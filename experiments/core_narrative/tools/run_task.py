@@ -29,7 +29,9 @@ from _llm_budget import (
     llm_safe_subprocess_env,
     parse_usd,
     redact_command_arguments,
+    redact_sensitive_text,
     run_to_redacted_artifacts,
+    unsafe_text_findings,
 )
 
 
@@ -80,22 +82,69 @@ def resolve_acut_id(args: argparse.Namespace) -> str:
     raise ToolError("either --acut or --acut-id is required")
 
 
-def write_patch(workspace: Path, patch_path: Path) -> None:
-    patch_path.parent.mkdir(parents=True, exist_ok=True)
+def collect_patch(workspace: Path, env: dict[str, str]) -> str:
     try:
-        with patch_path.open("w", encoding="utf-8") as patch_file:
-            completed = subprocess.run(
-                ["git", "diff", "--binary", "--no-ext-diff"],
-                cwd=str(workspace),
-                stdout=patch_file,
-                stderr=subprocess.PIPE,
-                text=True,
-                check=False,
-            )
+        completed = subprocess.run(
+            ["git", "diff", "--binary", "--no-ext-diff", "HEAD"],
+            cwd=str(workspace),
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+            text=True,
+            check=False,
+        )
     except FileNotFoundError as exc:
         raise ToolError("git executable was not found") from exc
     if completed.returncode != 0:
-        raise ToolError("failed to write patch", stderr=completed.stderr.strip())
+        raise ToolError(
+            "failed to inspect patch",
+            stderr=redact_sensitive_text(completed.stderr.strip(), env),
+        )
+    return completed.stdout
+
+
+def write_safe_patch(workspace: Path, patch_path: Path, env: dict[str, str]) -> dict[str, object]:
+    patch_text = collect_patch(workspace, env)
+    findings = unsafe_text_findings(patch_text, env)
+    patch_path.parent.mkdir(parents=True, exist_ok=True)
+    if findings["unsafe"]:
+        if patch_path.exists():
+            patch_path.unlink()
+        return {
+            "path": str(patch_path),
+            "written": False,
+            "unsafe_content_detected": True,
+            "unsafe_content": findings,
+            "policy": "reject_before_write",
+            "size_bytes": 0,
+        }
+    patch_path.write_text(patch_text, encoding="utf-8")
+    return {
+        "path": str(patch_path),
+        "written": True,
+        "unsafe_content_detected": False,
+        "unsafe_content": findings,
+        "policy": "reject_before_write",
+        "size_bytes": len(patch_text.encode("utf-8")),
+    }
+
+
+def restore_tracked_workspace_changes(workspace: Path, env: dict[str, str]) -> dict[str, object]:
+    result = git("reset", "--hard", "--quiet", "HEAD", cwd=workspace)
+    if result.returncode != 0:
+        raise ToolError(
+            "failed to restore tracked workspace changes after unsafe patch rejection",
+            stderr=redact_sensitive_text(result.stderr.strip(), env),
+        )
+    status = git("status", "--porcelain", "--untracked-files=no", cwd=workspace)
+    if status.returncode != 0:
+        raise ToolError(
+            "failed to inspect tracked workspace state after unsafe patch rejection",
+            stderr=redact_sensitive_text(status.stderr.strip(), env),
+        )
+    return {
+        "attempted": True,
+        "tracked_changes_remaining": bool(status.stdout.strip()),
+    }
 
 
 def main() -> int:
@@ -150,10 +199,16 @@ def main() -> int:
             stderr_path=stderr_path,
             env=acut_env,
         )
+        patch_artifact = write_safe_patch(workspace, patch_path, acut_env)
+        tracked_restore = {"attempted": False, "tracked_changes_remaining": None}
+        unsafe_patch_rejected = bool(patch_artifact["unsafe_content_detected"])
+        if unsafe_patch_rejected:
+            tracked_restore = restore_tracked_workspace_changes(workspace, acut_env)
         finished_at = iso_now()
-        write_patch(workspace, patch_path)
 
-        if run["timed_out"]:
+        if unsafe_patch_rejected:
+            status = "unsafe_patch_rejected"
+        elif run["timed_out"]:
             status = "timeout"
         elif run["exit_code"] == 0:
             status = "command_completed"
@@ -180,6 +235,9 @@ def main() -> int:
                 "command_arguments_checked": True,
                 "unsafe_command_arguments_rejected": True,
                 "command_representation_redacted": True,
+                "patch_artifact_checked": True,
+                "unsafe_patch_content_rejected": True,
+                "patch_rejection_restores_tracked_changes": True,
             },
             "agent": {
                 "exit_code": run["exit_code"],
@@ -188,8 +246,12 @@ def main() -> int:
                 "stderr_artifact": str(stderr_path),
             },
             "patch_path": str(patch_path),
+            "patch_artifact": patch_artifact,
+            "tracked_workspace_restore": tracked_restore,
         }
         emit_json(payload, args.output)
+        if unsafe_patch_rejected:
+            return 2
         return 0 if not run["timed_out"] else 124
     except Exception as exc:
         return fail(TOOL, exc)

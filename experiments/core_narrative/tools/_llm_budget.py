@@ -62,6 +62,20 @@ SECRET_VALUE_PATTERNS = [
         re.IGNORECASE,
     ),
 ]
+CREDENTIAL_LITERAL_VALUE_RE = re.compile(
+    r"""(?ix)
+    (?<![A-Za-z0-9_])
+    (?:api[-_]?key|secret|password|authorization|auth[-_]?header|bearer|credential|
+       access[-_]?token|refresh[-_]?token|session[-_]?token|id[-_]?token)
+    (?![A-Za-z0-9_])
+    \s*[:=]\s*
+    (?:
+      (["'])[^\s"']{6,}\1
+      |
+      [A-Za-z0-9._~+/=-]{12,}
+    )
+    """,
+)
 PROVIDER_ENV_MARKERS = (
     "OPENAI",
     "ANTHROPIC",
@@ -348,6 +362,38 @@ def redact_sensitive_text(text: str | bytes | None, env: Mapping[str, str] | Non
         redacted = pattern.sub("<redacted:secret>", redacted)
     redacted = FULL_URL_RE.sub("<redacted:url>", redacted)
     return redacted
+
+
+def unsafe_text_findings(text: str | bytes | None, env: Mapping[str, str] | None = None) -> dict[str, Any]:
+    text = _coerce_output_text(text)
+    reason_counts: dict[str, int] = {}
+    resolved_env_var_names: list[str] = []
+
+    def add_reason(reason: str, count: int) -> None:
+        if count > 0:
+            reason_counts[reason] = reason_counts.get(reason, 0) + count
+
+    for name, value in forbidden_value_markers(env).items():
+        if not value:
+            continue
+        count = text.count(value)
+        if count:
+            add_reason("resolved_llm_environment_value", count)
+            resolved_env_var_names.append(name)
+
+    add_reason("bearer_token", len(SECRET_VALUE_PATTERNS[0].findall(text)))
+    provider_token_count = 0
+    for pattern in SECRET_VALUE_PATTERNS[1:]:
+        provider_token_count += len(pattern.findall(text))
+    add_reason("provider_token", provider_token_count)
+    add_reason("credential_literal_value", len(CREDENTIAL_LITERAL_VALUE_RE.findall(text)))
+    add_reason("full_url", len(FULL_URL_RE.findall(text)))
+
+    return {
+        "unsafe": bool(reason_counts),
+        "reason_counts": dict(sorted(reason_counts.items())),
+        "resolved_env_var_names": resolved_env_var_names,
+    }
 
 
 def ensure_no_required_env_values(value: Any, env: Mapping[str, str] | None = None) -> None:
