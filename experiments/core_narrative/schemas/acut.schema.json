@@ -9,18 +9,22 @@
     "provider",
     "model",
     "prompt_policy_digest",
-    "tool_permissions",
-    "retrieval_context_strategy",
-    "runtime_budget",
-    "network_policy",
-    "execution_mode",
-    "adapter_or_harness_basis",
     "frozen_at",
     "operator"
   ],
+  "$defs": {
+    "freeform_object": {
+      "type": "object",
+      "additionalProperties": true
+    }
+  },
   "properties": {
     "schema_version": {
       "const": "core-narrative.acut.v1"
+    },
+    "manifest_version": {
+      "type": "string",
+      "minLength": 1
     },
     "acut_id": {
       "type": "string",
@@ -30,17 +34,24 @@
       "type": "string",
       "minLength": 1
     },
+    "purpose": {
+      "type": "string"
+    },
+    "frozen": {
+      "type": "boolean"
+    },
     "provider": {
       "type": "string",
-      "minLength": 1
+      "minLength": 1,
+      "description": "Top-level model/provider family, for example openai."
     },
     "model": {
       "type": "string",
-      "minLength": 1
+      "minLength": 1,
+      "description": "Top-level model identifier, for example gpt-5.5."
     },
     "model_parameters": {
-      "type": "object",
-      "additionalProperties": true
+      "$ref": "#/$defs/freeform_object"
     },
     "prompt_policy_digest": {
       "type": "string",
@@ -53,130 +64,22 @@
       ]
     },
     "tool_permissions": {
-      "type": "object",
-      "additionalProperties": false,
-      "required": [
-        "filesystem",
-        "network",
-        "allowed_tools"
-      ],
-      "properties": {
-        "filesystem": {
-          "type": "string",
-          "enum": [
-            "none",
-            "read-only",
-            "workspace-write",
-            "full"
-          ]
-        },
-        "network": {
-          "type": "string",
-          "enum": [
-            "disabled",
-            "restricted",
-            "enabled"
-          ]
-        },
-        "allowed_tools": {
-          "type": "array",
-          "items": {
-            "type": "string",
-            "minLength": 1
-          },
-          "uniqueItems": true
-        }
-      }
+      "$ref": "#/$defs/freeform_object"
     },
     "retrieval_context_strategy": {
-      "type": "object",
-      "additionalProperties": false,
-      "required": [
-        "strategy_id",
-        "description",
-        "allowed_sources"
-      ],
-      "properties": {
-        "strategy_id": {
-          "type": "string",
-          "minLength": 1
-        },
-        "description": {
-          "type": "string"
-        },
-        "allowed_sources": {
-          "type": "array",
-          "items": {
-            "type": "string",
-            "minLength": 1
-          },
-          "uniqueItems": true
-        }
-      }
+      "$ref": "#/$defs/freeform_object"
     },
     "runtime_budget": {
-      "type": "object",
-      "additionalProperties": false,
-      "properties": {
-        "max_wall_seconds": {
-          "type": "integer",
-          "minimum": 1
-        },
-        "max_turns": {
-          "type": "integer",
-          "minimum": 1
-        },
-        "max_tokens": {
-          "type": "integer",
-          "minimum": 1
-        },
-        "max_cost_usd": {
-          "type": [
-            "number",
-            "null"
-          ],
-          "minimum": 0
-        }
-      },
-      "minProperties": 1
+      "$ref": "#/$defs/freeform_object"
     },
     "network_policy": {
-      "type": "object",
-      "additionalProperties": false,
-      "required": [
-        "mode"
-      ],
-      "properties": {
-        "mode": {
-          "type": "string",
-          "enum": [
-            "disabled",
-            "restricted",
-            "enabled"
-          ]
-        },
-        "allowed_hosts": {
-          "type": "array",
-          "items": {
-            "type": "string",
-            "minLength": 1
-          },
-          "uniqueItems": true
-        }
-      }
+      "$ref": "#/$defs/freeform_object"
     },
     "execution_mode": {
-      "type": "string",
-      "enum": [
-        "codex_cli",
-        "api",
-        "manual",
-        "other"
-      ]
+      "$ref": "#/$defs/freeform_object"
     },
     "adapter_or_harness_basis": {
-      "type": "string",
-      "minLength": 1
+      "$ref": "#/$defs/freeform_object"
     },
     "frozen_at": {
       "type": "string",
@@ -186,12 +89,14 @@
       "type": "string",
       "minLength": 1
     },
+    "score_fields": {
+      "$ref": "#/$defs/freeform_object"
+    },
     "notes": {
       "type": "string"
     },
     "metadata": {
-      "type": "object",
-      "additionalProperties": true
+      "$ref": "#/$defs/freeform_object"
     }
   }
 }

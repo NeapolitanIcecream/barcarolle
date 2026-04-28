@@ -112,15 +112,16 @@
       "properties": {
         "mergeability_grade": {
           "type": [
-            "string",
+            "integer",
             "null"
           ],
+          "description": "Blinded RWork mergeability rubric: 0 means not mergeable/no useful patch, 1 means major issues, 2 means minor issues, and 3 means cleanly mergeable. Use null for unreviewed results and non-RWork cases.",
           "enum": [
             null,
-            "clean",
-            "minor_issues",
-            "major_issues",
-            "unreviewed"
+            0,
+            1,
+            2,
+            3
           ]
         },
         "wrong_module": {
