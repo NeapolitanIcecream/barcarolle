@@ -17,6 +17,9 @@ The target outcome is a credible ranking reversal:
 - Use disjoint worker ownership.
 - Keep large workspaces, cloned repositories, caches, and logs out of Git.
 - Do not use this Barcarolle repository as the target repository.
+- ACUT execution uses only `BARCAROLLE_LLM_API_KEY` and `BARCAROLLE_LLM_BASE_URL`; credential values must never be recorded.
+- The executable experiment is budget-constrained by default: USD `$240` soft stop, USD `$300` hard cap, four core ACUTs, 6 `G_score` tasks, 8 `RBench` tasks, 6 `RWork` tasks, and one primary attempt per ACUT/task.
+- Broad execution workers must not start until the LLM access contract and cost ledger gate are implemented.
 
 ## Phase 0 Output
 
@@ -25,5 +28,6 @@ Phase 0 should leave the coordinator with:
 - a selected target repository candidate set;
 - frozen or proposed ACUT manifests;
 - an explicit general benchmark basis;
+- an LLM access manifest and cost ledger gate;
 - minimal schemas and runner/verifier tooling;
 - enough status metadata to decide whether to start Phase 1 review and task-pack construction.
