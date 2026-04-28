@@ -1,0 +1,197 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://barcarolle.local/experiments/core_narrative/schemas/acut.schema.json",
+  "title": "Core Narrative ACUT Manifest",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "acut_id",
+    "provider",
+    "model",
+    "prompt_policy_digest",
+    "tool_permissions",
+    "retrieval_context_strategy",
+    "runtime_budget",
+    "network_policy",
+    "execution_mode",
+    "adapter_or_harness_basis",
+    "frozen_at",
+    "operator"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "core-narrative.acut.v1"
+    },
+    "acut_id": {
+      "type": "string",
+      "pattern": "^[a-z0-9][a-z0-9_-]*$"
+    },
+    "display_name": {
+      "type": "string",
+      "minLength": 1
+    },
+    "provider": {
+      "type": "string",
+      "minLength": 1
+    },
+    "model": {
+      "type": "string",
+      "minLength": 1
+    },
+    "model_parameters": {
+      "type": "object",
+      "additionalProperties": true
+    },
+    "prompt_policy_digest": {
+      "type": "string",
+      "minLength": 1
+    },
+    "prompt_policy_reference": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "tool_permissions": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "filesystem",
+        "network",
+        "allowed_tools"
+      ],
+      "properties": {
+        "filesystem": {
+          "type": "string",
+          "enum": [
+            "none",
+            "read-only",
+            "workspace-write",
+            "full"
+          ]
+        },
+        "network": {
+          "type": "string",
+          "enum": [
+            "disabled",
+            "restricted",
+            "enabled"
+          ]
+        },
+        "allowed_tools": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "uniqueItems": true
+        }
+      }
+    },
+    "retrieval_context_strategy": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "strategy_id",
+        "description",
+        "allowed_sources"
+      ],
+      "properties": {
+        "strategy_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "description": {
+          "type": "string"
+        },
+        "allowed_sources": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "uniqueItems": true
+        }
+      }
+    },
+    "runtime_budget": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "max_wall_seconds": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "max_turns": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "max_tokens": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "max_cost_usd": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0
+        }
+      },
+      "minProperties": 1
+    },
+    "network_policy": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "mode"
+      ],
+      "properties": {
+        "mode": {
+          "type": "string",
+          "enum": [
+            "disabled",
+            "restricted",
+            "enabled"
+          ]
+        },
+        "allowed_hosts": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "uniqueItems": true
+        }
+      }
+    },
+    "execution_mode": {
+      "type": "string",
+      "enum": [
+        "codex_cli",
+        "api",
+        "manual",
+        "other"
+      ]
+    },
+    "adapter_or_harness_basis": {
+      "type": "string",
+      "minLength": 1
+    },
+    "frozen_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "operator": {
+      "type": "string",
+      "minLength": 1
+    },
+    "notes": {
+      "type": "string"
+    },
+    "metadata": {
+      "type": "object",
+      "additionalProperties": true
+    }
+  }
+}
