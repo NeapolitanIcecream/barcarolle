@@ -1,7 +1,7 @@
 # Core Narrative Experiment Coordinator
 
-status: llm_budget_tooling_revision_running
-updated: 2026-04-28T10:52:37+08:00
+status: wave0_r3_review_starting
+updated: 2026-04-28T11:03:26+08:00
 phase: Phase 0 - Experiment Bootstrap
 base_commit: 47046e7754d2402b7177a4b80f631ab6b0bcd97c
 coordinator_repo: /Users/chenmohan/gits/barcarolle
@@ -24,12 +24,13 @@ Execute `docs/experiments/core-narrative-experiment-plan.md` with tmux-managed C
 | acut-matrix-r1 | Wave 0 revision | delivered; commit `583600c` | exited | codex/core-exp-acut-matrix | /Users/chenmohan/gits/barcarolle-wt-acut-matrix | `experiments/core_narrative/configs/acuts/**`, `experiments/core_narrative/reports/acut_matrix_notes.md` |
 | wave0-r1-reviewer | Wave 0 revision review | delivered; issues_found; commit `607d8a2` integrated | exited | codex/core-exp-wave0-r1-reviewer | /Users/chenmohan/gits/barcarolle-wt-wave0-r1-reviewer | `.codex-workflows/core-narrative-experiment/reviews/wave0-r1-review.md` |
 | schema-toolsmith-r2 | Wave 0 revision | delivered; commit `de7a126` | exited | codex/core-exp-schema-toolsmith | /Users/chenmohan/gits/barcarolle-wt-schema-toolsmith | `experiments/core_narrative/schemas/**`, `experiments/core_narrative/tools/**` |
-| llm-budget-gate | Revised-plan gate | recorded; tool enforcement pending schema worker | n/a | codex/core-narrative-experiment | /Users/chenmohan/gits/barcarolle | `experiments/core_narrative/configs/llm_access.yaml`, `experiments/core_narrative/results/cost_ledger.jsonl`, shared workflow contract |
-| schema-toolsmith-r3 | Revised-plan gate tooling | session_running; implementation in progress; syntax check passed | bcx-schema-toolsmith-r3 | codex/core-exp-schema-toolsmith | /Users/chenmohan/gits/barcarolle-wt-schema-toolsmith | `experiments/core_narrative/tools/**` |
+| llm-budget-gate | Revised-plan gate | recorded; tool enforcement delivered by schema worker; review pending | n/a | codex/core-narrative-experiment | /Users/chenmohan/gits/barcarolle | `experiments/core_narrative/configs/llm_access.yaml`, `experiments/core_narrative/results/cost_ledger.jsonl`, shared workflow contract |
+| schema-toolsmith-r3 | Revised-plan gate tooling | delivered; commits `c7a01b2`, `34b0677` | exited | codex/core-exp-schema-toolsmith | /Users/chenmohan/gits/barcarolle-wt-schema-toolsmith | `experiments/core_narrative/tools/**` |
+| wave0-r3-reviewer | Wave 0 revision review | initialized | pending | codex/core-exp-wave0-r3-reviewer | /Users/chenmohan/gits/barcarolle-wt-wave0-r3-reviewer | `.codex-workflows/core-narrative-experiment/reviews/wave0-r3-review.md` |
 
 ## Active Tmux Sessions
 
-- `bcx-schema-toolsmith-r3`
+None. `schema-toolsmith-r3` has exited after delivery.
 
 ## Decisions
 
@@ -54,7 +55,7 @@ None currently recorded.
 - Started `schema-toolsmith-r2` to align `execution_mode` and `adapter_or_harness_basis` with the scalar ACUT manifest contract and run the validator against all seven manifests.
 - `schema-toolsmith-r2` delivered and the coordinator resolved its Git metadata commit blocker.
 - Started `schema-toolsmith-r3` to implement the LLM access and cost ledger gate tooling required by the revised plan.
-- `schema-toolsmith-r3` has implemented initial gate and ledger append tooling, updated `run_task.py` to enforce the gate before ACUT command execution, and passed Python syntax checks. Awaiting final self-checks and delivery.
+- `schema-toolsmith-r3` delivered gate and ledger append tooling, updated `run_task.py` to enforce the gate before ACUT command execution, and reported passing self-checks. Start focused review before integrating worker branches.
 - Do not start task-builder, leakage-auditor, verifier-auditor, or ACUT execution workers until the clean-room workspace leakage and ACUT schema/manifest mismatch are closed.
 
 ## Pre-Run Gates
@@ -75,4 +76,4 @@ None currently recorded.
 
 ## Next Heartbeat Action
 
-Read `schema-toolsmith` revision `process.md`. If revision 3 is delivered, start a narrow review covering the ACUT schema/validator contract plus the revised LLM/cost gate. If blocked, notify the user only if coordinator action cannot resolve it. Do not inspect `cli.log` unless debugging is explicitly requested.
+Read `wave0-r3-reviewer` `process.md`. If review is delivered with no blocking issues, integrate the reviewed worker branches and keep broad execution blocked until the remaining pre-run repository and general-benchmark locks are closed. If issues remain, write targeted feedback into the owning worker directory and start the next revision. Do not inspect `cli.log` unless debugging is explicitly requested.
