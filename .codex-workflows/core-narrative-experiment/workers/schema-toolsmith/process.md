@@ -1,7 +1,7 @@
 # Process
 
 status: delivered
-updated: 2026-04-28T10:54:16+08:00
+updated: 2026-04-28T10:55:56+08:00
 
 ## Summary
 
@@ -49,6 +49,7 @@ None. Previous commit blocker was resolved by the coordinator.
 - 2026-04-28T10:41:47+08:00: Initial worktree state has only untracked coordinator-provided revision files: `review-feedback-1.md`, `review-feedback-2.md`, `review-feedback-3.md`, `revision-prompt-1.md`, `revision-prompt-2.md`, `revision-prompt-3.md`, `run_revision_1.sh`, `run_revision_2.sh`, `run_revision_3.sh`.
 - 2026-04-28T10:48:06+08:00: Read revision 3 feedback, the coordinator plan's revised LLM access/budget section, the shared worker contract, and the coordinator LLM access/budget contract. Implemented dependency-light gate and ledger append tooling; updated `run_task.py` to enforce the gate before ACUT command execution and to redact captured artifacts. Syntax check passed for all Python tools.
 - 2026-04-28T10:54:16+08:00: Completed revision 3 self-checks. The gate blocks missing env vars, missing/unwritable ledgers, and projected hard-cap overflow; soft-stop projection returns `requires_coordinator_approval`; safe append updates cumulative cost; secret-looking append metadata is refused. Temporary dummy env values were absent from structured outputs, temporary ledger output, runner artifacts, repository files, and the ignored revision CLI log after scrubbing.
+- 2026-04-28T10:55:56+08:00: Committed owned revision 3 implementation changes on `codex/core-exp-schema-toolsmith` as `c7a01b2`; adding this final process-state update as an owned handoff commit. Did not push.
 
 ## Git State
 
@@ -89,6 +90,13 @@ revision-3 pre-commit status:
 - new owned files: `experiments/core_narrative/tools/_llm_budget.py`, `experiments/core_narrative/tools/append_cost_record.py`, `experiments/core_narrative/tools/llm_budget_gate.py`
 - untracked coordinator-provided revision files remain unstaged: `review-feedback-1.md`, `review-feedback-2.md`, `review-feedback-3.md`, `revision-prompt-1.md`, `revision-prompt-2.md`, `revision-prompt-3.md`, `run_revision_1.sh`, `run_revision_2.sh`, `run_revision_3.sh`
 - ignored CLI log is not staged; no dummy credential values remain in repository files
+
+revision-3 post-commit state:
+- branch: `codex/core-exp-schema-toolsmith`
+- worktree: `/Users/chenmohan/gits/barcarolle-wt-schema-toolsmith`
+- implementation commit: `c7a01b2`
+- final process-state update is an owned handoff commit after `c7a01b2`
+- untracked coordinator-provided revision files remain unstaged: `review-feedback-1.md`, `review-feedback-2.md`, `review-feedback-3.md`, `revision-prompt-1.md`, `revision-prompt-2.md`, `revision-prompt-3.md`, `run_revision_1.sh`, `run_revision_2.sh`, `run_revision_3.sh`
 
 ## Handoff
 
