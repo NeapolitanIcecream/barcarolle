@@ -1,0 +1,440 @@
+schema_version: core-narrative.task-split.v1
+prepared_at: "2026-04-28T15:34:59+08:00"
+status: prepared_not_started
+split: RBench
+repo_slug: click
+repository: pallets/click
+locked_target_commit: 8bd8b4a074c55c03b6eb5666edc44a9c43df38a2
+local_checkout_cache: experiments/core_narrative/external_repos/click
+selection_policy:
+  source_basis: GitHub commit search plus compare metadata for pallets/click.
+  split_rule: Historical behavior tasks from anchors before 2024; no anchors reused in RWork.
+  exclusion_rule: Exclude docs-only, dependency-only, release-only, CI-only, and workflow-only anchors unless repository behavior is exercised by tests.
+  context_rule: Issue or PR text may be visible when it is the source anchor; reference patches and target diffs stay hidden.
+task_count: 8
+tasks:
+  - task_id: click__rbench__001
+    repo_slug: click
+    split: rbench
+    benchmark_split: RBench
+    locked_target_repository: pallets/click
+    locked_target_commit: 8bd8b4a074c55c03b6eb5666edc44a9c43df38a2
+    source:
+      kind: pull_request
+      public_url: https://github.com/pallets/click/pull/252
+      anchor_id: pallets/click#252
+      base_commit: 4a7fe69f942bd02b811548ff8f02a08fff7429c1
+      target_commit: 39e51d961b9e69c050bb948b1db11275f9630542
+    source_compare:
+      commits_ahead: 3
+      changed_files:
+        - click/core.py
+        - tests/test_options.py
+    task_family: option help/default rendering
+    task_statement_path: inline:problem_statement
+    problem_statement: >-
+      Fix option help generation so an option declared with multiple=True,
+      show_default=True, and a list or tuple default renders help instead of
+      raising while formatting the default.
+    expected_touched_area:
+      - Option.get_help_record or default rendering in click/core.py
+      - focused regression coverage in tests/test_options.py
+    visible_context_guidance: >-
+      Provide the PR title, issue discussion if available, current behavior,
+      and the expected help text shape. Do not expose the merge diff or final
+      implementation.
+    allowed_context:
+      include_git_history_before_base: true
+      include_issue_text: false
+      include_pr_text: true
+      include_reference_patch: false
+    disallowed_context:
+      - reference patch or target diff for pull request 252
+      - ACUT outputs or public model results
+      - future execution results for this task
+    verifier:
+      command: .venv/bin/python -m pytest -q tests/test_options.py::test_multiple_default_help
+      timeout_seconds: 60
+    expected:
+      no_op_fails: true
+      reference_passes: true
+    leakage:
+      reviewed: true
+      notes: Compact historical behavior fix; verifier node exists in the locked checkout but may need packaging as hidden regression coverage for the historical base tree.
+    admission:
+      status: accepted
+      reviewer: task-manifests-worker
+      rationale: Behavior-verifiable option formatting regression with a small source and test surface.
+    risk_notes: >-
+      Historical source path uses click/core.py, while the locked checkout now
+      uses src/click/core.py; task packaging must use the source base tree.
+
+  - task_id: click__rbench__002
+    repo_slug: click
+    split: rbench
+    benchmark_split: RBench
+    locked_target_repository: pallets/click
+    locked_target_commit: 8bd8b4a074c55c03b6eb5666edc44a9c43df38a2
+    source:
+      kind: pull_request
+      public_url: https://github.com/pallets/click/pull/151
+      anchor_id: pallets/click#151
+      base_commit: b557743f3bc26a4cdbf610b221e7e81d609aa65d
+      target_commit: 637447f9ccf882d5c810540ca261e8ba2af9cb1c
+    source_compare:
+      commits_ahead: 2
+      changed_files:
+        - click/testing.py
+        - tests/test_testing.py
+    task_family: CliRunner exception handling
+    task_statement_path: inline:problem_statement
+    problem_statement: >-
+      Add support for controlling whether CliRunner.invoke catches exceptions,
+      including a runner-level default and an invoke-time override.
+    expected_touched_area:
+      - click.testing.CliRunner.invoke exception handling
+      - tests for catch_exceptions behavior
+    visible_context_guidance: >-
+      Show the PR/issue intent and expected API behavior for catch_exceptions.
+      Do not show the reference patch.
+    allowed_context:
+      include_git_history_before_base: true
+      include_issue_text: false
+      include_pr_text: true
+      include_reference_patch: false
+    disallowed_context:
+      - reference patch or target diff for pull request 151
+      - ACUT outputs or public model results
+      - future execution results for this task
+    verifier:
+      command: .venv/bin/python -m pytest -q tests/test_testing.py::test_catch_exceptions tests/test_testing.py::test_catch_exceptions_cli_runner
+      timeout_seconds: 60
+    expected:
+      no_op_fails: true
+      reference_passes: true
+    leakage:
+      reviewed: true
+      notes: Small API behavior task in test runner code; no platform-specific terminal behavior required.
+    admission:
+      status: accepted
+      reviewer: task-manifests-worker
+      rationale: Compact, behavior-verifiable testing helper enhancement.
+    risk_notes: Historical source path uses click/testing.py before the src layout.
+
+  - task_id: click__rbench__003
+    repo_slug: click
+    split: rbench
+    benchmark_split: RBench
+    locked_target_repository: pallets/click
+    locked_target_commit: 8bd8b4a074c55c03b6eb5666edc44a9c43df38a2
+    source:
+      kind: commit
+      public_url: https://github.com/pallets/click/commit/02ea9ee7e864581258b4902d6e6c1264b0226b9f
+      anchor_id: commit:02ea9ee7e864581258b4902d6e6c1264b0226b9f
+      base_commit: d3f36e884e18f374c3e4e6cf062ba19f100d0fd6
+      target_commit: 02ea9ee7e864581258b4902d6e6c1264b0226b9f
+    source_compare:
+      commits_ahead: 1
+      changed_files:
+        - click/core.py
+        - click/termui.py
+        - tests/test_termui.py
+    task_family: prompt choice rendering
+    task_statement_path: inline:problem_statement
+    problem_statement: >-
+      When prompting for a click.Choice value, display the available choices in
+      the prompt, while preserving support for defaults and show_choices=False.
+    expected_touched_area:
+      - prompt text construction for Choice parameters
+      - termui prompt regression tests
+    visible_context_guidance: >-
+      Provide the commit message and expected before/after prompt behavior.
+      The implementation diff remains hidden.
+    allowed_context:
+      include_git_history_before_base: true
+      include_issue_text: false
+      include_pr_text: false
+      include_reference_patch: false
+    disallowed_context:
+      - reference patch or target diff for commit 02ea9ee
+      - ACUT outputs or public model results
+      - future execution results for this task
+    verifier:
+      command: .venv/bin/python -m pytest -q tests/test_termui.py::test_choices_list_in_prompt
+      timeout_seconds: 60
+    expected:
+      no_op_fails: true
+      reference_passes: true
+    leakage:
+      reviewed: true
+      notes: Terminal UI behavior is exercised through CliRunner and monkeypatching, not a real terminal.
+    admission:
+      status: accepted
+      reviewer: task-manifests-worker
+      rationale: User-visible behavior with focused deterministic tests.
+    risk_notes: Avoid relying on terminal state or locale; use in-process prompt tests only.
+
+  - task_id: click__rbench__004
+    repo_slug: click
+    split: rbench
+    benchmark_split: RBench
+    locked_target_repository: pallets/click
+    locked_target_commit: 8bd8b4a074c55c03b6eb5666edc44a9c43df38a2
+    source:
+      kind: pull_request
+      public_url: https://github.com/pallets/click/pull/868
+      anchor_id: pallets/click#868
+      base_commit: b1b4449cda6767f022372890998d6b0eb895d041
+      target_commit: fdceb39d344603fc73a4d9761766b5701f69236d
+    source_compare:
+      commits_ahead: 1
+      changed_files:
+        - click/testing.py
+        - tests/test_testing.py
+        - tests/test_termui.py
+        - tests/test_utils.py
+    task_family: CliRunner stdout/stderr stream separation
+    task_statement_path: inline:problem_statement
+    problem_statement: >-
+      Teach CliRunner results to expose separated stdout and stderr while
+      preserving the mixed output stream used by existing tests.
+    expected_touched_area:
+      - click.testing stream capture and Result attributes
+      - tests for stdout, stderr, and mixed output behavior
+    visible_context_guidance: >-
+      Show the PR title and desired stream semantics. Do not include the final
+      implementation or reference diff.
+    allowed_context:
+      include_git_history_before_base: true
+      include_issue_text: false
+      include_pr_text: true
+      include_reference_patch: false
+    disallowed_context:
+      - reference patch or target diff for pull request 868
+      - ACUT outputs or public model results
+      - future execution results for this task
+    verifier:
+      command: .venv/bin/python -m pytest -q tests/test_testing.py::test_stderr
+      timeout_seconds: 60
+    expected:
+      no_op_fails: true
+      reference_passes: true
+    leakage:
+      reviewed: true
+      notes: Deterministic in-process stream tests; no OS terminal dependency.
+    admission:
+      status: accepted
+      reviewer: task-manifests-worker
+      rationale: Clear behavior contract with compact verifier coverage.
+    risk_notes: Historical changes touch multiple tests, but the core behavior is isolated to CliRunner stream capture.
+
+  - task_id: click__rbench__005
+    repo_slug: click
+    split: rbench
+    benchmark_split: RBench
+    locked_target_repository: pallets/click
+    locked_target_commit: 8bd8b4a074c55c03b6eb5666edc44a9c43df38a2
+    source:
+      kind: pull_request
+      public_url: https://github.com/pallets/click/pull/887
+      anchor_id: pallets/click#887
+      base_commit: a00e01845100ce2b3d5288a2b655aad260346361
+      target_commit: c70d4636831e391016895587f7ed10e96f49773e
+    source_compare:
+      commits_ahead: 2
+      changed_files:
+        - click/types.py
+        - tests/test_options.py
+    task_family: Choice type case sensitivity
+    task_statement_path: inline:problem_statement
+    problem_statement: >-
+      Add a case_sensitive=False mode to click.Choice so command-line values
+      can match choices case-insensitively while preserving exact return values.
+    expected_touched_area:
+      - click.types.Choice normalization and conversion
+      - option tests for case-insensitive choices
+    visible_context_guidance: >-
+      Provide the PR title and linked issue context for Choice matching. Keep
+      the patch hidden.
+    allowed_context:
+      include_git_history_before_base: true
+      include_issue_text: true
+      include_pr_text: true
+      include_reference_patch: false
+    disallowed_context:
+      - reference patch or target diff for pull request 887
+      - ACUT outputs or public model results
+      - future execution results for this task
+    verifier:
+      command: .venv/bin/python -m pytest -q tests/test_options.py::test_case_insensitive_choice tests/test_options.py::test_case_insensitive_choice_returned_exactly
+      timeout_seconds: 60
+    expected:
+      no_op_fails: true
+      reference_passes: true
+    leakage:
+      reviewed: true
+      notes: Behavior is pure parser/type conversion; no platform-specific dependencies.
+    admission:
+      status: accepted
+      reviewer: task-manifests-worker
+      rationale: Compact type-system behavior change with direct tests.
+    risk_notes: Token normalization interactions should be described but not over-specified with the reference code.
+
+  - task_id: click__rbench__006
+    repo_slug: click
+    split: rbench
+    benchmark_split: RBench
+    locked_target_repository: pallets/click
+    locked_target_commit: 8bd8b4a074c55c03b6eb5666edc44a9c43df38a2
+    source:
+      kind: commit
+      public_url: https://github.com/pallets/click/commit/5fe0b7e7795f9bb04ae926d00868cfeb1fa33187
+      anchor_id: commit:5fe0b7e7795f9bb04ae926d00868cfeb1fa33187
+      base_commit: 6e62332349db6e93decf47666c4cd6fe20df6b02
+      target_commit: 5fe0b7e7795f9bb04ae926d00868cfeb1fa33187
+    source_compare:
+      commits_ahead: 1
+      changed_files:
+        - click/types.py
+        - tests/test_basic.py
+    task_family: DateTime parameter parsing
+    task_statement_path: inline:problem_statement
+    problem_statement: >-
+      Extend the default click.DateTime formats to accept a space between date
+      and time, in addition to the existing ISO-like T separator.
+    expected_touched_area:
+      - click.types.DateTime default format list and conversion behavior
+      - basic DateTime option tests
+    visible_context_guidance: >-
+      Provide the commit title and expected accepted input format. Do not show
+      the source diff.
+    allowed_context:
+      include_git_history_before_base: true
+      include_issue_text: false
+      include_pr_text: false
+      include_reference_patch: false
+    disallowed_context:
+      - reference patch or target diff for commit 5fe0b7e
+      - ACUT outputs or public model results
+      - future execution results for this task
+    verifier:
+      command: .venv/bin/python -m pytest -q tests/test_basic.py::test_datetime_option_default
+      timeout_seconds: 60
+    expected:
+      no_op_fails: true
+      reference_passes: true
+    leakage:
+      reviewed: true
+      notes: Date parsing is deterministic and locale-independent for the selected numeric format.
+    admission:
+      status: accepted
+      reviewer: task-manifests-worker
+      rationale: Small behavior extension with compact verification.
+    risk_notes: Avoid locale-dependent DateTime formats in any hidden tests.
+
+  - task_id: click__rbench__007
+    repo_slug: click
+    split: rbench
+    benchmark_split: RBench
+    locked_target_repository: pallets/click
+    locked_target_commit: 8bd8b4a074c55c03b6eb5666edc44a9c43df38a2
+    source:
+      kind: pull_request
+      public_url: https://github.com/pallets/click/pull/1312
+      anchor_id: pallets/click#1312
+      base_commit: 563b1a7116a6806e699d31d327dd9bca93c40cb3
+      target_commit: 990ca8e664a0610fe0583f3aa8924fd49f928a74
+    source_compare:
+      commits_ahead: 2
+      changed_files:
+        - src/click/testing.py
+        - tests/test_testing.py
+    task_family: CliRunner return value capture
+    task_statement_path: inline:problem_statement
+    problem_statement: >-
+      Preserve a command callback's return value on the CliRunner Result object
+      when running in standalone mode.
+    expected_touched_area:
+      - src/click/testing.py Result and invoke plumbing
+      - tests for Result.return_value
+    visible_context_guidance: >-
+      Show the PR title and desired testing API behavior. Keep implementation
+      and patch details hidden.
+    allowed_context:
+      include_git_history_before_base: true
+      include_issue_text: false
+      include_pr_text: true
+      include_reference_patch: false
+    disallowed_context:
+      - reference patch or target diff for pull request 1312
+      - ACUT outputs or public model results
+      - future execution results for this task
+    verifier:
+      command: .venv/bin/python -m pytest -q tests/test_testing.py::test_command_standalone_mode_returns_value
+      timeout_seconds: 60
+    expected:
+      no_op_fails: true
+      reference_passes: true
+    leakage:
+      reviewed: true
+      notes: Pure testing helper behavior with a single focused verifier.
+    admission:
+      status: accepted
+      reviewer: task-manifests-worker
+      rationale: Compact testing API task with visible behavioral output.
+    risk_notes: Ensure the task asks for return value capture without exposing exact Result internals from the reference patch.
+
+  - task_id: click__rbench__008
+    repo_slug: click
+    split: rbench
+    benchmark_split: RBench
+    locked_target_repository: pallets/click
+    locked_target_commit: 8bd8b4a074c55c03b6eb5666edc44a9c43df38a2
+    source:
+      kind: pull_request
+      public_url: https://github.com/pallets/click/pull/1618
+      anchor_id: pallets/click#1618
+      base_commit: 7332f00ed4c27d8da041788ca6a7aa405f062c76
+      target_commit: 8efb348e2bc820aeba60d4cce6939708c6b2b11c
+    source_compare:
+      commits_ahead: 2
+      changed_files:
+        - src/click/core.py
+        - src/click/parser.py
+        - tests/test_options.py
+        - tests/test_termui.py
+    task_family: optional value prompts
+    task_statement_path: inline:problem_statement
+    problem_statement: >-
+      Allow an option used without an explicit value to either prompt for the
+      value or fall back to its default according to prompt_required and
+      required settings.
+    expected_touched_area:
+      - option parsing for optional values
+      - prompt_required behavior in option and termui tests
+    visible_context_guidance: >-
+      Provide the PR title and behavior matrix for prompt_required/required.
+      Do not reveal the reference implementation.
+    allowed_context:
+      include_git_history_before_base: true
+      include_issue_text: false
+      include_pr_text: true
+      include_reference_patch: false
+    disallowed_context:
+      - reference patch or target diff for pull request 1618
+      - ACUT outputs or public model results
+      - future execution results for this task
+    verifier:
+      command: .venv/bin/python -m pytest -q tests/test_termui.py::test_prompt_required_with_required tests/test_termui.py::test_prompt_required_false
+      timeout_seconds: 60
+    expected:
+      no_op_fails: true
+      reference_passes: true
+    leakage:
+      reviewed: true
+      notes: Prompt behavior is exercised with CliRunner; no real terminal interaction required.
+    admission:
+      status: accepted
+      reviewer: task-manifests-worker
+      rationale: Behavior-facing option parsing task with deterministic tests.
+    risk_notes: Keep hidden tests independent of shell and terminal state.
