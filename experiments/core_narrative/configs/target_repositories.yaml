@@ -1,0 +1,10 @@
+# Filled by the repo-scout worker.
+status: pending
+primary: null
+fallbacks: []
+selection_criteria:
+  deterministic_tests: true
+  enough_historical_tasks: true
+  acceptable_build_time: true
+  limited_external_services: true
+  license_permits_local_evaluation: true
