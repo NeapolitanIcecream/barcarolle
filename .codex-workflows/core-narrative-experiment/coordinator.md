@@ -1,7 +1,7 @@
 # Core Narrative Experiment Coordinator
 
-status: pre_run_locks_running
-updated: 2026-04-28T12:20:31+08:00
+status: blocked_pre_run_locks
+updated: 2026-04-28T12:31:37+08:00
 phase: Phase 0 - Experiment Bootstrap
 base_commit: 47046e7754d2402b7177a4b80f631ab6b0bcd97c
 coordinator_repo: /Users/chenmohan/gits/barcarolle
@@ -31,13 +31,12 @@ Execute `docs/experiments/core-narrative-experiment-plan.md` with tmux-managed C
 | wave0-r4-reviewer | Wave 0 revision review | delivered; issues_found; worker commit `b5312b5`, integrated as `4b767bd` | exited | codex/core-exp-wave0-r4-reviewer | /Users/chenmohan/gits/barcarolle-wt-wave0-r4-reviewer | `.codex-workflows/core-narrative-experiment/reviews/wave0-r4-review.md` |
 | schema-toolsmith-r5 | Revised-plan gate tooling | delivered; worker commits `df16bdb`, `11ce367`, integrated as `3b14e8a`, `a3c90f9` | exited | codex/core-exp-schema-toolsmith | /Users/chenmohan/gits/barcarolle-wt-schema-toolsmith | `experiments/core_narrative/tools/**` |
 | wave0-r5-reviewer | Wave 0 revision review | delivered; no_issues; worker commit `386a6e1`, integrated as `1d07e2e` | exited | codex/core-exp-wave0-r5-reviewer | /Users/chenmohan/gits/barcarolle-wt-wave0-r5-reviewer | `.codex-workflows/core-narrative-experiment/reviews/wave0-r5-review.md` |
-| repo-runtime-lock | Pre-run lock | session_running; process initialized | bcx-repo-runtime-lock | codex/core-exp-repo-runtime-lock | /Users/chenmohan/gits/barcarolle-wt-repo-runtime-lock | `experiments/core_narrative/configs/target_repositories.yaml`, `experiments/core_narrative/reports/repo_scout_notes.md` |
-| general-benchmark-lock | Pre-run lock | session_running; process initialized | bcx-general-benchmark-lock | codex/core-exp-general-lock | /Users/chenmohan/gits/barcarolle-wt-general-lock | `experiments/core_narrative/configs/general_benchmark.yaml`, `experiments/core_narrative/reports/general_benchmark_notes.md` |
+| repo-runtime-lock | Pre-run lock | blocked; worker commit `e6c2165`, integrated as `29b1dd8` | exited | codex/core-exp-repo-runtime-lock | /Users/chenmohan/gits/barcarolle-wt-repo-runtime-lock | `experiments/core_narrative/configs/target_repositories.yaml`, `experiments/core_narrative/reports/repo_scout_notes.md` |
+| general-benchmark-lock | Pre-run lock | blocked; worker commit `fb9bc2c`, integrated as `77e2814` | exited | codex/core-exp-general-lock | /Users/chenmohan/gits/barcarolle-wt-general-lock | `experiments/core_narrative/configs/general_benchmark.yaml`, `experiments/core_narrative/reports/general_benchmark_notes.md` |
 
 ## Active Tmux Sessions
 
-- `bcx-repo-runtime-lock`
-- `bcx-general-benchmark-lock`
+None.
 
 ## Decisions
 
@@ -52,7 +51,8 @@ Execute `docs/experiments/core-narrative-experiment-plan.md` with tmux-managed C
 
 ## Blockers
 
-None currently recorded.
+- `repo-runtime-lock`: local runtime cannot be verified because GitHub DNS resolution fails for `pallets/click` and all repo-scout fallbacks, and no existing local checkout/cache was found.
+- `general-benchmark-lock`: concrete six-task `G_score` IDs cannot be materialized because shell network cannot resolve Hugging Face or GitHub endpoints, no pinned dataset copy is present locally, and Docker is not reachable.
 
 ## Review Queue
 
@@ -74,12 +74,14 @@ None currently recorded.
 - Integrated reviewed Wave 0 worker artifacts into the coordinator branch.
 - Started `repo-runtime-lock` to verify local target repository runtime feasibility or select a fallback.
 - Started `general-benchmark-lock` to materialize the revised six-task `G_score` concrete instance lock.
+- `repo-runtime-lock` is blocked and its blocker artifact is integrated.
+- `general-benchmark-lock` is blocked and its blocker artifact is integrated.
 - Do not start broad ACUT execution workers until the remaining pre-run repository and general-benchmark locks are closed.
 
 ## Pre-Run Gates
 
-- `repo-scout`: clone and run a local `pallets/click` smoke/full-suite timing check, or select a fallback if local runtime is not viable.
-- `general-benchmark`: materialize and record locked SWE-Bench Pro instance IDs and any pre-run infrastructure replacements before ACUT patch-generation runs.
+- `repo-scout`: blocked until `pallets/click` or a fallback can be cloned and timed in an environment with GitHub DNS/network access, or an existing local checkout/cache is provided.
+- `general-benchmark`: blocked until `ScaleAI/SWE-bench_Pro` `default/test` at Hugging Face revision `7ab5114912baf22bb098818e604c02fe7ad2c11f` with parquet SHA256 `c8cd7115496ad4e9a8b21d088cef576a65bf821bb542b24336f13f714cef13f8` is fetched or provided locally so the six `G_score` IDs can be computed.
 - LLM access: `experiments/core_narrative/configs/llm_access.yaml` must remain value-free and record only environment variable names, redaction policy, and budget caps.
 - Cost ledger: `experiments/core_narrative/results/cost_ledger.jsonl` must exist and every ACUT model call or patch-generation attempt must append token, estimated/actual cost, and cumulative estimated cost fields.
 - Execution block: ACUT execution workers must mark `status: blocked` before any model call if either LLM environment variable is missing, if the ledger is missing/unwritable, if ledgering is not implemented, or if projected spend would exceed `$300`.
@@ -94,4 +96,4 @@ None currently recorded.
 
 ## Next Heartbeat Action
 
-Read `repo-runtime-lock` and `general-benchmark-lock` `process.md` files. If either lock is delivered, integrate or review the delivered artifact as appropriate. If either lock is blocked, record the blocker and notify only if user input is required. Do not start broad ACUT execution workers until both locks close. Do not inspect `cli.log` unless debugging is explicitly requested.
+Workflow is blocked on external/local data access for the two pre-run locks. Next action requires either working GitHub/Hugging Face network access, local checkouts/caches for target repositories, or a local pinned SWE-Bench Pro dataset copy. Do not start broad ACUT execution workers until both locks close. Do not inspect `cli.log` unless debugging is explicitly requested.
