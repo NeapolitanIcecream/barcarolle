@@ -1,94 +1,123 @@
-manifest_version: "0.1"
-acut_id: "higher-budget-repo-depth"
-frozen: true
-frozen_date: "2026-04-28"
-operator:
-  id: "codex-cli-worker-acut-matrix"
-  branch: "codex/core-exp-acut-matrix"
-  worktree: "/Users/chenmohan/gits/barcarolle-wt-acut-matrix"
-purpose: "Higher-budget configuration for testing whether additional exploration and verification budget improves repository work more than general benchmark rank."
-model:
-  provider: "openai"
-  name: "gpt-5.5"
-  reasoning_effort: "xhigh"
-prompt_or_policy_digest:
-  digest_id: "policy-digest-v1:higher-budget-repo-depth"
-  summary: "Spend extra budget on architecture discovery, multiple candidate fixes, focused regression tests, and full verification before producing the final patch."
+schema_version: core-narrative.acut.v1
+acut_id: higher-budget-repo-depth
+display_name: Higher Budget Repo Depth
+provider: openai
+model: gpt-5.5
+model_parameters:
+  reasoning_effort: xhigh
+prompt_policy_digest: policy-digest-v1:higher-budget-repo-depth
+prompt_policy_reference: null
 tool_permissions:
-  filesystem:
-    read:
-      - "target_repository_checkout"
-      - "public_task_statement"
-      - "allowed_context_bundle"
-    write:
-      - "task_workspace"
-    forbidden:
-      - "private_reference_patch"
-      - "private_expected_results"
-      - "other_acut_outputs"
-  shell:
-    allowed: true
-    destructive_commands: false
-    package_install: false
-  git:
-    allowed:
-      - "status"
-      - "diff"
-      - "show"
-      - "log"
-    commit_allowed: false
-  code_editing:
-    allowed: true
-  browser:
-    allowed: false
+  filesystem: workspace-write
+  network: disabled
+  allowed_tools:
+  - filesystem:read
+  - filesystem:write
+  - shell
+  - code_edit
+  - git:status
+  - git:diff
+  - git:show
+  - git:log
 retrieval_context_strategy:
-  strategy_id: "repo-map-plus-verification"
+  strategy_id: repo-map-plus-verification
+  description: Map repository structure, inspect relevant history, then run at least one targeted and one broader verification command when available.
   allowed_sources:
-    - "public_task_statement"
-    - "repository README and contributor docs"
-    - "build and dependency manifests"
-    - "module entry points"
-    - "adjacent and integration tests"
-    - "callers and callees of touched symbols"
-    - "pre-cutoff git history relevant to touched files"
-  disallowed_sources:
-    - "private benchmark artifacts"
-    - "reference patches"
-    - "post-cutoff task anchors when runner marks them unavailable"
-  initial_context_budget_tokens: 80000
-  maximum_context_budget_tokens: 200000
-  repository_map: "deep"
-  search_policy: "Map repository structure, inspect relevant history, then run at least one targeted and one broader verification command when available."
+  - public_task_statement
+  - repository README and contributor docs
+  - build and dependency manifests
+  - module entry points
+  - adjacent and integration tests
+  - callers and callees of touched symbols
+  - pre-cutoff git history relevant to touched files
 runtime_budget:
-  wall_clock_minutes: 150
-  model_turns: 42
-  shell_commands: 140
-  test_commands: 24
-  verification_minutes: 45
+  max_wall_seconds: 9000
+  max_turns: 42
+  max_tokens: 200000
+  max_cost_usd: null
 network_policy:
-  default: "denied"
+  mode: disabled
   allowed_hosts: []
-  package_downloads: false
-execution_mode:
-  type: "non_interactive_codex_cli"
-  workspace: "fresh_task_worktree"
-  state_reset_between_tasks: true
-  private_artifacts_access: false
-  output_contract: "patch_plus_run_metadata"
-adapter_or_harness_basis:
-  adapter_id: "codex-cli-acut-adapter-v0"
-  harness_id: "core-narrative-runner-v0"
-  basis: "Experiment plan section 5 runner/verifier scaffold; exact script paths may be finalized by schema-toolsmith."
-  expected_inputs:
-    - "base repository checkout"
-    - "public task statement"
-    - "allowed context bundle"
-  expected_outputs:
-    - "unified diff"
-    - "run metadata"
-score_fields:
-  g_score: null
-  r_score: null
-  w_score: null
-  public_benchmark_score: null
-  general_benchmark_basis_id: "general_benchmark.yaml#pending"
+execution_mode: codex_cli
+adapter_or_harness_basis: codex-cli-acut-adapter-v0 + core-narrative-runner-v0; Experiment plan section 5 runner/verifier scaffold; exact script paths may be finalized by schema-toolsmith.
+frozen_at: '2026-04-28T09:38:54+08:00'
+operator: codex-cli-worker-acut-matrix
+notes: Higher-budget configuration for testing whether additional exploration and verification budget improves repository work more than general benchmark rank.
+metadata:
+  original_manifest_version: '0.1'
+  frozen: true
+  original_frozen_date: '2026-04-28'
+  operator_detail:
+    id: codex-cli-worker-acut-matrix
+    branch: codex/core-exp-acut-matrix
+    worktree: /Users/chenmohan/gits/barcarolle-wt-acut-matrix
+  prompt_policy_summary: Spend extra budget on architecture discovery, multiple candidate fixes, focused regression tests, and full verification before producing the final patch.
+  tool_permissions_detail:
+    filesystem:
+      read:
+      - target_repository_checkout
+      - public_task_statement
+      - allowed_context_bundle
+      write:
+      - task_workspace
+      forbidden:
+      - private_reference_patch
+      - private_expected_results
+      - other_acut_outputs
+    shell:
+      allowed: true
+      destructive_commands: false
+      package_install: false
+    git:
+      allowed:
+      - status
+      - diff
+      - show
+      - log
+      commit_allowed: false
+    code_editing:
+      allowed: true
+    browser:
+      allowed: false
+  retrieval_context_strategy_detail:
+    disallowed_sources:
+    - private benchmark artifacts
+    - reference patches
+    - post-cutoff task anchors when runner marks them unavailable
+    initial_context_budget_tokens: 80000
+    maximum_context_budget_tokens: 200000
+    repository_map: deep
+    search_policy: Map repository structure, inspect relevant history, then run at least one targeted and one broader verification command when available.
+  runtime_budget_detail:
+    wall_clock_minutes: 150
+    model_turns: 42
+    shell_commands: 140
+    test_commands: 24
+    verification_minutes: 45
+  network_policy_detail:
+    default: denied
+    allowed_hosts: []
+    package_downloads: false
+  execution_mode_detail:
+    type: non_interactive_codex_cli
+    workspace: fresh_task_worktree
+    state_reset_between_tasks: true
+    private_artifacts_access: false
+    output_contract: patch_plus_run_metadata
+  adapter_or_harness_detail:
+    adapter_id: codex-cli-acut-adapter-v0
+    harness_id: core-narrative-runner-v0
+    basis: Experiment plan section 5 runner/verifier scaffold; exact script paths may be finalized by schema-toolsmith.
+    expected_inputs:
+    - base repository checkout
+    - public task statement
+    - allowed context bundle
+    expected_outputs:
+    - unified diff
+    - run metadata
+  score_fields:
+    g_score: null
+    r_score: null
+    w_score: null
+    public_benchmark_score: null
+    general_benchmark_basis_id: general_benchmark.yaml#pending

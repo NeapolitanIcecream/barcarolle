@@ -1,90 +1,118 @@
-manifest_version: "0.1"
-acut_id: "general-benchmark-optimized"
-frozen: true
-frozen_date: "2026-04-28"
-operator:
-  id: "codex-cli-worker-acut-matrix"
-  branch: "codex/core-exp-acut-matrix"
-  worktree: "/Users/chenmohan/gits/barcarolle-wt-acut-matrix"
-purpose: "Benchmark-style configuration expected to be strong on short, self-contained coding tasks but less tuned to repository conventions."
-model:
-  provider: "openai"
-  name: "gpt-5.5"
-  reasoning_effort: "medium"
-prompt_or_policy_digest:
-  digest_id: "policy-digest-v1:general-benchmark-optimized"
-  summary: "Prioritize quick defect localization, concise patching, and direct test repair using benchmark-like assumptions; prefer local minimal changes over extended repository archaeology."
+schema_version: core-narrative.acut.v1
+acut_id: general-benchmark-optimized
+display_name: General Benchmark Optimized
+provider: openai
+model: gpt-5.5
+model_parameters:
+  reasoning_effort: medium
+prompt_policy_digest: policy-digest-v1:general-benchmark-optimized
+prompt_policy_reference: null
 tool_permissions:
-  filesystem:
-    read:
-      - "target_repository_checkout"
-      - "public_task_statement"
-      - "allowed_context_bundle"
-    write:
-      - "task_workspace"
-    forbidden:
-      - "private_reference_patch"
-      - "private_expected_results"
-      - "other_acut_outputs"
-  shell:
-    allowed: true
-    destructive_commands: false
-    package_install: false
-  git:
-    allowed:
-      - "status"
-      - "diff"
-      - "show"
-    commit_allowed: false
-  code_editing:
-    allowed: true
-  browser:
-    allowed: false
+  filesystem: workspace-write
+  network: disabled
+  allowed_tools:
+  - filesystem:read
+  - filesystem:write
+  - shell
+  - code_edit
+  - git:status
+  - git:diff
+  - git:show
 retrieval_context_strategy:
-  strategy_id: "benchmark-compact"
+  strategy_id: benchmark-compact
+  description: Start from the failing behavior and file names, then expand only to adjacent tests and direct imports.
   allowed_sources:
-    - "public_task_statement"
-    - "repository README and direct dependency manifests"
-    - "files matched by symbol or filename search"
-    - "test files adjacent to changed code"
-  disallowed_sources:
-    - "private benchmark artifacts"
-    - "reference patches"
-    - "manual review notes outside the public task packet"
-  initial_context_budget_tokens: 24000
-  maximum_context_budget_tokens: 64000
-  repository_map: "shallow"
-  search_policy: "Start from the failing behavior and file names, then expand only to adjacent tests and direct imports."
+  - public_task_statement
+  - repository README and direct dependency manifests
+  - files matched by symbol or filename search
+  - test files adjacent to changed code
 runtime_budget:
-  wall_clock_minutes: 60
-  model_turns: 18
-  shell_commands: 55
-  test_commands: 10
-  verification_minutes: 18
+  max_wall_seconds: 3600
+  max_turns: 18
+  max_tokens: 64000
+  max_cost_usd: null
 network_policy:
-  default: "denied"
+  mode: disabled
   allowed_hosts: []
-  package_downloads: false
-execution_mode:
-  type: "non_interactive_codex_cli"
-  workspace: "fresh_task_worktree"
-  state_reset_between_tasks: true
-  private_artifacts_access: false
-  output_contract: "patch_plus_run_metadata"
-adapter_or_harness_basis:
-  adapter_id: "codex-cli-acut-adapter-v0"
-  harness_id: "core-narrative-runner-v0"
-  basis: "Experiment plan section 5 runner/verifier scaffold; exact script paths may be finalized by schema-toolsmith."
-  expected_inputs:
-    - "base repository checkout"
-    - "public task statement"
-    - "allowed context bundle"
-  expected_outputs:
-    - "unified diff"
-    - "run metadata"
-score_fields:
-  g_score: null
-  r_score: null
-  w_score: null
-  public_benchmark_score: null
-  general_benchmark_basis_id: "general_benchmark.yaml#pending"
+execution_mode: codex_cli
+adapter_or_harness_basis: codex-cli-acut-adapter-v0 + core-narrative-runner-v0; Experiment plan section 5 runner/verifier scaffold; exact script paths may be finalized by schema-toolsmith.
+frozen_at: '2026-04-28T09:38:54+08:00'
+operator: codex-cli-worker-acut-matrix
+notes: Benchmark-style configuration expected to be strong on short, self-contained coding tasks but less tuned to repository conventions.
+metadata:
+  original_manifest_version: '0.1'
+  frozen: true
+  original_frozen_date: '2026-04-28'
+  operator_detail:
+    id: codex-cli-worker-acut-matrix
+    branch: codex/core-exp-acut-matrix
+    worktree: /Users/chenmohan/gits/barcarolle-wt-acut-matrix
+  prompt_policy_summary: Prioritize quick defect localization, concise patching, and direct test repair using benchmark-like assumptions; prefer local minimal changes over extended repository archaeology.
+  tool_permissions_detail:
+    filesystem:
+      read:
+      - target_repository_checkout
+      - public_task_statement
+      - allowed_context_bundle
+      write:
+      - task_workspace
+      forbidden:
+      - private_reference_patch
+      - private_expected_results
+      - other_acut_outputs
+    shell:
+      allowed: true
+      destructive_commands: false
+      package_install: false
+    git:
+      allowed:
+      - status
+      - diff
+      - show
+      commit_allowed: false
+    code_editing:
+      allowed: true
+    browser:
+      allowed: false
+  retrieval_context_strategy_detail:
+    disallowed_sources:
+    - private benchmark artifacts
+    - reference patches
+    - manual review notes outside the public task packet
+    initial_context_budget_tokens: 24000
+    maximum_context_budget_tokens: 64000
+    repository_map: shallow
+    search_policy: Start from the failing behavior and file names, then expand only to adjacent tests and direct imports.
+  runtime_budget_detail:
+    wall_clock_minutes: 60
+    model_turns: 18
+    shell_commands: 55
+    test_commands: 10
+    verification_minutes: 18
+  network_policy_detail:
+    default: denied
+    allowed_hosts: []
+    package_downloads: false
+  execution_mode_detail:
+    type: non_interactive_codex_cli
+    workspace: fresh_task_worktree
+    state_reset_between_tasks: true
+    private_artifacts_access: false
+    output_contract: patch_plus_run_metadata
+  adapter_or_harness_detail:
+    adapter_id: codex-cli-acut-adapter-v0
+    harness_id: core-narrative-runner-v0
+    basis: Experiment plan section 5 runner/verifier scaffold; exact script paths may be finalized by schema-toolsmith.
+    expected_inputs:
+    - base repository checkout
+    - public task statement
+    - allowed context bundle
+    expected_outputs:
+    - unified diff
+    - run metadata
+  score_fields:
+    g_score: null
+    r_score: null
+    w_score: null
+    public_benchmark_score: null
+    general_benchmark_basis_id: general_benchmark.yaml#pending

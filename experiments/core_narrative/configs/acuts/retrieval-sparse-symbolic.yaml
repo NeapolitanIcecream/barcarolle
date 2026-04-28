@@ -1,93 +1,121 @@
-manifest_version: "0.1"
-acut_id: "retrieval-sparse-symbolic"
-frozen: true
-frozen_date: "2026-04-28"
-operator:
-  id: "codex-cli-worker-acut-matrix"
-  branch: "codex/core-exp-acut-matrix"
-  worktree: "/Users/chenmohan/gits/barcarolle-wt-acut-matrix"
-purpose: "Retrieval variant that relies on sparse symbol and text search instead of preloaded broad context."
-model:
-  provider: "openai"
-  name: "gpt-5.5"
-  reasoning_effort: "high"
-prompt_or_policy_digest:
-  digest_id: "policy-digest-v1:retrieval-sparse-symbolic"
-  summary: "Use precise symbol, filename, and error-text retrieval to identify the smallest relevant context set; prefer call graph locality over broad documentation loading."
+schema_version: core-narrative.acut.v1
+acut_id: retrieval-sparse-symbolic
+display_name: Retrieval Sparse Symbolic
+provider: openai
+model: gpt-5.5
+model_parameters:
+  reasoning_effort: high
+prompt_policy_digest: policy-digest-v1:retrieval-sparse-symbolic
+prompt_policy_reference: null
 tool_permissions:
-  filesystem:
-    read:
-      - "target_repository_checkout"
-      - "public_task_statement"
-      - "allowed_context_bundle"
-    write:
-      - "task_workspace"
-    forbidden:
-      - "private_reference_patch"
-      - "private_expected_results"
-      - "other_acut_outputs"
-  shell:
-    allowed: true
-    destructive_commands: false
-    package_install: false
-  git:
-    allowed:
-      - "status"
-      - "diff"
-      - "show"
-    commit_allowed: false
-  code_editing:
-    allowed: true
-  browser:
-    allowed: false
+  filesystem: workspace-write
+  network: disabled
+  allowed_tools:
+  - filesystem:read
+  - filesystem:write
+  - shell
+  - code_edit
+  - git:status
+  - git:diff
+  - git:show
 retrieval_context_strategy:
-  strategy_id: "sparse-symbolic"
+  strategy_id: sparse-symbolic
+  description: Prefer ripgrep-style exact and regex searches, then inspect direct dependencies around each candidate file.
   allowed_sources:
-    - "public_task_statement"
-    - "symbol search results"
-    - "filename search results"
-    - "error text search results"
-    - "direct callers and callees"
-    - "adjacent tests"
-  disallowed_sources:
-    - "private benchmark artifacts"
-    - "reference patches"
-    - "full repository preload"
-    - "git history scan"
-  initial_context_budget_tokens: 32000
-  maximum_context_budget_tokens: 90000
-  repository_map: "symbolic"
-  search_policy: "Prefer ripgrep-style exact and regex searches, then inspect direct dependencies around each candidate file."
+  - public_task_statement
+  - symbol search results
+  - filename search results
+  - error text search results
+  - direct callers and callees
+  - adjacent tests
 runtime_budget:
-  wall_clock_minutes: 75
-  model_turns: 24
-  shell_commands: 80
-  test_commands: 12
-  verification_minutes: 22
+  max_wall_seconds: 4500
+  max_turns: 24
+  max_tokens: 90000
+  max_cost_usd: null
 network_policy:
-  default: "denied"
+  mode: disabled
   allowed_hosts: []
-  package_downloads: false
-execution_mode:
-  type: "non_interactive_codex_cli"
-  workspace: "fresh_task_worktree"
-  state_reset_between_tasks: true
-  private_artifacts_access: false
-  output_contract: "patch_plus_run_metadata"
-adapter_or_harness_basis:
-  adapter_id: "codex-cli-acut-adapter-v0"
-  harness_id: "core-narrative-runner-v0"
-  basis: "Experiment plan section 5 runner/verifier scaffold; exact script paths may be finalized by schema-toolsmith."
-  expected_inputs:
-    - "base repository checkout"
-    - "public task statement"
-    - "allowed context bundle"
-  expected_outputs:
-    - "unified diff"
-    - "run metadata"
-score_fields:
-  g_score: null
-  r_score: null
-  w_score: null
-  public_benchmark_score: null
-  general_benchmark_basis_id: "general_benchmark.yaml#pending"
+execution_mode: codex_cli
+adapter_or_harness_basis: codex-cli-acut-adapter-v0 + core-narrative-runner-v0; Experiment plan section 5 runner/verifier scaffold; exact script paths may be finalized by schema-toolsmith.
+frozen_at: '2026-04-28T09:38:54+08:00'
+operator: codex-cli-worker-acut-matrix
+notes: Retrieval variant that relies on sparse symbol and text search instead of preloaded broad context.
+metadata:
+  original_manifest_version: '0.1'
+  frozen: true
+  original_frozen_date: '2026-04-28'
+  operator_detail:
+    id: codex-cli-worker-acut-matrix
+    branch: codex/core-exp-acut-matrix
+    worktree: /Users/chenmohan/gits/barcarolle-wt-acut-matrix
+  prompt_policy_summary: Use precise symbol, filename, and error-text retrieval to identify the smallest relevant context set; prefer call graph locality over broad documentation loading.
+  tool_permissions_detail:
+    filesystem:
+      read:
+      - target_repository_checkout
+      - public_task_statement
+      - allowed_context_bundle
+      write:
+      - task_workspace
+      forbidden:
+      - private_reference_patch
+      - private_expected_results
+      - other_acut_outputs
+    shell:
+      allowed: true
+      destructive_commands: false
+      package_install: false
+    git:
+      allowed:
+      - status
+      - diff
+      - show
+      commit_allowed: false
+    code_editing:
+      allowed: true
+    browser:
+      allowed: false
+  retrieval_context_strategy_detail:
+    disallowed_sources:
+    - private benchmark artifacts
+    - reference patches
+    - full repository preload
+    - git history scan
+    initial_context_budget_tokens: 32000
+    maximum_context_budget_tokens: 90000
+    repository_map: symbolic
+    search_policy: Prefer ripgrep-style exact and regex searches, then inspect direct dependencies around each candidate file.
+  runtime_budget_detail:
+    wall_clock_minutes: 75
+    model_turns: 24
+    shell_commands: 80
+    test_commands: 12
+    verification_minutes: 22
+  network_policy_detail:
+    default: denied
+    allowed_hosts: []
+    package_downloads: false
+  execution_mode_detail:
+    type: non_interactive_codex_cli
+    workspace: fresh_task_worktree
+    state_reset_between_tasks: true
+    private_artifacts_access: false
+    output_contract: patch_plus_run_metadata
+  adapter_or_harness_detail:
+    adapter_id: codex-cli-acut-adapter-v0
+    harness_id: core-narrative-runner-v0
+    basis: Experiment plan section 5 runner/verifier scaffold; exact script paths may be finalized by schema-toolsmith.
+    expected_inputs:
+    - base repository checkout
+    - public task statement
+    - allowed context bundle
+    expected_outputs:
+    - unified diff
+    - run metadata
+  score_fields:
+    g_score: null
+    r_score: null
+    w_score: null
+    public_benchmark_score: null
+    general_benchmark_basis_id: general_benchmark.yaml#pending

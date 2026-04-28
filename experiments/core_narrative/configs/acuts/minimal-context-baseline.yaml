@@ -1,88 +1,116 @@
-manifest_version: "0.1"
-acut_id: "minimal-context-baseline"
-frozen: true
-frozen_date: "2026-04-28"
-operator:
-  id: "codex-cli-worker-acut-matrix"
-  branch: "codex/core-exp-acut-matrix"
-  worktree: "/Users/chenmohan/gits/barcarolle-wt-acut-matrix"
-purpose: "Minimal-context baseline for measuring how much repository-specific context changes R_score and W_score."
-model:
-  provider: "openai"
-  name: "gpt-5.4-mini"
-  reasoning_effort: "low"
-prompt_or_policy_digest:
-  digest_id: "policy-digest-v1:minimal-context-baseline"
-  summary: "Solve from the public task statement, immediate local files discovered during the task, and test output only; avoid broad repository exploration unless a failing command points to it."
+schema_version: core-narrative.acut.v1
+acut_id: minimal-context-baseline
+display_name: Minimal Context Baseline
+provider: openai
+model: gpt-5.4-mini
+model_parameters:
+  reasoning_effort: low
+prompt_policy_digest: policy-digest-v1:minimal-context-baseline
+prompt_policy_reference: null
 tool_permissions:
-  filesystem:
-    read:
-      - "target_repository_checkout"
-      - "public_task_statement"
-    write:
-      - "task_workspace"
-    forbidden:
-      - "private_reference_patch"
-      - "private_expected_results"
-      - "other_acut_outputs"
-  shell:
-    allowed: true
-    destructive_commands: false
-    package_install: false
-  git:
-    allowed:
-      - "status"
-      - "diff"
-      - "show"
-    commit_allowed: false
-  code_editing:
-    allowed: true
-  browser:
-    allowed: false
+  filesystem: workspace-write
+  network: disabled
+  allowed_tools:
+  - filesystem:read
+  - filesystem:write
+  - shell
+  - code_edit
+  - git:status
+  - git:diff
+  - git:show
 retrieval_context_strategy:
-  strategy_id: "minimal-local"
+  strategy_id: minimal-local
+  description: Use targeted file reads and narrow text search only after an observed failure or named symbol.
   allowed_sources:
-    - "public_task_statement"
-    - "files explicitly named in task statement"
-    - "files surfaced by failing tests or compiler errors"
-  disallowed_sources:
-    - "private benchmark artifacts"
-    - "reference patches"
-    - "full repository history scan"
-  initial_context_budget_tokens: 12000
-  maximum_context_budget_tokens: 32000
-  repository_map: "none"
-  search_policy: "Use targeted file reads and narrow text search only after an observed failure or named symbol."
+  - public_task_statement
+  - files explicitly named in task statement
+  - files surfaced by failing tests or compiler errors
 runtime_budget:
-  wall_clock_minutes: 35
-  model_turns: 12
-  shell_commands: 30
-  test_commands: 6
-  verification_minutes: 10
+  max_wall_seconds: 2100
+  max_turns: 12
+  max_tokens: 32000
+  max_cost_usd: null
 network_policy:
-  default: "denied"
+  mode: disabled
   allowed_hosts: []
-  package_downloads: false
-execution_mode:
-  type: "non_interactive_codex_cli"
-  workspace: "fresh_task_worktree"
-  state_reset_between_tasks: true
-  private_artifacts_access: false
-  output_contract: "patch_plus_run_metadata"
-adapter_or_harness_basis:
-  adapter_id: "codex-cli-acut-adapter-v0"
-  harness_id: "core-narrative-runner-v0"
-  basis: "Experiment plan section 5 runner/verifier scaffold; exact script paths may be finalized by schema-toolsmith."
-  expected_inputs:
-    - "base repository checkout"
-    - "public task statement"
-    - "allowed context bundle"
-  expected_outputs:
-    - "unified diff"
-    - "run metadata"
-score_fields:
-  g_score: null
-  r_score: null
-  w_score: null
-  public_benchmark_score: null
-  general_benchmark_basis_id: "general_benchmark.yaml#pending"
+execution_mode: codex_cli
+adapter_or_harness_basis: codex-cli-acut-adapter-v0 + core-narrative-runner-v0; Experiment plan section 5 runner/verifier scaffold; exact script paths may be finalized by schema-toolsmith.
+frozen_at: '2026-04-28T09:38:54+08:00'
+operator: codex-cli-worker-acut-matrix
+notes: Minimal-context baseline for measuring how much repository-specific context changes R_score and W_score.
+metadata:
+  original_manifest_version: '0.1'
+  frozen: true
+  original_frozen_date: '2026-04-28'
+  operator_detail:
+    id: codex-cli-worker-acut-matrix
+    branch: codex/core-exp-acut-matrix
+    worktree: /Users/chenmohan/gits/barcarolle-wt-acut-matrix
+  prompt_policy_summary: Solve from the public task statement, immediate local files discovered during the task, and test output only; avoid broad repository exploration unless a failing command points to it.
+  tool_permissions_detail:
+    filesystem:
+      read:
+      - target_repository_checkout
+      - public_task_statement
+      write:
+      - task_workspace
+      forbidden:
+      - private_reference_patch
+      - private_expected_results
+      - other_acut_outputs
+    shell:
+      allowed: true
+      destructive_commands: false
+      package_install: false
+    git:
+      allowed:
+      - status
+      - diff
+      - show
+      commit_allowed: false
+    code_editing:
+      allowed: true
+    browser:
+      allowed: false
+  retrieval_context_strategy_detail:
+    disallowed_sources:
+    - private benchmark artifacts
+    - reference patches
+    - full repository history scan
+    initial_context_budget_tokens: 12000
+    maximum_context_budget_tokens: 32000
+    repository_map: none
+    search_policy: Use targeted file reads and narrow text search only after an observed failure or named symbol.
+  runtime_budget_detail:
+    wall_clock_minutes: 35
+    model_turns: 12
+    shell_commands: 30
+    test_commands: 6
+    verification_minutes: 10
+  network_policy_detail:
+    default: denied
+    allowed_hosts: []
+    package_downloads: false
+  execution_mode_detail:
+    type: non_interactive_codex_cli
+    workspace: fresh_task_worktree
+    state_reset_between_tasks: true
+    private_artifacts_access: false
+    output_contract: patch_plus_run_metadata
+  adapter_or_harness_detail:
+    adapter_id: codex-cli-acut-adapter-v0
+    harness_id: core-narrative-runner-v0
+    basis: Experiment plan section 5 runner/verifier scaffold; exact script paths may be finalized by schema-toolsmith.
+    expected_inputs:
+    - base repository checkout
+    - public task statement
+    - allowed context bundle
+    expected_outputs:
+    - unified diff
+    - run metadata
+  score_fields:
+    g_score: null
+    r_score: null
+    w_score: null
+    public_benchmark_score: null
+    general_benchmark_basis_id: general_benchmark.yaml#pending
