@@ -1,7 +1,7 @@
 # Core Narrative Experiment Coordinator
 
-status: task_manifests_running
-updated: 2026-04-28T15:26:31+08:00
+status: task_manifests_review_running
+updated: 2026-04-28T15:48:33+08:00
 phase: Phase 0 - Experiment Bootstrap
 base_commit: 47046e7754d2402b7177a4b80f631ab6b0bcd97c
 coordinator_repo: /Users/chenmohan/gits/barcarolle
@@ -35,11 +35,12 @@ Execute `docs/experiments/core-narrative-experiment-plan.md` with tmux-managed C
 | general-benchmark-lock | Pre-run lock | delivered; worker commit `88acbad`, integrated as `d9f8f8e` | exited | codex/core-exp-general-lock | /Users/chenmohan/gits/barcarolle-wt-general-lock | `experiments/core_narrative/configs/general_benchmark.yaml`, `experiments/core_narrative/reports/general_benchmark_notes.md` |
 | pre-run-lock-reviewer | Pre-run lock review | delivered; no_issues; worker commit `9c1c9a7`, integrated as `13404bc` | exited | codex/core-exp-pre-run-lock-reviewer | /Users/chenmohan/gits/barcarolle-wt-pre-run-lock-reviewer | `.codex-workflows/core-narrative-experiment/reviews/pre-run-locks-review.md` |
 | execution-planner | Execution planning | delivered; run manifest prepared | exited | codex/core-narrative-experiment | /Users/chenmohan/gits/barcarolle | `experiments/core_narrative/configs/core_subset_run_manifest.yaml` |
-| task-manifests | No-model preflight | session_running; process initialized | bcx-task-manifests | codex/core-exp-task-manifests | /Users/chenmohan/gits/barcarolle-wt-task-manifests | `experiments/core_narrative/configs/tasks/**`, `experiments/core_narrative/reports/task_manifest_notes.md` |
+| task-manifests | No-model preflight | delivered; worker commit `1cdcbba`; awaiting focused review | exited | codex/core-exp-task-manifests | /Users/chenmohan/gits/barcarolle-wt-task-manifests | `experiments/core_narrative/configs/tasks/**`, `experiments/core_narrative/reports/task_manifest_notes.md` |
+| task-manifests-reviewer | No-model preflight review | session_running; started focused review at commit `57736fa` | bcx-task-manifests-reviewer | codex/core-exp-task-manifests-reviewer | /Users/chenmohan/gits/barcarolle-wt-task-manifests-reviewer | `.codex-workflows/core-narrative-experiment/reviews/task-manifests-review.md`, `.codex-workflows/core-narrative-experiment/workers/task-manifests-reviewer/process.md` |
 
 ## Active Tmux Sessions
 
-- `bcx-task-manifests`
+- `bcx-task-manifests-reviewer`
 
 ## Decisions
 
@@ -85,6 +86,8 @@ None currently recorded. Broad ACUT execution has not been started.
 - Non-secret execution-start preflight recorded at `2026-04-28T15:02:08+08:00`: `BARCAROLLE_LLM_API_KEY` present, `BARCAROLLE_LLM_BASE_URL` present, and `experiments/core_narrative/results/cost_ledger.jsonl` exists and is writable. Values were not printed or recorded.
 - Prepared `experiments/core_narrative/configs/core_subset_run_manifest.yaml` without starting broad ACUT execution or model calls.
 - Started `task-manifests` to prepare concrete 8 `RBench` and 6 `RWork` task manifests plus no-model-call preflights.
+- `task-manifests` delivered concrete 8 `RBench` and 6 `RWork` manifests for focused review. Broad ACUT execution and model calls remain not started.
+- Started focused `task-manifests-reviewer` before integrating task manifests.
 
 ## Pre-Run Gates
 
@@ -122,4 +125,4 @@ None currently recorded. Broad ACUT execution has not been started.
 
 ## Next Heartbeat Action
 
-Read `task-manifests` `process.md`. If delivered, start focused review before integration. If blocked, record the blocker and notify only if user input is required. Do not start broad ACUT execution or model calls until the coordinator explicitly records execution start. Do not inspect `cli.log` unless debugging is explicitly requested.
+Read `task-manifests-reviewer` `process.md`. If delivered with `no_issues`, integrate the reviewed task-manifests artifacts and review before any execution-start record. If issues are found, start a focused revision. If blocked, record the blocker and notify only if user input is required. Do not start broad ACUT execution or model calls until the coordinator explicitly records execution start. Do not inspect `cli.log` unless debugging is explicitly requested.
