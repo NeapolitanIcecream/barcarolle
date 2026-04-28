@@ -18,8 +18,16 @@ from _common import (
     iso_now,
     load_manifest,
     require_keys,
-    run_to_artifacts,
     slug,
+)
+from _llm_budget import (
+    DEFAULT_LEDGER_PATH,
+    ensure_no_required_env_values,
+    gate_exit_code,
+    gate_payload,
+    llm_safe_subprocess_env,
+    parse_usd,
+    run_to_redacted_artifacts,
 )
 
 
@@ -43,6 +51,19 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--patch-path", help="Patch output path. Defaults under --artifact-dir.")
     parser.add_argument("--output", help="Optional path for the structured JSON summary.")
     parser.add_argument("--timeout-seconds", type=int, help="Timeout for the ACUT command.")
+    parser.add_argument(
+        "--llm-ledger",
+        default=str(DEFAULT_LEDGER_PATH),
+        help="Cost ledger JSONL path that must exist and be writable before ACUT execution.",
+    )
+    parser.add_argument(
+        "--projected-cost-usd",
+        help="Conservative projected cost for this ACUT patch-generation attempt.",
+    )
+    parser.add_argument(
+        "--coordinator-decision-ref",
+        help="Reference to an explicit coordinator approval for soft-stop, rerun, or non-core ACUT execution.",
+    )
     parser.add_argument("command", nargs=argparse.REMAINDER, help="Command to run after --.")
     return parser.parse_args()
 
@@ -97,15 +118,33 @@ def main() -> int:
         stderr_path = artifact_dir / "agent.stderr.txt"
         patch_path = Path(args.patch_path) if args.patch_path else artifact_dir / "submission.patch"
         command = command_from_args(args.command)
+        ensure_no_required_env_values(command, os.environ)
+        projected_cost_usd = parse_usd(args.projected_cost_usd, "--projected-cost-usd")
+        budget_gate = gate_payload(
+            ledger_path=Path(args.llm_ledger),
+            projected_cost_usd=projected_cost_usd,
+            coordinator_decision_ref=args.coordinator_decision_ref,
+            acut_id=acut_id,
+            split=str(task["split"]),
+            attempt=args.attempt,
+            env=os.environ,
+        )
+        if budget_gate["status"] != "passed":
+            raise ToolError(
+                "LLM budget gate blocked ACUT execution",
+                exit_code=gate_exit_code(budget_gate),
+                gate=budget_gate,
+            )
+        acut_env, scrubbed_env_var_count = llm_safe_subprocess_env(os.environ)
 
         started_at = iso_now()
-        run = run_to_artifacts(
+        run = run_to_redacted_artifacts(
             command,
             cwd=workspace,
             timeout_seconds=args.timeout_seconds,
             stdout_path=stdout_path,
             stderr_path=stderr_path,
-            env=os.environ.copy(),
+            env=acut_env,
         )
         finished_at = iso_now()
         write_patch(workspace, patch_path)
@@ -129,6 +168,12 @@ def main() -> int:
             "finished_at": finished_at,
             "workspace": str(workspace),
             "command": command,
+            "llm_budget_gate": budget_gate,
+            "credential_env_policy": {
+                "allowed_llm_env_vars": ["BARCAROLLE_LLM_API_KEY", "BARCAROLLE_LLM_BASE_URL"],
+                "scrubbed_secret_like_env_var_count": scrubbed_env_var_count,
+                "captured_artifacts_redacted": True,
+            },
             "agent": {
                 "exit_code": run["exit_code"],
                 "duration_seconds": run["duration_seconds"],
