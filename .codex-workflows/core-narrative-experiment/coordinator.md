@@ -1,7 +1,7 @@
 # Core Narrative Experiment Coordinator
 
-status: execution_planning_gate_ready
-updated: 2026-04-28T15:02:08+08:00
+status: core_subset_run_manifest_prepared
+updated: 2026-04-28T15:13:51+08:00
 phase: Phase 0 - Experiment Bootstrap
 base_commit: 47046e7754d2402b7177a4b80f631ab6b0bcd97c
 coordinator_repo: /Users/chenmohan/gits/barcarolle
@@ -34,6 +34,7 @@ Execute `docs/experiments/core-narrative-experiment-plan.md` with tmux-managed C
 | repo-runtime-lock | Pre-run lock | delivered; worker commit `029fbdf`, integrated as `08064a5` | exited | codex/core-exp-repo-runtime-lock | /Users/chenmohan/gits/barcarolle-wt-repo-runtime-lock | `experiments/core_narrative/configs/target_repositories.yaml`, `experiments/core_narrative/reports/repo_scout_notes.md` |
 | general-benchmark-lock | Pre-run lock | delivered; worker commit `88acbad`, integrated as `d9f8f8e` | exited | codex/core-exp-general-lock | /Users/chenmohan/gits/barcarolle-wt-general-lock | `experiments/core_narrative/configs/general_benchmark.yaml`, `experiments/core_narrative/reports/general_benchmark_notes.md` |
 | pre-run-lock-reviewer | Pre-run lock review | delivered; no_issues; worker commit `9c1c9a7`, integrated as `13404bc` | exited | codex/core-exp-pre-run-lock-reviewer | /Users/chenmohan/gits/barcarolle-wt-pre-run-lock-reviewer | `.codex-workflows/core-narrative-experiment/reviews/pre-run-locks-review.md` |
+| execution-planner | Execution planning | delivered; run manifest prepared | exited | codex/core-narrative-experiment | /Users/chenmohan/gits/barcarolle | `experiments/core_narrative/configs/core_subset_run_manifest.yaml` |
 
 ## Active Tmux Sessions
 
@@ -81,6 +82,7 @@ None currently recorded. Broad ACUT execution has not been started.
 - Integrated the reviewed pre-run lock commits and review artifact.
 - Broad ACUT execution has not been started; execution planning gate is ready for the budget-constrained core subset.
 - Non-secret execution-start preflight recorded at `2026-04-28T15:02:08+08:00`: `BARCAROLLE_LLM_API_KEY` present, `BARCAROLLE_LLM_BASE_URL` present, and `experiments/core_narrative/results/cost_ledger.jsonl` exists and is writable. Values were not printed or recorded.
+- Prepared `experiments/core_narrative/configs/core_subset_run_manifest.yaml` without starting broad ACUT execution or model calls.
 
 ## Pre-Run Gates
 
@@ -106,7 +108,8 @@ None currently recorded. Broad ACUT execution has not been started.
   - attempts: one primary attempt per ACUT/task
 - deferred_acuts: `higher-budget-repo-depth`, `retrieval-history-augmented`, `minimal-context-baseline`
 - broad_execution_started: false
-- next_allowed_step: prepare execution plan/run manifest and any no-model-call preflight checks; do not start model calls until the coordinator records explicit execution start.
+- run_manifest: `experiments/core_narrative/configs/core_subset_run_manifest.yaml`
+- next_allowed_step: prepare concrete RBench/RWork task manifests and any no-model-call preflight checks; do not start model calls until the coordinator records explicit execution start.
 
 ## Acceptance Gate
 
@@ -117,4 +120,4 @@ None currently recorded. Broad ACUT execution has not been started.
 
 ## Next Heartbeat Action
 
-Prepare an execution plan/run manifest for the budget-constrained core subset and any no-model-call preflight checks. Do not start broad ACUT execution or model calls until the coordinator explicitly records execution start. Do not inspect `cli.log` unless debugging is explicitly requested.
+Prepare concrete RBench/RWork task manifests and any no-model-call preflight checks for the locked target repository and six locked `G_score` IDs. Do not start broad ACUT execution or model calls until the coordinator explicitly records execution start. Do not inspect `cli.log` unless debugging is explicitly requested.

@@ -1,0 +1,85 @@
+id: core_subset_budget_constrained_v1
+status: prepared_not_started
+prepared_at: "2026-04-28T15:13:51+08:00"
+owner: coordinator
+
+execution_start:
+  recorded: false
+  broad_acut_execution_started: false
+  model_calls_allowed: false
+  required_before_start:
+    - coordinator records explicit execution start
+    - required LLM environment variables are present
+    - cost ledger exists and is writable
+    - projected spend does not exceed hard cap
+    - every ACUT model call or patch-generation attempt appends a cost ledger record
+
+llm_access:
+  allowed_environment_variables:
+    api_key: BARCAROLLE_LLM_API_KEY
+    base_url: BARCAROLLE_LLM_BASE_URL
+  record_values: false
+  redaction_required: true
+  credential_values_must_not_be_persisted: true
+
+budget:
+  currency: USD
+  soft_stop: 240
+  hard_cap: 300
+  behavior:
+    missing_required_environment: block_before_acut_command
+    missing_or_unwritable_ledger: block_before_acut_command
+    projected_hard_cap_overflow: block_before_acut_command
+    projected_soft_stop_reached: requires_coordinator_approval
+
+ledger:
+  path: experiments/core_narrative/results/cost_ledger.jsonl
+  required_fields:
+    - run_id
+    - acut_id
+    - task_id
+    - split
+    - attempt
+    - event
+    - input_tokens
+    - output_tokens
+    - estimated_cost_usd
+    - cumulative_estimated_cost_usd
+
+active_default_slice:
+  acuts:
+    - general-benchmark-optimized
+    - repo-context-heavy
+    - retrieval-sparse-symbolic
+    - lower-budget-fast-path
+  deferred_acuts:
+    - higher-budget-repo-depth
+    - retrieval-history-augmented
+    - minimal-context-baseline
+  tasks:
+    G_score: 6
+    RBench: 8
+    RWork: 6
+  attempts:
+    primary_per_acut_task: 1
+    optional_extra_attempts_allowed: false
+  total_primary_patch_generation_attempts: 80
+
+locked_inputs:
+  target_repository:
+    repository: pallets/click
+    commit: 8bd8b4a074c55c03b6eb5666edc44a9c43df38a2
+    local_checkout_cache: experiments/core_narrative/external_repos/click
+    runtime: Python 3.12.12 via uv
+  general_benchmark:
+    dataset_id: ScaleAI/SWE-bench_Pro
+    revision: 7ab5114912baf22bb098818e604c02fe7ad2c11f
+    parquet_sha256: c8cd7115496ad4e9a8b21d088cef576a65bf821bb542b24336f13f714cef13f8
+    locked_task_count: 6
+    locked_task_ids_source: experiments/core_narrative/configs/general_benchmark.yaml
+
+next_no_model_preflights:
+  - build or verify concrete RBench and RWork task manifests for the locked target repository
+  - run any task packaging validation without model calls
+  - run gold-patch or infrastructure smoke checks before scored ACUT runs where applicable
+  - dry-run cost ledger append with synthetic safe values only if needed
