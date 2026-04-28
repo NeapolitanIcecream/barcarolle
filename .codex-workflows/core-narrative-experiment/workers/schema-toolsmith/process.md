@@ -1,11 +1,11 @@
 # Process
 
 status: delivered
-updated: 2026-04-28T10:07:59+08:00
+updated: 2026-04-28T10:40:02+08:00
 
 ## Summary
 
-Delivered review-feedback-1 revisions. `prepare_workspace.py` now builds ACUT workspaces from a base-commit tree archive into a fresh synthetic Git repository, so post-base refs and target commit objects are not visible. ACUT and run-result schemas are aligned to the reviewed minimal contracts, and dependency-light leakage and ACUT validation self-checks are available.
+Implemented and self-checked review-feedback-2 closure. `acut.schema.json` and `validate_acut_manifest.py` now accept non-empty scalar strings or objects for `execution_mode` and `adapter_or_harness_basis`; scalar strings are documented as the canonical compact Phase 0 form and objects remain allowed for later richer harness metadata. Coordinator resolved the commit blocker by staging and committing the owned changes from the coordinator environment.
 
 ## Owned Paths
 
@@ -21,6 +21,12 @@ Delivered review-feedback-1 revisions. `prepare_workspace.py` now builds ACUT wo
 - Inspected `.codex-workflows/core-narrative-experiment/shared/worker-contract.md`
 - Inspected `.codex-workflows/core-narrative-experiment/workers/schema-toolsmith/review-feedback-1.md`
 - Inspected delivered ACUT manifests in `/Users/chenmohan/gits/barcarolle-wt-acut-matrix/experiments/core_narrative/configs/acuts/` for shape compatibility only; no edits made there
+- Inspected review-feedback-2 and prior `/Users/chenmohan/gits/barcarolle/.codex-workflows/core-narrative-experiment/reviews/wave0-r1-review.md`
+- Inspected current `experiments/core_narrative/schemas/acut.schema.json` and `experiments/core_narrative/tools/validate_acut_manifest.py`
+- Reproduced the remaining ACUT validator mismatch against `/Users/chenmohan/gits/barcarolle-wt-acut-matrix/experiments/core_narrative/configs/acuts`: `invalid_count: 7`, only `execution_mode` and `adapter_or_harness_basis` object-vs-scalar errors
+- Modified `experiments/core_narrative/schemas/acut.schema.json` to allow non-empty string or object values for `execution_mode` and `adapter_or_harness_basis`
+- Modified `experiments/core_narrative/tools/validate_acut_manifest.py` to accept non-empty strings or objects for those fields, with self-check coverage for compact strings, richer objects, empty strings, and non-string/non-object values
+- Updated this process file for revision 2 state and self-check results
 - Added `experiments/core_narrative/tools/check_workspace_leakage.py`
 - Added `experiments/core_narrative/tools/validate_acut_manifest.py`
 - Modified `experiments/core_narrative/tools/prepare_workspace.py`
@@ -29,7 +35,7 @@ Delivered review-feedback-1 revisions. `prepare_workspace.py` now builds ACUT wo
 
 ## Current Blockers
 
-None.
+None. Previous commit blocker was resolved by the coordinator.
 
 ## Git State
 
@@ -45,6 +51,24 @@ pre-commit status:
 - Untracked coordinator-provided revision files remain unstaged: `review-feedback-1.md`, `revision-prompt-1.md`, `run_revision_1.sh`
 final state after commit: owned tracked revision changes committed on `codex/core-exp-schema-toolsmith`; coordinator-provided untracked revision files intentionally not committed
 
+revision-2 start status:
+- branch: `codex/core-exp-schema-toolsmith`
+- worktree: `/Users/chenmohan/gits/barcarolle-wt-schema-toolsmith`
+- untracked coordinator-provided files present: `review-feedback-1.md`, `review-feedback-2.md`, `revision-prompt-1.md`, `revision-prompt-2.md`, `run_revision_1.sh`, `run_revision_2.sh`
+- no tracked modifications before updating this process file
+
+revision-2 pre-commit status:
+- branch: `codex/core-exp-schema-toolsmith`
+- worktree: `/Users/chenmohan/gits/barcarolle-wt-schema-toolsmith`
+- modified owned files: `process.md`, `experiments/core_narrative/schemas/acut.schema.json`, `experiments/core_narrative/tools/validate_acut_manifest.py`
+- untracked coordinator-provided revision files remain unstaged: `review-feedback-1.md`, `review-feedback-2.md`, `revision-prompt-1.md`, `revision-prompt-2.md`, `run_revision_1.sh`, `run_revision_2.sh`
+- no edits made in `/Users/chenmohan/gits/barcarolle-wt-acut-matrix`
+
+revision-2 delivery status:
+- branch: `codex/core-exp-schema-toolsmith`
+- worktree: `/Users/chenmohan/gits/barcarolle-wt-schema-toolsmith`
+- owned modifications were committed by the coordinator after self-checks passed
+
 ## Handoff
 
 Self-checks passed:
@@ -58,4 +82,13 @@ Self-checks passed:
 
 Leakage self-check result: passed with one synthetic workspace commit and one local ref; the supplied target commit was absent from refs, the object database, reachable history, and the ACUT-visible task package.
 
-Validation note: the inspected ACUT matrix manifests currently use the pre-review nested `model`/`operator` shape and `frozen_date`/`prompt_or_policy_digest` names. They were not edited in this worktree; `validate_acut_manifest.py` is ready for the ACUT matrix worker to run after those manifests are revised to the canonical top-level contract.
+Revision 2 self-checks passed:
+- `PYTHONPYCACHEPREFIX=/tmp/barcarolle-core-narrative-pycache-r2-pre python3 experiments/core_narrative/tools/validate_acut_manifest.py /Users/chenmohan/gits/barcarolle-wt-acut-matrix/experiments/core_narrative/configs/acuts` reproduced the prior failure: `invalid_count: 7`
+- `for f in experiments/core_narrative/schemas/*.schema.json; do python3 -m json.tool "$f" >/tmp/$(basename "$f").r2.pretty.json; done`
+- `PYTHONPYCACHEPREFIX=/tmp/barcarolle-core-narrative-pycache-r2 python3 -m py_compile experiments/core_narrative/tools/*.py`
+- `PYTHONPYCACHEPREFIX=/tmp/barcarolle-core-narrative-pycache-r2 python3 experiments/core_narrative/tools/validate_acut_manifest.py --self-check` passed with `manifest_count: 3`, `invalid_count: 0`
+- `PYTHONPYCACHEPREFIX=/tmp/barcarolle-core-narrative-pycache-r2 python3 experiments/core_narrative/tools/validate_acut_manifest.py /Users/chenmohan/gits/barcarolle-wt-acut-matrix/experiments/core_narrative/configs/acuts` passed with `manifest_count: 7`, `invalid_count: 0`
+- `PYTHONPYCACHEPREFIX=/tmp/barcarolle-core-narrative-pycache-r2 python3 experiments/core_narrative/tools/check_workspace_leakage.py` passed; target commit absent from refs, object database, reachable history, and task package
+- `git diff --check`
+
+Revision 2 handoff: the ACUT matrix manifests validate from this tool without editing the ACUT matrix worktree. The commit blocker has been resolved.

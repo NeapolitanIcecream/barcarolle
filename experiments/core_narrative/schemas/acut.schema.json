@@ -16,6 +16,18 @@
     "freeform_object": {
       "type": "object",
       "additionalProperties": true
+    },
+    "compact_string_or_freeform_object": {
+      "description": "Phase 0 manifests use a non-empty scalar string as the canonical compact form; objects remain allowed for later richer harness metadata.",
+      "oneOf": [
+        {
+          "type": "string",
+          "minLength": 1
+        },
+        {
+          "$ref": "#/$defs/freeform_object"
+        }
+      ]
     }
   },
   "properties": {
@@ -76,10 +88,10 @@
       "$ref": "#/$defs/freeform_object"
     },
     "execution_mode": {
-      "$ref": "#/$defs/freeform_object"
+      "$ref": "#/$defs/compact_string_or_freeform_object"
     },
     "adapter_or_harness_basis": {
-      "$ref": "#/$defs/freeform_object"
+      "$ref": "#/$defs/compact_string_or_freeform_object"
     },
     "frozen_at": {
       "type": "string",
