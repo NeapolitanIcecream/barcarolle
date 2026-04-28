@@ -1,7 +1,7 @@
 # Core Narrative Experiment Coordinator
 
-status: pre_run_locks_review_running
-updated: 2026-04-28T14:35:56+08:00
+status: pre_run_locks_integrated
+updated: 2026-04-28T14:48:40+08:00
 phase: Phase 0 - Experiment Bootstrap
 base_commit: 47046e7754d2402b7177a4b80f631ab6b0bcd97c
 coordinator_repo: /Users/chenmohan/gits/barcarolle
@@ -31,13 +31,13 @@ Execute `docs/experiments/core-narrative-experiment-plan.md` with tmux-managed C
 | wave0-r4-reviewer | Wave 0 revision review | delivered; issues_found; worker commit `b5312b5`, integrated as `4b767bd` | exited | codex/core-exp-wave0-r4-reviewer | /Users/chenmohan/gits/barcarolle-wt-wave0-r4-reviewer | `.codex-workflows/core-narrative-experiment/reviews/wave0-r4-review.md` |
 | schema-toolsmith-r5 | Revised-plan gate tooling | delivered; worker commits `df16bdb`, `11ce367`, integrated as `3b14e8a`, `a3c90f9` | exited | codex/core-exp-schema-toolsmith | /Users/chenmohan/gits/barcarolle-wt-schema-toolsmith | `experiments/core_narrative/tools/**` |
 | wave0-r5-reviewer | Wave 0 revision review | delivered; no_issues; worker commit `386a6e1`, integrated as `1d07e2e` | exited | codex/core-exp-wave0-r5-reviewer | /Users/chenmohan/gits/barcarolle-wt-wave0-r5-reviewer | `.codex-workflows/core-narrative-experiment/reviews/wave0-r5-review.md` |
-| repo-runtime-lock | Pre-run lock | delivered; worker commit `029fbdf`, review pending | exited | codex/core-exp-repo-runtime-lock | /Users/chenmohan/gits/barcarolle-wt-repo-runtime-lock | `experiments/core_narrative/configs/target_repositories.yaml`, `experiments/core_narrative/reports/repo_scout_notes.md` |
-| general-benchmark-lock | Pre-run lock | delivered; worker commit `88acbad`, review pending | exited | codex/core-exp-general-lock | /Users/chenmohan/gits/barcarolle-wt-general-lock | `experiments/core_narrative/configs/general_benchmark.yaml`, `experiments/core_narrative/reports/general_benchmark_notes.md` |
-| pre-run-lock-reviewer | Pre-run lock review | session_running; process initialized | bcx-pre-run-lock-reviewer | codex/core-exp-pre-run-lock-reviewer | /Users/chenmohan/gits/barcarolle-wt-pre-run-lock-reviewer | `.codex-workflows/core-narrative-experiment/reviews/pre-run-locks-review.md` |
+| repo-runtime-lock | Pre-run lock | delivered; worker commit `029fbdf`, integrated as `08064a5` | exited | codex/core-exp-repo-runtime-lock | /Users/chenmohan/gits/barcarolle-wt-repo-runtime-lock | `experiments/core_narrative/configs/target_repositories.yaml`, `experiments/core_narrative/reports/repo_scout_notes.md` |
+| general-benchmark-lock | Pre-run lock | delivered; worker commit `88acbad`, integrated as `d9f8f8e` | exited | codex/core-exp-general-lock | /Users/chenmohan/gits/barcarolle-wt-general-lock | `experiments/core_narrative/configs/general_benchmark.yaml`, `experiments/core_narrative/reports/general_benchmark_notes.md` |
+| pre-run-lock-reviewer | Pre-run lock review | delivered; no_issues; worker commit `9c1c9a7`, integrated as `13404bc` | exited | codex/core-exp-pre-run-lock-reviewer | /Users/chenmohan/gits/barcarolle-wt-pre-run-lock-reviewer | `.codex-workflows/core-narrative-experiment/reviews/pre-run-locks-review.md` |
 
 ## Active Tmux Sessions
 
-- `bcx-pre-run-lock-reviewer`
+None.
 
 ## Decisions
 
@@ -52,7 +52,7 @@ Execute `docs/experiments/core-narrative-experiment-plan.md` with tmux-managed C
 
 ## Blockers
 
-None currently recorded. Broad ACUT execution remains paused until pre-run lock review and integration finish.
+None currently recorded. Broad ACUT execution has not been started.
 
 ## Review Queue
 
@@ -77,12 +77,14 @@ None currently recorded. Broad ACUT execution remains paused until pre-run lock 
 - `repo-runtime-lock` rerun delivered: `pallets/click` locked locally at commit `8bd8b4a074c55c03b6eb5666edc44a9c43df38a2`; smoke and full local pytest commands passed.
 - `general-benchmark-lock` rerun delivered: pinned SWE-Bench Pro parquet hash matched and six `G_score` IDs were materialized from the recorded selection rule.
 - Started focused `pre-run-lock-reviewer` before integrating the rerun lock commits.
-- Do not start broad ACUT execution workers until pre-run lock review and integration finish.
+- Focused `pre-run-lock-reviewer` delivered `no_issues`; repo runtime and general benchmark pre-run locks are reviewed.
+- Integrated the reviewed pre-run lock commits and review artifact.
+- Broad ACUT execution has not been started; next step is execution planning for the budget-constrained core subset.
 
 ## Pre-Run Gates
 
-- `repo-scout`: delivered by worker rerun; review pending before integration.
-- `general-benchmark`: delivered by worker rerun; review pending before integration.
+- `repo-scout`: closed and reviewed. `pallets/click` is locked at commit `8bd8b4a074c55c03b6eb5666edc44a9c43df38a2` with local Python 3.12 install, smoke, and full local pytest timings recorded.
+- `general-benchmark`: closed and reviewed. Six `G_score` task IDs are locked from the pinned SWE-Bench Pro parquet and recorded in `experiments/core_narrative/configs/general_benchmark.yaml`.
 - LLM access: `experiments/core_narrative/configs/llm_access.yaml` must remain value-free and record only environment variable names, redaction policy, and budget caps.
 - Cost ledger: `experiments/core_narrative/results/cost_ledger.jsonl` must exist and every ACUT model call or patch-generation attempt must append token, estimated/actual cost, and cumulative estimated cost fields.
 - Execution block: ACUT execution workers must mark `status: blocked` before any model call if either LLM environment variable is missing, if the ledger is missing/unwritable, if ledgering is not implemented, or if projected spend would exceed `$300`.
@@ -97,4 +99,4 @@ None currently recorded. Broad ACUT execution remains paused until pre-run lock 
 
 ## Next Heartbeat Action
 
-Read `pre-run-lock-reviewer` `process.md`. If review is delivered with `no_issues`, integrate `repo-runtime-lock`, `general-benchmark-lock`, and the review artifact, then update coordinator status before considering any broad ACUT execution worker. If issues remain, route focused feedback to the owning lock worker. Do not inspect `cli.log` unless debugging is explicitly requested.
+Prepare the next execution-planning step for the budget-constrained core subset. Do not start broad ACUT execution until the coordinator explicitly records the execution start, required LLM env presence, writable cost ledger, and the active default slice: four core ACUTs, 6 `G_score`, 8 `RBench`, 6 `RWork`, one primary attempt each. Do not inspect `cli.log` unless debugging is explicitly requested.
