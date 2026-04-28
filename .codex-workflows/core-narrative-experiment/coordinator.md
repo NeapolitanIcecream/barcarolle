@@ -1,7 +1,7 @@
 # Core Narrative Experiment Coordinator
 
-status: wave0_r5_review_running
-updated: 2026-04-28T11:56:03+08:00
+status: wave0_integrated_pre_run_locks_pending
+updated: 2026-04-28T12:07:48+08:00
 phase: Phase 0 - Experiment Bootstrap
 base_commit: 47046e7754d2402b7177a4b80f631ab6b0bcd97c
 coordinator_repo: /Users/chenmohan/gits/barcarolle
@@ -15,26 +15,26 @@ Execute `docs/experiments/core-narrative-experiment-plan.md` with tmux-managed C
 
 | Worker | Phase | Status | Session | Branch | Worktree | Owned Paths |
 | --- | --- | --- | --- | --- | --- | --- |
-| repo-scout | Wave 0 | delivered; commit `9b5dbbe` | exited | codex/core-exp-repo-scout | /Users/chenmohan/gits/barcarolle-wt-repo-scout | `experiments/core_narrative/configs/target_repositories.yaml`, `experiments/core_narrative/reports/repo_scout_notes.md` |
-| schema-toolsmith | Wave 0 | delivered; commit `a9824ba` | exited | codex/core-exp-schema-toolsmith | /Users/chenmohan/gits/barcarolle-wt-schema-toolsmith | `experiments/core_narrative/schemas/**`, `experiments/core_narrative/tools/**` |
-| acut-matrix | Wave 0 | delivered; commit `dcbdc1e` | exited | codex/core-exp-acut-matrix | /Users/chenmohan/gits/barcarolle-wt-acut-matrix | `experiments/core_narrative/configs/acuts/**`, `experiments/core_narrative/reports/acut_matrix_notes.md` |
-| general-benchmark | Wave 0 | delivered; commit `54a07ae` | exited | codex/core-exp-general-benchmark | /Users/chenmohan/gits/barcarolle-wt-general-benchmark | `experiments/core_narrative/configs/general_benchmark.yaml`, `experiments/core_narrative/reports/general_benchmark_notes.md` |
+| repo-scout | Wave 0 | delivered; worker commit `9b5dbbe`, integrated as `dc58f8d` | exited | codex/core-exp-repo-scout | /Users/chenmohan/gits/barcarolle-wt-repo-scout | `experiments/core_narrative/configs/target_repositories.yaml`, `experiments/core_narrative/reports/repo_scout_notes.md` |
+| schema-toolsmith | Wave 0 | delivered; worker commit `a9824ba`, integrated as `d337c78` | exited | codex/core-exp-schema-toolsmith | /Users/chenmohan/gits/barcarolle-wt-schema-toolsmith | `experiments/core_narrative/schemas/**`, `experiments/core_narrative/tools/**` |
+| acut-matrix | Wave 0 | delivered; worker commit `dcbdc1e`, integrated as `512be8a` | exited | codex/core-exp-acut-matrix | /Users/chenmohan/gits/barcarolle-wt-acut-matrix | `experiments/core_narrative/configs/acuts/**`, `experiments/core_narrative/reports/acut_matrix_notes.md` |
+| general-benchmark | Wave 0 | delivered; worker commit `54a07ae`, integrated as `7215d3e` | exited | codex/core-exp-general-benchmark | /Users/chenmohan/gits/barcarolle-wt-general-benchmark | `experiments/core_narrative/configs/general_benchmark.yaml`, `experiments/core_narrative/reports/general_benchmark_notes.md` |
 | wave0-reviewer | Wave 0 review | delivered; issues_found; commit `a2aef12` integrated | exited | codex/core-exp-wave0-reviewer | /Users/chenmohan/gits/barcarolle-wt-wave0-reviewer | `.codex-workflows/core-narrative-experiment/reviews/wave0-review.md` |
-| schema-toolsmith-r1 | Wave 0 revision | delivered; commit `b79d369` | exited | codex/core-exp-schema-toolsmith | /Users/chenmohan/gits/barcarolle-wt-schema-toolsmith | `experiments/core_narrative/schemas/**`, `experiments/core_narrative/tools/**` |
-| acut-matrix-r1 | Wave 0 revision | delivered; commit `583600c` | exited | codex/core-exp-acut-matrix | /Users/chenmohan/gits/barcarolle-wt-acut-matrix | `experiments/core_narrative/configs/acuts/**`, `experiments/core_narrative/reports/acut_matrix_notes.md` |
+| schema-toolsmith-r1 | Wave 0 revision | delivered; worker commit `b79d369`, integrated as `6c41c2d` | exited | codex/core-exp-schema-toolsmith | /Users/chenmohan/gits/barcarolle-wt-schema-toolsmith | `experiments/core_narrative/schemas/**`, `experiments/core_narrative/tools/**` |
+| acut-matrix-r1 | Wave 0 revision | delivered; worker commit `583600c`, integrated as `cb2831a` | exited | codex/core-exp-acut-matrix | /Users/chenmohan/gits/barcarolle-wt-acut-matrix | `experiments/core_narrative/configs/acuts/**`, `experiments/core_narrative/reports/acut_matrix_notes.md` |
 | wave0-r1-reviewer | Wave 0 revision review | delivered; issues_found; commit `607d8a2` integrated | exited | codex/core-exp-wave0-r1-reviewer | /Users/chenmohan/gits/barcarolle-wt-wave0-r1-reviewer | `.codex-workflows/core-narrative-experiment/reviews/wave0-r1-review.md` |
-| schema-toolsmith-r2 | Wave 0 revision | delivered; commit `de7a126` | exited | codex/core-exp-schema-toolsmith | /Users/chenmohan/gits/barcarolle-wt-schema-toolsmith | `experiments/core_narrative/schemas/**`, `experiments/core_narrative/tools/**` |
-| llm-budget-gate | Revised-plan gate | recorded; tool enforcement delivered by schema worker; review pending | n/a | codex/core-narrative-experiment | /Users/chenmohan/gits/barcarolle | `experiments/core_narrative/configs/llm_access.yaml`, `experiments/core_narrative/results/cost_ledger.jsonl`, shared workflow contract |
-| schema-toolsmith-r3 | Revised-plan gate tooling | delivered; commits `c7a01b2`, `34b0677` | exited | codex/core-exp-schema-toolsmith | /Users/chenmohan/gits/barcarolle-wt-schema-toolsmith | `experiments/core_narrative/tools/**` |
+| schema-toolsmith-r2 | Wave 0 revision | delivered; worker commit `de7a126`, integrated as `0c1fb36` | exited | codex/core-exp-schema-toolsmith | /Users/chenmohan/gits/barcarolle-wt-schema-toolsmith | `experiments/core_narrative/schemas/**`, `experiments/core_narrative/tools/**` |
+| llm-budget-gate | Revised-plan gate | implemented and reviewed; no_issues in Wave 0 r5 review | n/a | codex/core-narrative-experiment | /Users/chenmohan/gits/barcarolle | `experiments/core_narrative/configs/llm_access.yaml`, `experiments/core_narrative/results/cost_ledger.jsonl`, shared workflow contract |
+| schema-toolsmith-r3 | Revised-plan gate tooling | delivered; worker commits `c7a01b2`, `34b0677`, integrated as `de47618`, `8575eb6` | exited | codex/core-exp-schema-toolsmith | /Users/chenmohan/gits/barcarolle-wt-schema-toolsmith | `experiments/core_narrative/tools/**` |
 | wave0-r3-reviewer | Wave 0 revision review | delivered; issues_found; commit `1689032` integrated | exited | codex/core-exp-wave0-r3-reviewer | /Users/chenmohan/gits/barcarolle-wt-wave0-r3-reviewer | `.codex-workflows/core-narrative-experiment/reviews/wave0-r3-review.md` |
-| schema-toolsmith-r4 | Revised-plan gate tooling | delivered; commit `61833bf` | exited | codex/core-exp-schema-toolsmith | /Users/chenmohan/gits/barcarolle-wt-schema-toolsmith | `experiments/core_narrative/tools/**` |
+| schema-toolsmith-r4 | Revised-plan gate tooling | delivered; worker commit `61833bf`, integrated as `2f804e9` | exited | codex/core-exp-schema-toolsmith | /Users/chenmohan/gits/barcarolle-wt-schema-toolsmith | `experiments/core_narrative/tools/**` |
 | wave0-r4-reviewer | Wave 0 revision review | delivered; issues_found; worker commit `b5312b5`, integrated as `4b767bd` | exited | codex/core-exp-wave0-r4-reviewer | /Users/chenmohan/gits/barcarolle-wt-wave0-r4-reviewer | `.codex-workflows/core-narrative-experiment/reviews/wave0-r4-review.md` |
-| schema-toolsmith-r5 | Revised-plan gate tooling | delivered; commits `df16bdb`, `11ce367` | exited | codex/core-exp-schema-toolsmith | /Users/chenmohan/gits/barcarolle-wt-schema-toolsmith | `experiments/core_narrative/tools/**` |
-| wave0-r5-reviewer | Wave 0 revision review | session_running; process initialized | bcx-wave0-r5-reviewer | codex/core-exp-wave0-r5-reviewer | /Users/chenmohan/gits/barcarolle-wt-wave0-r5-reviewer | `.codex-workflows/core-narrative-experiment/reviews/wave0-r5-review.md` |
+| schema-toolsmith-r5 | Revised-plan gate tooling | delivered; worker commits `df16bdb`, `11ce367`, integrated as `3b14e8a`, `a3c90f9` | exited | codex/core-exp-schema-toolsmith | /Users/chenmohan/gits/barcarolle-wt-schema-toolsmith | `experiments/core_narrative/tools/**` |
+| wave0-r5-reviewer | Wave 0 revision review | delivered; no_issues; worker commit `386a6e1`, integrated as `1d07e2e` | exited | codex/core-exp-wave0-r5-reviewer | /Users/chenmohan/gits/barcarolle-wt-wave0-r5-reviewer | `.codex-workflows/core-narrative-experiment/reviews/wave0-r5-review.md` |
 
 ## Active Tmux Sessions
 
-- `bcx-wave0-r5-reviewer`
+None.
 
 ## Decisions
 
@@ -67,7 +67,9 @@ None currently recorded.
 - Started `schema-toolsmith-r5` to prevent `submission.patch` and related runner artifacts from persisting resolved required LLM env values or other unsafe credential/full-URL content from tracked-file mutations.
 - `schema-toolsmith-r5` delivered the patch artifact credential-boundary fix and reported passing focused self-checks.
 - Started focused `wave0-r5-reviewer` before integrating worker branches.
-- Do not start task-builder, leakage-auditor, verifier-auditor, or ACUT execution workers until the patch artifact credential-boundary issue is closed by revision and review, and until the remaining pre-run repository and general-benchmark locks are closed.
+- Focused `wave0-r5-reviewer` delivered `no_issues`; LLM access, cost ledger, command/result redaction, and patch artifact credential-boundary gates are implemented and reviewed.
+- Integrated reviewed Wave 0 worker artifacts into the coordinator branch.
+- Do not start broad ACUT execution workers until the remaining pre-run repository and general-benchmark locks are closed.
 
 ## Pre-Run Gates
 
@@ -76,7 +78,7 @@ None currently recorded.
 - LLM access: `experiments/core_narrative/configs/llm_access.yaml` must remain value-free and record only environment variable names, redaction policy, and budget caps.
 - Cost ledger: `experiments/core_narrative/results/cost_ledger.jsonl` must exist and every ACUT model call or patch-generation attempt must append token, estimated/actual cost, and cumulative estimated cost fields.
 - Execution block: ACUT execution workers must mark `status: blocked` before any model call if either LLM environment variable is missing, if the ledger is missing/unwritable, if ledgering is not implemented, or if projected spend would exceed `$300`.
-- Broad execution workers remain blocked until the LLM access contract and ledger gate are implemented and reviewed.
+- Broad execution workers remain blocked until the `repo-scout` and `general-benchmark` pre-run locks are closed.
 
 ## Acceptance Gate
 
@@ -87,4 +89,4 @@ None currently recorded.
 
 ## Next Heartbeat Action
 
-Read `wave0-r5-reviewer` `process.md`. If review is delivered with no blocking issues, integrate the reviewed worker branches and keep broad ACUT execution blocked until the remaining pre-run repository and general-benchmark locks are closed. If issues remain, write targeted feedback into the owning worker directory and start the next revision. Do not inspect `cli.log` unless debugging is explicitly requested.
+Start bounded pre-run lock work for `repo-scout` local runtime feasibility and `general-benchmark` concrete SWE-Bench Pro instance materialization. Do not start broad ACUT execution workers until those locks close. Do not inspect `cli.log` unless debugging is explicitly requested.
