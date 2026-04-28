@@ -1,7 +1,7 @@
 # Core Narrative Experiment Coordinator
 
-status: task_manifests_integrated
-updated: 2026-04-28T16:06:03+08:00
+status: execution_ready_stop_policy_defer
+updated: 2026-04-28T16:18:03+08:00
 today_stop_state: pre_soft_stop_active
 phase: Phase 0 - Experiment Bootstrap
 base_commit: 47046e7754d2402b7177a4b80f631ab6b0bcd97c
@@ -61,7 +61,7 @@ None.
 - soft_stop_at: `2026-04-28T17:30:00+08:00`
 - hard_stop_at: `2026-04-28T17:50:00+08:00`
 - current_stop_state: `pre_soft_stop_active`
-- current_pause_or_wind_down_status: Reviewed task manifests are integrated. Broad ACUT execution remains not started, and the next broad run should be deferred unless the coordinator can explicitly record an execution start with enough time to close cleanly before the hard stop.
+- current_pause_or_wind_down_status: Reviewed task manifests are integrated and no worker is active. Broad ACUT execution remains not started. Because the default core run is broad and cannot be guaranteed to close cleanly before the `17:50` hard stop, defer broad execution for today's remaining window.
 - before_soft_stop_policy: Continue the current plan, but do not start a new long task that is unlikely to be reviewed, handed off, or cleanly paused before the hard stop.
 - soft_stop_window_policy: From `17:30` through `17:50`, only continue or start short, low-risk, easy-to-close coordination tasks such as `process.md` updates, review cleanup, artifact integration, small no-model-call preflights, and status summaries.
 - post_soft_stop_bans: After `17:30`, do not start broad ACUT execution, large batches of ACUT model calls, or new long-running workers.
@@ -72,6 +72,22 @@ None.
 ## Blockers
 
 None currently recorded. Broad ACUT execution has not been started.
+
+## Execution Readiness Bookkeeping
+
+- checked_at: `2026-04-28T16:18:03+08:00`
+- readiness_state: `ready_for_explicit_execution_start_after_resume_or_sufficient_runway`
+- active_workers: none recorded
+- reviewed_inputs_ready:
+  - LLM access and budget gate: reviewed in `wave0-r5-reviewer` with `no_issues`
+  - repo runtime lock: reviewed and integrated
+  - general benchmark lock: reviewed and integrated
+  - core subset run manifest: prepared, not started
+  - concrete `RBench` and `RWork` task manifests: reviewed and integrated
+- broad_execution_started: false
+- model_calls_started: false
+- today_execution_decision: Do not start broad ACUT execution or large model-call batches in the remaining 2026-04-28 window unless a future coordinator step can explicitly prove it will close cleanly before `17:50`.
+- resume_entry: On the next real execution window, read this coordinator and the latest relevant worker `process.md` files, re-confirm required LLM env presence and writable ledger without recording values, then explicitly record execution start before launching any ACUT worker.
 
 ## Review Queue
 
@@ -143,4 +159,4 @@ None currently recorded. Broad ACUT execution has not been started.
 
 ## Next Heartbeat Action
 
-Apply today's stop strategy before taking the next step. The task manifests are reviewed and integrated, so the next eligible work is only short execution-readiness bookkeeping or a status summary unless there is enough time before `17:50` to close cleanly. After `17:30`, do not start broad ACUT execution, large ACUT model-call batches, or new long-running workers. After `17:50`, request any running worker to write a handoff in `process.md`, stop its tmux session, and pause the workflow. Do not start broad ACUT execution or model calls until the coordinator explicitly records execution start. Do not inspect `cli.log` unless debugging is explicitly requested.
+Apply today's stop strategy before taking the next step. The task manifests are reviewed and integrated, no worker is active, and broad ACUT execution remains not started. For the remaining 2026-04-28 window, only perform short readiness bookkeeping or status summaries. After `17:30`, do not start broad ACUT execution, large ACUT model-call batches, or new long-running workers. After `17:50`, pause the workflow unless a running worker unexpectedly appears; if one does, request a `process.md` handoff and stop its tmux session. Do not start broad ACUT execution or model calls until the coordinator explicitly records execution start. Do not inspect `cli.log` unless debugging is explicitly requested.
