@@ -1,7 +1,7 @@
 # Core Narrative Experiment Coordinator
 
-status: pre_run_locks_integrated
-updated: 2026-04-28T14:48:40+08:00
+status: execution_planning_gate_ready
+updated: 2026-04-28T15:02:08+08:00
 phase: Phase 0 - Experiment Bootstrap
 base_commit: 47046e7754d2402b7177a4b80f631ab6b0bcd97c
 coordinator_repo: /Users/chenmohan/gits/barcarolle
@@ -79,7 +79,8 @@ None currently recorded. Broad ACUT execution has not been started.
 - Started focused `pre-run-lock-reviewer` before integrating the rerun lock commits.
 - Focused `pre-run-lock-reviewer` delivered `no_issues`; repo runtime and general benchmark pre-run locks are reviewed.
 - Integrated the reviewed pre-run lock commits and review artifact.
-- Broad ACUT execution has not been started; next step is execution planning for the budget-constrained core subset.
+- Broad ACUT execution has not been started; execution planning gate is ready for the budget-constrained core subset.
+- Non-secret execution-start preflight recorded at `2026-04-28T15:02:08+08:00`: `BARCAROLLE_LLM_API_KEY` present, `BARCAROLLE_LLM_BASE_URL` present, and `experiments/core_narrative/results/cost_ledger.jsonl` exists and is writable. Values were not printed or recorded.
 
 ## Pre-Run Gates
 
@@ -90,6 +91,23 @@ None currently recorded. Broad ACUT execution has not been started.
 - Execution block: ACUT execution workers must mark `status: blocked` before any model call if either LLM environment variable is missing, if the ledger is missing/unwritable, if ledgering is not implemented, or if projected spend would exceed `$300`.
 - Broad execution workers are not started yet; next execution-start record must confirm required LLM env presence, writable cost ledger, and the active budget-constrained default slice.
 
+## Execution Planning Gate
+
+- gate_status: ready_for_execution_planning
+- checked_at: 2026-04-28T15:02:08+08:00
+- llm_env_presence:
+  - `BARCAROLLE_LLM_API_KEY`: present, value not inspected or recorded
+  - `BARCAROLLE_LLM_BASE_URL`: present, value not inspected or recorded
+- cost_ledger: `experiments/core_narrative/results/cost_ledger.jsonl` exists and is writable
+- budget_caps: USD `$240` soft stop, USD `$300` hard cap
+- active_default_slice:
+  - acuts: `general-benchmark-optimized`, `repo-context-heavy`, `retrieval-sparse-symbolic`, `lower-budget-fast-path`
+  - tasks: 6 `G_score`, 8 `RBench`, 6 `RWork`
+  - attempts: one primary attempt per ACUT/task
+- deferred_acuts: `higher-budget-repo-depth`, `retrieval-history-augmented`, `minimal-context-baseline`
+- broad_execution_started: false
+- next_allowed_step: prepare execution plan/run manifest and any no-model-call preflight checks; do not start model calls until the coordinator records explicit execution start.
+
 ## Acceptance Gate
 
 - Coordinator can list all workers and owned paths.
@@ -99,4 +117,4 @@ None currently recorded. Broad ACUT execution has not been started.
 
 ## Next Heartbeat Action
 
-Prepare the next execution-planning step for the budget-constrained core subset. Do not start broad ACUT execution until the coordinator explicitly records the execution start, required LLM env presence, writable cost ledger, and the active default slice: four core ACUTs, 6 `G_score`, 8 `RBench`, 6 `RWork`, one primary attempt each. Do not inspect `cli.log` unless debugging is explicitly requested.
+Prepare an execution plan/run manifest for the budget-constrained core subset and any no-model-call preflight checks. Do not start broad ACUT execution or model calls until the coordinator explicitly records execution start. Do not inspect `cli.log` unless debugging is explicitly requested.
