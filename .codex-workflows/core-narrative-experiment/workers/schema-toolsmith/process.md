@@ -1,13 +1,15 @@
 # Process
 
 status: delivered
-updated: 2026-04-28T11:24:37+08:00
+updated: 2026-04-28T11:52:29+08:00
 
 ## Summary
 
 Implemented and self-checked revision 3 LLM access and budget gate tooling. ACUT execution now has a dependency-light pre-call gate for `BARCAROLLE_LLM_API_KEY` and `BARCAROLLE_LLM_BASE_URL`, ledger existence/writability, soft-stop approval, hard-cap blocking, default core ACUT profile diagnostics, and secret-safe structured output. A JSONL cost append tool records token/cost/cumulative fields and refuses obvious secret-looking fields or values. `run_task.py` now invokes the gate before running an ACUT command, strips other secret-like provider env vars from the child process, and redacts captured stdout/stderr artifacts.
 
 Revision 4 closes the remaining command/result redaction issue. `run_task.py` now rejects unsafe command arguments before execution when they contain credential-looking keys, secret/provider-token-looking values, resolved required LLM env values, or full URLs; persisted command representations are sanitized, and captured artifacts apply the broader token/URL redaction policy.
+
+Revision 5 closes the remaining patch artifact credential-boundary issue. `run_task.py` now collects the workspace diff in memory, rejects unsafe diff content before writing `submission.patch`, emits value-free reason counts for auditability, and restores tracked workspace changes on the unsafe-patch rejection path. The unsafe detector covers resolved required LLM env values, bearer-token-looking strings, provider-token-looking strings, credential literal assignments, and full URLs. Revision 3/4 budget gates, command-argument rejection, and stdout/stderr redaction behavior remain intact.
 
 ## Owned Paths
 
@@ -46,10 +48,25 @@ Revision 4 closes the remaining command/result redaction issue. `run_task.py` no
 - Modified `experiments/core_narrative/tools/_llm_budget.py` to reject unsafe command arguments and redact provider-token-looking strings and full URLs
 - Modified `experiments/core_narrative/tools/run_task.py` to reject unsafe command arguments before budget gating/execution and persist only sanitized command representations
 - Updated this process file for revision 4 state, self-checks, and handoff
+- Inspected `.codex-workflows/core-narrative-experiment/workers/schema-toolsmith/review-feedback-5.md`
+- Re-read `/Users/chenmohan/gits/barcarolle/.codex-workflows/core-narrative-experiment/shared/llm-access-budget-contract.md` and `/Users/chenmohan/gits/barcarolle/.codex-workflows/core-narrative-experiment/shared/worker-contract.md`
+- Reproduced the revision 5 `run_task.py` unsafe patch artifact issue in a temporary workspace before the fix
+- Modified `experiments/core_narrative/tools/_llm_budget.py` to report value-free unsafe-text findings for patch handling
+- Modified `experiments/core_narrative/tools/run_task.py` to reject unsafe patch content before writing `submission.patch`, emit explicit patch-artifact diagnostics, and restore tracked workspace changes after unsafe-patch rejection
+- Updated this process file for revision 5 state, self-checks, and handoff
 
 ## Current Blockers
 
 None. Previous commit blocker was resolved by the coordinator.
+
+## Revision 5 Progress
+
+- 2026-04-28T11:44:03+08:00: Started revision 5 on branch `codex/core-exp-schema-toolsmith` in worktree `/Users/chenmohan/gits/barcarolle-wt-schema-toolsmith`.
+- 2026-04-28T11:44:03+08:00: Initial worktree state has only untracked coordinator-provided revision files: `review-feedback-1.md`, `review-feedback-2.md`, `review-feedback-3.md`, `review-feedback-4.md`, `review-feedback-5.md`, `revision-prompt-1.md`, `revision-prompt-2.md`, `revision-prompt-3.md`, `revision-prompt-4.md`, `revision-prompt-5.md`, `run_revision_1.sh`, `run_revision_2.sh`, `run_revision_3.sh`, `run_revision_4.sh`, `run_revision_5.sh`.
+- 2026-04-28T11:49:05+08:00: Read revision 5 feedback, the worker contract, and the LLM access/budget contract. Reproduced the remaining `run_task.py` issue in a temporary workspace: a command that wrote dummy required LLM env values into a tracked file completed and persisted an unsafe `submission.patch`.
+- 2026-04-28T11:51:40+08:00: Implemented reject-before-write patch handling. `run_task.py` now collects `git diff HEAD --binary --no-ext-diff` in memory, rejects unsafe patch content before writing `submission.patch`, emits value-free reason counts, and restores tracked workspace changes on the unsafe-patch path. Focused syntax/help checks passed, and the tracked-file mutation probe now exits `2` with `status: unsafe_patch_rejected`, no retained `submission.patch`, no dummy values in runner JSON/stdout/stderr artifacts, and the tracked file restored.
+- 2026-04-28T11:52:29+08:00: Completed revision 5 self-checks. All experiment Python tools syntax-check, relevant tool help checks pass, all seven ACUT manifests validate with `invalid_count: 0`, `check_workspace_leakage.py` passes, r4 command-argument rejection and harmless env redaction probes pass, budget gate preservation probes pass, tracked-file mutation and unsafe-pattern patch probes pass, schema JSON formatting checks pass, and `git diff --check` passes.
+- 2026-04-28T11:52:29+08:00: Revision 5 implementation delivery commit: `df16bdb2fba1aee0b4d99ac58dfd7e3897c991d4`. No coordinator-owned `llm_access.yaml` or `cost_ledger.jsonl` files were edited, and no real model calls were made.
 
 ## Revision 4 Progress
 
@@ -122,6 +139,14 @@ revision-4 delivery state:
 - untracked coordinator-provided revision files remain unstaged: `review-feedback-1.md`, `review-feedback-2.md`, `review-feedback-3.md`, `review-feedback-4.md`, `revision-prompt-1.md`, `revision-prompt-2.md`, `revision-prompt-3.md`, `revision-prompt-4.md`, `run_revision_1.sh`, `run_revision_2.sh`, `run_revision_3.sh`, `run_revision_4.sh`
 - no edits made to coordinator-owned `llm_access.yaml` or `cost_ledger.jsonl`; no real model calls were made
 
+revision-5 delivery state:
+- branch: `codex/core-exp-schema-toolsmith`
+- worktree: `/Users/chenmohan/gits/barcarolle-wt-schema-toolsmith`
+- implementation delivery commit: `df16bdb2fba1aee0b4d99ac58dfd7e3897c991d4`
+- modified owned tracked file for final handoff: `.codex-workflows/core-narrative-experiment/workers/schema-toolsmith/process.md`
+- untracked coordinator-provided revision files remain unstaged: `review-feedback-1.md`, `review-feedback-2.md`, `review-feedback-3.md`, `review-feedback-4.md`, `review-feedback-5.md`, `revision-prompt-1.md`, `revision-prompt-2.md`, `revision-prompt-3.md`, `revision-prompt-4.md`, `revision-prompt-5.md`, `run_revision_1.sh`, `run_revision_2.sh`, `run_revision_3.sh`, `run_revision_4.sh`, `run_revision_5.sh`
+- no edits made to coordinator-owned `experiments/core_narrative/configs/llm_access.yaml` or `experiments/core_narrative/results/cost_ledger.jsonl`; no real model calls were made
+
 ## Handoff
 
 Self-checks passed:
@@ -183,3 +208,17 @@ Revision 4 self-checks passed:
 - `git diff --check`
 
 Revision 4 handoff: The remaining runner command/result redaction issue is closed. Unsafe command arguments are refused before execution, safe runner output remains redacted, revision 3 budget gate behavior is preserved, and no coordinator-owned config or ledger files were edited.
+
+Revision 5 self-checks passed:
+- `PYTHONPYCACHEPREFIX=/tmp/barcarolle-core-narrative-pycache-r5-all python3 -m py_compile experiments/core_narrative/tools/*.py`
+- `for tool_name in prepare_workspace run_task apply_and_verify summarize_results check_workspace_leakage validate_acut_manifest llm_budget_gate append_cost_record; do python3 "experiments/core_narrative/tools/$tool_name.py" --help >/tmp/barcarolle-r5-$tool_name.help.txt; done`
+- `PYTHONPYCACHEPREFIX=/tmp/barcarolle-core-narrative-pycache-r5-validate python3 experiments/core_narrative/tools/validate_acut_manifest.py /Users/chenmohan/gits/barcarolle-wt-acut-matrix/experiments/core_narrative/configs/acuts` passed with `manifest_count: 7`, `invalid_count: 0`.
+- `PYTHONPYCACHEPREFIX=/tmp/barcarolle-core-narrative-pycache-r5-leakage python3 experiments/core_narrative/tools/check_workspace_leakage.py` passed.
+- R4 runner protection probes passed: unsafe command arguments exit `2` before agent artifacts are written and harmless required LLM env output is redacted from runner JSON/stdout/stderr artifacts.
+- Budget gate preservation probes passed: missing required env exits `2`, missing ledger exits `2`, unwritable ledger exits `2`, projected hard-cap overflow exits `2`, and soft stop exits `3` with `status: requires_coordinator_approval`.
+- R5 tracked-file mutation probe passed: a command wrote dummy required LLM env values into a tracked file and stdout/stderr; `run_task.py` exited `2` with `status: unsafe_patch_rejected`, retained no `submission.patch`, restored the tracked file, and did not retain dummy values in runner JSON/stdout/stderr artifacts or tracked repo files.
+- R5 unsafe-pattern patch probe passed: bearer-token-looking text, provider-token-looking text, credential literal assignment, and a full URL generated inside the ACUT process caused `status: unsafe_patch_rejected`, no retained `submission.patch`, and tracked workspace restoration.
+- `for schema_file in experiments/core_narrative/schemas/*.schema.json; do python3 -m json.tool "$schema_file" >/tmp/barcarolle-r5-$(basename "$schema_file").pretty.json; done`
+- `git diff --check`
+
+Revision 5 handoff: The patch artifact credential boundary is closed by rejecting unsafe diffs before writing `submission.patch` and by restoring tracked workspace changes on unsafe-patch rejection. Diagnostics are explicit and machine-readable without matched values. Revision 3/4 budget, command, stdout/stderr, and default ACUT profile protections remain intact.
