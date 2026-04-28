@@ -1,8 +1,156 @@
-# Filled by the general-benchmark worker.
-status: pending
-benchmark: null
-version_or_snapshot_date: null
-task_subset: null
-scoring_method: null
-score_basis: null
-limitations: []
+id: gscore_swebench_pro_public_22_v1
+status: selected
+owner: general-benchmark
+selected_at: "2026-04-28"
+
+benchmark:
+  name: SWE-Bench Pro Public
+  provider: Scale AI
+  task_type: long_horizon_repository_issue_resolution
+  dataset_id: ScaleAI/SWE-bench_Pro
+  dataset_config: default
+  split: test
+  version_or_snapshot_date: "2026-04-28"
+  snapshot_basis:
+    huggingface_revision: "7ab5114912baf22bb098818e604c02fe7ad2c11f"
+    data_file_commit: "2dd05cab1572ce1d59fdc699b386692ff8e0bd29"
+    data_file_path: data/test-00000-of-00001.parquet
+    data_file_sha256: "c8cd7115496ad4e9a8b21d088cef576a65bf821bb542b24336f13f714cef13f8"
+    data_file_xet_hash: "6aee72308d8c16c707416780f6d05155ec7aa7591fdf8bb715fbe1b0f9502cf3"
+    rows: 731
+    repository_count: 11
+    repo_language_count: 4
+  evaluation_harness:
+    repo: scaleapi/SWE-bench_Pro-os
+    revision: "0c64e26f00b9c190432de7fc520c8ceed5c25518"
+    entrypoint: swe_bench_pro_eval.py
+    patch_input_format:
+      - instance_id
+      - patch
+      - prefix
+    docker_image_source: "jefzda/sweap-images, using each row's dockerhub_tag field"
+    execution_backend_preference:
+      primary: Modal
+      fallback: local Docker with --use_local_docker
+
+task_subset:
+  name: barcarolle_gscore_swebp_public_22_v1
+  target_size: 22
+  source_population: "all 731 rows in ScaleAI/SWE-bench_Pro default/test at the pinned snapshot"
+  selection_status: deterministic_rule_frozen_before_acut_runs
+  stratification:
+    field: repo
+    rows_per_repo: 2
+    repo_order: "lexicographic by repo string from the pinned dataset"
+  selection_rule:
+    salt: "barcarolle-core-narrative-gscore-v1"
+    key: "sha256(salt + '\\n' + instance_id), lowercase hex"
+    algorithm:
+      - "Group candidate rows by repo."
+      - "Sort each repo group by the selection key ascending, then by instance_id ascending as a tie breaker."
+      - "Select the first two rows from each repo group."
+      - "Build a global reserve list from remaining rows sorted by the same key, then instance_id."
+      - "Do not inspect ACUT results, public leaderboard per-task results, gold patches, or test outcomes while selecting."
+  replacement_rule:
+    allowed_only_for_global_infra_failure: true
+    global_infra_failure_definition: "the official gold patch for the instance cannot be evaluated successfully with the pinned harness, pinned dataset row, and declared Docker image before any ACUT scoring begins"
+    replacement_source: "next row in the global reserve list"
+    replacement_lock: "all replacements must be recorded before the first ACUT patch-generation run"
+  acut_visible_context:
+    include_fields:
+      - repo
+      - problem_statement
+      - requirements
+      - interface
+      - repo_language
+      - base_commit
+    hide_fields:
+      - patch
+      - test_patch
+      - fail_to_pass
+      - pass_to_pass
+      - before_repo_set_cmd
+      - selected_test_files_to_run
+      - dockerhub_tag
+    workspace_rule: "ACUT receives a checkout at base_commit plus the visible task statement; future git history, gold patch, test patch, and evaluator metadata are not available to the ACUT."
+
+scoring_method:
+  metric: resolved_rate_percent
+  unit: task_instance
+  evaluator: pinned SWE-Bench Pro harness
+  pass_condition: "the submitted patch is applied by the evaluator and all required fail-to-pass and pass-to-pass checks for the instance pass"
+  failure_conditions_count_as_zero:
+    - no_patch
+    - patch_apply_failure
+    - verification_failure
+    - timeout
+    - invalid_submission
+    - acut_runtime_error
+  weights: uniform_per_task
+  formula: "G_score = 100 * sum(resolved_i) / 22 after any pre-run global-infra replacements"
+  denominator_policy: "fixed across all ACUTs; ACUT-specific failures do not shrink the denominator"
+  repeated_runs:
+    primary_attempts_per_acut_task: 1
+    optional_stability_attempts: "run a second full slice only if declared before any G/R/W score analysis and applied to every ACUT"
+  tie_breakers:
+    - "higher resolved_count"
+    - "lower invalid_submission_count"
+    - "lower median verification wall time, diagnostic only if first two tie"
+  confidence_reporting: "report binomial 95% confidence interval as diagnostic; do not use it to alter the primary rank order"
+
+score_basis:
+  type: direct_run_slice
+  direct_run: true
+  external_public_scores_used_for_g_score: false
+  evidence_strength: primary_general_signal_for_this_experiment
+  public_leaderboard_role: "background sanity check only; not a source of ACUT scores or ranking"
+  fallback_if_direct_run_becomes_infeasible:
+    type: external_public_scores
+    evidence_strength: weaker_prescreen_only
+    allowed_for_core_claim: false
+    required_note: "If used, record exact public score source, date, model/scaffold mismatch, and mark G_score as non-comparable to local ACUT manifests."
+
+normalization:
+  output_range: "0 to 100"
+  raw_to_normalized: "resolved_rate_percent"
+  missing_or_skipped_tasks: "not allowed after pre-run slice lock except coordinator-declared global experiment abort"
+  infra_exclusions: "only global gold-patch or image failures found before ACUT runs may be replaced; no post-score exclusions"
+  cross_acut_comparability: "all ACUTs use the same locked task IDs, visible context fields, evaluator revision, timeout policy, and scoring formula"
+
+cost_setup_estimate:
+  slice_attempts:
+    per_acut: 22
+    four_acuts: 88
+    eight_acuts: 176
+  setup:
+    - "Clone scaleapi/SWE-bench_Pro-os at the pinned revision."
+    - "Install Python requirements for the evaluation harness."
+    - "Configure Modal or local Docker."
+    - "Pull or use the prebuilt jefzda/sweap-images image tag recorded in each dataset row."
+    - "Run gold-patch smoke evaluation for the locked slice before ACUT runs."
+  resource_level: moderate_to_high
+  local_storage_estimate: "plan for at least 120 GB free Docker/cache space if running locally; Modal is preferred for parallelism"
+  wall_time_estimate: "gold smoke plus verification can take hours; ACUT patch generation dominates and should use the ACUT manifest budget caps"
+  cost_driver: "22 * number_of_acuts long-horizon patch-generation attempts plus container verification"
+
+limitations:
+  - "The slice is a 22-task experiment basis, not the official full SWE-Bench Pro public leaderboard."
+  - "The deterministic rule is frozen here, but concrete task IDs still need to be materialized and locked by the coordinator before any ACUT run."
+  - "Public tasks can still be contaminated in model training or discoverable through external search; ACUT network policy must match the repository experiment policy."
+  - "SWE-Bench Pro is broader and harder than many target repositories, so G_score may underweight repository-specific context strategies."
+  - "SWE-Bench Pro scoring is test-based; it does not directly measure maintainability, code review acceptability, or product fit."
+  - "Public leaderboard scores use different scaffolds, budgets, and sometimes uncapped settings; they are not comparable to this direct-run slice."
+
+sources:
+  - name: "ScaleAI/SWE-bench_Pro dataset card"
+    url: "https://huggingface.co/datasets/ScaleAI/SWE-bench_Pro"
+    accessed: "2026-04-28"
+  - name: "ScaleAI/SWE-bench_Pro data file pointer"
+    url: "https://huggingface.co/datasets/ScaleAI/SWE-bench_Pro/blob/main/data/test-00000-of-00001.parquet"
+    accessed: "2026-04-28"
+  - name: "SWE-Bench Pro OS evaluation repository"
+    url: "https://github.com/scaleapi/SWE-bench_Pro-os"
+    accessed: "2026-04-28"
+  - name: "OpenAI SWE-bench Verified retirement note"
+    url: "https://openai.com/index/why-we-no-longer-evaluate-swe-bench-verified/"
+    accessed: "2026-04-28"
