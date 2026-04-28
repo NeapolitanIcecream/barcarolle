@@ -1,7 +1,7 @@
 # Core Narrative Experiment Coordinator
 
 status: wave_0_running
-updated: 2026-04-28T09:32:17+08:00
+updated: 2026-04-28T09:32:54+08:00
 phase: Phase 0 - Experiment Bootstrap
 base_commit: 47046e7754d2402b7177a4b80f631ab6b0bcd97c
 coordinator_repo: /Users/chenmohan/gits/barcarolle
@@ -16,9 +16,9 @@ Execute `docs/experiments/core-narrative-experiment-plan.md` with tmux-managed C
 | Worker | Phase | Status | Session | Branch | Worktree | Owned Paths |
 | --- | --- | --- | --- | --- | --- | --- |
 | repo-scout | Wave 0 | session_running; process initialized | bcx-repo-scout | codex/core-exp-repo-scout | /Users/chenmohan/gits/barcarolle-wt-repo-scout | `experiments/core_narrative/configs/target_repositories.yaml`, `experiments/core_narrative/reports/repo_scout_notes.md` |
-| schema-toolsmith | Wave 0 | session_running; process initialized | bcx-schema-toolsmith | codex/core-exp-schema-toolsmith | /Users/chenmohan/gits/barcarolle-wt-schema-toolsmith | `experiments/core_narrative/schemas/**`, `experiments/core_narrative/tools/**` |
-| acut-matrix | Wave 0 | session_running; process initialized | bcx-acut-matrix | codex/core-exp-acut-matrix | /Users/chenmohan/gits/barcarolle-wt-acut-matrix | `experiments/core_narrative/configs/acuts/**`, `experiments/core_narrative/reports/acut_matrix_notes.md` |
-| general-benchmark | Wave 0 | session_running; process initialized | bcx-general-benchmark | codex/core-exp-general-benchmark | /Users/chenmohan/gits/barcarolle-wt-general-benchmark | `experiments/core_narrative/configs/general_benchmark.yaml`, `experiments/core_narrative/reports/general_benchmark_notes.md` |
+| schema-toolsmith | Wave 0 | in_progress | bcx-schema-toolsmith | codex/core-exp-schema-toolsmith | /Users/chenmohan/gits/barcarolle-wt-schema-toolsmith | `experiments/core_narrative/schemas/**`, `experiments/core_narrative/tools/**` |
+| acut-matrix | Wave 0 | working | bcx-acut-matrix | codex/core-exp-acut-matrix | /Users/chenmohan/gits/barcarolle-wt-acut-matrix | `experiments/core_narrative/configs/acuts/**`, `experiments/core_narrative/reports/acut_matrix_notes.md` |
+| general-benchmark | Wave 0 | in_progress | bcx-general-benchmark | codex/core-exp-general-benchmark | /Users/chenmohan/gits/barcarolle-wt-general-benchmark | `experiments/core_narrative/configs/general_benchmark.yaml`, `experiments/core_narrative/reports/general_benchmark_notes.md` |
 
 ## Active Tmux Sessions
 
@@ -32,6 +32,7 @@ Execute `docs/experiments/core-narrative-experiment-plan.md` with tmux-managed C
 - Use dedicated worktrees for all Wave 0 workers to keep write ownership isolated.
 - Run Codex CLI workers in sandboxed non-interactive mode with `--full-auto`; do not use `--dangerously-bypass-approvals-and-sandbox`.
 - Track the core narrative workflow files in Git, while ignoring CLI logs and large local artifacts.
+- Created heartbeat automation `core-narrative-experiment-coordinator` to wake this thread every 10 minutes for bounded coordination steps.
 
 ## Blockers
 
