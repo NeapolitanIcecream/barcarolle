@@ -1,7 +1,7 @@
 # Core Narrative Experiment Coordinator
 
-status: wave0_integrated_pre_run_locks_pending
-updated: 2026-04-28T12:07:48+08:00
+status: pre_run_locks_running
+updated: 2026-04-28T12:20:31+08:00
 phase: Phase 0 - Experiment Bootstrap
 base_commit: 47046e7754d2402b7177a4b80f631ab6b0bcd97c
 coordinator_repo: /Users/chenmohan/gits/barcarolle
@@ -31,10 +31,13 @@ Execute `docs/experiments/core-narrative-experiment-plan.md` with tmux-managed C
 | wave0-r4-reviewer | Wave 0 revision review | delivered; issues_found; worker commit `b5312b5`, integrated as `4b767bd` | exited | codex/core-exp-wave0-r4-reviewer | /Users/chenmohan/gits/barcarolle-wt-wave0-r4-reviewer | `.codex-workflows/core-narrative-experiment/reviews/wave0-r4-review.md` |
 | schema-toolsmith-r5 | Revised-plan gate tooling | delivered; worker commits `df16bdb`, `11ce367`, integrated as `3b14e8a`, `a3c90f9` | exited | codex/core-exp-schema-toolsmith | /Users/chenmohan/gits/barcarolle-wt-schema-toolsmith | `experiments/core_narrative/tools/**` |
 | wave0-r5-reviewer | Wave 0 revision review | delivered; no_issues; worker commit `386a6e1`, integrated as `1d07e2e` | exited | codex/core-exp-wave0-r5-reviewer | /Users/chenmohan/gits/barcarolle-wt-wave0-r5-reviewer | `.codex-workflows/core-narrative-experiment/reviews/wave0-r5-review.md` |
+| repo-runtime-lock | Pre-run lock | session_running; process initialized | bcx-repo-runtime-lock | codex/core-exp-repo-runtime-lock | /Users/chenmohan/gits/barcarolle-wt-repo-runtime-lock | `experiments/core_narrative/configs/target_repositories.yaml`, `experiments/core_narrative/reports/repo_scout_notes.md` |
+| general-benchmark-lock | Pre-run lock | session_running; process initialized | bcx-general-benchmark-lock | codex/core-exp-general-lock | /Users/chenmohan/gits/barcarolle-wt-general-lock | `experiments/core_narrative/configs/general_benchmark.yaml`, `experiments/core_narrative/reports/general_benchmark_notes.md` |
 
 ## Active Tmux Sessions
 
-None.
+- `bcx-repo-runtime-lock`
+- `bcx-general-benchmark-lock`
 
 ## Decisions
 
@@ -69,6 +72,8 @@ None currently recorded.
 - Started focused `wave0-r5-reviewer` before integrating worker branches.
 - Focused `wave0-r5-reviewer` delivered `no_issues`; LLM access, cost ledger, command/result redaction, and patch artifact credential-boundary gates are implemented and reviewed.
 - Integrated reviewed Wave 0 worker artifacts into the coordinator branch.
+- Started `repo-runtime-lock` to verify local target repository runtime feasibility or select a fallback.
+- Started `general-benchmark-lock` to materialize the revised six-task `G_score` concrete instance lock.
 - Do not start broad ACUT execution workers until the remaining pre-run repository and general-benchmark locks are closed.
 
 ## Pre-Run Gates
@@ -89,4 +94,4 @@ None currently recorded.
 
 ## Next Heartbeat Action
 
-Start bounded pre-run lock work for `repo-scout` local runtime feasibility and `general-benchmark` concrete SWE-Bench Pro instance materialization. Do not start broad ACUT execution workers until those locks close. Do not inspect `cli.log` unless debugging is explicitly requested.
+Read `repo-runtime-lock` and `general-benchmark-lock` `process.md` files. If either lock is delivered, integrate or review the delivered artifact as appropriate. If either lock is blocked, record the blocker and notify only if user input is required. Do not start broad ACUT execution workers until both locks close. Do not inspect `cli.log` unless debugging is explicitly requested.
