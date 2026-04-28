@@ -10,11 +10,30 @@ The pinned population is `ScaleAI/SWE-bench_Pro` `default/test` at Hugging Face 
 
 ## Materialization Status
 
-Status: blocked.
+Status: locked.
 
-Concrete task IDs were not materialized. The pinned dataset rows are not available in the local Hugging Face cache or local worktrees, shell network cannot resolve the dataset or evaluator hosts, and Docker is not running for the local evaluator fallback. The browser-accessible Hugging Face pages verify the public dataset metadata, row count, and pointer hashes, but they expose only preview rows, not the complete 731-row `(repo, instance_id)` population required to compute the deterministic selection.
+The pinned parquet was fetched anonymously from Hugging Face at revision
+`7ab5114912baf22bb098818e604c02fe7ad2c11f` into the ignored cache path
+`experiments/core_narrative/cache/swebench_pro/test-00000-of-00001.parquet`.
+SHA256 verification matched
+`c8cd7115496ad4e9a8b21d088cef576a65bf821bb542b24336f13f714cef13f8`.
 
-Smallest next action: provide or fetch the pinned parquet file above, verify its SHA256, then compute the six locked IDs with the frozen salt `barcarolle-core-narrative-gscore-v1` before any ACUT patch-generation run.
+The materialized population has 731 rows and 11 repositories. The revised
+six-task default is locked to:
+
+| Ordinal | Repo | Instance ID | Selection key prefix |
+| --- | --- | --- | --- |
+| 1 | `NodeBB/NodeBB` | `instance_NodeBB__NodeBB-51d8f3b195bddb13a13ddc0de110722774d9bb1b-vf2cf3cbd463b7ad942381f1c6d077626485a1e9e` | `047ff911070e` |
+| 2 | `NodeBB/NodeBB` | `instance_NodeBB__NodeBB-84dfda59e6a0e8a77240f939a7cb8757e6eaf945-v2c59007b1005cd5cd14cbb523ca5229db1fd2dd8` | `0721e5783d7d` |
+| 3 | `ansible/ansible` | `instance_ansible__ansible-d33bedc48fdd933b5abd65a77c081876298e2f07-v0f01c69f1e2528b935359cfe578530722bca2c59` | `017a871e5635` |
+| 4 | `ansible/ansible` | `instance_ansible__ansible-984216f52e76b904e5b0fa0fb956ab4f1e0a7751-v1055803c3a812189a1133297f7f5468579283f86` | `048c1c04ca17` |
+| 5 | `element-hq/element-web` | `instance_element-hq__element-web-776ffa47641c7ec6d142ab4a47691c30ebf83c2e` | `0129076119cd` |
+| 6 | `element-hq/element-web` | `instance_element-hq__element-web-5dfde12c1c1c0b6e48f17e3405468593e39d9492-vnan` | `05758b206557` |
+
+Docker/OrbStack is reachable (`orbstack`, Docker client/server `29.4.0`), but
+no evaluator or ACUT scoring run was started. Smallest next action before
+scored ACUT runs: run pre-ACUT gold-patch smoke evaluation for the locked
+six-task slice with the pinned evaluator.
 
 ## Six-Task Selection Rule
 
@@ -27,7 +46,10 @@ The six-task default adapts the delivered 22-task basis without changing its sel
 - Build the replacement reserve from all remaining rows sorted by the same hash key and `instance_id`.
 - Do not inspect ACUT results, public per-task results, gold patches, or test outcomes while selecting.
 
-No replacement IDs are recorded because no primary IDs are locked yet and no gold-patch smoke evaluation could be run.
+No replacement IDs are recorded because no pre-ACUT global infrastructure
+failure has been found. The reserve preview is recorded in
+`general_benchmark.yaml`; any replacement must still be locked before the first
+ACUT patch-generation run.
 
 ## Anti-Cherry-Picking Controls
 
@@ -43,6 +65,9 @@ No replacement IDs are recorded because no primary IDs are locked yet and no gol
 
 - Revised default is recorded as 6 `G_score` tasks and one primary attempt per ACUT/task.
 - Dataset snapshot, data hash, row count, and evaluator revision are explicit.
+- Concrete task IDs were computed from the pinned parquet by reading only `repo`
+  and `instance_id` columns, using the frozen salt and selection rule.
 - No invented task IDs were added.
 - No broad ACUT execution or model calls were made.
-- The remaining blocker is access to the pinned dataset rows and evaluator infrastructure needed to compute and smoke-test the concrete IDs.
+- Remaining pre-execution work is gold-patch smoke evaluation of the locked
+  six-task slice, not task ID materialization.

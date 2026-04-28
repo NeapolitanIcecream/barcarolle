@@ -1,7 +1,7 @@
 id: gscore_swebench_pro_public_6_v1
-status: blocked_pending_task_id_materialization
+status: locked
 owner: general-benchmark-lock
-selected_at: null
+selected_at: "2026-04-28T14:36:30+08:00"
 updated_at: "2026-04-28"
 
 benchmark:
@@ -38,17 +38,61 @@ task_subset:
   name: barcarolle_gscore_swebp_public_6_v1
   target_size: 6
   source_population: "all 731 rows in ScaleAI/SWE-bench_Pro default/test at the pinned snapshot"
-  selection_status: blocked_pending_dataset_access
-  materialization_required_before_acut_runs: true
-  locked_task_ids: []
+  selection_status: locked
+  materialization_required_before_acut_runs: false
+  locked_task_ids:
+    - ordinal: 1
+      repo: NodeBB/NodeBB
+      instance_id: instance_NodeBB__NodeBB-51d8f3b195bddb13a13ddc0de110722774d9bb1b-vf2cf3cbd463b7ad942381f1c6d077626485a1e9e
+      selection_key: "047ff911070ea0140124c66c1cf72f0b7784a6aabc6498be01b83feb5c975002"
+    - ordinal: 2
+      repo: NodeBB/NodeBB
+      instance_id: instance_NodeBB__NodeBB-84dfda59e6a0e8a77240f939a7cb8757e6eaf945-v2c59007b1005cd5cd14cbb523ca5229db1fd2dd8
+      selection_key: "0721e5783d7d2d25c88f1e5e89f9f6534798dc3b069d39ecab6c2948bcaa2a8c"
+    - ordinal: 3
+      repo: ansible/ansible
+      instance_id: instance_ansible__ansible-d33bedc48fdd933b5abd65a77c081876298e2f07-v0f01c69f1e2528b935359cfe578530722bca2c59
+      selection_key: "017a871e5635c864650083122fc0a23ab4caf85bb6fc99da08df84ca7cb4852d"
+    - ordinal: 4
+      repo: ansible/ansible
+      instance_id: instance_ansible__ansible-984216f52e76b904e5b0fa0fb956ab4f1e0a7751-v1055803c3a812189a1133297f7f5468579283f86
+      selection_key: "048c1c04ca1707ade6311c313fde81725dd47da7d47774dc1940af6c6b94ae5e"
+    - ordinal: 5
+      repo: element-hq/element-web
+      instance_id: instance_element-hq__element-web-776ffa47641c7ec6d142ab4a47691c30ebf83c2e
+      selection_key: "0129076119cdc9afe90add7483d6d84e60836ab72986d7f24525c60c15ba0be5"
+    - ordinal: 6
+      repo: element-hq/element-web
+      instance_id: instance_element-hq__element-web-5dfde12c1c1c0b6e48f17e3405468593e39d9492-vnan
+      selection_key: "05758b2065573dbfba3b9ff296a4363ac2aefe48447f8fc3b5580541f9f9f454"
   replacements: []
   materialization_attempt:
-    attempted_at: "2026-04-28T12:24:52+08:00"
-    result: blocked
-    blocker: "The pinned dataset rows are not available locally, shell network cannot resolve the dataset or evaluator hosts, and Docker is not running for the local evaluator fallback."
-    smallest_next_action: "Provide or fetch the pinned parquet file, verify its SHA256, then compute the first six IDs with the frozen salt and selection rule below before any ACUT patch-generation run."
+    attempted_at: "2026-04-28T14:36:30+08:00"
+    result: locked
+    blocker: null
+    cache_path: experiments/core_narrative/cache/swebench_pro/test-00000-of-00001.parquet
+    cache_ignored_by_git: true
+    download_command: "curl -L --fail --retry 3 --retry-delay 2 -o experiments/core_narrative/cache/swebench_pro/test-00000-of-00001.parquet https://huggingface.co/datasets/ScaleAI/SWE-bench_Pro/resolve/7ab5114912baf22bb098818e604c02fe7ad2c11f/data/test-00000-of-00001.parquet"
+    download_elapsed_seconds: 2.52
+    sha256_verified: "c8cd7115496ad4e9a8b21d088cef576a65bf821bb542b24336f13f714cef13f8"
+    parquet_reader: pyarrow 24.0.0 in ignored uv-managed Python 3.12.12 cache venv
+    materialized_rows: 731
+    materialized_repo_count: 11
+    docker_context: orbstack
+    docker_version: "client 29.4.0, server 29.4.0"
+    smallest_next_action: "Run pre-ACUT gold-patch smoke evaluation for the locked six-task slice with the pinned evaluator before any scored ACUT runs."
     checked_without_model_calls: true
     broad_acut_execution_started: false
+  reserve_task_ids_preview:
+    - repo: internetarchive/openlibrary
+      instance_id: instance_internetarchive__openlibrary-58999808a17a26b387f8237860a7a524d1e2d262-v08d8e8889ec945ab821fb156c04c7d2e2810debb
+      selection_key: "002fe9143400118cd9c1dad92c71c32415871635f28a89259c73c089eeaa0929"
+    - repo: flipt-io/flipt
+      instance_id: instance_flipt-io__flipt-b3cd920bbb25e01fdb2dab66a5a913363bc62f6c
+      selection_key: "00839534be07eec25b851cda34e41f66df5b6442adb36ca767b781156c5bd484"
+    - repo: internetarchive/openlibrary
+      instance_id: instance_internetarchive__openlibrary-6fdbbeee4c0a7e976ff3e46fb1d36f4eb110c428-v08d8e8889ec945ab821fb156c04c7d2e2810debb
+      selection_key: "00fd0eec01435e42714aa87c7ee9798200181983ca7a2cb71f91a59312aa2e93"
   stratification:
     field: repo
     rows_per_repo: 2
@@ -149,7 +193,7 @@ cost_setup_estimate:
 
 limitations:
   - "The configured slice is the revised six-task default, not the official full SWE-Bench Pro public leaderboard."
-  - "Concrete task IDs are not locked yet because the pinned dataset rows could not be accessed from this worktree."
+  - "Concrete task IDs are locked from the pinned dataset, but pre-ACUT gold-patch smoke evaluation is still required before scored runs."
   - "Public tasks can still be contaminated in model training or discoverable through external search; ACUT network policy must match the repository experiment policy."
   - "SWE-Bench Pro is broader and harder than many target repositories, so G_score may underweight repository-specific context strategies."
   - "SWE-Bench Pro scoring is test-based; it does not directly measure maintainability, code review acceptability, or product fit."
