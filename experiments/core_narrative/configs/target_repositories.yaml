@@ -1,6 +1,7 @@
-status: recommended
-updated: 2026-04-28T09:36:26+08:00
+status: blocked_runtime_unverified
+updated: 2026-04-28T12:23:52+08:00
 decision_owner: repo-scout
+runtime_lock_owner: repo-runtime-lock
 primary: pallets_click
 fallbacks:
   - psf_black
@@ -35,6 +36,115 @@ common_notes:
     - GitHub repository pages for issue, pull request, and test-directory shape.
     - Ecosyste.ms issue statistics only where GitHub pages did not expose a
       stable aggregate in plain HTML.
+
+runtime_lock:
+  status: blocked
+  updated: 2026-04-28T12:23:52+08:00
+  selected_repository: null
+  reason: >-
+    Local runtime verification could not be completed in this worker sandbox.
+    The primary and every ordered fallback failed before checkout because
+    github.com could not be resolved, and no existing local checkout/cache was
+    found for any candidate.
+  revised_default_slice:
+    rbench_tasks: 8
+    rwork_tasks: 6
+    primary_attempts_per_task: 1
+    execution_profile: budget-constrained four-core ACUT core subset
+  local_environment:
+    shell_python:
+      command: python
+      result: not_found
+    default_python3:
+      command: python3 --version
+      result: Python 3.9.6
+      path: /usr/bin/python3
+      suitability_for_primary: not_suitable_for_pallets_click_python_requires
+    uv:
+      command: uv --version
+      result: uv 0.11.1 (Homebrew 2026-03-24 aarch64-apple-darwin)
+      usable_cache_override: UV_CACHE_DIR=/tmp/barcarolle-uv-cache
+      candidate_python_for_primary:
+        command: UV_CACHE_DIR=/tmp/barcarolle-uv-cache uv python find 3.12
+        result: /Users/chenmohan/.local/share/uv/python/cpython-3.12.12-macos-aarch64-none/bin/python3.12
+    git:
+      command: git --version
+      result: git version 2.50.1 (Apple Git-155)
+  clone_probe_directory: experiments/core_narrative/external_repos
+  local_checkout_cache_search:
+    searched_roots:
+      - /Users/chenmohan/gits
+      - /tmp
+      - /var/folders/my/gymbb9t12mb4tf91rnc9yzjc0000gn/T
+    result: no_existing_click_black_attrs_or_flask_checkout_found
+    notes: >-
+      Some macOS temporary subdirectories were unreadable due local permission
+      restrictions; no candidate checkout was found in readable locations.
+  attempts:
+    - repository_key: pallets_click
+      role: primary
+      repository: pallets/click
+      target_path: experiments/core_narrative/external_repos/click
+      clone_command: git clone https://github.com/pallets/click.git experiments/core_narrative/external_repos/click
+      clone_elapsed_seconds: 0.03
+      clone_result: failed_dns_resolution_for_github_com
+      checkout_commit: null
+      python_runtime: not_verified_no_checkout
+      install_command: python -m pip install -e . pytest
+      install_elapsed_seconds: null
+      smoke_command: pytest -q tests/test_parser.py tests/test_options.py tests/test_shell_completion.py
+      smoke_elapsed_seconds: null
+      representative_or_full_command: pytest -q
+      representative_or_full_elapsed_seconds: null
+      viable_for_revised_default_slice: unknown_local_runtime_unverified
+    - repository_key: psf_black
+      role: fallback_1
+      repository: psf/black
+      target_path: experiments/core_narrative/external_repos/black
+      clone_command: git clone https://github.com/psf/black.git experiments/core_narrative/external_repos/black
+      clone_elapsed_seconds: 0.02
+      clone_result: failed_dns_resolution_for_github_com
+      checkout_commit: null
+      python_runtime: not_verified_no_checkout
+      install_command: python -m pip install -e . pytest pytest-xdist
+      install_elapsed_seconds: null
+      smoke_command: pytest -q tests/test_format.py tests/test_black.py
+      smoke_elapsed_seconds: null
+      representative_or_full_command: pytest -q -k "not incompatible_with_mypyc"
+      representative_or_full_elapsed_seconds: null
+      viable_for_revised_default_slice: unknown_local_runtime_unverified
+    - repository_key: python_attrs_attrs
+      role: fallback_2
+      repository: python-attrs/attrs
+      target_path: experiments/core_narrative/external_repos/attrs
+      clone_command: git clone https://github.com/python-attrs/attrs.git experiments/core_narrative/external_repos/attrs
+      clone_elapsed_seconds: 0.02
+      clone_result: failed_dns_resolution_for_github_com
+      checkout_commit: null
+      python_runtime: not_verified_no_checkout
+      install_command: python -m pip install -e . pytest hypothesis pympler cloudpickle "pytest-xdist[psutil]"
+      install_elapsed_seconds: null
+      smoke_command: pytest -q tests/test_make.py tests/test_validators.py tests/test_converters.py
+      smoke_elapsed_seconds: null
+      representative_or_full_command: pytest -q
+      representative_or_full_elapsed_seconds: null
+      viable_for_revised_default_slice: unknown_local_runtime_unverified
+    - repository_key: pallets_flask
+      role: fallback_3
+      repository: pallets/flask
+      target_path: experiments/core_narrative/external_repos/flask
+      clone_command: git clone https://github.com/pallets/flask.git experiments/core_narrative/external_repos/flask
+      clone_elapsed_seconds: 0.02
+      clone_result: failed_dns_resolution_for_github_com
+      checkout_commit: null
+      python_runtime: not_verified_no_checkout
+      install_command: python -m pip install -e . pytest asgiref greenlet python-dotenv
+      install_elapsed_seconds: null
+      smoke_command: pytest -q tests/test_basic.py tests/test_request.py tests/test_cli.py
+      smoke_elapsed_seconds: null
+      representative_or_full_command: pytest -q
+      representative_or_full_elapsed_seconds: null
+      viable_for_revised_default_slice: unknown_local_runtime_unverified
 
 repositories:
   pallets_click:

@@ -1,6 +1,6 @@
 # Repo Scout Notes
 
-Updated: 2026-04-28T09:36:26+08:00
+Updated: 2026-04-28T12:23:52+08:00
 
 ## Recommendation
 
@@ -18,6 +18,44 @@ Recommended fallbacks, in order:
 3. `pallets/flask`
 
 The Barcarolle repository was excluded as required.
+
+## Runtime Lock Update
+
+Status: blocked. The pre-run repository lock is not closed because local
+runtime verification could not complete in this sandbox.
+
+The runtime-lock worker attempted the primary and every ordered fallback under
+the ignored local probe directory `experiments/core_narrative/external_repos/`.
+Each clone failed before checkout with DNS resolution failure for `github.com`,
+so no repository commit, install timing, smoke timing, or full-suite timing was
+available to lock:
+
+| Candidate | Role | Clone target | Clone result | Elapsed |
+| --- | --- | --- | --- | --- |
+| `pallets/click` | primary | `experiments/core_narrative/external_repos/click` | failed before checkout: could not resolve `github.com` | 0.03s |
+| `psf/black` | fallback 1 | `experiments/core_narrative/external_repos/black` | failed before checkout: could not resolve `github.com` | 0.02s |
+| `python-attrs/attrs` | fallback 2 | `experiments/core_narrative/external_repos/attrs` | failed before checkout: could not resolve `github.com` | 0.02s |
+| `pallets/flask` | fallback 3 | `experiments/core_narrative/external_repos/flask` | failed before checkout: could not resolve `github.com` | 0.02s |
+
+Local checkout/cache search found no existing `click`, `black`, `attrs`, or
+`flask` checkout under readable workspace or temp probe roots. Some macOS temp
+subdirectories were unreadable due local permission restrictions.
+
+Local tooling observed:
+
+- `python`: not found on `PATH`.
+- `python3`: `Python 3.9.6` at `/usr/bin/python3`.
+- `uv`: `uv 0.11.1`; with `UV_CACHE_DIR=/tmp/barcarolle-uv-cache`, `uv python
+  find 3.12` found `/Users/chenmohan/.local/share/uv/python/cpython-3.12.12-macos-aarch64-none/bin/python3.12`.
+- `git`: `git version 2.50.1 (Apple Git-155)`.
+
+The revised default target remains 8 `RBench` tasks and 6 `RWork` tasks, one
+primary attempt each, under the budget-constrained four-core ACUT profile.
+`pallets/click` remains the preferred candidate on repo-scout evidence, but it
+is not locally locked until a checkout commit can be installed and timed with at
+least the smoke command
+`pytest -q tests/test_parser.py tests/test_options.py tests/test_shell_completion.py`
+and a full-suite or representative command such as `pytest -q`.
 
 ## Evidence
 
