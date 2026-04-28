@@ -1,7 +1,7 @@
 # Core Narrative Experiment Coordinator
 
-status: bootstrapping
-updated: 2026-04-28T09:29:29+08:00
+status: wave_0_running
+updated: 2026-04-28T09:32:17+08:00
 phase: Phase 0 - Experiment Bootstrap
 base_commit: 47046e7754d2402b7177a4b80f631ab6b0bcd97c
 coordinator_repo: /Users/chenmohan/gits/barcarolle
@@ -15,14 +15,17 @@ Execute `docs/experiments/core-narrative-experiment-plan.md` with tmux-managed C
 
 | Worker | Phase | Status | Session | Branch | Worktree | Owned Paths |
 | --- | --- | --- | --- | --- | --- | --- |
-| repo-scout | Wave 0 | initialized | pending | codex/core-exp-repo-scout | /Users/chenmohan/gits/barcarolle-wt-repo-scout | `experiments/core_narrative/configs/target_repositories.yaml`, `experiments/core_narrative/reports/repo_scout_notes.md` |
-| schema-toolsmith | Wave 0 | initialized | pending | codex/core-exp-schema-toolsmith | /Users/chenmohan/gits/barcarolle-wt-schema-toolsmith | `experiments/core_narrative/schemas/**`, `experiments/core_narrative/tools/**` |
-| acut-matrix | Wave 0 | initialized | pending | codex/core-exp-acut-matrix | /Users/chenmohan/gits/barcarolle-wt-acut-matrix | `experiments/core_narrative/configs/acuts/**`, `experiments/core_narrative/reports/acut_matrix_notes.md` |
-| general-benchmark | Wave 0 | initialized | pending | codex/core-exp-general-benchmark | /Users/chenmohan/gits/barcarolle-wt-general-benchmark | `experiments/core_narrative/configs/general_benchmark.yaml`, `experiments/core_narrative/reports/general_benchmark_notes.md` |
+| repo-scout | Wave 0 | session_running; process initialized | bcx-repo-scout | codex/core-exp-repo-scout | /Users/chenmohan/gits/barcarolle-wt-repo-scout | `experiments/core_narrative/configs/target_repositories.yaml`, `experiments/core_narrative/reports/repo_scout_notes.md` |
+| schema-toolsmith | Wave 0 | session_running; process initialized | bcx-schema-toolsmith | codex/core-exp-schema-toolsmith | /Users/chenmohan/gits/barcarolle-wt-schema-toolsmith | `experiments/core_narrative/schemas/**`, `experiments/core_narrative/tools/**` |
+| acut-matrix | Wave 0 | session_running; process initialized | bcx-acut-matrix | codex/core-exp-acut-matrix | /Users/chenmohan/gits/barcarolle-wt-acut-matrix | `experiments/core_narrative/configs/acuts/**`, `experiments/core_narrative/reports/acut_matrix_notes.md` |
+| general-benchmark | Wave 0 | session_running; process initialized | bcx-general-benchmark | codex/core-exp-general-benchmark | /Users/chenmohan/gits/barcarolle-wt-general-benchmark | `experiments/core_narrative/configs/general_benchmark.yaml`, `experiments/core_narrative/reports/general_benchmark_notes.md` |
 
 ## Active Tmux Sessions
 
-No Wave 0 sessions have been started yet.
+- `bcx-repo-scout`
+- `bcx-schema-toolsmith`
+- `bcx-acut-matrix`
+- `bcx-general-benchmark`
 
 ## Decisions
 
@@ -43,4 +46,4 @@ None currently recorded.
 
 ## Next Heartbeat Action
 
-Read each Wave 0 worker `process.md` from its worker worktree, update this status table, and start review or revision only after a worker marks `status: delivered`.
+Read each Wave 0 worker `process.md` from its worker worktree, update this status table, and start review or revision only after a worker marks `status: delivered`. Do not inspect `cli.log` unless debugging is explicitly requested.
