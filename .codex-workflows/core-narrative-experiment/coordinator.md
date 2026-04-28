@@ -1,7 +1,8 @@
 # Core Narrative Experiment Coordinator
 
 status: task_manifests_review_running
-updated: 2026-04-28T15:48:33+08:00
+updated: 2026-04-28T15:55:30+08:00
+today_stop_state: pre_soft_stop_active
 phase: Phase 0 - Experiment Bootstrap
 base_commit: 47046e7754d2402b7177a4b80f631ab6b0bcd97c
 coordinator_repo: /Users/chenmohan/gits/barcarolle
@@ -52,6 +53,21 @@ Execute `docs/experiments/core-narrative-experiment-plan.md` with tmux-managed C
 - Adopt revised-plan budget contract: USD `$240` soft stop, USD `$300` hard cap, and no ACUT model call may start without cost ledgering.
 - Default execution is budget-constrained to the core ACUT subset: `general-benchmark-optimized`, `repo-context-heavy`, `retrieval-sparse-symbolic`, and `lower-budget-fast-path`; 6 `G_score`, 8 `RBench`, 6 `RWork`, and one primary attempt per ACUT/task.
 - Defer `higher-budget-repo-depth`, `retrieval-history-augmented`, and `minimal-context-baseline` unless the core subset finishes below the soft stop and the coordinator records spare budget.
+- Adopt today's local stop strategy for 2026-04-28 in `Asia/Shanghai`: soft stop at `17:30`, hard stop at `17:50`.
+
+## Today Stop Strategy
+
+- timezone: `Asia/Shanghai`
+- soft_stop_at: `2026-04-28T17:30:00+08:00`
+- hard_stop_at: `2026-04-28T17:50:00+08:00`
+- current_stop_state: `pre_soft_stop_active`
+- current_pause_or_wind_down_status: Current focused `task-manifests-reviewer` may continue because it is already running, review-scoped, no-model-call work. Broad ACUT execution remains not started.
+- before_soft_stop_policy: Continue the current plan, but do not start a new long task that is unlikely to be reviewed, handed off, or cleanly paused before the hard stop.
+- soft_stop_window_policy: From `17:30` through `17:50`, only continue or start short, low-risk, easy-to-close coordination tasks such as `process.md` updates, review cleanup, artifact integration, small no-model-call preflights, and status summaries.
+- post_soft_stop_bans: After `17:30`, do not start broad ACUT execution, large batches of ACUT model calls, or new long-running workers.
+- hard_stop_policy: After `17:50`, do not start new Codex CLI workers, do not continue ACUT model calls, and do not continue consuming LLM budget. If any worker is still running, require it to write a clear `process.md` handoff and stop the corresponding tmux session.
+- workflow_contract: Coordinate only through `coordinator.md` and worker `process.md` files, do not inspect `cli.log` unless explicitly debugging, and do not overwrite unrelated user changes.
+- resume_entry: On resume, first read this `coordinator.md` and the latest relevant worker `process.md`. Continue from the recorded handoff: if `task-manifests-reviewer` delivered `no_issues`, integrate the reviewed task manifests and review; if it found issues, start a focused revision only if the current stop window allows it; if it is still working after hard stop, request handoff and stop its tmux session before any further execution.
 
 ## Blockers
 
@@ -125,4 +141,4 @@ None currently recorded. Broad ACUT execution has not been started.
 
 ## Next Heartbeat Action
 
-Read `task-manifests-reviewer` `process.md`. If delivered with `no_issues`, integrate the reviewed task-manifests artifacts and review before any execution-start record. If issues are found, start a focused revision. If blocked, record the blocker and notify only if user input is required. Do not start broad ACUT execution or model calls until the coordinator explicitly records execution start. Do not inspect `cli.log` unless debugging is explicitly requested.
+Read `task-manifests-reviewer` `process.md` and apply today's stop strategy. If delivered with `no_issues` before the hard stop, integrate the reviewed task-manifests artifacts and review before any execution-start record. If issues are found, start a focused revision only before the soft stop or if it is clearly short and easy to close before the hard stop. If blocked, record the blocker and notify only if user input is required. After `17:30`, do not start broad ACUT execution, large ACUT model-call batches, or new long-running workers. After `17:50`, request any running worker to write a handoff in `process.md`, stop its tmux session, and pause the workflow. Do not start broad ACUT execution or model calls until the coordinator explicitly records execution start. Do not inspect `cli.log` unless debugging is explicitly requested.
