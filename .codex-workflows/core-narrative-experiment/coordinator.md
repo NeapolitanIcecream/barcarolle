@@ -1,7 +1,7 @@
 # Core Narrative Experiment Coordinator
 
-status: schema_toolsmith_r5_running
-updated: 2026-04-28T11:43:46+08:00
+status: wave0_r5_review_running
+updated: 2026-04-28T11:56:03+08:00
 phase: Phase 0 - Experiment Bootstrap
 base_commit: 47046e7754d2402b7177a4b80f631ab6b0bcd97c
 coordinator_repo: /Users/chenmohan/gits/barcarolle
@@ -29,11 +29,12 @@ Execute `docs/experiments/core-narrative-experiment-plan.md` with tmux-managed C
 | wave0-r3-reviewer | Wave 0 revision review | delivered; issues_found; commit `1689032` integrated | exited | codex/core-exp-wave0-r3-reviewer | /Users/chenmohan/gits/barcarolle-wt-wave0-r3-reviewer | `.codex-workflows/core-narrative-experiment/reviews/wave0-r3-review.md` |
 | schema-toolsmith-r4 | Revised-plan gate tooling | delivered; commit `61833bf` | exited | codex/core-exp-schema-toolsmith | /Users/chenmohan/gits/barcarolle-wt-schema-toolsmith | `experiments/core_narrative/tools/**` |
 | wave0-r4-reviewer | Wave 0 revision review | delivered; issues_found; worker commit `b5312b5`, integrated as `4b767bd` | exited | codex/core-exp-wave0-r4-reviewer | /Users/chenmohan/gits/barcarolle-wt-wave0-r4-reviewer | `.codex-workflows/core-narrative-experiment/reviews/wave0-r4-review.md` |
-| schema-toolsmith-r5 | Revised-plan gate tooling | session_running; patch artifact credential-boundary revision started | bcx-schema-toolsmith-r5 | codex/core-exp-schema-toolsmith | /Users/chenmohan/gits/barcarolle-wt-schema-toolsmith | `experiments/core_narrative/tools/**` |
+| schema-toolsmith-r5 | Revised-plan gate tooling | delivered; commits `df16bdb`, `11ce367` | exited | codex/core-exp-schema-toolsmith | /Users/chenmohan/gits/barcarolle-wt-schema-toolsmith | `experiments/core_narrative/tools/**` |
+| wave0-r5-reviewer | Wave 0 revision review | session_running; process initialized | bcx-wave0-r5-reviewer | codex/core-exp-wave0-r5-reviewer | /Users/chenmohan/gits/barcarolle-wt-wave0-r5-reviewer | `.codex-workflows/core-narrative-experiment/reviews/wave0-r5-review.md` |
 
 ## Active Tmux Sessions
 
-- `bcx-schema-toolsmith-r5`
+- `bcx-wave0-r5-reviewer`
 
 ## Decisions
 
@@ -64,6 +65,8 @@ None currently recorded.
 - `schema-toolsmith-r4` delivered the command/result redaction fix and reported passing focused self-checks.
 - Focused `wave0-r4-reviewer` found one remaining patch artifact credential-boundary issue and its review is integrated at `.codex-workflows/core-narrative-experiment/reviews/wave0-r4-review.md`.
 - Started `schema-toolsmith-r5` to prevent `submission.patch` and related runner artifacts from persisting resolved required LLM env values or other unsafe credential/full-URL content from tracked-file mutations.
+- `schema-toolsmith-r5` delivered the patch artifact credential-boundary fix and reported passing focused self-checks.
+- Started focused `wave0-r5-reviewer` before integrating worker branches.
 - Do not start task-builder, leakage-auditor, verifier-auditor, or ACUT execution workers until the patch artifact credential-boundary issue is closed by revision and review, and until the remaining pre-run repository and general-benchmark locks are closed.
 
 ## Pre-Run Gates
@@ -84,4 +87,4 @@ None currently recorded.
 
 ## Next Heartbeat Action
 
-Read `schema-toolsmith` `process.md`. If revision 5 is delivered, start a focused Wave 0 revision 5 review. Keep broad ACUT execution blocked until the LLM access contract, cost ledger gate, and patch artifact credential boundary are implemented and reviewed, and until the remaining pre-run repository and general-benchmark locks are closed. Do not inspect `cli.log` unless debugging is explicitly requested.
+Read `wave0-r5-reviewer` `process.md`. If review is delivered with no blocking issues, integrate the reviewed worker branches and keep broad ACUT execution blocked until the remaining pre-run repository and general-benchmark locks are closed. If issues remain, write targeted feedback into the owning worker directory and start the next revision. Do not inspect `cli.log` unless debugging is explicitly requested.
