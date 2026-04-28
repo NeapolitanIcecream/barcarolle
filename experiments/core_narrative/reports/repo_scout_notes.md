@@ -1,6 +1,6 @@
 # Repo Scout Notes
 
-Updated: 2026-04-28T12:23:52+08:00
+Updated: 2026-04-28T14:36:00+08:00
 
 ## Recommendation
 
@@ -21,41 +21,34 @@ The Barcarolle repository was excluded as required.
 
 ## Runtime Lock Update
 
-Status: blocked. The pre-run repository lock is not closed because local
-runtime verification could not complete in this sandbox.
+Status: locked. After network recovery, the pre-run repository lock is closed
+on the primary target `pallets/click`.
 
-The runtime-lock worker attempted the primary and every ordered fallback under
-the ignored local probe directory `experiments/core_narrative/external_repos/`.
-Each clone failed before checkout with DNS resolution failure for `github.com`,
-so no repository commit, install timing, smoke timing, or full-suite timing was
-available to lock:
+The runtime-lock worker cloned `pallets/click` into the ignored local probe
+directory `experiments/core_narrative/external_repos/click` and verified local
+runtime viability with Python 3.12 and pytest:
 
-| Candidate | Role | Clone target | Clone result | Elapsed |
-| --- | --- | --- | --- | --- |
-| `pallets/click` | primary | `experiments/core_narrative/external_repos/click` | failed before checkout: could not resolve `github.com` | 0.03s |
-| `psf/black` | fallback 1 | `experiments/core_narrative/external_repos/black` | failed before checkout: could not resolve `github.com` | 0.02s |
-| `python-attrs/attrs` | fallback 2 | `experiments/core_narrative/external_repos/attrs` | failed before checkout: could not resolve `github.com` | 0.02s |
-| `pallets/flask` | fallback 3 | `experiments/core_narrative/external_repos/flask` | failed before checkout: could not resolve `github.com` | 0.02s |
+| Candidate | Role | Commit | Command | Result | Elapsed |
+| --- | --- | --- | --- | --- | --- |
+| `pallets/click` | primary | `8bd8b4a074c55c03b6eb5666edc44a9c43df38a2` | `git clone --depth 1 https://github.com/pallets/click.git experiments/core_narrative/external_repos/click` | succeeded | 1.34s |
+| `pallets/click` | primary | same | `uv pip install --python .venv/bin/python -e . pytest` | succeeded | 1.34s |
+| `pallets/click` | primary | same | `.venv/bin/python -m pytest -q tests/test_parser.py tests/test_options.py tests/test_shell_completion.py` | 618 passed | 1.37s |
+| `pallets/click` | primary | same | `.venv/bin/python -m pytest -q` | 1435 passed, 24 skipped, 30000 deselected, 1 xfailed | 2.42s |
 
-Local checkout/cache search found no existing `click`, `black`, `attrs`, or
-`flask` checkout under readable workspace or temp probe roots. Some macOS temp
-subdirectories were unreadable due local permission restrictions.
+Fallbacks were not rerun after the primary passed.
 
 Local tooling observed:
 
 - `python`: not found on `PATH`.
 - `python3`: `Python 3.9.6` at `/usr/bin/python3`.
-- `uv`: `uv 0.11.1`; with `UV_CACHE_DIR=/tmp/barcarolle-uv-cache`, `uv python
-  find 3.12` found `/Users/chenmohan/.local/share/uv/python/cpython-3.12.12-macos-aarch64-none/bin/python3.12`.
+- `uv`: `uv 0.11.1`; `uv python find 3.12` found `/Users/chenmohan/.local/share/uv/python/cpython-3.12.12-macos-aarch64-none/bin/python3.12`.
+- Runtime used for lock: `Python 3.12.12` in the local `.venv`.
 - `git`: `git version 2.50.1 (Apple Git-155)`.
 
 The revised default target remains 8 `RBench` tasks and 6 `RWork` tasks, one
 primary attempt each, under the budget-constrained four-core ACUT profile.
-`pallets/click` remains the preferred candidate on repo-scout evidence, but it
-is not locally locked until a checkout commit can be installed and timed with at
-least the smoke command
-`pytest -q tests/test_parser.py tests/test_options.py tests/test_shell_completion.py`
-and a full-suite or representative command such as `pytest -q`.
+`pallets/click` is now locally locked and remains viable for repo-specific
+benchmark generation.
 
 ## Evidence
 
@@ -120,11 +113,11 @@ and a full-suite or representative command such as `pytest -q`.
 
 - Created ignored directory `experiments/core_narrative/external_repos/`.
 - Verified `.gitignore` ignores `experiments/core_narrative/external_repos/`.
-- Attempted a shallow filtered clone of `pallets/click` into that directory.
-- Clone failed before checkout with `Could not resolve host: github.com`, so no
-  local full-suite timing was collected in this worker sandbox.
-- GitHub connector and browser reads were used instead for pyproject, license,
-  test-directory, and issue/PR evidence.
+- Shallow cloned `pallets/click` into that directory after network recovery.
+- Verified install, smoke, and full local non-stress pytest commands as recorded
+  in the runtime lock table.
+- Repo-scout source evidence still comes from the earlier GitHub connector and
+  browser reads for pyproject, license, test-directory, and issue/PR context.
 
 ## Primary Self-Check
 
@@ -161,7 +154,6 @@ Filtering required:
 
 ## Unresolved Questions
 
-- Exact `pallets/click` full-suite runtime on the experiment machine.
 - Best cutoff date after task-builder inspects actual merged PR density by
   task family.
 - Whether to include still-open issues in RWork or use only post-cutoff merged
