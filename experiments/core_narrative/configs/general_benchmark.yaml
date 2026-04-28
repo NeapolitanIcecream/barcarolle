@@ -1,7 +1,8 @@
-id: gscore_swebench_pro_public_22_v1
-status: selected
-owner: general-benchmark
-selected_at: "2026-04-28"
+id: gscore_swebench_pro_public_6_v1
+status: blocked_pending_task_id_materialization
+owner: general-benchmark-lock
+selected_at: null
+updated_at: "2026-04-28"
 
 benchmark:
   name: SWE-Bench Pro Public
@@ -34,22 +35,34 @@ benchmark:
       fallback: local Docker with --use_local_docker
 
 task_subset:
-  name: barcarolle_gscore_swebp_public_22_v1
-  target_size: 22
+  name: barcarolle_gscore_swebp_public_6_v1
+  target_size: 6
   source_population: "all 731 rows in ScaleAI/SWE-bench_Pro default/test at the pinned snapshot"
-  selection_status: deterministic_rule_frozen_before_acut_runs
+  selection_status: blocked_pending_dataset_access
+  materialization_required_before_acut_runs: true
+  locked_task_ids: []
+  replacements: []
+  materialization_attempt:
+    attempted_at: "2026-04-28T12:24:52+08:00"
+    result: blocked
+    blocker: "The pinned dataset rows are not available locally, shell network cannot resolve the dataset or evaluator hosts, and Docker is not running for the local evaluator fallback."
+    smallest_next_action: "Provide or fetch the pinned parquet file, verify its SHA256, then compute the first six IDs with the frozen salt and selection rule below before any ACUT patch-generation run."
+    checked_without_model_calls: true
+    broad_acut_execution_started: false
   stratification:
     field: repo
     rows_per_repo: 2
+    repo_count_for_primary_slice: 3
     repo_order: "lexicographic by repo string from the pinned dataset"
   selection_rule:
     salt: "barcarolle-core-narrative-gscore-v1"
     key: "sha256(salt + '\\n' + instance_id), lowercase hex"
     algorithm:
       - "Group candidate rows by repo."
+      - "Sort repo groups lexicographically by repo string."
       - "Sort each repo group by the selection key ascending, then by instance_id ascending as a tie breaker."
-      - "Select the first two rows from each repo group."
-      - "Build a global reserve list from remaining rows sorted by the same key, then instance_id."
+      - "Select the first two rows from each repo group in repo order until six rows are selected."
+      - "Build a global reserve list from all remaining rows sorted by the same key, then instance_id."
       - "Do not inspect ACUT results, public leaderboard per-task results, gold patches, or test outcomes while selecting."
   replacement_rule:
     allowed_only_for_global_infra_failure: true
@@ -87,7 +100,7 @@ scoring_method:
     - invalid_submission
     - acut_runtime_error
   weights: uniform_per_task
-  formula: "G_score = 100 * sum(resolved_i) / 22 after any pre-run global-infra replacements"
+  formula: "G_score = 100 * sum(resolved_i) / 6 after any pre-run global-infra replacements"
   denominator_policy: "fixed across all ACUTs; ACUT-specific failures do not shrink the denominator"
   repeated_runs:
     primary_attempts_per_acut_task: 1
@@ -119,23 +132,24 @@ normalization:
 
 cost_setup_estimate:
   slice_attempts:
-    per_acut: 22
-    four_acuts: 88
-    eight_acuts: 176
+    per_acut: 6
+    four_core_acuts: 24
+    eight_acuts: 48
   setup:
+    - "Fetch or provide the pinned ScaleAI/SWE-bench_Pro parquet file and verify its SHA256."
     - "Clone scaleapi/SWE-bench_Pro-os at the pinned revision."
     - "Install Python requirements for the evaluation harness."
     - "Configure Modal or local Docker."
     - "Pull or use the prebuilt jefzda/sweap-images image tag recorded in each dataset row."
-    - "Run gold-patch smoke evaluation for the locked slice before ACUT runs."
-  resource_level: moderate_to_high
+    - "Run gold-patch smoke evaluation for the locked six-task slice before ACUT runs."
+  resource_level: moderate
   local_storage_estimate: "plan for at least 120 GB free Docker/cache space if running locally; Modal is preferred for parallelism"
-  wall_time_estimate: "gold smoke plus verification can take hours; ACUT patch generation dominates and should use the ACUT manifest budget caps"
-  cost_driver: "22 * number_of_acuts long-horizon patch-generation attempts plus container verification"
+  wall_time_estimate: "gold smoke plus verification can take hours; ACUT patch generation dominates and must use the ACUT manifest budget caps"
+  cost_driver: "6 * number_of_acuts long-horizon patch-generation attempts plus container verification"
 
 limitations:
-  - "The slice is a 22-task experiment basis, not the official full SWE-Bench Pro public leaderboard."
-  - "The deterministic rule is frozen here, but concrete task IDs still need to be materialized and locked by the coordinator before any ACUT run."
+  - "The configured slice is the revised six-task default, not the official full SWE-Bench Pro public leaderboard."
+  - "Concrete task IDs are not locked yet because the pinned dataset rows could not be accessed from this worktree."
   - "Public tasks can still be contaminated in model training or discoverable through external search; ACUT network policy must match the repository experiment policy."
   - "SWE-Bench Pro is broader and harder than many target repositories, so G_score may underweight repository-specific context strategies."
   - "SWE-Bench Pro scoring is test-based; it does not directly measure maintainability, code review acceptability, or product fit."
