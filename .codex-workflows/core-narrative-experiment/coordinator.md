@@ -1,7 +1,7 @@
 # Core Narrative Experiment Coordinator
 
-status: wave0_r4_review_starting
-updated: 2026-04-28T11:28:09+08:00
+status: wave0_r4_review_running
+updated: 2026-04-28T11:29:12+08:00
 phase: Phase 0 - Experiment Bootstrap
 base_commit: 47046e7754d2402b7177a4b80f631ab6b0bcd97c
 coordinator_repo: /Users/chenmohan/gits/barcarolle
@@ -28,11 +28,11 @@ Execute `docs/experiments/core-narrative-experiment-plan.md` with tmux-managed C
 | schema-toolsmith-r3 | Revised-plan gate tooling | delivered; commits `c7a01b2`, `34b0677` | exited | codex/core-exp-schema-toolsmith | /Users/chenmohan/gits/barcarolle-wt-schema-toolsmith | `experiments/core_narrative/tools/**` |
 | wave0-r3-reviewer | Wave 0 revision review | delivered; issues_found; commit `1689032` integrated | exited | codex/core-exp-wave0-r3-reviewer | /Users/chenmohan/gits/barcarolle-wt-wave0-r3-reviewer | `.codex-workflows/core-narrative-experiment/reviews/wave0-r3-review.md` |
 | schema-toolsmith-r4 | Revised-plan gate tooling | delivered; commit `61833bf` | exited | codex/core-exp-schema-toolsmith | /Users/chenmohan/gits/barcarolle-wt-schema-toolsmith | `experiments/core_narrative/tools/**` |
-| wave0-r4-reviewer | Wave 0 revision review | initialized | pending | codex/core-exp-wave0-r4-reviewer | /Users/chenmohan/gits/barcarolle-wt-wave0-r4-reviewer | `.codex-workflows/core-narrative-experiment/reviews/wave0-r4-review.md` |
+| wave0-r4-reviewer | Wave 0 revision review | session_running; process initialized | bcx-wave0-r4-reviewer | codex/core-exp-wave0-r4-reviewer | /Users/chenmohan/gits/barcarolle-wt-wave0-r4-reviewer | `.codex-workflows/core-narrative-experiment/reviews/wave0-r4-review.md` |
 
 ## Active Tmux Sessions
 
-None. `schema-toolsmith-r4` has exited after delivery.
+- `bcx-wave0-r4-reviewer`
 
 ## Decisions
 
@@ -60,7 +60,8 @@ None currently recorded.
 - `schema-toolsmith-r3` delivered gate and ledger append tooling, updated `run_task.py` to enforce the gate before ACUT command execution, and reported passing self-checks.
 - Focused `wave0-r3-reviewer` found one remaining credential-boundary issue and its review is integrated at `.codex-workflows/core-narrative-experiment/reviews/wave0-r3-review.md`.
 - Started `schema-toolsmith-r4` to make `run_task.py` reject or redact secret-looking command arguments and full URLs before writing result artifacts.
-- `schema-toolsmith-r4` delivered the command/result redaction fix and reported passing focused self-checks. Start focused review before integrating worker branches.
+- `schema-toolsmith-r4` delivered the command/result redaction fix and reported passing focused self-checks.
+- Focused `wave0-r4-reviewer` is running before integrating worker branches.
 - Do not start task-builder, leakage-auditor, verifier-auditor, or ACUT execution workers until the clean-room workspace leakage and ACUT schema/manifest mismatch are closed.
 
 ## Pre-Run Gates
