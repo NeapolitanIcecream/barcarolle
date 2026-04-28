@@ -1,10 +1,331 @@
-# Filled by the repo-scout worker.
-status: pending
-primary: null
-fallbacks: []
+status: recommended
+updated: 2026-04-28T09:36:26+08:00
+decision_owner: repo-scout
+primary: pallets_click
+fallbacks:
+  - psf_black
+  - python_attrs_attrs
+  - pallets_flask
+
 selection_criteria:
-  deterministic_tests: true
+  deterministic_local_tests: true
   enough_historical_tasks: true
   acceptable_build_time: true
   limited_external_services: true
+  language_tooling_familiarity: true
   license_permits_local_evaluation: true
+  excluded_repositories:
+    - /Users/chenmohan/gits/barcarolle
+    - /Users/chenmohan/gits/barcarolle-wt-repo-scout
+
+common_notes:
+  local_probe:
+    attempted: true
+    command: >-
+      git clone --depth 1 --filter=blob:none
+      https://github.com/pallets/click.git
+      experiments/core_narrative/external_repos/click
+    result: >-
+      Failed in this worker sandbox with DNS resolution error for github.com.
+      No repository checkout was available for local timing. The ignored clone
+      directory exists locally and should be reused by later workers if network
+      access is available.
+  evidence_basis:
+    - GitHub connector reads of current pyproject and license files.
+    - GitHub repository pages for issue, pull request, and test-directory shape.
+    - Ecosyste.ms issue statistics only where GitHub pages did not expose a
+      stable aggregate in plain HTML.
+
+repositories:
+  pallets_click:
+    role: primary
+    repository: pallets/click
+    clone_url: https://github.com/pallets/click.git
+    default_branch: main
+    license:
+      spdx: BSD-3-Clause
+      suitability: suitable
+      evidence_url: https://github.com/pallets/click/blob/main/LICENSE.txt
+    language_tooling:
+      primary_language: Python
+      package_backend: flit_core
+      python_requires: ">=3.10"
+      local_test_framework: pytest
+      maintainer_runner: tox with tox-uv
+      familiarity: high
+    setup_commands:
+      - git clone https://github.com/pallets/click.git experiments/core_narrative/external_repos/click
+      - cd experiments/core_narrative/external_repos/click
+      - python -m venv .venv
+      - . .venv/bin/activate
+      - python -m pip install -U pip
+      - python -m pip install -e . pytest
+    test_commands:
+      smoke:
+        - pytest -q tests/test_parser.py tests/test_options.py tests/test_shell_completion.py
+      full_local:
+        - pytest -q
+      maintainer_style:
+        - python -m pip install tox tox-uv
+        - tox -e py3.12
+    evaluation:
+      deterministic_local_tests:
+        rating: high
+        rationale: >-
+          pyproject declares pytest testpaths as tests, warning-as-error behavior,
+          and excludes stress tests by default with the non-stress marker.
+      historical_task_supply:
+        rating: high
+        rationale: >-
+          Mature Pallets project with more than one thousand closed pull
+          requests in public GitHub listings and active issue/PR traffic.
+          Candidate anchors can be mined across parser, option/default handling,
+          shell completion, terminal UI, formatting, CliRunner, typing, and docs
+          backed by tests.
+      build_time:
+        rating: low_to_moderate
+        rationale: >-
+          Small pure-Python package with one runtime dependency only on Windows.
+          Full pytest is expected to be much cheaper than larger web framework
+          or formatter suites, although exact timing was not measured locally.
+      service_dependency_risk:
+        rating: low
+        rationale: CLI library tests are mostly in-process and filesystem/TTY
+          oriented; no database, network service, browser, or container runtime is
+          expected for the core suite.
+      language_tooling_familiarity:
+        rating: high
+        rationale: Standard Python packaging and pytest verification are familiar
+          to Codex workers and easy to wrap in deterministic verifiers.
+      license_suitability:
+        rating: high
+        rationale: BSD-3-Clause is permissive for local evaluation and derivative
+          test harness work, subject to retaining notices.
+    rbench_rwork_self_check:
+      status: plausible
+      proposed_split:
+        rbench: 30
+        rwork: 12
+        split_method: temporal
+        suggested_cutoff: "2024-01-01"
+      disjoint_anchor_strategy: >-
+        Mine RBench from merged PRs and linked issues before the cutoff; mine
+        RWork from later merged PRs and selected still-open maintainer-style
+        issues. Exclude documentation-only, dependency-only, release-only, and
+        workflow-only anchors unless they exercise repo behavior.
+      likely_task_families:
+        - parser and option parsing edge cases
+        - default and flag value semantics
+        - shell completion behavior
+        - terminal UI and prompt behavior
+        - CliRunner/testing helper behavior
+        - type annotation and metadata regressions
+        - formatting/help output regressions
+      confidence: 0.82
+    known_risks:
+      - Exact full-suite runtime was not measured because the sandbox cannot clone from GitHub.
+      - Some tasks touch terminal, color, locale, and Windows-specific behavior;
+        verifiers should pin platform assumptions or avoid platform-specific anchors.
+      - Historical mining must filter dependency, docs, release, and CI-only PRs.
+      - Current main requires Python 3.10 or newer.
+    recommendation_rationale: >-
+      Best balance of enough historical supply, cheap local verification, low
+      external service risk, familiar Python tooling, and permissive license.
+
+  psf_black:
+    role: fallback
+    repository: psf/black
+    clone_url: https://github.com/psf/black.git
+    default_branch: main
+    license:
+      spdx: MIT
+      suitability: suitable
+      evidence_url: https://github.com/psf/black/blob/main/LICENSE
+    language_tooling:
+      primary_language: Python
+      package_backend: hatchling
+      python_requires: ">=3.10"
+      local_test_framework: pytest
+      familiarity: high
+    setup_commands:
+      - git clone https://github.com/psf/black.git experiments/core_narrative/external_repos/black
+      - cd experiments/core_narrative/external_repos/black
+      - python -m venv .venv
+      - . .venv/bin/activate
+      - python -m pip install -U pip
+      - python -m pip install -e . pytest pytest-xdist
+    test_commands:
+      smoke:
+        - pytest -q tests/test_format.py tests/test_black.py
+      full_local:
+        - pytest -q -k "not incompatible_with_mypyc"
+      maintainer_style:
+        - python -m pip install tox
+        - tox -e py3.12
+    evaluation:
+      deterministic_local_tests:
+        rating: high
+        rationale: pyproject configures pytest with strict config and markers.
+      historical_task_supply:
+        rating: very_high
+        rationale: >-
+          Public GitHub listings show thousands of closed PRs and hundreds of
+          open issues; many formatter regressions include compact code examples
+          and snapshot-like expected output.
+      build_time:
+        rating: moderate
+        rationale: >-
+          Larger suite than Click, with formatting fixtures, optional blackd and
+          notebook paths, pytest-xdist, and optional mypyc-related concerns.
+      service_dependency_risk:
+        rating: low_to_moderate
+        rationale: Core formatter tests are local, but blackd and optional
+          notebook/server-adjacent paths need filtering or extra dependencies.
+      language_tooling_familiarity:
+        rating: high
+        rationale: Python plus pytest is familiar; formatter internals are more
+          specialized than Click internals.
+      license_suitability:
+        rating: high
+        rationale: MIT license is suitable for local evaluation.
+    rbench_rwork_self_check:
+      status: plausible
+      proposed_split:
+        rbench: 35
+        rwork: 15
+        split_method: temporal
+      confidence: 0.73
+    known_risks:
+      - Formatter output oracles need careful leakage controls and fixture handling.
+      - Some high-value bugs are parser/style-policy debates rather than objective fixes.
+      - Full test runtime and optional dependency setup are likely heavier than Click.
+
+  python_attrs_attrs:
+    role: fallback
+    repository: python-attrs/attrs
+    clone_url: https://github.com/python-attrs/attrs.git
+    default_branch: main
+    license:
+      spdx: MIT
+      suitability: suitable
+      evidence_url: https://github.com/python-attrs/attrs/blob/main/LICENSE
+    language_tooling:
+      primary_language: Python
+      package_backend: hatchling
+      python_requires: ">=3.9"
+      local_test_framework: pytest
+      familiarity: high
+    setup_commands:
+      - git clone https://github.com/python-attrs/attrs.git experiments/core_narrative/external_repos/attrs
+      - cd experiments/core_narrative/external_repos/attrs
+      - python -m venv .venv
+      - . .venv/bin/activate
+      - python -m pip install -U pip
+      - python -m pip install -e . pytest hypothesis pympler cloudpickle "pytest-xdist[psutil]"
+    test_commands:
+      smoke:
+        - pytest -q tests/test_make.py tests/test_validators.py tests/test_converters.py
+      full_local:
+        - pytest -q
+    evaluation:
+      deterministic_local_tests:
+        rating: high
+        rationale: pyproject declares pytest testpaths and strict markers/config.
+      historical_task_supply:
+        rating: moderate_to_high
+        rationale: >-
+          GitHub pages show hundreds of closed PRs and over one hundred open
+          issues. Supply appears sufficient after filtering docs and dependency
+          churn, but thinner than Click or Black.
+      build_time:
+        rating: low
+        rationale: Pure-Python library with a focused test suite and no runtime
+          dependencies.
+      service_dependency_risk:
+        rating: low
+        rationale: Tests are in-process and library-focused.
+      language_tooling_familiarity:
+        rating: high
+        rationale: Python data-model tests are familiar, though metaprogramming
+          details require careful task statements.
+      license_suitability:
+        rating: high
+        rationale: MIT license is suitable for local evaluation.
+    rbench_rwork_self_check:
+      status: plausible_but_tighter
+      proposed_split:
+        rbench: 24
+        rwork: 10
+        split_method: temporal_or_source_anchor
+      confidence: 0.76
+    known_risks:
+      - Smaller issue/PR pool after excluding docs, packaging, and sponsor material.
+      - Hypothesis-based tests should pin or clear example databases for repeatability.
+      - Some behavior is subtle Python data-model work that may need strong statements.
+
+  pallets_flask:
+    role: fallback
+    repository: pallets/flask
+    clone_url: https://github.com/pallets/flask.git
+    default_branch: main
+    license:
+      spdx: BSD-3-Clause
+      suitability: suitable
+      evidence_url: https://github.com/pallets/flask/blob/main/LICENSE.txt
+    language_tooling:
+      primary_language: Python
+      package_backend: flit_core
+      python_requires: ">=3.10"
+      local_test_framework: pytest
+      maintainer_runner: tox with tox-uv
+      familiarity: high
+    setup_commands:
+      - git clone https://github.com/pallets/flask.git experiments/core_narrative/external_repos/flask
+      - cd experiments/core_narrative/external_repos/flask
+      - python -m venv .venv
+      - . .venv/bin/activate
+      - python -m pip install -U pip
+      - python -m pip install -e . pytest asgiref greenlet python-dotenv
+    test_commands:
+      smoke:
+        - pytest -q tests/test_basic.py tests/test_request.py tests/test_cli.py
+      full_local:
+        - pytest -q
+      maintainer_style:
+        - python -m pip install tox tox-uv
+        - tox -e py3.12
+    evaluation:
+      deterministic_local_tests:
+        rating: high
+        rationale: pyproject configures pytest testpaths and warning-as-error behavior.
+      historical_task_supply:
+        rating: very_high
+        rationale: >-
+          GitHub merged-PR search exposed over one thousand merged PRs, and the
+          repo has a broad set of behavior-bearing tests across app, request,
+          JSON, session, CLI, templating, and async paths.
+      build_time:
+        rating: moderate
+        rationale: More dependencies and broader suite than Click.
+      service_dependency_risk:
+        rating: low_to_moderate
+        rationale: Most tests are local, but the web-framework domain introduces
+          more integration-style behavior and dependency-version coupling.
+      language_tooling_familiarity:
+        rating: high
+        rationale: Python/pytest are familiar, but web framework semantics add
+          complexity.
+      license_suitability:
+        rating: high
+        rationale: BSD-3-Clause is suitable for local evaluation.
+    rbench_rwork_self_check:
+      status: plausible
+      proposed_split:
+        rbench: 35
+        rwork: 15
+        split_method: temporal
+      confidence: 0.70
+    known_risks:
+      - Larger dependency surface than Click.
+      - Some tasks may require coordinating with Werkzeug, Jinja, or related Pallets packages.
+      - Web-framework behavior can create broader verifier fixtures than a CLI library.
