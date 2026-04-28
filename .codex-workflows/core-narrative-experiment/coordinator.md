@@ -1,7 +1,7 @@
 # Core Narrative Experiment Coordinator
 
-status: task_manifests_review_running
-updated: 2026-04-28T15:55:30+08:00
+status: task_manifests_integrated
+updated: 2026-04-28T16:06:03+08:00
 today_stop_state: pre_soft_stop_active
 phase: Phase 0 - Experiment Bootstrap
 base_commit: 47046e7754d2402b7177a4b80f631ab6b0bcd97c
@@ -36,12 +36,12 @@ Execute `docs/experiments/core-narrative-experiment-plan.md` with tmux-managed C
 | general-benchmark-lock | Pre-run lock | delivered; worker commit `88acbad`, integrated as `d9f8f8e` | exited | codex/core-exp-general-lock | /Users/chenmohan/gits/barcarolle-wt-general-lock | `experiments/core_narrative/configs/general_benchmark.yaml`, `experiments/core_narrative/reports/general_benchmark_notes.md` |
 | pre-run-lock-reviewer | Pre-run lock review | delivered; no_issues; worker commit `9c1c9a7`, integrated as `13404bc` | exited | codex/core-exp-pre-run-lock-reviewer | /Users/chenmohan/gits/barcarolle-wt-pre-run-lock-reviewer | `.codex-workflows/core-narrative-experiment/reviews/pre-run-locks-review.md` |
 | execution-planner | Execution planning | delivered; run manifest prepared | exited | codex/core-narrative-experiment | /Users/chenmohan/gits/barcarolle | `experiments/core_narrative/configs/core_subset_run_manifest.yaml` |
-| task-manifests | No-model preflight | delivered; worker commit `1cdcbba`; awaiting focused review | exited | codex/core-exp-task-manifests | /Users/chenmohan/gits/barcarolle-wt-task-manifests | `experiments/core_narrative/configs/tasks/**`, `experiments/core_narrative/reports/task_manifest_notes.md` |
-| task-manifests-reviewer | No-model preflight review | session_running; started focused review at commit `57736fa` | bcx-task-manifests-reviewer | codex/core-exp-task-manifests-reviewer | /Users/chenmohan/gits/barcarolle-wt-task-manifests-reviewer | `.codex-workflows/core-narrative-experiment/reviews/task-manifests-review.md`, `.codex-workflows/core-narrative-experiment/workers/task-manifests-reviewer/process.md` |
+| task-manifests | No-model preflight | delivered; worker commit `1cdcbba`, integrated as `4a89984` | exited | codex/core-exp-task-manifests | /Users/chenmohan/gits/barcarolle-wt-task-manifests | `experiments/core_narrative/configs/tasks/**`, `experiments/core_narrative/reports/task_manifest_notes.md` |
+| task-manifests-reviewer | No-model preflight review | delivered; no_issues; worker commit `8869a07`, integrated as `7ad9462` | exited | codex/core-exp-task-manifests-reviewer | /Users/chenmohan/gits/barcarolle-wt-task-manifests-reviewer | `.codex-workflows/core-narrative-experiment/reviews/task-manifests-review.md`, `.codex-workflows/core-narrative-experiment/workers/task-manifests-reviewer/process.md` |
 
 ## Active Tmux Sessions
 
-- `bcx-task-manifests-reviewer`
+None.
 
 ## Decisions
 
@@ -61,7 +61,7 @@ Execute `docs/experiments/core-narrative-experiment-plan.md` with tmux-managed C
 - soft_stop_at: `2026-04-28T17:30:00+08:00`
 - hard_stop_at: `2026-04-28T17:50:00+08:00`
 - current_stop_state: `pre_soft_stop_active`
-- current_pause_or_wind_down_status: Current focused `task-manifests-reviewer` may continue because it is already running, review-scoped, no-model-call work. Broad ACUT execution remains not started.
+- current_pause_or_wind_down_status: Reviewed task manifests are integrated. Broad ACUT execution remains not started, and the next broad run should be deferred unless the coordinator can explicitly record an execution start with enough time to close cleanly before the hard stop.
 - before_soft_stop_policy: Continue the current plan, but do not start a new long task that is unlikely to be reviewed, handed off, or cleanly paused before the hard stop.
 - soft_stop_window_policy: From `17:30` through `17:50`, only continue or start short, low-risk, easy-to-close coordination tasks such as `process.md` updates, review cleanup, artifact integration, small no-model-call preflights, and status summaries.
 - post_soft_stop_bans: After `17:30`, do not start broad ACUT execution, large batches of ACUT model calls, or new long-running workers.
@@ -104,6 +104,8 @@ None currently recorded. Broad ACUT execution has not been started.
 - Started `task-manifests` to prepare concrete 8 `RBench` and 6 `RWork` task manifests plus no-model-call preflights.
 - `task-manifests` delivered concrete 8 `RBench` and 6 `RWork` manifests for focused review. Broad ACUT execution and model calls remain not started.
 - Started focused `task-manifests-reviewer` before integrating task manifests.
+- Focused `task-manifests-reviewer` delivered `no_issues`.
+- Integrated reviewed task manifests and the review artifact. Broad ACUT execution and model calls remain not started.
 
 ## Pre-Run Gates
 
@@ -141,4 +143,4 @@ None currently recorded. Broad ACUT execution has not been started.
 
 ## Next Heartbeat Action
 
-Read `task-manifests-reviewer` `process.md` and apply today's stop strategy. If delivered with `no_issues` before the hard stop, integrate the reviewed task-manifests artifacts and review before any execution-start record. If issues are found, start a focused revision only before the soft stop or if it is clearly short and easy to close before the hard stop. If blocked, record the blocker and notify only if user input is required. After `17:30`, do not start broad ACUT execution, large ACUT model-call batches, or new long-running workers. After `17:50`, request any running worker to write a handoff in `process.md`, stop its tmux session, and pause the workflow. Do not start broad ACUT execution or model calls until the coordinator explicitly records execution start. Do not inspect `cli.log` unless debugging is explicitly requested.
+Apply today's stop strategy before taking the next step. The task manifests are reviewed and integrated, so the next eligible work is only short execution-readiness bookkeeping or a status summary unless there is enough time before `17:50` to close cleanly. After `17:30`, do not start broad ACUT execution, large ACUT model-call batches, or new long-running workers. After `17:50`, request any running worker to write a handoff in `process.md`, stop its tmux session, and pause the workflow. Do not start broad ACUT execution or model calls until the coordinator explicitly records execution start. Do not inspect `cli.log` unless debugging is explicitly requested.
