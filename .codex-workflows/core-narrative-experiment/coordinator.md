@@ -88,7 +88,7 @@ None currently recorded. Broad ACUT execution has not been started.
 - LLM access: `experiments/core_narrative/configs/llm_access.yaml` must remain value-free and record only environment variable names, redaction policy, and budget caps.
 - Cost ledger: `experiments/core_narrative/results/cost_ledger.jsonl` must exist and every ACUT model call or patch-generation attempt must append token, estimated/actual cost, and cumulative estimated cost fields.
 - Execution block: ACUT execution workers must mark `status: blocked` before any model call if either LLM environment variable is missing, if the ledger is missing/unwritable, if ledgering is not implemented, or if projected spend would exceed `$300`.
-- Broad execution workers remain blocked until the `repo-scout` and `general-benchmark` pre-run locks are closed.
+- Broad execution workers are not started yet; next execution-start record must confirm required LLM env presence, writable cost ledger, and the active budget-constrained default slice.
 
 ## Acceptance Gate
 
