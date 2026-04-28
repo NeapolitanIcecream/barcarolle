@@ -1,7 +1,7 @@
 # Core Narrative Experiment Coordinator
 
-status: wave0_r3_review_running
-updated: 2026-04-28T11:05:01+08:00
+status: schema_toolsmith_r4_running
+updated: 2026-04-28T11:16:57+08:00
 phase: Phase 0 - Experiment Bootstrap
 base_commit: 47046e7754d2402b7177a4b80f631ab6b0bcd97c
 coordinator_repo: /Users/chenmohan/gits/barcarolle
@@ -26,11 +26,12 @@ Execute `docs/experiments/core-narrative-experiment-plan.md` with tmux-managed C
 | schema-toolsmith-r2 | Wave 0 revision | delivered; commit `de7a126` | exited | codex/core-exp-schema-toolsmith | /Users/chenmohan/gits/barcarolle-wt-schema-toolsmith | `experiments/core_narrative/schemas/**`, `experiments/core_narrative/tools/**` |
 | llm-budget-gate | Revised-plan gate | recorded; tool enforcement delivered by schema worker; review pending | n/a | codex/core-narrative-experiment | /Users/chenmohan/gits/barcarolle | `experiments/core_narrative/configs/llm_access.yaml`, `experiments/core_narrative/results/cost_ledger.jsonl`, shared workflow contract |
 | schema-toolsmith-r3 | Revised-plan gate tooling | delivered; commits `c7a01b2`, `34b0677` | exited | codex/core-exp-schema-toolsmith | /Users/chenmohan/gits/barcarolle-wt-schema-toolsmith | `experiments/core_narrative/tools/**` |
-| wave0-r3-reviewer | Wave 0 revision review | session_running; process initialized | bcx-wave0-r3-reviewer | codex/core-exp-wave0-r3-reviewer | /Users/chenmohan/gits/barcarolle-wt-wave0-r3-reviewer | `.codex-workflows/core-narrative-experiment/reviews/wave0-r3-review.md` |
+| wave0-r3-reviewer | Wave 0 revision review | delivered; issues_found; commit `1689032` integrated | exited | codex/core-exp-wave0-r3-reviewer | /Users/chenmohan/gits/barcarolle-wt-wave0-r3-reviewer | `.codex-workflows/core-narrative-experiment/reviews/wave0-r3-review.md` |
+| schema-toolsmith-r4 | Revised-plan gate tooling | session_running; feedback written | bcx-schema-toolsmith-r4 | codex/core-exp-schema-toolsmith | /Users/chenmohan/gits/barcarolle-wt-schema-toolsmith | `experiments/core_narrative/tools/**` |
 
 ## Active Tmux Sessions
 
-- `bcx-wave0-r3-reviewer`
+- `bcx-schema-toolsmith-r4`
 
 ## Decisions
 
@@ -56,7 +57,8 @@ None currently recorded.
 - `schema-toolsmith-r2` delivered and the coordinator resolved its Git metadata commit blocker.
 - Started `schema-toolsmith-r3` to implement the LLM access and cost ledger gate tooling required by the revised plan.
 - `schema-toolsmith-r3` delivered gate and ledger append tooling, updated `run_task.py` to enforce the gate before ACUT command execution, and reported passing self-checks.
-- Focused `wave0-r3-reviewer` is running before integrating worker branches.
+- Focused `wave0-r3-reviewer` found one remaining credential-boundary issue and its review is integrated at `.codex-workflows/core-narrative-experiment/reviews/wave0-r3-review.md`.
+- Started `schema-toolsmith-r4` to make `run_task.py` reject or redact secret-looking command arguments and full URLs before writing result artifacts.
 - Do not start task-builder, leakage-auditor, verifier-auditor, or ACUT execution workers until the clean-room workspace leakage and ACUT schema/manifest mismatch are closed.
 
 ## Pre-Run Gates
@@ -77,4 +79,4 @@ None currently recorded.
 
 ## Next Heartbeat Action
 
-Read `wave0-r3-reviewer` `process.md`. If review is delivered with no blocking issues, integrate the reviewed worker branches and keep broad execution blocked until the remaining pre-run repository and general-benchmark locks are closed. If issues remain, write targeted feedback into the owning worker directory and start the next revision. Do not inspect `cli.log` unless debugging is explicitly requested.
+Read `schema-toolsmith` revision `process.md`. If revision 4 is delivered, start a narrow re-review of the `run_task.py` credential-boundary fix and the revised LLM/cost gate. If blocked, notify the user only if coordinator action cannot resolve it. Do not inspect `cli.log` unless debugging is explicitly requested.
