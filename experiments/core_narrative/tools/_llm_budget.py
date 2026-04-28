@@ -48,12 +48,19 @@ SECRET_FIELD_RE = re.compile(
     re.IGNORECASE,
 )
 URL_VALUE_RE = re.compile(r"https?://", re.IGNORECASE)
+FULL_URL_RE = re.compile(r"https?://[^\s\"'<>]+", re.IGNORECASE)
 SECRET_VALUE_PATTERNS = [
     re.compile(r"Bearer\s+[A-Za-z0-9._~+/=-]+", re.IGNORECASE),
     re.compile(r"\bsk-[A-Za-z0-9][A-Za-z0-9._-]{8,}\b"),
+    re.compile(r"\bAIza[0-9A-Za-z_-]{20,}\b"),
+    re.compile(r"\bya29\.[0-9A-Za-z_-]{20,}\b"),
     re.compile(r"\bgh[pousr]_[A-Za-z0-9_]{12,}\b"),
     re.compile(r"\bAKIA[0-9A-Z]{16}\b"),
     re.compile(r"\bxox[baprs]-[A-Za-z0-9-]{10,}\b"),
+    re.compile(
+        r"\b(?:gsk|or|mistral|cohere|voyage|fireworks|together)_[A-Za-z0-9][A-Za-z0-9._-]{16,}\b",
+        re.IGNORECASE,
+    ),
 ]
 PROVIDER_ENV_MARKERS = (
     "OPENAI",
@@ -336,7 +343,10 @@ def redact_sensitive_text(text: str | bytes | None, env: Mapping[str, str] | Non
     redacted = text
     for name, value in forbidden_value_markers(env).items():
         redacted = redacted.replace(value, f"<redacted:{name}>")
-    redacted = re.sub(r"Bearer\s+[A-Za-z0-9._~+/=-]+", "Bearer <redacted>", redacted, flags=re.IGNORECASE)
+    redacted = SECRET_VALUE_PATTERNS[0].sub("Bearer <redacted>", redacted)
+    for pattern in SECRET_VALUE_PATTERNS[1:]:
+        redacted = pattern.sub("<redacted:secret>", redacted)
+    redacted = FULL_URL_RE.sub("<redacted:url>", redacted)
     return redacted
 
 
@@ -348,6 +358,45 @@ def ensure_no_required_env_values(value: Any, env: Mapping[str, str] | None = No
     leaked = [name for name, marker in markers.items() if marker and marker in haystack]
     if leaked:
         raise ToolError("payload contains resolved LLM environment value", env_var_names=leaked)
+
+
+def _command_argument_violation(argument: str, env: Mapping[str, str] | None = None) -> str | None:
+    for value in forbidden_value_markers(env).values():
+        if value and value in argument:
+            return "resolved_llm_environment_value"
+    if URL_VALUE_RE.search(argument):
+        return "full_url"
+    if SECRET_FIELD_RE.search(argument):
+        return "credential_like_key"
+    for pattern in SECRET_VALUE_PATTERNS:
+        if pattern.search(argument):
+            return "secret_like_value"
+    return None
+
+
+def assert_safe_command_arguments(command: Sequence[str], env: Mapping[str, str] | None = None) -> None:
+    for index, argument in enumerate(command):
+        reason = _command_argument_violation(str(argument), env)
+        if reason:
+            raise ToolError(
+                "command argument rejected by redaction policy",
+                argument_index=index,
+                reason=reason,
+            )
+
+
+def redact_command_arguments(command: Sequence[str], env: Mapping[str, str] | None = None) -> list[str]:
+    redacted: list[str] = []
+    for argument in command:
+        text = str(argument)
+        for name, value in forbidden_value_markers(env).items():
+            if value:
+                text = text.replace(value, f"<redacted:{name}>")
+        text = redact_sensitive_text(text, env)
+        if SECRET_FIELD_RE.search(text):
+            text = "<redacted:credential-argument>"
+        redacted.append(text)
+    return redacted
 
 
 def _assert_safe_key(key: str, path_label: str) -> None:

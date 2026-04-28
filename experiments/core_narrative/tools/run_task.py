@@ -22,11 +22,13 @@ from _common import (
 )
 from _llm_budget import (
     DEFAULT_LEDGER_PATH,
+    assert_safe_command_arguments,
     ensure_no_required_env_values,
     gate_exit_code,
     gate_payload,
     llm_safe_subprocess_env,
     parse_usd,
+    redact_command_arguments,
     run_to_redacted_artifacts,
 )
 
@@ -118,7 +120,9 @@ def main() -> int:
         stderr_path = artifact_dir / "agent.stderr.txt"
         patch_path = Path(args.patch_path) if args.patch_path else artifact_dir / "submission.patch"
         command = command_from_args(args.command)
+        assert_safe_command_arguments(command, os.environ)
         ensure_no_required_env_values(command, os.environ)
+        redacted_command = redact_command_arguments(command, os.environ)
         projected_cost_usd = parse_usd(args.projected_cost_usd, "--projected-cost-usd")
         budget_gate = gate_payload(
             ledger_path=Path(args.llm_ledger),
@@ -167,12 +171,15 @@ def main() -> int:
             "started_at": started_at,
             "finished_at": finished_at,
             "workspace": str(workspace),
-            "command": command,
+            "command": redacted_command,
             "llm_budget_gate": budget_gate,
             "credential_env_policy": {
                 "allowed_llm_env_vars": ["BARCAROLLE_LLM_API_KEY", "BARCAROLLE_LLM_BASE_URL"],
                 "scrubbed_secret_like_env_var_count": scrubbed_env_var_count,
                 "captured_artifacts_redacted": True,
+                "command_arguments_checked": True,
+                "unsafe_command_arguments_rejected": True,
+                "command_representation_redacted": True,
             },
             "agent": {
                 "exit_code": run["exit_code"],
