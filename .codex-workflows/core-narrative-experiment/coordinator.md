@@ -1,7 +1,7 @@
 # Core Narrative Experiment Coordinator
 
-status: first_execution_pilot_review_running
-updated: 2026-04-29T13:17:24+08:00
+status: first_execution_pilot_integrated_transport_preflight_ready
+updated: 2026-04-29T13:29:57+08:00
 today_stop_state: 2026-04-28_stop_policy_expired
 phase: Phase 0 - Experiment Bootstrap
 base_commit: 47046e7754d2402b7177a4b80f631ab6b0bcd97c
@@ -45,12 +45,12 @@ Execute `docs/experiments/core-narrative-experiment-plan.md` with tmux-managed C
 | acut-2x2-patch-reviewer | Phase 3 focused review | delivered; issues_found; worker commit `13b3918`, integrated as `c8da5cc` | exited | codex/core-exp-acut-2x2-patch-reviewer | /Users/chenmohan/gits/barcarolle-wt-acut-2x2-patch-reviewer | `.codex-workflows/core-narrative-experiment/reviews/acut-2x2-patch-command-review.md`, `.codex-workflows/core-narrative-experiment/workers/acut-2x2-patch-reviewer/process.md` |
 | patch-command-r1-reviewer | Phase 3 focused re-review | delivered; issues_found; worker commit `e5c7db1`, integrated as `81dfbd0` | exited | codex/core-exp-patch-command-r1-reviewer | /Users/chenmohan/gits/barcarolle-wt-patch-command-r1-reviewer | `.codex-workflows/core-narrative-experiment/reviews/patch-command-r1-review.md`, `.codex-workflows/core-narrative-experiment/workers/patch-command-r1-reviewer/process.md` |
 | patch-command-r2-reviewer | Phase 3 focused follow-up review | delivered; no_issues; worker commit `8ce8d9b`, integrated as `3ffaefc` | exited | codex/core-exp-patch-command-r2-reviewer | /Users/chenmohan/gits/barcarolle-wt-patch-command-r2-reviewer | `.codex-workflows/core-narrative-experiment/reviews/patch-command-r2-review.md`, `.codex-workflows/core-narrative-experiment/workers/patch-command-r2-reviewer/process.md` |
-| first-execution-pilot | Phase 3 bounded execution | delivered; worker commit `f9a6986`; single authorized attempt ended as `command_failed` with one ledger record and no retry | exited | codex/core-exp-first-execution-pilot | /Users/chenmohan/gits/barcarolle-wt-first-execution-pilot | `experiments/core_narrative/results/cost_ledger.jsonl`, `experiments/core_narrative/results/raw/pilot_001__cheap-generic-swe__click__rbench__001__attempt1/**`, `experiments/core_narrative/results/normalized/pilot_001__cheap-generic-swe__click__rbench__001__attempt1.json`, `.codex-workflows/core-narrative-experiment/workers/first-execution-pilot/**` |
-| first-execution-pilot-reviewer | Phase 3 bounded execution review | running; start commit `d9b910f`; reviewing worker commit `f9a6986` before integration or further execution | bcx-first-execution-pilot-reviewer | codex/core-exp-first-execution-pilot-reviewer | /Users/chenmohan/gits/barcarolle-wt-first-execution-pilot-reviewer | `.codex-workflows/core-narrative-experiment/reviews/first-execution-pilot-review.md`, `.codex-workflows/core-narrative-experiment/workers/first-execution-pilot-reviewer/**` |
+| first-execution-pilot | Phase 3 bounded execution | delivered and reviewed; worker commit `f9a6986`, integrated as `998e0dc`; single authorized attempt ended as `command_failed` with one ledger record and no retry | exited | codex/core-exp-first-execution-pilot | /Users/chenmohan/gits/barcarolle-wt-first-execution-pilot | `experiments/core_narrative/results/cost_ledger.jsonl`, `experiments/core_narrative/results/raw/pilot_001__cheap-generic-swe__click__rbench__001__attempt1/**`, `experiments/core_narrative/results/normalized/pilot_001__cheap-generic-swe__click__rbench__001__attempt1.json`, `.codex-workflows/core-narrative-experiment/workers/first-execution-pilot/**` |
+| first-execution-pilot-reviewer | Phase 3 bounded execution review | delivered; no_issues; worker commit `5cb2cb4`, integrated as `41ca528` | exited | codex/core-exp-first-execution-pilot-reviewer | /Users/chenmohan/gits/barcarolle-wt-first-execution-pilot-reviewer | `.codex-workflows/core-narrative-experiment/reviews/first-execution-pilot-review.md`, `.codex-workflows/core-narrative-experiment/workers/first-execution-pilot-reviewer/**` |
 
 ## Active Tmux Sessions
 
-- `bcx-first-execution-pilot-reviewer` for focused review of delivered worker commit `f9a6986`.
+- None.
 
 ## Decisions
 
@@ -60,7 +60,7 @@ Execute `docs/experiments/core-narrative-experiment-plan.md` with tmux-managed C
 - Created heartbeat automation `core-narrative-experiment-coordinator` to wake this thread every 10 minutes for bounded coordination steps.
 - Adopt revised-plan LLM access contract: ACUT execution may use only `BARCAROLLE_LLM_API_KEY` and `BARCAROLLE_LLM_BASE_URL`; credential values, bearer tokens, resolved secrets, and full base URL values must not be written to Git, process files, logs, run results, or reports.
 - Adopt revised-plan budget contract: USD `$240` soft stop, USD `$300` hard cap, and no ACUT model call may start without cost ledgering.
-- Default execution is changed, pending focused review, to the 2x2 pilot ACUT subset: `frontier-generic-swe`, `frontier-click-specialist`, `cheap-generic-swe`, and `cheap-click-specialist`; 2 `G_score`, 3 `RBench`, 2 `RWork`, and one primary attempt per ACUT/task for 28 pilot runs.
+- Default execution is changed and reviewed to the 2x2 pilot ACUT subset: `frontier-generic-swe`, `frontier-click-specialist`, `cheap-generic-swe`, and `cheap-click-specialist`; 2 `G_score`, 3 `RBench`, 2 `RWork`, and one primary attempt per ACUT/task for 28 pilot runs.
 - If budget is tight, the allowed three-ACUT pilot subset is `frontier-generic-swe`, `frontier-click-specialist`, and `cheap-click-specialist`.
 - Defer `higher-budget-repo-depth`, `retrieval-history-augmented`, and `minimal-context-baseline` unless the pilot and any full-core promotion finish below the soft stop and the coordinator records spare budget.
 - Retire the previous active ACUT IDs for new execution: `general-benchmark-optimized`, `repo-context-heavy`, `retrieval-sparse-symbolic`, and `lower-budget-fast-path`.
@@ -82,13 +82,13 @@ Execute `docs/experiments/core-narrative-experiment-plan.md` with tmux-managed C
 
 ## Blockers
 
-No open patch-command blocker remains. Broad ACUT execution has not been started and no large model-call batch has started. A separate explicit execution-start decision was recorded at `2026-04-29T12:58:12+08:00` for exactly one bounded first pilot attempt: `cheap-generic-swe` on `click__rbench__001`, attempt 1. This authorizes only the `first-execution-pilot` worker and does not authorize broad ACUT execution.
+No open patch-command blocker remains. Broad ACUT execution has not been started and no large model-call batch has started. The first bounded pilot attempt is integrated and reviewed with `no_issues`, but the live patch command failed with redacted outcome `LLM request failed` and error type `gaierror`. Do not start a second model-call attempt until a no-secret transport preflight or equivalent coordinator record clears this operational failure mode.
 
 ## Execution Readiness Bookkeeping
 
 - checked_at: `2026-04-29T09:41:00+08:00`
 - readiness_state: `runner_smoke_preflight_ready`
-- active_workers: `first-execution-pilot-reviewer` running in tmux session `bcx-first-execution-pilot-reviewer`
+- active_workers: none
 - reviewed_inputs_ready:
   - LLM access and budget gate: reviewed in `wave0-r5-reviewer` with `no_issues`
   - repo runtime lock: reviewed and integrated
@@ -111,7 +111,8 @@ No open patch-command blocker remains. Broad ACUT execution has not been started
 - broad_execution_started: false
 - model_calls_started: one first-execution worker attempt completed with event `command_failed`; no second attempt or broad execution authorized
 - execution_decision: Explicit execution start is recorded only for `pilot_001__cheap-generic-swe__click__rbench__001__attempt1`; broad execution remains disallowed.
-- resume_entry: On the next step, read this coordinator and latest relevant worker `process.md` files. If `first-execution-pilot-reviewer` is running, read only its `process.md`; if delivered with `no_issues`, integrate the reviewed first-execution delivery and review artifact before deciding any next bounded step; if issues are found or blocked, record whether user input is required. Do not inspect `cli.log`.
+- first_execution_outcome: integrated and reviewed; adapter event `command_failed`, estimated cost `3.00`, cumulative estimated cost `3.00`, no patch, no verifier run, no retry.
+- resume_entry: On the next step, read this coordinator and latest relevant worker `process.md` files. Prepare or run a no-secret transport preflight for the BARCAROLLE LLM endpoint before any second model-call attempt; record only booleans/error classes and never credential values or full base URL values. Do not inspect `cli.log`.
 
 ## Execution Start Preflight
 
@@ -123,7 +124,7 @@ No open patch-command blocker remains. Broad ACUT execution has not been started
 - execution_start_worker: `first-execution-pilot`
 - execution_start_run_id: `pilot_001__cheap-generic-swe__click__rbench__001__attempt1`
 - broad_acut_execution_started: false
-- model_calls_started: exactly one first-execution worker attempt authorized and dispatched; no second attempt or broad execution authorized
+- model_calls_started: one first-execution worker attempt completed with event `command_failed`; no second attempt or broad execution authorized
 - env_presence:
   - `BARCAROLLE_LLM_API_KEY`: present, value not inspected or recorded
   - `BARCAROLLE_LLM_BASE_URL`: present, value not inspected or recorded
@@ -131,7 +132,7 @@ No open patch-command blocker remains. Broad ACUT execution has not been started
 - adapter_command_path: `python3 experiments/core_narrative/tools/acut_patch_adapter.py`
 - patch_command_path: `python3 experiments/core_narrative/tools/barcarolle_patch_command.py`
 - adapter_command_template: `python3 experiments/core_narrative/tools/acut_patch_adapter.py --workspace <prepared-task-workspace> --task <task-yaml> --acut experiments/core_narrative/configs/acuts/<active-2x2-acut>.yaml --attempt 1 --run-id <approved-run-id> --artifact-dir experiments/core_narrative/results/raw/<approved-run-id> --output experiments/core_narrative/results/raw/<approved-run-id>/adapter_result.json --normalized-output experiments/core_narrative/results/normalized/<approved-run-id>.json --llm-ledger experiments/core_narrative/results/cost_ledger.jsonl --projected-cost-usd <approved-projected-cost> --coordinator-decision-ref coordinator.md#execution-start-record --timeout-seconds 1200 -- python3 experiments/core_narrative/tools/barcarolle_patch_command.py --acut experiments/core_narrative/configs/acuts/<same-active-2x2-acut>.yaml`
-- run_manifest: `experiments/core_narrative/configs/core_subset_run_manifest.yaml` status updated to `first_execution_pilot_review_running`; `execution_start.recorded` is `true` only for the single approved first pilot attempt
+- run_manifest: `experiments/core_narrative/configs/core_subset_run_manifest.yaml` status updated to `first_execution_pilot_integrated_transport_preflight_ready`; `execution_start.recorded` is `true` only for the single approved first pilot attempt
 - active_default_slice:
   - acuts: `frontier-generic-swe`, `frontier-click-specialist`, `cheap-generic-swe`, `cheap-click-specialist`
   - pilot tasks: 2 `G_score`, 3 `RBench`, 2 `RWork`
@@ -204,7 +205,7 @@ No open patch-command blocker remains. Broad ACUT execution has not been started
 - closure_decision: `patch_generation_command_gap` is closed. A later explicit execution-start decision authorizes only the single `first-execution-pilot` worker attempt.
 - execution_start_recorded: true
 - broad_acut_execution_started: false
-- model_calls_started: exactly one first-execution worker attempt authorized and dispatched; no second attempt or broad execution authorized
+- model_calls_started: one first-execution worker attempt completed with event `command_failed`; no second attempt or broad execution authorized
 
 ## Review Queue
 
@@ -262,6 +263,9 @@ No open patch-command blocker remains. Broad ACUT execution has not been started
 - `patch-command-contract` revision 2 delivered commit `0d27f26`; current adapter smoke evidence now records active `cheap-click-specialist` and the active 2x2 pilot profile.
 - Started focused `patch-command-r2-reviewer` before integrating patch-command revisions or closing `patch_generation_command_gap`.
 - Focused `patch-command-r2-reviewer` delivered `no_issues`; integrated the patch-command implementation/revisions and review artifacts. `patch_generation_command_gap` is closed. Broad ACUT execution, execution-start preflight, and ACUT model calls remain not started.
+- Recorded an explicit execution-start decision for exactly one first pilot attempt: `pilot_001__cheap-generic-swe__click__rbench__001__attempt1`.
+- `first-execution-pilot` delivered commit `f9a6986`; the single attempt ran through the reviewed adapter and custom patch command, appended one cost ledger record, and ended as `command_failed` with redacted `LLM request failed` / `gaierror`; no patch, verifier run, retry, second attempt, broad execution, or large batch occurred.
+- Focused `first-execution-pilot-reviewer` delivered `no_issues` in commit `5cb2cb4`; integrated the first execution delivery and review artifact as merge commits `998e0dc` and `41ca528`.
 
 ## Pre-Run Gates
 
@@ -288,7 +292,7 @@ No open patch-command blocker remains. Broad ACUT execution has not been started
 - deferred_acuts: `higher-budget-repo-depth`, `retrieval-history-augmented`, `minimal-context-baseline`
 - broad_execution_started: false
 - run_manifest: `experiments/core_narrative/configs/core_subset_run_manifest.yaml`
-- next_allowed_step: focused review of the 2x2 ACUT redesign and focused review of the BARCAROLLE-env-only patch-generation command path; do not rerun execution-start preflight or start model calls until both reviews pass.
+- next_allowed_step: no-secret BARCAROLLE LLM transport preflight or equivalent coordinator record for the `gaierror` outcome; do not start broad ACUT execution or any second model-call attempt until that operational failure mode is cleared.
 
 ## Acceptance Gate
 
@@ -299,4 +303,4 @@ No open patch-command blocker remains. Broad ACUT execution has not been started
 
 ## Next Heartbeat Action
 
-Monitor `first-execution-pilot-reviewer`. Read only `.codex-workflows/core-narrative-experiment/workers/first-execution-pilot-reviewer/process.md`; if delivered with `no_issues`, integrate the reviewed delivery and review artifact before deciding any next bounded step; if issues are found or blocked, record whether user input is required. Do not start broad ACUT execution or any second model-call attempt.
+Prepare a no-secret BARCAROLLE LLM transport preflight for the first-attempt `gaierror` outcome, or record why user input is required. Do not start broad ACUT execution or any second model-call attempt. Do not record credential values, bearer tokens, resolved secrets, or full base URL values.

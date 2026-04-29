@@ -1,5 +1,5 @@
 id: core_2x2_pilot_budget_constrained_v2
-status: first_execution_pilot_review_running
+status: first_execution_pilot_integrated_transport_preflight_ready
 prepared_at: "2026-04-28T15:13:51+08:00"
 redesigned_at: "2026-04-29T11:20:00+08:00"
 owner: coordinator
@@ -18,7 +18,7 @@ execution_start:
   projected_cost_usd: 3.00
   broad_acut_execution_started: false
   model_calls_allowed: false
-  model_calls_allowed_scope: none_until_first_execution_review_passes
+  model_calls_allowed_scope: none_until_transport_preflight_clears_first_attempt_gaierror
   required_before_start:
     - coordinator records explicit execution start
     - required LLM environment variables are present
@@ -96,7 +96,7 @@ active_default_slice:
   total_primary_patch_generation_attempts: 80
 
 pilot_slice:
-  status: first_execution_attempt_delivered_under_review
+  status: first_execution_attempt_integrated_transport_preflight_ready
   default_before_full_core: true
   acuts:
     - frontier-generic-swe
@@ -138,7 +138,7 @@ pilot_slice:
     explicit_execution_start_decision_recorded: true
     broad_acut_execution_started: false
     model_calls_allowed: false
-    model_calls_allowed_scope: none_until_first_execution_review_passes
+    model_calls_allowed_scope: none_until_transport_preflight_clears_first_attempt_gaierror
   first_execution_attempt:
     run_id: pilot_001__cheap-generic-swe__click__rbench__001__attempt1
     acut_id: cheap-generic-swe
@@ -148,7 +148,18 @@ pilot_slice:
     projected_cost_usd: 3.00
     broad_execution: false
     delivery_status: command_failed
-    review_status: first_execution_pilot_review_running
+    review_status: no_issues_integrated
+    ledger_event: command_failed
+    estimated_cost_usd: 3.00
+    cumulative_estimated_cost_usd: 3.00
+    patch_returned: false
+    verifier_run: false
+    retry_or_second_attempt_started: false
+    redacted_error_type: gaierror
+  next_gate:
+    required_before_second_model_call: no_secret_transport_preflight_or_equivalent_coordinator_record
+    record_full_base_url: false
+    record_credential_values: false
   promotion_to_full_core:
     allowed_only_after: "pilot summary review and explicit coordinator decision"
     full_core_attempts_if_promoted: 80
