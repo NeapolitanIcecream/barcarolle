@@ -1,7 +1,7 @@
 # Core Narrative Experiment Coordinator
 
-status: execution_start_preflight_recorded
-updated: 2026-04-29T10:42:52+08:00
+status: execution_start_blocked_patch_command_gap
+updated: 2026-04-29T10:55:07+08:00
 today_stop_state: 2026-04-28_stop_policy_expired
 phase: Phase 0 - Experiment Bootstrap
 base_commit: 47046e7754d2402b7177a4b80f631ab6b0bcd97c
@@ -73,7 +73,7 @@ Execute `docs/experiments/core-narrative-experiment-plan.md` with tmux-managed C
 
 ## Blockers
 
-None currently recorded for no-model preflight. Broad ACUT execution has not been started. ACUT model-call execution must still wait for an explicit coordinator execution-start record. The execution-start preflight is recorded below; it confirms required LLM env presence, writable cost ledger, active default slice, and concrete adapter command path without recording credential values or a full base URL.
+Execution start is blocked on the concrete patch-generation command contract. Broad ACUT execution has not been started and no ACUT model calls have started. The reviewed adapter can enforce env, budget, ledger, and redaction gates around a command, but the coordinator has not yet recorded a reviewed live patch-generation command that itself uses only `BARCAROLLE_LLM_API_KEY` and `BARCAROLLE_LLM_BASE_URL` for LLM access. Do not use bare `codex exec` as the ACUT patch-generation command unless a focused review proves it uses only the BARCAROLLE LLM env contract for ACUT model access.
 
 ## Execution Readiness Bookkeeping
 
@@ -101,8 +101,8 @@ None currently recorded for no-model preflight. Broad ACUT execution has not bee
   - ran no-op verifier smoke for `click__rbench__001`; it failed the injected regression test with exit `1`, matching `expected.no_op_fails: true`
 - broad_execution_started: false
 - model_calls_started: false
-- execution_decision: The execution-start preflight is recorded and passed, but execution is not yet started. The next step may record explicit execution start and dispatch only a bounded first execution worker; do not start broad execution or large ACUT model-call batches.
-- resume_entry: On the next step, read this coordinator and latest relevant worker `process.md` files, decide whether to record explicit execution start for the bounded first execution worker, then dispatch at most one first execution worker.
+- execution_decision: Do not record execution start yet. First close the concrete patch-generation command gap with a focused implementation/review or a user-approved command that is proven to use only the BARCAROLLE LLM env contract.
+- resume_entry: On the next step, read this coordinator and latest relevant worker `process.md` files, then either implement/review a BARCAROLLE-env-only patch-generation command path or request a concrete user-approved command. Do not start ACUT model calls until the command gap is closed and this coordinator records explicit execution start.
 
 ## Execution Start Preflight
 
@@ -125,6 +125,22 @@ None currently recorded for no-model preflight. Broad ACUT execution has not bee
 - deferred_acuts: `higher-budget-repo-depth`, `retrieval-history-augmented`, `minimal-context-baseline`
 - first_execution_worker_decision: not started in this heartbeat; next bounded step can record explicit execution start and dispatch at most one first execution worker
 - first_execution_worker_scope_limit: one ACUT/task primary attempt routed through `acut_patch_adapter.py`, with ledger append required before/around the attempt and immediate blocker status if the gate fails
+
+## Execution Start Blocker
+
+- recorded_at: `2026-04-29T10:55:07+08:00`
+- blocker_id: `patch_generation_command_gap`
+- status: `blocked`
+- details: `experiments/core_narrative/tools/acut_patch_adapter.py` is reviewed and integrated as the required gate/ledger/redaction wrapper, but the live command passed after `--` has not been implemented, reviewed, or approved as using only `BARCAROLLE_LLM_API_KEY` and `BARCAROLLE_LLM_BASE_URL`.
+- rejected_assumption: Bare `codex exec` is not recorded as ACUT-compliant because the coordinator cannot prove it uses only the BARCAROLLE LLM env contract for ACUT model access.
+- current_guards_still_passed:
+  - `BARCAROLLE_LLM_API_KEY`: present, value not inspected or recorded
+  - `BARCAROLLE_LLM_BASE_URL`: present, value not inspected or recorded
+  - `experiments/core_narrative/results/cost_ledger.jsonl`: exists and is writable
+- required_closure: implement and review a BARCAROLLE-env-only patch-generation command path, or receive a concrete user-approved command with evidence that it uses only the BARCAROLLE LLM env contract.
+- execution_start_recorded: false
+- broad_acut_execution_started: false
+- model_calls_started: false
 
 ## Review Queue
 
@@ -168,6 +184,7 @@ None currently recorded for no-model preflight. Broad ACUT execution has not bee
 - Focused `acut-adapter-smoke-reviewer` delivered `no_issues`.
 - Integrated the reviewed ACUT adapter smoke delivery and review artifact. Broad ACUT execution and model calls remain not started.
 - Recorded execution-start preflight for the budget-constrained core subset: required LLM env vars are present without recorded values, the cost ledger is writable, and the reviewed adapter command path is available. Execution start and model calls are still not recorded as started.
+- Blocked execution start on the missing concrete patch-generation command contract. The adapter wrapper is ready, but no reviewed live command has been recorded as using only the BARCAROLLE LLM env contract. No execution worker or model call was started.
 
 ## Pre-Run Gates
 
@@ -205,4 +222,4 @@ None currently recorded for no-model preflight. Broad ACUT execution has not bee
 
 ## Next Heartbeat Action
 
-Decide whether to record explicit execution start and dispatch a bounded first execution worker. Read the latest relevant `process.md` files first. If starting, record the execution-start decision in this coordinator before any model call, route the attempt through `experiments/core_narrative/tools/acut_patch_adapter.py`, limit scope to one ACUT/task primary attempt, and require a cost ledger append. Do not inspect `cli.log`, record credential values, or start broad ACUT execution/large model-call batches.
+Resolve the `patch_generation_command_gap` blocker. Read the latest relevant `process.md` files first. Start a focused implementation/review step for a BARCAROLLE-env-only patch-generation command, or request a concrete user-approved command with evidence that it uses only `BARCAROLLE_LLM_API_KEY` and `BARCAROLLE_LLM_BASE_URL`. Do not record execution start, inspect `cli.log`, record credential values, or start ACUT model calls until this blocker is closed.
