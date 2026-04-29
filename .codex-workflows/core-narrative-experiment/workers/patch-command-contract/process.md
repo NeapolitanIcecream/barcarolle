@@ -1,13 +1,18 @@
 # Process
 
-status: delivered
-updated: 2026-04-29T11:20:27+08:00
+status: revising
+updated: 2026-04-29T11:42:00+08:00
 
 ## Summary
 
-Delivered a BARCAROLLE-env-only patch-generation command path and no-model
-smoke coverage for `patch_generation_command_gap`. This worker did not inspect
-`cli.log`, start broad ACUT execution, live ACUT model calls, or live
+Revision 1 is starting after focused review found one compatibility issue: the
+patch-command handoff and no-model adapter evidence still target retired
+pre-redesign ACUT IDs. The worker must refresh executable templates and
+no-model evidence against active 2x2 ACUT IDs before the coordinator can close
+`patch_generation_command_gap`.
+
+This revision remains no-model-call only. Do not inspect `cli.log`, start broad
+ACUT execution, live ACUT model calls, execution-start preflight, or live
 patch-generation attempts.
 
 ## Owned Paths
@@ -17,6 +22,9 @@ patch-generation attempts.
 - `experiments/core_narrative/results/normalized/patch_command_contract*.json`
 - `experiments/core_narrative/results/raw/patch_command_contract*/**`
 - `.codex-workflows/core-narrative-experiment/workers/patch-command-contract/process.md`
+- `.codex-workflows/core-narrative-experiment/workers/patch-command-contract/review-feedback-1.md`
+- `.codex-workflows/core-narrative-experiment/workers/patch-command-contract/revision-prompt-1.md`
+- `.codex-workflows/core-narrative-experiment/workers/patch-command-contract/run_revision_1.sh`
 
 ## Branch / Worktree
 
@@ -53,7 +61,8 @@ Inspected:
 
 ## Current Blockers
 
-None.
+Focused review requires refreshed executable templates and no-model evidence
+against active 2x2 ACUT IDs before integration or execution-start promotion.
 
 ## Checks Run
 
@@ -92,5 +101,7 @@ python3 /Users/chenmohan/gits/barcarolle-wt-patch-command-contract/experiments/c
 
 ## Handoff
 
-Ready for coordinator review. Do not run the live template until coordinator
-approval records the single task attempt and approved projected cost.
+Revision 1 is running in tmux session `bcx-patch-command-contract-r1`.
+Coordinator should read this `process.md` on the next heartbeat. Do not
+integrate, re-run execution-start preflight, or start model calls until this
+process reports `status: delivered` and a focused re-review passes.
