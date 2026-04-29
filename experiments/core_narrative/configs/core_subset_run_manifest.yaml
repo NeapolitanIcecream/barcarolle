@@ -1,5 +1,5 @@
 id: core_2x2_pilot_budget_constrained_v2
-status: model_route_fix_ready_for_review
+status: model_route_fix_review_running
 prepared_at: "2026-04-28T15:13:51+08:00"
 redesigned_at: "2026-04-29T11:20:00+08:00"
 owner: coordinator
@@ -99,7 +99,7 @@ active_default_slice:
   total_primary_patch_generation_attempts: 80
 
 pilot_slice:
-  status: model_route_fix_ready_for_review
+  status: model_route_fix_review_running
   default_before_full_core: true
   acuts:
     - frontier-generic-swe
@@ -220,7 +220,7 @@ pilot_slice:
     record_hostname: false
     record_ip_address: false
   model_route_fix:
-    status: ready_for_focused_review
+    status: focused_review_running
     diagnostic_basis: no_secret_parent_diagnostics_and_focused_health_check
     bare_model_ids_not_routable:
       - gpt-5.4-mini
@@ -243,6 +243,12 @@ pilot_slice:
     cumulative_estimated_cost_usd_after_health_check: 6.0008
     model_calls_allowed: false
     required_before_next_pilot_attempt: focused_review_no_issues_and_explicit_one_attempt_start_decision
+    reviewer:
+      worker: model-route-fix-reviewer
+      session: bcx-model-route-fix-reviewer
+      branch: codex/core-exp-model-route-reviewer
+      worktree: /Users/chenmohan/gits/barcarolle-wt-model-route-reviewer
+      start_commit: bb002f2
     record_credential_values: false
     record_bearer_tokens: false
     record_resolved_secrets: false
