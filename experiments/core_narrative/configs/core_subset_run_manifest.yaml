@@ -1,5 +1,5 @@
 id: core_2x2_pilot_budget_constrained_v2
-status: pilot_002_review_running
+status: pilot_002_integrated_transport_diagnostic_ready
 prepared_at: "2026-04-28T15:13:51+08:00"
 redesigned_at: "2026-04-29T11:20:00+08:00"
 owner: coordinator
@@ -9,7 +9,7 @@ execution_start:
   preflight_recorded_at: "2026-04-29T12:44:40+08:00"
   explicit_start_decision_recorded: true
   recorded_at: "2026-04-29T12:58:12+08:00"
-  scope: single_first_pilot_attempt_only
+  scope: bounded_pilot_attempts_only
   run_id: pilot_001__cheap-generic-swe__click__rbench__001__attempt1
   acut_id: cheap-generic-swe
   task_id: click__rbench__001
@@ -18,7 +18,7 @@ execution_start:
   projected_cost_usd: 3.00
   broad_acut_execution_started: false
   model_calls_allowed: false
-  model_calls_allowed_scope: none_until_pilot_002_review_passes
+  model_calls_allowed_scope: none_until_repeated_gaierror_diagnostics_recorded
   required_before_start:
     - coordinator records explicit execution start
     - required LLM environment variables are present
@@ -96,7 +96,7 @@ active_default_slice:
   total_primary_patch_generation_attempts: 80
 
 pilot_slice:
-  status: pilot_002_review_running
+  status: pilot_002_integrated_transport_diagnostic_ready
   default_before_full_core: true
   acuts:
     - frontier-generic-swe
@@ -138,7 +138,7 @@ pilot_slice:
     explicit_execution_start_decision_recorded: true
     broad_acut_execution_started: false
     model_calls_allowed: false
-    model_calls_allowed_scope: none_until_pilot_002_review_passes
+    model_calls_allowed_scope: none_until_repeated_gaierror_diagnostics_recorded
   first_execution_attempt:
     run_id: pilot_001__cheap-generic-swe__click__rbench__001__attempt1
     acut_id: cheap-generic-swe
@@ -157,7 +157,7 @@ pilot_slice:
     retry_or_second_attempt_started: false
     redacted_error_type: gaierror
   next_gate:
-    required_before_second_model_call: separate_explicit_coordinator_decision_for_one_bounded_attempt
+    required_before_next_model_call: no_secret_diagnostics_or_user_input_record_for_repeated_gaierror
     no_secret_transport_preflight:
       checked_at: "2026-04-29T13:42:24+08:00"
       api_key_env_present: true
@@ -189,7 +189,10 @@ pilot_slice:
     model_calls_allowed_scope: single_pilot_002_execution_worker
     rationale: "Different primary ACUT/task pair after the no-secret transport preflight; avoids retrying the first failed ACUT/task attempt and avoids specialist ACUTs until task-agnostic Click specialist context artifacts are verified or generated."
     delivery_status: command_failed
-    review_status: pilot_002_review_running
+    review_status: no_issues_integrated
+    integration:
+      worker_integrated_as: "581850d"
+      review_integrated_as: "71b11e9"
     ledger_event: command_failed
     estimated_cost_usd: 3.00
     cumulative_estimated_cost_usd: 6.00
@@ -197,6 +200,20 @@ pilot_slice:
     verifier_run: false
     retry_or_second_attempt_started: false
     redacted_error_type: gaierror
+  repeated_transport_failure:
+    reviewed_attempts:
+      - pilot_001__cheap-generic-swe__click__rbench__001__attempt1
+      - pilot_002__cheap-generic-swe__click__rbench__002__attempt1
+    redacted_error: LLM request failed
+    redacted_error_type: gaierror
+    model_calls_allowed: false
+    required_before_next_model_call: no_secret_diagnostics_or_user_input_record
+    record_credential_values: false
+    record_bearer_tokens: false
+    record_resolved_secrets: false
+    record_full_base_url: false
+    record_hostname: false
+    record_ip_address: false
   promotion_to_full_core:
     allowed_only_after: "pilot summary review and explicit coordinator decision"
     full_core_attempts_if_promoted: 80
