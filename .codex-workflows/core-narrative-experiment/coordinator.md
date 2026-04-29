@@ -1,7 +1,7 @@
 # Core Narrative Experiment Coordinator
 
-status: patch_command_gap_closed_execution_preflight_ready
-updated: 2026-04-29T12:32:44+08:00
+status: execution_start_preflight_recorded_awaiting_start_decision
+updated: 2026-04-29T12:44:40+08:00
 today_stop_state: 2026-04-28_stop_policy_expired
 phase: Phase 0 - Experiment Bootstrap
 base_commit: 47046e7754d2402b7177a4b80f631ab6b0bcd97c
@@ -80,7 +80,7 @@ Execute `docs/experiments/core-narrative-experiment-plan.md` with tmux-managed C
 
 ## Blockers
 
-No open patch-command blocker remains. Broad ACUT execution has not been started and no ACUT model calls have started. `patch-command-r2-reviewer` delivered `no_issues`; patch-command revisions and review artifacts are integrated. The next allowed coordination step is a non-secret execution-start preflight record for the reviewed 2x2 pilot and custom BARCAROLLE-env-only patch command path. Do not start model calls or broad execution until the coordinator records a separate explicit execution-start decision.
+No open patch-command blocker remains. Broad ACUT execution has not been started and no ACUT model calls have started. `patch-command-r2-reviewer` delivered `no_issues`; patch-command revisions and review artifacts are integrated. A non-secret execution-start preflight record for the reviewed 2x2 pilot and custom BARCAROLLE-env-only patch command path was recorded at `2026-04-29T12:44:40+08:00`. Do not start model calls or broad execution until the coordinator records a separate explicit execution-start decision.
 
 ## Execution Readiness Bookkeeping
 
@@ -108,13 +108,13 @@ No open patch-command blocker remains. Broad ACUT execution has not been started
   - ran no-op verifier smoke for `click__rbench__001`; it failed the injected regression test with exit `1`, matching `expected.no_op_fails: true`
 - broad_execution_started: false
 - model_calls_started: false
-- execution_decision: Do not record execution start yet. The next bounded step may rerun execution-start preflight for the reviewed 2x2 pilot and custom patch command path, confirming required env presence and ledger writability without recording values.
-- resume_entry: On the next step, read this coordinator and latest relevant worker `process.md` files. If no new worker is active, prepare a non-secret execution-start preflight record for the reviewed 2x2 pilot, but do not start model calls or broad execution without a separate explicit execution-start decision.
+- execution_decision: Execution-start preflight is recorded for the reviewed 2x2 pilot and custom patch command path. Do not record execution start yet; the next bounded step may decide whether to start at most one first execution worker for one ACUT/task primary attempt.
+- resume_entry: On the next step, read this coordinator and latest relevant worker `process.md` files. If no new worker is active, decide whether to record a separate explicit execution-start decision and dispatch at most one bounded first execution worker. Do not start broad ACUT execution or large model-call batches.
 
 ## Execution Start Preflight
 
-- checked_at: `2026-04-29T10:42:52+08:00`
-- status: `superseded_by_2x2_redesign`
+- checked_at: `2026-04-29T12:44:40+08:00`
+- status: `reviewed_2x2_preflight_recorded`
 - execution_start_recorded: false
 - broad_acut_execution_started: false
 - model_calls_started: false
@@ -123,16 +123,19 @@ No open patch-command blocker remains. Broad ACUT execution has not been started
   - `BARCAROLLE_LLM_BASE_URL`: present, value not inspected or recorded
 - cost_ledger: `experiments/core_narrative/results/cost_ledger.jsonl` exists and is writable; no ledger content was appended by this preflight
 - adapter_command_path: `python3 experiments/core_narrative/tools/acut_patch_adapter.py`
-- adapter_command_template: `python3 experiments/core_narrative/tools/acut_patch_adapter.py --workspace <prepared-workspace> --task <task-yaml> --acut <acut-yaml> --attempt 1 --run-id <run-id> --artifact-dir <artifact-dir> --output <adapter-result.json> --normalized-output <normalized-result.json> --llm-ledger experiments/core_narrative/results/cost_ledger.jsonl --projected-cost-usd <estimate> --coordinator-decision-ref coordinator.md#execution-start-record --timeout-seconds <seconds> -- <patch-generation-command>`
+- patch_command_path: `python3 experiments/core_narrative/tools/barcarolle_patch_command.py`
+- adapter_command_template: `python3 experiments/core_narrative/tools/acut_patch_adapter.py --workspace <prepared-task-workspace> --task <task-yaml> --acut experiments/core_narrative/configs/acuts/<active-2x2-acut>.yaml --attempt 1 --run-id <approved-run-id> --artifact-dir experiments/core_narrative/results/raw/<approved-run-id> --output experiments/core_narrative/results/raw/<approved-run-id>/adapter_result.json --normalized-output experiments/core_narrative/results/normalized/<approved-run-id>.json --llm-ledger experiments/core_narrative/results/cost_ledger.jsonl --projected-cost-usd <approved-projected-cost> --coordinator-decision-ref coordinator.md#execution-start-record --timeout-seconds 1200 -- python3 experiments/core_narrative/tools/barcarolle_patch_command.py --acut experiments/core_narrative/configs/acuts/<same-active-2x2-acut>.yaml`
+- run_manifest: `experiments/core_narrative/configs/core_subset_run_manifest.yaml` status updated to `reviewed_preflight_recorded_not_started`; `execution_start.recorded` remains `false`
 - active_default_slice:
   - acuts: `frontier-generic-swe`, `frontier-click-specialist`, `cheap-generic-swe`, `cheap-click-specialist`
   - pilot tasks: 2 `G_score`, 3 `RBench`, 2 `RWork`
   - attempts: one primary attempt per ACUT/task
 - budget_caps: USD `$240` soft stop and USD `$300` hard cap
 - deferred_acuts: `higher-budget-repo-depth`, `retrieval-history-augmented`, `minimal-context-baseline`
-- first_execution_worker_decision: not started in this heartbeat; next bounded step can record explicit execution start and dispatch at most one first execution worker
-- first_execution_worker_scope_limit: one ACUT/task primary attempt routed through `acut_patch_adapter.py`, with ledger append required before/around the attempt and immediate blocker status if the gate fails
-- supersession_note: The 2026-04-29 ACUT redesign invalidates this preflight for execution-start purposes. Rerun execution-start preflight only after focused reviews pass.
+- first_execution_worker_decision: not started in this heartbeat; next bounded step can record a separate explicit execution-start decision and dispatch at most one first execution worker
+- first_execution_worker_scope_limit: one ACUT/task primary attempt routed through `acut_patch_adapter.py` and the reviewed custom `barcarolle_patch_command.py`, with ledger append required for the patch-generation attempt and immediate blocker status if any gate fails
+- preflight_decision: ready for a separate explicit execution-start decision for a bounded first pilot attempt; broad execution remains disallowed
+- supersession_note: This preflight supersedes the `2026-04-29T10:42:52+08:00` pre-redesign execution-start preflight.
 
 ## ACUT 2x2 Redesign
 
@@ -288,4 +291,4 @@ No open patch-command blocker remains. Broad ACUT execution has not been started
 
 ## Next Heartbeat Action
 
-Prepare a non-secret execution-start preflight record for the reviewed 2x2 pilot and custom BARCAROLLE-env-only patch command path: confirm required LLM env presence without recording values, confirm the cost ledger is writable, record the concrete adapter command template and active pilot slice, and do not start model calls or broad ACUT execution without a separate explicit execution-start decision.
+Decide whether to record a separate explicit execution-start decision and dispatch at most one bounded first execution worker for one ACUT/task primary attempt routed through the reviewed `acut_patch_adapter.py` plus `barcarolle_patch_command.py` path. Do not start broad ACUT execution or large model-call batches; keep env values and resolved base URLs unrecorded.
