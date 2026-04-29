@@ -1,0 +1,106 @@
+{
+  "acut_id": "general-benchmark-optimized",
+  "adapter_id": "codex-cli-acut-adapter-v0",
+  "artifact_dir": "experiments/core_narrative/results/raw/acut_adapter_smoke_dry_run",
+  "attempt": 1,
+  "command": [
+    "<dry-run:no-model-patch-generation>"
+  ],
+  "command_duration_seconds": 0,
+  "cost_ledger_append": {
+    "actual_cost_recorded": false,
+    "estimated_cost_usd": 0.0,
+    "event": "dry_run_no_model",
+    "new_cumulative_estimated_cost_usd": 0.0,
+    "path": "experiments/core_narrative/results/raw/acut_adapter_smoke_dry_run/cost_ledger.jsonl",
+    "previous_cumulative_estimated_cost_usd": 0.0,
+    "record_count_after": 2,
+    "record_count_before": 1,
+    "status": "appended"
+  },
+  "dry_run": true,
+  "finished_at": "2026-04-29T02:01:10.614545Z",
+  "llm_budget_gate": {
+    "allowed": true,
+    "approvals_required": [],
+    "blockers": [],
+    "budget": {
+      "current_cumulative_estimated_cost_usd": 0.0,
+      "hard_cap_reached_or_projected": false,
+      "hard_cap_usd": 300.0,
+      "projected_cost_usd": 0.0,
+      "projected_cumulative_estimated_cost_usd": 0.0,
+      "soft_stop_reached_or_projected": false,
+      "soft_stop_usd": 240.0
+    },
+    "default_execution_profile": {
+      "core_acut_ids": [
+        "general-benchmark-optimized",
+        "repo-context-heavy",
+        "retrieval-sparse-symbolic",
+        "lower-budget-fast-path"
+      ],
+      "primary_attempts_per_acut_task": 1,
+      "profile_id": "budget-constrained-core-v1",
+      "split_task_limits": {
+        "G_score": 6,
+        "RBench": 8,
+        "RWork": 6
+      }
+    },
+    "env": {
+      "all_required_present": true,
+      "required": [
+        {
+          "name": "BARCAROLLE_LLM_API_KEY",
+          "present": true
+        },
+        {
+          "name": "BARCAROLLE_LLM_BASE_URL",
+          "present": true
+        }
+      ]
+    },
+    "execution_request": {
+      "acut_id": "general-benchmark-optimized",
+      "attempt": 1,
+      "coordinator_decision_ref_present": false,
+      "split": "rbench"
+    },
+    "ledger": {
+      "cumulative_estimated_cost_usd": 0.0,
+      "error_type": null,
+      "errors": [],
+      "estimated_cost_sum_usd": 0.0,
+      "exists": true,
+      "is_file": true,
+      "line_count": 1,
+      "path": "experiments/core_narrative/results/raw/acut_adapter_smoke_dry_run/cost_ledger.jsonl",
+      "record_count": 1,
+      "writable": true
+    },
+    "status": "passed",
+    "tool": "llm_budget_gate"
+  },
+  "llm_env_policy": {
+    "allowed_variable_names": [
+      "BARCAROLLE_LLM_API_KEY",
+      "BARCAROLLE_LLM_BASE_URL"
+    ],
+    "captured_artifacts_redacted": true,
+    "command_arguments_checked": true,
+    "command_representation_redacted": true,
+    "unsafe_command_arguments_rejected": true,
+    "values_recorded": false
+  },
+  "model_call_made": false,
+  "patch_path": "experiments/core_narrative/results/raw/acut_adapter_smoke_dry_run/submission.patch",
+  "run_id": "acut_adapter_smoke__dry_run",
+  "split": "rbench",
+  "started_at": "2026-04-29T02:01:10.614324Z",
+  "status": "dry_run_completed",
+  "stderr_artifact": "experiments/core_narrative/results/raw/acut_adapter_smoke_dry_run/adapter.stderr.txt",
+  "stdout_artifact": "experiments/core_narrative/results/raw/acut_adapter_smoke_dry_run/adapter.stdout.txt",
+  "task_id": "click__rbench__001",
+  "tool": "acut_patch_adapter"
+}

@@ -1,0 +1,1 @@
+Patch-generation command not executed; budget gate status: blocked.

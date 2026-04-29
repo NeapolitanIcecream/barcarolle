@@ -1,0 +1,32 @@
+{
+  "acut_id": "general-benchmark-optimized",
+  "attempt": 1,
+  "error": "budget gate status: blocked",
+  "finished_at": "2026-04-29T02:01:32.455108Z",
+  "metadata": {
+    "adapter_id": "codex-cli-acut-adapter-v0",
+    "dry_run": false,
+    "ledger_append_status": "appended",
+    "model_call_made": false,
+    "tool": "acut_patch_adapter"
+  },
+  "patch_path": "experiments/core_narrative/results/raw/acut_adapter_smoke_missing_env/submission.patch",
+  "review": {
+    "mergeability_grade": null,
+    "notes": "",
+    "rule_violation": false,
+    "wrong_module": false
+  },
+  "run_id": "acut_adapter_smoke__missing_env",
+  "schema_version": "core-narrative.run-result.v1",
+  "split": "rbench",
+  "started_at": "2026-04-29T02:01:32.454844Z",
+  "status": "infra_failed",
+  "task_id": "click__rbench__001",
+  "verification": {
+    "duration_seconds": 0,
+    "exit_code": null,
+    "stderr_artifact": "experiments/core_narrative/results/raw/acut_adapter_smoke_missing_env/adapter.stderr.txt",
+    "stdout_artifact": "experiments/core_narrative/results/raw/acut_adapter_smoke_missing_env/adapter.stdout.txt"
+  }
+}
