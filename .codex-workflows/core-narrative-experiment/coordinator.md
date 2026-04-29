@@ -1,7 +1,7 @@
 # Core Narrative Experiment Coordinator
 
-status: pilot_002_worker_running
-updated: 2026-04-29T13:57:37+08:00
+status: pilot_002_review_running
+updated: 2026-04-29T14:09:47+08:00
 today_stop_state: 2026-04-28_stop_policy_expired
 phase: Phase 0 - Experiment Bootstrap
 base_commit: 47046e7754d2402b7177a4b80f631ab6b0bcd97c
@@ -47,11 +47,12 @@ Execute `docs/experiments/core-narrative-experiment-plan.md` with tmux-managed C
 | patch-command-r2-reviewer | Phase 3 focused follow-up review | delivered; no_issues; worker commit `8ce8d9b`, integrated as `3ffaefc` | exited | codex/core-exp-patch-command-r2-reviewer | /Users/chenmohan/gits/barcarolle-wt-patch-command-r2-reviewer | `.codex-workflows/core-narrative-experiment/reviews/patch-command-r2-review.md`, `.codex-workflows/core-narrative-experiment/workers/patch-command-r2-reviewer/process.md` |
 | first-execution-pilot | Phase 3 bounded execution | delivered and reviewed; worker commit `f9a6986`, integrated as `998e0dc`; single authorized attempt ended as `command_failed` with one ledger record and no retry | exited | codex/core-exp-first-execution-pilot | /Users/chenmohan/gits/barcarolle-wt-first-execution-pilot | `experiments/core_narrative/results/cost_ledger.jsonl`, `experiments/core_narrative/results/raw/pilot_001__cheap-generic-swe__click__rbench__001__attempt1/**`, `experiments/core_narrative/results/normalized/pilot_001__cheap-generic-swe__click__rbench__001__attempt1.json`, `.codex-workflows/core-narrative-experiment/workers/first-execution-pilot/**` |
 | first-execution-pilot-reviewer | Phase 3 bounded execution review | delivered; no_issues; worker commit `5cb2cb4`, integrated as `41ca528` | exited | codex/core-exp-first-execution-pilot-reviewer | /Users/chenmohan/gits/barcarolle-wt-first-execution-pilot-reviewer | `.codex-workflows/core-narrative-experiment/reviews/first-execution-pilot-review.md`, `.codex-workflows/core-narrative-experiment/workers/first-execution-pilot-reviewer/**` |
-| pilot-002-execution | Phase 3 bounded execution | running; start commit `97b1135`; explicit execution-start decision recorded for one ACUT/task primary attempt | bcx-pilot-002-execution | codex/core-exp-pilot-002-execution | /Users/chenmohan/gits/barcarolle-wt-pilot-002-execution | `experiments/core_narrative/results/cost_ledger.jsonl`, `experiments/core_narrative/results/raw/pilot_002__cheap-generic-swe__click__rbench__002__attempt1/**`, `experiments/core_narrative/results/normalized/pilot_002__cheap-generic-swe__click__rbench__002__attempt1.json`, `.codex-workflows/core-narrative-experiment/workers/pilot-002-execution/**` |
+| pilot-002-execution | Phase 3 bounded execution | delivered; worker commit `0885be8`; single authorized attempt ended as `command_failed` with one ledger record and no retry | exited | codex/core-exp-pilot-002-execution | /Users/chenmohan/gits/barcarolle-wt-pilot-002-execution | `experiments/core_narrative/results/cost_ledger.jsonl`, `experiments/core_narrative/results/raw/pilot_002__cheap-generic-swe__click__rbench__002__attempt1/**`, `experiments/core_narrative/results/normalized/pilot_002__cheap-generic-swe__click__rbench__002__attempt1.json`, `.codex-workflows/core-narrative-experiment/workers/pilot-002-execution/**` |
+| pilot-002-reviewer | Phase 3 bounded execution review | running; start commit `d13a348`; reviewing worker commit `0885be8` before integration or further execution | bcx-pilot-002-reviewer | codex/core-exp-pilot-002-reviewer | /Users/chenmohan/gits/barcarolle-wt-pilot-002-reviewer | `.codex-workflows/core-narrative-experiment/reviews/pilot-002-review.md`, `.codex-workflows/core-narrative-experiment/workers/pilot-002-reviewer/**` |
 
 ## Active Tmux Sessions
 
-- `bcx-pilot-002-execution` for exactly one bounded pilot attempt: `pilot_002__cheap-generic-swe__click__rbench__002__attempt1`.
+- `bcx-pilot-002-reviewer` for focused review of delivered worker commit `0885be8`.
 
 ## Decisions
 
@@ -89,7 +90,7 @@ No open patch-command blocker remains. Broad ACUT execution has not been started
 
 - checked_at: `2026-04-29T09:41:00+08:00`
 - readiness_state: `runner_smoke_preflight_ready`
-- active_workers: `pilot-002-execution` running in tmux session `bcx-pilot-002-execution`
+- active_workers: `pilot-002-reviewer` running in tmux session `bcx-pilot-002-reviewer`
 - reviewed_inputs_ready:
   - LLM access and budget gate: reviewed in `wave0-r5-reviewer` with `no_issues`
   - repo runtime lock: reviewed and integrated
@@ -110,12 +111,13 @@ No open patch-command blocker remains. Broad ACUT execution has not been started
   - installed the Click runtime in that workspace with `uv`
   - ran no-op verifier smoke for `click__rbench__001`; it failed the injected regression test with exit `1`, matching `expected.no_op_fails: true`
 - broad_execution_started: false
-- model_calls_started: one first-execution worker attempt completed with event `command_failed`; exactly one pilot-002 worker attempt authorized and dispatched; no broad execution authorized
+- model_calls_started: two bounded worker attempts completed with event `command_failed`; no broad execution authorized
 - execution_decision: Explicit execution start is recorded only for `pilot_001__cheap-generic-swe__click__rbench__001__attempt1`; broad execution remains disallowed.
 - first_execution_outcome: integrated and reviewed; adapter event `command_failed`, estimated cost `3.00`, cumulative estimated cost `3.00`, no patch, no verifier run, no retry.
 - transport_preflight: passed at `2026-04-29T13:42:24+08:00`; checked only non-secret booleans/error classes. `BARCAROLLE_LLM_API_KEY` present, `BARCAROLLE_LLM_BASE_URL` present, endpoint parse ok, allowed scheme ok, host present, endpoint kind `chat_completions`, DNS resolution ok, TCP connect ok, TLS handshake ok, error class null. Credential values, bearer tokens, resolved secrets, full base URL values, hostnames, and IP addresses were not recorded.
 - pilot_002_decision: start exactly one primary attempt: ACUT `cheap-generic-swe`, task `click__rbench__002`, attempt `1`, run id `pilot_002__cheap-generic-swe__click__rbench__002__attempt1`; projected cost USD `3.00`, projected cumulative USD `6.00`, below soft stop and hard cap.
-- resume_entry: On the next step, read this coordinator and latest relevant worker `process.md` files. If `pilot-002-execution` is running, read only its `process.md`; if delivered, start focused result review before any further execution; if blocked, record whether user input is required. Do not inspect `cli.log`.
+- pilot_002_outcome: delivered for focused review; adapter event `command_failed`, estimated cost `3.00`, cumulative estimated cost `6.00`, no patch, no verifier run, no retry.
+- resume_entry: On the next step, read this coordinator and latest relevant worker `process.md` files. If `pilot-002-reviewer` is running, read only its `process.md`; if delivered with `no_issues`, integrate the reviewed pilot-002 delivery and review artifact before deciding any next bounded step; if issues are found or blocked, record whether user input is required. Do not inspect `cli.log`.
 
 ## Execution Start Preflight
 
@@ -127,7 +129,7 @@ No open patch-command blocker remains. Broad ACUT execution has not been started
 - execution_start_worker: `first-execution-pilot`
 - execution_start_run_id: `pilot_001__cheap-generic-swe__click__rbench__001__attempt1`
 - broad_acut_execution_started: false
-- model_calls_started: one first-execution worker attempt completed with event `command_failed`; exactly one pilot-002 worker attempt authorized and dispatched; no broad execution authorized
+- model_calls_started: two bounded worker attempts completed with event `command_failed`; no broad execution authorized
 - env_presence:
   - `BARCAROLLE_LLM_API_KEY`: present, value not inspected or recorded
   - `BARCAROLLE_LLM_BASE_URL`: present, value not inspected or recorded
@@ -135,7 +137,7 @@ No open patch-command blocker remains. Broad ACUT execution has not been started
 - adapter_command_path: `python3 experiments/core_narrative/tools/acut_patch_adapter.py`
 - patch_command_path: `python3 experiments/core_narrative/tools/barcarolle_patch_command.py`
 - adapter_command_template: `python3 experiments/core_narrative/tools/acut_patch_adapter.py --workspace <prepared-task-workspace> --task <task-yaml> --acut experiments/core_narrative/configs/acuts/<active-2x2-acut>.yaml --attempt 1 --run-id <approved-run-id> --artifact-dir experiments/core_narrative/results/raw/<approved-run-id> --output experiments/core_narrative/results/raw/<approved-run-id>/adapter_result.json --normalized-output experiments/core_narrative/results/normalized/<approved-run-id>.json --llm-ledger experiments/core_narrative/results/cost_ledger.jsonl --projected-cost-usd <approved-projected-cost> --coordinator-decision-ref coordinator.md#execution-start-record --timeout-seconds 1200 -- python3 experiments/core_narrative/tools/barcarolle_patch_command.py --acut experiments/core_narrative/configs/acuts/<same-active-2x2-acut>.yaml`
-- run_manifest: `experiments/core_narrative/configs/core_subset_run_manifest.yaml` status updated to `pilot_002_worker_running`; `execution_start.recorded` is `true` only for the approved first and pilot-002 bounded attempts
+- run_manifest: `experiments/core_narrative/configs/core_subset_run_manifest.yaml` status updated to `pilot_002_review_running`; `execution_start.recorded` is `true` only for the approved first and pilot-002 bounded attempts
 - active_default_slice:
   - acuts: `frontier-generic-swe`, `frontier-click-specialist`, `cheap-generic-swe`, `cheap-click-specialist`
   - pilot tasks: 2 `G_score`, 3 `RBench`, 2 `RWork`
@@ -271,6 +273,8 @@ No open patch-command blocker remains. Broad ACUT execution has not been started
 - Focused `first-execution-pilot-reviewer` delivered `no_issues` in commit `5cb2cb4`; integrated the first execution delivery and review artifact as merge commits `998e0dc` and `41ca528`.
 - Ran a no-secret BARCAROLLE LLM transport preflight at `2026-04-29T13:42:24+08:00`: environment presence, endpoint parse, allowed scheme, host presence, DNS resolution, TCP connect, and TLS handshake all passed. No credential values, bearer tokens, resolved secrets, full base URL values, hostnames, or IP addresses were recorded. This clears the observed `gaierror` transport class for deciding one next bounded attempt, but does not itself authorize any ACUT model call.
 - Recorded an explicit execution-start decision for exactly one next pilot attempt: `pilot_002__cheap-generic-swe__click__rbench__002__attempt1`. The chosen task is a different primary ACUT/task pair, not a retry of the first failed attempt; specialist ACUTs remain deferred until task-agnostic Click specialist context artifacts are verified or generated.
+- `pilot-002-execution` delivered commit `0885be8`; the single attempt ran through the reviewed adapter and custom patch command, appended one cost ledger record, and ended as `command_failed` with redacted `LLM request failed` / `gaierror`; no patch, verifier run, retry, second attempt, specialist ACUT run, broad execution, or large batch occurred.
+- Started focused `pilot-002-reviewer` before integrating the pilot-002 delivery or deciding any next execution step.
 
 ## Pre-Run Gates
 
@@ -297,7 +301,7 @@ No open patch-command blocker remains. Broad ACUT execution has not been started
 - deferred_acuts: `higher-budget-repo-depth`, `retrieval-history-augmented`, `minimal-context-baseline`
 - broad_execution_started: false
 - run_manifest: `experiments/core_narrative/configs/core_subset_run_manifest.yaml`
-- next_allowed_step: start or monitor `pilot-002-execution`; do not start broad ACUT execution, any retry of `pilot_001`, any specialist ACUT run, or any large batch.
+- next_allowed_step: monitor `pilot-002-reviewer`; do not integrate pilot-002 delivery or start any next execution step until focused review passes.
 
 ## Acceptance Gate
 
@@ -308,4 +312,4 @@ No open patch-command blocker remains. Broad ACUT execution has not been started
 
 ## Next Heartbeat Action
 
-Start or monitor `pilot-002-execution`. Read only `.codex-workflows/core-narrative-experiment/workers/pilot-002-execution/process.md`; if delivered, start focused result review before any further execution; if blocked, record whether user input is required. Do not start broad ACUT execution or any large batch. Do not record credential values, bearer tokens, resolved secrets, or full base URL values.
+Monitor `pilot-002-reviewer`. Read only `.codex-workflows/core-narrative-experiment/workers/pilot-002-reviewer/process.md`; if delivered with `no_issues`, integrate the reviewed pilot-002 delivery and review artifact before deciding any next bounded step; if issues are found or blocked, record whether user input is required. Do not start broad ACUT execution or any large batch. Do not record credential values, bearer tokens, resolved secrets, or full base URL values.

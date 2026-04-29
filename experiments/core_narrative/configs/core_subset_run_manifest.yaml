@@ -1,5 +1,5 @@
 id: core_2x2_pilot_budget_constrained_v2
-status: pilot_002_worker_running
+status: pilot_002_review_running
 prepared_at: "2026-04-28T15:13:51+08:00"
 redesigned_at: "2026-04-29T11:20:00+08:00"
 owner: coordinator
@@ -17,8 +17,8 @@ execution_start:
   attempt: 1
   projected_cost_usd: 3.00
   broad_acut_execution_started: false
-  model_calls_allowed: true
-  model_calls_allowed_scope: single_pilot_002_execution_worker
+  model_calls_allowed: false
+  model_calls_allowed_scope: none_until_pilot_002_review_passes
   required_before_start:
     - coordinator records explicit execution start
     - required LLM environment variables are present
@@ -96,7 +96,7 @@ active_default_slice:
   total_primary_patch_generation_attempts: 80
 
 pilot_slice:
-  status: pilot_002_worker_running
+  status: pilot_002_review_running
   default_before_full_core: true
   acuts:
     - frontier-generic-swe
@@ -137,8 +137,8 @@ pilot_slice:
     execution_start_preflight_recorded: true
     explicit_execution_start_decision_recorded: true
     broad_acut_execution_started: false
-    model_calls_allowed: true
-    model_calls_allowed_scope: single_pilot_002_execution_worker
+    model_calls_allowed: false
+    model_calls_allowed_scope: none_until_pilot_002_review_passes
   first_execution_attempt:
     run_id: pilot_001__cheap-generic-swe__click__rbench__001__attempt1
     acut_id: cheap-generic-swe
@@ -188,6 +188,15 @@ pilot_slice:
     retry_of_prior_attempt: false
     model_calls_allowed_scope: single_pilot_002_execution_worker
     rationale: "Different primary ACUT/task pair after the no-secret transport preflight; avoids retrying the first failed ACUT/task attempt and avoids specialist ACUTs until task-agnostic Click specialist context artifacts are verified or generated."
+    delivery_status: command_failed
+    review_status: pilot_002_review_running
+    ledger_event: command_failed
+    estimated_cost_usd: 3.00
+    cumulative_estimated_cost_usd: 6.00
+    patch_returned: false
+    verifier_run: false
+    retry_or_second_attempt_started: false
+    redacted_error_type: gaierror
   promotion_to_full_core:
     allowed_only_after: "pilot summary review and explicit coordinator decision"
     full_core_attempts_if_promoted: 80
