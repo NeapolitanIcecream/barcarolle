@@ -1,5 +1,11 @@
 # Patch Command Contract Worker
 
+Historical note: this original worker prompt predates the active 2x2 pilot
+revision. It is superseded by `revision-prompt-1.md` and
+`revision-prompt-2.md`; ACUT manifest references below are historical context
+only and must not be used as current execution templates, current smoke
+evidence, default core IDs, or new-execution ACUT references.
+
 You are a focused implementation worker for the Barcarolle core narrative experiment.
 
 Repository and workflow context:

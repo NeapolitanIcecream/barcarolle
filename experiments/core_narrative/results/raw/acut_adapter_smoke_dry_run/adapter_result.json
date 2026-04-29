@@ -1,5 +1,5 @@
 {
-  "acut_id": "general-benchmark-optimized",
+  "acut_id": "cheap-click-specialist",
   "adapter_id": "codex-cli-acut-adapter-v0",
   "artifact_dir": "experiments/core_narrative/results/raw/acut_adapter_smoke_dry_run",
   "attempt": 1,
@@ -19,7 +19,7 @@
     "status": "appended"
   },
   "dry_run": true,
-  "finished_at": "2026-04-29T02:01:10.614545Z",
+  "finished_at": "2026-04-29T04:11:49.035733Z",
   "llm_budget_gate": {
     "allowed": true,
     "approvals_required": [],
@@ -35,17 +35,19 @@
     },
     "default_execution_profile": {
       "core_acut_ids": [
-        "general-benchmark-optimized",
-        "repo-context-heavy",
-        "retrieval-sparse-symbolic",
-        "lower-budget-fast-path"
+        "frontier-generic-swe",
+        "frontier-click-specialist",
+        "cheap-generic-swe",
+        "cheap-click-specialist"
       ],
+      "full_core_requires_coordinator_decision": true,
+      "pilot_primary_attempts": 28,
       "primary_attempts_per_acut_task": 1,
-      "profile_id": "budget-constrained-core-v1",
+      "profile_id": "budget-constrained-2x2-pilot-v2",
       "split_task_limits": {
-        "G_score": 6,
-        "RBench": 8,
-        "RWork": 6
+        "G_score": 2,
+        "RBench": 3,
+        "RWork": 2
       }
     },
     "env": {
@@ -62,7 +64,7 @@
       ]
     },
     "execution_request": {
-      "acut_id": "general-benchmark-optimized",
+      "acut_id": "cheap-click-specialist",
       "attempt": 1,
       "coordinator_decision_ref_present": false,
       "split": "rbench"
@@ -97,7 +99,7 @@
   "patch_path": "experiments/core_narrative/results/raw/acut_adapter_smoke_dry_run/submission.patch",
   "run_id": "acut_adapter_smoke__dry_run",
   "split": "rbench",
-  "started_at": "2026-04-29T02:01:10.614324Z",
+  "started_at": "2026-04-29T04:11:49.035501Z",
   "status": "dry_run_completed",
   "stderr_artifact": "experiments/core_narrative/results/raw/acut_adapter_smoke_dry_run/adapter.stderr.txt",
   "stdout_artifact": "experiments/core_narrative/results/raw/acut_adapter_smoke_dry_run/adapter.stdout.txt",

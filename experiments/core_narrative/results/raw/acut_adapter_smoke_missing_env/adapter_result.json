@@ -1,12 +1,14 @@
 {
-  "acut_id": "general-benchmark-optimized",
+  "acut_id": "cheap-click-specialist",
   "adapter_id": "codex-cli-acut-adapter-v0",
   "artifact_dir": "experiments/core_narrative/results/raw/acut_adapter_smoke_missing_env",
   "attempt": 1,
   "command": [
-    "/bin/sh",
-    "-c",
-    "touch experiments/core_narrative/results/raw/acut_adapter_smoke_missing_env/should_not_exist"
+    "python3",
+    "experiments/core_narrative/tools/barcarolle_patch_command.py",
+    "--dry-run",
+    "--acut",
+    "experiments/core_narrative/configs/acuts/cheap-click-specialist.yaml"
   ],
   "command_duration_seconds": 0,
   "cost_ledger_append": {
@@ -21,7 +23,7 @@
     "status": "appended"
   },
   "dry_run": false,
-  "finished_at": "2026-04-29T02:01:32.455108Z",
+  "finished_at": "2026-04-29T04:11:49.090345Z",
   "llm_budget_gate": {
     "allowed": false,
     "approvals_required": [],
@@ -39,17 +41,19 @@
     },
     "default_execution_profile": {
       "core_acut_ids": [
-        "general-benchmark-optimized",
-        "repo-context-heavy",
-        "retrieval-sparse-symbolic",
-        "lower-budget-fast-path"
+        "frontier-generic-swe",
+        "frontier-click-specialist",
+        "cheap-generic-swe",
+        "cheap-click-specialist"
       ],
+      "full_core_requires_coordinator_decision": true,
+      "pilot_primary_attempts": 28,
       "primary_attempts_per_acut_task": 1,
-      "profile_id": "budget-constrained-core-v1",
+      "profile_id": "budget-constrained-2x2-pilot-v2",
       "split_task_limits": {
-        "G_score": 6,
-        "RBench": 8,
-        "RWork": 6
+        "G_score": 2,
+        "RBench": 3,
+        "RWork": 2
       }
     },
     "env": {
@@ -66,7 +70,7 @@
       ]
     },
     "execution_request": {
-      "acut_id": "general-benchmark-optimized",
+      "acut_id": "cheap-click-specialist",
       "attempt": 1,
       "coordinator_decision_ref_present": false,
       "split": "rbench"
@@ -101,7 +105,7 @@
   "patch_path": "experiments/core_narrative/results/raw/acut_adapter_smoke_missing_env/submission.patch",
   "run_id": "acut_adapter_smoke__missing_env",
   "split": "rbench",
-  "started_at": "2026-04-29T02:01:32.454844Z",
+  "started_at": "2026-04-29T04:11:49.090234Z",
   "status": "gate_blocked",
   "stderr_artifact": "experiments/core_narrative/results/raw/acut_adapter_smoke_missing_env/adapter.stderr.txt",
   "stdout_artifact": "experiments/core_narrative/results/raw/acut_adapter_smoke_missing_env/adapter.stdout.txt",
