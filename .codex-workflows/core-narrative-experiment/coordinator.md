@@ -1,7 +1,7 @@
 # Core Narrative Experiment Coordinator
 
-status: acut_adapter_smoke_running
-updated: 2026-04-29T09:52:44+08:00
+status: acut_adapter_smoke_review_running
+updated: 2026-04-29T10:17:55+08:00
 today_stop_state: 2026-04-28_stop_policy_expired
 phase: Phase 0 - Experiment Bootstrap
 base_commit: 47046e7754d2402b7177a4b80f631ab6b0bcd97c
@@ -38,11 +38,12 @@ Execute `docs/experiments/core-narrative-experiment-plan.md` with tmux-managed C
 | execution-planner | Execution planning | delivered; run manifest prepared | exited | codex/core-narrative-experiment | /Users/chenmohan/gits/barcarolle | `experiments/core_narrative/configs/core_subset_run_manifest.yaml` |
 | task-manifests | No-model preflight | delivered; worker commit `1cdcbba`, integrated as `4a89984` | exited | codex/core-exp-task-manifests | /Users/chenmohan/gits/barcarolle-wt-task-manifests | `experiments/core_narrative/configs/tasks/**`, `experiments/core_narrative/reports/task_manifest_notes.md` |
 | task-manifests-reviewer | No-model preflight review | delivered; no_issues; worker commit `8869a07`, integrated as `7ad9462` | exited | codex/core-exp-task-manifests-reviewer | /Users/chenmohan/gits/barcarolle-wt-task-manifests-reviewer | `.codex-workflows/core-narrative-experiment/reviews/task-manifests-review.md`, `.codex-workflows/core-narrative-experiment/workers/task-manifests-reviewer/process.md` |
-| acut-adapter-smoke | Phase 3 runner smoke | session_running; started focused adapter smoke at commit `9c1b14a` | bcx-acut-adapter-smoke | codex/core-exp-acut-adapter-smoke | /Users/chenmohan/gits/barcarolle-wt-acut-adapter-smoke | `experiments/core_narrative/tools/**` limited to ACUT adapter/orchestration additions, `experiments/core_narrative/reports/acut_adapter_smoke.md`, `experiments/core_narrative/results/normalized/acut_adapter_smoke*.json`, `experiments/core_narrative/results/raw/acut_adapter_smoke*/**`, `.codex-workflows/core-narrative-experiment/workers/acut-adapter-smoke/process.md` |
+| acut-adapter-smoke | Phase 3 runner smoke | delivered; worker commit `3b2f820`, awaiting focused review | exited | codex/core-exp-acut-adapter-smoke | /Users/chenmohan/gits/barcarolle-wt-acut-adapter-smoke | `experiments/core_narrative/tools/**` limited to ACUT adapter/orchestration additions, `experiments/core_narrative/reports/acut_adapter_smoke.md`, `experiments/core_narrative/results/normalized/acut_adapter_smoke*.json`, `experiments/core_narrative/results/raw/acut_adapter_smoke*/**`, `.codex-workflows/core-narrative-experiment/workers/acut-adapter-smoke/process.md` |
+| acut-adapter-smoke-reviewer | Phase 3 runner smoke review | session_running; started focused review at commit `95abda6` | bcx-acut-adapter-smoke-reviewer | codex/core-exp-acut-adapter-smoke-reviewer | /Users/chenmohan/gits/barcarolle-wt-acut-adapter-smoke-reviewer | `.codex-workflows/core-narrative-experiment/reviews/acut-adapter-smoke-review.md`, `.codex-workflows/core-narrative-experiment/workers/acut-adapter-smoke-reviewer/process.md` |
 
 ## Active Tmux Sessions
 
-- `bcx-acut-adapter-smoke`
+- `bcx-acut-adapter-smoke-reviewer`
 
 ## Decisions
 
@@ -78,7 +79,7 @@ None currently recorded for no-model preflight. Broad ACUT execution has not bee
 
 - checked_at: `2026-04-29T09:41:00+08:00`
 - readiness_state: `runner_smoke_preflight_ready`
-- active_workers: none recorded
+- active_workers: `acut-adapter-smoke-reviewer`
 - reviewed_inputs_ready:
   - LLM access and budget gate: reviewed in `wave0-r5-reviewer` with `no_issues`
   - repo runtime lock: reviewed and integrated
@@ -99,8 +100,8 @@ None currently recorded for no-model preflight. Broad ACUT execution has not bee
   - ran no-op verifier smoke for `click__rbench__001`; it failed the injected regression test with exit `1`, matching `expected.no_op_fails: true`
 - broad_execution_started: false
 - model_calls_started: false
-- execution_decision: Continue with Phase 3 runner smoke before any full budget-constrained execution. Do not start ACUT model calls until the ACUT adapter command path is recorded and the coordinator explicitly records execution start.
-- resume_entry: On the next step, read this coordinator and latest relevant worker `process.md` files, then either finish the ACUT adapter/cost-ledger smoke wiring or start a small Phase 3 smoke run only after explicit execution-start recording.
+- execution_decision: Continue Phase 3 runner smoke review before any full budget-constrained execution. Do not start ACUT model calls until the reviewed ACUT adapter command path is integrated and the coordinator explicitly records execution start.
+- resume_entry: On the next step, read this coordinator and latest relevant worker `process.md` files, then handle the `acut-adapter-smoke-reviewer` delivery or blocker. Start execution only after reviewed integration and an explicit execution-start record.
 
 ## Review Queue
 
@@ -139,6 +140,8 @@ None currently recorded for no-model preflight. Broad ACUT execution has not bee
 - Recreated the ignored full Click checkout and verified task base/target commit availability.
 - Added task-pack materialization tooling, materialized 14 Click task packs, and ran a no-op clean-room verifier smoke for `click__rbench__001`; the no-op failed the injected regression as expected.
 - Started focused `acut-adapter-smoke` to implement and no-model-test the ACUT adapter command path before any live ACUT model call.
+- Focused `acut-adapter-smoke` delivered commit `3b2f820`; no live ACUT model calls were made and broad execution remains not started.
+- Started focused `acut-adapter-smoke-reviewer` before integrating the adapter smoke delivery.
 
 ## Pre-Run Gates
 
@@ -176,4 +179,4 @@ None currently recorded for no-model preflight. Broad ACUT execution has not bee
 
 ## Next Heartbeat Action
 
-Read `acut-adapter-smoke` `process.md`. If delivered, start focused review before integration. If blocked, record the blocker and notify only if user input is required. Do not start broad ACUT execution or model calls until the coordinator explicitly records execution start. Do not inspect `cli.log` unless debugging is explicitly requested.
+Read `acut-adapter-smoke-reviewer` `process.md`. If delivered with `no_issues`, integrate the reviewed adapter smoke delivery and review artifact; if issues are found, start a focused revision before integration; if blocked, record the blocker and notify only if user input is required. Do not start broad ACUT execution or model calls until the coordinator explicitly records execution start. Do not inspect `cli.log` unless debugging is explicitly requested.
