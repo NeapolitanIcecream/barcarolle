@@ -1,7 +1,7 @@
 # Core Narrative Experiment Coordinator
 
-status: codex_cli_harness_handoff_ready
-updated: 2026-04-29T16:04:08+08:00
+status: codex_cli_harness_adapter_worker_running
+updated: 2026-04-29T16:09:25+08:00
 today_stop_state: 2026-04-28_stop_policy_expired
 phase: Phase 0 - Experiment Bootstrap
 base_commit: 47046e7754d2402b7177a4b80f631ab6b0bcd97c
@@ -53,10 +53,11 @@ Execute `docs/experiments/core-narrative-experiment-plan.md` with tmux-managed C
 | model-route-fix-reviewer | Phase 3 route diagnostic review | delivered; no_issues; worker commit `159dc3f`, integrated as `7292dfa` | exited | codex/core-exp-model-route-reviewer | /Users/chenmohan/gits/barcarolle-wt-model-route-reviewer | `.codex-workflows/core-narrative-experiment/reviews/model-route-fix-review.md`, `.codex-workflows/core-narrative-experiment/workers/model-route-fix-reviewer/**` |
 | pilot-003-execution | Phase 3 bounded execution | delivered and reviewed; worker commit `c8d78d4`, integrated as `c748362`; single authorized attempt ended as `command_failed` with one ledger record and no retry | exited | codex/core-exp-pilot-003-execution | /Users/chenmohan/gits/barcarolle-wt-pilot-003-execution | `experiments/core_narrative/results/cost_ledger.jsonl`, `experiments/core_narrative/results/raw/pilot_003__cheap-generic-swe__click__rbench__003__attempt1/**`, `experiments/core_narrative/results/normalized/pilot_003__cheap-generic-swe__click__rbench__003__attempt1.json`, `.codex-workflows/core-narrative-experiment/workers/pilot-003-execution/**` |
 | pilot-003-reviewer | Phase 3 bounded execution review | delivered; no_issues; worker commit `b6d4693`, integrated as `22cd6a1` | exited | codex/core-exp-pilot-003-reviewer | /Users/chenmohan/gits/barcarolle-wt-pilot-003-reviewer | `.codex-workflows/core-narrative-experiment/reviews/pilot-003-review.md`, `.codex-workflows/core-narrative-experiment/workers/pilot-003-reviewer/**` |
+| codex-cli-harness-adapter | Phase 3 harness replacement | running; start commit `de2dfe9`; focused worker only, no ACUT attempt authorized | bcx-codex-cli-harness-adapter | codex/core-exp-codex-cli-harness-adapter | /Users/chenmohan/gits/barcarolle-wt-codex-cli-harness-adapter | `experiments/core_narrative/tools/**`, `experiments/core_narrative/reports/codex_cli_harness_adapter.md`, `experiments/core_narrative/results/normalized/codex_cli_harness_adapter*.json`, `experiments/core_narrative/results/raw/codex_cli_harness_adapter*/**`, `experiments/core_narrative/results/cost_ledger.jsonl` only for ledgered live smoke if performed, `.codex-workflows/core-narrative-experiment/workers/codex-cli-harness-adapter/**` |
 
 ## Active Tmux Sessions
 
-- none for this workflow.
+- `bcx-codex-cli-harness-adapter` for focused Codex CLI inner patch-command harness work.
 
 ## Decisions
 
@@ -91,13 +92,13 @@ Execute `docs/experiments/core-narrative-experiment-plan.md` with tmux-managed C
 
 ## Blockers
 
-No open patch-command blocker remains for the reviewed hand-written command path, but three bounded pilot attempts all failed before producing a patch. Broad ACUT execution has not been started and no large model-call batch has started. The first, pilot-002, and pilot-003 bounded attempts are integrated and reviewed with `no_issues`, and all three live patch commands failed with redacted outcome `LLM request failed` and error type `gaierror`. Parent no-secret diagnostics narrowed the first two failures to bare model route/name mismatch rather than missing env, DNS/TCP/TLS, endpoint reachability, or credit exhaustion, and the active 2x2 ACUT configs now use provider-prefixed model routes. The focused route health check with token cap `16` returned HTTP 2xx for both active model tiers, but pilot-003 still failed in the full patch-generation request path after the route fix. Parent-session Codex CLI diagnostics now indicate that replacing only the inner hand-written patch-generation command with `codex exec` is feasible under the BARCAROLLE env contract. No further ACUT attempt is authorized until a focused `codex-cli-harness-adapter` worker implements or spikes that replacement path and a reviewer clears the result.
+No open patch-command blocker remains for the reviewed hand-written command path, but three bounded pilot attempts all failed before producing a patch. Broad ACUT execution has not been started and no large model-call batch has started. The first, pilot-002, and pilot-003 bounded attempts are integrated and reviewed with `no_issues`, and all three live patch commands failed with redacted outcome `LLM request failed` and error type `gaierror`. Parent no-secret diagnostics narrowed the first two failures to bare model route/name mismatch rather than missing env, DNS/TCP/TLS, endpoint reachability, or credit exhaustion, and the active 2x2 ACUT configs now use provider-prefixed model routes. The focused route health check with token cap `16` returned HTTP 2xx for both active model tiers, but pilot-003 still failed in the full patch-generation request path after the route fix. Parent-session Codex CLI diagnostics now indicate that replacing only the inner hand-written patch-generation command with `codex exec` is feasible under the BARCAROLLE env contract. The focused `codex-cli-harness-adapter` worker is running to implement or spike that replacement path. No further ACUT attempt is authorized until this worker delivers and a reviewer clears the result.
 
 ## Codex CLI Harness Handoff
 
 - handoff: `.codex-workflows/core-narrative-experiment/shared/codex-cli-harness-handoff.md`
 - parent_verification_status: startup-only provider override, Responses API route, temporary `CODEX_HOME` isolation, temporary provider-prefixed model catalog, and non-interactive Codex CLI tool execution were verified outside the experiment workflow without recording secrets.
-- required_next_worker: focused `codex-cli-harness-adapter` implementation/spike.
+- required_next_worker: focused `codex-cli-harness-adapter` implementation/spike is running in tmux session `bcx-codex-cli-harness-adapter`.
 - required_review_after_worker: focused no-secret review before any additional ACUT model-call attempt.
 - execution_guard: no broad execution, retry, second attempt, specialist ACUT run, or large batch is authorized by this handoff.
 
@@ -305,6 +306,7 @@ No open patch-command blocker remains for the reviewed hand-written command path
 - Started focused `pilot-003-reviewer` before integrating the pilot-003 delivery or deciding any next execution step.
 - Focused `pilot-003-reviewer` delivered `no_issues` in commit `b6d4693`; integrated the pilot-003 delivery and review artifact as merge commits `c748362` and `22cd6a1`.
 - Pilot-003 confirmed the full patch-generation request path can still fail with redacted `gaierror` after provider-prefixed route health checks pass. Further model-call attempts remain paused pending no-secret post-route-fix diagnostics or an explicit user-input blocker record.
+- Started focused `codex-cli-harness-adapter` worker at start commit `de2dfe9` to replace or spike only the inner patch-generation agent with `codex exec`, while preserving the outer adapter's budget, ledger, redaction, normalization, verifier, and handoff duties. No new ACUT attempt or broad execution was started.
 
 ## Pre-Run Gates
 
@@ -331,7 +333,7 @@ No open patch-command blocker remains for the reviewed hand-written command path
 - deferred_acuts: `higher-budget-repo-depth`, `retrieval-history-augmented`, `minimal-context-baseline`
 - broad_execution_started: false
 - run_manifest: `experiments/core_narrative/configs/core_subset_run_manifest.yaml`
-- next_allowed_step: start a focused `codex-cli-harness-adapter` implementation/spike from `.codex-workflows/core-narrative-experiment/shared/codex-cli-harness-handoff.md`, then review it before any further ACUT model-call attempt; do not start any retry, specialist run, broad execution, or large batch.
+- next_allowed_step: monitor focused `codex-cli-harness-adapter` process; if delivered, start focused review before integration or any further ACUT model-call attempt; do not start any retry, specialist run, broad execution, or large batch.
 
 ## Acceptance Gate
 
@@ -342,4 +344,4 @@ No open patch-command blocker remains for the reviewed hand-written command path
 
 ## Next Heartbeat Action
 
-Start a focused `codex-cli-harness-adapter` worker using `.codex-workflows/core-narrative-experiment/shared/codex-cli-harness-handoff.md` as the handoff. The worker should replace or spike only the inner patch-generation command with Codex CLI, keeping the outer adapter responsible for budget, ledger, verifier, normalization, and redaction. Do not inspect `cli.log`. Do not start broad ACUT execution, retries, second attempts, specialist ACUT runs, any further pilot attempt, or any large batch before the focused worker and reviewer both clear this path.
+Monitor `codex-cli-harness-adapter`. Read only `.codex-workflows/core-narrative-experiment/workers/codex-cli-harness-adapter/process.md` in `/Users/chenmohan/gits/barcarolle-wt-codex-cli-harness-adapter`; do not inspect `cli.log`. If delivered, start focused review before integration or any further execution decision. If blocked, record whether user input is required. Do not start broad ACUT execution, retries, second attempts, specialist ACUT runs, any further pilot attempt, or any large batch before the focused worker and reviewer both clear this path.
