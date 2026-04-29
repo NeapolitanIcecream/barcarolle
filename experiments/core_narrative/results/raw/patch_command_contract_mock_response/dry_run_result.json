@@ -1,0 +1,42 @@
+{
+  "acut_id": "lower-budget-fast-path",
+  "command_contract_id": "barcarolle-patch-command-v1",
+  "llm_env_policy": {
+    "allowed_variable_names": [
+      "BARCAROLLE_LLM_API_KEY",
+      "BARCAROLLE_LLM_BASE_URL"
+    ],
+    "command_arguments_checked": true,
+    "endpoint_value_recorded": false,
+    "required_present": {
+      "BARCAROLLE_LLM_API_KEY": false,
+      "BARCAROLLE_LLM_BASE_URL": false
+    },
+    "unsafe_command_arguments_rejected": true,
+    "values_recorded": false
+  },
+  "mode": "dry_run",
+  "model": "gpt-5.4-mini",
+  "model_call_made": false,
+  "patch": {
+    "applied": false,
+    "received": false,
+    "validated": false
+  },
+  "prompt": {
+    "char_count": 2184,
+    "content_recorded": false,
+    "full_urls_redacted": true,
+    "manifest_truncated": false,
+    "prepared": true,
+    "sha256": "ba45e8f7b4b3525a10ad6246c33925febe1159d18b47939da5f27007d0dd64a7",
+    "statement_truncated": false
+  },
+  "provider": "openai",
+  "split": "rbench",
+  "statement_path": "/private/tmp/barcarolle-patch-command-contract-workspace/.core_narrative/statement.md",
+  "status": "dry_run_completed",
+  "task_id": "patch_command_contract_smoke",
+  "tool": "barcarolle_patch_command",
+  "workspace": "/private/tmp/barcarolle-patch-command-contract-workspace"
+}

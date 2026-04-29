@@ -1,0 +1,24 @@
+{
+  "details": {
+    "argument_index": 2,
+    "reason": "full_url"
+  },
+  "error": "command argument rejected by redaction policy",
+  "llm_env_policy": {
+    "allowed_variable_names": [
+      "BARCAROLLE_LLM_API_KEY",
+      "BARCAROLLE_LLM_BASE_URL"
+    ],
+    "command_arguments_checked": true,
+    "endpoint_value_recorded": false,
+    "required_present": {
+      "BARCAROLLE_LLM_API_KEY": false,
+      "BARCAROLLE_LLM_BASE_URL": false
+    },
+    "unsafe_command_arguments_rejected": true,
+    "values_recorded": false
+  },
+  "model_call_made": false,
+  "status": "error",
+  "tool": "barcarolle_patch_command"
+}

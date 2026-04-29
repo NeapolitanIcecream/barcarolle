@@ -1,0 +1,49 @@
+{
+  "schema_version": "core-narrative.patch-command-contract-smoke.v1",
+  "status": "passed",
+  "live_model_call_made": false,
+  "checks": [
+    {
+      "name": "direct_dry_run_no_env",
+      "status": "passed",
+      "artifact": "experiments/core_narrative/results/raw/patch_command_contract_mock_response/dry_run_result.json"
+    },
+    {
+      "name": "direct_live_mode_missing_env_blocks",
+      "status": "passed",
+      "artifact": "experiments/core_narrative/results/raw/patch_command_contract_missing_env/command_result.json"
+    },
+    {
+      "name": "unsafe_cli_api_key_rejected",
+      "status": "passed",
+      "artifact": "experiments/core_narrative/results/raw/patch_command_contract_unsafe_cli/api_key_result.json"
+    },
+    {
+      "name": "unsafe_cli_full_url_rejected",
+      "status": "passed",
+      "artifact": "experiments/core_narrative/results/raw/patch_command_contract_unsafe_cli/full_url_result.json"
+    },
+    {
+      "name": "direct_mock_response_applies_without_env",
+      "status": "passed",
+      "artifact": "experiments/core_narrative/results/raw/patch_command_contract_mock_response/command_result.json"
+    },
+    {
+      "name": "adapter_dry_run_wraps_command_template",
+      "status": "passed",
+      "artifact": "experiments/core_narrative/results/raw/patch_command_contract_adapter_dry_run/adapter_result.json"
+    },
+    {
+      "name": "adapter_mock_probe_appends_zero_cost_ledger",
+      "status": "passed",
+      "artifact": "experiments/core_narrative/results/raw/patch_command_contract_adapter_mock_probe/adapter_result.json"
+    }
+  ],
+  "redaction": {
+    "credential_values_recorded": false,
+    "resolved_endpoint_values_recorded": false,
+    "prompt_content_recorded": false,
+    "artifact_secret_scan_status": "passed"
+  },
+  "adapter_probe_note": "The adapter command-completed payload marks command mode as model_call_made by adapter convention; the wrapped command artifact records mock_response mode with model_call_made false."
+}
