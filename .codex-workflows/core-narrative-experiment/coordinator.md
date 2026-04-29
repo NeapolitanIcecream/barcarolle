@@ -1,7 +1,7 @@
 # Core Narrative Experiment Coordinator
 
-status: execution_start_blocked_patch_command_gap
-updated: 2026-04-29T10:55:07+08:00
+status: patch_command_contract_worker_running
+updated: 2026-04-29T11:08:33+08:00
 today_stop_state: 2026-04-28_stop_policy_expired
 phase: Phase 0 - Experiment Bootstrap
 base_commit: 47046e7754d2402b7177a4b80f631ab6b0bcd97c
@@ -40,10 +40,11 @@ Execute `docs/experiments/core-narrative-experiment-plan.md` with tmux-managed C
 | task-manifests-reviewer | No-model preflight review | delivered; no_issues; worker commit `8869a07`, integrated as `7ad9462` | exited | codex/core-exp-task-manifests-reviewer | /Users/chenmohan/gits/barcarolle-wt-task-manifests-reviewer | `.codex-workflows/core-narrative-experiment/reviews/task-manifests-review.md`, `.codex-workflows/core-narrative-experiment/workers/task-manifests-reviewer/process.md` |
 | acut-adapter-smoke | Phase 3 runner smoke | delivered; worker commit `3b2f820`, integrated as `918fc89` | exited | codex/core-exp-acut-adapter-smoke | /Users/chenmohan/gits/barcarolle-wt-acut-adapter-smoke | `experiments/core_narrative/tools/**` limited to ACUT adapter/orchestration additions, `experiments/core_narrative/reports/acut_adapter_smoke.md`, `experiments/core_narrative/results/normalized/acut_adapter_smoke*.json`, `experiments/core_narrative/results/raw/acut_adapter_smoke*/**`, `.codex-workflows/core-narrative-experiment/workers/acut-adapter-smoke/process.md` |
 | acut-adapter-smoke-reviewer | Phase 3 runner smoke review | delivered; no_issues; worker commit `c5534b1`, integrated as `49fe2df` | exited | codex/core-exp-acut-adapter-smoke-reviewer | /Users/chenmohan/gits/barcarolle-wt-acut-adapter-smoke-reviewer | `.codex-workflows/core-narrative-experiment/reviews/acut-adapter-smoke-review.md`, `.codex-workflows/core-narrative-experiment/workers/acut-adapter-smoke-reviewer/process.md` |
+| patch-command-contract | Phase 3 execution blocker closure | session_running; started focused implementation at commit `f1fa589` | bcx-patch-command-contract | codex/core-exp-patch-command-contract | /Users/chenmohan/gits/barcarolle-wt-patch-command-contract | `experiments/core_narrative/tools/barcarolle_patch_command.py`, `experiments/core_narrative/reports/patch_command_contract.md`, `experiments/core_narrative/results/normalized/patch_command_contract*.json`, `experiments/core_narrative/results/raw/patch_command_contract*/**`, `.codex-workflows/core-narrative-experiment/workers/patch-command-contract/process.md` |
 
 ## Active Tmux Sessions
 
-- none
+- `bcx-patch-command-contract`
 
 ## Decisions
 
@@ -73,13 +74,13 @@ Execute `docs/experiments/core-narrative-experiment-plan.md` with tmux-managed C
 
 ## Blockers
 
-Execution start is blocked on the concrete patch-generation command contract. Broad ACUT execution has not been started and no ACUT model calls have started. The reviewed adapter can enforce env, budget, ledger, and redaction gates around a command, but the coordinator has not yet recorded a reviewed live patch-generation command that itself uses only `BARCAROLLE_LLM_API_KEY` and `BARCAROLLE_LLM_BASE_URL` for LLM access. Do not use bare `codex exec` as the ACUT patch-generation command unless a focused review proves it uses only the BARCAROLLE LLM env contract for ACUT model access.
+Execution start is blocked on the concrete patch-generation command contract. Broad ACUT execution has not been started and no ACUT model calls have started. The reviewed adapter can enforce env, budget, ledger, and redaction gates around a command, but the coordinator has not yet recorded a reviewed live patch-generation command that itself uses only `BARCAROLLE_LLM_API_KEY` and `BARCAROLLE_LLM_BASE_URL` for LLM access. Focused worker `patch-command-contract` is running to close this blocker without live model calls.
 
 ## Execution Readiness Bookkeeping
 
 - checked_at: `2026-04-29T09:41:00+08:00`
 - readiness_state: `runner_smoke_preflight_ready`
-- active_workers: none recorded
+- active_workers: `patch-command-contract`
 - reviewed_inputs_ready:
   - LLM access and budget gate: reviewed in `wave0-r5-reviewer` with `no_issues`
   - repo runtime lock: reviewed and integrated
@@ -101,8 +102,8 @@ Execution start is blocked on the concrete patch-generation command contract. Br
   - ran no-op verifier smoke for `click__rbench__001`; it failed the injected regression test with exit `1`, matching `expected.no_op_fails: true`
 - broad_execution_started: false
 - model_calls_started: false
-- execution_decision: Do not record execution start yet. First close the concrete patch-generation command gap with a focused implementation/review or a user-approved command that is proven to use only the BARCAROLLE LLM env contract.
-- resume_entry: On the next step, read this coordinator and latest relevant worker `process.md` files, then either implement/review a BARCAROLLE-env-only patch-generation command path or request a concrete user-approved command. Do not start ACUT model calls until the command gap is closed and this coordinator records explicit execution start.
+- execution_decision: Do not record execution start yet. Wait for `patch-command-contract` delivery or blocker, then review before closing the concrete patch-generation command gap.
+- resume_entry: On the next step, read this coordinator and latest relevant worker `process.md` files, then read `patch-command-contract/process.md`. If delivered, start focused review before integration; if blocked, record whether user input is required. Do not start ACUT model calls until the command gap is closed and this coordinator records explicit execution start.
 
 ## Execution Start Preflight
 
@@ -138,6 +139,7 @@ Execution start is blocked on the concrete patch-generation command contract. Br
   - `BARCAROLLE_LLM_BASE_URL`: present, value not inspected or recorded
   - `experiments/core_narrative/results/cost_ledger.jsonl`: exists and is writable
 - required_closure: implement and review a BARCAROLLE-env-only patch-generation command path, or receive a concrete user-approved command with evidence that it uses only the BARCAROLLE LLM env contract.
+- closure_step_running: `patch-command-contract` focused implementation worker started at `2026-04-29T11:08:33+08:00`
 - execution_start_recorded: false
 - broad_acut_execution_started: false
 - model_calls_started: false
@@ -185,6 +187,7 @@ Execution start is blocked on the concrete patch-generation command contract. Br
 - Integrated the reviewed ACUT adapter smoke delivery and review artifact. Broad ACUT execution and model calls remain not started.
 - Recorded execution-start preflight for the budget-constrained core subset: required LLM env vars are present without recorded values, the cost ledger is writable, and the reviewed adapter command path is available. Execution start and model calls are still not recorded as started.
 - Blocked execution start on the missing concrete patch-generation command contract. The adapter wrapper is ready, but no reviewed live command has been recorded as using only the BARCAROLLE LLM env contract. No execution worker or model call was started.
+- Started focused `patch-command-contract` worker to implement and no-model-test a BARCAROLLE-env-only patch-generation command path. No ACUT execution worker or model call was started.
 
 ## Pre-Run Gates
 
@@ -222,4 +225,4 @@ Execution start is blocked on the concrete patch-generation command contract. Br
 
 ## Next Heartbeat Action
 
-Resolve the `patch_generation_command_gap` blocker. Read the latest relevant `process.md` files first. Start a focused implementation/review step for a BARCAROLLE-env-only patch-generation command, or request a concrete user-approved command with evidence that it uses only `BARCAROLLE_LLM_API_KEY` and `BARCAROLLE_LLM_BASE_URL`. Do not record execution start, inspect `cli.log`, record credential values, or start ACUT model calls until this blocker is closed.
+Read `patch-command-contract/process.md`. If delivered, start focused review before integration; if blocked, record the blocker and notify only if user input is required. Do not record execution start, inspect `cli.log`, record credential values, or start ACUT model calls until `patch_generation_command_gap` is reviewed and closed.
