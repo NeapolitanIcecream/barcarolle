@@ -1,7 +1,7 @@
 # Core Narrative Experiment Coordinator
 
-status: acut_adapter_smoke_review_running
-updated: 2026-04-29T10:17:55+08:00
+status: acut_adapter_smoke_integrated_execution_start_ready
+updated: 2026-04-29T10:30:57+08:00
 today_stop_state: 2026-04-28_stop_policy_expired
 phase: Phase 0 - Experiment Bootstrap
 base_commit: 47046e7754d2402b7177a4b80f631ab6b0bcd97c
@@ -38,12 +38,12 @@ Execute `docs/experiments/core-narrative-experiment-plan.md` with tmux-managed C
 | execution-planner | Execution planning | delivered; run manifest prepared | exited | codex/core-narrative-experiment | /Users/chenmohan/gits/barcarolle | `experiments/core_narrative/configs/core_subset_run_manifest.yaml` |
 | task-manifests | No-model preflight | delivered; worker commit `1cdcbba`, integrated as `4a89984` | exited | codex/core-exp-task-manifests | /Users/chenmohan/gits/barcarolle-wt-task-manifests | `experiments/core_narrative/configs/tasks/**`, `experiments/core_narrative/reports/task_manifest_notes.md` |
 | task-manifests-reviewer | No-model preflight review | delivered; no_issues; worker commit `8869a07`, integrated as `7ad9462` | exited | codex/core-exp-task-manifests-reviewer | /Users/chenmohan/gits/barcarolle-wt-task-manifests-reviewer | `.codex-workflows/core-narrative-experiment/reviews/task-manifests-review.md`, `.codex-workflows/core-narrative-experiment/workers/task-manifests-reviewer/process.md` |
-| acut-adapter-smoke | Phase 3 runner smoke | delivered; worker commit `3b2f820`, awaiting focused review | exited | codex/core-exp-acut-adapter-smoke | /Users/chenmohan/gits/barcarolle-wt-acut-adapter-smoke | `experiments/core_narrative/tools/**` limited to ACUT adapter/orchestration additions, `experiments/core_narrative/reports/acut_adapter_smoke.md`, `experiments/core_narrative/results/normalized/acut_adapter_smoke*.json`, `experiments/core_narrative/results/raw/acut_adapter_smoke*/**`, `.codex-workflows/core-narrative-experiment/workers/acut-adapter-smoke/process.md` |
-| acut-adapter-smoke-reviewer | Phase 3 runner smoke review | session_running; started focused review at commit `95abda6` | bcx-acut-adapter-smoke-reviewer | codex/core-exp-acut-adapter-smoke-reviewer | /Users/chenmohan/gits/barcarolle-wt-acut-adapter-smoke-reviewer | `.codex-workflows/core-narrative-experiment/reviews/acut-adapter-smoke-review.md`, `.codex-workflows/core-narrative-experiment/workers/acut-adapter-smoke-reviewer/process.md` |
+| acut-adapter-smoke | Phase 3 runner smoke | delivered; worker commit `3b2f820`, integrated as `918fc89` | exited | codex/core-exp-acut-adapter-smoke | /Users/chenmohan/gits/barcarolle-wt-acut-adapter-smoke | `experiments/core_narrative/tools/**` limited to ACUT adapter/orchestration additions, `experiments/core_narrative/reports/acut_adapter_smoke.md`, `experiments/core_narrative/results/normalized/acut_adapter_smoke*.json`, `experiments/core_narrative/results/raw/acut_adapter_smoke*/**`, `.codex-workflows/core-narrative-experiment/workers/acut-adapter-smoke/process.md` |
+| acut-adapter-smoke-reviewer | Phase 3 runner smoke review | delivered; no_issues; worker commit `c5534b1`, integrated as `49fe2df` | exited | codex/core-exp-acut-adapter-smoke-reviewer | /Users/chenmohan/gits/barcarolle-wt-acut-adapter-smoke-reviewer | `.codex-workflows/core-narrative-experiment/reviews/acut-adapter-smoke-review.md`, `.codex-workflows/core-narrative-experiment/workers/acut-adapter-smoke-reviewer/process.md` |
 
 ## Active Tmux Sessions
 
-- `bcx-acut-adapter-smoke-reviewer`
+- none
 
 ## Decisions
 
@@ -73,19 +73,20 @@ Execute `docs/experiments/core-narrative-experiment-plan.md` with tmux-managed C
 
 ## Blockers
 
-None currently recorded for no-model preflight. Broad ACUT execution has not been started. ACUT model-call execution must still wait for an explicit coordinator execution-start record and an adapter command path that uses only `BARCAROLLE_LLM_API_KEY` and `BARCAROLLE_LLM_BASE_URL` for LLM access while appending a cost ledger record for each patch-generation attempt.
+None currently recorded for no-model preflight. Broad ACUT execution has not been started. ACUT model-call execution must still wait for an explicit coordinator execution-start record confirming required LLM env presence, writable cost ledger, active default slice, and concrete adapter command.
 
 ## Execution Readiness Bookkeeping
 
 - checked_at: `2026-04-29T09:41:00+08:00`
 - readiness_state: `runner_smoke_preflight_ready`
-- active_workers: `acut-adapter-smoke-reviewer`
+- active_workers: none recorded
 - reviewed_inputs_ready:
   - LLM access and budget gate: reviewed in `wave0-r5-reviewer` with `no_issues`
   - repo runtime lock: reviewed and integrated
   - general benchmark lock: reviewed and integrated
   - core subset run manifest: prepared, not started
   - concrete `RBench` and `RWork` task manifests: reviewed and integrated
+  - ACUT adapter command path: reviewed and integrated
 - resumed_gate_check:
   - `BARCAROLLE_LLM_API_KEY`: present, value not inspected or recorded
   - `BARCAROLLE_LLM_BASE_URL`: present, value not inspected or recorded
@@ -100,8 +101,8 @@ None currently recorded for no-model preflight. Broad ACUT execution has not bee
   - ran no-op verifier smoke for `click__rbench__001`; it failed the injected regression test with exit `1`, matching `expected.no_op_fails: true`
 - broad_execution_started: false
 - model_calls_started: false
-- execution_decision: Continue Phase 3 runner smoke review before any full budget-constrained execution. Do not start ACUT model calls until the reviewed ACUT adapter command path is integrated and the coordinator explicitly records execution start.
-- resume_entry: On the next step, read this coordinator and latest relevant worker `process.md` files, then handle the `acut-adapter-smoke-reviewer` delivery or blocker. Start execution only after reviewed integration and an explicit execution-start record.
+- execution_decision: The reviewed ACUT adapter smoke path is integrated. The next step is an explicit execution-start planning/record step for the budget-constrained core subset; do not start ACUT model calls until that record exists.
+- resume_entry: On the next step, read this coordinator and latest relevant worker `process.md` files, confirm non-secret env presence and writable ledger, record the concrete adapter command and active default slice if execution is being started, then dispatch only the bounded first execution worker.
 
 ## Review Queue
 
@@ -142,6 +143,8 @@ None currently recorded for no-model preflight. Broad ACUT execution has not bee
 - Started focused `acut-adapter-smoke` to implement and no-model-test the ACUT adapter command path before any live ACUT model call.
 - Focused `acut-adapter-smoke` delivered commit `3b2f820`; no live ACUT model calls were made and broad execution remains not started.
 - Started focused `acut-adapter-smoke-reviewer` before integrating the adapter smoke delivery.
+- Focused `acut-adapter-smoke-reviewer` delivered `no_issues`.
+- Integrated the reviewed ACUT adapter smoke delivery and review artifact. Broad ACUT execution and model calls remain not started.
 
 ## Pre-Run Gates
 
@@ -179,4 +182,4 @@ None currently recorded for no-model preflight. Broad ACUT execution has not bee
 
 ## Next Heartbeat Action
 
-Read `acut-adapter-smoke-reviewer` `process.md`. If delivered with `no_issues`, integrate the reviewed adapter smoke delivery and review artifact; if issues are found, start a focused revision before integration; if blocked, record the blocker and notify only if user input is required. Do not start broad ACUT execution or model calls until the coordinator explicitly records execution start. Do not inspect `cli.log` unless debugging is explicitly requested.
+Prepare the explicit execution-start planning record for the budget-constrained core subset. Read the latest relevant `process.md` files first, verify required LLM env presence without recording values, verify `experiments/core_narrative/results/cost_ledger.jsonl` is writable, record the concrete adapter command path, and only then decide whether to start a bounded first execution worker. Do not inspect `cli.log`, record credential values, or start broad ACUT execution/model calls without the explicit execution-start record.
