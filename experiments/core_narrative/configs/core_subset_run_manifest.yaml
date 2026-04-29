@@ -1,5 +1,5 @@
 id: core_2x2_pilot_budget_constrained_v2
-status: first_execution_pilot_integrated_transport_preflight_ready
+status: transport_preflight_clear_next_bounded_attempt_ready
 prepared_at: "2026-04-28T15:13:51+08:00"
 redesigned_at: "2026-04-29T11:20:00+08:00"
 owner: coordinator
@@ -18,7 +18,7 @@ execution_start:
   projected_cost_usd: 3.00
   broad_acut_execution_started: false
   model_calls_allowed: false
-  model_calls_allowed_scope: none_until_transport_preflight_clears_first_attempt_gaierror
+  model_calls_allowed_scope: none_until_next_explicit_bounded_attempt_decision
   required_before_start:
     - coordinator records explicit execution start
     - required LLM environment variables are present
@@ -96,7 +96,7 @@ active_default_slice:
   total_primary_patch_generation_attempts: 80
 
 pilot_slice:
-  status: first_execution_attempt_integrated_transport_preflight_ready
+  status: transport_preflight_clear_next_bounded_attempt_ready
   default_before_full_core: true
   acuts:
     - frontier-generic-swe
@@ -138,7 +138,7 @@ pilot_slice:
     explicit_execution_start_decision_recorded: true
     broad_acut_execution_started: false
     model_calls_allowed: false
-    model_calls_allowed_scope: none_until_transport_preflight_clears_first_attempt_gaierror
+    model_calls_allowed_scope: none_until_next_explicit_bounded_attempt_decision
   first_execution_attempt:
     run_id: pilot_001__cheap-generic-swe__click__rbench__001__attempt1
     acut_id: cheap-generic-swe
@@ -157,7 +157,21 @@ pilot_slice:
     retry_or_second_attempt_started: false
     redacted_error_type: gaierror
   next_gate:
-    required_before_second_model_call: no_secret_transport_preflight_or_equivalent_coordinator_record
+    required_before_second_model_call: separate_explicit_coordinator_decision_for_one_bounded_attempt
+    no_secret_transport_preflight:
+      checked_at: "2026-04-29T13:42:24+08:00"
+      api_key_env_present: true
+      base_url_env_present: true
+      endpoint_parse_ok: true
+      scheme_allowed: true
+      host_present: true
+      endpoint_kind: chat_completions
+      dns_resolution_ok: true
+      tcp_connect_ok: true
+      tls_handshake_ok: true
+      error_class: null
+      record_hostname: false
+      record_ip_address: false
     record_full_base_url: false
     record_credential_values: false
   promotion_to_full_core:

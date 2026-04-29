@@ -1,7 +1,7 @@
 # Core Narrative Experiment Coordinator
 
-status: first_execution_pilot_integrated_transport_preflight_ready
-updated: 2026-04-29T13:29:57+08:00
+status: transport_preflight_clear_next_bounded_attempt_ready
+updated: 2026-04-29T13:42:29+08:00
 today_stop_state: 2026-04-28_stop_policy_expired
 phase: Phase 0 - Experiment Bootstrap
 base_commit: 47046e7754d2402b7177a4b80f631ab6b0bcd97c
@@ -82,7 +82,7 @@ Execute `docs/experiments/core-narrative-experiment-plan.md` with tmux-managed C
 
 ## Blockers
 
-No open patch-command blocker remains. Broad ACUT execution has not been started and no large model-call batch has started. The first bounded pilot attempt is integrated and reviewed with `no_issues`, but the live patch command failed with redacted outcome `LLM request failed` and error type `gaierror`. Do not start a second model-call attempt until a no-secret transport preflight or equivalent coordinator record clears this operational failure mode.
+No open patch-command blocker remains. Broad ACUT execution has not been started and no large model-call batch has started. The first bounded pilot attempt is integrated and reviewed with `no_issues`. Its live patch command failed with redacted outcome `LLM request failed` and error type `gaierror`; a no-secret transport preflight at `2026-04-29T13:42:24+08:00` confirmed environment presence, endpoint parse, DNS resolution, TCP connect, and TLS handshake without recording credential values, bearer tokens, resolved secrets, full base URL values, hostnames, or IP addresses. A next single bounded attempt decision is ready, but still requires a separate coordinator record.
 
 ## Execution Readiness Bookkeeping
 
@@ -112,7 +112,8 @@ No open patch-command blocker remains. Broad ACUT execution has not been started
 - model_calls_started: one first-execution worker attempt completed with event `command_failed`; no second attempt or broad execution authorized
 - execution_decision: Explicit execution start is recorded only for `pilot_001__cheap-generic-swe__click__rbench__001__attempt1`; broad execution remains disallowed.
 - first_execution_outcome: integrated and reviewed; adapter event `command_failed`, estimated cost `3.00`, cumulative estimated cost `3.00`, no patch, no verifier run, no retry.
-- resume_entry: On the next step, read this coordinator and latest relevant worker `process.md` files. Prepare or run a no-secret transport preflight for the BARCAROLLE LLM endpoint before any second model-call attempt; record only booleans/error classes and never credential values or full base URL values. Do not inspect `cli.log`.
+- transport_preflight: passed at `2026-04-29T13:42:24+08:00`; checked only non-secret booleans/error classes. `BARCAROLLE_LLM_API_KEY` present, `BARCAROLLE_LLM_BASE_URL` present, endpoint parse ok, allowed scheme ok, host present, endpoint kind `chat_completions`, DNS resolution ok, TCP connect ok, TLS handshake ok, error class null. Credential values, bearer tokens, resolved secrets, full base URL values, hostnames, and IP addresses were not recorded.
+- resume_entry: On the next step, read this coordinator and latest relevant worker `process.md` files. Decide whether to record a separate explicit start decision for at most one next bounded pilot attempt; do not start broad ACUT execution or any large batch. Do not inspect `cli.log`.
 
 ## Execution Start Preflight
 
@@ -132,7 +133,7 @@ No open patch-command blocker remains. Broad ACUT execution has not been started
 - adapter_command_path: `python3 experiments/core_narrative/tools/acut_patch_adapter.py`
 - patch_command_path: `python3 experiments/core_narrative/tools/barcarolle_patch_command.py`
 - adapter_command_template: `python3 experiments/core_narrative/tools/acut_patch_adapter.py --workspace <prepared-task-workspace> --task <task-yaml> --acut experiments/core_narrative/configs/acuts/<active-2x2-acut>.yaml --attempt 1 --run-id <approved-run-id> --artifact-dir experiments/core_narrative/results/raw/<approved-run-id> --output experiments/core_narrative/results/raw/<approved-run-id>/adapter_result.json --normalized-output experiments/core_narrative/results/normalized/<approved-run-id>.json --llm-ledger experiments/core_narrative/results/cost_ledger.jsonl --projected-cost-usd <approved-projected-cost> --coordinator-decision-ref coordinator.md#execution-start-record --timeout-seconds 1200 -- python3 experiments/core_narrative/tools/barcarolle_patch_command.py --acut experiments/core_narrative/configs/acuts/<same-active-2x2-acut>.yaml`
-- run_manifest: `experiments/core_narrative/configs/core_subset_run_manifest.yaml` status updated to `first_execution_pilot_integrated_transport_preflight_ready`; `execution_start.recorded` is `true` only for the single approved first pilot attempt
+- run_manifest: `experiments/core_narrative/configs/core_subset_run_manifest.yaml` status updated to `transport_preflight_clear_next_bounded_attempt_ready`; `execution_start.recorded` is `true` only for the single approved first pilot attempt
 - active_default_slice:
   - acuts: `frontier-generic-swe`, `frontier-click-specialist`, `cheap-generic-swe`, `cheap-click-specialist`
   - pilot tasks: 2 `G_score`, 3 `RBench`, 2 `RWork`
@@ -266,6 +267,7 @@ No open patch-command blocker remains. Broad ACUT execution has not been started
 - Recorded an explicit execution-start decision for exactly one first pilot attempt: `pilot_001__cheap-generic-swe__click__rbench__001__attempt1`.
 - `first-execution-pilot` delivered commit `f9a6986`; the single attempt ran through the reviewed adapter and custom patch command, appended one cost ledger record, and ended as `command_failed` with redacted `LLM request failed` / `gaierror`; no patch, verifier run, retry, second attempt, broad execution, or large batch occurred.
 - Focused `first-execution-pilot-reviewer` delivered `no_issues` in commit `5cb2cb4`; integrated the first execution delivery and review artifact as merge commits `998e0dc` and `41ca528`.
+- Ran a no-secret BARCAROLLE LLM transport preflight at `2026-04-29T13:42:24+08:00`: environment presence, endpoint parse, allowed scheme, host presence, DNS resolution, TCP connect, and TLS handshake all passed. No credential values, bearer tokens, resolved secrets, full base URL values, hostnames, or IP addresses were recorded. This clears the observed `gaierror` transport class for deciding one next bounded attempt, but does not itself authorize any ACUT model call.
 
 ## Pre-Run Gates
 
@@ -292,7 +294,7 @@ No open patch-command blocker remains. Broad ACUT execution has not been started
 - deferred_acuts: `higher-budget-repo-depth`, `retrieval-history-augmented`, `minimal-context-baseline`
 - broad_execution_started: false
 - run_manifest: `experiments/core_narrative/configs/core_subset_run_manifest.yaml`
-- next_allowed_step: no-secret BARCAROLLE LLM transport preflight or equivalent coordinator record for the `gaierror` outcome; do not start broad ACUT execution or any second model-call attempt until that operational failure mode is cleared.
+- next_allowed_step: decide whether to record a separate explicit start decision for at most one next bounded pilot attempt after the no-secret transport preflight; do not start broad ACUT execution or any large batch.
 
 ## Acceptance Gate
 
@@ -303,4 +305,4 @@ No open patch-command blocker remains. Broad ACUT execution has not been started
 
 ## Next Heartbeat Action
 
-Prepare a no-secret BARCAROLLE LLM transport preflight for the first-attempt `gaierror` outcome, or record why user input is required. Do not start broad ACUT execution or any second model-call attempt. Do not record credential values, bearer tokens, resolved secrets, or full base URL values.
+Decide whether to record a separate explicit start decision for at most one next bounded pilot attempt after the no-secret transport preflight. Do not start broad ACUT execution or any large batch. Do not record credential values, bearer tokens, resolved secrets, or full base URL values.
