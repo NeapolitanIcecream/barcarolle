@@ -1,5 +1,5 @@
 id: core_2x2_pilot_budget_constrained_v2
-status: pilot_003_integrated_transport_diagnostic_ready
+status: codex_cli_harness_adapter_integrated_preflight_ready
 prepared_at: "2026-04-28T15:13:51+08:00"
 redesigned_at: "2026-04-29T11:20:00+08:00"
 owner: coordinator
@@ -18,7 +18,7 @@ execution_start:
   projected_cost_usd: 3.00
   broad_acut_execution_started: false
   model_calls_allowed: false
-  model_calls_allowed_scope: none_until_post_route_fix_diagnostics_and_explicit_next_decision
+  model_calls_allowed_scope: none_until_reviewed_codex_cli_harness_explicit_next_decision
   required_before_start:
     - coordinator records explicit execution start
     - required LLM environment variables are present
@@ -99,7 +99,7 @@ active_default_slice:
   total_primary_patch_generation_attempts: 80
 
 pilot_slice:
-  status: pilot_003_integrated_transport_diagnostic_ready
+  status: codex_cli_harness_adapter_integrated_preflight_ready
   default_before_full_core: true
   acuts:
     - frontier-generic-swe
@@ -141,7 +141,7 @@ pilot_slice:
     explicit_execution_start_decision_recorded: true
     broad_acut_execution_started: false
     model_calls_allowed: false
-    model_calls_allowed_scope: none_until_post_route_fix_diagnostics_and_explicit_next_decision
+    model_calls_allowed_scope: none_until_reviewed_codex_cli_harness_explicit_next_decision
   first_execution_attempt:
     run_id: pilot_001__cheap-generic-swe__click__rbench__001__attempt1
     acut_id: cheap-generic-swe
@@ -317,6 +317,41 @@ pilot_slice:
     record_full_base_url: false
     record_hostname: false
     record_ip_address: false
+  codex_cli_harness_adapter:
+    status: reviewed_no_issues_integrated
+    worker_commit: c6cdc45
+    worker_integrated_as: "62e01ce"
+    review_commit: 6760c0a
+    review_integrated_as: "11ad0a7"
+    inner_patch_command_path: experiments/core_narrative/tools/codex_cli_patch_command.py
+    outer_adapter_path: experiments/core_narrative/tools/acut_patch_adapter.py
+    scope: inner_patch_generation_command_only
+    temporary_codex_home_required: true
+    provider_override:
+      provider_name: barcarolle
+      wire_api: responses
+      api_key_env: BARCAROLLE_LLM_API_KEY
+      base_url_env: BARCAROLLE_LLM_BASE_URL
+      record_resolved_base_url: false
+    model_catalog_routes:
+      - openai/gpt-5.4-mini
+      - openai/gpt-5.5
+    no_model_smoke:
+      direct_dry_run: passed
+      adapter_wrapped_dry_run: passed
+      live_barcarolle_model_call: false
+      main_ledger_appended: false
+      smoke_local_zero_cost_ledger_record: true
+    reviewed_controls:
+      no_secret_artifacts: true
+      shell_edit_tool_metadata_present: true
+      non_interactive_base_instructions_present: true
+      outer_adapter_budget_ledger_redaction_normalization_verifier_preserved: true
+      broad_execution_started: false
+      retry_or_second_attempt_started: false
+      specialist_acut_run_started: false
+      large_batch_started: false
+    required_before_next_model_call: explicit_one_attempt_start_decision_after_no_secret_preflight
   promotion_to_full_core:
     allowed_only_after: "pilot summary review and explicit coordinator decision"
     full_core_attempts_if_promoted: 80
@@ -335,6 +370,6 @@ locked_inputs:
     locked_task_ids_source: experiments/core_narrative/configs/general_benchmark.yaml
 
 next_no_model_preflights:
-  - no-secret diagnostics of the post-route-fix full patch-generation request gaierror before any next execution decision
+  - no-secret execution preflight for exactly one possible next bounded attempt through the reviewed Codex CLI harness before any model call
   - generate or verify task-agnostic Click specialist context artifacts before any specialist ACUT live run if not already available
   - do not start broad ACUT execution or model calls before the coordinator records a reviewed execution start
