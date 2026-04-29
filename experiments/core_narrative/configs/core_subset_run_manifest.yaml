@@ -1,5 +1,5 @@
 id: core_2x2_pilot_budget_constrained_v2
-status: model_route_fix_review_integrated_next_bounded_attempt_ready
+status: pilot_003_worker_running
 prepared_at: "2026-04-28T15:13:51+08:00"
 redesigned_at: "2026-04-29T11:20:00+08:00"
 owner: coordinator
@@ -99,7 +99,7 @@ active_default_slice:
   total_primary_patch_generation_attempts: 80
 
 pilot_slice:
-  status: model_route_fix_review_integrated_next_bounded_attempt_ready
+  status: pilot_003_worker_running
   default_before_full_core: true
   acuts:
     - frontier-generic-swe
@@ -212,7 +212,7 @@ pilot_slice:
     model_calls_allowed: false
     required_before_next_model_call: no_secret_diagnostics_or_user_input_record
     diagnostic_resolution: bare_model_route_name_mismatch
-    resolved_by_model_route_fix: pending_focused_review
+    resolved_by_model_route_fix: reviewed_no_issues_integrated
     record_credential_values: false
     record_bearer_tokens: false
     record_resolved_secrets: false
@@ -253,12 +253,43 @@ pilot_slice:
       integrated_as: 7292dfa
       status: no_issues
     next_execution_decision:
-      status: ready_for_separate_one_attempt_decision
+      status: pilot_003_dispatched
       broad_acut_execution_allowed: false
       retries_allowed: false
       second_attempts_allowed: false
       specialist_acut_runs_allowed: false
       large_batches_allowed: false
+    record_credential_values: false
+    record_bearer_tokens: false
+    record_resolved_secrets: false
+    record_full_base_url: false
+    record_hostname: false
+    record_ip_address: false
+  pilot_003_execution_attempt:
+    explicit_start_decision_recorded: true
+    recorded_at: "2026-04-29T15:07:50+08:00"
+    run_id: pilot_003__cheap-generic-swe__click__rbench__003__attempt1
+    acut_id: cheap-generic-swe
+    task_id: click__rbench__003
+    split: rbench
+    attempt: 1
+    model_route: openai/gpt-5.4-mini
+    projected_cost_usd: 3.00
+    projected_cumulative_estimated_cost_usd: 9.0008
+    broad_execution: false
+    retry_of_prior_attempt: false
+    second_attempt: false
+    specialist_acut_run: false
+    model_calls_allowed_scope: single_pilot_003_execution_worker
+    rationale: "First bounded pilot attempt after the reviewed provider-prefixed model-route fix; uses a different unattempted cheap-generic-swe RBench task and does not retry pilot_001 or pilot_002."
+    delivery_status: running
+    review_status: not_started
+    ledger_event: pending_worker_append
+    required_before_live_call:
+      - BARCAROLLE_LLM_API_KEY present without recording value
+      - BARCAROLLE_LLM_BASE_URL present without recording value
+      - cost ledger exists and is writable
+      - projected cumulative estimated cost below USD 240 soft stop and USD 300 hard cap
     record_credential_values: false
     record_bearer_tokens: false
     record_resolved_secrets: false
