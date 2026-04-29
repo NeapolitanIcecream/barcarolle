@@ -1,0 +1,7 @@
+diff --git a/README.md b/README.md
+index df967b9..007a04f 100644
+--- a/README.md
++++ b/README.md
+@@ -1 +1,2 @@
+ base
++mock patch applied

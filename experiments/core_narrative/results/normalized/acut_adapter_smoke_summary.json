@@ -1,0 +1,43 @@
+{
+  "schema_version": "core-narrative.adapter-smoke-summary.v1",
+  "summary_id": "acut_adapter_smoke_summary",
+  "status": "refreshed_no_model",
+  "updated_at": "2026-04-29T12:12:40+08:00",
+  "supersedes": "pre_redesign_acut_adapter_smoke_current_evidence",
+  "active_probe_acut_id": "cheap-click-specialist",
+  "default_execution_profile": {
+    "profile_id": "budget-constrained-2x2-pilot-v2",
+    "core_acut_ids": [
+      "frontier-generic-swe",
+      "frontier-click-specialist",
+      "cheap-generic-swe",
+      "cheap-click-specialist"
+    ],
+    "split_task_limits": {
+      "G_score": 2,
+      "RBench": 3,
+      "RWork": 2
+    },
+    "primary_attempts_per_acut_task": 1,
+    "pilot_primary_attempts": 28,
+    "full_core_requires_coordinator_decision": true
+  },
+  "artifacts": {
+    "dry_run_raw": "experiments/core_narrative/results/raw/acut_adapter_smoke_dry_run/adapter_result.json",
+    "dry_run_normalized": "experiments/core_narrative/results/normalized/acut_adapter_smoke_dry_run.json",
+    "missing_env_raw": "experiments/core_narrative/results/raw/acut_adapter_smoke_missing_env/adapter_result.json",
+    "missing_env_normalized": "experiments/core_narrative/results/normalized/acut_adapter_smoke_missing_env.json"
+  },
+  "evidence": {
+    "adapter_path": "experiments/core_narrative/tools/acut_patch_adapter.py",
+    "active_acut_manifest": "experiments/core_narrative/configs/acuts/cheap-click-specialist.yaml",
+    "dry_run_exit_code": 0,
+    "missing_env_exit_code": 2,
+    "dry_run_model_call_made": false,
+    "missing_env_model_call_made": false,
+    "broad_acut_execution_started": false,
+    "execution_start_preflight_started": false,
+    "live_patch_generation_attempt_started": false,
+    "live_model_call_started": false
+  }
+}

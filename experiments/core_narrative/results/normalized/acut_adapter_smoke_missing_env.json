@@ -1,8 +1,8 @@
 {
-  "acut_id": "general-benchmark-optimized",
+  "acut_id": "cheap-click-specialist",
   "attempt": 1,
   "error": "budget gate status: blocked",
-  "finished_at": "2026-04-29T02:01:32.455108Z",
+  "finished_at": "2026-04-29T04:11:49.090345Z",
   "metadata": {
     "adapter_id": "codex-cli-acut-adapter-v0",
     "dry_run": false,
@@ -20,7 +20,7 @@
   "run_id": "acut_adapter_smoke__missing_env",
   "schema_version": "core-narrative.run-result.v1",
   "split": "rbench",
-  "started_at": "2026-04-29T02:01:32.454844Z",
+  "started_at": "2026-04-29T04:11:49.090234Z",
   "status": "infra_failed",
   "task_id": "click__rbench__001",
   "verification": {
