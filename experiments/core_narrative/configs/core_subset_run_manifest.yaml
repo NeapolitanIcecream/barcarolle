@@ -5,11 +5,20 @@ redesigned_at: "2026-04-29T11:20:00+08:00"
 owner: coordinator
 
 execution_start:
-  recorded: false
+  recorded: true
   preflight_recorded_at: "2026-04-29T12:44:40+08:00"
-  explicit_start_decision_recorded: false
+  explicit_start_decision_recorded: true
+  recorded_at: "2026-04-29T12:58:12+08:00"
+  scope: single_first_pilot_attempt_only
+  run_id: pilot_001__cheap-generic-swe__click__rbench__001__attempt1
+  acut_id: cheap-generic-swe
+  task_id: click__rbench__001
+  split: rbench
+  attempt: 1
+  projected_cost_usd: 3.00
   broad_acut_execution_started: false
-  model_calls_allowed: false
+  model_calls_allowed: true
+  model_calls_allowed_scope: single_first_execution_worker
   required_before_start:
     - coordinator records explicit execution start
     - required LLM environment variables are present
@@ -87,7 +96,7 @@ active_default_slice:
   total_primary_patch_generation_attempts: 80
 
 pilot_slice:
-  status: reviewed_preflight_recorded_not_started
+  status: first_execution_attempt_authorized
   default_before_full_core: true
   acuts:
     - frontier-generic-swe
@@ -126,9 +135,18 @@ pilot_slice:
     focused_reviews_passed: true
     patch_generation_command_gap_closed: true
     execution_start_preflight_recorded: true
-    explicit_execution_start_decision_recorded: false
+    explicit_execution_start_decision_recorded: true
     broad_acut_execution_started: false
-    model_calls_allowed: false
+    model_calls_allowed: true
+    model_calls_allowed_scope: single_first_execution_worker
+  first_execution_attempt:
+    run_id: pilot_001__cheap-generic-swe__click__rbench__001__attempt1
+    acut_id: cheap-generic-swe
+    task_id: click__rbench__001
+    split: rbench
+    attempt: 1
+    projected_cost_usd: 3.00
+    broad_execution: false
   promotion_to_full_core:
     allowed_only_after: "pilot summary review and explicit coordinator decision"
     full_core_attempts_if_promoted: 80

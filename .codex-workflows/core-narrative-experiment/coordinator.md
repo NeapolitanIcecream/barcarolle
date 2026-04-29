@@ -1,7 +1,7 @@
 # Core Narrative Experiment Coordinator
 
-status: execution_start_preflight_recorded_awaiting_start_decision
-updated: 2026-04-29T12:44:40+08:00
+status: first_execution_worker_pending_start
+updated: 2026-04-29T12:58:12+08:00
 today_stop_state: 2026-04-28_stop_policy_expired
 phase: Phase 0 - Experiment Bootstrap
 base_commit: 47046e7754d2402b7177a4b80f631ab6b0bcd97c
@@ -45,6 +45,7 @@ Execute `docs/experiments/core-narrative-experiment-plan.md` with tmux-managed C
 | acut-2x2-patch-reviewer | Phase 3 focused review | delivered; issues_found; worker commit `13b3918`, integrated as `c8da5cc` | exited | codex/core-exp-acut-2x2-patch-reviewer | /Users/chenmohan/gits/barcarolle-wt-acut-2x2-patch-reviewer | `.codex-workflows/core-narrative-experiment/reviews/acut-2x2-patch-command-review.md`, `.codex-workflows/core-narrative-experiment/workers/acut-2x2-patch-reviewer/process.md` |
 | patch-command-r1-reviewer | Phase 3 focused re-review | delivered; issues_found; worker commit `e5c7db1`, integrated as `81dfbd0` | exited | codex/core-exp-patch-command-r1-reviewer | /Users/chenmohan/gits/barcarolle-wt-patch-command-r1-reviewer | `.codex-workflows/core-narrative-experiment/reviews/patch-command-r1-review.md`, `.codex-workflows/core-narrative-experiment/workers/patch-command-r1-reviewer/process.md` |
 | patch-command-r2-reviewer | Phase 3 focused follow-up review | delivered; no_issues; worker commit `8ce8d9b`, integrated as `3ffaefc` | exited | codex/core-exp-patch-command-r2-reviewer | /Users/chenmohan/gits/barcarolle-wt-patch-command-r2-reviewer | `.codex-workflows/core-narrative-experiment/reviews/patch-command-r2-review.md`, `.codex-workflows/core-narrative-experiment/workers/patch-command-r2-reviewer/process.md` |
+| first-execution-pilot | Phase 3 bounded execution | pending start; explicit execution-start decision recorded for one ACUT/task primary attempt | pending | codex/core-exp-first-execution-pilot | /Users/chenmohan/gits/barcarolle-wt-first-execution-pilot | `experiments/core_narrative/results/cost_ledger.jsonl`, `experiments/core_narrative/results/raw/pilot_001__cheap-generic-swe__click__rbench__001__attempt1/**`, `experiments/core_narrative/results/normalized/pilot_001__cheap-generic-swe__click__rbench__001__attempt1.json`, `.codex-workflows/core-narrative-experiment/workers/first-execution-pilot/**` |
 
 ## Active Tmux Sessions
 
@@ -80,13 +81,13 @@ Execute `docs/experiments/core-narrative-experiment-plan.md` with tmux-managed C
 
 ## Blockers
 
-No open patch-command blocker remains. Broad ACUT execution has not been started and no ACUT model calls have started. `patch-command-r2-reviewer` delivered `no_issues`; patch-command revisions and review artifacts are integrated. A non-secret execution-start preflight record for the reviewed 2x2 pilot and custom BARCAROLLE-env-only patch command path was recorded at `2026-04-29T12:44:40+08:00`. Do not start model calls or broad execution until the coordinator records a separate explicit execution-start decision.
+No open patch-command blocker remains. Broad ACUT execution has not been started and no large model-call batch has started. A separate explicit execution-start decision was recorded at `2026-04-29T12:58:12+08:00` for exactly one bounded first pilot attempt: `cheap-generic-swe` on `click__rbench__001`, attempt 1. This authorizes only the `first-execution-pilot` worker and does not authorize broad ACUT execution.
 
 ## Execution Readiness Bookkeeping
 
 - checked_at: `2026-04-29T09:41:00+08:00`
 - readiness_state: `runner_smoke_preflight_ready`
-- active_workers: none
+- active_workers: `first-execution-pilot` pending tmux start
 - reviewed_inputs_ready:
   - LLM access and budget gate: reviewed in `wave0-r5-reviewer` with `no_issues`
   - repo runtime lock: reviewed and integrated
@@ -107,17 +108,21 @@ No open patch-command blocker remains. Broad ACUT execution has not been started
   - installed the Click runtime in that workspace with `uv`
   - ran no-op verifier smoke for `click__rbench__001`; it failed the injected regression test with exit `1`, matching `expected.no_op_fails: true`
 - broad_execution_started: false
-- model_calls_started: false
-- execution_decision: Execution-start preflight is recorded for the reviewed 2x2 pilot and custom patch command path. Do not record execution start yet; the next bounded step may decide whether to start at most one first execution worker for one ACUT/task primary attempt.
-- resume_entry: On the next step, read this coordinator and latest relevant worker `process.md` files. If no new worker is active, decide whether to record a separate explicit execution-start decision and dispatch at most one bounded first execution worker. Do not start broad ACUT execution or large model-call batches.
+- model_calls_started: pending exactly one first-execution worker attempt
+- execution_decision: Explicit execution start is recorded only for `pilot_001__cheap-generic-swe__click__rbench__001__attempt1`; broad execution remains disallowed.
+- resume_entry: On the next step, read this coordinator and latest relevant worker `process.md` files. If `first-execution-pilot` is running, read only its `process.md`; if delivered, start focused result review before any further execution; if blocked, record whether user input is required.
 
 ## Execution Start Preflight
 
 - checked_at: `2026-04-29T12:44:40+08:00`
 - status: `reviewed_2x2_preflight_recorded`
-- execution_start_recorded: false
+- execution_start_recorded: true
+- execution_start_recorded_at: `2026-04-29T12:58:12+08:00`
+- execution_start_scope: `single_first_pilot_attempt_only`
+- execution_start_worker: `first-execution-pilot`
+- execution_start_run_id: `pilot_001__cheap-generic-swe__click__rbench__001__attempt1`
 - broad_acut_execution_started: false
-- model_calls_started: false
+- model_calls_started: pending worker start
 - env_presence:
   - `BARCAROLLE_LLM_API_KEY`: present, value not inspected or recorded
   - `BARCAROLLE_LLM_BASE_URL`: present, value not inspected or recorded
@@ -132,9 +137,11 @@ No open patch-command blocker remains. Broad ACUT execution has not been started
   - attempts: one primary attempt per ACUT/task
 - budget_caps: USD `$240` soft stop and USD `$300` hard cap
 - deferred_acuts: `higher-budget-repo-depth`, `retrieval-history-augmented`, `minimal-context-baseline`
-- first_execution_worker_decision: not started in this heartbeat; next bounded step can record a separate explicit execution-start decision and dispatch at most one first execution worker
+- first_execution_worker_decision: start exactly one primary attempt: ACUT `cheap-generic-swe`, task `click__rbench__001`, attempt `1`, run id `pilot_001__cheap-generic-swe__click__rbench__001__attempt1`
 - first_execution_worker_scope_limit: one ACUT/task primary attempt routed through `acut_patch_adapter.py` and the reviewed custom `barcarolle_patch_command.py`, with ledger append required for the patch-generation attempt and immediate blocker status if any gate fails
-- preflight_decision: ready for a separate explicit execution-start decision for a bounded first pilot attempt; broad execution remains disallowed
+- first_execution_worker_projected_cost_usd: `3.00`
+- first_execution_worker_token_record_policy: use dry-run prompt sizing plus conservative output budget; initial ledger args target approximately `20000` input tokens and `64000` output tokens unless the worker records a tighter value before live call
+- preflight_decision: explicit first-attempt start decision recorded; broad execution remains disallowed
 - supersession_note: This preflight supersedes the `2026-04-29T10:42:52+08:00` pre-redesign execution-start preflight.
 
 ## ACUT 2x2 Redesign
@@ -194,7 +201,7 @@ No open patch-command blocker remains. Broad ACUT execution has not been started
 - revision_step_2_delivery: `patch-command-contract` revision 2 delivered commit `0d27f26` at `2026-04-29T12:20:00+08:00`; focused `patch-command-r2-reviewer` started at `2026-04-29T12:20:56+08:00`
 - revision_review_2: `patch-command-r2-reviewer` delivered `no_issues` in commit `8ce8d9b`; patch-command revisions and review artifacts integrated as merge commits `2c23631`, `81dfbd0`, and `3ffaefc`
 - closure_decision: `patch_generation_command_gap` is closed. This does not record execution start and does not authorize model calls.
-- execution_start_recorded: false
+- execution_start_recorded: true
 - broad_acut_execution_started: false
 - model_calls_started: false
 
@@ -291,4 +298,4 @@ No open patch-command blocker remains. Broad ACUT execution has not been started
 
 ## Next Heartbeat Action
 
-Decide whether to record a separate explicit execution-start decision and dispatch at most one bounded first execution worker for one ACUT/task primary attempt routed through the reviewed `acut_patch_adapter.py` plus `barcarolle_patch_command.py` path. Do not start broad ACUT execution or large model-call batches; keep env values and resolved base URLs unrecorded.
+Start or monitor `first-execution-pilot`. Read only `.codex-workflows/core-narrative-experiment/workers/first-execution-pilot/process.md`; if delivered, start focused result review before any further execution; if blocked, record whether user input is required. Do not start broad ACUT execution or any second model-call attempt.
