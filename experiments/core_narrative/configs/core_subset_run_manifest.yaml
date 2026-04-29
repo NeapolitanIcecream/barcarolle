@@ -1,5 +1,5 @@
 id: core_2x2_pilot_budget_constrained_v2
-status: pilot_003_review_running
+status: pilot_003_integrated_transport_diagnostic_ready
 prepared_at: "2026-04-28T15:13:51+08:00"
 redesigned_at: "2026-04-29T11:20:00+08:00"
 owner: coordinator
@@ -18,7 +18,7 @@ execution_start:
   projected_cost_usd: 3.00
   broad_acut_execution_started: false
   model_calls_allowed: false
-  model_calls_allowed_scope: none_until_pilot_003_review_passes_and_explicit_next_decision
+  model_calls_allowed_scope: none_until_post_route_fix_diagnostics_and_explicit_next_decision
   required_before_start:
     - coordinator records explicit execution start
     - required LLM environment variables are present
@@ -99,7 +99,7 @@ active_default_slice:
   total_primary_patch_generation_attempts: 80
 
 pilot_slice:
-  status: pilot_003_review_running
+  status: pilot_003_integrated_transport_diagnostic_ready
   default_before_full_core: true
   acuts:
     - frontier-generic-swe
@@ -141,7 +141,7 @@ pilot_slice:
     explicit_execution_start_decision_recorded: true
     broad_acut_execution_started: false
     model_calls_allowed: false
-    model_calls_allowed_scope: none_until_pilot_003_review_passes_and_explicit_next_decision
+    model_calls_allowed_scope: none_until_post_route_fix_diagnostics_and_explicit_next_decision
   first_execution_attempt:
     run_id: pilot_001__cheap-generic-swe__click__rbench__001__attempt1
     acut_id: cheap-generic-swe
@@ -207,12 +207,14 @@ pilot_slice:
     reviewed_attempts:
       - pilot_001__cheap-generic-swe__click__rbench__001__attempt1
       - pilot_002__cheap-generic-swe__click__rbench__002__attempt1
+      - pilot_003__cheap-generic-swe__click__rbench__003__attempt1
     redacted_error: LLM request failed
     redacted_error_type: gaierror
     model_calls_allowed: false
     required_before_next_model_call: no_secret_diagnostics_or_user_input_record
-    diagnostic_resolution: bare_model_route_name_mismatch
+    diagnostic_resolution: bare_model_route_name_mismatch_for_first_two_attempts
     resolved_by_model_route_fix: reviewed_no_issues_integrated
+    post_model_route_fix_status: pilot_003_full_patch_generation_request_still_failed_with_gaierror
     record_credential_values: false
     record_bearer_tokens: false
     record_resolved_secrets: false
@@ -283,8 +285,11 @@ pilot_slice:
     model_calls_allowed_scope: single_pilot_003_execution_worker
     rationale: "First bounded pilot attempt after the reviewed provider-prefixed model-route fix; uses a different unattempted cheap-generic-swe RBench task and does not retry pilot_001 or pilot_002."
     delivery_status: command_failed
-    review_status: pilot_003_review_running
+    review_status: no_issues_integrated
     worker_commit: c8d78d4
+    integration:
+      worker_integrated_as: "c748362"
+      review_integrated_as: "22cd6a1"
     ledger_event: command_failed
     estimated_cost_usd: 3.00
     cumulative_estimated_cost_usd: 9.0008
@@ -294,11 +299,13 @@ pilot_slice:
     redacted_error_type: gaierror
     reviewer:
       worker: pilot-003-reviewer
-      session: bcx-pilot-003-reviewer
+      session: exited
       branch: codex/core-exp-pilot-003-reviewer
       worktree: /Users/chenmohan/gits/barcarolle-wt-pilot-003-reviewer
       start_commit: dd49fcb
-      status: running
+      worker_commit: b6d4693
+      integrated_as: 22cd6a1
+      status: no_issues
     required_before_live_call:
       - BARCAROLLE_LLM_API_KEY present without recording value
       - BARCAROLLE_LLM_BASE_URL present without recording value
@@ -328,6 +335,6 @@ locked_inputs:
     locked_task_ids_source: experiments/core_narrative/configs/general_benchmark.yaml
 
 next_no_model_preflights:
-  - focused review of the pilot-003 bounded execution delivery before any next execution decision
+  - no-secret diagnostics of the post-route-fix full patch-generation request gaierror before any next execution decision
   - generate or verify task-agnostic Click specialist context artifacts before any specialist ACUT live run if not already available
   - do not start broad ACUT execution or model calls before the coordinator records a reviewed execution start
