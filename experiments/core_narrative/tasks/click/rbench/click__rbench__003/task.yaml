@@ -1,0 +1,53 @@
+schema_version: core-narrative.task.v1
+task_id: click__rbench__003
+repo_slug: click
+split: rbench
+source:
+  kind: commit
+  public_url: https://github.com/pallets/click/commit/02ea9ee7e864581258b4902d6e6c1264b0226b9f
+  anchor_id: commit:02ea9ee7e864581258b4902d6e6c1264b0226b9f
+  base_commit: d3f36e884e18f374c3e4e6cf062ba19f100d0fd6
+  target_commit: 02ea9ee7e864581258b4902d6e6c1264b0226b9f
+task_family: prompt choice rendering
+task_statement_path: public/statement.md
+allowed_context:
+  include_git_history_before_base: true
+  include_issue_text: false
+  include_pr_text: false
+  include_reference_patch: false
+disallowed_context:
+- reference patch or target diff for commit 02ea9ee
+- ACUT outputs or public model results
+- future execution results for this task
+verifier:
+  command: verifier/run.sh
+  timeout_seconds: 60
+expected:
+  no_op_fails: true
+  reference_passes: true
+leakage:
+  reviewed: true
+  notes: Terminal UI behavior is exercised through CliRunner and monkeypatching, not
+    a real terminal.
+admission:
+  status: accepted
+  reviewer: task-manifests-worker
+  rationale: User-visible behavior with focused deterministic tests.
+metadata:
+  materialized_from: experiments/core_narrative/configs/tasks/rbench_click.yaml
+  benchmark_split: RBench
+  locked_target_repository: pallets/click
+  locked_target_commit: 8bd8b4a074c55c03b6eb5666edc44a9c43df38a2
+  source_compare:
+    commits_ahead: 1
+    changed_files:
+    - click/core.py
+    - click/termui.py
+    - tests/test_termui.py
+  expected_touched_area:
+  - prompt text construction for Choice parameters
+  - termui prompt regression tests
+  visible_context_guidance: Provide the commit message and expected before/after prompt
+    behavior. The implementation diff remains hidden.
+  risk_notes: Avoid relying on terminal state or locale; use in-process prompt tests
+    only.

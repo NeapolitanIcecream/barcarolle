@@ -1,8 +1,8 @@
 # Core Narrative Experiment Coordinator
 
-status: execution_ready_stop_policy_defer
-updated: 2026-04-28T16:18:03+08:00
-today_stop_state: pre_soft_stop_active
+status: runner_smoke_preflight_ready
+updated: 2026-04-29T09:41:00+08:00
+today_stop_state: 2026-04-28_stop_policy_expired
 phase: Phase 0 - Experiment Bootstrap
 base_commit: 47046e7754d2402b7177a4b80f631ab6b0bcd97c
 coordinator_repo: /Users/chenmohan/gits/barcarolle
@@ -60,8 +60,8 @@ None.
 - timezone: `Asia/Shanghai`
 - soft_stop_at: `2026-04-28T17:30:00+08:00`
 - hard_stop_at: `2026-04-28T17:50:00+08:00`
-- current_stop_state: `pre_soft_stop_active`
-- current_pause_or_wind_down_status: Reviewed task manifests are integrated and no worker is active. Broad ACUT execution remains not started. Because the default core run is broad and cannot be guaranteed to close cleanly before the `17:50` hard stop, defer broad execution for today's remaining window.
+- current_stop_state: `expired_after_resume_on_2026-04-29`
+- current_pause_or_wind_down_status: The 2026-04-28 stop window is over. The workflow resumed on 2026-04-29 from the integrated stop point with no active workers and broad ACUT execution still not started.
 - before_soft_stop_policy: Continue the current plan, but do not start a new long task that is unlikely to be reviewed, handed off, or cleanly paused before the hard stop.
 - soft_stop_window_policy: From `17:30` through `17:50`, only continue or start short, low-risk, easy-to-close coordination tasks such as `process.md` updates, review cleanup, artifact integration, small no-model-call preflights, and status summaries.
 - post_soft_stop_bans: After `17:30`, do not start broad ACUT execution, large batches of ACUT model calls, or new long-running workers.
@@ -71,12 +71,12 @@ None.
 
 ## Blockers
 
-None currently recorded. Broad ACUT execution has not been started.
+None currently recorded for no-model preflight. Broad ACUT execution has not been started. ACUT model-call execution must still wait for an explicit coordinator execution-start record and an adapter command path that uses only `BARCAROLLE_LLM_API_KEY` and `BARCAROLLE_LLM_BASE_URL` for LLM access while appending a cost ledger record for each patch-generation attempt.
 
 ## Execution Readiness Bookkeeping
 
-- checked_at: `2026-04-28T16:18:03+08:00`
-- readiness_state: `ready_for_explicit_execution_start_after_resume_or_sufficient_runway`
+- checked_at: `2026-04-29T09:41:00+08:00`
+- readiness_state: `runner_smoke_preflight_ready`
 - active_workers: none recorded
 - reviewed_inputs_ready:
   - LLM access and budget gate: reviewed in `wave0-r5-reviewer` with `no_issues`
@@ -84,10 +84,22 @@ None currently recorded. Broad ACUT execution has not been started.
   - general benchmark lock: reviewed and integrated
   - core subset run manifest: prepared, not started
   - concrete `RBench` and `RWork` task manifests: reviewed and integrated
+- resumed_gate_check:
+  - `BARCAROLLE_LLM_API_KEY`: present, value not inspected or recorded
+  - `BARCAROLLE_LLM_BASE_URL`: present, value not inspected or recorded
+  - cost ledger: exists and writable
+- runner_preflight:
+  - recreated ignored full `pallets/click` checkout under `experiments/core_narrative/external_repos/click`
+  - verified all 42 RBench/RWork base, target, and locked target commits are present in the local checkout
+  - materialized 14 runner-ready Click task packs under `experiments/core_narrative/tasks/click/**`
+  - packaged coordinator-only hidden verifier test files for each task
+  - prepared a clean-room workspace for `click__rbench__001`
+  - installed the Click runtime in that workspace with `uv`
+  - ran no-op verifier smoke for `click__rbench__001`; it failed the injected regression test with exit `1`, matching `expected.no_op_fails: true`
 - broad_execution_started: false
 - model_calls_started: false
-- today_execution_decision: Do not start broad ACUT execution or large model-call batches in the remaining 2026-04-28 window unless a future coordinator step can explicitly prove it will close cleanly before `17:50`.
-- resume_entry: On the next real execution window, read this coordinator and the latest relevant worker `process.md` files, re-confirm required LLM env presence and writable ledger without recording values, then explicitly record execution start before launching any ACUT worker.
+- execution_decision: Continue with Phase 3 runner smoke before any full budget-constrained execution. Do not start ACUT model calls until the ACUT adapter command path is recorded and the coordinator explicitly records execution start.
+- resume_entry: On the next step, read this coordinator and latest relevant worker `process.md` files, then either finish the ACUT adapter/cost-ledger smoke wiring or start a small Phase 3 smoke run only after explicit execution-start recording.
 
 ## Review Queue
 
@@ -122,6 +134,9 @@ None currently recorded. Broad ACUT execution has not been started.
 - Started focused `task-manifests-reviewer` before integrating task manifests.
 - Focused `task-manifests-reviewer` delivered `no_issues`.
 - Integrated reviewed task manifests and the review artifact. Broad ACUT execution and model calls remain not started.
+- Resumed on 2026-04-29 from the integrated stop point.
+- Recreated the ignored full Click checkout and verified task base/target commit availability.
+- Added task-pack materialization tooling, materialized 14 Click task packs, and ran a no-op clean-room verifier smoke for `click__rbench__001`; the no-op failed the injected regression as expected.
 
 ## Pre-Run Gates
 
@@ -159,4 +174,4 @@ None currently recorded. Broad ACUT execution has not been started.
 
 ## Next Heartbeat Action
 
-Apply today's stop strategy before taking the next step. The task manifests are reviewed and integrated, no worker is active, and broad ACUT execution remains not started. For the remaining 2026-04-28 window, only perform short readiness bookkeeping or status summaries. After `17:30`, do not start broad ACUT execution, large ACUT model-call batches, or new long-running workers. After `17:50`, pause the workflow unless a running worker unexpectedly appears; if one does, request a `process.md` handoff and stop its tmux session. Do not start broad ACUT execution or model calls until the coordinator explicitly records execution start. Do not inspect `cli.log` unless debugging is explicitly requested.
+Continue Phase 3 runner smoke preparation. Next eligible step: finish or start focused work on the ACUT adapter command path so patch-generation attempts use only `BARCAROLLE_LLM_API_KEY` and `BARCAROLLE_LLM_BASE_URL`, run through the budget gate, and append a cost record per attempt. Do not start broad ACUT execution or model calls until the coordinator explicitly records execution start. Do not inspect `cli.log` unless debugging is explicitly requested.
