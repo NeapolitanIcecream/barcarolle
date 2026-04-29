@@ -1,7 +1,7 @@
 # Core Narrative Experiment Coordinator
 
-status: pilot_002_worker_pending_start
-updated: 2026-04-29T13:55:06+08:00
+status: pilot_002_worker_running
+updated: 2026-04-29T13:57:37+08:00
 today_stop_state: 2026-04-28_stop_policy_expired
 phase: Phase 0 - Experiment Bootstrap
 base_commit: 47046e7754d2402b7177a4b80f631ab6b0bcd97c
@@ -47,11 +47,11 @@ Execute `docs/experiments/core-narrative-experiment-plan.md` with tmux-managed C
 | patch-command-r2-reviewer | Phase 3 focused follow-up review | delivered; no_issues; worker commit `8ce8d9b`, integrated as `3ffaefc` | exited | codex/core-exp-patch-command-r2-reviewer | /Users/chenmohan/gits/barcarolle-wt-patch-command-r2-reviewer | `.codex-workflows/core-narrative-experiment/reviews/patch-command-r2-review.md`, `.codex-workflows/core-narrative-experiment/workers/patch-command-r2-reviewer/process.md` |
 | first-execution-pilot | Phase 3 bounded execution | delivered and reviewed; worker commit `f9a6986`, integrated as `998e0dc`; single authorized attempt ended as `command_failed` with one ledger record and no retry | exited | codex/core-exp-first-execution-pilot | /Users/chenmohan/gits/barcarolle-wt-first-execution-pilot | `experiments/core_narrative/results/cost_ledger.jsonl`, `experiments/core_narrative/results/raw/pilot_001__cheap-generic-swe__click__rbench__001__attempt1/**`, `experiments/core_narrative/results/normalized/pilot_001__cheap-generic-swe__click__rbench__001__attempt1.json`, `.codex-workflows/core-narrative-experiment/workers/first-execution-pilot/**` |
 | first-execution-pilot-reviewer | Phase 3 bounded execution review | delivered; no_issues; worker commit `5cb2cb4`, integrated as `41ca528` | exited | codex/core-exp-first-execution-pilot-reviewer | /Users/chenmohan/gits/barcarolle-wt-first-execution-pilot-reviewer | `.codex-workflows/core-narrative-experiment/reviews/first-execution-pilot-review.md`, `.codex-workflows/core-narrative-experiment/workers/first-execution-pilot-reviewer/**` |
-| pilot-002-execution | Phase 3 bounded execution | pending start; explicit execution-start decision recorded for one ACUT/task primary attempt | pending | codex/core-exp-pilot-002-execution | /Users/chenmohan/gits/barcarolle-wt-pilot-002-execution | `experiments/core_narrative/results/cost_ledger.jsonl`, `experiments/core_narrative/results/raw/pilot_002__cheap-generic-swe__click__rbench__002__attempt1/**`, `experiments/core_narrative/results/normalized/pilot_002__cheap-generic-swe__click__rbench__002__attempt1.json`, `.codex-workflows/core-narrative-experiment/workers/pilot-002-execution/**` |
+| pilot-002-execution | Phase 3 bounded execution | running; start commit `97b1135`; explicit execution-start decision recorded for one ACUT/task primary attempt | bcx-pilot-002-execution | codex/core-exp-pilot-002-execution | /Users/chenmohan/gits/barcarolle-wt-pilot-002-execution | `experiments/core_narrative/results/cost_ledger.jsonl`, `experiments/core_narrative/results/raw/pilot_002__cheap-generic-swe__click__rbench__002__attempt1/**`, `experiments/core_narrative/results/normalized/pilot_002__cheap-generic-swe__click__rbench__002__attempt1.json`, `.codex-workflows/core-narrative-experiment/workers/pilot-002-execution/**` |
 
 ## Active Tmux Sessions
 
-- None.
+- `bcx-pilot-002-execution` for exactly one bounded pilot attempt: `pilot_002__cheap-generic-swe__click__rbench__002__attempt1`.
 
 ## Decisions
 
@@ -89,7 +89,7 @@ No open patch-command blocker remains. Broad ACUT execution has not been started
 
 - checked_at: `2026-04-29T09:41:00+08:00`
 - readiness_state: `runner_smoke_preflight_ready`
-- active_workers: `pilot-002-execution` pending tmux start
+- active_workers: `pilot-002-execution` running in tmux session `bcx-pilot-002-execution`
 - reviewed_inputs_ready:
   - LLM access and budget gate: reviewed in `wave0-r5-reviewer` with `no_issues`
   - repo runtime lock: reviewed and integrated
@@ -110,7 +110,7 @@ No open patch-command blocker remains. Broad ACUT execution has not been started
   - installed the Click runtime in that workspace with `uv`
   - ran no-op verifier smoke for `click__rbench__001`; it failed the injected regression test with exit `1`, matching `expected.no_op_fails: true`
 - broad_execution_started: false
-- model_calls_started: one first-execution worker attempt completed with event `command_failed`; exactly one next bounded worker attempt authorized and pending dispatch; no broad execution authorized
+- model_calls_started: one first-execution worker attempt completed with event `command_failed`; exactly one pilot-002 worker attempt authorized and dispatched; no broad execution authorized
 - execution_decision: Explicit execution start is recorded only for `pilot_001__cheap-generic-swe__click__rbench__001__attempt1`; broad execution remains disallowed.
 - first_execution_outcome: integrated and reviewed; adapter event `command_failed`, estimated cost `3.00`, cumulative estimated cost `3.00`, no patch, no verifier run, no retry.
 - transport_preflight: passed at `2026-04-29T13:42:24+08:00`; checked only non-secret booleans/error classes. `BARCAROLLE_LLM_API_KEY` present, `BARCAROLLE_LLM_BASE_URL` present, endpoint parse ok, allowed scheme ok, host present, endpoint kind `chat_completions`, DNS resolution ok, TCP connect ok, TLS handshake ok, error class null. Credential values, bearer tokens, resolved secrets, full base URL values, hostnames, and IP addresses were not recorded.
@@ -127,7 +127,7 @@ No open patch-command blocker remains. Broad ACUT execution has not been started
 - execution_start_worker: `first-execution-pilot`
 - execution_start_run_id: `pilot_001__cheap-generic-swe__click__rbench__001__attempt1`
 - broad_acut_execution_started: false
-- model_calls_started: one first-execution worker attempt completed with event `command_failed`; exactly one next bounded worker attempt authorized and pending dispatch; no broad execution authorized
+- model_calls_started: one first-execution worker attempt completed with event `command_failed`; exactly one pilot-002 worker attempt authorized and dispatched; no broad execution authorized
 - env_presence:
   - `BARCAROLLE_LLM_API_KEY`: present, value not inspected or recorded
   - `BARCAROLLE_LLM_BASE_URL`: present, value not inspected or recorded
@@ -135,7 +135,7 @@ No open patch-command blocker remains. Broad ACUT execution has not been started
 - adapter_command_path: `python3 experiments/core_narrative/tools/acut_patch_adapter.py`
 - patch_command_path: `python3 experiments/core_narrative/tools/barcarolle_patch_command.py`
 - adapter_command_template: `python3 experiments/core_narrative/tools/acut_patch_adapter.py --workspace <prepared-task-workspace> --task <task-yaml> --acut experiments/core_narrative/configs/acuts/<active-2x2-acut>.yaml --attempt 1 --run-id <approved-run-id> --artifact-dir experiments/core_narrative/results/raw/<approved-run-id> --output experiments/core_narrative/results/raw/<approved-run-id>/adapter_result.json --normalized-output experiments/core_narrative/results/normalized/<approved-run-id>.json --llm-ledger experiments/core_narrative/results/cost_ledger.jsonl --projected-cost-usd <approved-projected-cost> --coordinator-decision-ref coordinator.md#execution-start-record --timeout-seconds 1200 -- python3 experiments/core_narrative/tools/barcarolle_patch_command.py --acut experiments/core_narrative/configs/acuts/<same-active-2x2-acut>.yaml`
-- run_manifest: `experiments/core_narrative/configs/core_subset_run_manifest.yaml` status updated to `pilot_002_worker_pending_start`; `execution_start.recorded` is `true` only for the approved first and pilot-002 bounded attempts
+- run_manifest: `experiments/core_narrative/configs/core_subset_run_manifest.yaml` status updated to `pilot_002_worker_running`; `execution_start.recorded` is `true` only for the approved first and pilot-002 bounded attempts
 - active_default_slice:
   - acuts: `frontier-generic-swe`, `frontier-click-specialist`, `cheap-generic-swe`, `cheap-click-specialist`
   - pilot tasks: 2 `G_score`, 3 `RBench`, 2 `RWork`
@@ -208,7 +208,7 @@ No open patch-command blocker remains. Broad ACUT execution has not been started
 - closure_decision: `patch_generation_command_gap` is closed. A later explicit execution-start decision authorizes only the single `first-execution-pilot` worker attempt.
 - execution_start_recorded: true
 - broad_acut_execution_started: false
-- model_calls_started: one first-execution worker attempt completed with event `command_failed`; no second attempt or broad execution authorized
+- model_calls_started: one first-execution worker attempt completed with event `command_failed`; exactly one pilot-002 worker attempt authorized and dispatched; no broad execution authorized
 
 ## Review Queue
 
