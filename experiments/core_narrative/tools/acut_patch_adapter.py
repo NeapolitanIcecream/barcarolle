@@ -83,6 +83,14 @@ def parse_args() -> argparse.Namespace:
     )
     parser.add_argument("--timeout-seconds", type=int, help="Timeout for the patch-generation command.")
     parser.add_argument("--dry-run", action="store_true", help="Exercise gate, ledger, and artifact paths without a model call.")
+    parser.add_argument(
+        "--command-no-model",
+        action="store_true",
+        help=(
+            "Run the command path as a no-model smoke. Requires zero projected, "
+            "input, and output cost fields and records model_call_made=false."
+        ),
+    )
     parser.add_argument("command", nargs=argparse.REMAINDER, help="Patch-generation command to run after --.")
     return parser.parse_args()
 
@@ -324,6 +332,15 @@ def main() -> int:
         actual_cost = parse_usd(args.actual_cost_usd, "--actual-cost-usd") if args.actual_cost_usd is not None else None
         input_tokens = parse_non_negative_int(args.input_tokens, "--input-tokens")
         output_tokens = parse_non_negative_int(args.output_tokens, "--output-tokens")
+        if args.command_no_model and args.dry_run:
+            raise ToolError("--command-no-model is only meaningful when a command is executed")
+        if args.command_no_model:
+            if projected_cost != Decimal("0"):
+                raise ToolError("--command-no-model requires --projected-cost-usd 0")
+            if actual_cost not in (None, Decimal("0")):
+                raise ToolError("--command-no-model requires --actual-cost-usd 0 when provided")
+            if input_tokens != 0 or output_tokens != 0:
+                raise ToolError("--command-no-model requires zero input and output tokens")
 
         timestamp = iso_now().replace(":", "").replace("-", "")
         run_id = args.run_id or f"{slug(acut_id)}__{slug(task_id)}__attempt{args.attempt}__{timestamp}"
@@ -500,6 +517,7 @@ def main() -> int:
             return 0
 
         workspace = require_workspace(args.workspace)
+        command_model_call_made = not args.command_no_model
         acut_env, scrubbed_env_var_count = llm_safe_subprocess_env(os.environ)
         run = run_to_redacted_artifacts(
             command,
@@ -549,7 +567,7 @@ def main() -> int:
                 "gate_status": budget_gate["status"],
                 "command_exit_code": run["exit_code"],
                 "command_timed_out": run["timed_out"],
-                "model_call_made": True,
+                "model_call_made": command_model_call_made,
             },
         )
         payload = base_payload(
@@ -571,7 +589,8 @@ def main() -> int:
             dry_run=False,
             command_duration_seconds=float(run["duration_seconds"]),
             extra={
-                "model_call_made": True,
+                "model_call_made": command_model_call_made,
+                "command_no_model": args.command_no_model,
                 "scrubbed_env_var_count": scrubbed_env_var_count,
                 "command_exit_code": run["exit_code"],
                 "command_timed_out": run["timed_out"],
