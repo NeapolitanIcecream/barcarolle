@@ -1,5 +1,5 @@
 {
-  "acut_id": "lower-budget-fast-path",
+  "acut_id": "cheap-click-specialist",
   "command_contract_id": "barcarolle-patch-command-v1",
   "llm_env_policy": {
     "allowed_variable_names": [
@@ -24,12 +24,12 @@
     "validated": false
   },
   "prompt": {
-    "char_count": 2184,
+    "char_count": 2837,
     "content_recorded": false,
     "full_urls_redacted": true,
     "manifest_truncated": false,
     "prepared": true,
-    "sha256": "ba45e8f7b4b3525a10ad6246c33925febe1159d18b47939da5f27007d0dd64a7",
+    "sha256": "c5ca122a3034666d573324598ccac474e57718f0ea5f50ac43171a73842447e2",
     "statement_truncated": false
   },
   "provider": "openai",

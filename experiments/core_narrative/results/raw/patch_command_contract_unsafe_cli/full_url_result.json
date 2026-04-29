@@ -1,6 +1,6 @@
 {
   "details": {
-    "argument_index": 2,
+    "argument_index": 0,
     "reason": "full_url"
   },
   "error": "command argument rejected by redaction policy",

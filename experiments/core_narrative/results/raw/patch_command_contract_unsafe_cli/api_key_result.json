@@ -1,7 +1,7 @@
 {
   "details": {
-    "argument_index": 2,
-    "reason": "credential_like_key"
+    "argument_index": 0,
+    "reason": "secret_like_value"
   },
   "error": "command argument rejected by redaction policy",
   "llm_env_policy": {

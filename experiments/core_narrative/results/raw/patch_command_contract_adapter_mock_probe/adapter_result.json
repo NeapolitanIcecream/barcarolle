@@ -1,19 +1,19 @@
 {
-  "acut_id": "lower-budget-fast-path",
+  "acut_id": "cheap-click-specialist",
   "adapter_id": "codex-cli-acut-adapter-v0",
-  "artifact_dir": "experiments/core_narrative/results/raw/patch_command_contract_adapter_mock_probe",
+  "artifact_dir": "/Users/chenmohan/gits/barcarolle-wt-patch-command-contract/experiments/core_narrative/results/raw/patch_command_contract_adapter_mock_probe",
   "attempt": 1,
   "command": [
     "python3",
     "/Users/chenmohan/gits/barcarolle-wt-patch-command-contract/experiments/core_narrative/tools/barcarolle_patch_command.py",
     "--acut",
-    "/Users/chenmohan/gits/barcarolle-wt-patch-command-contract/experiments/core_narrative/configs/acuts/lower-budget-fast-path.yaml",
+    "/Users/chenmohan/gits/barcarolle-wt-patch-command-contract/experiments/core_narrative/configs/acuts/cheap-click-specialist.yaml",
     "--mock-response",
     "/Users/chenmohan/gits/barcarolle-wt-patch-command-contract/experiments/core_narrative/results/raw/patch_command_contract_mock_response/mock_response.json",
     "--summary-output",
     "/Users/chenmohan/gits/barcarolle-wt-patch-command-contract/experiments/core_narrative/results/raw/patch_command_contract_adapter_mock_probe/command_result.json"
   ],
-  "command_duration_seconds": 0.09,
+  "command_duration_seconds": 0.097,
   "command_exit_code": 0,
   "command_timed_out": false,
   "cost_ledger_append": {
@@ -21,14 +21,14 @@
     "estimated_cost_usd": 0.0,
     "event": "command_completed",
     "new_cumulative_estimated_cost_usd": 0.0,
-    "path": "experiments/core_narrative/results/raw/patch_command_contract_adapter_mock_probe/cost_ledger.jsonl",
+    "path": "/Users/chenmohan/gits/barcarolle-wt-patch-command-contract/experiments/core_narrative/results/raw/patch_command_contract_adapter_mock_probe/cost_ledger.jsonl",
     "previous_cumulative_estimated_cost_usd": 0.0,
     "record_count_after": 1,
     "record_count_before": 0,
     "status": "appended"
   },
   "dry_run": false,
-  "finished_at": "2026-04-29T03:17:41.653018Z",
+  "finished_at": "2026-04-29T03:49:06.222130Z",
   "llm_budget_gate": {
     "allowed": true,
     "approvals_required": [],
@@ -44,17 +44,19 @@
     },
     "default_execution_profile": {
       "core_acut_ids": [
-        "general-benchmark-optimized",
-        "repo-context-heavy",
-        "retrieval-sparse-symbolic",
-        "lower-budget-fast-path"
+        "frontier-generic-swe",
+        "frontier-click-specialist",
+        "cheap-generic-swe",
+        "cheap-click-specialist"
       ],
+      "full_core_requires_coordinator_decision": true,
+      "pilot_primary_attempts": 28,
       "primary_attempts_per_acut_task": 1,
-      "profile_id": "budget-constrained-core-v1",
+      "profile_id": "budget-constrained-2x2-pilot-v2",
       "split_task_limits": {
-        "G_score": 6,
-        "RBench": 8,
-        "RWork": 6
+        "G_score": 2,
+        "RBench": 3,
+        "RWork": 2
       }
     },
     "env": {
@@ -71,7 +73,7 @@
       ]
     },
     "execution_request": {
-      "acut_id": "lower-budget-fast-path",
+      "acut_id": "cheap-click-specialist",
       "attempt": 1,
       "coordinator_decision_ref_present": false,
       "split": "rbench"
@@ -84,7 +86,7 @@
       "exists": true,
       "is_file": true,
       "line_count": 0,
-      "path": "experiments/core_narrative/results/raw/patch_command_contract_adapter_mock_probe/cost_ledger.jsonl",
+      "path": "/Users/chenmohan/gits/barcarolle-wt-patch-command-contract/experiments/core_narrative/results/raw/patch_command_contract_adapter_mock_probe/cost_ledger.jsonl",
       "record_count": 0,
       "writable": true
     },
@@ -104,7 +106,7 @@
   },
   "model_call_made": true,
   "patch_artifact": {
-    "path": "experiments/core_narrative/results/raw/patch_command_contract_adapter_mock_probe/submission.patch",
+    "path": "/Users/chenmohan/gits/barcarolle-wt-patch-command-contract/experiments/core_narrative/results/raw/patch_command_contract_adapter_mock_probe/submission.patch",
     "policy": "reject_before_write",
     "size_bytes": 137,
     "unsafe_content": {
@@ -115,14 +117,14 @@
     "unsafe_content_detected": false,
     "written": true
   },
-  "patch_path": "experiments/core_narrative/results/raw/patch_command_contract_adapter_mock_probe/submission.patch",
+  "patch_path": "/Users/chenmohan/gits/barcarolle-wt-patch-command-contract/experiments/core_narrative/results/raw/patch_command_contract_adapter_mock_probe/submission.patch",
   "run_id": "patch_command_contract_adapter_mock_probe",
   "scrubbed_env_var_count": 17,
   "split": "rbench",
-  "started_at": "2026-04-29T03:17:41.546103Z",
+  "started_at": "2026-04-29T03:49:06.108612Z",
   "status": "command_completed",
-  "stderr_artifact": "experiments/core_narrative/results/raw/patch_command_contract_adapter_mock_probe/adapter.stderr.txt",
-  "stdout_artifact": "experiments/core_narrative/results/raw/patch_command_contract_adapter_mock_probe/adapter.stdout.txt",
+  "stderr_artifact": "/Users/chenmohan/gits/barcarolle-wt-patch-command-contract/experiments/core_narrative/results/raw/patch_command_contract_adapter_mock_probe/adapter.stderr.txt",
+  "stdout_artifact": "/Users/chenmohan/gits/barcarolle-wt-patch-command-contract/experiments/core_narrative/results/raw/patch_command_contract_adapter_mock_probe/adapter.stdout.txt",
   "task_id": "patch_command_contract_smoke",
   "tool": "acut_patch_adapter",
   "tracked_workspace_restore": {

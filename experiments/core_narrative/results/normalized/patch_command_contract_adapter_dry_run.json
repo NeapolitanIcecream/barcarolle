@@ -1,8 +1,8 @@
 {
-  "acut_id": "lower-budget-fast-path",
+  "acut_id": "cheap-click-specialist",
   "attempt": 1,
   "error": "no-model dry run; no ACUT patch was generated",
-  "finished_at": "2026-04-29T03:17:41.545187Z",
+  "finished_at": "2026-04-29T03:49:06.057704Z",
   "metadata": {
     "adapter_id": "codex-cli-acut-adapter-v0",
     "dry_run": true,
@@ -10,7 +10,7 @@
     "model_call_made": false,
     "tool": "acut_patch_adapter"
   },
-  "patch_path": "experiments/core_narrative/results/raw/patch_command_contract_adapter_dry_run/submission.patch",
+  "patch_path": "/Users/chenmohan/gits/barcarolle-wt-patch-command-contract/experiments/core_narrative/results/raw/patch_command_contract_adapter_dry_run/submission.patch",
   "review": {
     "mergeability_grade": null,
     "notes": "",
@@ -20,13 +20,13 @@
   "run_id": "patch_command_contract_adapter_dry_run",
   "schema_version": "core-narrative.run-result.v1",
   "split": "rbench",
-  "started_at": "2026-04-29T03:17:41.544950Z",
+  "started_at": "2026-04-29T03:49:06.057581Z",
   "status": "infra_failed",
   "task_id": "patch_command_contract_smoke",
   "verification": {
     "duration_seconds": 0,
     "exit_code": null,
-    "stderr_artifact": "experiments/core_narrative/results/raw/patch_command_contract_adapter_dry_run/adapter.stderr.txt",
-    "stdout_artifact": "experiments/core_narrative/results/raw/patch_command_contract_adapter_dry_run/adapter.stdout.txt"
+    "stderr_artifact": "/Users/chenmohan/gits/barcarolle-wt-patch-command-contract/experiments/core_narrative/results/raw/patch_command_contract_adapter_dry_run/adapter.stderr.txt",
+    "stdout_artifact": "/Users/chenmohan/gits/barcarolle-wt-patch-command-contract/experiments/core_narrative/results/raw/patch_command_contract_adapter_dry_run/adapter.stdout.txt"
   }
 }

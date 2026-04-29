@@ -2,6 +2,26 @@
   "schema_version": "core-narrative.patch-command-contract-smoke.v1",
   "status": "passed",
   "live_model_call_made": false,
+  "active_2x2_evidence": {
+    "acut_id": "cheap-click-specialist",
+    "acut_manifest": "experiments/core_narrative/configs/acuts/cheap-click-specialist.yaml",
+    "run_manifest": "experiments/core_narrative/configs/core_subset_run_manifest.yaml",
+    "profile_id": "budget-constrained-2x2-pilot-v2",
+    "core_acut_ids": [
+      "frontier-generic-swe",
+      "frontier-click-specialist",
+      "cheap-generic-swe",
+      "cheap-click-specialist"
+    ],
+    "split_task_limits": {
+      "G_score": 2,
+      "RBench": 3,
+      "RWork": 2
+    },
+    "primary_attempts_per_acut_task": 1,
+    "pilot_primary_attempts": 28,
+    "source_artifact": "experiments/core_narrative/results/raw/patch_command_contract_adapter_mock_probe/adapter_result.json"
+  },
   "checks": [
     {
       "name": "direct_dry_run_no_env",
