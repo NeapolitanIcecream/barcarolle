@@ -1,0 +1,11 @@
+{
+  "run_id": "pilot_003__cheap-generic-swe__click__rbench__003__attempt1",
+  "basis": "barcarolle_patch_command dry-run prompt character count",
+  "prompt_char_count": 3265,
+  "input_token_estimate_method": "ceil(prompt_char_count / 4)",
+  "input_tokens": 817,
+  "output_tokens": 64000,
+  "output_token_basis": "conservative ACUT runtime budget",
+  "model_call_made": false,
+  "values_recorded": false
+}
