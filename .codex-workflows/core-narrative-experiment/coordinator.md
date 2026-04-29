@@ -1,7 +1,7 @@
 # Core Narrative Experiment Coordinator
 
-status: execution_start_blocked_patch_command_gap
-updated: 2026-04-29T10:55:07+08:00
+status: acut_2x2_patch_command_review_running
+updated: 2026-04-29T11:27:08+08:00
 today_stop_state: 2026-04-28_stop_policy_expired
 phase: Phase 0 - Experiment Bootstrap
 base_commit: 47046e7754d2402b7177a4b80f631ab6b0bcd97c
@@ -40,10 +40,13 @@ Execute `docs/experiments/core-narrative-experiment-plan.md` with tmux-managed C
 | task-manifests-reviewer | No-model preflight review | delivered; no_issues; worker commit `8869a07`, integrated as `7ad9462` | exited | codex/core-exp-task-manifests-reviewer | /Users/chenmohan/gits/barcarolle-wt-task-manifests-reviewer | `.codex-workflows/core-narrative-experiment/reviews/task-manifests-review.md`, `.codex-workflows/core-narrative-experiment/workers/task-manifests-reviewer/process.md` |
 | acut-adapter-smoke | Phase 3 runner smoke | delivered; worker commit `3b2f820`, integrated as `918fc89` | exited | codex/core-exp-acut-adapter-smoke | /Users/chenmohan/gits/barcarolle-wt-acut-adapter-smoke | `experiments/core_narrative/tools/**` limited to ACUT adapter/orchestration additions, `experiments/core_narrative/reports/acut_adapter_smoke.md`, `experiments/core_narrative/results/normalized/acut_adapter_smoke*.json`, `experiments/core_narrative/results/raw/acut_adapter_smoke*/**`, `.codex-workflows/core-narrative-experiment/workers/acut-adapter-smoke/process.md` |
 | acut-adapter-smoke-reviewer | Phase 3 runner smoke review | delivered; no_issues; worker commit `c5534b1`, integrated as `49fe2df` | exited | codex/core-exp-acut-adapter-smoke-reviewer | /Users/chenmohan/gits/barcarolle-wt-acut-adapter-smoke-reviewer | `.codex-workflows/core-narrative-experiment/reviews/acut-adapter-smoke-review.md`, `.codex-workflows/core-narrative-experiment/workers/acut-adapter-smoke-reviewer/process.md` |
+| patch-command-contract | Phase 3 execution blocker closure | delivered; worker commit `db68a50`, under focused review | exited | codex/core-exp-patch-command-contract | /Users/chenmohan/gits/barcarolle-wt-patch-command-contract | `experiments/core_narrative/tools/barcarolle_patch_command.py`, `experiments/core_narrative/reports/patch_command_contract.md`, `experiments/core_narrative/results/normalized/patch_command_contract*.json`, `experiments/core_narrative/results/raw/patch_command_contract*/**`, `.codex-workflows/core-narrative-experiment/workers/patch-command-contract/process.md` |
+| acut-2x2-redesign | Phase 3 design revision | delivered; commit `9409244`, under focused review | n/a | codex/core-narrative-experiment | /Users/chenmohan/gits/barcarolle | `experiments/core_narrative/configs/acuts/**`, `experiments/core_narrative/configs/core_subset_run_manifest.yaml`, `experiments/core_narrative/configs/llm_access.yaml`, `experiments/core_narrative/tools/_llm_budget.py`, `experiments/core_narrative/reports/acut_matrix_notes.md`, `.codex-workflows/core-narrative-experiment/shared/llm-access-budget-contract.md`, `.codex-workflows/core-narrative-experiment/workers/acut-2x2-redesign/process.md` |
+| acut-2x2-patch-reviewer | Phase 3 focused review | session_running; started focused review at commit `7f58b07` | bcx-acut-2x2-patch-reviewer | codex/core-exp-acut-2x2-patch-reviewer | /Users/chenmohan/gits/barcarolle-wt-acut-2x2-patch-reviewer | `.codex-workflows/core-narrative-experiment/reviews/acut-2x2-patch-command-review.md`, `.codex-workflows/core-narrative-experiment/workers/acut-2x2-patch-reviewer/process.md` |
 
 ## Active Tmux Sessions
 
-- none
+- `bcx-acut-2x2-patch-reviewer`
 
 ## Decisions
 
@@ -53,8 +56,10 @@ Execute `docs/experiments/core-narrative-experiment-plan.md` with tmux-managed C
 - Created heartbeat automation `core-narrative-experiment-coordinator` to wake this thread every 10 minutes for bounded coordination steps.
 - Adopt revised-plan LLM access contract: ACUT execution may use only `BARCAROLLE_LLM_API_KEY` and `BARCAROLLE_LLM_BASE_URL`; credential values, bearer tokens, resolved secrets, and full base URL values must not be written to Git, process files, logs, run results, or reports.
 - Adopt revised-plan budget contract: USD `$240` soft stop, USD `$300` hard cap, and no ACUT model call may start without cost ledgering.
-- Default execution is budget-constrained to the core ACUT subset: `general-benchmark-optimized`, `repo-context-heavy`, `retrieval-sparse-symbolic`, and `lower-budget-fast-path`; 6 `G_score`, 8 `RBench`, 6 `RWork`, and one primary attempt per ACUT/task.
-- Defer `higher-budget-repo-depth`, `retrieval-history-augmented`, and `minimal-context-baseline` unless the core subset finishes below the soft stop and the coordinator records spare budget.
+- Default execution is changed, pending focused review, to the 2x2 pilot ACUT subset: `frontier-generic-swe`, `frontier-click-specialist`, `cheap-generic-swe`, and `cheap-click-specialist`; 2 `G_score`, 3 `RBench`, 2 `RWork`, and one primary attempt per ACUT/task for 28 pilot runs.
+- If budget is tight, the allowed three-ACUT pilot subset is `frontier-generic-swe`, `frontier-click-specialist`, and `cheap-click-specialist`.
+- Defer `higher-budget-repo-depth`, `retrieval-history-augmented`, and `minimal-context-baseline` unless the pilot and any full-core promotion finish below the soft stop and the coordinator records spare budget.
+- Retire the previous active ACUT IDs for new execution: `general-benchmark-optimized`, `repo-context-heavy`, `retrieval-sparse-symbolic`, and `lower-budget-fast-path`.
 - Adopt today's local stop strategy for 2026-04-28 in `Asia/Shanghai`: soft stop at `17:30`, hard stop at `17:50`.
 
 ## Today Stop Strategy
@@ -73,18 +78,18 @@ Execute `docs/experiments/core-narrative-experiment-plan.md` with tmux-managed C
 
 ## Blockers
 
-Execution start is blocked on the concrete patch-generation command contract. Broad ACUT execution has not been started and no ACUT model calls have started. The reviewed adapter can enforce env, budget, ledger, and redaction gates around a command, but the coordinator has not yet recorded a reviewed live patch-generation command that itself uses only `BARCAROLLE_LLM_API_KEY` and `BARCAROLLE_LLM_BASE_URL` for LLM access. Do not use bare `codex exec` as the ACUT patch-generation command unless a focused review proves it uses only the BARCAROLLE LLM env contract for ACUT model access.
+Execution start is blocked on focused review. Broad ACUT execution has not been started and no ACUT model calls have started. `patch-command-contract` delivered a BARCAROLLE-env-only patch command path without live model calls, and `acut-2x2-redesign` delivered the revised pilot design. Both are under focused review before integration, blocker closure, or execution-start preflight.
 
 ## Execution Readiness Bookkeeping
 
 - checked_at: `2026-04-29T09:41:00+08:00`
 - readiness_state: `runner_smoke_preflight_ready`
-- active_workers: none recorded
+- active_workers: `acut-2x2-patch-reviewer`
 - reviewed_inputs_ready:
   - LLM access and budget gate: reviewed in `wave0-r5-reviewer` with `no_issues`
   - repo runtime lock: reviewed and integrated
   - general benchmark lock: reviewed and integrated
-  - core subset run manifest: prepared, not started
+  - core subset run manifest: superseded by 2x2 pilot redesign; focused review pending
   - concrete `RBench` and `RWork` task manifests: reviewed and integrated
   - ACUT adapter command path: reviewed and integrated
 - resumed_gate_check:
@@ -101,13 +106,13 @@ Execution start is blocked on the concrete patch-generation command contract. Br
   - ran no-op verifier smoke for `click__rbench__001`; it failed the injected regression test with exit `1`, matching `expected.no_op_fails: true`
 - broad_execution_started: false
 - model_calls_started: false
-- execution_decision: Do not record execution start yet. First close the concrete patch-generation command gap with a focused implementation/review or a user-approved command that is proven to use only the BARCAROLLE LLM env contract.
-- resume_entry: On the next step, read this coordinator and latest relevant worker `process.md` files, then either implement/review a BARCAROLLE-env-only patch-generation command path or request a concrete user-approved command. Do not start ACUT model calls until the command gap is closed and this coordinator records explicit execution start.
+- execution_decision: Do not record execution-start preflight or execution start yet. Wait for `acut-2x2-patch-reviewer` delivery before integration or revision decisions.
+- resume_entry: On the next step, read this coordinator and latest relevant worker `process.md` files, then read `acut-2x2-patch-reviewer/process.md`. If delivered with `no_issues`, integrate/review closure; if issues are found, start focused revision. Do not start ACUT model calls until both blockers are closed and this coordinator records explicit execution start.
 
 ## Execution Start Preflight
 
 - checked_at: `2026-04-29T10:42:52+08:00`
-- status: `passed`
+- status: `superseded_by_2x2_redesign`
 - execution_start_recorded: false
 - broad_acut_execution_started: false
 - model_calls_started: false
@@ -118,13 +123,49 @@ Execution start is blocked on the concrete patch-generation command contract. Br
 - adapter_command_path: `python3 experiments/core_narrative/tools/acut_patch_adapter.py`
 - adapter_command_template: `python3 experiments/core_narrative/tools/acut_patch_adapter.py --workspace <prepared-workspace> --task <task-yaml> --acut <acut-yaml> --attempt 1 --run-id <run-id> --artifact-dir <artifact-dir> --output <adapter-result.json> --normalized-output <normalized-result.json> --llm-ledger experiments/core_narrative/results/cost_ledger.jsonl --projected-cost-usd <estimate> --coordinator-decision-ref coordinator.md#execution-start-record --timeout-seconds <seconds> -- <patch-generation-command>`
 - active_default_slice:
-  - acuts: `general-benchmark-optimized`, `repo-context-heavy`, `retrieval-sparse-symbolic`, `lower-budget-fast-path`
-  - tasks: 6 `G_score`, 8 `RBench`, 6 `RWork`
+  - acuts: `frontier-generic-swe`, `frontier-click-specialist`, `cheap-generic-swe`, `cheap-click-specialist`
+  - pilot tasks: 2 `G_score`, 3 `RBench`, 2 `RWork`
   - attempts: one primary attempt per ACUT/task
 - budget_caps: USD `$240` soft stop and USD `$300` hard cap
 - deferred_acuts: `higher-budget-repo-depth`, `retrieval-history-augmented`, `minimal-context-baseline`
 - first_execution_worker_decision: not started in this heartbeat; next bounded step can record explicit execution start and dispatch at most one first execution worker
 - first_execution_worker_scope_limit: one ACUT/task primary attempt routed through `acut_patch_adapter.py`, with ledger append required before/around the attempt and immediate blocker status if the gate fails
+- supersession_note: The 2026-04-29 ACUT redesign invalidates this preflight for execution-start purposes. Rerun execution-start preflight only after focused reviews pass.
+
+## ACUT 2x2 Redesign
+
+- recorded_at: `2026-04-29T11:24:00+08:00`
+- status: `delivered_pending_focused_review`
+- active_acuts:
+  - `frontier-generic-swe`
+  - `frontier-click-specialist`
+  - `cheap-generic-swe`
+  - `cheap-click-specialist`
+- mapping:
+  - `general-benchmark-optimized` -> `frontier-generic-swe`
+  - `repo-context-heavy` + `retrieval-sparse-symbolic` -> `frontier-click-specialist`
+  - `lower-budget-fast-path` -> `cheap-generic-swe`
+  - added `cheap-click-specialist`
+- retired_from_new_execution:
+  - `general-benchmark-optimized`
+  - `repo-context-heavy`
+  - `retrieval-sparse-symbolic`
+  - `lower-budget-fast-path`
+- deferred_acuts:
+  - `higher-budget-repo-depth`
+  - `retrieval-history-augmented`
+  - `minimal-context-baseline`
+- controls:
+  - same harness
+  - same task budget, turn cap, test cap, and retry policy across all four active ACUTs
+  - same model tier within each generic-vs-Click-specialist pair
+  - Click-specialist policy may use only pre-generated, task-agnostic, reproducible Click repo/docs/symbol/convention/deterministic retrieval context
+  - no RBench/RWork gold patches, hidden human hints, post-hoc tuning, or undeclared history mining
+- pilot_strategy:
+  - default: 4 ACUTs x (2 `G_score` + 3 `RBench` + 2 `RWork`) = 28 runs
+  - budget-tight fallback: `frontier-generic-swe`, `frontier-click-specialist`, `cheap-click-specialist`
+  - full core subset requires pilot review and explicit coordinator promotion
+- execution_start_preflight_allowed: false until focused redesign review passes and `patch_generation_command_gap` is reviewed closed
 
 ## Execution Start Blocker
 
@@ -138,6 +179,8 @@ Execution start is blocked on the concrete patch-generation command contract. Br
   - `BARCAROLLE_LLM_BASE_URL`: present, value not inspected or recorded
   - `experiments/core_narrative/results/cost_ledger.jsonl`: exists and is writable
 - required_closure: implement and review a BARCAROLLE-env-only patch-generation command path, or receive a concrete user-approved command with evidence that it uses only the BARCAROLLE LLM env contract.
+- closure_step_running: `patch-command-contract` focused implementation worker started at `2026-04-29T11:08:33+08:00`
+- closure_step_delivery: `patch-command-contract` delivered commit `db68a50` at `2026-04-29T11:20:27+08:00`; focused review started before integration
 - execution_start_recorded: false
 - broad_acut_execution_started: false
 - model_calls_started: false
@@ -185,6 +228,10 @@ Execution start is blocked on the concrete patch-generation command contract. Br
 - Integrated the reviewed ACUT adapter smoke delivery and review artifact. Broad ACUT execution and model calls remain not started.
 - Recorded execution-start preflight for the budget-constrained core subset: required LLM env vars are present without recorded values, the cost ledger is writable, and the reviewed adapter command path is available. Execution start and model calls are still not recorded as started.
 - Blocked execution start on the missing concrete patch-generation command contract. The adapter wrapper is ready, but no reviewed live command has been recorded as using only the BARCAROLLE LLM env contract. No execution worker or model call was started.
+- Started focused `patch-command-contract` worker to implement and no-model-test a BARCAROLLE-env-only patch-generation command path. No ACUT execution worker or model call was started.
+- Revised the active ACUT design to the 2x2 pilot: `frontier-generic-swe`, `frontier-click-specialist`, `cheap-generic-swe`, `cheap-click-specialist`. The old active ACUT IDs are retired for new execution, the pilot is 28 runs, and execution-start preflight is blocked until focused review passes.
+- `patch-command-contract` delivered commit `db68a50`; no live model calls were made.
+- Started focused `acut-2x2-patch-reviewer` to review both the 2x2 redesign and the delivered patch command before any integration or execution-start preflight.
 
 ## Pre-Run Gates
 
@@ -205,13 +252,13 @@ Execution start is blocked on the concrete patch-generation command contract. Br
 - cost_ledger: `experiments/core_narrative/results/cost_ledger.jsonl` exists and is writable
 - budget_caps: USD `$240` soft stop, USD `$300` hard cap
 - active_default_slice:
-  - acuts: `general-benchmark-optimized`, `repo-context-heavy`, `retrieval-sparse-symbolic`, `lower-budget-fast-path`
-  - tasks: 6 `G_score`, 8 `RBench`, 6 `RWork`
+  - acuts: `frontier-generic-swe`, `frontier-click-specialist`, `cheap-generic-swe`, `cheap-click-specialist`
+  - pilot tasks: 2 `G_score`, 3 `RBench`, 2 `RWork`
   - attempts: one primary attempt per ACUT/task
 - deferred_acuts: `higher-budget-repo-depth`, `retrieval-history-augmented`, `minimal-context-baseline`
 - broad_execution_started: false
 - run_manifest: `experiments/core_narrative/configs/core_subset_run_manifest.yaml`
-- next_allowed_step: prepare concrete RBench/RWork task manifests and any no-model-call preflight checks; do not start model calls until the coordinator records explicit execution start.
+- next_allowed_step: focused review of the 2x2 ACUT redesign and focused review of the BARCAROLLE-env-only patch-generation command path; do not rerun execution-start preflight or start model calls until both reviews pass.
 
 ## Acceptance Gate
 
@@ -222,4 +269,4 @@ Execution start is blocked on the concrete patch-generation command contract. Br
 
 ## Next Heartbeat Action
 
-Resolve the `patch_generation_command_gap` blocker. Read the latest relevant `process.md` files first. Start a focused implementation/review step for a BARCAROLLE-env-only patch-generation command, or request a concrete user-approved command with evidence that it uses only `BARCAROLLE_LLM_API_KEY` and `BARCAROLLE_LLM_BASE_URL`. Do not record execution start, inspect `cli.log`, record credential values, or start ACUT model calls until this blocker is closed.
+Read `acut-2x2-patch-reviewer/process.md`. If delivered with `no_issues`, integrate the reviewed 2x2 redesign review and patch command delivery/review; if issues are found, start focused revision; if blocked, record whether user input is required. Do not rerun execution-start preflight, inspect `cli.log`, record credential values, or start ACUT model calls until the 2x2 redesign and `patch_generation_command_gap` are both reviewed and closed.

@@ -1,6 +1,7 @@
-id: core_subset_budget_constrained_v1
-status: prepared_not_started
+id: core_2x2_pilot_budget_constrained_v2
+status: redesigned_not_started_review_pending
 prepared_at: "2026-04-28T15:13:51+08:00"
+redesigned_at: "2026-04-29T11:20:00+08:00"
 owner: coordinator
 
 execution_start:
@@ -47,15 +48,33 @@ ledger:
     - cumulative_estimated_cost_usd
 
 active_default_slice:
+  design: "2x2_core"
+  design_goal: "Clean ranking-reversal probe with model tier crossed against generic-vs-Click-specialist policy."
   acuts:
-    - general-benchmark-optimized
-    - repo-context-heavy
-    - retrieval-sparse-symbolic
-    - lower-budget-fast-path
+    - frontier-generic-swe
+    - frontier-click-specialist
+    - cheap-generic-swe
+    - cheap-click-specialist
   deferred_acuts:
     - higher-budget-repo-depth
     - retrieval-history-augmented
     - minimal-context-baseline
+  retired_or_replaced_acuts:
+    general-benchmark-optimized: frontier-generic-swe
+    repo-context-heavy: frontier-click-specialist
+    retrieval-sparse-symbolic: frontier-click-specialist
+    lower-budget-fast-path: cheap-generic-swe
+  controls:
+    same_harness: true
+    same_task_budget: true
+    same_turn_cap: true
+    same_test_cap: true
+    same_retry_policy: true
+    same_model_tier_only_changes_policy_within_pairs: true
+    no_gold_patches: true
+    no_hidden_human_hints: true
+    no_post_hoc_tuning: true
+    no_undeclared_history_mining: true
   tasks:
     G_score: 6
     RBench: 8
@@ -64,6 +83,49 @@ active_default_slice:
     primary_per_acut_task: 1
     optional_extra_attempts_allowed: false
   total_primary_patch_generation_attempts: 80
+
+pilot_slice:
+  status: prepared_not_started
+  default_before_full_core: true
+  acuts:
+    - frontier-generic-swe
+    - frontier-click-specialist
+    - cheap-generic-swe
+    - cheap-click-specialist
+  fallback_if_budget_tight:
+    acuts:
+      - frontier-generic-swe
+      - frontier-click-specialist
+      - cheap-click-specialist
+    reason: "Preserve the frontier generic-vs-specialist contrast and include the cheap specialist cell most relevant to Barcarolle leverage."
+  tasks:
+    G_score:
+      count: 2
+      source: experiments/core_narrative/configs/general_benchmark.yaml
+      ordinals: [1, 2]
+    RBench:
+      count: 3
+      task_ids:
+        - click__rbench__001
+        - click__rbench__002
+        - click__rbench__003
+    RWork:
+      count: 2
+      task_ids:
+        - click__rwork__001
+        - click__rwork__002
+  attempts:
+    primary_per_acut_task: 1
+    optional_extra_attempts_allowed: false
+  total_primary_patch_generation_attempts: 28
+  execution_policy:
+    start_only_after_focused_review: true
+    start_only_after_patch_command_contract_review: true
+    broad_acut_execution_started: false
+    model_calls_allowed: false
+  promotion_to_full_core:
+    allowed_only_after: "pilot summary review and explicit coordinator decision"
+    full_core_attempts_if_promoted: 80
 
 locked_inputs:
   target_repository:
@@ -79,7 +141,8 @@ locked_inputs:
     locked_task_ids_source: experiments/core_narrative/configs/general_benchmark.yaml
 
 next_no_model_preflights:
-  - build or verify concrete RBench and RWork task manifests for the locked target repository
-  - run any task packaging validation without model calls
-  - run gold-patch or infrastructure smoke checks before scored ACUT runs where applicable
-  - dry-run cost ledger append with synthetic safe values only if needed
+  - focused review of the 2x2 ACUT redesign
+  - focused review of the BARCAROLLE-env-only patch-generation command path
+  - generate or verify task-agnostic Click specialist context artifacts before any specialist ACUT run
+  - rerun execution-start preflight only after both focused reviews pass
+  - do not start broad ACUT execution or model calls before the coordinator records a reviewed execution start

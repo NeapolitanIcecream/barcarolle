@@ -22,21 +22,23 @@ DEFAULT_HARD_CAP_USD = Decimal("300")
 MONEY_QUANT = Decimal("0.000001")
 
 CORE_ACUT_IDS = (
-    "general-benchmark-optimized",
-    "repo-context-heavy",
-    "retrieval-sparse-symbolic",
-    "lower-budget-fast-path",
+    "frontier-generic-swe",
+    "frontier-click-specialist",
+    "cheap-generic-swe",
+    "cheap-click-specialist",
 )
 DEFAULT_SPLIT_TASK_LIMITS = {
-    "G_score": 6,
-    "RBench": 8,
-    "RWork": 6,
+    "G_score": 2,
+    "RBench": 3,
+    "RWork": 2,
 }
 DEFAULT_EXECUTION_PROFILE = {
-    "profile_id": "budget-constrained-core-v1",
+    "profile_id": "budget-constrained-2x2-pilot-v2",
     "core_acut_ids": list(CORE_ACUT_IDS),
     "split_task_limits": DEFAULT_SPLIT_TASK_LIMITS,
     "primary_attempts_per_acut_task": 1,
+    "pilot_primary_attempts": 28,
+    "full_core_requires_coordinator_decision": True,
 }
 
 SECRET_FIELD_RE = re.compile(

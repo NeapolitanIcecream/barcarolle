@@ -48,13 +48,17 @@ Do not write secrets into ledger records.
 
 ## Default Execution Profile
 
-The default executable experiment is budget-constrained:
+The default executable experiment is now the reviewed 2x2 pilot, pending focused review before execution start:
 
-- core ACUTs: `general-benchmark-optimized`, `repo-context-heavy`, `retrieval-sparse-symbolic`, `lower-budget-fast-path`;
-- task counts: 6 `G_score`, 8 `RBench`, and 6 `RWork`;
+- core ACUTs: `frontier-generic-swe`, `frontier-click-specialist`, `cheap-generic-swe`, `cheap-click-specialist`;
+- pilot task counts: 2 `G_score`, 3 `RBench`, and 2 `RWork`;
 - one primary attempt per ACUT/task.
 
-Defer `higher-budget-repo-depth`, `retrieval-history-augmented`, and `minimal-context-baseline` unless the core subset finishes below the soft stop and the coordinator records spare budget.
+This yields 28 pilot attempts. Do not run the full 80-attempt core until the pilot is reviewed and the coordinator records an explicit promotion decision.
+
+If budget is tight, the allowed three-ACUT pilot subset is `frontier-generic-swe`, `frontier-click-specialist`, and `cheap-click-specialist`.
+
+Defer `higher-budget-repo-depth`, `retrieval-history-augmented`, and `minimal-context-baseline` unless the pilot/full-core decision records spare budget. The retired active ACUT IDs `general-benchmark-optimized`, `repo-context-heavy`, `retrieval-sparse-symbolic`, and `lower-budget-fast-path` must not be used for new execution.
 
 ## Coordinator Rule
 

@@ -1,0 +1,123 @@
+schema_version: core-narrative.acut.v1
+manifest_version: "2.0"
+acut_id: frontier-click-specialist
+display_name: Frontier Click Specialist
+purpose: Frontier-tier Click-specialist policy for the 2x2 core ACUT design.
+frozen: true
+provider: openai
+model: gpt-5.5
+model_parameters:
+  reasoning_effort: medium
+prompt_policy_digest: policy-digest-v2:frontier-click-specialist
+prompt_policy_reference: null
+tool_permissions:
+  filesystem: workspace-write
+  network: disabled
+  allowed_tools:
+    - filesystem:read
+    - filesystem:write
+    - shell
+    - code_edit
+    - git:status
+    - git:diff
+    - git:show
+retrieval_context_strategy:
+  strategy_id: click-specialist-task-agnostic-v2
+  description: Use deterministic Click-specialist context generated before execution from task-agnostic repository/docs/symbol/convention sources, then solve with the same task budget as the generic ACUTs.
+  allowed_sources:
+    - public_task_statement
+    - files explicitly named in the task statement
+    - files surfaced by failing tests or import errors
+    - adjacent tests
+    - direct symbol and filename search results
+    - precomputed_click_repo_map_v1
+    - precomputed_click_docs_map_v1
+    - precomputed_click_symbol_index_v1
+    - precomputed_click_convention_playbook_v1
+    - deterministic_click_retrieval_v1
+  forbidden_sources:
+    - RBench/RWork gold patches
+    - hidden human hints
+    - post-hoc tuning from ACUT outputs
+    - undeclared history mining
+    - task-specific private benchmark artifacts
+runtime_budget:
+  max_wall_seconds: 3600
+  max_turns: 18
+  max_tokens: 64000
+  max_cost_usd: null
+  max_test_commands: 10
+  retry_policy:
+    primary_attempts: 1
+    retries_allowed: false
+network_policy:
+  mode: disabled
+  allowed_hosts: []
+execution_mode: codex_cli
+adapter_or_harness_basis: barcarolle-patch-command-v0 behind codex-cli-acut-adapter-v0 + core-narrative-runner-v0
+frozen_at: "2026-04-29T11:20:00+08:00"
+operator: codex-core-narrative-coordinator
+notes: Merges the intended repository-context and sparse-symbolic strengths of repo-context-heavy and retrieval-sparse-symbolic while removing their higher reasoning and higher budget confounds. It shares the same model tier and runtime budget as frontier-generic-swe.
+metadata:
+  redesign_source:
+    prior_acut_ids:
+      - repo-context-heavy
+      - retrieval-sparse-symbolic
+    review_basis: GPT-5.5-Pro design review
+  factorial_design:
+    core_design_id: barcarolle-2x2-core-v2
+    model_tier: frontier
+    specialization: click_specialist
+    controlled_factors:
+      harness: shared
+      task_budget: shared
+      turn_cap: shared
+      test_cap: shared
+      retry_policy: shared
+      network_policy: shared
+    same_tier_pair: frontier-generic-swe
+    intended_contrast: Same frontier model tier; compare Click-specialist policy against generic SWE policy only.
+  prompt_policy_summary: Use task-agnostic Click repository structure, docs, symbols, and conventions as prior context; apply deterministic retrieval and fit patches to Click conventions without using task-specific gold material.
+  specialist_context:
+    click_task_agnostic_context_allowed: true
+    required_precomputed_artifacts:
+      - id: precomputed_click_repo_map_v1
+        property: task_agnostic_reproducible
+      - id: precomputed_click_docs_map_v1
+        property: task_agnostic_reproducible
+      - id: precomputed_click_symbol_index_v1
+        property: task_agnostic_reproducible
+      - id: precomputed_click_convention_playbook_v1
+        property: task_agnostic_reproducible
+      - id: deterministic_click_retrieval_v1
+        property: deterministic_query_policy
+    generation_timing: before any ACUT run and before seeing ACUT outputs
+    task_specific_tuning_allowed: false
+  leakage_guards:
+    disallowed:
+      - RBench/RWork gold patches
+      - hidden artificial hints
+      - post-hoc tuning after seeing pilot results
+      - undeclared git history mining
+      - other ACUT outputs
+    history_policy: no undeclared history mining; deterministic context artifacts must document any allowed source and cutoff before execution
+  runtime_budget_detail:
+    wall_clock_minutes: 60
+    model_turns: 18
+    shell_commands: 55
+    test_commands: 10
+    verification_minutes: 18
+    primary_attempts: 1
+    retries_allowed: false
+  execution_mode_detail:
+    type: non_interactive_patch_command
+    workspace: fresh_task_worktree
+    state_reset_between_tasks: true
+    private_artifacts_access: false
+    output_contract: patch_plus_run_metadata
+  score_fields:
+    g_score: null
+    r_score: null
+    w_score: null
+    public_benchmark_score: null
+    general_benchmark_basis_id: general_benchmark.yaml#locked
