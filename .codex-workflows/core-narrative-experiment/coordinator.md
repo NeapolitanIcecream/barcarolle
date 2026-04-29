@@ -1,7 +1,7 @@
 # Core Narrative Experiment Coordinator
 
-status: acut_adapter_smoke_integrated_execution_start_ready
-updated: 2026-04-29T10:30:57+08:00
+status: execution_start_preflight_recorded
+updated: 2026-04-29T10:42:52+08:00
 today_stop_state: 2026-04-28_stop_policy_expired
 phase: Phase 0 - Experiment Bootstrap
 base_commit: 47046e7754d2402b7177a4b80f631ab6b0bcd97c
@@ -73,7 +73,7 @@ Execute `docs/experiments/core-narrative-experiment-plan.md` with tmux-managed C
 
 ## Blockers
 
-None currently recorded for no-model preflight. Broad ACUT execution has not been started. ACUT model-call execution must still wait for an explicit coordinator execution-start record confirming required LLM env presence, writable cost ledger, active default slice, and concrete adapter command.
+None currently recorded for no-model preflight. Broad ACUT execution has not been started. ACUT model-call execution must still wait for an explicit coordinator execution-start record. The execution-start preflight is recorded below; it confirms required LLM env presence, writable cost ledger, active default slice, and concrete adapter command path without recording credential values or a full base URL.
 
 ## Execution Readiness Bookkeeping
 
@@ -101,8 +101,30 @@ None currently recorded for no-model preflight. Broad ACUT execution has not bee
   - ran no-op verifier smoke for `click__rbench__001`; it failed the injected regression test with exit `1`, matching `expected.no_op_fails: true`
 - broad_execution_started: false
 - model_calls_started: false
-- execution_decision: The reviewed ACUT adapter smoke path is integrated. The next step is an explicit execution-start planning/record step for the budget-constrained core subset; do not start ACUT model calls until that record exists.
-- resume_entry: On the next step, read this coordinator and latest relevant worker `process.md` files, confirm non-secret env presence and writable ledger, record the concrete adapter command and active default slice if execution is being started, then dispatch only the bounded first execution worker.
+- execution_decision: The execution-start preflight is recorded and passed, but execution is not yet started. The next step may record explicit execution start and dispatch only a bounded first execution worker; do not start broad execution or large ACUT model-call batches.
+- resume_entry: On the next step, read this coordinator and latest relevant worker `process.md` files, decide whether to record explicit execution start for the bounded first execution worker, then dispatch at most one first execution worker.
+
+## Execution Start Preflight
+
+- checked_at: `2026-04-29T10:42:52+08:00`
+- status: `passed`
+- execution_start_recorded: false
+- broad_acut_execution_started: false
+- model_calls_started: false
+- env_presence:
+  - `BARCAROLLE_LLM_API_KEY`: present, value not inspected or recorded
+  - `BARCAROLLE_LLM_BASE_URL`: present, value not inspected or recorded
+- cost_ledger: `experiments/core_narrative/results/cost_ledger.jsonl` exists and is writable; no ledger content was appended by this preflight
+- adapter_command_path: `python3 experiments/core_narrative/tools/acut_patch_adapter.py`
+- adapter_command_template: `python3 experiments/core_narrative/tools/acut_patch_adapter.py --workspace <prepared-workspace> --task <task-yaml> --acut <acut-yaml> --attempt 1 --run-id <run-id> --artifact-dir <artifact-dir> --output <adapter-result.json> --normalized-output <normalized-result.json> --llm-ledger experiments/core_narrative/results/cost_ledger.jsonl --projected-cost-usd <estimate> --coordinator-decision-ref coordinator.md#execution-start-record --timeout-seconds <seconds> -- <patch-generation-command>`
+- active_default_slice:
+  - acuts: `general-benchmark-optimized`, `repo-context-heavy`, `retrieval-sparse-symbolic`, `lower-budget-fast-path`
+  - tasks: 6 `G_score`, 8 `RBench`, 6 `RWork`
+  - attempts: one primary attempt per ACUT/task
+- budget_caps: USD `$240` soft stop and USD `$300` hard cap
+- deferred_acuts: `higher-budget-repo-depth`, `retrieval-history-augmented`, `minimal-context-baseline`
+- first_execution_worker_decision: not started in this heartbeat; next bounded step can record explicit execution start and dispatch at most one first execution worker
+- first_execution_worker_scope_limit: one ACUT/task primary attempt routed through `acut_patch_adapter.py`, with ledger append required before/around the attempt and immediate blocker status if the gate fails
 
 ## Review Queue
 
@@ -145,6 +167,7 @@ None currently recorded for no-model preflight. Broad ACUT execution has not bee
 - Started focused `acut-adapter-smoke-reviewer` before integrating the adapter smoke delivery.
 - Focused `acut-adapter-smoke-reviewer` delivered `no_issues`.
 - Integrated the reviewed ACUT adapter smoke delivery and review artifact. Broad ACUT execution and model calls remain not started.
+- Recorded execution-start preflight for the budget-constrained core subset: required LLM env vars are present without recorded values, the cost ledger is writable, and the reviewed adapter command path is available. Execution start and model calls are still not recorded as started.
 
 ## Pre-Run Gates
 
@@ -182,4 +205,4 @@ None currently recorded for no-model preflight. Broad ACUT execution has not bee
 
 ## Next Heartbeat Action
 
-Prepare the explicit execution-start planning record for the budget-constrained core subset. Read the latest relevant `process.md` files first, verify required LLM env presence without recording values, verify `experiments/core_narrative/results/cost_ledger.jsonl` is writable, record the concrete adapter command path, and only then decide whether to start a bounded first execution worker. Do not inspect `cli.log`, record credential values, or start broad ACUT execution/model calls without the explicit execution-start record.
+Decide whether to record explicit execution start and dispatch a bounded first execution worker. Read the latest relevant `process.md` files first. If starting, record the execution-start decision in this coordinator before any model call, route the attempt through `experiments/core_narrative/tools/acut_patch_adapter.py`, limit scope to one ACUT/task primary attempt, and require a cost ledger append. Do not inspect `cli.log`, record credential values, or start broad ACUT execution/large model-call batches.
