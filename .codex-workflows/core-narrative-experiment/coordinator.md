@@ -1,7 +1,7 @@
 # Core Narrative Experiment Coordinator
 
-status: acut_2x2_redesign_review_pending
-updated: 2026-04-29T11:24:00+08:00
+status: acut_2x2_patch_command_review_running
+updated: 2026-04-29T11:27:08+08:00
 today_stop_state: 2026-04-28_stop_policy_expired
 phase: Phase 0 - Experiment Bootstrap
 base_commit: 47046e7754d2402b7177a4b80f631ab6b0bcd97c
@@ -40,12 +40,13 @@ Execute `docs/experiments/core-narrative-experiment-plan.md` with tmux-managed C
 | task-manifests-reviewer | No-model preflight review | delivered; no_issues; worker commit `8869a07`, integrated as `7ad9462` | exited | codex/core-exp-task-manifests-reviewer | /Users/chenmohan/gits/barcarolle-wt-task-manifests-reviewer | `.codex-workflows/core-narrative-experiment/reviews/task-manifests-review.md`, `.codex-workflows/core-narrative-experiment/workers/task-manifests-reviewer/process.md` |
 | acut-adapter-smoke | Phase 3 runner smoke | delivered; worker commit `3b2f820`, integrated as `918fc89` | exited | codex/core-exp-acut-adapter-smoke | /Users/chenmohan/gits/barcarolle-wt-acut-adapter-smoke | `experiments/core_narrative/tools/**` limited to ACUT adapter/orchestration additions, `experiments/core_narrative/reports/acut_adapter_smoke.md`, `experiments/core_narrative/results/normalized/acut_adapter_smoke*.json`, `experiments/core_narrative/results/raw/acut_adapter_smoke*/**`, `.codex-workflows/core-narrative-experiment/workers/acut-adapter-smoke/process.md` |
 | acut-adapter-smoke-reviewer | Phase 3 runner smoke review | delivered; no_issues; worker commit `c5534b1`, integrated as `49fe2df` | exited | codex/core-exp-acut-adapter-smoke-reviewer | /Users/chenmohan/gits/barcarolle-wt-acut-adapter-smoke-reviewer | `.codex-workflows/core-narrative-experiment/reviews/acut-adapter-smoke-review.md`, `.codex-workflows/core-narrative-experiment/workers/acut-adapter-smoke-reviewer/process.md` |
-| patch-command-contract | Phase 3 execution blocker closure | session_running; started focused implementation at commit `f1fa589` | bcx-patch-command-contract | codex/core-exp-patch-command-contract | /Users/chenmohan/gits/barcarolle-wt-patch-command-contract | `experiments/core_narrative/tools/barcarolle_patch_command.py`, `experiments/core_narrative/reports/patch_command_contract.md`, `experiments/core_narrative/results/normalized/patch_command_contract*.json`, `experiments/core_narrative/results/raw/patch_command_contract*/**`, `.codex-workflows/core-narrative-experiment/workers/patch-command-contract/process.md` |
-| acut-2x2-redesign | Phase 3 design revision | delivered; pending focused review | n/a | codex/core-narrative-experiment | /Users/chenmohan/gits/barcarolle | `experiments/core_narrative/configs/acuts/**`, `experiments/core_narrative/configs/core_subset_run_manifest.yaml`, `experiments/core_narrative/configs/llm_access.yaml`, `experiments/core_narrative/tools/_llm_budget.py`, `experiments/core_narrative/reports/acut_matrix_notes.md`, `.codex-workflows/core-narrative-experiment/shared/llm-access-budget-contract.md`, `.codex-workflows/core-narrative-experiment/workers/acut-2x2-redesign/process.md` |
+| patch-command-contract | Phase 3 execution blocker closure | delivered; worker commit `db68a50`, under focused review | exited | codex/core-exp-patch-command-contract | /Users/chenmohan/gits/barcarolle-wt-patch-command-contract | `experiments/core_narrative/tools/barcarolle_patch_command.py`, `experiments/core_narrative/reports/patch_command_contract.md`, `experiments/core_narrative/results/normalized/patch_command_contract*.json`, `experiments/core_narrative/results/raw/patch_command_contract*/**`, `.codex-workflows/core-narrative-experiment/workers/patch-command-contract/process.md` |
+| acut-2x2-redesign | Phase 3 design revision | delivered; commit `9409244`, under focused review | n/a | codex/core-narrative-experiment | /Users/chenmohan/gits/barcarolle | `experiments/core_narrative/configs/acuts/**`, `experiments/core_narrative/configs/core_subset_run_manifest.yaml`, `experiments/core_narrative/configs/llm_access.yaml`, `experiments/core_narrative/tools/_llm_budget.py`, `experiments/core_narrative/reports/acut_matrix_notes.md`, `.codex-workflows/core-narrative-experiment/shared/llm-access-budget-contract.md`, `.codex-workflows/core-narrative-experiment/workers/acut-2x2-redesign/process.md` |
+| acut-2x2-patch-reviewer | Phase 3 focused review | session_running; started focused review at commit `7f58b07` | bcx-acut-2x2-patch-reviewer | codex/core-exp-acut-2x2-patch-reviewer | /Users/chenmohan/gits/barcarolle-wt-acut-2x2-patch-reviewer | `.codex-workflows/core-narrative-experiment/reviews/acut-2x2-patch-command-review.md`, `.codex-workflows/core-narrative-experiment/workers/acut-2x2-patch-reviewer/process.md` |
 
 ## Active Tmux Sessions
 
-- `bcx-patch-command-contract`
+- `bcx-acut-2x2-patch-reviewer`
 
 ## Decisions
 
@@ -77,13 +78,13 @@ Execute `docs/experiments/core-narrative-experiment-plan.md` with tmux-managed C
 
 ## Blockers
 
-Execution start is blocked on focused reviews. Broad ACUT execution has not been started and no ACUT model calls have started. The reviewed adapter can enforce env, budget, ledger, and redaction gates around a command, but the coordinator has not yet recorded a reviewed live patch-generation command that itself uses only `BARCAROLLE_LLM_API_KEY` and `BARCAROLLE_LLM_BASE_URL` for LLM access. Focused worker `patch-command-contract` is running to close that blocker without live model calls. The active ACUT design has also been revised to a 2x2 pilot and must pass focused review before execution-start preflight is allowed.
+Execution start is blocked on focused review. Broad ACUT execution has not been started and no ACUT model calls have started. `patch-command-contract` delivered a BARCAROLLE-env-only patch command path without live model calls, and `acut-2x2-redesign` delivered the revised pilot design. Both are under focused review before integration, blocker closure, or execution-start preflight.
 
 ## Execution Readiness Bookkeeping
 
 - checked_at: `2026-04-29T09:41:00+08:00`
 - readiness_state: `runner_smoke_preflight_ready`
-- active_workers: `patch-command-contract`
+- active_workers: `acut-2x2-patch-reviewer`
 - reviewed_inputs_ready:
   - LLM access and budget gate: reviewed in `wave0-r5-reviewer` with `no_issues`
   - repo runtime lock: reviewed and integrated
@@ -105,8 +106,8 @@ Execution start is blocked on focused reviews. Broad ACUT execution has not been
   - ran no-op verifier smoke for `click__rbench__001`; it failed the injected regression test with exit `1`, matching `expected.no_op_fails: true`
 - broad_execution_started: false
 - model_calls_started: false
-- execution_decision: Do not record execution-start preflight or execution start yet. Wait for focused review of the 2x2 ACUT redesign and focused review of `patch-command-contract` before any execution-start preflight.
-- resume_entry: On the next step, read this coordinator and latest relevant worker `process.md` files. Start focused review of `acut-2x2-redesign`, and continue monitoring `patch-command-contract/process.md`. Do not start ACUT model calls until both blockers are closed and this coordinator records explicit execution start.
+- execution_decision: Do not record execution-start preflight or execution start yet. Wait for `acut-2x2-patch-reviewer` delivery before integration or revision decisions.
+- resume_entry: On the next step, read this coordinator and latest relevant worker `process.md` files, then read `acut-2x2-patch-reviewer/process.md`. If delivered with `no_issues`, integrate/review closure; if issues are found, start focused revision. Do not start ACUT model calls until both blockers are closed and this coordinator records explicit execution start.
 
 ## Execution Start Preflight
 
@@ -179,6 +180,7 @@ Execution start is blocked on focused reviews. Broad ACUT execution has not been
   - `experiments/core_narrative/results/cost_ledger.jsonl`: exists and is writable
 - required_closure: implement and review a BARCAROLLE-env-only patch-generation command path, or receive a concrete user-approved command with evidence that it uses only the BARCAROLLE LLM env contract.
 - closure_step_running: `patch-command-contract` focused implementation worker started at `2026-04-29T11:08:33+08:00`
+- closure_step_delivery: `patch-command-contract` delivered commit `db68a50` at `2026-04-29T11:20:27+08:00`; focused review started before integration
 - execution_start_recorded: false
 - broad_acut_execution_started: false
 - model_calls_started: false
@@ -228,6 +230,8 @@ Execution start is blocked on focused reviews. Broad ACUT execution has not been
 - Blocked execution start on the missing concrete patch-generation command contract. The adapter wrapper is ready, but no reviewed live command has been recorded as using only the BARCAROLLE LLM env contract. No execution worker or model call was started.
 - Started focused `patch-command-contract` worker to implement and no-model-test a BARCAROLLE-env-only patch-generation command path. No ACUT execution worker or model call was started.
 - Revised the active ACUT design to the 2x2 pilot: `frontier-generic-swe`, `frontier-click-specialist`, `cheap-generic-swe`, `cheap-click-specialist`. The old active ACUT IDs are retired for new execution, the pilot is 28 runs, and execution-start preflight is blocked until focused review passes.
+- `patch-command-contract` delivered commit `db68a50`; no live model calls were made.
+- Started focused `acut-2x2-patch-reviewer` to review both the 2x2 redesign and the delivered patch command before any integration or execution-start preflight.
 
 ## Pre-Run Gates
 
@@ -265,4 +269,4 @@ Execution start is blocked on focused reviews. Broad ACUT execution has not been
 
 ## Next Heartbeat Action
 
-Start focused review of `acut-2x2-redesign`, then read `patch-command-contract/process.md`. If `patch-command-contract` is delivered, start focused review before integration; if blocked, record the blocker and notify only if user input is required. Do not rerun execution-start preflight, inspect `cli.log`, record credential values, or start ACUT model calls until the 2x2 redesign and `patch_generation_command_gap` are both reviewed and closed.
+Read `acut-2x2-patch-reviewer/process.md`. If delivered with `no_issues`, integrate the reviewed 2x2 redesign review and patch command delivery/review; if issues are found, start focused revision; if blocked, record whether user input is required. Do not rerun execution-start preflight, inspect `cli.log`, record credential values, or start ACUT model calls until the 2x2 redesign and `patch_generation_command_gap` are both reviewed and closed.
