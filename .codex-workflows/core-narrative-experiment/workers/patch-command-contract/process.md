@@ -1,13 +1,14 @@
 # Process
 
-status: delivered
-updated: 2026-04-29T11:53:00+08:00
+status: revising
+updated: 2026-04-29T12:08:00+08:00
 
 ## Summary
 
-Revision 1 refreshed the patch-command report, handoff command template, and
-no-model evidence against the active 2x2 pilot. The executable adapter template
-and refreshed no-model probes now use `cheap-click-specialist`.
+Revision 2 is starting after focused re-review found one remaining related
+command-contract issue: older `acut_adapter_smoke*` report/results are still
+presented as current smoke evidence and still record retired ACUT IDs/default
+profile values.
 
 This revision remains no-model-call only. Do not inspect `cli.log`, start broad
 ACUT execution, live ACUT model calls, execution-start preflight, or live
@@ -23,6 +24,12 @@ patch-generation attempts.
 - `.codex-workflows/core-narrative-experiment/workers/patch-command-contract/review-feedback-1.md`
 - `.codex-workflows/core-narrative-experiment/workers/patch-command-contract/revision-prompt-1.md`
 - `.codex-workflows/core-narrative-experiment/workers/patch-command-contract/run_revision_1.sh`
+- `experiments/core_narrative/reports/acut_adapter_smoke.md`
+- `experiments/core_narrative/results/normalized/acut_adapter_smoke*.json`
+- `experiments/core_narrative/results/raw/acut_adapter_smoke*/**`
+- `.codex-workflows/core-narrative-experiment/workers/patch-command-contract/review-feedback-2.md`
+- `.codex-workflows/core-narrative-experiment/workers/patch-command-contract/revision-prompt-2.md`
+- `.codex-workflows/core-narrative-experiment/workers/patch-command-contract/run_revision_2.sh`
 
 ## Branch / Worktree
 
@@ -60,8 +67,9 @@ Inspected:
 
 ## Current Blockers
 
-None in the owned revision scope. Focused re-review is still required before
-integration or execution-start promotion.
+Focused re-review requires refreshing or clearly superseding stale
+`acut_adapter_smoke*` current smoke evidence before integration or
+execution-start promotion.
 
 ## Checks Run
 
@@ -113,7 +121,7 @@ python3 /Users/chenmohan/gits/barcarolle-wt-patch-command-contract/experiments/c
 
 ## Handoff
 
-Revision 1 is delivered in tmux session `bcx-patch-command-contract-r1`.
-Coordinator should send this branch for focused re-review. Do not integrate,
-re-run execution-start preflight, or start model calls until the focused
-re-review passes.
+Revision 2 is running in tmux session `bcx-patch-command-contract-r2`.
+Coordinator should read this `process.md` on the next heartbeat. Do not
+integrate, re-run execution-start preflight, or start model calls until this
+process reports `status: delivered` and a focused follow-up review passes.
