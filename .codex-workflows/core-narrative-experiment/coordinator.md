@@ -1,7 +1,7 @@
 # Core Narrative Experiment Coordinator
 
-status: runner_smoke_preflight_ready
-updated: 2026-04-29T09:41:00+08:00
+status: acut_adapter_smoke_running
+updated: 2026-04-29T09:52:44+08:00
 today_stop_state: 2026-04-28_stop_policy_expired
 phase: Phase 0 - Experiment Bootstrap
 base_commit: 47046e7754d2402b7177a4b80f631ab6b0bcd97c
@@ -38,10 +38,11 @@ Execute `docs/experiments/core-narrative-experiment-plan.md` with tmux-managed C
 | execution-planner | Execution planning | delivered; run manifest prepared | exited | codex/core-narrative-experiment | /Users/chenmohan/gits/barcarolle | `experiments/core_narrative/configs/core_subset_run_manifest.yaml` |
 | task-manifests | No-model preflight | delivered; worker commit `1cdcbba`, integrated as `4a89984` | exited | codex/core-exp-task-manifests | /Users/chenmohan/gits/barcarolle-wt-task-manifests | `experiments/core_narrative/configs/tasks/**`, `experiments/core_narrative/reports/task_manifest_notes.md` |
 | task-manifests-reviewer | No-model preflight review | delivered; no_issues; worker commit `8869a07`, integrated as `7ad9462` | exited | codex/core-exp-task-manifests-reviewer | /Users/chenmohan/gits/barcarolle-wt-task-manifests-reviewer | `.codex-workflows/core-narrative-experiment/reviews/task-manifests-review.md`, `.codex-workflows/core-narrative-experiment/workers/task-manifests-reviewer/process.md` |
+| acut-adapter-smoke | Phase 3 runner smoke | session_running; started focused adapter smoke at commit `9c1b14a` | bcx-acut-adapter-smoke | codex/core-exp-acut-adapter-smoke | /Users/chenmohan/gits/barcarolle-wt-acut-adapter-smoke | `experiments/core_narrative/tools/**` limited to ACUT adapter/orchestration additions, `experiments/core_narrative/reports/acut_adapter_smoke.md`, `experiments/core_narrative/results/normalized/acut_adapter_smoke*.json`, `experiments/core_narrative/results/raw/acut_adapter_smoke*/**`, `.codex-workflows/core-narrative-experiment/workers/acut-adapter-smoke/process.md` |
 
 ## Active Tmux Sessions
 
-None.
+- `bcx-acut-adapter-smoke`
 
 ## Decisions
 
@@ -137,6 +138,7 @@ None currently recorded for no-model preflight. Broad ACUT execution has not bee
 - Resumed on 2026-04-29 from the integrated stop point.
 - Recreated the ignored full Click checkout and verified task base/target commit availability.
 - Added task-pack materialization tooling, materialized 14 Click task packs, and ran a no-op clean-room verifier smoke for `click__rbench__001`; the no-op failed the injected regression as expected.
+- Started focused `acut-adapter-smoke` to implement and no-model-test the ACUT adapter command path before any live ACUT model call.
 
 ## Pre-Run Gates
 
@@ -174,4 +176,4 @@ None currently recorded for no-model preflight. Broad ACUT execution has not bee
 
 ## Next Heartbeat Action
 
-Continue Phase 3 runner smoke preparation. Next eligible step: finish or start focused work on the ACUT adapter command path so patch-generation attempts use only `BARCAROLLE_LLM_API_KEY` and `BARCAROLLE_LLM_BASE_URL`, run through the budget gate, and append a cost record per attempt. Do not start broad ACUT execution or model calls until the coordinator explicitly records execution start. Do not inspect `cli.log` unless debugging is explicitly requested.
+Read `acut-adapter-smoke` `process.md`. If delivered, start focused review before integration. If blocked, record the blocker and notify only if user input is required. Do not start broad ACUT execution or model calls until the coordinator explicitly records execution start. Do not inspect `cli.log` unless debugging is explicitly requested.
