@@ -5,7 +5,7 @@ display_name: Cheap Click Specialist
 purpose: Cheap-tier Click-specialist policy for the 2x2 core ACUT design.
 frozen: true
 provider: openai
-model: gpt-5.4-mini
+model: openai/gpt-5.4-mini
 model_parameters:
   reasoning_effort: medium
 prompt_policy_digest: policy-digest-v2:cheap-click-specialist

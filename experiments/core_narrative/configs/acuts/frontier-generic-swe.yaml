@@ -5,7 +5,7 @@ display_name: Frontier Generic SWE
 purpose: Frontier-tier generic software-engineering policy for the 2x2 core ACUT design.
 frozen: true
 provider: openai
-model: gpt-5.5
+model: openai/gpt-5.5
 model_parameters:
   reasoning_effort: medium
 prompt_policy_digest: policy-digest-v2:frontier-generic-swe

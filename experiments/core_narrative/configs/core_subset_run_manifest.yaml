@@ -1,5 +1,5 @@
 id: core_2x2_pilot_budget_constrained_v2
-status: pilot_002_integrated_transport_diagnostic_ready
+status: model_route_fix_ready_for_review
 prepared_at: "2026-04-28T15:13:51+08:00"
 redesigned_at: "2026-04-29T11:20:00+08:00"
 owner: coordinator
@@ -18,7 +18,7 @@ execution_start:
   projected_cost_usd: 3.00
   broad_acut_execution_started: false
   model_calls_allowed: false
-  model_calls_allowed_scope: none_until_repeated_gaierror_diagnostics_recorded
+  model_calls_allowed_scope: none_until_model_route_fix_review_passes
   required_before_start:
     - coordinator records explicit execution start
     - required LLM environment variables are present
@@ -66,6 +66,9 @@ active_default_slice:
     - frontier-click-specialist
     - cheap-generic-swe
     - cheap-click-specialist
+  model_routes:
+    cheap_tier: openai/gpt-5.4-mini
+    frontier_tier: openai/gpt-5.5
   deferred_acuts:
     - higher-budget-repo-depth
     - retrieval-history-augmented
@@ -96,7 +99,7 @@ active_default_slice:
   total_primary_patch_generation_attempts: 80
 
 pilot_slice:
-  status: pilot_002_integrated_transport_diagnostic_ready
+  status: model_route_fix_ready_for_review
   default_before_full_core: true
   acuts:
     - frontier-generic-swe
@@ -138,7 +141,7 @@ pilot_slice:
     explicit_execution_start_decision_recorded: true
     broad_acut_execution_started: false
     model_calls_allowed: false
-    model_calls_allowed_scope: none_until_repeated_gaierror_diagnostics_recorded
+    model_calls_allowed_scope: none_until_model_route_fix_review_passes
   first_execution_attempt:
     run_id: pilot_001__cheap-generic-swe__click__rbench__001__attempt1
     acut_id: cheap-generic-swe
@@ -157,7 +160,7 @@ pilot_slice:
     retry_or_second_attempt_started: false
     redacted_error_type: gaierror
   next_gate:
-    required_before_next_model_call: no_secret_diagnostics_or_user_input_record_for_repeated_gaierror
+    required_before_next_model_call: model_route_fix_review_no_issues_and_explicit_bounded_start
     no_secret_transport_preflight:
       checked_at: "2026-04-29T13:42:24+08:00"
       api_key_env_present: true
@@ -208,6 +211,38 @@ pilot_slice:
     redacted_error_type: gaierror
     model_calls_allowed: false
     required_before_next_model_call: no_secret_diagnostics_or_user_input_record
+    diagnostic_resolution: bare_model_route_name_mismatch
+    resolved_by_model_route_fix: pending_focused_review
+    record_credential_values: false
+    record_bearer_tokens: false
+    record_resolved_secrets: false
+    record_full_base_url: false
+    record_hostname: false
+    record_ip_address: false
+  model_route_fix:
+    status: ready_for_focused_review
+    diagnostic_basis: no_secret_parent_diagnostics_and_focused_health_check
+    bare_model_ids_not_routable:
+      - gpt-5.4-mini
+      - gpt-5.5
+    provider_prefixed_routes:
+      cheap_tier: openai/gpt-5.4-mini
+      frontier_tier: openai/gpt-5.5
+    active_acut_configs_updated:
+      - experiments/core_narrative/configs/acuts/frontier-generic-swe.yaml
+      - experiments/core_narrative/configs/acuts/frontier-click-specialist.yaml
+      - experiments/core_narrative/configs/acuts/cheap-generic-swe.yaml
+      - experiments/core_narrative/configs/acuts/cheap-click-specialist.yaml
+    health_check_artifact: experiments/core_narrative/results/normalized/model_route_health_20260429T1437.json
+    health_check_status: provider_prefixed_routes_http_2xx
+    max_completion_or_output_tokens_minimum: 16
+    response_text_recorded: false
+    cost_ledger_records:
+      - model_route_health__openai_gpt_5_4_mini__20260429T1437
+      - model_route_health__openai_gpt_5_5__20260429T1437
+    cumulative_estimated_cost_usd_after_health_check: 6.0008
+    model_calls_allowed: false
+    required_before_next_pilot_attempt: focused_review_no_issues_and_explicit_one_attempt_start_decision
     record_credential_values: false
     record_bearer_tokens: false
     record_resolved_secrets: false
@@ -232,6 +267,6 @@ locked_inputs:
     locked_task_ids_source: experiments/core_narrative/configs/general_benchmark.yaml
 
 next_no_model_preflights:
-  - optional final readiness bookkeeping before the explicit execution-start decision
+  - focused review of the provider-prefixed model route fix before any next execution decision
   - generate or verify task-agnostic Click specialist context artifacts before any specialist ACUT live run if not already available
   - do not start broad ACUT execution or model calls before the coordinator records a reviewed execution start
