@@ -1,7 +1,7 @@
 # Core Narrative Experiment Coordinator
 
-status: pilot_003_integrated_transport_diagnostic_ready
-updated: 2026-04-29T15:37:43+08:00
+status: codex_cli_harness_handoff_ready
+updated: 2026-04-29T16:04:08+08:00
 today_stop_state: 2026-04-28_stop_policy_expired
 phase: Phase 0 - Experiment Bootstrap
 base_commit: 47046e7754d2402b7177a4b80f631ab6b0bcd97c
@@ -68,6 +68,8 @@ Execute `docs/experiments/core-narrative-experiment-plan.md` with tmux-managed C
 - Adopt revised-plan budget contract: USD `$240` soft stop, USD `$300` hard cap, and no ACUT model call may start without cost ledgering.
 - Default execution is changed and reviewed to the 2x2 pilot ACUT subset: `frontier-generic-swe`, `frontier-click-specialist`, `cheap-generic-swe`, and `cheap-click-specialist`; 2 `G_score`, 3 `RBench`, 2 `RWork`, and one primary attempt per ACUT/task for 28 pilot runs.
 - Active 2x2 model routes use provider-prefixed IDs for the configured BARCAROLLE LLM endpoint: cheap tier `openai/gpt-5.4-mini`, frontier tier `openai/gpt-5.5`.
+- Parent-session diagnostics verified that Codex CLI can be used as the inner ACUT patch-generation agent with startup-only BARCAROLLE provider overrides, temporary `CODEX_HOME`, temporary provider-prefixed `model_catalog_json`, and non-interactive base instructions. See `.codex-workflows/core-narrative-experiment/shared/codex-cli-harness-handoff.md`.
+- Do not replace the outer Barcarolle adapter: it still owns task materialization, budget gating, ledgering, result normalization, verifier execution, and redaction. The replacement target is only the hand-written inner patch-generation command.
 - If budget is tight, the allowed three-ACUT pilot subset is `frontier-generic-swe`, `frontier-click-specialist`, and `cheap-click-specialist`.
 - Defer `higher-budget-repo-depth`, `retrieval-history-augmented`, and `minimal-context-baseline` unless the pilot and any full-core promotion finish below the soft stop and the coordinator records spare budget.
 - Retire the previous active ACUT IDs for new execution: `general-benchmark-optimized`, `repo-context-heavy`, `retrieval-sparse-symbolic`, and `lower-budget-fast-path`.
@@ -89,7 +91,15 @@ Execute `docs/experiments/core-narrative-experiment-plan.md` with tmux-managed C
 
 ## Blockers
 
-No open patch-command blocker remains. Broad ACUT execution has not been started and no large model-call batch has started. The first, pilot-002, and pilot-003 bounded attempts are integrated and reviewed with `no_issues`, and all three live patch commands failed with redacted outcome `LLM request failed` and error type `gaierror`. Parent no-secret diagnostics narrowed the first two failures to bare model route/name mismatch rather than missing env, DNS/TCP/TLS, endpoint reachability, or credit exhaustion, and the active 2x2 ACUT configs now use provider-prefixed model routes. The focused route health check with token cap `16` returned HTTP 2xx for both active model tiers, but pilot-003 still failed in the full patch-generation request path after the route fix. No further ACUT attempt is authorized until a no-secret post-route-fix diagnostic or explicit user-input blocker record is made.
+No open patch-command blocker remains for the reviewed hand-written command path, but three bounded pilot attempts all failed before producing a patch. Broad ACUT execution has not been started and no large model-call batch has started. The first, pilot-002, and pilot-003 bounded attempts are integrated and reviewed with `no_issues`, and all three live patch commands failed with redacted outcome `LLM request failed` and error type `gaierror`. Parent no-secret diagnostics narrowed the first two failures to bare model route/name mismatch rather than missing env, DNS/TCP/TLS, endpoint reachability, or credit exhaustion, and the active 2x2 ACUT configs now use provider-prefixed model routes. The focused route health check with token cap `16` returned HTTP 2xx for both active model tiers, but pilot-003 still failed in the full patch-generation request path after the route fix. Parent-session Codex CLI diagnostics now indicate that replacing only the inner hand-written patch-generation command with `codex exec` is feasible under the BARCAROLLE env contract. No further ACUT attempt is authorized until a focused `codex-cli-harness-adapter` worker implements or spikes that replacement path and a reviewer clears the result.
+
+## Codex CLI Harness Handoff
+
+- handoff: `.codex-workflows/core-narrative-experiment/shared/codex-cli-harness-handoff.md`
+- parent_verification_status: startup-only provider override, Responses API route, temporary `CODEX_HOME` isolation, temporary provider-prefixed model catalog, and non-interactive Codex CLI tool execution were verified outside the experiment workflow without recording secrets.
+- required_next_worker: focused `codex-cli-harness-adapter` implementation/spike.
+- required_review_after_worker: focused no-secret review before any additional ACUT model-call attempt.
+- execution_guard: no broad execution, retry, second attempt, specialist ACUT run, or large batch is authorized by this handoff.
 
 ## Execution Readiness Bookkeeping
 
@@ -321,7 +331,7 @@ No open patch-command blocker remains. Broad ACUT execution has not been started
 - deferred_acuts: `higher-budget-repo-depth`, `retrieval-history-augmented`, `minimal-context-baseline`
 - broad_execution_started: false
 - run_manifest: `experiments/core_narrative/configs/core_subset_run_manifest.yaml`
-- next_allowed_step: prepare no-secret diagnostics for the post-route-fix full patch-generation `gaierror`; do not start any further ACUT model-call attempt, retry, specialist run, broad execution, or large batch.
+- next_allowed_step: start a focused `codex-cli-harness-adapter` implementation/spike from `.codex-workflows/core-narrative-experiment/shared/codex-cli-harness-handoff.md`, then review it before any further ACUT model-call attempt; do not start any retry, specialist run, broad execution, or large batch.
 
 ## Acceptance Gate
 
@@ -332,4 +342,4 @@ No open patch-command blocker remains. Broad ACUT execution has not been started
 
 ## Next Heartbeat Action
 
-Prepare no-secret diagnostics for the repeated full patch-generation request `gaierror` after the provider-prefixed model-route fix. Read only this coordinator and relevant worker `process.md` files first; do not inspect cli.log. Diagnostics may verify env presence and non-secret connectivity/error classes only, without recording credential values, bearer tokens, resolved secrets, hostnames, IP addresses, or full base URL values. Do not start broad ACUT execution, retries, second attempts, specialist ACUT runs, any further pilot attempt, or any large batch.
+Start a focused `codex-cli-harness-adapter` worker using `.codex-workflows/core-narrative-experiment/shared/codex-cli-harness-handoff.md` as the handoff. The worker should replace or spike only the inner patch-generation command with Codex CLI, keeping the outer adapter responsible for budget, ledger, verifier, normalization, and redaction. Do not inspect `cli.log`. Do not start broad ACUT execution, retries, second attempts, specialist ACUT runs, any further pilot attempt, or any large batch before the focused worker and reviewer both clear this path.
