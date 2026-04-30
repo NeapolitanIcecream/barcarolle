@@ -531,7 +531,12 @@ def main() -> int:
         tracked_restore = {"attempted": False, "tracked_changes_remaining": None}
         unsafe_patch_rejected = bool(patch_artifact["unsafe_content_detected"])
         patch_size_bytes = int(patch_artifact.get("size_bytes") or 0)
-        no_patch_generated = run["exit_code"] == 0 and patch_size_bytes == 0
+        no_patch_generated = (
+            run["exit_code"] == 0
+            and not run["timed_out"]
+            and not unsafe_patch_rejected
+            and patch_size_bytes == 0
+        )
         if unsafe_patch_rejected:
             tracked_restore = restore_tracked_workspace_changes(workspace, acut_env)
         finished_at = iso_now()
@@ -606,7 +611,7 @@ def main() -> int:
                 "tracked_workspace_restore": tracked_restore,
             },
         )
-        if no_patch_generated:
+        if status == "no_patch_generated":
             write_normalized_result(
                 path=args.normalized_output,
                 run_id=run_id,
