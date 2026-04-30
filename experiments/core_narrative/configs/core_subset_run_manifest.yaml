@@ -1,5 +1,5 @@
 id: core_2x2_pilot_budget_constrained_v2
-status: codex_cli_failure_capture_integrated_next_preflight_ready
+status: pilot_006_preflight_recorded_awaiting_start_decision
 prepared_at: "2026-04-28T15:13:51+08:00"
 redesigned_at: "2026-04-29T11:20:00+08:00"
 owner: coordinator
@@ -121,7 +121,7 @@ active_default_slice:
   total_primary_patch_generation_attempts: 80
 
 pilot_slice:
-  status: codex_cli_failure_capture_integrated_next_preflight_ready
+  status: pilot_006_preflight_recorded_awaiting_start_decision
   default_before_full_core: true
   acuts:
     - frontier-generic-swe
@@ -752,6 +752,65 @@ pilot_slice:
     record_full_base_url: false
     record_hostname: false
     record_ip_address: false
+  pilot_006_preflight:
+    status: awaiting_separate_explicit_start_decision
+    recorded_at: "2026-04-30T16:36:06+08:00"
+    run_id: pilot_006__cheap-click-specialist__click__rbench__001__attempt1
+    acut_id: cheap-click-specialist
+    task_id: click__rbench__001
+    split: rbench
+    attempt: 1
+    model_route: openai/gpt-5.4-mini
+    purpose: diagnostic_recovery_candidate_after_reviewed_failure_capture_r1
+    harness: reviewed_codex_cli_patch_command
+    specialist_context_pack: reviewed_no_issues_integrated
+    empty_patch_gate: revision_1_reviewed_integrated
+    failure_capture_gate: revision_1_reviewed_integrated
+    execution_start_decision_recorded: false
+    execution_authorized: false
+    live_model_call_authorized: false
+    broad_execution_authorized: false
+    retry_authorized: false
+    second_attempt_authorized: false
+    additional_specialist_acut_run_authorized: false
+    further_pilot_attempt_authorized: false
+    large_batch_authorized: false
+    projected_cost_usd: 3.00
+    current_ledger_records: 8
+    current_cumulative_estimated_cost_usd: 15.0008
+    projected_cumulative_estimated_cost_usd: 18.0008
+    below_soft_stop: true
+    below_hard_cap: true
+    required_before_live_call:
+      - coordinator records a separate explicit execution start for this exact run id
+      - BARCAROLLE_LLM_API_KEY present without recording value
+      - BARCAROLLE_LLM_BASE_URL present without recording value
+      - cost ledger exists and is writable
+      - projected cumulative estimated cost below USD 240 soft stop and USD 300 hard cap
+      - cost ledger append for the attempt
+      - structured failure_capture artifacts remain redacted if the inner Codex CLI command fails
+      - no verifier or scoring if adapter returns no_patch_generated or infra_failed
+    preflight_checks:
+      api_key_env_present: true
+      base_url_env_present: true
+      env_values_recorded: false
+      cost_ledger_exists: true
+      cost_ledger_writable: true
+      adapter_command_path_present: true
+      inner_codex_cli_command_path_present: true
+      task_manifest_present: true
+      acut_manifest_present: true
+      context_pack_manifest_present: true
+      cli_log_inspected: false
+    rationale: "Pilot 004 and pilot 005 are reviewed infra_failed/no-patch outcomes rather than scorable ACUT results; a later single explicit decision may use this candidate to verify the reviewed failure-capture path under the same specialist cell without broad execution."
+    model_calls_started_by_preflight: false
+    worker_started_by_preflight: false
+    record_credential_values: false
+    record_bearer_tokens: false
+    record_resolved_secrets: false
+    record_full_base_url: false
+    record_hostname: false
+    record_ip_address: false
   promotion_to_full_core:
     allowed_only_after: "pilot summary review and explicit coordinator decision"
     full_core_attempts_if_promoted: 80
@@ -770,5 +829,5 @@ locked_inputs:
     locked_task_ids_source: experiments/core_narrative/configs/general_benchmark.yaml
 
 next_no_model_preflights:
-  - no-secret execution preflight for exactly one possible next bounded attempt through the reviewed Codex CLI harness before any model call
-  - do not start broad ACUT execution or model calls before the coordinator records a reviewed execution start
+  - pilot_006 preflight is recorded; no model call or worker execution is authorized until a separate explicit coordinator start decision names that run id
+  - do not start broad ACUT execution, retries, second attempts, additional specialist runs, further pilot attempts, or model calls before the coordinator records a new explicit execution start
