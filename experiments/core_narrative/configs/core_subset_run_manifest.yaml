@@ -1,5 +1,5 @@
 id: core_2x2_pilot_budget_constrained_v2
-status: empty_patch_gate_no_model_smoke_passed
+status: empty_patch_gate_r1_reviewed_integrated
 prepared_at: "2026-04-28T15:13:51+08:00"
 redesigned_at: "2026-04-29T11:20:00+08:00"
 owner: coordinator
@@ -546,15 +546,22 @@ pilot_slice:
     record_hostname: false
     record_ip_address: false
   harness_empty_patch_gate:
-    status: no_model_smoke_passed
+    status: revision_1_reviewed_integrated
     implemented_in: experiments/core_narrative/tools/acut_patch_adapter.py
     regression_test: experiments/core_narrative/tools/test_acut_patch_adapter.py
     report: experiments/core_narrative/reports/acut_adapter_empty_patch_gate.md
+    worker_commit: ead03e4
+    worker_handoff_commit: b505bc4
+    worker_integrated_as: 8c2d74a
+    review_commit: fba15aa
+    review_integrated_as: e051adc
     behavior:
       inner_command_exit_zero_with_empty_git_diff: no_patch_generated
       ledger_event: no_patch_generated
       normalized_status: infra_failed
       verifier_ready_result_created: false
+      unsafe_patch_rejection_remains_distinct: true
+      unsafe_patch_no_patch_generated_metadata: false
     live_barcarolle_model_call_started: false
     acut_attempt_started: false
     broad_execution_started: false
