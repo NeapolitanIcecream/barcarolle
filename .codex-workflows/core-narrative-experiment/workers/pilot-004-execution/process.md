@@ -1,7 +1,7 @@
 # Process
 
-status: blocked
-updated: 2026-04-30T10:05:41+08:00
+status: working
+updated: 2026-04-30T10:30:12+08:00
 
 ## Summary
 
@@ -45,17 +45,13 @@ disallowed.
 
 ## Current Blockers
 
-The coordinator does not record the required explicit execution-start decision
-for `pilot_004__cheap-click-specialist__click__rbench__001__attempt1`.
-`.codex-workflows/core-narrative-experiment/coordinator.md` currently has
-`status: pilot_004_preflight_recorded_awaiting_start_decision`; its
-`pilot_004_preflight` entry says the preflight does not authorize execution or
-any model call, and the next heartbeat action says a separate explicit
-coordinator execution-start decision is still required.
+None at redispatch start.
 
-Because that gate failed, this worker did not prepare a workspace, run the
-Codex CLI patch-command dry run, run the live adapter, or append the cost
-ledger.
+Earlier blocker: this worker first blocked before any model call because its
+checkout did not include the coordinator commit that recorded the explicit
+execution-start decision. The coordinator has now recorded repair redispatch in
+commit `52e165c`, and this branch merged that coordinator state in merge commit
+`4b013cd` before any model call.
 
 ## Execution Log
 
@@ -74,10 +70,14 @@ ledger.
   reviewed Click specialist context pack hash/marker. The worktree-local Click
   source cache is absent, and the sibling local checkout is present, but no
   restore was attempted because coordinator execution start was not recorded.
+- `2026-04-30T10:30:12+08:00`: Redispatch started after merging coordinator
+  repair state. Scope remains exactly one primary attempt for the same run id.
+  This is not a retry or second attempt because no prior model call or attempt
+  artifact exists for `pilot_004`.
 
 ## Result
 
-- blocked before attempt
+- working after repair redispatch
 
 Adapter command ran: no.
 
