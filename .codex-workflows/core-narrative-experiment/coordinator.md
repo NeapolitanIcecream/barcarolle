@@ -1,7 +1,7 @@
 # Core Narrative Experiment Coordinator
 
-status: empty_patch_gate_r1_integrated_next_preflight_ready
-updated: 2026-04-30T13:51:06+08:00
+status: pilot_005_preflight_recorded_awaiting_start_decision
+updated: 2026-04-30T14:04:36+08:00
 today_stop_state: 2026-04-28_stop_policy_expired
 phase: Phase 0 - Experiment Bootstrap
 base_commit: 47046e7754d2402b7177a4b80f631ab6b0bcd97c
@@ -159,7 +159,9 @@ No open patch-command blocker remains for the reviewed hand-written command path
 - empty_patch_gate_revision_1: focused worker `empty-patch-gate-r1` delivered implementation commit `ead03e4` and handoff commit `b505bc4`, integrated as `8c2d74a`. It keeps unsafe patch rejection distinct from true empty/no-patch generation and adds no-model regression coverage. No ACUT attempt, live BARCAROLLE model call, retry, second attempt, additional specialist run, broad execution, or large batch was started.
 - empty_patch_gate_revision_1_review: focused reviewer `empty-patch-gate-r1-reviewer` delivered `no_issues` in commit `fba15aa`, integrated as `e051adc`.
 - empty_patch_gate_integrated_state: The reviewed harness gate is now integrated. Exit-0 empty-diff runs classify as `no_patch_generated` / normalized `infra_failed`; unsafe patch rejection remains `unsafe_patch_rejected` / `command_completed_unsafe_patch_rejected` without `no_patch_generated` metadata. Verification after integration passed with no-model tests and static checks.
-- resume_entry: On the next step, read this coordinator and latest relevant worker `process.md` files. Prepare a separate no-secret next-attempt preflight if appropriate, but do not start broad ACUT execution, retries, second attempts, additional specialist runs, any further pilot attempt, live BARCAROLLE model call, or any large batch without a new explicit coordinator decision. Do not inspect `cli.log`.
+- pilot_005_preflight: recorded at `2026-04-30T14:04:36+08:00` for one possible bounded recovery replacement of the infra-failed pilot 004 path: run id `pilot_005__cheap-click-specialist__click__rbench__001__attempt1`, ACUT `cheap-click-specialist`, task `click__rbench__001`, attempt `1`, through the reviewed Codex CLI harness, reviewed Click specialist context pack, and reviewed empty-patch gate. This is a preflight only and does not authorize execution, a retry, a second attempt, a live BARCAROLLE model call, broad execution, an additional specialist run, or a large batch.
+- pilot_005_preflight_checks: `BARCAROLLE_LLM_API_KEY` and `BARCAROLLE_LLM_BASE_URL` are present without inspecting or recording values; `experiments/core_narrative/results/cost_ledger.jsonl` exists and is writable; ledger has `7` records and cumulative estimated cost USD `12.0008`; projected additional cost is USD `3.00`; projected cumulative estimated cost is USD `15.0008`, below the USD `240` soft stop and USD `300` hard cap. Candidate command paths and task/ACUT/context-pack inputs are present.
+- resume_entry: On the next step, read this coordinator and latest relevant worker `process.md` files. Decide whether to record a separate explicit execution-start decision for the single preflighted pilot 005 candidate, or defer with reason. Do not start broad ACUT execution, retries, second attempts, additional specialist runs, any further pilot attempt, live BARCAROLLE model call, or any large batch without a new explicit coordinator decision. Do not inspect `cli.log`.
 
 ## Execution Start Preflight
 
