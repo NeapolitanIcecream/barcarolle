@@ -1,7 +1,7 @@
 # Process
 
-status: revising
-updated: 2026-04-30T15:57:36+08:00
+status: delivered
+updated: 2026-04-30T16:03:04+08:00
 
 ## Summary
 
@@ -50,6 +50,21 @@ No ACUT attempt, live BARCAROLLE model call, retry, second attempt, additional
 specialist ACUT run, broad execution, further pilot attempt, or large
 model-call batch is authorized.
 
+Revision 1 delivered:
+
+- replaced fixed-suffix hostname capture redaction with a generic DNS-label
+  hostname-shape redactor used for redacted stdout/stderr artifacts and bounded
+  failure tails
+- added no-model regression coverage for `timeout` and
+  `unsafe_patch_content`
+- added artifact/tail assertions that credential values,
+  bearer-token-shaped strings, full URLs, hostname-shaped values, and
+  IP-address-shaped values are absent after redaction
+- preserved temporary `CODEX_HOME`, BARCAROLLE provider override,
+  provider-prefixed model catalog, non-interactive base instructions, dry-run,
+  specialist context injection, and the outer adapter budget/ledger/redaction
+  contract
+
 ## Changed Files
 
 - `experiments/core_narrative/tools/codex_cli_patch_command.py`
@@ -59,29 +74,29 @@ model-call batch is authorized.
 
 ## Verification
 
-- `python3 experiments/core_narrative/tools/test_codex_cli_patch_command.py`
-- `python3 experiments/core_narrative/tools/test_acut_patch_adapter.py`
-- `python3 -m py_compile experiments/core_narrative/tools/codex_cli_patch_command.py experiments/core_narrative/tools/test_codex_cli_patch_command.py`
-- `git diff --check`
-- Scoped changed-file scan for literal full URLs, bearer-token-shaped values,
-  IPv4-address-shaped values, and hostname-shaped values: no matches.
+- PASS: `python3 experiments/core_narrative/tools/test_codex_cli_patch_command.py`
+- PASS: `python3 experiments/core_narrative/tools/test_acut_patch_adapter.py`
+- PASS: `python3 -m py_compile experiments/core_narrative/tools/codex_cli_patch_command.py experiments/core_narrative/tools/test_codex_cli_patch_command.py`
+- PASS: `git diff --check`
 
 All verification was no-model. No live BARCAROLLE model call, ACUT attempt,
 retry, second attempt, additional specialist ACUT run, broad execution, further
-pilot attempt, or large model-call batch was started.
+pilot attempt, or large model-call batch was started. No record was appended to
+`experiments/core_narrative/results/cost_ledger.jsonl`.
 
 No `cli.log` file was inspected.
 
 ## Handoff
 
-Focused no-model repair delivered for Codex CLI failure capture.
+Focused no-model revision 1 repair delivered for Codex CLI failure capture.
 
 The inner Codex CLI summary now records `failure_capture` and `workspace_patch`
 metadata for nonzero exits, timeouts, unsafe patch content, and exit-zero
 no-workspace-patch outcomes. Redacted stdout/stderr artifacts are written under
 the command artifact directory, and bounded redacted tail snippets are included
-only in the structured failure capture. The outer adapter budget, ledger,
-redaction, empty-patch, and normalized-result contract is unchanged.
+only in the structured failure capture. Hostname redaction no longer depends on
+a fixed suffix list. The outer adapter budget, ledger, redaction, empty-patch,
+and normalized-result contract is unchanged.
 
 Recommended next step: run a focused reviewer before any later coordinator
 decision to authorize another bounded live attempt.

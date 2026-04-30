@@ -60,9 +60,11 @@ MODEL_DISPLAY_NAMES = {
 }
 DEFAULT_CODEX_TIMEOUT_SECONDS = 3600
 DEFAULT_FAILURE_CAPTURE_TAIL_CHARS = 2000
+HOSTNAME_LABEL_RE = r"[A-Za-z0-9](?:[A-Za-z0-9-]{0,61}[A-Za-z0-9])?"
 NETWORK_HOSTNAME_RE = re.compile(
-    r"\b(?:[A-Za-z0-9](?:[A-Za-z0-9-]{0,61}[A-Za-z0-9])?\.)+"
-    r"(?:com|org|net|edu|gov|io|ai|dev|app|cloud|cn|us|uk|invalid|local|internal|test)\b",
+    rf"(?<![A-Za-z0-9_.-])(?:{HOSTNAME_LABEL_RE}\.)+"
+    rf"(?=[A-Za-z0-9-]*[A-Za-z]){HOSTNAME_LABEL_RE}\.?"
+    rf"(?![A-Za-z0-9_-])",
     re.IGNORECASE,
 )
 IPV4_RE = re.compile(r"\b(?:\d{1,3}\.){3}\d{1,3}\b")

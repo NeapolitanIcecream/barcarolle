@@ -5,6 +5,7 @@ from __future__ import annotations
 
 import json
 import os
+import re
 import shutil
 import subprocess
 import sys
@@ -16,6 +17,17 @@ from pathlib import Path
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
 PATCH_COMMAND = REPO_ROOT / "experiments" / "core_narrative" / "tools" / "codex_cli_patch_command.py"
+HOSTNAME_LABEL_RE = r"[A-Za-z0-9](?:[A-Za-z0-9-]{0,61}[A-Za-z0-9])?"
+BEARER_TOKEN_SHAPED_RE = re.compile(r"\bBearer\s+[A-Za-z0-9._~+/=-]{10,}\b", re.IGNORECASE)
+FULL_URL_SHAPED_RE = re.compile(r"https?://[^\s\"'<>]+", re.IGNORECASE)
+HOSTNAME_SHAPED_RE = re.compile(
+    rf"(?<![A-Za-z0-9_.-])(?:{HOSTNAME_LABEL_RE}\.)+"
+    rf"(?=[A-Za-z0-9-]*[A-Za-z]){HOSTNAME_LABEL_RE}\.?"
+    rf"(?![A-Za-z0-9_-])",
+    re.IGNORECASE,
+)
+IPV4_SHAPED_RE = re.compile(r"\b(?:\d{1,3}\.){3}\d{1,3}\b")
+IPV6_SHAPED_RE = re.compile(r"\b(?:[0-9A-Fa-f]{1,4}:){2,}[0-9A-Fa-f]{1,4}\b")
 
 
 def run(command: list[str], *, cwd: Path, env: dict[str, str] | None = None) -> subprocess.CompletedProcess[str]:
@@ -43,6 +55,12 @@ class CodexCliPatchCommandTests(unittest.TestCase):
         run(["git", "add", "module.py"], cwd=self.workspace)
         commit = run(["git", "commit", "-m", "initial"], cwd=self.workspace)
         self.assertEqual(commit.returncode, 0, commit.stderr)
+        self.resolved_secret = "unit" + "-redacted" + "-secret"
+        self.resolved_endpoint_host = "api" + ".example" + ".invalid"
+        self.resolved_endpoint = "http" + "s://" + self.resolved_endpoint_host + "/v1"
+        self.raw_bearer = "Bearer " + "abcdefghij123456"
+        self.raw_hostname = "worker01" + ".service-mesh" + ".corpzone"
+        self.raw_ip = "203" + ".0" + ".113" + ".42"
 
         task_dir = self.workspace / ".core_narrative"
         task_dir.mkdir()
@@ -104,12 +122,17 @@ class CodexCliPatchCommandTests(unittest.TestCase):
         fake_codex.chmod(0o755)
         return fake_codex
 
-    def run_patch_command(self, *, fake_codex: Path, artifact_dir: Path, summary_path: Path) -> subprocess.CompletedProcess[str]:
+    def run_patch_command(
+        self,
+        *,
+        fake_codex: Path,
+        artifact_dir: Path,
+        summary_path: Path,
+        extra_args: list[str] | None = None,
+    ) -> subprocess.CompletedProcess[str]:
         env = os.environ.copy()
-        resolved_secret = "unit" + "-redacted" + "-secret"
-        resolved_endpoint = "http" + "s://" + "api" + ".example" + ".invalid/v1"
-        env["BARCAROLLE_LLM_API_KEY"] = resolved_secret
-        env["BARCAROLLE_LLM_BASE_URL"] = resolved_endpoint
+        env["BARCAROLLE_LLM_API_KEY"] = self.resolved_secret
+        env["BARCAROLLE_LLM_BASE_URL"] = self.resolved_endpoint
 
         return run(
             [
@@ -125,10 +148,43 @@ class CodexCliPatchCommandTests(unittest.TestCase):
                 str(summary_path),
                 "--codex-bin",
                 str(fake_codex),
+                *(extra_args or []),
             ],
             cwd=REPO_ROOT,
             env=env,
         )
+
+    def assert_failure_capture_redacted(self, summary: dict[str, object]) -> None:
+        failure = summary["failure_capture"]
+        self.assertIsInstance(failure, dict)
+        codex_exec = summary["codex_exec"]
+        self.assertIsInstance(codex_exec, dict)
+        stdout_artifact = Path(str(codex_exec["stdout_artifact"]))
+        stderr_artifact = Path(str(codex_exec["stderr_artifact"]))
+        self.assertTrue(stdout_artifact.is_file())
+        self.assertTrue(stderr_artifact.is_file())
+        checked_texts = [
+            stdout_artifact.read_text(encoding="utf-8"),
+            stderr_artifact.read_text(encoding="utf-8"),
+            str(failure["stdout_tail"]),
+            str(failure["stderr_tail"]),
+        ]
+        forbidden_values = [
+            self.resolved_secret,
+            self.resolved_endpoint,
+            self.resolved_endpoint_host,
+            self.raw_bearer,
+            self.raw_hostname,
+            self.raw_ip,
+        ]
+        for text in checked_texts:
+            for value in forbidden_values:
+                self.assertNotIn(value, text)
+            self.assertIsNone(BEARER_TOKEN_SHAPED_RE.search(text), text)
+            self.assertIsNone(FULL_URL_SHAPED_RE.search(text), text)
+            self.assertIsNone(HOSTNAME_SHAPED_RE.search(text), text)
+            self.assertIsNone(IPV4_SHAPED_RE.search(text), text)
+            self.assertIsNone(IPV6_SHAPED_RE.search(text), text)
 
     def test_nonzero_codex_exec_records_structured_failure_capture(self) -> None:
         """Regression: codex_exec_failed summaries need reviewable non-log diagnostics."""
@@ -139,9 +195,9 @@ class CodexCliPatchCommandTests(unittest.TestCase):
             sys.stdout.write(os.environ["BARCAROLLE_LLM_BASE_URL"] + "\\n")
             sys.stderr.write("safe stderr tail\\n")
             sys.stderr.write(
-                "host " + "api" + ".example" + ".invalid "
+                "host " + "worker01" + ".service-mesh" + ".corpzone "
                 + "ip " + "203" + ".0" + ".113" + ".42 "
-                + "Bearer " + "abcdefghij" + "\\n"
+                + "Bearer " + "abcdefghij123456" + "\\n"
             )
             sys.exit(7)
             """
@@ -165,17 +221,12 @@ class CodexCliPatchCommandTests(unittest.TestCase):
         self.assertEqual(failure["stderr_artifact"], codex_exec["stderr_artifact"])
         self.assertIn("safe stdout before failure", failure["stdout_tail"])
         self.assertIn("safe stderr tail", failure["stderr_tail"])
-        forbidden_secret = "unit" + "-redacted" + "-secret"
-        forbidden_host = "api" + ".example" + ".invalid"
-        forbidden_ip = "203" + ".0" + ".113" + ".42"
-        forbidden_bearer = "Bearer " + "abcdefghij"
-        self.assertNotIn(forbidden_secret, json.dumps(summary))
-        self.assertNotIn(forbidden_host, json.dumps(summary))
-        self.assertNotIn(forbidden_ip, json.dumps(summary))
-        self.assertNotIn(forbidden_bearer, json.dumps(summary))
+        self.assertNotIn(self.resolved_secret, json.dumps(summary))
+        self.assertNotIn(self.raw_hostname, json.dumps(summary))
+        self.assertNotIn(self.raw_ip, json.dumps(summary))
+        self.assertNotIn(self.raw_bearer, json.dumps(summary))
         self.assertNotIn("https://", json.dumps(summary))
-        self.assertTrue(Path(codex_exec["stdout_artifact"]).is_file())
-        self.assertTrue(Path(codex_exec["stderr_artifact"]).is_file())
+        self.assert_failure_capture_redacted(summary)
 
     def test_exit_zero_without_workspace_diff_records_no_patch_failure_capture(self) -> None:
         """Regression: exit-0 progress-only runs need a no-patch class in the summary."""
@@ -200,6 +251,82 @@ class CodexCliPatchCommandTests(unittest.TestCase):
         self.assertEqual(failure["exit_code"], 0)
         self.assertFalse(summary["workspace_patch"]["usable_patch"])
         self.assertEqual(summary["workspace_patch"]["size_bytes"], 0)
+
+    def test_timeout_records_structured_failure_capture_with_redacted_artifacts(self) -> None:
+        """Regression: timed-out codex exec runs need non-log redacted diagnostics."""
+        fake_codex = self.write_fake_codex(
+            """
+            import time
+
+            sys.stdout.write("timeout stdout before sleep\\n")
+            sys.stdout.write(os.environ["BARCAROLLE_LLM_API_KEY"] + "\\n")
+            sys.stdout.flush()
+            sys.stderr.write(
+                "timeout stderr " + "worker01" + ".service-mesh" + ".corpzone "
+                + "Bearer " + "abcdefghij123456" + "\\n"
+            )
+            sys.stderr.flush()
+            time.sleep(5)
+            """
+        )
+        artifact_dir = self.root / "artifacts-timeout"
+        summary_path = self.root / "summary-timeout.json"
+
+        completed = self.run_patch_command(
+            fake_codex=fake_codex,
+            artifact_dir=artifact_dir,
+            summary_path=summary_path,
+            extra_args=["--codex-timeout-seconds", "1"],
+        )
+
+        self.assertEqual(completed.returncode, 124, completed.stderr)
+        summary = json.loads(summary_path.read_text(encoding="utf-8"))
+        failure = summary["failure_capture"]
+
+        self.assertEqual(summary["status"], "timeout")
+        self.assertIs(failure["present"], True)
+        self.assertEqual(failure["failure_class"], "timeout")
+        self.assertIs(failure["timed_out"], True)
+        self.assertEqual(failure["exit_code"], None)
+        self.assertIn("timeout stdout before sleep", failure["stdout_tail"])
+        self.assertIn("timeout stderr", failure["stderr_tail"])
+        self.assert_failure_capture_redacted(summary)
+
+    def test_unsafe_patch_content_records_structured_failure_capture_with_redacted_artifacts(self) -> None:
+        """Regression: unsafe workspace diffs need a distinct failure class."""
+        fake_codex = self.write_fake_codex(
+            """
+            from pathlib import Path
+
+            Path("module.py").write_text(
+                "VALUE = " + repr(os.environ["BARCAROLLE_LLM_API_KEY"]) + "\\n",
+                encoding="utf-8",
+            )
+            sys.stdout.write("unsafe patch stdout\\n")
+            sys.stderr.write(
+                "unsafe patch stderr " + "worker01" + ".service-mesh" + ".corpzone "
+                + "ip " + "203" + ".0" + ".113" + ".42 "
+                + os.environ["BARCAROLLE_LLM_BASE_URL"] + "\\n"
+            )
+            sys.exit(0)
+            """
+        )
+        artifact_dir = self.root / "artifacts-unsafe"
+        summary_path = self.root / "summary-unsafe.json"
+
+        completed = self.run_patch_command(fake_codex=fake_codex, artifact_dir=artifact_dir, summary_path=summary_path)
+
+        self.assertEqual(completed.returncode, 0, completed.stderr)
+        summary = json.loads(summary_path.read_text(encoding="utf-8"))
+        failure = summary["failure_capture"]
+
+        self.assertEqual(summary["status"], "codex_exec_completed")
+        self.assertIs(failure["present"], True)
+        self.assertEqual(failure["failure_class"], "unsafe_patch_content")
+        self.assertIs(failure["timed_out"], False)
+        self.assertTrue(summary["workspace_patch"]["unsafe_content_detected"])
+        self.assertFalse(summary["workspace_patch"]["usable_patch"])
+        self.assert_failure_capture_redacted(summary)
 
 
 if __name__ == "__main__":
