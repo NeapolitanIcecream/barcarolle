@@ -1,7 +1,7 @@
 # Core Narrative Experiment Coordinator
 
-status: click_specialist_context_pack_integrated_next_preflight_ready
-updated: 2026-04-30T09:36:12+08:00
+status: pilot_004_preflight_recorded_awaiting_start_decision
+updated: 2026-04-30T09:48:23+08:00
 today_stop_state: 2026-04-28_stop_policy_expired
 phase: Phase 0 - Experiment Bootstrap
 base_commit: 47046e7754d2402b7177a4b80f631ab6b0bcd97c
@@ -96,7 +96,7 @@ Execute `docs/experiments/core-narrative-experiment-plan.md` with tmux-managed C
 
 ## Blockers
 
-No open patch-command blocker remains for the reviewed hand-written command path, but three bounded pilot attempts all failed before producing a patch. Broad ACUT execution has not been started and no large model-call batch has started. The first, pilot-002, and pilot-003 bounded attempts are integrated and reviewed with `no_issues`, and all three live patch commands failed with redacted outcome `LLM request failed` and error type `gaierror`. Parent no-secret diagnostics narrowed the first two failures to bare model route/name mismatch rather than missing env, DNS/TCP/TLS, endpoint reachability, or credit exhaustion, and the active 2x2 ACUT configs now use provider-prefixed model routes. The focused route health check with token cap `16` returned HTTP 2xx for both active model tiers, but pilot-003 still failed in the full patch-generation request path after the route fix. The Codex CLI inner patch-generation harness is now implemented, reviewed with `no_issues`, and integrated. The task-agnostic Click specialist context pack and no-model injection evidence are now generated, reviewed with `no_issues`, and integrated. No further ACUT attempt is authorized until the coordinator records a later explicit execution-start decision.
+No open patch-command blocker remains for the reviewed hand-written command path, but three bounded pilot attempts all failed before producing a patch. Broad ACUT execution has not been started and no large model-call batch has started. The first, pilot-002, and pilot-003 bounded attempts are integrated and reviewed with `no_issues`, and all three live patch commands failed with redacted outcome `LLM request failed` and error type `gaierror`. Parent no-secret diagnostics narrowed the first two failures to bare model route/name mismatch rather than missing env, DNS/TCP/TLS, endpoint reachability, or credit exhaustion, and the active 2x2 ACUT configs now use provider-prefixed model routes. The focused route health check with token cap `16` returned HTTP 2xx for both active model tiers, but pilot-003 still failed in the full patch-generation request path after the route fix. The Codex CLI inner patch-generation harness is now implemented, reviewed with `no_issues`, and integrated. The task-agnostic Click specialist context pack and no-model injection evidence are now generated, reviewed with `no_issues`, and integrated. A no-secret preflight is recorded for a possible single `pilot_004` cheap Click-specialist primary attempt through the reviewed Codex CLI harness, but no execution-start decision has been recorded and no further ACUT attempt is authorized yet.
 
 ## Codex CLI Harness Handoff
 
@@ -142,6 +142,7 @@ No open patch-command blocker remains for the reviewed hand-written command path
 - pilot_003_decision: start exactly one primary attempt: ACUT `cheap-generic-swe`, task `click__rbench__003`, attempt `1`, run id `pilot_003__cheap-generic-swe__click__rbench__003__attempt1`; projected cost USD `3.00`, projected cumulative USD `9.0008`, below soft stop and hard cap. This is not a retry of `pilot_001` or `pilot_002`.
 - pilot_003_outcome: integrated and reviewed; adapter event `command_failed`, estimated cost USD `3.00`, cumulative estimated cost USD `9.0008`, no patch, no verifier run, no retry, and redacted error type `gaierror`.
 - post_route_fix_live_request_status: pilot-003 still failed with the same redacted `gaierror` class after provider-prefixed route health checks passed; next step should prepare no-secret diagnostics of the full patch-generation request path before any further model-call attempt.
+- pilot_004_preflight: recorded at `2026-04-30T09:48:23+08:00` for possible run id `pilot_004__cheap-click-specialist__click__rbench__001__attempt1`; this is a different ACUT cell from prior cheap-generic attempts, uses the reviewed Codex CLI harness, and uses the reviewed Click specialist context pack. `BARCAROLLE_LLM_API_KEY` and `BARCAROLLE_LLM_BASE_URL` were present without recording values; `experiments/core_narrative/results/cost_ledger.jsonl` exists and is writable; ledger currently has `6` records and cumulative estimated cost USD `9.0008`; projected additional cost is USD `3.00`; projected cumulative estimated cost is USD `12.0008`, below the USD `240` soft stop and USD `300` hard cap. This preflight does not authorize execution or any model call.
 - resume_entry: On the next step, read this coordinator and the latest relevant worker `process.md` files. Prepare no-secret diagnostics for the repeated live-request `gaierror` after the provider-prefixed route fix, or record why user input is required. Do not start broad ACUT execution, retries, second attempts, specialist ACUT runs, any further pilot attempt, or any large batch. Do not inspect `cli.log`.
 
 ## Execution Start Preflight
@@ -346,7 +347,7 @@ No open patch-command blocker remains for the reviewed hand-written command path
 - deferred_acuts: `higher-budget-repo-depth`, `retrieval-history-augmented`, `minimal-context-baseline`
 - broad_execution_started: false
 - run_manifest: `experiments/core_narrative/configs/core_subset_run_manifest.yaml`
-- next_allowed_step: prepare a no-secret execution preflight or explicit decision record for at most one possible next bounded attempt through the reviewed Codex CLI harness and reviewed Click specialist context pack. Do not start any ACUT model call, retry, second attempt, specialist run, broad execution, or large batch without a separate explicit coordinator execution-start decision.
+- next_allowed_step: decide whether to record a separate explicit execution-start decision and dispatch at most one bounded worker for `pilot_004__cheap-click-specialist__click__rbench__001__attempt1`, or defer with reason. Do not start any ACUT model call, retry, second attempt, broad execution, or large batch without that separate explicit coordinator execution-start decision.
 
 ## Acceptance Gate
 
@@ -357,4 +358,4 @@ No open patch-command blocker remains for the reviewed hand-written command path
 
 ## Next Heartbeat Action
 
-Read this coordinator and the latest relevant worker `process.md` files; do not inspect `cli.log`. Prepare a no-secret preflight or explicit decision record for at most one possible next bounded attempt through the reviewed Codex CLI harness and reviewed Click specialist context pack. Confirm required env presence without values, writable ledger, reviewed command template, active slice, and projected spend before any later execution-start decision. Do not start broad ACUT execution, retries, second attempts, specialist ACUT runs, any further pilot attempt, live BARCAROLLE model call, or any large batch unless a separate explicit coordinator execution-start decision is recorded first.
+Read this coordinator and the latest relevant worker `process.md` files; do not inspect `cli.log`. Current preflight candidate is exactly one possible bounded worker for `pilot_004__cheap-click-specialist__click__rbench__001__attempt1` through the reviewed Codex CLI harness and reviewed Click specialist context pack. Decide whether to record a separate explicit execution-start decision and dispatch that one worker, or defer with reason. Do not start broad ACUT execution, retries, second attempts, any additional specialist ACUT run, any further pilot attempt, live BARCAROLLE model call, or any large batch unless that separate explicit coordinator execution-start decision is recorded first.
