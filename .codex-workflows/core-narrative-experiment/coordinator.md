@@ -1,7 +1,7 @@
 # Core Narrative Experiment Coordinator
 
-status: pilot_005_preflight_recorded_awaiting_start_decision
-updated: 2026-04-30T14:04:36+08:00
+status: pilot_005_worker_running
+updated: 2026-04-30T14:16:36+08:00
 today_stop_state: 2026-04-28_stop_policy_expired
 phase: Phase 0 - Experiment Bootstrap
 base_commit: 47046e7754d2402b7177a4b80f631ab6b0bcd97c
@@ -55,6 +55,7 @@ Execute `docs/experiments/core-narrative-experiment-plan.md` with tmux-managed C
 | pilot-003-reviewer | Phase 3 bounded execution review | delivered; no_issues; worker commit `b6d4693`, integrated as `22cd6a1` | exited | codex/core-exp-pilot-003-reviewer | /Users/chenmohan/gits/barcarolle-wt-pilot-003-reviewer | `.codex-workflows/core-narrative-experiment/reviews/pilot-003-review.md`, `.codex-workflows/core-narrative-experiment/workers/pilot-003-reviewer/**` |
 | pilot-004-execution | Phase 3 bounded execution | delivered and reviewed; worker commit `7e224ba`, integrated as `efd7e6c`; exactly one live adapter attempt, one ledger append, final normalized status `infra_failed`, no retry/second attempt/broad execution | exited | codex/core-exp-pilot-004-execution | /Users/chenmohan/gits/barcarolle-wt-pilot-004-execution | `experiments/core_narrative/results/cost_ledger.jsonl`, `experiments/core_narrative/results/raw/pilot_004__cheap-click-specialist__click__rbench__001__attempt1/**`, `experiments/core_narrative/results/normalized/pilot_004__cheap-click-specialist__click__rbench__001__attempt1.json`, `.codex-workflows/core-narrative-experiment/workers/pilot-004-execution/**` |
 | pilot-004-reviewer | Phase 3 bounded execution review | delivered; no_issues; worker commit `ddfcd0c`, integrated as `cfd9f51` | exited | codex/core-exp-pilot-004-reviewer | /Users/chenmohan/gits/barcarolle-wt-pilot-004-reviewer | `.codex-workflows/core-narrative-experiment/reviews/pilot-004-review.md`, `.codex-workflows/core-narrative-experiment/workers/pilot-004-reviewer/**` |
+| pilot-005-execution | Phase 3 bounded recovery execution | running; exactly one authorized recovery replacement primary attempt after pilot 004 infra failure | bcx-pilot-005-execution | codex/core-exp-pilot-005-execution | /Users/chenmohan/gits/barcarolle-wt-pilot-005-execution | `experiments/core_narrative/results/cost_ledger.jsonl`, `experiments/core_narrative/results/raw/pilot_005__cheap-click-specialist__click__rbench__001__attempt1/**`, `experiments/core_narrative/results/normalized/pilot_005__cheap-click-specialist__click__rbench__001__attempt1.json`, `.codex-workflows/core-narrative-experiment/workers/pilot-005-execution/**` |
 | acut-adapter-empty-patch-gate | Phase 3 harness hardening | implemented locally; no-model scratch smoke passed; no live BARCAROLLE model call and no ACUT attempt started | n/a | codex/core-narrative-experiment | /Users/chenmohan/gits/barcarolle | `experiments/core_narrative/tools/acut_patch_adapter.py`, `experiments/core_narrative/tools/test_acut_patch_adapter.py`, `experiments/core_narrative/reports/acut_adapter_empty_patch_gate.md` |
 | empty-patch-gate-reviewer | Phase 3 harness hardening review | delivered; issues_found; worker commit `0752e32`, integrated as `d71c8d9` | exited | codex/core-exp-empty-patch-gate-reviewer | /Users/chenmohan/gits/barcarolle-wt-empty-patch-gate-reviewer | `.codex-workflows/core-narrative-experiment/reviews/empty-patch-gate-review.md`, `.codex-workflows/core-narrative-experiment/workers/empty-patch-gate-reviewer/**` |
 | empty-patch-gate-r1 | Phase 3 harness hardening revision | delivered; worker implementation commit `ead03e4`, handoff commit `b505bc4`, integrated as `8c2d74a` | exited | codex/core-exp-empty-patch-gate-r1 | /Users/chenmohan/gits/barcarolle-wt-empty-patch-gate-r1 | `experiments/core_narrative/tools/acut_patch_adapter.py`, `experiments/core_narrative/tools/test_acut_patch_adapter.py`, `experiments/core_narrative/reports/acut_adapter_empty_patch_gate.md`, `.codex-workflows/core-narrative-experiment/workers/empty-patch-gate-r1/**` |
@@ -66,7 +67,9 @@ Execute `docs/experiments/core-narrative-experiment-plan.md` with tmux-managed C
 
 ## Active Tmux Sessions
 
-No active core narrative experiment tmux sessions. Unrelated tmux sessions are ignored.
+- `bcx-pilot-005-execution`: running exactly one authorized recovery replacement primary attempt for `pilot_005__cheap-click-specialist__click__rbench__001__attempt1`.
+
+Unrelated tmux sessions are ignored.
 
 ## Decisions
 
@@ -161,7 +164,8 @@ No open patch-command blocker remains for the reviewed hand-written command path
 - empty_patch_gate_integrated_state: The reviewed harness gate is now integrated. Exit-0 empty-diff runs classify as `no_patch_generated` / normalized `infra_failed`; unsafe patch rejection remains `unsafe_patch_rejected` / `command_completed_unsafe_patch_rejected` without `no_patch_generated` metadata. Verification after integration passed with no-model tests and static checks.
 - pilot_005_preflight: recorded at `2026-04-30T14:04:36+08:00` for one possible bounded recovery replacement of the infra-failed pilot 004 path: run id `pilot_005__cheap-click-specialist__click__rbench__001__attempt1`, ACUT `cheap-click-specialist`, task `click__rbench__001`, attempt `1`, through the reviewed Codex CLI harness, reviewed Click specialist context pack, and reviewed empty-patch gate. This is a preflight only and does not authorize execution, a retry, a second attempt, a live BARCAROLLE model call, broad execution, an additional specialist run, or a large batch.
 - pilot_005_preflight_checks: `BARCAROLLE_LLM_API_KEY` and `BARCAROLLE_LLM_BASE_URL` are present without inspecting or recording values; `experiments/core_narrative/results/cost_ledger.jsonl` exists and is writable; ledger has `7` records and cumulative estimated cost USD `12.0008`; projected additional cost is USD `3.00`; projected cumulative estimated cost is USD `15.0008`, below the USD `240` soft stop and USD `300` hard cap. Candidate command paths and task/ACUT/context-pack inputs are present.
-- resume_entry: On the next step, read this coordinator and latest relevant worker `process.md` files. Decide whether to record a separate explicit execution-start decision for the single preflighted pilot 005 candidate, or defer with reason. Do not start broad ACUT execution, retries, second attempts, additional specialist runs, any further pilot attempt, live BARCAROLLE model call, or any large batch without a new explicit coordinator decision. Do not inspect `cli.log`.
+- pilot_005_decision: explicit execution start recorded at `2026-04-30T14:16:36+08:00` for exactly one recovery replacement primary attempt: run id `pilot_005__cheap-click-specialist__click__rbench__001__attempt1`, ACUT `cheap-click-specialist`, task `click__rbench__001`, attempt `1`, through `acut_patch_adapter.py` plus reviewed `codex_cli_patch_command.py`, reviewed Click specialist context pack, and reviewed empty-patch gate. Projected cost USD `3.00`, projected cumulative estimated cost USD `15.0008`, below soft stop and hard cap. This authorizes only this one run id and does not authorize broad execution, retries beyond this recovery replacement, second attempts, additional specialist runs, further pilot attempts, or large batches.
+- resume_entry: On the next step, read this coordinator and latest relevant worker `process.md` files, especially `pilot-005-execution/process.md`. If delivered, start focused result review before integration or any further execution decision; if blocked, record whether user input is required; if still working, update coordinator only if needed. Do not inspect `cli.log`.
 
 ## Execution Start Preflight
 

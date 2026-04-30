@@ -1,5 +1,5 @@
 id: core_2x2_pilot_budget_constrained_v2
-status: pilot_005_preflight_recorded_awaiting_start_decision
+status: pilot_005_worker_running
 prepared_at: "2026-04-28T15:13:51+08:00"
 redesigned_at: "2026-04-29T11:20:00+08:00"
 owner: coordinator
@@ -569,7 +569,7 @@ pilot_slice:
     additional_specialist_acut_run_started: false
     large_batch_started: false
   pilot_005_preflight:
-    status: preflight_recorded_awaiting_start_decision
+    status: explicit_start_recorded_worker_running
     recorded_at: "2026-04-30T14:04:36+08:00"
     run_id: pilot_005__cheap-click-specialist__click__rbench__001__attempt1
     acut_id: cheap-click-specialist
@@ -581,14 +581,16 @@ pilot_slice:
     harness: reviewed_codex_cli_patch_command
     specialist_context_pack: reviewed_no_issues_integrated
     empty_patch_gate: revision_1_reviewed_integrated
-    execution_start_decision_recorded: false
-    execution_authorized: false
+    execution_start_decision_recorded: true
+    execution_start_recorded_at: "2026-04-30T14:16:36+08:00"
+    execution_authorized: true
+    execution_authorized_scope: this_single_recovery_replacement_run_id_only
     broad_execution: false
-    retry_authorized: false
+    retry_authorized: this_recovery_replacement_only
     second_attempt_authorized: false
     additional_specialist_acut_run_authorized: false
     large_batch_authorized: false
-    live_model_call_authorized: false
+    live_model_call_authorized: true
     projected_cost_usd: 3.00
     current_ledger_records: 7
     current_cumulative_estimated_cost_usd: 12.0008
@@ -614,8 +616,14 @@ pilot_slice:
       task_manifest_present: true
       acut_manifest_present: true
       context_pack_dir_present: true
+    worker:
+      name: pilot-005-execution
+      session: bcx-pilot-005-execution
+      branch: codex/core-exp-pilot-005-execution
+      worktree: /Users/chenmohan/gits/barcarolle-wt-pilot-005-execution
+      status: running
     model_calls_started_by_preflight: false
-    worker_started_by_preflight: false
+    worker_started_by_preflight: true
     record_credential_values: false
     record_bearer_tokens: false
     record_resolved_secrets: false
