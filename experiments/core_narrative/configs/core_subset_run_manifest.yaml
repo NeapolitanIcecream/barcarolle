@@ -89,6 +89,23 @@ active_default_slice:
     no_hidden_human_hints: true
     no_post_hoc_tuning: true
     no_undeclared_history_mining: true
+  specialist_context_pack:
+    status: generated_review_pending
+    pack_id: click_specialist_context_pack_v1
+    marker: CLICK_SPECIALIST_CONTEXT_PACK_V1
+    pack_hash: dfb271ad174531a7dd2f00da4cd0486193d87ce33349380982150889ecf84e48
+    manifest_path: experiments/core_narrative/context_packs/click_specialist/manifest.json
+    context_prompt_path: experiments/core_narrative/context_packs/click_specialist/context_prompt.md
+    locked_click_commit: 8bd8b4a074c55c03b6eb5666edc44a9c43df38a2
+    injected_acuts:
+      - frontier-click-specialist
+      - cheap-click-specialist
+    excluded_acuts:
+      - frontier-generic-swe
+      - cheap-generic-swe
+    task_agnostic_generation: true
+    live_model_call_made_for_generation: false
+    specialist_acut_execution_started_after_generation: false
   tasks:
     G_score: 6
     RBench: 8
