@@ -1,7 +1,7 @@
 # Process
 
-status: working
-updated: 2026-04-30T15:43:31+08:00
+status: issues_found
+updated: 2026-04-30T15:48:21+08:00
 
 ## Summary
 
@@ -25,10 +25,28 @@ contract before any integration or later execution decision.
 
 ## Current Blockers
 
-None at dispatch start.
+None.
 
 ## Handoff
 
-When complete, set `status: no_issues`, `status: issues_found`, or
-`status: blocked`, write the review artifact, and summarize findings. Do not
-inspect any `cli.log` file.
+Review artifact:
+`.codex-workflows/core-narrative-experiment/reviews/codex-cli-failure-capture-review.md`
+
+Focused no-model/static review completed with `issues_found` for delivery commit
+`64c5d9b`.
+
+The implementation adds useful structured `failure_capture` and
+`workspace_patch` metadata and preserves the outer adapter contract, but closure
+is required before a later live attempt: hostname redaction is incomplete for
+hostname-shaped values outside the hard-coded suffix list, and no-model tests do
+not cover timeout, unsafe patch content, or the contents of the redacted
+stdout/stderr artifacts.
+
+Verification run: `python3 experiments/core_narrative/tools/test_codex_cli_patch_command.py`,
+`python3 experiments/core_narrative/tools/test_acut_patch_adapter.py`, and
+`python3 -m py_compile experiments/core_narrative/tools/codex_cli_patch_command.py experiments/core_narrative/tools/test_codex_cli_patch_command.py`.
+`git diff --check` passed.
+
+No `cli.log` file was inspected. No ACUT attempt, live BARCAROLLE model call,
+retry, second attempt, additional specialist ACUT run, broad execution, further
+pilot attempt, or large model-call batch was started.
