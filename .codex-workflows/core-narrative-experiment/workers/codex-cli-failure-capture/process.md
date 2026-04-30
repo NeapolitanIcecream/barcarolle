@@ -1,7 +1,7 @@
 # Process
 
-status: delivered
-updated: 2026-04-30T15:36:05+08:00
+status: revising
+updated: 2026-04-30T15:57:36+08:00
 
 ## Summary
 
@@ -30,6 +30,25 @@ attempt, or large model-call batch.
 ## Current Blockers
 
 None.
+
+## Revision 1
+
+Focused reviewer `codex-cli-failure-capture-reviewer` reported
+`issues_found` in commit `a07c65c`.
+
+Revision 1 scope is no-model only:
+
+- broaden hostname redaction beyond the narrow suffix list so the stated
+  `hostnames_redacted: true` policy is accurate for structured failure capture,
+  stdout/stderr artifacts, and bounded tail snippets
+- add no-model regression coverage for timeout and unsafe patch content
+- assert the contents of redacted stdout/stderr artifacts do not contain
+  credential values, bearer-token-shaped strings, full URLs, hostnames, or IP
+  address-shaped strings
+
+No ACUT attempt, live BARCAROLLE model call, retry, second attempt, additional
+specialist ACUT run, broad execution, further pilot attempt, or large
+model-call batch is authorized.
 
 ## Changed Files
 
