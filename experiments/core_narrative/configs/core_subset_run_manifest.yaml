@@ -1,5 +1,5 @@
 id: core_2x2_pilot_budget_constrained_v2
-status: pilot_005_integrated_next_decision_ready
+status: pilot_005_integrated_no_model_triage_pending
 prepared_at: "2026-04-28T15:13:51+08:00"
 redesigned_at: "2026-04-29T11:20:00+08:00"
 owner: coordinator
@@ -121,7 +121,7 @@ active_default_slice:
   total_primary_patch_generation_attempts: 80
 
 pilot_slice:
-  status: empty_patch_gate_no_model_smoke_passed
+  status: pilot_005_integrated_no_model_triage_pending
   default_before_full_core: true
   acuts:
     - frontier-generic-swe
@@ -569,7 +569,7 @@ pilot_slice:
     additional_specialist_acut_run_started: false
     large_batch_started: false
   pilot_005_preflight:
-    status: explicit_start_recorded_worker_running
+    status: delivered_reviewed_integrated_no_model_triage_pending
     recorded_at: "2026-04-30T14:04:36+08:00"
     run_id: pilot_005__cheap-click-specialist__click__rbench__001__attempt1
     acut_id: cheap-click-specialist
@@ -591,6 +591,7 @@ pilot_slice:
     additional_specialist_acut_run_authorized: false
     large_batch_authorized: false
     live_model_call_authorized: true
+    further_live_model_call_authorized: false
     projected_cost_usd: 3.00
     current_ledger_records: 7
     current_cumulative_estimated_cost_usd: 12.0008
@@ -652,6 +653,23 @@ pilot_slice:
       worktree: /Users/chenmohan/gits/barcarolle-wt-pilot-005-reviewer
       worker_commit: ff810e5
       integrated_as: 5440fc8
+    next_decision:
+      status: no_model_triage_required_before_more_spend
+      reason: pilot_005_ended_command_failed_infra_failed_with_empty_patch_after_reviewed_harness_and_context_pack
+      authorized_next_step: no_model_failure_triage_only
+      triage_scope:
+        - reviewed_pilot_004_artifacts
+        - reviewed_pilot_005_artifacts
+        - worker_process_md_files
+      excluded_inputs:
+        - cli.log
+      broad_execution_authorized: false
+      retries_authorized: false
+      second_attempts_authorized: false
+      additional_specialist_acut_runs_authorized: false
+      further_pilot_attempts_authorized: false
+      live_barcarolle_model_calls_authorized: false
+      large_batch_authorized: false
     model_calls_allowed: false
     model_calls_allowed_scope: none_until_next_explicit_coordinator_decision
     model_calls_started_by_preflight: false
