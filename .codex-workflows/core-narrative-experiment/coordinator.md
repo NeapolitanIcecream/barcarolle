@@ -1,7 +1,7 @@
 # Core Narrative Experiment Coordinator
 
-status: click_specialist_context_pack_worker_running
-updated: 2026-04-30T09:01:11+08:00
+status: click_specialist_context_pack_review_running
+updated: 2026-04-30T09:24:46+08:00
 today_stop_state: 2026-04-28_stop_policy_expired
 phase: Phase 0 - Experiment Bootstrap
 base_commit: 47046e7754d2402b7177a4b80f631ab6b0bcd97c
@@ -55,11 +55,12 @@ Execute `docs/experiments/core-narrative-experiment-plan.md` with tmux-managed C
 | pilot-003-reviewer | Phase 3 bounded execution review | delivered; no_issues; worker commit `b6d4693`, integrated as `22cd6a1` | exited | codex/core-exp-pilot-003-reviewer | /Users/chenmohan/gits/barcarolle-wt-pilot-003-reviewer | `.codex-workflows/core-narrative-experiment/reviews/pilot-003-review.md`, `.codex-workflows/core-narrative-experiment/workers/pilot-003-reviewer/**` |
 | codex-cli-harness-adapter | Phase 3 harness replacement | delivered and reviewed; worker commit `c6cdc45`, integrated as `62e01ce`; no-model smoke only, no live BARCAROLLE call | exited | codex/core-exp-codex-cli-harness-adapter | /Users/chenmohan/gits/barcarolle-wt-codex-cli-harness-adapter | `experiments/core_narrative/tools/**`, `experiments/core_narrative/reports/codex_cli_harness_adapter.md`, `experiments/core_narrative/results/normalized/codex_cli_harness_adapter*.json`, `experiments/core_narrative/results/raw/codex_cli_harness_adapter*/**`, `.codex-workflows/core-narrative-experiment/workers/codex-cli-harness-adapter/**` |
 | codex-cli-harness-reviewer | Phase 3 harness replacement review | delivered; no_issues; worker commit `6760c0a`, integrated as `11ad0a7` | exited | codex/core-exp-codex-cli-harness-reviewer | /Users/chenmohan/gits/barcarolle-wt-codex-cli-harness-reviewer | `.codex-workflows/core-narrative-experiment/reviews/codex-cli-harness-adapter-review.md`, `.codex-workflows/core-narrative-experiment/workers/codex-cli-harness-reviewer/**` |
-| click-specialist-context-pack | Phase 3 specialist treatment preflight | working; worker start commit `0a1f1fb` | bcx-click-specialist-context-pack | codex/core-exp-click-specialist-context-pack | /Users/chenmohan/gits/barcarolle-wt-click-specialist-context-pack | `experiments/core_narrative/context_packs/click_specialist/**`, `experiments/core_narrative/tools/**` for context-pack generation/loading/injection, specialist ACUT manifests, context-pack status in run manifest, `experiments/core_narrative/reports/click_specialist_context_pack.md`, `experiments/core_narrative/results/normalized/click_specialist_context_pack*.json`, `experiments/core_narrative/results/raw/click_specialist_context_pack*/**`, worker process files |
+| click-specialist-context-pack | Phase 3 specialist treatment preflight | delivered; worker commit `d21bfc4`; focused review running | exited | codex/core-exp-click-specialist-context-pack | /Users/chenmohan/gits/barcarolle-wt-click-specialist-context-pack | `experiments/core_narrative/context_packs/click_specialist/**`, `experiments/core_narrative/tools/**` for context-pack generation/loading/injection, specialist ACUT manifests, context-pack status in run manifest, `experiments/core_narrative/reports/click_specialist_context_pack.md`, `experiments/core_narrative/results/normalized/click_specialist_context_pack*.json`, `experiments/core_narrative/results/raw/click_specialist_context_pack*/**`, worker process files |
+| click-specialist-context-reviewer | Phase 3 specialist treatment review | working; reviewer start commit `519f0bf` | bcx-click-specialist-context-reviewer | codex/core-exp-click-specialist-context-reviewer | /Users/chenmohan/gits/barcarolle-wt-click-specialist-context-reviewer | `.codex-workflows/core-narrative-experiment/reviews/click-specialist-context-pack-review.md`, `.codex-workflows/core-narrative-experiment/workers/click-specialist-context-reviewer/**` |
 
 ## Active Tmux Sessions
 
-- `bcx-click-specialist-context-pack`: focused Click specialist context pack worker. No ACUT attempt, retry, second attempt, specialist ACUT run, broad execution, live model-call batch, or broader pilot execution is authorized.
+- `bcx-click-specialist-context-reviewer`: focused review of delivered Click specialist context pack commit `d21bfc4`. No ACUT attempt, retry, second attempt, specialist ACUT run, broad execution, live model-call batch, or broader pilot execution is authorized.
 
 ## Decisions
 
@@ -315,6 +316,8 @@ No open patch-command blocker remains for the reviewed hand-written command path
 - Focused `codex-cli-harness-reviewer` delivered `no_issues` in commit `6760c0a`; integrated the harness adapter delivery and review artifact as merge commits `62e01ce` and `11ad0a7`.
 - The next allowed coordination step is a no-secret preflight/decision record for whether to authorize exactly one bounded pilot attempt through the reviewed Codex CLI harness. No attempt, retry, second attempt, specialist run, broad execution, or large batch has been authorized.
 - Started focused `click-specialist-context-pack` worker at start commit `0a1f1fb` to generate task-agnostic Click specialist repo/docs/symbol/convention/retrieval context artifacts and no-model prompt/context injection evidence before any specialist ACUT run. No new ACUT attempt, live model call, specialist run, retry, second attempt, broad execution, or large batch was started.
+- `click-specialist-context-pack` delivered worker commit `d21bfc4` with deterministic context-pack artifacts and no-model four-ACUT injection smoke evidence; it reported no live BARCAROLLE model call and no main cost ledger append.
+- Started focused `click-specialist-context-reviewer` at start commit `519f0bf` before any integration or specialist execution decision.
 
 ## Pre-Run Gates
 
@@ -341,7 +344,7 @@ No open patch-command blocker remains for the reviewed hand-written command path
 - deferred_acuts: `higher-budget-repo-depth`, `retrieval-history-augmented`, `minimal-context-baseline`
 - broad_execution_started: false
 - run_manifest: `experiments/core_narrative/configs/core_subset_run_manifest.yaml`
-- next_allowed_step: monitor `click-specialist-context-pack` via its `process.md`; if delivered, start a focused reviewer before integration or any specialist execution decision. Do not start any ACUT model call, retry, second attempt, specialist run, broad execution, or large batch while the context-pack worker/review is open.
+- next_allowed_step: monitor `click-specialist-context-reviewer` via its `process.md`; if delivered with `no_issues`, integrate the reviewed context-pack delivery and review artifact before any later execution decision. If issues are found, start a focused revision. Do not start any ACUT model call, retry, second attempt, specialist run, broad execution, or large batch while the context-pack review is open.
 
 ## Acceptance Gate
 
@@ -352,4 +355,4 @@ No open patch-command blocker remains for the reviewed hand-written command path
 
 ## Next Heartbeat Action
 
-Read this coordinator and `.codex-workflows/core-narrative-experiment/workers/click-specialist-context-pack/process.md`; do not inspect `cli.log`. If the worker is delivered, start a focused reviewer before integration or any specialist execution decision. If it is blocked, record whether user input is required. Do not start broad ACUT execution, retries, second attempts, specialist ACUT runs, any further pilot attempt, live BARCAROLLE model call, or any large batch while this worker/review is open.
+Read this coordinator and `.codex-workflows/core-narrative-experiment/workers/click-specialist-context-reviewer/process.md`; do not inspect `cli.log`. If the reviewer is delivered with `no_issues`, integrate the reviewed context-pack delivery and review artifact before any later execution decision. If it found issues, start a focused revision; if blocked, record whether user input is required. Do not start broad ACUT execution, retries, second attempts, specialist ACUT runs, any further pilot attempt, live BARCAROLLE model call, or any large batch while this review is open.

@@ -1,5 +1,5 @@
 id: core_2x2_pilot_budget_constrained_v2
-status: click_specialist_context_pack_worker_running
+status: click_specialist_context_pack_review_running
 prepared_at: "2026-04-28T15:13:51+08:00"
 redesigned_at: "2026-04-29T11:20:00+08:00"
 owner: coordinator
@@ -99,7 +99,7 @@ active_default_slice:
   total_primary_patch_generation_attempts: 80
 
 pilot_slice:
-  status: click_specialist_context_pack_worker_running
+  status: click_specialist_context_pack_review_running
   default_before_full_core: true
   acuts:
     - frontier-generic-swe
@@ -353,12 +353,20 @@ pilot_slice:
       large_batch_started: false
     required_before_next_model_call: explicit_one_attempt_start_decision_after_no_secret_preflight
   click_specialist_context_pack:
-    status: worker_running
+    status: review_running
     worker: click-specialist-context-pack
-    session: bcx-click-specialist-context-pack
+    session: exited
     branch: codex/core-exp-click-specialist-context-pack
     worktree: /Users/chenmohan/gits/barcarolle-wt-click-specialist-context-pack
     start_commit: 0a1f1fb
+    worker_commit: d21bfc4
+    reviewer:
+      worker: click-specialist-context-reviewer
+      session: bcx-click-specialist-context-reviewer
+      branch: codex/core-exp-click-specialist-context-reviewer
+      worktree: /Users/chenmohan/gits/barcarolle-wt-click-specialist-context-reviewer
+      start_commit: 519f0bf
+      status: working
     required_before_specialist_acut_run: reviewed_no_issues_and_integrated
     expected_artifacts:
       context_pack_dir: experiments/core_narrative/context_packs/click_specialist
@@ -412,6 +420,6 @@ locked_inputs:
     locked_task_ids_source: experiments/core_narrative/configs/general_benchmark.yaml
 
 next_no_model_preflights:
-  - complete and review task-agnostic Click specialist context pack generation and no-model injection evidence before any specialist ACUT live run
+  - complete focused review of task-agnostic Click specialist context pack generation and no-model injection evidence before any specialist ACUT live run
   - no-secret execution preflight for exactly one possible next bounded attempt through the reviewed Codex CLI harness before any model call
   - do not start broad ACUT execution or model calls before the coordinator records a reviewed execution start
