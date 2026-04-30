@@ -1,5 +1,5 @@
 id: core_2x2_pilot_budget_constrained_v2
-status: codex_cli_failure_capture_r1_review_running
+status: codex_cli_failure_capture_integrated_next_preflight_ready
 prepared_at: "2026-04-28T15:13:51+08:00"
 redesigned_at: "2026-04-29T11:20:00+08:00"
 owner: coordinator
@@ -121,7 +121,7 @@ active_default_slice:
   total_primary_patch_generation_attempts: 80
 
 pilot_slice:
-  status: codex_cli_failure_capture_r1_review_running
+  status: codex_cli_failure_capture_integrated_next_preflight_ready
   default_before_full_core: true
   acuts:
     - frontier-generic-swe
@@ -654,7 +654,7 @@ pilot_slice:
       worker_commit: ff810e5
       integrated_as: 5440fc8
     next_decision:
-      status: codex_cli_failure_capture_r1_review_running
+      status: codex_cli_failure_capture_integrated_next_preflight_ready
       reason: pilot_005_ended_command_failed_infra_failed_with_empty_patch_after_reviewed_harness_and_context_pack
       triage_mode: coordinator_local
       started_new_worker: true
@@ -666,6 +666,8 @@ pilot_slice:
         start_commit: e88869c
         delivered_commit: 64c5d9b
         delivery_status: delivered
+        revision_1_delivered_commit: 5429338
+        integrated_as: 7be798c
         model_calls_authorized: false
         live_barcarolle_model_calls_authorized: false
       review:
@@ -676,6 +678,7 @@ pilot_slice:
         worktree: /Users/chenmohan/gits/barcarolle-wt-codex-cli-failure-capture-reviewer
         start_commit: 5a19749
         worker_commit: a07c65c
+        integrated_as: 3dff487
         model_calls_authorized: false
         live_barcarolle_model_calls_authorized: false
         required_closure:
@@ -684,7 +687,7 @@ pilot_slice:
           - add_no_model_unsafe_patch_content_failure_capture_test
           - assert_redacted_stdout_stderr_artifact_contents
       revision_1:
-        status: delivered_re_review_running
+        status: delivered_reviewed_integrated
         worker: codex-cli-failure-capture
         session: exited
         branch: codex/core-exp-codex-cli-failure-capture
@@ -692,18 +695,28 @@ pilot_slice:
         start_commit: fceae58
         delivered_commit: 5429338
         delivery_status: delivered
+        integrated_as: 7be798c
         model_calls_authorized: false
         live_barcarolle_model_calls_authorized: false
       re_review:
-        status: running
+        status: no_issues_integrated
         worker: codex-cli-failure-capture-r1-reviewer
-        session: bcx-codex-cli-failure-capture-r1-reviewer
+        session: exited
         branch: codex/core-exp-codex-cli-failure-capture-r1-reviewer
         worktree: /Users/chenmohan/gits/barcarolle-wt-codex-cli-failure-capture-r1-reviewer
         start_commit: f86e4ee
+        worker_commit: f2595a9
+        integrated_as: 8424e11
         model_calls_authorized: false
         live_barcarolle_model_calls_authorized: false
-      authorized_next_step: no_model_harness_failure_capture_diagnostic_or_repair_only
+      post_integration:
+        no_model_tests_passed:
+          - python3 experiments/core_narrative/tools/test_codex_cli_patch_command.py
+          - python3 experiments/core_narrative/tools/test_acut_patch_adapter.py
+          - python3 -m py_compile experiments/core_narrative/tools/codex_cli_patch_command.py experiments/core_narrative/tools/test_codex_cli_patch_command.py
+        cost_ledger_appended: false
+        live_barcarolle_model_call_started: false
+      authorized_next_step: no_secret_next_attempt_preflight_only
       triage_scope:
         - reviewed_pilot_004_artifacts
         - reviewed_pilot_005_artifacts
@@ -720,7 +733,7 @@ pilot_slice:
         normalized_status: infra_failed
         verifier_run: false
       next_required_before_more_spend:
-        - no_model_harness_diagnostic_or_repair_for_structured_codex_cli_failure_capture
+        - no_secret_next_attempt_preflight
         - coordinator_records_new_explicit_decision
       broad_execution_authorized: false
       retries_authorized: false
