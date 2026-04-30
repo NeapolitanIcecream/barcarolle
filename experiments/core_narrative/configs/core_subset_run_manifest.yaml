@@ -1,5 +1,5 @@
 id: core_2x2_pilot_budget_constrained_v2
-status: pilot_005_integrated_no_model_triage_pending
+status: pilot_005_coordinator_local_triage_recorded
 prepared_at: "2026-04-28T15:13:51+08:00"
 redesigned_at: "2026-04-29T11:20:00+08:00"
 owner: coordinator
@@ -121,7 +121,7 @@ active_default_slice:
   total_primary_patch_generation_attempts: 80
 
 pilot_slice:
-  status: pilot_005_integrated_no_model_triage_pending
+  status: pilot_005_coordinator_local_triage_recorded
   default_before_full_core: true
   acuts:
     - frontier-generic-swe
@@ -654,15 +654,29 @@ pilot_slice:
       worker_commit: ff810e5
       integrated_as: 5440fc8
     next_decision:
-      status: no_model_triage_required_before_more_spend
+      status: coordinator_local_triage_recorded
       reason: pilot_005_ended_command_failed_infra_failed_with_empty_patch_after_reviewed_harness_and_context_pack
-      authorized_next_step: no_model_failure_triage_only
+      triage_mode: coordinator_local
+      started_new_worker: false
+      authorized_next_step: no_model_harness_failure_capture_diagnostic_or_repair_only
       triage_scope:
         - reviewed_pilot_004_artifacts
         - reviewed_pilot_005_artifacts
         - worker_process_md_files
       excluded_inputs:
         - cli.log
+      interim_classification: harness_or_transport_inner_command_failure_before_patch_available
+      common_observations:
+        no_model_dry_run_completed: true
+        specialist_context_injected: true
+        live_model_call_attempted_once_per_run: true
+        inner_codex_cli_status: codex_exec_failed
+        patch_artifact_empty: true
+        normalized_status: infra_failed
+        verifier_run: false
+      next_required_before_more_spend:
+        - no_model_harness_diagnostic_or_repair_for_structured_codex_cli_failure_capture
+        - coordinator_records_new_explicit_decision
       broad_execution_authorized: false
       retries_authorized: false
       second_attempts_authorized: false

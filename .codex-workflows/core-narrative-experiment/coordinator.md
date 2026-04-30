@@ -1,7 +1,7 @@
 # Core Narrative Experiment Coordinator
 
-status: pilot_005_integrated_no_model_triage_pending
-updated: 2026-04-30T15:02:36+08:00
+status: pilot_005_coordinator_local_triage_recorded
+updated: 2026-04-30T15:15:36+08:00
 today_stop_state: 2026-04-28_stop_policy_expired
 phase: Phase 0 - Experiment Bootstrap
 base_commit: 47046e7754d2402b7177a4b80f631ab6b0bcd97c
@@ -167,8 +167,11 @@ No open patch-command blocker remains for the reviewed hand-written command path
 - pilot_005_outcome: delivered at `2026-04-30T14:28:56+08:00` and integrated as `03e096f`; exactly one live adapter attempt, status `command_failed`, normalized status `infra_failed`, one cost ledger append, cumulative estimated cost USD `15.0008`, empty patch artifact, no verifier run, no retry beyond this recovery replacement, no second attempt, no broad execution, no additional specialist run, no further pilot attempt, and no large batch. Worker could not create a Git commit because its Git common directory was not writable from the worker sandbox; coordinator integrated the reviewed owned artifacts directly.
 - pilot_005_review: focused reviewer `pilot-005-reviewer` delivered `no_issues` in commit `ff810e5`, integrated as `5440fc8`. The review found the delivery valid for the single bounded recovery replacement and found no secret/endpoint recording issue.
 - pilot_005_next_decision: Further live ACUT attempts are deferred. Before any additional spend, run or prepare a no-model failure triage over the reviewed pilot 004 and pilot 005 raw/normalized artifacts and worker `process.md` files, excluding `cli.log`, to classify the Codex CLI `command_failed` / no-patch failure mode and propose any harness, prompt, or preflight repair.
-- next_authorized_step: no-model triage/planning only; no ACUT model call, retry, second attempt, additional specialist run, further pilot attempt, broad execution, or large batch is authorized.
-- resume_entry: On the next step, read this coordinator and latest relevant worker `process.md` files. Decide whether to start a focused no-model failure-triage worker or keep the triage coordinator-local; do not start broad ACUT execution, retries, second attempts, additional specialist runs, further pilot attempts, live BARCAROLLE model calls, or large batches without a new explicit coordinator decision. Do not inspect `cli.log`.
+- pilot_005_triage_decision: Keep the immediate failure triage coordinator-local instead of starting a new worker. Rationale: the scoped evidence is small, both pilot 004 and pilot 005 are reviewed, no active worker exists, and starting another worker is unnecessary before a concrete repair hypothesis is recorded.
+- pilot_005_triage_scope_checked: Read pilot 004 and pilot 005 worker/reviewer `process.md` files plus structured raw/normalized artifacts only; `cli.log` was not read. Both runs prepared workspaces, completed no-model dry runs with specialist context enabled, attempted exactly one live model call, ended inner Codex CLI status `codex_exec_failed`, wrote zero-byte `submission.patch`, produced normalized `infra_failed`, appended exactly one ledger record, and skipped verifier execution.
+- pilot_005_triage_interim_classification: The repeated failure is not a task scoring result and not evidence against the Click-specialist treatment. It is still a harness/transport/inner-command failure before any patch is available. The next bounded step should be no-model harness diagnostics over `codex_cli_patch_command.py` failure capture and artifact preservation so future `codex_exec_failed` outcomes expose a structured non-secret failure class without relying on `cli.log`.
+- next_authorized_step: no-model harness triage/planning only; no ACUT model call, retry, second attempt, additional specialist run, further pilot attempt, broad execution, or large batch is authorized.
+- resume_entry: On the next step, read this coordinator and latest relevant worker `process.md` files. Prepare a focused no-model harness-diagnostic or repair step for Codex CLI failure capture, or record a narrower blocker if the structured artifacts are insufficient; do not start broad ACUT execution, retries, second attempts, additional specialist runs, further pilot attempts, live BARCAROLLE model calls, or large batches without a new explicit coordinator decision. Do not inspect `cli.log`.
 
 ## Execution Start Preflight
 
