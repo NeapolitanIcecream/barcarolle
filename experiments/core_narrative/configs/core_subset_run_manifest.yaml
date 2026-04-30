@@ -1,5 +1,5 @@
 id: core_2x2_pilot_budget_constrained_v2
-status: codex_cli_harness_adapter_integrated_preflight_ready
+status: click_specialist_context_pack_worker_running
 prepared_at: "2026-04-28T15:13:51+08:00"
 redesigned_at: "2026-04-29T11:20:00+08:00"
 owner: coordinator
@@ -18,7 +18,7 @@ execution_start:
   projected_cost_usd: 3.00
   broad_acut_execution_started: false
   model_calls_allowed: false
-  model_calls_allowed_scope: none_until_reviewed_codex_cli_harness_explicit_next_decision
+  model_calls_allowed_scope: none_until_click_specialist_context_pack_review_and_explicit_next_decision
   required_before_start:
     - coordinator records explicit execution start
     - required LLM environment variables are present
@@ -99,7 +99,7 @@ active_default_slice:
   total_primary_patch_generation_attempts: 80
 
 pilot_slice:
-  status: codex_cli_harness_adapter_integrated_preflight_ready
+  status: click_specialist_context_pack_worker_running
   default_before_full_core: true
   acuts:
     - frontier-generic-swe
@@ -141,7 +141,7 @@ pilot_slice:
     explicit_execution_start_decision_recorded: true
     broad_acut_execution_started: false
     model_calls_allowed: false
-    model_calls_allowed_scope: none_until_reviewed_codex_cli_harness_explicit_next_decision
+    model_calls_allowed_scope: none_until_click_specialist_context_pack_review_and_explicit_next_decision
   first_execution_attempt:
     run_id: pilot_001__cheap-generic-swe__click__rbench__001__attempt1
     acut_id: cheap-generic-swe
@@ -352,6 +352,48 @@ pilot_slice:
       specialist_acut_run_started: false
       large_batch_started: false
     required_before_next_model_call: explicit_one_attempt_start_decision_after_no_secret_preflight
+  click_specialist_context_pack:
+    status: worker_running
+    worker: click-specialist-context-pack
+    session: bcx-click-specialist-context-pack
+    branch: codex/core-exp-click-specialist-context-pack
+    worktree: /Users/chenmohan/gits/barcarolle-wt-click-specialist-context-pack
+    start_commit: 0a1f1fb
+    required_before_specialist_acut_run: reviewed_no_issues_and_integrated
+    expected_artifacts:
+      context_pack_dir: experiments/core_narrative/context_packs/click_specialist
+      report: experiments/core_narrative/reports/click_specialist_context_pack.md
+      normalized_evidence_glob: experiments/core_narrative/results/normalized/click_specialist_context_pack*.json
+      raw_evidence_glob: experiments/core_narrative/results/raw/click_specialist_context_pack*/**
+    required_pack_components:
+      - precomputed_click_repo_map_v1
+      - precomputed_click_docs_map_v1
+      - precomputed_click_symbol_index_v1
+      - precomputed_click_convention_playbook_v1
+      - deterministic_click_retrieval_v1
+    required_injection_evidence:
+      specialist_acuts_include_pack:
+        - frontier-click-specialist
+        - cheap-click-specialist
+      generic_acuts_exclude_pack:
+        - frontier-generic-swe
+        - cheap-generic-swe
+      preferred_evidence_mode: no_model_smoke
+      live_smoke_allowed_only_if_needed: true
+      max_live_smoke_calls: 2
+      live_smoke_must_be_ledgered_and_capped: true
+    leakage_guards:
+      task_agnostic: true
+      no_gold_patches: true
+      no_hidden_hints: true
+      no_hidden_verifier_artifacts: true
+      no_post_hoc_tuning_from_acut_outputs: true
+      no_undeclared_history_mining: true
+      no_secret_or_endpoint_values_recorded: true
+    model_calls_allowed: false
+    broad_execution_started: false
+    specialist_acut_run_started: false
+    retry_or_second_attempt_started: false
   promotion_to_full_core:
     allowed_only_after: "pilot summary review and explicit coordinator decision"
     full_core_attempts_if_promoted: 80
@@ -370,6 +412,6 @@ locked_inputs:
     locked_task_ids_source: experiments/core_narrative/configs/general_benchmark.yaml
 
 next_no_model_preflights:
+  - complete and review task-agnostic Click specialist context pack generation and no-model injection evidence before any specialist ACUT live run
   - no-secret execution preflight for exactly one possible next bounded attempt through the reviewed Codex CLI harness before any model call
-  - generate or verify task-agnostic Click specialist context artifacts before any specialist ACUT live run if not already available
   - do not start broad ACUT execution or model calls before the coordinator records a reviewed execution start
