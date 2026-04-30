@@ -1,5 +1,5 @@
 id: core_2x2_pilot_budget_constrained_v2
-status: pilot_004_worker_running
+status: pilot_004_blocked_stale_coordinator_decision
 prepared_at: "2026-04-28T15:13:51+08:00"
 redesigned_at: "2026-04-29T11:20:00+08:00"
 owner: coordinator
@@ -18,7 +18,7 @@ execution_start:
   projected_cost_usd: 3.00
   broad_acut_execution_started: false
   model_calls_allowed: false
-  model_calls_allowed_scope: single_pilot_004_execution_worker
+  model_calls_allowed_scope: none_until_pilot_004_repair_decision
   required_before_start:
     - coordinator records explicit execution start
     - required LLM environment variables are present
@@ -121,7 +121,7 @@ active_default_slice:
   total_primary_patch_generation_attempts: 80
 
 pilot_slice:
-  status: pilot_004_worker_running
+  status: pilot_004_blocked_stale_coordinator_decision
   default_before_full_core: true
   acuts:
     - frontier-generic-swe
@@ -163,7 +163,7 @@ pilot_slice:
     explicit_execution_start_decision_recorded: true
     broad_acut_execution_started: false
     model_calls_allowed: false
-    model_calls_allowed_scope: single_pilot_004_execution_worker
+    model_calls_allowed_scope: none_until_pilot_004_repair_decision
   first_execution_attempt:
     run_id: pilot_001__cheap-generic-swe__click__rbench__001__attempt1
     acut_id: cheap-generic-swe
@@ -428,7 +428,7 @@ pilot_slice:
     specialist_acut_run_started: false
     retry_or_second_attempt_started: false
   pilot_004_preflight:
-    status: dispatched
+    status: blocked_before_attempt
     recorded_at: "2026-04-30T09:48:23+08:00"
     run_id: pilot_004__cheap-click-specialist__click__rbench__001__attempt1
     acut_id: cheap-click-specialist
@@ -442,11 +442,16 @@ pilot_slice:
     execution_start_recorded_at: "2026-04-30T10:01:56+08:00"
     worker:
       name: pilot-004-execution
-      session: bcx-pilot-004-execution
+      session: exited
       branch: codex/core-exp-pilot-004-execution
       worktree: /Users/chenmohan/gits/barcarolle-wt-pilot-004-execution
       start_commit: e7958c8
-      status: working
+      worker_commit: 7c221a3
+      status: blocked
+      blocked_reason: worker_checkout_did_not_include_explicit_start_commit_58bf5ed
+      worker_observed_coordinator_status: pilot_004_preflight_recorded_awaiting_start_decision
+      worker_observed_execution_start_decision_recorded: false
+      user_input_required: false
     broad_execution: false
     retry_of_prior_attempt: false
     second_attempt: false
@@ -476,8 +481,21 @@ pilot_slice:
       task_manifest_present: true
       acut_manifest_present: true
       context_pack_manifest_present: true
-    model_calls_allowed: true
-    model_calls_allowed_scope: single_pilot_004_execution_worker
+    worker_outcome:
+      blocked_before_live_call: true
+      live_barcarolle_model_call_attempted: false
+      adapter_command_ran: false
+      ledger_appended: false
+      raw_or_normalized_attempt_artifacts_written: false
+      verifier_run: false
+      retry_or_second_attempt_started: false
+      broad_execution_started: false
+      large_batch_started: false
+      existing_ledger_records: 6
+      cumulative_estimated_cost_usd: 9.0008
+    repair_required_before_model_call: refresh_or_recreate_single_pilot_004_worker_from_checkout_including_58bf5ed_or_later
+    model_calls_allowed: false
+    model_calls_allowed_scope: none_until_pilot_004_repair_decision
     record_credential_values: false
     record_bearer_tokens: false
     record_resolved_secrets: false
