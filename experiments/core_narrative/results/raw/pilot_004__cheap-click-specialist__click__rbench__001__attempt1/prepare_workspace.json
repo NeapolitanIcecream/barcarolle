@@ -1,0 +1,14 @@
+{
+  "base_commit": "4a7fe69f942bd02b811548ff8f02a08fff7429c1",
+  "repo_slug": "click",
+  "split": "rbench",
+  "statement_path": "experiments/core_narrative/workspaces/pilot_004__cheap-click-specialist__click__rbench__001__attempt1/.core_narrative/statement.md",
+  "status": "prepared",
+  "target_commit_absence_checked": true,
+  "task_id": "click__rbench__001",
+  "task_package_path": "experiments/core_narrative/workspaces/pilot_004__cheap-click-specialist__click__rbench__001__attempt1/.core_narrative/task.json",
+  "tool": "prepare_workspace",
+  "warnings": [],
+  "workspace": "experiments/core_narrative/workspaces/pilot_004__cheap-click-specialist__click__rbench__001__attempt1",
+  "workspace_history_mode": "base_tree_only_synthetic_git"
+}
