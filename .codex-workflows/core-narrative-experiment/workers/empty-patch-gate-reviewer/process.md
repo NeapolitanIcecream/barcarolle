@@ -1,18 +1,21 @@
 # Process
 
-status: working
-updated: 2026-04-30T13:14:06+08:00
+status: issues_found
+updated: 2026-04-30T13:20:08+08:00
 
 ## Summary
 
-Focused review is starting for the post-pilot-004 empty-patch adapter gate
+Focused review completed for the post-pilot-004 empty-patch adapter gate
 hardening in commit `1504e5e`.
 
-The review is limited to the harness behavior that marks an inner command that
-exits `0` with an empty patch/git diff as `no_patch_generated` with normalized
-status `infra_failed`. It must not start any ACUT attempt, live BARCAROLLE model
-call, retry, second attempt, additional specialist run, broad execution, or
-large model-call batch.
+The intended exit-0 empty-diff path is covered and passes the committed
+no-model smoke: adapter status and ledger event are `no_patch_generated`, patch
+size is `0`, and the normalized result is `infra_failed`.
+
+One issue remains. Unsafe patch rejection is still top-level distinct, but the
+new empty-patch boolean is computed from the sanitized zero-byte patch artifact,
+so an unsafe non-empty diff also records `no_patch_generated: true` in adapter
+and ledger metadata and receives the empty-patch normalized message.
 
 ## Owned Paths
 
@@ -26,10 +29,27 @@ large model-call batch.
 
 ## Current Blockers
 
-None.
+See review finding in
+`.codex-workflows/core-narrative-experiment/reviews/empty-patch-gate-review.md`.
+
+## Checks Run
+
+- `python3 experiments/core_narrative/tools/test_acut_patch_adapter.py`
+- Scratch no-model adapter cases for non-empty success, non-zero empty command,
+  timeout, and unsafe patch rejection
+- `PYTHONPYCACHEPREFIX=/tmp/acut-empty-patch-review-pycache python3 -m py_compile experiments/core_narrative/tools/acut_patch_adapter.py experiments/core_narrative/tools/test_acut_patch_adapter.py`
+- Scoped redaction-oriented `rg` scans excluding `cli.log`
 
 ## Handoff
 
-Read coordinator and relevant worker `process.md` files first. Do not inspect
-any `cli.log` file. Report `status: no_issues`, `status: issues_found`, or
-`status: blocked` here and write the review artifact before delivery.
+Review artifact:
+`.codex-workflows/core-narrative-experiment/reviews/empty-patch-gate-review.md`
+
+Status is `issues_found`. Start a focused revision before integrating this
+hardening. The revision should exclude `unsafe_patch_rejected` from true
+empty-patch classification and add a no-model regression that preserves unsafe
+status/event without `no_patch_generated` metadata.
+
+No `cli.log` file was inspected. No live BARCAROLLE model call, ACUT attempt,
+retry, second attempt, additional specialist run, broad execution, or large
+batch was started by this review.
