@@ -1,5 +1,5 @@
 id: core_2x2_pilot_budget_constrained_v2
-status: pilot_004_integrated_next_diagnostic_ready
+status: empty_patch_gate_no_model_smoke_passed
 prepared_at: "2026-04-28T15:13:51+08:00"
 redesigned_at: "2026-04-29T11:20:00+08:00"
 owner: coordinator
@@ -121,7 +121,7 @@ active_default_slice:
   total_primary_patch_generation_attempts: 80
 
 pilot_slice:
-  status: pilot_004_integrated_next_diagnostic_ready
+  status: empty_patch_gate_no_model_smoke_passed
   default_before_full_core: true
   acuts:
     - frontier-generic-swe
@@ -545,6 +545,22 @@ pilot_slice:
     record_full_base_url: false
     record_hostname: false
     record_ip_address: false
+  harness_empty_patch_gate:
+    status: no_model_smoke_passed
+    implemented_in: experiments/core_narrative/tools/acut_patch_adapter.py
+    regression_test: experiments/core_narrative/tools/test_acut_patch_adapter.py
+    report: experiments/core_narrative/reports/acut_adapter_empty_patch_gate.md
+    behavior:
+      inner_command_exit_zero_with_empty_git_diff: no_patch_generated
+      ledger_event: no_patch_generated
+      normalized_status: infra_failed
+      verifier_ready_result_created: false
+    live_barcarolle_model_call_started: false
+    acut_attempt_started: false
+    broad_execution_started: false
+    retry_or_second_attempt_started: false
+    additional_specialist_acut_run_started: false
+    large_batch_started: false
   promotion_to_full_core:
     allowed_only_after: "pilot summary review and explicit coordinator decision"
     full_core_attempts_if_promoted: 80

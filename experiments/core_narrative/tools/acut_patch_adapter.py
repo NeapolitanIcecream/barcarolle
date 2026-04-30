@@ -530,6 +530,8 @@ def main() -> int:
         patch_artifact = write_safe_patch(workspace, patch_path, acut_env)
         tracked_restore = {"attempted": False, "tracked_changes_remaining": None}
         unsafe_patch_rejected = bool(patch_artifact["unsafe_content_detected"])
+        patch_size_bytes = int(patch_artifact.get("size_bytes") or 0)
+        no_patch_generated = run["exit_code"] == 0 and patch_size_bytes == 0
         if unsafe_patch_rejected:
             tracked_restore = restore_tracked_workspace_changes(workspace, acut_env)
         finished_at = iso_now()
@@ -540,6 +542,9 @@ def main() -> int:
         elif run["timed_out"]:
             status = "timeout"
             event = "command_timeout"
+        elif no_patch_generated:
+            status = "no_patch_generated"
+            event = "no_patch_generated"
         elif run["exit_code"] == 0:
             status = "command_completed"
             event = "command_completed"
@@ -568,6 +573,8 @@ def main() -> int:
                 "command_exit_code": run["exit_code"],
                 "command_timed_out": run["timed_out"],
                 "model_call_made": command_model_call_made,
+                "patch_size_bytes": patch_size_bytes,
+                "no_patch_generated": no_patch_generated,
             },
         )
         payload = base_payload(
@@ -595,9 +602,38 @@ def main() -> int:
                 "command_exit_code": run["exit_code"],
                 "command_timed_out": run["timed_out"],
                 "patch_artifact": patch_artifact,
+                "no_patch_generated": no_patch_generated,
                 "tracked_workspace_restore": tracked_restore,
             },
         )
+        if no_patch_generated:
+            write_normalized_result(
+                path=args.normalized_output,
+                run_id=run_id,
+                acut_id=acut_id,
+                task_id=task_id,
+                split=split,
+                attempt=args.attempt,
+                started_at=started_at,
+                finished_at=finished_at,
+                status="infra_failed",
+                patch_path=patch_path,
+                stdout_path=stdout_path,
+                stderr_path=stderr_path,
+                duration_seconds=float(run["duration_seconds"]),
+                error="patch-generation command completed without producing a patch",
+                metadata={
+                    "tool": TOOL,
+                    "adapter_id": ADAPTER_ID,
+                    "adapter_status": status,
+                    "dry_run": False,
+                    "command_no_model": args.command_no_model,
+                    "model_call_made": command_model_call_made,
+                    "command_exit_code": run["exit_code"],
+                    "patch_size_bytes": patch_size_bytes,
+                    "ledger_append_status": ledger_append["status"],
+                },
+            )
         emit_json(payload, args.output)
         if unsafe_patch_rejected:
             return 2
