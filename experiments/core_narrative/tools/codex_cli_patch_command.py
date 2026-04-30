@@ -12,6 +12,7 @@ from __future__ import annotations
 import argparse
 import json
 import os
+import re
 import subprocess
 import sys
 import tempfile
@@ -26,6 +27,7 @@ from _llm_budget import (
     ensure_no_required_env_values,
     llm_safe_subprocess_env,
     redact_sensitive_text,
+    unsafe_text_findings,
 )
 from barcarolle_patch_command import (
     DEFAULT_MAX_MANIFEST_CHARS,
@@ -57,6 +59,15 @@ MODEL_DISPLAY_NAMES = {
     "openai/gpt-5.5": "OpenAI GPT-5.5 via Barcarolle",
 }
 DEFAULT_CODEX_TIMEOUT_SECONDS = 3600
+DEFAULT_FAILURE_CAPTURE_TAIL_CHARS = 2000
+NETWORK_HOSTNAME_RE = re.compile(
+    r"\b(?:[A-Za-z0-9](?:[A-Za-z0-9-]{0,61}[A-Za-z0-9])?\.)+"
+    r"(?:com|org|net|edu|gov|io|ai|dev|app|cloud|cn|us|uk|invalid|local|internal|test)\b",
+    re.IGNORECASE,
+)
+IPV4_RE = re.compile(r"\b(?:\d{1,3}\.){3}\d{1,3}\b")
+IPV6_RE = re.compile(r"\b(?:[0-9A-Fa-f]{1,4}:){2,}[0-9A-Fa-f]{1,4}\b")
+LOCALHOST_RE = re.compile(r"\blocalhost\b", re.IGNORECASE)
 
 NON_INTERACTIVE_BASE_INSTRUCTIONS = "\n".join(
     [
@@ -391,6 +402,125 @@ def env_summary(env: Mapping[str, str]) -> dict[str, Any]:
     }
 
 
+def redact_failure_capture_text(text: str | bytes | None, env: Mapping[str, str]) -> str:
+    """Redact snippets and artifacts more strictly than normal command output."""
+    redacted = redact_sensitive_text(text, env)
+    redacted = IPV4_RE.sub("<redacted:ip-address>", redacted)
+    redacted = IPV6_RE.sub("<redacted:ip-address>", redacted)
+    redacted = NETWORK_HOSTNAME_RE.sub("<redacted:hostname>", redacted)
+    redacted = LOCALHOST_RE.sub("<redacted:hostname>", redacted)
+    return redacted
+
+
+def tail_text(text: str, max_chars: int = DEFAULT_FAILURE_CAPTURE_TAIL_CHARS) -> tuple[str, bool]:
+    if len(text) <= max_chars:
+        return text, False
+    return text[-max_chars:], True
+
+
+def inspect_workspace_patch_state(workspace: Path, env: Mapping[str, str]) -> dict[str, Any]:
+    try:
+        completed = subprocess.run(
+            ["git", "diff", "--binary", "--no-ext-diff", "HEAD"],
+            cwd=str(workspace),
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+            text=True,
+            check=False,
+        )
+    except FileNotFoundError:
+        return {
+            "checked": False,
+            "usable_patch": False,
+            "failure_class": "git_executable_not_found",
+            "content_recorded": False,
+        }
+    if completed.returncode != 0:
+        stderr = redact_failure_capture_text(completed.stderr, env).strip()
+        stderr_tail, stderr_truncated = tail_text(stderr)
+        return {
+            "checked": False,
+            "usable_patch": False,
+            "failure_class": "git_diff_failed",
+            "exit_code": completed.returncode,
+            "stderr_tail": stderr_tail,
+            "stderr_tail_truncated": stderr_truncated,
+            "content_recorded": False,
+        }
+
+    patch_text = completed.stdout
+    findings = unsafe_text_findings(patch_text, env)
+    size_bytes = len(patch_text.encode("utf-8"))
+    unsafe_content_detected = bool(findings["unsafe"])
+    return {
+        "checked": True,
+        "collection_command": ["git", "diff", "--binary", "--no-ext-diff", "HEAD"],
+        "matches_outer_adapter_patch_scope": True,
+        "untracked_files_ignored": True,
+        "size_bytes": size_bytes,
+        "has_patch": size_bytes > 0,
+        "unsafe_content_detected": unsafe_content_detected,
+        "unsafe_content": findings,
+        "usable_patch": size_bytes > 0 and not unsafe_content_detected,
+        "content_recorded": False,
+    }
+
+
+def classify_failure(run: Mapping[str, Any], workspace_patch: Mapping[str, Any]) -> str | None:
+    if run.get("timed_out"):
+        return "timeout"
+    exit_code = run.get("exit_code")
+    if exit_code not in (0, None):
+        return "nonzero_exit"
+    if not workspace_patch.get("checked"):
+        return str(workspace_patch.get("failure_class") or "patch_state_unavailable")
+    if workspace_patch.get("unsafe_content_detected"):
+        return "unsafe_patch_content"
+    if not workspace_patch.get("usable_patch"):
+        return "no_workspace_patch"
+    return None
+
+
+def build_failure_capture(
+    *,
+    run: Mapping[str, Any],
+    failure_class: str | None,
+    timeout_seconds: int,
+    workspace_patch: Mapping[str, Any],
+) -> dict[str, Any]:
+    present = failure_class is not None
+    return {
+        "present": present,
+        "failure_class": failure_class,
+        "exit_code": run.get("exit_code"),
+        "timed_out": bool(run.get("timed_out")),
+        "duration_seconds": run.get("duration_seconds"),
+        "timeout_seconds": timeout_seconds,
+        "stdout_artifact": run.get("stdout_artifact"),
+        "stderr_artifact": run.get("stderr_artifact"),
+        "stdout_tail": run.get("stdout_tail") if present else "",
+        "stderr_tail": run.get("stderr_tail") if present else "",
+        "stdout_tail_truncated": bool(run.get("stdout_tail_truncated")) if present else False,
+        "stderr_tail_truncated": bool(run.get("stderr_tail_truncated")) if present else False,
+        "stdout_bytes": run.get("stdout_bytes"),
+        "stderr_bytes": run.get("stderr_bytes"),
+        "workspace_patch_checked": bool(workspace_patch.get("checked")),
+        "workspace_patch_usable": bool(workspace_patch.get("usable_patch")),
+        "workspace_patch_size_bytes": workspace_patch.get("size_bytes"),
+        "redaction_policy": {
+            "credential_values_redacted": True,
+            "bearer_tokens_redacted": True,
+            "resolved_required_env_values_redacted": True,
+            "full_urls_redacted": True,
+            "hostnames_redacted": True,
+            "ip_addresses_redacted": True,
+            "tail_max_chars": DEFAULT_FAILURE_CAPTURE_TAIL_CHARS,
+        },
+        "cli_log_required_for_review": False,
+        "cli_log_inspected": False,
+    }
+
+
 def payload_base(
     *,
     status: str,
@@ -499,7 +629,11 @@ def run_codex_exec(
     workspace: Path,
     env: Mapping[str, str],
     timeout_seconds: int,
+    stdout_path: Path,
+    stderr_path: Path,
 ) -> dict[str, Any]:
+    stdout_path.parent.mkdir(parents=True, exist_ok=True)
+    stderr_path.parent.mkdir(parents=True, exist_ok=True)
     started = time.monotonic()
     try:
         completed = subprocess.run(
@@ -513,28 +647,52 @@ def run_codex_exec(
             timeout=timeout_seconds,
             check=False,
         )
-        safe_stdout = redact_sensitive_text(completed.stdout, env)
-        safe_stderr = redact_sensitive_text(completed.stderr, env)
+        safe_stdout = redact_failure_capture_text(completed.stdout, env)
+        safe_stderr = redact_failure_capture_text(completed.stderr, env)
+        stdout_path.write_text(safe_stdout, encoding="utf-8")
+        stderr_path.write_text(safe_stderr, encoding="utf-8")
         if safe_stdout:
             print(safe_stdout, end="")
         if safe_stderr:
             print(safe_stderr, file=sys.stderr, end="")
+        stdout_tail, stdout_truncated = tail_text(safe_stdout)
+        stderr_tail, stderr_truncated = tail_text(safe_stderr)
         return {
             "exit_code": completed.returncode,
             "timed_out": False,
             "duration_seconds": round(time.monotonic() - started, 3),
+            "stdout_artifact": str(stdout_path),
+            "stderr_artifact": str(stderr_path),
+            "stdout_bytes": len(safe_stdout.encode("utf-8")),
+            "stderr_bytes": len(safe_stderr.encode("utf-8")),
+            "stdout_tail": stdout_tail,
+            "stderr_tail": stderr_tail,
+            "stdout_tail_truncated": stdout_truncated,
+            "stderr_tail_truncated": stderr_truncated,
         }
     except subprocess.TimeoutExpired as exc:
-        safe_stdout = redact_sensitive_text(exc.stdout, env)
-        safe_stderr = redact_sensitive_text(exc.stderr, env)
+        safe_stdout = redact_failure_capture_text(exc.stdout, env)
+        safe_stderr = redact_failure_capture_text(exc.stderr, env)
+        stdout_path.write_text(safe_stdout, encoding="utf-8")
+        stderr_path.write_text(safe_stderr, encoding="utf-8")
         if safe_stdout:
             print(safe_stdout, end="")
         if safe_stderr:
             print(safe_stderr, file=sys.stderr, end="")
+        stdout_tail, stdout_truncated = tail_text(safe_stdout)
+        stderr_tail, stderr_truncated = tail_text(safe_stderr)
         return {
             "exit_code": None,
             "timed_out": True,
             "duration_seconds": round(time.monotonic() - started, 3),
+            "stdout_artifact": str(stdout_path),
+            "stderr_artifact": str(stderr_path),
+            "stdout_bytes": len(safe_stdout.encode("utf-8")),
+            "stderr_bytes": len(safe_stderr.encode("utf-8")),
+            "stdout_tail": stdout_tail,
+            "stderr_tail": stderr_tail,
+            "stdout_tail_truncated": stdout_truncated,
+            "stderr_tail_truncated": stderr_truncated,
         }
     except FileNotFoundError as exc:
         raise ToolError("codex executable was not found", executable=command[0]) from exc
@@ -634,13 +792,19 @@ def run(argv: Sequence[str]) -> int:
         endpoint=endpoint,
     )
     codex_env = {**acut_env, "CODEX_HOME": str(codex_home)}
+    stdout_path = artifact_dir / "codex_exec.stdout.txt"
+    stderr_path = artifact_dir / "codex_exec.stderr.txt"
     run = run_codex_exec(
         command=command,
         prompt=prompt,
         workspace=workspace,
         env=codex_env,
         timeout_seconds=args.codex_timeout_seconds,
+        stdout_path=stdout_path,
+        stderr_path=stderr_path,
     )
+    workspace_patch = inspect_workspace_patch_state(workspace, codex_env)
+    failure_class = classify_failure(run, workspace_patch)
     finished_at = iso_now()
     if run["timed_out"]:
         status = "timeout"
@@ -682,7 +846,21 @@ def run(argv: Sequence[str]) -> int:
                 "executed": True,
                 "exit_code": run["exit_code"],
                 "timed_out": run["timed_out"],
+                "duration_seconds": run["duration_seconds"],
+                "stdout_artifact": run["stdout_artifact"],
+                "stderr_artifact": run["stderr_artifact"],
+                "stdout_bytes": run["stdout_bytes"],
+                "stderr_bytes": run["stderr_bytes"],
+                "stdout_tail_recorded": failure_class is not None,
+                "stderr_tail_recorded": failure_class is not None,
             },
+            "workspace_patch": workspace_patch,
+            "failure_capture": build_failure_capture(
+                run=run,
+                failure_class=failure_class,
+                timeout_seconds=args.codex_timeout_seconds,
+                workspace_patch=workspace_patch,
+            ),
             "scrubbed_env_var_count": scrubbed_env_var_count,
         },
     )

@@ -1,7 +1,7 @@
 # Process
 
-status: working
-updated: 2026-04-30T15:27:36+08:00
+status: delivered
+updated: 2026-04-30T15:36:05+08:00
 
 ## Summary
 
@@ -29,10 +29,40 @@ attempt, or large model-call batch.
 
 ## Current Blockers
 
-None at dispatch start.
+None.
+
+## Changed Files
+
+- `experiments/core_narrative/tools/codex_cli_patch_command.py`
+- `experiments/core_narrative/tools/test_codex_cli_patch_command.py`
+- `experiments/core_narrative/reports/codex_cli_failure_capture.md`
+- `.codex-workflows/core-narrative-experiment/workers/codex-cli-failure-capture/process.md`
+
+## Verification
+
+- `python3 experiments/core_narrative/tools/test_codex_cli_patch_command.py`
+- `python3 experiments/core_narrative/tools/test_acut_patch_adapter.py`
+- `python3 -m py_compile experiments/core_narrative/tools/codex_cli_patch_command.py experiments/core_narrative/tools/test_codex_cli_patch_command.py`
+- `git diff --check`
+- Scoped changed-file scan for literal full URLs, bearer-token-shaped values,
+  IPv4-address-shaped values, and hostname-shaped values: no matches.
+
+All verification was no-model. No live BARCAROLLE model call, ACUT attempt,
+retry, second attempt, additional specialist ACUT run, broad execution, further
+pilot attempt, or large model-call batch was started.
+
+No `cli.log` file was inspected.
 
 ## Handoff
 
-Update this file before meaningful phases. When delivered, set
-`status: delivered`, list changed files, summarize no-model verification, and
-state whether a focused reviewer should run. Do not inspect any `cli.log` file.
+Focused no-model repair delivered for Codex CLI failure capture.
+
+The inner Codex CLI summary now records `failure_capture` and `workspace_patch`
+metadata for nonzero exits, timeouts, unsafe patch content, and exit-zero
+no-workspace-patch outcomes. Redacted stdout/stderr artifacts are written under
+the command artifact directory, and bounded redacted tail snippets are included
+only in the structured failure capture. The outer adapter budget, ledger,
+redaction, empty-patch, and normalized-result contract is unchanged.
+
+Recommended next step: run a focused reviewer before any later coordinator
+decision to authorize another bounded live attempt.
