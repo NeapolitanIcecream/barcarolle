@@ -39,6 +39,7 @@ from barcarolle_patch_command import (
     sha256_text,
     truncate_text,
 )
+from click_specialist_context import load_click_specialist_context, prompt_injection_evidence
 
 
 TOOL = "codex_cli_patch_command"
@@ -241,33 +242,41 @@ def build_prompt(
     task: Mapping[str, Any],
     statement: str,
     acut: Mapping[str, Any],
+    click_specialist_context: str,
     max_manifest_chars: int,
 ) -> tuple[str, bool]:
     acut_json = json.dumps(concise_acut_summary(acut), indent=2, sort_keys=True)
     acut_json, manifest_truncated = truncate_text(acut_json, max_manifest_chars)
     task_json = json.dumps(concise_task_summary(task), indent=2, sort_keys=True)
-    prompt = "\n".join(
-        [
-            "You are generating a minimal repository patch for one prepared ACUT task.",
-            "",
-            "Work only in the prepared git workspace. Use shell and edit tools as needed.",
-            "Use only the visible task package, public statement, and ACUT policy below.",
-            "Do not use future history, reference patches, private benchmark artifacts, ACUT outputs, or public model results.",
-            "Do not expose credentials, endpoint values, authorization secrets, or full URLs in edits, stdout, stderr, or the final answer.",
-            "Leave the repository changes in the workspace; the outer adapter will collect the git diff.",
-            "Before finishing, inspect changed files and run focused verification when it is feasible within the ACUT policy.",
-            "Keep the final answer brief.",
-            "",
-            "Task package summary:",
-            task_json,
-            "",
-            "Public task statement:",
-            statement or "[no task statement was packaged]",
-            "",
-            "ACUT manifest summary:",
-            acut_json,
-        ]
-    )
+    sections = [
+        "You are generating a minimal repository patch for one prepared ACUT task.",
+        "",
+        "Work only in the prepared git workspace. Use shell and edit tools as needed.",
+        "Use only the visible task package, public statement, and ACUT policy below.",
+        "Do not use future history, reference patches, private benchmark artifacts, ACUT outputs, or public model results.",
+        "Do not expose credentials, endpoint values, authorization secrets, or full URLs in edits, stdout, stderr, or the final answer.",
+        "Leave the repository changes in the workspace; the outer adapter will collect the git diff.",
+        "Before finishing, inspect changed files and run focused verification when it is feasible within the ACUT policy.",
+        "Keep the final answer brief.",
+        "",
+        "Task package summary:",
+        task_json,
+        "",
+        "Public task statement:",
+        statement or "[no task statement was packaged]",
+        "",
+        "ACUT manifest summary:",
+        acut_json,
+    ]
+    if click_specialist_context:
+        sections.extend(
+            [
+                "",
+                "Task-agnostic Click specialist context:",
+                click_specialist_context,
+            ]
+        )
+    prompt = "\n".join(sections)
     return sanitize_text(prompt), manifest_truncated
 
 
@@ -397,6 +406,7 @@ def payload_base(
     acut: Mapping[str, Any],
     model: str,
     prompt: str,
+    context_pack_evidence: Mapping[str, Any],
     statement_path: Path | None,
     statement_truncated: bool,
     manifest_truncated: bool,
@@ -431,6 +441,7 @@ def payload_base(
             "statement_truncated": statement_truncated,
             "manifest_truncated": manifest_truncated,
         },
+        "specialist_context_pack": context_pack_evidence,
         "codex_home": {
             "path": str(codex_home),
             "temporary_run_local": True,
@@ -551,6 +562,7 @@ def run(argv: Sequence[str]) -> int:
     if "acut_id" not in acut:
         raise ToolError("ACUT manifest is missing required fields", missing=["acut_id"])
     model = resolve_model(acut, args.model)
+    context_text, context_evidence = load_click_specialist_context(acut, args.acut)
 
     acut_env, scrubbed_env_var_count = llm_safe_subprocess_env(os.environ)
     write_model_catalog(args.codex_bin, codex_home, model_catalog_path, acut_env)
@@ -559,8 +571,10 @@ def run(argv: Sequence[str]) -> int:
         task=task,
         statement=statement,
         acut=acut,
+        click_specialist_context=context_text,
         max_manifest_chars=args.max_manifest_chars,
     )
+    context_pack_evidence = prompt_injection_evidence(prompt, context_evidence)
     display_command = build_display_command(
         codex_bin=args.codex_bin,
         workspace=workspace,
@@ -586,6 +600,7 @@ def run(argv: Sequence[str]) -> int:
             acut=acut,
             model=model,
             prompt=prompt,
+            context_pack_evidence=context_pack_evidence,
             statement_path=statement_path,
             statement_truncated=statement_truncated,
             manifest_truncated=manifest_truncated,
@@ -648,6 +663,7 @@ def run(argv: Sequence[str]) -> int:
         acut=acut,
         model=model,
         prompt=prompt,
+        context_pack_evidence=context_pack_evidence,
         statement_path=statement_path,
         statement_truncated=statement_truncated,
         manifest_truncated=manifest_truncated,

@@ -78,6 +78,40 @@ metadata:
   prompt_policy_summary: Use task-agnostic Click repository structure, docs, symbols, and conventions as prior context with the cheap model tier, without changing task budget or retry policy.
   specialist_context:
     click_task_agnostic_context_allowed: true
+    context_pack:
+      pack_id: click_specialist_context_pack_v1
+      marker: CLICK_SPECIALIST_CONTEXT_PACK_V1
+      pack_hash: dfb271ad174531a7dd2f00da4cd0486193d87ce33349380982150889ecf84e48
+      manifest_path: experiments/core_narrative/context_packs/click_specialist/manifest.json
+      context_prompt_path: experiments/core_narrative/context_packs/click_specialist/context_prompt.md
+      artifacts:
+        repo_map:
+          path: experiments/core_narrative/context_packs/click_specialist/repo_map.json
+          sha256: f3d9d32bb44801e3dc17326ab448ff8aa14e209c4e9d639ca9c68a3f7026cd93
+        docs_map:
+          path: experiments/core_narrative/context_packs/click_specialist/docs_map.json
+          sha256: 5c38819cae84353b3cb0ce4f6187d6b15f0b9e6af6985f86c5cc6b844d874f19
+        symbol_index:
+          path: experiments/core_narrative/context_packs/click_specialist/symbol_index.json
+          sha256: aef8fed0090d6da5a8e450ffe33c9aecc50c8e8730fa00f709c0ce4e876f25a0
+        convention_playbook:
+          path: experiments/core_narrative/context_packs/click_specialist/convention_playbook.json
+          sha256: 44f2feceb44def94c047ef229bd306f2b53f85a3b28b2bc0efb08e7e415ca805
+        deterministic_retrieval_policy:
+          path: experiments/core_narrative/context_packs/click_specialist/retrieval_policy.json
+          sha256: 0e42f25fc6a70f8123991448214d4d910fb2da93c048b8b4f6a678ce61d98cb8
+        context_prompt:
+          path: experiments/core_narrative/context_packs/click_specialist/context_prompt.md
+          sha256: 7d80f3254695a99ddc2f2f9b8b9a7d97b6fcf5f46922c204e3a9333facde728d
+      section_ids:
+        - repo_map
+        - docs_map
+        - symbol_index
+        - convention_playbook
+        - deterministic_retrieval_policy
+      locked_click_commit: 8bd8b4a074c55c03b6eb5666edc44a9c43df38a2
+      generation_timing: before_any_click_specialist_acut_execution
+      task_specific_tuning_allowed: false
     required_precomputed_artifacts:
       - id: precomputed_click_repo_map_v1
         property: task_agnostic_reproducible

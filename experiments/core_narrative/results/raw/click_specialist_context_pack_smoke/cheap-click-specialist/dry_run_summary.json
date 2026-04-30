@@ -1,0 +1,164 @@
+{
+  "acut_id": "cheap-click-specialist",
+  "artifact_dir": "/Users/chenmohan/gits/barcarolle-wt-click-specialist-context-pack/experiments/core_narrative/results/raw/click_specialist_context_pack_smoke/cheap-click-specialist",
+  "codex_exec": {
+    "command": [
+      "codex",
+      "-a",
+      "never",
+      "exec",
+      "--json",
+      "--ephemeral",
+      "--ignore-rules",
+      "--skip-git-repo-check",
+      "--full-auto",
+      "--cd",
+      "/private/var/folders/my/gymbb9t12mb4tf91rnc9yzjc0000gn/T/click-specialist-context-pack-smoke-qxv1ome4/workspace",
+      "--model",
+      "openai/gpt-5.4-mini",
+      "-c",
+      "model_provider=\"barcarolle\"",
+      "-c",
+      "model_providers.barcarolle={name=\"Barcarolle\", base_url=\"<from BARCAROLLE_LLM_BASE_URL at runtime>\", env_key=\"BARCAROLLE_LLM_API_KEY\", wire_api=\"responses\"}",
+      "-c",
+      "model_catalog_json=\"/Users/chenmohan/gits/barcarolle-wt-click-specialist-context-pack/experiments/core_narrative/results/raw/click_specialist_context_pack_smoke/cheap-click-specialist/codex_home_vncvgeuq/model_catalog.json\"",
+      "-o",
+      "/Users/chenmohan/gits/barcarolle-wt-click-specialist-context-pack/experiments/core_narrative/results/raw/click_specialist_context_pack_smoke/cheap-click-specialist/codex_final.txt",
+      "-"
+    ],
+    "command_contains_credential_value": false,
+    "command_contains_endpoint_value": false,
+    "command_contains_prompt": false,
+    "executed": false,
+    "final_output_path": "/Users/chenmohan/gits/barcarolle-wt-click-specialist-context-pack/experiments/core_narrative/results/raw/click_specialist_context_pack_smoke/cheap-click-specialist/codex_final.txt",
+    "prompt_passed_via_stdin": true
+  },
+  "codex_home": {
+    "config_path": "/Users/chenmohan/gits/barcarolle-wt-click-specialist-context-pack/experiments/core_narrative/results/raw/click_specialist_context_pack_smoke/cheap-click-specialist/codex_home_vncvgeuq/config.toml",
+    "path": "/Users/chenmohan/gits/barcarolle-wt-click-specialist-context-pack/experiments/core_narrative/results/raw/click_specialist_context_pack_smoke/cheap-click-specialist/codex_home_vncvgeuq",
+    "project_trust_configured": true,
+    "real_user_profile_written": false,
+    "temporary_run_local": true,
+    "trusted_workspace": "/private/var/folders/my/gymbb9t12mb4tf91rnc9yzjc0000gn/T/click-specialist-context-pack-smoke-qxv1ome4/workspace"
+  },
+  "command_contract_id": "codex-cli-patch-command-v1",
+  "duration_seconds": 0,
+  "finished_at": "2026-04-30T01:19:47.727364Z",
+  "llm_env_policy": {
+    "allowed_variable_names": [
+      "BARCAROLLE_LLM_API_KEY",
+      "BARCAROLLE_LLM_BASE_URL"
+    ],
+    "command_arguments_checked": true,
+    "endpoint_value_recorded": false,
+    "required_present": {
+      "BARCAROLLE_LLM_API_KEY": true,
+      "BARCAROLLE_LLM_BASE_URL": true
+    },
+    "unsafe_command_arguments_rejected": true,
+    "values_recorded": false
+  },
+  "mode": "dry_run",
+  "model": "openai/gpt-5.4-mini",
+  "model_call_made": false,
+  "model_catalog": {
+    "content_safe_for_artifact": true,
+    "edit_tool_enabled": true,
+    "non_interactive_base_instructions": true,
+    "path": "/Users/chenmohan/gits/barcarolle-wt-click-specialist-context-pack/experiments/core_narrative/results/raw/click_specialist_context_pack_smoke/cheap-click-specialist/codex_home_vncvgeuq/model_catalog.json",
+    "provider_prefixed_routes": true,
+    "routes": [
+      "openai/gpt-5.4-mini",
+      "openai/gpt-5.5"
+    ],
+    "shell_tool_enabled": true
+  },
+  "prompt": {
+    "char_count": 8499,
+    "content_recorded": false,
+    "full_urls_redacted": true,
+    "manifest_truncated": false,
+    "prepared": true,
+    "sha256": "4d4c541860a02c2ef7315a69f990075b35b7ea6099e1bf4fb83b36ac8b87fdd8",
+    "statement_truncated": false
+  },
+  "provider": "openai",
+  "provider_override": {
+    "catalog_refresh_warnings_nonfatal": true,
+    "credential_env_key": "BARCAROLLE_LLM_API_KEY",
+    "credential_value_recorded": false,
+    "endpoint_source_env": "BARCAROLLE_LLM_BASE_URL",
+    "endpoint_value_recorded": false,
+    "provider_id": "barcarolle",
+    "wire_api": "responses"
+  },
+  "scrubbed_env_var_count": 19,
+  "specialist_context_pack": {
+    "content_recorded": false,
+    "context_prompt_char_count": 5198,
+    "context_prompt_path": "/Users/chenmohan/gits/barcarolle-wt-click-specialist-context-pack/experiments/core_narrative/context_packs/click_specialist/context_prompt.md",
+    "context_prompt_sha256": "7d80f3254695a99ddc2f2f9b8b9a7d97b6fcf5f46922c204e3a9333facde728d",
+    "enabled": true,
+    "expected_for_acut": true,
+    "leakage_guards": {
+      "bearer_tokens_recorded": false,
+      "credential_values_recorded": false,
+      "full_base_url_values_recorded": false,
+      "full_urls_recorded": false,
+      "hostnames_recorded": false,
+      "ip_addresses_recorded": false,
+      "resolved_endpoint_values_recorded": false,
+      "resolved_secrets_recorded": false
+    },
+    "manifest_path": "/Users/chenmohan/gits/barcarolle-wt-click-specialist-context-pack/experiments/core_narrative/context_packs/click_specialist/manifest.json",
+    "manifest_sha256": "1f3797bbdbe23aef304d810533f53937437971aa5049c4024b5f5f069375d984",
+    "marker": "CLICK_SPECIALIST_CONTEXT_PACK_V1",
+    "pack_hash": "dfb271ad174531a7dd2f00da4cd0486193d87ce33349380982150889ecf84e48",
+    "pack_id": "click_specialist_context_pack_v1",
+    "prompt_checks": {
+      "all_expected_sections_present": true,
+      "marker_present": true,
+      "pack_hash_present": true,
+      "pack_id_present": true,
+      "prompt_char_count": 8499,
+      "prompt_content_recorded": false,
+      "prompt_sha256": "4d4c541860a02c2ef7315a69f990075b35b7ea6099e1bf4fb83b36ac8b87fdd8",
+      "section_ids_present": {
+        "convention_playbook": true,
+        "deterministic_retrieval_policy": true,
+        "docs_map": true,
+        "repo_map": true,
+        "symbol_index": true
+      }
+    },
+    "section_ids": [
+      "repo_map",
+      "docs_map",
+      "symbol_index",
+      "convention_playbook",
+      "deterministic_retrieval_policy"
+    ],
+    "section_markers_present_in_context": {
+      "convention_playbook": true,
+      "deterministic_retrieval_policy": true,
+      "docs_map": true,
+      "repo_map": true,
+      "symbol_index": true
+    },
+    "source_material_policy": {
+      "acut_outputs_or_failed_patches_used": false,
+      "git_history_mining_used": false,
+      "hidden_verifier_tests_used": false,
+      "network_fetched_docs_used": false,
+      "public_committed_source_docs_tests_examples_only": true,
+      "rbench_rwork_gold_patches_used": false
+    }
+  },
+  "split": "smoke",
+  "started_at": "2026-04-30T01:19:47.727264Z",
+  "statement_path": "/private/var/folders/my/gymbb9t12mb4tf91rnc9yzjc0000gn/T/click-specialist-context-pack-smoke-qxv1ome4/workspace/.core_narrative/statement.md",
+  "status": "dry_run_completed",
+  "task_id": "click_specialist_context_pack_smoke",
+  "tool": "codex_cli_patch_command",
+  "workspace": "/private/var/folders/my/gymbb9t12mb4tf91rnc9yzjc0000gn/T/click-specialist-context-pack-smoke-qxv1ome4/workspace"
+}
