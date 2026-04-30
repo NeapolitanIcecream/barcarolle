@@ -1,7 +1,7 @@
 # Process
 
-status: working
-updated: 2026-04-30T10:30:12+08:00
+status: delivered
+updated: 2026-04-30T10:43:15+08:00
 
 ## Summary
 
@@ -74,32 +74,95 @@ commit `52e165c`, and this branch merged that coordinator state in merge commit
   repair state. Scope remains exactly one primary attempt for the same run id.
   This is not a retry or second attempt because no prior model call or attempt
   artifact exists for `pilot_004`.
+- `2026-04-30T10:31:07+08:00`: Gate review restarted for the single authorized
+  attempt. No live BARCAROLLE model call has been attempted in this
+  redispatched worker session.
+- `2026-04-30T10:33:58+08:00`: Gate checks passed for exact coordinator
+  authorization, required env var presence without values, ACUT model route,
+  reviewed Click specialist context pack marker/hash, ledger parse/writability,
+  and budget headroom. The worktree-local ignored Click source cache is missing;
+  restoring it from the sibling local checkout, without network access, before
+  workspace preparation.
+- `2026-04-30T10:34:21+08:00`: Restored the ignored worktree-local Click source
+  cache from the sibling local checkout at commit
+  `8bd8b4a074c55c03b6eb5666edc44a9c43df38a2`. Starting fresh workspace
+  preparation for the single authorized run id.
+- `2026-04-30T10:34:39+08:00`: Workspace preparation succeeded with status
+  `prepared` at base commit `4a7fe69f942bd02b811548ff8f02a08fff7429c1`.
+  Starting the no-model dry run of the reviewed Codex CLI patch command.
+- `2026-04-30T10:35:04+08:00`: No-model dry run completed with
+  `model_call_made: false`; specialist context pack injection is enabled, and
+  the prompt contains the reviewed pack marker/hash. Prompt character count is
+  `9017`, so the live adapter attempt will use estimated input tokens `2255`
+  and conservative output tokens `64000`.
+- `2026-04-30T10:36:04+08:00`: Exactly one live adapter attempt completed. The
+  adapter reported `model_call_made: true`, status `command_failed`, inner
+  command exit code `1`, no timeout, ledger append `appended`, and new
+  cumulative estimated cost USD `12.0008`. The patch artifact exists but is
+  empty (`0` bytes), so there is no applied patch to verify and no retry will
+  be run.
+- `2026-04-30T10:38:32+08:00`: Adapter, inner command, dry-run, workspace, and
+  normalized JSON artifacts parse successfully. The cost ledger now has `7`
+  records, exactly one for this run id, with last event `command_failed` and
+  cumulative estimated cost USD `12.0008`. Wrote a normalized `infra_failed`
+  result because the adapter failure path did not create one automatically.
+- `2026-04-30T10:43:15+08:00`: Scoped scan of preserved new owned artifacts
+  completed without exact required env values, Bearer-token strings, credential-looking
+  strings, full URLs, resolved base hostname, or IP addresses. A broad hostname
+  pattern had filename/config-token candidates only after excluding `cli.log`
+  and ignored Codex-home side effects. Marking the one-attempt result delivered.
 
 ## Result
 
-- working after repair redispatch
+- delivered one completed primary attempt for
+  `pilot_004__cheap-click-specialist__click__rbench__001__attempt1`
+- final normalized status: `infra_failed`
+- adapter status: `command_failed`
+- inner Codex CLI status: `codex_exec_failed`
 
-Adapter command ran: no.
+Adapter command ran: yes, exactly once, through
+`experiments/core_narrative/tools/acut_patch_adapter.py` wrapping the reviewed
+`experiments/core_narrative/tools/codex_cli_patch_command.py`.
 
-Live BARCAROLLE model call attempted: no.
+Live BARCAROLLE model call attempted: yes. No retry, second attempt, broad
+execution, additional specialist ACUT run, further pilot attempt, or large
+batch was started.
 
-Codex CLI specialist context pack injected: not tested by dry run because the
-coordinator authorization gate failed first. The reviewed pack manifest exists
-and the ACUT manifest declares its hash/marker.
+Codex CLI specialist context pack injected: yes. The no-model dry run and live
+inner command summary both record `specialist_context_pack.enabled: true`, with
+marker `CLICK_SPECIALIST_CONTEXT_PACK_V1` and the reviewed pack hash.
 
-Ledger append status: no append. Existing cumulative estimated cost is USD
-`9.0008`; projected cumulative for the requested attempt would be USD
-`12.0008`.
+Ledger append status: appended. The ledger now has `7` records, exactly one for
+this run id, and cumulative estimated cost is USD `12.0008`.
 
-Artifact paths: no raw or normalized attempt artifacts were written. Updated
-handoff is this `process.md` file.
+Artifact paths:
 
-Verifier status: not run.
+- raw directory:
+  `experiments/core_narrative/results/raw/pilot_004__cheap-click-specialist__click__rbench__001__attempt1/`
+- adapter result:
+  `experiments/core_narrative/results/raw/pilot_004__cheap-click-specialist__click__rbench__001__attempt1/adapter_result.json`
+- inner Codex CLI summary:
+  `experiments/core_narrative/results/raw/pilot_004__cheap-click-specialist__click__rbench__001__attempt1/codex_cli_patch_command.json`
+- dry-run summary:
+  `experiments/core_narrative/results/raw/pilot_004__cheap-click-specialist__click__rbench__001__attempt1/codex_cli_patch_command_dry_run.json`
+- patch artifact:
+  `experiments/core_narrative/results/raw/pilot_004__cheap-click-specialist__click__rbench__001__attempt1/submission.patch`
+- normalized result:
+  `experiments/core_narrative/results/normalized/pilot_004__cheap-click-specialist__click__rbench__001__attempt1.json`
+- cost ledger:
+  `experiments/core_narrative/results/cost_ledger.jsonl`
+
+Verifier status: not run, because the adapter produced an empty `0` byte patch
+artifact and no applied patch or source-code change was available to verify.
+
+Scoped artifact scan: passed for exact required env values, Bearer-token strings,
+credential-looking strings, full URLs, resolved base hostname, and IP
+addresses. `cli.log` was excluded and was not inspected.
 
 No `cli.log` file was inspected.
 
 No broad execution, retries, second attempts, additional specialist ACUT runs,
-or large batches happened.
+further pilot attempts, or large batches happened.
 
 ## Handoff
 
