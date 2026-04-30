@@ -1,5 +1,5 @@
 id: core_2x2_pilot_budget_constrained_v2
-status: codex_cli_failure_capture_review_running
+status: codex_cli_failure_capture_r1_worker_running
 prepared_at: "2026-04-28T15:13:51+08:00"
 redesigned_at: "2026-04-29T11:20:00+08:00"
 owner: coordinator
@@ -121,7 +121,7 @@ active_default_slice:
   total_primary_patch_generation_attempts: 80
 
 pilot_slice:
-  status: codex_cli_failure_capture_review_running
+  status: codex_cli_failure_capture_r1_worker_running
   default_before_full_core: true
   acuts:
     - frontier-generic-swe
@@ -654,7 +654,7 @@ pilot_slice:
       worker_commit: ff810e5
       integrated_as: 5440fc8
     next_decision:
-      status: codex_cli_failure_capture_review_running
+      status: codex_cli_failure_capture_r1_worker_running
       reason: pilot_005_ended_command_failed_infra_failed_with_empty_patch_after_reviewed_harness_and_context_pack
       triage_mode: coordinator_local
       started_new_worker: true
@@ -669,12 +669,27 @@ pilot_slice:
         model_calls_authorized: false
         live_barcarolle_model_calls_authorized: false
       review:
-        status: running
+        status: issues_found
         worker: codex-cli-failure-capture-reviewer
-        session: bcx-codex-cli-failure-capture-reviewer
+        session: exited
         branch: codex/core-exp-codex-cli-failure-capture-reviewer
         worktree: /Users/chenmohan/gits/barcarolle-wt-codex-cli-failure-capture-reviewer
         start_commit: 5a19749
+        worker_commit: a07c65c
+        model_calls_authorized: false
+        live_barcarolle_model_calls_authorized: false
+        required_closure:
+          - broaden_hostname_redaction_beyond_narrow_suffix_list
+          - add_no_model_timeout_failure_capture_test
+          - add_no_model_unsafe_patch_content_failure_capture_test
+          - assert_redacted_stdout_stderr_artifact_contents
+      revision_1:
+        status: running
+        worker: codex-cli-failure-capture
+        session: bcx-codex-cli-failure-capture-r1
+        branch: codex/core-exp-codex-cli-failure-capture
+        worktree: /Users/chenmohan/gits/barcarolle-wt-codex-cli-failure-capture
+        start_commit: fceae58
         model_calls_authorized: false
         live_barcarolle_model_calls_authorized: false
       authorized_next_step: no_model_harness_failure_capture_diagnostic_or_repair_only
