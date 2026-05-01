@@ -228,6 +228,53 @@ class CodexCliPatchCommandTests(unittest.TestCase):
         self.assertNotIn("https://", json.dumps(summary))
         self.assert_failure_capture_redacted(summary)
 
+    def test_responses_stream_disconnect_records_transport_failure_class(self) -> None:
+        """Regression: repeated Responses stream disconnects need a machine-readable class."""
+        fake_codex = self.write_fake_codex(
+            """
+            for attempt in range(1, 6):
+                print(json.dumps({
+                    "type": "error",
+                    "message": (
+                        f"Reconnecting... {attempt}/5 "
+                        f"(stream disconnected before completion: error sending request for url "
+                        f"({os.environ['BARCAROLLE_LLM_BASE_URL']}/responses))"
+                    ),
+                }))
+            print(json.dumps({
+                "type": "error",
+                "message": (
+                    "stream disconnected before completion: error sending request for url "
+                    f"({os.environ['BARCAROLLE_LLM_BASE_URL']}/responses)"
+                ),
+            }))
+            sys.exit(1)
+            """
+        )
+        artifact_dir = self.root / "artifacts-stream-disconnect"
+        summary_path = self.root / "summary-stream-disconnect.json"
+
+        completed = self.run_patch_command(fake_codex=fake_codex, artifact_dir=artifact_dir, summary_path=summary_path)
+
+        self.assertEqual(completed.returncode, 1, completed.stderr)
+        summary = json.loads(summary_path.read_text(encoding="utf-8"))
+        failure = summary["failure_capture"]
+        transport = summary["transport_failure"]
+
+        self.assertEqual(summary["status"], "codex_exec_failed")
+        self.assertEqual(failure["failure_class"], "responses_streaming_disconnect")
+        self.assertEqual(failure["transport_failure"]["failure_class"], "responses_streaming_disconnect")
+        self.assertIs(transport["present"], True)
+        self.assertEqual(transport["failure_class"], "responses_streaming_disconnect")
+        self.assertEqual(transport["wire_api"], "responses")
+        self.assertEqual(transport["endpoint_path"], "/responses")
+        self.assertEqual(transport["after_reconnects"], 5)
+        self.assertEqual(transport["reconnect_limit"], 5)
+        self.assertIs(transport["retry_exhausted"], True)
+        self.assertIs(transport["messages_recorded"], False)
+        self.assertIs(transport["content_recorded"], False)
+        self.assert_failure_capture_redacted(summary)
+
     def test_exit_zero_without_workspace_diff_records_no_patch_failure_capture(self) -> None:
         """Regression: exit-0 progress-only runs need a no-patch class in the summary."""
         fake_codex = self.write_fake_codex(
