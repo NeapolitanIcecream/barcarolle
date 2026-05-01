@@ -1,5 +1,5 @@
 id: core_2x2_pilot_budget_constrained_v2
-status: pilot_008_worker_running
+status: pilot_008_review_running
 prepared_at: "2026-04-28T15:13:51+08:00"
 redesigned_at: "2026-04-29T11:20:00+08:00"
 owner: coordinator
@@ -121,7 +121,7 @@ active_default_slice:
   total_primary_patch_generation_attempts: 80
 
 pilot_slice:
-  status: pilot_008_worker_running
+  status: pilot_008_review_running
   default_before_full_core: true
   acuts:
     - frontier-generic-swe
@@ -959,7 +959,7 @@ pilot_slice:
     record_hostname: false
     record_ip_address: false
   pilot_008_frontier_preflight:
-    status: worker_running
+    status: review_running
     recorded_at: "2026-05-01T20:22:15+08:00"
     run_id: pilot_008__frontier-generic-swe__click__rbench__001__attempt1
     acut_id: frontier-generic-swe
@@ -983,11 +983,33 @@ pilot_slice:
     model_calls_allowed_scope: single_pilot_008_execution_worker
     worker:
       name: pilot-008-execution
-      session: bcx-pilot-008-execution
+      session: exited
       branch: codex/core-exp-pilot-008-execution
       worktree: /Users/chenmohan/gits/barcarolle-wt-pilot-008-execution
       start_commit: 015d53d
+      worker_commit: b307d18
+      status: delivered
+    result:
+      adapter_status: command_failed
+      normalized_status: infra_failed
+      inner_codex_cli_status: codex_exec_failed
+      failure_capture_present: true
+      failure_capture_class: responses_streaming_disconnect
+      transport_disconnect_classifier_present: true
+      specialist_context_pack_excluded_for_generic_acut: true
+      ledger_event: command_failed
+      cumulative_estimated_cost_usd: 31.0008
+      verifier_run: false
+    review:
       status: running
+      worker: pilot-008-reviewer
+      session: bcx-pilot-008-reviewer
+      branch: codex/core-exp-pilot-008-reviewer
+      worktree: /Users/chenmohan/gits/barcarolle-wt-pilot-008-reviewer
+      reviewed_commit: b307d18
+      start_commit: pending
+      live_model_call_made_by_review: false
+      cli_log_inspected: false
     broad_execution_authorized: false
     retry_authorized: false
     second_attempt_authorized: false
@@ -1025,5 +1047,5 @@ locked_inputs:
     locked_task_ids_source: experiments/core_narrative/configs/general_benchmark.yaml
 
 next_no_model_preflights:
-  - pilot 008 frontier-generic worker is running for one explicitly authorized transport-discriminating candidate; wait for delivery or blocker before any further execution hypothesis
+  - pilot 008 frontier-generic delivery is under focused no-model/static review; wait for no_issues review or blocker before integration or any further execution hypothesis
   - do not start broad ACUT execution, retries, second attempts, additional specialist runs, further pilot attempts, or other model calls before the coordinator records a new explicit execution start
