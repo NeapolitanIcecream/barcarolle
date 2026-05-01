@@ -1,5 +1,5 @@
 id: core_2x2_pilot_budget_constrained_v2
-status: pilot_008_frontier_preflight_recorded_awaiting_start_decision
+status: pilot_008_worker_running
 prepared_at: "2026-04-28T15:13:51+08:00"
 redesigned_at: "2026-04-29T11:20:00+08:00"
 owner: coordinator
@@ -121,7 +121,7 @@ active_default_slice:
   total_primary_patch_generation_attempts: 80
 
 pilot_slice:
-  status: pilot_008_frontier_preflight_recorded_awaiting_start_decision
+  status: pilot_008_worker_running
   default_before_full_core: true
   acuts:
     - frontier-generic-swe
@@ -959,7 +959,7 @@ pilot_slice:
     record_hostname: false
     record_ip_address: false
   pilot_008_frontier_preflight:
-    status: awaiting_separate_explicit_start_decision
+    status: worker_running
     recorded_at: "2026-05-01T20:22:15+08:00"
     run_id: pilot_008__frontier-generic-swe__click__rbench__001__attempt1
     acut_id: frontier-generic-swe
@@ -975,9 +975,18 @@ pilot_slice:
     failure_capture_gate: revision_1_reviewed_integrated
     nonzero_exit_normalization_gate: reviewed_integrated
     transport_disconnect_classifier: reviewed_integrated
-    execution_start_decision_recorded: false
-    execution_authorized: false
-    live_model_call_authorized: false
+    execution_start_decision_recorded: true
+    execution_start_recorded_at: "2026-05-01T20:47:45+08:00"
+    execution_authorized: true
+    execution_authorized_scope: this_single_frontier_transport_probe_run_id_only
+    live_model_call_authorized: true
+    model_calls_allowed_scope: single_pilot_008_execution_worker
+    worker:
+      name: pilot-008-execution
+      session: bcx-pilot-008-execution
+      branch: codex/core-exp-pilot-008-execution
+      worktree: /Users/chenmohan/gits/barcarolle-wt-pilot-008-execution
+      status: running
     broad_execution_authorized: false
     retry_authorized: false
     second_attempt_authorized: false
@@ -1015,5 +1024,5 @@ locked_inputs:
     locked_task_ids_source: experiments/core_narrative/configs/general_benchmark.yaml
 
 next_no_model_preflights:
-  - pilot 008 frontier-generic preflight is recorded for one possible transport-discriminating candidate; decide whether to record a separate explicit one-attempt start or defer
+  - pilot 008 frontier-generic worker is running for one explicitly authorized transport-discriminating candidate; wait for delivery or blocker before any further execution hypothesis
   - do not start broad ACUT execution, retries, second attempts, additional specialist runs, further pilot attempts, or other model calls before the coordinator records a new explicit execution start
