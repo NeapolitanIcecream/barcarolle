@@ -986,6 +986,7 @@ pilot_slice:
       session: bcx-pilot-008-execution
       branch: codex/core-exp-pilot-008-execution
       worktree: /Users/chenmohan/gits/barcarolle-wt-pilot-008-execution
+      start_commit: 015d53d
       status: running
     broad_execution_authorized: false
     retry_authorized: false
