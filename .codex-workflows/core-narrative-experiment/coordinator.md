@@ -1,7 +1,7 @@
 # Core Narrative Experiment Coordinator
 
-status: nonzero_exit_normalization_integrated_next_decision_ready
-updated: 2026-05-01T18:16:42+08:00
+status: pilot_007_preflight_recorded_awaiting_start_decision
+updated: 2026-05-01T18:29:11+08:00
 today_stop_state: 2026-04-28_stop_policy_expired
 phase: Phase 0 - Experiment Bootstrap
 base_commit: 47046e7754d2402b7177a4b80f631ab6b0bcd97c
@@ -204,8 +204,10 @@ No open patch-command blocker remains for the reviewed hand-written command path
 - nonzero_exit_normalization_review: started focused no-model/static reviewer in tmux session `bcx-nonzero-exit-normalization-reviewer`, branch `codex/core-exp-nonzero-exit-normalization-reviewer`, worktree `/Users/chenmohan/gits/barcarolle-wt-nonzero-exit-normalization-reviewer`, reviewing worker commit `4b26c7a`. Review must pass before integration or any later execution hypothesis.
 - nonzero_exit_normalization_review_result: reviewer delivered `no_issues` in commit `ef9e0ba`. The review confirmed non-timeout nonzero no-patch failures now write normalized `infra_failed` output without changing raw adapter status or ledger event from `command_failed`; exit-0 empty diff, unsafe patch rejection, timeout, and successful verifier-eligible patch behavior remain distinct. No ACUT attempt, live BARCAROLLE model call, retry, second attempt, additional specialist run, further pilot attempt, broad execution, large batch, cost-ledger append, or `cli.log` inspection occurred.
 - nonzero_exit_normalization_integration: integrated repair as merge commit `42351d0` and review artifact as merge commit `4874606`. Coordinator post-merge no-model verification passed with `test_acut_patch_adapter.py`, `test_codex_cli_patch_command.py`, and `PYTHONPYCACHEPREFIX` py_compile. No live execution or budget spend was started by integration.
-- next_authorized_step: decide the next bounded planning or no-secret preflight step. Do not start broad ACUT execution, retries, second attempts, additional specialist runs, further pilot attempts, live BARCAROLLE model calls, or large batches without a new explicit coordinator decision.
-- resume_entry: On the next step, read this coordinator and the latest relevant worker `process.md` files, then choose a bounded no-secret planning/preflight step or defer with reason. Do not inspect `cli.log`.
+- pilot_007_preflight: recorded at `2026-05-01T18:29:11+08:00` for exactly one possible bounded recovery candidate that does not repeat the failed specialist cell: run id `pilot_007__cheap-generic-swe__click__rbench__001__attempt1`, ACUT `cheap-generic-swe`, task `click__rbench__001`, attempt `1`, through the reviewed Codex CLI harness and reviewed nonzero-exit normalization gate. Rationale: pilot 001 for this generic/task cell failed under the older pre-route/pre-Codex-CLI path and is not a scorable capability result; a later explicit decision may use this candidate to test the current generic cell on the paired task without repeating `cheap-click-specialist` on `click__rbench__001`.
+- pilot_007_preflight_checks: `BARCAROLLE_LLM_API_KEY` and `BARCAROLLE_LLM_BASE_URL` are present without inspecting or recording values; `experiments/core_narrative/results/cost_ledger.jsonl` exists, parses as JSONL, and is writable; ledger has `9` records and cumulative estimated cost USD `18.0008`; projected additional cost is USD `3.00`; projected cumulative estimated cost is USD `21.0008`, below the USD `240` soft stop and USD `300` hard cap. Candidate ACUT config, task pack, adapter command, and Codex CLI patch command paths are present. This is a no-secret preflight only and does not authorize execution or any model call.
+- next_authorized_step: decide whether to record a separate explicit execution-start decision for `pilot_007__cheap-generic-swe__click__rbench__001__attempt1`, or defer with reason. Do not start broad ACUT execution, retries, second attempts, additional specialist runs, further pilot attempts, live BARCAROLLE model calls, or large batches without a new explicit coordinator decision.
+- resume_entry: On the next step, read this coordinator and the latest relevant worker `process.md` files, then decide whether to explicitly authorize the single `pilot_007` candidate or defer. Do not inspect `cli.log`.
 
 ## Execution Start Preflight
 
