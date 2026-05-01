@@ -117,6 +117,40 @@ class AcutPatchAdapterTests(unittest.TestCase):
         self.assertEqual(len(ledger_records), 1)
         self.assertEqual(ledger_records[0]["event"], "no_patch_generated")
 
+    def test_nonzero_exit_with_empty_git_diff_writes_infra_failed_normalized_result(self) -> None:
+        """Regression: reviewed codex_exec_failed/no-patch runs need a normalized result."""
+        completed, adapter_result, ledger_records, normalized_path = self.run_adapter_case(
+            command=[
+                sys.executable,
+                "-c",
+                "import sys; print('inner failed before patch'); sys.exit(7)",
+            ],
+            run_id="unit_nonzero_no_patch_attempt1",
+        )
+
+        self.assertEqual(completed.returncode, 0, completed.stderr)
+        normalized = json.loads(normalized_path.read_text(encoding="utf-8"))
+
+        self.assertEqual(adapter_result["status"], "command_failed")
+        self.assertEqual(adapter_result["command_exit_code"], 7)
+        self.assertIs(adapter_result["command_timed_out"], False)
+        self.assertEqual(adapter_result["patch_artifact"]["size_bytes"], 0)
+        self.assertIs(adapter_result["no_patch_generated"], False)
+        self.assertIs(adapter_result["nonzero_exit_without_verifier_patch"], True)
+        self.assertIs(adapter_result["verifier_ready_patch_available"], False)
+        self.assertEqual(adapter_result["cost_ledger_append"]["event"], "command_failed")
+
+        self.assertEqual(normalized["status"], "infra_failed")
+        self.assertEqual(normalized["metadata"]["adapter_status"], "command_failed")
+        self.assertEqual(normalized["metadata"]["failure_class"], "nonzero_exit")
+        self.assertIs(normalized["metadata"]["no_patch_generated"], False)
+        self.assertIs(normalized["metadata"]["verifier_ready_patch_available"], False)
+        self.assertNotEqual(normalized.get("error"), "patch-generation command completed without producing a patch")
+
+        self.assertEqual(len(ledger_records), 1)
+        self.assertEqual(ledger_records[0]["event"], "command_failed")
+        self.assertIs(ledger_records[0]["metadata"]["no_patch_generated"], False)
+
     def test_unsafe_patch_rejection_is_not_marked_no_patch_generated(self) -> None:
         """Regression: unsafe sanitized artifacts are not true empty-patch runs."""
         completed, adapter_result, ledger_records, normalized_path = self.run_adapter_case(
@@ -143,10 +177,7 @@ class AcutPatchAdapterTests(unittest.TestCase):
         self.assertEqual(ledger_records[0]["event"], "command_completed_unsafe_patch_rejected")
         self.assertIs(ledger_records[0]["metadata"]["no_patch_generated"], False)
 
-        if normalized_path.exists():
-            normalized = json.loads(normalized_path.read_text(encoding="utf-8"))
-            self.assertNotEqual(normalized["metadata"].get("adapter_status"), "no_patch_generated")
-            self.assertNotEqual(normalized.get("error"), "patch-generation command completed without producing a patch")
+        self.assertFalse(normalized_path.exists())
 
 
 if __name__ == "__main__":
