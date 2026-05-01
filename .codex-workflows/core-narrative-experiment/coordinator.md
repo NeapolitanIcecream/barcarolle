@@ -1,7 +1,7 @@
 # Core Narrative Experiment Coordinator
 
-status: pilot_007_integrated_next_decision_ready
-updated: 2026-05-01T19:07:14+08:00
+status: pilot_007_integrated_no_model_triage_pending
+updated: 2026-05-01T19:19:15+08:00
 today_stop_state: 2026-04-28_stop_policy_expired
 phase: Phase 0 - Experiment Bootstrap
 base_commit: 47046e7754d2402b7177a4b80f631ab6b0bcd97c
@@ -214,8 +214,10 @@ No open patch-command blocker remains for the reviewed hand-written command path
 - pilot_007_review: started focused no-model/static result reviewer in tmux session `bcx-pilot-007-reviewer`, branch `codex/core-exp-pilot-007-reviewer`, worktree `/Users/chenmohan/gits/barcarolle-wt-pilot-007-reviewer`, reviewing worker commit `261faf4`. Review must pass before integration or any later execution hypothesis.
 - pilot_007_review_result: reviewer delivered `no_issues` in commit `2fdc48d`. The review confirmed the result matches the exact authorization, the generic ACUT excluded the Click specialist context pack, exactly one ledgered model-call attempt occurred, raw/ledger status remained `command_failed`, normalized status was `infra_failed`, no verifier ran without a verifier-ready patch, and no retry, second attempt, additional specialist run, further pilot attempt, broad execution, or large batch occurred. No `cli.log` content was inspected.
 - pilot_007_integration: integrated pilot 007 worker delivery as merge commit `fcec699` and review artifact as merge commit `8a802f5`. No core narrative experiment worker is active. Broad ACUT execution, retries, second attempts, additional specialist runs, further pilot attempts, live BARCAROLLE model calls, and large batches remain unauthorized pending a new explicit coordinator decision.
-- next_authorized_step: decide the next bounded no-secret planning or triage step from the integrated pilot 007 result, or defer with reason. Do not start broad ACUT execution, retries, second attempts, additional specialist runs, further pilot attempts, live BARCAROLLE model calls, or large batches without a new explicit coordinator decision. Do not inspect `cli.log`.
-- resume_entry: On the next step, read this coordinator and the latest relevant worker `process.md` files, especially `pilot-007-execution/process.md` and `pilot-007-reviewer/process.md`, then decide the next bounded no-secret planning or triage step. Do not inspect `cli.log`.
+- pilot_007_next_decision: defer any further live preflight or execution-start decision. Rationale: the reviewed cheap-generic recovery candidate on `click__rbench__001` now shows the same pre-verifier `command_failed` / inner `codex_exec_failed` / nonzero-exit / no-patch shape as the reviewed cheap-click-specialist diagnostic cell, so another immediate live attempt would spend budget without a new hypothesis.
+- pilot_007_triage_mode: keep the next step coordinator-local and no-model. Scope is to compare the integrated pilot 006 specialist and pilot 007 generic `process.md` plus structured raw/normalized/ledger artifacts only, excluding all `cli.log`, and decide whether the next bounded action is a harness repair, a non-live Codex CLI smoke, or a different execution hypothesis.
+- next_authorized_step: run coordinator-local no-model triage over integrated pilot 006 and pilot 007 evidence, or record a concrete blocker if the structured artifacts are insufficient. Do not start broad ACUT execution, retries, second attempts, additional specialist runs, further pilot attempts, live BARCAROLLE model calls, or large batches without a new explicit coordinator decision. Do not inspect `cli.log`.
+- resume_entry: On the next step, read this coordinator and the latest relevant worker `process.md` files, especially `pilot-006-execution/process.md`, `pilot-006-reviewer/process.md`, `pilot-007-execution/process.md`, and `pilot-007-reviewer/process.md`, then perform the no-model triage. Do not inspect `cli.log`.
 
 ## Execution Start Preflight
 
