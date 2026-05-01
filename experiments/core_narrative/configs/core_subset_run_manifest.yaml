@@ -1,5 +1,5 @@
 id: core_2x2_pilot_budget_constrained_v2
-status: pilot_006_integrated_no_model_triage_pending
+status: pilot_006_coordinator_local_triage_recorded
 prepared_at: "2026-04-28T15:13:51+08:00"
 redesigned_at: "2026-04-29T11:20:00+08:00"
 owner: coordinator
@@ -121,7 +121,7 @@ active_default_slice:
   total_primary_patch_generation_attempts: 80
 
 pilot_slice:
-  status: pilot_006_integrated_no_model_triage_pending
+  status: pilot_006_coordinator_local_triage_recorded
   default_before_full_core: true
   acuts:
     - frontier-generic-swe
@@ -843,10 +843,12 @@ pilot_slice:
       worktree: /Users/chenmohan/gits/barcarolle-wt-pilot-006-reviewer
       worker_commit: 5287668
     next_decision:
-      status: pilot_006_integrated_no_model_triage_pending
-      reason: pilot_006_repeated_cheap_click_specialist_pre_verifier_failure_requires_no_model_triage_before_more_spend
+      status: pilot_006_coordinator_local_triage_recorded
+      reason: pilot_006_repeated_cheap_click_specialist_pre_verifier_failure_is_now_sufficiently_structured_for_no_model_repair_or_new_hypothesis_selection
       triage_mode: coordinator_local
-      structured_inputs_sufficient_unknown: true
+      structured_inputs_sufficient: true
+      repeated_cell_repeat_not_justified_yet: true
+      recommended_before_more_spend: focused_no_model_repair_or_different_bounded_hypothesis
       broad_execution_authorized: false
       retries_authorized: false
       second_attempts_authorized: false
@@ -881,5 +883,5 @@ locked_inputs:
     locked_task_ids_source: experiments/core_narrative/configs/general_benchmark.yaml
 
 next_no_model_preflights:
-  - pilot_006 delivery and no_issues review are integrated; run coordinator-local no-model triage over pilot 004/005/006 structured artifacts before any later live preflight or execution decision
+  - coordinator-local no-model triage is recorded; decide whether to dispatch a focused no-model repair or choose a different bounded execution hypothesis before any later live preflight or execution decision
   - do not start broad ACUT execution, retries beyond pilot_006, second attempts, additional specialist runs, further pilot attempts, or other model calls before the coordinator records a new explicit execution start

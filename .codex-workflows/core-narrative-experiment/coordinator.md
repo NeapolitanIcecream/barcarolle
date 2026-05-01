@@ -1,7 +1,7 @@
 # Core Narrative Experiment Coordinator
 
-status: pilot_006_integrated_no_model_triage_pending
-updated: 2026-05-01T16:54:39+08:00
+status: pilot_006_coordinator_local_triage_recorded
+updated: 2026-05-01T17:06:14+08:00
 today_stop_state: 2026-04-28_stop_policy_expired
 phase: Phase 0 - Experiment Bootstrap
 base_commit: 47046e7754d2402b7177a4b80f631ab6b0bcd97c
@@ -192,8 +192,11 @@ No open patch-command blocker remains for the reviewed hand-written command path
 - pilot_006_integration: worker delivery and no_issues review are integrated on the coordinator branch. No pilot worker is active. Broad ACUT execution, retries, second attempts, additional specialist runs, further pilot attempts, live BARCAROLLE model calls, and large batches remain unauthorized pending a new explicit coordinator decision.
 - pilot_006_next_decision: defer any further live preflight or execution-start decision. Rationale: the integrated pilot 006 diagnostic recovery still ended before a verifier-ready patch, with the same cheap-click-specialist cell producing `command_failed` / inner `codex_exec_failed` even after reviewed failure-capture preservation. Before any more spend, perform no-model triage over the structured pilot 006 artifacts and adjacent reviewed pilot 004/005 evidence, excluding `cli.log`, to decide whether the next bounded step is a harness repair or a different bounded execution hypothesis.
 - pilot_006_triage_mode: keep the immediate next step coordinator-local unless the structured artifacts prove insufficient. The available no-secret inputs are the worker/reviewer `process.md` files, `.codex-workflows/core-narrative-experiment/reviews/pilot-006-review.md`, and the structured raw/ledger artifacts for pilot 004, pilot 005, and pilot 006. `cli.log` remains excluded.
-- next_authorized_step: run or prepare coordinator-local no-model triage over the integrated pilot 006 failure-capture artifacts before any further live preflight, live attempt, retry, second attempt, additional specialist run, further pilot attempt, broad execution, or large batch.
-- resume_entry: On the next step, read this coordinator and the latest relevant worker `process.md` files, then perform coordinator-local no-model triage or record a concrete no-model repair dispatch if the structured artifacts are insufficient. Do not inspect `cli.log`.
+- pilot_006_triage_scope_checked: reviewed coordinator-integrated worker `process.md` files for pilot 004, pilot 005, and pilot 006, plus `.codex-workflows/core-narrative-experiment/reviews/pilot-006-review.md` and the structured raw/ledger artifacts for those three runs only. No `cli.log` file was read.
+- pilot_006_triage_findings: all three reviewed cheap-click-specialist attempts used the same task `click__rbench__001`, same provider-prefixed model route `openai/gpt-5.4-mini`, same specialist-context injection, same estimated input/output budget (`2255` / `64000`), and appended exactly one `command_failed` ledger record each. All three ended before verifier with inner status `codex_exec_failed` and a zero-byte patch artifact. Pilot 006 adds sufficient reviewed `failure_capture` and `workspace_patch` structure to classify the failure as a non-timeout nonzero exit with no usable workspace patch, without relying on `cli.log`.
+- pilot_006_triage_implication: the structured artifacts are now sufficient for planning. Another live attempt on the same cheap-click-specialist `click__rbench__001` cell is not justified until a no-model repair improves the harness/result contract or the coordinator selects a different bounded execution hypothesis.
+- next_authorized_step: decide whether to dispatch a focused no-model repair for nonzero-exit `command_failed` result normalization/classification, or record a different bounded execution hypothesis that does not repeat the same specialist cell immediately. No further live preflight, live attempt, retry, second attempt, additional specialist run, further pilot attempt, broad execution, or large batch is authorized by this triage step.
+- resume_entry: On the next step, read this coordinator and the latest relevant worker `process.md` files, then either dispatch a focused no-model repair or record a different bounded execution hypothesis. Do not inspect `cli.log`.
 
 ## Execution Start Preflight
 
