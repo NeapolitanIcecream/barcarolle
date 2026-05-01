@@ -1,0 +1,1 @@
+warning: `--full-auto` is deprecated; use `--sandbox workspace-write` instead.
