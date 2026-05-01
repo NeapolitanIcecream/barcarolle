@@ -1007,7 +1007,7 @@ pilot_slice:
       branch: codex/core-exp-pilot-008-reviewer
       worktree: /Users/chenmohan/gits/barcarolle-wt-pilot-008-reviewer
       reviewed_commit: b307d18
-      start_commit: pending
+      start_commit: b05eb77
       live_model_call_made_by_review: false
       cli_log_inspected: false
     broad_execution_authorized: false
