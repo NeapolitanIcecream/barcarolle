@@ -1,5 +1,5 @@
 id: core_2x2_pilot_budget_constrained_v2
-status: codex_cli_transport_hardening_review_running
+status: codex_cli_transport_hardening_integrated_next_decision_ready
 prepared_at: "2026-04-28T15:13:51+08:00"
 redesigned_at: "2026-04-29T11:20:00+08:00"
 owner: coordinator
@@ -121,7 +121,7 @@ active_default_slice:
   total_primary_patch_generation_attempts: 80
 
 pilot_slice:
-  status: codex_cli_transport_hardening_review_running
+  status: codex_cli_transport_hardening_integrated_next_decision_ready
   default_before_full_core: true
   acuts:
     - frontier-generic-swe
@@ -976,5 +976,5 @@ locked_inputs:
     locked_task_ids_source: experiments/core_narrative/configs/general_benchmark.yaml
 
 next_no_model_preflights:
-  - focused no-model codex-cli-transport-hardening review is running; wait for no_issues review or blocker before integration or any further execution hypothesis
+  - reviewed codex-cli-transport-hardening delivery is integrated; decide the next bounded no-secret planning/preflight step or defer before any further execution hypothesis
   - do not start broad ACUT execution, retries, second attempts, additional specialist runs, further pilot attempts, or other model calls before the coordinator records a new explicit execution start
