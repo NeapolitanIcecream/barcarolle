@@ -1,7 +1,7 @@
 # Core Narrative Experiment Coordinator
 
-status: pilot_006_coordinator_local_triage_recorded
-updated: 2026-05-01T17:06:14+08:00
+status: nonzero_exit_normalization_worker_running
+updated: 2026-05-01T17:19:56+08:00
 today_stop_state: 2026-04-28_stop_policy_expired
 phase: Phase 0 - Experiment Bootstrap
 base_commit: 47046e7754d2402b7177a4b80f631ab6b0bcd97c
@@ -70,10 +70,11 @@ Execute `docs/experiments/core-narrative-experiment-plan.md` with tmux-managed C
 | codex-cli-failure-capture-r1-reviewer | Phase 3 harness diagnostic re-review | delivered; no_issues; worker commit `f2595a9`, integrated as `8424e11`; no-model/static only | exited | codex/core-exp-codex-cli-failure-capture-r1-reviewer | /Users/chenmohan/gits/barcarolle-wt-codex-cli-failure-capture-r1-reviewer | `.codex-workflows/core-narrative-experiment/reviews/codex-cli-failure-capture-r1-review.md`, `.codex-workflows/core-narrative-experiment/workers/codex-cli-failure-capture-r1-reviewer/**` |
 | click-specialist-context-pack | Phase 3 specialist treatment preflight | delivered and reviewed; worker commit `d21bfc4`, integrated as `21487b9` | exited | codex/core-exp-click-specialist-context-pack | /Users/chenmohan/gits/barcarolle-wt-click-specialist-context-pack | `experiments/core_narrative/context_packs/click_specialist/**`, `experiments/core_narrative/tools/**` for context-pack generation/loading/injection, specialist ACUT manifests, context-pack status in run manifest, `experiments/core_narrative/reports/click_specialist_context_pack.md`, `experiments/core_narrative/results/normalized/click_specialist_context_pack*.json`, `experiments/core_narrative/results/raw/click_specialist_context_pack*/**`, worker process files |
 | click-specialist-context-reviewer | Phase 3 specialist treatment review | delivered; no_issues; worker commit `1eb222c`, integrated as `81b3473` | exited | codex/core-exp-click-specialist-context-reviewer | /Users/chenmohan/gits/barcarolle-wt-click-specialist-context-reviewer | `.codex-workflows/core-narrative-experiment/reviews/click-specialist-context-pack-review.md`, `.codex-workflows/core-narrative-experiment/workers/click-specialist-context-reviewer/**` |
+| nonzero-exit-normalization | Phase 3 harness repair | working; focused no-model repair dispatched for nonzero-exit `command_failed` normalization/classification after reviewed pilot 004/005/006 triage | running | codex/core-exp-nonzero-exit-normalization | /Users/chenmohan/gits/barcarolle-wt-nonzero-exit-normalization | `experiments/core_narrative/tools/acut_patch_adapter.py`, `experiments/core_narrative/tools/test_acut_patch_adapter.py`, `experiments/core_narrative/reports/acut_adapter_nonzero_exit_normalization.md`, `experiments/core_narrative/results/raw/nonzero_exit_normalization*/**`, `experiments/core_narrative/results/normalized/nonzero_exit_normalization*.json`, `.codex-workflows/core-narrative-experiment/workers/nonzero-exit-normalization/**` |
 
 ## Active Tmux Sessions
 
-No active core narrative experiment tmux sessions. Unrelated tmux sessions are ignored.
+- `bcx-nonzero-exit-normalization` -> focused no-model worker `nonzero-exit-normalization` on branch `codex/core-exp-nonzero-exit-normalization`
 
 ## Decisions
 
@@ -195,8 +196,11 @@ No open patch-command blocker remains for the reviewed hand-written command path
 - pilot_006_triage_scope_checked: reviewed coordinator-integrated worker `process.md` files for pilot 004, pilot 005, and pilot 006, plus `.codex-workflows/core-narrative-experiment/reviews/pilot-006-review.md` and the structured raw/ledger artifacts for those three runs only. No `cli.log` file was read.
 - pilot_006_triage_findings: all three reviewed cheap-click-specialist attempts used the same task `click__rbench__001`, same provider-prefixed model route `openai/gpt-5.4-mini`, same specialist-context injection, same estimated input/output budget (`2255` / `64000`), and appended exactly one `command_failed` ledger record each. All three ended before verifier with inner status `codex_exec_failed` and a zero-byte patch artifact. Pilot 006 adds sufficient reviewed `failure_capture` and `workspace_patch` structure to classify the failure as a non-timeout nonzero exit with no usable workspace patch, without relying on `cli.log`.
 - pilot_006_triage_implication: the structured artifacts are now sufficient for planning. Another live attempt on the same cheap-click-specialist `click__rbench__001` cell is not justified until a no-model repair improves the harness/result contract or the coordinator selects a different bounded execution hypothesis.
-- next_authorized_step: decide whether to dispatch a focused no-model repair for nonzero-exit `command_failed` result normalization/classification, or record a different bounded execution hypothesis that does not repeat the same specialist cell immediately. No further live preflight, live attempt, retry, second attempt, additional specialist run, further pilot attempt, broad execution, or large batch is authorized by this triage step.
-- resume_entry: On the next step, read this coordinator and the latest relevant worker `process.md` files, then either dispatch a focused no-model repair or record a different bounded execution hypothesis. Do not inspect `cli.log`.
+- nonzero_exit_normalization_decision: dispatch a focused no-model repair rather than another live specialist attempt on `click__rbench__001`. Rationale: pilot 004/005/006 already establish the repeated cell failure shape, and the missing normalized result on reviewed nonzero-exit `command_failed` paths now looks like a harness/result-contract gap rather than an ACUT capability signal.
+- nonzero_exit_normalization_scope: repair `acut_patch_adapter.py` so nonzero-exit inner-command failures with no verifier-ready patch consistently write normalized `infra_failed` output and stay distinct from exit-0 empty-diff and unsafe-patch outcomes; add no-model regression coverage and no-secret handoff notes only.
+- nonzero_exit_normalization_worker: started focused worker `nonzero-exit-normalization` in tmux session `bcx-nonzero-exit-normalization`, branch `codex/core-exp-nonzero-exit-normalization`, worktree `/Users/chenmohan/gits/barcarolle-wt-nonzero-exit-normalization`. No ACUT attempt, live BARCAROLLE model call, retry, second attempt, additional specialist run, further pilot attempt, broad execution, or large batch is authorized by this worker.
+- next_authorized_step: read `.codex-workflows/core-narrative-experiment/workers/nonzero-exit-normalization/process.md`; if delivered, start focused no-model review before integration or any later execution hypothesis. Do not inspect `cli.log`.
+- resume_entry: On the next step, read this coordinator and the latest relevant worker `process.md` files, especially `nonzero-exit-normalization/process.md`, then handle worker delivery or blocker. Do not inspect `cli.log`.
 
 ## Execution Start Preflight
 

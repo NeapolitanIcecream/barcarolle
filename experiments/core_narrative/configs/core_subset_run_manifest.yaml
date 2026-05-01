@@ -1,5 +1,5 @@
 id: core_2x2_pilot_budget_constrained_v2
-status: pilot_006_coordinator_local_triage_recorded
+status: nonzero_exit_normalization_worker_running
 prepared_at: "2026-04-28T15:13:51+08:00"
 redesigned_at: "2026-04-29T11:20:00+08:00"
 owner: coordinator
@@ -121,7 +121,7 @@ active_default_slice:
   total_primary_patch_generation_attempts: 80
 
 pilot_slice:
-  status: pilot_006_coordinator_local_triage_recorded
+  status: nonzero_exit_normalization_worker_running
   default_before_full_core: true
   acuts:
     - frontier-generic-swe
@@ -843,12 +843,21 @@ pilot_slice:
       worktree: /Users/chenmohan/gits/barcarolle-wt-pilot-006-reviewer
       worker_commit: 5287668
     next_decision:
-      status: pilot_006_coordinator_local_triage_recorded
+      status: nonzero_exit_normalization_worker_running
       reason: pilot_006_repeated_cheap_click_specialist_pre_verifier_failure_is_now_sufficiently_structured_for_no_model_repair_or_new_hypothesis_selection
-      triage_mode: coordinator_local
+      triage_mode: coordinator_local_completed_dispatch_worker
       structured_inputs_sufficient: true
       repeated_cell_repeat_not_justified_yet: true
-      recommended_before_more_spend: focused_no_model_repair_or_different_bounded_hypothesis
+      recommended_before_more_spend: focused_no_model_repair_for_nonzero_exit_normalization
+      started_new_worker: true
+      worker:
+        name: nonzero-exit-normalization
+        session: bcx-nonzero-exit-normalization
+        branch: codex/core-exp-nonzero-exit-normalization
+        worktree: /Users/chenmohan/gits/barcarolle-wt-nonzero-exit-normalization
+        model_calls_authorized: false
+        live_barcarolle_model_calls_authorized: false
+        scope: repair_acut_patch_adapter_nonzero_exit_normalized_result_and_classification
       broad_execution_authorized: false
       retries_authorized: false
       second_attempts_authorized: false
@@ -883,5 +892,5 @@ locked_inputs:
     locked_task_ids_source: experiments/core_narrative/configs/general_benchmark.yaml
 
 next_no_model_preflights:
-  - coordinator-local no-model triage is recorded; decide whether to dispatch a focused no-model repair or choose a different bounded execution hypothesis before any later live preflight or execution decision
+  - focused worker `nonzero-exit-normalization` is running; wait for delivered no-model repair or blocker before any later live preflight or execution decision
   - do not start broad ACUT execution, retries beyond pilot_006, second attempts, additional specialist runs, further pilot attempts, or other model calls before the coordinator records a new explicit execution start
