@@ -1,7 +1,7 @@
 # Core Narrative Experiment Coordinator
 
-status: pilot_007_integrated_no_model_triage_pending
-updated: 2026-05-01T19:19:15+08:00
+status: pilot_007_coordinator_local_triage_recorded
+updated: 2026-05-01T19:30:45+08:00
 today_stop_state: 2026-04-28_stop_policy_expired
 phase: Phase 0 - Experiment Bootstrap
 base_commit: 47046e7754d2402b7177a4b80f631ab6b0bcd97c
@@ -216,8 +216,12 @@ No open patch-command blocker remains for the reviewed hand-written command path
 - pilot_007_integration: integrated pilot 007 worker delivery as merge commit `fcec699` and review artifact as merge commit `8a802f5`. No core narrative experiment worker is active. Broad ACUT execution, retries, second attempts, additional specialist runs, further pilot attempts, live BARCAROLLE model calls, and large batches remain unauthorized pending a new explicit coordinator decision.
 - pilot_007_next_decision: defer any further live preflight or execution-start decision. Rationale: the reviewed cheap-generic recovery candidate on `click__rbench__001` now shows the same pre-verifier `command_failed` / inner `codex_exec_failed` / nonzero-exit / no-patch shape as the reviewed cheap-click-specialist diagnostic cell, so another immediate live attempt would spend budget without a new hypothesis.
 - pilot_007_triage_mode: keep the next step coordinator-local and no-model. Scope is to compare the integrated pilot 006 specialist and pilot 007 generic `process.md` plus structured raw/normalized/ledger artifacts only, excluding all `cli.log`, and decide whether the next bounded action is a harness repair, a non-live Codex CLI smoke, or a different execution hypothesis.
-- next_authorized_step: run coordinator-local no-model triage over integrated pilot 006 and pilot 007 evidence, or record a concrete blocker if the structured artifacts are insufficient. Do not start broad ACUT execution, retries, second attempts, additional specialist runs, further pilot attempts, live BARCAROLLE model calls, or large batches without a new explicit coordinator decision. Do not inspect `cli.log`.
-- resume_entry: On the next step, read this coordinator and the latest relevant worker `process.md` files, especially `pilot-006-execution/process.md`, `pilot-006-reviewer/process.md`, `pilot-007-execution/process.md`, and `pilot-007-reviewer/process.md`, then perform the no-model triage. Do not inspect `cli.log`.
+- pilot_007_triage_scope_checked: reviewed coordinator-integrated `process.md` files for pilot 006 execution/review and pilot 007 execution/review, plus structured raw/normalized/ledger artifacts only. No `cli.log` file was read.
+- pilot_007_triage_findings: pilot 006 (`cheap-click-specialist`) and pilot 007 (`cheap-generic-swe`) used the same task `click__rbench__001`, same provider-prefixed model route `openai/gpt-5.4-mini`, same reviewed Codex CLI harness, and exactly one ledgered model-call attempt each. Both prepared the workspace, completed the no-model dry run, reached the live adapter command, then ended before verifier with inner status `codex_exec_failed`, failure class `nonzero_exit`, zero-byte patch, and no usable workspace patch. The treatment difference behaved as expected: pilot 006 injected the reviewed Click specialist context pack and pilot 007 excluded it.
+- pilot_007_triage_transport_signal: structured failure tails for both pilot 006 and pilot 007 report the same redacted Responses streaming failure after five reconnects against the BARCAROLLE endpoint path; pilot 007 additionally records normalized `infra_failed` due to the reviewed nonzero-exit normalization gate. This pattern is independent of specialist-vs-generic treatment and is not a scorable ACUT capability signal.
+- pilot_007_triage_implication: do not spend on another live ACUT attempt until a no-model Codex CLI transport hardening step reviews the current command/config envelope and proposes a reviewed mitigation, such as a safe non-streaming path, bounded output-cap profile, or retry/fallback behavior that preserves the 2x2 control contract.
+- next_authorized_step: prepare or dispatch a focused no-model `codex-cli-transport-hardening` worker. Scope should be static/no-model only over `codex_cli_patch_command.py`, `acut_patch_adapter.py`, run manifests, and reviewed pilot 006/007 structured artifacts; it must not start ACUT attempts, live BARCAROLLE model calls, retries, second attempts, additional specialist runs, further pilot attempts, broad execution, or large batches. Do not inspect `cli.log`.
+- resume_entry: On the next step, read this coordinator and the latest relevant worker `process.md` files, especially pilot 006/007 execution/review files, then prepare or dispatch the no-model Codex CLI transport hardening step. Do not inspect `cli.log`.
 
 ## Execution Start Preflight
 

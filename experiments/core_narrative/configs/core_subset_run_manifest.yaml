@@ -1,5 +1,5 @@
 id: core_2x2_pilot_budget_constrained_v2
-status: pilot_007_integrated_no_model_triage_pending
+status: pilot_007_coordinator_local_triage_recorded
 prepared_at: "2026-04-28T15:13:51+08:00"
 redesigned_at: "2026-04-29T11:20:00+08:00"
 owner: coordinator
@@ -121,7 +121,7 @@ active_default_slice:
   total_primary_patch_generation_attempts: 80
 
 pilot_slice:
-  status: pilot_007_integrated_no_model_triage_pending
+  status: pilot_007_coordinator_local_triage_recorded
   default_before_full_core: true
   acuts:
     - frontier-generic-swe
@@ -976,5 +976,5 @@ locked_inputs:
     locked_task_ids_source: experiments/core_narrative/configs/general_benchmark.yaml
 
 next_no_model_preflights:
-  - pilot_007 delivery and no_issues review are integrated; run coordinator-local no-model triage comparing pilot_006 specialist and pilot_007 generic evidence before any further execution hypothesis
+  - pilot_007 coordinator-local no-model triage is recorded; prepare or dispatch focused no-model codex-cli-transport-hardening before any further execution hypothesis
   - do not start broad ACUT execution, retries, second attempts, additional specialist runs, further pilot attempts, or other model calls before the coordinator records a new explicit execution start
