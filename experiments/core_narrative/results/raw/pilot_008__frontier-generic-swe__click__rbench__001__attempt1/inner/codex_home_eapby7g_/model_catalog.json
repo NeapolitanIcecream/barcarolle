@@ -1,0 +1,108 @@
+{
+  "models": [
+    {
+      "additional_speed_tiers": [],
+      "apply_patch_tool_type": "freeform",
+      "base_instructions": "You are running as a non-interactive ACUT patch-generation agent.\nComplete the task using tools; do not stop at a progress-only final answer such as 'I will modify'.\nInspect the repository, make the necessary file edits, and verify changed files before finishing.\nKeep the final answer brief and do not include credentials, endpoint values, authorization secrets, or full URLs.",
+      "context_window": 272000,
+      "default_reasoning_level": "medium",
+      "default_reasoning_summary": "none",
+      "default_verbosity": "medium",
+      "description": "Small, fast, and cost-efficient model for simpler coding tasks.",
+      "display_name": "OpenAI GPT-5.4 Mini via Barcarolle",
+      "effective_context_window_percent": 95,
+      "experimental_supported_tools": [],
+      "input_modalities": [
+        "text",
+        "image"
+      ],
+      "max_context_window": 272000,
+      "priority": 4,
+      "shell_type": "shell_command",
+      "slug": "openai/gpt-5.4-mini",
+      "support_verbosity": true,
+      "supported_in_api": true,
+      "supported_reasoning_levels": [
+        {
+          "description": "Fast responses with lighter reasoning",
+          "effort": "low"
+        },
+        {
+          "description": "Balances speed and reasoning depth for everyday tasks",
+          "effort": "medium"
+        },
+        {
+          "description": "Greater reasoning depth for complex problems",
+          "effort": "high"
+        },
+        {
+          "description": "Extra high reasoning depth for complex problems",
+          "effort": "xhigh"
+        }
+      ],
+      "supports_image_detail_original": true,
+      "supports_parallel_tool_calls": true,
+      "supports_reasoning_summaries": true,
+      "supports_search_tool": true,
+      "truncation_policy": {
+        "limit": 10000,
+        "mode": "tokens"
+      },
+      "visibility": "list",
+      "web_search_tool_type": "text_and_image"
+    },
+    {
+      "additional_speed_tiers": [
+        "fast"
+      ],
+      "apply_patch_tool_type": "freeform",
+      "base_instructions": "You are running as a non-interactive ACUT patch-generation agent.\nComplete the task using tools; do not stop at a progress-only final answer such as 'I will modify'.\nInspect the repository, make the necessary file edits, and verify changed files before finishing.\nKeep the final answer brief and do not include credentials, endpoint values, authorization secrets, or full URLs.",
+      "context_window": 272000,
+      "default_reasoning_level": "medium",
+      "default_reasoning_summary": "none",
+      "default_verbosity": "low",
+      "description": "Frontier model for complex coding, research, and real-world work.",
+      "display_name": "OpenAI GPT-5.5 via Barcarolle",
+      "effective_context_window_percent": 95,
+      "experimental_supported_tools": [],
+      "input_modalities": [
+        "text",
+        "image"
+      ],
+      "max_context_window": 272000,
+      "priority": 0,
+      "shell_type": "shell_command",
+      "slug": "openai/gpt-5.5",
+      "support_verbosity": true,
+      "supported_in_api": true,
+      "supported_reasoning_levels": [
+        {
+          "description": "Fast responses with lighter reasoning",
+          "effort": "low"
+        },
+        {
+          "description": "Balances speed and reasoning depth for everyday tasks",
+          "effort": "medium"
+        },
+        {
+          "description": "Greater reasoning depth for complex problems",
+          "effort": "high"
+        },
+        {
+          "description": "Extra high reasoning depth for complex problems",
+          "effort": "xhigh"
+        }
+      ],
+      "supports_image_detail_original": true,
+      "supports_parallel_tool_calls": true,
+      "supports_reasoning_summaries": true,
+      "supports_search_tool": true,
+      "truncation_policy": {
+        "limit": 10000,
+        "mode": "tokens"
+      },
+      "visibility": "list",
+      "web_search_tool_type": "text_and_image"
+    }
+  ]
+}
