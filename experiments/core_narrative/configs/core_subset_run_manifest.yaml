@@ -1,5 +1,5 @@
 id: core_2x2_pilot_budget_constrained_v2
-status: pilot_008_integrated_next_decision_ready
+status: pilot_008_integrated_local_triage_recorded
 prepared_at: "2026-04-28T15:13:51+08:00"
 redesigned_at: "2026-04-29T11:20:00+08:00"
 owner: coordinator
@@ -121,7 +121,7 @@ active_default_slice:
   total_primary_patch_generation_attempts: 80
 
 pilot_slice:
-  status: pilot_008_integrated_next_decision_ready
+  status: pilot_008_integrated_local_triage_recorded
   default_before_full_core: true
   acuts:
     - frontier-generic-swe
@@ -959,7 +959,7 @@ pilot_slice:
     record_hostname: false
     record_ip_address: false
   pilot_008_frontier_preflight:
-    status: delivered_reviewed_integrated_next_decision_ready
+    status: delivered_reviewed_integrated_local_triage_recorded
     recorded_at: "2026-05-01T20:22:15+08:00"
     run_id: pilot_008__frontier-generic-swe__click__rbench__001__attempt1
     acut_id: frontier-generic-swe
@@ -1032,6 +1032,71 @@ pilot_slice:
     record_full_base_url: false
     record_hostname: false
     record_ip_address: false
+    post_integration_triage:
+      recorded_at: "2026-05-01T21:39:15+08:00"
+      mode: coordinator_local_no_model
+      inputs:
+        - coordinator_md
+        - pilot_006_execution_and_review_process_md
+        - pilot_007_execution_and_review_process_md
+        - pilot_008_execution_and_review_process_md
+        - structured_raw_normalized_and_cost_ledger_artifacts
+      excluded_inputs:
+        - cli.log
+      cli_log_inspected: false
+      live_model_call_started: false
+      cost_ledger_appended: false
+      compared_runs:
+        - run_id: pilot_006__cheap-click-specialist__click__rbench__001__attempt1
+          acut_id: cheap-click-specialist
+          model_route: openai/gpt-5.4-mini
+          specialist_context_pack_injected: true
+          adapter_status: command_failed
+          normalized_status: missing_for_legacy_nonzero_path
+          inner_codex_cli_status: codex_exec_failed
+          failure_class: nonzero_exit
+          ledger_event: command_failed
+          estimated_cost_usd: 3.00
+          cumulative_estimated_cost_usd: 18.0008
+          patch_size_bytes: 0
+          verifier_run: false
+        - run_id: pilot_007__cheap-generic-swe__click__rbench__001__attempt1
+          acut_id: cheap-generic-swe
+          model_route: openai/gpt-5.4-mini
+          specialist_context_pack_injected: false
+          adapter_status: command_failed
+          normalized_status: infra_failed
+          inner_codex_cli_status: codex_exec_failed
+          failure_class: nonzero_exit
+          ledger_event: command_failed
+          estimated_cost_usd: 3.00
+          cumulative_estimated_cost_usd: 21.0008
+          patch_size_bytes: 0
+          verifier_run: false
+        - run_id: pilot_008__frontier-generic-swe__click__rbench__001__attempt1
+          acut_id: frontier-generic-swe
+          model_route: openai/gpt-5.5
+          specialist_context_pack_injected: false
+          adapter_status: command_failed
+          normalized_status: infra_failed
+          inner_codex_cli_status: codex_exec_failed
+          failure_class: responses_streaming_disconnect
+          transport_failure_class: responses_streaming_disconnect
+          ledger_event: command_failed
+          estimated_cost_usd: 10.00
+          cumulative_estimated_cost_usd: 31.0008
+          patch_size_bytes: 0
+          verifier_run: false
+      triage_implication: treatment_and_model_tier_independent_pre_verifier_transport_failure_on_current_codex_cli_responses_streaming_path
+      scorable_acut_capability_result_available: false
+      next_authorized_step: bounded_no_secret_transport_or_harness_planning_only
+      broad_execution_authorized: false
+      retries_authorized: false
+      second_attempts_authorized: false
+      additional_specialist_acut_runs_authorized: false
+      further_pilot_attempts_authorized: false
+      live_barcarolle_model_calls_authorized: false
+      large_batch_authorized: false
   promotion_to_full_core:
     allowed_only_after: "pilot summary review and explicit coordinator decision"
     full_core_attempts_if_promoted: 80
@@ -1050,5 +1115,5 @@ locked_inputs:
     locked_task_ids_source: experiments/core_narrative/configs/general_benchmark.yaml
 
 next_no_model_preflights:
-  - pilot 008 frontier-generic delivery and no_issues review are integrated; next step should be bounded no-secret planning or coordinator-local triage over pilot 006/007/008 before any further execution hypothesis
+  - pilot 008 frontier-generic delivery and no_issues review are integrated, and coordinator-local no-model triage over pilot 006/007/008 is recorded; next step is bounded no-secret planning for a new transport/harness hypothesis or operational readiness criterion before any further execution hypothesis
   - do not start broad ACUT execution, retries, second attempts, additional specialist runs, further pilot attempts, or other model calls before the coordinator records a new explicit execution start

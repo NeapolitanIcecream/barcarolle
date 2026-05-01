@@ -1,7 +1,7 @@
 # Core Narrative Experiment Coordinator
 
-status: pilot_008_integrated_next_decision_ready
-updated: 2026-05-01T21:27:15+08:00
+status: pilot_008_integrated_local_triage_recorded
+updated: 2026-05-01T21:39:15+08:00
 today_stop_state: 2026-04-28_stop_policy_expired
 phase: Phase 0 - Experiment Bootstrap
 base_commit: 47046e7754d2402b7177a4b80f631ab6b0bcd97c
@@ -237,8 +237,11 @@ No open patch-command blocker remains for the reviewed hand-written command path
 - pilot_008_review: started focused no-model/static result reviewer in tmux session `bcx-pilot-008-reviewer`, branch `codex/core-exp-pilot-008-reviewer`, worktree `/Users/chenmohan/gits/barcarolle-wt-pilot-008-reviewer`, start commit `b05eb77`, reviewing worker commit `b307d18`. Review must pass before integration or any later execution hypothesis.
 - pilot_008_review_result: reviewer delivered `no_issues` in commit `f7fcf34`. The review confirmed the result matches the exact authorization, the frontier generic ACUT excluded the Click specialist context pack, exactly one ledgered model-call attempt occurred, raw/ledger status remained `command_failed`, normalized status was `infra_failed`, structured transport metadata reported `responses_streaming_disconnect`, no verifier ran without a verifier-ready patch, and no retry, second attempt, additional specialist run, further pilot attempt, broad execution, or large batch occurred. No `cli.log` content was inspected.
 - pilot_008_integration: integrated pilot 008 worker delivery as merge commit `c3d25b4` and review artifact as merge commit `5e30487`. No core narrative experiment worker is active. Broad ACUT execution, retries, second attempts, additional specialist runs, further pilot attempts, live BARCAROLLE model calls, and large batches remain unauthorized pending a new explicit coordinator decision.
-- next_authorized_step: decide the next bounded no-secret planning or triage step. Recommended immediate step is coordinator-local no-model triage over integrated pilot 006, pilot 007, and pilot 008 process files plus structured raw/normalized/ledger artifacts only, excluding `cli.log`, before any further live attempt. Do not inspect `cli.log`.
-- resume_entry: On the next step, read this coordinator and latest relevant worker `process.md` files, then decide the next bounded no-secret planning/triage step or defer. Do not inspect `cli.log`.
+- pilot_008_triage_scope_checked: coordinator-local no-model triage completed at `2026-05-01T21:39:15+08:00`. Inputs were this coordinator, pilot 006/007/008 execution and reviewer `process.md` files, and structured raw/normalized/cost-ledger artifacts only. No `cli.log` content was inspected, and no credential values, bearer tokens, resolved secrets, full base URLs, hostnames, or IP addresses were recorded.
+- pilot_008_triage_findings: pilot 006 (`cheap-click-specialist`, `openai/gpt-5.4-mini`, specialist context injected), pilot 007 (`cheap-generic-swe`, `openai/gpt-5.4-mini`, specialist context excluded), and pilot 008 (`frontier-generic-swe`, `openai/gpt-5.5`, specialist context excluded) each reached exactly one ledgered live adapter/model-call attempt on `click__rbench__001`, then failed before verifier with `command_failed` / `codex_exec_failed`, zero-byte patch/no verifier-ready workspace patch, one ledger record, and no verifier run, retry, second attempt, additional specialist run, further pilot attempt, broad execution, or large batch. Pilot 008 records the reviewed `responses_streaming_disconnect` class; pilot 006/007 show the same pre-verifier no-patch failure shape, with pilot 007 normalized by the reviewed nonzero-exit gate.
+- pilot_008_triage_implication: the failure remains treatment-independent and model-tier-independent within the current Codex CLI Responses streaming command path. The integrated attempts are not scorable ACUT capability results. More live attempts on the same path are not justified until a new no-model execution hypothesis or transport mitigation is reviewed.
+- next_authorized_step: bounded no-secret planning only. Prepare a focused no-model decision record for an alternate patch-generation transport/harness or an operational readiness criterion before any new explicit execution-start decision. Broad ACUT execution, retries, second attempts, additional specialist runs, further pilot attempts, live BARCAROLLE model calls, and large batches remain unauthorized.
+- resume_entry: On the next step, read this coordinator and latest relevant worker `process.md` files, then continue with bounded no-secret planning for a new transport/harness hypothesis or defer. Do not inspect `cli.log`.
 
 ## Execution Start Preflight
 
