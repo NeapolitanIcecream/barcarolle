@@ -1,5 +1,5 @@
 id: core_2x2_pilot_budget_constrained_v2
-status: pilot_008_review_running
+status: pilot_008_integrated_next_decision_ready
 prepared_at: "2026-04-28T15:13:51+08:00"
 redesigned_at: "2026-04-29T11:20:00+08:00"
 owner: coordinator
@@ -121,7 +121,7 @@ active_default_slice:
   total_primary_patch_generation_attempts: 80
 
 pilot_slice:
-  status: pilot_008_review_running
+  status: pilot_008_integrated_next_decision_ready
   default_before_full_core: true
   acuts:
     - frontier-generic-swe
@@ -959,7 +959,7 @@ pilot_slice:
     record_hostname: false
     record_ip_address: false
   pilot_008_frontier_preflight:
-    status: review_running
+    status: delivered_reviewed_integrated_next_decision_ready
     recorded_at: "2026-05-01T20:22:15+08:00"
     run_id: pilot_008__frontier-generic-swe__click__rbench__001__attempt1
     acut_id: frontier-generic-swe
@@ -988,6 +988,7 @@ pilot_slice:
       worktree: /Users/chenmohan/gits/barcarolle-wt-pilot-008-execution
       start_commit: 015d53d
       worker_commit: b307d18
+      integrated_as: c3d25b4
       status: delivered
     result:
       adapter_status: command_failed
@@ -1001,13 +1002,15 @@ pilot_slice:
       cumulative_estimated_cost_usd: 31.0008
       verifier_run: false
     review:
-      status: running
+      status: no_issues_integrated
       worker: pilot-008-reviewer
-      session: bcx-pilot-008-reviewer
+      session: exited
       branch: codex/core-exp-pilot-008-reviewer
       worktree: /Users/chenmohan/gits/barcarolle-wt-pilot-008-reviewer
       reviewed_commit: b307d18
       start_commit: b05eb77
+      worker_commit: f7fcf34
+      integrated_as: 5e30487
       live_model_call_made_by_review: false
       cli_log_inspected: false
     broad_execution_authorized: false
@@ -1047,5 +1050,5 @@ locked_inputs:
     locked_task_ids_source: experiments/core_narrative/configs/general_benchmark.yaml
 
 next_no_model_preflights:
-  - pilot 008 frontier-generic delivery is under focused no-model/static review; wait for no_issues review or blocker before integration or any further execution hypothesis
+  - pilot 008 frontier-generic delivery and no_issues review are integrated; next step should be bounded no-secret planning or coordinator-local triage over pilot 006/007/008 before any further execution hypothesis
   - do not start broad ACUT execution, retries, second attempts, additional specialist runs, further pilot attempts, or other model calls before the coordinator records a new explicit execution start
