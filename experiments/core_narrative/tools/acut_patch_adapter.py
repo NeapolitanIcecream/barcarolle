@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 import argparse
+import json
 import os
 import sys
 from decimal import Decimal
@@ -44,6 +45,8 @@ from run_task import restore_tracked_workspace_changes, write_safe_patch
 TOOL = "acut_patch_adapter"
 ADAPTER_ID = "codex-cli-acut-adapter-v0"
 NO_MODEL_COMMAND = ["<dry-run:no-model-patch-generation>"]
+INNER_PATCH_COMMAND_TOOL = "codex_cli_patch_command"
+DEFAULT_NONZERO_FAILURE_CLASS = "nonzero_exit"
 
 
 def parse_args() -> argparse.Namespace:
@@ -252,6 +255,102 @@ def write_normalized_result(
         "metadata": dict(metadata),
     }
     write_json(path, payload)
+
+
+def command_option_value(command: Sequence[str], option: str) -> str | None:
+    for index, value in enumerate(command[:-1]):
+        if value == option:
+            return command[index + 1]
+    return None
+
+
+def sanitized_transport_failure(value: object) -> dict[str, Any] | None:
+    if not isinstance(value, dict) or value.get("present") is not True:
+        return None
+    allowed_keys = {
+        "present",
+        "failure_class",
+        "wire_api",
+        "endpoint_path",
+        "after_reconnects",
+        "reconnect_limit",
+        "retry_exhausted",
+        "matched_stdout",
+        "matched_stderr",
+        "messages_recorded",
+        "content_recorded",
+        "redaction_applied_before_detection",
+    }
+    sanitized: dict[str, Any] = {}
+    for key in allowed_keys:
+        item = value.get(key)
+        if isinstance(item, (bool, int)) or item is None:
+            sanitized[key] = item
+        elif isinstance(item, str) and "://" not in item:
+            if key == "endpoint_path" and not item.startswith("/"):
+                continue
+            sanitized[key] = item
+    return sanitized
+
+
+def read_inner_patch_command_summary(command: Sequence[str]) -> dict[str, Any]:
+    summary_arg = command_option_value(command, "--summary-output")
+    metadata: dict[str, Any] = {
+        "summary_output_arg_present": summary_arg is not None,
+        "summary_read": False,
+        "summary_path": summary_arg,
+    }
+    if summary_arg is None:
+        return metadata
+
+    try:
+        data = json.loads(Path(summary_arg).read_text(encoding="utf-8"))
+    except OSError as exc:
+        metadata["summary_read_error_type"] = type(exc).__name__
+        return metadata
+    except json.JSONDecodeError:
+        metadata["summary_read_error_type"] = "JSONDecodeError"
+        return metadata
+
+    if not isinstance(data, dict):
+        metadata["summary_read_error_type"] = "unexpected_json_shape"
+        return metadata
+
+    tool = data.get("tool")
+    metadata.update(
+        {
+            "summary_read": True,
+            "tool": tool,
+            "inner_status": data.get("status"),
+        }
+    )
+    if tool != INNER_PATCH_COMMAND_TOOL:
+        return metadata
+
+    failure_capture = data.get("failure_capture")
+    if not isinstance(failure_capture, dict):
+        failure_capture = {}
+    failure_class = failure_capture.get("failure_class")
+    transport_failure = sanitized_transport_failure(data.get("transport_failure"))
+    if transport_failure is None:
+        transport_failure = sanitized_transport_failure(failure_capture.get("transport_failure"))
+
+    metadata.update(
+        {
+            "failure_class": failure_class if isinstance(failure_class, str) else None,
+            "cli_log_inspected": bool(failure_capture.get("cli_log_inspected")),
+        }
+    )
+    if transport_failure is not None:
+        metadata["transport_failure"] = transport_failure
+    return metadata
+
+
+def effective_nonzero_failure_class(inner_summary: Mapping[str, Any]) -> str:
+    failure_class = inner_summary.get("failure_class")
+    if isinstance(failure_class, str) and failure_class:
+        return failure_class
+    return DEFAULT_NONZERO_FAILURE_CLASS
 
 
 def base_payload(
@@ -527,6 +626,7 @@ def main() -> int:
             stderr_path=stderr_path,
             env=acut_env,
         )
+        inner_patch_command = read_inner_patch_command_summary(command)
         patch_artifact = write_safe_patch(workspace, patch_path, acut_env)
         tracked_restore = {"attempted": False, "tracked_changes_remaining": None}
         unsafe_patch_rejected = bool(patch_artifact["unsafe_content_detected"])
@@ -569,6 +669,27 @@ def main() -> int:
             and not unsafe_patch_rejected
             and patch_size_bytes == 0
         )
+        nonzero_failure_class = (
+            effective_nonzero_failure_class(inner_patch_command)
+            if nonzero_exit_without_verifier_patch
+            else None
+        )
+
+        ledger_metadata = {
+            "adapter_id": ADAPTER_ID,
+            "mode": "command",
+            "gate_status": budget_gate["status"],
+            "command_exit_code": run["exit_code"],
+            "command_timed_out": run["timed_out"],
+            "model_call_made": command_model_call_made,
+            "patch_size_bytes": patch_size_bytes,
+            "no_patch_generated": no_patch_generated,
+        }
+        if nonzero_failure_class is not None:
+            ledger_metadata["failure_class"] = nonzero_failure_class
+        transport_failure = inner_patch_command.get("transport_failure")
+        if isinstance(transport_failure, dict) and transport_failure.get("present") is True:
+            ledger_metadata["transport_failure_class"] = transport_failure.get("failure_class")
 
         ledger_append = append_attempt_record(
             ledger_path=Path(args.llm_ledger),
@@ -584,16 +705,7 @@ def main() -> int:
             output_tokens=output_tokens,
             estimated_cost=projected_cost,
             actual_cost=actual_cost,
-            metadata={
-                "adapter_id": ADAPTER_ID,
-                "mode": "command",
-                "gate_status": budget_gate["status"],
-                "command_exit_code": run["exit_code"],
-                "command_timed_out": run["timed_out"],
-                "model_call_made": command_model_call_made,
-                "patch_size_bytes": patch_size_bytes,
-                "no_patch_generated": no_patch_generated,
-            },
+            metadata=ledger_metadata,
         )
         payload = base_payload(
             status=status,
@@ -623,6 +735,7 @@ def main() -> int:
                 "no_patch_generated": no_patch_generated,
                 "verifier_ready_patch_available": verifier_ready_patch_available,
                 "nonzero_exit_without_verifier_patch": nonzero_exit_without_verifier_patch,
+                "inner_patch_command": inner_patch_command,
                 "tracked_workspace_restore": tracked_restore,
             },
         )
@@ -674,7 +787,8 @@ def main() -> int:
                     "tool": TOOL,
                     "adapter_id": ADAPTER_ID,
                     "adapter_status": status,
-                    "failure_class": "nonzero_exit",
+                    "failure_class": nonzero_failure_class or DEFAULT_NONZERO_FAILURE_CLASS,
+                    "inner_patch_command": inner_patch_command,
                     "dry_run": False,
                     "command_no_model": args.command_no_model,
                     "model_call_made": command_model_call_made,

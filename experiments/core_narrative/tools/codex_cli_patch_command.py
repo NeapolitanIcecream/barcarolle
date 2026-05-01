@@ -60,6 +60,7 @@ MODEL_DISPLAY_NAMES = {
 }
 DEFAULT_CODEX_TIMEOUT_SECONDS = 3600
 DEFAULT_FAILURE_CAPTURE_TAIL_CHARS = 2000
+RESPONSES_STREAMING_DISCONNECT_CLASS = "responses_streaming_disconnect"
 HOSTNAME_LABEL_RE = r"[A-Za-z0-9](?:[A-Za-z0-9-]{0,61}[A-Za-z0-9])?"
 NETWORK_HOSTNAME_RE = re.compile(
     rf"(?<![A-Za-z0-9_.-])(?:{HOSTNAME_LABEL_RE}\.)+"
@@ -70,6 +71,9 @@ NETWORK_HOSTNAME_RE = re.compile(
 IPV4_RE = re.compile(r"\b(?:\d{1,3}\.){3}\d{1,3}\b")
 IPV6_RE = re.compile(r"\b(?:[0-9A-Fa-f]{1,4}:){2,}[0-9A-Fa-f]{1,4}\b")
 LOCALHOST_RE = re.compile(r"\blocalhost\b", re.IGNORECASE)
+RESPONSES_STREAM_DISCONNECT_RE = re.compile(r"\bstream disconnected before completion\b", re.IGNORECASE)
+RESPONSES_ENDPOINT_PATH_RE = re.compile(r"/responses\b", re.IGNORECASE)
+CODEX_RECONNECT_RE = re.compile(r"\bReconnecting\.\.\.\s+(\d+)\s*/\s*(\d+)\b", re.IGNORECASE)
 
 NON_INTERACTIVE_BASE_INSTRUCTIONS = "\n".join(
     [
@@ -420,6 +424,62 @@ def tail_text(text: str, max_chars: int = DEFAULT_FAILURE_CAPTURE_TAIL_CHARS) ->
     return text[-max_chars:], True
 
 
+def iter_codex_exec_error_messages(text: str) -> list[str]:
+    messages: list[str] = []
+    for raw_line in text.splitlines():
+        line = raw_line.strip()
+        if not line:
+            continue
+        try:
+            event = json.loads(line)
+        except json.JSONDecodeError:
+            messages.append(line)
+            continue
+        if not isinstance(event, dict):
+            continue
+        message = event.get("message")
+        if isinstance(message, str):
+            messages.append(message)
+        error = event.get("error")
+        if isinstance(error, dict) and isinstance(error.get("message"), str):
+            messages.append(str(error["message"]))
+    return messages
+
+
+def detect_responses_streaming_disconnect(stdout: str, stderr: str) -> dict[str, Any]:
+    stdout_messages = iter_codex_exec_error_messages(stdout)
+    stderr_messages = iter_codex_exec_error_messages(stderr)
+    combined = "\n".join([*stdout_messages, *stderr_messages])
+    stream_disconnect = bool(RESPONSES_STREAM_DISCONNECT_RE.search(combined))
+    responses_endpoint = bool(RESPONSES_ENDPOINT_PATH_RE.search(combined))
+    reconnect_matches = [
+        (int(match.group(1)), int(match.group(2)))
+        for match in CODEX_RECONNECT_RE.finditer(combined)
+    ]
+    max_reconnect = max((attempt for attempt, _limit in reconnect_matches), default=None)
+    reconnect_limit = max((limit for _attempt, limit in reconnect_matches), default=None)
+    retry_exhausted = bool(
+        max_reconnect is not None
+        and reconnect_limit is not None
+        and max_reconnect >= reconnect_limit
+    )
+    present = stream_disconnect and responses_endpoint
+    return {
+        "present": present,
+        "failure_class": RESPONSES_STREAMING_DISCONNECT_CLASS if present else None,
+        "wire_api": PROVIDER_WIRE_API if present else None,
+        "endpoint_path": "/responses" if present else None,
+        "after_reconnects": max_reconnect,
+        "reconnect_limit": reconnect_limit,
+        "retry_exhausted": retry_exhausted,
+        "matched_stdout": bool(stdout_messages and RESPONSES_STREAM_DISCONNECT_RE.search("\n".join(stdout_messages))),
+        "matched_stderr": bool(stderr_messages and RESPONSES_STREAM_DISCONNECT_RE.search("\n".join(stderr_messages))),
+        "messages_recorded": False,
+        "content_recorded": False,
+        "redaction_applied_before_detection": True,
+    }
+
+
 def inspect_workspace_patch_state(workspace: Path, env: Mapping[str, str]) -> dict[str, Any]:
     try:
         completed = subprocess.run(
@@ -471,6 +531,11 @@ def inspect_workspace_patch_state(workspace: Path, env: Mapping[str, str]) -> di
 def classify_failure(run: Mapping[str, Any], workspace_patch: Mapping[str, Any]) -> str | None:
     if run.get("timed_out"):
         return "timeout"
+    transport_failure = run.get("transport_failure")
+    if isinstance(transport_failure, Mapping) and transport_failure.get("present"):
+        failure_class = transport_failure.get("failure_class")
+        if isinstance(failure_class, str) and failure_class:
+            return failure_class
     exit_code = run.get("exit_code")
     if exit_code not in (0, None):
         return "nonzero_exit"
@@ -491,9 +556,11 @@ def build_failure_capture(
     workspace_patch: Mapping[str, Any],
 ) -> dict[str, Any]:
     present = failure_class is not None
+    transport_failure = run.get("transport_failure")
     return {
         "present": present,
         "failure_class": failure_class,
+        "transport_failure": transport_failure if isinstance(transport_failure, Mapping) else {"present": False},
         "exit_code": run.get("exit_code"),
         "timed_out": bool(run.get("timed_out")),
         "duration_seconds": run.get("duration_seconds"),
@@ -651,6 +718,7 @@ def run_codex_exec(
         )
         safe_stdout = redact_failure_capture_text(completed.stdout, env)
         safe_stderr = redact_failure_capture_text(completed.stderr, env)
+        transport_failure = detect_responses_streaming_disconnect(safe_stdout, safe_stderr)
         stdout_path.write_text(safe_stdout, encoding="utf-8")
         stderr_path.write_text(safe_stderr, encoding="utf-8")
         if safe_stdout:
@@ -671,10 +739,12 @@ def run_codex_exec(
             "stderr_tail": stderr_tail,
             "stdout_tail_truncated": stdout_truncated,
             "stderr_tail_truncated": stderr_truncated,
+            "transport_failure": transport_failure,
         }
     except subprocess.TimeoutExpired as exc:
         safe_stdout = redact_failure_capture_text(exc.stdout, env)
         safe_stderr = redact_failure_capture_text(exc.stderr, env)
+        transport_failure = detect_responses_streaming_disconnect(safe_stdout, safe_stderr)
         stdout_path.write_text(safe_stdout, encoding="utf-8")
         stderr_path.write_text(safe_stderr, encoding="utf-8")
         if safe_stdout:
@@ -695,6 +765,7 @@ def run_codex_exec(
             "stderr_tail": stderr_tail,
             "stdout_tail_truncated": stdout_truncated,
             "stderr_tail_truncated": stderr_truncated,
+            "transport_failure": transport_failure,
         }
     except FileNotFoundError as exc:
         raise ToolError("codex executable was not found", executable=command[0]) from exc
@@ -857,6 +928,7 @@ def run(argv: Sequence[str]) -> int:
                 "stderr_tail_recorded": failure_class is not None,
             },
             "workspace_patch": workspace_patch,
+            "transport_failure": run.get("transport_failure", {"present": False}),
             "failure_capture": build_failure_capture(
                 run=run,
                 failure_class=failure_class,

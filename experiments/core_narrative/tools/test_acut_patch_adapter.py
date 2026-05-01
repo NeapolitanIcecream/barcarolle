@@ -33,8 +33,9 @@ class AcutPatchAdapterTests(unittest.TestCase):
     def run_adapter_case(
         self,
         *,
-        command: list[str],
+        command: list[str] | None = None,
         run_id: str,
+        inner_summary: dict[str, object] | None = None,
     ) -> tuple[subprocess.CompletedProcess[str], dict[str, object], list[dict[str, object]], Path]:
         root = Path(tempfile.mkdtemp())
         self.addCleanup(shutil.rmtree, root, ignore_errors=True)
@@ -55,6 +56,25 @@ class AcutPatchAdapterTests(unittest.TestCase):
         output_path = root / "adapter_result.json"
         normalized_path = root / "normalized.json"
         artifact_dir = root / "artifacts"
+        if inner_summary is not None:
+            inner_summary_path = artifact_dir / "codex_cli_patch_command.json"
+            writer_path = root / "write_inner_summary.py"
+            writer_path.write_text(
+                (
+                    "import json\n"
+                    "import sys\n"
+                    "from pathlib import Path\n"
+                    f"PAYLOAD = {inner_summary!r}\n"
+                    "summary_path = Path(sys.argv[sys.argv.index('--summary-output') + 1])\n"
+                    "summary_path.parent.mkdir(parents=True, exist_ok=True)\n"
+                    "summary_path.write_text(json.dumps(PAYLOAD), encoding='utf-8')\n"
+                    "print('inner failed before patch')\n"
+                    "sys.exit(7)\n"
+                ),
+                encoding="utf-8",
+            )
+            command = [sys.executable, str(writer_path), "--summary-output", str(inner_summary_path)]
+        self.assertIsNotNone(command)
 
         env = os.environ.copy()
         env["BARCAROLLE_LLM_API_KEY"] = "test-api-key"
@@ -150,6 +170,55 @@ class AcutPatchAdapterTests(unittest.TestCase):
         self.assertEqual(len(ledger_records), 1)
         self.assertEqual(ledger_records[0]["event"], "command_failed")
         self.assertIs(ledger_records[0]["metadata"]["no_patch_generated"], False)
+
+    def test_nonzero_exit_normalized_result_preserves_inner_transport_failure_class(self) -> None:
+        """Regression: known Codex transport failures should remain distinguishable from generic exits."""
+        inner_summary = {
+            "tool": "codex_cli_patch_command",
+            "status": "codex_exec_failed",
+            "failure_capture": {
+                "present": True,
+                "failure_class": "responses_streaming_disconnect",
+                "cli_log_inspected": False,
+            },
+            "transport_failure": {
+                "present": True,
+                "failure_class": "responses_streaming_disconnect",
+                "wire_api": "responses",
+                "endpoint_path": "/responses",
+                "after_reconnects": 5,
+                "reconnect_limit": 5,
+                "retry_exhausted": True,
+                "messages_recorded": False,
+                "content_recorded": False,
+            },
+        }
+        completed, adapter_result, ledger_records, normalized_path = self.run_adapter_case(
+            inner_summary=inner_summary,
+            run_id="unit_transport_disconnect_attempt1",
+        )
+
+        self.assertEqual(completed.returncode, 0, completed.stderr)
+        normalized = json.loads(normalized_path.read_text(encoding="utf-8"))
+
+        self.assertEqual(adapter_result["status"], "command_failed")
+        self.assertEqual(adapter_result["inner_patch_command"]["failure_class"], "responses_streaming_disconnect")
+        self.assertEqual(
+            adapter_result["inner_patch_command"]["transport_failure"]["failure_class"],
+            "responses_streaming_disconnect",
+        )
+        self.assertEqual(normalized["status"], "infra_failed")
+        self.assertEqual(normalized["metadata"]["failure_class"], "responses_streaming_disconnect")
+        self.assertEqual(
+            normalized["metadata"]["inner_patch_command"]["transport_failure"]["after_reconnects"],
+            5,
+        )
+        self.assertEqual(ledger_records[0]["event"], "command_failed")
+        self.assertEqual(ledger_records[0]["metadata"]["failure_class"], "responses_streaming_disconnect")
+        self.assertEqual(
+            ledger_records[0]["metadata"]["transport_failure_class"],
+            "responses_streaming_disconnect",
+        )
 
     def test_unsafe_patch_rejection_is_not_marked_no_patch_generated(self) -> None:
         """Regression: unsafe sanitized artifacts are not true empty-patch runs."""
