@@ -1,7 +1,7 @@
 # Core Narrative Experiment Coordinator
 
-status: pilot_006_integrated_next_decision_ready
-updated: 2026-05-01T16:52:24+08:00
+status: pilot_006_integrated_no_model_triage_pending
+updated: 2026-05-01T16:54:39+08:00
 today_stop_state: 2026-04-28_stop_policy_expired
 phase: Phase 0 - Experiment Bootstrap
 base_commit: 47046e7754d2402b7177a4b80f631ab6b0bcd97c
@@ -190,8 +190,10 @@ No open patch-command blocker remains for the reviewed hand-written command path
 - pilot_006_worker: delivered worker commit `aefbcd9`, now integrated. Exactly one live adapter attempt ran, adapter status `command_failed`, inner Codex CLI status `codex_exec_failed`, structured failure capture present with class `nonzero_exit`, specialist context injected, one cost ledger append, cumulative estimated cost USD `18.0008`, no verifier run, no broad execution, no retry beyond this diagnostic recovery, no second attempt, no additional specialist run, no further pilot attempt, and no large batch. Worker process reports no `cli.log` inspection.
 - pilot_006_review: focused reviewer delivered `no_issues` in commit `5287668`, now integrated. Review concluded the missing normalized result file is acceptable for this nonzero inner-command failure path; raw adapter and inner-command summaries remain the authoritative result artifacts.
 - pilot_006_integration: worker delivery and no_issues review are integrated on the coordinator branch. No pilot worker is active. Broad ACUT execution, retries, second attempts, additional specialist runs, further pilot attempts, live BARCAROLLE model calls, and large batches remain unauthorized pending a new explicit coordinator decision.
-- next_authorized_step: decide the next bounded planning or preflight step in light of the integrated pilot-006 command_failed result and the repeated cheap-click-specialist infra pattern. No execution expansion is authorized by this integration step.
-- resume_entry: On the next step, read this coordinator and the latest relevant worker `process.md` files, then decide the next bounded planning/preflight step or defer with reason. Do not inspect `cli.log`.
+- pilot_006_next_decision: defer any further live preflight or execution-start decision. Rationale: the integrated pilot 006 diagnostic recovery still ended before a verifier-ready patch, with the same cheap-click-specialist cell producing `command_failed` / inner `codex_exec_failed` even after reviewed failure-capture preservation. Before any more spend, perform no-model triage over the structured pilot 006 artifacts and adjacent reviewed pilot 004/005 evidence, excluding `cli.log`, to decide whether the next bounded step is a harness repair or a different bounded execution hypothesis.
+- pilot_006_triage_mode: keep the immediate next step coordinator-local unless the structured artifacts prove insufficient. The available no-secret inputs are the worker/reviewer `process.md` files, `.codex-workflows/core-narrative-experiment/reviews/pilot-006-review.md`, and the structured raw/ledger artifacts for pilot 004, pilot 005, and pilot 006. `cli.log` remains excluded.
+- next_authorized_step: run or prepare coordinator-local no-model triage over the integrated pilot 006 failure-capture artifacts before any further live preflight, live attempt, retry, second attempt, additional specialist run, further pilot attempt, broad execution, or large batch.
+- resume_entry: On the next step, read this coordinator and the latest relevant worker `process.md` files, then perform coordinator-local no-model triage or record a concrete no-model repair dispatch if the structured artifacts are insufficient. Do not inspect `cli.log`.
 
 ## Execution Start Preflight
 

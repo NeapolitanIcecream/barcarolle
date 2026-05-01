@@ -1,5 +1,5 @@
 id: core_2x2_pilot_budget_constrained_v2
-status: pilot_006_integrated_next_decision_ready
+status: pilot_006_integrated_no_model_triage_pending
 prepared_at: "2026-04-28T15:13:51+08:00"
 redesigned_at: "2026-04-29T11:20:00+08:00"
 owner: coordinator
@@ -121,7 +121,7 @@ active_default_slice:
   total_primary_patch_generation_attempts: 80
 
 pilot_slice:
-  status: pilot_006_integrated_next_decision_ready
+  status: pilot_006_integrated_no_model_triage_pending
   default_before_full_core: true
   acuts:
     - frontier-generic-swe
@@ -843,8 +843,10 @@ pilot_slice:
       worktree: /Users/chenmohan/gits/barcarolle-wt-pilot-006-reviewer
       worker_commit: 5287668
     next_decision:
-      status: pilot_006_integrated_next_decision_ready
-      reason: pilot_006_ended_command_failed_with_structured_nonzero_exit_failure_capture_and_no_verifier_ready_patch
+      status: pilot_006_integrated_no_model_triage_pending
+      reason: pilot_006_repeated_cheap_click_specialist_pre_verifier_failure_requires_no_model_triage_before_more_spend
+      triage_mode: coordinator_local
+      structured_inputs_sufficient_unknown: true
       broad_execution_authorized: false
       retries_authorized: false
       second_attempts_authorized: false
@@ -879,5 +881,5 @@ locked_inputs:
     locked_task_ids_source: experiments/core_narrative/configs/general_benchmark.yaml
 
 next_no_model_preflights:
-  - pilot_006 delivery and no_issues review are integrated; decide the next bounded planning or preflight step before any later execution decision
+  - pilot_006 delivery and no_issues review are integrated; run coordinator-local no-model triage over pilot 004/005/006 structured artifacts before any later live preflight or execution decision
   - do not start broad ACUT execution, retries beyond pilot_006, second attempts, additional specialist runs, further pilot attempts, or other model calls before the coordinator records a new explicit execution start
