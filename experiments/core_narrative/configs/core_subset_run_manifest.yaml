@@ -1,5 +1,5 @@
 id: core_2x2_pilot_budget_constrained_v2
-status: pilot_007_preflight_recorded_awaiting_start_decision
+status: pilot_007_worker_running
 prepared_at: "2026-04-28T15:13:51+08:00"
 redesigned_at: "2026-04-29T11:20:00+08:00"
 owner: coordinator
@@ -121,7 +121,7 @@ active_default_slice:
   total_primary_patch_generation_attempts: 80
 
 pilot_slice:
-  status: pilot_007_preflight_recorded_awaiting_start_decision
+  status: pilot_007_worker_running
   default_before_full_core: true
   acuts:
     - frontier-generic-swe
@@ -880,7 +880,7 @@ pilot_slice:
       live_barcarolle_model_calls_authorized: false
       large_batch_authorized: false
     pilot_007_preflight:
-      status: awaiting_explicit_start_decision
+      status: worker_running
       recorded_at: "2026-05-01T18:29:11+08:00"
       run_id: pilot_007__cheap-generic-swe__click__rbench__001__attempt1
       acut_id: cheap-generic-swe
@@ -895,9 +895,17 @@ pilot_slice:
       empty_patch_gate: revision_1_reviewed_integrated
       failure_capture_gate: revision_1_reviewed_integrated
       nonzero_exit_normalization_gate: reviewed_integrated
-      execution_start_decision_recorded: false
-      execution_authorized: false
-      live_model_call_authorized: false
+      execution_start_decision_recorded: true
+      execution_start_recorded_at: "2026-05-01T18:40:59+08:00"
+      execution_authorized: true
+      execution_authorized_scope: this_single_recovery_candidate_run_id_only
+      live_model_call_authorized: true
+      model_calls_allowed_scope: single_pilot_007_execution_worker
+      worker:
+        name: pilot-007-execution
+        session: bcx-pilot-007-execution
+        branch: codex/core-exp-pilot-007-execution
+        worktree: /Users/chenmohan/gits/barcarolle-wt-pilot-007-execution
       broad_execution_authorized: false
       retry_authorized: false
       second_attempt_authorized: false
@@ -944,5 +952,5 @@ locked_inputs:
     locked_task_ids_source: experiments/core_narrative/configs/general_benchmark.yaml
 
 next_no_model_preflights:
-  - pilot_007 no-secret preflight is recorded; decide whether to record a separate explicit start decision for the single named candidate or defer with reason
+  - pilot_007 single bounded worker is running; wait for delivered result or blocker before any further execution decision
   - do not start broad ACUT execution, retries beyond pilot_006, second attempts, additional specialist runs, further pilot attempts, or other model calls before the coordinator records a new explicit execution start
