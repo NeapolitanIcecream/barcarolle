@@ -556,6 +556,19 @@ def main() -> int:
         else:
             status = "command_failed"
             event = "command_failed"
+        verifier_ready_patch_available = (
+            status == "command_completed"
+            and not unsafe_patch_rejected
+            and not run["timed_out"]
+            and patch_size_bytes > 0
+        )
+        nonzero_exit_without_verifier_patch = (
+            status == "command_failed"
+            and run["exit_code"] not in (0, None)
+            and not run["timed_out"]
+            and not unsafe_patch_rejected
+            and patch_size_bytes == 0
+        )
 
         ledger_append = append_attempt_record(
             ledger_path=Path(args.llm_ledger),
@@ -608,6 +621,8 @@ def main() -> int:
                 "command_timed_out": run["timed_out"],
                 "patch_artifact": patch_artifact,
                 "no_patch_generated": no_patch_generated,
+                "verifier_ready_patch_available": verifier_ready_patch_available,
+                "nonzero_exit_without_verifier_patch": nonzero_exit_without_verifier_patch,
                 "tracked_workspace_restore": tracked_restore,
             },
         )
@@ -636,6 +651,38 @@ def main() -> int:
                     "model_call_made": command_model_call_made,
                     "command_exit_code": run["exit_code"],
                     "patch_size_bytes": patch_size_bytes,
+                    "ledger_append_status": ledger_append["status"],
+                },
+            )
+        elif nonzero_exit_without_verifier_patch:
+            write_normalized_result(
+                path=args.normalized_output,
+                run_id=run_id,
+                acut_id=acut_id,
+                task_id=task_id,
+                split=split,
+                attempt=args.attempt,
+                started_at=started_at,
+                finished_at=finished_at,
+                status="infra_failed",
+                patch_path=patch_path,
+                stdout_path=stdout_path,
+                stderr_path=stderr_path,
+                duration_seconds=float(run["duration_seconds"]),
+                error="patch-generation command exited nonzero without producing a verifier-ready patch",
+                metadata={
+                    "tool": TOOL,
+                    "adapter_id": ADAPTER_ID,
+                    "adapter_status": status,
+                    "failure_class": "nonzero_exit",
+                    "dry_run": False,
+                    "command_no_model": args.command_no_model,
+                    "model_call_made": command_model_call_made,
+                    "command_exit_code": run["exit_code"],
+                    "command_timed_out": run["timed_out"],
+                    "patch_size_bytes": patch_size_bytes,
+                    "no_patch_generated": no_patch_generated,
+                    "verifier_ready_patch_available": verifier_ready_patch_available,
                     "ledger_append_status": ledger_append["status"],
                 },
             )
