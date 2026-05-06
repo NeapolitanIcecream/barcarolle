@@ -1133,6 +1133,7 @@ post_pilot_008_transport_gate:
     - explicit scope statement preserving the bans on broad execution, retries, second attempts, additional specialist runs, further pilots, and large batches
   no_model_options_note: experiments/core_narrative/reports/post_pilot_008_transport_options.md
   option_c_no_model_spike: experiments/core_narrative/reports/post_pilot_008_option_c_no_model_spike.md
+  kickoff_narrative_evidence_memo: experiments/core_narrative/reports/kickoff_narrative_evidence_memo.md
   next_safe_action: review_option_c_no_model_spike_then_pause_or_prepare_separate_operational_readiness_record
 
 locked_inputs:
@@ -1149,5 +1150,5 @@ locked_inputs:
     locked_task_ids_source: experiments/core_narrative/configs/general_benchmark.yaml
 
 next_no_model_preflights:
-  - post-pilot-008 transport gate is recorded at `.codex-workflows/core-narrative-experiment/decisions/post-pilot-008-transport-gate.md`; the no-model options note is `experiments/core_narrative/reports/post_pilot_008_transport_options.md`; the completed Option C no-model spike is `experiments/core_narrative/reports/post_pilot_008_option_c_no_model_spike.md`; next step is review of that spike, then pause/report no scoreable result or prepare a separate operational-readiness record before any execution hypothesis
+  - post-pilot-008 transport gate is recorded at `.codex-workflows/core-narrative-experiment/decisions/post-pilot-008-transport-gate.md`; the no-model options note is `experiments/core_narrative/reports/post_pilot_008_transport_options.md`; the completed Option C no-model spike is `experiments/core_narrative/reports/post_pilot_008_option_c_no_model_spike.md`; the kickoff narrative evidence memo is `experiments/core_narrative/reports/kickoff_narrative_evidence_memo.md`; next step is review of that spike, then pause/report no scoreable result or prepare a separate operational-readiness record before any execution hypothesis
   - do not start live BARCAROLLE model calls, broad ACUT execution, retries, second attempts, additional specialist runs, further pilot attempts, or other model calls before the coordinator satisfies the gate and records a new explicit execution start
