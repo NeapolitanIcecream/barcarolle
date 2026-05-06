@@ -1,7 +1,7 @@
 # Core Narrative Experiment Coordinator
 
 status: pilot_008_integrated_local_triage_recorded
-updated: 2026-05-01T21:39:15+08:00
+updated: 2026-05-06T23:51:30+08:00
 today_stop_state: 2026-04-28_stop_policy_expired
 phase: Phase 0 - Experiment Bootstrap
 base_commit: 47046e7754d2402b7177a4b80f631ab6b0bcd97c
@@ -117,7 +117,11 @@ Execute `docs/experiments/core-narrative-experiment-plan.md` with tmux-managed C
 
 ## Blockers
 
-No open patch-command blocker remains for the reviewed hand-written command path, but bounded pilot attempts have not yet produced a verifier-ready patch. Broad ACUT execution has not been started and no large model-call batch has started. The first, pilot-002, and pilot-003 bounded attempts are integrated and reviewed with `no_issues`, and all three live patch commands failed with redacted outcome `LLM request failed` and error type `gaierror`. Parent no-secret diagnostics narrowed the first two failures to bare model route/name mismatch rather than missing env, DNS/TCP/TLS, endpoint reachability, or credit exhaustion, and the active 2x2 ACUT configs now use provider-prefixed model routes. The focused route health check with token cap `16` returned HTTP 2xx for both active model tiers, but pilot-003 still failed in the full patch-generation request path after the route fix. The Codex CLI inner patch-generation harness is now implemented, reviewed with `no_issues`, and integrated. The task-agnostic Click specialist context pack and no-model injection evidence are now generated, reviewed with `no_issues`, and integrated. The first `pilot_004` cheap Click-specialist worker blocked before any attempt because its worktree was based on preflight commit `b00d65d` and did not include coordinator/run-manifest commit `58bf5ed` with the explicit execution-start decision. No model call happened, no budget was spent, no ledger append occurred, and no raw/normalized attempt artifacts were written. The refreshed `pilot_004` single-run redispatch is delivered, reviewed with `no_issues`, and integrated. The post-review empty-patch harness risk is now hardened: if the inner command exits `0` but produces an empty patch/git diff, `acut_patch_adapter.py` records `no_patch_generated` and normalized `infra_failed`, not `command_completed`. Pilot 005 is also delivered, reviewed with `no_issues`, and integrated as a single recovery replacement for the pilot 004 infra failure, but it ended `command_failed` / normalized `infra_failed` with no patch or verifier run. The next safe step is no-model failure triage over the reviewed pilot 004 and pilot 005 artifacts, excluding `cli.log`, before spending more budget. No broad execution, retry, second attempt, additional specialist run, further pilot attempt, live BARCAROLLE model call, or large batch is authorized.
+Pilot 008 is integrated, reviewed, and locally triaged. The current blocker is no longer any pending pilot 004/005 empty-patch or stale-checkout action; those are historical and resolved. The current blocker is that the current Codex CLI Responses streaming patch-generation path has produced no verifier-ready patch and no scoreable ACUT capability result.
+
+Pilots 006, 007, and 008 each reached exactly one ledgered live adapter/model-call attempt on `click__rbench__001`, then failed before verifier with `command_failed` / `codex_exec_failed`, zero-byte patch/no verifier-ready workspace patch, one ledger record, and no verifier run. They cross the treatment and model-tier axes enough to classify the failure as treatment-independent and model-tier-independent within the current path: pilot 006 is cheap Click-specialist, pilot 007 is cheap generic, and pilot 008 is frontier generic.
+
+No further live BARCAROLLE model call, broad ACUT execution, retry, second attempt, additional specialist run, further pilot attempt, or large batch is authorized on this same path. The post-pilot-008 gate is recorded at `.codex-workflows/core-narrative-experiment/decisions/post-pilot-008-transport-gate.md`; the options note is `experiments/core_narrative/reports/post_pilot_008_transport_options.md`; the completed no-model Option C spike is `experiments/core_narrative/reports/post_pilot_008_option_c_no_model_spike.md`. Any future live call must first satisfy that gate: exact run id and scope, projected cost/ledger state, fresh no-secret preflight, and reviewed evidence explaining why the call is not another pilots 006/007/008 Codex CLI Responses streaming repeat or another pilots 001/002/003 direct-command `gaierror` repeat.
 
 ## Codex CLI Harness Handoff
 
@@ -129,8 +133,8 @@ No open patch-command blocker remains for the reviewed hand-written command path
 
 ## Execution Readiness Bookkeeping
 
-- checked_at: `2026-04-29T09:41:00+08:00`
-- readiness_state: `runner_smoke_preflight_ready`
+- checked_at: `2026-05-06T21:55:01+08:00`
+- readiness_state: `pilot_008_integrated_transport_gate_recorded`
 - active_workers: none
 - reviewed_inputs_ready:
   - LLM access and budget gate: reviewed in `wave0-r5-reviewer` with `no_issues`
@@ -152,8 +156,8 @@ No open patch-command blocker remains for the reviewed hand-written command path
   - installed the Click runtime in that workspace with `uv`
   - ran no-op verifier smoke for `click__rbench__001`; it failed the injected regression test with exit `1`, matching `expected.no_op_fails: true`
 - broad_execution_started: false
-- model_calls_started: five bounded worker attempts completed with event `command_failed`; no broad execution authorized
-- execution_decision: Explicit execution starts are recorded only for the first, pilot-002, pilot-003, pilot-004 repair, and pilot-005 recovery-replacement bounded attempts; broad execution remains disallowed.
+- model_calls_started: eight bounded pilot attempts reached the model-call gate and ended before verifier; pilots 006/007/008 establish a treatment-independent and model-tier-independent pre-verifier failure on the current Codex CLI Responses streaming path; no broad execution authorized
+- execution_decision: Historical explicit execution starts are recorded only for the bounded pilot attempts 001-008. Current authorization is none: broad execution, retries, second attempts, additional specialist runs, further pilots, live BARCAROLLE model calls, and large batches require a new explicit coordinator decision after satisfying the post-pilot-008 transport gate.
 - first_execution_outcome: integrated and reviewed; adapter event `command_failed`, estimated cost `3.00`, cumulative estimated cost `3.00`, no patch, no verifier run, no retry.
 - transport_preflight: passed at `2026-04-29T13:42:24+08:00`; checked only non-secret booleans/error classes. `BARCAROLLE_LLM_API_KEY` present, `BARCAROLLE_LLM_BASE_URL` present, endpoint parse ok, allowed scheme ok, host present, endpoint kind `chat_completions`, DNS resolution ok, TCP connect ok, TLS handshake ok, error class null. Credential values, bearer tokens, resolved secrets, full base URL values, hostnames, and IP addresses were not recorded.
 - pilot_002_decision: start exactly one primary attempt: ACUT `cheap-generic-swe`, task `click__rbench__002`, attempt `1`, run id `pilot_002__cheap-generic-swe__click__rbench__002__attempt1`; projected cost USD `3.00`, projected cumulative USD `6.00`, below soft stop and hard cap.
@@ -241,39 +245,28 @@ No open patch-command blocker remains for the reviewed hand-written command path
 - pilot_008_triage_findings: pilot 006 (`cheap-click-specialist`, `openai/gpt-5.4-mini`, specialist context injected), pilot 007 (`cheap-generic-swe`, `openai/gpt-5.4-mini`, specialist context excluded), and pilot 008 (`frontier-generic-swe`, `openai/gpt-5.5`, specialist context excluded) each reached exactly one ledgered live adapter/model-call attempt on `click__rbench__001`, then failed before verifier with `command_failed` / `codex_exec_failed`, zero-byte patch/no verifier-ready workspace patch, one ledger record, and no verifier run, retry, second attempt, additional specialist run, further pilot attempt, broad execution, or large batch. Pilot 008 records the reviewed `responses_streaming_disconnect` class; pilot 006/007 show the same pre-verifier no-patch failure shape, with pilot 007 normalized by the reviewed nonzero-exit gate.
 - pilot_008_triage_implication: the failure remains treatment-independent and model-tier-independent within the current Codex CLI Responses streaming command path. The integrated attempts are not scorable ACUT capability results. More live attempts on the same path are not justified until a new no-model execution hypothesis or transport mitigation is reviewed.
 - next_authorized_step: bounded no-secret planning only. Prepare a focused no-model decision record for an alternate patch-generation transport/harness or an operational readiness criterion before any new explicit execution-start decision. Broad ACUT execution, retries, second attempts, additional specialist runs, further pilot attempts, live BARCAROLLE model calls, and large batches remain unauthorized.
+- post_pilot_008_transport_gate_record: `.codex-workflows/core-narrative-experiment/decisions/post-pilot-008-transport-gate.md`; options note: `experiments/core_narrative/reports/post_pilot_008_transport_options.md`; completed no-model Option C spike: `experiments/core_narrative/reports/post_pilot_008_option_c_no_model_spike.md`; any future live call must name the exact run id, projected budget impact, fresh no-secret preflight, and reviewed reason it is not another current-path repeat or direct-command `gaierror` repeat.
 - resume_entry: On the next step, read this coordinator and latest relevant worker `process.md` files, then continue with bounded no-secret planning for a new transport/harness hypothesis or defer. Do not inspect `cli.log`.
 
 ## Execution Start Preflight
 
-- checked_at: `2026-04-29T12:44:40+08:00`
-- status: `reviewed_2x2_preflight_recorded`
-- execution_start_recorded: true
-- execution_start_recorded_at: `2026-04-29T12:58:12+08:00`
-- execution_start_scope: `single_first_pilot_attempt_only`
-- execution_start_worker: `first-execution-pilot`
-- execution_start_run_id: `pilot_001__cheap-generic-swe__click__rbench__001__attempt1`
+- checked_at: `2026-05-06T21:55:01+08:00`
+- status: `post_pilot_008_transport_gate_recorded`
+- historical_preflights: retained in the decision log above and in `experiments/core_narrative/configs/core_subset_run_manifest.yaml`; pilots 001-008 were each bounded, explicitly scoped attempts where a live attempt was actually authorized.
 - broad_acut_execution_started: false
-- model_calls_started: three bounded worker attempts completed with event `command_failed`; no further model-call attempt authorized until post-route-fix no-secret diagnostics are recorded and a later explicit decision is made
-- env_presence:
-  - `BARCAROLLE_LLM_API_KEY`: present, value not inspected or recorded
-  - `BARCAROLLE_LLM_BASE_URL`: present, value not inspected or recorded
-- cost_ledger: `experiments/core_narrative/results/cost_ledger.jsonl` exists and is writable; no ledger content was appended by this preflight
-- adapter_command_path: `python3 experiments/core_narrative/tools/acut_patch_adapter.py`
-- patch_command_path: `python3 experiments/core_narrative/tools/barcarolle_patch_command.py`
-- adapter_command_template: `python3 experiments/core_narrative/tools/acut_patch_adapter.py --workspace <prepared-task-workspace> --task <task-yaml> --acut experiments/core_narrative/configs/acuts/<active-2x2-acut>.yaml --attempt 1 --run-id <approved-run-id> --artifact-dir experiments/core_narrative/results/raw/<approved-run-id> --output experiments/core_narrative/results/raw/<approved-run-id>/adapter_result.json --normalized-output experiments/core_narrative/results/normalized/<approved-run-id>.json --llm-ledger experiments/core_narrative/results/cost_ledger.jsonl --projected-cost-usd <approved-projected-cost> --coordinator-decision-ref coordinator.md#execution-start-record --timeout-seconds 1200 -- python3 experiments/core_narrative/tools/barcarolle_patch_command.py --acut experiments/core_narrative/configs/acuts/<same-active-2x2-acut>.yaml`
-- run_manifest: `experiments/core_narrative/configs/core_subset_run_manifest.yaml` status updated to `codex_cli_harness_adapter_integrated_preflight_ready`; `execution_start.recorded` is `true` only for the approved first, pilot-002, and pilot-003 bounded attempts
-- active_default_slice:
-  - acuts: `frontier-generic-swe`, `frontier-click-specialist`, `cheap-generic-swe`, `cheap-click-specialist`
-  - pilot tasks: 2 `G_score`, 3 `RBench`, 2 `RWork`
-  - attempts: one primary attempt per ACUT/task
-- budget_caps: USD `$240` soft stop and USD `$300` hard cap
-- deferred_acuts: `higher-budget-repo-depth`, `retrieval-history-augmented`, `minimal-context-baseline`
-- first_execution_worker_decision: start exactly one primary attempt: ACUT `cheap-generic-swe`, task `click__rbench__001`, attempt `1`, run id `pilot_001__cheap-generic-swe__click__rbench__001__attempt1`
-- first_execution_worker_scope_limit: one ACUT/task primary attempt routed through `acut_patch_adapter.py` and the reviewed custom `barcarolle_patch_command.py`, with ledger append required for the patch-generation attempt and immediate blocker status if any gate fails
-- first_execution_worker_projected_cost_usd: `3.00`
-- first_execution_worker_token_record_policy: use dry-run prompt sizing plus conservative output budget; initial ledger args target approximately `20000` input tokens and `64000` output tokens unless the worker records a tighter value before live call
-- preflight_decision: explicit first-attempt start decision recorded; broad execution remains disallowed
-- supersession_note: This preflight supersedes the `2026-04-29T10:42:52+08:00` pre-redesign execution-start preflight.
+- current_live_call_authorization: none
+- model_calls_started: eight bounded pilot attempts reached the model-call gate and ended before verifier; two model-route health checks were also ledgered. No scoreable ACUT capability result exists.
+- latest_ledger_state: `experiments/core_narrative/results/cost_ledger.jsonl` parses as JSONL with 11 records and cumulative estimated cost USD `31.0008`, below the USD `$240` soft stop and USD `$300` hard cap.
+- current_failure_classification: treatment-independent and model-tier-independent pre-verifier failure on the current Codex CLI Responses streaming patch-generation path, based on pilots 006/007/008.
+- next_allowed_step: no-model/static transport or harness planning only; do not prepare or start another live attempt on the same path.
+- required_before_any_future_live_call:
+  - exact run id, ACUT, task, split, attempt, and whether specialist context is expected
+  - projected additional cost and projected cumulative cost from the current ledger state
+  - fresh no-secret preflight confirming `BARCAROLLE_LLM_API_KEY` and `BARCAROLLE_LLM_BASE_URL` presence without printing or recording values
+  - ledger parse/writability confirmation and cap check against USD `$240` soft stop and USD `$300` hard cap
+  - reviewed no-model evidence for an alternate transport/harness, materially different output/transport profile, or fallback behavior that can produce verifier-ready patches without weakening the 2x2 control contract
+  - explicit statement that broad execution, retries, second attempts, additional specialist runs, further pilots, and large batches remain unauthorized unless separately named
+- supersedes_current_preflight_summary: the old pilot-001/002/003 preflight summary is historical and must not be read as current authorization.
 
 ## ACUT 2x2 Redesign
 
@@ -334,7 +327,7 @@ No open patch-command blocker remains for the reviewed hand-written command path
 - closure_decision: `patch_generation_command_gap` is closed. A later explicit execution-start decision authorizes only the single `first-execution-pilot` worker attempt.
 - execution_start_recorded: true
 - broad_acut_execution_started: false
-- model_calls_started: three bounded worker attempts completed with event `command_failed`; pilot-003 is integrated and no further model call is authorized pending post-route-fix diagnostics
+- model_calls_started: eight bounded pilot attempts reached the model-call gate and ended before verifier; no further model call is authorized until the post-pilot-008 transport gate is satisfied with reviewed no-model evidence
 
 ## Review Queue
 
@@ -420,6 +413,8 @@ No open patch-command blocker remains for the reviewed hand-written command path
 - Focused `click-specialist-context-reviewer` delivered `no_issues` in commit `1eb222c`; integrated the context-pack delivery and review artifact as merge commits `21487b9` and `81b3473`.
 - The next allowed coordination step is a no-secret preflight/decision record for whether to authorize exactly one bounded pilot attempt through the reviewed Codex CLI harness and reviewed Click specialist context pack. No attempt, retry, second attempt, specialist run, broad execution, live BARCAROLLE model call, or large batch has been authorized by this integration.
 - Recorded an explicit execution-start decision for exactly one next pilot attempt using the reviewed Codex CLI harness and reviewed Click specialist context pack: `pilot_004__cheap-click-specialist__click__rbench__001__attempt1`. This is the first bounded Click-specialist pilot attempt and is not a retry of the three earlier cheap-generic attempts. Broad execution, retries, second attempts, additional specialist runs, further pilot attempts, and large batches remain unauthorized.
+- Pilots 005, 006, 007, and 008 are now delivered, reviewed with `no_issues`, integrated, and locally triaged where needed. The latest state is pilot 008 integrated/local triage recorded; no review worker is active.
+- Review queue is currently empty for live execution artifacts. The next useful review should be for a no-model alternate transport/harness hypothesis or operational readiness criterion, not for another same-path live attempt.
 
 ## Pre-Run Gates
 
@@ -428,17 +423,17 @@ No open patch-command blocker remains for the reviewed hand-written command path
 - LLM access: `experiments/core_narrative/configs/llm_access.yaml` must remain value-free and record only environment variable names, redaction policy, and budget caps.
 - Cost ledger: `experiments/core_narrative/results/cost_ledger.jsonl` must exist and every ACUT model call or patch-generation attempt must append token, estimated/actual cost, and cumulative estimated cost fields.
 - Execution block: ACUT execution workers must mark `status: blocked` before any model call if either LLM environment variable is missing, if the ledger is missing/unwritable, if ledgering is not implemented, or if projected spend would exceed `$300`.
-- Broad execution workers are not started yet; next execution-start record must confirm required LLM env presence, writable cost ledger, and the active budget-constrained default slice.
-- Pilot 004 initially blocked before attempt due to a stale worker checkout, not due to env, ledger, budget, or model route failure. The refreshed redispatch must start from a checkout that includes coordinator/run-manifest commit `58bf5ed` or a later repair commit before any model call.
+- Broad execution workers are not started. No new execution-start record may be prepared until the post-pilot-008 transport gate has reviewed no-model evidence for an alternate transport/harness or operational readiness criterion.
+- Pilot 004 stale-checkout handling is historical and resolved; pilots 004-008 are integrated and reviewed. It is not a current pre-run blocker.
 
 ## Execution Planning Gate
 
-- gate_status: ready_for_execution_planning
-- checked_at: 2026-04-28T15:02:08+08:00
+- gate_status: post_pilot_008_transport_gate_recorded
+- checked_at: 2026-05-06T21:55:01+08:00
 - llm_env_presence:
   - `BARCAROLLE_LLM_API_KEY`: present, value not inspected or recorded
   - `BARCAROLLE_LLM_BASE_URL`: present, value not inspected or recorded
-- cost_ledger: `experiments/core_narrative/results/cost_ledger.jsonl` exists and is writable
+- cost_ledger: `experiments/core_narrative/results/cost_ledger.jsonl` exists, parses as JSONL, and currently records cumulative estimated cost USD `31.0008` across 11 records
 - budget_caps: USD `$240` soft stop, USD `$300` hard cap
 - active_default_slice:
   - acuts: `frontier-generic-swe`, `frontier-click-specialist`, `cheap-generic-swe`, `cheap-click-specialist`
@@ -447,7 +442,7 @@ No open patch-command blocker remains for the reviewed hand-written command path
 - deferred_acuts: `higher-budget-repo-depth`, `retrieval-history-augmented`, `minimal-context-baseline`
 - broad_execution_started: false
 - run_manifest: `experiments/core_narrative/configs/core_subset_run_manifest.yaml`
-- next_allowed_step: decide whether the empty-patch gate needs a focused external review or prepare a separate next-attempt preflight. Do not start any retry, second attempt, additional specialist run, broad execution, further pilot attempt, or large batch without a new explicit coordinator decision.
+- next_allowed_step: review the completed Option C no-model spike at `experiments/core_narrative/reports/post_pilot_008_option_c_no_model_spike.md`; then either pause/report no scoreable result or prepare a separate no-secret operational-readiness record for exactly one future direct-transport probe. Do not start a live BARCAROLLE model call, retry, second attempt, additional specialist run, broad execution, further pilot attempt, or large batch without satisfying the post-pilot-008 gate and recording a new explicit coordinator decision.
 
 ## Acceptance Gate
 
@@ -458,4 +453,4 @@ No open patch-command blocker remains for the reviewed hand-written command path
 
 ## Next Heartbeat Action
 
-Read this coordinator and latest relevant worker `process.md` files; do not inspect `cli.log`. Current state: pilot 004 delivery/review are integrated and the empty-patch adapter gate passed no-model smoke. Do one bounded coordination step: decide whether this harness hardening needs a focused external review or prepare a separate next-attempt preflight without starting it. Do not start broad ACUT execution, retries, second attempts, any additional specialist ACUT run, any further pilot attempt, or any large batch.
+Read this coordinator, `.codex-workflows/core-narrative-experiment/decisions/post-pilot-008-transport-gate.md`, `experiments/core_narrative/configs/core_subset_run_manifest.yaml`, `experiments/core_narrative/reports/post_pilot_008_transport_options.md`, and `experiments/core_narrative/reports/post_pilot_008_option_c_no_model_spike.md`; do not inspect `cli.log`. Current state: pilot 008 delivery/review are integrated, coordinator-local pilot 006/007/008 triage is recorded, the Option C no-model spike is complete, and no live BARCAROLLE model call is authorized. Do one bounded no-model step: review the Option C spike and decide whether to pause/report no scoreable result or prepare a separate operational-readiness record for exactly one future direct-transport probe. Do not start broad ACUT execution, retries, second attempts, additional specialist ACUT runs, further pilot attempts, live BARCAROLLE model calls, or large batches.

@@ -1101,6 +1101,40 @@ pilot_slice:
     allowed_only_after: "pilot summary review and explicit coordinator decision"
     full_core_attempts_if_promoted: 80
 
+post_pilot_008_transport_gate:
+  status: recorded
+  recorded_at: "2026-05-06T21:55:01+08:00"
+  decision_record: .codex-workflows/core-narrative-experiment/decisions/post-pilot-008-transport-gate.md
+  decision: no_further_live_attempts_on_current_codex_cli_responses_streaming_path
+  basis:
+    compared_runs:
+      - pilot_006__cheap-click-specialist__click__rbench__001__attempt1
+      - pilot_007__cheap-generic-swe__click__rbench__001__attempt1
+      - pilot_008__frontier-generic-swe__click__rbench__001__attempt1
+    treatment_independent: true
+    model_tier_independent_within_observed_path: true
+    verifier_ready_patch_observed: false
+    scorable_acut_capability_result_available: false
+    current_cumulative_estimated_cost_usd: 31.0008
+  current_authorization:
+    live_barcarolle_model_calls_authorized: false
+    broad_execution_authorized: false
+    retries_authorized: false
+    second_attempts_authorized: false
+    additional_specialist_acut_runs_authorized: false
+    further_pilot_attempts_authorized: false
+    large_batch_authorized: false
+  required_before_any_future_live_call:
+    - exact run id, ACUT, task, split, attempt, and specialist-context expectation
+    - current ledger record count, cumulative estimated cost, projected additional cost, and projected cumulative cost
+    - fresh no-secret BARCAROLLE_LLM_API_KEY and BARCAROLLE_LLM_BASE_URL presence preflight without recording values
+    - cost ledger parse and writability check plus USD 240 soft-stop and USD 300 hard-cap check
+    - reviewed no-model evidence that the proposed call is not another current-path repeat
+    - explicit scope statement preserving the bans on broad execution, retries, second attempts, additional specialist runs, further pilots, and large batches
+  no_model_options_note: experiments/core_narrative/reports/post_pilot_008_transport_options.md
+  option_c_no_model_spike: experiments/core_narrative/reports/post_pilot_008_option_c_no_model_spike.md
+  next_safe_action: review_option_c_no_model_spike_then_pause_or_prepare_separate_operational_readiness_record
+
 locked_inputs:
   target_repository:
     repository: pallets/click
@@ -1115,5 +1149,5 @@ locked_inputs:
     locked_task_ids_source: experiments/core_narrative/configs/general_benchmark.yaml
 
 next_no_model_preflights:
-  - pilot 008 frontier-generic delivery and no_issues review are integrated, and coordinator-local no-model triage over pilot 006/007/008 is recorded; next step is bounded no-secret planning for a new transport/harness hypothesis or operational readiness criterion before any further execution hypothesis
-  - do not start broad ACUT execution, retries, second attempts, additional specialist runs, further pilot attempts, or other model calls before the coordinator records a new explicit execution start
+  - post-pilot-008 transport gate is recorded at `.codex-workflows/core-narrative-experiment/decisions/post-pilot-008-transport-gate.md`; the no-model options note is `experiments/core_narrative/reports/post_pilot_008_transport_options.md`; the completed Option C no-model spike is `experiments/core_narrative/reports/post_pilot_008_option_c_no_model_spike.md`; next step is review of that spike, then pause/report no scoreable result or prepare a separate operational-readiness record before any execution hypothesis
+  - do not start live BARCAROLLE model calls, broad ACUT execution, retries, second attempts, additional specialist runs, further pilot attempts, or other model calls before the coordinator satisfies the gate and records a new explicit execution start

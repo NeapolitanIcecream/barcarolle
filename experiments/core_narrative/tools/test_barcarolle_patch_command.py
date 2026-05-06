@@ -1,0 +1,298 @@
+#!/usr/bin/env python3
+"""Executable no-model specs for the direct Barcarolle patch command."""
+
+from __future__ import annotations
+
+import json
+import os
+import shutil
+import subprocess
+import sys
+import tempfile
+import textwrap
+import unittest
+from pathlib import Path
+
+from barcarolle_patch_command import live_request_payload, resolve_live_endpoint
+
+
+REPO_ROOT = Path(__file__).resolve().parents[3]
+PATCH_COMMAND = REPO_ROOT / "experiments" / "core_narrative" / "tools" / "barcarolle_patch_command.py"
+ADAPTER = REPO_ROOT / "experiments" / "core_narrative" / "tools" / "acut_patch_adapter.py"
+
+
+def run(command: list[str], *, cwd: Path, env: dict[str, str] | None = None) -> subprocess.CompletedProcess[str]:
+    return subprocess.run(
+        command,
+        cwd=str(cwd),
+        env=env,
+        text=True,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+        check=False,
+    )
+
+
+class BarcarollePatchCommandTests(unittest.TestCase):
+    def setUp(self) -> None:
+        self.root = Path(tempfile.mkdtemp())
+        self.addCleanup(shutil.rmtree, self.root, ignore_errors=True)
+        self.workspace = self.root / "workspace"
+        self.workspace.mkdir()
+        run(["git", "init"], cwd=self.workspace)
+        run(["git", "config", "user.email", "test" + "@example.invalid"], cwd=self.workspace)
+        run(["git", "config", "user.name", "Test User"], cwd=self.workspace)
+        (self.workspace / "module.py").write_text("VALUE = 1\n", encoding="utf-8")
+        (self.workspace / "statement.md").write_text(
+            "Change module.py so VALUE becomes 2. Do not use external context.\n",
+            encoding="utf-8",
+        )
+        run(["git", "add", "module.py", "statement.md"], cwd=self.workspace)
+        commit = run(["git", "commit", "-m", "initial"], cwd=self.workspace)
+        self.assertEqual(commit.returncode, 0, commit.stderr)
+
+        task_dir = self.workspace / ".core_narrative"
+        task_dir.mkdir()
+        (task_dir / "task.json").write_text(
+            json.dumps(
+                {
+                    "task_id": "click__rbench__001",
+                    "split": "rbench",
+                    "repo_slug": "click",
+                    "task_statement_path": "statement.md",
+                }
+            ),
+            encoding="utf-8",
+        )
+        self.acut_path = self.root / "acut.json"
+        self.acut_path.write_text(
+            json.dumps(
+                {
+                    "acut_id": "cheap-generic-swe",
+                    "provider": "openai",
+                    "model": "openai/gpt-5.4-mini",
+                    "model_parameters": {"reasoning_effort": "medium"},
+                }
+            ),
+            encoding="utf-8",
+        )
+
+    def command_env(self, *, include_llm_env: bool = False) -> dict[str, str]:
+        env = os.environ.copy()
+        env.pop("BARCAROLLE_LLM_API_KEY", None)
+        env.pop("BARCAROLLE_LLM_BASE_URL", None)
+        if include_llm_env:
+            env["BARCAROLLE_LLM_API_KEY"] = "unit" + "-secret" + "-value"
+            env["BARCAROLLE_LLM_BASE_URL"] = "http" + "s://" + "llm-gateway.example.invalid/v1"
+        return env
+
+    def run_patch_command(
+        self,
+        *extra_args: str,
+        env: dict[str, str] | None = None,
+        summary_path: Path | None = None,
+    ) -> subprocess.CompletedProcess[str]:
+        args = [
+            sys.executable,
+            str(PATCH_COMMAND),
+            "--workspace",
+            str(self.workspace),
+            "--acut",
+            str(self.acut_path),
+            *extra_args,
+        ]
+        if summary_path is not None:
+            args.extend(["--summary-output", str(summary_path)])
+        return run(args, cwd=REPO_ROOT, env=env or self.command_env())
+
+    def test_dry_run_prepares_prompt_without_llm_environment_or_network(self) -> None:
+        """Given missing LLM env, dry-run records prompt metadata and never calls a model."""
+        summary_path = self.root / "dry-run-summary.json"
+
+        completed = self.run_patch_command("--dry-run", summary_path=summary_path)
+
+        self.assertEqual(completed.returncode, 0, completed.stderr)
+        summary = json.loads(summary_path.read_text(encoding="utf-8"))
+        self.assertEqual(summary["status"], "dry_run_completed")
+        self.assertEqual(summary["mode"], "dry_run")
+        self.assertIs(summary["model_call_made"], False)
+        self.assertIs(summary["prompt"]["prepared"], True)
+        self.assertIs(summary["prompt"]["content_recorded"], False)
+        self.assertEqual(
+            summary["llm_env_policy"]["required_present"],
+            {"BARCAROLLE_LLM_API_KEY": False, "BARCAROLLE_LLM_BASE_URL": False},
+        )
+        self.assertNotIn("Change module.py", json.dumps(summary))
+        self.assertNotIn("http" + "s://", json.dumps(summary))
+
+    def test_live_mode_missing_env_blocks_before_network(self) -> None:
+        """Given missing LLM env, live mode fails as preflight and records no network attempt."""
+        summary_path = self.root / "missing-env-summary.json"
+
+        completed = self.run_patch_command(summary_path=summary_path)
+
+        self.assertEqual(completed.returncode, 2, completed.stderr)
+        summary = json.loads(summary_path.read_text(encoding="utf-8"))
+        self.assertEqual(summary["status"], "error")
+        self.assertEqual(summary["error"], "missing required LLM environment")
+        self.assertEqual(
+            sorted(summary["details"]["missing_env"]),
+            ["BARCAROLLE_LLM_API_KEY", "BARCAROLLE_LLM_BASE_URL"],
+        )
+        self.assertIs(summary["details"]["network_attempted"], False)
+        self.assertIs(summary["model_call_made"], False)
+
+    def test_mock_response_applies_unified_diff_without_llm_environment(self) -> None:
+        """Given a mock model response, the command applies a patch with no live call."""
+        summary_path = self.root / "mock-summary.json"
+        patch = textwrap.dedent(
+            """\
+            diff --git a/module.py b/module.py
+            --- a/module.py
+            +++ b/module.py
+            @@ -1 +1 @@
+            -VALUE = 1
+            +VALUE = 2
+            """
+        )
+        response = json.dumps({"unified_diff": patch})
+
+        completed = self.run_patch_command("--mock-response-text", response, summary_path=summary_path)
+
+        self.assertEqual(completed.returncode, 0, completed.stderr)
+        summary = json.loads(summary_path.read_text(encoding="utf-8"))
+        self.assertEqual(summary["status"], "mock_response_applied")
+        self.assertEqual(summary["mode"], "mock_response")
+        self.assertIs(summary["model_call_made"], False)
+        self.assertIs(summary["patch"]["received"], True)
+        self.assertIs(summary["patch"]["applied"], True)
+        self.assertEqual(summary["patch"]["changed_paths"], ["module.py"])
+        self.assertEqual((self.workspace / "module.py").read_text(encoding="utf-8"), "VALUE = 2\n")
+        self.assertNotIn(response, json.dumps(summary))
+
+    def test_unsafe_mock_response_argument_is_rejected_before_parsing(self) -> None:
+        """Given URL-like model text as a CLI argument, the redaction policy blocks it."""
+        summary_path = self.root / "unsafe-argument-summary.json"
+        unsafe_text = "diff mentions " + "http" + "s://" + "gateway.example.invalid/v1"
+
+        completed = self.run_patch_command(
+            "--mock-response-text",
+            unsafe_text,
+            env=self.command_env(include_llm_env=True),
+            summary_path=summary_path,
+        )
+
+        self.assertEqual(completed.returncode, 2, completed.stderr)
+        summary = json.loads(summary_path.read_text(encoding="utf-8"))
+        self.assertEqual(summary["status"], "error")
+        self.assertEqual(summary["details"].get("reason"), "full_url")
+        self.assertEqual((self.workspace / "module.py").read_text(encoding="utf-8"), "VALUE = 1\n")
+        self.assertNotIn("http" + "s://", json.dumps(summary))
+
+
+    def test_adapter_command_no_model_wraps_mock_response_with_zero_cost_ledger(self) -> None:
+        """The outer adapter can wrap the direct command as no-model compatible evidence."""
+        artifact_dir = self.root / "adapter-artifacts"
+        ledger_path = self.root / "cost_ledger.jsonl"
+        ledger_path.write_text("", encoding="utf-8")
+        output_path = self.root / "adapter-result.json"
+        normalized_path = self.root / "normalized.json"
+        inner_summary_path = artifact_dir / "patch_command_summary.json"
+        patch = textwrap.dedent(
+            """\
+            diff --git a/module.py b/module.py
+            --- a/module.py
+            +++ b/module.py
+            @@ -1 +1 @@
+            -VALUE = 1
+            +VALUE = 2
+            """
+        )
+        response = json.dumps({"unified_diff": patch})
+        env = self.command_env(include_llm_env=True)
+
+        completed = run(
+            [
+                sys.executable,
+                str(ADAPTER),
+                "--workspace",
+                str(self.workspace),
+                "--task",
+                str(self.workspace / ".core_narrative" / "task.json"),
+                "--acut-id",
+                "cheap-generic-swe",
+                "--attempt",
+                "1",
+                "--run-id",
+                "unit_direct_transport_mock_attempt1",
+                "--artifact-dir",
+                str(artifact_dir),
+                "--output",
+                str(output_path),
+                "--normalized-output",
+                str(normalized_path),
+                "--llm-ledger",
+                str(ledger_path),
+                "--projected-cost-usd",
+                "0",
+                "--input-tokens",
+                "0",
+                "--output-tokens",
+                "0",
+                "--command-no-model",
+                "--",
+                sys.executable,
+                str(PATCH_COMMAND),
+                "--workspace",
+                str(self.workspace),
+                "--acut",
+                str(self.acut_path),
+                "--mock-response-text",
+                response,
+                "--summary-output",
+                str(inner_summary_path),
+            ],
+            cwd=REPO_ROOT,
+            env=env,
+        )
+
+        self.assertEqual(completed.returncode, 0, completed.stderr)
+        adapter_result = json.loads(output_path.read_text(encoding="utf-8"))
+        inner_summary = json.loads(inner_summary_path.read_text(encoding="utf-8"))
+        ledger_records = [json.loads(line) for line in ledger_path.read_text(encoding="utf-8").splitlines()]
+
+        self.assertEqual(adapter_result["status"], "command_completed")
+        self.assertIs(adapter_result["model_call_made"], False)
+        self.assertIs(adapter_result["command_no_model"], True)
+        self.assertGreater(adapter_result["patch_artifact"]["size_bytes"], 0)
+        self.assertEqual(adapter_result["cost_ledger_append"]["event"], "command_completed")
+        self.assertEqual(len(ledger_records), 1)
+        self.assertEqual(ledger_records[0]["estimated_cost_usd"], 0)
+        self.assertIs(ledger_records[0]["metadata"]["model_call_made"], False)
+        self.assertEqual(inner_summary["status"], "mock_response_applied")
+        self.assertIs(inner_summary["model_call_made"], False)
+        self.assertEqual((self.workspace / "module.py").read_text(encoding="utf-8"), "VALUE = 2\n")
+        self.assertNotIn(env["BARCAROLLE_LLM_API_KEY"], json.dumps(adapter_result))
+        self.assertNotIn("http" + "s://", json.dumps(adapter_result))
+
+    def test_direct_transport_shapes_chat_completions_payload_without_network(self) -> None:
+        """The default direct HTTP transport is non-streaming and chat-completions shaped."""
+        endpoint, endpoint_kind = resolve_live_endpoint("http" + "s://" + "llm-gateway.example.invalid/v1")
+        payload = live_request_payload(
+            {"model": "openai/gpt-5.4-mini", "model_parameters": {"reasoning_effort": "medium"}},
+            "prepared prompt",
+            endpoint_kind,
+        )
+
+        self.assertEqual(endpoint_kind, "chat_completions")
+        self.assertTrue(endpoint.endswith("/chat/completions"))
+        self.assertEqual(payload["model"], "openai/gpt-5.4-mini")
+        self.assertIn("messages", payload)
+        self.assertNotIn("input", payload)
+        self.assertNotIn("stream", payload)
+        self.assertNotIn("http" + "s://", json.dumps(payload))
+        self.assertNotIn("Bearer", json.dumps(payload))
+
+
+if __name__ == "__main__":
+    unittest.main()
