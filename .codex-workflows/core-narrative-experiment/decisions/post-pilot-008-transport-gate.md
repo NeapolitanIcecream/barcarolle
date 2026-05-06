@@ -1,8 +1,8 @@
 # Post-Pilot-008 Transport/Harness Gate
 
-status: recorded_option_c_no_model_spike_completed
+status: option_c_review_integrated_single_direct_probe_authorized
 recorded_at: 2026-05-06T21:55:01+08:00
-updated: 2026-05-06T23:51:30+08:00
+updated: 2026-05-07T01:00:00+08:00
 owner: coordinator
 related_status: `pilot_008_integrated_local_triage_recorded`
 
@@ -47,3 +47,12 @@ A future live BARCAROLLE model call must stop for coordinator approval and recor
 ## Next Safe Work
 
 Use the no-model options note at `experiments/core_narrative/reports/post_pilot_008_transport_options.md` and the completed Option C spike at `experiments/core_narrative/reports/post_pilot_008_option_c_no_model_spike.md`. The next safe step is review of that no-model spike, then either pause/report no scoreable result or prepare a separate no-secret operational-readiness record for exactly one future direct-transport probe. If a probe is ever proposed, it must explain why it is not another pilots 006/007/008 Codex CLI Responses streaming repeat and not another pilots 001/002/003 direct-command `gaierror` repeat.
+
+
+## 2026-05-07 Update: Option C Review And Single Direct Probe
+
+The Option C no-model spike review is integrated at `.codex-workflows/core-narrative-experiment/reviews/post-pilot-008-option-c-no-model-spike-review.md` with status `no_issues`. Reviewer prompt/run audit artifacts are retained under `.codex-workflows/core-narrative-experiment/workers/option-c-no-model-reviewer/` and no `cli.log` content was inspected.
+
+Voyager's `2026-05-07T00:52+08:00` budget instruction is recorded in `.codex-workflows/core-narrative-experiment/decisions/post-option-c-direct-probe-readiness.md`. The USD `300` hard cap remains binding; the USD `240` soft stop is now an internal recorded coordinator decision point.
+
+The coordinator records exactly one live direct Option C probe as authorized: `pilot_009__frontier-generic-swe__click__rbench__001__attempt1`. This does not reopen broad execution, retries, second attempts, additional specialist ACUT runs, further pilot attempts, or large batches. If this single probe repeats the prior direct-command `gaierror`/pre-verifier no-patch family, live execution on Option C must stop and the blocker should be reported rather than retried.

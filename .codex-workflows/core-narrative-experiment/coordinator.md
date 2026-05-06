@@ -1,7 +1,7 @@
 # Core Narrative Experiment Coordinator
 
-status: pilot_008_integrated_local_triage_recorded
-updated: 2026-05-06T23:53:50+08:00
+status: option_c_review_integrated_direct_probe_authorized
+updated: 2026-05-07T01:00:00+08:00
 today_stop_state: 2026-04-28_stop_policy_expired
 phase: Phase 0 - Experiment Bootstrap
 base_commit: 47046e7754d2402b7177a4b80f631ab6b0bcd97c
@@ -63,6 +63,7 @@ Execute `docs/experiments/core-narrative-experiment-plan.md` with tmux-managed C
 | pilot-007-reviewer | Phase 3 bounded recovery review | delivered; no_issues; worker commit `2fdc48d`, integrated as `8a802f5` | exited | codex/core-exp-pilot-007-reviewer | /Users/chenmohan/gits/barcarolle-wt-pilot-007-reviewer | `.codex-workflows/core-narrative-experiment/reviews/pilot-007-review.md`, `.codex-workflows/core-narrative-experiment/workers/pilot-007-reviewer/**` |
 | pilot-008-execution | Phase 3 bounded frontier transport probe | delivered and reviewed; worker commit `b307d18`, integrated as `c3d25b4`; exactly one live adapter attempt, one ledger append, final normalized status `infra_failed`, no verifier/retry/second attempt/broad execution | exited | codex/core-exp-pilot-008-execution | /Users/chenmohan/gits/barcarolle-wt-pilot-008-execution | `experiments/core_narrative/results/cost_ledger.jsonl`, `experiments/core_narrative/results/raw/pilot_008__frontier-generic-swe__click__rbench__001__attempt1/**`, `experiments/core_narrative/results/normalized/pilot_008__frontier-generic-swe__click__rbench__001__attempt1.json`, `.codex-workflows/core-narrative-experiment/workers/pilot-008-execution/**` |
 | pilot-008-reviewer | Phase 3 bounded frontier transport review | delivered; no_issues; worker commit `f7fcf34`, integrated as `5e30487` | exited | codex/core-exp-pilot-008-reviewer | /Users/chenmohan/gits/barcarolle-wt-pilot-008-reviewer | `.codex-workflows/core-narrative-experiment/reviews/pilot-008-review.md`, `.codex-workflows/core-narrative-experiment/workers/pilot-008-reviewer/**` |
+| pilot-009-direct-probe | Phase 3 bounded direct transport probe | authorized; not started; exact run id `pilot_009__frontier-generic-swe__click__rbench__001__attempt1`; direct Option C path only | n/a | codex/core-exp-pilot-009-direct-probe | /Users/chenmohan/gits/barcarolle-wt-pilot-009-direct-probe | `experiments/core_narrative/results/cost_ledger.jsonl`, `experiments/core_narrative/results/raw/pilot_009__frontier-generic-swe__click__rbench__001__attempt1/**`, `experiments/core_narrative/results/normalized/pilot_009__frontier-generic-swe__click__rbench__001__attempt1.json`, `.codex-workflows/core-narrative-experiment/workers/pilot-009-direct-probe/**` |
 | acut-adapter-empty-patch-gate | Phase 3 harness hardening | implemented locally; no-model scratch smoke passed; no live BARCAROLLE model call and no ACUT attempt started | n/a | codex/core-narrative-experiment | /Users/chenmohan/gits/barcarolle | `experiments/core_narrative/tools/acut_patch_adapter.py`, `experiments/core_narrative/tools/test_acut_patch_adapter.py`, `experiments/core_narrative/reports/acut_adapter_empty_patch_gate.md` |
 | empty-patch-gate-reviewer | Phase 3 harness hardening review | delivered; issues_found; worker commit `0752e32`, integrated as `d71c8d9` | exited | codex/core-exp-empty-patch-gate-reviewer | /Users/chenmohan/gits/barcarolle-wt-empty-patch-gate-reviewer | `.codex-workflows/core-narrative-experiment/reviews/empty-patch-gate-review.md`, `.codex-workflows/core-narrative-experiment/workers/empty-patch-gate-reviewer/**` |
 | empty-patch-gate-r1 | Phase 3 harness hardening revision | delivered; worker implementation commit `ead03e4`, handoff commit `b505bc4`, integrated as `8c2d74a` | exited | codex/core-exp-empty-patch-gate-r1 | /Users/chenmohan/gits/barcarolle-wt-empty-patch-gate-r1 | `experiments/core_narrative/tools/acut_patch_adapter.py`, `experiments/core_narrative/tools/test_acut_patch_adapter.py`, `experiments/core_narrative/reports/acut_adapter_empty_patch_gate.md`, `.codex-workflows/core-narrative-experiment/workers/empty-patch-gate-r1/**` |
@@ -248,17 +249,21 @@ No further live BARCAROLLE model call, broad ACUT execution, retry, second attem
 - post_pilot_008_transport_gate_record: `.codex-workflows/core-narrative-experiment/decisions/post-pilot-008-transport-gate.md`; options note: `experiments/core_narrative/reports/post_pilot_008_transport_options.md`; completed no-model Option C spike: `experiments/core_narrative/reports/post_pilot_008_option_c_no_model_spike.md`; kickoff narrative evidence memo: `experiments/core_narrative/reports/kickoff_narrative_evidence_memo.md`; any future live call must name the exact run id, projected budget impact, fresh no-secret preflight, and reviewed reason it is not another current-path repeat or direct-command `gaierror` repeat.
 - resume_entry: On the next step, read this coordinator and latest relevant worker `process.md` files, then continue with bounded no-secret planning for a new transport/harness hypothesis or defer. Do not inspect `cli.log`.
 
+- option_c_no_model_review_integration: integrated reviewer commit `b9fe4f8` plus reviewer prompt/run audit commit `81ad49d` as merge commit `26afcab`; review status `no_issues`; no live/model/API call was made by the review; reviewer did not inspect `cli.log`.
+- voyager_budget_authority_update: Voyager instructed at `2026-05-07T00:52+08:00` “让 lab agent 持续推进，预算该花就花，不要阻塞”. Coordinator interpretation is recorded in `.codex-workflows/core-narrative-experiment/decisions/post-option-c-direct-probe-readiness.md`: Lab/coordinator may spend within the assigned BARCAROLLE budget when a reviewed, non-redundant hypothesis and gates justify it; USD `300` hard cap remains binding, and USD `240` soft stop is an internal recorded decision point.
+- pilot_009_direct_probe_decision: exact single live probe authorized at `2026-05-07T01:00:00+08:00`: `pilot_009__frontier-generic-swe__click__rbench__001__attempt1`, ACUT `frontier-generic-swe`, task `click__rbench__001`, split `rbench`, attempt `1`, specialist context excluded, through `acut_patch_adapter.py` plus direct `barcarolle_patch_command.py` only. Fresh env presence check passed without recording values; ledger has `11` records and cumulative estimated cost USD `31.0008`; projected additional cost USD `10.00`; projected cumulative USD `41.0008`, below soft stop and hard cap. This is not a Codex CLI Responses streaming repeat; it is a final diagnostic for Option C against the prior direct-command `gaierror` family. If the same redacted `gaierror` or another pre-verifier no-patch transport failure appears, stop live execution on this path and report a hard/repeated infra blocker.
+
 ## Execution Start Preflight
 
 - checked_at: `2026-05-06T21:55:01+08:00`
-- status: `post_pilot_008_transport_gate_recorded`
+- status: `option_c_review_integrated_direct_probe_authorized`
 - historical_preflights: retained in the decision log above and in `experiments/core_narrative/configs/core_subset_run_manifest.yaml`; pilots 001-008 were each bounded, explicitly scoped attempts where a live attempt was actually authorized.
 - broad_acut_execution_started: false
-- current_live_call_authorization: none
+- current_live_call_authorization: exactly_one_pilot_009_direct_probe
 - model_calls_started: eight bounded pilot attempts reached the model-call gate and ended before verifier; two model-route health checks were also ledgered. No scoreable ACUT capability result exists.
-- latest_ledger_state: `experiments/core_narrative/results/cost_ledger.jsonl` parses as JSONL with 11 records and cumulative estimated cost USD `31.0008`, below the USD `$240` soft stop and USD `$300` hard cap.
-- current_failure_classification: treatment-independent and model-tier-independent pre-verifier failure on the current Codex CLI Responses streaming patch-generation path, based on pilots 006/007/008.
-- next_allowed_step: no-model/static transport or harness planning only; do not prepare or start another live attempt on the same path.
+- latest_ledger_state: `experiments/core_narrative/results/cost_ledger.jsonl` parses as JSONL with 11 records and cumulative estimated cost USD `31.0008`; pilot 009 projection is USD `41.0008`, below the USD `$240` soft stop and USD `$300` hard cap.
+- current_failure_classification: treatment-independent and model-tier-independent pre-verifier failure on the current Codex CLI Responses streaming patch-generation path, based on pilots 006/007/008; prior direct-command path also failed with redacted `gaierror` in pilots 001/002/003, so pilot 009 is a final one-run Option C diagnostic rather than a cleared path.
+- next_allowed_step: execute exactly `pilot_009__frontier-generic-swe__click__rbench__001__attempt1` through the direct Option C path, then stop on same-family direct transport failure or run one verifier only if a verifier-ready patch exists.
 - required_before_any_future_live_call:
   - exact run id, ACUT, task, split, attempt, and whether specialist context is expected
   - projected additional cost and projected cumulative cost from the current ledger state
@@ -423,12 +428,12 @@ No further live BARCAROLLE model call, broad ACUT execution, retry, second attem
 - LLM access: `experiments/core_narrative/configs/llm_access.yaml` must remain value-free and record only environment variable names, redaction policy, and budget caps.
 - Cost ledger: `experiments/core_narrative/results/cost_ledger.jsonl` must exist and every ACUT model call or patch-generation attempt must append token, estimated/actual cost, and cumulative estimated cost fields.
 - Execution block: ACUT execution workers must mark `status: blocked` before any model call if either LLM environment variable is missing, if the ledger is missing/unwritable, if ledgering is not implemented, or if projected spend would exceed `$300`.
-- Broad execution workers are not started. No new execution-start record may be prepared until the post-pilot-008 transport gate has reviewed no-model evidence for an alternate transport/harness or operational readiness criterion.
+- Broad execution workers are not started. The post-pilot-008 gate now has reviewed Option C no-model evidence and a separate readiness record for exactly one pilot 009 direct probe; no other execution-start record may be prepared without another coordinator decision.
 - Pilot 004 stale-checkout handling is historical and resolved; pilots 004-008 are integrated and reviewed. It is not a current pre-run blocker.
 
 ## Execution Planning Gate
 
-- gate_status: post_pilot_008_transport_gate_recorded
+- gate_status: option_c_review_integrated_direct_probe_authorized
 - checked_at: 2026-05-06T21:55:01+08:00
 - llm_env_presence:
   - `BARCAROLLE_LLM_API_KEY`: present, value not inspected or recorded
@@ -442,7 +447,7 @@ No further live BARCAROLLE model call, broad ACUT execution, retry, second attem
 - deferred_acuts: `higher-budget-repo-depth`, `retrieval-history-augmented`, `minimal-context-baseline`
 - broad_execution_started: false
 - run_manifest: `experiments/core_narrative/configs/core_subset_run_manifest.yaml`
-- next_allowed_step: review the completed Option C no-model spike at `experiments/core_narrative/reports/post_pilot_008_option_c_no_model_spike.md`; then either pause/report no scoreable result or prepare a separate no-secret operational-readiness record for exactly one future direct-transport probe. Do not start a live BARCAROLLE model call, retry, second attempt, additional specialist run, broad execution, further pilot attempt, or large batch without satisfying the post-pilot-008 gate and recording a new explicit coordinator decision.
+- next_allowed_step: execute exactly the authorized pilot 009 direct probe, then stop if it repeats the direct `gaierror`/pre-verifier transport family or run one verifier only if a verifier-ready patch is produced. Do not start any retry, second attempt, additional specialist run, broad execution, further pilot attempt, or large batch.
 
 ## Acceptance Gate
 
