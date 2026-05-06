@@ -760,6 +760,7 @@ def run(argv: Sequence[str]) -> int:
     if mode == "mock_response":
         model_text = read_mock_response(args)
         model_call_made = False
+        model_response_received = False
     else:
         model_text = call_live_model(
             acut=acut,
@@ -769,10 +770,17 @@ def run(argv: Sequence[str]) -> int:
             max_response_bytes=args.max_response_bytes,
         )
         model_call_made = True
+        model_response_received = True
 
-    reject_unsafe_generated_text(model_text, "model response")
-    parsed = parse_patch_response(model_text)
-    patch_result = apply_patch_response(workspace, parsed, apply_patch=not args.no_apply)
+    try:
+        reject_unsafe_generated_text(model_text, "model response")
+        parsed = parse_patch_response(model_text)
+        patch_result = apply_patch_response(workspace, parsed, apply_patch=not args.no_apply)
+    except ToolError as exc:
+        if model_response_received:
+            exc.details.setdefault("model_call_made", True)
+            exc.details.setdefault("model_response_received", True)
+        raise
 
     status = "mock_response_validated" if args.no_apply else f"{mode}_applied"
     payload = base_payload(
@@ -808,7 +816,7 @@ def main() -> int:
             "status": "error",
             "error": sanitize_text(str(exc)),
             "details": sanitize_jsonish(details),
-            "model_call_made": False,
+            "model_call_made": bool(details.get("model_call_made", False)),
             "llm_env_policy": llm_env_summary(os.environ),
         }
         output_path = None

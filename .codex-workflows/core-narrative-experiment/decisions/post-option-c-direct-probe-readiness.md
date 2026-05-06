@@ -1,7 +1,8 @@
 # Post-Option-C Direct Probe Readiness
 
-status: readiness_recorded_single_probe_authorized
+status: single_probe_consumed_non_scoreable_invalid_patch
 recorded_at: 2026-05-07T01:00:00+08:00
+updated: 2026-05-07T01:24:00+08:00
 owner: coordinator
 related_gate: `.codex-workflows/core-narrative-experiment/decisions/post-pilot-008-transport-gate.md`
 related_review: `.codex-workflows/core-narrative-experiment/reviews/post-pilot-008-option-c-no-model-spike-review.md`
@@ -62,3 +63,10 @@ If it produces a verifier-ready patch, run exactly one verifier pass for this sa
 ## Still Not Authorized
 
 This record does not authorize broad ACUT execution, retries, second attempts, additional specialist ACUT runs, further pilot attempts beyond the single run id above, large batches, external/public actions, pushing, or PR creation.
+
+
+## Result Update
+
+The single authorized probe was consumed by `pilot_009__frontier-generic-swe__click__rbench__001__attempt1` and integrated as merge commit `314fffa`. It did not repeat the prior direct-command `gaierror` family; the direct path reached a live model response. The response failed patch validation (`generated unified diff failed git apply validation`, `corrupt patch at line 12`), leaving no verifier-ready patch and no scoreable ACUT result.
+
+Ledger state after the run: 12 records, cumulative estimated cost USD `41.0008`. No retry, second attempt, additional specialist run, broad execution, further pilot, large batch, or verifier run occurred. No further live probe is authorized by this readiness record.

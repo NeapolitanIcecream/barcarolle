@@ -1,8 +1,8 @@
 # Post-Pilot-008 Transport/Harness Gate
 
-status: option_c_review_integrated_single_direct_probe_authorized
+status: pilot_009_consumed_no_scoreable_result
 recorded_at: 2026-05-06T21:55:01+08:00
-updated: 2026-05-07T01:00:00+08:00
+updated: 2026-05-07T01:24:00+08:00
 owner: coordinator
 related_status: `pilot_008_integrated_local_triage_recorded`
 
@@ -56,3 +56,10 @@ The Option C no-model spike review is integrated at `.codex-workflows/core-narra
 Voyager's `2026-05-07T00:52+08:00` budget instruction is recorded in `.codex-workflows/core-narrative-experiment/decisions/post-option-c-direct-probe-readiness.md`. The USD `300` hard cap remains binding; the USD `240` soft stop is now an internal recorded coordinator decision point.
 
 The coordinator records exactly one live direct Option C probe as authorized: `pilot_009__frontier-generic-swe__click__rbench__001__attempt1`. This does not reopen broad execution, retries, second attempts, additional specialist ACUT runs, further pilot attempts, or large batches. If this single probe repeats the prior direct-command `gaierror`/pre-verifier no-patch family, live execution on Option C must stop and the blocker should be reported rather than retried.
+
+
+## 2026-05-07 Result: Pilot 009 Consumed The Direct-Probe Authorization
+
+Pilot 009 is integrated and non-scoreable. The direct Option C path reached a live model response and did not repeat the prior direct-command `gaierror` family, but the generated unified diff failed `git apply --check`; no verifier-ready patch existed and no verifier ran. The ledger now has 12 records and cumulative estimated cost USD `41.0008`.
+
+This gate no longer authorizes any live call. The next safe work is no-model direct-output-contract hardening/review or reporting the non-scoreable blocker.

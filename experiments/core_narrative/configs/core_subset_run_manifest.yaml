@@ -1,5 +1,5 @@
 id: core_2x2_pilot_budget_constrained_v2
-status: pilot_008_integrated_local_triage_recorded
+status: pilot_009_integrated_direct_invalid_patch_hardening_recorded
 prepared_at: "2026-04-28T15:13:51+08:00"
 redesigned_at: "2026-04-29T11:20:00+08:00"
 owner: coordinator
@@ -121,7 +121,7 @@ active_default_slice:
   total_primary_patch_generation_attempts: 80
 
 pilot_slice:
-  status: pilot_008_integrated_local_triage_recorded
+  status: pilot_009_integrated_direct_invalid_patch_hardening_recorded
   default_before_full_core: true
   acuts:
     - frontier-generic-swe
@@ -1102,8 +1102,9 @@ pilot_slice:
     full_core_attempts_if_promoted: 80
 
 post_pilot_008_transport_gate:
-  status: recorded
+  status: pilot_009_consumed_no_scoreable_result
   recorded_at: "2026-05-06T21:55:01+08:00"
+  updated_at: "2026-05-07T01:24:00+08:00"
   decision_record: .codex-workflows/core-narrative-experiment/decisions/post-pilot-008-transport-gate.md
   decision: no_further_live_attempts_on_current_codex_cli_responses_streaming_path
   basis:
@@ -1115,7 +1116,7 @@ post_pilot_008_transport_gate:
     model_tier_independent_within_observed_path: true
     verifier_ready_patch_observed: false
     scorable_acut_capability_result_available: false
-    current_cumulative_estimated_cost_usd: 31.0008
+    current_cumulative_estimated_cost_usd: 41.0008
   current_authorization:
     live_barcarolle_model_calls_authorized: false
     broad_execution_authorized: false
@@ -1134,7 +1135,27 @@ post_pilot_008_transport_gate:
   no_model_options_note: experiments/core_narrative/reports/post_pilot_008_transport_options.md
   option_c_no_model_spike: experiments/core_narrative/reports/post_pilot_008_option_c_no_model_spike.md
   kickoff_narrative_evidence_memo: experiments/core_narrative/reports/kickoff_narrative_evidence_memo.md
-  next_safe_action: review_option_c_no_model_spike_then_pause_or_prepare_separate_operational_readiness_record
+  option_c_review: .codex-workflows/core-narrative-experiment/reviews/post-pilot-008-option-c-no-model-spike-review.md
+  pilot_009_direct_probe:
+    run_id: pilot_009__frontier-generic-swe__click__rbench__001__attempt1
+    acut_id: frontier-generic-swe
+    task_id: click__rbench__001
+    split: rbench
+    attempt: 1
+    transport_path: direct_barcarolle_patch_command_non_streaming
+    worker_commit: af5da93
+    integrated_as: "314fffa"
+    adapter_status: command_failed
+    normalized_status: infra_failed
+    direct_gaierror_repeated: false
+    live_model_response_reached: true
+    failure_class: invalid_generated_diff_git_apply_validation
+    verifier_ready_patch_available: false
+    verifier_run: false
+    ledger_event: command_failed
+    cumulative_estimated_cost_usd: 41.0008
+    scorable_acut_capability_result_available: false
+  next_safe_action: no_model_direct_output_contract_hardening_or_report_non_scoreable_blocker
 
 locked_inputs:
   target_repository:
@@ -1150,5 +1171,5 @@ locked_inputs:
     locked_task_ids_source: experiments/core_narrative/configs/general_benchmark.yaml
 
 next_no_model_preflights:
-  - post-pilot-008 transport gate is recorded at `.codex-workflows/core-narrative-experiment/decisions/post-pilot-008-transport-gate.md`; the no-model options note is `experiments/core_narrative/reports/post_pilot_008_transport_options.md`; the completed Option C no-model spike is `experiments/core_narrative/reports/post_pilot_008_option_c_no_model_spike.md`; the kickoff narrative evidence memo is `experiments/core_narrative/reports/kickoff_narrative_evidence_memo.md`; next step is review of that spike, then pause/report no scoreable result or prepare a separate operational-readiness record before any execution hypothesis
+  - pilot 009 direct probe is integrated and non-scoreable; next step is no-model direct-output-contract hardening/review or reporting the blocker before any further live spend
   - do not start live BARCAROLLE model calls, broad ACUT execution, retries, second attempts, additional specialist runs, further pilot attempts, or other model calls before the coordinator satisfies the gate and records a new explicit execution start

@@ -11,8 +11,10 @@ import sys
 import tempfile
 import textwrap
 import unittest
+from unittest import mock
 from pathlib import Path
 
+import barcarolle_patch_command as patch_command_module
 from barcarolle_patch_command import live_request_payload, resolve_live_endpoint
 
 
@@ -188,6 +190,45 @@ class BarcarollePatchCommandTests(unittest.TestCase):
         self.assertEqual(summary["details"].get("reason"), "full_url")
         self.assertEqual((self.workspace / "module.py").read_text(encoding="utf-8"), "VALUE = 1\n")
         self.assertNotIn("http" + "s://", json.dumps(summary))
+
+
+    def test_live_response_apply_failure_records_model_call_made(self) -> None:
+        """Regression: invalid live model patches must still record that a model answered."""
+        summary_path = self.root / "invalid-live-patch-summary.json"
+        invalid_patch = textwrap.dedent(
+            """\
+            diff --git a/module.py b/module.py
+            --- a/module.py
+            +++ b/module.py
+            @@ -1 +1 @@
+            -VALUE = 1
+            VALUE = 2
+            """
+        )
+        argv = [
+            str(PATCH_COMMAND),
+            "--workspace",
+            str(self.workspace),
+            "--acut",
+            str(self.acut_path),
+            "--summary-output",
+            str(summary_path),
+        ]
+
+        with (
+            mock.patch.object(sys, "argv", argv),
+            mock.patch.dict(os.environ, self.command_env(include_llm_env=True), clear=True),
+            mock.patch.object(patch_command_module, "call_live_model", return_value=json.dumps({"unified_diff": invalid_patch})),
+        ):
+            exit_code = patch_command_module.main()
+
+        self.assertEqual(exit_code, 2)
+        summary = json.loads(summary_path.read_text(encoding="utf-8"))
+        self.assertEqual(summary["status"], "error")
+        self.assertEqual(summary["error"], "generated unified diff failed git apply validation")
+        self.assertIs(summary["model_call_made"], True)
+        self.assertIs(summary["details"]["model_response_received"], True)
+        self.assertEqual((self.workspace / "module.py").read_text(encoding="utf-8"), "VALUE = 1\n")
 
 
     def test_adapter_command_no_model_wraps_mock_response_with_zero_cost_ledger(self) -> None:
