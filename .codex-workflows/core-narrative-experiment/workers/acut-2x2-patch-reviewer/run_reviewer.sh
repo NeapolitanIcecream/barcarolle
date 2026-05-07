@@ -1,13 +1,16 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-cd /Users/chenmohan/gits/barcarolle-wt-acut-2x2-patch-reviewer
+script_dir="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
+repo_root="${BARCAROLLE_REPO_ROOT:-$(cd -- "${script_dir}/../../../.." && pwd)}"
+
+cd "${repo_root}"
 
 exec codex exec \
-  -C /Users/chenmohan/gits/barcarolle-wt-acut-2x2-patch-reviewer \
+  -C "${repo_root}" \
   -m gpt-5.5 \
   -c model_reasoning_effort=\"xhigh\" \
   --full-auto \
-  - < .codex-workflows/core-narrative-experiment/workers/acut-2x2-patch-reviewer/prompt.md \
-  > .codex-workflows/core-narrative-experiment/workers/acut-2x2-patch-reviewer/cli.log \
+  - < "${script_dir}/prompt.md" \
+  > "${script_dir}/cli.log" \
   2>&1
