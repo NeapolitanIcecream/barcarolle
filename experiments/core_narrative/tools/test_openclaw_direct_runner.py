@@ -227,6 +227,51 @@ class OpenClawDirectRunnerTests(unittest.TestCase):
         self.assertNotIn(self.env()["BARCAROLLE_LLM_API_KEY"], json.dumps(summary))
         self.assertNotIn("http" + "s://", json.dumps(summary))
 
+    def test_live_run_rejects_empty_context_before_model_call(self) -> None:
+        """Regression: empty context must fail before spending live model tokens."""
+        artifact_dir = self.root / "empty-context-artifacts"
+        output_path = self.root / "empty-context.json"
+        argv = [
+            "--workspace",
+            str(self.workspace),
+            "--task",
+            str(self.task_path),
+            "--acut",
+            str(self.acut_path),
+            "--attempt",
+            "1",
+            "--run-id",
+            "unit_openclaw_empty_context_attempt1",
+            "--artifact-dir",
+            str(artifact_dir),
+            "--output",
+            str(output_path),
+            "--llm-ledger",
+            str(self.ledger_path),
+            "--projected-cost-usd",
+            "1",
+        ]
+        model_calls: list[dict[str, object]] = []
+
+        def fake_call_live_model(**kwargs):
+            model_calls.append(dict(kwargs))
+            return '{"edits":[]}', {"prompt_tokens": 10, "completion_tokens": 2}, {}
+
+        with mock.patch.dict(os.environ, self.env(), clear=False), mock.patch.object(
+            runner_module,
+            "call_live_model",
+            fake_call_live_model,
+        ), mock.patch.object(runner_module.sys, "argv", [str(RUNNER), *argv]):
+            code = runner_module.main(argv)
+
+        self.assertEqual(code, 2)
+        self.assertEqual(model_calls, [])
+        summary = json.loads(output_path.read_text(encoding="utf-8"))
+        self.assertEqual(summary["status"], "error")
+        self.assertEqual(summary["details"]["failure_class"], "empty_context_paths")
+        self.assertIs(summary["details"]["network_attempted"], False)
+        self.assertFalse((artifact_dir / "provider_response.redacted.json").exists())
+
     def test_mock_response_rejects_unsafe_raw_text_before_redaction_mutates_edit(self) -> None:
         """Regression: redaction must not turn unsafe model edits into applied placeholders."""
         redacted_placeholder = "<redacted:url>"

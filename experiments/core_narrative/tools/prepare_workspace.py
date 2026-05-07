@@ -76,12 +76,14 @@ def ensure_tar_member_safe(member: tarfile.TarInfo, destination: Path) -> None:
     except ValueError as exc:
         raise ToolError("git archive contains an unsafe path", path=member.name) from exc
 
-    if member.islnk():
-        link_target = (destination / member.linkname).resolve()
+    if member.islnk() or member.issym():
+        link_base = destination if member.islnk() else (destination / member.name).parent
+        link_target = (link_base / member.linkname).resolve()
         try:
             link_target.relative_to(destination_root)
         except ValueError as exc:
-            raise ToolError("git archive contains an unsafe hardlink", path=member.name, link=member.linkname) from exc
+            link_type = "symlink" if member.issym() else "hardlink"
+            raise ToolError(f"git archive contains an unsafe {link_type}", path=member.name, link=member.linkname) from exc
 
 
 def extract_archive_safely(archive_path: Path, destination: Path) -> None:

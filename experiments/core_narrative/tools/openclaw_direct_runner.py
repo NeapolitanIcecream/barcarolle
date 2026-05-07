@@ -694,6 +694,13 @@ def main(argv: Sequence[str] | None = None) -> int:
         task_statement, statement_path, statement_truncated = safe_task_statement(task_path, task)
 
         context_files = [context_file_payload(workspace, path, args.max_file_chars) for path in args.context_path]
+        if mode in {"live", "mock_response"} and not context_files:
+            raise ToolError(
+                "no context files available for model patch generation",
+                failure_class="empty_context_paths",
+                network_attempted=False,
+                context_paths=list(args.context_path),
+            )
         specialist_text = None
         specialist_path = specialist_context_path(acut)
         include_specialist = args.include_specialist_context == "always" or (
