@@ -609,6 +609,18 @@ def aggregate(results: Sequence[Mapping[str, Any]]) -> dict[str, Any]:
     }
 
 
+def started_at_for_batch(results: Sequence[Mapping[str, Any]]) -> str | None:
+    for result in results:
+        runner_result = result.get("runner_result")
+        if isinstance(runner_result, Mapping) and isinstance(runner_result.get("started_at"), str):
+            return str(runner_result["started_at"])
+        noop = result.get("noop")
+        noop_result = noop.get("result") if isinstance(noop, Mapping) else None
+        if isinstance(noop_result, Mapping) and isinstance(noop_result.get("started_at"), str):
+            return str(noop_result["started_at"])
+    return None
+
+
 def main(argv: Sequence[str] | None = None) -> int:
     args = parse_args(sys.argv[1:] if argv is None else argv)
     try:
@@ -634,7 +646,7 @@ def main(argv: Sequence[str] | None = None) -> int:
             "tasks": args.tasks,
             "acuts": args.acuts,
             "attempt": args.attempt,
-            "started_at": results[0]["runner_result"].get("started_at") if results else None,
+            "started_at": started_at_for_batch(results),
             "finished_at": iso_now(),
             "aggregate": aggregate(results),
             "results": results,

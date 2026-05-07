@@ -178,6 +178,40 @@ class CodexNflExperimentRunnerTests(unittest.TestCase):
         self.assertFalse(result["scoreable"])
         self.assertEqual(result["normalized"]["metadata"]["failure_class"], "noop_verifier_passed")
 
+    def test_main_preserves_batch_summary_when_first_run_has_no_runner_result(self) -> None:
+        """Regression: no-op infra failures still emit a completed batch summary."""
+        runner = load_runner_module()
+        output_path = self.root / "batch_summary.json"
+        runner.load_manifest = lambda path: {
+            "tasks": [{"task_id": "click__rbench__001", "split": "rbench"}],
+        }
+        runner.run_one = lambda args, task, acut_id: {
+            "run_id": "unit_noop__cheap-generic-swe__click__rbench__001__attempt1",
+            "task_id": "click__rbench__001",
+            "acut_id": acut_id,
+            "status": "infra_failed",
+            "scoreable": False,
+            "runner_result": None,
+            "noop": {"result": {"status": "passed"}},
+        }
+
+        code = runner.main(
+            [
+                "--tasks",
+                "click__rbench__001",
+                "--acuts",
+                "cheap-generic-swe",
+                "--output",
+                str(output_path),
+            ]
+        )
+
+        self.assertEqual(code, 0)
+        payload = json.loads(output_path.read_text(encoding="utf-8"))
+        self.assertEqual(payload["status"], "completed")
+        self.assertIsNone(payload["started_at"])
+        self.assertEqual(payload["aggregate"]["infra_failed"], 1)
+
 
 if __name__ == "__main__":
     unittest.main()
