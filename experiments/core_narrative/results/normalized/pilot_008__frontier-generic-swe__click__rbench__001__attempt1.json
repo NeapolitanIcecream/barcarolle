@@ -1,0 +1,63 @@
+{
+  "acut_id": "frontier-generic-swe",
+  "attempt": 1,
+  "error": "patch-generation command exited nonzero without producing a verifier-ready patch",
+  "finished_at": "2026-05-01T12:55:41.066059Z",
+  "metadata": {
+    "adapter_id": "codex-cli-acut-adapter-v0",
+    "adapter_status": "command_failed",
+    "command_exit_code": 1,
+    "command_no_model": false,
+    "command_timed_out": false,
+    "dry_run": false,
+    "failure_class": "responses_streaming_disconnect",
+    "inner_patch_command": {
+      "cli_log_inspected": false,
+      "failure_class": "responses_streaming_disconnect",
+      "inner_status": "codex_exec_failed",
+      "summary_output_arg_present": true,
+      "summary_path": "/Users/chenmohan/gits/barcarolle-wt-pilot-008-execution/experiments/core_narrative/results/raw/pilot_008__frontier-generic-swe__click__rbench__001__attempt1/codex_cli_patch_command.json",
+      "summary_read": true,
+      "tool": "codex_cli_patch_command",
+      "transport_failure": {
+        "after_reconnects": 5,
+        "content_recorded": false,
+        "endpoint_path": "/responses",
+        "failure_class": "responses_streaming_disconnect",
+        "matched_stderr": false,
+        "matched_stdout": true,
+        "messages_recorded": false,
+        "present": true,
+        "reconnect_limit": 5,
+        "redaction_applied_before_detection": true,
+        "retry_exhausted": true,
+        "wire_api": "responses"
+      }
+    },
+    "ledger_append_status": "appended",
+    "model_call_made": true,
+    "no_patch_generated": false,
+    "patch_size_bytes": 0,
+    "tool": "acut_patch_adapter",
+    "verifier_ready_patch_available": false
+  },
+  "patch_path": "experiments/core_narrative/results/raw/pilot_008__frontier-generic-swe__click__rbench__001__attempt1/submission.patch",
+  "review": {
+    "mergeability_grade": null,
+    "notes": "",
+    "rule_violation": false,
+    "wrong_module": false
+  },
+  "run_id": "pilot_008__frontier-generic-swe__click__rbench__001__attempt1",
+  "schema_version": "core-narrative.run-result.v1",
+  "split": "rbench",
+  "started_at": "2026-05-01T12:55:16.819554Z",
+  "status": "infra_failed",
+  "task_id": "click__rbench__001",
+  "verification": {
+    "duration_seconds": 24.229,
+    "exit_code": null,
+    "stderr_artifact": "experiments/core_narrative/results/raw/pilot_008__frontier-generic-swe__click__rbench__001__attempt1/adapter.stderr.txt",
+    "stdout_artifact": "experiments/core_narrative/results/raw/pilot_008__frontier-generic-swe__click__rbench__001__attempt1/adapter.stdout.txt"
+  }
+}

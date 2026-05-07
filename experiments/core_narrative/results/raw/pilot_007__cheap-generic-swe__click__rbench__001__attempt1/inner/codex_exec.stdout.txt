@@ -1,0 +1,9 @@
+{"type":"<redacted:hostname>","thread_id":"019de325-7282-7630-a82d-38e70d6b8f35"}
+{"type":"<redacted:hostname>"}
+{"type":"error","message":"Reconnecting... 1/5 (stream disconnected before completion: error sending request for url (<redacted:BARCAROLLE_LLM_BASE_URL>/responses))"}
+{"type":"error","message":"Reconnecting... 2/5 (stream disconnected before completion: error sending request for url (<redacted:BARCAROLLE_LLM_BASE_URL>/responses))"}
+{"type":"error","message":"Reconnecting... 3/5 (stream disconnected before completion: error sending request for url (<redacted:BARCAROLLE_LLM_BASE_URL>/responses))"}
+{"type":"error","message":"Reconnecting... 4/5 (stream disconnected before completion: error sending request for url (<redacted:BARCAROLLE_LLM_BASE_URL>/responses))"}
+{"type":"error","message":"Reconnecting... 5/5 (stream disconnected before completion: error sending request for url (<redacted:BARCAROLLE_LLM_BASE_URL>/responses))"}
+{"type":"error","message":"stream disconnected before completion: error sending request for url (<redacted:BARCAROLLE_LLM_BASE_URL>/responses)"}
+{"type":"<redacted:hostname>","error":{"message":"stream disconnected before completion: error sending request for url (<redacted:BARCAROLLE_LLM_BASE_URL>/responses)"}}

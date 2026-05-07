@@ -1,0 +1,28 @@
+{
+  "context_files": [
+    {
+      "char_count": 8808,
+      "path": "click/testing.py",
+      "sha256": "64763b2d63273766f002d66e0763a33a57bdebbb35dcd81669cd6125a39ffe08",
+      "truncated": false
+    },
+    {
+      "char_count": 2915,
+      "path": "tests/test_testing.py",
+      "sha256": "7286952813647e841a6d7cccf91908f242a39f3d8858d5bfccc5aa028471ec07",
+      "truncated": false
+    }
+  ],
+  "full_urls_redacted": true,
+  "output_contract": "search-replace-json-v1",
+  "prompt_char_count": 15221,
+  "prompt_content_recorded": true,
+  "prompt_sha256": "ddcc6e4912097c57b0260355d72e2ea4b1267cf23591d08da4d5104041c464cd",
+  "run_id": "codex_nfl_live_expand_20260507__cheap-generic-swe__click__rbench__002__attempt1",
+  "runner_id": "codex-nfl-direct-search-replace-v1",
+  "specialist_context_included": false,
+  "specialist_context_path": null,
+  "statement_truncated": false,
+  "task_statement_path": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/tasks/click/rbench/click__rbench__002/public/statement.md",
+  "tool": "codex_nfl_direct_runner"
+}

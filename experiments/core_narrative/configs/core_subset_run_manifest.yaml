@@ -1,0 +1,1175 @@
+id: core_2x2_pilot_budget_constrained_v2
+status: pilot_009_integrated_direct_invalid_patch_hardening_recorded
+prepared_at: "2026-04-28T15:13:51+08:00"
+redesigned_at: "2026-04-29T11:20:00+08:00"
+owner: coordinator
+
+execution_start:
+  recorded: true
+  preflight_recorded_at: "2026-04-29T12:44:40+08:00"
+  explicit_start_decision_recorded: true
+  recorded_at: "2026-04-29T12:58:12+08:00"
+  scope: bounded_pilot_attempts_only
+  run_id: pilot_001__cheap-generic-swe__click__rbench__001__attempt1
+  acut_id: cheap-generic-swe
+  task_id: click__rbench__001
+  split: rbench
+  attempt: 1
+  projected_cost_usd: 3.00
+  broad_acut_execution_started: false
+  model_calls_allowed: false
+  model_calls_allowed_scope: none_until_next_explicit_coordinator_decision
+  required_before_start:
+    - coordinator records explicit execution start
+    - required LLM environment variables are present
+    - cost ledger exists and is writable
+    - projected spend does not exceed hard cap
+    - every ACUT model call or patch-generation attempt appends a cost ledger record
+
+llm_access:
+  allowed_environment_variables:
+    api_key: BARCAROLLE_LLM_API_KEY
+    base_url: BARCAROLLE_LLM_BASE_URL
+  record_values: false
+  redaction_required: true
+  credential_values_must_not_be_persisted: true
+
+budget:
+  currency: USD
+  soft_stop: 240
+  hard_cap: 300
+  behavior:
+    missing_required_environment: block_before_acut_command
+    missing_or_unwritable_ledger: block_before_acut_command
+    projected_hard_cap_overflow: block_before_acut_command
+    projected_soft_stop_reached: requires_coordinator_approval
+
+ledger:
+  path: experiments/core_narrative/results/cost_ledger.jsonl
+  required_fields:
+    - run_id
+    - acut_id
+    - task_id
+    - split
+    - attempt
+    - event
+    - input_tokens
+    - output_tokens
+    - estimated_cost_usd
+    - cumulative_estimated_cost_usd
+
+active_default_slice:
+  design: "2x2_core"
+  design_goal: "Clean ranking-reversal probe with model tier crossed against generic-vs-Click-specialist policy."
+  acuts:
+    - frontier-generic-swe
+    - frontier-click-specialist
+    - cheap-generic-swe
+    - cheap-click-specialist
+  model_routes:
+    cheap_tier: openai/gpt-5.4-mini
+    frontier_tier: openai/gpt-5.5
+  deferred_acuts:
+    - higher-budget-repo-depth
+    - retrieval-history-augmented
+    - minimal-context-baseline
+  retired_or_replaced_acuts:
+    general-benchmark-optimized: frontier-generic-swe
+    repo-context-heavy: frontier-click-specialist
+    retrieval-sparse-symbolic: frontier-click-specialist
+    lower-budget-fast-path: cheap-generic-swe
+  controls:
+    same_harness: true
+    same_task_budget: true
+    same_turn_cap: true
+    same_test_cap: true
+    same_retry_policy: true
+    same_model_tier_only_changes_policy_within_pairs: true
+    no_gold_patches: true
+    no_hidden_human_hints: true
+    no_post_hoc_tuning: true
+    no_undeclared_history_mining: true
+  specialist_context_pack:
+    status: reviewed_no_issues_integrated
+    pack_id: click_specialist_context_pack_v1
+    marker: CLICK_SPECIALIST_CONTEXT_PACK_V1
+    pack_hash: dfb271ad174531a7dd2f00da4cd0486193d87ce33349380982150889ecf84e48
+    manifest_path: experiments/core_narrative/context_packs/click_specialist/manifest.json
+    context_prompt_path: experiments/core_narrative/context_packs/click_specialist/context_prompt.md
+    locked_click_commit: 8bd8b4a074c55c03b6eb5666edc44a9c43df38a2
+    injected_acuts:
+      - frontier-click-specialist
+      - cheap-click-specialist
+    excluded_acuts:
+      - frontier-generic-swe
+      - cheap-generic-swe
+    task_agnostic_generation: true
+    live_model_call_made_for_generation: false
+    specialist_acut_execution_started_after_generation: false
+    worker_commit: d21bfc4
+    worker_integrated_as: "21487b9"
+    review_commit: 1eb222c
+    review_integrated_as: "81b3473"
+    review_status: no_issues
+  tasks:
+    G_score: 6
+    RBench: 8
+    RWork: 6
+  attempts:
+    primary_per_acut_task: 1
+    optional_extra_attempts_allowed: false
+  total_primary_patch_generation_attempts: 80
+
+pilot_slice:
+  status: pilot_009_integrated_direct_invalid_patch_hardening_recorded
+  default_before_full_core: true
+  acuts:
+    - frontier-generic-swe
+    - frontier-click-specialist
+    - cheap-generic-swe
+    - cheap-click-specialist
+  fallback_if_budget_tight:
+    acuts:
+      - frontier-generic-swe
+      - frontier-click-specialist
+      - cheap-click-specialist
+    reason: "Preserve the frontier generic-vs-specialist contrast and include the cheap specialist cell most relevant to Barcarolle leverage."
+  tasks:
+    G_score:
+      count: 2
+      source: experiments/core_narrative/configs/general_benchmark.yaml
+      ordinals: [1, 2]
+    RBench:
+      count: 3
+      task_ids:
+        - click__rbench__001
+        - click__rbench__002
+        - click__rbench__003
+    RWork:
+      count: 2
+      task_ids:
+        - click__rwork__001
+        - click__rwork__002
+  attempts:
+    primary_per_acut_task: 1
+    optional_extra_attempts_allowed: false
+  total_primary_patch_generation_attempts: 28
+  execution_policy:
+    start_only_after_focused_review: true
+    start_only_after_patch_command_contract_review: true
+    focused_reviews_passed: true
+    patch_generation_command_gap_closed: true
+    execution_start_preflight_recorded: true
+    explicit_execution_start_decision_recorded: true
+    broad_acut_execution_started: false
+    model_calls_allowed: false
+    model_calls_allowed_scope: none_until_next_explicit_coordinator_decision
+  first_execution_attempt:
+    run_id: pilot_001__cheap-generic-swe__click__rbench__001__attempt1
+    acut_id: cheap-generic-swe
+    task_id: click__rbench__001
+    split: rbench
+    attempt: 1
+    projected_cost_usd: 3.00
+    broad_execution: false
+    delivery_status: command_failed
+    review_status: no_issues_integrated
+    ledger_event: command_failed
+    estimated_cost_usd: 3.00
+    cumulative_estimated_cost_usd: 3.00
+    patch_returned: false
+    verifier_run: false
+    retry_or_second_attempt_started: false
+    redacted_error_type: gaierror
+  next_gate:
+    required_before_next_model_call: model_route_fix_review_no_issues_and_explicit_bounded_start
+    no_secret_transport_preflight:
+      checked_at: "2026-04-29T13:42:24+08:00"
+      api_key_env_present: true
+      base_url_env_present: true
+      endpoint_parse_ok: true
+      scheme_allowed: true
+      host_present: true
+      endpoint_kind: chat_completions
+      dns_resolution_ok: true
+      tcp_connect_ok: true
+      tls_handshake_ok: true
+      error_class: null
+      record_hostname: false
+      record_ip_address: false
+    record_full_base_url: false
+    record_credential_values: false
+  pilot_002_execution_attempt:
+    explicit_start_decision_recorded: true
+    recorded_at: "2026-04-29T13:55:06+08:00"
+    run_id: pilot_002__cheap-generic-swe__click__rbench__002__attempt1
+    acut_id: cheap-generic-swe
+    task_id: click__rbench__002
+    split: rbench
+    attempt: 1
+    projected_cost_usd: 3.00
+    projected_cumulative_estimated_cost_usd: 6.00
+    broad_execution: false
+    retry_of_prior_attempt: false
+    model_calls_allowed_scope: single_pilot_002_execution_worker
+    rationale: "Different primary ACUT/task pair after the no-secret transport preflight; avoids retrying the first failed ACUT/task attempt and avoids specialist ACUTs until task-agnostic Click specialist context artifacts are verified or generated."
+    delivery_status: command_failed
+    review_status: no_issues_integrated
+    integration:
+      worker_integrated_as: "581850d"
+      review_integrated_as: "71b11e9"
+    ledger_event: command_failed
+    estimated_cost_usd: 3.00
+    cumulative_estimated_cost_usd: 6.00
+    patch_returned: false
+    verifier_run: false
+    retry_or_second_attempt_started: false
+    redacted_error_type: gaierror
+  repeated_transport_failure:
+    reviewed_attempts:
+      - pilot_001__cheap-generic-swe__click__rbench__001__attempt1
+      - pilot_002__cheap-generic-swe__click__rbench__002__attempt1
+      - pilot_003__cheap-generic-swe__click__rbench__003__attempt1
+    redacted_error: LLM request failed
+    redacted_error_type: gaierror
+    model_calls_allowed: false
+    required_before_next_model_call: no_secret_diagnostics_or_user_input_record
+    diagnostic_resolution: bare_model_route_name_mismatch_for_first_two_attempts
+    resolved_by_model_route_fix: reviewed_no_issues_integrated
+    post_model_route_fix_status: pilot_003_full_patch_generation_request_still_failed_with_gaierror
+    record_credential_values: false
+    record_bearer_tokens: false
+    record_resolved_secrets: false
+    record_full_base_url: false
+    record_hostname: false
+    record_ip_address: false
+  model_route_fix:
+    status: reviewed_no_issues_integrated
+    diagnostic_basis: no_secret_parent_diagnostics_and_focused_health_check
+    bare_model_ids_not_routable:
+      - gpt-5.4-mini
+      - gpt-5.5
+    provider_prefixed_routes:
+      cheap_tier: openai/gpt-5.4-mini
+      frontier_tier: openai/gpt-5.5
+    active_acut_configs_updated:
+      - experiments/core_narrative/configs/acuts/frontier-generic-swe.yaml
+      - experiments/core_narrative/configs/acuts/frontier-click-specialist.yaml
+      - experiments/core_narrative/configs/acuts/cheap-generic-swe.yaml
+      - experiments/core_narrative/configs/acuts/cheap-click-specialist.yaml
+    health_check_artifact: experiments/core_narrative/results/normalized/model_route_health_20260429T1437.json
+    health_check_status: provider_prefixed_routes_http_2xx
+    max_completion_or_output_tokens_minimum: 16
+    response_text_recorded: false
+    cost_ledger_records:
+      - model_route_health__openai_gpt_5_4_mini__20260429T1437
+      - model_route_health__openai_gpt_5_5__20260429T1437
+    cumulative_estimated_cost_usd_after_health_check: 6.0008
+    model_calls_allowed: false
+    required_before_next_pilot_attempt: focused_review_no_issues_and_explicit_one_attempt_start_decision
+    reviewer:
+      worker: model-route-fix-reviewer
+      session: exited
+      branch: codex/core-exp-model-route-reviewer
+      worktree: /Users/chenmohan/gits/barcarolle-wt-model-route-reviewer
+      start_commit: bb002f2
+      worker_commit: 159dc3f
+      integrated_as: 7292dfa
+      status: no_issues
+    next_execution_decision:
+      status: pilot_003_dispatched
+      broad_acut_execution_allowed: false
+      retries_allowed: false
+      second_attempts_allowed: false
+      specialist_acut_runs_allowed: false
+      large_batches_allowed: false
+    record_credential_values: false
+    record_bearer_tokens: false
+    record_resolved_secrets: false
+    record_full_base_url: false
+    record_hostname: false
+    record_ip_address: false
+  pilot_003_execution_attempt:
+    explicit_start_decision_recorded: true
+    recorded_at: "2026-04-29T15:07:50+08:00"
+    run_id: pilot_003__cheap-generic-swe__click__rbench__003__attempt1
+    acut_id: cheap-generic-swe
+    task_id: click__rbench__003
+    split: rbench
+    attempt: 1
+    model_route: openai/gpt-5.4-mini
+    projected_cost_usd: 3.00
+    projected_cumulative_estimated_cost_usd: 9.0008
+    broad_execution: false
+    retry_of_prior_attempt: false
+    second_attempt: false
+    specialist_acut_run: false
+    model_calls_allowed_scope: single_pilot_003_execution_worker
+    rationale: "First bounded pilot attempt after the reviewed provider-prefixed model-route fix; uses a different unattempted cheap-generic-swe RBench task and does not retry pilot_001 or pilot_002."
+    delivery_status: command_failed
+    review_status: no_issues_integrated
+    worker_commit: c8d78d4
+    integration:
+      worker_integrated_as: "c748362"
+      review_integrated_as: "22cd6a1"
+    ledger_event: command_failed
+    estimated_cost_usd: 3.00
+    cumulative_estimated_cost_usd: 9.0008
+    patch_returned: false
+    verifier_run: false
+    retry_or_second_attempt_started: false
+    redacted_error_type: gaierror
+    reviewer:
+      worker: pilot-003-reviewer
+      session: exited
+      branch: codex/core-exp-pilot-003-reviewer
+      worktree: /Users/chenmohan/gits/barcarolle-wt-pilot-003-reviewer
+      start_commit: dd49fcb
+      worker_commit: b6d4693
+      integrated_as: 22cd6a1
+      status: no_issues
+    required_before_live_call:
+      - BARCAROLLE_LLM_API_KEY present without recording value
+      - BARCAROLLE_LLM_BASE_URL present without recording value
+      - cost ledger exists and is writable
+      - projected cumulative estimated cost below USD 240 soft stop and USD 300 hard cap
+    record_credential_values: false
+    record_bearer_tokens: false
+    record_resolved_secrets: false
+    record_full_base_url: false
+    record_hostname: false
+    record_ip_address: false
+  codex_cli_harness_adapter:
+    status: reviewed_no_issues_integrated
+    worker_commit: c6cdc45
+    worker_integrated_as: "62e01ce"
+    review_commit: 6760c0a
+    review_integrated_as: "11ad0a7"
+    inner_patch_command_path: experiments/core_narrative/tools/codex_cli_patch_command.py
+    outer_adapter_path: experiments/core_narrative/tools/acut_patch_adapter.py
+    scope: inner_patch_generation_command_only
+    temporary_codex_home_required: true
+    provider_override:
+      provider_name: barcarolle
+      wire_api: responses
+      api_key_env: BARCAROLLE_LLM_API_KEY
+      base_url_env: BARCAROLLE_LLM_BASE_URL
+      record_resolved_base_url: false
+    model_catalog_routes:
+      - openai/gpt-5.4-mini
+      - openai/gpt-5.5
+    no_model_smoke:
+      direct_dry_run: passed
+      adapter_wrapped_dry_run: passed
+      live_barcarolle_model_call: false
+      main_ledger_appended: false
+      smoke_local_zero_cost_ledger_record: true
+    reviewed_controls:
+      no_secret_artifacts: true
+      shell_edit_tool_metadata_present: true
+      non_interactive_base_instructions_present: true
+      outer_adapter_budget_ledger_redaction_normalization_verifier_preserved: true
+      broad_execution_started: false
+      retry_or_second_attempt_started: false
+      specialist_acut_run_started: false
+      large_batch_started: false
+    required_before_next_model_call: explicit_one_attempt_start_decision_after_no_secret_preflight
+  click_specialist_context_pack:
+    status: reviewed_no_issues_integrated
+    worker: click-specialist-context-pack
+    session: exited
+    branch: codex/core-exp-click-specialist-context-pack
+    worktree: /Users/chenmohan/gits/barcarolle-wt-click-specialist-context-pack
+    start_commit: 0a1f1fb
+    worker_commit: d21bfc4
+    worker_integrated_as: "21487b9"
+    reviewer:
+      worker: click-specialist-context-reviewer
+      session: exited
+      branch: codex/core-exp-click-specialist-context-reviewer
+      worktree: /Users/chenmohan/gits/barcarolle-wt-click-specialist-context-reviewer
+      start_commit: 519f0bf
+      worker_commit: 1eb222c
+      integrated_as: "81b3473"
+      status: no_issues
+    required_before_specialist_acut_run: explicit_coordinator_execution_start_decision
+    expected_artifacts:
+      context_pack_dir: experiments/core_narrative/context_packs/click_specialist
+      report: experiments/core_narrative/reports/click_specialist_context_pack.md
+      normalized_evidence_glob: experiments/core_narrative/results/normalized/click_specialist_context_pack*.json
+      raw_evidence_glob: experiments/core_narrative/results/raw/click_specialist_context_pack*/**
+    required_pack_components:
+      - precomputed_click_repo_map_v1
+      - precomputed_click_docs_map_v1
+      - precomputed_click_symbol_index_v1
+      - precomputed_click_convention_playbook_v1
+      - deterministic_click_retrieval_v1
+    required_injection_evidence:
+      specialist_acuts_include_pack:
+        - frontier-click-specialist
+        - cheap-click-specialist
+      generic_acuts_exclude_pack:
+        - frontier-generic-swe
+        - cheap-generic-swe
+      preferred_evidence_mode: no_model_smoke
+      live_smoke_allowed_only_if_needed: true
+      max_live_smoke_calls: 2
+      live_smoke_must_be_ledgered_and_capped: true
+    leakage_guards:
+      task_agnostic: true
+      no_gold_patches: true
+      no_hidden_hints: true
+      no_hidden_verifier_artifacts: true
+      no_post_hoc_tuning_from_acut_outputs: true
+      no_undeclared_history_mining: true
+      no_secret_or_endpoint_values_recorded: true
+    model_calls_allowed: false
+    broad_execution_started: false
+    specialist_acut_run_started: false
+    retry_or_second_attempt_started: false
+  pilot_004_preflight:
+    status: reviewed_no_issues_integrated
+    recorded_at: "2026-04-30T09:48:23+08:00"
+    run_id: pilot_004__cheap-click-specialist__click__rbench__001__attempt1
+    acut_id: cheap-click-specialist
+    task_id: click__rbench__001
+    split: rbench
+    attempt: 1
+    model_route: openai/gpt-5.4-mini
+    harness: reviewed_codex_cli_patch_command
+    specialist_context_pack: reviewed_no_issues_integrated
+    execution_start_decision_recorded: true
+    execution_start_recorded_at: "2026-04-30T10:01:56+08:00"
+    repair_decision_recorded: true
+    repair_decision_recorded_at: "2026-04-30T10:28:12+08:00"
+    repair_decision_reason: stale_worker_checkout_blocked_before_any_model_call
+    repair_is_retry_or_second_attempt: false
+    worker:
+      name: pilot-004-execution
+      session: exited
+      branch: codex/core-exp-pilot-004-execution
+      worktree: /Users/chenmohan/gits/barcarolle-wt-pilot-004-execution
+      start_commit: e7958c8
+      blocked_handoff_commit: 7c221a3
+      delivered_commit: 7e224ba
+      status: delivered
+      prior_blocked_reason: worker_checkout_did_not_include_explicit_start_commit_58bf5ed
+      user_input_required_for_repair: false
+    broad_execution: false
+    retry_of_prior_attempt: false
+    second_attempt: false
+    additional_specialist_acut_run: false
+    large_batch: false
+    projected_cost_usd: 3.00
+    current_cumulative_estimated_cost_usd: 9.0008
+    projected_cumulative_estimated_cost_usd: 12.0008
+    below_soft_stop: true
+    below_hard_cap: true
+    required_before_live_call:
+      - coordinator recorded explicit execution start for this exact run id
+      - BARCAROLLE_LLM_API_KEY present without recording value
+      - BARCAROLLE_LLM_BASE_URL present without recording value
+      - cost ledger exists and is writable
+      - projected cumulative estimated cost below USD 240 soft stop and USD 300 hard cap
+      - cost ledger append for the attempt
+    preflight_checks:
+      api_key_env_present: true
+      base_url_env_present: true
+      env_values_recorded: false
+      cost_ledger_exists: true
+      cost_ledger_writable: true
+      current_ledger_records: 6
+      adapter_command_path_present: true
+      inner_codex_cli_command_path_present: true
+      task_manifest_present: true
+      acut_manifest_present: true
+      context_pack_manifest_present: true
+    worker_outcome:
+      blocked_before_live_call: true
+      live_barcarolle_model_call_attempted: false
+      adapter_command_ran: false
+      ledger_appended: false
+      raw_or_normalized_attempt_artifacts_written: false
+      verifier_run: false
+      retry_or_second_attempt_started: false
+      broad_execution_started: false
+      large_batch_started: false
+      existing_ledger_records: 6
+      cumulative_estimated_cost_usd: 9.0008
+    repair_required_before_model_call: completed_by_refreshed_worker_checkout_including_58bf5ed_or_later
+    repair_preflight_checks:
+      api_key_env_present: true
+      base_url_env_present: true
+      env_values_recorded: false
+      cost_ledger_exists: true
+      cost_ledger_writable: true
+      current_ledger_records: 6
+      current_cumulative_estimated_cost_usd: 9.0008
+      projected_cumulative_estimated_cost_usd: 12.0008
+      below_soft_stop: true
+      below_hard_cap: true
+    delivery_outcome:
+      worker_commit: 7e224ba
+      worker_integrated_as: "efd7e6c"
+      delivered_at: "2026-04-30T10:43:15+08:00"
+      adapter_command_ran: true
+      live_barcarolle_model_call_attempted: true
+      ledger_appended: true
+      ledger_records_after: 7
+      ledger_event: command_failed
+      estimated_cost_usd: 3.00
+      cumulative_estimated_cost_usd: 12.0008
+      adapter_status: command_failed
+      normalized_status: infra_failed
+      inner_codex_cli_status: codex_exec_failed
+      patch_artifact_empty: true
+      verifier_run: false
+      retry_or_second_attempt_started: false
+      broad_execution_started: false
+      additional_specialist_acut_run_started: false
+      large_batch_started: false
+    review:
+      status: no_issues_integrated
+      worker: pilot-004-reviewer
+      session: exited
+      branch: codex/core-exp-pilot-004-reviewer
+      worktree: /Users/chenmohan/gits/barcarolle-wt-pilot-004-reviewer
+      start_commit: 885086b
+      worker_commit: ddfcd0c
+      integrated_as: "cfd9f51"
+    model_calls_allowed: false
+    model_calls_allowed_scope: none_until_next_explicit_coordinator_decision
+    record_credential_values: false
+    record_bearer_tokens: false
+    record_resolved_secrets: false
+    record_full_base_url: false
+    record_hostname: false
+    record_ip_address: false
+  harness_empty_patch_gate:
+    status: revision_1_reviewed_integrated
+    implemented_in: experiments/core_narrative/tools/acut_patch_adapter.py
+    regression_test: experiments/core_narrative/tools/test_acut_patch_adapter.py
+    report: experiments/core_narrative/reports/acut_adapter_empty_patch_gate.md
+    worker_commit: ead03e4
+    worker_handoff_commit: b505bc4
+    worker_integrated_as: 8c2d74a
+    review_commit: fba15aa
+    review_integrated_as: e051adc
+    behavior:
+      inner_command_exit_zero_with_empty_git_diff: no_patch_generated
+      ledger_event: no_patch_generated
+      normalized_status: infra_failed
+      verifier_ready_result_created: false
+      unsafe_patch_rejection_remains_distinct: true
+      unsafe_patch_no_patch_generated_metadata: false
+    live_barcarolle_model_call_started: false
+    acut_attempt_started: false
+    broad_execution_started: false
+    retry_or_second_attempt_started: false
+    additional_specialist_acut_run_started: false
+    large_batch_started: false
+  pilot_005_preflight:
+    status: delivered_reviewed_integrated_no_model_triage_pending
+    recorded_at: "2026-04-30T14:04:36+08:00"
+    run_id: pilot_005__cheap-click-specialist__click__rbench__001__attempt1
+    acut_id: cheap-click-specialist
+    task_id: click__rbench__001
+    split: rbench
+    attempt: 1
+    model_route: openai/gpt-5.4-mini
+    purpose: recovery_replacement_candidate_for_infra_failed_pilot_004_after_reviewed_empty_patch_gate
+    harness: reviewed_codex_cli_patch_command
+    specialist_context_pack: reviewed_no_issues_integrated
+    empty_patch_gate: revision_1_reviewed_integrated
+    execution_start_decision_recorded: true
+    execution_start_recorded_at: "2026-04-30T14:16:36+08:00"
+    execution_authorized: true
+    execution_authorized_scope: this_single_recovery_replacement_run_id_only
+    broad_execution: false
+    retry_authorized: this_recovery_replacement_only
+    second_attempt_authorized: false
+    additional_specialist_acut_run_authorized: false
+    large_batch_authorized: false
+    live_model_call_authorized: true
+    further_live_model_call_authorized: false
+    projected_cost_usd: 3.00
+    current_ledger_records: 7
+    current_cumulative_estimated_cost_usd: 12.0008
+    projected_cumulative_estimated_cost_usd: 15.0008
+    below_soft_stop: true
+    below_hard_cap: true
+    required_before_live_call:
+      - coordinator records a separate explicit execution start for this exact run id
+      - BARCAROLLE_LLM_API_KEY present without recording value
+      - BARCAROLLE_LLM_BASE_URL present without recording value
+      - cost ledger exists and is writable
+      - projected cumulative estimated cost below USD 240 soft stop and USD 300 hard cap
+      - cost ledger append for the attempt
+      - no verifier or scoring if adapter returns no_patch_generated or infra_failed
+    preflight_checks:
+      api_key_env_present: true
+      base_url_env_present: true
+      env_values_recorded: false
+      cost_ledger_exists: true
+      cost_ledger_writable: true
+      adapter_command_path_present: true
+      inner_codex_cli_command_path_present: true
+      task_manifest_present: true
+      acut_manifest_present: true
+      context_pack_dir_present: true
+    worker:
+      name: pilot-005-execution
+      session: exited
+      branch: codex/core-exp-pilot-005-execution
+      worktree: /Users/chenmohan/gits/barcarolle-wt-pilot-005-execution
+      status: delivered
+      delivered_at: "2026-04-30T14:28:56+08:00"
+      commit_status: blocked_by_worker_git_common_dir_unwritable
+      integrated_as: 03e096f
+    delivery_outcome:
+      adapter_command_ran: true
+      live_barcarolle_model_call_attempted: true
+      ledger_appended: true
+      ledger_records_after: 8
+      ledger_event: command_failed
+      estimated_cost_usd: 3.00
+      cumulative_estimated_cost_usd: 15.0008
+      adapter_status: command_failed
+      normalized_status: infra_failed
+      inner_codex_cli_status: codex_exec_failed
+      patch_artifact_empty: true
+      verifier_run: false
+      retry_beyond_this_recovery_replacement_started: false
+      second_attempt_started: false
+      broad_execution_started: false
+      additional_specialist_acut_run_started: false
+      further_pilot_attempt_started: false
+      large_batch_started: false
+    review:
+      status: no_issues_integrated
+      worker: pilot-005-reviewer
+      session: exited
+      branch: codex/core-exp-pilot-005-reviewer
+      worktree: /Users/chenmohan/gits/barcarolle-wt-pilot-005-reviewer
+      worker_commit: ff810e5
+      integrated_as: 5440fc8
+    next_decision:
+      status: codex_cli_failure_capture_integrated_next_preflight_ready
+      reason: pilot_005_ended_command_failed_infra_failed_with_empty_patch_after_reviewed_harness_and_context_pack
+      triage_mode: coordinator_local
+      started_new_worker: true
+      worker:
+        name: codex-cli-failure-capture
+        session: exited
+        branch: codex/core-exp-codex-cli-failure-capture
+        worktree: /Users/chenmohan/gits/barcarolle-wt-codex-cli-failure-capture
+        start_commit: e88869c
+        delivered_commit: 64c5d9b
+        delivery_status: delivered
+        revision_1_delivered_commit: 5429338
+        integrated_as: 7be798c
+        model_calls_authorized: false
+        live_barcarolle_model_calls_authorized: false
+      review:
+        status: issues_found
+        worker: codex-cli-failure-capture-reviewer
+        session: exited
+        branch: codex/core-exp-codex-cli-failure-capture-reviewer
+        worktree: /Users/chenmohan/gits/barcarolle-wt-codex-cli-failure-capture-reviewer
+        start_commit: 5a19749
+        worker_commit: a07c65c
+        integrated_as: 3dff487
+        model_calls_authorized: false
+        live_barcarolle_model_calls_authorized: false
+        required_closure:
+          - broaden_hostname_redaction_beyond_narrow_suffix_list
+          - add_no_model_timeout_failure_capture_test
+          - add_no_model_unsafe_patch_content_failure_capture_test
+          - assert_redacted_stdout_stderr_artifact_contents
+      revision_1:
+        status: delivered_reviewed_integrated
+        worker: codex-cli-failure-capture
+        session: exited
+        branch: codex/core-exp-codex-cli-failure-capture
+        worktree: /Users/chenmohan/gits/barcarolle-wt-codex-cli-failure-capture
+        start_commit: fceae58
+        delivered_commit: 5429338
+        delivery_status: delivered
+        integrated_as: 7be798c
+        model_calls_authorized: false
+        live_barcarolle_model_calls_authorized: false
+      re_review:
+        status: no_issues_integrated
+        worker: codex-cli-failure-capture-r1-reviewer
+        session: exited
+        branch: codex/core-exp-codex-cli-failure-capture-r1-reviewer
+        worktree: /Users/chenmohan/gits/barcarolle-wt-codex-cli-failure-capture-r1-reviewer
+        start_commit: f86e4ee
+        worker_commit: f2595a9
+        integrated_as: 8424e11
+        model_calls_authorized: false
+        live_barcarolle_model_calls_authorized: false
+      post_integration:
+        no_model_tests_passed:
+          - python3 experiments/core_narrative/tools/test_codex_cli_patch_command.py
+          - python3 experiments/core_narrative/tools/test_acut_patch_adapter.py
+          - python3 -m py_compile experiments/core_narrative/tools/codex_cli_patch_command.py experiments/core_narrative/tools/test_codex_cli_patch_command.py
+        cost_ledger_appended: false
+        live_barcarolle_model_call_started: false
+      authorized_next_step: no_secret_next_attempt_preflight_only
+      triage_scope:
+        - reviewed_pilot_004_artifacts
+        - reviewed_pilot_005_artifacts
+        - worker_process_md_files
+      excluded_inputs:
+        - cli.log
+      interim_classification: harness_or_transport_inner_command_failure_before_patch_available
+      common_observations:
+        no_model_dry_run_completed: true
+        specialist_context_injected: true
+        live_model_call_attempted_once_per_run: true
+        inner_codex_cli_status: codex_exec_failed
+        patch_artifact_empty: true
+        normalized_status: infra_failed
+        verifier_run: false
+      next_required_before_more_spend:
+        - no_secret_next_attempt_preflight
+        - coordinator_records_new_explicit_decision
+      broad_execution_authorized: false
+      retries_authorized: false
+      second_attempts_authorized: false
+      additional_specialist_acut_runs_authorized: false
+      further_pilot_attempts_authorized: false
+      live_barcarolle_model_calls_authorized: false
+      large_batch_authorized: false
+    model_calls_allowed: false
+    model_calls_allowed_scope: none_until_next_explicit_coordinator_decision
+    model_calls_started_by_preflight: false
+    worker_started_by_preflight: true
+    record_credential_values: false
+    record_bearer_tokens: false
+    record_resolved_secrets: false
+    record_full_base_url: false
+    record_hostname: false
+    record_ip_address: false
+  pilot_006_preflight:
+    status: delivered_reviewed_integrated
+    recorded_at: "2026-04-30T16:36:06+08:00"
+    run_id: pilot_006__cheap-click-specialist__click__rbench__001__attempt1
+    acut_id: cheap-click-specialist
+    task_id: click__rbench__001
+    split: rbench
+    attempt: 1
+    model_route: openai/gpt-5.4-mini
+    purpose: diagnostic_recovery_candidate_after_reviewed_failure_capture_r1
+    harness: reviewed_codex_cli_patch_command
+    specialist_context_pack: reviewed_no_issues_integrated
+    empty_patch_gate: revision_1_reviewed_integrated
+    failure_capture_gate: revision_1_reviewed_integrated
+    execution_start_decision_recorded: true
+    execution_start_recorded_at: "2026-04-30T16:50:06+08:00"
+    execution_authorized: true
+    execution_authorized_scope: this_single_diagnostic_recovery_run_id_only
+    live_model_call_authorized: true
+    broad_execution_authorized: false
+    retry_authorized: this_single_diagnostic_recovery_only
+    second_attempt_authorized: false
+    additional_specialist_acut_run_authorized: false
+    further_pilot_attempt_authorized: false
+    large_batch_authorized: false
+    projected_cost_usd: 3.00
+    current_ledger_records: 8
+    current_cumulative_estimated_cost_usd: 15.0008
+    projected_cumulative_estimated_cost_usd: 18.0008
+    below_soft_stop: true
+    below_hard_cap: true
+    required_before_live_call:
+      - coordinator records a separate explicit execution start for this exact run id
+      - BARCAROLLE_LLM_API_KEY present without recording value
+      - BARCAROLLE_LLM_BASE_URL present without recording value
+      - cost ledger exists and is writable
+      - projected cumulative estimated cost below USD 240 soft stop and USD 300 hard cap
+      - cost ledger append for the attempt
+      - structured failure_capture artifacts remain redacted if the inner Codex CLI command fails
+      - no verifier or scoring if adapter returns no_patch_generated or infra_failed
+    preflight_checks:
+      api_key_env_present: true
+      base_url_env_present: true
+      env_values_recorded: false
+      cost_ledger_exists: true
+      cost_ledger_writable: true
+      adapter_command_path_present: true
+      inner_codex_cli_command_path_present: true
+      task_manifest_present: true
+      acut_manifest_present: true
+      context_pack_manifest_present: true
+      cli_log_inspected: false
+    worker:
+      name: pilot-006-execution
+      session: exited
+      branch: codex/core-exp-pilot-006-execution
+      worktree: /Users/chenmohan/gits/barcarolle-wt-pilot-006-execution
+      status: delivered
+      worker_commit: aefbcd9
+      delivered_at: "2026-04-30T17:01:06+08:00"
+    delivery_outcome:
+      adapter_command_ran: true
+      live_barcarolle_model_call_attempted: true
+      ledger_appended: true
+      ledger_records_after: 9
+      ledger_event: command_failed
+      estimated_cost_usd: 3.00
+      cumulative_estimated_cost_usd: 18.0008
+      adapter_status: command_failed
+      inner_codex_cli_status: codex_exec_failed
+      failure_capture_present: true
+      failure_capture_class: nonzero_exit
+      specialist_context_pack_injected: true
+      patch_artifact_empty: true
+      verifier_run: false
+      normalized_result_written: false
+      cli_log_inspected: false
+      retry_beyond_this_diagnostic_recovery_started: false
+      second_attempt_started: false
+      broad_execution_started: false
+      additional_specialist_acut_run_started: false
+      further_pilot_attempt_started: false
+      large_batch_started: false
+    review:
+      status: no_issues_integrated
+      worker: pilot-006-reviewer
+      session: exited
+      branch: codex/core-exp-pilot-006-reviewer
+      worktree: /Users/chenmohan/gits/barcarolle-wt-pilot-006-reviewer
+      worker_commit: 5287668
+    next_decision:
+      status: pilot_007_preflight_recorded_awaiting_start_decision
+      reason: pilot_006_repeated_cheap_click_specialist_pre_verifier_failure_is_now_sufficiently_structured_for_no_model_repair_or_new_hypothesis_selection
+      triage_mode: coordinator_local_completed_dispatch_worker
+      structured_inputs_sufficient: true
+      repeated_cell_repeat_not_justified_yet: true
+      recommended_before_more_spend: focused_no_model_repair_for_nonzero_exit_normalization
+      started_new_worker: true
+      worker:
+        name: nonzero-exit-normalization
+        session: exited
+        branch: codex/core-exp-nonzero-exit-normalization
+        worktree: /Users/chenmohan/gits/barcarolle-wt-nonzero-exit-normalization
+        delivered_commit: 4b26c7a
+        integrated_as: 42351d0
+        delivery_status: delivered
+        model_calls_authorized: false
+        live_barcarolle_model_calls_authorized: false
+        scope: repair_acut_patch_adapter_nonzero_exit_normalized_result_and_classification
+      review:
+        status: no_issues_integrated
+        worker: nonzero-exit-normalization-reviewer
+        session: exited
+        branch: codex/core-exp-nonzero-exit-normalization-reviewer
+        worktree: /Users/chenmohan/gits/barcarolle-wt-nonzero-exit-normalization-reviewer
+        reviewed_commit: 4b26c7a
+        worker_commit: ef9e0ba
+        integrated_as: 4874606
+        model_calls_authorized: false
+        live_barcarolle_model_calls_authorized: false
+      broad_execution_authorized: false
+      retries_authorized: false
+      second_attempts_authorized: false
+      additional_specialist_acut_runs_authorized: false
+      further_pilot_attempts_authorized: false
+      live_barcarolle_model_calls_authorized: false
+      large_batch_authorized: false
+    pilot_007_preflight:
+      status: reviewed_integrated
+      recorded_at: "2026-05-01T18:29:11+08:00"
+      run_id: pilot_007__cheap-generic-swe__click__rbench__001__attempt1
+      acut_id: cheap-generic-swe
+      task_id: click__rbench__001
+      split: rbench
+      attempt: 1
+      model_route: openai/gpt-5.4-mini
+      purpose: recovery_candidate_for_prior_non_scorable_generic_attempt_after_reviewed_codex_cli_harness_and_nonzero_exit_normalization
+      rationale: "Use the paired generic cell on click__rbench__001 under the current reviewed harness before any further cheap-click-specialist repeat on the same task."
+      harness: reviewed_codex_cli_patch_command
+      specialist_context_pack: excluded_for_generic_acut
+      empty_patch_gate: revision_1_reviewed_integrated
+      failure_capture_gate: revision_1_reviewed_integrated
+      nonzero_exit_normalization_gate: reviewed_integrated
+      execution_start_decision_recorded: true
+      execution_start_recorded_at: "2026-05-01T18:40:59+08:00"
+      execution_authorized: true
+      execution_authorized_scope: this_single_recovery_candidate_run_id_only
+      live_model_call_authorized: true
+      model_calls_allowed_scope: single_pilot_007_execution_worker
+      worker:
+        name: pilot-007-execution
+        session: exited
+        branch: codex/core-exp-pilot-007-execution
+        worktree: /Users/chenmohan/gits/barcarolle-wt-pilot-007-execution
+        worker_commit: 261faf4
+        integrated_as: fcec699
+        delivery_status: delivered
+      result:
+        adapter_status: command_failed
+        normalized_status: infra_failed
+        inner_codex_cli_status: codex_exec_failed
+        failure_capture_present: true
+        failure_capture_class: nonzero_exit
+        specialist_context_pack_excluded_for_generic_acut: true
+        ledger_event: command_failed
+        cumulative_estimated_cost_usd: 21.0008
+        verifier_run: false
+      review:
+        status: no_issues_integrated
+        worker: pilot-007-reviewer
+        session: exited
+        branch: codex/core-exp-pilot-007-reviewer
+        worktree: /Users/chenmohan/gits/barcarolle-wt-pilot-007-reviewer
+        reviewed_commit: 261faf4
+        worker_commit: 2fdc48d
+        integrated_as: 8a802f5
+        live_model_call_made_by_review: false
+        cli_log_inspected: false
+      broad_execution_authorized: false
+      retry_authorized: false
+      second_attempt_authorized: false
+      additional_specialist_acut_run_authorized: false
+      further_pilot_attempts_authorized: false
+      large_batch_authorized: false
+      env_presence_confirmed_without_values: true
+      ledger_records_before: 9
+      current_cumulative_estimated_cost_usd: 18.0008
+      projected_additional_cost_usd: 3.00
+      projected_cumulative_estimated_cost_usd: 21.0008
+      below_soft_stop: true
+      below_hard_cap: true
+      record_credential_values: false
+      record_bearer_tokens: false
+      record_resolved_secrets: false
+      record_full_base_url: false
+      record_hostname: false
+      record_ip_address: false
+    rationale: "Pilot 004 and pilot 005 are reviewed infra_failed/no-patch outcomes rather than scorable ACUT results; this single explicit decision uses the same specialist cell to verify the reviewed failure-capture path without broad execution."
+    model_calls_started_by_preflight: false
+    worker_started_by_preflight: true
+    record_credential_values: false
+    record_bearer_tokens: false
+    record_resolved_secrets: false
+    record_full_base_url: false
+    record_hostname: false
+    record_ip_address: false
+  pilot_008_frontier_preflight:
+    status: delivered_reviewed_integrated_local_triage_recorded
+    recorded_at: "2026-05-01T20:22:15+08:00"
+    run_id: pilot_008__frontier-generic-swe__click__rbench__001__attempt1
+    acut_id: frontier-generic-swe
+    task_id: click__rbench__001
+    split: rbench
+    attempt: 1
+    model_route: openai/gpt-5.5
+    purpose: transport_discriminating_candidate_after_reviewed_cheap_route_streaming_disconnects
+    rationale: "Pilot 006 and pilot 007 failed before verifier with the same reviewed streaming-disconnect class on the cheap route across specialist and generic treatments; this candidate tests the frontier route without specialist context and without broad execution."
+    harness: reviewed_codex_cli_patch_command
+    specialist_context_pack: excluded_for_generic_acut
+    empty_patch_gate: revision_1_reviewed_integrated
+    failure_capture_gate: revision_1_reviewed_integrated
+    nonzero_exit_normalization_gate: reviewed_integrated
+    transport_disconnect_classifier: reviewed_integrated
+    execution_start_decision_recorded: true
+    execution_start_recorded_at: "2026-05-01T20:47:45+08:00"
+    execution_authorized: true
+    execution_authorized_scope: this_single_frontier_transport_probe_run_id_only
+    live_model_call_authorized: true
+    model_calls_allowed_scope: single_pilot_008_execution_worker
+    worker:
+      name: pilot-008-execution
+      session: exited
+      branch: codex/core-exp-pilot-008-execution
+      worktree: /Users/chenmohan/gits/barcarolle-wt-pilot-008-execution
+      start_commit: 015d53d
+      worker_commit: b307d18
+      integrated_as: c3d25b4
+      status: delivered
+    result:
+      adapter_status: command_failed
+      normalized_status: infra_failed
+      inner_codex_cli_status: codex_exec_failed
+      failure_capture_present: true
+      failure_capture_class: responses_streaming_disconnect
+      transport_disconnect_classifier_present: true
+      specialist_context_pack_excluded_for_generic_acut: true
+      ledger_event: command_failed
+      cumulative_estimated_cost_usd: 31.0008
+      verifier_run: false
+    review:
+      status: no_issues_integrated
+      worker: pilot-008-reviewer
+      session: exited
+      branch: codex/core-exp-pilot-008-reviewer
+      worktree: /Users/chenmohan/gits/barcarolle-wt-pilot-008-reviewer
+      reviewed_commit: b307d18
+      start_commit: b05eb77
+      worker_commit: f7fcf34
+      integrated_as: 5e30487
+      live_model_call_made_by_review: false
+      cli_log_inspected: false
+    broad_execution_authorized: false
+    retry_authorized: false
+    second_attempt_authorized: false
+    additional_specialist_acut_run_authorized: false
+    further_pilot_attempts_authorized: false
+    large_batch_authorized: false
+    env_presence_confirmed_without_values: true
+    ledger_records_before: 10
+    current_cumulative_estimated_cost_usd: 21.0008
+    projected_additional_cost_usd: 10.00
+    projected_cumulative_estimated_cost_usd: 31.0008
+    below_soft_stop: true
+    below_hard_cap: true
+    record_credential_values: false
+    record_bearer_tokens: false
+    record_resolved_secrets: false
+    record_full_base_url: false
+    record_hostname: false
+    record_ip_address: false
+    post_integration_triage:
+      recorded_at: "2026-05-01T21:39:15+08:00"
+      mode: coordinator_local_no_model
+      inputs:
+        - coordinator_md
+        - pilot_006_execution_and_review_process_md
+        - pilot_007_execution_and_review_process_md
+        - pilot_008_execution_and_review_process_md
+        - structured_raw_normalized_and_cost_ledger_artifacts
+      excluded_inputs:
+        - cli.log
+      cli_log_inspected: false
+      live_model_call_started: false
+      cost_ledger_appended: false
+      compared_runs:
+        - run_id: pilot_006__cheap-click-specialist__click__rbench__001__attempt1
+          acut_id: cheap-click-specialist
+          model_route: openai/gpt-5.4-mini
+          specialist_context_pack_injected: true
+          adapter_status: command_failed
+          normalized_status: missing_for_legacy_nonzero_path
+          inner_codex_cli_status: codex_exec_failed
+          failure_class: nonzero_exit
+          ledger_event: command_failed
+          estimated_cost_usd: 3.00
+          cumulative_estimated_cost_usd: 18.0008
+          patch_size_bytes: 0
+          verifier_run: false
+        - run_id: pilot_007__cheap-generic-swe__click__rbench__001__attempt1
+          acut_id: cheap-generic-swe
+          model_route: openai/gpt-5.4-mini
+          specialist_context_pack_injected: false
+          adapter_status: command_failed
+          normalized_status: infra_failed
+          inner_codex_cli_status: codex_exec_failed
+          failure_class: nonzero_exit
+          ledger_event: command_failed
+          estimated_cost_usd: 3.00
+          cumulative_estimated_cost_usd: 21.0008
+          patch_size_bytes: 0
+          verifier_run: false
+        - run_id: pilot_008__frontier-generic-swe__click__rbench__001__attempt1
+          acut_id: frontier-generic-swe
+          model_route: openai/gpt-5.5
+          specialist_context_pack_injected: false
+          adapter_status: command_failed
+          normalized_status: infra_failed
+          inner_codex_cli_status: codex_exec_failed
+          failure_class: responses_streaming_disconnect
+          transport_failure_class: responses_streaming_disconnect
+          ledger_event: command_failed
+          estimated_cost_usd: 10.00
+          cumulative_estimated_cost_usd: 31.0008
+          patch_size_bytes: 0
+          verifier_run: false
+      triage_implication: treatment_and_model_tier_independent_pre_verifier_transport_failure_on_current_codex_cli_responses_streaming_path
+      scorable_acut_capability_result_available: false
+      next_authorized_step: bounded_no_secret_transport_or_harness_planning_only
+      broad_execution_authorized: false
+      retries_authorized: false
+      second_attempts_authorized: false
+      additional_specialist_acut_runs_authorized: false
+      further_pilot_attempts_authorized: false
+      live_barcarolle_model_calls_authorized: false
+      large_batch_authorized: false
+  promotion_to_full_core:
+    allowed_only_after: "pilot summary review and explicit coordinator decision"
+    full_core_attempts_if_promoted: 80
+
+post_pilot_008_transport_gate:
+  status: pilot_009_consumed_no_scoreable_result
+  recorded_at: "2026-05-06T21:55:01+08:00"
+  updated_at: "2026-05-07T01:24:00+08:00"
+  decision_record: .codex-workflows/core-narrative-experiment/decisions/post-pilot-008-transport-gate.md
+  decision: no_further_live_attempts_on_current_codex_cli_responses_streaming_path
+  basis:
+    compared_runs:
+      - pilot_006__cheap-click-specialist__click__rbench__001__attempt1
+      - pilot_007__cheap-generic-swe__click__rbench__001__attempt1
+      - pilot_008__frontier-generic-swe__click__rbench__001__attempt1
+    treatment_independent: true
+    model_tier_independent_within_observed_path: true
+    verifier_ready_patch_observed: false
+    scorable_acut_capability_result_available: false
+    current_cumulative_estimated_cost_usd: 41.0008
+  current_authorization:
+    live_barcarolle_model_calls_authorized: false
+    broad_execution_authorized: false
+    retries_authorized: false
+    second_attempts_authorized: false
+    additional_specialist_acut_runs_authorized: false
+    further_pilot_attempts_authorized: false
+    large_batch_authorized: false
+  required_before_any_future_live_call:
+    - exact run id, ACUT, task, split, attempt, and specialist-context expectation
+    - current ledger record count, cumulative estimated cost, projected additional cost, and projected cumulative cost
+    - fresh no-secret BARCAROLLE_LLM_API_KEY and BARCAROLLE_LLM_BASE_URL presence preflight without recording values
+    - cost ledger parse and writability check plus USD 240 soft-stop and USD 300 hard-cap check
+    - reviewed no-model evidence that the proposed call is not another current-path repeat
+    - explicit scope statement preserving the bans on broad execution, retries, second attempts, additional specialist runs, further pilots, and large batches
+  no_model_options_note: experiments/core_narrative/reports/post_pilot_008_transport_options.md
+  option_c_no_model_spike: experiments/core_narrative/reports/post_pilot_008_option_c_no_model_spike.md
+  kickoff_narrative_evidence_memo: experiments/core_narrative/reports/kickoff_narrative_evidence_memo.md
+  option_c_review: .codex-workflows/core-narrative-experiment/reviews/post-pilot-008-option-c-no-model-spike-review.md
+  pilot_009_direct_probe:
+    run_id: pilot_009__frontier-generic-swe__click__rbench__001__attempt1
+    acut_id: frontier-generic-swe
+    task_id: click__rbench__001
+    split: rbench
+    attempt: 1
+    transport_path: direct_barcarolle_patch_command_non_streaming
+    worker_commit: af5da93
+    integrated_as: "314fffa"
+    adapter_status: command_failed
+    normalized_status: infra_failed
+    direct_gaierror_repeated: false
+    live_model_response_reached: true
+    failure_class: invalid_generated_diff_git_apply_validation
+    verifier_ready_patch_available: false
+    verifier_run: false
+    ledger_event: command_failed
+    cumulative_estimated_cost_usd: 41.0008
+    scorable_acut_capability_result_available: false
+  next_safe_action: no_model_direct_output_contract_hardening_or_report_non_scoreable_blocker
+
+locked_inputs:
+  target_repository:
+    repository: pallets/click
+    commit: 8bd8b4a074c55c03b6eb5666edc44a9c43df38a2
+    local_checkout_cache: experiments/core_narrative/external_repos/click
+    runtime: Python 3.12.12 via uv
+  general_benchmark:
+    dataset_id: ScaleAI/SWE-bench_Pro
+    revision: 7ab5114912baf22bb098818e604c02fe7ad2c11f
+    parquet_sha256: c8cd7115496ad4e9a8b21d088cef576a65bf821bb542b24336f13f714cef13f8
+    locked_task_count: 6
+    locked_task_ids_source: experiments/core_narrative/configs/general_benchmark.yaml
+
+next_no_model_preflights:
+  - pilot 009 direct probe is integrated and non-scoreable; next step is no-model direct-output-contract hardening/review or reporting the blocker before any further live spend
+  - do not start live BARCAROLLE model calls, broad ACUT execution, retries, second attempts, additional specialist runs, further pilot attempts, or other model calls before the coordinator satisfies the gate and records a new explicit execution start

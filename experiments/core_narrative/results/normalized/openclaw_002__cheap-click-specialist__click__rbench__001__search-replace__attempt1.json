@@ -1,0 +1,37 @@
+{
+  "acut_id": "cheap-click-specialist",
+  "attempt": 1,
+  "error": "[Errno 2] No such file or directory: '/Users/chenmohan/gits/barcarolle/experiments/core_narrative/workspaces/openclaw_002__cheap-click-specialist__click__rbench__001__search-replace__attempt1/src/click/core.py'",
+  "finished_at": "2026-05-07T10:28:06.462842Z",
+  "metadata": {
+    "adapter_status": "error",
+    "failure_class": "generated_path_not_in_workspace",
+    "ledger_event": "runner_error_after_model_response",
+    "model_call_made": true,
+    "model_response_received": true,
+    "prompt_snapshot": "experiments/core_narrative/results/raw/openclaw_002__cheap-click-specialist__click__rbench__001__search-replace__attempt1/prompt_snapshot.json",
+    "raw_response_artifact": "experiments/core_narrative/results/raw/openclaw_002__cheap-click-specialist__click__rbench__001__search-replace__attempt1/provider_response.redacted.json",
+    "runner_id": "openclaw-direct-search-replace-v1",
+    "tool": "openclaw_direct_runner",
+    "verifier_ready_patch_available": false
+  },
+  "patch_path": "experiments/core_narrative/results/raw/openclaw_002__cheap-click-specialist__click__rbench__001__search-replace__attempt1/submission.patch",
+  "review": {
+    "mergeability_grade": null,
+    "notes": "",
+    "rule_violation": false,
+    "wrong_module": false
+  },
+  "run_id": "openclaw_002__cheap-click-specialist__click__rbench__001__search-replace__attempt1",
+  "schema_version": "core-narrative.run-result.v1",
+  "split": "rbench",
+  "started_at": "2026-05-07T10:27:23.146760Z",
+  "status": "infra_failed",
+  "task_id": "click__rbench__001",
+  "verification": {
+    "duration_seconds": null,
+    "exit_code": null,
+    "stderr_artifact": null,
+    "stdout_artifact": null
+  }
+}

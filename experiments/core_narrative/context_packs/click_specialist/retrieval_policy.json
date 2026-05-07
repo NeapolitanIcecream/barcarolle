@@ -1,0 +1,42 @@
+{
+  "allowed_sources": [
+    "public_task_statement",
+    "files explicitly named in the task statement",
+    "files surfaced by failing tests or import errors",
+    "adjacent public tests",
+    "direct symbol and filename search results",
+    "this precomputed task-agnostic Click context pack"
+  ],
+  "forbidden_material_policy": {
+    "acut_outputs_or_failed_generated_patches_present": false,
+    "benchmark_solution_patches_content_present": false,
+    "hidden_human_hints_present": false,
+    "hidden_verifier_files_present": false,
+    "network_fetched_docs_present": false,
+    "task_specific_private_artifacts_present": false
+  },
+  "history_mining": "not_used",
+  "marker": "CLICK_SPECIALIST_CONTEXT_PACK_V1",
+  "pack_id": "click_specialist_context_pack_v1",
+  "policy_id": "deterministic_click_retrieval_v1",
+  "prompt_use": {
+    "do_not_inject_for_acut_specializations": [
+      "frontier-generic-swe",
+      "cheap-generic-swe"
+    ],
+    "inject_for_acut_specializations": [
+      "frontier-click-specialist",
+      "cheap-click-specialist"
+    ],
+    "must_not_change_model_tier_or_runtime_budget": true
+  },
+  "section_id": "deterministic_retrieval_policy",
+  "selection_order": [
+    "Read the public task statement and named files.",
+    "Map mentioned symbols or failing imports to symbol_index exact names.",
+    "Inspect repo_map for the owning Click module and adjacent public tests.",
+    "Use docs_map headings only when behavior is public or documented.",
+    "Apply convention_playbook guidance for verification scope and public API boundaries."
+  ],
+  "task_agnostic": true
+}

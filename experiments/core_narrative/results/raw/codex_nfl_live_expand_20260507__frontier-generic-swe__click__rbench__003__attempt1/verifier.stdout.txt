@@ -1,0 +1,31 @@
+F                                                                        [100%]
+=================================== FAILURES ===================================
+_________________________ test_choices_list_in_prompt __________________________
+
+runner = <click.testing.CliRunner object at 0x105dadc70>
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x105dadac0>
+
+    def test_choices_list_in_prompt(runner, monkeypatch):
+        @click.option('-g', type=click.Choice(['none', 'day', 'week', 'month']), prompt=True)
+        @click.command()
+        def cli_with_choices():
+            pass
+    
+        @click.option('-g', type=click.Choice(['none', 'day', 'week', 'month']), prompt=True, show_choices=False)
+        @click.command()
+        def cli_without_choices():
+            pass
+    
+>       monkeypatch.setattr(click._termui_impl, 'isatty', lambda _: True)
+E       AttributeError: module 'click' has no attribute '_termui_impl'
+
+tests/test_termui.py:58: AttributeError
+=============================== warnings summary ===============================
+click/core.py:1224
+  /Users/chenmohan/gits/barcarolle/experiments/core_narrative/workspaces/codex_nfl_live_expand_20260507__frontier-generic-swe__click__rbench__003__attempt1/click/core.py:1224: DeprecationWarning: invalid escape sequence \s
+    """A parameter to a command comes in two versions: they are either
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED tests/test_termui.py::test_choices_list_in_prompt - AttributeError: mo...
+1 failed, 1 warning in 0.02s

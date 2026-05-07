@@ -1,0 +1,7 @@
+{
+  "schema_version": "core-narrative.task.v1",
+  "task_id": "patch_command_contract_smoke",
+  "repo_slug": "contract-smoke",
+  "split": "rbench",
+  "task_family": "patch command contract"
+}

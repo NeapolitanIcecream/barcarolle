@@ -196,7 +196,19 @@ cython_debug/
 
 # Local Codex workflow artifacts
 .codex-calibration/
-.codex-workflows/
+.codex-workflows/*
+!.codex-workflows/core-narrative-experiment/
+!.codex-workflows/core-narrative-experiment/**
+.codex-workflows/**/cli.log
+.codex-workflows/**/cli-*.log
+.codex-workflows/**/launcher.log
+
+# Core narrative experiment local artifacts
+experiments/core_narrative/workspaces/
+experiments/core_narrative/external_repos/
+experiments/core_narrative/cache/
+experiments/core_narrative/large_artifacts/
+experiments/core_narrative/results/raw/*/logs/
 
 # PyPI configuration file
 .pypirc

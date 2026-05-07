@@ -1,0 +1,45 @@
+diff --git a/click/core.py b/click/core.py
+index af6ed57..b8a431b 100644
+--- a/click/core.py
++++ b/click/core.py
+@@ -1509,7 +1509,10 @@ class Option(Parameter):
+         help = self.help or ''
+         extra = []
+         if self.default is not None and self.show_default:
+-            extra.append('default: %s' % self.default)
++            default = self.default
++            if isinstance(default, (tuple, list)):
++                default = ', '.join(map(make_str, default))
++            extra.append('default: %s' % default)
+         if self.required:
+             extra.append('required')
+         if extra:
+diff --git a/tests/test_options.py b/tests/test_options.py
+index e60ed43..59a313f 100644
+--- a/tests/test_options.py
++++ b/tests/test_options.py
+@@ -115,6 +115,24 @@ def test_multiple_envvar(runner):
+     assert result.output == 'foo|bar\n'
+ 
+ 
++def test_multiple_default_help(runner):
++    @click.command()
++    @click.option("--arg1", multiple=True, default=('foo', 'bar'),
++                  show_default=True)
++    @click.option("--arg2", multiple=True, default=(1, 2), type=int,
++                  show_default=True)
++    @click.option("--arg3", multiple=True, default=['baz', 'qux'],
++                  show_default=True)
++    def cmd(arg, arg2, arg3):
++        pass
++
++    result = runner.invoke(cmd, ['--help'])
++    assert not result.exception
++    assert "foo, bar" in result.output
++    assert "1, 2" in result.output
++    assert "baz, qux" in result.output
++
++
+ def test_nargs_envvar(runner):
+     @click.command()
+     @click.option('--arg', nargs=2)

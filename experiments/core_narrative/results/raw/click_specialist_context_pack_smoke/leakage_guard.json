@@ -1,0 +1,10 @@
+{
+  "findings": [],
+  "record_bearer_tokens": false,
+  "record_credential_values": false,
+  "record_full_urls": false,
+  "record_hostnames": false,
+  "record_ip_addresses": false,
+  "scanned_file_count": 27,
+  "status": "passed"
+}

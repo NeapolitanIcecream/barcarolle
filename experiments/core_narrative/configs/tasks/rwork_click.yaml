@@ -1,0 +1,338 @@
+schema_version: core-narrative.task-split.v1
+prepared_at: "2026-04-28T15:34:59+08:00"
+status: prepared_not_started
+split: RWork
+repo_slug: click
+repository: pallets/click
+locked_target_commit: 8bd8b4a074c55c03b6eb5666edc44a9c43df38a2
+local_checkout_cache: experiments/core_narrative/external_repos/click
+selection_policy:
+  source_basis: GitHub commit search plus compare metadata for pallets/click.
+  split_rule: Recent maintainer-style behavior tasks from 2025-2026 anchors; no anchors reused in RBench.
+  exclusion_rule: Exclude docs-only, dependency-only, release-only, CI-only, and workflow-only anchors unless repository behavior is exercised by tests.
+  context_rule: Issue or PR text may be visible when it is the source anchor; reference patches and target diffs stay hidden.
+task_count: 6
+tasks:
+  - task_id: click__rwork__001
+    repo_slug: click
+    split: rwork
+    benchmark_split: RWork
+    locked_target_repository: pallets/click
+    locked_target_commit: 8bd8b4a074c55c03b6eb5666edc44a9c43df38a2
+    source:
+      kind: pull_request
+      public_url: https://github.com/pallets/click/pull/2956
+      anchor_id: pallets/click#2956
+      base_commit: 5c1239b0116b66492cdd0848144ab3c78a04495a
+      target_commit: 565f36d5bc4a15d304337b749e113fb4477b1843
+    source_compare:
+      commits_ahead: 2
+      changed_files:
+        - src/click/core.py
+        - src/click/types.py
+        - tests/test_options.py
+        - tests/test_basic.py
+        - tests/test_imports.py
+    task_family: flag envvar/default/type reconciliation
+    task_statement_path: inline:problem_statement
+    problem_statement: >-
+      Fix flag option reconciliation when envvar, default, flag_value, and
+      explicit type settings interact, so environment values activate or
+      deactivate flags consistently with command-line parsing.
+    expected_touched_area:
+      - src/click/core.py flag option value resolution
+      - src/click/types.py conversion of flag values
+      - tests for envvar string flag_value behavior
+    visible_context_guidance: >-
+      Provide the PR title, linked issue identifiers, and the behavior expected
+      for envvar activation/deactivation. Do not expose the reference patch.
+    allowed_context:
+      include_git_history_before_base: true
+      include_issue_text: true
+      include_pr_text: true
+      include_reference_patch: false
+    disallowed_context:
+      - reference patch or target diff for pull request 2956
+      - ACUT outputs or public model results
+      - future execution results for this task
+    verifier:
+      command: .venv/bin/python -m pytest -q tests/test_options.py::test_envvar_string_flag_value
+      timeout_seconds: 60
+    expected:
+      no_op_fails: true
+      reference_passes: true
+    leakage:
+      reviewed: true
+      notes: Recent behavior task with focused option/envvar verification; docs changes are ancillary and not the evaluation target.
+    admission:
+      status: accepted
+      reviewer: task-manifests-worker
+      rationale: Repository-specific, behavior-verifiable regression with maintainer-style complexity.
+    risk_notes: Avoid over-broad verifier selection; the full PR touched many option tests.
+
+  - task_id: click__rwork__002
+    repo_slug: click
+    split: rwork
+    benchmark_split: RWork
+    locked_target_repository: pallets/click
+    locked_target_commit: 8bd8b4a074c55c03b6eb5666edc44a9c43df38a2
+    source:
+      kind: pull_request
+      public_url: https://github.com/pallets/click/pull/2940
+      anchor_id: pallets/click#2940
+      base_commit: 36deba8a95a2585de1a2aa4475b7f054f52830ac
+      target_commit: 2a0e3ba907927ade6951d5732b775f11b54cb766
+    source_compare:
+      commits_ahead: 3
+      changed_files:
+        - src/click/testing.py
+        - tests/test_chain.py
+    task_family: CliRunner EOF and stdin file handling
+    task_statement_path: inline:problem_statement
+    problem_statement: >-
+      Fix a CliRunner EOF regression so commands that read a click.File value
+      from stdin continue to work instead of aborting when the synthetic stdin
+      stream is exhausted.
+    expected_touched_area:
+      - src/click/testing.py stdin wrapper behavior
+      - chain pipeline test using click.File("r") with "-"
+    visible_context_guidance: >-
+      Provide the PR title and linked regression issue context. The reference
+      diff and final code remain hidden.
+    allowed_context:
+      include_git_history_before_base: true
+      include_issue_text: true
+      include_pr_text: true
+      include_reference_patch: false
+    disallowed_context:
+      - reference patch or target diff for pull request 2940
+      - ACUT outputs or public model results
+      - future execution results for this task
+    verifier:
+      command: .venv/bin/python -m pytest -q tests/test_chain.py::test_pipeline
+      timeout_seconds: 60
+    expected:
+      no_op_fails: true
+      reference_passes: true
+    leakage:
+      reviewed: true
+      notes: In-process stdin behavior; no real TTY or shell dependency.
+    admission:
+      status: accepted
+      reviewer: task-manifests-worker
+      rationale: Compact regression fix with a direct repository behavior test.
+    risk_notes: Keep tests focused on file/stdin behavior, not interactive prompt EOF behavior.
+
+  - task_id: click__rwork__003
+    repo_slug: click
+    split: rwork
+    benchmark_split: RWork
+    locked_target_repository: pallets/click
+    locked_target_commit: 8bd8b4a074c55c03b6eb5666edc44a9c43df38a2
+    source:
+      kind: commit
+      public_url: https://github.com/pallets/click/commit/1c20dc6e724cd5625faaa17b715ba928d44c08bf
+      anchor_id: commit:1c20dc6e724cd5625faaa17b715ba928d44c08bf
+      base_commit: 6a1c0d077311f180b356965914e2de5b9e0fdb44
+      target_commit: 1c20dc6e724cd5625faaa17b715ba928d44c08bf
+    source_compare:
+      commits_ahead: 1
+      changed_files:
+        - src/click/core.py
+        - tests/test_defaults.py
+    task_family: default handling for shared flag parameters
+    task_statement_path: inline:problem_statement
+    problem_statement: >-
+      Defer normalization of internal UNSET defaults until all options sharing
+      a parameter have been evaluated, so the first real default is preserved
+      regardless of declaration order.
+    expected_touched_area:
+      - src/click/core.py default lookup and normalization
+      - tests/test_defaults.py shared-parameter default regression
+    visible_context_guidance: >-
+      Provide the commit message and linked issue identifier 3071. Hide the
+      target diff and exact implementation.
+    allowed_context:
+      include_git_history_before_base: true
+      include_issue_text: true
+      include_pr_text: false
+      include_reference_patch: false
+    disallowed_context:
+      - reference patch or target diff for commit 1c20dc6
+      - ACUT outputs or public model results
+      - future execution results for this task
+    verifier:
+      command: .venv/bin/python -m pytest -q tests/test_defaults.py::test_shared_param_prefers_first_default
+      timeout_seconds: 60
+    expected:
+      no_op_fails: true
+      reference_passes: true
+    leakage:
+      reviewed: true
+      notes: One-commit behavior fix with a focused default regression test.
+    admission:
+      status: accepted
+      reviewer: task-manifests-worker
+      rationale: Compact recent Click internals task that exercises nuanced option semantics.
+    risk_notes: Do not expose the new test implementation as visible context.
+
+  - task_id: click__rwork__004
+    repo_slug: click
+    split: rwork
+    benchmark_split: RWork
+    locked_target_repository: pallets/click
+    locked_target_commit: 8bd8b4a074c55c03b6eb5666edc44a9c43df38a2
+    source:
+      kind: commit
+      public_url: https://github.com/pallets/click/commit/546f2851f414b07413777ebcae89b2c21a685252
+      anchor_id: commit:546f2851f414b07413777ebcae89b2c21a685252
+      base_commit: ae46cfd6bc997804893adc799589248eadcdbc29
+      target_commit: 546f2851f414b07413777ebcae89b2c21a685252
+    source_compare:
+      commits_ahead: 1
+      changed_files:
+        - src/click/core.py
+        - tests/test_defaults.py
+        - tests/test_options.py
+    task_family: callable flag_value default handling
+    task_statement_path: inline:problem_statement
+    problem_statement: >-
+      Prevent callable flag_value objects from being instantiated merely
+      because default=True causes a flag's default to align with its flag_value.
+    expected_touched_area:
+      - src/click/core.py Option default handling
+      - tests for callable flag_value defaults and default_map/show_default interactions
+    visible_context_guidance: >-
+      Provide the commit title and linked issue identifiers 3121, 3201, and
+      3213. Do not show the reference patch.
+    allowed_context:
+      include_git_history_before_base: true
+      include_issue_text: true
+      include_pr_text: false
+      include_reference_patch: false
+    disallowed_context:
+      - reference patch or target diff for commit 546f285
+      - ACUT outputs or public model results
+      - future execution results for this task
+    verifier:
+      command: .venv/bin/python -m pytest -q tests/test_options.py::test_callable_flag_value_not_instantiated
+      timeout_seconds: 60
+    expected:
+      no_op_fails: true
+      reference_passes: true
+    leakage:
+      reviewed: true
+      notes: Recent option-default internals task; verifier is parameterized but fast and deterministic.
+    admission:
+      status: accepted
+      reviewer: task-manifests-worker
+      rationale: Behavior-specific recent work item with compact source changes.
+    risk_notes: The public follow-up merge commit 5850ef9 is not reused as a separate anchor.
+
+  - task_id: click__rwork__005
+    repo_slug: click
+    split: rwork
+    benchmark_split: RWork
+    locked_target_repository: pallets/click
+    locked_target_commit: 8bd8b4a074c55c03b6eb5666edc44a9c43df38a2
+    source:
+      kind: commit
+      public_url: https://github.com/pallets/click/commit/4f9086bf8fd98aca1d804bf742f4f1ceb6c12295
+      anchor_id: commit:4f9086bf8fd98aca1d804bf742f4f1ceb6c12295
+      base_commit: 1339fd3323357119a9c7a6326c788f80295954ce
+      target_commit: 4f9086bf8fd98aca1d804bf742f4f1ceb6c12295
+    source_compare:
+      commits_ahead: 1
+      changed_files:
+        - src/click/testing.py
+        - tests/test_testing.py
+    task_family: CliRunner debugger stream isolation
+    task_statement_path: inline:problem_statement
+    problem_statement: >-
+      Patch pdb initialization during CliRunner.invoke so debugger instances
+      created without explicit streams use the real terminal streams, while
+      explicit stream arguments remain honored and the patch is restored after
+      invocation.
+    expected_touched_area:
+      - src/click/testing.py CliRunner isolation context
+      - tests for pdb stream selection and restoration
+    visible_context_guidance: >-
+      Provide the commit title and linked issue identifiers 654, 824, 843, and
+      951. Hide the implementation diff.
+    allowed_context:
+      include_git_history_before_base: true
+      include_issue_text: true
+      include_pr_text: false
+      include_reference_patch: false
+    disallowed_context:
+      - reference patch or target diff for commit 4f9086b
+      - ACUT outputs or public model results
+      - future execution results for this task
+    verifier:
+      command: .venv/bin/python -m pytest -q tests/test_testing.py::test_pdb_uses_real_streams tests/test_testing.py::test_pdb_explicit_streams_honored tests/test_testing.py::test_pdb_init_restored_after_invoke
+      timeout_seconds: 60
+    expected:
+      no_op_fails: true
+      reference_passes: true
+    leakage:
+      reviewed: true
+      notes: Debugger stream behavior is checked through object identity, not by opening an interactive debugger.
+    admission:
+      status: accepted
+      reviewer: task-manifests-worker
+      rationale: Recent, realistic testing helper issue with bounded deterministic tests.
+    risk_notes: Avoid real interactive debugger or terminal-state requirements in verification.
+
+  - task_id: click__rwork__006
+    repo_slug: click
+    split: rwork
+    benchmark_split: RWork
+    locked_target_repository: pallets/click
+    locked_target_commit: 8bd8b4a074c55c03b6eb5666edc44a9c43df38a2
+    source:
+      kind: commit
+      public_url: https://github.com/pallets/click/commit/c653ec820093ed1dda41aae8d35bff7834b0344a
+      anchor_id: commit:c653ec820093ed1dda41aae8d35bff7834b0344a
+      base_commit: 878de46100e9c29aea9dab5b385b8116863cb5e3
+      target_commit: c653ec820093ed1dda41aae8d35bff7834b0344a
+    source_compare:
+      commits_ahead: 1
+      changed_files:
+        - src/click/core.py
+        - tests/test_options.py
+        - tests/test_termui.py
+    task_family: default value passing and flag activation
+    task_statement_path: inline:problem_statement
+    problem_statement: >-
+      Reconcile default value passing with flag activation so a flag's explicit
+      default is processed as the default value, while user activation still
+      returns the flag_value.
+    expected_touched_area:
+      - src/click/core.py Option default and flag activation behavior
+      - option tests for default, flag_value, and type combinations
+    visible_context_guidance: >-
+      Provide the commit title and linked issue 3111. Do not expose the
+      reference patch or final tests.
+    allowed_context:
+      include_git_history_before_base: true
+      include_issue_text: true
+      include_pr_text: false
+      include_reference_patch: false
+    disallowed_context:
+      - reference patch or target diff for commit c653ec8
+      - ACUT outputs or public model results
+      - future execution results for this task
+    verifier:
+      command: .venv/bin/python -m pytest -q tests/test_options.py::test_flag_value_and_default
+      timeout_seconds: 60
+    expected:
+      no_op_fails: true
+      reference_passes: true
+    leakage:
+      reviewed: true
+      notes: Recent one-commit semantics fix; selected verifier is parameterized but local runtime showed it is fast.
+    admission:
+      status: accepted
+      reviewer: task-manifests-worker
+      rationale: Nuanced, repository-specific option behavior suitable for RWork review.
+    risk_notes: Docs changes in the source commit are supporting context only; evaluation should target behavior.

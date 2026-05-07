@@ -1,0 +1,53 @@
+schema_version: core-narrative.task.v1
+task_id: click__rwork__006
+repo_slug: click
+split: rwork
+source:
+  kind: commit
+  public_url: https://github.com/pallets/click/commit/c653ec820093ed1dda41aae8d35bff7834b0344a
+  anchor_id: commit:c653ec820093ed1dda41aae8d35bff7834b0344a
+  base_commit: 878de46100e9c29aea9dab5b385b8116863cb5e3
+  target_commit: c653ec820093ed1dda41aae8d35bff7834b0344a
+task_family: default value passing and flag activation
+task_statement_path: public/statement.md
+allowed_context:
+  include_git_history_before_base: true
+  include_issue_text: true
+  include_pr_text: false
+  include_reference_patch: false
+disallowed_context:
+- reference patch or target diff for commit c653ec8
+- ACUT outputs or public model results
+- future execution results for this task
+verifier:
+  command: verifier/run.sh
+  timeout_seconds: 60
+expected:
+  no_op_fails: true
+  reference_passes: true
+leakage:
+  reviewed: true
+  notes: Recent one-commit semantics fix; selected verifier is parameterized but local
+    runtime showed it is fast.
+admission:
+  status: accepted
+  reviewer: task-manifests-worker
+  rationale: Nuanced, repository-specific option behavior suitable for RWork review.
+metadata:
+  materialized_from: experiments/core_narrative/configs/tasks/rwork_click.yaml
+  benchmark_split: RWork
+  locked_target_repository: pallets/click
+  locked_target_commit: 8bd8b4a074c55c03b6eb5666edc44a9c43df38a2
+  source_compare:
+    commits_ahead: 1
+    changed_files:
+    - src/click/core.py
+    - tests/test_options.py
+    - tests/test_termui.py
+  expected_touched_area:
+  - src/click/core.py Option default and flag activation behavior
+  - option tests for default, flag_value, and type combinations
+  visible_context_guidance: Provide the commit title and linked issue 3111. Do not
+    expose the reference patch or final tests.
+  risk_notes: Docs changes in the source commit are supporting context only; evaluation
+    should target behavior.

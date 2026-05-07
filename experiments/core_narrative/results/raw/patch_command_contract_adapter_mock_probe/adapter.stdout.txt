@@ -1,0 +1,51 @@
+{
+  "acut_id": "cheap-click-specialist",
+  "command_contract_id": "barcarolle-patch-command-v1",
+  "llm_env_policy": {
+    "allowed_variable_names": [
+      "BARCAROLLE_LLM_API_KEY",
+      "BARCAROLLE_LLM_BASE_URL"
+    ],
+    "command_arguments_checked": true,
+    "endpoint_value_recorded": false,
+    "required_present": {
+      "BARCAROLLE_LLM_API_KEY": true,
+      "BARCAROLLE_LLM_BASE_URL": true
+    },
+    "unsafe_command_arguments_rejected": true,
+    "values_recorded": false
+  },
+  "mode": "mock_response",
+  "model": "gpt-5.4-mini",
+  "model_call_made": false,
+  "patch": {
+    "applied": true,
+    "changed_paths": [
+      "README.md"
+    ],
+    "declared_paths": [
+      "README.md"
+    ],
+    "kind": "unified_diff",
+    "received": true,
+    "response_content_recorded": false,
+    "response_sha256": "3ba09b480ea1d34051749450e3212b45a174aff56077facf750fcca380e94d65",
+    "validated": true
+  },
+  "prompt": {
+    "char_count": 2837,
+    "content_recorded": false,
+    "full_urls_redacted": true,
+    "manifest_truncated": false,
+    "prepared": true,
+    "sha256": "c5ca122a3034666d573324598ccac474e57718f0ea5f50ac43171a73842447e2",
+    "statement_truncated": false
+  },
+  "provider": "openai",
+  "split": "rbench",
+  "statement_path": "/private/tmp/barcarolle-patch-command-contract-adapter-workspace/.core_narrative/statement.md",
+  "status": "mock_response_applied",
+  "task_id": "patch_command_contract_smoke",
+  "tool": "barcarolle_patch_command",
+  "workspace": "/private/tmp/barcarolle-patch-command-contract-adapter-workspace"
+}

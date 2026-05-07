@@ -1,0 +1,51 @@
+schema_version: core-narrative.task.v1
+task_id: click__rwork__002
+repo_slug: click
+split: rwork
+source:
+  kind: pull_request
+  public_url: https://github.com/pallets/click/pull/2940
+  anchor_id: pallets/click#2940
+  base_commit: 36deba8a95a2585de1a2aa4475b7f054f52830ac
+  target_commit: 2a0e3ba907927ade6951d5732b775f11b54cb766
+task_family: CliRunner EOF and stdin file handling
+task_statement_path: public/statement.md
+allowed_context:
+  include_git_history_before_base: true
+  include_issue_text: true
+  include_pr_text: true
+  include_reference_patch: false
+disallowed_context:
+- reference patch or target diff for pull request 2940
+- ACUT outputs or public model results
+- future execution results for this task
+verifier:
+  command: verifier/run.sh
+  timeout_seconds: 60
+expected:
+  no_op_fails: true
+  reference_passes: true
+leakage:
+  reviewed: true
+  notes: In-process stdin behavior; no real TTY or shell dependency.
+admission:
+  status: accepted
+  reviewer: task-manifests-worker
+  rationale: Compact regression fix with a direct repository behavior test.
+metadata:
+  materialized_from: experiments/core_narrative/configs/tasks/rwork_click.yaml
+  benchmark_split: RWork
+  locked_target_repository: pallets/click
+  locked_target_commit: 8bd8b4a074c55c03b6eb5666edc44a9c43df38a2
+  source_compare:
+    commits_ahead: 3
+    changed_files:
+    - src/click/testing.py
+    - tests/test_chain.py
+  expected_touched_area:
+  - src/click/testing.py stdin wrapper behavior
+  - chain pipeline test using click.File("r") with "-"
+  visible_context_guidance: Provide the PR title and linked regression issue context.
+    The reference diff and final code remain hidden.
+  risk_notes: Keep tests focused on file/stdin behavior, not interactive prompt EOF
+    behavior.

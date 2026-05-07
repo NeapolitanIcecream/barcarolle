@@ -1,0 +1,10 @@
+{
+  "dry_run_summary": "experiments/core_narrative/results/raw/pilot_002__cheap-generic-swe__click__rbench__002__attempt1/patch_command_dry_run_summary.json",
+  "estimated_input_tokens": 809,
+  "input_token_estimate_method": "ceil(prompt_char_count / 4)",
+  "model_call_made": false,
+  "output_token_budget": 64000,
+  "output_token_budget_basis": "ACUT runtime_budget.max_tokens conservative default",
+  "prompt_char_count": 3235,
+  "run_id": "pilot_002__cheap-generic-swe__click__rbench__002__attempt1"
+}

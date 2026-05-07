@@ -1,0 +1,17 @@
+diff --git a/click/core.py b/click/core.py
+index af6ed57..43136b9 100644
+--- a/click/core.py
++++ b/click/core.py
+@@ -1509,7 +1509,11 @@ class Option(Parameter):
+         help = self.help or ''
+         extra = []
+         if self.default is not None and self.show_default:
+-            extra.append('default: %s' % self.default)
++            if isinstance(self.default, (tuple, list)):
++                default_string = ', '.join(str(item) for item in self.default)
++            else:
++                default_string = self.default
++            extra.append('default: %s' % default_string)
+         if self.required:
+             extra.append('required')
+         if extra:

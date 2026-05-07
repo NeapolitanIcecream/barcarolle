@@ -1,0 +1,202 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://barcarolle.local/experiments/core_narrative/schemas/task.schema.json",
+  "title": "Core Narrative Task Manifest",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "task_id",
+    "repo_slug",
+    "split",
+    "source",
+    "task_family",
+    "task_statement_path",
+    "allowed_context",
+    "disallowed_context",
+    "verifier",
+    "expected",
+    "leakage",
+    "admission"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "core-narrative.task.v1"
+    },
+    "task_id": {
+      "type": "string",
+      "pattern": "^[a-z0-9][a-z0-9_-]*__[a-z0-9][a-z0-9_-]*__[0-9]+$"
+    },
+    "repo_slug": {
+      "type": "string",
+      "pattern": "^[a-z0-9][a-z0-9_-]*$"
+    },
+    "split": {
+      "type": "string",
+      "enum": [
+        "rbench",
+        "rwork",
+        "smoke"
+      ]
+    },
+    "source": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "kind",
+        "anchor_id",
+        "base_commit",
+        "target_commit"
+      ],
+      "properties": {
+        "kind": {
+          "type": "string",
+          "enum": [
+            "pull_request",
+            "issue",
+            "commit",
+            "manual"
+          ]
+        },
+        "public_url": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "uri"
+        },
+        "anchor_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "base_commit": {
+          "type": "string",
+          "pattern": "^[0-9a-fA-F]{7,64}$"
+        },
+        "target_commit": {
+          "type": "string",
+          "pattern": "^[0-9a-fA-F]{7,64}$"
+        }
+      }
+    },
+    "task_family": {
+      "type": "string",
+      "minLength": 1
+    },
+    "task_statement_path": {
+      "type": "string",
+      "minLength": 1
+    },
+    "allowed_context": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "include_git_history_before_base",
+        "include_issue_text",
+        "include_pr_text",
+        "include_reference_patch"
+      ],
+      "properties": {
+        "include_git_history_before_base": {
+          "type": "boolean"
+        },
+        "include_issue_text": {
+          "type": "boolean"
+        },
+        "include_pr_text": {
+          "type": "boolean"
+        },
+        "include_reference_patch": {
+          "type": "boolean",
+          "const": false
+        }
+      }
+    },
+    "disallowed_context": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      },
+      "uniqueItems": true
+    },
+    "verifier": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "command",
+        "timeout_seconds"
+      ],
+      "properties": {
+        "command": {
+          "type": "string",
+          "minLength": 1
+        },
+        "timeout_seconds": {
+          "type": "integer",
+          "minimum": 1
+        }
+      }
+    },
+    "expected": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "no_op_fails",
+        "reference_passes"
+      ],
+      "properties": {
+        "no_op_fails": {
+          "type": "boolean"
+        },
+        "reference_passes": {
+          "type": "boolean"
+        }
+      }
+    },
+    "leakage": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "reviewed",
+        "notes"
+      ],
+      "properties": {
+        "reviewed": {
+          "type": "boolean"
+        },
+        "notes": {
+          "type": "string"
+        }
+      }
+    },
+    "admission": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "status",
+        "reviewer",
+        "rationale"
+      ],
+      "properties": {
+        "status": {
+          "type": "string",
+          "enum": [
+            "accepted",
+            "excluded",
+            "needs_review"
+          ]
+        },
+        "reviewer": {
+          "type": "string"
+        },
+        "rationale": {
+          "type": "string"
+        }
+      }
+    },
+    "metadata": {
+      "type": "object",
+      "additionalProperties": true
+    }
+  }
+}

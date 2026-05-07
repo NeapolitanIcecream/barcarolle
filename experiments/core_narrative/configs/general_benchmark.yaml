@@ -1,0 +1,214 @@
+id: gscore_swebench_pro_public_6_v1
+status: locked
+owner: general-benchmark-lock
+selected_at: "2026-04-28T14:36:30+08:00"
+updated_at: "2026-04-28"
+
+benchmark:
+  name: SWE-Bench Pro Public
+  provider: Scale AI
+  task_type: long_horizon_repository_issue_resolution
+  dataset_id: ScaleAI/SWE-bench_Pro
+  dataset_config: default
+  split: test
+  version_or_snapshot_date: "2026-04-28"
+  snapshot_basis:
+    huggingface_revision: "7ab5114912baf22bb098818e604c02fe7ad2c11f"
+    data_file_commit: "2dd05cab1572ce1d59fdc699b386692ff8e0bd29"
+    data_file_path: data/test-00000-of-00001.parquet
+    data_file_sha256: "c8cd7115496ad4e9a8b21d088cef576a65bf821bb542b24336f13f714cef13f8"
+    data_file_xet_hash: "6aee72308d8c16c707416780f6d05155ec7aa7591fdf8bb715fbe1b0f9502cf3"
+    rows: 731
+    repository_count: 11
+    repo_language_count: 4
+  evaluation_harness:
+    repo: scaleapi/SWE-bench_Pro-os
+    revision: "0c64e26f00b9c190432de7fc520c8ceed5c25518"
+    entrypoint: swe_bench_pro_eval.py
+    patch_input_format:
+      - instance_id
+      - patch
+      - prefix
+    docker_image_source: "jefzda/sweap-images, using each row's dockerhub_tag field"
+    execution_backend_preference:
+      primary: Modal
+      fallback: local Docker with --use_local_docker
+
+task_subset:
+  name: barcarolle_gscore_swebp_public_6_v1
+  target_size: 6
+  source_population: "all 731 rows in ScaleAI/SWE-bench_Pro default/test at the pinned snapshot"
+  selection_status: locked
+  materialization_required_before_acut_runs: false
+  locked_task_ids:
+    - ordinal: 1
+      repo: NodeBB/NodeBB
+      instance_id: instance_NodeBB__NodeBB-51d8f3b195bddb13a13ddc0de110722774d9bb1b-vf2cf3cbd463b7ad942381f1c6d077626485a1e9e
+      selection_key: "047ff911070ea0140124c66c1cf72f0b7784a6aabc6498be01b83feb5c975002"
+    - ordinal: 2
+      repo: NodeBB/NodeBB
+      instance_id: instance_NodeBB__NodeBB-84dfda59e6a0e8a77240f939a7cb8757e6eaf945-v2c59007b1005cd5cd14cbb523ca5229db1fd2dd8
+      selection_key: "0721e5783d7d2d25c88f1e5e89f9f6534798dc3b069d39ecab6c2948bcaa2a8c"
+    - ordinal: 3
+      repo: ansible/ansible
+      instance_id: instance_ansible__ansible-d33bedc48fdd933b5abd65a77c081876298e2f07-v0f01c69f1e2528b935359cfe578530722bca2c59
+      selection_key: "017a871e5635c864650083122fc0a23ab4caf85bb6fc99da08df84ca7cb4852d"
+    - ordinal: 4
+      repo: ansible/ansible
+      instance_id: instance_ansible__ansible-984216f52e76b904e5b0fa0fb956ab4f1e0a7751-v1055803c3a812189a1133297f7f5468579283f86
+      selection_key: "048c1c04ca1707ade6311c313fde81725dd47da7d47774dc1940af6c6b94ae5e"
+    - ordinal: 5
+      repo: element-hq/element-web
+      instance_id: instance_element-hq__element-web-776ffa47641c7ec6d142ab4a47691c30ebf83c2e
+      selection_key: "0129076119cdc9afe90add7483d6d84e60836ab72986d7f24525c60c15ba0be5"
+    - ordinal: 6
+      repo: element-hq/element-web
+      instance_id: instance_element-hq__element-web-5dfde12c1c1c0b6e48f17e3405468593e39d9492-vnan
+      selection_key: "05758b2065573dbfba3b9ff296a4363ac2aefe48447f8fc3b5580541f9f9f454"
+  replacements: []
+  materialization_attempt:
+    attempted_at: "2026-04-28T14:36:30+08:00"
+    result: locked
+    blocker: null
+    cache_path: experiments/core_narrative/cache/swebench_pro/test-00000-of-00001.parquet
+    cache_ignored_by_git: true
+    download_command: "curl -L --fail --retry 3 --retry-delay 2 -o experiments/core_narrative/cache/swebench_pro/test-00000-of-00001.parquet https://huggingface.co/datasets/ScaleAI/SWE-bench_Pro/resolve/7ab5114912baf22bb098818e604c02fe7ad2c11f/data/test-00000-of-00001.parquet"
+    download_elapsed_seconds: 2.52
+    sha256_verified: "c8cd7115496ad4e9a8b21d088cef576a65bf821bb542b24336f13f714cef13f8"
+    parquet_reader: pyarrow 24.0.0 in ignored uv-managed Python 3.12.12 cache venv
+    materialized_rows: 731
+    materialized_repo_count: 11
+    docker_context: orbstack
+    docker_version: "client 29.4.0, server 29.4.0"
+    smallest_next_action: "Run pre-ACUT gold-patch smoke evaluation for the locked six-task slice with the pinned evaluator before any scored ACUT runs."
+    checked_without_model_calls: true
+    broad_acut_execution_started: false
+  reserve_task_ids_preview:
+    - repo: internetarchive/openlibrary
+      instance_id: instance_internetarchive__openlibrary-58999808a17a26b387f8237860a7a524d1e2d262-v08d8e8889ec945ab821fb156c04c7d2e2810debb
+      selection_key: "002fe9143400118cd9c1dad92c71c32415871635f28a89259c73c089eeaa0929"
+    - repo: flipt-io/flipt
+      instance_id: instance_flipt-io__flipt-b3cd920bbb25e01fdb2dab66a5a913363bc62f6c
+      selection_key: "00839534be07eec25b851cda34e41f66df5b6442adb36ca767b781156c5bd484"
+    - repo: internetarchive/openlibrary
+      instance_id: instance_internetarchive__openlibrary-6fdbbeee4c0a7e976ff3e46fb1d36f4eb110c428-v08d8e8889ec945ab821fb156c04c7d2e2810debb
+      selection_key: "00fd0eec01435e42714aa87c7ee9798200181983ca7a2cb71f91a59312aa2e93"
+  stratification:
+    field: repo
+    rows_per_repo: 2
+    repo_count_for_primary_slice: 3
+    repo_order: "lexicographic by repo string from the pinned dataset"
+  selection_rule:
+    salt: "barcarolle-core-narrative-gscore-v1"
+    key: "sha256(salt + '\\n' + instance_id), lowercase hex"
+    algorithm:
+      - "Group candidate rows by repo."
+      - "Sort repo groups lexicographically by repo string."
+      - "Sort each repo group by the selection key ascending, then by instance_id ascending as a tie breaker."
+      - "Select the first two rows from each repo group in repo order until six rows are selected."
+      - "Build a global reserve list from all remaining rows sorted by the same key, then instance_id."
+      - "Do not inspect ACUT results, public leaderboard per-task results, gold patches, or test outcomes while selecting."
+  replacement_rule:
+    allowed_only_for_global_infra_failure: true
+    global_infra_failure_definition: "the official gold patch for the instance cannot be evaluated successfully with the pinned harness, pinned dataset row, and declared Docker image before any ACUT scoring begins"
+    replacement_source: "next row in the global reserve list"
+    replacement_lock: "all replacements must be recorded before the first ACUT patch-generation run"
+  acut_visible_context:
+    include_fields:
+      - repo
+      - problem_statement
+      - requirements
+      - interface
+      - repo_language
+      - base_commit
+    hide_fields:
+      - patch
+      - test_patch
+      - fail_to_pass
+      - pass_to_pass
+      - before_repo_set_cmd
+      - selected_test_files_to_run
+      - dockerhub_tag
+    workspace_rule: "ACUT receives a checkout at base_commit plus the visible task statement; future git history, gold patch, test patch, and evaluator metadata are not available to the ACUT."
+
+scoring_method:
+  metric: resolved_rate_percent
+  unit: task_instance
+  evaluator: pinned SWE-Bench Pro harness
+  pass_condition: "the submitted patch is applied by the evaluator and all required fail-to-pass and pass-to-pass checks for the instance pass"
+  failure_conditions_count_as_zero:
+    - no_patch
+    - patch_apply_failure
+    - verification_failure
+    - timeout
+    - invalid_submission
+    - acut_runtime_error
+  weights: uniform_per_task
+  formula: "G_score = 100 * sum(resolved_i) / 6 after any pre-run global-infra replacements"
+  denominator_policy: "fixed across all ACUTs; ACUT-specific failures do not shrink the denominator"
+  repeated_runs:
+    primary_attempts_per_acut_task: 1
+    optional_stability_attempts: "run a second full slice only if declared before any G/R/W score analysis and applied to every ACUT"
+  tie_breakers:
+    - "higher resolved_count"
+    - "lower invalid_submission_count"
+    - "lower median verification wall time, diagnostic only if first two tie"
+  confidence_reporting: "report binomial 95% confidence interval as diagnostic; do not use it to alter the primary rank order"
+
+score_basis:
+  type: direct_run_slice
+  direct_run: true
+  external_public_scores_used_for_g_score: false
+  evidence_strength: primary_general_signal_for_this_experiment
+  public_leaderboard_role: "background sanity check only; not a source of ACUT scores or ranking"
+  fallback_if_direct_run_becomes_infeasible:
+    type: external_public_scores
+    evidence_strength: weaker_prescreen_only
+    allowed_for_core_claim: false
+    required_note: "If used, record exact public score source, date, model/scaffold mismatch, and mark G_score as non-comparable to local ACUT manifests."
+
+normalization:
+  output_range: "0 to 100"
+  raw_to_normalized: "resolved_rate_percent"
+  missing_or_skipped_tasks: "not allowed after pre-run slice lock except coordinator-declared global experiment abort"
+  infra_exclusions: "only global gold-patch or image failures found before ACUT runs may be replaced; no post-score exclusions"
+  cross_acut_comparability: "all ACUTs use the same locked task IDs, visible context fields, evaluator revision, timeout policy, and scoring formula"
+
+cost_setup_estimate:
+  slice_attempts:
+    per_acut: 6
+    four_core_acuts: 24
+    eight_acuts: 48
+  setup:
+    - "Fetch or provide the pinned ScaleAI/SWE-bench_Pro parquet file and verify its SHA256."
+    - "Clone scaleapi/SWE-bench_Pro-os at the pinned revision."
+    - "Install Python requirements for the evaluation harness."
+    - "Configure Modal or local Docker."
+    - "Pull or use the prebuilt jefzda/sweap-images image tag recorded in each dataset row."
+    - "Run gold-patch smoke evaluation for the locked six-task slice before ACUT runs."
+  resource_level: moderate
+  local_storage_estimate: "plan for at least 120 GB free Docker/cache space if running locally; Modal is preferred for parallelism"
+  wall_time_estimate: "gold smoke plus verification can take hours; ACUT patch generation dominates and must use the ACUT manifest budget caps"
+  cost_driver: "6 * number_of_acuts long-horizon patch-generation attempts plus container verification"
+
+limitations:
+  - "The configured slice is the revised six-task default, not the official full SWE-Bench Pro public leaderboard."
+  - "Concrete task IDs are locked from the pinned dataset, but pre-ACUT gold-patch smoke evaluation is still required before scored runs."
+  - "Public tasks can still be contaminated in model training or discoverable through external search; ACUT network policy must match the repository experiment policy."
+  - "SWE-Bench Pro is broader and harder than many target repositories, so G_score may underweight repository-specific context strategies."
+  - "SWE-Bench Pro scoring is test-based; it does not directly measure maintainability, code review acceptability, or product fit."
+  - "Public leaderboard scores use different scaffolds, budgets, and sometimes uncapped settings; they are not comparable to this direct-run slice."
+
+sources:
+  - name: "ScaleAI/SWE-bench_Pro dataset card"
+    url: "https://huggingface.co/datasets/ScaleAI/SWE-bench_Pro"
+    accessed: "2026-04-28"
+  - name: "ScaleAI/SWE-bench_Pro data file pointer"
+    url: "https://huggingface.co/datasets/ScaleAI/SWE-bench_Pro/blob/main/data/test-00000-of-00001.parquet"
+    accessed: "2026-04-28"
+  - name: "SWE-Bench Pro OS evaluation repository"
+    url: "https://github.com/scaleapi/SWE-bench_Pro-os"
+    accessed: "2026-04-28"
+  - name: "OpenAI SWE-bench Verified retirement note"
+    url: "https://openai.com/index/why-we-no-longer-evaluate-swe-bench-verified/"
+    accessed: "2026-04-28"

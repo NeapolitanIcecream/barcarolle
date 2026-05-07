@@ -1,0 +1,33 @@
+{
+  "acut_id": "cheap-generic-swe",
+  "attempt": 1,
+  "error": null,
+  "finished_at": "2026-05-07T10:25:57.164919Z",
+  "metadata": {
+    "skip_apply": true,
+    "timeout_seconds": 60,
+    "tool": "apply_and_verify",
+    "verifier_command": [
+      "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/tasks/click/rbench/click__rbench__001/verifier/run.sh"
+    ]
+  },
+  "patch_path": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/openclaw_direct_mock__cheap-generic-swe__click__rbench__001__attempt1/submission.patch",
+  "review": {
+    "mergeability_grade": null,
+    "notes": "",
+    "rule_violation": false,
+    "wrong_module": false
+  },
+  "run_id": "openclaw_direct_mock__cheap-generic-swe__click__rbench__001__attempt1",
+  "schema_version": "core-narrative.run-result.v1",
+  "split": "rbench",
+  "started_at": "2026-05-07T10:25:57.013695Z",
+  "status": "passed",
+  "task_id": "click__rbench__001",
+  "verification": {
+    "duration_seconds": 0.151,
+    "exit_code": 0,
+    "stderr_artifact": "experiments/core_narrative/results/raw/openclaw_direct_mock__cheap-generic-swe__click__rbench__001__attempt1/verifier.stderr.txt",
+    "stdout_artifact": "experiments/core_narrative/results/raw/openclaw_direct_mock__cheap-generic-swe__click__rbench__001__attempt1/verifier.stdout.txt"
+  }
+}

@@ -1,0 +1,5 @@
+Raw adapter stdout was replaced with this redaction notice after structured
+adapter JSON was parsed and preserved. The original stream was not needed for
+handoff and was removed from the committed artifact set to avoid persisting
+credential-looking, URL, hostname, or IP-address patterns. No cli.log file was
+inspected.

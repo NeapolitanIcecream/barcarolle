@@ -1,0 +1,11 @@
+{
+  "details": {
+    "exception_type": "FileNotFoundError"
+  },
+  "error": "[Errno 2] No such file or directory: '/Users/chenmohan/gits/barcarolle/experiments/core_narrative/workspaces/openclaw_002__cheap-click-specialist__click__rbench__001__search-replace__attempt1/src/click/core.py'",
+  "finished_at": "2026-05-07T10:28:06.462842Z",
+  "runner_id": "openclaw-direct-search-replace-v1",
+  "started_at": "2026-05-07T10:27:23.146760Z",
+  "status": "error",
+  "tool": "openclaw_direct_runner"
+}

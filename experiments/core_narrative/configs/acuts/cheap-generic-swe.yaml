@@ -1,0 +1,105 @@
+schema_version: core-narrative.acut.v1
+manifest_version: "2.0"
+acut_id: cheap-generic-swe
+display_name: Cheap Generic SWE
+purpose: Cheap-tier generic software-engineering policy for the 2x2 core ACUT design.
+frozen: true
+provider: openai
+model: openai/gpt-5.4-mini
+model_parameters:
+  reasoning_effort: medium
+prompt_policy_digest: policy-digest-v2:cheap-generic-swe
+prompt_policy_reference: null
+tool_permissions:
+  filesystem: workspace-write
+  network: disabled
+  allowed_tools:
+    - filesystem:read
+    - filesystem:write
+    - shell
+    - code_edit
+    - git:status
+    - git:diff
+    - git:show
+retrieval_context_strategy:
+  strategy_id: generic-swe-local-evidence-v2
+  description: Use the public task statement, direct local evidence, failing tests, named files, adjacent tests, and bounded symbol search without Click-specific priors.
+  allowed_sources:
+    - public_task_statement
+    - files explicitly named in the task statement
+    - files surfaced by failing tests or import errors
+    - adjacent tests
+    - direct symbol and filename search results
+  forbidden_sources:
+    - RBench/RWork gold patches
+    - hidden human hints
+    - post-hoc tuning from ACUT outputs
+    - undeclared history mining
+    - task-specific private benchmark artifacts
+runtime_budget:
+  max_wall_seconds: 3600
+  max_turns: 18
+  max_tokens: 64000
+  max_cost_usd: null
+  max_test_commands: 10
+  retry_policy:
+    primary_attempts: 1
+    retries_allowed: false
+network_policy:
+  mode: disabled
+  allowed_hosts: []
+execution_mode: codex_cli
+adapter_or_harness_basis: barcarolle-patch-command-v0 behind codex-cli-acut-adapter-v0 + core-narrative-runner-v0
+frozen_at: "2026-04-29T11:20:00+08:00"
+operator: codex-core-narrative-coordinator
+notes: Revises lower-budget-fast-path into the cheap generic cell. Cheap here means model tier, not shorter task budget; it uses the same task budget, turn cap, test cap, and retry policy as the other active 2x2 cells.
+metadata:
+  redesign_source:
+    prior_acut_ids:
+      - lower-budget-fast-path
+    review_basis: GPT-5.5-Pro design review
+  factorial_design:
+    core_design_id: barcarolle-2x2-core-v2
+    model_tier: cheap
+    specialization: generic_swe
+    controlled_factors:
+      harness: shared
+      task_budget: shared
+      turn_cap: shared
+      test_cap: shared
+      retry_policy: shared
+      network_policy: shared
+    same_tier_pair: cheap-click-specialist
+    intended_contrast: Same cheap model tier; compare generic SWE policy against Click-specialist policy only.
+  prompt_policy_summary: Solve as a general SWE agent with the cheap model tier but without shortened task budget or fast-path-specific constraints.
+  specialist_context:
+    click_task_agnostic_context_allowed: false
+    deterministic_retrieval_allowed: generic_local_search_only
+  leakage_guards:
+    disallowed:
+      - RBench/RWork gold patches
+      - hidden artificial hints
+      - post-hoc tuning after seeing pilot results
+      - undeclared git history mining
+      - other ACUT outputs
+    history_policy: no broad history mining; use git show/status/diff only for current workspace evidence
+  runtime_budget_detail:
+    wall_clock_minutes: 60
+    model_turns: 18
+    shell_commands: 55
+    test_commands: 10
+    verification_minutes: 18
+    primary_attempts: 1
+    retries_allowed: false
+  execution_mode_detail:
+    type: non_interactive_patch_command
+    workspace: fresh_task_worktree
+    state_reset_between_tasks: true
+    private_artifacts_access: false
+    output_contract: patch_plus_run_metadata
+  score_fields:
+    g_score: null
+    r_score: null
+    w_score: null
+    public_benchmark_score: null
+    general_benchmark_basis_id: general_benchmark.yaml#locked

@@ -1,0 +1,97 @@
+schema_version: "core-narrative.llm-access.v1"
+status: active
+credential_environment:
+  api_key_env_var: "BARCAROLLE_LLM_API_KEY"
+  base_url_env_var: "BARCAROLLE_LLM_BASE_URL"
+allowed_credential_sources:
+  - "environment"
+forbidden_credential_sources:
+  - "git"
+  - "process.md"
+  - "cli.log"
+  - "run_results"
+  - "reports"
+  - "worker_prompts"
+redaction_policy:
+  never_record_values: true
+  allowed_to_record:
+    - "environment variable names"
+    - "boolean presence checks"
+    - "redacted provider/base-url label"
+  forbidden_to_record:
+    - "API keys"
+    - "bearer tokens"
+    - "provider secrets"
+    - "resolved credential values"
+    - "full base URL values"
+budget:
+  currency: "USD"
+  soft_stop_usd: 240.0
+  hard_cap_usd: 300.0
+  stop_before_projected_hard_cap: true
+cost_estimation:
+  record_actual_when_available: true
+  conservative_defaults:
+    openai_gpt_5_5:
+      input_usd_per_1m_tokens: 5.0
+      output_usd_per_1m_tokens: 30.0
+    anthropic_opus_class:
+      input_usd_per_1m_tokens: 5.0
+      output_usd_per_1m_tokens: 25.0
+    unknown_sota_compatible:
+      input_usd_per_1m_tokens: 5.0
+      output_usd_per_1m_tokens: 30.0
+ledger:
+  path: "experiments/core_narrative/results/cost_ledger.jsonl"
+  required_before_acut_execution: true
+  attempt_record_required_fields:
+    - "record_type"
+    - "run_id"
+    - "acut_id"
+    - "task_id"
+    - "split"
+    - "attempt"
+    - "event"
+    - "started_at"
+    - "finished_at"
+    - "input_tokens"
+    - "output_tokens"
+    - "estimated_cost_usd"
+    - "actual_cost_usd"
+    - "cumulative_estimated_cost_usd"
+execution_gates:
+  block_if_api_key_env_missing: true
+  block_if_base_url_env_missing: true
+  block_if_cost_ledger_missing: true
+  block_if_cost_ledger_unwritable: true
+  block_if_cumulative_or_projected_cost_exceeds_hard_cap: true
+  soft_stop_requires_coordinator_decision: true
+budget_constrained_profile:
+  status: pilot_default_pending_review
+  design: "2x2_core"
+  core_acuts:
+    - "frontier-generic-swe"
+    - "frontier-click-specialist"
+    - "cheap-generic-swe"
+    - "cheap-click-specialist"
+  deferred_acuts:
+    - "higher-budget-repo-depth"
+    - "retrieval-history-augmented"
+    - "minimal-context-baseline"
+  retired_or_replaced_acuts:
+    "general-benchmark-optimized": "frontier-generic-swe"
+    "repo-context-heavy": "frontier-click-specialist"
+    "retrieval-sparse-symbolic": "frontier-click-specialist"
+    "lower-budget-fast-path": "cheap-generic-swe"
+  task_counts:
+    g_score_tasks: 2
+    rbench_tasks: 3
+    rwork_tasks: 2
+  full_core_task_counts_after_pilot_review:
+    g_score_tasks: 6
+    rbench_tasks: 8
+    rwork_tasks: 6
+  primary_attempts_per_acut_task: 1
+  pilot_primary_attempts: 28
+  full_core_primary_attempts_after_review: 80
+  deferred_acut_release_condition: "Only after the pilot is reviewed and the coordinator records an explicit full-core decision with spare budget."

@@ -1,0 +1,64 @@
+diff --git a/click/core.py b/click/core.py
+index 06ca15e..12df1c6 100644
+--- a/click/core.py
++++ b/click/core.py
+@@ -1653,12 +1653,19 @@ class Option(Parameter):
+         # Calculate the default before prompting anything to be stable.
+         default = self.get_default(ctx)
+ 
++        prompt_text = self.prompt
++        if self.type.name == 'choice' and \
++           getattr(self.type, 'show_choices', True):
++            choices = ', '.join(make_str(choice)
++                                for choice in self.type.choices)
++            prompt_text = '%s (%s)' % (prompt_text, choices)
++
+         # If this is a prompt for a flag we need to handle this
+         # differently.
+         if self.is_bool_flag:
+-            return confirm(self.prompt, default)
++            return confirm(prompt_text, default)
+ 
+-        return prompt(self.prompt, default=default,
++        return prompt(prompt_text, default=default,
+                       hide_input=self.hide_input,
+                       confirmation_prompt=self.confirmation_prompt,
+                       value_proc=lambda x: self.process_value(ctx, x))
+diff --git a/tests/test_termui.py b/tests/test_termui.py
+index fa7c262..e3a4723 100644
+--- a/tests/test_termui.py
++++ b/tests/test_termui.py
+@@ -44,6 +44,33 @@ def test_progressbar_length_hint(runner, monkeypatch):
+     assert result.exception is None
+ 
+ 
++def test_choices_list_in_prompt(runner, monkeypatch):
++    @click.option('-g', type=click.Choice(['none', 'day', 'week', 'month']), prompt=True)
++    @click.command()
++    def cli_with_choices():
++        pass
++
++    @click.option('-g', type=click.Choice(['none', 'day', 'week', 'month']), prompt=True, show_choices=False)
++    @click.command()
++    def cli_without_choices():
++        pass
++
++    @click.option('-g', type=click.Choice(['none', 'day', 'week', 'month']), prompt=True, default='day')
++    @click.command()
++    def cli_with_default():
++        pass
++
++    monkeypatch.setattr(click._termui_impl, 'isatty', lambda _: True)
++
++    assert '(none, day, week, month)' in runner.invoke(cli_with_choices, [], input='none').output
++    assert '(none, day, week, month)' not in runner.invoke(cli_without_choices, [], input='none').output
++
++    default_result = runner.invoke(cli_with_default, [], input='\n')
++    assert default_result.exception is None
++    assert '(none, day, week, month)' in default_result.output
++    assert '[day]' in default_result.output
++
++
+ def test_secho(runner):
+     with runner.isolation() as out:
+         click.secho(None, nl=False)

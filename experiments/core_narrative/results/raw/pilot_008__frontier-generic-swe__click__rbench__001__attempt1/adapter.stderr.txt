@@ -1,0 +1,2 @@
+Raw adapter stderr was replaced with this redaction notice after structured
+adapter JSON was parsed and preserved. No cli.log file was inspected.

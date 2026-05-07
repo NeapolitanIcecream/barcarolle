@@ -1,0 +1,570 @@
+{
+  "docs": [
+    {
+      "heading_count": 4,
+      "headings": [
+        "Click",
+        "A Simple Example",
+        "Donate",
+        "Contributing"
+      ],
+      "path": "README.md",
+      "title": "Click"
+    },
+    {
+      "heading_count": 9,
+      "headings": [
+        "Advanced Patterns",
+        "Callbacks and Eager Options",
+        "Callbacks for Validation",
+        "Parameter Modifications",
+        "Token Normalization",
+        "And how it works on the command line:",
+        "Invoking Other Commands",
+        "Forwarding Unknown Options",
+        "Managing Resources"
+      ],
+      "path": "docs/advanced.md",
+      "title": "Advanced Patterns"
+    },
+    {
+      "heading_count": 12,
+      "headings": [
+        "API",
+        "Decorators",
+        "Utilities",
+        "Commands",
+        "Parameters",
+        "Context",
+        "Types",
+        "Exceptions",
+        "Formatting",
+        "Parsing",
+        "Shell Completion",
+        "Testing"
+      ],
+      "path": "docs/api.md",
+      "title": "API"
+    },
+    {
+      "heading_count": 5,
+      "headings": [
+        "Arguments",
+        "Basic Arguments",
+        "Multiple Arguments",
+        "Argument Escape Sequences",
+        "Environment Variables"
+      ],
+      "path": "docs/arguments.md",
+      "title": "Arguments"
+    },
+    {
+      "heading_count": 1,
+      "headings": [
+        "Changes"
+      ],
+      "path": "docs/changes.rst",
+      "title": "Changes"
+    },
+    {
+      "heading_count": 2,
+      "headings": [
+        "Click Concepts",
+        "Callback Evaluation Order"
+      ],
+      "path": "docs/click-concepts.md",
+      "title": "Click Concepts"
+    },
+    {
+      "heading_count": 2,
+      "headings": [
+        "General Command Line Topics",
+        "Exit Codes"
+      ],
+      "path": "docs/command-line-reference.md",
+      "title": "General Command Line Topics"
+    },
+    {
+      "heading_count": 19,
+      "headings": [
+        "Basic Commands, Groups, Context",
+        "Commands",
+        "Basic Command Example",
+        "Renaming Commands",
+        "Deprecating Commands",
+        "Groups",
+        "Basic Group Example",
+        "Renaming Groups",
+        "Group Invocation Without Command",
+        "Group Separation",
+        "Arbitrary Nesting",
+        "Lazily Attaching Commands",
+        "Context Object",
+        "Auto Envvar Prefix",
+        "Global Context Access",
+        "Parameter Source Priority",
+        "True if the value was explicitly set (command line, prompt, or env var).",
+        "True if the value came from any kind of default.",
+        "Detecting the Source of a Parameter"
+      ],
+      "path": "docs/commands-and-groups.md",
+      "title": "Basic Commands, Groups, Context"
+    },
+    {
+      "heading_count": 9,
+      "headings": [
+        "Advanced Groups and Context",
+        "Callback Invocation",
+        "Nested Handling and Contexts",
+        "Decorating Commands",
+        "Command Chaining",
+        "Command Pipelines",
+        "Overriding Defaults",
+        "Context Defaults",
+        "Command Return Values"
+      ],
+      "path": "docs/commands.md",
+      "title": "Advanced Groups and Context"
+    },
+    {
+      "heading_count": 19,
+      "headings": [
+        "Complex Applications",
+        "Basic Concepts",
+        "Contexts",
+        "Calling Convention",
+        "Building a Git Clone",
+        "The Root Command",
+        "The First Child Command",
+        "Interleaved Commands",
+        "Ensuring Object Creation",
+        "Lazily Loading Subcommands",
+        "Defining the Lazy Group",
+        "in lazy_group.py",
+        "Using LazyGroup To Define a CLI",
+        "in main.py",
+        "in foo.py",
+        "in bar.py",
+        "in baz.py",
+        "What triggers Lazy Loading?",
+        "Further Deferring Imports"
+      ],
+      "path": "docs/complex.md",
+      "title": "Complex Applications"
+    },
+    {
+      "heading_count": 2,
+      "headings": [
+        "click-contrib",
+        "Third-party projects"
+      ],
+      "path": "docs/contrib.md",
+      "title": "click-contrib"
+    },
+    {
+      "heading_count": 2,
+      "headings": [
+        "Contributing",
+        "Extra Test Environments"
+      ],
+      "path": "docs/contributing.md",
+      "title": "Contributing"
+    },
+    {
+      "heading_count": 2,
+      "headings": [
+        "CLI Design Opinions",
+        "Options over arguments"
+      ],
+      "path": "docs/design-opinions.md",
+      "title": "CLI Design Opinions"
+    },
+    {
+      "heading_count": 13,
+      "headings": [
+        "Help Pages",
+        "Help Texts",
+        "Command Short Help",
+        "Command Epilog Help",
+        "Documenting Arguments",
+        "Showing Defaults",
+        "Showing Environment Variables",
+        "Click's Wrapping Behavior",
+        "Escaping Click's Wrapping",
+        "Truncating Help Texts",
+        "Placeholder / Meta Variable",
+        "Example usage:",
+        "Help Parameter Customization"
+      ],
+      "path": "docs/documentation.md",
+      "title": "Help Pages"
+    },
+    {
+      "heading_count": 3,
+      "headings": [
+        "Packaging Entry Points",
+        "Project Files",
+        "Installation"
+      ],
+      "path": "docs/entry-points.md",
+      "title": "Packaging Entry Points"
+    },
+    {
+      "heading_count": 5,
+      "headings": [
+        "Exception Handling and Exit Codes",
+        "Where are Errors Handled?",
+        "What if I Don't Want That?",
+        "Which Exceptions Exist?",
+        "Help Pages and Exit Codes"
+      ],
+      "path": "docs/exceptions.md",
+      "title": "Exception Handling and Exit Codes"
+    },
+    {
+      "heading_count": 3,
+      "headings": [
+        "Extending Click",
+        "Custom Groups",
+        "Command Aliases"
+      ],
+      "path": "docs/extending-click.md",
+      "title": "Extending Click"
+    },
+    {
+      "heading_count": 4,
+      "headings": [
+        "Frequently Asked Questions",
+        "General",
+        "Shell Variable Expansion On Windows",
+        "Answer"
+      ],
+      "path": "docs/faqs.md",
+      "title": "Frequently Asked Questions"
+    },
+    {
+      "heading_count": 4,
+      "headings": [
+        "Handling Files",
+        "File Arguments",
+        "File Path Arguments",
+        "File Opening Behaviors"
+      ],
+      "path": "docs/handling-files.md",
+      "title": "Handling Files"
+    },
+    {
+      "heading_count": 8,
+      "headings": [
+        "Welcome to Click",
+        "Documentation",
+        "Tutorials",
+        "How to Guides",
+        "Conceptual Guides",
+        "General Reference",
+        "API Reference",
+        "About Project"
+      ],
+      "path": "docs/index.rst",
+      "title": "Welcome to Click"
+    },
+    {
+      "heading_count": 1,
+      "headings": [
+        "BSD-3-Clause License"
+      ],
+      "path": "docs/license.md",
+      "title": "BSD-3-Clause License"
+    },
+    {
+      "heading_count": 4,
+      "headings": [
+        "Options Shortcut Decorators",
+        "Password Option",
+        "Confirmation Option",
+        "Version Option"
+      ],
+      "path": "docs/option-decorators.md",
+      "title": "Options Shortcut Decorators"
+    },
+    {
+      "heading_count": 19,
+      "headings": [
+        "Options",
+        "Option Decorator",
+        "Basic Example",
+        "Setting a Default",
+        "Multi Value Options",
+        "Multi Value Options as Tuples",
+        "Multiple Options",
+        "Counting",
+        "Boolean",
+        "Flag Value",
+        "How `default` and `flag_value` interact",
+        "Boolean flags (`is_flag=True`, boolean `flag_value`)",
+        "Boolean flag pairs (`--flag/--no-flag`)",
+        "Non-boolean feature switches (`flag_value` is a string, class, etc.)",
+        "Feature switch groups (multiple flags sharing one variable)",
+        "Values from Environment Variables",
+        "Multiple Options from Environment Values",
+        "Other Prefix Characters",
+        "Optional Value"
+      ],
+      "path": "docs/options.md",
+      "title": "Options"
+    },
+    {
+      "heading_count": 6,
+      "headings": [
+        "Parameter Types",
+        "Built-in Types Examples",
+        "Choice",
+        "Int and Float Ranges",
+        "Built-in Types Listing",
+        "How to Implement Custom Types"
+      ],
+      "path": "docs/parameter-types.md",
+      "title": "Parameter Types"
+    },
+    {
+      "heading_count": 4,
+      "headings": [
+        "Parameters",
+        "Options",
+        "Arguments",
+        "Parameter Names"
+      ],
+      "path": "docs/parameters.md",
+      "title": "Parameters"
+    },
+    {
+      "heading_count": 6,
+      "headings": [
+        "User Input Prompts",
+        "Option Prompts",
+        "Input Prompts",
+        "Optional Prompts",
+        "Confirmation Prompts",
+        "Dynamic Defaults for Prompts"
+      ],
+      "path": "docs/prompts.md",
+      "title": "User Input Prompts"
+    },
+    {
+      "heading_count": 9,
+      "headings": [
+        "Quickstart",
+        "Install",
+        "Examples",
+        "Basic Concepts - Creating a Command",
+        "Echoing",
+        "Nesting Commands",
+        "Registering Commands Later",
+        "Adding Parameters",
+        "Switching to Entry Points"
+      ],
+      "path": "docs/quickstart.md",
+      "title": "Quickstart"
+    },
+    {
+      "heading_count": 1,
+      "headings": [
+        "Setuptools Integration"
+      ],
+      "path": "docs/setuptools.md",
+      "title": "Setuptools Integration"
+    },
+    {
+      "heading_count": 5,
+      "headings": [
+        "Shell Completion",
+        "Enabling Completion",
+        "Custom Type Completion",
+        "Overriding Value Completion",
+        "Adding Support for a Shell"
+      ],
+      "path": "docs/shell-completion.md",
+      "title": "Shell Completion"
+    },
+    {
+      "heading_count": 6,
+      "headings": [
+        "Standalone Application with Briefcase",
+        "Installation",
+        "Configuration",
+        "Entry Point",
+        "Running",
+        "Building and Packaging"
+      ],
+      "path": "docs/standalone-apps.md",
+      "title": "Standalone Application with Briefcase"
+    },
+    {
+      "heading_count": 4,
+      "headings": [
+        "Supporting Multiple Versions",
+        "Use Feature Detection",
+        "Changes in 8.2",
+        "`ParamType` methods require `ctx`"
+      ],
+      "path": "docs/support-multiple-versions.md",
+      "title": "Supporting Multiple Versions"
+    },
+    {
+      "heading_count": 7,
+      "headings": [
+        "Testing Click Applications",
+        "Basic Example",
+        "Subcommands",
+        "Context Settings",
+        "File System Isolation",
+        "Input Streams",
+        "File Descriptors and Low-Level I/O"
+      ],
+      "path": "docs/testing.md",
+      "title": "Testing Click Applications"
+    },
+    {
+      "heading_count": 2,
+      "headings": [
+        "Unicode Support",
+        "Surrogate Handling"
+      ],
+      "path": "docs/unicode-support.md",
+      "title": "Unicode Support"
+    },
+    {
+      "heading_count": 7,
+      "headings": [
+        "Upgrade Guides",
+        "Upgrading 8.3.X to 9.0",
+        "Deprecations",
+        "Removals with prior deprecation",
+        "Removals with no prior deprecation",
+        "Changes",
+        "Fixes"
+      ],
+      "path": "docs/upgrade-guides.md",
+      "title": "Upgrade Guides"
+    },
+    {
+      "heading_count": 14,
+      "headings": [
+        "Utilities",
+        "Printing to Stdout",
+        "ANSI Colors",
+        "Pager Support",
+        "Screen Clearing",
+        "Getting Characters from Terminal",
+        "Waiting for Key Press",
+        "Launching Editors",
+        "Launching Applications",
+        "Printing Filenames",
+        "Standard Streams",
+        "Intelligent File Opening",
+        "Finding Application Folders",
+        "Showing Progress Bars"
+      ],
+      "path": "docs/utils.md",
+      "title": "Utilities"
+    },
+    {
+      "heading_count": 3,
+      "headings": [
+        "Virtualenv",
+        "Why Use Virtualenv?",
+        "How to Use Virtualenv"
+      ],
+      "path": "docs/virtualenv.md",
+      "title": "Virtualenv"
+    },
+    {
+      "heading_count": 5,
+      "headings": [
+        "Why Click?",
+        "Why not Argparse?",
+        "Why not Docopt etc.?",
+        "Why Hardcoded Behaviors?",
+        "Why No Auto Correction?"
+      ],
+      "path": "docs/why.md",
+      "title": "Why Click?"
+    },
+    {
+      "heading_count": 3,
+      "headings": [
+        "Windows Console Notes",
+        "Unicode Arguments",
+        "Unicode Output and Input"
+      ],
+      "path": "docs/wincmd.md",
+      "title": "Windows Console Notes"
+    },
+    {
+      "heading_count": 0,
+      "headings": [],
+      "path": "examples/aliases/README",
+      "title": "README"
+    },
+    {
+      "heading_count": 0,
+      "headings": [],
+      "path": "examples/colors/README",
+      "title": "README"
+    },
+    {
+      "heading_count": 1,
+      "headings": [
+        "$ completion"
+      ],
+      "path": "examples/completion/README",
+      "title": "$ completion"
+    },
+    {
+      "heading_count": 0,
+      "headings": [],
+      "path": "examples/complex/README",
+      "title": "README"
+    },
+    {
+      "heading_count": 0,
+      "headings": [],
+      "path": "examples/imagepipe/README",
+      "title": "README"
+    },
+    {
+      "heading_count": 0,
+      "headings": [],
+      "path": "examples/inout/README",
+      "title": "README"
+    },
+    {
+      "heading_count": 0,
+      "headings": [],
+      "path": "examples/naval/README",
+      "title": "README"
+    },
+    {
+      "heading_count": 0,
+      "headings": [],
+      "path": "examples/repo/README",
+      "title": "README"
+    },
+    {
+      "heading_count": 0,
+      "headings": [],
+      "path": "examples/termui/README",
+      "title": "README"
+    },
+    {
+      "heading_count": 0,
+      "headings": [],
+      "path": "examples/validation/README",
+      "title": "README"
+    }
+  ],
+  "heading_extraction": "markdown_hash_headings_and_rst_underlined_titles_only",
+  "marker": "CLICK_SPECIALIST_CONTEXT_PACK_V1",
+  "pack_id": "click_specialist_context_pack_v1",
+  "section_id": "docs_map"
+}

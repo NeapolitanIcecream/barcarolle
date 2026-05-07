@@ -1,0 +1,11 @@
+{
+  "run_id": "pilot_008__frontier-generic-swe__click__rbench__001__attempt1",
+  "source_summary": "experiments/core_narrative/results/raw/pilot_008__frontier-generic-swe__click__rbench__001__attempt1/codex_cli_patch_command_dry_run.json",
+  "prompt_char_count": 3515,
+  "estimated_input_tokens": 879,
+  "estimation_method": "ceil(prompt_char_count / 4)",
+  "output_token_budget": 64000,
+  "dry_run_model_call_made": false,
+  "specialist_context_pack_enabled": false,
+  "specialist_context_pack_expected_for_acut": false
+}
