@@ -315,21 +315,28 @@ def extract_text(value: Any) -> str | None:
     return None
 
 
-def live_payload(acut: Mapping[str, Any], prompt: str) -> dict[str, Any]:
+def live_payload(acut: Mapping[str, Any], prompt: str, endpoint_kind: str) -> dict[str, Any]:
     model = acut.get("model")
     if not isinstance(model, str) or not model:
         raise ToolError("ACUT manifest is missing model")
     params = acut.get("model_parameters") if isinstance(acut.get("model_parameters"), dict) else {}
+    system = (
+        "You are a patch-generation engine. Return only valid JSON "
+        "matching the requested search/replace edit contract."
+    )
+    if endpoint_kind == "responses":
+        return {
+            "model": model,
+            "input": [
+                {"role": "system", "content": system},
+                {"role": "user", "content": prompt},
+            ],
+            **params,
+        }
     return {
         "model": model,
         "messages": [
-            {
-                "role": "system",
-                "content": (
-                    "You are a patch-generation engine. Return only valid JSON "
-                    "matching the requested search/replace edit contract."
-                ),
-            },
+            {"role": "system", "content": system},
             {"role": "user", "content": prompt},
         ],
         "response_format": {"type": "json_object"},
@@ -350,12 +357,12 @@ def call_live_model(
     if not api_key or not raw_endpoint:
         raise ToolError("missing required LLM environment", network_attempted=False)
     endpoint, endpoint_kind = resolve_live_endpoint(raw_endpoint)
-    payload = live_payload(acut, prompt)
+    payload = live_payload(acut, prompt, endpoint_kind)
     request_body = json.dumps(payload).encode("utf-8")
     profile = {
         "endpoint_kind": endpoint_kind,
         "output_contract": DEFAULT_OUTPUT_CONTRACT,
-        "response_format_requested": True,
+        "response_format_requested": payload.get("response_format") == {"type": "json_object"},
         "request_body_bytes": len(request_body),
         "prompt_sha256": sha256_text(prompt),
         "prompt_char_count": len(prompt),

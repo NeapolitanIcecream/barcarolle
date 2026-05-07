@@ -119,6 +119,28 @@ def projected_cost_for_acut(acut_id: str) -> str:
     return "3" if acut_id.startswith("frontier-") else "1"
 
 
+def default_mock_response_text(workspace: Path, context_paths: Sequence[str]) -> str:
+    for context_path in context_paths:
+        path = Path(context_path)
+        if path.is_absolute() or ".." in path.parts:
+            continue
+        target = workspace / path
+        if not target.is_file():
+            continue
+        text = target.read_text(encoding="utf-8")
+        for candidate in text.splitlines(keepends=True):
+            if candidate.strip() and text.count(candidate) == 1:
+                return json.dumps(
+                    {"edits": [{"path": context_path, "old": candidate, "new": candidate}]}
+                )
+        if text:
+            return json.dumps({"edits": [{"path": context_path, "old": text, "new": text}]})
+    raise ToolError(
+        "mock mode needs at least one non-empty context file when no mock response is provided",
+        failure_class="empty_mock_context",
+    )
+
+
 def context_paths_for_task(task: Mapping[str, Any], workspace: Path) -> list[str]:
     compare = task.get("source_compare") if isinstance(task.get("source_compare"), dict) else {}
     paths = compare.get("changed_files") if isinstance(compare.get("changed_files"), list) else []
@@ -309,7 +331,12 @@ def run_direct_runner(
         if args.mock_response:
             command.extend(["--mock-response", args.mock_response])
         else:
-            command.extend(["--mock-response-text", args.mock_response_text or '{"edits": []}'])
+            command.extend(
+                [
+                    "--mock-response-text",
+                    args.mock_response_text or default_mock_response_text(workspace, context_paths),
+                ]
+            )
 
     started_at = iso_now()
     completed = run_capture(command, timeout=args.runner_timeout_seconds + 30)

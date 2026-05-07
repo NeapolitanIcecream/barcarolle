@@ -212,6 +212,57 @@ class CodexNflExperimentRunnerTests(unittest.TestCase):
         self.assertIsNone(payload["started_at"])
         self.assertEqual(payload["aggregate"]["infra_failed"], 1)
 
+    def test_run_direct_runner_default_mock_response_is_parseable_noop_edit(self) -> None:
+        """Regression: default mock mode should smoke the runner instead of sending empty edits."""
+        runner = load_runner_module()
+        workspace = self.root / "workspace"
+        workspace.mkdir()
+        (workspace / "module.py").write_text("VALUE = 1\n", encoding="utf-8")
+        artifact_dir = self.root / "artifacts"
+        captured_commands: list[list[str]] = []
+
+        def fake_run_capture(command, *, cwd=None, timeout=None):
+            captured_commands.append(list(command))
+            output_path = Path(command[command.index("--output") + 1])
+            output_path.parent.mkdir(parents=True, exist_ok=True)
+            output_path.write_text(json.dumps({"status": "patch_generated"}), encoding="utf-8")
+            return subprocess.CompletedProcess(command, 0, "", "")
+
+        runner.run_capture = fake_run_capture
+        runner.write_command_artifacts = lambda **kwargs: {"exit_code": kwargs["completed"].returncode}
+        runner.task_manifest_path = lambda task_id: self.root / f"{task_id}.yaml"
+        runner.acut_manifest_path = lambda acut_id: self.root / f"{acut_id}.yaml"
+        runner.projected_cost_for_acut = lambda acut_id: "0"
+
+        args = SimpleNamespace(
+            attempt=1,
+            mode="mock",
+            mock_response=None,
+            mock_response_text=None,
+            llm_ledger=str(self.root / "ledger.jsonl"),
+            runner_timeout_seconds=1,
+        )
+        code, result = runner.run_direct_runner(
+            args=args,
+            task={"task_id": "click__rbench__001"},
+            task_id="click__rbench__001",
+            acut_id="cheap-generic-swe",
+            workspace=workspace,
+            run_id="unit-mock",
+            artifact_dir=artifact_dir,
+            context_paths=["module.py"],
+        )
+
+        self.assertEqual(code, 0)
+        self.assertEqual(result["status"], "patch_generated")
+        command = captured_commands[0]
+        mock_text = command[command.index("--mock-response-text") + 1]
+        payload = json.loads(mock_text)
+        self.assertEqual(
+            payload,
+            {"edits": [{"path": "module.py", "old": "VALUE = 1\n", "new": "VALUE = 1\n"}]},
+        )
+
 
 if __name__ == "__main__":
     unittest.main()

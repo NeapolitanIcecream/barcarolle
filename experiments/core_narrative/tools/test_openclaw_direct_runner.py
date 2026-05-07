@@ -163,6 +163,56 @@ class OpenClawDirectRunnerTests(unittest.TestCase):
         self.assertNotIn(raw_url, persisted)
         self.assertIn("<redacted:url>", persisted)
 
+    def test_live_model_uses_responses_payload_for_responses_endpoint(self) -> None:
+        """Regression: /responses endpoints require the Responses API request shape."""
+        captured_payloads: list[dict[str, object]] = []
+        body = json.dumps(
+            {
+                "output_text": '{"edits": []}',
+                "usage": {"input_tokens": 12, "output_tokens": 4},
+            }
+        ).encode("utf-8")
+        raw_response_path = self.root / "responses_provider_response.redacted.json"
+
+        class FakeResponse:
+            def __enter__(self):
+                return self
+
+            def __exit__(self, exc_type, exc, traceback):
+                return False
+
+            def read(self, size):
+                return body
+
+        def fake_urlopen(request, timeout):
+            captured_payloads.append(json.loads(request.data.decode("utf-8")))
+            return FakeResponse()
+
+        env = {
+            "BARCAROLLE_LLM_API_KEY": "unit-secret-value",
+            "BARCAROLLE_LLM_BASE_URL": "http" + "s://" + "llm-gateway.example.invalid/v1/responses",
+        }
+        with mock.patch.dict(os.environ, env, clear=False), mock.patch.object(
+            runner_module.urllib.request,
+            "urlopen",
+            fake_urlopen,
+        ):
+            _text, _usage, profile = runner_module.call_live_model(
+                acut={"model": "openai/gpt-5.4-mini", "model_parameters": {}},
+                prompt="Return JSON edits.",
+                timeout_seconds=1,
+                max_response_bytes=10_000,
+                raw_response_path=raw_response_path,
+            )
+
+        self.assertEqual(profile["endpoint_kind"], "responses")
+        self.assertIs(profile["response_format_requested"], False)
+        self.assertEqual(len(captured_payloads), 1)
+        payload = captured_payloads[0]
+        self.assertIn("input", payload)
+        self.assertNotIn("messages", payload)
+        self.assertNotIn("response_format", payload)
+
     def test_mock_search_replace_generates_patch_and_zero_cost_unknown_actual(self) -> None:
         """The OpenClaw runner can produce a verifier-ready patch without old Codex plumbing."""
         artifact_dir = self.root / "artifacts"
