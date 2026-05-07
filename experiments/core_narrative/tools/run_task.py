@@ -99,7 +99,47 @@ def collect_patch(workspace: Path, env: dict[str, str]) -> str:
             "failed to inspect patch",
             stderr=redact_sensitive_text(completed.stderr.strip(), env),
         )
-    return completed.stdout
+    patch_parts = [completed.stdout] if completed.stdout else []
+
+    try:
+        untracked = subprocess.run(
+            ["git", "ls-files", "--others", "--exclude-standard", "-z"],
+            cwd=str(workspace),
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+            check=False,
+        )
+    except FileNotFoundError as exc:
+        raise ToolError("git executable was not found") from exc
+    if untracked.returncode != 0:
+        raise ToolError(
+            "failed to inspect untracked files",
+            stderr=redact_sensitive_text(os.fsdecode(untracked.stderr).strip(), env),
+        )
+
+    for raw_path in filter(None, untracked.stdout.split(b"\0")):
+        relative_path = os.fsdecode(raw_path)
+        try:
+            new_file_diff = subprocess.run(
+                ["git", "diff", "--binary", "--no-ext-diff", "--no-index", "--", "/dev/null", relative_path],
+                cwd=str(workspace),
+                stdout=subprocess.PIPE,
+                stderr=subprocess.PIPE,
+                text=True,
+                check=False,
+            )
+        except FileNotFoundError as exc:
+            raise ToolError("git executable was not found") from exc
+        if new_file_diff.returncode not in (0, 1):
+            raise ToolError(
+                "failed to inspect untracked file patch",
+                path=relative_path,
+                stderr=redact_sensitive_text(new_file_diff.stderr.strip(), env),
+            )
+        if new_file_diff.stdout:
+            patch_parts.append(new_file_diff.stdout)
+
+    return "".join(part if part.endswith("\n") else f"{part}\n" for part in patch_parts)
 
 
 def write_safe_patch(workspace: Path, patch_path: Path, env: dict[str, str]) -> dict[str, object]:
