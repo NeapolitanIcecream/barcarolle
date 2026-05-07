@@ -126,6 +126,47 @@ The coordinator must record:
 - whether the score was directly run or externally sourced;
 - any mismatch between the general benchmark ACUT and the repository experiment ACUT.
 
+### 4.6 LLM Access and Budget Contract
+
+ACUT execution must use the experiment-specific LLM access environment variables:
+
+- `BARCAROLLE_LLM_API_KEY`
+- `BARCAROLLE_LLM_BASE_URL`
+
+Do not write API keys, bearer tokens, provider secrets, or resolved credential values into Git, `process.md`, run results, CLI logs, or reports. Workers may mention the environment variable names only. If either variable is missing, ACUT execution workers must mark themselves `blocked` before making any model call.
+
+The total LLM spend cap for this experiment is **USD $300**. This is a hard cap. The coordinator should target a weaker but usable signal rather than a full matrix.
+
+Budget policy:
+
+- Treat `$240` as the soft stop where the coordinator must decide whether remaining runs are worth the remaining budget.
+- Treat `$300` as the hard stop. No new ACUT patch-generation run may start once the ledger reaches or is projected to exceed `$300`.
+- Prefer directly-run, budget-constrained evidence over broad but unaffordable coverage.
+- If actual provider billing is not returned by the API or runner, estimate cost conservatively using SOTA pricing. For OpenAI `gpt-5.5`, use `$5 / 1M input tokens` and `$30 / 1M output tokens`; for Anthropic Opus-class pricing, use `$5 / 1M input tokens` and `$25 / 1M output tokens`; for unknown SOTA-compatible endpoints, default to the higher OpenAI estimate.
+- Record both actual usage, when available, and conservative estimated usage.
+
+Budget-constrained execution profile:
+
+- Keep all seven ACUT manifests as design artifacts.
+- Run only a core subset unless the coordinator explicitly records spare budget:
+  - `general-benchmark-optimized`
+  - `repo-context-heavy`
+  - `retrieval-sparse-symbolic`
+  - `lower-budget-fast-path`
+- Defer `higher-budget-repo-depth`, `retrieval-history-augmented`, and `minimal-context-baseline` unless the core subset finishes below the soft stop.
+- Downsample the first executable experiment to:
+  - 6 locked general-benchmark tasks for `G_score`;
+  - 8 accepted `RBench` tasks for `R_score`;
+  - 6 accepted `RWork` tasks for `W_score`.
+- This yields about 80 primary ACUT patch-generation runs for the four-ACUT core subset, before smoke tests and targeted reruns.
+- Run at most one primary attempt per ACUT/task. Use reruns only for claimed ranking reversals, infrastructure ambiguity, or patch-application ambiguity, and only while under the soft stop.
+
+Required budget artifacts:
+
+- `experiments/core_narrative/configs/llm_access.yaml` records only environment variable names, provider/base-url label, redaction policy, and budget caps.
+- `experiments/core_narrative/results/cost_ledger.jsonl` records every ACUT model call or patch-generation attempt with ACUT ID, task ID, split, input tokens, output tokens, estimated cost, actual cost when available, and cumulative estimated cost.
+- Summary reports must state that the experiment is budget-constrained and intentionally weaker than the original full matrix.
+
 ## 5. Artifact Layout
 
 Recommended committed layout:
@@ -138,6 +179,7 @@ experiments/core_narrative/
     acuts/
       <acut_id>.yaml
     general_benchmark.yaml
+    llm_access.yaml
     target_repositories.yaml
   schemas/
     acut.schema.json
@@ -165,6 +207,7 @@ experiments/core_narrative/
         <task_id>/
           ...
   results/
+    cost_ledger.jsonl
     raw/
     normalized/
     figures/
@@ -538,6 +581,7 @@ Deliverables:
 - One primary target repository selected.
 - ACUT matrix frozen.
 - General benchmark basis frozen or fallback evidence basis recorded.
+- LLM access contract recorded with `BARCAROLLE_LLM_API_KEY`, `BARCAROLLE_LLM_BASE_URL`, and the $300 hard cap.
 - Minimal schemas and scripts drafted.
 
 Acceptance gate:
@@ -545,6 +589,7 @@ Acceptance gate:
 - Target repository can be cloned and tested locally.
 - ACUT manifests are complete enough to reproduce runs.
 - General benchmark basis is explicit enough to avoid post-hoc cherry-picking.
+- ACUT execution is blocked unless both LLM access environment variables are present and cost ledgering is implemented.
 
 ### Phase 2: Task Pack Construction
 
@@ -587,10 +632,20 @@ Acceptance gate:
 - Clean-room apply-and-verify works from a fresh checkout.
 - Failure classes distinguish agent failure from infra failure.
 - Results can be summarized without manual spreadsheet editing.
+- Smoke runs write cost records to `experiments/core_narrative/results/cost_ledger.jsonl`.
+- The coordinator records a measured or conservative estimated cost per ACUT/task before approving full execution.
 
 ### Phase 4: Full Experiment Run
 
-Parallelize by shard:
+Use the budget-constrained execution profile by default:
+
+- 4 core ACUTs;
+- 6 `G_score` tasks;
+- 8 `RBench` tasks;
+- 6 `RWork` tasks;
+- 1 primary attempt per ACUT/task.
+
+Parallelize cautiously by shard:
 
 - shard by ACUT;
 - or shard by task family;
@@ -604,9 +659,11 @@ Deliverables:
 
 Acceptance gate:
 
-- At least 80 percent of planned runs finish with scoreable outcomes.
+- At least 80 percent of budget-constrained planned runs finish with scoreable outcomes.
 - Infra failures are either rerun or excluded with explicit reason.
 - Each claimed reversal has at least one repeated-run sanity check.
+- LLM spend remains under the $300 hard cap.
+- New ACUT patch-generation runs stop at the $240 soft stop unless the coordinator records why the remaining runs are necessary.
 
 ### Phase 5: Analysis and Report
 
@@ -698,6 +755,9 @@ Required controls:
 - No worker that inspected private task artifacts should run as the evaluated ACUT for that task.
 - All generated tasks carry admission notes.
 - No-op and reference-patch validation are recorded.
+- LLM credentials are supplied only through `BARCAROLLE_LLM_API_KEY` and `BARCAROLLE_LLM_BASE_URL`.
+- LLM credentials and raw authorization headers are redacted from all saved prompts, traces, logs, and run artifacts.
+- ACUT execution workers must stop before making a model call if the cumulative projected LLM spend would exceed $300.
 
 Threats to validity to report:
 
@@ -707,6 +767,7 @@ Threats to validity to report:
 - Historical task replay may differ from real maintainer workflow.
 - Verifiers may be weaker than maintainer judgment.
 - ACUTs may have hidden training exposure to public repository history.
+- The first executable run is budget-constrained to $300, so task and ACUT coverage is intentionally weak and should be treated as signal-finding rather than final evidence.
 
 ## 13. Prompt Templates
 
@@ -778,9 +839,11 @@ The experiment is complete when these exist:
 
 - Frozen ACUT manifests.
 - Frozen general benchmark basis.
+- LLM access manifest with credential environment variable names and budget policy.
 - Frozen repository-specific `RBench` task pack.
 - Frozen held-out `RWork` task pack.
 - Raw and normalized run results.
+- Cost ledger proving the run stayed within the $300 LLM cap.
 - Git branches or commits for experiment code, schemas, manifests, and reports.
 - External artifact manifests for any raw data too large or sensitive for Git.
 - Analysis table with `G_score`, `R_score`, and `W_score`.
