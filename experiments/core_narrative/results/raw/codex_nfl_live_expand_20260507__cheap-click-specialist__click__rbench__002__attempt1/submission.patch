@@ -1,0 +1,78 @@
+diff --git a/click/testing.py b/click/testing.py
+index bf39761..93e2009 100644
+--- a/click/testing.py
++++ b/click/testing.py
+@@ -104,12 +104,14 @@ class CliRunner(object):
+                        will automatically echo the input.
+     """
+ 
+-    def __init__(self, charset=None, env=None, echo_stdin=False):
++    def __init__(self, charset=None, env=None, echo_stdin=False,
++                 catch_exceptions=True):
+         if charset is None:
+             charset = 'utf-8'
+         self.charset = charset
+         self.env = env or {}
+         self.echo_stdin = echo_stdin
++        self.catch_exceptions = catch_exceptions
+ 
+     def get_default_prog_name(self, cli):
+         """Given a command object it will return the default program name
+@@ -231,6 +233,8 @@ class CliRunner(object):
+         with self.isolation(input=input, env=env) as out:
+             exception = None
+             exit_code = 0
++            catch_exceptions = extra.pop('catch_exceptions',
++                                          self.catch_exceptions)
+ 
+             try:
+                 cli.main(args=args or (),
+@@ -240,6 +244,8 @@ class CliRunner(object):
+                     exception = e
+                 exit_code = e.code
+             except Exception as e:
++                if not catch_exceptions:
++                    raise
+                 exception = e
+                 exit_code = -1
+             sys.stdout.flush()
+diff --git a/tests/test_testing.py b/tests/test_testing.py
+index c0fc05f..f7f5587 100644
+--- a/tests/test_testing.py
++++ b/tests/test_testing.py
+@@ -1,3 +1,4 @@
++import pytest
+ import click
+ 
+ from click.testing import CliRunner
+@@ -88,3 +89,30 @@ def test_getchar():
+     result = runner.invoke(continue_it, input='y')
+     assert not result.exception
+     assert result.output == 'y\n'
++
++
++def test_catch_exceptions():
++    class CustomError(Exception):
++        pass
++
++    @click.command()
++    def cli():
++        raise CustomError(1)
++
++    runner = CliRunner()
++
++    result = runner.invoke(cli)
++    assert isinstance(result.exception, CustomError)
++
++    runner = CliRunner(catch_exceptions=False)
++    with pytest.raises(CustomError):
++        runner.invoke(cli)
++
++    runner = CliRunner()
++    with pytest.raises(CustomError):
++        runner.invoke(cli, catch_exceptions=False)
++
++    CustomError = SystemExit
++
++    result = runner.invoke(cli)
++    assert result.exit_code == 1

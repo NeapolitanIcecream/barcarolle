@@ -1,0 +1,10 @@
+{
+  "dry_run_status": "dry_run_completed",
+  "estimated_input_tokens": 842,
+  "estimation_rule": "ceil(prompt_char_count / 4)",
+  "model_call_made": false,
+  "output_token_budget": 64000,
+  "prompt_char_count": 3368,
+  "run_id": "pilot_009__frontier-generic-swe__click__rbench__001__attempt1",
+  "specialist_context_expected": false
+}

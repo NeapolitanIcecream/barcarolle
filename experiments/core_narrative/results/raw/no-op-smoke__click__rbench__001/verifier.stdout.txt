@@ -1,0 +1,30 @@
+F                                                                        [100%]
+=================================== FAILURES ===================================
+__________________________ test_multiple_default_help __________________________
+
+runner = <click.testing.CliRunner object at 0x1057d91f0>
+
+    def test_multiple_default_help(runner):
+        @click.command()
+        @click.option("--arg1", multiple=True, default=('foo', 'bar'),
+                      show_default=True)
+        @click.option("--arg2", multiple=True, default=(1, 2), type=int,
+                      show_default=True)
+        def cmd(arg, arg2):
+            pass
+    
+        result = runner.invoke(cmd, ['--help'])
+>       assert not result.exception
+E       AssertionError: assert not TypeError('not all arguments converted during string formatting')
+E        +  where TypeError('not all arguments converted during string formatting') = <Result TypeError('not all arguments converted during string formatting')>.exception
+
+tests/test_options.py:128: AssertionError
+=============================== warnings summary ===============================
+tests/test_options.py:58
+  /Users/chenmohan/gits/barcarolle/experiments/core_narrative/workspaces/smoke/click__rbench__001/tests/test_options.py:58: SyntaxWarning: invalid escape sequence '\s'
+    assert re.search('-v\s+Verbosity', result.output) is not None
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED tests/test_options.py::test_multiple_default_help - AssertionError: as...
+1 failed, 1 warning in 0.03s

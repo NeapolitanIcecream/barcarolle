@@ -1,0 +1,73 @@
+{
+  "aggregate": {
+    "failed": 2,
+    "infra_failed": 1,
+    "passed": 0,
+    "scoreable": 2,
+    "total_live_runs": 3
+  },
+  "artifacts": {
+    "cost_reconciliation": "experiments/core_narrative/results/cost_reconciliation_2026-05-07.json",
+    "report": "experiments/core_narrative/reports/2026-05-07_openclaw_overnight_experiment.md",
+    "score_summary": "experiments/core_narrative/results/normalized/openclaw_search_replace_summary.json"
+  },
+  "cost_accounting": {
+    "actual_provider_billed_cost_observed_usd": null,
+    "actual_provider_billed_cost_status": "unknown_no_invoice_or_billed_cost_records",
+    "interpretation": "ledger estimated cost is local budgeting/estimation, not actual billing",
+    "latest_cumulative_estimated_cost_usd": 66.0008,
+    "observed_provider_usage_cost_sum_usd": 0.177407
+  },
+  "live_runs": [
+    {
+      "acut_id": "cheap-generic-swe",
+      "failure_summary": "partial fix: avoided formatting crash but rendered Python tuple repr instead of comma-separated default help text",
+      "input_tokens": 15786,
+      "ledger_estimated_cost_usd": 1.0,
+      "normalized_status": "failed",
+      "observed_provider_usage_cost_usd": 0.022365,
+      "output_tokens": 2339,
+      "run_id": "openclaw_001__cheap-generic-swe__click__rbench__001__search-replace__attempt1",
+      "runner_status": "patch_generated",
+      "scoreable": true,
+      "split": "rbench",
+      "task_id": "click__rbench__001"
+    },
+    {
+      "acut_id": "cheap-click-specialist",
+      "failure_summary": "generated modern src/click/core.py path for historical click/core.py workspace",
+      "input_tokens": 17131,
+      "ledger_estimated_cost_usd": 1.0,
+      "normalized_status": "infra_failed",
+      "observed_provider_usage_cost_usd": 0.03292725,
+      "output_tokens": 4462,
+      "run_id": "openclaw_002__cheap-click-specialist__click__rbench__001__search-replace__attempt1",
+      "runner_status": "error",
+      "scoreable": false,
+      "split": "rbench",
+      "task_id": "click__rbench__001"
+    },
+    {
+      "acut_id": "frontier-generic-swe",
+      "failure_summary": "same partial semantic miss as cheap generic",
+      "input_tokens": 15819,
+      "ledger_estimated_cost_usd": 3.0,
+      "normalized_status": "failed",
+      "observed_provider_usage_cost_usd": 0.122115,
+      "output_tokens": 1434,
+      "run_id": "openclaw_003__frontier-generic-swe__click__rbench__001__search-replace__attempt1",
+      "runner_status": "patch_generated",
+      "scoreable": true,
+      "split": "rbench",
+      "task_id": "click__rbench__001"
+    }
+  ],
+  "next_steps": [
+    "fix specialist context path guard for historical non-src Click workspaces",
+    "add declared PR/expected-shape context packaging before expanding RBench",
+    "continue using OpenClaw direct runner instead of old Codex work-review-loop plumbing"
+  ],
+  "runner_id": "openclaw-direct-search-replace-v1",
+  "status": "openclaw_runner_scoreable_data_obtained",
+  "updated_at": "2026-05-07T18:40:00+08:00"
+}

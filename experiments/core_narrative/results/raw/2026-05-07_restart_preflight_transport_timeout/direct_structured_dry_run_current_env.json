@@ -1,0 +1,43 @@
+{
+  "acut_id": "frontier-generic-swe",
+  "command_contract_id": "barcarolle-patch-command-v1",
+  "llm_env_policy": {
+    "allowed_variable_names": [
+      "BARCAROLLE_LLM_API_KEY",
+      "BARCAROLLE_LLM_BASE_URL"
+    ],
+    "command_arguments_checked": true,
+    "endpoint_value_recorded": false,
+    "required_present": {
+      "BARCAROLLE_LLM_API_KEY": false,
+      "BARCAROLLE_LLM_BASE_URL": false
+    },
+    "unsafe_command_arguments_rejected": true,
+    "values_recorded": false
+  },
+  "mode": "dry_run",
+  "model": "openai/gpt-5.5",
+  "model_call_made": false,
+  "output_contract": "structured-files-json-v1",
+  "patch": {
+    "applied": false,
+    "received": false,
+    "validated": false
+  },
+  "prompt": {
+    "char_count": 3507,
+    "content_recorded": false,
+    "full_urls_redacted": true,
+    "manifest_truncated": false,
+    "prepared": true,
+    "sha256": "031b4a3cf996bd0b051e3f8d0163cfe94d62a1140b2fcce1f0eb0bcf79f2e683",
+    "statement_truncated": false
+  },
+  "provider": "openai",
+  "split": "rbench",
+  "statement_path": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/workspaces/pilot_010__frontier-generic-swe__click__rbench__001__structured-files-json__attempt1/.core_narrative/statement.md",
+  "status": "dry_run_completed",
+  "task_id": "click__rbench__001",
+  "tool": "barcarolle_patch_command",
+  "workspace": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/workspaces/pilot_010__frontier-generic-swe__click__rbench__001__structured-files-json__attempt1"
+}

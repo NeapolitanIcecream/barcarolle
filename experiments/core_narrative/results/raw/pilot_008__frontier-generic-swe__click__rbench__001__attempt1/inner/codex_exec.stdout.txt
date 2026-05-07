@@ -1,0 +1,4 @@
+Raw inner Codex stdout was replaced with this redaction notice after the
+redacted `codex_cli_patch_command.json` summary was parsed and preserved. The
+structured summary retains failure_capture and transport_failure metadata. No
+cli.log file was inspected.

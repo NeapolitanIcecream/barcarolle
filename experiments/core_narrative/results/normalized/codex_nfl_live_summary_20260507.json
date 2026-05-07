@@ -1,0 +1,93 @@
+{
+  "by_acut": {
+    "cheap-click-specialist": {
+      "pass_rate": 0.6667,
+      "passed": 2,
+      "scoreable": 3,
+      "status_counts": {
+        "failed": 1,
+        "passed": 2
+      },
+      "total": 3
+    },
+    "cheap-generic-swe": {
+      "pass_rate": 0.6667,
+      "passed": 2,
+      "scoreable": 3,
+      "status_counts": {
+        "failed": 1,
+        "passed": 2
+      },
+      "total": 3
+    },
+    "frontier-generic-swe": {
+      "pass_rate": 0.6667,
+      "passed": 2,
+      "scoreable": 3,
+      "status_counts": {
+        "failed": 1,
+        "passed": 2
+      },
+      "total": 3
+    }
+  },
+  "by_acut_split": {
+    "cheap-click-specialist": {
+      "rbench": {
+        "pass_rate": 0.6667,
+        "passed": 2,
+        "scoreable": 3,
+        "status_counts": {
+          "failed": 1,
+          "passed": 2
+        },
+        "total": 3
+      }
+    },
+    "cheap-generic-swe": {
+      "rbench": {
+        "pass_rate": 0.6667,
+        "passed": 2,
+        "scoreable": 3,
+        "status_counts": {
+          "failed": 1,
+          "passed": 2
+        },
+        "total": 3
+      }
+    },
+    "frontier-generic-swe": {
+      "rbench": {
+        "pass_rate": 0.6667,
+        "passed": 2,
+        "scoreable": 3,
+        "status_counts": {
+          "failed": 1,
+          "passed": 2
+        },
+        "total": 3
+      }
+    }
+  },
+  "by_split": {
+    "rbench": {
+      "pass_rate": 0.6667,
+      "passed": 6,
+      "scoreable": 9,
+      "status_counts": {
+        "failed": 3,
+        "passed": 6
+      },
+      "total": 9
+    }
+  },
+  "input_count": 9,
+  "result_count": 9,
+  "status": "summarized",
+  "status_counts": {
+    "failed": 3,
+    "passed": 6
+  },
+  "tool": "summarize_results",
+  "warnings": []
+}

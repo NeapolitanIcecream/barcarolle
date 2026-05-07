@@ -1,0 +1,51 @@
+schema_version: core-narrative.task.v1
+task_id: click__rwork__005
+repo_slug: click
+split: rwork
+source:
+  kind: commit
+  public_url: https://github.com/pallets/click/commit/4f9086bf8fd98aca1d804bf742f4f1ceb6c12295
+  anchor_id: commit:4f9086bf8fd98aca1d804bf742f4f1ceb6c12295
+  base_commit: 1339fd3323357119a9c7a6326c788f80295954ce
+  target_commit: 4f9086bf8fd98aca1d804bf742f4f1ceb6c12295
+task_family: CliRunner debugger stream isolation
+task_statement_path: public/statement.md
+allowed_context:
+  include_git_history_before_base: true
+  include_issue_text: true
+  include_pr_text: false
+  include_reference_patch: false
+disallowed_context:
+- reference patch or target diff for commit 4f9086b
+- ACUT outputs or public model results
+- future execution results for this task
+verifier:
+  command: verifier/run.sh
+  timeout_seconds: 60
+expected:
+  no_op_fails: true
+  reference_passes: true
+leakage:
+  reviewed: true
+  notes: Debugger stream behavior is checked through object identity, not by opening
+    an interactive debugger.
+admission:
+  status: accepted
+  reviewer: task-manifests-worker
+  rationale: Recent, realistic testing helper issue with bounded deterministic tests.
+metadata:
+  materialized_from: experiments/core_narrative/configs/tasks/rwork_click.yaml
+  benchmark_split: RWork
+  locked_target_repository: pallets/click
+  locked_target_commit: 8bd8b4a074c55c03b6eb5666edc44a9c43df38a2
+  source_compare:
+    commits_ahead: 1
+    changed_files:
+    - src/click/testing.py
+    - tests/test_testing.py
+  expected_touched_area:
+  - src/click/testing.py CliRunner isolation context
+  - tests for pdb stream selection and restoration
+  visible_context_guidance: Provide the commit title and linked issue identifiers
+    654, 824, 843, and 951. Hide the implementation diff.
+  risk_notes: Avoid real interactive debugger or terminal-state requirements in verification.

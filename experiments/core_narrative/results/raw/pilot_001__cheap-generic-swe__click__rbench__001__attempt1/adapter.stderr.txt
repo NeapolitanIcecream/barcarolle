@@ -1,0 +1,24 @@
+{
+  "details": {
+    "error_type": "gaierror",
+    "network_attempted": true
+  },
+  "error": "LLM request failed",
+  "llm_env_policy": {
+    "allowed_variable_names": [
+      "BARCAROLLE_LLM_API_KEY",
+      "BARCAROLLE_LLM_BASE_URL"
+    ],
+    "command_arguments_checked": true,
+    "endpoint_value_recorded": false,
+    "required_present": {
+      "BARCAROLLE_LLM_API_KEY": true,
+      "BARCAROLLE_LLM_BASE_URL": true
+    },
+    "unsafe_command_arguments_rejected": true,
+    "values_recorded": false
+  },
+  "model_call_made": false,
+  "status": "error",
+  "tool": "barcarolle_patch_command"
+}

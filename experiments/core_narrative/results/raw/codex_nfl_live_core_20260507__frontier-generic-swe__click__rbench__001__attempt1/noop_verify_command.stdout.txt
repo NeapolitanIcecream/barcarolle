@@ -1,0 +1,34 @@
+{
+  "acut_id": "frontier-generic-swe",
+  "attempt": 1,
+  "error": null,
+  "finished_at": "2026-05-07T11:33:30.779022Z",
+  "metadata": {
+    "skip_apply": true,
+    "timeout_seconds": 60,
+    "tool": "apply_and_verify",
+    "verifier_command": [
+      "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/tasks/click/rbench/click__rbench__001/verifier/run.sh"
+    ]
+  },
+  "output_path": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/codex_nfl_live_core_20260507__frontier-generic-swe__click__rbench__001__attempt1/noop_verify.json",
+  "patch_path": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/codex_nfl_live_core_20260507__frontier-generic-swe__click__rbench__001__attempt1/missing_noop.patch",
+  "review": {
+    "mergeability_grade": null,
+    "notes": "",
+    "rule_violation": false,
+    "wrong_module": false
+  },
+  "run_id": "codex_nfl_live_core_20260507__frontier-generic-swe__click__rbench__001__attempt1__noop",
+  "schema_version": "core-narrative.run-result.v1",
+  "split": "rbench",
+  "started_at": "2026-05-07T11:33:30.592752Z",
+  "status": "failed",
+  "task_id": "click__rbench__001",
+  "verification": {
+    "duration_seconds": 0.186,
+    "exit_code": 1,
+    "stderr_artifact": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/codex_nfl_live_core_20260507__frontier-generic-swe__click__rbench__001__attempt1/verifier.stderr.txt",
+    "stdout_artifact": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/codex_nfl_live_core_20260507__frontier-generic-swe__click__rbench__001__attempt1/verifier.stdout.txt"
+  }
+}

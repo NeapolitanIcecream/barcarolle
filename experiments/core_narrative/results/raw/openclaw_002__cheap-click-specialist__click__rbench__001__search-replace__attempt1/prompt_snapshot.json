@@ -1,0 +1,28 @@
+{
+  "context_files": [
+    {
+      "char_count": 66204,
+      "path": "click/core.py",
+      "sha256": "9e700d0f479b658a1b975dde5be4ed1c0effd353a2c9e46f20589bf42d4dd2b4",
+      "truncated": false
+    },
+    {
+      "char_count": 6454,
+      "path": "tests/test_options.py",
+      "sha256": "83a2f21399dfc9193b52dad1c8a1186e6d93160c2d5bfad92f06e04af44c2179",
+      "truncated": false
+    }
+  ],
+  "full_urls_redacted": true,
+  "output_contract": "search-replace-json-v1",
+  "prompt_char_count": 81363,
+  "prompt_content_recorded": true,
+  "prompt_sha256": "88b5c5f0aea444266d06f30080a2d2e145128b2a361556dc2f8b506b23125209",
+  "run_id": "openclaw_002__cheap-click-specialist__click__rbench__001__search-replace__attempt1",
+  "runner_id": "openclaw-direct-search-replace-v1",
+  "specialist_context_included": true,
+  "specialist_context_path": "experiments/core_narrative/context_packs/click_specialist/context_prompt.md",
+  "statement_truncated": false,
+  "task_statement_path": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/tasks/click/rbench/click__rbench__001/public/statement.md",
+  "tool": "openclaw_direct_runner"
+}

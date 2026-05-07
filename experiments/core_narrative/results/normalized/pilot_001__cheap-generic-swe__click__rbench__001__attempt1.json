@@ -1,0 +1,35 @@
+{
+  "acut_id": "cheap-generic-swe",
+  "attempt": 1,
+  "error": "patch-generation command failed before producing a patch; LLM request failed",
+  "finished_at": "2026-04-29T05:09:49.195910Z",
+  "metadata": {
+    "adapter_result": "experiments/core_narrative/results/raw/pilot_001__cheap-generic-swe__click__rbench__001__attempt1/adapter_result.json",
+    "command_exit_code": 2,
+    "command_status": "command_failed",
+    "command_timed_out": false,
+    "ledger_append_status": "appended",
+    "model_call_attempted_by_adapter": true,
+    "patch_command_summary": "experiments/core_narrative/results/raw/pilot_001__cheap-generic-swe__click__rbench__001__attempt1/patch_command_summary.json",
+    "tool": "first-execution-pilot"
+  },
+  "patch_path": "experiments/core_narrative/results/raw/pilot_001__cheap-generic-swe__click__rbench__001__attempt1/submission.patch",
+  "review": {
+    "mergeability_grade": null,
+    "notes": "",
+    "rule_violation": false,
+    "wrong_module": false
+  },
+  "run_id": "pilot_001__cheap-generic-swe__click__rbench__001__attempt1",
+  "schema_version": "core-narrative.run-result.v1",
+  "split": "rbench",
+  "started_at": "2026-04-29T05:09:49.093512Z",
+  "status": "infra_failed",
+  "task_id": "click__rbench__001",
+  "verification": {
+    "duration_seconds": 0,
+    "exit_code": null,
+    "stderr_artifact": null,
+    "stdout_artifact": null
+  }
+}

@@ -1,0 +1,112 @@
+{
+  "acut_id": "cheap-click-specialist",
+  "adapter_id": "codex-cli-acut-adapter-v0",
+  "artifact_dir": "/Users/chenmohan/gits/barcarolle-wt-patch-command-contract/experiments/core_narrative/results/raw/patch_command_contract_adapter_dry_run",
+  "attempt": 1,
+  "command": [
+    "python3",
+    "/Users/chenmohan/gits/barcarolle-wt-patch-command-contract/experiments/core_narrative/tools/barcarolle_patch_command.py",
+    "--acut",
+    "/Users/chenmohan/gits/barcarolle-wt-patch-command-contract/experiments/core_narrative/configs/acuts/cheap-click-specialist.yaml",
+    "--dry-run"
+  ],
+  "command_duration_seconds": 0,
+  "cost_ledger_append": {
+    "actual_cost_recorded": false,
+    "estimated_cost_usd": 0.0,
+    "event": "dry_run_no_model",
+    "new_cumulative_estimated_cost_usd": 0.0,
+    "path": "/Users/chenmohan/gits/barcarolle-wt-patch-command-contract/experiments/core_narrative/results/raw/patch_command_contract_adapter_dry_run/cost_ledger.jsonl",
+    "previous_cumulative_estimated_cost_usd": 0.0,
+    "record_count_after": 1,
+    "record_count_before": 0,
+    "status": "appended"
+  },
+  "dry_run": true,
+  "finished_at": "2026-04-29T03:49:06.057704Z",
+  "llm_budget_gate": {
+    "allowed": true,
+    "approvals_required": [],
+    "blockers": [],
+    "budget": {
+      "current_cumulative_estimated_cost_usd": 0.0,
+      "hard_cap_reached_or_projected": false,
+      "hard_cap_usd": 300.0,
+      "projected_cost_usd": 0.0,
+      "projected_cumulative_estimated_cost_usd": 0.0,
+      "soft_stop_reached_or_projected": false,
+      "soft_stop_usd": 240.0
+    },
+    "default_execution_profile": {
+      "core_acut_ids": [
+        "frontier-generic-swe",
+        "frontier-click-specialist",
+        "cheap-generic-swe",
+        "cheap-click-specialist"
+      ],
+      "full_core_requires_coordinator_decision": true,
+      "pilot_primary_attempts": 28,
+      "primary_attempts_per_acut_task": 1,
+      "profile_id": "budget-constrained-2x2-pilot-v2",
+      "split_task_limits": {
+        "G_score": 2,
+        "RBench": 3,
+        "RWork": 2
+      }
+    },
+    "env": {
+      "all_required_present": true,
+      "required": [
+        {
+          "name": "BARCAROLLE_LLM_API_KEY",
+          "present": true
+        },
+        {
+          "name": "BARCAROLLE_LLM_BASE_URL",
+          "present": true
+        }
+      ]
+    },
+    "execution_request": {
+      "acut_id": "cheap-click-specialist",
+      "attempt": 1,
+      "coordinator_decision_ref_present": false,
+      "split": "rbench"
+    },
+    "ledger": {
+      "cumulative_estimated_cost_usd": 0.0,
+      "error_type": null,
+      "errors": [],
+      "estimated_cost_sum_usd": 0.0,
+      "exists": true,
+      "is_file": true,
+      "line_count": 0,
+      "path": "/Users/chenmohan/gits/barcarolle-wt-patch-command-contract/experiments/core_narrative/results/raw/patch_command_contract_adapter_dry_run/cost_ledger.jsonl",
+      "record_count": 0,
+      "writable": true
+    },
+    "status": "passed",
+    "tool": "llm_budget_gate"
+  },
+  "llm_env_policy": {
+    "allowed_variable_names": [
+      "BARCAROLLE_LLM_API_KEY",
+      "BARCAROLLE_LLM_BASE_URL"
+    ],
+    "captured_artifacts_redacted": true,
+    "command_arguments_checked": true,
+    "command_representation_redacted": true,
+    "unsafe_command_arguments_rejected": true,
+    "values_recorded": false
+  },
+  "model_call_made": false,
+  "patch_path": "/Users/chenmohan/gits/barcarolle-wt-patch-command-contract/experiments/core_narrative/results/raw/patch_command_contract_adapter_dry_run/submission.patch",
+  "run_id": "patch_command_contract_adapter_dry_run",
+  "split": "rbench",
+  "started_at": "2026-04-29T03:49:06.057581Z",
+  "status": "dry_run_completed",
+  "stderr_artifact": "/Users/chenmohan/gits/barcarolle-wt-patch-command-contract/experiments/core_narrative/results/raw/patch_command_contract_adapter_dry_run/adapter.stderr.txt",
+  "stdout_artifact": "/Users/chenmohan/gits/barcarolle-wt-patch-command-contract/experiments/core_narrative/results/raw/patch_command_contract_adapter_dry_run/adapter.stdout.txt",
+  "task_id": "patch_command_contract_smoke",
+  "tool": "acut_patch_adapter"
+}

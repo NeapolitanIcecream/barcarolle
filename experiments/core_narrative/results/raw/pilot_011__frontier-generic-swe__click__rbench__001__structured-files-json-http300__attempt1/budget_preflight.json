@@ -1,0 +1,64 @@
+{
+  "allowed": true,
+  "approvals_required": [],
+  "blockers": [],
+  "budget": {
+    "current_cumulative_estimated_cost_usd": 51.0008,
+    "hard_cap_reached_or_projected": false,
+    "hard_cap_usd": 300.0,
+    "projected_cost_usd": 10.0,
+    "projected_cumulative_estimated_cost_usd": 61.0008,
+    "soft_stop_reached_or_projected": false,
+    "soft_stop_usd": 240.0
+  },
+  "default_execution_profile": {
+    "core_acut_ids": [
+      "frontier-generic-swe",
+      "frontier-click-specialist",
+      "cheap-generic-swe",
+      "cheap-click-specialist"
+    ],
+    "full_core_requires_coordinator_decision": true,
+    "pilot_primary_attempts": 28,
+    "primary_attempts_per_acut_task": 1,
+    "profile_id": "budget-constrained-2x2-pilot-v2",
+    "split_task_limits": {
+      "G_score": 2,
+      "RBench": 3,
+      "RWork": 2
+    }
+  },
+  "env": {
+    "all_required_present": true,
+    "required": [
+      {
+        "name": "BARCAROLLE_LLM_API_KEY",
+        "present": true
+      },
+      {
+        "name": "BARCAROLLE_LLM_BASE_URL",
+        "present": true
+      }
+    ]
+  },
+  "execution_request": {
+    "acut_id": "frontier-generic-swe",
+    "attempt": 1,
+    "coordinator_decision_ref_present": false,
+    "split": "rbench"
+  },
+  "ledger": {
+    "cumulative_estimated_cost_usd": 51.0008,
+    "error_type": null,
+    "errors": [],
+    "estimated_cost_sum_usd": 51.0008,
+    "exists": true,
+    "is_file": true,
+    "line_count": 13,
+    "path": "experiments/core_narrative/results/cost_ledger.jsonl",
+    "record_count": 13,
+    "writable": true
+  },
+  "status": "passed",
+  "tool": "llm_budget_gate"
+}

@@ -1,0 +1,365 @@
+{
+  "core_modules": [
+    {
+      "class_count": 0,
+      "function_count": 1,
+      "line_count": 124,
+      "local_imports": [
+        ".core",
+        ".decorators",
+        ".exceptions",
+        ".formatting",
+        ".globals",
+        ".parser",
+        ".termui",
+        ".types",
+        ".utils"
+      ],
+      "method_count": 0,
+      "module": "click",
+      "path": "src/click/__init__.py"
+    },
+    {
+      "class_count": 3,
+      "function_count": 27,
+      "line_count": 622,
+      "local_imports": [
+        "._winconsole"
+      ],
+      "method_count": 16,
+      "module": "click._compat",
+      "path": "src/click/_compat.py"
+    },
+    {
+      "class_count": 2,
+      "function_count": 6,
+      "line_count": 870,
+      "local_imports": [
+        "._compat",
+        ".exceptions",
+        ".utils"
+      ],
+      "method_count": 25,
+      "module": "click._termui_impl",
+      "path": "src/click/_termui_impl.py"
+    },
+    {
+      "class_count": 1,
+      "function_count": 0,
+      "line_count": 51,
+      "local_imports": [],
+      "method_count": 3,
+      "module": "click._textwrap",
+      "path": "src/click/_textwrap.py"
+    },
+    {
+      "class_count": 1,
+      "function_count": 0,
+      "line_count": 36,
+      "local_imports": [],
+      "method_count": 1,
+      "module": "click._utils",
+      "path": "src/click/_utils.py"
+    },
+    {
+      "class_count": 4,
+      "function_count": 5,
+      "line_count": 296,
+      "local_imports": [
+        "._compat"
+      ],
+      "method_count": 14,
+      "module": "click._winconsole",
+      "path": "src/click/_winconsole.py"
+    },
+    {
+      "class_count": 11,
+      "function_count": 7,
+      "line_count": 3476,
+      "local_imports": [
+        ".",
+        "._utils",
+        ".decorators",
+        ".exceptions",
+        ".formatting",
+        ".globals",
+        ".parser",
+        ".shell_completion",
+        ".termui",
+        ".utils",
+        "click.shell_completion"
+      ],
+      "method_count": 123,
+      "module": "click.core",
+      "path": "src/click/core.py"
+    },
+    {
+      "class_count": 0,
+      "function_count": 21,
+      "line_count": 551,
+      "local_imports": [
+        ".core",
+        ".globals",
+        ".utils"
+      ],
+      "method_count": 0,
+      "module": "click.decorators",
+      "path": "src/click/decorators.py"
+    },
+    {
+      "class_count": 11,
+      "function_count": 1,
+      "line_count": 308,
+      "local_imports": [
+        "._compat",
+        ".core",
+        ".globals",
+        ".utils"
+      ],
+      "method_count": 19,
+      "module": "click.exceptions",
+      "path": "src/click/exceptions.py"
+    },
+    {
+      "class_count": 1,
+      "function_count": 4,
+      "line_count": 301,
+      "local_imports": [
+        "._compat",
+        "._textwrap",
+        ".parser"
+      ],
+      "method_count": 12,
+      "module": "click.formatting",
+      "path": "src/click/formatting.py"
+    },
+    {
+      "class_count": 0,
+      "function_count": 6,
+      "line_count": 67,
+      "local_imports": [
+        ".core"
+      ],
+      "method_count": 0,
+      "module": "click.globals",
+      "path": "src/click/globals.py"
+    },
+    {
+      "class_count": 4,
+      "function_count": 4,
+      "line_count": 532,
+      "local_imports": [
+        "._utils",
+        ".core",
+        ".exceptions",
+        ".shell_completion"
+      ],
+      "method_count": 16,
+      "module": "click.parser",
+      "path": "src/click/parser.py"
+    },
+    {
+      "class_count": 5,
+      "function_count": 9,
+      "line_count": 667,
+      "local_imports": [
+        ".core",
+        ".utils"
+      ],
+      "method_count": 18,
+      "module": "click.shell_completion",
+      "path": "src/click/shell_completion.py"
+    },
+    {
+      "class_count": 0,
+      "function_count": 22,
+      "line_count": 891,
+      "local_imports": [
+        "._compat",
+        "._termui_impl",
+        ".exceptions",
+        ".globals",
+        ".types",
+        ".utils"
+      ],
+      "method_count": 0,
+      "module": "click.termui",
+      "path": "src/click/termui.py"
+    },
+    {
+      "class_count": 6,
+      "function_count": 2,
+      "line_count": 669,
+      "local_imports": [
+        ".",
+        "._compat",
+        ".core"
+      ],
+      "method_count": 29,
+      "module": "click.testing",
+      "path": "src/click/testing.py"
+    },
+    {
+      "class_count": 19,
+      "function_count": 2,
+      "line_count": 1209,
+      "local_imports": [
+        "._compat",
+        ".core",
+        ".exceptions",
+        ".shell_completion",
+        ".utils",
+        "click.shell_completion"
+      ],
+      "method_count": 64,
+      "module": "click.types",
+      "path": "src/click/types.py"
+    },
+    {
+      "class_count": 3,
+      "function_count": 12,
+      "line_count": 630,
+      "local_imports": [
+        "._compat",
+        ".exceptions",
+        ".globals"
+      ],
+      "method_count": 18,
+      "module": "click.utils",
+      "path": "src/click/utils.py"
+    }
+  ],
+  "example_entrypoints": [
+    "examples/aliases/aliases.py",
+    "examples/colors/colors.py",
+    "examples/completion/completion.py",
+    "examples/complex/complex/__init__.py",
+    "examples/complex/complex/cli.py",
+    "examples/complex/complex/commands/__init__.py",
+    "examples/complex/complex/commands/cmd_init.py",
+    "examples/complex/complex/commands/cmd_status.py",
+    "examples/imagepipe/imagepipe.py",
+    "examples/inout/inout.py",
+    "examples/naval/naval.py",
+    "examples/repo/repo.py",
+    "examples/termui/termui.py",
+    "examples/validation/validation.py"
+  ],
+  "file_counts": {
+    "allowlisted_total": 125,
+    "docs_pages": 37,
+    "example_python": 14,
+    "public_test_python": 31,
+    "source_python": 17
+  },
+  "history_mining": "not_used",
+  "locked_click_commit": "8bd8b4a074c55c03b6eb5666edc44a9c43df38a2",
+  "marker": "CLICK_SPECIALIST_CONTEXT_PACK_V1",
+  "pack_id": "click_specialist_context_pack_v1",
+  "package_layout": {
+    "docs_root": "docs",
+    "examples_root": "examples",
+    "source_root": "src/click",
+    "tests_root": "tests"
+  },
+  "public_api_exports_from_click_init": [
+    "Abort",
+    "Argument",
+    "BOOL",
+    "BadArgumentUsage",
+    "BadOptionUsage",
+    "BadParameter",
+    "Choice",
+    "ClickException",
+    "Command",
+    "CommandCollection",
+    "Context",
+    "DateTime",
+    "FLOAT",
+    "File",
+    "FileError",
+    "FloatRange",
+    "Group",
+    "HelpFormatter",
+    "INT",
+    "IntRange",
+    "MissingParameter",
+    "NoSuchOption",
+    "Option",
+    "ParamType",
+    "Parameter",
+    "ParameterSource",
+    "Path",
+    "STRING",
+    "Tuple",
+    "UNPROCESSED",
+    "UUID",
+    "UsageError",
+    "argument",
+    "clear",
+    "command",
+    "confirm",
+    "confirmation_option",
+    "echo",
+    "echo_via_pager",
+    "edit",
+    "format_filename",
+    "get_app_dir",
+    "get_binary_stream",
+    "get_current_context",
+    "get_text_stream",
+    "getchar",
+    "group",
+    "help_option",
+    "launch",
+    "make_pass_decorator",
+    "open_file",
+    "option",
+    "pass_context",
+    "pass_obj",
+    "password_option",
+    "pause",
+    "progressbar",
+    "prompt",
+    "secho",
+    "style",
+    "unstyle",
+    "version_option",
+    "wrap_text"
+  ],
+  "public_test_files": [
+    "tests/conftest.py",
+    "tests/test_arguments.py",
+    "tests/test_basic.py",
+    "tests/test_chain.py",
+    "tests/test_command_decorators.py",
+    "tests/test_commands.py",
+    "tests/test_compat.py",
+    "tests/test_context.py",
+    "tests/test_custom_classes.py",
+    "tests/test_defaults.py",
+    "tests/test_formatting.py",
+    "tests/test_imports.py",
+    "tests/test_info_dict.py",
+    "tests/test_normalization.py",
+    "tests/test_options.py",
+    "tests/test_parser.py",
+    "tests/test_shell_completion.py",
+    "tests/test_stream_lifecycle.py",
+    "tests/test_termui.py",
+    "tests/test_testing.py",
+    "tests/test_types.py",
+    "tests/test_utils.py",
+    "tests/typing/typing_aliased_group.py",
+    "tests/typing/typing_confirmation_option.py",
+    "tests/typing/typing_group_kw_options.py",
+    "tests/typing/typing_help_option.py",
+    "tests/typing/typing_options.py",
+    "tests/typing/typing_password_option.py",
+    "tests/typing/typing_progressbar.py",
+    "tests/typing/typing_simple_example.py",
+    "tests/typing/typing_version_option.py"
+  ],
+  "section_id": "repo_map",
+  "source_root_label": "experiments/core_narrative/external_repos/click"
+}

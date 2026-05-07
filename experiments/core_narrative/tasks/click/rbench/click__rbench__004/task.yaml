@@ -1,0 +1,53 @@
+schema_version: core-narrative.task.v1
+task_id: click__rbench__004
+repo_slug: click
+split: rbench
+source:
+  kind: pull_request
+  public_url: https://github.com/pallets/click/pull/868
+  anchor_id: pallets/click#868
+  base_commit: b1b4449cda6767f022372890998d6b0eb895d041
+  target_commit: fdceb39d344603fc73a4d9761766b5701f69236d
+task_family: CliRunner stdout/stderr stream separation
+task_statement_path: public/statement.md
+allowed_context:
+  include_git_history_before_base: true
+  include_issue_text: false
+  include_pr_text: true
+  include_reference_patch: false
+disallowed_context:
+- reference patch or target diff for pull request 868
+- ACUT outputs or public model results
+- future execution results for this task
+verifier:
+  command: verifier/run.sh
+  timeout_seconds: 60
+expected:
+  no_op_fails: true
+  reference_passes: true
+leakage:
+  reviewed: true
+  notes: Deterministic in-process stream tests; no OS terminal dependency.
+admission:
+  status: accepted
+  reviewer: task-manifests-worker
+  rationale: Clear behavior contract with compact verifier coverage.
+metadata:
+  materialized_from: experiments/core_narrative/configs/tasks/rbench_click.yaml
+  benchmark_split: RBench
+  locked_target_repository: pallets/click
+  locked_target_commit: 8bd8b4a074c55c03b6eb5666edc44a9c43df38a2
+  source_compare:
+    commits_ahead: 1
+    changed_files:
+    - click/testing.py
+    - tests/test_testing.py
+    - tests/test_termui.py
+    - tests/test_utils.py
+  expected_touched_area:
+  - click.testing stream capture and Result attributes
+  - tests for stdout, stderr, and mixed output behavior
+  visible_context_guidance: Show the PR title and desired stream semantics. Do not
+    include the final implementation or reference diff.
+  risk_notes: Historical changes touch multiple tests, but the core behavior is isolated
+    to CliRunner stream capture.

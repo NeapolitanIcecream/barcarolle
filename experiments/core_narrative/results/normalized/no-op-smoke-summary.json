@@ -1,0 +1,45 @@
+{
+  "by_acut": {
+    "no-op-smoke": {
+      "pass_rate": 0.0,
+      "passed": 0,
+      "scoreable": 1,
+      "status_counts": {
+        "failed": 1
+      },
+      "total": 1
+    }
+  },
+  "by_acut_split": {
+    "no-op-smoke": {
+      "rbench": {
+        "pass_rate": 0.0,
+        "passed": 0,
+        "scoreable": 1,
+        "status_counts": {
+          "failed": 1
+        },
+        "total": 1
+      }
+    }
+  },
+  "by_split": {
+    "rbench": {
+      "pass_rate": 0.0,
+      "passed": 0,
+      "scoreable": 1,
+      "status_counts": {
+        "failed": 1
+      },
+      "total": 1
+    }
+  },
+  "input_count": 1,
+  "result_count": 1,
+  "status": "summarized",
+  "status_counts": {
+    "failed": 1
+  },
+  "tool": "summarize_results",
+  "warnings": []
+}

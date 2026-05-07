@@ -1,0 +1,58 @@
+schema_version: core-narrative.task.v1
+task_id: click__rwork__001
+repo_slug: click
+split: rwork
+source:
+  kind: pull_request
+  public_url: https://github.com/pallets/click/pull/2956
+  anchor_id: pallets/click#2956
+  base_commit: 5c1239b0116b66492cdd0848144ab3c78a04495a
+  target_commit: 565f36d5bc4a15d304337b749e113fb4477b1843
+task_family: flag envvar/default/type reconciliation
+task_statement_path: public/statement.md
+allowed_context:
+  include_git_history_before_base: true
+  include_issue_text: true
+  include_pr_text: true
+  include_reference_patch: false
+disallowed_context:
+- reference patch or target diff for pull request 2956
+- ACUT outputs or public model results
+- future execution results for this task
+verifier:
+  command: verifier/run.sh
+  timeout_seconds: 60
+expected:
+  no_op_fails: true
+  reference_passes: true
+leakage:
+  reviewed: true
+  notes: Recent behavior task with focused option/envvar verification; docs changes
+    are ancillary and not the evaluation target.
+admission:
+  status: accepted
+  reviewer: task-manifests-worker
+  rationale: Repository-specific, behavior-verifiable regression with maintainer-style
+    complexity.
+metadata:
+  materialized_from: experiments/core_narrative/configs/tasks/rwork_click.yaml
+  benchmark_split: RWork
+  locked_target_repository: pallets/click
+  locked_target_commit: 8bd8b4a074c55c03b6eb5666edc44a9c43df38a2
+  source_compare:
+    commits_ahead: 2
+    changed_files:
+    - src/click/core.py
+    - src/click/types.py
+    - tests/test_options.py
+    - tests/test_basic.py
+    - tests/test_imports.py
+  expected_touched_area:
+  - src/click/core.py flag option value resolution
+  - src/click/types.py conversion of flag values
+  - tests for envvar string flag_value behavior
+  visible_context_guidance: Provide the PR title, linked issue identifiers, and the
+    behavior expected for envvar activation/deactivation. Do not expose the reference
+    patch.
+  risk_notes: Avoid over-broad verifier selection; the full PR touched many option
+    tests.

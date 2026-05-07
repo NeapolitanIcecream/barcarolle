@@ -1,0 +1,43 @@
+F                                                                        [100%]
+=================================== FAILURES ===================================
+__________________________ test_multiple_default_help __________________________
+
+runner = <click.testing.CliRunner object at 0x10a6244c0>
+
+    def test_multiple_default_help(runner):
+        @click.command()
+        @click.option("--arg1", multiple=True, default=('foo', 'bar'),
+                      show_default=True)
+        @click.option("--arg2", multiple=True, default=(1, 2), type=int,
+                      show_default=True)
+        def cmd(arg, arg2):
+            pass
+
+        result = runner.invoke(cmd, ['--help'])
+        assert not result.exception
+>       assert "foo, bar" in result.output
+E       assert 'foo, bar' in "Usage: cmd [OPTIONS]\n\nOptions:\n  --arg1 TEXT     [default: ('foo', 'bar')]\n  --arg2 INTEGER  [default: (1, 2)]\n  --help          Show this message and exit.\n"
+E        +  where "Usage: cmd [OPTIONS]\n\nOptions:\n  --arg1 TEXT     [default: ('foo', 'bar')]\n  --arg2 INTEGER  [default: (1, 2)]\n  --help          Show this message and exit.\n" = <Result okay>.output
+
+tests/test_options.py:129: AssertionError
+=============================== warnings summary ===============================
+click/core.py:1140
+  /Users/chenmohan/gits/barcarolle/experiments/core_narrative/workspaces/openclaw_001__cheap-generic-swe__click__rbench__001__search-replace__attempt1/click/core.py:1140: DeprecationWarning: invalid escape sequence \s
+    """A parameter to a command comes in two versions: they are either
+
+click/_compat.py:14
+  /Users/chenmohan/gits/barcarolle/experiments/core_narrative/workspaces/openclaw_001__cheap-generic-swe__click__rbench__001__search-replace__attempt1/click/_compat.py:14: DeprecationWarning: invalid escape sequence \[
+    _ansi_re = re.compile('\033\[((?:\d|;)*)([a-zA-Z])')
+
+click/decorators.py:92
+  /Users/chenmohan/gits/barcarolle/experiments/core_narrative/workspaces/openclaw_001__cheap-generic-swe__click__rbench__001__search-replace__attempt1/click/decorators.py:92: DeprecationWarning: invalid escape sequence \s
+    """Creates a new :class:`Command` and uses the decorated function as
+
+tests/test_options.py:58
+  /Users/chenmohan/gits/barcarolle/experiments/core_narrative/workspaces/openclaw_001__cheap-generic-swe__click__rbench__001__search-replace__attempt1/tests/test_options.py:58: DeprecationWarning: invalid escape sequence \s
+    assert re.search('-v\s+Verbosity', result.output) is not None
+
+-- Docs: <redacted:url>
+=========================== short test summary info ============================
+FAILED tests/test_options.py::test_multiple_default_help - assert 'foo, bar' ...
+1 failed, 4 warnings in 0.03s

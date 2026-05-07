@@ -1,0 +1,35 @@
+{
+  "schema_version": "core-narrative.run-result.v1",
+  "run_id": "pilot_002__cheap-generic-swe__click__rbench__002__attempt1",
+  "acut_id": "cheap-generic-swe",
+  "task_id": "click__rbench__002",
+  "split": "rbench",
+  "attempt": 1,
+  "started_at": "2026-04-29T06:02:39.502632Z",
+  "finished_at": "2026-04-29T06:02:39.603849Z",
+  "status": "infra_failed",
+  "patch_path": "experiments/core_narrative/results/raw/pilot_002__cheap-generic-swe__click__rbench__002__attempt1/submission.patch",
+  "verification": {
+    "exit_code": null,
+    "stdout_artifact": null,
+    "stderr_artifact": null,
+    "duration_seconds": 0
+  },
+  "review": {
+    "mergeability_grade": null,
+    "wrong_module": false,
+    "rule_violation": false,
+    "notes": ""
+  },
+  "error": "patch-generation command failed before producing a patch; LLM request failed",
+  "metadata": {
+    "tool": "pilot-002-execution",
+    "adapter_result": "experiments/core_narrative/results/raw/pilot_002__cheap-generic-swe__click__rbench__002__attempt1/adapter_result.json",
+    "patch_command_summary": "experiments/core_narrative/results/raw/pilot_002__cheap-generic-swe__click__rbench__002__attempt1/patch_command_summary.json",
+    "command_status": "command_failed",
+    "command_exit_code": 2,
+    "command_timed_out": false,
+    "ledger_append_status": "appended",
+    "model_call_attempted_by_adapter": true
+  }
+}

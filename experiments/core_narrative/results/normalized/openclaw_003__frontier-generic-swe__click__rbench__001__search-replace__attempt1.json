@@ -1,0 +1,33 @@
+{
+  "acut_id": "frontier-generic-swe",
+  "attempt": 1,
+  "error": null,
+  "finished_at": "2026-05-07T10:31:02.725489Z",
+  "metadata": {
+    "skip_apply": true,
+    "timeout_seconds": 60,
+    "tool": "apply_and_verify",
+    "verifier_command": [
+      "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/tasks/click/rbench/click__rbench__001/verifier/run.sh"
+    ]
+  },
+  "patch_path": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/openclaw_003__frontier-generic-swe__click__rbench__001__search-replace__attempt1/submission.patch",
+  "review": {
+    "mergeability_grade": null,
+    "notes": "",
+    "rule_violation": false,
+    "wrong_module": false
+  },
+  "run_id": "openclaw_003__frontier-generic-swe__click__rbench__001__search-replace__attempt1",
+  "schema_version": "core-narrative.run-result.v1",
+  "split": "rbench",
+  "started_at": "2026-05-07T10:31:02.533964Z",
+  "status": "failed",
+  "task_id": "click__rbench__001",
+  "verification": {
+    "duration_seconds": 0.191,
+    "exit_code": 1,
+    "stderr_artifact": "experiments/core_narrative/results/raw/openclaw_003__frontier-generic-swe__click__rbench__001__search-replace__attempt1/verifier.stderr.txt",
+    "stdout_artifact": "experiments/core_narrative/results/raw/openclaw_003__frontier-generic-swe__click__rbench__001__search-replace__attempt1/verifier.stdout.txt"
+  }
+}

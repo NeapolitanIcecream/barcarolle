@@ -1,0 +1,87 @@
+{
+  "by_acut": {
+    "cheap-click-specialist": {
+      "pass_rate": null,
+      "passed": 0,
+      "scoreable": 0,
+      "status_counts": {
+        "infra_failed": 1
+      },
+      "total": 1
+    },
+    "cheap-generic-swe": {
+      "pass_rate": 0.0,
+      "passed": 0,
+      "scoreable": 1,
+      "status_counts": {
+        "failed": 1
+      },
+      "total": 1
+    },
+    "frontier-generic-swe": {
+      "pass_rate": 0.0,
+      "passed": 0,
+      "scoreable": 1,
+      "status_counts": {
+        "failed": 1
+      },
+      "total": 1
+    }
+  },
+  "by_acut_split": {
+    "cheap-click-specialist": {
+      "rbench": {
+        "pass_rate": null,
+        "passed": 0,
+        "scoreable": 0,
+        "status_counts": {
+          "infra_failed": 1
+        },
+        "total": 1
+      }
+    },
+    "cheap-generic-swe": {
+      "rbench": {
+        "pass_rate": 0.0,
+        "passed": 0,
+        "scoreable": 1,
+        "status_counts": {
+          "failed": 1
+        },
+        "total": 1
+      }
+    },
+    "frontier-generic-swe": {
+      "rbench": {
+        "pass_rate": 0.0,
+        "passed": 0,
+        "scoreable": 1,
+        "status_counts": {
+          "failed": 1
+        },
+        "total": 1
+      }
+    }
+  },
+  "by_split": {
+    "rbench": {
+      "pass_rate": 0.0,
+      "passed": 0,
+      "scoreable": 2,
+      "status_counts": {
+        "failed": 2,
+        "infra_failed": 1
+      },
+      "total": 3
+    }
+  },
+  "input_count": 3,
+  "result_count": 3,
+  "status": "summarized",
+  "status_counts": {
+    "failed": 2,
+    "infra_failed": 1
+  },
+  "tool": "summarize_results",
+  "warnings": []
+}

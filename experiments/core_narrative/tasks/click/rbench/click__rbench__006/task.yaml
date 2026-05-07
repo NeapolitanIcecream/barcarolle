@@ -1,0 +1,51 @@
+schema_version: core-narrative.task.v1
+task_id: click__rbench__006
+repo_slug: click
+split: rbench
+source:
+  kind: commit
+  public_url: https://github.com/pallets/click/commit/5fe0b7e7795f9bb04ae926d00868cfeb1fa33187
+  anchor_id: commit:5fe0b7e7795f9bb04ae926d00868cfeb1fa33187
+  base_commit: 6e62332349db6e93decf47666c4cd6fe20df6b02
+  target_commit: 5fe0b7e7795f9bb04ae926d00868cfeb1fa33187
+task_family: DateTime parameter parsing
+task_statement_path: public/statement.md
+allowed_context:
+  include_git_history_before_base: true
+  include_issue_text: false
+  include_pr_text: false
+  include_reference_patch: false
+disallowed_context:
+- reference patch or target diff for commit 5fe0b7e
+- ACUT outputs or public model results
+- future execution results for this task
+verifier:
+  command: verifier/run.sh
+  timeout_seconds: 60
+expected:
+  no_op_fails: true
+  reference_passes: true
+leakage:
+  reviewed: true
+  notes: Date parsing is deterministic and locale-independent for the selected numeric
+    format.
+admission:
+  status: accepted
+  reviewer: task-manifests-worker
+  rationale: Small behavior extension with compact verification.
+metadata:
+  materialized_from: experiments/core_narrative/configs/tasks/rbench_click.yaml
+  benchmark_split: RBench
+  locked_target_repository: pallets/click
+  locked_target_commit: 8bd8b4a074c55c03b6eb5666edc44a9c43df38a2
+  source_compare:
+    commits_ahead: 1
+    changed_files:
+    - click/types.py
+    - tests/test_basic.py
+  expected_touched_area:
+  - click.types.DateTime default format list and conversion behavior
+  - basic DateTime option tests
+  visible_context_guidance: Provide the commit title and expected accepted input format.
+    Do not show the source diff.
+  risk_notes: Avoid locale-dependent DateTime formats in any hidden tests.
