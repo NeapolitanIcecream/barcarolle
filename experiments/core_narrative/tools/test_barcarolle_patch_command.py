@@ -273,6 +273,50 @@ class BarcarollePatchCommandTests(unittest.TestCase):
         self.assertIs(summary["model_call_made"], True)
         self.assertIs(summary["details"]["network_attempted"], True)
 
+    def test_live_transport_timeout_records_safe_request_profile_without_network(self) -> None:
+        """Timeout evidence should explain the request shape without recording endpoint or secret values."""
+        env = self.command_env(include_llm_env=True)
+
+        with mock.patch.object(
+            patch_command_module.urllib.request,
+            "urlopen",
+            side_effect=TimeoutError("timed out"),
+        ):
+            with self.assertRaises(patch_command_module.ToolError) as caught:
+                patch_command_module.call_live_model(
+                    acut={
+                        "model": "openai/gpt-5.5",
+                        "model_parameters": {"reasoning_effort": "medium"},
+                    },
+                    prompt="prepared prompt",
+                    env=env,
+                    timeout_seconds=7,
+                    max_response_bytes=1234,
+                    output_contract=STRUCTURED_FILES_OUTPUT_CONTRACT,
+                )
+
+        details = caught.exception.details
+        self.assertEqual(str(caught.exception), "LLM request timed out")
+        self.assertEqual(details["error_type"], "timeout")
+        self.assertIs(details["network_attempted"], True)
+        self.assertEqual(
+            details["request_profile"],
+            {
+                "endpoint_kind": "chat_completions",
+                "output_contract": "structured-files-json-v1",
+                "response_format_requested": True,
+                "timeout_seconds": 7,
+                "max_response_bytes": 1234,
+                "request_body_bytes": details["request_profile"]["request_body_bytes"],
+                "prompt_char_count": len("prepared prompt"),
+            },
+        )
+        self.assertGreater(details["request_profile"]["request_body_bytes"], 0)
+        serialized = json.dumps(details)
+        self.assertNotIn("http" + "s://", serialized)
+        self.assertNotIn("llm-gateway.example.invalid", serialized)
+        self.assertNotIn("unit" + "-secret" + "-value", serialized)
+
     def test_structured_files_contract_rejects_unified_diff_before_workspace_mutation(self) -> None:
         """Given the strict direct-output contract, unified diffs are rejected as contract drift."""
         summary_path = self.root / "structured-contract-rejects-diff-summary.json"

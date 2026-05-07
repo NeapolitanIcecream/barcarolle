@@ -355,6 +355,38 @@ def live_request_payload(
     return payload
 
 
+def live_request_profile(
+    *,
+    endpoint_kind: str,
+    output_contract: str,
+    timeout_seconds: int,
+    max_response_bytes: int,
+    request_body: bytes,
+    payload: Mapping[str, Any],
+    prompt: str,
+) -> dict[str, Any]:
+    """Return safe, endpoint-value-free metadata for live transport triage."""
+    return {
+        "endpoint_kind": endpoint_kind,
+        "output_contract": output_contract,
+        "response_format_requested": payload.get("response_format") == {"type": "json_object"},
+        "timeout_seconds": timeout_seconds,
+        "max_response_bytes": max_response_bytes,
+        "request_body_bytes": len(request_body),
+        "prompt_char_count": len(prompt),
+    }
+
+
+def transport_error_type(reason: Any) -> str:
+    """Classify transport exceptions without recording messages, hosts, or URLs."""
+    if isinstance(reason, TimeoutError):
+        return "timeout"
+    reason_text = str(reason).strip().lower()
+    if reason_text in {"timeout", "timed out"}:
+        return "timeout"
+    return type(reason).__name__
+
+
 def extract_text_from_provider_response(body: bytes) -> str:
     raw_text = body.decode("utf-8", errors="replace")
     try:
@@ -413,6 +445,15 @@ def call_live_model(
     endpoint, endpoint_kind = resolve_live_endpoint(raw_endpoint)
     payload = live_request_payload(acut, prompt, endpoint_kind, output_contract)
     request_body = json.dumps(payload).encode("utf-8")
+    request_profile = live_request_profile(
+        endpoint_kind=endpoint_kind,
+        output_contract=output_contract,
+        timeout_seconds=timeout_seconds,
+        max_response_bytes=max_response_bytes,
+        request_body=request_body,
+        payload=payload,
+        prompt=prompt,
+    )
     request = urllib.request.Request(
         endpoint,
         data=request_body,
@@ -430,24 +471,36 @@ def call_live_model(
             "LLM request failed",
             http_status=exc.code,
             network_attempted=True,
+            request_profile=request_profile,
         ) from exc
     except urllib.error.URLError as exc:
         raise ToolError(
             "LLM request failed",
-            error_type=type(exc.reason).__name__,
+            error_type=transport_error_type(exc.reason),
             network_attempted=True,
+            request_profile=request_profile,
         ) from exc
     except TimeoutError as exc:
-        raise ToolError("LLM request timed out", network_attempted=True) from exc
+        raise ToolError(
+            "LLM request timed out",
+            error_type="timeout",
+            network_attempted=True,
+            request_profile=request_profile,
+        ) from exc
     except OSError as exc:
         raise ToolError(
             "LLM request failed",
-            error_type=type(exc).__name__,
+            error_type=transport_error_type(exc),
             network_attempted=True,
+            request_profile=request_profile,
         ) from exc
 
     if len(body) > max_response_bytes:
-        raise ToolError("LLM response exceeded maximum size", network_attempted=True)
+        raise ToolError(
+            "LLM response exceeded maximum size",
+            network_attempted=True,
+            request_profile=request_profile,
+        )
     return extract_text_from_provider_response(body)
 
 
@@ -545,7 +598,8 @@ def classify_failure(error: str, details: Mapping[str, Any]) -> str:
         return "output_contract_violation"
     if "unsafe content" in error:
         return "unsafe_generated_content"
-    if error == "LLM request timed out" or details.get("error_type") == "timeout":
+    error_type = str(details.get("error_type", "")).lower()
+    if error == "LLM request timed out" or error_type in {"timeout", "timeouterror", "socket.timeout"}:
         return "llm_request_timed_out"
     if error.startswith("LLM request"):
         return "llm_request_failed"
