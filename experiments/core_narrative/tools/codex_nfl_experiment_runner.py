@@ -453,6 +453,56 @@ def run_one(args: argparse.Namespace, task: Mapping[str, Any], acut_id: str) -> 
             run_id=run_id,
             artifact_dir=artifact_dir,
         )
+        noop_result = noop_summary.get("result") if isinstance(noop_summary, dict) else {}
+        if isinstance(noop_result, dict) and noop_result.get("status") == "passed":
+            patch_path = artifact_dir / "submission.patch"
+            normalized = write_infra_failed_result(
+                run_id=run_id,
+                task_id=task_id,
+                split=str(task["split"]),
+                acut_id=acut_id,
+                attempt=args.attempt,
+                normalized_path=normalized_path,
+                patch_path=patch_path,
+                runner_result={
+                    "status": "noop_verifier_passed",
+                    "error": "no-op verifier passed before applying an ACUT patch",
+                    "details": {"failure_class": "noop_verifier_passed"},
+                    "model_call_made": False,
+                    "started_at": noop_result.get("started_at"),
+                    "finished_at": noop_result.get("finished_at"),
+                },
+            )
+            result = {
+                "run_id": run_id,
+                "task_id": task_id,
+                "acut_id": acut_id,
+                "status": "infra_failed",
+                "scoreable": False,
+                "patch_ready": False,
+                "runner_status": "noop_verifier_passed",
+                "runner_code": None,
+                "verify_code": None,
+                "artifact_dir": str(artifact_dir),
+                "workspace": str(workspace),
+                "runner_workspace": str(workspace),
+                "verify_workspace": None,
+                "normalized_result": str(normalized_path),
+                "patch_path": str(patch_path),
+                "prompt_snapshot": None,
+                "raw_response_artifact": None,
+                "context_paths": context_paths,
+                "duration_seconds": round(time.monotonic() - started, 3),
+                "prepare": prepare_summary,
+                "install": install_summary,
+                "verify_prepare": None,
+                "verify_install": None,
+                "noop": noop_summary,
+                "runner_result": None,
+                "normalized": normalized,
+            }
+            write_json(artifact_dir / "batch_run_result.json", result)
+            return result
     runner_code, runner_result = run_direct_runner(
         args=args,
         task=task,

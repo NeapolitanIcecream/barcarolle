@@ -167,6 +167,64 @@ class OpenClawDirectRunnerTests(unittest.TestCase):
         self.assertNotIn(self.env()["BARCAROLLE_LLM_API_KEY"], json.dumps(summary))
         self.assertNotIn("http" + "s://", json.dumps(summary))
 
+    def test_mock_search_replace_rejects_edits_outside_context_paths(self) -> None:
+        """Regression: generated edits must stay within the files shown to the model."""
+        (self.workspace / "hidden.py").write_text("SECRET_VALUE = 1\n", encoding="utf-8")
+        run(["git", "add", "hidden.py"], cwd=self.workspace)
+        commit = run(["git", "commit", "-m", "add hidden"], cwd=self.workspace)
+        self.assertEqual(commit.returncode, 0, commit.stderr)
+
+        artifact_dir = self.root / "outside-context-artifacts"
+        output_path = self.root / "outside-context.json"
+        response = json.dumps(
+            {
+                "edits": [
+                    {
+                        "path": "hidden.py",
+                        "old": "SECRET_VALUE = 1\n",
+                        "new": "SECRET_VALUE = 2\n",
+                    }
+                ]
+            }
+        )
+
+        completed = run(
+            [
+                sys.executable,
+                str(RUNNER),
+                "--workspace",
+                str(self.workspace),
+                "--task",
+                str(self.task_path),
+                "--acut",
+                str(self.acut_path),
+                "--attempt",
+                "1",
+                "--run-id",
+                "unit_openclaw_outside_context_attempt1",
+                "--artifact-dir",
+                str(artifact_dir),
+                "--output",
+                str(output_path),
+                "--llm-ledger",
+                str(self.ledger_path),
+                "--projected-cost-usd",
+                "1",
+                "--context-path",
+                "module.py",
+                "--mock-response-text",
+                response,
+            ],
+            cwd=REPO_ROOT,
+            env=self.env(),
+        )
+
+        self.assertNotEqual(completed.returncode, 0)
+        summary = json.loads(output_path.read_text(encoding="utf-8"))
+        self.assertEqual(summary["status"], "error")
+        self.assertEqual(summary["details"]["failure_class"], "generated_path_outside_context")
+        self.assertEqual((self.workspace / "hidden.py").read_text(encoding="utf-8"), "SECRET_VALUE = 1\n")
+
     def test_live_failure_after_response_is_ledgered_with_provider_usage(self) -> None:
         """Regression: validation failures after a model response still consume provider usage."""
         artifact_dir = self.root / "failed-live-artifacts"

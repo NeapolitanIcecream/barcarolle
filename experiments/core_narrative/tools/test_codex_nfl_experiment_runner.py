@@ -136,6 +136,48 @@ class CodexNflExperimentRunnerTests(unittest.TestCase):
         self.assertNotEqual(result["runner_workspace"], result["verify_workspace"])
         self.assertEqual(result["status"], "passed")
 
+    def test_run_one_marks_noop_verifier_pass_as_infra_failed_without_model_call(self) -> None:
+        """Regression: a verifier that passes before any patch cannot produce scoreable runs."""
+        runner = load_runner_module()
+        runner.RAW_ROOT = self.root / "raw"
+        runner.NORMALIZED_ROOT = self.root / "normalized"
+        runner.WORKSPACES_ROOT = self.root / "workspaces"
+        runner.NORMALIZED_ROOT.mkdir(parents=True)
+
+        model_calls: list[str] = []
+
+        def fake_prepare_workspace(task_id, workspace_name, artifact_dir, *, summary_name="prepare_workspace"):
+            workspace = runner.WORKSPACES_ROOT / workspace_name
+            workspace.mkdir(parents=True)
+            return workspace, {"workspace": str(workspace), "summary_name": summary_name}
+
+        def fake_run_direct_runner(**kwargs):
+            model_calls.append(kwargs["run_id"])
+            return 0, {"status": "patch_generated"}
+
+        runner.prepare_workspace = fake_prepare_workspace
+        runner.install_workspace = lambda *args, **kwargs: {"status": "installed"}
+        runner.context_paths_for_task = lambda task, workspace: ["click/core.py"]
+        runner.no_op_verify = lambda **kwargs: {"result": {"status": "passed"}}
+        runner.run_direct_runner = fake_run_direct_runner
+
+        args = SimpleNamespace(
+            run_prefix="unit_noop",
+            attempt=1,
+            install_timeout_seconds=1,
+            skip_noop_check=False,
+        )
+        result = runner.run_one(
+            args,
+            {"task_id": "click__rbench__001", "split": "rbench"},
+            "cheap-generic-swe",
+        )
+
+        self.assertEqual(model_calls, [])
+        self.assertEqual(result["status"], "infra_failed")
+        self.assertFalse(result["scoreable"])
+        self.assertEqual(result["normalized"]["metadata"]["failure_class"], "noop_verifier_passed")
+
 
 if __name__ == "__main__":
     unittest.main()

@@ -44,6 +44,7 @@ from _llm_budget import (
 from barcarolle_patch_command import (
     DEFAULT_MAX_RESPONSE_BYTES,
     apply_patch_response,
+    diff_paths,
     parse_patch_response,
     reject_unsafe_generated_text,
     resolve_live_endpoint,
@@ -407,7 +408,54 @@ def parse_edit_bundle(text: str) -> list[dict[str, str]] | None:
     return normalized
 
 
-def apply_edit_bundle(workspace: Path, edits: Sequence[Mapping[str, str]]) -> dict[str, Any]:
+def ensure_paths_within_context(workspace: Path, paths: Sequence[str], allowed_paths: Sequence[str]) -> list[str]:
+    allowed = sorted({validate_patch_path(path) for path in allowed_paths})
+    requested = sorted({validate_patch_path(path) for path in paths})
+    for path in requested:
+        target = resolve_workspace_path(workspace, path, "generated patch path")
+        if not target.exists() or not target.is_file():
+            raise ToolError(
+                "edit path is not in the prepared workspace",
+                path=path,
+                failure_class="generated_path_not_in_workspace",
+            )
+    outside = [path for path in requested if path not in allowed]
+    if outside:
+        raise ToolError(
+            "generated patch path is outside declared context paths",
+            paths=outside,
+            allowed_context_paths=allowed,
+            failure_class="generated_path_outside_context",
+        )
+    return requested
+
+
+def parsed_patch_paths(parsed: Mapping[str, Any]) -> list[str]:
+    kind = parsed.get("kind")
+    if kind == "unified_diff":
+        text = parsed.get("text")
+        if not isinstance(text, str):
+            return []
+        return diff_paths(text)
+    if kind == "structured_files":
+        files = parsed.get("files")
+        if not isinstance(files, list):
+            return []
+        paths: list[str] = []
+        for item in files:
+            if isinstance(item, Mapping) and isinstance(item.get("path"), str):
+                paths.append(str(item["path"]))
+        return sorted(set(paths))
+    return []
+
+
+def apply_edit_bundle(
+    workspace: Path,
+    edits: Sequence[Mapping[str, str]],
+    *,
+    allowed_paths: Sequence[str],
+) -> dict[str, Any]:
+    ensure_paths_within_context(workspace, [str(edit["path"]) for edit in edits], allowed_paths)
     changed: list[str] = []
     for edit in edits:
         path = str(edit["path"])
@@ -438,13 +486,19 @@ def apply_edit_bundle(workspace: Path, edits: Sequence[Mapping[str, str]]) -> di
     }
 
 
-def apply_model_response(workspace: Path, text: str) -> dict[str, Any]:
+def apply_model_response(workspace: Path, text: str, *, allowed_paths: Sequence[str]) -> dict[str, Any]:
     reject_unsafe_generated_text(text, "model response")
     edits = parse_edit_bundle(text)
     if edits is not None:
-        return apply_edit_bundle(workspace, edits)
+        result = apply_edit_bundle(workspace, edits, allowed_paths=allowed_paths)
+        result["allowed_context_paths"] = sorted({validate_patch_path(path) for path in allowed_paths})
+        return result
     parsed = parse_patch_response(text)
-    return apply_patch_response(workspace, parsed, apply_patch=True)
+    ensure_paths_within_context(workspace, parsed_patch_paths(parsed), allowed_paths)
+    result = apply_patch_response(workspace, parsed, apply_patch=True)
+    ensure_paths_within_context(workspace, result.get("changed_paths", []), allowed_paths)
+    result["allowed_context_paths"] = sorted({validate_patch_path(path) for path in allowed_paths})
+    return result
 
 
 def usage_token_counts(usage: Mapping[str, Any] | None, args: argparse.Namespace) -> tuple[int, int]:
@@ -717,7 +771,11 @@ def main(argv: Sequence[str] | None = None) -> int:
                     raw_response_path=raw_response_path,
                 )
                 model_call_made = True
-            patch_result = apply_model_response(workspace, model_text)
+            patch_result = apply_model_response(
+                workspace,
+                model_text,
+                allowed_paths=[str(item["path"]) for item in context_files],
+            )
             safe_env, _ = llm_safe_subprocess_env(os.environ)
             patch_artifact = write_safe_patch(workspace, patch_path, safe_env)
             status = "patch_generated"
