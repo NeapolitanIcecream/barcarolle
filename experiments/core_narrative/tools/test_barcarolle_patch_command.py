@@ -235,6 +235,44 @@ class BarcarollePatchCommandTests(unittest.TestCase):
         self.assertIs(summary["details"]["model_response_received"], True)
         self.assertEqual((self.workspace / "module.py").read_text(encoding="utf-8"), "VALUE = 1\n")
 
+    def test_live_transport_timeout_records_attempted_model_call(self) -> None:
+        """Regression: provider timeouts are classified distinctly and ledgerable as attempted calls."""
+        summary_path = self.root / "timeout-summary.json"
+        argv = [
+            str(PATCH_COMMAND),
+            "--workspace",
+            str(self.workspace),
+            "--acut",
+            str(self.acut_path),
+            "--output-contract",
+            "structured-files-json-v1",
+            "--summary-output",
+            str(summary_path),
+        ]
+
+        with (
+            mock.patch.object(sys, "argv", argv),
+            mock.patch.dict(os.environ, self.command_env(include_llm_env=True), clear=True),
+            mock.patch.object(
+                patch_command_module,
+                "call_live_model",
+                side_effect=patch_command_module.ToolError(
+                    "LLM request failed",
+                    error_type="timeout",
+                    network_attempted=True,
+                ),
+            ),
+        ):
+            exit_code = patch_command_module.main()
+
+        self.assertEqual(exit_code, 2)
+        summary = json.loads(summary_path.read_text(encoding="utf-8"))
+        self.assertEqual(summary["status"], "error")
+        self.assertEqual(summary["failure_class"], "llm_request_timed_out")
+        self.assertEqual(summary["output_contract"], "structured-files-json-v1")
+        self.assertIs(summary["model_call_made"], True)
+        self.assertIs(summary["details"]["network_attempted"], True)
+
     def test_structured_files_contract_rejects_unified_diff_before_workspace_mutation(self) -> None:
         """Given the strict direct-output contract, unified diffs are rejected as contract drift."""
         summary_path = self.root / "structured-contract-rejects-diff-summary.json"
@@ -295,6 +333,41 @@ class BarcarollePatchCommandTests(unittest.TestCase):
         self.assertEqual(summary["patch"]["changed_paths"], ["module.py"])
         self.assertEqual((self.workspace / "module.py").read_text(encoding="utf-8"), "VALUE = 2\n")
 
+
+    def test_structured_files_contract_rejects_url_like_generated_paths(self) -> None:
+        """Regression: generated structured paths must not persist full URLs into artifacts."""
+        summary_path = self.root / "structured-contract-unsafe-path-summary.json"
+        response_path = self.root / "unsafe-path-response.json"
+        response_path.write_text(
+            json.dumps(
+                {
+                    "files": [
+                        {
+                            "path": "http" + "s://" + "gateway.example.invalid/leak.py",
+                            "action": "write",
+                            "content": "VALUE = 2\n",
+                        }
+                    ]
+                }
+            ),
+            encoding="utf-8",
+        )
+
+        completed = self.run_patch_command(
+            "--mock-response",
+            str(response_path),
+            "--output-contract",
+            "structured-files-json-v1",
+            summary_path=summary_path,
+        )
+
+        self.assertEqual(completed.returncode, 2, completed.stderr)
+        summary = json.loads(summary_path.read_text(encoding="utf-8"))
+        self.assertEqual(summary["status"], "error")
+        self.assertEqual(summary["failure_class"], "unsafe_generated_content")
+        self.assertEqual(summary["details"]["unsafe_content"]["reason_counts"], {"full_url": 1})
+        self.assertEqual((self.workspace / "module.py").read_text(encoding="utf-8"), "VALUE = 1\n")
+        self.assertNotIn("http" + "s://", json.dumps(summary))
 
     def test_adapter_command_no_model_wraps_mock_response_with_zero_cost_ledger(self) -> None:
         """The outer adapter can wrap the direct command as no-model compatible evidence."""
@@ -380,6 +453,89 @@ class BarcarollePatchCommandTests(unittest.TestCase):
         self.assertEqual((self.workspace / "module.py").read_text(encoding="utf-8"), "VALUE = 2\n")
         self.assertNotIn(env["BARCAROLLE_LLM_API_KEY"], json.dumps(adapter_result))
         self.assertNotIn("http" + "s://", json.dumps(adapter_result))
+
+    def test_adapter_command_no_model_wraps_structured_files_contract_with_patch_artifact(self) -> None:
+        """The adapter can collect a verifier-ready diff after structured file application."""
+        artifact_dir = self.root / "adapter-structured-artifacts"
+        ledger_path = self.root / "structured_cost_ledger.jsonl"
+        ledger_path.write_text("", encoding="utf-8")
+        output_path = self.root / "adapter-structured-result.json"
+        normalized_path = self.root / "structured-normalized.json"
+        inner_summary_path = artifact_dir / "patch_command_summary.json"
+        response = json.dumps(
+            {
+                "files": [
+                    {
+                        "path": "module.py",
+                        "action": "replace",
+                        "content": "VALUE = 2\n",
+                    }
+                ]
+            }
+        )
+        env = self.command_env(include_llm_env=True)
+
+        completed = run(
+            [
+                sys.executable,
+                str(ADAPTER),
+                "--workspace",
+                str(self.workspace),
+                "--task",
+                str(self.workspace / ".core_narrative" / "task.json"),
+                "--acut-id",
+                "cheap-generic-swe",
+                "--attempt",
+                "1",
+                "--run-id",
+                "unit_direct_structured_transport_mock_attempt1",
+                "--artifact-dir",
+                str(artifact_dir),
+                "--output",
+                str(output_path),
+                "--normalized-output",
+                str(normalized_path),
+                "--llm-ledger",
+                str(ledger_path),
+                "--projected-cost-usd",
+                "0",
+                "--input-tokens",
+                "0",
+                "--output-tokens",
+                "0",
+                "--command-no-model",
+                "--",
+                sys.executable,
+                str(PATCH_COMMAND),
+                "--workspace",
+                str(self.workspace),
+                "--acut",
+                str(self.acut_path),
+                "--mock-response-text",
+                response,
+                "--output-contract",
+                "structured-files-json-v1",
+                "--summary-output",
+                str(inner_summary_path),
+            ],
+            cwd=REPO_ROOT,
+            env=env,
+        )
+
+        self.assertEqual(completed.returncode, 0, completed.stderr)
+        adapter_result = json.loads(output_path.read_text(encoding="utf-8"))
+        inner_summary = json.loads(inner_summary_path.read_text(encoding="utf-8"))
+        ledger_records = [json.loads(line) for line in ledger_path.read_text(encoding="utf-8").splitlines()]
+
+        self.assertEqual(adapter_result["status"], "command_completed")
+        self.assertIs(adapter_result["model_call_made"], False)
+        self.assertGreater(adapter_result["patch_artifact"]["size_bytes"], 0)
+        self.assertEqual(adapter_result["cost_ledger_append"]["event"], "command_completed")
+        self.assertEqual(len(ledger_records), 1)
+        self.assertIs(ledger_records[0]["metadata"]["model_call_made"], False)
+        self.assertEqual(inner_summary["output_contract"], "structured-files-json-v1")
+        self.assertEqual(inner_summary["patch"]["kind"], "structured_files")
+        self.assertEqual((self.workspace / "module.py").read_text(encoding="utf-8"), "VALUE = 2\n")
 
     def test_direct_transport_shapes_chat_completions_payload_without_network(self) -> None:
         """The default direct HTTP transport is non-streaming and chat-completions shaped."""

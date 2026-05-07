@@ -545,7 +545,7 @@ def classify_failure(error: str, details: Mapping[str, Any]) -> str:
         return "output_contract_violation"
     if "unsafe content" in error:
         return "unsafe_generated_content"
-    if error == "LLM request timed out":
+    if error == "LLM request timed out" or details.get("error_type") == "timeout":
         return "llm_request_timed_out"
     if error.startswith("LLM request"):
         return "llm_request_failed"
@@ -563,6 +563,7 @@ def reject_unsafe_generated_text(text: str, label: str) -> None:
 
 
 def validate_patch_path(path: str) -> str:
+    reject_unsafe_generated_text(path, "generated patch path")
     relative = Path(path)
     if relative.is_absolute():
         raise ToolError("patch path must be relative", path=path)
@@ -882,15 +883,20 @@ def main() -> int:
         exit_code = exc.exit_code if isinstance(exc, ToolError) else 1
         details = exc.details if isinstance(exc, ToolError) else {"exception_type": type(exc).__name__}
         failure_class = classify_failure(str(exc), details if isinstance(details, dict) else {})
+        model_call_made = bool(details.get("model_call_made", details.get("network_attempted", False)))
         payload = {
             "tool": TOOL,
             "status": "error",
             "error": sanitize_text(str(exc)),
             "details": sanitize_jsonish(details),
             "failure_class": failure_class,
-            "model_call_made": bool(details.get("model_call_made", False)),
+            "model_call_made": model_call_made,
             "llm_env_policy": llm_env_summary(os.environ),
         }
+        if "--output-contract" in sys.argv:
+            index = sys.argv.index("--output-contract")
+            if index + 1 < len(sys.argv):
+                payload["output_contract"] = sys.argv[index + 1]
         output_path = None
         if "--summary-output" in sys.argv:
             index = sys.argv.index("--summary-output")
