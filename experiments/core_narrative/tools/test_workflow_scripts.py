@@ -15,7 +15,11 @@ WORKFLOW_WORKERS = REPO_ROOT / ".codex-workflows" / "core-narrative-experiment" 
 class WorkflowScriptTests(unittest.TestCase):
     def test_core_narrative_launchers_use_portable_repo_paths(self) -> None:
         """Regression: recorded launchers must not depend on one user's checkout path."""
-        launcher_paths = sorted(WORKFLOW_WORKERS.glob("*/run_*.sh"))
+        launcher_paths = sorted(
+            path
+            for pattern in ("*/run.sh", "*/run_*.sh")
+            for path in WORKFLOW_WORKERS.glob(pattern)
+        )
         self.assertGreater(len(launcher_paths), 0)
 
         for launcher_path in launcher_paths:

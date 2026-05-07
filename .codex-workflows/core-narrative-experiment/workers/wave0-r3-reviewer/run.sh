@@ -1,16 +1,15 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-COORDINATOR_REPO="${COORDINATOR_REPO:-/Users/chenmohan/gits/barcarolle}"
-WORKER_REPO="${WORKER_REPO:-/Users/chenmohan/gits/barcarolle-wt-wave0-r3-reviewer}"
-WORKFLOW_ROOT=".codex-workflows/core-narrative-experiment"
-PROMPT_PATH="$WORKER_REPO/$WORKFLOW_ROOT/workers/wave0-r3-reviewer/prompt.md"
-LOG_PATH="$WORKER_REPO/$WORKFLOW_ROOT/workers/wave0-r3-reviewer/cli.log"
+script_dir="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
+repo_root="${BARCAROLLE_REPO_ROOT:-$(cd -- "${script_dir}/../../../.." && pwd)}"
+prompt_path="${script_dir}/prompt.md"
+log_path="${script_dir}/cli.log"
 
-cd "$WORKER_REPO"
+cd "${repo_root}"
 exec codex exec \
-  -C "$WORKER_REPO" \
+  -C "${repo_root}" \
   -m gpt-5.5 \
   -c 'model_reasoning_effort="xhigh"' \
   --full-auto \
-  - < "$PROMPT_PATH" > "$LOG_PATH" 2>&1
+  - < "${prompt_path}" > "${log_path}" 2>&1
