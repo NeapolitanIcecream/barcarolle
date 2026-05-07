@@ -1,0 +1,26 @@
+{
+  "details": {
+    "model_call_made": true,
+    "model_response_received": true
+  },
+  "error": "model response did not contain a supported patch",
+  "failure_class": "unsupported_patch_response",
+  "llm_env_policy": {
+    "allowed_variable_names": [
+      "BARCAROLLE_LLM_API_KEY",
+      "BARCAROLLE_LLM_BASE_URL"
+    ],
+    "command_arguments_checked": true,
+    "endpoint_value_recorded": false,
+    "required_present": {
+      "BARCAROLLE_LLM_API_KEY": true,
+      "BARCAROLLE_LLM_BASE_URL": true
+    },
+    "unsafe_command_arguments_rejected": true,
+    "values_recorded": false
+  },
+  "model_call_made": true,
+  "output_contract": "structured-files-json-v1",
+  "status": "error",
+  "tool": "barcarolle_patch_command"
+}

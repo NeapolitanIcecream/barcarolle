@@ -1,0 +1,149 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://barcarolle.local/experiments/core_narrative/schemas/run_result.schema.json",
+  "title": "Core Narrative Normalized Run Result",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "run_id",
+    "acut_id",
+    "task_id",
+    "split",
+    "attempt",
+    "started_at",
+    "finished_at",
+    "status",
+    "patch_path",
+    "verification",
+    "review"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "core-narrative.run-result.v1"
+    },
+    "run_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "acut_id": {
+      "type": "string",
+      "pattern": "^[a-z0-9][a-z0-9_-]*$"
+    },
+    "task_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "split": {
+      "type": "string",
+      "enum": [
+        "rbench",
+        "rwork",
+        "smoke"
+      ]
+    },
+    "attempt": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "started_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "finished_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "passed",
+        "failed",
+        "infra_failed",
+        "timeout",
+        "invalid_submission"
+      ]
+    },
+    "patch_path": {
+      "type": "string"
+    },
+    "verification": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "exit_code",
+        "stdout_artifact",
+        "stderr_artifact",
+        "duration_seconds"
+      ],
+      "properties": {
+        "exit_code": {
+          "type": [
+            "integer",
+            "null"
+          ]
+        },
+        "stdout_artifact": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "stderr_artifact": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "duration_seconds": {
+          "type": "number",
+          "minimum": 0
+        }
+      }
+    },
+    "review": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "mergeability_grade",
+        "wrong_module",
+        "rule_violation",
+        "notes"
+      ],
+      "properties": {
+        "mergeability_grade": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "description": "Blinded RWork mergeability rubric: 0 means not mergeable/no useful patch, 1 means major issues, 2 means minor issues, and 3 means cleanly mergeable. Use null for unreviewed results and non-RWork cases.",
+          "enum": [
+            null,
+            0,
+            1,
+            2,
+            3
+          ]
+        },
+        "wrong_module": {
+          "type": "boolean"
+        },
+        "rule_violation": {
+          "type": "boolean"
+        },
+        "notes": {
+          "type": "string"
+        }
+      }
+    },
+    "error": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "metadata": {
+      "type": "object",
+      "additionalProperties": true
+    }
+  }
+}

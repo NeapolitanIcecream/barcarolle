@@ -1,0 +1,51 @@
+schema_version: core-narrative.task.v1
+task_id: click__rbench__007
+repo_slug: click
+split: rbench
+source:
+  kind: pull_request
+  public_url: https://github.com/pallets/click/pull/1312
+  anchor_id: pallets/click#1312
+  base_commit: 563b1a7116a6806e699d31d327dd9bca93c40cb3
+  target_commit: 990ca8e664a0610fe0583f3aa8924fd49f928a74
+task_family: CliRunner return value capture
+task_statement_path: public/statement.md
+allowed_context:
+  include_git_history_before_base: true
+  include_issue_text: false
+  include_pr_text: true
+  include_reference_patch: false
+disallowed_context:
+- reference patch or target diff for pull request 1312
+- ACUT outputs or public model results
+- future execution results for this task
+verifier:
+  command: verifier/run.sh
+  timeout_seconds: 60
+expected:
+  no_op_fails: true
+  reference_passes: true
+leakage:
+  reviewed: true
+  notes: Pure testing helper behavior with a single focused verifier.
+admission:
+  status: accepted
+  reviewer: task-manifests-worker
+  rationale: Compact testing API task with visible behavioral output.
+metadata:
+  materialized_from: experiments/core_narrative/configs/tasks/rbench_click.yaml
+  benchmark_split: RBench
+  locked_target_repository: pallets/click
+  locked_target_commit: 8bd8b4a074c55c03b6eb5666edc44a9c43df38a2
+  source_compare:
+    commits_ahead: 2
+    changed_files:
+    - src/click/testing.py
+    - tests/test_testing.py
+  expected_touched_area:
+  - src/click/testing.py Result and invoke plumbing
+  - tests for Result.return_value
+  visible_context_guidance: Show the PR title and desired testing API behavior. Keep
+    implementation and patch details hidden.
+  risk_notes: Ensure the task asks for return value capture without exposing exact
+    Result internals from the reference patch.

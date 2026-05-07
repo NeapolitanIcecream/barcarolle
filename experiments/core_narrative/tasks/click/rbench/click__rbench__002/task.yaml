@@ -1,0 +1,51 @@
+schema_version: core-narrative.task.v1
+task_id: click__rbench__002
+repo_slug: click
+split: rbench
+source:
+  kind: pull_request
+  public_url: https://github.com/pallets/click/pull/151
+  anchor_id: pallets/click#151
+  base_commit: b557743f3bc26a4cdbf610b221e7e81d609aa65d
+  target_commit: 637447f9ccf882d5c810540ca261e8ba2af9cb1c
+task_family: CliRunner exception handling
+task_statement_path: public/statement.md
+allowed_context:
+  include_git_history_before_base: true
+  include_issue_text: false
+  include_pr_text: true
+  include_reference_patch: false
+disallowed_context:
+- reference patch or target diff for pull request 151
+- ACUT outputs or public model results
+- future execution results for this task
+verifier:
+  command: verifier/run.sh
+  timeout_seconds: 60
+expected:
+  no_op_fails: true
+  reference_passes: true
+leakage:
+  reviewed: true
+  notes: Small API behavior task in test runner code; no platform-specific terminal
+    behavior required.
+admission:
+  status: accepted
+  reviewer: task-manifests-worker
+  rationale: Compact, behavior-verifiable testing helper enhancement.
+metadata:
+  materialized_from: experiments/core_narrative/configs/tasks/rbench_click.yaml
+  benchmark_split: RBench
+  locked_target_repository: pallets/click
+  locked_target_commit: 8bd8b4a074c55c03b6eb5666edc44a9c43df38a2
+  source_compare:
+    commits_ahead: 2
+    changed_files:
+    - click/testing.py
+    - tests/test_testing.py
+  expected_touched_area:
+  - click.testing.CliRunner.invoke exception handling
+  - tests for catch_exceptions behavior
+  visible_context_guidance: Show the PR/issue intent and expected API behavior for
+    catch_exceptions. Do not show the reference patch.
+  risk_notes: Historical source path uses click/testing.py before the src layout.

@@ -1,0 +1,24 @@
+{
+  "endpoint_value_recorded": false,
+  "hostname_or_ip_recorded": false,
+  "no_network_or_model_call": true,
+  "payload_has_stream": false,
+  "payload_param_keys": [
+    "model",
+    "reasoning_effort",
+    "response_format"
+  ],
+  "request_profile": {
+    "endpoint_kind": "chat_completions",
+    "max_response_bytes": 2000000,
+    "output_contract": "structured-files-json-v1",
+    "prompt_char_count": 3507,
+    "request_body_bytes": 3838,
+    "response_format_requested": true,
+    "timeout_seconds": 120
+  },
+  "runtime_budget_max_tokens": 64000,
+  "runtime_budget_max_tokens_present_as_payload_param": false,
+  "tool": "manual_static_live_request_profile_probe",
+  "values_recorded": false
+}

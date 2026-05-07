@@ -1,0 +1,16 @@
+{
+  "artifact_hashes_after_rerun": {
+    "context_prompt.md": "7d80f3254695a99ddc2f2f9b8b9a7d97b6fcf5f46922c204e3a9333facde728d",
+    "convention_playbook.json": "44f2feceb44def94c047ef229bd306f2b53f85a3b28b2bc0efb08e7e415ca805",
+    "docs_map.json": "5c38819cae84353b3cb0ce4f6187d6b15f0b9e6af6985f86c5cc6b844d874f19",
+    "manifest.json": "1f3797bbdbe23aef304d810533f53937437971aa5049c4024b5f5f069375d984",
+    "repo_map.json": "f3d9d32bb44801e3dc17326ab448ff8aa14e209c4e9d639ca9c68a3f7026cd93",
+    "retrieval_policy.json": "0e42f25fc6a70f8123991448214d4d910fb2da93c048b8b4f6a678ce61d98cb8",
+    "symbol_index.json": "aef8fed0090d6da5a8e450ffe33c9aecc50c8e8730fa00f709c0ce4e876f25a0"
+  },
+  "command": "python3 experiments/core_narrative/tools/build_click_specialist_context_pack.py --click-root experiments/core_narrative/external_repos/click --output-dir experiments/core_narrative/context_packs/click_specialist --generated-at 2026-04-30T09:25:00+08:00",
+  "diff_exit_code": 0,
+  "model_call_made": false,
+  "status": "passed",
+  "tool": "click_specialist_context_pack_reproducibility_check"
+}

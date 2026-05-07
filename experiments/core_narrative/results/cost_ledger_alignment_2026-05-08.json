@@ -1,0 +1,16 @@
+{
+  "actual_provider_billed_cost_status": "unknown_no_invoice_or_billed_cost_records",
+  "interpretation": "estimated_cost_usd has been calibrated for future budget gates: provider-reported usage cost is used when available, and records without provider usage follow the selected unreported policy. Provider usage cost is not invoice proof.",
+  "kept_unreported_record_count": 0,
+  "new_estimated_cost_sum_usd": 0.716208,
+  "new_latest_cumulative_estimated_cost_usd": 0.716208,
+  "previous_estimated_cost_sum_usd": 0.716208,
+  "previous_latest_cumulative_estimated_cost_usd": 0.716208,
+  "provider_reported_usage_cost_sum_usd": 0.716208,
+  "provider_usage_cost_record_count": 12,
+  "record_count": 28,
+  "status": "rewritten",
+  "tool": "calibrate_cost_ledger",
+  "unreported_policy": "zero",
+  "zeroed_unreported_record_count": 15
+}

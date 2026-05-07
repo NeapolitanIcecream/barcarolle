@@ -1,0 +1,14 @@
+{
+  "base_commit": "d3f36e884e18f374c3e4e6cf062ba19f100d0fd6",
+  "repo_slug": "click",
+  "split": "rbench",
+  "statement_path": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/workspaces/codex_nfl_live_expand_20260507__frontier-generic-swe__click__rbench__003__attempt1/.core_narrative/statement.md",
+  "status": "prepared",
+  "target_commit_absence_checked": true,
+  "task_id": "click__rbench__003",
+  "task_package_path": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/workspaces/codex_nfl_live_expand_20260507__frontier-generic-swe__click__rbench__003__attempt1/.core_narrative/task.json",
+  "tool": "prepare_workspace",
+  "warnings": [],
+  "workspace": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/workspaces/codex_nfl_live_expand_20260507__frontier-generic-swe__click__rbench__003__attempt1",
+  "workspace_history_mode": "base_tree_only_synthetic_git"
+}

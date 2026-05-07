@@ -1,0 +1,87 @@
+{
+  "marker": "CLICK_SPECIALIST_CONTEXT_PACK_V1",
+  "observed_code_shape": {
+    "private_support_modules": [
+      "src/click/__init__.py",
+      "src/click/_compat.py",
+      "src/click/_termui_impl.py",
+      "src/click/_textwrap.py",
+      "src/click/_utils.py",
+      "src/click/_winconsole.py"
+    ],
+    "public_api_export_file": "src/click/__init__.py",
+    "public_source_modules": [
+      "src/click/core.py",
+      "src/click/decorators.py",
+      "src/click/exceptions.py",
+      "src/click/formatting.py",
+      "src/click/globals.py",
+      "src/click/parser.py",
+      "src/click/shell_completion.py",
+      "src/click/termui.py",
+      "src/click/testing.py",
+      "src/click/types.py",
+      "src/click/utils.py"
+    ]
+  },
+  "observed_project_config": {
+    "requires_python": ">=3.10",
+    "testpaths_declared": true,
+    "warnings_as_errors_declared": true
+  },
+  "observed_test_conventions": {
+    "cli_runner_reference_count": 62,
+    "isolated_filesystem_reference_count": 17,
+    "pytest_import_count": 17,
+    "result_exit_code_assertions": 119
+  },
+  "pack_id": "click_specialist_context_pack_v1",
+  "playbook": [
+    {
+      "evidence_paths": [
+        "src/click/__init__.py",
+        "tests"
+      ],
+      "guidance": "When changing public behavior, check exports in src/click/__init__.py and behavior tests in tests/test_*.py.",
+      "id": "patch_public_api_carefully"
+    },
+    {
+      "evidence_paths": [
+        "src/click/testing.py",
+        "tests/test_testing.py",
+        "tests/test_options.py"
+      ],
+      "guidance": "CLI behavior is commonly exercised through click.testing.CliRunner and result exit/output assertions.",
+      "id": "use_cli_runner_for_cli_behavior"
+    },
+    {
+      "evidence_paths": [
+        "src/click/parser.py",
+        "src/click/core.py",
+        "src/click/types.py",
+        "src/click/formatting.py",
+        "src/click/termui.py",
+        "src/click/shell_completion.py"
+      ],
+      "guidance": "Parser, option, argument, type, formatting, terminal UI, and shell-completion behavior live in separate modules with matching public tests.",
+      "id": "keep_parser_option_type_boundaries"
+    },
+    {
+      "evidence_paths": [
+        "pyproject.toml",
+        "tests"
+      ],
+      "guidance": "Use focused pytest module or test-name selection first; broaden only when the changed surface crosses modules.",
+      "id": "prefer_focused_pytest"
+    },
+    {
+      "evidence_paths": [
+        "docs",
+        "README.md"
+      ],
+      "guidance": "When user-facing command semantics change, inspect the matching docs page heading map before editing docs.",
+      "id": "docs_follow_behavior"
+    }
+  ],
+  "section_id": "convention_playbook"
+}

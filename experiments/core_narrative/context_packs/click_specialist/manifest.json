@@ -1,0 +1,111 @@
+{
+  "artifacts": {
+    "context_prompt": {
+      "bytes": 5198,
+      "path": "context_prompt.md",
+      "sha256": "7d80f3254695a99ddc2f2f9b8b9a7d97b6fcf5f46922c204e3a9333facde728d"
+    },
+    "convention_playbook": {
+      "bytes": 2726,
+      "path": "convention_playbook.json",
+      "sha256": "44f2feceb44def94c047ef229bd306f2b53f85a3b28b2bc0efb08e7e415ca805"
+    },
+    "deterministic_retrieval_policy": {
+      "bytes": 1604,
+      "path": "retrieval_policy.json",
+      "sha256": "0e42f25fc6a70f8123991448214d4d910fb2da93c048b8b4f6a678ce61d98cb8"
+    },
+    "docs_map": {
+      "bytes": 14089,
+      "path": "docs_map.json",
+      "sha256": "5c38819cae84353b3cb0ce4f6187d6b15f0b9e6af6985f86c5cc6b844d874f19"
+    },
+    "repo_map": {
+      "bytes": 8413,
+      "path": "repo_map.json",
+      "sha256": "f3d9d32bb44801e3dc17326ab448ff8aa14e209c4e9d639ca9c68a3f7026cd93"
+    },
+    "symbol_index": {
+      "bytes": 357794,
+      "path": "symbol_index.json",
+      "sha256": "aef8fed0090d6da5a8e450ffe33c9aecc50c8e8730fa00f709c0ce4e876f25a0"
+    }
+  },
+  "generated_at": "2026-04-30T09:25:00+08:00",
+  "generation_timing": {
+    "relative_to_specialist_acut_execution": "before any frontier-click-specialist or cheap-click-specialist ACUT execution",
+    "task_agnostic": true,
+    "uses_observed_acut_outputs": false
+  },
+  "generator": {
+    "command": "python3 experiments/core_narrative/tools/build_click_specialist_context_pack.py --click-root experiments/core_narrative/external_repos/click --output-dir experiments/core_narrative/context_packs/click_specialist --generated-at 2026-04-30T09:25:00+08:00",
+    "history_mining": "not_used",
+    "tool": "build_click_specialist_context_pack"
+  },
+  "leakage_guards": {
+    "bearer_tokens_recorded": false,
+    "benchmark_solution_patch_content_recorded": false,
+    "credential_values_recorded": false,
+    "full_base_url_values_recorded": false,
+    "full_urls_recorded": false,
+    "hidden_verifier_paths_recorded": false,
+    "hostnames_recorded": false,
+    "ip_addresses_recorded": false,
+    "post_hoc_pilot_artifacts_recorded": false,
+    "resolved_endpoint_values_recorded": false,
+    "resolved_secrets_recorded": false
+  },
+  "locked_click_commit": "8bd8b4a074c55c03b6eb5666edc44a9c43df38a2",
+  "marker": "CLICK_SPECIALIST_CONTEXT_PACK_V1",
+  "pack_hash": "dfb271ad174531a7dd2f00da4cd0486193d87ce33349380982150889ecf84e48",
+  "pack_id": "click_specialist_context_pack_v1",
+  "schema_version": "core-narrative.click-specialist-context-pack.v1",
+  "section_ids": [
+    "repo_map",
+    "docs_map",
+    "symbol_index",
+    "convention_playbook",
+    "deterministic_retrieval_policy"
+  ],
+  "source_allowlist": [
+    "README.md",
+    "CHANGES.rst",
+    "LICENSE.txt",
+    "pyproject.toml",
+    "src/click/*.py",
+    "src/click/**/*.py",
+    "src/click/py.typed",
+    "docs/*.md",
+    "docs/*.rst",
+    "docs/**/*.md",
+    "docs/**/*.rst",
+    "docs/conf.py",
+    "examples/*/*.py",
+    "examples/**/*.py",
+    "examples/**/README",
+    "examples/**/pyproject.toml",
+    "tests/*.py",
+    "tests/**/*.py"
+  ],
+  "source_excludes": [
+    ".git/**",
+    ".github/**",
+    ".devcontainer/**",
+    "docs/_build/**",
+    "docs/_static/**",
+    "examples/**/*.jpg",
+    "uv.lock"
+  ],
+  "source_file_count": 125,
+  "source_input_digest": "be77261cc5c354ee10ab1dd7189d4caec0a80c08de25df5038d66f4777fb81ed",
+  "source_material_policy": {
+    "acut_outputs_or_failed_patches_used": false,
+    "git_history_mining_used": false,
+    "hidden_human_hints_used": false,
+    "hidden_verifier_tests_used": false,
+    "network_fetched_docs_used": false,
+    "public_committed_source_docs_tests_examples_only": true,
+    "rbench_rwork_gold_patches_used": false
+  },
+  "source_root_label": "experiments/core_narrative/external_repos/click"
+}

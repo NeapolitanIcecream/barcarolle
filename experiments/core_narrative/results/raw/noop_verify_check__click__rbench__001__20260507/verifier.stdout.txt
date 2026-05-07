@@ -1,0 +1,42 @@
+F                                                                        [100%]
+=================================== FAILURES ===================================
+__________________________ test_multiple_default_help __________________________
+
+runner = <click.testing.CliRunner object at 0x10ab71d30>
+
+    def test_multiple_default_help(runner):
+        @click.command()
+        @click.option("--arg1", multiple=True, default=('foo', 'bar'),
+                      show_default=True)
+        @click.option("--arg2", multiple=True, default=(1, 2), type=int,
+                      show_default=True)
+        def cmd(arg, arg2):
+            pass
+
+        result = runner.invoke(cmd, ['--help'])
+>       assert not result.exception
+E       AssertionError: assert not TypeError('not all arguments converted during string formatting')
+E        +  where TypeError('not all arguments converted during string formatting') = <Result TypeError('not all arguments converted during string formatting')>.exception
+
+tests/test_options.py:128: AssertionError
+=============================== warnings summary ===============================
+click/core.py:1140
+  /Users/chenmohan/gits/barcarolle/experiments/core_narrative/workspaces/noop_verify_check__click__rbench__001__20260507/click/core.py:1140: DeprecationWarning: invalid escape sequence \s
+    """A parameter to a command comes in two versions: they are either
+
+click/_compat.py:14
+  /Users/chenmohan/gits/barcarolle/experiments/core_narrative/workspaces/noop_verify_check__click__rbench__001__20260507/click/_compat.py:14: DeprecationWarning: invalid escape sequence \[
+    _ansi_re = re.compile('\033\[((?:\d|;)*)([a-zA-Z])')
+
+click/decorators.py:92
+  /Users/chenmohan/gits/barcarolle/experiments/core_narrative/workspaces/noop_verify_check__click__rbench__001__20260507/click/decorators.py:92: DeprecationWarning: invalid escape sequence \s
+    """Creates a new :class:`Command` and uses the decorated function as
+
+tests/test_options.py:58
+  /Users/chenmohan/gits/barcarolle/experiments/core_narrative/workspaces/noop_verify_check__click__rbench__001__20260507/tests/test_options.py:58: DeprecationWarning: invalid escape sequence \s
+    assert re.search('-v\s+Verbosity', result.output) is not None
+
+-- Docs: <redacted:url>
+=========================== short test summary info ============================
+FAILED tests/test_options.py::test_multiple_default_help - AssertionError: as...
+1 failed, 4 warnings in 0.03s

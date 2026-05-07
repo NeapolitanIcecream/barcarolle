@@ -1,0 +1,53 @@
+schema_version: core-narrative.task.v1
+task_id: click__rwork__004
+repo_slug: click
+split: rwork
+source:
+  kind: commit
+  public_url: https://github.com/pallets/click/commit/546f2851f414b07413777ebcae89b2c21a685252
+  anchor_id: commit:546f2851f414b07413777ebcae89b2c21a685252
+  base_commit: ae46cfd6bc997804893adc799589248eadcdbc29
+  target_commit: 546f2851f414b07413777ebcae89b2c21a685252
+task_family: callable flag_value default handling
+task_statement_path: public/statement.md
+allowed_context:
+  include_git_history_before_base: true
+  include_issue_text: true
+  include_pr_text: false
+  include_reference_patch: false
+disallowed_context:
+- reference patch or target diff for commit 546f285
+- ACUT outputs or public model results
+- future execution results for this task
+verifier:
+  command: verifier/run.sh
+  timeout_seconds: 60
+expected:
+  no_op_fails: true
+  reference_passes: true
+leakage:
+  reviewed: true
+  notes: Recent option-default internals task; verifier is parameterized but fast
+    and deterministic.
+admission:
+  status: accepted
+  reviewer: task-manifests-worker
+  rationale: Behavior-specific recent work item with compact source changes.
+metadata:
+  materialized_from: experiments/core_narrative/configs/tasks/rwork_click.yaml
+  benchmark_split: RWork
+  locked_target_repository: pallets/click
+  locked_target_commit: 8bd8b4a074c55c03b6eb5666edc44a9c43df38a2
+  source_compare:
+    commits_ahead: 1
+    changed_files:
+    - src/click/core.py
+    - tests/test_defaults.py
+    - tests/test_options.py
+  expected_touched_area:
+  - src/click/core.py Option default handling
+  - tests for callable flag_value defaults and default_map/show_default interactions
+  visible_context_guidance: Provide the commit title and linked issue identifiers
+    3121, 3201, and 3213. Do not show the reference patch.
+  risk_notes: The public follow-up merge commit 5850ef9 is not reused as a separate
+    anchor.

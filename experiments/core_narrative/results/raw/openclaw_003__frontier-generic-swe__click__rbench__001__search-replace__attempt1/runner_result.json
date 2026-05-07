@@ -1,0 +1,134 @@
+{
+  "acut_id": "frontier-generic-swe",
+  "artifact_dir": "experiments/core_narrative/results/raw/openclaw_003__frontier-generic-swe__click__rbench__001__search-replace__attempt1",
+  "attempt": 1,
+  "budget_gate": {
+    "allowed": true,
+    "approvals_required": [],
+    "blockers": [],
+    "budget": {
+      "current_cumulative_estimated_cost_usd": 63.0008,
+      "hard_cap_reached_or_projected": false,
+      "hard_cap_usd": 300.0,
+      "projected_cost_usd": 3.0,
+      "projected_cumulative_estimated_cost_usd": 66.0008,
+      "soft_stop_reached_or_projected": false,
+      "soft_stop_usd": 240.0
+    },
+    "default_execution_profile": {
+      "core_acut_ids": [
+        "frontier-generic-swe",
+        "frontier-click-specialist",
+        "cheap-generic-swe",
+        "cheap-click-specialist"
+      ],
+      "full_core_requires_coordinator_decision": true,
+      "pilot_primary_attempts": 28,
+      "primary_attempts_per_acut_task": 1,
+      "profile_id": "budget-constrained-2x2-pilot-v2",
+      "split_task_limits": {
+        "G_score": 2,
+        "RBench": 3,
+        "RWork": 2
+      }
+    },
+    "env": {
+      "all_required_present": true,
+      "required": [
+        {
+          "name": "BARCAROLLE_LLM_API_KEY",
+          "present": true
+        },
+        {
+          "name": "BARCAROLLE_LLM_BASE_URL",
+          "present": true
+        }
+      ]
+    },
+    "execution_request": {
+      "acut_id": "frontier-generic-swe",
+      "attempt": 1,
+      "coordinator_decision_ref_present": false,
+      "split": "rbench"
+    },
+    "ledger": {
+      "cumulative_estimated_cost_usd": 63.0008,
+      "error_type": null,
+      "errors": [],
+      "estimated_cost_sum_usd": 63.0008,
+      "exists": true,
+      "is_file": true,
+      "line_count": 16,
+      "path": "experiments/core_narrative/results/cost_ledger.jsonl",
+      "record_count": 16,
+      "writable": true
+    },
+    "status": "passed",
+    "tool": "llm_budget_gate"
+  },
+  "cost_accounting": {
+    "actual_cost_status": "unknown_not_provider_reported",
+    "actual_cost_usd": null,
+    "estimated_cost_usd": 3.0,
+    "input_tokens": 15819,
+    "observed_provider_cost_status": "provider_response_usage_cost_not_invoice",
+    "observed_provider_cost_usd": 0.122115,
+    "output_tokens": 1434,
+    "provider_usage_reported": true
+  },
+  "cost_ledger_append": {
+    "actual_cost_recorded": false,
+    "estimated_cost_usd": 3.0,
+    "new_cumulative_estimated_cost_usd": 66.0008,
+    "record_count_after": 17,
+    "record_count_before": 16,
+    "status": "appended"
+  },
+  "duration_seconds": 25.164,
+  "finished_at": "2026-05-07T10:30:46.238685Z",
+  "llm_env_policy": {
+    "allowed_variable_names": [
+      "BARCAROLLE_LLM_API_KEY",
+      "BARCAROLLE_LLM_BASE_URL"
+    ],
+    "endpoint_value_recorded": false,
+    "raw_response_redacted": true,
+    "values_recorded": false
+  },
+  "mode": "live",
+  "model_call_made": true,
+  "patch": {
+    "applied": true,
+    "changed_paths": [
+      "click/core.py",
+      "tests/test_options.py"
+    ],
+    "edit_count": 2,
+    "kind": "search_replace_edits",
+    "validated": true
+  },
+  "patch_artifact": {
+    "path": "experiments/core_narrative/results/raw/openclaw_003__frontier-generic-swe__click__rbench__001__search-replace__attempt1/submission.patch",
+    "policy": "reject_before_write",
+    "size_bytes": 1245,
+    "unsafe_content": {
+      "reason_counts": {},
+      "resolved_env_var_names": [],
+      "unsafe": false
+    },
+    "unsafe_content_detected": false,
+    "written": true
+  },
+  "patch_path": "experiments/core_narrative/results/raw/openclaw_003__frontier-generic-swe__click__rbench__001__search-replace__attempt1/submission.patch",
+  "prompt_artifact": "experiments/core_narrative/results/raw/openclaw_003__frontier-generic-swe__click__rbench__001__search-replace__attempt1/prompt.txt",
+  "prompt_snapshot": "experiments/core_narrative/results/raw/openclaw_003__frontier-generic-swe__click__rbench__001__search-replace__attempt1/prompt_snapshot.json",
+  "raw_response_artifact": "experiments/core_narrative/results/raw/openclaw_003__frontier-generic-swe__click__rbench__001__search-replace__attempt1/provider_response.redacted.json",
+  "run_id": "openclaw_003__frontier-generic-swe__click__rbench__001__search-replace__attempt1",
+  "runner_id": "openclaw-direct-search-replace-v1",
+  "split": "rbench",
+  "started_at": "2026-05-07T10:30:20.988455Z",
+  "status": "patch_generated",
+  "task_id": "click__rbench__001",
+  "tool": "openclaw_direct_runner",
+  "workspace": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/workspaces/openclaw_003__frontier-generic-swe__click__rbench__001__search-replace__attempt1"
+}

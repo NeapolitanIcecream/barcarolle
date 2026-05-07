@@ -1,0 +1,54 @@
+schema_version: core-narrative.task.v1
+task_id: click__rbench__001
+repo_slug: click
+split: rbench
+source:
+  kind: pull_request
+  public_url: https://github.com/pallets/click/pull/252
+  anchor_id: pallets/click#252
+  base_commit: 4a7fe69f942bd02b811548ff8f02a08fff7429c1
+  target_commit: 39e51d961b9e69c050bb948b1db11275f9630542
+task_family: option help/default rendering
+task_statement_path: public/statement.md
+allowed_context:
+  include_git_history_before_base: true
+  include_issue_text: false
+  include_pr_text: true
+  include_reference_patch: false
+disallowed_context:
+- reference patch or target diff for pull request 252
+- ACUT outputs or public model results
+- future execution results for this task
+verifier:
+  command: verifier/run.sh
+  timeout_seconds: 60
+expected:
+  no_op_fails: true
+  reference_passes: true
+leakage:
+  reviewed: true
+  notes: Compact historical behavior fix; verifier node exists in the locked checkout
+    but may need packaging as hidden regression coverage for the historical base tree.
+admission:
+  status: accepted
+  reviewer: task-manifests-worker
+  rationale: Behavior-verifiable option formatting regression with a small source
+    and test surface.
+metadata:
+  materialized_from: experiments/core_narrative/configs/tasks/rbench_click.yaml
+  benchmark_split: RBench
+  locked_target_repository: pallets/click
+  locked_target_commit: 8bd8b4a074c55c03b6eb5666edc44a9c43df38a2
+  source_compare:
+    commits_ahead: 3
+    changed_files:
+    - click/core.py
+    - tests/test_options.py
+  expected_touched_area:
+  - Option.get_help_record or default rendering in click/core.py
+  - focused regression coverage in tests/test_options.py
+  visible_context_guidance: Provide the PR title, issue discussion if available, current
+    behavior, and the expected help text shape. Do not expose the merge diff or final
+    implementation.
+  risk_notes: Historical source path uses click/core.py, while the locked checkout
+    now uses src/click/core.py; task packaging must use the source base tree.
