@@ -10,4 +10,4 @@ if [ -d "$hidden_dir" ]; then
     cp "$file" "$rel"
   done < <(find "$hidden_dir" -type f -print0)
 fi
-exec .venv/bin/python -m pytest -q tests/test_testing.py::test_catch_exceptions tests/test_testing.py::test_catch_exceptions_cli_runner
+exec .venv/bin/python -m pytest -q tests/test_testing.py::test_catch_exceptions

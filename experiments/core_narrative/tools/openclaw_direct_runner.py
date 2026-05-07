@@ -226,6 +226,17 @@ def build_prompt(
         "Valid edit paths:",
         json.dumps([item["path"] for item in context_files], indent=2),
     ]
+    valid_paths = {str(item["path"]) for item in context_files}
+    if any(path.startswith("click/") for path in valid_paths) and not any(path.startswith("src/click/") for path in valid_paths):
+        sections.extend(
+            [
+                "",
+                "Historical Click layout guard:",
+                "- This prepared workspace predates Click's src/ layout.",
+                "- Do not generate src/click/... paths; they are invalid for this task.",
+                "- Use only the exact Valid edit paths listed above.",
+            ]
+        )
     if specialist_context:
         sections.extend(["", "Task-agnostic Click specialist context:", specialist_context])
     for item in context_files:
@@ -406,6 +417,12 @@ def apply_edit_bundle(workspace: Path, edits: Sequence[Mapping[str, str]]) -> di
         reject_unsafe_generated_text(old, "edit old text")
         reject_unsafe_generated_text(new, "edit new text")
         target = resolve_workspace_path(workspace, path, "edit path")
+        if not target.exists() or not target.is_file():
+            raise ToolError(
+                "edit path is not in the prepared workspace",
+                path=path,
+                failure_class="generated_path_not_in_workspace",
+            )
         text = target.read_text(encoding="utf-8")
         occurrences = text.count(old)
         if occurrences != 1:
@@ -456,6 +473,22 @@ def observed_provider_cost(usage: Mapping[str, Any] | None) -> float | None:
     if isinstance(value, (int, float)) and value >= 0:
         return float(value)
     return None
+
+
+def ledger_estimated_cost_for_provider_usage(
+    *,
+    mode: str,
+    fallback_estimated_cost: Decimal,
+    usage: Mapping[str, Any] | None,
+) -> tuple[Decimal, str]:
+    """Return the budget-ledger cost basis for a completed runner call."""
+
+    if mode != "live":
+        return Decimal("0"), "no_model"
+    observed = observed_provider_cost(usage)
+    if observed is not None:
+        return parse_usd(observed, "observed_provider_cost_usd"), "provider_response_usage_cost_not_invoice"
+    return fallback_estimated_cost, "local_projected_estimate_not_invoice"
 
 
 def append_cost_record(
@@ -540,6 +573,11 @@ def append_failure_record_if_model_responded(args: argparse.Namespace, *, starte
         input_tokens, output_tokens = usage_token_counts(usage, args)
         projected_cost = parse_usd(args.projected_cost_usd, "--projected-cost-usd")
         estimated_cost = parse_usd(args.estimated_cost_usd, "--estimated-cost-usd") if args.estimated_cost_usd else projected_cost
+        ledger_estimated_cost, cost_basis = ledger_estimated_cost_for_provider_usage(
+            mode="live",
+            fallback_estimated_cost=estimated_cost,
+            usage=usage,
+        )
         return append_cost_record(
             ledger_path=Path(args.llm_ledger),
             run_id=args.run_id,
@@ -552,7 +590,7 @@ def append_failure_record_if_model_responded(args: argparse.Namespace, *, starte
             finished_at=finished_at,
             input_tokens=input_tokens,
             output_tokens=output_tokens,
-            estimated_cost=estimated_cost,
+            estimated_cost=ledger_estimated_cost,
             actual_cost=None,
             metadata={
                 "runner_id": RUNNER_ID,
@@ -560,7 +598,7 @@ def append_failure_record_if_model_responded(args: argparse.Namespace, *, starte
                 "model_call_made": True,
                 "model_response_received": True,
                 "failure_class": type(exc).__name__,
-                "cost_basis": "local_projected_estimate_not_invoice",
+                "cost_basis": cost_basis,
                 "actual_cost_status": "unknown_not_invoice_verified",
                 "provider_usage_reported": usage is not None,
                 "provider_usage": usage or {},
@@ -568,6 +606,8 @@ def append_failure_record_if_model_responded(args: argparse.Namespace, *, starte
                 "observed_provider_cost_status": "provider_response_usage_cost_not_invoice"
                 if observed_provider_cost(usage) is not None
                 else "not_reported",
+                "projected_cost_usd": money_json(projected_cost),
+                "fallback_estimated_cost_usd": money_json(estimated_cost),
                 "response_text_sha256": sha256_text(text),
             },
         )
@@ -686,6 +726,11 @@ def main(argv: Sequence[str] | None = None) -> int:
         finished_at = iso_now()
         duration_seconds = round(time.monotonic() - duration_start, 3)
         input_tokens, output_tokens = usage_token_counts(provider_usage, args)
+        ledger_estimated_cost, cost_basis = ledger_estimated_cost_for_provider_usage(
+            mode=mode,
+            fallback_estimated_cost=estimated_cost,
+            usage=provider_usage,
+        )
         ledger_append = append_cost_record(
             ledger_path=Path(args.llm_ledger),
             run_id=args.run_id,
@@ -698,13 +743,13 @@ def main(argv: Sequence[str] | None = None) -> int:
             finished_at=finished_at,
             input_tokens=input_tokens,
             output_tokens=output_tokens,
-            estimated_cost=Decimal("0") if mode != "live" else estimated_cost,
+            estimated_cost=ledger_estimated_cost,
             actual_cost=actual_cost,
             metadata={
                 "runner_id": RUNNER_ID,
                 "mode": mode,
                 "model_call_made": model_call_made,
-                "cost_basis": "local_projected_estimate_not_invoice" if mode == "live" else "no_model",
+                "cost_basis": cost_basis,
                 "actual_cost_status": "unknown_not_provider_reported" if actual_cost is None else "provider_or_invoice_reported",
                 "provider_usage_reported": provider_usage is not None,
                 "provider_usage": provider_usage or {},
@@ -713,6 +758,7 @@ def main(argv: Sequence[str] | None = None) -> int:
                 if observed_provider_cost(provider_usage) is not None
                 else "not_reported",
                 "projected_cost_usd": money_json(projected_cost),
+                "fallback_estimated_cost_usd": money_json(estimated_cost),
                 "request_profile": request_profile or {},
                 "patch_size_bytes": patch_artifact.get("size_bytes", 0),
             },
@@ -740,7 +786,7 @@ def main(argv: Sequence[str] | None = None) -> int:
             "budget_gate": budget_gate,
             "cost_ledger_append": ledger_append,
             "cost_accounting": {
-                "estimated_cost_usd": money_json(Decimal("0") if mode != "live" else estimated_cost),
+                "estimated_cost_usd": money_json(ledger_estimated_cost),
                 "actual_cost_usd": None if actual_cost is None else money_json(actual_cost),
                 "actual_cost_status": "unknown_not_provider_reported" if actual_cost is None else "provider_or_invoice_reported",
                 "observed_provider_cost_usd": observed_provider_cost(provider_usage),

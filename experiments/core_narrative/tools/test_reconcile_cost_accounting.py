@@ -62,11 +62,13 @@ class ReconcileCostAccountingTests(unittest.TestCase):
             )
             self.assertEqual(summary["provider_usage_observed_count"], 1)
             self.assertEqual(summary["observed_provider_usage_cost_sum_usd"], 0.025)
+            self.assertEqual(summary["estimate_only_record_count"], 1)
+            self.assertEqual(summary["estimate_only_run_ids"], ["run_estimate_only"])
             self.assertEqual(
                 summary["observed_provider_usage_cost_status"],
                 "provider_response_usage_cost_not_invoice",
             )
-            self.assertIn("not evidence of actual provider billing", summary["interpretation"])
+            self.assertIn("not invoice proof", summary["interpretation"])
 
 
 if __name__ == "__main__":

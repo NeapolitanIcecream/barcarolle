@@ -1,0 +1,92 @@
+diff --git a/click/testing.py b/click/testing.py
+index bf39761..ad163d4 100644
+--- a/click/testing.py
++++ b/click/testing.py
+@@ -104,12 +104,14 @@ class CliRunner(object):
+                        will automatically echo the input.
+     """
+ 
+-    def __init__(self, charset=None, env=None, echo_stdin=False):
++    def __init__(self, charset=None, env=None, echo_stdin=False,
++                 catch_exceptions=True):
+         if charset is None:
+             charset = 'utf-8'
+         self.charset = charset
+         self.env = env or {}
+         self.echo_stdin = echo_stdin
++        self.catch_exceptions = catch_exceptions
+ 
+     def get_default_prog_name(self, cli):
+         """Given a command object it will return the default program name
+@@ -214,7 +216,8 @@ class CliRunner(object):
+             click.termui.hidden_prompt_func = old_hidden_prompt_func
+             click.termui._getchar = old__getchar_func
+ 
+-    def invoke(self, cli, args=None, input=None, env=None, **extra):
++    def invoke(self, cli, args=None, input=None, env=None,
++               catch_exceptions=None, **extra):
+         """Invokes a command in an isolated environment.  The arguments are
+         forwarded directly to the command line script, the `extra` keyword
+         arguments are passed to the :meth:`~click.Command.main` function of
+@@ -228,6 +231,9 @@ class CliRunner(object):
+         :param env: the environment overrides.
+         :param extra: the keyword arguments to pass to :meth:`main`.
+         """
++        if catch_exceptions is None:
++            catch_exceptions = self.catch_exceptions
++
+         with self.isolation(input=input, env=env) as out:
+             exception = None
+             exit_code = 0
+@@ -240,6 +246,8 @@ class CliRunner(object):
+                     exception = e
+                 exit_code = e.code
+             except Exception as e:
++                if not catch_exceptions:
++                    raise
+                 exception = e
+                 exit_code = -1
+             sys.stdout.flush()
+diff --git a/tests/test_testing.py b/tests/test_testing.py
+index c0fc05f..60e3bd7 100644
+--- a/tests/test_testing.py
++++ b/tests/test_testing.py
+@@ -1,3 +1,4 @@
++import pytest
+ import click
+ 
+ from click.testing import CliRunner
+@@ -88,3 +89,33 @@ def test_getchar():
+     result = runner.invoke(continue_it, input='y')
+     assert not result.exception
+     assert result.output == 'y\n'
++
++
++def test_catch_exceptions():
++    class CustomError(Exception):
++        pass
++
++    @click.command()
++    def cli():
++        raise CustomError(1)
++
++    runner = CliRunner()
++
++    result = runner.invoke(cli)
++    assert isinstance(result.exception, CustomError)
++
++    with pytest.raises(CustomError):
++        runner.invoke(cli, catch_exceptions=False)
++
++    runner = CliRunner(catch_exceptions=False)
++    with pytest.raises(CustomError):
++        runner.invoke(cli)
++
++    runner = CliRunner(catch_exceptions=False)
++    result = runner.invoke(cli, catch_exceptions=True)
++    assert isinstance(result.exception, CustomError)
++
++    CustomError = SystemExit
++
++    result = runner.invoke(cli)
++    assert result.exit_code == 1

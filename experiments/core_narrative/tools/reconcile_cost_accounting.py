@@ -88,18 +88,18 @@ def reconcile(records: list[dict[str, Any]], ledger_path: Path) -> dict[str, Any
         estimated_sum += decimal_or_zero(record.get("estimated_cost_usd"))
         if "cumulative_estimated_cost_usd" in record:
             latest_cumulative = parse_usd(record["cumulative_estimated_cost_usd"], "cumulative_estimated_cost_usd")
+        usage = safe_usage(record)
+        observed_cost = usage.get("observed_provider_usage_cost_usd") if usage is not None else None
         actual = record.get("actual_cost_usd")
         if actual is not None:
             actual_observed_sum += parse_usd(actual, "actual_cost_usd")
             actual_records += 1
-        elif record.get("record_type") != "ledger_initialized":
+        elif record.get("record_type") != "ledger_initialized" and not isinstance(observed_cost, (int, float)):
             run_id = record.get("run_id")
             if isinstance(run_id, str):
                 estimate_only_records.append(run_id)
-        usage = safe_usage(record)
         if usage is not None:
             provider_usage.append(usage)
-            observed_cost = usage.get("observed_provider_usage_cost_usd")
             if isinstance(observed_cost, (int, float)):
                 observed_usage_cost_sum += Decimal(str(observed_cost))
                 observed_usage_cost_count += 1
@@ -125,9 +125,10 @@ def reconcile(records: list[dict[str, Any]], ledger_path: Path) -> dict[str, Any
         "estimate_only_record_count": len(estimate_only_records),
         "estimate_only_run_ids": estimate_only_records,
         "interpretation": (
-            "ledger_estimated_cost_sum_usd is a local budgeting/estimation number, "
-            "not evidence of actual provider billing; actual billed cost remains "
-            "unknown unless actual_cost_usd is populated from provider billing/invoice data."
+            "ledger_estimated_cost_sum_usd is the current budget-gate ledger total. "
+            "It may be calibrated to provider response usage cost where available, "
+            "but provider usage cost is still not invoice proof; actual billed cost "
+            "remains unknown unless actual_cost_usd is populated from provider billing/invoice data."
         ),
     }
 

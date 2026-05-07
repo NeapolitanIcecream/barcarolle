@@ -1,7 +1,7 @@
 # Core Narrative Experiment Coordinator
 
-status: direct_output_contract_no_model_hardening_recorded
-updated: 2026-05-07T13:10:00+08:00
+status: codex_resumption_as_is_status_synced
+updated: 2026-05-07T19:20:00+08:00
 today_stop_state: 2026-04-28_stop_policy_expired
 phase: Phase 0 - Experiment Bootstrap
 base_commit: 47046e7754d2402b7177a4b80f631ab6b0bcd97c
@@ -80,10 +80,11 @@ Execute `docs/experiments/core-narrative-experiment-plan.md` with tmux-managed C
 | click-specialist-context-reviewer | Phase 3 specialist treatment review | delivered; no_issues; worker commit `1eb222c`, integrated as `81b3473` | exited | codex/core-exp-click-specialist-context-reviewer | /Users/chenmohan/gits/barcarolle-wt-click-specialist-context-reviewer | `.codex-workflows/core-narrative-experiment/reviews/click-specialist-context-pack-review.md`, `.codex-workflows/core-narrative-experiment/workers/click-specialist-context-reviewer/**` |
 | nonzero-exit-normalization | Phase 3 harness repair | delivered and reviewed; worker commit `4b26c7a`, integrated as `42351d0`; no-model only, no ACUT/model call/budget spend | exited | codex/core-exp-nonzero-exit-normalization | /Users/chenmohan/gits/barcarolle-wt-nonzero-exit-normalization | `experiments/core_narrative/tools/acut_patch_adapter.py`, `experiments/core_narrative/tools/test_acut_patch_adapter.py`, `experiments/core_narrative/reports/acut_adapter_nonzero_exit_normalization.md`, `experiments/core_narrative/results/raw/nonzero_exit_normalization*/**`, `experiments/core_narrative/results/normalized/nonzero_exit_normalization*.json`, `.codex-workflows/core-narrative-experiment/workers/nonzero-exit-normalization/**` |
 | nonzero-exit-normalization-reviewer | Phase 3 harness repair review | delivered; no_issues; worker commit `ef9e0ba`, integrated as `4874606`; no-model/static only | exited | codex/core-exp-nonzero-exit-normalization-reviewer | /Users/chenmohan/gits/barcarolle-wt-nonzero-exit-normalization-reviewer | `.codex-workflows/core-narrative-experiment/reviews/nonzero-exit-normalization-review.md`, `.codex-workflows/core-narrative-experiment/workers/nonzero-exit-normalization-reviewer/**` |
+| 2026-05-07-openclaw-as-is-sync | Status sync | delivered; synchronized OpenClaw as-is results and Codex resumption handoff; no model call, worker, reviewer, or tmux session started | n/a | codex/core-narrative-experiment | /Users/chenmohan/gits/barcarolle | `.codex-workflows/core-narrative-experiment/coordinator.md`, `.codex-workflows/core-narrative-experiment/workers/2026-05-07-openclaw-as-is-sync/process.md` |
 
 ## Active Tmux Sessions
 
-- None.
+- None for the core-narrative experiment.
 
 ## Decisions
 
@@ -102,6 +103,7 @@ Execute `docs/experiments/core-narrative-experiment-plan.md` with tmux-managed C
 - Defer `higher-budget-repo-depth`, `retrieval-history-augmented`, and `minimal-context-baseline` unless the pilot and any full-core promotion finish below the soft stop and the coordinator records spare budget.
 - Retire the previous active ACUT IDs for new execution: `general-benchmark-optimized`, `repo-context-heavy`, `retrieval-sparse-symbolic`, and `lower-budget-fast-path`.
 - Adopt today's local stop strategy for 2026-04-28 in `Asia/Shanghai`: soft stop at `17:30`, hard stop at `17:50`.
+- 2026-05-07 Codex resumption decision: the user is switching this experiment back to Codex and no longer trying to have OpenClaw take over the experiment. OpenClaw artifacts remain recorded as as-is evidence and diagnostics, not the current primary execution path.
 
 ## Today Stop Strategy
 
@@ -119,11 +121,13 @@ Execute `docs/experiments/core-narrative-experiment-plan.md` with tmux-managed C
 
 ## Blockers
 
-Pilot 008 is integrated, reviewed, and locally triaged. The current blocker is no longer any pending pilot 004/005 empty-patch or stale-checkout action; those are historical and resolved. The current blocker is that the current Codex CLI Responses streaming patch-generation path has produced no verifier-ready patch and no scoreable ACUT capability result.
+As of 2026-05-07T19:20:00+08:00, the current source of truth is the as-is sync process at `.codex-workflows/core-narrative-experiment/workers/2026-05-07-openclaw-as-is-sync/process.md` plus `experiments/core_narrative/reports/2026-05-07_openclaw_overnight_experiment.md`. The user has decided to switch the experiment back to Codex and stop trying to make OpenClaw the primary experiment runner.
 
-Pilots 006, 007, and 008 each reached exactly one ledgered live adapter/model-call attempt on `click__rbench__001`, then failed before verifier with `command_failed` / `codex_exec_failed`, zero-byte patch/no verifier-ready workspace patch, one ledger record, and no verifier run. They cross the treatment and model-tier axes enough to classify the failure as treatment-independent and model-tier-independent within the current path: pilot 006 is cheap Click-specialist, pilot 007 is cheap generic, and pilot 008 is frontier generic.
+The historical Codex path progressed beyond pilot 008: pilot 010 used strict `structured-files-json-v1` and timed out before a model response; pilot 011 used the same strict direct path with a longer HTTP timeout, got a model response in 67.3s, but failed the strict patch contract with `unsupported_patch_response`. Neither produced a verifier-ready patch.
 
-No further live BARCAROLLE model call, broad ACUT execution, retry, second attempt, additional specialist run, further pilot attempt, or large batch is authorized on this same path. The post-pilot-008 gate is recorded at `.codex-workflows/core-narrative-experiment/decisions/post-pilot-008-transport-gate.md`; the options note is `experiments/core_narrative/reports/post_pilot_008_transport_options.md`; the completed no-model Option C spike is `experiments/core_narrative/reports/post_pilot_008_option_c_no_model_spike.md`; the kickoff narrative evidence memo is `experiments/core_narrative/reports/kickoff_narrative_evidence_memo.md`. Any future live call must first satisfy that gate: exact run id and scope, projected cost/ledger state, fresh no-secret preflight, and reviewed evidence explaining why the call is not another pilots 006/007/008 Codex CLI Responses streaming repeat or another pilots 001/002/003 direct-command `gaierror` repeat.
+The OpenClaw direct runner produced the first live scoreable data, but not a passing result. `openclaw_001` and `openclaw_003` generated patches and reached the hidden verifier, both failing with the same semantic miss: tuple repr output instead of expected comma-separated Click default help text. `openclaw_002` reached a model response but was normalized as `infra_failed` because the generated edit targeted `src/click/core.py` in a historical workspace whose path is `click/core.py`. The no-model mock patch passed the verifier, so the verifier/patch path itself is viable.
+
+The current blocker is no longer launch, env presence, or basic runner transport. The blocker is the next Codex-owned execution path and the patch/context behavior needed to produce verifier-passing artifacts without repeating the OpenClaw takeover attempt. No live BARCAROLLE model call, OpenClaw continuation, broad ACUT execution, retry, second attempt, additional specialist run, further pilot attempt, or large batch is currently authorized.
 
 ## Codex CLI Harness Handoff
 
@@ -135,8 +139,8 @@ No further live BARCAROLLE model call, broad ACUT execution, retry, second attem
 
 ## Execution Readiness Bookkeeping
 
-- checked_at: `2026-05-06T21:55:01+08:00`
-- readiness_state: `pilot_008_integrated_transport_gate_recorded`
+- checked_at: `2026-05-07T19:20:00+08:00`
+- readiness_state: `codex_resumption_as_is_synced_after_openclaw_probe`
 - active_workers: none
 - reviewed_inputs_ready:
   - LLM access and budget gate: reviewed in `wave0-r5-reviewer` with `no_issues`
@@ -158,8 +162,8 @@ No further live BARCAROLLE model call, broad ACUT execution, retry, second attem
   - installed the Click runtime in that workspace with `uv`
   - ran no-op verifier smoke for `click__rbench__001`; it failed the injected regression test with exit `1`, matching `expected.no_op_fails: true`
 - broad_execution_started: false
-- model_calls_started: nine bounded pilot attempts reached the model-call gate and ended before verifier; pilots 006/007/008 establish a treatment-independent and model-tier-independent pre-verifier failure on the current Codex CLI Responses streaming path, and pilot 009 shows the direct path can reach live model output but still fail patch validation; no broad execution authorized
-- execution_decision: Historical explicit execution starts are recorded only for the bounded pilot attempts 001-009. Current authorization is none: broad execution, retries, second attempts, additional specialist runs, further pilots, live BARCAROLLE model calls, and large batches require a new explicit coordinator decision after a reviewed no-model hypothesis.
+- model_calls_started: 17 ledger records exist. Historical Codex/adapter pilots 001-011 produced no verifier-passing result; pilot 010 timed out on strict structured-files output, and pilot 011 received a model response but no supported patch. OpenClaw direct runs 001 and 003 produced scoreable failed verifier results; OpenClaw direct run 002 infra_failed after model response due to a generated modern `src/click/core.py` path in a historical `click/core.py` workspace. No broad execution authorized.
+- execution_decision: Historical explicit execution starts are recorded for bounded pilot attempts 001-011 and the three OpenClaw direct probes 001-003. Current user direction is to return control to Codex and stop trying to have OpenClaw take over this experiment. Current authorization is none: broad execution, retries, second attempts, additional specialist runs, further pilots, OpenClaw continuation, live BARCAROLLE model calls, and large batches require a new explicit coordinator decision.
 - first_execution_outcome: integrated and reviewed; adapter event `command_failed`, estimated cost `3.00`, cumulative estimated cost `3.00`, no patch, no verifier run, no retry.
 - transport_preflight: passed at `2026-04-29T13:42:24+08:00`; checked only non-secret booleans/error classes. `BARCAROLLE_LLM_API_KEY` present, `BARCAROLLE_LLM_BASE_URL` present, endpoint parse ok, allowed scheme ok, host present, endpoint kind `chat_completions`, DNS resolution ok, TCP connect ok, TLS handshake ok, error class null. Credential values, bearer tokens, resolved secrets, full base URL values, hostnames, and IP addresses were not recorded.
 - pilot_002_decision: start exactly one primary attempt: ACUT `cheap-generic-swe`, task `click__rbench__002`, attempt `1`, run id `pilot_002__cheap-generic-swe__click__rbench__002__attempt1`; projected cost USD `3.00`, projected cumulative USD `6.00`, below soft stop and hard cap.
@@ -438,12 +442,13 @@ No further live BARCAROLLE model call, broad ACUT execution, retry, second attem
 
 ## Execution Planning Gate
 
-- gate_status: direct_output_contract_no_model_hardening_recorded
-- checked_at: 2026-05-07T13:10:00+08:00
+- gate_status: codex_resumption_as_is_status_synced
+- checked_at: 2026-05-07T19:20:00+08:00
 - llm_env_presence:
-  - `BARCAROLLE_LLM_API_KEY`: present, value not inspected or recorded
-  - `BARCAROLLE_LLM_BASE_URL`: present, value not inspected or recorded
-- cost_ledger: `experiments/core_narrative/results/cost_ledger.jsonl` exists, parses as JSONL, and currently records cumulative estimated cost USD `41.0008` across 12 records
+  - `BARCAROLLE_LLM_API_KEY`: present, value not inspected or recorded during sync
+  - `BARCAROLLE_LLM_BASE_URL`: present, value not inspected or recorded during sync
+- cost_ledger: `experiments/core_narrative/results/cost_ledger.jsonl` exists, is writable, and currently records 17 ledger records with latest cumulative estimated cost USD `66.0008`
+- cost_accounting_note: `experiments/core_narrative/results/cost_reconciliation_2026-05-07.json` reports observed provider usage cost sum USD `0.177407` for the three OpenClaw live runs; this is provider response usage cost, not invoice/billed-cost proof, and actual billed cost remains unknown in repo artifacts.
 - budget_caps: USD `$240` soft stop, USD `$300` hard cap
 - active_default_slice:
   - acuts: `frontier-generic-swe`, `frontier-click-specialist`, `cheap-generic-swe`, `cheap-click-specialist`
@@ -452,7 +457,8 @@ No further live BARCAROLLE model call, broad ACUT execution, retry, second attem
 - deferred_acuts: `higher-budget-repo-depth`, `retrieval-history-augmented`, `minimal-context-baseline`
 - broad_execution_started: false
 - run_manifest: `experiments/core_narrative/configs/core_subset_run_manifest.yaml`
-- next_allowed_step: review the no-model `structured-files-json-v1` direct-output contract hardening; if accepted and fresh ledger/env gates pass, the next bounded stage may run exactly one paid direct structured-files probe. Do not start any live BARCAROLLE model call, retry, second attempt, additional specialist run, broad execution, further pilot attempt, or large batch without that new reviewed hypothesis and explicit coordinator decision.
+- latest_artifacts: `experiments/core_narrative/reports/2026-05-07_openclaw_overnight_experiment.md`, `experiments/core_narrative/results/overnight_2026-05-07_summary.json`, `experiments/core_narrative/results/normalized/openclaw_search_replace_summary.json`, and `.codex-workflows/core-narrative-experiment/workers/2026-05-07-openclaw-as-is-sync/process.md`
+- next_allowed_step: Codex-owned planning or implementation only. Treat OpenClaw direct runner artifacts as recorded evidence, not the active primary runner. Do not start a live BARCAROLLE model call, OpenClaw continuation, retry, second attempt, additional specialist run, broad execution, further pilot attempt, or large batch without a new explicit coordinator decision.
 
 ## Acceptance Gate
 
@@ -463,4 +469,4 @@ No further live BARCAROLLE model call, broad ACUT execution, retry, second attem
 
 ## Next Heartbeat Action
 
-Read this coordinator, `.codex-workflows/core-narrative-experiment/decisions/post-pilot-008-transport-gate.md`, `.codex-workflows/core-narrative-experiment/decisions/post-option-c-direct-probe-readiness.md`, `experiments/core_narrative/reports/pilot_009_direct_probe_triage.md`, `experiments/core_narrative/reports/2026-05-07_preflight_direct_output_contract.md`, and `experiments/core_narrative/reports/kickoff_narrative_evidence_memo.md`; do not inspect `cli.log`. Current state: pilot 009 is integrated and non-scoreable, the no-model strict structured-files direct-output contract hardening is locally implemented and tested, no scoreable ACUT result exists, and no live BARCAROLLE model call is currently authorized. Next bounded step: review this hardening and, only after fresh ledger/env gates and an explicit run-id decision, optionally run one paid `structured-files-json-v1` direct probe. Do not start broad ACUT execution, retries, second attempts, additional specialist ACUT runs, further pilot attempts, live BARCAROLLE model calls, or large batches without that reviewed hypothesis and explicit coordinator decision.
+Read this coordinator and `.codex-workflows/core-narrative-experiment/workers/2026-05-07-openclaw-as-is-sync/process.md` first, then consult `experiments/core_narrative/reports/2026-05-07_openclaw_overnight_experiment.md`, `experiments/core_narrative/results/overnight_2026-05-07_summary.json`, `experiments/core_narrative/results/normalized/openclaw_search_replace_summary.json`, and `experiments/core_narrative/results/cost_reconciliation_2026-05-07.json`; do not inspect `cli.log` unless explicitly debugging. Current state: user plans to switch back to Codex and stop trying to have OpenClaw take over; OpenClaw produced first scoreable-but-failing data and one specialist path infra failure; no core-narrative tmux worker is active; no live model call or OpenClaw continuation is authorized. Next bounded step should be Codex-owned planning/implementation from this as-is handoff, not another OpenClaw takeover attempt.

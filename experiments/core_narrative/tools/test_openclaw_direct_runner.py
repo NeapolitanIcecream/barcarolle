@@ -204,7 +204,7 @@ class OpenClawDirectRunnerTests(unittest.TestCase):
 
         self.assertEqual(append_summary["status"], "appended")
         self.assertEqual(ledger_records[0]["event"], "runner_error_after_model_response")
-        self.assertEqual(ledger_records[0]["estimated_cost_usd"], 1)
+        self.assertEqual(ledger_records[0]["estimated_cost_usd"], 0.0123)
         self.assertIsNone(ledger_records[0]["actual_cost_usd"])
         self.assertEqual(ledger_records[0]["input_tokens"], 120)
         self.assertEqual(ledger_records[0]["output_tokens"], 30)
@@ -213,6 +213,11 @@ class OpenClawDirectRunnerTests(unittest.TestCase):
             ledger_records[0]["metadata"]["observed_provider_cost_status"],
             "provider_response_usage_cost_not_invoice",
         )
+        self.assertEqual(
+            ledger_records[0]["metadata"]["cost_basis"],
+            "provider_response_usage_cost_not_invoice",
+        )
+        self.assertEqual(ledger_records[0]["metadata"]["fallback_estimated_cost_usd"], 1)
 
 
 if __name__ == "__main__":

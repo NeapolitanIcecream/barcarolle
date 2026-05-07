@@ -1,0 +1,2 @@
+WARNING: You are using pip version 21.2.4; however, version 26.0.1 is available.
+You should consider upgrading via the '/Users/chenmohan/gits/barcarolle/experiments/core_narrative/workspaces/codex_nfl_live_expand_20260507__cheap-click-specialist__click__rbench__003__attempt1/.venv/bin/python -m pip install --upgrade pip' command.

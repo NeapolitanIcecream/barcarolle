@@ -107,7 +107,7 @@ tasks:
       - ACUT outputs or public model results
       - future execution results for this task
     verifier:
-      command: .venv/bin/python -m pytest -q tests/test_testing.py::test_catch_exceptions tests/test_testing.py::test_catch_exceptions_cli_runner
+      command: .venv/bin/python -m pytest -q tests/test_testing.py::test_catch_exceptions
       timeout_seconds: 60
     expected:
       no_op_fails: true

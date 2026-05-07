@@ -1,0 +1,49 @@
+F                                                                        [100%]
+=================================== FAILURES ===================================
+_________________________ test_choices_list_in_prompt __________________________
+
+runner = <click.testing.CliRunner object at 0x10a5d7ac0>
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x10a5d7970>
+
+    def test_choices_list_in_prompt(runner, monkeypatch):
+        @click.option('-g', type=click.Choice(['none', 'day', 'week', 'month']), prompt=True)
+        @click.command()
+        def cli_with_choices():
+            pass
+    
+        @click.option('-g', type=click.Choice(['none', 'day', 'week', 'month']), prompt=True, show_choices=False)
+        @click.command()
+>       def cli_without_choices():
+
+tests/test_termui.py:55: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+click/decorators.py:170: in decorator
+    _param_memo(f, OptionClass(param_decls, **attrs))
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <click.core.Option object at 0x10a5d76d0>, param_decls = ('-g',)
+show_default = False, prompt = True, confirmation_prompt = False
+hide_input = False, is_flag = None, flag_value = None, multiple = False
+count = False, allow_from_autoenv = True
+type = Choice(['none', 'day', 'week', 'month']), help = None, hidden = False
+attrs = {'show_choices': False}, default_is_missing = True
+
+    def __init__(self, param_decls=None, show_default=False,
+                 prompt=False, confirmation_prompt=False,
+                 hide_input=False, is_flag=None, flag_value=None,
+                 multiple=False, count=False, allow_from_autoenv=True,
+                 type=None, help=None, hidden=False, **attrs):
+        default_is_missing = attrs.get('default', _missing) is _missing
+>       Parameter.__init__(self, param_decls, type=type, **attrs)
+E       TypeError: __init__() got an unexpected keyword argument 'show_choices'
+
+click/core.py:1466: TypeError
+=============================== warnings summary ===============================
+click/core.py:1224
+  /Users/chenmohan/gits/barcarolle/experiments/core_narrative/workspaces/codex_nfl_live_expand_20260507__cheap-click-specialist__click__rbench__003__attempt1/click/core.py:1224: DeprecationWarning: invalid escape sequence \s
+    """A parameter to a command comes in two versions: they are either
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED tests/test_termui.py::test_choices_list_in_prompt - TypeError: __init_...
+1 failed, 1 warning in 0.03s
