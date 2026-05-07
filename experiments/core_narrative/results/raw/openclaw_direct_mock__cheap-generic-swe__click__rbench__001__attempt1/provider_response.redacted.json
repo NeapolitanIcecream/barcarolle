@@ -1,0 +1,9 @@
+{
+  "edits": [
+    {
+      "path": "click/core.py",
+      "old": "        if self.default is not None and self.show_default:\n            extra.append('default: %s' % self.default)\n",
+      "new": "        if self.default is not None and self.show_default:\n            if isinstance(self.default, (tuple, list)):\n                default_string = ', '.join(str(item) for item in self.default)\n            else:\n                default_string = self.default\n            extra.append('default: %s' % default_string)\n"
+    }
+  ]
+}

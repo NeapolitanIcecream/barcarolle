@@ -1,0 +1,33 @@
+{
+  "acut_id": "no-op-smoke",
+  "attempt": 1,
+  "error": null,
+  "finished_at": "2026-05-07T10:19:58.593400Z",
+  "metadata": {
+    "skip_apply": true,
+    "timeout_seconds": 60,
+    "tool": "apply_and_verify",
+    "verifier_command": [
+      "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/tasks/click/rbench/click__rbench__001/verifier/run.sh"
+    ]
+  },
+  "patch_path": "/dev/null",
+  "review": {
+    "mergeability_grade": null,
+    "notes": "",
+    "rule_violation": false,
+    "wrong_module": false
+  },
+  "run_id": "noop_verify_check__click__rbench__001__20260507",
+  "schema_version": "core-narrative.run-result.v1",
+  "split": "rbench",
+  "started_at": "2026-05-07T10:19:58.172564Z",
+  "status": "failed",
+  "task_id": "click__rbench__001",
+  "verification": {
+    "duration_seconds": 0.421,
+    "exit_code": 1,
+    "stderr_artifact": "experiments/core_narrative/results/raw/noop_verify_check__click__rbench__001__20260507/verifier.stderr.txt",
+    "stdout_artifact": "experiments/core_narrative/results/raw/noop_verify_check__click__rbench__001__20260507/verifier.stdout.txt"
+  }
+}
