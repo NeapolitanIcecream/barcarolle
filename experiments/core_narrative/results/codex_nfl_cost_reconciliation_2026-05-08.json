@@ -1,7 +1,7 @@
 {
   "actual_provider_billed_cost_observed_usd": null,
   "actual_provider_billed_cost_status": "unknown_no_invoice_or_billed_cost_records",
-  "estimate_only_record_count": 14,
+  "estimate_only_record_count": 15,
   "estimate_only_run_ids": [
     "pilot_001__cheap-generic-swe__click__rbench__001__attempt1",
     "pilot_002__cheap-generic-swe__click__rbench__002__attempt1",
@@ -16,7 +16,8 @@
     "pilot_009__frontier-generic-swe__click__rbench__001__attempt1",
     "pilot_010__frontier-generic-swe__click__rbench__001__structured-files-json__attempt1",
     "pilot_011__frontier-generic-swe__click__rbench__001__structured-files-json-http300__attempt1",
-    "codex_nfl_mock_smoke_20260507__cheap-generic-swe__click__rbench__001__attempt1"
+    "codex_nfl_mock_smoke_20260507__cheap-generic-swe__click__rbench__001__attempt1",
+    "codex_nfl_clean_verify_mock_20260508__cheap-generic-swe__click__rbench__001__attempt1"
   ],
   "interpretation": "ledger_estimated_cost_sum_usd is the current budget-gate ledger total. It may be calibrated to provider response usage cost where available, but provider usage cost is still not invoice proof; actual billed cost remains unknown unless actual_cost_usd is populated from provider billing/invoice data.",
   "latest_cumulative_estimated_cost_usd": 0.716208,
@@ -302,6 +303,6 @@
       "total_tokens": 27331
     }
   ],
-  "record_count": 27,
+  "record_count": 28,
   "tool": "reconcile_cost_accounting"
 }

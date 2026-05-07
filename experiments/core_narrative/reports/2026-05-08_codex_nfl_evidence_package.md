@@ -94,6 +94,21 @@ Verifier repair:
 - The runner is direct search/replace, not the old interactive Codex CLI path.
 - Task 002 required verifier repair; use normalized outputs and `codex_nfl_live_summary_20260507.json` for scoring, not the stale in-flight aggregate.
 
+## Next Experiment Advice
+
+GPT-5.5-Pro reviewed this evidence package in `/Users/chenmohan/Downloads/barcarolle-research-0.md`. The accepted next direction is recorded in `experiments/core_narrative/reports/2026-05-08_gpt55pro_next_experiment_advice.md`.
+
+Summary:
+
+- Do not switch to a new repository yet.
+- Do not only repeat the original 9 cells.
+- First harden runner and verifier trust without live API spend.
+- Fill the missing `frontier-click-specialist` cells on tasks 001-003.
+- Repeat the complete 4 ACUT by 3 task matrix as attempt 2.
+- Expand to Click tasks 004-008 only after `experiments/core_narrative/reports/next_experiment_decision_gates.md` passes.
+
+Initial Step 0 progress is already in this PR: the batch runner now replays `submission.patch` in a clean `__verify` workspace, and `codex_nfl_clean_verify_mock_20260508` passed a no-model smoke run with `metadata.skip_apply: false`.
+
 ## Prompt For GPT-5.5-Pro
 
 ```text

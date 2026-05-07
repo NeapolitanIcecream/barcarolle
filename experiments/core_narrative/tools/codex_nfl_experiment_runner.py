@@ -144,8 +144,14 @@ def context_paths_for_task(task: Mapping[str, Any], workspace: Path) -> list[str
     return sorted(set(valid))
 
 
-def prepare_workspace(task_id: str, run_id: str, artifact_dir: Path) -> tuple[Path, dict[str, Any]]:
-    workspace = WORKSPACES_ROOT / run_id
+def prepare_workspace(
+    task_id: str,
+    workspace_name: str,
+    artifact_dir: Path,
+    *,
+    summary_name: str = "prepare_workspace",
+) -> tuple[Path, dict[str, Any]]:
+    workspace = WORKSPACES_ROOT / workspace_name
     command = [
         sys.executable,
         str(PREPARE),
@@ -157,15 +163,21 @@ def prepare_workspace(task_id: str, run_id: str, artifact_dir: Path) -> tuple[Pa
         str(workspace),
         "--force",
         "--output",
-        str(artifact_dir / "prepare_workspace.json"),
+        str(artifact_dir / f"{summary_name}.json"),
     ]
     completed = run_capture(command, timeout=120)
     if completed.returncode != 0:
         raise ToolError("workspace preparation failed", stderr=redact_sensitive_text(completed.stderr, os.environ))
-    return workspace, json.loads((artifact_dir / "prepare_workspace.json").read_text(encoding="utf-8"))
+    return workspace, json.loads((artifact_dir / f"{summary_name}.json").read_text(encoding="utf-8"))
 
 
-def install_workspace(workspace: Path, artifact_dir: Path, timeout_seconds: int) -> dict[str, Any]:
+def install_workspace(
+    workspace: Path,
+    artifact_dir: Path,
+    timeout_seconds: int,
+    *,
+    name_prefix: str = "",
+) -> dict[str, Any]:
     command = [
         sys.executable,
         "-m",
@@ -178,7 +190,7 @@ def install_workspace(workspace: Path, artifact_dir: Path, timeout_seconds: int)
     summary = write_command_artifacts(
         completed=completed,
         artifact_dir=artifact_dir,
-        name="venv_create",
+        name=f"{name_prefix}venv_create",
         command=command,
         started_at=started_at,
         finished_at=finished_at,
@@ -193,7 +205,7 @@ def install_workspace(workspace: Path, artifact_dir: Path, timeout_seconds: int)
     summary = write_command_artifacts(
         completed=completed,
         artifact_dir=artifact_dir,
-        name="venv_install",
+        name=f"{name_prefix}venv_install",
         command=install,
         started_at=started_at,
         finished_at=finished_at,
@@ -401,7 +413,6 @@ def verify_patch(
         str(artifact_dir),
         "--output",
         str(normalized_path),
-        "--skip-apply",
     ]
     started_at = iso_now()
     completed = run_capture(command, timeout=120)
@@ -454,9 +465,24 @@ def run_one(args: argparse.Namespace, task: Mapping[str, Any], acut_id: str) -> 
     )
     patch_path = artifact_dir / "submission.patch"
     patch_ready = runner_code == 0 and patch_path.exists() and patch_path.stat().st_size > 0
+    verify_workspace = None
+    verify_prepare_summary = None
+    verify_install_summary = None
     if patch_ready:
+        verify_workspace, verify_prepare_summary = prepare_workspace(
+            task_id,
+            run_id + "__verify",
+            artifact_dir,
+            summary_name="prepare_verify_workspace",
+        )
+        verify_install_summary = install_workspace(
+            verify_workspace,
+            artifact_dir,
+            args.install_timeout_seconds,
+            name_prefix="verify_",
+        )
         verify_code, normalized = verify_patch(
-            workspace=workspace,
+            workspace=verify_workspace,
             task_id=task_id,
             acut_id=acut_id,
             attempt=args.attempt,
@@ -489,6 +515,8 @@ def run_one(args: argparse.Namespace, task: Mapping[str, Any], acut_id: str) -> 
         "verify_code": verify_code,
         "artifact_dir": str(artifact_dir),
         "workspace": str(workspace),
+        "runner_workspace": str(workspace),
+        "verify_workspace": str(verify_workspace) if verify_workspace is not None else None,
         "normalized_result": str(normalized_path),
         "patch_path": str(patch_path),
         "prompt_snapshot": runner_result.get("prompt_snapshot"),
@@ -497,6 +525,8 @@ def run_one(args: argparse.Namespace, task: Mapping[str, Any], acut_id: str) -> 
         "duration_seconds": round(time.monotonic() - started, 3),
         "prepare": prepare_summary,
         "install": install_summary,
+        "verify_prepare": verify_prepare_summary,
+        "verify_install": verify_install_summary,
         "noop": noop_summary,
         "runner_result": runner_result,
         "normalized": normalized,
