@@ -55,6 +55,7 @@ from run_task import write_safe_patch
 
 TOOL = "openclaw_direct_runner"
 RUNNER_ID = "openclaw-direct-search-replace-v1"
+REPO_ROOT = Path(__file__).resolve().parents[3]
 DEFAULT_HTTP_TIMEOUT_SECONDS = 300
 DEFAULT_MAX_FILE_CHARS = 80_000
 DEFAULT_MAX_CONTEXT_CHARS = 120_000
@@ -173,6 +174,16 @@ def specialist_context_path(acut: Mapping[str, Any]) -> str | None:
     if allowed and isinstance(path, str) and path:
         return path
     return None
+
+
+def resolve_specialist_context_file(path: str, acut_path: Path) -> Path:
+    candidate = Path(path)
+    if candidate.is_absolute():
+        return candidate
+    repo_relative = REPO_ROOT / candidate
+    if repo_relative.exists():
+        return repo_relative
+    return (acut_path.parent / candidate).resolve()
 
 
 def build_prompt(
@@ -707,9 +718,15 @@ def main(argv: Sequence[str] | None = None) -> int:
             args.include_specialist_context == "auto" and specialist_path is not None
         )
         if include_specialist and specialist_path is not None:
-            specialist_file = Path(specialist_path)
-            if specialist_file.exists():
-                specialist_text, _ = truncate_text(specialist_file.read_text(encoding="utf-8"), args.max_file_chars)
+            specialist_file = resolve_specialist_context_file(specialist_path, acut_path)
+            if not specialist_file.exists() or not specialist_file.is_file():
+                raise ToolError(
+                    "specialist context file does not exist",
+                    path=specialist_path,
+                    resolved_path=str(specialist_file),
+                    failure_class="specialist_context_missing",
+                )
+            specialist_text, _ = truncate_text(specialist_file.read_text(encoding="utf-8"), args.max_file_chars)
 
         prompt = build_prompt(
             task=task,

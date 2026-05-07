@@ -272,6 +272,61 @@ class OpenClawDirectRunnerTests(unittest.TestCase):
         self.assertIs(summary["details"]["network_attempted"], False)
         self.assertFalse((artifact_dir / "provider_response.redacted.json").exists())
 
+    def test_specialist_context_uses_repo_relative_path_outside_repo_cwd(self) -> None:
+        """Regression: specialist runs must not depend on the process cwd."""
+        artifact_dir = self.root / "specialist-artifacts"
+        output_path = self.root / "specialist.json"
+        response = json.dumps(
+            {
+                "edits": [
+                    {
+                        "path": "module.py",
+                        "old": "VALUE = 1\n",
+                        "new": "VALUE = 2\n",
+                    }
+                ]
+            }
+        )
+
+        completed = run(
+            [
+                sys.executable,
+                str(RUNNER),
+                "--workspace",
+                str(self.workspace),
+                "--task",
+                str(self.task_path),
+                "--acut",
+                str(REPO_ROOT / "experiments/core_narrative/configs/acuts/cheap-click-specialist.yaml"),
+                "--attempt",
+                "1",
+                "--run-id",
+                "unit_openclaw_specialist_context_attempt1",
+                "--artifact-dir",
+                str(artifact_dir),
+                "--output",
+                str(output_path),
+                "--llm-ledger",
+                str(self.ledger_path),
+                "--projected-cost-usd",
+                "1",
+                "--context-path",
+                "module.py",
+                "--mock-response-text",
+                response,
+            ],
+            cwd=self.root,
+            env=self.env(),
+        )
+
+        self.assertEqual(completed.returncode, 0, completed.stderr)
+        snapshot = json.loads((artifact_dir / "prompt_snapshot.json").read_text(encoding="utf-8"))
+        self.assertIs(snapshot["specialist_context_included"], True)
+        self.assertEqual(
+            snapshot["specialist_context_path"],
+            "experiments/core_narrative/context_packs/click_specialist/context_prompt.md",
+        )
+
     def test_mock_response_rejects_unsafe_raw_text_before_redaction_mutates_edit(self) -> None:
         """Regression: redaction must not turn unsafe model edits into applied placeholders."""
         redacted_placeholder = "<redacted:url>"
