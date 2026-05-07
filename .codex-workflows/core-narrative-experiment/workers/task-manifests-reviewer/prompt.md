@@ -66,4 +66,3 @@ status: no_issues | issues_found | blocked
 
 - Update `.codex-workflows/core-narrative-experiment/workers/task-manifests-reviewer/process.md` with current status, files inspected, checks run, findings count, blockers, and handoff.
 - If review completes, commit only the review artifact and reviewer process update on branch `codex/core-exp-task-manifests-reviewer`. Do not commit delivered task-manifests artifacts.
-

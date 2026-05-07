@@ -11,4 +11,3 @@ codex exec \
   - < .codex-workflows/core-narrative-experiment/workers/task-manifests-reviewer/prompt.md \
   > .codex-workflows/core-narrative-experiment/workers/task-manifests-reviewer/cli.log \
   2>&1
-
