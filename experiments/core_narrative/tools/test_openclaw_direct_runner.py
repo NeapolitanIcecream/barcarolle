@@ -11,8 +11,10 @@ import sys
 import tempfile
 import types
 import unittest
+from unittest import mock
 from pathlib import Path
 
+import openclaw_direct_runner as runner_module
 from openclaw_direct_runner import append_failure_record_if_model_responded, provider_text_and_usage
 
 
@@ -103,6 +105,64 @@ class OpenClawDirectRunnerTests(unittest.TestCase):
         self.assertEqual(text, '{"edits": []}')
         self.assertEqual(usage, {"prompt_tokens": 12, "completion_tokens": 3, "total_tokens": 15})
 
+    def test_live_model_returns_raw_text_while_persisting_redacted_response(self) -> None:
+        """Regression: live response parsing must not consume redacted model text."""
+        raw_url = "http" + "s://" + "gateway.example.invalid/v1"
+        response_text = json.dumps(
+            {
+                "edits": [
+                    {
+                        "path": "module.py",
+                        "old": f'ENDPOINT = "{raw_url}"\n',
+                        "new": 'ENDPOINT = "safe"\n',
+                    }
+                ]
+            }
+        )
+        body = json.dumps(
+            {
+                "choices": [{"message": {"content": response_text}}],
+                "usage": {"prompt_tokens": 12, "completion_tokens": 4},
+            }
+        ).encode("utf-8")
+        raw_response_path = self.root / "provider_response.redacted.json"
+
+        class FakeResponse:
+            def __enter__(self):
+                return self
+
+            def __exit__(self, exc_type, exc, traceback):
+                return False
+
+            def read(self, size):
+                return body
+
+        def fake_urlopen(request, timeout):
+            return FakeResponse()
+
+        env = {
+            "BARCAROLLE_LLM_API_KEY": "unit-secret-value",
+            "BARCAROLLE_LLM_BASE_URL": "http" + "s://" + "llm-gateway.example.invalid/v1",
+        }
+        with mock.patch.dict(os.environ, env, clear=False), mock.patch.object(
+            runner_module.urllib.request,
+            "urlopen",
+            fake_urlopen,
+        ):
+            text, usage, _profile = runner_module.call_live_model(
+                acut={"model": "openai/gpt-5.4-mini", "model_parameters": {}},
+                prompt="Return JSON edits.",
+                timeout_seconds=1,
+                max_response_bytes=10_000,
+                raw_response_path=raw_response_path,
+            )
+
+        self.assertIn(raw_url, text)
+        self.assertEqual(usage, {"prompt_tokens": 12, "completion_tokens": 4})
+        persisted = raw_response_path.read_text(encoding="utf-8")
+        self.assertNotIn(raw_url, persisted)
+        self.assertIn("<redacted:url>", persisted)
+
     def test_mock_search_replace_generates_patch_and_zero_cost_unknown_actual(self) -> None:
         """The OpenClaw runner can produce a verifier-ready patch without old Codex plumbing."""
         artifact_dir = self.root / "artifacts"
@@ -166,6 +226,68 @@ class OpenClawDirectRunnerTests(unittest.TestCase):
         self.assertEqual(ledger_records[0]["metadata"]["cost_basis"], "no_model")
         self.assertNotIn(self.env()["BARCAROLLE_LLM_API_KEY"], json.dumps(summary))
         self.assertNotIn("http" + "s://", json.dumps(summary))
+
+    def test_mock_response_rejects_unsafe_raw_text_before_redaction_mutates_edit(self) -> None:
+        """Regression: redaction must not turn unsafe model edits into applied placeholders."""
+        redacted_placeholder = "<redacted:url>"
+        (self.workspace / "module.py").write_text(f'ENDPOINT = "{redacted_placeholder}"\n', encoding="utf-8")
+        run(["git", "add", "module.py"], cwd=self.workspace)
+        commit = run(["git", "commit", "-m", "endpoint placeholder"], cwd=self.workspace)
+        self.assertEqual(commit.returncode, 0, commit.stderr)
+
+        artifact_dir = self.root / "unsafe-response-artifacts"
+        output_path = self.root / "unsafe-response.json"
+        raw_url = "http" + "s://" + "gateway.example.invalid/v1"
+        response = json.dumps(
+            {
+                "edits": [
+                    {
+                        "path": "module.py",
+                        "old": f'ENDPOINT = "{raw_url}"\n',
+                        "new": 'ENDPOINT = "replacement"\n',
+                    }
+                ]
+            }
+        )
+
+        completed = run(
+            [
+                sys.executable,
+                str(RUNNER),
+                "--workspace",
+                str(self.workspace),
+                "--task",
+                str(self.task_path),
+                "--acut",
+                str(self.acut_path),
+                "--attempt",
+                "1",
+                "--run-id",
+                "unit_openclaw_unsafe_raw_response_attempt1",
+                "--artifact-dir",
+                str(artifact_dir),
+                "--output",
+                str(output_path),
+                "--llm-ledger",
+                str(self.ledger_path),
+                "--projected-cost-usd",
+                "1",
+                "--context-path",
+                "module.py",
+                "--mock-response-text",
+                response,
+            ],
+            cwd=REPO_ROOT,
+            env=self.env(),
+        )
+
+        self.assertEqual(completed.returncode, 2, completed.stderr)
+        summary = json.loads(output_path.read_text(encoding="utf-8"))
+        self.assertEqual(summary["status"], "error")
+        self.assertEqual(summary["details"]["unsafe_content"]["reason_counts"], {"full_url": 1})
+        self.assertEqual((self.workspace / "module.py").read_text(encoding="utf-8"), f'ENDPOINT = "{redacted_placeholder}"\n')
+        persisted = (artifact_dir / "provider_response.redacted.json").read_text(encoding="utf-8")
+        self.assertNotIn(raw_url, persisted)
 
     def test_mock_search_replace_rejects_edits_outside_context_paths(self) -> None:
         """Regression: generated edits must stay within the files shown to the model."""

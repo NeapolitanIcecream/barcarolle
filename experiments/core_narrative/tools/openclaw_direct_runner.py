@@ -370,7 +370,7 @@ def call_live_model(
         raise ToolError("LLM response exceeded maximum size", network_attempted=True, request_profile=profile)
     raw_response_path.write_text(redact_sensitive_text(body, os.environ), encoding="utf-8")
     text, usage = provider_text_and_usage(body)
-    return redact_sensitive_text(text, os.environ), usage, profile
+    return text, usage, profile
 
 
 def read_mock_response(args: argparse.Namespace) -> str:
@@ -760,8 +760,8 @@ def main(argv: Sequence[str] | None = None) -> int:
             event = "dry_run_no_model"
         else:
             if mode == "mock_response":
-                model_text = redact_sensitive_text(read_mock_response(args), os.environ)
-                raw_response_path.write_text(model_text, encoding="utf-8")
+                model_text = read_mock_response(args)
+                raw_response_path.write_text(redact_sensitive_text(model_text, os.environ), encoding="utf-8")
             else:
                 model_text, provider_usage, request_profile = call_live_model(
                     acut=acut,
