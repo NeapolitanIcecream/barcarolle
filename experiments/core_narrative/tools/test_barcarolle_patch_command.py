@@ -15,7 +15,11 @@ from unittest import mock
 from pathlib import Path
 
 import barcarolle_patch_command as patch_command_module
-from barcarolle_patch_command import live_request_payload, resolve_live_endpoint
+from barcarolle_patch_command import (
+    STRUCTURED_FILES_OUTPUT_CONTRACT,
+    live_request_payload,
+    resolve_live_endpoint,
+)
 
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
@@ -226,9 +230,70 @@ class BarcarollePatchCommandTests(unittest.TestCase):
         summary = json.loads(summary_path.read_text(encoding="utf-8"))
         self.assertEqual(summary["status"], "error")
         self.assertEqual(summary["error"], "generated unified diff failed git apply validation")
+        self.assertEqual(summary["failure_class"], "invalid_unified_diff")
         self.assertIs(summary["model_call_made"], True)
         self.assertIs(summary["details"]["model_response_received"], True)
         self.assertEqual((self.workspace / "module.py").read_text(encoding="utf-8"), "VALUE = 1\n")
+
+    def test_structured_files_contract_rejects_unified_diff_before_workspace_mutation(self) -> None:
+        """Given the strict direct-output contract, unified diffs are rejected as contract drift."""
+        summary_path = self.root / "structured-contract-rejects-diff-summary.json"
+        patch = textwrap.dedent(
+            """\
+            diff --git a/module.py b/module.py
+            --- a/module.py
+            +++ b/module.py
+            @@ -1 +1 @@
+            -VALUE = 1
+            +VALUE = 2
+            """
+        )
+
+        completed = self.run_patch_command(
+            "--mock-response-text",
+            json.dumps({"unified_diff": patch}),
+            "--output-contract",
+            "structured-files-json-v1",
+            summary_path=summary_path,
+        )
+
+        self.assertEqual(completed.returncode, 2, completed.stderr)
+        summary = json.loads(summary_path.read_text(encoding="utf-8"))
+        self.assertEqual(summary["status"], "error")
+        self.assertEqual(summary["failure_class"], "output_contract_violation")
+        self.assertIs(summary["model_call_made"], False)
+        self.assertEqual((self.workspace / "module.py").read_text(encoding="utf-8"), "VALUE = 1\n")
+
+    def test_structured_files_contract_applies_json_files_without_llm_environment(self) -> None:
+        """Given strict JSON files output, the direct path can avoid malformed diff syntax."""
+        summary_path = self.root / "structured-contract-applies-files-summary.json"
+        response = json.dumps(
+            {
+                "files": [
+                    {
+                        "path": "module.py",
+                        "action": "replace",
+                        "content": "VALUE = 2\n",
+                    }
+                ]
+            }
+        )
+
+        completed = self.run_patch_command(
+            "--mock-response-text",
+            response,
+            "--output-contract",
+            "structured-files-json-v1",
+            summary_path=summary_path,
+        )
+
+        self.assertEqual(completed.returncode, 0, completed.stderr)
+        summary = json.loads(summary_path.read_text(encoding="utf-8"))
+        self.assertEqual(summary["status"], "mock_response_applied")
+        self.assertEqual(summary["output_contract"], "structured-files-json-v1")
+        self.assertEqual(summary["patch"]["kind"], "structured_files")
+        self.assertEqual(summary["patch"]["changed_paths"], ["module.py"])
+        self.assertEqual((self.workspace / "module.py").read_text(encoding="utf-8"), "VALUE = 2\n")
 
 
     def test_adapter_command_no_model_wraps_mock_response_with_zero_cost_ledger(self) -> None:
@@ -333,6 +398,21 @@ class BarcarollePatchCommandTests(unittest.TestCase):
         self.assertNotIn("stream", payload)
         self.assertNotIn("http" + "s://", json.dumps(payload))
         self.assertNotIn("Bearer", json.dumps(payload))
+
+    def test_structured_files_contract_requests_json_object_without_network(self) -> None:
+        """The strict direct-output contract asks chat-completions routes for JSON object output."""
+        endpoint, endpoint_kind = resolve_live_endpoint("http" + "s://" + "llm-gateway.example.invalid/v1")
+        payload = live_request_payload(
+            {"model": "openai/gpt-5.5", "model_parameters": {"reasoning_effort": "medium"}},
+            "prepared prompt",
+            endpoint_kind,
+            STRUCTURED_FILES_OUTPUT_CONTRACT,
+        )
+
+        self.assertTrue(endpoint.endswith("/chat/completions"))
+        self.assertEqual(payload["response_format"], {"type": "json_object"})
+        self.assertNotIn("stream", payload)
+        self.assertNotIn("http" + "s://", json.dumps(payload))
 
 
 if __name__ == "__main__":

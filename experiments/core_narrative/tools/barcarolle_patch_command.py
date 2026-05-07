@@ -32,6 +32,8 @@ from _llm_budget import (
 
 TOOL = "barcarolle_patch_command"
 COMMAND_CONTRACT_ID = "barcarolle-patch-command-v1"
+DEFAULT_OUTPUT_CONTRACT = "patch-or-files-v1"
+STRUCTURED_FILES_OUTPUT_CONTRACT = "structured-files-json-v1"
 DEFAULT_TASK_PACKAGE = ".core_narrative/task.json"
 DEFAULT_MAX_STATEMENT_CHARS = 6_000
 DEFAULT_MAX_MANIFEST_CHARS = 5_000
@@ -64,6 +66,16 @@ def parse_args(argv: Sequence[str]) -> argparse.Namespace:
     parser.add_argument("--mock-response-text", help="Use this no-model mock response text and apply it.")
     parser.add_argument("--no-apply", action="store_true", help="Validate a mock patch without modifying the workspace.")
     parser.add_argument("--summary-output", help="Optional redacted machine-readable summary JSON path.")
+    parser.add_argument(
+        "--output-contract",
+        choices=(DEFAULT_OUTPUT_CONTRACT, STRUCTURED_FILES_OUTPUT_CONTRACT),
+        default=DEFAULT_OUTPUT_CONTRACT,
+        help=(
+            "Direct model output contract. The default accepts unified diffs or "
+            "structured files; structured-files-json-v1 requests strict JSON "
+            "and rejects unified-diff fallbacks before workspace mutation."
+        ),
+    )
     parser.add_argument(
         "--http-timeout-seconds",
         type=int,
@@ -230,10 +242,26 @@ def build_prompt(
     statement: str,
     acut: Mapping[str, Any],
     max_manifest_chars: int,
+    output_contract: str = DEFAULT_OUTPUT_CONTRACT,
 ) -> tuple[str, bool]:
     acut_json = json.dumps(concise_acut_summary(acut), indent=2, sort_keys=True)
     acut_json, manifest_truncated = truncate_text(acut_json, max_manifest_chars)
     task_json = json.dumps(concise_task_summary(task), indent=2, sort_keys=True)
+    if output_contract == STRUCTURED_FILES_OUTPUT_CONTRACT:
+        return_contract = [
+            "Return only a JSON object. Do not include markdown fences, prose, or a unified diff.",
+            "The JSON object must have this shape:",
+            '{"files":[{"path":"relative/path","action":"write","content":"full file content"}]}',
+            "Allowed actions are write, create, replace, and delete. For delete, omit content.",
+            "Each path must be relative and must not target .git or .core_narrative.",
+        ]
+    else:
+        return_contract = [
+            "Return either:",
+            "1. A unified diff applicable with git apply.",
+            "2. JSON with a string field named unified_diff, patch, or diff.",
+            "3. JSON with files: [{path, action, content}], where action is write, create, replace, or delete.",
+        ]
     prompt = "\n".join(
         [
             "You are generating a minimal repository patch for one prepared ACUT task.",
@@ -242,10 +270,7 @@ def build_prompt(
             "Do not use future history, reference patches, private benchmark artifacts, or ACUT outputs.",
             "Do not expose credentials, endpoint values, bearer tokens, or full URLs in the patch.",
             "",
-            "Return either:",
-            "1. A unified diff applicable with git apply.",
-            "2. JSON with a string field named unified_diff, patch, or diff.",
-            "3. JSON with files: [{path, action, content}], where action is write, create, replace, or delete.",
+            *return_contract,
             "",
             "Task package summary:",
             task_json,
@@ -294,7 +319,12 @@ def resolve_live_endpoint(raw_endpoint: str) -> tuple[str, str]:
     return endpoint.rstrip("/") + "/chat/completions", "chat_completions"
 
 
-def live_request_payload(acut: Mapping[str, Any], prompt: str, endpoint_kind: str) -> dict[str, Any]:
+def live_request_payload(
+    acut: Mapping[str, Any],
+    prompt: str,
+    endpoint_kind: str,
+    output_contract: str = DEFAULT_OUTPUT_CONTRACT,
+) -> dict[str, Any]:
     model = acut.get("model")
     if not isinstance(model, str) or not model:
         raise ToolError("ACUT manifest is missing model")
@@ -312,7 +342,7 @@ def live_request_payload(acut: Mapping[str, Any], prompt: str, endpoint_kind: st
             ],
             **params,
         }
-    return {
+    payload = {
         "model": model,
         "messages": [
             {"role": "system", "content": system},
@@ -320,6 +350,9 @@ def live_request_payload(acut: Mapping[str, Any], prompt: str, endpoint_kind: st
         ],
         **params,
     }
+    if output_contract == STRUCTURED_FILES_OUTPUT_CONTRACT:
+        payload["response_format"] = {"type": "json_object"}
+    return payload
 
 
 def extract_text_from_provider_response(body: bytes) -> str:
@@ -374,10 +407,11 @@ def call_live_model(
     env: Mapping[str, str],
     timeout_seconds: int,
     max_response_bytes: int,
+    output_contract: str = DEFAULT_OUTPUT_CONTRACT,
 ) -> str:
     api_key, raw_endpoint = require_live_env(env)
     endpoint, endpoint_kind = resolve_live_endpoint(raw_endpoint)
-    payload = live_request_payload(acut, prompt, endpoint_kind)
+    payload = live_request_payload(acut, prompt, endpoint_kind, output_contract)
     request_body = json.dumps(payload).encode("utf-8")
     request = urllib.request.Request(
         endpoint,
@@ -488,6 +522,34 @@ def parse_patch_response(text: str) -> dict[str, Any]:
     if inline:
         return {"kind": "unified_diff", "text": inline}
     raise ToolError("model response did not contain a supported patch")
+
+
+def enforce_output_contract(parsed: Mapping[str, Any], output_contract: str) -> None:
+    if output_contract != STRUCTURED_FILES_OUTPUT_CONTRACT:
+        return
+    if parsed.get("kind") != "structured_files":
+        raise ToolError(
+            "structured-files output contract requires JSON files",
+            failure_class="output_contract_violation",
+        )
+
+
+def classify_failure(error: str, details: Mapping[str, Any]) -> str:
+    if isinstance(details.get("failure_class"), str):
+        return str(details["failure_class"])
+    if error == "generated unified diff failed git apply validation":
+        return "invalid_unified_diff"
+    if error == "model response did not contain a supported patch":
+        return "unsupported_patch_response"
+    if error == "structured-files output contract requires JSON files":
+        return "output_contract_violation"
+    if "unsafe content" in error:
+        return "unsafe_generated_content"
+    if error == "LLM request timed out":
+        return "llm_request_timed_out"
+    if error.startswith("LLM request"):
+        return "llm_request_failed"
+    return "direct_patch_command_error"
 
 
 def reject_unsafe_generated_text(text: str, label: str) -> None:
@@ -692,6 +754,7 @@ def base_payload(
     statement_path: Path | None,
     statement_truncated: bool,
     manifest_truncated: bool,
+    output_contract: str,
 ) -> dict[str, Any]:
     prompt_info = {
         "prepared": prompt is not None,
@@ -707,6 +770,7 @@ def base_payload(
         "command_contract_id": COMMAND_CONTRACT_ID,
         "status": status,
         "mode": mode,
+        "output_contract": output_contract,
         "model_call_made": mode == "live" and status.endswith("_applied"),
         "workspace": None if workspace is None else str(workspace),
         "task_id": None if task is None else task.get("task_id"),
@@ -739,6 +803,7 @@ def run(argv: Sequence[str]) -> int:
         statement=statement,
         acut=acut,
         max_manifest_chars=args.max_manifest_chars,
+        output_contract=args.output_contract,
     )
 
     if mode == "dry_run":
@@ -752,6 +817,7 @@ def run(argv: Sequence[str]) -> int:
             statement_path=statement_path,
             statement_truncated=statement_truncated,
             manifest_truncated=manifest_truncated,
+            output_contract=args.output_contract,
         )
         payload["patch"] = {"received": False, "validated": False, "applied": False}
         emit_payload(payload, args.summary_output)
@@ -768,6 +834,7 @@ def run(argv: Sequence[str]) -> int:
             env=os.environ,
             timeout_seconds=args.http_timeout_seconds,
             max_response_bytes=args.max_response_bytes,
+            output_contract=args.output_contract,
         )
         model_call_made = True
         model_response_received = True
@@ -775,6 +842,7 @@ def run(argv: Sequence[str]) -> int:
     try:
         reject_unsafe_generated_text(model_text, "model response")
         parsed = parse_patch_response(model_text)
+        enforce_output_contract(parsed, args.output_contract)
         patch_result = apply_patch_response(workspace, parsed, apply_patch=not args.no_apply)
     except ToolError as exc:
         if model_response_received:
@@ -793,8 +861,10 @@ def run(argv: Sequence[str]) -> int:
         statement_path=statement_path,
         statement_truncated=statement_truncated,
         manifest_truncated=manifest_truncated,
+        output_contract=args.output_contract,
     )
     payload["model_call_made"] = model_call_made
+    payload["output_contract"] = args.output_contract
     payload["patch"] = {
         "received": True,
         "response_sha256": sha256_text(model_text),
@@ -811,11 +881,13 @@ def main() -> int:
     except Exception as exc:
         exit_code = exc.exit_code if isinstance(exc, ToolError) else 1
         details = exc.details if isinstance(exc, ToolError) else {"exception_type": type(exc).__name__}
+        failure_class = classify_failure(str(exc), details if isinstance(details, dict) else {})
         payload = {
             "tool": TOOL,
             "status": "error",
             "error": sanitize_text(str(exc)),
             "details": sanitize_jsonish(details),
+            "failure_class": failure_class,
             "model_call_made": bool(details.get("model_call_made", False)),
             "llm_env_policy": llm_env_summary(os.environ),
         }

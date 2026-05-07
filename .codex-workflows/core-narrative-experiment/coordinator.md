@@ -1,7 +1,7 @@
 # Core Narrative Experiment Coordinator
 
-status: pilot_009_integrated_direct_invalid_patch_hardening_recorded
-updated: 2026-05-07T01:24:00+08:00
+status: direct_output_contract_no_model_hardening_recorded
+updated: 2026-05-07T13:10:00+08:00
 today_stop_state: 2026-04-28_stop_policy_expired
 phase: Phase 0 - Experiment Bootstrap
 base_commit: 47046e7754d2402b7177a4b80f631ab6b0bcd97c
@@ -256,6 +256,7 @@ No further live BARCAROLLE model call, broad ACUT execution, retry, second attem
 - pilot_009_direct_probe_delivery: worker branch `codex/core-exp-pilot-009-direct-probe` delivered commit `af5da93`, integrated as merge commit `314fffa`. Exactly one live adapter attempt ran through the direct `barcarolle_patch_command.py` path for `frontier-generic-swe` / `click__rbench__001`; it did not repeat the redacted direct-command `gaierror` family and did not use Codex CLI Responses streaming. The live model response failed patch validation (`generated unified diff failed git apply validation`, `corrupt patch at line 12`), so adapter status is `command_failed`, normalized status is `infra_failed`, patch size is `0`, no verifier-ready patch existed, and no verifier/retry/second attempt/additional specialist run/broad execution/further pilot/large batch occurred. Ledger now has `12` records and cumulative estimated cost USD `41.0008`.
 - pilot_009_triage_and_review: result triage recorded at `experiments/core_narrative/reports/pilot_009_direct_probe_triage.md`; focused review recorded at `.codex-workflows/core-narrative-experiment/reviews/pilot-009-direct-probe-review.md` with status `no_issues`. Scoped no-secret scan found zero required env value, bearer-token, secret-like, full URL, or IPv4 hits across owned text artifacts.
 - pilot_009_no_model_hardening: direct command error summaries now preserve `model_call_made: true` and `model_response_received: true` when a live model response is received but rejected during patch validation. Regression test was added after first observing the failure; no live BARCAROLLE model/API call was made by the hardening.
+- preflight_and_plan_2026_05_07: bounded no-model restart inventory and direct-output-contract hardening delivered. Added `structured-files-json-v1` to `barcarolle_patch_command.py`, added direct failure classes such as `invalid_unified_diff` and `output_contract_violation`, updated `acut_patch_adapter.py` to preserve direct patch-command failure classes/model-response receipt metadata, and recorded `experiments/core_narrative/reports/2026-05-07_preflight_direct_output_contract.md` plus worker process notes. Verification passed with py_compile and 20 focused unittest specs. No live BARCAROLLE call, ledger append, push, PR, or external mutation occurred; pre-existing dirty `docs/experiments/core-narrative-experiment-plan.md` remains preserved and uncommitted.
 
 ## Execution Start Preflight
 
@@ -437,12 +438,12 @@ No further live BARCAROLLE model call, broad ACUT execution, retry, second attem
 
 ## Execution Planning Gate
 
-- gate_status: pilot_009_integrated_direct_invalid_patch_hardening_recorded
-- checked_at: 2026-05-06T21:55:01+08:00
+- gate_status: direct_output_contract_no_model_hardening_recorded
+- checked_at: 2026-05-07T13:10:00+08:00
 - llm_env_presence:
   - `BARCAROLLE_LLM_API_KEY`: present, value not inspected or recorded
   - `BARCAROLLE_LLM_BASE_URL`: present, value not inspected or recorded
-- cost_ledger: `experiments/core_narrative/results/cost_ledger.jsonl` exists, parses as JSONL, and currently records cumulative estimated cost USD `31.0008` across 11 records
+- cost_ledger: `experiments/core_narrative/results/cost_ledger.jsonl` exists, parses as JSONL, and currently records cumulative estimated cost USD `41.0008` across 12 records
 - budget_caps: USD `$240` soft stop, USD `$300` hard cap
 - active_default_slice:
   - acuts: `frontier-generic-swe`, `frontier-click-specialist`, `cheap-generic-swe`, `cheap-click-specialist`
@@ -451,7 +452,7 @@ No further live BARCAROLLE model call, broad ACUT execution, retry, second attem
 - deferred_acuts: `higher-budget-repo-depth`, `retrieval-history-augmented`, `minimal-context-baseline`
 - broad_execution_started: false
 - run_manifest: `experiments/core_narrative/configs/core_subset_run_manifest.yaml`
-- next_allowed_step: no-model direct-output-contract hardening/review only. Do not start any live BARCAROLLE model call, retry, second attempt, additional specialist run, broad execution, further pilot attempt, or large batch without a new reviewed hypothesis and coordinator decision.
+- next_allowed_step: review the no-model `structured-files-json-v1` direct-output contract hardening; if accepted and fresh ledger/env gates pass, the next bounded stage may run exactly one paid direct structured-files probe. Do not start any live BARCAROLLE model call, retry, second attempt, additional specialist run, broad execution, further pilot attempt, or large batch without that new reviewed hypothesis and explicit coordinator decision.
 
 ## Acceptance Gate
 
@@ -462,4 +463,4 @@ No further live BARCAROLLE model call, broad ACUT execution, retry, second attem
 
 ## Next Heartbeat Action
 
-Read this coordinator, `.codex-workflows/core-narrative-experiment/decisions/post-pilot-008-transport-gate.md`, `.codex-workflows/core-narrative-experiment/decisions/post-option-c-direct-probe-readiness.md`, `experiments/core_narrative/reports/pilot_009_direct_probe_triage.md`, and `experiments/core_narrative/reports/kickoff_narrative_evidence_memo.md`; do not inspect `cli.log`. Current state: pilot 009 is integrated, the direct path reached live model output but failed patch validation before verifier, no scoreable ACUT result exists, and no live BARCAROLLE model call is authorized. Do one bounded no-model step: design/review direct-output-contract hardening or report the non-scoreable blocker. Do not start broad ACUT execution, retries, second attempts, additional specialist ACUT runs, further pilot attempts, live BARCAROLLE model calls, or large batches without a new reviewed hypothesis and explicit coordinator decision.
+Read this coordinator, `.codex-workflows/core-narrative-experiment/decisions/post-pilot-008-transport-gate.md`, `.codex-workflows/core-narrative-experiment/decisions/post-option-c-direct-probe-readiness.md`, `experiments/core_narrative/reports/pilot_009_direct_probe_triage.md`, `experiments/core_narrative/reports/2026-05-07_preflight_direct_output_contract.md`, and `experiments/core_narrative/reports/kickoff_narrative_evidence_memo.md`; do not inspect `cli.log`. Current state: pilot 009 is integrated and non-scoreable, the no-model strict structured-files direct-output contract hardening is locally implemented and tested, no scoreable ACUT result exists, and no live BARCAROLLE model call is currently authorized. Next bounded step: review this hardening and, only after fresh ledger/env gates and an explicit run-id decision, optionally run one paid `structured-files-json-v1` direct probe. Do not start broad ACUT execution, retries, second attempts, additional specialist ACUT runs, further pilot attempts, live BARCAROLLE model calls, or large batches without that reviewed hypothesis and explicit coordinator decision.

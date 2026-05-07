@@ -46,6 +46,7 @@ TOOL = "acut_patch_adapter"
 ADAPTER_ID = "codex-cli-acut-adapter-v0"
 NO_MODEL_COMMAND = ["<dry-run:no-model-patch-generation>"]
 INNER_PATCH_COMMAND_TOOL = "codex_cli_patch_command"
+DIRECT_PATCH_COMMAND_TOOL = "barcarolle_patch_command"
 DEFAULT_NONZERO_FAILURE_CLASS = "nonzero_exit"
 
 
@@ -324,6 +325,19 @@ def read_inner_patch_command_summary(command: Sequence[str]) -> dict[str, Any]:
             "inner_status": data.get("status"),
         }
     )
+    if tool == DIRECT_PATCH_COMMAND_TOOL:
+        failure_class = data.get("failure_class")
+        details = data.get("details") if isinstance(data.get("details"), dict) else {}
+        metadata.update(
+            {
+                "failure_class": failure_class if isinstance(failure_class, str) else None,
+                "model_call_made": bool(data.get("model_call_made")),
+                "model_response_received": bool(details.get("model_response_received")),
+                "output_contract": data.get("output_contract") if isinstance(data.get("output_contract"), str) else None,
+            }
+        )
+        return metadata
+
     if tool != INNER_PATCH_COMMAND_TOOL:
         return metadata
 

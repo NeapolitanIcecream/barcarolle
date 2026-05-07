@@ -220,6 +220,36 @@ class AcutPatchAdapterTests(unittest.TestCase):
             "responses_streaming_disconnect",
         )
 
+    def test_nonzero_direct_patch_command_preserves_invalid_diff_failure_class(self) -> None:
+        """Regression: direct-output validation failures should not collapse to generic nonzero exits."""
+        inner_summary = {
+            "tool": "barcarolle_patch_command",
+            "status": "error",
+            "error": "generated unified diff failed git apply validation",
+            "failure_class": "invalid_unified_diff",
+            "model_call_made": True,
+            "details": {
+                "git_apply_stderr": "error: corrupt patch at line 12",
+                "model_response_received": True,
+            },
+        }
+        completed, adapter_result, ledger_records, normalized_path = self.run_adapter_case(
+            inner_summary=inner_summary,
+            run_id="unit_direct_invalid_diff_attempt1",
+        )
+
+        self.assertEqual(completed.returncode, 0, completed.stderr)
+        normalized = json.loads(normalized_path.read_text(encoding="utf-8"))
+
+        self.assertEqual(adapter_result["status"], "command_failed")
+        self.assertEqual(adapter_result["inner_patch_command"]["tool"], "barcarolle_patch_command")
+        self.assertEqual(adapter_result["inner_patch_command"]["failure_class"], "invalid_unified_diff")
+        self.assertIs(adapter_result["inner_patch_command"]["model_call_made"], True)
+        self.assertIs(adapter_result["inner_patch_command"]["model_response_received"], True)
+        self.assertEqual(normalized["metadata"]["failure_class"], "invalid_unified_diff")
+        self.assertEqual(ledger_records[0]["event"], "command_failed")
+        self.assertEqual(ledger_records[0]["metadata"]["failure_class"], "invalid_unified_diff")
+
     def test_unsafe_patch_rejection_is_not_marked_no_patch_generated(self) -> None:
         """Regression: unsafe sanitized artifacts are not true empty-patch runs."""
         completed, adapter_result, ledger_records, normalized_path = self.run_adapter_case(
