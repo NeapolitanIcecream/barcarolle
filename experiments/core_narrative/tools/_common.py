@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 import datetime as _dt
+import ast
 import json
 import re
 import shlex
@@ -32,6 +33,195 @@ def slug(value: str) -> str:
     return cleaned.strip("-") or "unnamed"
 
 
+def parse_yaml_scalar(value: str) -> Any:
+    if value in {"", "null", "Null", "NULL", "~"}:
+        return None
+    if value in {"true", "True", "TRUE"}:
+        return True
+    if value in {"false", "False", "FALSE"}:
+        return False
+    if value in {"[]", "{}", "''", '""'}:
+        return [] if value == "[]" else {} if value == "{}" else ""
+    if value[0:1] in {"'", '"'} and value[-1:] == value[0]:
+        try:
+            return ast.literal_eval(value)
+        except (SyntaxError, ValueError):
+            return value[1:-1]
+    if re.fullmatch(r"[-+]?\d+", value):
+        return int(value)
+    if re.fullmatch(r"[-+]?(?:\d+\.\d*|\.\d+)", value):
+        return float(value)
+    return value
+
+
+def significant_yaml_line(lines: list[str], index: int) -> tuple[int, str] | None:
+    while index < len(lines):
+        raw = lines[index]
+        stripped = raw.strip()
+        if stripped and not stripped.startswith("#"):
+            return len(raw) - len(raw.lstrip(" ")), raw.lstrip(" ").rstrip()
+        index += 1
+    return None
+
+
+def split_yaml_key_value(content: str) -> tuple[str, str]:
+    if ":" not in content:
+        raise ToolError("failed to parse YAML manifest line", line=content)
+    key, value = content.split(":", 1)
+    key = key.strip()
+    if not key:
+        raise ToolError("failed to parse YAML manifest line", line=content)
+    return key, value.strip()
+
+
+def collect_yaml_block_scalar(lines: list[str], index: int, parent_indent: int, style: str) -> tuple[str, int]:
+    block_lines: list[str] = []
+    while index < len(lines):
+        raw = lines[index].rstrip()
+        stripped = raw.strip()
+        if stripped and not stripped.startswith("#"):
+            indent = len(raw) - len(raw.lstrip(" "))
+            if indent <= parent_indent:
+                break
+        block_indent = parent_indent + 2
+        block_lines.append(raw[block_indent:] if len(raw) >= block_indent else "")
+        index += 1
+    if style.startswith("|"):
+        return "\n".join(block_lines), index
+    paragraphs: list[str] = []
+    current: list[str] = []
+    for line in block_lines:
+        if line.strip():
+            current.append(line.strip())
+        elif current:
+            paragraphs.append(" ".join(current))
+            current = []
+    if current:
+        paragraphs.append(" ".join(current))
+    return "\n".join(paragraphs), index
+
+
+def parse_yaml_value(lines: list[str], index: int, indent: int, value: str) -> tuple[Any, int]:
+    if value in {">", ">-", "|", "|-"}:
+        return collect_yaml_block_scalar(lines, index, indent, value)
+    if value:
+        scalar = parse_yaml_scalar(value)
+        if isinstance(scalar, str):
+            continuation: list[str] = [scalar]
+            while index < len(lines):
+                raw = lines[index]
+                stripped = raw.strip()
+                if not stripped or stripped.startswith("#"):
+                    break
+                line_indent = len(raw) - len(raw.lstrip(" "))
+                content = raw.lstrip(" ").rstrip()
+                if line_indent <= indent or content.startswith("- ") or ":" in content:
+                    break
+                continuation.append(content.strip())
+                index += 1
+            scalar = " ".join(continuation)
+        return scalar, index
+    next_line = significant_yaml_line(lines, index)
+    if next_line is None or next_line[0] < indent:
+        return {}, index
+    if next_line[0] == indent and not next_line[1].startswith("- "):
+        return {}, index
+    return parse_yaml_block(lines, index, next_line[0])
+
+
+def parse_yaml_list(lines: list[str], index: int, indent: int) -> tuple[list[Any], int]:
+    values: list[Any] = []
+    while index < len(lines):
+        next_line = significant_yaml_line(lines, index)
+        if next_line is None:
+            return values, len(lines)
+        line_indent, content = next_line
+        if line_indent < indent or not content.startswith("- "):
+            return values, index
+        if line_indent > indent:
+            raise ToolError("unexpected YAML indentation", line=content)
+        index += 1
+        item = content[2:].strip()
+        if not item:
+            next_item_line = significant_yaml_line(lines, index)
+            if next_item_line is None or next_item_line[0] <= indent:
+                values.append(None)
+            else:
+                parsed, index = parse_yaml_block(lines, index, next_item_line[0])
+                values.append(parsed)
+        elif ":" in item and not item.startswith(("http://", "https://")):
+            key, raw_value = split_yaml_key_value(item)
+            parsed_value, index = parse_yaml_value(lines, index, line_indent, raw_value)
+            item_data: dict[str, Any] = {key: parsed_value}
+            next_item_line = significant_yaml_line(lines, index)
+            if next_item_line is not None and next_item_line[0] > indent:
+                nested, index = parse_yaml_block(lines, index, next_item_line[0])
+                if not isinstance(nested, dict):
+                    raise ToolError("YAML list item continuation must be an object", line=item)
+                item_data.update(nested)
+            values.append(item_data)
+        else:
+            scalar = parse_yaml_scalar(item)
+            if isinstance(scalar, str):
+                continuation: list[str] = [scalar]
+                while index < len(lines):
+                    raw = lines[index]
+                    stripped = raw.strip()
+                    if not stripped or stripped.startswith("#"):
+                        break
+                    continuation_indent = len(raw) - len(raw.lstrip(" "))
+                    content = raw.lstrip(" ").rstrip()
+                    if continuation_indent <= line_indent or content.startswith("- ") or ":" in content:
+                        break
+                    continuation.append(content.strip())
+                    index += 1
+                scalar = " ".join(continuation)
+            values.append(scalar)
+    return values, index
+
+
+def parse_yaml_dict(lines: list[str], index: int, indent: int) -> tuple[dict[str, Any], int]:
+    values: dict[str, Any] = {}
+    while index < len(lines):
+        next_line = significant_yaml_line(lines, index)
+        if next_line is None:
+            return values, len(lines)
+        line_indent, content = next_line
+        if line_indent < indent or content.startswith("- "):
+            return values, index
+        if line_indent > indent:
+            raise ToolError("unexpected YAML indentation", line=content)
+        key, raw_value = split_yaml_key_value(content)
+        index += 1
+        values[key], index = parse_yaml_value(lines, index, indent, raw_value)
+    return values, index
+
+
+def parse_yaml_block(lines: list[str], index: int, indent: int) -> tuple[Any, int]:
+    next_line = significant_yaml_line(lines, index)
+    if next_line is None:
+        return {}, len(lines)
+    if next_line[0] < indent:
+        return {}, index
+    if next_line[0] != indent:
+        raise ToolError("unexpected YAML indentation", line=next_line[1])
+    if next_line[1].startswith("- "):
+        return parse_yaml_list(lines, index, indent)
+    return parse_yaml_dict(lines, index, indent)
+
+
+def load_yaml_manifest(text: str) -> Any:
+    lines = text.splitlines()
+    first = significant_yaml_line(lines, 0)
+    if first is None:
+        return {}
+    data, next_index = parse_yaml_block(lines, 0, first[0])
+    trailing = significant_yaml_line(lines, next_index)
+    if trailing is not None:
+        raise ToolError("failed to parse complete YAML manifest", line=trailing[1])
+    return data
+
+
 def load_manifest(path: str | Path) -> dict[str, Any]:
     manifest_path = Path(path)
     if not manifest_path.exists():
@@ -45,24 +235,20 @@ def load_manifest(path: str | Path) -> dict[str, Any]:
         elif suffix in {".yaml", ".yml"}:
             try:
                 import yaml  # type: ignore[import-not-found]
-            except ImportError as exc:
-                raise ToolError(
-                    "YAML manifests require PyYAML; install it or use JSON",
-                    path=str(manifest_path),
-                ) from exc
-            data = yaml.safe_load(text)
+            except ImportError:
+                data = load_yaml_manifest(text)
+            else:
+                data = yaml.safe_load(text)
         else:
             try:
                 data = json.loads(text)
             except json.JSONDecodeError:
                 try:
                     import yaml  # type: ignore[import-not-found]
-                except ImportError as exc:
-                    raise ToolError(
-                        "unknown manifest suffix and PyYAML is unavailable",
-                        path=str(manifest_path),
-                    ) from exc
-                data = yaml.safe_load(text)
+                except ImportError:
+                    data = load_yaml_manifest(text)
+                else:
+                    data = yaml.safe_load(text)
     except ToolError:
         raise
     except Exception as exc:
