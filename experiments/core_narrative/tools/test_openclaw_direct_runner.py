@@ -212,6 +212,161 @@ class OpenClawDirectRunnerTests(unittest.TestCase):
         self.assertIn("input", payload)
         self.assertNotIn("messages", payload)
         self.assertNotIn("response_format", payload)
+        system_message = payload["input"][0]["content"]
+        self.assertIn("anchored search/replace", system_message)
+        self.assertNotIn("unified-diff", system_message)
+
+    def test_prompt_contract_requests_only_anchored_edit_json(self) -> None:
+        """The live prompt contract should steer models away from hand-written diffs."""
+        prompt = runner_module.build_prompt(
+            task={
+                "task_id": "click__rbench__003",
+                "repo_slug": "click",
+                "split": "rbench",
+                "task_family": "prompt choice rendering",
+                "allowed_context": {},
+                "disallowed_context": [],
+                "metadata": {
+                    "expected_touched_area": [
+                        "prompt text construction for Choice parameters",
+                        "termui prompt regression tests",
+                    ]
+                },
+            },
+            task_statement="When prompting for a click.Choice value, display the available choices.",
+            acut={
+                "acut_id": "frontier-click-specialist",
+                "model": "openai/gpt-5.5",
+                "retrieval_context_strategy": {"strategy_id": "click-specialist-task-agnostic-v2"},
+                "runtime_budget": {},
+            },
+            context_files=[
+                {
+                    "path": "click/termui.py",
+                    "sha256": "termui-sha",
+                    "char_count": 120,
+                    "truncated": False,
+                    "content": "prompt = _build_prompt(text, prompt_suffix, show_default, default)\n",
+                }
+            ],
+            specialist_context=None,
+            max_context_chars=10_000,
+        )
+
+        self.assertIn("Return only one JSON object with this exact contract:", prompt)
+        self.assertIn('"edits":[{"path":"relative/file.py"', prompt)
+        self.assertIn("Do not return unified_diff", prompt)
+        self.assertIn("Pre-submit validation checklist:", prompt)
+        self.assertIn("Apply edits in order mentally", prompt)
+        self.assertIn("If old occurs exactly once, omit before and after anchors.", prompt)
+        self.assertIn("Non-matching anchors are invalid even when old occurs once.", prompt)
+        self.assertNotIn('{"unified_diff":"diff --git ..."}', prompt)
+
+    def test_prompt_required_context_packaging_includes_option_focus_excerpt(self) -> None:
+        """Regression: Click 008-style context must show Option internals past a large prefix."""
+        core_path = self.workspace / "src" / "click" / "core.py"
+        core_path.parent.mkdir(parents=True)
+        core_path.write_text(
+            (
+                "# large prefix\n"
+                + "IGNORED = 1\n" * 20
+                + "class Option(Parameter):\n"
+                + "    def __init__(\n"
+                + "        self,\n"
+                + "        prompt=False,\n"
+                + "        **attrs,\n"
+                + "    ):\n"
+                + "        self.prompt = prompt\n"
+                + "\n"
+                + "    def consume_value(self, ctx, opts):\n"
+                + "        return super().consume_value(ctx, opts)\n"
+            ),
+            encoding="utf-8",
+        )
+
+        task = {
+            "task_id": "click__rbench__008",
+            "task_family": "optional value prompts",
+            "metadata": {
+                "expected_touched_area": ["prompt_required behavior in option and termui tests"],
+                "visible_context_guidance": "Provide the behavior matrix for prompt_required/required.",
+            },
+        }
+        focus_terms = runner_module.context_focus_terms(
+            task,
+            "Allow an option used without an explicit value to prompt according to prompt_required.",
+            "src/click/core.py",
+        )
+        payload = runner_module.context_file_payload(
+            self.workspace,
+            "src/click/core.py",
+            80,
+            focus_terms=focus_terms,
+        )
+        prompt = runner_module.build_prompt(
+            task=task,
+            task_statement="Allow prompt_required to control whether optional values prompt.",
+            acut={"acut_id": "cheap-generic-swe", "model": "openai/gpt-5.4-mini"},
+            context_files=[payload],
+            specialist_context=None,
+            max_context_chars=10_000,
+        )
+
+        self.assertTrue(payload["truncated"])
+        self.assertIn("class Option(Parameter):", focus_terms)
+        self.assertGreaterEqual(len(payload["focused_excerpts"]), 1)
+        self.assertIn("prompt=False", payload["focused_excerpts"][0]["content"])
+        self.assertIn("Focused exact source excerpts for src/click/core.py", prompt)
+        self.assertIn("prompt=False", prompt)
+
+    def test_prompt_required_context_uses_compact_per_file_budget_for_four_files(self) -> None:
+        """Regression: Click 008 packaging should leave room for every declared context file."""
+        budget = runner_module.effective_max_file_chars(
+            requested_max_file_chars=80_000,
+            max_context_chars=120_000,
+            context_path_count=4,
+            task={"metadata": {"expected_touched_area": ["prompt_required behavior"]}},
+            task_statement="Allow prompt_required behavior.",
+        )
+
+        self.assertEqual(budget, 25_000)
+
+    def test_anchor_mismatch_diagnostics_explain_unique_old_anchor_policy(self) -> None:
+        """Regression: bad anchors on a unique old string should produce actionable diagnostics."""
+        with self.assertRaises(runner_module.ToolError) as raised:
+            runner_module.resolve_edit_offset(
+                "prefix\nVALUE = 1\n",
+                {
+                    "path": "module.py",
+                    "old": "VALUE = 1\n",
+                    "new": "VALUE = 2\n",
+                    "before": "not adjacent\n",
+                },
+                edit_index=0,
+            )
+
+        details = raised.exception.details
+        self.assertEqual(details["failure_class"], "search_replace_anchor_mismatch")
+        self.assertEqual(details["occurrences"], 1)
+        self.assertEqual(details["anchor_matches"], 0)
+        self.assertEqual(details["diagnostic"]["code"], "unique_old_anchor_mismatch")
+        self.assertIn("omit before/after anchors", details["diagnostic"]["recommendation"])
+        self.assertEqual(details["old_text_char_count"], len("VALUE = 1\n"))
+
+    def test_old_occurrence_mismatch_diagnostics_explain_missing_old_text(self) -> None:
+        """Regression: zero-occurrence old strings should tell the model to copy shown source."""
+        with self.assertRaises(runner_module.ToolError) as raised:
+            runner_module.resolve_edit_offset(
+                "VALUE = 1\n",
+                {"path": "module.py", "old": "VALUE = 2\n", "new": "VALUE = 3\n"},
+                edit_index=0,
+            )
+
+        details = raised.exception.details
+        self.assertEqual(details["failure_class"], "search_replace_old_occurrence_mismatch")
+        self.assertEqual(details["occurrences"], 0)
+        self.assertEqual(details["diagnostic"]["code"], "old_text_not_found")
+        self.assertIn("copy old exactly", details["diagnostic"]["recommendation"])
 
     def test_mock_search_replace_generates_patch_and_zero_cost_unknown_actual(self) -> None:
         """The OpenClaw runner can produce a verifier-ready patch without old Codex plumbing."""
@@ -721,6 +876,263 @@ class OpenClawDirectRunnerTests(unittest.TestCase):
         self.assertFalse(summary["model_call_made"])
         self.assertEqual(summary["prompt_snapshot"], str(artifact_dir / "prompt_snapshot.json"))
         self.assertEqual(summary["raw_response_artifact"], str(artifact_dir / "provider_response.redacted.json"))
+
+    def test_task003_style_ambiguous_late_edit_does_not_partially_mutate_workspace(self) -> None:
+        """Regression: Click 003-style repeated old strings cannot leave earlier edits applied."""
+        original = (
+            "import os\n"
+            "\n"
+            "FIRST = 1\n"
+            "prompt = _build_prompt(text, prompt_suffix, show_default, default)\n"
+            "\n"
+            "SECOND = 2\n"
+            "prompt = _build_prompt(text, prompt_suffix, show_default, default)\n"
+        )
+        (self.workspace / "module.py").write_text(original, encoding="utf-8")
+        run(["git", "add", "module.py"], cwd=self.workspace)
+        commit = run(["git", "commit", "-m", "click 003 shape"], cwd=self.workspace)
+        self.assertEqual(commit.returncode, 0, commit.stderr)
+
+        artifact_dir = self.root / "task003-ambiguous-artifacts"
+        output_path = self.root / "task003-ambiguous.json"
+        response = json.dumps(
+            {
+                "edits": [
+                    {
+                        "path": "module.py",
+                        "old": "import os\n",
+                        "new": "import os\nimport sys\n",
+                    },
+                    {
+                        "path": "module.py",
+                        "old": "prompt = _build_prompt(text, prompt_suffix, show_default, default)\n",
+                        "new": "prompt = _build_prompt(text, prompt_suffix, show_default, default, show_choices, type)\n",
+                    },
+                ]
+            }
+        )
+
+        completed = run(
+            [
+                sys.executable,
+                str(RUNNER),
+                "--workspace",
+                str(self.workspace),
+                "--task",
+                str(self.task_path),
+                "--acut",
+                str(self.acut_path),
+                "--attempt",
+                "1",
+                "--run-id",
+                "unit_openclaw_task003_ambiguous_late_edit_attempt1",
+                "--artifact-dir",
+                str(artifact_dir),
+                "--output",
+                str(output_path),
+                "--llm-ledger",
+                str(self.ledger_path),
+                "--projected-cost-usd",
+                "1",
+                "--context-path",
+                "module.py",
+                "--mock-response-text",
+                response,
+            ],
+            cwd=REPO_ROOT,
+            env=self.env(),
+        )
+
+        self.assertEqual(completed.returncode, 2, completed.stderr)
+        summary = json.loads(output_path.read_text(encoding="utf-8"))
+        self.assertEqual(summary["status"], "error")
+        self.assertEqual(summary["details"]["failure_class"], "search_replace_old_occurrence_mismatch")
+        self.assertEqual(summary["details"]["edit_index"], 1)
+        self.assertEqual(summary["details"]["occurrences"], 2)
+        self.assertEqual((self.workspace / "module.py").read_text(encoding="utf-8"), original)
+        self.assertFalse((artifact_dir / "submission.patch").exists())
+
+    def test_edit_bundle_with_extra_top_level_keys_is_contract_violation(self) -> None:
+        """Regression: the edit contract is a single-key schema, not JSON plus commentary."""
+        artifact_dir = self.root / "extra-key-artifacts"
+        output_path = self.root / "extra-key.json"
+        response = json.dumps(
+            {
+                "edits": [
+                    {
+                        "path": "module.py",
+                        "old": "VALUE = 1\n",
+                        "new": "VALUE = 2\n",
+                    }
+                ],
+                "notes": "Changed the constant.",
+            }
+        )
+
+        completed = run(
+            [
+                sys.executable,
+                str(RUNNER),
+                "--workspace",
+                str(self.workspace),
+                "--task",
+                str(self.task_path),
+                "--acut",
+                str(self.acut_path),
+                "--attempt",
+                "1",
+                "--run-id",
+                "unit_openclaw_extra_contract_key_attempt1",
+                "--artifact-dir",
+                str(artifact_dir),
+                "--output",
+                str(output_path),
+                "--llm-ledger",
+                str(self.ledger_path),
+                "--projected-cost-usd",
+                "1",
+                "--context-path",
+                "module.py",
+                "--mock-response-text",
+                response,
+            ],
+            cwd=REPO_ROOT,
+            env=self.env(),
+        )
+
+        self.assertEqual(completed.returncode, 2, completed.stderr)
+        summary = json.loads(output_path.read_text(encoding="utf-8"))
+        self.assertEqual(summary["status"], "error")
+        self.assertEqual(summary["details"]["failure_class"], "output_contract_violation")
+        self.assertEqual(summary["details"]["unsupported_top_level_keys"], ["notes"])
+        self.assertEqual((self.workspace / "module.py").read_text(encoding="utf-8"), "VALUE = 1\n")
+
+    def test_anchored_repeated_search_replace_generates_patch(self) -> None:
+        """An exact local anchor can disambiguate repeated old text without broad matching."""
+        original = (
+            "FIRST = 1\n"
+            "prompt = _build_prompt(text, prompt_suffix, show_default, default)\n"
+            "\n"
+            "SECOND = 2\n"
+            "prompt = _build_prompt(text, prompt_suffix, show_default, default)\n"
+        )
+        expected = (
+            "FIRST = 1\n"
+            "prompt = _build_prompt(text, prompt_suffix, show_default, default, show_choices, type)\n"
+            "\n"
+            "SECOND = 2\n"
+            "prompt = _build_prompt(text, prompt_suffix, show_default, default)\n"
+        )
+        (self.workspace / "module.py").write_text(original, encoding="utf-8")
+        run(["git", "add", "module.py"], cwd=self.workspace)
+        commit = run(["git", "commit", "-m", "click 003 anchor shape"], cwd=self.workspace)
+        self.assertEqual(commit.returncode, 0, commit.stderr)
+
+        artifact_dir = self.root / "anchored-edit-artifacts"
+        output_path = self.root / "anchored-edit.json"
+        response = json.dumps(
+            {
+                "edits": [
+                    {
+                        "path": "module.py",
+                        "before": "FIRST = 1\n",
+                        "old": "prompt = _build_prompt(text, prompt_suffix, show_default, default)\n",
+                        "new": "prompt = _build_prompt(text, prompt_suffix, show_default, default, show_choices, type)\n",
+                    }
+                ]
+            }
+        )
+
+        completed = run(
+            [
+                sys.executable,
+                str(RUNNER),
+                "--workspace",
+                str(self.workspace),
+                "--task",
+                str(self.task_path),
+                "--acut",
+                str(self.acut_path),
+                "--attempt",
+                "1",
+                "--run-id",
+                "unit_openclaw_anchored_repeated_edit_attempt1",
+                "--artifact-dir",
+                str(artifact_dir),
+                "--output",
+                str(output_path),
+                "--llm-ledger",
+                str(self.ledger_path),
+                "--projected-cost-usd",
+                "1",
+                "--context-path",
+                "module.py",
+                "--mock-response-text",
+                response,
+            ],
+            cwd=REPO_ROOT,
+            env=self.env(),
+        )
+
+        self.assertEqual(completed.returncode, 0, completed.stderr)
+        summary = json.loads(output_path.read_text(encoding="utf-8"))
+        self.assertEqual(summary["status"], "patch_generated")
+        self.assertEqual(summary["patch"]["kind"], "search_replace_edits")
+        self.assertEqual(summary["patch"]["edit_count"], 1)
+        self.assertEqual(summary["patch"]["anchored_edit_count"], 1)
+        self.assertGreater(summary["patch_artifact"]["size_bytes"], 0)
+        self.assertEqual((self.workspace / "module.py").read_text(encoding="utf-8"), expected)
+
+    def test_invalid_unified_diff_has_model_output_failure_class(self) -> None:
+        """Regression: corrupt unified diffs are invalid submissions, not infra failures."""
+        artifact_dir = self.root / "invalid-diff-artifacts"
+        output_path = self.root / "invalid-diff.json"
+        invalid_patch = (
+            "diff --git a/module.py b/module.py\n"
+            "--- a/module.py\n"
+            "+++ b/module.py\n"
+            "@@ -1 +1 @@\n"
+            "-VALUE = 1\n"
+            "VALUE = 2\n"
+        )
+        response = json.dumps({"unified_diff": invalid_patch})
+
+        completed = run(
+            [
+                sys.executable,
+                str(RUNNER),
+                "--workspace",
+                str(self.workspace),
+                "--task",
+                str(self.task_path),
+                "--acut",
+                str(self.acut_path),
+                "--attempt",
+                "1",
+                "--run-id",
+                "unit_openclaw_invalid_unified_diff_attempt1",
+                "--artifact-dir",
+                str(artifact_dir),
+                "--output",
+                str(output_path),
+                "--llm-ledger",
+                str(self.ledger_path),
+                "--projected-cost-usd",
+                "1",
+                "--context-path",
+                "module.py",
+                "--mock-response-text",
+                response,
+            ],
+            cwd=REPO_ROOT,
+            env=self.env(),
+        )
+
+        self.assertEqual(completed.returncode, 2, completed.stderr)
+        summary = json.loads(output_path.read_text(encoding="utf-8"))
+        self.assertEqual(summary["status"], "error")
+        self.assertEqual(summary["details"]["failure_class"], "invalid_unified_diff")
+        self.assertEqual((self.workspace / "module.py").read_text(encoding="utf-8"), "VALUE = 1\n")
 
     def test_live_failure_after_response_is_ledgered_with_provider_usage(self) -> None:
         """Regression: validation failures after a model response still consume provider usage."""

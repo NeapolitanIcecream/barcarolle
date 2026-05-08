@@ -1,0 +1,75 @@
+diff --git a/src/click/testing.py b/src/click/testing.py
+index fd6bf61..723cef5 100644
+--- a/src/click/testing.py
++++ b/src/click/testing.py
+@@ -62,7 +62,14 @@ class Result:
+     """Holds the captured result of an invoked CLI script."""
+ 
+     def __init__(
+-        self, runner, stdout_bytes, stderr_bytes, exit_code, exception, exc_info=None
++        self,
++        runner,
++        stdout_bytes,
++        stderr_bytes,
++        exit_code,
++        exception,
++        exc_info=None,
++        return_value=None,
+     ):
+         #: The runner that created the result
+         self.runner = runner
+@@ -76,6 +83,8 @@ class Result:
+         self.exception = exception
+         #: The traceback
+         self.exc_info = exc_info
++        #: The return value if the command returned successfully.
++        self.return_value = return_value
+ 
+     @property
+     def output(self):
+@@ -293,6 +302,7 @@ class CliRunner:
+                       application can still override this explicitly.
+         """
+         exc_info = None
++        return_value = None
+         with self.isolation(input=input, env=env, color=color) as outstreams:
+             exception = None
+             exit_code = 0
+@@ -306,7 +316,7 @@ class CliRunner:
+                 prog_name = self.get_default_prog_name(cli)
+ 
+             try:
+-                cli.main(args=args or (), prog_name=prog_name, **extra)
++                return_value = cli.main(args=args or (), prog_name=prog_name, **extra)
+             except SystemExit as e:
+                 exc_info = sys.exc_info()
+                 exit_code = e.code
+@@ -342,6 +352,7 @@ class CliRunner:
+             exit_code=exit_code,
+             exception=exception,
+             exc_info=exc_info,
++            return_value=return_value,
+         )
+ 
+     @contextlib.contextmanager
+diff --git a/tests/test_testing.py b/tests/test_testing.py
+index 7360473..86c8708 100644
+--- a/tests/test_testing.py
++++ b/tests/test_testing.py
+@@ -295,3 +295,16 @@ def test_setting_prog_name_in_extra():
+     result = runner.invoke(cli, prog_name="foobar")
+     assert not result.exception
+     assert result.output == "ok\n"
++
++
++def test_command_standalone_mode_returns_value():
++    @click.command()
++    def cli():
++        click.echo("ok")
++        return "Hello, World!"
++
++    runner = CliRunner()
++    result = runner.invoke(cli, standalone_mode=False)
++    assert result.output == "ok\n"
++    assert result.return_value == "Hello, World!"
++    assert result.exit_code == 0

@@ -1,0 +1,3 @@
+ERROR: not found: /Users/chenmohan/gits/barcarolle/experiments/core_narrative/workspaces/codex_nfl_output_contract_v3_click_004_008_20260508__frontier-generic-swe__click__rbench__005__attempt1__verify/tests/test_options.py::test_case_insensitive_choice_returned_exactly
+(no match in any of [<Module test_options.py>])
+

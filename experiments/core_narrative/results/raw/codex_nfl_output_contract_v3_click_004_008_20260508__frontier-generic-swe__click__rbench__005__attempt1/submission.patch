@@ -1,0 +1,89 @@
+diff --git a/click/types.py b/click/types.py
+index f594005..f7086df 100644
+--- a/click/types.py
++++ b/click/types.py
+@@ -136,8 +136,9 @@ class Choice(ParamType):
+     """
+     name = 'choice'
+ 
+-    def __init__(self, choices):
++    def __init__(self, choices, case_sensitive=True):
+         self.choices = choices
++        self.case_sensitive = case_sensitive
+ 
+     def get_metavar(self, param):
+         return '[%s]' % '|'.join(self.choices)
+@@ -145,18 +146,24 @@ class Choice(ParamType):
+     def get_missing_message(self, param):
+         return 'Choose from %s.' % ', '.join(self.choices)
+ 
++    def normalize_choice(self, choice, ctx):
++        if ctx is not None and \
++           ctx.token_normalize_func is not None:
++            choice = ctx.token_normalize_func(choice)
++        if not self.case_sensitive:
++            choice = choice.lower()
++        return choice
++
+     def convert(self, value, param, ctx):
+         # Exact match
+         if value in self.choices:
+             return value
+ 
+-        # Match through normalization
+-        if ctx is not None and \
+-           ctx.token_normalize_func is not None:
+-            value = ctx.token_normalize_func(value)
+-            for choice in self.choices:
+-                if ctx.token_normalize_func(choice) == value:
+-                    return choice
++        # Match through normalization and case sensitivity
++        normed_value = self.normalize_choice(value, ctx)
++        for choice in self.choices:
++            if self.normalize_choice(choice, ctx) == normed_value:
++                return choice
+ 
+         self.fail('invalid choice: %s. (choose from %s)' %
+                   (value, ', '.join(self.choices)), param, ctx)
+diff --git a/tests/test_options.py b/tests/test_options.py
+index e8057fa..06931f1 100644
+--- a/tests/test_options.py
++++ b/tests/test_options.py
+@@ -310,6 +310,37 @@ def test_missing_choice(runner):
+         in result.output
+ 
+ 
++def test_case_insensitive_choice(runner):
++    @click.command()
++    @click.option('--foo', type=click.Choice(
++        ['Orange', 'Apple'], case_sensitive=False))
++    def cmd(foo):
++        click.echo(foo)
++
++    result = runner.invoke(cmd, ['--foo', 'apple'])
++    assert result.exit_code == 0
++
++    result = runner.invoke(cmd, ['--foo', 'oRANGe'])
++    assert result.exit_code == 0
++
++    result = runner.invoke(cmd, ['--foo', 'Apple'])
++    assert result.exit_code == 0
++
++    @click.command()
++    @click.option('--foo', type=click.Choice(['Orange', 'Apple']))
++    def cmd2(foo):
++        click.echo(foo)
++
++    result = runner.invoke(cmd2, ['--foo', 'apple'])
++    assert result.exit_code == 2
++
++    result = runner.invoke(cmd2, ['--foo', 'oRANGe'])
++    assert result.exit_code == 2
++
++    result = runner.invoke(cmd2, ['--foo', 'Apple'])
++    assert result.exit_code == 0
++
++
+ def test_multiline_help(runner):
+     @click.command()
+     @click.option('--foo', help="""

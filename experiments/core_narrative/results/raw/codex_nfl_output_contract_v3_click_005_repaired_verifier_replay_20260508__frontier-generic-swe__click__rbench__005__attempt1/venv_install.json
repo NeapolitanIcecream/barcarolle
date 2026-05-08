@@ -1,0 +1,20 @@
+{
+  "command": [
+    ".venv/bin/python",
+    "-m",
+    "pip",
+    "install",
+    "-q",
+    "-e",
+    ".",
+    "pytest"
+  ],
+  "cwd": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/workspaces/codex_nfl_output_contract_v3_click_005_repaired_verifier_replay_20260508__frontier-generic-swe__click__rbench__005__attempt1",
+  "duration_seconds": 2.589,
+  "exit_code": 0,
+  "finished_at": "2026-05-08T18:06:17+08:00",
+  "name": "venv_install",
+  "started_at": "2026-05-08T18:06:15+08:00",
+  "stderr_artifact": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/codex_nfl_output_contract_v3_click_005_repaired_verifier_replay_20260508__frontier-generic-swe__click__rbench__005__attempt1/venv_install.stderr.txt",
+  "stdout_artifact": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/codex_nfl_output_contract_v3_click_005_repaired_verifier_replay_20260508__frontier-generic-swe__click__rbench__005__attempt1/venv_install.stdout.txt"
+}

@@ -34,9 +34,12 @@ SCOREABLE_STATUSES = {"passed", "failed", "timeout", "invalid_submission"}
 MODEL_OUTPUT_FAILURE_CLASSES = {
     "generated_path_not_in_workspace",
     "generated_path_outside_context",
+    "search_replace_anchor_invalid",
+    "search_replace_anchor_mismatch",
     "search_replace_old_occurrence_mismatch",
     "output_contract_violation",
     "invalid_unified_diff",
+    "unsupported_patch_response",
     "unsafe_generated_text",
 }
 
@@ -617,9 +620,24 @@ def run_one(args: argparse.Namespace, task: Mapping[str, Any], acut_id: str) -> 
     install_summary = install_workspace(workspace, artifact_dir, args.install_timeout_seconds)
     context_paths = context_paths_for_task(task, workspace)
     noop_summary = None
+    noop_workspace = None
+    noop_prepare_summary = None
+    noop_install_summary = None
     if not args.skip_noop_check:
+        noop_workspace, noop_prepare_summary = prepare_workspace(
+            task_id,
+            run_id + "__noop",
+            artifact_dir,
+            summary_name="prepare_noop_workspace",
+        )
+        noop_install_summary = install_workspace(
+            noop_workspace,
+            artifact_dir,
+            args.install_timeout_seconds,
+            name_prefix="noop_",
+        )
         noop_summary = no_op_verify(
-            workspace=workspace,
+            workspace=noop_workspace,
             task_id=task_id,
             acut_id=acut_id,
             attempt=args.attempt,
@@ -670,6 +688,7 @@ def run_one(args: argparse.Namespace, task: Mapping[str, Any], acut_id: str) -> 
                 "workspace": str(workspace),
                 "runner_workspace": str(workspace),
                 "verify_workspace": None,
+                "noop_workspace": str(noop_workspace),
                 "normalized_result": str(normalized_path),
                 "patch_path": str(patch_path),
                 "prompt_snapshot": None,
@@ -678,6 +697,8 @@ def run_one(args: argparse.Namespace, task: Mapping[str, Any], acut_id: str) -> 
                 "duration_seconds": round(time.monotonic() - started, 3),
                 "prepare": prepare_summary,
                 "install": install_summary,
+                "noop_prepare": noop_prepare_summary,
+                "noop_install": noop_install_summary,
                 "verify_prepare": None,
                 "verify_install": None,
                 "noop": noop_summary,
@@ -770,6 +791,7 @@ def run_one(args: argparse.Namespace, task: Mapping[str, Any], acut_id: str) -> 
         "workspace": str(workspace),
         "runner_workspace": str(workspace),
         "verify_workspace": str(verify_workspace) if verify_workspace is not None else None,
+        "noop_workspace": str(noop_workspace) if noop_workspace is not None else None,
         "normalized_result": str(normalized_path),
         "patch_path": str(patch_path),
         "prompt_snapshot": runner_result.get("prompt_snapshot"),
@@ -778,6 +800,8 @@ def run_one(args: argparse.Namespace, task: Mapping[str, Any], acut_id: str) -> 
         "duration_seconds": round(time.monotonic() - started, 3),
         "prepare": prepare_summary,
         "install": install_summary,
+        "noop_prepare": noop_prepare_summary,
+        "noop_install": noop_install_summary,
         "verify_prepare": verify_prepare_summary,
         "verify_install": verify_install_summary,
         "noop": noop_summary,

@@ -1,0 +1,237 @@
+{
+  "acuts": [
+    "frontier-click-specialist"
+  ],
+  "aggregate": {
+    "by_acut": {
+      "frontier-click-specialist": {
+        "invalid_submission": 1
+      }
+    },
+    "by_task": {
+      "click__rbench__003": {
+        "invalid_submission": 1
+      }
+    },
+    "failed": 0,
+    "infra_failed": 0,
+    "passed": 0,
+    "scoreable": 1,
+    "status_counts": {
+      "invalid_submission": 1
+    },
+    "timeout": 0,
+    "total": 1
+  },
+  "attempt": 1,
+  "finished_at": "2026-05-08T05:15:09.015187Z",
+  "mode": "mock",
+  "results": [
+    {
+      "acut_id": "frontier-click-specialist",
+      "artifact_dir": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/codex_nfl_output_contract_repair_replay_20260508__frontier-click-specialist__click__rbench__003__attempt1",
+      "context_paths": [
+        "click/core.py",
+        "click/termui.py",
+        "tests/test_termui.py"
+      ],
+      "duration_seconds": 6.052,
+      "install": {
+        "command": [
+          ".venv/bin/python",
+          "-m",
+          "pip",
+          "install",
+          "-q",
+          "-e",
+          ".",
+          "pytest"
+        ],
+        "exit_code": 0,
+        "finished_at": "2026-05-08T05:15:08.660233Z",
+        "name": "venv_install",
+        "started_at": "2026-05-08T05:15:04.614025Z",
+        "stderr_artifact": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/codex_nfl_output_contract_repair_replay_20260508__frontier-click-specialist__click__rbench__003__attempt1/venv_install.stderr.txt",
+        "stdout_artifact": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/codex_nfl_output_contract_repair_replay_20260508__frontier-click-specialist__click__rbench__003__attempt1/venv_install.stdout.txt"
+      },
+      "noop": {
+        "command": {
+          "command": [
+            "/Applications/Xcode.app/Contents/Developer/usr/bin/python3",
+            "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/tools/apply_and_verify.py",
+            "--workspace",
+            "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/workspaces/codex_nfl_output_contract_repair_replay_20260508__frontier-click-specialist__click__rbench__003__attempt1",
+            "--task",
+            "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/tasks/click/rbench/click__rbench__003/task.yaml",
+            "--patch",
+            "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/codex_nfl_output_contract_repair_replay_20260508__frontier-click-specialist__click__rbench__003__attempt1/missing_noop.patch",
+            "--acut-id",
+            "frontier-click-specialist",
+            "--attempt",
+            "1",
+            "--run-id",
+            "codex_nfl_output_contract_repair_replay_20260508__frontier-click-specialist__click__rbench__003__attempt1__noop",
+            "--artifact-dir",
+            "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/codex_nfl_output_contract_repair_replay_20260508__frontier-click-specialist__click__rbench__003__attempt1",
+            "--output",
+            "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/codex_nfl_output_contract_repair_replay_20260508__frontier-click-specialist__click__rbench__003__attempt1/noop_verify.json",
+            "--skip-apply"
+          ],
+          "exit_code": 0,
+          "finished_at": "2026-05-08T05:15:08.896172Z",
+          "name": "noop_verify_command",
+          "started_at": "2026-05-08T05:15:08.660902Z",
+          "stderr_artifact": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/codex_nfl_output_contract_repair_replay_20260508__frontier-click-specialist__click__rbench__003__attempt1/noop_verify_command.stderr.txt",
+          "stdout_artifact": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/codex_nfl_output_contract_repair_replay_20260508__frontier-click-specialist__click__rbench__003__attempt1/noop_verify_command.stdout.txt"
+        },
+        "result": {
+          "acut_id": "frontier-click-specialist",
+          "attempt": 1,
+          "error": null,
+          "finished_at": "2026-05-08T05:15:08.891843Z",
+          "metadata": {
+            "skip_apply": true,
+            "timeout_seconds": 60,
+            "tool": "apply_and_verify",
+            "verifier_command": [
+              "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/tasks/click/rbench/click__rbench__003/verifier/run.sh"
+            ]
+          },
+          "patch_path": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/codex_nfl_output_contract_repair_replay_20260508__frontier-click-specialist__click__rbench__003__attempt1/missing_noop.patch",
+          "review": {
+            "mergeability_grade": null,
+            "notes": "",
+            "rule_violation": false,
+            "wrong_module": false
+          },
+          "run_id": "codex_nfl_output_contract_repair_replay_20260508__frontier-click-specialist__click__rbench__003__attempt1__noop",
+          "schema_version": "core-narrative.run-result.v1",
+          "split": "rbench",
+          "started_at": "2026-05-08T05:15:08.697156Z",
+          "status": "failed",
+          "task_id": "click__rbench__003",
+          "verification": {
+            "duration_seconds": 0.194,
+            "exit_code": 1,
+            "stderr_artifact": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/codex_nfl_output_contract_repair_replay_20260508__frontier-click-specialist__click__rbench__003__attempt1/verifier.stderr.txt",
+            "stdout_artifact": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/codex_nfl_output_contract_repair_replay_20260508__frontier-click-specialist__click__rbench__003__attempt1/verifier.stdout.txt"
+          }
+        }
+      },
+      "normalized": {
+        "acut_id": "frontier-click-specialist",
+        "attempt": 1,
+        "error": "generated unified diff failed git apply validation",
+        "finished_at": "2026-05-08T05:15:09.001465Z",
+        "metadata": {
+          "acut_manifest_path": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/configs/acuts/frontier-click-specialist.yaml",
+          "acut_manifest_sha256": "7cfcfc91863d017d2038042b0eb003b070604d6e986a455211739ee8ef46b8fb",
+          "batch_tool": "codex_nfl_experiment_runner",
+          "clean_patch_replay": {
+            "attempted": false,
+            "runner_workspace": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/workspaces/codex_nfl_output_contract_repair_replay_20260508__frontier-click-specialist__click__rbench__003__attempt1",
+            "separate_workspace": false,
+            "skip_apply": null,
+            "verify_workspace": null
+          },
+          "context_pack_digest": "dfb271ad174531a7dd2f00da4cd0486193d87ce33349380982150889ecf84e48",
+          "direct_runner_cost_accounting": null,
+          "direct_runner_id": "codex-nfl-direct-search-replace-v1",
+          "direct_runner_status": "error",
+          "failure_class": "invalid_unified_diff",
+          "failure_owner": "model_output",
+          "model_call_made": false,
+          "prompt_snapshot": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/codex_nfl_output_contract_repair_replay_20260508__frontier-click-specialist__click__rbench__003__attempt1/prompt_snapshot.json",
+          "prompt_snapshot_sha256": "12b6ac2a9e11928bb01edab6f4d334a668760e47e30365a8a402ba7e67194f0d",
+          "raw_response_artifact": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/codex_nfl_output_contract_repair_replay_20260508__frontier-click-specialist__click__rbench__003__attempt1/provider_response.redacted.json",
+          "runner_id": "codex-nfl-batch-v1",
+          "task_manifest_path": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/tasks/click/rbench/click__rbench__003/task.yaml",
+          "task_manifest_sha256": "94b14a86fdc8f3ebe721d999112d493656d132346adde1e0e58088a80a1e66b2",
+          "tool": "codex_nfl_experiment_runner",
+          "verifier_digest_sha256": "5751e9708001a151184e3af403cf275418e7821922e617a51337777bd3a814b3",
+          "verifier_ready_patch_available": false
+        },
+        "patch_path": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/codex_nfl_output_contract_repair_replay_20260508__frontier-click-specialist__click__rbench__003__attempt1/submission.patch",
+        "review": {
+          "mergeability_grade": null,
+          "notes": "",
+          "rule_violation": false,
+          "wrong_module": false
+        },
+        "run_id": "codex_nfl_output_contract_repair_replay_20260508__frontier-click-specialist__click__rbench__003__attempt1",
+        "schema_version": "core-narrative.run-result.v1",
+        "split": "rbench",
+        "started_at": "2026-05-08T05:15:08.940413Z",
+        "status": "invalid_submission",
+        "task_id": "click__rbench__003",
+        "verification": {
+          "duration_seconds": null,
+          "exit_code": null,
+          "stderr_artifact": null,
+          "stdout_artifact": null
+        }
+      },
+      "normalized_result": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/normalized/codex_nfl_output_contract_repair_replay_20260508__frontier-click-specialist__click__rbench__003__attempt1.json",
+      "patch_path": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/codex_nfl_output_contract_repair_replay_20260508__frontier-click-specialist__click__rbench__003__attempt1/submission.patch",
+      "patch_ready": false,
+      "prepare": {
+        "base_commit": "d3f36e884e18f374c3e4e6cf062ba19f100d0fd6",
+        "repo_slug": "click",
+        "split": "rbench",
+        "statement_path": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/workspaces/codex_nfl_output_contract_repair_replay_20260508__frontier-click-specialist__click__rbench__003__attempt1/.core_narrative/statement.md",
+        "status": "prepared",
+        "target_commit_absence_checked": true,
+        "task_id": "click__rbench__003",
+        "task_package_path": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/workspaces/codex_nfl_output_contract_repair_replay_20260508__frontier-click-specialist__click__rbench__003__attempt1/.core_narrative/task.json",
+        "tool": "prepare_workspace",
+        "warnings": [],
+        "workspace": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/workspaces/codex_nfl_output_contract_repair_replay_20260508__frontier-click-specialist__click__rbench__003__attempt1",
+        "workspace_history_mode": "base_tree_only_synthetic_git"
+      },
+      "prompt_snapshot": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/codex_nfl_output_contract_repair_replay_20260508__frontier-click-specialist__click__rbench__003__attempt1/prompt_snapshot.json",
+      "raw_response_artifact": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/codex_nfl_output_contract_repair_replay_20260508__frontier-click-specialist__click__rbench__003__attempt1/provider_response.redacted.json",
+      "run_id": "codex_nfl_output_contract_repair_replay_20260508__frontier-click-specialist__click__rbench__003__attempt1",
+      "runner_code": 2,
+      "runner_result": {
+        "cost_ledger_append": null,
+        "details": {
+          "failure_class": "invalid_unified_diff",
+          "git_apply_stderr": "error: corrupt patch at line 57"
+        },
+        "error": "generated unified diff failed git apply validation",
+        "finished_at": "2026-05-08T05:15:09.001465Z",
+        "model_call_made": false,
+        "prompt_snapshot": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/codex_nfl_output_contract_repair_replay_20260508__frontier-click-specialist__click__rbench__003__attempt1/prompt_snapshot.json",
+        "raw_response_artifact": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/codex_nfl_output_contract_repair_replay_20260508__frontier-click-specialist__click__rbench__003__attempt1/provider_response.redacted.json",
+        "runner_id": "codex-nfl-direct-search-replace-v1",
+        "selected_context_paths": [
+          "click/core.py",
+          "click/termui.py",
+          "tests/test_termui.py"
+        ],
+        "started_at": "2026-05-08T05:15:08.940413Z",
+        "status": "error",
+        "task_visible_context_guidance": "Provide the commit message and expected before/after prompt behavior. The implementation diff remains hidden.",
+        "tool": "codex_nfl_direct_runner"
+      },
+      "runner_status": "error",
+      "runner_workspace": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/workspaces/codex_nfl_output_contract_repair_replay_20260508__frontier-click-specialist__click__rbench__003__attempt1",
+      "scoreable": true,
+      "status": "invalid_submission",
+      "task_id": "click__rbench__003",
+      "verify_code": null,
+      "verify_install": null,
+      "verify_prepare": null,
+      "verify_workspace": null,
+      "workspace": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/workspaces/codex_nfl_output_contract_repair_replay_20260508__frontier-click-specialist__click__rbench__003__attempt1"
+    }
+  ],
+  "run_prefix": "codex_nfl_output_contract_repair_replay_20260508",
+  "runner_id": "codex-nfl-batch-v1",
+  "started_at": "2026-05-08T05:15:08.940413Z",
+  "status": "completed",
+  "tasks": [
+    "click__rbench__003"
+  ],
+  "tool": "codex_nfl_experiment_runner"
+}

@@ -188,6 +188,86 @@ class CodexNflDirectRunnerTests(unittest.TestCase):
         self.assertEqual(summary["status"], "error")
         self.assertEqual(summary["details"]["failure_class"], "generated_path_not_in_workspace")
 
+    def test_task003_style_ambiguous_edit_is_invalid_without_partial_mutation(self) -> None:
+        """Regression: repeated Click prompt edits need exact anchors or a replayable patch."""
+        original = (
+            "from .types import convert_type\n"
+            "\n"
+            "FIRST = 1\n"
+            "prompt = _build_prompt(text, prompt_suffix, show_default, default)\n"
+            "\n"
+            "SECOND = 2\n"
+            "prompt = _build_prompt(text, prompt_suffix, show_default, default)\n"
+        )
+        termui = self.workspace / "click" / "termui.py"
+        termui.write_text(original, encoding="utf-8")
+        run(["git", "add", "click/termui.py"], cwd=self.workspace)
+        commit = run(["git", "commit", "-m", "add termui prompt shape"], cwd=self.workspace)
+        self.assertEqual(commit.returncode, 0, commit.stderr)
+
+        artifact_dir = self.root / "task003-ambiguous"
+        output_path = self.root / "task003-ambiguous.json"
+        response = json.dumps(
+            {
+                "edits": [
+                    {
+                        "path": "click/termui.py",
+                        "old": "from .types import convert_type\n",
+                        "new": "from .types import convert_type, Choice\n",
+                    },
+                    {
+                        "path": "click/termui.py",
+                        "old": "prompt = _build_prompt(text, prompt_suffix, show_default, default)\n",
+                        "new": "prompt = _build_prompt(text, prompt_suffix, show_default, default, show_choices, type)\n",
+                    },
+                ]
+            }
+        )
+
+        completed = run(
+            [
+                sys.executable,
+                str(RUNNER),
+                "--workspace",
+                str(self.workspace),
+                "--task",
+                str(self.task_path),
+                "--acut",
+                str(self.acut_path),
+                "--attempt",
+                "1",
+                "--run-id",
+                "unit_codex_nfl_task003_ambiguous_attempt1",
+                "--artifact-dir",
+                str(artifact_dir),
+                "--output",
+                str(output_path),
+                "--llm-ledger",
+                str(self.ledger_path),
+                "--projected-cost-usd",
+                "1",
+                "--context-path",
+                "click/termui.py",
+                "--mock-response-text",
+                response,
+            ],
+            cwd=REPO_ROOT,
+            env=self.env(),
+        )
+
+        self.assertEqual(completed.returncode, 2)
+        summary = json.loads(output_path.read_text(encoding="utf-8"))
+        snapshot = json.loads((artifact_dir / "prompt_snapshot.json").read_text(encoding="utf-8"))
+
+        self.assertEqual(summary["runner_id"], "codex-nfl-direct-search-replace-v1")
+        self.assertEqual(summary["status"], "error")
+        self.assertEqual(summary["details"]["failure_class"], "search_replace_old_occurrence_mismatch")
+        self.assertEqual(summary["details"]["edit_index"], 1)
+        self.assertEqual(summary["details"]["occurrences"], 2)
+        self.assertEqual(snapshot["output_contract"], "anchored-search-replace-json-v3")
+        self.assertEqual(snapshot["output_contract_schema"]["primary_top_level_key"], "edits")
+        self.assertEqual(termui.read_text(encoding="utf-8"), original)
+
 
 if __name__ == "__main__":
     unittest.main()

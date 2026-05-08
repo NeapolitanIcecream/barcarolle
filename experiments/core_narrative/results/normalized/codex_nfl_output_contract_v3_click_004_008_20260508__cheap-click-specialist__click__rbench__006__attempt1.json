@@ -1,0 +1,63 @@
+{
+  "acut_id": "cheap-click-specialist",
+  "attempt": 1,
+  "error": null,
+  "finished_at": "2026-05-08T06:33:49.056174Z",
+  "metadata": {
+    "acut_manifest_path": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/configs/acuts/cheap-click-specialist.yaml",
+    "acut_manifest_sha256": "ea70a0ada77bad7c538dd7ca23340d33762148e55153ca10363a8ae1f2c1b677",
+    "batch_tool": "codex_nfl_experiment_runner",
+    "clean_patch_replay": {
+      "attempted": true,
+      "runner_workspace": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/workspaces/codex_nfl_output_contract_v3_click_004_008_20260508__cheap-click-specialist__click__rbench__006__attempt1",
+      "separate_workspace": true,
+      "skip_apply": false,
+      "verify_workspace": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/workspaces/codex_nfl_output_contract_v3_click_004_008_20260508__cheap-click-specialist__click__rbench__006__attempt1__verify"
+    },
+    "context_pack_digest": "dfb271ad174531a7dd2f00da4cd0486193d87ce33349380982150889ecf84e48",
+    "direct_runner_cost_accounting": {
+      "actual_cost_status": "unknown_not_provider_reported",
+      "actual_cost_usd": null,
+      "estimated_cost_usd": 0.012897,
+      "input_tokens": 11448,
+      "observed_provider_cost_status": "provider_response_usage_cost_not_invoice",
+      "observed_provider_cost_usd": 0.012897,
+      "output_tokens": 958,
+      "provider_usage_reported": true
+    },
+    "direct_runner_id": "codex-nfl-direct-search-replace-v1",
+    "model_call_made": true,
+    "prompt_snapshot": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/codex_nfl_output_contract_v3_click_004_008_20260508__cheap-click-specialist__click__rbench__006__attempt1/prompt_snapshot.json",
+    "prompt_snapshot_sha256": "82c78cbd1528e2f9e547cfde9cd8bc6a19b3a8c7810bb3f01e755a76f592ac60",
+    "raw_response_artifact": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/codex_nfl_output_contract_v3_click_004_008_20260508__cheap-click-specialist__click__rbench__006__attempt1/provider_response.redacted.json",
+    "runner_id": "codex-nfl-batch-v1",
+    "skip_apply": false,
+    "task_manifest_path": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/tasks/click/rbench/click__rbench__006/task.yaml",
+    "task_manifest_sha256": "1117ab680d5f04bb049de0013e7c6bd20f79d15534a8994ec59353e9d5d46a51",
+    "timeout_seconds": 60,
+    "tool": "apply_and_verify",
+    "verifier_command": [
+      "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/tasks/click/rbench/click__rbench__006/verifier/run.sh"
+    ],
+    "verifier_digest_sha256": "dd6d74ea0ec44f1b390be8a4d93e81fc1b4938d69c9b590d700f2cd9fa1ae25e"
+  },
+  "patch_path": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/codex_nfl_output_contract_v3_click_004_008_20260508__cheap-click-specialist__click__rbench__006__attempt1/submission.patch",
+  "review": {
+    "mergeability_grade": null,
+    "notes": "",
+    "rule_violation": false,
+    "wrong_module": false
+  },
+  "run_id": "codex_nfl_output_contract_v3_click_004_008_20260508__cheap-click-specialist__click__rbench__006__attempt1",
+  "schema_version": "core-narrative.run-result.v1",
+  "split": "rbench",
+  "started_at": "2026-05-08T06:33:48.852922Z",
+  "status": "passed",
+  "task_id": "click__rbench__006",
+  "verification": {
+    "duration_seconds": 0.187,
+    "exit_code": 0,
+    "stderr_artifact": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/codex_nfl_output_contract_v3_click_004_008_20260508__cheap-click-specialist__click__rbench__006__attempt1/verifier.stderr.txt",
+    "stdout_artifact": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/codex_nfl_output_contract_v3_click_004_008_20260508__cheap-click-specialist__click__rbench__006__attempt1/verifier.stdout.txt"
+  }
+}

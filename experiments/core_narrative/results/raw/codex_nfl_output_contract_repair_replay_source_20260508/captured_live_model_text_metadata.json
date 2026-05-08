@@ -1,0 +1,22 @@
+{
+  "char_count": 3977,
+  "extracted_field": "choices[0].message.content",
+  "redaction_policy": {
+    "credentials_or_endpoint_values_recorded": false,
+    "full_provider_response_not_copied": true,
+    "replay_text_redacted": true,
+    "source_provider_response_redacted": true
+  },
+  "replay_mode": "mock_no_new_model_call",
+  "replay_text_artifact": "experiments/core_narrative/results/raw/codex_nfl_output_contract_repair_replay_source_20260508/captured_live_model_text.redacted.txt",
+  "replay_text_sha256": "5db7fb87b7fad39fc497f1beb57b90465c740062e4039bed2408833e34771d71",
+  "schema_version": "core-narrative.replay-source.v1",
+  "sha256_matches_source_ledger": true,
+  "source_ledger_response_text_sha256": "5db7fb87b7fad39fc497f1beb57b90465c740062e4039bed2408833e34771d71",
+  "source_live_run_id": "codex_nfl_output_contract_repair_20260508__frontier-click-specialist__click__rbench__003__attempt1",
+  "source_provider_response": "experiments/core_narrative/results/raw/codex_nfl_output_contract_repair_20260508__frontier-click-specialist__click__rbench__003__attempt1/provider_response.redacted.json",
+  "source_provider_usage_cost_status": "provider_response_usage_cost_not_invoice",
+  "source_provider_usage_cost_usd": 0.2202,
+  "status": "extracted",
+  "tool": "codex_nfl_output_contract_repair_replay_source"
+}

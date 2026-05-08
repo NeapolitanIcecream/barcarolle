@@ -1,0 +1,50 @@
+{
+  "by_acut": {
+    "frontier-click-specialist": {
+      "pass_rate": 0.0,
+      "passed": 0,
+      "scoreable": 1,
+      "status_counts": {
+        "invalid_submission": 1
+      },
+      "total": 1
+    }
+  },
+  "by_acut_split": {
+    "frontier-click-specialist": {
+      "rbench": {
+        "pass_rate": 0.0,
+        "passed": 0,
+        "scoreable": 1,
+        "status_counts": {
+          "invalid_submission": 1
+        },
+        "total": 1
+      }
+    }
+  },
+  "by_split": {
+    "rbench": {
+      "pass_rate": 0.0,
+      "passed": 0,
+      "scoreable": 1,
+      "status_counts": {
+        "invalid_submission": 1
+      },
+      "total": 1
+    }
+  },
+  "input_count": 1,
+  "result_count": 1,
+  "status": "summarized",
+  "status_counts": {
+    "invalid_submission": 1
+  },
+  "tool": "codex_nfl_output_contract_repair_summary",
+  "warnings": [],
+  "source_final_code_replay_batch": "experiments/core_narrative/results/codex_nfl_output_contract_repair_replay_targeted_20260508.json",
+  "source_final_code_replay_normalized": "experiments/core_narrative/results/normalized/codex_nfl_output_contract_repair_replay_20260508__frontier-click-specialist__click__rbench__003__attempt1.json",
+  "source_replay_summary": "experiments/core_narrative/results/codex_nfl_output_contract_repair_targeted_corrected_20260508.json",
+  "source_live_run_id": "codex_nfl_output_contract_repair_20260508__frontier-click-specialist__click__rbench__003__attempt1",
+  "canonical_evidence_basis": "Final-code no-new-spend replay of captured live model text; runner/batch/normalized artifacts emit invalid_unified_diff directly."
+}

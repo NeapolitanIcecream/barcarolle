@@ -1,0 +1,165 @@
+{
+  "conditions": {
+    "budget_controls_strict": {
+      "passed": true,
+      "value": {
+        "blockers": [],
+        "pre_expansion_gate_status": "passed"
+      }
+    },
+    "clean_replay_for_patch_ready_runs": {
+      "passed": true,
+      "value": {
+        "clean_replay_attempted": 16,
+        "clean_replay_separate_workspace": 16,
+        "patch_ready_count": 16
+      }
+    },
+    "expected_matrix_completed": {
+      "passed": true,
+      "value": {
+        "normalized_results": 20,
+        "provider_ledger_records": 20
+      }
+    },
+    "infra_failed_rate_eq_0": {
+      "passed": true,
+      "value": 0.0
+    },
+    "no_extra_attempts": {
+      "passed": true,
+      "value": [
+        1
+      ]
+    },
+    "per_cell_budget_gates_recorded_by_runner": {
+      "basis": "Each expansion model response appended one provider-usage ledger record under the requested run prefix.",
+      "passed": true,
+      "value": 20
+    },
+    "raw_responses_redacted_present": {
+      "passed": true,
+      "value": {
+        "missing": []
+      }
+    },
+    "timeout_count_eq_0": {
+      "passed": true,
+      "value": 0
+    }
+  },
+  "decided_at": "2026-05-08T06:51:51.510724Z",
+  "decision": {
+    "additional_live_runs_this_iteration": false,
+    "controlled_click_004_008_expansion_completed": true,
+    "gate1_weakened": false,
+    "next_local_step": "No-new-spend failure triage of the Click 005 and Click 008 failure clusters, especially search_replace_anchor_mismatch/search_replace_old_occurrence_mismatch, before any further live expansion or retry spend.",
+    "reason": "The requested 20 primary live cells completed with strict budget gates, no infra failures, and all model responses ledgered. Failures are scoreable verifier failures or model-output invalid submissions under existing semantics."
+  },
+  "evidence": {
+    "budget_gate": "experiments/core_narrative/results/codex_nfl_output_contract_v3_click_004_008_budget_gate_20260508.json",
+    "cost_reconciliation": "experiments/core_narrative/results/codex_nfl_output_contract_v3_click_004_008_cost_reconciliation_2026-05-08.json",
+    "expansion_summary": "experiments/core_narrative/results/codex_nfl_output_contract_v3_click_004_008_expansion_summary_20260508.json",
+    "live_batch": "experiments/core_narrative/results/codex_nfl_output_contract_v3_click_004_008_live_20260508.json",
+    "normalized_summary": "experiments/core_narrative/results/normalized/codex_nfl_output_contract_v3_click_004_008_summary_20260508.json"
+  },
+  "notes": [
+    "Gate 1 and budget checks remain strict; no budget/credential/gate checks were bypassed.",
+    "No broad non-Click families and no non-primary attempts were run.",
+    "Provider usage cost is not invoice proof; actual billed cost remains unknown without invoice-backed actual_cost_usd records."
+  ],
+  "outcome": {
+    "by_acut": {
+      "cheap-click-specialist": {
+        "failed": 1,
+        "invalid_submission": 1,
+        "passed": 3
+      },
+      "cheap-generic-swe": {
+        "failed": 1,
+        "invalid_submission": 2,
+        "passed": 2
+      },
+      "frontier-click-specialist": {
+        "failed": 2,
+        "passed": 3
+      },
+      "frontier-generic-swe": {
+        "failed": 1,
+        "invalid_submission": 1,
+        "passed": 3
+      }
+    },
+    "by_task": {
+      "click__rbench__004": {
+        "passed": 4
+      },
+      "click__rbench__005": {
+        "failed": 3,
+        "invalid_submission": 1
+      },
+      "click__rbench__006": {
+        "passed": 4
+      },
+      "click__rbench__007": {
+        "invalid_submission": 1,
+        "passed": 3
+      },
+      "click__rbench__008": {
+        "failed": 2,
+        "invalid_submission": 2
+      }
+    },
+    "cost": {
+      "actual_cost_records_in_expansion": 0,
+      "actual_provider_billed_cost_status": "unknown_no_invoice_or_billed_cost_records",
+      "cost_reconciliation": "experiments/core_narrative/results/codex_nfl_output_contract_v3_click_004_008_cost_reconciliation_2026-05-08.json",
+      "input_tokens": 246732,
+      "ledger_cumulative_after_expansion_usd": 4.879213,
+      "ledger_cumulative_before_expansion_usd": 2.391728,
+      "ledger_record_count_after_expansion": 67,
+      "ledger_record_count_before_expansion": 47,
+      "ledger_record_count_delta": 20,
+      "new_provider_usage_cost_usd": 2.487485,
+      "output_tokens": 150017,
+      "provider_usage_cost_status": "provider_response_usage_cost_not_invoice"
+    },
+    "failure_taxonomy": {
+      "infra_failed_count": 0,
+      "invalid_submission_failure_classes": {
+        "search_replace_anchor_mismatch": 2,
+        "search_replace_old_occurrence_mismatch": 2
+      },
+      "metadata_failure_classes": {
+        "search_replace_anchor_mismatch": 2,
+        "search_replace_old_occurrence_mismatch": 2
+      },
+      "model_output_invalid_submission_count": 4,
+      "model_output_invalid_submission_run_ids": [
+        "codex_nfl_output_contract_v3_click_004_008_20260508__cheap-click-specialist__click__rbench__005__attempt1",
+        "codex_nfl_output_contract_v3_click_004_008_20260508__cheap-generic-swe__click__rbench__007__attempt1",
+        "codex_nfl_output_contract_v3_click_004_008_20260508__cheap-generic-swe__click__rbench__008__attempt1",
+        "codex_nfl_output_contract_v3_click_004_008_20260508__frontier-generic-swe__click__rbench__008__attempt1"
+      ],
+      "timeout_count": 0,
+      "verifier_replay_failed_count": 5,
+      "verifier_replay_failed_run_ids": [
+        "codex_nfl_output_contract_v3_click_004_008_20260508__cheap-click-specialist__click__rbench__008__attempt1",
+        "codex_nfl_output_contract_v3_click_004_008_20260508__cheap-generic-swe__click__rbench__005__attempt1",
+        "codex_nfl_output_contract_v3_click_004_008_20260508__frontier-click-specialist__click__rbench__005__attempt1",
+        "codex_nfl_output_contract_v3_click_004_008_20260508__frontier-click-specialist__click__rbench__008__attempt1",
+        "codex_nfl_output_contract_v3_click_004_008_20260508__frontier-generic-swe__click__rbench__005__attempt1"
+      ]
+    },
+    "pass_rate": 0.55,
+    "status_counts": {
+      "failed": 5,
+      "invalid_submission": 4,
+      "passed": 11
+    }
+  },
+  "prior_gate_decision": "experiments/core_narrative/results/codex_nfl_output_contract_v3_gate1_decision_20260508.json",
+  "schema_version": "core-narrative.output-contract-v3-click-004-008-decision.v1",
+  "status": "expansion_completed",
+  "tool": "codex_nfl_output_contract_v3_click_004_008_decision"
+}
