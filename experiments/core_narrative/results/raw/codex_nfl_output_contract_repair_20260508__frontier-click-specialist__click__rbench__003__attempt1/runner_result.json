@@ -1,0 +1,22 @@
+{
+  "cost_ledger_append": {
+    "actual_cost_recorded": false,
+    "estimated_cost_usd": 0.2202,
+    "new_cumulative_estimated_cost_usd": 2.159068,
+    "record_count_after": 46,
+    "record_count_before": 45,
+    "status": "appended"
+  },
+  "details": {
+    "git_apply_stderr": "error: corrupt patch at line 57"
+  },
+  "error": "generated unified diff failed git apply validation",
+  "finished_at": "2026-05-08T04:45:21.563558Z",
+  "model_call_made": true,
+  "prompt_snapshot": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/codex_nfl_output_contract_repair_20260508__frontier-click-specialist__click__rbench__003__attempt1/prompt_snapshot.json",
+  "raw_response_artifact": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/codex_nfl_output_contract_repair_20260508__frontier-click-specialist__click__rbench__003__attempt1/provider_response.redacted.json",
+  "runner_id": "codex-nfl-direct-search-replace-v1",
+  "started_at": "2026-05-08T04:44:20.808806Z",
+  "status": "error",
+  "tool": "codex_nfl_direct_runner"
+}

@@ -1,0 +1,123 @@
+{
+  "by_acut": {
+    "cheap-click-specialist": {
+      "pass_rate": 0.6,
+      "passed": 3,
+      "scoreable": 5,
+      "status_counts": {
+        "failed": 1,
+        "invalid_submission": 1,
+        "passed": 3
+      },
+      "total": 5
+    },
+    "cheap-generic-swe": {
+      "pass_rate": 0.4,
+      "passed": 2,
+      "scoreable": 5,
+      "status_counts": {
+        "failed": 1,
+        "invalid_submission": 2,
+        "passed": 2
+      },
+      "total": 5
+    },
+    "frontier-click-specialist": {
+      "pass_rate": 0.6,
+      "passed": 3,
+      "scoreable": 5,
+      "status_counts": {
+        "failed": 2,
+        "passed": 3
+      },
+      "total": 5
+    },
+    "frontier-generic-swe": {
+      "pass_rate": 0.6,
+      "passed": 3,
+      "scoreable": 5,
+      "status_counts": {
+        "failed": 1,
+        "invalid_submission": 1,
+        "passed": 3
+      },
+      "total": 5
+    }
+  },
+  "by_acut_split": {
+    "cheap-click-specialist": {
+      "rbench": {
+        "pass_rate": 0.6,
+        "passed": 3,
+        "scoreable": 5,
+        "status_counts": {
+          "failed": 1,
+          "invalid_submission": 1,
+          "passed": 3
+        },
+        "total": 5
+      }
+    },
+    "cheap-generic-swe": {
+      "rbench": {
+        "pass_rate": 0.4,
+        "passed": 2,
+        "scoreable": 5,
+        "status_counts": {
+          "failed": 1,
+          "invalid_submission": 2,
+          "passed": 2
+        },
+        "total": 5
+      }
+    },
+    "frontier-click-specialist": {
+      "rbench": {
+        "pass_rate": 0.6,
+        "passed": 3,
+        "scoreable": 5,
+        "status_counts": {
+          "failed": 2,
+          "passed": 3
+        },
+        "total": 5
+      }
+    },
+    "frontier-generic-swe": {
+      "rbench": {
+        "pass_rate": 0.6,
+        "passed": 3,
+        "scoreable": 5,
+        "status_counts": {
+          "failed": 1,
+          "invalid_submission": 1,
+          "passed": 3
+        },
+        "total": 5
+      }
+    }
+  },
+  "by_split": {
+    "rbench": {
+      "pass_rate": 0.55,
+      "passed": 11,
+      "scoreable": 20,
+      "status_counts": {
+        "failed": 5,
+        "invalid_submission": 4,
+        "passed": 11
+      },
+      "total": 20
+    }
+  },
+  "input_count": 20,
+  "result_count": 20,
+  "status": "summarized",
+  "status_counts": {
+    "failed": 5,
+    "invalid_submission": 4,
+    "passed": 11
+  },
+  "tool": "summarize_results",
+  "warnings": []
+}

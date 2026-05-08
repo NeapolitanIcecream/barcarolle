@@ -1,0 +1,64 @@
+{
+  "checks": {
+    "ledger_record_count": {
+      "actual": 5,
+      "expected": 5,
+      "status": "passed"
+    },
+    "ledger_run_ids_match_normalized": {
+      "ledger_run_ids": [
+        "codex_nfl_output_contract_v3_click_005_008_attempt2_20260508__cheap-click-specialist__click__rbench__005__attempt2",
+        "codex_nfl_output_contract_v3_click_005_008_attempt2_20260508__cheap-click-specialist__click__rbench__008__attempt2",
+        "codex_nfl_output_contract_v3_click_005_008_attempt2_20260508__cheap-generic-swe__click__rbench__008__attempt2",
+        "codex_nfl_output_contract_v3_click_005_008_attempt2_20260508__frontier-click-specialist__click__rbench__008__attempt2",
+        "codex_nfl_output_contract_v3_click_005_008_attempt2_20260508__frontier-generic-swe__click__rbench__008__attempt2"
+      ],
+      "normalized_run_ids": [
+        "codex_nfl_output_contract_v3_click_005_008_attempt2_20260508__cheap-click-specialist__click__rbench__005__attempt2",
+        "codex_nfl_output_contract_v3_click_005_008_attempt2_20260508__cheap-click-specialist__click__rbench__008__attempt2",
+        "codex_nfl_output_contract_v3_click_005_008_attempt2_20260508__cheap-generic-swe__click__rbench__008__attempt2",
+        "codex_nfl_output_contract_v3_click_005_008_attempt2_20260508__frontier-click-specialist__click__rbench__008__attempt2",
+        "codex_nfl_output_contract_v3_click_005_008_attempt2_20260508__frontier-generic-swe__click__rbench__008__attempt2"
+      ],
+      "status": "passed"
+    },
+    "normalized_result_count": {
+      "actual": 5,
+      "expected": 5,
+      "status": "passed"
+    },
+    "prompt_snapshot_count": {
+      "actual": 5,
+      "expected": 5,
+      "status": "passed"
+    },
+    "redacted_provider_response_count": {
+      "actual": 5,
+      "expected": 5,
+      "status": "passed"
+    }
+  },
+  "normalized_results": [
+    "experiments/core_narrative/results/normalized/codex_nfl_output_contract_v3_click_005_008_attempt2_20260508__cheap-click-specialist__click__rbench__005__attempt2.json",
+    "experiments/core_narrative/results/normalized/codex_nfl_output_contract_v3_click_005_008_attempt2_20260508__cheap-click-specialist__click__rbench__008__attempt2.json",
+    "experiments/core_narrative/results/normalized/codex_nfl_output_contract_v3_click_005_008_attempt2_20260508__cheap-generic-swe__click__rbench__008__attempt2.json",
+    "experiments/core_narrative/results/normalized/codex_nfl_output_contract_v3_click_005_008_attempt2_20260508__frontier-click-specialist__click__rbench__008__attempt2.json",
+    "experiments/core_narrative/results/normalized/codex_nfl_output_contract_v3_click_005_008_attempt2_20260508__frontier-generic-swe__click__rbench__008__attempt2.json"
+  ],
+  "prompt_snapshots": [
+    "experiments/core_narrative/results/raw/codex_nfl_output_contract_v3_click_005_008_attempt2_20260508__cheap-click-specialist__click__rbench__005__attempt2/prompt_snapshot.json",
+    "experiments/core_narrative/results/raw/codex_nfl_output_contract_v3_click_005_008_attempt2_20260508__cheap-click-specialist__click__rbench__008__attempt2/prompt_snapshot.json",
+    "experiments/core_narrative/results/raw/codex_nfl_output_contract_v3_click_005_008_attempt2_20260508__cheap-generic-swe__click__rbench__008__attempt2/prompt_snapshot.json",
+    "experiments/core_narrative/results/raw/codex_nfl_output_contract_v3_click_005_008_attempt2_20260508__frontier-click-specialist__click__rbench__008__attempt2/prompt_snapshot.json",
+    "experiments/core_narrative/results/raw/codex_nfl_output_contract_v3_click_005_008_attempt2_20260508__frontier-generic-swe__click__rbench__008__attempt2/prompt_snapshot.json"
+  ],
+  "redacted_provider_responses": [
+    "experiments/core_narrative/results/raw/codex_nfl_output_contract_v3_click_005_008_attempt2_20260508__cheap-click-specialist__click__rbench__005__attempt2/provider_response.redacted.json",
+    "experiments/core_narrative/results/raw/codex_nfl_output_contract_v3_click_005_008_attempt2_20260508__cheap-click-specialist__click__rbench__008__attempt2/provider_response.redacted.json",
+    "experiments/core_narrative/results/raw/codex_nfl_output_contract_v3_click_005_008_attempt2_20260508__cheap-generic-swe__click__rbench__008__attempt2/provider_response.redacted.json",
+    "experiments/core_narrative/results/raw/codex_nfl_output_contract_v3_click_005_008_attempt2_20260508__frontier-click-specialist__click__rbench__008__attempt2/provider_response.redacted.json",
+    "experiments/core_narrative/results/raw/codex_nfl_output_contract_v3_click_005_008_attempt2_20260508__frontier-generic-swe__click__rbench__008__attempt2/provider_response.redacted.json"
+  ],
+  "run_prefix": "codex_nfl_output_contract_v3_click_005_008_attempt2_20260508",
+  "tool": "codex_nfl_attempt2_artifact_check"
+}

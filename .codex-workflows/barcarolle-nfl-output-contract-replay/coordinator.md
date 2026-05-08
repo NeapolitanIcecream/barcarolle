@@ -1,0 +1,136 @@
+# barcarolle-nfl-output-contract-replay Work Loop Coordinator
+
+STATUS: PR_READY_WAITING
+UPDATED_AT: 2026-05-08 20:10 CST
+
+RULES:
+- Do not read worker or reviewer CLI stdout/stderr logs.
+- Use `worker/process.md` and `reviewer/process.md` as progress sources.
+- Worker tmux session: `barcarolle-nfl-output-contract-replay-worker`.
+- Reviewer tmux session: `barcarolle-nfl-output-contract-replay-reviewer` once needed.
+- Requested Codex CLI configuration: `gpt-5.5`, `model_reasoning_effort=xhigh`, YOLO mode.
+- Supervisor policy: if steps 1-4 are handled, do not treat step 5 report/packaging as a blocking endpoint. Continue pushing the experiment forward as long as there is a clear local next step and no hard blocker.
+- If a worker/reviewer loop stops or closes but the supervisor judges that additional local engineering or experiment work can advance the goal, start a new bounded loop/revision instead of stopping. Notify only for true hard blockers: API funds/quota exhaustion, missing credentials, repo auth failure, or necessary user input.
+
+TASK:
+- Work type: implementation+experiment
+- Statement: Repair the Codex NFL output contract / patch replay path that blocked Gate 1, keep Gate 1 clean-replay strict, add regression coverage for ambiguous search/replace on Click task 003 style failures, run a targeted frontier-click-specialist x click__rbench__003 rerun after the fix, and produce a PR-ready report explaining whether Gate 1 can now pass and whether Click 004-008 expansion is justified.
+- Deliverable: Focused code/tests/artifacts/report for the output-contract replay repair and targeted live rerun, with local reviewer closure and PR-ready evidence.
+- Review focus: Verify that Gate 1 was not weakened, ambiguous model-output failures are handled by robust diagnostics or a replayable patch contract, tests cover the failure mode, live spend is minimal and cost-accounted, and the report supports next-step expansion decisions without overclaiming.
+
+CURRENT:
+- Worker prompt: `.codex-workflows/barcarolle-nfl-output-contract-replay/worker/prompt.md`
+- Worker process: `.codex-workflows/barcarolle-nfl-output-contract-replay/worker/process.md`
+- Worker launcher: `.codex-workflows/barcarolle-nfl-output-contract-replay/worker/run_worker.sh`
+- Worker tmux session started: `barcarolle-nfl-output-contract-replay-worker`.
+- Worker reported `status: delivered`.
+- Reviewer tmux session started: `barcarolle-nfl-output-contract-replay-reviewer`.
+- Reviewer reported `issues_found`.
+- Revision files:
+  - `worker/review-feedback-1.md`
+  - `worker/revision-prompt-1.md`
+  - `worker/run_worker_revision_1.sh`
+- Worker revision 1 tmux session started: `barcarolle-nfl-output-contract-replay-worker-revision-1`.
+- Worker revision 1 reported `status: delivered`.
+- Reviewer recheck files:
+  - `reviewer/recheck-prompt-1.md`
+  - `reviewer/run_recheck_1.sh`
+- Reviewer recheck 1 tmux session started: `barcarolle-nfl-output-contract-replay-reviewer-recheck-1`.
+- Reviewer recheck 1 reported `no_issues`.
+- Supervisor decision: do not stop at packaging because Gate 1 still fails on the frontier-click task 003 output contract; continue with one bounded engineering/experiment iteration to try recovering clean replay or classify the next failure mode.
+- Continuation files:
+  - `worker/continuation-prompt-2.md`
+  - `worker/run_worker_continuation_2.sh`
+- Worker continuation 2 tmux session started: `barcarolle-nfl-output-contract-replay-worker-continuation-2`.
+- Worker continuation 2 reported `status: delivered`.
+- Reviewer recheck 2 files:
+  - `reviewer/recheck-prompt-2.md`
+  - `reviewer/run_recheck_2.sh`
+- Reviewer recheck 2 tmux session started: `barcarolle-nfl-output-contract-replay-reviewer-recheck-2`.
+- Reviewer recheck 2 reported `no_issues`.
+- Supervisor decision: do not stop at packaging because v3 recovered strict clean replay and Click 004-008 are now the clear controlled expansion step.
+- Continuation 3 files:
+  - `worker/continuation-prompt-3.md`
+  - `worker/run_worker_continuation_3.sh`
+- Worker continuation 3 tmux session started: `barcarolle-nfl-output-contract-replay-worker-continuation-3`.
+- Worker continuation 3 reported `status: delivered`.
+- Reviewer recheck 3 files:
+  - `reviewer/recheck-prompt-3.md`
+  - `reviewer/run_recheck_3.sh`
+- Reviewer recheck 3 tmux session started: `barcarolle-nfl-output-contract-replay-reviewer-recheck-3`.
+- Reviewer recheck 3 reported `issues_found`.
+- Supervisor applied focused wording fix for verifier exit-code distribution and copied handoff into `worker/review-feedback-2.md`.
+- Reviewer recheck 4 files:
+  - `reviewer/recheck-prompt-4.md`
+  - `reviewer/run_recheck_4.sh`
+- Reviewer recheck 4 tmux session started: `barcarolle-nfl-output-contract-replay-reviewer-recheck-4`.
+- Reviewer recheck 4 reported `no_issues`.
+- Supervisor decision: do not stop at packaging because the reviewed expansion identifies a clear no-new-spend next step: Click 005/008 failure-cluster triage.
+- Continuation 4 files:
+  - `worker/continuation-prompt-4.md`
+  - `worker/run_worker_continuation_4.sh`
+- Worker continuation 4 tmux session started: `barcarolle-nfl-output-contract-replay-worker-continuation-4`.
+- Worker continuation 4 reported `status: delivered`.
+- Reviewer recheck 5 files:
+  - `reviewer/recheck-prompt-5.md`
+  - `reviewer/run_recheck_5.sh`
+- Reviewer recheck 5 tmux session started: `barcarolle-nfl-output-contract-replay-reviewer-recheck-5`.
+- Reviewer recheck 5 reported `no_issues`.
+- Supervisor decision: do not stop at packaging because the reviewed triage identifies a clear no-new-spend next step: replay existing Click 005 patch artifacts against the repaired verifier and tighten prompt/output-contract/context packaging before any new live retry.
+- Continuation 5 files:
+  - `worker/continuation-prompt-5.md`
+  - `worker/run_worker_continuation_5.sh`
+- Worker continuation 5 tmux session started: `barcarolle-nfl-output-contract-replay-worker-continuation-5`.
+- Worker continuation 5 reported `status: delivered`.
+- Reviewer recheck 6 files:
+  - `reviewer/recheck-prompt-6.md`
+  - `reviewer/run_recheck_6.sh`
+- Reviewer recheck 6 tmux session started: `barcarolle-nfl-output-contract-replay-reviewer-recheck-6`.
+- Reviewer recheck 6 reported `no_issues`.
+- Supervisor decision: do not publish yet because reviewer-approved continuation 5 identifies a narrow, evidence-supported live retry step that advances Click 004-008 readiness after local repairs.
+- Continuation 6 files:
+  - `worker/continuation-prompt-6.md`
+  - `worker/run_worker_continuation_6.sh`
+- Worker continuation 6 tmux session started: `barcarolle-nfl-output-contract-replay-worker-continuation-6`.
+- Worker continuation 6 reported `status: delivered`.
+- Reviewer recheck 7 files:
+  - `reviewer/recheck-prompt-7.md`
+  - `reviewer/run_recheck_7.sh`
+- Reviewer recheck 7 tmux session started: `barcarolle-nfl-output-contract-replay-reviewer-recheck-7`.
+- Reviewer recheck 7 reported `no_issues`.
+- Supervisor decision: do not publish yet because the reviewed attempt-2 retry identifies a clear no-spend next step: Click 008 failure analysis before any further live spend.
+- Continuation 7 files:
+  - `worker/continuation-prompt-7.md`
+  - `worker/run_worker_continuation_7.sh`
+- Worker continuation 7 tmux session started: `barcarolle-nfl-output-contract-replay-worker-continuation-7`.
+- Worker continuation 7 reported `status: delivered`.
+- Reviewer recheck 8 files:
+  - `reviewer/recheck-prompt-8.md`
+  - `reviewer/run_recheck_8.sh`
+- Reviewer recheck 8 tmux session started: `barcarolle-nfl-output-contract-replay-reviewer-recheck-8`.
+- Reviewer recheck 8 reported `no_issues`.
+- Supervisor decision: do not publish yet because the reviewed Click 008 fix has a clear no-model verification step before any further live spend.
+- Continuation 8 files:
+  - `worker/continuation-prompt-8.md`
+  - `worker/run_worker_continuation_8.sh`
+- Worker continuation 8 tmux session started: `barcarolle-nfl-output-contract-replay-worker-continuation-8`.
+- Worker continuation 8 reported `status: delivered`.
+- Reviewer recheck 9 files:
+  - `reviewer/recheck-prompt-9.md`
+  - `reviewer/run_recheck_9.sh`
+- Reviewer recheck 9 tmux session started: `barcarolle-nfl-output-contract-replay-reviewer-recheck-9`.
+- Reviewer recheck 9 reported `no_issues`.
+- Supervisor decision: no further local fix remains before PR packaging. Future live spend would require explicit approval as a bounded Click 008 attempt-3 measurement; no Click 009+ or speculative spend is justified by the reviewed evidence.
+- PR packaging complete:
+  - Commit: `6724959055df8e329ec49ae7e3f95c15a029671b`
+  - PR: https://github.com/NeapolitanIcecream/barcarolle/pull/3
+  - PR state: open, ready for review, mergeable.
+  - Initial checks/reviews: no checks reported yet; no reviews/comments yet.
+  - Unrelated user draft `docs/draft/barcarolle-leadership-report.md` was left untracked and uncommitted.
+
+NEXT:
+- On next heartbeat, inspect PR #3 reviews/checks and continue the gh-codex-review-loop.
+- Fix valid review findings or CI failures with focused commits and tests.
+- Merge only when checks are clean and Codex has no open findings or a positive latest signal after the latest commit.
+- If worker continuation blocks on actual API funds/quota, missing LLM credentials, repo auth, or user input, return `NOTIFY`.
+- If local reviewer reports `no_issues` but the delivered work merely packages/report step 5 while clear next experiment steps remain, start a new worker continuation loop before publishing/merging.

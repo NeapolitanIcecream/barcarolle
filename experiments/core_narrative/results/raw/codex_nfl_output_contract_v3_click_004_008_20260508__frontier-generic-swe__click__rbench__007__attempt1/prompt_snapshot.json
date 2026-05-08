@@ -1,0 +1,45 @@
+{
+  "context_files": [
+    {
+      "char_count": 11994,
+      "path": "src/click/testing.py",
+      "sha256": "053ed5ef84a1bfe50b25263f15561a77e8b404c667fc2999b4c8392505b3639d",
+      "truncated": false
+    },
+    {
+      "char_count": 7693,
+      "path": "tests/test_testing.py",
+      "sha256": "94398068e6d6fd8f0e2d8d6832861708677e4e2400e01f5c3c2b0209fdd80b64",
+      "truncated": false
+    }
+  ],
+  "full_urls_redacted": true,
+  "output_contract": "anchored-search-replace-json-v3",
+  "output_contract_schema": {
+    "id": "anchored-search-replace-json-v3",
+    "legacy_parser_fallback_keys": [
+      "unified_diff",
+      "files"
+    ],
+    "primary_top_level_key": "edits",
+    "requires_exact_old_text": true,
+    "requires_exact_path_from_context": true,
+    "requires_immediate_anchors_for_repeated_old_text": true,
+    "requires_single_top_level_key": true
+  },
+  "prompt_char_count": 23578,
+  "prompt_content_recorded": true,
+  "prompt_sha256": "04d6bcd3333e99850261cf379e33953422258bcae65fa4e961ccc77d49b5e67e",
+  "run_id": "codex_nfl_output_contract_v3_click_004_008_20260508__frontier-generic-swe__click__rbench__007__attempt1",
+  "runner_id": "codex-nfl-direct-search-replace-v1",
+  "specialist_context_assertion": {
+    "expected": "excluded",
+    "include_mode": "auto",
+    "passed": true
+  },
+  "specialist_context_included": false,
+  "specialist_context_path": null,
+  "statement_truncated": false,
+  "task_statement_path": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/tasks/click/rbench/click__rbench__007/public/statement.md",
+  "tool": "codex_nfl_direct_runner"
+}

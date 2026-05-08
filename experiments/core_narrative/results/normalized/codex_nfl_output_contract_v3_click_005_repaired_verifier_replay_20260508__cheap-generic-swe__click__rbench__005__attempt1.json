@@ -1,0 +1,33 @@
+{
+  "acut_id": "cheap-generic-swe",
+  "attempt": 1,
+  "error": null,
+  "finished_at": "2026-05-08T10:06:13.711221Z",
+  "metadata": {
+    "skip_apply": false,
+    "timeout_seconds": 60,
+    "tool": "apply_and_verify",
+    "verifier_command": [
+      "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/tasks/click/rbench/click__rbench__005/verifier/run.sh"
+    ]
+  },
+  "patch_path": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/codex_nfl_output_contract_v3_click_004_008_20260508__cheap-generic-swe__click__rbench__005__attempt1/submission.patch",
+  "review": {
+    "mergeability_grade": null,
+    "notes": "",
+    "rule_violation": false,
+    "wrong_module": false
+  },
+  "run_id": "codex_nfl_output_contract_v3_click_005_repaired_verifier_replay_20260508__cheap-generic-swe__click__rbench__005__attempt1",
+  "schema_version": "core-narrative.run-result.v1",
+  "split": "rbench",
+  "started_at": "2026-05-08T10:06:13.510273Z",
+  "status": "passed",
+  "task_id": "click__rbench__005",
+  "verification": {
+    "duration_seconds": 0.182,
+    "exit_code": 0,
+    "stderr_artifact": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/codex_nfl_output_contract_v3_click_005_repaired_verifier_replay_20260508__cheap-generic-swe__click__rbench__005__attempt1/verifier.stderr.txt",
+    "stdout_artifact": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/codex_nfl_output_contract_v3_click_005_repaired_verifier_replay_20260508__cheap-generic-swe__click__rbench__005__attempt1/verifier.stdout.txt"
+  }
+}
