@@ -87,6 +87,30 @@ def likely_harness_paths(config: Mapping[str, Any]) -> list[Path]:
     return [root / name for root in roots for name in names]
 
 
+def execution_backend_preference(config: Mapping[str, Any]) -> dict[str, str | None]:
+    benchmark = config.get("benchmark") if isinstance(config.get("benchmark"), dict) else {}
+    harness = benchmark.get("evaluation_harness") if isinstance(benchmark.get("evaluation_harness"), dict) else {}
+    preference = (
+        harness.get("execution_backend_preference")
+        if isinstance(harness.get("execution_backend_preference"), dict)
+        else {}
+    )
+    primary = preference.get("primary")
+    fallback = preference.get("fallback")
+    return {
+        "primary": primary if isinstance(primary, str) and primary else None,
+        "fallback": fallback if isinstance(fallback, str) and fallback else None,
+    }
+
+
+def docker_required_for_selected_backend(config: Mapping[str, Any]) -> bool:
+    preference = execution_backend_preference(config)
+    primary = preference.get("primary")
+    if primary is None:
+        return True
+    return "docker" in primary.lower()
+
+
 def build_basis(config_path: Path) -> dict[str, Any]:
     config = load_manifest(config_path)
     cache_path = cache_path_from_config(config)
@@ -95,6 +119,13 @@ def build_basis(config_path: Path) -> dict[str, Any]:
     harness_candidates = likely_harness_paths(config)
     existing_harnesses = [path for path in harness_candidates if path.exists()]
     docker = run_capture(["docker", "--version"])
+    backend_preference = execution_backend_preference(config)
+    docker_required = docker_required_for_selected_backend(config)
+    docker_check = {
+        **docker,
+        "required_for_selected_backend": docker_required,
+        "execution_backend_preference": backend_preference,
+    }
 
     blockers: list[dict[str, Any]] = []
     if cache_path is None:
@@ -117,8 +148,8 @@ def build_basis(config_path: Path) -> dict[str, Any]:
                 "checked_paths": [str(path) for path in harness_candidates],
             }
         )
-    if not docker["available"]:
-        blockers.append({"blocker": "docker_unavailable", "diagnostic": docker})
+    if docker_required and not docker["available"]:
+        blockers.append({"blocker": "docker_unavailable", "diagnostic": docker_check})
 
     direct_feasible = not blockers
     return {
@@ -146,7 +177,7 @@ def build_basis(config_path: Path) -> dict[str, Any]:
                 "existing_paths": [str(path) for path in existing_harnesses],
                 "checked_paths": [str(path) for path in harness_candidates],
             },
-            "docker": docker,
+            "docker": docker_check,
         },
         "blockers": blockers,
         "next_defensible_action": (

@@ -11,6 +11,7 @@ from pathlib import Path
 from unittest import mock
 
 import codex_nfl_canonical_matrix as matrix
+import codex_nfl_gscore_basis as gscore_basis
 import codex_nfl_predictivity_analysis as predictivity
 
 
@@ -109,6 +110,32 @@ class CodexNflPredictivityToolsTests(unittest.TestCase):
         self.assertEqual(cell["canonical_latest"]["run_id"], "live-expected-identity")
         self.assertEqual(payload["by_acut"]["cheap-generic-swe"]["score_percent_fixed_denominator"], 0.0)
 
+    def test_canonical_matrix_rejects_manifest_override_with_mismatched_split(self) -> None:
+        """Regression: matrix builds must fail fast when an override manifest uses the wrong split."""
+        with tempfile.TemporaryDirectory() as temp_dir:
+            manifest_path = Path(temp_dir) / "rwork_manifest.json"
+            manifest_path.write_text(
+                json.dumps(
+                    {
+                        "split": "RWork",
+                        "tasks": [
+                            {
+                                "task_id": "click__rwork__001",
+                                "split": "rwork",
+                                "benchmark_split": "RWork",
+                            }
+                        ],
+                    }
+                ),
+                encoding="utf-8",
+            )
+
+            with self.assertRaises(matrix.ToolError) as raised:
+                matrix.load_tasks("rbench", str(manifest_path))
+
+        self.assertEqual(raised.exception.details["expected_split"], "rbench")
+        self.assertEqual(raised.exception.details["observed_split"], "rwork")
+
     def test_canonical_matrix_same_attempt_duplicates_use_evidence_time_not_mtime(self) -> None:
         """Regression: stale duplicate artifacts with newer mtimes must not win canonical selection."""
         with tempfile.TemporaryDirectory() as temp_dir:
@@ -199,6 +226,46 @@ class CodexNflPredictivityToolsTests(unittest.TestCase):
         self.assertEqual(payload["predictivity"]["r_score_vs_w_score_error"]["status"], "computed")
         self.assertEqual(payload["predictivity"]["g_score_vs_w_score_error"]["status"], "not_computable")
         self.assertIsNone(payload["g_score"]["by_acut"]["cheap-generic-swe"]["score_percent"])
+
+    def test_gscore_basis_does_not_block_on_docker_when_primary_backend_is_modal(self) -> None:
+        """Regression: local Docker fallback cannot block a config whose primary backend is Modal."""
+        with tempfile.TemporaryDirectory() as temp_dir:
+            root = Path(temp_dir)
+            cache_path = root / "test.parquet"
+            cache_path.write_text("dataset", encoding="utf-8")
+            harness_path = root / "SWE-bench_Pro-os"
+            harness_path.mkdir()
+            config = {
+                "benchmark": {
+                    "evaluation_harness": {
+                        "repo": "scaleapi/SWE-bench_Pro-os",
+                        "execution_backend_preference": {
+                            "primary": "Modal",
+                            "fallback": "local Docker with --use_local_docker",
+                        },
+                    }
+                },
+                "task_subset": {
+                    "materialization_attempt": {
+                        "cache_path": str(cache_path),
+                    }
+                },
+            }
+
+            with (
+                mock.patch.object(gscore_basis, "load_manifest", return_value=config),
+                mock.patch.object(gscore_basis, "likely_harness_paths", return_value=[harness_path]),
+                mock.patch.object(
+                    gscore_basis,
+                    "run_capture",
+                    return_value={"available": False, "exit_code": 127, "stderr": "docker missing"},
+                ),
+            ):
+                payload = gscore_basis.build_basis(root / "config.yaml")
+
+        self.assertEqual(payload["status"], "direct_gscore_feasible")
+        self.assertFalse(payload["checks"]["docker"]["required_for_selected_backend"])
+        self.assertNotIn("docker_unavailable", {item["blocker"] for item in payload["blockers"]})
 
 
 if __name__ == "__main__":

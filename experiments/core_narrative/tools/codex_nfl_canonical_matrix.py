@@ -52,12 +52,39 @@ def parse_args(argv: Sequence[str]) -> argparse.Namespace:
 
 
 def load_tasks(split: str, manifest_override: str | None) -> list[str]:
+    expected_split = split.lower()
     manifest_path = Path(manifest_override) if manifest_override else batch.task_split_manifest_path(split)
     manifest = load_manifest(manifest_path)
+    observed_split = manifest.get("split")
+    if isinstance(observed_split, str) and observed_split.lower() != expected_split:
+        raise ToolError(
+            "task split manifest has wrong split",
+            manifest_path=str(manifest_path),
+            expected_split=expected_split,
+            observed_split=observed_split.lower(),
+        )
     tasks = manifest.get("tasks")
     if not isinstance(tasks, list):
         raise ToolError("task split manifest has no tasks list", manifest_path=str(manifest_path))
-    task_ids = [str(task["task_id"]) for task in tasks if isinstance(task, Mapping) and isinstance(task.get("task_id"), str)]
+    task_ids: list[str] = []
+    for task in tasks:
+        if not isinstance(task, Mapping) or not isinstance(task.get("task_id"), str):
+            continue
+        task_id = str(task["task_id"])
+        encoded_split = batch.split_from_task_id(task_id)
+        task_split = task.get("split")
+        benchmark_split = task.get("benchmark_split")
+        for field, value in (("task_id", encoded_split), ("split", task_split), ("benchmark_split", benchmark_split)):
+            if isinstance(value, str) and value.lower() != expected_split:
+                raise ToolError(
+                    "task split manifest has task from wrong split",
+                    manifest_path=str(manifest_path),
+                    task_id=task_id,
+                    field=field,
+                    expected_split=expected_split,
+                    observed_split=value.lower(),
+                )
+        task_ids.append(task_id)
     if not task_ids:
         raise ToolError("task split manifest has no task ids", manifest_path=str(manifest_path))
     return task_ids
