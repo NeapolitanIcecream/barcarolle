@@ -1,0 +1,85 @@
+diff --git a/click/types.py b/click/types.py
+index f594005..0da1683 100644
+--- a/click/types.py
++++ b/click/types.py
+@@ -132,12 +132,16 @@ class Choice(ParamType):
+     You should only pass *choices* as list or tuple.  Other iterables (like
+     generators) may lead to surprising results.
+ 
++    :param case_sensitive: Set to false to make choices case insensitive.
++        Defaults to true.
++
+     See :ref:`choice-opts` for an example.
+     """
+     name = 'choice'
+ 
+-    def __init__(self, choices):
++    def __init__(self, choices, case_sensitive=True):
+         self.choices = choices
++        self.case_sensitive = case_sensitive
+ 
+     def get_metavar(self, param):
+         return '[%s]' % '|'.join(self.choices)
+@@ -145,18 +149,24 @@ class Choice(ParamType):
+     def get_missing_message(self, param):
+         return 'Choose from %s.' % ', '.join(self.choices)
+ 
++    def normalize_choice(self, choice, ctx):
++        if ctx is not None and \
++           ctx.token_normalize_func is not None:
++            choice = ctx.token_normalize_func(choice)
++        if not self.case_sensitive:
++            choice = choice.lower()
++        return choice
++
+     def convert(self, value, param, ctx):
+         # Exact match
+         if value in self.choices:
+             return value
+ 
+-        # Match through normalization
+-        if ctx is not None and \
+-           ctx.token_normalize_func is not None:
+-            value = ctx.token_normalize_func(value)
+-            for choice in self.choices:
+-                if ctx.token_normalize_func(choice) == value:
+-                    return choice
++        # Match through normalization and case sensitivity
++        normed_value = self.normalize_choice(value, ctx)
++        for choice in self.choices:
++            if self.normalize_choice(choice, ctx) == normed_value:
++                return choice
+ 
+         self.fail('invalid choice: %s. (choose from %s)' %
+                   (value, ', '.join(self.choices)), param, ctx)
+diff --git a/tests/test_options.py b/tests/test_options.py
+index e8057fa..5b68cba 100644
+--- a/tests/test_options.py
++++ b/tests/test_options.py
+@@ -310,6 +310,26 @@ def test_missing_choice(runner):
+         in result.output
+ 
+ 
++def test_case_insensitive_choice(runner):
++    @click.command()
++    @click.option('--hash-type', type=click.Choice(['MD5', 'SHA1'],
++                                                   case_sensitive=False))
++    def cmd(hash_type):
++        click.echo(hash_type)
++
++    result = runner.invoke(cmd, ['--hash-type', 'md5'])
++    assert result.exit_code == 0
++    assert result.output == 'MD5\n'
++
++    result = runner.invoke(cmd, ['--hash-type', 'SHA1'])
++    assert result.exit_code == 0
++    assert result.output == 'SHA1\n'
++
++    result = runner.invoke(cmd, ['--hash-type', 'sha256'])
++    assert result.exit_code == 2
++    assert 'invalid choice: sha256. (choose from MD5, SHA1)' in result.output
++
++
+ def test_multiline_help(runner):
+     @click.command()
+     @click.option('--foo', help="""

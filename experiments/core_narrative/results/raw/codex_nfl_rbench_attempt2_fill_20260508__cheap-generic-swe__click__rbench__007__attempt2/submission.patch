@@ -1,0 +1,80 @@
+diff --git a/src/click/testing.py b/src/click/testing.py
+index fd6bf61..9b94174 100644
+--- a/src/click/testing.py
++++ b/src/click/testing.py
+@@ -62,7 +62,14 @@ class Result:
+     """Holds the captured result of an invoked CLI script."""
+ 
+     def __init__(
+-        self, runner, stdout_bytes, stderr_bytes, exit_code, exception, exc_info=None
++        self,
++        runner,
++        stdout_bytes,
++        stderr_bytes,
++        exit_code,
++        exception,
++        return_value=None,
++        exc_info=None,
+     ):
+         #: The runner that created the result
+         self.runner = runner
+@@ -74,6 +81,8 @@ class Result:
+         self.exit_code = exit_code
+         #: The exception that happened if one did.
+         self.exception = exception
++        #: The command's return value, if any.
++        self.return_value = return_value
+         #: The traceback
+         self.exc_info = exc_info
+ 
+@@ -293,6 +302,7 @@ class CliRunner:
+                       application can still override this explicitly.
+         """
+         exc_info = None
++        return_value = None
+         with self.isolation(input=input, env=env, color=color) as outstreams:
+             exception = None
+             exit_code = 0
+@@ -305,8 +315,10 @@ class CliRunner:
+             except KeyError:
+                 prog_name = self.get_default_prog_name(cli)
+ 
++            extra.setdefault("standalone_mode", False)
++
+             try:
+-                cli.main(args=args or (), prog_name=prog_name, **extra)
++                return_value = cli.main(args=args or (), prog_name=prog_name, **extra)
+             except SystemExit as e:
+                 exc_info = sys.exc_info()
+                 exit_code = e.code
+@@ -341,6 +353,7 @@ class CliRunner:
+             stderr_bytes=stderr,
+             exit_code=exit_code,
+             exception=exception,
++            return_value=return_value,
+             exc_info=exc_info,
+         )
+ 
+diff --git a/tests/test_testing.py b/tests/test_testing.py
+index 7360473..d92348a 100644
+--- a/tests/test_testing.py
++++ b/tests/test_testing.py
+@@ -210,6 +210,18 @@ def test_exit_code_and_output_from_sys_exit():
+     assert result.output == "hello world\n"
+ 
+ 
++def test_return_value():
++    @click.command()
++    def cli():
++        return 42
++
++    runner = CliRunner()
++    result = runner.invoke(cli)
++
++    assert result.exit_code == 0
++    assert result.return_value == 42
++
++
+ def test_env():
+     @click.command()
+     def cli_env():

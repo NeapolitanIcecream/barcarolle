@@ -1,0 +1,49 @@
+{
+  "schema_version": "core-narrative.execution-decision.v1",
+  "decision_id": "codex_nfl_rbench_rwork_autonomous_execution_decision_20260508",
+  "status": "approved",
+  "recorded_at": "2026-05-08T23:52:00+08:00",
+  "scope": {
+    "repo": "click",
+    "acuts": [
+      "cheap-generic-swe",
+      "cheap-click-specialist",
+      "frontier-generic-swe",
+      "frontier-click-specialist"
+    ],
+    "rbench": {
+      "allowed": true,
+      "tasks": [
+        "click__rbench__004",
+        "click__rbench__005",
+        "click__rbench__006",
+        "click__rbench__007"
+      ],
+      "attempt": 2,
+      "note": "Fill missing non-Click008 attempt-2 cells only."
+    },
+    "rwork": {
+      "allowed": true,
+      "tasks": [
+        "click__rwork__001",
+        "click__rwork__002",
+        "click__rwork__003",
+        "click__rwork__004",
+        "click__rwork__005",
+        "click__rwork__006"
+      ],
+      "attempt": 1
+    },
+    "click008_retry_allowed": false,
+    "second_repository_expansion_allowed": false
+  },
+  "authorization_basis": "User explicitly authorized autonomous execution until hard blocker or future-work step 7 completion.",
+  "budget_gate_use": "Pass this artifact path as coordinator_decision_ref for non-primary RBench attempt-2 live runs.",
+  "secrets_policy": {
+    "record_secret_values": false,
+    "allowed_environment_variables": [
+      "BARCAROLLE_LLM_API_KEY",
+      "BARCAROLLE_LLM_BASE_URL"
+    ]
+  }
+}

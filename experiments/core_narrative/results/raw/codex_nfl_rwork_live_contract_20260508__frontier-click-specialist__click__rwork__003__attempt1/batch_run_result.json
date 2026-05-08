@@ -1,0 +1,407 @@
+{
+  "acut_id": "frontier-click-specialist",
+  "artifact_dir": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/codex_nfl_rwork_live_contract_20260508__frontier-click-specialist__click__rwork__003__attempt1",
+  "context_paths": [
+    "src/click/core.py",
+    "tests/test_defaults.py"
+  ],
+  "duration_seconds": 113.297,
+  "install": {
+    "command": [
+      "/opt/homebrew/bin/uv",
+      "pip",
+      "install",
+      "--python",
+      ".venv/bin/python",
+      "-q",
+      "-e",
+      ".",
+      "pytest"
+    ],
+    "exit_code": 0,
+    "finished_at": "2026-05-08T17:10:37.920055Z",
+    "name": "venv_install",
+    "started_at": "2026-05-08T17:10:37.799532Z",
+    "stderr_artifact": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/codex_nfl_rwork_live_contract_20260508__frontier-click-specialist__click__rwork__003__attempt1/venv_install.stderr.txt",
+    "stdout_artifact": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/codex_nfl_rwork_live_contract_20260508__frontier-click-specialist__click__rwork__003__attempt1/venv_install.stdout.txt",
+    "venv_backend": "uv"
+  },
+  "noop": {
+    "command": {
+      "command": [
+        "/Applications/Xcode.app/Contents/Developer/usr/bin/python3",
+        "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/tools/apply_and_verify.py",
+        "--workspace",
+        "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/workspaces/codex_nfl_rwork_live_contract_20260508__frontier-click-specialist__click__rwork__003__attempt1__noop",
+        "--task",
+        "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/tasks/click/rwork/click__rwork__003/task.yaml",
+        "--patch",
+        "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/codex_nfl_rwork_live_contract_20260508__frontier-click-specialist__click__rwork__003__attempt1/missing_noop.patch",
+        "--acut-id",
+        "frontier-click-specialist",
+        "--attempt",
+        "1",
+        "--run-id",
+        "codex_nfl_rwork_live_contract_20260508__frontier-click-specialist__click__rwork__003__attempt1__noop",
+        "--artifact-dir",
+        "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/codex_nfl_rwork_live_contract_20260508__frontier-click-specialist__click__rwork__003__attempt1",
+        "--output",
+        "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/codex_nfl_rwork_live_contract_20260508__frontier-click-specialist__click__rwork__003__attempt1/noop_verify.json",
+        "--skip-apply"
+      ],
+      "exit_code": 0,
+      "finished_at": "2026-05-08T17:10:38.619217Z",
+      "name": "noop_verify_command",
+      "started_at": "2026-05-08T17:10:38.317303Z",
+      "stderr_artifact": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/codex_nfl_rwork_live_contract_20260508__frontier-click-specialist__click__rwork__003__attempt1/noop_verify_command.stderr.txt",
+      "stdout_artifact": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/codex_nfl_rwork_live_contract_20260508__frontier-click-specialist__click__rwork__003__attempt1/noop_verify_command.stdout.txt"
+    },
+    "result": {
+      "acut_id": "frontier-click-specialist",
+      "attempt": 1,
+      "error": null,
+      "finished_at": "2026-05-08T17:10:38.615318Z",
+      "metadata": {
+        "skip_apply": true,
+        "timeout_seconds": 60,
+        "tool": "apply_and_verify",
+        "verifier_command": [
+          "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/tasks/click/rwork/click__rwork__003/verifier/run.sh"
+        ]
+      },
+      "patch_path": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/codex_nfl_rwork_live_contract_20260508__frontier-click-specialist__click__rwork__003__attempt1/missing_noop.patch",
+      "review": {
+        "mergeability_grade": null,
+        "notes": "",
+        "rule_violation": false,
+        "wrong_module": false
+      },
+      "run_id": "codex_nfl_rwork_live_contract_20260508__frontier-click-specialist__click__rwork__003__attempt1__noop",
+      "schema_version": "core-narrative.run-result.v1",
+      "split": "rwork",
+      "started_at": "2026-05-08T17:10:38.350981Z",
+      "status": "failed",
+      "task_id": "click__rwork__003",
+      "verification": {
+        "duration_seconds": 0.264,
+        "exit_code": 1,
+        "stderr_artifact": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/codex_nfl_rwork_live_contract_20260508__frontier-click-specialist__click__rwork__003__attempt1/verifier.stderr.txt",
+        "stdout_artifact": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/codex_nfl_rwork_live_contract_20260508__frontier-click-specialist__click__rwork__003__attempt1/verifier.stdout.txt"
+      }
+    }
+  },
+  "noop_install": {
+    "command": [
+      "/opt/homebrew/bin/uv",
+      "pip",
+      "install",
+      "--python",
+      ".venv/bin/python",
+      "-q",
+      "-e",
+      ".",
+      "pytest"
+    ],
+    "exit_code": 0,
+    "finished_at": "2026-05-08T17:10:38.316837Z",
+    "name": "noop_venv_install",
+    "started_at": "2026-05-08T17:10:38.195978Z",
+    "stderr_artifact": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/codex_nfl_rwork_live_contract_20260508__frontier-click-specialist__click__rwork__003__attempt1/noop_venv_install.stderr.txt",
+    "stdout_artifact": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/codex_nfl_rwork_live_contract_20260508__frontier-click-specialist__click__rwork__003__attempt1/noop_venv_install.stdout.txt",
+    "venv_backend": "uv"
+  },
+  "noop_prepare": {
+    "base_commit": "6a1c0d077311f180b356965914e2de5b9e0fdb44",
+    "repo_slug": "click",
+    "split": "rwork",
+    "statement_path": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/workspaces/codex_nfl_rwork_live_contract_20260508__frontier-click-specialist__click__rwork__003__attempt1__noop/.core_narrative/statement.md",
+    "status": "prepared",
+    "target_commit_absence_checked": true,
+    "task_id": "click__rwork__003",
+    "task_package_path": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/workspaces/codex_nfl_rwork_live_contract_20260508__frontier-click-specialist__click__rwork__003__attempt1__noop/.core_narrative/task.json",
+    "tool": "prepare_workspace",
+    "warnings": [],
+    "workspace": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/workspaces/codex_nfl_rwork_live_contract_20260508__frontier-click-specialist__click__rwork__003__attempt1__noop",
+    "workspace_history_mode": "base_tree_only_synthetic_git"
+  },
+  "noop_workspace": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/workspaces/codex_nfl_rwork_live_contract_20260508__frontier-click-specialist__click__rwork__003__attempt1__noop",
+  "normalized": {
+    "acut_id": "frontier-click-specialist",
+    "attempt": 1,
+    "error": "edit anchors must identify exactly one old-string occurrence",
+    "finished_at": "2026-05-08T17:12:30.774244Z",
+    "metadata": {
+      "acut_manifest_path": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/configs/acuts/frontier-click-specialist.yaml",
+      "acut_manifest_sha256": "7cfcfc91863d017d2038042b0eb003b070604d6e986a455211739ee8ef46b8fb",
+      "batch_tool": "codex_nfl_experiment_runner",
+      "clean_patch_replay": {
+        "attempted": false,
+        "runner_workspace": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/workspaces/codex_nfl_rwork_live_contract_20260508__frontier-click-specialist__click__rwork__003__attempt1",
+        "separate_workspace": false,
+        "skip_apply": null,
+        "verify_workspace": null
+      },
+      "context_pack_digest": "dfb271ad174531a7dd2f00da4cd0486193d87ce33349380982150889ecf84e48",
+      "direct_runner_budget_gate": {
+        "allowed": true,
+        "approvals_required": [],
+        "blockers": [],
+        "budget": {
+          "current_cumulative_estimated_cost_usd": 22.887578,
+          "hard_cap_reached_or_projected": false,
+          "hard_cap_usd": 300.0,
+          "projected_cost_usd": 3.0,
+          "projected_cumulative_estimated_cost_usd": 25.887578,
+          "soft_stop_reached_or_projected": false,
+          "soft_stop_usd": 240.0
+        },
+        "default_execution_profile": {
+          "core_acut_ids": [
+            "frontier-generic-swe",
+            "frontier-click-specialist",
+            "cheap-generic-swe",
+            "cheap-click-specialist"
+          ],
+          "full_core_requires_coordinator_decision": true,
+          "pilot_primary_attempts": 28,
+          "primary_attempts_per_acut_task": 1,
+          "profile_id": "budget-constrained-2x2-pilot-v2",
+          "split_task_limits": {
+            "G_score": 2,
+            "RBench": 3,
+            "RWork": 2
+          }
+        },
+        "env": {
+          "all_required_present": true,
+          "required": [
+            {
+              "name": "BARCAROLLE_LLM_API_KEY",
+              "present": true
+            },
+            {
+              "name": "BARCAROLLE_LLM_BASE_URL",
+              "present": true
+            }
+          ]
+        },
+        "execution_request": {
+          "acut_id": "frontier-click-specialist",
+          "attempt": 1,
+          "coordinator_decision_ref_present": true,
+          "split": "rwork"
+        },
+        "ledger": {
+          "cumulative_estimated_cost_usd": 22.887578,
+          "error_type": null,
+          "errors": [],
+          "estimated_cost_sum_usd": 22.887578,
+          "exists": true,
+          "is_file": true,
+          "line_count": 109,
+          "path": "experiments/core_narrative/results/cost_ledger.jsonl",
+          "record_count": 109,
+          "writable": true
+        },
+        "status": "passed",
+        "tool": "llm_budget_gate"
+      },
+      "direct_runner_cost_accounting": {
+        "actual_cost_recorded": false,
+        "actual_cost_usd": null,
+        "cost_record_basis": "failure_ledger_append",
+        "estimated_cost_usd": 0.326395
+      },
+      "direct_runner_cost_ledger_append": {
+        "actual_cost_recorded": false,
+        "estimated_cost_usd": 0.326395,
+        "new_cumulative_estimated_cost_usd": 23.213973,
+        "record_count_after": 110,
+        "record_count_before": 109,
+        "status": "appended"
+      },
+      "direct_runner_id": "codex-nfl-direct-search-replace-v1",
+      "direct_runner_status": "error",
+      "failure_class": "search_replace_anchor_mismatch",
+      "failure_owner": "model_output",
+      "model_call_made": true,
+      "prompt_snapshot": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/codex_nfl_rwork_live_contract_20260508__frontier-click-specialist__click__rwork__003__attempt1/prompt_snapshot.json",
+      "prompt_snapshot_sha256": "c360a8e4c67de0ec09cdac1cb2e86aabe74c819cb2561215f47e5a18e7361178",
+      "raw_response_artifact": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/codex_nfl_rwork_live_contract_20260508__frontier-click-specialist__click__rwork__003__attempt1/provider_response.redacted.json",
+      "runner_id": "codex-nfl-batch-v1",
+      "task_manifest_path": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/tasks/click/rwork/click__rwork__003/task.yaml",
+      "task_manifest_sha256": "db8ff7168e981d07fba9b3bcb6f6809225e8584b1c0afd2e18595a1afa174ba5",
+      "tool": "codex_nfl_experiment_runner",
+      "verifier_digest_sha256": "609e560843b434813d98fc6891fe4834f2ca628bd2c01616f23db26a0fa9f232",
+      "verifier_ready_patch_available": false
+    },
+    "patch_path": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/codex_nfl_rwork_live_contract_20260508__frontier-click-specialist__click__rwork__003__attempt1/submission.patch",
+    "review": {
+      "mergeability_grade": null,
+      "notes": "",
+      "rule_violation": false,
+      "wrong_module": false
+    },
+    "run_id": "codex_nfl_rwork_live_contract_20260508__frontier-click-specialist__click__rwork__003__attempt1",
+    "schema_version": "core-narrative.run-result.v1",
+    "split": "rwork",
+    "started_at": "2026-05-08T17:10:38.658615Z",
+    "status": "invalid_submission",
+    "task_id": "click__rwork__003",
+    "verification": {
+      "duration_seconds": null,
+      "exit_code": null,
+      "stderr_artifact": null,
+      "stdout_artifact": null
+    }
+  },
+  "normalized_result": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/normalized/codex_nfl_rwork_live_contract_20260508__frontier-click-specialist__click__rwork__003__attempt1.json",
+  "patch_path": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/codex_nfl_rwork_live_contract_20260508__frontier-click-specialist__click__rwork__003__attempt1/submission.patch",
+  "patch_ready": false,
+  "prepare": {
+    "base_commit": "6a1c0d077311f180b356965914e2de5b9e0fdb44",
+    "repo_slug": "click",
+    "split": "rwork",
+    "statement_path": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/workspaces/codex_nfl_rwork_live_contract_20260508__frontier-click-specialist__click__rwork__003__attempt1/.core_narrative/statement.md",
+    "status": "prepared",
+    "target_commit_absence_checked": true,
+    "task_id": "click__rwork__003",
+    "task_package_path": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/workspaces/codex_nfl_rwork_live_contract_20260508__frontier-click-specialist__click__rwork__003__attempt1/.core_narrative/task.json",
+    "tool": "prepare_workspace",
+    "warnings": [],
+    "workspace": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/workspaces/codex_nfl_rwork_live_contract_20260508__frontier-click-specialist__click__rwork__003__attempt1",
+    "workspace_history_mode": "base_tree_only_synthetic_git"
+  },
+  "prompt_snapshot": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/codex_nfl_rwork_live_contract_20260508__frontier-click-specialist__click__rwork__003__attempt1/prompt_snapshot.json",
+  "raw_response_artifact": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/codex_nfl_rwork_live_contract_20260508__frontier-click-specialist__click__rwork__003__attempt1/provider_response.redacted.json",
+  "run_id": "codex_nfl_rwork_live_contract_20260508__frontier-click-specialist__click__rwork__003__attempt1",
+  "runner_code": 2,
+  "runner_result": {
+    "budget_gate": {
+      "allowed": true,
+      "approvals_required": [],
+      "blockers": [],
+      "budget": {
+        "current_cumulative_estimated_cost_usd": 22.887578,
+        "hard_cap_reached_or_projected": false,
+        "hard_cap_usd": 300.0,
+        "projected_cost_usd": 3.0,
+        "projected_cumulative_estimated_cost_usd": 25.887578,
+        "soft_stop_reached_or_projected": false,
+        "soft_stop_usd": 240.0
+      },
+      "default_execution_profile": {
+        "core_acut_ids": [
+          "frontier-generic-swe",
+          "frontier-click-specialist",
+          "cheap-generic-swe",
+          "cheap-click-specialist"
+        ],
+        "full_core_requires_coordinator_decision": true,
+        "pilot_primary_attempts": 28,
+        "primary_attempts_per_acut_task": 1,
+        "profile_id": "budget-constrained-2x2-pilot-v2",
+        "split_task_limits": {
+          "G_score": 2,
+          "RBench": 3,
+          "RWork": 2
+        }
+      },
+      "env": {
+        "all_required_present": true,
+        "required": [
+          {
+            "name": "BARCAROLLE_LLM_API_KEY",
+            "present": true
+          },
+          {
+            "name": "BARCAROLLE_LLM_BASE_URL",
+            "present": true
+          }
+        ]
+      },
+      "execution_request": {
+        "acut_id": "frontier-click-specialist",
+        "attempt": 1,
+        "coordinator_decision_ref_present": true,
+        "split": "rwork"
+      },
+      "ledger": {
+        "cumulative_estimated_cost_usd": 22.887578,
+        "error_type": null,
+        "errors": [],
+        "estimated_cost_sum_usd": 22.887578,
+        "exists": true,
+        "is_file": true,
+        "line_count": 109,
+        "path": "experiments/core_narrative/results/cost_ledger.jsonl",
+        "record_count": 109,
+        "writable": true
+      },
+      "status": "passed",
+      "tool": "llm_budget_gate"
+    },
+    "cost_accounting": {
+      "actual_cost_recorded": false,
+      "actual_cost_usd": null,
+      "cost_record_basis": "failure_ledger_append",
+      "estimated_cost_usd": 0.326395
+    },
+    "cost_ledger_append": {
+      "actual_cost_recorded": false,
+      "estimated_cost_usd": 0.326395,
+      "new_cumulative_estimated_cost_usd": 23.213973,
+      "record_count_after": 110,
+      "record_count_before": 109,
+      "status": "appended"
+    },
+    "details": {
+      "anchor_matches": 0,
+      "anchors": {
+        "after": true,
+        "after_chars": 51,
+        "before": true,
+        "before_chars": 59
+      },
+      "diagnostic": {
+        "anchor_policy": {
+          "anchors_must_be_immediate_adjacent_source": true,
+          "anchors_required_when_old_is_repeated": true,
+          "omit_anchors_when_old_is_unique": true
+        },
+        "code": "unique_old_anchor_mismatch",
+        "recommendation": "old occurs exactly once; omit before/after anchors unless they are exact immediate adjacent source"
+      },
+      "edit_index": 0,
+      "failure_class": "search_replace_anchor_mismatch",
+      "occurrences": 1,
+      "old_text_char_count": 60,
+      "old_text_sha256": "390c58a4aaf1ec9de350199de70d8aa8324493d08bf75422df351fd469e46e67",
+      "path": "src/click/core.py"
+    },
+    "error": "edit anchors must identify exactly one old-string occurrence",
+    "finished_at": "2026-05-08T17:12:30.774244Z",
+    "model_call_made": true,
+    "prompt_snapshot": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/codex_nfl_rwork_live_contract_20260508__frontier-click-specialist__click__rwork__003__attempt1/prompt_snapshot.json",
+    "raw_response_artifact": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/codex_nfl_rwork_live_contract_20260508__frontier-click-specialist__click__rwork__003__attempt1/provider_response.redacted.json",
+    "runner_id": "codex-nfl-direct-search-replace-v1",
+    "selected_context_paths": [
+      "src/click/core.py",
+      "tests/test_defaults.py"
+    ],
+    "started_at": "2026-05-08T17:10:38.658615Z",
+    "status": "error",
+    "task_visible_context_guidance": "Provide the commit message and linked issue identifier 3071. Hide the target diff and exact implementation.",
+    "tool": "codex_nfl_direct_runner"
+  },
+  "runner_status": "error",
+  "runner_workspace": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/workspaces/codex_nfl_rwork_live_contract_20260508__frontier-click-specialist__click__rwork__003__attempt1",
+  "scoreable": true,
+  "status": "invalid_submission",
+  "task_id": "click__rwork__003",
+  "verify_code": null,
+  "verify_install": null,
+  "verify_prepare": null,
+  "verify_workspace": null,
+  "workspace": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/workspaces/codex_nfl_rwork_live_contract_20260508__frontier-click-specialist__click__rwork__003__attempt1"
+}

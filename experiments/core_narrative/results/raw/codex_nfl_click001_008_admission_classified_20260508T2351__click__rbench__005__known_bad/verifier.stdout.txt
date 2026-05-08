@@ -1,0 +1,14 @@
+FF                                                                       [100%]
+=================================== FAILURES ===================================
+_________________________ test_case_insensitive_choice _________________________
+tests/test_options.py:315: in test_case_insensitive_choice
+    @click.option('--foo', type=click.Choice(
+E   TypeError: __init__() got an unexpected keyword argument 'case_sensitive'
+________________ test_case_insensitive_choice_returned_exactly _________________
+tests/test_options.py:346: in test_case_insensitive_choice_returned_exactly
+    @click.option('--foo', type=click.Choice(
+E   TypeError: __init__() got an unexpected keyword argument 'case_sensitive'
+=========================== short test summary info ============================
+FAILED tests/test_options.py::test_case_insensitive_choice - TypeError: __ini...
+FAILED tests/test_options.py::test_case_insensitive_choice_returned_exactly
+2 failed in 0.04s

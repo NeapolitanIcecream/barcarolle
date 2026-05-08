@@ -12,6 +12,7 @@ import tempfile
 import unittest
 from pathlib import Path
 from types import SimpleNamespace
+from unittest import mock
 
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
@@ -384,6 +385,54 @@ class CodexNflExperimentRunnerTests(unittest.TestCase):
             "unit_attempt2_approval",
         )
 
+    def test_run_direct_runner_forwards_context_caps(self) -> None:
+        """Retries can reduce oversized prompts without editing the direct runner contract."""
+        runner = load_runner_module()
+        workspace = self.root / "workspace"
+        workspace.mkdir()
+        (workspace / "module.py").write_text("VALUE = 1\n", encoding="utf-8")
+        artifact_dir = self.root / "artifacts"
+        artifact_dir.mkdir()
+        captured_commands: list[list[str]] = []
+
+        def fake_run_capture(command, *, cwd=None, timeout=None):
+            captured_commands.append(list(command))
+            output_path = Path(command[command.index("--output") + 1])
+            output_path.write_text(json.dumps({"status": "patch_generated"}), encoding="utf-8")
+            return subprocess.CompletedProcess(command, 0, "", "")
+
+        runner.run_capture = fake_run_capture
+        runner.write_command_artifacts = lambda **kwargs: {"exit_code": kwargs["completed"].returncode}
+        runner.task_manifest_path = lambda task_id: self.root / f"{task_id}.yaml"
+        runner.acut_manifest_path = lambda acut_id: self.root / f"{acut_id}.yaml"
+        runner.projected_cost_for_acut = lambda acut_id: "0"
+
+        args = SimpleNamespace(
+            attempt=2,
+            mode="mock",
+            mock_response=None,
+            mock_response_text='{"edits":[]}',
+            llm_ledger=str(self.root / "ledger.jsonl"),
+            runner_timeout_seconds=1,
+            coordinator_decision_ref=None,
+            max_context_chars=80000,
+            max_file_chars=50000,
+        )
+        runner.run_direct_runner(
+            args=args,
+            task={"task_id": "click__rwork__006"},
+            task_id="click__rwork__006",
+            acut_id="cheap-generic-swe",
+            workspace=workspace,
+            run_id="unit-context-caps",
+            artifact_dir=artifact_dir,
+            context_paths=["module.py"],
+        )
+
+        command = captured_commands[0]
+        self.assertEqual(command[command.index("--max-context-chars") + 1], "80000")
+        self.assertEqual(command[command.index("--max-file-chars") + 1], "50000")
+
     def test_run_one_refuses_existing_normalized_run_id_before_model_call(self) -> None:
         """Regression: batch runs must not overwrite prior run artifacts by default."""
         runner = load_runner_module()
@@ -416,6 +465,145 @@ class CodexNflExperimentRunnerTests(unittest.TestCase):
             )
 
         self.assertIn("normalized_result_exists", raised.exception.details["blockers"])
+
+    def test_task_manifest_path_resolves_rwork_task_packs(self) -> None:
+        """The batch runner can target held-out RWork task packs, not only RBench."""
+        runner = load_runner_module()
+        runner.TASK_PACK_ROOT = self.root / "tasks"
+        expected = runner.TASK_PACK_ROOT / "click" / "rwork" / "click__rwork__001" / "task.yaml"
+        expected.parent.mkdir(parents=True)
+        expected.write_text("task_id: click__rwork__001\n", encoding="utf-8")
+
+        self.assertEqual(runner.task_manifest_path("click__rwork__001"), expected)
+
+    def test_main_rejects_tasks_with_wrong_split_even_when_manifest_contains_id(self) -> None:
+        """Regression: custom split manifests must not mix RBench task packs into RWork runs."""
+        runner = load_runner_module()
+        manifest_path = self.root / "mixed_manifest.json"
+        manifest_path.write_text(
+            json.dumps(
+                {
+                    "split": "RWork",
+                    "tasks": [
+                        {
+                            "task_id": "click__rbench__001",
+                            "split": "rbench",
+                            "benchmark_split": "RBench",
+                        }
+                    ],
+                }
+            ),
+            encoding="utf-8",
+        )
+        output_path = self.root / "summary.json"
+        run_calls: list[str] = []
+
+        def fake_run_one(_args, task, _acut_id):
+            run_calls.append(task["task_id"])
+            return {"status": "passed", "scoreable": True}
+
+        runner.run_one = fake_run_one
+
+        code = runner.main(
+            [
+                "--task-split",
+                "rwork",
+                "--task-split-manifest",
+                str(manifest_path),
+                "--tasks",
+                "click__rbench__001",
+                "--acuts",
+                "cheap-generic-swe",
+                "--output",
+                str(output_path),
+            ]
+        )
+
+        self.assertNotEqual(code, 0)
+        self.assertEqual(run_calls, [])
+
+    def test_install_workspace_prefers_uv_python312_when_available(self) -> None:
+        """RWork Click tasks require Python 3.10+, so use the repo's uv 3.12 path."""
+        runner = load_runner_module()
+        commands: list[list[str]] = []
+        artifact_dir = self.root / "artifacts"
+        artifact_dir.mkdir()
+
+        def fake_run_capture(command, *, cwd=None, timeout=None):
+            commands.append(list(command))
+            return subprocess.CompletedProcess(command, 0, "", "")
+
+        with mock.patch.object(runner.shutil, "which", return_value="/opt/homebrew/bin/uv"):
+            runner.run_capture = fake_run_capture
+            runner.write_command_artifacts = lambda **kwargs: {
+                "name": kwargs["name"],
+                "command": kwargs["command"],
+                "exit_code": kwargs["completed"].returncode,
+            }
+
+            summary = runner.install_workspace(self.root / "workspace", artifact_dir, 1)
+
+        self.assertEqual(len(commands), 2)
+        self.assertEqual(commands[0], ["/opt/homebrew/bin/uv", "venv", "--python", "3.12", ".venv"])
+        self.assertEqual(commands[1][:5], ["/opt/homebrew/bin/uv", "pip", "install", "--python", ".venv/bin/python"])
+        self.assertEqual(commands[1][-4:], ["-q", "-e", ".", "pytest"])
+        self.assertEqual(summary["venv_backend"], "uv")
+
+    def test_install_workspace_falls_back_when_uv_python312_venv_fails(self) -> None:
+        """Regression: a broken uv Python 3.12 provisioner must not block sys.executable venv."""
+        runner = load_runner_module()
+        commands: list[list[str]] = []
+        artifact_dir = self.root / "artifacts"
+        artifact_dir.mkdir()
+
+        def fake_run_capture(command, *, cwd=None, timeout=None):
+            commands.append(list(command))
+            if len(commands) == 1:
+                return subprocess.CompletedProcess(command, 1, "", "python 3.12 unavailable")
+            return subprocess.CompletedProcess(command, 0, "", "")
+
+        with mock.patch.object(runner.shutil, "which", return_value="/opt/homebrew/bin/uv"):
+            runner.run_capture = fake_run_capture
+            runner.write_command_artifacts = lambda **kwargs: {
+                "name": kwargs["name"],
+                "command": kwargs["command"],
+                "exit_code": kwargs["completed"].returncode,
+            }
+
+            summary = runner.install_workspace(self.root / "workspace", artifact_dir, 1)
+
+        self.assertEqual(commands[0], ["/opt/homebrew/bin/uv", "venv", "--python", "3.12", ".venv"])
+        self.assertEqual(commands[1], [sys.executable, "-m", "venv", ".venv"])
+        self.assertEqual(commands[2][-2:], ["--upgrade", "pip"])
+        self.assertEqual(commands[3][-4:], ["-q", "-e", ".", "pytest"])
+        self.assertEqual(summary["venv_backend"], "python_venv")
+        self.assertEqual(summary["uv_venv_create_attempt"]["exit_code"], 1)
+
+    def test_install_workspace_fallback_upgrades_pip_before_editable_install(self) -> None:
+        """Fallback venv installs still support pyproject/flit editable projects."""
+        runner = load_runner_module()
+        commands: list[list[str]] = []
+        artifact_dir = self.root / "artifacts"
+        artifact_dir.mkdir()
+
+        def fake_run_capture(command, *, cwd=None, timeout=None):
+            commands.append(list(command))
+            return subprocess.CompletedProcess(command, 0, "", "")
+
+        with mock.patch.object(runner.shutil, "which", return_value=None):
+            runner.run_capture = fake_run_capture
+            runner.write_command_artifacts = lambda **kwargs: {
+                "name": kwargs["name"],
+                "command": kwargs["command"],
+                "exit_code": kwargs["completed"].returncode,
+            }
+
+            summary = runner.install_workspace(self.root / "workspace", artifact_dir, 1)
+
+        self.assertEqual(len(commands), 3)
+        self.assertEqual(commands[1][-2:], ["--upgrade", "pip"])
+        self.assertEqual(commands[2][-4:], ["-q", "-e", ".", "pytest"])
+        self.assertEqual(summary["pip_upgrade"]["name"], "venv_pip_upgrade")
 
     def test_enrich_normalized_metadata_records_clean_replay_evidence_digests(self) -> None:
         """Normalized results carry machine-readable evidence identity for audit gates."""
@@ -463,6 +651,12 @@ class CodexNflExperimentRunnerTests(unittest.TestCase):
                     "observed_provider_cost_status": "provider_response_usage_cost_not_invoice",
                     "observed_provider_cost_usd": 0.01,
                 },
+                "cost_ledger_append": {
+                    "status": "appended",
+                    "record_count_after": 12,
+                    "estimated_cost_usd": 0.01,
+                },
+                "budget_gate": {"status": "passed", "allowed": True},
             },
             runner_workspace=self.root / "runner-workspace",
             verify_workspace=self.root / "verify-workspace",
@@ -480,6 +674,8 @@ class CodexNflExperimentRunnerTests(unittest.TestCase):
         self.assertIsNotNone(metadata["prompt_snapshot_sha256"])
         self.assertEqual(metadata["raw_response_artifact"], str(raw_response))
         self.assertEqual(metadata["direct_runner_cost_accounting"]["observed_provider_cost_usd"], 0.01)
+        self.assertEqual(metadata["direct_runner_cost_ledger_append"]["status"], "appended")
+        self.assertEqual(metadata["direct_runner_budget_gate"]["status"], "passed")
         self.assertTrue(metadata["clean_patch_replay"]["attempted"])
         self.assertFalse(metadata["clean_patch_replay"]["skip_apply"])
         self.assertTrue(metadata["clean_patch_replay"]["separate_workspace"])

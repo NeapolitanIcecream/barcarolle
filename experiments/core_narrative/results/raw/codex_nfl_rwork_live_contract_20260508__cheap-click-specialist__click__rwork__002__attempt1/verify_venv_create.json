@@ -1,0 +1,15 @@
+{
+  "command": [
+    "/opt/homebrew/bin/uv",
+    "venv",
+    "--python",
+    "3.12",
+    ".venv"
+  ],
+  "exit_code": 0,
+  "finished_at": "2026-05-08T16:53:22.195745Z",
+  "name": "verify_venv_create",
+  "started_at": "2026-05-08T16:53:22.100131Z",
+  "stderr_artifact": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/codex_nfl_rwork_live_contract_20260508__cheap-click-specialist__click__rwork__002__attempt1/verify_venv_create.stderr.txt",
+  "stdout_artifact": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/codex_nfl_rwork_live_contract_20260508__cheap-click-specialist__click__rwork__002__attempt1/verify_venv_create.stdout.txt"
+}

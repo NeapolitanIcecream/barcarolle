@@ -1,0 +1,48 @@
+diff --git a/src/click/core.py b/src/click/core.py
+index f57ada6..a08042d 100644
+--- a/src/click/core.py
++++ b/src/click/core.py
+@@ -2958,12 +2958,12 @@ class Option(Parameter):
+             **prompt_kwargs,
+         )
+ 
+-    def resolve_envvar_value(self, ctx: Context) -> str | None:
++    def resolve_envvar_value(self, ctx: Context) -> t.Any | None:
+         rv = super().resolve_envvar_value(ctx)
+ 
+         if rv is not None:
+-            if self.is_flag and self.flag_value:
+-                return str(self.flag_value)
++            if self.is_flag:
++                return self.flag_value if types.BOOL(rv, self, ctx) else False
+             return rv
+ 
+         if (
+@@ -2975,6 +2975,8 @@ class Option(Parameter):
+             rv = os.environ.get(envvar)
+ 
+             if rv:
++                if self.is_flag:
++                    return self.flag_value if types.BOOL(rv, self, ctx) else False
+                 return rv
+ 
+         return None
+diff --git a/src/click/types.py b/src/click/types.py
+index 684cb3b..fd34ece 100644
+--- a/src/click/types.py
++++ b/src/click/types.py
+@@ -667,7 +667,13 @@ class BoolParamType(ParamType):
+         if value in {False, True}:
+             return bool(value)
+ 
+-        norm = value.strip().lower()
++        norm = str(value).strip().lower()
++
++        if param is not None:
++            flag_value = getattr(param, "flag_value", None)
++
++            if flag_value is not None and str(value).strip() == str(flag_value):
++                return True
+ 
+         if norm in {"1", "true", "t", "yes", "y", "on"}:
+             return True

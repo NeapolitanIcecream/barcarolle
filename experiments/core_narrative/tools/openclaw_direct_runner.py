@@ -1351,6 +1351,15 @@ def main(argv: Sequence[str] | None = None) -> int:
             "started_at": started_at,
             "finished_at": finished_at,
         }
+        if "budget_gate" in locals():
+            payload["budget_gate"] = budget_gate
+        if isinstance(failure_ledger_append, Mapping) and failure_ledger_append.get("status") == "appended":
+            payload["cost_accounting"] = {
+                "estimated_cost_usd": failure_ledger_append.get("estimated_cost_usd"),
+                "actual_cost_usd": None,
+                "actual_cost_recorded": failure_ledger_append.get("actual_cost_recorded"),
+                "cost_record_basis": "failure_ledger_append",
+            }
         if "model_call_made" in locals():
             payload["model_call_made"] = bool(model_call_made or network_attempted)
         elif isinstance(failure_ledger_append, Mapping):

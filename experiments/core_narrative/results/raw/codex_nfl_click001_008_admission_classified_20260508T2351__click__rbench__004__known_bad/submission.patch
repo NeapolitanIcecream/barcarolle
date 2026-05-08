@@ -1,0 +1,9 @@
+diff --git a/click/testing.py b/click/testing.py
+index ae36d10..1989d52 100644
+--- a/click/testing.py
++++ b/click/testing.py
+@@ -331,3 +331,4 @@ class CliRunner(object):
+                 shutil.rmtree(t)
+             except (OSError, IOError):
+                 pass
++# Barcarolle known-bad probe: no behavior change.

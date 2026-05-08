@@ -583,6 +583,9 @@ class OpenClawDirectRunnerTests(unittest.TestCase):
         self.assertEqual(summary["details"]["failure_class"], "search_replace_old_occurrence_mismatch")
         self.assertEqual(summary["prompt_snapshot"], str(artifact_dir / "prompt_snapshot.json"))
         self.assertEqual(summary["raw_response_artifact"], str(artifact_dir / "provider_response.redacted.json"))
+        self.assertEqual(summary["budget_gate"]["status"], "passed")
+        self.assertEqual(summary["cost_ledger_append"]["status"], "appended")
+        self.assertEqual(summary["cost_accounting"]["estimated_cost_usd"], 0.01)
 
     def test_specialist_context_uses_repo_relative_path_outside_repo_cwd(self) -> None:
         """Regression: specialist runs must not depend on the process cwd."""
@@ -1240,7 +1243,9 @@ class OpenClawDirectRunnerTests(unittest.TestCase):
         self.assertEqual(summary["status"], "error")
         self.assertTrue(summary["model_call_made"])
         self.assertEqual(summary["details"]["error_type"], "timeout")
+        self.assertEqual(summary["budget_gate"]["status"], "passed")
         self.assertEqual(summary["cost_ledger_append"]["status"], "appended")
+        self.assertEqual(summary["cost_accounting"]["estimated_cost_usd"], 1)
 
         ledger_records = [json.loads(line) for line in self.ledger_path.read_text(encoding="utf-8").splitlines()]
         self.assertEqual(ledger_records[0]["event"], "runner_error_after_model_attempt")

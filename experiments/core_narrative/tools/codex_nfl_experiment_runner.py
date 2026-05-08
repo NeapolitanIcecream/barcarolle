@@ -7,6 +7,7 @@ import argparse
 import hashlib
 import json
 import os
+import shutil
 import subprocess
 import sys
 import time
@@ -21,6 +22,10 @@ TOOL = "codex_nfl_experiment_runner"
 RUNNER_ID = "codex-nfl-batch-v1"
 REPO_ROOT = Path(__file__).resolve().parents[3]
 TASK_SPLIT = REPO_ROOT / "experiments/core_narrative/configs/tasks/rbench_click.yaml"
+TASK_SPLIT_MANIFESTS = {
+    "rbench": TASK_SPLIT,
+    "rwork": REPO_ROOT / "experiments/core_narrative/configs/tasks/rwork_click.yaml",
+}
 TASK_PACK_ROOT = REPO_ROOT / "experiments/core_narrative/tasks"
 SOURCE_REPO = REPO_ROOT / "experiments/core_narrative/external_repos/click"
 WORKSPACES_ROOT = REPO_ROOT / "experiments/core_narrative/workspaces"
@@ -47,6 +52,16 @@ MODEL_OUTPUT_FAILURE_CLASSES = {
 def parse_args(argv: Sequence[str]) -> argparse.Namespace:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--run-prefix", default=DEFAULT_RUN_PREFIX)
+    parser.add_argument(
+        "--task-split",
+        choices=sorted(TASK_SPLIT_MANIFESTS),
+        default="rbench",
+        help="Click task split manifest and task-pack root to use.",
+    )
+    parser.add_argument(
+        "--task-split-manifest",
+        help="Optional explicit task split manifest path; defaults from --task-split.",
+    )
     parser.add_argument("--tasks", nargs="+", required=True)
     parser.add_argument("--acuts", nargs="+", required=True)
     parser.add_argument("--attempt", type=int, default=1)
@@ -61,6 +76,8 @@ def parse_args(argv: Sequence[str]) -> argparse.Namespace:
     parser.add_argument("--output", required=True)
     parser.add_argument("--install-timeout-seconds", type=int, default=240)
     parser.add_argument("--runner-timeout-seconds", type=int, default=360)
+    parser.add_argument("--max-context-chars", type=int, help="Forwarded to the direct runner.")
+    parser.add_argument("--max-file-chars", type=int, help="Forwarded to the direct runner.")
     parser.add_argument("--skip-noop-check", action="store_true")
     return parser.parse_args(list(argv))
 
@@ -114,12 +131,29 @@ def task_by_id(split_manifest: Mapping[str, Any]) -> dict[str, dict[str, Any]]:
     return result
 
 
-def task_manifest_path(task_id: str) -> Path:
-    path = TASK_PACK_ROOT / "click" / "rbench" / task_id / "task.yaml"
+def split_from_task_id(task_id: str) -> str:
+    if "__rwork__" in task_id:
+        return "rwork"
+    if "__rbench__" in task_id:
+        return "rbench"
+    raise ToolError("task id does not encode a supported Click split", task_id=task_id)
+
+
+def task_split_manifest_path(split: str) -> Path:
+    key = split.lower()
+    if key not in TASK_SPLIT_MANIFESTS:
+        raise ToolError("unsupported Click task split", split=split, supported=sorted(TASK_SPLIT_MANIFESTS))
+    return TASK_SPLIT_MANIFESTS[key]
+
+
+def task_manifest_path(task_id: str, split: str | None = None) -> Path:
+    split_key = (split or split_from_task_id(task_id)).lower()
+    path = TASK_PACK_ROOT / "click" / split_key / task_id / "task.yaml"
     if not path.exists():
         raise ToolError(
             "materialized task pack does not exist; run materialize_task_pack.py first",
             task_id=task_id,
+            split=split_key,
             path=str(path),
         )
     return path
@@ -283,6 +317,45 @@ def install_workspace(
     *,
     name_prefix: str = "",
 ) -> dict[str, Any]:
+    uv = shutil.which("uv")
+    uv_venv_create_attempt: dict[str, Any] | None = None
+    if uv:
+        command = [uv, "venv", "--python", "3.12", ".venv"]
+        started_at = iso_now()
+        completed = run_capture(command, cwd=workspace, timeout=timeout_seconds)
+        finished_at = iso_now()
+        uv_venv_create_attempt = write_command_artifacts(
+            completed=completed,
+            artifact_dir=artifact_dir,
+            name=f"{name_prefix}venv_create",
+            command=command,
+            started_at=started_at,
+            finished_at=finished_at,
+        )
+        if completed.returncode == 0:
+            install = [uv, "pip", "install", "--python", ".venv/bin/python", "-q", "-e", ".", "pytest"]
+            started_at = iso_now()
+            completed = run_capture(install, cwd=workspace, timeout=timeout_seconds)
+            finished_at = iso_now()
+            install_summary = write_command_artifacts(
+                completed=completed,
+                artifact_dir=artifact_dir,
+                name=f"{name_prefix}venv_install",
+                command=install,
+                started_at=started_at,
+                finished_at=finished_at,
+            )
+            install_summary["venv_backend"] = "uv"
+            if completed.returncode != 0:
+                raise ToolError("workspace dependency install failed", summary=install_summary)
+            return install_summary
+
+    if uv_venv_create_attempt is not None:
+        venv_create_name = f"{name_prefix}venv_create_fallback"
+    else:
+        venv_create_name = f"{name_prefix}venv_create"
+    if (workspace / ".venv").exists():
+        shutil.rmtree(workspace / ".venv")
     command = [
         sys.executable,
         "-m",
@@ -295,13 +368,34 @@ def install_workspace(
     summary = write_command_artifacts(
         completed=completed,
         artifact_dir=artifact_dir,
-        name=f"{name_prefix}venv_create",
+        name=venv_create_name,
         command=command,
         started_at=started_at,
         finished_at=finished_at,
     )
     if completed.returncode != 0:
+        if uv_venv_create_attempt is not None:
+            raise ToolError(
+                "workspace venv creation failed",
+                summary=summary,
+                uv_venv_create_attempt=uv_venv_create_attempt,
+            )
         raise ToolError("workspace venv creation failed", summary=summary)
+
+    upgrade_pip = [".venv/bin/python", "-m", "pip", "install", "-q", "--upgrade", "pip"]
+    started_at = iso_now()
+    completed = run_capture(upgrade_pip, cwd=workspace, timeout=timeout_seconds)
+    finished_at = iso_now()
+    upgrade_summary = write_command_artifacts(
+        completed=completed,
+        artifact_dir=artifact_dir,
+        name=f"{name_prefix}venv_pip_upgrade",
+        command=upgrade_pip,
+        started_at=started_at,
+        finished_at=finished_at,
+    )
+    if completed.returncode != 0:
+        raise ToolError("workspace pip upgrade failed", summary=upgrade_summary)
 
     install = [".venv/bin/python", "-m", "pip", "install", "-q", "-e", ".", "pytest"]
     started_at = iso_now()
@@ -317,6 +411,10 @@ def install_workspace(
     )
     if completed.returncode != 0:
         raise ToolError("workspace dependency install failed", summary=summary)
+    summary["venv_backend"] = "python_venv"
+    summary["pip_upgrade"] = upgrade_summary
+    if uv_venv_create_attempt is not None:
+        summary["uv_venv_create_attempt"] = uv_venv_create_attempt
     return summary
 
 
@@ -408,6 +506,10 @@ def run_direct_runner(
     ]
     for path in context_paths:
         command.extend(["--context-path", path])
+    if getattr(args, "max_context_chars", None) is not None:
+        command.extend(["--max-context-chars", str(args.max_context_chars)])
+    if getattr(args, "max_file_chars", None) is not None:
+        command.extend(["--max-file-chars", str(args.max_file_chars)])
     if args.mode == "dry-run":
         command.append("--dry-run")
     elif args.mode == "mock":
@@ -564,6 +666,8 @@ def enrich_normalized_metadata(
     prompt_snapshot_path = Path(str(prompt_snapshot)) if isinstance(prompt_snapshot, str) else None
     raw_response_artifact = runner_result.get("raw_response_artifact") if isinstance(runner_result, Mapping) else None
     cost_accounting = runner_result.get("cost_accounting") if isinstance(runner_result, Mapping) else None
+    cost_ledger_append = runner_result.get("cost_ledger_append") if isinstance(runner_result, Mapping) else None
+    budget_gate = runner_result.get("budget_gate") if isinstance(runner_result, Mapping) else None
     runner_model_call_made = runner_result.get("model_call_made") if isinstance(runner_result, Mapping) else None
     metadata = normalized.get("metadata") if isinstance(normalized.get("metadata"), dict) else {}
     model_call_made = metadata.get("model_call_made")
@@ -584,6 +688,8 @@ def enrich_normalized_metadata(
         "prompt_snapshot_sha256": sha256_file(prompt_snapshot_path) if prompt_snapshot_path is not None else None,
         "raw_response_artifact": str(raw_response_artifact) if isinstance(raw_response_artifact, str) else metadata.get("raw_response_artifact"),
         "direct_runner_cost_accounting": cost_accounting if isinstance(cost_accounting, Mapping) else metadata.get("direct_runner_cost_accounting"),
+        "direct_runner_cost_ledger_append": cost_ledger_append if isinstance(cost_ledger_append, Mapping) else metadata.get("direct_runner_cost_ledger_append"),
+        "direct_runner_budget_gate": budget_gate if isinstance(budget_gate, Mapping) else metadata.get("direct_runner_budget_gate"),
         "context_pack_digest": context_pack_digest(acut_id),
         "clean_patch_replay": {
             "attempted": clean_patch_replay_attempted,
@@ -853,13 +959,41 @@ def main(argv: Sequence[str] | None = None) -> int:
     try:
         if args.attempt < 1:
             raise ToolError("--attempt must be at least 1")
-        split_manifest = load_manifest(TASK_SPLIT)
+        task_split = str(args.task_split).lower()
+        split_manifest_path = Path(args.task_split_manifest) if args.task_split_manifest else task_split_manifest_path(task_split)
+        split_manifest = load_manifest(split_manifest_path)
+        manifest_split = str(split_manifest.get("split", task_split)).lower()
+        if manifest_split != task_split:
+            raise ToolError(
+                "task split manifest split does not match --task-split",
+                task_split=task_split,
+                manifest_split=manifest_split,
+                manifest_path=str(split_manifest_path),
+            )
         tasks = task_by_id(split_manifest)
         selected_tasks = []
         for task_id in args.tasks:
             if task_id not in tasks:
-                raise ToolError("requested task is not in RBench Click manifest", task_id=task_id)
-            selected_tasks.append(tasks[task_id])
+                raise ToolError(
+                    "requested task is not in selected Click manifest",
+                    task_id=task_id,
+                    task_split=task_split,
+                    manifest_path=str(split_manifest_path),
+                )
+            task = tasks[task_id]
+            encoded_split = split_from_task_id(task_id)
+            task_fields = (("task_id", encoded_split), ("split", task.get("split")), ("benchmark_split", task.get("benchmark_split")))
+            for field, value in task_fields:
+                if isinstance(value, str) and value.lower() != task_split:
+                    raise ToolError(
+                        "requested task split does not match --task-split",
+                        task_id=task_id,
+                        field=field,
+                        task_split=task_split,
+                        observed_split=value.lower(),
+                        manifest_path=str(split_manifest_path),
+                    )
+            selected_tasks.append(task)
         results: list[dict[str, Any]] = []
         for task in selected_tasks:
             for acut_id in args.acuts:
@@ -870,6 +1004,8 @@ def main(argv: Sequence[str] | None = None) -> int:
             "status": "completed",
             "mode": args.mode,
             "run_prefix": args.run_prefix,
+            "task_split": task_split,
+            "task_split_manifest": str(split_manifest_path),
             "tasks": args.tasks,
             "acuts": args.acuts,
             "attempt": args.attempt,

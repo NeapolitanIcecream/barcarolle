@@ -1,0 +1,190 @@
+diff --git a/click/testing.py b/click/testing.py
+index ae36d10..e47b8ad 100644
+--- a/click/testing.py
++++ b/click/testing.py
+@@ -70,15 +70,78 @@ def make_input_stream(input, charset):
+     return io.BytesIO(input)
+ 
+ 
++class _StreamCapture(object):
++
++    def __init__(self, stream, stdout, stderr):
++        self._stream = stream
++        self.stdout_bytes = stdout
++        self.stderr_bytes = stderr
++
++    def __getattr__(self, name):
++        return getattr(self._stream, name)
++
++    def getvalue(self):
++        return self._stream.getvalue()
++
++
++class _TeeStream(object):
++
++    def __init__(self, stream, mixed):
++        self._stream = stream
++        self._mixed = mixed
++
++    def __getattr__(self, name):
++        return getattr(self._stream, name)
++
++    def write(self, value):
++        rv = self._stream.write(value)
++        self._mixed.write(value)
++        return rv
++
++    def flush(self):
++        flush = getattr(self._stream, 'flush', None)
++        if flush is not None:
++            flush()
++        flush = getattr(self._mixed, 'flush', None)
++        if flush is not None:
++            flush()
++
++
++if not PY2:
++    class _TeeBytesIO(io.BytesIO):
++
++        def __init__(self, mixed):
++            io.BytesIO.__init__(self)
++            self._mixed = mixed
++
++        def write(self, value):
++            rv = io.BytesIO.write(self, value)
++            self._mixed.write(value)
++            return rv
++
++
++    def _make_text_stream(stream, charset):
++        try:
++            return io.TextIOWrapper(stream, encoding=charset,
++                                    write_through=True)
++        except TypeError:
++            return io.TextIOWrapper(stream, encoding=charset)
++
++
+ class Result(object):
+     """Holds the captured result of an invoked CLI script."""
+ 
+     def __init__(self, runner, output_bytes, exit_code, exception,
+-                 exc_info=None):
++                 exc_info=None, stdout_bytes=None, stderr_bytes=None):
+         #: The runner that created the result
+         self.runner = runner
+         #: The output as bytes.
+         self.output_bytes = output_bytes
++        #: The standard output as bytes.
++        self.stdout_bytes = stdout_bytes if stdout_bytes is not None \
++            else output_bytes
++        #: The standard error as bytes.
++        self.stderr_bytes = stderr_bytes if stderr_bytes is not None else b''
+         #: The exit code as integer.
+         self.exit_code = exit_code
+         #: The exception that happend if one did.
+@@ -92,6 +155,18 @@ class Result(object):
+         return self.output_bytes.decode(self.runner.charset, 'replace') \
+             .replace('\r\n', '\n')
+ 
++    @property
++    def stdout(self):
++        """The standard output as unicode string."""
++        return self.stdout_bytes.decode(self.runner.charset, 'replace') \
++            .replace('\r\n', '\n')
++
++    @property
++    def stderr(self):
++        """The standard error as unicode string."""
++        return self.stderr_bytes.decode(self.runner.charset, 'replace') \
++            .replace('\r\n', '\n')
++
+     def __repr__(self):
+         return '<Result %s>' % (
+             self.exception and repr(self.exception) or 'okay',
+@@ -164,17 +239,24 @@ class CliRunner(object):
+         env = self.make_env(env)
+ 
+         if PY2:
+-            sys.stdout = sys.stderr = bytes_output = StringIO()
++            bytes_output = StringIO()
++            stdout = _TeeStream(StringIO(), bytes_output)
++            stderr = _TeeStream(StringIO(), bytes_output)
+             if self.echo_stdin:
+-                input = EchoingStdin(input, bytes_output)
++                input = EchoingStdin(input, stdout)
++            sys.stdout = stdout
++            sys.stderr = stderr
+         else:
+             bytes_output = io.BytesIO()
++            stdout = _TeeBytesIO(bytes_output)
++            stderr = _TeeBytesIO(bytes_output)
+             if self.echo_stdin:
+-                input = EchoingStdin(input, bytes_output)
++                input = EchoingStdin(input, stdout)
+             input = io.TextIOWrapper(input, encoding=self.charset)
+-            sys.stdout = sys.stderr = io.TextIOWrapper(
+-                bytes_output, encoding=self.charset)
++            sys.stdout = _make_text_stream(stdout, self.charset)
++            sys.stderr = _make_text_stream(stderr, self.charset)
+ 
++        output = _StreamCapture(bytes_output, stdout, stderr)
+         sys.stdin = input
+ 
+         def visible_input(prompt=None):
+@@ -223,7 +305,7 @@ class CliRunner(object):
+                         pass
+                 else:
+                     os.environ[key] = value
+-            yield bytes_output
++            yield output
+         finally:
+             for key, value in iteritems(old_env):
+                 if value is None:
+@@ -307,13 +389,18 @@ class CliRunner(object):
+                 exc_info = sys.exc_info()
+             finally:
+                 sys.stdout.flush()
++                sys.stderr.flush()
+                 output = out.getvalue()
++                stdout = out.stdout_bytes.getvalue()
++                stderr = out.stderr_bytes.getvalue()
+ 
+         return Result(runner=self,
+                       output_bytes=output,
+                       exit_code=exit_code,
+                       exception=exception,
+-                      exc_info=exc_info)
++                      exc_info=exc_info,
++                      stdout_bytes=stdout,
++                      stderr_bytes=stderr)
+ 
+     @contextlib.contextmanager
+     def isolated_filesystem(self):
+diff --git a/tests/test_testing.py b/tests/test_testing.py
+index c091095..de81c60 100644
+--- a/tests/test_testing.py
++++ b/tests/test_testing.py
+@@ -38,6 +38,23 @@ def test_runner():
+     assert result.output == 'Hello World!\nHello World!\n'
+ 
+ 
++def test_separate_stdout_stderr():
++    @click.command()
++    def test():
++        click.echo('out')
++        click.echo('err', err=True)
++        click.echo('out again')
++
++    runner = CliRunner()
++    result = runner.invoke(test)
++    assert not result.exception
++    assert result.output == 'out\nerr\nout again\n'
++    assert result.stdout == 'out\nout again\n'
++    assert result.stderr == 'err\n'
++    assert result.stdout_bytes == b'out\nout again\n'
++    assert result.stderr_bytes == b'err\n'
++
++
+ def test_runner_with_stream():
+     @click.command()
+     def test():

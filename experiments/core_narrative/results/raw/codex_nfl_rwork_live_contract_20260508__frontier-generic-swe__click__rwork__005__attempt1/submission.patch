@@ -1,0 +1,83 @@
+diff --git a/src/click/testing.py b/src/click/testing.py
+index ebfd54d..b8c5721 100644
+--- a/src/click/testing.py
++++ b/src/click/testing.py
+@@ -4,6 +4,7 @@ import collections.abc as cabc
+ import contextlib
+ import io
+ import os
++import pdb
+ import shlex
+ import sys
+ import tempfile
+@@ -314,6 +315,18 @@ class CliRunner:
+         old_stdout = sys.stdout
+         old_stderr = sys.stderr
+         old_forced_width = formatting.FORCED_WIDTH
++        old_pdb_init = pdb.Pdb.__init__
++
++        def _pdb_init(self: pdb.Pdb, *args: t.Any, **kwargs: t.Any) -> None:
++            if len(args) < 2 and "stdin" not in kwargs:
++                kwargs["stdin"] = old_stdin
++
++            if len(args) < 3 and "stdout" not in kwargs:
++                kwargs["stdout"] = old_stdout
++
++            old_pdb_init(self, *args, **kwargs)
++
++        pdb.Pdb.__init__ = _pdb_init  # type: ignore[method-assign]
+         formatting.FORCED_WIDTH = 80
+ 
+         env = self.make_env(env)
+@@ -425,6 +438,7 @@ class CliRunner:
+             termui._getchar = old__getchar_func
+             utils.should_strip_ansi = old_should_strip_ansi  # type: ignore
+             _compat.should_strip_ansi = old__compat_should_strip_ansi
++            pdb.Pdb.__init__ = old_pdb_init  # type: ignore[method-assign]
+             formatting.FORCED_WIDTH = old_forced_width
+ 
+     def invoke(
+diff --git a/tests/test_testing.py b/tests/test_testing.py
+index 11fe29d..3fcf3f5 100644
+--- a/tests/test_testing.py
++++ b/tests/test_testing.py
+@@ -1,6 +1,7 @@
+ import os
++import pdb
+ import sys
+-from io import BytesIO
++from io import BytesIO, StringIO
+ 
+ import pytest
+ 
+@@ -368,6 +369,30 @@ def test_stderr():
+     assert result.stderr == ""
+ 
+ 
++def test_pdb_uses_real_streams():
++    real_stdin = sys.stdin
++    real_stdout = sys.stdout
++    explicit_stdin = StringIO()
++    explicit_stdout = StringIO()
++    old_pdb_init = pdb.Pdb.__init__
++
++    @click.command()
++    def cli_pdb():
++        default_debugger = pdb.Pdb()
++        assert default_debugger.stdin is real_stdin
++        assert default_debugger.stdout is real_stdout
++
++        explicit_debugger = pdb.Pdb(stdin=explicit_stdin, stdout=explicit_stdout)
++        assert explicit_debugger.stdin is explicit_stdin
++        assert explicit_debugger.stdout is explicit_stdout
++
++    runner = CliRunner()
++    result = runner.invoke(cli_pdb)
++
++    assert result.exception is None
++    assert pdb.Pdb.__init__ is old_pdb_init
++
++
+ @pytest.mark.parametrize(
+     "args, expected_output",
+     [

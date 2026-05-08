@@ -1,0 +1,113 @@
+{
+  "budget_gate": {
+    "allowed": true,
+    "approvals_required": [],
+    "blockers": [],
+    "budget": {
+      "current_cumulative_estimated_cost_usd": 22.887578,
+      "hard_cap_reached_or_projected": false,
+      "hard_cap_usd": 300.0,
+      "projected_cost_usd": 3.0,
+      "projected_cumulative_estimated_cost_usd": 25.887578,
+      "soft_stop_reached_or_projected": false,
+      "soft_stop_usd": 240.0
+    },
+    "default_execution_profile": {
+      "core_acut_ids": [
+        "frontier-generic-swe",
+        "frontier-click-specialist",
+        "cheap-generic-swe",
+        "cheap-click-specialist"
+      ],
+      "full_core_requires_coordinator_decision": true,
+      "pilot_primary_attempts": 28,
+      "primary_attempts_per_acut_task": 1,
+      "profile_id": "budget-constrained-2x2-pilot-v2",
+      "split_task_limits": {
+        "G_score": 2,
+        "RBench": 3,
+        "RWork": 2
+      }
+    },
+    "env": {
+      "all_required_present": true,
+      "required": [
+        {
+          "name": "BARCAROLLE_LLM_API_KEY",
+          "present": true
+        },
+        {
+          "name": "BARCAROLLE_LLM_BASE_URL",
+          "present": true
+        }
+      ]
+    },
+    "execution_request": {
+      "acut_id": "frontier-click-specialist",
+      "attempt": 1,
+      "coordinator_decision_ref_present": true,
+      "split": "rwork"
+    },
+    "ledger": {
+      "cumulative_estimated_cost_usd": 22.887578,
+      "error_type": null,
+      "errors": [],
+      "estimated_cost_sum_usd": 22.887578,
+      "exists": true,
+      "is_file": true,
+      "line_count": 109,
+      "path": "experiments/core_narrative/results/cost_ledger.jsonl",
+      "record_count": 109,
+      "writable": true
+    },
+    "status": "passed",
+    "tool": "llm_budget_gate"
+  },
+  "cost_accounting": {
+    "actual_cost_recorded": false,
+    "actual_cost_usd": null,
+    "cost_record_basis": "failure_ledger_append",
+    "estimated_cost_usd": 0.326395
+  },
+  "cost_ledger_append": {
+    "actual_cost_recorded": false,
+    "estimated_cost_usd": 0.326395,
+    "new_cumulative_estimated_cost_usd": 23.213973,
+    "record_count_after": 110,
+    "record_count_before": 109,
+    "status": "appended"
+  },
+  "details": {
+    "anchor_matches": 0,
+    "anchors": {
+      "after": true,
+      "after_chars": 51,
+      "before": true,
+      "before_chars": 59
+    },
+    "diagnostic": {
+      "anchor_policy": {
+        "anchors_must_be_immediate_adjacent_source": true,
+        "anchors_required_when_old_is_repeated": true,
+        "omit_anchors_when_old_is_unique": true
+      },
+      "code": "unique_old_anchor_mismatch",
+      "recommendation": "old occurs exactly once; omit before/after anchors unless they are exact immediate adjacent source"
+    },
+    "edit_index": 0,
+    "failure_class": "search_replace_anchor_mismatch",
+    "occurrences": 1,
+    "old_text_char_count": 60,
+    "old_text_sha256": "390c58a4aaf1ec9de350199de70d8aa8324493d08bf75422df351fd469e46e67",
+    "path": "src/click/core.py"
+  },
+  "error": "edit anchors must identify exactly one old-string occurrence",
+  "finished_at": "2026-05-08T17:12:30.774244Z",
+  "model_call_made": true,
+  "prompt_snapshot": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/codex_nfl_rwork_live_contract_20260508__frontier-click-specialist__click__rwork__003__attempt1/prompt_snapshot.json",
+  "raw_response_artifact": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/codex_nfl_rwork_live_contract_20260508__frontier-click-specialist__click__rwork__003__attempt1/provider_response.redacted.json",
+  "runner_id": "codex-nfl-direct-search-replace-v1",
+  "started_at": "2026-05-08T17:10:38.658615Z",
+  "status": "error",
+  "tool": "codex_nfl_direct_runner"
+}

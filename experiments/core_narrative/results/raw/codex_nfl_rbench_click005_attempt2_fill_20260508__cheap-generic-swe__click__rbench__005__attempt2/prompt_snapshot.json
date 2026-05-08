@@ -1,0 +1,67 @@
+{
+  "context_files": [
+    {
+      "char_count": 20647,
+      "displayed_char_count": 20647,
+      "focus_terms": [],
+      "focused_excerpts": [],
+      "path": "click/types.py",
+      "sha256": "d7d0bf92a0dd3a356f41a8af4c4121aafcc4162db82d27512aa7e900b908d577",
+      "truncated": false
+    },
+    {
+      "char_count": 13628,
+      "displayed_char_count": 13628,
+      "focus_terms": [],
+      "focused_excerpts": [],
+      "path": "tests/test_options.py",
+      "sha256": "df90a919549318b4d6c6195504f2aca758157d786d160205725a40c23b2f9b1b",
+      "truncated": false
+    }
+  ],
+  "context_packaging": {
+    "effective_max_file_chars": 80000,
+    "max_context_chars": 120000,
+    "prompt_truncated": false,
+    "requested_max_file_chars": 80000
+  },
+  "full_urls_redacted": true,
+  "output_contract": "anchored-search-replace-json-v3",
+  "output_contract_schema": {
+    "anchor_policy": {
+      "anchors_are_for_repeated_old_text_only": true,
+      "anchors_must_be_immediate_adjacent_source": true,
+      "invalid_anchors_reject_the_edit_even_when_old_is_unique": true,
+      "omit_anchors_when_old_is_unique": true
+    },
+    "diagnostic_failure_classes": {
+      "search_replace_anchor_mismatch": "old text was present, but supplied anchors did not isolate exactly one occurrence",
+      "search_replace_old_occurrence_mismatch": "old text did not occur exactly once after earlier edits"
+    },
+    "id": "anchored-search-replace-json-v3",
+    "legacy_parser_fallback_keys": [
+      "unified_diff",
+      "files"
+    ],
+    "primary_top_level_key": "edits",
+    "requires_exact_old_text": true,
+    "requires_exact_path_from_context": true,
+    "requires_immediate_anchors_for_repeated_old_text": true,
+    "requires_single_top_level_key": true
+  },
+  "prompt_char_count": 38669,
+  "prompt_content_recorded": true,
+  "prompt_sha256": "ac6982973c49885b94105a8f8a2453d470de5b1e473ee3cd46804b7c3f8b41d7",
+  "run_id": "codex_nfl_rbench_click005_attempt2_fill_20260508__cheap-generic-swe__click__rbench__005__attempt2",
+  "runner_id": "codex-nfl-direct-search-replace-v1",
+  "specialist_context_assertion": {
+    "expected": "excluded",
+    "include_mode": "auto",
+    "passed": true
+  },
+  "specialist_context_included": false,
+  "specialist_context_path": null,
+  "statement_truncated": false,
+  "task_statement_path": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/tasks/click/rbench/click__rbench__005/public/statement.md",
+  "tool": "codex_nfl_direct_runner"
+}

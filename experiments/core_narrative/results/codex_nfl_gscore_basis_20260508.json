@@ -1,0 +1,69 @@
+{
+  "blockers": [
+    {
+      "blocker": "dataset_cache_missing",
+      "path": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/cache/swebench_pro/test-00000-of-00001.parquet"
+    },
+    {
+      "blocker": "evaluation_harness_checkout_missing",
+      "checked_paths": [
+        "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/external_repos/SWE-bench_Pro-os",
+        "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/external_repos/swebench_pro_os",
+        "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/external_repos/SWE-bench_Pro-os",
+        "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/cache/SWE-bench_Pro-os",
+        "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/cache/swebench_pro_os",
+        "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/cache/SWE-bench_Pro-os",
+        "/Users/chenmohan/gits/barcarolle/external_repos/SWE-bench_Pro-os",
+        "/Users/chenmohan/gits/barcarolle/external_repos/swebench_pro_os",
+        "/Users/chenmohan/gits/barcarolle/external_repos/SWE-bench_Pro-os"
+      ]
+    }
+  ],
+  "checks": {
+    "dataset_cache": {
+      "exists": false,
+      "expected_sha256": "c8cd7115496ad4e9a8b21d088cef576a65bf821bb542b24336f13f714cef13f8",
+      "observed_sha256": null,
+      "path": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/cache/swebench_pro/test-00000-of-00001.parquet"
+    },
+    "docker": {
+      "available": true,
+      "exit_code": 0,
+      "stderr": "",
+      "stdout": "Docker version 29.4.0, build 9d7ad9f"
+    },
+    "evaluation_harness": {
+      "checked_paths": [
+        "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/external_repos/SWE-bench_Pro-os",
+        "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/external_repos/swebench_pro_os",
+        "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/external_repos/SWE-bench_Pro-os",
+        "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/cache/SWE-bench_Pro-os",
+        "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/cache/swebench_pro_os",
+        "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/cache/SWE-bench_Pro-os",
+        "/Users/chenmohan/gits/barcarolle/external_repos/SWE-bench_Pro-os",
+        "/Users/chenmohan/gits/barcarolle/external_repos/swebench_pro_os",
+        "/Users/chenmohan/gits/barcarolle/external_repos/SWE-bench_Pro-os"
+      ],
+      "existing_paths": []
+    }
+  },
+  "claim_limitations": [
+    "No direct G_score values are available from this run.",
+    "Prediction analysis must treat G_score as unavailable, not as zero.",
+    "Public or external scores would be weak, scaffold-mismatched evidence and are not used here."
+  ],
+  "config_path": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/configs/general_benchmark.yaml",
+  "direct_gscore_feasible_now": false,
+  "direct_gscore_used": false,
+  "external_public_or_proxy_scores": {
+    "comparability": "no public/proxy G_score values were substituted",
+    "evidence_strength": "not_used",
+    "used": false
+  },
+  "g_score_basis": "direct_run_unavailable",
+  "g_scores": {},
+  "generated_at": "2026-05-08T15:46:48.152787Z",
+  "next_defensible_action": "materialize the pinned SWE-Bench Pro dataset cache and evaluator checkout, then run a gold-patch smoke on the locked six-task slice",
+  "status": "direct_gscore_blocked",
+  "tool": "codex_nfl_gscore_basis"
+}

@@ -1,0 +1,137 @@
+{
+  "acut_id": "frontier-click-specialist",
+  "attempt": 2,
+  "error": null,
+  "finished_at": "2026-05-08T16:05:14.026190Z",
+  "metadata": {
+    "acut_manifest_path": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/configs/acuts/frontier-click-specialist.yaml",
+    "acut_manifest_sha256": "7cfcfc91863d017d2038042b0eb003b070604d6e986a455211739ee8ef46b8fb",
+    "batch_tool": "codex_nfl_experiment_runner",
+    "clean_patch_replay": {
+      "attempted": true,
+      "runner_workspace": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/workspaces/codex_nfl_rbench_attempt2_fill_20260508__frontier-click-specialist__click__rbench__006__attempt2",
+      "separate_workspace": true,
+      "skip_apply": false,
+      "verify_workspace": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/workspaces/codex_nfl_rbench_attempt2_fill_20260508__frontier-click-specialist__click__rbench__006__attempt2__verify"
+    },
+    "context_pack_digest": "dfb271ad174531a7dd2f00da4cd0486193d87ce33349380982150889ecf84e48",
+    "direct_runner_budget_gate": {
+      "allowed": true,
+      "approvals_required": [
+        "non_primary_attempt"
+      ],
+      "blockers": [],
+      "budget": {
+        "current_cumulative_estimated_cost_usd": 19.27653,
+        "hard_cap_reached_or_projected": false,
+        "hard_cap_usd": 300.0,
+        "projected_cost_usd": 3.0,
+        "projected_cumulative_estimated_cost_usd": 22.27653,
+        "soft_stop_reached_or_projected": false,
+        "soft_stop_usd": 240.0
+      },
+      "default_execution_profile": {
+        "core_acut_ids": [
+          "frontier-generic-swe",
+          "frontier-click-specialist",
+          "cheap-generic-swe",
+          "cheap-click-specialist"
+        ],
+        "full_core_requires_coordinator_decision": true,
+        "pilot_primary_attempts": 28,
+        "primary_attempts_per_acut_task": 1,
+        "profile_id": "budget-constrained-2x2-pilot-v2",
+        "split_task_limits": {
+          "G_score": 2,
+          "RBench": 3,
+          "RWork": 2
+        }
+      },
+      "env": {
+        "all_required_present": true,
+        "required": [
+          {
+            "name": "BARCAROLLE_LLM_API_KEY",
+            "present": true
+          },
+          {
+            "name": "BARCAROLLE_LLM_BASE_URL",
+            "present": true
+          }
+        ]
+      },
+      "execution_request": {
+        "acut_id": "frontier-click-specialist",
+        "attempt": 2,
+        "coordinator_decision_ref_present": true,
+        "split": "rbench"
+      },
+      "ledger": {
+        "cumulative_estimated_cost_usd": 19.27653,
+        "error_type": null,
+        "errors": [],
+        "estimated_cost_sum_usd": 19.27653,
+        "exists": true,
+        "is_file": true,
+        "line_count": 88,
+        "path": "experiments/core_narrative/results/cost_ledger.jsonl",
+        "record_count": 88,
+        "writable": true
+      },
+      "status": "passed",
+      "tool": "llm_budget_gate"
+    },
+    "direct_runner_cost_accounting": {
+      "actual_cost_status": "unknown_not_provider_reported",
+      "actual_cost_usd": null,
+      "estimated_cost_usd": 0.08943,
+      "input_tokens": 11472,
+      "observed_provider_cost_status": "provider_response_usage_cost_not_invoice",
+      "observed_provider_cost_usd": 0.08943,
+      "output_tokens": 1069,
+      "provider_usage_reported": true
+    },
+    "direct_runner_cost_ledger_append": {
+      "actual_cost_recorded": false,
+      "estimated_cost_usd": 0.08943,
+      "new_cumulative_estimated_cost_usd": 19.36596,
+      "record_count_after": 89,
+      "record_count_before": 88,
+      "status": "appended"
+    },
+    "direct_runner_id": "codex-nfl-direct-search-replace-v1",
+    "model_call_made": true,
+    "prompt_snapshot": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/codex_nfl_rbench_attempt2_fill_20260508__frontier-click-specialist__click__rbench__006__attempt2/prompt_snapshot.json",
+    "prompt_snapshot_sha256": "f82e9c67e0b65082da7c3d3b6a2ffe0df62d5102716060cab6a1f3a01eca3b6d",
+    "raw_response_artifact": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/codex_nfl_rbench_attempt2_fill_20260508__frontier-click-specialist__click__rbench__006__attempt2/provider_response.redacted.json",
+    "runner_id": "codex-nfl-batch-v1",
+    "skip_apply": false,
+    "task_manifest_path": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/tasks/click/rbench/click__rbench__006/task.yaml",
+    "task_manifest_sha256": "1117ab680d5f04bb049de0013e7c6bd20f79d15534a8994ec59353e9d5d46a51",
+    "timeout_seconds": 60,
+    "tool": "apply_and_verify",
+    "verifier_command": [
+      "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/tasks/click/rbench/click__rbench__006/verifier/run.sh"
+    ],
+    "verifier_digest_sha256": "dd6d74ea0ec44f1b390be8a4d93e81fc1b4938d69c9b590d700f2cd9fa1ae25e"
+  },
+  "patch_path": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/codex_nfl_rbench_attempt2_fill_20260508__frontier-click-specialist__click__rbench__006__attempt2/submission.patch",
+  "review": {
+    "mergeability_grade": null,
+    "notes": "",
+    "rule_violation": false,
+    "wrong_module": false
+  },
+  "run_id": "codex_nfl_rbench_attempt2_fill_20260508__frontier-click-specialist__click__rbench__006__attempt2",
+  "schema_version": "core-narrative.run-result.v1",
+  "split": "rbench",
+  "started_at": "2026-05-08T16:05:13.802893Z",
+  "status": "passed",
+  "task_id": "click__rbench__006",
+  "verification": {
+    "duration_seconds": 0.197,
+    "exit_code": 0,
+    "stderr_artifact": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/codex_nfl_rbench_attempt2_fill_20260508__frontier-click-specialist__click__rbench__006__attempt2/verifier.stderr.txt",
+    "stdout_artifact": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/codex_nfl_rbench_attempt2_fill_20260508__frontier-click-specialist__click__rbench__006__attempt2/verifier.stdout.txt"
+  }
+}
