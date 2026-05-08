@@ -36,6 +36,12 @@ from _llm_budget import (
 
 
 TOOL = "run_task"
+HARNESS_UNTRACKED_PREFIXES = (
+    ".core_narrative/",
+    ".pytest_cache/",
+    ".venv/",
+)
+HARNESS_UNTRACKED_PARTS = {"__pycache__"}
 
 
 def parse_args() -> argparse.Namespace:
@@ -119,6 +125,8 @@ def collect_patch(workspace: Path, env: dict[str, str]) -> str:
 
     for raw_path in filter(None, untracked.stdout.split(b"\0")):
         relative_path = os.fsdecode(raw_path)
+        if is_harness_untracked_path(relative_path):
+            continue
         try:
             new_file_diff = subprocess.run(
                 ["git", "diff", "--binary", "--no-ext-diff", "--no-index", "--", "/dev/null", relative_path],
@@ -140,6 +148,13 @@ def collect_patch(workspace: Path, env: dict[str, str]) -> str:
             patch_parts.append(new_file_diff.stdout)
 
     return "".join(part if part.endswith("\n") else f"{part}\n" for part in patch_parts)
+
+
+def is_harness_untracked_path(relative_path: str) -> bool:
+    normalized = relative_path.replace(os.sep, "/")
+    if any(normalized.startswith(prefix) for prefix in HARNESS_UNTRACKED_PREFIXES):
+        return True
+    return bool(HARNESS_UNTRACKED_PARTS.intersection(Path(normalized).parts))
 
 
 def write_safe_patch(workspace: Path, patch_path: Path, env: dict[str, str]) -> dict[str, object]:

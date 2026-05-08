@@ -1,0 +1,21 @@
+{
+  "cost_ledger_append": {
+    "actual_cost_recorded": false,
+    "estimated_cost_usd": 0.115339,
+    "new_cumulative_estimated_cost_usd": 1.938868,
+    "record_count_after": 45,
+    "record_count_before": 44,
+    "status": "appended"
+  },
+  "details": {
+    "failure_class": "search_replace_old_occurrence_mismatch",
+    "occurrences": 2,
+    "path": "click/termui.py"
+  },
+  "error": "edit old string must occur exactly once",
+  "finished_at": "2026-05-08T01:51:16.925686Z",
+  "runner_id": "codex-nfl-direct-search-replace-v1",
+  "started_at": "2026-05-08T01:50:27.898694Z",
+  "status": "error",
+  "tool": "codex_nfl_direct_runner"
+}

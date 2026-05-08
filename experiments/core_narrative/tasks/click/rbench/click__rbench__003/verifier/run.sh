@@ -10,4 +10,4 @@ if [ -d "$hidden_dir" ]; then
     cp "$file" "$rel"
   done < <(find "$hidden_dir" -type f -print0)
 fi
-exec .venv/bin/python -m pytest -q tests/test_termui.py::test_choices_list_in_prompt
+exec .venv/bin/python -c 'import click._termui_impl, pytest, sys; sys.exit(pytest.main(["-q", "tests/test_termui.py::test_choices_list_in_prompt"]))' tests/test_termui.py::test_choices_list_in_prompt

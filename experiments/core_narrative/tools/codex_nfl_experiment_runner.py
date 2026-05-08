@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
 import os
 import subprocess
@@ -29,6 +30,15 @@ PREPARE = REPO_ROOT / "experiments/core_narrative/tools/prepare_workspace.py"
 DIRECT_RUNNER = REPO_ROOT / "experiments/core_narrative/tools/codex_nfl_direct_runner.py"
 VERIFY = REPO_ROOT / "experiments/core_narrative/tools/apply_and_verify.py"
 DEFAULT_RUN_PREFIX = "codex_nfl_20260508"
+SCOREABLE_STATUSES = {"passed", "failed", "timeout", "invalid_submission"}
+MODEL_OUTPUT_FAILURE_CLASSES = {
+    "generated_path_not_in_workspace",
+    "generated_path_outside_context",
+    "search_replace_old_occurrence_mismatch",
+    "output_contract_violation",
+    "invalid_unified_diff",
+    "unsafe_generated_text",
+}
 
 
 def parse_args(argv: Sequence[str]) -> argparse.Namespace:
@@ -41,6 +51,10 @@ def parse_args(argv: Sequence[str]) -> argparse.Namespace:
     parser.add_argument("--mock-response")
     parser.add_argument("--mock-response-text")
     parser.add_argument("--llm-ledger", default=str(DEFAULT_LEDGER_PATH))
+    parser.add_argument(
+        "--coordinator-decision-ref",
+        help="Structured approval reference forwarded to live runner budget gates.",
+    )
     parser.add_argument("--output", required=True)
     parser.add_argument("--install-timeout-seconds", type=int, default=240)
     parser.add_argument("--runner-timeout-seconds", type=int, default=360)
@@ -113,6 +127,72 @@ def acut_manifest_path(acut_id: str) -> Path:
     if not path.exists():
         raise ToolError("ACUT manifest does not exist", acut_id=acut_id, path=str(path))
     return path
+
+
+def sha256_file(path: Path) -> str | None:
+    if not path.exists() or not path.is_file():
+        return None
+    digest = hashlib.sha256()
+    with path.open("rb") as handle:
+        for chunk in iter(lambda: handle.read(1024 * 1024), b""):
+            digest.update(chunk)
+    return digest.hexdigest()
+
+
+def sha256_tree(root: Path) -> str | None:
+    if not root.exists():
+        return None
+    if root.is_file():
+        return sha256_file(root)
+    digest = hashlib.sha256()
+    files = sorted(path for path in root.rglob("*") if path.is_file())
+    for path in files:
+        rel = path.relative_to(root).as_posix()
+        digest.update(rel.encode("utf-8"))
+        digest.update(b"\0")
+        digest.update((sha256_file(path) or "").encode("ascii"))
+        digest.update(b"\0")
+    return digest.hexdigest()
+
+
+def context_pack_digest(acut_id: str) -> str | None:
+    acut = load_manifest(acut_manifest_path(acut_id))
+    metadata = acut.get("metadata") if isinstance(acut.get("metadata"), dict) else {}
+    specialist = metadata.get("specialist_context") if isinstance(metadata.get("specialist_context"), dict) else {}
+    pack = specialist.get("context_pack") if isinstance(specialist.get("context_pack"), dict) else {}
+    digest = pack.get("pack_hash")
+    return str(digest) if isinstance(digest, str) and digest else None
+
+
+def ledger_has_run_id(path: Path, run_id: str) -> bool:
+    if not path.exists():
+        return False
+    for line in path.read_text(encoding="utf-8").splitlines():
+        if not line.strip():
+            continue
+        try:
+            record = json.loads(line)
+        except json.JSONDecodeError:
+            continue
+        if isinstance(record, dict) and record.get("run_id") == run_id:
+            return True
+    return False
+
+
+def path_has_entries(path: Path) -> bool:
+    return path.exists() and any(path.iterdir()) if path.is_dir() else path.exists()
+
+
+def assert_run_id_available(*, run_id: str, artifact_dir: Path, normalized_path: Path, ledger_path: Path) -> None:
+    blockers: list[str] = []
+    if path_has_entries(artifact_dir):
+        blockers.append("raw_artifact_dir_exists")
+    if normalized_path.exists():
+        blockers.append("normalized_result_exists")
+    if ledger_has_run_id(ledger_path, run_id):
+        blockers.append("ledger_run_id_exists")
+    if blockers:
+        raise ToolError("run id already has artifacts; refusing to overwrite by default", run_id=run_id, blockers=blockers)
 
 
 def projected_cost_for_acut(acut_id: str) -> str:
@@ -337,6 +417,9 @@ def run_direct_runner(
                     args.mock_response_text or default_mock_response_text(workspace, context_paths),
                 ]
             )
+    coordinator_decision_ref = getattr(args, "coordinator_decision_ref", None)
+    if coordinator_decision_ref:
+        command.extend(["--coordinator-decision-ref", coordinator_decision_ref])
 
     started_at = iso_now()
     completed = run_capture(command, timeout=args.runner_timeout_seconds + 30)
@@ -369,6 +452,9 @@ def write_infra_failed_result(
     patch_path: Path,
     runner_result: Mapping[str, Any],
 ) -> dict[str, Any]:
+    details = runner_result.get("details") if isinstance(runner_result.get("details"), dict) else {}
+    failure_class = details.get("failure_class")
+    status = "invalid_submission" if failure_class in MODEL_OUTPUT_FAILURE_CLASSES else "infra_failed"
     payload = {
         "schema_version": "core-narrative.run-result.v1",
         "run_id": run_id,
@@ -378,7 +464,7 @@ def write_infra_failed_result(
         "attempt": attempt,
         "started_at": runner_result.get("started_at"),
         "finished_at": runner_result.get("finished_at"),
-        "status": "infra_failed",
+        "status": status,
         "patch_path": str(patch_path),
         "verification": {
             "exit_code": None,
@@ -399,9 +485,8 @@ def write_infra_failed_result(
             "direct_runner_id": runner_result.get("runner_id"),
             "direct_runner_status": runner_result.get("status"),
             "model_call_made": runner_result.get("model_call_made"),
-            "failure_class": (runner_result.get("details") or {}).get("failure_class")
-            if isinstance(runner_result.get("details"), dict)
-            else None,
+            "failure_class": failure_class,
+            "failure_owner": "model_output" if status == "invalid_submission" else "infrastructure",
             "verifier_ready_patch_available": False,
             "raw_response_artifact": runner_result.get("raw_response_artifact"),
             "prompt_snapshot": runner_result.get("prompt_snapshot"),
@@ -459,12 +544,73 @@ def verify_patch(
     return completed.returncode, result
 
 
+def enrich_normalized_metadata(
+    *,
+    normalized: dict[str, Any],
+    normalized_path: Path,
+    task_id: str,
+    acut_id: str,
+    runner_result: Mapping[str, Any] | None,
+    runner_workspace: Path | None,
+    verify_workspace: Path | None,
+    clean_patch_replay_attempted: bool,
+) -> dict[str, Any]:
+    task_path = task_manifest_path(task_id)
+    acut_path = acut_manifest_path(acut_id)
+    prompt_snapshot = runner_result.get("prompt_snapshot") if isinstance(runner_result, Mapping) else None
+    prompt_snapshot_path = Path(str(prompt_snapshot)) if isinstance(prompt_snapshot, str) else None
+    raw_response_artifact = runner_result.get("raw_response_artifact") if isinstance(runner_result, Mapping) else None
+    cost_accounting = runner_result.get("cost_accounting") if isinstance(runner_result, Mapping) else None
+    runner_model_call_made = runner_result.get("model_call_made") if isinstance(runner_result, Mapping) else None
+    metadata = normalized.get("metadata") if isinstance(normalized.get("metadata"), dict) else {}
+    model_call_made = metadata.get("model_call_made")
+    if model_call_made is None:
+        model_call_made = runner_model_call_made
+    enriched = {
+        **metadata,
+        "batch_tool": TOOL,
+        "runner_id": RUNNER_ID,
+        "direct_runner_id": runner_result.get("runner_id") if isinstance(runner_result, Mapping) else None,
+        "model_call_made": model_call_made,
+        "task_manifest_path": str(task_path),
+        "task_manifest_sha256": sha256_file(task_path),
+        "acut_manifest_path": str(acut_path),
+        "acut_manifest_sha256": sha256_file(acut_path),
+        "verifier_digest_sha256": sha256_tree(task_path.parent / "verifier"),
+        "prompt_snapshot": str(prompt_snapshot_path) if prompt_snapshot_path is not None else None,
+        "prompt_snapshot_sha256": sha256_file(prompt_snapshot_path) if prompt_snapshot_path is not None else None,
+        "raw_response_artifact": str(raw_response_artifact) if isinstance(raw_response_artifact, str) else metadata.get("raw_response_artifact"),
+        "direct_runner_cost_accounting": cost_accounting if isinstance(cost_accounting, Mapping) else metadata.get("direct_runner_cost_accounting"),
+        "context_pack_digest": context_pack_digest(acut_id),
+        "clean_patch_replay": {
+            "attempted": clean_patch_replay_attempted,
+            "skip_apply": metadata.get("skip_apply"),
+            "runner_workspace": str(runner_workspace) if runner_workspace is not None else None,
+            "verify_workspace": str(verify_workspace) if verify_workspace is not None else None,
+            "separate_workspace": (
+                runner_workspace is not None
+                and verify_workspace is not None
+                and str(runner_workspace) != str(verify_workspace)
+            ),
+        },
+    }
+    normalized["metadata"] = enriched
+    write_json(normalized_path, normalized)
+    return normalized
+
+
 def run_one(args: argparse.Namespace, task: Mapping[str, Any], acut_id: str) -> dict[str, Any]:
     task_id = str(task["task_id"])
     run_id = f"{args.run_prefix}__{acut_id}__{task_id}__attempt{args.attempt}"
     artifact_dir = RAW_ROOT / run_id
-    artifact_dir.mkdir(parents=True, exist_ok=True)
     normalized_path = NORMALIZED_ROOT / f"{run_id}.json"
+    assert_run_id_available(
+        run_id=run_id,
+        artifact_dir=artifact_dir,
+        normalized_path=normalized_path,
+        ledger_path=Path(getattr(args, "llm_ledger", DEFAULT_LEDGER_PATH)),
+    )
+    artifact_dir.mkdir(parents=True, exist_ok=True)
 
     started = time.monotonic()
     workspace, prepare_summary = prepare_workspace(task_id, run_id, artifact_dir)
@@ -499,6 +645,16 @@ def run_one(args: argparse.Namespace, task: Mapping[str, Any], acut_id: str) -> 
                     "started_at": noop_result.get("started_at"),
                     "finished_at": noop_result.get("finished_at"),
                 },
+            )
+            normalized = enrich_normalized_metadata(
+                normalized=normalized,
+                normalized_path=normalized_path,
+                task_id=task_id,
+                acut_id=acut_id,
+                runner_result=None,
+                runner_workspace=workspace,
+                verify_workspace=None,
+                clean_patch_replay_attempted=False,
             )
             result = {
                 "run_id": run_id,
@@ -567,6 +723,16 @@ def run_one(args: argparse.Namespace, task: Mapping[str, Any], acut_id: str) -> 
             artifact_dir=artifact_dir,
             normalized_path=normalized_path,
         )
+        normalized = enrich_normalized_metadata(
+            normalized=normalized,
+            normalized_path=normalized_path,
+            task_id=task_id,
+            acut_id=acut_id,
+            runner_result=runner_result,
+            runner_workspace=workspace,
+            verify_workspace=verify_workspace,
+            clean_patch_replay_attempted=True,
+        )
     else:
         verify_code = None
         normalized = write_infra_failed_result(
@@ -579,13 +745,23 @@ def run_one(args: argparse.Namespace, task: Mapping[str, Any], acut_id: str) -> 
             patch_path=patch_path,
             runner_result=runner_result,
         )
+        normalized = enrich_normalized_metadata(
+            normalized=normalized,
+            normalized_path=normalized_path,
+            task_id=task_id,
+            acut_id=acut_id,
+            runner_result=runner_result,
+            runner_workspace=workspace,
+            verify_workspace=None,
+            clean_patch_replay_attempted=False,
+        )
 
     result = {
         "run_id": run_id,
         "task_id": task_id,
         "acut_id": acut_id,
         "status": normalized.get("status"),
-        "scoreable": normalized.get("status") in {"passed", "failed", "timeout"},
+        "scoreable": normalized.get("status") in SCOREABLE_STATUSES,
         "patch_ready": patch_ready,
         "runner_status": runner_result.get("status"),
         "runner_code": runner_code,

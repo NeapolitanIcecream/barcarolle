@@ -1,0 +1,51 @@
+{
+  "acut_id": "cheap-generic-swe",
+  "attempt": 1,
+  "error": "direct runner did not produce a verifier-ready patch",
+  "finished_at": "2026-05-08T01:34:53.872791Z",
+  "metadata": {
+    "acut_manifest_path": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/configs/acuts/cheap-generic-swe.yaml",
+    "acut_manifest_sha256": "3888ad4d393ac439d8a3d6ea48a7358b4480c6137d2c7aeed9c411cd676513c3",
+    "batch_tool": "codex_nfl_experiment_runner",
+    "clean_patch_replay": {
+      "attempted": false,
+      "runner_workspace": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/workspaces/codex_nfl_mock_smoke_followup_20260508__cheap-generic-swe__click__rbench__001__attempt1",
+      "separate_workspace": false,
+      "skip_apply": null,
+      "verify_workspace": null
+    },
+    "context_pack_digest": null,
+    "direct_runner_id": "codex-nfl-direct-search-replace-v1",
+    "direct_runner_status": "patch_generated",
+    "failure_class": null,
+    "model_call_made": false,
+    "prompt_snapshot": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/codex_nfl_mock_smoke_followup_20260508__cheap-generic-swe__click__rbench__001__attempt1/prompt_snapshot.json",
+    "prompt_snapshot_sha256": "9d31a35ae0034df6f14c79c04532c9aa13f55d0802b81ac0e964977e1dbdbc14",
+    "raw_response_artifact": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/codex_nfl_mock_smoke_followup_20260508__cheap-generic-swe__click__rbench__001__attempt1/provider_response.redacted.json",
+    "runner_id": "codex-nfl-batch-v1",
+    "task_manifest_path": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/tasks/click/rbench/click__rbench__001/task.yaml",
+    "task_manifest_sha256": "bf126fc1bdff30331ddd6345936a8a5b0120b9e7cf5191455630cc592abda509",
+    "tool": "codex_nfl_experiment_runner",
+    "verifier_digest_sha256": "63986121ca796b56b79d7b73228718a4e7921cb52483b5141db51d6482d7ed9b",
+    "verifier_ready_patch_available": false
+  },
+  "patch_path": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/codex_nfl_mock_smoke_followup_20260508__cheap-generic-swe__click__rbench__001__attempt1/submission.patch",
+  "review": {
+    "mergeability_grade": null,
+    "notes": "",
+    "rule_violation": false,
+    "wrong_module": false
+  },
+  "run_id": "codex_nfl_mock_smoke_followup_20260508__cheap-generic-swe__click__rbench__001__attempt1",
+  "schema_version": "core-narrative.run-result.v1",
+  "split": "rbench",
+  "started_at": "2026-05-08T01:34:43.405275Z",
+  "status": "infra_failed",
+  "task_id": "click__rbench__001",
+  "verification": {
+    "duration_seconds": null,
+    "exit_code": null,
+    "stderr_artifact": null,
+    "stdout_artifact": null
+  }
+}
