@@ -980,7 +980,20 @@ def main(argv: Sequence[str] | None = None) -> int:
                     task_split=task_split,
                     manifest_path=str(split_manifest_path),
                 )
-            selected_tasks.append(tasks[task_id])
+            task = tasks[task_id]
+            encoded_split = split_from_task_id(task_id)
+            task_fields = (("task_id", encoded_split), ("split", task.get("split")), ("benchmark_split", task.get("benchmark_split")))
+            for field, value in task_fields:
+                if isinstance(value, str) and value.lower() != task_split:
+                    raise ToolError(
+                        "requested task split does not match --task-split",
+                        task_id=task_id,
+                        field=field,
+                        task_split=task_split,
+                        observed_split=value.lower(),
+                        manifest_path=str(split_manifest_path),
+                    )
+            selected_tasks.append(task)
         results: list[dict[str, Any]] = []
         for task in selected_tasks:
             for acut_id in args.acuts:
