@@ -1,0 +1,49 @@
+{
+  "by_acut": {
+    "frontier-click-specialist": {
+      "pass_rate": 0.6667,
+      "passed": 2,
+      "scoreable": 3,
+      "status_counts": {
+        "invalid_submission": 1,
+        "passed": 2
+      },
+      "total": 3
+    }
+  },
+  "by_acut_split": {
+    "frontier-click-specialist": {
+      "rbench": {
+        "pass_rate": 0.6667,
+        "passed": 2,
+        "scoreable": 3,
+        "status_counts": {
+          "invalid_submission": 1,
+          "passed": 2
+        },
+        "total": 3
+      }
+    }
+  },
+  "by_split": {
+    "rbench": {
+      "pass_rate": 0.6667,
+      "passed": 2,
+      "scoreable": 3,
+      "status_counts": {
+        "invalid_submission": 1,
+        "passed": 2
+      },
+      "total": 3
+    }
+  },
+  "input_count": 3,
+  "result_count": 3,
+  "status": "summarized",
+  "status_counts": {
+    "invalid_submission": 1,
+    "passed": 2
+  },
+  "tool": "summarize_results",
+  "warnings": []
+}

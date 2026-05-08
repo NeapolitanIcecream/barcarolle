@@ -322,6 +322,113 @@ class OpenClawDirectRunnerTests(unittest.TestCase):
         self.assertIs(summary["details"]["network_attempted"], False)
         self.assertFalse((artifact_dir / "provider_response.redacted.json").exists())
 
+    def test_live_attempt_two_uses_coordinator_decision_ref_for_budget_gate(self) -> None:
+        """Regression: approved repeat attempts must reach the model instead of stopping at the gate."""
+        artifact_dir = self.root / "attempt-two-artifacts"
+        output_path = self.root / "attempt-two.json"
+        argv = [
+            "--workspace",
+            str(self.workspace),
+            "--task",
+            str(self.task_path),
+            "--acut",
+            str(self.acut_path),
+            "--attempt",
+            "2",
+            "--run-id",
+            "unit_openclaw_attempt2",
+            "--artifact-dir",
+            str(artifact_dir),
+            "--output",
+            str(output_path),
+            "--llm-ledger",
+            str(self.ledger_path),
+            "--projected-cost-usd",
+            "1",
+            "--coordinator-decision-ref",
+            "unit_attempt2_approval",
+            "--context-path",
+            "module.py",
+        ]
+        model_calls: list[dict[str, object]] = []
+
+        def fake_call_live_model(**kwargs):
+            model_calls.append(dict(kwargs))
+            return (
+                json.dumps({"edits": [{"path": "module.py", "old": "VALUE = 1\n", "new": "VALUE = 2\n"}]}),
+                {"prompt_tokens": 10, "completion_tokens": 2, "cost": 0.001},
+                {"endpoint_kind": "chat_completions"},
+            )
+
+        with mock.patch.dict(os.environ, self.env(), clear=False), mock.patch.object(
+            runner_module,
+            "call_live_model",
+            fake_call_live_model,
+        ), mock.patch.object(runner_module.sys, "argv", [str(RUNNER), *argv]):
+            code = runner_module.main(argv)
+
+        self.assertEqual(code, 0)
+        self.assertEqual(len(model_calls), 1)
+        summary = json.loads(output_path.read_text(encoding="utf-8"))
+        self.assertEqual(summary["budget_gate"]["status"], "passed")
+        self.assertTrue(summary["budget_gate"]["execution_request"]["coordinator_decision_ref_present"])
+        self.assertEqual(summary["attempt"], 2)
+
+    def test_live_error_after_response_records_model_artifact_paths(self) -> None:
+        """Regression: post-response model-output errors remain auditable."""
+        (self.workspace / "module.py").write_text("VALUE = 1\nVALUE = 1\n", encoding="utf-8")
+        run(["git", "add", "module.py"], cwd=self.workspace)
+        commit = run(["git", "commit", "-m", "duplicate value"], cwd=self.workspace)
+        self.assertEqual(commit.returncode, 0, commit.stderr)
+
+        artifact_dir = self.root / "live-ambiguous-artifacts"
+        output_path = self.root / "live-ambiguous.json"
+        argv = [
+            "--workspace",
+            str(self.workspace),
+            "--task",
+            str(self.task_path),
+            "--acut",
+            str(self.acut_path),
+            "--attempt",
+            "1",
+            "--run-id",
+            "unit_openclaw_live_ambiguous_edit_attempt1",
+            "--artifact-dir",
+            str(artifact_dir),
+            "--output",
+            str(output_path),
+            "--llm-ledger",
+            str(self.ledger_path),
+            "--projected-cost-usd",
+            "1",
+            "--context-path",
+            "module.py",
+        ]
+
+        def fake_call_live_model(**kwargs):
+            kwargs["raw_response_path"].write_text('{"choices":[],"usage":{"cost":0.01}}\n', encoding="utf-8")
+            return (
+                json.dumps({"edits": [{"path": "module.py", "old": "VALUE = 1\n", "new": "VALUE = 2\n"}]}),
+                {"prompt_tokens": 10, "completion_tokens": 2, "cost": 0.01},
+                {"endpoint_kind": "chat_completions"},
+            )
+
+        with mock.patch.dict(os.environ, self.env(), clear=False), mock.patch.object(
+            runner_module,
+            "call_live_model",
+            fake_call_live_model,
+        ), mock.patch.object(runner_module.sys, "argv", [str(RUNNER), *argv]):
+            code = runner_module.main(argv)
+
+        self.assertEqual(code, 2)
+        summary = json.loads(output_path.read_text(encoding="utf-8"))
+        self.assertEqual(summary["status"], "error")
+        self.assertTrue(summary["model_call_made"])
+        self.assertEqual(summary["details"]["failure_class"], "search_replace_old_occurrence_mismatch")
+        self.assertEqual(summary["prompt_snapshot"], str(artifact_dir / "prompt_snapshot.json"))
+        self.assertEqual(summary["raw_response_artifact"], str(artifact_dir / "provider_response.redacted.json"))
+
     def test_specialist_context_uses_repo_relative_path_outside_repo_cwd(self) -> None:
         """Regression: specialist runs must not depend on the process cwd."""
         artifact_dir = self.root / "specialist-artifacts"
@@ -372,10 +479,68 @@ class OpenClawDirectRunnerTests(unittest.TestCase):
         self.assertEqual(completed.returncode, 0, completed.stderr)
         snapshot = json.loads((artifact_dir / "prompt_snapshot.json").read_text(encoding="utf-8"))
         self.assertIs(snapshot["specialist_context_included"], True)
+        self.assertEqual(snapshot["specialist_context_assertion"]["expected"], "included")
         self.assertEqual(
             snapshot["specialist_context_path"],
             "experiments/core_narrative/context_packs/click_specialist/context_prompt.md",
         )
+
+    def test_click_specialist_acut_without_context_pack_fails_before_model_call(self) -> None:
+        """Regression: specialist ACUT identity must not silently run without specialist context."""
+        artifact_dir = self.root / "missing-specialist-artifacts"
+        output_path = self.root / "missing-specialist.json"
+        acut_path = self.root / "missing-specialist-acut.json"
+        acut_path.write_text(
+            json.dumps(
+                {
+                    "acut_id": "cheap-click-specialist",
+                    "provider": "openai",
+                    "model": "openai/gpt-5.4-mini",
+                    "model_parameters": {"reasoning_effort": "medium"},
+                }
+            ),
+            encoding="utf-8",
+        )
+        argv = [
+            "--workspace",
+            str(self.workspace),
+            "--task",
+            str(self.task_path),
+            "--acut",
+            str(acut_path),
+            "--attempt",
+            "1",
+            "--run-id",
+            "unit_missing_specialist_context",
+            "--artifact-dir",
+            str(artifact_dir),
+            "--output",
+            str(output_path),
+            "--llm-ledger",
+            str(self.ledger_path),
+            "--projected-cost-usd",
+            "1",
+            "--context-path",
+            "module.py",
+        ]
+        model_calls: list[dict[str, object]] = []
+
+        def fake_call_live_model(**kwargs):
+            model_calls.append(dict(kwargs))
+            return '{"edits":[]}', {"prompt_tokens": 10, "completion_tokens": 2}, {}
+
+        with mock.patch.dict(os.environ, self.env(), clear=False), mock.patch.object(
+            runner_module,
+            "call_live_model",
+            fake_call_live_model,
+        ), mock.patch.object(runner_module.sys, "argv", [str(RUNNER), *argv]):
+            code = runner_module.main(argv)
+
+        self.assertEqual(code, 2)
+        self.assertEqual(model_calls, [])
+        summary = json.loads(output_path.read_text(encoding="utf-8"))
+        self.assertEqual(summary["status"], "error")
+        self.assertEqual(summary["details"]["failure_class"], "specialist_context_missing")
 
     def test_mock_response_rejects_unsafe_raw_text_before_redaction_mutates_edit(self) -> None:
         """Regression: redaction must not turn unsafe model edits into applied placeholders."""
@@ -496,6 +661,66 @@ class OpenClawDirectRunnerTests(unittest.TestCase):
         self.assertEqual(summary["status"], "error")
         self.assertEqual(summary["details"]["failure_class"], "generated_path_outside_context")
         self.assertEqual((self.workspace / "hidden.py").read_text(encoding="utf-8"), "SECRET_VALUE = 1\n")
+
+    def test_non_unique_search_replace_old_string_has_model_output_failure_class(self) -> None:
+        """Regression: ambiguous search/replace edits are model-output failures, not infra."""
+        (self.workspace / "module.py").write_text("VALUE = 1\nVALUE = 1\n", encoding="utf-8")
+        run(["git", "add", "module.py"], cwd=self.workspace)
+        commit = run(["git", "commit", "-m", "duplicate value"], cwd=self.workspace)
+        self.assertEqual(commit.returncode, 0, commit.stderr)
+
+        artifact_dir = self.root / "ambiguous-edit-artifacts"
+        output_path = self.root / "ambiguous-edit.json"
+        response = json.dumps(
+            {
+                "edits": [
+                    {
+                        "path": "module.py",
+                        "old": "VALUE = 1\n",
+                        "new": "VALUE = 2\n",
+                    }
+                ]
+            }
+        )
+
+        completed = run(
+            [
+                sys.executable,
+                str(RUNNER),
+                "--workspace",
+                str(self.workspace),
+                "--task",
+                str(self.task_path),
+                "--acut",
+                str(self.acut_path),
+                "--attempt",
+                "1",
+                "--run-id",
+                "unit_openclaw_ambiguous_edit_attempt1",
+                "--artifact-dir",
+                str(artifact_dir),
+                "--output",
+                str(output_path),
+                "--llm-ledger",
+                str(self.ledger_path),
+                "--projected-cost-usd",
+                "1",
+                "--context-path",
+                "module.py",
+                "--mock-response-text",
+                response,
+            ],
+            cwd=REPO_ROOT,
+            env=self.env(),
+        )
+
+        self.assertEqual(completed.returncode, 2, completed.stderr)
+        summary = json.loads(output_path.read_text(encoding="utf-8"))
+        self.assertEqual(summary["status"], "error")
+        self.assertEqual(summary["details"]["failure_class"], "search_replace_old_occurrence_mismatch")
+        self.assertFalse(summary["model_call_made"])
+        self.assertEqual(summary["prompt_snapshot"], str(artifact_dir / "prompt_snapshot.json"))
+        self.assertEqual(summary["raw_response_artifact"], str(artifact_dir / "provider_response.redacted.json"))
 
     def test_live_failure_after_response_is_ledgered_with_provider_usage(self) -> None:
         """Regression: validation failures after a model response still consume provider usage."""

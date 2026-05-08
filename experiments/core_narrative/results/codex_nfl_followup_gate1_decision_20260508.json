@@ -1,0 +1,68 @@
+{
+  "tool": "codex_nfl_followup_gate1_decision",
+  "status": "failed_stop_no_expansion",
+  "decided_at": "2026-05-08T01:59:06Z",
+  "gate_source": "experiments/core_narrative/reports/next_experiment_decision_gates.md",
+  "scope": {
+    "tasks": [
+      "click__rbench__001",
+      "click__rbench__002",
+      "click__rbench__003"
+    ],
+    "acuts": [
+      "cheap-generic-swe",
+      "frontier-generic-swe",
+      "cheap-click-specialist",
+      "frontier-click-specialist"
+    ],
+      "evaluated_runs": [
+        "experiments/core_narrative/results/normalized/codex_nfl_live_summary_20260507.json",
+        "experiments/core_narrative/results/codex_nfl_live_frontier_specialist_fill_corrected_20260508.json",
+        "experiments/core_narrative/results/normalized/codex_nfl_frontier_specialist_fill_summary_20260508.json",
+        "experiments/core_narrative/results/normalized/codex_nfl_attempt2_summary_20260508.json",
+        "experiments/core_narrative/results/normalized/codex_nfl_followup_summary_20260508.json"
+    ]
+  },
+  "conditions": {
+    "infra_failed_rate_eq_0": {
+      "passed": true,
+      "value": 0.0,
+      "basis": "normalized follow-up source of truth; model-output search/replace contract failures are invalid_submission, not infra_failed"
+    },
+    "verifier_repair_after_live_eq_false": {
+      "passed": true,
+      "value": false,
+      "basis": "task-003 verifier pre-import repair happened before live follow-up calls; no verifier repair was made after those calls"
+    },
+    "unclassified_failure_rate_lte_20pct": {
+      "passed": true,
+      "value": 0.0,
+      "basis": "all failed or invalid cells have report-level film labels"
+    },
+    "all_runs_have_clean_patch_replay": {
+      "passed": false,
+      "value": false,
+      "basis": "frontier-click-specialist task-003 attempt 1 and attempt 2 were scoreable invalid_submission outcomes without a verifier-ready patch to replay"
+    },
+    "frontier_click_specialist_attempt1_completed": {
+      "passed": true,
+      "value": true,
+      "basis": "tasks 001 and 002 passed; task 003 produced a model-output invalid_submission"
+    },
+    "meaningful_film_contrast_exists": {
+      "passed": true,
+      "value": true,
+      "basis": "task 003 separates API-plumbing verifier failures, a frontier-generic pass, and frontier-click search/replace contract failures"
+    }
+  },
+  "decision": {
+    "expand_click_004_008": false,
+    "expansion_calls_skipped": 20,
+    "stop_reason": "Gate 1 requires every scoreable stabilization result to be produced by clean patch replay. Two frontier-click-specialist task-003 cells consumed provider responses but failed the model-output search/replace contract before producing a patch."
+  },
+  "notes": [
+    "The stop is not an API quota, credential, or repository-auth blocker.",
+    "The stop is not an infrastructure-failure-rate blocker; normalized status treats these cells as model-output invalid submissions.",
+    "Use the corrected fill evidence artifact, normalized artifacts, and the gate decision as source of truth; the original fill batch and task-003 batch_run_result are stale non-scoring audit outputs."
+  ]
+}

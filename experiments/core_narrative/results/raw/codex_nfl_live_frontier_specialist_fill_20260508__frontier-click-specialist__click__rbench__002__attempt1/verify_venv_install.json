@@ -1,0 +1,18 @@
+{
+  "command": [
+    ".venv/bin/python",
+    "-m",
+    "pip",
+    "install",
+    "-q",
+    "-e",
+    ".",
+    "pytest"
+  ],
+  "exit_code": 0,
+  "finished_at": "2026-05-08T01:39:17.165142Z",
+  "name": "verify_venv_install",
+  "started_at": "2026-05-08T01:39:15.186019Z",
+  "stderr_artifact": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/codex_nfl_live_frontier_specialist_fill_20260508__frontier-click-specialist__click__rbench__002__attempt1/verify_venv_install.stderr.txt",
+  "stdout_artifact": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/codex_nfl_live_frontier_specialist_fill_20260508__frontier-click-specialist__click__rbench__002__attempt1/verify_venv_install.stdout.txt"
+}
