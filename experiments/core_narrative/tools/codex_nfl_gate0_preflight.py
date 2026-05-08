@@ -55,6 +55,21 @@ def p95(values: Sequence[float]) -> float | None:
     return ordered[max(0, min(index, len(ordered) - 1))]
 
 
+def unique_task_ids(task_ids: Sequence[str]) -> list[str]:
+    seen = set()
+    duplicates = set()
+    unique = []
+    for task_id in task_ids:
+        if task_id in seen:
+            duplicates.add(task_id)
+            continue
+        seen.add(task_id)
+        unique.append(task_id)
+    if duplicates:
+        raise ToolError("Gate 0 tasks must be unique", duplicate_task_ids=sorted(duplicates))
+    return unique
+
+
 def git_diff(source_repo: Path, base_commit: str, target_commit: str, paths: Sequence[str]) -> str:
     command = ["git", "diff", "--binary", base_commit, target_commit, "--", *paths]
     completed = run_capture(command, cwd=source_repo, timeout=60)
@@ -318,10 +333,11 @@ def main(argv: Sequence[str] | None = None) -> int:
         started_at = iso_now()
         if args.flakiness_runs < 2:
             raise ToolError("--flakiness-runs must be at least 2")
+        requested_task_ids = unique_task_ids(args.tasks)
         split_manifest = load_manifest(batch.TASK_SPLIT)
         tasks = batch.task_by_id(split_manifest)
         selected = []
-        for task_id in args.tasks:
+        for task_id in requested_task_ids:
             if task_id not in tasks:
                 raise ToolError("requested task is not in RBench Click manifest", task_id=task_id)
             if not batch.task_manifest_path(task_id).exists():

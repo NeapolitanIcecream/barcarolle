@@ -84,6 +84,41 @@ class CodexNflGate0PreflightTests(unittest.TestCase):
         """Gate 0 payloads include timing provenance for audit."""
         with tempfile.TemporaryDirectory() as temp_dir:
             output = Path(temp_dir) / "preflight.json"
+            tasks = [
+                {"task_id": "click__rbench__001"},
+                {"task_id": "click__rbench__002"},
+                {"task_id": "click__rbench__003"},
+            ]
+            task_by_id = {task["task_id"]: task for task in tasks}
+            with mock.patch.object(preflight, "load_manifest", return_value={"tasks": tasks}), mock.patch.object(
+                preflight.batch,
+                "task_by_id",
+                return_value=task_by_id,
+            ), mock.patch.object(preflight.batch, "task_manifest_path", return_value=Path(__file__)), mock.patch.object(
+                preflight,
+                "task_probe",
+                side_effect=lambda task, **kwargs: {"task_id": task["task_id"], "status": "passed"},
+            ), mock.patch.object(preflight, "iso_now", side_effect=["start-time", "finish-time"]):
+                code = preflight.main(
+                    [
+                        "--tasks",
+                        "click__rbench__001",
+                        "click__rbench__002",
+                        "click__rbench__003",
+                        "--output",
+                        str(output),
+                    ]
+                )
+
+            self.assertEqual(code, 0)
+            payload = preflight.json.loads(output.read_text(encoding="utf-8"))
+            self.assertEqual(payload["started_at"], "start-time")
+            self.assertEqual(payload["finished_at"], "finish-time")
+
+    def test_main_rejects_duplicate_task_ids_for_count_gate(self) -> None:
+        """Regression: repeated task IDs must not satisfy the three-task Gate 0 count."""
+        with tempfile.TemporaryDirectory() as temp_dir:
+            output = Path(temp_dir) / "preflight.json"
             task = {"task_id": "click__rbench__001"}
             with mock.patch.object(preflight, "load_manifest", return_value={"tasks": [task]}), mock.patch.object(
                 preflight.batch,
@@ -93,7 +128,7 @@ class CodexNflGate0PreflightTests(unittest.TestCase):
                 preflight,
                 "task_probe",
                 return_value={"task_id": "click__rbench__001", "status": "passed"},
-            ), mock.patch.object(preflight, "iso_now", side_effect=["start-time", "finish-time"]):
+            ):
                 code = preflight.main(
                     [
                         "--tasks",
@@ -105,10 +140,8 @@ class CodexNflGate0PreflightTests(unittest.TestCase):
                     ]
                 )
 
-            self.assertEqual(code, 0)
-            payload = preflight.json.loads(output.read_text(encoding="utf-8"))
-            self.assertEqual(payload["started_at"], "start-time")
-            self.assertEqual(payload["finished_at"], "finish-time")
+            self.assertEqual(code, 2)
+            self.assertFalse(output.exists())
 
 
 if __name__ == "__main__":
