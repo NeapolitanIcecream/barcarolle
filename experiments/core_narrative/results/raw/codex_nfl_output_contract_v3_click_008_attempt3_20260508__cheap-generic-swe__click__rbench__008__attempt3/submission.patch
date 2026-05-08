@@ -1,0 +1,74 @@
+diff --git a/src/click/parser.py b/src/click/parser.py
+index f613947..e8820bf 100644
+--- a/src/click/parser.py
++++ b/src/click/parser.py
+@@ -345,7 +345,10 @@ class OptionParser:
+ 
+             nargs = option.nargs
+             if len(state.rargs) < nargs:
+-                _error_opt_args(nargs, opt)
++                if option.obj.prompt is not None and nargs == 1:
++                    value = None
++                else:
++                    _error_opt_args(nargs, opt)
+             elif nargs == 1:
+                 value = state.rargs.pop(0)
+             else:
+@@ -385,7 +388,10 @@ class OptionParser:
+ 
+                 nargs = option.nargs
+                 if len(state.rargs) < nargs:
+-                    _error_opt_args(nargs, opt)
++                    if option.obj.prompt is not None and nargs == 1:
++                        value = None
++                    else:
++                        _error_opt_args(nargs, opt)
+                 elif nargs == 1:
+                     value = state.rargs.pop(0)
+                 else:
+diff --git a/tests/test_options.py b/tests/test_options.py
+index eea68c1..57710b7 100644
+--- a/tests/test_options.py
++++ b/tests/test_options.py
+@@ -269,6 +269,27 @@ def test_dynamic_default_help_text(runner):
+     assert "(current user)" in result.output
+ 
+ 
++def test_option_prompt_required(runner):
++    @click.command()
++    @click.option(
++        "--name",
++        default="World",
++        prompt=True,
++        prompt_required=False,
++        required=True,
++    )
++    def cmd(name):
++        click.echo(name)
++
++    result = runner.invoke(cmd, ["--name"])
++    assert result.exit_code == 0
++    assert result.output == "World\n"
++
++    result = runner.invoke(cmd, [], input="Jane\n")
++    assert result.exit_code == 0
++    assert "Jane" in result.output
++
++
+ @pytest.mark.parametrize(
+     ("type", "expect"),
+     [
+diff --git a/tests/test_termui.py b/tests/test_termui.py
+index 90a4ce6..d65c41c 100644
+--- a/tests/test_termui.py
++++ b/tests/test_termui.py
+@@ -250,6 +250,9 @@ def test_file_prompt_default_format(runner, file_kwargs):
+     result = runner.invoke(cli)
+     assert result.output == f"file [{__file__}]: \n{__file__}\n"
+ 
++    result = runner.invoke(cli, ["-f"], input="")
++    assert result.output == f"file [{__file__}]: \n{__file__}\n"
++
+ 
+ def test_secho(runner):
+     with runner.isolation() as outstreams:
