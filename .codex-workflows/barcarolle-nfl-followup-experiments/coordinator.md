@@ -1,7 +1,8 @@
 # barcarolle-nfl-followup-experiments Work Loop Coordinator
 
-STATUS: LOCAL_REVIEW_CLOSED
-UPDATED_AT: 2026-05-08 10:42 CST
+STATUS: PR_READY_WAITING_CLOUD_REVIEW
+UPDATED_AT: 2026-05-08 10:45 CST
+PR: https://github.com/NeapolitanIcecream/barcarolle/pull/2
 
 RULES:
 - Do not read worker or reviewer CLI stdout/stderr logs.
@@ -32,7 +33,11 @@ CURRENT:
   - `reviewer/recheck-prompt-1.md`
   - `reviewer/run_recheck_1.sh`
 - Reviewer recheck 1 reported `no_issues`.
+- Committed local review closure and experiment artifacts as `7393019 Run Codex NFL follow-up experiments`.
+- Pushed branch `codex/nfl-followup-experiments`.
+- Created ready PR #2 using `experiments/core_narrative/reports/2026-05-08_codex_nfl_followup_evidence_package.md` as PR body.
+- Initial PR state: open, not draft, mergeable, merge state clean, no checks, no review threads yet.
 
 NEXT:
-- Commit and push PR-scope experiment artifacts, create or update a ready PR, then continue cloud Codex/CI review loop.
+- Wait for cloud Codex review and CI/check state on PR #2. Fix valid findings or merge only after review/checks are clean.
 - Do not read worker or reviewer CLI logs unless the user explicitly asks for debugging.
