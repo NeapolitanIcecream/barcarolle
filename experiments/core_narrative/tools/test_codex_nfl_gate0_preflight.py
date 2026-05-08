@@ -1,0 +1,58 @@
+#!/usr/bin/env python3
+"""Executable specs for Codex NFL Gate 0 preflight probes."""
+
+from __future__ import annotations
+
+import tempfile
+import unittest
+from pathlib import Path
+
+import codex_nfl_gate0_preflight as preflight
+
+
+class CodexNflGate0PreflightTests(unittest.TestCase):
+    def test_p95_uses_nearest_rank(self) -> None:
+        """Runtime p95 is deterministic for small probe samples."""
+        self.assertEqual(preflight.p95([0.1, 0.2, 0.3]), 0.3)
+        self.assertEqual(preflight.p95([0.3, 0.1, 0.2, 0.4]), 0.4)
+
+    def test_leakage_findings_reports_unsafe_verifier_output(self) -> None:
+        """Gate 0 emits a machine-readable leakage signal when verifier logs contain unsafe text."""
+        with tempfile.TemporaryDirectory() as temp_dir:
+            path = Path(temp_dir) / "verifier.stderr.txt"
+            path.write_text("provider mentioned https://example.invalid/token\n", encoding="utf-8")
+
+            findings = preflight.leakage_findings([str(path)])
+
+        self.assertTrue(findings["unsafe"])
+        self.assertEqual(findings["reason_counts"], {"full_url": 1})
+
+    def test_leakage_findings_ignores_pytest_docs_url(self) -> None:
+        """Pytest's warning help URL is not oracle leakage."""
+        with tempfile.TemporaryDirectory() as temp_dir:
+            path = Path(temp_dir) / "verifier.stdout.txt"
+            path.write_text("Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html\n", encoding="utf-8")
+
+            findings = preflight.leakage_findings([str(path)])
+
+        self.assertFalse(findings["unsafe"])
+        self.assertEqual(findings["reason_counts"], {})
+        self.assertEqual(
+            findings["ignored_benign_urls"],
+            ["https://docs.pytest.org/en/stable/how-to/capture-warnings.html"],
+        )
+
+    def test_reference_patch_requires_changed_files(self) -> None:
+        """A task without changed files cannot satisfy the reference probe."""
+        with self.assertRaises(preflight.ToolError):
+            preflight.reference_patch_for_task(
+                {
+                    "task_id": "click__rbench__unit",
+                    "source": {"base_commit": "base", "target_commit": "target"},
+                    "source_compare": {"changed_files": []},
+                }
+            )
+
+
+if __name__ == "__main__":
+    unittest.main()

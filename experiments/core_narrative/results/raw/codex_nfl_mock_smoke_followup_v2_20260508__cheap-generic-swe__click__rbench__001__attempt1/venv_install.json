@@ -1,0 +1,18 @@
+{
+  "command": [
+    ".venv/bin/python",
+    "-m",
+    "pip",
+    "install",
+    "-q",
+    "-e",
+    ".",
+    "pytest"
+  ],
+  "exit_code": 0,
+  "finished_at": "2026-05-08T01:36:55.887902Z",
+  "name": "venv_install",
+  "started_at": "2026-05-08T01:36:53.999325Z",
+  "stderr_artifact": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/codex_nfl_mock_smoke_followup_v2_20260508__cheap-generic-swe__click__rbench__001__attempt1/venv_install.stderr.txt",
+  "stdout_artifact": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/codex_nfl_mock_smoke_followup_v2_20260508__cheap-generic-swe__click__rbench__001__attempt1/venv_install.stdout.txt"
+}

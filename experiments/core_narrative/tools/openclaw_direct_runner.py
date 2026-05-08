@@ -76,6 +76,10 @@ def parse_args(argv: Sequence[str]) -> argparse.Namespace:
     parser.add_argument("--projected-cost-usd", required=True)
     parser.add_argument("--estimated-cost-usd", help="Local ledger estimate. Defaults to projected cost.")
     parser.add_argument("--actual-cost-usd", help="Actual provider-billed USD cost, if an invoice/API reports it.")
+    parser.add_argument(
+        "--coordinator-decision-ref",
+        help="Structured approval reference for budget-gated non-primary attempts or non-core runs.",
+    )
     parser.add_argument("--input-tokens", default=None, help="Override input token count when provider usage is absent.")
     parser.add_argument("--output-tokens", default=None, help="Override output token count when provider usage is absent.")
     parser.add_argument("--context-path", action="append", default=[], help="Workspace-relative source file to include.")
@@ -174,6 +178,51 @@ def specialist_context_path(acut: Mapping[str, Any]) -> str | None:
     if allowed and isinstance(path, str) and path:
         return path
     return None
+
+
+def expects_click_specialist_context(acut: Mapping[str, Any]) -> bool:
+    acut_id = str(acut.get("acut_id") or "")
+    strategy = acut.get("retrieval_context_strategy") if isinstance(acut.get("retrieval_context_strategy"), dict) else {}
+    strategy_id = str(strategy.get("strategy_id") or "")
+    metadata = acut.get("metadata") if isinstance(acut.get("metadata"), dict) else {}
+    specialist = metadata.get("specialist_context") if isinstance(metadata.get("specialist_context"), dict) else {}
+    return (
+        bool(specialist.get("click_task_agnostic_context_allowed"))
+        or "click-specialist" in acut_id
+        or strategy_id == "click-specialist-task-agnostic-v2"
+    )
+
+
+def assert_specialist_context_policy(
+    *,
+    acut: Mapping[str, Any],
+    include_mode: str,
+    specialist_path: str | None,
+) -> dict[str, Any]:
+    expected = expects_click_specialist_context(acut)
+    if expected and include_mode == "never":
+        raise ToolError(
+            "Click-specialist ACUT must include the task-agnostic Click context pack",
+            acut_id=acut.get("acut_id"),
+            failure_class="specialist_context_not_included",
+        )
+    if not expected and include_mode == "always":
+        raise ToolError(
+            "generic ACUT must not include the Click specialist context pack",
+            acut_id=acut.get("acut_id"),
+            failure_class="specialist_context_forbidden",
+        )
+    if expected and specialist_path is None:
+        raise ToolError(
+            "Click-specialist ACUT is missing metadata.specialist_context.context_pack",
+            acut_id=acut.get("acut_id"),
+            failure_class="specialist_context_missing",
+        )
+    return {
+        "expected": "included" if expected else "excluded",
+        "include_mode": include_mode,
+        "passed": True,
+    }
 
 
 def resolve_specialist_context_file(path: str, acut_path: Path) -> Path:
@@ -492,7 +541,12 @@ def apply_edit_bundle(
         text = target.read_text(encoding="utf-8")
         occurrences = text.count(old)
         if occurrences != 1:
-            raise ToolError("edit old string must occur exactly once", path=path, occurrences=occurrences)
+            raise ToolError(
+                "edit old string must occur exactly once",
+                path=path,
+                occurrences=occurrences,
+                failure_class="search_replace_old_occurrence_mismatch",
+            )
         target.write_text(text.replace(old, new, 1), encoding="utf-8")
         changed.append(path)
     return {
@@ -721,6 +775,11 @@ def main(argv: Sequence[str] | None = None) -> int:
             )
         specialist_text = None
         specialist_path = specialist_context_path(acut)
+        specialist_assertion = assert_specialist_context_policy(
+            acut=acut,
+            include_mode=args.include_specialist_context,
+            specialist_path=specialist_path,
+        )
         include_specialist = args.include_specialist_context == "always" or (
             args.include_specialist_context == "auto" and specialist_path is not None
         )
@@ -760,6 +819,7 @@ def main(argv: Sequence[str] | None = None) -> int:
                 ],
                 "specialist_context_included": specialist_text is not None,
                 "specialist_context_path": specialist_path if specialist_text is not None else None,
+                "specialist_context_assertion": specialist_assertion,
                 "output_contract": DEFAULT_OUTPUT_CONTRACT,
                 "full_urls_redacted": True,
             },
@@ -774,6 +834,7 @@ def main(argv: Sequence[str] | None = None) -> int:
             acut_id=str(acut["acut_id"]),
             split=str(task["split"]),
             attempt=args.attempt,
+            coordinator_decision_ref=args.coordinator_decision_ref,
             env=os.environ,
         )
         if mode == "live" and budget_gate["status"] != "passed":
@@ -916,6 +977,14 @@ def main(argv: Sequence[str] | None = None) -> int:
             "started_at": started_at,
             "finished_at": finished_at,
         }
+        if "model_call_made" in locals():
+            payload["model_call_made"] = model_call_made
+        elif isinstance(failure_ledger_append, Mapping):
+            payload["model_call_made"] = failure_ledger_append.get("status") == "appended"
+        if "prompt_snapshot_path" in locals() and prompt_snapshot_path.exists():
+            payload["prompt_snapshot"] = str(prompt_snapshot_path)
+        if "raw_response_path" in locals() and raw_response_path.exists():
+            payload["raw_response_artifact"] = str(raw_response_path)
         if "--output" in sys.argv:
             try:
                 output_path = Path(sys.argv[sys.argv.index("--output") + 1])

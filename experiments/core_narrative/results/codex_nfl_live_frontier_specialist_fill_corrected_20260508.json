@@ -1,0 +1,243 @@
+{
+  "acuts": [
+    "frontier-click-specialist"
+  ],
+  "aggregate": {
+    "by_acut": {
+      "frontier-click-specialist": {
+        "invalid_submission": 1,
+        "passed": 2
+      }
+    },
+    "by_task": {
+      "click__rbench__001": {
+        "passed": 1
+      },
+      "click__rbench__002": {
+        "passed": 1
+      },
+      "click__rbench__003": {
+        "invalid_submission": 1
+      }
+    },
+    "failed": 0,
+    "infra_failed": 0,
+    "invalid_submission": 1,
+    "passed": 2,
+    "scoreable": 3,
+    "status_counts": {
+      "invalid_submission": 1,
+      "passed": 2
+    },
+    "timeout": 0,
+    "total": 3
+  },
+  "attempt": 1,
+  "corrected_at": "2026-05-08T02:26:27Z",
+  "correction_reason": "The original fill batch and task-003 per-run batch_result were emitted before the consumed-response model-output search/replace ambiguity was classified as scoreable invalid_submission.",
+  "finished_at": "2026-05-08T01:40:13.120477Z",
+  "mode": "live",
+  "normalized_summary_status_counts": {
+    "invalid_submission": 1,
+    "passed": 2
+  },
+  "results": [
+    {
+      "acut_id": "frontier-click-specialist",
+      "attempt": 1,
+      "clean_patch_replay": {
+        "attempted": true,
+        "runner_workspace": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/workspaces/codex_nfl_live_frontier_specialist_fill_20260508__frontier-click-specialist__click__rbench__001__attempt1",
+        "separate_workspace": true,
+        "skip_apply": false,
+        "verify_workspace": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/workspaces/codex_nfl_live_frontier_specialist_fill_20260508__frontier-click-specialist__click__rbench__001__attempt1__verify"
+      },
+      "direct_runner_cost_accounting": {
+        "actual_cost_status": "unknown_not_provider_reported",
+        "actual_cost_usd": null,
+        "estimated_cost_usd": 0.135345,
+        "input_tokens": 17319,
+        "observed_provider_cost_status": "provider_response_usage_cost_not_invoice",
+        "observed_provider_cost_usd": 0.135345,
+        "output_tokens": 1625,
+        "provider_usage_reported": true
+      },
+      "error": null,
+      "failure_class": null,
+      "failure_owner": null,
+      "model_call_made": true,
+      "normalized_result": "experiments/core_narrative/results/normalized/codex_nfl_live_frontier_specialist_fill_20260508__frontier-click-specialist__click__rbench__001__attempt1.json",
+      "patch_path": "experiments/core_narrative/results/raw/codex_nfl_live_frontier_specialist_fill_20260508__frontier-click-specialist__click__rbench__001__attempt1/submission.patch",
+      "patch_ready": true,
+      "prompt_snapshot": "experiments/core_narrative/results/raw/codex_nfl_live_frontier_specialist_fill_20260508__frontier-click-specialist__click__rbench__001__attempt1/prompt_snapshot.json",
+      "raw_artifact_dir": "experiments/core_narrative/results/raw/codex_nfl_live_frontier_specialist_fill_20260508__frontier-click-specialist__click__rbench__001__attempt1",
+      "raw_batch_run_result": "experiments/core_narrative/results/raw/codex_nfl_live_frontier_specialist_fill_20260508__frontier-click-specialist__click__rbench__001__attempt1/batch_run_result.json",
+      "raw_response_artifact": "experiments/core_narrative/results/raw/codex_nfl_live_frontier_specialist_fill_20260508__frontier-click-specialist__click__rbench__001__attempt1/provider_response.redacted.json",
+      "reconciliation": {
+        "corrected_from_normalized_status": false,
+        "original_batch_scoreable": true,
+        "original_batch_status": "passed"
+      },
+      "run_id": "codex_nfl_live_frontier_specialist_fill_20260508__frontier-click-specialist__click__rbench__001__attempt1",
+      "runner_code": 0,
+      "runner_status": "patch_generated",
+      "scoreable": true,
+      "split": "rbench",
+      "status": "passed",
+      "task_id": "click__rbench__001",
+      "verification": {
+        "duration_seconds": 0.181,
+        "exit_code": 0,
+        "stderr_artifact": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/codex_nfl_live_frontier_specialist_fill_20260508__frontier-click-specialist__click__rbench__001__attempt1/verifier.stderr.txt",
+        "stdout_artifact": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/codex_nfl_live_frontier_specialist_fill_20260508__frontier-click-specialist__click__rbench__001__attempt1/verifier.stdout.txt"
+      },
+      "verify_code": 0
+    },
+    {
+      "acut_id": "frontier-click-specialist",
+      "attempt": 1,
+      "clean_patch_replay": {
+        "attempted": true,
+        "runner_workspace": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/workspaces/codex_nfl_live_frontier_specialist_fill_20260508__frontier-click-specialist__click__rbench__002__attempt1",
+        "separate_workspace": true,
+        "skip_apply": false,
+        "verify_workspace": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/workspaces/codex_nfl_live_frontier_specialist_fill_20260508__frontier-click-specialist__click__rbench__002__attempt1__verify"
+      },
+      "direct_runner_cost_accounting": {
+        "actual_cost_status": "unknown_not_provider_reported",
+        "actual_cost_usd": null,
+        "estimated_cost_usd": 0.096305,
+        "input_tokens": 4753,
+        "observed_provider_cost_status": "provider_response_usage_cost_not_invoice",
+        "observed_provider_cost_usd": 0.096305,
+        "output_tokens": 2418,
+        "provider_usage_reported": true
+      },
+      "error": null,
+      "failure_class": null,
+      "failure_owner": null,
+      "model_call_made": true,
+      "normalized_result": "experiments/core_narrative/results/normalized/codex_nfl_live_frontier_specialist_fill_20260508__frontier-click-specialist__click__rbench__002__attempt1.json",
+      "patch_path": "experiments/core_narrative/results/raw/codex_nfl_live_frontier_specialist_fill_20260508__frontier-click-specialist__click__rbench__002__attempt1/submission.patch",
+      "patch_ready": true,
+      "prompt_snapshot": "experiments/core_narrative/results/raw/codex_nfl_live_frontier_specialist_fill_20260508__frontier-click-specialist__click__rbench__002__attempt1/prompt_snapshot.json",
+      "raw_artifact_dir": "experiments/core_narrative/results/raw/codex_nfl_live_frontier_specialist_fill_20260508__frontier-click-specialist__click__rbench__002__attempt1",
+      "raw_batch_run_result": "experiments/core_narrative/results/raw/codex_nfl_live_frontier_specialist_fill_20260508__frontier-click-specialist__click__rbench__002__attempt1/batch_run_result.json",
+      "raw_response_artifact": "experiments/core_narrative/results/raw/codex_nfl_live_frontier_specialist_fill_20260508__frontier-click-specialist__click__rbench__002__attempt1/provider_response.redacted.json",
+      "reconciliation": {
+        "corrected_from_normalized_status": false,
+        "original_batch_scoreable": true,
+        "original_batch_status": "passed"
+      },
+      "run_id": "codex_nfl_live_frontier_specialist_fill_20260508__frontier-click-specialist__click__rbench__002__attempt1",
+      "runner_code": 0,
+      "runner_status": "patch_generated",
+      "scoreable": true,
+      "split": "rbench",
+      "status": "passed",
+      "task_id": "click__rbench__002",
+      "verification": {
+        "duration_seconds": 0.132,
+        "exit_code": 0,
+        "stderr_artifact": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/codex_nfl_live_frontier_specialist_fill_20260508__frontier-click-specialist__click__rbench__002__attempt1/verifier.stderr.txt",
+        "stdout_artifact": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/codex_nfl_live_frontier_specialist_fill_20260508__frontier-click-specialist__click__rbench__002__attempt1/verifier.stdout.txt"
+      },
+      "verify_code": 0
+    },
+    {
+      "acut_id": "frontier-click-specialist",
+      "attempt": 1,
+      "clean_patch_replay": {
+        "attempted": false,
+        "runner_workspace": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/workspaces/codex_nfl_live_frontier_specialist_fill_20260508__frontier-click-specialist__click__rbench__003__attempt1",
+        "separate_workspace": false,
+        "skip_apply": null,
+        "verify_workspace": null
+      },
+      "direct_runner_cost_accounting": {
+        "actual_cost_status": "unknown_not_invoice_verified",
+        "actual_cost_usd": null,
+        "estimated_cost_usd": 0.210445,
+        "input_tokens": 21797,
+        "observed_provider_cost_status": "provider_response_usage_cost_not_invoice",
+        "observed_provider_cost_usd": 0.210445,
+        "output_tokens": 3382,
+        "provider_usage_reported": true
+      },
+      "error": "edit old string must occur exactly once",
+      "failure_class": "search_replace_old_occurrence_mismatch",
+      "failure_owner": "model_output",
+      "model_call_made": true,
+      "normalized_result": "experiments/core_narrative/results/normalized/codex_nfl_live_frontier_specialist_fill_20260508__frontier-click-specialist__click__rbench__003__attempt1.json",
+      "patch_path": "experiments/core_narrative/results/raw/codex_nfl_live_frontier_specialist_fill_20260508__frontier-click-specialist__click__rbench__003__attempt1/submission.patch",
+      "patch_ready": false,
+      "prompt_snapshot": "experiments/core_narrative/results/raw/codex_nfl_live_frontier_specialist_fill_20260508__frontier-click-specialist__click__rbench__003__attempt1/prompt_snapshot.json",
+      "raw_artifact_dir": "experiments/core_narrative/results/raw/codex_nfl_live_frontier_specialist_fill_20260508__frontier-click-specialist__click__rbench__003__attempt1",
+      "raw_batch_run_result": "experiments/core_narrative/results/raw/codex_nfl_live_frontier_specialist_fill_20260508__frontier-click-specialist__click__rbench__003__attempt1/batch_run_result.json",
+      "raw_response_artifact": "experiments/core_narrative/results/raw/codex_nfl_live_frontier_specialist_fill_20260508__frontier-click-specialist__click__rbench__003__attempt1/provider_response.redacted.json",
+      "reconciliation": {
+        "corrected_from_normalized_status": true,
+        "original_batch_scoreable": false,
+        "original_batch_status": "infra_failed"
+      },
+      "run_id": "codex_nfl_live_frontier_specialist_fill_20260508__frontier-click-specialist__click__rbench__003__attempt1",
+      "runner_code": 2,
+      "runner_status": "error",
+      "scoreable": true,
+      "split": "rbench",
+      "status": "invalid_submission",
+      "task_id": "click__rbench__003",
+      "verification": {
+        "duration_seconds": null,
+        "exit_code": null,
+        "stderr_artifact": null,
+        "stdout_artifact": null
+      },
+      "verify_code": null
+    }
+  ],
+  "run_prefix": "codex_nfl_live_frontier_specialist_fill_20260508",
+  "runner_id": "codex-nfl-batch-v1",
+  "schema_version": "core-narrative.corrected-batch-summary.v1",
+  "scoring_policy": {
+    "scoreable_statuses": [
+      "failed",
+      "invalid_submission",
+      "passed",
+      "timeout"
+    ],
+    "scoring_inputs": [
+      "experiments/core_narrative/results/normalized/codex_nfl_live_frontier_specialist_fill_20260508__frontier-click-specialist__click__rbench__001__attempt1.json",
+      "experiments/core_narrative/results/normalized/codex_nfl_live_frontier_specialist_fill_20260508__frontier-click-specialist__click__rbench__002__attempt1.json",
+      "experiments/core_narrative/results/normalized/codex_nfl_live_frontier_specialist_fill_20260508__frontier-click-specialist__click__rbench__003__attempt1.json",
+      "experiments/core_narrative/results/normalized/codex_nfl_frontier_specialist_fill_summary_20260508.json"
+    ],
+    "stale_non_scoring_artifacts": [
+      {
+        "path": "experiments/core_narrative/results/codex_nfl_live_frontier_specialist_fill_20260508.json",
+        "reason": "Retained as historical batch output only; its task-003 aggregate/status fields are stale and excluded from scoring and Gate 1 inputs."
+      },
+      {
+        "path": "experiments/core_narrative/results/raw/codex_nfl_live_frontier_specialist_fill_20260508__frontier-click-specialist__click__rbench__003__attempt1/batch_run_result.json",
+        "reason": "Retained as historical per-run batch output only; normalized task-003 result is the scoring record."
+      }
+    ]
+  },
+  "source_artifacts": {
+    "normalized_results": [
+      "experiments/core_narrative/results/normalized/codex_nfl_live_frontier_specialist_fill_20260508__frontier-click-specialist__click__rbench__001__attempt1.json",
+      "experiments/core_narrative/results/normalized/codex_nfl_live_frontier_specialist_fill_20260508__frontier-click-specialist__click__rbench__002__attempt1.json",
+      "experiments/core_narrative/results/normalized/codex_nfl_live_frontier_specialist_fill_20260508__frontier-click-specialist__click__rbench__003__attempt1.json"
+    ],
+    "normalized_summary": "experiments/core_narrative/results/normalized/codex_nfl_frontier_specialist_fill_summary_20260508.json",
+    "original_batch": "experiments/core_narrative/results/codex_nfl_live_frontier_specialist_fill_20260508.json"
+  },
+  "started_at": "2026-05-08T01:38:03.732688Z",
+  "status": "corrected_summary",
+  "tasks": [
+    "click__rbench__001",
+    "click__rbench__002",
+    "click__rbench__003"
+  ],
+  "tool": "codex_nfl_fill_evidence_reconciliation"
+}

@@ -64,6 +64,26 @@ class RunTaskTests(unittest.TestCase):
         )
         self.assertEqual(check.returncode, 0, check.stderr)
 
+    def test_collect_patch_excludes_runner_owned_untracked_dirs(self) -> None:
+        """Regression: harness metadata and venv files must not contaminate model patches."""
+        workspace = self.root / "workspace"
+        self.init_repo(workspace)
+        (workspace / "base.txt").write_text("changed\n", encoding="utf-8")
+        (workspace / ".core_narrative").mkdir()
+        (workspace / ".core_narrative" / "task.json").write_text('{"task_id":"unit"}\n', encoding="utf-8")
+        (workspace / ".venv" / "bin").mkdir(parents=True)
+        (workspace / ".venv" / "bin" / "activate").write_text("https://example.invalid\n", encoding="utf-8")
+        (workspace / ".pytest_cache").mkdir()
+        (workspace / ".pytest_cache" / "README.md").write_text("cache\n", encoding="utf-8")
+
+        patch_text = run_task.collect_patch(workspace, {})
+
+        self.assertIn("diff --git a/base.txt b/base.txt", patch_text)
+        self.assertNotIn(".core_narrative", patch_text)
+        self.assertNotIn(".venv", patch_text)
+        self.assertNotIn(".pytest_cache", patch_text)
+        self.assertNotIn("https://example.invalid", patch_text)
+
 
 if __name__ == "__main__":
     unittest.main()
