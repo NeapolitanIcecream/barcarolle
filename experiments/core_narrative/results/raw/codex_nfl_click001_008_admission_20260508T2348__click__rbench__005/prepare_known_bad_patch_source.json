@@ -1,0 +1,14 @@
+{
+  "base_commit": "a00e01845100ce2b3d5288a2b655aad260346361",
+  "repo_slug": "click",
+  "split": "rbench",
+  "statement_path": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/workspaces/codex_nfl_click001_008_admission_20260508T2348__click__rbench__005__known_bad_patch_source/.core_narrative/statement.md",
+  "status": "prepared",
+  "target_commit_absence_checked": true,
+  "task_id": "click__rbench__005",
+  "task_package_path": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/workspaces/codex_nfl_click001_008_admission_20260508T2348__click__rbench__005__known_bad_patch_source/.core_narrative/task.json",
+  "tool": "prepare_workspace",
+  "warnings": [],
+  "workspace": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/workspaces/codex_nfl_click001_008_admission_20260508T2348__click__rbench__005__known_bad_patch_source",
+  "workspace_history_mode": "base_tree_only_synthetic_git"
+}

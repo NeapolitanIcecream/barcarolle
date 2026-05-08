@@ -1,0 +1,1638 @@
+You are generating a minimal repository patch for one Barcarolle ACUT task.
+Use only the public task statement, ACUT policy, and source files included below.
+Do not use hidden verifier files, reference patches, future history, credentials, endpoints, or URLs.
+
+Return only one JSON object with this exact contract:
+{"edits":[{"path":"relative/file.py","old":"exact existing text","new":"replacement text","before":"optional exact text immediately before old","after":"optional exact text immediately after old"}]}
+Do not return unified_diff, raw diff text, markdown fences, prose, or any top-level key other than edits.
+
+Pre-submit validation checklist:
+- The top-level JSON object has exactly one key: edits.
+- Each edit path exactly matches one of the Valid edit paths below.
+- Each old string is copied exactly from the currently shown source.
+- Apply edits in order mentally. For each edit, old must identify exactly one occurrence after earlier edits.
+- If old occurs exactly once, omit before and after anchors.
+- If old occurs more than once, include before and/or after anchors copied exactly from the same file.
+- Anchors must be immediate context: before must end exactly where old begins; after must begin exactly where old ends.
+Rules:
+- Repeated old strings without exact anchors are invalid and will not be applied.
+- Non-matching anchors are invalid even when old occurs once.
+- Never invent old text from memory or from APIs not shown in the source excerpts.
+- Keep edits minimal. Prefer source code fixes over test-only changes.
+
+Task summary:
+{
+  "allowed_context": {
+    "include_git_history_before_base": true,
+    "include_issue_text": true,
+    "include_pr_text": false,
+    "include_reference_patch": false
+  },
+  "disallowed_context": [
+    "reference patch or target diff for commit c653ec8",
+    "ACUT outputs or public model results",
+    "future execution results for this task"
+  ],
+  "expected_touched_area": [
+    "src/click/core.py Option default and flag activation behavior",
+    "option tests for default, flag_value, and type combinations"
+  ],
+  "repo_slug": "click",
+  "split": "rwork",
+  "task_family": "default value passing and flag activation",
+  "task_id": "click__rwork__006"
+}
+
+Public task statement:
+# click__rwork__006
+
+## Problem Statement
+
+Reconcile default value passing with flag activation so a flag's explicit default is processed as the default value, while user activation still returns the flag_value.
+
+## Public Source
+
+- Kind: commit
+- Anchor: commit:c653ec820093ed1dda41aae8d35bff7834b0344a
+- URL: <redacted:url>
+
+## Visible Context Guidance
+
+Provide the commit title and linked issue 3111. Do not expose the reference patch or final tests.
+
+## Expected Touched Area
+
+- src/click/core.py Option default and flag activation behavior
+- option tests for default, flag_value, and type combinations
+
+
+ACUT policy summary:
+{
+  "acut_id": "cheap-click-specialist",
+  "model": "openai/gpt-5.4-mini",
+  "retrieval_context_strategy": {
+    "allowed_sources": [
+      "public_task_statement",
+      "files explicitly named in the task statement",
+      "files surfaced by failing tests or import errors",
+      "adjacent tests",
+      "direct symbol and filename search results",
+      "precomputed_click_repo_map_v1",
+      "precomputed_click_docs_map_v1",
+      "precomputed_click_symbol_index_v1",
+      "precomputed_click_convention_playbook_v1",
+      "deterministic_click_retrieval_v1"
+    ],
+    "description": "Use deterministic Click-specialist context generated before execution from task-agnostic repository/docs/symbol/convention sources, then solve with the same task budget as the generic ACUTs.",
+    "forbidden_sources": [
+      "RBench/RWork gold patches",
+      "hidden human hints",
+      "post-hoc tuning from ACUT outputs",
+      "undeclared history mining",
+      "task-specific private benchmark artifacts"
+    ],
+    "strategy_id": "click-specialist-task-agnostic-v2"
+  },
+  "runtime_budget": {
+    "max_cost_usd": null,
+    "max_test_commands": 10,
+    "max_tokens": 64000,
+    "max_turns": 18,
+    "max_wall_seconds": 3600,
+    "retry_policy": {
+      "primary_attempts": 1,
+      "retries_allowed": false
+    }
+  }
+}
+
+Valid edit paths:
+[
+  "src/click/core.py",
+  "tests/test_options.py",
+  "tests/test_termui.py"
+]
+
+Task-agnostic Click specialist context:
+<!-- CLICK_SPECIALIST_CONTEXT_PACK_V1 -->
+# Click Specialist Context Pack
+
+Pack ID: click_specialist_context_pack_v1
+Pack hash: sha256:dfb271ad174531a7dd2f00da4cd0486193d87ce33349380982150889ecf84e48
+Marker: CLICK_SPECIALIST_CONTEXT_PACK_V1
+Source: locked local Click checkout public source, docs, tests, and examples only.
+Task scope: task-agnostic; generated before any Click-specialist ACUT execution.
+Leakage guard: no benchmark solution patch content, hidden verifier files, hidden hints, ACUT outputs, network-fetched docs, credentials, endpoint values, full URLs, hostnames, or IP addresses.
+
+[CLICK_SECTION:repo_map]
+Locked Click commit: 8bd8b4a074c55c03b6eb5666edc44a9c43df38a2
+Layout roots: src/click, tests, docs, examples.
+Core modules: src/click/__init__.py, src/click/_compat.py, src/click/_termui_impl.py, src/click/_textwrap.py, src/click/_utils.py, src/click/_winconsole.py, src/click/core.py, src/click/decorators.py, src/click/exceptions.py, src/click/formatting.py, src/click/globals.py, src/click/parser.py, src/click/shell_completion.py, src/click/termui.py, src/click/testing.py, src/click/types.py, src/click/utils.py.
+Public exports from click.__init__: Abort, Argument, BOOL, BadArgumentUsage, BadOptionUsage, BadParameter, Choice, ClickException, Command, CommandCollection, Context, DateTime, FLOAT, File, FileError, FloatRange, Group, HelpFormatter, INT, IntRange, MissingParameter, NoSuchOption, Option, ParamType, Parameter, ParameterSource, Path, STRING, Tuple, UNPROCESSED, UUID, UsageError, argument, clear, command, confirm, confirmation_option, echo, echo_via_pager, edit; +23 more.
+
+[CLICK_SECTION:docs_map]
+Docs/examples mapped by headings only: README.md, docs/advanced.md, docs/api.md, docs/arguments.md, docs/changes.rst, docs/click-concepts.md, docs/command-line-reference.md, docs/commands-and-groups.md, docs/commands.md, docs/complex.md, docs/contrib.md, docs/contributing.md, docs/design-opinions.md, docs/documentation.md, docs/entry-points.md, docs/exceptions.md, docs/extending-click.md, docs/faqs.md, docs/handling-files.md, docs/index.rst, docs/license.md, docs/option-decorators.md, docs/options.md, docs/parameter-types.md, docs/parameters.md, docs/prompts.md, docs/quickstart.md, docs/setuptools.md; +20 more.
+
+[CLICK_SECTION:symbol_index]
+Indexed symbols: 1115 total across source, public tests, and examples.
+Public source symbol examples: click._compat._AtomicFile.close, click._compat._AtomicFile.name, click._compat._FixupStream.read1, click._compat._FixupStream.readable, click._compat._FixupStream.seekable, click._compat._FixupStream.writable, click._compat._NonClosingTextIOWrapper.isatty, click._compat.get_best_encoding, click._compat.get_binary_stderr, click._compat.get_binary_stdin, click._compat.get_binary_stdout, click._compat.get_text_stderr, click._compat.get_text_stdin, click._compat.get_text_stdout, click._compat.is_ascii_encoding, click._compat.isatty, click._compat.open_stream, click._compat.should_strip_ansi, click._compat.strip_ansi, click._compat.term_len, click._termui_impl.Editor, click._termui_impl.Editor.edit, click._termui_impl.Editor.edit_files, click._termui_impl.Editor.get_editor, click._termui_impl.ProgressBar, click._termui_impl.ProgressBar.eta, click._termui_impl.ProgressBar.finish, click._termui_impl.ProgressBar.format_bar, click._termui_impl.ProgressBar.format_eta, click._termui_impl.ProgressBar.format_pct, click._termui_impl.ProgressBar.format_pos, click._termui_impl.ProgressBar.format_progress_line, click._termui_impl.ProgressBar.generator, click._termui_impl.ProgressBar.make_step, click._termui_impl.ProgressBar.pct, click._termui_impl.ProgressBar.render_finish, click._termui_impl.ProgressBar.render_progress, click._termui_impl.ProgressBar.time_per_iteration, click._termui_impl.ProgressBar.update, click._termui_impl.open_url, click._termui_impl.pager, click._textwrap.TextWrapper; +306 more.
+
+[CLICK_SECTION:convention_playbook]
+- patch_public_api_carefully: When changing public behavior, check exports in src/click/__init__.py and behavior tests in tests/test_*.py.
+- use_cli_runner_for_cli_behavior: CLI behavior is commonly exercised through click.testing.CliRunner and result exit/output assertions.
+- keep_parser_option_type_boundaries: Parser, option, argument, type, formatting, terminal UI, and shell-completion behavior live in separate modules with matching public tests.
+- prefer_focused_pytest: Use focused pytest module or test-name selection first; broaden only when the changed surface crosses modules.
+- docs_follow_behavior: When user-facing command semantics change, inspect the matching docs page heading map before editing docs.
+
+[CLICK_SECTION:deterministic_retrieval_policy]
+1. Read the public task statement and named files.
+2. Map mentioned symbols or failing imports to symbol_index exact names.
+3. Inspect repo_map for the owning Click module and adjacent public tests.
+4. Use docs_map headings only when behavior is public or documented.
+5. Apply convention_playbook guidance for verification scope and public API boundaries.
+Apply this context only for frontier-click-specialist and cheap-click-specialist.
+Do not use this context for generic SWE ACUTs.
+
+
+Source file: src/click/core.py
+sha256: ed6f0d86ce1a77b4c79718ca8e1cf7d4cfd8a223b2ab52d93d6d0d6fe431100f truncated: True displayed_chars: 30013
+```
+from __future__ import annotations
+
+import collections.abc as cabc
+import enum
+import errno
+import inspect
+import os
+import sys
+import typing as t
+from collections import abc
+from collections import Counter
+from contextlib import AbstractContextManager
+from contextlib import contextmanager
+from contextlib import ExitStack
+from functools import update_wrapper
+from gettext import gettext as _
+from gettext import ngettext
+from itertools import repeat
+from types import TracebackType
+
+from . import types
+from ._utils import FLAG_NEEDS_VALUE
+from ._utils import UNSET
+from .exceptions import Abort
+from .exceptions import BadParameter
+from .exceptions import ClickException
+from .exceptions import Exit
+from .exceptions import MissingParameter
+from .exceptions import NoArgsIsHelpError
+from .exceptions import UsageError
+from .formatting import HelpFormatter
+from .formatting import join_options
+from .globals import pop_context
+from .globals import push_context
+from .parser import _OptionParser
+from .parser import _split_opt
+from .termui import confirm
+from .termui import prompt
+from .termui import style
+from .utils import _detect_program_name
+from .utils import _expand_args
+from .utils import echo
+from .utils import make_default_short_help
+from .utils import make_str
+from .utils import PacifyFlushWrapper
+
+if t.TYPE_CHECKING:
+    from .shell_completion import CompletionItem
+
+F = t.TypeVar("F", bound="t.Callable[..., t.Any]")
+V = t.TypeVar("V")
+
+
+def _complete_visible_commands(
+    ctx: Context, incomplete: str
+) -> cabc.Iterator[tuple[str, Command]]:
+    """List all the subcommands of a group that start with the
+    incomplete value and aren't hidden.
+
+    :param ctx: Invocation context for the group.
+    :param incomplete: Value being completed. May be empty.
+    """
+    multi = t.cast(Group, ctx.command)
+
+    for name in multi.list_commands(ctx):
+        if name.startswith(incomplete):
+            command = multi.get_command(ctx, name)
+
+            if command is not None and not command.hidden:
+                yield name, command
+
+
+def _check_nested_chain(
+    base_command: Group, cmd_name: str, cmd: Command, register: bool = False
+) -> None:
+    if not base_command.chain or not isinstance(cmd, Group):
+        return
+
+    if register:
+        message = (
+            f"It is not possible to add the group {cmd_name!r} to another"
+            f" group {base_command.name!r} that is in chain mode."
+        )
+    else:
+        message = (
+            f"Found the group {cmd_name!r} as subcommand to another group "
+            f" {base_command.name!r} that is in chain mode. This is not supported."
+        )
+
+    raise RuntimeError(message)
+
+
+def batch(iterable: cabc.Iterable[V], batch_size: int) -> list[tuple[V, ...]]:
+    return list(zip(*repeat(iter(iterable), batch_size), strict=False))
+
+
+@contextmanager
+def augment_usage_errors(
+    ctx: Context, param: Parameter | None = None
+) -> cabc.Iterator[None]:
+    """Context manager that attaches extra information to exceptions."""
+    try:
+        yield
+    except BadParameter as e:
+        if e.ctx is None:
+            e.ctx = ctx
+        if param is not None and e.param is None:
+            e.param = param
+        raise
+    except UsageError as e:
+        if e.ctx is None:
+            e.ctx = ctx
+        raise
+
+
+def iter_params_for_processing(
+    invocation_order: cabc.Sequence[Parameter],
+    declaration_order: cabc.Sequence[Parameter],
+) -> list[Parameter]:
+    """Returns all declared parameters in the order they should be processed.
+
+    The declared parameters are re-shuffled depending on the order in which
+    they were invoked, as well as the eagerness of each parameters.
+
+    The invocation order takes precedence over the declaration order. I.e. the
+    order in which the user provided them to the CLI is respected.
+
+    This behavior and its effect on callback evaluation is detailed at:
+    <redacted:url>
+    """
+
+    def sort_key(item: Parameter) -> tuple[bool, float]:
+        try:
+            idx: float = invocation_order.index(item)
+        except ValueError:
+            idx = float("inf")
+
+        return not item.is_eager, idx
+
+    return sorted(declaration_order, key=sort_key)
+
+
+class ParameterSource(enum.Enum):
+    """This is an :class:`~enum.Enum` that indicates the source of a
+    parameter's value.
+
+    Use :meth:`click.Context.get_parameter_source` to get the
+    source for a parameter by name.
+
+    .. versionchanged:: 8.0
+        Use :class:`~enum.Enum` and drop the ``validate`` method.
+
+    .. versionchanged:: 8.0
+        Added the ``PROMPT`` value.
+    """
+
+    COMMANDLINE = enum.auto()
+    """The value was provided by the command line args."""
+    ENVIRONMENT = enum.auto()
+    """The value was provided with an environment variable."""
+    DEFAULT = enum.auto()
+    """Used the default specified by the parameter."""
+    DEFAULT_MAP = enum.auto()
+    """Used a default provided by :attr:`Context.default_map`."""
+    PROMPT = enum.auto()
+    """Used a prompt to confirm a default or provide a value."""
+
+
+class Context:
+    """The context is a special internal object that holds state relevant
+    for the script execution at every single level.  It's normally invisible
+    to commands unless they opt-in to getting access to it.
+
+    The context is useful as it can pass internal objects around and can
+    control special execution features such as reading data from
+    environment variables.
+
+    A context can be used as context manager in which case it will call
+    :meth:`close` on teardown.
+
+    :param command: the command class for this context.
+    :param parent: the parent context.
+    :param info_name: the info name for this invocation.  Generally this
+                      is the most descriptive name for the script or
+                      command.  For the toplevel script it is usually
+                      the name of the script, for commands below it it's
+                      the name of the script.
+    :param obj: an arbitrary object of user data.
+    :param auto_envvar_prefix: the prefix to use for automatic environment
+                               variables.  If this is `None` then reading
+                               from environment variables is disabled.  This
+                               does not affect manually set environment
+                               variables which are always read.
+    :param default_map: a dictionary (like object) with default values
+                        for parameters.
+    :param terminal_width: the width of the terminal.  The default is
+                           inherit from parent context.  If no context
+                           defines the terminal width then auto
+                           detection will be applied.
+    :param max_content_width: the maximum width for content rendered by
+                              Click (this currently only affects help
+                              pages).  This defaults to 80 characters if
+                              not overridden.  In other words: even if the
+                              terminal is larger than that, Click will not
+                              format things wider than 80 characters by
+                              default.  In addition to that, formatters might
+                              add some safety mapping on the right.
+    :param resilient_parsing: if this flag is enabled then Click will
+                              parse without any interactivity or callback
+                              invocation.  Default values will also be
+                              ignored.  This is useful for implementing
+                              things such as completion support.
+    :param allow_extra_args: if this is set to `True` then extra arguments
+                             at the end will not raise an error and will be
+                             kept on the context.  The default is to inherit
+                             from the command.
+    :param allow_interspersed_args: if this is set to `False` then options
+                                    and arguments cannot be mixed.  The
+                                    default is to inherit from the command.
+    :param ignore_unknown_options: instructs click to ignore options it does
+                                   not know and keeps them for later
+                                   processing.
+    :param help_option_names: optionally a list of strings that define how
+                              the default help parameter is named.  The
+                              default is ``['--help']``.
+    :param token_normalize_func: an optional function that is used to
+                                 normalize tokens (options, choices,
+                                 etc.).  This for instance can be used to
+                                 implement case insensitive behavior.
+    :param color: controls if the terminal supports ANSI colors or not.  The
+                  default is autodetection.  This is only needed if ANSI
+                  codes are used in texts that Click prints which is by
+                  default not the case.  This for instance would affect
+                  help output.
+    :param show_default: Show the default value for commands. If this
+        value is not set, it defaults to the value from the parent
+        context. ``Command.show_default`` overrides this default for the
+        specific command.
+
+    .. versionchanged:: 8.2
+        The ``protected_args`` attribute is deprecated and will be removed in
+        Click 9.0. ``args`` will contain remaining unparsed tokens.
+
+    .. versionchanged:: 8.1
+        The ``show_default`` parameter is overridden by
+        ``Command.show_default``, instead of the other way around.
+
+    .. versionchanged:: 8.0
+        The ``show_default`` parameter defaults to the value from the
+        parent context.
+
+    .. versionchanged:: 7.1
+       Added the ``show_default`` parameter.
+
+    .. versionchanged:: 4.0
+        Added the ``color``, ``ignore_unknown_options``, and
+        ``max_content_width`` parameters.
+
+    .. versionchanged:: 3.0
+        Added the ``allow_extra_args`` and ``allow_interspersed_args``
+        parameters.
+
+    .. versionchanged:: 2.0
+        Added the ``resilient_parsing``, ``help_option_names``, and
+        ``token_normalize_func`` parameters.
+    """
+
+    #: The formatter class to create with :meth:`make_formatter`.
+    #:
+    #: .. versionadded:: 8.0
+    formatter_class: type[HelpFormatter] = HelpFormatter
+
+    def __init__(
+        self,
+        command: Command,
+        parent: Context | None = None,
+        info_name: str | None = None,
+        obj: t.Any | None = None,
+        auto_envvar_prefix: str | None = None,
+        default_map: cabc.MutableMapping[str, t.Any] | None = None,
+        terminal_width: int | None = None,
+        max_content_width: int | None = None,
+        resilient_parsing: bool = False,
+        allow_extra_args: bool | None = None,
+        allow_interspersed_args: bool | None = None,
+        ignore_unknown_options: bool | None = None,
+        help_option_names: list[str] | None = None,
+        token_normalize_func: t.Callable[[str], str] | None = None,
+        color: bool | None = None,
+        show_default: bool | None = None,
+    ) -> None:
+        #: the parent context or `None` if none exists.
+        self.parent = parent
+        #: the :class:`Command` for this context.
+        self.command = command
+        #: the descriptive information name
+        self.info_name = info_name
+        #: Map of parameter names to their parsed values. Parameters
+        #: with ``expose_value=False`` are not stored.
+        self.params: dict[str, t.Any] = {}
+        #: the leftover arguments.
+        self.args: list[str] = []
+        #: protected arguments.  These are arguments that are prepended
+        #: to `args` when certain parsing scenarios are encountered but
+        #: must be never propagated to another arguments.  This is used
+        #: to implement nested parsing.
+        self._protected_args: list[str] = []
+        #: the collected prefixes of the command's options.
+        self._opt_prefixes: set[str] = set(parent._opt_prefixes) if parent else set()
+
+        if obj is None and parent is not None:
+            obj = parent.obj
+
+        #: the user object stored.
+        self.obj: t.Any = obj
+        self._meta: dict[str, t.Any] = getattr(parent, "meta", {})
+
+        #: A dictionary (-like object) with defaults for parameters.
+        if (
+            default_map is None
+            and info_name is not None
+            and parent is not None
+            and parent.default_map is not None
+        ):
+            default_map = parent.default_map.get(info_name)
+
+        self.default_map: cabc.MutableMapping[str, t.Any] | None = default_map
+
+        #: This flag indicates if a subcommand is going to be executed. A
+        #: group callback can use this information to figure out if it's
+        #: being executed directly or because the execution flow passes
+        #: onwards to a subcommand. By default it's None, but it can be
+        #: the name of the subcommand to execute.
+        #:
+        #: If chaining is enabled this will be set to ``'*'`` in case
+        #: any commands are executed.  It is however not possible to
+        #: figure out which ones.  If you require this knowledge you
+        #: should use a :func:`result_callback`.
+        self.invoked_subcommand: str | None = None
+
+        if terminal_width is None and parent is not None:
+            terminal_width = parent.terminal_width
+
+        #: The width of the terminal (None is autodetection).
+        self.terminal_width: int | None = terminal_width
+
+        if max_content_width is None and parent is not None:
+            max_content_width = parent.max_content_width
+
+        #: The maximum width of formatted content (None implies a sensible
+        #: default which is 80 for most things).
+        self.max_content_width: int | None = max_content_width
+
+        if allow_extra_args is None:
+            allow_extra_args = command.allow_extra_args
+
+        #: Indicates if the context allows extra args or if it should
+        #: fail on parsing.
+        #:
+        #: .. versionadded:: 3.0
+        self.allow_extra_args = allow_extra_args
+
+        if allow_interspersed_args is None:
+            allow_interspersed_args = command.allow_interspersed_args
+
+        #: Indicates if the context allows mixing of arguments and
+        #: options or not.
+        #:
+        #: .. versionadded:: 3.0
+        self.allow_interspersed_args: bool = allow_interspersed_args
+
+        if ignore_unknown_options is None:
+            ignore_unknown_options = command.ignore_unknown_options
+
+        #: Instructs click to ignore options that a command does not
+        #: understand and will store it on the context for later
+        #: processing.  This is primarily useful for situations where you
+        #: want to call into external programs.  Generally this pattern is
+        #: strongly discouraged because it's not possibly to losslessly
+        #: forward all arguments.
+        #:
+        #: .. versionadded:: 4.0
+        self.ignore_unknown_options: bool = ignore_unknown_options
+
+        if help_option_names is None:
+            if parent is not None:
+                help_option_names = parent.help_option_names
+            else:
+                help_option_names = ["--help"]
+
+        #: The names for the help options.
+        self.help_option_names: list[str] = help_option_names
+
+        if token_normalize_func is None and parent is not None:
+            token_normalize_func = parent.token_normalize_func
+
+        #: An optional normalization function for tokens.  This is
+        #: options, choices, commands etc.
+        self.token_normalize_func: t.Callable[[str], str] | None = token_normalize_func
+
+        #: Indicates if resilient parsing is enabled.  In that case Click
+        #: will do its best to not cause any failures and default values
+        #: will be ignored. Useful for completion.
+        self.resilient_parsing: bool = resilient_parsing
+
+        # If there is no envvar prefix yet, but the parent has one and
+        # the command on this level has a name, we can expand the envvar
+        # prefix automatically.
+        if auto_envvar_prefix is None:
+            if (
+                parent is not None
+                and parent.auto_envvar_prefix is not None
+                and self.info_name is not None
+            ):
+                auto_envvar_prefix = (
+                    f"{parent.auto_envvar_prefix}_{self.info_name.upper()}"
+                )
+        else:
+            auto_envvar_prefix = auto_envvar_prefix.upper()
+
+        if auto_envvar_prefix is not None:
+            auto_envvar_prefix = auto_envvar_prefix.replace("-", "_")
+
+        self.auto_envvar_prefix: str | None = auto_envvar_prefix
+
+        if color is None and parent is not None:
+            color = parent.color
+
+        #: Controls if styling output is wanted or not.
+        self.color: bool | None = color
+
+        if show_default is None and parent is not None:
+            show_default = parent.show_default
+
+        #: Show option default values when formatting help text.
+        self.show_default: bool | None = show_default
+
+        self._close_callbacks: list[t.Callable[[], t.Any]] = []
+        self._depth = 0
+        self._parameter_source: dict[str, ParameterSource] = {}
+        self._exit_stack = ExitStack()
+
+    @property
+    def protected_args(self) -> list[str]:
+        import warnings
+
+        warnings.warn(
+            "'protected_args' is deprecated and will be removed in Click 9.0."
+            " 'args' will contain remaining unparsed tokens.",
+            DeprecationWarning,
+            stacklevel=2,
+        )
+        return self._protected_args
+
+    def to_info_dict(self) -> dict[str, t.Any]:
+        """Gather information that could be useful for a tool generating
+        user-facing documentation. This traverses the entire CLI
+        structure.
+
+        .. code-block:: python
+
+            with Context(cli) as ctx:
+                info = ctx.to_info_dict()
+
+        .. versionadded:: 8.0
+        """
+        return {
+            "command": self.command.to_info_dict(self),
+            "info_name": self.info_name,
+            "allow_extra_args": self.allow_extra_args,
+            "allow_interspersed_args": self.allow_interspersed_args,
+            "ignore_unknown_options": self.ignore_unknown_options,
+            "auto_envvar_prefix": self.auto_envvar_prefix,
+        }
+
+    def __enter__(self) -> Context:
+        self._depth += 1
+        push_context(self)
+        return self
+
+    def __exit__(
+        self,
+        exc_type: type[BaseException] | None,
+        exc_value: BaseException | None,
+        tb: TracebackType | None,
+    ) -> bool | None:
+        self._depth -= 1
+        exit_result: bool | None = None
+        if self._depth == 0:
+            exit_result = self._close_with_exception_info(exc_type, exc_value, tb)
+        pop_context()
+
+        return exit_result
+
+    @contextmanager
+    def scope(self, cleanup: bool = True) -> cabc.Iterator[Context]:
+        """This helper method can be used with the context object to promote
+        it to the current thread local (see :func:`get_current_context`).
+        The default behavior of this is to invoke the cleanup functions which
+        can be disabled by setting `cleanup` to `False`.  The cleanup
+        functions are typically used for things such as closing file handles.
+
+        If the cleanup is intended the context object can also be directly
+        used as a context manager.
+
+        Example usage::
+
+            with ctx.scope():
+                assert get_current_context() is ctx
+
+        This is equivalent::
+
+            with ctx:
+                assert get_current_context() is ctx
+
+        .. versionadded:: 5.0
+
+        :param cleanup: controls if the cleanup functions should be run or
+                        not.  The default is to run these functions.  In
+                        some situations the context only wants to be
+                        temporarily pushed in which case this can be disabled.
+                        Nested pushes automatically defer the cleanup.
+        """
+        if not cleanup:
+            self._depth += 1
+        try:
+            with self as rv:
+                yield rv
+        finally:
+            if not cleanup:
+                self._depth -= 1
+
+    @property
+    def meta(self) -> dict[str, t.Any]:
+        """This is a dictionary which is shared with all the contexts
+        that are nested.  It exists so that click utilities can store some
+        state here if they need to.  It is however the responsibility of
+        that code to manage this dictionary well.
+
+        The keys are supposed to be unique dotted strings.  For instance
+        module paths are a good choice for it.  What is stored in there is
+        irrelevant for the operation of click.  However what is important is
+        that code that places data here adheres to the general semantics of
+        the system.
+
+        Example usage::
+
+            LANG_KEY = f'{__name__}.lang'
+
+            def set_language(value):
+                ctx = get_current_context()
+                ctx.meta[LANG_KEY] = value
+
+            def get_language():
+                return get_current_context().meta.get(LANG_KEY, 'en_US')
+
+        .. versionadded:: 5.0
+        """
+        return self._meta
+
+    def make_formatter(self) -> HelpFormatter:
+        """Creates the :class:`~click.HelpFormatter` for the help and
+        usage output.
+
+        To quickly customize the formatter class used without overriding
+        this method, set the :attr:`formatter_class` attribute.
+
+        .. versionchanged:: 8.0
+            Added the :attr:`formatter_class` attribute.
+        """
+        return self.formatter_class(
+            width=self.terminal_width, max_width=self.max_content_width
+        )
+
+    def with_resource(self, context_manager: AbstractContextManager[V]) -> V:
+        """Register a resource as if it were used in a ``with``
+        statement. The resource will be cleaned up when the context is
+        popped.
+
+        Uses :meth:`contextlib.ExitStack.enter_context`. It calls the
+        resource's ``__enter__()`` method and returns the result. When
+        the context is popped, it closes the stack, which calls the
+        resource's ``__exit__()`` method.
+
+        To register a cleanup function for something that isn't a
+        context manager, use :meth:`call_on_close`. Or use something
+        from :mod:`contextlib` to turn it into a context manager first.
+
+        .. code-block:: python
+
+            @click.group()
+            @click.option("--name")
+            @click.pass_context
+            def cli(ctx):
+                ctx.obj = ctx.with_resource(connect_db(name))
+
+        :param context_manager: The context manager to enter.
+        :return: Whatever ``context_manager.__enter__()`` returns.
+
+        .. versionadded:: 8.0
+        """
+        return self._exit_stack.enter_context(context_manager)
+
+    def call_on_close(self, f: t.Callable[..., t.Any]) -> t.Callable[..., t.Any]:
+        """Register a function to be called when the context tears down.
+
+        This can be used to close resources opened during the script
+        execution. Resources that support Python's context manager
+        protocol which would be used in a ``with`` statement should be
+        registered with :meth:`with_resource` instead.
+
+        :param f: The function to execute on teardown.
+        """
+        return self._exit_stack.callback(f)
+
+    def close(self) -> None:
+        """Invoke all close callbacks registered with
+        :meth:`call_on_close`, and exit all context managers entered
+        with :meth:`with_resource`.
+        """
+        self._close_with_exception_info(None, None, None)
+
+    def _close_with_exception_info(
+        self,
+        exc_type: type[BaseException] | None,
+        exc_value: BaseException | None,
+        tb: TracebackType | None,
+    ) -> bool | None:
+        """Unwind the exit stack by calling its :meth:`__exit__` providing the exception
+        information to allow for exception handling by the various resources registered
+        using :meth;`with_resource`
+
+        :return: Whatever ``exit_stack.__exit__()`` returns.
+        """
+        exit_result = self._exit_stack.__exit__(exc_type, exc_value, tb)
+        # In case the context is reused, create a new exit stack.
+        self._exit_stack = ExitStack()
+
+        return exit_result
+
+    @property
+    def command_path(self) -> str:
+        """The computed command path.  This is used for the ``usage``
+        information on the help page.  It's automatically created by
+        combining the info names of the chain of contexts to the root.
+        """
+        rv = ""
+        if self.info_name is not None:
+            rv = self.info_name
+        if self.parent is not None:
+            parent_command_path = [self.parent.command_path]
+
+            if isinstance(self.parent.command, Command):
+                for param in self.parent.command.get_params(self):
+                    parent_command_path.extend(param.get_usage_pieces(self))
+
+            rv = f"{' '.join(parent_command_path)} {rv}"
+        return rv.lstrip()
+
+    def find_root(self) -> Context:
+        """Finds the outermost context."""
+        node = self
+        while node.parent is not None:
+            node = node.parent
+        return node
+
+    def find_object(self, object_type: type[V]) -> V | None:
+        """Finds the closest object of a given type."""
+        node: Context | None = self
+
+        while node is not None:
+            if isinstance(node.obj, object_type):
+                return node.obj
+
+            node = node.parent
+
+        return None
+
+    def ensure_object(self, object_type: type[V]) -> V:
+        """Like :meth:`find_object` but sets the innermost object to a
+        new instance of `object_type` if it does not exist.
+        """
+        rv = self.find_object(object_type)
+        if rv is None:
+            self.obj = rv = object_type()
+        return rv
+
+    @t.overload
+    def lookup_default(
+        self, name: str, call: t.Literal[True] = True
+    ) -> t.Any | None: ...
+
+    @t.overload
+    def lookup_default(
+        self, name: str, call: t.Literal[False] = ...
+    ) -> t.Any | t.Callable[[], t.Any] | None: ...
+
+    def lookup_default(self, name: str, call: bool = True) -> t.Any | None:
+        """Get the default for a parameter from :attr:`default_map`.
+
+        :param name: Name of the parameter.
+        :param call: If the default is a callable, call it. Disable to
+            return the callable instead.
+
+        .. versionchanged:: 8.0
+            Added the ``call`` parameter.
+        """
+        if self.default_map is not None:
+            value = self.default_map.get(name)
+
+            if call and callable(value):
+                return value()
+
+            return value
+
+        return None
+
+    def fail(self, message: str) -> t.NoReturn:
+        """Aborts the execution of the program with a specific error
+        message.
+
+        :param message: the error message to fail with.
+        """
+        raise UsageError(message, self)
+
+    def abort(self) -> t.NoReturn:
+        """Aborts the script."""
+        raise Abort()
+
+    def exit(self, code: int = 0) -> t.NoReturn:
+        """Exits the application with a given exit code.
+
+        .. versionchanged:: 8.2
+            Callbacks and context managers registered with :meth:`call_on_close`
+            and :meth:`with_resource` are closed before exiting.
+        """
+        self.close()
+        raise Exit(code)
+
+    def get_usage(self) -> str:
+        """Helper method to get formatted usage string for the current
+        context and command.
+        """
+        return self.command.get_usage(self)
+
+    def get_help(self) -> str:
+        """Helper method to get formatted help page for the current
+        context and command.
+        """
+        return self.command.get_help(self)
+
+    def _make_sub_context(self, command: Command) -> Context:
+        """Create a new context of the same type as this context, but
+        for a new command.
+
+        :meta private:
+        """
+        return type(self)(command, info_name=command.name, parent=self)
+
+    @t.overload
+    def invoke(
+        self, callback: t.Callable[..., V], /, *args: t.Any, **kwargs: t.Any
+    ) -> V: ...
+
+    @t.overload
+    def invoke(self, callback: Command, /, *args: t.Any, **kwargs: t.Any) -> t.Any: ...
+
+    def invoke(
+        self, callback: Command | t.Callable[..., V], /, *args: t.Any, **kwargs: t.Any
+    ) -> t.Any | V:
+        """Invokes a command callback in exactly the way it expects.  There
+        are two ways to invoke this method:
+
+        1.  the first argument can be a callback and all other arguments and
+            keyword arguments are forwarded directly to the function.
+        2.  the first argument is a click command object.  In that case all
+            arguments are forwarded as well but proper click parameters
+            (options and click arguments) must be keyword arguments and Click
+            will fill in defaults.
+
+        .. versionchanged:: 8.0
+            All ``kwargs`` are tracked in :attr:`params` so they will be
+            passed if :meth:`forward` is called at multiple levels.
+
+        .. versionchanged:: 3.2
+            A new context is created, and missing arguments use default values.
+        """
+        if isinstance(callback, Command):
+            other_cmd = callback
+
+            if other_cmd.callback is None:
+                raise TypeError(
+                    "The given command does not have a callback that can be invoked."
+                )
+            else:
+                callback = t.cast("t.Callable[..., V]", other_cmd.callback)
+
+            ctx = self._make_sub_context(other_cmd)
+
+            for param i
+[truncated]
+
+```
+
+Source file: tests/test_options.py
+sha256: d3aed1bff9572591f91598b763bb65d0669e7548a36a5308cc4b8b127cd40137 truncated: True displayed_chars: 30013
+```
+import enum
+import os
+import re
+import sys
+import tempfile
+from contextlib import nullcontext
+from typing import Literal
+
+if sys.version_info < (3, 11):
+    enum.StrEnum = enum.Enum  # type: ignore[assignment]
+
+import pytest
+
+import click
+from click import Option
+from click import UNPROCESSED
+from click._utils import UNSET
+from click.testing import CliRunner
+
+
+def test_prefixes(runner):
+    @click.command()
+    @click.option("++foo", is_flag=True, help="das foo")
+    @click.option("--bar", is_flag=True, help="das bar")
+    def cli(foo, bar):
+        click.echo(f"foo={foo} bar={bar}")
+
+    result = runner.invoke(cli, ["++foo", "--bar"])
+    assert not result.exception
+    assert result.output == "foo=True bar=True\n"
+
+    result = runner.invoke(cli, ["--help"])
+    assert re.search(r"\+\+foo\s+das foo", result.output) is not None
+    assert re.search(r"--bar\s+das bar", result.output) is not None
+
+
+def test_invalid_option(runner):
+    with pytest.raises(TypeError, match="name was passed") as exc_info:
+        click.Option(["foo"])
+
+    message = str(exc_info.value)
+    assert "name was passed (foo)" in message
+    assert "declare an argument" in message
+    assert "'--foo'" in message
+
+
+@pytest.mark.parametrize("deprecated", [True, "USE B INSTEAD"])
+def test_deprecated_usage(runner, deprecated):
+    @click.command()
+    @click.option("--foo", default="bar", deprecated=deprecated)
+    def cmd(foo):
+        click.echo(foo)
+
+    result = runner.invoke(cmd, ["--help"])
+    assert "(DEPRECATED" in result.output
+
+    if isinstance(deprecated, str):
+        assert deprecated in result.output
+
+
+@pytest.mark.parametrize("deprecated", [True, "USE B INSTEAD"])
+def test_deprecated_warning(runner, deprecated):
+    @click.command()
+    @click.option(
+        "--my-option", required=False, deprecated=deprecated, default="default option"
+    )
+    def cli(my_option: str):
+        click.echo(f"{my_option}")
+
+    # defaults should not give a deprecated warning
+    result = runner.invoke(cli, [])
+    assert result.exit_code == 0, result.output
+    assert "is deprecated" not in result.output
+
+    result = runner.invoke(cli, ["--my-option", "hello"])
+    assert result.exit_code == 0, result.output
+    assert "option 'my_option' is deprecated" in result.output
+
+    if isinstance(deprecated, str):
+        assert deprecated in result.output
+
+
+def test_deprecated_required(runner):
+    with pytest.raises(ValueError, match="is deprecated and still required"):
+        click.Option(["--a"], required=True, deprecated=True)
+
+
+def test_deprecated_prompt(runner):
+    with pytest.raises(ValueError, match="`deprecated` options cannot use `prompt`"):
+        click.Option(["--a"], prompt=True, deprecated=True)
+
+
+def test_invalid_nargs(runner):
+    with pytest.raises(TypeError, match="nargs=-1 is not supported for options."):
+
+        @click.command()
+        @click.option("--foo", nargs=-1)
+        def cli(foo):
+            pass
+
+
+def test_nargs_tup_composite_mult(runner):
+    @click.command()
+    @click.option("--item", type=(str, int), multiple=True)
+    def copy(item):
+        for name, id in item:
+            click.echo(f"name={name} id={id:d}")
+
+    result = runner.invoke(copy, ["--item", "peter", "1", "--item", "max", "2"])
+    assert not result.exception
+    assert result.output.splitlines() == ["name=peter id=1", "name=max id=2"]
+
+
+def test_counting(runner):
+    @click.command()
+    @click.option("-v", count=True, help="Verbosity", type=click.IntRange(0, 3))
+    def cli(v):
+        click.echo(f"verbosity={v:d}")
+
+    result = runner.invoke(cli, ["-vvv"])
+    assert not result.exception
+    assert result.output == "verbosity=3\n"
+
+    result = runner.invoke(cli, ["-vvvv"])
+    assert result.exception
+    assert "Invalid value for '-v': 4 is not in the range 0<=x<=3." in result.output
+
+    result = runner.invoke(cli, [])
+    assert not result.exception
+    assert result.output == "verbosity=0\n"
+
+    result = runner.invoke(cli, ["--help"])
+    assert re.search(r"-v\s+Verbosity", result.output) is not None
+
+
+@pytest.mark.parametrize("unknown_flag", ["--foo", "-f"])
+def test_unknown_options(runner, unknown_flag):
+    @click.command()
+    def cli():
+        pass
+
+    result = runner.invoke(cli, [unknown_flag])
+    assert result.exception
+    assert f"No such option: {unknown_flag}" in result.output
+
+
+@pytest.mark.parametrize(
+    ("value", "expect"),
+    [
+        ("--cat", "Did you mean --count?"),
+        ("--bounds", "(Possible options: --bound, --count)"),
+        ("--bount", "(Possible options: --bound, --count)"),
+    ],
+)
+def test_suggest_possible_options(runner, value, expect):
+    cli = click.Command(
+        "cli", params=[click.Option(["--bound"]), click.Option(["--count"])]
+    )
+    result = runner.invoke(cli, [value])
+    assert expect in result.output
+
+
+def test_multiple_required(runner):
+    @click.command()
+    @click.option("-m", "--message", multiple=True, required=True)
+    def cli(message):
+        click.echo("\n".join(message))
+
+    result = runner.invoke(cli, ["-m", "foo", "-mbar"])
+    assert not result.exception
+    assert result.output == "foo\nbar\n"
+
+    result = runner.invoke(cli, [])
+    assert result.exception
+    assert "Error: Missing option '-m' / '--message'." in result.output
+
+
+@pytest.mark.parametrize(
+    ("multiple", "nargs", "default", "expected"),
+    [
+        # If multiple values are allowed, defaults should be iterable.
+        (True, 1, [], ()),
+        (True, 1, (), ()),
+        (True, 1, tuple(), ()),
+        (True, 1, set(), ()),
+        (True, 1, frozenset(), ()),
+        (True, 1, {}, ()),
+        # Special values.
+        (True, 1, None, ()),
+        (True, 1, UNSET, ()),
+        # Number of values are kept as-is in the default.
+        (True, 1, [1], (1,)),
+        (True, 1, [1, 2], (1, 2)),
+        (True, 1, [1, 2, 3], (1, 2, 3)),
+        (True, 1, [1.1, 2.2], (1.1, 2.2)),
+        (True, 1, ["1", "2"], ("1", "2")),
+        (True, 1, [None, None], (None, None)),
+        # Contrary to list or tuples, native Python types not supported by Click are
+        # not recognized and are converted to the default format: tuple of strings.
+        # Refs: <redacted:url>
+        (True, 1, {1, 2}, ("1", "2")),
+        (True, 1, frozenset([1, 2]), ("1", "2")),
+        (True, 1, {1: "a", 2: "b"}, ("1", "2")),
+        # Multiple values with nargs > 1.
+        (True, 2, [], ()),
+        (True, 2, (), ()),
+        (True, 2, tuple(), ()),
+        (True, 2, set(), ()),
+        (True, 2, frozenset(), ()),
+        (True, 2, {}, ()),
+        (True, 2, None, ()),
+        (True, 2, UNSET, ()),
+        (True, 2, [[1, 2]], ((1, 2),)),
+        (True, 2, [[1, 2], [3, 4]], ((1, 2), (3, 4))),
+        (True, 2, [[1, 2], [3, 4], [5, 6]], ((1, 2), (3, 4), (5, 6))),
+        (True, 2, [[1.1, 2.2], [3.3, 4.4]], ((1.1, 2.2), (3.3, 4.4))),
+        (True, 2, [["1", "2"], ["3", "4"]], (("1", "2"), ("3", "4"))),
+        (True, 2, [[None, None], [None, None]], ((None, None), (None, None))),
+        (True, 2, [[1, 2.2], ["3", None]], ((1, 2.2), (3, None))),
+        (True, 2, [[1, 2.2], None], ((1, 2.2), None)),
+        # Default of the right length works for non-multiples.
+        (False, 2, [1, 2], (1, 2)),
+    ],
+)
+def test_good_defaults_for_multiple(runner, multiple, nargs, default, expected):
+    """Comprehensive check of default-value processing for options with
+    ``multiple=True`` and/or ``nargs > 1``.
+
+    .. hint::
+        An argument-specific equivalent is in
+        ``test_arguments.py::test_good_defaults_for_nargs``.
+
+        Smoke tests are in ``test_defaults.py``:
+        ``test_multiple_defaults`` (explicit ``type=FLOAT``)
+        and ``test_nargs_plus_multiple`` (``nargs=2``).
+    """
+
+    @click.command()
+    @click.option("-a", multiple=multiple, nargs=nargs, default=default)
+    def cmd(a):
+        click.echo(repr(a), nl=False)
+
+    result = runner.invoke(cmd)
+    assert result.output == repr(expected)
+
+
+@pytest.mark.parametrize(
+    ("multiple", "nargs", "default", "exception", "message"),
+    [
+        # Non-iterables defaults.
+        (
+            True,
+            1,
+            "Yo",
+            None,
+            "Error: Invalid value for '-a': Value must be an iterable.",
+        ),
+        (
+            True,
+            1,
+            "",
+            None,
+            "Error: Invalid value for '-a': Value must be an iterable.",
+        ),
+        (
+            True,
+            1,
+            True,
+            None,
+            "Error: Invalid value for '-a': Value must be an iterable.",
+        ),
+        (
+            True,
+            1,
+            False,
+            None,
+            "Error: Invalid value for '-a': Value must be an iterable.",
+        ),
+        (
+            True,
+            1,
+            12,
+            None,
+            "Error: Invalid value for '-a': Value must be an iterable.",
+        ),
+        (
+            True,
+            1,
+            7.9,
+            None,
+            "Error: Invalid value for '-a': Value must be an iterable.",
+        ),
+        (
+            False,
+            2,
+            42,
+            None,
+            "Error: Invalid value for '-a': Value must be an iterable.",
+        ),
+        (
+            True,
+            2,
+            ["test string which is not a list in the list"],
+            None,
+            "Error: Invalid value for '-a': Value must be an iterable.",
+        ),
+        # Multiple options, each with 2 args, but with wrong length.
+        (
+            True,
+            2,
+            (1,),
+            None,
+            "Error: Invalid value for '-a': Value must be an iterable.",
+        ),
+        (
+            True,
+            2,
+            (1, 2, 3),
+            None,
+            "Error: Invalid value for '-a': Value must be an iterable.",
+        ),
+        (
+            True,
+            2,
+            [tuple()],
+            ValueError,
+            r"'nargs' must be 0 \(or None\) for type <click\.types\.Tuple object at "
+            r"0x[0-9A-Fa-f]+>, but it was 2\.",
+        ),
+        (
+            True,
+            2,
+            [(1,)],
+            ValueError,
+            r"'nargs' must be 1 \(or None\) for type <click\.types\.Tuple object at "
+            r"0x[0-9A-Fa-f]+>, but it was 2\.",
+        ),
+        (
+            True,
+            2,
+            [(1, 2, 3)],
+            ValueError,
+            r"'nargs' must be 3 \(or None\) for type <click\.types\.Tuple object at "
+            r"0x[0-9A-Fa-f]+>, but it was 2\.",
+        ),
+        # A mix of valid and invalid defaults.
+        (
+            True,
+            2,
+            [[1, 2.2], []],
+            None,
+            "Error: Invalid value for '-a': 2 values are required, but 0 were given.",
+        ),
+        # Default values that are iterable but not of the right length.
+        (
+            False,
+            2,
+            [1],
+            None,
+            "Error: Invalid value for '-a': Takes 2 values but 1 was given.",
+        ),
+        (
+            True,
+            2,
+            [[1]],
+            ValueError,
+            r"'nargs' must be 1 \(or None\) for type <click\.types\.Tuple object at "
+            r"0x[0-9A-Fa-f]+>, but it was 2\.",
+        ),
+    ],
+)
+def test_bad_defaults_for_multiple(
+    runner, multiple, nargs, default, exception, message
+):
+    if exception:
+        assert issubclass(exception, Exception)
+    else:
+        assert exception is None
+
+    with (
+        pytest.raises(exception, match=re.compile(message))
+        if exception
+        else nullcontext()
+    ):
+
+        @click.command()
+        @click.option("-a", multiple=multiple, nargs=nargs, default=default)
+        def cmd(a):
+            click.echo(repr(a))
+
+        result = runner.invoke(cmd)
+        assert message in result.stderr
+
+
+@pytest.mark.parametrize("env_key", ["MYPATH", "AUTO_MYPATH"])
+def test_empty_envvar(runner, env_key):
+    @click.command()
+    @click.option("--mypath", type=click.Path(exists=True), envvar="MYPATH")
+    def cli(mypath):
+        click.echo(f"mypath: {mypath}")
+
+    result = runner.invoke(cli, env={env_key: ""}, auto_envvar_prefix="AUTO")
+    assert result.exception is None
+    assert result.output == "mypath: None\n"
+
+
+def test_multiple_envvar(runner):
+    @click.command()
+    @click.option("--arg", multiple=True)
+    def cmd(arg):
+        click.echo("|".join(arg))
+
+    result = runner.invoke(
+        cmd, [], auto_envvar_prefix="TEST", env={"TEST_ARG": "foo bar baz"}
+    )
+    assert not result.exception
+    assert result.output == "foo|bar|baz\n"
+
+    @click.command()
+    @click.option("--arg", multiple=True, envvar="X")
+    def cmd(arg):
+        click.echo("|".join(arg))
+
+    result = runner.invoke(cmd, [], env={"X": "foo bar baz"})
+    assert not result.exception
+    assert result.output == "foo|bar|baz\n"
+
+    @click.command()
+    @click.option("--arg", multiple=True, type=click.Path())
+    def cmd(arg):
+        click.echo("|".join(arg))
+
+    result = runner.invoke(
+        cmd,
+        [],
+        auto_envvar_prefix="TEST",
+        env={"TEST_ARG": f"foo{os.path.pathsep}bar"},
+    )
+    assert not result.exception
+    assert result.output == "foo|bar\n"
+
+
+@pytest.mark.parametrize(
+    ("envvar_name", "envvar_value", "expected"),
+    (
+        # Lower-cased variations of value.
+        ("SHOUT", "true", True),
+        ("SHOUT", "false", False),
+        # Title-cased variations of value.
+        ("SHOUT", "True", True),
+        ("SHOUT", "False", False),
+        # Upper-cased variations of value.
+        ("SHOUT", "TRUE", True),
+        ("SHOUT", "FALSE", False),
+        # Random-cased variations of value.
+        ("SHOUT", "TruE", True),
+        ("SHOUT", "truE", True),
+        ("SHOUT", "FaLsE", False),
+        ("SHOUT", "falsE", False),
+        # Extra spaces around the value.
+        ("SHOUT", "true    ", True),
+        ("SHOUT", "  true  ", True),
+        ("SHOUT", "    true", True),
+        ("SHOUT", "false   ", False),
+        ("SHOUT", "  false ", False),
+        ("SHOUT", "   false", False),
+        # Integer variations.
+        ("SHOUT", "1", True),
+        ("SHOUT", "0", False),
+        # Alternative states.
+        ("SHOUT", "t", True),
+        ("SHOUT", "T", True),
+        ("SHOUT", "  T  ", True),
+        ("SHOUT", "f", False),
+        ("SHOUT", "y", True),
+        ("SHOUT", "n", False),
+        ("SHOUT", "yes", True),
+        ("SHOUT", "no", False),
+        ("SHOUT", "on", True),
+        ("SHOUT", "off", False),
+        # Blank value variations.
+        ("SHOUT", None, False),
+        ("SHOUT", "", False),
+        ("SHOUT", " ", False),
+        ("SHOUT", "       ", False),
+        # Variable names are not stripped of spaces and so don't match the
+        # flag, which then naturraly takes its default value.
+        ("SHOUT    ", "True", False),
+        ("SHOUT    ", "False", False),
+        ("  SHOUT  ", "True", False),
+        ("  SHOUT  ", "False", False),
+        ("    SHOUT", "True", False),
+        ("    SHOUT", "False", False),
+        ("SH    OUT", "True", False),
+        ("SH    OUT", "False", False),
+        # Same for random and reverse environment variable names: they are not
+        # recognized by the option.
+        ("RANDOM", "True", False),
+        ("NO_SHOUT", "True", False),
+        ("NO_SHOUT", "False", False),
+        ("NOSHOUT", "True", False),
+        ("NOSHOUT", "False", False),
+    ),
+)
+def test_boolean_flag_envvar(runner, envvar_name, envvar_value, expected):
+    assert isinstance(envvar_name, str)
+    assert isinstance(envvar_value, str) or envvar_value is None
+
+    @click.command()
+    @click.option("--shout/--no-shout", envvar="SHOUT")
+    def cli(shout):
+        click.echo(repr(shout), nl=False)
+
+    result = runner.invoke(cli, [], env={envvar_name: envvar_value})
+    assert result.exit_code == 0
+    assert result.output == repr(expected)
+
+
+@pytest.mark.parametrize(
+    "value",
+    (
+        # Extra spaces inside the value.
+        "tr ue",
+        "fa lse",
+        # Numbers.
+        "10",
+        "01",
+        "00",
+        "11",
+        "0.0",
+        "1.1",
+        # Random strings.
+        "randomstring",
+        "None",
+        "'None'",
+        "A B",
+        " 1 2 ",
+        "9.3",
+        "a;n",
+        "x:y",
+        "i/o",
+    ),
+)
+def test_boolean_envvar_bad_values(runner, value):
+    @click.command()
+    @click.option("--shout/--no-shout", envvar="SHOUT")
+    def cli(shout):
+        click.echo(shout)
+
+    result = runner.invoke(cli, [], env={"SHOUT": value})
+    assert result.exit_code == 2
+    assert (
+        f"Invalid value for '--shout': {value!r} is not a valid boolean."
+        in result.output
+    )
+
+
+def test_multiple_default_help(runner):
+    @click.command()
+    @click.option("--arg1", multiple=True, default=("foo", "bar"), show_default=True)
+    @click.option("--arg2", multiple=True, default=(1, 2), type=int, show_default=True)
+    def cmd(arg, arg2):
+        pass
+
+    result = runner.invoke(cmd, ["--help"])
+    assert not result.exception
+    assert "foo, bar" in result.output
+    assert "1, 2" in result.output
+
+
+def test_show_default_default_map(runner):
+    @click.command()
+    @click.option("--arg", default="a", show_default=True)
+    def cmd(arg):
+        click.echo(arg)
+
+    result = runner.invoke(cmd, ["--help"], default_map={"arg": "b"})
+
+    assert not result.exception
+    assert "[default: b]" in result.output
+
+
+def test_multiple_default_type():
+    opt = click.Option(["-a"], multiple=True, default=(1, 2))
+    assert opt.nargs == 1
+    assert opt.multiple
+    assert opt.type is click.INT
+    ctx = click.Context(click.Command("test"))
+    assert opt.get_default(ctx) == (1, 2)
+
+
+def test_multiple_default_composite_type():
+    opt = click.Option(["-a"], multiple=True, default=[(1, "a")])
+    assert opt.nargs == 2
+    assert opt.multiple
+    assert isinstance(opt.type, click.Tuple)
+    assert opt.type.types == [click.INT, click.STRING]
+    ctx = click.Context(click.Command("test"))
+    assert opt.type_cast_value(ctx, opt.get_default(ctx)) == ((1, "a"),)
+
+
+def test_parse_multiple_default_composite_type(runner):
+    @click.command()
+    @click.option("-a", multiple=True, default=("a", "b"))
+    @click.option("-b", multiple=True, default=[(1, "a")])
+    def cmd(a, b):
+        click.echo(a)
+        click.echo(b)
+
+    # result = runner.invoke(cmd, "-a c -a 1 -a d -b 2 two -b 4 four".split())
+    # assert result.output == "('c', '1', 'd')\n((2, 'two'), (4, 'four'))\n"
+    result = runner.invoke(cmd)
+    assert result.output == "('a', 'b')\n((1, 'a'),)\n"
+
+
+def test_dynamic_default_help_unset(runner):
+    @click.command()
+    @click.option(
+        "--username",
+        prompt=True,
+        default=lambda: os.environ.get("USER", ""),
+        show_default=True,
+    )
+    def cmd(username):
+        print("Hello,", username)
+
+    result = runner.invoke(cmd, ["--help"])
+    assert result.exit_code == 0
+    assert "--username" in result.output
+    assert "lambda" not in result.output
+    assert "(dynamic)" in result.output
+
+
+def test_dynamic_default_help_text(runner):
+    @click.command()
+    @click.option(
+        "--username",
+        prompt=True,
+        default=lambda: os.environ.get("USER", ""),
+        show_default="current user",
+    )
+    def cmd(username):
+        print("Hello,", username)
+
+    result = runner.invoke(cmd, ["--help"])
+    assert result.exit_code == 0
+    assert "--username" in result.output
+    assert "lambda" not in result.output
+    assert "(current user)" in result.output
+
+
+def test_dynamic_default_help_special_method(runner):
+    class Value:
+        def __call__(self):
+            return 42
+
+        def __str__(self):
+            return "special value"
+
+    opt = click.Option(["-a"], default=Value(), show_default=True)
+    ctx = click.Context(click.Command("cli"))
+    assert opt.get_help_extra(ctx) == {"default": "special value"}
+    assert "special value" in opt.get_help_record(ctx)[1]
+
+
+@pytest.mark.parametrize(
+    ("type", "expect"),
+    [
+        (click.IntRange(1, 32), "1<=x<=32"),
+        (click.IntRange(1, 32, min_open=True, max_open=True), "1<x<32"),
+        (click.IntRange(1), "x>=1"),
+[truncated]

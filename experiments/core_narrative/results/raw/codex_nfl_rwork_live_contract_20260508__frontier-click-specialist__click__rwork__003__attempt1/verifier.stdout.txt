@@ -1,0 +1,30 @@
+F                                                                        [100%]
+=================================== FAILURES ===================================
+___________________ test_shared_param_prefers_first_default ____________________
+
+runner = <click.testing.CliRunner object at 0x106a62c30>
+
+    def test_shared_param_prefers_first_default(runner):
+        """test that the first default is chosen when multiple flags share a param name"""
+    
+        @click.command
+        @click.option("--red", "color", flag_value="red")
+        @click.option("--green", "color", flag_value="green", default=True)
+        def prefers_green(color):
+            click.echo(color)
+    
+        @click.command
+        @click.option("--red", "color", flag_value="red", default=True)
+        @click.option("--green", "color", flag_value="green")
+        def prefers_red(color):
+            click.echo(color)
+    
+        result = runner.invoke(prefers_green, [])
+>       assert "green" in result.output
+E       AssertionError: assert 'green' in '\n'
+E        +  where '\n' = <Result okay>.output
+
+tests/test_defaults.py:105: AssertionError
+=========================== short test summary info ============================
+FAILED tests/test_defaults.py::test_shared_param_prefers_first_default - Asse...
+1 failed in 0.02s

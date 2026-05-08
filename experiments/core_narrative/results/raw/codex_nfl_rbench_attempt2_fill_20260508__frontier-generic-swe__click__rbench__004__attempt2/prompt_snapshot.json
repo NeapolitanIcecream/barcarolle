@@ -1,0 +1,85 @@
+{
+  "context_files": [
+    {
+      "char_count": 11408,
+      "displayed_char_count": 11408,
+      "focus_terms": [],
+      "focused_excerpts": [],
+      "path": "click/testing.py",
+      "sha256": "0e3b14785341ee27914d97aca77070a29bb07085bc71029594846f50d76963db",
+      "truncated": false
+    },
+    {
+      "char_count": 5612,
+      "displayed_char_count": 5612,
+      "focus_terms": [],
+      "focused_excerpts": [],
+      "path": "tests/test_testing.py",
+      "sha256": "f2d684eb6415573d6cd50187a08a8a1e3ee0f01aaedca2f6709024cae5f8fe32",
+      "truncated": false
+    },
+    {
+      "char_count": 2339,
+      "displayed_char_count": 2339,
+      "focus_terms": [],
+      "focused_excerpts": [],
+      "path": "tests/test_termui.py",
+      "sha256": "92f7616aab45bab0ee14b54b80c3a334dce828a933de5775da0608eef1dd8c81",
+      "truncated": false
+    },
+    {
+      "char_count": 9565,
+      "displayed_char_count": 9565,
+      "focus_terms": [],
+      "focused_excerpts": [],
+      "path": "tests/test_utils.py",
+      "sha256": "ea5fe8c98b4a7c94a2283e2ca5a6423e069cabf7bf377e85ea0ff0f8929dc046",
+      "truncated": false
+    }
+  ],
+  "context_packaging": {
+    "effective_max_file_chars": 80000,
+    "max_context_chars": 120000,
+    "prompt_truncated": false,
+    "requested_max_file_chars": 80000
+  },
+  "full_urls_redacted": true,
+  "output_contract": "anchored-search-replace-json-v3",
+  "output_contract_schema": {
+    "anchor_policy": {
+      "anchors_are_for_repeated_old_text_only": true,
+      "anchors_must_be_immediate_adjacent_source": true,
+      "invalid_anchors_reject_the_edit_even_when_old_is_unique": true,
+      "omit_anchors_when_old_is_unique": true
+    },
+    "diagnostic_failure_classes": {
+      "search_replace_anchor_mismatch": "old text was present, but supplied anchors did not isolate exactly one occurrence",
+      "search_replace_old_occurrence_mismatch": "old text did not occur exactly once after earlier edits"
+    },
+    "id": "anchored-search-replace-json-v3",
+    "legacy_parser_fallback_keys": [
+      "unified_diff",
+      "files"
+    ],
+    "primary_top_level_key": "edits",
+    "requires_exact_old_text": true,
+    "requires_exact_path_from_context": true,
+    "requires_immediate_anchors_for_repeated_old_text": true,
+    "requires_single_top_level_key": true
+  },
+  "prompt_char_count": 33719,
+  "prompt_content_recorded": true,
+  "prompt_sha256": "daa6aaf69e0dbda83f2528104043366d8fef4c3a3096b1b3ce2539c16d2c9970",
+  "run_id": "codex_nfl_rbench_attempt2_fill_20260508__frontier-generic-swe__click__rbench__004__attempt2",
+  "runner_id": "codex-nfl-direct-search-replace-v1",
+  "specialist_context_assertion": {
+    "expected": "excluded",
+    "include_mode": "auto",
+    "passed": true
+  },
+  "specialist_context_included": false,
+  "specialist_context_path": null,
+  "statement_truncated": false,
+  "task_statement_path": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/tasks/click/rbench/click__rbench__004/public/statement.md",
+  "tool": "codex_nfl_direct_runner"
+}

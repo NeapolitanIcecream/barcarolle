@@ -1,0 +1,9 @@
+diff --git a/click/core.py b/click/core.py
+index 06ca15e..f3d5e64 100644
+--- a/click/core.py
++++ b/click/core.py
+@@ -1751,3 +1751,4 @@ class Argument(Parameter):
+ 
+ # Circular dependency between decorators and core
+ from .decorators import command, group
++# Barcarolle known-bad probe: no behavior change.

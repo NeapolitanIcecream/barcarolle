@@ -1,0 +1,138 @@
+F.F.....                                                                 [100%]
+=================================== FAILURES ===================================
+_____ test_callable_flag_value_not_instantiated[opt_params0-args0-Class1] ______
+
+runner = <click.testing.CliRunner object at 0x108cd9580>
+opt_params = {'default': True, 'flag_value': <class 'test_options.Class1'>, 'type': UNPROCESSED}
+args = [], expected = <class 'test_options.Class1'>
+
+    @pytest.mark.parametrize(
+        ("opt_params", "args", "expected"),
+        [
+            # Class flag_value with default=True and UNPROCESSED: the class itself is
+            # returned, NOT an instance. Regression test for
+            # https://github.com/pallets/click/issues/3121
+            ({"flag_value": Class1, "type": UNPROCESSED, "default": True}, [], Class1),
+            (
+                {"flag_value": Class1, "type": UNPROCESSED, "default": True},
+                ["--opt"],
+                Class1,
+            ),
+            # Without UNPROCESSED, the class is str()-ified by the default STRING type.
+            ({"flag_value": Class1, "default": True}, [], "<class 'test_options.Class1'>"),
+            (
+                {"flag_value": Class1, "default": True},
+                ["--opt"],
+                "<class 'test_options.Class1'>",
+            ),
+            # Explicit default=Class1 (not via default=True alignment): callable IS invoked,
+            # because the user explicitly set a callable as the default.
+            (
+                {"flag_value": Class1, "type": UNPROCESSED, "default": Class1},
+                [],
+                re.compile(r"<test_options.Class1 object at 0x[0-9A-Fa-f]+>"),
+            ),
+            # Explicit default=Class2, different from flag_value=Class1.
+            (
+                {"flag_value": Class1, "type": UNPROCESSED, "default": Class2},
+                [],
+                re.compile(r"<test_options.Class2 object at 0x[0-9A-Fa-f]+>"),
+            ),
+            # Non-callable flag_value with default=True: unaffected by the fix.
+            ({"flag_value": "upper", "default": True}, [], "upper"),
+            ({"flag_value": "upper", "default": True}, ["--opt"], "upper"),
+        ],
+    )
+    def test_callable_flag_value_not_instantiated(runner, opt_params, args, expected):
+        """A callable ``flag_value`` like a class, with ``default=True`` should not be
+        invoked when resolving the default. This is the single-option variant of
+        the regression reported in https://github.com/pallets/click/issues/3121.
+        """
+    
+        @click.command()
+        @click.option("--opt", "value", **opt_params)
+        def cli(value):
+            click.echo(repr(value), nl=False)
+    
+        result = runner.invoke(cli, args)
+        assert result.exit_code == 0
+        if isinstance(expected, re.Pattern):
+            assert re.match(expected, result.output)
+        else:
+>           assert result.output == repr(expected)
+E           assert '<test_option... 0x108cda5d0>' == "<class 'test...ions.Class1'>"
+E             
+E             - <class 'test_options.Class1'>
+E             + <test_options.Class1 object at 0x108cda5d0>
+
+tests/test_options.py:2326: AssertionError
+_ test_callable_flag_value_not_instantiated[opt_params2-args2-<class 'test_options.Class1'>] _
+
+runner = <click.testing.CliRunner object at 0x108cda090>
+opt_params = {'default': True, 'flag_value': <class 'test_options.Class1'>}
+args = [], expected = "<class 'test_options.Class1'>"
+
+    @pytest.mark.parametrize(
+        ("opt_params", "args", "expected"),
+        [
+            # Class flag_value with default=True and UNPROCESSED: the class itself is
+            # returned, NOT an instance. Regression test for
+            # https://github.com/pallets/click/issues/3121
+            ({"flag_value": Class1, "type": UNPROCESSED, "default": True}, [], Class1),
+            (
+                {"flag_value": Class1, "type": UNPROCESSED, "default": True},
+                ["--opt"],
+                Class1,
+            ),
+            # Without UNPROCESSED, the class is str()-ified by the default STRING type.
+            ({"flag_value": Class1, "default": True}, [], "<class 'test_options.Class1'>"),
+            (
+                {"flag_value": Class1, "default": True},
+                ["--opt"],
+                "<class 'test_options.Class1'>",
+            ),
+            # Explicit default=Class1 (not via default=True alignment): callable IS invoked,
+            # because the user explicitly set a callable as the default.
+            (
+                {"flag_value": Class1, "type": UNPROCESSED, "default": Class1},
+                [],
+                re.compile(r"<test_options.Class1 object at 0x[0-9A-Fa-f]+>"),
+            ),
+            # Explicit default=Class2, different from flag_value=Class1.
+            (
+                {"flag_value": Class1, "type": UNPROCESSED, "default": Class2},
+                [],
+                re.compile(r"<test_options.Class2 object at 0x[0-9A-Fa-f]+>"),
+            ),
+            # Non-callable flag_value with default=True: unaffected by the fix.
+            ({"flag_value": "upper", "default": True}, [], "upper"),
+            ({"flag_value": "upper", "default": True}, ["--opt"], "upper"),
+        ],
+    )
+    def test_callable_flag_value_not_instantiated(runner, opt_params, args, expected):
+        """A callable ``flag_value`` like a class, with ``default=True`` should not be
+        invoked when resolving the default. This is the single-option variant of
+        the regression reported in https://github.com/pallets/click/issues/3121.
+        """
+    
+        @click.command()
+        @click.option("--opt", "value", **opt_params)
+        def cli(value):
+            click.echo(repr(value), nl=False)
+    
+        result = runner.invoke(cli, args)
+        assert result.exit_code == 0
+        if isinstance(expected, re.Pattern):
+            assert re.match(expected, result.output)
+        else:
+>           assert result.output == repr(expected)
+E           assert "'<test_optio...0x108cda7b0>'" == '"<class \'te...ns.Class1\'>"'
+E             
+E             - "<class 'test_options.Class1'>"
+E             + '<test_options.Class1 object at 0x108cda7b0>'
+
+tests/test_options.py:2326: AssertionError
+=========================== short test summary info ============================
+FAILED tests/test_options.py::test_callable_flag_value_not_instantiated[opt_params0-args0-Class1]
+FAILED tests/test_options.py::test_callable_flag_value_not_instantiated[opt_params2-args2-<class 'test_options.Class1'>]
+2 failed, 6 passed in 0.09s

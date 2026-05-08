@@ -1,0 +1,38 @@
+diff --git a/click/types.py b/click/types.py
+index 5820146..ead0f90 100644
+--- a/click/types.py
++++ b/click/types.py
+@@ -189,7 +189,8 @@ class DateTime(ParamType):
+     def __init__(self, formats=None):
+         self.formats = formats or [
+             '%Y-%m-%d',
+-            '%Y-%m-%dT%H:%M:%S'
++            '%Y-%m-%dT%H:%M:%S',
++            '%Y-%m-%d %H:%M:%S'
+         ]
+ 
+     def get_metavar(self, param):
+diff --git a/tests/test_basic.py b/tests/test_basic.py
+index 414fd1c..b3f48ad 100644
+--- a/tests/test_basic.py
++++ b/tests/test_basic.py
+@@ -347,13 +347,17 @@ def test_datetime_option_default(runner):
+     assert not result.exception
+     assert result.output == '2015-09-29T09:11:22\n'
+ 
++    result = runner.invoke(cli, ['--start_date=2015-09-29 09:11:22'])
++    assert not result.exception
++    assert result.output == '2015-09-29T09:11:22\n'
++
+     result = runner.invoke(cli, ['--start_date=2015-09'])
+     assert result.exit_code == 2
+     assert 'Invalid value for "--start_date": invalid datetime format: 2015-09. ' \
+-        '(choose from %Y-%m-%d, %Y-%m-%dT%H:%M:%S)' in result.output
++        '(choose from %Y-%m-%d, %Y-%m-%dT%H:%M:%S, %Y-%m-%d %H:%M:%S)' in result.output
+ 
+     result = runner.invoke(cli, ['--help'])
+-    assert '--start_date [%Y-%m-%d|%Y-%m-%dT%H:%M:%S]' in result.output
++    assert '--start_date [%Y-%m-%d|%Y-%m-%dT%H:%M:%S|%Y-%m-%d %H:%M:%S]' in result.output
+ 
+ 
+ def test_datetime_option_custom(runner):

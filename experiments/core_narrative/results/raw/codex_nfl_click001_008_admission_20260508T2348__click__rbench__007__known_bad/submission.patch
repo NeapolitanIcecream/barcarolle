@@ -1,0 +1,9 @@
+diff --git a/src/click/testing.py b/src/click/testing.py
+index fd6bf61..f4a505a 100644
+--- a/src/click/testing.py
++++ b/src/click/testing.py
+@@ -360,3 +360,4 @@ class CliRunner:
+                 shutil.rmtree(t)
+             except OSError:  # noqa: B014
+                 pass
++# Barcarolle known-bad probe: no behavior change.

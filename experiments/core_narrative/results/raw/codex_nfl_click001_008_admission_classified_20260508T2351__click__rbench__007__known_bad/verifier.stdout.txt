@@ -1,0 +1,20 @@
+F                                                                        [100%]
+=================================== FAILURES ===================================
+__________________ test_command_standalone_mode_returns_value __________________
+
+    def test_command_standalone_mode_returns_value():
+        @click.command()
+        def cli():
+            click.echo("ok")
+            return "Hello, World!"
+    
+        runner = CliRunner()
+        result = runner.invoke(cli, standalone_mode=False)
+        assert result.output == "ok\n"
+>       assert result.return_value == "Hello, World!"
+E       AttributeError: 'Result' object has no attribute 'return_value'
+
+tests/test_testing.py:309: AttributeError
+=========================== short test summary info ============================
+FAILED tests/test_testing.py::test_command_standalone_mode_returns_value - At...
+1 failed in 0.03s

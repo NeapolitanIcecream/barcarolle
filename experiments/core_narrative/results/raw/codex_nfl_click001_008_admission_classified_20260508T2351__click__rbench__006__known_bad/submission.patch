@@ -1,0 +1,9 @@
+diff --git a/click/types.py b/click/types.py
+index 5820146..6fe0202 100644
+--- a/click/types.py
++++ b/click/types.py
+@@ -646,3 +646,4 @@ BOOL = BoolParamType()
+ 
+ #: A UUID parameter.
+ UUID = UUIDParameterType()
++# Barcarolle known-bad probe: no behavior change.

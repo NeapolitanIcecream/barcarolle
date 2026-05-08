@@ -1,0 +1,180 @@
+{
+  "generated_at": "2026-05-08T17:51:54.195570Z",
+  "report_future_work_steps": {
+    "1_gap_audit": {
+      "already_satisfied_by_merged_artifacts": [
+        "Click008 attempt 3 report exists",
+        "Click008 frontier retry report exists",
+        "Click008 scoreable closure exists"
+      ],
+      "artifact": "experiments/core_narrative/results/codex_nfl_future_work_gap_map_20260508.json",
+      "remaining_work": [],
+      "status": "satisfied"
+    },
+    "2_task_admission_freeze_click_001_008": {
+      "admission_status": "failed",
+      "already_satisfied_by_merged_artifacts": [
+        "codex_nfl_gate0_preflight.py existed before this workflow",
+        "materialized Click RBench task packs 001-008 exist"
+      ],
+      "artifact": "experiments/core_narrative/results/codex_nfl_click001_008_admission_classified_20260508.json",
+      "defect_classification_counts": {
+        "clean_reference_replay_failed": 1,
+        "reference_patch_failed_verifier": 1,
+        "reference_replay_unstable_or_failed": 1
+      },
+      "remaining_work": [
+        "resolve the Click005 reference/verifier strict-admission defect, then rerun the eight-task admission freeze"
+      ],
+      "status": "partial"
+    },
+    "3_output_contract_v3_workspace_isolation": {
+      "already_satisfied_by_merged_artifacts": [
+        "Click008 closure artifacts contain scoreable outcomes for all four core ACUTs",
+        "existing tests cover clean verify workspace and no-op isolation"
+      ],
+      "future_contract_metadata_missing_counts": {
+        "direct_runner_budget_gate": 17,
+        "direct_runner_cost_ledger_append": 17
+      },
+      "remaining_work": [],
+      "status": "satisfied"
+    },
+    "4_click_rbench_clean_slice": {
+      "artifact": "experiments/core_narrative/results/codex_nfl_rbench_canonical_matrix_20260508.json",
+      "click008_no_retry_policy": "preserve canonical closure as latest clean scoreable evidence",
+      "missing": {
+        "attempt2_cells": [],
+        "canonical_cells": []
+      },
+      "remaining_work": [],
+      "status": "satisfied"
+    },
+    "5_gscore_basis": {
+      "artifact": "experiments/core_narrative/results/codex_nfl_gscore_basis_20260508.json",
+      "blockers": [
+        {
+          "blocker": "dataset_cache_missing",
+          "path": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/cache/swebench_pro/test-00000-of-00001.parquet"
+        },
+        {
+          "blocker": "evaluation_harness_checkout_missing",
+          "checked_paths": [
+            "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/external_repos/SWE-bench_Pro-os",
+            "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/external_repos/swebench_pro_os",
+            "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/external_repos/SWE-bench_Pro-os",
+            "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/cache/SWE-bench_Pro-os",
+            "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/cache/swebench_pro_os",
+            "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/cache/SWE-bench_Pro-os",
+            "/Users/chenmohan/gits/barcarolle/external_repos/SWE-bench_Pro-os",
+            "/Users/chenmohan/gits/barcarolle/external_repos/swebench_pro_os",
+            "/Users/chenmohan/gits/barcarolle/external_repos/SWE-bench_Pro-os"
+          ]
+        }
+      ],
+      "remaining_work": [
+        "materialize SWE-Bench Pro cache/evaluator and run gold-patch smoke before direct G_score ACUT calls"
+      ],
+      "status": "blocked_direct_gscore_recorded"
+    },
+    "6_rwork_w_score": {
+      "artifact": "experiments/core_narrative/results/codex_nfl_rwork_canonical_matrix_20260508.json",
+      "missing": {
+        "attempt2_cells": [
+          {
+            "acut_id": "cheap-generic-swe",
+            "task_id": "click__rwork__001"
+          },
+          {
+            "acut_id": "cheap-generic-swe",
+            "task_id": "click__rwork__002"
+          },
+          {
+            "acut_id": "cheap-generic-swe",
+            "task_id": "click__rwork__004"
+          },
+          {
+            "acut_id": "cheap-generic-swe",
+            "task_id": "click__rwork__005"
+          },
+          {
+            "acut_id": "cheap-generic-swe",
+            "task_id": "click__rwork__006"
+          },
+          {
+            "acut_id": "cheap-click-specialist",
+            "task_id": "click__rwork__001"
+          },
+          {
+            "acut_id": "cheap-click-specialist",
+            "task_id": "click__rwork__002"
+          },
+          {
+            "acut_id": "cheap-click-specialist",
+            "task_id": "click__rwork__003"
+          },
+          {
+            "acut_id": "cheap-click-specialist",
+            "task_id": "click__rwork__004"
+          },
+          {
+            "acut_id": "cheap-click-specialist",
+            "task_id": "click__rwork__005"
+          },
+          {
+            "acut_id": "frontier-generic-swe",
+            "task_id": "click__rwork__001"
+          },
+          {
+            "acut_id": "frontier-generic-swe",
+            "task_id": "click__rwork__002"
+          },
+          {
+            "acut_id": "frontier-generic-swe",
+            "task_id": "click__rwork__003"
+          },
+          {
+            "acut_id": "frontier-generic-swe",
+            "task_id": "click__rwork__004"
+          },
+          {
+            "acut_id": "frontier-generic-swe",
+            "task_id": "click__rwork__005"
+          },
+          {
+            "acut_id": "frontier-click-specialist",
+            "task_id": "click__rwork__001"
+          },
+          {
+            "acut_id": "frontier-click-specialist",
+            "task_id": "click__rwork__002"
+          },
+          {
+            "acut_id": "frontier-click-specialist",
+            "task_id": "click__rwork__003"
+          },
+          {
+            "acut_id": "frontier-click-specialist",
+            "task_id": "click__rwork__004"
+          },
+          {
+            "acut_id": "frontier-click-specialist",
+            "task_id": "click__rwork__005"
+          }
+        ],
+        "canonical_cells": []
+      },
+      "remaining_work": [],
+      "status": "satisfied"
+    },
+    "7_prediction_analysis": {
+      "analysis_artifact": "experiments/core_narrative/results/codex_nfl_predictivity_analysis_20260508.json",
+      "ranking_reversal_status": "not_supported",
+      "remaining_work": [],
+      "report": "experiments/core_narrative/reports/2026-05-08_codex_nfl_predictivity_step7_report.md",
+      "status": "satisfied"
+    }
+  },
+  "status": "completed",
+  "tool": "codex_nfl_future_work_gap_map"
+}

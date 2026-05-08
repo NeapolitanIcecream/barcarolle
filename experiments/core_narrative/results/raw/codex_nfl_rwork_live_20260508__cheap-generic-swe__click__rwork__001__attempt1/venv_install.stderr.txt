@@ -1,0 +1,4 @@
+ERROR: File "setup.py" or "setup.cfg" not found. Directory cannot be installed in editable mode: /Users/chenmohan/gits/barcarolle/experiments/core_narrative/workspaces/codex_nfl_rwork_live_20260508__cheap-generic-swe__click__rwork__001__attempt1
+(A "pyproject.toml" file was found, but editable mode currently requires a setuptools-based build.)
+WARNING: You are using pip version 21.2.4; however, version 26.0.1 is available.
+You should consider upgrading via the '/Users/chenmohan/gits/barcarolle/experiments/core_narrative/workspaces/codex_nfl_rwork_live_20260508__cheap-generic-swe__click__rwork__001__attempt1/.venv/bin/python -m pip install --upgrade pip' command.

@@ -1,0 +1,9 @@
+F                                                                        [100%]
+=================================== FAILURES ===================================
+_________________________________ test_stderr __________________________________
+tests/test_testing.py:213: in test_stderr
+    runner = CliRunner(mix_stderr=False)
+E   TypeError: __init__() got an unexpected keyword argument 'mix_stderr'
+=========================== short test summary info ============================
+FAILED tests/test_testing.py::test_stderr - TypeError: __init__() got an unex...
+1 failed in 0.02s

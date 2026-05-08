@@ -1,0 +1,22 @@
+{
+  "cost_ledger_append": {
+    "actual_cost_recorded": false,
+    "estimated_cost_usd": 0.101767,
+    "new_cumulative_estimated_cost_usd": 20.431009,
+    "record_count_after": 98,
+    "record_count_before": 97,
+    "status": "appended"
+  },
+  "details": {
+    "failure_class": "unsupported_patch_response"
+  },
+  "error": "model response did not contain a supported patch",
+  "finished_at": "2026-05-08T16:29:55.972764Z",
+  "model_call_made": true,
+  "prompt_snapshot": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/codex_nfl_rwork_live_uv_20260508__cheap-generic-swe__click__rwork__001__attempt1/prompt_snapshot.json",
+  "raw_response_artifact": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/codex_nfl_rwork_live_uv_20260508__cheap-generic-swe__click__rwork__001__attempt1/provider_response.redacted.json",
+  "runner_id": "codex-nfl-direct-search-replace-v1",
+  "started_at": "2026-05-08T16:27:01.904068Z",
+  "status": "error",
+  "tool": "codex_nfl_direct_runner"
+}

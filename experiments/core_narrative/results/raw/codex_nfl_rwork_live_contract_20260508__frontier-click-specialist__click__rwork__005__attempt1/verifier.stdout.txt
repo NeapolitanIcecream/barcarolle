@@ -1,0 +1,49 @@
+F..                                                                      [100%]
+=================================== FAILURES ===================================
+__________________________ test_pdb_uses_real_streams __________________________
+
+    def test_pdb_uses_real_streams():
+        """``pdb.Pdb()`` inside ``CliRunner`` defaults to real terminal streams
+        so that interactive debuggers work instead of reading from the
+        captured ``BytesIO`` stdin.
+        """
+    
+        @click.command()
+        def cli():
+            debugger = pdb.Pdb()
+            assert debugger.stdin is sys.__stdin__
+            assert debugger.stdout is sys.__stdout__
+            click.echo("after debugger")
+    
+        runner = CliRunner()
+>       result = runner.invoke(cli, catch_exceptions=False)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_testing.py:489: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+src/click/testing.py:518: in invoke
+    return_value = cli.main(args=args or (), prog_name=prog_name, **extra)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src/click/core.py:1406: in main
+    rv = self.invoke(ctx)
+         ^^^^^^^^^^^^^^^^
+src/click/core.py:1269: in invoke
+    return ctx.invoke(self.callback, **ctx.params)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src/click/core.py:824: in invoke
+    return callback(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    @click.command()
+    def cli():
+        debugger = pdb.Pdb()
+>       assert debugger.stdin is sys.__stdin__
+E       AssertionError: assert <_pytest.capture.DontReadFromInput object at 0x105676d80> is <_io.TextIOWrapper name='<stdin>' mode='r' encoding='utf-8'>
+E        +  where <_pytest.capture.DontReadFromInput object at 0x105676d80> = <pdb.Pdb object at 0x1054b2e70>.stdin
+E        +  and   <_io.TextIOWrapper name='<stdin>' mode='r' encoding='utf-8'> = sys.__stdin__
+
+tests/test_testing.py:484: AssertionError
+=========================== short test summary info ============================
+FAILED tests/test_testing.py::test_pdb_uses_real_streams - AssertionError: as...
+1 failed, 2 passed in 0.05s
