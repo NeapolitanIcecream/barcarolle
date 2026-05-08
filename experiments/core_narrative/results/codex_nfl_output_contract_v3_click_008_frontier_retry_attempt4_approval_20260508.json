@@ -1,0 +1,24 @@
+{
+  "approval_id": "codex_nfl_output_contract_v3_click_008_frontier_retry_attempt4_20260508",
+  "approved_by": "codex-supervisor",
+  "approved_at": "2026-05-08T21:38:00+08:00",
+  "reason": "Bounded frontier-only retry for Click008 after attempt 3 produced provider timeouts for both frontier ACUTs; cheap ACUTs are not repeated.",
+  "scope": {
+    "tasks": ["click__rbench__008"],
+    "acuts": ["frontier-generic-swe", "frontier-click-specialist"],
+    "attempt": 4,
+    "mode": "live",
+    "run_prefix": "codex_nfl_output_contract_v3_click_008_frontier_retry_attempt4_20260508"
+  },
+  "budget": {
+    "projected_cost_usd": 6.0,
+    "ledger": "experiments/core_narrative/results/cost_ledger.jsonl",
+    "hard_stop": "Do not continue if the budget gate blocks, credentials are missing, or actual API funds/quota are exhausted."
+  },
+  "execution_constraints": {
+    "no_click009_plus": true,
+    "no_cheap_acut_replay": true,
+    "runner_timeout_seconds": 600,
+    "purpose": "Convert prior frontier infra timeouts into scoreable Click008 outcomes when possible."
+  }
+}
