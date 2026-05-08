@@ -156,6 +156,21 @@ def leakage_findings(paths: Sequence[str | None]) -> dict[str, Any]:
     }
 
 
+def assert_probe_artifacts_available(
+    *,
+    run_id: str,
+    artifact_dir: Path,
+    normalized_path: Path | None = None,
+) -> None:
+    blockers: list[str] = []
+    if artifact_dir.exists() and any(artifact_dir.iterdir()):
+        blockers.append("raw_artifact_dir_exists")
+    if normalized_path is not None and normalized_path.exists():
+        blockers.append("normalized_result_exists")
+    if blockers:
+        raise ToolError("probe run id already has artifacts; refusing to reuse stale outputs", run_id=run_id, blockers=blockers)
+
+
 def verify_patch_text(
     *,
     task_id: str,
@@ -166,12 +181,13 @@ def verify_patch_text(
 ) -> dict[str, Any]:
     run_id = f"{run_prefix}__{task_id}__{probe_name}"
     artifact_dir = batch.RAW_ROOT / run_id
+    normalized_path = artifact_dir / "normalized_result.json"
+    assert_probe_artifacts_available(run_id=run_id, artifact_dir=artifact_dir, normalized_path=normalized_path)
     artifact_dir.mkdir(parents=True, exist_ok=True)
     workspace, prepare_summary = batch.prepare_workspace(task_id, run_id, artifact_dir)
     install_summary = batch.install_workspace(workspace, artifact_dir, install_timeout_seconds)
     patch_path = artifact_dir / "submission.patch"
     patch_path.write_text(patch_text, encoding="utf-8")
-    normalized_path = artifact_dir / "normalized_result.json"
     verify_code, normalized = batch.verify_patch(
         workspace=workspace,
         task_id=task_id,
@@ -203,6 +219,7 @@ def run_noop_probe(
 ) -> dict[str, Any]:
     run_id = f"{run_prefix}__{task_id}__noop"
     artifact_dir = batch.RAW_ROOT / run_id
+    assert_probe_artifacts_available(run_id=run_id, artifact_dir=artifact_dir)
     artifact_dir.mkdir(parents=True, exist_ok=True)
     workspace, prepare_summary = batch.prepare_workspace(task_id, run_id, artifact_dir)
     install_summary = batch.install_workspace(workspace, artifact_dir, install_timeout_seconds)
@@ -298,6 +315,7 @@ def task_probe(task: Mapping[str, Any], *, run_prefix: str, flakiness_runs: int,
 def main(argv: Sequence[str] | None = None) -> int:
     args = parse_args(sys.argv[1:] if argv is None else argv)
     try:
+        started_at = iso_now()
         if args.flakiness_runs < 2:
             raise ToolError("--flakiness-runs must be at least 2")
         split_manifest = load_manifest(batch.TASK_SPLIT)
@@ -322,7 +340,7 @@ def main(argv: Sequence[str] | None = None) -> int:
             "tool": TOOL,
             "status": "passed" if len(selected) >= 3 and all(item["status"] == "passed" for item in per_task) else "failed",
             "run_prefix": args.run_prefix,
-            "started_at": None,
+            "started_at": started_at,
             "finished_at": iso_now(),
             "selected_tasks_count": len(selected),
             "selected_tasks_count_gate": len(selected) >= 3,
