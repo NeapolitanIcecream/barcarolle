@@ -1,0 +1,415 @@
+{
+  "acut_ids": [
+    "cheap-click-specialist",
+    "cheap-generic-swe",
+    "frontier-click-specialist",
+    "frontier-generic-swe"
+  ],
+  "g_score": {
+    "basis": "direct_run_unavailable",
+    "basis_status": "direct_gscore_blocked",
+    "blockers": [
+      {
+        "blocker": "dataset_cache_missing",
+        "path": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/cache/swebench_pro/test-00000-of-00001.parquet"
+      },
+      {
+        "blocker": "evaluation_harness_checkout_missing",
+        "checked_paths": [
+          "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/external_repos/SWE-bench_Pro-os",
+          "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/external_repos/swebench_pro_os",
+          "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/external_repos/SWE-bench_Pro-os",
+          "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/cache/SWE-bench_Pro-os",
+          "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/cache/swebench_pro_os",
+          "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/cache/SWE-bench_Pro-os",
+          "/Users/chenmohan/gits/barcarolle/external_repos/SWE-bench_Pro-os",
+          "/Users/chenmohan/gits/barcarolle/external_repos/swebench_pro_os",
+          "/Users/chenmohan/gits/barcarolle/external_repos/SWE-bench_Pro-os"
+        ]
+      }
+    ],
+    "by_acut": {
+      "cheap-click-specialist": {
+        "basis": "direct_run_unavailable",
+        "basis_status": "direct_gscore_blocked",
+        "direct_gscore_used": false,
+        "score_name": "G_score",
+        "score_percent": null
+      },
+      "cheap-generic-swe": {
+        "basis": "direct_run_unavailable",
+        "basis_status": "direct_gscore_blocked",
+        "direct_gscore_used": false,
+        "score_name": "G_score",
+        "score_percent": null
+      },
+      "frontier-click-specialist": {
+        "basis": "direct_run_unavailable",
+        "basis_status": "direct_gscore_blocked",
+        "direct_gscore_used": false,
+        "score_name": "G_score",
+        "score_percent": null
+      },
+      "frontier-generic-swe": {
+        "basis": "direct_run_unavailable",
+        "basis_status": "direct_gscore_blocked",
+        "direct_gscore_used": false,
+        "score_name": "G_score",
+        "score_percent": null
+      }
+    },
+    "direct_gscore_used": false,
+    "rank_order": []
+  },
+  "generated_at": "2026-05-08T17:50:48.147731Z",
+  "inputs": {
+    "gscore_status": "direct_gscore_blocked",
+    "rbench_split": "rbench",
+    "rwork_split": "rwork"
+  },
+  "predictivity": {
+    "g_score_vs_w_score_error": {
+      "reason": "direct G_score unavailable; external/proxy scores were not substituted",
+      "status": "not_computable"
+    },
+    "g_score_vs_w_score_rank_delta": {
+      "reason": "direct G_score unavailable",
+      "status": "not_computable"
+    },
+    "r_score_vs_w_score_error": {
+      "mae_points": 44.791666666666664,
+      "mean_signed_error_points": 44.791666666666664,
+      "paired_acut_count": 4,
+      "per_acut": {
+        "cheap-click-specialist": {
+          "absolute_error_points": 29.166666666666664,
+          "predicted_score_percent": 62.5,
+          "signed_error_points": 29.166666666666664,
+          "target_score_percent": 33.333333333333336
+        },
+        "cheap-generic-swe": {
+          "absolute_error_points": 45.83333333333333,
+          "predicted_score_percent": 62.5,
+          "signed_error_points": 45.83333333333333,
+          "target_score_percent": 16.666666666666668
+        },
+        "frontier-click-specialist": {
+          "absolute_error_points": 45.83333333333333,
+          "predicted_score_percent": 62.5,
+          "signed_error_points": 45.83333333333333,
+          "target_score_percent": 16.666666666666668
+        },
+        "frontier-generic-swe": {
+          "absolute_error_points": 58.33333333333333,
+          "predicted_score_percent": 75.0,
+          "signed_error_points": 58.33333333333333,
+          "target_score_percent": 16.666666666666668
+        }
+      },
+      "rmse_points": 45.97515935565398,
+      "status": "computed"
+    },
+    "r_score_vs_w_score_rank_delta": {
+      "per_acut": {
+        "cheap-click-specialist": {
+          "delta": 1,
+          "source_rank": 2,
+          "target_rank": 1
+        },
+        "cheap-generic-swe": {
+          "delta": 1,
+          "source_rank": 3,
+          "target_rank": 2
+        },
+        "frontier-click-specialist": {
+          "delta": 1,
+          "source_rank": 4,
+          "target_rank": 3
+        },
+        "frontier-generic-swe": {
+          "delta": -3,
+          "source_rank": 1,
+          "target_rank": 4
+        }
+      },
+      "status": "computed"
+    },
+    "ranking_reversal_assessment": {
+      "blockers": [
+        "direct G_score unavailable",
+        "single repository only",
+        "small RBench/RWork task counts"
+      ],
+      "status": "not_supported",
+      "summary": "No ranking reversal conclusion is supported: W_score has a bounded held-out Click slice, but direct G_score is unavailable and the R/W sample is too small for stable reversal claims."
+    }
+  },
+  "r_score": {
+    "basis": "Click RBench canonical latest fixed-denominator pass percentage",
+    "by_acut": {
+      "cheap-click-specialist": {
+        "canonical_missing": 0,
+        "canonical_present": 8,
+        "denominator": 8,
+        "failure_label_counts": {
+          "failed": 2,
+          "invalid_submission:search_replace_anchor_mismatch": 1,
+          "passed": 5
+        },
+        "passed": 5,
+        "score_name": "R_score",
+        "score_percent": 62.5,
+        "scoreable": 8,
+        "status_counts": {
+          "failed": 2,
+          "invalid_submission": 1,
+          "passed": 5
+        },
+        "wilson_95": {
+          "lower": 0.30574239460262737,
+          "upper": 0.8631557141764026
+        }
+      },
+      "cheap-generic-swe": {
+        "canonical_missing": 0,
+        "canonical_present": 8,
+        "denominator": 8,
+        "failure_label_counts": {
+          "failed": 3,
+          "passed": 5
+        },
+        "passed": 5,
+        "score_name": "R_score",
+        "score_percent": 62.5,
+        "scoreable": 8,
+        "status_counts": {
+          "failed": 3,
+          "passed": 5
+        },
+        "wilson_95": {
+          "lower": 0.30574239460262737,
+          "upper": 0.8631557141764026
+        }
+      },
+      "frontier-click-specialist": {
+        "canonical_missing": 0,
+        "canonical_present": 8,
+        "denominator": 8,
+        "failure_label_counts": {
+          "failed": 1,
+          "invalid_submission:search_replace_old_occurrence_mismatch": 2,
+          "passed": 5
+        },
+        "passed": 5,
+        "score_name": "R_score",
+        "score_percent": 62.5,
+        "scoreable": 8,
+        "status_counts": {
+          "failed": 1,
+          "invalid_submission": 2,
+          "passed": 5
+        },
+        "wilson_95": {
+          "lower": 0.30574239460262737,
+          "upper": 0.8631557141764026
+        }
+      },
+      "frontier-generic-swe": {
+        "canonical_missing": 0,
+        "canonical_present": 8,
+        "denominator": 8,
+        "failure_label_counts": {
+          "failed": 1,
+          "invalid_submission:search_replace_old_occurrence_mismatch": 1,
+          "passed": 6
+        },
+        "passed": 6,
+        "score_name": "R_score",
+        "score_percent": 75.0,
+        "scoreable": 8,
+        "status_counts": {
+          "failed": 1,
+          "invalid_submission": 1,
+          "passed": 6
+        },
+        "wilson_95": {
+          "lower": 0.40927543031016883,
+          "upper": 0.9285207872478909
+        }
+      }
+    },
+    "distributions": {
+      "failure_label_counts_canonical": {
+        "failed": 7,
+        "invalid_submission:search_replace_anchor_mismatch": 1,
+        "invalid_submission:search_replace_old_occurrence_mismatch": 3,
+        "passed": 21
+      },
+      "metadata_missing_counts_canonical_future_contract": {
+        "direct_runner_budget_gate": 17,
+        "direct_runner_cost_ledger_append": 17
+      },
+      "status_counts_canonical": {
+        "failed": 7,
+        "invalid_submission": 4,
+        "passed": 21
+      }
+    },
+    "rank_order": [
+      {
+        "acut_id": "frontier-generic-swe",
+        "rank": 1,
+        "score_percent": 75.0
+      },
+      {
+        "acut_id": "cheap-click-specialist",
+        "rank": 2,
+        "score_percent": 62.5
+      },
+      {
+        "acut_id": "cheap-generic-swe",
+        "rank": 3,
+        "score_percent": 62.5
+      },
+      {
+        "acut_id": "frontier-click-specialist",
+        "rank": 4,
+        "score_percent": 62.5
+      }
+    ]
+  },
+  "status": "completed",
+  "tool": "codex_nfl_predictivity_analysis",
+  "w_score": {
+    "basis": "Click RWork canonical latest fixed-denominator pass percentage",
+    "by_acut": {
+      "cheap-click-specialist": {
+        "canonical_missing": 0,
+        "canonical_present": 6,
+        "denominator": 6,
+        "failure_label_counts": {
+          "invalid_submission:search_replace_old_occurrence_mismatch": 4,
+          "passed": 2
+        },
+        "passed": 2,
+        "score_name": "W_score",
+        "score_percent": 33.333333333333336,
+        "scoreable": 6,
+        "status_counts": {
+          "invalid_submission": 4,
+          "passed": 2
+        },
+        "wilson_95": {
+          "lower": 0.09677141110578041,
+          "upper": 0.700006684861608
+        }
+      },
+      "cheap-generic-swe": {
+        "canonical_missing": 0,
+        "canonical_present": 6,
+        "denominator": 6,
+        "failure_label_counts": {
+          "invalid_submission:search_replace_old_occurrence_mismatch": 5,
+          "passed": 1
+        },
+        "passed": 1,
+        "score_name": "W_score",
+        "score_percent": 16.666666666666668,
+        "scoreable": 6,
+        "status_counts": {
+          "invalid_submission": 5,
+          "passed": 1
+        },
+        "wilson_95": {
+          "lower": 0.030053369748306635,
+          "upper": 0.5635028221864702
+        }
+      },
+      "frontier-click-specialist": {
+        "canonical_missing": 0,
+        "canonical_present": 6,
+        "denominator": 6,
+        "failure_label_counts": {
+          "failed": 2,
+          "invalid_submission:search_replace_anchor_mismatch": 1,
+          "invalid_submission:search_replace_old_occurrence_mismatch": 2,
+          "passed": 1
+        },
+        "passed": 1,
+        "score_name": "W_score",
+        "score_percent": 16.666666666666668,
+        "scoreable": 6,
+        "status_counts": {
+          "failed": 2,
+          "invalid_submission": 3,
+          "passed": 1
+        },
+        "wilson_95": {
+          "lower": 0.030053369748306635,
+          "upper": 0.5635028221864702
+        }
+      },
+      "frontier-generic-swe": {
+        "canonical_missing": 0,
+        "canonical_present": 6,
+        "denominator": 6,
+        "failure_label_counts": {
+          "failed": 1,
+          "invalid_submission:search_replace_old_occurrence_mismatch": 3,
+          "invalid_submission:unsupported_patch_response": 1,
+          "passed": 1
+        },
+        "passed": 1,
+        "score_name": "W_score",
+        "score_percent": 16.666666666666668,
+        "scoreable": 6,
+        "status_counts": {
+          "failed": 1,
+          "invalid_submission": 4,
+          "passed": 1
+        },
+        "wilson_95": {
+          "lower": 0.030053369748306635,
+          "upper": 0.5635028221864702
+        }
+      }
+    },
+    "distributions": {
+      "failure_label_counts_canonical": {
+        "failed": 3,
+        "invalid_submission:search_replace_anchor_mismatch": 1,
+        "invalid_submission:search_replace_old_occurrence_mismatch": 14,
+        "invalid_submission:unsupported_patch_response": 1,
+        "passed": 5
+      },
+      "metadata_missing_counts_canonical_future_contract": {},
+      "status_counts_canonical": {
+        "failed": 3,
+        "invalid_submission": 16,
+        "passed": 5
+      }
+    },
+    "rank_order": [
+      {
+        "acut_id": "cheap-click-specialist",
+        "rank": 1,
+        "score_percent": 33.333333333333336
+      },
+      {
+        "acut_id": "cheap-generic-swe",
+        "rank": 2,
+        "score_percent": 16.666666666666668
+      },
+      {
+        "acut_id": "frontier-click-specialist",
+        "rank": 3,
+        "score_percent": 16.666666666666668
+      },
+      {
+        "acut_id": "frontier-generic-swe",
+        "rank": 4,
+        "score_percent": 16.666666666666668
+      }
+    ]
+  }
+}

@@ -1,0 +1,59 @@
+diff --git a/click/types.py b/click/types.py
+index 5820146..1f88032 100644
+--- a/click/types.py
++++ b/click/types.py
+@@ -184,12 +184,32 @@ class Choice(ParamType):
+ 
+ 
+ class DateTime(ParamType):
++    """The DateTime type converts date strings into `datetime` objects.
++
++    The format strings which are checked are configurable, but default to some
++    common (non-timezone aware) ISO 8601 formats.
++
++    When specifying *DateTime* formats, you should only pass a list or a tuple.
++    Other iterables, like generators, may lead to surprising results.
++
++    The format strings are processed using ``datetime.strptime``, and this
++    consequently defines the format strings which are allowed.
++
++    Parsing is tried using each format, in order, and the first format which
++    parses successfully is used.
++
++    :param formats: A list or tuple of date format strings, in the order in
++                    which they should be tried. Defaults to
++                    ``'%Y-%m-%d'``, ``'%Y-%m-%dT%H:%M:%S'``,
++                    ``'%Y-%m-%d %H:%M:%S'``.
++    """
+     name = 'datetime'
+ 
+     def __init__(self, formats=None):
+         self.formats = formats or [
+             '%Y-%m-%d',
+-            '%Y-%m-%dT%H:%M:%S'
++            '%Y-%m-%dT%H:%M:%S',
++            '%Y-%m-%d %H:%M:%S'
+         ]
+ 
+     def get_metavar(self, param):
+diff --git a/tests/test_basic.py b/tests/test_basic.py
+index 414fd1c..8de6301 100644
+--- a/tests/test_basic.py
++++ b/tests/test_basic.py
+@@ -349,11 +349,13 @@ def test_datetime_option_default(runner):
+ 
+     result = runner.invoke(cli, ['--start_date=2015-09'])
+     assert result.exit_code == 2
+-    assert 'Invalid value for "--start_date": invalid datetime format: 2015-09. ' \
+-        '(choose from %Y-%m-%d, %Y-%m-%dT%H:%M:%S)' in result.output
++    assert ('Invalid value for "--start_date": '
++            'invalid datetime format: 2015-09. '
++            '(choose from %Y-%m-%d, %Y-%m-%dT%H:%M:%S, %Y-%m-%d %H:%M:%S)'
++            ) in result.output
+ 
+     result = runner.invoke(cli, ['--help'])
+-    assert '--start_date [%Y-%m-%d|%Y-%m-%dT%H:%M:%S]' in result.output
++    assert '--start_date [%Y-%m-%d|%Y-%m-%dT%H:%M:%S|%Y-%m-%d %H:%M:%S]' in result.output
+ 
+ 
+ def test_datetime_option_custom(runner):

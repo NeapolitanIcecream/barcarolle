@@ -1,0 +1,73 @@
+diff --git a/click/types.py b/click/types.py
+index f594005..f10f623 100644
+--- a/click/types.py
++++ b/click/types.py
+@@ -136,8 +136,9 @@ class Choice(ParamType):
+     """
+     name = 'choice'
+ 
+-    def __init__(self, choices):
++    def __init__(self, choices, case_sensitive=True):
+         self.choices = choices
++        self.case_sensitive = case_sensitive
+ 
+     def get_metavar(self, param):
+         return '[%s]' % '|'.join(self.choices)
+@@ -145,18 +146,24 @@ class Choice(ParamType):
+     def get_missing_message(self, param):
+         return 'Choose from %s.' % ', '.join(self.choices)
+ 
++    def _normalize_choice(self, choice, ctx):
++        if ctx is not None and \
++           ctx.token_normalize_func is not None:
++            choice = ctx.token_normalize_func(choice)
++        if not self.case_sensitive:
++            choice = choice.lower()
++        return choice
++
+     def convert(self, value, param, ctx):
+         # Exact match
+         if value in self.choices:
+             return value
+ 
+         # Match through normalization
+-        if ctx is not None and \
+-           ctx.token_normalize_func is not None:
+-            value = ctx.token_normalize_func(value)
+-            for choice in self.choices:
+-                if ctx.token_normalize_func(choice) == value:
+-                    return choice
++        value = self._normalize_choice(value, ctx)
++        for choice in self.choices:
++            if self._normalize_choice(choice, ctx) == value:
++                return choice
+ 
+         self.fail('invalid choice: %s. (choose from %s)' %
+                   (value, ', '.join(self.choices)), param, ctx)
+diff --git a/tests/test_options.py b/tests/test_options.py
+index e8057fa..722dfc6 100644
+--- a/tests/test_options.py
++++ b/tests/test_options.py
+@@ -310,6 +310,22 @@ def test_missing_choice(runner):
+         in result.output
+ 
+ 
++def test_case_insensitive_choice(runner):
++    @click.command()
++    @click.option('--foo', type=click.Choice(['Foo', 'Bar'],
++                                             case_sensitive=False))
++    def cmd(foo):
++        click.echo(foo)
++
++    result = runner.invoke(cmd, ['--foo', 'fOo'])
++    assert not result.exception
++    assert result.output == 'Foo\n'
++
++    result = runner.invoke(cmd, ['--foo', 'BAR'])
++    assert not result.exception
++    assert result.output == 'Bar\n'
++
++
+ def test_multiline_help(runner):
+     @click.command()
+     @click.option('--foo', help="""

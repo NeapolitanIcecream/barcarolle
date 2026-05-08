@@ -1,0 +1,94 @@
+diff --git a/src/click/testing.py b/src/click/testing.py
+index fd6bf61..2cfbfac 100644
+--- a/src/click/testing.py
++++ b/src/click/testing.py
+@@ -62,7 +62,14 @@ class Result:
+     """Holds the captured result of an invoked CLI script."""
+ 
+     def __init__(
+-        self, runner, stdout_bytes, stderr_bytes, exit_code, exception, exc_info=None
++        self,
++        runner,
++        stdout_bytes,
++        stderr_bytes,
++        exit_code,
++        exception,
++        return_value=None,
++        exc_info=None,
+     ):
+         #: The runner that created the result
+         self.runner = runner
+@@ -74,6 +81,8 @@ class Result:
+         self.exit_code = exit_code
+         #: The exception that happened if one did.
+         self.exception = exception
++        #: The return value from the invoked command.
++        self.return_value = return_value
+         #: The traceback
+         self.exc_info = exc_info
+ 
+@@ -296,6 +305,7 @@ class CliRunner:
+         with self.isolation(input=input, env=env, color=color) as outstreams:
+             exception = None
+             exit_code = 0
++            return_value = None
+ 
+             if isinstance(args, str):
+                 args = shlex.split(args)
+@@ -305,8 +315,25 @@ class CliRunner:
+             except KeyError:
+                 prog_name = self.get_default_prog_name(cli)
+ 
++            sentinel = object()
++            old_invoke = cli.invoke
++            old_invoke_attr = getattr(cli, "__dict__", {}).get("invoke", sentinel)
++
++            def catch_return_value(*args, **kwargs):
++                nonlocal return_value
++                return_value = old_invoke(*args, **kwargs)
++                return return_value
++
++            cli.invoke = catch_return_value
++
+             try:
+-                cli.main(args=args or (), prog_name=prog_name, **extra)
++                try:
++                    cli.main(args=args or (), prog_name=prog_name, **extra)
++                finally:
++                    if old_invoke_attr is sentinel:
++                        del cli.invoke
++                    else:
++                        cli.invoke = old_invoke_attr
+             except SystemExit as e:
+                 exc_info = sys.exc_info()
+                 exit_code = e.code
+@@ -341,6 +368,7 @@ class CliRunner:
+             stderr_bytes=stderr,
+             exit_code=exit_code,
+             exception=exception,
++            return_value=return_value,
+             exc_info=exc_info,
+         )
+ 
+diff --git a/tests/test_testing.py b/tests/test_testing.py
+index 7360473..5dffa48 100644
+--- a/tests/test_testing.py
++++ b/tests/test_testing.py
+@@ -32,6 +32,17 @@ def test_runner():
+     assert result.output == "Hello World!\nHello World!\n"
+ 
+ 
++def test_return_value():
++    @click.command()
++    def cli():
++        return "hello"
++
++    runner = CliRunner()
++    result = runner.invoke(cli)
++    assert result.exit_code == 0
++    assert result.return_value == "hello"
++
++
+ def test_runner_with_stream():
+     @click.command()
+     def test():

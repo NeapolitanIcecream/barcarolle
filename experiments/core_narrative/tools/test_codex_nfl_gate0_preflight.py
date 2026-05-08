@@ -114,6 +114,111 @@ class CodexNflGate0PreflightTests(unittest.TestCase):
             payload = preflight.json.loads(output.read_text(encoding="utf-8"))
             self.assertEqual(payload["started_at"], "start-time")
             self.assertEqual(payload["finished_at"], "finish-time")
+            self.assertEqual(payload["task_split"], "rbench")
+
+    def test_main_can_probe_rwork_manifest(self) -> None:
+        """Gate 0 admission checks are split-aware for held-out Click RWork tasks."""
+        with tempfile.TemporaryDirectory() as temp_dir:
+            output = Path(temp_dir) / "preflight.json"
+            tasks = [
+                {"task_id": "click__rwork__001"},
+                {"task_id": "click__rwork__002"},
+                {"task_id": "click__rwork__003"},
+            ]
+            task_by_id = {task["task_id"]: task for task in tasks}
+            with mock.patch.object(preflight.batch, "task_split_manifest_path", return_value=Path("rwork.yaml")), mock.patch.object(
+                preflight,
+                "load_manifest",
+                return_value={"split": "RWork", "tasks": tasks},
+            ), mock.patch.object(preflight.batch, "task_by_id", return_value=task_by_id), mock.patch.object(
+                preflight.batch,
+                "task_manifest_path",
+                return_value=Path(__file__),
+            ), mock.patch.object(
+                preflight,
+                "task_probe",
+                side_effect=lambda task, **kwargs: {"task_id": task["task_id"], "status": "passed"},
+            ), mock.patch.object(preflight, "iso_now", side_effect=["start-time", "finish-time"]):
+                code = preflight.main(
+                    [
+                        "--task-split",
+                        "rwork",
+                        "--tasks",
+                        "click__rwork__001",
+                        "click__rwork__002",
+                        "click__rwork__003",
+                        "--output",
+                        str(output),
+                    ]
+                )
+
+            self.assertEqual(code, 0)
+            payload = preflight.json.loads(output.read_text(encoding="utf-8"))
+            self.assertEqual(payload["task_split"], "rwork")
+
+    def test_task_probe_records_clean_patch_replay_gate(self) -> None:
+        """Reference probes double as clean replay evidence in the admission artifact."""
+        task = {"task_id": "click__rbench__001", "source": {}}
+
+        with mock.patch.object(preflight, "reference_patch_for_task", return_value="reference"), mock.patch.object(
+            preflight,
+            "known_bad_patch_for_task",
+            return_value="known-bad",
+        ), mock.patch.object(
+            preflight,
+            "write_json",
+        ), mock.patch.object(
+            preflight,
+            "run_noop_probe",
+            return_value={"status": "failed", "verification": {"duration_seconds": 0.1}},
+        ), mock.patch.object(
+            preflight,
+            "verify_patch_text",
+            side_effect=[
+                {"status": "passed", "workspace": "/tmp/ref1", "verification": {"exit_code": 0, "duration_seconds": 0.2}},
+                {"status": "passed", "workspace": "/tmp/ref2", "verification": {"exit_code": 0, "duration_seconds": 0.3}},
+                {"status": "failed", "workspace": "/tmp/bad", "verification": {"exit_code": 1, "duration_seconds": 0.2}},
+            ],
+        ), mock.patch.object(
+            preflight,
+            "verifier_timeout_seconds",
+            return_value=60,
+        ), mock.patch.object(
+            preflight,
+            "leakage_findings",
+            return_value={"unsafe": False, "reason_counts": {}, "ignored_benign_urls": []},
+        ):
+            result = preflight.task_probe(
+                task,
+                run_prefix="unit",
+                flakiness_runs=2,
+                install_timeout_seconds=1,
+            )
+
+        self.assertTrue(result["gates"]["clean_patch_replay"])
+        self.assertTrue(result["clean_patch_replay"]["separate_workspaces"])
+
+    def test_reference_failure_is_classified_as_task_pack_or_verifier_defect(self) -> None:
+        """Admission artifacts label reference/verifier mismatches instead of hiding them."""
+        defects = preflight.admission_defect_classifications(
+            gates={
+                "no_op_probe": True,
+                "reference_probe": False,
+                "known_bad_probe": True,
+                "flakiness_probe": False,
+                "verifier_runtime_p95_lt_timeout": True,
+                "oracle_log_leakage": True,
+                "clean_patch_replay": False,
+            },
+            noop={"status": "failed"},
+            reference_runs=[{"status": "failed"}, {"status": "failed"}],
+            known_bad={"status": "failed"},
+            leakage={"unsafe": False},
+        )
+
+        classes = {defect["defect_class"] for defect in defects}
+        self.assertIn("reference_patch_failed_verifier", classes)
+        self.assertIn("clean_reference_replay_failed", classes)
 
     def test_main_rejects_duplicate_task_ids_for_count_gate(self) -> None:
         """Regression: repeated task IDs must not satisfy the three-task Gate 0 count."""

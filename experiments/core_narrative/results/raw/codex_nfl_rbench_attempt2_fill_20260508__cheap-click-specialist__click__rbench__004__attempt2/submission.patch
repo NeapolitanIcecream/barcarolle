@@ -1,0 +1,178 @@
+diff --git a/click/testing.py b/click/testing.py
+index ae36d10..f00aad0 100644
+--- a/click/testing.py
++++ b/click/testing.py
+@@ -70,15 +70,47 @@ def make_input_stream(input, charset):
+     return io.BytesIO(input)
+ 
+ 
++class _TeeStream(object):
++
++    def __init__(self, stream, mirror):
++        self._stream = stream
++        self._mirror = mirror
++
++    def write(self, data):
++        self._stream.write(data)
++        self._mirror.write(data)
++        return len(data)
++
++    def flush(self):
++        self._stream.flush()
++        self._mirror.flush()
++
++    def writable(self):
++        return True
++
++    def readable(self):
++        return False
++
++    def seekable(self):
++        return False
++
++    def __getattr__(self, x):
++        return getattr(self._stream, x)
++
++
+ class Result(object):
+     """Holds the captured result of an invoked CLI script."""
+ 
+-    def __init__(self, runner, output_bytes, exit_code, exception,
+-                 exc_info=None):
++    def __init__(self, runner, output_bytes, stdout_bytes, stderr_bytes,
++                 exit_code, exception, exc_info=None):
+         #: The runner that created the result
+         self.runner = runner
+         #: The output as bytes.
+         self.output_bytes = output_bytes
++        #: The standard output as bytes.
++        self.stdout_bytes = stdout_bytes
++        #: The standard error as bytes.
++        self.stderr_bytes = stderr_bytes
+         #: The exit code as integer.
+         self.exit_code = exit_code
+         #: The exception that happend if one did.
+@@ -86,11 +118,24 @@ class Result(object):
+         #: The traceback
+         self.exc_info = exc_info
+ 
++    def _decode(self, data):
++        return data.decode(self.runner.charset, 'replace') \
++            .replace('\r\n', '\n')
++
+     @property
+     def output(self):
+         """The output as unicode string."""
+-        return self.output_bytes.decode(self.runner.charset, 'replace') \
+-            .replace('\r\n', '\n')
++        return self._decode(self.output_bytes)
++
++    @property
++    def stdout(self):
++        """The standard output as unicode string."""
++        return self._decode(self.stdout_bytes)
++
++    @property
++    def stderr(self):
++        """The standard error as unicode string."""
++        return self._decode(self.stderr_bytes)
+ 
+     def __repr__(self):
+         return '<Result %s>' % (
+@@ -164,16 +209,26 @@ class CliRunner(object):
+         env = self.make_env(env)
+ 
+         if PY2:
+-            sys.stdout = sys.stderr = bytes_output = StringIO()
++            stdout_bytes = StringIO()
++            stderr_bytes = StringIO()
++            bytes_output = StringIO()
++            sys.stdout = _TeeStream(stdout_bytes, bytes_output)
++            sys.stderr = _TeeStream(stderr_bytes, bytes_output)
+             if self.echo_stdin:
+-                input = EchoingStdin(input, bytes_output)
++                input = EchoingStdin(input, sys.stdout)
+         else:
++            stdout_bytes = io.BytesIO()
++            stderr_bytes = io.BytesIO()
+             bytes_output = io.BytesIO()
++            sys.stdout = io.TextIOWrapper(
++                _TeeStream(stdout_bytes, bytes_output),
++                encoding=self.charset)
++            sys.stderr = io.TextIOWrapper(
++                _TeeStream(stderr_bytes, bytes_output),
++                encoding=self.charset)
+             if self.echo_stdin:
+-                input = EchoingStdin(input, bytes_output)
++                input = EchoingStdin(input, sys.stdout)
+             input = io.TextIOWrapper(input, encoding=self.charset)
+-            sys.stdout = sys.stderr = io.TextIOWrapper(
+-                bytes_output, encoding=self.charset)
+ 
+         sys.stdin = input
+ 
+@@ -223,7 +278,7 @@ class CliRunner(object):
+                         pass
+                 else:
+                     os.environ[key] = value
+-            yield bytes_output
++            yield bytes_output, stdout_bytes, stderr_bytes
+         finally:
+             for key, value in iteritems(old_env):
+                 if value is None:
+@@ -275,7 +330,8 @@ class CliRunner(object):
+                       application can still override this explicitly.
+         """
+         exc_info = None
+-        with self.isolation(input=input, env=env, color=color) as out:
++        with self.isolation(input=input, env=env, color=color) as streams:
++            out, stdout, stderr = streams
+             exception = None
+             exit_code = 0
+ 
+@@ -307,10 +363,15 @@ class CliRunner(object):
+                 exc_info = sys.exc_info()
+             finally:
+                 sys.stdout.flush()
++                sys.stderr.flush()
+                 output = out.getvalue()
++                stdout_bytes = stdout.getvalue()
++                stderr_bytes = stderr.getvalue()
+ 
+         return Result(runner=self,
+                       output_bytes=output,
++                      stdout_bytes=stdout_bytes,
++                      stderr_bytes=stderr_bytes,
+                       exit_code=exit_code,
+                       exception=exception,
+                       exc_info=exc_info)
+diff --git a/tests/test_testing.py b/tests/test_testing.py
+index c091095..0b714ea 100644
+--- a/tests/test_testing.py
++++ b/tests/test_testing.py
+@@ -61,6 +61,25 @@ def test_runner_with_stream():
+     assert result.output == 'Hello World!\nHello World!\n'
+ 
+ 
++def test_runner_separated_streams():
++    @click.command()
++    def test():
++        click.echo('stdout 1')
++        click.echo('stderr 1', err=True)
++        click.echo('stdout 2')
++        click.echo('stderr 2', err=True)
++
++    runner = CliRunner()
++    result = runner.invoke(test)
++
++    assert not result.exception
++    assert result.output == 'stdout 1\nstderr 1\nstdout 2\nstderr 2\n'
++    assert result.stdout == 'stdout 1\nstdout 2\n'
++    assert result.stderr == 'stderr 1\nstderr 2\n'
++    assert result.stdout_bytes == b'stdout 1\nstdout 2\n'
++    assert result.stderr_bytes == b'stderr 1\nstderr 2\n'
++
++
+ def test_prompts():
+     @click.command()
+     @click.option('--foo', prompt=True)

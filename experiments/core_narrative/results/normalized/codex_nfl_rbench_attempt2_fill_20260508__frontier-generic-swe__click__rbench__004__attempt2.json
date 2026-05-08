@@ -1,0 +1,62 @@
+{
+  "acut_id": "frontier-generic-swe",
+  "attempt": 2,
+  "error": "LLM request failed",
+  "finished_at": "2026-05-08T16:00:03.188204Z",
+  "metadata": {
+    "acut_manifest_path": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/configs/acuts/frontier-generic-swe.yaml",
+    "acut_manifest_sha256": "a6246d43f9de1ebf0dfb05d86b18561d94721ce4e68b4ad70f1452e9c6b03734",
+    "batch_tool": "codex_nfl_experiment_runner",
+    "clean_patch_replay": {
+      "attempted": false,
+      "runner_workspace": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/workspaces/codex_nfl_rbench_attempt2_fill_20260508__frontier-generic-swe__click__rbench__004__attempt2",
+      "separate_workspace": false,
+      "skip_apply": null,
+      "verify_workspace": null
+    },
+    "context_pack_digest": null,
+    "direct_runner_budget_gate": null,
+    "direct_runner_cost_accounting": null,
+    "direct_runner_cost_ledger_append": {
+      "actual_cost_recorded": false,
+      "estimated_cost_usd": 3.0,
+      "new_cumulative_estimated_cost_usd": 18.893923,
+      "record_count_after": 84,
+      "record_count_before": 83,
+      "status": "appended"
+    },
+    "direct_runner_id": "codex-nfl-direct-search-replace-v1",
+    "direct_runner_status": "error",
+    "failure_class": null,
+    "failure_owner": "infrastructure",
+    "model_call_made": true,
+    "prompt_snapshot": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/codex_nfl_rbench_attempt2_fill_20260508__frontier-generic-swe__click__rbench__004__attempt2/prompt_snapshot.json",
+    "prompt_snapshot_sha256": "d05ecb61b10c8302cfbc275ded701b3e558a2c3774f748258b9ecd99e9dc8aef",
+    "raw_response_artifact": null,
+    "runner_id": "codex-nfl-batch-v1",
+    "task_manifest_path": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/tasks/click/rbench/click__rbench__004/task.yaml",
+    "task_manifest_sha256": "e143179d5dfe307889be075cfc0c4fde24cfa76b7ae1567fdb742a8e17080fbe",
+    "tool": "codex_nfl_experiment_runner",
+    "verifier_digest_sha256": "a2dabe656a5652694af6cca1dbd4ea70bf23bba5056086d55dc5ac4d627df848",
+    "verifier_ready_patch_available": false
+  },
+  "patch_path": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/codex_nfl_rbench_attempt2_fill_20260508__frontier-generic-swe__click__rbench__004__attempt2/submission.patch",
+  "review": {
+    "mergeability_grade": null,
+    "notes": "",
+    "rule_violation": false,
+    "wrong_module": false
+  },
+  "run_id": "codex_nfl_rbench_attempt2_fill_20260508__frontier-generic-swe__click__rbench__004__attempt2",
+  "schema_version": "core-narrative.run-result.v1",
+  "split": "rbench",
+  "started_at": "2026-05-08T15:59:58.317753Z",
+  "status": "infra_failed",
+  "task_id": "click__rbench__004",
+  "verification": {
+    "duration_seconds": null,
+    "exit_code": null,
+    "stderr_artifact": null,
+    "stdout_artifact": null
+  }
+}
