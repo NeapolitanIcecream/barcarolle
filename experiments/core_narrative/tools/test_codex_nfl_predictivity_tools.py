@@ -8,9 +8,11 @@ import os
 import tempfile
 import unittest
 from pathlib import Path
+from types import SimpleNamespace
 from unittest import mock
 
 import codex_nfl_canonical_matrix as matrix
+import codex_nfl_future_work_gap_map as gap_map
 import codex_nfl_gscore_basis as gscore_basis
 import codex_nfl_predictivity_analysis as predictivity
 
@@ -266,6 +268,57 @@ class CodexNflPredictivityToolsTests(unittest.TestCase):
         self.assertEqual(payload["status"], "direct_gscore_feasible")
         self.assertFalse(payload["checks"]["docker"]["required_for_selected_backend"])
         self.assertNotIn("docker_unavailable", {item["blocker"] for item in payload["blockers"]})
+
+    def test_future_work_gap_map_resolves_baseline_artifacts_from_repo_root(self) -> None:
+        """Regression: baseline artifact checks must not depend on the process CWD."""
+        with tempfile.TemporaryDirectory() as repo_dir, tempfile.TemporaryDirectory() as cwd_dir:
+            repo = Path(repo_dir)
+            (repo / "experiments/core_narrative/results").mkdir(parents=True)
+            (repo / "experiments/core_narrative/reports").mkdir(parents=True)
+            (repo / "experiments/core_narrative/tools").mkdir(parents=True)
+            (repo / "experiments/core_narrative/results/codex_nfl_output_contract_v3_click_008_scoreable_closure_20260508.json").write_text(
+                "{}",
+                encoding="utf-8",
+            )
+            (repo / "experiments/core_narrative/reports/2026-05-08_codex_nfl_click008_attempt3_report.md").write_text(
+                "attempt3",
+                encoding="utf-8",
+            )
+            (repo / "experiments/core_narrative/reports/2026-05-08_codex_nfl_click008_frontier_retry_report.md").write_text(
+                "frontier",
+                encoding="utf-8",
+            )
+            (repo / "experiments/core_narrative/tools/test_codex_nfl_experiment_runner.py").write_text(
+                "# tests",
+                encoding="utf-8",
+            )
+            args = SimpleNamespace(
+                output="gap.json",
+                admission_artifact=None,
+                rbench_matrix=None,
+                rwork_matrix=None,
+                gscore_basis=None,
+                prediction_analysis=None,
+                prediction_report=None,
+            )
+            previous_cwd = Path.cwd()
+            try:
+                os.chdir(cwd_dir)
+                with mock.patch.object(gap_map, "REPO_ROOT", repo):
+                    payload = gap_map.build_gap_map(args)
+            finally:
+                os.chdir(previous_cwd)
+
+        step1 = payload["report_future_work_steps"]["1_gap_audit"]["already_satisfied_by_merged_artifacts"]
+        self.assertEqual(
+            step1,
+            [
+                "Click008 attempt 3 report exists",
+                "Click008 frontier retry report exists",
+                "Click008 scoreable closure exists",
+            ],
+        )
+        self.assertEqual(payload["report_future_work_steps"]["3_output_contract_v3_workspace_isolation"]["status"], "satisfied")
 
 
 if __name__ == "__main__":

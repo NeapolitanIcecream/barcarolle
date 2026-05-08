@@ -13,6 +13,7 @@ from _common import emit_json, fail, iso_now
 
 
 TOOL = "codex_nfl_future_work_gap_map"
+REPO_ROOT = Path(__file__).resolve().parents[3]
 
 
 def parse_args(argv: Sequence[str]) -> argparse.Namespace:
@@ -49,18 +50,22 @@ def status_for(condition: bool, partial: bool = False) -> str:
     return "open"
 
 
+def repo_path(path: str) -> Path:
+    return REPO_ROOT / path
+
+
 def build_gap_map(args: argparse.Namespace) -> dict[str, Any]:
     admission = load(args.admission_artifact)
     rbench = load(args.rbench_matrix)
     rwork = load(args.rwork_matrix)
     gscore = load(args.gscore_basis)
     prediction = load(args.prediction_analysis)
-    click008_closure = Path("experiments/core_narrative/results/codex_nfl_output_contract_v3_click_008_scoreable_closure_20260508.json")
+    click008_closure = repo_path("experiments/core_narrative/results/codex_nfl_output_contract_v3_click_008_scoreable_closure_20260508.json")
     click008_reports = [
-        Path("experiments/core_narrative/reports/2026-05-08_codex_nfl_click008_attempt3_report.md"),
-        Path("experiments/core_narrative/reports/2026-05-08_codex_nfl_click008_frontier_retry_report.md"),
+        repo_path("experiments/core_narrative/reports/2026-05-08_codex_nfl_click008_attempt3_report.md"),
+        repo_path("experiments/core_narrative/reports/2026-05-08_codex_nfl_click008_frontier_retry_report.md"),
     ]
-    output_contract_tests = Path("experiments/core_narrative/tools/test_codex_nfl_experiment_runner.py").exists()
+    output_contract_tests = repo_path("experiments/core_narrative/tools/test_codex_nfl_experiment_runner.py").exists()
     admission_ok = admission.get("status") == "passed" and int(admission.get("selected_tasks_count", 0) or 0) >= 8
     admission_defects = admission.get("defect_classification_counts") if isinstance(admission.get("defect_classification_counts"), dict) else {}
     rbench_missing = rbench.get("missing", {}) if isinstance(rbench.get("missing"), dict) else {}

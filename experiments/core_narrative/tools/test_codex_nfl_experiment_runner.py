@@ -476,6 +476,52 @@ class CodexNflExperimentRunnerTests(unittest.TestCase):
 
         self.assertEqual(runner.task_manifest_path("click__rwork__001"), expected)
 
+    def test_main_rejects_tasks_with_wrong_split_even_when_manifest_contains_id(self) -> None:
+        """Regression: custom split manifests must not mix RBench task packs into RWork runs."""
+        runner = load_runner_module()
+        manifest_path = self.root / "mixed_manifest.json"
+        manifest_path.write_text(
+            json.dumps(
+                {
+                    "split": "RWork",
+                    "tasks": [
+                        {
+                            "task_id": "click__rbench__001",
+                            "split": "rbench",
+                            "benchmark_split": "RBench",
+                        }
+                    ],
+                }
+            ),
+            encoding="utf-8",
+        )
+        output_path = self.root / "summary.json"
+        run_calls: list[str] = []
+
+        def fake_run_one(_args, task, _acut_id):
+            run_calls.append(task["task_id"])
+            return {"status": "passed", "scoreable": True}
+
+        runner.run_one = fake_run_one
+
+        code = runner.main(
+            [
+                "--task-split",
+                "rwork",
+                "--task-split-manifest",
+                str(manifest_path),
+                "--tasks",
+                "click__rbench__001",
+                "--acuts",
+                "cheap-generic-swe",
+                "--output",
+                str(output_path),
+            ]
+        )
+
+        self.assertNotEqual(code, 0)
+        self.assertEqual(run_calls, [])
+
     def test_install_workspace_prefers_uv_python312_when_available(self) -> None:
         """RWork Click tasks require Python 3.10+, so use the repo's uv 3.12 path."""
         runner = load_runner_module()
