@@ -1,0 +1,79 @@
+{
+  "schema_version": "core-narrative.output-contract-v3-targeted-summary.v1",
+  "tool": "codex_nfl_output_contract_v3_targeted_summary",
+  "status": "clean_replay_recovered",
+  "updated_at": "2026-05-08T05:51:14Z",
+  "purpose": "Continuation 2 targeted output-contract iteration for frontier-click-specialist x click__rbench__003.",
+  "contract_change": {
+    "output_contract": "anchored-search-replace-json-v3",
+    "summary": "Prompt now requests a single-key edits JSON object, explicitly rejects unified_diff/raw diff/prose in the live contract, records a machine-readable schema, and rejects edit bundles with unsupported top-level keys.",
+    "implementation_files": [
+      "experiments/core_narrative/tools/openclaw_direct_runner.py",
+      "experiments/core_narrative/tools/test_openclaw_direct_runner.py",
+      "experiments/core_narrative/tools/test_codex_nfl_direct_runner.py"
+    ]
+  },
+  "no_new_spend_replay": {
+    "batch": "experiments/core_narrative/results/codex_nfl_output_contract_v3_replay_targeted_20260508.json",
+    "normalized_result": "experiments/core_narrative/results/normalized/codex_nfl_output_contract_v3_replay_20260508__frontier-click-specialist__click__rbench__003__attempt1.json",
+    "runner_result": "experiments/core_narrative/results/raw/codex_nfl_output_contract_v3_replay_20260508__frontier-click-specialist__click__rbench__003__attempt1/runner_result.json",
+    "model_call_made": false,
+    "ledger_record_appended": false,
+    "status": "invalid_submission",
+    "failure_class": "invalid_unified_diff",
+    "failure_owner": "model_output",
+    "patch_ready": false,
+    "clean_patch_replay_attempted": false
+  },
+  "targeted_live_cell": {
+    "batch": "experiments/core_narrative/results/codex_nfl_output_contract_v3_live_targeted_20260508.json",
+    "normalized_result": "experiments/core_narrative/results/normalized/codex_nfl_output_contract_v3_live_20260508__frontier-click-specialist__click__rbench__003__attempt1.json",
+    "runner_result": "experiments/core_narrative/results/raw/codex_nfl_output_contract_v3_live_20260508__frontier-click-specialist__click__rbench__003__attempt1/runner_result.json",
+    "batch_run_result": "experiments/core_narrative/results/raw/codex_nfl_output_contract_v3_live_20260508__frontier-click-specialist__click__rbench__003__attempt1/batch_run_result.json",
+    "prompt_snapshot": "experiments/core_narrative/results/raw/codex_nfl_output_contract_v3_live_20260508__frontier-click-specialist__click__rbench__003__attempt1/prompt_snapshot.json",
+    "patch_path": "experiments/core_narrative/results/raw/codex_nfl_output_contract_v3_live_20260508__frontier-click-specialist__click__rbench__003__attempt1/submission.patch",
+    "run_id": "codex_nfl_output_contract_v3_live_20260508__frontier-click-specialist__click__rbench__003__attempt1",
+    "task_id": "click__rbench__003",
+    "acut_id": "frontier-click-specialist",
+    "status": "passed",
+    "scoreable": true,
+    "patch_ready": true,
+    "model_call_made": true,
+    "runner_code": 0,
+    "runner_status": "patch_generated",
+    "verify_code": 0,
+    "clean_patch_replay": {
+      "attempted": true,
+      "skip_apply": false,
+      "separate_workspace": true
+    },
+    "patch": {
+      "kind": "search_replace_edits",
+      "edit_count": 7,
+      "anchored_edit_count": 0,
+      "changed_paths": [
+        "click/core.py",
+        "click/termui.py"
+      ],
+      "size_bytes": 4459
+    }
+  },
+  "cost": {
+    "new_live_provider_usage_cost_usd": 0.23266,
+    "new_live_provider_usage_cost_status": "provider_response_usage_cost_not_invoice",
+    "input_tokens": 21926,
+    "output_tokens": 4101,
+    "ledger_record_count_after_live": 47,
+    "ledger_estimated_cost_sum_usd_after_live": 2.391728,
+    "actual_provider_billed_cost_status": "unknown_no_invoice_or_billed_cost_records",
+    "cost_reconciliation": "experiments/core_narrative/results/codex_nfl_output_contract_v3_cost_reconciliation_2026-05-08.json"
+  },
+  "gate": {
+    "decision": "experiments/core_narrative/results/codex_nfl_output_contract_v3_gate1_decision_20260508.json",
+    "gate1_can_pass": true,
+    "next_justified_step": "Run the controlled Click 004-008 expansion using the v3 contract, subject to the normal budget and expansion controls."
+  },
+  "summaries": {
+    "normalized_live_summary": "experiments/core_narrative/results/normalized/codex_nfl_output_contract_v3_summary_20260508.json"
+  }
+}

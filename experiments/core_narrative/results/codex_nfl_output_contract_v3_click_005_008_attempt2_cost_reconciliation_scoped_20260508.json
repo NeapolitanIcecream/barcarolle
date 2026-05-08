@@ -1,0 +1,356 @@
+{
+  "actual_provider_billed_cost_observed_usd": null,
+  "actual_provider_billed_cost_status": "unknown_no_invoice_or_billed_cost_records",
+  "expected_record_count": 5,
+  "full_reconciliation_artifact": "experiments/core_narrative/results/codex_nfl_output_contract_v3_click_005_008_attempt2_cost_reconciliation_2026-05-08.json",
+  "input_tokens": 94266,
+  "latest_cumulative_estimated_cost_usd": 5.865572,
+  "ledger": "experiments/core_narrative/results/cost_ledger.jsonl",
+  "ledger_estimated_cost_sum_usd": 0.986359,
+  "ledger_record_count_after_attempt2": 72,
+  "ledger_record_count_before_attempt2": 67,
+  "observed_provider_usage_cost_raw_sum_usd": "0.98635825",
+  "observed_provider_usage_cost_status": "provider_response_usage_cost_not_invoice",
+  "observed_provider_usage_cost_sum_usd": 0.986358,
+  "output_tokens": 71759,
+  "provider_usage_expected_count": 5,
+  "provider_usage_observed_count": 5,
+  "record_count": 5,
+  "record_count_check": "passed",
+  "records": [
+    {
+      "actual_cost_usd": null,
+      "acut_id": "cheap-click-specialist",
+      "attempt": 2,
+      "cumulative_estimated_cost_usd": 4.904721,
+      "estimated_cost_usd": 0.025508,
+      "event": "patch_generated",
+      "finished_at": "2026-05-08T10:35:53.933494Z",
+      "input_tokens": 10772,
+      "metadata": {
+        "actual_cost_status": "unknown_not_provider_reported",
+        "cost_basis": "provider_response_usage_cost_not_invoice",
+        "fallback_estimated_cost_usd": 1.0,
+        "mode": "live",
+        "model_call_made": true,
+        "observed_provider_cost_status": "provider_response_usage_cost_not_invoice",
+        "observed_provider_cost_usd": 0.0255075,
+        "patch_size_bytes": 3617,
+        "projected_cost_usd": 1.0,
+        "provider_usage": {
+          "completion_tokens": 3873,
+          "completion_tokens_details": {
+            "audio_tokens": 0,
+            "image_tokens": 0,
+            "reasoning_tokens": 3106
+          },
+          "cost": 0.0255075,
+          "cost_details": {
+            "upstream_inference_completions_cost": 0.0174285,
+            "upstream_inference_cost": 0.0255075,
+            "upstream_inference_prompt_cost": 0.008079
+          },
+          "is_byok": false,
+          "prompt_tokens": 10772,
+          "prompt_tokens_details": {
+            "audio_tokens": 0,
+            "cache_write_tokens": 0,
+            "cached_tokens": 0,
+            "video_tokens": 0
+          },
+          "total_tokens": 14645
+        },
+        "provider_usage_reported": true,
+        "request_profile": {
+          "endpoint_kind": "chat_completions",
+          "max_response_bytes": 2000000,
+          "model": "openai/gpt-5.4-mini",
+          "output_contract": "anchored-search-replace-json-v3",
+          "output_contract_schema": {
+            "anchor_policy": {
+              "anchors_are_for_repeated_old_text_only": true,
+              "anchors_must_be_immediate_adjacent_source": true,
+              "invalid_anchors_reject_the_edit_even_when_old_is_unique": true,
+              "omit_anchors_when_old_is_unique": true
+            },
+            "diagnostic_failure_classes": {
+              "search_replace_anchor_mismatch": "old text was present, but supplied anchors did not isolate exactly one occurrence",
+              "search_replace_old_occurrence_mismatch": "old text did not occur exactly once after earlier edits"
+            },
+            "id": "anchored-search-replace-json-v3",
+            "legacy_parser_fallback_keys": [
+              "unified_diff",
+              "files"
+            ],
+            "primary_top_level_key": "edits",
+            "requires_exact_old_text": true,
+            "requires_exact_path_from_context": true,
+            "requires_immediate_anchors_for_repeated_old_text": true,
+            "requires_single_top_level_key": true
+          },
+          "prompt_char_count": 45497,
+          "prompt_sha256": "1ecbbbe423d33188f5a17905c1353cf064c8b697c69fa014122bf8e0b0516d0a",
+          "request_body_bytes": 47357,
+          "response_format_requested": true,
+          "timeout_seconds": 360
+        },
+        "runner_id": "codex-nfl-direct-search-replace-v1"
+      },
+      "output_tokens": 3873,
+      "record_type": "acut_patch_generation_attempt",
+      "run_id": "codex_nfl_output_contract_v3_click_005_008_attempt2_20260508__cheap-click-specialist__click__rbench__005__attempt2",
+      "split": "rbench",
+      "started_at": "2026-05-08T10:35:01.369186Z",
+      "task_id": "click__rbench__005"
+    },
+    {
+      "actual_cost_usd": null,
+      "acut_id": "cheap-generic-swe",
+      "attempt": 2,
+      "cumulative_estimated_cost_usd": 4.9963,
+      "estimated_cost_usd": 0.091579,
+      "event": "runner_error_after_model_response",
+      "finished_at": "2026-05-08T10:38:36.122858Z",
+      "input_tokens": 20201,
+      "metadata": {
+        "actual_cost_status": "unknown_not_invoice_verified",
+        "cost_basis": "provider_response_usage_cost_not_invoice",
+        "failure_class": "search_replace_anchor_mismatch",
+        "fallback_estimated_cost_usd": 1.0,
+        "mode": "live",
+        "model_call_made": true,
+        "model_response_received": true,
+        "observed_provider_cost_status": "provider_response_usage_cost_not_invoice",
+        "observed_provider_cost_usd": 0.09157875,
+        "projected_cost_usd": 1.0,
+        "provider_usage": {
+          "completion_tokens": 16984,
+          "completion_tokens_details": {
+            "audio_tokens": 0,
+            "image_tokens": 0,
+            "reasoning_tokens": 16621
+          },
+          "cost": 0.09157875,
+          "cost_details": {
+            "upstream_inference_completions_cost": 0.076428,
+            "upstream_inference_cost": 0.09157875,
+            "upstream_inference_prompt_cost": 0.01515075
+          },
+          "is_byok": false,
+          "prompt_tokens": 20201,
+          "prompt_tokens_details": {
+            "audio_tokens": 0,
+            "cache_write_tokens": 0,
+            "cached_tokens": 0,
+            "video_tokens": 0
+          },
+          "total_tokens": 37185
+        },
+        "provider_usage_reported": true,
+        "response_text_sha256": "727652954f309e2a30c4178d421dec1924d5530d8c8000b4a1b9c40f0af05289",
+        "runner_id": "codex-nfl-direct-search-replace-v1"
+      },
+      "output_tokens": 16984,
+      "record_type": "acut_patch_generation_attempt",
+      "run_id": "codex_nfl_output_contract_v3_click_005_008_attempt2_20260508__cheap-generic-swe__click__rbench__008__attempt2",
+      "split": "rbench",
+      "started_at": "2026-05-08T10:36:18.788633Z",
+      "task_id": "click__rbench__008"
+    },
+    {
+      "actual_cost_usd": null,
+      "acut_id": "frontier-generic-swe",
+      "attempt": 2,
+      "cumulative_estimated_cost_usd": 5.350955,
+      "estimated_cost_usd": 0.354655,
+      "event": "runner_error_after_model_response",
+      "finished_at": "2026-05-08T10:41:08.151656Z",
+      "input_tokens": 20201,
+      "metadata": {
+        "actual_cost_status": "unknown_not_invoice_verified",
+        "cost_basis": "provider_response_usage_cost_not_invoice",
+        "failure_class": "search_replace_old_occurrence_mismatch",
+        "fallback_estimated_cost_usd": 3.0,
+        "mode": "live",
+        "model_call_made": true,
+        "model_response_received": true,
+        "observed_provider_cost_status": "provider_response_usage_cost_not_invoice",
+        "observed_provider_cost_usd": 0.354655,
+        "projected_cost_usd": 3.0,
+        "provider_usage": {
+          "completion_tokens": 8455,
+          "completion_tokens_details": {
+            "audio_tokens": 0,
+            "image_tokens": 0,
+            "reasoning_tokens": 6965
+          },
+          "cost": 0.354655,
+          "cost_details": {
+            "upstream_inference_completions_cost": 0.25365,
+            "upstream_inference_cost": 0.354655,
+            "upstream_inference_prompt_cost": 0.101005
+          },
+          "is_byok": false,
+          "prompt_tokens": 20201,
+          "prompt_tokens_details": {
+            "audio_tokens": 0,
+            "cache_write_tokens": 0,
+            "cached_tokens": 0,
+            "video_tokens": 0
+          },
+          "total_tokens": 28656
+        },
+        "provider_usage_reported": true,
+        "response_text_sha256": "e8c2f566e7b2ecb7aafbc1902b3f485327879f279c72de586dce6869bb55dd78",
+        "runner_id": "codex-nfl-direct-search-replace-v1"
+      },
+      "output_tokens": 8455,
+      "record_type": "acut_patch_generation_attempt",
+      "run_id": "codex_nfl_output_contract_v3_click_005_008_attempt2_20260508__frontier-generic-swe__click__rbench__008__attempt2",
+      "split": "rbench",
+      "started_at": "2026-05-08T10:38:40.639468Z",
+      "task_id": "click__rbench__008"
+    },
+    {
+      "actual_cost_usd": null,
+      "acut_id": "cheap-click-specialist",
+      "attempt": 2,
+      "cumulative_estimated_cost_usd": 5.522882,
+      "estimated_cost_usd": 0.171927,
+      "event": "patch_generated",
+      "finished_at": "2026-05-08T10:44:39.261712Z",
+      "input_tokens": 21546,
+      "metadata": {
+        "actual_cost_status": "unknown_not_provider_reported",
+        "cost_basis": "provider_response_usage_cost_not_invoice",
+        "fallback_estimated_cost_usd": 1.0,
+        "mode": "live",
+        "model_call_made": true,
+        "observed_provider_cost_status": "provider_response_usage_cost_not_invoice",
+        "observed_provider_cost_usd": 0.171927,
+        "patch_size_bytes": 5021,
+        "projected_cost_usd": 1.0,
+        "provider_usage": {
+          "completion_tokens": 34615,
+          "completion_tokens_details": {
+            "audio_tokens": 0,
+            "image_tokens": 0,
+            "reasoning_tokens": 33101
+          },
+          "cost": 0.171927,
+          "cost_details": {
+            "upstream_inference_completions_cost": 0.1557675,
+            "upstream_inference_cost": 0.171927,
+            "upstream_inference_prompt_cost": 0.0161595
+          },
+          "is_byok": false,
+          "prompt_tokens": 21546,
+          "prompt_tokens_details": {
+            "audio_tokens": 0,
+            "cache_write_tokens": 0,
+            "cached_tokens": 0,
+            "video_tokens": 0
+          },
+          "total_tokens": 56161
+        },
+        "provider_usage_reported": true,
+        "request_profile": {
+          "endpoint_kind": "chat_completions",
+          "max_response_bytes": 2000000,
+          "model": "openai/gpt-5.4-mini",
+          "output_contract": "anchored-search-replace-json-v3",
+          "output_contract_schema": {
+            "anchor_policy": {
+              "anchors_are_for_repeated_old_text_only": true,
+              "anchors_must_be_immediate_adjacent_source": true,
+              "invalid_anchors_reject_the_edit_even_when_old_is_unique": true,
+              "omit_anchors_when_old_is_unique": true
+            },
+            "diagnostic_failure_classes": {
+              "search_replace_anchor_mismatch": "old text was present, but supplied anchors did not isolate exactly one occurrence",
+              "search_replace_old_occurrence_mismatch": "old text did not occur exactly once after earlier edits"
+            },
+            "id": "anchored-search-replace-json-v3",
+            "legacy_parser_fallback_keys": [
+              "unified_diff",
+              "files"
+            ],
+            "primary_top_level_key": "edits",
+            "requires_exact_old_text": true,
+            "requires_exact_path_from_context": true,
+            "requires_immediate_anchors_for_repeated_old_text": true,
+            "requires_single_top_level_key": true
+          },
+          "prompt_char_count": 93559,
+          "prompt_sha256": "ea86cd108362d8cf942b1f64f3cecca5f22979513ceb69471ef090f8d41a85c6",
+          "request_body_bytes": 98262,
+          "response_format_requested": true,
+          "timeout_seconds": 360
+        },
+        "runner_id": "codex-nfl-direct-search-replace-v1"
+      },
+      "output_tokens": 34615,
+      "record_type": "acut_patch_generation_attempt",
+      "run_id": "codex_nfl_output_contract_v3_click_005_008_attempt2_20260508__cheap-click-specialist__click__rbench__008__attempt2",
+      "split": "rbench",
+      "started_at": "2026-05-08T10:41:12.692082Z",
+      "task_id": "click__rbench__008"
+    },
+    {
+      "actual_cost_usd": null,
+      "acut_id": "frontier-click-specialist",
+      "attempt": 2,
+      "cumulative_estimated_cost_usd": 5.865572,
+      "estimated_cost_usd": 0.34269,
+      "event": "runner_error_after_model_response",
+      "finished_at": "2026-05-08T10:47:55.090843Z",
+      "input_tokens": 21546,
+      "metadata": {
+        "actual_cost_status": "unknown_not_invoice_verified",
+        "cost_basis": "provider_response_usage_cost_not_invoice",
+        "failure_class": "search_replace_old_occurrence_mismatch",
+        "fallback_estimated_cost_usd": 3.0,
+        "mode": "live",
+        "model_call_made": true,
+        "model_response_received": true,
+        "observed_provider_cost_status": "provider_response_usage_cost_not_invoice",
+        "observed_provider_cost_usd": 0.34269,
+        "projected_cost_usd": 3.0,
+        "provider_usage": {
+          "completion_tokens": 7832,
+          "completion_tokens_details": {
+            "audio_tokens": 0,
+            "image_tokens": 0,
+            "reasoning_tokens": 6649
+          },
+          "cost": 0.34269,
+          "cost_details": {
+            "upstream_inference_completions_cost": 0.23496,
+            "upstream_inference_cost": 0.34269,
+            "upstream_inference_prompt_cost": 0.10773
+          },
+          "is_byok": false,
+          "prompt_tokens": 21546,
+          "prompt_tokens_details": {
+            "audio_tokens": 0,
+            "cache_write_tokens": 0,
+            "cached_tokens": 0,
+            "video_tokens": 0
+          },
+          "total_tokens": 29378
+        },
+        "provider_usage_reported": true,
+        "response_text_sha256": "471ee769412c23fb7215e361175e4f45f8be4cdec35125cbcbb0dbcb1a19ffa6",
+        "runner_id": "codex-nfl-direct-search-replace-v1"
+      },
+      "output_tokens": 7832,
+      "record_type": "acut_patch_generation_attempt",
+      "run_id": "codex_nfl_output_contract_v3_click_005_008_attempt2_20260508__frontier-click-specialist__click__rbench__008__attempt2",
+      "split": "rbench",
+      "started_at": "2026-05-08T10:44:48.076593Z",
+      "task_id": "click__rbench__008"
+    }
+  ],
+  "run_prefix": "codex_nfl_output_contract_v3_click_005_008_attempt2_20260508",
+  "tool": "codex_nfl_attempt2_scoped_cost_reconciliation"
+}

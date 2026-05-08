@@ -129,12 +129,83 @@ class CodexNflExperimentRunnerTests(unittest.TestCase):
             prepare_calls,
             [
                 (run_id, "prepare_workspace"),
+                (run_id + "__noop", "prepare_noop_workspace"),
                 (run_id + "__verify", "prepare_verify_workspace"),
             ],
         )
         self.assertEqual(verify_workspaces, [runner.WORKSPACES_ROOT / (run_id + "__verify")])
         self.assertNotEqual(result["runner_workspace"], result["verify_workspace"])
         self.assertEqual(result["status"], "passed")
+
+    def test_run_one_noop_verify_uses_separate_workspace_before_prompting(self) -> None:
+        """Regression: no-op verifier mutations must not leak hidden tests into prompts."""
+        runner = load_runner_module()
+        runner.RAW_ROOT = self.root / "raw"
+        runner.NORMALIZED_ROOT = self.root / "normalized"
+        runner.WORKSPACES_ROOT = self.root / "workspaces"
+        runner.NORMALIZED_ROOT.mkdir(parents=True)
+
+        noop_workspaces: list[Path] = []
+        direct_workspaces: list[Path] = []
+
+        def fake_prepare_workspace(task_id, workspace_name, artifact_dir, *, summary_name="prepare_workspace"):
+            workspace = runner.WORKSPACES_ROOT / workspace_name
+            workspace.mkdir(parents=True)
+            (workspace / "tests").mkdir(parents=True, exist_ok=True)
+            return workspace, {"workspace": str(workspace), "summary_name": summary_name}
+
+        def fake_no_op_verify(**kwargs):
+            workspace = kwargs["workspace"]
+            noop_workspaces.append(workspace)
+            (workspace / "tests" / "hidden_verifier_marker.py").write_text("leaked = True\n", encoding="utf-8")
+            return {"result": {"status": "failed"}}
+
+        def fake_run_direct_runner(**kwargs):
+            workspace = kwargs["workspace"]
+            direct_workspaces.append(workspace)
+            self.assertFalse((workspace / "tests" / "hidden_verifier_marker.py").exists())
+            patch_path = kwargs["artifact_dir"] / "submission.patch"
+            patch_path.write_text("diff --git a/click/core.py b/click/core.py\n", encoding="utf-8")
+            return 0, {
+                "status": "patch_generated",
+                "runner_id": "codex-nfl-direct-search-replace-v1",
+                "model_call_made": False,
+            }
+
+        def fake_verify_patch(**kwargs):
+            payload = {
+                "status": "passed",
+                "run_id": kwargs["run_id"],
+                "task_id": kwargs["task_id"],
+                "acut_id": kwargs["acut_id"],
+            }
+            kwargs["normalized_path"].write_text(json.dumps(payload), encoding="utf-8")
+            return 0, payload
+
+        runner.prepare_workspace = fake_prepare_workspace
+        runner.install_workspace = lambda *args, **kwargs: {"status": "installed"}
+        runner.context_paths_for_task = lambda task, workspace: ["click/core.py"]
+        runner.no_op_verify = fake_no_op_verify
+        runner.run_direct_runner = fake_run_direct_runner
+        runner.verify_patch = fake_verify_patch
+
+        args = SimpleNamespace(
+            run_prefix="unit_noop_isolated",
+            attempt=1,
+            install_timeout_seconds=1,
+            skip_noop_check=False,
+        )
+        result = runner.run_one(
+            args,
+            {"task_id": "click__rbench__001", "split": "rbench"},
+            "cheap-generic-swe",
+        )
+
+        self.assertEqual(result["status"], "passed")
+        self.assertEqual(len(noop_workspaces), 1)
+        self.assertEqual(len(direct_workspaces), 1)
+        self.assertNotEqual(noop_workspaces[0], direct_workspaces[0])
+        self.assertTrue(noop_workspaces[0].name.endswith("__noop"))
 
     def test_run_one_marks_noop_verifier_pass_as_infra_failed_without_model_call(self) -> None:
         """Regression: a verifier that passes before any patch cannot produce scoreable runs."""

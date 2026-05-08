@@ -1,0 +1,1254 @@
+You are generating a minimal repository patch for one Barcarolle ACUT task.
+Use only the public task statement, ACUT policy, and source files included below.
+Do not use hidden verifier files, reference patches, future history, credentials, endpoints, or URLs.
+
+Return only one JSON object with this exact contract:
+{"edits":[{"path":"relative/file.py","old":"exact existing text","new":"replacement text","before":"optional exact text immediately before old","after":"optional exact text immediately after old"}]}
+Do not return unified_diff, raw diff text, markdown fences, prose, or any top-level key other than edits.
+
+Pre-submit validation checklist:
+- The top-level JSON object has exactly one key: edits.
+- Each edit path exactly matches one of the Valid edit paths below.
+- Each old string is copied exactly from the currently shown source.
+- Apply edits in order mentally. For each edit, old must identify exactly one occurrence after earlier edits.
+- If old occurs exactly once, omit before and after anchors.
+- If old occurs more than once, include before and/or after anchors copied exactly from the same file.
+- Anchors must be immediate context: before must end exactly where old begins; after must begin exactly where old ends.
+Rules:
+- Repeated old strings without exact anchors are invalid and will not be applied.
+- Non-matching anchors are invalid even when old occurs once.
+- Never invent old text from memory or from APIs not shown in the source excerpts.
+- Keep edits minimal. Prefer source code fixes over test-only changes.
+
+Task summary:
+{
+  "allowed_context": {
+    "include_git_history_before_base": true,
+    "include_issue_text": true,
+    "include_pr_text": true,
+    "include_reference_patch": false
+  },
+  "disallowed_context": [
+    "reference patch or target diff for pull request 887",
+    "ACUT outputs or public model results",
+    "future execution results for this task"
+  ],
+  "expected_touched_area": [
+    "click.types.Choice normalization and conversion",
+    "option tests for case-insensitive choices"
+  ],
+  "repo_slug": "click",
+  "split": "rbench",
+  "task_family": "Choice type case sensitivity",
+  "task_id": "click__rbench__005"
+}
+
+Public task statement:
+# click__rbench__005
+
+## Problem Statement
+
+Add a case_sensitive=False mode to click.Choice so command-line values can match choices case-insensitively while preserving exact return values.
+
+## Public Source
+
+- Kind: pull_request
+- Anchor: pallets/click#887
+- URL: <redacted:url>
+
+## Visible Context Guidance
+
+Provide the PR title and linked issue context for Choice matching. Keep the patch hidden.
+
+## Expected Touched Area
+
+- click.types.Choice normalization and conversion
+- option tests for case-insensitive choices
+
+
+ACUT policy summary:
+{
+  "acut_id": "cheap-click-specialist",
+  "model": "openai/gpt-5.4-mini",
+  "retrieval_context_strategy": {
+    "allowed_sources": [
+      "public_task_statement",
+      "files explicitly named in the task statement",
+      "files surfaced by failing tests or import errors",
+      "adjacent tests",
+      "direct symbol and filename search results",
+      "precomputed_click_repo_map_v1",
+      "precomputed_click_docs_map_v1",
+      "precomputed_click_symbol_index_v1",
+      "precomputed_click_convention_playbook_v1",
+      "deterministic_click_retrieval_v1"
+    ],
+    "description": "Use deterministic Click-specialist context generated before execution from task-agnostic repository/docs/symbol/convention sources, then solve with the same task budget as the generic ACUTs.",
+    "forbidden_sources": [
+      "RBench/RWork gold patches",
+      "hidden human hints",
+      "post-hoc tuning from ACUT outputs",
+      "undeclared history mining",
+      "task-specific private benchmark artifacts"
+    ],
+    "strategy_id": "click-specialist-task-agnostic-v2"
+  },
+  "runtime_budget": {
+    "max_cost_usd": null,
+    "max_test_commands": 10,
+    "max_tokens": 64000,
+    "max_turns": 18,
+    "max_wall_seconds": 3600,
+    "retry_policy": {
+      "primary_attempts": 1,
+      "retries_allowed": false
+    }
+  }
+}
+
+Valid edit paths:
+[
+  "click/types.py",
+  "tests/test_options.py"
+]
+
+Historical Click layout guard:
+- This prepared workspace predates Click's src/ layout.
+- Do not generate src/click/... paths; they are invalid for this task.
+- Use only the exact Valid edit paths listed above.
+
+Task-agnostic Click specialist context:
+<!-- CLICK_SPECIALIST_CONTEXT_PACK_V1 -->
+# Click Specialist Context Pack
+
+Pack ID: click_specialist_context_pack_v1
+Pack hash: sha256:dfb271ad174531a7dd2f00da4cd0486193d87ce33349380982150889ecf84e48
+Marker: CLICK_SPECIALIST_CONTEXT_PACK_V1
+Source: locked local Click checkout public source, docs, tests, and examples only.
+Task scope: task-agnostic; generated before any Click-specialist ACUT execution.
+Leakage guard: no benchmark solution patch content, hidden verifier files, hidden hints, ACUT outputs, network-fetched docs, credentials, endpoint values, full URLs, hostnames, or IP addresses.
+
+[CLICK_SECTION:repo_map]
+Locked Click commit: 8bd8b4a074c55c03b6eb5666edc44a9c43df38a2
+Layout roots: src/click, tests, docs, examples.
+Core modules: src/click/__init__.py, src/click/_compat.py, src/click/_termui_impl.py, src/click/_textwrap.py, src/click/_utils.py, src/click/_winconsole.py, src/click/core.py, src/click/decorators.py, src/click/exceptions.py, src/click/formatting.py, src/click/globals.py, src/click/parser.py, src/click/shell_completion.py, src/click/termui.py, src/click/testing.py, src/click/types.py, src/click/utils.py.
+Public exports from click.__init__: Abort, Argument, BOOL, BadArgumentUsage, BadOptionUsage, BadParameter, Choice, ClickException, Command, CommandCollection, Context, DateTime, FLOAT, File, FileError, FloatRange, Group, HelpFormatter, INT, IntRange, MissingParameter, NoSuchOption, Option, ParamType, Parameter, ParameterSource, Path, STRING, Tuple, UNPROCESSED, UUID, UsageError, argument, clear, command, confirm, confirmation_option, echo, echo_via_pager, edit; +23 more.
+
+[CLICK_SECTION:docs_map]
+Docs/examples mapped by headings only: README.md, docs/advanced.md, docs/api.md, docs/arguments.md, docs/changes.rst, docs/click-concepts.md, docs/command-line-reference.md, docs/commands-and-groups.md, docs/commands.md, docs/complex.md, docs/contrib.md, docs/contributing.md, docs/design-opinions.md, docs/documentation.md, docs/entry-points.md, docs/exceptions.md, docs/extending-click.md, docs/faqs.md, docs/handling-files.md, docs/index.rst, docs/license.md, docs/option-decorators.md, docs/options.md, docs/parameter-types.md, docs/parameters.md, docs/prompts.md, docs/quickstart.md, docs/setuptools.md; +20 more.
+
+[CLICK_SECTION:symbol_index]
+Indexed symbols: 1115 total across source, public tests, and examples.
+Public source symbol examples: click._compat._AtomicFile.close, click._compat._AtomicFile.name, click._compat._FixupStream.read1, click._compat._FixupStream.readable, click._compat._FixupStream.seekable, click._compat._FixupStream.writable, click._compat._NonClosingTextIOWrapper.isatty, click._compat.get_best_encoding, click._compat.get_binary_stderr, click._compat.get_binary_stdin, click._compat.get_binary_stdout, click._compat.get_text_stderr, click._compat.get_text_stdin, click._compat.get_text_stdout, click._compat.is_ascii_encoding, click._compat.isatty, click._compat.open_stream, click._compat.should_strip_ansi, click._compat.strip_ansi, click._compat.term_len, click._termui_impl.Editor, click._termui_impl.Editor.edit, click._termui_impl.Editor.edit_files, click._termui_impl.Editor.get_editor, click._termui_impl.ProgressBar, click._termui_impl.ProgressBar.eta, click._termui_impl.ProgressBar.finish, click._termui_impl.ProgressBar.format_bar, click._termui_impl.ProgressBar.format_eta, click._termui_impl.ProgressBar.format_pct, click._termui_impl.ProgressBar.format_pos, click._termui_impl.ProgressBar.format_progress_line, click._termui_impl.ProgressBar.generator, click._termui_impl.ProgressBar.make_step, click._termui_impl.ProgressBar.pct, click._termui_impl.ProgressBar.render_finish, click._termui_impl.ProgressBar.render_progress, click._termui_impl.ProgressBar.time_per_iteration, click._termui_impl.ProgressBar.update, click._termui_impl.open_url, click._termui_impl.pager, click._textwrap.TextWrapper; +306 more.
+
+[CLICK_SECTION:convention_playbook]
+- patch_public_api_carefully: When changing public behavior, check exports in src/click/__init__.py and behavior tests in tests/test_*.py.
+- use_cli_runner_for_cli_behavior: CLI behavior is commonly exercised through click.testing.CliRunner and result exit/output assertions.
+- keep_parser_option_type_boundaries: Parser, option, argument, type, formatting, terminal UI, and shell-completion behavior live in separate modules with matching public tests.
+- prefer_focused_pytest: Use focused pytest module or test-name selection first; broaden only when the changed surface crosses modules.
+- docs_follow_behavior: When user-facing command semantics change, inspect the matching docs page heading map before editing docs.
+
+[CLICK_SECTION:deterministic_retrieval_policy]
+1. Read the public task statement and named files.
+2. Map mentioned symbols or failing imports to symbol_index exact names.
+3. Inspect repo_map for the owning Click module and adjacent public tests.
+4. Use docs_map headings only when behavior is public or documented.
+5. Apply convention_playbook guidance for verification scope and public API boundaries.
+Apply this context only for frontier-click-specialist and cheap-click-specialist.
+Do not use this context for generic SWE ACUTs.
+
+
+Source file: click/types.py
+sha256: d7d0bf92a0dd3a356f41a8af4c4121aafcc4162db82d27512aa7e900b908d577 truncated: False displayed_chars: 20647
+```
+import os
+import stat
+
+from ._compat import open_stream, text_type, filename_to_ui, \
+    get_filesystem_encoding, get_streerror, _get_argv_encoding, PY2
+from .exceptions import BadParameter
+from .utils import safecall, LazyFile
+
+
+class ParamType(object):
+    """Helper for converting values through types.  The following is
+    necessary for a valid type:
+
+    *   it needs a name
+    *   it needs to pass through None unchanged
+    *   it needs to convert from a string
+    *   it needs to convert its result type through unchanged
+        (eg: needs to be idempotent)
+    *   it needs to be able to deal with param and context being `None`.
+        This can be the case when the object is used with prompt
+        inputs.
+    """
+    is_composite = False
+
+    #: the descriptive name of this type
+    name = None
+
+    #: if a list of this type is expected and the value is pulled from a
+    #: string environment variable, this is what splits it up.  `None`
+    #: means any whitespace.  For all parameters the general rule is that
+    #: whitespace splits them up.  The exception are paths and files which
+    #: are split by ``os.path.pathsep`` by default (":" on Unix and ";" on
+    #: Windows).
+    envvar_list_splitter = None
+
+    def __call__(self, value, param=None, ctx=None):
+        if value is not None:
+            return self.convert(value, param, ctx)
+
+    def get_metavar(self, param):
+        """Returns the metavar default for this param if it provides one."""
+
+    def get_missing_message(self, param):
+        """Optionally might return extra information about a missing
+        parameter.
+
+        .. versionadded:: 2.0
+        """
+
+    def convert(self, value, param, ctx):
+        """Converts the value.  This is not invoked for values that are
+        `None` (the missing value).
+        """
+        return value
+
+    def split_envvar_value(self, rv):
+        """Given a value from an environment variable this splits it up
+        into small chunks depending on the defined envvar list splitter.
+
+        If the splitter is set to `None`, which means that whitespace splits,
+        then leading and trailing whitespace is ignored.  Otherwise, leading
+        and trailing splitters usually lead to empty items being included.
+        """
+        return (rv or '').split(self.envvar_list_splitter)
+
+    def fail(self, message, param=None, ctx=None):
+        """Helper method to fail with an invalid value message."""
+        raise BadParameter(message, ctx=ctx, param=param)
+
+
+class CompositeParamType(ParamType):
+    is_composite = True
+
+    @property
+    def arity(self):
+        raise NotImplementedError()
+
+
+class FuncParamType(ParamType):
+
+    def __init__(self, func):
+        self.name = func.__name__
+        self.func = func
+
+    def convert(self, value, param, ctx):
+        try:
+            return self.func(value)
+        except ValueError:
+            try:
+                value = text_type(value)
+            except UnicodeError:
+                value = str(value).decode('utf-8', 'replace')
+            self.fail(value, param, ctx)
+
+
+class UnprocessedParamType(ParamType):
+    name = 'text'
+
+    def convert(self, value, param, ctx):
+        return value
+
+    def __repr__(self):
+        return 'UNPROCESSED'
+
+
+class StringParamType(ParamType):
+    name = 'text'
+
+    def convert(self, value, param, ctx):
+        if isinstance(value, bytes):
+            enc = _get_argv_encoding()
+            try:
+                value = value.decode(enc)
+            except UnicodeError:
+                fs_enc = get_filesystem_encoding()
+                if fs_enc != enc:
+                    try:
+                        value = value.decode(fs_enc)
+                    except UnicodeError:
+                        value = value.decode('utf-8', 'replace')
+            return value
+        return value
+
+    def __repr__(self):
+        return 'STRING'
+
+
+class Choice(ParamType):
+    """The choice type allows a value to be checked against a fixed set of
+    supported values.  All of these values have to be strings.
+
+    You should only pass *choices* as list or tuple.  Other iterables (like
+    generators) may lead to surprising results.
+
+    See :ref:`choice-opts` for an example.
+    """
+    name = 'choice'
+
+    def __init__(self, choices):
+        self.choices = choices
+
+    def get_metavar(self, param):
+        return '[%s]' % '|'.join(self.choices)
+
+    def get_missing_message(self, param):
+        return 'Choose from %s.' % ', '.join(self.choices)
+
+    def convert(self, value, param, ctx):
+        # Exact match
+        if value in self.choices:
+            return value
+
+        # Match through normalization
+        if ctx is not None and \
+           ctx.token_normalize_func is not None:
+            value = ctx.token_normalize_func(value)
+            for choice in self.choices:
+                if ctx.token_normalize_func(choice) == value:
+                    return choice
+
+        self.fail('invalid choice: %s. (choose from %s)' %
+                  (value, ', '.join(self.choices)), param, ctx)
+
+    def __repr__(self):
+        return 'Choice(%r)' % list(self.choices)
+
+
+class IntParamType(ParamType):
+    name = 'integer'
+
+    def convert(self, value, param, ctx):
+        try:
+            return int(value)
+        except (ValueError, UnicodeError):
+            self.fail('%s is not a valid integer' % value, param, ctx)
+
+    def __repr__(self):
+        return 'INT'
+
+
+class IntRange(IntParamType):
+    """A parameter that works similar to :data:`click.INT` but restricts
+    the value to fit into a range.  The default behavior is to fail if the
+    value falls outside the range, but it can also be silently clamped
+    between the two edges.
+
+    See :ref:`ranges` for an example.
+    """
+    name = 'integer range'
+
+    def __init__(self, min=None, max=None, clamp=False):
+        self.min = min
+        self.max = max
+        self.clamp = clamp
+
+    def convert(self, value, param, ctx):
+        rv = IntParamType.convert(self, value, param, ctx)
+        if self.clamp:
+            if self.min is not None and rv < self.min:
+                return self.min
+            if self.max is not None and rv > self.max:
+                return self.max
+        if self.min is not None and rv < self.min or \
+           self.max is not None and rv > self.max:
+            if self.min is None:
+                self.fail('%s is bigger than the maximum valid value '
+                          '%s.' % (rv, self.max), param, ctx)
+            elif self.max is None:
+                self.fail('%s is smaller than the minimum valid value '
+                          '%s.' % (rv, self.min), param, ctx)
+            else:
+                self.fail('%s is not in the valid range of %s to %s.'
+                          % (rv, self.min, self.max), param, ctx)
+        return rv
+
+    def __repr__(self):
+        return 'IntRange(%r, %r)' % (self.min, self.max)
+
+
+class FloatParamType(ParamType):
+    name = 'float'
+
+    def convert(self, value, param, ctx):
+        try:
+            return float(value)
+        except (UnicodeError, ValueError):
+            self.fail('%s is not a valid floating point value' %
+                      value, param, ctx)
+
+    def __repr__(self):
+        return 'FLOAT'
+
+
+class FloatRange(FloatParamType):
+    """A parameter that works similar to :data:`click.FLOAT` but restricts
+    the value to fit into a range.  The default behavior is to fail if the
+    value falls outside the range, but it can also be silently clamped
+    between the two edges.
+
+    See :ref:`ranges` for an example.
+    """
+    name = 'float range'
+
+    def __init__(self, min=None, max=None, clamp=False):
+        self.min = min
+        self.max = max
+        self.clamp = clamp
+
+    def convert(self, value, param, ctx):
+        rv = FloatParamType.convert(self, value, param, ctx)
+        if self.clamp:
+            if self.min is not None and rv < self.min:
+                return self.min
+            if self.max is not None and rv > self.max:
+                return self.max
+        if self.min is not None and rv < self.min or \
+           self.max is not None and rv > self.max:
+            if self.min is None:
+                self.fail('%s is bigger than the maximum valid value '
+                          '%s.' % (rv, self.max), param, ctx)
+            elif self.max is None:
+                self.fail('%s is smaller than the minimum valid value '
+                          '%s.' % (rv, self.min), param, ctx)
+            else:
+                self.fail('%s is not in the valid range of %s to %s.'
+                          % (rv, self.min, self.max), param, ctx)
+        return rv
+
+    def __repr__(self):
+        return 'FloatRange(%r, %r)' % (self.min, self.max)
+
+
+class BoolParamType(ParamType):
+    name = 'boolean'
+
+    def convert(self, value, param, ctx):
+        if isinstance(value, bool):
+            return bool(value)
+        value = value.lower()
+        if value in ('true', 't', '1', 'yes', 'y'):
+            return True
+        elif value in ('false', 'f', '0', 'no', 'n'):
+            return False
+        self.fail('%s is not a valid boolean' % value, param, ctx)
+
+    def __repr__(self):
+        return 'BOOL'
+
+
+class UUIDParameterType(ParamType):
+    name = 'uuid'
+
+    def convert(self, value, param, ctx):
+        import uuid
+        try:
+            if PY2 and isinstance(value, text_type):
+                value = value.encode('ascii')
+            return uuid.UUID(value)
+        except (UnicodeError, ValueError):
+            self.fail('%s is not a valid UUID value' % value, param, ctx)
+
+    def __repr__(self):
+        return 'UUID'
+
+
+class File(ParamType):
+    """Declares a parameter to be a file for reading or writing.  The file
+    is automatically closed once the context tears down (after the command
+    finished working).
+
+    Files can be opened for reading or writing.  The special value ``-``
+    indicates stdin or stdout depending on the mode.
+
+    By default, the file is opened for reading text data, but it can also be
+    opened in binary mode or for writing.  The encoding parameter can be used
+    to force a specific encoding.
+
+    The `lazy` flag controls if the file should be opened immediately or
+    upon first IO.  The default is to be non lazy for standard input and
+    output streams as well as files opened for reading, lazy otherwise.
+
+    Starting with Click 2.0, files can also be opened atomically in which
+    case all writes go into a separate file in the same folder and upon
+    completion the file will be moved over to the original location.  This
+    is useful if a file regularly read by other users is modified.
+
+    See :ref:`file-args` for more information.
+    """
+    name = 'filename'
+    envvar_list_splitter = os.path.pathsep
+
+    def __init__(self, mode='r', encoding=None, errors='strict', lazy=None,
+                 atomic=False):
+        self.mode = mode
+        self.encoding = encoding
+        self.errors = errors
+        self.lazy = lazy
+        self.atomic = atomic
+
+    def resolve_lazy_flag(self, value):
+        if self.lazy is not None:
+            return self.lazy
+        if value == '-':
+            return False
+        elif 'w' in self.mode:
+            return True
+        return False
+
+    def convert(self, value, param, ctx):
+        try:
+            if hasattr(value, 'read') or hasattr(value, 'write'):
+                return value
+
+            lazy = self.resolve_lazy_flag(value)
+
+            if lazy:
+                f = LazyFile(value, self.mode, self.encoding, self.errors,
+                             atomic=self.atomic)
+                if ctx is not None:
+                    ctx.call_on_close(f.close_intelligently)
+                return f
+
+            f, should_close = open_stream(value, self.mode,
+                                          self.encoding, self.errors,
+                                          atomic=self.atomic)
+            # If a context is provided, we automatically close the file
+            # at the end of the context execution (or flush out).  If a
+            # context does not exist, it's the caller's responsibility to
+            # properly close the file.  This for instance happens when the
+            # type is used with prompts.
+            if ctx is not None:
+                if should_close:
+                    ctx.call_on_close(safecall(f.close))
+                else:
+                    ctx.call_on_close(safecall(f.flush))
+            return f
+        except (IOError, OSError) as e:
+            self.fail('Could not open file: %s: %s' % (
+                filename_to_ui(value),
+                get_streerror(e),
+            ), param, ctx)
+
+
+class Path(ParamType):
+    """The path type is similar to the :class:`File` type but it performs
+    different checks.  First of all, instead of returning an open file
+    handle it returns just the filename.  Secondly, it can perform various
+    basic checks about what the file or directory should be.
+
+    .. versionchanged:: 6.0
+       `allow_dash` was added.
+
+    :param exists: if set to true, the file or directory needs to exist for
+                   this value to be valid.  If this is not required and a
+                   file does indeed not exist, then all further checks are
+                   silently skipped.
+    :param file_okay: controls if a file is a possible value.
+    :param dir_okay: controls if a directory is a possible value.
+    :param writable: if true, a writable check is performed.
+    :param readable: if true, a readable check is performed.
+    :param resolve_path: if this is true, then the path is fully resolved
+                         before the value is passed onwards.  This means
+                         that it's absolute and symlinks are resolved.  It
+                         will not expand a tilde-prefix, as this is
+                         supposed to be done by the shell only.
+    :param allow_dash: If this is set to `True`, a single dash to indicate
+                       standard streams is permitted.
+    :param path_type: optionally a string type that should be used to
+                      represent the path.  The default is `None` which
+                      means the return value will be either bytes or
+                      unicode depending on what makes most sense given the
+                      input data Click deals with.
+    """
+    envvar_list_splitter = os.path.pathsep
+
+    def __init__(self, exists=False, file_okay=True, dir_okay=True,
+                 writable=False, readable=True, resolve_path=False,
+                 allow_dash=False, path_type=None):
+        self.exists = exists
+        self.file_okay = file_okay
+        self.dir_okay = dir_okay
+        self.writable = writable
+        self.readable = readable
+        self.resolve_path = resolve_path
+        self.allow_dash = allow_dash
+        self.type = path_type
+
+        if self.file_okay and not self.dir_okay:
+            self.name = 'file'
+            self.path_type = 'File'
+        elif self.dir_okay and not self.file_okay:
+            self.name = 'directory'
+            self.path_type = 'Directory'
+        else:
+            self.name = 'path'
+            self.path_type = 'Path'
+
+    def coerce_path_result(self, rv):
+        if self.type is not None and not isinstance(rv, self.type):
+            if self.type is text_type:
+                rv = rv.decode(get_filesystem_encoding())
+            else:
+                rv = rv.encode(get_filesystem_encoding())
+        return rv
+
+    def convert(self, value, param, ctx):
+        rv = value
+
+        is_dash = self.file_okay and self.allow_dash and rv in (b'-', '-')
+
+        if not is_dash:
+            if self.resolve_path:
+                rv = os.path.realpath(rv)
+
+            try:
+                st = os.stat(rv)
+            except OSError:
+                if not self.exists:
+                    return self.coerce_path_result(rv)
+                self.fail('%s "%s" does not exist.' % (
+                    self.path_type,
+                    filename_to_ui(value)
+                ), param, ctx)
+
+            if not self.file_okay and stat.S_ISREG(st.st_mode):
+                self.fail('%s "%s" is a file.' % (
+                    self.path_type,
+                    filename_to_ui(value)
+                ), param, ctx)
+            if not self.dir_okay and stat.S_ISDIR(st.st_mode):
+                self.fail('%s "%s" is a directory.' % (
+                    self.path_type,
+                    filename_to_ui(value)
+                ), param, ctx)
+            if self.writable and not os.access(value, os.W_OK):
+                self.fail('%s "%s" is not writable.' % (
+                    self.path_type,
+                    filename_to_ui(value)
+                ), param, ctx)
+            if self.readable and not os.access(value, os.R_OK):
+                self.fail('%s "%s" is not readable.' % (
+                    self.path_type,
+                    filename_to_ui(value)
+                ), param, ctx)
+
+        return self.coerce_path_result(rv)
+
+
+class Tuple(CompositeParamType):
+    """The default behavior of Click is to apply a type on a value directly.
+    This works well in most cases, except for when `nargs` is set to a fixed
+    count and different types should be used for different items.  In this
+    case the :class:`Tuple` type can be used.  This type can only be used
+    if `nargs` is set to a fixed number.
+
+    For more information see :ref:`tuple-type`.
+
+    This can be selected by using a Python tuple literal as a type.
+
+    :param types: a list of types that should be used for the tuple items.
+    """
+
+    def __init__(self, types):
+        self.types = [convert_type(ty) for ty in types]
+
+    @property
+    def name(self):
+        return "<" + " ".join(ty.name for ty in self.types) + ">"
+
+    @property
+    def arity(self):
+        return len(self.types)
+
+    def convert(self, value, param, ctx):
+        if len(value) != len(self.types):
+            raise TypeError('It would appear that nargs is set to conflict '
+                            'with the composite type arity.')
+        return tuple(ty(x, param, ctx) for ty, x in zip(self.types, value))
+
+
+def convert_type(ty, default=None):
+    """Converts a callable or python ty into the most appropriate param
+    ty.
+    """
+    guessed_type = False
+    if ty is None and default is not None:
+        if isinstance(default, tuple):
+            ty = tuple(map(type, default))
+        else:
+            ty = type(default)
+        guessed_type = True
+
+    if isinstance(ty, tuple):
+        return Tuple(ty)
+    if isinstance(ty, ParamType):
+        return ty
+    if ty is text_type or ty is str or ty is None:
+        return STRING
+    if ty is int:
+        return INT
+    # Booleans are only okay if not guessed.  This is done because for
+    # flags the default value is actually a bit of a lie in that it
+    # indicates which of the flags is the one we want.  See get_default()
+    # for more information.
+    if ty is bool and not guessed_type:
+        return BOOL
+    if ty is float:
+        return FLOAT
+    if guessed_type:
+        return STRING
+
+    # Catch a common mistake
+    if __debug__:
+        try:
+            if issubclass(ty, ParamType):
+                raise AssertionError('Attempted to use an uninstantiated '
+                                     'parameter type (%s).' % ty)
+        except TypeError:
+            pass
+    return FuncParamType(ty)
+
+
+#: A dummy parameter type that just does nothing.  From a user's
+#: perspective this appears to just be the same as `STRING` but internally
+#: no string conversion takes place.  This is necessary to achieve the
+#: same bytes/unicode behavior on Python 2/3 in situations where you want
+#: to not convert argument types.  This is usually useful when working
+#: with file paths as they can appear in bytes and unicode.
+#:
+#: For path related uses the :class:`Path` type is a better choice but
+#: there are situations where an unprocessed type is useful which is why
+#: it is is provided.
+#:
+#: .. versionadded:: 4.0
+UNPROCESSED = UnprocessedParamType()
+
+#: A unicode string parameter type which is the implicit default.  This
+#: can also be selected by using ``str`` as type.
+STRING = StringParamType()
+
+#: An integer parameter.  This can also be selected by using ``int`` as
+#: type.
+INT = IntParamType()
+
+#: A floating point value parameter.  This can also be selected by using
+#: ``float`` as type.
+FLOAT = FloatParamType()
+
+#: A boolean parameter.  This is the default for boolean flags.  This can
+#: also be selected by using ``bool`` as a type.
+BOOL = BoolParamType()
+
+#: A UUID parameter.
+UUID = UUIDParameterType()
+
+```
+
+Source file: tests/test_options.py
+sha256: e45ba7e772dd0a64ec9ae14ca176697755fb09870800c2ded71edb6e28c48bf1 truncated: False displayed_chars: 14958
+```
+# -*- coding: utf-8 -*-
+import re
+import os
+import click
+import pytest
+
+from click._compat import text_type
+
+
+def test_prefixes(runner):
+    @click.command()
+    @click.option('++foo', is_flag=True, help='das foo')
+    @click.option('--bar', is_flag=True, help='das bar')
+    def cli(foo, bar):
+        click.echo('foo=%s bar=%s' % (foo, bar))
+
+    result = runner.invoke(cli, ['++foo', '--bar'])
+    assert not result.exception
+    assert result.output == 'foo=True bar=True\n'
+
+    result = runner.invoke(cli, ['--help'])
+    assert re.search(r'\+\+foo\s+das foo', result.output) is not None
+    assert re.search(r'--bar\s+das bar', result.output) is not None
+
+
+def test_invalid_option(runner):
+    try:
+        @click.command()
+        @click.option('foo')
+        def cli(foo):
+            pass
+    except TypeError as e:
+        assert 'No options defined but a name was passed (foo).' \
+            in str(e)
+    else:
+        assert False, 'Expected a type error because of an invalid option.'
+
+
+def test_invalid_nargs(runner):
+    try:
+        @click.command()
+        @click.option('--foo', nargs=-1)
+        def cli(foo):
+            pass
+    except TypeError as e:
+        assert 'Options cannot have nargs < 0' in str(e)
+    else:
+        assert False, 'Expected a type error because of an invalid option.'
+
+
+def test_nargs_tup_composite_mult(runner):
+    @click.command()
+    @click.option('--item', type=(str, int), multiple=True)
+    def copy(item):
+        for item in item:
+            click.echo('name=%s id=%d' % item)
+
+    result = runner.invoke(copy, ['--item', 'peter', '1', '--item', 'max', '2'])
+    assert not result.exception
+    assert result.output.splitlines() == [
+        'name=peter id=1',
+        'name=max id=2',
+    ]
+
+
+def test_counting(runner):
+    @click.command()
+    @click.option('-v', count=True, help='Verbosity',
+                  type=click.IntRange(0, 3))
+    def cli(v):
+        click.echo('verbosity=%d' % v)
+
+    result = runner.invoke(cli, ['-vvv'])
+    assert not result.exception
+    assert result.output == 'verbosity=3\n'
+
+    result = runner.invoke(cli, ['-vvvv'])
+    assert result.exception
+    assert 'Invalid value for "-v": 4 is not in the valid range of 0 to 3.' \
+        in result.output
+
+    result = runner.invoke(cli, [])
+    assert not result.exception
+    assert result.output == 'verbosity=0\n'
+
+    result = runner.invoke(cli, ['--help'])
+    assert re.search(r'-v\s+Verbosity', result.output) is not None
+
+
+@pytest.mark.parametrize('unknown_flag', ['--foo', '-f'])
+def test_unknown_options(runner, unknown_flag):
+    @click.command()
+    def cli():
+        pass
+
+    result = runner.invoke(cli, [unknown_flag])
+    assert result.exception
+    assert 'no such option: {0}'.format(unknown_flag) in result.output
+
+
+def test_multiple_required(runner):
+    @click.command()
+    @click.option('-m', '--message', multiple=True, required=True)
+    def cli(message):
+        click.echo('\n'.join(message))
+
+    result = runner.invoke(cli, ['-m', 'foo', '-mbar'])
+    assert not result.exception
+    assert result.output == 'foo\nbar\n'
+
+    result = runner.invoke(cli, [])
+    assert result.exception
+    assert 'Error: Missing option "-m" / "--message".' in result.output
+
+
+def test_multiple_envvar(runner):
+    @click.command()
+    @click.option('--arg', multiple=True)
+    def cmd(arg):
+        click.echo('|'.join(arg))
+
+    result = runner.invoke(cmd, [], auto_envvar_prefix='TEST',
+                           env={'TEST_ARG': 'foo bar baz'})
+    assert not result.exception
+    assert result.output == 'foo|bar|baz\n'
+
+    @click.command()
+    @click.option('--arg', multiple=True, envvar='X')
+    def cmd(arg):
+        click.echo('|'.join(arg))
+
+    result = runner.invoke(cmd, [], env={'X': 'foo bar baz'})
+    assert not result.exception
+    assert result.output == 'foo|bar|baz\n'
+
+    @click.command()
+    @click.option('--arg', multiple=True, type=click.Path())
+    def cmd(arg):
+        click.echo('|'.join(arg))
+
+    result = runner.invoke(cmd, [], auto_envvar_prefix='TEST',
+                           env={'TEST_ARG': 'foo%sbar' % os.path.pathsep})
+    assert not result.exception
+    assert result.output == 'foo|bar\n'
+
+
+def test_multiple_default_help(runner):
+    @click.command()
+    @click.option('--arg1', multiple=True, default=('foo', 'bar'),
+                  show_default=True)
+    @click.option('--arg2', multiple=True, default=(1, 2), type=int,
+                  show_default=True)
+    def cmd(arg, arg2):
+        pass
+
+    result = runner.invoke(cmd, ['--help'])
+    assert not result.exception
+    assert 'foo, bar' in result.output
+    assert '1, 2' in result.output
+
+
+def test_multiple_default_type(runner):
+    @click.command()
+    @click.option('--arg1', multiple=True, default=('foo', 'bar'))
+    @click.option('--arg2', multiple=True, default=(1, 'a'))
+    def cmd(arg1, arg2):
+        assert all(isinstance(e[0], text_type) for e in arg1)
+        assert all(isinstance(e[1], text_type) for e in arg1)
+
+        assert all(isinstance(e[0], int) for e in arg2)
+        assert all(isinstance(e[1], text_type) for e in arg2)
+
+    result = runner.invoke(cmd, '--arg1 a b --arg1 test 1 --arg2 2 '
+                           'two --arg2 4 four'.split())
+    assert not result.exception
+
+def test_dynamic_default_help_unset(runner):
+    @click.command()
+    @click.option('--username', prompt=True,
+                  default=lambda: os.environ.get('USER', ''),
+                  show_default=True)
+    def cmd(username):
+        print("Hello,", username)
+
+    result = runner.invoke(cmd, ['--help'])
+    assert result.exit_code == 0
+    assert '--username' in result.output
+    assert 'lambda' not in result.output
+    assert '(dynamic)' in result.output
+
+def test_dynamic_default_help_text(runner):
+    @click.command()
+    @click.option('--username', prompt=True,
+                  default=lambda: os.environ.get('USER', ''),
+                  show_default='current user')
+    def cmd(username):
+        print("Hello,", username)
+
+    result = runner.invoke(cmd, ['--help'])
+    assert result.exit_code == 0
+    assert '--username' in result.output
+    assert 'lambda' not in result.output
+    assert '(current user)' in result.output
+
+def test_nargs_envvar(runner):
+    @click.command()
+    @click.option('--arg', nargs=2)
+    def cmd(arg):
+        click.echo('|'.join(arg))
+
+    result = runner.invoke(cmd, [], auto_envvar_prefix='TEST',
+                           env={'TEST_ARG': 'foo bar'})
+    assert not result.exception
+    assert result.output == 'foo|bar\n'
+
+    @click.command()
+    @click.option('--arg', nargs=2, multiple=True)
+    def cmd(arg):
+        for item in arg:
+            click.echo('|'.join(item))
+
+    result = runner.invoke(cmd, [], auto_envvar_prefix='TEST',
+                           env={'TEST_ARG': 'x 1 y 2'})
+    assert not result.exception
+    assert result.output == 'x|1\ny|2\n'
+
+
+def test_show_envvar(runner):
+    @click.command()
+    @click.option('--arg1', envvar='ARG1',
+                  show_envvar=True)
+    def cmd(arg):
+        pass
+
+    result = runner.invoke(cmd, ['--help'])
+    assert not result.exception
+    assert 'ARG1' in result.output
+
+
+def test_show_envvar_auto_prefix(runner):
+    @click.command()
+    @click.option('--arg1', show_envvar=True)
+    def cmd(arg):
+        pass
+
+    result = runner.invoke(cmd, ['--help'],
+                           auto_envvar_prefix='TEST')
+    assert not result.exception
+    assert 'TEST_ARG1' in result.output
+
+
+def test_custom_validation(runner):
+    def validate_pos_int(ctx, param, value):
+        if value < 0:
+            raise click.BadParameter('Value needs to be positive')
+        return value
+
+    @click.command()
+    @click.option('--foo', callback=validate_pos_int, default=1)
+    def cmd(foo):
+        click.echo(foo)
+
+    result = runner.invoke(cmd, ['--foo', '-1'])
+    assert 'Invalid value for "--foo": Value needs to be positive' \
+        in result.output
+
+    result = runner.invoke(cmd, ['--foo', '42'])
+    assert result.output == '42\n'
+
+
+def test_winstyle_options(runner):
+    @click.command()
+    @click.option('/debug;/no-debug', help='Enables or disables debug mode.')
+    def cmd(debug):
+        click.echo(debug)
+
+    result = runner.invoke(cmd, ['/debug'], help_option_names=['/?'])
+    assert result.output == 'True\n'
+    result = runner.invoke(cmd, ['/no-debug'], help_option_names=['/?'])
+    assert result.output == 'False\n'
+    result = runner.invoke(cmd, [], help_option_names=['/?'])
+    assert result.output == 'False\n'
+    result = runner.invoke(cmd, ['/?'], help_option_names=['/?'])
+    assert '/debug; /no-debug  Enables or disables debug mode.' in result.output
+    assert '/?                 Show this message and exit.' in result.output
+
+
+def test_legacy_options(runner):
+    @click.command()
+    @click.option('-whatever')
+    def cmd(whatever):
+        click.echo(whatever)
+
+    result = runner.invoke(cmd, ['-whatever', '42'])
+    assert result.output == '42\n'
+    result = runner.invoke(cmd, ['-whatever=23'])
+    assert result.output == '23\n'
+
+
+def test_missing_choice(runner):
+    @click.command()
+    @click.option('--foo', type=click.Choice(['foo', 'bar']),
+                  required=True)
+    def cmd(foo):
+        click.echo(foo)
+
+    result = runner.invoke(cmd)
+    assert result.exit_code == 2
+    assert 'Error: Missing option "--foo".  Choose from foo, bar.' \
+        in result.output
+
+
+def test_case_insensitive_choice(runner):
+    @click.command()
+    @click.option('--foo', type=click.Choice(
+        ['Orange', 'Apple'], case_sensitive=False))
+    def cmd(foo):
+        click.echo(foo)
+
+    result = runner.invoke(cmd, ['--foo', 'apple'])
+    assert result.exit_code == 0
+
+    result = runner.invoke(cmd, ['--foo', 'oRANGe'])
+    assert result.exit_code == 0
+
+    result = runner.invoke(cmd, ['--foo', 'Apple'])
+    assert result.exit_code == 0
+
+    @click.command()
+    @click.option('--foo', type=click.Choice(['Orange', 'Apple']))
+    def cmd2(foo):
+        click.echo(foo)
+
+    result = runner.invoke(cmd2, ['--foo', 'apple'])
+    assert result.exit_code == 2
+
+    result = runner.invoke(cmd2, ['--foo', 'oRANGe'])
+    assert result.exit_code == 2
+
+    result = runner.invoke(cmd2, ['--foo', 'Apple'])
+    assert result.exit_code == 0
+
+
+def test_case_insensitive_choice_returned_exactly(runner):
+    @click.command()
+    @click.option('--foo', type=click.Choice(
+        ['Orange', 'Apple'], case_sensitive=False))
+    def cmd(foo):
+        click.echo(foo)
+
+    result = runner.invoke(cmd, ['--foo', 'apple'])
+    assert result.exit_code == 0
+    assert result.output == 'Apple\n'
+
+    result = runner.invoke(cmd, ['--foo', 'oRANGe'])
+    assert result.exit_code == 0
+    assert result.output == 'Orange\n'
+
+
+def test_multiline_help(runner):
+    @click.command()
+    @click.option('--foo', help="""
+        hello
+
+        i am
+
+        multiline
+    """)
+    def cmd(foo):
+        click.echo(foo)
+
+    result = runner.invoke(cmd, ['--help'])
+    assert result.exit_code == 0
+    out = result.output.splitlines()
+    assert '  --foo TEXT  hello' in out
+    assert '              i am' in out
+    assert '              multiline' in out
+
+def test_argument_custom_class(runner):
+    class CustomArgument(click.Argument):
+        def get_default(self, ctx):
+            '''a dumb override of a default value for testing'''
+            return 'I am a default'
+
+    @click.command()
+    @click.argument('testarg', cls=CustomArgument, default='you wont see me')
+    def cmd(testarg):
+        click.echo(testarg)
+
+    result = runner.invoke(cmd)
+    assert 'I am a default' in result.output
+    assert 'you wont see me' not in result.output
+
+
+def test_option_custom_class(runner):
+    class CustomOption(click.Option):
+        def get_help_record(self, ctx):
+            '''a dumb override of a help text for testing'''
+            return ('--help', 'I am a help text')
+
+    @click.command()
+    @click.option('--testoption', cls=CustomOption, help='you wont see me')
+    def cmd(testoption):
+        click.echo(testoption)
+
+    result = runner.invoke(cmd, ['--help'])
+    assert 'I am a help text' in result.output
+    assert 'you wont see me' not in result.output
+
+
+def test_option_custom_class_reusable(runner):
+    """Ensure we can reuse a custom class option. See Issue #926"""
+
+    class CustomOption(click.Option):
+        def get_help_record(self, ctx):
+            '''a dumb override of a help text for testing'''
+            return ('--help', 'I am a help text')
+
+    # Assign to a variable to re-use the decorator.
+    testoption = click.option('--testoption', cls=CustomOption, help='you wont see me')
+
+    @click.command()
+    @testoption
+    def cmd1(testoption):
+        click.echo(testoption)
+
+    @click.command()
+    @testoption
+    def cmd2(testoption):
+        click.echo(testoption)
+
+    # Both of the commands should have the --help option now.
+    for cmd in (cmd1, cmd2):
+
+        result = runner.invoke(cmd, ['--help'])
+        assert 'I am a help text' in result.output
+        assert 'you wont see me' not in result.output
+
+
+def test_aliases_for_flags(runner):
+    @click.command()
+    @click.option('--warnings/--no-warnings', ' /-W', default=True)
+    def cli(warnings):
+        click.echo(warnings)
+
+    result = runner.invoke(cli, ['--warnings'])
+    assert result.output == 'True\n'
+    result = runner.invoke(cli, ['--no-warnings'])
+    assert result.output == 'False\n'
+    result = runner.invoke(cli, ['-W'])
+    assert result.output == 'False\n'
+
+    @click.command()
+    @click.option('--warnings/--no-warnings', '-w', default=True)
+    def cli_alt(warnings):
+        click.echo(warnings)
+
+    result = runner.invoke(cli_alt, ['--warnings'])
+    assert result.output == 'True\n'
+    result = runner.invoke(cli_alt, ['--no-warnings'])
+    assert result.output == 'False\n'
+    result = runner.invoke(cli_alt, ['-w'])
+    assert result.output == 'True\n'
+
+@pytest.mark.parametrize('option_args,expected', [
+    (['--aggressive', '--all', '-a'], 'aggressive'),
+    (['--first', '--second', '--third', '-a', '-b', '-c'], 'first'),
+    (['--apple', '--banana', '--cantaloupe', '-a', '-b', '-c'], 'apple'),
+    (['--cantaloupe', '--banana', '--apple', '-c', '-b', '-a'], 'cantaloupe'),
+    (['-a', '-b', '-c'], 'a'),
+    (['-c', '-b', '-a'], 'c'),
+    (['-a', '--apple', '-b', '--banana', '-c', '--cantaloupe'], 'apple'),
+    (['-c', '-a', '--cantaloupe', '-b', '--banana', '--apple'], 'cantaloupe'),
+    (['--from', '-f', '_from'], '_from'),
+    (['--return', '-r', '_ret'], '_ret'),
+])
+def test_option_names(runner, option_args, expected):
+
+    @click.command()
+    @click.option(*option_args, is_flag=True)
+    def cmd(**kwargs):
+        click.echo(str(kwargs[expected]))
+
+    assert cmd.params[0].name == expected
+
+    for form in option_args:
+        if form.startswith('-'):
+            result = runner.invoke(cmd, [form])
+            assert result.output == 'True\n'
+
+```

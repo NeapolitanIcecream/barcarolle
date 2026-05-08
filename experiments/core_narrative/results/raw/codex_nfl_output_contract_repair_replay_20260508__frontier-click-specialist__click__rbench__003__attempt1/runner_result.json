@@ -1,0 +1,16 @@
+{
+  "cost_ledger_append": null,
+  "details": {
+    "failure_class": "invalid_unified_diff",
+    "git_apply_stderr": "error: corrupt patch at line 57"
+  },
+  "error": "generated unified diff failed git apply validation",
+  "finished_at": "2026-05-08T05:15:09.001465Z",
+  "model_call_made": false,
+  "prompt_snapshot": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/codex_nfl_output_contract_repair_replay_20260508__frontier-click-specialist__click__rbench__003__attempt1/prompt_snapshot.json",
+  "raw_response_artifact": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/codex_nfl_output_contract_repair_replay_20260508__frontier-click-specialist__click__rbench__003__attempt1/provider_response.redacted.json",
+  "runner_id": "codex-nfl-direct-search-replace-v1",
+  "started_at": "2026-05-08T05:15:08.940413Z",
+  "status": "error",
+  "tool": "codex_nfl_direct_runner"
+}

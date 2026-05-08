@@ -1,0 +1,136 @@
+diff --git a/src/click/core.py b/src/click/core.py
+index b62a591..0aa80a6 100644
+--- a/src/click/core.py
++++ b/src/click/core.py
+@@ -18,6 +18,7 @@ from .formatting import HelpFormatter
+ from .formatting import join_options
+ from .globals import pop_context
+ from .globals import push_context
++from .parser import _flag_needs_value
+ from .parser import OptionParser
+ from .parser import split_opt
+ from .termui import confirm
+@@ -1962,6 +1963,20 @@ class Parameter:
+         value = opts.get(self.name)
+         source = ParameterSource.COMMANDLINE
+ 
++        if value is _flag_needs_value:
++            if (
++                getattr(self, "prompt", None) is not None
++                and not ctx.resilient_parsing
++                and (self.required or getattr(self, "prompt_required", False))
++            ):
++                value = self.prompt_for_value(ctx)
++                source = ParameterSource.PROMPT
++            else:
++                value = self.get_default(ctx)
++                source = ParameterSource.DEFAULT
++
++            return value, source
++
+         if value is None:
+             value = self.value_from_envvar(ctx)
+             source = ParameterSource.ENVIRONMENT
+diff --git a/src/click/parser.py b/src/click/parser.py
+index f613947..c81217c 100644
+--- a/src/click/parser.py
++++ b/src/click/parser.py
+@@ -30,6 +30,9 @@ from .exceptions import NoSuchOption
+ from .exceptions import UsageError
+ 
+ 
++_flag_needs_value = object()
++
++
+ def _unpack_args(args, nargs_spec):
+     """Given an iterable of arguments and an iterable of nargs specifications,
+     it returns a tuple with all the unpacked arguments at the first index
+@@ -345,7 +348,13 @@ class OptionParser:
+ 
+             nargs = option.nargs
+             if len(state.rargs) < nargs:
+-                _error_opt_args(nargs, opt)
++                if (
++                    option.obj is not None
++                    and getattr(option.obj, "prompt", None) is not None
++                ):
++                    value = _flag_needs_value
++                else:
++                    _error_opt_args(nargs, opt)
+             elif nargs == 1:
+                 value = state.rargs.pop(0)
+             else:
+@@ -385,7 +394,13 @@ class OptionParser:
+ 
+                 nargs = option.nargs
+                 if len(state.rargs) < nargs:
+-                    _error_opt_args(nargs, opt)
++                    if (
++                        option.obj is not None
++                        and getattr(option.obj, "prompt", None) is not None
++                    ):
++                        value = _flag_needs_value
++                    else:
++                        _error_opt_args(nargs, opt)
+                 elif nargs == 1:
+                     value = state.rargs.pop(0)
+                 else:
+diff --git a/tests/test_termui.py b/tests/test_termui.py
+index 90a4ce6..e199516 100644
+--- a/tests/test_termui.py
++++ b/tests/test_termui.py
+@@ -385,3 +385,54 @@ def test_getchar_windows_exceptions(runner, monkeypatch, key_char, exc):
+ def test_fast_edit(runner):
+     result = click.edit("a\nb", editor="sed -i~ 's/$/Test/'")
+     assert result == "aTest\nbTest\n"
++
++
++@pytest.mark.parametrize(
++    ("prompt_required", "required", "args", "expect"),
++    [
++        (True, False, None, "prompt"),
++        (True, False, ["-v"], "-v option requires an argument"),
++        (False, True, None, "prompt"),
++        (False, True, ["-v"], "prompt"),
++    ],
++)
++def test_prompt_required_with_required(runner, prompt_required, required, args, expect):
++    @click.command()
++    @click.option("-v", prompt=True, prompt_required=prompt_required, required=required)
++    def cli(v):
++        click.echo(str(v))
++
++    result = runner.invoke(cli, args, input="prompt")
++    assert expect in result.output
++
++
++@pytest.mark.parametrize(
++    ("args", "expect"),
++    [
++        # Flag not passed, don't prompt.
++        pytest.param(None, None, id="no flag"),
++        # Flag and value passed, don't prompt.
++        pytest.param(["-v", "value"], "value", id="short sep value"),
++        pytest.param(["--value", "value"], "value", id="long sep value"),
++        pytest.param(["-vvalue"], "value", id="short join value"),
++        pytest.param(["--value=value"], "value", id="long join value"),
++        # Flag without value passed, prompt.
++        pytest.param(["-v"], "prompt", id="short no value"),
++        pytest.param(["--value"], "prompt", id="long no value"),
++        # Don't use next option flag as value.
++        pytest.param(["-v", "-o", "42"], ("prompt", "42"), id="no value opt"),
++    ],
++)
++def test_prompt_required_false(runner, args, expect):
++    @click.command()
++    @click.option("-v", "--value", prompt=True, prompt_required=False)
++    @click.option("-o")
++    def cli(value, o):
++        if o is not None:
++            return value, o
++
++        return value
++
++    result = runner.invoke(cli, args=args, input="prompt", standalone_mode=False)
++    assert result.exception is None
++    assert result.return_value == expect

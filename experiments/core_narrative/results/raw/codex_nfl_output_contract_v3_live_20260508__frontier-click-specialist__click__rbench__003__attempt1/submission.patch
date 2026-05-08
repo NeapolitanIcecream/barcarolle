@@ -1,0 +1,109 @@
+diff --git a/click/core.py b/click/core.py
+index 06ca15e..81d15ce 100644
+--- a/click/core.py
++++ b/click/core.py
+@@ -1461,7 +1461,8 @@ class Option(Parameter):
+                  prompt=False, confirmation_prompt=False,
+                  hide_input=False, is_flag=None, flag_value=None,
+                  multiple=False, count=False, allow_from_autoenv=True,
+-                 type=None, help=None, hidden=False, **attrs):
++                 type=None, help=None, hidden=False, show_choices=True,
++                 **attrs):
+         default_is_missing = attrs.get('default', _missing) is _missing
+         Parameter.__init__(self, param_decls, type=type, **attrs)
+ 
+@@ -1507,6 +1508,7 @@ class Option(Parameter):
+         self.allow_from_autoenv = allow_from_autoenv
+         self.help = help
+         self.show_default = show_default
++        self.show_choices = show_choices
+ 
+         # Sanity check for stuff we don't support
+         if __debug__:
+@@ -1661,7 +1663,8 @@ class Option(Parameter):
+         return prompt(self.prompt, default=default,
+                       hide_input=self.hide_input,
+                       confirmation_prompt=self.confirmation_prompt,
+-                      value_proc=lambda x: self.process_value(ctx, x))
++                      value_proc=lambda x: self.process_value(ctx, x),
++                      type=self.type, show_choices=self.show_choices)
+ 
+     def resolve_envvar_value(self, ctx):
+         rv = Parameter.resolve_envvar_value(self, ctx)
+diff --git a/click/termui.py b/click/termui.py
+index c8e42be..67ad13f 100644
+--- a/click/termui.py
++++ b/click/termui.py
+@@ -6,7 +6,7 @@ from ._compat import raw_input, text_type, string_types, \
+      isatty, strip_ansi, get_winterm_size, DEFAULT_COLUMNS, WIN
+ from .utils import echo
+ from .exceptions import Abort, UsageError
+-from .types import convert_type
++from .types import convert_type, Choice
+ from .globals import resolve_color_default
+ 
+ 
+@@ -24,8 +24,11 @@ def hidden_prompt_func(prompt):
+     return getpass.getpass(prompt)
+ 
+ 
+-def _build_prompt(text, suffix, show_default=False, default=None):
++def _build_prompt(text, suffix, show_default=False, default=None,
++                  show_choices=True, type=None):
+     prompt = text
++    if type is not None and show_choices and isinstance(type, Choice):
++        prompt = '%s (%s)' % (prompt, ', '.join(type.choices))
+     if default is not None and show_default:
+         prompt = '%s [%s]' % (prompt, default)
+     return prompt + suffix
+@@ -34,7 +37,7 @@ def _build_prompt(text, suffix, show_default=False, default=None):
+ def prompt(text, default=None, hide_input=False,
+            confirmation_prompt=False, type=None,
+            value_proc=None, prompt_suffix=': ',
+-           show_default=True, err=False):
++           show_default=True, err=False, show_choices=True):
+     """Prompts a user for input.  This is a convenience function that can
+     be used to prompt a user for input later.
+ 
+@@ -80,9 +83,11 @@ def prompt(text, default=None, hide_input=False,
+             raise Abort()
+ 
+     if value_proc is None:
+-        value_proc = convert_type(type, default)
++        type = convert_type(type, default)
++        value_proc = type
+ 
+-    prompt = _build_prompt(text, prompt_suffix, show_default, default)
++    prompt = _build_prompt(text, prompt_suffix, show_default, default,
++                           show_choices, type)
+ 
+     while 1:
+         while 1:
+diff --git a/tests/test_termui.py b/tests/test_termui.py
+index fa7c262..b0484f2 100644
+--- a/tests/test_termui.py
++++ b/tests/test_termui.py
+@@ -44,6 +44,23 @@ def test_progressbar_length_hint(runner, monkeypatch):
+     assert result.exception is None
+ 
+ 
++def test_choices_list_in_prompt(runner, monkeypatch):
++    @click.option('-g', type=click.Choice(['none', 'day', 'week', 'month']), prompt=True)
++    @click.command()
++    def cli_with_choices():
++        pass
++
++    @click.option('-g', type=click.Choice(['none', 'day', 'week', 'month']), prompt=True, show_choices=False)
++    @click.command()
++    def cli_without_choices():
++        pass
++
++    monkeypatch.setattr(click._termui_impl, 'isatty', lambda _: True)
++
++    assert '(none, day, week, month)' in runner.invoke(cli_with_choices, [], input='none').output
++    assert '(none, day, week, month)' not in runner.invoke(cli_without_choices, [], input='none').output
++
++
+ def test_secho(runner):
+     with runner.isolation() as out:
+         click.secho(None, nl=False)

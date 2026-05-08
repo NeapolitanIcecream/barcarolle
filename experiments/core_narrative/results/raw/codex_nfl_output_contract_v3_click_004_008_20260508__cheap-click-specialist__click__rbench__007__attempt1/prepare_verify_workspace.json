@@ -1,0 +1,14 @@
+{
+  "base_commit": "563b1a7116a6806e699d31d327dd9bca93c40cb3",
+  "repo_slug": "click",
+  "split": "rbench",
+  "statement_path": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/workspaces/codex_nfl_output_contract_v3_click_004_008_20260508__cheap-click-specialist__click__rbench__007__attempt1__verify/.core_narrative/statement.md",
+  "status": "prepared",
+  "target_commit_absence_checked": true,
+  "task_id": "click__rbench__007",
+  "task_package_path": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/workspaces/codex_nfl_output_contract_v3_click_004_008_20260508__cheap-click-specialist__click__rbench__007__attempt1__verify/.core_narrative/task.json",
+  "tool": "prepare_workspace",
+  "warnings": [],
+  "workspace": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/workspaces/codex_nfl_output_contract_v3_click_004_008_20260508__cheap-click-specialist__click__rbench__007__attempt1__verify",
+  "workspace_history_mode": "base_tree_only_synthetic_git"
+}

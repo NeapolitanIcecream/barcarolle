@@ -1,0 +1,373 @@
+{
+  "schema_version": "barcarolle.click008.failure_analysis.v1",
+  "generated_at": "2026-05-08T11:20:14Z",
+  "workflow": ".codex-workflows/barcarolle-nfl-output-contract-replay",
+  "scope": {
+    "task_id": "click__rbench__008",
+    "attempts": [1, 2],
+    "spend_policy": "no_live_model_calls_no_retries_no_extra_attempts",
+    "historical_artifacts_mutated": false,
+    "worker_reviewer_cli_logs_read": false
+  },
+  "included_cells": [
+    {
+      "acut_id": "cheap-generic-swe",
+      "attempt1_run_id": "codex_nfl_output_contract_v3_click_004_008_20260508__cheap-generic-swe__click__rbench__008__attempt1",
+      "attempt2_run_id": "codex_nfl_output_contract_v3_click_005_008_attempt2_20260508__cheap-generic-swe__click__rbench__008__attempt2"
+    },
+    {
+      "acut_id": "frontier-generic-swe",
+      "attempt1_run_id": "codex_nfl_output_contract_v3_click_004_008_20260508__frontier-generic-swe__click__rbench__008__attempt1",
+      "attempt2_run_id": "codex_nfl_output_contract_v3_click_005_008_attempt2_20260508__frontier-generic-swe__click__rbench__008__attempt2"
+    },
+    {
+      "acut_id": "cheap-click-specialist",
+      "attempt1_run_id": "codex_nfl_output_contract_v3_click_004_008_20260508__cheap-click-specialist__click__rbench__008__attempt1",
+      "attempt2_run_id": "codex_nfl_output_contract_v3_click_005_008_attempt2_20260508__cheap-click-specialist__click__rbench__008__attempt2"
+    },
+    {
+      "acut_id": "frontier-click-specialist",
+      "attempt1_run_id": "codex_nfl_output_contract_v3_click_004_008_20260508__frontier-click-specialist__click__rbench__008__attempt1",
+      "attempt2_run_id": "codex_nfl_output_contract_v3_click_005_008_attempt2_20260508__frontier-click-specialist__click__rbench__008__attempt2"
+    }
+  ],
+  "source_artifacts": {
+    "attempt1_normalized_glob": "experiments/core_narrative/results/normalized/codex_nfl_output_contract_v3_click_004_008_20260508__*__click__rbench__008__attempt1.json",
+    "attempt1_raw_glob": "experiments/core_narrative/results/raw/codex_nfl_output_contract_v3_click_004_008_20260508__*__click__rbench__008__attempt1/",
+    "attempt2_normalized_glob": "experiments/core_narrative/results/normalized/codex_nfl_output_contract_v3_click_005_008_attempt2_20260508__*__click__rbench__008__attempt2.json",
+    "attempt2_raw_glob": "experiments/core_narrative/results/raw/codex_nfl_output_contract_v3_click_005_008_attempt2_20260508__*__click__rbench__008__attempt2/",
+    "attempt2_batch_summary": "experiments/core_narrative/results/codex_nfl_output_contract_v3_click_005_008_attempt2_live_click008_20260508.json",
+    "attempt2_combined_summary": "experiments/core_narrative/results/codex_nfl_output_contract_v3_click_005_008_attempt2_live_20260508.json",
+    "task_manifest": "experiments/core_narrative/tasks/click/rbench/click__rbench__008/task.yaml",
+    "public_statement": "experiments/core_narrative/tasks/click/rbench/click__rbench__008/public/statement.md",
+    "verifier_script": "experiments/core_narrative/tasks/click/rbench/click__rbench__008/verifier/run.sh",
+    "runner_code": [
+      "experiments/core_narrative/tools/codex_nfl_experiment_runner.py",
+      "experiments/core_narrative/tools/openclaw_direct_runner.py",
+      "experiments/core_narrative/tools/apply_and_verify.py"
+    ],
+    "runner_tests": [
+      "experiments/core_narrative/tools/test_codex_nfl_experiment_runner.py",
+      "experiments/core_narrative/tools/test_openclaw_direct_runner.py"
+    ]
+  },
+  "artifact_count_check": {
+    "attempt1_normalized": 4,
+    "attempt1_raw_dirs": 4,
+    "attempt1_prompt_snapshots": 4,
+    "attempt1_provider_responses": 4,
+    "attempt2_normalized": 4,
+    "attempt2_raw_dirs": 4,
+    "attempt2_prompt_snapshots": 4,
+    "attempt2_provider_responses": 4,
+    "status": "passed"
+  },
+  "attempt_status_comparison": {
+    "attempt1": {
+      "passed": 0,
+      "failed": 2,
+      "invalid_submission": 2,
+      "infra_failed": 0,
+      "timeout": 0
+    },
+    "attempt2": {
+      "passed": 0,
+      "failed": 1,
+      "invalid_submission": 3,
+      "infra_failed": 0,
+      "timeout": 0
+    },
+    "per_acut": [
+      {
+        "acut_id": "cheap-generic-swe",
+        "attempt1": {
+          "status": "invalid_submission",
+          "failure_owner": "model_output",
+          "failure_class": "search_replace_anchor_mismatch",
+          "runner_error": "edit anchors must identify exactly one old-string occurrence",
+          "path": "src/click/parser.py",
+          "edit_index": 1,
+          "occurrences": 1,
+          "anchor_matches": 0
+        },
+        "attempt2": {
+          "status": "invalid_submission",
+          "failure_owner": "model_output",
+          "failure_class": "search_replace_anchor_mismatch",
+          "runner_error": "edit anchors must identify exactly one old-string occurrence",
+          "path": "src/click/parser.py",
+          "edit_index": 1,
+          "occurrences": 0,
+          "anchor_matches": 0,
+          "diagnostic_code": "anchors_do_not_isolate_one_occurrence",
+          "old_text_sha256": "6d554f1b57048546f70d36bd5252f802db233534d186757e739539920c4cf1da"
+        }
+      },
+      {
+        "acut_id": "frontier-generic-swe",
+        "attempt1": {
+          "status": "invalid_submission",
+          "failure_owner": "model_output",
+          "failure_class": "search_replace_old_occurrence_mismatch",
+          "runner_error": "edit old string must occur exactly once",
+          "path": "src/click/core.py",
+          "edit_index": 4,
+          "occurrences": 0,
+          "anchor_matches": 0
+        },
+        "attempt2": {
+          "status": "invalid_submission",
+          "failure_owner": "model_output",
+          "failure_class": "search_replace_old_occurrence_mismatch",
+          "runner_error": "edit old string must occur exactly once",
+          "path": "src/click/core.py",
+          "edit_index": 9,
+          "occurrences": 0,
+          "anchor_matches": 0,
+          "diagnostic_code": "old_text_not_found",
+          "old_text_sha256": "733483051c7e6bd98aafb26c62d3dbb99e3aec26cae8511e4c47bf67e2bd7d06"
+        }
+      },
+      {
+        "acut_id": "cheap-click-specialist",
+        "attempt1": {
+          "status": "failed",
+          "patch_ready": true,
+          "clean_patch_replay_attempted": true,
+          "verifier_exit_code": 1,
+          "patch_changed_paths": [
+            "src/click/parser.py",
+            "tests/test_termui.py"
+          ]
+        },
+        "attempt2": {
+          "status": "failed",
+          "patch_ready": true,
+          "clean_patch_replay_attempted": true,
+          "verifier_exit_code": 1,
+          "patch_changed_paths": [
+            "src/click/parser.py",
+            "tests/test_options.py",
+            "tests/test_termui.py"
+          ]
+        }
+      },
+      {
+        "acut_id": "frontier-click-specialist",
+        "attempt1": {
+          "status": "failed",
+          "patch_ready": true,
+          "clean_patch_replay_attempted": true,
+          "verifier_exit_code": 1,
+          "patch_changed_paths": [
+            "src/click/core.py",
+            "src/click/parser.py",
+            "tests/test_termui.py"
+          ]
+        },
+        "attempt2": {
+          "status": "invalid_submission",
+          "failure_owner": "model_output",
+          "failure_class": "search_replace_old_occurrence_mismatch",
+          "runner_error": "edit old string must occur exactly once",
+          "path": "src/click/core.py",
+          "edit_index": 8,
+          "occurrences": 0,
+          "anchor_matches": 0,
+          "diagnostic_code": "old_text_not_found",
+          "old_text_sha256": "590b935894ba625585aabddab381f1be9310745ca0e2df6ca5d1a05329569cf6"
+        }
+      }
+    ],
+    "interpretation": "Attempt 2 did not improve Click 008. It traded one patch-ready verifier failure for one additional invalid submission and still had zero passes."
+  },
+  "invalid_submission_failure_classes": {
+    "attempt1": {
+      "search_replace_anchor_mismatch": 1,
+      "search_replace_old_occurrence_mismatch": 1
+    },
+    "attempt2": {
+      "search_replace_anchor_mismatch": 1,
+      "search_replace_old_occurrence_mismatch": 2
+    },
+    "evidence": [
+      {
+        "cell": "attempt2 cheap-generic-swe",
+        "artifact": "experiments/core_narrative/results/raw/codex_nfl_output_contract_v3_click_005_008_attempt2_20260508__cheap-generic-swe__click__rbench__008__attempt2/runner_result.json",
+        "failure_class": "search_replace_anchor_mismatch",
+        "diagnostic_code": "anchors_do_not_isolate_one_occurrence",
+        "evidence_summary": "The runner rejected edit index 1 in src/click/parser.py before verifier replay."
+      },
+      {
+        "cell": "attempt2 frontier-generic-swe",
+        "artifact": "experiments/core_narrative/results/raw/codex_nfl_output_contract_v3_click_005_008_attempt2_20260508__frontier-generic-swe__click__rbench__008__attempt2/runner_result.json",
+        "failure_class": "search_replace_old_occurrence_mismatch",
+        "diagnostic_code": "old_text_not_found",
+        "evidence_summary": "The runner rejected edit index 9 in src/click/core.py because old text had zero occurrences after earlier edits."
+      },
+      {
+        "cell": "attempt2 frontier-click-specialist",
+        "artifact": "experiments/core_narrative/results/raw/codex_nfl_output_contract_v3_click_005_008_attempt2_20260508__frontier-click-specialist__click__rbench__008__attempt2/runner_result.json",
+        "failure_class": "search_replace_old_occurrence_mismatch",
+        "diagnostic_code": "old_text_not_found",
+        "evidence_summary": "The runner rejected edit index 8 in src/click/core.py because old text had zero occurrences after earlier edits."
+      }
+    ]
+  },
+  "verifier_failure_evidence": {
+    "cells": [
+      {
+        "cell": "attempt1 cheap-click-specialist",
+        "normalized": "experiments/core_narrative/results/normalized/codex_nfl_output_contract_v3_click_004_008_20260508__cheap-click-specialist__click__rbench__008__attempt1.json",
+        "patch": "experiments/core_narrative/results/raw/codex_nfl_output_contract_v3_click_004_008_20260508__cheap-click-specialist__click__rbench__008__attempt1/submission.patch",
+        "verifier_stdout": "experiments/core_narrative/results/raw/codex_nfl_output_contract_v3_click_004_008_20260508__cheap-click-specialist__click__rbench__008__attempt1/verifier.stdout.txt",
+        "exit_code": 1,
+        "failure_summary": "12 failed; traces fail during Option construction because prompt_required is an unexpected keyword."
+      },
+      {
+        "cell": "attempt1 frontier-click-specialist",
+        "normalized": "experiments/core_narrative/results/normalized/codex_nfl_output_contract_v3_click_004_008_20260508__frontier-click-specialist__click__rbench__008__attempt1.json",
+        "patch": "experiments/core_narrative/results/raw/codex_nfl_output_contract_v3_click_004_008_20260508__frontier-click-specialist__click__rbench__008__attempt1/submission.patch",
+        "verifier_stdout": "experiments/core_narrative/results/raw/codex_nfl_output_contract_v3_click_004_008_20260508__frontier-click-specialist__click__rbench__008__attempt1/verifier.stdout.txt",
+        "exit_code": 1,
+        "failure_summary": "12 failed; traces fail during Option construction because prompt_required is an unexpected keyword."
+      },
+      {
+        "cell": "attempt2 cheap-click-specialist",
+        "normalized": "experiments/core_narrative/results/normalized/codex_nfl_output_contract_v3_click_005_008_attempt2_20260508__cheap-click-specialist__click__rbench__008__attempt2.json",
+        "patch": "experiments/core_narrative/results/raw/codex_nfl_output_contract_v3_click_005_008_attempt2_20260508__cheap-click-specialist__click__rbench__008__attempt2/submission.patch",
+        "verifier_stdout": "experiments/core_narrative/results/raw/codex_nfl_output_contract_v3_click_005_008_attempt2_20260508__cheap-click-specialist__click__rbench__008__attempt2/verifier.stdout.txt",
+        "exit_code": 1,
+        "failure_summary": "12 failed; traces fail during Option construction because prompt_required is an unexpected keyword."
+      }
+    ],
+    "classification": "ordinary_model_implementation_failure_for_patch_ready_cells",
+    "reason": "The verifier command executed and collected tests successfully; the generated patches did not add complete prompt_required support before behavior assertions could run."
+  },
+  "context_packaging_evidence": {
+    "attempt2_option_context_present": true,
+    "attempt2_option_context_evidence": {
+      "all_attempt2_prompts_have_focused_core_option_excerpt": true,
+      "core_focus_trigger": "class Option(Parameter):",
+      "focused_excerpt_char_count": 8600,
+      "effective_max_file_chars": 25000,
+      "prompt_truncated": false
+    },
+    "attempt1_prompt_packaging": {
+      "prompt_char_count_per_cell": 120013,
+      "prompt_ended_with_truncated_marker": true,
+      "prompt_had_hidden_test_function_names": false,
+      "context_packaging_snapshot": null,
+      "note": "The runner workspace was already mutated by no-op verification, but the prompt hit the max-context truncation before the hidden prompt_required test functions were included."
+    },
+    "attempt2_prompt_packaging": {
+      "prompt_char_count_by_cell": {
+        "cheap-click-specialist": 93559,
+        "cheap-generic-swe": 88061,
+        "frontier-click-specialist": 93557,
+        "frontier-generic-swe": 88059
+      },
+      "prompt_ended_with_truncated_marker": false,
+      "prompt_had_hidden_test_function_names": true,
+      "all_four_attempt2_prompts_had_hidden_test_function_names": true,
+      "hidden_function_markers_observed": [
+        "test_prompt_required_with_required",
+        "test_prompt_required_false"
+      ]
+    },
+    "hidden_verifier_contamination": {
+      "present": true,
+      "confidence": "high",
+      "evidence": [
+        {
+          "artifact": "experiments/core_narrative/results/raw/codex_nfl_output_contract_v3_click_005_008_attempt2_20260508__cheap-generic-swe__click__rbench__008__attempt2/noop_verify_command.json",
+          "summary": "No-op verification ran before direct_runner_command in the same workspace used by prompt packaging."
+        },
+        {
+          "artifact": "experiments/core_narrative/tasks/click/rbench/click__rbench__008/verifier/run.sh",
+          "summary": "The verifier copies files from verifier/hidden into the workspace before running pytest."
+        },
+        {
+          "artifact": "experiments/core_narrative/results/raw/codex_nfl_output_contract_v3_click_005_008_attempt2_20260508__cheap-generic-swe__click__rbench__008__attempt2/prompt_snapshot.json",
+          "summary": "The tests/test_termui.py context sha256 equals the hidden verifier test file sha256."
+        },
+        {
+          "artifact": "experiments/core_narrative/workspaces/codex_nfl_output_contract_v3_click_004_008_sanity__click__rbench__008/tests/test_termui.py",
+          "summary": "A clean prepared sanity workspace lacks the prompt_required verifier test names and has a different sha256."
+        }
+      ],
+      "hidden_test_sha256": "385d3e676c73a1b0b49a184e07eceb2160f5a79403a4cff07b1d58d41544e359",
+      "clean_sanity_termui_sha256": "2ba18dfb4f62eca1ec5fd8eb4503a084b12db5ee4b3e9b62e9b4e6f2b543675a"
+    }
+  },
+  "task_and_verifier_semantics_assessment": {
+    "task_statement_consistent_with_failures": true,
+    "no_op_fails_as_expected": true,
+    "verifier_collects_named_tests": true,
+    "evidence_of_task_verifier_defect": false,
+    "notes": "Unlike Click 005, Click 008 verifier failures are not collection failures. The issue found here is verifier-induced workspace mutation before prompt packaging, not bad verifier semantics."
+  },
+  "root_cause_classification": {
+    "experiment_validity_root_cause": {
+      "class": "context_packaging_failure",
+      "confidence": 0.93,
+      "summary": "No-op verifier execution reused the runner workspace and copied hidden verifier tests into files that were later packaged as model context. Attempt-2 hardening made the prompt compact enough for that forbidden content to be included in full."
+    },
+    "observed_attempt2_failure_mix": {
+      "model_output_contract_failures": 3,
+      "ordinary_model_implementation_failures": 1,
+      "context_packaging_failures": 1,
+      "task_verifier_semantics_failures": 0,
+      "summary": "The scoreable attempt-2 outcomes are mostly strict output-contract failures, with one ordinary incomplete patch. However, the run should not be used as a clean model-capability or prompt-hardening measurement because the prompt context was contaminated."
+    },
+    "answer_to_why_no_improvement": "Prompt/context hardening did add focused Option context and eliminated prompt truncation, but because no-op verification had already copied hidden tests into the same workspace, the cleaner prompt also included hidden verifier tests. The models then either violated the strict anchored-search-replace contract or generated incomplete patches that still did not make Option accept prompt_required."
+  },
+  "local_engineering_fix": {
+    "implemented": true,
+    "files_changed": [
+      "experiments/core_narrative/tools/codex_nfl_experiment_runner.py",
+      "experiments/core_narrative/tools/test_codex_nfl_experiment_runner.py"
+    ],
+    "summary": "No-op verification now runs in a separately prepared and installed run_id__noop workspace. The direct runner continues to package prompt context from the clean runner workspace. Batch results record noop_workspace, noop_prepare, and noop_install.",
+    "gate1_impact": "Gate 1 is not weakened. No-op verification still runs, strict invalid-submission classification is unchanged, and patch-ready clean replay still uses a separate verify workspace.",
+    "regression_test": "test_run_one_noop_verify_uses_separate_workspace_before_prompting"
+  },
+  "recommended_next_action": {
+    "live_spend_justified_now": false,
+    "next_step": "review the local no-op workspace isolation fix and run no-model prompt-packaging verification before any new live spend",
+    "why": "The attempt-2 Click 008 evidence is contaminated by hidden verifier context. Spending again before proving clean prompt packaging would only repeat an experiment-validity risk.",
+    "minimal_future_live_run_if_approved": {
+      "scope": "click__rbench__008 only, four core ACUTs only, attempt3 only",
+      "acuts": [
+        "cheap-generic-swe",
+        "frontier-generic-swe",
+        "cheap-click-specialist",
+        "frontier-click-specialist"
+      ],
+      "exclude": [
+        "Click 005",
+        "Click 009+",
+        "non-Click tasks",
+        "additional attempts or retries"
+      ]
+    },
+    "evidence_threshold_before_live": [
+      "unit tests for no-op workspace isolation pass",
+      "a no-model Click 008 prompt-packaging dry-run under the fixed runner shows noop_workspace separate from runner_workspace",
+      "the dry-run prompt snapshot shows focused class Option context still present",
+      "the dry-run prompt content does not contain hidden verifier test names or the hidden tests/test_termui.py sha256",
+      "artifact count checks for the dry-run scope pass",
+      "a supervisor or reviewer explicitly approves the bounded attempt3 spend"
+    ]
+  },
+  "verification": {
+    "json_validation": "passed",
+    "syntax_checks": [
+      "python3 -m py_compile experiments/core_narrative/tools/codex_nfl_experiment_runner.py experiments/core_narrative/tools/test_codex_nfl_experiment_runner.py"
+    ],
+    "tests": [
+      "PYTHONPATH=experiments/core_narrative/tools python3 -m unittest experiments.core_narrative.tools.test_codex_nfl_experiment_runner"
+    ],
+    "artifact_count_and_source_reference_checks": "passed"
+  }
+}

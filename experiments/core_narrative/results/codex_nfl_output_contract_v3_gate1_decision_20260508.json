@@ -1,0 +1,121 @@
+{
+  "tool": "codex_nfl_output_contract_v3_gate1_decision",
+  "status": "passed_targeted_clean_replay_recovered",
+  "decided_at": "2026-05-08T05:51:14Z",
+  "gate_source": "experiments/core_narrative/reports/next_experiment_decision_gates.md",
+  "prior_gate_decision": "experiments/core_narrative/results/codex_nfl_output_contract_repair_gate1_decision_20260508.json",
+  "bounded_iteration": {
+    "goal": "Strengthen the targeted frontier-click-specialist Click 003 output contract and run at most one new live cell if local evidence supported it.",
+    "output_contract": "anchored-search-replace-json-v3",
+    "live_cells_run": 1,
+    "live_cell_limit": 1,
+    "click_004_008_run_in_this_iteration": false
+  },
+  "no_new_spend_replay": {
+    "run_id": "codex_nfl_output_contract_v3_replay_20260508__frontier-click-specialist__click__rbench__003__attempt1",
+    "source_live_run_id": "codex_nfl_output_contract_repair_20260508__frontier-click-specialist__click__rbench__003__attempt1",
+    "task_id": "click__rbench__003",
+    "acut_id": "frontier-click-specialist",
+    "mode": "mock_replay_of_captured_live_text",
+    "model_call_made": false,
+    "ledger_record_appended": false,
+    "status": "invalid_submission",
+    "failure_class": "invalid_unified_diff",
+    "failure_owner": "model_output",
+    "patch_ready": false,
+    "clean_patch_replay_attempted": false,
+    "batch": "experiments/core_narrative/results/codex_nfl_output_contract_v3_replay_targeted_20260508.json",
+    "normalized_result": "experiments/core_narrative/results/normalized/codex_nfl_output_contract_v3_replay_20260508__frontier-click-specialist__click__rbench__003__attempt1.json",
+    "runner_result": "experiments/core_narrative/results/raw/codex_nfl_output_contract_v3_replay_20260508__frontier-click-specialist__click__rbench__003__attempt1/runner_result.json"
+  },
+  "targeted_live_cell": {
+    "run_id": "codex_nfl_output_contract_v3_live_20260508__frontier-click-specialist__click__rbench__003__attempt1",
+    "task_id": "click__rbench__003",
+    "acut_id": "frontier-click-specialist",
+    "mode": "live",
+    "model_call_made": true,
+    "status": "passed",
+    "patch_ready": true,
+    "clean_patch_replay_attempted": true,
+    "clean_patch_replay_separate_workspace": true,
+    "verification_exit_code": 0,
+    "patch_kind": "search_replace_edits",
+    "edit_count": 7,
+    "anchored_edit_count": 0,
+    "changed_paths": [
+      "click/core.py",
+      "click/termui.py"
+    ],
+    "output_contract": "anchored-search-replace-json-v3",
+    "output_contract_schema": {
+      "id": "anchored-search-replace-json-v3",
+      "primary_top_level_key": "edits",
+      "requires_single_top_level_key": true,
+      "requires_exact_old_text": true,
+      "requires_exact_path_from_context": true,
+      "requires_immediate_anchors_for_repeated_old_text": true,
+      "legacy_parser_fallback_keys": [
+        "unified_diff",
+        "files"
+      ]
+    },
+    "batch": "experiments/core_narrative/results/codex_nfl_output_contract_v3_live_targeted_20260508.json",
+    "normalized_result": "experiments/core_narrative/results/normalized/codex_nfl_output_contract_v3_live_20260508__frontier-click-specialist__click__rbench__003__attempt1.json",
+    "runner_result": "experiments/core_narrative/results/raw/codex_nfl_output_contract_v3_live_20260508__frontier-click-specialist__click__rbench__003__attempt1/runner_result.json",
+    "prompt_snapshot": "experiments/core_narrative/results/raw/codex_nfl_output_contract_v3_live_20260508__frontier-click-specialist__click__rbench__003__attempt1/prompt_snapshot.json",
+    "patch_path": "experiments/core_narrative/results/raw/codex_nfl_output_contract_v3_live_20260508__frontier-click-specialist__click__rbench__003__attempt1/submission.patch"
+  },
+  "conditions": {
+    "infra_failed_rate_eq_0": {
+      "passed": true,
+      "value": 0.0,
+      "basis": "The v3 live targeted cell completed as passed; the v3 no-new-spend replay remains classified as model-output invalid_submission, not infrastructure."
+    },
+    "verifier_repair_after_live_eq_false": {
+      "passed": true,
+      "value": false,
+      "basis": "No verifier or task-pack repair was made after the v3 live response; the generated patch was replayed on a separate clean workspace."
+    },
+    "unclassified_failure_rate_lte_20pct": {
+      "passed": true,
+      "value": 0.0,
+      "basis": "The only remaining replay failure is classified as invalid_unified_diff/model_output; the current live cell passed."
+    },
+    "all_runs_have_clean_patch_replay": {
+      "passed": true,
+      "value": true,
+      "basis": "The current targeted v3 live cell emitted a verifier-ready patch and clean_patch_replay.attempted is true with skip_apply false."
+    },
+    "frontier_click_specialist_attempt1_completed": {
+      "passed": true,
+      "value": true,
+      "basis": "The v3 frontier-click-specialist task-003 live call completed and appended one provider-usage ledger record."
+    },
+    "meaningful_film_contrast_exists": {
+      "passed": true,
+      "value": true,
+      "basis": "The evidence now contrasts the old unified-diff model-output failure with a v3 anchored-edits clean replay on the same targeted cell."
+    }
+  },
+  "decision": {
+    "gate1_can_pass": true,
+    "expand_click_004_008_this_iteration": false,
+    "expand_click_004_008_next_step": true,
+    "stop_reason": "The required bounded iteration allowed at most one new targeted live cell, which recovered clean replay. Click 004-008 expansion is now justified as the next controlled step, but was not run in this worker pass."
+  },
+  "cost": {
+    "new_live_provider_usage_cost_usd": 0.23266,
+    "new_live_provider_usage_cost_status": "provider_response_usage_cost_not_invoice",
+    "ledger_record_count_before_live": 46,
+    "ledger_record_count_after_live": 47,
+    "ledger_estimated_cost_sum_usd_after_live": 2.391728,
+    "actual_provider_billed_cost_status": "unknown_no_invoice_or_billed_cost_records",
+    "cost_reconciliation": "experiments/core_narrative/results/codex_nfl_output_contract_v3_cost_reconciliation_2026-05-08.json"
+  },
+  "notes": [
+    "Gate 1 remains strict; all_runs_have_clean_patch_replay was not weakened.",
+    "The old captured response remains a model-output invalid_unified_diff diagnostic under final code.",
+    "The new v3 live response used the search_replace_edits path and passed verifier replay.",
+    "Click 004-008 were not executed in this iteration because the live-cell budget was capped at one targeted cell."
+  ]
+}

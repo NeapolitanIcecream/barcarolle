@@ -1,0 +1,18 @@
+{
+  "command": [
+    ".venv/bin/python",
+    "-m",
+    "pip",
+    "install",
+    "-q",
+    "-e",
+    ".",
+    "pytest"
+  ],
+  "exit_code": 0,
+  "finished_at": "2026-05-08T06:21:29.557643Z",
+  "name": "venv_install",
+  "started_at": "2026-05-08T06:21:08.440484Z",
+  "stderr_artifact": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/codex_nfl_output_contract_v3_click_004_008_20260508__cheap-click-specialist__click__rbench__004__attempt1/venv_install.stderr.txt",
+  "stdout_artifact": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/codex_nfl_output_contract_v3_click_004_008_20260508__cheap-click-specialist__click__rbench__004__attempt1/venv_install.stdout.txt"
+}

@@ -1,0 +1,166 @@
+{
+  "aggregate": {
+    "by_acut": {
+      "cheap-click-specialist": {
+        "failed": 1,
+        "invalid_submission": 1,
+        "passed": 3
+      },
+      "cheap-generic-swe": {
+        "failed": 1,
+        "invalid_submission": 2,
+        "passed": 2
+      },
+      "frontier-click-specialist": {
+        "failed": 2,
+        "passed": 3
+      },
+      "frontier-generic-swe": {
+        "failed": 1,
+        "invalid_submission": 1,
+        "passed": 3
+      }
+    },
+    "by_task": {
+      "click__rbench__004": {
+        "passed": 4
+      },
+      "click__rbench__005": {
+        "failed": 3,
+        "invalid_submission": 1
+      },
+      "click__rbench__006": {
+        "passed": 4
+      },
+      "click__rbench__007": {
+        "invalid_submission": 1,
+        "passed": 3
+      },
+      "click__rbench__008": {
+        "failed": 2,
+        "invalid_submission": 2
+      }
+    },
+    "failed": 5,
+    "infra_failed": 0,
+    "invalid_submission": 4,
+    "pass_rate": 0.55,
+    "passed": 11,
+    "result_count": 20,
+    "scoreable": 20,
+    "status_counts": {
+      "failed": 5,
+      "invalid_submission": 4,
+      "passed": 11
+    },
+    "timeout": 0
+  },
+  "cost": {
+    "actual_cost_records_in_expansion": 0,
+    "actual_provider_billed_cost_status": "unknown_no_invoice_or_billed_cost_records",
+    "cost_reconciliation": "experiments/core_narrative/results/codex_nfl_output_contract_v3_click_004_008_cost_reconciliation_2026-05-08.json",
+    "input_tokens": 246732,
+    "ledger_cumulative_after_expansion_usd": 4.879213,
+    "ledger_cumulative_before_expansion_usd": 2.391728,
+    "ledger_record_count_after_expansion": 67,
+    "ledger_record_count_before_expansion": 47,
+    "ledger_record_count_delta": 20,
+    "new_provider_usage_cost_usd": 2.487485,
+    "output_tokens": 150017,
+    "provider_usage_cost_status": "provider_response_usage_cost_not_invoice"
+  },
+  "failure_taxonomy": {
+    "infra_failed_count": 0,
+    "invalid_submission_failure_classes": {
+      "search_replace_anchor_mismatch": 2,
+      "search_replace_old_occurrence_mismatch": 2
+    },
+    "metadata_failure_classes": {
+      "search_replace_anchor_mismatch": 2,
+      "search_replace_old_occurrence_mismatch": 2
+    },
+    "model_output_invalid_submission_count": 4,
+    "model_output_invalid_submission_run_ids": [
+      "codex_nfl_output_contract_v3_click_004_008_20260508__cheap-click-specialist__click__rbench__005__attempt1",
+      "codex_nfl_output_contract_v3_click_004_008_20260508__cheap-generic-swe__click__rbench__007__attempt1",
+      "codex_nfl_output_contract_v3_click_004_008_20260508__cheap-generic-swe__click__rbench__008__attempt1",
+      "codex_nfl_output_contract_v3_click_004_008_20260508__frontier-generic-swe__click__rbench__008__attempt1"
+    ],
+    "timeout_count": 0,
+    "verifier_replay_failed_count": 5,
+    "verifier_replay_failed_run_ids": [
+      "codex_nfl_output_contract_v3_click_004_008_20260508__cheap-click-specialist__click__rbench__008__attempt1",
+      "codex_nfl_output_contract_v3_click_004_008_20260508__cheap-generic-swe__click__rbench__005__attempt1",
+      "codex_nfl_output_contract_v3_click_004_008_20260508__frontier-click-specialist__click__rbench__005__attempt1",
+      "codex_nfl_output_contract_v3_click_004_008_20260508__frontier-click-specialist__click__rbench__008__attempt1",
+      "codex_nfl_output_contract_v3_click_004_008_20260508__frontier-generic-swe__click__rbench__005__attempt1"
+    ]
+  },
+  "purpose": "Controlled Click 004-008 expansion using anchored-search-replace-json-v3 and the four core ACUTs.",
+  "replay_and_artifacts": {
+    "changed_paths_by_task": {
+      "click__rbench__004": {
+        "click/testing.py": 4
+      },
+      "click__rbench__005": {
+        "click/types.py": 3
+      },
+      "click__rbench__006": {
+        "click/types.py": 4,
+        "tests/test_basic.py": 4
+      },
+      "click__rbench__007": {
+        "src/click/testing.py": 3,
+        "tests/test_testing.py": 2
+      },
+      "click__rbench__008": {
+        "src/click/core.py": 1,
+        "src/click/parser.py": 2
+      }
+    },
+    "clean_patch_replay_attempted": 16,
+    "clean_patch_replay_failed": 5,
+    "clean_patch_replay_passed": 11,
+    "clean_patch_replay_separate_workspace": 16,
+    "model_calls_recorded": 20,
+    "patch_kinds": {
+      "search_replace_edits": 16
+    },
+    "patch_ready_count": 16,
+    "prompt_snapshot_missing_run_ids": [],
+    "prompt_snapshots_present": true,
+    "provider_usage_ledger_records": 20,
+    "raw_response_missing_run_ids": [],
+    "raw_response_redacted_artifacts_present": true
+  },
+  "run": {
+    "acuts": [
+      "cheap-generic-swe",
+      "frontier-generic-swe",
+      "cheap-click-specialist",
+      "frontier-click-specialist"
+    ],
+    "attempt": 1,
+    "batch": "experiments/core_narrative/results/codex_nfl_output_contract_v3_click_004_008_live_20260508.json",
+    "budget_gate": "experiments/core_narrative/results/codex_nfl_output_contract_v3_click_004_008_budget_gate_20260508.json",
+    "coordinator_decision_ref": "experiments/core_narrative/results/codex_nfl_output_contract_v3_gate1_decision_20260508.json",
+    "finished_at": "2026-05-08T06:49:44.637492Z",
+    "mode": "live",
+    "run_prefix": "codex_nfl_output_contract_v3_click_004_008_20260508",
+    "started_at": "2026-05-08T06:15:47.497749Z",
+    "tasks": [
+      "click__rbench__004",
+      "click__rbench__005",
+      "click__rbench__006",
+      "click__rbench__007",
+      "click__rbench__008"
+    ]
+  },
+  "schema_version": "core-narrative.output-contract-v3-click-004-008-expansion-summary.v1",
+  "status": "completed",
+  "summaries": {
+    "normalized_summary": "experiments/core_narrative/results/normalized/codex_nfl_output_contract_v3_click_004_008_summary_20260508.json"
+  },
+  "tool": "codex_nfl_output_contract_v3_click_004_008_expansion_summary",
+  "updated_at": "2026-05-08T06:51:51.510588Z"
+}

@@ -1,0 +1,111 @@
+{
+  "by_acut": {
+    "cheap-click-specialist": {
+      "pass_rate": 0.5,
+      "passed": 1,
+      "scoreable": 2,
+      "status_counts": {
+        "failed": 1,
+        "passed": 1
+      },
+      "total": 2
+    },
+    "cheap-generic-swe": {
+      "pass_rate": 0.0,
+      "passed": 0,
+      "scoreable": 1,
+      "status_counts": {
+        "invalid_submission": 1
+      },
+      "total": 1
+    },
+    "frontier-click-specialist": {
+      "pass_rate": 0.0,
+      "passed": 0,
+      "scoreable": 1,
+      "status_counts": {
+        "invalid_submission": 1
+      },
+      "total": 1
+    },
+    "frontier-generic-swe": {
+      "pass_rate": 0.0,
+      "passed": 0,
+      "scoreable": 1,
+      "status_counts": {
+        "invalid_submission": 1
+      },
+      "total": 1
+    }
+  },
+  "by_acut_split": {
+    "cheap-click-specialist": {
+      "rbench": {
+        "pass_rate": 0.5,
+        "passed": 1,
+        "scoreable": 2,
+        "status_counts": {
+          "failed": 1,
+          "passed": 1
+        },
+        "total": 2
+      }
+    },
+    "cheap-generic-swe": {
+      "rbench": {
+        "pass_rate": 0.0,
+        "passed": 0,
+        "scoreable": 1,
+        "status_counts": {
+          "invalid_submission": 1
+        },
+        "total": 1
+      }
+    },
+    "frontier-click-specialist": {
+      "rbench": {
+        "pass_rate": 0.0,
+        "passed": 0,
+        "scoreable": 1,
+        "status_counts": {
+          "invalid_submission": 1
+        },
+        "total": 1
+      }
+    },
+    "frontier-generic-swe": {
+      "rbench": {
+        "pass_rate": 0.0,
+        "passed": 0,
+        "scoreable": 1,
+        "status_counts": {
+          "invalid_submission": 1
+        },
+        "total": 1
+      }
+    }
+  },
+  "by_split": {
+    "rbench": {
+      "pass_rate": 0.2,
+      "passed": 1,
+      "scoreable": 5,
+      "status_counts": {
+        "failed": 1,
+        "invalid_submission": 3,
+        "passed": 1
+      },
+      "total": 5
+    }
+  },
+  "input_count": 5,
+  "result_count": 5,
+  "status": "summarized",
+  "status_counts": {
+    "failed": 1,
+    "invalid_submission": 3,
+    "passed": 1
+  },
+  "tool": "summarize_results",
+  "warnings": []
+}

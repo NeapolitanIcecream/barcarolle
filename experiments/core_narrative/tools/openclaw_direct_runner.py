@@ -59,7 +59,30 @@ REPO_ROOT = Path(__file__).resolve().parents[3]
 DEFAULT_HTTP_TIMEOUT_SECONDS = 300
 DEFAULT_MAX_FILE_CHARS = 80_000
 DEFAULT_MAX_CONTEXT_CHARS = 120_000
-DEFAULT_OUTPUT_CONTRACT = "search-replace-json-v1"
+DEFAULT_MAX_FOCUSED_EXCERPT_CHARS = 8_000
+DEFAULT_OUTPUT_CONTRACT = "anchored-search-replace-json-v3"
+
+
+def output_contract_schema() -> dict[str, Any]:
+    return {
+        "id": DEFAULT_OUTPUT_CONTRACT,
+        "primary_top_level_key": "edits",
+        "requires_single_top_level_key": True,
+        "requires_exact_old_text": True,
+        "requires_exact_path_from_context": True,
+        "requires_immediate_anchors_for_repeated_old_text": True,
+        "anchor_policy": {
+            "omit_anchors_when_old_is_unique": True,
+            "anchors_are_for_repeated_old_text_only": True,
+            "anchors_must_be_immediate_adjacent_source": True,
+            "invalid_anchors_reject_the_edit_even_when_old_is_unique": True,
+        },
+        "diagnostic_failure_classes": {
+            "search_replace_anchor_mismatch": "old text was present, but supplied anchors did not isolate exactly one occurrence",
+            "search_replace_old_occurrence_mismatch": "old text did not occur exactly once after earlier edits",
+        },
+        "legacy_parser_fallback_keys": ["unified_diff", "files"],
+    }
 
 
 def parse_args(argv: Sequence[str]) -> argparse.Namespace:
@@ -121,6 +144,7 @@ def ensure_git_workspace(workspace: Path) -> None:
 
 
 def resolve_workspace_path(workspace: Path, path: str, label: str) -> Path:
+    workspace = workspace.resolve()
     safe_relative = validate_patch_path(path)
     target = (workspace / safe_relative).resolve()
     try:
@@ -150,7 +174,89 @@ def safe_task_statement(task_path: Path, task: Mapping[str, Any]) -> tuple[str, 
     return statement, str(path), False
 
 
-def context_file_payload(workspace: Path, rel_path: str, max_file_chars: int) -> dict[str, Any]:
+def context_focus_terms(task: Mapping[str, Any], task_statement: str, rel_path: str) -> list[str]:
+    metadata = task.get("metadata") if isinstance(task.get("metadata"), dict) else {}
+    combined = "\n".join(
+        str(item)
+        for item in [
+            task.get("task_id"),
+            task.get("task_family"),
+            task_statement,
+            metadata.get("visible_context_guidance"),
+            metadata.get("risk_notes"),
+            *(metadata.get("expected_touched_area") if isinstance(metadata.get("expected_touched_area"), list) else []),
+        ]
+        if item
+    ).lower()
+    if "prompt_required" not in combined:
+        return []
+    if rel_path.endswith("click/core.py"):
+        return [
+            "class Option(Parameter):",
+            "    def consume_value(self, ctx, opts):",
+        ]
+    if rel_path.endswith("click/parser.py"):
+        return [
+            "class Option:",
+            "class OptionParser:",
+        ]
+    return []
+
+
+def focused_source_excerpts(
+    text: str,
+    *,
+    visible_prefix_chars: int,
+    focus_terms: Sequence[str],
+    max_excerpt_chars: int = DEFAULT_MAX_FOCUSED_EXCERPT_CHARS,
+) -> list[dict[str, Any]]:
+    excerpts: list[dict[str, Any]] = []
+    used_ranges: list[tuple[int, int]] = []
+    for term in focus_terms:
+        index = text.find(term)
+        if index == -1 or index < visible_prefix_chars:
+            continue
+        start = max(0, index - 600)
+        end = min(len(text), index + max_excerpt_chars)
+        if any(start < used_end and end > used_start for used_start, used_end in used_ranges):
+            continue
+        used_ranges.append((start, end))
+        excerpts.append(
+            {
+                "trigger": term,
+                "start_char": start,
+                "end_char": end,
+                "char_count": end - start,
+                "content": text[start:end],
+            }
+        )
+    return excerpts
+
+
+def effective_max_file_chars(
+    *,
+    requested_max_file_chars: int,
+    max_context_chars: int,
+    context_path_count: int,
+    task: Mapping[str, Any],
+    task_statement: str,
+) -> int:
+    metadata = task.get("metadata") if isinstance(task.get("metadata"), dict) else {}
+    expected = " ".join(str(item) for item in metadata.get("expected_touched_area", []) if item)
+    prompt_required_task = "prompt_required" in f"{task_statement} {expected}".lower()
+    if not prompt_required_task or context_path_count < 4:
+        return requested_max_file_chars
+    compact_budget = max(20_000, (max_context_chars - 20_000) // context_path_count)
+    return min(requested_max_file_chars, compact_budget)
+
+
+def context_file_payload(
+    workspace: Path,
+    rel_path: str,
+    max_file_chars: int,
+    *,
+    focus_terms: Sequence[str] = (),
+) -> dict[str, Any]:
     path = resolve_workspace_path(workspace, rel_path, "--context-path")
     if not path.exists() or not path.is_file():
         raise ToolError("context path is not a file", path=rel_path)
@@ -160,11 +266,20 @@ def context_file_payload(workspace: Path, rel_path: str, max_file_chars: int) ->
     if findings["unsafe"]:
         raise ToolError(f"context file {rel_path} could not be redacted safely", unsafe_content=findings)
     shown, truncated = truncate_text(text, max_file_chars)
+    visible_prefix_chars = min(len(text), max_file_chars)
+    excerpts = focused_source_excerpts(
+        text,
+        visible_prefix_chars=visible_prefix_chars,
+        focus_terms=focus_terms,
+    ) if truncated else []
     return {
         "path": validate_patch_path(rel_path),
         "sha256": sha256_text(raw_text),
         "char_count": len(raw_text),
         "truncated": truncated,
+        "displayed_char_count": len(shown),
+        "focus_terms": list(focus_terms),
+        "focused_excerpts": excerpts,
         "content": shown,
     }
 
@@ -268,12 +383,23 @@ def build_prompt(
         "Do not use hidden verifier files, reference patches, future history, credentials, endpoints, or URLs.",
         "",
         "Return only one JSON object with this exact contract:",
-        '{"edits":[{"path":"relative/file.py","old":"exact existing text","new":"replacement text"}]}',
+        '{"edits":[{"path":"relative/file.py","old":"exact existing text","new":"replacement text",'
+        '"before":"optional exact text immediately before old","after":"optional exact text immediately after old"}]}',
+        "Do not return unified_diff, raw diff text, markdown fences, prose, or any top-level key other than edits.",
+        "",
+        "Pre-submit validation checklist:",
+        "- The top-level JSON object has exactly one key: edits.",
+        "- Each edit path exactly matches one of the Valid edit paths below.",
+        "- Each old string is copied exactly from the currently shown source.",
+        "- Apply edits in order mentally. For each edit, old must identify exactly one occurrence after earlier edits.",
+        "- If old occurs exactly once, omit before and after anchors.",
+        "- If old occurs more than once, include before and/or after anchors copied exactly from the same file.",
+        "- Anchors must be immediate context: before must end exactly where old begins; after must begin exactly where old ends.",
         "Rules:",
-        "- Each old string must be copied exactly from one included source file and occur exactly once.",
-        "- Edit paths must exactly match one of the Source file headers below.",
+        "- Repeated old strings without exact anchors are invalid and will not be applied.",
+        "- Non-matching anchors are invalid even when old occurs once.",
+        "- Never invent old text from memory or from APIs not shown in the source excerpts.",
         "- Keep edits minimal. Prefer source code fixes over test-only changes.",
-        "- Do not include markdown fences or prose.",
         "",
         "Task summary:",
         json.dumps(task_summary, indent=2, sort_keys=True),
@@ -305,12 +431,29 @@ def build_prompt(
             [
                 "",
                 f"Source file: {item['path']}",
-                f"sha256: {item['sha256']} truncated: {item['truncated']}",
+                f"sha256: {item['sha256']} truncated: {item['truncated']} displayed_chars: {item.get('displayed_char_count')}",
                 "```",
                 str(item["content"]),
                 "```",
             ]
         )
+        excerpts = item.get("focused_excerpts") if isinstance(item.get("focused_excerpts"), list) else []
+        if excerpts:
+            sections.extend(
+                [
+                    f"Focused exact source excerpts for {item['path']}:",
+                    "These excerpts are from the same current file and may be used for exact old strings.",
+                ]
+            )
+            for excerpt in excerpts:
+                sections.extend(
+                    [
+                        f"excerpt trigger: {excerpt.get('trigger')} chars: {excerpt.get('start_char')}..{excerpt.get('end_char')}",
+                        "```",
+                        str(excerpt.get("content", "")),
+                        "```",
+                    ]
+                )
     prompt = redact_sensitive_text("\n".join(sections), os.environ)
     prompt, _ = truncate_text(prompt, max_context_chars)
     return prompt
@@ -370,8 +513,8 @@ def live_payload(acut: Mapping[str, Any], prompt: str, endpoint_kind: str) -> di
         raise ToolError("ACUT manifest is missing model")
     params = acut.get("model_parameters") if isinstance(acut.get("model_parameters"), dict) else {}
     system = (
-        "You are a patch-generation engine. Return only valid JSON "
-        "matching the requested search/replace edit contract."
+        "You are a patch-generation engine. Return only valid JSON matching "
+        "the requested anchored search/replace edit contract."
     )
     if endpoint_kind == "responses":
         return {
@@ -411,6 +554,7 @@ def call_live_model(
     profile = {
         "endpoint_kind": endpoint_kind,
         "output_contract": DEFAULT_OUTPUT_CONTRACT,
+        "output_contract_schema": output_contract_schema(),
         "response_format_requested": payload.get("response_format") == {"type": "json_object"},
         "request_body_bytes": len(request_body),
         "prompt_sha256": sha256_text(prompt),
@@ -458,6 +602,13 @@ def parse_edit_bundle(text: str) -> list[dict[str, str]] | None:
     edits = data.get("edits")
     if not isinstance(edits, list):
         return None
+    extra_keys = sorted(key for key in data if key != "edits")
+    if extra_keys:
+        raise ToolError(
+            "edit bundle must not include unsupported top-level keys",
+            unsupported_top_level_keys=extra_keys,
+            failure_class="output_contract_violation",
+        )
     normalized: list[dict[str, str]] = []
     for index, item in enumerate(edits):
         if not isinstance(item, dict):
@@ -469,7 +620,27 @@ def parse_edit_bundle(text: str) -> list[dict[str, str]] | None:
             raise ToolError("edit entry requires string path, old, and new", index=index)
         if not old:
             raise ToolError("edit old string must not be empty", index=index)
-        normalized.append({"path": validate_patch_path(path), "old": old, "new": new})
+        normalized_edit = {"path": validate_patch_path(path), "old": old, "new": new}
+        for anchor_key in ("before", "after"):
+            if anchor_key not in item:
+                continue
+            anchor = item.get(anchor_key)
+            if not isinstance(anchor, str):
+                raise ToolError(
+                    "edit anchor must be a string",
+                    index=index,
+                    anchor=anchor_key,
+                    failure_class="search_replace_anchor_invalid",
+                )
+            if not anchor:
+                raise ToolError(
+                    "edit anchor string must not be empty",
+                    index=index,
+                    anchor=anchor_key,
+                    failure_class="search_replace_anchor_invalid",
+                )
+            normalized_edit[anchor_key] = anchor
+        normalized.append(normalized_edit)
     if not normalized:
         raise ToolError("edit bundle contains no edits")
     return normalized
@@ -516,6 +687,119 @@ def parsed_patch_paths(parsed: Mapping[str, Any]) -> list[str]:
     return []
 
 
+def occurrence_offsets(text: str, old: str) -> list[int]:
+    offsets: list[int] = []
+    start = 0
+    while True:
+        index = text.find(old, start)
+        if index == -1:
+            return offsets
+        offsets.append(index)
+        start = index + len(old)
+
+
+def anchored_offsets(text: str, old: str, *, before: str | None, after: str | None) -> tuple[list[int], list[int]]:
+    offsets = occurrence_offsets(text, old)
+    if before is None and after is None:
+        return offsets, offsets
+    matches: list[int] = []
+    for offset in offsets:
+        end = offset + len(old)
+        if before is not None and not text[:offset].endswith(before):
+            continue
+        if after is not None and not text[end:].startswith(after):
+            continue
+        matches.append(offset)
+    return offsets, matches
+
+
+def edit_resolution_details(
+    *,
+    path: str,
+    edit_index: int,
+    old: str,
+    offsets: Sequence[int],
+    matches: Sequence[int],
+    before_text: str | None,
+    after_text: str | None,
+) -> dict[str, Any]:
+    anchored = before_text is not None or after_text is not None
+    occurrences = len(offsets)
+    anchor_matches = len(matches)
+    if anchored:
+        if occurrences == 1 and anchor_matches == 0:
+            code = "unique_old_anchor_mismatch"
+            recommendation = (
+                "old occurs exactly once; omit before/after anchors unless they are exact immediate adjacent source"
+            )
+        else:
+            code = "anchors_do_not_isolate_one_occurrence"
+            recommendation = "copy before/after anchors from the immediate source adjacent to old"
+    elif occurrences == 0:
+        code = "old_text_not_found"
+        recommendation = "copy old exactly from the displayed current source after applying earlier edits mentally"
+    else:
+        code = "old_text_repeated_without_anchors"
+        recommendation = "include an exact immediate before or after anchor copied from the same file"
+    return {
+        "path": path,
+        "edit_index": edit_index,
+        "occurrences": occurrences,
+        "anchor_matches": anchor_matches,
+        "anchors": {
+            "before": before_text is not None,
+            "after": after_text is not None,
+            "before_chars": 0 if before_text is None else len(before_text),
+            "after_chars": 0 if after_text is None else len(after_text),
+        },
+        "old_text_char_count": len(old),
+        "old_text_sha256": sha256_text(old),
+        "diagnostic": {
+            "code": code,
+            "recommendation": recommendation,
+            "anchor_policy": {
+                "omit_anchors_when_old_is_unique": True,
+                "anchors_required_when_old_is_repeated": True,
+                "anchors_must_be_immediate_adjacent_source": True,
+            },
+        },
+    }
+
+
+def resolve_edit_offset(text: str, edit: Mapping[str, str], *, edit_index: int) -> tuple[int, int, bool]:
+    path = str(edit["path"])
+    old = str(edit["old"])
+    before = edit.get("before")
+    after = edit.get("after")
+    before_text = str(before) if before is not None else None
+    after_text = str(after) if after is not None else None
+    offsets, matches = anchored_offsets(text, old, before=before_text, after=after_text)
+    anchored = before_text is not None or after_text is not None
+    if len(matches) == 1:
+        start = matches[0]
+        return start, start + len(old), anchored
+    details = edit_resolution_details(
+        path=path,
+        edit_index=edit_index,
+        old=old,
+        offsets=offsets,
+        matches=matches,
+        before_text=before_text,
+        after_text=after_text,
+    )
+    if anchored:
+        raise ToolError(
+            "edit anchors must identify exactly one old-string occurrence",
+            **details,
+            failure_class="search_replace_anchor_mismatch",
+        )
+    raise ToolError(
+        "edit old string must occur exactly once",
+        **details,
+        failure_class="search_replace_old_occurrence_mismatch",
+    )
+
+
 def apply_edit_bundle(
     workspace: Path,
     edits: Sequence[Mapping[str, str]],
@@ -524,13 +808,21 @@ def apply_edit_bundle(
 ) -> dict[str, Any]:
     ensure_paths_within_context(workspace, [str(edit["path"]) for edit in edits], allowed_paths)
     changed: list[str] = []
-    for edit in edits:
+    planned_texts: dict[str, str] = {}
+    anchored_count = 0
+    for index, edit in enumerate(edits):
         path = str(edit["path"])
         old = str(edit["old"])
         new = str(edit["new"])
         reject_unsafe_generated_text(path, "edit path")
         reject_unsafe_generated_text(old, "edit old text")
         reject_unsafe_generated_text(new, "edit new text")
+        before = edit.get("before")
+        after = edit.get("after")
+        if before is not None:
+            reject_unsafe_generated_text(str(before), "edit before anchor")
+        if after is not None:
+            reject_unsafe_generated_text(str(after), "edit after anchor")
         target = resolve_workspace_path(workspace, path, "edit path")
         if not target.exists() or not target.is_file():
             raise ToolError(
@@ -538,23 +830,24 @@ def apply_edit_bundle(
                 path=path,
                 failure_class="generated_path_not_in_workspace",
             )
-        text = target.read_text(encoding="utf-8")
-        occurrences = text.count(old)
-        if occurrences != 1:
-            raise ToolError(
-                "edit old string must occur exactly once",
-                path=path,
-                occurrences=occurrences,
-                failure_class="search_replace_old_occurrence_mismatch",
-            )
-        target.write_text(text.replace(old, new, 1), encoding="utf-8")
+        text = planned_texts.get(path)
+        if text is None:
+            text = target.read_text(encoding="utf-8")
+        start, end, anchored = resolve_edit_offset(text, edit, edit_index=index)
+        if anchored:
+            anchored_count += 1
+        planned_texts[path] = f"{text[:start]}{new}{text[end:]}"
         changed.append(path)
+    for path, text in planned_texts.items():
+        resolve_workspace_path(workspace, path, "edit path").write_text(text, encoding="utf-8")
     return {
         "kind": "search_replace_edits",
         "validated": True,
         "applied": True,
         "changed_paths": sorted(set(changed)),
         "edit_count": len(edits),
+        "anchored_edit_count": anchored_count,
+        "output_contract": DEFAULT_OUTPUT_CONTRACT,
     }
 
 
@@ -565,9 +858,26 @@ def apply_model_response(workspace: Path, text: str, *, allowed_paths: Sequence[
         result = apply_edit_bundle(workspace, edits, allowed_paths=allowed_paths)
         result["allowed_context_paths"] = sorted({validate_patch_path(path) for path in allowed_paths})
         return result
-    parsed = parse_patch_response(text)
+    try:
+        parsed = parse_patch_response(text)
+    except ToolError as exc:
+        if str(exc) == "model response did not contain a supported patch":
+            raise ToolError(str(exc), **exc.details, failure_class="unsupported_patch_response") from exc
+        raise
     ensure_paths_within_context(workspace, parsed_patch_paths(parsed), allowed_paths)
-    result = apply_patch_response(workspace, parsed, apply_patch=True)
+    try:
+        result = apply_patch_response(workspace, parsed, apply_patch=True)
+    except ToolError as exc:
+        if str(exc) in {
+            "generated unified diff failed git apply validation",
+            "generated unified diff failed to apply",
+        }:
+            raise ToolError(
+                str(exc),
+                **exc.details,
+                failure_class="invalid_unified_diff",
+            ) from exc
+        raise
     ensure_paths_within_context(workspace, result.get("changed_paths", []), allowed_paths)
     result["allowed_context_paths"] = sorted({validate_patch_path(path) for path in allowed_paths})
     return result
@@ -704,6 +1014,12 @@ def append_failure_record_if_model_responded(args: argparse.Namespace, *, starte
             fallback_estimated_cost=estimated_cost,
             usage=usage,
         )
+        details = exc.details if isinstance(exc, ToolError) else {}
+        failure_class = (
+            details.get("failure_class")
+            if isinstance(details.get("failure_class"), str)
+            else type(exc).__name__
+        )
         return append_cost_record(
             ledger_path=Path(args.llm_ledger),
             run_id=args.run_id,
@@ -723,7 +1039,7 @@ def append_failure_record_if_model_responded(args: argparse.Namespace, *, starte
                 "mode": "live",
                 "model_call_made": True,
                 "model_response_received": True,
-                "failure_class": type(exc).__name__,
+                "failure_class": failure_class,
                 "cost_basis": cost_basis,
                 "actual_cost_status": "unknown_not_invoice_verified",
                 "provider_usage_reported": usage is not None,
@@ -765,7 +1081,22 @@ def main(argv: Sequence[str] | None = None) -> int:
         mode = mode_from_args(args)
         task_statement, statement_path, statement_truncated = safe_task_statement(task_path, task)
 
-        context_files = [context_file_payload(workspace, path, args.max_file_chars) for path in args.context_path]
+        max_file_chars = effective_max_file_chars(
+            requested_max_file_chars=args.max_file_chars,
+            max_context_chars=args.max_context_chars,
+            context_path_count=len(args.context_path),
+            task=task,
+            task_statement=task_statement,
+        )
+        context_files = [
+            context_file_payload(
+                workspace,
+                path,
+                max_file_chars,
+                focus_terms=context_focus_terms(task, task_statement, path),
+            )
+            for path in args.context_path
+        ]
         if mode in {"live", "mock_response"} and not context_files:
             raise ToolError(
                 "no context files available for model patch generation",
@@ -815,12 +1146,39 @@ def main(argv: Sequence[str] | None = None) -> int:
                 "task_statement_path": statement_path,
                 "statement_truncated": statement_truncated,
                 "context_files": [
-                    {key: item[key] for key in ("path", "sha256", "char_count", "truncated")} for item in context_files
+                    {
+                        key: item[key]
+                        for key in (
+                            "path",
+                            "sha256",
+                            "char_count",
+                            "truncated",
+                            "displayed_char_count",
+                            "focus_terms",
+                        )
+                    }
+                    | {
+                        "focused_excerpts": [
+                            {
+                                key: excerpt[key]
+                                for key in ("trigger", "start_char", "end_char", "char_count")
+                            }
+                            for excerpt in item.get("focused_excerpts", [])
+                        ]
+                    }
+                    for item in context_files
                 ],
+                "context_packaging": {
+                    "requested_max_file_chars": args.max_file_chars,
+                    "effective_max_file_chars": max_file_chars,
+                    "max_context_chars": args.max_context_chars,
+                    "prompt_truncated": prompt.endswith("[truncated]\n"),
+                },
                 "specialist_context_included": specialist_text is not None,
                 "specialist_context_path": specialist_path if specialist_text is not None else None,
                 "specialist_context_assertion": specialist_assertion,
                 "output_contract": DEFAULT_OUTPUT_CONTRACT,
+                "output_contract_schema": output_contract_schema(),
                 "full_urls_redacted": True,
             },
         )

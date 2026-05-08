@@ -1,0 +1,72 @@
+{
+  "tool": "codex_nfl_output_contract_repair_gate1_decision",
+  "status": "failed_stop_no_expansion",
+  "decided_at": "2026-05-08T05:15:09.015187Z",
+  "gate_source": "experiments/core_narrative/reports/next_experiment_decision_gates.md",
+  "prior_gate_decision": "experiments/core_narrative/results/codex_nfl_followup_gate1_decision_20260508.json",
+  "targeted_rerun": {
+    "run_id": "codex_nfl_output_contract_repair_replay_20260508__frontier-click-specialist__click__rbench__003__attempt1",
+    "source_live_run_id": "codex_nfl_output_contract_repair_20260508__frontier-click-specialist__click__rbench__003__attempt1",
+    "task_id": "click__rbench__003",
+    "acut_id": "frontier-click-specialist",
+    "mode": "mock_replay_of_captured_live_text",
+    "no_new_model_call": true,
+    "model_call_made": false,
+    "source_live_model_call_made": true,
+    "status": "invalid_submission",
+    "failure_class": "invalid_unified_diff",
+    "failure_owner": "model_output",
+    "patch_ready": false,
+    "clean_patch_replay_attempted": false,
+    "output_contract": "anchored-search-replace-json-v2",
+    "replay_batch": "experiments/core_narrative/results/codex_nfl_output_contract_repair_replay_targeted_20260508.json",
+    "replay_normalized_result": "experiments/core_narrative/results/normalized/codex_nfl_output_contract_repair_replay_20260508__frontier-click-specialist__click__rbench__003__attempt1.json",
+    "replay_runner_result": "experiments/core_narrative/results/raw/codex_nfl_output_contract_repair_replay_20260508__frontier-click-specialist__click__rbench__003__attempt1/runner_result.json",
+    "replay_source_metadata": "experiments/core_narrative/results/raw/codex_nfl_output_contract_repair_replay_source_20260508/captured_live_model_text_metadata.json",
+    "replay_summary": "experiments/core_narrative/results/codex_nfl_output_contract_repair_targeted_corrected_20260508.json"
+  },
+  "conditions": {
+    "infra_failed_rate_eq_0": {
+      "passed": true,
+      "value": 0.0,
+      "basis": "Final-code replay canonical normalized output classifies the corrupt unified diff as model-output invalid_submission, not infrastructure."
+    },
+    "verifier_repair_after_live_eq_false": {
+      "passed": true,
+      "value": false,
+      "basis": "No verifier or task-pack repair was made after the source live call; Revision 1 only replayed captured text through the final runner path."
+    },
+    "unclassified_failure_rate_lte_20pct": {
+      "passed": true,
+      "value": 0.0,
+      "basis": "The replayed targeted failure has failure_class invalid_unified_diff and failure_owner model_output in normalized metadata."
+    },
+    "all_runs_have_clean_patch_replay": {
+      "passed": false,
+      "value": false,
+      "basis": "The final-code replay produced no verifier-ready patch; clean_patch_replay.attempted is false."
+    },
+    "frontier_click_specialist_attempt1_completed": {
+      "passed": true,
+      "value": true,
+      "basis": "The source frontier-click-specialist task-003 live call completed and consumed provider usage; the captured response was replayed without new spend through final code."
+    },
+    "meaningful_film_contrast_exists": {
+      "passed": true,
+      "value": true,
+      "basis": "Task 003 still separates patch/verifier failures from model-output contract failures; final-code replay adds direct invalid unified-diff evidence."
+    }
+  },
+  "decision": {
+    "gate1_can_pass": false,
+    "expand_click_004_008": false,
+    "expansion_calls_skipped": 20,
+    "stop_reason": "Gate 1 remains clean-replay strict. The final repaired path emits invalid_unified_diff for the captured targeted response, but no verifier-ready patch exists, so clean replay does not pass."
+  },
+  "notes": [
+    "Do not reclassify invalid_submission as clean replay.",
+    "Do not run Click 004-008 on this evidence.",
+    "Revision 1 evidence is a no-new-spend replay of the source live response text; it is not a new live model attempt.",
+    "The stop is evidence-integrity based, not an API credential, quota, or repository-auth blocker."
+  ]
+}

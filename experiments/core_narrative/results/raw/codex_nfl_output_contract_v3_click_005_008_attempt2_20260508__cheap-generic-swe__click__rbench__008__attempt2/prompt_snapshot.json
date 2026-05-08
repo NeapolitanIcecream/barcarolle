@@ -1,0 +1,98 @@
+{
+  "context_files": [
+    {
+      "char_count": 95217,
+      "displayed_char_count": 25013,
+      "focus_terms": [
+        "class Option(Parameter):",
+        "    def consume_value(self, ctx, opts):"
+      ],
+      "focused_excerpts": [
+        {
+          "char_count": 8600,
+          "end_char": 87447,
+          "start_char": 78847,
+          "trigger": "class Option(Parameter):"
+        }
+      ],
+      "path": "src/click/core.py",
+      "sha256": "875ba3b0dda05c71503d9a9de31b9ff0031d4aa802bf4cda1d52528bba75e4a2",
+      "truncated": true
+    },
+    {
+      "char_count": 15902,
+      "displayed_char_count": 15902,
+      "focus_terms": [
+        "class Option:",
+        "class OptionParser:"
+      ],
+      "focused_excerpts": [],
+      "path": "src/click/parser.py",
+      "sha256": "7d956ab17fa25f96e8755c69c68968496aa1b16f2fe9f423551d686922a7bb1c",
+      "truncated": false
+    },
+    {
+      "char_count": 19947,
+      "displayed_char_count": 19947,
+      "focus_terms": [],
+      "focused_excerpts": [],
+      "path": "tests/test_options.py",
+      "sha256": "60cc85aec586a3b5008e5b453649b54259e4a3b391252438f85b1f197e8a5193",
+      "truncated": false
+    },
+    {
+      "char_count": 13810,
+      "displayed_char_count": 13810,
+      "focus_terms": [],
+      "focused_excerpts": [],
+      "path": "tests/test_termui.py",
+      "sha256": "385d3e676c73a1b0b49a184e07eceb2160f5a79403a4cff07b1d58d41544e359",
+      "truncated": false
+    }
+  ],
+  "context_packaging": {
+    "effective_max_file_chars": 25000,
+    "max_context_chars": 120000,
+    "prompt_truncated": false,
+    "requested_max_file_chars": 80000
+  },
+  "full_urls_redacted": true,
+  "output_contract": "anchored-search-replace-json-v3",
+  "output_contract_schema": {
+    "anchor_policy": {
+      "anchors_are_for_repeated_old_text_only": true,
+      "anchors_must_be_immediate_adjacent_source": true,
+      "invalid_anchors_reject_the_edit_even_when_old_is_unique": true,
+      "omit_anchors_when_old_is_unique": true
+    },
+    "diagnostic_failure_classes": {
+      "search_replace_anchor_mismatch": "old text was present, but supplied anchors did not isolate exactly one occurrence",
+      "search_replace_old_occurrence_mismatch": "old text did not occur exactly once after earlier edits"
+    },
+    "id": "anchored-search-replace-json-v3",
+    "legacy_parser_fallback_keys": [
+      "unified_diff",
+      "files"
+    ],
+    "primary_top_level_key": "edits",
+    "requires_exact_old_text": true,
+    "requires_exact_path_from_context": true,
+    "requires_immediate_anchors_for_repeated_old_text": true,
+    "requires_single_top_level_key": true
+  },
+  "prompt_char_count": 88061,
+  "prompt_content_recorded": true,
+  "prompt_sha256": "669031d9b163dcfffb626cb2daa1d329fc647001fc2940c91f3ebb0990533dc4",
+  "run_id": "codex_nfl_output_contract_v3_click_005_008_attempt2_20260508__cheap-generic-swe__click__rbench__008__attempt2",
+  "runner_id": "codex-nfl-direct-search-replace-v1",
+  "specialist_context_assertion": {
+    "expected": "excluded",
+    "include_mode": "auto",
+    "passed": true
+  },
+  "specialist_context_included": false,
+  "specialist_context_path": null,
+  "statement_truncated": false,
+  "task_statement_path": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/tasks/click/rbench/click__rbench__008/public/statement.md",
+  "tool": "codex_nfl_direct_runner"
+}

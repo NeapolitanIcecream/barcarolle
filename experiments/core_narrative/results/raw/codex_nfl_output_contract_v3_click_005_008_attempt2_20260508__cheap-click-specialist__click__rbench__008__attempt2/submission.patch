@@ -1,0 +1,128 @@
+diff --git a/src/click/parser.py b/src/click/parser.py
+index f613947..69b76ed 100644
+--- a/src/click/parser.py
++++ b/src/click/parser.py
+@@ -344,7 +344,21 @@ class OptionParser:
+                 state.rargs.insert(0, explicit_value)
+ 
+             nargs = option.nargs
+-            if len(state.rargs) < nargs:
++            value_is_missing = len(state.rargs) < nargs and option.obj.prompt is not None
++            if (
++                not value_is_missing
++                and nargs == 1
++                and option.obj.prompt is not None
++            ):
++                next_arg = state.rargs[0]
++                prefix, value = split_opt(next_arg)
++                value_is_missing = (
++                    prefix == "--" and value.split("=", 1)[0] in self._long_opt
++                ) or (prefix == "-" and value and f"-{value[0]}" in self._short_opt)
++
++            if value_is_missing:
++                value = None
++            elif len(state.rargs) < nargs:
+                 _error_opt_args(nargs, opt)
+             elif nargs == 1:
+                 value = state.rargs.pop(0)
+@@ -384,7 +398,21 @@ class OptionParser:
+                     stop = True
+ 
+                 nargs = option.nargs
+-                if len(state.rargs) < nargs:
++                value_is_missing = len(state.rargs) < nargs and option.obj.prompt is not None
++                if (
++                    not value_is_missing
++                    and nargs == 1
++                    and option.obj.prompt is not None
++                ):
++                    next_arg = state.rargs[0]
++                    prefix, value = split_opt(next_arg)
++                    value_is_missing = (
++                        prefix == "--" and value.split("=", 1)[0] in self._long_opt
++                    ) or (prefix == "-" and value and f"-{value[0]}" in self._short_opt)
++
++                if value_is_missing:
++                    value = None
++                elif len(state.rargs) < nargs:
+                     _error_opt_args(nargs, opt)
+                 elif nargs == 1:
+                     value = state.rargs.pop(0)
+diff --git a/tests/test_options.py b/tests/test_options.py
+index eea68c1..32502c6 100644
+--- a/tests/test_options.py
++++ b/tests/test_options.py
+@@ -658,3 +658,14 @@ def test_show_default_boolean_flag_value(runner):
+     ctx = click.Context(click.Command("test"))
+     message = opt.get_help_record(ctx)[1]
+     assert "[default: False]" in message
++
++
++def test_prompt_required_uses_default_when_option_is_used_without_value(runner):
++    @click.command()
++    @click.option("--value", default="default", prompt=True, prompt_required=True)
++    def cli(value):
++        click.echo(value)
++
++    result = runner.invoke(cli, ["--value"])
++    assert not result.exception
++    assert result.output == "default\n"
+diff --git a/tests/test_termui.py b/tests/test_termui.py
+index 90a4ce6..1064441 100644
+--- a/tests/test_termui.py
++++ b/tests/test_termui.py
+@@ -385,3 +385,54 @@ def test_getchar_windows_exceptions(runner, monkeypatch, key_char, exc):
+ def test_fast_edit(runner):
+     result = click.edit("a\nb", editor="sed -i~ 's/$/Test/'")
+     assert result == "aTest\nbTest\n"
++
++
++@pytest.mark.parametrize(
++    ("prompt_required", "required", "args", "expect"),
++    [
++        (True, False, None, "prompt"),
++        (True, False, ["-v"], "prompt"),
++        (False, True, None, "prompt"),
++        (False, True, ["-v"], "prompt"),
++    ],
++)
++def test_prompt_required_with_required(runner, prompt_required, required, args, expect):
++    @click.command()
++    @click.option("-v", prompt=True, prompt_required=prompt_required, required=required)
++    def cli(v):
++        click.echo(str(v))
++
++    result = runner.invoke(cli, args, input="prompt")
++    assert expect in result.output
++
++
++@pytest.mark.parametrize(
++    ("args", "expect"),
++    [
++        # Flag not passed, don't prompt.
++        pytest.param(None, None, id="no flag"),
++        # Flag and value passed, don't prompt.
++        pytest.param(["-v", "value"], "value", id="short sep value"),
++        pytest.param(["--value", "value"], "value", id="long sep value"),
++        pytest.param(["-vvalue"], "value", id="short join value"),
++        pytest.param(["--value=value"], "value", id="long join value"),
++        # Flag without value passed, prompt.
++        pytest.param(["-v"], "prompt", id="short no value"),
++        pytest.param(["--value"], "prompt", id="long no value"),
++        # Don't use next option flag as value.
++        pytest.param(["-v", "-o", "42"], ("prompt", "42"), id="no value opt"),
++    ],
++)
++def test_prompt_required_false(runner, args, expect):
++    @click.command()
++    @click.option("-v", "--value", prompt=True, prompt_required=False)
++    @click.option("-o")
++    def cli(value, o):
++        if o is not None:
++            return value, o
++
++        return value
++
++    result = runner.invoke(cli, args=args, input="prompt", standalone_mode=False)
++    assert result.exception is None
++    assert result.return_value == expect
