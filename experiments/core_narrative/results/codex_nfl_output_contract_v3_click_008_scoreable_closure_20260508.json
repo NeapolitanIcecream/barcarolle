@@ -1,0 +1,92 @@
+{
+  "canonical_latest_results": [
+    {
+      "acut_id": "cheap-generic-swe",
+      "attempt": 3,
+      "cost_ledger_estimated_cost_usd": 0.110096,
+      "error_type": null,
+      "failure_class": null,
+      "failure_owner": null,
+      "http_status": null,
+      "model_call_made": true,
+      "normalized_result": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/normalized/codex_nfl_output_contract_v3_click_008_attempt3_20260508__cheap-generic-swe__click__rbench__008__attempt3.json",
+      "patch_path": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/codex_nfl_output_contract_v3_click_008_attempt3_20260508__cheap-generic-swe__click__rbench__008__attempt3/submission.patch",
+      "raw_response_artifact": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/codex_nfl_output_contract_v3_click_008_attempt3_20260508__cheap-generic-swe__click__rbench__008__attempt3/provider_response.redacted.json",
+      "runner_status": "patch_generated",
+      "scoreable": true,
+      "source_summary": "experiments/core_narrative/results/codex_nfl_output_contract_v3_click_008_attempt3_live_20260508.json",
+      "status": "failed",
+      "task_id": "click__rbench__008"
+    },
+    {
+      "acut_id": "cheap-click-specialist",
+      "attempt": 3,
+      "cost_ledger_estimated_cost_usd": 0.124358,
+      "error_type": null,
+      "failure_class": "search_replace_anchor_mismatch",
+      "failure_owner": "model_output",
+      "http_status": null,
+      "model_call_made": true,
+      "normalized_result": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/normalized/codex_nfl_output_contract_v3_click_008_attempt3_20260508__cheap-click-specialist__click__rbench__008__attempt3.json",
+      "patch_path": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/codex_nfl_output_contract_v3_click_008_attempt3_20260508__cheap-click-specialist__click__rbench__008__attempt3/submission.patch",
+      "raw_response_artifact": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/codex_nfl_output_contract_v3_click_008_attempt3_20260508__cheap-click-specialist__click__rbench__008__attempt3/provider_response.redacted.json",
+      "runner_status": "error",
+      "scoreable": true,
+      "source_summary": "experiments/core_narrative/results/codex_nfl_output_contract_v3_click_008_attempt3_live_20260508.json",
+      "status": "invalid_submission",
+      "task_id": "click__rbench__008"
+    },
+    {
+      "acut_id": "frontier-generic-swe",
+      "attempt": 4,
+      "cost_ledger_estimated_cost_usd": 0.296815,
+      "error_type": null,
+      "failure_class": "search_replace_old_occurrence_mismatch",
+      "failure_owner": "model_output",
+      "http_status": null,
+      "model_call_made": true,
+      "normalized_result": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/normalized/codex_nfl_output_contract_v3_click_008_frontier_retry_attempt4_20260508__frontier-generic-swe__click__rbench__008__attempt4.json",
+      "patch_path": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/codex_nfl_output_contract_v3_click_008_frontier_retry_attempt4_20260508__frontier-generic-swe__click__rbench__008__attempt4/submission.patch",
+      "raw_response_artifact": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/codex_nfl_output_contract_v3_click_008_frontier_retry_attempt4_20260508__frontier-generic-swe__click__rbench__008__attempt4/provider_response.redacted.json",
+      "runner_status": "error",
+      "scoreable": true,
+      "source_summary": "experiments/core_narrative/results/codex_nfl_output_contract_v3_click_008_frontier_retry_attempt4_live_20260508.json",
+      "status": "invalid_submission",
+      "task_id": "click__rbench__008"
+    },
+    {
+      "acut_id": "frontier-click-specialist",
+      "attempt": 5,
+      "cost_ledger_estimated_cost_usd": 0.300858,
+      "error_type": null,
+      "failure_class": "search_replace_old_occurrence_mismatch",
+      "failure_owner": "model_output",
+      "http_status": null,
+      "model_call_made": true,
+      "normalized_result": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/normalized/codex_nfl_output_contract_v3_click_008_frontier_specialist_retry_attempt5_20260508__frontier-click-specialist__click__rbench__008__attempt5.json",
+      "patch_path": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/codex_nfl_output_contract_v3_click_008_frontier_specialist_retry_attempt5_20260508__frontier-click-specialist__click__rbench__008__attempt5/submission.patch",
+      "raw_response_artifact": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/codex_nfl_output_contract_v3_click_008_frontier_specialist_retry_attempt5_20260508__frontier-click-specialist__click__rbench__008__attempt5/provider_response.redacted.json",
+      "runner_status": "error",
+      "scoreable": true,
+      "source_summary": "experiments/core_narrative/results/codex_nfl_output_contract_v3_click_008_frontier_specialist_retry_attempt5_live_20260508.json",
+      "status": "invalid_submission",
+      "task_id": "click__rbench__008"
+    }
+  ],
+  "created_at": "2026-05-08T21:46:00+08:00",
+  "input_summaries": [
+    "experiments/core_narrative/results/codex_nfl_output_contract_v3_click_008_attempt3_live_20260508.json",
+    "experiments/core_narrative/results/codex_nfl_output_contract_v3_click_008_frontier_retry_attempt4_live_20260508.json",
+    "experiments/core_narrative/results/codex_nfl_output_contract_v3_click_008_frontier_specialist_retry_attempt5_live_20260508.json"
+  ],
+  "interpretation": "All four core ACUTs now have scoreable Click008 outcomes; none passed. The remaining failures are model-output or verifier failures, not unresolved provider timeouts.",
+  "passed": 0,
+  "scoreable": 4,
+  "status_counts": {
+    "failed": 1,
+    "invalid_submission": 3
+  },
+  "task_id": "click__rbench__008",
+  "tool": "codex_nfl_click008_scoreable_closure",
+  "total": 4
+}

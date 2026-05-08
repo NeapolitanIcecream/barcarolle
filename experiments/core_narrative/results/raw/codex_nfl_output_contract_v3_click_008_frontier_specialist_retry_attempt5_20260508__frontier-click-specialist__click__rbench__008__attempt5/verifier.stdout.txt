@@ -1,0 +1,772 @@
+FFFFFFFFFFFF                                                             [100%]
+=================================== FAILURES ===================================
+__________ test_prompt_required_with_required[True-False-None-prompt] __________
+
+runner = <click.testing.CliRunner object at 0x1084eaf10>, prompt_required = True
+required = False, args = None, expect = 'prompt'
+
+    @pytest.mark.parametrize(
+        ("prompt_required", "required", "args", "expect"),
+        [
+            (True, False, None, "prompt"),
+            (True, False, ["-v"], "-v option requires an argument"),
+            (False, True, None, "prompt"),
+            (False, True, ["-v"], "prompt"),
+        ],
+    )
+    def test_prompt_required_with_required(runner, prompt_required, required, args, expect):
+        @click.command()
+        @click.option("-v", prompt=True, prompt_required=prompt_required, required=required)
+>       def cli(v):
+
+tests/test_termui.py:402: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+src/click/decorators.py:189: in decorator
+    _param_memo(f, OptionClass(param_decls, **option_attrs))
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <[AttributeError("'Option' object has no attribute 'name'") raised in repr()] Option object at 0x1085855b0>
+param_decls = ('-v',), show_default = False, prompt = True
+confirmation_prompt = False, hide_input = False, is_flag = None
+flag_value = None, multiple = False, count = False, allow_from_autoenv = True
+type = None, help = None, hidden = False, show_choices = True
+show_envvar = False, attrs = {'prompt_required': True, 'required': False}
+default_is_missing = True
+
+    def __init__(
+        self,
+        param_decls=None,
+        show_default=False,
+        prompt=False,
+        confirmation_prompt=False,
+        hide_input=False,
+        is_flag=None,
+        flag_value=None,
+        multiple=False,
+        count=False,
+        allow_from_autoenv=True,
+        type=None,
+        help=None,
+        hidden=False,
+        show_choices=True,
+        show_envvar=False,
+        **attrs,
+    ):
+        default_is_missing = attrs.get("default", _missing) is _missing
+>       super().__init__(param_decls, type=type, **attrs)
+E       TypeError: __init__() got an unexpected keyword argument 'prompt_required'
+
+src/click/core.py:2194: TypeError
+_ test_prompt_required_with_required[True-False-args1--v option requires an argument] _
+
+runner = <click.testing.CliRunner object at 0x108707c40>, prompt_required = True
+required = False, args = ['-v'], expect = '-v option requires an argument'
+
+    @pytest.mark.parametrize(
+        ("prompt_required", "required", "args", "expect"),
+        [
+            (True, False, None, "prompt"),
+            (True, False, ["-v"], "-v option requires an argument"),
+            (False, True, None, "prompt"),
+            (False, True, ["-v"], "prompt"),
+        ],
+    )
+    def test_prompt_required_with_required(runner, prompt_required, required, args, expect):
+        @click.command()
+        @click.option("-v", prompt=True, prompt_required=prompt_required, required=required)
+>       def cli(v):
+
+tests/test_termui.py:402: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+src/click/decorators.py:189: in decorator
+    _param_memo(f, OptionClass(param_decls, **option_attrs))
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <[AttributeError("'Option' object has no attribute 'name'") raised in repr()] Option object at 0x108707d00>
+param_decls = ('-v',), show_default = False, prompt = True
+confirmation_prompt = False, hide_input = False, is_flag = None
+flag_value = None, multiple = False, count = False, allow_from_autoenv = True
+type = None, help = None, hidden = False, show_choices = True
+show_envvar = False, attrs = {'prompt_required': True, 'required': False}
+default_is_missing = True
+
+    def __init__(
+        self,
+        param_decls=None,
+        show_default=False,
+        prompt=False,
+        confirmation_prompt=False,
+        hide_input=False,
+        is_flag=None,
+        flag_value=None,
+        multiple=False,
+        count=False,
+        allow_from_autoenv=True,
+        type=None,
+        help=None,
+        hidden=False,
+        show_choices=True,
+        show_envvar=False,
+        **attrs,
+    ):
+        default_is_missing = attrs.get("default", _missing) is _missing
+>       super().__init__(param_decls, type=type, **attrs)
+E       TypeError: __init__() got an unexpected keyword argument 'prompt_required'
+
+src/click/core.py:2194: TypeError
+__________ test_prompt_required_with_required[False-True-None-prompt] __________
+
+runner = <click.testing.CliRunner object at 0x108529b50>
+prompt_required = False, required = True, args = None, expect = 'prompt'
+
+    @pytest.mark.parametrize(
+        ("prompt_required", "required", "args", "expect"),
+        [
+            (True, False, None, "prompt"),
+            (True, False, ["-v"], "-v option requires an argument"),
+            (False, True, None, "prompt"),
+            (False, True, ["-v"], "prompt"),
+        ],
+    )
+    def test_prompt_required_with_required(runner, prompt_required, required, args, expect):
+        @click.command()
+        @click.option("-v", prompt=True, prompt_required=prompt_required, required=required)
+>       def cli(v):
+
+tests/test_termui.py:402: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+src/click/decorators.py:189: in decorator
+    _param_memo(f, OptionClass(param_decls, **option_attrs))
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <[AttributeError("'Option' object has no attribute 'name'") raised in repr()] Option object at 0x1085293d0>
+param_decls = ('-v',), show_default = False, prompt = True
+confirmation_prompt = False, hide_input = False, is_flag = None
+flag_value = None, multiple = False, count = False, allow_from_autoenv = True
+type = None, help = None, hidden = False, show_choices = True
+show_envvar = False, attrs = {'prompt_required': False, 'required': True}
+default_is_missing = True
+
+    def __init__(
+        self,
+        param_decls=None,
+        show_default=False,
+        prompt=False,
+        confirmation_prompt=False,
+        hide_input=False,
+        is_flag=None,
+        flag_value=None,
+        multiple=False,
+        count=False,
+        allow_from_autoenv=True,
+        type=None,
+        help=None,
+        hidden=False,
+        show_choices=True,
+        show_envvar=False,
+        **attrs,
+    ):
+        default_is_missing = attrs.get("default", _missing) is _missing
+>       super().__init__(param_decls, type=type, **attrs)
+E       TypeError: __init__() got an unexpected keyword argument 'prompt_required'
+
+src/click/core.py:2194: TypeError
+_________ test_prompt_required_with_required[False-True-args3-prompt] __________
+
+runner = <click.testing.CliRunner object at 0x10856f700>
+prompt_required = False, required = True, args = ['-v'], expect = 'prompt'
+
+    @pytest.mark.parametrize(
+        ("prompt_required", "required", "args", "expect"),
+        [
+            (True, False, None, "prompt"),
+            (True, False, ["-v"], "-v option requires an argument"),
+            (False, True, None, "prompt"),
+            (False, True, ["-v"], "prompt"),
+        ],
+    )
+    def test_prompt_required_with_required(runner, prompt_required, required, args, expect):
+        @click.command()
+        @click.option("-v", prompt=True, prompt_required=prompt_required, required=required)
+>       def cli(v):
+
+tests/test_termui.py:402: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+src/click/decorators.py:189: in decorator
+    _param_memo(f, OptionClass(param_decls, **option_attrs))
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <[AttributeError("'Option' object has no attribute 'name'") raised in repr()] Option object at 0x10856feb0>
+param_decls = ('-v',), show_default = False, prompt = True
+confirmation_prompt = False, hide_input = False, is_flag = None
+flag_value = None, multiple = False, count = False, allow_from_autoenv = True
+type = None, help = None, hidden = False, show_choices = True
+show_envvar = False, attrs = {'prompt_required': False, 'required': True}
+default_is_missing = True
+
+    def __init__(
+        self,
+        param_decls=None,
+        show_default=False,
+        prompt=False,
+        confirmation_prompt=False,
+        hide_input=False,
+        is_flag=None,
+        flag_value=None,
+        multiple=False,
+        count=False,
+        allow_from_autoenv=True,
+        type=None,
+        help=None,
+        hidden=False,
+        show_choices=True,
+        show_envvar=False,
+        **attrs,
+    ):
+        default_is_missing = attrs.get("default", _missing) is _missing
+>       super().__init__(param_decls, type=type, **attrs)
+E       TypeError: __init__() got an unexpected keyword argument 'prompt_required'
+
+src/click/core.py:2194: TypeError
+_____________________ test_prompt_required_false[no flag] ______________________
+
+runner = <click.testing.CliRunner object at 0x108517580>, args = None
+expect = None
+
+    @pytest.mark.parametrize(
+        ("args", "expect"),
+        [
+            # Flag not passed, don't prompt.
+            pytest.param(None, None, id="no flag"),
+            # Flag and value passed, don't prompt.
+            pytest.param(["-v", "value"], "value", id="short sep value"),
+            pytest.param(["--value", "value"], "value", id="long sep value"),
+            pytest.param(["-vvalue"], "value", id="short join value"),
+            pytest.param(["--value=value"], "value", id="long join value"),
+            # Flag without value passed, prompt.
+            pytest.param(["-v"], "prompt", id="short no value"),
+            pytest.param(["--value"], "prompt", id="long no value"),
+            # Don't use next option flag as value.
+            pytest.param(["-v", "-o", "42"], ("prompt", "42"), id="no value opt"),
+        ],
+    )
+    def test_prompt_required_false(runner, args, expect):
+        @click.command()
+        @click.option("-v", "--value", prompt=True, prompt_required=False)
+        @click.option("-o")
+>       def cli(value, o):
+
+tests/test_termui.py:430: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+src/click/decorators.py:189: in decorator
+    _param_memo(f, OptionClass(param_decls, **option_attrs))
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <[AttributeError("'Option' object has no attribute 'name'") raised in repr()] Option object at 0x108517970>
+param_decls = ('-v', '--value'), show_default = False, prompt = True
+confirmation_prompt = False, hide_input = False, is_flag = None
+flag_value = None, multiple = False, count = False, allow_from_autoenv = True
+type = None, help = None, hidden = False, show_choices = True
+show_envvar = False, attrs = {'prompt_required': False}
+default_is_missing = True
+
+    def __init__(
+        self,
+        param_decls=None,
+        show_default=False,
+        prompt=False,
+        confirmation_prompt=False,
+        hide_input=False,
+        is_flag=None,
+        flag_value=None,
+        multiple=False,
+        count=False,
+        allow_from_autoenv=True,
+        type=None,
+        help=None,
+        hidden=False,
+        show_choices=True,
+        show_envvar=False,
+        **attrs,
+    ):
+        default_is_missing = attrs.get("default", _missing) is _missing
+>       super().__init__(param_decls, type=type, **attrs)
+E       TypeError: __init__() got an unexpected keyword argument 'prompt_required'
+
+src/click/core.py:2194: TypeError
+_________________ test_prompt_required_false[short sep value] __________________
+
+runner = <click.testing.CliRunner object at 0x1084ea190>, args = ['-v', 'value']
+expect = 'value'
+
+    @pytest.mark.parametrize(
+        ("args", "expect"),
+        [
+            # Flag not passed, don't prompt.
+            pytest.param(None, None, id="no flag"),
+            # Flag and value passed, don't prompt.
+            pytest.param(["-v", "value"], "value", id="short sep value"),
+            pytest.param(["--value", "value"], "value", id="long sep value"),
+            pytest.param(["-vvalue"], "value", id="short join value"),
+            pytest.param(["--value=value"], "value", id="long join value"),
+            # Flag without value passed, prompt.
+            pytest.param(["-v"], "prompt", id="short no value"),
+            pytest.param(["--value"], "prompt", id="long no value"),
+            # Don't use next option flag as value.
+            pytest.param(["-v", "-o", "42"], ("prompt", "42"), id="no value opt"),
+        ],
+    )
+    def test_prompt_required_false(runner, args, expect):
+        @click.command()
+        @click.option("-v", "--value", prompt=True, prompt_required=False)
+        @click.option("-o")
+>       def cli(value, o):
+
+tests/test_termui.py:430: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+src/click/decorators.py:189: in decorator
+    _param_memo(f, OptionClass(param_decls, **option_attrs))
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <[AttributeError("'Option' object has no attribute 'name'") raised in repr()] Option object at 0x1084eafd0>
+param_decls = ('-v', '--value'), show_default = False, prompt = True
+confirmation_prompt = False, hide_input = False, is_flag = None
+flag_value = None, multiple = False, count = False, allow_from_autoenv = True
+type = None, help = None, hidden = False, show_choices = True
+show_envvar = False, attrs = {'prompt_required': False}
+default_is_missing = True
+
+    def __init__(
+        self,
+        param_decls=None,
+        show_default=False,
+        prompt=False,
+        confirmation_prompt=False,
+        hide_input=False,
+        is_flag=None,
+        flag_value=None,
+        multiple=False,
+        count=False,
+        allow_from_autoenv=True,
+        type=None,
+        help=None,
+        hidden=False,
+        show_choices=True,
+        show_envvar=False,
+        **attrs,
+    ):
+        default_is_missing = attrs.get("default", _missing) is _missing
+>       super().__init__(param_decls, type=type, **attrs)
+E       TypeError: __init__() got an unexpected keyword argument 'prompt_required'
+
+src/click/core.py:2194: TypeError
+__________________ test_prompt_required_false[long sep value] __________________
+
+runner = <click.testing.CliRunner object at 0x10853ff40>
+args = ['--value', 'value'], expect = 'value'
+
+    @pytest.mark.parametrize(
+        ("args", "expect"),
+        [
+            # Flag not passed, don't prompt.
+            pytest.param(None, None, id="no flag"),
+            # Flag and value passed, don't prompt.
+            pytest.param(["-v", "value"], "value", id="short sep value"),
+            pytest.param(["--value", "value"], "value", id="long sep value"),
+            pytest.param(["-vvalue"], "value", id="short join value"),
+            pytest.param(["--value=value"], "value", id="long join value"),
+            # Flag without value passed, prompt.
+            pytest.param(["-v"], "prompt", id="short no value"),
+            pytest.param(["--value"], "prompt", id="long no value"),
+            # Don't use next option flag as value.
+            pytest.param(["-v", "-o", "42"], ("prompt", "42"), id="no value opt"),
+        ],
+    )
+    def test_prompt_required_false(runner, args, expect):
+        @click.command()
+        @click.option("-v", "--value", prompt=True, prompt_required=False)
+        @click.option("-o")
+>       def cli(value, o):
+
+tests/test_termui.py:430: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+src/click/decorators.py:189: in decorator
+    _param_memo(f, OptionClass(param_decls, **option_attrs))
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <[AttributeError("'Option' object has no attribute 'name'") raised in repr()] Option object at 0x108517340>
+param_decls = ('-v', '--value'), show_default = False, prompt = True
+confirmation_prompt = False, hide_input = False, is_flag = None
+flag_value = None, multiple = False, count = False, allow_from_autoenv = True
+type = None, help = None, hidden = False, show_choices = True
+show_envvar = False, attrs = {'prompt_required': False}
+default_is_missing = True
+
+    def __init__(
+        self,
+        param_decls=None,
+        show_default=False,
+        prompt=False,
+        confirmation_prompt=False,
+        hide_input=False,
+        is_flag=None,
+        flag_value=None,
+        multiple=False,
+        count=False,
+        allow_from_autoenv=True,
+        type=None,
+        help=None,
+        hidden=False,
+        show_choices=True,
+        show_envvar=False,
+        **attrs,
+    ):
+        default_is_missing = attrs.get("default", _missing) is _missing
+>       super().__init__(param_decls, type=type, **attrs)
+E       TypeError: __init__() got an unexpected keyword argument 'prompt_required'
+
+src/click/core.py:2194: TypeError
+_________________ test_prompt_required_false[short join value] _________________
+
+runner = <click.testing.CliRunner object at 0x10852b100>, args = ['-vvalue']
+expect = 'value'
+
+    @pytest.mark.parametrize(
+        ("args", "expect"),
+        [
+            # Flag not passed, don't prompt.
+            pytest.param(None, None, id="no flag"),
+            # Flag and value passed, don't prompt.
+            pytest.param(["-v", "value"], "value", id="short sep value"),
+            pytest.param(["--value", "value"], "value", id="long sep value"),
+            pytest.param(["-vvalue"], "value", id="short join value"),
+            pytest.param(["--value=value"], "value", id="long join value"),
+            # Flag without value passed, prompt.
+            pytest.param(["-v"], "prompt", id="short no value"),
+            pytest.param(["--value"], "prompt", id="long no value"),
+            # Don't use next option flag as value.
+            pytest.param(["-v", "-o", "42"], ("prompt", "42"), id="no value opt"),
+        ],
+    )
+    def test_prompt_required_false(runner, args, expect):
+        @click.command()
+        @click.option("-v", "--value", prompt=True, prompt_required=False)
+        @click.option("-o")
+>       def cli(value, o):
+
+tests/test_termui.py:430: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+src/click/decorators.py:189: in decorator
+    _param_memo(f, OptionClass(param_decls, **option_attrs))
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <[AttributeError("'Option' object has no attribute 'name'") raised in repr()] Option object at 0x10852b340>
+param_decls = ('-v', '--value'), show_default = False, prompt = True
+confirmation_prompt = False, hide_input = False, is_flag = None
+flag_value = None, multiple = False, count = False, allow_from_autoenv = True
+type = None, help = None, hidden = False, show_choices = True
+show_envvar = False, attrs = {'prompt_required': False}
+default_is_missing = True
+
+    def __init__(
+        self,
+        param_decls=None,
+        show_default=False,
+        prompt=False,
+        confirmation_prompt=False,
+        hide_input=False,
+        is_flag=None,
+        flag_value=None,
+        multiple=False,
+        count=False,
+        allow_from_autoenv=True,
+        type=None,
+        help=None,
+        hidden=False,
+        show_choices=True,
+        show_envvar=False,
+        **attrs,
+    ):
+        default_is_missing = attrs.get("default", _missing) is _missing
+>       super().__init__(param_decls, type=type, **attrs)
+E       TypeError: __init__() got an unexpected keyword argument 'prompt_required'
+
+src/click/core.py:2194: TypeError
+_________________ test_prompt_required_false[long join value] __________________
+
+runner = <click.testing.CliRunner object at 0x1084c3520>
+args = ['--value=value'], expect = 'value'
+
+    @pytest.mark.parametrize(
+        ("args", "expect"),
+        [
+            # Flag not passed, don't prompt.
+            pytest.param(None, None, id="no flag"),
+            # Flag and value passed, don't prompt.
+            pytest.param(["-v", "value"], "value", id="short sep value"),
+            pytest.param(["--value", "value"], "value", id="long sep value"),
+            pytest.param(["-vvalue"], "value", id="short join value"),
+            pytest.param(["--value=value"], "value", id="long join value"),
+            # Flag without value passed, prompt.
+            pytest.param(["-v"], "prompt", id="short no value"),
+            pytest.param(["--value"], "prompt", id="long no value"),
+            # Don't use next option flag as value.
+            pytest.param(["-v", "-o", "42"], ("prompt", "42"), id="no value opt"),
+        ],
+    )
+    def test_prompt_required_false(runner, args, expect):
+        @click.command()
+        @click.option("-v", "--value", prompt=True, prompt_required=False)
+        @click.option("-o")
+>       def cli(value, o):
+
+tests/test_termui.py:430: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+src/click/decorators.py:189: in decorator
+    _param_memo(f, OptionClass(param_decls, **option_attrs))
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <[AttributeError("'Option' object has no attribute 'name'") raised in repr()] Option object at 0x108586670>
+param_decls = ('-v', '--value'), show_default = False, prompt = True
+confirmation_prompt = False, hide_input = False, is_flag = None
+flag_value = None, multiple = False, count = False, allow_from_autoenv = True
+type = None, help = None, hidden = False, show_choices = True
+show_envvar = False, attrs = {'prompt_required': False}
+default_is_missing = True
+
+    def __init__(
+        self,
+        param_decls=None,
+        show_default=False,
+        prompt=False,
+        confirmation_prompt=False,
+        hide_input=False,
+        is_flag=None,
+        flag_value=None,
+        multiple=False,
+        count=False,
+        allow_from_autoenv=True,
+        type=None,
+        help=None,
+        hidden=False,
+        show_choices=True,
+        show_envvar=False,
+        **attrs,
+    ):
+        default_is_missing = attrs.get("default", _missing) is _missing
+>       super().__init__(param_decls, type=type, **attrs)
+E       TypeError: __init__() got an unexpected keyword argument 'prompt_required'
+
+src/click/core.py:2194: TypeError
+__________________ test_prompt_required_false[short no value] __________________
+
+runner = <click.testing.CliRunner object at 0x1087397f0>, args = ['-v']
+expect = 'prompt'
+
+    @pytest.mark.parametrize(
+        ("args", "expect"),
+        [
+            # Flag not passed, don't prompt.
+            pytest.param(None, None, id="no flag"),
+            # Flag and value passed, don't prompt.
+            pytest.param(["-v", "value"], "value", id="short sep value"),
+            pytest.param(["--value", "value"], "value", id="long sep value"),
+            pytest.param(["-vvalue"], "value", id="short join value"),
+            pytest.param(["--value=value"], "value", id="long join value"),
+            # Flag without value passed, prompt.
+            pytest.param(["-v"], "prompt", id="short no value"),
+            pytest.param(["--value"], "prompt", id="long no value"),
+            # Don't use next option flag as value.
+            pytest.param(["-v", "-o", "42"], ("prompt", "42"), id="no value opt"),
+        ],
+    )
+    def test_prompt_required_false(runner, args, expect):
+        @click.command()
+        @click.option("-v", "--value", prompt=True, prompt_required=False)
+        @click.option("-o")
+>       def cli(value, o):
+
+tests/test_termui.py:430: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+src/click/decorators.py:189: in decorator
+    _param_memo(f, OptionClass(param_decls, **option_attrs))
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <[AttributeError("'Option' object has no attribute 'name'") raised in repr()] Option object at 0x108739f40>
+param_decls = ('-v', '--value'), show_default = False, prompt = True
+confirmation_prompt = False, hide_input = False, is_flag = None
+flag_value = None, multiple = False, count = False, allow_from_autoenv = True
+type = None, help = None, hidden = False, show_choices = True
+show_envvar = False, attrs = {'prompt_required': False}
+default_is_missing = True
+
+    def __init__(
+        self,
+        param_decls=None,
+        show_default=False,
+        prompt=False,
+        confirmation_prompt=False,
+        hide_input=False,
+        is_flag=None,
+        flag_value=None,
+        multiple=False,
+        count=False,
+        allow_from_autoenv=True,
+        type=None,
+        help=None,
+        hidden=False,
+        show_choices=True,
+        show_envvar=False,
+        **attrs,
+    ):
+        default_is_missing = attrs.get("default", _missing) is _missing
+>       super().__init__(param_decls, type=type, **attrs)
+E       TypeError: __init__() got an unexpected keyword argument 'prompt_required'
+
+src/click/core.py:2194: TypeError
+__________________ test_prompt_required_false[long no value] ___________________
+
+runner = <click.testing.CliRunner object at 0x108425310>, args = ['--value']
+expect = 'prompt'
+
+    @pytest.mark.parametrize(
+        ("args", "expect"),
+        [
+            # Flag not passed, don't prompt.
+            pytest.param(None, None, id="no flag"),
+            # Flag and value passed, don't prompt.
+            pytest.param(["-v", "value"], "value", id="short sep value"),
+            pytest.param(["--value", "value"], "value", id="long sep value"),
+            pytest.param(["-vvalue"], "value", id="short join value"),
+            pytest.param(["--value=value"], "value", id="long join value"),
+            # Flag without value passed, prompt.
+            pytest.param(["-v"], "prompt", id="short no value"),
+            pytest.param(["--value"], "prompt", id="long no value"),
+            # Don't use next option flag as value.
+            pytest.param(["-v", "-o", "42"], ("prompt", "42"), id="no value opt"),
+        ],
+    )
+    def test_prompt_required_false(runner, args, expect):
+        @click.command()
+        @click.option("-v", "--value", prompt=True, prompt_required=False)
+        @click.option("-o")
+>       def cli(value, o):
+
+tests/test_termui.py:430: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+src/click/decorators.py:189: in decorator
+    _param_memo(f, OptionClass(param_decls, **option_attrs))
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <[AttributeError("'Option' object has no attribute 'name'") raised in repr()] Option object at 0x10852d700>
+param_decls = ('-v', '--value'), show_default = False, prompt = True
+confirmation_prompt = False, hide_input = False, is_flag = None
+flag_value = None, multiple = False, count = False, allow_from_autoenv = True
+type = None, help = None, hidden = False, show_choices = True
+show_envvar = False, attrs = {'prompt_required': False}
+default_is_missing = True
+
+    def __init__(
+        self,
+        param_decls=None,
+        show_default=False,
+        prompt=False,
+        confirmation_prompt=False,
+        hide_input=False,
+        is_flag=None,
+        flag_value=None,
+        multiple=False,
+        count=False,
+        allow_from_autoenv=True,
+        type=None,
+        help=None,
+        hidden=False,
+        show_choices=True,
+        show_envvar=False,
+        **attrs,
+    ):
+        default_is_missing = attrs.get("default", _missing) is _missing
+>       super().__init__(param_decls, type=type, **attrs)
+E       TypeError: __init__() got an unexpected keyword argument 'prompt_required'
+
+src/click/core.py:2194: TypeError
+___________________ test_prompt_required_false[no value opt] ___________________
+
+runner = <click.testing.CliRunner object at 0x10859e250>
+args = ['-v', '-o', '42'], expect = ('prompt', '42')
+
+    @pytest.mark.parametrize(
+        ("args", "expect"),
+        [
+            # Flag not passed, don't prompt.
+            pytest.param(None, None, id="no flag"),
+            # Flag and value passed, don't prompt.
+            pytest.param(["-v", "value"], "value", id="short sep value"),
+            pytest.param(["--value", "value"], "value", id="long sep value"),
+            pytest.param(["-vvalue"], "value", id="short join value"),
+            pytest.param(["--value=value"], "value", id="long join value"),
+            # Flag without value passed, prompt.
+            pytest.param(["-v"], "prompt", id="short no value"),
+            pytest.param(["--value"], "prompt", id="long no value"),
+            # Don't use next option flag as value.
+            pytest.param(["-v", "-o", "42"], ("prompt", "42"), id="no value opt"),
+        ],
+    )
+    def test_prompt_required_false(runner, args, expect):
+        @click.command()
+        @click.option("-v", "--value", prompt=True, prompt_required=False)
+        @click.option("-o")
+>       def cli(value, o):
+
+tests/test_termui.py:430: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+src/click/decorators.py:189: in decorator
+    _param_memo(f, OptionClass(param_decls, **option_attrs))
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <[AttributeError("'Option' object has no attribute 'name'") raised in repr()] Option object at 0x10859e490>
+param_decls = ('-v', '--value'), show_default = False, prompt = True
+confirmation_prompt = False, hide_input = False, is_flag = None
+flag_value = None, multiple = False, count = False, allow_from_autoenv = True
+type = None, help = None, hidden = False, show_choices = True
+show_envvar = False, attrs = {'prompt_required': False}
+default_is_missing = True
+
+    def __init__(
+        self,
+        param_decls=None,
+        show_default=False,
+        prompt=False,
+        confirmation_prompt=False,
+        hide_input=False,
+        is_flag=None,
+        flag_value=None,
+        multiple=False,
+        count=False,
+        allow_from_autoenv=True,
+        type=None,
+        help=None,
+        hidden=False,
+        show_choices=True,
+        show_envvar=False,
+        **attrs,
+    ):
+        default_is_missing = attrs.get("default", _missing) is _missing
+>       super().__init__(param_decls, type=type, **attrs)
+E       TypeError: __init__() got an unexpected keyword argument 'prompt_required'
+
+src/click/core.py:2194: TypeError
+=========================== short test summary info ============================
+FAILED tests/test_termui.py::test_prompt_required_with_required[True-False-None-prompt]
+FAILED tests/test_termui.py::test_prompt_required_with_required[True-False-args1--v option requires an argument]
+FAILED tests/test_termui.py::test_prompt_required_with_required[False-True-None-prompt]
+FAILED tests/test_termui.py::test_prompt_required_with_required[False-True-args3-prompt]
+FAILED tests/test_termui.py::test_prompt_required_false[no flag] - TypeError:...
+FAILED tests/test_termui.py::test_prompt_required_false[short sep value] - Ty...
+FAILED tests/test_termui.py::test_prompt_required_false[long sep value] - Typ...
+FAILED tests/test_termui.py::test_prompt_required_false[short join value] - T...
+FAILED tests/test_termui.py::test_prompt_required_false[long join value] - Ty...
+FAILED tests/test_termui.py::test_prompt_required_false[short no value] - Typ...
+FAILED tests/test_termui.py::test_prompt_required_false[long no value] - Type...
+FAILED tests/test_termui.py::test_prompt_required_false[no value opt] - TypeE...
+12 failed in 0.22s

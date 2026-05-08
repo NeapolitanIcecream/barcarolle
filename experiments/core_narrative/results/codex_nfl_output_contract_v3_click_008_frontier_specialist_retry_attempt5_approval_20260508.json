@@ -1,0 +1,25 @@
+{
+  "approval_id": "codex_nfl_output_contract_v3_click_008_frontier_specialist_retry_attempt5_20260508",
+  "approved_by": "codex-supervisor",
+  "approved_at": "2026-05-08T21:41:00+08:00",
+  "reason": "Bounded single-cell retry after attempt 4 converted frontier-generic-swe to a scoreable outcome but frontier-click-specialist failed with provider HTTP 500.",
+  "scope": {
+    "tasks": ["click__rbench__008"],
+    "acuts": ["frontier-click-specialist"],
+    "attempt": 5,
+    "mode": "live",
+    "run_prefix": "codex_nfl_output_contract_v3_click_008_frontier_specialist_retry_attempt5_20260508"
+  },
+  "budget": {
+    "projected_cost_usd": 3.0,
+    "ledger": "experiments/core_narrative/results/cost_ledger.jsonl",
+    "hard_stop": "Do not continue if the budget gate blocks, credentials are missing, or actual API funds/quota are exhausted."
+  },
+  "execution_constraints": {
+    "no_click009_plus": true,
+    "no_cheap_acut_replay": true,
+    "no_frontier_generic_replay": true,
+    "runner_timeout_seconds": 600,
+    "purpose": "Convert the remaining frontier-click-specialist infra failure into a scoreable Click008 outcome if the provider recovers."
+  }
+}
