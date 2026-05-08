@@ -1,0 +1,2011 @@
+{
+  "defect_classification_counts": {
+    "clean_reference_replay_failed": 1,
+    "reference_patch_failed_verifier": 1,
+    "reference_replay_unstable_or_failed": 1
+  },
+  "finished_at": "2026-05-08T15:53:52.638406Z",
+  "flakiness_runs": 2,
+  "per_task": [
+    {
+      "clean_patch_replay": {
+        "reference_probe_count": 2,
+        "separate_workspaces": true,
+        "supported": true
+      },
+      "defect_classifications": [],
+      "gates": {
+        "clean_patch_replay": true,
+        "flakiness_probe": true,
+        "known_bad_probe": true,
+        "no_op_probe": true,
+        "oracle_log_leakage": true,
+        "reference_probe": true,
+        "verifier_runtime_p95_lt_timeout": true
+      },
+      "known_bad": {
+        "artifact_dir": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__001__known_bad",
+        "install": {
+          "command": [
+            ".venv/bin/python",
+            "-m",
+            "pip",
+            "install",
+            "-q",
+            "-e",
+            ".",
+            "pytest"
+          ],
+          "exit_code": 0,
+          "finished_at": "2026-05-08T15:51:47.621497Z",
+          "name": "venv_install",
+          "started_at": "2026-05-08T15:51:45.124157Z",
+          "stderr_artifact": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__001__known_bad/venv_install.stderr.txt",
+          "stdout_artifact": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__001__known_bad/venv_install.stdout.txt"
+        },
+        "normalized_result": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__001__known_bad/normalized_result.json",
+        "prepare": {
+          "base_commit": "4a7fe69f942bd02b811548ff8f02a08fff7429c1",
+          "repo_slug": "click",
+          "split": "rbench",
+          "statement_path": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/workspaces/codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__001__known_bad/.core_narrative/statement.md",
+          "status": "prepared",
+          "target_commit_absence_checked": true,
+          "task_id": "click__rbench__001",
+          "task_package_path": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/workspaces/codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__001__known_bad/.core_narrative/task.json",
+          "tool": "prepare_workspace",
+          "warnings": [],
+          "workspace": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/workspaces/codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__001__known_bad",
+          "workspace_history_mode": "base_tree_only_synthetic_git"
+        },
+        "probe": "known_bad",
+        "run_id": "codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__001__known_bad",
+        "status": "failed",
+        "verification": {
+          "duration_seconds": 0.15,
+          "exit_code": 1,
+          "stderr_artifact": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__001__known_bad/verifier.stderr.txt",
+          "stdout_artifact": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__001__known_bad/verifier.stdout.txt"
+        },
+        "verify_code": 0,
+        "workspace": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/workspaces/codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__001__known_bad"
+      },
+      "noop": {
+        "artifact_dir": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__001__noop",
+        "command": {
+          "command": [
+            "/Applications/Xcode.app/Contents/Developer/usr/bin/python3",
+            "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/tools/apply_and_verify.py",
+            "--workspace",
+            "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/workspaces/codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__001__noop",
+            "--task",
+            "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/tasks/click/rbench/click__rbench__001/task.yaml",
+            "--patch",
+            "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__001__noop/missing_noop.patch",
+            "--acut-id",
+            "cheap-generic-swe",
+            "--attempt",
+            "1",
+            "--run-id",
+            "codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__001__noop__noop",
+            "--artifact-dir",
+            "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__001__noop",
+            "--output",
+            "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__001__noop/noop_verify.json",
+            "--skip-apply"
+          ],
+          "exit_code": 0,
+          "finished_at": "2026-05-08T15:51:35.071466Z",
+          "name": "noop_verify_command",
+          "started_at": "2026-05-08T15:51:34.828013Z",
+          "stderr_artifact": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__001__noop/noop_verify_command.stderr.txt",
+          "stdout_artifact": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__001__noop/noop_verify_command.stdout.txt"
+        },
+        "install": {
+          "command": [
+            ".venv/bin/python",
+            "-m",
+            "pip",
+            "install",
+            "-q",
+            "-e",
+            ".",
+            "pytest"
+          ],
+          "exit_code": 0,
+          "finished_at": "2026-05-08T15:51:34.827377Z",
+          "name": "venv_install",
+          "started_at": "2026-05-08T15:51:32.304101Z",
+          "stderr_artifact": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__001__noop/venv_install.stderr.txt",
+          "stdout_artifact": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__001__noop/venv_install.stdout.txt"
+        },
+        "prepare": {
+          "base_commit": "4a7fe69f942bd02b811548ff8f02a08fff7429c1",
+          "repo_slug": "click",
+          "split": "rbench",
+          "statement_path": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/workspaces/codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__001__noop/.core_narrative/statement.md",
+          "status": "prepared",
+          "target_commit_absence_checked": true,
+          "task_id": "click__rbench__001",
+          "task_package_path": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/workspaces/codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__001__noop/.core_narrative/task.json",
+          "tool": "prepare_workspace",
+          "warnings": [],
+          "workspace": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/workspaces/codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__001__noop",
+          "workspace_history_mode": "base_tree_only_synthetic_git"
+        },
+        "probe": "noop",
+        "run_id": "codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__001__noop",
+        "status": "failed",
+        "verification": {
+          "duration_seconds": 0.204,
+          "exit_code": 1,
+          "stderr_artifact": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__001__noop/verifier.stderr.txt",
+          "stdout_artifact": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__001__noop/verifier.stdout.txt"
+        },
+        "workspace": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/workspaces/codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__001__noop"
+      },
+      "oracle_log_leakage_findings": {
+        "ignored_benign_urls": [
+          "https://docs.pytest.org/en/stable/how-to/capture-warnings.html"
+        ],
+        "reason_counts": {},
+        "unsafe": false
+      },
+      "reference_runs": [
+        {
+          "artifact_dir": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__001__reference_1",
+          "install": {
+            "command": [
+              ".venv/bin/python",
+              "-m",
+              "pip",
+              "install",
+              "-q",
+              "-e",
+              ".",
+              "pytest"
+            ],
+            "exit_code": 0,
+            "finished_at": "2026-05-08T15:51:39.284857Z",
+            "name": "venv_install",
+            "started_at": "2026-05-08T15:51:36.615502Z",
+            "stderr_artifact": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__001__reference_1/venv_install.stderr.txt",
+            "stdout_artifact": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__001__reference_1/venv_install.stdout.txt"
+          },
+          "normalized_result": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__001__reference_1/normalized_result.json",
+          "prepare": {
+            "base_commit": "4a7fe69f942bd02b811548ff8f02a08fff7429c1",
+            "repo_slug": "click",
+            "split": "rbench",
+            "statement_path": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/workspaces/codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__001__reference_1/.core_narrative/statement.md",
+            "status": "prepared",
+            "target_commit_absence_checked": true,
+            "task_id": "click__rbench__001",
+            "task_package_path": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/workspaces/codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__001__reference_1/.core_narrative/task.json",
+            "tool": "prepare_workspace",
+            "warnings": [],
+            "workspace": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/workspaces/codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__001__reference_1",
+            "workspace_history_mode": "base_tree_only_synthetic_git"
+          },
+          "probe": "reference_1",
+          "run_id": "codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__001__reference_1",
+          "status": "passed",
+          "verification": {
+            "duration_seconds": 0.147,
+            "exit_code": 0,
+            "stderr_artifact": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__001__reference_1/verifier.stderr.txt",
+            "stdout_artifact": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__001__reference_1/verifier.stdout.txt"
+          },
+          "verify_code": 0,
+          "workspace": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/workspaces/codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__001__reference_1"
+        },
+        {
+          "artifact_dir": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__001__reference_2",
+          "install": {
+            "command": [
+              ".venv/bin/python",
+              "-m",
+              "pip",
+              "install",
+              "-q",
+              "-e",
+              ".",
+              "pytest"
+            ],
+            "exit_code": 0,
+            "finished_at": "2026-05-08T15:51:43.435085Z",
+            "name": "venv_install",
+            "started_at": "2026-05-08T15:51:41.017458Z",
+            "stderr_artifact": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__001__reference_2/venv_install.stderr.txt",
+            "stdout_artifact": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__001__reference_2/venv_install.stdout.txt"
+          },
+          "normalized_result": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__001__reference_2/normalized_result.json",
+          "prepare": {
+            "base_commit": "4a7fe69f942bd02b811548ff8f02a08fff7429c1",
+            "repo_slug": "click",
+            "split": "rbench",
+            "statement_path": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/workspaces/codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__001__reference_2/.core_narrative/statement.md",
+            "status": "prepared",
+            "target_commit_absence_checked": true,
+            "task_id": "click__rbench__001",
+            "task_package_path": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/workspaces/codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__001__reference_2/.core_narrative/task.json",
+            "tool": "prepare_workspace",
+            "warnings": [],
+            "workspace": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/workspaces/codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__001__reference_2",
+            "workspace_history_mode": "base_tree_only_synthetic_git"
+          },
+          "probe": "reference_2",
+          "run_id": "codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__001__reference_2",
+          "status": "passed",
+          "verification": {
+            "duration_seconds": 0.142,
+            "exit_code": 0,
+            "stderr_artifact": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__001__reference_2/verifier.stderr.txt",
+            "stdout_artifact": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__001__reference_2/verifier.stdout.txt"
+          },
+          "verify_code": 0,
+          "workspace": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/workspaces/codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__001__reference_2"
+        }
+      ],
+      "runtime_p95_seconds": 0.204,
+      "status": "passed",
+      "task_id": "click__rbench__001",
+      "verifier_timeout_seconds": 60
+    },
+    {
+      "clean_patch_replay": {
+        "reference_probe_count": 2,
+        "separate_workspaces": true,
+        "supported": true
+      },
+      "defect_classifications": [],
+      "gates": {
+        "clean_patch_replay": true,
+        "flakiness_probe": true,
+        "known_bad_probe": true,
+        "no_op_probe": true,
+        "oracle_log_leakage": true,
+        "reference_probe": true,
+        "verifier_runtime_p95_lt_timeout": true
+      },
+      "known_bad": {
+        "artifact_dir": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__002__known_bad",
+        "install": {
+          "command": [
+            ".venv/bin/python",
+            "-m",
+            "pip",
+            "install",
+            "-q",
+            "-e",
+            ".",
+            "pytest"
+          ],
+          "exit_code": 0,
+          "finished_at": "2026-05-08T15:52:05.323308Z",
+          "name": "venv_install",
+          "started_at": "2026-05-08T15:52:02.702696Z",
+          "stderr_artifact": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__002__known_bad/venv_install.stderr.txt",
+          "stdout_artifact": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__002__known_bad/venv_install.stdout.txt"
+        },
+        "normalized_result": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__002__known_bad/normalized_result.json",
+        "prepare": {
+          "base_commit": "b557743f3bc26a4cdbf610b221e7e81d609aa65d",
+          "repo_slug": "click",
+          "split": "rbench",
+          "statement_path": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/workspaces/codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__002__known_bad/.core_narrative/statement.md",
+          "status": "prepared",
+          "target_commit_absence_checked": true,
+          "task_id": "click__rbench__002",
+          "task_package_path": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/workspaces/codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__002__known_bad/.core_narrative/task.json",
+          "tool": "prepare_workspace",
+          "warnings": [],
+          "workspace": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/workspaces/codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__002__known_bad",
+          "workspace_history_mode": "base_tree_only_synthetic_git"
+        },
+        "probe": "known_bad",
+        "run_id": "codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__002__known_bad",
+        "status": "failed",
+        "verification": {
+          "duration_seconds": 0.149,
+          "exit_code": 1,
+          "stderr_artifact": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__002__known_bad/verifier.stderr.txt",
+          "stdout_artifact": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__002__known_bad/verifier.stdout.txt"
+        },
+        "verify_code": 0,
+        "workspace": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/workspaces/codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__002__known_bad"
+      },
+      "noop": {
+        "artifact_dir": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__002__noop",
+        "command": {
+          "command": [
+            "/Applications/Xcode.app/Contents/Developer/usr/bin/python3",
+            "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/tools/apply_and_verify.py",
+            "--workspace",
+            "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/workspaces/codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__002__noop",
+            "--task",
+            "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/tasks/click/rbench/click__rbench__002/task.yaml",
+            "--patch",
+            "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__002__noop/missing_noop.patch",
+            "--acut-id",
+            "cheap-generic-swe",
+            "--attempt",
+            "1",
+            "--run-id",
+            "codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__002__noop__noop",
+            "--artifact-dir",
+            "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__002__noop",
+            "--output",
+            "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__002__noop/noop_verify.json",
+            "--skip-apply"
+          ],
+          "exit_code": 0,
+          "finished_at": "2026-05-08T15:51:52.415478Z",
+          "name": "noop_verify_command",
+          "started_at": "2026-05-08T15:51:52.233928Z",
+          "stderr_artifact": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__002__noop/noop_verify_command.stderr.txt",
+          "stdout_artifact": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__002__noop/noop_verify_command.stdout.txt"
+        },
+        "install": {
+          "command": [
+            ".venv/bin/python",
+            "-m",
+            "pip",
+            "install",
+            "-q",
+            "-e",
+            ".",
+            "pytest"
+          ],
+          "exit_code": 0,
+          "finished_at": "2026-05-08T15:51:52.232972Z",
+          "name": "venv_install",
+          "started_at": "2026-05-08T15:51:49.604437Z",
+          "stderr_artifact": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__002__noop/venv_install.stderr.txt",
+          "stdout_artifact": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__002__noop/venv_install.stdout.txt"
+        },
+        "prepare": {
+          "base_commit": "b557743f3bc26a4cdbf610b221e7e81d609aa65d",
+          "repo_slug": "click",
+          "split": "rbench",
+          "statement_path": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/workspaces/codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__002__noop/.core_narrative/statement.md",
+          "status": "prepared",
+          "target_commit_absence_checked": true,
+          "task_id": "click__rbench__002",
+          "task_package_path": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/workspaces/codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__002__noop/.core_narrative/task.json",
+          "tool": "prepare_workspace",
+          "warnings": [],
+          "workspace": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/workspaces/codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__002__noop",
+          "workspace_history_mode": "base_tree_only_synthetic_git"
+        },
+        "probe": "noop",
+        "run_id": "codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__002__noop",
+        "status": "failed",
+        "verification": {
+          "duration_seconds": 0.143,
+          "exit_code": 1,
+          "stderr_artifact": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__002__noop/verifier.stderr.txt",
+          "stdout_artifact": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__002__noop/verifier.stdout.txt"
+        },
+        "workspace": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/workspaces/codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__002__noop"
+      },
+      "oracle_log_leakage_findings": {
+        "ignored_benign_urls": [
+          "https://docs.pytest.org/en/stable/how-to/capture-warnings.html"
+        ],
+        "reason_counts": {},
+        "unsafe": false
+      },
+      "reference_runs": [
+        {
+          "artifact_dir": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__002__reference_1",
+          "install": {
+            "command": [
+              ".venv/bin/python",
+              "-m",
+              "pip",
+              "install",
+              "-q",
+              "-e",
+              ".",
+              "pytest"
+            ],
+            "exit_code": 0,
+            "finished_at": "2026-05-08T15:51:56.538252Z",
+            "name": "venv_install",
+            "started_at": "2026-05-08T15:51:53.944298Z",
+            "stderr_artifact": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__002__reference_1/venv_install.stderr.txt",
+            "stdout_artifact": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__002__reference_1/venv_install.stdout.txt"
+          },
+          "normalized_result": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__002__reference_1/normalized_result.json",
+          "prepare": {
+            "base_commit": "b557743f3bc26a4cdbf610b221e7e81d609aa65d",
+            "repo_slug": "click",
+            "split": "rbench",
+            "statement_path": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/workspaces/codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__002__reference_1/.core_narrative/statement.md",
+            "status": "prepared",
+            "target_commit_absence_checked": true,
+            "task_id": "click__rbench__002",
+            "task_package_path": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/workspaces/codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__002__reference_1/.core_narrative/task.json",
+            "tool": "prepare_workspace",
+            "warnings": [],
+            "workspace": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/workspaces/codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__002__reference_1",
+            "workspace_history_mode": "base_tree_only_synthetic_git"
+          },
+          "probe": "reference_1",
+          "run_id": "codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__002__reference_1",
+          "status": "passed",
+          "verification": {
+            "duration_seconds": 0.146,
+            "exit_code": 0,
+            "stderr_artifact": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__002__reference_1/verifier.stderr.txt",
+            "stdout_artifact": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__002__reference_1/verifier.stdout.txt"
+          },
+          "verify_code": 0,
+          "workspace": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/workspaces/codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__002__reference_1"
+        },
+        {
+          "artifact_dir": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__002__reference_2",
+          "install": {
+            "command": [
+              ".venv/bin/python",
+              "-m",
+              "pip",
+              "install",
+              "-q",
+              "-e",
+              ".",
+              "pytest"
+            ],
+            "exit_code": 0,
+            "finished_at": "2026-05-08T15:52:00.933693Z",
+            "name": "venv_install",
+            "started_at": "2026-05-08T15:51:58.266042Z",
+            "stderr_artifact": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__002__reference_2/venv_install.stderr.txt",
+            "stdout_artifact": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__002__reference_2/venv_install.stdout.txt"
+          },
+          "normalized_result": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__002__reference_2/normalized_result.json",
+          "prepare": {
+            "base_commit": "b557743f3bc26a4cdbf610b221e7e81d609aa65d",
+            "repo_slug": "click",
+            "split": "rbench",
+            "statement_path": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/workspaces/codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__002__reference_2/.core_narrative/statement.md",
+            "status": "prepared",
+            "target_commit_absence_checked": true,
+            "task_id": "click__rbench__002",
+            "task_package_path": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/workspaces/codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__002__reference_2/.core_narrative/task.json",
+            "tool": "prepare_workspace",
+            "warnings": [],
+            "workspace": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/workspaces/codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__002__reference_2",
+            "workspace_history_mode": "base_tree_only_synthetic_git"
+          },
+          "probe": "reference_2",
+          "run_id": "codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__002__reference_2",
+          "status": "passed",
+          "verification": {
+            "duration_seconds": 0.146,
+            "exit_code": 0,
+            "stderr_artifact": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__002__reference_2/verifier.stderr.txt",
+            "stdout_artifact": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__002__reference_2/verifier.stdout.txt"
+          },
+          "verify_code": 0,
+          "workspace": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/workspaces/codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__002__reference_2"
+        }
+      ],
+      "runtime_p95_seconds": 0.149,
+      "status": "passed",
+      "task_id": "click__rbench__002",
+      "verifier_timeout_seconds": 60
+    },
+    {
+      "clean_patch_replay": {
+        "reference_probe_count": 2,
+        "separate_workspaces": true,
+        "supported": true
+      },
+      "defect_classifications": [],
+      "gates": {
+        "clean_patch_replay": true,
+        "flakiness_probe": true,
+        "known_bad_probe": true,
+        "no_op_probe": true,
+        "oracle_log_leakage": true,
+        "reference_probe": true,
+        "verifier_runtime_p95_lt_timeout": true
+      },
+      "known_bad": {
+        "artifact_dir": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__003__known_bad",
+        "install": {
+          "command": [
+            ".venv/bin/python",
+            "-m",
+            "pip",
+            "install",
+            "-q",
+            "-e",
+            ".",
+            "pytest"
+          ],
+          "exit_code": 0,
+          "finished_at": "2026-05-08T15:52:23.130016Z",
+          "name": "venv_install",
+          "started_at": "2026-05-08T15:52:20.761779Z",
+          "stderr_artifact": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__003__known_bad/venv_install.stderr.txt",
+          "stdout_artifact": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__003__known_bad/venv_install.stdout.txt"
+        },
+        "normalized_result": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__003__known_bad/normalized_result.json",
+        "prepare": {
+          "base_commit": "d3f36e884e18f374c3e4e6cf062ba19f100d0fd6",
+          "repo_slug": "click",
+          "split": "rbench",
+          "statement_path": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/workspaces/codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__003__known_bad/.core_narrative/statement.md",
+          "status": "prepared",
+          "target_commit_absence_checked": true,
+          "task_id": "click__rbench__003",
+          "task_package_path": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/workspaces/codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__003__known_bad/.core_narrative/task.json",
+          "tool": "prepare_workspace",
+          "warnings": [],
+          "workspace": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/workspaces/codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__003__known_bad",
+          "workspace_history_mode": "base_tree_only_synthetic_git"
+        },
+        "probe": "known_bad",
+        "run_id": "codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__003__known_bad",
+        "status": "failed",
+        "verification": {
+          "duration_seconds": 0.15,
+          "exit_code": 1,
+          "stderr_artifact": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__003__known_bad/verifier.stderr.txt",
+          "stdout_artifact": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__003__known_bad/verifier.stdout.txt"
+        },
+        "verify_code": 0,
+        "workspace": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/workspaces/codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__003__known_bad"
+      },
+      "noop": {
+        "artifact_dir": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__003__noop",
+        "command": {
+          "command": [
+            "/Applications/Xcode.app/Contents/Developer/usr/bin/python3",
+            "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/tools/apply_and_verify.py",
+            "--workspace",
+            "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/workspaces/codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__003__noop",
+            "--task",
+            "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/tasks/click/rbench/click__rbench__003/task.yaml",
+            "--patch",
+            "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__003__noop/missing_noop.patch",
+            "--acut-id",
+            "cheap-generic-swe",
+            "--attempt",
+            "1",
+            "--run-id",
+            "codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__003__noop__noop",
+            "--artifact-dir",
+            "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__003__noop",
+            "--output",
+            "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__003__noop/noop_verify.json",
+            "--skip-apply"
+          ],
+          "exit_code": 0,
+          "finished_at": "2026-05-08T15:52:10.306853Z",
+          "name": "noop_verify_command",
+          "started_at": "2026-05-08T15:52:10.061813Z",
+          "stderr_artifact": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__003__noop/noop_verify_command.stderr.txt",
+          "stdout_artifact": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__003__noop/noop_verify_command.stdout.txt"
+        },
+        "install": {
+          "command": [
+            ".venv/bin/python",
+            "-m",
+            "pip",
+            "install",
+            "-q",
+            "-e",
+            ".",
+            "pytest"
+          ],
+          "exit_code": 0,
+          "finished_at": "2026-05-08T15:52:10.061142Z",
+          "name": "venv_install",
+          "started_at": "2026-05-08T15:52:07.353389Z",
+          "stderr_artifact": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__003__noop/venv_install.stderr.txt",
+          "stdout_artifact": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__003__noop/venv_install.stdout.txt"
+        },
+        "prepare": {
+          "base_commit": "d3f36e884e18f374c3e4e6cf062ba19f100d0fd6",
+          "repo_slug": "click",
+          "split": "rbench",
+          "statement_path": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/workspaces/codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__003__noop/.core_narrative/statement.md",
+          "status": "prepared",
+          "target_commit_absence_checked": true,
+          "task_id": "click__rbench__003",
+          "task_package_path": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/workspaces/codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__003__noop/.core_narrative/task.json",
+          "tool": "prepare_workspace",
+          "warnings": [],
+          "workspace": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/workspaces/codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__003__noop",
+          "workspace_history_mode": "base_tree_only_synthetic_git"
+        },
+        "probe": "noop",
+        "run_id": "codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__003__noop",
+        "status": "failed",
+        "verification": {
+          "duration_seconds": 0.205,
+          "exit_code": 1,
+          "stderr_artifact": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__003__noop/verifier.stderr.txt",
+          "stdout_artifact": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__003__noop/verifier.stdout.txt"
+        },
+        "workspace": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/workspaces/codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__003__noop"
+      },
+      "oracle_log_leakage_findings": {
+        "ignored_benign_urls": [],
+        "reason_counts": {},
+        "unsafe": false
+      },
+      "reference_runs": [
+        {
+          "artifact_dir": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__003__reference_1",
+          "install": {
+            "command": [
+              ".venv/bin/python",
+              "-m",
+              "pip",
+              "install",
+              "-q",
+              "-e",
+              ".",
+              "pytest"
+            ],
+            "exit_code": 0,
+            "finished_at": "2026-05-08T15:52:14.547283Z",
+            "name": "venv_install",
+            "started_at": "2026-05-08T15:52:11.853399Z",
+            "stderr_artifact": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__003__reference_1/venv_install.stderr.txt",
+            "stdout_artifact": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__003__reference_1/venv_install.stdout.txt"
+          },
+          "normalized_result": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__003__reference_1/normalized_result.json",
+          "prepare": {
+            "base_commit": "d3f36e884e18f374c3e4e6cf062ba19f100d0fd6",
+            "repo_slug": "click",
+            "split": "rbench",
+            "statement_path": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/workspaces/codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__003__reference_1/.core_narrative/statement.md",
+            "status": "prepared",
+            "target_commit_absence_checked": true,
+            "task_id": "click__rbench__003",
+            "task_package_path": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/workspaces/codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__003__reference_1/.core_narrative/task.json",
+            "tool": "prepare_workspace",
+            "warnings": [],
+            "workspace": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/workspaces/codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__003__reference_1",
+            "workspace_history_mode": "base_tree_only_synthetic_git"
+          },
+          "probe": "reference_1",
+          "run_id": "codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__003__reference_1",
+          "status": "passed",
+          "verification": {
+            "duration_seconds": 0.15,
+            "exit_code": 0,
+            "stderr_artifact": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__003__reference_1/verifier.stderr.txt",
+            "stdout_artifact": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__003__reference_1/verifier.stdout.txt"
+          },
+          "verify_code": 0,
+          "workspace": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/workspaces/codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__003__reference_1"
+        },
+        {
+          "artifact_dir": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__003__reference_2",
+          "install": {
+            "command": [
+              ".venv/bin/python",
+              "-m",
+              "pip",
+              "install",
+              "-q",
+              "-e",
+              ".",
+              "pytest"
+            ],
+            "exit_code": 0,
+            "finished_at": "2026-05-08T15:52:18.982894Z",
+            "name": "venv_install",
+            "started_at": "2026-05-08T15:52:16.309042Z",
+            "stderr_artifact": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__003__reference_2/venv_install.stderr.txt",
+            "stdout_artifact": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__003__reference_2/venv_install.stdout.txt"
+          },
+          "normalized_result": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__003__reference_2/normalized_result.json",
+          "prepare": {
+            "base_commit": "d3f36e884e18f374c3e4e6cf062ba19f100d0fd6",
+            "repo_slug": "click",
+            "split": "rbench",
+            "statement_path": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/workspaces/codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__003__reference_2/.core_narrative/statement.md",
+            "status": "prepared",
+            "target_commit_absence_checked": true,
+            "task_id": "click__rbench__003",
+            "task_package_path": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/workspaces/codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__003__reference_2/.core_narrative/task.json",
+            "tool": "prepare_workspace",
+            "warnings": [],
+            "workspace": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/workspaces/codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__003__reference_2",
+            "workspace_history_mode": "base_tree_only_synthetic_git"
+          },
+          "probe": "reference_2",
+          "run_id": "codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__003__reference_2",
+          "status": "passed",
+          "verification": {
+            "duration_seconds": 0.15,
+            "exit_code": 0,
+            "stderr_artifact": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__003__reference_2/verifier.stderr.txt",
+            "stdout_artifact": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__003__reference_2/verifier.stdout.txt"
+          },
+          "verify_code": 0,
+          "workspace": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/workspaces/codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__003__reference_2"
+        }
+      ],
+      "runtime_p95_seconds": 0.205,
+      "status": "passed",
+      "task_id": "click__rbench__003",
+      "verifier_timeout_seconds": 60
+    },
+    {
+      "clean_patch_replay": {
+        "reference_probe_count": 2,
+        "separate_workspaces": true,
+        "supported": true
+      },
+      "defect_classifications": [],
+      "gates": {
+        "clean_patch_replay": true,
+        "flakiness_probe": true,
+        "known_bad_probe": true,
+        "no_op_probe": true,
+        "oracle_log_leakage": true,
+        "reference_probe": true,
+        "verifier_runtime_p95_lt_timeout": true
+      },
+      "known_bad": {
+        "artifact_dir": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__004__known_bad",
+        "install": {
+          "command": [
+            ".venv/bin/python",
+            "-m",
+            "pip",
+            "install",
+            "-q",
+            "-e",
+            ".",
+            "pytest"
+          ],
+          "exit_code": 0,
+          "finished_at": "2026-05-08T15:52:40.817181Z",
+          "name": "venv_install",
+          "started_at": "2026-05-08T15:52:38.129686Z",
+          "stderr_artifact": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__004__known_bad/venv_install.stderr.txt",
+          "stdout_artifact": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__004__known_bad/venv_install.stdout.txt"
+        },
+        "normalized_result": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__004__known_bad/normalized_result.json",
+        "prepare": {
+          "base_commit": "b1b4449cda6767f022372890998d6b0eb895d041",
+          "repo_slug": "click",
+          "split": "rbench",
+          "statement_path": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/workspaces/codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__004__known_bad/.core_narrative/statement.md",
+          "status": "prepared",
+          "target_commit_absence_checked": true,
+          "task_id": "click__rbench__004",
+          "task_package_path": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/workspaces/codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__004__known_bad/.core_narrative/task.json",
+          "tool": "prepare_workspace",
+          "warnings": [],
+          "workspace": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/workspaces/codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__004__known_bad",
+          "workspace_history_mode": "base_tree_only_synthetic_git"
+        },
+        "probe": "known_bad",
+        "run_id": "codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__004__known_bad",
+        "status": "failed",
+        "verification": {
+          "duration_seconds": 0.199,
+          "exit_code": 1,
+          "stderr_artifact": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__004__known_bad/verifier.stderr.txt",
+          "stdout_artifact": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__004__known_bad/verifier.stdout.txt"
+        },
+        "verify_code": 0,
+        "workspace": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/workspaces/codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__004__known_bad"
+      },
+      "noop": {
+        "artifact_dir": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__004__noop",
+        "command": {
+          "command": [
+            "/Applications/Xcode.app/Contents/Developer/usr/bin/python3",
+            "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/tools/apply_and_verify.py",
+            "--workspace",
+            "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/workspaces/codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__004__noop",
+            "--task",
+            "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/tasks/click/rbench/click__rbench__004/task.yaml",
+            "--patch",
+            "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__004__noop/missing_noop.patch",
+            "--acut-id",
+            "cheap-generic-swe",
+            "--attempt",
+            "1",
+            "--run-id",
+            "codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__004__noop__noop",
+            "--artifact-dir",
+            "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__004__noop",
+            "--output",
+            "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__004__noop/noop_verify.json",
+            "--skip-apply"
+          ],
+          "exit_code": 0,
+          "finished_at": "2026-05-08T15:52:27.749040Z",
+          "name": "noop_verify_command",
+          "started_at": "2026-05-08T15:52:27.511929Z",
+          "stderr_artifact": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__004__noop/noop_verify_command.stderr.txt",
+          "stdout_artifact": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__004__noop/noop_verify_command.stdout.txt"
+        },
+        "install": {
+          "command": [
+            ".venv/bin/python",
+            "-m",
+            "pip",
+            "install",
+            "-q",
+            "-e",
+            ".",
+            "pytest"
+          ],
+          "exit_code": 0,
+          "finished_at": "2026-05-08T15:52:27.511287Z",
+          "name": "venv_install",
+          "started_at": "2026-05-08T15:52:25.156785Z",
+          "stderr_artifact": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__004__noop/venv_install.stderr.txt",
+          "stdout_artifact": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__004__noop/venv_install.stdout.txt"
+        },
+        "prepare": {
+          "base_commit": "b1b4449cda6767f022372890998d6b0eb895d041",
+          "repo_slug": "click",
+          "split": "rbench",
+          "statement_path": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/workspaces/codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__004__noop/.core_narrative/statement.md",
+          "status": "prepared",
+          "target_commit_absence_checked": true,
+          "task_id": "click__rbench__004",
+          "task_package_path": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/workspaces/codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__004__noop/.core_narrative/task.json",
+          "tool": "prepare_workspace",
+          "warnings": [],
+          "workspace": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/workspaces/codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__004__noop",
+          "workspace_history_mode": "base_tree_only_synthetic_git"
+        },
+        "probe": "noop",
+        "run_id": "codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__004__noop",
+        "status": "failed",
+        "verification": {
+          "duration_seconds": 0.197,
+          "exit_code": 1,
+          "stderr_artifact": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__004__noop/verifier.stderr.txt",
+          "stdout_artifact": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__004__noop/verifier.stdout.txt"
+        },
+        "workspace": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/workspaces/codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__004__noop"
+      },
+      "oracle_log_leakage_findings": {
+        "ignored_benign_urls": [],
+        "reason_counts": {},
+        "unsafe": false
+      },
+      "reference_runs": [
+        {
+          "artifact_dir": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__004__reference_1",
+          "install": {
+            "command": [
+              ".venv/bin/python",
+              "-m",
+              "pip",
+              "install",
+              "-q",
+              "-e",
+              ".",
+              "pytest"
+            ],
+            "exit_code": 0,
+            "finished_at": "2026-05-08T15:52:31.952423Z",
+            "name": "venv_install",
+            "started_at": "2026-05-08T15:52:29.326901Z",
+            "stderr_artifact": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__004__reference_1/venv_install.stderr.txt",
+            "stdout_artifact": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__004__reference_1/venv_install.stdout.txt"
+          },
+          "normalized_result": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__004__reference_1/normalized_result.json",
+          "prepare": {
+            "base_commit": "b1b4449cda6767f022372890998d6b0eb895d041",
+            "repo_slug": "click",
+            "split": "rbench",
+            "statement_path": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/workspaces/codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__004__reference_1/.core_narrative/statement.md",
+            "status": "prepared",
+            "target_commit_absence_checked": true,
+            "task_id": "click__rbench__004",
+            "task_package_path": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/workspaces/codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__004__reference_1/.core_narrative/task.json",
+            "tool": "prepare_workspace",
+            "warnings": [],
+            "workspace": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/workspaces/codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__004__reference_1",
+            "workspace_history_mode": "base_tree_only_synthetic_git"
+          },
+          "probe": "reference_1",
+          "run_id": "codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__004__reference_1",
+          "status": "passed",
+          "verification": {
+            "duration_seconds": 0.15,
+            "exit_code": 0,
+            "stderr_artifact": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__004__reference_1/verifier.stderr.txt",
+            "stdout_artifact": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__004__reference_1/verifier.stdout.txt"
+          },
+          "verify_code": 0,
+          "workspace": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/workspaces/codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__004__reference_1"
+        },
+        {
+          "artifact_dir": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__004__reference_2",
+          "install": {
+            "command": [
+              ".venv/bin/python",
+              "-m",
+              "pip",
+              "install",
+              "-q",
+              "-e",
+              ".",
+              "pytest"
+            ],
+            "exit_code": 0,
+            "finished_at": "2026-05-08T15:52:36.283181Z",
+            "name": "venv_install",
+            "started_at": "2026-05-08T15:52:33.724359Z",
+            "stderr_artifact": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__004__reference_2/venv_install.stderr.txt",
+            "stdout_artifact": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__004__reference_2/venv_install.stdout.txt"
+          },
+          "normalized_result": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__004__reference_2/normalized_result.json",
+          "prepare": {
+            "base_commit": "b1b4449cda6767f022372890998d6b0eb895d041",
+            "repo_slug": "click",
+            "split": "rbench",
+            "statement_path": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/workspaces/codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__004__reference_2/.core_narrative/statement.md",
+            "status": "prepared",
+            "target_commit_absence_checked": true,
+            "task_id": "click__rbench__004",
+            "task_package_path": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/workspaces/codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__004__reference_2/.core_narrative/task.json",
+            "tool": "prepare_workspace",
+            "warnings": [],
+            "workspace": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/workspaces/codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__004__reference_2",
+            "workspace_history_mode": "base_tree_only_synthetic_git"
+          },
+          "probe": "reference_2",
+          "run_id": "codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__004__reference_2",
+          "status": "passed",
+          "verification": {
+            "duration_seconds": 0.199,
+            "exit_code": 0,
+            "stderr_artifact": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__004__reference_2/verifier.stderr.txt",
+            "stdout_artifact": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__004__reference_2/verifier.stdout.txt"
+          },
+          "verify_code": 0,
+          "workspace": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/workspaces/codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__004__reference_2"
+        }
+      ],
+      "runtime_p95_seconds": 0.199,
+      "status": "passed",
+      "task_id": "click__rbench__004",
+      "verifier_timeout_seconds": 60
+    },
+    {
+      "clean_patch_replay": {
+        "reference_probe_count": 2,
+        "separate_workspaces": true,
+        "supported": true
+      },
+      "defect_classifications": [
+        {
+          "defect_class": "reference_patch_failed_verifier",
+          "gate": "reference_probe",
+          "owner": "task_pack_reference_or_verifier",
+          "reference_statuses": [
+            "failed",
+            "failed"
+          ],
+          "severity": "blocking_for_strict_admission",
+          "summary": "The source target-commit reference patch did not satisfy the packaged verifier."
+        },
+        {
+          "defect_class": "reference_replay_unstable_or_failed",
+          "gate": "flakiness_probe",
+          "owner": "verifier_or_environment",
+          "reference_statuses": [
+            "failed",
+            "failed"
+          ],
+          "severity": "blocking_for_strict_admission",
+          "summary": "Repeated reference replays did not all pass with the same status."
+        },
+        {
+          "defect_class": "clean_reference_replay_failed",
+          "gate": "clean_patch_replay",
+          "owner": "task_pack_reference_or_verifier",
+          "reference_statuses": [
+            "failed",
+            "failed"
+          ],
+          "severity": "blocking_for_strict_admission",
+          "summary": "Reference patch replay on clean prepared workspaces did not pass."
+        }
+      ],
+      "gates": {
+        "clean_patch_replay": false,
+        "flakiness_probe": false,
+        "known_bad_probe": true,
+        "no_op_probe": true,
+        "oracle_log_leakage": true,
+        "reference_probe": false,
+        "verifier_runtime_p95_lt_timeout": true
+      },
+      "known_bad": {
+        "artifact_dir": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__005__known_bad",
+        "install": {
+          "command": [
+            ".venv/bin/python",
+            "-m",
+            "pip",
+            "install",
+            "-q",
+            "-e",
+            ".",
+            "pytest"
+          ],
+          "exit_code": 0,
+          "finished_at": "2026-05-08T15:52:58.721452Z",
+          "name": "venv_install",
+          "started_at": "2026-05-08T15:52:56.002520Z",
+          "stderr_artifact": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__005__known_bad/venv_install.stderr.txt",
+          "stdout_artifact": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__005__known_bad/venv_install.stdout.txt"
+        },
+        "normalized_result": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__005__known_bad/normalized_result.json",
+        "prepare": {
+          "base_commit": "a00e01845100ce2b3d5288a2b655aad260346361",
+          "repo_slug": "click",
+          "split": "rbench",
+          "statement_path": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/workspaces/codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__005__known_bad/.core_narrative/statement.md",
+          "status": "prepared",
+          "target_commit_absence_checked": true,
+          "task_id": "click__rbench__005",
+          "task_package_path": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/workspaces/codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__005__known_bad/.core_narrative/task.json",
+          "tool": "prepare_workspace",
+          "warnings": [],
+          "workspace": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/workspaces/codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__005__known_bad",
+          "workspace_history_mode": "base_tree_only_synthetic_git"
+        },
+        "probe": "known_bad",
+        "run_id": "codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__005__known_bad",
+        "status": "failed",
+        "verification": {
+          "duration_seconds": 0.206,
+          "exit_code": 1,
+          "stderr_artifact": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__005__known_bad/verifier.stderr.txt",
+          "stdout_artifact": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__005__known_bad/verifier.stdout.txt"
+        },
+        "verify_code": 0,
+        "workspace": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/workspaces/codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__005__known_bad"
+      },
+      "noop": {
+        "artifact_dir": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__005__noop",
+        "command": {
+          "command": [
+            "/Applications/Xcode.app/Contents/Developer/usr/bin/python3",
+            "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/tools/apply_and_verify.py",
+            "--workspace",
+            "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/workspaces/codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__005__noop",
+            "--task",
+            "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/tasks/click/rbench/click__rbench__005/task.yaml",
+            "--patch",
+            "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__005__noop/missing_noop.patch",
+            "--acut-id",
+            "cheap-generic-swe",
+            "--attempt",
+            "1",
+            "--run-id",
+            "codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__005__noop__noop",
+            "--artifact-dir",
+            "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__005__noop",
+            "--output",
+            "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__005__noop/noop_verify.json",
+            "--skip-apply"
+          ],
+          "exit_code": 0,
+          "finished_at": "2026-05-08T15:52:45.824341Z",
+          "name": "noop_verify_command",
+          "started_at": "2026-05-08T15:52:45.575573Z",
+          "stderr_artifact": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__005__noop/noop_verify_command.stderr.txt",
+          "stdout_artifact": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__005__noop/noop_verify_command.stdout.txt"
+        },
+        "install": {
+          "command": [
+            ".venv/bin/python",
+            "-m",
+            "pip",
+            "install",
+            "-q",
+            "-e",
+            ".",
+            "pytest"
+          ],
+          "exit_code": 0,
+          "finished_at": "2026-05-08T15:52:45.574911Z",
+          "name": "venv_install",
+          "started_at": "2026-05-08T15:52:42.946031Z",
+          "stderr_artifact": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__005__noop/venv_install.stderr.txt",
+          "stdout_artifact": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__005__noop/venv_install.stdout.txt"
+        },
+        "prepare": {
+          "base_commit": "a00e01845100ce2b3d5288a2b655aad260346361",
+          "repo_slug": "click",
+          "split": "rbench",
+          "statement_path": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/workspaces/codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__005__noop/.core_narrative/statement.md",
+          "status": "prepared",
+          "target_commit_absence_checked": true,
+          "task_id": "click__rbench__005",
+          "task_package_path": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/workspaces/codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__005__noop/.core_narrative/task.json",
+          "tool": "prepare_workspace",
+          "warnings": [],
+          "workspace": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/workspaces/codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__005__noop",
+          "workspace_history_mode": "base_tree_only_synthetic_git"
+        },
+        "probe": "noop",
+        "run_id": "codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__005__noop",
+        "status": "failed",
+        "verification": {
+          "duration_seconds": 0.208,
+          "exit_code": 1,
+          "stderr_artifact": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__005__noop/verifier.stderr.txt",
+          "stdout_artifact": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__005__noop/verifier.stdout.txt"
+        },
+        "workspace": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/workspaces/codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__005__noop"
+      },
+      "oracle_log_leakage_findings": {
+        "ignored_benign_urls": [],
+        "reason_counts": {},
+        "unsafe": false
+      },
+      "reference_runs": [
+        {
+          "artifact_dir": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__005__reference_1",
+          "install": {
+            "command": [
+              ".venv/bin/python",
+              "-m",
+              "pip",
+              "install",
+              "-q",
+              "-e",
+              ".",
+              "pytest"
+            ],
+            "exit_code": 0,
+            "finished_at": "2026-05-08T15:52:49.868731Z",
+            "name": "venv_install",
+            "started_at": "2026-05-08T15:52:47.413396Z",
+            "stderr_artifact": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__005__reference_1/venv_install.stderr.txt",
+            "stdout_artifact": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__005__reference_1/venv_install.stdout.txt"
+          },
+          "normalized_result": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__005__reference_1/normalized_result.json",
+          "prepare": {
+            "base_commit": "a00e01845100ce2b3d5288a2b655aad260346361",
+            "repo_slug": "click",
+            "split": "rbench",
+            "statement_path": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/workspaces/codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__005__reference_1/.core_narrative/statement.md",
+            "status": "prepared",
+            "target_commit_absence_checked": true,
+            "task_id": "click__rbench__005",
+            "task_package_path": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/workspaces/codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__005__reference_1/.core_narrative/task.json",
+            "tool": "prepare_workspace",
+            "warnings": [],
+            "workspace": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/workspaces/codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__005__reference_1",
+            "workspace_history_mode": "base_tree_only_synthetic_git"
+          },
+          "probe": "reference_1",
+          "run_id": "codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__005__reference_1",
+          "status": "failed",
+          "verification": {
+            "duration_seconds": 0.21,
+            "exit_code": 1,
+            "stderr_artifact": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__005__reference_1/verifier.stderr.txt",
+            "stdout_artifact": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__005__reference_1/verifier.stdout.txt"
+          },
+          "verify_code": 0,
+          "workspace": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/workspaces/codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__005__reference_1"
+        },
+        {
+          "artifact_dir": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__005__reference_2",
+          "install": {
+            "command": [
+              ".venv/bin/python",
+              "-m",
+              "pip",
+              "install",
+              "-q",
+              "-e",
+              ".",
+              "pytest"
+            ],
+            "exit_code": 0,
+            "finished_at": "2026-05-08T15:52:54.162628Z",
+            "name": "venv_install",
+            "started_at": "2026-05-08T15:52:51.700604Z",
+            "stderr_artifact": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__005__reference_2/venv_install.stderr.txt",
+            "stdout_artifact": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__005__reference_2/venv_install.stdout.txt"
+          },
+          "normalized_result": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__005__reference_2/normalized_result.json",
+          "prepare": {
+            "base_commit": "a00e01845100ce2b3d5288a2b655aad260346361",
+            "repo_slug": "click",
+            "split": "rbench",
+            "statement_path": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/workspaces/codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__005__reference_2/.core_narrative/statement.md",
+            "status": "prepared",
+            "target_commit_absence_checked": true,
+            "task_id": "click__rbench__005",
+            "task_package_path": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/workspaces/codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__005__reference_2/.core_narrative/task.json",
+            "tool": "prepare_workspace",
+            "warnings": [],
+            "workspace": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/workspaces/codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__005__reference_2",
+            "workspace_history_mode": "base_tree_only_synthetic_git"
+          },
+          "probe": "reference_2",
+          "run_id": "codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__005__reference_2",
+          "status": "failed",
+          "verification": {
+            "duration_seconds": 0.199,
+            "exit_code": 1,
+            "stderr_artifact": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__005__reference_2/verifier.stderr.txt",
+            "stdout_artifact": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__005__reference_2/verifier.stdout.txt"
+          },
+          "verify_code": 0,
+          "workspace": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/workspaces/codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__005__reference_2"
+        }
+      ],
+      "runtime_p95_seconds": 0.21,
+      "status": "failed",
+      "task_id": "click__rbench__005",
+      "verifier_timeout_seconds": 60
+    },
+    {
+      "clean_patch_replay": {
+        "reference_probe_count": 2,
+        "separate_workspaces": true,
+        "supported": true
+      },
+      "defect_classifications": [],
+      "gates": {
+        "clean_patch_replay": true,
+        "flakiness_probe": true,
+        "known_bad_probe": true,
+        "no_op_probe": true,
+        "oracle_log_leakage": true,
+        "reference_probe": true,
+        "verifier_runtime_p95_lt_timeout": true
+      },
+      "known_bad": {
+        "artifact_dir": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__006__known_bad",
+        "install": {
+          "command": [
+            ".venv/bin/python",
+            "-m",
+            "pip",
+            "install",
+            "-q",
+            "-e",
+            ".",
+            "pytest"
+          ],
+          "exit_code": 0,
+          "finished_at": "2026-05-08T15:53:16.428920Z",
+          "name": "venv_install",
+          "started_at": "2026-05-08T15:53:13.855053Z",
+          "stderr_artifact": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__006__known_bad/venv_install.stderr.txt",
+          "stdout_artifact": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__006__known_bad/venv_install.stdout.txt"
+        },
+        "normalized_result": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__006__known_bad/normalized_result.json",
+        "prepare": {
+          "base_commit": "6e62332349db6e93decf47666c4cd6fe20df6b02",
+          "repo_slug": "click",
+          "split": "rbench",
+          "statement_path": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/workspaces/codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__006__known_bad/.core_narrative/statement.md",
+          "status": "prepared",
+          "target_commit_absence_checked": true,
+          "task_id": "click__rbench__006",
+          "task_package_path": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/workspaces/codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__006__known_bad/.core_narrative/task.json",
+          "tool": "prepare_workspace",
+          "warnings": [],
+          "workspace": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/workspaces/codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__006__known_bad",
+          "workspace_history_mode": "base_tree_only_synthetic_git"
+        },
+        "probe": "known_bad",
+        "run_id": "codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__006__known_bad",
+        "status": "failed",
+        "verification": {
+          "duration_seconds": 0.208,
+          "exit_code": 1,
+          "stderr_artifact": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__006__known_bad/verifier.stderr.txt",
+          "stdout_artifact": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__006__known_bad/verifier.stdout.txt"
+        },
+        "verify_code": 0,
+        "workspace": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/workspaces/codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__006__known_bad"
+      },
+      "noop": {
+        "artifact_dir": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__006__noop",
+        "command": {
+          "command": [
+            "/Applications/Xcode.app/Contents/Developer/usr/bin/python3",
+            "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/tools/apply_and_verify.py",
+            "--workspace",
+            "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/workspaces/codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__006__noop",
+            "--task",
+            "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/tasks/click/rbench/click__rbench__006/task.yaml",
+            "--patch",
+            "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__006__noop/missing_noop.patch",
+            "--acut-id",
+            "cheap-generic-swe",
+            "--attempt",
+            "1",
+            "--run-id",
+            "codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__006__noop__noop",
+            "--artifact-dir",
+            "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__006__noop",
+            "--output",
+            "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__006__noop/noop_verify.json",
+            "--skip-apply"
+          ],
+          "exit_code": 0,
+          "finished_at": "2026-05-08T15:53:03.458219Z",
+          "name": "noop_verify_command",
+          "started_at": "2026-05-08T15:53:03.207165Z",
+          "stderr_artifact": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__006__noop/noop_verify_command.stderr.txt",
+          "stdout_artifact": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__006__noop/noop_verify_command.stdout.txt"
+        },
+        "install": {
+          "command": [
+            ".venv/bin/python",
+            "-m",
+            "pip",
+            "install",
+            "-q",
+            "-e",
+            ".",
+            "pytest"
+          ],
+          "exit_code": 0,
+          "finished_at": "2026-05-08T15:53:03.206462Z",
+          "name": "venv_install",
+          "started_at": "2026-05-08T15:53:00.849502Z",
+          "stderr_artifact": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__006__noop/venv_install.stderr.txt",
+          "stdout_artifact": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__006__noop/venv_install.stdout.txt"
+        },
+        "prepare": {
+          "base_commit": "6e62332349db6e93decf47666c4cd6fe20df6b02",
+          "repo_slug": "click",
+          "split": "rbench",
+          "statement_path": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/workspaces/codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__006__noop/.core_narrative/statement.md",
+          "status": "prepared",
+          "target_commit_absence_checked": true,
+          "task_id": "click__rbench__006",
+          "task_package_path": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/workspaces/codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__006__noop/.core_narrative/task.json",
+          "tool": "prepare_workspace",
+          "warnings": [],
+          "workspace": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/workspaces/codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__006__noop",
+          "workspace_history_mode": "base_tree_only_synthetic_git"
+        },
+        "probe": "noop",
+        "run_id": "codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__006__noop",
+        "status": "failed",
+        "verification": {
+          "duration_seconds": 0.21,
+          "exit_code": 1,
+          "stderr_artifact": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__006__noop/verifier.stderr.txt",
+          "stdout_artifact": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__006__noop/verifier.stdout.txt"
+        },
+        "workspace": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/workspaces/codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__006__noop"
+      },
+      "oracle_log_leakage_findings": {
+        "ignored_benign_urls": [],
+        "reason_counts": {},
+        "unsafe": false
+      },
+      "reference_runs": [
+        {
+          "artifact_dir": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__006__reference_1",
+          "install": {
+            "command": [
+              ".venv/bin/python",
+              "-m",
+              "pip",
+              "install",
+              "-q",
+              "-e",
+              ".",
+              "pytest"
+            ],
+            "exit_code": 0,
+            "finished_at": "2026-05-08T15:53:07.430500Z",
+            "name": "venv_install",
+            "started_at": "2026-05-08T15:53:05.054772Z",
+            "stderr_artifact": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__006__reference_1/venv_install.stderr.txt",
+            "stdout_artifact": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__006__reference_1/venv_install.stdout.txt"
+          },
+          "normalized_result": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__006__reference_1/normalized_result.json",
+          "prepare": {
+            "base_commit": "6e62332349db6e93decf47666c4cd6fe20df6b02",
+            "repo_slug": "click",
+            "split": "rbench",
+            "statement_path": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/workspaces/codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__006__reference_1/.core_narrative/statement.md",
+            "status": "prepared",
+            "target_commit_absence_checked": true,
+            "task_id": "click__rbench__006",
+            "task_package_path": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/workspaces/codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__006__reference_1/.core_narrative/task.json",
+            "tool": "prepare_workspace",
+            "warnings": [],
+            "workspace": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/workspaces/codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__006__reference_1",
+            "workspace_history_mode": "base_tree_only_synthetic_git"
+          },
+          "probe": "reference_1",
+          "run_id": "codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__006__reference_1",
+          "status": "passed",
+          "verification": {
+            "duration_seconds": 0.21,
+            "exit_code": 0,
+            "stderr_artifact": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__006__reference_1/verifier.stderr.txt",
+            "stdout_artifact": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__006__reference_1/verifier.stdout.txt"
+          },
+          "verify_code": 0,
+          "workspace": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/workspaces/codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__006__reference_1"
+        },
+        {
+          "artifact_dir": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__006__reference_2",
+          "install": {
+            "command": [
+              ".venv/bin/python",
+              "-m",
+              "pip",
+              "install",
+              "-q",
+              "-e",
+              ".",
+              "pytest"
+            ],
+            "exit_code": 0,
+            "finished_at": "2026-05-08T15:53:11.996437Z",
+            "name": "venv_install",
+            "started_at": "2026-05-08T15:53:09.337735Z",
+            "stderr_artifact": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__006__reference_2/venv_install.stderr.txt",
+            "stdout_artifact": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__006__reference_2/venv_install.stdout.txt"
+          },
+          "normalized_result": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__006__reference_2/normalized_result.json",
+          "prepare": {
+            "base_commit": "6e62332349db6e93decf47666c4cd6fe20df6b02",
+            "repo_slug": "click",
+            "split": "rbench",
+            "statement_path": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/workspaces/codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__006__reference_2/.core_narrative/statement.md",
+            "status": "prepared",
+            "target_commit_absence_checked": true,
+            "task_id": "click__rbench__006",
+            "task_package_path": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/workspaces/codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__006__reference_2/.core_narrative/task.json",
+            "tool": "prepare_workspace",
+            "warnings": [],
+            "workspace": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/workspaces/codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__006__reference_2",
+            "workspace_history_mode": "base_tree_only_synthetic_git"
+          },
+          "probe": "reference_2",
+          "run_id": "codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__006__reference_2",
+          "status": "passed",
+          "verification": {
+            "duration_seconds": 0.2,
+            "exit_code": 0,
+            "stderr_artifact": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__006__reference_2/verifier.stderr.txt",
+            "stdout_artifact": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__006__reference_2/verifier.stdout.txt"
+          },
+          "verify_code": 0,
+          "workspace": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/workspaces/codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__006__reference_2"
+        }
+      ],
+      "runtime_p95_seconds": 0.21,
+      "status": "passed",
+      "task_id": "click__rbench__006",
+      "verifier_timeout_seconds": 60
+    },
+    {
+      "clean_patch_replay": {
+        "reference_probe_count": 2,
+        "separate_workspaces": true,
+        "supported": true
+      },
+      "defect_classifications": [],
+      "gates": {
+        "clean_patch_replay": true,
+        "flakiness_probe": true,
+        "known_bad_probe": true,
+        "no_op_probe": true,
+        "oracle_log_leakage": true,
+        "reference_probe": true,
+        "verifier_runtime_p95_lt_timeout": true
+      },
+      "known_bad": {
+        "artifact_dir": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__007__known_bad",
+        "install": {
+          "command": [
+            ".venv/bin/python",
+            "-m",
+            "pip",
+            "install",
+            "-q",
+            "-e",
+            ".",
+            "pytest"
+          ],
+          "exit_code": 0,
+          "finished_at": "2026-05-08T15:53:34.352920Z",
+          "name": "venv_install",
+          "started_at": "2026-05-08T15:53:31.877327Z",
+          "stderr_artifact": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__007__known_bad/venv_install.stderr.txt",
+          "stdout_artifact": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__007__known_bad/venv_install.stdout.txt"
+        },
+        "normalized_result": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__007__known_bad/normalized_result.json",
+        "prepare": {
+          "base_commit": "563b1a7116a6806e699d31d327dd9bca93c40cb3",
+          "repo_slug": "click",
+          "split": "rbench",
+          "statement_path": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/workspaces/codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__007__known_bad/.core_narrative/statement.md",
+          "status": "prepared",
+          "target_commit_absence_checked": true,
+          "task_id": "click__rbench__007",
+          "task_package_path": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/workspaces/codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__007__known_bad/.core_narrative/task.json",
+          "tool": "prepare_workspace",
+          "warnings": [],
+          "workspace": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/workspaces/codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__007__known_bad",
+          "workspace_history_mode": "base_tree_only_synthetic_git"
+        },
+        "probe": "known_bad",
+        "run_id": "codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__007__known_bad",
+        "status": "failed",
+        "verification": {
+          "duration_seconds": 0.202,
+          "exit_code": 1,
+          "stderr_artifact": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__007__known_bad/verifier.stderr.txt",
+          "stdout_artifact": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__007__known_bad/verifier.stdout.txt"
+        },
+        "verify_code": 0,
+        "workspace": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/workspaces/codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__007__known_bad"
+      },
+      "noop": {
+        "artifact_dir": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__007__noop",
+        "command": {
+          "command": [
+            "/Applications/Xcode.app/Contents/Developer/usr/bin/python3",
+            "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/tools/apply_and_verify.py",
+            "--workspace",
+            "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/workspaces/codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__007__noop",
+            "--task",
+            "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/tasks/click/rbench/click__rbench__007/task.yaml",
+            "--patch",
+            "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__007__noop/missing_noop.patch",
+            "--acut-id",
+            "cheap-generic-swe",
+            "--attempt",
+            "1",
+            "--run-id",
+            "codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__007__noop__noop",
+            "--artifact-dir",
+            "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__007__noop",
+            "--output",
+            "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__007__noop/noop_verify.json",
+            "--skip-apply"
+          ],
+          "exit_code": 0,
+          "finished_at": "2026-05-08T15:53:21.220473Z",
+          "name": "noop_verify_command",
+          "started_at": "2026-05-08T15:53:20.971207Z",
+          "stderr_artifact": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__007__noop/noop_verify_command.stderr.txt",
+          "stdout_artifact": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__007__noop/noop_verify_command.stdout.txt"
+        },
+        "install": {
+          "command": [
+            ".venv/bin/python",
+            "-m",
+            "pip",
+            "install",
+            "-q",
+            "-e",
+            ".",
+            "pytest"
+          ],
+          "exit_code": 0,
+          "finished_at": "2026-05-08T15:53:20.970544Z",
+          "name": "venv_install",
+          "started_at": "2026-05-08T15:53:18.540461Z",
+          "stderr_artifact": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__007__noop/venv_install.stderr.txt",
+          "stdout_artifact": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__007__noop/venv_install.stdout.txt"
+        },
+        "prepare": {
+          "base_commit": "563b1a7116a6806e699d31d327dd9bca93c40cb3",
+          "repo_slug": "click",
+          "split": "rbench",
+          "statement_path": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/workspaces/codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__007__noop/.core_narrative/statement.md",
+          "status": "prepared",
+          "target_commit_absence_checked": true,
+          "task_id": "click__rbench__007",
+          "task_package_path": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/workspaces/codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__007__noop/.core_narrative/task.json",
+          "tool": "prepare_workspace",
+          "warnings": [],
+          "workspace": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/workspaces/codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__007__noop",
+          "workspace_history_mode": "base_tree_only_synthetic_git"
+        },
+        "probe": "noop",
+        "run_id": "codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__007__noop",
+        "status": "failed",
+        "verification": {
+          "duration_seconds": 0.209,
+          "exit_code": 1,
+          "stderr_artifact": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__007__noop/verifier.stderr.txt",
+          "stdout_artifact": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__007__noop/verifier.stdout.txt"
+        },
+        "workspace": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/workspaces/codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__007__noop"
+      },
+      "oracle_log_leakage_findings": {
+        "ignored_benign_urls": [],
+        "reason_counts": {},
+        "unsafe": false
+      },
+      "reference_runs": [
+        {
+          "artifact_dir": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__007__reference_1",
+          "install": {
+            "command": [
+              ".venv/bin/python",
+              "-m",
+              "pip",
+              "install",
+              "-q",
+              "-e",
+              ".",
+              "pytest"
+            ],
+            "exit_code": 0,
+            "finished_at": "2026-05-08T15:53:25.483020Z",
+            "name": "venv_install",
+            "started_at": "2026-05-08T15:53:22.849010Z",
+            "stderr_artifact": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__007__reference_1/venv_install.stderr.txt",
+            "stdout_artifact": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__007__reference_1/venv_install.stdout.txt"
+          },
+          "normalized_result": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__007__reference_1/normalized_result.json",
+          "prepare": {
+            "base_commit": "563b1a7116a6806e699d31d327dd9bca93c40cb3",
+            "repo_slug": "click",
+            "split": "rbench",
+            "statement_path": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/workspaces/codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__007__reference_1/.core_narrative/statement.md",
+            "status": "prepared",
+            "target_commit_absence_checked": true,
+            "task_id": "click__rbench__007",
+            "task_package_path": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/workspaces/codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__007__reference_1/.core_narrative/task.json",
+            "tool": "prepare_workspace",
+            "warnings": [],
+            "workspace": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/workspaces/codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__007__reference_1",
+            "workspace_history_mode": "base_tree_only_synthetic_git"
+          },
+          "probe": "reference_1",
+          "run_id": "codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__007__reference_1",
+          "status": "passed",
+          "verification": {
+            "duration_seconds": 0.199,
+            "exit_code": 0,
+            "stderr_artifact": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__007__reference_1/verifier.stderr.txt",
+            "stdout_artifact": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__007__reference_1/verifier.stdout.txt"
+          },
+          "verify_code": 0,
+          "workspace": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/workspaces/codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__007__reference_1"
+        },
+        {
+          "artifact_dir": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__007__reference_2",
+          "install": {
+            "command": [
+              ".venv/bin/python",
+              "-m",
+              "pip",
+              "install",
+              "-q",
+              "-e",
+              ".",
+              "pytest"
+            ],
+            "exit_code": 0,
+            "finished_at": "2026-05-08T15:53:30.029107Z",
+            "name": "venv_install",
+            "started_at": "2026-05-08T15:53:27.350840Z",
+            "stderr_artifact": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__007__reference_2/venv_install.stderr.txt",
+            "stdout_artifact": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__007__reference_2/venv_install.stdout.txt"
+          },
+          "normalized_result": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__007__reference_2/normalized_result.json",
+          "prepare": {
+            "base_commit": "563b1a7116a6806e699d31d327dd9bca93c40cb3",
+            "repo_slug": "click",
+            "split": "rbench",
+            "statement_path": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/workspaces/codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__007__reference_2/.core_narrative/statement.md",
+            "status": "prepared",
+            "target_commit_absence_checked": true,
+            "task_id": "click__rbench__007",
+            "task_package_path": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/workspaces/codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__007__reference_2/.core_narrative/task.json",
+            "tool": "prepare_workspace",
+            "warnings": [],
+            "workspace": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/workspaces/codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__007__reference_2",
+            "workspace_history_mode": "base_tree_only_synthetic_git"
+          },
+          "probe": "reference_2",
+          "run_id": "codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__007__reference_2",
+          "status": "passed",
+          "verification": {
+            "duration_seconds": 0.19,
+            "exit_code": 0,
+            "stderr_artifact": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__007__reference_2/verifier.stderr.txt",
+            "stdout_artifact": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__007__reference_2/verifier.stdout.txt"
+          },
+          "verify_code": 0,
+          "workspace": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/workspaces/codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__007__reference_2"
+        }
+      ],
+      "runtime_p95_seconds": 0.209,
+      "status": "passed",
+      "task_id": "click__rbench__007",
+      "verifier_timeout_seconds": 60
+    },
+    {
+      "clean_patch_replay": {
+        "reference_probe_count": 2,
+        "separate_workspaces": true,
+        "supported": true
+      },
+      "defect_classifications": [],
+      "gates": {
+        "clean_patch_replay": true,
+        "flakiness_probe": true,
+        "known_bad_probe": true,
+        "no_op_probe": true,
+        "oracle_log_leakage": true,
+        "reference_probe": true,
+        "verifier_runtime_p95_lt_timeout": true
+      },
+      "known_bad": {
+        "artifact_dir": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__008__known_bad",
+        "install": {
+          "command": [
+            ".venv/bin/python",
+            "-m",
+            "pip",
+            "install",
+            "-q",
+            "-e",
+            ".",
+            "pytest"
+          ],
+          "exit_code": 0,
+          "finished_at": "2026-05-08T15:53:52.211887Z",
+          "name": "venv_install",
+          "started_at": "2026-05-08T15:53:49.855123Z",
+          "stderr_artifact": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__008__known_bad/venv_install.stderr.txt",
+          "stdout_artifact": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__008__known_bad/venv_install.stdout.txt"
+        },
+        "normalized_result": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__008__known_bad/normalized_result.json",
+        "prepare": {
+          "base_commit": "7332f00ed4c27d8da041788ca6a7aa405f062c76",
+          "repo_slug": "click",
+          "split": "rbench",
+          "statement_path": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/workspaces/codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__008__known_bad/.core_narrative/statement.md",
+          "status": "prepared",
+          "target_commit_absence_checked": true,
+          "task_id": "click__rbench__008",
+          "task_package_path": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/workspaces/codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__008__known_bad/.core_narrative/task.json",
+          "tool": "prepare_workspace",
+          "warnings": [],
+          "workspace": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/workspaces/codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__008__known_bad",
+          "workspace_history_mode": "base_tree_only_synthetic_git"
+        },
+        "probe": "known_bad",
+        "run_id": "codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__008__known_bad",
+        "status": "failed",
+        "verification": {
+          "duration_seconds": 0.354,
+          "exit_code": 1,
+          "stderr_artifact": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__008__known_bad/verifier.stderr.txt",
+          "stdout_artifact": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__008__known_bad/verifier.stdout.txt"
+        },
+        "verify_code": 0,
+        "workspace": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/workspaces/codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__008__known_bad"
+      },
+      "noop": {
+        "artifact_dir": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__008__noop",
+        "command": {
+          "command": [
+            "/Applications/Xcode.app/Contents/Developer/usr/bin/python3",
+            "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/tools/apply_and_verify.py",
+            "--workspace",
+            "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/workspaces/codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__008__noop",
+            "--task",
+            "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/tasks/click/rbench/click__rbench__008/task.yaml",
+            "--patch",
+            "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__008__noop/missing_noop.patch",
+            "--acut-id",
+            "cheap-generic-swe",
+            "--attempt",
+            "1",
+            "--run-id",
+            "codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__008__noop__noop",
+            "--artifact-dir",
+            "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__008__noop",
+            "--output",
+            "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__008__noop/noop_verify.json",
+            "--skip-apply"
+          ],
+          "exit_code": 0,
+          "finished_at": "2026-05-08T15:53:39.452726Z",
+          "name": "noop_verify_command",
+          "started_at": "2026-05-08T15:53:39.036381Z",
+          "stderr_artifact": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__008__noop/noop_verify_command.stderr.txt",
+          "stdout_artifact": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__008__noop/noop_verify_command.stdout.txt"
+        },
+        "install": {
+          "command": [
+            ".venv/bin/python",
+            "-m",
+            "pip",
+            "install",
+            "-q",
+            "-e",
+            ".",
+            "pytest"
+          ],
+          "exit_code": 0,
+          "finished_at": "2026-05-08T15:53:39.035764Z",
+          "name": "venv_install",
+          "started_at": "2026-05-08T15:53:36.495591Z",
+          "stderr_artifact": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__008__noop/venv_install.stderr.txt",
+          "stdout_artifact": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__008__noop/venv_install.stdout.txt"
+        },
+        "prepare": {
+          "base_commit": "7332f00ed4c27d8da041788ca6a7aa405f062c76",
+          "repo_slug": "click",
+          "split": "rbench",
+          "statement_path": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/workspaces/codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__008__noop/.core_narrative/statement.md",
+          "status": "prepared",
+          "target_commit_absence_checked": true,
+          "task_id": "click__rbench__008",
+          "task_package_path": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/workspaces/codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__008__noop/.core_narrative/task.json",
+          "tool": "prepare_workspace",
+          "warnings": [],
+          "workspace": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/workspaces/codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__008__noop",
+          "workspace_history_mode": "base_tree_only_synthetic_git"
+        },
+        "probe": "noop",
+        "run_id": "codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__008__noop",
+        "status": "failed",
+        "verification": {
+          "duration_seconds": 0.375,
+          "exit_code": 1,
+          "stderr_artifact": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__008__noop/verifier.stderr.txt",
+          "stdout_artifact": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__008__noop/verifier.stdout.txt"
+        },
+        "workspace": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/workspaces/codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__008__noop"
+      },
+      "oracle_log_leakage_findings": {
+        "ignored_benign_urls": [],
+        "reason_counts": {},
+        "unsafe": false
+      },
+      "reference_runs": [
+        {
+          "artifact_dir": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__008__reference_1",
+          "install": {
+            "command": [
+              ".venv/bin/python",
+              "-m",
+              "pip",
+              "install",
+              "-q",
+              "-e",
+              ".",
+              "pytest"
+            ],
+            "exit_code": 0,
+            "finished_at": "2026-05-08T15:53:43.678381Z",
+            "name": "venv_install",
+            "started_at": "2026-05-08T15:53:41.048918Z",
+            "stderr_artifact": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__008__reference_1/venv_install.stderr.txt",
+            "stdout_artifact": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__008__reference_1/venv_install.stdout.txt"
+          },
+          "normalized_result": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__008__reference_1/normalized_result.json",
+          "prepare": {
+            "base_commit": "7332f00ed4c27d8da041788ca6a7aa405f062c76",
+            "repo_slug": "click",
+            "split": "rbench",
+            "statement_path": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/workspaces/codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__008__reference_1/.core_narrative/statement.md",
+            "status": "prepared",
+            "target_commit_absence_checked": true,
+            "task_id": "click__rbench__008",
+            "task_package_path": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/workspaces/codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__008__reference_1/.core_narrative/task.json",
+            "tool": "prepare_workspace",
+            "warnings": [],
+            "workspace": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/workspaces/codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__008__reference_1",
+            "workspace_history_mode": "base_tree_only_synthetic_git"
+          },
+          "probe": "reference_1",
+          "run_id": "codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__008__reference_1",
+          "status": "passed",
+          "verification": {
+            "duration_seconds": 0.201,
+            "exit_code": 0,
+            "stderr_artifact": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__008__reference_1/verifier.stderr.txt",
+            "stdout_artifact": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__008__reference_1/verifier.stdout.txt"
+          },
+          "verify_code": 0,
+          "workspace": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/workspaces/codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__008__reference_1"
+        },
+        {
+          "artifact_dir": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__008__reference_2",
+          "install": {
+            "command": [
+              ".venv/bin/python",
+              "-m",
+              "pip",
+              "install",
+              "-q",
+              "-e",
+              ".",
+              "pytest"
+            ],
+            "exit_code": 0,
+            "finished_at": "2026-05-08T15:53:48.013523Z",
+            "name": "venv_install",
+            "started_at": "2026-05-08T15:53:45.549280Z",
+            "stderr_artifact": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__008__reference_2/venv_install.stderr.txt",
+            "stdout_artifact": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__008__reference_2/venv_install.stdout.txt"
+          },
+          "normalized_result": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__008__reference_2/normalized_result.json",
+          "prepare": {
+            "base_commit": "7332f00ed4c27d8da041788ca6a7aa405f062c76",
+            "repo_slug": "click",
+            "split": "rbench",
+            "statement_path": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/workspaces/codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__008__reference_2/.core_narrative/statement.md",
+            "status": "prepared",
+            "target_commit_absence_checked": true,
+            "task_id": "click__rbench__008",
+            "task_package_path": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/workspaces/codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__008__reference_2/.core_narrative/task.json",
+            "tool": "prepare_workspace",
+            "warnings": [],
+            "workspace": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/workspaces/codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__008__reference_2",
+            "workspace_history_mode": "base_tree_only_synthetic_git"
+          },
+          "probe": "reference_2",
+          "run_id": "codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__008__reference_2",
+          "status": "passed",
+          "verification": {
+            "duration_seconds": 0.191,
+            "exit_code": 0,
+            "stderr_artifact": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__008__reference_2/verifier.stderr.txt",
+            "stdout_artifact": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__008__reference_2/verifier.stdout.txt"
+          },
+          "verify_code": 0,
+          "workspace": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/workspaces/codex_nfl_click001_008_admission_classified_20260508T2351__click__rbench__008__reference_2"
+        }
+      ],
+      "runtime_p95_seconds": 0.375,
+      "status": "passed",
+      "task_id": "click__rbench__008",
+      "verifier_timeout_seconds": 60
+    }
+  ],
+  "run_prefix": "codex_nfl_click001_008_admission_classified_20260508T2351",
+  "selected_tasks_count": 8,
+  "selected_tasks_count_gate": true,
+  "started_at": "2026-05-08T15:51:30.495635Z",
+  "status": "failed",
+  "task_split": "rbench",
+  "task_split_manifest": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/configs/tasks/rbench_click.yaml",
+  "tasks": [
+    "click__rbench__001",
+    "click__rbench__002",
+    "click__rbench__003",
+    "click__rbench__004",
+    "click__rbench__005",
+    "click__rbench__006",
+    "click__rbench__007",
+    "click__rbench__008"
+  ],
+  "tool": "codex_nfl_gate0_preflight"
+}

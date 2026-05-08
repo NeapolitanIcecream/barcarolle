@@ -1,0 +1,137 @@
+{
+  "acut_id": "frontier-click-specialist",
+  "attempt": 2,
+  "error": null,
+  "finished_at": "2026-05-08T16:15:30.901589Z",
+  "metadata": {
+    "acut_manifest_path": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/configs/acuts/frontier-click-specialist.yaml",
+    "acut_manifest_sha256": "7cfcfc91863d017d2038042b0eb003b070604d6e986a455211739ee8ef46b8fb",
+    "batch_tool": "codex_nfl_experiment_runner",
+    "clean_patch_replay": {
+      "attempted": true,
+      "runner_workspace": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/workspaces/codex_nfl_rbench_click005_attempt2_fill_20260508__frontier-click-specialist__click__rbench__005__attempt2",
+      "separate_workspace": true,
+      "skip_apply": false,
+      "verify_workspace": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/workspaces/codex_nfl_rbench_click005_attempt2_fill_20260508__frontier-click-specialist__click__rbench__005__attempt2__verify"
+    },
+    "context_pack_digest": "dfb271ad174531a7dd2f00da4cd0486193d87ce33349380982150889ecf84e48",
+    "direct_runner_budget_gate": {
+      "allowed": true,
+      "approvals_required": [
+        "non_primary_attempt"
+      ],
+      "blockers": [],
+      "budget": {
+        "current_cumulative_estimated_cost_usd": 19.984067,
+        "hard_cap_reached_or_projected": false,
+        "hard_cap_usd": 300.0,
+        "projected_cost_usd": 3.0,
+        "projected_cumulative_estimated_cost_usd": 22.984067,
+        "soft_stop_reached_or_projected": false,
+        "soft_stop_usd": 240.0
+      },
+      "default_execution_profile": {
+        "core_acut_ids": [
+          "frontier-generic-swe",
+          "frontier-click-specialist",
+          "cheap-generic-swe",
+          "cheap-click-specialist"
+        ],
+        "full_core_requires_coordinator_decision": true,
+        "pilot_primary_attempts": 28,
+        "primary_attempts_per_acut_task": 1,
+        "profile_id": "budget-constrained-2x2-pilot-v2",
+        "split_task_limits": {
+          "G_score": 2,
+          "RBench": 3,
+          "RWork": 2
+        }
+      },
+      "env": {
+        "all_required_present": true,
+        "required": [
+          {
+            "name": "BARCAROLLE_LLM_API_KEY",
+            "present": true
+          },
+          {
+            "name": "BARCAROLLE_LLM_BASE_URL",
+            "present": true
+          }
+        ]
+      },
+      "execution_request": {
+        "acut_id": "frontier-click-specialist",
+        "attempt": 2,
+        "coordinator_decision_ref_present": true,
+        "split": "rbench"
+      },
+      "ledger": {
+        "cumulative_estimated_cost_usd": 19.984067,
+        "error_type": null,
+        "errors": [],
+        "estimated_cost_sum_usd": 19.984067,
+        "exists": true,
+        "is_file": true,
+        "line_count": 95,
+        "path": "experiments/core_narrative/results/cost_ledger.jsonl",
+        "record_count": 95,
+        "writable": true
+      },
+      "status": "passed",
+      "tool": "llm_budget_gate"
+    },
+    "direct_runner_cost_accounting": {
+      "actual_cost_status": "unknown_not_provider_reported",
+      "actual_cost_usd": null,
+      "estimated_cost_usd": 0.129645,
+      "input_tokens": 10425,
+      "observed_provider_cost_status": "provider_response_usage_cost_not_invoice",
+      "observed_provider_cost_usd": 0.129645,
+      "output_tokens": 2584,
+      "provider_usage_reported": true
+    },
+    "direct_runner_cost_ledger_append": {
+      "actual_cost_recorded": false,
+      "estimated_cost_usd": 0.129645,
+      "new_cumulative_estimated_cost_usd": 20.113712,
+      "record_count_after": 96,
+      "record_count_before": 95,
+      "status": "appended"
+    },
+    "direct_runner_id": "codex-nfl-direct-search-replace-v1",
+    "model_call_made": true,
+    "prompt_snapshot": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/codex_nfl_rbench_click005_attempt2_fill_20260508__frontier-click-specialist__click__rbench__005__attempt2/prompt_snapshot.json",
+    "prompt_snapshot_sha256": "53f40a9673537da9d082edd7e240edf7bf672e33837f23ca2525df4a9b0b2137",
+    "raw_response_artifact": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/codex_nfl_rbench_click005_attempt2_fill_20260508__frontier-click-specialist__click__rbench__005__attempt2/provider_response.redacted.json",
+    "runner_id": "codex-nfl-batch-v1",
+    "skip_apply": false,
+    "task_manifest_path": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/tasks/click/rbench/click__rbench__005/task.yaml",
+    "task_manifest_sha256": "4934b5fbed0ebd560ee00ab8d7e22fc55990d107d105969690176ffcbf66cbea",
+    "timeout_seconds": 60,
+    "tool": "apply_and_verify",
+    "verifier_command": [
+      "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/tasks/click/rbench/click__rbench__005/verifier/run.sh"
+    ],
+    "verifier_digest_sha256": "828ff49a3d3a1686f0c6e084eece3886fc3bfa030a0dd8a9d59b60674d296c82"
+  },
+  "patch_path": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/codex_nfl_rbench_click005_attempt2_fill_20260508__frontier-click-specialist__click__rbench__005__attempt2/submission.patch",
+  "review": {
+    "mergeability_grade": null,
+    "notes": "",
+    "rule_violation": false,
+    "wrong_module": false
+  },
+  "run_id": "codex_nfl_rbench_click005_attempt2_fill_20260508__frontier-click-specialist__click__rbench__005__attempt2",
+  "schema_version": "core-narrative.run-result.v1",
+  "split": "rbench",
+  "started_at": "2026-05-08T16:15:30.676590Z",
+  "status": "passed",
+  "task_id": "click__rbench__005",
+  "verification": {
+    "duration_seconds": 0.202,
+    "exit_code": 0,
+    "stderr_artifact": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/codex_nfl_rbench_click005_attempt2_fill_20260508__frontier-click-specialist__click__rbench__005__attempt2/verifier.stderr.txt",
+    "stdout_artifact": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/codex_nfl_rbench_click005_attempt2_fill_20260508__frontier-click-specialist__click__rbench__005__attempt2/verifier.stdout.txt"
+  }
+}

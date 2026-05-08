@@ -1,0 +1,14 @@
+{
+  "base_commit": "878de46100e9c29aea9dab5b385b8116863cb5e3",
+  "repo_slug": "click",
+  "split": "rwork",
+  "statement_path": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/workspaces/codex_nfl_rwork_retry_task006_20260508__frontier-generic-swe__click__rwork__006__attempt2/.core_narrative/statement.md",
+  "status": "prepared",
+  "target_commit_absence_checked": true,
+  "task_id": "click__rwork__006",
+  "task_package_path": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/workspaces/codex_nfl_rwork_retry_task006_20260508__frontier-generic-swe__click__rwork__006__attempt2/.core_narrative/task.json",
+  "tool": "prepare_workspace",
+  "warnings": [],
+  "workspace": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/workspaces/codex_nfl_rwork_retry_task006_20260508__frontier-generic-swe__click__rwork__006__attempt2",
+  "workspace_history_mode": "base_tree_only_synthetic_git"
+}

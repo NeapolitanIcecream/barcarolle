@@ -1,0 +1,585 @@
+You are generating a minimal repository patch for one Barcarolle ACUT task.
+Use only the public task statement, ACUT policy, and source files included below.
+Do not use hidden verifier files, reference patches, future history, credentials, endpoints, or URLs.
+
+Return only one JSON object with this exact contract:
+{"edits":[{"path":"relative/file.py","old":"exact existing text","new":"replacement text","before":"optional exact text immediately before old","after":"optional exact text immediately after old"}]}
+Do not return unified_diff, raw diff text, markdown fences, prose, or any top-level key other than edits.
+
+Pre-submit validation checklist:
+- The top-level JSON object has exactly one key: edits.
+- Each edit path exactly matches one of the Valid edit paths below.
+- Each old string is copied exactly from the currently shown source.
+- Apply edits in order mentally. For each edit, old must identify exactly one occurrence after earlier edits.
+- If old occurs exactly once, omit before and after anchors.
+- If old occurs more than once, include before and/or after anchors copied exactly from the same file.
+- Anchors must be immediate context: before must end exactly where old begins; after must begin exactly where old ends.
+Rules:
+- Repeated old strings without exact anchors are invalid and will not be applied.
+- Non-matching anchors are invalid even when old occurs once.
+- Never invent old text from memory or from APIs not shown in the source excerpts.
+- Keep edits minimal. Prefer source code fixes over test-only changes.
+
+Task summary:
+{
+  "allowed_context": {
+    "include_git_history_before_base": true,
+    "include_issue_text": true,
+    "include_pr_text": false,
+    "include_reference_patch": false
+  },
+  "disallowed_context": [
+    "reference patch or target diff for commit 1c20dc6",
+    "ACUT outputs or public model results",
+    "future execution results for this task"
+  ],
+  "expected_touched_area": [
+    "src/click/core.py default lookup and normalization",
+    "tests/test_defaults.py shared-parameter default regression"
+  ],
+  "repo_slug": "click",
+  "split": "rwork",
+  "task_family": "default handling for shared flag parameters",
+  "task_id": "click__rwork__003"
+}
+
+Public task statement:
+# click__rwork__003
+
+## Problem Statement
+
+Defer normalization of internal UNSET defaults until all options sharing a parameter have been evaluated, so the first real default is preserved regardless of declaration order.
+
+## Public Source
+
+- Kind: commit
+- Anchor: commit:1c20dc6e724cd5625faaa17b715ba928d44c08bf
+- URL: <redacted:url>
+
+## Visible Context Guidance
+
+Provide the commit message and linked issue identifier 3071. Hide the target diff and exact implementation.
+
+## Expected Touched Area
+
+- src/click/core.py default lookup and normalization
+- tests/test_defaults.py shared-parameter default regression
+
+
+ACUT policy summary:
+{
+  "acut_id": "cheap-generic-swe",
+  "model": "openai/gpt-5.4-mini",
+  "retrieval_context_strategy": {
+    "allowed_sources": [
+      "public_task_statement",
+      "files explicitly named in the task statement",
+      "files surfaced by failing tests or import errors",
+      "adjacent tests",
+      "direct symbol and filename search results"
+    ],
+    "description": "Use the public task statement, direct local evidence, failing tests, named files, adjacent tests, and bounded symbol search without Click-specific priors.",
+    "forbidden_sources": [
+      "RBench/RWork gold patches",
+      "hidden human hints",
+      "post-hoc tuning from ACUT outputs",
+      "undeclared history mining",
+      "task-specific private benchmark artifacts"
+    ],
+    "strategy_id": "generic-swe-local-evidence-v2"
+  },
+  "runtime_budget": {
+    "max_cost_usd": null,
+    "max_test_commands": 10,
+    "max_tokens": 64000,
+    "max_turns": 18,
+    "max_wall_seconds": 3600,
+    "retry_policy": {
+      "primary_attempts": 1,
+      "retries_allowed": false
+    }
+  }
+}
+
+Valid edit paths:
+[
+  "src/click/core.py",
+  "tests/test_defaults.py"
+]
+
+Source file: src/click/core.py
+sha256: 5e214de83e8c69349f93a8cd1fc1ce9a2c2c9b3fd5ca11988700c2fa47219cdb truncated: True displayed_chars: 15013
+```
+from __future__ import annotations
+
+import collections.abc as cabc
+import enum
+import errno
+import inspect
+import os
+import sys
+import typing as t
+from collections import abc
+from collections import Counter
+from contextlib import AbstractContextManager
+from contextlib import contextmanager
+from contextlib import ExitStack
+from functools import update_wrapper
+from gettext import gettext as _
+from gettext import ngettext
+from itertools import repeat
+from types import TracebackType
+
+from . import types
+from ._utils import FLAG_NEEDS_VALUE
+from ._utils import UNSET
+from .exceptions import Abort
+from .exceptions import BadParameter
+from .exceptions import ClickException
+from .exceptions import Exit
+from .exceptions import MissingParameter
+from .exceptions import NoArgsIsHelpError
+from .exceptions import UsageError
+from .formatting import HelpFormatter
+from .formatting import join_options
+from .globals import pop_context
+from .globals import push_context
+from .parser import _OptionParser
+from .parser import _split_opt
+from .termui import confirm
+from .termui import prompt
+from .termui import style
+from .utils import _detect_program_name
+from .utils import _expand_args
+from .utils import echo
+from .utils import make_default_short_help
+from .utils import make_str
+from .utils import PacifyFlushWrapper
+
+if t.TYPE_CHECKING:
+    from .shell_completion import CompletionItem
+
+F = t.TypeVar("F", bound="t.Callable[..., t.Any]")
+V = t.TypeVar("V")
+
+
+def _complete_visible_commands(
+    ctx: Context, incomplete: str
+) -> cabc.Iterator[tuple[str, Command]]:
+    """List all the subcommands of a group that start with the
+    incomplete value and aren't hidden.
+
+    :param ctx: Invocation context for the group.
+    :param incomplete: Value being completed. May be empty.
+    """
+    multi = t.cast(Group, ctx.command)
+
+    for name in multi.list_commands(ctx):
+        if name.startswith(incomplete):
+            command = multi.get_command(ctx, name)
+
+            if command is not None and not command.hidden:
+                yield name, command
+
+
+def _check_nested_chain(
+    base_command: Group, cmd_name: str, cmd: Command, register: bool = False
+) -> None:
+    if not base_command.chain or not isinstance(cmd, Group):
+        return
+
+    if register:
+        message = (
+            f"It is not possible to add the group {cmd_name!r} to another"
+            f" group {base_command.name!r} that is in chain mode."
+        )
+    else:
+        message = (
+            f"Found the group {cmd_name!r} as subcommand to another group "
+            f" {base_command.name!r} that is in chain mode. This is not supported."
+        )
+
+    raise RuntimeError(message)
+
+
+def batch(iterable: cabc.Iterable[V], batch_size: int) -> list[tuple[V, ...]]:
+    return list(zip(*repeat(iter(iterable), batch_size), strict=False))
+
+
+@contextmanager
+def augment_usage_errors(
+    ctx: Context, param: Parameter | None = None
+) -> cabc.Iterator[None]:
+    """Context manager that attaches extra information to exceptions."""
+    try:
+        yield
+    except BadParameter as e:
+        if e.ctx is None:
+            e.ctx = ctx
+        if param is not None and e.param is None:
+            e.param = param
+        raise
+    except UsageError as e:
+        if e.ctx is None:
+            e.ctx = ctx
+        raise
+
+
+def iter_params_for_processing(
+    invocation_order: cabc.Sequence[Parameter],
+    declaration_order: cabc.Sequence[Parameter],
+) -> list[Parameter]:
+    """Returns all declared parameters in the order they should be processed.
+
+    The declared parameters are re-shuffled depending on the order in which
+    they were invoked, as well as the eagerness of each parameters.
+
+    The invocation order takes precedence over the declaration order. I.e. the
+    order in which the user provided them to the CLI is respected.
+
+    This behavior and its effect on callback evaluation is detailed at:
+    <redacted:url>
+    """
+
+    def sort_key(item: Parameter) -> tuple[bool, float]:
+        try:
+            idx: float = invocation_order.index(item)
+        except ValueError:
+            idx = float("inf")
+
+        return not item.is_eager, idx
+
+    return sorted(declaration_order, key=sort_key)
+
+
+class ParameterSource(enum.Enum):
+    """This is an :class:`~enum.Enum` that indicates the source of a
+    parameter's value.
+
+    Use :meth:`click.Context.get_parameter_source` to get the
+    source for a parameter by name.
+
+    .. versionchanged:: 8.0
+        Use :class:`~enum.Enum` and drop the ``validate`` method.
+
+    .. versionchanged:: 8.0
+        Added the ``PROMPT`` value.
+    """
+
+    COMMANDLINE = enum.auto()
+    """The value was provided by the command line args."""
+    ENVIRONMENT = enum.auto()
+    """The value was provided with an environment variable."""
+    DEFAULT = enum.auto()
+    """Used the default specified by the parameter."""
+    DEFAULT_MAP = enum.auto()
+    """Used a default provided by :attr:`Context.default_map`."""
+    PROMPT = enum.auto()
+    """Used a prompt to confirm a default or provide a value."""
+
+
+class Context:
+    """The context is a special internal object that holds state relevant
+    for the script execution at every single level.  It's normally invisible
+    to commands unless they opt-in to getting access to it.
+
+    The context is useful as it can pass internal objects around and can
+    control special execution features such as reading data from
+    environment variables.
+
+    A context can be used as context manager in which case it will call
+    :meth:`close` on teardown.
+
+    :param command: the command class for this context.
+    :param parent: the parent context.
+    :param info_name: the info name for this invocation.  Generally this
+                      is the most descriptive name for the script or
+                      command.  For the toplevel script it is usually
+                      the name of the script, for commands below it it's
+                      the name of the script.
+    :param obj: an arbitrary object of user data.
+    :param auto_envvar_prefix: the prefix to use for automatic environment
+                               variables.  If this is `None` then reading
+                               from environment variables is disabled.  This
+                               does not affect manually set environment
+                               variables which are always read.
+    :param default_map: a dictionary (like object) with default values
+                        for parameters.
+    :param terminal_width: the width of the terminal.  The default is
+                           inherit from parent context.  If no context
+                           defines the terminal width then auto
+                           detection will be applied.
+    :param max_content_width: the maximum width for content rendered by
+                              Click (this currently only affects help
+                              pages).  This defaults to 80 characters if
+                              not overridden.  In other words: even if the
+                              terminal is larger than that, Click will not
+                              format things wider than 80 characters by
+                              default.  In addition to that, formatters might
+                              add some safety mapping on the right.
+    :param resilient_parsing: if this flag is enabled then Click will
+                              parse without any interactivity or callback
+                              invocation.  Default values will also be
+                              ignored.  This is useful for implementing
+                              things such as completion support.
+    :param allow_extra_args: if this is set to `True` then extra arguments
+                             at the end will not raise an error and will be
+                             kept on the context.  The default is to inherit
+                             from the command.
+    :param allow_interspersed_args: if this is set to `False` then options
+                                    and arguments cannot be mixed.  The
+                                    default is to inherit from the command.
+    :param ignore_unknown_options: instructs click to ignore options it does
+                                   not know and keeps them for later
+                                   processing.
+    :param help_option_names: optionally a list of strings that define how
+                              the default help parameter is named.  The
+                              default is ``['--help']``.
+    :param token_normalize_func: an optional function that is used to
+                                 normalize tokens (options, choices,
+                                 etc.).  This for instance can be used to
+                                 implement case insensitive behavior.
+    :param color: controls if the terminal supports ANSI colors or not.  The
+                  default is autodetection.  This is only needed if ANSI
+                  codes are used in texts that Click prints which is by
+                  default not the case.  This for instance would affect
+                  help output.
+    :param show_default: Show the default value for commands. If this
+        value is not set, it defaults to the value from the parent
+        context. ``Command.show_default`` overrides this default for the
+        specific command.
+
+    .. versionchanged:: 8.2
+        The ``protected_args`` attribute is deprecated and will be removed in
+        Click 9.0. ``args`` will contain remaining unparsed tokens.
+
+    .. versionchanged:: 8.1
+        The ``show_default`` parameter is overridden by
+        ``Command.show_default``, instead of the other way around.
+
+    .. versionchanged:: 8.0
+        The ``show_default`` parameter defaults to the value from the
+        parent context.
+
+    .. versionchanged:: 7.1
+       Added the ``show_default`` parameter.
+
+    .. versionchanged:: 4.0
+        Added the ``color``, ``ignore_unknown_options``, and
+        ``max_content_width`` parameters.
+
+    .. versionchanged:: 3.0
+        Added the ``allow_extra_args`` and ``allow_interspersed_args``
+        parameters.
+
+    .. versionchanged:: 2.0
+        Added the ``resilient_parsing``, ``help_option_names``, and
+        ``token_normalize_func`` parameters.
+    """
+
+    #: The formatter class to create with :meth:`make_formatter`.
+    #:
+    #: .. versionadded:: 8.0
+    formatter_class: type[HelpFormatter] = HelpFormatter
+
+    def __init__(
+        self,
+        command: Command,
+        parent: Context | None = None,
+        info_name: str | None = None,
+        obj: t.Any | None = None,
+        auto_envvar_prefix: str | None = None,
+        default_map: cabc.MutableMapping[str, t.Any] | None = None,
+        terminal_width: int | None = None,
+        max_content_width: int | None = None,
+        resilient_parsing: bool = False,
+        allow_extra_args: bool | None = None,
+        allow_interspersed_args: bool | None = None,
+        ignore_unknown_options: bool | None = None,
+        help_option_names: list[str] | None = None,
+        token_normalize_func: t.Callable[[str], str] | None = None,
+        color: bool | None = None,
+        show_default: bool | None = None,
+    ) -> None:
+        #: the parent context or `None` if none exists.
+        self.parent = parent
+        #: the :class:`Command` for this context.
+        self.command = command
+        #: the descriptive information name
+        self.info_name = info_name
+        #: Map of parameter names to their parsed values. Parameters
+        #: with ``expose_value=False`` are not stored.
+        self.params: dict[str, t.Any] = {}
+        #: the leftover arguments.
+        self.args: list[str] = []
+        #: protected arguments.  These are arguments that are prepended
+        #: to `args` when certain parsing scenarios are encountered but
+        #: must be never propagated to another arguments.  This is used
+        #: to implement nested parsing.
+        self._protected_args: list[str] = []
+        #: the collected prefixes of the command's options.
+        self._opt_prefixes: set[str] = set(parent._opt_prefixes) if parent else set()
+
+        if obj is None and parent is not None:
+            obj = parent.obj
+
+        #: the user object stored.
+        self.obj: t.Any = obj
+        self._meta: dict[str, t.Any] = getattr(parent, "meta", {})
+
+        #: A dictionary (-like object) with defaults for parameters.
+        if (
+            default_map is None
+            and info_name is not None
+            and parent is not None
+            and parent.default_map is not None
+        ):
+            default_map = parent.default_map.get(info_name)
+
+        self.default_map: cabc.MutableMapping[str, t.Any] | None = default_map
+
+        #: This flag indicates if a subcommand is going to be executed. A
+        #: group callback can use this information to figure out if it's
+        #: being executed directly or because the execution flow passes
+        #: onwards to a subcommand. By default it's None, but it can be
+        #: the name of the subcommand to execute.
+        #:
+        #: If chaining is enabled this will be set to ``'*'`` in case
+        #: any commands are executed.  It is however not possible to
+        #: figure out which ones.  If you require this knowledge you
+        #: should use a :func:`result_callback`.
+        self.invoked_subcommand: str | None = None
+
+        if terminal_width is None and parent is not None:
+            terminal_width = parent.terminal_width
+
+        #: The width of the terminal (None is autodetection).
+        self.terminal_width: int | None = terminal_width
+
+        if max_content_width is None and parent is not None:
+            max_content_width = parent.max_content_width
+
+        #: The maximum width of formatted content (None implies a sensible
+        #: default which is 80 for most things).
+        self.max_content_width: int | None = max_content_width
+
+        if allow_extra_args is None:
+            allow_extra_args = command.allow_extra_args
+
+        #: Indicates if the context allows extra args or if it should
+        #: fail on parsing.
+        #:
+        #: .. versionadded:: 3.0
+        self.allow_extra_args = allow_extra_args
+
+        if allow_interspersed_args is None:
+            allow_interspersed_args = command.allow_interspersed_args
+
+        #: Indicates if the context allows mixing of arguments and
+        #: options or not.
+        #:
+        #: .. versionadded:: 3.0
+        self.allow_interspersed_args: bool = allow_interspersed_args
+
+        if ignore_unknown_options is None:
+            ignore_unknown_options = command.ignore_unknown_options
+
+        #: Instructs click to ignore options that a command does not
+        #: understand and will store it on the context for later
+        #: processing.  This is primarily useful for situations where you
+        #: want to call into external programs.  Generally t
+[truncated]
+
+```
+
+Source file: tests/test_defaults.py
+sha256: 1f835d0531beaaaa0fe99dcfa57635fa5e2cc9edd85d279a3f854a85551c8e45 truncated: False displayed_chars: 2531
+```
+import click
+
+
+def test_basic_defaults(runner):
+    @click.command()
+    @click.option("--foo", default=42, type=click.FLOAT)
+    def cli(foo):
+        assert isinstance(foo, float)
+        click.echo(f"FOO:[{foo}]")
+
+    result = runner.invoke(cli, [])
+    assert not result.exception
+    assert "FOO:[42.0]" in result.output
+
+
+def test_multiple_defaults(runner):
+    @click.command()
+    @click.option("--foo", default=[23, 42], type=click.FLOAT, multiple=True)
+    def cli(foo):
+        for item in foo:
+            assert isinstance(item, float)
+            click.echo(item)
+
+    result = runner.invoke(cli, [])
+    assert not result.exception
+    assert result.output.splitlines() == ["23.0", "42.0"]
+
+
+def test_nargs_plus_multiple(runner):
+    @click.command()
+    @click.option(
+        "--arg", default=((1, 2), (3, 4)), nargs=2, multiple=True, type=click.INT
+    )
+    def cli(arg):
+        for a, b in arg:
+            click.echo(f"<{a:d}|{b:d}>")
+
+    result = runner.invoke(cli, [])
+    assert not result.exception
+    assert result.output.splitlines() == ["<1|2>", "<3|4>"]
+
+
+def test_multiple_flag_default(runner):
+    """Default default for flags when multiple=True should be empty tuple."""
+
+    @click.command
+    # flag due to secondary token
+    @click.option("-y/-n", multiple=True)
+    # flag due to is_flag
+    @click.option("-f", is_flag=True, multiple=True)
+    # flag due to flag_value
+    @click.option("-v", "v", flag_value=1, multiple=True)
+    @click.option("-q", "v", flag_value=-1, multiple=True)
+    def cli(y, f, v):
+        return y, f, v
+
+    result = runner.invoke(cli, standalone_mode=False)
+    assert result.return_value == ((), (), ())
+
+    result = runner.invoke(cli, ["-y", "-n", "-f", "-v", "-q"], standalone_mode=False)
+    assert result.return_value == ((True, False), (True,), (1, -1))
+
+
+def test_flag_default_map(runner):
+    """test flag with default map"""
+
+    @click.group()
+    def cli():
+        pass
+
+    @cli.command()
+    @click.option("--name/--no-name", is_flag=True, show_default=True, help="name flag")
+    def foo(name):
+        click.echo(name)
+
+    result = runner.invoke(cli, ["foo"])
+    assert "False" in result.output
+
+    result = runner.invoke(cli, ["foo", "--help"])
+    assert "default: no-name" in result.output
+
+    result = runner.invoke(cli, ["foo"], default_map={"foo": {"name": True}})
+    assert "True" in result.output
+
+    result = runner.invoke(cli, ["foo", "--help"], default_map={"foo": {"name": True}})
+    assert "default: name" in result.output
+
+```

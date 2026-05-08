@@ -1,0 +1,87 @@
+diff --git a/src/click/testing.py b/src/click/testing.py
+index ebfd54d..c01a3e0 100644
+--- a/src/click/testing.py
++++ b/src/click/testing.py
+@@ -2,8 +2,10 @@ from __future__ import annotations
+ 
+ import collections.abc as cabc
+ import contextlib
++import inspect
+ import io
+ import os
++import pdb
+ import shlex
+ import sys
+ import tempfile
+@@ -314,6 +316,23 @@ class CliRunner:
+         old_stdout = sys.stdout
+         old_stderr = sys.stderr
+         old_forced_width = formatting.FORCED_WIDTH
++        old_pdb_init = pdb.Pdb.__init__
++        pdb_init_signature = inspect.signature(old_pdb_init)
++
++        def _pdb_init(
++            self: t.Any, *args: t.Any, **kwargs: t.Any
++        ) -> None:
++            bound = pdb_init_signature.bind_partial(self, *args, **kwargs)
++
++            if bound.arguments.get("stdin") is None:
++                bound.arguments["stdin"] = sys.__stdin__
++
++            if bound.arguments.get("stdout") is None:
++                bound.arguments["stdout"] = sys.__stdout__
++
++            old_pdb_init(*bound.args, **bound.kwargs)
++
++        pdb.Pdb.__init__ = _pdb_init  # type: ignore
+         formatting.FORCED_WIDTH = 80
+ 
+         env = self.make_env(env)
+@@ -425,6 +444,7 @@ class CliRunner:
+             termui._getchar = old__getchar_func
+             utils.should_strip_ansi = old_should_strip_ansi  # type: ignore
+             _compat.should_strip_ansi = old__compat_should_strip_ansi
++            pdb.Pdb.__init__ = old_pdb_init  # type: ignore
+             formatting.FORCED_WIDTH = old_forced_width
+ 
+     def invoke(
+diff --git a/tests/test_testing.py b/tests/test_testing.py
+index 11fe29d..c80c91d 100644
+--- a/tests/test_testing.py
++++ b/tests/test_testing.py
+@@ -1,6 +1,7 @@
+ import os
++import pdb
+ import sys
+-from io import BytesIO
++from io import BytesIO, StringIO
+ 
+ import pytest
+ 
+@@ -469,3 +470,26 @@ def test_isolation_flushes_unflushed_stderr():
+ 
+     result = runner.invoke(cli)
+     assert result.stderr == "gyarados gyarados gyarados"
++
++
++def test_pdb_streams_are_isolated_and_restored():
++    original_init = pdb.Pdb.__init__
++
++    @click.command()
++    def cli():
++        debugger = pdb.Pdb()
++        click.echo(debugger.stdin is sys.__stdin__)
++        click.echo(debugger.stdout is sys.__stdout__)
++
++        stdin = StringIO()
++        stdout = StringIO()
++        debugger = pdb.Pdb(stdin=stdin, stdout=stdout)
++        click.echo(debugger.stdin is stdin)
++        click.echo(debugger.stdout is stdout)
++
++    runner = CliRunner()
++    result = runner.invoke(cli)
++
++    assert not result.exception
++    assert result.output == "True\nTrue\nTrue\nTrue\n"
++    assert pdb.Pdb.__init__ is original_init

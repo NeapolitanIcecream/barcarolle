@@ -1,0 +1,14 @@
+.F                                                                       [100%]
+=================================== FAILURES ===================================
+________________ test_case_insensitive_choice_returned_exactly _________________
+tests/test_options.py:353: in test_case_insensitive_choice_returned_exactly
+    assert result.output == 'Apple\n'
+E   AssertionError: assert 'apple\n' == 'Apple\n'
+E     
+E     - Apple
+E     ? ^
+E     + apple
+E     ? ^
+=========================== short test summary info ============================
+FAILED tests/test_options.py::test_case_insensitive_choice_returned_exactly
+1 failed, 1 passed in 0.04s

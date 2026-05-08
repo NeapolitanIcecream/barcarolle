@@ -1,0 +1,10 @@
+F                                                                        [100%]
+=================================== FAILURES ===================================
+_________________________ test_datetime_option_default _________________________
+tests/test_basic.py:352: in test_datetime_option_default
+    assert ('Invalid value for "--start_date": '
+E   assert 'Invalid value for "--start_date": invalid datetime format: 2015-09. (choose from %Y-%m-%d, %Y-%m-%dT%H:%M:%S, %Y-%m-%d %H:%M:%S)' in 'Usage: cli [OPTIONS]\n\nError: Invalid value for "--start_date": invalid datetime format: 2015-09. (choose from %Y-%m-%d, %Y-%m-%dT%H:%M:%S)\n'
+E    +  where 'Usage: cli [OPTIONS]\n\nError: Invalid value for "--start_date": invalid datetime format: 2015-09. (choose from %Y-%m-%d, %Y-%m-%dT%H:%M:%S)\n' = <Result SystemExit(2)>.output
+=========================== short test summary info ============================
+FAILED tests/test_basic.py::test_datetime_option_default - assert 'Invalid va...
+1 failed in 0.05s

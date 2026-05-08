@@ -1,0 +1,83 @@
+diff --git a/src/click/testing.py b/src/click/testing.py
+index ebfd54d..1e07a65 100644
+--- a/src/click/testing.py
++++ b/src/click/testing.py
+@@ -313,6 +313,22 @@ class CliRunner:
+         old_stdin = sys.stdin
+         old_stdout = sys.stdout
+         old_stderr = sys.stderr
++
++        import pdb
++
++        old_pdb_init = pdb.Pdb.__init__
++
++        def _pdb_init(self: pdb.Pdb, *args: t.Any, **kwargs: t.Any) -> None:
++            if len(args) < 2 and "stdin" not in kwargs:
++                kwargs["stdin"] = old_stdin
++
++            if len(args) < 3 and "stdout" not in kwargs:
++                kwargs["stdout"] = old_stdout
++
++            old_pdb_init(self, *args, **kwargs)
++
++        pdb.Pdb.__init__ = _pdb_init  # type: ignore[method-assign]
++
+         old_forced_width = formatting.FORCED_WIDTH
+         formatting.FORCED_WIDTH = 80
+ 
+@@ -420,6 +436,7 @@ class CliRunner:
+             sys.stdout = old_stdout
+             sys.stderr = old_stderr
+             sys.stdin = old_stdin
++            pdb.Pdb.__init__ = old_pdb_init  # type: ignore[method-assign]
+             termui.visible_prompt_func = old_visible_prompt_func
+             termui.hidden_prompt_func = old_hidden_prompt_func
+             termui._getchar = old__getchar_func
+diff --git a/tests/test_testing.py b/tests/test_testing.py
+index 11fe29d..1701b9a 100644
+--- a/tests/test_testing.py
++++ b/tests/test_testing.py
+@@ -1,6 +1,7 @@
+ import os
++import pdb
+ import sys
+-from io import BytesIO
++from io import BytesIO, StringIO
+ 
+ import pytest
+ 
+@@ -368,6 +369,34 @@ def test_stderr():
+     assert result.stderr == ""
+ 
+ 
++def test_pdb_uses_real_stdio_and_restores():
++    old_pdb_init = pdb.Pdb.__init__
++    real_stdin = sys.stdin
++    real_stdout = sys.stdout
++    custom_stdin = StringIO()
++    custom_stdout = StringIO()
++
++    @click.command()
++    def cli():
++        debugger = pdb.Pdb(readrc=False)
++        assert debugger.stdin is real_stdin
++        assert debugger.stdout is real_stdout
++
++        debugger = pdb.Pdb(stdin=custom_stdin, stdout=custom_stdout, readrc=False)
++        assert debugger.stdin is custom_stdin
++        assert debugger.stdout is custom_stdout
++
++    runner = CliRunner()
++    result = runner.invoke(cli)
++
++    assert result.exception is None
++    assert pdb.Pdb.__init__ is old_pdb_init
++
++    debugger = pdb.Pdb(readrc=False)
++    assert debugger.stdin is sys.stdin
++    assert debugger.stdout is sys.stdout
++
++
+ @pytest.mark.parametrize(
+     "args, expected_output",
+     [

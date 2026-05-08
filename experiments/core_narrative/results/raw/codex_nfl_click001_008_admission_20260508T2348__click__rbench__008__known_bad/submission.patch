@@ -1,0 +1,9 @@
+diff --git a/src/click/core.py b/src/click/core.py
+index b62a591..a391898 100644
+--- a/src/click/core.py
++++ b/src/click/core.py
+@@ -2564,3 +2564,4 @@ class Argument(Parameter):
+ 
+     def add_to_parser(self, parser, ctx):
+         parser.add_argument(dest=self.name, nargs=self.nargs, obj=self)
++# Barcarolle known-bad probe: no behavior change.

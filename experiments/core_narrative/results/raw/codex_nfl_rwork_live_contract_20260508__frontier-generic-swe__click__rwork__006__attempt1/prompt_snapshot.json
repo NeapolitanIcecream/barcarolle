@@ -1,0 +1,76 @@
+{
+  "context_files": [
+    {
+      "char_count": 132940,
+      "displayed_char_count": 80013,
+      "focus_terms": [],
+      "focused_excerpts": [],
+      "path": "src/click/core.py",
+      "sha256": "ed6f0d86ce1a77b4c79718ca8e1cf7d4cfd8a223b2ab52d93d6d0d6fe431100f",
+      "truncated": true
+    },
+    {
+      "char_count": 85179,
+      "displayed_char_count": 80013,
+      "focus_terms": [],
+      "focused_excerpts": [],
+      "path": "tests/test_options.py",
+      "sha256": "d3aed1bff9572591f91598b763bb65d0669e7548a36a5308cc4b8b127cd40137",
+      "truncated": true
+    },
+    {
+      "char_count": 34190,
+      "displayed_char_count": 34159,
+      "focus_terms": [],
+      "focused_excerpts": [],
+      "path": "tests/test_termui.py",
+      "sha256": "b2dcc9afdaca8f4e287725373e1441a870f4fefad8f0070dab60a5b230e16f6a",
+      "truncated": false
+    }
+  ],
+  "context_packaging": {
+    "effective_max_file_chars": 80000,
+    "max_context_chars": 120000,
+    "prompt_truncated": true,
+    "requested_max_file_chars": 80000
+  },
+  "full_urls_redacted": true,
+  "output_contract": "anchored-search-replace-json-v3",
+  "output_contract_schema": {
+    "anchor_policy": {
+      "anchors_are_for_repeated_old_text_only": true,
+      "anchors_must_be_immediate_adjacent_source": true,
+      "invalid_anchors_reject_the_edit_even_when_old_is_unique": true,
+      "omit_anchors_when_old_is_unique": true
+    },
+    "diagnostic_failure_classes": {
+      "search_replace_anchor_mismatch": "old text was present, but supplied anchors did not isolate exactly one occurrence",
+      "search_replace_old_occurrence_mismatch": "old text did not occur exactly once after earlier edits"
+    },
+    "id": "anchored-search-replace-json-v3",
+    "legacy_parser_fallback_keys": [
+      "unified_diff",
+      "files"
+    ],
+    "primary_top_level_key": "edits",
+    "requires_exact_old_text": true,
+    "requires_exact_path_from_context": true,
+    "requires_immediate_anchors_for_repeated_old_text": true,
+    "requires_single_top_level_key": true
+  },
+  "prompt_char_count": 120013,
+  "prompt_content_recorded": true,
+  "prompt_sha256": "67d550b0f391beb9348585df791e7f295fa3ed98cf0d789c601c29e30d1790b0",
+  "run_id": "codex_nfl_rwork_live_contract_20260508__frontier-generic-swe__click__rwork__006__attempt1",
+  "runner_id": "codex-nfl-direct-search-replace-v1",
+  "specialist_context_assertion": {
+    "expected": "excluded",
+    "include_mode": "auto",
+    "passed": true
+  },
+  "specialist_context_included": false,
+  "specialist_context_path": null,
+  "statement_truncated": false,
+  "task_statement_path": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/tasks/click/rwork/click__rwork__006/public/statement.md",
+  "tool": "codex_nfl_direct_runner"
+}

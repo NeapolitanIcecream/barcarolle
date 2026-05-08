@@ -1,0 +1,137 @@
+{
+  "acut_id": "cheap-click-specialist",
+  "attempt": 2,
+  "error": null,
+  "finished_at": "2026-05-08T15:59:50.066718Z",
+  "metadata": {
+    "acut_manifest_path": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/configs/acuts/cheap-click-specialist.yaml",
+    "acut_manifest_sha256": "ea70a0ada77bad7c538dd7ca23340d33762148e55153ca10363a8ae1f2c1b677",
+    "batch_tool": "codex_nfl_experiment_runner",
+    "clean_patch_replay": {
+      "attempted": true,
+      "runner_workspace": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/workspaces/codex_nfl_rbench_attempt2_fill_20260508__cheap-click-specialist__click__rbench__004__attempt2",
+      "separate_workspace": true,
+      "skip_apply": false,
+      "verify_workspace": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/workspaces/codex_nfl_rbench_attempt2_fill_20260508__cheap-click-specialist__click__rbench__004__attempt2__verify"
+    },
+    "context_pack_digest": "dfb271ad174531a7dd2f00da4cd0486193d87ce33349380982150889ecf84e48",
+    "direct_runner_budget_gate": {
+      "allowed": true,
+      "approvals_required": [
+        "non_primary_attempt"
+      ],
+      "blockers": [],
+      "budget": {
+        "current_cumulative_estimated_cost_usd": 15.771836,
+        "hard_cap_reached_or_projected": false,
+        "hard_cap_usd": 300.0,
+        "projected_cost_usd": 1.0,
+        "projected_cumulative_estimated_cost_usd": 16.771836,
+        "soft_stop_reached_or_projected": false,
+        "soft_stop_usd": 240.0
+      },
+      "default_execution_profile": {
+        "core_acut_ids": [
+          "frontier-generic-swe",
+          "frontier-click-specialist",
+          "cheap-generic-swe",
+          "cheap-click-specialist"
+        ],
+        "full_core_requires_coordinator_decision": true,
+        "pilot_primary_attempts": 28,
+        "primary_attempts_per_acut_task": 1,
+        "profile_id": "budget-constrained-2x2-pilot-v2",
+        "split_task_limits": {
+          "G_score": 2,
+          "RBench": 3,
+          "RWork": 2
+        }
+      },
+      "env": {
+        "all_required_present": true,
+        "required": [
+          {
+            "name": "BARCAROLLE_LLM_API_KEY",
+            "present": true
+          },
+          {
+            "name": "BARCAROLLE_LLM_BASE_URL",
+            "present": true
+          }
+        ]
+      },
+      "execution_request": {
+        "acut_id": "cheap-click-specialist",
+        "attempt": 2,
+        "coordinator_decision_ref_present": true,
+        "split": "rbench"
+      },
+      "ledger": {
+        "cumulative_estimated_cost_usd": 15.771836,
+        "error_type": null,
+        "errors": [],
+        "estimated_cost_sum_usd": 15.771836,
+        "exists": true,
+        "is_file": true,
+        "line_count": 82,
+        "path": "experiments/core_narrative/results/cost_ledger.jsonl",
+        "record_count": 82,
+        "writable": true
+      },
+      "status": "passed",
+      "tool": "llm_budget_gate"
+    },
+    "direct_runner_cost_accounting": {
+      "actual_cost_status": "unknown_not_provider_reported",
+      "actual_cost_usd": null,
+      "estimated_cost_usd": 0.122087,
+      "input_tokens": 9513,
+      "observed_provider_cost_status": "provider_response_usage_cost_not_invoice",
+      "observed_provider_cost_usd": 0.12208725,
+      "output_tokens": 25545,
+      "provider_usage_reported": true
+    },
+    "direct_runner_cost_ledger_append": {
+      "actual_cost_recorded": false,
+      "estimated_cost_usd": 0.122087,
+      "new_cumulative_estimated_cost_usd": 15.893923,
+      "record_count_after": 83,
+      "record_count_before": 82,
+      "status": "appended"
+    },
+    "direct_runner_id": "codex-nfl-direct-search-replace-v1",
+    "model_call_made": true,
+    "prompt_snapshot": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/codex_nfl_rbench_attempt2_fill_20260508__cheap-click-specialist__click__rbench__004__attempt2/prompt_snapshot.json",
+    "prompt_snapshot_sha256": "bd2a58ae605edfa2d47b8d641d8aab6f7114e2d0452033e808758ed92d987b7d",
+    "raw_response_artifact": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/codex_nfl_rbench_attempt2_fill_20260508__cheap-click-specialist__click__rbench__004__attempt2/provider_response.redacted.json",
+    "runner_id": "codex-nfl-batch-v1",
+    "skip_apply": false,
+    "task_manifest_path": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/tasks/click/rbench/click__rbench__004/task.yaml",
+    "task_manifest_sha256": "e143179d5dfe307889be075cfc0c4fde24cfa76b7ae1567fdb742a8e17080fbe",
+    "timeout_seconds": 60,
+    "tool": "apply_and_verify",
+    "verifier_command": [
+      "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/tasks/click/rbench/click__rbench__004/verifier/run.sh"
+    ],
+    "verifier_digest_sha256": "a2dabe656a5652694af6cca1dbd4ea70bf23bba5056086d55dc5ac4d627df848"
+  },
+  "patch_path": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/codex_nfl_rbench_attempt2_fill_20260508__cheap-click-specialist__click__rbench__004__attempt2/submission.patch",
+  "review": {
+    "mergeability_grade": null,
+    "notes": "",
+    "rule_violation": false,
+    "wrong_module": false
+  },
+  "run_id": "codex_nfl_rbench_attempt2_fill_20260508__cheap-click-specialist__click__rbench__004__attempt2",
+  "schema_version": "core-narrative.run-result.v1",
+  "split": "rbench",
+  "started_at": "2026-05-08T15:59:49.896051Z",
+  "status": "failed",
+  "task_id": "click__rbench__004",
+  "verification": {
+    "duration_seconds": 0.148,
+    "exit_code": 1,
+    "stderr_artifact": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/codex_nfl_rbench_attempt2_fill_20260508__cheap-click-specialist__click__rbench__004__attempt2/verifier.stderr.txt",
+    "stdout_artifact": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/codex_nfl_rbench_attempt2_fill_20260508__cheap-click-specialist__click__rbench__004__attempt2/verifier.stdout.txt"
+  }
+}

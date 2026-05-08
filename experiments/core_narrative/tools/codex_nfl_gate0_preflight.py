@@ -28,6 +28,16 @@ BENIGN_ORACLE_URL_PREFIXES = ("https://docs.pytest.org/",)
 def parse_args(argv: Sequence[str]) -> argparse.Namespace:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--run-prefix", default=DEFAULT_RUN_PREFIX)
+    parser.add_argument(
+        "--task-split",
+        choices=sorted(batch.TASK_SPLIT_MANIFESTS),
+        default="rbench",
+        help="Click task split manifest and task-pack root to probe.",
+    )
+    parser.add_argument(
+        "--task-split-manifest",
+        help="Optional explicit task split manifest path; defaults from --task-split.",
+    )
     parser.add_argument("--tasks", nargs="+", required=True)
     parser.add_argument("--output", required=True)
     parser.add_argument("--flakiness-runs", type=int, default=2)
@@ -127,6 +137,94 @@ def verification_duration(result: Mapping[str, Any]) -> float | None:
     verification = result.get("verification") if isinstance(result.get("verification"), dict) else {}
     value = verification.get("duration_seconds")
     return float(value) if isinstance(value, (int, float)) else None
+
+
+def admission_defect_classifications(
+    *,
+    gates: Mapping[str, bool],
+    noop: Mapping[str, Any],
+    reference_runs: Sequence[Mapping[str, Any]],
+    known_bad: Mapping[str, Any],
+    leakage: Mapping[str, Any],
+) -> list[dict[str, Any]]:
+    defects: list[dict[str, Any]] = []
+    if not gates.get("no_op_probe", False):
+        defects.append(
+            {
+                "gate": "no_op_probe",
+                "owner": "verifier",
+                "defect_class": "noop_verifier_passed",
+                "severity": "blocking_for_task_admission",
+                "summary": "Verifier passed before any submitted patch was applied.",
+                "observed_status": noop.get("status"),
+            }
+        )
+    if not gates.get("reference_probe", False):
+        defects.append(
+            {
+                "gate": "reference_probe",
+                "owner": "task_pack_reference_or_verifier",
+                "defect_class": "reference_patch_failed_verifier",
+                "severity": "blocking_for_strict_admission",
+                "summary": "The source target-commit reference patch did not satisfy the packaged verifier.",
+                "reference_statuses": [probe.get("status") for probe in reference_runs],
+            }
+        )
+    if not gates.get("known_bad_probe", False):
+        defects.append(
+            {
+                "gate": "known_bad_probe",
+                "owner": "verifier",
+                "defect_class": "known_bad_patch_passed",
+                "severity": "blocking_for_task_admission",
+                "summary": "A behavior-preserving known-bad patch passed the verifier.",
+                "observed_status": known_bad.get("status"),
+            }
+        )
+    if not gates.get("flakiness_probe", False):
+        defects.append(
+            {
+                "gate": "flakiness_probe",
+                "owner": "verifier_or_environment",
+                "defect_class": "reference_replay_unstable_or_failed",
+                "severity": "blocking_for_strict_admission",
+                "summary": "Repeated reference replays did not all pass with the same status.",
+                "reference_statuses": [probe.get("status") for probe in reference_runs],
+            }
+        )
+    if not gates.get("verifier_runtime_p95_lt_timeout", False):
+        defects.append(
+            {
+                "gate": "verifier_runtime_p95_lt_timeout",
+                "owner": "verifier_or_environment",
+                "defect_class": "runtime_budget_margin_failed",
+                "severity": "admission_warning_or_blocker",
+                "summary": "Verifier runtime p95 did not stay below the declared timeout.",
+            }
+        )
+    if not gates.get("oracle_log_leakage", False):
+        defects.append(
+            {
+                "gate": "oracle_log_leakage",
+                "owner": "verifier",
+                "defect_class": "oracle_log_leakage",
+                "severity": "blocking_for_task_admission",
+                "summary": "Verifier logs exposed unsafe oracle-like content.",
+                "leakage": leakage,
+            }
+        )
+    if not gates.get("clean_patch_replay", False):
+        defects.append(
+            {
+                "gate": "clean_patch_replay",
+                "owner": "task_pack_reference_or_verifier",
+                "defect_class": "clean_reference_replay_failed",
+                "severity": "blocking_for_strict_admission",
+                "summary": "Reference patch replay on clean prepared workspaces did not pass.",
+                "reference_statuses": [probe.get("status") for probe in reference_runs],
+            }
+        )
+    return defects
 
 
 def verifier_timeout_seconds(task_id: str) -> int:
@@ -313,15 +411,41 @@ def task_probe(task: Mapping[str, Any], *, run_prefix: str, flakiness_runs: int,
         "flakiness_probe": bool(flakiness_statuses) and len(set(flakiness_statuses)) == 1 and flakiness_statuses[0] == "passed",
         "verifier_runtime_p95_lt_timeout": runtime_p95 is not None and runtime_p95 < timeout,
         "oracle_log_leakage": not leakage["unsafe"],
+        "clean_patch_replay": all(
+            probe.get("status") == "passed"
+            and isinstance(probe.get("verification"), dict)
+            and probe["verification"].get("exit_code") == 0
+            for probe in reference_runs
+        ),
     }
+    defect_classifications = admission_defect_classifications(
+        gates=gates,
+        noop=noop,
+        reference_runs=reference_runs,
+        known_bad=known_bad,
+        leakage=leakage,
+    )
     return {
         "task_id": task_id,
         "status": "passed" if all(gates.values()) else "failed",
         "gates": gates,
+        "defect_classifications": defect_classifications,
         "runtime_p95_seconds": runtime_p95,
         "verifier_timeout_seconds": timeout,
-        "oracle_log_leakage_findings": leakage,
-        "noop": noop,
+            "oracle_log_leakage_findings": leakage,
+            "clean_patch_replay": {
+                "supported": True,
+                "reference_probe_count": len(reference_runs),
+                "separate_workspaces": len(
+                    {
+                        str(probe.get("workspace"))
+                        for probe in reference_runs
+                        if isinstance(probe.get("workspace"), str)
+                    }
+                )
+                == len(reference_runs),
+            },
+            "noop": noop,
         "reference_runs": reference_runs,
         "known_bad": known_bad,
     }
@@ -334,12 +458,27 @@ def main(argv: Sequence[str] | None = None) -> int:
         if args.flakiness_runs < 2:
             raise ToolError("--flakiness-runs must be at least 2")
         requested_task_ids = unique_task_ids(args.tasks)
-        split_manifest = load_manifest(batch.TASK_SPLIT)
+        task_split = str(args.task_split).lower()
+        split_manifest_path = Path(args.task_split_manifest) if args.task_split_manifest else batch.task_split_manifest_path(task_split)
+        split_manifest = load_manifest(split_manifest_path)
+        manifest_split = str(split_manifest.get("split", task_split)).lower()
+        if manifest_split != task_split:
+            raise ToolError(
+                "task split manifest split does not match --task-split",
+                task_split=task_split,
+                manifest_split=manifest_split,
+                manifest_path=str(split_manifest_path),
+            )
         tasks = batch.task_by_id(split_manifest)
         selected = []
         for task_id in requested_task_ids:
             if task_id not in tasks:
-                raise ToolError("requested task is not in RBench Click manifest", task_id=task_id)
+                raise ToolError(
+                    "requested task is not in selected Click manifest",
+                    task_id=task_id,
+                    task_split=task_split,
+                    manifest_path=str(split_manifest_path),
+                )
             if not batch.task_manifest_path(task_id).exists():
                 raise ToolError("materialized task manifest is missing", task_id=task_id)
             selected.append(tasks[task_id])
@@ -352,16 +491,26 @@ def main(argv: Sequence[str] | None = None) -> int:
             )
             for task in selected
         ]
+        defect_counts: dict[str, int] = {}
+        for item in per_task:
+            for defect in item.get("defect_classifications", []):
+                if not isinstance(defect, dict):
+                    continue
+                defect_class = str(defect.get("defect_class"))
+                defect_counts[defect_class] = defect_counts.get(defect_class, 0) + 1
         payload = {
             "tool": TOOL,
             "status": "passed" if len(selected) >= 3 and all(item["status"] == "passed" for item in per_task) else "failed",
             "run_prefix": args.run_prefix,
+            "task_split": task_split,
+            "task_split_manifest": str(split_manifest_path),
             "started_at": started_at,
             "finished_at": iso_now(),
             "selected_tasks_count": len(selected),
             "selected_tasks_count_gate": len(selected) >= 3,
             "tasks": [str(task["task_id"]) for task in selected],
             "flakiness_runs": args.flakiness_runs,
+            "defect_classification_counts": dict(sorted(defect_counts.items())),
             "per_task": per_task,
         }
         emit_json(payload, args.output)
