@@ -318,46 +318,69 @@ def install_workspace(
     name_prefix: str = "",
 ) -> dict[str, Any]:
     uv = shutil.which("uv")
+    uv_venv_create_attempt: dict[str, Any] | None = None
     if uv:
         command = [uv, "venv", "--python", "3.12", ".venv"]
+        started_at = iso_now()
+        completed = run_capture(command, cwd=workspace, timeout=timeout_seconds)
+        finished_at = iso_now()
+        uv_venv_create_attempt = write_command_artifacts(
+            completed=completed,
+            artifact_dir=artifact_dir,
+            name=f"{name_prefix}venv_create",
+            command=command,
+            started_at=started_at,
+            finished_at=finished_at,
+        )
+        if completed.returncode == 0:
+            install = [uv, "pip", "install", "--python", ".venv/bin/python", "-q", "-e", ".", "pytest"]
+            started_at = iso_now()
+            completed = run_capture(install, cwd=workspace, timeout=timeout_seconds)
+            finished_at = iso_now()
+            install_summary = write_command_artifacts(
+                completed=completed,
+                artifact_dir=artifact_dir,
+                name=f"{name_prefix}venv_install",
+                command=install,
+                started_at=started_at,
+                finished_at=finished_at,
+            )
+            install_summary["venv_backend"] = "uv"
+            if completed.returncode != 0:
+                raise ToolError("workspace dependency install failed", summary=install_summary)
+            return install_summary
+
+    if uv_venv_create_attempt is not None:
+        venv_create_name = f"{name_prefix}venv_create_fallback"
     else:
-        command = [
-            sys.executable,
-            "-m",
-            "venv",
-            ".venv",
-        ]
+        venv_create_name = f"{name_prefix}venv_create"
+    if (workspace / ".venv").exists():
+        shutil.rmtree(workspace / ".venv")
+    command = [
+        sys.executable,
+        "-m",
+        "venv",
+        ".venv",
+    ]
     started_at = iso_now()
     completed = run_capture(command, cwd=workspace, timeout=timeout_seconds)
     finished_at = iso_now()
     summary = write_command_artifacts(
         completed=completed,
         artifact_dir=artifact_dir,
-        name=f"{name_prefix}venv_create",
+        name=venv_create_name,
         command=command,
         started_at=started_at,
         finished_at=finished_at,
     )
     if completed.returncode != 0:
+        if uv_venv_create_attempt is not None:
+            raise ToolError(
+                "workspace venv creation failed",
+                summary=summary,
+                uv_venv_create_attempt=uv_venv_create_attempt,
+            )
         raise ToolError("workspace venv creation failed", summary=summary)
-
-    if uv:
-        install = [uv, "pip", "install", "--python", ".venv/bin/python", "-q", "-e", ".", "pytest"]
-        started_at = iso_now()
-        completed = run_capture(install, cwd=workspace, timeout=timeout_seconds)
-        finished_at = iso_now()
-        install_summary = write_command_artifacts(
-            completed=completed,
-            artifact_dir=artifact_dir,
-            name=f"{name_prefix}venv_install",
-            command=install,
-            started_at=started_at,
-            finished_at=finished_at,
-        )
-        install_summary["venv_backend"] = "uv"
-        if completed.returncode != 0:
-            raise ToolError("workspace dependency install failed", summary=install_summary)
-        return install_summary
 
     upgrade_pip = [".venv/bin/python", "-m", "pip", "install", "-q", "--upgrade", "pip"]
     started_at = iso_now()
@@ -388,7 +411,10 @@ def install_workspace(
     )
     if completed.returncode != 0:
         raise ToolError("workspace dependency install failed", summary=summary)
+    summary["venv_backend"] = "python_venv"
     summary["pip_upgrade"] = upgrade_summary
+    if uv_venv_create_attempt is not None:
+        summary["uv_venv_create_attempt"] = uv_venv_create_attempt
     return summary
 
 
