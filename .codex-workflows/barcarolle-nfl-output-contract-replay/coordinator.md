@@ -1,7 +1,7 @@
 # barcarolle-nfl-output-contract-replay Work Loop Coordinator
 
-STATUS: PR_PACKAGING_RUNNING
-UPDATED_AT: 2026-05-08 20:06 CST
+STATUS: PR_READY_WAITING
+UPDATED_AT: 2026-05-08 20:10 CST
 
 RULES:
 - Do not read worker or reviewer CLI stdout/stderr logs.
@@ -121,11 +121,16 @@ CURRENT:
 - Reviewer recheck 9 tmux session started: `barcarolle-nfl-output-contract-replay-reviewer-recheck-9`.
 - Reviewer recheck 9 reported `no_issues`.
 - Supervisor decision: no further local fix remains before PR packaging. Future live spend would require explicit approval as a bounded Click 008 attempt-3 measurement; no Click 009+ or speculative spend is justified by the reviewed evidence.
-- PR packaging is in progress: stage PR-scope artifacts excluding CLI logs and unrelated user draft, commit, push, create/update ready PR, then inspect PR reviews/checks.
+- PR packaging complete:
+  - Commit: `6724959055df8e329ec49ae7e3f95c15a029671b`
+  - PR: https://github.com/NeapolitanIcecream/barcarolle/pull/3
+  - PR state: open, ready for review, mergeable.
+  - Initial checks/reviews: no checks reported yet; no reviews/comments yet.
+  - Unrelated user draft `docs/draft/barcarolle-leadership-report.md` was left untracked and uncommitted.
 
 NEXT:
-- Commit and push PR-scope artifacts if the staged set excludes CLI logs and unrelated user draft.
-- Create or update a ready PR using `experiments/core_narrative/reports/2026-05-08_codex_nfl_output_contract_replay_repair_report.md` as the body.
-- Inspect PR reviews/checks and continue the gh-codex-review-loop.
+- On next heartbeat, inspect PR #3 reviews/checks and continue the gh-codex-review-loop.
+- Fix valid review findings or CI failures with focused commits and tests.
+- Merge only when checks are clean and Codex has no open findings or a positive latest signal after the latest commit.
 - If worker continuation blocks on actual API funds/quota, missing LLM credentials, repo auth, or user input, return `NOTIFY`.
 - If local reviewer reports `no_issues` but the delivered work merely packages/report step 5 while clear next experiment steps remain, start a new worker continuation loop before publishing/merging.
