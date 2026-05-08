@@ -86,7 +86,7 @@ def read_json(path: Path) -> dict[str, Any] | None:
 
 def is_live_batch_candidate(payload: Mapping[str, Any]) -> bool:
     metadata = payload.get("metadata") if isinstance(payload.get("metadata"), dict) else {}
-    if metadata.get("runner_id") != batch.RUNNER_ID and metadata.get("batch_tool") != batch.TOOL:
+    if metadata.get("runner_id") != batch.RUNNER_ID or metadata.get("batch_tool") != batch.TOOL:
         return False
     if metadata.get("direct_runner_status") == "dry_run_completed":
         return False

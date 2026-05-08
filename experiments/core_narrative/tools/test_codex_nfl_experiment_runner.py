@@ -503,6 +503,36 @@ class CodexNflExperimentRunnerTests(unittest.TestCase):
         self.assertEqual(commands[1][-4:], ["-q", "-e", ".", "pytest"])
         self.assertEqual(summary["venv_backend"], "uv")
 
+    def test_install_workspace_falls_back_when_uv_python312_venv_fails(self) -> None:
+        """Regression: a broken uv Python 3.12 provisioner must not block sys.executable venv."""
+        runner = load_runner_module()
+        commands: list[list[str]] = []
+        artifact_dir = self.root / "artifacts"
+        artifact_dir.mkdir()
+
+        def fake_run_capture(command, *, cwd=None, timeout=None):
+            commands.append(list(command))
+            if len(commands) == 1:
+                return subprocess.CompletedProcess(command, 1, "", "python 3.12 unavailable")
+            return subprocess.CompletedProcess(command, 0, "", "")
+
+        with mock.patch.object(runner.shutil, "which", return_value="/opt/homebrew/bin/uv"):
+            runner.run_capture = fake_run_capture
+            runner.write_command_artifacts = lambda **kwargs: {
+                "name": kwargs["name"],
+                "command": kwargs["command"],
+                "exit_code": kwargs["completed"].returncode,
+            }
+
+            summary = runner.install_workspace(self.root / "workspace", artifact_dir, 1)
+
+        self.assertEqual(commands[0], ["/opt/homebrew/bin/uv", "venv", "--python", "3.12", ".venv"])
+        self.assertEqual(commands[1], [sys.executable, "-m", "venv", ".venv"])
+        self.assertEqual(commands[2][-2:], ["--upgrade", "pip"])
+        self.assertEqual(commands[3][-4:], ["-q", "-e", ".", "pytest"])
+        self.assertEqual(summary["venv_backend"], "python_venv")
+        self.assertEqual(summary["uv_venv_create_attempt"]["exit_code"], 1)
+
     def test_install_workspace_fallback_upgrades_pip_before_editable_install(self) -> None:
         """Fallback venv installs still support pyproject/flit editable projects."""
         runner = load_runner_module()

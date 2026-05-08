@@ -58,6 +58,57 @@ class CodexNflPredictivityToolsTests(unittest.TestCase):
         self.assertEqual(cell["canonical_latest"]["run_id"], "live")
         self.assertEqual(payload["by_acut"]["cheap-generic-swe"]["score_percent_fixed_denominator"], 100.0)
 
+    def test_canonical_matrix_requires_both_batch_identity_fields(self) -> None:
+        """Regression: one matching runner identity field is not enough for canonical evidence."""
+        with tempfile.TemporaryDirectory() as temp_dir:
+            root = Path(temp_dir)
+            live = {
+                "run_id": "live-expected-identity",
+                "acut_id": "cheap-generic-swe",
+                "task_id": "click__rbench__001",
+                "split": "rbench",
+                "attempt": 1,
+                "status": "failed",
+                "metadata": {
+                    "runner_id": "codex-nfl-batch-v1",
+                    "direct_runner_id": "codex-nfl-direct-search-replace-v1",
+                    "model_call_made": True,
+                    "batch_tool": "codex_nfl_experiment_runner",
+                    "task_manifest_sha256": "task",
+                    "acut_manifest_sha256": "acut",
+                    "verifier_digest_sha256": "verifier",
+                    "prompt_snapshot_sha256": "prompt",
+                    "context_pack_digest": None,
+                    "raw_response_artifact": "provider_response.redacted.json",
+                    "direct_runner_cost_accounting": {},
+                    "clean_patch_replay": {"attempted": True},
+                },
+            }
+            mismatched_runner = {
+                **live,
+                "run_id": "wrong-runner-id",
+                "attempt": 2,
+                "status": "passed",
+                "metadata": {**live["metadata"], "runner_id": "future-batch-v2"},
+            }
+            mismatched_tool = {
+                **live,
+                "run_id": "wrong-batch-tool",
+                "attempt": 3,
+                "status": "passed",
+                "metadata": {**live["metadata"], "batch_tool": "reused_tool_name"},
+            }
+            (root / "live.json").write_text(json.dumps(live), encoding="utf-8")
+            (root / "mismatched_runner.json").write_text(json.dumps(mismatched_runner), encoding="utf-8")
+            (root / "mismatched_tool.json").write_text(json.dumps(mismatched_tool), encoding="utf-8")
+
+            with mock.patch.object(matrix, "CORE_ACUTS", ["cheap-generic-swe"]):
+                payload = matrix.build_matrix("rbench", ["click__rbench__001"], root)
+
+        cell = payload["cells"]["cheap-generic-swe::click__rbench__001"]
+        self.assertEqual(cell["canonical_latest"]["run_id"], "live-expected-identity")
+        self.assertEqual(payload["by_acut"]["cheap-generic-swe"]["score_percent_fixed_denominator"], 0.0)
+
     def test_canonical_matrix_same_attempt_duplicates_use_evidence_time_not_mtime(self) -> None:
         """Regression: stale duplicate artifacts with newer mtimes must not win canonical selection."""
         with tempfile.TemporaryDirectory() as temp_dir:
