@@ -1,0 +1,56 @@
+{
+  "after": {
+    "cumulative_estimated_cost_usd": 12.100026,
+    "error_type": null,
+    "errors": [],
+    "estimated_cost_sum_usd": 12.100026,
+    "exists": true,
+    "is_file": true,
+    "line_count": 76,
+    "path": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/cost_ledger.jsonl",
+    "record_count": 76,
+    "writable": true
+  },
+  "before": {
+    "cumulative_estimated_cost_usd": 6.100026,
+    "error_type": null,
+    "errors": [],
+    "estimated_cost_sum_usd": 6.100026,
+    "exists": true,
+    "is_file": true,
+    "line_count": 74,
+    "path": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/cost_ledger.jsonl",
+    "record_count": 74,
+    "writable": true
+  },
+  "correction_policy": "append local projected estimate for live provider requests that reached the network but timed out before provider usage was reported",
+  "corrections": [
+    {
+      "append_summary": {
+        "actual_cost_recorded": false,
+        "estimated_cost_usd": 3.0,
+        "new_cumulative_estimated_cost_usd": 9.100026,
+        "record_count_after": 75,
+        "record_count_before": 74,
+        "status": "appended"
+      },
+      "run_id": "codex_nfl_output_contract_v3_click_008_attempt3_20260508__frontier-generic-swe__click__rbench__008__attempt3",
+      "status": "appended"
+    },
+    {
+      "append_summary": {
+        "actual_cost_recorded": false,
+        "estimated_cost_usd": 3.0,
+        "new_cumulative_estimated_cost_usd": 12.100026,
+        "record_count_after": 76,
+        "record_count_before": 75,
+        "status": "appended"
+      },
+      "run_id": "codex_nfl_output_contract_v3_click_008_attempt3_20260508__frontier-click-specialist__click__rbench__008__attempt3",
+      "status": "appended"
+    }
+  ],
+  "ledger": "experiments/core_narrative/results/cost_ledger.jsonl",
+  "summary": "experiments/core_narrative/results/codex_nfl_output_contract_v3_click_008_attempt3_live_20260508.json",
+  "tool": "codex_nfl_cost_reconciliation"
+}

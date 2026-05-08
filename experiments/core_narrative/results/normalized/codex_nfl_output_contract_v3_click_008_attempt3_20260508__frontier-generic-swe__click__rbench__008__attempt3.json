@@ -1,0 +1,53 @@
+{
+  "acut_id": "frontier-generic-swe",
+  "attempt": 3,
+  "error": "LLM request failed",
+  "finished_at": "2026-05-08T13:14:50.991794Z",
+  "metadata": {
+    "acut_manifest_path": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/configs/acuts/frontier-generic-swe.yaml",
+    "acut_manifest_sha256": "a6246d43f9de1ebf0dfb05d86b18561d94721ce4e68b4ad70f1452e9c6b03734",
+    "batch_tool": "codex_nfl_experiment_runner",
+    "clean_patch_replay": {
+      "attempted": false,
+      "runner_workspace": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/workspaces/codex_nfl_output_contract_v3_click_008_attempt3_20260508__frontier-generic-swe__click__rbench__008__attempt3",
+      "separate_workspace": false,
+      "skip_apply": null,
+      "verify_workspace": null
+    },
+    "context_pack_digest": null,
+    "direct_runner_cost_accounting": null,
+    "direct_runner_id": "codex-nfl-direct-search-replace-v1",
+    "direct_runner_status": "error",
+    "failure_class": null,
+    "failure_owner": "infrastructure",
+    "model_call_made": false,
+    "prompt_snapshot": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/codex_nfl_output_contract_v3_click_008_attempt3_20260508__frontier-generic-swe__click__rbench__008__attempt3/prompt_snapshot.json",
+    "prompt_snapshot_sha256": "d2d51058d003207d69850e0baa691b96cf8fa7ee05b2ac183918e370af509c12",
+    "raw_response_artifact": null,
+    "runner_id": "codex-nfl-batch-v1",
+    "task_manifest_path": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/tasks/click/rbench/click__rbench__008/task.yaml",
+    "task_manifest_sha256": "392031ba697fd975f34ab7516ca27dacf775aa3396606db0b0f1dde06f4ed3ca",
+    "tool": "codex_nfl_experiment_runner",
+    "verifier_digest_sha256": "ba2ad64cf925b56cd838b2441be0f763ebd8ed5a86419824db5aadb5a1df48a5",
+    "verifier_ready_patch_available": false
+  },
+  "patch_path": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/codex_nfl_output_contract_v3_click_008_attempt3_20260508__frontier-generic-swe__click__rbench__008__attempt3/submission.patch",
+  "review": {
+    "mergeability_grade": null,
+    "notes": "",
+    "rule_violation": false,
+    "wrong_module": false
+  },
+  "run_id": "codex_nfl_output_contract_v3_click_008_attempt3_20260508__frontier-generic-swe__click__rbench__008__attempt3",
+  "schema_version": "core-narrative.run-result.v1",
+  "split": "rbench",
+  "started_at": "2026-05-08T13:08:50.653184Z",
+  "status": "infra_failed",
+  "task_id": "click__rbench__008",
+  "verification": {
+    "duration_seconds": null,
+    "exit_code": null,
+    "stderr_artifact": null,
+    "stdout_artifact": null
+  }
+}

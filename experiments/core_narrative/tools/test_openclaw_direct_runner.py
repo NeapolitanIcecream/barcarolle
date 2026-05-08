@@ -1186,6 +1186,76 @@ class OpenClawDirectRunnerTests(unittest.TestCase):
         )
         self.assertEqual(ledger_records[0]["metadata"]["fallback_estimated_cost_usd"], 1)
 
+    def test_live_timeout_after_network_attempt_is_ledgered_conservatively(self) -> None:
+        """Regression: provider timeouts after a network attempt must not undercount budget."""
+        artifact_dir = self.root / "timeout-live-artifacts"
+        output_path = self.root / "timeout-summary.json"
+
+        def fake_call_live_model(**_kwargs):
+            raise runner_module.ToolError(
+                "LLM request failed",
+                error_type="timeout",
+                network_attempted=True,
+                request_profile={
+                    "endpoint_kind": "chat_completions",
+                    "model": "openai/gpt-5.4-mini",
+                    "prompt_sha256": "unit-prompt",
+                },
+            )
+
+        with mock.patch.dict(os.environ, self.env(), clear=False), mock.patch.object(
+            runner_module,
+            "call_live_model",
+            fake_call_live_model,
+        ):
+            code = runner_module.main(
+                [
+                    "--workspace",
+                    str(self.workspace),
+                    "--task",
+                    str(self.task_path),
+                    "--acut",
+                    str(self.acut_path),
+                    "--attempt",
+                    "1",
+                    "--run-id",
+                    "unit_timeout_after_network_attempt",
+                    "--artifact-dir",
+                    str(artifact_dir),
+                    "--output",
+                    str(output_path),
+                    "--llm-ledger",
+                    str(self.ledger_path),
+                    "--projected-cost-usd",
+                    "1",
+                    "--estimated-cost-usd",
+                    "1",
+                    "--context-path",
+                    "module.py",
+                ]
+            )
+
+        self.assertEqual(code, 2)
+        summary = json.loads(output_path.read_text(encoding="utf-8"))
+        self.assertEqual(summary["status"], "error")
+        self.assertTrue(summary["model_call_made"])
+        self.assertEqual(summary["details"]["error_type"], "timeout")
+        self.assertEqual(summary["cost_ledger_append"]["status"], "appended")
+
+        ledger_records = [json.loads(line) for line in self.ledger_path.read_text(encoding="utf-8").splitlines()]
+        self.assertEqual(ledger_records[0]["event"], "runner_error_after_model_attempt")
+        self.assertEqual(ledger_records[0]["estimated_cost_usd"], 1)
+        self.assertEqual(ledger_records[0]["input_tokens"], 0)
+        self.assertEqual(ledger_records[0]["output_tokens"], 0)
+        self.assertEqual(ledger_records[0]["metadata"]["cost_basis"], "local_projected_estimate_not_invoice")
+        self.assertTrue(ledger_records[0]["metadata"]["model_call_made"])
+        self.assertFalse(ledger_records[0]["metadata"]["model_response_received"])
+        self.assertTrue(ledger_records[0]["metadata"]["network_attempted"])
+        self.assertFalse(ledger_records[0]["metadata"]["provider_usage_reported"])
+        self.assertEqual(ledger_records[0]["metadata"]["observed_provider_cost_status"], "not_reported")
+        self.assertEqual(ledger_records[0]["metadata"]["error_type"], "timeout")
+        self.assertEqual(ledger_records[0]["metadata"]["request_profile"]["prompt_sha256"], "unit-prompt")
+
 
 if __name__ == "__main__":
     unittest.main()
