@@ -992,20 +992,29 @@ def ledger_has_run_id(path: Path, run_id: str) -> bool:
 
 
 def append_failure_record_if_model_responded(args: argparse.Namespace, *, started_at: str, finished_at: str, exc: Exception) -> dict[str, Any] | None:
-    """Best-effort ledgering for failures after a live provider response.
+    """Best-effort ledgering for failures after a live provider attempt.
 
     The normal success path appends the ledger after patch collection.  If a
     model response is received but validation/application fails first, the run
     still consumed provider resources and needs an explicit cost/usage record.
+    If the provider request was attempted but no response body was captured
+    (for example an HTTP timeout), ledger the local projected estimate so the
+    experiment budget remains conservative.
     """
 
     raw_response_path = Path(args.artifact_dir) / "provider_response.redacted.json"
-    if not raw_response_path.exists() or ledger_has_run_id(Path(args.llm_ledger), args.run_id):
+    details = exc.details if isinstance(exc, ToolError) else {}
+    network_attempted = isinstance(details, Mapping) and details.get("network_attempted") is True
+    response_received = raw_response_path.exists()
+    if (not response_received and not network_attempted) or ledger_has_run_id(Path(args.llm_ledger), args.run_id):
         return None
     try:
         task = load_manifest(args.task)
         acut = load_manifest(args.acut)
-        text, usage = provider_text_and_usage(raw_response_path.read_bytes())
+        text = ""
+        usage = None
+        if response_received:
+            text, usage = provider_text_and_usage(raw_response_path.read_bytes())
         input_tokens, output_tokens = usage_token_counts(usage, args)
         projected_cost = parse_usd(args.projected_cost_usd, "--projected-cost-usd")
         estimated_cost = parse_usd(args.estimated_cost_usd, "--estimated-cost-usd") if args.estimated_cost_usd else projected_cost
@@ -1014,12 +1023,15 @@ def append_failure_record_if_model_responded(args: argparse.Namespace, *, starte
             fallback_estimated_cost=estimated_cost,
             usage=usage,
         )
-        details = exc.details if isinstance(exc, ToolError) else {}
         failure_class = (
             details.get("failure_class")
-            if isinstance(details.get("failure_class"), str)
+            if isinstance(details, Mapping) and isinstance(details.get("failure_class"), str)
+            else details.get("error_type")
+            if isinstance(details, Mapping) and isinstance(details.get("error_type"), str)
             else type(exc).__name__
         )
+        response_sha = sha256_text(text) if response_received else None
+        request_profile = details.get("request_profile") if isinstance(details, Mapping) else None
         return append_cost_record(
             ledger_path=Path(args.llm_ledger),
             run_id=args.run_id,
@@ -1027,7 +1039,7 @@ def append_failure_record_if_model_responded(args: argparse.Namespace, *, starte
             task_id=str(task.get("task_id")),
             split=str(task.get("split")),
             attempt=args.attempt,
-            event="runner_error_after_model_response",
+            event="runner_error_after_model_response" if response_received else "runner_error_after_model_attempt",
             started_at=started_at,
             finished_at=finished_at,
             input_tokens=input_tokens,
@@ -1038,8 +1050,10 @@ def append_failure_record_if_model_responded(args: argparse.Namespace, *, starte
                 "runner_id": RUNNER_ID,
                 "mode": "live",
                 "model_call_made": True,
-                "model_response_received": True,
+                "model_response_received": response_received,
+                "network_attempted": network_attempted or response_received,
                 "failure_class": failure_class,
+                "error_type": details.get("error_type") if isinstance(details, Mapping) else None,
                 "cost_basis": cost_basis,
                 "actual_cost_status": "unknown_not_invoice_verified",
                 "provider_usage_reported": usage is not None,
@@ -1050,7 +1064,8 @@ def append_failure_record_if_model_responded(args: argparse.Namespace, *, starte
                 else "not_reported",
                 "projected_cost_usd": money_json(projected_cost),
                 "fallback_estimated_cost_usd": money_json(estimated_cost),
-                "response_text_sha256": sha256_text(text),
+                "response_text_sha256": response_sha,
+                "request_profile": request_profile if isinstance(request_profile, Mapping) else {},
             },
         )
     except Exception as ledger_exc:  # keep the original failure primary
@@ -1319,6 +1334,7 @@ def main(argv: Sequence[str] | None = None) -> int:
     except Exception as exc:
         finished_at = iso_now()
         details = exc.details if isinstance(exc, ToolError) else {"exception_type": type(exc).__name__}
+        network_attempted = isinstance(details, Mapping) and details.get("network_attempted") is True
         failure_ledger_append = None
         try:
             if mode_from_args(args) == "live":
@@ -1336,19 +1352,17 @@ def main(argv: Sequence[str] | None = None) -> int:
             "finished_at": finished_at,
         }
         if "model_call_made" in locals():
-            payload["model_call_made"] = model_call_made
+            payload["model_call_made"] = bool(model_call_made or network_attempted)
         elif isinstance(failure_ledger_append, Mapping):
             payload["model_call_made"] = failure_ledger_append.get("status") == "appended"
         if "prompt_snapshot_path" in locals() and prompt_snapshot_path.exists():
             payload["prompt_snapshot"] = str(prompt_snapshot_path)
         if "raw_response_path" in locals() and raw_response_path.exists():
             payload["raw_response_artifact"] = str(raw_response_path)
-        if "--output" in sys.argv:
-            try:
-                output_path = Path(sys.argv[sys.argv.index("--output") + 1])
-                write_json(output_path, payload)
-            except Exception:
-                pass
+        try:
+            write_json(Path(args.output), payload)
+        except Exception:
+            pass
         print(json.dumps(payload, indent=2, sort_keys=True), file=sys.stderr)
         return exc.exit_code if isinstance(exc, ToolError) else 1
 

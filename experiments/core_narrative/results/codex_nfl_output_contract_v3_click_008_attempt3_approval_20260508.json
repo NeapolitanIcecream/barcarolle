@@ -1,0 +1,37 @@
+{
+  "schema_version": 1,
+  "decision_id": "codex_nfl_output_contract_v3_click_008_attempt3_approval_20260508",
+  "decided_at_local": "2026-05-08",
+  "decision_source": "user_followup_after_supervisor_brief",
+  "user_instruction_summary": "Continue with the next bounded experiment after the supervisor identified Click008 attempt 3 as the minimal useful next live step.",
+  "approved_scope": {
+    "task_ids": [
+      "click__rbench__008"
+    ],
+    "acut_ids": [
+      "cheap-generic-swe",
+      "frontier-generic-swe",
+      "cheap-click-specialist",
+      "frontier-click-specialist"
+    ],
+    "attempt": 3,
+    "mode": "live",
+    "run_prefix": "codex_nfl_output_contract_v3_click_008_attempt3_20260508"
+  },
+  "explicit_limits": {
+    "no_click009_or_later": true,
+    "no_broader_repo_family": true,
+    "no_speculative_extra_attempts": true,
+    "stop_on_api_funds_or_quota_blocker": true
+  },
+  "rationale": [
+    "Click008 attempt 2 was contaminated by hidden verifier test context before model prompting.",
+    "The no-op verifier workspace isolation fix has passed no-model prompt-packaging verification.",
+    "A four-cell Click008 attempt 3 is the minimal live measurement needed to test whether Click008 remains a stable failure after the packaging fix."
+  ],
+  "budget_policy": {
+    "projected_cost_usd": 8.0,
+    "projected_cost_basis": "Batch runner default projection: cheap ACUTs 1 USD each, frontier ACUTs 3 USD each.",
+    "ledger": "experiments/core_narrative/results/cost_ledger.jsonl"
+  }
+}
