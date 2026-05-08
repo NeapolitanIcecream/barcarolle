@@ -156,6 +156,54 @@ class CodexNflGate0PreflightTests(unittest.TestCase):
             payload = preflight.json.loads(output.read_text(encoding="utf-8"))
             self.assertEqual(payload["task_split"], "rwork")
 
+    def test_main_rejects_task_with_wrong_split_even_when_manifest_contains_id(self) -> None:
+        """Regression: Gate 0 must not probe RBench task packs under an RWork summary."""
+        with tempfile.TemporaryDirectory() as temp_dir:
+            output = Path(temp_dir) / "preflight.json"
+            manifest_path = Path(temp_dir) / "mixed_manifest.json"
+            manifest_path.write_text(
+                preflight.json.dumps(
+                    {
+                        "split": "RWork",
+                        "tasks": [
+                            {
+                                "task_id": "click__rbench__001",
+                                "split": "rbench",
+                                "benchmark_split": "RBench",
+                            }
+                        ],
+                    }
+                ),
+                encoding="utf-8",
+            )
+            run_calls: list[str] = []
+
+            def fake_probe(task, **kwargs):
+                run_calls.append(task["task_id"])
+                return {"task_id": task["task_id"], "status": "passed"}
+
+            with mock.patch.object(preflight.batch, "task_manifest_path", return_value=Path(__file__)), mock.patch.object(
+                preflight,
+                "task_probe",
+                side_effect=fake_probe,
+            ):
+                code = preflight.main(
+                    [
+                        "--task-split",
+                        "rwork",
+                        "--task-split-manifest",
+                        str(manifest_path),
+                        "--tasks",
+                        "click__rbench__001",
+                        "--output",
+                        str(output),
+                    ]
+                )
+
+            self.assertNotEqual(code, 0)
+            self.assertEqual(run_calls, [])
+            self.assertFalse(output.exists())
+
     def test_task_probe_records_clean_patch_replay_gate(self) -> None:
         """Reference probes double as clean replay evidence in the admission artifact."""
         task = {"task_id": "click__rbench__001", "source": {}}
