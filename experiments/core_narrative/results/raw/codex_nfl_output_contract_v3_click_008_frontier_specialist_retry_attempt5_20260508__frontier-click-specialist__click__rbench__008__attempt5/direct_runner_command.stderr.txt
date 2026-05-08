@@ -1,0 +1,43 @@
+{
+  "cost_ledger_append": {
+    "actual_cost_recorded": false,
+    "estimated_cost_usd": 0.300858,
+    "new_cumulative_estimated_cost_usd": 15.697699,
+    "record_count_after": 79,
+    "record_count_before": 78,
+    "status": "appended"
+  },
+  "details": {
+    "anchor_matches": 0,
+    "anchors": {
+      "after": false,
+      "after_chars": 0,
+      "before": false,
+      "before_chars": 0
+    },
+    "diagnostic": {
+      "anchor_policy": {
+        "anchors_must_be_immediate_adjacent_source": true,
+        "anchors_required_when_old_is_repeated": true,
+        "omit_anchors_when_old_is_unique": true
+      },
+      "code": "old_text_not_found",
+      "recommendation": "copy old exactly from the displayed current source after applying earlier edits mentally"
+    },
+    "edit_index": 7,
+    "failure_class": "search_replace_old_occurrence_mismatch",
+    "occurrences": 0,
+    "old_text_char_count": 303,
+    "old_text_sha256": "eecc6679b9f3d2b20172a0541d5f913a4dbdfd02cb328598fc0c31d2fab1d459",
+    "path": "src/click/core.py"
+  },
+  "error": "edit old string must occur exactly once",
+  "finished_at": "2026-05-08T13:44:39.437907Z",
+  "model_call_made": true,
+  "prompt_snapshot": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/codex_nfl_output_contract_v3_click_008_frontier_specialist_retry_attempt5_20260508__frontier-click-specialist__click__rbench__008__attempt5/prompt_snapshot.json",
+  "raw_response_artifact": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/codex_nfl_output_contract_v3_click_008_frontier_specialist_retry_attempt5_20260508__frontier-click-specialist__click__rbench__008__attempt5/provider_response.redacted.json",
+  "runner_id": "codex-nfl-direct-search-replace-v1",
+  "started_at": "2026-05-08T13:40:32.128582Z",
+  "status": "error",
+  "tool": "codex_nfl_direct_runner"
+}
