@@ -262,6 +262,43 @@ class OpenClawDirectRunnerTests(unittest.TestCase):
         self.assertIn("Non-matching anchors are invalid even when old occurs once.", prompt)
         self.assertNotIn('{"unified_diff":"diff --git ..."}', prompt)
 
+    def test_structured_files_prompt_contract_requests_full_file_json(self) -> None:
+        """The alternate contract asks for file-level JSON, not search/replace anchors."""
+        prompt = runner_module.build_prompt(
+            task={
+                "task_id": "click__rwork__003",
+                "repo_slug": "click",
+                "split": "rwork",
+                "task_family": "default handling",
+                "allowed_context": {},
+                "disallowed_context": [],
+            },
+            task_statement="Preserve the first real default for shared options.",
+            acut={
+                "acut_id": "cheap-generic-swe",
+                "model": "openai/gpt-5.4-mini",
+                "retrieval_context_strategy": {},
+                "runtime_budget": {},
+            },
+            context_files=[
+                {
+                    "path": "src/click/core.py",
+                    "sha256": "core-sha",
+                    "char_count": 20,
+                    "truncated": False,
+                    "content": "VALUE = 1\n",
+                }
+            ],
+            specialist_context=None,
+            max_context_chars=10_000,
+            output_contract="structured-files-json-v1",
+        )
+
+        self.assertIn('"files":[{"path":"relative/file.py"', prompt)
+        self.assertIn("full file content", prompt)
+        self.assertIn("Do not return edits", prompt)
+        self.assertNotIn('"edits":[{"path":"relative/file.py"', prompt)
+
     def test_prompt_required_context_packaging_includes_option_focus_excerpt(self) -> None:
         """Regression: Click 008-style context must show Option internals past a large prefix."""
         core_path = self.workspace / "src" / "click" / "core.py"
@@ -1085,6 +1122,189 @@ class OpenClawDirectRunnerTests(unittest.TestCase):
         self.assertEqual(summary["patch"]["anchored_edit_count"], 1)
         self.assertGreater(summary["patch_artifact"]["size_bytes"], 0)
         self.assertEqual((self.workspace / "module.py").read_text(encoding="utf-8"), expected)
+
+    def test_structured_files_contract_generates_patch_without_old_string_matching(self) -> None:
+        """File-level JSON should bypass anchored search/replace ambiguity as a measurement contract."""
+        original = "VALUE = 1\nVALUE = 1\n"
+        expected = "VALUE = 2\nVALUE = 1\n"
+        (self.workspace / "module.py").write_text(original, encoding="utf-8")
+        run(["git", "add", "module.py"], cwd=self.workspace)
+        commit = run(["git", "commit", "-m", "duplicate value"], cwd=self.workspace)
+        self.assertEqual(commit.returncode, 0, commit.stderr)
+
+        artifact_dir = self.root / "structured-files-artifacts"
+        output_path = self.root / "structured-files.json"
+        response = json.dumps(
+            {
+                "files": [
+                    {
+                        "path": "module.py",
+                        "action": "replace",
+                        "content": expected,
+                    }
+                ]
+            }
+        )
+
+        completed = run(
+            [
+                sys.executable,
+                str(RUNNER),
+                "--workspace",
+                str(self.workspace),
+                "--task",
+                str(self.task_path),
+                "--acut",
+                str(self.acut_path),
+                "--attempt",
+                "1",
+                "--run-id",
+                "unit_openclaw_structured_files_attempt1",
+                "--artifact-dir",
+                str(artifact_dir),
+                "--output",
+                str(output_path),
+                "--llm-ledger",
+                str(self.ledger_path),
+                "--projected-cost-usd",
+                "1",
+                "--context-path",
+                "module.py",
+                "--output-contract",
+                "structured-files-json-v1",
+                "--mock-response-text",
+                response,
+            ],
+            cwd=REPO_ROOT,
+            env=self.env(),
+        )
+
+        self.assertEqual(completed.returncode, 0, completed.stderr)
+        summary = json.loads(output_path.read_text(encoding="utf-8"))
+        self.assertEqual(summary["status"], "patch_generated")
+        self.assertEqual(summary["submission_contract"], "structured-files-json-v1")
+        self.assertEqual(summary["patch"]["kind"], "structured_files")
+        self.assertEqual(summary["patch"]["output_contract"], "structured-files-json-v1")
+        self.assertGreater(summary["patch_artifact"]["size_bytes"], 0)
+        self.assertEqual((self.workspace / "module.py").read_text(encoding="utf-8"), expected)
+        snapshot = json.loads((artifact_dir / "prompt_snapshot.json").read_text(encoding="utf-8"))
+        self.assertEqual(snapshot["output_contract"], "structured-files-json-v1")
+
+    def test_structured_files_contract_rejects_search_replace_bundle_before_mutation(self) -> None:
+        """Failure diagnostics should identify wrong-contract model output as model-owned."""
+        artifact_dir = self.root / "structured-files-rejects-edits-artifacts"
+        output_path = self.root / "structured-files-rejects-edits.json"
+        response = json.dumps(
+            {
+                "edits": [
+                    {
+                        "path": "module.py",
+                        "old": "VALUE = 1\n",
+                        "new": "VALUE = 2\n",
+                    }
+                ]
+            }
+        )
+
+        completed = run(
+            [
+                sys.executable,
+                str(RUNNER),
+                "--workspace",
+                str(self.workspace),
+                "--task",
+                str(self.task_path),
+                "--acut",
+                str(self.acut_path),
+                "--attempt",
+                "1",
+                "--run-id",
+                "unit_openclaw_structured_files_rejects_edits_attempt1",
+                "--artifact-dir",
+                str(artifact_dir),
+                "--output",
+                str(output_path),
+                "--llm-ledger",
+                str(self.ledger_path),
+                "--projected-cost-usd",
+                "1",
+                "--context-path",
+                "module.py",
+                "--output-contract",
+                "structured-files-json-v1",
+                "--mock-response-text",
+                response,
+            ],
+            cwd=REPO_ROOT,
+            env=self.env(),
+        )
+
+        self.assertEqual(completed.returncode, 2, completed.stderr)
+        summary = json.loads(output_path.read_text(encoding="utf-8"))
+        self.assertEqual(summary["status"], "error")
+        self.assertEqual(summary["submission_contract"], "structured-files-json-v1")
+        self.assertEqual(summary["details"]["failure_class"], "output_contract_violation")
+        self.assertEqual((self.workspace / "module.py").read_text(encoding="utf-8"), "VALUE = 1\n")
+
+    def test_structured_files_contract_rejects_unsafe_patch_content_as_model_output(self) -> None:
+        """Generated full-file content with full URLs is an invalid submission, not infra."""
+        artifact_dir = self.root / "structured-files-unsafe-artifacts"
+        output_path = self.root / "structured-files-unsafe.json"
+        response_path = self.root / "unsafe-response.json"
+        response_path.write_text(
+            json.dumps(
+                {
+                    "files": [
+                        {
+                            "path": "module.py",
+                            "action": "replace",
+                            "content": 'DOC = "http' + 's://example.invalid/private"\n',
+                        }
+                    ]
+                }
+            ),
+            encoding="utf-8",
+        )
+
+        completed = run(
+            [
+                sys.executable,
+                str(RUNNER),
+                "--workspace",
+                str(self.workspace),
+                "--task",
+                str(self.task_path),
+                "--acut",
+                str(self.acut_path),
+                "--attempt",
+                "1",
+                "--run-id",
+                "unit_openclaw_structured_files_unsafe_attempt1",
+                "--artifact-dir",
+                str(artifact_dir),
+                "--output",
+                str(output_path),
+                "--llm-ledger",
+                str(self.ledger_path),
+                "--projected-cost-usd",
+                "1",
+                "--context-path",
+                "module.py",
+                "--output-contract",
+                "structured-files-json-v1",
+                "--mock-response",
+                str(response_path),
+            ],
+            cwd=REPO_ROOT,
+            env=self.env(),
+        )
+
+        self.assertEqual(completed.returncode, 2, completed.stderr)
+        summary = json.loads(output_path.read_text(encoding="utf-8"))
+        self.assertEqual(summary["status"], "error")
+        self.assertEqual(summary["details"]["failure_class"], "unsafe_generated_text")
+        self.assertTrue(summary["details"]["unsafe_content"]["unsafe"])
+        self.assertFalse((artifact_dir / "submission.patch").exists())
 
     def test_invalid_unified_diff_has_model_output_failure_class(self) -> None:
         """Regression: corrupt unified diffs are invalid submissions, not infra failures."""

@@ -36,6 +36,12 @@ DIRECT_RUNNER = REPO_ROOT / "experiments/core_narrative/tools/codex_nfl_direct_r
 VERIFY = REPO_ROOT / "experiments/core_narrative/tools/apply_and_verify.py"
 DEFAULT_RUN_PREFIX = "codex_nfl_20260508"
 SCOREABLE_STATUSES = {"passed", "failed", "timeout", "invalid_submission"}
+DEFAULT_SUBMISSION_CONTRACT = "anchored-search-replace-json-v3"
+STRUCTURED_FILES_SUBMISSION_CONTRACT = "structured-files-json-v1"
+SUBMISSION_CONTRACTS = (
+    DEFAULT_SUBMISSION_CONTRACT,
+    STRUCTURED_FILES_SUBMISSION_CONTRACT,
+)
 MODEL_OUTPUT_FAILURE_CLASSES = {
     "generated_path_not_in_workspace",
     "generated_path_outside_context",
@@ -45,6 +51,7 @@ MODEL_OUTPUT_FAILURE_CLASSES = {
     "output_contract_violation",
     "invalid_unified_diff",
     "unsupported_patch_response",
+    "structured_files_invalid",
     "unsafe_generated_text",
 }
 
@@ -68,6 +75,12 @@ def parse_args(argv: Sequence[str]) -> argparse.Namespace:
     parser.add_argument("--mode", choices=("live", "mock", "dry-run"), default="live")
     parser.add_argument("--mock-response")
     parser.add_argument("--mock-response-text")
+    parser.add_argument(
+        "--submission-contract",
+        choices=SUBMISSION_CONTRACTS,
+        default=DEFAULT_SUBMISSION_CONTRACT,
+        help="Submission/output contract used by the direct runner.",
+    )
     parser.add_argument("--llm-ledger", default=str(DEFAULT_LEDGER_PATH))
     parser.add_argument(
         "--coordinator-decision-ref",
@@ -510,6 +523,8 @@ def run_direct_runner(
         command.extend(["--max-context-chars", str(args.max_context_chars)])
     if getattr(args, "max_file_chars", None) is not None:
         command.extend(["--max-file-chars", str(args.max_file_chars)])
+    submission_contract = getattr(args, "submission_contract", DEFAULT_SUBMISSION_CONTRACT)
+    command.extend(["--output-contract", str(submission_contract)])
     if args.mode == "dry-run":
         command.append("--dry-run")
     elif args.mode == "mock":
@@ -541,9 +556,38 @@ def run_direct_runner(
         "status": "error",
         "error": redact_sensitive_text(completed.stderr, os.environ),
     }
+    result.setdefault("submission_contract", submission_contract)
+    result.setdefault("output_contract", submission_contract)
     result["selected_context_paths"] = list(context_paths)
     result["task_visible_context_guidance"] = task.get("visible_context_guidance")
     return completed.returncode, result
+
+
+def submission_contract_from_runner_result(runner_result: Mapping[str, Any] | None) -> str:
+    if isinstance(runner_result, Mapping):
+        for key in ("submission_contract", "output_contract"):
+            value = runner_result.get(key)
+            if isinstance(value, str) and value:
+                return value
+    return DEFAULT_SUBMISSION_CONTRACT
+
+
+def failure_owner_for_status(status: object, metadata: Mapping[str, Any], runner_result: Mapping[str, Any] | None) -> str:
+    existing = metadata.get("failure_owner")
+    if isinstance(existing, str) and existing:
+        return existing
+    status_text = str(status)
+    if status_text == "passed":
+        return "none"
+    if status_text == "invalid_submission":
+        return "model_output"
+    if status_text in {"failed", "timeout"}:
+        return "candidate_patch"
+    if status_text == "infra_failed":
+        return "infrastructure"
+    if isinstance(runner_result, Mapping) and runner_result.get("status") == "error":
+        return "infrastructure"
+    return "unknown"
 
 
 def write_infra_failed_result(
@@ -589,10 +633,16 @@ def write_infra_failed_result(
             "runner_id": RUNNER_ID,
             "direct_runner_id": runner_result.get("runner_id"),
             "direct_runner_status": runner_result.get("status"),
+            "submission_contract": submission_contract_from_runner_result(runner_result),
             "model_call_made": runner_result.get("model_call_made"),
             "failure_class": failure_class,
             "failure_owner": "model_output" if status == "invalid_submission" else "infrastructure",
             "verifier_ready_patch_available": False,
+            "patch_readiness": {
+                "verifier_ready_patch_available": False,
+                "patch_size_bytes": 0,
+                "clean_replay_attempted": False,
+            },
             "raw_response_artifact": runner_result.get("raw_response_artifact"),
             "prompt_snapshot": runner_result.get("prompt_snapshot"),
         },
@@ -669,16 +719,21 @@ def enrich_normalized_metadata(
     cost_ledger_append = runner_result.get("cost_ledger_append") if isinstance(runner_result, Mapping) else None
     budget_gate = runner_result.get("budget_gate") if isinstance(runner_result, Mapping) else None
     runner_model_call_made = runner_result.get("model_call_made") if isinstance(runner_result, Mapping) else None
+    patch_artifact = runner_result.get("patch_artifact") if isinstance(runner_result, Mapping) else None
+    patch_size_bytes = patch_artifact.get("size_bytes") if isinstance(patch_artifact, Mapping) else None
     metadata = normalized.get("metadata") if isinstance(normalized.get("metadata"), dict) else {}
     model_call_made = metadata.get("model_call_made")
     if model_call_made is None:
         model_call_made = runner_model_call_made
+    submission_contract = submission_contract_from_runner_result(runner_result)
     enriched = {
         **metadata,
         "batch_tool": TOOL,
         "runner_id": RUNNER_ID,
         "direct_runner_id": runner_result.get("runner_id") if isinstance(runner_result, Mapping) else None,
+        "submission_contract": submission_contract,
         "model_call_made": model_call_made,
+        "failure_owner": failure_owner_for_status(normalized.get("status"), metadata, runner_result),
         "task_manifest_path": str(task_path),
         "task_manifest_sha256": sha256_file(task_path),
         "acut_manifest_path": str(acut_path),
@@ -691,6 +746,11 @@ def enrich_normalized_metadata(
         "direct_runner_cost_ledger_append": cost_ledger_append if isinstance(cost_ledger_append, Mapping) else metadata.get("direct_runner_cost_ledger_append"),
         "direct_runner_budget_gate": budget_gate if isinstance(budget_gate, Mapping) else metadata.get("direct_runner_budget_gate"),
         "context_pack_digest": context_pack_digest(acut_id),
+        "patch_readiness": {
+            "verifier_ready_patch_available": clean_patch_replay_attempted,
+            "patch_size_bytes": patch_size_bytes if isinstance(patch_size_bytes, int) else None,
+            "clean_replay_attempted": clean_patch_replay_attempted,
+        },
         "clean_patch_replay": {
             "attempted": clean_patch_replay_attempted,
             "skip_apply": metadata.get("skip_apply"),
@@ -784,6 +844,7 @@ def run_one(args: argparse.Namespace, task: Mapping[str, Any], acut_id: str) -> 
                 "run_id": run_id,
                 "task_id": task_id,
                 "acut_id": acut_id,
+                "submission_contract": getattr(args, "submission_contract", DEFAULT_SUBMISSION_CONTRACT),
                 "status": "infra_failed",
                 "scoreable": False,
                 "patch_ready": False,
@@ -887,6 +948,7 @@ def run_one(args: argparse.Namespace, task: Mapping[str, Any], acut_id: str) -> 
         "run_id": run_id,
         "task_id": task_id,
         "acut_id": acut_id,
+        "submission_contract": submission_contract_from_runner_result(runner_result),
         "status": normalized.get("status"),
         "scoreable": normalized.get("status") in SCOREABLE_STATUSES,
         "patch_ready": patch_ready,
@@ -922,13 +984,16 @@ def aggregate(results: Sequence[Mapping[str, Any]]) -> dict[str, Any]:
     counts: dict[str, int] = {}
     by_acut: dict[str, dict[str, int]] = {}
     by_task: dict[str, dict[str, int]] = {}
+    by_contract: dict[str, dict[str, int]] = {}
     for result in results:
         status = str(result.get("status"))
         counts[status] = counts.get(status, 0) + 1
         acut = str(result.get("acut_id"))
         task = str(result.get("task_id"))
+        contract = str(result.get("submission_contract") or DEFAULT_SUBMISSION_CONTRACT)
         by_acut.setdefault(acut, {})[status] = by_acut.setdefault(acut, {}).get(status, 0) + 1
         by_task.setdefault(task, {})[status] = by_task.setdefault(task, {}).get(status, 0) + 1
+        by_contract.setdefault(contract, {})[status] = by_contract.setdefault(contract, {}).get(status, 0) + 1
     return {
         "total": len(results),
         "scoreable": sum(1 for result in results if result.get("scoreable")),
@@ -939,6 +1004,7 @@ def aggregate(results: Sequence[Mapping[str, Any]]) -> dict[str, Any]:
         "status_counts": counts,
         "by_acut": by_acut,
         "by_task": by_task,
+        "by_contract": by_contract,
     }
 
 
@@ -1003,6 +1069,7 @@ def main(argv: Sequence[str] | None = None) -> int:
             "runner_id": RUNNER_ID,
             "status": "completed",
             "mode": args.mode,
+            "submission_contract": args.submission_contract,
             "run_prefix": args.run_prefix,
             "task_split": task_split,
             "task_split_manifest": str(split_manifest_path),

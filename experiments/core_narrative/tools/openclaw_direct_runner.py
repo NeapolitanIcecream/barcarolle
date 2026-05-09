@@ -43,8 +43,10 @@ from _llm_budget import (
 )
 from barcarolle_patch_command import (
     DEFAULT_MAX_RESPONSE_BYTES,
+    STRUCTURED_FILES_OUTPUT_CONTRACT,
     apply_patch_response,
     diff_paths,
+    enforce_output_contract,
     parse_patch_response,
     reject_unsafe_generated_text,
     resolve_live_endpoint,
@@ -61,9 +63,28 @@ DEFAULT_MAX_FILE_CHARS = 80_000
 DEFAULT_MAX_CONTEXT_CHARS = 120_000
 DEFAULT_MAX_FOCUSED_EXCERPT_CHARS = 8_000
 DEFAULT_OUTPUT_CONTRACT = "anchored-search-replace-json-v3"
+SUPPORTED_OUTPUT_CONTRACTS = (DEFAULT_OUTPUT_CONTRACT, STRUCTURED_FILES_OUTPUT_CONTRACT)
 
 
-def output_contract_schema() -> dict[str, Any]:
+def output_contract_schema(output_contract: str = DEFAULT_OUTPUT_CONTRACT) -> dict[str, Any]:
+    if output_contract == STRUCTURED_FILES_OUTPUT_CONTRACT:
+        return {
+            "id": STRUCTURED_FILES_OUTPUT_CONTRACT,
+            "primary_top_level_key": "files",
+            "requires_single_top_level_key": True,
+            "requires_json_object": True,
+            "requires_full_file_content": True,
+            "allowed_actions": ["write", "create", "replace", "delete"],
+            "path_policy": {
+                "paths_must_be_relative": True,
+                "paths_must_not_target_reserved_metadata": [".git", ".core_narrative"],
+                "paths_must_be_from_declared_context": True,
+            },
+            "diagnostic_failure_classes": {
+                "output_contract_violation": "response did not satisfy the selected structured-files contract",
+                "structured_files_invalid": "files entries were malformed or could not be applied as file-level edits",
+            },
+        }
     return {
         "id": DEFAULT_OUTPUT_CONTRACT,
         "primary_top_level_key": "edits",
@@ -113,6 +134,12 @@ def parse_args(argv: Sequence[str]) -> argparse.Namespace:
     parser.add_argument("--max-response-bytes", type=int, default=DEFAULT_MAX_RESPONSE_BYTES)
     parser.add_argument("--max-file-chars", type=int, default=DEFAULT_MAX_FILE_CHARS)
     parser.add_argument("--max-context-chars", type=int, default=DEFAULT_MAX_CONTEXT_CHARS)
+    parser.add_argument(
+        "--output-contract",
+        choices=SUPPORTED_OUTPUT_CONTRACTS,
+        default=DEFAULT_OUTPUT_CONTRACT,
+        help="Model submission contract to request and validate.",
+    )
     parser.add_argument(
         "--include-specialist-context",
         choices=("auto", "always", "never"),
@@ -358,6 +385,7 @@ def build_prompt(
     context_files: Sequence[Mapping[str, Any]],
     specialist_context: str | None,
     max_context_chars: int,
+    output_contract: str = DEFAULT_OUTPUT_CONTRACT,
 ) -> str:
     acut_policy = {
         "acut_id": acut.get("acut_id"),
@@ -377,29 +405,48 @@ def build_prompt(
         else None,
     }
 
+    if output_contract == STRUCTURED_FILES_OUTPUT_CONTRACT:
+        contract_lines = [
+            "Return only one JSON object with this exact contract:",
+            '{"files":[{"path":"relative/file.py","action":"write","content":"full file content"}]}',
+            "Allowed actions are write, create, replace, and delete. For delete, omit content.",
+            "For write, create, and replace, content must be the complete final file content, not a snippet or diff.",
+            "Do not return edits, old/new search strings, unified_diff, raw diff text, markdown fences, prose, or any top-level key other than files.",
+            "",
+            "Pre-submit validation checklist:",
+            "- The top-level JSON object has exactly one key: files.",
+            "- Each file path exactly matches one of the Valid edit paths below.",
+            "- Each non-delete entry includes complete final file content.",
+            "- Keep changes minimal. Prefer source code fixes over test-only changes.",
+        ]
+    else:
+        contract_lines = [
+            "Return only one JSON object with this exact contract:",
+            '{"edits":[{"path":"relative/file.py","old":"exact existing text","new":"replacement text",'
+            '"before":"optional exact text immediately before old","after":"optional exact text immediately after old"}]}',
+            "Do not return unified_diff, raw diff text, markdown fences, prose, or any top-level key other than edits.",
+            "",
+            "Pre-submit validation checklist:",
+            "- The top-level JSON object has exactly one key: edits.",
+            "- Each edit path exactly matches one of the Valid edit paths below.",
+            "- Each old string is copied exactly from the currently shown source.",
+            "- Apply edits in order mentally. For each edit, old must identify exactly one occurrence after earlier edits.",
+            "- If old occurs exactly once, omit before and after anchors.",
+            "- If old occurs more than once, include before and/or after anchors copied exactly from the same file.",
+            "- Anchors must be immediate context: before must end exactly where old begins; after must begin exactly where old ends.",
+            "Rules:",
+            "- Repeated old strings without exact anchors are invalid and will not be applied.",
+            "- Non-matching anchors are invalid even when old occurs once.",
+            "- Never invent old text from memory or from APIs not shown in the source excerpts.",
+            "- Keep edits minimal. Prefer source code fixes over test-only changes.",
+        ]
+
     sections: list[str] = [
         "You are generating a minimal repository patch for one Barcarolle ACUT task.",
         "Use only the public task statement, ACUT policy, and source files included below.",
         "Do not use hidden verifier files, reference patches, future history, credentials, endpoints, or URLs.",
         "",
-        "Return only one JSON object with this exact contract:",
-        '{"edits":[{"path":"relative/file.py","old":"exact existing text","new":"replacement text",'
-        '"before":"optional exact text immediately before old","after":"optional exact text immediately after old"}]}',
-        "Do not return unified_diff, raw diff text, markdown fences, prose, or any top-level key other than edits.",
-        "",
-        "Pre-submit validation checklist:",
-        "- The top-level JSON object has exactly one key: edits.",
-        "- Each edit path exactly matches one of the Valid edit paths below.",
-        "- Each old string is copied exactly from the currently shown source.",
-        "- Apply edits in order mentally. For each edit, old must identify exactly one occurrence after earlier edits.",
-        "- If old occurs exactly once, omit before and after anchors.",
-        "- If old occurs more than once, include before and/or after anchors copied exactly from the same file.",
-        "- Anchors must be immediate context: before must end exactly where old begins; after must begin exactly where old ends.",
-        "Rules:",
-        "- Repeated old strings without exact anchors are invalid and will not be applied.",
-        "- Non-matching anchors are invalid even when old occurs once.",
-        "- Never invent old text from memory or from APIs not shown in the source excerpts.",
-        "- Keep edits minimal. Prefer source code fixes over test-only changes.",
+        *contract_lines,
         "",
         "Task summary:",
         json.dumps(task_summary, indent=2, sort_keys=True),
@@ -507,15 +554,26 @@ def extract_text(value: Any) -> str | None:
     return None
 
 
-def live_payload(acut: Mapping[str, Any], prompt: str, endpoint_kind: str) -> dict[str, Any]:
+def live_payload(
+    acut: Mapping[str, Any],
+    prompt: str,
+    endpoint_kind: str,
+    output_contract: str = DEFAULT_OUTPUT_CONTRACT,
+) -> dict[str, Any]:
     model = acut.get("model")
     if not isinstance(model, str) or not model:
         raise ToolError("ACUT manifest is missing model")
     params = acut.get("model_parameters") if isinstance(acut.get("model_parameters"), dict) else {}
-    system = (
-        "You are a patch-generation engine. Return only valid JSON matching "
-        "the requested anchored search/replace edit contract."
-    )
+    if output_contract == STRUCTURED_FILES_OUTPUT_CONTRACT:
+        system = (
+            "You are a patch-generation engine. Return only valid JSON matching "
+            "the requested structured file-level contract."
+        )
+    else:
+        system = (
+            "You are a patch-generation engine. Return only valid JSON matching "
+            "the requested anchored search/replace edit contract."
+        )
     if endpoint_kind == "responses":
         return {
             "model": model,
@@ -543,18 +601,19 @@ def call_live_model(
     timeout_seconds: int,
     max_response_bytes: int,
     raw_response_path: Path,
+    output_contract: str = DEFAULT_OUTPUT_CONTRACT,
 ) -> tuple[str, dict[str, Any] | None, dict[str, Any]]:
     api_key = os.environ.get("BARCAROLLE_LLM_API_KEY")
     raw_endpoint = os.environ.get("BARCAROLLE_LLM_BASE_URL")
     if not api_key or not raw_endpoint:
         raise ToolError("missing required LLM environment", network_attempted=False)
     endpoint, endpoint_kind = resolve_live_endpoint(raw_endpoint)
-    payload = live_payload(acut, prompt, endpoint_kind)
+    payload = live_payload(acut, prompt, endpoint_kind, output_contract)
     request_body = json.dumps(payload).encode("utf-8")
     profile = {
         "endpoint_kind": endpoint_kind,
-        "output_contract": DEFAULT_OUTPUT_CONTRACT,
-        "output_contract_schema": output_contract_schema(),
+        "output_contract": output_contract,
+        "output_contract_schema": output_contract_schema(output_contract),
         "response_format_requested": payload.get("response_format") == {"type": "json_object"},
         "request_body_bytes": len(request_body),
         "prompt_sha256": sha256_text(prompt),
@@ -646,17 +705,9 @@ def parse_edit_bundle(text: str) -> list[dict[str, str]] | None:
     return normalized
 
 
-def ensure_paths_within_context(workspace: Path, paths: Sequence[str], allowed_paths: Sequence[str]) -> list[str]:
+def ensure_paths_allowed(paths: Sequence[str], allowed_paths: Sequence[str]) -> list[str]:
     allowed = sorted({validate_patch_path(path) for path in allowed_paths})
     requested = sorted({validate_patch_path(path) for path in paths})
-    for path in requested:
-        target = resolve_workspace_path(workspace, path, "generated patch path")
-        if not target.exists() or not target.is_file():
-            raise ToolError(
-                "edit path is not in the prepared workspace",
-                path=path,
-                failure_class="generated_path_not_in_workspace",
-            )
     outside = [path for path in requested if path not in allowed]
     if outside:
         raise ToolError(
@@ -665,6 +716,20 @@ def ensure_paths_within_context(workspace: Path, paths: Sequence[str], allowed_p
             allowed_context_paths=allowed,
             failure_class="generated_path_outside_context",
         )
+    return requested
+
+
+def ensure_paths_within_context(workspace: Path, paths: Sequence[str], allowed_paths: Sequence[str]) -> list[str]:
+    requested = ensure_paths_allowed(paths, allowed_paths)
+    allowed = sorted({validate_patch_path(path) for path in allowed_paths})
+    for path in requested:
+        target = resolve_workspace_path(workspace, path, "generated patch path")
+        if not target.exists() or not target.is_file():
+            raise ToolError(
+                "edit path is not in the prepared workspace",
+                path=path,
+                failure_class="generated_path_not_in_workspace",
+            )
     return requested
 
 
@@ -851,8 +916,76 @@ def apply_edit_bundle(
     }
 
 
-def apply_model_response(workspace: Path, text: str, *, allowed_paths: Sequence[str]) -> dict[str, Any]:
-    reject_unsafe_generated_text(text, "model response")
+def structured_files_failure_class(error: str) -> str:
+    if error == "model response did not contain a supported patch":
+        return "unsupported_patch_response"
+    if error == "structured-files output contract requires JSON files":
+        return "output_contract_violation"
+    if "unsafe content" in error:
+        return "unsafe_generated_text"
+    return "structured_files_invalid"
+
+
+def reject_unsafe_model_response(text: str) -> None:
+    try:
+        reject_unsafe_generated_text(text, "model response")
+    except ToolError as exc:
+        details = dict(exc.details)
+        details.setdefault("failure_class", "unsafe_generated_text")
+        raise ToolError(str(exc), **details) from exc
+
+
+def reject_known_wrong_contract_json(text: str) -> None:
+    try:
+        data = json.loads(text.strip())
+    except json.JSONDecodeError:
+        return
+    if not isinstance(data, dict):
+        return
+    if "files" in data:
+        return
+    if "edits" in data or any(key in data for key in ("unified_diff", "patch", "diff")):
+        raise ToolError(
+            "structured-files output contract requires JSON files",
+            failure_class="output_contract_violation",
+        )
+
+
+def apply_structured_files_model_response(
+    workspace: Path,
+    text: str,
+    *,
+    allowed_paths: Sequence[str],
+) -> dict[str, Any]:
+    reject_unsafe_model_response(text)
+    try:
+        reject_known_wrong_contract_json(text)
+        parsed = parse_patch_response(text)
+        enforce_output_contract(parsed, STRUCTURED_FILES_OUTPUT_CONTRACT)
+        ensure_paths_within_context(workspace, parsed_patch_paths(parsed), allowed_paths)
+        result = apply_patch_response(workspace, parsed, apply_patch=True)
+        ensure_paths_allowed(result.get("changed_paths", []), allowed_paths)
+    except ToolError as exc:
+        details = dict(exc.details)
+        failure_class = details.pop("failure_class", None)
+        if not isinstance(failure_class, str) or not failure_class:
+            failure_class = structured_files_failure_class(str(exc))
+        raise ToolError(str(exc), **details, failure_class=failure_class) from exc
+    result["allowed_context_paths"] = sorted({validate_patch_path(path) for path in allowed_paths})
+    result["output_contract"] = STRUCTURED_FILES_OUTPUT_CONTRACT
+    return result
+
+
+def apply_model_response(
+    workspace: Path,
+    text: str,
+    *,
+    allowed_paths: Sequence[str],
+    output_contract: str = DEFAULT_OUTPUT_CONTRACT,
+) -> dict[str, Any]:
+    if output_contract == STRUCTURED_FILES_OUTPUT_CONTRACT:
+        return apply_structured_files_model_response(workspace, text, allowed_paths=allowed_paths)
+    reject_unsafe_model_response(text)
     edits = parse_edit_bundle(text)
     if edits is not None:
         result = apply_edit_bundle(workspace, edits, allowed_paths=allowed_paths)
@@ -1049,6 +1182,7 @@ def append_failure_record_if_model_responded(args: argparse.Namespace, *, starte
             metadata={
                 "runner_id": RUNNER_ID,
                 "mode": "live",
+                "submission_contract": getattr(args, "output_contract", DEFAULT_OUTPUT_CONTRACT),
                 "model_call_made": True,
                 "model_response_received": response_received,
                 "network_attempted": network_attempted or response_received,
@@ -1147,6 +1281,7 @@ def main(argv: Sequence[str] | None = None) -> int:
             context_files=context_files,
             specialist_context=specialist_text,
             max_context_chars=args.max_context_chars,
+            output_contract=args.output_contract,
         )
         prompt_path.write_text(prompt, encoding="utf-8")
         write_json(
@@ -1192,8 +1327,8 @@ def main(argv: Sequence[str] | None = None) -> int:
                 "specialist_context_included": specialist_text is not None,
                 "specialist_context_path": specialist_path if specialist_text is not None else None,
                 "specialist_context_assertion": specialist_assertion,
-                "output_contract": DEFAULT_OUTPUT_CONTRACT,
-                "output_contract_schema": output_contract_schema(),
+                "output_contract": args.output_contract,
+                "output_contract_schema": output_contract_schema(args.output_contract),
                 "full_urls_redacted": True,
             },
         )
@@ -1234,15 +1369,23 @@ def main(argv: Sequence[str] | None = None) -> int:
                     timeout_seconds=args.http_timeout_seconds,
                     max_response_bytes=args.max_response_bytes,
                     raw_response_path=raw_response_path,
+                    output_contract=args.output_contract,
                 )
                 model_call_made = True
             patch_result = apply_model_response(
                 workspace,
                 model_text,
                 allowed_paths=[str(item["path"]) for item in context_files],
+                output_contract=args.output_contract,
             )
             safe_env, _ = llm_safe_subprocess_env(os.environ)
             patch_artifact = write_safe_patch(workspace, patch_path, safe_env)
+            if patch_artifact.get("unsafe_content_detected") is True:
+                raise ToolError(
+                    "generated patch contains unsafe content",
+                    failure_class="unsafe_generated_text",
+                    unsafe_content=patch_artifact.get("unsafe_content", {}),
+                )
             status = "patch_generated"
             event = "patch_generated"
 
@@ -1271,6 +1414,7 @@ def main(argv: Sequence[str] | None = None) -> int:
             metadata={
                 "runner_id": RUNNER_ID,
                 "mode": mode,
+                "submission_contract": args.output_contract,
                 "model_call_made": model_call_made,
                 "cost_basis": cost_basis,
                 "actual_cost_status": "unknown_not_provider_reported" if actual_cost is None else "provider_or_invoice_reported",
@@ -1296,6 +1440,8 @@ def main(argv: Sequence[str] | None = None) -> int:
             "split": task["split"],
             "attempt": args.attempt,
             "mode": mode,
+            "submission_contract": args.output_contract,
+            "output_contract": args.output_contract,
             "started_at": started_at,
             "finished_at": finished_at,
             "duration_seconds": duration_seconds,
@@ -1351,6 +1497,9 @@ def main(argv: Sequence[str] | None = None) -> int:
             "started_at": started_at,
             "finished_at": finished_at,
         }
+        if "args" in locals():
+            payload["submission_contract"] = getattr(args, "output_contract", DEFAULT_OUTPUT_CONTRACT)
+            payload["output_contract"] = getattr(args, "output_contract", DEFAULT_OUTPUT_CONTRACT)
         if "budget_gate" in locals():
             payload["budget_gate"] = budget_gate
         if isinstance(failure_ledger_append, Mapping) and failure_ledger_append.get("status") == "appended":
