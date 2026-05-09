@@ -10,6 +10,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import re
 import shutil
 import subprocess
 import sys
@@ -87,6 +88,55 @@ def fixture_definitions() -> list[dict[str, Any]]:
                         "before": "def first():\n",
                         "old": "    rv = get_default()\n",
                         "new": "    rv = get_default(ctx)\n",
+                    }
+                ]
+            },
+        },
+        {
+            "fixture_id": "repeated_old_missing_anchors",
+            "intent": "repeated old text without immediate anchors is a model-output invalid submission",
+            "files": {"src/click/core.py": repeated_core},
+            "context_paths": ["src/click/core.py"],
+            "response": {
+                "edits": [
+                    {
+                        "path": "src/click/core.py",
+                        "old": "    rv = get_default()\n",
+                        "new": "    rv = get_default(ctx)\n",
+                    }
+                ]
+            },
+        },
+        {
+            "fixture_id": "stale_old_text",
+            "intent": "old text copied from a stale Click variant is diagnosed as zero-occurrence model output",
+            "files": {
+                "src/click/core.py": (
+                    "def get_default(self, ctx, call=True):\n"
+                    "    value = super().get_default(ctx, call=False)\n"
+                    "    if value is True and self.is_flag:\n"
+                    "        value = self.flag_value\n"
+                    "    return value\n"
+                )
+            },
+            "context_paths": ["src/click/core.py"],
+            "response": {
+                "edits": [
+                    {
+                        "path": "src/click/core.py",
+                        "old": (
+                            "def get_default(self, ctx, call=True):\n"
+                            "    if self.is_flag and self.flag_value is not UNSET and self.default is True:\n"
+                            "        return self.flag_value\n"
+                            "    return super().get_default(ctx, call)\n"
+                        ),
+                        "new": (
+                            "def get_default(self, ctx, call=True):\n"
+                            "    value = super().get_default(ctx, call=False)\n"
+                            "    if value is True and self.is_flag:\n"
+                            "        value = self.flag_value\n"
+                            "    return value\n"
+                        ),
                     }
                 ]
             },
@@ -371,10 +421,88 @@ def aggregate(rows: Sequence[Mapping[str, Any]]) -> dict[str, Any]:
     }
 
 
+def compact_old_occurrence_diagnostic(
+    details: Mapping[str, Any],
+    *,
+    acut_id: object = None,
+    task_id: object = None,
+    fixture_id: object = None,
+    status: object = None,
+    failure_class: object = None,
+    failure_owner: object = None,
+    artifact_dir: object = None,
+    prompt_snapshot: object = None,
+    raw_response_artifact: object = None,
+) -> dict[str, Any] | None:
+    search_text = details.get("search_text") if isinstance(details.get("search_text"), Mapping) else {}
+    diagnostic = details.get("diagnostic") if isinstance(details.get("diagnostic"), Mapping) else {}
+    has_old_occurrence_signal = any(
+        key in details
+        for key in (
+            "occurrences",
+            "anchor_matches",
+            "old_text_sha256",
+            "old_text_char_count",
+        )
+    ) or bool(search_text)
+    if not has_old_occurrence_signal:
+        return None
+    old_sha = search_text.get("old_text_sha256") or details.get("old_text_sha256")
+    row = {
+        "acut_id": acut_id,
+        "task_id": task_id,
+        "fixture_id": fixture_id,
+        "status": status,
+        "failure_owner": failure_owner,
+        "failure_class": failure_class or details.get("failure_class"),
+        "path": details.get("path"),
+        "edit_index": details.get("edit_index"),
+        "old_occurrence_count": details.get("occurrences"),
+        "anchor_match_count": details.get("anchor_matches"),
+        "diagnostic_code": diagnostic.get("code"),
+        "old_text_char_count": search_text.get("old_text_char_count") or details.get("old_text_char_count"),
+        "old_text_line_count": search_text.get("old_text_line_count"),
+        "old_text_sha256": old_sha,
+        "old_redacted_url_marker_count": search_text.get("old_redacted_url_marker_count"),
+        "redacted_url_context": details.get("redacted_url_context"),
+        "content_recorded": bool(details.get("content_recorded") or search_text.get("content_recorded")),
+        "artifact_dir": artifact_dir,
+        "prompt_snapshot": prompt_snapshot,
+        "raw_response_artifact": raw_response_artifact,
+    }
+    anchor_texts = details.get("anchor_texts") if isinstance(details.get("anchor_texts"), Mapping) else {}
+    row["anchor_hashes"] = {
+        key: value.get("sha256")
+        for key, value in anchor_texts.items()
+        if isinstance(value, Mapping) and isinstance(value.get("sha256"), str)
+    }
+    return row
+
+
+def occurrence_diagnostic_summary(rows: Sequence[Mapping[str, Any]]) -> dict[str, Any]:
+    occurrence_buckets: dict[str, int] = {}
+    for row in rows:
+        occurrence = row.get("old_occurrence_count")
+        key = "none" if occurrence is None else str(occurrence)
+        occurrence_buckets[key] = occurrence_buckets.get(key, 0) + 1
+    return {
+        "row_count": len(rows),
+        "diagnostic_code_counts": count_by(rows, "diagnostic_code"),
+        "failure_class_counts": count_by(rows, "failure_class"),
+        "old_occurrence_count_buckets": dict(sorted(occurrence_buckets.items())),
+        "rows_with_old_text_hash": sum(1 for row in rows if isinstance(row.get("old_text_sha256"), str)),
+        "source_content_recorded": any(bool(row.get("content_recorded")) for row in rows),
+    }
+
+
 def diagnostic_summary(rows: Sequence[Mapping[str, Any]]) -> dict[str, Any]:
     exact_search_rows = 0
     ambiguous_anchor_rows = 0
     stale_anchor_rows = 0
+    repeated_missing_anchor_rows = 0
+    stale_old_text_rows = 0
+    old_occurrence_mismatch_rows = 0
+    old_occurrence_hash_rows = 0
     redacted_rows = 0
     missing_raw_rows = 0
     source_content_recorded = False
@@ -399,6 +527,15 @@ def diagnostic_summary(rows: Sequence[Mapping[str, Any]]) -> dict[str, Any]:
             ambiguous_anchor_rows += 1
         if details.get("diagnostic", {}).get("code") == "unique_old_anchor_mismatch":
             stale_anchor_rows += 1
+        if details.get("diagnostic", {}).get("code") == "old_text_repeated_without_anchors":
+            repeated_missing_anchor_rows += 1
+        if details.get("diagnostic", {}).get("code") == "old_text_not_found":
+            stale_old_text_rows += 1
+        if row.get("failure_class") == "search_replace_old_occurrence_mismatch":
+            old_occurrence_mismatch_rows += 1
+            search_text = details.get("search_text") if isinstance(details.get("search_text"), Mapping) else {}
+            if isinstance(search_text.get("old_text_sha256") or details.get("old_text_sha256"), str):
+                old_occurrence_hash_rows += 1
         if any(
             isinstance(item, Mapping)
             and isinstance(item.get("diagnostic"), Mapping)
@@ -412,6 +549,10 @@ def diagnostic_summary(rows: Sequence[Mapping[str, Any]]) -> dict[str, Any]:
         "exact_search_text_diagnostic_rows": exact_search_rows,
         "ambiguous_anchor_diagnostic_rows": ambiguous_anchor_rows,
         "stale_anchor_diagnostic_rows": stale_anchor_rows,
+        "repeated_old_missing_anchor_rows": repeated_missing_anchor_rows,
+        "stale_old_text_rows": stale_old_text_rows,
+        "old_occurrence_mismatch_rows": old_occurrence_mismatch_rows,
+        "old_occurrence_rows_with_hashes": old_occurrence_hash_rows,
         "redacted_source_text_diagnostic_rows": redacted_rows,
         "missing_raw_artifact_rows": missing_raw_rows,
         "source_content_recorded": source_content_recorded,
@@ -446,6 +587,31 @@ def live_smoke_status(args: argparse.Namespace) -> dict[str, Any]:
                     runner_result,
                 )
             failure_rows.append({"failure_class": failure_class, "failure_owner": failure_owner})
+        old_occurrence_diagnostics: list[dict[str, Any]] = []
+        for item in results:
+            runner_result = item.get("runner_result") if isinstance(item.get("runner_result"), Mapping) else {}
+            details = runner_result.get("details") if isinstance(runner_result.get("details"), Mapping) else {}
+            failure_class = item.get("failure_class") or details.get("failure_class")
+            failure_owner = item.get("failure_owner")
+            if failure_owner is None:
+                failure_owner = batch.failure_owner_for_status(
+                    item.get("status"),
+                    {"failure_owner": failure_owner},
+                    runner_result,
+                )
+            diagnostic = compact_old_occurrence_diagnostic(
+                details,
+                acut_id=item.get("acut_id"),
+                task_id=item.get("task_id"),
+                status=item.get("status"),
+                failure_class=failure_class,
+                failure_owner=failure_owner,
+                artifact_dir=item.get("artifact_dir"),
+                prompt_snapshot=item.get("prompt_snapshot") or runner_result.get("prompt_snapshot"),
+                raw_response_artifact=item.get("raw_response_artifact") or runner_result.get("raw_response_artifact"),
+            )
+            if diagnostic is not None:
+                old_occurrence_diagnostics.append(diagnostic)
         return {
             "status": "completed",
             "path": args.live_smoke_batch,
@@ -458,6 +624,8 @@ def live_smoke_status(args: argparse.Namespace) -> dict[str, Any]:
             "status_counts": count_by(results, "status"),
             "failure_class_counts": count_by(failure_rows, "failure_class"),
             "failure_owner_counts": count_by(failure_rows, "failure_owner"),
+            "old_occurrence_diagnostics": old_occurrence_diagnostics,
+            "old_occurrence_summary": occurrence_diagnostic_summary(old_occurrence_diagnostics),
             "submission_contract": batch_payload.get("submission_contract"),
         }
     return {
@@ -500,13 +668,14 @@ def build_payload(args: argparse.Namespace) -> dict[str, Any]:
             "prior_m2_acuts": m2_summary.get("acuts"),
             "prior_m2_claim_status": m2_summary.get("claim_status"),
             "denominators_are_separate": True,
+            "repair_focus": "anchored_old_occurrence_repair",
         },
         "method": {
             "fixture_model_calls": "none",
             "fixture_model_spend_usd": 0.0,
             "verifier_execution": "not_run",
             "runner_contract_schema": direct.output_contract_schema(CONTRACT),
-            "claim_boundary": "anchored contract/applicator scoreability smoke only",
+            "claim_boundary": "anchored contract/applicator old-occurrence diagnostics and scoreability smoke only",
         },
         "fixture_summary": aggregate(rows),
         "diagnostic_summary": diagnostic_summary(rows),
@@ -561,15 +730,30 @@ def write_report(payload: Mapping[str, Any], path: str) -> None:
     summary = payload.get("fixture_summary") if isinstance(payload.get("fixture_summary"), Mapping) else {}
     diagnostics = payload.get("diagnostic_summary") if isinstance(payload.get("diagnostic_summary"), Mapping) else {}
     live = payload.get("live_smoke") if isinstance(payload.get("live_smoke"), Mapping) else {}
+    live_occurrence = (
+        live.get("old_occurrence_summary")
+        if isinstance(live.get("old_occurrence_summary"), Mapping)
+        else {}
+    )
     inputs = payload.get("inputs") if isinstance(payload.get("inputs"), Mapping) else {}
+    generated_at = str(payload.get("generated_at") or "")
+    date_from_path = re.search(r"\d{4}-\d{2}-\d{2}", str(path))
+    report_date = (
+        date_from_path.group(0)
+        if date_from_path
+        else generated_at[:10]
+        if len(generated_at) >= 10
+        else "2026-05-09"
+    )
     lines = [
         "# M2 Anchored Contract Scoreability Smoke",
         "",
-        "Date: 2026-05-09",
+        f"Date: {report_date}",
         "",
         "## Scope",
         "",
         f"- Contract: `{scope.get('contract')}`.",
+        f"- Repair focus: `{scope.get('repair_focus')}`.",
         f"- Fixture denominator: `{scope.get('fixture_fixed_denominator')}`; prior M2 denominator: `{scope.get('prior_m2_fixed_denominator')}`.",
         "- Fixture replay made no model calls and ran no verifier.",
         "",
@@ -601,6 +785,10 @@ def write_report(payload: Mapping[str, Any], path: str) -> None:
             f"- Exact search-text diagnostic rows: `{diagnostics.get('exact_search_text_diagnostic_rows')}`.",
             f"- Ambiguous-anchor diagnostic rows: `{diagnostics.get('ambiguous_anchor_diagnostic_rows')}`.",
             f"- Stale-anchor diagnostic rows: `{diagnostics.get('stale_anchor_diagnostic_rows')}`.",
+            f"- Repeated-old missing-anchor rows: `{diagnostics.get('repeated_old_missing_anchor_rows')}`.",
+            f"- Stale-old-text rows: `{diagnostics.get('stale_old_text_rows')}`.",
+            f"- Old-occurrence mismatch rows: `{diagnostics.get('old_occurrence_mismatch_rows')}`.",
+            f"- Old-occurrence rows with hashes: `{diagnostics.get('old_occurrence_rows_with_hashes')}`.",
             f"- Redacted-source diagnostic rows: `{diagnostics.get('redacted_source_text_diagnostic_rows')}`.",
             f"- Missing raw artifact rows: `{diagnostics.get('missing_raw_artifact_rows')}`.",
             f"- Source content recorded in diagnostics: `{diagnostics.get('source_content_recorded')}`.",
@@ -611,6 +799,28 @@ def write_report(payload: Mapping[str, Any], path: str) -> None:
             f"Total cells: `{live.get('total')}`. Status counts: `{live.get('status_counts')}`. "
             f"Failure classes: `{live.get('failure_class_counts')}`. "
             f"Contract: `{live.get('submission_contract')}`.",
+            f"Old-occurrence diagnostic summary: `{live_occurrence}`.",
+            "",
+            "| ACUT | Task | Class | Code | Old occurrences | Anchor matches | Old hash | Content recorded |",
+            "| --- | --- | --- | --- | ---: | ---: | --- | --- |",
+        ]
+    )
+    live_occurrence_rows = (
+        live.get("old_occurrence_diagnostics", [])
+        if isinstance(live.get("old_occurrence_diagnostics"), list)
+        else []
+    )
+    for row in live_occurrence_rows:
+        if not isinstance(row, Mapping):
+            continue
+        lines.append(
+            f"| `{row.get('acut_id')}` | `{row.get('task_id')}` | `{row.get('failure_class')}` | "
+            f"`{row.get('diagnostic_code')}` | `{row.get('old_occurrence_count')}` | "
+            f"`{row.get('anchor_match_count')}` | `{row.get('old_text_sha256')}` | "
+            f"`{row.get('content_recorded')}` |"
+        )
+    lines.extend(
+        [
             "",
             "## Reproduction",
             "",

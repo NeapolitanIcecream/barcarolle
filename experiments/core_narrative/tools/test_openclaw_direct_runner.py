@@ -250,7 +250,7 @@ class OpenClawDirectRunnerTests(unittest.TestCase):
                 }
             ],
             specialist_context=None,
-            max_context_chars=10_000,
+            max_context_chars=40_000,
         )
 
         self.assertIn("Return only one JSON object with this exact contract:", prompt)
@@ -258,7 +258,10 @@ class OpenClawDirectRunnerTests(unittest.TestCase):
         self.assertIn("Do not return unified_diff", prompt)
         self.assertIn("Pre-submit validation checklist:", prompt)
         self.assertIn("Apply edits in order mentally", prompt)
-        self.assertIn("If old occurs exactly once, omit before and after anchors.", prompt)
+        self.assertIn("If old occurs exactly once in the current shown source, omit before and after anchors.", prompt)
+        self.assertIn("If old occurs more than once, is short or generic", prompt)
+        self.assertIn("Stale old strings from task prose", prompt)
+        self.assertIn("use a smaller exact visible old string plus immediate anchors", prompt)
         self.assertIn("Non-matching anchors are invalid even when old occurs once.", prompt)
         self.assertNotIn('{"unified_diff":"diff --git ..."}', prompt)
 
@@ -350,7 +353,7 @@ class OpenClawDirectRunnerTests(unittest.TestCase):
             acut={"acut_id": "cheap-generic-swe", "model": "openai/gpt-5.4-mini"},
             context_files=[payload],
             specialist_context=None,
-            max_context_chars=10_000,
+            max_context_chars=40_000,
         )
 
         self.assertTrue(payload["truncated"])
@@ -428,6 +431,78 @@ class OpenClawDirectRunnerTests(unittest.TestCase):
         self.assertIn("def process_value", payload["focused_excerpts"][0]["content"])
         self.assertIn("Focused exact source excerpts for src/click/core.py", prompt)
         self.assertIn("if self.is_flag", prompt)
+
+    def test_default_flag_context_packaging_includes_option_get_default_excerpt(self) -> None:
+        """Regression: Click rwork 006 prompts must show current Option.get_default source."""
+        core_path = self.workspace / "src" / "click" / "core.py"
+        core_path.parent.mkdir(parents=True, exist_ok=True)
+        core_path.write_text(
+            (
+                "# large prefix\n"
+                + "IGNORED = 1\n" * 300
+                + "class Option(Parameter):\n"
+                + "    def __init__(self, default=None, flag_value=None):\n"
+                + "        self.default = default\n"
+                + "        self.flag_value = flag_value\n"
+                + "\n"
+                + "    # intervening Option source\n" * 500
+                + "    def get_default(self, ctx, call=True):\n"
+                + "        value = super().get_default(ctx, call=False)\n"
+                + "\n"
+                + "        # Lazily resolve default=True to flag_value.\n"
+                + "        if value is True and self.is_flag:\n"
+                + "            value = self.flag_value\n"
+                + "        elif call and callable(value):\n"
+                + "            value = value()\n"
+                + "\n"
+                + "        return value\n"
+                + "\n"
+                + "    def process_value(self, ctx, value):\n"
+                + "        # A flag which is activated always returns the flag value\n"
+                + "        return super().process_value(ctx, value)\n"
+            ),
+            encoding="utf-8",
+        )
+        task = {
+            "task_id": "click__rwork__006",
+            "task_family": "default value passing and flag activation",
+            "metadata": {
+                "expected_touched_area": ["src/click/core.py Option default and flag activation behavior"],
+            },
+        }
+
+        budget = runner_module.effective_max_file_chars(
+            requested_max_file_chars=80_000,
+            max_context_chars=120_000,
+            context_path_count=3,
+            task=task,
+            task_statement="Reconcile default value passing with flag activation.",
+        )
+        focus_terms = runner_module.context_focus_terms(
+            task,
+            "Reconcile default value passing with flag activation.",
+            "src/click/core.py",
+        )
+        payload = runner_module.context_file_payload(
+            self.workspace,
+            "src/click/core.py",
+            120,
+            focus_terms=focus_terms,
+        )
+        prompt = runner_module.build_prompt(
+            task=task,
+            task_statement="Reconcile default value passing with flag activation.",
+            acut={"acut_id": "cheap-generic-swe", "model": "openai/gpt-5.4-mini"},
+            context_files=[payload],
+            specialist_context=None,
+            max_context_chars=40_000,
+        )
+
+        self.assertEqual(budget, 25_000)
+        self.assertIn("        # Lazily resolve default=True to flag_value.", focus_terms)
+        self.assertGreaterEqual(len(payload["focused_excerpts"]), 2)
+        self.assertIn("def get_default", json.dumps(payload["focused_excerpts"]))
+        self.assertIn("if value is True and self.is_flag", prompt)
 
     def test_prompt_required_context_uses_compact_per_file_budget_for_four_files(self) -> None:
         """Regression: Click 008 packaging should leave room for every declared context file."""

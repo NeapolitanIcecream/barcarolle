@@ -120,17 +120,24 @@ def output_contract_schema(output_contract: str = DEFAULT_OUTPUT_CONTRACT) -> di
         "primary_top_level_key": "edits",
         "requires_single_top_level_key": True,
         "requires_exact_old_text": True,
+        "requires_old_text_from_current_source_snapshot": True,
         "requires_exact_path_from_context": True,
         "requires_immediate_anchors_for_repeated_old_text": True,
+        "requires_immediate_anchors_when_old_text_may_repeat": True,
+        "stale_old_text_is_invalid": True,
+        "diagnostics_record_old_occurrence_counts": True,
+        "diagnostics_record_non_sensitive_hashes": True,
         "anchor_policy": {
             "omit_anchors_when_old_is_unique": True,
+            "omit_anchors_only_when_old_is_unique_in_current_source": True,
             "anchors_are_for_repeated_old_text_only": True,
+            "anchors_required_when_old_may_repeat_or_uniqueness_uncertain": True,
             "anchors_must_be_immediate_adjacent_source": True,
             "invalid_anchors_reject_the_edit_even_when_old_is_unique": True,
         },
         "diagnostic_failure_classes": {
             "search_replace_anchor_mismatch": "old text was present, but supplied anchors did not isolate exactly one occurrence",
-            "search_replace_old_occurrence_mismatch": "old text did not occur exactly once after earlier edits",
+            "search_replace_old_occurrence_mismatch": "old text occurred zero or multiple times after earlier edits",
         },
         "legacy_parser_fallback_keys": ["unified_diff", "files"],
     }
@@ -258,6 +265,8 @@ def context_focus_terms(task: Mapping[str, Any], task_statement: str, rel_path: 
             terms.extend(
                 [
                     "class Option(Parameter):",
+                    "        # Lazily resolve default=True to flag_value.",
+                    "        if value is True and self.is_flag:",
                     "        # Support the special case of aligning the default value with the flag_value",
                     "        # A flag which is activated always returns the flag value",
                     "        # process_value has to be overridden on Options",
@@ -321,11 +330,24 @@ def effective_max_file_chars(
 ) -> int:
     metadata = task.get("metadata") if isinstance(task.get("metadata"), dict) else {}
     expected = " ".join(str(item) for item in metadata.get("expected_touched_area", []) if item)
-    prompt_required_task = "prompt_required" in f"{task_statement} {expected}".lower()
-    if not prompt_required_task or context_path_count < 4:
-        return requested_max_file_chars
-    compact_budget = max(20_000, (max_context_chars - 20_000) // context_path_count)
-    return min(requested_max_file_chars, compact_budget)
+    combined = f"{task_statement} {expected}".lower()
+    prompt_required_task = "prompt_required" in combined
+    default_flag_task = any(
+        token in combined
+        for token in (
+            "default value passing",
+            "flag activation",
+            "flag_value",
+            "option default",
+        )
+    )
+    if prompt_required_task and context_path_count >= 4:
+        compact_budget = max(20_000, (max_context_chars - 20_000) // context_path_count)
+        return min(requested_max_file_chars, compact_budget)
+    if default_flag_task and context_path_count >= 3:
+        compact_budget = max(20_000, (max_context_chars - 45_000) // context_path_count)
+        return min(requested_max_file_chars, compact_budget)
+    return requested_max_file_chars
 
 
 def context_file_payload(
@@ -515,13 +537,15 @@ def build_prompt(
             "Pre-submit validation checklist:",
             "- The top-level JSON object has exactly one key: edits.",
             "- Each edit path exactly matches one of the Valid edit paths below.",
-            "- Each old string is copied exactly from the currently shown source.",
+            "- Each old string is copied exactly from a Source file or Focused exact source excerpt in this prompt.",
             "- Apply edits in order mentally. For each edit, old must identify exactly one occurrence after earlier edits.",
-            "- If old occurs exactly once, omit before and after anchors.",
-            "- If old occurs more than once, include before and/or after anchors copied exactly from the same file.",
+            "- If old occurs exactly once in the current shown source, omit before and after anchors.",
+            "- If old occurs more than once, is short or generic, or you cannot prove it is unique, include before and after anchors copied exactly from the same file.",
             "- Anchors must be immediate context: before must end exactly where old begins; after must begin exactly where old ends.",
             "Rules:",
             "- Repeated old strings without exact anchors are invalid and will not be applied.",
+            "- Stale old strings from task prose, issue text, memory, Git history, or another Click version are invalid and will not be applied.",
+            "- If the intended current source is not visible, use a smaller exact visible old string plus immediate anchors, or skip that edit.",
             "- Non-matching anchors are invalid even when old occurs once.",
             "- Never invent old text from memory or from APIs not shown in the source excerpts.",
             "- Keep edits minimal. Prefer source code fixes over test-only changes.",
