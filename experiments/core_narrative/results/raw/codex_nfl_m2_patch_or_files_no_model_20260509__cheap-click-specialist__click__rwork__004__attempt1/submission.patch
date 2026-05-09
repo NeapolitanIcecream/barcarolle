@@ -1,0 +1,9 @@
+diff --git a/src/click/core.py b/src/click/core.py
+index 23d1dd5..249de84 100644
+--- a/src/click/core.py
++++ b/src/click/core.py
+@@ -3421,3 +3421,4 @@ def __getattr__(name: str) -> object:
+         return _MultiCommand
+ 
+     raise AttributeError(name)
++# barcarolle no-model scoreability baseline

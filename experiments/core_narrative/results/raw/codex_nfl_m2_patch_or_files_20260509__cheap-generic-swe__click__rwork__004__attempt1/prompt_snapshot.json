@@ -1,0 +1,79 @@
+{
+  "context_files": [
+    {
+      "char_count": 132471,
+      "displayed_char_count": 80013,
+      "exists": true,
+      "focus_terms": [],
+      "focused_excerpts": [],
+      "path": "src/click/core.py",
+      "sha256": "780f4c19b26a30235a9840d7c184fecb4b1f9793e6eb69e8d3eefb6d41b92f7d",
+      "truncated": true
+    },
+    {
+      "char_count": 10814,
+      "displayed_char_count": 10727,
+      "exists": true,
+      "focus_terms": [],
+      "focused_excerpts": [],
+      "path": "tests/test_defaults.py",
+      "sha256": "0ffd1e23199cbfcd92ea8b1507cb255a9ef73c2032e00bc8b33e472ef9cdffa2",
+      "truncated": false
+    },
+    {
+      "char_count": 78685,
+      "displayed_char_count": 78086,
+      "exists": true,
+      "focus_terms": [],
+      "focused_excerpts": [],
+      "path": "tests/test_options.py",
+      "sha256": "c0a0001b83f8b2fc55ff4a2f7c7d7b6214c34de32d6a97d59976e6b5f9a309e5",
+      "truncated": false
+    }
+  ],
+  "context_packaging": {
+    "effective_max_file_chars": 80000,
+    "max_context_chars": 120000,
+    "prompt_truncated": true,
+    "requested_max_file_chars": 80000
+  },
+  "full_urls_redacted": true,
+  "output_contract": "patch-or-files-v1",
+  "output_contract_schema": {
+    "accepted_forms": [
+      "raw unified diff applicable with git apply",
+      "JSON object with unified_diff, patch, or diff string",
+      "JSON object with files list of full file contents"
+    ],
+    "diagnostic_failure_classes": {
+      "invalid_unified_diff": "unified diff was present but failed git apply validation",
+      "structured_files_invalid": "files entries were malformed or could not be applied as file-level edits",
+      "unsafe_generated_text": "response, path, content, or generated patch contained unsafe generated text",
+      "unsupported_patch_response": "response did not contain unified diff or structured files"
+    },
+    "id": "patch-or-files-v1",
+    "path_policy": {
+      "paths_must_be_from_declared_context": true,
+      "paths_must_be_relative": true,
+      "paths_must_not_target_reserved_metadata": [
+        ".git",
+        ".core_narrative"
+      ]
+    }
+  },
+  "prompt_char_count": 120013,
+  "prompt_content_recorded": true,
+  "prompt_sha256": "68187634f0fc8d6280125be30a9e40a9fef9d7513cf9adf053db9cfa34f56bc5",
+  "run_id": "codex_nfl_m2_patch_or_files_20260509__cheap-generic-swe__click__rwork__004__attempt1",
+  "runner_id": "codex-nfl-direct-search-replace-v1",
+  "specialist_context_assertion": {
+    "expected": "excluded",
+    "include_mode": "auto",
+    "passed": true
+  },
+  "specialist_context_included": false,
+  "specialist_context_path": null,
+  "statement_truncated": false,
+  "task_statement_path": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/tasks/click/rwork/click__rwork__004/public/statement.md",
+  "tool": "codex_nfl_direct_runner"
+}

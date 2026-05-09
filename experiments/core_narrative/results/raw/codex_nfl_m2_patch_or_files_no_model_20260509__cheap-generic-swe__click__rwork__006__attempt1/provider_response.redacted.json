@@ -1,0 +1,1 @@
+{"unified_diff": "--- a/src/click/core.py\n+++ b/src/click/core.py\n@@ -3435,3 +3435,4 @@\n         return _MultiCommand\n \n     raise AttributeError(name)\n+# barcarolle no-model scoreability baseline\n"}
