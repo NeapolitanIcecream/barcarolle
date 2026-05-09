@@ -21,6 +21,7 @@ from _common import (
     slug,
     split_command,
 )
+from _llm_budget import run_to_redacted_artifacts
 
 
 TOOL = "apply_and_verify"
@@ -45,6 +46,11 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--verifier-command", help="Override verifier.command from the task manifest.")
     parser.add_argument("--verifier-root", help="Directory for resolving relative verifier commands.")
     parser.add_argument("--skip-apply", action="store_true", help="Run verifier without applying the patch.")
+    parser.add_argument(
+        "--redact-verifier-artifacts",
+        action="store_true",
+        help="Redact secrets and full URLs before writing verifier stdout/stderr artifacts.",
+    )
     return parser.parse_args()
 
 
@@ -136,14 +142,25 @@ def main() -> int:
             return 0
 
         command = resolve_verifier_command(verifier_command, verifier_root)
-        run = run_to_artifacts(
-            command,
-            cwd=workspace,
-            timeout_seconds=timeout,
-            stdout_path=stdout_path,
-            stderr_path=stderr_path,
-            env={**os.environ.copy(), "CORE_NARRATIVE_TASK_DIR": str(task_path.parent.resolve())},
-        )
+        verifier_env = {**os.environ.copy(), "CORE_NARRATIVE_TASK_DIR": str(task_path.parent.resolve())}
+        if args.redact_verifier_artifacts:
+            run = run_to_redacted_artifacts(
+                command,
+                cwd=workspace,
+                timeout_seconds=timeout,
+                stdout_path=stdout_path,
+                stderr_path=stderr_path,
+                env=verifier_env,
+            )
+        else:
+            run = run_to_artifacts(
+                command,
+                cwd=workspace,
+                timeout_seconds=timeout,
+                stdout_path=stdout_path,
+                stderr_path=stderr_path,
+                env=verifier_env,
+            )
         finished_at = iso_now()
 
         if run["timed_out"]:
@@ -177,6 +194,7 @@ def main() -> int:
                 "verifier_command": command,
                 "timeout_seconds": timeout,
                 "skip_apply": args.skip_apply,
+                "verifier_artifacts_redacted": args.redact_verifier_artifacts,
             },
         }
         emit_json(payload, args.output)
