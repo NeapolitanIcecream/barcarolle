@@ -283,9 +283,22 @@ def context_file_payload(
     max_file_chars: int,
     *,
     focus_terms: Sequence[str] = (),
+    allow_missing: bool = False,
 ) -> dict[str, Any]:
     path = resolve_workspace_path(workspace, rel_path, "--context-path")
     if not path.exists() or not path.is_file():
+        if allow_missing and not path.exists():
+            return {
+                "path": validate_patch_path(rel_path),
+                "exists": False,
+                "sha256": None,
+                "char_count": 0,
+                "truncated": False,
+                "displayed_char_count": 0,
+                "focus_terms": list(focus_terms),
+                "focused_excerpts": [],
+                "content": "",
+            }
         raise ToolError("context path is not a file", path=rel_path)
     raw_text = path.read_text(encoding="utf-8", errors="replace")
     text = redact_sensitive_text(raw_text, os.environ)
@@ -301,6 +314,7 @@ def context_file_payload(
     ) if truncated else []
     return {
         "path": validate_patch_path(rel_path),
+        "exists": True,
         "sha256": sha256_text(raw_text),
         "char_count": len(raw_text),
         "truncated": truncated,
@@ -474,6 +488,15 @@ def build_prompt(
     if specialist_context:
         sections.extend(["", "Task-agnostic Click specialist context:", specialist_context])
     for item in context_files:
+        if item.get("exists") is False:
+            sections.extend(
+                [
+                    "",
+                    f"Declared create-only path: {item['path']}",
+                    "This file is not present in the prepared workspace. Use action create only if the task needs this new file.",
+                ]
+            )
+            continue
         sections.extend(
             [
                 "",
@@ -733,6 +756,37 @@ def ensure_paths_within_context(workspace: Path, paths: Sequence[str], allowed_p
     return requested
 
 
+def ensure_parsed_patch_paths_within_context(
+    workspace: Path,
+    parsed: Mapping[str, Any],
+    allowed_paths: Sequence[str],
+) -> list[str]:
+    if parsed.get("kind") != "structured_files":
+        return ensure_paths_within_context(workspace, parsed_patch_paths(parsed), allowed_paths)
+    files = parsed.get("files")
+    if not isinstance(files, list):
+        return ensure_paths_within_context(workspace, [], allowed_paths)
+    paths: list[str] = []
+    for item in files:
+        if isinstance(item, Mapping) and isinstance(item.get("path"), str):
+            paths.append(str(item["path"]))
+    requested = ensure_paths_allowed(paths, allowed_paths)
+    for item in files:
+        if not isinstance(item, Mapping) or not isinstance(item.get("path"), str):
+            continue
+        path = validate_patch_path(str(item["path"]))
+        if item.get("action", "write") == "create":
+            continue
+        target = resolve_workspace_path(workspace, path, "generated patch path")
+        if not target.exists() or not target.is_file():
+            raise ToolError(
+                "edit path is not in the prepared workspace",
+                path=path,
+                failure_class="generated_path_not_in_workspace",
+            )
+    return requested
+
+
 def parsed_patch_paths(parsed: Mapping[str, Any]) -> list[str]:
     kind = parsed.get("kind")
     if kind == "unified_diff":
@@ -969,7 +1023,7 @@ def apply_structured_files_model_response(
         reject_known_wrong_contract_json(text)
         parsed = parse_patch_response(text)
         enforce_output_contract(parsed, STRUCTURED_FILES_OUTPUT_CONTRACT)
-        ensure_paths_within_context(workspace, parsed_patch_paths(parsed), allowed_paths)
+        ensure_parsed_patch_paths_within_context(workspace, parsed, allowed_paths)
         result = apply_patch_response(workspace, parsed, apply_patch=True)
         ensure_paths_allowed(result.get("changed_paths", []), allowed_paths)
     except ToolError as exc:
@@ -1004,7 +1058,7 @@ def apply_model_response(
         if str(exc) == "model response did not contain a supported patch":
             raise ToolError(str(exc), **exc.details, failure_class="unsupported_patch_response") from exc
         raise
-    ensure_paths_within_context(workspace, parsed_patch_paths(parsed), allowed_paths)
+    ensure_parsed_patch_paths_within_context(workspace, parsed, allowed_paths)
     try:
         result = apply_patch_response(workspace, parsed, apply_patch=True)
     except ToolError as exc:
@@ -1250,6 +1304,7 @@ def main(argv: Sequence[str] | None = None) -> int:
                 path,
                 max_file_chars,
                 focus_terms=context_focus_terms(task, task_statement, path),
+                allow_missing=args.output_contract == STRUCTURED_FILES_OUTPUT_CONTRACT,
             )
             for path in args.context_path
         ]
@@ -1307,6 +1362,7 @@ def main(argv: Sequence[str] | None = None) -> int:
                         key: item[key]
                         for key in (
                             "path",
+                            "exists",
                             "sha256",
                             "char_count",
                             "truncated",

@@ -1310,6 +1310,64 @@ class OpenClawDirectRunnerTests(unittest.TestCase):
         self.assertEqual(summary["details"]["unsupported_top_level_keys"], ["edits"])
         self.assertEqual((self.workspace / "module.py").read_text(encoding="utf-8"), "VALUE = 1\n")
 
+    def test_structured_files_contract_allows_create_for_declared_missing_path(self) -> None:
+        """Regression: advertised create actions can target a declared path that is not yet present."""
+        artifact_dir = self.root / "structured-files-create-artifacts"
+        output_path = self.root / "structured-files-create.json"
+        response = json.dumps(
+            {
+                "files": [
+                    {
+                        "path": "new_module.py",
+                        "action": "create",
+                        "content": "VALUE = 2\n",
+                    }
+                ]
+            }
+        )
+
+        completed = run(
+            [
+                sys.executable,
+                str(RUNNER),
+                "--workspace",
+                str(self.workspace),
+                "--task",
+                str(self.task_path),
+                "--acut",
+                str(self.acut_path),
+                "--attempt",
+                "1",
+                "--run-id",
+                "unit_openclaw_structured_files_create_attempt1",
+                "--artifact-dir",
+                str(artifact_dir),
+                "--output",
+                str(output_path),
+                "--llm-ledger",
+                str(self.ledger_path),
+                "--projected-cost-usd",
+                "1",
+                "--context-path",
+                "new_module.py",
+                "--output-contract",
+                "structured-files-json-v1",
+                "--mock-response-text",
+                response,
+            ],
+            cwd=REPO_ROOT,
+            env=self.env(),
+        )
+
+        self.assertEqual(completed.returncode, 0, completed.stderr)
+        summary = json.loads(output_path.read_text(encoding="utf-8"))
+        self.assertEqual(summary["status"], "patch_generated")
+        self.assertEqual(summary["patch"]["kind"], "structured_files")
+        self.assertEqual(summary["patch"]["changed_paths"], ["new_module.py"])
+        self.assertEqual((self.workspace / "new_module.py").read_text(encoding="utf-8"), "VALUE = 2\n")
+        snapshot = json.loads((artifact_dir / "prompt_snapshot.json").read_text(encoding="utf-8"))
+        self.assertEqual(snapshot["context_files"][0]["exists"], False)
+
     def test_structured_files_contract_rejects_unsafe_patch_content_as_model_output(self) -> None:
         """Generated full-file content with full URLs is an invalid submission, not infra."""
         artifact_dir = self.root / "structured-files-unsafe-artifacts"
