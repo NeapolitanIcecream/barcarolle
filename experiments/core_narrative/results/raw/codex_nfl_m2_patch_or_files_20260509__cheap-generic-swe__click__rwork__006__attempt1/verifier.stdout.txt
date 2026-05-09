@@ -1,0 +1,128 @@
+.................................................F...................... [ 90%]
+........                                                                 [100%]
+=================================== FAILURES ===================================
+____________ test_flag_value_and_default[opt_params49-args49-True] _____________
+
+runner = <click.testing.CliRunner object at 0x109184bf0>
+opt_params = {'default': True, 'flag_value': False, 'type': <class 'bool'>}
+args = [], expected = True
+
+    @pytest.mark.parametrize(
+        ("opt_params", "args", "expected"),
+        [
+            # The type passed to the option is responsible to converting the value, whether
+            # we pass the option flag or not.
+            ({"type": bool}, [], False),
+            ({"type": bool}, ["--foo"], True),
+            ({"type": click.BOOL}, [], False),
+            ({"type": click.BOOL}, ["--foo"], True),
+            ({"type": str}, [], None),
+            ({"type": str}, ["--foo"], "True"),
+            # Default value is given as-is to the --foo option when it is not passed,
+            # whatever the type. Now if --foo is passed, the value is always True, whatever
+            # the type. In both case the type of the option is responsible for the
+            # conversion of the value.
+            ({"type": bool, "default": True}, [], True),
+            ({"type": bool, "default": True}, ["--foo"], True),
+            ({"type": bool, "default": False}, [], False),
+            ({"type": bool, "default": False}, ["--foo"], True),
+            # ({"type": bool, "default": "foo"}, [], "foo"),
+            ({"type": bool, "default": "foo"}, ["--foo"], True),
+            ({"type": bool, "default": None}, [], None),
+            ({"type": bool, "default": None}, ["--foo"], True),
+            ({"type": click.BOOL, "default": True}, [], True),
+            ({"type": click.BOOL, "default": True}, ["--foo"], True),
+            ({"type": click.BOOL, "default": False}, [], False),
+            ({"type": click.BOOL, "default": False}, ["--foo"], True),
+            # ({"type": click.BOOL, "default": "foo"}, [], "foo"),
+            ({"type": click.BOOL, "default": "foo"}, ["--foo"], True),
+            ({"type": click.BOOL, "default": None}, [], None),
+            ({"type": click.BOOL, "default": None}, ["--foo"], True),
+            ({"type": str, "default": True}, [], "True"),
+            ({"type": str, "default": True}, ["--foo"], "True"),
+            ({"type": str, "default": False}, [], "False"),
+            ({"type": str, "default": False}, ["--foo"], "True"),
+            ({"type": str, "default": "foo"}, [], "foo"),
+            ({"type": str, "default": "foo"}, ["--foo"], "True"),
+            ({"type": str, "default": None}, [], None),
+            ({"type": str, "default": None}, ["--foo"], "True"),
+            # Flag value is given as-is to the --foo option when it is passed, then
+            # converted by the option type.
+            ({"type": bool, "flag_value": True}, [], False),
+            ({"type": bool, "flag_value": True}, ["--foo"], True),
+            ({"type": bool, "flag_value": False}, [], False),
+            ({"type": bool, "flag_value": False}, ["--foo"], False),
+            ({"type": bool, "flag_value": None}, [], False),
+            ({"type": bool, "flag_value": None}, ["--foo"], None),
+            ({"type": click.BOOL, "flag_value": True}, [], False),
+            ({"type": click.BOOL, "flag_value": True}, ["--foo"], True),
+            ({"type": click.BOOL, "flag_value": False}, [], False),
+            ({"type": click.BOOL, "flag_value": False}, ["--foo"], False),
+            ({"type": click.BOOL, "flag_value": None}, [], False),
+            ({"type": click.BOOL, "flag_value": None}, ["--foo"], None),
+            ({"type": str, "flag_value": True}, [], None),
+            ({"type": str, "flag_value": True}, ["--foo"], "True"),
+            ({"type": str, "flag_value": False}, [], None),
+            ({"type": str, "flag_value": False}, ["--foo"], "False"),
+            ({"type": str, "flag_value": "foo"}, [], None),
+            ({"type": str, "flag_value": "foo"}, ["--foo"], "foo"),
+            ({"type": str, "flag_value": None}, [], None),
+            ({"type": str, "flag_value": None}, ["--foo"], None),
+            # Not passing --foo returns the default value as-is, in its Python type, then
+            # converted by the option type. For boolean flags, default=True is a literal
+            # value, not a sentinel meaning "activate flag". So it is NOT substituted with
+            # flag_value. See: https://github.com/pallets/click/issues/3111
+            # https://github.com/pallets/click/pull/3239
+            ({"type": bool, "default": True, "flag_value": True}, [], True),
+            ({"type": bool, "default": True, "flag_value": False}, [], True),
+            ({"type": bool, "default": False, "flag_value": True}, [], False),
+            ({"type": bool, "default": False, "flag_value": False}, [], False),
+            ({"type": bool, "default": None, "flag_value": True}, [], None),
+            ({"type": bool, "default": None, "flag_value": False}, [], None),
+            ({"type": str, "default": True, "flag_value": True}, [], "True"),
+            ({"type": str, "default": True, "flag_value": False}, [], "False"),
+            ({"type": str, "default": False, "flag_value": True}, [], "False"),
+            ({"type": str, "default": False, "flag_value": False}, [], "False"),
+            ({"type": str, "default": "foo", "flag_value": True}, [], "foo"),
+            ({"type": str, "default": "foo", "flag_value": False}, [], "foo"),
+            ({"type": str, "default": "foo", "flag_value": "bar"}, [], "foo"),
+            ({"type": str, "default": "foo", "flag_value": None}, [], "foo"),
+            ({"type": str, "default": None, "flag_value": True}, [], None),
+            ({"type": str, "default": None, "flag_value": False}, [], None),
+            # Passing --foo returns the flag_value that was explicitly set by the user,
+            # with its Python type, but still converted by the option type.
+            ({"type": bool, "default": True, "flag_value": True}, ["--foo"], True),
+            ({"type": bool, "default": True, "flag_value": False}, ["--foo"], False),
+            ({"type": bool, "default": False, "flag_value": True}, ["--foo"], True),
+            ({"type": bool, "default": False, "flag_value": False}, ["--foo"], False),
+            ({"type": bool, "default": None, "flag_value": True}, ["--foo"], True),
+            ({"type": bool, "default": None, "flag_value": False}, ["--foo"], False),
+            ({"type": str, "default": True, "flag_value": True}, ["--foo"], "True"),
+            ({"type": str, "default": True, "flag_value": False}, ["--foo"], "False"),
+            ({"type": str, "default": False, "flag_value": True}, ["--foo"], "True"),
+            ({"type": str, "default": False, "flag_value": False}, ["--foo"], "False"),
+            ({"type": str, "default": "foo", "flag_value": True}, ["--foo"], "True"),
+            ({"type": str, "default": "foo", "flag_value": False}, ["--foo"], "False"),
+            ({"type": str, "default": "foo", "flag_value": "bar"}, ["--foo"], "bar"),
+            ({"type": str, "default": "foo", "flag_value": None}, ["--foo"], None),
+            ({"type": str, "default": None, "flag_value": True}, ["--foo"], "True"),
+            ({"type": str, "default": None, "flag_value": False}, ["--foo"], "False"),
+        ],
+    )
+    def test_flag_value_and_default(runner, opt_params, args, expected):
+        @click.command()
+        @click.option("--foo", is_flag=True, **opt_params)
+        def cmd(foo):
+            click.echo(repr(foo), nl=False)
+    
+        result = runner.invoke(cmd, args)
+>       assert result.output == repr(expected)
+E       AssertionError: assert 'False' == 'True'
+E         
+E         - True
+E         + False
+
+tests/test_options.py:1507: AssertionError
+=========================== short test summary info ============================
+FAILED tests/test_options.py::test_flag_value_and_default[opt_params49-args49-True]
+1 failed, 79 passed in 0.11s

@@ -1599,6 +1599,61 @@ class OpenClawDirectRunnerTests(unittest.TestCase):
         self.assertEqual(summary["details"]["failure_class"], "invalid_unified_diff")
         self.assertEqual((self.workspace / "module.py").read_text(encoding="utf-8"), "VALUE = 1\n")
 
+    def test_patch_or_files_contract_accepts_unified_diff_mock_response(self) -> None:
+        """The M2 default patch path accepts verifier-ready unified diffs without JSON mode."""
+        artifact_dir = self.root / "patch-or-files-artifacts"
+        output_path = self.root / "patch-or-files.json"
+        patch = (
+            "diff --git a/module.py b/module.py\n"
+            "--- a/module.py\n"
+            "+++ b/module.py\n"
+            "@@ -1 +1 @@\n"
+            "-VALUE = 1\n"
+            "+VALUE = 2\n"
+        )
+        response = json.dumps({"unified_diff": patch})
+
+        completed = run(
+            [
+                sys.executable,
+                str(RUNNER),
+                "--workspace",
+                str(self.workspace),
+                "--task",
+                str(self.task_path),
+                "--acut",
+                str(self.acut_path),
+                "--attempt",
+                "1",
+                "--run-id",
+                "unit_openclaw_patch_or_files_attempt1",
+                "--artifact-dir",
+                str(artifact_dir),
+                "--output",
+                str(output_path),
+                "--llm-ledger",
+                str(self.ledger_path),
+                "--projected-cost-usd",
+                "1",
+                "--context-path",
+                "module.py",
+                "--output-contract",
+                "patch-or-files-v1",
+                "--mock-response-text",
+                response,
+            ],
+            cwd=REPO_ROOT,
+            env=self.env(),
+        )
+
+        self.assertEqual(completed.returncode, 0, completed.stderr)
+        summary = json.loads(output_path.read_text(encoding="utf-8"))
+        self.assertEqual(summary["status"], "patch_generated")
+        self.assertEqual(summary["submission_contract"], "patch-or-files-v1")
+        self.assertEqual(summary["patch"]["kind"], "unified_diff")
+        self.assertFalse(summary["model_call_made"])
+        self.assertEqual((self.workspace / "module.py").read_text(encoding="utf-8"), "VALUE = 2\n")
+
     def test_live_failure_after_response_is_ledgered_with_provider_usage(self) -> None:
         """Regression: validation failures after a model response still consume provider usage."""
         artifact_dir = self.root / "failed-live-artifacts"

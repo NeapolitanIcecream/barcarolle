@@ -42,6 +42,7 @@ from _llm_budget import (
     unsafe_text_findings,
 )
 from barcarolle_patch_command import (
+    DEFAULT_OUTPUT_CONTRACT as PATCH_OR_FILES_OUTPUT_CONTRACT,
     DEFAULT_MAX_RESPONSE_BYTES,
     STRUCTURED_FILES_OUTPUT_CONTRACT,
     apply_patch_response,
@@ -64,7 +65,7 @@ DEFAULT_MAX_FILE_CHARS = 80_000
 DEFAULT_MAX_CONTEXT_CHARS = 120_000
 DEFAULT_MAX_FOCUSED_EXCERPT_CHARS = 8_000
 DEFAULT_OUTPUT_CONTRACT = "anchored-search-replace-json-v3"
-SUPPORTED_OUTPUT_CONTRACTS = (DEFAULT_OUTPUT_CONTRACT, STRUCTURED_FILES_OUTPUT_CONTRACT)
+SUPPORTED_OUTPUT_CONTRACTS = (DEFAULT_OUTPUT_CONTRACT, STRUCTURED_FILES_OUTPUT_CONTRACT, PATCH_OR_FILES_OUTPUT_CONTRACT)
 
 
 def output_contract_schema(output_contract: str = DEFAULT_OUTPUT_CONTRACT) -> dict[str, Any]:
@@ -84,6 +85,26 @@ def output_contract_schema(output_contract: str = DEFAULT_OUTPUT_CONTRACT) -> di
             },
             "diagnostic_failure_classes": {
                 "output_contract_violation": "response did not satisfy the selected structured-files contract",
+                "structured_files_invalid": "files entries were malformed or could not be applied as file-level edits",
+                "unsafe_generated_text": "response, path, content, or generated patch contained unsafe generated text",
+            },
+        }
+    if output_contract == PATCH_OR_FILES_OUTPUT_CONTRACT:
+        return {
+            "id": PATCH_OR_FILES_OUTPUT_CONTRACT,
+            "accepted_forms": [
+                "raw unified diff applicable with git apply",
+                "JSON object with unified_diff, patch, or diff string",
+                "JSON object with files list of full file contents",
+            ],
+            "path_policy": {
+                "paths_must_be_relative": True,
+                "paths_must_not_target_reserved_metadata": [".git", ".core_narrative"],
+                "paths_must_be_from_declared_context": True,
+            },
+            "diagnostic_failure_classes": {
+                "invalid_unified_diff": "unified diff was present but failed git apply validation",
+                "unsupported_patch_response": "response did not contain unified diff or structured files",
                 "structured_files_invalid": "files entries were malformed or could not be applied as file-level edits",
                 "unsafe_generated_text": "response, path, content, or generated patch contained unsafe generated text",
             },
@@ -441,6 +462,20 @@ def build_prompt(
             "- No markdown fences, prose, notes, placeholders, diffs, old/new edit bundles, URLs, or endpoint strings are present.",
             "- Keep changes minimal. Prefer source code fixes over test-only changes.",
         ]
+    elif output_contract == PATCH_OR_FILES_OUTPUT_CONTRACT:
+        contract_lines = [
+            "Return only one patch artifact in one of these forms:",
+            "1. A raw unified diff applicable with git apply.",
+            "2. A JSON object with a string field named unified_diff, patch, or diff.",
+            "3. A JSON object with files: [{path, action, content}], where action is write, create, replace, or delete.",
+            "Do not include prose, markdown explanation, credentials, endpoints, or URLs.",
+            "",
+            "Pre-submit validation checklist:",
+            "- Every changed path exactly matches one of the Valid edit paths below.",
+            "- Unified diffs must apply cleanly with git apply.",
+            "- Structured file entries must include complete final content for write/create/replace actions.",
+            "- Keep changes minimal. Prefer source code fixes over test-only changes.",
+        ]
     else:
         contract_lines = [
             "Return only one JSON object with this exact contract:",
@@ -601,6 +636,12 @@ def live_payload(
             "the requested structured file-level contract. Do not include prose, "
             "markdown fences, URLs, endpoint values, credentials, or placeholders."
         )
+    elif output_contract == PATCH_OR_FILES_OUTPUT_CONTRACT:
+        system = (
+            "You are a patch-generation engine. Return only a valid patch artifact: "
+            "a unified diff or JSON patch/files object. Do not include prose, URLs, "
+            "endpoint values, credentials, or placeholders."
+        )
     else:
         system = (
             "You are a patch-generation engine. Return only valid JSON matching "
@@ -615,15 +656,17 @@ def live_payload(
             ],
             **params,
         }
-    return {
+    payload = {
         "model": model,
         "messages": [
             {"role": "system", "content": system},
             {"role": "user", "content": prompt},
         ],
-        "response_format": {"type": "json_object"},
         **params,
     }
+    if output_contract != PATCH_OR_FILES_OUTPUT_CONTRACT:
+        payload["response_format"] = {"type": "json_object"}
+    return payload
 
 
 def call_live_model(
@@ -1060,6 +1103,27 @@ def apply_model_response(
 ) -> dict[str, Any]:
     if output_contract == STRUCTURED_FILES_OUTPUT_CONTRACT:
         return apply_structured_files_model_response(workspace, text, allowed_paths=allowed_paths)
+    if output_contract == PATCH_OR_FILES_OUTPUT_CONTRACT:
+        reject_unsafe_model_response(text)
+        try:
+            parsed = parse_patch_response(text)
+            ensure_parsed_patch_paths_within_context(workspace, parsed, allowed_paths)
+            result = apply_patch_response(workspace, parsed, apply_patch=True)
+            ensure_paths_allowed(result.get("changed_paths", []), allowed_paths)
+        except ToolError as exc:
+            details = dict(exc.details)
+            failure_class = details.pop("failure_class", None)
+            if not isinstance(failure_class, str) or not failure_class:
+                failure_class = "unsupported_patch_response"
+                if str(exc) in {
+                    "generated unified diff failed git apply validation",
+                    "generated unified diff failed to apply",
+                }:
+                    failure_class = "invalid_unified_diff"
+            raise ToolError(str(exc), **details, failure_class=failure_class) from exc
+        result["allowed_context_paths"] = sorted({validate_patch_path(path) for path in allowed_paths})
+        result["output_contract"] = PATCH_OR_FILES_OUTPUT_CONTRACT
+        return result
     reject_unsafe_model_response(text)
     edits = parse_edit_bundle(text)
     if edits is not None:

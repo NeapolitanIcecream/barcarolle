@@ -1,0 +1,544 @@
+{
+  "acuts": [
+    "cheap-generic-swe",
+    "cheap-click-specialist"
+  ],
+  "claim_status": "scoreability_gate_not_met",
+  "claim_wording": "M2 scoreability readiness gate did not pass on the fixed 2 ACUT x 3 RWork smoke. This is measurement-readiness evidence only: it makes no capability uplift claim, no task-solving improvement claim, and no ranking reversal claim.",
+  "evidence_inputs": {
+    "patch_or_files_v1_live": {
+      "contract": "patch-or-files-v1",
+      "kind": "batch",
+      "path": "experiments/core_narrative/results/codex_nfl_m2_patch_or_files_20260509.json"
+    },
+    "patch_or_files_v1_no_model": {
+      "contract": "patch-or-files-v1",
+      "kind": "batch",
+      "path": "experiments/core_narrative/results/codex_nfl_m2_patch_or_files_no_model_20260509.json"
+    },
+    "structured_files_json_v1_live": {
+      "contract": "structured-files-json-v1",
+      "kind": "batch",
+      "path": "experiments/core_narrative/results/codex_nfl_m1_1_structured_20260509.json"
+    }
+  },
+  "fixed_denominator": 6,
+  "generated_at": "2026-05-09T10:40:09.986701Z",
+  "paths": {
+    "patch_or_files_v1_live": {
+      "blocked_cell_count": 0,
+      "blocked_cells": [],
+      "clean_replay_attempted_count": 0,
+      "clean_replay_disagreement_cells": [],
+      "clean_replay_disagreement_count": 0,
+      "clean_replay_success_count": 0,
+      "clean_replay_success_rate": 0.0,
+      "excluded_row_count": 0,
+      "excluded_rows": [],
+      "failure_class_counts": {
+        "invalid_unified_diff": 2,
+        "none": 1,
+        "unsupported_patch_response": 3
+      },
+      "failure_owner_counts": {
+        "infrastructure": 1,
+        "model_output": 5
+      },
+      "gate": {
+        "checks": {
+          "clean_replay_disagreement_count": true,
+          "complete_fixed_denominator": true,
+          "invalid_submission_rate": false,
+          "patch_ready_coverage": false
+        },
+        "status": "failed",
+        "thresholds": {
+          "clean_replay_disagreement_count_max": 0,
+          "invalid_submission_rate_max": 0.25,
+          "patch_ready_coverage_min": 0.7
+        }
+      },
+      "invalid_submission_count": 5,
+      "invalid_submission_rate": 0.833333,
+      "missing_cell_count": 0,
+      "missing_cells": [],
+      "model_call_made_counts": {
+        "false": 0,
+        "true": 6,
+        "unknown": 0
+      },
+      "patch_ready_count": 0,
+      "patch_ready_coverage": 0.0,
+      "status_counts": {
+        "infra_failed": 1,
+        "invalid_submission": 5
+      },
+      "total": 6
+    },
+    "patch_or_files_v1_no_model": {
+      "blocked_cell_count": 0,
+      "blocked_cells": [],
+      "clean_replay_attempted_count": 6,
+      "clean_replay_disagreement_cells": [],
+      "clean_replay_disagreement_count": 0,
+      "clean_replay_success_count": 6,
+      "clean_replay_success_rate": 1.0,
+      "excluded_row_count": 0,
+      "excluded_rows": [],
+      "failure_class_counts": {
+        "none": 6
+      },
+      "failure_owner_counts": {
+        "candidate_patch": 6
+      },
+      "gate": {
+        "checks": {
+          "clean_replay_disagreement_count": true,
+          "complete_fixed_denominator": true,
+          "invalid_submission_rate": true,
+          "patch_ready_coverage": true
+        },
+        "status": "passed",
+        "thresholds": {
+          "clean_replay_disagreement_count_max": 0,
+          "invalid_submission_rate_max": 0.25,
+          "patch_ready_coverage_min": 0.7
+        }
+      },
+      "invalid_submission_count": 0,
+      "invalid_submission_rate": 0.0,
+      "missing_cell_count": 0,
+      "missing_cells": [],
+      "model_call_made_counts": {
+        "false": 6,
+        "true": 0,
+        "unknown": 0
+      },
+      "patch_ready_count": 6,
+      "patch_ready_coverage": 1.0,
+      "status_counts": {
+        "failed": 6
+      },
+      "total": 6
+    },
+    "structured_files_json_v1_live": {
+      "blocked_cell_count": 0,
+      "blocked_cells": [],
+      "clean_replay_attempted_count": 2,
+      "clean_replay_disagreement_cells": [],
+      "clean_replay_disagreement_count": 0,
+      "clean_replay_success_count": 2,
+      "clean_replay_success_rate": 0.333333,
+      "excluded_row_count": 0,
+      "excluded_rows": [],
+      "failure_class_counts": {
+        "none": 2,
+        "unsafe_generated_text": 4
+      },
+      "failure_owner_counts": {
+        "candidate_patch": 2,
+        "model_output": 4
+      },
+      "gate": {
+        "checks": {
+          "clean_replay_disagreement_count": true,
+          "complete_fixed_denominator": true,
+          "invalid_submission_rate": false,
+          "patch_ready_coverage": false
+        },
+        "status": "failed",
+        "thresholds": {
+          "clean_replay_disagreement_count_max": 0,
+          "invalid_submission_rate_max": 0.25,
+          "patch_ready_coverage_min": 0.7
+        }
+      },
+      "invalid_submission_count": 4,
+      "invalid_submission_rate": 0.666667,
+      "missing_cell_count": 0,
+      "missing_cells": [],
+      "model_call_made_counts": {
+        "false": 0,
+        "true": 6,
+        "unknown": 0
+      },
+      "patch_ready_count": 2,
+      "patch_ready_coverage": 0.333333,
+      "status_counts": {
+        "failed": 2,
+        "invalid_submission": 4
+      },
+      "total": 6
+    }
+  },
+  "prohibited_claims": {
+    "capability_uplift": false,
+    "g_score_predictivity": false,
+    "ranking_reversal": false,
+    "task_solving_improvement": false
+  },
+  "records": {
+    "patch_or_files_v1_live": [
+      {
+        "acut_id": "cheap-generic-swe",
+        "clean_replay_attempted": false,
+        "clean_replay_disagreement": false,
+        "clean_replay_success": false,
+        "contract": "patch-or-files-v1",
+        "failure_class": "invalid_unified_diff",
+        "failure_owner": "model_output",
+        "model_call_made": true,
+        "normalized_result": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/normalized/codex_nfl_m2_patch_or_files_20260509__cheap-generic-swe__click__rwork__003__attempt1.json",
+        "patch_ready": false,
+        "path_id": "patch_or_files_v1_live",
+        "prompt_snapshot": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/codex_nfl_m2_patch_or_files_20260509__cheap-generic-swe__click__rwork__003__attempt1/prompt_snapshot.json",
+        "raw_response_artifact": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/codex_nfl_m2_patch_or_files_20260509__cheap-generic-swe__click__rwork__003__attempt1/provider_response.redacted.json",
+        "run_id": "codex_nfl_m2_patch_or_files_20260509__cheap-generic-swe__click__rwork__003__attempt1",
+        "status": "invalid_submission",
+        "task_id": "click__rwork__003",
+        "verifier_exit_code": null
+      },
+      {
+        "acut_id": "cheap-click-specialist",
+        "clean_replay_attempted": false,
+        "clean_replay_disagreement": false,
+        "clean_replay_success": false,
+        "contract": "patch-or-files-v1",
+        "failure_class": "unsupported_patch_response",
+        "failure_owner": "model_output",
+        "model_call_made": true,
+        "normalized_result": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/normalized/codex_nfl_m2_patch_or_files_20260509__cheap-click-specialist__click__rwork__003__attempt1.json",
+        "patch_ready": false,
+        "path_id": "patch_or_files_v1_live",
+        "prompt_snapshot": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/codex_nfl_m2_patch_or_files_20260509__cheap-click-specialist__click__rwork__003__attempt1/prompt_snapshot.json",
+        "raw_response_artifact": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/codex_nfl_m2_patch_or_files_20260509__cheap-click-specialist__click__rwork__003__attempt1/provider_response.redacted.json",
+        "run_id": "codex_nfl_m2_patch_or_files_20260509__cheap-click-specialist__click__rwork__003__attempt1",
+        "status": "invalid_submission",
+        "task_id": "click__rwork__003",
+        "verifier_exit_code": null
+      },
+      {
+        "acut_id": "cheap-generic-swe",
+        "clean_replay_attempted": false,
+        "clean_replay_disagreement": false,
+        "clean_replay_success": false,
+        "contract": "patch-or-files-v1",
+        "failure_class": "invalid_unified_diff",
+        "failure_owner": "model_output",
+        "model_call_made": true,
+        "normalized_result": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/normalized/codex_nfl_m2_patch_or_files_20260509__cheap-generic-swe__click__rwork__004__attempt1.json",
+        "patch_ready": false,
+        "path_id": "patch_or_files_v1_live",
+        "prompt_snapshot": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/codex_nfl_m2_patch_or_files_20260509__cheap-generic-swe__click__rwork__004__attempt1/prompt_snapshot.json",
+        "raw_response_artifact": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/codex_nfl_m2_patch_or_files_20260509__cheap-generic-swe__click__rwork__004__attempt1/provider_response.redacted.json",
+        "run_id": "codex_nfl_m2_patch_or_files_20260509__cheap-generic-swe__click__rwork__004__attempt1",
+        "status": "invalid_submission",
+        "task_id": "click__rwork__004",
+        "verifier_exit_code": null
+      },
+      {
+        "acut_id": "cheap-click-specialist",
+        "clean_replay_attempted": false,
+        "clean_replay_disagreement": false,
+        "clean_replay_success": false,
+        "contract": "patch-or-files-v1",
+        "failure_class": "unsupported_patch_response",
+        "failure_owner": "model_output",
+        "model_call_made": true,
+        "normalized_result": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/normalized/codex_nfl_m2_patch_or_files_20260509__cheap-click-specialist__click__rwork__004__attempt1.json",
+        "patch_ready": false,
+        "path_id": "patch_or_files_v1_live",
+        "prompt_snapshot": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/codex_nfl_m2_patch_or_files_20260509__cheap-click-specialist__click__rwork__004__attempt1/prompt_snapshot.json",
+        "raw_response_artifact": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/codex_nfl_m2_patch_or_files_20260509__cheap-click-specialist__click__rwork__004__attempt1/provider_response.redacted.json",
+        "run_id": "codex_nfl_m2_patch_or_files_20260509__cheap-click-specialist__click__rwork__004__attempt1",
+        "status": "invalid_submission",
+        "task_id": "click__rwork__004",
+        "verifier_exit_code": null
+      },
+      {
+        "acut_id": "cheap-generic-swe",
+        "clean_replay_attempted": false,
+        "clean_replay_disagreement": false,
+        "clean_replay_success": false,
+        "contract": "patch-or-files-v1",
+        "failure_class": "unsupported_patch_response",
+        "failure_owner": "model_output",
+        "model_call_made": true,
+        "normalized_result": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/normalized/codex_nfl_m2_patch_or_files_20260509__cheap-generic-swe__click__rwork__006__attempt1.json",
+        "patch_ready": false,
+        "path_id": "patch_or_files_v1_live",
+        "prompt_snapshot": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/codex_nfl_m2_patch_or_files_20260509__cheap-generic-swe__click__rwork__006__attempt1/prompt_snapshot.json",
+        "raw_response_artifact": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/codex_nfl_m2_patch_or_files_20260509__cheap-generic-swe__click__rwork__006__attempt1/provider_response.redacted.json",
+        "run_id": "codex_nfl_m2_patch_or_files_20260509__cheap-generic-swe__click__rwork__006__attempt1",
+        "status": "invalid_submission",
+        "task_id": "click__rwork__006",
+        "verifier_exit_code": null
+      },
+      {
+        "acut_id": "cheap-click-specialist",
+        "clean_replay_attempted": false,
+        "clean_replay_disagreement": false,
+        "clean_replay_success": false,
+        "contract": "patch-or-files-v1",
+        "failure_class": null,
+        "failure_owner": "infrastructure",
+        "model_call_made": true,
+        "normalized_result": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/normalized/codex_nfl_m2_patch_or_files_20260509__cheap-click-specialist__click__rwork__006__attempt1.json",
+        "patch_ready": false,
+        "path_id": "patch_or_files_v1_live",
+        "prompt_snapshot": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/codex_nfl_m2_patch_or_files_20260509__cheap-click-specialist__click__rwork__006__attempt1/prompt_snapshot.json",
+        "raw_response_artifact": null,
+        "run_id": "codex_nfl_m2_patch_or_files_20260509__cheap-click-specialist__click__rwork__006__attempt1",
+        "status": "infra_failed",
+        "task_id": "click__rwork__006",
+        "verifier_exit_code": null
+      }
+    ],
+    "patch_or_files_v1_no_model": [
+      {
+        "acut_id": "cheap-generic-swe",
+        "clean_replay_attempted": true,
+        "clean_replay_disagreement": false,
+        "clean_replay_success": true,
+        "contract": "patch-or-files-v1",
+        "failure_class": null,
+        "failure_owner": "candidate_patch",
+        "model_call_made": false,
+        "normalized_result": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/normalized/codex_nfl_m2_patch_or_files_no_model_20260509__cheap-generic-swe__click__rwork__003__attempt1.json",
+        "patch_ready": true,
+        "path_id": "patch_or_files_v1_no_model",
+        "prompt_snapshot": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/codex_nfl_m2_patch_or_files_no_model_20260509__cheap-generic-swe__click__rwork__003__attempt1/prompt_snapshot.json",
+        "raw_response_artifact": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/codex_nfl_m2_patch_or_files_no_model_20260509__cheap-generic-swe__click__rwork__003__attempt1/provider_response.redacted.json",
+        "run_id": "codex_nfl_m2_patch_or_files_no_model_20260509__cheap-generic-swe__click__rwork__003__attempt1",
+        "status": "failed",
+        "task_id": "click__rwork__003",
+        "verifier_exit_code": 1
+      },
+      {
+        "acut_id": "cheap-click-specialist",
+        "clean_replay_attempted": true,
+        "clean_replay_disagreement": false,
+        "clean_replay_success": true,
+        "contract": "patch-or-files-v1",
+        "failure_class": null,
+        "failure_owner": "candidate_patch",
+        "model_call_made": false,
+        "normalized_result": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/normalized/codex_nfl_m2_patch_or_files_no_model_20260509__cheap-click-specialist__click__rwork__003__attempt1.json",
+        "patch_ready": true,
+        "path_id": "patch_or_files_v1_no_model",
+        "prompt_snapshot": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/codex_nfl_m2_patch_or_files_no_model_20260509__cheap-click-specialist__click__rwork__003__attempt1/prompt_snapshot.json",
+        "raw_response_artifact": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/codex_nfl_m2_patch_or_files_no_model_20260509__cheap-click-specialist__click__rwork__003__attempt1/provider_response.redacted.json",
+        "run_id": "codex_nfl_m2_patch_or_files_no_model_20260509__cheap-click-specialist__click__rwork__003__attempt1",
+        "status": "failed",
+        "task_id": "click__rwork__003",
+        "verifier_exit_code": 1
+      },
+      {
+        "acut_id": "cheap-generic-swe",
+        "clean_replay_attempted": true,
+        "clean_replay_disagreement": false,
+        "clean_replay_success": true,
+        "contract": "patch-or-files-v1",
+        "failure_class": null,
+        "failure_owner": "candidate_patch",
+        "model_call_made": false,
+        "normalized_result": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/normalized/codex_nfl_m2_patch_or_files_no_model_20260509__cheap-generic-swe__click__rwork__004__attempt1.json",
+        "patch_ready": true,
+        "path_id": "patch_or_files_v1_no_model",
+        "prompt_snapshot": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/codex_nfl_m2_patch_or_files_no_model_20260509__cheap-generic-swe__click__rwork__004__attempt1/prompt_snapshot.json",
+        "raw_response_artifact": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/codex_nfl_m2_patch_or_files_no_model_20260509__cheap-generic-swe__click__rwork__004__attempt1/provider_response.redacted.json",
+        "run_id": "codex_nfl_m2_patch_or_files_no_model_20260509__cheap-generic-swe__click__rwork__004__attempt1",
+        "status": "failed",
+        "task_id": "click__rwork__004",
+        "verifier_exit_code": 1
+      },
+      {
+        "acut_id": "cheap-click-specialist",
+        "clean_replay_attempted": true,
+        "clean_replay_disagreement": false,
+        "clean_replay_success": true,
+        "contract": "patch-or-files-v1",
+        "failure_class": null,
+        "failure_owner": "candidate_patch",
+        "model_call_made": false,
+        "normalized_result": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/normalized/codex_nfl_m2_patch_or_files_no_model_20260509__cheap-click-specialist__click__rwork__004__attempt1.json",
+        "patch_ready": true,
+        "path_id": "patch_or_files_v1_no_model",
+        "prompt_snapshot": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/codex_nfl_m2_patch_or_files_no_model_20260509__cheap-click-specialist__click__rwork__004__attempt1/prompt_snapshot.json",
+        "raw_response_artifact": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/codex_nfl_m2_patch_or_files_no_model_20260509__cheap-click-specialist__click__rwork__004__attempt1/provider_response.redacted.json",
+        "run_id": "codex_nfl_m2_patch_or_files_no_model_20260509__cheap-click-specialist__click__rwork__004__attempt1",
+        "status": "failed",
+        "task_id": "click__rwork__004",
+        "verifier_exit_code": 1
+      },
+      {
+        "acut_id": "cheap-generic-swe",
+        "clean_replay_attempted": true,
+        "clean_replay_disagreement": false,
+        "clean_replay_success": true,
+        "contract": "patch-or-files-v1",
+        "failure_class": null,
+        "failure_owner": "candidate_patch",
+        "model_call_made": false,
+        "normalized_result": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/normalized/codex_nfl_m2_patch_or_files_no_model_20260509__cheap-generic-swe__click__rwork__006__attempt1.json",
+        "patch_ready": true,
+        "path_id": "patch_or_files_v1_no_model",
+        "prompt_snapshot": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/codex_nfl_m2_patch_or_files_no_model_20260509__cheap-generic-swe__click__rwork__006__attempt1/prompt_snapshot.json",
+        "raw_response_artifact": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/codex_nfl_m2_patch_or_files_no_model_20260509__cheap-generic-swe__click__rwork__006__attempt1/provider_response.redacted.json",
+        "run_id": "codex_nfl_m2_patch_or_files_no_model_20260509__cheap-generic-swe__click__rwork__006__attempt1",
+        "status": "failed",
+        "task_id": "click__rwork__006",
+        "verifier_exit_code": 1
+      },
+      {
+        "acut_id": "cheap-click-specialist",
+        "clean_replay_attempted": true,
+        "clean_replay_disagreement": false,
+        "clean_replay_success": true,
+        "contract": "patch-or-files-v1",
+        "failure_class": null,
+        "failure_owner": "candidate_patch",
+        "model_call_made": false,
+        "normalized_result": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/normalized/codex_nfl_m2_patch_or_files_no_model_20260509__cheap-click-specialist__click__rwork__006__attempt1.json",
+        "patch_ready": true,
+        "path_id": "patch_or_files_v1_no_model",
+        "prompt_snapshot": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/codex_nfl_m2_patch_or_files_no_model_20260509__cheap-click-specialist__click__rwork__006__attempt1/prompt_snapshot.json",
+        "raw_response_artifact": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/codex_nfl_m2_patch_or_files_no_model_20260509__cheap-click-specialist__click__rwork__006__attempt1/provider_response.redacted.json",
+        "run_id": "codex_nfl_m2_patch_or_files_no_model_20260509__cheap-click-specialist__click__rwork__006__attempt1",
+        "status": "failed",
+        "task_id": "click__rwork__006",
+        "verifier_exit_code": 1
+      }
+    ],
+    "structured_files_json_v1_live": [
+      {
+        "acut_id": "cheap-generic-swe",
+        "clean_replay_attempted": true,
+        "clean_replay_disagreement": false,
+        "clean_replay_success": true,
+        "contract": "structured-files-json-v1",
+        "failure_class": null,
+        "failure_owner": "candidate_patch",
+        "model_call_made": true,
+        "normalized_result": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/normalized/codex_nfl_m1_1_structured_20260509__cheap-generic-swe__click__rwork__003__attempt1.json",
+        "patch_ready": true,
+        "path_id": "structured_files_json_v1_live",
+        "prompt_snapshot": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/codex_nfl_m1_1_structured_20260509__cheap-generic-swe__click__rwork__003__attempt1/prompt_snapshot.json",
+        "raw_response_artifact": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/codex_nfl_m1_1_structured_20260509__cheap-generic-swe__click__rwork__003__attempt1/provider_response.redacted.json",
+        "run_id": "codex_nfl_m1_1_structured_20260509__cheap-generic-swe__click__rwork__003__attempt1",
+        "status": "failed",
+        "task_id": "click__rwork__003",
+        "verifier_exit_code": 1
+      },
+      {
+        "acut_id": "cheap-click-specialist",
+        "clean_replay_attempted": true,
+        "clean_replay_disagreement": false,
+        "clean_replay_success": true,
+        "contract": "structured-files-json-v1",
+        "failure_class": null,
+        "failure_owner": "candidate_patch",
+        "model_call_made": true,
+        "normalized_result": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/normalized/codex_nfl_m1_1_structured_20260509__cheap-click-specialist__click__rwork__003__attempt1.json",
+        "patch_ready": true,
+        "path_id": "structured_files_json_v1_live",
+        "prompt_snapshot": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/codex_nfl_m1_1_structured_20260509__cheap-click-specialist__click__rwork__003__attempt1/prompt_snapshot.json",
+        "raw_response_artifact": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/codex_nfl_m1_1_structured_20260509__cheap-click-specialist__click__rwork__003__attempt1/provider_response.redacted.json",
+        "run_id": "codex_nfl_m1_1_structured_20260509__cheap-click-specialist__click__rwork__003__attempt1",
+        "status": "failed",
+        "task_id": "click__rwork__003",
+        "verifier_exit_code": 1
+      },
+      {
+        "acut_id": "cheap-generic-swe",
+        "clean_replay_attempted": false,
+        "clean_replay_disagreement": false,
+        "clean_replay_success": false,
+        "contract": "structured-files-json-v1",
+        "failure_class": "unsafe_generated_text",
+        "failure_owner": "model_output",
+        "model_call_made": true,
+        "normalized_result": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/normalized/codex_nfl_m1_1_structured_20260509__cheap-generic-swe__click__rwork__004__attempt1.json",
+        "patch_ready": false,
+        "path_id": "structured_files_json_v1_live",
+        "prompt_snapshot": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/codex_nfl_m1_1_structured_20260509__cheap-generic-swe__click__rwork__004__attempt1/prompt_snapshot.json",
+        "raw_response_artifact": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/codex_nfl_m1_1_structured_20260509__cheap-generic-swe__click__rwork__004__attempt1/provider_response.redacted.json",
+        "run_id": "codex_nfl_m1_1_structured_20260509__cheap-generic-swe__click__rwork__004__attempt1",
+        "status": "invalid_submission",
+        "task_id": "click__rwork__004",
+        "verifier_exit_code": null
+      },
+      {
+        "acut_id": "cheap-click-specialist",
+        "clean_replay_attempted": false,
+        "clean_replay_disagreement": false,
+        "clean_replay_success": false,
+        "contract": "structured-files-json-v1",
+        "failure_class": "unsafe_generated_text",
+        "failure_owner": "model_output",
+        "model_call_made": true,
+        "normalized_result": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/normalized/codex_nfl_m1_1_structured_20260509__cheap-click-specialist__click__rwork__004__attempt1.json",
+        "patch_ready": false,
+        "path_id": "structured_files_json_v1_live",
+        "prompt_snapshot": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/codex_nfl_m1_1_structured_20260509__cheap-click-specialist__click__rwork__004__attempt1/prompt_snapshot.json",
+        "raw_response_artifact": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/codex_nfl_m1_1_structured_20260509__cheap-click-specialist__click__rwork__004__attempt1/provider_response.redacted.json",
+        "run_id": "codex_nfl_m1_1_structured_20260509__cheap-click-specialist__click__rwork__004__attempt1",
+        "status": "invalid_submission",
+        "task_id": "click__rwork__004",
+        "verifier_exit_code": null
+      },
+      {
+        "acut_id": "cheap-generic-swe",
+        "clean_replay_attempted": false,
+        "clean_replay_disagreement": false,
+        "clean_replay_success": false,
+        "contract": "structured-files-json-v1",
+        "failure_class": "unsafe_generated_text",
+        "failure_owner": "model_output",
+        "model_call_made": true,
+        "normalized_result": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/normalized/codex_nfl_m1_1_structured_20260509__cheap-generic-swe__click__rwork__006__attempt1.json",
+        "patch_ready": false,
+        "path_id": "structured_files_json_v1_live",
+        "prompt_snapshot": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/codex_nfl_m1_1_structured_20260509__cheap-generic-swe__click__rwork__006__attempt1/prompt_snapshot.json",
+        "raw_response_artifact": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/codex_nfl_m1_1_structured_20260509__cheap-generic-swe__click__rwork__006__attempt1/provider_response.redacted.json",
+        "run_id": "codex_nfl_m1_1_structured_20260509__cheap-generic-swe__click__rwork__006__attempt1",
+        "status": "invalid_submission",
+        "task_id": "click__rwork__006",
+        "verifier_exit_code": null
+      },
+      {
+        "acut_id": "cheap-click-specialist",
+        "clean_replay_attempted": false,
+        "clean_replay_disagreement": false,
+        "clean_replay_success": false,
+        "contract": "structured-files-json-v1",
+        "failure_class": "unsafe_generated_text",
+        "failure_owner": "model_output",
+        "model_call_made": true,
+        "normalized_result": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/normalized/codex_nfl_m1_1_structured_20260509__cheap-click-specialist__click__rwork__006__attempt1.json",
+        "patch_ready": false,
+        "path_id": "structured_files_json_v1_live",
+        "prompt_snapshot": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/codex_nfl_m1_1_structured_20260509__cheap-click-specialist__click__rwork__006__attempt1/prompt_snapshot.json",
+        "raw_response_artifact": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/codex_nfl_m1_1_structured_20260509__cheap-click-specialist__click__rwork__006__attempt1/provider_response.redacted.json",
+        "run_id": "codex_nfl_m1_1_structured_20260509__cheap-click-specialist__click__rwork__006__attempt1",
+        "status": "invalid_submission",
+        "task_id": "click__rwork__006",
+        "verifier_exit_code": null
+      }
+    ]
+  },
+  "research_question": "Whether the selected RWork smoke is scoreable across multiple submission paths before making G/R/W predictivity claims.",
+  "status": "completed",
+  "success_criteria": {
+    "claim_boundary": "scoreability/measurement readiness only; no capability uplift or ranking reversal",
+    "clean_replay_disagreement_count_max": 0,
+    "invalid_submission_rate_max": 0.25,
+    "patch_ready_coverage_min": 0.7
+  },
+  "tasks": [
+    "click__rwork__003",
+    "click__rwork__004",
+    "click__rwork__006"
+  ],
+  "tool": "m2_scoreability_summary"
+}

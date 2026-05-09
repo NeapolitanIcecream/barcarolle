@@ -1,0 +1,136 @@
+{
+  "acut_id": "cheap-generic-swe",
+  "attempt": 1,
+  "error": "generated unified diff failed git apply validation",
+  "finished_at": "2026-05-09T10:30:58.000532Z",
+  "metadata": {
+    "acut_manifest_path": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/configs/acuts/cheap-generic-swe.yaml",
+    "acut_manifest_sha256": "3888ad4d393ac439d8a3d6ea48a7358b4480c6137d2c7aeed9c411cd676513c3",
+    "batch_tool": "codex_nfl_experiment_runner",
+    "clean_patch_replay": {
+      "attempted": false,
+      "runner_workspace": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/workspaces/codex_nfl_m2_patch_or_files_20260509__cheap-generic-swe__click__rwork__003__attempt1",
+      "separate_workspace": false,
+      "skip_apply": null,
+      "verify_workspace": null
+    },
+    "context_pack_digest": null,
+    "direct_runner_budget_gate": {
+      "allowed": true,
+      "approvals_required": [],
+      "blockers": [],
+      "budget": {
+        "current_cumulative_estimated_cost_usd": 36.006081,
+        "hard_cap_reached_or_projected": false,
+        "hard_cap_usd": 300.0,
+        "projected_cost_usd": 1.0,
+        "projected_cumulative_estimated_cost_usd": 37.006081,
+        "soft_stop_reached_or_projected": false,
+        "soft_stop_usd": 240.0
+      },
+      "default_execution_profile": {
+        "core_acut_ids": [
+          "frontier-generic-swe",
+          "frontier-click-specialist",
+          "cheap-generic-swe",
+          "cheap-click-specialist"
+        ],
+        "full_core_requires_coordinator_decision": true,
+        "pilot_primary_attempts": 28,
+        "primary_attempts_per_acut_task": 1,
+        "profile_id": "budget-constrained-2x2-pilot-v2",
+        "split_task_limits": {
+          "G_score": 2,
+          "RBench": 3,
+          "RWork": 2
+        }
+      },
+      "env": {
+        "all_required_present": true,
+        "required": [
+          {
+            "name": "BARCAROLLE_LLM_API_KEY",
+            "present": true
+          },
+          {
+            "name": "BARCAROLLE_LLM_BASE_URL",
+            "present": true
+          }
+        ]
+      },
+      "execution_request": {
+        "acut_id": "cheap-generic-swe",
+        "attempt": 1,
+        "coordinator_decision_ref_present": false,
+        "split": "rwork"
+      },
+      "ledger": {
+        "cumulative_estimated_cost_usd": 36.006081,
+        "error_type": null,
+        "errors": [],
+        "estimated_cost_sum_usd": 36.006081,
+        "exists": true,
+        "is_file": true,
+        "line_count": 140,
+        "path": "experiments/core_narrative/results/cost_ledger.jsonl",
+        "record_count": 140,
+        "writable": true
+      },
+      "status": "passed",
+      "tool": "llm_budget_gate"
+    },
+    "direct_runner_cost_accounting": {
+      "actual_cost_recorded": false,
+      "actual_cost_usd": null,
+      "cost_record_basis": "failure_ledger_append",
+      "estimated_cost_usd": 0.063728
+    },
+    "direct_runner_cost_ledger_append": {
+      "actual_cost_recorded": false,
+      "estimated_cost_usd": 0.063728,
+      "new_cumulative_estimated_cost_usd": 36.069809,
+      "record_count_after": 141,
+      "record_count_before": 140,
+      "status": "appended"
+    },
+    "direct_runner_id": "codex-nfl-direct-search-replace-v1",
+    "direct_runner_status": "error",
+    "failure_class": "invalid_unified_diff",
+    "failure_owner": "model_output",
+    "model_call_made": true,
+    "patch_readiness": {
+      "clean_replay_attempted": false,
+      "patch_size_bytes": null,
+      "verifier_ready_patch_available": false
+    },
+    "prompt_snapshot": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/codex_nfl_m2_patch_or_files_20260509__cheap-generic-swe__click__rwork__003__attempt1/prompt_snapshot.json",
+    "prompt_snapshot_sha256": "496799ef19ca3868899d65a70aa7c69d8353fcb56b21adbe1f44f3ff14421841",
+    "raw_response_artifact": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/codex_nfl_m2_patch_or_files_20260509__cheap-generic-swe__click__rwork__003__attempt1/provider_response.redacted.json",
+    "runner_id": "codex-nfl-batch-v1",
+    "submission_contract": "patch-or-files-v1",
+    "task_manifest_path": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/tasks/click/rwork/click__rwork__003/task.yaml",
+    "task_manifest_sha256": "db8ff7168e981d07fba9b3bcb6f6809225e8584b1c0afd2e18595a1afa174ba5",
+    "tool": "codex_nfl_experiment_runner",
+    "verifier_digest_sha256": "609e560843b434813d98fc6891fe4834f2ca628bd2c01616f23db26a0fa9f232",
+    "verifier_ready_patch_available": false
+  },
+  "patch_path": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/codex_nfl_m2_patch_or_files_20260509__cheap-generic-swe__click__rwork__003__attempt1/submission.patch",
+  "review": {
+    "mergeability_grade": null,
+    "notes": "",
+    "rule_violation": false,
+    "wrong_module": false
+  },
+  "run_id": "codex_nfl_m2_patch_or_files_20260509__cheap-generic-swe__click__rwork__003__attempt1",
+  "schema_version": "core-narrative.run-result.v1",
+  "split": "rwork",
+  "started_at": "2026-05-09T10:29:33.270063Z",
+  "status": "invalid_submission",
+  "task_id": "click__rwork__003",
+  "verification": {
+    "duration_seconds": null,
+    "exit_code": null,
+    "stderr_artifact": null,
+    "stdout_artifact": null
+  }
+}

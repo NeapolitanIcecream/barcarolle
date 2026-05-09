@@ -35,6 +35,25 @@ class CodexNflExperimentRunnerTests(unittest.TestCase):
         self.root = Path(tempfile.mkdtemp())
         self.addCleanup(shutil.rmtree, self.root, ignore_errors=True)
 
+    def test_patch_or_files_mock_response_uses_unified_diff_contract(self) -> None:
+        """The no-model M2 baseline should exercise patch-or-files replay, not legacy edits."""
+        runner = load_runner_module()
+        workspace = self.root / "workspace"
+        workspace.mkdir()
+        (workspace / "module.py").write_text("VALUE = 1\n", encoding="utf-8")
+
+        response_text = runner.default_mock_response_text(
+            workspace,
+            ["module.py"],
+            submission_contract="patch-or-files-v1",
+        )
+
+        payload = json.loads(response_text)
+        self.assertEqual(sorted(payload), ["unified_diff"])
+        self.assertIn("--- a/module.py", payload["unified_diff"])
+        self.assertIn("+++ b/module.py", payload["unified_diff"])
+        self.assertIn("barcarolle no-model scoreability baseline", payload["unified_diff"])
+
     def test_verify_patch_replays_submission_on_clean_workspace(self) -> None:
         """Regression: batch verification must not skip patch apply."""
         runner = load_runner_module()
