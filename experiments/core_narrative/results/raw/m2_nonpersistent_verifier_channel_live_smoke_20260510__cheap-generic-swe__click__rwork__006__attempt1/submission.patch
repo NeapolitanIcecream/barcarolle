@@ -1,0 +1,38 @@
+diff --git a/src/click/core.py b/src/click/core.py
+index 6dc44f3..d8a6079 100644
+--- a/src/click/core.py
++++ b/src/click/core.py
+@@ -2900,3 +2900 @@ class Option(Parameter):
+-        if value is True and self.is_flag:
+-            value = self.flag_value
+-        elif call and callable(value):
++        if call and callable(value):
+diff --git a/tests/test_options.py b/tests/test_options.py
+index 85f6224..8d78887 100644
+--- a/tests/test_options.py
++++ b/tests/test_options.py
+@@ -707,0 +708,24 @@ def test_file_type_help_default():
++@pytest.mark.parametrize(
++    ("param_type", "flag_value", "expected_default", "expected_flag"),
++    [
++        (str, "bar", "True", "bar"),
++        (int, 7, 1, 7),
++    ],
++)
++def test_flag_value_default_and_activation(
++    runner, param_type, flag_value, expected_default, expected_flag
++):
++    @click.command()
++    @click.option("--foo", flag_value=flag_value, default=True, type=param_type)
++    def cli(foo):
++        click.echo(repr(foo))
++
++    result = runner.invoke(cli, [])
++    assert not result.exception
++    assert result.output == f"{expected_default!r}\n"
++
++    result = runner.invoke(cli, ["--foo"])
++    assert not result.exception
++    assert result.output == f"{expected_flag!r}\n"
++
++

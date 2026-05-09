@@ -1,0 +1,113 @@
+{
+  "context_files": [
+    {
+      "char_count": 132940,
+      "displayed_char_count": 25013,
+      "exists": true,
+      "focus_terms": [
+        "class Option(Parameter):",
+        "        # Lazily resolve default=True to flag_value.",
+        "        if value is True and self.is_flag:",
+        "        # Support the special case of aligning the default value with the flag_value",
+        "        # A flag which is activated always returns the flag value",
+        "        # process_value has to be overridden on Options"
+      ],
+      "focused_excerpts": [
+        {
+          "char_count": 8600,
+          "end_char": 109638,
+          "start_char": 101038,
+          "trigger": "class Option(Parameter):"
+        },
+        {
+          "char_count": 8600,
+          "end_char": 120088,
+          "start_char": 111488,
+          "trigger": "        # Lazily resolve default=True to flag_value."
+        },
+        {
+          "char_count": 6087,
+          "end_char": 132306,
+          "start_char": 126219,
+          "trigger": "        # A flag which is activated always returns the flag value"
+        }
+      ],
+      "path": "src/click/core.py",
+      "sha256": "ed6f0d86ce1a77b4c79718ca8e1cf7d4cfd8a223b2ab52d93d6d0d6fe431100f",
+      "truncated": true
+    },
+    {
+      "char_count": 85179,
+      "displayed_char_count": 25013,
+      "exists": true,
+      "focus_terms": [],
+      "focused_excerpts": [],
+      "path": "tests/test_options.py",
+      "sha256": "d3aed1bff9572591f91598b763bb65d0669e7548a36a5308cc4b8b127cd40137",
+      "truncated": true
+    },
+    {
+      "char_count": 34190,
+      "displayed_char_count": 25013,
+      "exists": true,
+      "focus_terms": [],
+      "focused_excerpts": [],
+      "path": "tests/test_termui.py",
+      "sha256": "b2dcc9afdaca8f4e287725373e1441a870f4fefad8f0070dab60a5b230e16f6a",
+      "truncated": true
+    }
+  ],
+  "context_packaging": {
+    "effective_max_file_chars": 25000,
+    "max_context_chars": 120000,
+    "prompt_truncated": false,
+    "requested_max_file_chars": 80000
+  },
+  "full_urls_redacted": true,
+  "output_contract": "anchored-search-replace-json-v3",
+  "output_contract_schema": {
+    "anchor_policy": {
+      "anchors_are_for_repeated_old_text_only": true,
+      "anchors_must_be_immediate_adjacent_source": true,
+      "anchors_required_when_old_may_repeat_or_uniqueness_uncertain": true,
+      "invalid_anchors_reject_the_edit_even_when_old_is_unique": true,
+      "omit_anchors_only_when_old_is_unique_in_current_source": true,
+      "omit_anchors_when_old_is_unique": true
+    },
+    "diagnostic_failure_classes": {
+      "search_replace_anchor_mismatch": "old text was present, but supplied anchors did not isolate exactly one occurrence",
+      "search_replace_old_occurrence_mismatch": "old text occurred zero or multiple times after earlier edits",
+      "search_replace_redacted_source_mismatch": "redacted source placeholders may match raw source for search only, but must not persist into replacements"
+    },
+    "diagnostics_record_non_sensitive_hashes": true,
+    "diagnostics_record_old_occurrence_counts": true,
+    "id": "anchored-search-replace-json-v3",
+    "legacy_parser_fallback_keys": [
+      "unified_diff",
+      "files"
+    ],
+    "primary_top_level_key": "edits",
+    "requires_exact_old_text": true,
+    "requires_exact_path_from_context": true,
+    "requires_immediate_anchors_for_repeated_old_text": true,
+    "requires_immediate_anchors_when_old_text_may_repeat": true,
+    "requires_old_text_from_current_source_snapshot": true,
+    "requires_single_top_level_key": true,
+    "stale_old_text_is_invalid": true
+  },
+  "prompt_char_count": 103851,
+  "prompt_content_recorded": true,
+  "prompt_sha256": "47f20cdc9a25c672ec0fdb145dba9c0f05e7ae8d1adef98dfcaff89b38d5450e",
+  "run_id": "m2_nonpersistent_verifier_channel_replay_20260510__cheap-generic-swe__click__rwork__006__attempt1",
+  "runner_id": "codex-nfl-direct-search-replace-v1",
+  "specialist_context_assertion": {
+    "expected": "excluded",
+    "include_mode": "auto",
+    "passed": true
+  },
+  "specialist_context_included": false,
+  "specialist_context_path": null,
+  "statement_truncated": false,
+  "task_statement_path": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/tasks/click/rwork/click__rwork__006/public/statement.md",
+  "tool": "codex_nfl_direct_runner"
+}

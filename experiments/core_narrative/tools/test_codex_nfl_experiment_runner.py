@@ -157,6 +157,309 @@ class CodexNflExperimentRunnerTests(unittest.TestCase):
         self.assertNotEqual(result["runner_workspace"], result["verify_workspace"])
         self.assertEqual(result["status"], "passed")
 
+    def test_source_derived_unsafe_patch_artifact_runs_nonpersistent_verifier_without_raw_patch(self) -> None:
+        """Source-derived full URLs in removed diff lines can be verified without persisting a raw patch."""
+        runner = load_runner_module()
+        runner.RAW_ROOT = self.root / "raw"
+        runner.NORMALIZED_ROOT = self.root / "normalized"
+        runner.WORKSPACES_ROOT = self.root / "workspaces"
+        runner.NORMALIZED_ROOT.mkdir(parents=True)
+
+        verify_calls: list[dict[str, object]] = []
+
+        def fake_prepare_workspace(task_id, workspace_name, artifact_dir, *, summary_name="prepare_workspace"):
+            workspace = runner.WORKSPACES_ROOT / workspace_name
+            workspace.mkdir(parents=True)
+            return workspace, {"workspace": str(workspace), "summary_name": summary_name}
+
+        def fake_run_direct_runner(**kwargs):
+            return 2, {
+                "status": "error",
+                "runner_id": "openclaw-direct-search-replace-v1",
+                "model_call_made": True,
+                "submission_contract": "anchored-search-replace-json-v3",
+                "details": {
+                    "failure_class": "unsafe_generated_text",
+                    "patch_artifact": {
+                        "written": False,
+                        "unsafe_content_detected": True,
+                        "policy": "reject_before_write",
+                        "redacted_preview": {"written": True, "path": str(kwargs["artifact_dir"] / "submission.patch.redacted.txt")},
+                        "unsafe_content_attribution": {
+                            "classification": "source_derived_full_url",
+                            "all_unsafe_reasons_source_derived": True,
+                            "source_derived_full_url_count": 1,
+                            "model_generated_full_url_count": 0,
+                            "ambiguous_full_url_count": 0,
+                            "content_recorded": False,
+                        },
+                    },
+                    "patch_result_before_patch_artifact": {
+                        "kind": "search_replace_edits",
+                        "validated": True,
+                        "applied": True,
+                        "edit_diagnostics": [
+                            {
+                                "diagnostic": {"code": "redacted_source_text_matched_raw_source"},
+                                "content_recorded": False,
+                            }
+                        ],
+                    },
+                },
+            }
+
+        def fake_verify_patch(**kwargs):
+            verify_calls.append(kwargs)
+            self.assertTrue(kwargs["skip_apply"])
+            self.assertTrue(kwargs["redact_verifier_artifacts"])
+            self.assertEqual(kwargs["command_name"], "nonpersistent_verify_command")
+            payload = {
+                "status": "failed",
+                "run_id": kwargs["run_id"],
+                "task_id": kwargs["task_id"],
+                "acut_id": kwargs["acut_id"],
+                "metadata": {
+                    "tool": "apply_and_verify",
+                    "skip_apply": True,
+                    "verifier_artifacts_redacted": True,
+                },
+            }
+            kwargs["normalized_path"].write_text(json.dumps(payload), encoding="utf-8")
+            return 0, payload
+
+        runner.prepare_workspace = fake_prepare_workspace
+        runner.install_workspace = lambda *args, **kwargs: {"status": "installed"}
+        runner.context_paths_for_task = lambda task, workspace: ["click/core.py"]
+        runner.run_direct_runner = fake_run_direct_runner
+        runner.verify_patch = fake_verify_patch
+
+        args = SimpleNamespace(
+            run_prefix="unit_nonpersistent",
+            attempt=1,
+            install_timeout_seconds=1,
+            skip_noop_check=True,
+        )
+        result = runner.run_one(
+            args,
+            {"task_id": "click__rwork__006", "split": "rwork"},
+            "cheap-generic-swe",
+        )
+
+        self.assertEqual(len(verify_calls), 1)
+        self.assertEqual(result["status"], "failed")
+        self.assertTrue(result["scoreable"])
+        self.assertFalse(result["patch_ready"])
+        self.assertFalse(Path(result["patch_path"]).exists())
+        self.assertEqual(result["verify_workspace"], result["runner_workspace"])
+        self.assertFalse(Path(result["runner_workspace"]).exists())
+        self.assertTrue(result["nonpersistent_verifier"]["attempted"])
+        self.assertTrue(result["nonpersistent_verifier"]["transient_workspace_cleanup"]["removed"])
+        metadata = result["normalized"]["metadata"]
+        self.assertFalse(metadata["patch_readiness"]["verifier_ready_patch_available"])
+        self.assertFalse(metadata["patch_readiness"]["patch_artifact_persisted"])
+        self.assertTrue(metadata["patch_readiness"]["nonpersistent_verifier_attempted"])
+        self.assertEqual(metadata["patch_readiness"]["verifier_attempt_channel"], "nonpersistent_preapplied_workspace")
+        self.assertEqual(metadata["verifier_attempt"]["channel"], "nonpersistent_preapplied_workspace")
+        self.assertTrue(metadata["verifier_attempt"]["skip_apply"])
+        self.assertTrue(metadata["verifier_attempt"]["verifier_artifacts_redacted"])
+        self.assertTrue(metadata["nonpersistent_verifier_channel"]["transient_workspace_cleanup"]["removed"])
+        self.assertFalse(metadata["clean_patch_replay"]["attempted"])
+
+    def test_nonpersistent_verifier_cleanup_failure_blocks_scoreable_result(self) -> None:
+        """Regression: verifier output is not scoreable unless the transient workspace is removed."""
+        runner = load_runner_module()
+        runner.RAW_ROOT = self.root / "raw"
+        runner.NORMALIZED_ROOT = self.root / "normalized"
+        runner.WORKSPACES_ROOT = self.root / "workspaces"
+        runner.NORMALIZED_ROOT.mkdir(parents=True)
+
+        verify_calls: list[dict[str, object]] = []
+
+        def fake_prepare_workspace(task_id, workspace_name, artifact_dir, *, summary_name="prepare_workspace"):
+            workspace = runner.WORKSPACES_ROOT / workspace_name
+            workspace.mkdir(parents=True)
+            return workspace, {"workspace": str(workspace), "summary_name": summary_name}
+
+        def fake_run_direct_runner(**kwargs):
+            return 2, {
+                "status": "error",
+                "runner_id": "openclaw-direct-search-replace-v1",
+                "model_call_made": True,
+                "submission_contract": "anchored-search-replace-json-v3",
+                "details": {
+                    "failure_class": "unsafe_generated_text",
+                    "patch_artifact": {
+                        "written": False,
+                        "unsafe_content_detected": True,
+                        "policy": "reject_before_write",
+                        "redacted_preview": {"written": True, "path": str(kwargs["artifact_dir"] / "submission.patch.redacted.txt")},
+                        "unsafe_content_attribution": {
+                            "classification": "source_derived_full_url",
+                            "all_unsafe_reasons_source_derived": True,
+                            "source_derived_full_url_count": 1,
+                            "model_generated_full_url_count": 0,
+                            "ambiguous_full_url_count": 0,
+                            "content_recorded": False,
+                        },
+                    },
+                    "patch_result_before_patch_artifact": {
+                        "kind": "search_replace_edits",
+                        "validated": True,
+                        "applied": True,
+                    },
+                },
+            }
+
+        def fake_verify_patch(**kwargs):
+            verify_calls.append(kwargs)
+            payload = {
+                "status": "failed",
+                "run_id": kwargs["run_id"],
+                "task_id": kwargs["task_id"],
+                "acut_id": kwargs["acut_id"],
+                "metadata": {
+                    "tool": "apply_and_verify",
+                    "skip_apply": True,
+                    "verifier_artifacts_redacted": True,
+                },
+            }
+            kwargs["normalized_path"].write_text(json.dumps(payload), encoding="utf-8")
+            return 0, payload
+
+        runner.prepare_workspace = fake_prepare_workspace
+        runner.install_workspace = lambda *args, **kwargs: {"status": "installed"}
+        runner.context_paths_for_task = lambda task, workspace: ["click/core.py"]
+        runner.run_direct_runner = fake_run_direct_runner
+        runner.verify_patch = fake_verify_patch
+
+        args = SimpleNamespace(
+            run_prefix="unit_nonpersistent_cleanup",
+            attempt=1,
+            install_timeout_seconds=1,
+            skip_noop_check=True,
+        )
+        with mock.patch.object(runner.shutil, "rmtree", side_effect=OSError("cleanup denied")):
+            result = runner.run_one(
+                args,
+                {"task_id": "click__rwork__006", "split": "rwork"},
+                "cheap-generic-swe",
+            )
+
+        self.assertEqual(len(verify_calls), 1)
+        self.assertEqual(result["status"], "infra_failed")
+        self.assertFalse(result["scoreable"])
+        self.assertTrue(Path(result["runner_workspace"]).exists())
+        cleanup = result["nonpersistent_verifier"]["transient_workspace_cleanup"]
+        self.assertTrue(cleanup["attempted"])
+        self.assertFalse(cleanup["removed"])
+        self.assertEqual(cleanup["error_type"], "OSError")
+        self.assertTrue(result["nonpersistent_verifier"]["scoreable_blocked"])
+        self.assertEqual(
+            result["normalized"]["metadata"]["failure_class"],
+            "nonpersistent_transient_workspace_cleanup_failed",
+        )
+        self.assertEqual(result["normalized"]["metadata"]["failure_owner"], "infrastructure")
+        self.assertEqual(result["normalized"]["metadata"]["nonpersistent_verifier_status_before_cleanup"], "failed")
+
+    def test_model_generated_unsafe_patch_artifact_does_not_run_nonpersistent_verifier(self) -> None:
+        """Model-generated full URLs remain rejected before any verifier attempt."""
+        runner = load_runner_module()
+        runner.RAW_ROOT = self.root / "raw"
+        runner.NORMALIZED_ROOT = self.root / "normalized"
+        runner.WORKSPACES_ROOT = self.root / "workspaces"
+        runner.NORMALIZED_ROOT.mkdir(parents=True)
+        verify_calls: list[object] = []
+
+        def fake_prepare_workspace(task_id, workspace_name, artifact_dir, *, summary_name="prepare_workspace"):
+            workspace = runner.WORKSPACES_ROOT / workspace_name
+            workspace.mkdir(parents=True)
+            return workspace, {"workspace": str(workspace), "summary_name": summary_name}
+
+        runner.prepare_workspace = fake_prepare_workspace
+        runner.install_workspace = lambda *args, **kwargs: {"status": "installed"}
+        runner.context_paths_for_task = lambda task, workspace: ["click/core.py"]
+        runner.verify_patch = lambda **kwargs: verify_calls.append(kwargs)
+        runner.run_direct_runner = lambda **kwargs: (
+            2,
+            {
+                "status": "error",
+                "model_call_made": True,
+                "details": {
+                    "failure_class": "unsafe_generated_text",
+                    "patch_artifact": {
+                        "written": False,
+                        "unsafe_content_detected": True,
+                        "unsafe_content_attribution": {
+                            "classification": "model_generated_full_url",
+                            "all_unsafe_reasons_source_derived": False,
+                            "model_generated_full_url_count": 1,
+                        },
+                    },
+                    "patch_result_before_patch_artifact": {
+                        "kind": "search_replace_edits",
+                        "validated": True,
+                        "applied": True,
+                    },
+                },
+            },
+        )
+
+        result = runner.run_one(
+            SimpleNamespace(run_prefix="unit_generated_url", attempt=1, install_timeout_seconds=1, skip_noop_check=True),
+            {"task_id": "click__rwork__006", "split": "rwork"},
+            "cheap-generic-swe",
+        )
+
+        self.assertEqual(verify_calls, [])
+        self.assertEqual(result["status"], "invalid_submission")
+        self.assertTrue(result["scoreable"])
+        self.assertFalse(result["patch_ready"])
+        metadata = result["normalized"]["metadata"]
+        self.assertFalse(metadata["patch_readiness"]["nonpersistent_verifier_attempted"])
+        self.assertEqual(result["nonpersistent_verifier"]["reason"], "unsafe_content_not_all_source_derived")
+
+    def test_redaction_placeholder_persistence_does_not_run_nonpersistent_verifier(self) -> None:
+        """Persisting <redacted:url> in replacement text stays a model-output invalid submission."""
+        runner = load_runner_module()
+        runner.RAW_ROOT = self.root / "raw"
+        runner.NORMALIZED_ROOT = self.root / "normalized"
+        runner.WORKSPACES_ROOT = self.root / "workspaces"
+        runner.NORMALIZED_ROOT.mkdir(parents=True)
+        verify_calls: list[object] = []
+
+        def fake_prepare_workspace(task_id, workspace_name, artifact_dir, *, summary_name="prepare_workspace"):
+            workspace = runner.WORKSPACES_ROOT / workspace_name
+            workspace.mkdir(parents=True)
+            return workspace, {"workspace": str(workspace), "summary_name": summary_name}
+
+        runner.prepare_workspace = fake_prepare_workspace
+        runner.install_workspace = lambda *args, **kwargs: {"status": "installed"}
+        runner.context_paths_for_task = lambda task, workspace: ["click/core.py"]
+        runner.verify_patch = lambda **kwargs: verify_calls.append(kwargs)
+        runner.run_direct_runner = lambda **kwargs: (
+            2,
+            {
+                "status": "error",
+                "model_call_made": True,
+                "details": {
+                    "failure_class": "search_replace_redacted_source_mismatch",
+                    "diagnostic": {"code": "redacted_source_replacement_would_persist_placeholder"},
+                },
+            },
+        )
+
+        result = runner.run_one(
+            SimpleNamespace(run_prefix="unit_placeholder", attempt=1, install_timeout_seconds=1, skip_noop_check=True),
+            {"task_id": "click__rwork__006", "split": "rwork"},
+            "cheap-generic-swe",
+        )
+
+        self.assertEqual(verify_calls, [])
+        self.assertEqual(result["status"], "invalid_submission")
+        self.assertFalse(result["patch_ready"])
+        self.assertFalse(result["normalized"]["metadata"]["patch_readiness"]["nonpersistent_verifier_attempted"])
+        self.assertEqual(result["normalized"]["metadata"]["failure_class"], "search_replace_redacted_source_mismatch")
+
     def test_run_one_noop_verify_uses_separate_workspace_before_prompting(self) -> None:
         """Regression: no-op verifier mutations must not leak hidden tests into prompts."""
         runner = load_runner_module()
