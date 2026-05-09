@@ -462,6 +462,10 @@ class OpenClawDirectRunnerTests(unittest.TestCase):
         self.assertEqual(details["diagnostic"]["code"], "unique_old_anchor_mismatch")
         self.assertIn("omit before/after anchors", details["diagnostic"]["recommendation"])
         self.assertEqual(details["old_text_char_count"], len("VALUE = 1\n"))
+        self.assertEqual(details["search_text"]["old_text_sha256"], details["old_text_sha256"])
+        self.assertFalse(details["search_text"]["content_recorded"])
+        self.assertEqual(details["anchor_texts"]["before"]["sha256"], runner_module.sha256_text("not adjacent\n"))
+        self.assertFalse(details["anchor_texts"]["before"]["content_recorded"])
 
     def test_old_occurrence_mismatch_diagnostics_explain_missing_old_text(self) -> None:
         """Regression: zero-occurrence old strings should tell the model to copy shown source."""
@@ -477,6 +481,124 @@ class OpenClawDirectRunnerTests(unittest.TestCase):
         self.assertEqual(details["occurrences"], 0)
         self.assertEqual(details["diagnostic"]["code"], "old_text_not_found")
         self.assertIn("copy old exactly", details["diagnostic"]["recommendation"])
+        self.assertFalse(details["content_recorded"])
+
+    def test_ambiguous_anchor_diagnostics_explain_non_isolating_anchor(self) -> None:
+        """Regression: repeated anchors should be identified without recording source text."""
+        source = (
+            "SECTION\n"
+            "VALUE = 1\n"
+            "SECTION\n"
+            "VALUE = 1\n"
+        )
+        with self.assertRaises(runner_module.ToolError) as raised:
+            runner_module.resolve_edit_offset(
+                source,
+                {
+                    "path": "module.py",
+                    "before": "SECTION\n",
+                    "old": "VALUE = 1\n",
+                    "new": "VALUE = 2\n",
+                },
+                edit_index=0,
+            )
+
+        details = raised.exception.details
+        self.assertEqual(details["failure_class"], "search_replace_anchor_mismatch")
+        self.assertEqual(details["occurrences"], 2)
+        self.assertEqual(details["anchor_matches"], 2)
+        self.assertEqual(details["diagnostic"]["code"], "anchors_do_not_isolate_one_occurrence")
+        self.assertEqual(details["anchor_texts"]["before"]["sha256"], runner_module.sha256_text("SECTION\n"))
+        self.assertFalse(details["content_recorded"])
+
+    def test_search_replace_redacted_source_text_records_safe_diagnostic_before_patch_artifact_policy(self) -> None:
+        """Regression: redacted prompt source can match raw source, but raw-URL patch artifacts stay blocked."""
+        (self.workspace / "module.py").write_text(
+            'ENDPOINT = "http' + 's://example.invalid/private"\n',
+            encoding="utf-8",
+        )
+        run(["git", "add", "module.py"], cwd=self.workspace)
+        commit = run(["git", "commit", "-m", "endpoint raw source"], cwd=self.workspace)
+        self.assertEqual(commit.returncode, 0, commit.stderr)
+
+        artifact_dir = self.root / "redacted-source-search-replace-artifacts"
+        output_path = self.root / "redacted-source-search-replace.json"
+        response = json.dumps(
+            {
+                "edits": [
+                    {
+                        "path": "module.py",
+                        "old": 'ENDPOINT = "<redacted:url>"\n',
+                        "new": 'ENDPOINT = "offline"\n',
+                    }
+                ]
+            }
+        )
+
+        completed = run(
+            [
+                sys.executable,
+                str(RUNNER),
+                "--workspace",
+                str(self.workspace),
+                "--task",
+                str(self.task_path),
+                "--acut",
+                str(self.acut_path),
+                "--attempt",
+                "1",
+                "--run-id",
+                "unit_openclaw_redacted_source_search_replace_attempt1",
+                "--artifact-dir",
+                str(artifact_dir),
+                "--output",
+                str(output_path),
+                "--llm-ledger",
+                str(self.ledger_path),
+                "--projected-cost-usd",
+                "1",
+                "--context-path",
+                "module.py",
+                "--mock-response-text",
+                response,
+            ],
+            cwd=REPO_ROOT,
+            env=self.env(),
+        )
+
+        self.assertEqual(completed.returncode, 2, completed.stderr)
+        summary = json.loads(output_path.read_text(encoding="utf-8"))
+        self.assertEqual(summary["status"], "error")
+        self.assertEqual(summary["details"]["failure_class"], "unsafe_generated_text")
+        patch_result = summary["details"]["patch_result_before_patch_artifact"]
+        diagnostic = patch_result["edit_diagnostics"][0]
+        self.assertEqual(diagnostic["diagnostic"]["code"], "redacted_source_text_matched_raw_source")
+        self.assertEqual(diagnostic["redacted_url_context"]["fallback_match_count"], 1)
+        self.assertFalse(diagnostic["content_recorded"])
+        self.assertEqual((self.workspace / "module.py").read_text(encoding="utf-8"), 'ENDPOINT = "offline"\n')
+        self.assertNotIn("http" + "s://", json.dumps(summary))
+
+    def test_search_replace_redacted_source_rejects_placeholder_persistence(self) -> None:
+        """Regression: redacted old text must not write redaction placeholders into source."""
+        source = 'ENDPOINT = "http' + 's://example.invalid/private"\n'
+        (self.workspace / "module.py").write_text(source, encoding="utf-8")
+        with self.assertRaises(runner_module.ToolError) as raised:
+            runner_module.apply_edit_bundle(
+                self.workspace,
+                [
+                    {
+                        "path": "module.py",
+                        "old": 'ENDPOINT = "<redacted:url>"\n',
+                        "new": 'ENDPOINT = "<redacted:url>"\n',
+                    }
+                ],
+                allowed_paths=["module.py"],
+            )
+
+        details = raised.exception.details
+        self.assertEqual(details["failure_class"], "search_replace_redacted_source_mismatch")
+        self.assertEqual(details["diagnostic"]["code"], "redacted_source_replacement_would_persist_placeholder")
+        self.assertFalse(details["content_recorded"])
 
     def test_mock_search_replace_generates_patch_and_zero_cost_unknown_actual(self) -> None:
         """The OpenClaw runner can produce a verifier-ready patch without old Codex plumbing."""
@@ -1193,6 +1315,8 @@ class OpenClawDirectRunnerTests(unittest.TestCase):
         self.assertEqual(summary["patch"]["kind"], "search_replace_edits")
         self.assertEqual(summary["patch"]["edit_count"], 1)
         self.assertEqual(summary["patch"]["anchored_edit_count"], 1)
+        self.assertEqual(summary["patch"]["applied_edit_summaries"][0]["resolution"], "exact")
+        self.assertFalse(summary["patch"]["applied_edit_summaries"][0]["search_text"]["content_recorded"])
         self.assertGreater(summary["patch_artifact"]["size_bytes"], 0)
         self.assertEqual((self.workspace / "module.py").read_text(encoding="utf-8"), expected)
 

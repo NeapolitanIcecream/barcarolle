@@ -1,0 +1,12 @@
+{
+  "choices": [
+    {
+      "message": {
+        "content": "{\"edits\": [{\"before\": \"def stale():\\n\", \"new\": \"    value = get_default(ctx)\\n\", \"old\": \"    value = get_default()\\n\", \"path\": \"src/click/core.py\"}]}"
+      }
+    }
+  ],
+  "usage": {
+    "cost": 0
+  }
+}
