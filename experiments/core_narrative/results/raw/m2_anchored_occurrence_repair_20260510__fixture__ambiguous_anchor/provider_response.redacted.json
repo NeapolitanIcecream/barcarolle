@@ -1,0 +1,12 @@
+{
+  "choices": [
+    {
+      "message": {
+        "content": "{\"edits\": [{\"before\": \"SECTION\\n\", \"new\": \"VALUE = 2\\n\", \"old\": \"VALUE = 1\\n\", \"path\": \"src/click/core.py\"}]}"
+      }
+    }
+  ],
+  "usage": {
+    "cost": 0
+  }
+}
