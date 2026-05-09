@@ -1256,13 +1256,17 @@ def apply_edit_bundle(
         reject_unsafe_generated_text(path, "edit path")
         reject_unsafe_generated_text(old, "edit old text")
         reject_unsafe_generated_text(new, "edit new text")
-        reject_redaction_placeholder_persistence(path=path, edit_index=index, new=new)
         before = edit.get("before")
         after = edit.get("after")
         if before is not None:
             reject_unsafe_generated_text(str(before), "edit before anchor")
         if after is not None:
             reject_unsafe_generated_text(str(after), "edit after anchor")
+        defer_placeholder_check = REDACTED_URL_MARKER in "".join(
+            item for item in (old, before, after) if item is not None
+        )
+        if not defer_placeholder_check:
+            reject_redaction_placeholder_persistence(path=path, edit_index=index, new=new)
         target = resolve_workspace_path(workspace, path, "edit path")
         if not target.exists() or not target.is_file():
             raise ToolError(
@@ -1274,6 +1278,8 @@ def apply_edit_bundle(
         if text is None:
             text = target.read_text(encoding="utf-8")
         start, end, anchored, diagnostic = resolve_edit_offset(text, edit, edit_index=index)
+        if defer_placeholder_check and diagnostic is None:
+            reject_redaction_placeholder_persistence(path=path, edit_index=index, new=new)
         if anchored:
             anchored_count += 1
         if diagnostic is not None:
