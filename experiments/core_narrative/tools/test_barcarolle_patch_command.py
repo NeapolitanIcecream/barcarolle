@@ -176,6 +176,36 @@ class BarcarollePatchCommandTests(unittest.TestCase):
         self.assertEqual((self.workspace / "module.py").read_text(encoding="utf-8"), "VALUE = 2\n")
         self.assertNotIn(response, json.dumps(summary))
 
+    def test_patch_or_files_contract_applies_codex_apply_patch_transcript(self) -> None:
+        """Regression: M2 live models often return apply_patch transcripts, not raw diffs."""
+        summary_path = self.root / "apply-patch-summary.json"
+        response = textwrap.dedent(
+            """\
+            *** Begin Patch
+            *** Update File: module.py
+            @@
+            -VALUE = 1
+            +VALUE = 2
+            *** End Patch
+            """
+        )
+
+        completed = self.run_patch_command(
+            "--mock-response-text",
+            response,
+            "--output-contract",
+            "patch-or-files-v1",
+            summary_path=summary_path,
+        )
+
+        self.assertEqual(completed.returncode, 0, completed.stderr)
+        summary = json.loads(summary_path.read_text(encoding="utf-8"))
+        self.assertEqual(summary["status"], "mock_response_applied")
+        self.assertEqual(summary["output_contract"], "patch-or-files-v1")
+        self.assertEqual(summary["patch"]["kind"], "apply_patch")
+        self.assertEqual(summary["patch"]["changed_paths"], ["module.py"])
+        self.assertEqual((self.workspace / "module.py").read_text(encoding="utf-8"), "VALUE = 2\n")
+
     def test_unsafe_mock_response_argument_is_rejected_before_parsing(self) -> None:
         """Given URL-like model text as a CLI argument, the redaction policy blocks it."""
         summary_path = self.root / "unsafe-argument-summary.json"
