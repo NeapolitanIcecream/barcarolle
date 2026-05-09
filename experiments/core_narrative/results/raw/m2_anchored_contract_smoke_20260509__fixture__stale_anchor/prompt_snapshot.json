@@ -1,0 +1,11 @@
+{
+  "content_recorded": false,
+  "context_files": [
+    {
+      "path": "src/click/core.py"
+    }
+  ],
+  "fixture_id": "stale_anchor",
+  "output_contract": "anchored-search-replace-json-v3",
+  "tool": "m2_anchored_contract_smoke"
+}

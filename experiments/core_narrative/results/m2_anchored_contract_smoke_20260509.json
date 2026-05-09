@@ -1,0 +1,636 @@
+{
+  "claim_boundaries": {
+    "admission": false,
+    "authorization": false,
+    "capability_uplift": false,
+    "g0_g5": false,
+    "g_score_predictivity": false,
+    "license": false,
+    "m2_passed": false,
+    "ranking_reversal": false,
+    "task_solving_improvement": false,
+    "verifier_or_task_success_measured": false
+  },
+  "claim_status": "anchored_contract_smoke_not_m2_pass",
+  "cost_model_call_flags": {
+    "fixtures": {
+      "live_api_calls": false,
+      "model_call_made": false,
+      "model_spend_usd": 0.0
+    },
+    "live_smoke": {
+      "model_call_made": true,
+      "status": "completed"
+    }
+  },
+  "diagnostic_summary": {
+    "ambiguous_anchor_diagnostic_rows": 1,
+    "exact_search_text_diagnostic_rows": 4,
+    "missing_raw_artifact_rows": 1,
+    "redacted_source_text_diagnostic_rows": 1,
+    "source_content_recorded": false,
+    "stale_anchor_diagnostic_rows": 1
+  },
+  "fixture_summary": {
+    "clean_replay_success_count": 1,
+    "clean_replay_success_rate": 0.2,
+    "failure_class_counts": {
+      "missing_raw_response_artifact": 1,
+      "none": 1,
+      "search_replace_anchor_mismatch": 2,
+      "unsafe_generated_text": 1
+    },
+    "failure_owner_counts": {
+      "candidate_patch": 1,
+      "infrastructure": 1,
+      "model_output": 3
+    },
+    "fixed_denominator": 5,
+    "patch_ready_count": 1,
+    "patch_ready_coverage": 0.2,
+    "status_counts": {
+      "invalid_submission": 3,
+      "missing_replay_input": 1,
+      "patch_ready": 1
+    }
+  },
+  "generated_at": "2026-05-09T16:11:38.097819Z",
+  "inputs": {
+    "force": true,
+    "live_smoke_batch": "experiments/core_narrative/results/m2_anchored_contract_live_smoke_20260509.json",
+    "live_smoke_blocker": null,
+    "m2_summary": "experiments/core_narrative/results/m2_scoreability_summary_20260509.json",
+    "output": "experiments/core_narrative/results/m2_anchored_contract_smoke_20260509.json",
+    "raw_root": "experiments/core_narrative/results/raw",
+    "report": "experiments/core_narrative/reports/2026-05-09_m2_anchored_contract_smoke_report.md",
+    "run_prefix": "m2_anchored_contract_smoke_20260509",
+    "workspace_root": "experiments/core_narrative/workspaces"
+  },
+  "live_smoke": {
+    "failure_class_counts": {
+      "search_replace_old_occurrence_mismatch": 1
+    },
+    "failure_owner_counts": {
+      "model_output": 1
+    },
+    "model_call_made": true,
+    "path": "experiments/core_narrative/results/m2_anchored_contract_live_smoke_20260509.json",
+    "status": "completed",
+    "status_counts": {
+      "invalid_submission": 1
+    },
+    "submission_contract": "anchored-search-replace-json-v3",
+    "total": 1
+  },
+  "matrix": [
+    {
+      "artifact_dir": "experiments/core_narrative/results/raw/m2_anchored_contract_smoke_20260509__fixture__exact_anchored_search_text",
+      "clean_replay": {
+        "attempted": true,
+        "status": "applied_to_clean_workspace",
+        "success": true,
+        "workspace": "experiments/core_narrative/workspaces/m2_anchored_contract_smoke_20260509__fixture__exact_anchored_search_text__clean_replay"
+      },
+      "context_paths": [
+        "src/click/core.py"
+      ],
+      "contract": "anchored-search-replace-json-v3",
+      "details": {
+        "content_recorded": false
+      },
+      "failure_class": null,
+      "failure_owner": "candidate_patch",
+      "fixture_id": "exact_anchored_search_text",
+      "intent": "exact immediate anchor isolates repeated Click-shaped old text",
+      "model_call_made": false,
+      "model_spend_usd": 0.0,
+      "patch": {
+        "allowed_context_paths": [
+          "src/click/core.py"
+        ],
+        "anchored_edit_count": 1,
+        "applied": true,
+        "applied_edit_summaries": [
+          {
+            "anchor_texts": {
+              "after": null,
+              "before": {
+                "char_count": 13,
+                "content_recorded": false,
+                "line_count": 1,
+                "redacted_url_marker_count": 0,
+                "sha256": "f61c132276a514c185fbc7004359c4d0c8a1958739c0ec595158868d5f064fb4"
+              }
+            },
+            "anchored": true,
+            "content_recorded": false,
+            "edit_index": 0,
+            "path": "src/click/core.py",
+            "redacted_url_context": {
+              "after_contains_marker": false,
+              "before_contains_marker": false,
+              "fallback_match_count": null,
+              "marker_count_after": 0,
+              "marker_count_before": 0,
+              "marker_count_old": 0,
+              "old_contains_marker": false
+            },
+            "resolution": "exact",
+            "search_text": {
+              "content_recorded": false,
+              "old_redacted_url_marker_count": 0,
+              "old_text_char_count": 23,
+              "old_text_line_count": 1,
+              "old_text_sha256": "45525949ecd75c58185be3098abbfaf0d52d4364778a78914d86ca88cd1634df"
+            }
+          }
+        ],
+        "changed_paths": [
+          "src/click/core.py"
+        ],
+        "edit_count": 1,
+        "edit_diagnostics": [],
+        "kind": "search_replace_edits",
+        "output_contract": "anchored-search-replace-json-v3",
+        "validated": true
+      },
+      "patch_artifact": {
+        "path": "experiments/core_narrative/results/raw/m2_anchored_contract_smoke_20260509__fixture__exact_anchored_search_text/submission.patch",
+        "policy": "reject_before_write",
+        "size_bytes": 251,
+        "unsafe_content": {
+          "reason_counts": {},
+          "resolved_env_var_names": [],
+          "unsafe": false
+        },
+        "unsafe_content_detected": false,
+        "written": true
+      },
+      "patch_ready": true,
+      "prompt_snapshot": "experiments/core_narrative/results/raw/m2_anchored_contract_smoke_20260509__fixture__exact_anchored_search_text/prompt_snapshot.json",
+      "raw_response_artifact": "experiments/core_narrative/results/raw/m2_anchored_contract_smoke_20260509__fixture__exact_anchored_search_text/provider_response.redacted.json",
+      "status": "patch_ready",
+      "workspace": "experiments/core_narrative/workspaces/m2_anchored_contract_smoke_20260509__fixture__exact_anchored_search_text"
+    },
+    {
+      "artifact_dir": "experiments/core_narrative/results/raw/m2_anchored_contract_smoke_20260509__fixture__ambiguous_anchor",
+      "clean_replay": {
+        "attempted": false,
+        "status": "not_attempted_after_invalid_submission",
+        "success": false
+      },
+      "context_paths": [
+        "src/click/core.py"
+      ],
+      "contract": "anchored-search-replace-json-v3",
+      "details": {
+        "anchor_matches": 2,
+        "anchor_texts": {
+          "after": null,
+          "before": {
+            "char_count": 8,
+            "content_recorded": false,
+            "line_count": 1,
+            "redacted_url_marker_count": 0,
+            "sha256": "82f169c8a632f32790dc6a3ffc7aba692b8115fd7be06b60a62d0901f5ddf71c"
+          }
+        },
+        "anchors": {
+          "after": false,
+          "after_chars": 0,
+          "before": true,
+          "before_chars": 8
+        },
+        "content_recorded": false,
+        "diagnostic": {
+          "anchor_policy": {
+            "anchors_must_be_immediate_adjacent_source": true,
+            "anchors_required_when_old_is_repeated": true,
+            "omit_anchors_when_old_is_unique": true
+          },
+          "code": "anchors_do_not_isolate_one_occurrence",
+          "recommendation": "copy before/after anchors from the immediate source adjacent to old"
+        },
+        "edit_index": 0,
+        "failure_class": "search_replace_anchor_mismatch",
+        "occurrences": 2,
+        "old_text_char_count": 10,
+        "old_text_sha256": "e13df8c44af5dea1e412403910b99cc5a48f2ccbf68a66b3374d6ab9cef9fc65",
+        "path": "src/click/core.py",
+        "redacted_url_context": {
+          "after_contains_marker": false,
+          "before_contains_marker": false,
+          "fallback_match_count": null,
+          "marker_count_after": 0,
+          "marker_count_before": 0,
+          "marker_count_old": 0,
+          "old_contains_marker": false
+        },
+        "search_text": {
+          "content_recorded": false,
+          "old_redacted_url_marker_count": 0,
+          "old_text_char_count": 10,
+          "old_text_line_count": 1,
+          "old_text_sha256": "e13df8c44af5dea1e412403910b99cc5a48f2ccbf68a66b3374d6ab9cef9fc65"
+        }
+      },
+      "error": "edit anchors must identify exactly one old-string occurrence",
+      "failure_class": "search_replace_anchor_mismatch",
+      "failure_owner": "model_output",
+      "fixture_id": "ambiguous_anchor",
+      "intent": "non-isolating immediate anchor is a model-output invalid submission",
+      "model_call_made": false,
+      "model_spend_usd": 0.0,
+      "patch": null,
+      "patch_artifact": null,
+      "patch_ready": false,
+      "prompt_snapshot": "experiments/core_narrative/results/raw/m2_anchored_contract_smoke_20260509__fixture__ambiguous_anchor/prompt_snapshot.json",
+      "raw_response_artifact": "experiments/core_narrative/results/raw/m2_anchored_contract_smoke_20260509__fixture__ambiguous_anchor/provider_response.redacted.json",
+      "status": "invalid_submission",
+      "workspace": "experiments/core_narrative/workspaces/m2_anchored_contract_smoke_20260509__fixture__ambiguous_anchor"
+    },
+    {
+      "artifact_dir": "experiments/core_narrative/results/raw/m2_anchored_contract_smoke_20260509__fixture__stale_anchor",
+      "clean_replay": {
+        "attempted": false,
+        "status": "not_attempted_after_invalid_submission",
+        "success": false
+      },
+      "context_paths": [
+        "src/click/core.py"
+      ],
+      "contract": "anchored-search-replace-json-v3",
+      "details": {
+        "anchor_matches": 0,
+        "anchor_texts": {
+          "after": null,
+          "before": {
+            "char_count": 13,
+            "content_recorded": false,
+            "line_count": 1,
+            "redacted_url_marker_count": 0,
+            "sha256": "3f6dabe159495041a3f90f7e9ebe019a6b6a2086825e4fc8b5b096a89954d4fc"
+          }
+        },
+        "anchors": {
+          "after": false,
+          "after_chars": 0,
+          "before": true,
+          "before_chars": 13
+        },
+        "content_recorded": false,
+        "diagnostic": {
+          "anchor_policy": {
+            "anchors_must_be_immediate_adjacent_source": true,
+            "anchors_required_when_old_is_repeated": true,
+            "omit_anchors_when_old_is_unique": true
+          },
+          "code": "unique_old_anchor_mismatch",
+          "recommendation": "old occurs exactly once; omit before/after anchors unless they are exact immediate adjacent source"
+        },
+        "edit_index": 0,
+        "failure_class": "search_replace_anchor_mismatch",
+        "occurrences": 1,
+        "old_text_char_count": 26,
+        "old_text_sha256": "0df6e2aa9c7f6717c31e60f017d59d86922f2f0c75efb93395e214fed458cd61",
+        "path": "src/click/core.py",
+        "redacted_url_context": {
+          "after_contains_marker": false,
+          "before_contains_marker": false,
+          "fallback_match_count": null,
+          "marker_count_after": 0,
+          "marker_count_before": 0,
+          "marker_count_old": 0,
+          "old_contains_marker": false
+        },
+        "search_text": {
+          "content_recorded": false,
+          "old_redacted_url_marker_count": 0,
+          "old_text_char_count": 26,
+          "old_text_line_count": 1,
+          "old_text_sha256": "0df6e2aa9c7f6717c31e60f017d59d86922f2f0c75efb93395e214fed458cd61"
+        }
+      },
+      "error": "edit anchors must identify exactly one old-string occurrence",
+      "failure_class": "search_replace_anchor_mismatch",
+      "failure_owner": "model_output",
+      "fixture_id": "stale_anchor",
+      "intent": "stale anchor beside otherwise unique old text is rejected with hashed diagnostics",
+      "model_call_made": false,
+      "model_spend_usd": 0.0,
+      "patch": null,
+      "patch_artifact": null,
+      "patch_ready": false,
+      "prompt_snapshot": "experiments/core_narrative/results/raw/m2_anchored_contract_smoke_20260509__fixture__stale_anchor/prompt_snapshot.json",
+      "raw_response_artifact": "experiments/core_narrative/results/raw/m2_anchored_contract_smoke_20260509__fixture__stale_anchor/provider_response.redacted.json",
+      "status": "invalid_submission",
+      "workspace": "experiments/core_narrative/workspaces/m2_anchored_contract_smoke_20260509__fixture__stale_anchor"
+    },
+    {
+      "artifact_dir": "experiments/core_narrative/results/raw/m2_anchored_contract_smoke_20260509__fixture__redacted_source_text",
+      "clean_replay": {
+        "attempted": false,
+        "status": "not_attempted_unsafe_patch_artifact",
+        "success": false
+      },
+      "context_paths": [
+        "src/click/core.py"
+      ],
+      "contract": "anchored-search-replace-json-v3",
+      "details": {
+        "content_recorded": false,
+        "failure_class": "unsafe_generated_text",
+        "patch_result_before_patch_artifact": {
+          "allowed_context_paths": [
+            "src/click/core.py"
+          ],
+          "anchored_edit_count": 0,
+          "applied": true,
+          "applied_edit_summaries": [
+            {
+              "anchor_texts": {
+                "after": null,
+                "before": null
+              },
+              "anchored": false,
+              "content_recorded": false,
+              "edit_index": 0,
+              "path": "src/click/core.py",
+              "redacted_url_context": {
+                "after_contains_marker": false,
+                "before_contains_marker": false,
+                "fallback_match_count": null,
+                "marker_count_after": 0,
+                "marker_count_before": 0,
+                "marker_count_old": 1,
+                "old_contains_marker": true
+              },
+              "resolution": "redacted_source",
+              "search_text": {
+                "content_recorded": false,
+                "old_redacted_url_marker_count": 1,
+                "old_text_char_count": 23,
+                "old_text_line_count": 1,
+                "old_text_sha256": "83501722254c4b9465e5c1205582929bd22dd359ce7be761ec320c5dbc8c0b9b"
+              }
+            }
+          ],
+          "changed_paths": [
+            "src/click/core.py"
+          ],
+          "edit_count": 1,
+          "edit_diagnostics": [
+            {
+              "anchor_matches": null,
+              "anchor_texts": {
+                "after": null,
+                "before": null
+              },
+              "anchors": {
+                "after": false,
+                "after_chars": 0,
+                "before": false,
+                "before_chars": 0
+              },
+              "content_recorded": false,
+              "diagnostic": {
+                "code": "redacted_source_text_matched_raw_source",
+                "content_recorded": false,
+                "redacted_search_text_matched_raw_source_once": true,
+                "replacement_contains_redacted_url_marker": false
+              },
+              "edit_index": 0,
+              "occurrences": null,
+              "old_text_char_count": 23,
+              "old_text_sha256": "83501722254c4b9465e5c1205582929bd22dd359ce7be761ec320c5dbc8c0b9b",
+              "path": "src/click/core.py",
+              "redacted_url_context": {
+                "after_contains_marker": false,
+                "before_contains_marker": false,
+                "fallback_match_count": 1,
+                "marker_count_after": 0,
+                "marker_count_before": 0,
+                "marker_count_old": 1,
+                "old_contains_marker": true
+              },
+              "search_text": {
+                "content_recorded": false,
+                "old_redacted_url_marker_count": 1,
+                "old_text_char_count": 23,
+                "old_text_line_count": 1,
+                "old_text_sha256": "83501722254c4b9465e5c1205582929bd22dd359ce7be761ec320c5dbc8c0b9b"
+              }
+            }
+          ],
+          "kind": "search_replace_edits",
+          "output_contract": "anchored-search-replace-json-v3",
+          "validated": true
+        },
+        "unsafe_content": {
+          "reason_counts": {
+            "full_url": 1
+          },
+          "resolved_env_var_names": [],
+          "unsafe": true
+        }
+      },
+      "failure_class": "unsafe_generated_text",
+      "failure_owner": "model_output",
+      "fixture_id": "redacted_source_text",
+      "intent": "redacted source text can match raw source, but raw-URL patch artifacts stay blocked",
+      "model_call_made": false,
+      "model_spend_usd": 0.0,
+      "patch": {
+        "allowed_context_paths": [
+          "src/click/core.py"
+        ],
+        "anchored_edit_count": 0,
+        "applied": true,
+        "applied_edit_summaries": [
+          {
+            "anchor_texts": {
+              "after": null,
+              "before": null
+            },
+            "anchored": false,
+            "content_recorded": false,
+            "edit_index": 0,
+            "path": "src/click/core.py",
+            "redacted_url_context": {
+              "after_contains_marker": false,
+              "before_contains_marker": false,
+              "fallback_match_count": null,
+              "marker_count_after": 0,
+              "marker_count_before": 0,
+              "marker_count_old": 1,
+              "old_contains_marker": true
+            },
+            "resolution": "redacted_source",
+            "search_text": {
+              "content_recorded": false,
+              "old_redacted_url_marker_count": 1,
+              "old_text_char_count": 23,
+              "old_text_line_count": 1,
+              "old_text_sha256": "83501722254c4b9465e5c1205582929bd22dd359ce7be761ec320c5dbc8c0b9b"
+            }
+          }
+        ],
+        "changed_paths": [
+          "src/click/core.py"
+        ],
+        "edit_count": 1,
+        "edit_diagnostics": [
+          {
+            "anchor_matches": null,
+            "anchor_texts": {
+              "after": null,
+              "before": null
+            },
+            "anchors": {
+              "after": false,
+              "after_chars": 0,
+              "before": false,
+              "before_chars": 0
+            },
+            "content_recorded": false,
+            "diagnostic": {
+              "code": "redacted_source_text_matched_raw_source",
+              "content_recorded": false,
+              "redacted_search_text_matched_raw_source_once": true,
+              "replacement_contains_redacted_url_marker": false
+            },
+            "edit_index": 0,
+            "occurrences": null,
+            "old_text_char_count": 23,
+            "old_text_sha256": "83501722254c4b9465e5c1205582929bd22dd359ce7be761ec320c5dbc8c0b9b",
+            "path": "src/click/core.py",
+            "redacted_url_context": {
+              "after_contains_marker": false,
+              "before_contains_marker": false,
+              "fallback_match_count": 1,
+              "marker_count_after": 0,
+              "marker_count_before": 0,
+              "marker_count_old": 1,
+              "old_contains_marker": true
+            },
+            "search_text": {
+              "content_recorded": false,
+              "old_redacted_url_marker_count": 1,
+              "old_text_char_count": 23,
+              "old_text_line_count": 1,
+              "old_text_sha256": "83501722254c4b9465e5c1205582929bd22dd359ce7be761ec320c5dbc8c0b9b"
+            }
+          }
+        ],
+        "kind": "search_replace_edits",
+        "output_contract": "anchored-search-replace-json-v3",
+        "validated": true
+      },
+      "patch_artifact": {
+        "path": "experiments/core_narrative/results/raw/m2_anchored_contract_smoke_20260509__fixture__redacted_source_text/submission.patch",
+        "policy": "reject_before_write",
+        "size_bytes": 0,
+        "unsafe_content": {
+          "reason_counts": {
+            "full_url": 1
+          },
+          "resolved_env_var_names": [],
+          "unsafe": true
+        },
+        "unsafe_content_detected": true,
+        "written": false
+      },
+      "patch_ready": false,
+      "prompt_snapshot": "experiments/core_narrative/results/raw/m2_anchored_contract_smoke_20260509__fixture__redacted_source_text/prompt_snapshot.json",
+      "raw_response_artifact": "experiments/core_narrative/results/raw/m2_anchored_contract_smoke_20260509__fixture__redacted_source_text/provider_response.redacted.json",
+      "status": "invalid_submission",
+      "workspace": "experiments/core_narrative/workspaces/m2_anchored_contract_smoke_20260509__fixture__redacted_source_text"
+    },
+    {
+      "artifact_dir": "experiments/core_narrative/results/raw/m2_anchored_contract_smoke_20260509__fixture__missing_raw_artifact",
+      "clean_replay": {
+        "attempted": false,
+        "status": "not_attempted_missing_input",
+        "success": false
+      },
+      "context_paths": [
+        "src/click/core.py"
+      ],
+      "contract": "anchored-search-replace-json-v3",
+      "details": {
+        "content_recorded": false
+      },
+      "failure_class": "missing_raw_response_artifact",
+      "failure_owner": "infrastructure",
+      "fixture_id": "missing_raw_artifact",
+      "intent": "missing raw response artifact remains machine-readable missing input",
+      "model_call_made": false,
+      "model_spend_usd": 0.0,
+      "patch": null,
+      "patch_artifact": null,
+      "patch_ready": false,
+      "prompt_snapshot": "experiments/core_narrative/results/raw/m2_anchored_contract_smoke_20260509__fixture__missing_raw_artifact/prompt_snapshot.json",
+      "raw_response_artifact": null,
+      "status": "missing_replay_input",
+      "workspace": "experiments/core_narrative/workspaces/m2_anchored_contract_smoke_20260509__fixture__missing_raw_artifact"
+    }
+  ],
+  "method": {
+    "claim_boundary": "anchored contract/applicator scoreability smoke only",
+    "fixture_model_calls": "none",
+    "fixture_model_spend_usd": 0.0,
+    "runner_contract_schema": {
+      "anchor_policy": {
+        "anchors_are_for_repeated_old_text_only": true,
+        "anchors_must_be_immediate_adjacent_source": true,
+        "invalid_anchors_reject_the_edit_even_when_old_is_unique": true,
+        "omit_anchors_when_old_is_unique": true
+      },
+      "diagnostic_failure_classes": {
+        "search_replace_anchor_mismatch": "old text was present, but supplied anchors did not isolate exactly one occurrence",
+        "search_replace_old_occurrence_mismatch": "old text did not occur exactly once after earlier edits"
+      },
+      "id": "anchored-search-replace-json-v3",
+      "legacy_parser_fallback_keys": [
+        "unified_diff",
+        "files"
+      ],
+      "primary_top_level_key": "edits",
+      "requires_exact_old_text": true,
+      "requires_exact_path_from_context": true,
+      "requires_immediate_anchors_for_repeated_old_text": true,
+      "requires_single_top_level_key": true
+    },
+    "verifier_execution": "not_run"
+  },
+  "prohibited_claims": {
+    "admission": false,
+    "authorization": false,
+    "capability_uplift": false,
+    "g0_g5": false,
+    "g_score_predictivity": false,
+    "license": false,
+    "m2_passed": false,
+    "ranking_reversal": false,
+    "task_solving_improvement": false
+  },
+  "scope": {
+    "contract": "anchored-search-replace-json-v3",
+    "denominators_are_separate": true,
+    "fixture_fixed_denominator": 5,
+    "fixture_matrix_row_count": 5,
+    "prior_m2_acuts": [
+      "cheap-generic-swe",
+      "cheap-click-specialist"
+    ],
+    "prior_m2_claim_status": "scoreability_gate_not_met",
+    "prior_m2_fixed_denominator": 6,
+    "prior_m2_tasks": [
+      "click__rwork__003",
+      "click__rwork__004",
+      "click__rwork__006"
+    ]
+  },
+  "status": "completed",
+  "tool": "m2_anchored_contract_smoke"
+}
