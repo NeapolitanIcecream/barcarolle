@@ -213,6 +213,8 @@ def build_payload(args: argparse.Namespace) -> dict[str, Any]:
             "unsafe_triage": args.unsafe_triage,
             "live_smoke_batch": args.live_smoke_batch,
             "live_smoke_blocker": args.live_smoke_blocker,
+            "output": args.output,
+            "report": args.report,
         },
         "scope": {
             "tasks": summary.get("tasks"),
@@ -250,6 +252,21 @@ def build_payload(args: argparse.Namespace) -> dict[str, Any]:
                 "repair_id": "apply_patch_context_mismatch_failure_owner",
                 "status": "implemented_with_focused_tests",
                 "claim": "failed apply_patch transcript replays remain model-output invalid submissions",
+            },
+            {
+                "repair_id": "apply_patch_context_mismatch_line_anchor_diagnostics",
+                "status": "implemented_with_focused_tests",
+                "claim": "mismatch artifacts identify path, hunk index, old-text hash, line-anchor occurrence counts, and redacted-URL match counts without recording source content",
+            },
+            {
+                "repair_id": "patch_or_files_v1_redacted_url_source_context_match",
+                "status": "implemented_with_focused_tests",
+                "claim": "old hunk context containing <redacted:url> can match raw workspace URLs only when the replacement does not persist redacted placeholders; safe patch-artifact policy still applies",
+            },
+            {
+                "repair_id": "patch_or_files_v1_default_flag_focused_context_excerpts",
+                "status": "implemented_with_focused_tests",
+                "claim": "future Click default/flag prompts include focused Option internals beyond the truncated source-file prefix",
             },
         ],
         "live_smoke": live_smoke_status(args),
@@ -308,6 +325,9 @@ def write_report(payload: Mapping[str, Any], path: str) -> None:
             "",
             "- `patch-or-files-v1` now accepts Codex `*** Begin Patch` transcripts when hunks match the prepared workspace exactly.",
             "- Failed apply-patch transcript replays are classified as model-output `invalid_submission`, not infrastructure failures.",
+            "- Apply-patch context mismatches now record path, hunk index, hashes, line-anchor occurrence counts, and redacted-URL match counts without source content.",
+            "- Redacted URL placeholders in old hunk context can match raw source URLs only when replacement text does not persist placeholders; safe patch-artifact policy is still enforced.",
+            "- Future Click default/flag prompts include focused `Option` internals beyond the truncated source-file prefix.",
             "- Malformed unified diffs, provider HTTP failures, and structured full-file artifact-safety blockers remain residual blockers.",
             "",
             "## Failure Modes",
@@ -341,8 +361,8 @@ def write_report(payload: Mapping[str, Any], path: str) -> None:
         reproduction_lines.append(f"  --live-smoke-blocker {inputs.get('live_smoke_blocker')} \\")
     reproduction_lines.extend(
         [
-            "  --output experiments/core_narrative/results/m2_live_scoreability_repair_20260509.json \\",
-            "  --report experiments/core_narrative/reports/2026-05-09_m2_live_scoreability_repair_report.md",
+            f"  --output {inputs.get('output')} \\",
+            f"  --report {inputs.get('report')}",
         ]
     )
     lines.extend(

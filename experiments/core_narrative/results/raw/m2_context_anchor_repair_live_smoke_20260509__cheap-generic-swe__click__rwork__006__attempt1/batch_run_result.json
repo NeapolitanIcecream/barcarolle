@@ -1,0 +1,351 @@
+{
+  "acut_id": "cheap-generic-swe",
+  "artifact_dir": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/m2_context_anchor_repair_live_smoke_20260509__cheap-generic-swe__click__rwork__006__attempt1",
+  "context_paths": [
+    "src/click/core.py",
+    "tests/test_options.py",
+    "tests/test_termui.py"
+  ],
+  "duration_seconds": 91.042,
+  "install": {
+    "command": [
+      "/opt/homebrew/bin/uv",
+      "pip",
+      "install",
+      "--python",
+      ".venv/bin/python",
+      "-q",
+      "-e",
+      ".",
+      "pytest"
+    ],
+    "exit_code": 0,
+    "finished_at": "2026-05-09T15:27:19.954565Z",
+    "name": "venv_install",
+    "started_at": "2026-05-09T15:27:19.421682Z",
+    "stderr_artifact": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/m2_context_anchor_repair_live_smoke_20260509__cheap-generic-swe__click__rwork__006__attempt1/venv_install.stderr.txt",
+    "stdout_artifact": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/m2_context_anchor_repair_live_smoke_20260509__cheap-generic-swe__click__rwork__006__attempt1/venv_install.stdout.txt",
+    "venv_backend": "uv"
+  },
+  "noop": null,
+  "noop_install": null,
+  "noop_prepare": null,
+  "noop_workspace": null,
+  "normalized": {
+    "acut_id": "cheap-generic-swe",
+    "attempt": 1,
+    "error": "apply_patch update hunk did not match workspace exactly",
+    "finished_at": "2026-05-09T15:28:50.057896Z",
+    "metadata": {
+      "acut_manifest_path": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/configs/acuts/cheap-generic-swe.yaml",
+      "acut_manifest_sha256": "3888ad4d393ac439d8a3d6ea48a7358b4480c6137d2c7aeed9c411cd676513c3",
+      "batch_tool": "codex_nfl_experiment_runner",
+      "clean_patch_replay": {
+        "attempted": false,
+        "runner_workspace": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/workspaces/m2_context_anchor_repair_live_smoke_20260509__cheap-generic-swe__click__rwork__006__attempt1",
+        "separate_workspace": false,
+        "skip_apply": null,
+        "verify_workspace": null
+      },
+      "context_pack_digest": null,
+      "direct_runner_budget_gate": {
+        "allowed": true,
+        "approvals_required": [],
+        "blockers": [],
+        "budget": {
+          "current_cumulative_estimated_cost_usd": 37.521729,
+          "hard_cap_reached_or_projected": false,
+          "hard_cap_usd": 300.0,
+          "projected_cost_usd": 1.0,
+          "projected_cumulative_estimated_cost_usd": 38.521729,
+          "soft_stop_reached_or_projected": false,
+          "soft_stop_usd": 240.0
+        },
+        "default_execution_profile": {
+          "core_acut_ids": [
+            "frontier-generic-swe",
+            "frontier-click-specialist",
+            "cheap-generic-swe",
+            "cheap-click-specialist"
+          ],
+          "full_core_requires_coordinator_decision": true,
+          "pilot_primary_attempts": 28,
+          "primary_attempts_per_acut_task": 1,
+          "profile_id": "budget-constrained-2x2-pilot-v2",
+          "split_task_limits": {
+            "G_score": 2,
+            "RBench": 3,
+            "RWork": 2
+          }
+        },
+        "env": {
+          "all_required_present": true,
+          "required": [
+            {
+              "name": "BARCAROLLE_LLM_API_KEY",
+              "present": true
+            },
+            {
+              "name": "BARCAROLLE_LLM_BASE_URL",
+              "present": true
+            }
+          ]
+        },
+        "execution_request": {
+          "acut_id": "cheap-generic-swe",
+          "attempt": 1,
+          "coordinator_decision_ref_present": false,
+          "split": "rwork"
+        },
+        "ledger": {
+          "cumulative_estimated_cost_usd": 37.521729,
+          "error_type": null,
+          "errors": [],
+          "estimated_cost_sum_usd": 37.521729,
+          "exists": true,
+          "is_file": true,
+          "line_count": 153,
+          "path": "experiments/core_narrative/results/cost_ledger.jsonl",
+          "record_count": 153,
+          "writable": true
+        },
+        "status": "passed",
+        "tool": "llm_budget_gate"
+      },
+      "direct_runner_cost_accounting": {
+        "actual_cost_recorded": false,
+        "actual_cost_usd": null,
+        "cost_record_basis": "failure_ledger_append",
+        "estimated_cost_usd": 0.077953
+      },
+      "direct_runner_cost_ledger_append": {
+        "actual_cost_recorded": false,
+        "estimated_cost_usd": 0.077953,
+        "new_cumulative_estimated_cost_usd": 37.599682,
+        "record_count_after": 154,
+        "record_count_before": 153,
+        "status": "appended"
+      },
+      "direct_runner_id": "codex-nfl-direct-search-replace-v1",
+      "direct_runner_status": "error",
+      "failure_class": "apply_patch_context_mismatch",
+      "failure_owner": "model_output",
+      "model_call_made": true,
+      "patch_readiness": {
+        "clean_replay_attempted": false,
+        "patch_size_bytes": null,
+        "verifier_ready_patch_available": false
+      },
+      "prompt_snapshot": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/m2_context_anchor_repair_live_smoke_20260509__cheap-generic-swe__click__rwork__006__attempt1/prompt_snapshot.json",
+      "prompt_snapshot_sha256": "88dc1d30b3794ec115cfe50fd40cbedc0bfac6cb29353f6ecd9496ff3277d26a",
+      "raw_response_artifact": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/m2_context_anchor_repair_live_smoke_20260509__cheap-generic-swe__click__rwork__006__attempt1/provider_response.redacted.json",
+      "runner_id": "codex-nfl-batch-v1",
+      "submission_contract": "patch-or-files-v1",
+      "task_manifest_path": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/tasks/click/rwork/click__rwork__006/task.yaml",
+      "task_manifest_sha256": "c1d40b2011d7d031a425a3690d3a756fff801e25122332780032ee9c1c448960",
+      "tool": "codex_nfl_experiment_runner",
+      "verifier_digest_sha256": "97854586001dda3ce15c30a539ce5932980201a562b356e95bde7362fcc84daf",
+      "verifier_ready_patch_available": false
+    },
+    "patch_path": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/m2_context_anchor_repair_live_smoke_20260509__cheap-generic-swe__click__rwork__006__attempt1/submission.patch",
+    "review": {
+      "mergeability_grade": null,
+      "notes": "",
+      "rule_violation": false,
+      "wrong_module": false
+    },
+    "run_id": "m2_context_anchor_repair_live_smoke_20260509__cheap-generic-swe__click__rwork__006__attempt1",
+    "schema_version": "core-narrative.run-result.v1",
+    "split": "rwork",
+    "started_at": "2026-05-09T15:27:19.994881Z",
+    "status": "invalid_submission",
+    "task_id": "click__rwork__006",
+    "verification": {
+      "duration_seconds": null,
+      "exit_code": null,
+      "stderr_artifact": null,
+      "stdout_artifact": null
+    }
+  },
+  "normalized_result": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/normalized/m2_context_anchor_repair_live_smoke_20260509__cheap-generic-swe__click__rwork__006__attempt1.json",
+  "patch_path": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/m2_context_anchor_repair_live_smoke_20260509__cheap-generic-swe__click__rwork__006__attempt1/submission.patch",
+  "patch_ready": false,
+  "prepare": {
+    "base_commit": "878de46100e9c29aea9dab5b385b8116863cb5e3",
+    "repo_slug": "click",
+    "split": "rwork",
+    "statement_path": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/workspaces/m2_context_anchor_repair_live_smoke_20260509__cheap-generic-swe__click__rwork__006__attempt1/.core_narrative/statement.md",
+    "status": "prepared",
+    "target_commit_absence_checked": true,
+    "task_id": "click__rwork__006",
+    "task_package_path": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/workspaces/m2_context_anchor_repair_live_smoke_20260509__cheap-generic-swe__click__rwork__006__attempt1/.core_narrative/task.json",
+    "tool": "prepare_workspace",
+    "warnings": [],
+    "workspace": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/workspaces/m2_context_anchor_repair_live_smoke_20260509__cheap-generic-swe__click__rwork__006__attempt1",
+    "workspace_history_mode": "base_tree_only_synthetic_git"
+  },
+  "prompt_snapshot": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/m2_context_anchor_repair_live_smoke_20260509__cheap-generic-swe__click__rwork__006__attempt1/prompt_snapshot.json",
+  "raw_response_artifact": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/m2_context_anchor_repair_live_smoke_20260509__cheap-generic-swe__click__rwork__006__attempt1/provider_response.redacted.json",
+  "run_id": "m2_context_anchor_repair_live_smoke_20260509__cheap-generic-swe__click__rwork__006__attempt1",
+  "runner_code": 2,
+  "runner_result": {
+    "budget_gate": {
+      "allowed": true,
+      "approvals_required": [],
+      "blockers": [],
+      "budget": {
+        "current_cumulative_estimated_cost_usd": 37.521729,
+        "hard_cap_reached_or_projected": false,
+        "hard_cap_usd": 300.0,
+        "projected_cost_usd": 1.0,
+        "projected_cumulative_estimated_cost_usd": 38.521729,
+        "soft_stop_reached_or_projected": false,
+        "soft_stop_usd": 240.0
+      },
+      "default_execution_profile": {
+        "core_acut_ids": [
+          "frontier-generic-swe",
+          "frontier-click-specialist",
+          "cheap-generic-swe",
+          "cheap-click-specialist"
+        ],
+        "full_core_requires_coordinator_decision": true,
+        "pilot_primary_attempts": 28,
+        "primary_attempts_per_acut_task": 1,
+        "profile_id": "budget-constrained-2x2-pilot-v2",
+        "split_task_limits": {
+          "G_score": 2,
+          "RBench": 3,
+          "RWork": 2
+        }
+      },
+      "env": {
+        "all_required_present": true,
+        "required": [
+          {
+            "name": "BARCAROLLE_LLM_API_KEY",
+            "present": true
+          },
+          {
+            "name": "BARCAROLLE_LLM_BASE_URL",
+            "present": true
+          }
+        ]
+      },
+      "execution_request": {
+        "acut_id": "cheap-generic-swe",
+        "attempt": 1,
+        "coordinator_decision_ref_present": false,
+        "split": "rwork"
+      },
+      "ledger": {
+        "cumulative_estimated_cost_usd": 37.521729,
+        "error_type": null,
+        "errors": [],
+        "estimated_cost_sum_usd": 37.521729,
+        "exists": true,
+        "is_file": true,
+        "line_count": 153,
+        "path": "experiments/core_narrative/results/cost_ledger.jsonl",
+        "record_count": 153,
+        "writable": true
+      },
+      "status": "passed",
+      "tool": "llm_budget_gate"
+    },
+    "cost_accounting": {
+      "actual_cost_recorded": false,
+      "actual_cost_usd": null,
+      "cost_record_basis": "failure_ledger_append",
+      "estimated_cost_usd": 0.077953
+    },
+    "cost_ledger_append": {
+      "actual_cost_recorded": false,
+      "estimated_cost_usd": 0.077953,
+      "new_cumulative_estimated_cost_usd": 37.599682,
+      "record_count_after": 154,
+      "record_count_before": 153,
+      "status": "appended"
+    },
+    "details": {
+      "content_recorded": false,
+      "failure_class": "apply_patch_context_mismatch",
+      "hunk_index": 0,
+      "line_anchors": [
+        {
+          "content_recorded": false,
+          "line_char_count": 21,
+          "line_numbers": [
+            2249,
+            2254,
+            2258,
+            2891
+          ],
+          "line_numbers_truncated": false,
+          "line_sha256": "9a2abbf705826eb7cc59ff3d9542434b4b40c1f766a5f64946f29648ab6485e7",
+          "occurrences": 4,
+          "position": "first"
+        },
+        {
+          "content_recorded": false,
+          "line_char_count": 18,
+          "line_numbers": [
+            686,
+            1044,
+            1408,
+            1791,
+            1995
+          ],
+          "line_numbers_truncated": true,
+          "line_sha256": "27e69fe2cf8a71e696fc82f2f70709749ebe16edea0cd82ec62a0f27dd2b69a8",
+          "occurrences": 13,
+          "position": "last"
+        }
+      ],
+      "new_text_char_count": 291,
+      "new_text_sha256": "293aa55dccbde2361650d5732d96f62a17a5c85b8b83456501fe4ac98c28faf5",
+      "occurrences": 0,
+      "old_text_char_count": 283,
+      "old_text_line_count": 9,
+      "old_text_sha256": "40682009289362d7b52d107c223237b6c4646aaede94db719c455e07fbe23673",
+      "path": "src/click/core.py",
+      "redacted_url_context": {
+        "fallback_match_count": 0,
+        "marker_count_new": 0,
+        "marker_count_old": 0,
+        "new_contains_marker": false,
+        "old_contains_marker": false
+      },
+      "target_text_char_count": 132940,
+      "target_text_sha256": "ed6f0d86ce1a77b4c79718ca8e1cf7d4cfd8a223b2ab52d93d6d0d6fe431100f"
+    },
+    "error": "apply_patch update hunk did not match workspace exactly",
+    "finished_at": "2026-05-09T15:28:50.057896Z",
+    "model_call_made": true,
+    "output_contract": "patch-or-files-v1",
+    "prompt_snapshot": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/m2_context_anchor_repair_live_smoke_20260509__cheap-generic-swe__click__rwork__006__attempt1/prompt_snapshot.json",
+    "raw_response_artifact": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/m2_context_anchor_repair_live_smoke_20260509__cheap-generic-swe__click__rwork__006__attempt1/provider_response.redacted.json",
+    "runner_id": "codex-nfl-direct-search-replace-v1",
+    "selected_context_paths": [
+      "src/click/core.py",
+      "tests/test_options.py",
+      "tests/test_termui.py"
+    ],
+    "started_at": "2026-05-09T15:27:19.994881Z",
+    "status": "error",
+    "submission_contract": "patch-or-files-v1",
+    "task_visible_context_guidance": "Provide the commit title and linked issue 3111. Do not expose the reference patch or final tests.",
+    "tool": "codex_nfl_direct_runner"
+  },
+  "runner_status": "error",
+  "runner_workspace": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/workspaces/m2_context_anchor_repair_live_smoke_20260509__cheap-generic-swe__click__rwork__006__attempt1",
+  "scoreable": true,
+  "status": "invalid_submission",
+  "submission_contract": "patch-or-files-v1",
+  "task_id": "click__rwork__006",
+  "verify_code": null,
+  "verify_install": null,
+  "verify_prepare": null,
+  "verify_workspace": null,
+  "workspace": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/workspaces/m2_context_anchor_repair_live_smoke_20260509__cheap-generic-swe__click__rwork__006__attempt1"
+}
