@@ -1,0 +1,325 @@
+{
+  "cells": [
+    {
+      "acut_id": "cheap-generic-swe",
+      "all_contract_markers_match_structured_v1": true,
+      "cell_present": true,
+      "classification": "prompt_or_applicator_overbreadth",
+      "classification_detail": "full-url rejection happened during patch artifact collection after workspace mutation, before patch write",
+      "contract_markers": [
+        {
+          "field": "submission_contract",
+          "source": "batch",
+          "value": "structured-files-json-v1"
+        },
+        {
+          "field": "submission_contract",
+          "source": "normalized.metadata",
+          "value": "structured-files-json-v1"
+        },
+        {
+          "field": "submission_contract",
+          "source": "runner_result",
+          "value": "structured-files-json-v1"
+        },
+        {
+          "field": "output_contract",
+          "source": "runner_result",
+          "value": "structured-files-json-v1"
+        }
+      ],
+      "enough_redacted_evidence": true,
+      "error": "generated patch contains unsafe content",
+      "failure_class": "unsafe_generated_text",
+      "failure_owner": "model_output",
+      "model_call_made": true,
+      "patch_artifact_fields_present": false,
+      "patch_artifact_policy": null,
+      "patch_artifact_unsafe_content_detected": null,
+      "patch_file_exists": false,
+      "patch_path": "experiments/core_narrative/results/raw/codex_nfl_m1_1_structured_20260509__cheap-generic-swe__click__rwork__004__attempt1/submission.patch",
+      "patch_path_declared": true,
+      "patch_written": false,
+      "reason_counts": {
+        "full_url": 3
+      },
+      "redacted_provider_artifact": {
+        "content_char_count": 13544,
+        "enough_for_sanitized_review": true,
+        "exists": true,
+        "json_valid": true,
+        "path": "experiments/core_narrative/results/raw/codex_nfl_m1_1_structured_20260509__cheap-generic-swe__click__rwork__004__attempt1/provider_response.redacted.json",
+        "raw_url_like_count": 0,
+        "redacted_url_marker_count": 3
+      },
+      "resolved_env_var_name_count": 0,
+      "run_id": "codex_nfl_m1_1_structured_20260509__cheap-generic-swe__click__rwork__004__attempt1",
+      "runner_status": "error",
+      "status": "invalid_submission",
+      "task_id": "click__rwork__004",
+      "unsafe_flag": true,
+      "workspace": {
+        "harness_metadata_untracked_count": 2,
+        "path": "experiments/core_narrative/workspaces/codex_nfl_m1_1_structured_20260509__cheap-generic-swe__click__rwork__004__attempt1",
+        "status_available": true,
+        "tracked_changed_paths": [
+          "tests/test_defaults.py"
+        ],
+        "untracked_non_harness_paths": [],
+        "workspace_mutation_happened": true
+      }
+    },
+    {
+      "acut_id": "cheap-click-specialist",
+      "all_contract_markers_match_structured_v1": true,
+      "cell_present": true,
+      "classification": "prompt_or_applicator_overbreadth",
+      "classification_detail": "full-url rejection happened during patch artifact collection after workspace mutation, before patch write",
+      "contract_markers": [
+        {
+          "field": "submission_contract",
+          "source": "batch",
+          "value": "structured-files-json-v1"
+        },
+        {
+          "field": "submission_contract",
+          "source": "normalized.metadata",
+          "value": "structured-files-json-v1"
+        },
+        {
+          "field": "submission_contract",
+          "source": "runner_result",
+          "value": "structured-files-json-v1"
+        },
+        {
+          "field": "output_contract",
+          "source": "runner_result",
+          "value": "structured-files-json-v1"
+        }
+      ],
+      "enough_redacted_evidence": true,
+      "error": "generated patch contains unsafe content",
+      "failure_class": "unsafe_generated_text",
+      "failure_owner": "model_output",
+      "model_call_made": true,
+      "patch_artifact_fields_present": false,
+      "patch_artifact_policy": null,
+      "patch_artifact_unsafe_content_detected": null,
+      "patch_file_exists": false,
+      "patch_path": "experiments/core_narrative/results/raw/codex_nfl_m1_1_structured_20260509__cheap-click-specialist__click__rwork__004__attempt1/submission.patch",
+      "patch_path_declared": true,
+      "patch_written": false,
+      "reason_counts": {
+        "full_url": 3
+      },
+      "redacted_provider_artifact": {
+        "content_char_count": 12740,
+        "enough_for_sanitized_review": true,
+        "exists": true,
+        "json_valid": true,
+        "path": "experiments/core_narrative/results/raw/codex_nfl_m1_1_structured_20260509__cheap-click-specialist__click__rwork__004__attempt1/provider_response.redacted.json",
+        "raw_url_like_count": 0,
+        "redacted_url_marker_count": 3
+      },
+      "resolved_env_var_name_count": 0,
+      "run_id": "codex_nfl_m1_1_structured_20260509__cheap-click-specialist__click__rwork__004__attempt1",
+      "runner_status": "error",
+      "status": "invalid_submission",
+      "task_id": "click__rwork__004",
+      "unsafe_flag": true,
+      "workspace": {
+        "harness_metadata_untracked_count": 2,
+        "path": "experiments/core_narrative/workspaces/codex_nfl_m1_1_structured_20260509__cheap-click-specialist__click__rwork__004__attempt1",
+        "status_available": true,
+        "tracked_changed_paths": [
+          "tests/test_defaults.py"
+        ],
+        "untracked_non_harness_paths": [],
+        "workspace_mutation_happened": true
+      }
+    },
+    {
+      "acut_id": "cheap-generic-swe",
+      "all_contract_markers_match_structured_v1": true,
+      "cell_present": true,
+      "classification": "prompt_or_applicator_overbreadth",
+      "classification_detail": "full-url rejection happened during patch artifact collection after workspace mutation, before patch write",
+      "contract_markers": [
+        {
+          "field": "submission_contract",
+          "source": "batch",
+          "value": "structured-files-json-v1"
+        },
+        {
+          "field": "submission_contract",
+          "source": "normalized.metadata",
+          "value": "structured-files-json-v1"
+        },
+        {
+          "field": "submission_contract",
+          "source": "runner_result",
+          "value": "structured-files-json-v1"
+        },
+        {
+          "field": "output_contract",
+          "source": "runner_result",
+          "value": "structured-files-json-v1"
+        }
+      ],
+      "enough_redacted_evidence": true,
+      "error": "generated patch contains unsafe content",
+      "failure_class": "unsafe_generated_text",
+      "failure_owner": "model_output",
+      "model_call_made": true,
+      "patch_artifact_fields_present": false,
+      "patch_artifact_policy": null,
+      "patch_artifact_unsafe_content_detected": null,
+      "patch_file_exists": false,
+      "patch_path": "experiments/core_narrative/results/raw/codex_nfl_m1_1_structured_20260509__cheap-generic-swe__click__rwork__006__attempt1/submission.patch",
+      "patch_path_declared": true,
+      "patch_written": false,
+      "reason_counts": {
+        "full_url": 36
+      },
+      "redacted_provider_artifact": {
+        "content_char_count": 1118,
+        "enough_for_sanitized_review": true,
+        "exists": true,
+        "json_valid": true,
+        "path": "experiments/core_narrative/results/raw/codex_nfl_m1_1_structured_20260509__cheap-generic-swe__click__rwork__006__attempt1/provider_response.redacted.json",
+        "raw_url_like_count": 0,
+        "redacted_url_marker_count": 0
+      },
+      "resolved_env_var_name_count": 0,
+      "run_id": "codex_nfl_m1_1_structured_20260509__cheap-generic-swe__click__rwork__006__attempt1",
+      "runner_status": "error",
+      "status": "invalid_submission",
+      "task_id": "click__rwork__006",
+      "unsafe_flag": true,
+      "workspace": {
+        "harness_metadata_untracked_count": 2,
+        "path": "experiments/core_narrative/workspaces/codex_nfl_m1_1_structured_20260509__cheap-generic-swe__click__rwork__006__attempt1",
+        "status_available": true,
+        "tracked_changed_paths": [
+          "src/click/core.py",
+          "tests/test_options.py"
+        ],
+        "untracked_non_harness_paths": [],
+        "workspace_mutation_happened": true
+      }
+    },
+    {
+      "acut_id": "cheap-click-specialist",
+      "all_contract_markers_match_structured_v1": true,
+      "cell_present": true,
+      "classification": "prompt_or_applicator_overbreadth",
+      "classification_detail": "full-url rejection happened during patch artifact collection after workspace mutation, before patch write",
+      "contract_markers": [
+        {
+          "field": "submission_contract",
+          "source": "batch",
+          "value": "structured-files-json-v1"
+        },
+        {
+          "field": "submission_contract",
+          "source": "normalized.metadata",
+          "value": "structured-files-json-v1"
+        },
+        {
+          "field": "submission_contract",
+          "source": "runner_result",
+          "value": "structured-files-json-v1"
+        },
+        {
+          "field": "output_contract",
+          "source": "runner_result",
+          "value": "structured-files-json-v1"
+        }
+      ],
+      "enough_redacted_evidence": true,
+      "error": "generated patch contains unsafe content",
+      "failure_class": "unsafe_generated_text",
+      "failure_owner": "model_output",
+      "model_call_made": true,
+      "patch_artifact_fields_present": false,
+      "patch_artifact_policy": null,
+      "patch_artifact_unsafe_content_detected": null,
+      "patch_file_exists": false,
+      "patch_path": "experiments/core_narrative/results/raw/codex_nfl_m1_1_structured_20260509__cheap-click-specialist__click__rwork__006__attempt1/submission.patch",
+      "patch_path_declared": true,
+      "patch_written": false,
+      "reason_counts": {
+        "full_url": 36
+      },
+      "redacted_provider_artifact": {
+        "content_char_count": 3261,
+        "enough_for_sanitized_review": true,
+        "exists": true,
+        "json_valid": true,
+        "path": "experiments/core_narrative/results/raw/codex_nfl_m1_1_structured_20260509__cheap-click-specialist__click__rwork__006__attempt1/provider_response.redacted.json",
+        "raw_url_like_count": 0,
+        "redacted_url_marker_count": 0
+      },
+      "resolved_env_var_name_count": 0,
+      "run_id": "codex_nfl_m1_1_structured_20260509__cheap-click-specialist__click__rwork__006__attempt1",
+      "runner_status": "error",
+      "status": "invalid_submission",
+      "task_id": "click__rwork__006",
+      "unsafe_flag": true,
+      "workspace": {
+        "harness_metadata_untracked_count": 2,
+        "path": "experiments/core_narrative/workspaces/codex_nfl_m1_1_structured_20260509__cheap-click-specialist__click__rwork__006__attempt1",
+        "status_available": true,
+        "tracked_changed_paths": [
+          "src/click/core.py",
+          "tests/test_options.py"
+        ],
+        "untracked_non_harness_paths": [],
+        "workspace_mutation_happened": true
+      }
+    }
+  ],
+  "claim_boundaries": [
+    "No task-solving improvement claim.",
+    "No capability uplift claim.",
+    "No G-score predictivity claim.",
+    "No ranking reversal claim."
+  ],
+  "fixed_denominator": {
+    "duplicate_target_rows": [],
+    "missing_cell_count": 0,
+    "present_cell_count": 4,
+    "total": 4
+  },
+  "generated_at": "2026-05-09T11:23:49.603911Z",
+  "inputs": {
+    "acuts": [
+      "cheap-generic-swe",
+      "cheap-click-specialist"
+    ],
+    "batch": "experiments/core_narrative/results/codex_nfl_m1_1_structured_20260509.json",
+    "redacted_artifacts_only": true,
+    "tasks": [
+      "click__rwork__004",
+      "click__rwork__006"
+    ]
+  },
+  "model_or_api_budget_spent": false,
+  "output_leakage_guard": {
+    "contains_raw_unsafe_text": false,
+    "reason_counts": {}
+  },
+  "schema_version": "unsafe-generated-text-triage.v1",
+  "summary": {
+    "classification_counts": {
+      "prompt_or_applicator_overbreadth": 4
+    },
+    "enough_redacted_evidence_count": 4,
+    "patch_written_count": 0,
+    "reason_counts_total": {
+      "full_url": 78
+    },
+    "workspace_mutation_count": 4
+  },
+  "tool": "unsafe_generated_text_triage"
+}
