@@ -1,0 +1,670 @@
+{
+  "claim_boundaries": {
+    "admission": false,
+    "authorization": false,
+    "capability_uplift": false,
+    "g0_g5": false,
+    "g_score_predictivity": false,
+    "license": false,
+    "m2_passed": false,
+    "ranking_reversal": false,
+    "task_solving_improvement": false,
+    "verifier_or_task_success_measured": false
+  },
+  "claim_status": "unsafe_patch_artifact_repair_not_m2_pass",
+  "cost_model_call_flags": {
+    "fixtures": {
+      "live_api_calls": false,
+      "model_call_made": false,
+      "model_spend_usd": 0.0
+    },
+    "post_repair_live_smoke": {
+      "model_call_made": true,
+      "status": "completed"
+    }
+  },
+  "fixture_summary": {
+    "classification_counts": {
+      "artifact_policy_source_derived_overbreadth": 1,
+      "provider_or_artifact_ambiguous": 1,
+      "redaction_placeholder_persistence_rejected": 1,
+      "safety_policy_true_positive": 1
+    },
+    "failure_class_counts": {
+      "missing_raw_response_artifact": 1,
+      "search_replace_redacted_source_mismatch": 1,
+      "unsafe_generated_text": 2
+    },
+    "failure_owner_counts": {
+      "artifact_policy": 1,
+      "infrastructure": 1,
+      "model_output": 2
+    },
+    "fixed_denominator": 4,
+    "model_call_count": 0,
+    "patch_ready_count": 0,
+    "status_counts": {
+      "invalid_submission": 3,
+      "missing_replay_input": 1
+    }
+  },
+  "generated_at": "2026-05-09T17:24:30.874051Z",
+  "inputs": {
+    "force": true,
+    "live_smoke_batch": "experiments/core_narrative/results/m2_unsafe_artifact_repair_live_smoke_20260510.json",
+    "live_smoke_blocker": null,
+    "output": "experiments/core_narrative/results/m2_unsafe_artifact_repair_20260510.json",
+    "prior_live_smoke": "experiments/core_narrative/results/m2_anchored_occurrence_repair_live_smoke_20260510.json",
+    "raw_root": "experiments/core_narrative/results/raw",
+    "report": "experiments/core_narrative/reports/2026-05-10_m2_unsafe_artifact_repair_report.md",
+    "run_prefix": "m2_unsafe_artifact_repair_20260510",
+    "workspace_root": "experiments/core_narrative/workspaces"
+  },
+  "matrix": [
+    {
+      "artifact_dir": "experiments/core_narrative/results/raw/m2_unsafe_artifact_repair_20260510__fixture__redacted_source_old_safe_replacement_source_url_artifact",
+      "classification": "artifact_policy_source_derived_overbreadth",
+      "context_paths": [
+        "src/click/core.py"
+      ],
+      "contract": "anchored-search-replace-json-v3",
+      "details": {
+        "content_recorded": false,
+        "failure_class": "unsafe_generated_text",
+        "patch_result_before_patch_artifact": {
+          "allowed_context_paths": [
+            "src/click/core.py"
+          ],
+          "anchored_edit_count": 0,
+          "applied": true,
+          "applied_edit_summaries": [
+            {
+              "anchor_texts": {
+                "after": null,
+                "before": null
+              },
+              "anchored": false,
+              "content_recorded": false,
+              "edit_index": 0,
+              "path": "src/click/core.py",
+              "redacted_url_context": {
+                "after_contains_marker": false,
+                "before_contains_marker": false,
+                "fallback_match_count": null,
+                "marker_count_after": 0,
+                "marker_count_before": 0,
+                "marker_count_old": 1,
+                "old_contains_marker": true
+              },
+              "resolution": "redacted_source",
+              "search_text": {
+                "content_recorded": false,
+                "old_redacted_url_marker_count": 1,
+                "old_text_char_count": 141,
+                "old_text_line_count": 4,
+                "old_text_sha256": "232d2da3a21e8ca8a88ed0b2286b03b43479ada384fc4b3f45ae7a597204a057"
+              }
+            }
+          ],
+          "changed_paths": [
+            "src/click/core.py"
+          ],
+          "edit_count": 1,
+          "edit_diagnostics": [
+            {
+              "anchor_matches": null,
+              "anchor_texts": {
+                "after": null,
+                "before": null
+              },
+              "anchors": {
+                "after": false,
+                "after_chars": 0,
+                "before": false,
+                "before_chars": 0
+              },
+              "content_recorded": false,
+              "diagnostic": {
+                "code": "redacted_source_text_matched_raw_source",
+                "content_recorded": false,
+                "redacted_search_text_matched_raw_source_once": true,
+                "replacement_contains_redacted_url_marker": false
+              },
+              "edit_index": 0,
+              "occurrences": null,
+              "old_text_char_count": 141,
+              "old_text_sha256": "232d2da3a21e8ca8a88ed0b2286b03b43479ada384fc4b3f45ae7a597204a057",
+              "path": "src/click/core.py",
+              "redacted_url_context": {
+                "after_contains_marker": false,
+                "before_contains_marker": false,
+                "fallback_match_count": 1,
+                "marker_count_after": 0,
+                "marker_count_before": 0,
+                "marker_count_old": 1,
+                "old_contains_marker": true
+              },
+              "search_text": {
+                "content_recorded": false,
+                "old_redacted_url_marker_count": 1,
+                "old_text_char_count": 141,
+                "old_text_line_count": 4,
+                "old_text_sha256": "232d2da3a21e8ca8a88ed0b2286b03b43479ada384fc4b3f45ae7a597204a057"
+              }
+            }
+          ],
+          "kind": "search_replace_edits",
+          "output_contract": "anchored-search-replace-json-v3",
+          "validated": true
+        },
+        "unsafe_content": {
+          "reason_counts": {
+            "full_url": 1
+          },
+          "resolved_env_var_names": [],
+          "unsafe": true
+        },
+        "unsafe_content_attribution": {
+          "all_full_urls_source_derived": true,
+          "all_unsafe_reasons_source_derived": true,
+          "ambiguous_full_url_count": 0,
+          "classification": "source_derived_full_url",
+          "content_recorded": false,
+          "full_url_count": 1,
+          "full_url_role_counts": {
+            "source_removed": 1
+          },
+          "model_generated_full_url_count": 0,
+          "non_url_reason_counts": {},
+          "reason_counts": {
+            "full_url": 1
+          },
+          "source_derived_full_url_count": 1,
+          "url_occurrences": [
+            {
+              "content_recorded": false,
+              "diff_line_role": "source_removed",
+              "line_number": 7,
+              "url_char_count": 44,
+              "url_sha256": "2f280692da015eee2e9bd27aef6658d569a4b144d68595c90e074d6c13f81bc5"
+            }
+          ],
+          "url_occurrences_truncated": false
+        }
+      },
+      "expected_classification": "artifact_policy_source_derived_overbreadth",
+      "failure_class": "unsafe_generated_text",
+      "failure_owner": "artifact_policy",
+      "fixture_id": "redacted_source_old_safe_replacement_source_url_artifact",
+      "intent": "redacted source old text may match raw source once, but source-derived raw URL patch lines are attributed",
+      "model_call_made": false,
+      "model_spend_usd": 0.0,
+      "patch": {
+        "allowed_context_paths": [
+          "src/click/core.py"
+        ],
+        "anchored_edit_count": 0,
+        "applied": true,
+        "applied_edit_summaries": [
+          {
+            "anchor_texts": {
+              "after": null,
+              "before": null
+            },
+            "anchored": false,
+            "content_recorded": false,
+            "edit_index": 0,
+            "path": "src/click/core.py",
+            "redacted_url_context": {
+              "after_contains_marker": false,
+              "before_contains_marker": false,
+              "fallback_match_count": null,
+              "marker_count_after": 0,
+              "marker_count_before": 0,
+              "marker_count_old": 1,
+              "old_contains_marker": true
+            },
+            "resolution": "redacted_source",
+            "search_text": {
+              "content_recorded": false,
+              "old_redacted_url_marker_count": 1,
+              "old_text_char_count": 141,
+              "old_text_line_count": 4,
+              "old_text_sha256": "232d2da3a21e8ca8a88ed0b2286b03b43479ada384fc4b3f45ae7a597204a057"
+            }
+          }
+        ],
+        "changed_paths": [
+          "src/click/core.py"
+        ],
+        "edit_count": 1,
+        "edit_diagnostics": [
+          {
+            "anchor_matches": null,
+            "anchor_texts": {
+              "after": null,
+              "before": null
+            },
+            "anchors": {
+              "after": false,
+              "after_chars": 0,
+              "before": false,
+              "before_chars": 0
+            },
+            "content_recorded": false,
+            "diagnostic": {
+              "code": "redacted_source_text_matched_raw_source",
+              "content_recorded": false,
+              "redacted_search_text_matched_raw_source_once": true,
+              "replacement_contains_redacted_url_marker": false
+            },
+            "edit_index": 0,
+            "occurrences": null,
+            "old_text_char_count": 141,
+            "old_text_sha256": "232d2da3a21e8ca8a88ed0b2286b03b43479ada384fc4b3f45ae7a597204a057",
+            "path": "src/click/core.py",
+            "redacted_url_context": {
+              "after_contains_marker": false,
+              "before_contains_marker": false,
+              "fallback_match_count": 1,
+              "marker_count_after": 0,
+              "marker_count_before": 0,
+              "marker_count_old": 1,
+              "old_contains_marker": true
+            },
+            "search_text": {
+              "content_recorded": false,
+              "old_redacted_url_marker_count": 1,
+              "old_text_char_count": 141,
+              "old_text_line_count": 4,
+              "old_text_sha256": "232d2da3a21e8ca8a88ed0b2286b03b43479ada384fc4b3f45ae7a597204a057"
+            }
+          }
+        ],
+        "kind": "search_replace_edits",
+        "output_contract": "anchored-search-replace-json-v3",
+        "validated": true
+      },
+      "patch_artifact": {
+        "diff_context_lines": 0,
+        "path": "experiments/core_narrative/results/raw/m2_unsafe_artifact_repair_20260510__fixture__redacted_source_old_safe_replacement_source_url_artifact/submission.patch",
+        "policy": "reject_before_write",
+        "redacted_preview": {
+          "applies_to_workspace": false,
+          "path": "experiments/core_narrative/results/raw/m2_unsafe_artifact_repair_20260510__fixture__redacted_source_old_safe_replacement_source_url_artifact/submission.patch.redacted.txt",
+          "policy": "redacted_diagnostic_preview_only",
+          "size_bytes": 236,
+          "unsafe_content_after_redaction": {
+            "reason_counts": {},
+            "resolved_env_var_names": [],
+            "unsafe": false
+          },
+          "unsafe_content_detected_after_redaction": false,
+          "written": true
+        },
+        "size_bytes": 0,
+        "unsafe_content": {
+          "reason_counts": {
+            "full_url": 1
+          },
+          "resolved_env_var_names": [],
+          "unsafe": true
+        },
+        "unsafe_content_attribution": {
+          "all_full_urls_source_derived": true,
+          "all_unsafe_reasons_source_derived": true,
+          "ambiguous_full_url_count": 0,
+          "classification": "source_derived_full_url",
+          "content_recorded": false,
+          "full_url_count": 1,
+          "full_url_role_counts": {
+            "source_removed": 1
+          },
+          "model_generated_full_url_count": 0,
+          "non_url_reason_counts": {},
+          "reason_counts": {
+            "full_url": 1
+          },
+          "source_derived_full_url_count": 1,
+          "url_occurrences": [
+            {
+              "content_recorded": false,
+              "diff_line_role": "source_removed",
+              "line_number": 7,
+              "url_char_count": 44,
+              "url_sha256": "2f280692da015eee2e9bd27aef6658d569a4b144d68595c90e074d6c13f81bc5"
+            }
+          ],
+          "url_occurrences_truncated": false
+        },
+        "unsafe_content_detected": true,
+        "written": false
+      },
+      "patch_ready": false,
+      "prompt_snapshot": "experiments/core_narrative/results/raw/m2_unsafe_artifact_repair_20260510__fixture__redacted_source_old_safe_replacement_source_url_artifact/prompt_snapshot.json",
+      "provider_artifact": {
+        "content_char_count": 282,
+        "content_recorded": false,
+        "content_sha256": "1353599e88c93b5b969cf2244c33dc492da9b1bb21bf28e2a70b436bc4be7b8e",
+        "exists": true,
+        "json_valid": true,
+        "path": "experiments/core_narrative/results/raw/m2_unsafe_artifact_repair_20260510__fixture__redacted_source_old_safe_replacement_source_url_artifact/provider_response.redacted.json",
+        "raw_url_like_count": 0,
+        "redacted_url_marker_count": 1
+      },
+      "raw_response_artifact": "experiments/core_narrative/results/raw/m2_unsafe_artifact_repair_20260510__fixture__redacted_source_old_safe_replacement_source_url_artifact/provider_response.redacted.json",
+      "status": "invalid_submission",
+      "workspace": "experiments/core_narrative/workspaces/m2_unsafe_artifact_repair_20260510__fixture__redacted_source_old_safe_replacement_source_url_artifact"
+    },
+    {
+      "artifact_dir": "experiments/core_narrative/results/raw/m2_unsafe_artifact_repair_20260510__fixture__model_generated_raw_url_replacement_true_positive",
+      "classification": "safety_policy_true_positive",
+      "context_paths": [
+        "src/click/core.py"
+      ],
+      "contract": "anchored-search-replace-json-v3",
+      "details": {
+        "content_recorded": false,
+        "failure_class": "unsafe_generated_text",
+        "network_attempted": false,
+        "unsafe_content": {
+          "reason_counts": {
+            "full_url": 1
+          },
+          "resolved_env_var_names": [],
+          "unsafe": true
+        }
+      },
+      "error": "model response contains unsafe content",
+      "expected_classification": "safety_policy_true_positive",
+      "failure_class": "unsafe_generated_text",
+      "failure_owner": "model_output",
+      "fixture_id": "model_generated_raw_url_replacement_true_positive",
+      "intent": "model-generated raw URL replacement remains a true unsafe generated-text hit",
+      "model_call_made": false,
+      "model_spend_usd": 0.0,
+      "patch": null,
+      "patch_artifact": null,
+      "patch_ready": false,
+      "prompt_snapshot": "experiments/core_narrative/results/raw/m2_unsafe_artifact_repair_20260510__fixture__model_generated_raw_url_replacement_true_positive/prompt_snapshot.json",
+      "provider_artifact": {
+        "content_char_count": 102,
+        "content_recorded": false,
+        "content_sha256": "42fb0c43ac5a26718437e23e24e55354c0ff16971a38ffe8272dfe69b71872a3",
+        "exists": true,
+        "json_valid": true,
+        "path": "experiments/core_narrative/results/raw/m2_unsafe_artifact_repair_20260510__fixture__model_generated_raw_url_replacement_true_positive/provider_response.redacted.json",
+        "raw_url_like_count": 0,
+        "redacted_url_marker_count": 1
+      },
+      "raw_response_artifact": "experiments/core_narrative/results/raw/m2_unsafe_artifact_repair_20260510__fixture__model_generated_raw_url_replacement_true_positive/provider_response.redacted.json",
+      "status": "invalid_submission",
+      "workspace": "experiments/core_narrative/workspaces/m2_unsafe_artifact_repair_20260510__fixture__model_generated_raw_url_replacement_true_positive"
+    },
+    {
+      "artifact_dir": "experiments/core_narrative/results/raw/m2_unsafe_artifact_repair_20260510__fixture__redaction_placeholder_persistence_rejection",
+      "classification": "redaction_placeholder_persistence_rejected",
+      "context_paths": [
+        "src/click/core.py"
+      ],
+      "contract": "anchored-search-replace-json-v3",
+      "details": {
+        "content_recorded": false,
+        "diagnostic": {
+          "code": "redacted_replacement_placeholder_persistence",
+          "content_recorded": false
+        },
+        "edit_index": 0,
+        "failure_class": "search_replace_redacted_source_mismatch",
+        "path": "src/click/core.py",
+        "replacement_contains_redacted_url_marker": true,
+        "replacement_redacted_url_marker_count": 1,
+        "replacement_text_char_count": 25,
+        "replacement_text_sha256": "2fe90ff75674a9886a13930971eddb9554cbeacdd1f859e30a61ef3be51b1c45"
+      },
+      "error": "edit replacement would persist redacted URL placeholders",
+      "expected_classification": "redaction_placeholder_persistence_rejected",
+      "failure_class": "search_replace_redacted_source_mismatch",
+      "failure_owner": "model_output",
+      "fixture_id": "redaction_placeholder_persistence_rejection",
+      "intent": "redaction placeholders must not persist into replacement text",
+      "model_call_made": false,
+      "model_spend_usd": 0.0,
+      "patch": null,
+      "patch_artifact": null,
+      "patch_ready": false,
+      "prompt_snapshot": "experiments/core_narrative/results/raw/m2_unsafe_artifact_repair_20260510__fixture__redaction_placeholder_persistence_rejection/prompt_snapshot.json",
+      "provider_artifact": {
+        "content_char_count": 103,
+        "content_recorded": false,
+        "content_sha256": "0c45eb19a74cf0042a35e5927d10aa717f1e6f45a38ff8fa15bb28eeea38b902",
+        "exists": true,
+        "json_valid": true,
+        "path": "experiments/core_narrative/results/raw/m2_unsafe_artifact_repair_20260510__fixture__redaction_placeholder_persistence_rejection/provider_response.redacted.json",
+        "raw_url_like_count": 0,
+        "redacted_url_marker_count": 1
+      },
+      "raw_response_artifact": "experiments/core_narrative/results/raw/m2_unsafe_artifact_repair_20260510__fixture__redaction_placeholder_persistence_rejection/provider_response.redacted.json",
+      "status": "invalid_submission",
+      "workspace": "experiments/core_narrative/workspaces/m2_unsafe_artifact_repair_20260510__fixture__redaction_placeholder_persistence_rejection"
+    },
+    {
+      "artifact_dir": "experiments/core_narrative/results/raw/m2_unsafe_artifact_repair_20260510__fixture__missing_raw_artifact_ambiguity",
+      "classification": "provider_or_artifact_ambiguous",
+      "context_paths": [
+        "src/click/core.py"
+      ],
+      "contract": "anchored-search-replace-json-v3",
+      "details": {
+        "content_recorded": false
+      },
+      "expected_classification": "provider_or_artifact_ambiguous",
+      "failure_class": "missing_raw_response_artifact",
+      "failure_owner": "infrastructure",
+      "fixture_id": "missing_raw_artifact_ambiguity",
+      "intent": "missing provider artifact remains ambiguous rather than treated as generated unsafe text",
+      "model_call_made": false,
+      "model_spend_usd": 0.0,
+      "patch": null,
+      "patch_artifact": null,
+      "patch_ready": false,
+      "prompt_snapshot": "experiments/core_narrative/results/raw/m2_unsafe_artifact_repair_20260510__fixture__missing_raw_artifact_ambiguity/prompt_snapshot.json",
+      "provider_artifact": {
+        "content_recorded": false,
+        "content_sha256": null,
+        "exists": false,
+        "json_valid": null,
+        "path": null,
+        "raw_url_like_count": 0,
+        "redacted_url_marker_count": 0
+      },
+      "raw_response_artifact": null,
+      "status": "missing_replay_input",
+      "workspace": "experiments/core_narrative/workspaces/m2_unsafe_artifact_repair_20260510__fixture__missing_raw_artifact_ambiguity"
+    }
+  ],
+  "method": {
+    "claim_boundary": "scoreability/artifact-policy attribution only",
+    "diagnostics_policy": "reason counts plus source/generated role counts and hashes only; raw unsafe text not recorded",
+    "fixture_model_calls": "none",
+    "fixture_model_spend_usd": 0.0,
+    "runner_contract_schema": {
+      "anchor_policy": {
+        "anchors_are_for_repeated_old_text_only": true,
+        "anchors_must_be_immediate_adjacent_source": true,
+        "anchors_required_when_old_may_repeat_or_uniqueness_uncertain": true,
+        "invalid_anchors_reject_the_edit_even_when_old_is_unique": true,
+        "omit_anchors_only_when_old_is_unique_in_current_source": true,
+        "omit_anchors_when_old_is_unique": true
+      },
+      "diagnostic_failure_classes": {
+        "search_replace_anchor_mismatch": "old text was present, but supplied anchors did not isolate exactly one occurrence",
+        "search_replace_old_occurrence_mismatch": "old text occurred zero or multiple times after earlier edits",
+        "search_replace_redacted_source_mismatch": "redacted source placeholders may match raw source for search only, but must not persist into replacements"
+      },
+      "diagnostics_record_non_sensitive_hashes": true,
+      "diagnostics_record_old_occurrence_counts": true,
+      "id": "anchored-search-replace-json-v3",
+      "legacy_parser_fallback_keys": [
+        "unified_diff",
+        "files"
+      ],
+      "primary_top_level_key": "edits",
+      "requires_exact_old_text": true,
+      "requires_exact_path_from_context": true,
+      "requires_immediate_anchors_for_repeated_old_text": true,
+      "requires_immediate_anchors_when_old_text_may_repeat": true,
+      "requires_old_text_from_current_source_snapshot": true,
+      "requires_single_top_level_key": true,
+      "stale_old_text_is_invalid": true
+    },
+    "verifier_execution": "not_run"
+  },
+  "output_leakage_guard": {
+    "contains_raw_unsafe_text": false,
+    "reason_counts": {}
+  },
+  "post_repair_live_smoke": {
+    "failure_class_counts": {
+      "unsafe_generated_text": 1
+    },
+    "failure_owner_counts": {
+      "model_output": 1
+    },
+    "model_call_made": true,
+    "path": "experiments/core_narrative/results/m2_unsafe_artifact_repair_live_smoke_20260510.json",
+    "status": "completed",
+    "status_counts": {
+      "invalid_submission": 1
+    },
+    "submission_contract": "anchored-search-replace-json-v3",
+    "total": 1,
+    "unsafe_patch_artifact_diagnostics": [
+      {
+        "acut_id": "cheap-generic-swe",
+        "content_recorded": false,
+        "failure_class": "unsafe_generated_text",
+        "failure_owner": "model_output",
+        "model_call_made": true,
+        "patch_artifact_written": false,
+        "redacted_preview_written": true,
+        "redacted_source_match_count": 1,
+        "status": "invalid_submission",
+        "task_id": "click__rwork__006",
+        "unsafe_content_attribution": {
+          "all_full_urls_source_derived": true,
+          "all_unsafe_reasons_source_derived": true,
+          "ambiguous_full_url_count": 0,
+          "classification": "source_derived_full_url",
+          "content_recorded": false,
+          "full_url_count": 1,
+          "full_url_role_counts": {
+            "source_removed": 1
+          },
+          "model_generated_full_url_count": 0,
+          "non_url_reason_counts": {},
+          "reason_counts": {
+            "full_url": 1
+          },
+          "source_derived_full_url_count": 1,
+          "url_occurrences": [
+            {
+              "content_recorded": false,
+              "diff_line_role": "source_removed",
+              "line_number": 9,
+              "url_char_count": 44,
+              "url_sha256": "2f280692da015eee2e9bd27aef6658d569a4b144d68595c90e074d6c13f81bc5"
+            }
+          ],
+          "url_occurrences_truncated": false
+        },
+        "unsafe_reason_counts": {
+          "full_url": 1
+        }
+      }
+    ]
+  },
+  "prior_live_smoke_inspection": {
+    "acut_id": "cheap-generic-swe",
+    "content_recorded": false,
+    "failure_class": "unsafe_generated_text",
+    "failure_owner": null,
+    "model_call_made": true,
+    "path": "experiments/core_narrative/results/m2_anchored_occurrence_repair_live_smoke_20260510.json",
+    "prompt_snapshot": {
+      "content_recorded": false,
+      "context_file_count": 3,
+      "exists": true,
+      "full_urls_redacted": true,
+      "output_contract": "anchored-search-replace-json-v3",
+      "path": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/m2_anchored_occurrence_repair_live_smoke_20260510__cheap-generic-swe__click__rwork__006__attempt1/prompt_snapshot.json",
+      "prompt_char_count": 103626,
+      "prompt_sha256": "404dcd6835d5198e3d986c6fc0a4cfeb4fe8c0ee4571b2f9c6d673fb58c628b6"
+    },
+    "provider_artifact": {
+      "content_char_count": 1262,
+      "content_recorded": false,
+      "content_sha256": "037766d2f711887c799858dd6f9975e93e81f58c33d431b3785e1f25caebb985",
+      "exists": true,
+      "json_valid": true,
+      "path": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/m2_anchored_occurrence_repair_live_smoke_20260510__cheap-generic-swe__click__rwork__006__attempt1/provider_response.redacted.json",
+      "raw_url_like_count": 0,
+      "redacted_url_marker_count": 1
+    },
+    "redacted_source_match_count": 1,
+    "redacted_source_replacement_marker_count": 0,
+    "run_status": "invalid_submission",
+    "runner_status": "error",
+    "status": "inspected",
+    "task_id": "click__rwork__006",
+    "unsafe_patch_artifact_attribution": {
+      "all_full_urls_source_derived": true,
+      "all_unsafe_reasons_source_derived": true,
+      "ambiguous_full_url_count": 0,
+      "classification": "source_derived_full_url",
+      "content_recorded": false,
+      "full_url_count": 1,
+      "full_url_role_counts": {
+        "source_removed": 1
+      },
+      "model_generated_full_url_count": 0,
+      "non_url_reason_counts": {},
+      "reason_counts": {
+        "full_url": 1
+      },
+      "source_derived_full_url_count": 1,
+      "url_occurrences": [
+        {
+          "content_recorded": false,
+          "diff_line_role": "source_removed",
+          "line_number": 9,
+          "url_char_count": 44,
+          "url_sha256": "2f280692da015eee2e9bd27aef6658d569a4b144d68595c90e074d6c13f81bc5"
+        }
+      ],
+      "url_occurrences_truncated": false
+    },
+    "unsafe_patch_artifact_reason_counts": {
+      "full_url": 1
+    }
+  },
+  "prohibited_claims": {
+    "admission": false,
+    "authorization": false,
+    "capability_uplift": false,
+    "g0_g5": false,
+    "g_score_predictivity": false,
+    "license": false,
+    "m2_passed": false,
+    "ranking_reversal": false,
+    "task_solving_improvement": false
+  },
+  "scope": {
+    "contract": "anchored-search-replace-json-v3",
+    "denominators_are_separate": true,
+    "fixture_fixed_denominator": 4,
+    "repair_focus": "unsafe_patch_artifact_source_attribution"
+  },
+  "status": "completed",
+  "tool": "m2_unsafe_artifact_repair"
+}

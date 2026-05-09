@@ -1,0 +1,12 @@
+{
+  "content_recorded": false,
+  "context_files": [
+    {
+      "path": "src/click/core.py"
+    }
+  ],
+  "fixture_id": "missing_raw_artifact_ambiguity",
+  "full_urls_redacted": true,
+  "output_contract": "anchored-search-replace-json-v3",
+  "tool": "m2_unsafe_artifact_repair"
+}
