@@ -433,6 +433,63 @@ class CodexNflExperimentRunnerTests(unittest.TestCase):
         self.assertEqual(command[command.index("--max-context-chars") + 1], "80000")
         self.assertEqual(command[command.index("--max-file-chars") + 1], "50000")
 
+    def test_run_direct_runner_forwards_selected_submission_contract(self) -> None:
+        """Measurement-stabilization runs can select the direct output contract per batch."""
+        runner = load_runner_module()
+        workspace = self.root / "workspace"
+        workspace.mkdir()
+        (workspace / "module.py").write_text("VALUE = 1\n", encoding="utf-8")
+        artifact_dir = self.root / "artifacts"
+        artifact_dir.mkdir()
+        captured_commands: list[list[str]] = []
+
+        def fake_run_capture(command, *, cwd=None, timeout=None):
+            captured_commands.append(list(command))
+            output_path = Path(command[command.index("--output") + 1])
+            output_path.write_text(
+                json.dumps(
+                    {
+                        "status": "patch_generated",
+                        "submission_contract": "structured-files-json-v1",
+                        "output_contract": "structured-files-json-v1",
+                    }
+                ),
+                encoding="utf-8",
+            )
+            return subprocess.CompletedProcess(command, 0, "", "")
+
+        runner.run_capture = fake_run_capture
+        runner.write_command_artifacts = lambda **kwargs: {"exit_code": kwargs["completed"].returncode}
+        runner.task_manifest_path = lambda task_id: self.root / f"{task_id}.yaml"
+        runner.acut_manifest_path = lambda acut_id: self.root / f"{acut_id}.yaml"
+        runner.projected_cost_for_acut = lambda acut_id: "0"
+
+        args = SimpleNamespace(
+            attempt=1,
+            mode="mock",
+            mock_response=None,
+            mock_response_text='{"files":[{"path":"module.py","action":"replace","content":"VALUE = 2\\n"}]}',
+            llm_ledger=str(self.root / "ledger.jsonl"),
+            runner_timeout_seconds=1,
+            coordinator_decision_ref=None,
+            submission_contract="structured-files-json-v1",
+        )
+        code, result = runner.run_direct_runner(
+            args=args,
+            task={"task_id": "click__rwork__003"},
+            task_id="click__rwork__003",
+            acut_id="cheap-generic-swe",
+            workspace=workspace,
+            run_id="unit-structured-contract",
+            artifact_dir=artifact_dir,
+            context_paths=["module.py"],
+        )
+
+        self.assertEqual(code, 0)
+        self.assertEqual(result["submission_contract"], "structured-files-json-v1")
+        command = captured_commands[0]
+        self.assertEqual(command[command.index("--output-contract") + 1], "structured-files-json-v1")
+
     def test_run_one_refuses_existing_normalized_run_id_before_model_call(self) -> None:
         """Regression: batch runs must not overwrite prior run artifacts by default."""
         runner = load_runner_module()
@@ -657,6 +714,9 @@ class CodexNflExperimentRunnerTests(unittest.TestCase):
                     "estimated_cost_usd": 0.01,
                 },
                 "budget_gate": {"status": "passed", "allowed": True},
+                "submission_contract": "structured-files-json-v1",
+                "output_contract": "structured-files-json-v1",
+                "patch_artifact": {"size_bytes": 123},
             },
             runner_workspace=self.root / "runner-workspace",
             verify_workspace=self.root / "verify-workspace",
@@ -676,6 +736,8 @@ class CodexNflExperimentRunnerTests(unittest.TestCase):
         self.assertEqual(metadata["direct_runner_cost_accounting"]["observed_provider_cost_usd"], 0.01)
         self.assertEqual(metadata["direct_runner_cost_ledger_append"]["status"], "appended")
         self.assertEqual(metadata["direct_runner_budget_gate"]["status"], "passed")
+        self.assertEqual(metadata["submission_contract"], "structured-files-json-v1")
+        self.assertEqual(metadata["patch_readiness"]["verifier_ready_patch_available"], True)
         self.assertTrue(metadata["clean_patch_replay"]["attempted"])
         self.assertFalse(metadata["clean_patch_replay"]["skip_apply"])
         self.assertTrue(metadata["clean_patch_replay"]["separate_workspace"])
