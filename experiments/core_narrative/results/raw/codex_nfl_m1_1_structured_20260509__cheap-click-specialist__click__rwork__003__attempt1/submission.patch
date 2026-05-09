@@ -1,0 +1,31 @@
+diff --git a/tests/test_defaults.py b/tests/test_defaults.py
+index 3f293e8..021f2fb 100644
+--- a/tests/test_defaults.py
++++ b/tests/test_defaults.py
+@@ -84,3 +84,26 @@ def test_flag_default_map(runner):
+
+     result = runner.invoke(cli, ["foo", "--help"], default_map={"foo": {"name": True}})
+     assert "default: name" in result.output
++
++
++def test_shared_flag_default_order(runner):
++    def make_cli(flag_first):
++        if flag_first:
++            @click.command()
++            @click.option("--value", default=2, type=click.INT)
++            @click.option("--flag", "value", flag_value=1)
++            def cli(value):
++                click.echo(value)
++        else:
++            @click.command()
++            @click.option("--flag", "value", flag_value=1)
++            @click.option("--value", default=2, type=click.INT)
++            def cli(value):
++                click.echo(value)
++
++        return cli
++
++    for flag_first in (True, False):
++        result = runner.invoke(make_cli(flag_first), [])
++        assert not result.exception
++        assert result.output.strip() == "2"

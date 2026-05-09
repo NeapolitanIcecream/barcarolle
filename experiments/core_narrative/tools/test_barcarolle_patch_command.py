@@ -444,7 +444,7 @@ class BarcarollePatchCommandTests(unittest.TestCase):
         self.assertEqual(completed.returncode, 2, completed.stderr)
         summary = json.loads(summary_path.read_text(encoding="utf-8"))
         self.assertEqual(summary["status"], "error")
-        self.assertEqual(summary["failure_class"], "unsafe_generated_content")
+        self.assertEqual(summary["failure_class"], "unsafe_generated_text")
         self.assertEqual(summary["details"]["unsafe_content"]["reason_counts"], {"full_url": 1})
         self.assertEqual((self.workspace / "module.py").read_text(encoding="utf-8"), "VALUE = 1\n")
         self.assertNotIn("http" + "s://", json.dumps(summary))

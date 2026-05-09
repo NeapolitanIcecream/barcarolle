@@ -823,6 +823,38 @@ class CodexNflExperimentRunnerTests(unittest.TestCase):
         persisted = json.loads(normalized_path.read_text(encoding="utf-8"))
         self.assertEqual(persisted["status"], "invalid_submission")
 
+    def test_unsafe_generated_text_runner_error_is_invalid_submission_not_infra_failed(self) -> None:
+        """Regression: unsafe structured output is model-owned invalid submission evidence."""
+        runner = load_runner_module()
+        normalized_path = self.root / "normalized-unsafe.json"
+        payload = runner.write_infra_failed_result(
+            run_id="unit-unsafe-invalid-submission",
+            task_id="click__rwork__004",
+            split="rwork",
+            acut_id="cheap-generic-swe",
+            attempt=1,
+            normalized_path=normalized_path,
+            patch_path=self.root / "unsafe-submission.patch",
+            runner_result={
+                "status": "error",
+                "error": "generated patch contains unsafe content",
+                "details": {
+                    "failure_class": "unsafe_generated_text",
+                    "unsafe_content": {"unsafe": True, "reason_counts": {"full_url": 1}},
+                },
+                "model_call_made": True,
+                "submission_contract": "structured-files-json-v1",
+                "output_contract": "structured-files-json-v1",
+            },
+        )
+
+        self.assertEqual(payload["status"], "invalid_submission")
+        self.assertEqual(payload["metadata"]["failure_owner"], "model_output")
+        self.assertEqual(payload["metadata"]["failure_class"], "unsafe_generated_text")
+        self.assertEqual(payload["metadata"]["submission_contract"], "structured-files-json-v1")
+        persisted = json.loads(normalized_path.read_text(encoding="utf-8"))
+        self.assertEqual(persisted["status"], "invalid_submission")
+
 
 if __name__ == "__main__":
     unittest.main()
