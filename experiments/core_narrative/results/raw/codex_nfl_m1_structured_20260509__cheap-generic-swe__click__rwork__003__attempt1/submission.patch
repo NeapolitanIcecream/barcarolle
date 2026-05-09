@@ -1,0 +1,41 @@
+diff --git a/tests/test_defaults.py b/tests/test_defaults.py
+index 3f293e8..d3da758 100644
+--- a/tests/test_defaults.py
++++ b/tests/test_defaults.py
+@@ -1,3 +1,5 @@
++import pytest
++
+ import click
+
+
+@@ -84,3 +86,30 @@ def test_flag_default_map(runner):
+
+     result = runner.invoke(cli, ["foo", "--help"], default_map={"foo": {"name": True}})
+     assert "default: name" in result.output
++
++
++@pytest.mark.parametrize("shared_flag_first", [True, False])
++def test_shared_flag_default_regression(runner, shared_flag_first):
++    if shared_flag_first:
++
++        @click.command()
++        @click.option("--upper", "value", flag_value="upper")
++        @click.option("--value", default="lower")
++        def cli(value):
++            click.echo(value)
++
++    else:
++
++        @click.command()
++        @click.option("--value", default="lower")
++        @click.option("--upper", "value", flag_value="upper")
++        def cli(value):
++            click.echo(value)
++
++    result = runner.invoke(cli, [])
++    assert not result.exception
++    assert result.output.strip() == "lower"
++
++    result = runner.invoke(cli, ["--upper"])
++    assert not result.exception
++    assert result.output.strip() == "upper"

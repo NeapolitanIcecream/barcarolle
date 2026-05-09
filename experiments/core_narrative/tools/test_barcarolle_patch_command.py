@@ -377,6 +377,42 @@ class BarcarollePatchCommandTests(unittest.TestCase):
         self.assertEqual(summary["patch"]["changed_paths"], ["module.py"])
         self.assertEqual((self.workspace / "module.py").read_text(encoding="utf-8"), "VALUE = 2\n")
 
+    def test_structured_files_contract_rejects_mixed_top_level_keys_before_mutation(self) -> None:
+        """Regression: strict structured output cannot include legacy edit keys beside files."""
+        summary_path = self.root / "structured-contract-rejects-mixed-summary.json"
+        response = json.dumps(
+            {
+                "files": [
+                    {
+                        "path": "module.py",
+                        "action": "replace",
+                        "content": "VALUE = 2\n",
+                    }
+                ],
+                "edits": [
+                    {
+                        "path": "module.py",
+                        "old": "VALUE = 1\n",
+                        "new": "VALUE = 2\n",
+                    }
+                ],
+            }
+        )
+
+        completed = self.run_patch_command(
+            "--mock-response-text",
+            response,
+            "--output-contract",
+            "structured-files-json-v1",
+            summary_path=summary_path,
+        )
+
+        self.assertEqual(completed.returncode, 2, completed.stderr)
+        summary = json.loads(summary_path.read_text(encoding="utf-8"))
+        self.assertEqual(summary["status"], "error")
+        self.assertEqual(summary["failure_class"], "output_contract_violation")
+        self.assertEqual(summary["details"]["unsupported_top_level_keys"], ["edits"])
+        self.assertEqual((self.workspace / "module.py").read_text(encoding="utf-8"), "VALUE = 1\n")
 
     def test_structured_files_contract_rejects_url_like_generated_paths(self) -> None:
         """Regression: generated structured paths must not persist full URLs into artifacts."""

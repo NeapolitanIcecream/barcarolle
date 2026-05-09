@@ -1,0 +1,79 @@
+{
+  "context_files": [
+    {
+      "char_count": 132940,
+      "displayed_char_count": 80013,
+      "focus_terms": [],
+      "focused_excerpts": [],
+      "path": "src/click/core.py",
+      "sha256": "ed6f0d86ce1a77b4c79718ca8e1cf7d4cfd8a223b2ab52d93d6d0d6fe431100f",
+      "truncated": true
+    },
+    {
+      "char_count": 85179,
+      "displayed_char_count": 80013,
+      "focus_terms": [],
+      "focused_excerpts": [],
+      "path": "tests/test_options.py",
+      "sha256": "d3aed1bff9572591f91598b763bb65d0669e7548a36a5308cc4b8b127cd40137",
+      "truncated": true
+    },
+    {
+      "char_count": 34190,
+      "displayed_char_count": 34159,
+      "focus_terms": [],
+      "focused_excerpts": [],
+      "path": "tests/test_termui.py",
+      "sha256": "b2dcc9afdaca8f4e287725373e1441a870f4fefad8f0070dab60a5b230e16f6a",
+      "truncated": false
+    }
+  ],
+  "context_packaging": {
+    "effective_max_file_chars": 80000,
+    "max_context_chars": 120000,
+    "prompt_truncated": true,
+    "requested_max_file_chars": 80000
+  },
+  "full_urls_redacted": true,
+  "output_contract": "structured-files-json-v1",
+  "output_contract_schema": {
+    "allowed_actions": [
+      "write",
+      "create",
+      "replace",
+      "delete"
+    ],
+    "diagnostic_failure_classes": {
+      "output_contract_violation": "response did not satisfy the selected structured-files contract",
+      "structured_files_invalid": "files entries were malformed or could not be applied as file-level edits"
+    },
+    "id": "structured-files-json-v1",
+    "path_policy": {
+      "paths_must_be_from_declared_context": true,
+      "paths_must_be_relative": true,
+      "paths_must_not_target_reserved_metadata": [
+        ".git",
+        ".core_narrative"
+      ]
+    },
+    "primary_top_level_key": "files",
+    "requires_full_file_content": true,
+    "requires_json_object": true,
+    "requires_single_top_level_key": true
+  },
+  "prompt_char_count": 120013,
+  "prompt_content_recorded": true,
+  "prompt_sha256": "23513e1b02de339dc0d7434e10ab8e13f231210e641fbbedca3e3e0b4d43a015",
+  "run_id": "codex_nfl_m1_structured_20260509__cheap-click-specialist__click__rwork__006__attempt1",
+  "runner_id": "codex-nfl-direct-search-replace-v1",
+  "specialist_context_assertion": {
+    "expected": "included",
+    "include_mode": "auto",
+    "passed": true
+  },
+  "specialist_context_included": true,
+  "specialist_context_path": "experiments/core_narrative/context_packs/click_specialist/context_prompt.md",
+  "statement_truncated": false,
+  "task_statement_path": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/tasks/click/rwork/click__rwork__006/public/statement.md",
+  "tool": "codex_nfl_direct_runner"
+}
