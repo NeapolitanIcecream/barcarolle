@@ -1,0 +1,166 @@
+{
+  "tool": "m2_nonpersistent_verifier_channel_report",
+  "status": "completed",
+  "generated_at": "2026-05-10",
+  "scope": {
+    "follow_up_after_pr": 19,
+    "base_merge": "62cebdb8f66a4c2c50377db995bb902b33e114d3",
+    "contract": "anchored-search-replace-json-v3",
+    "target_cell": {
+      "acut_id": "cheap-generic-swe",
+      "task_id": "click__rwork__006",
+      "split": "rwork"
+    },
+    "policy": "source-derived unsafe text may not be persisted as a raw patch artifact; verifier execution may use only the already-applied isolated workspace channel"
+  },
+    "implementation": {
+        "nonpersistent_channel": "nonpersistent_preapplied_workspace",
+        "eligibility": [
+            "direct runner failure_class is unsafe_generated_text",
+            "patch artifact was rejected before raw write",
+      "unsafe attribution says all unsafe reasons are source-derived",
+      "model_generated_full_url_count is zero",
+      "search/replace edits were already validated and applied"
+    ],
+    "nonpersistent_verifier_invocation": {
+      "apply_and_verify_skip_apply": true,
+      "verifier_artifacts_redacted": true,
+            "verifier_ready_patch_artifact": false,
+            "patch_artifact_persisted": false
+        },
+        "cleanup_scoreability_gate": {
+            "transient_workspace_cleanup_required": true,
+            "removed_false_or_cleanup_exception_status": "infra_failed",
+            "removed_false_or_cleanup_exception_scoreable": false,
+            "failure_class": "nonpersistent_transient_workspace_cleanup_failed"
+        }
+    },
+  "no_model_replay_evidence": {
+    "path": "experiments/core_narrative/results/m2_nonpersistent_verifier_channel_replay_20260510.json",
+    "raw_artifact_dir": "experiments/core_narrative/results/raw/m2_nonpersistent_verifier_channel_replay_20260510__cheap-generic-swe__click__rwork__006__attempt1",
+    "normalized_result": "experiments/core_narrative/results/normalized/m2_nonpersistent_verifier_channel_replay_20260510__cheap-generic-swe__click__rwork__006__attempt1.json",
+    "mode": "mock",
+    "model_call_made": false,
+    "status": "failed",
+    "scoreable": true,
+    "patch_ready": false,
+    "verify_code": 0,
+    "verifier_exit_code": 1,
+    "submission_patch_exists": false,
+    "redacted_preview_written": true,
+    "nonpersistent_verifier_attempted": true,
+    "verifier_attempt_channel": "nonpersistent_preapplied_workspace",
+    "verifier_ready_patch_available": false,
+    "patch_artifact_persisted": false,
+    "skip_apply": true,
+    "verifier_artifacts_redacted": true,
+    "transient_workspace_cleanup": {
+      "attempted": true,
+      "removed": true
+    },
+    "unsafe_content_attribution": {
+      "classification": "source_derived_full_url",
+      "source_derived_full_url_count": 1,
+      "model_generated_full_url_count": 0,
+      "ambiguous_full_url_count": 0,
+      "redacted_source_match_count": 1,
+      "content_recorded": false
+    },
+    "result_interpretation": "verifier attempted through the non-persistent channel and failed; transient workspace was removed after verifier execution; this is not a task-success result"
+  },
+  "live_smoke_evidence": {
+    "path": "experiments/core_narrative/results/m2_nonpersistent_verifier_channel_live_smoke_20260510.json",
+    "raw_artifact_dir": "experiments/core_narrative/results/raw/m2_nonpersistent_verifier_channel_live_smoke_20260510__cheap-generic-swe__click__rwork__006__attempt1",
+    "normalized_result": "experiments/core_narrative/results/normalized/m2_nonpersistent_verifier_channel_live_smoke_20260510__cheap-generic-swe__click__rwork__006__attempt1.json",
+    "mode": "live",
+    "model_call_made": true,
+    "status": "invalid_submission",
+    "scoreable": true,
+    "patch_ready": true,
+    "verify_code": 0,
+    "nonpersistent_verifier_attempted": false,
+    "verifier_attempt_channel": "verifier_ready_patch_artifact",
+    "patch_artifact_persisted": true,
+    "patch_size_bytes": 1248,
+    "failure_class_inferred_from_error": "patch_apply_failed",
+    "failure_detail": "persisted patch artifact existed, but clean patch application failed before verifier execution",
+    "cost_accounting": {
+      "estimated_cost_usd": 0.055751,
+      "actual_cost_usd": null,
+      "observed_provider_cost_usd": 0.05575125,
+      "input_tokens": 24145,
+      "output_tokens": 8365,
+      "ledger_record_count_before": 157,
+      "ledger_record_count_after": 158
+    },
+    "result_interpretation": "bounded live smoke did not exercise the non-persistent channel because the live model produced a raw-safe patch artifact"
+  },
+    "policy_boundary_tests": {
+        "source_derived_full_url_removed_context_runs_nonpersistent_verifier": "passed",
+        "cleanup_failure_blocks_nonpersistent_verifier_scoreability": "passed",
+        "model_generated_full_url_rejected_without_verifier_attempt": "passed",
+        "redaction_placeholder_persistence_rejected_without_verifier_attempt": "passed",
+        "normalized_metadata_distinguishes_nonpersistent_from_verifier_ready_patch_artifacts": "passed"
+    },
+  "verification": [
+    {
+            "command": "PYTHONPATH=experiments/core_narrative/tools python3 -m unittest experiments.core_narrative.tools.test_codex_nfl_experiment_runner",
+            "status": "passed",
+            "tests": 25
+        },
+    {
+      "command": "PYTHONPATH=experiments/core_narrative/tools python3 -m unittest experiments.core_narrative.tools.test_openclaw_direct_runner",
+      "status": "passed",
+      "tests": 38
+    },
+    {
+      "command": "PYTHONPATH=experiments/core_narrative/tools python3 -m unittest experiments.core_narrative.tools.test_m2_unsafe_artifact_repair experiments.core_narrative.tools.test_run_task",
+      "status": "passed",
+      "tests": 4
+    },
+    {
+      "command": "codex_nfl_experiment_runner mock replay for cheap-generic-swe x click__rwork__006",
+      "status": "passed",
+      "model_call_made": false
+    },
+        {
+            "command": "codex_nfl_experiment_runner live smoke for cheap-generic-swe x click__rwork__006",
+            "status": "completed",
+            "model_call_made": true,
+            "rerun_for_cleanup_fix": false,
+            "reason_not_rerun": "cleanup change affects only the nonpersistent transient-workspace branch; existing live smoke used verifier_ready_patch_artifact"
+        },
+        {
+            "command": "PYTHONPATH=experiments/core_narrative/tools python3 -m unittest experiments.core_narrative.tools.test_codex_nfl_experiment_runner.CodexNflExperimentRunnerTests.test_nonpersistent_verifier_cleanup_failure_blocks_scoreable_result",
+            "status": "passed",
+            "tests": 1,
+            "regression": "cleanup exception forces infra_failed and scoreable=false"
+        },
+        {
+            "command": "raw URL scan over report JSON, normalized JSON, redacted provider responses, redacted previews, and verifier stdout/stderr where present",
+            "status": "passed",
+      "raw_url_path_count": 0
+    }
+  ],
+  "output_leakage_guard": {
+    "paths_checked": {
+      "no_model_replay": 6,
+      "live_smoke": 3
+    },
+    "contains_raw_url": false,
+    "raw_unsafe_text_recorded": false
+  },
+  "claim_boundaries": {
+    "m2_passed": false,
+    "ranking_reversal": false,
+    "task_solving_improvement": false,
+    "capability_uplift": false,
+    "g_score_predictivity": false,
+    "g0_g5": false,
+    "license": false,
+    "admission": false,
+    "authorization": false,
+    "nonpersistent_verifier_attemptability_measured": true,
+    "task_success_measured": false
+  }
+}

@@ -1,0 +1,38 @@
+diff --git a/src/click/core.py b/src/click/core.py
+index 6dc44f3..1802663 100644
+--- a/src/click/core.py
++++ b/src/click/core.py
+@@ -2896,7 +2896 @@ class Option(Parameter):
+-        # Lazily resolve default=True to flag_value. Doing this here
+-        # (instead of eagerly in __init__) prevents callable flag_values
+-        # (like classes) from being instantiated by the callable check below.
+-        # <redacted:url>
+-        if value is True and self.is_flag:
+-            value = self.flag_value
+-        elif call and callable(value):
++        if call and callable(value):
+diff --git a/tests/test_options.py b/tests/test_options.py
+index 85f6224..1213063 100644
+--- a/tests/test_options.py
++++ b/tests/test_options.py
+@@ -798,0 +799,20 @@ def test_custom_validation(runner):
++@pytest.mark.parametrize(
++    ("type", "flag_value", "expected_default"),
++    [
++        (int, 2, 1),
++        (str, "2", "True"),
++    ],
++)
++def test_flag_default_and_activation(runner, type, flag_value, expected_default):
++    @click.command()
++    @click.option("--foo", flag_value=flag_value, default=True, type=type)
++    def cli(foo):
++        click.echo(foo)
++
++    result = runner.invoke(cli, [])
++    assert result.output == f"{expected_default}\n"
++
++    result = runner.invoke(cli, ["--foo"])
++    assert result.output == f"{flag_value}\n"
++
++

@@ -695,6 +695,9 @@ def verify_patch(
     run_id: str,
     artifact_dir: Path,
     normalized_path: Path,
+    skip_apply: bool = False,
+    redact_verifier_artifacts: bool = False,
+    command_name: str = "verify_command",
 ) -> tuple[int, dict[str, Any]]:
     command = [
         sys.executable,
@@ -716,13 +719,17 @@ def verify_patch(
         "--output",
         str(normalized_path),
     ]
+    if skip_apply:
+        command.append("--skip-apply")
+    if redact_verifier_artifacts:
+        command.append("--redact-verifier-artifacts")
     started_at = iso_now()
     completed = run_capture(command, timeout=120)
     finished_at = iso_now()
     write_command_artifacts(
         completed=completed,
         artifact_dir=artifact_dir,
-        name="verify_command",
+        name=command_name,
         command=command,
         started_at=started_at,
         finished_at=finished_at,
@@ -732,6 +739,89 @@ def verify_patch(
         "error": redact_sensitive_text(completed.stderr, os.environ),
     }
     return completed.returncode, result
+
+
+def nonpersistent_verifier_eligibility(runner_result: Mapping[str, Any] | None) -> dict[str, Any]:
+    """Return the narrow source-derived unsafe-artifact channel decision.
+
+    This does not make unsafe patch artifacts verifier-ready. It only recognizes
+    search/replace edits that were already validated and applied in the isolated
+    runner workspace before the raw patch artifact was rejected because the diff
+    would have contained source-derived unsafe text in removed/context lines.
+    """
+
+    if not isinstance(runner_result, Mapping):
+        return {"eligible": False, "reason": "missing_runner_result"}
+    details = runner_result.get("details") if isinstance(runner_result.get("details"), Mapping) else {}
+    failure_class = details.get("failure_class")
+    if failure_class != "unsafe_generated_text":
+        return {"eligible": False, "reason": "failure_class_not_unsafe_generated_text", "failure_class": failure_class}
+
+    patch_artifact = details.get("patch_artifact") if isinstance(details.get("patch_artifact"), Mapping) else {}
+    attribution = (
+        patch_artifact.get("unsafe_content_attribution")
+        if isinstance(patch_artifact.get("unsafe_content_attribution"), Mapping)
+        else {}
+    )
+    patch_result = (
+        details.get("patch_result_before_patch_artifact")
+        if isinstance(details.get("patch_result_before_patch_artifact"), Mapping)
+        else {}
+    )
+    if patch_artifact.get("unsafe_content_detected") is not True:
+        return {"eligible": False, "reason": "unsafe_patch_artifact_missing"}
+    if patch_artifact.get("written") is not False:
+        return {"eligible": False, "reason": "patch_artifact_written_or_unknown"}
+    if attribution.get("all_unsafe_reasons_source_derived") is not True:
+        return {
+            "eligible": False,
+            "reason": "unsafe_content_not_all_source_derived",
+            "attribution_classification": attribution.get("classification"),
+            "model_generated_full_url_count": attribution.get("model_generated_full_url_count"),
+        }
+    if attribution.get("model_generated_full_url_count") not in (0, None):
+        return {
+            "eligible": False,
+            "reason": "model_generated_full_url_present",
+            "model_generated_full_url_count": attribution.get("model_generated_full_url_count"),
+        }
+    if patch_result.get("kind") != "search_replace_edits":
+        return {"eligible": False, "reason": "not_search_replace_edits", "patch_kind": patch_result.get("kind")}
+    if patch_result.get("validated") is not True or patch_result.get("applied") is not True:
+        return {
+            "eligible": False,
+            "reason": "validated_edits_not_applied",
+            "validated": patch_result.get("validated"),
+            "applied": patch_result.get("applied"),
+        }
+
+    edit_diagnostics = patch_result.get("edit_diagnostics") if isinstance(patch_result.get("edit_diagnostics"), list) else []
+    redacted_source_match_count = sum(
+        1
+        for item in edit_diagnostics
+        if isinstance(item, Mapping)
+        and isinstance(item.get("diagnostic"), Mapping)
+        and item["diagnostic"].get("code") == "redacted_source_text_matched_raw_source"
+    )
+    return {
+        "eligible": True,
+        "channel": "nonpersistent_preapplied_workspace",
+        "reason": "source_derived_unsafe_patch_artifact_overbreadth",
+        "source_derived_patch_artifact_overbreadth": True,
+        "patch_artifact_written": False,
+        "patch_artifact_policy": patch_artifact.get("policy"),
+        "redacted_preview_written": (
+            patch_artifact.get("redacted_preview", {}).get("written")
+            if isinstance(patch_artifact.get("redacted_preview"), Mapping)
+            else None
+        ),
+        "attribution_classification": attribution.get("classification"),
+        "source_derived_full_url_count": attribution.get("source_derived_full_url_count"),
+        "model_generated_full_url_count": attribution.get("model_generated_full_url_count"),
+        "ambiguous_full_url_count": attribution.get("ambiguous_full_url_count"),
+        "redacted_source_match_count": redacted_source_match_count,
+        "content_recorded": False,
+    }
 
 
 def enrich_normalized_metadata(
@@ -744,6 +834,7 @@ def enrich_normalized_metadata(
     runner_workspace: Path | None,
     verify_workspace: Path | None,
     clean_patch_replay_attempted: bool,
+    nonpersistent_verifier_attempt: Mapping[str, Any] | None = None,
 ) -> dict[str, Any]:
     task_path = task_manifest_path(task_id)
     acut_path = acut_manifest_path(acut_id)
@@ -761,6 +852,16 @@ def enrich_normalized_metadata(
     if model_call_made is None:
         model_call_made = runner_model_call_made
     submission_contract = submission_contract_from_runner_result(runner_result)
+    nonpersistent_attempted = (
+        isinstance(nonpersistent_verifier_attempt, Mapping)
+        and nonpersistent_verifier_attempt.get("attempted") is True
+    )
+    if clean_patch_replay_attempted:
+        verifier_attempt_channel = "verifier_ready_patch_artifact"
+    elif nonpersistent_attempted:
+        verifier_attempt_channel = "nonpersistent_preapplied_workspace"
+    else:
+        verifier_attempt_channel = "not_attempted"
     enriched = {
         **metadata,
         "batch_tool": TOOL,
@@ -785,6 +886,9 @@ def enrich_normalized_metadata(
             "verifier_ready_patch_available": clean_patch_replay_attempted,
             "patch_size_bytes": patch_size_bytes if isinstance(patch_size_bytes, int) else None,
             "clean_replay_attempted": clean_patch_replay_attempted,
+            "patch_artifact_persisted": clean_patch_replay_attempted,
+            "nonpersistent_verifier_attempted": nonpersistent_attempted,
+            "verifier_attempt_channel": verifier_attempt_channel,
         },
         "clean_patch_replay": {
             "attempted": clean_patch_replay_attempted,
@@ -797,6 +901,18 @@ def enrich_normalized_metadata(
                 and str(runner_workspace) != str(verify_workspace)
             ),
         },
+        "verifier_attempt": {
+            "attempted": clean_patch_replay_attempted or nonpersistent_attempted,
+            "channel": verifier_attempt_channel,
+            "verifier_ready_patch_artifact": clean_patch_replay_attempted,
+            "patch_artifact_persisted": clean_patch_replay_attempted,
+            "nonpersistent": nonpersistent_attempted,
+            "skip_apply": metadata.get("skip_apply"),
+            "verifier_artifacts_redacted": metadata.get("verifier_artifacts_redacted"),
+        },
+        "nonpersistent_verifier_channel": dict(nonpersistent_verifier_attempt)
+        if isinstance(nonpersistent_verifier_attempt, Mapping)
+        else {"attempted": False},
     }
     normalized["metadata"] = enriched
     write_json(normalized_path, normalized)
@@ -924,6 +1040,7 @@ def run_one(args: argparse.Namespace, task: Mapping[str, Any], acut_id: str) -> 
     verify_workspace = None
     verify_prepare_summary = None
     verify_install_summary = None
+    nonpersistent_verifier_attempt: dict[str, Any] | None = None
     if patch_ready:
         verify_workspace, verify_prepare_summary = prepare_workspace(
             task_id,
@@ -956,8 +1073,75 @@ def run_one(args: argparse.Namespace, task: Mapping[str, Any], acut_id: str) -> 
             verify_workspace=verify_workspace,
             clean_patch_replay_attempted=True,
         )
+        nonpersistent_verifier_attempt = {"attempted": False, "reason": "verifier_ready_patch_artifact_available"}
+    elif (eligibility := nonpersistent_verifier_eligibility(runner_result)).get("eligible") is True:
+        verify_workspace = workspace
+        nonpersistent_verifier_attempt = {
+            **eligibility,
+            "attempted": True,
+            "verifier_workspace": str(verify_workspace),
+            "uses_runner_workspace_after_prompt": True,
+            "verifier_artifacts_redacted": True,
+            "verifier_ready_patch_artifact": False,
+            "patch_artifact_persisted": False,
+        }
+        verify_code, normalized = verify_patch(
+            workspace=verify_workspace,
+            task_id=task_id,
+            acut_id=acut_id,
+            attempt=args.attempt,
+            run_id=run_id,
+            artifact_dir=artifact_dir,
+            normalized_path=normalized_path,
+            skip_apply=True,
+            redact_verifier_artifacts=True,
+            command_name="nonpersistent_verify_command",
+        )
+        cleanup = {
+            "attempted": True,
+            "workspace": str(verify_workspace),
+            "removed": False,
+        }
+        try:
+            shutil.rmtree(verify_workspace)
+            cleanup["removed"] = not verify_workspace.exists()
+        except Exception as exc:
+            cleanup["error_type"] = type(exc).__name__
+            cleanup["error"] = redact_sensitive_text(str(exc), os.environ)
+        if cleanup.get("removed") is not True:
+            original_status = normalized.get("status")
+            cleanup["scoreable_blocked"] = True
+            cleanup["failure_class"] = "nonpersistent_transient_workspace_cleanup_failed"
+            nonpersistent_verifier_attempt["scoreable_blocked"] = True
+            nonpersistent_verifier_attempt["failure_class"] = "nonpersistent_transient_workspace_cleanup_failed"
+            nonpersistent_verifier_attempt["verifier_status_before_cleanup"] = original_status
+            metadata = normalized.get("metadata") if isinstance(normalized.get("metadata"), dict) else {}
+            normalized["status"] = "infra_failed"
+            normalized["error"] = "nonpersistent verifier transient workspace cleanup failed"
+            normalized["metadata"] = {
+                **metadata,
+                "failure_class": "nonpersistent_transient_workspace_cleanup_failed",
+                "failure_owner": "infrastructure",
+                "nonpersistent_verifier_status_before_cleanup": original_status,
+            }
+        nonpersistent_verifier_attempt["transient_workspace_cleanup"] = cleanup
+        normalized = enrich_normalized_metadata(
+            normalized=normalized,
+            normalized_path=normalized_path,
+            task_id=task_id,
+            acut_id=acut_id,
+            runner_result=runner_result,
+            runner_workspace=workspace,
+            verify_workspace=verify_workspace,
+            clean_patch_replay_attempted=False,
+            nonpersistent_verifier_attempt=nonpersistent_verifier_attempt,
+        )
     else:
         verify_code = None
+        nonpersistent_verifier_attempt = {
+            "attempted": False,
+            **nonpersistent_verifier_eligibility(runner_result),
+        }
         normalized = write_infra_failed_result(
             run_id=run_id,
             task_id=task_id,
@@ -977,6 +1161,7 @@ def run_one(args: argparse.Namespace, task: Mapping[str, Any], acut_id: str) -> 
             runner_workspace=workspace,
             verify_workspace=None,
             clean_patch_replay_attempted=False,
+            nonpersistent_verifier_attempt=nonpersistent_verifier_attempt,
         )
 
     result = {
@@ -1007,6 +1192,7 @@ def run_one(args: argparse.Namespace, task: Mapping[str, Any], acut_id: str) -> 
         "noop_install": noop_install_summary,
         "verify_prepare": verify_prepare_summary,
         "verify_install": verify_install_summary,
+        "nonpersistent_verifier": nonpersistent_verifier_attempt,
         "noop": noop_summary,
         "runner_result": runner_result,
         "normalized": normalized,
