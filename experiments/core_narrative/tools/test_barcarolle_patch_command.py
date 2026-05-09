@@ -206,6 +206,84 @@ class BarcarollePatchCommandTests(unittest.TestCase):
         self.assertEqual(summary["patch"]["changed_paths"], ["module.py"])
         self.assertEqual((self.workspace / "module.py").read_text(encoding="utf-8"), "VALUE = 2\n")
 
+    def test_apply_patch_transcript_matches_redacted_url_source_context(self) -> None:
+        """Regression: safe URL redaction in prompt context should not make hunks stale."""
+        summary_path = self.root / "apply-patch-redacted-url-summary.json"
+        (self.workspace / "module.py").write_text(
+            "def invoke():\n"
+            "    # Refs:\n"
+            "    # http" + "s://" + "github.example.invalid/pallets/click/issues/1\n"
+            "    return None\n",
+            encoding="utf-8",
+        )
+        run(["git", "add", "module.py"], cwd=self.workspace)
+        commit = run(["git", "commit", "-m", "add url context"], cwd=self.workspace)
+        self.assertEqual(commit.returncode, 0, commit.stderr)
+        response = textwrap.dedent(
+            """\
+            *** Begin Patch
+            *** Update File: module.py
+            @@
+             def invoke():
+                 # Refs:
+            -    # <redacted:url>
+                 return None
+            *** End Patch
+            """
+        )
+
+        completed = self.run_patch_command(
+            "--mock-response-text",
+            response,
+            "--output-contract",
+            "patch-or-files-v1",
+            summary_path=summary_path,
+        )
+
+        self.assertEqual(completed.returncode, 0, completed.stderr)
+        summary = json.loads(summary_path.read_text(encoding="utf-8"))
+        self.assertEqual(summary["status"], "mock_response_applied")
+        self.assertEqual(summary["patch"]["kind"], "apply_patch")
+        self.assertEqual(summary["patch"]["changed_paths"], ["module.py"])
+        self.assertEqual(summary["patch"]["hunk_diagnostics"][0]["diagnostic"]["code"], "redacted_url_context_matched_raw_source")
+        self.assertEqual(
+            (self.workspace / "module.py").read_text(encoding="utf-8"),
+            "def invoke():\n"
+            "    # Refs:\n"
+            "    return None\n",
+        )
+        self.assertNotIn("http" + "s://", json.dumps(summary))
+
+    def test_apply_patch_context_mismatch_records_anchor_diagnostics(self) -> None:
+        """Stale apply_patch hunks should explain which source anchors failed without content."""
+        response = textwrap.dedent(
+            """\
+            *** Begin Patch
+            *** Update File: module.py
+            @@
+            -STALE = 1
+            +VALUE = 2
+            *** End Patch
+            """
+        )
+
+        with self.assertRaises(patch_command_module.ToolError) as caught:
+            parsed = patch_command_module.parse_patch_response(response)
+            patch_command_module.apply_patch_response(
+                self.workspace.resolve(),
+                parsed,
+                apply_patch=True,
+            )
+
+        details = caught.exception.details
+        self.assertEqual(details["failure_class"], "apply_patch_context_mismatch")
+        self.assertEqual(details["path"], "module.py")
+        self.assertEqual(details["occurrences"], 0)
+        self.assertEqual(details["line_anchors"][0]["occurrences"], 0)
+        self.assertFalse(details["line_anchors"][0]["content_recorded"])
+        self.assertEqual(details["redacted_url_context"]["fallback_match_count"], 0)
+        self.assertEqual((self.workspace / "module.py").read_text(encoding="utf-8"), "VALUE = 1\n")
+
     def test_unsafe_mock_response_argument_is_rejected_before_parsing(self) -> None:
         """Given URL-like model text as a CLI argument, the redaction policy blocks it."""
         summary_path = self.root / "unsafe-argument-summary.json"
