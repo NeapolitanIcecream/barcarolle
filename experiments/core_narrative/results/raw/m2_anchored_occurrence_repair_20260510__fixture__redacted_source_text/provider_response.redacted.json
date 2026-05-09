@@ -1,0 +1,12 @@
+{
+  "choices": [
+    {
+      "message": {
+        "content": "{\"edits\": [{\"new\": \"DOC = \\\"offline\\\"\\n\", \"old\": \"DOC = \\\"<redacted:url>\\\"\\n\", \"path\": \"src/click/core.py\"}]}"
+      }
+    }
+  ],
+  "usage": {
+    "cost": 0
+  }
+}
