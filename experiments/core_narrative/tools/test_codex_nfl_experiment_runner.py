@@ -874,6 +874,37 @@ class CodexNflExperimentRunnerTests(unittest.TestCase):
         persisted = json.loads(normalized_path.read_text(encoding="utf-8"))
         self.assertEqual(persisted["status"], "invalid_submission")
 
+    def test_apply_patch_context_mismatch_is_model_output_invalid_submission(self) -> None:
+        """Regression: failed apply_patch-shaped model output is not infrastructure failure."""
+        runner = load_runner_module()
+        normalized_path = self.root / "normalized-apply-patch-mismatch.json"
+        payload = runner.write_infra_failed_result(
+            run_id="unit-apply-patch-invalid-submission",
+            task_id="click__rwork__003",
+            split="rwork",
+            acut_id="cheap-click-specialist",
+            attempt=1,
+            normalized_path=normalized_path,
+            patch_path=self.root / "apply-patch-submission.patch",
+            runner_result={
+                "status": "error",
+                "error": "apply_patch update hunk did not match workspace exactly",
+                "details": {
+                    "failure_class": "apply_patch_context_mismatch",
+                    "path": "src/click/core.py",
+                },
+                "model_call_made": True,
+                "submission_contract": "patch-or-files-v1",
+                "output_contract": "patch-or-files-v1",
+            },
+        )
+
+        self.assertEqual(payload["status"], "invalid_submission")
+        self.assertEqual(payload["metadata"]["failure_owner"], "model_output")
+        self.assertEqual(payload["metadata"]["failure_class"], "apply_patch_context_mismatch")
+        persisted = json.loads(normalized_path.read_text(encoding="utf-8"))
+        self.assertEqual(persisted["status"], "invalid_submission")
+
 
 if __name__ == "__main__":
     unittest.main()

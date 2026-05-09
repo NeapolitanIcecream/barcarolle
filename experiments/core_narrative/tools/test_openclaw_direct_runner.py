@@ -1654,6 +1654,60 @@ class OpenClawDirectRunnerTests(unittest.TestCase):
         self.assertFalse(summary["model_call_made"])
         self.assertEqual((self.workspace / "module.py").read_text(encoding="utf-8"), "VALUE = 2\n")
 
+    def test_patch_or_files_contract_accepts_codex_apply_patch_transcript(self) -> None:
+        """Regression: patch-or-files-v1 should score Codex apply_patch-shaped output."""
+        artifact_dir = self.root / "patch-or-files-apply-patch-artifacts"
+        output_path = self.root / "patch-or-files-apply-patch.json"
+        response = (
+            "*** Begin Patch\n"
+            "*** Update File: module.py\n"
+            "@@\n"
+            "-VALUE = 1\n"
+            "+VALUE = 2\n"
+            "*** End Patch\n"
+        )
+
+        completed = run(
+            [
+                sys.executable,
+                str(RUNNER),
+                "--workspace",
+                str(self.workspace),
+                "--task",
+                str(self.task_path),
+                "--acut",
+                str(self.acut_path),
+                "--attempt",
+                "1",
+                "--run-id",
+                "unit_openclaw_patch_or_files_apply_patch_attempt1",
+                "--artifact-dir",
+                str(artifact_dir),
+                "--output",
+                str(output_path),
+                "--llm-ledger",
+                str(self.ledger_path),
+                "--projected-cost-usd",
+                "1",
+                "--context-path",
+                "module.py",
+                "--output-contract",
+                "patch-or-files-v1",
+                "--mock-response-text",
+                response,
+            ],
+            cwd=REPO_ROOT,
+            env=self.env(),
+        )
+
+        self.assertEqual(completed.returncode, 0, completed.stderr)
+        summary = json.loads(output_path.read_text(encoding="utf-8"))
+        self.assertEqual(summary["status"], "patch_generated")
+        self.assertEqual(summary["submission_contract"], "patch-or-files-v1")
+        self.assertEqual(summary["patch"]["kind"], "apply_patch")
+        self.assertGreater(summary["patch_artifact"]["size_bytes"], 0)
+        self.assertEqual((self.workspace / "module.py").read_text(encoding="utf-8"), "VALUE = 2\n")
+
     def test_live_failure_after_response_is_ledgered_with_provider_usage(self) -> None:
         """Regression: validation failures after a model response still consume provider usage."""
         artifact_dir = self.root / "failed-live-artifacts"
