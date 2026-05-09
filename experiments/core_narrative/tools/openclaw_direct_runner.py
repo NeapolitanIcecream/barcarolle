@@ -138,6 +138,7 @@ def output_contract_schema(output_contract: str = DEFAULT_OUTPUT_CONTRACT) -> di
         "diagnostic_failure_classes": {
             "search_replace_anchor_mismatch": "old text was present, but supplied anchors did not isolate exactly one occurrence",
             "search_replace_old_occurrence_mismatch": "old text occurred zero or multiple times after earlier edits",
+            "search_replace_redacted_source_mismatch": "redacted source placeholders may match raw source for search only, but must not persist into replacements",
         },
         "legacy_parser_fallback_keys": ["unified_diff", "files"],
     }
@@ -548,6 +549,8 @@ def build_prompt(
             "- If the intended current source is not visible, use a smaller exact visible old string plus immediate anchors, or skip that edit.",
             "- Non-matching anchors are invalid even when old occurs once.",
             "- Never invent old text from memory or from APIs not shown in the source excerpts.",
+            "- <redacted:url> may appear in old, before, or after only when copied from shown source; never include it in new.",
+            "- Avoid editing or deleting source lines containing <redacted:url> unless the task cannot be solved otherwise.",
             "- Keep edits minimal. Prefer source code fixes over test-only changes.",
         ]
 
@@ -1149,6 +1152,31 @@ def applied_edit_text_summary(
     }
 
 
+def reject_redaction_placeholder_persistence(
+    *,
+    path: str,
+    edit_index: int,
+    new: str,
+) -> None:
+    if REDACTED_URL_MARKER not in new:
+        return
+    raise ToolError(
+        "edit replacement would persist redacted URL placeholders",
+        path=path,
+        edit_index=edit_index,
+        replacement_contains_redacted_url_marker=True,
+        replacement_redacted_url_marker_count=new.count(REDACTED_URL_MARKER),
+        replacement_text_sha256=sha256_text(new),
+        replacement_text_char_count=len(new),
+        diagnostic={
+            "code": "redacted_replacement_placeholder_persistence",
+            "content_recorded": False,
+        },
+        content_recorded=False,
+        failure_class="search_replace_redacted_source_mismatch",
+    )
+
+
 def resolve_edit_offset(text: str, edit: Mapping[str, str], *, edit_index: int) -> tuple[int, int, bool, dict[str, Any] | None]:
     path = str(edit["path"])
     old = str(edit["old"])
@@ -1228,6 +1256,7 @@ def apply_edit_bundle(
         reject_unsafe_generated_text(path, "edit path")
         reject_unsafe_generated_text(old, "edit old text")
         reject_unsafe_generated_text(new, "edit new text")
+        reject_redaction_placeholder_persistence(path=path, edit_index=index, new=new)
         before = edit.get("before")
         after = edit.get("after")
         if before is not None:
@@ -1785,6 +1814,8 @@ def main(argv: Sequence[str] | None = None) -> int:
                     "generated patch contains unsafe content",
                     failure_class="unsafe_generated_text",
                     unsafe_content=patch_artifact.get("unsafe_content", {}),
+                    unsafe_content_attribution=patch_artifact.get("unsafe_content_attribution", {}),
+                    patch_artifact=patch_artifact,
                     patch_result_before_patch_artifact=patch_result,
                 )
             status = "patch_generated"

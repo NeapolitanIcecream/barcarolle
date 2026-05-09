@@ -79,6 +79,44 @@ class CodexNflDirectRunnerTests(unittest.TestCase):
         env["BARCAROLLE_LLM_BASE_URL"] = "https://llm-gateway.example.invalid/v1"
         return env
 
+    def run_direct(
+        self,
+        *,
+        response: str,
+        artifact_name: str,
+        output_name: str,
+        context_paths: list[str] | None = None,
+    ) -> subprocess.CompletedProcess[str]:
+        artifact_dir = self.root / artifact_name
+        output_path = self.root / output_name
+        command = [
+            sys.executable,
+            str(RUNNER),
+            "--workspace",
+            str(self.workspace),
+            "--task",
+            str(self.task_path),
+            "--acut",
+            str(self.acut_path),
+            "--attempt",
+            "1",
+            "--run-id",
+            f"unit_codex_nfl_{artifact_name}_attempt1",
+            "--artifact-dir",
+            str(artifact_dir),
+            "--output",
+            str(output_path),
+            "--llm-ledger",
+            str(self.ledger_path),
+            "--projected-cost-usd",
+            "1",
+            "--mock-response-text",
+            response,
+        ]
+        for context_path in context_paths or ["click/core.py"]:
+            command.extend(["--context-path", context_path])
+        return run(command, cwd=REPO_ROOT, env=self.env())
+
     def test_mock_patch_records_codex_runner_identity(self) -> None:
         """The Codex wrapper emits Codex-owned runner metadata and a patch artifact."""
         artifact_dir = self.root / "artifacts"
@@ -267,6 +305,128 @@ class CodexNflDirectRunnerTests(unittest.TestCase):
         self.assertEqual(snapshot["output_contract"], "anchored-search-replace-json-v3")
         self.assertEqual(snapshot["output_contract_schema"]["primary_top_level_key"], "edits")
         self.assertEqual(termui.read_text(encoding="utf-8"), original)
+
+    def test_redacted_source_old_with_safe_replacement_records_source_derived_patch_url(self) -> None:
+        """Regression: raw URLs from source preimage lines are attributed without writing unsafe artifacts."""
+        source_url = "https://github.com/pallets/click/issues/3121"
+        original = (
+            "def get_default():\n"
+            "    # Lazily resolve default=True to flag_value.\n"
+            f"    # {source_url}\n"
+            "    if value is True and self.is_flag:\n"
+            "        value = self.flag_value\n"
+            "    return value\n"
+        )
+        (self.workspace / "click" / "core.py").write_text(original, encoding="utf-8")
+        run(["git", "add", "click/core.py"], cwd=self.workspace)
+        commit = run(["git", "commit", "-m", "add source url case"], cwd=self.workspace)
+        self.assertEqual(commit.returncode, 0, commit.stderr)
+        response = json.dumps(
+            {
+                "edits": [
+                    {
+                        "path": "click/core.py",
+                        "old": (
+                            "    # Lazily resolve default=True to flag_value.\n"
+                            "    # <redacted:url>\n"
+                            "    if value is True and self.is_flag:\n"
+                            "        value = self.flag_value\n"
+                        ),
+                        "new": "    if value is True and self.is_flag:\n        value = self.flag_value\n",
+                    }
+                ]
+            }
+        )
+
+        completed = self.run_direct(
+            response=response,
+            artifact_name="source-derived-url",
+            output_name="source-derived-url.json",
+        )
+
+        self.assertEqual(completed.returncode, 2)
+        summary = json.loads((self.root / "source-derived-url.json").read_text(encoding="utf-8"))
+        details = summary["details"]
+        patch_artifact = details["patch_artifact"]
+        attribution = patch_artifact["unsafe_content_attribution"]
+
+        self.assertEqual(details["failure_class"], "unsafe_generated_text")
+        self.assertEqual(attribution["classification"], "source_derived_full_url")
+        self.assertTrue(attribution["all_unsafe_reasons_source_derived"])
+        self.assertEqual(attribution["model_generated_full_url_count"], 0)
+        self.assertEqual(attribution["full_url_role_counts"], {"source_removed": 1})
+        self.assertFalse(patch_artifact["written"])
+        self.assertFalse((self.root / "source-derived-url" / "submission.patch").exists())
+        preview = Path(patch_artifact["redacted_preview"]["path"])
+        self.assertTrue(preview.exists())
+        preview_text = preview.read_text(encoding="utf-8")
+        self.assertNotIn(source_url, preview_text)
+        self.assertNotRegex(preview_text, r"https?://")
+        self.assertEqual(
+            details["patch_result_before_patch_artifact"]["edit_diagnostics"][0]["diagnostic"]["code"],
+            "redacted_source_text_matched_raw_source",
+        )
+        self.assertFalse(details["patch_result_before_patch_artifact"]["edit_diagnostics"][0]["content_recorded"])
+
+    def test_model_generated_raw_url_replacement_is_rejected_before_patch_artifact(self) -> None:
+        """Regression: generated replacement URLs remain true unsafe generated text."""
+        original = (self.workspace / "click" / "core.py").read_text(encoding="utf-8")
+        response = json.dumps(
+            {
+                "edits": [
+                    {
+                        "path": "click/core.py",
+                        "old": "VALUE = 1\n",
+                        "new": 'VALUE = "https://generated.example.invalid/path"\n',
+                    }
+                ]
+            }
+        )
+
+        completed = self.run_direct(
+            response=response,
+            artifact_name="generated-url",
+            output_name="generated-url.json",
+        )
+
+        self.assertEqual(completed.returncode, 2)
+        summary = json.loads((self.root / "generated-url.json").read_text(encoding="utf-8"))
+        self.assertEqual(summary["details"]["failure_class"], "unsafe_generated_text")
+        self.assertEqual(summary["details"]["unsafe_content"]["reason_counts"], {"full_url": 1})
+        self.assertNotIn("patch_artifact", summary["details"])
+        self.assertEqual((self.workspace / "click" / "core.py").read_text(encoding="utf-8"), original)
+
+    def test_redaction_placeholder_persistence_is_rejected(self) -> None:
+        """Regression: replacement text may not persist redaction placeholders into source."""
+        original = (self.workspace / "click" / "core.py").read_text(encoding="utf-8")
+        response = json.dumps(
+            {
+                "edits": [
+                    {
+                        "path": "click/core.py",
+                        "old": "VALUE = 1\n",
+                        "new": 'VALUE = "<redacted:url>"\n',
+                    }
+                ]
+            }
+        )
+
+        completed = self.run_direct(
+            response=response,
+            artifact_name="placeholder-persistence",
+            output_name="placeholder-persistence.json",
+        )
+
+        self.assertEqual(completed.returncode, 2)
+        summary = json.loads((self.root / "placeholder-persistence.json").read_text(encoding="utf-8"))
+        self.assertEqual(summary["details"]["failure_class"], "search_replace_redacted_source_mismatch")
+        self.assertEqual(
+            summary["details"]["diagnostic"]["code"],
+            "redacted_replacement_placeholder_persistence",
+        )
+        self.assertEqual(summary["details"]["replacement_redacted_url_marker_count"], 1)
+        self.assertFalse(summary["details"]["content_recorded"])
+        self.assertEqual((self.workspace / "click" / "core.py").read_text(encoding="utf-8"), original)
 
 
 if __name__ == "__main__":
