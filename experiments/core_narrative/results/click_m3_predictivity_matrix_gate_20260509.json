@@ -1,0 +1,528 @@
+{
+  "blockers": [
+    {
+      "blocker": "m2_claim_status_not_passed",
+      "observed_claim_status": "scoreability_gate_not_met",
+      "required_claim_status": "scoreability_gate_passed"
+    },
+    {
+      "blocker": "m2_live_path_gate_not_passed",
+      "clean_replay_disagreement_count": 0,
+      "gate_status": "failed",
+      "invalid_submission_rate": 0.833333,
+      "patch_ready_coverage": 0.0,
+      "path_id": "patch_or_files_v1_live"
+    },
+    {
+      "blocker": "m2_live_path_gate_not_passed",
+      "clean_replay_disagreement_count": 0,
+      "gate_status": "failed",
+      "invalid_submission_rate": 0.666667,
+      "patch_ready_coverage": 0.333333,
+      "path_id": "structured_files_json_v1_live"
+    },
+    {
+      "blocker": "no_model_path_not_sufficient_for_m3",
+      "path_id": "patch_or_files_v1_no_model",
+      "reason": "no-model paths are instrumentation baselines, not live scoreability gates"
+    }
+  ],
+  "claim_boundaries": {
+    "does_not_claim": [
+      "direct general-benchmark ACUT performance without direct scoring",
+      "capability uplift",
+      "task-solving improvement",
+      "ranking reversal",
+      "license, admission, or authorization outcome"
+    ],
+    "evidence_consumer_only": true,
+    "live_m3_experiments_run": false,
+    "model_or_api_budget_spent": false,
+    "prohibited_claims": {
+      "capability_uplift": false,
+      "g_score_predictivity": false,
+      "license_or_admission_or_authorization_output": false,
+      "ranking_reversal": false,
+      "task_solving_improvement": false
+    }
+  },
+  "evidence_inputs": {
+    "m2_scoreability_summary": {
+      "byte_count": 29151,
+      "generated_at": "2026-05-09T10:40:09.986701Z",
+      "path": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/m2_scoreability_summary_20260509.json",
+      "payload_status": "completed",
+      "present": true,
+      "required_for_gate": true,
+      "schema_version": null,
+      "sha256": "3e9f04a758cf678a88c4efa2c2734db8e0f8dda18de01412a16bd40db2c3b30d",
+      "status": "loaded",
+      "tool": "m2_scoreability_summary"
+    },
+    "rbench_canonical_matrix": {
+      "byte_count": 303918,
+      "generated_at": "2026-05-08T17:49:29.972662Z",
+      "path": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/codex_nfl_rbench_canonical_matrix_20260508.json",
+      "payload_status": "completed",
+      "present": true,
+      "required_for_gate": false,
+      "schema_version": null,
+      "sha256": "1939fe69269c951597d50cd9f9653a6074122fe6e133ddac717d3891e67a1209",
+      "status": "loaded",
+      "tool": "codex_nfl_canonical_matrix"
+    },
+    "rwork_canonical_matrix": {
+      "byte_count": 168211,
+      "generated_at": "2026-05-08T17:49:29.953277Z",
+      "path": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/codex_nfl_rwork_canonical_matrix_20260508.json",
+      "payload_status": "completed",
+      "present": true,
+      "required_for_gate": false,
+      "schema_version": null,
+      "sha256": "9ad111ec6675b15b5c1d189f61eb8f3a51ab41d5945eac93f007acbb31f5610a",
+      "status": "loaded",
+      "tool": "codex_nfl_canonical_matrix"
+    },
+    "scorecard_v0": {
+      "byte_count": 59711,
+      "generated_at": "2026-05-09T13:22:20.409857Z",
+      "path": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/scorecard_v0_existing_matrices_20260509.json",
+      "payload_status": "completed",
+      "present": true,
+      "required_for_gate": true,
+      "schema_version": "core-narrative.scorecard-v0-existing-matrices.v1",
+      "sha256": "7feeed3ab46a536d22cbc00407fc904c3aec4499b60c02574dc2fb960eaa106e",
+      "status": "loaded",
+      "tool": "scorecard_v0_from_existing_matrices"
+    },
+    "step7_predictivity_analysis": {
+      "byte_count": 12549,
+      "generated_at": "2026-05-08T17:50:48.147731Z",
+      "path": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/codex_nfl_predictivity_analysis_20260508.json",
+      "payload_status": "completed",
+      "present": true,
+      "required_for_gate": false,
+      "schema_version": null,
+      "sha256": "1de8dab4f02ee279e78eb2817b13b2da9ac24de5aa87aeee63a0a77a96939080",
+      "status": "loaded",
+      "tool": "codex_nfl_predictivity_analysis"
+    }
+  },
+  "existing_evidence_snapshot": {
+    "g_score_predictivity": {
+      "blocker_counts": {
+        "dataset_cache_missing": 1,
+        "evaluation_harness_checkout_missing": 1
+      },
+      "direct_acut_scoring_available": false,
+      "prior_step7_direct_gscore_used": false,
+      "public_leaderboard_proxy_used": false,
+      "scorecard_availability_status": "unavailable_blocked",
+      "scorecard_blocked": true,
+      "status": "unavailable_direct_acut_scoring_required"
+    },
+    "prior_step7_predictivity": {
+      "g_score_vs_w_score_error_status": "not_computable",
+      "present": true,
+      "promoted_to_m3": false,
+      "r_score_vs_w_score_error_status": "computed",
+      "ranking_reversal_assessment_status": "not_supported",
+      "reason_not_promoted": "M2 live scoreability gate is evaluated separately before M3 work.",
+      "status": "completed"
+    }
+  },
+  "fixed_denominators": {
+    "rbench_canonical_matrix": {
+      "acut_count": 4,
+      "by_acut": {
+        "cheap-click-specialist": {
+          "canonical_missing": 0,
+          "canonical_present": 8,
+          "fixed_denominator": 8,
+          "passed": 5,
+          "score_percent_fixed_denominator": 62.5,
+          "scoreable": 8,
+          "status_counts": {
+            "failed": 2,
+            "invalid_submission": 1,
+            "passed": 5
+          }
+        },
+        "cheap-generic-swe": {
+          "canonical_missing": 0,
+          "canonical_present": 8,
+          "fixed_denominator": 8,
+          "passed": 5,
+          "score_percent_fixed_denominator": 62.5,
+          "scoreable": 8,
+          "status_counts": {
+            "failed": 3,
+            "passed": 5
+          }
+        },
+        "frontier-click-specialist": {
+          "canonical_missing": 0,
+          "canonical_present": 8,
+          "fixed_denominator": 8,
+          "passed": 5,
+          "score_percent_fixed_denominator": 62.5,
+          "scoreable": 8,
+          "status_counts": {
+            "failed": 1,
+            "invalid_submission": 2,
+            "passed": 5
+          }
+        },
+        "frontier-generic-swe": {
+          "canonical_missing": 0,
+          "canonical_present": 8,
+          "fixed_denominator": 8,
+          "passed": 6,
+          "score_percent_fixed_denominator": 75.0,
+          "scoreable": 8,
+          "status_counts": {
+            "failed": 1,
+            "invalid_submission": 1,
+            "passed": 6
+          }
+        }
+      },
+      "canonical_missing": 0,
+      "expected_cells": 32,
+      "failure_label_counts_canonical": {
+        "failed": 7,
+        "invalid_submission:search_replace_anchor_mismatch": 1,
+        "invalid_submission:search_replace_old_occurrence_mismatch": 3,
+        "passed": 21
+      },
+      "metadata_missing_counts_canonical_future_contract": {
+        "direct_runner_budget_gate": 17,
+        "direct_runner_cost_ledger_append": 17
+      },
+      "present": true,
+      "split": "rbench",
+      "status_counts_canonical": {
+        "failed": 7,
+        "invalid_submission": 4,
+        "passed": 21
+      },
+      "task_count": 8
+    },
+    "rwork_canonical_matrix": {
+      "acut_count": 4,
+      "by_acut": {
+        "cheap-click-specialist": {
+          "canonical_missing": 0,
+          "canonical_present": 6,
+          "fixed_denominator": 6,
+          "passed": 2,
+          "score_percent_fixed_denominator": 33.333333333333336,
+          "scoreable": 6,
+          "status_counts": {
+            "invalid_submission": 4,
+            "passed": 2
+          }
+        },
+        "cheap-generic-swe": {
+          "canonical_missing": 0,
+          "canonical_present": 6,
+          "fixed_denominator": 6,
+          "passed": 1,
+          "score_percent_fixed_denominator": 16.666666666666668,
+          "scoreable": 6,
+          "status_counts": {
+            "invalid_submission": 5,
+            "passed": 1
+          }
+        },
+        "frontier-click-specialist": {
+          "canonical_missing": 0,
+          "canonical_present": 6,
+          "fixed_denominator": 6,
+          "passed": 1,
+          "score_percent_fixed_denominator": 16.666666666666668,
+          "scoreable": 6,
+          "status_counts": {
+            "failed": 2,
+            "invalid_submission": 3,
+            "passed": 1
+          }
+        },
+        "frontier-generic-swe": {
+          "canonical_missing": 0,
+          "canonical_present": 6,
+          "fixed_denominator": 6,
+          "passed": 1,
+          "score_percent_fixed_denominator": 16.666666666666668,
+          "scoreable": 6,
+          "status_counts": {
+            "failed": 1,
+            "invalid_submission": 4,
+            "passed": 1
+          }
+        }
+      },
+      "canonical_missing": 0,
+      "expected_cells": 24,
+      "failure_label_counts_canonical": {
+        "failed": 3,
+        "invalid_submission:search_replace_anchor_mismatch": 1,
+        "invalid_submission:search_replace_old_occurrence_mismatch": 14,
+        "invalid_submission:unsupported_patch_response": 1,
+        "passed": 5
+      },
+      "metadata_missing_counts_canonical_future_contract": {},
+      "present": true,
+      "split": "rwork",
+      "status_counts_canonical": {
+        "failed": 3,
+        "invalid_submission": 16,
+        "passed": 5
+      },
+      "task_count": 6
+    },
+    "scorecard_v0": {
+      "canonical_matrices": {
+        "by_split": {
+          "rbench": {
+            "acut_count": 4,
+            "canonical_missing": 0,
+            "canonical_present": 32,
+            "expected_cells": 32,
+            "scoreable_count": 32,
+            "split": "rbench",
+            "task_count": 8
+          },
+          "rwork": {
+            "acut_count": 4,
+            "canonical_missing": 0,
+            "canonical_present": 24,
+            "expected_cells": 24,
+            "scoreable_count": 24,
+            "split": "rwork",
+            "task_count": 6
+          }
+        },
+        "overall": {
+          "canonical_missing": 0,
+          "canonical_present": 56,
+          "expected_cells": 56,
+          "scoreable_count": 56
+        }
+      },
+      "g_score_basis": {
+        "availability_status": "unavailable_blocked",
+        "fixed_denominator": {
+          "denominator_policy": "fixed across all ACUTs; ACUT-specific failures do not shrink the denominator",
+          "formula": "G_score = 100 * sum(resolved_i) / 6 after any pre-run global-infra replacements",
+          "locked_task_count": 6,
+          "ordinals": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6
+          ],
+          "passed": true,
+          "target_size": 6,
+          "unique_instance_id_count": 6
+        },
+        "present": true
+      },
+      "m2_scoreability": {
+        "fixed_denominator": 6,
+        "paths": {
+          "patch_or_files_v1_live": {
+            "contract": "patch-or-files-v1",
+            "kind": "batch",
+            "total": 6
+          },
+          "patch_or_files_v1_no_model": {
+            "contract": "patch-or-files-v1",
+            "kind": "batch",
+            "total": 6
+          },
+          "structured_files_json_v1_live": {
+            "contract": "structured-files-json-v1",
+            "kind": "batch",
+            "total": 6
+          }
+        },
+        "present": true
+      },
+      "present": true
+    }
+  },
+  "generated_at": "2026-05-09T13:30:23.802677Z",
+  "input_policy": {
+    "default_inputs": {
+      "m2_scoreability_summary": "m2_scoreability_summary_20260509.json",
+      "rbench_canonical_matrix": "codex_nfl_rbench_canonical_matrix_20260508.json",
+      "rwork_canonical_matrix": "codex_nfl_rwork_canonical_matrix_20260508.json",
+      "scorecard_v0": "scorecard_v0_existing_matrices_20260509.json",
+      "step7_predictivity_analysis": "codex_nfl_predictivity_analysis_20260508.json"
+    },
+    "mode": "existing_artifacts_only",
+    "no_live_model_calls": true
+  },
+  "m2_live_scoreability_gate": {
+    "blockers": [
+      {
+        "blocker": "m2_claim_status_not_passed",
+        "observed_claim_status": "scoreability_gate_not_met",
+        "required_claim_status": "scoreability_gate_passed"
+      },
+      {
+        "blocker": "m2_live_path_gate_not_passed",
+        "clean_replay_disagreement_count": 0,
+        "gate_status": "failed",
+        "invalid_submission_rate": 0.833333,
+        "patch_ready_coverage": 0.0,
+        "path_id": "patch_or_files_v1_live"
+      },
+      {
+        "blocker": "m2_live_path_gate_not_passed",
+        "clean_replay_disagreement_count": 0,
+        "gate_status": "failed",
+        "invalid_submission_rate": 0.666667,
+        "patch_ready_coverage": 0.333333,
+        "path_id": "structured_files_json_v1_live"
+      },
+      {
+        "blocker": "no_model_path_not_sufficient_for_m3",
+        "path_id": "patch_or_files_v1_no_model",
+        "reason": "no-model paths are instrumentation baselines, not live scoreability gates"
+      }
+    ],
+    "claim_status": "scoreability_gate_not_met",
+    "live_gate_failed_paths": [
+      "patch_or_files_v1_live",
+      "structured_files_json_v1_live"
+    ],
+    "live_gate_passed": false,
+    "live_gate_passed_paths": [],
+    "live_paths": [
+      "patch_or_files_v1_live",
+      "structured_files_json_v1_live"
+    ],
+    "no_model_paths": [
+      "patch_or_files_v1_no_model"
+    ],
+    "paths": {
+      "patch_or_files_v1_live": {
+        "blocked_cell_count": 0,
+        "clean_replay_disagreement_count": 0,
+        "contract": "patch-or-files-v1",
+        "gate_checks": {
+          "clean_replay_disagreement_count": true,
+          "complete_fixed_denominator": true,
+          "invalid_submission_rate": false,
+          "patch_ready_coverage": false
+        },
+        "gate_status": "failed",
+        "gate_thresholds": {
+          "clean_replay_disagreement_count_max": 0,
+          "invalid_submission_rate_max": 0.25,
+          "patch_ready_coverage_min": 0.7
+        },
+        "invalid_submission_rate": 0.833333,
+        "kind": "batch",
+        "live_model_path": true,
+        "missing_cell_count": 0,
+        "model_call_made_counts": {
+          "false": 0,
+          "true": 6,
+          "unknown": 0
+        },
+        "no_model_baseline": false,
+        "patch_ready_coverage": 0.0,
+        "path_id": "patch_or_files_v1_live",
+        "status_counts": {
+          "infra_failed": 1,
+          "invalid_submission": 5
+        },
+        "total": 6
+      },
+      "patch_or_files_v1_no_model": {
+        "blocked_cell_count": 0,
+        "clean_replay_disagreement_count": 0,
+        "contract": "patch-or-files-v1",
+        "gate_checks": {
+          "clean_replay_disagreement_count": true,
+          "complete_fixed_denominator": true,
+          "invalid_submission_rate": true,
+          "patch_ready_coverage": true
+        },
+        "gate_status": "passed",
+        "gate_thresholds": {
+          "clean_replay_disagreement_count_max": 0,
+          "invalid_submission_rate_max": 0.25,
+          "patch_ready_coverage_min": 0.7
+        },
+        "invalid_submission_rate": 0.0,
+        "kind": "batch",
+        "live_model_path": false,
+        "missing_cell_count": 0,
+        "model_call_made_counts": {
+          "false": 6,
+          "true": 0,
+          "unknown": 0
+        },
+        "no_model_baseline": true,
+        "patch_ready_coverage": 1.0,
+        "path_id": "patch_or_files_v1_no_model",
+        "status_counts": {
+          "failed": 6
+        },
+        "total": 6
+      },
+      "structured_files_json_v1_live": {
+        "blocked_cell_count": 0,
+        "clean_replay_disagreement_count": 0,
+        "contract": "structured-files-json-v1",
+        "gate_checks": {
+          "clean_replay_disagreement_count": true,
+          "complete_fixed_denominator": true,
+          "invalid_submission_rate": false,
+          "patch_ready_coverage": false
+        },
+        "gate_status": "failed",
+        "gate_thresholds": {
+          "clean_replay_disagreement_count_max": 0,
+          "invalid_submission_rate_max": 0.25,
+          "patch_ready_coverage_min": 0.7
+        },
+        "invalid_submission_rate": 0.666667,
+        "kind": "batch",
+        "live_model_path": true,
+        "missing_cell_count": 0,
+        "model_call_made_counts": {
+          "false": 0,
+          "true": 6,
+          "unknown": 0
+        },
+        "no_model_baseline": false,
+        "patch_ready_coverage": 0.333333,
+        "path_id": "structured_files_json_v1_live",
+        "status_counts": {
+          "failed": 2,
+          "invalid_submission": 4
+        },
+        "total": 6
+      }
+    },
+    "required_policy": "M3 live predictivity work requires the M2 summary claim_status to pass and every live model path in the M2 summary to have gate_status passed. No-model baselines do not satisfy the live gate.",
+    "status": "blocked"
+  },
+  "m3_execution": {
+    "decision": "do_not_run_m3_live_experiments",
+    "live_model_or_api_experiments_allowed": false,
+    "live_model_or_api_experiments_run": false,
+    "reason": "M2 live scoreability gate is blocked; this artifact records the blocker only."
+  },
+  "model_or_api_budget_spent": false,
+  "schema_version": "core-narrative.click-m3-predictivity-matrix.v1",
+  "status": "blocked",
+  "tool": "click_m3_predictivity_matrix"
+}
