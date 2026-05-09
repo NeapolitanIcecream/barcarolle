@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 import argparse
+import difflib
 import hashlib
 import json
 import os
@@ -38,9 +39,11 @@ DEFAULT_RUN_PREFIX = "codex_nfl_20260508"
 SCOREABLE_STATUSES = {"passed", "failed", "timeout", "invalid_submission"}
 DEFAULT_SUBMISSION_CONTRACT = "anchored-search-replace-json-v3"
 STRUCTURED_FILES_SUBMISSION_CONTRACT = "structured-files-json-v1"
+PATCH_OR_FILES_SUBMISSION_CONTRACT = "patch-or-files-v1"
 SUBMISSION_CONTRACTS = (
     DEFAULT_SUBMISSION_CONTRACT,
     STRUCTURED_FILES_SUBMISSION_CONTRACT,
+    PATCH_OR_FILES_SUBMISSION_CONTRACT,
 )
 MODEL_OUTPUT_FAILURE_CLASSES = {
     "generated_path_not_in_workspace",
@@ -266,6 +269,21 @@ def default_mock_response_text(
         if submission_contract == STRUCTURED_FILES_SUBMISSION_CONTRACT:
             if text:
                 return json.dumps({"files": [{"path": context_path, "action": "replace", "content": text}]})
+            continue
+        if submission_contract == PATCH_OR_FILES_SUBMISSION_CONTRACT:
+            if text:
+                addition = "# barcarolle no-model scoreability baseline\n"
+                new_text = text if text.endswith("\n") else text + "\n"
+                new_text = new_text + addition
+                patch = "".join(
+                    difflib.unified_diff(
+                        text.splitlines(keepends=True),
+                        new_text.splitlines(keepends=True),
+                        fromfile=f"a/{context_path}",
+                        tofile=f"b/{context_path}",
+                    )
+                )
+                return json.dumps({"unified_diff": patch})
             continue
         for candidate in text.splitlines(keepends=True):
             if candidate.strip() and text.count(candidate) == 1:

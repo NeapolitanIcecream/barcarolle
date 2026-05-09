@@ -1,0 +1,14 @@
+{
+  "base_commit": "6a1c0d077311f180b356965914e2de5b9e0fdb44",
+  "repo_slug": "click",
+  "split": "rwork",
+  "statement_path": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/workspaces/codex_nfl_m2_patch_or_files_no_model_20260509__cheap-click-specialist__click__rwork__003__attempt1__verify/.core_narrative/statement.md",
+  "status": "prepared",
+  "target_commit_absence_checked": true,
+  "task_id": "click__rwork__003",
+  "task_package_path": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/workspaces/codex_nfl_m2_patch_or_files_no_model_20260509__cheap-click-specialist__click__rwork__003__attempt1__verify/.core_narrative/task.json",
+  "tool": "prepare_workspace",
+  "warnings": [],
+  "workspace": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/workspaces/codex_nfl_m2_patch_or_files_no_model_20260509__cheap-click-specialist__click__rwork__003__attempt1__verify",
+  "workspace_history_mode": "base_tree_only_synthetic_git"
+}

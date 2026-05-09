@@ -1,0 +1,127 @@
+{
+  "budget_gate": {
+    "allowed": true,
+    "approvals_required": [],
+    "blockers": [],
+    "budget": {
+      "current_cumulative_estimated_cost_usd": 36.441666,
+      "hard_cap_reached_or_projected": false,
+      "hard_cap_usd": 300.0,
+      "projected_cost_usd": 1.0,
+      "projected_cumulative_estimated_cost_usd": 37.441666,
+      "soft_stop_reached_or_projected": false,
+      "soft_stop_usd": 240.0
+    },
+    "default_execution_profile": {
+      "core_acut_ids": [
+        "frontier-generic-swe",
+        "frontier-click-specialist",
+        "cheap-generic-swe",
+        "cheap-click-specialist"
+      ],
+      "full_core_requires_coordinator_decision": true,
+      "pilot_primary_attempts": 28,
+      "primary_attempts_per_acut_task": 1,
+      "profile_id": "budget-constrained-2x2-pilot-v2",
+      "split_task_limits": {
+        "G_score": 2,
+        "RBench": 3,
+        "RWork": 2
+      }
+    },
+    "env": {
+      "all_required_present": true,
+      "required": [
+        {
+          "name": "BARCAROLLE_LLM_API_KEY",
+          "present": true
+        },
+        {
+          "name": "BARCAROLLE_LLM_BASE_URL",
+          "present": true
+        }
+      ]
+    },
+    "execution_request": {
+      "acut_id": "cheap-click-specialist",
+      "attempt": 1,
+      "coordinator_decision_ref_present": false,
+      "split": "rwork"
+    },
+    "ledger": {
+      "cumulative_estimated_cost_usd": 36.441666,
+      "error_type": null,
+      "errors": [],
+      "estimated_cost_sum_usd": 36.441666,
+      "exists": true,
+      "is_file": true,
+      "line_count": 145,
+      "path": "experiments/core_narrative/results/cost_ledger.jsonl",
+      "record_count": 145,
+      "writable": true
+    },
+    "status": "passed",
+    "tool": "llm_budget_gate"
+  },
+  "cost_accounting": {
+    "actual_cost_recorded": false,
+    "actual_cost_usd": null,
+    "cost_record_basis": "failure_ledger_append",
+    "estimated_cost_usd": 1.0
+  },
+  "cost_ledger_append": {
+    "actual_cost_recorded": false,
+    "estimated_cost_usd": 1.0,
+    "new_cumulative_estimated_cost_usd": 37.441666,
+    "record_count_after": 146,
+    "record_count_before": 145,
+    "status": "appended"
+  },
+  "details": {
+    "http_status": 500,
+    "network_attempted": true,
+    "request_profile": {
+      "endpoint_kind": "chat_completions",
+      "max_response_bytes": 2000000,
+      "model": "openai/gpt-5.4-mini",
+      "output_contract": "patch-or-files-v1",
+      "output_contract_schema": {
+        "accepted_forms": [
+          "raw unified diff applicable with git apply",
+          "JSON object with unified_diff, patch, or diff string",
+          "JSON object with files list of full file contents"
+        ],
+        "diagnostic_failure_classes": {
+          "invalid_unified_diff": "unified diff was present but failed git apply validation",
+          "structured_files_invalid": "files entries were malformed or could not be applied as file-level edits",
+          "unsafe_generated_text": "response, path, content, or generated patch contained unsafe generated text",
+          "unsupported_patch_response": "response did not contain unified diff or structured files"
+        },
+        "id": "patch-or-files-v1",
+        "path_policy": {
+          "paths_must_be_from_declared_context": true,
+          "paths_must_be_relative": true,
+          "paths_must_not_target_reserved_metadata": [
+            ".git",
+            ".core_narrative"
+          ]
+        }
+      },
+      "prompt_char_count": 120013,
+      "prompt_sha256": "4514e8892894f6d4b318dbf52d657be005913c859c264707f498930ad83ea4e7",
+      "request_body_bytes": 125368,
+      "response_format_requested": false,
+      "timeout_seconds": 900
+    }
+  },
+  "error": "LLM request failed",
+  "finished_at": "2026-05-09T10:39:37.158874Z",
+  "model_call_made": true,
+  "output_contract": "patch-or-files-v1",
+  "prompt_snapshot": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/codex_nfl_m2_patch_or_files_20260509__cheap-click-specialist__click__rwork__006__attempt1/prompt_snapshot.json",
+  "runner_id": "codex-nfl-direct-search-replace-v1",
+  "started_at": "2026-05-09T10:38:33.306418Z",
+  "status": "error",
+  "submission_contract": "patch-or-files-v1",
+  "tool": "codex_nfl_direct_runner"
+}
