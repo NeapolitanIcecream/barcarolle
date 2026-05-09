@@ -44,11 +44,14 @@ from _llm_budget import (
 from barcarolle_patch_command import (
     DEFAULT_OUTPUT_CONTRACT as PATCH_OR_FILES_OUTPUT_CONTRACT,
     DEFAULT_MAX_RESPONSE_BYTES,
+    REDACTED_URL_MARKER,
     STRUCTURED_FILES_OUTPUT_CONTRACT,
     apply_patch_response,
     diff_paths,
     enforce_output_contract,
     parse_patch_response,
+    redacted_url_context_matches,
+    redacted_url_context_regex,
     reject_unsafe_generated_text,
     resolve_live_endpoint,
     strip_code_fence,
@@ -939,6 +942,7 @@ def edit_resolution_details(
     matches: Sequence[int],
     before_text: str | None,
     after_text: str | None,
+    redacted_match_count: int | None = None,
 ) -> dict[str, Any]:
     anchored = before_text is not None or after_text is not None
     occurrences = len(offsets)
@@ -958,6 +962,9 @@ def edit_resolution_details(
     else:
         code = "old_text_repeated_without_anchors"
         recommendation = "include an exact immediate before or after anchor copied from the same file"
+    redacted_marker_count = old.count(REDACTED_URL_MARKER)
+    before_marker_count = 0 if before_text is None else before_text.count(REDACTED_URL_MARKER)
+    after_marker_count = 0 if after_text is None else after_text.count(REDACTED_URL_MARKER)
     return {
         "path": path,
         "edit_index": edit_index,
@@ -971,6 +978,43 @@ def edit_resolution_details(
         },
         "old_text_char_count": len(old),
         "old_text_sha256": sha256_text(old),
+        "search_text": {
+            "old_text_char_count": len(old),
+            "old_text_line_count": len(old.splitlines()),
+            "old_text_sha256": sha256_text(old),
+            "old_redacted_url_marker_count": redacted_marker_count,
+            "content_recorded": False,
+        },
+        "anchor_texts": {
+            "before": None
+            if before_text is None
+            else {
+                "char_count": len(before_text),
+                "line_count": len(before_text.splitlines()),
+                "sha256": sha256_text(before_text),
+                "redacted_url_marker_count": before_marker_count,
+                "content_recorded": False,
+            },
+            "after": None
+            if after_text is None
+            else {
+                "char_count": len(after_text),
+                "line_count": len(after_text.splitlines()),
+                "sha256": sha256_text(after_text),
+                "redacted_url_marker_count": after_marker_count,
+                "content_recorded": False,
+            },
+        },
+        "redacted_url_context": {
+            "old_contains_marker": redacted_marker_count > 0,
+            "before_contains_marker": before_marker_count > 0,
+            "after_contains_marker": after_marker_count > 0,
+            "marker_count_old": redacted_marker_count,
+            "marker_count_before": before_marker_count,
+            "marker_count_after": after_marker_count,
+            "fallback_match_count": redacted_match_count,
+        },
+        "content_recorded": False,
         "diagnostic": {
             "code": code,
             "recommendation": recommendation,
@@ -983,9 +1027,108 @@ def edit_resolution_details(
     }
 
 
-def resolve_edit_offset(text: str, edit: Mapping[str, str], *, edit_index: int) -> tuple[int, int, bool]:
+def redacted_context_matches_suffix(text: str, redacted_suffix: str) -> bool:
+    if REDACTED_URL_MARKER not in redacted_suffix:
+        return text.endswith(redacted_suffix)
+    pattern = redacted_url_context_regex(redacted_suffix)
+    return pattern is not None and any(match.end() == len(text) for match in pattern.finditer(text))
+
+
+def redacted_context_matches_prefix(text: str, redacted_prefix: str) -> bool:
+    if REDACTED_URL_MARKER not in redacted_prefix:
+        return text.startswith(redacted_prefix)
+    pattern = redacted_url_context_regex(redacted_prefix)
+    return pattern is not None and any(match.start() == 0 for match in pattern.finditer(text))
+
+
+def redacted_anchored_spans(
+    text: str,
+    old: str,
+    *,
+    before: str | None,
+    after: str | None,
+) -> list[tuple[int, int]]:
+    if REDACTED_URL_MARKER not in "".join(item for item in (before, old, after) if item is not None):
+        return []
+    if REDACTED_URL_MARKER in old:
+        old_spans = [(match.start(), match.end()) for match in redacted_url_context_matches(text, old)]
+    else:
+        old_spans = [(offset, offset + len(old)) for offset in occurrence_offsets(text, old)]
+    matches: list[tuple[int, int]] = []
+    for start, end in old_spans:
+        if before is not None and not redacted_context_matches_suffix(text[:start], before):
+            continue
+        if after is not None and not redacted_context_matches_prefix(text[end:], after):
+            continue
+        matches.append((start, end))
+    return matches
+
+
+def redacted_source_match_diagnostic(
+    *,
+    path: str,
+    edit_index: int,
+    old: str,
+    before_text: str | None,
+    after_text: str | None,
+    fallback_match_count: int,
+) -> dict[str, Any]:
+    details = edit_resolution_details(
+        path=path,
+        edit_index=edit_index,
+        old=old,
+        offsets=[],
+        matches=[],
+        before_text=before_text,
+        after_text=after_text,
+        redacted_match_count=fallback_match_count,
+    )
+    details["diagnostic"] = {
+        "code": "redacted_source_text_matched_raw_source",
+        "redacted_search_text_matched_raw_source_once": fallback_match_count == 1,
+        "replacement_contains_redacted_url_marker": False,
+        "content_recorded": False,
+    }
+    details["occurrences"] = None
+    details["anchor_matches"] = None
+    return details
+
+
+def applied_edit_text_summary(
+    *,
+    path: str,
+    edit_index: int,
+    old: str,
+    before_text: str | None,
+    after_text: str | None,
+    anchored: bool,
+    resolution: str,
+) -> dict[str, Any]:
+    details = edit_resolution_details(
+        path=path,
+        edit_index=edit_index,
+        old=old,
+        offsets=[],
+        matches=[],
+        before_text=before_text,
+        after_text=after_text,
+    )
+    return {
+        "path": path,
+        "edit_index": edit_index,
+        "anchored": anchored,
+        "resolution": resolution,
+        "search_text": details["search_text"],
+        "anchor_texts": details["anchor_texts"],
+        "redacted_url_context": details["redacted_url_context"],
+        "content_recorded": False,
+    }
+
+
+def resolve_edit_offset(text: str, edit: Mapping[str, str], *, edit_index: int) -> tuple[int, int, bool, dict[str, Any] | None]:
     path = str(edit["path"])
     old = str(edit["old"])
+    new = str(edit["new"])
     before = edit.get("before")
     after = edit.get("after")
     before_text = str(before) if before is not None else None
@@ -994,7 +1137,31 @@ def resolve_edit_offset(text: str, edit: Mapping[str, str], *, edit_index: int) 
     anchored = before_text is not None or after_text is not None
     if len(matches) == 1:
         start = matches[0]
-        return start, start + len(old), anchored
+        return start, start + len(old), anchored, None
+    redacted_matches = redacted_anchored_spans(text, old, before=before_text, after=after_text)
+    if len(redacted_matches) == 1:
+        details = redacted_source_match_diagnostic(
+            path=path,
+            edit_index=edit_index,
+            old=old,
+            before_text=before_text,
+            after_text=after_text,
+            fallback_match_count=len(redacted_matches),
+        )
+        if REDACTED_URL_MARKER in new:
+            details["diagnostic"] = {
+                "code": "redacted_source_replacement_would_persist_placeholder",
+                "redacted_search_text_matched_raw_source_once": True,
+                "replacement_contains_redacted_url_marker": True,
+                "content_recorded": False,
+            }
+            raise ToolError(
+                "edit replacement would persist redacted URL placeholders",
+                **details,
+                failure_class="search_replace_redacted_source_mismatch",
+            )
+        start, end = redacted_matches[0]
+        return start, end, anchored, details
     details = edit_resolution_details(
         path=path,
         edit_index=edit_index,
@@ -1003,6 +1170,7 @@ def resolve_edit_offset(text: str, edit: Mapping[str, str], *, edit_index: int) 
         matches=matches,
         before_text=before_text,
         after_text=after_text,
+        redacted_match_count=len(redacted_matches) if redacted_matches else None,
     )
     if anchored:
         raise ToolError(
@@ -1027,6 +1195,8 @@ def apply_edit_bundle(
     changed: list[str] = []
     planned_texts: dict[str, str] = {}
     anchored_count = 0
+    edit_diagnostics: list[dict[str, Any]] = []
+    applied_edit_summaries: list[dict[str, Any]] = []
     for index, edit in enumerate(edits):
         path = str(edit["path"])
         old = str(edit["old"])
@@ -1050,9 +1220,22 @@ def apply_edit_bundle(
         text = planned_texts.get(path)
         if text is None:
             text = target.read_text(encoding="utf-8")
-        start, end, anchored = resolve_edit_offset(text, edit, edit_index=index)
+        start, end, anchored, diagnostic = resolve_edit_offset(text, edit, edit_index=index)
         if anchored:
             anchored_count += 1
+        if diagnostic is not None:
+            edit_diagnostics.append(diagnostic)
+        applied_edit_summaries.append(
+            applied_edit_text_summary(
+                path=path,
+                edit_index=index,
+                old=old,
+                before_text=str(before) if before is not None else None,
+                after_text=str(after) if after is not None else None,
+                anchored=anchored,
+                resolution="redacted_source" if diagnostic is not None else "exact",
+            )
+        )
         planned_texts[path] = f"{text[:start]}{new}{text[end:]}"
         changed.append(path)
     for path, text in planned_texts.items():
@@ -1064,6 +1247,8 @@ def apply_edit_bundle(
         "changed_paths": sorted(set(changed)),
         "edit_count": len(edits),
         "anchored_edit_count": anchored_count,
+        "edit_diagnostics": edit_diagnostics,
+        "applied_edit_summaries": applied_edit_summaries,
         "output_contract": DEFAULT_OUTPUT_CONTRACT,
     }
 
@@ -1566,12 +1751,17 @@ def main(argv: Sequence[str] | None = None) -> int:
                 output_contract=args.output_contract,
             )
             safe_env, _ = llm_safe_subprocess_env(os.environ)
-            patch_artifact = write_safe_patch(workspace, patch_path, safe_env)
+            try:
+                patch_artifact = write_safe_patch(workspace, patch_path, safe_env)
+            except ToolError as exc:
+                exc.details.setdefault("patch_result_before_patch_artifact", patch_result)
+                raise
             if patch_artifact.get("unsafe_content_detected") is True:
                 raise ToolError(
                     "generated patch contains unsafe content",
                     failure_class="unsafe_generated_text",
                     unsafe_content=patch_artifact.get("unsafe_content", {}),
+                    patch_result_before_patch_artifact=patch_result,
                 )
             status = "patch_generated"
             event = "patch_generated"

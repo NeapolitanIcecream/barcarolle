@@ -842,6 +842,27 @@ class CodexNflExperimentRunnerTests(unittest.TestCase):
         persisted = json.loads(normalized_path.read_text(encoding="utf-8"))
         self.assertEqual(persisted["status"], "invalid_submission")
 
+        redacted_path = self.root / "normalized-redacted-source.json"
+        redacted_payload = runner.write_infra_failed_result(
+            run_id="unit-redacted-source-invalid-submission",
+            task_id="click__rwork__006",
+            split="rwork",
+            acut_id="cheap-generic-swe",
+            attempt=1,
+            normalized_path=redacted_path,
+            patch_path=self.root / "redacted-source-submission.patch",
+            runner_result={
+                "status": "error",
+                "error": "edit replacement would persist redacted URL placeholders",
+                "details": {"failure_class": "search_replace_redacted_source_mismatch"},
+                "model_call_made": True,
+            },
+        )
+
+        self.assertEqual(redacted_payload["status"], "invalid_submission")
+        self.assertEqual(redacted_payload["metadata"]["failure_owner"], "model_output")
+        self.assertEqual(redacted_payload["metadata"]["failure_class"], "search_replace_redacted_source_mismatch")
+
     def test_unsafe_generated_text_runner_error_is_invalid_submission_not_infra_failed(self) -> None:
         """Regression: unsafe structured output is model-owned invalid submission evidence."""
         runner = load_runner_module()

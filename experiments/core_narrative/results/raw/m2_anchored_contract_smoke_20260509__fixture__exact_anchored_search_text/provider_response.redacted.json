@@ -1,0 +1,12 @@
+{
+  "choices": [
+    {
+      "message": {
+        "content": "{\"edits\": [{\"before\": \"def first():\\n\", \"new\": \"    rv = get_default(ctx)\\n\", \"old\": \"    rv = get_default()\\n\", \"path\": \"src/click/core.py\"}]}"
+      }
+    }
+  ],
+  "usage": {
+    "cost": 0
+  }
+}
