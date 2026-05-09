@@ -249,7 +249,12 @@ def projected_cost_for_acut(acut_id: str) -> str:
     return "3" if acut_id.startswith("frontier-") else "1"
 
 
-def default_mock_response_text(workspace: Path, context_paths: Sequence[str]) -> str:
+def default_mock_response_text(
+    workspace: Path,
+    context_paths: Sequence[str],
+    *,
+    submission_contract: str = DEFAULT_SUBMISSION_CONTRACT,
+) -> str:
     for context_path in context_paths:
         path = Path(context_path)
         if path.is_absolute() or ".." in path.parts:
@@ -258,6 +263,10 @@ def default_mock_response_text(workspace: Path, context_paths: Sequence[str]) ->
         if not target.is_file():
             continue
         text = target.read_text(encoding="utf-8")
+        if submission_contract == STRUCTURED_FILES_SUBMISSION_CONTRACT:
+            if text:
+                return json.dumps({"files": [{"path": context_path, "action": "replace", "content": text}]})
+            continue
         for candidate in text.splitlines(keepends=True):
             if candidate.strip() and text.count(candidate) == 1:
                 return json.dumps(
@@ -534,7 +543,12 @@ def run_direct_runner(
             command.extend(
                 [
                     "--mock-response-text",
-                    args.mock_response_text or default_mock_response_text(workspace, context_paths),
+                    args.mock_response_text
+                    or default_mock_response_text(
+                        workspace,
+                        context_paths,
+                        submission_contract=str(submission_contract),
+                    ),
                 ]
             )
     coordinator_decision_ref = getattr(args, "coordinator_decision_ref", None)
