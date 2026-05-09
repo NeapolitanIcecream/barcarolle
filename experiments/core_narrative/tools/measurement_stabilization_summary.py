@@ -105,6 +105,7 @@ def batch_records(batch: Mapping[str, Any] | None, *, tasks: Sequence[str], acut
         return []
     wanted = {(acut_id, task_id) for acut_id in acuts for task_id in tasks}
     records: list[dict[str, Any]] = []
+    seen: set[tuple[str, str]] = set()
     for item in batch.get("results", []):
         if not isinstance(item, dict):
             continue
@@ -112,6 +113,9 @@ def batch_records(batch: Mapping[str, Any] | None, *, tasks: Sequence[str], acut
         task_id = item.get("task_id")
         if (acut_id, task_id) not in wanted:
             continue
+        if not isinstance(acut_id, str) or not isinstance(task_id, str):
+            continue
+        seen.add((acut_id, task_id))
         normalized = item.get("normalized") if isinstance(item.get("normalized"), dict) else {}
         metadata = normalized.get("metadata") if isinstance(normalized.get("metadata"), dict) else {}
         runner_result = item.get("runner_result") if isinstance(item.get("runner_result"), dict) else {}
@@ -141,6 +145,26 @@ def batch_records(batch: Mapping[str, Any] | None, *, tasks: Sequence[str], acut
                 "raw_response_artifact": metadata.get("raw_response_artifact"),
             }
         )
+    for acut_id in acuts:
+        for task_id in tasks:
+            if (acut_id, task_id) in seen:
+                continue
+            records.append(
+                {
+                    "contract": STRUCTURED_CONTRACT,
+                    "acut_id": acut_id,
+                    "task_id": task_id,
+                    "status": "missing",
+                    "failure_class": None,
+                    "failure_owner": "missing",
+                    "patch_ready": False,
+                    "model_call_made": None,
+                    "path": None,
+                    "run_id": None,
+                    "prompt_snapshot": None,
+                    "raw_response_artifact": None,
+                }
+            )
     return records
 
 
@@ -185,6 +209,9 @@ def claim_status(*, anchored: Mapping[str, Any], structured: Mapping[str, Any], 
         return "blocked"
     if structured.get("total", 0) == 0:
         return "blocked"
+    structured_status_counts = structured.get("status_counts") if isinstance(structured.get("status_counts"), Mapping) else {}
+    if structured_status_counts.get("missing", 0):
+        return "not yet testable"
     anchored_invalid = anchored.get("invalid_submission_rate")
     structured_invalid = structured.get("invalid_submission_rate")
     anchored_ready = anchored.get("patch_ready_coverage")
