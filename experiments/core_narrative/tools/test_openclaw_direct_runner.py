@@ -1246,6 +1246,70 @@ class OpenClawDirectRunnerTests(unittest.TestCase):
         self.assertEqual(summary["details"]["failure_class"], "output_contract_violation")
         self.assertEqual((self.workspace / "module.py").read_text(encoding="utf-8"), "VALUE = 1\n")
 
+    def test_structured_files_contract_rejects_mixed_files_and_edits_before_mutation(self) -> None:
+        """Regression: structured-files-json-v1 requires exactly one top-level files key."""
+        artifact_dir = self.root / "structured-files-rejects-mixed-artifacts"
+        output_path = self.root / "structured-files-rejects-mixed.json"
+        response = json.dumps(
+            {
+                "files": [
+                    {
+                        "path": "module.py",
+                        "action": "replace",
+                        "content": "VALUE = 2\n",
+                    }
+                ],
+                "edits": [
+                    {
+                        "path": "module.py",
+                        "old": "VALUE = 1\n",
+                        "new": "VALUE = 2\n",
+                    }
+                ],
+            }
+        )
+
+        completed = run(
+            [
+                sys.executable,
+                str(RUNNER),
+                "--workspace",
+                str(self.workspace),
+                "--task",
+                str(self.task_path),
+                "--acut",
+                str(self.acut_path),
+                "--attempt",
+                "1",
+                "--run-id",
+                "unit_openclaw_structured_files_rejects_mixed_attempt1",
+                "--artifact-dir",
+                str(artifact_dir),
+                "--output",
+                str(output_path),
+                "--llm-ledger",
+                str(self.ledger_path),
+                "--projected-cost-usd",
+                "1",
+                "--context-path",
+                "module.py",
+                "--output-contract",
+                "structured-files-json-v1",
+                "--mock-response-text",
+                response,
+            ],
+            cwd=REPO_ROOT,
+            env=self.env(),
+        )
+
+        self.assertEqual(completed.returncode, 2, completed.stderr)
+        summary = json.loads(output_path.read_text(encoding="utf-8"))
+        self.assertEqual(summary["status"], "error")
+        self.assertEqual(summary["submission_contract"], "structured-files-json-v1")
+        self.assertEqual(summary["details"]["failure_class"], "output_contract_violation")
+        self.assertEqual(summary["details"]["unsupported_top_level_keys"], ["edits"])
+        self.assertEqual((self.workspace / "module.py").read_text(encoding="utf-8"), "VALUE = 1\n")
+
     def test_structured_files_contract_rejects_unsafe_patch_content_as_model_output(self) -> None:
         """Generated full-file content with full URLs is an invalid submission, not infra."""
         artifact_dir = self.root / "structured-files-unsafe-artifacts"
