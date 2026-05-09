@@ -242,18 +242,39 @@ def context_focus_terms(task: Mapping[str, Any], task_statement: str, rel_path: 
         ]
         if item
     ).lower()
-    if "prompt_required" not in combined:
-        return []
+    terms: list[str] = []
     if rel_path.endswith("click/core.py"):
-        return [
-            "class Option(Parameter):",
-            "    def consume_value(self, ctx, opts):",
-        ]
+        if "prompt_required" in combined:
+            terms.extend(
+                [
+                    "class Option(Parameter):",
+                    "    def consume_value(self, ctx, opts):",
+                ]
+            )
+        if any(token in combined for token in ("default", "flag_value", "flag activation", "option default")):
+            terms.extend(
+                [
+                    "class Option(Parameter):",
+                    "        # Support the special case of aligning the default value with the flag_value",
+                    "        # A flag which is activated always returns the flag value",
+                    "        # process_value has to be overridden on Options",
+                ]
+            )
+        if any(token in combined for token in ("unset", "shared flag", "shared-parameter", "shared parameter")):
+            terms.extend(
+                [
+                    "    def invoke(",
+                    "                    if default_value is UNSET:",
+                ]
+            )
+        return list(dict.fromkeys(terms))
     if rel_path.endswith("click/parser.py"):
-        return [
-            "class Option:",
-            "class OptionParser:",
-        ]
+        if "prompt_required" in combined:
+            return [
+                "class Option:",
+                "class OptionParser:",
+            ]
+        return []
     return []
 
 
@@ -800,16 +821,25 @@ def ensure_paths_allowed(paths: Sequence[str], allowed_paths: Sequence[str]) -> 
 
 
 def ensure_paths_within_context(workspace: Path, paths: Sequence[str], allowed_paths: Sequence[str]) -> list[str]:
-    requested = ensure_paths_allowed(paths, allowed_paths)
     allowed = sorted({validate_patch_path(path) for path in allowed_paths})
+    requested = sorted({validate_patch_path(path) for path in paths})
     for path in requested:
         target = resolve_workspace_path(workspace, path, "generated patch path")
         if not target.exists() or not target.is_file():
             raise ToolError(
                 "edit path is not in the prepared workspace",
                 path=path,
+                allowed_context_paths=allowed,
                 failure_class="generated_path_not_in_workspace",
             )
+    outside = [path for path in requested if path not in allowed]
+    if outside:
+        raise ToolError(
+            "generated patch path is outside declared context paths",
+            paths=outside,
+            allowed_context_paths=allowed,
+            failure_class="generated_path_outside_context",
+        )
     return requested
 
 

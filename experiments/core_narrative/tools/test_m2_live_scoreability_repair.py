@@ -135,6 +135,10 @@ class M2LiveScoreabilityRepairTests(unittest.TestCase):
             modes["structured_full_file_patch_artifact_full_url_overbreadth"]["local_repair_status"],
             "classified_not_repaired",
         )
+        repair_ids = {item["repair_id"] for item in payload["local_repairs"]}
+        self.assertIn("apply_patch_context_mismatch_line_anchor_diagnostics", repair_ids)
+        self.assertIn("patch_or_files_v1_redacted_url_source_context_match", repair_ids)
+        self.assertIn("patch_or_files_v1_default_flag_focused_context_excerpts", repair_ids)
         self.assertFalse(payload["prohibited_claims"]["capability_uplift"])
         self.assertFalse(payload["prohibited_claims"]["ranking_reversal"])
         self.assertIn("M2 Live Scoreability Repair Report", report.read_text(encoding="utf-8"))

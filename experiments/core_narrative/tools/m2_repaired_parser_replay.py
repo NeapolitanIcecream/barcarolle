@@ -419,7 +419,11 @@ def replay_record(
             output_contract=PATCH_OR_FILES_CONTRACT,
         )
         patch_path = artifact_dir / "submission.patch"
-        patch_artifact = write_replay_patch(workspace, patch_path)
+        try:
+            patch_artifact = write_replay_patch(workspace, patch_path)
+        except ToolError as exc:
+            exc.details.setdefault("patch_result_before_patch_artifact", patch_result)
+            raise
         patch_ready = bool(patch_artifact.get("written") and patch_artifact.get("size_bytes", 0) > 0)
         if patch_ready and args.workspace_mode == "prepare":
             clean_run_id = f"{replay_run_id}__clean_replay"
@@ -670,6 +674,87 @@ def cost_model_call_flags(rows: Sequence[Mapping[str, Any]]) -> dict[str, Any]:
     }
 
 
+def patch_result_diagnostics(row: Mapping[str, Any]) -> Mapping[str, Any]:
+    repaired = row.get("repaired") if isinstance(row.get("repaired"), Mapping) else {}
+    patch_result = repaired.get("patch_result") if isinstance(repaired.get("patch_result"), Mapping) else None
+    if patch_result is not None:
+        return patch_result
+    details = repaired.get("details") if isinstance(repaired.get("details"), Mapping) else {}
+    before_artifact = (
+        details.get("patch_result_before_patch_artifact")
+        if isinstance(details.get("patch_result_before_patch_artifact"), Mapping)
+        else {}
+    )
+    return before_artifact
+
+
+def context_anchor_repair_summary(rows: Sequence[Mapping[str, Any]]) -> dict[str, Any]:
+    redacted_url_rows: list[dict[str, Any]] = []
+    mismatch_rows: list[dict[str, Any]] = []
+    for row in rows:
+        if not isinstance(row, Mapping):
+            continue
+        patch_result = patch_result_diagnostics(row)
+        hunk_diagnostics = (
+            patch_result.get("hunk_diagnostics")
+            if isinstance(patch_result.get("hunk_diagnostics"), list)
+            else []
+        )
+        redacted_matches = [
+            item
+            for item in hunk_diagnostics
+            if isinstance(item, Mapping)
+            and isinstance(item.get("diagnostic"), Mapping)
+            and item["diagnostic"].get("code") == "redacted_url_context_matched_raw_source"
+        ]
+        if redacted_matches:
+            redacted_url_rows.append(
+                {
+                    "acut_id": row.get("acut_id"),
+                    "task_id": row.get("task_id"),
+                    "run_id": row.get("run_id"),
+                    "matched_hunk_count": len(redacted_matches),
+                    "artifact_status": (row.get("repaired") or {}).get("failure_class")
+                    if isinstance(row.get("repaired"), Mapping)
+                    else None,
+                }
+            )
+        repaired = row.get("repaired") if isinstance(row.get("repaired"), Mapping) else {}
+        details = repaired.get("details") if isinstance(repaired.get("details"), Mapping) else {}
+        if repaired.get("failure_class") == "apply_patch_context_mismatch" and isinstance(details.get("line_anchors"), list):
+            mismatch_rows.append(
+                {
+                    "acut_id": row.get("acut_id"),
+                    "task_id": row.get("task_id"),
+                    "run_id": row.get("run_id"),
+                    "path": details.get("path"),
+                    "hunk_index": details.get("hunk_index"),
+                    "old_text_sha256": details.get("old_text_sha256"),
+                    "line_anchor_occurrences": [
+                        {
+                            "position": anchor.get("position"),
+                            "occurrences": anchor.get("occurrences"),
+                            "line_sha256": anchor.get("line_sha256"),
+                        }
+                        for anchor in details.get("line_anchors", [])
+                        if isinstance(anchor, Mapping)
+                    ],
+                    "redacted_url_fallback_match_count": (
+                        details.get("redacted_url_context", {}).get("fallback_match_count")
+                        if isinstance(details.get("redacted_url_context"), Mapping)
+                        else None
+                    ),
+                }
+            )
+    return {
+        "redacted_url_source_context_match_count": len(redacted_url_rows),
+        "redacted_url_source_context_rows": redacted_url_rows,
+        "apply_patch_context_mismatch_diagnostic_count": len(mismatch_rows),
+        "apply_patch_context_mismatch_rows": mismatch_rows,
+        "content_recorded": False,
+    }
+
+
 def build_payload(args: argparse.Namespace) -> dict[str, Any]:
     summary = read_json(args.m2_summary)
     paths = summary.get("paths") if isinstance(summary.get("paths"), Mapping) else {}
@@ -688,6 +773,8 @@ def build_payload(args: argparse.Namespace) -> dict[str, Any]:
             "run_prefix": args.run_prefix,
             "raw_root": args.raw_root,
             "force": bool(args.force),
+            "output": args.output,
+            "report": args.report,
         },
         "scope": {
             "source_path_id": args.path_id,
@@ -710,6 +797,7 @@ def build_payload(args: argparse.Namespace) -> dict[str, Any]:
         "old_summary": aggregate_old(rows, denominator, path_summary),
         "repaired_summary": aggregate_repaired(rows, denominator),
         "missing_artifact_summary": missing_artifact_summary(rows),
+        "context_anchor_repair_summary": context_anchor_repair_summary(rows),
         "cost_model_call_flags": cost_model_call_flags(rows),
         "matrix": rows,
         "claim_status": "historical_replay_not_m2_pass",
@@ -751,8 +839,14 @@ def write_report(payload: Mapping[str, Any], path: str) -> None:
     old = payload.get("old_summary") if isinstance(payload.get("old_summary"), Mapping) else {}
     repaired = payload.get("repaired_summary") if isinstance(payload.get("repaired_summary"), Mapping) else {}
     missing = payload.get("missing_artifact_summary") if isinstance(payload.get("missing_artifact_summary"), Mapping) else {}
+    anchors = (
+        payload.get("context_anchor_repair_summary")
+        if isinstance(payload.get("context_anchor_repair_summary"), Mapping)
+        else {}
+    )
     cost = payload.get("cost_model_call_flags") if isinstance(payload.get("cost_model_call_flags"), Mapping) else {}
     replay_cost = cost.get("replay") if isinstance(cost.get("replay"), Mapping) else {}
+    inputs = payload.get("inputs") if isinstance(payload.get("inputs"), Mapping) else {}
     lines = [
         "# M2 Repaired Parser Historical Replay Report",
         "",
@@ -794,6 +888,12 @@ def write_report(payload: Mapping[str, Any], path: str) -> None:
     lines.extend(
         [
             "",
+            "## Context Anchor Diagnostics",
+            "",
+            f"- Redacted URL source-context matches: `{anchors.get('redacted_url_source_context_match_count')}`.",
+            f"- Apply-patch context mismatch rows with line-anchor diagnostics: `{anchors.get('apply_patch_context_mismatch_diagnostic_count')}`.",
+            "- Diagnostics record file paths, hunk indexes, hashes, line-anchor occurrence counts, and redacted-URL match counts; source content is not recorded in the JSON summary.",
+            "",
             "## Missing Artifacts",
             "",
             f"- Raw response artifacts missing: `{missing.get('raw_response_artifact_missing_count')}`.",
@@ -806,12 +906,12 @@ def write_report(payload: Mapping[str, Any], path: str) -> None:
             "",
             "```bash",
             "PYTHONPATH=experiments/core_narrative/tools python3 experiments/core_narrative/tools/m2_repaired_parser_replay.py \\",
-            f"  --m2-summary {payload.get('inputs', {}).get('m2_summary')} \\",
+            f"  --m2-summary {inputs.get('m2_summary')} \\",
             f"  --path-id {scope.get('source_path_id')} \\",
-            f"  --run-prefix {payload.get('inputs', {}).get('run_prefix')} \\",
+            f"  --run-prefix {inputs.get('run_prefix')} \\",
             "  --force \\",
-            "  --output experiments/core_narrative/results/m2_repaired_parser_replay_20260509.json \\",
-            "  --report experiments/core_narrative/reports/2026-05-09_m2_repaired_parser_replay_report.md",
+            f"  --output {inputs.get('output')} \\",
+            f"  --report {inputs.get('report')}",
             "```",
             "",
             "## Claim Boundaries",
