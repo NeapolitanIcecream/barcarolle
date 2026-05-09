@@ -1,0 +1,47 @@
+{
+  "id": "gen-1778334966-xMoPkp2TxmjYffslZBT5",
+  "object": "chat.completion",
+  "created": 1778334966,
+  "model": "openai/gpt-5.4-mini-20260317",
+  "provider": "OpenAI",
+  "system_fingerprint": null,
+  "service_tier": "default",
+  "choices": [
+    {
+      "index": 0,
+      "logprobs": null,
+      "finish_reason": "stop",
+      "native_finish_reason": "completed",
+      "message": {
+        "role": "assistant",
+        "content": "*** Begin Patch\n*** Update File: src/click/core.py\n@@\n         if self.is_flag:\n             if default is None:\n                 default = False\n             elif default is True:\n-                default = self.flag_value\n+                if callable(flag_value):\n+                    default = lambda flag_value=flag_value: flag_value\n+                else:\n+                    default = flag_value\n*** End Patch\n*** Begin Patch\n*** Update File: tests/test_defaults.py\n@@\n def test_shared_param_prefers_first_default(runner):\n     \"\"\"The first ``default=True`` wins when multiple ``flag_value`` options share\n     a parameter name, regardless of which positional option carries it.\n@@\n     result = runner.invoke(prefers_red, [])\n     assert \"red\" in result.output\n     result = runner.invoke(prefers_red, [\"--green\"])\n     assert \"green\" in result.output\n \n \n+def test_callable_flag_value_default_true_and_show_default(runner):\n+    class Factory:\n+        def __init__(self):\n+            raise AssertionError(\"should not be instantiated\")\n+\n+    @click.command()\n+    @click.option(\"--factory\", flag_value=Factory, default=True, show_default=True)\n+    def cli(factory):\n+        click.echo(factory is Factory)\n+\n+    result = runner.invoke(cli, [], default_map={\"factory\": True})\n+    assert not result.exception\n+    assert result.output == \"True\\n\"\n+\n+    result = runner.invoke(cli, [\"--help\"], default_map={\"factory\": True})\n+    assert not result.exception\n+    assert \"default:\" in result.output\n+\n+\n @pytest.mark.parametrize(\n     (\"default_map\", \"key\", \"expected\"),\n     [\n         # Key present in default_map.\n         ({\"email\": \"a@b.com\"}, \"email\", \"a@b.com\"),\n*** End Patch",
+        "refusal": null,
+        "reasoning": "[redacted]",
+        "reasoning_details": "[redacted]"
+      }
+    }
+  ],
+  "usage": {
+    "prompt_tokens": 18172,
+    "completion_tokens": 14763,
+    "total_tokens": 32935,
+    "cost": 0.0800625,
+    "is_byok": false,
+    "prompt_tokens_details": {
+      "cached_tokens": 0,
+      "cache_write_tokens": 0,
+      "audio_tokens": 0,
+      "video_tokens": 0
+    },
+    "cost_details": {
+      "upstream_inference_cost": 0.0800625,
+      "upstream_inference_prompt_cost": 0.013629,
+      "upstream_inference_completions_cost": 0.0664335
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 14372,
+      "image_tokens": 0,
+      "audio_tokens": 0
+    }
+  }
+}

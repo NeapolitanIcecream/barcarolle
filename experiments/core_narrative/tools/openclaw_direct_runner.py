@@ -96,6 +96,7 @@ def output_contract_schema(output_contract: str = DEFAULT_OUTPUT_CONTRACT) -> di
                 "raw unified diff applicable with git apply",
                 "JSON object with unified_diff, patch, or diff string",
                 "JSON object with files list of full file contents",
+                "Codex apply_patch transcript beginning with *** Begin Patch",
             ],
             "path_policy": {
                 "paths_must_be_relative": True,
@@ -103,6 +104,8 @@ def output_contract_schema(output_contract: str = DEFAULT_OUTPUT_CONTRACT) -> di
                 "paths_must_be_from_declared_context": True,
             },
             "diagnostic_failure_classes": {
+                "apply_patch_context_mismatch": "apply_patch transcript was present but did not match the prepared workspace exactly",
+                "apply_patch_invalid": "apply_patch transcript was malformed",
                 "invalid_unified_diff": "unified diff was present but failed git apply validation",
                 "unsupported_patch_response": "response did not contain unified diff or structured files",
                 "structured_files_invalid": "files entries were malformed or could not be applied as file-level edits",
@@ -468,11 +471,13 @@ def build_prompt(
             "1. A raw unified diff applicable with git apply.",
             "2. A JSON object with a string field named unified_diff, patch, or diff.",
             "3. A JSON object with files: [{path, action, content}], where action is write, create, replace, or delete.",
+            "4. A Codex apply_patch transcript beginning with *** Begin Patch.",
             "Do not include prose, markdown explanation, credentials, endpoints, or URLs.",
             "",
             "Pre-submit validation checklist:",
             "- Every changed path exactly matches one of the Valid edit paths below.",
             "- Unified diffs must apply cleanly with git apply.",
+            "- apply_patch hunks must match the shown source exactly; do not use redacted URL placeholders as source text.",
             "- Structured file entries must include complete final content for write/create/replace actions.",
             "- Keep changes minimal. Prefer source code fixes over test-only changes.",
         ]
@@ -639,8 +644,8 @@ def live_payload(
     elif output_contract == PATCH_OR_FILES_OUTPUT_CONTRACT:
         system = (
             "You are a patch-generation engine. Return only a valid patch artifact: "
-            "a unified diff or JSON patch/files object. Do not include prose, URLs, "
-            "endpoint values, credentials, or placeholders."
+            "a unified diff, JSON patch/files object, or Codex apply_patch transcript. "
+            "Do not include prose, URLs, endpoint values, credentials, or placeholders."
         )
     else:
         system = (
@@ -855,6 +860,17 @@ def parsed_patch_paths(parsed: Mapping[str, Any]) -> list[str]:
             if isinstance(item, Mapping) and isinstance(item.get("path"), str):
                 paths.append(str(item["path"]))
         return sorted(set(paths))
+    if kind == "apply_patch":
+        operations = parsed.get("operations")
+        if not isinstance(operations, list):
+            return []
+        return sorted(
+            {
+                str(item["path"])
+                for item in operations
+                if isinstance(item, Mapping) and isinstance(item.get("path"), str)
+            }
+        )
     return []
 
 

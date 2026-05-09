@@ -50,6 +50,11 @@ INCOMPLETE_STRUCTURED_CONTENT_MARKERS = (
     "omitted for brevity",
     "same as before",
 )
+APPLY_PATCH_BEGIN = "*** Begin Patch"
+APPLY_PATCH_END = "*** End Patch"
+APPLY_PATCH_UPDATE_PREFIX = "*** Update File: "
+APPLY_PATCH_ADD_PREFIX = "*** Add File: "
+APPLY_PATCH_DELETE_PREFIX = "*** Delete File: "
 
 
 def parse_args(argv: Sequence[str]) -> argparse.Namespace:
@@ -277,6 +282,7 @@ def build_prompt(
             "1. A unified diff applicable with git apply.",
             "2. JSON with a string field named unified_diff, patch, or diff.",
             "3. JSON with files: [{path, action, content}], where action is write, create, replace, or delete.",
+            "4. A Codex apply_patch transcript beginning with *** Begin Patch.",
         ]
     prompt = "\n".join(
         [
@@ -345,11 +351,19 @@ def live_request_payload(
     if not isinstance(model, str) or not model:
         raise ToolError("ACUT manifest is missing model")
     params = acut.get("model_parameters") if isinstance(acut.get("model_parameters"), dict) else {}
-    system = (
-        "You are a patch-generation engine. Return only the requested patch "
-        "format. Do not include prose, markdown fences, credentials, endpoint "
-        "values, bearer tokens, full URLs, or placeholders."
-    )
+    if output_contract == DEFAULT_OUTPUT_CONTRACT:
+        system = (
+            "You are a patch-generation engine. Return only a valid patch artifact: "
+            "a unified diff, JSON patch/files object, or Codex apply_patch transcript. "
+            "Do not include prose, markdown fences, credentials, endpoint values, "
+            "bearer tokens, full URLs, or placeholders."
+        )
+    else:
+        system = (
+            "You are a patch-generation engine. Return only the requested patch "
+            "format. Do not include prose, markdown fences, credentials, endpoint "
+            "values, bearer tokens, full URLs, or placeholders."
+        )
     if endpoint_kind == "responses":
         return {
             "model": model,
@@ -567,6 +581,166 @@ def extract_inline_diff(text: str) -> str | None:
     return None
 
 
+def looks_like_apply_patch_transcript(text: str) -> bool:
+    stripped = text.strip()
+    return (
+        APPLY_PATCH_BEGIN in stripped
+        or APPLY_PATCH_UPDATE_PREFIX in stripped
+        or APPLY_PATCH_ADD_PREFIX in stripped
+        or APPLY_PATCH_DELETE_PREFIX in stripped
+    )
+
+
+def extract_fenced_apply_patch(text: str) -> str | None:
+    lines = text.splitlines()
+    in_fence = False
+    fence_lang = ""
+    buffer: list[str] = []
+    for line in lines:
+        stripped = line.strip()
+        if stripped.startswith("```") and not in_fence:
+            in_fence = True
+            fence_lang = stripped[3:].strip().lower()
+            buffer = []
+            continue
+        if stripped == "```" and in_fence:
+            candidate = "\n".join(buffer).strip()
+            if fence_lang in {"patch", "diff"} and looks_like_apply_patch_transcript(candidate):
+                return candidate
+            in_fence = False
+            fence_lang = ""
+            buffer = []
+            continue
+        if in_fence:
+            buffer.append(line)
+    return None
+
+
+def extract_inline_apply_patch(text: str) -> str | None:
+    lines = text.splitlines()
+    for index, line in enumerate(lines):
+        stripped = line.strip()
+        if (
+            stripped == APPLY_PATCH_BEGIN
+            or stripped.startswith(APPLY_PATCH_UPDATE_PREFIX)
+            or stripped.startswith(APPLY_PATCH_ADD_PREFIX)
+            or stripped.startswith(APPLY_PATCH_DELETE_PREFIX)
+        ):
+            return "\n".join(lines[index:]).strip() + "\n"
+    return None
+
+
+def apply_patch_response_candidates(text: str) -> list[str]:
+    candidates = [text.strip(), strip_code_fence(text)]
+    fenced = extract_fenced_apply_patch(text)
+    if fenced:
+        candidates.append(fenced)
+    inline = extract_inline_apply_patch(text)
+    if inline:
+        candidates.append(inline)
+    unique: list[str] = []
+    seen: set[str] = set()
+    for candidate in candidates:
+        if candidate and candidate not in seen:
+            seen.add(candidate)
+            unique.append(candidate)
+    return unique
+
+
+def marker_payload(line: str, prefix: str) -> str | None:
+    if line.startswith(prefix):
+        return line[len(prefix) :].strip()
+    return None
+
+
+def parse_apply_patch_response(text: str) -> dict[str, Any]:
+    operations: list[dict[str, Any]] = []
+    current: dict[str, Any] | None = None
+    saw_apply_marker = False
+    for raw_line in text.splitlines(keepends=True):
+        line = raw_line.rstrip("\r\n")
+        stripped = line.strip()
+        if stripped == APPLY_PATCH_BEGIN:
+            saw_apply_marker = True
+            current = None
+            continue
+        if stripped == APPLY_PATCH_END:
+            saw_apply_marker = True
+            current = None
+            continue
+
+        update_path = marker_payload(line, APPLY_PATCH_UPDATE_PREFIX)
+        add_path = marker_payload(line, APPLY_PATCH_ADD_PREFIX)
+        delete_path = marker_payload(line, APPLY_PATCH_DELETE_PREFIX)
+        if update_path is not None:
+            current = {"action": "update", "path": validate_patch_path(update_path), "hunks": []}
+            operations.append(current)
+            saw_apply_marker = True
+            continue
+        if add_path is not None:
+            current = {"action": "add", "path": validate_patch_path(add_path), "lines": []}
+            operations.append(current)
+            saw_apply_marker = True
+            continue
+        if delete_path is not None:
+            current = {"action": "delete", "path": validate_patch_path(delete_path)}
+            operations.append(current)
+            saw_apply_marker = True
+            continue
+
+        if current is None:
+            continue
+        action = current["action"]
+        if action == "delete":
+            if stripped:
+                raise ToolError(
+                    "apply_patch delete operation must not contain hunk lines",
+                    path=current["path"],
+                    failure_class="apply_patch_invalid",
+                )
+            continue
+        if action == "add":
+            if raw_line.startswith("+"):
+                current["lines"].append(raw_line[1:])
+            elif not stripped:
+                current["lines"].append(raw_line)
+            else:
+                raise ToolError(
+                    "apply_patch add operation lines must start with +",
+                    path=current["path"],
+                    failure_class="apply_patch_invalid",
+                )
+            continue
+
+        if stripped.startswith("@@"):
+            current["hunks"].append([])
+            continue
+        if raw_line.startswith((" ", "+", "-")):
+            if not current["hunks"]:
+                current["hunks"].append([])
+            current["hunks"][-1].append(raw_line)
+        elif not stripped and current["hunks"]:
+            current["hunks"][-1].append(" " + raw_line)
+        elif stripped:
+            raise ToolError(
+                "apply_patch update hunk line must start with context, +, or -",
+                path=current["path"],
+                line=stripped[:80],
+                failure_class="apply_patch_invalid",
+            )
+
+    if not saw_apply_marker or not operations:
+        raise ToolError("model response did not contain an apply_patch transcript")
+    for operation in operations:
+        if operation["action"] == "update" and not any(operation["hunks"]):
+            raise ToolError(
+                "apply_patch update operation has no hunks",
+                path=operation["path"],
+                failure_class="apply_patch_invalid",
+            )
+    return {"kind": "apply_patch", "operations": operations}
+
+
 def parse_patch_response(text: str) -> dict[str, Any]:
     candidates = [text.strip(), strip_code_fence(text)]
     for candidate in candidates:
@@ -581,10 +755,18 @@ def parse_patch_response(text: str) -> dict[str, Any]:
             for key in ("unified_diff", "patch", "diff"):
                 value = data.get(key)
                 if isinstance(value, str) and value.strip():
+                    if looks_like_apply_patch_transcript(value):
+                        parsed = parse_apply_patch_response(value)
+                        parsed["top_level_keys"] = top_level_keys
+                        return parsed
                     return {"kind": "unified_diff", "text": value.strip() + "\n", "top_level_keys": top_level_keys}
             files = data.get("files")
             if isinstance(files, list):
                 return {"kind": "structured_files", "files": files, "top_level_keys": top_level_keys}
+
+    for candidate in apply_patch_response_candidates(text):
+        if looks_like_apply_patch_transcript(candidate):
+            return parse_apply_patch_response(candidate)
 
     fenced = extract_fenced_diff(text)
     if fenced:
@@ -706,6 +888,138 @@ def changed_paths(workspace: Path) -> list[str]:
     return sorted(paths)
 
 
+def occurrence_offsets(text: str, old: str) -> list[int]:
+    offsets: list[int] = []
+    start = 0
+    while True:
+        index = text.find(old, start)
+        if index == -1:
+            return offsets
+        offsets.append(index)
+        start = index + max(1, len(old))
+
+
+def apply_update_hunk(text: str, hunk: Sequence[str], *, path: str, hunk_index: int) -> str:
+    old_parts: list[str] = []
+    new_parts: list[str] = []
+    for line in hunk:
+        if not line:
+            continue
+        prefix = line[0]
+        body = line[1:]
+        if prefix == " ":
+            old_parts.append(body)
+            new_parts.append(body)
+        elif prefix == "-":
+            old_parts.append(body)
+        elif prefix == "+":
+            new_parts.append(body)
+        else:
+            raise ToolError(
+                "apply_patch hunk line has unsupported prefix",
+                path=path,
+                hunk_index=hunk_index,
+                failure_class="apply_patch_invalid",
+            )
+    old_text = "".join(old_parts)
+    new_text = "".join(new_parts)
+    if old_text == new_text:
+        return text
+    if not old_text:
+        raise ToolError(
+            "apply_patch update hunk has no context or removed text",
+            path=path,
+            hunk_index=hunk_index,
+            failure_class="apply_patch_context_mismatch",
+        )
+    offsets = occurrence_offsets(text, old_text)
+    if len(offsets) != 1:
+        raise ToolError(
+            "apply_patch update hunk did not match workspace exactly",
+            path=path,
+            hunk_index=hunk_index,
+            occurrences=len(offsets),
+            old_text_char_count=len(old_text),
+            old_text_sha256=sha256_text(old_text),
+            failure_class="apply_patch_context_mismatch",
+        )
+    offset = offsets[0]
+    return f"{text[:offset]}{new_text}{text[offset + len(old_text):]}"
+
+
+def apply_apply_patch_transcript(workspace: Path, operations: Sequence[Mapping[str, Any]], *, apply_patch: bool) -> dict[str, Any]:
+    planned: dict[str, str | None] = {}
+    declared_paths: list[str] = []
+    hunk_count = 0
+    for operation in operations:
+        action = operation.get("action")
+        path = validate_patch_path(str(operation.get("path", "")))
+        declared_paths.append(path)
+        target = workspace_target(workspace, path)
+        if action == "add":
+            if target.exists() or path in planned:
+                raise ToolError(
+                    "apply_patch add operation target already exists",
+                    path=path,
+                    failure_class="apply_patch_context_mismatch",
+                )
+            content = "".join(str(line) for line in operation.get("lines", []))
+            reject_unsafe_generated_text(content, "apply_patch added content")
+            planned[path] = content
+            continue
+        if action == "delete":
+            if not target.exists() and path not in planned:
+                raise ToolError(
+                    "apply_patch delete operation target is missing",
+                    path=path,
+                    failure_class="apply_patch_context_mismatch",
+                )
+            planned[path] = None
+            continue
+        if action != "update":
+            raise ToolError("unsupported apply_patch operation", action=action, failure_class="apply_patch_invalid")
+        if path in planned:
+            text = planned[path]
+            if text is None:
+                raise ToolError(
+                    "apply_patch update operation follows delete",
+                    path=path,
+                    failure_class="apply_patch_context_mismatch",
+                )
+        else:
+            if not target.exists() or not target.is_file():
+                raise ToolError(
+                    "apply_patch update operation target is missing",
+                    path=path,
+                    failure_class="apply_patch_context_mismatch",
+                )
+            text = target.read_text(encoding="utf-8")
+        for hunk_index, hunk in enumerate(operation.get("hunks", [])):
+            hunk_count += 1
+            text = apply_update_hunk(str(text), hunk, path=path, hunk_index=hunk_index)
+        planned[path] = str(text)
+
+    if apply_patch:
+        for path, content in planned.items():
+            target = workspace_target(workspace, path)
+            if content is None:
+                if target.exists():
+                    target.unlink()
+                continue
+            target.parent.mkdir(parents=True, exist_ok=True)
+            target.write_text(content, encoding="utf-8")
+
+    return {
+        "kind": "apply_patch",
+        "validated": True,
+        "applied": apply_patch,
+        "declared_paths": sorted(set(declared_paths)),
+        "changed_paths": changed_paths(workspace),
+        "operation_count": len(operations),
+        "hunk_count": hunk_count,
+    }
+
+
 def run_git_apply(workspace: Path, patch_text: str, *, apply_patch: bool) -> dict[str, Any]:
     reject_unsafe_generated_text(patch_text, "generated patch")
     patch_paths = diff_paths(patch_text)
@@ -810,6 +1124,11 @@ def apply_patch_response(workspace: Path, parsed: Mapping[str, Any], *, apply_pa
         if not isinstance(text, str) or not text.strip():
             raise ToolError("unified diff response is empty")
         return run_git_apply(workspace, text, apply_patch=apply_patch)
+    if kind == "apply_patch":
+        operations = parsed.get("operations")
+        if not isinstance(operations, list) or not operations:
+            raise ToolError("apply_patch response has no operations", failure_class="apply_patch_invalid")
+        return apply_apply_patch_transcript(workspace, operations, apply_patch=apply_patch)
     if kind == "structured_files":
         files = parsed.get("files")
         if not isinstance(files, list) or not files:
