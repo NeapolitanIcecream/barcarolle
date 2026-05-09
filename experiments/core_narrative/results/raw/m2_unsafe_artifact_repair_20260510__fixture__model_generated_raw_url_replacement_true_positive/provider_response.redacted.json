@@ -1,0 +1,12 @@
+{
+  "choices": [
+    {
+      "message": {
+        "content": "{\"edits\": [{\"path\": \"src/click/core.py\", \"old\": \"VALUE = 1\\n\", \"new\": \"VALUE = \\\"<redacted:url>\"\\n\"}]}"
+      }
+    }
+  ],
+  "usage": {
+    "cost": 0
+  }
+}

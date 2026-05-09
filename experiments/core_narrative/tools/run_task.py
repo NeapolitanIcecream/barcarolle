@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 import argparse
+import hashlib
 import os
 import subprocess
 import sys
@@ -22,6 +23,7 @@ from _common import (
 )
 from _llm_budget import (
     DEFAULT_LEDGER_PATH,
+    FULL_URL_RE,
     assert_safe_command_arguments,
     ensure_no_required_env_values,
     gate_exit_code,
@@ -42,6 +44,8 @@ HARNESS_UNTRACKED_PREFIXES = (
     ".venv/",
 )
 HARNESS_UNTRACKED_PARTS = {"__pycache__"}
+PATCH_DIFF_CONTEXT_LINES = 0
+MAX_UNSAFE_PATCH_URL_OCCURRENCE_RECORDS = 20
 
 
 def parse_args() -> argparse.Namespace:
@@ -88,10 +92,25 @@ def resolve_acut_id(args: argparse.Namespace) -> str:
     raise ToolError("either --acut or --acut-id is required")
 
 
+def sha256_text(text: str) -> str:
+    return hashlib.sha256(text.encode("utf-8")).hexdigest()
+
+
+def diff_command(*extra: str) -> list[str]:
+    return [
+        "git",
+        "diff",
+        "--binary",
+        "--no-ext-diff",
+        f"--unified={PATCH_DIFF_CONTEXT_LINES}",
+        *extra,
+    ]
+
+
 def collect_patch(workspace: Path, env: dict[str, str]) -> str:
     try:
         completed = subprocess.run(
-            ["git", "diff", "--binary", "--no-ext-diff", "HEAD"],
+            diff_command("HEAD"),
             cwd=str(workspace),
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE,
@@ -129,7 +148,7 @@ def collect_patch(workspace: Path, env: dict[str, str]) -> str:
             continue
         try:
             new_file_diff = subprocess.run(
-                ["git", "diff", "--binary", "--no-ext-diff", "--no-index", "--", "/dev/null", relative_path],
+                diff_command("--no-index", "--", "/dev/null", relative_path),
                 cwd=str(workspace),
                 stdout=subprocess.PIPE,
                 stderr=subprocess.PIPE,
@@ -150,6 +169,118 @@ def collect_patch(workspace: Path, env: dict[str, str]) -> str:
     return "".join(part if part.endswith("\n") else f"{part}\n" for part in patch_parts)
 
 
+def patch_line_role(line: str) -> str:
+    if line.startswith(("diff --git ", "index ", "new file mode ", "deleted file mode ")):
+        return "metadata"
+    if line.startswith(("similarity index ", "rename from ", "rename to ", "@@ ")):
+        return "metadata"
+    if line.startswith(("--- ", "+++ ")):
+        return "metadata"
+    if line.startswith("+"):
+        return "generated_added"
+    if line.startswith("-"):
+        return "source_removed"
+    if line.startswith(" "):
+        return "source_context"
+    return "ambiguous"
+
+
+def unsafe_patch_artifact_attribution(patch_text: str, findings: dict[str, object]) -> dict[str, object]:
+    reason_counts = findings.get("reason_counts") if isinstance(findings.get("reason_counts"), dict) else {}
+    full_url_role_counts: dict[str, int] = {}
+    url_occurrences: list[dict[str, object]] = []
+    truncated = False
+
+    for line_number, line in enumerate(patch_text.splitlines(), start=1):
+        matches = list(FULL_URL_RE.finditer(line))
+        if not matches:
+            continue
+        role = patch_line_role(line)
+        full_url_role_counts[role] = full_url_role_counts.get(role, 0) + len(matches)
+        for match in matches:
+            if len(url_occurrences) >= MAX_UNSAFE_PATCH_URL_OCCURRENCE_RECORDS:
+                truncated = True
+                continue
+            url_text = match.group(0)
+            url_occurrences.append(
+                {
+                    "line_number": line_number,
+                    "diff_line_role": role,
+                    "url_sha256": sha256_text(url_text),
+                    "url_char_count": len(url_text),
+                    "content_recorded": False,
+                }
+            )
+
+    full_url_count = int(reason_counts.get("full_url", 0)) if isinstance(reason_counts.get("full_url"), int) else 0
+    source_derived_count = full_url_role_counts.get("source_removed", 0) + full_url_role_counts.get("source_context", 0)
+    generated_count = full_url_role_counts.get("generated_added", 0)
+    ambiguous_count = max(
+        0,
+        full_url_count
+        - source_derived_count
+        - generated_count,
+    )
+    non_url_reason_counts = {
+        str(reason): int(count)
+        for reason, count in reason_counts.items()
+        if reason != "full_url" and isinstance(count, int) and count > 0
+    }
+
+    if non_url_reason_counts:
+        classification = "non_url_unsafe_patch_content"
+    elif full_url_count == 0:
+        classification = "no_full_url_patch_content"
+    elif generated_count > 0:
+        classification = "model_generated_full_url"
+    elif ambiguous_count > 0:
+        classification = "ambiguous_full_url"
+    elif source_derived_count > 0:
+        classification = "source_derived_full_url"
+    else:
+        classification = "ambiguous_full_url"
+
+    return {
+        "classification": classification,
+        "reason_counts": dict(reason_counts),
+        "full_url_count": full_url_count,
+        "full_url_role_counts": dict(sorted(full_url_role_counts.items())),
+        "source_derived_full_url_count": source_derived_count,
+        "model_generated_full_url_count": generated_count,
+        "ambiguous_full_url_count": ambiguous_count,
+        "non_url_reason_counts": dict(sorted(non_url_reason_counts.items())),
+        "all_full_urls_source_derived": bool(full_url_count > 0 and source_derived_count == full_url_count),
+        "all_unsafe_reasons_source_derived": bool(
+            full_url_count > 0 and source_derived_count == full_url_count and not non_url_reason_counts
+        ),
+        "url_occurrences": url_occurrences,
+        "url_occurrences_truncated": truncated,
+        "content_recorded": False,
+    }
+
+
+def write_redacted_patch_preview(patch_text: str, patch_path: Path, env: dict[str, str]) -> dict[str, object]:
+    redacted = redact_sensitive_text(patch_text, env)
+    findings = unsafe_text_findings(redacted, env)
+    if findings["unsafe"]:
+        return {
+            "written": False,
+            "unsafe_content_detected_after_redaction": True,
+            "unsafe_content_after_redaction": findings,
+        }
+    preview_path = patch_path.with_name(f"{patch_path.name}.redacted.txt")
+    preview_path.write_text(redacted, encoding="utf-8")
+    return {
+        "path": str(preview_path),
+        "written": True,
+        "unsafe_content_detected_after_redaction": False,
+        "unsafe_content_after_redaction": findings,
+        "size_bytes": len(redacted.encode("utf-8")),
+        "applies_to_workspace": False,
+        "policy": "redacted_diagnostic_preview_only",
+    }
+
+
 def is_harness_untracked_path(relative_path: str) -> bool:
     normalized = relative_path.replace(os.sep, "/")
     if any(normalized.startswith(prefix) for prefix in HARNESS_UNTRACKED_PREFIXES):
@@ -160,17 +291,22 @@ def is_harness_untracked_path(relative_path: str) -> bool:
 def write_safe_patch(workspace: Path, patch_path: Path, env: dict[str, str]) -> dict[str, object]:
     patch_text = collect_patch(workspace, env)
     findings = unsafe_text_findings(patch_text, env)
+    attribution = unsafe_patch_artifact_attribution(patch_text, findings)
     patch_path.parent.mkdir(parents=True, exist_ok=True)
     if findings["unsafe"]:
         if patch_path.exists():
             patch_path.unlink()
+        redacted_preview = write_redacted_patch_preview(patch_text, patch_path, env)
         return {
             "path": str(patch_path),
             "written": False,
             "unsafe_content_detected": True,
             "unsafe_content": findings,
+            "unsafe_content_attribution": attribution,
+            "redacted_preview": redacted_preview,
             "policy": "reject_before_write",
             "size_bytes": 0,
+            "diff_context_lines": PATCH_DIFF_CONTEXT_LINES,
         }
     patch_path.write_text(patch_text, encoding="utf-8")
     return {
@@ -178,8 +314,10 @@ def write_safe_patch(workspace: Path, patch_path: Path, env: dict[str, str]) -> 
         "written": True,
         "unsafe_content_detected": False,
         "unsafe_content": findings,
+        "unsafe_content_attribution": attribution,
         "policy": "reject_before_write",
         "size_bytes": len(patch_text.encode("utf-8")),
+        "diff_context_lines": PATCH_DIFF_CONTEXT_LINES,
     }
 
 

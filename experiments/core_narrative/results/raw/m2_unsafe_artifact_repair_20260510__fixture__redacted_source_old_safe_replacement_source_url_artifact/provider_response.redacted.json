@@ -1,0 +1,12 @@
+{
+  "choices": [
+    {
+      "message": {
+        "content": "{\"edits\": [{\"path\": \"src/click/core.py\", \"old\": \"    # Lazily resolve default=True to flag_value.\\n    # <redacted:url>\\n    if value is True and self.is_flag:\\n        value = self.flag_value\\n\", \"new\": \"    if value is True and self.is_flag:\\n        value = self.flag_value\\n\"}]}"
+      }
+    }
+  ],
+  "usage": {
+    "cost": 0
+  }
+}

@@ -1,0 +1,12 @@
+{
+  "content_recorded": false,
+  "context_files": [
+    {
+      "path": "src/click/core.py"
+    }
+  ],
+  "fixture_id": "redaction_placeholder_persistence_rejection",
+  "full_urls_redacted": true,
+  "output_contract": "anchored-search-replace-json-v3",
+  "tool": "m2_unsafe_artifact_repair"
+}
