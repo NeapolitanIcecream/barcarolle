@@ -1,0 +1,19 @@
+{
+  "command": [
+    "/opt/homebrew/bin/uv",
+    "pip",
+    "install",
+    "--python",
+    ".venv/bin/python",
+    "-q",
+    "-e",
+    ".",
+    "pytest"
+  ],
+  "exit_code": 0,
+  "finished_at": "2026-05-09T16:04:38.866408Z",
+  "name": "venv_install",
+  "started_at": "2026-05-09T16:04:38.318591Z",
+  "stderr_artifact": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/m2_anchored_contract_live_smoke_20260509__cheap-generic-swe__click__rwork__006__attempt1/venv_install.stderr.txt",
+  "stdout_artifact": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/m2_anchored_contract_live_smoke_20260509__cheap-generic-swe__click__rwork__006__attempt1/venv_install.stdout.txt"
+}
