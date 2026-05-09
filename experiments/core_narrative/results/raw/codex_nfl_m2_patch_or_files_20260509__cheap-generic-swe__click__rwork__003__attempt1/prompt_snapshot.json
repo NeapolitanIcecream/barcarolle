@@ -1,0 +1,69 @@
+{
+  "context_files": [
+    {
+      "char_count": 129494,
+      "displayed_char_count": 80013,
+      "exists": true,
+      "focus_terms": [],
+      "focused_excerpts": [],
+      "path": "src/click/core.py",
+      "sha256": "5e214de83e8c69349f93a8cd1fc1ce9a2c2c9b3fd5ca11988700c2fa47219cdb",
+      "truncated": true
+    },
+    {
+      "char_count": 2531,
+      "displayed_char_count": 2531,
+      "exists": true,
+      "focus_terms": [],
+      "focused_excerpts": [],
+      "path": "tests/test_defaults.py",
+      "sha256": "1f835d0531beaaaa0fe99dcfa57635fa5e2cc9edd85d279a3f854a85551c8e45",
+      "truncated": false
+    }
+  ],
+  "context_packaging": {
+    "effective_max_file_chars": 80000,
+    "max_context_chars": 120000,
+    "prompt_truncated": false,
+    "requested_max_file_chars": 80000
+  },
+  "full_urls_redacted": true,
+  "output_contract": "patch-or-files-v1",
+  "output_contract_schema": {
+    "accepted_forms": [
+      "raw unified diff applicable with git apply",
+      "JSON object with unified_diff, patch, or diff string",
+      "JSON object with files list of full file contents"
+    ],
+    "diagnostic_failure_classes": {
+      "invalid_unified_diff": "unified diff was present but failed git apply validation",
+      "structured_files_invalid": "files entries were malformed or could not be applied as file-level edits",
+      "unsafe_generated_text": "response, path, content, or generated patch contained unsafe generated text",
+      "unsupported_patch_response": "response did not contain unified diff or structured files"
+    },
+    "id": "patch-or-files-v1",
+    "path_policy": {
+      "paths_must_be_from_declared_context": true,
+      "paths_must_be_relative": true,
+      "paths_must_not_target_reserved_metadata": [
+        ".git",
+        ".core_narrative"
+      ]
+    }
+  },
+  "prompt_char_count": 86259,
+  "prompt_content_recorded": true,
+  "prompt_sha256": "a1ff754b680f2281392843c1e53ff89a7a6207ca370f6f81e0d96c929c4d1f66",
+  "run_id": "codex_nfl_m2_patch_or_files_20260509__cheap-generic-swe__click__rwork__003__attempt1",
+  "runner_id": "codex-nfl-direct-search-replace-v1",
+  "specialist_context_assertion": {
+    "expected": "excluded",
+    "include_mode": "auto",
+    "passed": true
+  },
+  "specialist_context_included": false,
+  "specialist_context_path": null,
+  "statement_truncated": false,
+  "task_statement_path": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/tasks/click/rwork/click__rwork__003/public/statement.md",
+  "tool": "codex_nfl_direct_runner"
+}
