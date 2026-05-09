@@ -560,13 +560,14 @@ def parse_patch_response(text: str) -> dict[str, Any]:
         except json.JSONDecodeError:
             continue
         if isinstance(data, dict):
+            top_level_keys = sorted(data)
             for key in ("unified_diff", "patch", "diff"):
                 value = data.get(key)
                 if isinstance(value, str) and value.strip():
-                    return {"kind": "unified_diff", "text": value.strip() + "\n"}
+                    return {"kind": "unified_diff", "text": value.strip() + "\n", "top_level_keys": top_level_keys}
             files = data.get("files")
             if isinstance(files, list):
-                return {"kind": "structured_files", "files": files}
+                return {"kind": "structured_files", "files": files, "top_level_keys": top_level_keys}
 
     fenced = extract_fenced_diff(text)
     if fenced:
@@ -580,6 +581,15 @@ def parse_patch_response(text: str) -> dict[str, Any]:
 def enforce_output_contract(parsed: Mapping[str, Any], output_contract: str) -> None:
     if output_contract != STRUCTURED_FILES_OUTPUT_CONTRACT:
         return
+    top_level_keys = parsed.get("top_level_keys")
+    if isinstance(top_level_keys, list) and "files" in top_level_keys:
+        unsupported = sorted(str(key) for key in top_level_keys if key != "files")
+        if unsupported:
+            raise ToolError(
+                "structured-files output contract requires a single files key",
+                unsupported_top_level_keys=unsupported,
+                failure_class="output_contract_violation",
+            )
     if parsed.get("kind") != "structured_files":
         raise ToolError(
             "structured-files output contract requires JSON files",
