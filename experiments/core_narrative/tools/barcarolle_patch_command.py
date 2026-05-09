@@ -39,6 +39,17 @@ DEFAULT_MAX_STATEMENT_CHARS = 6_000
 DEFAULT_MAX_MANIFEST_CHARS = 5_000
 DEFAULT_MAX_RESPONSE_BYTES = 2_000_000
 DEFAULT_HTTP_TIMEOUT_SECONDS = 120
+INCOMPLETE_STRUCTURED_CONTENT_MARKERS = (
+    "[truncated]",
+    "<truncated>",
+    "<unchanged>",
+    "[unchanged]",
+    "rest of file unchanged",
+    "remaining file unchanged",
+    "unchanged content omitted",
+    "omitted for brevity",
+    "same as before",
+)
 
 
 def parse_args(argv: Sequence[str]) -> argparse.Namespace:
@@ -249,11 +260,16 @@ def build_prompt(
     task_json = json.dumps(concise_task_summary(task), indent=2, sort_keys=True)
     if output_contract == STRUCTURED_FILES_OUTPUT_CONTRACT:
         return_contract = [
-            "Return only a JSON object. Do not include markdown fences, prose, or a unified diff.",
-            "The JSON object must have this shape:",
+            "Return only a raw JSON object. The first non-whitespace character must be { and the last must be }.",
+            "Do not include markdown fences, prose, explanations, or a unified diff.",
+            "The JSON object must have exactly one top-level key and this shape:",
             '{"files":[{"path":"relative/path","action":"write","content":"full file content"}]}',
             "Allowed actions are write, create, replace, and delete. For delete, omit content.",
+            "For write, create, and replace, content must be the complete final file content from byte 1 through EOF.",
+            "Do not use placeholders like <unchanged>, [truncated], or comments saying the rest is unchanged.",
+            "Do not return edits, old/new search strings, unified_diff, patch, diff, raw diff text, or extra top-level keys.",
             "Each path must be relative and must not target .git or .core_narrative.",
+            "Do not include http:// or https:// URLs, endpoint values, credentials, or bearer tokens in paths or content.",
         ]
     else:
         return_contract = [
@@ -331,7 +347,8 @@ def live_request_payload(
     params = acut.get("model_parameters") if isinstance(acut.get("model_parameters"), dict) else {}
     system = (
         "You are a patch-generation engine. Return only the requested patch "
-        "format. Do not include credentials, endpoint values, bearer tokens, or full URLs."
+        "format. Do not include prose, markdown fences, credentials, endpoint "
+        "values, bearer tokens, full URLs, or placeholders."
     )
     if endpoint_kind == "responses":
         return {
@@ -607,7 +624,7 @@ def classify_failure(error: str, details: Mapping[str, Any]) -> str:
     if error == "structured-files output contract requires JSON files":
         return "output_contract_violation"
     if "unsafe content" in error:
-        return "unsafe_generated_content"
+        return "unsafe_generated_text"
     error_type = str(details.get("error_type", "")).lower()
     if error == "LLM request timed out" or error_type in {"timeout", "timeouterror", "socket.timeout"}:
         return "llm_request_timed_out"
@@ -622,8 +639,22 @@ def reject_unsafe_generated_text(text: str, label: str) -> None:
         raise ToolError(
             f"{label} contains unsafe content",
             unsafe_content=findings,
+            failure_class="unsafe_generated_text",
             network_attempted=False,
         )
+
+
+def reject_incomplete_structured_content(content: str, *, index: int, path: str) -> None:
+    lowered = content.lower()
+    for marker in INCOMPLETE_STRUCTURED_CONTENT_MARKERS:
+        if marker in lowered:
+            raise ToolError(
+                "structured patch content appears incomplete",
+                index=index,
+                path=path,
+                incomplete_content_marker=marker,
+                failure_class="structured_files_invalid",
+            )
 
 
 def validate_patch_path(path: str) -> str:
@@ -748,6 +779,7 @@ def apply_structured_files(workspace: Path, files: Sequence[Any], *, apply_patch
             if not isinstance(content, str):
                 raise ToolError("structured patch write action requires string content", index=index)
             reject_unsafe_generated_text(content, "structured patch content")
+            reject_incomplete_structured_content(content, index=index, path=planned_paths[-1])
 
     if apply_patch:
         for item in files:

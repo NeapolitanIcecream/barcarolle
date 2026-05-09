@@ -246,9 +246,45 @@ class AcutPatchAdapterTests(unittest.TestCase):
         self.assertEqual(adapter_result["inner_patch_command"]["failure_class"], "invalid_unified_diff")
         self.assertIs(adapter_result["inner_patch_command"]["model_call_made"], True)
         self.assertIs(adapter_result["inner_patch_command"]["model_response_received"], True)
+        self.assertEqual(normalized["status"], "invalid_submission")
         self.assertEqual(normalized["metadata"]["failure_class"], "invalid_unified_diff")
+        self.assertEqual(normalized["metadata"]["failure_owner"], "model_output")
         self.assertEqual(ledger_records[0]["event"], "command_failed")
         self.assertEqual(ledger_records[0]["metadata"]["failure_class"], "invalid_unified_diff")
+
+    def test_nonzero_direct_patch_command_unsafe_structured_content_is_invalid_submission(self) -> None:
+        """Regression: unsafe structured direct output is model-owned invalid-submission evidence."""
+        inner_summary = {
+            "tool": "barcarolle_patch_command",
+            "status": "error",
+            "error": "structured patch content contains unsafe content",
+            "failure_class": "unsafe_generated_text",
+            "model_call_made": True,
+            "output_contract": "structured-files-json-v1",
+            "details": {
+                "model_response_received": True,
+                "unsafe_content": {
+                    "unsafe": True,
+                    "reason_counts": {"full_url": 1},
+                },
+            },
+        }
+        completed, adapter_result, ledger_records, normalized_path = self.run_adapter_case(
+            inner_summary=inner_summary,
+            run_id="unit_direct_unsafe_structured_attempt1",
+        )
+
+        self.assertEqual(completed.returncode, 0, completed.stderr)
+        normalized = json.loads(normalized_path.read_text(encoding="utf-8"))
+
+        self.assertEqual(adapter_result["status"], "command_failed")
+        self.assertEqual(adapter_result["inner_patch_command"]["failure_class"], "unsafe_generated_text")
+        self.assertEqual(adapter_result["inner_patch_command"]["output_contract"], "structured-files-json-v1")
+        self.assertEqual(normalized["status"], "invalid_submission")
+        self.assertEqual(normalized["metadata"]["failure_class"], "unsafe_generated_text")
+        self.assertEqual(normalized["metadata"]["failure_owner"], "model_output")
+        self.assertEqual(ledger_records[0]["event"], "command_failed")
+        self.assertEqual(ledger_records[0]["metadata"]["failure_class"], "unsafe_generated_text")
 
     def test_unsafe_patch_rejection_is_not_marked_no_patch_generated(self) -> None:
         """Regression: unsafe sanitized artifacts are not true empty-patch runs."""

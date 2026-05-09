@@ -75,6 +75,7 @@ def output_contract_schema(output_contract: str = DEFAULT_OUTPUT_CONTRACT) -> di
             "requires_single_top_level_key": True,
             "requires_json_object": True,
             "requires_full_file_content": True,
+            "rejects_incomplete_content_markers": True,
             "allowed_actions": ["write", "create", "replace", "delete"],
             "path_policy": {
                 "paths_must_be_relative": True,
@@ -84,6 +85,7 @@ def output_contract_schema(output_contract: str = DEFAULT_OUTPUT_CONTRACT) -> di
             "diagnostic_failure_classes": {
                 "output_contract_violation": "response did not satisfy the selected structured-files contract",
                 "structured_files_invalid": "files entries were malformed or could not be applied as file-level edits",
+                "unsafe_generated_text": "response, path, content, or generated patch contained unsafe generated text",
             },
         }
     return {
@@ -422,16 +424,21 @@ def build_prompt(
 
     if output_contract == STRUCTURED_FILES_OUTPUT_CONTRACT:
         contract_lines = [
-            "Return only one JSON object with this exact contract:",
+            "Return only one raw JSON object with this exact contract:",
             '{"files":[{"path":"relative/file.py","action":"write","content":"full file content"}]}',
+            "The first non-whitespace character must be { and the last non-whitespace character must be }.",
             "Allowed actions are write, create, replace, and delete. For delete, omit content.",
-            "For write, create, and replace, content must be the complete final file content, not a snippet or diff.",
-            "Do not return edits, old/new search strings, unified_diff, raw diff text, markdown fences, prose, or any top-level key other than files.",
+            "For write, create, and replace, content must be the complete final file content from byte 1 through EOF, not a snippet or diff.",
+            "Do not use placeholders like <unchanged>, [truncated], or comments saying the rest is unchanged.",
+            "Do not return edits, old/new search strings, unified_diff, patch, diff, raw diff text, markdown fences, prose, or any top-level key other than files.",
+            "Any JSON object with edits, unified_diff, patch, diff, or extra top-level keys is invalid.",
+            "Do not include http:// or https:// URLs, endpoint values, credentials, bearer tokens, or generated API endpoints in paths or content.",
             "",
             "Pre-submit validation checklist:",
             "- The top-level JSON object has exactly one key: files.",
             "- Each file path exactly matches one of the Valid edit paths below.",
-            "- Each non-delete entry includes complete final file content.",
+            "- Each non-delete entry includes complete final file content, including unchanged lines before and after the edit.",
+            "- No markdown fences, prose, notes, placeholders, diffs, old/new edit bundles, URLs, or endpoint strings are present.",
             "- Keep changes minimal. Prefer source code fixes over test-only changes.",
         ]
     else:
@@ -590,8 +597,9 @@ def live_payload(
     params = acut.get("model_parameters") if isinstance(acut.get("model_parameters"), dict) else {}
     if output_contract == STRUCTURED_FILES_OUTPUT_CONTRACT:
         system = (
-            "You are a patch-generation engine. Return only valid JSON matching "
-            "the requested structured file-level contract."
+            "You are a patch-generation engine. Return only raw JSON matching "
+            "the requested structured file-level contract. Do not include prose, "
+            "markdown fences, URLs, endpoint values, credentials, or placeholders."
         )
     else:
         system = (

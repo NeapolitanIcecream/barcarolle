@@ -293,14 +293,119 @@ class MeasurementStabilizationSummaryTests(unittest.TestCase):
                         "acut_id": "cheap-generic-swe",
                         "task_id": "click__rwork__003",
                         "status": "passed",
-                        "submission_contract": "anchored-search-replace-json-v3",
+                        "submission_contract": "structured-files-json-v1",
+                        "output_contract": "anchored-search-replace-json-v3",
                         "normalized": {
                             "metadata": {
-                                "submission_contract": "anchored-search-replace-json-v3",
+                                "submission_contract": "structured-files-json-v1",
+                                "output_contract": "anchored-search-replace-json-v3",
                                 "failure_owner": "none",
                                 "model_call_made": True,
                                 "patch_readiness": {"verifier_ready_patch_available": True},
                             }
+                        },
+                    },
+                    {
+                        "acut_id": "cheap-click-specialist",
+                        "task_id": "click__rwork__003",
+                        "status": "passed",
+                        "submission_contract": "structured-files-json-v1",
+                        "output_contract": "structured-files-json-v1",
+                        "normalized": {
+                            "metadata": {
+                                "submission_contract": "structured-files-json-v1",
+                                "output_contract": "structured-files-json-v1",
+                                "failure_owner": "none",
+                                "model_call_made": True,
+                                "patch_readiness": {"verifier_ready_patch_available": True},
+                            }
+                        },
+                    },
+                    {
+                        "acut_id": "cheap-click-specialist",
+                        "task_id": "click__rwork__003",
+                        "status": "failed",
+                        "submission_contract": "structured-files-json-v1",
+                        "output_contract": "structured-files-json-v1",
+                        "normalized": {
+                            "metadata": {
+                                "submission_contract": "structured-files-json-v1",
+                                "output_contract": "structured-files-json-v1",
+                                "failure_owner": "candidate_patch",
+                                "model_call_made": True,
+                                "patch_readiness": {"verifier_ready_patch_available": True},
+                            }
+                        },
+                    },
+                ]
+            },
+        )
+        output = self.root / "summary.json"
+
+        code = summary.main(
+            [
+                "--anchored-baseline",
+                str(anchored),
+                "--structured-batch",
+                str(structured),
+                "--tasks",
+                "click__rwork__003",
+                "--acuts",
+                "cheap-generic-swe",
+                "cheap-click-specialist",
+                "--output",
+                str(output),
+            ]
+        )
+
+        self.assertEqual(code, 0)
+        payload = json.loads(output.read_text(encoding="utf-8"))
+        contract = payload["contracts"]["structured-files-json-v1"]
+        self.assertEqual(contract["total"], 2)
+        self.assertEqual(contract["status_counts"], {"missing": 1, "passed": 1})
+        self.assertEqual(payload["claim_status"], "not yet testable")
+
+    def test_runner_result_wrong_contract_batch_rows_do_not_count_as_structured_evidence(self) -> None:
+        """Regression: wrong contracts nested only under runner_result still exclude the row."""
+        anchored = self.write_json(
+            "anchored.json",
+            {
+                "cells": {
+                    "cheap-generic-swe::click__rwork__003": {
+                        "canonical_latest": {
+                            "status": "invalid_submission",
+                            "failure_label": "invalid_submission:search_replace_old_occurrence_mismatch",
+                        }
+                    },
+                    "cheap-click-specialist::click__rwork__003": {
+                        "canonical_latest": {
+                            "status": "invalid_submission",
+                            "failure_label": "invalid_submission:search_replace_old_occurrence_mismatch",
+                        }
+                    },
+                }
+            },
+        )
+        structured = self.write_json(
+            "structured.json",
+            {
+                "results": [
+                    {
+                        "acut_id": "cheap-generic-swe",
+                        "task_id": "click__rwork__003",
+                        "status": "passed",
+                        "submission_contract": "structured-files-json-v1",
+                        "normalized": {
+                            "metadata": {
+                                "submission_contract": "structured-files-json-v1",
+                                "failure_owner": "none",
+                                "model_call_made": True,
+                                "patch_readiness": {"verifier_ready_patch_available": True},
+                            }
+                        },
+                        "runner_result": {
+                            "submission_contract": "structured-files-json-v1",
+                            "output_contract": "anchored-search-replace-json-v3",
                         },
                     },
                     {
@@ -315,6 +420,10 @@ class MeasurementStabilizationSummaryTests(unittest.TestCase):
                                 "model_call_made": True,
                                 "patch_readiness": {"verifier_ready_patch_available": True},
                             }
+                        },
+                        "runner_result": {
+                            "submission_contract": "structured-files-json-v1",
+                            "output_contract": "structured-files-json-v1",
                         },
                     },
                 ]
