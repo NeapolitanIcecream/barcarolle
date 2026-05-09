@@ -52,6 +52,8 @@ MODEL_OUTPUT_FAILURE_CLASSES = {
     "search_replace_anchor_mismatch",
     "search_replace_old_occurrence_mismatch",
     "output_contract_violation",
+    "apply_patch_context_mismatch",
+    "apply_patch_invalid",
     "invalid_unified_diff",
     "unsupported_patch_response",
     "structured_files_invalid",
