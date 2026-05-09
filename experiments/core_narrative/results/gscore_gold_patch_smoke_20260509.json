@@ -1,0 +1,362 @@
+{
+  "artifact_dir": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/gscore_gold_patch_smoke_20260509",
+  "blockers": [
+    {
+      "blocker": "dataset_cache_missing",
+      "path": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/cache/swebench_pro/test-00000-of-00001.parquet"
+    },
+    {
+      "blocker": "evaluation_harness_checkout_missing",
+      "checked_paths": [
+        "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/external_repos/SWE-bench_Pro-os",
+        "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/external_repos/swebench_pro_os",
+        "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/cache/SWE-bench_Pro-os",
+        "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/cache/swebench_pro_os",
+        "/Users/chenmohan/gits/barcarolle/external_repos/SWE-bench_Pro-os",
+        "/Users/chenmohan/gits/barcarolle/external_repos/swebench_pro_os"
+      ]
+    }
+  ],
+  "checks": {
+    "artifact_layout": {
+      "artifact_dir": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/gscore_gold_patch_smoke_20260509",
+      "execution_layout_expected_now": false,
+      "expected_execution_artifacts": {
+        "command_artifact": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/gscore_gold_patch_smoke_20260509/evaluator_command.json",
+        "score_artifact": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/gscore_gold_patch_smoke_20260509/evaluator_output/eval_results.json",
+        "stderr_artifact": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/gscore_gold_patch_smoke_20260509/evaluator.stderr.txt",
+        "stdout_artifact": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/gscore_gold_patch_smoke_20260509/evaluator.stdout.txt"
+      },
+      "expected_inputs": {
+        "manifest_path": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/gscore_gold_patch_smoke_20260509/gold_patch_artifact_manifest.json",
+        "patch_path": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/gscore_gold_patch_smoke_20260509/gold_patches.json",
+        "raw_sample_path": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/gscore_gold_patch_smoke_20260509/gold_patch_raw_samples.jsonl"
+      },
+      "input_layout_expected_now": false,
+      "missing_expected_now": [],
+      "notes": [
+        "Input artifacts are required once the pinned dataset cache is readable.",
+        "Execution artifacts are required only when the evaluator gold-patch path is actually run."
+      ],
+      "present_execution_artifacts": {
+        "command_artifact": false,
+        "score_artifact": false,
+        "stderr_artifact": false,
+        "stdout_artifact": false
+      },
+      "present_inputs": {
+        "manifest_path": false,
+        "patch_path": false,
+        "raw_sample_path": false
+      },
+      "status": "passed"
+    },
+    "dataset_cache": {
+      "blockers": [
+        {
+          "blocker": "dataset_cache_missing",
+          "path": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/cache/swebench_pro/test-00000-of-00001.parquet"
+        }
+      ],
+      "exists": false,
+      "expected_sha256": "c8cd7115496ad4e9a8b21d088cef576a65bf821bb542b24336f13f714cef13f8",
+      "gold_patch_artifacts": null,
+      "observed_sha256": null,
+      "path": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/cache/swebench_pro/test-00000-of-00001.parquet",
+      "row_validation": null,
+      "status": "blocked"
+    },
+    "docker": {
+      "backend": "local-docker",
+      "blockers": [],
+      "execute_gold_patch_requested": false,
+      "host_platform": "macOS-26.2-arm64-arm-64bit",
+      "info": {
+        "available": true,
+        "exit_code": 0,
+        "stderr": "",
+        "stdout": "\"29.4.0\" \"OrbStack\""
+      },
+      "machine": "arm64",
+      "required_for_selected_backend": true,
+      "status": "passed",
+      "version": {
+        "available": true,
+        "exit_code": 0,
+        "stderr": "",
+        "stdout": "Docker version 29.4.0, build 9d7ad9f"
+      }
+    },
+    "evaluation_harness": {
+      "blockers": [
+        {
+          "blocker": "evaluation_harness_checkout_missing",
+          "checked_paths": [
+            "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/external_repos/SWE-bench_Pro-os",
+            "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/external_repos/swebench_pro_os",
+            "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/cache/SWE-bench_Pro-os",
+            "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/cache/swebench_pro_os",
+            "/Users/chenmohan/gits/barcarolle/external_repos/SWE-bench_Pro-os",
+            "/Users/chenmohan/gits/barcarolle/external_repos/swebench_pro_os"
+          ]
+        }
+      ],
+      "checked_paths": [
+        "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/external_repos/SWE-bench_Pro-os",
+        "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/external_repos/swebench_pro_os",
+        "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/cache/SWE-bench_Pro-os",
+        "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/cache/swebench_pro_os",
+        "/Users/chenmohan/gits/barcarolle/external_repos/SWE-bench_Pro-os",
+        "/Users/chenmohan/gits/barcarolle/external_repos/swebench_pro_os"
+      ],
+      "dockerfiles_dir_exists": false,
+      "entrypoint": "swe_bench_pro_eval.py",
+      "entrypoint_exists": false,
+      "existing_paths": [],
+      "expected_revision": "0c64e26f00b9c190432de7fc520c8ceed5c25518",
+      "git_head": null,
+      "python_dependency_check": null,
+      "run_scripts_dir_exists": false,
+      "selected_path": null,
+      "status": "blocked"
+    },
+    "pinned_config": {
+      "blockers": [],
+      "denominator": {
+        "denominator_policy": "fixed across all ACUTs; ACUT-specific failures do not shrink the denominator",
+        "formula": "G_score = 100 * sum(resolved_i) / 6 after any pre-run global-infra replacements",
+        "locked_task_count": 6,
+        "ordinals": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6
+        ],
+        "passed": true,
+        "target_size": 6,
+        "unique_instance_id_count": 6
+      },
+      "metadata_checks": {
+        "benchmark.dataset_config": {
+          "expected": "default",
+          "observed": "default",
+          "passed": true
+        },
+        "benchmark.dataset_id": {
+          "expected": "ScaleAI/SWE-bench_Pro",
+          "observed": "ScaleAI/SWE-bench_Pro",
+          "passed": true
+        },
+        "benchmark.evaluation_harness.entrypoint": {
+          "expected": "swe_bench_pro_eval.py",
+          "observed": "swe_bench_pro_eval.py",
+          "passed": true
+        },
+        "benchmark.evaluation_harness.repo": {
+          "expected": "scaleapi/SWE-bench_Pro-os",
+          "observed": "scaleapi/SWE-bench_Pro-os",
+          "passed": true
+        },
+        "benchmark.evaluation_harness.revision": {
+          "expected": "0c64e26f00b9c190432de7fc520c8ceed5c25518",
+          "observed": "0c64e26f00b9c190432de7fc520c8ceed5c25518",
+          "passed": true
+        },
+        "benchmark.name": {
+          "expected": "SWE-Bench Pro Public",
+          "observed": "SWE-Bench Pro Public",
+          "passed": true
+        },
+        "benchmark.snapshot_basis.data_file_commit": {
+          "expected": "2dd05cab1572ce1d59fdc699b386692ff8e0bd29",
+          "observed": "2dd05cab1572ce1d59fdc699b386692ff8e0bd29",
+          "passed": true
+        },
+        "benchmark.snapshot_basis.data_file_path": {
+          "expected": "data/test-00000-of-00001.parquet",
+          "observed": "data/test-00000-of-00001.parquet",
+          "passed": true
+        },
+        "benchmark.snapshot_basis.data_file_sha256": {
+          "expected": "c8cd7115496ad4e9a8b21d088cef576a65bf821bb542b24336f13f714cef13f8",
+          "observed": "c8cd7115496ad4e9a8b21d088cef576a65bf821bb542b24336f13f714cef13f8",
+          "passed": true
+        },
+        "benchmark.snapshot_basis.huggingface_revision": {
+          "expected": "7ab5114912baf22bb098818e604c02fe7ad2c11f",
+          "observed": "7ab5114912baf22bb098818e604c02fe7ad2c11f",
+          "passed": true
+        },
+        "benchmark.snapshot_basis.rows": {
+          "expected": 731,
+          "observed": 731,
+          "passed": true
+        },
+        "benchmark.split": {
+          "expected": "test",
+          "observed": "test",
+          "passed": true
+        },
+        "id": {
+          "expected": "gscore_swebench_pro_public_6_v1",
+          "observed": "gscore_swebench_pro_public_6_v1",
+          "passed": true
+        },
+        "score_basis.direct_run": {
+          "expected": true,
+          "observed": true,
+          "passed": true
+        },
+        "score_basis.external_public_scores_used_for_g_score": {
+          "expected": false,
+          "observed": false,
+          "passed": true
+        },
+        "status": {
+          "expected": "locked",
+          "observed": "locked",
+          "passed": true
+        },
+        "task_subset.name": {
+          "expected": "barcarolle_gscore_swebp_public_6_v1",
+          "observed": "barcarolle_gscore_swebp_public_6_v1",
+          "passed": true
+        },
+        "task_subset.selection_rule.salt": {
+          "expected": "barcarolle-core-narrative-gscore-v1",
+          "observed": "barcarolle-core-narrative-gscore-v1",
+          "passed": true
+        },
+        "task_subset.selection_status": {
+          "expected": "locked",
+          "observed": "locked",
+          "passed": true
+        },
+        "task_subset.target_size": {
+          "expected": 6,
+          "observed": 6,
+          "passed": true
+        }
+      },
+      "selection_rule": {
+        "algorithm": [
+          "Group candidate rows by repo.",
+          "Sort repo groups lexicographically by repo string.",
+          "Sort each repo group by the selection key ascending, then by instance_id ascending as a tie breaker.",
+          "Select the first two rows from each repo group in repo order until six rows are selected.",
+          "Build a global reserve list from all remaining rows sorted by the same key, then instance_id.",
+          "Do not inspect ACUT results, public leaderboard per-task results, gold patches, or test outcomes while selecting."
+        ],
+        "replacement_rule": {
+          "allowed_only_for_global_infra_failure": true,
+          "global_infra_failure_definition": "the official gold patch for the instance cannot be evaluated successfully with the pinned harness, pinned dataset row, and declared Docker image before any ACUT scoring begins",
+          "replacement_lock": "all replacements must be recorded before the first ACUT patch-generation run",
+          "replacement_source": "next row in the global reserve list"
+        },
+        "repo_counts": {
+          "NodeBB/NodeBB": 2,
+          "ansible/ansible": 2,
+          "element-hq/element-web": 2
+        },
+        "repo_stratification_passed": true,
+        "salt": "barcarolle-core-narrative-gscore-v1",
+        "selection_key_checks": [
+          {
+            "expected_selection_key": "047ff911070ea0140124c66c1cf72f0b7784a6aabc6498be01b83feb5c975002",
+            "instance_id": "instance_NodeBB__NodeBB-51d8f3b195bddb13a13ddc0de110722774d9bb1b-vf2cf3cbd463b7ad942381f1c6d077626485a1e9e",
+            "observed_selection_key": "047ff911070ea0140124c66c1cf72f0b7784a6aabc6498be01b83feb5c975002",
+            "ordinal": 1,
+            "passed": true,
+            "repo": "NodeBB/NodeBB"
+          },
+          {
+            "expected_selection_key": "0721e5783d7d2d25c88f1e5e89f9f6534798dc3b069d39ecab6c2948bcaa2a8c",
+            "instance_id": "instance_NodeBB__NodeBB-84dfda59e6a0e8a77240f939a7cb8757e6eaf945-v2c59007b1005cd5cd14cbb523ca5229db1fd2dd8",
+            "observed_selection_key": "0721e5783d7d2d25c88f1e5e89f9f6534798dc3b069d39ecab6c2948bcaa2a8c",
+            "ordinal": 2,
+            "passed": true,
+            "repo": "NodeBB/NodeBB"
+          },
+          {
+            "expected_selection_key": "017a871e5635c864650083122fc0a23ab4caf85bb6fc99da08df84ca7cb4852d",
+            "instance_id": "instance_ansible__ansible-d33bedc48fdd933b5abd65a77c081876298e2f07-v0f01c69f1e2528b935359cfe578530722bca2c59",
+            "observed_selection_key": "017a871e5635c864650083122fc0a23ab4caf85bb6fc99da08df84ca7cb4852d",
+            "ordinal": 3,
+            "passed": true,
+            "repo": "ansible/ansible"
+          },
+          {
+            "expected_selection_key": "048c1c04ca1707ade6311c313fde81725dd47da7d47774dc1940af6c6b94ae5e",
+            "instance_id": "instance_ansible__ansible-984216f52e76b904e5b0fa0fb956ab4f1e0a7751-v1055803c3a812189a1133297f7f5468579283f86",
+            "observed_selection_key": "048c1c04ca1707ade6311c313fde81725dd47da7d47774dc1940af6c6b94ae5e",
+            "ordinal": 4,
+            "passed": true,
+            "repo": "ansible/ansible"
+          },
+          {
+            "expected_selection_key": "0129076119cdc9afe90add7483d6d84e60836ab72986d7f24525c60c15ba0be5",
+            "instance_id": "instance_element-hq__element-web-776ffa47641c7ec6d142ab4a47691c30ebf83c2e",
+            "observed_selection_key": "0129076119cdc9afe90add7483d6d84e60836ab72986d7f24525c60c15ba0be5",
+            "ordinal": 5,
+            "passed": true,
+            "repo": "element-hq/element-web"
+          },
+          {
+            "expected_selection_key": "05758b2065573dbfba3b9ff296a4363ac2aefe48447f8fc3b5580541f9f9f454",
+            "instance_id": "instance_element-hq__element-web-5dfde12c1c1c0b6e48f17e3405468593e39d9492-vnan",
+            "observed_selection_key": "05758b2065573dbfba3b9ff296a4363ac2aefe48447f8fc3b5580541f9f9f454",
+            "ordinal": 6,
+            "passed": true,
+            "repo": "element-hq/element-web"
+          }
+        ]
+      },
+      "status": "passed"
+    },
+    "score_parser_expectations": {
+      "accepted_fallback_schemas": [
+        "JSON object with eval_results/results_by_instance/instance_results mapping, parsed for diagnostics only unless it matches the proof schema",
+        "JSON object with results or instances list carrying instance_id plus resolved/passed/status, parsed for diagnostics only unless it matches the proof schema"
+      ],
+      "fixed_denominator": 6,
+      "missing_expected_instance": "invalid_score_artifact",
+      "non_json_boolean_status": "invalid_score_artifact",
+      "non_proof_permissive_parser": "parse_score_payload_permissive accepts string/int convenience values only with status parsed_non_proof and proof_eligible false",
+      "official_artifact": "eval_results.json",
+      "proof_eligible_source_shape": "direct_instance_mapping",
+      "proof_schema": "Official eval_results.json object mapping instance_id to JSON boolean resolved status",
+      "proof_value_semantics": "json_boolean_only",
+      "unexpected_instance": "invalid_score_artifact"
+    }
+  },
+  "claim_limitations": [
+    "This artifact is gold-patch infrastructure evidence only.",
+    "No ACUT patch-generation was run.",
+    "No ACUT G_score is available from this smoke.",
+    "Public leaderboard or proxy scores were not used.",
+    "If blocked, G_score must remain unavailable rather than zero-filled."
+  ],
+  "config_path": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/configs/general_benchmark.yaml",
+  "direct_acut_scoring": {
+    "attempted": false,
+    "g_score_available": false,
+    "g_scores": {},
+    "reason": "This smoke only checks the gold-patch/evaluator basis before any ACUT patch-generation or scoring."
+  },
+  "generated_at": "2026-05-09T12:37:36.212180Z",
+  "gold_patch_path": {
+    "basis_proven": false,
+    "evaluator_run": null,
+    "execute_requested": false,
+    "ran": false,
+    "score_parser": null
+  },
+  "next_defensible_action": "Resolve the recorded environment/data/evaluator blockers, then rerun the no-model gold-patch smoke.",
+  "no_model_calls_made": true,
+  "public_leaderboard_proxy_used": false,
+  "schema_version": "core-narrative.gscore-gold-patch-smoke.v1",
+  "status": "gold_patch_smoke_blocked",
+  "tool": "codex_nfl_gscore_gold_patch_smoke"
+}
