@@ -58,15 +58,20 @@ class M2AnchoredContractSmokeTests(unittest.TestCase):
         self.assertEqual(code, 0)
         payload = json.loads(output.read_text(encoding="utf-8"))
         self.assertEqual(payload["scope"]["contract"], "anchored-search-replace-json-v3")
-        self.assertEqual(payload["scope"]["fixture_fixed_denominator"], 5)
+        self.assertEqual(payload["scope"]["fixture_fixed_denominator"], 7)
         self.assertEqual(payload["scope"]["prior_m2_fixed_denominator"], 6)
         self.assertTrue(payload["scope"]["denominators_are_separate"])
+        self.assertEqual(payload["scope"]["repair_focus"], "anchored_old_occurrence_repair")
         self.assertFalse(payload["cost_model_call_flags"]["fixtures"]["model_call_made"])
         self.assertEqual(payload["cost_model_call_flags"]["fixtures"]["model_spend_usd"], 0.0)
 
         diagnostics = payload["diagnostic_summary"]
         self.assertEqual(diagnostics["ambiguous_anchor_diagnostic_rows"], 1)
         self.assertEqual(diagnostics["stale_anchor_diagnostic_rows"], 1)
+        self.assertEqual(diagnostics["repeated_old_missing_anchor_rows"], 1)
+        self.assertEqual(diagnostics["stale_old_text_rows"], 1)
+        self.assertEqual(diagnostics["old_occurrence_mismatch_rows"], 2)
+        self.assertEqual(diagnostics["old_occurrence_rows_with_hashes"], 2)
         self.assertEqual(diagnostics["redacted_source_text_diagnostic_rows"], 1)
         self.assertEqual(diagnostics["missing_raw_artifact_rows"], 1)
         self.assertFalse(diagnostics["source_content_recorded"])
@@ -82,6 +87,16 @@ class M2AnchoredContractSmokeTests(unittest.TestCase):
         )
         self.assertEqual(rows["ambiguous_anchor"]["failure_class"], "search_replace_anchor_mismatch")
         self.assertEqual(rows["stale_anchor"]["details"]["diagnostic"]["code"], "unique_old_anchor_mismatch")
+        self.assertEqual(rows["repeated_old_missing_anchors"]["failure_class"], "search_replace_old_occurrence_mismatch")
+        self.assertEqual(rows["repeated_old_missing_anchors"]["details"]["occurrences"], 2)
+        self.assertEqual(
+            rows["repeated_old_missing_anchors"]["details"]["diagnostic"]["code"],
+            "old_text_repeated_without_anchors",
+        )
+        self.assertEqual(rows["stale_old_text"]["failure_class"], "search_replace_old_occurrence_mismatch")
+        self.assertEqual(rows["stale_old_text"]["details"]["occurrences"], 0)
+        self.assertEqual(rows["stale_old_text"]["details"]["diagnostic"]["code"], "old_text_not_found")
+        self.assertIsInstance(rows["stale_old_text"]["details"]["search_text"]["old_text_sha256"], str)
         self.assertEqual(rows["missing_raw_artifact"]["status"], "missing_replay_input")
         redacted = rows["redacted_source_text"]
         self.assertEqual(redacted["failure_class"], "unsafe_generated_text")
@@ -143,9 +158,29 @@ class M2AnchoredContractSmokeTests(unittest.TestCase):
                 "results": [
                     {
                         "status": "invalid_submission",
+                        "acut_id": "cheap-generic-swe",
+                        "task_id": "click__rwork__006",
+                        "artifact_dir": "/tmp/live-artifacts",
+                        "prompt_snapshot": "/tmp/live-artifacts/prompt_snapshot.json",
+                        "raw_response_artifact": "/tmp/live-artifacts/provider_response.redacted.json",
                         "runner_result": {
                             "model_call_made": True,
-                            "details": {"failure_class": "search_replace_old_occurrence_mismatch"},
+                            "details": {
+                                "failure_class": "search_replace_old_occurrence_mismatch",
+                                "path": "src/click/core.py",
+                                "edit_index": 0,
+                                "occurrences": 0,
+                                "anchor_matches": 0,
+                                "content_recorded": False,
+                                "diagnostic": {"code": "old_text_not_found"},
+                                "search_text": {
+                                    "old_text_char_count": 246,
+                                    "old_text_line_count": 5,
+                                    "old_text_sha256": "abc123",
+                                    "old_redacted_url_marker_count": 0,
+                                    "content_recorded": False,
+                                },
+                            },
                         },
                     }
                 ],
@@ -182,7 +217,15 @@ class M2AnchoredContractSmokeTests(unittest.TestCase):
             {"search_replace_old_occurrence_mismatch": 1},
         )
         self.assertEqual(payload["live_smoke"]["failure_owner_counts"], {"model_output": 1})
+        self.assertEqual(payload["live_smoke"]["old_occurrence_summary"]["row_count"], 1)
+        self.assertEqual(payload["live_smoke"]["old_occurrence_summary"]["old_occurrence_count_buckets"], {"0": 1})
+        self.assertEqual(
+            payload["live_smoke"]["old_occurrence_diagnostics"][0]["old_text_sha256"],
+            "abc123",
+        )
+        self.assertFalse(payload["live_smoke"]["old_occurrence_diagnostics"][0]["content_recorded"])
         self.assertIn("search_replace_old_occurrence_mismatch", report.read_text(encoding="utf-8"))
+        self.assertIn("Old-occurrence diagnostic summary", report.read_text(encoding="utf-8"))
 
 
 if __name__ == "__main__":
