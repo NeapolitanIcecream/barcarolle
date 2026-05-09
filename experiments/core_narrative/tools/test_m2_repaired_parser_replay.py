@@ -171,6 +171,10 @@ class M2RepairedParserReplayTests(unittest.TestCase):
         self.assertEqual(row["repaired"]["failure_owner"], "model_output")
         self.assertEqual(row["repaired"]["failure_class"], "apply_patch_context_mismatch")
         self.assertEqual(row["classification_delta"], "unsupported_patch_response -> apply_patch_context_mismatch")
+        self.assertEqual(row["repaired"]["details"]["path"], "module.py")
+        self.assertEqual(row["repaired"]["details"]["occurrences"], 0)
+        self.assertEqual(row["repaired"]["details"]["line_anchors"][0]["occurrences"], 0)
+        self.assertFalse(row["repaired"]["details"]["content_recorded"])
         self.assertEqual(payload["repaired_summary"]["failure_class_counts"], {"apply_patch_context_mismatch": 1})
 
     def test_missing_raw_response_is_counted_without_model_calls(self) -> None:
@@ -201,6 +205,53 @@ class M2RepairedParserReplayTests(unittest.TestCase):
         self.assertEqual(payload["missing_artifact_summary"]["raw_response_artifact_missing_count"], 1)
         self.assertFalse(payload["cost_model_call_flags"]["replay"]["model_call_made"])
         self.assertEqual(payload["cost_model_call_flags"]["replay"]["model_spend_usd"], 0.0)
+
+    def test_missing_context_paths_are_counted_without_model_calls(self) -> None:
+        """Missing prompt/workspace anchors block replay as input evidence, not live work."""
+        workspace = self.init_workspace("missing-context-workspace", {"module.py": "VALUE = 1\n"})
+        artifact_dir = self.root / "raw" / "missing-context-run"
+        raw = self.write_json(
+            artifact_dir / "provider_response.redacted.json",
+            {
+                "choices": [
+                    {
+                        "message": {
+                            "content": "*** Begin Patch\n*** Update File: module.py\n@@\n-VALUE = 1\n+VALUE = 2\n*** End Patch\n"
+                        }
+                    }
+                ],
+            },
+        )
+        self.write_json(
+            artifact_dir / "batch_run_result.json",
+            {"run_id": "missing-context-run", "workspace": str(workspace), "context_paths": []},
+        )
+        prompt = self.write_json(artifact_dir / "prompt_snapshot.json", {"context_files": []})
+        summary = self.write_summary(
+            [
+                {
+                    "acut_id": "acut_1",
+                    "task_id": "task_1",
+                    "run_id": "missing-context-run",
+                    "status": "invalid_submission",
+                    "failure_owner": "model_output",
+                    "failure_class": "unsupported_patch_response",
+                    "patch_ready": False,
+                    "model_call_made": True,
+                    "raw_response_artifact": str(raw),
+                    "prompt_snapshot": str(prompt),
+                }
+            ]
+        )
+
+        payload = self.run_replay(summary)
+
+        row = payload["matrix"][0]
+        self.assertFalse(row["repaired"]["attempted"])
+        self.assertEqual(row["repaired"]["status"], "missing_replay_input")
+        self.assertEqual(row["repaired"]["failure_class"], "missing_context_paths")
+        self.assertEqual(payload["missing_artifact_summary"]["missing_context_paths_count"], 1)
+        self.assertFalse(payload["cost_model_call_flags"]["replay"]["model_call_made"])
 
     def test_payload_has_no_unsupported_capability_claims(self) -> None:
         """The replay artifact records scoreability only, not M2 passage or capability uplift."""

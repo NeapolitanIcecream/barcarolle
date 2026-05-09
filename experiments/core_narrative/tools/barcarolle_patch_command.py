@@ -12,6 +12,7 @@ import argparse
 import hashlib
 import json
 import os
+import re
 import subprocess
 import sys
 import urllib.error
@@ -22,6 +23,7 @@ from typing import Any, Mapping, Sequence
 
 from _common import ToolError, git, load_manifest, require_keys
 from _llm_budget import (
+    FULL_URL_RE,
     REQUIRED_LLM_ENV_VARS,
     assert_safe_command_arguments,
     ensure_no_required_env_values,
@@ -55,6 +57,7 @@ APPLY_PATCH_END = "*** End Patch"
 APPLY_PATCH_UPDATE_PREFIX = "*** Update File: "
 APPLY_PATCH_ADD_PREFIX = "*** Add File: "
 APPLY_PATCH_DELETE_PREFIX = "*** Delete File: "
+REDACTED_URL_MARKER = "<redacted:url>"
 
 
 def parse_args(argv: Sequence[str]) -> argparse.Namespace:
@@ -899,7 +902,84 @@ def occurrence_offsets(text: str, old: str) -> list[int]:
         start = index + max(1, len(old))
 
 
-def apply_update_hunk(text: str, hunk: Sequence[str], *, path: str, hunk_index: int) -> str:
+def line_number_for_offset(text: str, offset: int) -> int:
+    return text.count("\n", 0, offset) + 1
+
+
+def line_occurrence_summary(text: str, line: str, *, limit: int = 5) -> dict[str, Any]:
+    offsets = occurrence_offsets(text, line)
+    return {
+        "line_sha256": sha256_text(line),
+        "line_char_count": len(line),
+        "occurrences": len(offsets),
+        "line_numbers": [line_number_for_offset(text, offset) for offset in offsets[:limit]],
+        "line_numbers_truncated": len(offsets) > limit,
+        "content_recorded": False,
+    }
+
+
+def apply_patch_hunk_context_diagnostics(
+    text: str,
+    old_text: str,
+    new_text: str,
+    hunk: Sequence[str],
+    *,
+    path: str,
+    hunk_index: int,
+    occurrences: int,
+) -> dict[str, Any]:
+    old_anchor_lines = [
+        line[1:]
+        for line in hunk
+        if line and line[0] in {" ", "-"} and line[1:].strip()
+    ]
+    line_anchors: list[dict[str, Any]] = []
+    if old_anchor_lines:
+        line_anchors.append({"position": "first", **line_occurrence_summary(text, old_anchor_lines[0])})
+        if old_anchor_lines[-1] != old_anchor_lines[0]:
+            line_anchors.append({"position": "last", **line_occurrence_summary(text, old_anchor_lines[-1])})
+
+    return {
+        "path": path,
+        "hunk_index": hunk_index,
+        "occurrences": occurrences,
+        "old_text_char_count": len(old_text),
+        "old_text_line_count": len(old_text.splitlines()),
+        "old_text_sha256": sha256_text(old_text),
+        "new_text_char_count": len(new_text),
+        "new_text_sha256": sha256_text(new_text),
+        "target_text_char_count": len(text),
+        "target_text_sha256": sha256_text(text),
+        "line_anchors": line_anchors,
+        "redacted_url_context": {
+            "old_contains_marker": REDACTED_URL_MARKER in old_text,
+            "new_contains_marker": REDACTED_URL_MARKER in new_text,
+            "marker_count_old": old_text.count(REDACTED_URL_MARKER),
+            "marker_count_new": new_text.count(REDACTED_URL_MARKER),
+            "fallback_match_count": None,
+        },
+        "content_recorded": False,
+    }
+
+
+def redacted_url_context_regex(redacted_text: str) -> re.Pattern[str] | None:
+    if REDACTED_URL_MARKER not in redacted_text:
+        return None
+    parts = redacted_text.split(REDACTED_URL_MARKER)
+    pattern = re.escape(parts[0])
+    for part in parts[1:]:
+        pattern += FULL_URL_RE.pattern + re.escape(part)
+    return re.compile(pattern, re.IGNORECASE)
+
+
+def redacted_url_context_matches(text: str, redacted_text: str) -> list[re.Match[str]]:
+    pattern = redacted_url_context_regex(redacted_text)
+    if pattern is None:
+        return []
+    return list(pattern.finditer(text))
+
+
+def apply_update_hunk(text: str, hunk: Sequence[str], *, path: str, hunk_index: int) -> tuple[str, dict[str, Any] | None]:
     old_parts: list[str] = []
     new_parts: list[str] = []
     for line in hunk:
@@ -924,7 +1004,7 @@ def apply_update_hunk(text: str, hunk: Sequence[str], *, path: str, hunk_index: 
     old_text = "".join(old_parts)
     new_text = "".join(new_parts)
     if old_text == new_text:
-        return text
+        return text, None
     if not old_text:
         raise ToolError(
             "apply_patch update hunk has no context or removed text",
@@ -934,22 +1014,45 @@ def apply_update_hunk(text: str, hunk: Sequence[str], *, path: str, hunk_index: 
         )
     offsets = occurrence_offsets(text, old_text)
     if len(offsets) != 1:
-        raise ToolError(
-            "apply_patch update hunk did not match workspace exactly",
+        details = apply_patch_hunk_context_diagnostics(
+            text,
+            old_text,
+            new_text,
+            hunk,
             path=path,
             hunk_index=hunk_index,
             occurrences=len(offsets),
-            old_text_char_count=len(old_text),
-            old_text_sha256=sha256_text(old_text),
+        )
+        redacted_matches = redacted_url_context_matches(text, old_text)
+        details["redacted_url_context"]["fallback_match_count"] = len(redacted_matches)
+        if len(redacted_matches) == 1:
+            if REDACTED_URL_MARKER in new_text:
+                raise ToolError(
+                    "apply_patch hunk replacement would persist redacted URL placeholders",
+                    **details,
+                    failure_class="apply_patch_context_mismatch",
+                )
+            match = redacted_matches[0]
+            details["diagnostic"] = {
+                "code": "redacted_url_context_matched_raw_source",
+                "redacted_old_text_matched_raw_source_once": True,
+                "replacement_contains_redacted_url_marker": False,
+                "content_recorded": False,
+            }
+            return f"{text[:match.start()]}{new_text}{text[match.end():]}", details
+        raise ToolError(
+            "apply_patch update hunk did not match workspace exactly",
+            **details,
             failure_class="apply_patch_context_mismatch",
         )
     offset = offsets[0]
-    return f"{text[:offset]}{new_text}{text[offset + len(old_text):]}"
+    return f"{text[:offset]}{new_text}{text[offset + len(old_text):]}", None
 
 
 def apply_apply_patch_transcript(workspace: Path, operations: Sequence[Mapping[str, Any]], *, apply_patch: bool) -> dict[str, Any]:
     planned: dict[str, str | None] = {}
     declared_paths: list[str] = []
+    hunk_diagnostics: list[dict[str, Any]] = []
     hunk_count = 0
     for operation in operations:
         action = operation.get("action")
@@ -996,7 +1099,9 @@ def apply_apply_patch_transcript(workspace: Path, operations: Sequence[Mapping[s
             text = target.read_text(encoding="utf-8")
         for hunk_index, hunk in enumerate(operation.get("hunks", [])):
             hunk_count += 1
-            text = apply_update_hunk(str(text), hunk, path=path, hunk_index=hunk_index)
+            text, hunk_diagnostic = apply_update_hunk(str(text), hunk, path=path, hunk_index=hunk_index)
+            if hunk_diagnostic is not None:
+                hunk_diagnostics.append(hunk_diagnostic)
         planned[path] = str(text)
 
     if apply_patch:
@@ -1017,6 +1122,7 @@ def apply_apply_patch_transcript(workspace: Path, operations: Sequence[Mapping[s
         "changed_paths": changed_paths(workspace),
         "operation_count": len(operations),
         "hunk_count": hunk_count,
+        "hunk_diagnostics": hunk_diagnostics,
     }
 
 

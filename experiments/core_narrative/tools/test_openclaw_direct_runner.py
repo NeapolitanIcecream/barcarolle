@@ -360,6 +360,75 @@ class OpenClawDirectRunnerTests(unittest.TestCase):
         self.assertIn("Focused exact source excerpts for src/click/core.py", prompt)
         self.assertIn("prompt=False", prompt)
 
+    def test_default_flag_context_packaging_includes_option_anchor_excerpt(self) -> None:
+        """Regression: M2 default/flag tasks need exact Option anchors beyond the file prefix."""
+        core_path = self.workspace / "src" / "click" / "core.py"
+        core_path.parent.mkdir(parents=True, exist_ok=True)
+        core_path.write_text(
+            (
+                "# large prefix\n"
+                + "IGNORED = 1\n" * 200
+                + "class Option(Parameter):\n"
+                + "    def __init__(self, default=None, flag_value=None):\n"
+                + "        self.default = default\n"
+                + "        self.flag_value = flag_value\n"
+                + "        # Support the special case of aligning the default value with the flag_value\n"
+                + "        if self.default is True and self.flag_value is not UNSET:\n"
+                + "            self.default = self.flag_value\n"
+                + "\n"
+                + "    def get_default(self, ctx, call=True):\n"
+                + "        return self.default\n"
+                + "\n"
+                + "    def consume_value(self, ctx, opts):\n"
+                + "        # A flag which is activated always returns the flag value\n"
+                + "        return super().consume_value(ctx, opts)\n"
+                + "\n"
+                + "    def process_value(self, ctx, value):\n"
+                + "        # process_value has to be overridden on Options\n"
+                + "        if self.is_flag and not self.required and self.is_bool_flag and value is UNSET:\n"
+                + "            value = False\n"
+                + "        return super().process_value(ctx, value)\n"
+            ),
+            encoding="utf-8",
+        )
+        task = {
+            "task_id": "click__rwork__006",
+            "task_family": "default value passing and flag activation",
+            "metadata": {
+                "expected_touched_area": ["src/click/core.py Option default and flag activation behavior"],
+                "visible_context_guidance": "Provide the commit title and linked issue 3111.",
+            },
+        }
+
+        focus_terms = runner_module.context_focus_terms(
+            task,
+            "Reconcile default value passing with flag activation.",
+            "src/click/core.py",
+        )
+        payload = runner_module.context_file_payload(
+            self.workspace,
+            "src/click/core.py",
+            120,
+            focus_terms=focus_terms,
+        )
+        prompt = runner_module.build_prompt(
+            task=task,
+            task_statement="Reconcile default value passing with flag activation.",
+            acut={"acut_id": "cheap-generic-swe", "model": "openai/gpt-5.4-mini"},
+            context_files=[payload],
+            specialist_context=None,
+            max_context_chars=10_000,
+            output_contract="patch-or-files-v1",
+        )
+
+        self.assertTrue(payload["truncated"])
+        self.assertIn("class Option(Parameter):", focus_terms)
+        self.assertIn("        # process_value has to be overridden on Options", focus_terms)
+        self.assertGreaterEqual(len(payload["focused_excerpts"]), 1)
+        self.assertIn("def process_value", payload["focused_excerpts"][0]["content"])
+        self.assertIn("Focused exact source excerpts for src/click/core.py", prompt)
+        self.assertIn("if self.is_flag", prompt)
+
     def test_prompt_required_context_uses_compact_per_file_budget_for_four_files(self) -> None:
         """Regression: Click 008 packaging should leave room for every declared context file."""
         budget = runner_module.effective_max_file_chars(
