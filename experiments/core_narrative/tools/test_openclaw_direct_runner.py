@@ -296,6 +296,10 @@ class OpenClawDirectRunnerTests(unittest.TestCase):
 
         self.assertIn('"files":[{"path":"relative/file.py"', prompt)
         self.assertIn("full file content", prompt)
+        self.assertIn("The first non-whitespace character must be {", prompt)
+        self.assertIn("Any JSON object with edits, unified_diff, patch, diff, or extra top-level keys is invalid.", prompt)
+        self.assertIn("Do not include http:// or https://", prompt)
+        self.assertIn("Do not use placeholders like <unchanged>, [truncated], or comments saying the rest is unchanged.", prompt)
         self.assertIn("Do not return edits", prompt)
         self.assertNotIn('"edits":[{"path":"relative/file.py"', prompt)
 
@@ -1486,6 +1490,62 @@ class OpenClawDirectRunnerTests(unittest.TestCase):
         self.assertEqual(summary["status"], "error")
         self.assertEqual(summary["details"]["failure_class"], "unsafe_generated_text")
         self.assertTrue(summary["details"]["unsafe_content"]["unsafe"])
+        self.assertFalse((artifact_dir / "submission.patch").exists())
+
+    def test_structured_files_contract_rejects_incomplete_full_file_placeholders(self) -> None:
+        """Regression: structured files must contain complete final file text, not unchanged placeholders."""
+        artifact_dir = self.root / "structured-files-incomplete-artifacts"
+        output_path = self.root / "structured-files-incomplete.json"
+        response = json.dumps(
+            {
+                "files": [
+                    {
+                        "path": "module.py",
+                        "action": "replace",
+                        "content": "VALUE = 2\n# rest of file unchanged\n",
+                    }
+                ]
+            }
+        )
+
+        completed = run(
+            [
+                sys.executable,
+                str(RUNNER),
+                "--workspace",
+                str(self.workspace),
+                "--task",
+                str(self.task_path),
+                "--acut",
+                str(self.acut_path),
+                "--attempt",
+                "1",
+                "--run-id",
+                "unit_openclaw_structured_files_incomplete_attempt1",
+                "--artifact-dir",
+                str(artifact_dir),
+                "--output",
+                str(output_path),
+                "--llm-ledger",
+                str(self.ledger_path),
+                "--projected-cost-usd",
+                "1",
+                "--context-path",
+                "module.py",
+                "--output-contract",
+                "structured-files-json-v1",
+                "--mock-response-text",
+                response,
+            ],
+            cwd=REPO_ROOT,
+            env=self.env(),
+        )
+
+        self.assertEqual(completed.returncode, 2, completed.stderr)
+        summary = json.loads(output_path.read_text(encoding="utf-8"))
+        self.assertEqual(summary["status"], "error")
+        self.assertEqual(summary["details"]["failure_class"], "structured_files_invalid")
+        self.assertEqual((self.workspace / "module.py").read_text(encoding="utf-8"), "VALUE = 1\n")
         self.assertFalse((artifact_dir / "submission.patch").exists())
 
     def test_invalid_unified_diff_has_model_output_failure_class(self) -> None:

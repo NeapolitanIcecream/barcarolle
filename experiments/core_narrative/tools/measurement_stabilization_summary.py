@@ -100,12 +100,17 @@ def matrix_records(matrix: Mapping[str, Any], *, tasks: Sequence[str], acuts: Se
     return records
 
 
-def structured_contract_from_batch_item(item: Mapping[str, Any], metadata: Mapping[str, Any]) -> str | None:
+def structured_contract_from_batch_item(
+    item: Mapping[str, Any],
+    metadata: Mapping[str, Any],
+    runner_result: Mapping[str, Any],
+) -> str | None:
     contracts: list[str] = []
-    for source in (item, metadata):
-        contract = source.get("submission_contract")
-        if isinstance(contract, str) and contract:
-            contracts.append(contract)
+    for source in (item, metadata, runner_result):
+        for key in ("submission_contract", "output_contract"):
+            contract = source.get(key)
+            if isinstance(contract, str) and contract:
+                contracts.append(contract)
     if not contracts:
         return None
     if any(contract != STRUCTURED_CONTRACT for contract in contracts):
@@ -130,11 +135,13 @@ def batch_records(batch: Mapping[str, Any] | None, *, tasks: Sequence[str], acut
             continue
         normalized = item.get("normalized") if isinstance(item.get("normalized"), dict) else {}
         metadata = normalized.get("metadata") if isinstance(normalized.get("metadata"), dict) else {}
-        submission_contract = structured_contract_from_batch_item(item, metadata)
+        runner_result = item.get("runner_result") if isinstance(item.get("runner_result"), dict) else {}
+        submission_contract = structured_contract_from_batch_item(item, metadata, runner_result)
         if submission_contract != STRUCTURED_CONTRACT:
             continue
+        if (acut_id, task_id) in seen:
+            continue
         seen.add((acut_id, task_id))
-        runner_result = item.get("runner_result") if isinstance(item.get("runner_result"), dict) else {}
         patch_artifact = runner_result.get("patch_artifact") if isinstance(runner_result.get("patch_artifact"), dict) else {}
         status = str(item.get("status") or normalized.get("status") or "unknown")
         failure_class = metadata.get("failure_class")

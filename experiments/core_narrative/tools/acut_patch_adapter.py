@@ -48,6 +48,18 @@ NO_MODEL_COMMAND = ["<dry-run:no-model-patch-generation>"]
 INNER_PATCH_COMMAND_TOOL = "codex_cli_patch_command"
 DIRECT_PATCH_COMMAND_TOOL = "barcarolle_patch_command"
 DEFAULT_NONZERO_FAILURE_CLASS = "nonzero_exit"
+MODEL_OUTPUT_FAILURE_CLASSES = {
+    "generated_path_not_in_workspace",
+    "generated_path_outside_context",
+    "search_replace_anchor_invalid",
+    "search_replace_anchor_mismatch",
+    "search_replace_old_occurrence_mismatch",
+    "output_contract_violation",
+    "invalid_unified_diff",
+    "unsupported_patch_response",
+    "structured_files_invalid",
+    "unsafe_generated_text",
+}
 
 
 def parse_args() -> argparse.Namespace:
@@ -365,6 +377,20 @@ def effective_nonzero_failure_class(inner_summary: Mapping[str, Any]) -> str:
     if isinstance(failure_class, str) and failure_class:
         return failure_class
     return DEFAULT_NONZERO_FAILURE_CLASS
+
+
+def normalized_status_for_nonzero_failure(failure_class: str | None) -> str:
+    if failure_class in MODEL_OUTPUT_FAILURE_CLASSES:
+        return "invalid_submission"
+    return "infra_failed"
+
+
+def failure_owner_for_status(status: str) -> str:
+    if status == "invalid_submission":
+        return "model_output"
+    if status == "infra_failed":
+        return "infrastructure"
+    return "unknown"
 
 
 def base_payload(
@@ -688,6 +714,11 @@ def main() -> int:
             if nonzero_exit_without_verifier_patch
             else None
         )
+        nonzero_normalized_status = (
+            normalized_status_for_nonzero_failure(nonzero_failure_class)
+            if nonzero_exit_without_verifier_patch
+            else None
+        )
 
         ledger_metadata = {
             "adapter_id": ADAPTER_ID,
@@ -791,7 +822,7 @@ def main() -> int:
                 attempt=args.attempt,
                 started_at=started_at,
                 finished_at=finished_at,
-                status="infra_failed",
+                status=nonzero_normalized_status or "infra_failed",
                 patch_path=patch_path,
                 stdout_path=stdout_path,
                 stderr_path=stderr_path,
@@ -802,6 +833,7 @@ def main() -> int:
                     "adapter_id": ADAPTER_ID,
                     "adapter_status": status,
                     "failure_class": nonzero_failure_class or DEFAULT_NONZERO_FAILURE_CLASS,
+                    "failure_owner": failure_owner_for_status(nonzero_normalized_status or "infra_failed"),
                     "inner_patch_command": inner_patch_command,
                     "dry_run": False,
                     "command_no_model": args.command_no_model,
