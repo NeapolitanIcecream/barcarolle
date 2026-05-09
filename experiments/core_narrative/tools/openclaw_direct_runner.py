@@ -943,6 +943,13 @@ def reject_known_wrong_contract_json(text: str) -> None:
     if not isinstance(data, dict):
         return
     if "files" in data:
+        extra_keys = sorted(key for key in data if key != "files")
+        if extra_keys:
+            raise ToolError(
+                "structured-files output contract requires a single files key",
+                unsupported_top_level_keys=extra_keys,
+                failure_class="output_contract_violation",
+            )
         return
     if "edits" in data or any(key in data for key in ("unified_diff", "patch", "diff")):
         raise ToolError(

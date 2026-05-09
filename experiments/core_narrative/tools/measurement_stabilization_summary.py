@@ -100,6 +100,19 @@ def matrix_records(matrix: Mapping[str, Any], *, tasks: Sequence[str], acuts: Se
     return records
 
 
+def structured_contract_from_batch_item(item: Mapping[str, Any], metadata: Mapping[str, Any]) -> str | None:
+    contracts: list[str] = []
+    for source in (item, metadata):
+        contract = source.get("submission_contract")
+        if isinstance(contract, str) and contract:
+            contracts.append(contract)
+    if not contracts:
+        return None
+    if any(contract != STRUCTURED_CONTRACT for contract in contracts):
+        return None
+    return STRUCTURED_CONTRACT
+
+
 def batch_records(batch: Mapping[str, Any] | None, *, tasks: Sequence[str], acuts: Sequence[str]) -> list[dict[str, Any]]:
     if not isinstance(batch, dict):
         return []
@@ -115,9 +128,12 @@ def batch_records(batch: Mapping[str, Any] | None, *, tasks: Sequence[str], acut
             continue
         if not isinstance(acut_id, str) or not isinstance(task_id, str):
             continue
-        seen.add((acut_id, task_id))
         normalized = item.get("normalized") if isinstance(item.get("normalized"), dict) else {}
         metadata = normalized.get("metadata") if isinstance(normalized.get("metadata"), dict) else {}
+        submission_contract = structured_contract_from_batch_item(item, metadata)
+        if submission_contract != STRUCTURED_CONTRACT:
+            continue
+        seen.add((acut_id, task_id))
         runner_result = item.get("runner_result") if isinstance(item.get("runner_result"), dict) else {}
         patch_artifact = runner_result.get("patch_artifact") if isinstance(runner_result.get("patch_artifact"), dict) else {}
         status = str(item.get("status") or normalized.get("status") or "unknown")
@@ -131,7 +147,7 @@ def batch_records(batch: Mapping[str, Any] | None, *, tasks: Sequence[str], acut
         patch_ready = bool(readiness.get("verifier_ready_patch_available")) or status in PATCH_READY_STATUSES
         records.append(
             {
-                "contract": str(item.get("submission_contract") or metadata.get("submission_contract") or STRUCTURED_CONTRACT),
+                "contract": submission_contract,
                 "acut_id": acut_id,
                 "task_id": task_id,
                 "status": status,
