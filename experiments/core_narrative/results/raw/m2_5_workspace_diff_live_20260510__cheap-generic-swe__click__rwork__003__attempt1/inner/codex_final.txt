@@ -1,0 +1,6 @@
+Implemented the shared-default fix for issue 3071.
+
+Commit message: `Defer UNSET normalization for shared parameter defaults`
+
+Verified with:
+- `PYTHONPATH=src python3 -m pytest tests/test_defaults.py`

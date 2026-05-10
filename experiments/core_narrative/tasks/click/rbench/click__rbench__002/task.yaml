@@ -9,7 +9,7 @@ source:
   base_commit: b557743f3bc26a4cdbf610b221e7e81d609aa65d
   target_commit: 637447f9ccf882d5c810540ca261e8ba2af9cb1c
 task_family: CliRunner exception handling
-task_statement_path: public/statement.md
+task_statement_path: public/acut_statement.md
 allowed_context:
   include_git_history_before_base: true
   include_issue_text: false

@@ -1,0 +1,7 @@
+Implemented the patch for issue **3071**.
+
+**Commit message:** Defer UNSET normalization for shared defaults
+
+Focused verification passed:
+- `tests/test_defaults.py::test_shared_parameter_default_preserved`
+- relevant shared-parameter default tests in `tests/test_options.py`

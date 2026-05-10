@@ -1,0 +1,167 @@
+{
+  "acut_id": "cheap-click-specialist",
+  "adapter_id": "codex-cli-acut-adapter-v0",
+  "artifact_dir": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/m2_5_workspace_diff_live_20260510__cheap-click-specialist__click__rwork__006__attempt1",
+  "attempt": 1,
+  "command": [
+    "/Applications/Xcode.app/Contents/Developer/usr/bin/python3",
+    "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/tools/codex_cli_patch_command.py",
+    "--workspace",
+    "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/workspaces/m2_5_workspace_diff_live_20260510__cheap-click-specialist__click__rwork__006__attempt1",
+    "--acut",
+    "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/configs/acuts/cheap-click-specialist.yaml",
+    "--artifact-dir",
+    "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/m2_5_workspace_diff_live_20260510__cheap-click-specialist__click__rwork__006__attempt1/inner",
+    "--summary-output",
+    "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/m2_5_workspace_diff_live_20260510__cheap-click-specialist__click__rwork__006__attempt1/codex_cli_patch_command.json",
+    "--codex-timeout-seconds",
+    "900"
+  ],
+  "command_duration_seconds": 174.474,
+  "command_exit_code": 0,
+  "command_no_model": false,
+  "command_timed_out": false,
+  "cost_ledger_append": {
+    "actual_cost_recorded": false,
+    "estimated_cost_usd": 1.0,
+    "event": "no_patch_generated",
+    "new_cumulative_estimated_cost_usd": 44.217436,
+    "path": "experiments/core_narrative/results/cost_ledger.jsonl",
+    "previous_cumulative_estimated_cost_usd": 43.217436,
+    "record_count_after": 170,
+    "record_count_before": 169,
+    "status": "appended"
+  },
+  "dry_run": false,
+  "finished_at": "2026-05-10T10:15:37.552791Z",
+  "inner_patch_command": {
+    "cli_log_inspected": false,
+    "failure_class": "no_workspace_patch",
+    "inner_status": "codex_exec_completed",
+    "summary_output_arg_present": true,
+    "summary_path": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/m2_5_workspace_diff_live_20260510__cheap-click-specialist__click__rwork__006__attempt1/codex_cli_patch_command.json",
+    "summary_read": true,
+    "tool": "codex_cli_patch_command"
+  },
+  "llm_budget_gate": {
+    "allowed": true,
+    "approvals_required": [],
+    "blockers": [],
+    "budget": {
+      "current_cumulative_estimated_cost_usd": 43.217436,
+      "hard_cap_reached_or_projected": false,
+      "hard_cap_usd": 300.0,
+      "projected_cost_usd": 1.0,
+      "projected_cumulative_estimated_cost_usd": 44.217436,
+      "soft_stop_reached_or_projected": false,
+      "soft_stop_usd": 240.0
+    },
+    "default_execution_profile": {
+      "core_acut_ids": [
+        "frontier-generic-swe",
+        "frontier-click-specialist",
+        "cheap-generic-swe",
+        "cheap-click-specialist"
+      ],
+      "full_core_requires_coordinator_decision": true,
+      "pilot_primary_attempts": 28,
+      "primary_attempts_per_acut_task": 1,
+      "profile_id": "budget-constrained-2x2-pilot-v2",
+      "split_task_limits": {
+        "G_score": 2,
+        "RBench": 3,
+        "RWork": 2
+      }
+    },
+    "env": {
+      "all_required_present": true,
+      "required": [
+        {
+          "name": "BARCAROLLE_LLM_API_KEY",
+          "present": true
+        },
+        {
+          "name": "BARCAROLLE_LLM_BASE_URL",
+          "present": true
+        }
+      ]
+    },
+    "execution_request": {
+      "acut_id": "cheap-click-specialist",
+      "attempt": 1,
+      "coordinator_decision_ref_present": false,
+      "split": "rwork"
+    },
+    "ledger": {
+      "cumulative_estimated_cost_usd": 43.217436,
+      "error_type": null,
+      "errors": [],
+      "estimated_cost_sum_usd": 43.217436,
+      "exists": true,
+      "is_file": true,
+      "line_count": 169,
+      "path": "experiments/core_narrative/results/cost_ledger.jsonl",
+      "record_count": 169,
+      "writable": true
+    },
+    "status": "passed",
+    "tool": "llm_budget_gate"
+  },
+  "llm_env_policy": {
+    "allowed_variable_names": [
+      "BARCAROLLE_LLM_API_KEY",
+      "BARCAROLLE_LLM_BASE_URL"
+    ],
+    "captured_artifacts_redacted": true,
+    "command_arguments_checked": true,
+    "command_representation_redacted": true,
+    "unsafe_command_arguments_rejected": true,
+    "values_recorded": false
+  },
+  "model_call_made": true,
+  "no_patch_generated": true,
+  "nonzero_exit_without_verifier_patch": false,
+  "patch_artifact": {
+    "diff_context_lines": 0,
+    "path": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/m2_5_workspace_diff_live_20260510__cheap-click-specialist__click__rwork__006__attempt1/submission.patch",
+    "policy": "reject_before_write",
+    "size_bytes": 0,
+    "unsafe_content": {
+      "reason_counts": {},
+      "resolved_env_var_names": [],
+      "unsafe": false
+    },
+    "unsafe_content_attribution": {
+      "all_full_urls_source_derived": false,
+      "all_unsafe_reasons_source_derived": false,
+      "ambiguous_full_url_count": 0,
+      "classification": "no_full_url_patch_content",
+      "content_recorded": false,
+      "full_url_count": 0,
+      "full_url_role_counts": {},
+      "model_generated_full_url_count": 0,
+      "non_url_reason_counts": {},
+      "reason_counts": {},
+      "source_derived_full_url_count": 0,
+      "url_occurrences": [],
+      "url_occurrences_truncated": false
+    },
+    "unsafe_content_detected": false,
+    "written": true
+  },
+  "patch_path": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/m2_5_workspace_diff_live_20260510__cheap-click-specialist__click__rwork__006__attempt1/submission.patch",
+  "run_id": "m2_5_workspace_diff_live_20260510__cheap-click-specialist__click__rwork__006__attempt1",
+  "scrubbed_env_var_count": 19,
+  "split": "rwork",
+  "started_at": "2026-05-10T10:12:43.047307Z",
+  "status": "no_patch_generated",
+  "stderr_artifact": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/m2_5_workspace_diff_live_20260510__cheap-click-specialist__click__rwork__006__attempt1/adapter.stderr.txt",
+  "stdout_artifact": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/m2_5_workspace_diff_live_20260510__cheap-click-specialist__click__rwork__006__attempt1/adapter.stdout.txt",
+  "task_id": "click__rwork__006",
+  "tool": "acut_patch_adapter",
+  "tracked_workspace_restore": {
+    "attempted": false,
+    "tracked_changes_remaining": null
+  },
+  "verifier_ready_patch_available": false
+}
