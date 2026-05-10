@@ -97,6 +97,16 @@ def parse_args(argv: Sequence[str]) -> argparse.Namespace:
             "historical_live, no_model_replay, fixed_grid_acquisition_live, or blocker."
         ),
     )
+    parser.add_argument(
+        "--patch-acquisition-batch",
+        action="append",
+        nargs=3,
+        metavar=("LABEL", "MODE", "PATH"),
+        help=(
+            "Patch-or-files gap-acquisition evidence. MODE should be "
+            "fixed_grid_acquisition_live or blocker."
+        ),
+    )
     parser.add_argument("--output", required=True)
     parser.add_argument("--report", required=True)
     return parser.parse_args(list(argv))
@@ -558,7 +568,7 @@ def anchored_category(
     }
 
 
-def anchored_batch_rows(label: str, mode: str, path: str) -> list[dict[str, Any]]:
+def experiment_batch_rows(label: str, mode: str, path: str, *, contract: str, matrix_source: str) -> list[dict[str, Any]]:
     payload = read_json(path)
     rows: list[dict[str, Any]] = []
     for index, item in enumerate(payload.get("results", [])):
@@ -584,11 +594,11 @@ def anchored_batch_rows(label: str, mode: str, path: str) -> list[dict[str, Any]
             and Path(raw_path).exists()
         )
         row = {
-            "matrix_source": "anchored_batch",
+            "matrix_source": matrix_source,
             "source_label": label,
             "source_path": path,
             "evidence_mode": mode,
-            "contract": ANCHORED_CONTRACT,
+            "contract": contract,
             "denominator_kind": "fixed_input_records",
             "index": index,
             "acut_id": item.get("acut_id"),
@@ -629,6 +639,20 @@ def anchored_batch_rows(label: str, mode: str, path: str) -> list[dict[str, Any]
         }
         rows.append(row)
     return rows
+
+
+def anchored_batch_rows(label: str, mode: str, path: str) -> list[dict[str, Any]]:
+    return experiment_batch_rows(label, mode, path, contract=ANCHORED_CONTRACT, matrix_source="anchored_batch")
+
+
+def patch_acquisition_batch_rows(label: str, mode: str, path: str) -> list[dict[str, Any]]:
+    return experiment_batch_rows(
+        label,
+        mode,
+        path,
+        contract=PATCH_OR_FILES_CONTRACT,
+        matrix_source="patch_or_files_acquisition_batch",
+    )
 
 
 def mark_anchored_transitions(rows: list[dict[str, Any]]) -> list[dict[str, Any]]:
@@ -869,6 +893,114 @@ def anchored_fixed_grid_accounting(summary: Mapping[str, Any], rows: Sequence[Ma
     }
 
 
+def patch_or_files_gap_accounting(summary: Mapping[str, Any], rows: Sequence[Mapping[str, Any]]) -> dict[str, Any]:
+    tasks = [str(item) for item in summary.get("tasks", []) if isinstance(item, str)]
+    acuts = [str(item) for item in summary.get("acuts", []) if isinstance(item, str)]
+    expected_grid = {(acut, task) for acut in acuts for task in tasks}
+    live_rows = [
+        row
+        for row in rows
+        if row.get("contract") == PATCH_OR_FILES_CONTRACT
+        and row.get("source_label") == "patch_or_files_v1_live"
+        and row.get("acut_id")
+        and row.get("task_id")
+    ]
+    acquisition_rows = [
+        row
+        for row in rows
+        if row.get("contract") == PATCH_OR_FILES_CONTRACT
+        and row.get("matrix_source") == "patch_or_files_acquisition_batch"
+        and row.get("acut_id")
+        and row.get("task_id")
+    ]
+    acquisition_by_cell: dict[tuple[str, str], list[Mapping[str, Any]]] = {}
+    for row in acquisition_rows:
+        acquisition_by_cell.setdefault((str(row.get("acut_id")), str(row.get("task_id"))), []).append(row)
+
+    historical_missing: list[Mapping[str, Any]] = [
+        row
+        for row in live_rows
+        if row.get("stable_category") == "missing_raw_artifact"
+        or not (
+            isinstance(row.get("artifact_presence"), Mapping)
+            and row["artifact_presence"].get("raw_response_artifact_exists") is True
+        )
+    ]
+    acquired_cells = {
+        cell
+        for cell, cell_rows in acquisition_by_cell.items()
+        if any(row.get("acquired_raw_input") is True for row in cell_rows)
+    }
+    remaining_missing_cells: list[dict[str, Any]] = []
+    for row in historical_missing:
+        cell = (str(row.get("acut_id")), str(row.get("task_id")))
+        if expected_grid and cell not in expected_grid:
+            continue
+        if cell in acquired_cells:
+            continue
+        remaining_missing_cells.append(
+            {
+                "acut_id": cell[0],
+                "task_id": cell[1],
+                "historical_run_id": row.get("run_id"),
+                "historical_failure_class": row.get("stable_failure_class"),
+            }
+        )
+
+    def summarize_acquisition_cell(acut_id: str, task_id: str) -> dict[str, Any]:
+        cell_rows = acquisition_by_cell[(acut_id, task_id)]
+        return {
+            "acut_id": acut_id,
+            "task_id": task_id,
+            "record_count": len(cell_rows),
+            "source_labels": sorted({str(row.get("source_label")) for row in cell_rows}),
+            "category_counts": count_by(cell_rows, "stable_category"),
+            "acquired_raw_input_count": sum(1 for row in cell_rows if row.get("acquired_raw_input") is True),
+            "new_model_call_made_count": sum(
+                1 for row in cell_rows if row.get("new_model_call_made_for_this_package") is True
+            ),
+            "verifier_attemptable_count": sum(
+                1 for row in cell_rows if row.get("stable_category") in ATTEMPTABLE_CATEGORIES
+            ),
+        }
+
+    observed_acquisition_cells = sorted(set(acquisition_by_cell) & expected_grid) if expected_grid else sorted(acquisition_by_cell)
+    extra_acquisition_cells = sorted(set(acquisition_by_cell) - expected_grid) if expected_grid else []
+    return {
+        "contract": PATCH_OR_FILES_CONTRACT,
+        "expected_live_fixed_denominator": len(expected_grid),
+        "expected_cells": [
+            {"acut_id": acut_id, "task_id": task_id}
+            for acut_id, task_id in sorted(expected_grid)
+        ],
+        "historical_live_input_record_count": len(live_rows),
+        "historical_missing_raw_artifact_count": len(historical_missing),
+        "historical_missing_raw_artifact_rows": [
+            {
+                "acut_id": row.get("acut_id"),
+                "task_id": row.get("task_id"),
+                "run_id": row.get("run_id"),
+                "failure_class": row.get("stable_failure_class"),
+            }
+            for row in historical_missing
+        ],
+        "acquisition_input_record_count": len(acquisition_rows),
+        "acquired_raw_input_count": sum(1 for row in acquisition_rows if row.get("acquired_raw_input") is True),
+        "observed_unique_acquisition_cell_count": len(observed_acquisition_cells),
+        "observed_acquisition_cells": [
+            summarize_acquisition_cell(acut_id, task_id)
+            for acut_id, task_id in observed_acquisition_cells
+        ],
+        "extra_acquisition_cell_count": len(extra_acquisition_cells),
+        "extra_acquisition_cells": [
+            summarize_acquisition_cell(acut_id, task_id)
+            for acut_id, task_id in extra_acquisition_cells
+        ],
+        "remaining_missing_cell_count": len(remaining_missing_cells),
+        "remaining_missing_cells": remaining_missing_cells,
+    }
+
+
 def blocker_summary(fixed_grid: Mapping[str, Any]) -> list[dict[str, Any]]:
     blockers: list[dict[str, Any]] = []
     missing_cells = fixed_grid.get("remaining_missing_cells")
@@ -912,8 +1044,18 @@ def build_payload(args: argparse.Namespace) -> dict[str, Any]:
     m2_summary = read_json(args.m2_summary)
     patch_replay = read_json(args.patch_replay)
     anchored_inputs = args.anchored_batch if args.anchored_batch is not None else list(DEFAULT_ANCHORED_BATCHES)
+    patch_acquisition_args = getattr(args, "patch_acquisition_batch", None)
+    patch_acquisition_inputs = patch_acquisition_args if patch_acquisition_args is not None else []
     rows = patch_replay_rows(patch_replay)
     rows.extend(existing_patch_or_files_path_rows(m2_summary, "patch_or_files_v1_no_model"))
+    patch_acquisition_evidence_inputs: list[dict[str, Any]] = []
+    for label, mode, path in patch_acquisition_inputs:
+        if mode not in ACQUISITION_EVIDENCE_MODES and mode != "blocker":
+            raise ToolError("unsupported patch-or-files acquisition evidence mode", label=label, mode=mode)
+        patch_acquisition_evidence_inputs.append({"label": label, "mode": mode, "path": path})
+        if mode == "blocker":
+            continue
+        rows.extend(patch_acquisition_batch_rows(label, mode, path))
     anchored_rows: list[dict[str, Any]] = []
     anchored_evidence_inputs: list[dict[str, Any]] = []
     for label, mode, path in anchored_inputs:
@@ -925,6 +1067,7 @@ def build_payload(args: argparse.Namespace) -> dict[str, Any]:
         anchored_rows.extend(anchored_batch_rows(label, mode, path))
     rows.extend(mark_anchored_transitions(anchored_rows))
     fixed_grid = anchored_fixed_grid_accounting(m2_summary, rows)
+    patch_gap = patch_or_files_gap_accounting(m2_summary, rows)
     blockers = blocker_summary(fixed_grid)
     payload: dict[str, Any] = {
         "tool": TOOL,
@@ -933,6 +1076,7 @@ def build_payload(args: argparse.Namespace) -> dict[str, Any]:
         "inputs": {
             "m2_summary": args.m2_summary,
             "patch_replay": args.patch_replay,
+            "patch_acquisition_batches": patch_acquisition_evidence_inputs,
             "anchored_batches": anchored_evidence_inputs,
             "output": args.output,
             "report": args.report,
@@ -950,6 +1094,8 @@ def build_payload(args: argparse.Namespace) -> dict[str, Any]:
                 if isinstance(patch_replay.get("scope"), Mapping)
                 else None,
                 "patch_or_files_v1_no_model": len(existing_patch_or_files_path_rows(m2_summary, "patch_or_files_v1_no_model")),
+                "patch_or_files_acquisition_input_records": patch_gap.get("acquisition_input_record_count"),
+                "patch_or_files_remaining_missing_cells_after_acquisition": patch_gap.get("remaining_missing_cell_count"),
                 "anchored_search_replace_input_records": sum(
                     1 for row in rows if row.get("contract") == ANCHORED_CONTRACT
                 ),
@@ -962,12 +1108,14 @@ def build_payload(args: argparse.Namespace) -> dict[str, Any]:
             "uses_existing_provider_responses": True,
             "patch_or_files_replay_source": "m2_repaired_parser_replay output generated with current parser/applicator",
             "patch_or_files_no_model_source": "existing M2 no-model verifier-ready control records from m2_scoreability_summary",
+            "patch_or_files_acquisition_source": "optional bounded live acquisition batch rows for missing patch-or-files raw-input cells",
             "anchored_evidence_source": "existing M2 anchored live-smoke and no-model nonpersistent replay batch outputs",
             "verifier_success_claim": "not_claimed",
             "claim_boundary": "verifier-attemptability and artifact channel accounting only",
             "content_policy": "hashes, counts, paths, and metadata only; raw provider text is not copied into the summary",
         },
         "summary": aggregate(rows),
+        "patch_or_files_gap_acquisition": patch_gap,
         "anchored_fixed_grid": fixed_grid,
         "missing_artifact_summary": missing_artifact_summary(rows),
         "cost_model_call_accounting": cost_model_call_accounting(rows),
@@ -1002,6 +1150,7 @@ def write_report(payload: Mapping[str, Any], path: str) -> None:
     package_cost = cost.get("package") if isinstance(cost.get("package"), Mapping) else {}
     missing = payload.get("missing_artifact_summary") if isinstance(payload.get("missing_artifact_summary"), Mapping) else {}
     fixed_grid = payload.get("anchored_fixed_grid") if isinstance(payload.get("anchored_fixed_grid"), Mapping) else {}
+    patch_gap = payload.get("patch_or_files_gap_acquisition") if isinstance(payload.get("patch_or_files_gap_acquisition"), Mapping) else {}
     generated_at = str(payload.get("generated_at") or "")
     date_from_path = re.search(r"\d{4}-\d{2}-\d{2}", str(path))
     report_date = (
@@ -1020,6 +1169,8 @@ def write_report(payload: Mapping[str, Any], path: str) -> None:
         "",
         f"- Patch-or-files fixed denominator: `{scope.get('fixed_denominators', {}).get('patch_or_files_v1_live')}`.",
         f"- Patch-or-files no-model control denominator: `{scope.get('fixed_denominators', {}).get('patch_or_files_v1_no_model')}`.",
+        f"- Patch-or-files acquisition input records: `{patch_gap.get('acquisition_input_record_count')}`; "
+        f"remaining raw-input gaps after acquisition: `{patch_gap.get('remaining_missing_cell_count')}`.",
         f"- Anchored fixed-grid denominator: `{fixed_grid.get('expected_fixed_denominator')}` expected cells; "
         f"`{fixed_grid.get('observed_unique_cell_count')}` observed unique cells; "
         f"`{fixed_grid.get('input_record_count')}` input records.",
@@ -1047,6 +1198,8 @@ def write_report(payload: Mapping[str, Any], path: str) -> None:
         f"- Nonpersistent verifier attempts: `{summary.get('nonpersistent_verifier_attempt_count')}`.",
         f"- Infra failures: `{summary.get('infra_failure_count')}`.",
         f"- Cleanup blockers: `{summary.get('cleanup_blocker_count')}`.",
+        f"- Historical patch-or-files missing raw artifacts: `{patch_gap.get('historical_missing_raw_artifact_count')}`.",
+        f"- Remaining patch-or-files raw input gaps after acquisition: `{patch_gap.get('remaining_missing_cell_count')}`.",
         f"- Remaining missing fixed-grid inputs: `{fixed_grid.get('remaining_missing_cell_count')}`.",
         "",
         "## By Contract",
@@ -1105,12 +1258,19 @@ def write_report(payload: Mapping[str, Any], path: str) -> None:
     else:
         lines.append("- None recorded.")
     inputs = payload.get("inputs") if isinstance(payload.get("inputs"), Mapping) else {}
+    patch_acquisition_batches = inputs.get("patch_acquisition_batches") if isinstance(inputs.get("patch_acquisition_batches"), list) else []
     anchored_batches = inputs.get("anchored_batches") if isinstance(inputs.get("anchored_batches"), list) else []
     matrix_command = [
         "PYTHONPATH=experiments/core_narrative/tools python3 experiments/core_narrative/tools/m2_stable_nonpersistent_replay_matrix.py",
         f"  --m2-summary {inputs.get('m2_summary')}",
         f"  --patch-replay {inputs.get('patch_replay')}",
     ]
+    for item in patch_acquisition_batches:
+        if not isinstance(item, Mapping):
+            continue
+        matrix_command.append(
+            f"  --patch-acquisition-batch {item.get('label')} {item.get('mode')} {item.get('path')}"
+        )
     for item in anchored_batches:
         if not isinstance(item, Mapping):
             continue

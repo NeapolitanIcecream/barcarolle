@@ -1,0 +1,93 @@
+{
+  "tool": "m2_patch_or_files_gap_acquisition_summary",
+  "status": "completed",
+  "generated_at": "2026-05-10T06:39:24Z",
+  "target_gap": {
+    "source_matrix": "experiments/core_narrative/results/m2_stable_nonpersistent_replay_matrix_fixed_grid_acquisition_20260510.json",
+    "source_report": "experiments/core_narrative/reports/2026-05-10_m2_stable_nonpersistent_replay_matrix_fixed_grid_acquisition.md",
+    "source_label": "patch_or_files_v1_live",
+    "contract": "patch-or-files-v1",
+    "acut_id": "cheap-click-specialist",
+    "task_id": "click__rwork__006",
+    "historical_run_id": "codex_nfl_m2_patch_or_files_20260509__cheap-click-specialist__click__rwork__006__attempt1",
+    "historical_failure_class": "missing_raw_response_artifact",
+    "historical_raw_response_artifact_exists": false,
+    "historical_prompt_snapshot_exists": true,
+    "historical_normalized_result_exists": true
+  },
+  "pre_call_gate": {
+    "path": "experiments/core_narrative/results/m2_patch_or_files_gap_acquisition_budget_gate_20260510.json",
+    "status": "passed",
+    "allowed": true,
+    "blockers": [],
+    "approvals_required": [],
+    "projected_cost_usd": 1.0,
+    "current_cumulative_estimated_cost_usd": 38.183778,
+    "projected_cumulative_estimated_cost_usd": 39.183778,
+    "soft_stop_reached_or_projected": false,
+    "hard_cap_reached_or_projected": false
+  },
+  "live_acquisition": {
+    "path": "experiments/core_narrative/results/m2_patch_or_files_gap_acquisition_20260510.json",
+    "run_id": "m2_patch_or_files_gap_acquisition_20260510__cheap-click-specialist__click__rwork__006__attempt1",
+    "model_call_made": true,
+    "raw_input_acquired": true,
+    "raw_response_artifact": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/m2_patch_or_files_gap_acquisition_20260510__cheap-click-specialist__click__rwork__006__attempt1/provider_response.redacted.json",
+    "prompt_snapshot": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/m2_patch_or_files_gap_acquisition_20260510__cheap-click-specialist__click__rwork__006__attempt1/prompt_snapshot.json",
+    "normalized_result": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/normalized/m2_patch_or_files_gap_acquisition_20260510__cheap-click-specialist__click__rwork__006__attempt1.json",
+    "stable_category": "model_output_invalid_submission",
+    "status": "invalid_submission",
+    "failure_owner": "model_output",
+    "failure_class": "unsafe_generated_text",
+    "verifier_ready_persisted_patch_artifact": false,
+    "nonpersistent_verifier_attempt": false,
+    "infra_failure": false,
+    "cleanup_blocker": false,
+    "cost_ledger_append": {
+      "status": "appended",
+      "estimated_cost_usd": 0.033658,
+      "record_count_before": 163,
+      "record_count_after": 164,
+      "new_cumulative_estimated_cost_usd": 38.217436
+    }
+  },
+  "updated_matrix": {
+    "path": "experiments/core_narrative/results/m2_stable_nonpersistent_replay_matrix_fixed_grid_acquisition_patch_or_files_gap_20260510.json",
+    "report": "experiments/core_narrative/reports/2026-05-10_m2_stable_nonpersistent_replay_matrix_fixed_grid_acquisition_patch_or_files_gap.md",
+    "patch_or_files_expected_live_fixed_denominator": 6,
+    "patch_or_files_acquisition_input_record_count": 1,
+    "patch_or_files_acquired_raw_input_count": 1,
+    "patch_or_files_historical_missing_raw_artifact_count": 1,
+    "patch_or_files_remaining_missing_cell_count": 0,
+    "category_counts": {
+      "missing_raw_artifact": 1,
+      "model_output_invalid_submission": 14,
+      "nonpersistent_verifier_attempt": 2,
+      "verifier_ready_persisted_patch_artifact": 6
+    },
+    "acquisition_category_counts": {
+      "model_output_invalid_submission": 5,
+      "nonpersistent_verifier_attempt": 1
+    },
+    "infra_failure_count": 0,
+    "cleanup_blocker_count": 0,
+    "blockers": []
+  },
+  "artifact_policy": {
+    "raw_provider_text_copied_into_reports": false,
+    "matrix_output_leakage_guard_contains_raw_unsafe_text": false,
+    "full_url_scan_over_new_acquisition_and_report_artifacts": "no_matches_after_redacting_source_derived_verifier_stdout_urls"
+  },
+  "claim_boundaries": {
+    "m2_passed": false,
+    "ranking_reversal": false,
+    "task_solving_improvement": false,
+    "capability_uplift": false,
+    "g_score_predictivity": false,
+    "g0_g5": false,
+    "license": false,
+    "admission": false,
+    "authorization": false,
+    "verifier_or_task_success_measured_by_this_package": false
+  }
+}
