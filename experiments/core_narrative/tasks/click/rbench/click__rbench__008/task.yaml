@@ -9,7 +9,7 @@ source:
   base_commit: 7332f00ed4c27d8da041788ca6a7aa405f062c76
   target_commit: 8efb348e2bc820aeba60d4cce6939708c6b2b11c
 task_family: optional value prompts
-task_statement_path: public/statement.md
+task_statement_path: public/acut_statement.md
 allowed_context:
   include_git_history_before_base: true
   include_issue_text: false

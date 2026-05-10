@@ -1,0 +1,6 @@
+diff --git a/src/click/core.py b/src/click/core.py
+index cd8052f..dd9d4a8 100644
+--- a/src/click/core.py
++++ b/src/click/core.py
+@@ -3357,0 +3358 @@ def __getattr__(name: str) -> object:
++# barcarolle workspace-diff-v1 no-model baseline

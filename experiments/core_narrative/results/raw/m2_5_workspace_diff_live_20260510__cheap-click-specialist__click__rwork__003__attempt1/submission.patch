@@ -1,0 +1,46 @@
+diff --git a/src/click/core.py b/src/click/core.py
+index cd8052f..1d00192 100644
+--- a/src/click/core.py
++++ b/src/click/core.py
+@@ -1228,0 +1229,7 @@ class Command:
++        # Normalize internal UNSET placeholders only after all parameters sharing the
++        # same destination name have been processed, so a real default is not hidden by
++        # an earlier UNSET default.
++        for param in self.get_params(ctx):
++            if param.expose_value and param.name is not None and param.name not in ctx.params:
++                ctx.params[param.name] = None
++
+@@ -2548,4 +2555,2 @@ class Parameter:
+-            # Normalize UNSET values to None, as we're about to pass them to the
+-            # command function and move them to the pure-Python realm of user-written
+-            # code.
+-            ctx.params[self.name] = value if value is not UNSET else None
++            if value is not UNSET:
++                ctx.params[self.name] = value
+diff --git a/tests/test_defaults.py b/tests/test_defaults.py
+index 3f293e8..b0ca478 100644
+--- a/tests/test_defaults.py
++++ b/tests/test_defaults.py
+@@ -86,0 +87,22 @@ def test_flag_default_map(runner):
++
++
++def test_shared_parameter_default_preserved(runner):
++    """Shared parameters should keep the first real default regardless of order."""
++
++    @click.command()
++    @click.option("--unset", "value", flag_value="unset")
++    @click.option("--real", "value", flag_value="real", default="real")
++    def cli_one(value):
++        click.echo(repr(value), nl=False)
++
++    @click.command()
++    @click.option("--real", "value", flag_value="real", default="real")
++    @click.option("--unset", "value", flag_value="unset")
++    def cli_two(value):
++        click.echo(repr(value), nl=False)
++
++    result = runner.invoke(cli_one)
++    assert result.output == repr("real")
++
++    result = runner.invoke(cli_two)
++    assert result.output == repr("real")

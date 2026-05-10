@@ -1,0 +1,3 @@
+Implemented the flag/default reconciliation fix for issue 3111 in `src/click/core.py` and updated the affected option/default tests.
+
+Verification: focused pytest run passed (`119 passed`).

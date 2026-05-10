@@ -1,0 +1,5 @@
+Implemented the flag default handling fix for callable `flag_value` cases and added focused tests for default, help, and `default_map` behavior.
+
+Verified with:
+- `tests/test_options.py -k 'default_true_flag_value_callable'`
+- `tests/test_defaults.py -k 'callable_flag_value_default_map_and_help or flag_default_map'`
