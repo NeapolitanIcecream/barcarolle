@@ -3,12 +3,14 @@
 
 from __future__ import annotations
 
+from decimal import Decimal
+from pathlib import Path
 import shutil
 import subprocess
 import tempfile
 import unittest
+from types import SimpleNamespace
 from typing import Any
-from pathlib import Path
 
 import m2_5_workspace_diff_runner as runner
 
@@ -28,6 +30,30 @@ class M25WorkspaceDiffRunnerTests(unittest.TestCase):
     def setUp(self) -> None:
         self.root = Path(tempfile.mkdtemp())
         self.addCleanup(shutil.rmtree, self.root, ignore_errors=True)
+
+    def test_live_preflight_budget_projection_covers_every_task_acut_cell(self) -> None:
+        """Regression: live batch admission must project the full fixed grid, not one task row."""
+        captured: dict[str, Any] = {}
+        original_gate_payload = runner.gate_payload
+
+        def fake_gate_payload(**kwargs: Any) -> dict[str, Any]:
+            captured.update(kwargs)
+            return {"status": "passed"}
+
+        runner.gate_payload = fake_gate_payload
+        self.addCleanup(lambda: setattr(runner, "gate_payload", original_gate_payload))
+
+        runner.live_preflight_gate(
+            SimpleNamespace(
+                tasks=["click__rwork__003", "click__rwork__004", "click__rwork__006"],
+                acuts=["cheap-generic-swe", "frontier-click-specialist"],
+                llm_ledger=str(self.root / "ledger.jsonl"),
+                coordinator_decision_ref=None,
+                attempt=1,
+            )
+        )
+
+        self.assertEqual(captured["projected_cost_usd"], Decimal("12"))
 
     def init_repo(self) -> Path:
         workspace = self.root / "workspace"
@@ -179,6 +205,47 @@ class M25WorkspaceDiffRunnerTests(unittest.TestCase):
         self.assertEqual(replay["status"], "invalid_submission")
         self.assertEqual(replay["failure_class"], "clean_replay_invalid_submission")
         self.assertTrue(verifier_attempt["attempted"])
+
+    def test_failed_or_timeout_clean_replay_without_verifier_owner_is_attributed_to_verifier(self) -> None:
+        """Regression: verifier failed/timeout outcomes are not candidate-patch collection failures."""
+        patch_path = self.root / "submission.patch"
+        patch_path.write_text(
+            "diff --git a/module.py b/module.py\n"
+            "--- a/module.py\n"
+            "+++ b/module.py\n"
+            "@@ -1 +1 @@\n"
+            "-VALUE = 1\n"
+            "+VALUE = 2\n",
+            encoding="utf-8",
+        )
+        normalized_path = self.root / "normalized.json"
+        candidate_collection = {
+            "patch_ready": True,
+            "patch_artifact": {
+                "written": True,
+                "unsafe_content_detected": False,
+                "size_bytes": patch_path.stat().st_size,
+            },
+            "untracked_scope": {"checked": True, "reserved_count": 0, "source_count": 0},
+        }
+
+        for status in ("failed", "timeout"):
+            with self.subTest(status=status):
+                enriched = runner.enrich_normalized_metadata(
+                    normalized={"status": status, "metadata": {"tool": "apply_and_verify"}, "error": None},
+                    normalized_path=normalized_path,
+                    task_id="click__rwork__003",
+                    acut_id="cheap-generic-swe",
+                    runner_workspace=self.root / "runner",
+                    verify_workspace=self.root / "verify",
+                    patch_path=patch_path,
+                    candidate_collection=candidate_collection,
+                    mode="live",
+                    model_call_made=True,
+                )
+
+                self.assertEqual(enriched["metadata"]["failure_owner"], "verifier")
+                self.assertEqual(enriched["metadata"]["failure_class"], f"verifier_{status}")
 
     def test_live_adapter_unsafe_attribution_survives_empty_followup_collection(self) -> None:
         """Unsafe adapter attribution remains visible after restored workspace collection is empty."""

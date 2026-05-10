@@ -519,6 +519,22 @@ def workspace_diff_unsafe_metadata(
     }
 
 
+def default_failure_owner(status: str, *, replay_attempted: bool) -> str:
+    if status == "passed":
+        return "none"
+    if status == "infra_failed":
+        return "infrastructure"
+    if replay_attempted and status in {"failed", "timeout"}:
+        return "verifier"
+    return "candidate_patch"
+
+
+def default_failure_class(status: str, *, replay_attempted: bool) -> str | None:
+    if replay_attempted and status in {"failed", "timeout"}:
+        return f"verifier_{status}"
+    return None
+
+
 def enrich_normalized_metadata(
     *,
     normalized: dict[str, Any],
@@ -549,8 +565,11 @@ def enrich_normalized_metadata(
     replay_status = clean_replay_status_for_normalized_status(status, attempted=replay_attempted)
     replay_failure_class = clean_replay_failure_class(status, attempted=replay_attempted)
     unsafe_metadata = workspace_diff_unsafe_metadata(collection_artifact, adapter_patch_artifact)
-    owner = failure_owner or str(metadata.get("failure_owner") or ("none" if status == "passed" else "candidate_patch"))
-    klass = failure_class or metadata.get("failure_class")
+    owner = failure_owner or str(metadata.get("failure_owner") or default_failure_owner(status, replay_attempted=replay_attempted))
+    klass = failure_class or metadata.get("failure_class") or default_failure_class(
+        status,
+        replay_attempted=replay_attempted,
+    )
     metadata.update(
         {
             "batch_tool": TOOL,
@@ -660,7 +679,8 @@ def verify_patch(
 
 
 def live_preflight_gate(args: argparse.Namespace) -> dict[str, Any]:
-    projected = Decimal(str(sum(3 if acut.startswith("frontier-") else 1 for acut in args.acuts)))
+    per_task_projected = Decimal(str(sum(3 if acut.startswith("frontier-") else 1 for acut in args.acuts)))
+    projected = per_task_projected * Decimal(len(args.tasks))
     return gate_payload(
         ledger_path=Path(args.llm_ledger),
         projected_cost_usd=projected,
