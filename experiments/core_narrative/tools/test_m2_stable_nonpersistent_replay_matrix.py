@@ -128,6 +128,7 @@ class M2StableNonpersistentReplayMatrixTests(unittest.TestCase):
         cleanup_removed: bool | None = None,
         verifier_exit_code: int | None = None,
         ledger_estimated_cost_usd: float | None = None,
+        contract: str = matrix.ANCHORED_CONTRACT,
     ) -> Path:
         nonpersistent_channel: dict[str, object] = {"attempted": nonpersistent}
         if nonpersistent:
@@ -141,7 +142,7 @@ class M2StableNonpersistentReplayMatrixTests(unittest.TestCase):
                 }
             )
         metadata: dict[str, object] = {
-            "submission_contract": matrix.ANCHORED_CONTRACT,
+            "submission_contract": contract,
             "model_call_made": model_call_made,
             "failure_owner": failure_owner,
             "failure_class": failure_class,
@@ -162,7 +163,7 @@ class M2StableNonpersistentReplayMatrixTests(unittest.TestCase):
         runner_result: dict[str, object] = {
             "status": "error" if status != "failed" else "patch_generated",
             "model_call_made": model_call_made,
-            "submission_contract": matrix.ANCHORED_CONTRACT,
+            "submission_contract": contract,
             "raw_response_artifact": str(raw),
             "prompt_snapshot": str(prompt),
             "details": {"failure_class": failure_class},
@@ -355,6 +356,56 @@ class M2StableNonpersistentReplayMatrixTests(unittest.TestCase):
             {"model_output_invalid_submission": 1, "nonpersistent_verifier_attempt": 1},
         )
 
+    def test_patch_or_files_acquisition_closes_raw_input_gap_without_rewriting_history(self) -> None:
+        """A bounded patch-or-files acquisition can close a cell gap while preserving the old missing row."""
+        m2_summary = self.m2_summary()
+        patch_raw = self.raw_response("raw/patch/provider_response.redacted.json", "*** Begin Patch\n")
+        patch_prompt = self.prompt("raw/patch/prompt_snapshot.json")
+        patch_normalized = self.normalized("normalized/patch.json")
+        patch_replay = self.patch_replay(patch_raw, patch_prompt, patch_normalized)
+
+        acquisition_raw = self.raw_response("raw/patch-acquisition/task2.json", "not a supported patch", cost=0.12)
+        acquisition_prompt = self.prompt("raw/patch-acquisition/prompt2.json")
+        acquisition_norm = self.normalized("normalized/patch_acquisition_task2.json")
+        acquisition = self.anchored_batch(
+            "patch-acquisition-task2.json",
+            raw=acquisition_raw,
+            prompt=acquisition_prompt,
+            normalized=acquisition_norm,
+            task_id="task_2",
+            status="invalid_submission",
+            model_call_made=True,
+            failure_owner="model_output",
+            failure_class="unsupported_patch_response",
+            ledger_estimated_cost_usd=0.13,
+            contract=matrix.PATCH_OR_FILES_CONTRACT,
+        )
+
+        args = argparse.Namespace(
+            m2_summary=str(m2_summary),
+            patch_replay=str(patch_replay),
+            patch_acquisition_batch=[("patch_gap", "fixed_grid_acquisition_live", str(acquisition))],
+            anchored_batch=[],
+            output=str(self.root / "out.json"),
+            report=str(self.root / "out.md"),
+        )
+
+        payload = matrix.build_payload(args)
+
+        patch_gap = payload["patch_or_files_gap_acquisition"]
+        self.assertEqual(patch_gap["historical_missing_raw_artifact_count"], 1)
+        self.assertEqual(patch_gap["acquisition_input_record_count"], 1)
+        self.assertEqual(patch_gap["acquired_raw_input_count"], 1)
+        self.assertEqual(patch_gap["remaining_missing_cell_count"], 0)
+        self.assertEqual(payload["missing_artifact_summary"]["missing_raw_artifact_count"], 1)
+        acquisition_cost = payload["cost_model_call_accounting"]["acquisition"]
+        self.assertEqual(acquisition_cost["input_record_count"], 1)
+        self.assertEqual(acquisition_cost["new_model_call_made_count"], 1)
+        self.assertEqual(acquisition_cost["provider_usage_cost_usd_observed_sum"], 0.12)
+        self.assertEqual(acquisition_cost["ledger_estimated_cost_usd_sum"], 0.13)
+        self.assertEqual(acquisition_cost["category_counts"], {"model_output_invalid_submission": 1})
+        self.assertTrue(payload["claim_boundaries"]["new_model_calls"])
+
     def test_report_includes_required_channel_breakout(self) -> None:
         """The human report names the stable categories and claim boundaries."""
         m2_summary = self.m2_summary()
@@ -365,6 +416,7 @@ class M2StableNonpersistentReplayMatrixTests(unittest.TestCase):
         args = argparse.Namespace(
             m2_summary=str(m2_summary),
             patch_replay=str(patch_replay),
+            patch_acquisition_batch=[],
             anchored_batch=[],
             output=str(self.root / "out.json"),
             report=str(self.root / "out.md"),
@@ -375,6 +427,7 @@ class M2StableNonpersistentReplayMatrixTests(unittest.TestCase):
 
         report = Path(args.report).read_text(encoding="utf-8")
         self.assertIn("Acquisition And Missing Inputs", report)
+        self.assertIn("Remaining patch-or-files raw input gaps after acquisition", report)
         self.assertIn("Persisted patch-artifact attemptable count", report)
         self.assertIn("Nonpersistent verifier attempts", report)
         self.assertIn("This report does not claim M2 passed", report)
