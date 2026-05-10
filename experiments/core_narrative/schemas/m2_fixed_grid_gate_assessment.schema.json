@@ -1,0 +1,168 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://barcarolle.local/schemas/core-narrative.m2-fixed-grid-gate-assessment.v1.json",
+  "title": "Core Narrative M2 Fixed-Grid Gate Assessment",
+  "type": "object",
+  "additionalProperties": true,
+  "required": [
+    "tool",
+    "schema_version",
+    "status",
+    "generated_at",
+    "inputs",
+    "method",
+    "thresholds",
+    "fixed_denominators",
+    "coverage_and_policy_gate",
+    "scoreability_gate_status",
+    "path_assessments",
+    "cost_model_call_accounting",
+    "failure_owner_class_accounting",
+    "attemptability_channels",
+    "no_raw_unsafe_policy_status",
+    "hard_blocker_summary",
+    "claim_status",
+    "claim_boundaries",
+    "prohibited_claims"
+  ],
+  "properties": {
+    "tool": {
+      "const": "m2_fixed_grid_gate_assessment"
+    },
+    "schema_version": {
+      "const": "core-narrative.m2-fixed-grid-gate-assessment.v1"
+    },
+    "status": {
+      "enum": [
+        "completed"
+      ]
+    },
+    "generated_at": {
+      "type": "string"
+    },
+    "inputs": {
+      "type": "object",
+      "required": [
+        "matrix",
+        "output",
+        "report"
+      ]
+    },
+    "method": {
+      "type": "object",
+      "required": [
+        "model_calls_made_by_assessment",
+        "uses_existing_matrix_only",
+        "cost_ledger_mutated_by_assessment",
+        "raw_provider_text_copied",
+        "historical_missing_raw_artifact_preserved"
+      ]
+    },
+    "thresholds": {
+      "type": "object",
+      "required": [
+        "attemptability_coverage_min",
+        "model_output_invalid_submission_rate_max",
+        "clean_replay_disagreement_count_max"
+      ]
+    },
+    "fixed_denominators": {
+      "type": "object"
+    },
+    "coverage_and_policy_gate": {
+      "type": "object",
+      "required": [
+        "gate_status",
+        "checks"
+      ],
+      "properties": {
+        "gate_status": {
+          "enum": [
+            "passed",
+            "blocked"
+          ]
+        }
+      }
+    },
+    "scoreability_gate_status": {
+      "enum": [
+        "passed",
+        "failed",
+        "blocked"
+      ]
+    },
+    "path_assessments": {
+      "type": "object",
+      "required": [
+        "patch_or_files_v1_live_after_gap_closure",
+        "anchored_search_replace_fixed_grid",
+        "patch_or_files_v1_no_model_control"
+      ],
+      "additionalProperties": {
+        "type": "object",
+        "required": [
+          "path_id",
+          "contract",
+          "gate_status",
+          "fixed_denominator",
+          "attemptable_cell_count",
+          "attemptability_coverage",
+          "model_output_invalid_submission_count",
+          "model_output_invalid_submission_rate",
+          "category_counts",
+          "failure_owner_counts",
+          "failure_class_counts",
+          "attemptability_channel_counts",
+          "exact_cell_blockers"
+        ]
+      }
+    },
+    "cost_model_call_accounting": {
+      "type": "object",
+      "required": [
+        "assessment_generation",
+        "input_matrix_package"
+      ]
+    },
+    "failure_owner_class_accounting": {
+      "type": "object"
+    },
+    "attemptability_channels": {
+      "type": "object"
+    },
+    "no_raw_unsafe_policy_status": {
+      "type": "object",
+      "required": [
+        "status",
+        "row_policy_violation_count"
+      ],
+      "properties": {
+        "status": {
+          "enum": [
+            "passed",
+            "failed"
+          ]
+        }
+      }
+    },
+    "hard_blocker_summary": {
+      "type": "object",
+      "required": [
+        "status",
+        "blocker_id",
+        "code_addressable_blocker_identified",
+        "next_code_addressable_blocker",
+        "reason"
+      ]
+    },
+    "claim_status": {
+      "type": "string"
+    },
+    "claim_boundaries": {
+      "type": "object"
+    },
+    "prohibited_claims": {
+      "type": "object"
+    }
+  }
+}
