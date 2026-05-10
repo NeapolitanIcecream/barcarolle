@@ -1,0 +1,56 @@
+diff --git a/src/click/core.py b/src/click/core.py
+index 23d1dd5..a6be219 100644
+--- a/src/click/core.py
++++ b/src/click/core.py
+@@ -2823,3 +2823,3 @@ class Option(Parameter):
+-        # for flags whose default is explicitly set to True. Note that as long as we
+-        # have this condition, there is no way a flag can have a default set to True,
+-        # and a flag_value set to something else. Refs:
++        # for flags whose default is explicitly set to True, as long as the flag_value
++        # is not itself callable. Callable flag values must remain values rather than
++        # becoming callable defaults that get invoked during resolution. Refs:
+@@ -2828 +2828,5 @@ class Option(Parameter):
+-        if self.default is True and self.flag_value is not UNSET:
++        if (
++            self.default is True
++            and self.flag_value is not UNSET
++            and not callable(self.flag_value)
++        ):
+diff --git a/tests/test_options.py b/tests/test_options.py
+index b162a96..ea03fbb 100644
+--- a/tests/test_options.py
++++ b/tests/test_options.py
+@@ -1367,0 +1368,33 @@ def test_multiple_option_with_optional_value(runner):
++def test_callable_flag_value_default_is_not_invoked(runner):
++    class Factory:
++        def __init__(self):
++            raise AssertionError("callable flag_value should not be called for default=True")
++
++    @click.command()
++    @click.option("--foo", flag_value=Factory, default=True, show_default=True)
++    def cli(foo):
++        click.echo(repr(foo))
++
++    result = runner.invoke(cli, [])
++    assert not result.exception
++    assert result.output == "'True'\n"
++
++
++def test_callable_flag_value_default_map_and_help(runner):
++    class Factory:
++        def __init__(self):
++            raise AssertionError("callable flag_value should not be called for default=True")
++
++    @click.command()
++    @click.option("--foo", flag_value=Factory, default=True, show_default=True)
++    def cli(foo):
++        click.echo(repr(foo))
++
++    result = runner.invoke(cli, [], default_map={"foo": "from-map"})
++    assert not result.exception
++    assert result.output == "'from-map'\n"
++
++    result = runner.invoke(cli, ["--help"], default_map={"foo": "from-map"})
++    assert "[default: from-map]" in result.output
++
++

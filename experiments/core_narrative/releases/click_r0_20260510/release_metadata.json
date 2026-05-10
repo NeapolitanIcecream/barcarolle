@@ -1,0 +1,790 @@
+{
+  "claim_boundary": {
+    "final_benchmark_authority": false,
+    "license_or_admission_output": false,
+    "predictivity_claim": false
+  },
+  "generated_at": "2026-05-10T10:16:27.414224Z",
+  "leakage_policy": {
+    "acut_visible_statement": "public/acut_statement.md",
+    "audit_provenance": "audit/provenance.md",
+    "compat_statement_preserved": "public/statement.md",
+    "target_commit_urls_shas_compare_links_reference_patch_excluded_from_acut_statement": true
+  },
+  "release_digest": "711cf19bd1235489683f0d58dde12db99ea25158d89581db75a0b75736910898",
+  "release_id": "click-r0-20260510",
+  "release_scope": "Click RBench/RWork mini release hygiene; provisional, not final benchmark authority",
+  "schema_version": "core-narrative.click-r0-release-hygiene.v1",
+  "status": "completed",
+  "task_count": 14,
+  "tasks": [
+    {
+      "acut_statement_leakage_guard": {
+        "contains_compare_link": false,
+        "contains_hex_sha_7_plus": false,
+        "contains_url": false,
+        "forbidden_term_hits": []
+      },
+      "acut_statement_path": "experiments/core_narrative/tasks/click/rbench/click__rbench__001/public/acut_statement.md",
+      "acut_statement_sha256": "a8f87f8dbd6f0263488d45e05f5ef98b15189a5e69cb4e351079813723606edd",
+      "allowed_context": {
+        "include_git_history_before_base": true,
+        "include_issue_text": false,
+        "include_pr_text": true,
+        "include_reference_patch": false
+      },
+      "audit_provenance_path": "experiments/core_narrative/tasks/click/rbench/click__rbench__001/audit/provenance.md",
+      "audit_provenance_sha256": "3edd0d29cb7b7732d06f69d5b807785efc30d5bf928bef9a9227bb694f62a849",
+      "compat_statement_path": "experiments/core_narrative/tasks/click/rbench/click__rbench__001/public/statement.md",
+      "leakage_notes": {
+        "acut_statement_excludes_provenance_urls_and_shas": true,
+        "notes": "Compact historical behavior fix; verifier node exists in the locked checkout but may need packaging as hidden regression coverage for the historical base tree.",
+        "provenance_preserved_in_audit_artifact": true,
+        "reviewed": true
+      },
+      "oracle_grade": "B",
+      "risk_permission_tags": [
+        "local_filesystem_edit",
+        "local_test_execution",
+        "network_not_required_for_verifier",
+        "pre_base_git_history_allowed",
+        "pr_text_allowed",
+        "reference_patch_forbidden"
+      ],
+      "source": {
+        "anchor_id": "pallets/click#252",
+        "base_commit": "4a7fe69f942bd02b811548ff8f02a08fff7429c1",
+        "changed_files": [
+          "click/core.py",
+          "tests/test_options.py"
+        ],
+        "commits_ahead": 3,
+        "kind": "pull_request",
+        "public_url": "https://github.com/pallets/click/pull/252",
+        "target_commit": "39e51d961b9e69c050bb948b1db11275f9630542"
+      },
+      "split": "rbench",
+      "task_family": "option help/default rendering",
+      "task_family_tags": [
+        "option help/default rendering"
+      ],
+      "task_id": "click__rbench__001",
+      "task_manifest_path": "experiments/core_narrative/tasks/click/rbench/click__rbench__001/task.yaml",
+      "task_manifest_sha256": "35589a73599419e2528a72b6f044c0b1cd76bb3af8411b0d604285bb87c14f65"
+    },
+    {
+      "acut_statement_leakage_guard": {
+        "contains_compare_link": false,
+        "contains_hex_sha_7_plus": false,
+        "contains_url": false,
+        "forbidden_term_hits": []
+      },
+      "acut_statement_path": "experiments/core_narrative/tasks/click/rbench/click__rbench__002/public/acut_statement.md",
+      "acut_statement_sha256": "ca1c8ec746478829316625d98d28b1d0b7e6d89b373f7f338192a020c30a9579",
+      "allowed_context": {
+        "include_git_history_before_base": true,
+        "include_issue_text": false,
+        "include_pr_text": true,
+        "include_reference_patch": false
+      },
+      "audit_provenance_path": "experiments/core_narrative/tasks/click/rbench/click__rbench__002/audit/provenance.md",
+      "audit_provenance_sha256": "4e25fee82c7fdb0a7f6889844500631c95fe8344cf79bd5db4e70b8406a56884",
+      "compat_statement_path": "experiments/core_narrative/tasks/click/rbench/click__rbench__002/public/statement.md",
+      "leakage_notes": {
+        "acut_statement_excludes_provenance_urls_and_shas": true,
+        "notes": "Small API behavior task in test runner code; no platform-specific terminal behavior required.",
+        "provenance_preserved_in_audit_artifact": true,
+        "reviewed": true
+      },
+      "oracle_grade": "B",
+      "risk_permission_tags": [
+        "local_filesystem_edit",
+        "local_test_execution",
+        "network_not_required_for_verifier",
+        "pre_base_git_history_allowed",
+        "pr_text_allowed",
+        "reference_patch_forbidden"
+      ],
+      "source": {
+        "anchor_id": "pallets/click#151",
+        "base_commit": "b557743f3bc26a4cdbf610b221e7e81d609aa65d",
+        "changed_files": [
+          "click/testing.py",
+          "tests/test_testing.py"
+        ],
+        "commits_ahead": 2,
+        "kind": "pull_request",
+        "public_url": "https://github.com/pallets/click/pull/151",
+        "target_commit": "637447f9ccf882d5c810540ca261e8ba2af9cb1c"
+      },
+      "split": "rbench",
+      "task_family": "CliRunner exception handling",
+      "task_family_tags": [
+        "CliRunner exception handling"
+      ],
+      "task_id": "click__rbench__002",
+      "task_manifest_path": "experiments/core_narrative/tasks/click/rbench/click__rbench__002/task.yaml",
+      "task_manifest_sha256": "881f89e73d2c17b27090045c0ad52784e96359049ea6b66c4ffc0fd5b9d43e2f"
+    },
+    {
+      "acut_statement_leakage_guard": {
+        "contains_compare_link": false,
+        "contains_hex_sha_7_plus": false,
+        "contains_url": false,
+        "forbidden_term_hits": []
+      },
+      "acut_statement_path": "experiments/core_narrative/tasks/click/rbench/click__rbench__003/public/acut_statement.md",
+      "acut_statement_sha256": "bc7e62629a595773f0c3d30187d57d8fe2cb7cfa47b0a12b36c07d13959e8383",
+      "allowed_context": {
+        "include_git_history_before_base": true,
+        "include_issue_text": false,
+        "include_pr_text": false,
+        "include_reference_patch": false
+      },
+      "audit_provenance_path": "experiments/core_narrative/tasks/click/rbench/click__rbench__003/audit/provenance.md",
+      "audit_provenance_sha256": "ada8fc257eb964bb1d76461e0cdd933049acb00dea532b95cb7b799cec2d06d0",
+      "compat_statement_path": "experiments/core_narrative/tasks/click/rbench/click__rbench__003/public/statement.md",
+      "leakage_notes": {
+        "acut_statement_excludes_provenance_urls_and_shas": true,
+        "notes": "Terminal UI behavior is exercised through CliRunner and monkeypatching, not a real terminal.",
+        "provenance_preserved_in_audit_artifact": true,
+        "reviewed": true
+      },
+      "oracle_grade": "B",
+      "risk_permission_tags": [
+        "local_filesystem_edit",
+        "local_test_execution",
+        "network_not_required_for_verifier",
+        "pre_base_git_history_allowed",
+        "reference_patch_forbidden"
+      ],
+      "source": {
+        "anchor_id": "commit:02ea9ee7e864581258b4902d6e6c1264b0226b9f",
+        "base_commit": "d3f36e884e18f374c3e4e6cf062ba19f100d0fd6",
+        "changed_files": [
+          "click/core.py",
+          "click/termui.py",
+          "tests/test_termui.py"
+        ],
+        "commits_ahead": 1,
+        "kind": "commit",
+        "public_url": "https://github.com/pallets/click/commit/02ea9ee7e864581258b4902d6e6c1264b0226b9f",
+        "target_commit": "02ea9ee7e864581258b4902d6e6c1264b0226b9f"
+      },
+      "split": "rbench",
+      "task_family": "prompt choice rendering",
+      "task_family_tags": [
+        "prompt choice rendering"
+      ],
+      "task_id": "click__rbench__003",
+      "task_manifest_path": "experiments/core_narrative/tasks/click/rbench/click__rbench__003/task.yaml",
+      "task_manifest_sha256": "3a1cccd1fe89f669db23175bff28de8daf9f6c45d82666028157c34a48f5c8cc"
+    },
+    {
+      "acut_statement_leakage_guard": {
+        "contains_compare_link": false,
+        "contains_hex_sha_7_plus": false,
+        "contains_url": false,
+        "forbidden_term_hits": []
+      },
+      "acut_statement_path": "experiments/core_narrative/tasks/click/rbench/click__rbench__004/public/acut_statement.md",
+      "acut_statement_sha256": "29bf64b00d6ba4e2c28d5bd26cf69faaf018edc9c102dabc3343545df865a1b4",
+      "allowed_context": {
+        "include_git_history_before_base": true,
+        "include_issue_text": false,
+        "include_pr_text": true,
+        "include_reference_patch": false
+      },
+      "audit_provenance_path": "experiments/core_narrative/tasks/click/rbench/click__rbench__004/audit/provenance.md",
+      "audit_provenance_sha256": "bd3b77a14255befe76cd2deb30723e9341e334b07a5e33ed3231458ff05acc94",
+      "compat_statement_path": "experiments/core_narrative/tasks/click/rbench/click__rbench__004/public/statement.md",
+      "leakage_notes": {
+        "acut_statement_excludes_provenance_urls_and_shas": true,
+        "notes": "Deterministic in-process stream tests; no OS terminal dependency.",
+        "provenance_preserved_in_audit_artifact": true,
+        "reviewed": true
+      },
+      "oracle_grade": "B",
+      "risk_permission_tags": [
+        "local_filesystem_edit",
+        "local_test_execution",
+        "network_not_required_for_verifier",
+        "pre_base_git_history_allowed",
+        "pr_text_allowed",
+        "reference_patch_forbidden"
+      ],
+      "source": {
+        "anchor_id": "pallets/click#868",
+        "base_commit": "b1b4449cda6767f022372890998d6b0eb895d041",
+        "changed_files": [
+          "click/testing.py",
+          "tests/test_testing.py",
+          "tests/test_termui.py",
+          "tests/test_utils.py"
+        ],
+        "commits_ahead": 1,
+        "kind": "pull_request",
+        "public_url": "https://github.com/pallets/click/pull/868",
+        "target_commit": "fdceb39d344603fc73a4d9761766b5701f69236d"
+      },
+      "split": "rbench",
+      "task_family": "CliRunner stdout/stderr stream separation",
+      "task_family_tags": [
+        "CliRunner stdout/stderr stream separation"
+      ],
+      "task_id": "click__rbench__004",
+      "task_manifest_path": "experiments/core_narrative/tasks/click/rbench/click__rbench__004/task.yaml",
+      "task_manifest_sha256": "6b5188d5166572b6415ac3eeb25863fb443eaceeaecd598d93eae61fce50afff"
+    },
+    {
+      "acut_statement_leakage_guard": {
+        "contains_compare_link": false,
+        "contains_hex_sha_7_plus": false,
+        "contains_url": false,
+        "forbidden_term_hits": []
+      },
+      "acut_statement_path": "experiments/core_narrative/tasks/click/rbench/click__rbench__005/public/acut_statement.md",
+      "acut_statement_sha256": "d05ba89d375df8e430eb4d3a54379ea6d4052ed579568af8b5abe9d73954c0c2",
+      "allowed_context": {
+        "include_git_history_before_base": true,
+        "include_issue_text": true,
+        "include_pr_text": true,
+        "include_reference_patch": false
+      },
+      "audit_provenance_path": "experiments/core_narrative/tasks/click/rbench/click__rbench__005/audit/provenance.md",
+      "audit_provenance_sha256": "af95f4b3790b51a2f710efafbcaaf6d8c85aab1bfbbc460437a96d0aa0850f23",
+      "compat_statement_path": "experiments/core_narrative/tasks/click/rbench/click__rbench__005/public/statement.md",
+      "leakage_notes": {
+        "acut_statement_excludes_provenance_urls_and_shas": true,
+        "notes": "Behavior is pure parser/type conversion; no platform-specific dependencies.",
+        "provenance_preserved_in_audit_artifact": true,
+        "reviewed": true
+      },
+      "oracle_grade": "B",
+      "risk_permission_tags": [
+        "local_filesystem_edit",
+        "local_test_execution",
+        "network_not_required_for_verifier",
+        "pre_base_git_history_allowed",
+        "issue_text_allowed",
+        "pr_text_allowed",
+        "reference_patch_forbidden"
+      ],
+      "source": {
+        "anchor_id": "pallets/click#887",
+        "base_commit": "a00e01845100ce2b3d5288a2b655aad260346361",
+        "changed_files": [
+          "click/types.py",
+          "tests/test_options.py"
+        ],
+        "commits_ahead": 2,
+        "kind": "pull_request",
+        "public_url": "https://github.com/pallets/click/pull/887",
+        "target_commit": "c70d4636831e391016895587f7ed10e96f49773e"
+      },
+      "split": "rbench",
+      "task_family": "Choice type case sensitivity",
+      "task_family_tags": [
+        "Choice type case sensitivity"
+      ],
+      "task_id": "click__rbench__005",
+      "task_manifest_path": "experiments/core_narrative/tasks/click/rbench/click__rbench__005/task.yaml",
+      "task_manifest_sha256": "95a7141f35a33ff2ad08ad021690455e8ed3794c814792a307f513da679d2ccd"
+    },
+    {
+      "acut_statement_leakage_guard": {
+        "contains_compare_link": false,
+        "contains_hex_sha_7_plus": false,
+        "contains_url": false,
+        "forbidden_term_hits": []
+      },
+      "acut_statement_path": "experiments/core_narrative/tasks/click/rbench/click__rbench__006/public/acut_statement.md",
+      "acut_statement_sha256": "d46758b0d16b381fc1241d566730cfba3c954772a44ba68351201dd210e86ffa",
+      "allowed_context": {
+        "include_git_history_before_base": true,
+        "include_issue_text": false,
+        "include_pr_text": false,
+        "include_reference_patch": false
+      },
+      "audit_provenance_path": "experiments/core_narrative/tasks/click/rbench/click__rbench__006/audit/provenance.md",
+      "audit_provenance_sha256": "abeabd38604259535f4d031af3af03f742f0e37217791096baf0b22e2d9fdd56",
+      "compat_statement_path": "experiments/core_narrative/tasks/click/rbench/click__rbench__006/public/statement.md",
+      "leakage_notes": {
+        "acut_statement_excludes_provenance_urls_and_shas": true,
+        "notes": "Date parsing is deterministic and locale-independent for the selected numeric format.",
+        "provenance_preserved_in_audit_artifact": true,
+        "reviewed": true
+      },
+      "oracle_grade": "B",
+      "risk_permission_tags": [
+        "local_filesystem_edit",
+        "local_test_execution",
+        "network_not_required_for_verifier",
+        "pre_base_git_history_allowed",
+        "reference_patch_forbidden"
+      ],
+      "source": {
+        "anchor_id": "commit:5fe0b7e7795f9bb04ae926d00868cfeb1fa33187",
+        "base_commit": "6e62332349db6e93decf47666c4cd6fe20df6b02",
+        "changed_files": [
+          "click/types.py",
+          "tests/test_basic.py"
+        ],
+        "commits_ahead": 1,
+        "kind": "commit",
+        "public_url": "https://github.com/pallets/click/commit/5fe0b7e7795f9bb04ae926d00868cfeb1fa33187",
+        "target_commit": "5fe0b7e7795f9bb04ae926d00868cfeb1fa33187"
+      },
+      "split": "rbench",
+      "task_family": "DateTime parameter parsing",
+      "task_family_tags": [
+        "DateTime parameter parsing"
+      ],
+      "task_id": "click__rbench__006",
+      "task_manifest_path": "experiments/core_narrative/tasks/click/rbench/click__rbench__006/task.yaml",
+      "task_manifest_sha256": "f821cd8c3e64662de90578e8893ad454f5f74f224a17e1137d56976302a4c3c9"
+    },
+    {
+      "acut_statement_leakage_guard": {
+        "contains_compare_link": false,
+        "contains_hex_sha_7_plus": false,
+        "contains_url": false,
+        "forbidden_term_hits": []
+      },
+      "acut_statement_path": "experiments/core_narrative/tasks/click/rbench/click__rbench__007/public/acut_statement.md",
+      "acut_statement_sha256": "ba6261bd9ab48fc360fcd6c4346a3edbced790fcd2a68342c003c9f9dac9db18",
+      "allowed_context": {
+        "include_git_history_before_base": true,
+        "include_issue_text": false,
+        "include_pr_text": true,
+        "include_reference_patch": false
+      },
+      "audit_provenance_path": "experiments/core_narrative/tasks/click/rbench/click__rbench__007/audit/provenance.md",
+      "audit_provenance_sha256": "a8e9569b44530f71a0b9dca4270bf13b66bed6eff1629812f20b5cd8c5890c2c",
+      "compat_statement_path": "experiments/core_narrative/tasks/click/rbench/click__rbench__007/public/statement.md",
+      "leakage_notes": {
+        "acut_statement_excludes_provenance_urls_and_shas": true,
+        "notes": "Pure testing helper behavior with a single focused verifier.",
+        "provenance_preserved_in_audit_artifact": true,
+        "reviewed": true
+      },
+      "oracle_grade": "B",
+      "risk_permission_tags": [
+        "local_filesystem_edit",
+        "local_test_execution",
+        "network_not_required_for_verifier",
+        "pre_base_git_history_allowed",
+        "pr_text_allowed",
+        "reference_patch_forbidden"
+      ],
+      "source": {
+        "anchor_id": "pallets/click#1312",
+        "base_commit": "563b1a7116a6806e699d31d327dd9bca93c40cb3",
+        "changed_files": [
+          "src/click/testing.py",
+          "tests/test_testing.py"
+        ],
+        "commits_ahead": 2,
+        "kind": "pull_request",
+        "public_url": "https://github.com/pallets/click/pull/1312",
+        "target_commit": "990ca8e664a0610fe0583f3aa8924fd49f928a74"
+      },
+      "split": "rbench",
+      "task_family": "CliRunner return value capture",
+      "task_family_tags": [
+        "CliRunner return value capture"
+      ],
+      "task_id": "click__rbench__007",
+      "task_manifest_path": "experiments/core_narrative/tasks/click/rbench/click__rbench__007/task.yaml",
+      "task_manifest_sha256": "7e7d32c0628a2c7efd457ac11b3f0688f48900fd784f0e8cf349f72552e717c5"
+    },
+    {
+      "acut_statement_leakage_guard": {
+        "contains_compare_link": false,
+        "contains_hex_sha_7_plus": false,
+        "contains_url": false,
+        "forbidden_term_hits": []
+      },
+      "acut_statement_path": "experiments/core_narrative/tasks/click/rbench/click__rbench__008/public/acut_statement.md",
+      "acut_statement_sha256": "90e0b447a273f2d0273154533bd4fbb9803513c8edca7154a207da9bbbc1eba1",
+      "allowed_context": {
+        "include_git_history_before_base": true,
+        "include_issue_text": false,
+        "include_pr_text": true,
+        "include_reference_patch": false
+      },
+      "audit_provenance_path": "experiments/core_narrative/tasks/click/rbench/click__rbench__008/audit/provenance.md",
+      "audit_provenance_sha256": "bd4000d7cbeb7d6fc7f5090d08862b95ed83d3651bc57c6c001098ddaa32ad90",
+      "compat_statement_path": "experiments/core_narrative/tasks/click/rbench/click__rbench__008/public/statement.md",
+      "leakage_notes": {
+        "acut_statement_excludes_provenance_urls_and_shas": true,
+        "notes": "Prompt behavior is exercised with CliRunner; no real terminal interaction required.",
+        "provenance_preserved_in_audit_artifact": true,
+        "reviewed": true
+      },
+      "oracle_grade": "B",
+      "risk_permission_tags": [
+        "local_filesystem_edit",
+        "local_test_execution",
+        "network_not_required_for_verifier",
+        "pre_base_git_history_allowed",
+        "pr_text_allowed",
+        "reference_patch_forbidden"
+      ],
+      "source": {
+        "anchor_id": "pallets/click#1618",
+        "base_commit": "7332f00ed4c27d8da041788ca6a7aa405f062c76",
+        "changed_files": [
+          "src/click/core.py",
+          "src/click/parser.py",
+          "tests/test_options.py",
+          "tests/test_termui.py"
+        ],
+        "commits_ahead": 2,
+        "kind": "pull_request",
+        "public_url": "https://github.com/pallets/click/pull/1618",
+        "target_commit": "8efb348e2bc820aeba60d4cce6939708c6b2b11c"
+      },
+      "split": "rbench",
+      "task_family": "optional value prompts",
+      "task_family_tags": [
+        "optional value prompts"
+      ],
+      "task_id": "click__rbench__008",
+      "task_manifest_path": "experiments/core_narrative/tasks/click/rbench/click__rbench__008/task.yaml",
+      "task_manifest_sha256": "78bf6fbb3e164f6acdeb72b1736d106a037eaaeb6c8ad04a22c852327e19d7a8"
+    },
+    {
+      "acut_statement_leakage_guard": {
+        "contains_compare_link": false,
+        "contains_hex_sha_7_plus": false,
+        "contains_url": false,
+        "forbidden_term_hits": []
+      },
+      "acut_statement_path": "experiments/core_narrative/tasks/click/rwork/click__rwork__001/public/acut_statement.md",
+      "acut_statement_sha256": "e3beb3f432fe2687576183ed41553664d6485d3cfb6019da6efdbff7d50e7f56",
+      "allowed_context": {
+        "include_git_history_before_base": true,
+        "include_issue_text": true,
+        "include_pr_text": true,
+        "include_reference_patch": false
+      },
+      "audit_provenance_path": "experiments/core_narrative/tasks/click/rwork/click__rwork__001/audit/provenance.md",
+      "audit_provenance_sha256": "1a882e6b0b26d576cbad888a8b5af659a1f08ab58defd997351b91d56ad54eee",
+      "compat_statement_path": "experiments/core_narrative/tasks/click/rwork/click__rwork__001/public/statement.md",
+      "leakage_notes": {
+        "acut_statement_excludes_provenance_urls_and_shas": true,
+        "notes": "Recent behavior task with focused option/envvar verification; docs changes are ancillary and not the evaluation target.",
+        "provenance_preserved_in_audit_artifact": true,
+        "reviewed": true
+      },
+      "oracle_grade": "B",
+      "risk_permission_tags": [
+        "local_filesystem_edit",
+        "local_test_execution",
+        "network_not_required_for_verifier",
+        "pre_base_git_history_allowed",
+        "issue_text_allowed",
+        "pr_text_allowed",
+        "reference_patch_forbidden"
+      ],
+      "source": {
+        "anchor_id": "pallets/click#2956",
+        "base_commit": "5c1239b0116b66492cdd0848144ab3c78a04495a",
+        "changed_files": [
+          "src/click/core.py",
+          "src/click/types.py",
+          "tests/test_options.py",
+          "tests/test_basic.py",
+          "tests/test_imports.py"
+        ],
+        "commits_ahead": 2,
+        "kind": "pull_request",
+        "public_url": "https://github.com/pallets/click/pull/2956",
+        "target_commit": "565f36d5bc4a15d304337b749e113fb4477b1843"
+      },
+      "split": "rwork",
+      "task_family": "flag envvar/default/type reconciliation",
+      "task_family_tags": [
+        "flag envvar/default/type reconciliation"
+      ],
+      "task_id": "click__rwork__001",
+      "task_manifest_path": "experiments/core_narrative/tasks/click/rwork/click__rwork__001/task.yaml",
+      "task_manifest_sha256": "2d84509a3ad083c0d0080247af77e23f81867c9b565e15ac904d54c9c9249f74"
+    },
+    {
+      "acut_statement_leakage_guard": {
+        "contains_compare_link": false,
+        "contains_hex_sha_7_plus": false,
+        "contains_url": false,
+        "forbidden_term_hits": []
+      },
+      "acut_statement_path": "experiments/core_narrative/tasks/click/rwork/click__rwork__002/public/acut_statement.md",
+      "acut_statement_sha256": "e9e2837edbc8d5b28ab537f6462935d42de3460864b84ff36aca0e5bba1927b2",
+      "allowed_context": {
+        "include_git_history_before_base": true,
+        "include_issue_text": true,
+        "include_pr_text": true,
+        "include_reference_patch": false
+      },
+      "audit_provenance_path": "experiments/core_narrative/tasks/click/rwork/click__rwork__002/audit/provenance.md",
+      "audit_provenance_sha256": "8d2434b315e5a2eded17d25e07a48e12bb4a93586e5d2197378f861fc53784a3",
+      "compat_statement_path": "experiments/core_narrative/tasks/click/rwork/click__rwork__002/public/statement.md",
+      "leakage_notes": {
+        "acut_statement_excludes_provenance_urls_and_shas": true,
+        "notes": "In-process stdin behavior; no real TTY or shell dependency.",
+        "provenance_preserved_in_audit_artifact": true,
+        "reviewed": true
+      },
+      "oracle_grade": "B",
+      "risk_permission_tags": [
+        "local_filesystem_edit",
+        "local_test_execution",
+        "network_not_required_for_verifier",
+        "pre_base_git_history_allowed",
+        "issue_text_allowed",
+        "pr_text_allowed",
+        "reference_patch_forbidden"
+      ],
+      "source": {
+        "anchor_id": "pallets/click#2940",
+        "base_commit": "36deba8a95a2585de1a2aa4475b7f054f52830ac",
+        "changed_files": [
+          "src/click/testing.py",
+          "tests/test_chain.py"
+        ],
+        "commits_ahead": 3,
+        "kind": "pull_request",
+        "public_url": "https://github.com/pallets/click/pull/2940",
+        "target_commit": "2a0e3ba907927ade6951d5732b775f11b54cb766"
+      },
+      "split": "rwork",
+      "task_family": "CliRunner EOF and stdin file handling",
+      "task_family_tags": [
+        "CliRunner EOF and stdin file handling"
+      ],
+      "task_id": "click__rwork__002",
+      "task_manifest_path": "experiments/core_narrative/tasks/click/rwork/click__rwork__002/task.yaml",
+      "task_manifest_sha256": "9390eef746f8385d769ac7a2bf8cc2ed89c5ce0292411032555b85ecc4778b5a"
+    },
+    {
+      "acut_statement_leakage_guard": {
+        "contains_compare_link": false,
+        "contains_hex_sha_7_plus": false,
+        "contains_url": false,
+        "forbidden_term_hits": []
+      },
+      "acut_statement_path": "experiments/core_narrative/tasks/click/rwork/click__rwork__003/public/acut_statement.md",
+      "acut_statement_sha256": "773094416d40b8142aae12a87a780e703a62a402593eb3cc0919874972bf9cc6",
+      "allowed_context": {
+        "include_git_history_before_base": true,
+        "include_issue_text": true,
+        "include_pr_text": false,
+        "include_reference_patch": false
+      },
+      "audit_provenance_path": "experiments/core_narrative/tasks/click/rwork/click__rwork__003/audit/provenance.md",
+      "audit_provenance_sha256": "e92937ea00c82bc5ed920393b6bffaf1278e2dd4c4f544292b3b90f1e4dbf365",
+      "compat_statement_path": "experiments/core_narrative/tasks/click/rwork/click__rwork__003/public/statement.md",
+      "leakage_notes": {
+        "acut_statement_excludes_provenance_urls_and_shas": true,
+        "notes": "One-commit behavior fix with a focused default regression test.",
+        "provenance_preserved_in_audit_artifact": true,
+        "reviewed": true
+      },
+      "oracle_grade": "B",
+      "risk_permission_tags": [
+        "local_filesystem_edit",
+        "local_test_execution",
+        "network_not_required_for_verifier",
+        "pre_base_git_history_allowed",
+        "issue_text_allowed",
+        "reference_patch_forbidden"
+      ],
+      "source": {
+        "anchor_id": "commit:1c20dc6e724cd5625faaa17b715ba928d44c08bf",
+        "base_commit": "6a1c0d077311f180b356965914e2de5b9e0fdb44",
+        "changed_files": [
+          "src/click/core.py",
+          "tests/test_defaults.py"
+        ],
+        "commits_ahead": 1,
+        "kind": "commit",
+        "public_url": "https://github.com/pallets/click/commit/1c20dc6e724cd5625faaa17b715ba928d44c08bf",
+        "target_commit": "1c20dc6e724cd5625faaa17b715ba928d44c08bf"
+      },
+      "split": "rwork",
+      "task_family": "default handling for shared flag parameters",
+      "task_family_tags": [
+        "default handling for shared flag parameters"
+      ],
+      "task_id": "click__rwork__003",
+      "task_manifest_path": "experiments/core_narrative/tasks/click/rwork/click__rwork__003/task.yaml",
+      "task_manifest_sha256": "dbbdc5345b82592bfcd61ff9d61cf1089090447007af9652d3cc90f5be2f849f"
+    },
+    {
+      "acut_statement_leakage_guard": {
+        "contains_compare_link": false,
+        "contains_hex_sha_7_plus": false,
+        "contains_url": false,
+        "forbidden_term_hits": []
+      },
+      "acut_statement_path": "experiments/core_narrative/tasks/click/rwork/click__rwork__004/public/acut_statement.md",
+      "acut_statement_sha256": "2dd1e6a42085150e40ca5185e2bb86f06e023dad593cd45e8a03431df043636f",
+      "allowed_context": {
+        "include_git_history_before_base": true,
+        "include_issue_text": true,
+        "include_pr_text": false,
+        "include_reference_patch": false
+      },
+      "audit_provenance_path": "experiments/core_narrative/tasks/click/rwork/click__rwork__004/audit/provenance.md",
+      "audit_provenance_sha256": "81184de5e41cdc9ca4780729445699089ef364d3d1315b02132cc5765cf440a1",
+      "compat_statement_path": "experiments/core_narrative/tasks/click/rwork/click__rwork__004/public/statement.md",
+      "leakage_notes": {
+        "acut_statement_excludes_provenance_urls_and_shas": true,
+        "notes": "Recent option-default internals task; verifier is parameterized but fast and deterministic.",
+        "provenance_preserved_in_audit_artifact": true,
+        "reviewed": true
+      },
+      "oracle_grade": "B",
+      "risk_permission_tags": [
+        "local_filesystem_edit",
+        "local_test_execution",
+        "network_not_required_for_verifier",
+        "pre_base_git_history_allowed",
+        "issue_text_allowed",
+        "reference_patch_forbidden"
+      ],
+      "source": {
+        "anchor_id": "commit:546f2851f414b07413777ebcae89b2c21a685252",
+        "base_commit": "ae46cfd6bc997804893adc799589248eadcdbc29",
+        "changed_files": [
+          "src/click/core.py",
+          "tests/test_defaults.py",
+          "tests/test_options.py"
+        ],
+        "commits_ahead": 1,
+        "kind": "commit",
+        "public_url": "https://github.com/pallets/click/commit/546f2851f414b07413777ebcae89b2c21a685252",
+        "target_commit": "546f2851f414b07413777ebcae89b2c21a685252"
+      },
+      "split": "rwork",
+      "task_family": "callable flag_value default handling",
+      "task_family_tags": [
+        "callable flag_value default handling"
+      ],
+      "task_id": "click__rwork__004",
+      "task_manifest_path": "experiments/core_narrative/tasks/click/rwork/click__rwork__004/task.yaml",
+      "task_manifest_sha256": "14d1ccd138cb9f182faf92b60a41af4d7bf0088fb8e50128e8408b244d1f5990"
+    },
+    {
+      "acut_statement_leakage_guard": {
+        "contains_compare_link": false,
+        "contains_hex_sha_7_plus": false,
+        "contains_url": false,
+        "forbidden_term_hits": []
+      },
+      "acut_statement_path": "experiments/core_narrative/tasks/click/rwork/click__rwork__005/public/acut_statement.md",
+      "acut_statement_sha256": "211fbba5db54dc5deed1dc2eb52a8ab01cdbde17e263c027e44747b7b24404bf",
+      "allowed_context": {
+        "include_git_history_before_base": true,
+        "include_issue_text": true,
+        "include_pr_text": false,
+        "include_reference_patch": false
+      },
+      "audit_provenance_path": "experiments/core_narrative/tasks/click/rwork/click__rwork__005/audit/provenance.md",
+      "audit_provenance_sha256": "a95b0286bca1624463da8ee520ccfa4a92b9f5dbfcc437cd396091764f0090f6",
+      "compat_statement_path": "experiments/core_narrative/tasks/click/rwork/click__rwork__005/public/statement.md",
+      "leakage_notes": {
+        "acut_statement_excludes_provenance_urls_and_shas": true,
+        "notes": "Debugger stream behavior is checked through object identity, not by opening an interactive debugger.",
+        "provenance_preserved_in_audit_artifact": true,
+        "reviewed": true
+      },
+      "oracle_grade": "B",
+      "risk_permission_tags": [
+        "local_filesystem_edit",
+        "local_test_execution",
+        "network_not_required_for_verifier",
+        "pre_base_git_history_allowed",
+        "issue_text_allowed",
+        "reference_patch_forbidden"
+      ],
+      "source": {
+        "anchor_id": "commit:4f9086bf8fd98aca1d804bf742f4f1ceb6c12295",
+        "base_commit": "1339fd3323357119a9c7a6326c788f80295954ce",
+        "changed_files": [
+          "src/click/testing.py",
+          "tests/test_testing.py"
+        ],
+        "commits_ahead": 1,
+        "kind": "commit",
+        "public_url": "https://github.com/pallets/click/commit/4f9086bf8fd98aca1d804bf742f4f1ceb6c12295",
+        "target_commit": "4f9086bf8fd98aca1d804bf742f4f1ceb6c12295"
+      },
+      "split": "rwork",
+      "task_family": "CliRunner debugger stream isolation",
+      "task_family_tags": [
+        "CliRunner debugger stream isolation"
+      ],
+      "task_id": "click__rwork__005",
+      "task_manifest_path": "experiments/core_narrative/tasks/click/rwork/click__rwork__005/task.yaml",
+      "task_manifest_sha256": "43f9f468044dfac6a0068ce66d6d96989a395e847617e873e8211cc7511ea255"
+    },
+    {
+      "acut_statement_leakage_guard": {
+        "contains_compare_link": false,
+        "contains_hex_sha_7_plus": false,
+        "contains_url": false,
+        "forbidden_term_hits": []
+      },
+      "acut_statement_path": "experiments/core_narrative/tasks/click/rwork/click__rwork__006/public/acut_statement.md",
+      "acut_statement_sha256": "8f29e1765a3c4b6b00b454ea9562a74f475692724fb2a8d95d788a252d11857c",
+      "allowed_context": {
+        "include_git_history_before_base": true,
+        "include_issue_text": true,
+        "include_pr_text": false,
+        "include_reference_patch": false
+      },
+      "audit_provenance_path": "experiments/core_narrative/tasks/click/rwork/click__rwork__006/audit/provenance.md",
+      "audit_provenance_sha256": "53c4baf12d49d6b39b88f2d0d2c2afa359a96696fef73aa1b6fff355f9ebda0b",
+      "compat_statement_path": "experiments/core_narrative/tasks/click/rwork/click__rwork__006/public/statement.md",
+      "leakage_notes": {
+        "acut_statement_excludes_provenance_urls_and_shas": true,
+        "notes": "Recent one-commit semantics fix; selected verifier is parameterized but local runtime showed it is fast.",
+        "provenance_preserved_in_audit_artifact": true,
+        "reviewed": true
+      },
+      "oracle_grade": "B",
+      "risk_permission_tags": [
+        "local_filesystem_edit",
+        "local_test_execution",
+        "network_not_required_for_verifier",
+        "pre_base_git_history_allowed",
+        "issue_text_allowed",
+        "reference_patch_forbidden"
+      ],
+      "source": {
+        "anchor_id": "commit:c653ec820093ed1dda41aae8d35bff7834b0344a",
+        "base_commit": "878de46100e9c29aea9dab5b385b8116863cb5e3",
+        "changed_files": [
+          "src/click/core.py",
+          "tests/test_options.py",
+          "tests/test_termui.py"
+        ],
+        "commits_ahead": 1,
+        "kind": "commit",
+        "public_url": "https://github.com/pallets/click/commit/c653ec820093ed1dda41aae8d35bff7834b0344a",
+        "target_commit": "c653ec820093ed1dda41aae8d35bff7834b0344a"
+      },
+      "split": "rwork",
+      "task_family": "default value passing and flag activation",
+      "task_family_tags": [
+        "default value passing and flag activation"
+      ],
+      "task_id": "click__rwork__006",
+      "task_manifest_path": "experiments/core_narrative/tasks/click/rwork/click__rwork__006/task.yaml",
+      "task_manifest_sha256": "fd327a7a956efa65ca1c492dec67715a8fe4f356050e04852275759c3dfbc989"
+    }
+  ],
+  "tool": "click_r0_release_hygiene"
+}

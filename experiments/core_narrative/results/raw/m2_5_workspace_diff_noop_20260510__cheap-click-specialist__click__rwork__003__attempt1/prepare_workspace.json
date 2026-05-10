@@ -1,0 +1,14 @@
+{
+  "base_commit": "6a1c0d077311f180b356965914e2de5b9e0fdb44",
+  "repo_slug": "click",
+  "split": "rwork",
+  "statement_path": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/workspaces/m2_5_workspace_diff_noop_20260510__cheap-click-specialist__click__rwork__003__attempt1/.core_narrative/statement.md",
+  "status": "prepared",
+  "target_commit_absence_checked": true,
+  "task_id": "click__rwork__003",
+  "task_package_path": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/workspaces/m2_5_workspace_diff_noop_20260510__cheap-click-specialist__click__rwork__003__attempt1/.core_narrative/task.json",
+  "tool": "prepare_workspace",
+  "warnings": [],
+  "workspace": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/workspaces/m2_5_workspace_diff_noop_20260510__cheap-click-specialist__click__rwork__003__attempt1",
+  "workspace_history_mode": "base_tree_only_synthetic_git"
+}

@@ -1,0 +1,29 @@
+{
+  "acut_id": "cheap-generic-swe",
+  "attempt": 1,
+  "error": "error: patch failed: src/click/core.py:2284\nerror: src/click/core.py: patch does not apply",
+  "finished_at": "2026-05-10T09:55:13.877155Z",
+  "metadata": {
+    "tool": "apply_and_verify"
+  },
+  "output_path": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/normalized/m2_5_workspace_diff_live_20260510__cheap-generic-swe__click__rwork__004__attempt1.json",
+  "patch_path": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/m2_5_workspace_diff_live_20260510__cheap-generic-swe__click__rwork__004__attempt1/submission.patch",
+  "review": {
+    "mergeability_grade": null,
+    "notes": "",
+    "rule_violation": false,
+    "wrong_module": false
+  },
+  "run_id": "m2_5_workspace_diff_live_20260510__cheap-generic-swe__click__rwork__004__attempt1",
+  "schema_version": "core-narrative.run-result.v1",
+  "split": "rwork",
+  "started_at": "2026-05-10T09:55:13.866581Z",
+  "status": "invalid_submission",
+  "task_id": "click__rwork__004",
+  "verification": {
+    "duration_seconds": 0,
+    "exit_code": null,
+    "stderr_artifact": null,
+    "stdout_artifact": null
+  }
+}

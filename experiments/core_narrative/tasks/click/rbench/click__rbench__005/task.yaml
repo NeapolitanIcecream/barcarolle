@@ -9,7 +9,7 @@ source:
   base_commit: a00e01845100ce2b3d5288a2b655aad260346361
   target_commit: c70d4636831e391016895587f7ed10e96f49773e
 task_family: Choice type case sensitivity
-task_statement_path: public/statement.md
+task_statement_path: public/acut_statement.md
 allowed_context:
   include_git_history_before_base: true
   include_issue_text: true

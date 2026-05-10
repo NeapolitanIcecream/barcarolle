@@ -9,7 +9,7 @@ source:
   base_commit: 563b1a7116a6806e699d31d327dd9bca93c40cb3
   target_commit: 990ca8e664a0610fe0583f3aa8924fd49f928a74
 task_family: CliRunner return value capture
-task_statement_path: public/statement.md
+task_statement_path: public/acut_statement.md
 allowed_context:
   include_git_history_before_base: true
   include_issue_text: false

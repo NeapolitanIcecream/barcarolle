@@ -9,7 +9,7 @@ source:
   base_commit: d3f36e884e18f374c3e4e6cf062ba19f100d0fd6
   target_commit: 02ea9ee7e864581258b4902d6e6c1264b0226b9f
 task_family: prompt choice rendering
-task_statement_path: public/statement.md
+task_statement_path: public/acut_statement.md
 allowed_context:
   include_git_history_before_base: true
   include_issue_text: false

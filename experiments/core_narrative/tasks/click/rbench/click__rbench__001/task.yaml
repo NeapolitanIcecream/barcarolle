@@ -9,7 +9,7 @@ source:
   base_commit: 4a7fe69f942bd02b811548ff8f02a08fff7429c1
   target_commit: 39e51d961b9e69c050bb948b1db11275f9630542
 task_family: option help/default rendering
-task_statement_path: public/statement.md
+task_statement_path: public/acut_statement.md
 allowed_context:
   include_git_history_before_base: true
   include_issue_text: false
