@@ -1,13 +1,16 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-cd /Users/chenmohan/gits/barcarolle
+script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+repo_root="$(git -C "$script_dir" rev-parse --show-toplevel)"
+
+cd "$repo_root"
 
 codex exec \
-  -C /Users/chenmohan/gits/barcarolle \
+  -C "$repo_root" \
   -m gpt-5.5 \
   -c model_reasoning_effort=\"xhigh\" \
   --dangerously-bypass-approvals-and-sandbox \
-  - < /Users/chenmohan/gits/barcarolle/.codex-workflows/m2-5-scoreability-recovery/reviewer/recheck-prompt-1.md \
-  > /Users/chenmohan/gits/barcarolle/.codex-workflows/m2-5-scoreability-recovery/reviewer/cli-recheck-1.log \
+  - < "$script_dir/recheck-prompt-1.md" \
+  > "$script_dir/cli-recheck-1.log" \
   2>&1
