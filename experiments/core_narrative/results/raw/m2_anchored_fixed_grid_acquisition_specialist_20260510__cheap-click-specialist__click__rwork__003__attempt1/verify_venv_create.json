@@ -1,0 +1,15 @@
+{
+  "command": [
+    "/opt/homebrew/bin/uv",
+    "venv",
+    "--python",
+    "3.12",
+    ".venv"
+  ],
+  "exit_code": 0,
+  "finished_at": "2026-05-10T06:04:46.040513Z",
+  "name": "verify_venv_create",
+  "started_at": "2026-05-10T06:04:45.947458Z",
+  "stderr_artifact": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/m2_anchored_fixed_grid_acquisition_specialist_20260510__cheap-click-specialist__click__rwork__003__attempt1/verify_venv_create.stderr.txt",
+  "stdout_artifact": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/m2_anchored_fixed_grid_acquisition_specialist_20260510__cheap-click-specialist__click__rwork__003__attempt1/verify_venv_create.stdout.txt"
+}

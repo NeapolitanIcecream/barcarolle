@@ -1,0 +1,41 @@
+diff --git a/src/click/core.py b/src/click/core.py
+index cd8052f..0cd2d08 100644
+--- a/src/click/core.py
++++ b/src/click/core.py
+@@ -799,0 +800,2 @@ class Context:
++            pending_defaults: dict[str, Parameter] = {}
++
+@@ -803,7 +804,0 @@ class Context:
+-                    # We explicitly hide the :attr:`UNSET` value to the user, as we
+-                    # choose to make it an implementation detail. And because ``invoke``
+-                    # has been designed as part of Click public API, we return ``None``
+-                    # instead. Refs:
+-                    # <redacted:url>
+-                    # <redacted:url>
+-                    # <redacted:url>
+@@ -811 +806,3 @@ class Context:
+-                        default_value = None
++                        pending_defaults.setdefault(param.name, param)
++                        continue
++
+@@ -815,0 +813,4 @@ class Context:
++            for name, param in pending_defaults.items():
++                if name not in kwargs:
++                    kwargs[name] = param.type_cast_value(ctx, None)
++
+diff --git a/tests/test_defaults.py b/tests/test_defaults.py
+index 3f293e8..29c4ef3 100644
+--- a/tests/test_defaults.py
++++ b/tests/test_defaults.py
+@@ -63,0 +64,11 @@ def test_multiple_flag_default(runner):
++def test_shared_flag_default_order(runner):
++    @click.command()
++    @click.option("-q", "value", flag_value=-1, type=click.INT)
++    @click.option("-v", "value", flag_value=1, default=2, type=click.INT)
++    def cli(value):
++        return value
++
++    result = runner.invoke(cli, [], standalone_mode=False)
++    assert result.return_value == 2
++
++

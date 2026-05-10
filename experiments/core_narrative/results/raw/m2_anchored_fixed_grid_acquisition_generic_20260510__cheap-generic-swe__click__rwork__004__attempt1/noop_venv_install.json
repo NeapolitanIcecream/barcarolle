@@ -1,0 +1,19 @@
+{
+  "command": [
+    "/opt/homebrew/bin/uv",
+    "pip",
+    "install",
+    "--python",
+    ".venv/bin/python",
+    "-q",
+    "-e",
+    ".",
+    "pytest"
+  ],
+  "exit_code": 0,
+  "finished_at": "2026-05-10T06:00:31.991270Z",
+  "name": "noop_venv_install",
+  "started_at": "2026-05-10T06:00:31.855382Z",
+  "stderr_artifact": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/m2_anchored_fixed_grid_acquisition_generic_20260510__cheap-generic-swe__click__rwork__004__attempt1/noop_venv_install.stderr.txt",
+  "stdout_artifact": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/m2_anchored_fixed_grid_acquisition_generic_20260510__cheap-generic-swe__click__rwork__004__attempt1/noop_venv_install.stdout.txt"
+}

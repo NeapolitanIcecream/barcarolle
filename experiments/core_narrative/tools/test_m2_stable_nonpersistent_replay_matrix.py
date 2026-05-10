@@ -122,9 +122,12 @@ class M2StableNonpersistentReplayMatrixTests(unittest.TestCase):
         model_call_made: bool,
         failure_owner: str,
         failure_class: str | None,
+        acut_id: str = "acut_1",
+        task_id: str = "task_1",
         nonpersistent: bool = False,
         cleanup_removed: bool | None = None,
         verifier_exit_code: int | None = None,
+        ledger_estimated_cost_usd: float | None = None,
     ) -> Path:
         nonpersistent_channel: dict[str, object] = {"attempted": nonpersistent}
         if nonpersistent:
@@ -156,6 +159,18 @@ class M2StableNonpersistentReplayMatrixTests(unittest.TestCase):
             },
             "nonpersistent_verifier_channel": nonpersistent_channel,
         }
+        runner_result: dict[str, object] = {
+            "status": "error" if status != "failed" else "patch_generated",
+            "model_call_made": model_call_made,
+            "submission_contract": matrix.ANCHORED_CONTRACT,
+            "raw_response_artifact": str(raw),
+            "prompt_snapshot": str(prompt),
+            "details": {"failure_class": failure_class},
+        }
+        if ledger_estimated_cost_usd is not None:
+            cost_append = {"estimated_cost_usd": ledger_estimated_cost_usd}
+            runner_result["cost_ledger_append"] = cost_append
+            metadata["direct_runner_cost_ledger_append"] = cost_append
         normalized_payload = {
             "status": status,
             "metadata": metadata,
@@ -169,21 +184,14 @@ class M2StableNonpersistentReplayMatrixTests(unittest.TestCase):
                 "status": "completed",
                 "results": [
                     {
-                        "acut_id": "acut_1",
-                        "task_id": "task_1",
+                        "acut_id": acut_id,
+                        "task_id": task_id,
                         "run_id": relative.replace(".json", ""),
                         "status": status,
                         "normalized_result": str(normalized),
                         "raw_response_artifact": str(raw),
                         "prompt_snapshot": str(prompt),
-                        "runner_result": {
-                            "status": "error" if status != "failed" else "patch_generated",
-                            "model_call_made": model_call_made,
-                            "submission_contract": matrix.ANCHORED_CONTRACT,
-                            "raw_response_artifact": str(raw),
-                            "prompt_snapshot": str(prompt),
-                            "details": {"failure_class": failure_class},
-                        },
+                        "runner_result": runner_result,
                         "normalized": normalized_payload,
                     }
                 ],
@@ -267,6 +275,85 @@ class M2StableNonpersistentReplayMatrixTests(unittest.TestCase):
         self.assertFalse(payload["claim_boundaries"]["new_model_calls"])
         self.assertFalse(payload["output_leakage_guard"]["contains_raw_unsafe_text"])
         self.assertEqual(payload["blockers"][0]["blocker_id"], "anchored_search_replace_fixed_grid_inputs_insufficient")
+        self.assertEqual(payload["anchored_fixed_grid"]["expected_fixed_denominator"], 2)
+        self.assertEqual(payload["anchored_fixed_grid"]["observed_unique_cell_count"], 1)
+        self.assertEqual(
+            payload["anchored_fixed_grid"]["remaining_missing_cells"],
+            [{"acut_id": "acut_1", "task_id": "task_2"}],
+        )
+
+    def test_fixed_grid_acquisition_rows_close_missing_cells_and_account_model_calls(self) -> None:
+        """Acquired anchored rows close the fixed-grid blocker without hiding row categories."""
+        m2_summary = self.m2_summary()
+        patch_raw = self.raw_response("raw/patch/provider_response.redacted.json", "*** Begin Patch\n")
+        patch_prompt = self.prompt("raw/patch/prompt_snapshot.json")
+        patch_normalized = self.normalized("normalized/patch.json")
+        patch_replay = self.patch_replay(patch_raw, patch_prompt, patch_normalized)
+
+        raw_1 = self.raw_response("raw/acquisition/task1.json", '{"edits":[1]}', cost=0.1)
+        prompt_1 = self.prompt("raw/acquisition/prompt1.json")
+        norm_1 = self.normalized("normalized/acquisition_task1.json")
+        raw_2 = self.raw_response("raw/acquisition/task2.json", '{"edits":[2]}', cost=0.2)
+        prompt_2 = self.prompt("raw/acquisition/prompt2.json")
+        norm_2 = self.normalized("normalized/acquisition_task2.json")
+
+        acquisition_1 = self.anchored_batch(
+            "anchored-acquisition-task1.json",
+            raw=raw_1,
+            prompt=prompt_1,
+            normalized=norm_1,
+            task_id="task_1",
+            status="invalid_submission",
+            model_call_made=True,
+            failure_owner="model_output",
+            failure_class="search_replace_old_occurrence_mismatch",
+            ledger_estimated_cost_usd=0.11,
+        )
+        acquisition_2 = self.anchored_batch(
+            "anchored-acquisition-task2.json",
+            raw=raw_2,
+            prompt=prompt_2,
+            normalized=norm_2,
+            task_id="task_2",
+            status="failed",
+            model_call_made=True,
+            failure_owner="candidate_patch",
+            failure_class=None,
+            nonpersistent=True,
+            cleanup_removed=True,
+            verifier_exit_code=1,
+            ledger_estimated_cost_usd=0.22,
+        )
+
+        args = argparse.Namespace(
+            m2_summary=str(m2_summary),
+            patch_replay=str(patch_replay),
+            anchored_batch=[
+                ("acquisition_task1", "fixed_grid_acquisition_live", str(acquisition_1)),
+                ("acquisition_task2", "fixed_grid_acquisition_live", str(acquisition_2)),
+            ],
+            output=str(self.root / "out.json"),
+            report=str(self.root / "out.md"),
+        )
+
+        payload = matrix.build_payload(args)
+
+        self.assertEqual(payload["blockers"], [])
+        self.assertTrue(payload["claim_boundaries"]["anchored_full_fixed_grid_available"])
+        self.assertTrue(payload["claim_boundaries"]["new_model_calls"])
+        self.assertEqual(payload["anchored_fixed_grid"]["expected_fixed_denominator"], 2)
+        self.assertEqual(payload["anchored_fixed_grid"]["observed_unique_cell_count"], 2)
+        self.assertEqual(payload["anchored_fixed_grid"]["remaining_missing_cell_count"], 0)
+        acquisition_cost = payload["cost_model_call_accounting"]["acquisition"]
+        self.assertEqual(acquisition_cost["input_record_count"], 2)
+        self.assertEqual(acquisition_cost["acquired_raw_input_count"], 2)
+        self.assertEqual(acquisition_cost["new_model_call_made_count"], 2)
+        self.assertEqual(acquisition_cost["provider_usage_cost_usd_observed_sum"], 0.3)
+        self.assertEqual(acquisition_cost["ledger_estimated_cost_usd_sum"], 0.33)
+        self.assertEqual(
+            acquisition_cost["category_counts"],
+            {"model_output_invalid_submission": 1, "nonpersistent_verifier_attempt": 1},
+        )
 
     def test_report_includes_required_channel_breakout(self) -> None:
         """The human report names the stable categories and claim boundaries."""
@@ -287,6 +374,7 @@ class M2StableNonpersistentReplayMatrixTests(unittest.TestCase):
         matrix.write_report(payload, args.report)
 
         report = Path(args.report).read_text(encoding="utf-8")
+        self.assertIn("Acquisition And Missing Inputs", report)
         self.assertIn("Persisted patch-artifact attemptable count", report)
         self.assertIn("Nonpersistent verifier attempts", report)
         self.assertIn("This report does not claim M2 passed", report)
