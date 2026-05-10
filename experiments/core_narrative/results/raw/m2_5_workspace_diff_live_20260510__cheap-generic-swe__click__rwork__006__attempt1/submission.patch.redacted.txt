@@ -1,0 +1,160 @@
+diff --git a/src/click/core.py b/src/click/core.py
+index 6dc44f3..1802663 100644
+--- a/src/click/core.py
++++ b/src/click/core.py
+@@ -2896,7 +2896 @@ class Option(Parameter):
+-        # Lazily resolve default=True to flag_value. Doing this here
+-        # (instead of eagerly in __init__) prevents callable flag_values
+-        # (like classes) from being instantiated by the callable check below.
+-        # <redacted:url>
+-        if value is True and self.is_flag:
+-            value = self.flag_value
+-        elif call and callable(value):
++        if call and callable(value):
+diff --git a/tests/test_basic.py b/tests/test_basic.py
+index 3f73528..4159b33 100644
+--- a/tests/test_basic.py
++++ b/tests/test_basic.py
+@@ -305,3 +305,3 @@ def test_boolean_conversion(runner, value, expect):
+-        # Special case: if default=True and flag_value is set, the value returned is the
+-        # flag_value, not the True Python value itself.
+-        (True, [], "upper"),
++        # Special case: if default=True and flag_value is set, the default value is
++        # processed as-is instead of being replaced by the flag_value.
++        (True, [], "True"),
+diff --git a/tests/test_defaults.py b/tests/test_defaults.py
+index 7dc74f0..bd81831 100644
+--- a/tests/test_defaults.py
++++ b/tests/test_defaults.py
+@@ -324,2 +324,2 @@ class _Marker:
+-        # No default_map: auto-aligned default returns the class, not an instance.
+-        (None, [], _Marker),
++        # No default_map: the explicit default value is preserved.
++        (None, [], True),
+@@ -328 +328 @@ class _Marker:
+-        # Static value in default_map overrides the auto-aligned flag_value.
++        # Static value in default_map overrides the default value.
+@@ -330 +330 @@ class _Marker:
+-        # Callable in default_map is still invoked (not suppressed by the fix).
++        # Callable in default_map is still invoked.
+@@ -332 +332 @@ class _Marker:
+-        # None in default_map overrides the flag_value.
++        # None in default_map overrides the default value.
+@@ -339,2 +339,2 @@ def test_default_map_with_callable_flag_value(runner, default_map, args, expecte
+-    """``default_map`` entries should override the auto-aligned callable ``flag_value``,
+-    and callable entries in ``default_map`` should still be invoked.
++    """``default_map`` entries should override the explicit default value, and
++    callable entries in ``default_map`` should still be invoked.
+@@ -342,2 +342 @@ def test_default_map_with_callable_flag_value(runner, default_map, args, expecte
+-    Verifies the fix for <redacted:url> does not
+-    break ``default_map`` precedence.
++    Verifies default-map precedence for flag options.
+diff --git a/tests/test_options.py b/tests/test_options.py
+index 85f6224..9e28266 100644
+--- a/tests/test_options.py
++++ b/tests/test_options.py
+@@ -1462 +1462 @@ def test_type_from_flag_value():
+-        ({"type": bool, "default": True, "flag_value": False}, [], False),
++        ({"type": bool, "default": True, "flag_value": False}, [], True),
+@@ -1468 +1468 @@ def test_type_from_flag_value():
+-        ({"type": str, "default": True, "flag_value": False}, [], "False"),
++        ({"type": str, "default": True, "flag_value": False}, [], "True"),
+@@ -1556,3 +1556,3 @@ def test_invalid_flag_definition(runner, args, opts):
+-        # Special case: if default=True and flag_value is set, the value returned is the
+-        # flag_value, not the True Python value itself.
+-        (True, [], "js"),
++        # Special case: if default=True and flag_value is set, the default value is
++        # processed as-is instead of being replaced by the flag_value.
++        (True, [], "True"),
+@@ -2103 +2103,2 @@ class Class2:
+-        # If a flag value is set, it is returned instead of the default value.
++        # The explicit default is processed by the option type when the option is not
++        # passed.
+@@ -2114,4 +2115,3 @@ class Class2:
+-        # Type is not specified and default to string, so the default value is
+-        # returned as a string, even if it is a boolean. Also, defaults to the
+-        # flag_value instead of the default value to support legacy behavior.
+-        ({"flag_value": "1", "default": True}, [], "1"),
++        # Type is not specified and defaults to string, so the explicit default is
++        # returned as a string, even if it is a boolean.
++        ({"flag_value": "1", "default": True}, [], "True"),
+@@ -2119 +2119 @@ class Class2:
+-        ({"flag_value": EngineType.OSS, "default": True}, [], "EngineType.OSS"),
++        ({"flag_value": EngineType.OSS, "default": True}, [], "True"),
+@@ -2122 +2122 @@ class Class2:
+-        ({"type": str, "flag_value": 1, "default": True}, [], "1"),
++        ({"type": str, "flag_value": 1, "default": True}, [], "True"),
+@@ -2124 +2124 @@ class Class2:
+-        ({"type": str, "flag_value": "1", "default": True}, [], "1"),
++        ({"type": str, "flag_value": "1", "default": True}, [], "True"),
+@@ -2129 +2129 @@ class Class2:
+-            "EngineType.OSS",
++            "True",
+@@ -2300,4 +2300,3 @@ def test_custom_type_flag_value_dual_options(
+-        # Class flag_value with default=True and UNPROCESSED: the class itself is
+-        # returned, NOT an instance. Regression test for
+-        # <redacted:url>
+-        ({"flag_value": Class1, "type": UNPROCESSED, "default": True}, [], Class1),
++        # Class flag_value with default=True and UNPROCESSED: the explicit default is
++        # preserved, while user activation still returns the class.
++        ({"flag_value": Class1, "type": UNPROCESSED, "default": True}, [], True),
+@@ -2309,2 +2308,3 @@ def test_custom_type_flag_value_dual_options(
+-        # Without UNPROCESSED, the class is str()-ified by the default STRING type.
+-        ({"flag_value": Class1, "default": True}, [], "<class 'test_options.Class1'>"),
++        # Without UNPROCESSED, the explicit default is str()-ified by the default
++        # STRING type.
++        ({"flag_value": Class1, "default": True}, [], "True"),
+@@ -2329,2 +2329,3 @@ def test_custom_type_flag_value_dual_options(
+-        # Non-callable flag_value with default=True: unaffected by the fix.
+-        ({"flag_value": "upper", "default": True}, [], "upper"),
++        # Non-callable flag_value with default=True: the explicit default is still
++        # preserved.
++        ({"flag_value": "upper", "default": True}, [], "True"),
+@@ -2335,3 +2336,2 @@ def test_callable_flag_value_not_instantiated(runner, opt_params, args, expected
+-    """A callable ``flag_value`` like a class, with ``default=True`` should not be
+-    invoked when resolving the default. This is the single-option variant of
+-    the regression reported in <redacted:url>
++    """A callable ``flag_value`` like a class, with ``default=True`` should keep the
++    explicit default value when the option is not passed.
+@@ -2354 +2354 @@ def test_callable_flag_value_default_map(runner):
+-    """A ``default_map`` entry should override the auto-aligned callable ``flag_value``.
++    """A ``default_map`` entry should override the explicit default value.
+@@ -2356,4 +2356,3 @@ def test_callable_flag_value_default_map(runner):
+-    When ``default=True`` and ``flag_value=SomeClass``, the default is aligned to
+-    ``SomeClass``. If ``default_map`` provides a different value (including a
+-    callable), it should take precedence and callables from ``default_map`` should
+-    still be invoked.
++    If ``default_map`` provides a different value (including a callable), it
++    should take precedence and callables from ``default_map`` should still be
++    invoked.
+@@ -2367 +2366 @@ def test_callable_flag_value_default_map(runner):
+-    # Static value in default_map overrides the flag_value default.
++    # Static value in default_map overrides the default value.
+@@ -2371 +2370 @@ def test_callable_flag_value_default_map(runner):
+-    # Callable in default_map is still invoked (not suppressed by the fix).
++    # Callable in default_map is still invoked.
+@@ -2406,2 +2405,2 @@ def test_callable_flag_value_show_default(runner):
+-        # default=True with callable flag_value: the attribute stays True
+-        # (not eagerly aligned), but get_default() resolves to the flag_value.
++        # default=True with callable flag_value: the attribute stays True and
++        # get_default() returns the same explicit default.
+@@ -2411 +2410 @@ def test_callable_flag_value_show_default(runner):
+-            Class1,
++            True,
+@@ -2413 +2412 @@ def test_callable_flag_value_show_default(runner):
+-        # default=True with non-callable flag_value: same lazy resolution.
++        # default=True with non-callable flag_value: the explicit default remains.
+@@ -2417 +2416 @@ def test_callable_flag_value_show_default(runner):
+-            "upper",
++            True,
+@@ -2436,4 +2435 @@ def test_callable_flag_value_get_default_override(
+-    """The ``default=True`` to ``flag_value`` alignment is resolved lazily in
+-    ``get_default()`` rather than eagerly in ``__init__``. This means
+-    ``option.default`` stays as ``True`` while ``get_default()`` returns the
+-    ``flag_value``.
++    """The explicit ``default=True`` remains available from ``get_default()``.
+@@ -2441,2 +2437,2 @@ def test_callable_flag_value_get_default_override(
+-    A user subclass that reads ``self.default`` directly (bypassing
+-    ``get_default()``) will see ``True`` instead of the ``flag_value``.
++    A user subclass that reads ``self.default`` directly will see the same
++    explicit default value that was configured.

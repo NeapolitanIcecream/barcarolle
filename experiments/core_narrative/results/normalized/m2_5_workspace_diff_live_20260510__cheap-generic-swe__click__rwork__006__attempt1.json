@@ -1,0 +1,138 @@
+{
+  "acut_id": "cheap-generic-swe",
+  "attempt": 1,
+  "error": "workspace diff did not produce a verifier-ready source patch",
+  "finished_at": "2026-05-10T10:12:41.415725Z",
+  "metadata": {
+    "acut_manifest_path": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/configs/acuts/cheap-generic-swe.yaml",
+    "acut_manifest_sha256": "3888ad4d393ac439d8a3d6ea48a7358b4480c6137d2c7aeed9c411cd676513c3",
+    "batch_tool": "m2_5_workspace_diff_runner",
+    "candidate_patch_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "candidate_patch_size_bytes": 0,
+    "clean_patch_replay": {
+      "attempted": false,
+      "error": null,
+      "failure_class": null,
+      "runner_workspace": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/workspaces/m2_5_workspace_diff_live_20260510__cheap-generic-swe__click__rwork__006__attempt1",
+      "separate_workspace": false,
+      "status": "not_attempted",
+      "verify_workspace": null
+    },
+    "failure_class": "unsafe_patch_content",
+    "failure_owner": "model_output",
+    "mode": "live",
+    "model_call_made": true,
+    "output_contract": "workspace-diff-v1",
+    "patch_readiness": {
+      "clean_replay_attempted": false,
+      "patch_artifact_persisted": false,
+      "patch_size_bytes": 0,
+      "verifier_attempt_channel": "not_attempted",
+      "verifier_ready_patch_available": false
+    },
+    "schema_version": "core-narrative.m2-5-workspace-diff-v1",
+    "submission_contract": "workspace-diff-v1",
+    "task_manifest_path": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/tasks/click/rwork/click__rwork__006/task.yaml",
+    "task_manifest_sha256": "fd327a7a956efa65ca1c492dec67715a8fe4f356050e04852275759c3dfbc989",
+    "verifier_attempt": {
+      "attempted": false,
+      "channel": "not_attempted",
+      "patch_artifact_persisted": false,
+      "verifier_ready_patch_artifact": false
+    },
+    "verifier_digest_sha256": "97854586001dda3ce15c30a539ce5932980201a562b356e95bde7362fcc84daf",
+    "workspace_diff": {
+      "adapter_unsafe_content_detected": true,
+      "candidate_patch_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "candidate_patch_size_bytes": 0,
+      "collection_command": [
+        "git",
+        "diff",
+        "--binary",
+        "--no-ext-diff",
+        "--unified=0",
+        "HEAD"
+      ],
+      "collection_unsafe_content_detected": false,
+      "contract": "workspace-diff-v1",
+      "patch_artifact_written": true,
+      "patch_ready": false,
+      "unsafe_content_attribution": {
+        "all_full_urls_source_derived": true,
+        "all_unsafe_reasons_source_derived": true,
+        "ambiguous_full_url_count": 0,
+        "classification": "source_derived_full_url",
+        "content_recorded": false,
+        "full_url_count": 4,
+        "full_url_role_counts": {
+          "source_removed": 4
+        },
+        "model_generated_full_url_count": 0,
+        "non_url_reason_counts": {},
+        "reason_counts": {
+          "full_url": 4
+        },
+        "source_derived_full_url_count": 4,
+        "url_occurrences": [
+          {
+            "content_recorded": false,
+            "diff_line_role": "source_removed",
+            "line_number": 9,
+            "url_char_count": 44,
+            "url_sha256": "2f280692da015eee2e9bd27aef6658d569a4b144d68595c90e074d6c13f81bc5"
+          },
+          {
+            "content_recorded": false,
+            "diff_line_role": "source_removed",
+            "line_number": 49,
+            "url_char_count": 44,
+            "url_sha256": "2f280692da015eee2e9bd27aef6658d569a4b144d68595c90e074d6c13f81bc5"
+          },
+          {
+            "content_recorded": false,
+            "diff_line_role": "source_removed",
+            "line_number": 96,
+            "url_char_count": 44,
+            "url_sha256": "2f280692da015eee2e9bd27aef6658d569a4b144d68595c90e074d6c13f81bc5"
+          },
+          {
+            "content_recorded": false,
+            "diff_line_role": "source_removed",
+            "line_number": 116,
+            "url_char_count": 45,
+            "url_sha256": "aec62dcd5b6a7c655230154c394481a8c56690e64d6eb3c3717274eaf9bcbfd0"
+          }
+        ],
+        "url_occurrences_truncated": false
+      },
+      "unsafe_content_detected": true,
+      "unsafe_content_source": "live_adapter_workspace_diff_collection",
+      "untracked_scope": {
+        "checked": true,
+        "reserved_count": 0,
+        "reserved_paths_sample": [],
+        "source_count": 0,
+        "source_paths_sample": []
+      }
+    }
+  },
+  "patch_path": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/m2_5_workspace_diff_live_20260510__cheap-generic-swe__click__rwork__006__attempt1/submission.patch",
+  "review": {
+    "mergeability_grade": null,
+    "notes": "",
+    "rule_violation": false,
+    "wrong_module": false
+  },
+  "run_id": "m2_5_workspace_diff_live_20260510__cheap-generic-swe__click__rwork__006__attempt1",
+  "schema_version": "core-narrative.run-result.v1",
+  "split": "rwork",
+  "started_at": "2026-05-10T10:12:41.415714Z",
+  "status": "invalid_submission",
+  "task_id": "click__rwork__006",
+  "verification": {
+    "duration_seconds": 0,
+    "exit_code": null,
+    "stderr_artifact": null,
+    "stdout_artifact": null
+  }
+}

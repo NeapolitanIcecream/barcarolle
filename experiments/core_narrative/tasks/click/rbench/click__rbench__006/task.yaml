@@ -9,7 +9,7 @@ source:
   base_commit: 6e62332349db6e93decf47666c4cd6fe20df6b02
   target_commit: 5fe0b7e7795f9bb04ae926d00868cfeb1fa33187
 task_family: DateTime parameter parsing
-task_statement_path: public/statement.md
+task_statement_path: public/acut_statement.md
 allowed_context:
   include_git_history_before_base: true
   include_issue_text: false

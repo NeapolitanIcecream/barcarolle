@@ -1,0 +1,101 @@
+diff --git a/src/click/core.py b/src/click/core.py
+index 23d1dd5..6e401db 100644
+--- a/src/click/core.py
++++ b/src/click/core.py
+@@ -2281,0 +2282,3 @@ class Parameter:
++        from_default_map = (
++            name is not None and ctx.default_map is not None and name in ctx.default_map
++        )
+@@ -2284,3 +2287 @@ class Parameter:
+-        if value is None and not (
+-            ctx.default_map is not None and name is not None and name in ctx.default_map
+-        ):
++        if value is None and not from_default_map:
+@@ -2289,0 +2291,6 @@ class Parameter:
++            if (
++                getattr(self, "_flag_default_is_flag_value", False)
++                and not from_default_map
++                and value is self.flag_value
++            ):
++                return value
+@@ -2828 +2835,2 @@ class Option(Parameter):
+-        if self.default is True and self.flag_value is not UNSET:
++        self._flag_default_is_flag_value = self.default is True and self.flag_value is not UNSET
++        if self._flag_default_is_flag_value:
+diff --git a/tests/test_defaults.py b/tests/test_defaults.py
+index 5ef20fe..226f03a 100644
+--- a/tests/test_defaults.py
++++ b/tests/test_defaults.py
+@@ -129,0 +130,27 @@ def test_flag_default_map(runner):
++def test_callable_flag_value_default_map_and_help(runner):
++    class Value:
++        calls = 0
++
++        def __call__(self):
++            Value.calls += 1
++            return "called"
++
++        def __str__(self):
++            return "value"
++
++    @click.command()
++    @click.option(
++        "--name", is_flag=True, flag_value=Value(), default=True, show_default=True
++    )
++    def cli(name):
++        click.echo(name)
++
++    result = runner.invoke(cli, [], default_map={"name": "mapped"})
++    assert result.output == "mapped\n"
++    assert Value.calls == 0
++
++    result = runner.invoke(cli, ["--help"], default_map={"name": "mapped"})
++    assert "default: mapped" in result.output
++    assert Value.calls == 0
++
++
+diff --git a/tests/test_options.py b/tests/test_options.py
+index b162a96..eb75860 100644
+--- a/tests/test_options.py
++++ b/tests/test_options.py
+@@ -1374,0 +1375,40 @@ def test_type_from_flag_value():
++def test_default_true_flag_value_callable_is_not_invoked():
++    class Value:
++        calls = 0
++
++        def __call__(self):
++            Value.calls += 1
++            return "called"
++
++    opt = click.Option(["--x"], is_flag=True, flag_value=Value(), default=True)
++    ctx = click.Context(click.Command("test"))
++
++    assert opt.get_default(ctx) is opt.flag_value
++    assert Value.calls == 0
++
++
++def test_default_true_flag_value_callable_help_and_default_map(runner):
++    class Value:
++        calls = 0
++
++        def __call__(self):
++            Value.calls += 1
++            return "called"
++
++        def __str__(self):
++            return "value"
++
++    @click.command()
++    @click.option("--x", is_flag=True, flag_value=Value(), default=True, show_default=True)
++    def cmd(x):
++        click.echo(x, nl=False)
++
++    result = runner.invoke(cmd, [])
++    assert result.output == "value"
++    assert result.exception is None
++
++    result = runner.invoke(cmd, ["--help"])
++    assert "[default: value]" in result.output
++    assert Value.calls == 0
++
++

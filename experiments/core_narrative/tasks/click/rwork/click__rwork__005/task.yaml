@@ -9,7 +9,7 @@ source:
   base_commit: 1339fd3323357119a9c7a6326c788f80295954ce
   target_commit: 4f9086bf8fd98aca1d804bf742f4f1ceb6c12295
 task_family: CliRunner debugger stream isolation
-task_statement_path: public/statement.md
+task_statement_path: public/acut_statement.md
 allowed_context:
   include_git_history_before_base: true
   include_issue_text: true

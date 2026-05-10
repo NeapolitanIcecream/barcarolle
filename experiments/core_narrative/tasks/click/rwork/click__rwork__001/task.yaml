@@ -9,7 +9,7 @@ source:
   base_commit: 5c1239b0116b66492cdd0848144ab3c78a04495a
   target_commit: 565f36d5bc4a15d304337b749e113fb4477b1843
 task_family: flag envvar/default/type reconciliation
-task_statement_path: public/statement.md
+task_statement_path: public/acut_statement.md
 allowed_context:
   include_git_history_before_base: true
   include_issue_text: true
