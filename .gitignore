@@ -209,6 +209,11 @@ experiments/core_narrative/external_repos/
 experiments/core_narrative/cache/
 experiments/core_narrative/large_artifacts/
 experiments/core_narrative/results/raw/*/logs/
+experiments/core_narrative/results/raw/*/inner/codex_home_*/
+experiments/core_narrative/results/raw/*/verifier.stdout.txt
+
+# Cloudflare/Wrangler local cache
+.wrangler/
 
 # PyPI configuration file
 .pypirc
