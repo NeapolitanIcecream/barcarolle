@@ -1,0 +1,41 @@
+diff --git a/src/click/core.py b/src/click/core.py
+index cd8052f..e6ca87c 100644
+--- a/src/click/core.py
++++ b/src/click/core.py
+@@ -3249,0 +3250,3 @@ class Option(Parameter):
++        if value is UNSET and self.name in ctx.params:
++            return ctx.params[self.name]
++
+@@ -3251,4 +3254,3 @@ class Option(Parameter):
+-            if value is UNSET:
+-                if self.is_bool_flag:
+-                    # If the flag is a boolean flag, we return False if it is not set.
+-                    value = False
++            if value is UNSET and self.is_bool_flag:
++                # If the flag is a boolean flag, we return False if it is not set.
++                value = False
+diff --git a/tests/test_defaults.py b/tests/test_defaults.py
+index 3f293e8..4ef7903 100644
+--- a/tests/test_defaults.py
++++ b/tests/test_defaults.py
+@@ -86,0 +87,20 @@ def test_flag_default_map(runner):
++
++
++def test_shared_flag_default_order(runner):
++    @click.command()
++    @click.option("--foo/--no-foo", "value", default=True)
++    @click.option("--bar", "value", is_flag=True)
++    def cli1(value):
++        click.echo(value)
++
++    result = runner.invoke(cli1, [])
++    assert result.output == "True\n"
++
++    @click.command()
++    @click.option("--bar", "value", is_flag=True)
++    @click.option("--foo/--no-foo", "value", default=True)
++    def cli2(value):
++        click.echo(value)
++
++    result = runner.invoke(cli2, [])
++    assert result.output == "True\n"

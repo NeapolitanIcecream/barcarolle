@@ -59,6 +59,13 @@ DEFAULT_ANCHORED_BATCHES: tuple[tuple[str, str, str], ...] = (
 
 PATCH_OR_FILES_CONTRACT = "patch-or-files-v1"
 ANCHORED_CONTRACT = "anchored-search-replace-json-v3"
+ANCHORED_EVIDENCE_MODES = {
+    "historical_live",
+    "no_model_replay",
+    "fixed_grid_acquisition_live",
+    "blocker",
+}
+ACQUISITION_EVIDENCE_MODES = {"fixed_grid_acquisition_live"}
 ATTEMPTABLE_CATEGORIES = {
     "verifier_ready_persisted_patch_artifact",
     "nonpersistent_verifier_attempt",
@@ -87,7 +94,7 @@ def parse_args(argv: Sequence[str]) -> argparse.Namespace:
         metavar=("LABEL", "MODE", "PATH"),
         help=(
             "Anchored-search-replace batch evidence. MODE should be "
-            "historical_live, no_model_replay, or blocker."
+            "historical_live, no_model_replay, fixed_grid_acquisition_live, or blocker."
         ),
     )
     parser.add_argument("--output", required=True)
@@ -174,10 +181,21 @@ def bool_label(value: object) -> str:
     return "unknown"
 
 
+def is_acquisition_mode(mode: object) -> bool:
+    return isinstance(mode, str) and mode in ACQUISITION_EVIDENCE_MODES
+
+
 def first_string(*values: object) -> str | None:
     for value in values:
         if isinstance(value, str) and value:
             return value
+    return None
+
+
+def first_number(*values: object) -> float | None:
+    for value in values:
+        if isinstance(value, (int, float)):
+            return float(value)
     return None
 
 
@@ -364,6 +382,38 @@ def metadata_from_item(item: Mapping[str, Any]) -> tuple[dict[str, Any], dict[st
     return dict(normalized), dict(metadata), dict(runner_result)
 
 
+def cost_ledger_estimated_cost(
+    metadata: Mapping[str, Any],
+    runner_result: Mapping[str, Any],
+) -> float | None:
+    runner_append = (
+        runner_result.get("cost_ledger_append")
+        if isinstance(runner_result.get("cost_ledger_append"), Mapping)
+        else {}
+    )
+    metadata_append = (
+        metadata.get("direct_runner_cost_ledger_append")
+        if isinstance(metadata.get("direct_runner_cost_ledger_append"), Mapping)
+        else {}
+    )
+    runner_accounting = (
+        runner_result.get("cost_accounting")
+        if isinstance(runner_result.get("cost_accounting"), Mapping)
+        else {}
+    )
+    metadata_accounting = (
+        metadata.get("direct_runner_cost_accounting")
+        if isinstance(metadata.get("direct_runner_cost_accounting"), Mapping)
+        else {}
+    )
+    return first_number(
+        runner_append.get("estimated_cost_usd"),
+        metadata_append.get("estimated_cost_usd"),
+        runner_accounting.get("estimated_cost_usd"),
+        metadata_accounting.get("estimated_cost_usd"),
+    )
+
+
 def anchored_failure_class(
     item: Mapping[str, Any],
     metadata: Mapping[str, Any],
@@ -527,6 +577,12 @@ def anchored_batch_rows(label: str, mode: str, path: str) -> list[dict[str, Any]
         failure_class = anchored_failure_class(item, metadata, runner_result)
         failure_owner = anchored_failure_owner(item, metadata, status)
         shape = response_shape(raw_path)
+        model_call_made = metadata.get("model_call_made", runner_result.get("model_call_made"))
+        acquired_raw_input = (
+            is_acquisition_mode(mode)
+            and isinstance(raw_path, str)
+            and Path(raw_path).exists()
+        )
         row = {
             "matrix_source": "anchored_batch",
             "source_label": label,
@@ -554,12 +610,14 @@ def anchored_batch_rows(label: str, mode: str, path: str) -> list[dict[str, Any]
             "cleanup_blocker": details["cleanup_blocker"],
             "transient_workspace_cleanup": details["transient_workspace_cleanup"],
             "verifier_exit_code": details["verifier_exit_code"],
-            "historical_model_call_made": metadata.get("model_call_made", runner_result.get("model_call_made")),
-            "replay_model_call_made": metadata.get("model_call_made", runner_result.get("model_call_made"))
+            "historical_model_call_made": model_call_made,
+            "replay_model_call_made": model_call_made
             if mode == "no_model_replay"
             else None,
-            "new_model_call_made_for_this_package": False,
+            "new_model_call_made_for_this_package": is_acquisition_mode(mode) and model_call_made is True,
             "historical_provider_usage_cost_usd": response_usage_cost(raw_path),
+            "cost_ledger_estimated_cost_usd": cost_ledger_estimated_cost(metadata, runner_result),
+            "acquired_raw_input": acquired_raw_input,
             "replay_model_spend_usd": 0.0 if mode == "no_model_replay" else None,
             "raw_response_artifact": raw_path,
             "prompt_snapshot": prompt,
@@ -646,6 +704,21 @@ def cost_model_call_accounting(rows: Sequence[Mapping[str, Any]]) -> dict[str, A
         for row in rows
         if isinstance(row.get("replay_model_spend_usd"), (int, float))
     ]
+    acquisition_rows = [
+        row
+        for row in rows
+        if row.get("evidence_mode") in ACQUISITION_EVIDENCE_MODES
+    ]
+    acquisition_provider_costs = [
+        float(row.get("historical_provider_usage_cost_usd"))
+        for row in acquisition_rows
+        if isinstance(row.get("historical_provider_usage_cost_usd"), (int, float))
+    ]
+    acquisition_ledger_estimates = [
+        float(row.get("cost_ledger_estimated_cost_usd"))
+        for row in acquisition_rows
+        if isinstance(row.get("cost_ledger_estimated_cost_usd"), (int, float))
+    ]
     return {
         "historical": {
             "model_call_made_counts": count_by(rows, "historical_model_call_made"),
@@ -655,10 +728,33 @@ def cost_model_call_accounting(rows: Sequence[Mapping[str, Any]]) -> dict[str, A
         },
         "replay": {
             "model_call_made_counts": count_by(rows, "replay_model_call_made"),
-            "new_model_call_made_count": sum(1 for row in rows if row.get("new_model_call_made_for_this_package") is True),
+            "new_model_call_made_count": sum(
+                1
+                for row in rows
+                if row.get("new_model_call_made_for_this_package") is True
+                and row.get("evidence_mode") not in ACQUISITION_EVIDENCE_MODES
+            ),
             "model_spend_usd_observed_sum": round(sum(replay_spend), 6),
             "live_api_calls": False,
             "canonical_cost_ledger_mutated": False,
+        },
+        "acquisition": {
+            "evidence_modes": sorted(ACQUISITION_EVIDENCE_MODES),
+            "input_record_count": len(acquisition_rows),
+            "acquired_raw_input_count": sum(1 for row in acquisition_rows if row.get("acquired_raw_input") is True),
+            "new_model_call_made_count": sum(
+                1 for row in acquisition_rows if row.get("new_model_call_made_for_this_package") is True
+            ),
+            "provider_usage_cost_usd_observed_sum": round(sum(acquisition_provider_costs), 6),
+            "provider_usage_cost_observed_count": len(acquisition_provider_costs),
+            "ledger_estimated_cost_usd_sum": round(sum(acquisition_ledger_estimates), 6),
+            "ledger_estimated_cost_observed_count": len(acquisition_ledger_estimates),
+            "category_counts": count_by(acquisition_rows, "stable_category"),
+        },
+        "package": {
+            "new_model_call_made_count": sum(
+                1 for row in rows if row.get("new_model_call_made_for_this_package") is True
+            ),
         },
     }
 
@@ -715,29 +811,78 @@ def aggregate(rows: Sequence[Mapping[str, Any]]) -> dict[str, Any]:
     }
 
 
-def blocker_summary(summary: Mapping[str, Any], rows: Sequence[Mapping[str, Any]]) -> list[dict[str, Any]]:
-    blockers: list[dict[str, Any]] = []
+def anchored_fixed_grid_accounting(summary: Mapping[str, Any], rows: Sequence[Mapping[str, Any]]) -> dict[str, Any]:
     tasks = [str(item) for item in summary.get("tasks", []) if isinstance(item, str)]
     acuts = [str(item) for item in summary.get("acuts", []) if isinstance(item, str)]
     expected_grid = {(acut, task) for acut in acuts for task in tasks}
-    anchored_cells = {
-        (str(row.get("acut_id")), str(row.get("task_id")))
+    anchored_rows = [
+        row
         for row in rows
         if row.get("contract") == ANCHORED_CONTRACT and row.get("acut_id") and row.get("task_id")
+    ]
+    by_cell: dict[tuple[str, str], list[Mapping[str, Any]]] = {}
+    for row in anchored_rows:
+        cell = (str(row.get("acut_id")), str(row.get("task_id")))
+        by_cell.setdefault(cell, []).append(row)
+    observed_expected_cells = (set(by_cell) & expected_grid) if expected_grid else set(by_cell)
+    extra_cells = sorted(set(by_cell) - expected_grid) if expected_grid else []
+    missing_cells = sorted(expected_grid - set(by_cell))
+
+    def summarize_cell(acut_id: str, task_id: str) -> dict[str, Any]:
+        cell_rows = by_cell[(acut_id, task_id)]
+        return {
+            "acut_id": acut_id,
+            "task_id": task_id,
+            "record_count": len(cell_rows),
+            "source_labels": sorted({str(row.get("source_label")) for row in cell_rows}),
+            "evidence_mode_counts": count_by(cell_rows, "evidence_mode"),
+            "category_counts": count_by(cell_rows, "stable_category"),
+            "acquired_raw_input_count": sum(1 for row in cell_rows if row.get("acquired_raw_input") is True),
+            "new_model_call_made_count": sum(
+                1 for row in cell_rows if row.get("new_model_call_made_for_this_package") is True
+            ),
+            "verifier_attemptable_count": sum(
+                1 for row in cell_rows if row.get("stable_category") in ATTEMPTABLE_CATEGORIES
+            ),
+        }
+
+    observed_cells = [summarize_cell(acut_id, task_id) for acut_id, task_id in sorted(observed_expected_cells)]
+    extra_observed_cells = [summarize_cell(acut_id, task_id) for acut_id, task_id in extra_cells]
+    return {
+        "contract": ANCHORED_CONTRACT,
+        "expected_fixed_denominator": len(expected_grid),
+        "expected_cells": [
+            {"acut_id": acut_id, "task_id": task_id}
+            for acut_id, task_id in sorted(expected_grid)
+        ],
+        "input_record_count": len(anchored_rows),
+        "observed_unique_cell_count": len(observed_expected_cells),
+        "duplicate_input_record_count": max(0, len(anchored_rows) - len(by_cell)),
+        "observed_cells": observed_cells,
+        "extra_observed_cell_count": len(extra_cells),
+        "extra_observed_cells": extra_observed_cells,
+        "remaining_missing_cell_count": len(missing_cells),
+        "remaining_missing_cells": [
+            {"acut_id": acut_id, "task_id": task_id}
+            for acut_id, task_id in missing_cells
+        ],
     }
-    missing_cells = sorted(expected_grid - anchored_cells)
-    if expected_grid and missing_cells:
+
+
+def blocker_summary(fixed_grid: Mapping[str, Any]) -> list[dict[str, Any]]:
+    blockers: list[dict[str, Any]] = []
+    missing_cells = fixed_grid.get("remaining_missing_cells")
+    if not isinstance(missing_cells, list):
+        missing_cells = []
+    if fixed_grid.get("expected_fixed_denominator") and missing_cells:
         blockers.append(
             {
                 "blocker_id": "anchored_search_replace_fixed_grid_inputs_insufficient",
                 "status": "blocked",
-                "expected_fixed_denominator": len(expected_grid),
-                "observed_unique_cell_count": len(anchored_cells),
-                "missing_cell_count": len(missing_cells),
-                "missing_cells": [
-                    {"acut_id": acut_id, "task_id": task_id}
-                    for acut_id, task_id in missing_cells
-                ],
+                "expected_fixed_denominator": fixed_grid.get("expected_fixed_denominator"),
+                "observed_unique_cell_count": fixed_grid.get("observed_unique_cell_count"),
+                "missing_cell_count": fixed_grid.get("remaining_missing_cell_count"),
+                "missing_cells": missing_cells,
                 "effect": (
                     "anchored-search-replace evidence is limited to recorded target-cell smoke/replay artifacts; "
                     "do not claim full M2 matrix passage or coverage"
@@ -772,14 +917,15 @@ def build_payload(args: argparse.Namespace) -> dict[str, Any]:
     anchored_rows: list[dict[str, Any]] = []
     anchored_evidence_inputs: list[dict[str, Any]] = []
     for label, mode, path in anchored_inputs:
-        if mode not in {"historical_live", "no_model_replay", "blocker"}:
+        if mode not in ANCHORED_EVIDENCE_MODES:
             raise ToolError("unsupported anchored evidence mode", label=label, mode=mode)
         anchored_evidence_inputs.append({"label": label, "mode": mode, "path": path})
         if mode == "blocker":
             continue
         anchored_rows.extend(anchored_batch_rows(label, mode, path))
     rows.extend(mark_anchored_transitions(anchored_rows))
-    blockers = blocker_summary(m2_summary, rows)
+    fixed_grid = anchored_fixed_grid_accounting(m2_summary, rows)
+    blockers = blocker_summary(fixed_grid)
     payload: dict[str, Any] = {
         "tool": TOOL,
         "status": "completed",
@@ -804,13 +950,15 @@ def build_payload(args: argparse.Namespace) -> dict[str, Any]:
                 if isinstance(patch_replay.get("scope"), Mapping)
                 else None,
                 "patch_or_files_v1_no_model": len(existing_patch_or_files_path_rows(m2_summary, "patch_or_files_v1_no_model")),
-                "anchored_search_replace_existing_records": sum(
+                "anchored_search_replace_input_records": sum(
                     1 for row in rows if row.get("contract") == ANCHORED_CONTRACT
                 ),
+                "anchored_search_replace_expected_fixed_grid_cells": fixed_grid.get("expected_fixed_denominator"),
+                "anchored_search_replace_observed_unique_cells": fixed_grid.get("observed_unique_cell_count"),
             },
         },
         "method": {
-            "model_calls": "none_in_this_package",
+            "model_calls": "none_during_matrix_aggregation; acquisition rows may record live calls made before aggregation",
             "uses_existing_provider_responses": True,
             "patch_or_files_replay_source": "m2_repaired_parser_replay output generated with current parser/applicator",
             "patch_or_files_no_model_source": "existing M2 no-model verifier-ready control records from m2_scoreability_summary",
@@ -820,6 +968,7 @@ def build_payload(args: argparse.Namespace) -> dict[str, Any]:
             "content_policy": "hashes, counts, paths, and metadata only; raw provider text is not copied into the summary",
         },
         "summary": aggregate(rows),
+        "anchored_fixed_grid": fixed_grid,
         "missing_artifact_summary": missing_artifact_summary(rows),
         "cost_model_call_accounting": cost_model_call_accounting(rows),
         "blockers": blockers,
@@ -827,7 +976,9 @@ def build_payload(args: argparse.Namespace) -> dict[str, Any]:
         "claim_status": "stable_nonpersistent_replay_matrix_not_m2_pass",
         "claim_boundaries": {
             **PROHIBITED_CLAIMS,
-            "new_model_calls": False,
+            "new_model_calls": bool(
+                any(row.get("new_model_call_made_for_this_package") is True for row in rows)
+            ),
             "verifier_or_task_success_measured_by_this_package": False,
             "anchored_full_fixed_grid_available": not blockers,
         },
@@ -847,8 +998,10 @@ def write_report(payload: Mapping[str, Any], path: str) -> None:
     scope = payload.get("scope") if isinstance(payload.get("scope"), Mapping) else {}
     summary = payload.get("summary") if isinstance(payload.get("summary"), Mapping) else {}
     cost = payload.get("cost_model_call_accounting") if isinstance(payload.get("cost_model_call_accounting"), Mapping) else {}
-    replay_cost = cost.get("replay") if isinstance(cost.get("replay"), Mapping) else {}
+    acquisition_cost = cost.get("acquisition") if isinstance(cost.get("acquisition"), Mapping) else {}
+    package_cost = cost.get("package") if isinstance(cost.get("package"), Mapping) else {}
     missing = payload.get("missing_artifact_summary") if isinstance(payload.get("missing_artifact_summary"), Mapping) else {}
+    fixed_grid = payload.get("anchored_fixed_grid") if isinstance(payload.get("anchored_fixed_grid"), Mapping) else {}
     generated_at = str(payload.get("generated_at") or "")
     date_from_path = re.search(r"\d{4}-\d{2}-\d{2}", str(path))
     report_date = (
@@ -867,8 +1020,10 @@ def write_report(payload: Mapping[str, Any], path: str) -> None:
         "",
         f"- Patch-or-files fixed denominator: `{scope.get('fixed_denominators', {}).get('patch_or_files_v1_live')}`.",
         f"- Patch-or-files no-model control denominator: `{scope.get('fixed_denominators', {}).get('patch_or_files_v1_no_model')}`.",
-        f"- Anchored input-record denominator: `{scope.get('fixed_denominators', {}).get('anchored_search_replace_existing_records')}`.",
-        f"- New model calls in this package: `{replay_cost.get('new_model_call_made_count')}`.",
+        f"- Anchored fixed-grid denominator: `{fixed_grid.get('expected_fixed_denominator')}` expected cells; "
+        f"`{fixed_grid.get('observed_unique_cell_count')}` observed unique cells; "
+        f"`{fixed_grid.get('input_record_count')}` input records.",
+        f"- New model calls in this package: `{package_cost.get('new_model_call_made_count')}`.",
         "- This is verifier-attemptability and artifact-channel accounting only.",
         "",
         "## Aggregate",
@@ -879,6 +1034,20 @@ def write_report(payload: Mapping[str, Any], path: str) -> None:
         f"- Nonpersistent verifier attempts: `{summary.get('nonpersistent_verifier_attempt_count')}`.",
         f"- Prior failures becoming verifier-attemptable: `{summary.get('prior_failures_became_verifier_attemptable_count')}`.",
         f"- Missing raw artifacts: `{missing.get('missing_raw_artifact_count')}`.",
+        "",
+        "## Acquisition And Missing Inputs",
+        "",
+        f"- Acquired raw input records: `{acquisition_cost.get('acquired_raw_input_count')}`.",
+        f"- Acquisition model calls: `{acquisition_cost.get('new_model_call_made_count')}`.",
+        f"- Acquisition provider usage cost observed sum: `{acquisition_cost.get('provider_usage_cost_usd_observed_sum')}` USD.",
+        f"- Acquisition ledger estimated cost sum: `{acquisition_cost.get('ledger_estimated_cost_usd_sum')}` USD.",
+        f"- Acquisition category counts: `{acquisition_cost.get('category_counts')}`.",
+        f"- Model-output invalid submissions: `{summary.get('model_output_invalid_submission_count')}`.",
+        f"- Verifier-ready persisted patch artifacts: `{summary.get('verifier_ready_persisted_patch_artifact_count')}`.",
+        f"- Nonpersistent verifier attempts: `{summary.get('nonpersistent_verifier_attempt_count')}`.",
+        f"- Infra failures: `{summary.get('infra_failure_count')}`.",
+        f"- Cleanup blockers: `{summary.get('cleanup_blocker_count')}`.",
+        f"- Remaining missing fixed-grid inputs: `{fixed_grid.get('remaining_missing_cell_count')}`.",
         "",
         "## By Contract",
         "",
@@ -925,9 +1094,35 @@ def write_report(payload: Mapping[str, Any], path: str) -> None:
                     f"anchored grid cells, observed `{blocker.get('observed_unique_cell_count')}`; "
                     f"missing `{blocker.get('missing_cell_count')}`."
                 )
+                missing_cells = blocker.get("missing_cells")
+                if isinstance(missing_cells, list) and missing_cells:
+                    formatted = ", ".join(
+                        f"{cell.get('acut_id')}/{cell.get('task_id')}"
+                        for cell in missing_cells
+                        if isinstance(cell, Mapping)
+                    )
+                    lines.append(f"  Missing cells: `{formatted}`.")
     else:
         lines.append("- None recorded.")
     inputs = payload.get("inputs") if isinstance(payload.get("inputs"), Mapping) else {}
+    anchored_batches = inputs.get("anchored_batches") if isinstance(inputs.get("anchored_batches"), list) else []
+    matrix_command = [
+        "PYTHONPATH=experiments/core_narrative/tools python3 experiments/core_narrative/tools/m2_stable_nonpersistent_replay_matrix.py",
+        f"  --m2-summary {inputs.get('m2_summary')}",
+        f"  --patch-replay {inputs.get('patch_replay')}",
+    ]
+    for item in anchored_batches:
+        if not isinstance(item, Mapping):
+            continue
+        matrix_command.append(
+            f"  --anchored-batch {item.get('label')} {item.get('mode')} {item.get('path')}"
+        )
+    matrix_command.extend(
+        [
+            f"  --output {inputs.get('output')}",
+            f"  --report {inputs.get('report')}",
+        ]
+    )
     lines.extend(
         [
             "",
@@ -942,11 +1137,10 @@ def write_report(payload: Mapping[str, Any], path: str) -> None:
             f"  --output {inputs.get('patch_replay')} \\",
             "  --report experiments/core_narrative/reports/2026-05-10_m2_stable_nonpersistent_replay_matrix_patch_or_files_replay.md",
             "",
-            "PYTHONPATH=experiments/core_narrative/tools python3 experiments/core_narrative/tools/m2_stable_nonpersistent_replay_matrix.py \\",
-            f"  --m2-summary {inputs.get('m2_summary')} \\",
-            f"  --patch-replay {inputs.get('patch_replay')} \\",
-            f"  --output {inputs.get('output')} \\",
-            f"  --report {inputs.get('report')}",
+            *[
+                line + (" \\" if index < len(matrix_command) - 1 else "")
+                for index, line in enumerate(matrix_command)
+            ],
             "```",
             "",
             "## Claim Boundaries",
