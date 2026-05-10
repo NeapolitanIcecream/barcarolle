@@ -1,0 +1,28 @@
+{
+  "command": [
+    "/Applications/Xcode.app/Contents/Developer/usr/bin/python3",
+    "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/tools/apply_and_verify.py",
+    "--workspace",
+    "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/workspaces/m2_anchored_fixed_grid_acquisition_specialist_20260510__cheap-click-specialist__click__rwork__003__attempt1__verify",
+    "--task",
+    "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/tasks/click/rwork/click__rwork__003/task.yaml",
+    "--patch",
+    "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/m2_anchored_fixed_grid_acquisition_specialist_20260510__cheap-click-specialist__click__rwork__003__attempt1/submission.patch",
+    "--acut-id",
+    "cheap-click-specialist",
+    "--attempt",
+    "1",
+    "--run-id",
+    "m2_anchored_fixed_grid_acquisition_specialist_20260510__cheap-click-specialist__click__rwork__003__attempt1",
+    "--artifact-dir",
+    "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/m2_anchored_fixed_grid_acquisition_specialist_20260510__cheap-click-specialist__click__rwork__003__attempt1",
+    "--output",
+    "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/normalized/m2_anchored_fixed_grid_acquisition_specialist_20260510__cheap-click-specialist__click__rwork__003__attempt1.json"
+  ],
+  "exit_code": 0,
+  "finished_at": "2026-05-10T06:04:46.296670Z",
+  "name": "verify_command",
+  "started_at": "2026-05-10T06:04:46.246259Z",
+  "stderr_artifact": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/m2_anchored_fixed_grid_acquisition_specialist_20260510__cheap-click-specialist__click__rwork__003__attempt1/verify_command.stderr.txt",
+  "stdout_artifact": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/raw/m2_anchored_fixed_grid_acquisition_specialist_20260510__cheap-click-specialist__click__rwork__003__attempt1/verify_command.stdout.txt"
+}
