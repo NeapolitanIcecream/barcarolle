@@ -1,0 +1,1209 @@
+You are generating a minimal repository patch for one Barcarolle ACUT task.
+Use only the public task statement, ACUT policy, and source files included below.
+Do not use hidden verifier files, reference patches, future history, credentials, endpoints, or URLs.
+
+Return only one patch artifact in one of these forms:
+1. A raw unified diff applicable with git apply.
+2. A JSON object with a string field named unified_diff, patch, or diff.
+3. A JSON object with files: [{path, action, content}], where action is write, create, replace, or delete.
+4. A Codex apply_patch transcript beginning with *** Begin Patch.
+Do not include prose, markdown explanation, credentials, endpoints, or URLs.
+
+Pre-submit validation checklist:
+- Every changed path exactly matches one of the Valid edit paths below.
+- Unified diffs must apply cleanly with git apply.
+- apply_patch hunks must match the shown source exactly; do not use redacted URL placeholders as source text.
+- Structured file entries must include complete final content for write/create/replace actions.
+- Keep changes minimal. Prefer source code fixes over test-only changes.
+
+Task summary:
+{
+  "allowed_context": {
+    "include_git_history_before_base": true,
+    "include_issue_text": true,
+    "include_pr_text": false,
+    "include_reference_patch": false
+  },
+  "disallowed_context": [
+    "reference patch or target diff for commit c653ec8",
+    "ACUT outputs or public model results",
+    "future execution results for this task"
+  ],
+  "expected_touched_area": [
+    "src/click/core.py Option default and flag activation behavior",
+    "option tests for default, flag_value, and type combinations"
+  ],
+  "repo_slug": "click",
+  "split": "rwork",
+  "task_family": "default value passing and flag activation",
+  "task_id": "click__rwork__006"
+}
+
+Public task statement:
+# click__rwork__006
+
+## Problem Statement
+
+Reconcile default value passing with flag activation so a flag's explicit default is processed as the default value, while user activation still returns the flag_value.
+
+## Public Source
+
+- Kind: commit
+- Anchor: commit:c653ec820093ed1dda41aae8d35bff7834b0344a
+- URL: <redacted:url>
+
+## Visible Context Guidance
+
+Provide the commit title and linked issue 3111. Do not expose the reference patch or final tests.
+
+## Expected Touched Area
+
+- src/click/core.py Option default and flag activation behavior
+- option tests for default, flag_value, and type combinations
+
+
+ACUT policy summary:
+{
+  "acut_id": "cheap-click-specialist",
+  "model": "openai/gpt-5.4-mini",
+  "retrieval_context_strategy": {
+    "allowed_sources": [
+      "public_task_statement",
+      "files explicitly named in the task statement",
+      "files surfaced by failing tests or import errors",
+      "adjacent tests",
+      "direct symbol and filename search results",
+      "precomputed_click_repo_map_v1",
+      "precomputed_click_docs_map_v1",
+      "precomputed_click_symbol_index_v1",
+      "precomputed_click_convention_playbook_v1",
+      "deterministic_click_retrieval_v1"
+    ],
+    "description": "Use deterministic Click-specialist context generated before execution from task-agnostic repository/docs/symbol/convention sources, then solve with the same task budget as the generic ACUTs.",
+    "forbidden_sources": [
+      "RBench/RWork gold patches",
+      "hidden human hints",
+      "post-hoc tuning from ACUT outputs",
+      "undeclared history mining",
+      "task-specific private benchmark artifacts"
+    ],
+    "strategy_id": "click-specialist-task-agnostic-v2"
+  },
+  "runtime_budget": {
+    "max_cost_usd": null,
+    "max_test_commands": 10,
+    "max_tokens": 64000,
+    "max_turns": 18,
+    "max_wall_seconds": 3600,
+    "retry_policy": {
+      "primary_attempts": 1,
+      "retries_allowed": false
+    }
+  }
+}
+
+Valid edit paths:
+[
+  "src/click/core.py",
+  "tests/test_options.py",
+  "tests/test_termui.py"
+]
+
+Task-agnostic Click specialist context:
+<!-- CLICK_SPECIALIST_CONTEXT_PACK_V1 -->
+# Click Specialist Context Pack
+
+Pack ID: click_specialist_context_pack_v1
+Pack hash: sha256:dfb271ad174531a7dd2f00da4cd0486193d87ce33349380982150889ecf84e48
+Marker: CLICK_SPECIALIST_CONTEXT_PACK_V1
+Source: locked local Click checkout public source, docs, tests, and examples only.
+Task scope: task-agnostic; generated before any Click-specialist ACUT execution.
+Leakage guard: no benchmark solution patch content, hidden verifier files, hidden hints, ACUT outputs, network-fetched docs, credentials, endpoint values, full URLs, hostnames, or IP addresses.
+
+[CLICK_SECTION:repo_map]
+Locked Click commit: 8bd8b4a074c55c03b6eb5666edc44a9c43df38a2
+Layout roots: src/click, tests, docs, examples.
+Core modules: src/click/__init__.py, src/click/_compat.py, src/click/_termui_impl.py, src/click/_textwrap.py, src/click/_utils.py, src/click/_winconsole.py, src/click/core.py, src/click/decorators.py, src/click/exceptions.py, src/click/formatting.py, src/click/globals.py, src/click/parser.py, src/click/shell_completion.py, src/click/termui.py, src/click/testing.py, src/click/types.py, src/click/utils.py.
+Public exports from click.__init__: Abort, Argument, BOOL, BadArgumentUsage, BadOptionUsage, BadParameter, Choice, ClickException, Command, CommandCollection, Context, DateTime, FLOAT, File, FileError, FloatRange, Group, HelpFormatter, INT, IntRange, MissingParameter, NoSuchOption, Option, ParamType, Parameter, ParameterSource, Path, STRING, Tuple, UNPROCESSED, UUID, UsageError, argument, clear, command, confirm, confirmation_option, echo, echo_via_pager, edit; +23 more.
+
+[CLICK_SECTION:docs_map]
+Docs/examples mapped by headings only: README.md, docs/advanced.md, docs/api.md, docs/arguments.md, docs/changes.rst, docs/click-concepts.md, docs/command-line-reference.md, docs/commands-and-groups.md, docs/commands.md, docs/complex.md, docs/contrib.md, docs/contributing.md, docs/design-opinions.md, docs/documentation.md, docs/entry-points.md, docs/exceptions.md, docs/extending-click.md, docs/faqs.md, docs/handling-files.md, docs/index.rst, docs/license.md, docs/option-decorators.md, docs/options.md, docs/parameter-types.md, docs/parameters.md, docs/prompts.md, docs/quickstart.md, docs/setuptools.md; +20 more.
+
+[CLICK_SECTION:symbol_index]
+Indexed symbols: 1115 total across source, public tests, and examples.
+Public source symbol examples: click._compat._AtomicFile.close, click._compat._AtomicFile.name, click._compat._FixupStream.read1, click._compat._FixupStream.readable, click._compat._FixupStream.seekable, click._compat._FixupStream.writable, click._compat._NonClosingTextIOWrapper.isatty, click._compat.get_best_encoding, click._compat.get_binary_stderr, click._compat.get_binary_stdin, click._compat.get_binary_stdout, click._compat.get_text_stderr, click._compat.get_text_stdin, click._compat.get_text_stdout, click._compat.is_ascii_encoding, click._compat.isatty, click._compat.open_stream, click._compat.should_strip_ansi, click._compat.strip_ansi, click._compat.term_len, click._termui_impl.Editor, click._termui_impl.Editor.edit, click._termui_impl.Editor.edit_files, click._termui_impl.Editor.get_editor, click._termui_impl.ProgressBar, click._termui_impl.ProgressBar.eta, click._termui_impl.ProgressBar.finish, click._termui_impl.ProgressBar.format_bar, click._termui_impl.ProgressBar.format_eta, click._termui_impl.ProgressBar.format_pct, click._termui_impl.ProgressBar.format_pos, click._termui_impl.ProgressBar.format_progress_line, click._termui_impl.ProgressBar.generator, click._termui_impl.ProgressBar.make_step, click._termui_impl.ProgressBar.pct, click._termui_impl.ProgressBar.render_finish, click._termui_impl.ProgressBar.render_progress, click._termui_impl.ProgressBar.time_per_iteration, click._termui_impl.ProgressBar.update, click._termui_impl.open_url, click._termui_impl.pager, click._textwrap.TextWrapper; +306 more.
+
+[CLICK_SECTION:convention_playbook]
+- patch_public_api_carefully: When changing public behavior, check exports in src/click/__init__.py and behavior tests in tests/test_*.py.
+- use_cli_runner_for_cli_behavior: CLI behavior is commonly exercised through click.testing.CliRunner and result exit/output assertions.
+- keep_parser_option_type_boundaries: Parser, option, argument, type, formatting, terminal UI, and shell-completion behavior live in separate modules with matching public tests.
+- prefer_focused_pytest: Use focused pytest module or test-name selection first; broaden only when the changed surface crosses modules.
+- docs_follow_behavior: When user-facing command semantics change, inspect the matching docs page heading map before editing docs.
+
+[CLICK_SECTION:deterministic_retrieval_policy]
+1. Read the public task statement and named files.
+2. Map mentioned symbols or failing imports to symbol_index exact names.
+3. Inspect repo_map for the owning Click module and adjacent public tests.
+4. Use docs_map headings only when behavior is public or documented.
+5. Apply convention_playbook guidance for verification scope and public API boundaries.
+Apply this context only for frontier-click-specialist and cheap-click-specialist.
+Do not use this context for generic SWE ACUTs.
+
+
+Source file: src/click/core.py
+sha256: ed6f0d86ce1a77b4c79718ca8e1cf7d4cfd8a223b2ab52d93d6d0d6fe431100f truncated: True displayed_chars: 20013
+```
+from __future__ import annotations
+
+import collections.abc as cabc
+import enum
+import errno
+import inspect
+import os
+import sys
+import typing as t
+from collections import abc
+from collections import Counter
+from contextlib import AbstractContextManager
+from contextlib import contextmanager
+from contextlib import ExitStack
+from functools import update_wrapper
+from gettext import gettext as _
+from gettext import ngettext
+from itertools import repeat
+from types import TracebackType
+
+from . import types
+from ._utils import FLAG_NEEDS_VALUE
+from ._utils import UNSET
+from .exceptions import Abort
+from .exceptions import BadParameter
+from .exceptions import ClickException
+from .exceptions import Exit
+from .exceptions import MissingParameter
+from .exceptions import NoArgsIsHelpError
+from .exceptions import UsageError
+from .formatting import HelpFormatter
+from .formatting import join_options
+from .globals import pop_context
+from .globals import push_context
+from .parser import _OptionParser
+from .parser import _split_opt
+from .termui import confirm
+from .termui import prompt
+from .termui import style
+from .utils import _detect_program_name
+from .utils import _expand_args
+from .utils import echo
+from .utils import make_default_short_help
+from .utils import make_str
+from .utils import PacifyFlushWrapper
+
+if t.TYPE_CHECKING:
+    from .shell_completion import CompletionItem
+
+F = t.TypeVar("F", bound="t.Callable[..., t.Any]")
+V = t.TypeVar("V")
+
+
+def _complete_visible_commands(
+    ctx: Context, incomplete: str
+) -> cabc.Iterator[tuple[str, Command]]:
+    """List all the subcommands of a group that start with the
+    incomplete value and aren't hidden.
+
+    :param ctx: Invocation context for the group.
+    :param incomplete: Value being completed. May be empty.
+    """
+    multi = t.cast(Group, ctx.command)
+
+    for name in multi.list_commands(ctx):
+        if name.startswith(incomplete):
+            command = multi.get_command(ctx, name)
+
+            if command is not None and not command.hidden:
+                yield name, command
+
+
+def _check_nested_chain(
+    base_command: Group, cmd_name: str, cmd: Command, register: bool = False
+) -> None:
+    if not base_command.chain or not isinstance(cmd, Group):
+        return
+
+    if register:
+        message = (
+            f"It is not possible to add the group {cmd_name!r} to another"
+            f" group {base_command.name!r} that is in chain mode."
+        )
+    else:
+        message = (
+            f"Found the group {cmd_name!r} as subcommand to another group "
+            f" {base_command.name!r} that is in chain mode. This is not supported."
+        )
+
+    raise RuntimeError(message)
+
+
+def batch(iterable: cabc.Iterable[V], batch_size: int) -> list[tuple[V, ...]]:
+    return list(zip(*repeat(iter(iterable), batch_size), strict=False))
+
+
+@contextmanager
+def augment_usage_errors(
+    ctx: Context, param: Parameter | None = None
+) -> cabc.Iterator[None]:
+    """Context manager that attaches extra information to exceptions."""
+    try:
+        yield
+    except BadParameter as e:
+        if e.ctx is None:
+            e.ctx = ctx
+        if param is not None and e.param is None:
+            e.param = param
+        raise
+    except UsageError as e:
+        if e.ctx is None:
+            e.ctx = ctx
+        raise
+
+
+def iter_params_for_processing(
+    invocation_order: cabc.Sequence[Parameter],
+    declaration_order: cabc.Sequence[Parameter],
+) -> list[Parameter]:
+    """Returns all declared parameters in the order they should be processed.
+
+    The declared parameters are re-shuffled depending on the order in which
+    they were invoked, as well as the eagerness of each parameters.
+
+    The invocation order takes precedence over the declaration order. I.e. the
+    order in which the user provided them to the CLI is respected.
+
+    This behavior and its effect on callback evaluation is detailed at:
+    <redacted:url>
+    """
+
+    def sort_key(item: Parameter) -> tuple[bool, float]:
+        try:
+            idx: float = invocation_order.index(item)
+        except ValueError:
+            idx = float("inf")
+
+        return not item.is_eager, idx
+
+    return sorted(declaration_order, key=sort_key)
+
+
+class ParameterSource(enum.Enum):
+    """This is an :class:`~enum.Enum` that indicates the source of a
+    parameter's value.
+
+    Use :meth:`click.Context.get_parameter_source` to get the
+    source for a parameter by name.
+
+    .. versionchanged:: 8.0
+        Use :class:`~enum.Enum` and drop the ``validate`` method.
+
+    .. versionchanged:: 8.0
+        Added the ``PROMPT`` value.
+    """
+
+    COMMANDLINE = enum.auto()
+    """The value was provided by the command line args."""
+    ENVIRONMENT = enum.auto()
+    """The value was provided with an environment variable."""
+    DEFAULT = enum.auto()
+    """Used the default specified by the parameter."""
+    DEFAULT_MAP = enum.auto()
+    """Used a default provided by :attr:`Context.default_map`."""
+    PROMPT = enum.auto()
+    """Used a prompt to confirm a default or provide a value."""
+
+
+class Context:
+    """The context is a special internal object that holds state relevant
+    for the script execution at every single level.  It's normally invisible
+    to commands unless they opt-in to getting access to it.
+
+    The context is useful as it can pass internal objects around and can
+    control special execution features such as reading data from
+    environment variables.
+
+    A context can be used as context manager in which case it will call
+    :meth:`close` on teardown.
+
+    :param command: the command class for this context.
+    :param parent: the parent context.
+    :param info_name: the info name for this invocation.  Generally this
+                      is the most descriptive name for the script or
+                      command.  For the toplevel script it is usually
+                      the name of the script, for commands below it it's
+                      the name of the script.
+    :param obj: an arbitrary object of user data.
+    :param auto_envvar_prefix: the prefix to use for automatic environment
+                               variables.  If this is `None` then reading
+                               from environment variables is disabled.  This
+                               does not affect manually set environment
+                               variables which are always read.
+    :param default_map: a dictionary (like object) with default values
+                        for parameters.
+    :param terminal_width: the width of the terminal.  The default is
+                           inherit from parent context.  If no context
+                           defines the terminal width then auto
+                           detection will be applied.
+    :param max_content_width: the maximum width for content rendered by
+                              Click (this currently only affects help
+                              pages).  This defaults to 80 characters if
+                              not overridden.  In other words: even if the
+                              terminal is larger than that, Click will not
+                              format things wider than 80 characters by
+                              default.  In addition to that, formatters might
+                              add some safety mapping on the right.
+    :param resilient_parsing: if this flag is enabled then Click will
+                              parse without any interactivity or callback
+                              invocation.  Default values will also be
+                              ignored.  This is useful for implementing
+                              things such as completion support.
+    :param allow_extra_args: if this is set to `True` then extra arguments
+                             at the end will not raise an error and will be
+                             kept on the context.  The default is to inherit
+                             from the command.
+    :param allow_interspersed_args: if this is set to `False` then options
+                                    and arguments cannot be mixed.  The
+                                    default is to inherit from the command.
+    :param ignore_unknown_options: instructs click to ignore options it does
+                                   not know and keeps them for later
+                                   processing.
+    :param help_option_names: optionally a list of strings that define how
+                              the default help parameter is named.  The
+                              default is ``['--help']``.
+    :param token_normalize_func: an optional function that is used to
+                                 normalize tokens (options, choices,
+                                 etc.).  This for instance can be used to
+                                 implement case insensitive behavior.
+    :param color: controls if the terminal supports ANSI colors or not.  The
+                  default is autodetection.  This is only needed if ANSI
+                  codes are used in texts that Click prints which is by
+                  default not the case.  This for instance would affect
+                  help output.
+    :param show_default: Show the default value for commands. If this
+        value is not set, it defaults to the value from the parent
+        context. ``Command.show_default`` overrides this default for the
+        specific command.
+
+    .. versionchanged:: 8.2
+        The ``protected_args`` attribute is deprecated and will be removed in
+        Click 9.0. ``args`` will contain remaining unparsed tokens.
+
+    .. versionchanged:: 8.1
+        The ``show_default`` parameter is overridden by
+        ``Command.show_default``, instead of the other way around.
+
+    .. versionchanged:: 8.0
+        The ``show_default`` parameter defaults to the value from the
+        parent context.
+
+    .. versionchanged:: 7.1
+       Added the ``show_default`` parameter.
+
+    .. versionchanged:: 4.0
+        Added the ``color``, ``ignore_unknown_options``, and
+        ``max_content_width`` parameters.
+
+    .. versionchanged:: 3.0
+        Added the ``allow_extra_args`` and ``allow_interspersed_args``
+        parameters.
+
+    .. versionchanged:: 2.0
+        Added the ``resilient_parsing``, ``help_option_names``, and
+        ``token_normalize_func`` parameters.
+    """
+
+    #: The formatter class to create with :meth:`make_formatter`.
+    #:
+    #: .. versionadded:: 8.0
+    formatter_class: type[HelpFormatter] = HelpFormatter
+
+    def __init__(
+        self,
+        command: Command,
+        parent: Context | None = None,
+        info_name: str | None = None,
+        obj: t.Any | None = None,
+        auto_envvar_prefix: str | None = None,
+        default_map: cabc.MutableMapping[str, t.Any] | None = None,
+        terminal_width: int | None = None,
+        max_content_width: int | None = None,
+        resilient_parsing: bool = False,
+        allow_extra_args: bool | None = None,
+        allow_interspersed_args: bool | None = None,
+        ignore_unknown_options: bool | None = None,
+        help_option_names: list[str] | None = None,
+        token_normalize_func: t.Callable[[str], str] | None = None,
+        color: bool | None = None,
+        show_default: bool | None = None,
+    ) -> None:
+        #: the parent context or `None` if none exists.
+        self.parent = parent
+        #: the :class:`Command` for this context.
+        self.command = command
+        #: the descriptive information name
+        self.info_name = info_name
+        #: Map of parameter names to their parsed values. Parameters
+        #: with ``expose_value=False`` are not stored.
+        self.params: dict[str, t.Any] = {}
+        #: the leftover arguments.
+        self.args: list[str] = []
+        #: protected arguments.  These are arguments that are prepended
+        #: to `args` when certain parsing scenarios are encountered but
+        #: must be never propagated to another arguments.  This is used
+        #: to implement nested parsing.
+        self._protected_args: list[str] = []
+        #: the collected prefixes of the command's options.
+        self._opt_prefixes: set[str] = set(parent._opt_prefixes) if parent else set()
+
+        if obj is None and parent is not None:
+            obj = parent.obj
+
+        #: the user object stored.
+        self.obj: t.Any = obj
+        self._meta: dict[str, t.Any] = getattr(parent, "meta", {})
+
+        #: A dictionary (-like object) with defaults for parameters.
+        if (
+            default_map is None
+            and info_name is not None
+            and parent is not None
+            and parent.default_map is not None
+        ):
+            default_map = parent.default_map.get(info_name)
+
+        self.default_map: cabc.MutableMapping[str, t.Any] | None = default_map
+
+        #: This flag indicates if a subcommand is going to be executed. A
+        #: group callback can use this information to figure out if it's
+        #: being executed directly or because the execution flow passes
+        #: onwards to a subcommand. By default it's None, but it can be
+        #: the name of the subcommand to execute.
+        #:
+        #: If chaining is enabled this will be set to ``'*'`` in case
+        #: any commands are executed.  It is however not possible to
+        #: figure out which ones.  If you require this knowledge you
+        #: should use a :func:`result_callback`.
+        self.invoked_subcommand: str | None = None
+
+        if terminal_width is None and parent is not None:
+            terminal_width = parent.terminal_width
+
+        #: The width of the terminal (None is autodetection).
+        self.terminal_width: int | None = terminal_width
+
+        if max_content_width is None and parent is not None:
+            max_content_width = parent.max_content_width
+
+        #: The maximum width of formatted content (None implies a sensible
+        #: default which is 80 for most things).
+        self.max_content_width: int | None = max_content_width
+
+        if allow_extra_args is None:
+            allow_extra_args = command.allow_extra_args
+
+        #: Indicates if the context allows extra args or if it should
+        #: fail on parsing.
+        #:
+        #: .. versionadded:: 3.0
+        self.allow_extra_args = allow_extra_args
+
+        if allow_interspersed_args is None:
+            allow_interspersed_args = command.allow_interspersed_args
+
+        #: Indicates if the context allows mixing of arguments and
+        #: options or not.
+        #:
+        #: .. versionadded:: 3.0
+        self.allow_interspersed_args: bool = allow_interspersed_args
+
+        if ignore_unknown_options is None:
+            ignore_unknown_options = command.ignore_unknown_options
+
+        #: Instructs click to ignore options that a command does not
+        #: understand and will store it on the context for later
+        #: processing.  This is primarily useful for situations where you
+        #: want to call into external programs.  Generally this pattern is
+        #: strongly discouraged because it's not possibly to losslessly
+        #: forward all arguments.
+        #:
+        #: .. versionadded:: 4.0
+        self.ignore_unknown_options: bool = ignore_unknown_options
+
+        if help_option_names is None:
+            if parent is not None:
+                help_option_names = parent.help_option_names
+            else:
+                help_option_names = ["--help"]
+
+        #: The names for the help options.
+        self.help_option_names: list[str] = help_option_names
+
+        if token_normalize_func is None and parent is not None:
+            token_normalize_func = parent.token_normalize_func
+
+        #: An optional normalization function for tokens.  This is
+        #: options, choices, commands etc.
+        self.token_normalize_func: t.Callable[[str], str] | None = token_normalize_func
+
+        #: Indicates if resilient parsing is enabled.  In that case Click
+        #: will do its best to not cause any failures and default values
+        #: will be ignored. Useful for completion.
+        self.resilient_parsing: bool = resilient_parsing
+
+        # If there is no envvar prefix yet, but the parent has one and
+        # the command on this level has a name, we can expand the envvar
+        # prefix automatically.
+        if auto_envvar_prefix is None:
+            if (
+                parent is not None
+                and parent.auto_envvar_prefix is not None
+                and self.info_name is not None
+            ):
+                auto_envvar_prefix = (
+                    f"{parent.auto_envvar_prefix}_{self.info_name.upper()}"
+                )
+        else:
+            auto_envvar_prefix = auto_envvar_prefix.upper()
+
+        if auto_envvar_prefix is not None:
+            auto_envvar_prefix = auto_envvar_prefix.replace("-", "_")
+
+        self.auto_envvar_prefix: str | None = auto_envvar_prefix
+
+        if color is None and parent is not None:
+            color = parent.color
+
+        #: Controls if styling output is wanted or not.
+        self.color: bool | None = color
+
+        if show_default is None and parent is not None:
+            show_default = parent.show_default
+
+        #: Show option default values when formatting help text.
+        self.show_default: bool | None = show_default
+
+        self._close_callbacks: list[t.Callable[[], t.Any]] = []
+        self._depth = 0
+        self._parameter_source: dict[str, ParameterSource] = {}
+        self._exit_stack = ExitStack()
+
+    @property
+    def protected_args(self) -> list[str]:
+        import warnings
+
+        warnings.warn(
+            "'protected_args' is deprecated and will be removed in Click 9.0."
+            " 'args' will contain remaining unparsed tokens.",
+            DeprecationWarning,
+            stacklevel=2,
+        )
+        return self._protected_args
+
+    def to_info_dict(self) -> dict[str, t.Any]:
+        """Gather information that could be useful for a tool generating
+        user-facing documentation. This traverses the entire CLI
+        structure.
+
+        .. code-block:: python
+
+            with Context(cli) as ctx:
+                info = ctx.to_info_dict()
+
+        .. versionadded:: 8.0
+        """
+        return {
+            "command": self.command.to_info_dict(self),
+            "info_name": self.info_name,
+            "allow_extra_args": self.allow_extra_args,
+            "allow_interspersed_args": self.allow_interspersed_args,
+            "ignore_unknown_options": self.ignore_unknown_options,
+            "auto_envvar_prefix": self.auto_envvar_prefix,
+        }
+
+    def __enter__(self) -> Context:
+        self._depth += 1
+        push_context(self)
+        return self
+
+    def __exit__(
+        self,
+        exc_type: type[BaseException] | None,
+        exc_value: BaseException | None,
+        tb: TracebackType | None,
+    ) -> bool | None:
+        self._depth -= 1
+        exit_result: bool | None = None
+        if self._depth == 0:
+            exit_result = self._close_with_exception_info(exc_type, exc_value, tb)
+        pop_context()
+
+        return exit_result
+
+    @contextmanager
+    def scope(self, cleanup: bool = True) -> cabc.Iterator[Context]:
+        """This helper method can be used with the context object to promote
+        it to the current thread local (see :func:`get_current_context`).
+        The default behavior of this is to invoke the cleanup functions which
+        can be disabled by setting `cleanup` to `False`.  The cleanup
+        functions are typically used for things such as closing file handles.
+
+        If the cleanup is intended the context object can also be directly
+        used as a context manager.
+
+        Example usage::
+
+            with ctx.scope():
+                assert get_current_context() is ctx
+
+        This is equivalent::
+
+            with ctx:
+                assert get_current_context() is ctx
+
+        .. versionadded:: 5.0
+
+        :param cleanup: controls if the cleanup functions should be run or
+
+[truncated]
+
+```
+Focused exact source excerpts for src/click/core.py:
+These excerpts are from the same current file and may be used for exact old strings.
+excerpt trigger: class Option(Parameter): chars: 101038..109638
+```
+      :param ctx: Invocation context for this command.
+        :param incomplete: Value being completed. May be empty.
+
+        .. versionadded:: 8.0
+        """
+        if self._custom_shell_complete is not None:
+            results = self._custom_shell_complete(ctx, self, incomplete)
+
+            if results and isinstance(results[0], str):
+                from click.shell_completion import CompletionItem
+
+                results = [CompletionItem(c) for c in results]
+
+            return t.cast("list[CompletionItem]", results)
+
+        return self.type.shell_complete(ctx, self, incomplete)
+
+
+class Option(Parameter):
+    """Options are usually optional values on the command line and
+    have some extra features that arguments don't have.
+
+    All other parameters are passed onwards to the parameter constructor.
+
+    :param show_default: Show the default value for this option in its
+        help text. Values are not shown by default, unless
+        :attr:`Context.show_default` is ``True``. If this value is a
+        string, it shows that string in parentheses instead of the
+        actual value. This is particularly useful for dynamic options.
+        For single option boolean flags, the default remains hidden if
+        its value is ``False``.
+    :param show_envvar: Controls if an environment variable should be
+        shown on the help page and error messages.
+        Normally, environment variables are not shown.
+    :param prompt: If set to ``True`` or a non empty string then the
+        user will be prompted for input. If set to ``True`` the prompt
+        will be the option name capitalized. A deprecated option cannot be
+        prompted.
+    :param confirmation_prompt: Prompt a second time to confirm the
+        value if it was prompted for. Can be set to a string instead of
+        ``True`` to customize the message.
+    :param prompt_required: If set to ``False``, the user will be
+        prompted for input only when the option was specified as a flag
+        without a value.
+    :param hide_input: If this is ``True`` then the input on the prompt
+        will be hidden from the user. This is useful for password input.
+    :param is_flag: forces this option to act as a flag.  The default is
+                    auto detection.
+    :param flag_value: which value should be used for this flag if it's
+                       enabled.  This is set to a boolean automatically if
+                       the option string contains a slash to mark two options.
+    :param multiple: if this is set to `True` then the argument is accepted
+                     multiple times and recorded.  This is similar to ``nargs``
+                     in how it works but supports arbitrary number of
+                     arguments.
+    :param count: this flag makes an option increment an integer.
+    :param allow_from_autoenv: if this is enabled then the value of this
+                               parameter will be pulled from an environment
+                               variable in case a prefix is defined on the
+                               context.
+    :param help: the help string.
+    :param hidden: hide this option from help outputs.
+    :param attrs: Other command arguments described in :class:`Parameter`.
+
+    .. versionchanged:: 8.2
+        ``envvar`` used with ``flag_value`` will always use the ``flag_value``,
+        previously it would use the value of the environment variable.
+
+    .. versionchanged:: 8.1
+        Help text indentation is cleaned here instead of only in the
+        ``@option`` decorator.
+
+    .. versionchanged:: 8.1
+        The ``show_default`` parameter overrides
+        ``Context.show_default``.
+
+    .. versionchanged:: 8.1
+        The default of a single option boolean flag is not shown if the
+        default value is ``False``.
+
+    .. versionchanged:: 8.0.1
+        ``type`` is detected from ``flag_value`` if given.
+    """
+
+    param_type_name = "option"
+
+    def __init__(
+        self,
+        param_decls: cabc.Sequence[str] | None = None,
+        show_default: bool | str | None = None,
+        prompt: bool | str = False,
+        confirmation_prompt: bool | str = False,
+        prompt_required: bool = True,
+        hide_input: bool = False,
+        is_flag: bool | None = None,
+        flag_value: t.Any = UNSET,
+        multiple: bool = False,
+        count: bool = False,
+        allow_from_autoenv: bool = True,
+        type: types.ParamType | t.Any | None = None,
+        help: str | None = None,
+        hidden: bool = False,
+        show_choices: bool = True,
+        show_envvar: bool = False,
+        deprecated: bool | str = False,
+        **attrs: t.Any,
+    ) -> None:
+        if help:
+            help = inspect.cleandoc(help)
+
+        super().__init__(
+            param_decls, type=type, multiple=multiple, deprecated=deprecated, **attrs
+        )
+
+        if prompt is True:
+            if self.name is None:
+                raise TypeError("'name' is required with 'prompt=True'.")
+
+            prompt_text: str | None = self.name.replace("_", " ").capitalize()
+        elif prompt is False:
+            prompt_text = None
+        else:
+            prompt_text = prompt
+
+        if deprecated:
+            deprecated_message = (
+                f"(DEPRECATED: {deprecated})"
+                if isinstance(deprecated, str)
+                else "(DEPRECATED)"
+            )
+            help = help + deprecated_message if help is not None else deprecated_message
+
+        self.prompt = prompt_text
+        self.confirmation_prompt = confirmation_prompt
+        self.prompt_required = prompt_required
+        self.hide_input = hide_input
+        self.hidden = hidden
+
+        # The _flag_needs_value property tells the parser that this option is a flag
+        # that cannot be used standalone and needs a value. With this information, the
+        # parser can determine whether to consider the next user-provided argument in
+        # the CLI as a value for this flag or as a new option.
+        # If prompt is enabled but not required, then it opens the possibility for the
+        # option to gets its value from the user.
+        self._flag_needs_value = self.prompt is not None and not self.prompt_required
+
+        # Auto-detect if this is a flag or not.
+        if is_flag is None:
+            # Implicitly a flag because flag_value was set.
+            if flag_value is not UNSET:
+                is_flag = True
+            # Not a flag, but when used as a flag it shows a prompt.
+            elif self._flag_needs_value:
+                is_flag = False
+            # Implicitly a flag because secondary options names were given.
+            elif self.secondary_opts:
+                is_flag = True
+
+        # The option is explicitly not a flag, but to determine whether or not it needs
+        # value, we need to check if `flag_value` or `default` was set. Either one is
+        # sufficient.
+        # Ref: <redacted:url>
+        elif is_flag is False and not self._flag_needs_value:
+            self._flag_needs_value = flag_value is not UNSET or self.default is UNSET
+
+        if is_flag:
+            # Set missing default for flags if not explicitly required or prompted.
+            if self.default is UNSET and not self.required and not self.prompt:
+                if multiple:
+                    self.default = ()
+
+            # Auto-detect the type of the flag based on the flag_value.
+            if type is None:
+                # A flag without a flag_value is a boolean flag.
+                if flag_value is UNSET:
+                    self.type: types.ParamType = types.BoolParamType()
+                # If the flag value is a boolean, use BoolParamType.
+                elif isinstance(flag_value, bool):
+                    self.type = types.BoolParamType()
+                # Otherwise, guess the type from the flag value.
+                else:
+                    self.type = types.convert_type(None, flag_value)
+
+        self.is_flag: bool = bool(is_flag)
+        self.is_bool_flag: bool = bool(
+            is_flag and isinstance(self.type, types.BoolParamType)
+        )
+        self.flag_value: t.Any = flag_value
+
+        # Set boolean flag default to False if unset and not required.
+        if self.is_bool_flag:
+            if self.default is UNSET and not self.required:
+                self.default = False
+
+        # The alignement of default to the flag_value is resolved lazily in
+        # get_default() to prevent callable flag_values (like classes) from
+        # being instantiated. Refs:
+        # <redacted:url>
+        # <redacted:url>
+        # <
+```
+excerpt trigger:         # Lazily resolve default=True to flag_value. chars: 111488..120088
+```
+
+            # We explicitly hide the :attr:`UNSET` value to the user, as we choose to
+            # make it an implementation detail. And because ``to_info_dict`` has been
+            # designed for documentation purposes, we return ``None`` instead.
+            flag_value=self.flag_value if self.flag_value is not UNSET else None,
+            count=self.count,
+            hidden=self.hidden,
+        )
+        return info_dict
+
+    def get_default(
+        self, ctx: Context, call: bool = True
+    ) -> t.Any | t.Callable[[], t.Any] | None:
+        value = super().get_default(ctx, call=False)
+
+        # Lazily resolve default=True to flag_value. Doing this here
+        # (instead of eagerly in __init__) prevents callable flag_values
+        # (like classes) from being instantiated by the callable check below.
+        # <redacted:url>
+        if value is True and self.is_flag:
+            value = self.flag_value
+        elif call and callable(value):
+            value = value()
+
+        return value
+
+    def get_error_hint(self, ctx: Context) -> str:
+        result = super().get_error_hint(ctx)
+        if self.show_envvar and self.envvar is not None:
+            result += f" (env var: '{self.envvar}')"
+        return result
+
+    def _parse_decls(
+        self, decls: cabc.Sequence[str], expose_value: bool
+    ) -> tuple[str | None, list[str], list[str]]:
+        opts = []
+        secondary_opts = []
+        name = None
+        possible_names = []
+
+        for decl in decls:
+            if decl.isidentifier():
+                if name is not None:
+                    raise TypeError(f"Name '{name}' defined twice")
+                name = decl
+            else:
+                split_char = ";" if decl[:1] == "/" else "/"
+                if split_char in decl:
+                    first, second = decl.split(split_char, 1)
+                    first = first.rstrip()
+                    if first:
+                        possible_names.append(_split_opt(first))
+                        opts.append(first)
+                    second = second.lstrip()
+                    if second:
+                        secondary_opts.append(second.lstrip())
+                    if first == second:
+                        raise ValueError(
+                            f"Boolean option {decl!r} cannot use the"
+                            " same flag for true/false."
+                        )
+                else:
+                    possible_names.append(_split_opt(decl))
+                    opts.append(decl)
+
+        if name is None and possible_names:
+            possible_names.sort(key=lambda x: -len(x[0]))  # group long options first
+            name = possible_names[0][1].replace("-", "_").lower()
+            if not name.isidentifier():
+                name = None
+
+        if name is None:
+            if not expose_value:
+                return None, opts, secondary_opts
+            raise TypeError(
+                f"Could not determine name for option with declarations {decls!r}"
+            )
+
+        if not opts and not secondary_opts:
+            raise TypeError(
+                f"No options defined but a name was passed ({name})."
+                " Did you mean to declare an argument instead? Did"
+                f" you mean to pass '--{name}'?"
+            )
+
+        return name, opts, secondary_opts
+
+    def add_to_parser(self, parser: _OptionParser, ctx: Context) -> None:
+        if self.multiple:
+            action = "append"
+        elif self.count:
+            action = "count"
+        else:
+            action = "store"
+
+        if self.is_flag:
+            action = f"{action}_const"
+
+            if self.is_bool_flag and self.secondary_opts:
+                parser.add_option(
+                    obj=self, opts=self.opts, dest=self.name, action=action, const=True
+                )
+                parser.add_option(
+                    obj=self,
+                    opts=self.secondary_opts,
+                    dest=self.name,
+                    action=action,
+                    const=False,
+                )
+            else:
+                parser.add_option(
+                    obj=self,
+                    opts=self.opts,
+                    dest=self.name,
+                    action=action,
+                    const=self.flag_value,
+                )
+        else:
+            parser.add_option(
+                obj=self,
+                opts=self.opts,
+                dest=self.name,
+                action=action,
+                nargs=self.nargs,
+            )
+
+    def get_help_record(self, ctx: Context) -> tuple[str, str] | None:
+        if self.hidden:
+            return None
+
+        any_prefix_is_slash = False
+
+        def _write_opts(opts: cabc.Sequence[str]) -> str:
+            nonlocal any_prefix_is_slash
+
+            rv, any_slashes = join_options(opts)
+
+            if any_slashes:
+                any_prefix_is_slash = True
+
+            if not self.is_flag and not self.count:
+                rv += f" {self.make_metavar(ctx=ctx)}"
+
+            return rv
+
+        rv = [_write_opts(self.opts)]
+
+        if self.secondary_opts:
+            rv.append(_write_opts(self.secondary_opts))
+
+        help = self.help or ""
+
+        extra = self.get_help_extra(ctx)
+        extra_items = []
+        if "envvars" in extra:
+            extra_items.append(
+                _("env var: {var}").format(var=", ".join(extra["envvars"]))
+            )
+        if "default" in extra:
+            extra_items.append(_("default: {default}").format(default=extra["default"]))
+        if "range" in extra:
+            extra_items.append(extra["range"])
+        if "required" in extra:
+            extra_items.append(_(extra["required"]))
+
+        if extra_items:
+            extra_str = "; ".join(extra_items)
+            help = f"{help}  [{extra_str}]" if help else f"[{extra_str}]"
+
+        return ("; " if any_prefix_is_slash else " / ").join(rv), help
+
+    def get_help_extra(self, ctx: Context) -> types.OptionHelpExtra:
+        extra: types.OptionHelpExtra = {}
+
+        if self.show_envvar:
+            envvar = self.envvar
+
+            if envvar is None:
+                if (
+                    self.allow_from_autoenv
+                    and ctx.auto_envvar_prefix is not None
+                    and self.name is not None
+                ):
+                    envvar = f"{ctx.auto_envvar_prefix}_{self.name.upper()}"
+
+            if envvar is not None:
+                if isinstance(envvar, str):
+                    extra["envvars"] = (envvar,)
+                else:
+                    extra["envvars"] = tuple(str(d) for d in envvar)
+
+        # Temporarily enable resilient parsing to avoid type casting
+        # failing for the default. Might be possible to extend this to
+        # help formatting in general.
+        resilient = ctx.resilient_parsing
+        ctx.resilient_parsing = True
+
+        try:
+            default_value = self.get_default(ctx, call=False)
+        finally:
+            ctx.resilient_parsing = resilient
+
+        show_default = False
+        show_default_is_str = False
+
+        if self.show_default is not None:
+            if isinstance(self.show_default, str):
+                show_default_is_str = show_default = True
+            else:
+                show_default = self.show_default
+        elif ctx.show_default is not None:
+            show_default = ctx.show_default
+
+        if show_default_is_str or (
+            show_default and (default_value not in (None, UNSET))
+        ):
+            if show_default_is_str:
+                default_string = f"({self.show_default})"
+            elif isinstance(default_value, (list, tuple)):
+                default_string = ", ".join(str(d) for d in default_value)
+            elif isinstance(default_value, enum.Enum):
+                default_string = default_value.name
+            elif inspect.isfunction(default_value):
+                default_string = _("(dynamic)")
+            elif self.is_bool_flag and self.secondary_opts:
+                # For boolean flags that have distinct True/False opts,
+                # use the opt without prefix instead of the value.
+                default_string = _split_opt(
+                    (self.opts if default_value else self.secondary_opts)[0]
+                )[1]
+            elif self.is_bool_flag and not self.secondary_opts and not default_value:
+                default_string = ""
+            elif isinstance(default_value, str) and default_value == "":
+                default_string = '""'
+            else:
+                default_string = str(default_value)
+
+            if default_st
+```
+excerpt trigger:         # A flag which is activated always returns the flag value chars: 126219..132306
+```
+me_value(ctx, opts)
+
+        # The parser will emit a sentinel value if the option is allowed to as a flag
+        # without a value.
+        if value is FLAG_NEEDS_VALUE:
+            # If the option allows for a prompt, we start an interaction with the user.
+            if self.prompt is not None and not ctx.resilient_parsing:
+                value = self.prompt_for_value(ctx)
+                source = ParameterSource.PROMPT
+            # Else the flag takes its flag_value as value.
+            else:
+                value = self.flag_value
+                source = ParameterSource.COMMANDLINE
+
+        # A flag which is activated always returns the flag value, unless the value
+        # comes from the explicitly sets default.
+        elif (
+            self.is_flag
+            and value is True
+            and not self.is_bool_flag
+            and source not in (ParameterSource.DEFAULT, ParameterSource.DEFAULT_MAP)
+        ):
+            value = self.flag_value
+
+        # Re-interpret a multiple option which has been sent as-is by the parser.
+        # Here we replace each occurrence of value-less flags (marked by the
+        # FLAG_NEEDS_VALUE sentinel) with the flag_value.
+        elif (
+            self.multiple
+            and value is not UNSET
+            and source not in (ParameterSource.DEFAULT, ParameterSource.DEFAULT_MAP)
+            and any(v is FLAG_NEEDS_VALUE for v in value)
+        ):
+            value = [self.flag_value if v is FLAG_NEEDS_VALUE else v for v in value]
+            source = ParameterSource.COMMANDLINE
+
+        # The value wasn't set, or used the param's default, prompt for one to the user
+        # if prompting is enabled.
+        elif (
+            (
+                value is UNSET
+                or source in (ParameterSource.DEFAULT, ParameterSource.DEFAULT_MAP)
+            )
+            and self.prompt is not None
+            and (self.required or self.prompt_required)
+            and not ctx.resilient_parsing
+        ):
+            value = self.prompt_for_value(ctx)
+            source = ParameterSource.PROMPT
+
+        return value, source
+
+    def process_value(self, ctx: Context, value: t.Any) -> t.Any:
+        # process_value has to be overridden on Options in order to capture
+        # `value == UNSET` cases before `type_cast_value()` gets called.
+        #
+        # Refs:
+        # <redacted:url>
+        if self.is_flag and not self.required and self.is_bool_flag and value is UNSET:
+            value = False
+
+            if self.callback is not None:
+                value = self.callback(ctx, self, value)
+
+            return value
+
+        # in the normal case, rely on Parameter.process_value
+        return super().process_value(ctx, value)
+
+
+class Argument(Parameter):
+    """Arguments are positional parameters to a command.  They generally
+    provide fewer features than options but can have infinite ``nargs``
+    and are required by default.
+
+    All parameters are passed onwards to the constructor of :class:`Parameter`.
+    """
+
+    param_type_name = "argument"
+
+    def __init__(
+        self,
+        param_dec
+[truncated]
