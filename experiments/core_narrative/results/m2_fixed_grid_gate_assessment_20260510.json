@@ -1,0 +1,761 @@
+{
+  "assessment_output_leakage_guard": {
+    "contains_raw_unsafe_text": false,
+    "reason_counts": {}
+  },
+  "attemptability_channels": {
+    "anchored_search_replace_fixed_grid": {
+      "nonpersistent_preapplied_workspace": 2,
+      "not_attempted": 3,
+      "verifier_ready_patch_artifact_clean_apply_blocked": 1
+    },
+    "patch_or_files_v1_live_after_gap_closure": {
+      "not_attempted": 6
+    },
+    "patch_or_files_v1_no_model_control": {
+      "verifier_ready_patch_artifact": 6
+    }
+  },
+  "claim_boundaries": {
+    "admission": false,
+    "authorization": false,
+    "capability_uplift": false,
+    "fixed_grid_coverage_closed": true,
+    "g0_g5": false,
+    "g_score_predictivity": false,
+    "license": false,
+    "m2_passed": false,
+    "new_model_calls_by_assessment": false,
+    "ranking_reversal": false,
+    "task_solving_improvement": false,
+    "verifier_or_task_success_measured_by_assessment": false
+  },
+  "claim_status": "m2_scoreability_gate_not_met_after_fixed_grid_gap_closure",
+  "cost_model_call_accounting": {
+    "assessment_generation": {
+      "canonical_cost_ledger_mutated": false,
+      "estimated_cost_usd": 0.0,
+      "live_api_calls": false,
+      "new_model_call_made_count": 0
+    },
+    "input_matrix_package": {
+      "acquisition": {
+        "acquired_raw_input_count": 6,
+        "category_counts": {
+          "model_output_invalid_submission": 5,
+          "nonpersistent_verifier_attempt": 1
+        },
+        "evidence_modes": [
+          "fixed_grid_acquisition_live"
+        ],
+        "input_record_count": 6,
+        "ledger_estimated_cost_observed_count": 6,
+        "ledger_estimated_cost_usd_sum": 0.361873,
+        "new_model_call_made_count": 6,
+        "provider_usage_cost_observed_count": 6,
+        "provider_usage_cost_usd_observed_sum": 0.361873
+      },
+      "historical": {
+        "model_call_made_counts": {
+          "False": 7,
+          "True": 16
+        },
+        "provider_usage_cost_observed_count": 15,
+        "provider_usage_cost_status": "historical_provider_response_usage_not_new_spend",
+        "provider_usage_cost_usd_observed_sum": 1.053338
+      },
+      "package": {
+        "new_model_call_made_count": 6
+      },
+      "replay": {
+        "canonical_cost_ledger_mutated": false,
+        "live_api_calls": false,
+        "model_call_made_counts": {
+          "False": 13,
+          "none": 10
+        },
+        "model_spend_usd_observed_sum": 0.0,
+        "new_model_call_made_count": 0
+      }
+    }
+  },
+  "coverage_and_policy_gate": {
+    "checks": {
+      "anchored_fixed_grid_complete": true,
+      "no_raw_unsafe_policy_passed": true,
+      "patch_or_files_raw_gap_closed": true
+    },
+    "gate_status": "passed"
+  },
+  "failure_owner_class_accounting": {
+    "anchored_search_replace_fixed_grid": {
+      "category_counts": {
+        "model_output_invalid_submission": 4,
+        "nonpersistent_verifier_attempt": 2
+      },
+      "failure_class_counts": {
+        "none": 1,
+        "search_replace_old_occurrence_mismatch": 1,
+        "search_replace_redacted_source_mismatch": 1,
+        "unsafe_generated_text": 2,
+        "unsupported_patch_response": 1
+      },
+      "failure_owner_counts": {
+        "candidate_patch": 2,
+        "model_output": 4
+      }
+    },
+    "patch_or_files_v1_live_after_gap_closure": {
+      "category_counts": {
+        "model_output_invalid_submission": 6
+      },
+      "failure_class_counts": {
+        "apply_patch_context_mismatch": 2,
+        "invalid_unified_diff": 2,
+        "unsafe_generated_text": 2
+      },
+      "failure_owner_counts": {
+        "model_output": 6
+      }
+    },
+    "patch_or_files_v1_no_model_control": {
+      "category_counts": {
+        "verifier_ready_persisted_patch_artifact": 6
+      },
+      "failure_class_counts": {
+        "none": 6
+      },
+      "failure_owner_counts": {
+        "candidate_patch": 6
+      }
+    }
+  },
+  "fixed_denominators": {
+    "anchored_search_replace_duplicate_input_records": 4,
+    "anchored_search_replace_expected_fixed_grid_cells": 6,
+    "anchored_search_replace_input_records": 10,
+    "anchored_search_replace_observed_unique_cells": 6,
+    "anchored_search_replace_remaining_missing_cells": 0,
+    "m2_scoreability_fixed_grid_cells": 6,
+    "patch_or_files_acquired_raw_input_records": 1,
+    "patch_or_files_acquisition_input_records": 1,
+    "patch_or_files_historical_live_input_records": 6,
+    "patch_or_files_historical_missing_raw_artifacts_preserved": 1,
+    "patch_or_files_live_fixed_denominator": 6,
+    "patch_or_files_no_model_control_denominator": 6,
+    "patch_or_files_remaining_raw_input_gaps_after_acquisition": 0
+  },
+  "generated_at": "2026-05-10T07:08:50.810837Z",
+  "hard_blocker_summary": {
+    "blocked_path_ids": [
+      "patch_or_files_v1_live_after_gap_closure",
+      "anchored_search_replace_fixed_grid"
+    ],
+    "blocker_id": "live_model_output_scoreability_thresholds_not_met_after_fixed_grid_gap_closure",
+    "code_addressable_blocker_identified": false,
+    "next_code_addressable_blocker": null,
+    "reason": "Fixed denominator and raw-input acquisition gaps are closed, but live evidence remains below attemptability coverage thresholds and above model-output invalid-submission thresholds. The assessment found no single safe code-addressable next experiment that is directly supported by this evidence and would not require new approved model calls.",
+    "status": "hard_blocked_for_m2_pass_or_predictivity_claims"
+  },
+  "inputs": {
+    "companion_reports": [
+      "experiments/core_narrative/reports/2026-05-09_m2_scoreability_stabilization_report.md",
+      "experiments/core_narrative/reports/2026-05-10_m2_stable_nonpersistent_replay_matrix_fixed_grid_acquisition.md",
+      "experiments/core_narrative/reports/2026-05-10_m2_patch_or_files_gap_acquisition.md"
+    ],
+    "m2_summary": "experiments/core_narrative/results/m2_scoreability_summary_20260509.json",
+    "matrix": "experiments/core_narrative/results/m2_stable_nonpersistent_replay_matrix_fixed_grid_acquisition_patch_or_files_gap_20260510.json",
+    "matrix_report": "experiments/core_narrative/reports/2026-05-10_m2_stable_nonpersistent_replay_matrix_fixed_grid_acquisition_patch_or_files_gap.md",
+    "output": "experiments/core_narrative/results/m2_fixed_grid_gate_assessment_20260510.json",
+    "report": "experiments/core_narrative/reports/2026-05-10_m2_fixed_grid_gate_assessment.md"
+  },
+  "method": {
+    "cost_ledger_mutated_by_assessment": false,
+    "gate_threshold_basis": "M2 scoreability stabilization thresholds from m2_scoreability_summary",
+    "historical_missing_raw_artifact_preserved": true,
+    "model_calls_made_by_assessment": 0,
+    "raw_provider_text_copied": false,
+    "scoreability_boundary": "attemptability/patch-artifact scoreability only; verifier pass/fail, task solving, ranking reversal, G-score predictivity, authorization, admission, and license outcomes are not measured",
+    "uses_existing_matrix_only": true
+  },
+  "no_raw_unsafe_policy_status": {
+    "matrix_output_leakage_guard": {
+      "contains_raw_unsafe_text": false,
+      "reason_counts": {}
+    },
+    "policy": "assessment records metadata, hashes, counts, and paths only; raw provider text is not copied",
+    "row_policy_violation_count": 0,
+    "row_policy_violations": [],
+    "status": "passed"
+  },
+  "path_assessments": {
+    "anchored_search_replace_fixed_grid": {
+      "attemptability_channel_counts": {
+        "nonpersistent_preapplied_workspace": 2,
+        "not_attempted": 3,
+        "verifier_ready_patch_artifact_clean_apply_blocked": 1
+      },
+      "attemptability_coverage": 0.333333,
+      "attemptable_cell_count": 2,
+      "category_counts": {
+        "model_output_invalid_submission": 4,
+        "nonpersistent_verifier_attempt": 2
+      },
+      "checks": {
+        "attemptability_coverage": false,
+        "clean_replay_disagreement_count": null,
+        "complete_fixed_denominator": true,
+        "model_output_invalid_submission_rate": false,
+        "raw_input_gap_closed": true
+      },
+      "clean_replay_disagreement_count": null,
+      "contract": "anchored-search-replace-json-v3",
+      "exact_cell_blockers": [
+        {
+          "acut_id": "cheap-click-specialist",
+          "assessment_evidence_role": "fixed_grid_acquisition_live_row",
+          "attemptability_channel": "verifier_ready_patch_artifact_clean_apply_blocked",
+          "blocker_id": "anchored_search_replace_fixed_grid.model_output_not_verifier_attemptable",
+          "failure_class": null,
+          "failure_owner": "model_output",
+          "run_id": "m2_anchored_fixed_grid_acquisition_specialist_20260510__cheap-click-specialist__click__rwork__003__attempt1",
+          "source_label": "fixed_grid_acquisition_specialist",
+          "stable_category": "model_output_invalid_submission",
+          "task_id": "click__rwork__003"
+        },
+        {
+          "acut_id": "cheap-click-specialist",
+          "assessment_evidence_role": "fixed_grid_acquisition_live_row",
+          "attemptability_channel": "not_attempted",
+          "blocker_id": "anchored_search_replace_fixed_grid.model_output_not_verifier_attemptable",
+          "failure_class": "unsupported_patch_response",
+          "failure_owner": "model_output",
+          "run_id": "m2_anchored_fixed_grid_acquisition_specialist_20260510__cheap-click-specialist__click__rwork__004__attempt1",
+          "source_label": "fixed_grid_acquisition_specialist",
+          "stable_category": "model_output_invalid_submission",
+          "task_id": "click__rwork__004"
+        },
+        {
+          "acut_id": "cheap-click-specialist",
+          "assessment_evidence_role": "fixed_grid_acquisition_live_row",
+          "attemptability_channel": "not_attempted",
+          "blocker_id": "anchored_search_replace_fixed_grid.model_output_not_verifier_attemptable",
+          "failure_class": "search_replace_redacted_source_mismatch",
+          "failure_owner": "model_output",
+          "run_id": "m2_anchored_fixed_grid_acquisition_specialist_20260510__cheap-click-specialist__click__rwork__006__attempt1",
+          "source_label": "fixed_grid_acquisition_specialist",
+          "stable_category": "model_output_invalid_submission",
+          "task_id": "click__rwork__006"
+        },
+        {
+          "acut_id": "cheap-generic-swe",
+          "assessment_evidence_role": "fixed_grid_acquisition_live_row",
+          "attemptability_channel": "not_attempted",
+          "blocker_id": "anchored_search_replace_fixed_grid.model_output_not_verifier_attemptable",
+          "failure_class": "search_replace_old_occurrence_mismatch",
+          "failure_owner": "model_output",
+          "run_id": "m2_anchored_fixed_grid_acquisition_generic_20260510__cheap-generic-swe__click__rwork__004__attempt1",
+          "source_label": "fixed_grid_acquisition_generic",
+          "stable_category": "model_output_invalid_submission",
+          "task_id": "click__rwork__004"
+        }
+      ],
+      "failure_class_counts": {
+        "none": 1,
+        "search_replace_old_occurrence_mismatch": 1,
+        "search_replace_redacted_source_mismatch": 1,
+        "unsafe_generated_text": 2,
+        "unsupported_patch_response": 1
+      },
+      "failure_owner_counts": {
+        "candidate_patch": 2,
+        "model_output": 4
+      },
+      "fixed_denominator": 6,
+      "gate_status": "failed",
+      "model_call_made_counts": {
+        "False": 1,
+        "True": 5
+      },
+      "model_output_invalid_submission_count": 4,
+      "model_output_invalid_submission_rate": 0.666667,
+      "path_id": "anchored_search_replace_fixed_grid",
+      "raw_input_gap_count": 0,
+      "role": "anchored-search-replace fixed grid using attemptable row per ACUT/task when present",
+      "selected_cell_count": 6,
+      "selected_cells": [
+        {
+          "acut_id": "cheap-click-specialist",
+          "assessment_evidence_role": "fixed_grid_acquisition_live_row",
+          "attemptability_channel": "verifier_ready_patch_artifact_clean_apply_blocked",
+          "failure_class": null,
+          "failure_owner": "model_output",
+          "historical_missing_raw_artifact_preserved": null,
+          "historical_missing_run_id": null,
+          "run_id": "m2_anchored_fixed_grid_acquisition_specialist_20260510__cheap-click-specialist__click__rwork__003__attempt1",
+          "source_label": "fixed_grid_acquisition_specialist",
+          "stable_category": "model_output_invalid_submission",
+          "supporting_category_counts": {
+            "model_output_invalid_submission": 1
+          },
+          "supporting_record_count": 1,
+          "task_id": "click__rwork__003"
+        },
+        {
+          "acut_id": "cheap-click-specialist",
+          "assessment_evidence_role": "fixed_grid_acquisition_live_row",
+          "attemptability_channel": "not_attempted",
+          "failure_class": "unsupported_patch_response",
+          "failure_owner": "model_output",
+          "historical_missing_raw_artifact_preserved": null,
+          "historical_missing_run_id": null,
+          "run_id": "m2_anchored_fixed_grid_acquisition_specialist_20260510__cheap-click-specialist__click__rwork__004__attempt1",
+          "source_label": "fixed_grid_acquisition_specialist",
+          "stable_category": "model_output_invalid_submission",
+          "supporting_category_counts": {
+            "model_output_invalid_submission": 1
+          },
+          "supporting_record_count": 1,
+          "task_id": "click__rwork__004"
+        },
+        {
+          "acut_id": "cheap-click-specialist",
+          "assessment_evidence_role": "fixed_grid_acquisition_live_row",
+          "attemptability_channel": "not_attempted",
+          "failure_class": "search_replace_redacted_source_mismatch",
+          "failure_owner": "model_output",
+          "historical_missing_raw_artifact_preserved": null,
+          "historical_missing_run_id": null,
+          "run_id": "m2_anchored_fixed_grid_acquisition_specialist_20260510__cheap-click-specialist__click__rwork__006__attempt1",
+          "source_label": "fixed_grid_acquisition_specialist",
+          "stable_category": "model_output_invalid_submission",
+          "supporting_category_counts": {
+            "model_output_invalid_submission": 1
+          },
+          "supporting_record_count": 1,
+          "task_id": "click__rwork__006"
+        },
+        {
+          "acut_id": "cheap-generic-swe",
+          "assessment_evidence_role": "fixed_grid_acquisition_attemptable_row",
+          "attemptability_channel": "nonpersistent_preapplied_workspace",
+          "failure_class": "unsafe_generated_text",
+          "failure_owner": "candidate_patch",
+          "historical_missing_raw_artifact_preserved": null,
+          "historical_missing_run_id": null,
+          "run_id": "m2_anchored_fixed_grid_acquisition_generic_20260510__cheap-generic-swe__click__rwork__003__attempt1",
+          "source_label": "fixed_grid_acquisition_generic",
+          "stable_category": "nonpersistent_verifier_attempt",
+          "supporting_category_counts": {
+            "nonpersistent_verifier_attempt": 1
+          },
+          "supporting_record_count": 1,
+          "task_id": "click__rwork__003"
+        },
+        {
+          "acut_id": "cheap-generic-swe",
+          "assessment_evidence_role": "fixed_grid_acquisition_live_row",
+          "attemptability_channel": "not_attempted",
+          "failure_class": "search_replace_old_occurrence_mismatch",
+          "failure_owner": "model_output",
+          "historical_missing_raw_artifact_preserved": null,
+          "historical_missing_run_id": null,
+          "run_id": "m2_anchored_fixed_grid_acquisition_generic_20260510__cheap-generic-swe__click__rwork__004__attempt1",
+          "source_label": "fixed_grid_acquisition_generic",
+          "stable_category": "model_output_invalid_submission",
+          "supporting_category_counts": {
+            "model_output_invalid_submission": 1
+          },
+          "supporting_record_count": 1,
+          "task_id": "click__rwork__004"
+        },
+        {
+          "acut_id": "cheap-generic-swe",
+          "assessment_evidence_role": "nonpersistent_no_model_replay_attemptable_row",
+          "attemptability_channel": "nonpersistent_preapplied_workspace",
+          "failure_class": "unsafe_generated_text",
+          "failure_owner": "candidate_patch",
+          "historical_missing_raw_artifact_preserved": null,
+          "historical_missing_run_id": null,
+          "run_id": "m2_nonpersistent_verifier_channel_replay_20260510__cheap-generic-swe__click__rwork__006__attempt1",
+          "source_label": "nonpersistent_channel_replay",
+          "stable_category": "nonpersistent_verifier_attempt",
+          "supporting_category_counts": {
+            "model_output_invalid_submission": 4,
+            "nonpersistent_verifier_attempt": 1
+          },
+          "supporting_record_count": 5,
+          "task_id": "click__rwork__006"
+        }
+      ],
+      "thresholds": {
+        "attemptability_coverage_min": 0.7,
+        "clean_replay_disagreement_count_max": 0,
+        "model_output_invalid_submission_rate_max": 0.25
+      }
+    },
+    "patch_or_files_v1_live_after_gap_closure": {
+      "attemptability_channel_counts": {
+        "not_attempted": 6
+      },
+      "attemptability_coverage": 0.0,
+      "attemptable_cell_count": 0,
+      "category_counts": {
+        "model_output_invalid_submission": 6
+      },
+      "checks": {
+        "attemptability_coverage": false,
+        "clean_replay_disagreement_count": true,
+        "complete_fixed_denominator": true,
+        "model_output_invalid_submission_rate": false,
+        "raw_input_gap_closed": true
+      },
+      "clean_replay_disagreement_count": 0,
+      "contract": "patch-or-files-v1",
+      "exact_cell_blockers": [
+        {
+          "acut_id": "cheap-click-specialist",
+          "assessment_evidence_role": "historical_live_replay_matrix_row",
+          "attemptability_channel": "not_attempted",
+          "blocker_id": "patch_or_files_v1_live_after_gap_closure.model_output_not_verifier_attemptable",
+          "failure_class": "unsafe_generated_text",
+          "failure_owner": "model_output",
+          "run_id": "codex_nfl_m2_patch_or_files_20260509__cheap-click-specialist__click__rwork__003__attempt1",
+          "source_label": "patch_or_files_v1_live",
+          "stable_category": "model_output_invalid_submission",
+          "task_id": "click__rwork__003"
+        },
+        {
+          "acut_id": "cheap-click-specialist",
+          "assessment_evidence_role": "historical_live_replay_matrix_row",
+          "attemptability_channel": "not_attempted",
+          "blocker_id": "patch_or_files_v1_live_after_gap_closure.model_output_not_verifier_attemptable",
+          "failure_class": "apply_patch_context_mismatch",
+          "failure_owner": "model_output",
+          "run_id": "codex_nfl_m2_patch_or_files_20260509__cheap-click-specialist__click__rwork__004__attempt1",
+          "source_label": "patch_or_files_v1_live",
+          "stable_category": "model_output_invalid_submission",
+          "task_id": "click__rwork__004"
+        },
+        {
+          "acut_id": "cheap-click-specialist",
+          "assessment_evidence_role": "gap_acquisition_replaces_historical_missing_raw_input_for_gate_assessment",
+          "attemptability_channel": "not_attempted",
+          "blocker_id": "patch_or_files_v1_live_after_gap_closure.model_output_not_verifier_attemptable",
+          "failure_class": "unsafe_generated_text",
+          "failure_owner": "model_output",
+          "run_id": "m2_patch_or_files_gap_acquisition_20260510__cheap-click-specialist__click__rwork__006__attempt1",
+          "source_label": "patch_or_files_gap_acquisition",
+          "stable_category": "model_output_invalid_submission",
+          "task_id": "click__rwork__006"
+        },
+        {
+          "acut_id": "cheap-generic-swe",
+          "assessment_evidence_role": "historical_live_replay_matrix_row",
+          "attemptability_channel": "not_attempted",
+          "blocker_id": "patch_or_files_v1_live_after_gap_closure.model_output_not_verifier_attemptable",
+          "failure_class": "invalid_unified_diff",
+          "failure_owner": "model_output",
+          "run_id": "codex_nfl_m2_patch_or_files_20260509__cheap-generic-swe__click__rwork__003__attempt1",
+          "source_label": "patch_or_files_v1_live",
+          "stable_category": "model_output_invalid_submission",
+          "task_id": "click__rwork__003"
+        },
+        {
+          "acut_id": "cheap-generic-swe",
+          "assessment_evidence_role": "historical_live_replay_matrix_row",
+          "attemptability_channel": "not_attempted",
+          "blocker_id": "patch_or_files_v1_live_after_gap_closure.model_output_not_verifier_attemptable",
+          "failure_class": "invalid_unified_diff",
+          "failure_owner": "model_output",
+          "run_id": "codex_nfl_m2_patch_or_files_20260509__cheap-generic-swe__click__rwork__004__attempt1",
+          "source_label": "patch_or_files_v1_live",
+          "stable_category": "model_output_invalid_submission",
+          "task_id": "click__rwork__004"
+        },
+        {
+          "acut_id": "cheap-generic-swe",
+          "assessment_evidence_role": "historical_live_replay_matrix_row",
+          "attemptability_channel": "not_attempted",
+          "blocker_id": "patch_or_files_v1_live_after_gap_closure.model_output_not_verifier_attemptable",
+          "failure_class": "apply_patch_context_mismatch",
+          "failure_owner": "model_output",
+          "run_id": "codex_nfl_m2_patch_or_files_20260509__cheap-generic-swe__click__rwork__006__attempt1",
+          "source_label": "patch_or_files_v1_live",
+          "stable_category": "model_output_invalid_submission",
+          "task_id": "click__rwork__006"
+        }
+      ],
+      "failure_class_counts": {
+        "apply_patch_context_mismatch": 2,
+        "invalid_unified_diff": 2,
+        "unsafe_generated_text": 2
+      },
+      "failure_owner_counts": {
+        "model_output": 6
+      },
+      "fixed_denominator": 6,
+      "gate_status": "failed",
+      "model_call_made_counts": {
+        "True": 6
+      },
+      "model_output_invalid_submission_count": 6,
+      "model_output_invalid_submission_rate": 1.0,
+      "path_id": "patch_or_files_v1_live_after_gap_closure",
+      "raw_input_gap_count": 0,
+      "role": "live patch-or-files cells after replacing only the historical missing-raw cell with the acquired raw input row",
+      "selected_cell_count": 6,
+      "selected_cells": [
+        {
+          "acut_id": "cheap-click-specialist",
+          "assessment_evidence_role": "historical_live_replay_matrix_row",
+          "attemptability_channel": "not_attempted",
+          "failure_class": "unsafe_generated_text",
+          "failure_owner": "model_output",
+          "historical_missing_raw_artifact_preserved": false,
+          "historical_missing_run_id": null,
+          "run_id": "codex_nfl_m2_patch_or_files_20260509__cheap-click-specialist__click__rwork__003__attempt1",
+          "source_label": "patch_or_files_v1_live",
+          "stable_category": "model_output_invalid_submission",
+          "supporting_category_counts": null,
+          "supporting_record_count": null,
+          "task_id": "click__rwork__003"
+        },
+        {
+          "acut_id": "cheap-click-specialist",
+          "assessment_evidence_role": "historical_live_replay_matrix_row",
+          "attemptability_channel": "not_attempted",
+          "failure_class": "apply_patch_context_mismatch",
+          "failure_owner": "model_output",
+          "historical_missing_raw_artifact_preserved": false,
+          "historical_missing_run_id": null,
+          "run_id": "codex_nfl_m2_patch_or_files_20260509__cheap-click-specialist__click__rwork__004__attempt1",
+          "source_label": "patch_or_files_v1_live",
+          "stable_category": "model_output_invalid_submission",
+          "supporting_category_counts": null,
+          "supporting_record_count": null,
+          "task_id": "click__rwork__004"
+        },
+        {
+          "acut_id": "cheap-click-specialist",
+          "assessment_evidence_role": "gap_acquisition_replaces_historical_missing_raw_input_for_gate_assessment",
+          "attemptability_channel": "not_attempted",
+          "failure_class": "unsafe_generated_text",
+          "failure_owner": "model_output",
+          "historical_missing_raw_artifact_preserved": true,
+          "historical_missing_run_id": "codex_nfl_m2_patch_or_files_20260509__cheap-click-specialist__click__rwork__006__attempt1",
+          "run_id": "m2_patch_or_files_gap_acquisition_20260510__cheap-click-specialist__click__rwork__006__attempt1",
+          "source_label": "patch_or_files_gap_acquisition",
+          "stable_category": "model_output_invalid_submission",
+          "supporting_category_counts": null,
+          "supporting_record_count": null,
+          "task_id": "click__rwork__006"
+        },
+        {
+          "acut_id": "cheap-generic-swe",
+          "assessment_evidence_role": "historical_live_replay_matrix_row",
+          "attemptability_channel": "not_attempted",
+          "failure_class": "invalid_unified_diff",
+          "failure_owner": "model_output",
+          "historical_missing_raw_artifact_preserved": false,
+          "historical_missing_run_id": null,
+          "run_id": "codex_nfl_m2_patch_or_files_20260509__cheap-generic-swe__click__rwork__003__attempt1",
+          "source_label": "patch_or_files_v1_live",
+          "stable_category": "model_output_invalid_submission",
+          "supporting_category_counts": null,
+          "supporting_record_count": null,
+          "task_id": "click__rwork__003"
+        },
+        {
+          "acut_id": "cheap-generic-swe",
+          "assessment_evidence_role": "historical_live_replay_matrix_row",
+          "attemptability_channel": "not_attempted",
+          "failure_class": "invalid_unified_diff",
+          "failure_owner": "model_output",
+          "historical_missing_raw_artifact_preserved": false,
+          "historical_missing_run_id": null,
+          "run_id": "codex_nfl_m2_patch_or_files_20260509__cheap-generic-swe__click__rwork__004__attempt1",
+          "source_label": "patch_or_files_v1_live",
+          "stable_category": "model_output_invalid_submission",
+          "supporting_category_counts": null,
+          "supporting_record_count": null,
+          "task_id": "click__rwork__004"
+        },
+        {
+          "acut_id": "cheap-generic-swe",
+          "assessment_evidence_role": "historical_live_replay_matrix_row",
+          "attemptability_channel": "not_attempted",
+          "failure_class": "apply_patch_context_mismatch",
+          "failure_owner": "model_output",
+          "historical_missing_raw_artifact_preserved": false,
+          "historical_missing_run_id": null,
+          "run_id": "codex_nfl_m2_patch_or_files_20260509__cheap-generic-swe__click__rwork__006__attempt1",
+          "source_label": "patch_or_files_v1_live",
+          "stable_category": "model_output_invalid_submission",
+          "supporting_category_counts": null,
+          "supporting_record_count": null,
+          "task_id": "click__rwork__006"
+        }
+      ],
+      "thresholds": {
+        "attemptability_coverage_min": 0.7,
+        "clean_replay_disagreement_count_max": 0,
+        "model_output_invalid_submission_rate_max": 0.25
+      }
+    },
+    "patch_or_files_v1_no_model_control": {
+      "attemptability_channel_counts": {
+        "verifier_ready_patch_artifact": 6
+      },
+      "attemptability_coverage": 1.0,
+      "attemptable_cell_count": 6,
+      "category_counts": {
+        "verifier_ready_persisted_patch_artifact": 6
+      },
+      "checks": {
+        "attemptability_coverage": true,
+        "clean_replay_disagreement_count": true,
+        "complete_fixed_denominator": true,
+        "model_output_invalid_submission_rate": true,
+        "raw_input_gap_closed": true
+      },
+      "clean_replay_disagreement_count": 0,
+      "contract": "patch-or-files-v1",
+      "exact_cell_blockers": [],
+      "failure_class_counts": {
+        "none": 6
+      },
+      "failure_owner_counts": {
+        "candidate_patch": 6
+      },
+      "fixed_denominator": 6,
+      "gate_status": "passed",
+      "model_call_made_counts": {
+        "False": 6
+      },
+      "model_output_invalid_submission_count": 0,
+      "model_output_invalid_submission_rate": 0.0,
+      "path_id": "patch_or_files_v1_no_model_control",
+      "raw_input_gap_count": 0,
+      "role": "instrumentation control only; not evidence of live ACUT capability",
+      "selected_cell_count": 6,
+      "selected_cells": [
+        {
+          "acut_id": "cheap-click-specialist",
+          "assessment_evidence_role": "existing_no_model_control_row",
+          "attemptability_channel": "verifier_ready_patch_artifact",
+          "failure_class": null,
+          "failure_owner": "candidate_patch",
+          "historical_missing_raw_artifact_preserved": null,
+          "historical_missing_run_id": null,
+          "run_id": "codex_nfl_m2_patch_or_files_no_model_20260509__cheap-click-specialist__click__rwork__003__attempt1",
+          "source_label": "patch_or_files_v1_no_model",
+          "stable_category": "verifier_ready_persisted_patch_artifact",
+          "supporting_category_counts": null,
+          "supporting_record_count": null,
+          "task_id": "click__rwork__003"
+        },
+        {
+          "acut_id": "cheap-click-specialist",
+          "assessment_evidence_role": "existing_no_model_control_row",
+          "attemptability_channel": "verifier_ready_patch_artifact",
+          "failure_class": null,
+          "failure_owner": "candidate_patch",
+          "historical_missing_raw_artifact_preserved": null,
+          "historical_missing_run_id": null,
+          "run_id": "codex_nfl_m2_patch_or_files_no_model_20260509__cheap-click-specialist__click__rwork__004__attempt1",
+          "source_label": "patch_or_files_v1_no_model",
+          "stable_category": "verifier_ready_persisted_patch_artifact",
+          "supporting_category_counts": null,
+          "supporting_record_count": null,
+          "task_id": "click__rwork__004"
+        },
+        {
+          "acut_id": "cheap-click-specialist",
+          "assessment_evidence_role": "existing_no_model_control_row",
+          "attemptability_channel": "verifier_ready_patch_artifact",
+          "failure_class": null,
+          "failure_owner": "candidate_patch",
+          "historical_missing_raw_artifact_preserved": null,
+          "historical_missing_run_id": null,
+          "run_id": "codex_nfl_m2_patch_or_files_no_model_20260509__cheap-click-specialist__click__rwork__006__attempt1",
+          "source_label": "patch_or_files_v1_no_model",
+          "stable_category": "verifier_ready_persisted_patch_artifact",
+          "supporting_category_counts": null,
+          "supporting_record_count": null,
+          "task_id": "click__rwork__006"
+        },
+        {
+          "acut_id": "cheap-generic-swe",
+          "assessment_evidence_role": "existing_no_model_control_row",
+          "attemptability_channel": "verifier_ready_patch_artifact",
+          "failure_class": null,
+          "failure_owner": "candidate_patch",
+          "historical_missing_raw_artifact_preserved": null,
+          "historical_missing_run_id": null,
+          "run_id": "codex_nfl_m2_patch_or_files_no_model_20260509__cheap-generic-swe__click__rwork__003__attempt1",
+          "source_label": "patch_or_files_v1_no_model",
+          "stable_category": "verifier_ready_persisted_patch_artifact",
+          "supporting_category_counts": null,
+          "supporting_record_count": null,
+          "task_id": "click__rwork__003"
+        },
+        {
+          "acut_id": "cheap-generic-swe",
+          "assessment_evidence_role": "existing_no_model_control_row",
+          "attemptability_channel": "verifier_ready_patch_artifact",
+          "failure_class": null,
+          "failure_owner": "candidate_patch",
+          "historical_missing_raw_artifact_preserved": null,
+          "historical_missing_run_id": null,
+          "run_id": "codex_nfl_m2_patch_or_files_no_model_20260509__cheap-generic-swe__click__rwork__004__attempt1",
+          "source_label": "patch_or_files_v1_no_model",
+          "stable_category": "verifier_ready_persisted_patch_artifact",
+          "supporting_category_counts": null,
+          "supporting_record_count": null,
+          "task_id": "click__rwork__004"
+        },
+        {
+          "acut_id": "cheap-generic-swe",
+          "assessment_evidence_role": "existing_no_model_control_row",
+          "attemptability_channel": "verifier_ready_patch_artifact",
+          "failure_class": null,
+          "failure_owner": "candidate_patch",
+          "historical_missing_raw_artifact_preserved": null,
+          "historical_missing_run_id": null,
+          "run_id": "codex_nfl_m2_patch_or_files_no_model_20260509__cheap-generic-swe__click__rwork__006__attempt1",
+          "source_label": "patch_or_files_v1_no_model",
+          "stable_category": "verifier_ready_persisted_patch_artifact",
+          "supporting_category_counts": null,
+          "supporting_record_count": null,
+          "task_id": "click__rwork__006"
+        }
+      ],
+      "thresholds": {
+        "attemptability_coverage_min": 0.7,
+        "clean_replay_disagreement_count_max": 0,
+        "model_output_invalid_submission_rate_max": 0.25
+      }
+    }
+  },
+  "prohibited_claims": {
+    "admission": false,
+    "authorization": false,
+    "capability_uplift": false,
+    "g0_g5": false,
+    "g_score_predictivity": false,
+    "license": false,
+    "m2_passed": false,
+    "ranking_reversal": false,
+    "task_solving_improvement": false
+  },
+  "schema_version": "core-narrative.m2-fixed-grid-gate-assessment.v1",
+  "scoreability_gate_status": "failed",
+  "status": "completed",
+  "thresholds": {
+    "attemptability_coverage_min": 0.7,
+    "clean_replay_disagreement_count_max": 0,
+    "model_output_invalid_submission_rate_max": 0.25
+  },
+  "tool": "m2_fixed_grid_gate_assessment"
+}
