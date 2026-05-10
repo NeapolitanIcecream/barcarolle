@@ -1,0 +1,107 @@
+{
+  "context_files": [
+    {
+      "char_count": 132471,
+      "displayed_char_count": 25013,
+      "exists": true,
+      "focus_terms": [
+        "class Option(Parameter):",
+        "        # Lazily resolve default=True to flag_value.",
+        "        if value is True and self.is_flag:",
+        "        # Support the special case of aligning the default value with the flag_value",
+        "        # A flag which is activated always returns the flag value",
+        "        # process_value has to be overridden on Options"
+      ],
+      "focused_excerpts": [
+        {
+          "char_count": 8600,
+          "end_char": 109638,
+          "start_char": 101038,
+          "trigger": "class Option(Parameter):"
+        },
+        {
+          "char_count": 6087,
+          "end_char": 131897,
+          "start_char": 125810,
+          "trigger": "        # A flag which is activated always returns the flag value"
+        }
+      ],
+      "path": "src/click/core.py",
+      "sha256": "780f4c19b26a30235a9840d7c184fecb4b1f9793e6eb69e8d3eefb6d41b92f7d",
+      "truncated": true
+    },
+    {
+      "char_count": 10814,
+      "displayed_char_count": 10727,
+      "exists": true,
+      "focus_terms": [],
+      "focused_excerpts": [],
+      "path": "tests/test_defaults.py",
+      "sha256": "0ffd1e23199cbfcd92ea8b1507cb255a9ef73c2032e00bc8b33e472ef9cdffa2",
+      "truncated": false
+    },
+    {
+      "char_count": 78685,
+      "displayed_char_count": 25013,
+      "exists": true,
+      "focus_terms": [],
+      "focused_excerpts": [],
+      "path": "tests/test_options.py",
+      "sha256": "c0a0001b83f8b2fc55ff4a2f7c7d7b6214c34de32d6a97d59976e6b5f9a309e5",
+      "truncated": true
+    }
+  ],
+  "context_packaging": {
+    "effective_max_file_chars": 25000,
+    "max_context_chars": 120000,
+    "prompt_truncated": false,
+    "requested_max_file_chars": 80000
+  },
+  "full_urls_redacted": true,
+  "output_contract": "anchored-search-replace-json-v3",
+  "output_contract_schema": {
+    "anchor_policy": {
+      "anchors_are_for_repeated_old_text_only": true,
+      "anchors_must_be_immediate_adjacent_source": true,
+      "anchors_required_when_old_may_repeat_or_uniqueness_uncertain": true,
+      "invalid_anchors_reject_the_edit_even_when_old_is_unique": true,
+      "omit_anchors_only_when_old_is_unique_in_current_source": true,
+      "omit_anchors_when_old_is_unique": true
+    },
+    "diagnostic_failure_classes": {
+      "search_replace_anchor_mismatch": "old text was present, but supplied anchors did not isolate exactly one occurrence",
+      "search_replace_old_occurrence_mismatch": "old text occurred zero or multiple times after earlier edits",
+      "search_replace_redacted_source_mismatch": "redacted source placeholders may match raw source for search only, but must not persist into replacements"
+    },
+    "diagnostics_record_non_sensitive_hashes": true,
+    "diagnostics_record_old_occurrence_counts": true,
+    "id": "anchored-search-replace-json-v3",
+    "legacy_parser_fallback_keys": [
+      "unified_diff",
+      "files"
+    ],
+    "primary_top_level_key": "edits",
+    "requires_exact_old_text": true,
+    "requires_exact_path_from_context": true,
+    "requires_immediate_anchors_for_repeated_old_text": true,
+    "requires_immediate_anchors_when_old_text_may_repeat": true,
+    "requires_old_text_from_current_source_snapshot": true,
+    "requires_single_top_level_key": true,
+    "stale_old_text_is_invalid": true
+  },
+  "prompt_char_count": 86348,
+  "prompt_content_recorded": true,
+  "prompt_sha256": "f7acd7060dd2d00f9dcc12b975bf751d904e18ec05f4584e68e329b3608206c5",
+  "run_id": "m2_anchored_fixed_grid_acquisition_specialist_20260510__cheap-click-specialist__click__rwork__004__attempt1",
+  "runner_id": "codex-nfl-direct-search-replace-v1",
+  "specialist_context_assertion": {
+    "expected": "included",
+    "include_mode": "auto",
+    "passed": true
+  },
+  "specialist_context_included": true,
+  "specialist_context_path": "experiments/core_narrative/context_packs/click_specialist/context_prompt.md",
+  "statement_truncated": false,
+  "task_statement_path": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/tasks/click/rwork/click__rwork__004/public/statement.md",
+  "tool": "codex_nfl_direct_runner"
+}
