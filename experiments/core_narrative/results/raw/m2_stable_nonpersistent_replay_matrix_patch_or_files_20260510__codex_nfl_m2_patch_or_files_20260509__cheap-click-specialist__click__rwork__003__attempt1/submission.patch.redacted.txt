@@ -1,0 +1,45 @@
+diff --git a/src/click/core.py b/src/click/core.py
+index cd8052f..6f3a2cd 100644
+--- a/src/click/core.py
++++ b/src/click/core.py
+@@ -799,0 +800 @@ class Context:
++            missing: set[str] = set()
+@@ -803,7 +803,0 @@ class Context:
+-                    # We explicitly hide the :attr:`UNSET` value to the user, as we
+-                    # choose to make it an implementation detail. And because ``invoke``
+-                    # has been designed as part of Click public API, we return ``None``
+-                    # instead. Refs:
+-                    # <redacted:url>
+-                    # <redacted:url>
+-                    # <redacted:url>
+@@ -811 +805,3 @@ class Context:
+-                        default_value = None
++                        missing.add(param.name)
++                        continue
++
+@@ -815,0 +812,3 @@ class Context:
++            for name in missing:
++                kwargs.setdefault(name, None)
++
+diff --git a/tests/test_defaults.py b/tests/test_defaults.py
+index 3f293e8..7a56125 100644
+--- a/tests/test_defaults.py
++++ b/tests/test_defaults.py
+@@ -86,0 +87,17 @@ def test_flag_default_map(runner):
++
++
++def test_shared_flag_default_order(runner):
++    @click.command()
++    @click.option("--foo", "value", flag_value=1)
++    @click.option("--bar", "value", flag_value=2, default=True)
++    def inner(value):
++        return value
++
++    @click.command()
++    @click.pass_context
++    def outer(ctx):
++        return ctx.invoke(inner)
++
++    result = runner.invoke(outer, [])
++    assert not result.exception
++    assert result.return_value == 2
