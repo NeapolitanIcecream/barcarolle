@@ -196,6 +196,70 @@ class WorkspaceModeRunnerTests(unittest.TestCase):
         self.assertEqual(verification["normalized"]["status"], "invalid_submission")
         self.assertIsNone(verification["verifier_exit_code"])
 
+    def test_stale_normalized_result_is_not_reused_when_verifier_emits_no_output(self) -> None:
+        """Regression: a reused artifact dir must not trust stale normalized verifier output."""
+        source, base_commit = self.init_source_repo()
+        task_path = self.write_task(
+            base_commit=base_commit,
+            verifier_python="from pathlib import Path\nassert Path('module.py').read_text() == 'VALUE = 2\\n'",
+        )
+        artifact_dir = self.root / "artifacts" / "stale-normalized"
+        artifact_dir.mkdir(parents=True)
+        patch_path = artifact_dir / "submission.patch"
+        patch_path.write_text(
+            "\n".join(
+                [
+                    "diff --git a/module.py b/module.py",
+                    "index d00491f..0fad9b1 100644",
+                    "--- a/module.py",
+                    "+++ b/module.py",
+                    "@@ -1 +1 @@",
+                    "-VALUE = 1",
+                    "+VALUE = 2",
+                    "",
+                ]
+            ),
+            encoding="utf-8",
+        )
+        stale_normalized = artifact_dir / "normalized_result.json"
+        stale_normalized.write_text(
+            json.dumps({"status": "passed", "verification": {"exit_code": 0}, "metadata": {"tool": "stale"}}),
+            encoding="utf-8",
+        )
+        _run_workspace, _prepare, base = runner.prepare_workspace_for_task(
+            task_path=task_path,
+            source_repo=source,
+            workspace=self.workspaces / "stale-normalized-run",
+            artifact_dir=artifact_dir,
+            summary_name="prepare_workspace",
+        )
+
+        original_verify = runner.VERIFY
+        runner.VERIFY = self.root / "missing_apply_and_verify.py"
+        try:
+            verification = runner.verify_candidate_patch(
+                task_path=task_path,
+                source_repo=source,
+                workspace_root=self.workspaces,
+                workspace_name="stale-normalized-verify",
+                artifact_dir=artifact_dir,
+                patch_path=patch_path,
+                acut_id="unit-acut",
+                attempt=1,
+                run_id="stale-normalized",
+                recorded_base_tree=base["base_tree"],
+                verifier_timeout_seconds=5,
+                install_workspace_before_verify=False,
+            )
+        finally:
+            runner.VERIFY = original_verify
+
+        self.assertEqual(verification["status"], "verifier_infra_error")
+        self.assertEqual(verification["normalized"]["status"], "infra_failed")
+        self.assertEqual(verification["normalized"]["metadata"]["tool"], runner.TOOL)
+        self.assertIn("verifier did not emit a normalized result", verification["normalized"]["error"])
+        self.assertFalse(stale_normalized.exists())
+
     def test_verify_base_tree_mismatch_blocks_replay_before_hidden_verifier(self) -> None:
         """A fresh workspace with the wrong base tree is an explicit replay boundary failure."""
         source, base_commit = self.init_source_repo()

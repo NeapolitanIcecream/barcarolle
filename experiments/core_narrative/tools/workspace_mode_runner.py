@@ -503,6 +503,8 @@ def verify_candidate_patch(
         )
 
     normalized_path = artifact_dir / "normalized_result.json"
+    if normalized_path.exists():
+        normalized_path.unlink()
     command = [
         sys.executable,
         str(VERIFY),
