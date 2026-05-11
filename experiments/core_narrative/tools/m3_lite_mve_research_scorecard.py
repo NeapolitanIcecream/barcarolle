@@ -6,6 +6,7 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+import os
 import subprocess
 import sys
 from pathlib import Path
@@ -31,6 +32,12 @@ OUTCOMES = (
     "missing_coverage",
     "policy_invalid",
 )
+HARNESS_UNTRACKED_PREFIXES = (
+    ".core_narrative/",
+    ".pytest_cache/",
+    ".venv/",
+)
+HARNESS_UNTRACKED_PARTS = {"__pycache__"}
 
 
 def parse_args(argv: Sequence[str]) -> argparse.Namespace:
@@ -184,6 +191,21 @@ def empty_counts() -> dict[str, int]:
     return {outcome: 0 for outcome in OUTCOMES}
 
 
+def git_diff_command(*extra: str) -> list[str]:
+    return ["git", "diff", "--binary", "--no-ext-diff", "--unified=0", *extra]
+
+
+def is_harness_untracked_path(relative_path: str) -> bool:
+    normalized = relative_path.replace(os.sep, "/")
+    if any(normalized.startswith(prefix) for prefix in HARNESS_UNTRACKED_PREFIXES):
+        return True
+    return bool(HARNESS_UNTRACKED_PARTS.intersection(Path(normalized).parts))
+
+
+def normalized_diff_part(content: bytes) -> bytes:
+    return content if content.endswith(b"\n") else content + b"\n"
+
+
 def aggregate_cells(cells: Sequence[Mapping[str, Any]]) -> dict[str, Any]:
     counts = empty_counts()
     by_acut: dict[str, dict[str, Any]] = {}
@@ -263,7 +285,7 @@ def collect_workspace_diff(workspace: Path | None) -> dict[str, Any]:
     if not (workspace / ".git").exists():
         return {"present": False, "status": "not_git_workspace", "path": repo_relative(workspace)}
     completed = subprocess.run(
-        ["git", "diff", "--binary", "--no-ext-diff", "--unified=0", "HEAD"],
+        git_diff_command("HEAD"),
         cwd=str(workspace),
         stdout=subprocess.PIPE,
         stderr=subprocess.PIPE,
@@ -276,12 +298,49 @@ def collect_workspace_diff(workspace: Path | None) -> dict[str, Any]:
             "path": repo_relative(workspace),
             "stderr_sha256": sha256_bytes(completed.stderr),
         }
+    diff_parts = [normalized_diff_part(completed.stdout)] if completed.stdout else []
+    untracked = subprocess.run(
+        ["git", "ls-files", "--others", "--exclude-standard", "-z"],
+        cwd=str(workspace),
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+        check=False,
+    )
+    if untracked.returncode != 0:
+        return {
+            "present": False,
+            "status": "git_untracked_files_failed",
+            "path": repo_relative(workspace),
+            "stderr_sha256": sha256_bytes(untracked.stderr),
+        }
+    for raw_path in filter(None, untracked.stdout.split(b"\0")):
+        relative_path = os.fsdecode(raw_path)
+        if is_harness_untracked_path(relative_path):
+            continue
+        new_file_diff = subprocess.run(
+            git_diff_command("--no-index", "--", "/dev/null", relative_path),
+            cwd=str(workspace),
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+            check=False,
+        )
+        if new_file_diff.returncode not in (0, 1):
+            return {
+                "present": False,
+                "status": "git_untracked_file_diff_failed",
+                "path": repo_relative(workspace),
+                "untracked_path": relative_path,
+                "stderr_sha256": sha256_bytes(new_file_diff.stderr),
+            }
+        if new_file_diff.stdout:
+            diff_parts.append(normalized_diff_part(new_file_diff.stdout))
+    diff = b"".join(diff_parts)
     return {
-        "present": bool(completed.stdout),
+        "present": bool(diff),
         "status": "diff_collected",
         "path": repo_relative(workspace),
-        "size_bytes": len(completed.stdout),
-        "sha256": sha256_bytes(completed.stdout) if completed.stdout else None,
+        "size_bytes": len(diff),
+        "sha256": sha256_bytes(diff) if diff else None,
     }
 
 

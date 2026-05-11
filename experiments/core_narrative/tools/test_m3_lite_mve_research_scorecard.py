@@ -36,6 +36,19 @@ class M3LiteMVEResearchScorecardTests(unittest.TestCase):
         (workspace / "module.py").write_text("VALUE = 2\n", encoding="utf-8")
         return workspace
 
+    def init_workspace_with_untracked_file(self) -> Path:
+        workspace = self.root / "workspace-untracked"
+        workspace.mkdir()
+        subprocess.run(["git", "init", "-q"], cwd=workspace, check=True)
+        subprocess.run(["git", "config", "user.email", "codex@example.invalid"], cwd=workspace, check=True)
+        subprocess.run(["git", "config", "user.name", "Codex"], cwd=workspace, check=True)
+        (workspace / "module.py").write_text("VALUE = 1\n", encoding="utf-8")
+        subprocess.run(["git", "add", "module.py"], cwd=workspace, check=True)
+        subprocess.run(["git", "commit", "-q", "-m", "base"], cwd=workspace, check=True)
+        (workspace / "pkg").mkdir()
+        (workspace / "pkg" / "generated.txt").write_text("created by acut\n", encoding="utf-8")
+        return workspace
+
     def matrix_path(self) -> Path:
         return self.write_json(
             self.root / "matrix.json",
@@ -274,6 +287,40 @@ class M3LiteMVEResearchScorecardTests(unittest.TestCase):
         self.assertTrue(record["research_scoreable"])
         self.assertEqual(record["research_outcome"], "verified_pass")
         self.assertEqual(record["evidence_types"], [])
+
+    def test_m2_5_recovery_counts_untracked_workspace_files_as_final_diff_evidence(self) -> None:
+        """Regression: untracked work-product files were invisible to workspace diff recovery."""
+        workspace = self.init_workspace_with_untracked_file()
+
+        recovery = m3.recover_m2_5(
+            {
+                "schema_version": "core-narrative.m2-5-workspace-diff-v1",
+                "status": "completed",
+                "run_prefix": "m2_5_fixture",
+                "results": [
+                    {
+                        "run_id": "m2-5-untracked-work-product",
+                        "acut_id": "cheap-generic-swe",
+                        "task_id": "click__rwork__003",
+                        "status": "invalid_submission",
+                        "patch_path": str(self.root / "missing.patch"),
+                        "workspace": str(workspace),
+                        "failure_owner": "candidate_patch",
+                        "failure_class": None,
+                    }
+                ],
+            }
+        )
+
+        self.assertEqual(recovery["summary"]["research_scoreable_count"], 1)
+        self.assertEqual(recovery["summary"]["final_workspace_diff_count"], 1)
+        self.assertEqual(recovery["summary"]["outcome_counts"], {"produced_patch_unverified": 1})
+        record = recovery["records"][0]
+        self.assertTrue(record["research_scoreable"])
+        self.assertEqual(record["research_outcome"], "produced_patch_unverified")
+        self.assertIn("final_workspace_git_diff", record["evidence_types"])
+        self.assertTrue(record["final_workspace_diff"]["present"])
+        self.assertGreater(record["final_workspace_diff"]["size_bytes"], 0)
 
 
 if __name__ == "__main__":
