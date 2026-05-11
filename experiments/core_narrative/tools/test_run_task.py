@@ -75,6 +75,8 @@ class RunTaskTests(unittest.TestCase):
         (workspace / ".venv" / "bin" / "activate").write_text("https://example.invalid\n", encoding="utf-8")
         (workspace / ".pytest_cache").mkdir()
         (workspace / ".pytest_cache" / "README.md").write_text("cache\n", encoding="utf-8")
+        (workspace / "pkg.egg-info").mkdir()
+        (workspace / "pkg.egg-info" / "PKG-INFO").write_text("install metadata\n", encoding="utf-8")
 
         patch_text = run_task.collect_patch(workspace, {})
 
@@ -82,6 +84,7 @@ class RunTaskTests(unittest.TestCase):
         self.assertNotIn(".core_narrative", patch_text)
         self.assertNotIn(".venv", patch_text)
         self.assertNotIn(".pytest_cache", patch_text)
+        self.assertNotIn(".egg-info", patch_text)
         self.assertNotIn("https://example.invalid", patch_text)
 
 

@@ -44,6 +44,7 @@ HARNESS_UNTRACKED_PREFIXES = (
     ".venv/",
 )
 HARNESS_UNTRACKED_PARTS = {"__pycache__"}
+HARNESS_UNTRACKED_PART_SUFFIXES = (".egg-info",)
 PATCH_DIFF_CONTEXT_LINES = 0
 MAX_UNSAFE_PATCH_URL_OCCURRENCE_RECORDS = 20
 
@@ -285,7 +286,10 @@ def is_harness_untracked_path(relative_path: str) -> bool:
     normalized = relative_path.replace(os.sep, "/")
     if any(normalized.startswith(prefix) for prefix in HARNESS_UNTRACKED_PREFIXES):
         return True
-    return bool(HARNESS_UNTRACKED_PARTS.intersection(Path(normalized).parts))
+    parts = Path(normalized).parts
+    if HARNESS_UNTRACKED_PARTS.intersection(parts):
+        return True
+    return any(part.endswith(HARNESS_UNTRACKED_PART_SUFFIXES) for part in parts)
 
 
 def write_safe_patch(workspace: Path, patch_path: Path, env: dict[str, str]) -> dict[str, object]:
