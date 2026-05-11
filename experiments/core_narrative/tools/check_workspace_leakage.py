@@ -49,6 +49,52 @@ def write_text(path: Path, text: str) -> None:
     path.write_text(text, encoding="utf-8")
 
 
+def resolve_workspace_payload_path(workspace: Path, path_value: str) -> Path:
+    candidate = Path(path_value)
+    if not candidate.is_absolute():
+        candidate = workspace / candidate
+    workspace_root = workspace.resolve()
+    resolved = candidate.resolve()
+    try:
+        resolved.relative_to(workspace_root)
+    except ValueError as exc:
+        raise ToolError(
+            "ACUT-visible statement path escaped prepared workspace",
+            statement_path=str(candidate),
+            workspace=str(workspace),
+        ) from exc
+    return resolved
+
+
+def statement_payload_paths(workspace: Path, package: object) -> list[Path]:
+    paths: list[Path] = []
+    if isinstance(package, dict):
+        package_statement = package.get("task_statement_path")
+        if isinstance(package_statement, str) and package_statement:
+            paths.append(resolve_workspace_payload_path(workspace, package_statement))
+    default_statement = resolve_workspace_payload_path(workspace, ".core_narrative/statement.md")
+    if default_statement.exists() and default_statement not in paths:
+        paths.append(default_statement)
+    return paths
+
+
+def statement_payloads_containing_target(workspace: Path, package: object, target_commit: str) -> list[str]:
+    payloads: list[str] = []
+    for statement_path in statement_payload_paths(workspace, package):
+        if not statement_path.exists():
+            continue
+        try:
+            statement_text = statement_path.read_text(encoding="utf-8")
+        except UnicodeDecodeError as exc:
+            raise ToolError(
+                "failed to read ACUT-visible statement payload as UTF-8",
+                statement_path=str(statement_path),
+            ) from exc
+        if target_commit in statement_text:
+            payloads.append(str(statement_path))
+    return payloads
+
+
 def build_fixture(root: Path) -> tuple[Path, Path, Path, str, str]:
     source_repo = root / "source-repo"
     task_dir = root / "task"
@@ -179,6 +225,13 @@ def assert_target_absent(workspace: Path, target_commit: str) -> dict[str, Any]:
     workspace_history = package.get("workspace_history") if isinstance(package, dict) else {}
     if not isinstance(workspace_history, dict) or workspace_history.get("source_anchor_metadata_visible") is not False:
         raise ToolError("task package did not declare source anchor metadata as hidden")
+    statement_payloads = statement_payloads_containing_target(workspace, package, target_commit)
+    if statement_payloads:
+        raise ToolError(
+            "target commit leaked into ACUT-visible statement payload",
+            target_commit=target_commit,
+            statement_payloads=statement_payloads,
+        )
 
     return {
         "ref_count": len(refs),
@@ -186,7 +239,9 @@ def assert_target_absent(workspace: Path, target_commit: str) -> dict[str, Any]:
         "target_absent_from_refs": True,
         "target_absent_from_object_database": True,
         "target_absent_from_task_package": True,
+        "target_absent_from_statement_payloads": True,
         "source_anchor_metadata_hidden_from_task_package": True,
+        "source_anchor_metadata_hidden_from_acut_payloads": True,
         "prepared_at_hidden_from_task_package": True,
     }
 
