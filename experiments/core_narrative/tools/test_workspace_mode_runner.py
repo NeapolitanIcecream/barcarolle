@@ -260,6 +260,74 @@ class WorkspaceModeRunnerTests(unittest.TestCase):
         self.assertIn("verifier did not emit a normalized result", verification["normalized"]["error"])
         self.assertFalse(stale_normalized.exists())
 
+    def test_malformed_normalized_result_maps_to_verifier_infra_error(self) -> None:
+        """Regression: truncated normalized verifier JSON must not abort workspace-mode runs."""
+        source, base_commit = self.init_source_repo()
+        task_path = self.write_task(
+            base_commit=base_commit,
+            verifier_python="from pathlib import Path\nassert Path('module.py').read_text() == 'VALUE = 2\\n'",
+        )
+        artifact_dir = self.root / "artifacts" / "malformed-normalized"
+        artifact_dir.mkdir(parents=True)
+        patch_path = artifact_dir / "submission.patch"
+        patch_path.write_text(
+            "\n".join(
+                [
+                    "diff --git a/module.py b/module.py",
+                    "index d00491f..0fad9b1 100644",
+                    "--- a/module.py",
+                    "+++ b/module.py",
+                    "@@ -1 +1 @@",
+                    "-VALUE = 1",
+                    "+VALUE = 2",
+                    "",
+                ]
+            ),
+            encoding="utf-8",
+        )
+        malformed_verify = self.root / "malformed_apply_and_verify.py"
+        malformed_verify.write_text(
+            "import sys\n"
+            "from pathlib import Path\n"
+            "output = Path(sys.argv[sys.argv.index('--output') + 1])\n"
+            "output.write_text('{', encoding='utf-8')\n",
+            encoding="utf-8",
+        )
+        _run_workspace, _prepare, base = runner.prepare_workspace_for_task(
+            task_path=task_path,
+            source_repo=source,
+            workspace=self.workspaces / "malformed-normalized-run",
+            artifact_dir=artifact_dir,
+            summary_name="prepare_workspace",
+        )
+
+        original_verify = runner.VERIFY
+        runner.VERIFY = malformed_verify
+        try:
+            verification = runner.verify_candidate_patch(
+                task_path=task_path,
+                source_repo=source,
+                workspace_root=self.workspaces,
+                workspace_name="malformed-normalized-verify",
+                artifact_dir=artifact_dir,
+                patch_path=patch_path,
+                acut_id="unit-acut",
+                attempt=1,
+                run_id="malformed-normalized",
+                recorded_base_tree=base["base_tree"],
+                verifier_timeout_seconds=5,
+                install_workspace_before_verify=False,
+            )
+        finally:
+            runner.VERIFY = original_verify
+
+        self.assertEqual(verification["status"], "verifier_infra_error")
+        self.assertEqual(verification["command"]["exit_code"], 0)
+        self.assertEqual(verification["normalized"]["status"], "infra_failed")
+        self.assertEqual(verification["normalized"]["metadata"]["tool"], runner.TOOL)
+        self.assertIn("malformed normalized result", verification["normalized"]["error"])
+        self.assertIsNone(verification["verifier_exit_code"])
+
     def test_verify_base_tree_mismatch_blocks_replay_before_hidden_verifier(self) -> None:
         """A fresh workspace with the wrong base tree is an explicit replay boundary failure."""
         source, base_commit = self.init_source_repo()
