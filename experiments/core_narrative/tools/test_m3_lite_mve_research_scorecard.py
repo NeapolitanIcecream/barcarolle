@@ -233,7 +233,7 @@ class M3LiteMVEResearchScorecardTests(unittest.TestCase):
         self.assertEqual(recovery["summary"]["research_scoreable_count"], 1)
         self.assertEqual(recovery["summary"]["persisted_patch_count"], 1)
         record = recovery["records"][0]
-        self.assertEqual(record["research_outcome"], "produced_patch_unverified")
+        self.assertEqual(record["research_outcome"], "produced_patch_replay_invalid")
         self.assertIn("persisted_submission_patch", record["evidence_types"])
         self.assertEqual(
             record["patch"],
@@ -244,6 +244,36 @@ class M3LiteMVEResearchScorecardTests(unittest.TestCase):
                 "size_bytes": 17,
             },
         )
+
+    def test_m2_5_recovery_counts_verified_status_as_research_scoreable_without_local_artifacts(self) -> None:
+        """Regression: verified M2.5 outcomes were not scoreable when local paths were absent."""
+        recovery = m3.recover_m2_5(
+            {
+                "schema_version": "core-narrative.m2-5-workspace-diff-v1",
+                "status": "completed",
+                "run_prefix": "m2_5_fixture",
+                "results": [
+                    {
+                        "run_id": "m2-5-verified-without-local-artifacts",
+                        "acut_id": "cheap-generic-swe",
+                        "task_id": "click__rwork__003",
+                        "status": "passed",
+                        "patch_path": str(self.root / "historical" / "submission.patch"),
+                        "workspace": str(self.root / "historical" / "workspace"),
+                        "normalized_result": str(self.root / "historical" / "normalized.json"),
+                        "failure_owner": None,
+                        "failure_class": None,
+                    }
+                ],
+            }
+        )
+
+        self.assertEqual(recovery["summary"]["research_scoreable_count"], 1)
+        self.assertEqual(recovery["summary"]["outcome_counts"], {"verified_pass": 1})
+        record = recovery["records"][0]
+        self.assertTrue(record["research_scoreable"])
+        self.assertEqual(record["research_outcome"], "verified_pass")
+        self.assertEqual(record["evidence_types"], [])
 
 
 if __name__ == "__main__":

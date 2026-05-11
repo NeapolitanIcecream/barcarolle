@@ -349,27 +349,29 @@ def recover_m2_5(m2_5_payload: Mapping[str, Any] | None) -> dict[str, Any]:
         if review.get("mergeability_grade") is not None:
             evidence_types.append("review_evidence")
         status = str(item.get("status") or normalized.get("status") or "missing")
+        clean_replay_status = clean_replay.get("status") or item.get("clean_replay_status")
         if status == "passed":
             research_outcome = "verified_pass"
         elif status in {"failed", "timeout"}:
             research_outcome = "verified_fail"
-        elif patch["present"] and clean_replay.get("status") == "invalid_submission":
+        elif patch["present"] and clean_replay_status == "invalid_submission":
             research_outcome = "produced_patch_replay_invalid"
         elif patch["present"] or workspace_diff.get("present") is True:
             research_outcome = "produced_patch_unverified"
         else:
             research_outcome = "no_research_scoreable_patch"
+        research_scoreable = bool(evidence_types) or research_outcome in {"verified_pass", "verified_fail"}
         records.append(
             {
                 "run_id": item.get("run_id"),
                 "acut_id": item.get("acut_id"),
                 "task_id": item.get("task_id"),
                 "status": status,
-                "research_scoreable": bool(evidence_types),
+                "research_scoreable": research_scoreable,
                 "research_outcome": research_outcome,
                 "evidence_types": evidence_types,
                 "clean_room_replay_required": False,
-                "clean_room_replay_status": clean_replay.get("status") or item.get("clean_replay_status"),
+                "clean_room_replay_status": clean_replay_status,
                 "failure_owner": item.get("failure_owner"),
                 "failure_class": item.get("failure_class"),
                 "patch": patch,
