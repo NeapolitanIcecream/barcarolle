@@ -178,6 +178,25 @@ class M3LiteMVEResearchScorecardTests(unittest.TestCase):
             report=str(self.root / "report.md"),
         )
 
+    def test_absolute_external_input_with_repo_directory_name_is_not_remapped(self) -> None:
+        """Regression: external CLI inputs under a barcarolle directory were redirected."""
+        original_repo_root = m3.REPO_ROOT
+        self.addCleanup(lambda: setattr(m3, "REPO_ROOT", original_repo_root))
+        checkout = self.root / "current" / "barcarolle"
+        checkout.mkdir(parents=True)
+        m3.REPO_ROOT = checkout
+
+        local_input = checkout / "custom" / "matrix.json"
+        self.write_json(local_input, {"tool": "local-checkout"})
+        external_input = self.root / "external" / "barcarolle" / "custom" / "matrix.json"
+        self.write_json(external_input, {"tool": "external-input"})
+
+        info, payload = m3.load_json_input(str(external_input), input_key="matrix")
+
+        self.assertEqual(payload, {"tool": "external-input"})
+        self.assertEqual(info["path"], str(external_input))
+        self.assertTrue(info["present"])
+
     def test_m3_lite_builds_research_grade_partial_grw_without_admission_claims(self) -> None:
         """M3-lite scores partial evidence while keeping G unavailable and claims bounded."""
         payload, recovery_artifact = m3.build_payload(self.build_args())

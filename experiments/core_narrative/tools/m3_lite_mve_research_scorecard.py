@@ -38,6 +38,10 @@ HARNESS_UNTRACKED_PREFIXES = (
     ".venv/",
 )
 HARNESS_UNTRACKED_PARTS = {"__pycache__"}
+SOURCE_ROOTED_M2_5_ARTIFACT_PREFIXES = (
+    ("experiments", "core_narrative", "results"),
+    ("experiments", "core_narrative", "workspaces"),
+)
 M2_5_STABLE_DIGEST_FIELDS = (
     "run_id",
     "acut_id",
@@ -105,8 +109,18 @@ def remap_source_rooted_absolute_path(path: Path) -> Path:
     for index in range(len(parts) - 1, -1, -1):
         if parts[index] != REPO_ROOT.name:
             continue
-        return REPO_ROOT.joinpath(*parts[index + 1 :])
+        source_root_suffix = parts[index + 1 :]
+        if not source_root_suffix_is_m2_5_artifact(source_root_suffix):
+            continue
+        return REPO_ROOT.joinpath(*source_root_suffix)
     return path
+
+
+def source_root_suffix_is_m2_5_artifact(parts: Sequence[str]) -> bool:
+    return any(
+        tuple(parts[: len(prefix)]) == prefix
+        for prefix in SOURCE_ROOTED_M2_5_ARTIFACT_PREFIXES
+    )
 
 
 def resolve_path(value: object) -> Path | None:
@@ -115,6 +129,13 @@ def resolve_path(value: object) -> Path | None:
     path = Path(value)
     if not path.is_absolute():
         path = REPO_ROOT / path
+    return path
+
+
+def resolve_m2_5_artifact_path(value: object) -> Path | None:
+    path = resolve_path(value)
+    if path is None:
+        return None
     return remap_source_rooted_absolute_path(path)
 
 
@@ -411,9 +432,9 @@ def recover_m2_5(m2_5_payload: Mapping[str, Any] | None) -> dict[str, Any]:
     for item in m2_5_payload.get("results", []):
         if not isinstance(item, Mapping):
             continue
-        patch_path = resolve_path(item.get("patch_path"))
-        workspace = resolve_path(item.get("workspace") or item.get("runner_workspace"))
-        normalized_path = resolve_path(item.get("normalized_result"))
+        patch_path = resolve_m2_5_artifact_path(item.get("patch_path"))
+        workspace = resolve_m2_5_artifact_path(item.get("workspace") or item.get("runner_workspace"))
+        normalized_path = resolve_m2_5_artifact_path(item.get("normalized_result"))
         normalized = read_normalized(normalized_path)
         metadata = normalized.get("metadata") if isinstance(normalized.get("metadata"), Mapping) else {}
         clean_replay = metadata.get("clean_patch_replay") if isinstance(metadata.get("clean_patch_replay"), Mapping) else {}
