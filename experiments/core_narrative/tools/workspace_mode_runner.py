@@ -535,7 +535,15 @@ def verify_candidate_patch(
         timeout_seconds=outer_timeout,
     )
     if normalized_path.exists():
-        normalized = json.loads(normalized_path.read_text(encoding="utf-8"))
+        try:
+            normalized = json.loads(normalized_path.read_text(encoding="utf-8"))
+        except json.JSONDecodeError as exc:
+            normalized = {
+                "status": "infra_failed",
+                "error": f"verifier emitted malformed normalized result: {exc.msg}",
+                "verification": {"exit_code": None, "stdout_artifact": None, "stderr_artifact": None, "duration_seconds": None},
+                "metadata": {"tool": TOOL},
+            }
     else:
         normalized = {
             "status": "infra_failed",
