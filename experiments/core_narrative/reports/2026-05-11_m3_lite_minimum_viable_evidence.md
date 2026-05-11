@@ -8,7 +8,7 @@ M3-lite is research-grade minimum viable evidence, not a product gate. Clean-roo
 
 Protocol: `experiments/core_narrative/configs/m3_lite_mve_matrix.yaml`. Matrix: `3` ACUTs, `4` RBench tasks, `4` RWork tasks.
 
-Score input set digest: `82940d96684bca4cbc2b1a39b0e92c7b3b6d40cfd6a2d39f3ebf687cec799c50`
+Score input set digest: `3d59aca652f9412fcdee0e0f553f823ca7234536f4ae067ae6228bb4da0e1ce2`
 
 ## Partial G/R/W
 

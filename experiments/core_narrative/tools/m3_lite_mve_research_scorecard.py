@@ -38,6 +38,22 @@ HARNESS_UNTRACKED_PREFIXES = (
     ".venv/",
 )
 HARNESS_UNTRACKED_PARTS = {"__pycache__"}
+M2_5_STABLE_DIGEST_FIELDS = (
+    "run_id",
+    "acut_id",
+    "task_id",
+    "status",
+    "patch_ready",
+    "attemptable",
+    "failure_owner",
+    "failure_class",
+    "candidate_patch_sha256",
+    "candidate_patch_size_bytes",
+    "clean_replay_status",
+    "task_manifest_sha256",
+    "acut_manifest_sha256",
+    "verifier_digest_sha256",
+)
 
 
 def parse_args(argv: Sequence[str]) -> argparse.Namespace:
@@ -77,9 +93,20 @@ def repo_relative(path: Path | None) -> str | None:
     if path is None:
         return None
     try:
-        return path.resolve().relative_to(REPO_ROOT).as_posix()
+        return path.resolve().relative_to(REPO_ROOT.resolve()).as_posix()
     except ValueError:
         return str(path)
+
+
+def remap_source_rooted_absolute_path(path: Path) -> Path:
+    if not path.is_absolute():
+        return path
+    parts = path.parts
+    for index in range(len(parts) - 1, -1, -1):
+        if parts[index] != REPO_ROOT.name:
+            continue
+        return REPO_ROOT.joinpath(*parts[index + 1 :])
+    return path
 
 
 def resolve_path(value: object) -> Path | None:
@@ -88,7 +115,7 @@ def resolve_path(value: object) -> Path | None:
     path = Path(value)
     if not path.is_absolute():
         path = REPO_ROOT / path
-    return path
+    return remap_source_rooted_absolute_path(path)
 
 
 def load_json_input(path_value: str | Path | None, *, input_key: str) -> tuple[dict[str, Any], dict[str, Any] | None]:
@@ -474,6 +501,24 @@ def recover_m2_5(m2_5_payload: Mapping[str, Any] | None) -> dict[str, Any]:
     }
 
 
+def stable_m2_5_score_inputs(m2_5_payload: Mapping[str, Any] | None) -> list[dict[str, Any]]:
+    if not isinstance(m2_5_payload, Mapping):
+        return []
+    records = []
+    for item in m2_5_payload.get("results", []):
+        if not isinstance(item, Mapping):
+            continue
+        records.append({key: item.get(key) for key in M2_5_STABLE_DIGEST_FIELDS})
+    return sorted(
+        records,
+        key=lambda record: (
+            str(record.get("run_id") or ""),
+            str(record.get("acut_id") or ""),
+            str(record.get("task_id") or ""),
+        ),
+    )
+
+
 def score_table(acuts: Sequence[str], r_summary: Mapping[str, Any], w_summary: Mapping[str, Any], g_score: Mapping[str, Any]) -> list[dict[str, Any]]:
     rows = []
     r_by_acut = r_summary.get("by_acut") if isinstance(r_summary.get("by_acut"), Mapping) else {}
@@ -562,7 +607,7 @@ def build_payload(args: argparse.Namespace) -> tuple[dict[str, Any], dict[str, A
             "m2_5_sha256": m2_5_info.get("sha256"),
             "r_cells": r_cells,
             "w_cells": w_cells,
-            "m2_5_recovery_records": m2_5_recovery["records"],
+            "m2_5_score_inputs": stable_m2_5_score_inputs(m2_5_payload),
         }
     )
     payload: dict[str, Any] = {

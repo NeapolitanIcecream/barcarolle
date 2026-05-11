@@ -24,9 +24,8 @@ class M3LiteMVEResearchScorecardTests(unittest.TestCase):
         path.write_text(json.dumps(payload, indent=2, sort_keys=True) + "\n", encoding="utf-8")
         return path
 
-    def init_workspace_with_diff(self) -> Path:
-        workspace = self.root / "workspace"
-        workspace.mkdir()
+    def init_workspace_with_diff_at(self, workspace: Path) -> Path:
+        workspace.mkdir(parents=True)
         subprocess.run(["git", "init", "-q"], cwd=workspace, check=True)
         subprocess.run(["git", "config", "user.email", "codex@example.invalid"], cwd=workspace, check=True)
         subprocess.run(["git", "config", "user.name", "Codex"], cwd=workspace, check=True)
@@ -35,6 +34,9 @@ class M3LiteMVEResearchScorecardTests(unittest.TestCase):
         subprocess.run(["git", "commit", "-q", "-m", "base"], cwd=workspace, check=True)
         (workspace / "module.py").write_text("VALUE = 2\n", encoding="utf-8")
         return workspace
+
+    def init_workspace_with_diff(self) -> Path:
+        return self.init_workspace_with_diff_at(self.root / "workspace")
 
     def init_workspace_with_untracked_file(self) -> Path:
         workspace = self.root / "workspace-untracked"
@@ -321,6 +323,124 @@ class M3LiteMVEResearchScorecardTests(unittest.TestCase):
         self.assertIn("final_workspace_git_diff", record["evidence_types"])
         self.assertTrue(record["final_workspace_diff"]["present"])
         self.assertGreater(record["final_workspace_diff"]["size_bytes"], 0)
+
+    def test_m2_5_recovery_remaps_source_rooted_absolute_paths_to_current_checkout(self) -> None:
+        """Regression: historical absolute artifact paths hid committed local evidence."""
+        original_repo_root = m3.REPO_ROOT
+        self.addCleanup(lambda: setattr(m3, "REPO_ROOT", original_repo_root))
+        checkout = self.root / "current" / "barcarolle"
+        checkout.mkdir(parents=True)
+        m3.REPO_ROOT = checkout
+
+        rel_patch = Path("experiments/core_narrative/results/raw/run/submission.patch")
+        rel_normalized = Path("experiments/core_narrative/results/normalized/run.json")
+        rel_workspace = Path("experiments/core_narrative/workspaces/run")
+        patch_path = checkout / rel_patch
+        patch_path.parent.mkdir(parents=True)
+        patch_path.write_text("diff --git a/module.py b/module.py\n", encoding="utf-8")
+        self.write_json(
+            checkout / rel_normalized,
+            {
+                "status": "failed",
+                "verification": {"exit_code": 1, "duration_seconds": 2.5},
+                "review": {"mergeability_grade": "blocked", "wrong_module": False, "rule_violation": True},
+            },
+        )
+        self.init_workspace_with_diff_at(checkout / rel_workspace)
+
+        historical_root = self.root / "source-machine" / "barcarolle"
+        historical_patch = historical_root / rel_patch
+        historical_patch.parent.mkdir(parents=True)
+        historical_patch.write_text("diff --git a/other.py b/other.py\n", encoding="utf-8")
+        self.write_json(
+            historical_root / rel_normalized,
+            {
+                "status": "passed",
+                "verification": {"exit_code": 0, "duration_seconds": 1.0},
+                "review": {"mergeability_grade": "clean", "wrong_module": False, "rule_violation": False},
+            },
+        )
+        (historical_root / rel_workspace).mkdir(parents=True)
+        recovery = m3.recover_m2_5(
+            {
+                "schema_version": "core-narrative.m2-5-workspace-diff-v1",
+                "status": "completed",
+                "run_prefix": "m2_5_fixture",
+                "results": [
+                    {
+                        "run_id": "m2-5-historical-absolute-paths",
+                        "acut_id": "cheap-generic-swe",
+                        "task_id": "click__rwork__003",
+                        "status": "failed",
+                        "patch_path": str(historical_root / rel_patch),
+                        "workspace": str(historical_root / rel_workspace),
+                        "normalized_result": str(historical_root / rel_normalized),
+                        "candidate_patch_sha256": m3.sha256_file(patch_path),
+                        "candidate_patch_size_bytes": patch_path.stat().st_size,
+                        "failure_owner": "verifier",
+                        "failure_class": "test_failure",
+                    }
+                ],
+            }
+        )
+
+        record = recovery["records"][0]
+        self.assertEqual(record["research_outcome"], "verified_fail")
+        self.assertTrue(record["patch"]["present"])
+        self.assertEqual(record["patch"]["path"], rel_patch.as_posix())
+        self.assertTrue(record["normalized_result"]["present"])
+        self.assertEqual(record["normalized_result"]["path"], rel_normalized.as_posix())
+        self.assertTrue(record["final_workspace_diff"]["present"])
+        self.assertEqual(record["final_workspace_diff"]["path"], rel_workspace.as_posix())
+        self.assertTrue(record["verifier_or_test_evidence"]["present"])
+        self.assertEqual(record["verifier_or_test_evidence"]["exit_code"], 1)
+        self.assertTrue(record["review_evidence"]["present"])
+        self.assertEqual(record["review_evidence"]["mergeability_grade"], "blocked")
+
+    def test_score_input_set_digest_ignores_live_m2_5_recovery_artifact_state(self) -> None:
+        """Regression: live workspace recovery details made identical inputs hash differently."""
+        workspace = self.root / "digest-workspace"
+        m2_5_path = self.write_json(
+            self.root / "m2_5_digest.json",
+            {
+                "schema_version": "core-narrative.m2-5-workspace-diff-v1",
+                "status": "completed",
+                "run_prefix": "m2_5_fixture",
+                "results": [
+                    {
+                        "run_id": "m2-5-digest-stability",
+                        "acut_id": "cheap-generic-swe",
+                        "task_id": "click__rwork__003",
+                        "status": "invalid_submission",
+                        "patch_path": str(self.root / "missing.patch"),
+                        "workspace": str(workspace),
+                        "failure_owner": "candidate_patch",
+                        "failure_class": None,
+                    }
+                ],
+            },
+        )
+        args = SimpleNamespace(
+            matrix=str(self.matrix_path()),
+            scorecard_v1=str(self.scorecard_path()),
+            m2_5_summary=str(m2_5_path),
+            output=str(self.root / "out.json"),
+            m2_5_output=str(self.root / "m2_5_recovery.json"),
+            report=str(self.root / "report.md"),
+        )
+
+        missing_workspace_payload, _ = m3.build_payload(args)
+        self.init_workspace_with_diff_at(workspace)
+        present_workspace_payload, _ = m3.build_payload(args)
+
+        self.assertNotEqual(
+            missing_workspace_payload["m2_5_recovery"]["records"][0]["final_workspace_diff"],
+            present_workspace_payload["m2_5_recovery"]["records"][0]["final_workspace_diff"],
+        )
+        self.assertEqual(
+            missing_workspace_payload["score_input_set_digest"],
+            present_workspace_payload["score_input_set_digest"],
+        )
 
 
 if __name__ == "__main__":

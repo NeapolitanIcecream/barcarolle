@@ -41,7 +41,7 @@
     "unavailable_is_not_zero": true,
     "value": null
   },
-  "generated_at": "2026-05-11T04:08:37.106662Z",
+  "generated_at": "2026-05-11T04:43:18.585019Z",
   "m2_5_recovery": {
     "records": [
       {
@@ -611,7 +611,7 @@
     "mode": "research_grade_minimum_viable_evidence",
     "product_gate": false
   },
-  "score_input_set_digest": "82940d96684bca4cbc2b1a39b0e92c7b3b6d40cfd6a2d39f3ebf687cec799c50",
+  "score_input_set_digest": "3d59aca652f9412fcdee0e0f553f823ca7234536f4ae067ae6228bb4da0e1ce2",
   "score_table": [
     {
       "acut_id": "cheap-generic-swe",
