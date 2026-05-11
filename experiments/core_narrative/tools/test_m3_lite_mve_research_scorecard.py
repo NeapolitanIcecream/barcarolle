@@ -205,6 +205,46 @@ class M3LiteMVEResearchScorecardTests(unittest.TestCase):
         self.assertIn("persisted_submission_patch", record["evidence_types"])
         self.assertIn("final_workspace_git_diff", record["evidence_types"])
 
+    def test_m2_5_recovery_preserves_patch_metadata_when_artifact_path_is_absent(self) -> None:
+        """Regression: summary hash/size evidence was ignored when patch paths were non-portable."""
+        recovery = m3.recover_m2_5(
+            {
+                "schema_version": "core-narrative.m2-5-workspace-diff-v1",
+                "status": "completed",
+                "run_prefix": "m2_5_fixture",
+                "results": [
+                    {
+                        "run_id": "m2-5-missing-local-patch",
+                        "acut_id": "cheap-generic-swe",
+                        "task_id": "click__rwork__003",
+                        "status": "invalid_submission",
+                        "patch_path": str(self.root / "historical" / "submission.patch"),
+                        "workspace": str(self.root / "historical" / "workspace"),
+                        "candidate_patch_sha256": "a" * 64,
+                        "candidate_patch_size_bytes": 17,
+                        "clean_replay_status": "invalid_submission",
+                        "failure_owner": "candidate_patch",
+                        "failure_class": None,
+                    }
+                ],
+            }
+        )
+
+        self.assertEqual(recovery["summary"]["research_scoreable_count"], 1)
+        self.assertEqual(recovery["summary"]["persisted_patch_count"], 1)
+        record = recovery["records"][0]
+        self.assertEqual(record["research_outcome"], "produced_patch_unverified")
+        self.assertIn("persisted_submission_patch", record["evidence_types"])
+        self.assertEqual(
+            record["patch"],
+            {
+                "present": True,
+                "path": str(self.root / "historical" / "submission.patch"),
+                "sha256": "a" * 64,
+                "size_bytes": 17,
+            },
+        )
+
 
 if __name__ == "__main__":
     unittest.main()

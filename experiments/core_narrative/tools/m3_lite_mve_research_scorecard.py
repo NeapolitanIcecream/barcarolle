@@ -297,11 +297,14 @@ def read_normalized(path: Path | None) -> Mapping[str, Any]:
 
 def patch_evidence(path: Path | None, fallback_sha: object, fallback_size: object) -> dict[str, Any]:
     exists = path is not None and path.is_file()
-    size = path.stat().st_size if exists and path is not None else fallback_size if isinstance(fallback_size, int) else None
+    fallback_size_int = fallback_size if isinstance(fallback_size, int) else None
+    fallback_sha_str = fallback_sha if isinstance(fallback_sha, str) and fallback_sha else None
+    size = path.stat().st_size if exists and path is not None else fallback_size_int
+    sha = sha256_file(path) if exists and path is not None else fallback_sha_str
     return {
-        "present": bool(exists and size and int(size) > 0),
+        "present": bool(size is not None and int(size) > 0 and sha),
         "path": repo_relative(path),
-        "sha256": sha256_file(path) if exists and path is not None else fallback_sha if isinstance(fallback_sha, str) else None,
+        "sha256": sha,
         "size_bytes": size,
     }
 
