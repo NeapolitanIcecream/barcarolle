@@ -1,0 +1,66 @@
+schema_version: core-narrative.m3-lite-mve-protocol.v1
+experiment_id: m3-lite-minimum-viable-evidence
+prepared_on: "2026-05-11"
+scope_reset:
+  mode: research_grade_minimum_viable_evidence
+  product_gate: false
+  license_or_admission_claims_allowed: false
+  clean_room_replay_required_for_research_scoreability: false
+  rationale: >-
+    M3-lite is a research MVE. It records whether existing artifacts are usable
+    as evidence for the G/R/W story line, without converting the result into a
+    product authorization, license, or benchmark admission decision.
+matrix:
+  repository: click
+  acuts:
+    - cheap-generic-swe
+    - cheap-click-specialist
+    - frontier-click-specialist
+  rbench_tasks:
+    - click__rbench__001
+    - click__rbench__002
+    - click__rbench__003
+    - click__rbench__004
+  rwork_tasks:
+    - click__rwork__001
+    - click__rwork__002
+    - click__rwork__003
+    - click__rwork__004
+  g_score_basis:
+    status: unavailable_in_m3_lite
+    direct_run_required_for_strong_claim: true
+    unavailable_is_not_zero: true
+research_scoreability_protocol:
+  accepted_evidence_inputs:
+    - existing_normalized_result
+    - persisted_submission_patch
+    - final_workspace_git_diff
+    - verifier_or_test_result_when_present
+    - review_evidence_when_present
+  clean_room_replay:
+    required_for_research_scoreability: false
+    recorded_when_present: true
+    required_for_strong_correctness_claim: true
+  outcome_tiers:
+    - verified_pass
+    - verified_fail
+    - produced_patch_replay_invalid
+    - produced_patch_unverified
+    - no_research_scoreable_patch
+    - missing_coverage
+  score_formulas:
+    r_score_partial: verified_pass / fixed RBench denominator, with invalid and missing cells retained.
+    w_score_partial: verified_pass / fixed RWork denominator, with invalid and missing cells retained.
+    m2_5_recovery: recovered work-product evidence count, not blended into verified W_score unless verifier or review evidence supports it.
+claim_boundaries:
+  does_not_claim:
+    - G_score predictivity
+    - ranking reversal
+    - task-solving improvement
+    - capability uplift
+    - license
+    - admission
+    - authorization
+reproduction_inputs:
+  scorecard_v1: experiments/core_narrative/results/scorecard_v1_before_predictivity_20260510.json
+  m2_5_workspace_diff: experiments/core_narrative/results/m2_5_workspace_diff_summary_20260510.json
