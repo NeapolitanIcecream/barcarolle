@@ -7,6 +7,7 @@ import shutil
 import tarfile
 import tempfile
 import unittest
+import json
 from pathlib import Path
 
 import prepare_workspace as prepare_module
@@ -34,6 +35,41 @@ class PrepareWorkspaceTests(unittest.TestCase):
 
         self.assertEqual(str(raised.exception), "git archive contains an unsafe symlink")
         self.assertFalse((self.destination / "pkg" / "link").exists())
+
+    def test_acut_visible_task_package_hides_source_anchor_and_preparation_metadata(self) -> None:
+        """Regression: commit URLs can contain the hidden target commit hash."""
+        task_dir = self.root / "task"
+        task_dir.mkdir()
+        (task_dir / "statement.md").write_text("Fix the behavior.\n", encoding="utf-8")
+        target_commit = "1c20dc6e724cd5625faaa17b715ba928d44c08bf"
+        task = {
+            "task_id": "click__rwork__003",
+            "repo_slug": "click",
+            "split": "rwork",
+            "task_family": "metadata leakage regression",
+            "task_statement_path": "statement.md",
+            "source": {
+                "kind": "commit",
+                "public_url": f"https://github.com/pallets/click/commit/{target_commit}",
+                "base_commit": "6a1c0d077311f180b356965914e2de5b9e0fdb44",
+                "target_commit": target_commit,
+            },
+            "allowed_context": {
+                "include_git_history_before_base": True,
+                "include_reference_patch": False,
+            },
+        }
+
+        metadata_path, statement_path, warnings = prepare_module.write_task_package(task, task_dir / "task.yaml", self.destination)
+
+        package = json.loads(metadata_path.read_text(encoding="utf-8"))
+        self.assertEqual(warnings, [])
+        self.assertEqual(statement_path, self.destination / ".core_narrative" / "statement.md")
+        self.assertEqual(package["schema_version"], "core-narrative.task-package.v2")
+        self.assertNotIn("prepared_at", package)
+        self.assertNotIn("source", package)
+        self.assertNotIn(target_commit, metadata_path.read_text(encoding="utf-8"))
+        self.assertFalse(package["workspace_history"]["source_anchor_metadata_visible"])
 
 
 if __name__ == "__main__":

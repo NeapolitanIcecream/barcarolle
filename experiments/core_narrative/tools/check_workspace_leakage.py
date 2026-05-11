@@ -78,7 +78,7 @@ def build_fixture(root: Path) -> tuple[Path, Path, Path, str, str]:
         "split": "rbench",
         "source": {
             "kind": "commit",
-            "public_url": None,
+            "public_url": f"https://example.invalid/fixture/commit/{target_commit}",
             "anchor_id": "synthetic-target",
             "base_commit": base_commit,
             "target_commit": target_commit,
@@ -171,6 +171,14 @@ def assert_target_absent(workspace: Path, target_commit: str) -> dict[str, Any]:
             target_commit=target_commit,
             task_package=str(task_package),
         )
+    package = json.loads(package_text)
+    if "prepared_at" in package:
+        raise ToolError("workspace preparation timestamp leaked into ACUT-visible task package")
+    if "source" in package:
+        raise ToolError("source anchor metadata leaked into ACUT-visible task package")
+    workspace_history = package.get("workspace_history") if isinstance(package, dict) else {}
+    if not isinstance(workspace_history, dict) or workspace_history.get("source_anchor_metadata_visible") is not False:
+        raise ToolError("task package did not declare source anchor metadata as hidden")
 
     return {
         "ref_count": len(refs),
@@ -178,6 +186,8 @@ def assert_target_absent(workspace: Path, target_commit: str) -> dict[str, Any]:
         "target_absent_from_refs": True,
         "target_absent_from_object_database": True,
         "target_absent_from_task_package": True,
+        "source_anchor_metadata_hidden_from_task_package": True,
+        "prepared_at_hidden_from_task_package": True,
     }
 
 
@@ -196,8 +206,9 @@ def main() -> int:
         payload = {
             "tool": TOOL,
             "status": "passed",
-            "work_dir": str(root),
-            "workspace": str(workspace),
+            "temporary_work_dir_retained": bool(args.keep or not created_temp),
+            "work_dir": str(root) if args.keep or not created_temp else None,
+            "workspace": str(workspace) if args.keep or not created_temp else None,
             "base_commit": base_commit,
             "target_commit": target_commit,
             "prepare_status": prepare_payload.get("status"),

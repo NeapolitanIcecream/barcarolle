@@ -1,0 +1,19 @@
+{
+  "base_commit": "eb2b84d08d45ac8dbd62dc744b58faad35e4ab3e",
+  "leakage": {
+    "prepared_at_hidden_from_task_package": true,
+    "reachable_commit_count": 1,
+    "ref_count": 1,
+    "source_anchor_metadata_hidden_from_task_package": true,
+    "target_absent_from_object_database": true,
+    "target_absent_from_refs": true,
+    "target_absent_from_task_package": true
+  },
+  "prepare_status": "prepared",
+  "status": "passed",
+  "target_commit": "6f7003f49d191fa048093584f921f0364c2ff5bb",
+  "temporary_work_dir_retained": false,
+  "tool": "check_workspace_leakage",
+  "work_dir": null,
+  "workspace": null
+}

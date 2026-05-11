@@ -1,0 +1,316 @@
+{
+  "claim_boundaries": {
+    "does_not_claim_capability_uplift": true,
+    "does_not_claim_g_score_predictivity": true,
+    "does_not_claim_ranking_reversal": true,
+    "does_not_claim_task_solving_improvement": true,
+    "does_not_emit_admission": true,
+    "does_not_emit_authorization": true,
+    "does_not_emit_license": true
+  },
+  "generated_at": "2026-05-11T02:51:54.338354Z",
+  "recovery": {
+    "records": [
+      {
+        "acut_id": "cheap-generic-swe",
+        "clean_room_replay_required": false,
+        "clean_room_replay_status": "invalid_submission",
+        "evidence_types": [
+          "persisted_submission_patch",
+          "final_workspace_git_diff"
+        ],
+        "failure_class": null,
+        "failure_owner": "candidate_patch",
+        "final_workspace_diff": {
+          "path": "experiments/core_narrative/workspaces/m2_5_workspace_diff_live_20260510__cheap-generic-swe__click__rwork__003__attempt1",
+          "present": true,
+          "sha256": "56ad6ff8783b8a217489fdaf0e6a0accce6724e631ed26281e64cdea6d2fd1fa",
+          "size_bytes": 2132,
+          "status": "diff_collected"
+        },
+        "normalized_result": {
+          "path": "experiments/core_narrative/results/normalized/m2_5_workspace_diff_live_20260510__cheap-generic-swe__click__rwork__003__attempt1.json",
+          "present": true,
+          "status": "invalid_submission"
+        },
+        "patch": {
+          "path": "experiments/core_narrative/results/raw/m2_5_workspace_diff_live_20260510__cheap-generic-swe__click__rwork__003__attempt1/submission.patch",
+          "present": true,
+          "sha256": "56ad6ff8783b8a217489fdaf0e6a0accce6724e631ed26281e64cdea6d2fd1fa",
+          "size_bytes": 2132
+        },
+        "research_outcome": "produced_patch_replay_invalid",
+        "research_scoreable": true,
+        "review_evidence": {
+          "mergeability_grade": null,
+          "present": false,
+          "rule_violation": false,
+          "wrong_module": false
+        },
+        "run_id": "m2_5_workspace_diff_live_20260510__cheap-generic-swe__click__rwork__003__attempt1",
+        "status": "invalid_submission",
+        "task_id": "click__rwork__003",
+        "verifier_or_test_evidence": {
+          "duration_seconds": 0,
+          "exit_code": null,
+          "present": false
+        }
+      },
+      {
+        "acut_id": "cheap-click-specialist",
+        "clean_room_replay_required": false,
+        "clean_room_replay_status": "invalid_submission",
+        "evidence_types": [
+          "persisted_submission_patch",
+          "final_workspace_git_diff"
+        ],
+        "failure_class": null,
+        "failure_owner": "candidate_patch",
+        "final_workspace_diff": {
+          "path": "experiments/core_narrative/workspaces/m2_5_workspace_diff_live_20260510__cheap-click-specialist__click__rwork__003__attempt1",
+          "present": true,
+          "sha256": "fdc006a57a5228f359ab09dd18e4c72dd6dea478a2d2476dd7faa7f1b7dd81ec",
+          "size_bytes": 1911,
+          "status": "diff_collected"
+        },
+        "normalized_result": {
+          "path": "experiments/core_narrative/results/normalized/m2_5_workspace_diff_live_20260510__cheap-click-specialist__click__rwork__003__attempt1.json",
+          "present": true,
+          "status": "invalid_submission"
+        },
+        "patch": {
+          "path": "experiments/core_narrative/results/raw/m2_5_workspace_diff_live_20260510__cheap-click-specialist__click__rwork__003__attempt1/submission.patch",
+          "present": true,
+          "sha256": "fdc006a57a5228f359ab09dd18e4c72dd6dea478a2d2476dd7faa7f1b7dd81ec",
+          "size_bytes": 1911
+        },
+        "research_outcome": "produced_patch_replay_invalid",
+        "research_scoreable": true,
+        "review_evidence": {
+          "mergeability_grade": null,
+          "present": false,
+          "rule_violation": false,
+          "wrong_module": false
+        },
+        "run_id": "m2_5_workspace_diff_live_20260510__cheap-click-specialist__click__rwork__003__attempt1",
+        "status": "invalid_submission",
+        "task_id": "click__rwork__003",
+        "verifier_or_test_evidence": {
+          "duration_seconds": 0,
+          "exit_code": null,
+          "present": false
+        }
+      },
+      {
+        "acut_id": "cheap-generic-swe",
+        "clean_room_replay_required": false,
+        "clean_room_replay_status": "invalid_submission",
+        "evidence_types": [
+          "persisted_submission_patch",
+          "final_workspace_git_diff"
+        ],
+        "failure_class": null,
+        "failure_owner": "candidate_patch",
+        "final_workspace_diff": {
+          "path": "experiments/core_narrative/workspaces/m2_5_workspace_diff_live_20260510__cheap-generic-swe__click__rwork__004__attempt1",
+          "present": true,
+          "sha256": "7d7186fa1c926d88328347a8188dbf17481c8a3ea3e4759e3c0fc173a96d200c",
+          "size_bytes": 3245,
+          "status": "diff_collected"
+        },
+        "normalized_result": {
+          "path": "experiments/core_narrative/results/normalized/m2_5_workspace_diff_live_20260510__cheap-generic-swe__click__rwork__004__attempt1.json",
+          "present": true,
+          "status": "invalid_submission"
+        },
+        "patch": {
+          "path": "experiments/core_narrative/results/raw/m2_5_workspace_diff_live_20260510__cheap-generic-swe__click__rwork__004__attempt1/submission.patch",
+          "present": true,
+          "sha256": "7d7186fa1c926d88328347a8188dbf17481c8a3ea3e4759e3c0fc173a96d200c",
+          "size_bytes": 3245
+        },
+        "research_outcome": "produced_patch_replay_invalid",
+        "research_scoreable": true,
+        "review_evidence": {
+          "mergeability_grade": null,
+          "present": false,
+          "rule_violation": false,
+          "wrong_module": false
+        },
+        "run_id": "m2_5_workspace_diff_live_20260510__cheap-generic-swe__click__rwork__004__attempt1",
+        "status": "invalid_submission",
+        "task_id": "click__rwork__004",
+        "verifier_or_test_evidence": {
+          "duration_seconds": 0,
+          "exit_code": null,
+          "present": false
+        }
+      },
+      {
+        "acut_id": "cheap-click-specialist",
+        "clean_room_replay_required": false,
+        "clean_room_replay_status": "invalid_submission",
+        "evidence_types": [
+          "persisted_submission_patch",
+          "final_workspace_git_diff"
+        ],
+        "failure_class": null,
+        "failure_owner": "candidate_patch",
+        "final_workspace_diff": {
+          "path": "experiments/core_narrative/workspaces/m2_5_workspace_diff_live_20260510__cheap-click-specialist__click__rwork__004__attempt1",
+          "present": true,
+          "sha256": "fb52fa802eb7bfaf343b7c1317bd92ccc419a1a1a1a9926e4dfb31301cc065c2",
+          "size_bytes": 2268,
+          "status": "diff_collected"
+        },
+        "normalized_result": {
+          "path": "experiments/core_narrative/results/normalized/m2_5_workspace_diff_live_20260510__cheap-click-specialist__click__rwork__004__attempt1.json",
+          "present": true,
+          "status": "invalid_submission"
+        },
+        "patch": {
+          "path": "experiments/core_narrative/results/raw/m2_5_workspace_diff_live_20260510__cheap-click-specialist__click__rwork__004__attempt1/submission.patch",
+          "present": true,
+          "sha256": "fb52fa802eb7bfaf343b7c1317bd92ccc419a1a1a1a9926e4dfb31301cc065c2",
+          "size_bytes": 2268
+        },
+        "research_outcome": "produced_patch_replay_invalid",
+        "research_scoreable": true,
+        "review_evidence": {
+          "mergeability_grade": null,
+          "present": false,
+          "rule_violation": false,
+          "wrong_module": false
+        },
+        "run_id": "m2_5_workspace_diff_live_20260510__cheap-click-specialist__click__rwork__004__attempt1",
+        "status": "invalid_submission",
+        "task_id": "click__rwork__004",
+        "verifier_or_test_evidence": {
+          "duration_seconds": 0,
+          "exit_code": null,
+          "present": false
+        }
+      },
+      {
+        "acut_id": "cheap-generic-swe",
+        "clean_room_replay_required": false,
+        "clean_room_replay_status": "not_attempted",
+        "evidence_types": [],
+        "failure_class": "unsafe_patch_content",
+        "failure_owner": "model_output",
+        "final_workspace_diff": {
+          "path": "experiments/core_narrative/workspaces/m2_5_workspace_diff_live_20260510__cheap-generic-swe__click__rwork__006__attempt1",
+          "present": false,
+          "sha256": null,
+          "size_bytes": 0,
+          "status": "diff_collected"
+        },
+        "normalized_result": {
+          "path": "experiments/core_narrative/results/normalized/m2_5_workspace_diff_live_20260510__cheap-generic-swe__click__rwork__006__attempt1.json",
+          "present": true,
+          "status": "invalid_submission"
+        },
+        "patch": {
+          "path": "experiments/core_narrative/results/raw/m2_5_workspace_diff_live_20260510__cheap-generic-swe__click__rwork__006__attempt1/submission.patch",
+          "present": false,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "size_bytes": 0
+        },
+        "research_outcome": "no_research_scoreable_patch",
+        "research_scoreable": false,
+        "review_evidence": {
+          "mergeability_grade": null,
+          "present": false,
+          "rule_violation": false,
+          "wrong_module": false
+        },
+        "run_id": "m2_5_workspace_diff_live_20260510__cheap-generic-swe__click__rwork__006__attempt1",
+        "status": "invalid_submission",
+        "task_id": "click__rwork__006",
+        "verifier_or_test_evidence": {
+          "duration_seconds": 0,
+          "exit_code": null,
+          "present": false
+        }
+      },
+      {
+        "acut_id": "cheap-click-specialist",
+        "clean_room_replay_required": false,
+        "clean_room_replay_status": "not_attempted",
+        "evidence_types": [],
+        "failure_class": "no_workspace_patch",
+        "failure_owner": "model_output",
+        "final_workspace_diff": {
+          "path": "experiments/core_narrative/workspaces/m2_5_workspace_diff_live_20260510__cheap-click-specialist__click__rwork__006__attempt1",
+          "present": false,
+          "sha256": null,
+          "size_bytes": 0,
+          "status": "diff_collected"
+        },
+        "normalized_result": {
+          "path": "experiments/core_narrative/results/normalized/m2_5_workspace_diff_live_20260510__cheap-click-specialist__click__rwork__006__attempt1.json",
+          "present": true,
+          "status": "invalid_submission"
+        },
+        "patch": {
+          "path": "experiments/core_narrative/results/raw/m2_5_workspace_diff_live_20260510__cheap-click-specialist__click__rwork__006__attempt1/submission.patch",
+          "present": false,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "size_bytes": 0
+        },
+        "research_outcome": "no_research_scoreable_patch",
+        "research_scoreable": false,
+        "review_evidence": {
+          "mergeability_grade": null,
+          "present": false,
+          "rule_violation": false,
+          "wrong_module": false
+        },
+        "run_id": "m2_5_workspace_diff_live_20260510__cheap-click-specialist__click__rwork__006__attempt1",
+        "status": "invalid_submission",
+        "task_id": "click__rwork__006",
+        "verifier_or_test_evidence": {
+          "duration_seconds": 0,
+          "exit_code": null,
+          "present": false
+        }
+      }
+    ],
+    "source_run_prefix": "m2_5_workspace_diff_live_20260510",
+    "source_schema_version": "core-narrative.m2-5-workspace-diff-v1",
+    "status": "completed",
+    "summary": {
+      "final_workspace_diff_count": 4,
+      "outcome_counts": {
+        "no_research_scoreable_patch": 2,
+        "produced_patch_replay_invalid": 4
+      },
+      "persisted_patch_count": 4,
+      "research_scoreable_count": 4,
+      "review_evidence_count": 0,
+      "total": 6,
+      "verifier_or_test_evidence_count": 0
+    }
+  },
+  "schema_version": "core-narrative.m3-lite-m2-5-recovery.v1",
+  "scope": {
+    "clean_room_replay_required_for_research_scoreability": false,
+    "license_or_admission_claims_allowed": false,
+    "mode": "research_grade_minimum_viable_evidence",
+    "product_gate": false
+  },
+  "source_input": {
+    "byte_count": 186239,
+    "generated_at": "2026-05-10T10:34:36.747774Z",
+    "input_key": "m2_5_workspace_diff",
+    "path": "experiments/core_narrative/results/m2_5_workspace_diff_summary_20260510.json",
+    "payload_status": "completed",
+    "present": true,
+    "schema_version": "core-narrative.m2-5-workspace-diff-v1",
+    "sha256": "af27caa7c67b354012fca4bef880caf79d2b15cab84b16c167776aaab9af4a17",
+    "status": "loaded",
+    "tool": "m2_5_workspace_diff_runner"
+  },
+  "status": "completed",
+  "tool": "m3_lite_mve_research_scorecard"
+}
