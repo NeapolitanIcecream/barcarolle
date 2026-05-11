@@ -143,24 +143,17 @@ def write_task_package(task: dict[str, object], task_path: Path, workspace: Path
     package_dir = workspace / ".core_narrative"
     package_dir.mkdir(parents=True, exist_ok=True)
 
-    source = require_mapping(task.get("source"), "task.source")
-    safe_source = {
-        "kind": source.get("kind"),
-        "public_url": source.get("public_url"),
-        "base_commit": source.get("base_commit"),
-    }
     safe_task = {
-        "schema_version": "core-narrative.task-package.v1",
-        "prepared_at": iso_now(),
+        "schema_version": "core-narrative.task-package.v2",
         "task_id": task.get("task_id"),
         "repo_slug": task.get("repo_slug"),
         "split": task.get("split"),
         "task_family": task.get("task_family"),
-        "source": safe_source,
         "allowed_context": task.get("allowed_context", {}),
         "workspace_history": {
             "mode": "base_tree_only_synthetic_git",
             "future_history_available": False,
+            "source_anchor_metadata_visible": False,
         },
     }
 
