@@ -436,12 +436,13 @@ def score_table(acuts: Sequence[str], r_summary: Mapping[str, Any], w_summary: M
 def story_impact(payload: Mapping[str, Any]) -> dict[str, Any]:
     g_score = payload.get("g_score") if isinstance(payload.get("g_score"), Mapping) else {}
     w_score = payload.get("w_score_partial") if isinstance(payload.get("w_score_partial"), Mapping) else {}
+    w_summary = w_score.get("summary") if isinstance(w_score.get("summary"), Mapping) else {}
     m2_5 = payload.get("m2_5_recovery") if isinstance(payload.get("m2_5_recovery"), Mapping) else {}
     m2_5_summary = m2_5.get("summary") if isinstance(m2_5.get("summary"), Mapping) else {}
     blockers = []
     if g_score.get("available") is not True:
         blockers.append("g_score_unavailable")
-    if int(w_score.get("verified_outcome_count") or 0) < 2:
+    if int(w_summary.get("verified_outcome_count") or 0) < 2:
         blockers.append("weak_w_verified_coverage")
     if int(m2_5_summary.get("research_scoreable_count") or 0) == 0:
         blockers.append("m2_5_no_recovered_work_product")

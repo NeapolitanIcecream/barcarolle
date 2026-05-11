@@ -179,6 +179,18 @@ class M3LiteMVEResearchScorecardTests(unittest.TestCase):
         self.assertEqual(payload["story_impact"]["nfl_claim_status"], "not_established")
         self.assertEqual(recovery_artifact["schema_version"], "core-narrative.m3-lite-m2-5-recovery.v1")
 
+    def test_story_impact_does_not_mark_w_coverage_weak_when_summary_is_verified(self) -> None:
+        """Regression: W coverage was read from the wrong nesting and always blocked."""
+        story = m3.story_impact(
+            {
+                "g_score": {"available": False},
+                "w_score_partial": {"summary": {"verified_outcome_count": 4}},
+                "m2_5_recovery": {"summary": {"research_scoreable_count": 1}},
+            }
+        )
+
+        self.assertEqual(story["weakens_or_blocks"], ["g_score_unavailable"])
+
     def test_m2_5_recovery_accepts_patch_and_final_workspace_diff_without_clean_replay(self) -> None:
         """Research-scoreability can use final work-product evidence when replay is invalid."""
         payload, _ = m3.build_payload(self.build_args())
