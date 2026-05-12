@@ -166,6 +166,46 @@ class CodexNflWorkspaceRunnerTests(unittest.TestCase):
         self.assertIn(str(runner.CODEX_CLI_PATCH_COMMAND), command[separator + 1 :])
         self.assertIn("--dry-run", command)
 
+    def test_run_click_cell_fallback_preserves_workspace_runner_timeout(self) -> None:
+        """Regression: timed out wrapper runs remain timeout cells when no payload is emitted."""
+        args = SimpleNamespace(
+            run_prefix="unit",
+            attempt=1,
+            bundle_root=str(self.root / "bundle"),
+            workspace_root=str(self.root / "workspaces"),
+            acut_timeout_seconds=1,
+            verifier_timeout_seconds=1,
+            install_workspaces=False,
+            mode="dry-run",
+            force=True,
+        )
+        summary = {
+            "command": ["workspace_mode_runner.py"],
+            "cwd": str(self.root),
+            "exit_code": None,
+            "timed_out": True,
+            "command_error": None,
+            "started_at": "start",
+            "finished_at": "finish",
+            "duration_seconds": 3.0,
+            "stdout_artifact": str(self.root / "stdout.txt"),
+            "stderr_artifact": str(self.root / "stderr.txt"),
+        }
+
+        with mock.patch.object(runner, "workspace_mode_command", return_value=["workspace_mode_runner.py"]):
+            with mock.patch.object(runner, "command_summary", return_value=summary):
+                normalized = runner.run_click_cell(
+                    axis="rwork",
+                    task_id="click__rwork__001",
+                    acut_id="cheap-generic-swe",
+                    args=args,
+                    config_path=self.root / "config.yaml",
+                )
+
+        self.assertEqual(normalized["status"], "timeout")
+        self.assertEqual(normalized["timeout_owner"], "verifier")
+        self.assertEqual(normalized["metadata"]["status_semantics"]["score_action"], "rerun_or_global_exclusion_required")
+
 
 if __name__ == "__main__":
     unittest.main()

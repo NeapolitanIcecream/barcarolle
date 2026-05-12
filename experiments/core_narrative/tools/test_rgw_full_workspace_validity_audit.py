@@ -100,8 +100,8 @@ class RgwFullWorkspaceValidityAuditTests(unittest.TestCase):
             {"split": "rwork", "status": "unsafe_or_scope_violation"},
         ]
         usv_cells = [
-            {"audit_disposition": "policy_hold_source_derived_url"},
-            {"audit_disposition": "true_unsafe_primary_result"},
+            {"split": "rwork", "audit_disposition": "policy_hold_source_derived_url"},
+            {"split": "rwork", "audit_disposition": "true_unsafe_primary_result"},
         ]
 
         overlay = audit.w_metrics(records, usv_cells)
@@ -110,6 +110,42 @@ class RgwFullWorkspaceValidityAuditTests(unittest.TestCase):
         self.assertEqual(overlay["metrics"]["measured_verified_pass_rate"], 2 / 3)
         self.assertEqual(overlay["metrics"]["policy_hold_count"], 1)
         self.assertEqual(overlay["metrics"]["true_unsafe_count"], 1)
+
+    def test_w_metrics_ignore_rbench_usv_cells_for_w_overlay(self) -> None:
+        """Regression: RBench policy holds must not shrink the W measured denominator."""
+        records = [
+            {"split": "rwork", "status": "verified_pass"},
+            {"split": "rwork", "status": "verified_fail"},
+            {"split": "rbench", "status": "unsafe_or_scope_violation"},
+        ]
+        usv_cells = [
+            {"split": "rbench", "audit_disposition": "policy_hold_source_derived_url"},
+            {"split": "rbench", "audit_disposition": "true_unsafe_primary_result"},
+        ]
+
+        overlay = audit.w_metrics(records, usv_cells)
+
+        self.assertEqual(overlay["denominators"]["measured_denominator"], 2)
+        self.assertEqual(overlay["metrics"]["measured_verified_pass_rate"], 0.5)
+        self.assertEqual(overlay["metrics"]["policy_hold_count"], 0)
+        self.assertEqual(overlay["metrics"]["true_unsafe_count"], 0)
+
+    def test_write_report_renders_empty_w_rates_without_crashing(self) -> None:
+        """Regression: empty RWork inputs render nullable W rates instead of raising."""
+        report = self.root / "report.md"
+        overlay = audit.w_metrics([], [])
+
+        audit.write_report(
+            report_path=report,
+            usv_cells=[],
+            reference_smokes=[],
+            replays=[],
+            overlay=overlay,
+        )
+
+        text = report.read_text(encoding="utf-8")
+        self.assertIn("fixed_denominator_verified_pass_rate: null", text)
+        self.assertIn("measured_verified_pass_rate: null", text)
 
     def test_public_artifact_scan_rejects_urls_and_local_user_paths(self) -> None:
         """Committed audit artifacts must not contain raw URLs or local user paths."""

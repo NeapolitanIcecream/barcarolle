@@ -639,14 +639,15 @@ def run_click_cell(
     write_json(artifact_dir / "workspace_runner_command.json", summary)
     payload = load_json(artifact_dir / "workspace_mode_output.json") or load_json(artifact_dir / "workspace_mode_result.json")
     if payload is None:
+        timed_out = bool(summary["timed_out"] or summary["exit_code"] == 124)
         payload = {
             "run_id": run_id,
             "acut_id": acut_id,
             "task_id": task_id,
             "split": axis,
             "attempt": args.attempt,
-            "status": "verifier_infra_error" if summary["exit_code"] != 124 else "timeout",
-            "metadata": {"timeout_owner": "verifier" if summary["timed_out"] else None},
+            "status": "timeout" if timed_out else "verifier_infra_error",
+            "metadata": {"timeout_owner": "verifier" if timed_out else None},
             "candidate_patch": {},
             "verification": {"attempted": False},
             "started_at": summary["started_at"],

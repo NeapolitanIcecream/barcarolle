@@ -599,9 +599,14 @@ def run_policy_hold_replay(
 
 def w_metrics(records: Sequence[Mapping[str, Any]], usv_cells: Sequence[Mapping[str, Any]]) -> dict[str, Any]:
     rwork = [record for record in records if record.get("split") == "rwork"]
+    rwork_usv_cells = [cell for cell in usv_cells if cell.get("split") == "rwork"]
     verified_passes = sum(1 for record in rwork if record.get("status") == "verified_pass")
-    policy_hold_count = sum(1 for cell in usv_cells if cell.get("audit_disposition") == "policy_hold_source_derived_url")
-    true_unsafe_count = sum(1 for cell in usv_cells if cell.get("audit_disposition") == "true_unsafe_primary_result")
+    policy_hold_count = sum(
+        1 for cell in rwork_usv_cells if cell.get("audit_disposition") == "policy_hold_source_derived_url"
+    )
+    true_unsafe_count = sum(
+        1 for cell in rwork_usv_cells if cell.get("audit_disposition") == "true_unsafe_primary_result"
+    )
     fixed_denominator = len(rwork)
     measured_denominator = max(0, fixed_denominator - policy_hold_count)
     return {
@@ -618,6 +623,10 @@ def w_metrics(records: Sequence[Mapping[str, Any]], usv_cells: Sequence[Mapping[
             "policy_holds_excluded_from_measured_denominator": policy_hold_count,
         },
     }
+
+
+def format_optional_rate(value: float | None) -> str:
+    return "null" if value is None else f"{value:.6f}"
 
 
 def scan_public_artifacts(paths: Sequence[Path]) -> dict[str, Any]:
@@ -698,8 +707,8 @@ def write_report(
             "## W Metrics",
             "",
             "```yaml",
-            f"fixed_denominator_verified_pass_rate: {metrics['fixed_denominator_verified_pass_rate']:.6f}",
-            f"measured_verified_pass_rate: {metrics['measured_verified_pass_rate']:.6f}",
+            f"fixed_denominator_verified_pass_rate: {format_optional_rate(metrics['fixed_denominator_verified_pass_rate'])}",
+            f"measured_verified_pass_rate: {format_optional_rate(metrics['measured_verified_pass_rate'])}",
             f"policy_hold_count: {metrics['policy_hold_count']}",
             f"true_unsafe_count: {metrics['true_unsafe_count']}",
             "```",
