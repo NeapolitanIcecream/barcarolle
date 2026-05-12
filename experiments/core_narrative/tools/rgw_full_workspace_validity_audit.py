@@ -523,10 +523,33 @@ def usv_primary_cell_key(record: Mapping[str, Any]) -> tuple[str, str, str] | No
     return str(split), str(task_id), str(acut_id)
 
 
+def is_dry_run_record(record: Mapping[str, Any]) -> bool:
+    run_id = record.get("run_id")
+    if isinstance(run_id, str) and "__dry-run__" in run_id:
+        return True
+    command_lines = record.get("command_lines") if isinstance(record.get("command_lines"), Mapping) else {}
+    workspace_runner = command_lines.get("workspace_runner") if isinstance(command_lines, Mapping) else None
+    return isinstance(workspace_runner, list) and "--dry-run" in {str(part) for part in workspace_runner}
+
+
+def has_explicit_non_live_model_call(record: Mapping[str, Any]) -> bool:
+    metadata = record.get("metadata") if isinstance(record.get("metadata"), Mapping) else {}
+    if metadata.get("model_call_made") is False:
+        return True
+    cost_metadata = record.get("cost_metadata") if isinstance(record.get("cost_metadata"), Mapping) else {}
+    return cost_metadata.get("model_call_made") is False
+
+
+def is_non_live_primary_record(record: Mapping[str, Any]) -> bool:
+    return is_dry_run_record(record) or has_explicit_non_live_model_call(record)
+
+
 def canonical_usv_input_records(records: Sequence[Mapping[str, Any]]) -> list[Mapping[str, Any]]:
     unkeyed: list[Mapping[str, Any]] = []
     keyed: dict[tuple[str, str, str], tuple[tuple[str, int, str, int], Mapping[str, Any]]] = {}
     for sequence, record in enumerate(records):
+        if is_non_live_primary_record(record):
+            continue
         key = usv_primary_cell_key(record)
         if key is None:
             unkeyed.append(record)
@@ -852,6 +875,8 @@ def canonical_rwork_records(records: Sequence[Mapping[str, Any]]) -> list[Mappin
     keyed: dict[tuple[str, str], tuple[tuple[str, int, str, int], Mapping[str, Any]]] = {}
     for sequence, record in enumerate(records):
         if record.get("split") != "rwork":
+            continue
+        if is_non_live_primary_record(record):
             continue
         key = primary_cell_key(record)
         if key is None:

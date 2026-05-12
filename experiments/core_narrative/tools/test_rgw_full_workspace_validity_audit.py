@@ -236,6 +236,89 @@ class RgwFullWorkspaceValidityAuditTests(unittest.TestCase):
 
         self.assertEqual(cells, [])
 
+    def test_usv_audit_ignores_newer_dry_run_records_when_selecting_primary_cell(self) -> None:
+        """Regression: dry-run records must not replace live primary evidence."""
+        artifact_dir = self.root / "raw/live-usv"
+        self.write_json(
+            "raw/live-usv/workspace_mode_result.json",
+            {
+                "status": "unsafe_or_scope_violation",
+                "candidate_patch": {
+                    "unsafe_content_attribution": {
+                        "all_full_urls_source_derived": True,
+                        "all_unsafe_reasons_source_derived": True,
+                        "full_url_count": 1,
+                        "source_derived_full_url_count": 1,
+                        "model_generated_full_url_count": 0,
+                        "ambiguous_full_url_count": 0,
+                        "non_url_reason_counts": {},
+                    }
+                },
+            },
+        )
+        records = [
+            {
+                "split": "rwork",
+                "task_id": "click__rwork__004",
+                "acut_id": "cheap-click-specialist",
+                "run_id": "live-usv",
+                "status": "unsafe_or_scope_violation",
+                "finished_at": "2026-05-12T10:00:00Z",
+                "attempt": 1,
+                "metadata": {"model_call_made": True},
+                "artifact_paths": {"artifact_dir": str(artifact_dir)},
+            },
+            {
+                "split": "rwork",
+                "task_id": "click__rwork__004",
+                "acut_id": "cheap-click-specialist",
+                "run_id": "unit__dry-run__rwork__cheap-click-specialist__click__rwork__004__attempt1",
+                "status": "verified_pass",
+                "finished_at": "2026-05-12T11:00:00Z",
+                "attempt": 1,
+                "metadata": {"model_call_made": False},
+                "command_lines": {"workspace_runner": ["workspace_mode_runner.py", "--dry-run"]},
+            },
+        ]
+
+        cells = audit.build_usv_audit(records, self.root)
+
+        self.assertEqual(len(cells), 1)
+        self.assertEqual(cells[0]["run_id"], "live-usv")
+        self.assertEqual(cells[0]["audit_disposition"], "policy_hold_source_derived_url")
+
+    def test_w_metrics_ignore_newer_dry_run_records_when_live_evidence_exists(self) -> None:
+        """Regression: W rates are computed from live primary evidence, not dry runs."""
+        records = [
+            {
+                "split": "rwork",
+                "task_id": "click__rwork__004",
+                "acut_id": "cheap-click-specialist",
+                "run_id": "live-fail",
+                "status": "verified_fail",
+                "finished_at": "2026-05-12T10:00:00Z",
+                "attempt": 1,
+                "metadata": {"model_call_made": True},
+            },
+            {
+                "split": "rwork",
+                "task_id": "click__rwork__004",
+                "acut_id": "cheap-click-specialist",
+                "run_id": "unit__dry-run__rwork__cheap-click-specialist__click__rwork__004__attempt1",
+                "status": "verified_pass",
+                "finished_at": "2026-05-12T11:00:00Z",
+                "attempt": 1,
+                "metadata": {"model_call_made": False},
+                "command_lines": {"workspace_runner": ["workspace_mode_runner.py", "--dry-run"]},
+            },
+        ]
+
+        overlay = audit.w_metrics(records, [])
+
+        self.assertEqual(overlay["denominators"]["fixed_denominator"], 1)
+        self.assertEqual(overlay["denominators"]["verified_pass_count"], 0)
+        self.assertEqual(overlay["metrics"]["fixed_denominator_verified_pass_rate"], 0.0)
+
     def test_policy_hold_replay_extracts_patch_from_cross_root_artifact_dir(self) -> None:
         """Regression: replay extraction must use the artifact dir resolved during USV audit."""
         primary_root = self.root / "current-results"
