@@ -1,0 +1,70 @@
+{
+  "r_rank_order": [
+    {
+      "acut_id": "frontier-click-specialist",
+      "rank": 1,
+      "score_percent": 62.5
+    },
+    {
+      "acut_id": "frontier-generic-swe",
+      "rank": 2,
+      "score_percent": 62.5
+    },
+    {
+      "acut_id": "cheap-click-specialist",
+      "rank": 3,
+      "score_percent": 37.5
+    },
+    {
+      "acut_id": "cheap-generic-swe",
+      "rank": 4,
+      "score_percent": 25.0
+    }
+  ],
+  "rank_deltas": [
+    {
+      "acut_id": "cheap-click-specialist",
+      "r_rank": 3,
+      "w_rank": 1
+    },
+    {
+      "acut_id": "cheap-generic-swe",
+      "r_rank": 4,
+      "w_rank": 2
+    },
+    {
+      "acut_id": "frontier-click-specialist",
+      "r_rank": 1,
+      "w_rank": 3
+    },
+    {
+      "acut_id": "frontier-generic-swe",
+      "r_rank": 2,
+      "w_rank": 4
+    }
+  ],
+  "statement": "Ranking reversal observed.",
+  "status": "reversal_observed",
+  "w_rank_order": [
+    {
+      "acut_id": "cheap-click-specialist",
+      "rank": 1,
+      "score_percent": 33.333333333333336
+    },
+    {
+      "acut_id": "cheap-generic-swe",
+      "rank": 2,
+      "score_percent": 33.333333333333336
+    },
+    {
+      "acut_id": "frontier-click-specialist",
+      "rank": 3,
+      "score_percent": 33.333333333333336
+    },
+    {
+      "acut_id": "frontier-generic-swe",
+      "rank": 4,
+      "score_percent": 33.333333333333336
+    }
+  ]
+}

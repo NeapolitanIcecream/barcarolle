@@ -1,0 +1,16 @@
+{
+  "bundle_root": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/rgw_full_workspace_v1",
+  "config": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/configs/rgw_full_workspace_v1.yaml",
+  "g6_smoke_status": null,
+  "generated_at": "2026-05-12T02:15:34.039108Z",
+  "mode": "live",
+  "phase": "sentinels",
+  "reproduction_command": "PYTHONPATH=experiments/core_narrative/tools python3 experiments/core_narrative/tools/codex_nfl_workspace_runner.py --config /Users/chenmohan/gits/barcarolle/experiments/core_narrative/configs/rgw_full_workspace_v1.yaml --bundle-root /Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/rgw_full_workspace_v1 --run-prefix rgw_full_workspace_v1_20260512 --phase sentinels --mode live --attempt 1 --force",
+  "results_written": 4,
+  "runner_id": "rgw-full-workspace-v1",
+  "schema_version": "core-narrative.rgw-full-workspace-summary.v1",
+  "status": "completed",
+  "summary": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/rgw_full_workspace_v1/summary.json",
+  "summary_status": "primary_incomplete_or_infra_blocked",
+  "tool": "codex_nfl_workspace_runner"
+}

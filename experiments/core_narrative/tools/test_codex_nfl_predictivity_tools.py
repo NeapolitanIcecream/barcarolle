@@ -112,6 +112,87 @@ class CodexNflPredictivityToolsTests(unittest.TestCase):
         self.assertEqual(cell["canonical_latest"]["run_id"], "live-expected-identity")
         self.assertEqual(payload["by_acut"]["cheap-generic-swe"]["score_percent_fixed_denominator"], 0.0)
 
+    def test_canonical_matrix_scores_workspace_mode_verified_pass_only(self) -> None:
+        """RGW workspace-mode statuses use verified_pass as the primary pass status."""
+        with tempfile.TemporaryDirectory() as temp_dir:
+            root = Path(temp_dir)
+            passed = {
+                "tool": "codex_nfl_workspace_runner",
+                "runner_id": "rgw-full-workspace-v1",
+                "run_id": "workspace-pass",
+                "acut_id": "cheap-generic-swe",
+                "task_id": "click__rbench__001",
+                "split": "rbench",
+                "axis": "rbench",
+                "attempt": 1,
+                "status": "verified_pass",
+                "primary_pass": True,
+                "score_action": "fixed_denominator_one",
+                "score_value": 1,
+                "requires_rerun_or_exclusion": False,
+                "triage_paused": False,
+                "metadata": {"model_call_made": True},
+            }
+            failed = {
+                **passed,
+                "run_id": "workspace-fail",
+                "task_id": "click__rbench__002",
+                "status": "verified_fail",
+                "primary_pass": False,
+                "score_action": "fixed_denominator_zero",
+                "score_value": 0,
+            }
+            (root / "passed.json").write_text(json.dumps(passed), encoding="utf-8")
+            (root / "failed.json").write_text(json.dumps(failed), encoding="utf-8")
+
+            with mock.patch.object(matrix, "CORE_ACUTS", ["cheap-generic-swe"]):
+                payload = matrix.build_matrix("rbench", ["click__rbench__001", "click__rbench__002"], root)
+
+        self.assertEqual(payload["by_acut"]["cheap-generic-swe"]["passed"], 1)
+        self.assertEqual(payload["by_acut"]["cheap-generic-swe"]["score_percent_fixed_denominator"], 50.0)
+        self.assertEqual(payload["status_counts_canonical"], {"verified_fail": 1, "verified_pass": 1})
+
+    def test_canonical_matrix_excludes_workspace_mode_without_model_call(self) -> None:
+        """Dry-run RGW workspace artifacts cannot become canonical live evidence."""
+        with tempfile.TemporaryDirectory() as temp_dir:
+            root = Path(temp_dir)
+            live = {
+                "tool": "codex_nfl_workspace_runner",
+                "runner_id": "rgw-full-workspace-v1",
+                "run_id": "workspace-live",
+                "acut_id": "cheap-generic-swe",
+                "task_id": "click__rbench__001",
+                "split": "rbench",
+                "axis": "rbench",
+                "attempt": 1,
+                "status": "verified_pass",
+                "primary_pass": True,
+                "score_action": "fixed_denominator_one",
+                "score_value": 1,
+                "requires_rerun_or_exclusion": False,
+                "triage_paused": False,
+                "metadata": {"model_call_made": True},
+            }
+            dry_run = {
+                **live,
+                "run_id": "workspace-dry-run",
+                "attempt": 2,
+                "status": "verified_fail",
+                "primary_pass": False,
+                "score_action": "fixed_denominator_zero",
+                "score_value": 0,
+                "metadata": {"model_call_made": False, "direct_runner_status": "dry_run_completed"},
+            }
+            (root / "live.json").write_text(json.dumps(live), encoding="utf-8")
+            (root / "dry-run.json").write_text(json.dumps(dry_run), encoding="utf-8")
+
+            with mock.patch.object(matrix, "CORE_ACUTS", ["cheap-generic-swe"]):
+                payload = matrix.build_matrix("rbench", ["click__rbench__001"], root)
+
+        cell = payload["cells"]["cheap-generic-swe::click__rbench__001"]
+        self.assertEqual(cell["canonical_latest"]["run_id"], "workspace-live")
+        self.assertEqual(payload["read_diagnostics"]["ignored_candidate_files"], 1)
+
     def test_canonical_matrix_rejects_manifest_override_with_mismatched_split(self) -> None:
         """Regression: matrix builds must fail fast when an override manifest uses the wrong split."""
         with tempfile.TemporaryDirectory() as temp_dir:
