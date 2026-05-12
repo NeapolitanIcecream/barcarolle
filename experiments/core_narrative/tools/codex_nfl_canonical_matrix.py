@@ -125,7 +125,9 @@ def read_json(path: Path) -> dict[str, Any] | None:
 def is_live_batch_candidate(payload: Mapping[str, Any]) -> bool:
     metadata = payload.get("metadata") if isinstance(payload.get("metadata"), dict) else {}
     if payload.get("runner_id") == "rgw-full-workspace-v1" and payload.get("tool") == "codex_nfl_workspace_runner":
-        return True
+        if metadata.get("direct_runner_status") == "dry_run_completed":
+            return False
+        return metadata.get("model_call_made") is True
     if metadata.get("runner_id") != batch.RUNNER_ID or metadata.get("batch_tool") != batch.TOOL:
         return False
     if metadata.get("direct_runner_status") == "dry_run_completed":

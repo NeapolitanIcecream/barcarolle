@@ -235,8 +235,8 @@ def bundle_paths(bundle_root: Path, run_id: str | None = None) -> dict[str, Path
     return paths
 
 
-def run_id_for(prefix: str, axis: str, task_id: str, acut_id: str, attempt: int) -> str:
-    return f"{prefix}__{axis}__{acut_id}__{slug(task_id)}__attempt{attempt}"
+def run_id_for(prefix: str, axis: str, task_id: str, acut_id: str, attempt: int, mode: str) -> str:
+    return f"{prefix}__{slug(mode)}__{axis}__{acut_id}__{slug(task_id)}__attempt{attempt}"
 
 
 def python_version(executable: str) -> tuple[int, int] | None:
@@ -600,7 +600,7 @@ def run_click_cell(
     args: argparse.Namespace,
     config_path: Path,
 ) -> dict[str, Any]:
-    run_id = run_id_for(args.run_prefix, axis, task_id, acut_id, args.attempt)
+    run_id = run_id_for(args.run_prefix, axis, task_id, acut_id, args.attempt, args.mode)
     paths = bundle_paths(Path(args.bundle_root), run_id)
     artifact_dir = paths["artifact_dir"]
     normalized_path = paths["normalized_result"]
@@ -726,7 +726,7 @@ def run_general_infra_records(
     results: list[dict[str, Any]] = []
     for task_id in design["general"]:
         for acut_id in design["acuts"]:
-            run_id = run_id_for(args.run_prefix, "general", str(task_id), str(acut_id), args.attempt)
+            run_id = run_id_for(args.run_prefix, "general", str(task_id), str(acut_id), args.attempt, args.mode)
             paths = bundle_paths(Path(args.bundle_root), run_id)
             if paths["normalized_result"].exists() and not args.force:
                 existing = load_json(paths["normalized_result"])

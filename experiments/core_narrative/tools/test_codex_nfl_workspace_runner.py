@@ -244,6 +244,29 @@ class CodexNflWorkspaceRunnerTests(unittest.TestCase):
         self.assertTrue(all(not os.path.isabs(path) for path in manifest["raw_artifacts"]))
         self.assertTrue(all(not os.path.isabs(path) for path in manifest["normalized_results"]))
 
+    def test_run_id_for_includes_execution_mode(self) -> None:
+        """Regression: dry-run and live cells must not reuse artifact paths."""
+        dry_run_id = runner.run_id_for(
+            "unit",
+            "rbench",
+            "click__rbench__001",
+            "cheap-generic-swe",
+            1,
+            "dry-run",
+        )
+        live_run_id = runner.run_id_for(
+            "unit",
+            "rbench",
+            "click__rbench__001",
+            "cheap-generic-swe",
+            1,
+            "live",
+        )
+
+        self.assertEqual(dry_run_id, "unit__dry-run__rbench__cheap-generic-swe__click__rbench__001__attempt1")
+        self.assertEqual(live_run_id, "unit__live__rbench__cheap-generic-swe__click__rbench__001__attempt1")
+        self.assertNotEqual(dry_run_id, live_run_id)
+
     def test_workspace_mode_command_invokes_workspace_runner_before_acut_command(self) -> None:
         """The primary execution chain starts with workspace_mode_runner.py."""
         args = SimpleNamespace(

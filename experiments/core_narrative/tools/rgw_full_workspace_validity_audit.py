@@ -348,6 +348,14 @@ def reference_patch_for_task(task_id: str) -> tuple[str, dict[str, Any]]:
     return completed.stdout, metadata
 
 
+def reference_smoke_oracle_status(status: Any) -> str:
+    if status == "passed":
+        return "reference_passed"
+    if status in {"failed", "patch_apply_error"}:
+        return "task_oracle_invalid"
+    return "reference_smoke_blocked"
+
+
 def run_reference_smoke(
     *,
     task_id: str,
@@ -380,7 +388,7 @@ def run_reference_smoke(
         )
         normalized = verified["normalized"]
         status = normalized.get("status")
-        oracle_status = "reference_passed" if status == "passed" else "task_oracle_invalid"
+        oracle_status = reference_smoke_oracle_status(status)
         verification = normalized.get("verification") if isinstance(normalized.get("verification"), Mapping) else {}
         return {
             "task_id": task_id,

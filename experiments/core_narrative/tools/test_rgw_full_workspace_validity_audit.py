@@ -9,6 +9,7 @@ import subprocess
 import tempfile
 import unittest
 from pathlib import Path
+from unittest import mock
 
 import rgw_full_workspace_validity_audit as audit
 
@@ -260,6 +261,36 @@ class RgwFullWorkspaceValidityAuditTests(unittest.TestCase):
         text = report.read_text(encoding="utf-8")
         self.assertIn("fixed_denominator_verified_pass_rate: null", text)
         self.assertIn("measured_verified_pass_rate: null", text)
+
+    def test_reference_smoke_timeout_is_blocked_not_oracle_invalid(self) -> None:
+        """Regression: verifier timeouts leave the reference oracle unknown."""
+        with mock.patch.object(
+            audit,
+            "reference_patch_for_task",
+            return_value=("diff --git a/a b/a\n", {"patch_bytes": 21, "patch_sha256": "abc", "changed_file_count": 1}),
+        ):
+            with mock.patch.object(audit, "prepare_workspace", return_value={}):
+                with mock.patch.object(audit, "install_workspace", return_value={}):
+                    with mock.patch.object(
+                        audit,
+                        "verify_patch",
+                        return_value={
+                            "normalized": {
+                                "status": "timeout",
+                                "verification": {"exit_code": 124, "duration_seconds": 1.0},
+                            }
+                        },
+                    ):
+                        result = audit.run_reference_smoke(
+                            task_id="click__rbench__001",
+                            private_root=self.root / "private",
+                            install_timeout_seconds=1,
+                            verifier_timeout_seconds=1,
+                            force_private=True,
+                        )
+
+        self.assertEqual(result["status"], "timeout")
+        self.assertEqual(result["oracle_status"], "reference_smoke_blocked")
 
     def test_public_artifact_scan_rejects_urls_and_local_user_paths(self) -> None:
         """Committed audit artifacts must not contain raw URLs or local user paths."""
