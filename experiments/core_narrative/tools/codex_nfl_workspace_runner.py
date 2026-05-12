@@ -775,6 +775,17 @@ def count_by(records: Sequence[Mapping[str, Any]], key: str) -> dict[str, int]:
     return dict(sorted(counts.items()))
 
 
+def evidence_recency_key(record: Mapping[str, Any], sequence: int) -> tuple[str, int, str, int]:
+    evidence_at = record.get("finished_at") or record.get("started_at")
+    attempt = record.get("attempt")
+    return (
+        evidence_at if isinstance(evidence_at, str) else "",
+        attempt if isinstance(attempt, int) else -1,
+        str(record.get("run_id") or ""),
+        sequence,
+    )
+
+
 def canonical_records_by_cell(
     records: Sequence[Mapping[str, Any]],
     axis: str,
@@ -782,14 +793,17 @@ def canonical_records_by_cell(
     acuts: Sequence[str],
 ) -> tuple[set[tuple[str, str]], dict[tuple[str, str], Mapping[str, Any]]]:
     expected_cells = {(str(acut), str(task_id)) for acut in acuts for task_id in task_ids}
-    by_cell: dict[tuple[str, str], Mapping[str, Any]] = {}
-    for record in records:
+    by_cell: dict[tuple[str, str], tuple[tuple[str, int, str, int], Mapping[str, Any]]] = {}
+    for sequence, record in enumerate(records):
         if record.get("axis") != axis:
             continue
         key = (str(record.get("acut_id")), str(record.get("task_id")))
         if key in expected_cells:
-            by_cell[key] = record
-    return expected_cells, by_cell
+            recency_key = evidence_recency_key(record, sequence)
+            current = by_cell.get(key)
+            if current is None or recency_key > current[0]:
+                by_cell[key] = (recency_key, record)
+    return expected_cells, {key: record for key, (_, record) in by_cell.items()}
 
 
 def summarize_axis(records: Sequence[Mapping[str, Any]], axis: str, task_ids: Sequence[str], acuts: Sequence[str]) -> dict[str, Any]:
@@ -925,14 +939,27 @@ def write_cost_ledger(bundle_root: Path, records: Sequence[Mapping[str, Any]]) -
     return path
 
 
+def repo_relative_artifact_path(path: Path) -> str:
+    resolved = path.resolve()
+    repo_root = REPO_ROOT.resolve()
+    try:
+        return resolved.relative_to(repo_root).as_posix()
+    except ValueError:
+        return os.path.relpath(resolved, repo_root)
+
+
 def write_manifest(bundle_root: Path, records: Sequence[Mapping[str, Any]], design: Mapping[str, Any], config_path: Path) -> dict[str, Any]:
-    raw_files = sorted(str(path) for path in (bundle_root / "raw").rglob("*") if path.is_file()) if (bundle_root / "raw").exists() else []
-    normalized = sorted(str(path) for path in normalized_files(bundle_root))
+    raw_files = (
+        sorted(repo_relative_artifact_path(path) for path in (bundle_root / "raw").rglob("*") if path.is_file())
+        if (bundle_root / "raw").exists()
+        else []
+    )
+    normalized = sorted(repo_relative_artifact_path(path) for path in normalized_files(bundle_root))
     manifest = {
         "schema_version": "core-narrative.rgw-artifact-manifest.v1",
         "generated_at": iso_now(),
         "experiment_id": RUNNER_ID,
-        "config": str(config_path),
+        "config": repo_relative_artifact_path(config_path),
         "fixed_denominator": {
             "rbench": len(design["rbench"]) * len(design["acuts"]),
             "rwork": len(design["rwork"]) * len(design["acuts"]),
