@@ -343,6 +343,36 @@ class RgwFullWorkspaceValidityAuditTests(unittest.TestCase):
         self.assertEqual(result["status"], "timeout")
         self.assertEqual(result["oracle_status"], "reference_smoke_blocked")
 
+    def test_reference_smoke_invalid_submission_is_task_oracle_invalid(self) -> None:
+        """Regression: reference patch application failures make the task oracle invalid."""
+        with mock.patch.object(
+            audit,
+            "reference_patch_for_task",
+            return_value=("diff --git a/a b/a\n", {"patch_bytes": 21, "patch_sha256": "abc", "changed_file_count": 1}),
+        ):
+            with mock.patch.object(audit, "prepare_workspace", return_value={}):
+                with mock.patch.object(audit, "install_workspace", return_value={}):
+                    with mock.patch.object(
+                        audit,
+                        "verify_patch",
+                        return_value={
+                            "normalized": {
+                                "status": "invalid_submission",
+                                "verification": {"exit_code": 1, "duration_seconds": 1.0},
+                            }
+                        },
+                    ):
+                        result = audit.run_reference_smoke(
+                            task_id="click__rbench__001",
+                            private_root=self.root / "private",
+                            install_timeout_seconds=1,
+                            verifier_timeout_seconds=1,
+                            force_private=True,
+                        )
+
+        self.assertEqual(result["status"], "invalid_submission")
+        self.assertEqual(result["oracle_status"], "task_oracle_invalid")
+
     def test_public_artifact_scan_rejects_urls_and_local_user_paths(self) -> None:
         """Committed audit artifacts must not contain raw URLs or local user paths."""
         safe = self.write_json("safe.json", {"status": "redacted"})

@@ -360,7 +360,7 @@ def reference_patch_for_task(task_id: str) -> tuple[str, dict[str, Any]]:
 def reference_smoke_oracle_status(status: Any) -> str:
     if status == "passed":
         return "reference_passed"
-    if status in {"failed", "patch_apply_error"}:
+    if status in {"failed", "invalid_submission", "patch_apply_error"}:
         return "task_oracle_invalid"
     return "reference_smoke_blocked"
 

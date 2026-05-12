@@ -786,6 +786,23 @@ def evidence_recency_key(record: Mapping[str, Any], sequence: int) -> tuple[str,
     )
 
 
+def is_dry_run_record(record: Mapping[str, Any]) -> bool:
+    run_id = record.get("run_id")
+    if isinstance(run_id, str) and "__dry-run__" in run_id:
+        return True
+    command_lines = record.get("command_lines") if isinstance(record.get("command_lines"), Mapping) else {}
+    workspace_runner = command_lines.get("workspace_runner") if isinstance(command_lines, Mapping) else None
+    return isinstance(workspace_runner, list) and "--dry-run" in {str(part) for part in workspace_runner}
+
+
+def is_primary_axis_dry_run_record(record: Mapping[str, Any]) -> bool:
+    return record.get("axis") in {"rbench", "rwork"} and is_dry_run_record(record)
+
+
+def primary_summary_records(records: Sequence[Mapping[str, Any]]) -> list[Mapping[str, Any]]:
+    return [record for record in records if not is_primary_axis_dry_run_record(record)]
+
+
 def canonical_records_by_cell(
     records: Sequence[Mapping[str, Any]],
     axis: str,
@@ -796,6 +813,8 @@ def canonical_records_by_cell(
     by_cell: dict[tuple[str, str], tuple[tuple[str, int, str, int], Mapping[str, Any]]] = {}
     for sequence, record in enumerate(records):
         if record.get("axis") != axis:
+            continue
+        if is_primary_axis_dry_run_record(record):
             continue
         key = (str(record.get("acut_id")), str(record.get("task_id")))
         if key in expected_cells:
@@ -992,12 +1011,13 @@ def threats_to_validity(summary: Mapping[str, Any]) -> str:
 
 def build_summary(design: Mapping[str, Any], bundle_root: Path, config_path: Path) -> dict[str, Any]:
     records = load_normalized_results(bundle_root)
+    summary_records = primary_summary_records(records)
     axes = {
-        "rbench": summarize_axis(records, "rbench", design["rbench"], design["acuts"]),
-        "rwork": summarize_axis(records, "rwork", design["rwork"], design["acuts"]),
-        "general": summarize_axis(records, "general", design["general"], design["acuts"]),
+        "rbench": summarize_axis(summary_records, "rbench", design["rbench"], design["acuts"]),
+        "rwork": summarize_axis(summary_records, "rwork", design["rwork"], design["acuts"]),
+        "general": summarize_axis(summary_records, "general", design["general"], design["acuts"]),
     }
-    table = by_acut_table(records, design)
+    table = by_acut_table(summary_records, design)
     infra = [
         {
             "run_id": record.get("run_id"),
@@ -1008,7 +1028,7 @@ def build_summary(design: Mapping[str, Any], bundle_root: Path, config_path: Pat
             "score_action": record.get("score_action"),
             "normalized_result": record.get("artifact_paths", {}).get("normalized_result"),
         }
-        for record in records
+        for record in summary_records
         if record.get("requires_rerun_or_exclusion") is True
     ]
     triage = [
@@ -1020,7 +1040,7 @@ def build_summary(design: Mapping[str, Any], bundle_root: Path, config_path: Pat
             "status": record.get("status"),
             "normalized_result": record.get("artifact_paths", {}).get("normalized_result"),
         }
-        for record in records
+        for record in summary_records
         if record.get("triage_paused") is True
     ]
     cost_path = write_cost_ledger(bundle_root, records)

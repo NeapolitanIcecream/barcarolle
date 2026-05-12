@@ -246,6 +246,53 @@ class CodexNflWorkspaceRunnerTests(unittest.TestCase):
         self.assertEqual(summary["grw_table"]["cheap-generic-swe"]["r_passed"], 1)
         self.assertEqual(summary["grw_table"]["cheap-generic-swe"]["r_status_counts"], {"verified_pass": 1})
 
+    def test_summary_ignores_newer_dry_run_primary_records_when_live_evidence_exists(self) -> None:
+        """Regression: dry-run primary records must not replace live model-call evidence."""
+        design = {"acuts": ["cheap-generic-swe"], "rbench": ["click__rbench__001"], "rwork": [], "general": []}
+        normalized = self.root / "normalized"
+        normalized.mkdir()
+        live = {
+            "schema_version": runner.SCHEMA_VERSION,
+            "tool": runner.TOOL,
+            "runner_id": runner.RUNNER_ID,
+            "run_id": "unit__live__rbench__cheap-generic-swe__click__rbench__001__attempt1",
+            "axis": "rbench",
+            "task_id": "click__rbench__001",
+            "acut_id": "cheap-generic-swe",
+            "attempt": 1,
+            "status": "verified_pass",
+            "started_at": "2026-05-12T10:00:00Z",
+            "finished_at": "2026-05-12T10:01:00Z",
+            "score_action": "fixed_denominator_one",
+            "score_value": 1,
+            "requires_rerun_or_exclusion": False,
+            "triage_paused": False,
+            "artifact_paths": {"normalized_result": str(normalized / "live.json")},
+            "cost_metadata": {"model_call_made": True, "estimated_cost_usd": 1.0},
+            "metadata": {"model_call_made": True},
+        }
+        dry_run = {
+            **live,
+            "run_id": "unit__dry-run__rbench__cheap-generic-swe__click__rbench__001__attempt1",
+            "status": "verified_fail",
+            "started_at": "2026-05-12T11:00:00Z",
+            "finished_at": "2026-05-12T11:01:00Z",
+            "score_action": "fixed_denominator_zero",
+            "score_value": 0,
+            "artifact_paths": {"normalized_result": str(normalized / "dry-run.json")},
+            "cost_metadata": {"model_call_made": False, "estimated_cost_usd": 0.0},
+            "metadata": {"model_call_made": False},
+        }
+        Path(live["artifact_paths"]["normalized_result"]).write_text(json.dumps(live), encoding="utf-8")
+        Path(dry_run["artifact_paths"]["normalized_result"]).write_text(json.dumps(dry_run), encoding="utf-8")
+
+        summary = runner.build_summary(design, self.root, self.root / "config.yaml")
+
+        self.assertEqual(summary["axes"]["rbench"]["passed"], 1)
+        self.assertEqual(summary["axes"]["rbench"]["status_counts"], {"verified_pass": 1})
+        self.assertEqual(summary["grw_table"]["cheap-generic-swe"]["r_passed"], 1)
+        self.assertEqual(summary["grw_table"]["cheap-generic-swe"]["r_status_counts"], {"verified_pass": 1})
+
     def test_manifest_stores_artifact_paths_relative_to_repo(self) -> None:
         """Regression: committed manifests must not contain host-specific artifact paths."""
         repo_root = self.root / "repo"
