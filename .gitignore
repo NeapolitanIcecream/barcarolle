@@ -208,6 +208,7 @@ experiments/core_narrative/workspaces/
 experiments/core_narrative/external_repos/
 experiments/core_narrative/cache/
 experiments/core_narrative/large_artifacts/
+experiments/core_narrative/results/rgw_full_workspace_v1/raw/
 experiments/core_narrative/results/raw/*/logs/
 experiments/core_narrative/results/raw/*/inner/codex_home_*/
 experiments/core_narrative/results/raw/*/verifier.stdout.txt

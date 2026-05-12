@@ -1,0 +1,23 @@
+{
+  "command": [
+    "/Applications/Xcode.app/Contents/Developer/usr/bin/python3",
+    "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/tools/codex_nfl_gscore_gold_patch_smoke.py",
+    "--config",
+    "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/configs/general_benchmark.yaml",
+    "--output",
+    "experiments/core_narrative/results/rgw_full_workspace_v1/g6_gold_patch_smoke.json",
+    "--report",
+    "experiments/core_narrative/results/rgw_full_workspace_v1/reports/g6_gold_patch_smoke.md",
+    "--artifact-dir",
+    "experiments/core_narrative/results/rgw_full_workspace_v1/raw/g6_gold_patch_smoke"
+  ],
+  "command_error": null,
+  "cwd": "/Users/chenmohan/gits/barcarolle",
+  "duration_seconds": 0.371,
+  "exit_code": 0,
+  "finished_at": "2026-05-12T02:08:33.792080Z",
+  "started_at": "2026-05-12T02:08:33.421381Z",
+  "stderr_artifact": "experiments/core_narrative/results/rgw_full_workspace_v1/logs/g6_gold_patch_smoke.stderr.txt",
+  "stdout_artifact": "experiments/core_narrative/results/rgw_full_workspace_v1/logs/g6_gold_patch_smoke.stdout.txt",
+  "timed_out": false
+}

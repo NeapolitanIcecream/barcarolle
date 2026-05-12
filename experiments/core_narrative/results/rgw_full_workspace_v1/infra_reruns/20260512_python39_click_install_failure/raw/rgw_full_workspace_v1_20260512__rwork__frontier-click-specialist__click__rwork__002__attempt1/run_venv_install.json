@@ -1,0 +1,23 @@
+{
+  "command": [
+    ".venv/bin/python",
+    "-m",
+    "pip",
+    "install",
+    "-q",
+    "-e",
+    ".",
+    "pytest"
+  ],
+  "command_error": null,
+  "cwd": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/workspaces/rgw_full_workspace_v1/rgw_full_workspace_v1_20260512__rwork__frontier-click-specialist__click__rwork__002__attempt1__run",
+  "duration_seconds": 1.357,
+  "exit_code": 1,
+  "finished_at": "2026-05-12T02:15:33.805797Z",
+  "name": "run_venv_install",
+  "started_at": "2026-05-12T02:15:32.449326Z",
+  "stderr_artifact": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/rgw_full_workspace_v1/raw/rgw_full_workspace_v1_20260512__rwork__frontier-click-specialist__click__rwork__002__attempt1/run_venv_install.stderr.txt",
+  "stdout_artifact": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/rgw_full_workspace_v1/raw/rgw_full_workspace_v1_20260512__rwork__frontier-click-specialist__click__rwork__002__attempt1/run_venv_install.stdout.txt",
+  "summary_artifact": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/rgw_full_workspace_v1/raw/rgw_full_workspace_v1_20260512__rwork__frontier-click-specialist__click__rwork__002__attempt1/run_venv_install.json",
+  "timed_out": false
+}
