@@ -1,0 +1,76 @@
+schema_version: core-narrative.rgw-full-workspace-v1
+experiment_id: RGW-full-workspace-v1
+status: frozen
+frozen_at: "2026-05-12T00:00:00+08:00"
+primary_execution_path: experiments/core_narrative/tools/workspace_mode_runner.py
+primary_attempts_per_acut_task: 1
+best_of_n: false
+fixed_denominator: true
+
+acuts:
+  - cheap-generic-swe
+  - cheap-click-specialist
+  - frontier-generic-swe
+  - frontier-click-specialist
+
+rbench:
+  manifest: experiments/core_narrative/configs/tasks/rbench_click.yaml
+  task_count: 8
+  include_all_tasks: true
+
+rwork:
+  manifest: experiments/core_narrative/configs/tasks/rwork_click.yaml
+  task_count: 6
+  include_all_tasks: true
+
+general:
+  manifest: experiments/core_narrative/configs/general_benchmark.yaml
+  lock_id: gscore_swebench_pro_public_6_v1
+  locked_task_count: 6
+  lock_label: G6
+  include_all_tasks: true
+
+primary_matrix:
+  expected_attempts:
+    rbench: 32
+    rwork: 24
+    general: 24
+    total: 80
+  order:
+    - rbench
+    - rwork
+    - general
+
+status_semantics:
+  recognized_statuses:
+    - verified_pass
+    - verified_fail
+    - no_diff
+    - timeout
+    - unsafe_or_scope_violation
+    - patch_apply_error
+    - verifier_infra_error
+    - base_tree_mismatch
+    - candidate_patch_extraction_error
+    - acut_command_error
+  primary_pass_only:
+    - verified_pass
+  fixed_denominator_zero:
+    - verified_fail
+    - no_diff
+    - timeout when timeout_owner is acut
+    - unsafe_or_scope_violation
+    - acut_command_error
+  infrastructure_rerun_or_global_exclusion_required:
+    - verifier_infra_error
+    - base_tree_mismatch
+    - candidate_patch_extraction_error
+    - timeout when timeout_owner is verifier or unknown
+  triage_paused_before_primary_scoring:
+    - patch_apply_error
+
+execution_order:
+  - no_model_harness_tests
+  - g6_gold_patch_smoke
+  - live_sentinel_primary_cells
+  - complete_primary_matrix

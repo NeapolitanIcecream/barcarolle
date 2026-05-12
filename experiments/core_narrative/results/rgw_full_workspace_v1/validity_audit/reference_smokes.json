@@ -1,0 +1,69 @@
+{
+  "schema_version": "core-narrative.rgw-full-workspace-validity-audit.v1",
+  "tasks": [
+    {
+      "oracle_status": "reference_passed",
+      "private_run_id": "validity_audit_20260512__reference__click__rbench__001",
+      "public_artifact_redacted": true,
+      "reference_patch": {
+        "changed_file_count": 2,
+        "patch_bytes": 1454,
+        "patch_sha256": "b6b93d9a4692008562c474570c930d9d03ac14fc5e5c4f89a8b3e9ea4c5a561c"
+      },
+      "smoke_kind": "source_target_reference_patch",
+      "status": "passed",
+      "task_id": "click__rbench__001",
+      "verifier_artifacts_redacted": true,
+      "verifier_duration_seconds": 0.269,
+      "verifier_exit_code": 0
+    },
+    {
+      "oracle_status": "reference_passed",
+      "private_run_id": "validity_audit_20260512__reference__click__rbench__004",
+      "public_artifact_redacted": true,
+      "reference_patch": {
+        "changed_file_count": 4,
+        "patch_bytes": 8725,
+        "patch_sha256": "b89fd0b2f5b7c7c9f22e931dca76e7d06a1031ad21020039ec69fe2cd2227c6a"
+      },
+      "smoke_kind": "source_target_reference_patch",
+      "status": "passed",
+      "task_id": "click__rbench__004",
+      "verifier_artifacts_redacted": true,
+      "verifier_duration_seconds": 0.271,
+      "verifier_exit_code": 0
+    },
+    {
+      "oracle_status": "reference_passed",
+      "private_run_id": "validity_audit_20260512__reference__click__rbench__008",
+      "public_artifact_redacted": true,
+      "reference_patch": {
+        "changed_file_count": 4,
+        "patch_bytes": 11456,
+        "patch_sha256": "e0bfd218f30b98850feccc5aee689998dee411a92bd18cd0d70b4cc14c0e0255"
+      },
+      "smoke_kind": "source_target_reference_patch",
+      "status": "passed",
+      "task_id": "click__rbench__008",
+      "verifier_artifacts_redacted": true,
+      "verifier_duration_seconds": 0.282,
+      "verifier_exit_code": 0
+    },
+    {
+      "oracle_status": "reference_passed",
+      "private_run_id": "validity_audit_20260512__reference__click__rwork__004",
+      "public_artifact_redacted": true,
+      "reference_patch": {
+        "changed_file_count": 3,
+        "patch_bytes": 12254,
+        "patch_sha256": "6d7d7da826b47b4f34395be8495257871dc8cedda40552e4a1924f3166b756db"
+      },
+      "smoke_kind": "source_target_reference_patch",
+      "status": "passed",
+      "task_id": "click__rwork__004",
+      "verifier_artifacts_redacted": true,
+      "verifier_duration_seconds": 0.341,
+      "verifier_exit_code": 0
+    }
+  ]
+}

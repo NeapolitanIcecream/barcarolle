@@ -1,0 +1,1 @@
+ERROR: Package 'click' requires a different Python: 3.9.6 not in '>=3.10'

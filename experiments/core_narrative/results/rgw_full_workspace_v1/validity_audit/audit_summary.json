@@ -1,0 +1,30 @@
+{
+  "audit_root": "experiments/core_narrative/results/rgw_full_workspace_v1/validity_audit",
+  "finished_at": "2026-05-12T10:58:58.468720Z",
+  "policy_hold_count": 7,
+  "primary_root": "experiments/core_narrative/results/rgw_full_workspace_v1",
+  "private_material_root": "experiments/core_narrative/workspaces/rgw_full_workspace_v1_validity_audit",
+  "public_artifact_safety_scan": {
+    "findings": [],
+    "passed": true
+  },
+  "reference_smoke_status_counts": {
+    "reference_passed": 4
+  },
+  "replay_outcome_counts": {
+    "verified_fail": 3,
+    "verified_pass": 4
+  },
+  "schema_version": "core-narrative.rgw-full-workspace-validity-audit.v1",
+  "started_at": "2026-05-12T10:58:47.716862Z",
+  "status": "delivered",
+  "tool": "rgw_full_workspace_validity_audit",
+  "true_unsafe_count": 2,
+  "usv_cell_count": 9,
+  "w_metrics": {
+    "fixed_denominator_verified_pass_rate": 0.3333333333333333,
+    "measured_verified_pass_rate": 0.47058823529411764,
+    "policy_hold_count": 7,
+    "true_unsafe_count": 2
+  }
+}

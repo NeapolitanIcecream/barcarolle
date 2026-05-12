@@ -1,0 +1,124 @@
+{
+  "replays": [
+    {
+      "acut_id": "cheap-click-specialist",
+      "cell_id": "rwork::click__rwork__004::cheap-click-specialist",
+      "patch": {
+        "patch_bytes": 3980,
+        "patch_sha256": "11d124a826b4e7fe656f3d79cf01f250e66b791806a72aa3d05a54f7bbfee1a5"
+      },
+      "primary_result_promoted": false,
+      "primary_run_id": "rgw_full_workspace_v1_20260512__rwork__cheap-click-specialist__click__rwork__004__attempt1",
+      "private_run_id": "validity_audit_20260512__replay__cheap-click-specialist__click__rwork__004",
+      "replay_basis": "post_run_replay_from_preserved_workspace",
+      "replay_outcome": "verified_pass",
+      "task_id": "click__rwork__004",
+      "verifier_artifacts_redacted": true,
+      "verifier_duration_seconds": 0.342,
+      "verifier_exit_code": 0
+    },
+    {
+      "acut_id": "cheap-generic-swe",
+      "cell_id": "rwork::click__rwork__004::cheap-generic-swe",
+      "patch": {
+        "patch_bytes": 4267,
+        "patch_sha256": "301f58d742d40984ce47f50103c6475f6d7d408deef48d626f127caaa1a93815"
+      },
+      "primary_result_promoted": false,
+      "primary_run_id": "rgw_full_workspace_v1_20260512__rwork__cheap-generic-swe__click__rwork__004__attempt1",
+      "private_run_id": "validity_audit_20260512__replay__cheap-generic-swe__click__rwork__004",
+      "replay_basis": "post_run_replay_from_preserved_workspace",
+      "replay_outcome": "verified_pass",
+      "task_id": "click__rwork__004",
+      "verifier_artifacts_redacted": true,
+      "verifier_duration_seconds": 0.332,
+      "verifier_exit_code": 0
+    },
+    {
+      "acut_id": "frontier-click-specialist",
+      "cell_id": "rwork::click__rwork__004::frontier-click-specialist",
+      "patch": {
+        "patch_bytes": 5110,
+        "patch_sha256": "18950ad7ac38d61cad9953130533cfefb9c96fe7aaa89841c0e452c16a07d71d"
+      },
+      "primary_result_promoted": false,
+      "primary_run_id": "rgw_full_workspace_v1_20260512__rwork__frontier-click-specialist__click__rwork__004__attempt1",
+      "private_run_id": "validity_audit_20260512__replay__frontier-click-specialist__click__rwork__004",
+      "replay_basis": "post_run_replay_from_preserved_workspace",
+      "replay_outcome": "verified_pass",
+      "task_id": "click__rwork__004",
+      "verifier_artifacts_redacted": true,
+      "verifier_duration_seconds": 0.33,
+      "verifier_exit_code": 0
+    },
+    {
+      "acut_id": "frontier-generic-swe",
+      "cell_id": "rwork::click__rwork__004::frontier-generic-swe",
+      "patch": {
+        "patch_bytes": 3956,
+        "patch_sha256": "e3dbae2d7995edebd566e99224dd108127ef60dd13cb5520deebfc497d19550c"
+      },
+      "primary_result_promoted": false,
+      "primary_run_id": "rgw_full_workspace_v1_20260512__rwork__frontier-generic-swe__click__rwork__004__attempt1",
+      "private_run_id": "validity_audit_20260512__replay__frontier-generic-swe__click__rwork__004",
+      "replay_basis": "post_run_replay_from_preserved_workspace",
+      "replay_outcome": "verified_pass",
+      "task_id": "click__rwork__004",
+      "verifier_artifacts_redacted": true,
+      "verifier_duration_seconds": 0.336,
+      "verifier_exit_code": 0
+    },
+    {
+      "acut_id": "cheap-click-specialist",
+      "cell_id": "rwork::click__rwork__006::cheap-click-specialist",
+      "patch": {
+        "patch_bytes": 5947,
+        "patch_sha256": "f25b2b5e2a9b83b3d4a214ce0e9947eaf4312cabeb981e9419869342c5205af0"
+      },
+      "primary_result_promoted": false,
+      "primary_run_id": "rgw_full_workspace_v1_20260512__rwork__cheap-click-specialist__click__rwork__006__attempt1",
+      "private_run_id": "validity_audit_20260512__replay__cheap-click-specialist__click__rwork__006",
+      "replay_basis": "post_run_replay_from_preserved_workspace",
+      "replay_outcome": "verified_fail",
+      "task_id": "click__rwork__006",
+      "verifier_artifacts_redacted": true,
+      "verifier_duration_seconds": 0.37,
+      "verifier_exit_code": 1
+    },
+    {
+      "acut_id": "cheap-generic-swe",
+      "cell_id": "rwork::click__rwork__006::cheap-generic-swe",
+      "patch": {
+        "patch_bytes": 10472,
+        "patch_sha256": "9ff640f5af9d95721b76a3bbe32d3bc94f91a3789f8c5c3e554caa10a9a7b522"
+      },
+      "primary_result_promoted": false,
+      "primary_run_id": "rgw_full_workspace_v1_20260512__rwork__cheap-generic-swe__click__rwork__006__attempt1",
+      "private_run_id": "validity_audit_20260512__replay__cheap-generic-swe__click__rwork__006",
+      "replay_basis": "post_run_replay_from_preserved_workspace",
+      "replay_outcome": "verified_fail",
+      "task_id": "click__rwork__006",
+      "verifier_artifacts_redacted": true,
+      "verifier_duration_seconds": 0.376,
+      "verifier_exit_code": 1
+    },
+    {
+      "acut_id": "frontier-generic-swe",
+      "cell_id": "rwork::click__rwork__006::frontier-generic-swe",
+      "patch": {
+        "patch_bytes": 16475,
+        "patch_sha256": "8f20138a5c977f08f194c80ca8bf50a2a7d6815e666f84186798fa38454924d7"
+      },
+      "primary_result_promoted": false,
+      "primary_run_id": "rgw_full_workspace_v1_20260512__rwork__frontier-generic-swe__click__rwork__006__attempt1",
+      "private_run_id": "validity_audit_20260512__replay__frontier-generic-swe__click__rwork__006",
+      "replay_basis": "post_run_replay_from_preserved_workspace",
+      "replay_outcome": "verified_fail",
+      "task_id": "click__rwork__006",
+      "verifier_artifacts_redacted": true,
+      "verifier_duration_seconds": 0.386,
+      "verifier_exit_code": 1
+    }
+  ],
+  "schema_version": "core-narrative.rgw-full-workspace-validity-audit.v1"
+}
