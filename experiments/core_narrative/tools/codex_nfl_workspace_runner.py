@@ -935,12 +935,30 @@ def reversal_analysis(table: Mapping[str, Mapping[str, Any]]) -> dict[str, Any]:
     }
 
 
+def normalize_cost_metadata_value(value: Any) -> Any:
+    if isinstance(value, str) and Path(value).is_absolute():
+        return repo_relative_artifact_path(Path(value))
+    if isinstance(value, Mapping):
+        return {str(key): normalize_cost_metadata_value(item) for key, item in value.items()}
+    if isinstance(value, list):
+        return [normalize_cost_metadata_value(item) for item in value]
+    return value
+
+
+def normalized_cost_metadata(cost: Mapping[str, Any]) -> dict[str, Any]:
+    return {str(key): normalize_cost_metadata_value(value) for key, value in cost.items()}
+
+
 def write_cost_ledger(bundle_root: Path, records: Sequence[Mapping[str, Any]]) -> Path:
     path = bundle_root / "cost_ledger.jsonl"
     path.parent.mkdir(parents=True, exist_ok=True)
     lines = []
     for record in records:
-        cost = record.get("cost_metadata") if isinstance(record.get("cost_metadata"), Mapping) else {}
+        cost = (
+            normalized_cost_metadata(record["cost_metadata"])
+            if isinstance(record.get("cost_metadata"), Mapping)
+            else {}
+        )
         lines.append(
             json.dumps(
                 {
@@ -949,7 +967,7 @@ def write_cost_ledger(bundle_root: Path, records: Sequence[Mapping[str, Any]]) -
                     "task_id": record.get("task_id"),
                     "acut_id": record.get("acut_id"),
                     "attempt": record.get("attempt"),
-                    **dict(cost),
+                    **cost,
                 },
                 sort_keys=True,
             )

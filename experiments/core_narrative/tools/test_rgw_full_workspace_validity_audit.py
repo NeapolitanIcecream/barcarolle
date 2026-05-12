@@ -190,6 +190,52 @@ class RgwFullWorkspaceValidityAuditTests(unittest.TestCase):
         self.assertEqual(cells[0]["candidate_patch"]["raw_candidate_patch_size_bytes"], 123)
         self.assertNotIn(audit.INTERNAL_RESOLVED_ARTIFACT_DIR, cells[0])
 
+    def test_usv_audit_uses_latest_canonical_cell_before_attribution(self) -> None:
+        """Regression: stale unsafe rerun history must not create USV audit cells."""
+        artifact_dir = self.root / "raw/older-usv"
+        self.write_json(
+            "raw/older-usv/workspace_mode_result.json",
+            {
+                "status": "unsafe_or_scope_violation",
+                "candidate_patch": {
+                    "unsafe_content_attribution": {
+                        "all_full_urls_source_derived": True,
+                        "all_unsafe_reasons_source_derived": True,
+                        "full_url_count": 1,
+                        "source_derived_full_url_count": 1,
+                        "model_generated_full_url_count": 0,
+                        "ambiguous_full_url_count": 0,
+                        "non_url_reason_counts": {},
+                    }
+                },
+            },
+        )
+        records = [
+            {
+                "split": "rwork",
+                "task_id": "click__rwork__004",
+                "acut_id": "cheap-click-specialist",
+                "run_id": "older-usv",
+                "status": "unsafe_or_scope_violation",
+                "finished_at": "2026-05-12T10:00:00Z",
+                "attempt": 1,
+                "artifact_paths": {"artifact_dir": str(artifact_dir)},
+            },
+            {
+                "split": "rwork",
+                "task_id": "click__rwork__004",
+                "acut_id": "cheap-click-specialist",
+                "run_id": "newer-pass",
+                "status": "verified_pass",
+                "finished_at": "2026-05-12T11:00:00Z",
+                "attempt": 1,
+            },
+        ]
+
+        cells = audit.build_usv_audit(records, self.root)
+
+        self.assertEqual(cells, [])
+
     def test_policy_hold_replay_extracts_patch_from_cross_root_artifact_dir(self) -> None:
         """Regression: replay extraction must use the artifact dir resolved during USV audit."""
         primary_root = self.root / "current-results"

@@ -514,6 +514,30 @@ def cached_usv_cells_by_key(cached_usv_path: Path) -> dict[tuple[str, str, str, 
     return cached
 
 
+def usv_primary_cell_key(record: Mapping[str, Any]) -> tuple[str, str, str] | None:
+    split = record.get("split")
+    task_id = record.get("task_id")
+    acut_id = record.get("acut_id")
+    if split is None or task_id is None or acut_id is None:
+        return None
+    return str(split), str(task_id), str(acut_id)
+
+
+def canonical_usv_input_records(records: Sequence[Mapping[str, Any]]) -> list[Mapping[str, Any]]:
+    unkeyed: list[Mapping[str, Any]] = []
+    keyed: dict[tuple[str, str, str], tuple[tuple[str, int, str, int], Mapping[str, Any]]] = {}
+    for sequence, record in enumerate(records):
+        key = usv_primary_cell_key(record)
+        if key is None:
+            unkeyed.append(record)
+            continue
+        recency_key = evidence_recency_key(record, sequence)
+        current = keyed.get(key)
+        if current is None or recency_key > current[0]:
+            keyed[key] = (recency_key, record)
+    return unkeyed + [keyed[key][1] for key in sorted(keyed)]
+
+
 def build_usv_audit(
     records: Sequence[Mapping[str, Any]],
     primary_root: Path,
@@ -530,7 +554,7 @@ def build_usv_audit(
         key = usv_cache_key(record)
         return cached_cells.get(key) if key is not None else None
 
-    for record in records:
+    for record in canonical_usv_input_records(records):
         if record.get("status") != "unsafe_or_scope_violation":
             continue
         artifact_dir = resolve_primary_artifact_dir(record, primary_root)

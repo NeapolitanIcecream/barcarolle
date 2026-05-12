@@ -327,6 +327,39 @@ class CodexNflWorkspaceRunnerTests(unittest.TestCase):
         self.assertTrue(all(not os.path.isabs(path) for path in manifest["raw_artifacts"]))
         self.assertTrue(all(not os.path.isabs(path) for path in manifest["normalized_results"]))
 
+    def test_cost_ledger_normalizes_cost_metadata_artifact_paths_to_repo_relative(self) -> None:
+        """Regression: committed cost ledgers must not expose host-specific paths."""
+        repo_root = self.root / "repo"
+        bundle_root = repo_root / "experiments/core_narrative/results/rgw_full_workspace_v1"
+        artifact = bundle_root / "raw/run/codex_cli_patch_command.json"
+        artifact.parent.mkdir(parents=True)
+        artifact.write_text("{}", encoding="utf-8")
+        records = [
+            {
+                "run_id": "run",
+                "axis": "rbench",
+                "task_id": "click__rbench__001",
+                "acut_id": "cheap-generic-swe",
+                "attempt": 1,
+                "cost_metadata": {
+                    "model_call_made": True,
+                    "estimated_cost_usd": 1.0,
+                    "acut_summary_artifact": str(artifact),
+                },
+            }
+        ]
+
+        with mock.patch.object(runner, "REPO_ROOT", repo_root):
+            path = runner.write_cost_ledger(bundle_root, records)
+
+        row = json.loads(path.read_text(encoding="utf-8").splitlines()[0])
+        self.assertEqual(
+            row["acut_summary_artifact"],
+            "experiments/core_narrative/results/rgw_full_workspace_v1/raw/run/codex_cli_patch_command.json",
+        )
+        self.assertFalse(os.path.isabs(row["acut_summary_artifact"]))
+        self.assertNotIn(str(repo_root), json.dumps(row))
+
     def test_summary_stores_artifact_paths_relative_to_repo(self) -> None:
         """Regression: committed summaries must not contain host-specific artifact paths."""
         repo_root = self.root / "repo"
