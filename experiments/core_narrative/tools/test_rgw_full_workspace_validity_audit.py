@@ -3,6 +3,7 @@
 
 from __future__ import annotations
 
+import argparse
 import json
 import shutil
 import subprocess
@@ -352,6 +353,40 @@ class RgwFullWorkspaceValidityAuditTests(unittest.TestCase):
 
         self.assertFalse(result["passed"])
         self.assertEqual({item["finding"] for item in result["findings"]}, {"full_url", "absolute_users_path"})
+
+    def test_run_audit_summary_reports_actual_roots(self) -> None:
+        """Regression: audit summaries must reflect the roots passed to the tool."""
+        repo_root = self.root / "repo"
+        primary_root = repo_root / "staging/results"
+        audit_root = repo_root / "staging/results/audit"
+        private_root = repo_root / "staging/private"
+        report = repo_root / "staging/reports/validity_audit.md"
+        primary_root.mkdir(parents=True)
+        (primary_root / "normalized_result_matrix.json").write_text('{"records": []}', encoding="utf-8")
+        args = argparse.Namespace(
+            primary_root=str(primary_root),
+            audit_root=str(audit_root),
+            private_root=str(private_root),
+            report=str(report),
+            install_timeout_seconds=1,
+            verifier_timeout_seconds=1,
+            force_private=True,
+        )
+
+        with mock.patch.object(audit, "REPO_ROOT", repo_root):
+            with mock.patch.object(audit, "build_usv_audit", return_value=[]):
+                with mock.patch.object(
+                    audit,
+                    "run_reference_smoke",
+                    return_value={"task_id": "reference", "status": "passed", "oracle_status": "passed"},
+                ):
+                    summary = audit.run_audit(args)
+
+        self.assertEqual(summary["primary_root"], "staging/results")
+        self.assertEqual(summary["audit_root"], "staging/results/audit")
+        self.assertEqual(summary["private_material_root"], "staging/private")
+        self.assertFalse(Path(summary["primary_root"]).is_absolute())
+        self.assertEqual(json.loads((audit_root / "audit_summary.json").read_text(encoding="utf-8")), summary)
 
 
 if __name__ == "__main__":

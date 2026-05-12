@@ -61,6 +61,15 @@ def load_json(path: Path) -> dict[str, Any]:
     return json.loads(path.read_text(encoding="utf-8"))
 
 
+def repo_relative_artifact_path(path: Path) -> str:
+    resolved = path.resolve()
+    repo_root = REPO_ROOT.resolve()
+    try:
+        return resolved.relative_to(repo_root).as_posix()
+    except ValueError:
+        return os.path.relpath(resolved, repo_root)
+
+
 def sha256_bytes(data: bytes) -> str:
     return hashlib.sha256(data).hexdigest()
 
@@ -938,9 +947,9 @@ def run_audit(args: argparse.Namespace) -> dict[str, Any]:
         "status": "delivered",
         "started_at": started_at,
         "finished_at": iso_now(),
-        "primary_root": "experiments/core_narrative/results/rgw_full_workspace_v1",
-        "audit_root": "experiments/core_narrative/results/rgw_full_workspace_v1/validity_audit",
-        "private_material_root": "experiments/core_narrative/workspaces/rgw_full_workspace_v1_validity_audit",
+        "primary_root": repo_relative_artifact_path(primary_root),
+        "audit_root": repo_relative_artifact_path(audit_root),
+        "private_material_root": repo_relative_artifact_path(private_root),
         "usv_cell_count": len(usv_cells),
         "policy_hold_count": overlay["metrics"]["policy_hold_count"],
         "true_unsafe_count": overlay["metrics"]["true_unsafe_count"],

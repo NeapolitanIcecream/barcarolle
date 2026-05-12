@@ -280,6 +280,29 @@ class CodexNflWorkspaceRunnerTests(unittest.TestCase):
         self.assertTrue(all(not os.path.isabs(path) for path in manifest["raw_artifacts"]))
         self.assertTrue(all(not os.path.isabs(path) for path in manifest["normalized_results"]))
 
+    def test_summary_stores_artifact_paths_relative_to_repo(self) -> None:
+        """Regression: committed summaries must not contain host-specific artifact paths."""
+        repo_root = self.root / "repo"
+        bundle_root = repo_root / "experiments/core_narrative/results/rgw_full_workspace_v1"
+        config_path = repo_root / "experiments/core_narrative/configs/rgw_full_workspace_v1.yaml"
+        bundle_root.mkdir(parents=True)
+        config_path.parent.mkdir(parents=True)
+        config_path.write_text("acuts: []\n", encoding="utf-8")
+
+        with mock.patch.object(runner, "REPO_ROOT", repo_root):
+            summary = runner.build_summary(
+                {"acuts": [], "rbench": [], "rwork": [], "general": []},
+                bundle_root,
+                config_path,
+            )
+
+        self.assertEqual(
+            summary["artifacts"]["summary"],
+            "experiments/core_narrative/results/rgw_full_workspace_v1/summary.json",
+        )
+        self.assertFalse(os.path.isabs(summary["config"]))
+        self.assertTrue(all(not os.path.isabs(path) for path in summary["artifacts"].values()))
+
     def test_run_id_for_includes_execution_mode(self) -> None:
         """Regression: dry-run and live cells must not reuse artifact paths."""
         dry_run_id = runner.run_id_for(
