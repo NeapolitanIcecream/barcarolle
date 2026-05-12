@@ -673,9 +673,81 @@ def run_policy_hold_replay(
         }
 
 
+def primary_cell_key(item: Mapping[str, Any]) -> tuple[str, str] | None:
+    task_id = item.get("task_id")
+    acut_id = item.get("acut_id")
+    if task_id is None or acut_id is None:
+        return None
+    return str(task_id), str(acut_id)
+
+
+def evidence_recency_key(record: Mapping[str, Any], sequence: int) -> tuple[str, int, str, int]:
+    evidence_at = record.get("finished_at") or record.get("started_at")
+    attempt = record.get("attempt")
+    return (
+        evidence_at if isinstance(evidence_at, str) else "",
+        attempt if isinstance(attempt, int) else -1,
+        str(record.get("run_id") or ""),
+        sequence,
+    )
+
+
+def canonical_rwork_records(records: Sequence[Mapping[str, Any]]) -> list[Mapping[str, Any]]:
+    unkeyed: list[Mapping[str, Any]] = []
+    keyed: dict[tuple[str, str], tuple[tuple[str, int, str, int], Mapping[str, Any]]] = {}
+    for sequence, record in enumerate(records):
+        if record.get("split") != "rwork":
+            continue
+        key = primary_cell_key(record)
+        if key is None:
+            unkeyed.append(record)
+            continue
+        recency_key = evidence_recency_key(record, sequence)
+        current = keyed.get(key)
+        if current is None or recency_key > current[0]:
+            keyed[key] = (recency_key, record)
+    return unkeyed + [keyed[key][1] for key in sorted(keyed)]
+
+
+def canonical_rwork_usv_cells(
+    records: Sequence[Mapping[str, Any]],
+    usv_cells: Sequence[Mapping[str, Any]],
+) -> list[Mapping[str, Any]]:
+    unkeyed: list[Mapping[str, Any]] = []
+    by_cell: dict[tuple[str, str], Mapping[str, Any]] = {}
+    by_run: dict[tuple[tuple[str, str], str], Mapping[str, Any]] = {}
+    for cell in usv_cells:
+        if cell.get("split") != "rwork":
+            continue
+        key = primary_cell_key(cell)
+        if key is None:
+            unkeyed.append(cell)
+            continue
+        by_cell[key] = cell
+        run_id = cell.get("run_id")
+        if run_id is not None:
+            by_run[(key, str(run_id))] = cell
+
+    selected: list[Mapping[str, Any]] = []
+    for record in records:
+        if record.get("status") != "unsafe_or_scope_violation":
+            continue
+        key = primary_cell_key(record)
+        if key is None:
+            continue
+        run_id = record.get("run_id")
+        cell = by_run.get((key, str(run_id))) if run_id is not None else None
+        if cell is None:
+            cell = by_cell.get(key)
+        if cell is not None:
+            selected.append(cell)
+    selected.extend(unkeyed)
+    return selected
+
+
 def w_metrics(records: Sequence[Mapping[str, Any]], usv_cells: Sequence[Mapping[str, Any]]) -> dict[str, Any]:
-    rwork = [record for record in records if record.get("split") == "rwork"]
-    rwork_usv_cells = [cell for cell in usv_cells if cell.get("split") == "rwork"]
+    rwork = canonical_rwork_records(records)
+    rwork_usv_cells = canonical_rwork_usv_cells(rwork, usv_cells)
     verified_passes = sum(1 for record in rwork if record.get("status") == "verified_pass")
     policy_hold_count = sum(
         1 for cell in rwork_usv_cells if cell.get("audit_disposition") == "policy_hold_source_derived_url"

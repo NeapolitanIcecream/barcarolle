@@ -419,7 +419,7 @@ def normalized_from_workspace_payload(
     classification = classify_status(status, payload)
     acut_id = str(payload.get("acut_id"))
     acut_summary = read_acut_summary(artifact_dir)
-    model_call_made = bool(acut_summary.get("model_call_made")) if isinstance(acut_summary, Mapping) else True
+    model_call_made = acut_summary.get("model_call_made") is True if isinstance(acut_summary, Mapping) else False
     cost_metadata = {
         "model_call_made": model_call_made,
         "estimated_cost_usd": estimate_cost_usd(acut_id, model_call_made),

@@ -81,6 +81,42 @@ class CodexNflWorkspaceRunnerTests(unittest.TestCase):
         self.assertEqual(normalized["verification_workspace"]["workspace"], "/tmp/verify")
         self.assertEqual(normalized["cost_metadata"]["estimated_cost_usd"], 1.0)
 
+    def test_normalized_workspace_payload_defaults_missing_acut_summary_to_no_model_call(self) -> None:
+        """Regression: missing ACUT summaries are not live model-call evidence."""
+        artifact_dir = self.root / "raw/run-without-acut-summary"
+        artifact_dir.mkdir(parents=True)
+        payload = {
+            "tool": "workspace_mode_runner",
+            "schema_version": "core-narrative.workspace-mode-execution.v1",
+            "run_id": "run-without-acut-summary",
+            "acut_id": "cheap-generic-swe",
+            "task_id": "click__rbench__001",
+            "split": "rbench",
+            "attempt": 1,
+            "status": "verifier_infra_error",
+            "started_at": "start",
+            "finished_at": "finish",
+            "duration_seconds": 1.2,
+            "candidate_patch": {},
+            "verification": {},
+            "metadata": {},
+            "error": "summary missing",
+        }
+
+        normalized = runner.normalized_from_workspace_payload(
+            payload=payload,
+            axis="rbench",
+            config_path=self.root / "config.yaml",
+            command={"command": ["workspace_mode_runner.py"]},
+            artifact_dir=artifact_dir,
+            normalized_path=self.root / "normalized/run-without-acut-summary.json",
+        )
+
+        self.assertIs(normalized["metadata"]["model_call_made"], False)
+        self.assertIs(normalized["cost_metadata"]["model_call_made"], False)
+        self.assertEqual(normalized["cost_metadata"]["estimated_cost_usd"], 0.0)
+        self.assertIsNone(normalized["cost_metadata"]["acut_summary_artifact"])
+
     def test_summary_keeps_infra_cells_out_of_primary_ready_state(self) -> None:
         """Infrastructure cells are recorded for rerun/exclusion instead of counted as zero."""
         design = {"acuts": ["cheap-generic-swe"], "rbench": ["click__rbench__001"], "rwork": [], "general": []}

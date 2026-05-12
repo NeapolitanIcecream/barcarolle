@@ -245,6 +245,56 @@ class RgwFullWorkspaceValidityAuditTests(unittest.TestCase):
         self.assertEqual(overlay["metrics"]["policy_hold_count"], 0)
         self.assertEqual(overlay["metrics"]["true_unsafe_count"], 0)
 
+    def test_w_metrics_deduplicate_rwork_cells_before_rates(self) -> None:
+        """Regression: RWork reruns for one cell must not inflate W overlay rates."""
+        records = [
+            {
+                "split": "rwork",
+                "task_id": "click__rwork__001",
+                "acut_id": "cheap-generic-swe",
+                "run_id": "older-policy-hold",
+                "status": "unsafe_or_scope_violation",
+                "finished_at": "2026-05-12T10:00:00Z",
+                "attempt": 1,
+            },
+            {
+                "split": "rwork",
+                "task_id": "click__rwork__001",
+                "acut_id": "cheap-generic-swe",
+                "run_id": "newer-pass",
+                "status": "verified_pass",
+                "finished_at": "2026-05-12T11:00:00Z",
+                "attempt": 1,
+            },
+            {
+                "split": "rwork",
+                "task_id": "click__rwork__002",
+                "acut_id": "cheap-generic-swe",
+                "run_id": "single-fail",
+                "status": "verified_fail",
+                "finished_at": "2026-05-12T10:30:00Z",
+                "attempt": 1,
+            },
+        ]
+        usv_cells = [
+            {
+                "split": "rwork",
+                "task_id": "click__rwork__001",
+                "acut_id": "cheap-generic-swe",
+                "run_id": "older-policy-hold",
+                "audit_disposition": "policy_hold_source_derived_url",
+            }
+        ]
+
+        overlay = audit.w_metrics(records, usv_cells)
+
+        self.assertEqual(overlay["denominators"]["fixed_denominator"], 2)
+        self.assertEqual(overlay["denominators"]["measured_denominator"], 2)
+        self.assertEqual(overlay["denominators"]["verified_pass_count"], 1)
+        self.assertEqual(overlay["metrics"]["fixed_denominator_verified_pass_rate"], 0.5)
+        self.assertEqual(overlay["metrics"]["measured_verified_pass_rate"], 0.5)
+        self.assertEqual(overlay["metrics"]["policy_hold_count"], 0)
+
     def test_write_report_renders_empty_w_rates_without_crashing(self) -> None:
         """Regression: empty RWork inputs render nullable W rates instead of raising."""
         report = self.root / "report.md"
