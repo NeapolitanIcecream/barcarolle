@@ -5,6 +5,7 @@ from __future__ import annotations
 
 import json
 import shutil
+import subprocess
 import tempfile
 import unittest
 from pathlib import Path
@@ -22,6 +23,16 @@ class RgwFullWorkspaceValidityAuditTests(unittest.TestCase):
         path.parent.mkdir(parents=True, exist_ok=True)
         path.write_text(json.dumps(payload, indent=2, sort_keys=True), encoding="utf-8")
         return path
+
+    def run_git(self, workspace: Path, *args: str) -> None:
+        subprocess.run(
+            ["git", *args],
+            cwd=workspace,
+            check=True,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+            text=True,
+        )
 
     def test_source_derived_full_urls_become_policy_hold_not_true_unsafe(self) -> None:
         """Source-derived URL-only USV cells are held out of measured ACUT failures."""
@@ -114,6 +125,71 @@ class RgwFullWorkspaceValidityAuditTests(unittest.TestCase):
 
         self.assertEqual(cells[0]["raw_artifact_ref"], "raw/run-1")
         self.assertEqual(cells[0]["workspace_mode_status"], "unsafe_or_scope_violation")
+
+    def test_policy_hold_replay_extracts_patch_from_cross_root_artifact_dir(self) -> None:
+        """Regression: replay extraction must use the artifact dir resolved during USV audit."""
+        primary_root = self.root / "current-results"
+        recorded_artifact_dir = (
+            self.root
+            / "old-checkout"
+            / "experiments/core_narrative/results/rgw_full_workspace_v1/raw/run-1"
+        )
+        run_workspace = self.root / "preserved-workspace"
+        run_workspace.mkdir(parents=True)
+        self.run_git(run_workspace, "init")
+        self.run_git(run_workspace, "config", "user.email", "test@example.invalid")
+        self.run_git(run_workspace, "config", "user.name", "Test User")
+        (run_workspace / "hello.txt").write_text("before\n", encoding="utf-8")
+        self.run_git(run_workspace, "add", "hello.txt")
+        self.run_git(run_workspace, "commit", "-m", "base")
+        (run_workspace / "hello.txt").write_text("after\n", encoding="utf-8")
+        recorded_artifact_dir.mkdir(parents=True)
+        (recorded_artifact_dir / "workspace_mode_result.json").write_text(
+            json.dumps(
+                {
+                    "status": "unsafe_or_scope_violation",
+                    "run_workspace": str(run_workspace),
+                    "candidate_patch": {
+                        "base_ref": "HEAD",
+                        "unsafe_content_attribution": {
+                            "all_full_urls_source_derived": True,
+                            "all_unsafe_reasons_source_derived": True,
+                            "full_url_count": 1,
+                            "source_derived_full_url_count": 1,
+                            "model_generated_full_url_count": 0,
+                            "ambiguous_full_url_count": 0,
+                            "non_url_reason_counts": {},
+                        },
+                    },
+                },
+                indent=2,
+                sort_keys=True,
+            ),
+            encoding="utf-8",
+        )
+        records = [
+            {
+                "split": "rwork",
+                "task_id": "click__rwork__004",
+                "acut_id": "cheap-click-specialist",
+                "run_id": "run-1",
+                "status": "unsafe_or_scope_violation",
+                "artifact_paths": {"artifact_dir": str(recorded_artifact_dir)},
+            }
+        ]
+
+        cells = audit.build_usv_audit(records, primary_root)
+        patch_path, metadata = audit.extract_patch_from_preserved_workspace(
+            cells[0],
+            primary_root,
+            self.root / "extract-artifacts",
+        )
+
+        self.assertIn("hello.txt", patch_path.read_text(encoding="utf-8"))
+        self.assertGreater(metadata["patch_bytes"], 0)
+        public_cell = audit.public_usv_cell(cells[0])
+        self.assertNotIn("_resolved_artifact_dir", public_cell)
+        self.assertNotIn(str(recorded_artifact_dir), json.dumps(public_cell))
 
     def test_model_generated_full_url_remains_true_unsafe(self) -> None:
         """Model-added full URLs stay true unsafe outcomes in the audit overlay."""

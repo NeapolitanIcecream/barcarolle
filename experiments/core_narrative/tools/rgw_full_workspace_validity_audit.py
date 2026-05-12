@@ -33,6 +33,7 @@ PREPARE = REPO_ROOT / "experiments/core_narrative/tools/prepare_workspace.py"
 VERIFY = REPO_ROOT / "experiments/core_narrative/tools/apply_and_verify.py"
 REFERENCE_TASKS = ("click__rbench__001", "click__rbench__004", "click__rbench__008", "click__rwork__004")
 FULL_URL_RE = re.compile(r"https?://[^\s\"'<>]+", re.IGNORECASE)
+INTERNAL_RESOLVED_ARTIFACT_DIR = "_resolved_artifact_dir"
 DISALLOWED_PUBLIC_RE = {
     "full_url": FULL_URL_RE,
     "file_url": re.compile(r"file:", re.IGNORECASE),
@@ -497,6 +498,7 @@ def build_usv_audit(records: Sequence[Mapping[str, Any]], primary_root: Path) ->
                 "run_id": run_id,
                 "primary_status": record.get("status"),
                 "primary_result_kind": "true_primary_result",
+                INTERNAL_RESOLVED_ARTIFACT_DIR: str(artifact_dir),
                 "audit_attribution_category": category,
                 "audit_disposition": "policy_hold_source_derived_url" if policy_hold else "true_unsafe_primary_result",
                 "acut_failure_counted_in_overlay": not policy_hold,
@@ -528,8 +530,45 @@ def build_usv_audit(records: Sequence[Mapping[str, Any]], primary_root: Path) ->
     return sorted(cells, key=lambda item: (str(item["task_id"]), str(item["acut_id"])))
 
 
+def public_usv_cell(cell: Mapping[str, Any]) -> dict[str, Any]:
+    return {str(key): value for key, value in cell.items() if not str(key).startswith("_")}
+
+
+def resolve_cell_artifact_dir(cell: Mapping[str, Any], primary_root: Path) -> Path:
+    candidates: list[Path] = []
+
+    def add_candidate(path: Path) -> None:
+        if path not in candidates:
+            candidates.append(path)
+
+    resolved_artifact_dir = cell.get(INTERNAL_RESOLVED_ARTIFACT_DIR)
+    if isinstance(resolved_artifact_dir, str) and resolved_artifact_dir:
+        add_candidate(Path(resolved_artifact_dir))
+
+    raw_artifact_ref = cell.get("raw_artifact_ref")
+    if isinstance(raw_artifact_ref, str) and raw_artifact_ref:
+        raw_artifact_path = Path(raw_artifact_ref)
+        if raw_artifact_path.is_absolute():
+            add_candidate(raw_artifact_path)
+        else:
+            add_candidate(primary_root / raw_artifact_path)
+            if len(raw_artifact_path.parts) == 1:
+                add_candidate(primary_root / "raw" / raw_artifact_path)
+
+    run_id = cell.get("run_id")
+    if isinstance(run_id, str) and run_id:
+        add_candidate(primary_root / "raw" / run_id)
+
+    for candidate in candidates:
+        if (candidate / "workspace_mode_result.json").exists():
+            return candidate
+    if candidates:
+        return candidates[0]
+    raise ToolError("policy-hold replay cell is missing artifact reference", cell_id=cell.get("cell_id"))
+
+
 def extract_patch_from_preserved_workspace(cell: Mapping[str, Any], primary_root: Path, artifact_dir: Path) -> tuple[Path, dict[str, Any]]:
-    workspace_result = load_json(primary_root / str(cell["raw_artifact_ref"]) / "workspace_mode_result.json")
+    workspace_result = load_json(resolve_cell_artifact_dir(cell, primary_root) / "workspace_mode_result.json")
     run_workspace = Path(str(workspace_result.get("run_workspace")))
     candidate = workspace_result.get("candidate_patch") if isinstance(workspace_result.get("candidate_patch"), Mapping) else {}
     base_ref = candidate.get("diff_base_ref") or candidate.get("base_ref")
@@ -787,14 +826,15 @@ def run_audit(args: argparse.Namespace) -> dict[str, Any]:
         for task_id in REFERENCE_TASKS
     ]
     overlay = w_metrics(records, usv_cells)
+    public_usv_cells = [public_usv_cell(cell) for cell in usv_cells]
 
-    write_json(audit_root / "usv_attribution.json", {"schema_version": SCHEMA_VERSION, "cells": usv_cells})
+    write_json(audit_root / "usv_attribution.json", {"schema_version": SCHEMA_VERSION, "cells": public_usv_cells})
     write_json(audit_root / "post_run_replays.json", {"schema_version": SCHEMA_VERSION, "replays": replays})
     write_json(audit_root / "reference_smokes.json", {"schema_version": SCHEMA_VERSION, "tasks": reference_smokes})
     write_json(audit_root / "w_metric_overlay.json", {"schema_version": SCHEMA_VERSION, **overlay})
     write_report(
         report_path=report_path,
-        usv_cells=usv_cells,
+        usv_cells=public_usv_cells,
         reference_smokes=reference_smokes,
         replays=replays,
         overlay=overlay,
