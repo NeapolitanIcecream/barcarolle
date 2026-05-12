@@ -440,13 +440,42 @@ def redacted_url_occurrences(attribution: Mapping[str, Any]) -> list[dict[str, A
     return redacted
 
 
+def resolve_primary_artifact_dir(record: Mapping[str, Any], primary_root: Path) -> Path:
+    artifact_paths = record.get("artifact_paths") if isinstance(record.get("artifact_paths"), Mapping) else {}
+    recorded = artifact_paths.get("artifact_dir")
+    run_id = str(record.get("run_id") or "")
+    candidates: list[Path] = []
+
+    def add_candidate(path: Path) -> None:
+        if path not in candidates:
+            candidates.append(path)
+
+    recorded_path = Path(str(recorded)) if isinstance(recorded, str) and recorded else None
+    if run_id:
+        add_candidate(primary_root / "raw" / run_id)
+    if recorded_path is not None:
+        add_candidate(primary_root / "raw" / recorded_path.name)
+        if recorded_path.is_absolute():
+            add_candidate(recorded_path)
+        else:
+            add_candidate(primary_root / recorded_path)
+            add_candidate(recorded_path)
+
+    if not candidates:
+        raise ToolError("normalized USV record is missing artifact_dir", run_id=record.get("run_id"))
+
+    for artifact_dir in candidates:
+        if (artifact_dir / "workspace_mode_result.json").exists():
+            return artifact_dir
+    return candidates[0]
+
+
 def build_usv_audit(records: Sequence[Mapping[str, Any]], primary_root: Path) -> list[dict[str, Any]]:
     cells: list[dict[str, Any]] = []
     for record in records:
         if record.get("status") != "unsafe_or_scope_violation":
             continue
-        artifact_paths = record.get("artifact_paths") if isinstance(record.get("artifact_paths"), Mapping) else {}
-        artifact_dir = Path(str(artifact_paths.get("artifact_dir")))
+        artifact_dir = resolve_primary_artifact_dir(record, primary_root)
         workspace_result_path = artifact_dir / "workspace_mode_result.json"
         payload = load_json(workspace_result_path)
         candidate = payload.get("candidate_patch") if isinstance(payload.get("candidate_patch"), Mapping) else {}

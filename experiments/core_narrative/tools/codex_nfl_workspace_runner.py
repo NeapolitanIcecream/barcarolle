@@ -775,7 +775,12 @@ def count_by(records: Sequence[Mapping[str, Any]], key: str) -> dict[str, int]:
     return dict(sorted(counts.items()))
 
 
-def summarize_axis(records: Sequence[Mapping[str, Any]], axis: str, task_ids: Sequence[str], acuts: Sequence[str]) -> dict[str, Any]:
+def canonical_records_by_cell(
+    records: Sequence[Mapping[str, Any]],
+    axis: str,
+    task_ids: Sequence[str],
+    acuts: Sequence[str],
+) -> tuple[set[tuple[str, str]], dict[tuple[str, str], Mapping[str, Any]]]:
     expected_cells = {(str(acut), str(task_id)) for acut in acuts for task_id in task_ids}
     by_cell: dict[tuple[str, str], Mapping[str, Any]] = {}
     for record in records:
@@ -784,6 +789,11 @@ def summarize_axis(records: Sequence[Mapping[str, Any]], axis: str, task_ids: Se
         key = (str(record.get("acut_id")), str(record.get("task_id")))
         if key in expected_cells:
             by_cell[key] = record
+    return expected_cells, by_cell
+
+
+def summarize_axis(records: Sequence[Mapping[str, Any]], axis: str, task_ids: Sequence[str], acuts: Sequence[str]) -> dict[str, Any]:
+    expected_cells, by_cell = canonical_records_by_cell(records, axis, task_ids, acuts)
     cells = []
     for acut, task_id in sorted(expected_cells):
         record = by_cell.get((acut, task_id))
@@ -829,10 +839,11 @@ def by_acut_table(records: Sequence[Mapping[str, Any]], design: Mapping[str, Any
         row: dict[str, Any] = {"acut_id": acut}
         for axis in ("rbench", "rwork", "general"):
             task_ids = design[axis]
+            _, by_cell = canonical_records_by_cell(records, axis, task_ids, [acut])
             axis_records = [
-                record
-                for record in records
-                if record.get("axis") == axis and record.get("acut_id") == acut and record.get("task_id") in task_ids
+                by_cell[(str(acut), str(task_id))]
+                for task_id in task_ids
+                if (str(acut), str(task_id)) in by_cell
             ]
             scored = [record for record in axis_records if isinstance(record.get("score_value"), int)]
             passed = sum(1 for record in scored if record.get("score_value") == 1)

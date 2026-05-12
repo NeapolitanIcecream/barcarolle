@@ -134,6 +134,37 @@ class CodexNflWorkspaceRunnerTests(unittest.TestCase):
         self.assertEqual(summary["status"], "primary_incomplete_or_infra_blocked")
         self.assertTrue((self.root / "cost_ledger.jsonl").exists())
 
+    def test_acut_table_deduplicates_cell_records_before_scoring(self) -> None:
+        """Regression: rerun records for the same ACUT cell must not inflate scores."""
+        design = {"acuts": ["cheap-generic-swe"], "rbench": ["click__rbench__001"], "rwork": [], "general": []}
+        records = [
+            {
+                "axis": "rbench",
+                "task_id": "click__rbench__001",
+                "acut_id": "cheap-generic-swe",
+                "status": "verified_pass",
+                "score_value": 1,
+                "requires_rerun_or_exclusion": False,
+                "triage_paused": False,
+            },
+            {
+                "axis": "rbench",
+                "task_id": "click__rbench__001",
+                "acut_id": "cheap-generic-swe",
+                "status": "verified_pass",
+                "score_value": 1,
+                "requires_rerun_or_exclusion": False,
+                "triage_paused": False,
+            },
+        ]
+
+        row = runner.by_acut_table(records, design)["cheap-generic-swe"]
+
+        self.assertEqual(row["r_passed"], 1)
+        self.assertEqual(row["r_score_percent_fixed"], 100.0)
+        self.assertTrue(row["r_primary_score_ready"])
+        self.assertEqual(row["r_status_counts"], {"verified_pass": 1})
+
     def test_workspace_mode_command_invokes_workspace_runner_before_acut_command(self) -> None:
         """The primary execution chain starts with workspace_mode_runner.py."""
         args = SimpleNamespace(
