@@ -488,13 +488,64 @@ def resolve_primary_artifact_dir(record: Mapping[str, Any], primary_root: Path) 
     return candidates[0]
 
 
-def build_usv_audit(records: Sequence[Mapping[str, Any]], primary_root: Path) -> list[dict[str, Any]]:
+def usv_cache_key(item: Mapping[str, Any]) -> tuple[str, str, str, str] | None:
+    split = item.get("split")
+    task_id = item.get("task_id")
+    acut_id = item.get("acut_id")
+    run_id = item.get("run_id")
+    if not all(isinstance(value, str) and value for value in (split, task_id, acut_id, run_id)):
+        return None
+    return str(split), str(task_id), str(acut_id), str(run_id)
+
+
+def cached_usv_cells_by_key(cached_usv_path: Path) -> dict[tuple[str, str, str, str], dict[str, Any]]:
+    if not cached_usv_path.exists():
+        return {}
+    payload = load_json(cached_usv_path)
+    cells = payload.get("cells") if isinstance(payload.get("cells"), list) else []
+    cached: dict[tuple[str, str, str, str], dict[str, Any]] = {}
+    for cell in cells:
+        if not isinstance(cell, Mapping):
+            continue
+        key = usv_cache_key(cell)
+        if key is None:
+            continue
+        cached[key] = public_usv_cell(cell)
+    return cached
+
+
+def build_usv_audit(
+    records: Sequence[Mapping[str, Any]],
+    primary_root: Path,
+    cached_usv_path: Path | None = None,
+) -> list[dict[str, Any]]:
     cells: list[dict[str, Any]] = []
+    cached_cells: dict[tuple[str, str, str, str], dict[str, Any]] | None = None
+    fallback_path = cached_usv_path if cached_usv_path is not None else primary_root / "validity_audit/usv_attribution.json"
+
+    def cached_cell_for(record: Mapping[str, Any]) -> dict[str, Any] | None:
+        nonlocal cached_cells
+        if cached_cells is None:
+            cached_cells = cached_usv_cells_by_key(fallback_path)
+        key = usv_cache_key(record)
+        return cached_cells.get(key) if key is not None else None
+
     for record in records:
         if record.get("status") != "unsafe_or_scope_violation":
             continue
         artifact_dir = resolve_primary_artifact_dir(record, primary_root)
         workspace_result_path = artifact_dir / "workspace_mode_result.json"
+        if not workspace_result_path.exists():
+            cached_cell = cached_cell_for(record)
+            if cached_cell is not None:
+                cells.append(cached_cell)
+                continue
+            raise ToolError(
+                "USV raw artifact is missing and no committed redacted attribution fallback exists",
+                run_id=record.get("run_id"),
+                workspace_mode_result=str(workspace_result_path),
+                cached_usv_path=str(fallback_path),
+            )
         payload = load_json(workspace_result_path)
         candidate = payload.get("candidate_patch") if isinstance(payload.get("candidate_patch"), Mapping) else {}
         attribution = (
@@ -891,7 +942,7 @@ def run_audit(args: argparse.Namespace) -> dict[str, Any]:
     records = matrix.get("records") if isinstance(matrix.get("records"), list) else []
     started_at = iso_now()
 
-    usv_cells = build_usv_audit(records, primary_root)
+    usv_cells = build_usv_audit(records, primary_root, audit_root / "usv_attribution.json")
     policy_holds = [cell for cell in usv_cells if cell["audit_disposition"] == "policy_hold_source_derived_url"]
     replays = [
         run_policy_hold_replay(

@@ -128,6 +128,68 @@ class RgwFullWorkspaceValidityAuditTests(unittest.TestCase):
         self.assertEqual(cells[0]["raw_artifact_ref"], "raw/run-1")
         self.assertEqual(cells[0]["workspace_mode_status"], "unsafe_or_scope_violation")
 
+    def test_usv_audit_reuses_committed_redacted_attribution_when_raw_is_absent(self) -> None:
+        """Regression: clean checkouts do not include ignored raw workspace-mode artifacts."""
+        primary_root = self.root / "primary"
+        recorded_artifact_dir = self.root / "old-checkout" / "raw/run-1"
+        self.write_json(
+            "primary/validity_audit/usv_attribution.json",
+            {
+                "schema_version": audit.SCHEMA_VERSION,
+                "cells": [
+                    {
+                        "cell_id": "rwork::click__rwork__003::cheap-generic-swe",
+                        "split": "rwork",
+                        "task_id": "click__rwork__003",
+                        "acut_id": "cheap-generic-swe",
+                        "run_id": "run-1",
+                        "primary_status": "unsafe_or_scope_violation",
+                        "primary_result_kind": "true_primary_result",
+                        "audit_attribution_category": "all_full_urls_source_derived",
+                        "audit_disposition": "policy_hold_source_derived_url",
+                        "acut_failure_counted_in_overlay": False,
+                        "raw_artifact_ref": "raw/run-1",
+                        "workspace_mode_status": "unsafe_or_scope_violation",
+                        "candidate_patch": {
+                            "persisted": False,
+                            "stored_size_bytes": 0,
+                            "raw_candidate_patch_size_bytes": 123,
+                            "redacted_preview_written": True,
+                        },
+                        "unsafe_attribution_redacted": {
+                            "reason_counts": {"full_url": 1},
+                            "full_url_count": 1,
+                            "source_derived_full_url_count": 1,
+                            "model_generated_full_url_count": 0,
+                            "ambiguous_full_url_count": 0,
+                            "non_url_reason_counts": {},
+                            "full_url_role_counts": {"source_context": 1},
+                            "content_recorded": False,
+                            "url_occurrences": [],
+                        },
+                    }
+                ],
+            },
+        )
+        records = [
+            {
+                "split": "rwork",
+                "task_id": "click__rwork__003",
+                "acut_id": "cheap-generic-swe",
+                "run_id": "run-1",
+                "status": "unsafe_or_scope_violation",
+                "artifact_paths": {"artifact_dir": str(recorded_artifact_dir)},
+            }
+        ]
+
+        cells = audit.build_usv_audit(records, primary_root)
+
+        self.assertEqual(cells[0]["audit_attribution_category"], "all_full_urls_source_derived")
+        self.assertEqual(cells[0]["audit_disposition"], "policy_hold_source_derived_url")
+        self.assertFalse(cells[0]["acut_failure_counted_in_overlay"])
+        self.assertEqual(cells[0]["candidate_patch"]["raw_candidate_patch_size_bytes"], 123)
+        self.assertNotIn(audit.INTERNAL_RESOLVED_ARTIFACT_DIR, cells[0])
+
     def test_policy_hold_replay_extracts_patch_from_cross_root_artifact_dir(self) -> None:
         """Regression: replay extraction must use the artifact dir resolved during USV audit."""
         primary_root = self.root / "current-results"
