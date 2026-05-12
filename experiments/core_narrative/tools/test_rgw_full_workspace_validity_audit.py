@@ -446,6 +446,95 @@ class RgwFullWorkspaceValidityAuditTests(unittest.TestCase):
         self.assertFalse(result["passed"])
         self.assertEqual({item["finding"] for item in result["findings"]}, {"full_url", "absolute_users_path"})
 
+    def test_run_audit_reuses_cached_replays_when_policy_hold_raw_is_absent(self) -> None:
+        """Regression: clean checkouts must not replace committed replay outcomes with infra blocks."""
+        repo_root = self.root / "repo"
+        primary_root = repo_root / "results"
+        audit_root = primary_root / "validity_audit"
+        private_root = repo_root / "private"
+        report = repo_root / "reports/validity_audit.md"
+        cell_id = "rwork::click__rwork__004::cheap-click-specialist"
+        run_id = "run-1"
+        self.write_json(
+            "repo/results/normalized_result_matrix.json",
+            {
+                "records": [
+                    {
+                        "split": "rwork",
+                        "task_id": "click__rwork__004",
+                        "acut_id": "cheap-click-specialist",
+                        "run_id": run_id,
+                        "status": "unsafe_or_scope_violation",
+                        "artifact_paths": {"artifact_dir": str(self.root / "old-checkout/raw/run-1")},
+                    }
+                ]
+            },
+        )
+        self.write_json(
+            "repo/results/validity_audit/usv_attribution.json",
+            {
+                "schema_version": audit.SCHEMA_VERSION,
+                "cells": [
+                    {
+                        "cell_id": cell_id,
+                        "split": "rwork",
+                        "task_id": "click__rwork__004",
+                        "acut_id": "cheap-click-specialist",
+                        "run_id": run_id,
+                        "primary_status": "unsafe_or_scope_violation",
+                        "primary_result_kind": "true_primary_result",
+                        "audit_attribution_category": "all_full_urls_source_derived",
+                        "audit_disposition": "policy_hold_source_derived_url",
+                        "acut_failure_counted_in_overlay": False,
+                        "raw_artifact_ref": "raw/run-1",
+                        "workspace_mode_status": "unsafe_or_scope_violation",
+                    }
+                ],
+            },
+        )
+        self.write_json(
+            "repo/results/validity_audit/post_run_replays.json",
+            {
+                "schema_version": audit.SCHEMA_VERSION,
+                "replays": [
+                    {
+                        "cell_id": cell_id,
+                        "task_id": "click__rwork__004",
+                        "acut_id": "cheap-click-specialist",
+                        "primary_run_id": run_id,
+                        "private_run_id": "cached-replay",
+                        "replay_basis": "post_run_replay_from_preserved_workspace",
+                        "primary_result_promoted": False,
+                        "replay_outcome": "verified_pass",
+                        "verifier_artifacts_redacted": True,
+                        "patch": {"patch_bytes": 12, "patch_sha256": "abc"},
+                    }
+                ],
+            },
+        )
+        args = argparse.Namespace(
+            primary_root=str(primary_root),
+            audit_root=str(audit_root),
+            private_root=str(private_root),
+            report=str(report),
+            install_timeout_seconds=1,
+            verifier_timeout_seconds=1,
+            force_private=True,
+        )
+
+        with mock.patch.object(audit, "REPO_ROOT", repo_root):
+            with mock.patch.object(
+                audit,
+                "run_reference_smoke",
+                return_value={"task_id": "reference", "status": "passed", "oracle_status": "reference_passed"},
+            ):
+                summary = audit.run_audit(args)
+
+        replays = json.loads((audit_root / "post_run_replays.json").read_text(encoding="utf-8"))["replays"]
+        self.assertEqual(replays[0]["replay_outcome"], "verified_pass")
+        self.assertNotIn("blocker", replays[0])
+        self.assertEqual(summary["replay_outcome_counts"], {"verified_pass": 1})
+
     def test_run_audit_summary_reports_actual_roots(self) -> None:
         """Regression: audit summaries must reflect the roots passed to the tool."""
         repo_root = self.root / "repo"

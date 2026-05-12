@@ -635,6 +635,38 @@ def resolve_cell_artifact_dir(cell: Mapping[str, Any], primary_root: Path) -> Pa
     raise ToolError("policy-hold replay cell is missing artifact reference", cell_id=cell.get("cell_id"))
 
 
+def policy_hold_replay_cache_key(item: Mapping[str, Any], *, run_id_key: str) -> tuple[str, str] | None:
+    cell_id = item.get("cell_id")
+    run_id = item.get(run_id_key)
+    if not isinstance(cell_id, str) or not cell_id or not isinstance(run_id, str) or not run_id:
+        return None
+    return cell_id, run_id
+
+
+def cached_policy_hold_replays_by_key(cached_replays_path: Path) -> dict[tuple[str, str], dict[str, Any]]:
+    if not cached_replays_path.exists():
+        return {}
+    payload = load_json(cached_replays_path)
+    replays = payload.get("replays") if isinstance(payload.get("replays"), list) else []
+    cached: dict[tuple[str, str], dict[str, Any]] = {}
+    for replay in replays:
+        if not isinstance(replay, Mapping):
+            continue
+        key = policy_hold_replay_cache_key(replay, run_id_key="primary_run_id")
+        if key is None:
+            continue
+        cached[key] = dict(replay)
+    return cached
+
+
+def has_workspace_mode_result(cell: Mapping[str, Any], primary_root: Path) -> bool:
+    try:
+        artifact_dir = resolve_cell_artifact_dir(cell, primary_root)
+    except ToolError:
+        return False
+    return (artifact_dir / "workspace_mode_result.json").exists()
+
+
 def extract_patch_from_preserved_workspace(cell: Mapping[str, Any], primary_root: Path, artifact_dir: Path) -> tuple[Path, dict[str, Any]]:
     workspace_result = load_json(resolve_cell_artifact_dir(cell, primary_root) / "workspace_mode_result.json")
     run_workspace = Path(str(workspace_result.get("run_workspace")))
@@ -731,6 +763,45 @@ def run_policy_hold_replay(
             "replay_outcome": "infra_blocked",
             "blocker": redact_sensitive_text(str(exc), os.environ),
         }
+
+
+def build_policy_hold_replays(
+    *,
+    policy_holds: Sequence[Mapping[str, Any]],
+    primary_root: Path,
+    private_root: Path,
+    cached_replays_path: Path,
+    install_timeout_seconds: int,
+    verifier_timeout_seconds: int,
+    force_private: bool,
+) -> list[dict[str, Any]]:
+    replays: list[dict[str, Any]] = []
+    cached_replays: dict[tuple[str, str], dict[str, Any]] | None = None
+
+    def cached_replay_for(cell: Mapping[str, Any]) -> dict[str, Any] | None:
+        nonlocal cached_replays
+        if cached_replays is None:
+            cached_replays = cached_policy_hold_replays_by_key(cached_replays_path)
+        key = policy_hold_replay_cache_key(cell, run_id_key="run_id")
+        return cached_replays.get(key) if key is not None else None
+
+    for cell in policy_holds:
+        if not has_workspace_mode_result(cell, primary_root):
+            cached_replay = cached_replay_for(cell)
+            if cached_replay is not None:
+                replays.append(cached_replay)
+                continue
+        replays.append(
+            run_policy_hold_replay(
+                cell=cell,
+                primary_root=primary_root,
+                private_root=private_root,
+                install_timeout_seconds=install_timeout_seconds,
+                verifier_timeout_seconds=verifier_timeout_seconds,
+                force_private=force_private,
+            )
+        )
+    return replays
 
 
 def primary_cell_key(item: Mapping[str, Any]) -> tuple[str, str] | None:
@@ -944,17 +1015,15 @@ def run_audit(args: argparse.Namespace) -> dict[str, Any]:
 
     usv_cells = build_usv_audit(records, primary_root, audit_root / "usv_attribution.json")
     policy_holds = [cell for cell in usv_cells if cell["audit_disposition"] == "policy_hold_source_derived_url"]
-    replays = [
-        run_policy_hold_replay(
-            cell=cell,
-            primary_root=primary_root,
-            private_root=private_root,
-            install_timeout_seconds=args.install_timeout_seconds,
-            verifier_timeout_seconds=args.verifier_timeout_seconds,
-            force_private=args.force_private,
-        )
-        for cell in policy_holds
-    ]
+    replays = build_policy_hold_replays(
+        policy_holds=policy_holds,
+        primary_root=primary_root,
+        private_root=private_root,
+        cached_replays_path=audit_root / "post_run_replays.json",
+        install_timeout_seconds=args.install_timeout_seconds,
+        verifier_timeout_seconds=args.verifier_timeout_seconds,
+        force_private=args.force_private,
+    )
     reference_smokes = [
         run_reference_smoke(
             task_id=task_id,
