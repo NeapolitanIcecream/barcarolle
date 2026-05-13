@@ -1,0 +1,152 @@
+{
+  "output_root": "experiments/core_narrative/tasks",
+  "schema_version": "core-narrative.m6-w3-admission.v1",
+  "status": "materialized",
+  "task_count": 20,
+  "tasks": [
+    {
+      "hidden_verifier_files": [
+        "tests/test_options.py"
+      ],
+      "task_id": "click__w3__001",
+      "task_manifest": "experiments/core_narrative/tasks/click/w3/click__w3__001/task.yaml"
+    },
+    {
+      "hidden_verifier_files": [
+        "tests/test_options.py"
+      ],
+      "task_id": "click__w3__002",
+      "task_manifest": "experiments/core_narrative/tasks/click/w3/click__w3__002/task.yaml"
+    },
+    {
+      "hidden_verifier_files": [
+        "tests/test_defaults.py"
+      ],
+      "task_id": "click__w3__003",
+      "task_manifest": "experiments/core_narrative/tasks/click/w3/click__w3__003/task.yaml"
+    },
+    {
+      "hidden_verifier_files": [
+        "tests/test_defaults.py"
+      ],
+      "task_id": "click__w3__004",
+      "task_manifest": "experiments/core_narrative/tasks/click/w3/click__w3__004/task.yaml"
+    },
+    {
+      "hidden_verifier_files": [
+        "tests/test_testing.py"
+      ],
+      "task_id": "click__w3__005",
+      "task_manifest": "experiments/core_narrative/tasks/click/w3/click__w3__005/task.yaml"
+    },
+    {
+      "hidden_verifier_files": [
+        "tests/test_testing.py"
+      ],
+      "task_id": "click__w3__006",
+      "task_manifest": "experiments/core_narrative/tasks/click/w3/click__w3__006/task.yaml"
+    },
+    {
+      "hidden_verifier_files": [
+        "tests/test_testing.py"
+      ],
+      "task_id": "click__w3__007",
+      "task_manifest": "experiments/core_narrative/tasks/click/w3/click__w3__007/task.yaml"
+    },
+    {
+      "hidden_verifier_files": [
+        "tests/test_testing.py"
+      ],
+      "task_id": "click__w3__008",
+      "task_manifest": "experiments/core_narrative/tasks/click/w3/click__w3__008/task.yaml"
+    },
+    {
+      "hidden_verifier_files": [
+        "tests/test_options.py",
+        "tests/test_termui.py"
+      ],
+      "task_id": "click__w3__009",
+      "task_manifest": "experiments/core_narrative/tasks/click/w3/click__w3__009/task.yaml"
+    },
+    {
+      "hidden_verifier_files": [
+        "tests/test_utils.py"
+      ],
+      "task_id": "click__w3__010",
+      "task_manifest": "experiments/core_narrative/tasks/click/w3/click__w3__010/task.yaml"
+    },
+    {
+      "hidden_verifier_files": [
+        "tests/test_termui.py"
+      ],
+      "task_id": "click__w3__011",
+      "task_manifest": "experiments/core_narrative/tasks/click/w3/click__w3__011/task.yaml"
+    },
+    {
+      "hidden_verifier_files": [
+        "tests/test_basic.py",
+        "tests/test_options.py",
+        "tests/test_termui.py"
+      ],
+      "task_id": "click__w3__012",
+      "task_manifest": "experiments/core_narrative/tasks/click/w3/click__w3__012/task.yaml"
+    },
+    {
+      "hidden_verifier_files": [
+        "tests/test_types.py"
+      ],
+      "task_id": "click__w3__013",
+      "task_manifest": "experiments/core_narrative/tasks/click/w3/click__w3__013/task.yaml"
+    },
+    {
+      "hidden_verifier_files": [
+        "tests/test_options.py"
+      ],
+      "task_id": "click__w3__014",
+      "task_manifest": "experiments/core_narrative/tasks/click/w3/click__w3__014/task.yaml"
+    },
+    {
+      "hidden_verifier_files": [
+        "tests/test_options.py"
+      ],
+      "task_id": "click__w3__015",
+      "task_manifest": "experiments/core_narrative/tasks/click/w3/click__w3__015/task.yaml"
+    },
+    {
+      "hidden_verifier_files": [
+        "tests/test_arguments.py",
+        "tests/test_options.py"
+      ],
+      "task_id": "click__w3__016",
+      "task_manifest": "experiments/core_narrative/tasks/click/w3/click__w3__016/task.yaml"
+    },
+    {
+      "hidden_verifier_files": [
+        "tests/test_shell_completion.py"
+      ],
+      "task_id": "click__w3__017",
+      "task_manifest": "experiments/core_narrative/tasks/click/w3/click__w3__017/task.yaml"
+    },
+    {
+      "hidden_verifier_files": [
+        "tests/test_commands.py"
+      ],
+      "task_id": "click__w3__018",
+      "task_manifest": "experiments/core_narrative/tasks/click/w3/click__w3__018/task.yaml"
+    },
+    {
+      "hidden_verifier_files": [
+        "tests/test_shell_completion.py"
+      ],
+      "task_id": "click__w3__019",
+      "task_manifest": "experiments/core_narrative/tasks/click/w3/click__w3__019/task.yaml"
+    },
+    {
+      "hidden_verifier_files": [
+        "tests/test_shell_completion.py"
+      ],
+      "task_id": "click__w3__020",
+      "task_manifest": "experiments/core_narrative/tasks/click/w3/click__w3__020/task.yaml"
+    }
+  ]
+}

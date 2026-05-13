@@ -1,0 +1,83 @@
+{
+  "acut_g_run": false,
+  "admission_counts": {
+    "accepted": 28,
+    "rejected": 12
+  },
+  "admission_sheets": "experiments/core_narrative/results/m6_w3_admission/admission_sheets.json",
+  "admitted_candidate_count": 28,
+  "candidate_count": 40,
+  "candidate_manifest": "experiments/core_narrative/configs/tasks/rwork_click_w3_candidates.yaml",
+  "freeze": {
+    "acut_run_order": [
+      "cheap-generic-swe",
+      "cheap-click-deep-specialist-v2",
+      "cheap-click-rbench-calibrated-v1",
+      "frontier-generic-swe"
+    ],
+    "denominator_status": "frozen_primary_not_run",
+    "deterministic_run_seed": "m6-w3-primary-20260513-denominator-v1",
+    "infra_rerun_policy": {
+      "acut_specific_retry_allowed": false,
+      "best_of_n_allowed": false,
+      "global_infra_only": true,
+      "requires_documented_global_exclusion_before_scoring": true
+    },
+    "reserve_ordering": "manifest_order",
+    "status_mapping": {
+      "no_diff": {
+        "score_action": "fixed_denominator_zero",
+        "score_value": 0
+      },
+      "timeout": {
+        "score_action": "fixed_denominator_zero_unless_global_infra",
+        "score_value": 0
+      },
+      "unsafe_or_scope_violation": {
+        "score_action": "fixed_denominator_zero",
+        "score_value": 0
+      },
+      "verified_fail": {
+        "score_action": "fixed_denominator_zero",
+        "score_value": 0
+      },
+      "verified_pass": {
+        "score_action": "fixed_denominator_one",
+        "score_value": 1
+      },
+      "verifier_infra_error": {
+        "score_action": "rerun_or_global_exclusion_required",
+        "score_value": null
+      }
+    }
+  },
+  "generated_at": "2026-05-13T14:18:08.649605Z",
+  "materialization_summary": "experiments/core_narrative/results/m6_w3_admission/materialization_summary.json",
+  "model_calls_made": 0,
+  "primary_family_counts": {
+    "CliRunner/testing/input-output isolation": 4,
+    "option/default/envvar/flag semantics": 4,
+    "parser/mixed integration": 4,
+    "prompt/termui/output rendering": 4,
+    "type conversion/parameter normalization": 4
+  },
+  "primary_manifest": "experiments/core_narrative/configs/tasks/rwork_click_w3.yaml",
+  "primary_task_count": 20,
+  "private_root": "experiments/core_narrative/large_artifacts/m6_w3_admission_20260513",
+  "r3_run": false,
+  "report": "experiments/core_narrative/reports/2026-05-13_m6_w3_admission_report.md",
+  "reserve_family_counts": {
+    "CliRunner/testing/input-output isolation": 2,
+    "parser/mixed integration": 2,
+    "type conversion/parameter normalization": 1
+  },
+  "reserve_manifest": "experiments/core_narrative/configs/tasks/rwork_click_w3_reserve.yaml",
+  "reserve_task_count": 5,
+  "schema_version": "core-narrative.m6-w3-admission.v1",
+  "selection_used_acut_outputs": false,
+  "status": "denominator_frozen_primary_not_run",
+  "summary": "experiments/core_narrative/results/m6_w3_admission/admission_summary_20260513.json",
+  "tool": "m6_w3_task_admission",
+  "venv_python": "python3.12",
+  "w3_primary_run": false
+}

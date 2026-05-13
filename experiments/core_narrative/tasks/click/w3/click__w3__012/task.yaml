@@ -1,0 +1,67 @@
+schema_version: core-narrative.task.v1
+task_id: click__w3__012
+repo_slug: click
+split: w3
+source:
+  kind: commit_or_pull_request
+  public_url: https://github.com/pallets/click/commit/06847da9126a99c88bf347adf213d33bfe4e4af2
+  anchor_id: commit:06847da9126a99c88bf347adf213d33bfe4e4af2
+  base_commit: bbe1eb6d41f54bd49690a5c385b0895d061a76c1
+  target_commit: 06847da9126a99c88bf347adf213d33bfe4e4af2
+task_family: prompt/termui/output rendering
+task_statement_path: public/statement.md
+allowed_context:
+  include_git_history_before_base: true
+  include_issue_text: false
+  include_pr_text: true
+  include_reference_patch: false
+disallowed_context:
+- reference patch or target diff for commit:06847da9126a99c88bf347adf213d33bfe4e4af2
+- hidden verifier files
+- M5-W2 ACUT outputs, failed patches, or near-miss scores
+- W3 ACUT outputs or public model results
+- future execution results for this task
+verifier:
+  command: verifier/run.sh
+  timeout_seconds: 120
+expected:
+  no_op_fails: true
+  reference_passes: true
+leakage:
+  reviewed: true
+  notes: M6-W3 admission uses ACUT-independent selection proxies and hides target
+    tests/reference patches from ACUT context.
+admission:
+  status: accepted
+  reviewer: codex-m6-w3-admission
+  rationale: Accepted for frozen W3 primary denominator after admission smoke.
+metadata:
+  materialized_from: m6_w3_task_admission.py
+  benchmark_split: W3
+  locked_target_repository: pallets/click
+  locked_target_commit: 8bd8b4a074c55c03b6eb5666edc44a9c43df38a2
+  source_compare:
+    changed_files:
+    - src/click/core.py
+    - tests/test_basic.py
+    - tests/test_options.py
+    - tests/test_termui.py
+    changed_file_set_digest: 722e99c0f19989311b76a9ae911e061047091daac9abc72ade4a38ef9e3c9ca3
+    reference_patch_digest: a8d23834c7a3537de90c4f16337bea80f1e515fdb04baa720bf7298df6b0275c
+    reference_patch_complexity_band: large
+  expected_touched_area:
+  - src/click/core.py behavior surface
+  - tests/test_basic.py focused regression coverage
+  - tests/test_options.py focused regression coverage
+  - tests/test_termui.py focused regression coverage
+  visible_context_guidance: Expose the public behavior summary and minimal reproduction
+    expectation. Hide the implementation diff, reference patch, and target tests.
+  candidate_id: w3_candidate_016
+  human_difficulty_rating: 5
+  test_nodes:
+  - tests/test_basic.py::test_boolean_conversion
+  - tests/test_options.py::test_type_from_flag_value
+  - tests/test_options.py::test_invalid_flag_definition
+  - tests/test_options.py::test_custom_type_flag_value_standalone_option
+  - tests/test_termui.py::test_false_show_default_cause_no_default_display_in_prompt
+  - tests/test_termui.py::test_flag_value_prompt

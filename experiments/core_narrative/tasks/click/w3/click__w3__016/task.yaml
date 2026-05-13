@@ -1,0 +1,63 @@
+schema_version: core-narrative.task.v1
+task_id: click__w3__016
+repo_slug: click
+split: w3
+source:
+  kind: commit_or_pull_request
+  public_url: https://github.com/pallets/click/commit/18d29196c508b249ef1111f1f29c9133e0a8b097
+  anchor_id: commit:18d29196c508b249ef1111f1f29c9133e0a8b097
+  base_commit: 27aaed3fe5bcd6adedd6e91de234914af9859cf1
+  target_commit: 18d29196c508b249ef1111f1f29c9133e0a8b097
+task_family: type conversion/parameter normalization
+task_statement_path: public/statement.md
+allowed_context:
+  include_git_history_before_base: true
+  include_issue_text: false
+  include_pr_text: true
+  include_reference_patch: false
+disallowed_context:
+- reference patch or target diff for commit:18d29196c508b249ef1111f1f29c9133e0a8b097
+- hidden verifier files
+- M5-W2 ACUT outputs, failed patches, or near-miss scores
+- W3 ACUT outputs or public model results
+- future execution results for this task
+verifier:
+  command: verifier/run.sh
+  timeout_seconds: 120
+expected:
+  no_op_fails: true
+  reference_passes: true
+leakage:
+  reviewed: true
+  notes: M6-W3 admission uses ACUT-independent selection proxies and hides target
+    tests/reference patches from ACUT context.
+admission:
+  status: accepted
+  reviewer: codex-m6-w3-admission
+  rationale: Accepted for frozen W3 primary denominator after admission smoke.
+metadata:
+  materialized_from: m6_w3_task_admission.py
+  benchmark_split: W3
+  locked_target_repository: pallets/click
+  locked_target_commit: 8bd8b4a074c55c03b6eb5666edc44a9c43df38a2
+  source_compare:
+    changed_files:
+    - src/click/core.py
+    - tests/test_arguments.py
+    - tests/test_options.py
+    changed_file_set_digest: 4594235a7ea6d10d25ae4259d57ec76ae2e665d961ebe64dec8c90a1747276e4
+    reference_patch_digest: ad59d6871cb4671495adf9b73b0f4dfbf167e481941990cc13ac946be685d5da
+    reference_patch_complexity_band: medium
+  expected_touched_area:
+  - src/click/core.py behavior surface
+  - tests/test_arguments.py focused regression coverage
+  - tests/test_options.py focused regression coverage
+  visible_context_guidance: Expose the public behavior summary and minimal reproduction
+    expectation. Hide the implementation diff, reference patch, and target tests.
+  candidate_id: w3_candidate_012
+  human_difficulty_rating: 3
+  test_nodes:
+  - tests/test_arguments.py::test_duplicate_names_warning
+  - tests/test_arguments.py::test_argument_custom_class_can_override_type_cast_value_and_never_sees_unset
+  - tests/test_options.py::test_option_custom_class
+  - tests/test_options.py::test_option_custom_class_can_override_type_cast_value_and_never_sees_unset

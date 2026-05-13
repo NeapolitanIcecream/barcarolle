@@ -1,0 +1,1313 @@
+schema_version: core-narrative.task-split.v1
+prepared_at: '2026-05-13T00:00:00+08:00'
+status: admitted_frozen
+split: W3
+benchmark_split: W3
+repo_slug: click
+repository: pallets/click
+locked_target_commit: 8bd8b4a074c55c03b6eb5666edc44a9c43df38a2
+local_checkout_cache: experiments/core_narrative/external_repos/click
+selection_policy:
+  objective: Fresh held-out Click W3 tasks for M6 repository-calibrated ACUT testing.
+  split_rule: Disjoint from RBench, RWork-v1, and W2 anchors; no ACUT output used
+    for selection.
+  context_rule: Public statement may include source anchor and behavior summary; reference
+    patch, target tests, and hidden verifier stay hidden.
+  denominator_rule: Do not run W3 primary until this denominator is frozen.
+freeze:
+  denominator_status: frozen_primary_not_run
+  reserve_ordering: manifest_order
+  deterministic_run_seed: m6-w3-primary-20260513-denominator-v1
+  acut_run_order:
+  - cheap-generic-swe
+  - cheap-click-deep-specialist-v2
+  - cheap-click-rbench-calibrated-v1
+  - frontier-generic-swe
+  status_mapping:
+    verified_pass:
+      score_value: 1
+      score_action: fixed_denominator_one
+    verified_fail:
+      score_value: 0
+      score_action: fixed_denominator_zero
+    no_diff:
+      score_value: 0
+      score_action: fixed_denominator_zero
+    unsafe_or_scope_violation:
+      score_value: 0
+      score_action: fixed_denominator_zero
+    timeout:
+      score_value: 0
+      score_action: fixed_denominator_zero_unless_global_infra
+    verifier_infra_error:
+      score_value: null
+      score_action: rerun_or_global_exclusion_required
+  infra_rerun_policy:
+    global_infra_only: true
+    acut_specific_retry_allowed: false
+    best_of_n_allowed: false
+    requires_documented_global_exclusion_before_scoring: true
+task_count: 20
+tasks:
+- task_id: click__w3__001
+  repo_slug: click
+  split: w3
+  benchmark_split: W3
+  locked_target_repository: pallets/click
+  locked_target_commit: 8bd8b4a074c55c03b6eb5666edc44a9c43df38a2
+  source:
+    kind: commit_or_pull_request
+    public_url: https://github.com/pallets/click/commit/d340b0c1202284a1b9d0ca892549208527d586ce
+    anchor_id: commit:d340b0c1202284a1b9d0ca892549208527d586ce
+    base_commit: 04ef3a6f473deb2499721a8d11f92a7d2c0912f2
+    target_commit: d340b0c1202284a1b9d0ca892549208527d586ce
+  source_compare:
+    changed_files:
+    - src/click/core.py
+    - tests/test_options.py
+    changed_file_set_digest: bb28ce6bdcdf9cc9d6d6a107fe41dce165074b32ccd13714da09c8ecc8d94c2e
+    reference_patch_digest: c7910f2c2bc5685cb6d41c0e9be170e16e2f3ac9c9845019bcd003f6db6804e3
+    reference_patch_complexity_band: small
+  task_family: option/default/envvar/flag semantics
+  task_statement_path: inline:problem_statement
+  problem_statement: Fix speculative speculative empty string check.
+  expected_touched_area:
+  - src/click/core.py behavior surface
+  - tests/test_options.py focused regression coverage
+  visible_context_guidance: Expose the public behavior summary and minimal reproduction
+    expectation. Hide the implementation diff, reference patch, and target tests.
+  allowed_context:
+    include_git_history_before_base: true
+    include_issue_text: false
+    include_pr_text: true
+    include_reference_patch: false
+  disallowed_context:
+  - reference patch or target diff for commit:d340b0c1202284a1b9d0ca892549208527d586ce
+  - hidden verifier files
+  - M5-W2 ACUT outputs, failed patches, or near-miss scores
+  - W3 ACUT outputs or public model results
+  - future execution results for this task
+  verifier:
+    command: .venv/bin/python -m pytest -q tests/test_options.py::test_show_default_string
+      tests/test_options.py::test_show_default_with_empty_string
+    timeout_seconds: 120
+  expected:
+    no_op_fails: true
+    reference_passes: true
+  leakage:
+    reviewed: true
+    notes: M6-W3 admission uses ACUT-independent selection proxies and hides target
+      tests/reference patches from ACUT context.
+  admission:
+    status: accepted
+    reviewer: codex-m6-w3-admission
+    rationale: Accepted for frozen W3 primary denominator after admission smoke.
+  metadata:
+    candidate_id: w3_candidate_007
+    human_difficulty_rating: 2
+    selection_proxy_only: true
+    used_acut_outputs_for_selection: false
+    test_nodes:
+    - tests/test_options.py::test_show_default_string
+    - tests/test_options.py::test_show_default_with_empty_string
+- task_id: click__w3__002
+  repo_slug: click
+  split: w3
+  benchmark_split: W3
+  locked_target_repository: pallets/click
+  locked_target_commit: 8bd8b4a074c55c03b6eb5666edc44a9c43df38a2
+  source:
+    kind: commit_or_pull_request
+    public_url: https://github.com/pallets/click/commit/91de59c6c8abc8251e7af551cd4546cc964288af
+    anchor_id: pallets/click#3084
+    base_commit: 7f7bbe4569ea68e8dabee232eade069ef3310aea
+    target_commit: 91de59c6c8abc8251e7af551cd4546cc964288af
+  source_compare:
+    changed_files:
+    - src/click/core.py
+    - tests/test_options.py
+    changed_file_set_digest: e152dc8bc9fd07bb772ba0ee90d4f9ea491dd80fe7e401675b519a7c808c06cb
+    reference_patch_digest: 325d706c844ec1223538fb11c1eb03631cd3674d120dcfa355cdee95b1978474
+    reference_patch_complexity_band: small
+  task_family: option/default/envvar/flag semantics
+  task_statement_path: inline:problem_statement
+  problem_statement: 'Fix #3084: Correct flag optional value behavior and add comprehensive
+    tests.'
+  expected_touched_area:
+  - src/click/core.py behavior surface
+  - tests/test_options.py focused regression coverage
+  visible_context_guidance: Expose the public behavior summary and minimal reproduction
+    expectation. Hide the implementation diff, reference patch, and target tests.
+  allowed_context:
+    include_git_history_before_base: true
+    include_issue_text: false
+    include_pr_text: true
+    include_reference_patch: false
+  disallowed_context:
+  - reference patch or target diff for pallets/click#3084
+  - hidden verifier files
+  - M5-W2 ACUT outputs, failed patches, or near-miss scores
+  - W3 ACUT outputs or public model results
+  - future execution results for this task
+  verifier:
+    command: .venv/bin/python -m pytest -q tests/test_options.py::test_custom_type_frozenset_flag_value
+      tests/test_options.py::test_flag_value_optional_behavior tests/test_options.py::test_flag_value_with_type_conversion
+    timeout_seconds: 120
+  expected:
+    no_op_fails: true
+    reference_passes: true
+  leakage:
+    reviewed: true
+    notes: M6-W3 admission uses ACUT-independent selection proxies and hides target
+      tests/reference patches from ACUT context.
+  admission:
+    status: accepted
+    reviewer: codex-m6-w3-admission
+    rationale: Accepted for frozen W3 primary denominator after admission smoke.
+  metadata:
+    candidate_id: w3_candidate_010
+    human_difficulty_rating: 2
+    selection_proxy_only: true
+    used_acut_outputs_for_selection: false
+    test_nodes:
+    - tests/test_options.py::test_custom_type_frozenset_flag_value
+    - tests/test_options.py::test_flag_value_optional_behavior
+    - tests/test_options.py::test_flag_value_with_type_conversion
+- task_id: click__w3__003
+  repo_slug: click
+  split: w3
+  benchmark_split: W3
+  locked_target_repository: pallets/click
+  locked_target_commit: 8bd8b4a074c55c03b6eb5666edc44a9c43df38a2
+  source:
+    kind: commit_or_pull_request
+    public_url: https://github.com/pallets/click/commit/6de212151893e4072ca21779b7b6f4cb82452f51
+    anchor_id: commit:6de212151893e4072ca21779b7b6f4cb82452f51
+    base_commit: 1339fd3323357119a9c7a6326c788f80295954ce
+    target_commit: 6de212151893e4072ca21779b7b6f4cb82452f51
+  source_compare:
+    changed_files:
+    - src/click/core.py
+    - tests/test_defaults.py
+    changed_file_set_digest: 37a8ebd649ad40c07ec48d8bc56f6052bb665ac1957012895c28139c5bd6449c
+    reference_patch_digest: 2dafb9734c9e9518cf18db08d1a767bc4b8c2e298542041de651dfd818953f32
+    reference_patch_complexity_band: medium
+  task_family: option/default/envvar/flag semantics
+  task_statement_path: inline:problem_statement
+  problem_statement: Treat `UNSET` in a `default_map` as absent.
+  expected_touched_area:
+  - src/click/core.py behavior surface
+  - tests/test_defaults.py focused regression coverage
+  visible_context_guidance: Expose the public behavior summary and minimal reproduction
+    expectation. Hide the implementation diff, reference patch, and target tests.
+  allowed_context:
+    include_git_history_before_base: true
+    include_issue_text: false
+    include_pr_text: true
+    include_reference_patch: false
+  disallowed_context:
+  - reference patch or target diff for commit:6de212151893e4072ca21779b7b6f4cb82452f51
+  - hidden verifier files
+  - M5-W2 ACUT outputs, failed patches, or near-miss scores
+  - W3 ACUT outputs or public model results
+  - future execution results for this task
+  verifier:
+    command: .venv/bin/python -m pytest -q tests/test_defaults.py::test_default_map_with_callable_flag_value
+      tests/test_defaults.py::test_unset_in_default_map
+    timeout_seconds: 120
+  expected:
+    no_op_fails: true
+    reference_passes: true
+  leakage:
+    reviewed: true
+    notes: M6-W3 admission uses ACUT-independent selection proxies and hides target
+      tests/reference patches from ACUT context.
+  admission:
+    status: accepted
+    reviewer: codex-m6-w3-admission
+    rationale: Accepted for frozen W3 primary denominator after admission smoke.
+  metadata:
+    candidate_id: w3_candidate_005
+    human_difficulty_rating: 3
+    selection_proxy_only: true
+    used_acut_outputs_for_selection: false
+    test_nodes:
+    - tests/test_defaults.py::test_default_map_with_callable_flag_value
+    - tests/test_defaults.py::test_unset_in_default_map
+- task_id: click__w3__004
+  repo_slug: click
+  split: w3
+  benchmark_split: W3
+  locked_target_repository: pallets/click
+  locked_target_commit: 8bd8b4a074c55c03b6eb5666edc44a9c43df38a2
+  source:
+    kind: commit_or_pull_request
+    public_url: https://github.com/pallets/click/commit/aaf99a3ee6935f321f755bc7c5717a91d321cd39
+    anchor_id: commit:aaf99a3ee6935f321f755bc7c5717a91d321cd39
+    base_commit: cdab890e57a30a9f437b88ce9652f7bfce980c1f
+    target_commit: aaf99a3ee6935f321f755bc7c5717a91d321cd39
+  source_compare:
+    changed_files:
+    - src/click/core.py
+    - tests/test_defaults.py
+    changed_file_set_digest: 8411a89580876d0f7b00d22ac0744d849468313dcec2038e99fa1cf4fc919f5d
+    reference_patch_digest: 1ae4ee25f04d4892d718211809d36e84bfdf3dcc3f34c36e29f0c8a4430ccacb
+    reference_patch_complexity_band: medium
+  task_family: option/default/envvar/flag semantics
+  task_statement_path: inline:problem_statement
+  problem_statement: Hide `Sentinel.UNSET` values as `None` in `lookup_default()`.
+  expected_touched_area:
+  - src/click/core.py behavior surface
+  - tests/test_defaults.py focused regression coverage
+  visible_context_guidance: Expose the public behavior summary and minimal reproduction
+    expectation. Hide the implementation diff, reference patch, and target tests.
+  allowed_context:
+    include_git_history_before_base: true
+    include_issue_text: false
+    include_pr_text: true
+    include_reference_patch: false
+  disallowed_context:
+  - reference patch or target diff for commit:aaf99a3ee6935f321f755bc7c5717a91d321cd39
+  - hidden verifier files
+  - M5-W2 ACUT outputs, failed patches, or near-miss scores
+  - W3 ACUT outputs or public model results
+  - future execution results for this task
+  verifier:
+    command: .venv/bin/python -m pytest -q tests/test_defaults.py::test_shared_param_prefers_first_default
+      tests/test_defaults.py::test_lookup_default_returns_hides_sentinel tests/test_defaults.py::test_lookup_default_callable_in_default_map
+      tests/test_defaults.py::test_default_map_source
+    timeout_seconds: 120
+  expected:
+    no_op_fails: true
+    reference_passes: true
+  leakage:
+    reviewed: true
+    notes: M6-W3 admission uses ACUT-independent selection proxies and hides target
+      tests/reference patches from ACUT context.
+  admission:
+    status: accepted
+    reviewer: codex-m6-w3-admission
+    rationale: Accepted for frozen W3 primary denominator after admission smoke.
+  metadata:
+    candidate_id: w3_candidate_008
+    human_difficulty_rating: 3
+    selection_proxy_only: true
+    used_acut_outputs_for_selection: false
+    test_nodes:
+    - tests/test_defaults.py::test_shared_param_prefers_first_default
+    - tests/test_defaults.py::test_lookup_default_returns_hides_sentinel
+    - tests/test_defaults.py::test_lookup_default_callable_in_default_map
+    - tests/test_defaults.py::test_default_map_source
+- task_id: click__w3__005
+  repo_slug: click
+  split: w3
+  benchmark_split: W3
+  locked_target_repository: pallets/click
+  locked_target_commit: 8bd8b4a074c55c03b6eb5666edc44a9c43df38a2
+  source:
+    kind: commit_or_pull_request
+    public_url: https://github.com/pallets/click/commit/ad2482bf696df25025ee78fb81a8cf91256af6a5
+    anchor_id: commit:ad2482bf696df25025ee78fb81a8cf91256af6a5
+    base_commit: c4542263a96dd067ed1ded12a83553da05bb61dd
+    target_commit: ad2482bf696df25025ee78fb81a8cf91256af6a5
+  source_compare:
+    changed_files:
+    - src/click/testing.py
+    - tests/test_testing.py
+    changed_file_set_digest: e21b37db2179e1008bc1dc518c12e4004da49411456a4c89ae0b349a55bf50dd
+    reference_patch_digest: 76a781323b4e316e4b07015c23098f5d9be29023a84825778f09a9a6a81d55fd
+    reference_patch_complexity_band: small
+  task_family: CliRunner/testing/input-output isolation
+  task_statement_path: inline:problem_statement
+  problem_statement: 'Implement the Click behavior change: test runner opens stderr
+    with backslashreplace.'
+  expected_touched_area:
+  - src/click/testing.py behavior surface
+  - tests/test_testing.py focused regression coverage
+  visible_context_guidance: Expose the public behavior summary and minimal reproduction
+    expectation. Hide the implementation diff, reference patch, and target tests.
+  allowed_context:
+    include_git_history_before_base: true
+    include_issue_text: false
+    include_pr_text: true
+    include_reference_patch: false
+  disallowed_context:
+  - reference patch or target diff for commit:ad2482bf696df25025ee78fb81a8cf91256af6a5
+  - hidden verifier files
+  - M5-W2 ACUT outputs, failed patches, or near-miss scores
+  - W3 ACUT outputs or public model results
+  - future execution results for this task
+  verifier:
+    command: .venv/bin/python -m pytest -q tests/test_testing.py::test_isolated_runner_custom_tempdir
+      tests/test_testing.py::test_isolation_stderr_errors
+    timeout_seconds: 120
+  expected:
+    no_op_fails: true
+    reference_passes: true
+  leakage:
+    reviewed: true
+    notes: M6-W3 admission uses ACUT-independent selection proxies and hides target
+      tests/reference patches from ACUT context.
+  admission:
+    status: accepted
+    reviewer: codex-m6-w3-admission
+    rationale: Accepted for frozen W3 primary denominator after admission smoke.
+  metadata:
+    candidate_id: w3_candidate_090
+    human_difficulty_rating: 2
+    selection_proxy_only: true
+    used_acut_outputs_for_selection: false
+    test_nodes:
+    - tests/test_testing.py::test_isolated_runner_custom_tempdir
+    - tests/test_testing.py::test_isolation_stderr_errors
+- task_id: click__w3__006
+  repo_slug: click
+  split: w3
+  benchmark_split: W3
+  locked_target_repository: pallets/click
+  locked_target_commit: 8bd8b4a074c55c03b6eb5666edc44a9c43df38a2
+  source:
+    kind: commit_or_pull_request
+    public_url: https://github.com/pallets/click/commit/a9711c50be5ee37104068b309431c5ab02968b8f
+    anchor_id: commit:a9711c50be5ee37104068b309431c5ab02968b8f
+    base_commit: 90a6c78ae574de35d3783e0d575b688a12f09a3d
+    target_commit: a9711c50be5ee37104068b309431c5ab02968b8f
+  source_compare:
+    changed_files:
+    - src/click/testing.py
+    - tests/test_testing.py
+    changed_file_set_digest: 022b19793388ffdfcf682d9f523af0a09786025c1a4113c06faf99b7a9d373fd
+    reference_patch_digest: 51b4f962104ef06bc9d2121b6cd4eb7d224838d43c3a28020793459f77543823
+    reference_patch_complexity_band: small
+  task_family: CliRunner/testing/input-output isolation
+  task_statement_path: inline:problem_statement
+  problem_statement: 'Implement the Click behavior change: custom temp directory with
+    CLIRunner.isolated_filesystem.'
+  expected_touched_area:
+  - src/click/testing.py behavior surface
+  - tests/test_testing.py focused regression coverage
+  visible_context_guidance: Expose the public behavior summary and minimal reproduction
+    expectation. Hide the implementation diff, reference patch, and target tests.
+  allowed_context:
+    include_git_history_before_base: true
+    include_issue_text: false
+    include_pr_text: true
+    include_reference_patch: false
+  disallowed_context:
+  - reference patch or target diff for commit:a9711c50be5ee37104068b309431c5ab02968b8f
+  - hidden verifier files
+  - M5-W2 ACUT outputs, failed patches, or near-miss scores
+  - W3 ACUT outputs or public model results
+  - future execution results for this task
+  verifier:
+    command: .venv/bin/python -m pytest -q tests/test_testing.py::test_file_stdin_attrs
+      tests/test_testing.py::test_isolated_runner tests/test_testing.py::test_isolated_runner_custom_tempdir
+    timeout_seconds: 120
+  expected:
+    no_op_fails: true
+    reference_passes: true
+  leakage:
+    reviewed: true
+    notes: M6-W3 admission uses ACUT-independent selection proxies and hides target
+      tests/reference patches from ACUT context.
+  admission:
+    status: accepted
+    reviewer: codex-m6-w3-admission
+    rationale: Accepted for frozen W3 primary denominator after admission smoke.
+  metadata:
+    candidate_id: w3_candidate_104
+    human_difficulty_rating: 2
+    selection_proxy_only: true
+    used_acut_outputs_for_selection: false
+    test_nodes:
+    - tests/test_testing.py::test_file_stdin_attrs
+    - tests/test_testing.py::test_isolated_runner
+    - tests/test_testing.py::test_isolated_runner_custom_tempdir
+- task_id: click__w3__007
+  repo_slug: click
+  split: w3
+  benchmark_split: W3
+  locked_target_repository: pallets/click
+  locked_target_commit: 8bd8b4a074c55c03b6eb5666edc44a9c43df38a2
+  source:
+    kind: commit_or_pull_request
+    public_url: https://github.com/pallets/click/commit/7d7809fcd0940c9a272b5aaeba3ec96bc8b682c1
+    anchor_id: commit:7d7809fcd0940c9a272b5aaeba3ec96bc8b682c1
+    base_commit: 10103e3835a381185f786745c0281237f0b238ae
+    target_commit: 7d7809fcd0940c9a272b5aaeba3ec96bc8b682c1
+  source_compare:
+    changed_files:
+    - src/click/testing.py
+    - tests/test_testing.py
+    changed_file_set_digest: 6f940a4b20e536c059e07d8e4b22c395fd4056b34da4eda759e9c8e67b85e75f
+    reference_patch_digest: 3e0bf1a33f4972ae55fd466d4d46d980c4b841960acc3e63cb3cf0ae8f746ae7
+    reference_patch_complexity_band: small
+  task_family: CliRunner/testing/input-output isolation
+  task_statement_path: inline:problem_statement
+  problem_statement: 'Implement the Click behavior change: CliRunner isolation streams
+    have name and mode.'
+  expected_touched_area:
+  - src/click/testing.py behavior surface
+  - tests/test_testing.py focused regression coverage
+  visible_context_guidance: Expose the public behavior summary and minimal reproduction
+    expectation. Hide the implementation diff, reference patch, and target tests.
+  allowed_context:
+    include_git_history_before_base: true
+    include_issue_text: false
+    include_pr_text: true
+    include_reference_patch: false
+  disallowed_context:
+  - reference patch or target diff for commit:7d7809fcd0940c9a272b5aaeba3ec96bc8b682c1
+  - hidden verifier files
+  - M5-W2 ACUT outputs, failed patches, or near-miss scores
+  - W3 ACUT outputs or public model results
+  - future execution results for this task
+  verifier:
+    command: .venv/bin/python -m pytest -q tests/test_testing.py::test_command_standalone_mode_returns_value
+      tests/test_testing.py::test_file_stdin_attrs
+    timeout_seconds: 120
+  expected:
+    no_op_fails: true
+    reference_passes: true
+  leakage:
+    reviewed: true
+    notes: M6-W3 admission uses ACUT-independent selection proxies and hides target
+      tests/reference patches from ACUT context.
+  admission:
+    status: accepted
+    reviewer: codex-m6-w3-admission
+    rationale: Accepted for frozen W3 primary denominator after admission smoke.
+  metadata:
+    candidate_id: w3_candidate_129
+    human_difficulty_rating: 2
+    selection_proxy_only: true
+    used_acut_outputs_for_selection: false
+    test_nodes:
+    - tests/test_testing.py::test_command_standalone_mode_returns_value
+    - tests/test_testing.py::test_file_stdin_attrs
+- task_id: click__w3__008
+  repo_slug: click
+  split: w3
+  benchmark_split: W3
+  locked_target_repository: pallets/click
+  locked_target_commit: 8bd8b4a074c55c03b6eb5666edc44a9c43df38a2
+  source:
+    kind: commit_or_pull_request
+    public_url: https://github.com/pallets/click/commit/a7436e89bbebd361d8d97d1261db0bd399c84b31
+    anchor_id: commit:a7436e89bbebd361d8d97d1261db0bd399c84b31
+    base_commit: 563b1a7116a6806e699d31d327dd9bca93c40cb3
+    target_commit: a7436e89bbebd361d8d97d1261db0bd399c84b31
+  source_compare:
+    changed_files:
+    - src/click/testing.py
+    - tests/test_testing.py
+    changed_file_set_digest: acdc01916a3361cbfda2953194c5fb5582dc8e46782f715b443aa442bc1d1225
+    reference_patch_digest: 0cf3dfe6d8e6fe894712711277faf9891c79dbac815296cbe3e8ebe962092ec7
+    reference_patch_complexity_band: medium
+  task_family: CliRunner/testing/input-output isolation
+  task_statement_path: inline:problem_statement
+  problem_statement: 'Implement the Click behavior change: test result captures command
+    return value.'
+  expected_touched_area:
+  - src/click/testing.py behavior surface
+  - tests/test_testing.py focused regression coverage
+  visible_context_guidance: Expose the public behavior summary and minimal reproduction
+    expectation. Hide the implementation diff, reference patch, and target tests.
+  allowed_context:
+    include_git_history_before_base: true
+    include_issue_text: false
+    include_pr_text: true
+    include_reference_patch: false
+  disallowed_context:
+  - reference patch or target diff for commit:a7436e89bbebd361d8d97d1261db0bd399c84b31
+  - hidden verifier files
+  - M5-W2 ACUT outputs, failed patches, or near-miss scores
+  - W3 ACUT outputs or public model results
+  - future execution results for this task
+  verifier:
+    command: .venv/bin/python -m pytest -q tests/test_testing.py::test_setting_prog_name_in_extra
+      tests/test_testing.py::test_command_standalone_mode_returns_value
+    timeout_seconds: 120
+  expected:
+    no_op_fails: true
+    reference_passes: true
+  leakage:
+    reviewed: true
+    notes: M6-W3 admission uses ACUT-independent selection proxies and hides target
+      tests/reference patches from ACUT context.
+  admission:
+    status: accepted
+    reviewer: codex-m6-w3-admission
+    rationale: Accepted for frozen W3 primary denominator after admission smoke.
+  metadata:
+    candidate_id: w3_candidate_136
+    human_difficulty_rating: 3
+    selection_proxy_only: true
+    used_acut_outputs_for_selection: false
+    test_nodes:
+    - tests/test_testing.py::test_setting_prog_name_in_extra
+    - tests/test_testing.py::test_command_standalone_mode_returns_value
+- task_id: click__w3__009
+  repo_slug: click
+  split: w3
+  benchmark_split: W3
+  locked_target_repository: pallets/click
+  locked_target_commit: 8bd8b4a074c55c03b6eb5666edc44a9c43df38a2
+  source:
+    kind: commit_or_pull_request
+    public_url: https://github.com/pallets/click/commit/607316f9dea85ee81f8a215f5d5ae20f7f4fff71
+    anchor_id: commit:607316f9dea85ee81f8a215f5d5ae20f7f4fff71
+    base_commit: 878de46100e9c29aea9dab5b385b8116863cb5e3
+    target_commit: 607316f9dea85ee81f8a215f5d5ae20f7f4fff71
+  source_compare:
+    changed_files:
+    - src/click/core.py
+    - src/click/termui.py
+    - tests/test_options.py
+    - tests/test_termui.py
+    changed_file_set_digest: 9cf58284f1c628dd0cfb7728106abe18c7ecf4784264b79be86721a8e81ff123
+    reference_patch_digest: e8084243cb69cc6d5ac6c2535d38a151e8978f075791b83cc7a70cc4ce708091
+    reference_patch_complexity_band: medium
+  task_family: prompt/termui/output rendering
+  task_statement_path: inline:problem_statement
+  problem_statement: Support show_default string in prompts.
+  expected_touched_area:
+  - src/click/core.py behavior surface
+  - src/click/termui.py behavior surface
+  - tests/test_options.py focused regression coverage
+  - tests/test_termui.py focused regression coverage
+  visible_context_guidance: Expose the public behavior summary and minimal reproduction
+    expectation. Hide the implementation diff, reference patch, and target tests.
+  allowed_context:
+    include_git_history_before_base: true
+    include_issue_text: false
+    include_pr_text: true
+    include_reference_patch: false
+  disallowed_context:
+  - reference patch or target diff for commit:607316f9dea85ee81f8a215f5d5ae20f7f4fff71
+  - hidden verifier files
+  - M5-W2 ACUT outputs, failed patches, or near-miss scores
+  - W3 ACUT outputs or public model results
+  - future execution results for this task
+  verifier:
+    command: .venv/bin/python -m pytest -q tests/test_options.py::test_show_default_string
+      tests/test_options.py::test_string_show_default_shows_custom_string_in_prompt
+      tests/test_termui.py::test_false_show_default_cause_no_default_display_in_prompt
+      tests/test_termui.py::test_string_show_default_shows_custom_string_in_prompt
+    timeout_seconds: 120
+  expected:
+    no_op_fails: true
+    reference_passes: true
+  leakage:
+    reviewed: true
+    notes: M6-W3 admission uses ACUT-independent selection proxies and hides target
+      tests/reference patches from ACUT context.
+  admission:
+    status: accepted
+    reviewer: codex-m6-w3-admission
+    rationale: Accepted for frozen W3 primary denominator after admission smoke.
+  metadata:
+    candidate_id: w3_candidate_003
+    human_difficulty_rating: 3
+    selection_proxy_only: true
+    used_acut_outputs_for_selection: false
+    test_nodes:
+    - tests/test_options.py::test_show_default_string
+    - tests/test_options.py::test_string_show_default_shows_custom_string_in_prompt
+    - tests/test_termui.py::test_false_show_default_cause_no_default_display_in_prompt
+    - tests/test_termui.py::test_string_show_default_shows_custom_string_in_prompt
+- task_id: click__w3__010
+  repo_slug: click
+  split: w3
+  benchmark_split: W3
+  locked_target_repository: pallets/click
+  locked_target_commit: 8bd8b4a074c55c03b6eb5666edc44a9c43df38a2
+  source:
+    kind: commit_or_pull_request
+    public_url: https://github.com/pallets/click/commit/812b8000f79c1fbb747a2de5114fc74515558857
+    anchor_id: commit:812b8000f79c1fbb747a2de5114fc74515558857
+    base_commit: a8b41c077b225c30921a78190507a463a20ebb1b
+    target_commit: 812b8000f79c1fbb747a2de5114fc74515558857
+  source_compare:
+    changed_files:
+    - src/click/termui.py
+    - tests/test_utils.py
+    changed_file_set_digest: 664c90cb3cc42c9d6707a1419d808ca56166abf130add379a867d81f7fffad1f
+    reference_patch_digest: 226cf0d71bb51778aecebff8161281ffc6c049e8a815a524b8a361849ed5322e
+    reference_patch_complexity_band: small
+  task_family: prompt/termui/output rendering
+  task_statement_path: inline:problem_statement
+  problem_statement: Fix rendering when `prompt_suffix` is empty.
+  expected_touched_area:
+  - src/click/termui.py behavior surface
+  - tests/test_utils.py focused regression coverage
+  visible_context_guidance: Expose the public behavior summary and minimal reproduction
+    expectation. Hide the implementation diff, reference patch, and target tests.
+  allowed_context:
+    include_git_history_before_base: true
+    include_issue_text: false
+    include_pr_text: true
+    include_reference_patch: false
+  disallowed_context:
+  - reference patch or target diff for commit:812b8000f79c1fbb747a2de5114fc74515558857
+  - hidden verifier files
+  - M5-W2 ACUT outputs, failed patches, or near-miss scores
+  - W3 ACUT outputs or public model results
+  - future execution results for this task
+  verifier:
+    command: .venv/bin/python -m pytest -q tests/test_utils.py::test_echo_writing_to_standard_error
+    timeout_seconds: 120
+  expected:
+    no_op_fails: true
+    reference_passes: true
+  leakage:
+    reviewed: true
+    notes: M6-W3 admission uses ACUT-independent selection proxies and hides target
+      tests/reference patches from ACUT context.
+  admission:
+    status: accepted
+    reviewer: codex-m6-w3-admission
+    rationale: Accepted for frozen W3 primary denominator after admission smoke.
+  metadata:
+    candidate_id: w3_candidate_019
+    human_difficulty_rating: 1
+    selection_proxy_only: true
+    used_acut_outputs_for_selection: false
+    test_nodes:
+    - tests/test_utils.py::test_echo_writing_to_standard_error
+- task_id: click__w3__011
+  repo_slug: click
+  split: w3
+  benchmark_split: W3
+  locked_target_repository: pallets/click
+  locked_target_commit: 8bd8b4a074c55c03b6eb5666edc44a9c43df38a2
+  source:
+    kind: commit_or_pull_request
+    public_url: https://github.com/pallets/click/commit/b96c2601af4e01341b4d2c0db494ebee4aef8f42
+    anchor_id: commit:b96c2601af4e01341b4d2c0db494ebee4aef8f42
+    base_commit: 04ef3a6f473deb2499721a8d11f92a7d2c0912f2
+    target_commit: b96c2601af4e01341b4d2c0db494ebee4aef8f42
+  source_compare:
+    changed_files:
+    - src/click/_termui_impl.py
+    - tests/test_termui.py
+    changed_file_set_digest: d748b89d3e1634e8945c4ae154993133226fa73070a175c5ba10ede750ca8dbe
+    reference_patch_digest: ab411399af450b10bd2a84909e6b2b2d7564244ea355eac46e4b563205744fe7
+    reference_patch_complexity_band: large
+  task_family: prompt/termui/output rendering
+  task_statement_path: inline:problem_statement
+  problem_statement: 'Implement the Click behavior change: Document and fix command
+    string sanitizing with `shlex.split`.'
+  expected_touched_area:
+  - src/click/_termui_impl.py behavior surface
+  - tests/test_termui.py focused regression coverage
+  visible_context_guidance: Expose the public behavior summary and minimal reproduction
+    expectation. Hide the implementation diff, reference patch, and target tests.
+  allowed_context:
+    include_git_history_before_base: true
+    include_issue_text: false
+    include_pr_text: true
+    include_reference_patch: false
+  disallowed_context:
+  - reference patch or target diff for commit:b96c2601af4e01341b4d2c0db494ebee4aef8f42
+  - hidden verifier files
+  - M5-W2 ACUT outputs, failed patches, or near-miss scores
+  - W3 ACUT outputs or public model results
+  - future execution results for this task
+  verifier:
+    command: .venv/bin/python -m pytest -q tests/test_termui.py::test_edit tests/test_termui.py::test_editor_path_normalization
+      tests/test_termui.py::test_editor_windows_path_normalization tests/test_termui.py::test_editor_env_passed_through
+    timeout_seconds: 120
+  expected:
+    no_op_fails: true
+    reference_passes: true
+  leakage:
+    reviewed: true
+    notes: M6-W3 admission uses ACUT-independent selection proxies and hides target
+      tests/reference patches from ACUT context.
+  admission:
+    status: accepted
+    reviewer: codex-m6-w3-admission
+    rationale: Accepted for frozen W3 primary denominator after admission smoke.
+  metadata:
+    candidate_id: w3_candidate_006
+    human_difficulty_rating: 5
+    selection_proxy_only: true
+    used_acut_outputs_for_selection: false
+    test_nodes:
+    - tests/test_termui.py::test_edit
+    - tests/test_termui.py::test_editor_path_normalization
+    - tests/test_termui.py::test_editor_windows_path_normalization
+    - tests/test_termui.py::test_editor_env_passed_through
+- task_id: click__w3__012
+  repo_slug: click
+  split: w3
+  benchmark_split: W3
+  locked_target_repository: pallets/click
+  locked_target_commit: 8bd8b4a074c55c03b6eb5666edc44a9c43df38a2
+  source:
+    kind: commit_or_pull_request
+    public_url: https://github.com/pallets/click/commit/06847da9126a99c88bf347adf213d33bfe4e4af2
+    anchor_id: commit:06847da9126a99c88bf347adf213d33bfe4e4af2
+    base_commit: bbe1eb6d41f54bd49690a5c385b0895d061a76c1
+    target_commit: 06847da9126a99c88bf347adf213d33bfe4e4af2
+  source_compare:
+    changed_files:
+    - src/click/core.py
+    - tests/test_basic.py
+    - tests/test_options.py
+    - tests/test_termui.py
+    changed_file_set_digest: 722e99c0f19989311b76a9ae911e061047091daac9abc72ade4a38ef9e3c9ca3
+    reference_patch_digest: a8d23834c7a3537de90c4f16337bea80f1e515fdb04baa720bf7298df6b0275c
+    reference_patch_complexity_band: large
+  task_family: prompt/termui/output rendering
+  task_statement_path: inline:problem_statement
+  problem_statement: Support legacy case of default aligning to flag_value for flag
+    whose default=True.
+  expected_touched_area:
+  - src/click/core.py behavior surface
+  - tests/test_basic.py focused regression coverage
+  - tests/test_options.py focused regression coverage
+  - tests/test_termui.py focused regression coverage
+  visible_context_guidance: Expose the public behavior summary and minimal reproduction
+    expectation. Hide the implementation diff, reference patch, and target tests.
+  allowed_context:
+    include_git_history_before_base: true
+    include_issue_text: false
+    include_pr_text: true
+    include_reference_patch: false
+  disallowed_context:
+  - reference patch or target diff for commit:06847da9126a99c88bf347adf213d33bfe4e4af2
+  - hidden verifier files
+  - M5-W2 ACUT outputs, failed patches, or near-miss scores
+  - W3 ACUT outputs or public model results
+  - future execution results for this task
+  verifier:
+    command: .venv/bin/python -m pytest -q tests/test_basic.py::test_boolean_conversion
+      tests/test_options.py::test_type_from_flag_value tests/test_options.py::test_invalid_flag_definition
+      tests/test_options.py::test_custom_type_flag_value_standalone_option tests/test_termui.py::test_false_show_default_cause_no_default_display_in_prompt
+      tests/test_termui.py::test_flag_value_prompt
+    timeout_seconds: 120
+  expected:
+    no_op_fails: true
+    reference_passes: true
+  leakage:
+    reviewed: true
+    notes: M6-W3 admission uses ACUT-independent selection proxies and hides target
+      tests/reference patches from ACUT context.
+  admission:
+    status: accepted
+    reviewer: codex-m6-w3-admission
+    rationale: Accepted for frozen W3 primary denominator after admission smoke.
+  metadata:
+    candidate_id: w3_candidate_016
+    human_difficulty_rating: 5
+    selection_proxy_only: true
+    used_acut_outputs_for_selection: false
+    test_nodes:
+    - tests/test_basic.py::test_boolean_conversion
+    - tests/test_options.py::test_type_from_flag_value
+    - tests/test_options.py::test_invalid_flag_definition
+    - tests/test_options.py::test_custom_type_flag_value_standalone_option
+    - tests/test_termui.py::test_false_show_default_cause_no_default_display_in_prompt
+    - tests/test_termui.py::test_flag_value_prompt
+- task_id: click__w3__013
+  repo_slug: click
+  split: w3
+  benchmark_split: W3
+  locked_target_repository: pallets/click
+  locked_target_commit: 8bd8b4a074c55c03b6eb5666edc44a9c43df38a2
+  source:
+    kind: commit_or_pull_request
+    public_url: https://github.com/pallets/click/commit/3f91d2154ebc47651f0cd9798250a03821473521
+    anchor_id: commit:3f91d2154ebc47651f0cd9798250a03821473521
+    base_commit: e88c11239971d309744fd3f9139259f64787f45a
+    target_commit: 3f91d2154ebc47651f0cd9798250a03821473521
+  source_compare:
+    changed_files:
+    - src/click/types.py
+    - tests/test_types.py
+    changed_file_set_digest: ce0c027c3963259a6afdf5d6ae659df25ae454d8fc64de7c9a56510ea3738394
+    reference_patch_digest: 94c40210d3aea0564d71aa57cea4f8132f500da66ecd78ae97c746fecd9133e2
+    reference_patch_complexity_band: small
+  task_family: type conversion/parameter normalization
+  task_statement_path: inline:problem_statement
+  problem_statement: Prevent multiline error message on invalid path.
+  expected_touched_area:
+  - src/click/types.py behavior surface
+  - tests/test_types.py focused regression coverage
+  visible_context_guidance: Expose the public behavior summary and minimal reproduction
+    expectation. Hide the implementation diff, reference patch, and target tests.
+  allowed_context:
+    include_git_history_before_base: true
+    include_issue_text: false
+    include_pr_text: true
+    include_reference_patch: false
+  disallowed_context:
+  - reference patch or target diff for commit:3f91d2154ebc47651f0cd9798250a03821473521
+  - hidden verifier files
+  - M5-W2 ACUT outputs, failed patches, or near-miss scores
+  - W3 ACUT outputs or public model results
+  - future execution results for this task
+  verifier:
+    command: .venv/bin/python -m pytest -q tests/test_types.py::test_file_error_surrogates
+      tests/test_types.py::test_path_type_with_esc_sequence
+    timeout_seconds: 120
+  expected:
+    no_op_fails: true
+    reference_passes: true
+  leakage:
+    reviewed: true
+    notes: M6-W3 admission uses ACUT-independent selection proxies and hides target
+      tests/reference patches from ACUT context.
+  admission:
+    status: accepted
+    reviewer: codex-m6-w3-admission
+    rationale: Accepted for frozen W3 primary denominator after admission smoke.
+  metadata:
+    candidate_id: w3_candidate_042
+    human_difficulty_rating: 2
+    selection_proxy_only: true
+    used_acut_outputs_for_selection: false
+    test_nodes:
+    - tests/test_types.py::test_file_error_surrogates
+    - tests/test_types.py::test_path_type_with_esc_sequence
+- task_id: click__w3__014
+  repo_slug: click
+  split: w3
+  benchmark_split: W3
+  locked_target_repository: pallets/click
+  locked_target_commit: 8bd8b4a074c55c03b6eb5666edc44a9c43df38a2
+  source:
+    kind: commit_or_pull_request
+    public_url: https://github.com/pallets/click/commit/1a4d8c1bb1e8f8e214ede7223bd2c05dc2ce006a
+    anchor_id: pallets/click#2365
+    base_commit: 02046e7a19480f85fff7e4577486518abe47e401
+    target_commit: 1a4d8c1bb1e8f8e214ede7223bd2c05dc2ce006a
+  source_compare:
+    changed_files:
+    - src/click/types.py
+    - tests/test_options.py
+    changed_file_set_digest: 50905a3404a5b63bc7c09c9235eeced66ab1e12d9a45efdebabada0f98b753eb
+    reference_patch_digest: 5a7d9032f213a573dc10bfaf3a1bba1fc410c95a212f2ebfbbb3df0e4075735c
+    reference_patch_complexity_band: small
+  task_family: type conversion/parameter normalization
+  task_statement_path: inline:problem_statement
+  problem_statement: Fix metavar for Choice options when show_choices=False.
+  expected_touched_area:
+  - src/click/types.py behavior surface
+  - tests/test_options.py focused regression coverage
+  visible_context_guidance: Expose the public behavior summary and minimal reproduction
+    expectation. Hide the implementation diff, reference patch, and target tests.
+  allowed_context:
+    include_git_history_before_base: true
+    include_issue_text: false
+    include_pr_text: true
+    include_reference_patch: false
+  disallowed_context:
+  - reference patch or target diff for pallets/click#2365
+  - hidden verifier files
+  - M5-W2 ACUT outputs, failed patches, or near-miss scores
+  - W3 ACUT outputs or public model results
+  - future execution results for this task
+  verifier:
+    command: .venv/bin/python -m pytest -q tests/test_options.py::test_invalid_flag_combinations
+      tests/test_options.py::test_usage_show_choices
+    timeout_seconds: 120
+  expected:
+    no_op_fails: true
+    reference_passes: true
+  leakage:
+    reviewed: true
+    notes: M6-W3 admission uses ACUT-independent selection proxies and hides target
+      tests/reference patches from ACUT context.
+  admission:
+    status: accepted
+    reviewer: codex-m6-w3-admission
+    rationale: Accepted for frozen W3 primary denominator after admission smoke.
+  metadata:
+    candidate_id: w3_candidate_038
+    human_difficulty_rating: 2
+    selection_proxy_only: true
+    used_acut_outputs_for_selection: false
+    test_nodes:
+    - tests/test_options.py::test_invalid_flag_combinations
+    - tests/test_options.py::test_usage_show_choices
+- task_id: click__w3__015
+  repo_slug: click
+  split: w3
+  benchmark_split: W3
+  locked_target_repository: pallets/click
+  locked_target_commit: 8bd8b4a074c55c03b6eb5666edc44a9c43df38a2
+  source:
+    kind: commit_or_pull_request
+    public_url: https://github.com/pallets/click/commit/4fd2fea0db423d242aedcae0a5f664efe0a93484
+    anchor_id: commit:4fd2fea0db423d242aedcae0a5f664efe0a93484
+    base_commit: 9ce34f20d2370f2e298268227edf0ffce6b9725f
+    target_commit: 4fd2fea0db423d242aedcae0a5f664efe0a93484
+  source_compare:
+    changed_files:
+    - src/click/core.py
+    - tests/test_options.py
+    changed_file_set_digest: a19f469780f5d8b6b2f2627f653498b3de480162bc97c582fc98238302bd6a39
+    reference_patch_digest: fd1084976c1f6c7d99bd3f3403c28919d6b2b2fab5ec9749efe0ddf5c4016cfb
+    reference_patch_complexity_band: medium
+  task_family: type conversion/parameter normalization
+  task_statement_path: inline:problem_statement
+  problem_statement: Fix condition for setting flag value when type is provided.
+  expected_touched_area:
+  - src/click/core.py behavior surface
+  - tests/test_options.py focused regression coverage
+  visible_context_guidance: Expose the public behavior summary and minimal reproduction
+    expectation. Hide the implementation diff, reference patch, and target tests.
+  allowed_context:
+    include_git_history_before_base: true
+    include_issue_text: false
+    include_pr_text: true
+    include_reference_patch: false
+  disallowed_context:
+  - reference patch or target diff for commit:4fd2fea0db423d242aedcae0a5f664efe0a93484
+  - hidden verifier files
+  - M5-W2 ACUT outputs, failed patches, or near-miss scores
+  - W3 ACUT outputs or public model results
+  - future execution results for this task
+  verifier:
+    command: .venv/bin/python -m pytest -q tests/test_options.py::test_type_from_flag_value
+      tests/test_options.py::test_flag_value_is_correctly_set tests/test_options.py::test_invalid_flag_combinations
+      tests/test_options.py::test_non_flag_with_non_negatable_default
+    timeout_seconds: 120
+  expected:
+    no_op_fails: true
+    reference_passes: true
+  leakage:
+    reviewed: true
+    notes: M6-W3 admission uses ACUT-independent selection proxies and hides target
+      tests/reference patches from ACUT context.
+  admission:
+    status: accepted
+    reviewer: codex-m6-w3-admission
+    rationale: Accepted for frozen W3 primary denominator after admission smoke.
+  metadata:
+    candidate_id: w3_candidate_024
+    human_difficulty_rating: 3
+    selection_proxy_only: true
+    used_acut_outputs_for_selection: false
+    test_nodes:
+    - tests/test_options.py::test_type_from_flag_value
+    - tests/test_options.py::test_flag_value_is_correctly_set
+    - tests/test_options.py::test_invalid_flag_combinations
+    - tests/test_options.py::test_non_flag_with_non_negatable_default
+- task_id: click__w3__016
+  repo_slug: click
+  split: w3
+  benchmark_split: W3
+  locked_target_repository: pallets/click
+  locked_target_commit: 8bd8b4a074c55c03b6eb5666edc44a9c43df38a2
+  source:
+    kind: commit_or_pull_request
+    public_url: https://github.com/pallets/click/commit/18d29196c508b249ef1111f1f29c9133e0a8b097
+    anchor_id: commit:18d29196c508b249ef1111f1f29c9133e0a8b097
+    base_commit: 27aaed3fe5bcd6adedd6e91de234914af9859cf1
+    target_commit: 18d29196c508b249ef1111f1f29c9133e0a8b097
+  source_compare:
+    changed_files:
+    - src/click/core.py
+    - tests/test_arguments.py
+    - tests/test_options.py
+    changed_file_set_digest: 4594235a7ea6d10d25ae4259d57ec76ae2e665d961ebe64dec8c90a1747276e4
+    reference_patch_digest: ad59d6871cb4671495adf9b73b0f4dfbf167e481941990cc13ac946be685d5da
+    reference_patch_complexity_band: medium
+  task_family: type conversion/parameter normalization
+  task_statement_path: inline:problem_statement
+  problem_statement: 'Implement the Click behavior change: Ensure that ''type_cast_value''
+    never gets ''UNSET''.'
+  expected_touched_area:
+  - src/click/core.py behavior surface
+  - tests/test_arguments.py focused regression coverage
+  - tests/test_options.py focused regression coverage
+  visible_context_guidance: Expose the public behavior summary and minimal reproduction
+    expectation. Hide the implementation diff, reference patch, and target tests.
+  allowed_context:
+    include_git_history_before_base: true
+    include_issue_text: false
+    include_pr_text: true
+    include_reference_patch: false
+  disallowed_context:
+  - reference patch or target diff for commit:18d29196c508b249ef1111f1f29c9133e0a8b097
+  - hidden verifier files
+  - M5-W2 ACUT outputs, failed patches, or near-miss scores
+  - W3 ACUT outputs or public model results
+  - future execution results for this task
+  verifier:
+    command: .venv/bin/python -m pytest -q tests/test_arguments.py::test_duplicate_names_warning
+      tests/test_arguments.py::test_argument_custom_class_can_override_type_cast_value_and_never_sees_unset
+      tests/test_options.py::test_option_custom_class tests/test_options.py::test_option_custom_class_can_override_type_cast_value_and_never_sees_unset
+    timeout_seconds: 120
+  expected:
+    no_op_fails: true
+    reference_passes: true
+  leakage:
+    reviewed: true
+    notes: M6-W3 admission uses ACUT-independent selection proxies and hides target
+      tests/reference patches from ACUT context.
+  admission:
+    status: accepted
+    reviewer: codex-m6-w3-admission
+    rationale: Accepted for frozen W3 primary denominator after admission smoke.
+  metadata:
+    candidate_id: w3_candidate_012
+    human_difficulty_rating: 3
+    selection_proxy_only: true
+    used_acut_outputs_for_selection: false
+    test_nodes:
+    - tests/test_arguments.py::test_duplicate_names_warning
+    - tests/test_arguments.py::test_argument_custom_class_can_override_type_cast_value_and_never_sees_unset
+    - tests/test_options.py::test_option_custom_class
+    - tests/test_options.py::test_option_custom_class_can_override_type_cast_value_and_never_sees_unset
+- task_id: click__w3__017
+  repo_slug: click
+  split: w3
+  benchmark_split: W3
+  locked_target_repository: pallets/click
+  locked_target_commit: 8bd8b4a074c55c03b6eb5666edc44a9c43df38a2
+  source:
+    kind: commit_or_pull_request
+    public_url: https://github.com/pallets/click/commit/ac6a2acfdb4550c35ce69ce54db502ba96c96324
+    anchor_id: commit:ac6a2acfdb4550c35ce69ce54db502ba96c96324
+    base_commit: 884af5c20fdc95c9c7352df35c37273391464fb9
+    target_commit: ac6a2acfdb4550c35ce69ce54db502ba96c96324
+  source_compare:
+    changed_files:
+    - src/click/shell_completion.py
+    - tests/test_shell_completion.py
+    changed_file_set_digest: e9a27fab0d865ed0d64253c36ce075a7425a44f85d1980ef732bcbe705f59cc5
+    reference_patch_digest: d33d798fc7ec7863d8037af09708ad0ae5063461f57fd2a1479ac13f7e0e9dba
+    reference_patch_complexity_band: small
+  task_family: parser/mixed integration
+  task_statement_path: inline:problem_statement
+  problem_statement: Fix shell completion for nested groups.
+  expected_touched_area:
+  - src/click/shell_completion.py behavior surface
+  - tests/test_shell_completion.py focused regression coverage
+  visible_context_guidance: Expose the public behavior summary and minimal reproduction
+    expectation. Hide the implementation diff, reference patch, and target tests.
+  allowed_context:
+    include_git_history_before_base: true
+    include_issue_text: false
+    include_pr_text: true
+    include_reference_patch: false
+  disallowed_context:
+  - reference patch or target diff for commit:ac6a2acfdb4550c35ce69ce54db502ba96c96324
+  - hidden verifier files
+  - M5-W2 ACUT outputs, failed patches, or near-miss scores
+  - W3 ACUT outputs or public model results
+  - future execution results for this task
+  verifier:
+    command: .venv/bin/python -m pytest -q tests/test_shell_completion.py::test_group
+      tests/test_shell_completion.py::test_nested_group
+    timeout_seconds: 120
+  expected:
+    no_op_fails: true
+    reference_passes: true
+  leakage:
+    reviewed: true
+    notes: M6-W3 admission uses ACUT-independent selection proxies and hides target
+      tests/reference patches from ACUT context.
+  admission:
+    status: accepted
+    reviewer: codex-m6-w3-admission
+    rationale: Accepted for frozen W3 primary denominator after admission smoke.
+  metadata:
+    candidate_id: w3_candidate_023
+    human_difficulty_rating: 2
+    selection_proxy_only: true
+    used_acut_outputs_for_selection: false
+    test_nodes:
+    - tests/test_shell_completion.py::test_group
+    - tests/test_shell_completion.py::test_nested_group
+- task_id: click__w3__018
+  repo_slug: click
+  split: w3
+  benchmark_split: W3
+  locked_target_repository: pallets/click
+  locked_target_commit: 8bd8b4a074c55c03b6eb5666edc44a9c43df38a2
+  source:
+    kind: commit_or_pull_request
+    public_url: https://github.com/pallets/click/commit/5fc3423ae54990cec5a8b41d2c7b489da41475b0
+    anchor_id: commit:5fc3423ae54990cec5a8b41d2c7b489da41475b0
+    base_commit: 7d7183604158f064390539d83d4a19a978c6b08a
+    target_commit: 5fc3423ae54990cec5a8b41d2c7b489da41475b0
+  source_compare:
+    changed_files:
+    - src/click/core.py
+    - tests/test_commands.py
+    changed_file_set_digest: aba9120db82af58fbac5d3d13bd512f9904dd213182cf18ce4649577691b6998
+    reference_patch_digest: d996c9fe20b20a2a8ecf6ae88466413ae63bf8119d257d763f8a2c172f4d5567
+    reference_patch_complexity_band: medium
+  task_family: parser/mixed integration
+  task_statement_path: inline:problem_statement
+  problem_statement: Hide UNSET values in Context.invoke.
+  expected_touched_area:
+  - src/click/core.py behavior surface
+  - tests/test_commands.py focused regression coverage
+  visible_context_guidance: Expose the public behavior summary and minimal reproduction
+    expectation. Hide the implementation diff, reference patch, and target tests.
+  allowed_context:
+    include_git_history_before_base: true
+    include_issue_text: false
+    include_pr_text: true
+    include_reference_patch: false
+  disallowed_context:
+  - reference patch or target diff for commit:5fc3423ae54990cec5a8b41d2c7b489da41475b0
+  - hidden verifier files
+  - M5-W2 ACUT outputs, failed patches, or near-miss scores
+  - W3 ACUT outputs or public model results
+  - future execution results for this task
+  verifier:
+    command: .venv/bin/python -m pytest -q tests/test_commands.py::test_object_propagation
+      tests/test_commands.py::test_other_command_invoke_with_defaults
+    timeout_seconds: 120
+  expected:
+    no_op_fails: true
+    reference_passes: true
+  leakage:
+    reviewed: true
+    notes: M6-W3 admission uses ACUT-independent selection proxies and hides target
+      tests/reference patches from ACUT context.
+  admission:
+    status: accepted
+    reviewer: codex-m6-w3-admission
+    rationale: Accepted for frozen W3 primary denominator after admission smoke.
+  metadata:
+    candidate_id: w3_candidate_013
+    human_difficulty_rating: 3
+    selection_proxy_only: true
+    used_acut_outputs_for_selection: false
+    test_nodes:
+    - tests/test_commands.py::test_object_propagation
+    - tests/test_commands.py::test_other_command_invoke_with_defaults
+- task_id: click__w3__019
+  repo_slug: click
+  split: w3
+  benchmark_split: W3
+  locked_target_repository: pallets/click
+  locked_target_commit: 8bd8b4a074c55c03b6eb5666edc44a9c43df38a2
+  source:
+    kind: commit_or_pull_request
+    public_url: https://github.com/pallets/click/commit/a1235aacb1be55dc66ddcfefbf64dec44b6ab54d
+    anchor_id: pallets/click#2846
+    base_commit: 565f36d5bc4a15d304337b749e113fb4477b1843
+    target_commit: a1235aacb1be55dc66ddcfefbf64dec44b6ab54d
+  source_compare:
+    changed_files:
+    - src/click/shell_completion.py
+    - tests/test_shell_completion.py
+    changed_file_set_digest: 83916c8fe0c1184f29863d47ac80bb80cb1a05792daf79b1ac61767fec49661e
+    reference_patch_digest: b62d0f1167f8835f031ec22c96a64f6ec848ff1997a2ffef94c585468c0990d9
+    reference_patch_complexity_band: medium
+  task_family: parser/mixed integration
+  task_statement_path: inline:problem_statement
+  problem_statement: Fix Zsh completions with colons.
+  expected_touched_area:
+  - src/click/shell_completion.py behavior surface
+  - tests/test_shell_completion.py focused regression coverage
+  visible_context_guidance: Expose the public behavior summary and minimal reproduction
+    expectation. Hide the implementation diff, reference patch, and target tests.
+  allowed_context:
+    include_git_history_before_base: true
+    include_issue_text: false
+    include_pr_text: true
+    include_reference_patch: false
+  disallowed_context:
+  - reference patch or target diff for pallets/click#2846
+  - hidden verifier files
+  - M5-W2 ACUT outputs, failed patches, or near-miss scores
+  - W3 ACUT outputs or public model results
+  - future execution results for this task
+  verifier:
+    command: .venv/bin/python -m pytest -q tests/test_shell_completion.py::test_full_complete
+      tests/test_shell_completion.py::test_zsh_full_complete_with_colons
+    timeout_seconds: 120
+  expected:
+    no_op_fails: true
+    reference_passes: true
+  leakage:
+    reviewed: true
+    notes: M6-W3 admission uses ACUT-independent selection proxies and hides target
+      tests/reference patches from ACUT context.
+  admission:
+    status: accepted
+    reviewer: codex-m6-w3-admission
+    rationale: Accepted for frozen W3 primary denominator after admission smoke.
+  metadata:
+    candidate_id: w3_candidate_020
+    human_difficulty_rating: 3
+    selection_proxy_only: true
+    used_acut_outputs_for_selection: false
+    test_nodes:
+    - tests/test_shell_completion.py::test_full_complete
+    - tests/test_shell_completion.py::test_zsh_full_complete_with_colons
+- task_id: click__w3__020
+  repo_slug: click
+  split: w3
+  benchmark_split: W3
+  locked_target_repository: pallets/click
+  locked_target_commit: 8bd8b4a074c55c03b6eb5666edc44a9c43df38a2
+  source:
+    kind: commit_or_pull_request
+    public_url: https://github.com/pallets/click/commit/0ef55fda47bb3d0dece21197d81d8d72a4250e73
+    anchor_id: pallets/click#2644
+    base_commit: d8763b93021c416549b5f8b4b5497234619410db
+    target_commit: 0ef55fda47bb3d0dece21197d81d8d72a4250e73
+  source_compare:
+    changed_files:
+    - src/click/core.py
+    - src/click/shell_completion.py
+    - tests/test_shell_completion.py
+    changed_file_set_digest: 51d9af12c76ed5f26d8913e26bc2d892a7d257973d4ceb2a614a9c53886426b3
+    reference_patch_digest: 48912c88eabcec61a0ee64a5f3d35ffe8d88c5642e84615008753ce37ed5515d
+    reference_patch_complexity_band: medium
+  task_family: parser/mixed integration
+  task_statement_path: inline:problem_statement
+  problem_statement: 'Implement the Click behavior change: Close contexts created
+    during shell completion #2644.'
+  expected_touched_area:
+  - src/click/core.py behavior surface
+  - src/click/shell_completion.py behavior surface
+  - tests/test_shell_completion.py focused regression coverage
+  visible_context_guidance: Expose the public behavior summary and minimal reproduction
+    expectation. Hide the implementation diff, reference patch, and target tests.
+  allowed_context:
+    include_git_history_before_base: true
+    include_issue_text: false
+    include_pr_text: true
+    include_reference_patch: false
+  disallowed_context:
+  - reference patch or target diff for pallets/click#2644
+  - hidden verifier files
+  - M5-W2 ACUT outputs, failed patches, or near-miss scores
+  - W3 ACUT outputs or public model results
+  - future execution results for this task
+  verifier:
+    command: .venv/bin/python -m pytest -q tests/test_shell_completion.py::test_add_completion_class_decorator
+      tests/test_shell_completion.py::test_files_closed
+    timeout_seconds: 120
+  expected:
+    no_op_fails: true
+    reference_passes: true
+  leakage:
+    reviewed: true
+    notes: M6-W3 admission uses ACUT-independent selection proxies and hides target
+      tests/reference patches from ACUT context.
+  admission:
+    status: accepted
+    reviewer: codex-m6-w3-admission
+    rationale: Accepted for frozen W3 primary denominator after admission smoke.
+  metadata:
+    candidate_id: w3_candidate_029
+    human_difficulty_rating: 3
+    selection_proxy_only: true
+    used_acut_outputs_for_selection: false
+    test_nodes:
+    - tests/test_shell_completion.py::test_add_completion_class_decorator
+    - tests/test_shell_completion.py::test_files_closed

@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+set -euo pipefail
+script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+hidden_dir="$script_dir/hidden"
+if [ -d "$hidden_dir" ]; then
+  while IFS= read -r -d '' file; do
+    rel="${file#$hidden_dir/}"
+    mkdir -p "$(dirname "$rel")"
+    cp "$file" "$rel"
+  done < <(find "$hidden_dir" -type f -print0)
+fi
+exec .venv/bin/python -m pytest -q tests/test_arguments.py::test_duplicate_names_warning tests/test_arguments.py::test_argument_custom_class_can_override_type_cast_value_and_never_sees_unset tests/test_options.py::test_option_custom_class tests/test_options.py::test_option_custom_class_can_override_type_cast_value_and_never_sees_unset

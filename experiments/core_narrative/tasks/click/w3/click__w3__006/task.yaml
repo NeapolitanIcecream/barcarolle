@@ -1,0 +1,60 @@
+schema_version: core-narrative.task.v1
+task_id: click__w3__006
+repo_slug: click
+split: w3
+source:
+  kind: commit_or_pull_request
+  public_url: https://github.com/pallets/click/commit/a9711c50be5ee37104068b309431c5ab02968b8f
+  anchor_id: commit:a9711c50be5ee37104068b309431c5ab02968b8f
+  base_commit: 90a6c78ae574de35d3783e0d575b688a12f09a3d
+  target_commit: a9711c50be5ee37104068b309431c5ab02968b8f
+task_family: CliRunner/testing/input-output isolation
+task_statement_path: public/statement.md
+allowed_context:
+  include_git_history_before_base: true
+  include_issue_text: false
+  include_pr_text: true
+  include_reference_patch: false
+disallowed_context:
+- reference patch or target diff for commit:a9711c50be5ee37104068b309431c5ab02968b8f
+- hidden verifier files
+- M5-W2 ACUT outputs, failed patches, or near-miss scores
+- W3 ACUT outputs or public model results
+- future execution results for this task
+verifier:
+  command: verifier/run.sh
+  timeout_seconds: 120
+expected:
+  no_op_fails: true
+  reference_passes: true
+leakage:
+  reviewed: true
+  notes: M6-W3 admission uses ACUT-independent selection proxies and hides target
+    tests/reference patches from ACUT context.
+admission:
+  status: accepted
+  reviewer: codex-m6-w3-admission
+  rationale: Accepted for frozen W3 primary denominator after admission smoke.
+metadata:
+  materialized_from: m6_w3_task_admission.py
+  benchmark_split: W3
+  locked_target_repository: pallets/click
+  locked_target_commit: 8bd8b4a074c55c03b6eb5666edc44a9c43df38a2
+  source_compare:
+    changed_files:
+    - src/click/testing.py
+    - tests/test_testing.py
+    changed_file_set_digest: 022b19793388ffdfcf682d9f523af0a09786025c1a4113c06faf99b7a9d373fd
+    reference_patch_digest: 51b4f962104ef06bc9d2121b6cd4eb7d224838d43c3a28020793459f77543823
+    reference_patch_complexity_band: small
+  expected_touched_area:
+  - src/click/testing.py behavior surface
+  - tests/test_testing.py focused regression coverage
+  visible_context_guidance: Expose the public behavior summary and minimal reproduction
+    expectation. Hide the implementation diff, reference patch, and target tests.
+  candidate_id: w3_candidate_104
+  human_difficulty_rating: 2
+  test_nodes:
+  - tests/test_testing.py::test_file_stdin_attrs
+  - tests/test_testing.py::test_isolated_runner
+  - tests/test_testing.py::test_isolated_runner_custom_tempdir

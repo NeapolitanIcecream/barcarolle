@@ -1,0 +1,65 @@
+schema_version: core-narrative.task.v1
+task_id: click__w3__009
+repo_slug: click
+split: w3
+source:
+  kind: commit_or_pull_request
+  public_url: https://github.com/pallets/click/commit/607316f9dea85ee81f8a215f5d5ae20f7f4fff71
+  anchor_id: commit:607316f9dea85ee81f8a215f5d5ae20f7f4fff71
+  base_commit: 878de46100e9c29aea9dab5b385b8116863cb5e3
+  target_commit: 607316f9dea85ee81f8a215f5d5ae20f7f4fff71
+task_family: prompt/termui/output rendering
+task_statement_path: public/statement.md
+allowed_context:
+  include_git_history_before_base: true
+  include_issue_text: false
+  include_pr_text: true
+  include_reference_patch: false
+disallowed_context:
+- reference patch or target diff for commit:607316f9dea85ee81f8a215f5d5ae20f7f4fff71
+- hidden verifier files
+- M5-W2 ACUT outputs, failed patches, or near-miss scores
+- W3 ACUT outputs or public model results
+- future execution results for this task
+verifier:
+  command: verifier/run.sh
+  timeout_seconds: 120
+expected:
+  no_op_fails: true
+  reference_passes: true
+leakage:
+  reviewed: true
+  notes: M6-W3 admission uses ACUT-independent selection proxies and hides target
+    tests/reference patches from ACUT context.
+admission:
+  status: accepted
+  reviewer: codex-m6-w3-admission
+  rationale: Accepted for frozen W3 primary denominator after admission smoke.
+metadata:
+  materialized_from: m6_w3_task_admission.py
+  benchmark_split: W3
+  locked_target_repository: pallets/click
+  locked_target_commit: 8bd8b4a074c55c03b6eb5666edc44a9c43df38a2
+  source_compare:
+    changed_files:
+    - src/click/core.py
+    - src/click/termui.py
+    - tests/test_options.py
+    - tests/test_termui.py
+    changed_file_set_digest: 9cf58284f1c628dd0cfb7728106abe18c7ecf4784264b79be86721a8e81ff123
+    reference_patch_digest: e8084243cb69cc6d5ac6c2535d38a151e8978f075791b83cc7a70cc4ce708091
+    reference_patch_complexity_band: medium
+  expected_touched_area:
+  - src/click/core.py behavior surface
+  - src/click/termui.py behavior surface
+  - tests/test_options.py focused regression coverage
+  - tests/test_termui.py focused regression coverage
+  visible_context_guidance: Expose the public behavior summary and minimal reproduction
+    expectation. Hide the implementation diff, reference patch, and target tests.
+  candidate_id: w3_candidate_003
+  human_difficulty_rating: 3
+  test_nodes:
+  - tests/test_options.py::test_show_default_string
+  - tests/test_options.py::test_string_show_default_shows_custom_string_in_prompt
+  - tests/test_termui.py::test_false_show_default_cause_no_default_display_in_prompt
+  - tests/test_termui.py::test_string_show_default_shows_custom_string_in_prompt

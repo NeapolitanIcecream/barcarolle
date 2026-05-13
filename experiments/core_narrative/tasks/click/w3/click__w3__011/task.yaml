@@ -1,0 +1,61 @@
+schema_version: core-narrative.task.v1
+task_id: click__w3__011
+repo_slug: click
+split: w3
+source:
+  kind: commit_or_pull_request
+  public_url: https://github.com/pallets/click/commit/b96c2601af4e01341b4d2c0db494ebee4aef8f42
+  anchor_id: commit:b96c2601af4e01341b4d2c0db494ebee4aef8f42
+  base_commit: 04ef3a6f473deb2499721a8d11f92a7d2c0912f2
+  target_commit: b96c2601af4e01341b4d2c0db494ebee4aef8f42
+task_family: prompt/termui/output rendering
+task_statement_path: public/statement.md
+allowed_context:
+  include_git_history_before_base: true
+  include_issue_text: false
+  include_pr_text: true
+  include_reference_patch: false
+disallowed_context:
+- reference patch or target diff for commit:b96c2601af4e01341b4d2c0db494ebee4aef8f42
+- hidden verifier files
+- M5-W2 ACUT outputs, failed patches, or near-miss scores
+- W3 ACUT outputs or public model results
+- future execution results for this task
+verifier:
+  command: verifier/run.sh
+  timeout_seconds: 120
+expected:
+  no_op_fails: true
+  reference_passes: true
+leakage:
+  reviewed: true
+  notes: M6-W3 admission uses ACUT-independent selection proxies and hides target
+    tests/reference patches from ACUT context.
+admission:
+  status: accepted
+  reviewer: codex-m6-w3-admission
+  rationale: Accepted for frozen W3 primary denominator after admission smoke.
+metadata:
+  materialized_from: m6_w3_task_admission.py
+  benchmark_split: W3
+  locked_target_repository: pallets/click
+  locked_target_commit: 8bd8b4a074c55c03b6eb5666edc44a9c43df38a2
+  source_compare:
+    changed_files:
+    - src/click/_termui_impl.py
+    - tests/test_termui.py
+    changed_file_set_digest: d748b89d3e1634e8945c4ae154993133226fa73070a175c5ba10ede750ca8dbe
+    reference_patch_digest: ab411399af450b10bd2a84909e6b2b2d7564244ea355eac46e4b563205744fe7
+    reference_patch_complexity_band: large
+  expected_touched_area:
+  - src/click/_termui_impl.py behavior surface
+  - tests/test_termui.py focused regression coverage
+  visible_context_guidance: Expose the public behavior summary and minimal reproduction
+    expectation. Hide the implementation diff, reference patch, and target tests.
+  candidate_id: w3_candidate_006
+  human_difficulty_rating: 5
+  test_nodes:
+  - tests/test_termui.py::test_edit
+  - tests/test_termui.py::test_editor_path_normalization
+  - tests/test_termui.py::test_editor_windows_path_normalization
+  - tests/test_termui.py::test_editor_env_passed_through

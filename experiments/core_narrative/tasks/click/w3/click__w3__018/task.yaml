@@ -1,0 +1,59 @@
+schema_version: core-narrative.task.v1
+task_id: click__w3__018
+repo_slug: click
+split: w3
+source:
+  kind: commit_or_pull_request
+  public_url: https://github.com/pallets/click/commit/5fc3423ae54990cec5a8b41d2c7b489da41475b0
+  anchor_id: commit:5fc3423ae54990cec5a8b41d2c7b489da41475b0
+  base_commit: 7d7183604158f064390539d83d4a19a978c6b08a
+  target_commit: 5fc3423ae54990cec5a8b41d2c7b489da41475b0
+task_family: parser/mixed integration
+task_statement_path: public/statement.md
+allowed_context:
+  include_git_history_before_base: true
+  include_issue_text: false
+  include_pr_text: true
+  include_reference_patch: false
+disallowed_context:
+- reference patch or target diff for commit:5fc3423ae54990cec5a8b41d2c7b489da41475b0
+- hidden verifier files
+- M5-W2 ACUT outputs, failed patches, or near-miss scores
+- W3 ACUT outputs or public model results
+- future execution results for this task
+verifier:
+  command: verifier/run.sh
+  timeout_seconds: 120
+expected:
+  no_op_fails: true
+  reference_passes: true
+leakage:
+  reviewed: true
+  notes: M6-W3 admission uses ACUT-independent selection proxies and hides target
+    tests/reference patches from ACUT context.
+admission:
+  status: accepted
+  reviewer: codex-m6-w3-admission
+  rationale: Accepted for frozen W3 primary denominator after admission smoke.
+metadata:
+  materialized_from: m6_w3_task_admission.py
+  benchmark_split: W3
+  locked_target_repository: pallets/click
+  locked_target_commit: 8bd8b4a074c55c03b6eb5666edc44a9c43df38a2
+  source_compare:
+    changed_files:
+    - src/click/core.py
+    - tests/test_commands.py
+    changed_file_set_digest: aba9120db82af58fbac5d3d13bd512f9904dd213182cf18ce4649577691b6998
+    reference_patch_digest: d996c9fe20b20a2a8ecf6ae88466413ae63bf8119d257d763f8a2c172f4d5567
+    reference_patch_complexity_band: medium
+  expected_touched_area:
+  - src/click/core.py behavior surface
+  - tests/test_commands.py focused regression coverage
+  visible_context_guidance: Expose the public behavior summary and minimal reproduction
+    expectation. Hide the implementation diff, reference patch, and target tests.
+  candidate_id: w3_candidate_013
+  human_difficulty_rating: 3
+  test_nodes:
+  - tests/test_commands.py::test_object_propagation
+  - tests/test_commands.py::test_other_command_invoke_with_defaults

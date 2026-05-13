@@ -1,0 +1,646 @@
+schema_version: core-narrative.m6-w3-candidate-pool.v1
+prepared_at: '2026-05-13T00:00:00+08:00'
+status: candidate_pool_smoked
+candidate_count: 40
+rows:
+- candidate_id: w3_candidate_005
+  source_anchor: commit:6de212151893e4072ca21779b7b6f4cb82452f51
+  target_commit: 6de212151893e4072ca21779b7b6f4cb82452f51
+  base_commit: 1339fd3323357119a9c7a6326c788f80295954ce
+  family: option/default/envvar/flag semantics
+  changed_file_anchor_set:
+  - commit:6de212151893e4072ca21779b7b6f4cb82452f51::click/core.py
+  - commit:6de212151893e4072ca21779b7b6f4cb82452f51::tests/test_defaults.py
+  changed_file_set_digest: 37a8ebd649ad40c07ec48d8bc56f6052bb665ac1957012895c28139c5bd6449c
+  reference_patch_digest: 2dafb9734c9e9518cf18db08d1a767bc4b8c2e298542041de651dfd818953f32
+  statement_digest: 1d64ff8a407f07600578ea9085b169f9f95f8acfed292f3a849e89c3ffb566ba
+  hidden_verifier_digest: 2b8b569240f450ee4aad93a4f5893093dbbec81bcef5f7489023dbf46e368de0
+  human_difficulty_rating: 3
+  reference_patch_complexity_band: medium
+  admission_decision: accepted
+- candidate_id: w3_candidate_007
+  source_anchor: commit:d340b0c1202284a1b9d0ca892549208527d586ce
+  target_commit: d340b0c1202284a1b9d0ca892549208527d586ce
+  base_commit: 04ef3a6f473deb2499721a8d11f92a7d2c0912f2
+  family: option/default/envvar/flag semantics
+  changed_file_anchor_set:
+  - commit:d340b0c1202284a1b9d0ca892549208527d586ce::click/core.py
+  - commit:d340b0c1202284a1b9d0ca892549208527d586ce::tests/test_options.py
+  changed_file_set_digest: bb28ce6bdcdf9cc9d6d6a107fe41dce165074b32ccd13714da09c8ecc8d94c2e
+  reference_patch_digest: c7910f2c2bc5685cb6d41c0e9be170e16e2f3ac9c9845019bcd003f6db6804e3
+  statement_digest: 3d776c189dffd3f71a0ba6430e37bbb7f01cb30b9becc498d8369c810c507121
+  hidden_verifier_digest: ce507493d7d94d74c0d19fbf7a90f88c8c2e47251f3cb30736b253154b03acf4
+  human_difficulty_rating: 2
+  reference_patch_complexity_band: small
+  admission_decision: accepted
+- candidate_id: w3_candidate_008
+  source_anchor: commit:aaf99a3ee6935f321f755bc7c5717a91d321cd39
+  target_commit: aaf99a3ee6935f321f755bc7c5717a91d321cd39
+  base_commit: cdab890e57a30a9f437b88ce9652f7bfce980c1f
+  family: option/default/envvar/flag semantics
+  changed_file_anchor_set:
+  - commit:aaf99a3ee6935f321f755bc7c5717a91d321cd39::click/core.py
+  - commit:aaf99a3ee6935f321f755bc7c5717a91d321cd39::tests/test_defaults.py
+  changed_file_set_digest: 8411a89580876d0f7b00d22ac0744d849468313dcec2038e99fa1cf4fc919f5d
+  reference_patch_digest: 1ae4ee25f04d4892d718211809d36e84bfdf3dcc3f34c36e29f0c8a4430ccacb
+  statement_digest: 69ae5a097956637f17fc6b0c0325edd61e1a8f41c59d3f4594a60fcd9d6e64d2
+  hidden_verifier_digest: df66b4fd4c94004a351ccbe1c917c68e7d30d6d5834c146d9a1314d48dd54f0b
+  human_difficulty_rating: 3
+  reference_patch_complexity_band: medium
+  admission_decision: accepted
+- candidate_id: w3_candidate_009
+  source_anchor: commit:955ca492a6b9e8de0660dae1c415568ca6f9c4b3
+  target_commit: 955ca492a6b9e8de0660dae1c415568ca6f9c4b3
+  base_commit: 91de59c6c8abc8251e7af551cd4546cc964288af
+  family: option/default/envvar/flag semantics
+  changed_file_anchor_set:
+  - commit:955ca492a6b9e8de0660dae1c415568ca6f9c4b3::click/core.py
+  - commit:955ca492a6b9e8de0660dae1c415568ca6f9c4b3::tests/test_options.py
+  changed_file_set_digest: 622ba21dc446db93c382d4914faf3d5d0863b3af9f5ce42310250b2ea9d27acd
+  reference_patch_digest: 43a3e20a5cf34eba5ecbacd5487b45ee92a6dbf5707d5a59b7bfdced71c439df
+  statement_digest: aefe38f1cd023febb5c350dd7b960f03b348e7475150034d411d600db7c97871
+  hidden_verifier_digest: 7f78944c98dbcafb50bc055dbf89e13b1ad3941cef0f53fc09757a1d7ce24f92
+  human_difficulty_rating: 3
+  reference_patch_complexity_band: medium
+  admission_decision: rejected
+- candidate_id: w3_candidate_010
+  source_anchor: pallets/click#3084
+  target_commit: 91de59c6c8abc8251e7af551cd4546cc964288af
+  base_commit: 7f7bbe4569ea68e8dabee232eade069ef3310aea
+  family: option/default/envvar/flag semantics
+  changed_file_anchor_set:
+  - pallets/click#3084::click/core.py
+  - pallets/click#3084::tests/test_options.py
+  changed_file_set_digest: e152dc8bc9fd07bb772ba0ee90d4f9ea491dd80fe7e401675b519a7c808c06cb
+  reference_patch_digest: 325d706c844ec1223538fb11c1eb03631cd3674d120dcfa355cdee95b1978474
+  statement_digest: fd5c5a69180d0157dfb350e56a0daafd2f9ff0ded92fe3d95a80d001afc6422f
+  hidden_verifier_digest: 8674c77b2c2da6f53007efef85286b100734474c14ef72a1cf5c1cd6551c1bae
+  human_difficulty_rating: 2
+  reference_patch_complexity_band: small
+  admission_decision: accepted
+- candidate_id: w3_candidate_014
+  source_anchor: commit:a2456134ec14305c9de131c4f38d027184bd19c0
+  target_commit: a2456134ec14305c9de131c4f38d027184bd19c0
+  base_commit: b0ffa61c1b2d7245e25c3cd315a911192aa81b2a
+  family: option/default/envvar/flag semantics
+  changed_file_anchor_set:
+  - commit:a2456134ec14305c9de131c4f38d027184bd19c0::click/core.py
+  - commit:a2456134ec14305c9de131c4f38d027184bd19c0::tests/test_basic.py
+  - commit:a2456134ec14305c9de131c4f38d027184bd19c0::tests/test_options.py
+  changed_file_set_digest: d7c0c903fdacadbb2b0d1c272fb9ff44904405806bf4059ac31f1cddcd0a0f7f
+  reference_patch_digest: b992e1e58c8806111ddbba1b7b706a9a263925e4c8367f268c108c3440a0dc4b
+  statement_digest: ebf6f3e23b0d73d7a1cdc9f1dc97d9dfc2c868962f411c4bb46c191951561021
+  hidden_verifier_digest: 1224eba1a8711efe330666368d558b6c19a28d622cbde80f5ba2531990681078
+  human_difficulty_rating: 3
+  reference_patch_complexity_band: medium
+  admission_decision: rejected
+- candidate_id: w3_candidate_015
+  source_anchor: commit:029bbeda76aa824149f110408d56de7b402a87ed
+  target_commit: 029bbeda76aa824149f110408d56de7b402a87ed
+  base_commit: a2b699a134ae4f2459808290f62e96e5b3c1d54f
+  family: option/default/envvar/flag semantics
+  changed_file_anchor_set:
+  - commit:029bbeda76aa824149f110408d56de7b402a87ed::click/core.py
+  - commit:029bbeda76aa824149f110408d56de7b402a87ed::tests/test_options.py
+  changed_file_set_digest: f5a0fe38ff9d2e4995179d3968197f8befd443b86111ece8cd44d2a1b5511a37
+  reference_patch_digest: a6ed7c099b28237134281929d25b7de284e69fafb833a51a1654262869f033c6
+  statement_digest: de9bb1db20c92aaac8f341a28ee8d2530590a9595abae06caf2fe34c53e3de91
+  hidden_verifier_digest: b2a469ac4fb125b30402e1239d13455fe7cf72ba6c249414400b794306523207
+  human_difficulty_rating: 1
+  reference_patch_complexity_band: small
+  admission_decision: rejected
+- candidate_id: w3_candidate_001
+  source_anchor: commit:8762c7752cf1632d082c76922b15fef06ac3a2f1
+  target_commit: 8762c7752cf1632d082c76922b15fef06ac3a2f1
+  base_commit: 878de46100e9c29aea9dab5b385b8116863cb5e3
+  family: CliRunner/testing/input-output isolation
+  changed_file_anchor_set:
+  - commit:8762c7752cf1632d082c76922b15fef06ac3a2f1::click/testing.py
+  - commit:8762c7752cf1632d082c76922b15fef06ac3a2f1::tests/test_testing.py
+  changed_file_set_digest: 875f34bff89b1a862d5a0fb40c9e8db01dc2031ca3e3f57ed3262705b44e3ecb
+  reference_patch_digest: e7a549c27dd6c953fcac2486a6f2bce3b990ed1cf58d5090c3593076b226eb7d
+  statement_digest: 3e3514e237b92d9c23671167440cd1d09c6e6a75e62b5576f9dc5b036fa93f0a
+  hidden_verifier_digest: 3eca34ca580dbe2aeed4b9e9259196a8fe34bf23727cb2658d913624d9680618
+  human_difficulty_rating: 3
+  reference_patch_complexity_band: medium
+  admission_decision: accepted
+- candidate_id: w3_candidate_022
+  source_anchor: commit:93c6966eb3a575c2b600434d1cc9f4b3aee505ac
+  target_commit: 93c6966eb3a575c2b600434d1cc9f4b3aee505ac
+  base_commit: b63239d657aab7c4e04667a62e7177f617b37230
+  family: CliRunner/testing/input-output isolation
+  changed_file_anchor_set:
+  - commit:93c6966eb3a575c2b600434d1cc9f4b3aee505ac::click/testing.py
+  - commit:93c6966eb3a575c2b600434d1cc9f4b3aee505ac::tests/test_chain.py
+  changed_file_set_digest: 26df256982d41e402be8bd46e995f993ba9ac7dcbfff00bcb91182c20d69e7dd
+  reference_patch_digest: d8a992e9e596dd665437982a41dd24a11f11232e361d3320ec358093dbbba4d9
+  statement_digest: 71c422364628adf4facdb787c2be885754beeccf4c1188f6a1f3ff677785760f
+  hidden_verifier_digest: 04ea2509428996a47cad9e44a5fc438815afdd8b233539802b6368b63e6cc627
+  human_difficulty_rating: 1
+  reference_patch_complexity_band: small
+  admission_decision: accepted
+- candidate_id: w3_candidate_036
+  source_anchor: pallets/click#2523
+  target_commit: 0e0c00324a5af35f8995c7ff88df67b0f5594a58
+  base_commit: 948d7a707a0abda8ce0a1b39ba87390f11ffcd5e
+  family: CliRunner/testing/input-output isolation
+  changed_file_anchor_set:
+  - pallets/click#2523::click/testing.py
+  - pallets/click#2523::tests/test_termui.py
+  - pallets/click#2523::tests/test_testing.py
+  changed_file_set_digest: 637cfbdf1c42754d25d7530a2b9d19acaf3c48595007a53c922a7178c6f29a54
+  reference_patch_digest: 31b04d756d15c5c45fc3d0e972ff2de2acdc3506acd813aeaa57dfa97bac21c8
+  statement_digest: cdd0a844a9e18ddc7c76eb9f79a109598c3591fe95196cb19e3c0d832a22adb7
+  hidden_verifier_digest: a4ec1dfeb3aca06dc13424a56344f5fd2599bccfb55940f333f2b10dc924299d
+  human_difficulty_rating: 5
+  reference_patch_complexity_band: large
+  admission_decision: accepted
+- candidate_id: w3_candidate_040
+  source_anchor: commit:d83868aefcaffd876c0bfd67d32b9ec6a03d65d1
+  target_commit: d83868aefcaffd876c0bfd67d32b9ec6a03d65d1
+  base_commit: d3e3852eba45a6f7ce0ae5e02ca49106e228add6
+  family: CliRunner/testing/input-output isolation
+  changed_file_anchor_set:
+  - commit:d83868aefcaffd876c0bfd67d32b9ec6a03d65d1::click/testing.py
+  - commit:d83868aefcaffd876c0bfd67d32b9ec6a03d65d1::tests/test_testing.py
+  changed_file_set_digest: b2cfe4ce0976f783f04d34635c0e314a5cdaf084e049a6ef88ae754cfc343acc
+  reference_patch_digest: 81693d6ba0c379e48757d42f65e5cca3f7cea64bf7aba445a739954aff5bcef7
+  statement_digest: 5f9bbef9912220ca57fbbfb89bbd7573979de0b8ff84a55df11d46dccef7be9b
+  hidden_verifier_digest: 8b1f52690850340aa5e35cd308ef28d82e955072f9f0c9f313b66c9fc597d808
+  human_difficulty_rating: 1
+  reference_patch_complexity_band: small
+  admission_decision: rejected
+- candidate_id: w3_candidate_084
+  source_anchor: commit:f6f8976900d9c9d65e82d61477a626545c58f054
+  target_commit: f6f8976900d9c9d65e82d61477a626545c58f054
+  base_commit: 0d01686fe6be5c335f50098a06b7e847a2753452
+  family: CliRunner/testing/input-output isolation
+  changed_file_anchor_set:
+  - commit:f6f8976900d9c9d65e82d61477a626545c58f054::click/testing.py
+  - commit:f6f8976900d9c9d65e82d61477a626545c58f054::tests/test_testing.py
+  changed_file_set_digest: 1c08be005f20fce3a10d0346f35557c3d35b155704e61861bc9404e182a548d7
+  reference_patch_digest: 8c9b356382d5bcaec4aad9bbfd97316636d75df14c944794ca688b8ed7742e3e
+  statement_digest: 8d763e41b936feb0355faded6fa8da3e20ecf1aab1c5319ec53fe113cd3cb958
+  hidden_verifier_digest: 742d1cf3bb1e198dbd91398e83943e6ad1d4dc58796223d6d676ae9a2519ad2a
+  human_difficulty_rating: 3
+  reference_patch_complexity_band: medium
+  admission_decision: accepted
+- candidate_id: w3_candidate_085
+  source_anchor: commit:0d01686fe6be5c335f50098a06b7e847a2753452
+  target_commit: 0d01686fe6be5c335f50098a06b7e847a2753452
+  base_commit: 0dc6d74df5c984ff923f5d17e97bf94a21b3a3cd
+  family: CliRunner/testing/input-output isolation
+  changed_file_anchor_set:
+  - commit:0d01686fe6be5c335f50098a06b7e847a2753452::click/testing.py
+  - commit:0d01686fe6be5c335f50098a06b7e847a2753452::tests/test_testing.py
+  changed_file_set_digest: 33ecc486ce80306c9ed3ea0f9b19df8e66e8868b68050be5079acbea734f7d1d
+  reference_patch_digest: 02454a199047a1077d971efe19f5f1841ad16c29a3728cafbf592103a6b155e6
+  statement_digest: fc9538b36e27878db1fbfa7d2376327f1360b5f6d6a13a5c4743328c34845a52
+  hidden_verifier_digest: 2f29316d6ef5c304f2515720231ba298637c088396224b0e626e2f3332105622
+  human_difficulty_rating: 3
+  reference_patch_complexity_band: medium
+  admission_decision: rejected
+- candidate_id: w3_candidate_090
+  source_anchor: commit:ad2482bf696df25025ee78fb81a8cf91256af6a5
+  target_commit: ad2482bf696df25025ee78fb81a8cf91256af6a5
+  base_commit: c4542263a96dd067ed1ded12a83553da05bb61dd
+  family: CliRunner/testing/input-output isolation
+  changed_file_anchor_set:
+  - commit:ad2482bf696df25025ee78fb81a8cf91256af6a5::click/testing.py
+  - commit:ad2482bf696df25025ee78fb81a8cf91256af6a5::tests/test_testing.py
+  changed_file_set_digest: e21b37db2179e1008bc1dc518c12e4004da49411456a4c89ae0b349a55bf50dd
+  reference_patch_digest: 76a781323b4e316e4b07015c23098f5d9be29023a84825778f09a9a6a81d55fd
+  statement_digest: ed44d2328571ecb54f832e12b313cca5815a11742cfa38877d98d9ee3c914bae
+  hidden_verifier_digest: 2147d142b1387788055bc82c590d20222dd3f827fbc841d084d064e303670daa
+  human_difficulty_rating: 2
+  reference_patch_complexity_band: small
+  admission_decision: accepted
+- candidate_id: w3_candidate_104
+  source_anchor: commit:a9711c50be5ee37104068b309431c5ab02968b8f
+  target_commit: a9711c50be5ee37104068b309431c5ab02968b8f
+  base_commit: 90a6c78ae574de35d3783e0d575b688a12f09a3d
+  family: CliRunner/testing/input-output isolation
+  changed_file_anchor_set:
+  - commit:a9711c50be5ee37104068b309431c5ab02968b8f::click/testing.py
+  - commit:a9711c50be5ee37104068b309431c5ab02968b8f::tests/test_testing.py
+  changed_file_set_digest: 022b19793388ffdfcf682d9f523af0a09786025c1a4113c06faf99b7a9d373fd
+  reference_patch_digest: 51b4f962104ef06bc9d2121b6cd4eb7d224838d43c3a28020793459f77543823
+  statement_digest: 63dff68dea6d8e6f678523693c17035ca91b534747c6569a44a1bd40937a3435
+  hidden_verifier_digest: ce39da7f90cd84fc8c49731d3e6312b4622d723afcc284415fb65d0885c03e88
+  human_difficulty_rating: 2
+  reference_patch_complexity_band: small
+  admission_decision: accepted
+- candidate_id: w3_candidate_129
+  source_anchor: commit:7d7809fcd0940c9a272b5aaeba3ec96bc8b682c1
+  target_commit: 7d7809fcd0940c9a272b5aaeba3ec96bc8b682c1
+  base_commit: 10103e3835a381185f786745c0281237f0b238ae
+  family: CliRunner/testing/input-output isolation
+  changed_file_anchor_set:
+  - commit:7d7809fcd0940c9a272b5aaeba3ec96bc8b682c1::click/testing.py
+  - commit:7d7809fcd0940c9a272b5aaeba3ec96bc8b682c1::tests/test_testing.py
+  changed_file_set_digest: 6f940a4b20e536c059e07d8e4b22c395fd4056b34da4eda759e9c8e67b85e75f
+  reference_patch_digest: 3e0bf1a33f4972ae55fd466d4d46d980c4b841960acc3e63cb3cf0ae8f746ae7
+  statement_digest: 1831fd49c6b01ac91ef963a3ace24db89b77406629f2d0b2e45fc06ef8f9fe9c
+  hidden_verifier_digest: fafceb2817e248ba0358f821b6b2a2f86a1e118ad867a82860cda3fccdc8f963
+  human_difficulty_rating: 2
+  reference_patch_complexity_band: small
+  admission_decision: accepted
+- candidate_id: w3_candidate_136
+  source_anchor: commit:a7436e89bbebd361d8d97d1261db0bd399c84b31
+  target_commit: a7436e89bbebd361d8d97d1261db0bd399c84b31
+  base_commit: 563b1a7116a6806e699d31d327dd9bca93c40cb3
+  family: CliRunner/testing/input-output isolation
+  changed_file_anchor_set:
+  - commit:a7436e89bbebd361d8d97d1261db0bd399c84b31::click/testing.py
+  - commit:a7436e89bbebd361d8d97d1261db0bd399c84b31::tests/test_testing.py
+  changed_file_set_digest: acdc01916a3361cbfda2953194c5fb5582dc8e46782f715b443aa442bc1d1225
+  reference_patch_digest: 0cf3dfe6d8e6fe894712711277faf9891c79dbac815296cbe3e8ebe962092ec7
+  statement_digest: 0d629654be3fe11bf1a3d55a2c994b3e38586e43fd15a77ecec8afdbc28e667e
+  hidden_verifier_digest: 610f53b52c39b2e54cc3571b77578faf4efb6419baec9b476737b6bb7095a244
+  human_difficulty_rating: 3
+  reference_patch_complexity_band: medium
+  admission_decision: accepted
+- candidate_id: w3_candidate_166
+  source_anchor: commit:bc5de6f30ec7c10c45c62508861d5d2d90541718
+  target_commit: bc5de6f30ec7c10c45c62508861d5d2d90541718
+  base_commit: e0ad5a651f5b4f7a69841710750ffa6ac3905366
+  family: CliRunner/testing/input-output isolation
+  changed_file_anchor_set:
+  - commit:bc5de6f30ec7c10c45c62508861d5d2d90541718::click/testing.py
+  - commit:bc5de6f30ec7c10c45c62508861d5d2d90541718::tests/test_testing.py
+  changed_file_set_digest: a30af137067564c7e48fb80c04c8fde27837694793e78d5e290056bc7caf2405
+  reference_patch_digest: c9ded209e54a2dc65e30f5180b5945806bf8574c9a2ac725f880131de9c28cb7
+  statement_digest: 03d4e5946672672a951d2379e253cdf5437fa5d1ca90f93afde5118c50a507fd
+  hidden_verifier_digest: 62874e5c6659474d622e4ff99bddd437d8ead663d339c4cd0cc1eb29d6fc3f4b
+  human_difficulty_rating: 1
+  reference_patch_complexity_band: small
+  admission_decision: accepted
+- candidate_id: w3_candidate_188
+  source_anchor: commit:82f9c626ffedb284eafe67235b5592be6919106d
+  target_commit: 82f9c626ffedb284eafe67235b5592be6919106d
+  base_commit: 61266619cb201accdba6392a4809d3e70cac2b5c
+  family: CliRunner/testing/input-output isolation
+  changed_file_anchor_set:
+  - commit:82f9c626ffedb284eafe67235b5592be6919106d::click/__init__.py
+  - commit:82f9c626ffedb284eafe67235b5592be6919106d::click/_bashcomplete.py
+  - commit:82f9c626ffedb284eafe67235b5592be6919106d::click/_compat.py
+  - commit:82f9c626ffedb284eafe67235b5592be6919106d::click/_termui_impl.py
+  - commit:82f9c626ffedb284eafe67235b5592be6919106d::click/_unicodefun.py
+  - commit:82f9c626ffedb284eafe67235b5592be6919106d::click/_winconsole.py
+  - commit:82f9c626ffedb284eafe67235b5592be6919106d::click/core.py
+  - commit:82f9c626ffedb284eafe67235b5592be6919106d::click/decorators.py
+  - commit:82f9c626ffedb284eafe67235b5592be6919106d::click/exceptions.py
+  - commit:82f9c626ffedb284eafe67235b5592be6919106d::click/globals.py
+  - commit:82f9c626ffedb284eafe67235b5592be6919106d::click/termui.py
+  - commit:82f9c626ffedb284eafe67235b5592be6919106d::click/testing.py
+  - commit:82f9c626ffedb284eafe67235b5592be6919106d::click/types.py
+  - commit:82f9c626ffedb284eafe67235b5592be6919106d::click/utils.py
+  - commit:82f9c626ffedb284eafe67235b5592be6919106d::tests/test_arguments.py
+  - commit:82f9c626ffedb284eafe67235b5592be6919106d::tests/test_bashcomplete.py
+  - commit:82f9c626ffedb284eafe67235b5592be6919106d::tests/test_basic.py
+  - commit:82f9c626ffedb284eafe67235b5592be6919106d::tests/test_commands.py
+  - commit:82f9c626ffedb284eafe67235b5592be6919106d::tests/test_compat.py
+  - commit:82f9c626ffedb284eafe67235b5592be6919106d::tests/test_formatting.py
+  - commit:82f9c626ffedb284eafe67235b5592be6919106d::tests/test_imports.py
+  - commit:82f9c626ffedb284eafe67235b5592be6919106d::tests/test_options.py
+  - commit:82f9c626ffedb284eafe67235b5592be6919106d::tests/test_termui.py
+  - commit:82f9c626ffedb284eafe67235b5592be6919106d::tests/test_testing.py
+  - commit:82f9c626ffedb284eafe67235b5592be6919106d::tests/test_utils.py
+  changed_file_set_digest: bbb249104797b8abe475a26e191ced42cdaedd8714b7abe2696bafc10447c64c
+  reference_patch_digest: a6816d7173b1ce77f76ba56c171d2c4c4af79d29bcfe709c8d79ec952cf1d763
+  statement_digest: 8b3be553dcb6d47938b4fd0e0f5f6cee0305b3632e7757af36a2729cd10682af
+  hidden_verifier_digest: 410b55d1c2f6373a9e07df6450da9785df5b22f20e25715b47a711e6d389b8f6
+  human_difficulty_rating: 5
+  reference_patch_complexity_band: large
+  admission_decision: rejected
+- candidate_id: w3_candidate_002
+  source_anchor: commit:39413d9b1d782317e72e82ec09d437bef8359078
+  target_commit: 39413d9b1d782317e72e82ec09d437bef8359078
+  base_commit: 607316f9dea85ee81f8a215f5d5ae20f7f4fff71
+  family: prompt/termui/output rendering
+  changed_file_anchor_set:
+  - commit:39413d9b1d782317e72e82ec09d437bef8359078::click/termui.py
+  - commit:39413d9b1d782317e72e82ec09d437bef8359078::tests/test_termui.py
+  changed_file_set_digest: 4711f059c4e56f04b39ff244c82427a49c5d09304c08acea67cc3ce3c154deef
+  reference_patch_digest: 260588bab86c786d03e395a0667a97a11c529ab922d74b39bc537a34ff98d419
+  statement_digest: e3ab8ebf1c2d8c9044690a5e38303fa682c5ef674e4c2065b9beb14d7ed8e435
+  hidden_verifier_digest: 8756cfad018278a35190996181c4166234d925377482e433aee751d7ea94fa5d
+  human_difficulty_rating: 3
+  reference_patch_complexity_band: medium
+  admission_decision: rejected
+- candidate_id: w3_candidate_003
+  source_anchor: commit:607316f9dea85ee81f8a215f5d5ae20f7f4fff71
+  target_commit: 607316f9dea85ee81f8a215f5d5ae20f7f4fff71
+  base_commit: 878de46100e9c29aea9dab5b385b8116863cb5e3
+  family: prompt/termui/output rendering
+  changed_file_anchor_set:
+  - commit:607316f9dea85ee81f8a215f5d5ae20f7f4fff71::click/core.py
+  - commit:607316f9dea85ee81f8a215f5d5ae20f7f4fff71::click/termui.py
+  - commit:607316f9dea85ee81f8a215f5d5ae20f7f4fff71::tests/test_options.py
+  - commit:607316f9dea85ee81f8a215f5d5ae20f7f4fff71::tests/test_termui.py
+  changed_file_set_digest: 9cf58284f1c628dd0cfb7728106abe18c7ecf4784264b79be86721a8e81ff123
+  reference_patch_digest: e8084243cb69cc6d5ac6c2535d38a151e8978f075791b83cc7a70cc4ce708091
+  statement_digest: 898b9c0d7832491634134309b03f9770fd320b60063b0ceb5548f208a8613b5a
+  hidden_verifier_digest: 6b8dfb1a35c70329879689bf184b0864bcc19e458660f98fe389366d380a379d
+  human_difficulty_rating: 3
+  reference_patch_complexity_band: medium
+  admission_decision: accepted
+- candidate_id: w3_candidate_006
+  source_anchor: commit:b96c2601af4e01341b4d2c0db494ebee4aef8f42
+  target_commit: b96c2601af4e01341b4d2c0db494ebee4aef8f42
+  base_commit: 04ef3a6f473deb2499721a8d11f92a7d2c0912f2
+  family: prompt/termui/output rendering
+  changed_file_anchor_set:
+  - commit:b96c2601af4e01341b4d2c0db494ebee4aef8f42::click/_termui_impl.py
+  - commit:b96c2601af4e01341b4d2c0db494ebee4aef8f42::tests/test_termui.py
+  changed_file_set_digest: d748b89d3e1634e8945c4ae154993133226fa73070a175c5ba10ede750ca8dbe
+  reference_patch_digest: ab411399af450b10bd2a84909e6b2b2d7564244ea355eac46e4b563205744fe7
+  statement_digest: f847b79040f259acd2dc675f6acd670c91d4190f64e2138d0c93f2be90ec742d
+  hidden_verifier_digest: 723ee428979bd7538241bbe35bb1cb6be7c02e04aa02ab532338f54c3fd7bf21
+  human_difficulty_rating: 5
+  reference_patch_complexity_band: large
+  admission_decision: accepted
+- candidate_id: w3_candidate_016
+  source_anchor: commit:06847da9126a99c88bf347adf213d33bfe4e4af2
+  target_commit: 06847da9126a99c88bf347adf213d33bfe4e4af2
+  base_commit: bbe1eb6d41f54bd49690a5c385b0895d061a76c1
+  family: prompt/termui/output rendering
+  changed_file_anchor_set:
+  - commit:06847da9126a99c88bf347adf213d33bfe4e4af2::click/core.py
+  - commit:06847da9126a99c88bf347adf213d33bfe4e4af2::tests/test_basic.py
+  - commit:06847da9126a99c88bf347adf213d33bfe4e4af2::tests/test_options.py
+  - commit:06847da9126a99c88bf347adf213d33bfe4e4af2::tests/test_termui.py
+  changed_file_set_digest: 722e99c0f19989311b76a9ae911e061047091daac9abc72ade4a38ef9e3c9ca3
+  reference_patch_digest: a8d23834c7a3537de90c4f16337bea80f1e515fdb04baa720bf7298df6b0275c
+  statement_digest: dcb796144000270fb45aba0f21e2bc3fd82100f1f804de70a526418bb3121b19
+  hidden_verifier_digest: c13cee404230a35d0ecb8d04736409568abf627434f72f1ab51781ebdae7fdc8
+  human_difficulty_rating: 5
+  reference_patch_complexity_band: large
+  admission_decision: accepted
+- candidate_id: w3_candidate_017
+  source_anchor: commit:b64ea07128a6368b5f6f93035c75d5693c7ba572
+  target_commit: b64ea07128a6368b5f6f93035c75d5693c7ba572
+  base_commit: 1f4002096439d6661f1df5ceff7eccd3862153ac
+  family: prompt/termui/output rendering
+  changed_file_anchor_set:
+  - commit:b64ea07128a6368b5f6f93035c75d5693c7ba572::click/_utils.py
+  - commit:b64ea07128a6368b5f6f93035c75d5693c7ba572::click/core.py
+  - commit:b64ea07128a6368b5f6f93035c75d5693c7ba572::click/parser.py
+  - commit:b64ea07128a6368b5f6f93035c75d5693c7ba572::click/termui.py
+  - commit:b64ea07128a6368b5f6f93035c75d5693c7ba572::tests/test_arguments.py
+  - commit:b64ea07128a6368b5f6f93035c75d5693c7ba572::tests/test_basic.py
+  - commit:b64ea07128a6368b5f6f93035c75d5693c7ba572::tests/test_options.py
+  - commit:b64ea07128a6368b5f6f93035c75d5693c7ba572::tests/test_termui.py
+  - commit:b64ea07128a6368b5f6f93035c75d5693c7ba572::tests/test_utils.py
+  changed_file_set_digest: 24f7d88924459ea253ff792c5c27fbe30481912e75e03df7b1281797db018119
+  reference_patch_digest: c5a8b22a9ece62551f13f7e85d24a6e59b1cf0fefe802db08ce76c5f653684ae
+  statement_digest: 907e203028e7c358be27e682763cb47a189e817b04982dfc9ba855f97b6f94b0
+  hidden_verifier_digest: 71ec7e8bcdb9b2c08764863955fd935b2c89b55f4a1d84998b9087793a89ede3
+  human_difficulty_rating: 5
+  reference_patch_complexity_band: large
+  admission_decision: rejected
+- candidate_id: w3_candidate_019
+  source_anchor: commit:812b8000f79c1fbb747a2de5114fc74515558857
+  target_commit: 812b8000f79c1fbb747a2de5114fc74515558857
+  base_commit: a8b41c077b225c30921a78190507a463a20ebb1b
+  family: prompt/termui/output rendering
+  changed_file_anchor_set:
+  - commit:812b8000f79c1fbb747a2de5114fc74515558857::click/termui.py
+  - commit:812b8000f79c1fbb747a2de5114fc74515558857::tests/test_utils.py
+  changed_file_set_digest: 664c90cb3cc42c9d6707a1419d808ca56166abf130add379a867d81f7fffad1f
+  reference_patch_digest: 226cf0d71bb51778aecebff8161281ffc6c049e8a815a524b8a361849ed5322e
+  statement_digest: 27cc883a4e283c8d946f0173dfa7e70e17f9d0d2f40bd838337c788235181621
+  hidden_verifier_digest: 45bac5843e4b282e36835803202f0705362fcf11fe70e815eef1afac2d469ec9
+  human_difficulty_rating: 1
+  reference_patch_complexity_band: small
+  admission_decision: accepted
+- candidate_id: w3_candidate_028
+  source_anchor: pallets/click#2068
+  target_commit: 0d69b6ce8b25fe31ea580c608adb8e45df3805bb
+  base_commit: d791537317947448a3960662d00acf160eff2602
+  family: prompt/termui/output rendering
+  changed_file_anchor_set:
+  - pallets/click#2068::click/_termui_impl.py
+  - pallets/click#2068::click/termui.py
+  - pallets/click#2068::tests/test_termui.py
+  changed_file_set_digest: 5a4320d6258077f5a4209c95804a69d716a195d29b4e5c4fbad68564aab9c92a
+  reference_patch_digest: b04781e44dbc1af723c73137fb0b47ab559b1a86ef47df42f31c6c346f99adb2
+  statement_digest: 34f61ad7baf060bfb5ae9d629606d627c7a5e24f3621884ecb26200c5fccc205
+  hidden_verifier_digest: e0fec0f809b946ada1bf49a15b72f82b6ead10884a03eb79ce286b9670cebb39
+  human_difficulty_rating: 3
+  reference_patch_complexity_band: medium
+  admission_decision: rejected
+- candidate_id: w3_candidate_004
+  source_anchor: commit:b55294797ef32e22eb41e7d9657edb8faefa4976
+  target_commit: b55294797ef32e22eb41e7d9657edb8faefa4976
+  base_commit: 1339fd3323357119a9c7a6326c788f80295954ce
+  family: type conversion/parameter normalization
+  changed_file_anchor_set:
+  - commit:b55294797ef32e22eb41e7d9657edb8faefa4976::click/_termui_impl.py
+  - commit:b55294797ef32e22eb41e7d9657edb8faefa4976::tests/test_termui.py
+  changed_file_set_digest: 56af2bb9506d19054b507491e3248293397e403804ed872d895ae45fa832fb1a
+  reference_patch_digest: c4f3c032219798c74b534adcba9fd8c3099a4d9412fc0c0e61a7297a1802bdd3
+  statement_digest: 7323f596a40eb7d88db36f2f43430eba11bd7186936b4b6c77693c196647f41e
+  hidden_verifier_digest: 411691616fb55aa4d5060f755eb9119aa0227c2bc3ae6a4e803127eed5fb648e
+  human_difficulty_rating: 5
+  reference_patch_complexity_band: large
+  admission_decision: rejected
+- candidate_id: w3_candidate_012
+  source_anchor: commit:18d29196c508b249ef1111f1f29c9133e0a8b097
+  target_commit: 18d29196c508b249ef1111f1f29c9133e0a8b097
+  base_commit: 27aaed3fe5bcd6adedd6e91de234914af9859cf1
+  family: type conversion/parameter normalization
+  changed_file_anchor_set:
+  - commit:18d29196c508b249ef1111f1f29c9133e0a8b097::click/core.py
+  - commit:18d29196c508b249ef1111f1f29c9133e0a8b097::tests/test_arguments.py
+  - commit:18d29196c508b249ef1111f1f29c9133e0a8b097::tests/test_options.py
+  changed_file_set_digest: 4594235a7ea6d10d25ae4259d57ec76ae2e665d961ebe64dec8c90a1747276e4
+  reference_patch_digest: ad59d6871cb4671495adf9b73b0f4dfbf167e481941990cc13ac946be685d5da
+  statement_digest: 347e2814c966980cff2910e4a8a59eab01b141c712d50ad25258712cb8814c04
+  hidden_verifier_digest: 23a46e50470138af4bf0a9ef1ba38f3a1d5d20fbd82ab3eab9795db6b1c6c0e4
+  human_difficulty_rating: 3
+  reference_patch_complexity_band: medium
+  admission_decision: accepted
+- candidate_id: w3_candidate_024
+  source_anchor: commit:4fd2fea0db423d242aedcae0a5f664efe0a93484
+  target_commit: 4fd2fea0db423d242aedcae0a5f664efe0a93484
+  base_commit: 9ce34f20d2370f2e298268227edf0ffce6b9725f
+  family: type conversion/parameter normalization
+  changed_file_anchor_set:
+  - commit:4fd2fea0db423d242aedcae0a5f664efe0a93484::click/core.py
+  - commit:4fd2fea0db423d242aedcae0a5f664efe0a93484::tests/test_options.py
+  changed_file_set_digest: a19f469780f5d8b6b2f2627f653498b3de480162bc97c582fc98238302bd6a39
+  reference_patch_digest: fd1084976c1f6c7d99bd3f3403c28919d6b2b2fab5ec9749efe0ddf5c4016cfb
+  statement_digest: 849c3418052b5150061730e4fb7321fcc71f301b8b8a306916f315addcddab89
+  hidden_verifier_digest: ca164501c31e9b6e8af4214a502227710e427b7b8207d0f3bce66bfd405420da
+  human_difficulty_rating: 3
+  reference_patch_complexity_band: medium
+  admission_decision: accepted
+- candidate_id: w3_candidate_025
+  source_anchor: commit:ba770cbc96f522e9dab1bf54dc642dfa5b053956
+  target_commit: ba770cbc96f522e9dab1bf54dc642dfa5b053956
+  base_commit: f14b75063fb36b9208b13a920326926363616b39
+  family: type conversion/parameter normalization
+  changed_file_anchor_set:
+  - commit:ba770cbc96f522e9dab1bf54dc642dfa5b053956::click/core.py
+  - commit:ba770cbc96f522e9dab1bf54dc642dfa5b053956::click/types.py
+  - commit:ba770cbc96f522e9dab1bf54dc642dfa5b053956::tests/test_utils.py
+  changed_file_set_digest: 6bebd1fa55b4b04e1a74dc2ef62f97147df35ef39cea734c9606bd7d8c1225bc
+  reference_patch_digest: 4bf562650358e1380b0d191b949c625a45c43e46fa000762f00cb9280938cc77
+  statement_digest: 558829dfb58bc5e96f4a689d8a6f2c7cb4975e2e47ec6ea574b09d9649efdb8e
+  hidden_verifier_digest: ea262f476188cca23b56295ebb07902bcbf2b2223927f2abdb3a0496af38d89d
+  human_difficulty_rating: 2
+  reference_patch_complexity_band: small
+  admission_decision: rejected
+- candidate_id: w3_candidate_037
+  source_anchor: pallets/click#2517
+  target_commit: 948d7a707a0abda8ce0a1b39ba87390f11ffcd5e
+  base_commit: a6e0d2936891030f5092c9869c7391104f6721d9
+  family: type conversion/parameter normalization
+  changed_file_anchor_set:
+  - pallets/click#2517::click/core.py
+  - pallets/click#2517::click/types.py
+  - pallets/click#2517::tests/test_options.py
+  changed_file_set_digest: a7d02c33871406a27e9c54d8762b30685f57596fb18471d4f9a90ba7d2c46e60
+  reference_patch_digest: d36619457ea7c75bba7d1000193f3a7c170cd73e55a82d5d309c093178ab3a60
+  statement_digest: 726183931d5a55452b1f4fa9fd0ada9855172bfcca62a4ff12b2035991659614
+  hidden_verifier_digest: 18f1f5cdb46b4271ee463e91497928fe7c31410fea2fce40d3cc0f3879385739
+  human_difficulty_rating: 3
+  reference_patch_complexity_band: medium
+  admission_decision: accepted
+- candidate_id: w3_candidate_038
+  source_anchor: pallets/click#2365
+  target_commit: 1a4d8c1bb1e8f8e214ede7223bd2c05dc2ce006a
+  base_commit: 02046e7a19480f85fff7e4577486518abe47e401
+  family: type conversion/parameter normalization
+  changed_file_anchor_set:
+  - pallets/click#2365::click/types.py
+  - pallets/click#2365::tests/test_options.py
+  changed_file_set_digest: 50905a3404a5b63bc7c09c9235eeced66ab1e12d9a45efdebabada0f98b753eb
+  reference_patch_digest: 5a7d9032f213a573dc10bfaf3a1bba1fc410c95a212f2ebfbbb3df0e4075735c
+  statement_digest: 8e380fc861d315de201ede23d3bf4cde30b8ce88d77bc525a0ac66d6e5afd97d
+  hidden_verifier_digest: bbce1624304e514f483097d2b6767b3f95accb259cce5fb2e045b1e2dc901bf7
+  human_difficulty_rating: 2
+  reference_patch_complexity_band: small
+  admission_decision: accepted
+- candidate_id: w3_candidate_042
+  source_anchor: commit:3f91d2154ebc47651f0cd9798250a03821473521
+  target_commit: 3f91d2154ebc47651f0cd9798250a03821473521
+  base_commit: e88c11239971d309744fd3f9139259f64787f45a
+  family: type conversion/parameter normalization
+  changed_file_anchor_set:
+  - commit:3f91d2154ebc47651f0cd9798250a03821473521::click/types.py
+  - commit:3f91d2154ebc47651f0cd9798250a03821473521::tests/test_types.py
+  changed_file_set_digest: ce0c027c3963259a6afdf5d6ae659df25ae454d8fc64de7c9a56510ea3738394
+  reference_patch_digest: 94c40210d3aea0564d71aa57cea4f8132f500da66ecd78ae97c746fecd9133e2
+  statement_digest: 9b4ccdff2bfd5d146ac6d31c5716a1765f1eef0d0715cee6c15f09260221c691
+  hidden_verifier_digest: 6b4764ebdd0ecac14072a3509579e8b4d8b288fa4f36c8cdca86ad0bb9d4630b
+  human_difficulty_rating: 2
+  reference_patch_complexity_band: small
+  admission_decision: accepted
+- candidate_id: w3_candidate_011
+  source_anchor: commit:437e1e3295c7ec979fc1bf285bb402ca20d847e7
+  target_commit: 437e1e3295c7ec979fc1bf285bb402ca20d847e7
+  base_commit: ea70da487b05d6bb758d472a3a9ffab4a5b7fcd5
+  family: parser/mixed integration
+  changed_file_anchor_set:
+  - commit:437e1e3295c7ec979fc1bf285bb402ca20d847e7::click/core.py
+  - commit:437e1e3295c7ec979fc1bf285bb402ca20d847e7::tests/test_context.py
+  changed_file_set_digest: 0767476ad180b662a6993f638cde7b3ab87000cacffe212774ea5b4460569d2e
+  reference_patch_digest: c8244f70aa594c04e3be1bbff762ee49d8f15be1673cc31f438ec30d47027642
+  statement_digest: a473ac986353a29284a668719ea184e0f0a26bd805d79e9be3d5a14321940da0
+  hidden_verifier_digest: 66bcd59be867d4aad850d1301a2d4f9c564e3fb603d3c55f21efedf40e08b779
+  human_difficulty_rating: 3
+  reference_patch_complexity_band: medium
+  admission_decision: accepted
+- candidate_id: w3_candidate_013
+  source_anchor: commit:5fc3423ae54990cec5a8b41d2c7b489da41475b0
+  target_commit: 5fc3423ae54990cec5a8b41d2c7b489da41475b0
+  base_commit: 7d7183604158f064390539d83d4a19a978c6b08a
+  family: parser/mixed integration
+  changed_file_anchor_set:
+  - commit:5fc3423ae54990cec5a8b41d2c7b489da41475b0::click/core.py
+  - commit:5fc3423ae54990cec5a8b41d2c7b489da41475b0::tests/test_commands.py
+  changed_file_set_digest: aba9120db82af58fbac5d3d13bd512f9904dd213182cf18ce4649577691b6998
+  reference_patch_digest: d996c9fe20b20a2a8ecf6ae88466413ae63bf8119d257d763f8a2c172f4d5567
+  statement_digest: 5cf455c63ef55c4456bf46d02848dc724b7b044f0d3f0b9e2ac311f29f973d04
+  hidden_verifier_digest: 82c1e33597cd88565ba4eb04f8f7f36918063e5a764efcf7078a00c8f458e3e9
+  human_difficulty_rating: 3
+  reference_patch_complexity_band: medium
+  admission_decision: accepted
+- candidate_id: w3_candidate_018
+  source_anchor: pallets/click#3013
+  target_commit: 701b313160be12752e49b3f7cea32402c0969a69
+  base_commit: 3be1f33c8e0b13295853f6aa64d1f7412b5312df
+  family: parser/mixed integration
+  changed_file_anchor_set:
+  - pallets/click#3013::click/shell_completion.py
+  - pallets/click#3013::tests/test_shell_completion.py
+  changed_file_set_digest: e9e1bc66beb28b9f2f7ca6c9b0ec614d3b2a704d17a2a9d554e2ef51db57986b
+  reference_patch_digest: 63944adb8b0aae74e3dd05b111cc51bb2f4c23433d3eaeb84449f733ec0c7db8
+  statement_digest: 1a78c3792585d1d7204dcaed2030643d50a741d5ed819a53ee7c9a3702d0f63d
+  hidden_verifier_digest: 5bccd8df80c933e822e17f176a51fdd364ec3c2f10319e52e929b3b019c85bdb
+  human_difficulty_rating: 1
+  reference_patch_complexity_band: small
+  admission_decision: rejected
+- candidate_id: w3_candidate_020
+  source_anchor: pallets/click#2846
+  target_commit: a1235aacb1be55dc66ddcfefbf64dec44b6ab54d
+  base_commit: 565f36d5bc4a15d304337b749e113fb4477b1843
+  family: parser/mixed integration
+  changed_file_anchor_set:
+  - pallets/click#2846::click/shell_completion.py
+  - pallets/click#2846::tests/test_shell_completion.py
+  changed_file_set_digest: 83916c8fe0c1184f29863d47ac80bb80cb1a05792daf79b1ac61767fec49661e
+  reference_patch_digest: b62d0f1167f8835f031ec22c96a64f6ec848ff1997a2ffef94c585468c0990d9
+  statement_digest: 7c884adfde4b445123960d8adbd0a6fbcc9d88e604ade3a41027c399abffe24a
+  hidden_verifier_digest: 80b0bdcc78b9e9d97926c92ef24dac15570d7f5ec86a82fdd89dcfee172a7107
+  human_difficulty_rating: 3
+  reference_patch_complexity_band: medium
+  admission_decision: accepted
+- candidate_id: w3_candidate_023
+  source_anchor: commit:ac6a2acfdb4550c35ce69ce54db502ba96c96324
+  target_commit: ac6a2acfdb4550c35ce69ce54db502ba96c96324
+  base_commit: 884af5c20fdc95c9c7352df35c37273391464fb9
+  family: parser/mixed integration
+  changed_file_anchor_set:
+  - commit:ac6a2acfdb4550c35ce69ce54db502ba96c96324::click/shell_completion.py
+  - commit:ac6a2acfdb4550c35ce69ce54db502ba96c96324::tests/test_shell_completion.py
+  changed_file_set_digest: e9a27fab0d865ed0d64253c36ce075a7425a44f85d1980ef732bcbe705f59cc5
+  reference_patch_digest: d33d798fc7ec7863d8037af09708ad0ae5063461f57fd2a1479ac13f7e0e9dba
+  statement_digest: 1294643a7b7226479a861d23d2271b8add5291ffb2bbbb9295a0dd2ab858b6ae
+  hidden_verifier_digest: 70ed8214642690370eb8951d5b8ee2dc080d8a91aa400d04067bbc0facd40bd3
+  human_difficulty_rating: 2
+  reference_patch_complexity_band: small
+  admission_decision: accepted
+- candidate_id: w3_candidate_029
+  source_anchor: pallets/click#2644
+  target_commit: 0ef55fda47bb3d0dece21197d81d8d72a4250e73
+  base_commit: d8763b93021c416549b5f8b4b5497234619410db
+  family: parser/mixed integration
+  changed_file_anchor_set:
+  - pallets/click#2644::click/core.py
+  - pallets/click#2644::click/shell_completion.py
+  - pallets/click#2644::tests/test_shell_completion.py
+  changed_file_set_digest: 51d9af12c76ed5f26d8913e26bc2d892a7d257973d4ceb2a614a9c53886426b3
+  reference_patch_digest: 48912c88eabcec61a0ee64a5f3d35ffe8d88c5642e84615008753ce37ed5515d
+  statement_digest: 167a7d813b492404fd2f9dcef8fc2306f44dc4e48d8f1171449d112a3118b659
+  hidden_verifier_digest: 0c59254b3c45bb743a8071193e2eaf0e9c0e797c750ba65a4585cc3df1065728
+  human_difficulty_rating: 3
+  reference_patch_complexity_band: medium
+  admission_decision: accepted
+- candidate_id: w3_candidate_034
+  source_anchor: pallets/click#2680
+  target_commit: c326df95e9e3da0425360e030413f6a3ee25fdee
+  base_commit: a8c05427602d12842c53ce48b03b5d6b5c0c6693
+  family: parser/mixed integration
+  changed_file_anchor_set:
+  - pallets/click#2680::click/core.py
+  - pallets/click#2680::tests/test_context.py
+  changed_file_set_digest: dfdfb5b18575b191b7b893da3c76f22a212a70ce4487e1cc61494bb6cca92553
+  reference_patch_digest: 5ae3cff0f96712f668626d7b09797771570d9ee2eda6d95e6bd9c08bb0aece59
+  statement_digest: 7b783d184fccfa9dc1be3d02346f38cdd02ba0e6ee0a56a0cd4206e5c6b2b2d0
+  hidden_verifier_digest: 5fb095ce40ae8f6983053278981724be2093177be0519de333c9dabf3d907c91
+  human_difficulty_rating: 3
+  reference_patch_complexity_band: medium
+  admission_decision: accepted

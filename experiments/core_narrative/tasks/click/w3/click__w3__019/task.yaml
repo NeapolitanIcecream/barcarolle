@@ -1,0 +1,59 @@
+schema_version: core-narrative.task.v1
+task_id: click__w3__019
+repo_slug: click
+split: w3
+source:
+  kind: commit_or_pull_request
+  public_url: https://github.com/pallets/click/commit/a1235aacb1be55dc66ddcfefbf64dec44b6ab54d
+  anchor_id: pallets/click#2846
+  base_commit: 565f36d5bc4a15d304337b749e113fb4477b1843
+  target_commit: a1235aacb1be55dc66ddcfefbf64dec44b6ab54d
+task_family: parser/mixed integration
+task_statement_path: public/statement.md
+allowed_context:
+  include_git_history_before_base: true
+  include_issue_text: false
+  include_pr_text: true
+  include_reference_patch: false
+disallowed_context:
+- reference patch or target diff for pallets/click#2846
+- hidden verifier files
+- M5-W2 ACUT outputs, failed patches, or near-miss scores
+- W3 ACUT outputs or public model results
+- future execution results for this task
+verifier:
+  command: verifier/run.sh
+  timeout_seconds: 120
+expected:
+  no_op_fails: true
+  reference_passes: true
+leakage:
+  reviewed: true
+  notes: M6-W3 admission uses ACUT-independent selection proxies and hides target
+    tests/reference patches from ACUT context.
+admission:
+  status: accepted
+  reviewer: codex-m6-w3-admission
+  rationale: Accepted for frozen W3 primary denominator after admission smoke.
+metadata:
+  materialized_from: m6_w3_task_admission.py
+  benchmark_split: W3
+  locked_target_repository: pallets/click
+  locked_target_commit: 8bd8b4a074c55c03b6eb5666edc44a9c43df38a2
+  source_compare:
+    changed_files:
+    - src/click/shell_completion.py
+    - tests/test_shell_completion.py
+    changed_file_set_digest: 83916c8fe0c1184f29863d47ac80bb80cb1a05792daf79b1ac61767fec49661e
+    reference_patch_digest: b62d0f1167f8835f031ec22c96a64f6ec848ff1997a2ffef94c585468c0990d9
+    reference_patch_complexity_band: medium
+  expected_touched_area:
+  - src/click/shell_completion.py behavior surface
+  - tests/test_shell_completion.py focused regression coverage
+  visible_context_guidance: Expose the public behavior summary and minimal reproduction
+    expectation. Hide the implementation diff, reference patch, and target tests.
+  candidate_id: w3_candidate_020
+  human_difficulty_rating: 3
+  test_nodes:
+  - tests/test_shell_completion.py::test_full_complete
+  - tests/test_shell_completion.py::test_zsh_full_complete_with_colons

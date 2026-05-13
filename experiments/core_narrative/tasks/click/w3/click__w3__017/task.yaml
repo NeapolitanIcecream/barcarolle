@@ -1,0 +1,59 @@
+schema_version: core-narrative.task.v1
+task_id: click__w3__017
+repo_slug: click
+split: w3
+source:
+  kind: commit_or_pull_request
+  public_url: https://github.com/pallets/click/commit/ac6a2acfdb4550c35ce69ce54db502ba96c96324
+  anchor_id: commit:ac6a2acfdb4550c35ce69ce54db502ba96c96324
+  base_commit: 884af5c20fdc95c9c7352df35c37273391464fb9
+  target_commit: ac6a2acfdb4550c35ce69ce54db502ba96c96324
+task_family: parser/mixed integration
+task_statement_path: public/statement.md
+allowed_context:
+  include_git_history_before_base: true
+  include_issue_text: false
+  include_pr_text: true
+  include_reference_patch: false
+disallowed_context:
+- reference patch or target diff for commit:ac6a2acfdb4550c35ce69ce54db502ba96c96324
+- hidden verifier files
+- M5-W2 ACUT outputs, failed patches, or near-miss scores
+- W3 ACUT outputs or public model results
+- future execution results for this task
+verifier:
+  command: verifier/run.sh
+  timeout_seconds: 120
+expected:
+  no_op_fails: true
+  reference_passes: true
+leakage:
+  reviewed: true
+  notes: M6-W3 admission uses ACUT-independent selection proxies and hides target
+    tests/reference patches from ACUT context.
+admission:
+  status: accepted
+  reviewer: codex-m6-w3-admission
+  rationale: Accepted for frozen W3 primary denominator after admission smoke.
+metadata:
+  materialized_from: m6_w3_task_admission.py
+  benchmark_split: W3
+  locked_target_repository: pallets/click
+  locked_target_commit: 8bd8b4a074c55c03b6eb5666edc44a9c43df38a2
+  source_compare:
+    changed_files:
+    - src/click/shell_completion.py
+    - tests/test_shell_completion.py
+    changed_file_set_digest: e9a27fab0d865ed0d64253c36ce075a7425a44f85d1980ef732bcbe705f59cc5
+    reference_patch_digest: d33d798fc7ec7863d8037af09708ad0ae5063461f57fd2a1479ac13f7e0e9dba
+    reference_patch_complexity_band: small
+  expected_touched_area:
+  - src/click/shell_completion.py behavior surface
+  - tests/test_shell_completion.py focused regression coverage
+  visible_context_guidance: Expose the public behavior summary and minimal reproduction
+    expectation. Hide the implementation diff, reference patch, and target tests.
+  candidate_id: w3_candidate_023
+  human_difficulty_rating: 2
+  test_nodes:
+  - tests/test_shell_completion.py::test_group
+  - tests/test_shell_completion.py::test_nested_group

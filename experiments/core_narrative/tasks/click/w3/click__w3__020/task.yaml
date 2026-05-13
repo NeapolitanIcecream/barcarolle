@@ -1,0 +1,61 @@
+schema_version: core-narrative.task.v1
+task_id: click__w3__020
+repo_slug: click
+split: w3
+source:
+  kind: commit_or_pull_request
+  public_url: https://github.com/pallets/click/commit/0ef55fda47bb3d0dece21197d81d8d72a4250e73
+  anchor_id: pallets/click#2644
+  base_commit: d8763b93021c416549b5f8b4b5497234619410db
+  target_commit: 0ef55fda47bb3d0dece21197d81d8d72a4250e73
+task_family: parser/mixed integration
+task_statement_path: public/statement.md
+allowed_context:
+  include_git_history_before_base: true
+  include_issue_text: false
+  include_pr_text: true
+  include_reference_patch: false
+disallowed_context:
+- reference patch or target diff for pallets/click#2644
+- hidden verifier files
+- M5-W2 ACUT outputs, failed patches, or near-miss scores
+- W3 ACUT outputs or public model results
+- future execution results for this task
+verifier:
+  command: verifier/run.sh
+  timeout_seconds: 120
+expected:
+  no_op_fails: true
+  reference_passes: true
+leakage:
+  reviewed: true
+  notes: M6-W3 admission uses ACUT-independent selection proxies and hides target
+    tests/reference patches from ACUT context.
+admission:
+  status: accepted
+  reviewer: codex-m6-w3-admission
+  rationale: Accepted for frozen W3 primary denominator after admission smoke.
+metadata:
+  materialized_from: m6_w3_task_admission.py
+  benchmark_split: W3
+  locked_target_repository: pallets/click
+  locked_target_commit: 8bd8b4a074c55c03b6eb5666edc44a9c43df38a2
+  source_compare:
+    changed_files:
+    - src/click/core.py
+    - src/click/shell_completion.py
+    - tests/test_shell_completion.py
+    changed_file_set_digest: 51d9af12c76ed5f26d8913e26bc2d892a7d257973d4ceb2a614a9c53886426b3
+    reference_patch_digest: 48912c88eabcec61a0ee64a5f3d35ffe8d88c5642e84615008753ce37ed5515d
+    reference_patch_complexity_band: medium
+  expected_touched_area:
+  - src/click/core.py behavior surface
+  - src/click/shell_completion.py behavior surface
+  - tests/test_shell_completion.py focused regression coverage
+  visible_context_guidance: Expose the public behavior summary and minimal reproduction
+    expectation. Hide the implementation diff, reference patch, and target tests.
+  candidate_id: w3_candidate_029
+  human_difficulty_rating: 3
+  test_nodes:
+  - tests/test_shell_completion.py::test_add_completion_class_decorator
+  - tests/test_shell_completion.py::test_files_closed
