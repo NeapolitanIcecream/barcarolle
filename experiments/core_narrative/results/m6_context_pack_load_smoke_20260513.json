@@ -1,0 +1,26 @@
+{
+  "acut": "experiments/core_narrative/configs/acuts/cheap-click-rbench-calibrated-v1.yaml",
+  "context_prompt_char_count": 4360,
+  "model_calls_made": 0,
+  "pack_id": "click_rbench_calibrated_context_pack_v1",
+  "prompt_checks": {
+    "all_expected_sections_present": true,
+    "marker_present": true,
+    "pack_hash_present": true,
+    "pack_id_present": true,
+    "prompt_char_count": 4402,
+    "prompt_content_recorded": false,
+    "prompt_sha256": "e19d1412180ab3c7d64f05c33d7eca41bcd1167756f2b9fead5735153a2a463a",
+    "section_ids_present": {
+      "abstract_repair_patterns": true,
+      "calibration_boundary": true,
+      "click_module_failure_checklist": true,
+      "maintainer_style_regression_tests": true,
+      "rbench_family_taxonomy": true
+    }
+  },
+  "raw_prompt_content_recorded": false,
+  "schema_version": "core-narrative.m6-context-pack-load-smoke.v1",
+  "status": "passed",
+  "tool": "m6_context_pack_load_smoke"
+}

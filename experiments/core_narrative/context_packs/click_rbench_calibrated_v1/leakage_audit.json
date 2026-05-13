@@ -1,0 +1,36 @@
+{
+  "schema_version": "core-narrative.click-rbench-calibrated-leakage-audit.v1",
+  "pack_id": "click_rbench_calibrated_context_pack_v1",
+  "generated_at": "2026-05-13T00:00:00+08:00",
+  "status": "passed_for_protocol_prep",
+  "claim": "The pack uses RBench-derived calibration only and contains no W3 task material.",
+  "allowed_sources": {
+    "rbench_task_manifest": true,
+    "rbench_reference_patches_as_abstract_patterns": true,
+    "public_click_source_docs_tests": true,
+    "bounded_public_history": true
+  },
+  "forbidden_sources_checked": {
+    "w3_target_commits_used": false,
+    "w3_reference_patches_used": false,
+    "w3_hidden_verifiers_used": false,
+    "w3_final_diffs_used": false,
+    "w3_acut_outputs_used": false,
+    "m5_w2_acut_outputs_used_as_calibration": false,
+    "secrets_or_private_endpoints_recorded": false
+  },
+  "public_artifact_policy": {
+    "raw_rbench_reference_diffs_copied": false,
+    "abstract_patterns_only": true,
+    "raw_prompt_contains_secret_or_endpoint": false
+  },
+  "primary_boundary": {
+    "m5_scores_modified": false,
+    "w3_primary_authorized": false,
+    "requires_w3_task_admission_before_primary": true
+  },
+  "limitations": [
+    "This is a protocol-prep leakage audit; W3 task admission must run its own disjointness and leakage checks after concrete W3 tasks are selected.",
+    "The existing context loader records RBench/RWork gold-patch use as one boolean; this pack narrows that use to RBench calibration only in this audit."
+  ]
+}

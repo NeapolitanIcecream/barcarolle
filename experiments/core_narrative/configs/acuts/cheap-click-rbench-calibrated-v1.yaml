@@ -1,0 +1,158 @@
+schema_version: core-narrative.acut.v1
+manifest_version: "3.0"
+acut_id: cheap-click-rbench-calibrated-v1
+display_name: Cheap Click RBench-Calibrated v1
+purpose: Cheap-tier Click repository-calibrated treatment for the M6 rescue-prep hypothesis.
+frozen: true
+provider: openai
+model: openai/gpt-5.4-mini
+model_parameters:
+  reasoning_effort: medium
+prompt_policy_digest: policy-digest-m6:cheap-click-rbench-calibrated-v1
+prompt_policy_reference: null
+tool_permissions:
+  filesystem: workspace-write
+  network: disabled
+  allowed_tools:
+    - filesystem:read
+    - filesystem:write
+    - shell
+    - code_edit
+    - git:status
+    - git:diff
+    - git:show
+retrieval_context_strategy:
+  strategy_id: click-rbench-calibrated-v1
+  description: Use a repository-calibrated Click repair playbook derived from RBench evidence while keeping the same cheap model tier, task budget, tool permissions, retry policy, and network policy as cheap-generic-swe.
+  allowed_sources:
+    - public_task_statement
+    - files explicitly named in the task statement
+    - files surfaced by failing tests or import errors
+    - adjacent public tests
+    - direct symbol and filename search results
+    - rbench_derived_repair_playbook_v1
+    - public Click source, tests, docs, and bounded pre-W3 history
+  forbidden_sources:
+    - W3 target commits
+    - W3 reference patches
+    - W3 final diffs
+    - W3 hidden verifier files
+    - W3 ACUT outputs or failed patches
+    - M5-W2 ACUT outputs as calibration material
+    - post-hoc tuning from held-out work outputs
+    - hidden human hints
+    - task-specific private benchmark artifacts
+runtime_budget:
+  max_wall_seconds: 3600
+  max_turns: 18
+  max_tokens: 64000
+  max_cost_usd: null
+  max_test_commands: 10
+  retry_policy:
+    primary_attempts: 1
+    retries_allowed: false
+network_policy:
+  mode: disabled
+  allowed_hosts: []
+execution_mode: codex_cli
+adapter_or_harness_basis: barcarolle-patch-command-v0 behind codex-cli-acut-adapter-v0 + core-narrative-runner-v0 + workspace-mode-runner source-derived-url-only-v1 policy
+frozen_at: "2026-05-13T00:00:00+08:00"
+operator: codex-core-narrative-coordinator
+notes: M6 protocol-prep treatment ACUT. It is a new hypothesis, not a M5-W2 score reinterpretation. It must not be run on W3 until W3 task admission and leakage checks are complete.
+metadata:
+  redesign_source:
+    prior_acut_ids:
+      - cheap-generic-swe
+      - cheap-click-deep-specialist-v2
+    review_basis:
+      - experiments/core_narrative/reports/2026-05-13_m5_w2_negative_result.md
+      - experiments/core_narrative/reports/2026-05-13_m5_w2_failure_forensics.md
+  factorial_design:
+    core_design_id: barcarolle-m6-repository-calibrated-hypothesis
+    model_tier: cheap
+    specialization: click_rbench_calibrated
+    controlled_factors:
+      harness: shared_with_cheap_generic_swe
+      task_budget: shared_with_cheap_generic_swe
+      turn_cap: shared_with_cheap_generic_swe
+      token_cap: shared_with_cheap_generic_swe
+      test_cap: shared_with_cheap_generic_swe
+      retry_policy: shared_with_cheap_generic_swe
+      network_policy: shared_with_cheap_generic_swe
+    same_tier_pair: cheap-generic-swe
+    static_context_pair: cheap-click-deep-specialist-v2
+    intended_contrast: Same cheap model tier and execution budget; compare RBench-calibrated repository repair playbook against generic SWE and static Click context.
+  prompt_policy_summary: Solve as a cheap-tier Click specialist using a RBench-derived repair playbook of abstract Click repair patterns, maintainer-style tests, module ownership, and failure-mode checklists.
+  specialist_context:
+    click_task_agnostic_context_allowed: true
+    context_pack:
+      pack_id: click_rbench_calibrated_context_pack_v1
+      marker: CLICK_SPECIALIST_CONTEXT_PACK_V1
+      pack_hash: b1b1ee40b72be5912ea07ac76d6ae6689edb2f3a930c5e2479ea6f71ffc0de85
+      manifest_path: experiments/core_narrative/context_packs/click_rbench_calibrated_v1/manifest.json
+      context_prompt_path: experiments/core_narrative/context_packs/click_rbench_calibrated_v1/context_prompt.md
+      artifacts:
+        context_prompt:
+          path: experiments/core_narrative/context_packs/click_rbench_calibrated_v1/context_prompt.md
+          sha256: c4f2df5fa00ee2e592f267c644bf0b377c69946c6eedf33444fb25945ff89aa0
+        repair_playbook:
+          path: experiments/core_narrative/context_packs/click_rbench_calibrated_v1/repair_playbook.json
+          sha256: a8cbfb3960677b2e550ce3ef037dfcf026f40c23ea033f5d5e70ded8b7b2ab3e
+        leakage_audit:
+          path: experiments/core_narrative/context_packs/click_rbench_calibrated_v1/leakage_audit.json
+          sha256: c82c263839a8774224bed5f14e890898703f403d5057f6f5aebaadecdd05da2d
+        manifest:
+          path: experiments/core_narrative/context_packs/click_rbench_calibrated_v1/manifest.json
+          sha256: 30580db3f6fe32e954358dac41e472aa7d51a81bfdd4f5654eac1920b4a090e4
+      section_ids:
+        - rbench_family_taxonomy
+        - abstract_repair_patterns
+        - maintainer_style_regression_tests
+        - click_module_failure_checklist
+        - calibration_boundary
+      locked_click_commit: 8bd8b4a074c55c03b6eb5666edc44a9c43df38a2
+      generation_timing: before W3 task admission and before any W3 primary execution
+      task_specific_tuning_allowed: false
+    calibration_basis:
+      rbench_manifest: experiments/core_narrative/configs/tasks/rbench_click.yaml
+      rbench_task_count: 8
+      rbench_reference_patches_allowed_as_abstract_patterns: true
+      w2_outputs_used_as_calibration: false
+      w3_material_used: false
+  leakage_guards:
+    allowed:
+      - RBench public task metadata
+      - RBench reference patches as abstract repair-pattern calibration
+      - public Click source, tests, docs, and bounded pre-W3 history
+    disallowed:
+      - W3 target commits
+      - W3 reference patches
+      - W3 hidden verifier files
+      - W3 final diffs
+      - W3 ACUT outputs or failed patches
+      - M5-W2 ACUT outputs as calibration
+      - post-hoc tuning after seeing held-out W3 outputs
+      - hidden artificial hints
+      - other ACUT outputs
+    history_policy: bounded public history only; no W3 target or task-specific future history.
+  runtime_budget_detail:
+    wall_clock_minutes: 60
+    model_turns: 18
+    shell_commands: 55
+    test_commands: 10
+    verification_minutes: 18
+    primary_attempts: 1
+    retries_allowed: false
+  execution_mode_detail:
+    type: non_interactive_patch_command
+    workspace: fresh_task_worktree
+    state_reset_between_tasks: true
+    private_artifacts_access: false
+    output_contract: patch_plus_run_metadata
+    source_derived_url_only_policy: allow_private_verifier_replay_public_redacted
+  score_fields:
+    g_score: null
+    r_score: null
+    w_score: null
+    public_benchmark_score: null
+    general_benchmark_basis_id: general_benchmark.yaml#locked

@@ -1,0 +1,16 @@
+{
+  "invalid_count": 0,
+  "manifest_count": 1,
+  "results": [
+    {
+      "acut_id": "cheap-click-rbench-calibrated-v1",
+      "errors": [],
+      "path": "experiments/core_narrative/configs/acuts/cheap-click-rbench-calibrated-v1.yaml",
+      "valid": true,
+      "warnings": []
+    }
+  ],
+  "status": "passed",
+  "tool": "validate_acut_manifest",
+  "valid_count": 1
+}

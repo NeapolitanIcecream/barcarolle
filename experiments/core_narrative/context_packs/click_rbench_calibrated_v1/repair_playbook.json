@@ -1,0 +1,60 @@
+{
+  "schema_version": "core-narrative.click-rbench-calibrated-playbook.v1",
+  "playbook_id": "click_rbench_calibrated_repair_playbook_v1",
+  "generated_at": "2026-05-13T00:00:00+08:00",
+  "calibration_basis": {
+    "split": "RBench",
+    "task_manifest": "experiments/core_narrative/configs/tasks/rbench_click.yaml",
+    "task_count": 8,
+    "uses_reference_patches_as_abstract_patterns": true,
+    "uses_w2_outputs": false,
+    "uses_w3_material": false
+  },
+  "family_taxonomy": [
+    {
+      "family": "option help/default rendering",
+      "rbench_tasks": ["click__rbench__001"],
+      "primary_modules": ["click/core.py", "tests/test_options.py"],
+      "repair_pattern": "Preserve explicit default-rendering semantics and avoid truthiness-sensitive formatting."
+    },
+    {
+      "family": "CliRunner exception and stream handling",
+      "rbench_tasks": ["click__rbench__002", "click__rbench__004", "click__rbench__007"],
+      "primary_modules": ["click/testing.py", "src/click/testing.py", "tests/test_testing.py"],
+      "repair_pattern": "Keep runner-level defaults, invoke overrides, Result fields, and mixed/separated stream behavior compatible."
+    },
+    {
+      "family": "prompt and terminal UI rendering",
+      "rbench_tasks": ["click__rbench__003"],
+      "primary_modules": ["click/core.py", "click/termui.py", "tests/test_termui.py"],
+      "repair_pattern": "Construct prompt text through Click prompt helpers while preserving defaults and show/hide choices controls."
+    },
+    {
+      "family": "type conversion and parameter normalization",
+      "rbench_tasks": ["click__rbench__005", "click__rbench__006"],
+      "primary_modules": ["click/types.py", "tests/test_options.py", "tests/test_basic.py"],
+      "repair_pattern": "Expand accepted inputs through ParamType conversion while preserving returned values and error shape."
+    },
+    {
+      "family": "optional value and parser behavior",
+      "rbench_tasks": ["click__rbench__008"],
+      "primary_modules": ["src/click/core.py", "src/click/parser.py", "tests/test_options.py", "tests/test_termui.py"],
+      "repair_pattern": "Resolve missing values, explicit values, prompt_required, required, and defaults in the documented order."
+    }
+  ],
+  "maintainer_style_tests": [
+    "Add focused regression tests near existing family tests.",
+    "Use CliRunner for command behavior, prompt, streams, and exception cases.",
+    "Assert compatibility edge cases alongside the new behavior.",
+    "Avoid terminal, locale, network, or wall-clock assumptions."
+  ],
+  "forbidden_material": [
+    "W3 target commits",
+    "W3 reference patches",
+    "W3 hidden verifiers",
+    "W3 final diffs",
+    "W3 ACUT outputs",
+    "M5/W2 ACUT outputs as calibration",
+    "secrets or private endpoint material"
+  ]
+}

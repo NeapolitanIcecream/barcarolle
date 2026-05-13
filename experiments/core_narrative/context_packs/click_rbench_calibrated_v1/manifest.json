@@ -1,0 +1,73 @@
+{
+  "schema_version": "core-narrative.click-specialist-context-pack.v1",
+  "pack_id": "click_rbench_calibrated_context_pack_v1",
+  "marker": "CLICK_SPECIALIST_CONTEXT_PACK_V1",
+  "pack_hash": "b1b1ee40b72be5912ea07ac76d6ae6689edb2f3a930c5e2479ea6f71ffc0de85",
+  "generated_at": "2026-05-13T00:00:00+08:00",
+  "generator": {
+    "tool": "codex_m6_rescue_prep",
+    "command": "manual synthesis from RBench task manifest and abstract RBench repair-pattern calibration",
+    "history_mining": "bounded_public_history"
+  },
+  "generation_timing": {
+    "relative_to_m6_w3_primary_execution": "before W3 denominator admission and before any W3 primary ACUT execution",
+    "uses_observed_m5_w2_acut_outputs": false,
+    "uses_w3_material": false
+  },
+  "locked_click_commit": "8bd8b4a074c55c03b6eb5666edc44a9c43df38a2",
+  "source_root_label": "experiments/core_narrative/external_repos/click",
+  "section_ids": [
+    "rbench_family_taxonomy",
+    "abstract_repair_patterns",
+    "maintainer_style_regression_tests",
+    "click_module_failure_checklist",
+    "calibration_boundary"
+  ],
+  "artifacts": {
+    "context_prompt": {
+      "path": "context_prompt.md",
+      "sha256": "c4f2df5fa00ee2e592f267c644bf0b377c69946c6eedf33444fb25945ff89aa0",
+      "bytes": 4360
+    },
+    "repair_playbook": {
+      "path": "repair_playbook.json",
+      "sha256": "a8cbfb3960677b2e550ce3ef037dfcf026f40c23ea033f5d5e70ded8b7b2ab3e",
+      "bytes": 2789
+    },
+    "leakage_audit": {
+      "path": "leakage_audit.json",
+      "sha256": "c82c263839a8774224bed5f14e890898703f403d5057f6f5aebaadecdd05da2d",
+      "bytes": 1499
+    }
+  },
+  "source_material_policy": {
+    "public_committed_source_docs_tests_examples_only": true,
+    "network_fetched_docs_used": false,
+    "rbench_rwork_gold_patches_used": true,
+    "rbench_reference_patches_used_for_abstract_calibration": true,
+    "rwork_or_w2_gold_patches_used": false,
+    "w3_target_commits_used": false,
+    "w3_reference_patches_used": false,
+    "w3_hidden_verifier_tests_used": false,
+    "w3_acut_outputs_used": false,
+    "hidden_verifier_tests_used": false,
+    "acut_outputs_or_failed_patches_used": false,
+    "git_history_mining_used": true
+  },
+  "leakage_guards": {
+    "credential_values_recorded": false,
+    "bearer_tokens_recorded": false,
+    "resolved_secrets_recorded": false,
+    "full_base_url_values_recorded": false,
+    "resolved_endpoint_values_recorded": false,
+    "hostnames_recorded": false,
+    "ip_addresses_recorded": false,
+    "full_urls_recorded": false,
+    "hidden_verifier_paths_recorded": false,
+    "benchmark_solution_patch_content_recorded": false,
+    "w3_target_commits_recorded": false,
+    "w3_reference_diffs_recorded": false,
+    "w3_acut_outputs_recorded": false,
+    "m5_w2_acut_outputs_recorded": false
+  }
+}

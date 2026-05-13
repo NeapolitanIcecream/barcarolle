@@ -1,0 +1,136 @@
+schema_version: core-narrative.m6-w3-protocol.v1
+prepared_at: "2026-05-13T00:00:00+08:00"
+status: protocol_preregistered_no_primary_run
+experiment_id: m6_repository_calibrated_click_v1
+objective: Test whether a cheap Click ACUT calibrated from RBench evidence can outperform generic and static-context baselines on a fresh held-out Click W3 denominator.
+relationship_to_m5:
+  m5_w2_result: negative
+  m5_primary_scores_modified: false
+  m5_denominator_reused: false
+  m6_is_new_hypothesis: true
+  decision_note: experiments/core_narrative/reports/2026-05-13_m5_w2_m6_transition_decision.md
+calibration_basis:
+  allowed:
+    - RBench public task metadata
+    - RBench reference patches as abstract repair-pattern calibration
+    - public Click source, tests, docs, and bounded pre-W3 history
+  forbidden:
+    - W3 target commits
+    - W3 reference patches
+    - W3 hidden verifier files
+    - W3 final diffs
+    - W3 ACUT outputs or failed patches
+    - M5-W2 ACUT outputs as calibration
+  playbook_manifest: experiments/core_narrative/context_packs/click_rbench_calibrated_v1/manifest.json
+  leakage_audit: experiments/core_narrative/context_packs/click_rbench_calibrated_v1/leakage_audit.json
+primary_acuts:
+  - cheap-generic-swe
+  - cheap-click-deep-specialist-v2
+  - cheap-click-rbench-calibrated-v1
+  - frontier-generic-swe
+controlled_factors:
+  cheap_model_tier:
+    - cheap-generic-swe
+    - cheap-click-deep-specialist-v2
+    - cheap-click-rbench-calibrated-v1
+  same_budget_as_cheap_generic:
+    wall_seconds: 3600
+    max_turns: 18
+    max_tokens: 64000
+    max_test_commands: 10
+    primary_attempts: 1
+    retries_allowed: false
+    network: disabled
+w3_denominator:
+  status: design_preregistered_tasks_not_materialized
+  target_task_count: 20
+  accepted_task_count: 0
+  admission_required_before_primary: true
+  repository: pallets/click
+  local_checkout_cache: experiments/core_narrative/external_repos/click
+  split: W3
+  selection_rule: Select new held-out Click behavior tasks only after this protocol is frozen; do not select tasks from any M5 ACUT output or failed patch.
+  disjoint_from_manifests:
+    - experiments/core_narrative/configs/tasks/rbench_click.yaml
+    - experiments/core_narrative/configs/tasks/rwork_click.yaml
+    - experiments/core_narrative/configs/tasks/rwork_click_v2.yaml
+  excluded_anchors:
+    - pallets/click#252
+    - pallets/click#151
+    - commit:02ea9ee7e864581258b4902d6e6c1264b0226b9f
+    - pallets/click#868
+    - pallets/click#887
+    - commit:5fe0b7e7795f9bb04ae926d00868cfeb1fa33187
+    - pallets/click#1312
+    - pallets/click#1618
+    - pallets/click#2956
+    - pallets/click#2940
+    - commit:1c20dc6e724cd5625faaa17b715ba928d44c08bf
+    - commit:546f2851f414b07413777ebcae89b2c21a685252
+    - commit:4f9086bf8fd98aca1d804bf742f4f1ceb6c12295
+    - commit:c653ec820093ed1dda41aae8d35bff7834b0344a
+    - pallets/click#3240
+    - pallets/click#3299
+    - pallets/click#3152
+    - pallets/click#3244
+    - pallets/click#2818
+    - pallets/click#3328
+    - pallets/click#3021
+    - pallets/click#3090
+    - pallets/click#2796
+    - pallets/click#2271
+  family_quotas:
+    option_default_envvar_flag_value: 4
+    clirunner_testing_io_isolation: 4
+    prompt_termui_output_rendering: 4
+    type_conversion_parameter_normalization: 4
+    parser_or_mixed_integration: 4
+  admission_criteria:
+    - no_op_fails
+    - reference_patch_passes
+    - hidden verifier checks behavior rather than incidental reference implementation
+    - task statement exposes behavior or minimal reproduction, not implementation diff
+    - no overlap with excluded anchors or changed-file anchors from prior primary denominators
+    - source-derived URL-only policy remains source-derived and redacted publicly
+  candidate_selection_constraints:
+    use_m5_acut_outputs_to_select_tasks: false
+    use_w3_reference_patch_in_public_statement: false
+    use_w3_hidden_verifier_in_acut_context: false
+    select_after_protocol_freeze: true
+primary_matrix:
+  attempts_per_acut_task: 1
+  best_of_n: false
+  deterministic_shuffle_required: true
+  fixed_denominator: true
+  expected_attempts:
+    w3: 80
+    total: 80
+primary_score:
+  metric: W3_verified_pass / 20
+  no_diff_score: 0
+  unsafe_or_scope_violation_score: 0
+  timeout_score: 0 unless globally classified as infrastructure before any ACUT-specific attempt
+gates:
+  repository_calibration_gate:
+    expression: cheap-click-rbench-calibrated-v1 >= cheap-generic-swe + 4 tasks
+    required_margin_tasks: 4
+  static_context_comparison:
+    expression: cheap-click-rbench-calibrated-v1 > cheap-click-deep-specialist-v2
+  nfl_candidate_gate:
+    expression: cheap-click-rbench-calibrated-v1 > frontier-generic-swe
+  if_w3_fails:
+    next_action: stop_do_not_run_R3_or_ACUT_G
+  if_w3_passes:
+    next_action: design_R3_before_any_ACUT_G
+post_w3_only_if_gates_pass:
+  r3:
+    description: 20 RBench-style historical Click tasks.
+    critical_pair:
+      - frontier-generic-swe
+      - cheap-click-rbench-calibrated-v1
+  g6:
+    description: Critical pair only; do not run full ACUT G unless W3 and R3 produce a credible pairwise reversal candidate.
+not_authorized_in_this_phase:
+  run_w3_primary: true
+  run_r3: true
+  run_acut_g: true
