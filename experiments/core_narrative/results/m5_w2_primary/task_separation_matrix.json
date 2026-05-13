@@ -1,0 +1,294 @@
+{
+  "classification_counts": {
+    "ceiling": 3,
+    "floor": 5,
+    "separator": 2
+  },
+  "generated_at": "2026-05-13T11:52:29.570552Z",
+  "rows": [
+    {
+      "classification": "ceiling",
+      "expected_touched_area": [
+        "src/click/core.py default_map lookup behavior",
+        "tests/test_defaults.py default_map regression"
+      ],
+      "fail_count": 0,
+      "pass_count": 4,
+      "scores": {
+        "cheap-click-deep-specialist-v2": 1,
+        "cheap-click-specialist": 1,
+        "cheap-generic-swe": 1,
+        "frontier-generic-swe": 1
+      },
+      "source_changed_files": [
+        "src/click/core.py",
+        "tests/test_defaults.py"
+      ],
+      "statuses": {
+        "cheap-click-deep-specialist-v2": "verified_pass",
+        "cheap-click-specialist": "verified_pass",
+        "cheap-generic-swe": "verified_pass",
+        "frontier-generic-swe": "verified_pass"
+      },
+      "task_family": "option/default/envvar/flag_value semantics",
+      "task_id": "click__rwork__101"
+    },
+    {
+      "classification": "floor",
+      "expected_touched_area": [
+        "src/click/core.py default display logic",
+        "tests/test_options.py show_default empty-string cases"
+      ],
+      "fail_count": 4,
+      "pass_count": 0,
+      "scores": {
+        "cheap-click-deep-specialist-v2": 0,
+        "cheap-click-specialist": 0,
+        "cheap-generic-swe": 0,
+        "frontier-generic-swe": 0
+      },
+      "source_changed_files": [
+        "src/click/core.py",
+        "tests/test_options.py"
+      ],
+      "statuses": {
+        "cheap-click-deep-specialist-v2": "verified_fail",
+        "cheap-click-specialist": "verified_fail",
+        "cheap-generic-swe": "verified_fail",
+        "frontier-generic-swe": "verified_fail"
+      },
+      "task_family": "option/default/envvar/flag_value semantics",
+      "task_id": "click__rwork__102"
+    },
+    {
+      "classification": "separator",
+      "expected_touched_area": [
+        "src/click/core.py option value processing",
+        "tests/test_options.py zero-or-one argument flag_value cases"
+      ],
+      "fail_count": 1,
+      "pass_count": 3,
+      "scores": {
+        "cheap-click-deep-specialist-v2": 1,
+        "cheap-click-specialist": 0,
+        "cheap-generic-swe": 1,
+        "frontier-generic-swe": 1
+      },
+      "source_changed_files": [
+        "src/click/core.py",
+        "tests/test_options.py"
+      ],
+      "statuses": {
+        "cheap-click-deep-specialist-v2": "verified_pass",
+        "cheap-click-specialist": "no_diff",
+        "cheap-generic-swe": "verified_pass",
+        "frontier-generic-swe": "verified_pass"
+      },
+      "task_family": "option/default/envvar/flag_value semantics",
+      "task_id": "click__rwork__103"
+    },
+    {
+      "classification": "ceiling",
+      "expected_touched_area": [
+        "src/click/testing.py stream isolation",
+        "tests/test_testing.py faulthandler stream behavior"
+      ],
+      "fail_count": 0,
+      "pass_count": 4,
+      "scores": {
+        "cheap-click-deep-specialist-v2": 1,
+        "cheap-click-specialist": 1,
+        "cheap-generic-swe": 1,
+        "frontier-generic-swe": 1
+      },
+      "source_changed_files": [
+        "src/click/testing.py",
+        "tests/test_testing.py"
+      ],
+      "statuses": {
+        "cheap-click-deep-specialist-v2": "verified_pass",
+        "cheap-click-specialist": "verified_pass",
+        "cheap-generic-swe": "verified_pass",
+        "frontier-generic-swe": "verified_pass"
+      },
+      "task_family": "CliRunner/testing/input-output isolation",
+      "task_id": "click__rwork__104"
+    },
+    {
+      "classification": "ceiling",
+      "expected_touched_area": [
+        "src/click/testing.py CliRunner initialization and invoke defaults",
+        "tests/test_testing.py catch_exceptions behavior"
+      ],
+      "fail_count": 0,
+      "pass_count": 4,
+      "scores": {
+        "cheap-click-deep-specialist-v2": 1,
+        "cheap-click-specialist": 1,
+        "cheap-generic-swe": 1,
+        "frontier-generic-swe": 1
+      },
+      "source_changed_files": [
+        "src/click/testing.py",
+        "tests/test_testing.py"
+      ],
+      "statuses": {
+        "cheap-click-deep-specialist-v2": "verified_pass",
+        "cheap-click-specialist": "verified_pass",
+        "cheap-generic-swe": "verified_pass",
+        "frontier-generic-swe": "verified_pass"
+      },
+      "task_family": "CliRunner/testing/input-output isolation",
+      "task_id": "click__rwork__105"
+    },
+    {
+      "classification": "floor",
+      "expected_touched_area": [
+        "src/click/core.py prompt/default display metadata",
+        "src/click/termui.py prompt text rendering",
+        "tests for string show_default in prompts"
+      ],
+      "fail_count": 4,
+      "pass_count": 0,
+      "scores": {
+        "cheap-click-deep-specialist-v2": 0,
+        "cheap-click-specialist": 0,
+        "cheap-generic-swe": 0,
+        "frontier-generic-swe": 0
+      },
+      "source_changed_files": [
+        "src/click/core.py",
+        "src/click/termui.py",
+        "tests/test_options.py",
+        "tests/test_termui.py"
+      ],
+      "statuses": {
+        "cheap-click-deep-specialist-v2": "verified_fail",
+        "cheap-click-specialist": "verified_fail",
+        "cheap-generic-swe": "verified_fail",
+        "frontier-generic-swe": "verified_fail"
+      },
+      "task_family": "prompt/termui/output rendering",
+      "task_id": "click__rwork__106"
+    },
+    {
+      "classification": "floor",
+      "expected_touched_area": [
+        "src/click/termui.py prompt suffix rendering",
+        "tests/test_utils.py prompt output capture"
+      ],
+      "fail_count": 4,
+      "pass_count": 0,
+      "scores": {
+        "cheap-click-deep-specialist-v2": 0,
+        "cheap-click-specialist": 0,
+        "cheap-generic-swe": 0,
+        "frontier-generic-swe": 0
+      },
+      "source_changed_files": [
+        "src/click/termui.py",
+        "tests/test_utils.py"
+      ],
+      "statuses": {
+        "cheap-click-deep-specialist-v2": "verified_fail",
+        "cheap-click-specialist": "verified_fail",
+        "cheap-generic-swe": "verified_fail",
+        "frontier-generic-swe": "verified_fail"
+      },
+      "task_family": "prompt/termui/output rendering",
+      "task_id": "click__rwork__107"
+    },
+    {
+      "classification": "separator",
+      "expected_touched_area": [
+        "src/click/core.py type_cast_value call boundary",
+        "tests for custom Argument and Option subclasses"
+      ],
+      "fail_count": 1,
+      "pass_count": 3,
+      "scores": {
+        "cheap-click-deep-specialist-v2": 1,
+        "cheap-click-specialist": 1,
+        "cheap-generic-swe": 1,
+        "frontier-generic-swe": 0
+      },
+      "source_changed_files": [
+        "src/click/core.py",
+        "tests/test_arguments.py",
+        "tests/test_options.py"
+      ],
+      "statuses": {
+        "cheap-click-deep-specialist-v2": "verified_pass",
+        "cheap-click-specialist": "verified_pass",
+        "cheap-generic-swe": "verified_pass",
+        "frontier-generic-swe": "no_diff"
+      },
+      "task_family": "type conversion / parameter normalization",
+      "task_id": "click__rwork__108"
+    },
+    {
+      "classification": "floor",
+      "expected_touched_area": [
+        "src/click/types.py Choice normalization",
+        "src/click/core.py parameter handling around Choice",
+        "tests/test_types.py Choice argument cases"
+      ],
+      "fail_count": 4,
+      "pass_count": 0,
+      "scores": {
+        "cheap-click-deep-specialist-v2": 0,
+        "cheap-click-specialist": 0,
+        "cheap-generic-swe": 0,
+        "frontier-generic-swe": 0
+      },
+      "source_changed_files": [
+        "src/click/core.py",
+        "src/click/exceptions.py",
+        "src/click/types.py",
+        "tests/test_types.py"
+      ],
+      "statuses": {
+        "cheap-click-deep-specialist-v2": "verified_fail",
+        "cheap-click-specialist": "verified_fail",
+        "cheap-generic-swe": "verified_fail",
+        "frontier-generic-swe": "verified_fail"
+      },
+      "task_family": "type conversion / parameter normalization",
+      "task_id": "click__rwork__109"
+    },
+    {
+      "classification": "floor",
+      "expected_touched_area": [
+        "src/click/core.py Command and Parameter deprecation behavior",
+        "tests/test_arguments.py, tests/test_commands.py, and tests/test_options.py"
+      ],
+      "fail_count": 4,
+      "pass_count": 0,
+      "scores": {
+        "cheap-click-deep-specialist-v2": 0,
+        "cheap-click-specialist": 0,
+        "cheap-generic-swe": 0,
+        "frontier-generic-swe": 0
+      },
+      "source_changed_files": [
+        "src/click/core.py",
+        "tests/test_arguments.py",
+        "tests/test_commands.py",
+        "tests/test_options.py"
+      ],
+      "statuses": {
+        "cheap-click-deep-specialist-v2": "verified_fail",
+        "cheap-click-specialist": "verified_fail",
+        "cheap-generic-swe": "verified_fail",
+        "frontier-generic-swe": "verified_fail"
+      },
+      "task_family": "mixed integration",
+      "task_id": "click__rwork__110"
+    }
+  ],
+  "schema_version": "core-narrative.m6-rescue-prep.v1",
+  "source_summary_status": "w2_primary_complete_gate_failed",
+  "status": "completed",
+  "task_count": 10,
+  "tool": "m6_rescue_prep"
+}

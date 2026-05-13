@@ -1,0 +1,724 @@
+{
+  "generated_at": "2026-05-13T11:52:29.720802Z",
+  "row_count": 20,
+  "rows": [
+    {
+      "acut_id": "cheap-click-deep-specialist-v2",
+      "candidate_changed_files": [
+        "src/click/core.py",
+        "tests/test_defaults.py"
+      ],
+      "candidate_hunk_count": 4,
+      "candidate_patch_sha256": "33fe69736bef518ee45566583f5f36f712c9f7418ebc459c886fbe0bff3cb347",
+      "candidate_patch_size_bytes": 2713,
+      "expected_files": [
+        "src/click/core.py",
+        "tests/test_defaults.py"
+      ],
+      "patch_token_jaccard": 0.3011,
+      "primary_status": "verified_pass",
+      "raw_patch_content_recorded": false,
+      "reference_changed_files": [
+        "CHANGES.rst",
+        "src/click/core.py",
+        "tests/test_defaults.py"
+      ],
+      "reference_hunk_count": 7,
+      "reference_patch_content_recorded": false,
+      "reference_patch_sha256": "10b36f36db4e79d6a76cb8d6d496dea291aca7884c7082297e05c5f5460d97be",
+      "reviewer_instruction": "Use private raw artifacts only for blinded near-miss scoring; do not alter primary score.",
+      "same_conceptual_fix_proxy": "strong_automated_proxy",
+      "score_value": 1,
+      "task_id": "click__rwork__101",
+      "touched_expected_file": true,
+      "touched_expected_function_or_class_proxy": true,
+      "touched_reference_file": true,
+      "verifier_fail_reason": "verified_pass"
+    },
+    {
+      "acut_id": "cheap-generic-swe",
+      "candidate_changed_files": [
+        "src/click/core.py",
+        "tests/test_defaults.py"
+      ],
+      "candidate_hunk_count": 6,
+      "candidate_patch_sha256": "9867ea533c981b5456f73b5b301bcdd8671b82210c7701125f0724af4d29be2d",
+      "candidate_patch_size_bytes": 2841,
+      "expected_files": [
+        "src/click/core.py",
+        "tests/test_defaults.py"
+      ],
+      "patch_token_jaccard": 0.2442,
+      "primary_status": "verified_pass",
+      "raw_patch_content_recorded": false,
+      "reference_changed_files": [
+        "CHANGES.rst",
+        "src/click/core.py",
+        "tests/test_defaults.py"
+      ],
+      "reference_hunk_count": 7,
+      "reference_patch_content_recorded": false,
+      "reference_patch_sha256": "10b36f36db4e79d6a76cb8d6d496dea291aca7884c7082297e05c5f5460d97be",
+      "reviewer_instruction": "Use private raw artifacts only for blinded near-miss scoring; do not alter primary score.",
+      "same_conceptual_fix_proxy": "strong_automated_proxy",
+      "score_value": 1,
+      "task_id": "click__rwork__101",
+      "touched_expected_file": true,
+      "touched_expected_function_or_class_proxy": true,
+      "touched_reference_file": true,
+      "verifier_fail_reason": "verified_pass"
+    },
+    {
+      "acut_id": "cheap-click-deep-specialist-v2",
+      "candidate_changed_files": [
+        "src/click/core.py",
+        "tests/test_options.py"
+      ],
+      "candidate_hunk_count": 3,
+      "candidate_patch_sha256": "017803c62331e19b31c60e12c967a34923a4571133ab56f0db87487a819703c5",
+      "candidate_patch_size_bytes": 1809,
+      "expected_files": [
+        "src/click/core.py",
+        "tests/test_options.py"
+      ],
+      "patch_token_jaccard": 0.1,
+      "primary_status": "verified_fail",
+      "raw_patch_content_recorded": false,
+      "reference_changed_files": [
+        "src/click/core.py",
+        "tests/test_options.py"
+      ],
+      "reference_hunk_count": 2,
+      "reference_patch_content_recorded": false,
+      "reference_patch_sha256": "c7910f2c2bc5685cb6d41c0e9be170e16e2f3ac9c9845019bcd003f6db6804e3",
+      "reviewer_instruction": "Use private raw artifacts only for blinded near-miss scoring; do not alter primary score.",
+      "same_conceptual_fix_proxy": "weak_file_only_proxy",
+      "score_value": 0,
+      "task_id": "click__rwork__102",
+      "touched_expected_file": true,
+      "touched_expected_function_or_class_proxy": true,
+      "touched_reference_file": true,
+      "verifier_fail_reason": "verifier_test_failed"
+    },
+    {
+      "acut_id": "cheap-generic-swe",
+      "candidate_changed_files": [
+        "src/click/core.py",
+        "tests/test_options.py"
+      ],
+      "candidate_hunk_count": 3,
+      "candidate_patch_sha256": "140085c5cf1c730eb89698badac3f30b9535bc3b451ae481d539480143b1b5bf",
+      "candidate_patch_size_bytes": 2600,
+      "expected_files": [
+        "src/click/core.py",
+        "tests/test_options.py"
+      ],
+      "patch_token_jaccard": 0.1081,
+      "primary_status": "verified_fail",
+      "raw_patch_content_recorded": false,
+      "reference_changed_files": [
+        "src/click/core.py",
+        "tests/test_options.py"
+      ],
+      "reference_hunk_count": 2,
+      "reference_patch_content_recorded": false,
+      "reference_patch_sha256": "c7910f2c2bc5685cb6d41c0e9be170e16e2f3ac9c9845019bcd003f6db6804e3",
+      "reviewer_instruction": "Use private raw artifacts only for blinded near-miss scoring; do not alter primary score.",
+      "same_conceptual_fix_proxy": "weak_file_only_proxy",
+      "score_value": 0,
+      "task_id": "click__rwork__102",
+      "touched_expected_file": true,
+      "touched_expected_function_or_class_proxy": true,
+      "touched_reference_file": true,
+      "verifier_fail_reason": "verifier_test_failed"
+    },
+    {
+      "acut_id": "cheap-click-deep-specialist-v2",
+      "candidate_changed_files": [
+        "src/click/core.py",
+        "tests/test_options.py"
+      ],
+      "candidate_hunk_count": 4,
+      "candidate_patch_sha256": "3c91925f4e027de1fa2b710dca64141cbb5baa97832baab8cfaf4b3b1bd56b76",
+      "candidate_patch_size_bytes": 2539,
+      "expected_files": [
+        "src/click/core.py",
+        "tests/test_options.py"
+      ],
+      "patch_token_jaccard": 0.16,
+      "primary_status": "verified_pass",
+      "raw_patch_content_recorded": false,
+      "reference_changed_files": [
+        "CHANGES.rst",
+        "src/click/core.py",
+        "tests/test_options.py"
+      ],
+      "reference_hunk_count": 4,
+      "reference_patch_content_recorded": false,
+      "reference_patch_sha256": "10b4a9a77017886912776741ae5b0efb1d3666308d68b5d4651007a90b0501ca",
+      "reviewer_instruction": "Use private raw artifacts only for blinded near-miss scoring; do not alter primary score.",
+      "same_conceptual_fix_proxy": "strong_automated_proxy",
+      "score_value": 1,
+      "task_id": "click__rwork__103",
+      "touched_expected_file": true,
+      "touched_expected_function_or_class_proxy": true,
+      "touched_reference_file": true,
+      "verifier_fail_reason": "verified_pass"
+    },
+    {
+      "acut_id": "cheap-generic-swe",
+      "candidate_changed_files": [
+        "src/click/core.py",
+        "tests/test_options.py"
+      ],
+      "candidate_hunk_count": 2,
+      "candidate_patch_sha256": "fd93470f169575dbc8aaf0d88e73e9e082b50ab89e0671aef1cfad56fd6d50a8",
+      "candidate_patch_size_bytes": 1721,
+      "expected_files": [
+        "src/click/core.py",
+        "tests/test_options.py"
+      ],
+      "patch_token_jaccard": 0.2391,
+      "primary_status": "verified_pass",
+      "raw_patch_content_recorded": false,
+      "reference_changed_files": [
+        "CHANGES.rst",
+        "src/click/core.py",
+        "tests/test_options.py"
+      ],
+      "reference_hunk_count": 4,
+      "reference_patch_content_recorded": false,
+      "reference_patch_sha256": "10b4a9a77017886912776741ae5b0efb1d3666308d68b5d4651007a90b0501ca",
+      "reviewer_instruction": "Use private raw artifacts only for blinded near-miss scoring; do not alter primary score.",
+      "same_conceptual_fix_proxy": "strong_automated_proxy",
+      "score_value": 1,
+      "task_id": "click__rwork__103",
+      "touched_expected_file": true,
+      "touched_expected_function_or_class_proxy": true,
+      "touched_reference_file": true,
+      "verifier_fail_reason": "verified_pass"
+    },
+    {
+      "acut_id": "cheap-click-deep-specialist-v2",
+      "candidate_changed_files": [
+        "src/click/testing.py",
+        "tests/test_testing.py"
+      ],
+      "candidate_hunk_count": 6,
+      "candidate_patch_sha256": "100b05f007d6c7d4496a6a23eff8d01708b6218d690e8d3ce16f9cb68b408796",
+      "candidate_patch_size_bytes": 3351,
+      "expected_files": [
+        "src/click/testing.py",
+        "tests/test_testing.py"
+      ],
+      "patch_token_jaccard": 0.168,
+      "primary_status": "verified_pass",
+      "raw_patch_content_recorded": false,
+      "reference_changed_files": [
+        "CHANGES.rst",
+        "docs/testing.md",
+        "src/click/testing.py",
+        "tests/test_testing.py"
+      ],
+      "reference_hunk_count": 8,
+      "reference_patch_content_recorded": false,
+      "reference_patch_sha256": "10668d43276e628de809a64ca98ad6ad75056e86f2fcdfa074cdf1061d2077fd",
+      "reviewer_instruction": "Use private raw artifacts only for blinded near-miss scoring; do not alter primary score.",
+      "same_conceptual_fix_proxy": "strong_automated_proxy",
+      "score_value": 1,
+      "task_id": "click__rwork__104",
+      "touched_expected_file": true,
+      "touched_expected_function_or_class_proxy": true,
+      "touched_reference_file": true,
+      "verifier_fail_reason": "verified_pass"
+    },
+    {
+      "acut_id": "cheap-generic-swe",
+      "candidate_changed_files": [
+        "src/click/testing.py",
+        "tests/test_testing.py"
+      ],
+      "candidate_hunk_count": 6,
+      "candidate_patch_sha256": "f178c2925dd2ee4469f1f569c5d9a0d091ceffb47a75916d85ad44947f11a0cb",
+      "candidate_patch_size_bytes": 2734,
+      "expected_files": [
+        "src/click/testing.py",
+        "tests/test_testing.py"
+      ],
+      "patch_token_jaccard": 0.1266,
+      "primary_status": "verified_pass",
+      "raw_patch_content_recorded": false,
+      "reference_changed_files": [
+        "CHANGES.rst",
+        "docs/testing.md",
+        "src/click/testing.py",
+        "tests/test_testing.py"
+      ],
+      "reference_hunk_count": 8,
+      "reference_patch_content_recorded": false,
+      "reference_patch_sha256": "10668d43276e628de809a64ca98ad6ad75056e86f2fcdfa074cdf1061d2077fd",
+      "reviewer_instruction": "Use private raw artifacts only for blinded near-miss scoring; do not alter primary score.",
+      "same_conceptual_fix_proxy": "weak_file_only_proxy",
+      "score_value": 1,
+      "task_id": "click__rwork__104",
+      "touched_expected_file": true,
+      "touched_expected_function_or_class_proxy": true,
+      "touched_reference_file": true,
+      "verifier_fail_reason": "verified_pass"
+    },
+    {
+      "acut_id": "cheap-click-deep-specialist-v2",
+      "candidate_changed_files": [
+        "src/click/testing.py",
+        "tests/test_testing.py"
+      ],
+      "candidate_hunk_count": 5,
+      "candidate_patch_sha256": "b690399c93f33b31d2080589c9b868b314d4a5f270b839be01e5332349efe311",
+      "candidate_patch_size_bytes": 2889,
+      "expected_files": [
+        "src/click/testing.py",
+        "tests/test_testing.py"
+      ],
+      "patch_token_jaccard": 0.4262,
+      "primary_status": "verified_pass",
+      "raw_patch_content_recorded": false,
+      "reference_changed_files": [
+        "CHANGES.rst",
+        "src/click/testing.py",
+        "tests/test_testing.py"
+      ],
+      "reference_hunk_count": 7,
+      "reference_patch_content_recorded": false,
+      "reference_patch_sha256": "58058b8f268c01155ad363c4de200da7c80d9ee984325159efc82d761faf5146",
+      "reviewer_instruction": "Use private raw artifacts only for blinded near-miss scoring; do not alter primary score.",
+      "same_conceptual_fix_proxy": "strong_automated_proxy",
+      "score_value": 1,
+      "task_id": "click__rwork__105",
+      "touched_expected_file": true,
+      "touched_expected_function_or_class_proxy": true,
+      "touched_reference_file": true,
+      "verifier_fail_reason": "verified_pass"
+    },
+    {
+      "acut_id": "cheap-generic-swe",
+      "candidate_changed_files": [
+        "src/click/testing.py",
+        "tests/test_testing.py"
+      ],
+      "candidate_hunk_count": 6,
+      "candidate_patch_sha256": "472de6201e37e72b94ee358a255de2b7eb99f79a92016474622669729c8501f0",
+      "candidate_patch_size_bytes": 3226,
+      "expected_files": [
+        "src/click/testing.py",
+        "tests/test_testing.py"
+      ],
+      "patch_token_jaccard": 0.4754,
+      "primary_status": "verified_pass",
+      "raw_patch_content_recorded": false,
+      "reference_changed_files": [
+        "CHANGES.rst",
+        "src/click/testing.py",
+        "tests/test_testing.py"
+      ],
+      "reference_hunk_count": 7,
+      "reference_patch_content_recorded": false,
+      "reference_patch_sha256": "58058b8f268c01155ad363c4de200da7c80d9ee984325159efc82d761faf5146",
+      "reviewer_instruction": "Use private raw artifacts only for blinded near-miss scoring; do not alter primary score.",
+      "same_conceptual_fix_proxy": "strong_automated_proxy",
+      "score_value": 1,
+      "task_id": "click__rwork__105",
+      "touched_expected_file": true,
+      "touched_expected_function_or_class_proxy": true,
+      "touched_reference_file": true,
+      "verifier_fail_reason": "verified_pass"
+    },
+    {
+      "acut_id": "cheap-click-deep-specialist-v2",
+      "candidate_changed_files": [
+        "src/click/core.py",
+        "src/click/termui.py",
+        "tests/test_termui.py"
+      ],
+      "candidate_hunk_count": 6,
+      "candidate_patch_sha256": "aa42f42fca044c5d68cad23dd8ae9b486228db8bc67de2929168b19521e1e97b",
+      "candidate_patch_size_bytes": 3780,
+      "expected_files": [
+        "src/click/core.py",
+        "src/click/termui.py",
+        "tests/test_options.py",
+        "tests/test_termui.py"
+      ],
+      "patch_token_jaccard": 0.3966,
+      "primary_status": "verified_fail",
+      "raw_patch_content_recorded": false,
+      "reference_changed_files": [
+        "CHANGES.rst",
+        "src/click/core.py",
+        "src/click/termui.py",
+        "tests/test_options.py",
+        "tests/test_termui.py"
+      ],
+      "reference_hunk_count": 10,
+      "reference_patch_content_recorded": false,
+      "reference_patch_sha256": "252d0000dbd198371660bb919d56234d2651b4dda882582a31e3d13ed0fe2374",
+      "reviewer_instruction": "Use private raw artifacts only for blinded near-miss scoring; do not alter primary score.",
+      "same_conceptual_fix_proxy": "strong_automated_proxy",
+      "score_value": 0,
+      "task_id": "click__rwork__106",
+      "touched_expected_file": true,
+      "touched_expected_function_or_class_proxy": true,
+      "touched_reference_file": true,
+      "verifier_fail_reason": "verifier_test_failed"
+    },
+    {
+      "acut_id": "cheap-generic-swe",
+      "candidate_changed_files": [
+        "src/click/core.py",
+        "src/click/termui.py",
+        "tests/test_termui.py"
+      ],
+      "candidate_hunk_count": 7,
+      "candidate_patch_sha256": "65fcb21620df97959e277494647d09dae5bb2dc7d901f825efaa20918bd58351",
+      "candidate_patch_size_bytes": 3808,
+      "expected_files": [
+        "src/click/core.py",
+        "src/click/termui.py",
+        "tests/test_options.py",
+        "tests/test_termui.py"
+      ],
+      "patch_token_jaccard": 0.3,
+      "primary_status": "verified_fail",
+      "raw_patch_content_recorded": false,
+      "reference_changed_files": [
+        "CHANGES.rst",
+        "src/click/core.py",
+        "src/click/termui.py",
+        "tests/test_options.py",
+        "tests/test_termui.py"
+      ],
+      "reference_hunk_count": 10,
+      "reference_patch_content_recorded": false,
+      "reference_patch_sha256": "252d0000dbd198371660bb919d56234d2651b4dda882582a31e3d13ed0fe2374",
+      "reviewer_instruction": "Use private raw artifacts only for blinded near-miss scoring; do not alter primary score.",
+      "same_conceptual_fix_proxy": "strong_automated_proxy",
+      "score_value": 0,
+      "task_id": "click__rwork__106",
+      "touched_expected_file": true,
+      "touched_expected_function_or_class_proxy": true,
+      "touched_reference_file": true,
+      "verifier_fail_reason": "verifier_test_failed"
+    },
+    {
+      "acut_id": "cheap-click-deep-specialist-v2",
+      "candidate_changed_files": [
+        "src/click/termui.py",
+        "tests/test_utils.py"
+      ],
+      "candidate_hunk_count": 3,
+      "candidate_patch_sha256": "07d026693febeffe37b2023b2c4dedea3081e5df1a3f0b8010e187f088c275f1",
+      "candidate_patch_size_bytes": 2490,
+      "expected_files": [
+        "src/click/termui.py",
+        "tests/test_utils.py"
+      ],
+      "patch_token_jaccard": 0.3333,
+      "primary_status": "verified_fail",
+      "raw_patch_content_recorded": false,
+      "reference_changed_files": [
+        "CHANGES.rst",
+        "src/click/termui.py",
+        "tests/test_utils.py"
+      ],
+      "reference_hunk_count": 6,
+      "reference_patch_content_recorded": false,
+      "reference_patch_sha256": "c328b74db0a42e9355792f06ab021b74a1e39ea908cc971b879e549f654ec6f5",
+      "reviewer_instruction": "Use private raw artifacts only for blinded near-miss scoring; do not alter primary score.",
+      "same_conceptual_fix_proxy": "strong_automated_proxy",
+      "score_value": 0,
+      "task_id": "click__rwork__107",
+      "touched_expected_file": true,
+      "touched_expected_function_or_class_proxy": true,
+      "touched_reference_file": true,
+      "verifier_fail_reason": "verifier_test_failed"
+    },
+    {
+      "acut_id": "cheap-generic-swe",
+      "candidate_changed_files": [
+        "src/click/termui.py",
+        "tests/test_utils.py"
+      ],
+      "candidate_hunk_count": 4,
+      "candidate_patch_sha256": "1ac2b0895246d7f6794d37a26148899bd6ecb406bd6e264ab2804da0198da40b",
+      "candidate_patch_size_bytes": 2914,
+      "expected_files": [
+        "src/click/termui.py",
+        "tests/test_utils.py"
+      ],
+      "patch_token_jaccard": 0.3636,
+      "primary_status": "verified_fail",
+      "raw_patch_content_recorded": false,
+      "reference_changed_files": [
+        "CHANGES.rst",
+        "src/click/termui.py",
+        "tests/test_utils.py"
+      ],
+      "reference_hunk_count": 6,
+      "reference_patch_content_recorded": false,
+      "reference_patch_sha256": "c328b74db0a42e9355792f06ab021b74a1e39ea908cc971b879e549f654ec6f5",
+      "reviewer_instruction": "Use private raw artifacts only for blinded near-miss scoring; do not alter primary score.",
+      "same_conceptual_fix_proxy": "strong_automated_proxy",
+      "score_value": 0,
+      "task_id": "click__rwork__107",
+      "touched_expected_file": true,
+      "touched_expected_function_or_class_proxy": true,
+      "touched_reference_file": true,
+      "verifier_fail_reason": "verifier_test_failed"
+    },
+    {
+      "acut_id": "cheap-click-deep-specialist-v2",
+      "candidate_changed_files": [
+        "src/click/core.py",
+        "tests/test_arguments.py",
+        "tests/test_options.py"
+      ],
+      "candidate_hunk_count": 4,
+      "candidate_patch_sha256": "2a483a550a04428233a5cc421c33f8f6841bcea7c2c4be106a28457c563f818e",
+      "candidate_patch_size_bytes": 3069,
+      "expected_files": [
+        "src/click/core.py",
+        "tests/test_arguments.py",
+        "tests/test_options.py"
+      ],
+      "patch_token_jaccard": 0.2923,
+      "primary_status": "verified_pass",
+      "raw_patch_content_recorded": false,
+      "reference_changed_files": [
+        "CHANGES.rst",
+        "src/click/core.py",
+        "tests/test_arguments.py",
+        "tests/test_options.py"
+      ],
+      "reference_hunk_count": 6,
+      "reference_patch_content_recorded": false,
+      "reference_patch_sha256": "ea7de40e8474adbacb293421827eb22208d3806f60ab874f070f820fa76bc769",
+      "reviewer_instruction": "Use private raw artifacts only for blinded near-miss scoring; do not alter primary score.",
+      "same_conceptual_fix_proxy": "strong_automated_proxy",
+      "score_value": 1,
+      "task_id": "click__rwork__108",
+      "touched_expected_file": true,
+      "touched_expected_function_or_class_proxy": true,
+      "touched_reference_file": true,
+      "verifier_fail_reason": "verified_pass"
+    },
+    {
+      "acut_id": "cheap-generic-swe",
+      "candidate_changed_files": [
+        "src/click/core.py",
+        "tests/test_arguments.py",
+        "tests/test_options.py"
+      ],
+      "candidate_hunk_count": 4,
+      "candidate_patch_sha256": "ac1e012f4ad033532dd9d55ee5202ed5b6509427c785a6dd674583f9bb9bc909",
+      "candidate_patch_size_bytes": 3156,
+      "expected_files": [
+        "src/click/core.py",
+        "tests/test_arguments.py",
+        "tests/test_options.py"
+      ],
+      "patch_token_jaccard": 0.2661,
+      "primary_status": "verified_pass",
+      "raw_patch_content_recorded": false,
+      "reference_changed_files": [
+        "CHANGES.rst",
+        "src/click/core.py",
+        "tests/test_arguments.py",
+        "tests/test_options.py"
+      ],
+      "reference_hunk_count": 6,
+      "reference_patch_content_recorded": false,
+      "reference_patch_sha256": "ea7de40e8474adbacb293421827eb22208d3806f60ab874f070f820fa76bc769",
+      "reviewer_instruction": "Use private raw artifacts only for blinded near-miss scoring; do not alter primary score.",
+      "same_conceptual_fix_proxy": "strong_automated_proxy",
+      "score_value": 1,
+      "task_id": "click__rwork__108",
+      "touched_expected_file": true,
+      "touched_expected_function_or_class_proxy": true,
+      "touched_reference_file": true,
+      "verifier_fail_reason": "verified_pass"
+    },
+    {
+      "acut_id": "cheap-click-deep-specialist-v2",
+      "candidate_changed_files": [
+        "src/click/types.py",
+        "tests/test_types.py"
+      ],
+      "candidate_hunk_count": 3,
+      "candidate_patch_sha256": "d790b028dd9e2968a10e4aca7dd85d1271471216b986edd6818668c5eff17ca7",
+      "candidate_patch_size_bytes": 3159,
+      "expected_files": [
+        "src/click/core.py",
+        "src/click/exceptions.py",
+        "src/click/types.py",
+        "tests/test_types.py"
+      ],
+      "patch_token_jaccard": 0.1345,
+      "primary_status": "verified_fail",
+      "raw_patch_content_recorded": false,
+      "reference_changed_files": [
+        "CHANGES.rst",
+        "docs/options.rst",
+        "src/click/core.py",
+        "src/click/exceptions.py",
+        "src/click/types.py",
+        "tests/test_basic.py",
+        "tests/test_formatting.py",
+        "tests/test_info_dict.py",
+        "tests/test_normalization.py",
+        "tests/test_types.py"
+      ],
+      "reference_hunk_count": 21,
+      "reference_patch_content_recorded": false,
+      "reference_patch_sha256": "804d580b4a63032bb1bcb32e0281f65e238d03cedb81bdfaa39d45cd216b5df4",
+      "reviewer_instruction": "Use private raw artifacts only for blinded near-miss scoring; do not alter primary score.",
+      "same_conceptual_fix_proxy": "weak_file_only_proxy",
+      "score_value": 0,
+      "task_id": "click__rwork__109",
+      "touched_expected_file": true,
+      "touched_expected_function_or_class_proxy": true,
+      "touched_reference_file": true,
+      "verifier_fail_reason": "verifier_test_failed"
+    },
+    {
+      "acut_id": "cheap-generic-swe",
+      "candidate_changed_files": [
+        "src/click/types.py",
+        "tests/test_types.py"
+      ],
+      "candidate_hunk_count": 5,
+      "candidate_patch_sha256": "835bce2feeebe3474b0b5c2aae3b88965ebcb30036a85252b70e18faf02c3892",
+      "candidate_patch_size_bytes": 4534,
+      "expected_files": [
+        "src/click/core.py",
+        "src/click/exceptions.py",
+        "src/click/types.py",
+        "tests/test_types.py"
+      ],
+      "patch_token_jaccard": 0.2574,
+      "primary_status": "verified_fail",
+      "raw_patch_content_recorded": false,
+      "reference_changed_files": [
+        "CHANGES.rst",
+        "docs/options.rst",
+        "src/click/core.py",
+        "src/click/exceptions.py",
+        "src/click/types.py",
+        "tests/test_basic.py",
+        "tests/test_formatting.py",
+        "tests/test_info_dict.py",
+        "tests/test_normalization.py",
+        "tests/test_types.py"
+      ],
+      "reference_hunk_count": 21,
+      "reference_patch_content_recorded": false,
+      "reference_patch_sha256": "804d580b4a63032bb1bcb32e0281f65e238d03cedb81bdfaa39d45cd216b5df4",
+      "reviewer_instruction": "Use private raw artifacts only for blinded near-miss scoring; do not alter primary score.",
+      "same_conceptual_fix_proxy": "strong_automated_proxy",
+      "score_value": 0,
+      "task_id": "click__rwork__109",
+      "touched_expected_file": true,
+      "touched_expected_function_or_class_proxy": true,
+      "touched_reference_file": true,
+      "verifier_fail_reason": "verifier_test_failed"
+    },
+    {
+      "acut_id": "cheap-click-deep-specialist-v2",
+      "candidate_changed_files": [
+        "src/click/core.py",
+        "tests/test_arguments.py",
+        "tests/test_commands.py",
+        "tests/test_options.py"
+      ],
+      "candidate_hunk_count": 15,
+      "candidate_patch_sha256": "ef2ee3943a911859241b869260139387f39a09fe680a41f0085a2a8df20f4e83",
+      "candidate_patch_size_bytes": 8274,
+      "expected_files": [
+        "src/click/core.py",
+        "tests/test_arguments.py",
+        "tests/test_commands.py",
+        "tests/test_options.py"
+      ],
+      "patch_token_jaccard": 0.2468,
+      "primary_status": "verified_fail",
+      "raw_patch_content_recorded": false,
+      "reference_changed_files": [
+        "CHANGES.rst",
+        "src/click/core.py",
+        "tests/test_arguments.py",
+        "tests/test_commands.py",
+        "tests/test_options.py"
+      ],
+      "reference_hunk_count": 19,
+      "reference_patch_content_recorded": false,
+      "reference_patch_sha256": "631f6224bc4699792d16a0c3f07ff8c6a52efd5796f9b788e3abaa6e323e4a59",
+      "reviewer_instruction": "Use private raw artifacts only for blinded near-miss scoring; do not alter primary score.",
+      "same_conceptual_fix_proxy": "strong_automated_proxy",
+      "score_value": 0,
+      "task_id": "click__rwork__110",
+      "touched_expected_file": true,
+      "touched_expected_function_or_class_proxy": true,
+      "touched_reference_file": true,
+      "verifier_fail_reason": "verifier_test_failed"
+    },
+    {
+      "acut_id": "cheap-generic-swe",
+      "candidate_changed_files": [
+        "src/click/core.py",
+        "tests/test_arguments.py",
+        "tests/test_commands.py",
+        "tests/test_options.py"
+      ],
+      "candidate_hunk_count": 17,
+      "candidate_patch_sha256": "b24c24750d25835f046ef7525ef08425a1a6d0d6d6ff454a6e68598de091ea07",
+      "candidate_patch_size_bytes": 11410,
+      "expected_files": [
+        "src/click/core.py",
+        "tests/test_arguments.py",
+        "tests/test_commands.py",
+        "tests/test_options.py"
+      ],
+      "patch_token_jaccard": 0.3353,
+      "primary_status": "verified_fail",
+      "raw_patch_content_recorded": false,
+      "reference_changed_files": [
+        "CHANGES.rst",
+        "src/click/core.py",
+        "tests/test_arguments.py",
+        "tests/test_commands.py",
+        "tests/test_options.py"
+      ],
+      "reference_hunk_count": 19,
+      "reference_patch_content_recorded": false,
+      "reference_patch_sha256": "631f6224bc4699792d16a0c3f07ff8c6a52efd5796f9b788e3abaa6e323e4a59",
+      "reviewer_instruction": "Use private raw artifacts only for blinded near-miss scoring; do not alter primary score.",
+      "same_conceptual_fix_proxy": "strong_automated_proxy",
+      "score_value": 0,
+      "task_id": "click__rwork__110",
+      "touched_expected_file": true,
+      "touched_expected_function_or_class_proxy": true,
+      "touched_reference_file": true,
+      "verifier_fail_reason": "verifier_test_failed"
+    }
+  ],
+  "schema_version": "core-narrative.m6-rescue-prep.v1",
+  "scope": {
+    "model_calls_made": 0,
+    "primary_scores_modified": false,
+    "subject_acuts": [
+      "cheap-click-deep-specialist-v2",
+      "cheap-generic-swe"
+    ]
+  },
+  "source_summary_status": "w2_primary_complete_gate_failed",
+  "status": "completed",
+  "tool": "m6_rescue_prep"
+}

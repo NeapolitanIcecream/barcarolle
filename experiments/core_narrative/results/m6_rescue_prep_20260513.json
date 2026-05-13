@@ -1,0 +1,24 @@
+{
+  "generated_at": "2026-05-13T11:52:29.727393Z",
+  "model_calls_made": 0,
+  "near_miss_packet_status": "packet_prepared_unscored",
+  "outputs": {
+    "near_miss_blind_review": "experiments/core_narrative/results/m5_w2_primary/near_miss_blind_review.json",
+    "patch_reference_overlap_audit": "experiments/core_narrative/results/m5_w2_primary/patch_reference_overlap_audit.json",
+    "task_separation_matrix": "experiments/core_narrative/results/m5_w2_primary/task_separation_matrix.json",
+    "treatment_delivery_audit": "experiments/core_narrative/results/m5_w2_primary/treatment_delivery_audit.json"
+  },
+  "primary_scores_modified": false,
+  "report": "experiments/core_narrative/reports/2026-05-13_m5_w2_failure_forensics.md",
+  "schema_version": "core-narrative.m6-rescue-prep.v1",
+  "status": "completed",
+  "summary": "experiments/core_narrative/results/m5_w2_primary/summary.json",
+  "task_classification_counts": {
+    "ceiling": 3,
+    "floor": 5,
+    "separator": 2
+  },
+  "task_count": 10,
+  "tool": "m6_rescue_prep",
+  "treatment_delivery_status": "completed"
+}

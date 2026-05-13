@@ -1,0 +1,318 @@
+{
+  "generated_at": "2026-05-13T11:52:29.720818Z",
+  "model_calls_made": 0,
+  "primary_scores_modified": false,
+  "review_packet_count": 10,
+  "review_rows": [
+    {
+      "acut_id": "cheap-click-deep-specialist-v2",
+      "automated_overlap_proxy": "weak_file_only_proxy",
+      "blind_review_scale": {
+        "0": "unrelated or no useful patch",
+        "1": "right file but wrong logic",
+        "2": "right function or condition but incomplete",
+        "3": "near reference, likely boundary or small omission"
+      },
+      "blind_review_score": null,
+      "candidate_changed_files": [
+        "src/click/core.py",
+        "tests/test_options.py"
+      ],
+      "candidate_patch_sha256": "017803c62331e19b31c60e12c967a34923a4571133ab56f0db87487a819703c5",
+      "patch_token_jaccard": 0.1,
+      "primary_score_locked": true,
+      "primary_status": "verified_fail",
+      "raw_patch_content_recorded": false,
+      "reference_changed_files": [
+        "src/click/core.py",
+        "tests/test_options.py"
+      ],
+      "reference_patch_sha256": "c7910f2c2bc5685cb6d41c0e9be170e16e2f3ac9c9845019bcd003f6db6804e3",
+      "task_id": "click__rwork__102",
+      "verifier_fail_reason": "verifier_test_failed"
+    },
+    {
+      "acut_id": "cheap-generic-swe",
+      "automated_overlap_proxy": "weak_file_only_proxy",
+      "blind_review_scale": {
+        "0": "unrelated or no useful patch",
+        "1": "right file but wrong logic",
+        "2": "right function or condition but incomplete",
+        "3": "near reference, likely boundary or small omission"
+      },
+      "blind_review_score": null,
+      "candidate_changed_files": [
+        "src/click/core.py",
+        "tests/test_options.py"
+      ],
+      "candidate_patch_sha256": "140085c5cf1c730eb89698badac3f30b9535bc3b451ae481d539480143b1b5bf",
+      "patch_token_jaccard": 0.1081,
+      "primary_score_locked": true,
+      "primary_status": "verified_fail",
+      "raw_patch_content_recorded": false,
+      "reference_changed_files": [
+        "src/click/core.py",
+        "tests/test_options.py"
+      ],
+      "reference_patch_sha256": "c7910f2c2bc5685cb6d41c0e9be170e16e2f3ac9c9845019bcd003f6db6804e3",
+      "task_id": "click__rwork__102",
+      "verifier_fail_reason": "verifier_test_failed"
+    },
+    {
+      "acut_id": "cheap-click-deep-specialist-v2",
+      "automated_overlap_proxy": "strong_automated_proxy",
+      "blind_review_scale": {
+        "0": "unrelated or no useful patch",
+        "1": "right file but wrong logic",
+        "2": "right function or condition but incomplete",
+        "3": "near reference, likely boundary or small omission"
+      },
+      "blind_review_score": null,
+      "candidate_changed_files": [
+        "src/click/core.py",
+        "src/click/termui.py",
+        "tests/test_termui.py"
+      ],
+      "candidate_patch_sha256": "aa42f42fca044c5d68cad23dd8ae9b486228db8bc67de2929168b19521e1e97b",
+      "patch_token_jaccard": 0.3966,
+      "primary_score_locked": true,
+      "primary_status": "verified_fail",
+      "raw_patch_content_recorded": false,
+      "reference_changed_files": [
+        "CHANGES.rst",
+        "src/click/core.py",
+        "src/click/termui.py",
+        "tests/test_options.py",
+        "tests/test_termui.py"
+      ],
+      "reference_patch_sha256": "252d0000dbd198371660bb919d56234d2651b4dda882582a31e3d13ed0fe2374",
+      "task_id": "click__rwork__106",
+      "verifier_fail_reason": "verifier_test_failed"
+    },
+    {
+      "acut_id": "cheap-generic-swe",
+      "automated_overlap_proxy": "strong_automated_proxy",
+      "blind_review_scale": {
+        "0": "unrelated or no useful patch",
+        "1": "right file but wrong logic",
+        "2": "right function or condition but incomplete",
+        "3": "near reference, likely boundary or small omission"
+      },
+      "blind_review_score": null,
+      "candidate_changed_files": [
+        "src/click/core.py",
+        "src/click/termui.py",
+        "tests/test_termui.py"
+      ],
+      "candidate_patch_sha256": "65fcb21620df97959e277494647d09dae5bb2dc7d901f825efaa20918bd58351",
+      "patch_token_jaccard": 0.3,
+      "primary_score_locked": true,
+      "primary_status": "verified_fail",
+      "raw_patch_content_recorded": false,
+      "reference_changed_files": [
+        "CHANGES.rst",
+        "src/click/core.py",
+        "src/click/termui.py",
+        "tests/test_options.py",
+        "tests/test_termui.py"
+      ],
+      "reference_patch_sha256": "252d0000dbd198371660bb919d56234d2651b4dda882582a31e3d13ed0fe2374",
+      "task_id": "click__rwork__106",
+      "verifier_fail_reason": "verifier_test_failed"
+    },
+    {
+      "acut_id": "cheap-click-deep-specialist-v2",
+      "automated_overlap_proxy": "strong_automated_proxy",
+      "blind_review_scale": {
+        "0": "unrelated or no useful patch",
+        "1": "right file but wrong logic",
+        "2": "right function or condition but incomplete",
+        "3": "near reference, likely boundary or small omission"
+      },
+      "blind_review_score": null,
+      "candidate_changed_files": [
+        "src/click/termui.py",
+        "tests/test_utils.py"
+      ],
+      "candidate_patch_sha256": "07d026693febeffe37b2023b2c4dedea3081e5df1a3f0b8010e187f088c275f1",
+      "patch_token_jaccard": 0.3333,
+      "primary_score_locked": true,
+      "primary_status": "verified_fail",
+      "raw_patch_content_recorded": false,
+      "reference_changed_files": [
+        "CHANGES.rst",
+        "src/click/termui.py",
+        "tests/test_utils.py"
+      ],
+      "reference_patch_sha256": "c328b74db0a42e9355792f06ab021b74a1e39ea908cc971b879e549f654ec6f5",
+      "task_id": "click__rwork__107",
+      "verifier_fail_reason": "verifier_test_failed"
+    },
+    {
+      "acut_id": "cheap-generic-swe",
+      "automated_overlap_proxy": "strong_automated_proxy",
+      "blind_review_scale": {
+        "0": "unrelated or no useful patch",
+        "1": "right file but wrong logic",
+        "2": "right function or condition but incomplete",
+        "3": "near reference, likely boundary or small omission"
+      },
+      "blind_review_score": null,
+      "candidate_changed_files": [
+        "src/click/termui.py",
+        "tests/test_utils.py"
+      ],
+      "candidate_patch_sha256": "1ac2b0895246d7f6794d37a26148899bd6ecb406bd6e264ab2804da0198da40b",
+      "patch_token_jaccard": 0.3636,
+      "primary_score_locked": true,
+      "primary_status": "verified_fail",
+      "raw_patch_content_recorded": false,
+      "reference_changed_files": [
+        "CHANGES.rst",
+        "src/click/termui.py",
+        "tests/test_utils.py"
+      ],
+      "reference_patch_sha256": "c328b74db0a42e9355792f06ab021b74a1e39ea908cc971b879e549f654ec6f5",
+      "task_id": "click__rwork__107",
+      "verifier_fail_reason": "verifier_test_failed"
+    },
+    {
+      "acut_id": "cheap-click-deep-specialist-v2",
+      "automated_overlap_proxy": "weak_file_only_proxy",
+      "blind_review_scale": {
+        "0": "unrelated or no useful patch",
+        "1": "right file but wrong logic",
+        "2": "right function or condition but incomplete",
+        "3": "near reference, likely boundary or small omission"
+      },
+      "blind_review_score": null,
+      "candidate_changed_files": [
+        "src/click/types.py",
+        "tests/test_types.py"
+      ],
+      "candidate_patch_sha256": "d790b028dd9e2968a10e4aca7dd85d1271471216b986edd6818668c5eff17ca7",
+      "patch_token_jaccard": 0.1345,
+      "primary_score_locked": true,
+      "primary_status": "verified_fail",
+      "raw_patch_content_recorded": false,
+      "reference_changed_files": [
+        "CHANGES.rst",
+        "docs/options.rst",
+        "src/click/core.py",
+        "src/click/exceptions.py",
+        "src/click/types.py",
+        "tests/test_basic.py",
+        "tests/test_formatting.py",
+        "tests/test_info_dict.py",
+        "tests/test_normalization.py",
+        "tests/test_types.py"
+      ],
+      "reference_patch_sha256": "804d580b4a63032bb1bcb32e0281f65e238d03cedb81bdfaa39d45cd216b5df4",
+      "task_id": "click__rwork__109",
+      "verifier_fail_reason": "verifier_test_failed"
+    },
+    {
+      "acut_id": "cheap-generic-swe",
+      "automated_overlap_proxy": "strong_automated_proxy",
+      "blind_review_scale": {
+        "0": "unrelated or no useful patch",
+        "1": "right file but wrong logic",
+        "2": "right function or condition but incomplete",
+        "3": "near reference, likely boundary or small omission"
+      },
+      "blind_review_score": null,
+      "candidate_changed_files": [
+        "src/click/types.py",
+        "tests/test_types.py"
+      ],
+      "candidate_patch_sha256": "835bce2feeebe3474b0b5c2aae3b88965ebcb30036a85252b70e18faf02c3892",
+      "patch_token_jaccard": 0.2574,
+      "primary_score_locked": true,
+      "primary_status": "verified_fail",
+      "raw_patch_content_recorded": false,
+      "reference_changed_files": [
+        "CHANGES.rst",
+        "docs/options.rst",
+        "src/click/core.py",
+        "src/click/exceptions.py",
+        "src/click/types.py",
+        "tests/test_basic.py",
+        "tests/test_formatting.py",
+        "tests/test_info_dict.py",
+        "tests/test_normalization.py",
+        "tests/test_types.py"
+      ],
+      "reference_patch_sha256": "804d580b4a63032bb1bcb32e0281f65e238d03cedb81bdfaa39d45cd216b5df4",
+      "task_id": "click__rwork__109",
+      "verifier_fail_reason": "verifier_test_failed"
+    },
+    {
+      "acut_id": "cheap-click-deep-specialist-v2",
+      "automated_overlap_proxy": "strong_automated_proxy",
+      "blind_review_scale": {
+        "0": "unrelated or no useful patch",
+        "1": "right file but wrong logic",
+        "2": "right function or condition but incomplete",
+        "3": "near reference, likely boundary or small omission"
+      },
+      "blind_review_score": null,
+      "candidate_changed_files": [
+        "src/click/core.py",
+        "tests/test_arguments.py",
+        "tests/test_commands.py",
+        "tests/test_options.py"
+      ],
+      "candidate_patch_sha256": "ef2ee3943a911859241b869260139387f39a09fe680a41f0085a2a8df20f4e83",
+      "patch_token_jaccard": 0.2468,
+      "primary_score_locked": true,
+      "primary_status": "verified_fail",
+      "raw_patch_content_recorded": false,
+      "reference_changed_files": [
+        "CHANGES.rst",
+        "src/click/core.py",
+        "tests/test_arguments.py",
+        "tests/test_commands.py",
+        "tests/test_options.py"
+      ],
+      "reference_patch_sha256": "631f6224bc4699792d16a0c3f07ff8c6a52efd5796f9b788e3abaa6e323e4a59",
+      "task_id": "click__rwork__110",
+      "verifier_fail_reason": "verifier_test_failed"
+    },
+    {
+      "acut_id": "cheap-generic-swe",
+      "automated_overlap_proxy": "strong_automated_proxy",
+      "blind_review_scale": {
+        "0": "unrelated or no useful patch",
+        "1": "right file but wrong logic",
+        "2": "right function or condition but incomplete",
+        "3": "near reference, likely boundary or small omission"
+      },
+      "blind_review_score": null,
+      "candidate_changed_files": [
+        "src/click/core.py",
+        "tests/test_arguments.py",
+        "tests/test_commands.py",
+        "tests/test_options.py"
+      ],
+      "candidate_patch_sha256": "b24c24750d25835f046ef7525ef08425a1a6d0d6d6ff454a6e68598de091ea07",
+      "patch_token_jaccard": 0.3353,
+      "primary_score_locked": true,
+      "primary_status": "verified_fail",
+      "raw_patch_content_recorded": false,
+      "reference_changed_files": [
+        "CHANGES.rst",
+        "src/click/core.py",
+        "tests/test_arguments.py",
+        "tests/test_commands.py",
+        "tests/test_options.py"
+      ],
+      "reference_patch_sha256": "631f6224bc4699792d16a0c3f07ff8c6a52efd5796f9b788e3abaa6e323e4a59",
+      "task_id": "click__rwork__110",
+      "verifier_fail_reason": "verifier_test_failed"
+    }
+  ],
+  "schema_version": "core-narrative.m6-rescue-prep.v1",
+  "source_summary_status": "w2_primary_complete_gate_failed",
+  "status": "packet_prepared_unscored",
+  "tool": "m6_rescue_prep"
+}
