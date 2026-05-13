@@ -476,20 +476,10 @@ def task_entry(candidate: Mapping[str, Any], task_id: str, *, status: str, ratio
 
 
 def statement_text(task: Mapping[str, Any]) -> str:
-    expected_area = "\n".join(f"- {item}" for item in task.get("expected_touched_area", []))
-    source = task.get("source") if isinstance(task.get("source"), Mapping) else {}
     return (
         f"# {task['task_id']}\n\n"
         "## Problem Statement\n\n"
-        f"{str(task.get('problem_statement', '')).strip()}\n\n"
-        "## Public Source\n\n"
-        f"- Kind: {source.get('kind', 'unknown')}\n"
-        f"- Anchor: {source.get('anchor_id', 'unknown')}\n"
-        f"- URL: {source.get('public_url', 'not recorded')}\n\n"
-        "## Visible Context Guidance\n\n"
-        f"{task.get('visible_context_guidance', '')}\n\n"
-        "## Expected Touched Area\n\n"
-        f"{expected_area or '- Not recorded'}\n"
+        f"{str(task.get('problem_statement', '')).strip()}\n"
     )
 
 

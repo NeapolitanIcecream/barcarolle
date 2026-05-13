@@ -1,6 +1,6 @@
 schema_version: core-narrative.m6-w3-protocol.v1
 prepared_at: "2026-05-13T00:00:00+08:00"
-status: protocol_preregistered_no_primary_run
+status: protocol_synced_denominator_frozen_no_primary_run
 experiment_id: m6_repository_calibrated_click_v1
 objective: Test whether a cheap Click ACUT calibrated from RBench evidence can outperform generic and static-context baselines on a fresh held-out Click W3 denominator.
 relationship_to_m5:
@@ -42,18 +42,66 @@ controlled_factors:
     retries_allowed: false
     network: disabled
 w3_denominator:
-  status: design_preregistered_tasks_not_materialized
+  status: denominator_frozen_primary_not_run
   target_task_count: 20
-  accepted_task_count: 0
+  accepted_task_count: 20
+  candidate_count: 40
+  admitted_candidate_count: 28
+  reserve_task_count: 5
   admission_required_before_primary: true
   repository: pallets/click
   local_checkout_cache: experiments/core_narrative/external_repos/click
   split: W3
+  primary_manifest: experiments/core_narrative/configs/tasks/rwork_click_w3.yaml
+  reserve_manifest: experiments/core_narrative/configs/tasks/rwork_click_w3_reserve.yaml
+  candidate_manifest: experiments/core_narrative/configs/tasks/rwork_click_w3_candidates.yaml
+  admission_summary: experiments/core_narrative/results/m6_w3_admission/admission_summary_20260513.json
+  admission_sheets: experiments/core_narrative/results/m6_w3_admission/admission_sheets.json
+  materialization_summary: experiments/core_narrative/results/m6_w3_admission/materialization_summary.json
+  admission_report: experiments/core_narrative/reports/2026-05-13_m6_w3_admission_report.md
+  admission_completion_audit: experiments/core_narrative/reports/2026-05-13_m6_w3_admission_completion_audit.md
   selection_rule: Select new held-out Click behavior tasks only after this protocol is frozen; do not select tasks from any M5 ACUT output or failed patch.
   disjoint_from_manifests:
     - experiments/core_narrative/configs/tasks/rbench_click.yaml
     - experiments/core_narrative/configs/tasks/rwork_click.yaml
     - experiments/core_narrative/configs/tasks/rwork_click_v2.yaml
+    - experiments/core_narrative/configs/tasks/rwork_click_v2_reserve.yaml
+  metadata_sync:
+    synced_at: "2026-05-13T14:18:08.649605Z"
+    source_of_truth: experiments/core_narrative/results/m6_w3_admission/admission_summary_20260513.json
+    task_reselection_performed: false
+    w3_primary_run_performed: false
+    note: Admission artifacts froze the denominator; this protocol update only synchronizes preregistered metadata.
+  deterministic_run_seed: m6-w3-primary-20260513-denominator-v1
+  acut_run_order:
+    - cheap-generic-swe
+    - cheap-click-deep-specialist-v2
+    - cheap-click-rbench-calibrated-v1
+    - frontier-generic-swe
+  freeze_status_mapping:
+    verified_pass:
+      score_value: 1
+      score_action: fixed_denominator_one
+    verified_fail:
+      score_value: 0
+      score_action: fixed_denominator_zero
+    no_diff:
+      score_value: 0
+      score_action: fixed_denominator_zero
+    unsafe_or_scope_violation:
+      score_value: 0
+      score_action: fixed_denominator_zero
+    timeout:
+      score_value: 0
+      score_action: fixed_denominator_zero_unless_global_infra
+    verifier_infra_error:
+      score_value: null
+      score_action: rerun_or_global_exclusion_required
+  infra_rerun_policy:
+    global_infra_only: true
+    acut_specific_retry_allowed: false
+    best_of_n_allowed: false
+    requires_documented_global_exclusion_before_scoring: true
   excluded_anchors:
     - pallets/click#252
     - pallets/click#151
