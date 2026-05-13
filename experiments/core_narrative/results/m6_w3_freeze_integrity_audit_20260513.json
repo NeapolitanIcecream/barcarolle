@@ -1,0 +1,344 @@
+{
+  "acut_g_run": false,
+  "artifact_paths": {
+    "acut_config": "experiments/core_narrative/configs/acuts/cheap-click-rbench-calibrated-v1.yaml",
+    "admission_sheets": "experiments/core_narrative/results/m6_w3_admission/admission_sheets.json",
+    "admission_summary": "experiments/core_narrative/results/m6_w3_admission/admission_summary_20260513.json",
+    "candidate_manifest": "experiments/core_narrative/configs/tasks/rwork_click_w3_candidates.yaml",
+    "context_manifest": "experiments/core_narrative/context_packs/click_rbench_calibrated_v1/manifest.json",
+    "leakage_audit": "experiments/core_narrative/context_packs/click_rbench_calibrated_v1/leakage_audit.json",
+    "materialization_summary": "experiments/core_narrative/results/m6_w3_admission/materialization_summary.json",
+    "primary_manifest": "experiments/core_narrative/configs/tasks/rwork_click_w3.yaml",
+    "protocol": "experiments/core_narrative/configs/m6_w3_protocol.yaml",
+    "reserve_manifest": "experiments/core_narrative/configs/tasks/rwork_click_w3_reserve.yaml"
+  },
+  "checks": [
+    {
+      "description": "rwork_click_w3.yaml exists and contains 20 primary tasks",
+      "evidence": {
+        "exists": true,
+        "manifest_task_count": 20,
+        "observed_task_count": 20,
+        "path": "experiments/core_narrative/configs/tasks/rwork_click_w3.yaml",
+        "status": "admitted_frozen"
+      },
+      "id": "freeze.primary_manifest",
+      "status": "passed"
+    },
+    {
+      "description": "rwork_click_w3_reserve.yaml exists and contains 5 reserve tasks",
+      "evidence": {
+        "exists": true,
+        "manifest_task_count": 5,
+        "observed_task_count": 5,
+        "path": "experiments/core_narrative/configs/tasks/rwork_click_w3_reserve.yaml",
+        "status": "reserve_admitted_frozen"
+      },
+      "id": "freeze.reserve_manifest",
+      "status": "passed"
+    },
+    {
+      "description": "admission_summary_20260513.json exists with expected candidate/admission counts",
+      "evidence": {
+        "admitted_candidate_count": 28,
+        "candidate_count": 40,
+        "exists": true,
+        "path": "experiments/core_narrative/results/m6_w3_admission/admission_summary_20260513.json",
+        "primary_task_count": 20,
+        "reserve_task_count": 5,
+        "status": "denominator_frozen_primary_not_run"
+      },
+      "id": "admission.summary_counts",
+      "status": "passed"
+    },
+    {
+      "description": "every primary task has an accepted admission sheet",
+      "evidence": {
+        "accepted_sheet_count": 20,
+        "invalid_smoke_task_ids": [],
+        "missing_anchor_record_task_ids": [],
+        "missing_digest_task_ids": [],
+        "missing_sheet_task_ids": [],
+        "reference_digest_mismatch_task_ids": [],
+        "task_count": 20
+      },
+      "id": "admission.primary_sheet_coverage",
+      "status": "passed"
+    },
+    {
+      "description": "every primary task records no-op fail and reference patch pass",
+      "evidence": {
+        "checked_task_count": 20,
+        "invalid_smoke_task_ids": []
+      },
+      "id": "admission.primary_smoke_records",
+      "status": "passed"
+    },
+    {
+      "description": "every primary task records statement, reference patch, and hidden verifier digests",
+      "evidence": {
+        "checked_task_count": 20,
+        "missing_digest_task_ids": [],
+        "reference_digest_mismatch_task_ids": []
+      },
+      "id": "admission.primary_digest_records",
+      "status": "passed"
+    },
+    {
+      "description": "every primary task records source anchor and changed-file anchors",
+      "evidence": {
+        "checked_task_count": 20,
+        "missing_anchor_record_task_ids": []
+      },
+      "id": "admission.primary_anchor_records",
+      "status": "passed"
+    },
+    {
+      "description": "W3 primary task anchors are disjoint from RBench, RWork-v1, W2 primary, and W2 reserve",
+      "evidence": {
+        "overlaps": {},
+        "primary_anchor_count": 24,
+        "prior_manifest_anchor_counts": {
+          "experiments/core_narrative/configs/tasks/rbench_click.yaml": 14,
+          "experiments/core_narrative/configs/tasks/rwork_click.yaml": 8,
+          "experiments/core_narrative/configs/tasks/rwork_click_v2.yaml": 20,
+          "experiments/core_narrative/configs/tasks/rwork_click_v2_reserve.yaml": 5
+        }
+      },
+      "id": "denominator.disjoint_anchors",
+      "status": "passed"
+    },
+    {
+      "description": "public statements contain no implementation diff, target commit, reference patch, hidden verifier, or ACUT output",
+      "evidence": {
+        "checked_paths": [
+          "experiments/core_narrative/tasks/click/w3/click__w3__001/public/statement.md",
+          "experiments/core_narrative/tasks/click/w3/click__w3__002/public/statement.md",
+          "experiments/core_narrative/tasks/click/w3/click__w3__003/public/statement.md",
+          "experiments/core_narrative/tasks/click/w3/click__w3__004/public/statement.md",
+          "experiments/core_narrative/tasks/click/w3/click__w3__005/public/statement.md",
+          "experiments/core_narrative/tasks/click/w3/click__w3__006/public/statement.md",
+          "experiments/core_narrative/tasks/click/w3/click__w3__007/public/statement.md",
+          "experiments/core_narrative/tasks/click/w3/click__w3__008/public/statement.md",
+          "experiments/core_narrative/tasks/click/w3/click__w3__009/public/statement.md",
+          "experiments/core_narrative/tasks/click/w3/click__w3__010/public/statement.md",
+          "experiments/core_narrative/tasks/click/w3/click__w3__011/public/statement.md",
+          "experiments/core_narrative/tasks/click/w3/click__w3__012/public/statement.md",
+          "experiments/core_narrative/tasks/click/w3/click__w3__013/public/statement.md",
+          "experiments/core_narrative/tasks/click/w3/click__w3__014/public/statement.md",
+          "experiments/core_narrative/tasks/click/w3/click__w3__015/public/statement.md",
+          "experiments/core_narrative/tasks/click/w3/click__w3__016/public/statement.md",
+          "experiments/core_narrative/tasks/click/w3/click__w3__017/public/statement.md",
+          "experiments/core_narrative/tasks/click/w3/click__w3__018/public/statement.md",
+          "experiments/core_narrative/tasks/click/w3/click__w3__019/public/statement.md",
+          "experiments/core_narrative/tasks/click/w3/click__w3__020/public/statement.md"
+        ],
+        "findings_by_task": {},
+        "missing_paths": []
+      },
+      "id": "public.statement_redaction",
+      "status": "passed"
+    },
+    {
+      "description": "calibrated context pack hash matches the ACUT manifest hash",
+      "evidence": {
+        "acut_config": "experiments/core_narrative/configs/acuts/cheap-click-rbench-calibrated-v1.yaml",
+        "acut_pack_hash": "b1b1ee40b72be5912ea07ac76d6ae6689edb2f3a930c5e2479ea6f71ffc0de85",
+        "context_manifest": "experiments/core_narrative/context_packs/click_rbench_calibrated_v1/manifest.json",
+        "context_manifest_pack_hash": "b1b1ee40b72be5912ea07ac76d6ae6689edb2f3a930c5e2479ea6f71ffc0de85"
+      },
+      "id": "context.hash_match",
+      "status": "passed"
+    },
+    {
+      "description": "leakage audit and context pack record W3 material and M5-W2 ACUT outputs as unused",
+      "evidence": {
+        "forbidden_true_flags": {},
+        "leakage_audit_status": "passed_for_protocol_prep"
+      },
+      "id": "context.leakage_w3_false",
+      "status": "passed"
+    },
+    {
+      "description": "m6_w3_protocol.yaml denominator status is synchronized to denominator_frozen_primary_not_run",
+      "evidence": {
+        "accepted_task_count": 20,
+        "metadata_sync": {
+          "note": "Admission artifacts froze the denominator; this protocol update only synchronizes preregistered metadata.",
+          "source_of_truth": "experiments/core_narrative/results/m6_w3_admission/admission_summary_20260513.json",
+          "synced_at": "2026-05-13T14:18:08.649605Z",
+          "task_reselection_performed": false,
+          "w3_primary_run_performed": false
+        },
+        "path": "experiments/core_narrative/configs/m6_w3_protocol.yaml",
+        "protocol_status": "protocol_synced_denominator_frozen_no_primary_run",
+        "w3_denominator_status": "denominator_frozen_primary_not_run"
+      },
+      "id": "protocol.denominator_status",
+      "status": "passed"
+    },
+    {
+      "description": "deterministic run seed, ACUT order, status mapping, no best-of-N, and no ACUT-specific retry are frozen",
+      "evidence": {
+        "primary_acut_order": [
+          "cheap-generic-swe",
+          "cheap-click-deep-specialist-v2",
+          "cheap-click-rbench-calibrated-v1",
+          "frontier-generic-swe"
+        ],
+        "primary_infra_policy": {
+          "acut_specific_retry_allowed": false,
+          "best_of_n_allowed": false,
+          "global_infra_only": true,
+          "requires_documented_global_exclusion_before_scoring": true
+        },
+        "primary_seed": "m6-w3-primary-20260513-denominator-v1",
+        "primary_status_mapping_keys": [
+          "no_diff",
+          "timeout",
+          "unsafe_or_scope_violation",
+          "verified_fail",
+          "verified_pass",
+          "verifier_infra_error"
+        ],
+        "protocol_acut_order": [
+          "cheap-generic-swe",
+          "cheap-click-deep-specialist-v2",
+          "cheap-click-rbench-calibrated-v1",
+          "frontier-generic-swe"
+        ],
+        "protocol_infra_policy": {
+          "acut_specific_retry_allowed": false,
+          "best_of_n_allowed": false,
+          "global_infra_only": true,
+          "requires_documented_global_exclusion_before_scoring": true
+        },
+        "protocol_seed": "m6-w3-primary-20260513-denominator-v1",
+        "protocol_status_mapping_keys": [
+          "no_diff",
+          "timeout",
+          "unsafe_or_scope_violation",
+          "verified_fail",
+          "verified_pass",
+          "verifier_infra_error"
+        ],
+        "reserve_acut_order": [
+          "cheap-generic-swe",
+          "cheap-click-deep-specialist-v2",
+          "cheap-click-rbench-calibrated-v1",
+          "frontier-generic-swe"
+        ],
+        "reserve_seed": "m6-w3-primary-20260513-denominator-v1",
+        "summary_acut_order": [
+          "cheap-generic-swe",
+          "cheap-click-deep-specialist-v2",
+          "cheap-click-rbench-calibrated-v1",
+          "frontier-generic-swe"
+        ],
+        "summary_seed": "m6-w3-primary-20260513-denominator-v1"
+      },
+      "id": "readiness.freeze_controls",
+      "status": "passed"
+    },
+    {
+      "description": "W3 primary, R3, and ACUT G have not been run in this phase",
+      "evidence": {
+        "admission_summary_flags": {
+          "acut_g_run": false,
+          "model_calls_made": 0,
+          "r3_run": false,
+          "w3_primary_run": false
+        },
+        "forbidden_result_paths_existing": []
+      },
+      "id": "boundary.no_w3_r3_or_g_run",
+      "status": "passed"
+    },
+    {
+      "description": "cost ledger path is writable before any live ACUT execution",
+      "evidence": {
+        "error": null,
+        "ledger_exists": true,
+        "ledger_path": "experiments/core_narrative/results/cost_ledger.jsonl",
+        "parent_writable_probe_passed": true,
+        "required_before_acut_execution": true
+      },
+      "id": "readiness.cost_ledger_writable",
+      "status": "passed"
+    },
+    {
+      "description": "workspace-mode runner and source-derived URL-only policy tests pass",
+      "evidence": {
+        "command": [
+          "/Applications/Xcode.app/Contents/Developer/usr/bin/python3",
+          "-m",
+          "unittest",
+          "experiments/core_narrative/tools/test_workspace_mode_runner.py",
+          "experiments/core_narrative/tools/test_apply_source_derived_url_policy.py"
+        ],
+        "exit_code": 0,
+        "stderr_tail": "..................\n----------------------------------------------------------------------\nRan 18 tests in 7.506s\n\nOK\n",
+        "stdout_tail": ""
+      },
+      "id": "readiness.workspace_and_source_url_tests",
+      "status": "passed"
+    },
+    {
+      "description": "remote branch at the same commit can access frozen protocol, manifests, admission artifacts, and context artifacts",
+      "evidence": {
+        "checked_paths": [
+          "experiments/core_narrative/configs/tasks/rwork_click_w3.yaml",
+          "experiments/core_narrative/configs/tasks/rwork_click_w3_reserve.yaml",
+          "experiments/core_narrative/configs/tasks/rwork_click_w3_candidates.yaml",
+          "experiments/core_narrative/configs/m6_w3_protocol.yaml",
+          "experiments/core_narrative/results/m6_w3_admission/admission_summary_20260513.json",
+          "experiments/core_narrative/results/m6_w3_admission_20260513.json",
+          "experiments/core_narrative/results/m6_w3_admission/admission_sheets.json",
+          "experiments/core_narrative/results/m6_w3_admission/materialization_summary.json",
+          "experiments/core_narrative/reports/2026-05-13_m6_w3_admission_report.md",
+          "experiments/core_narrative/reports/2026-05-13_m6_w3_admission_completion_audit.md",
+          "experiments/core_narrative/configs/acuts/cheap-click-rbench-calibrated-v1.yaml",
+          "experiments/core_narrative/context_packs/click_rbench_calibrated_v1/manifest.json",
+          "experiments/core_narrative/context_packs/click_rbench_calibrated_v1/leakage_audit.json"
+        ],
+        "content_mismatch_paths": [],
+        "fetch": {
+          "exit_code": 0,
+          "stderr_tail": "From https://github.com/NeapolitanIcecream/barcarolle\n * branch            codex/rgw-full-workspace-v1 -> FETCH_HEAD\n",
+          "stdout_tail": ""
+        },
+        "head_exit_code": 0,
+        "local_head": "879e7bb53dd2c01f34e0514ed3b2cf7433acb63c",
+        "missing_paths": [],
+        "remote_exit_code": 0,
+        "remote_head": "879e7bb53dd2c01f34e0514ed3b2cf7433acb63c",
+        "remote_ref": "origin/codex/rgw-full-workspace-v1",
+        "same_commit": true
+      },
+      "id": "remote.same_commit_artifacts",
+      "status": "passed"
+    }
+  ],
+  "counts": {
+    "admission_sheet_count": 40,
+    "admitted_candidate_count": 28,
+    "candidate_count": 40,
+    "primary_family_counts": {
+      "CliRunner/testing/input-output isolation": 4,
+      "option/default/envvar/flag semantics": 4,
+      "parser/mixed integration": 4,
+      "prompt/termui/output rendering": 4,
+      "type conversion/parameter normalization": 4
+    },
+    "primary_task_count": 20,
+    "reserve_task_count": 5
+  },
+  "generated_at": "2026-05-13T15:27:33.903747Z",
+  "model_calls_made": 0,
+  "objective": "M6-W3 0-model freeze integrity audit before W3 primary execution",
+  "r3_run": false,
+  "schema_version": "core-narrative.m6-w3-freeze-integrity-audit.v1",
+  "status": "passed",
+  "tool": "m6_w3_freeze_integrity_audit",
+  "w3_primary_run": false
+}
