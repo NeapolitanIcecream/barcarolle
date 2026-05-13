@@ -1,0 +1,63 @@
+schema_version: core-narrative.m5-w2-matrix.v1
+experiment_id: M5-W2-repository-specific-advantage
+status: ready_for_primary_w2
+created_at: "2026-05-13T00:00:00+08:00"
+decision_basis:
+  - experiments/core_narrative/reports/2026-05-13_rgw_v1_decision.md
+  - experiments/core_narrative/reports/m5_w2_protocol.md
+primary_execution_path: experiments/core_narrative/tools/workspace_mode_runner.py
+primary_attempts_per_acut_task: 1
+best_of_n: false
+fixed_denominator: true
+policy_semantics:
+  source_derived_url_only_policy: source-derived-url-only-v1
+  helper: experiments/core_narrative/tools/apply_source_derived_url_policy.py
+  implementation: workspace_mode_runner private verifier replay with public redacted preview
+
+acuts:
+  - cheap-generic-swe
+  - cheap-click-specialist
+  - cheap-click-deep-specialist-v2
+  - frontier-generic-swe
+
+rwork_v2:
+  manifest: experiments/core_narrative/configs/tasks/rwork_click_v2.yaml
+  reserve_manifest: experiments/core_narrative/configs/tasks/rwork_click_v2_reserve.yaml
+  task_count: 10
+  reserve_task_count: 4
+  include_all_tasks: true
+  admission_evidence: experiments/core_narrative/results/m5_w2_rwork_v2_admission_smoke_20260513.json
+  reserve_status: selected_pending_admission_smoke
+
+primary_matrix:
+  expected_attempts:
+    rwork_v2: 40
+    total: 40
+  order: deterministic_shuffle
+  shuffle_seed: m5-w2-2026-05-13
+
+primary_score:
+  field: W2_verified_score
+  numerator_status: verified_pass
+  denominator: 10
+
+secondary_metrics:
+  - paired_wins_vs_cheap_generic_swe
+  - paired_wins_vs_frontier_generic_swe
+  - no_diff_count
+  - true_unsafe_count
+  - policy_hold_count
+  - blind_review_score
+
+gates:
+  context_effect:
+    expression: cheap-click-deep-specialist-v2 W2_score >= cheap-generic-swe W2_score + 2 tasks
+    failure_action: stop_and_write_negative_result
+  nfl_candidate:
+    expression: cheap-click-deep-specialist-v2 W2_score > frontier-generic-swe W2_score
+    weak_candidate_threshold: +1 task
+    preferred_candidate_threshold: +2 tasks
+
+downstream_if_passes:
+  r2: design RBench-v2 or run cheap-click-deep-specialist-v2 on existing RBench-v1 only as a cheaper fallback
+  g: G6 no-model readiness remains separate; run ACUT G only after W2 and R2 produce a candidate reversal

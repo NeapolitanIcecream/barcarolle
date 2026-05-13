@@ -27,6 +27,7 @@ from _common import (
     write_json,
 )
 from _llm_budget import llm_safe_subprocess_env, redact_sensitive_text, run_to_redacted_artifacts, unsafe_text_findings
+from apply_source_derived_url_policy import candidate_patch_policy
 from run_task import is_harness_untracked_path, unsafe_patch_artifact_attribution, write_redacted_patch_preview
 
 
@@ -317,6 +318,21 @@ def workspace_diff_command(base_ref: str) -> list[str]:
     ]
 
 
+def write_private_replay_patch(workspace: Path, patch_text: str) -> dict[str, Any]:
+    """Persist a raw patch only inside the ignored run workspace for verifier replay."""
+    private_path = workspace / ".core_narrative" / "private_candidate.patch"
+    private_path.parent.mkdir(parents=True, exist_ok=True)
+    private_path.write_text(patch_text, encoding="utf-8")
+    return {
+        "path": str(private_path),
+        "written": True,
+        "ignored_local_artifact": True,
+        "public_artifact": False,
+        "sha256": sha256_file(private_path),
+        "size_bytes": len(patch_text.encode("utf-8")),
+    }
+
+
 def collect_candidate_patch_from_workspace(
     *,
     workspace: Path,
@@ -384,11 +400,15 @@ def collect_candidate_patch_from_workspace(
     patch_text = completed.stdout
     findings = unsafe_text_findings(patch_text, env)
     attribution = unsafe_patch_artifact_attribution(patch_text, dict(findings))
+    policy = candidate_patch_policy(findings, attribution)
     patch_path.parent.mkdir(parents=True, exist_ok=True)
+    private_replay_patch = None
     if findings["unsafe"]:
         if patch_path.exists():
             patch_path.unlink()
         redacted_preview = write_redacted_patch_preview(patch_text, patch_path, dict(env))
+        if policy["allow_private_verifier_replay"]:
+            private_replay_patch = write_private_replay_patch(workspace, patch_text)
         written = False
         size_bytes = 0
     else:
@@ -408,7 +428,15 @@ def collect_candidate_patch_from_workspace(
         "unsafe_content_detected": bool(findings["unsafe"]),
         "unsafe_content": findings,
         "unsafe_content_attribution": attribution,
+        "unsafe_content_policy": policy,
         "redacted_preview": redacted_preview,
+        "private_replay_patch": private_replay_patch,
+        "private_replay_allowed": bool(policy["allow_private_verifier_replay"]),
+        "replay_patch_path": (
+            private_replay_patch["path"]
+            if isinstance(private_replay_patch, Mapping)
+            else str(patch_path)
+        ),
         "diff_command": workspace_diff_command(base_ref),
         "diff_base_ref": base_ref,
         "base_ref": base_ref,
@@ -422,7 +450,10 @@ def collect_candidate_patch_from_workspace(
         "included_untracked_files": [item for item in untracked_records if item["disposition"] == "included"],
         "index_restore_error": index_restore_error,
         "diff_context_lines": WORKSPACE_DIFF_CONTEXT_LINES,
-        "has_scoreable_diff": bool(written and size_bytes > 0 and not findings["unsafe"]),
+        "has_scoreable_diff": bool(
+            (written and size_bytes > 0 and not findings["unsafe"])
+            or (policy["allow_private_verifier_replay"] and len(patch_text.encode("utf-8")) > 0)
+        ),
     }
 
 
@@ -734,7 +765,7 @@ def execute_workspace_mode(
         timeout_owner = "acut"
         verification = no_verification_result("acut_timeout")
         error = "ACUT command timed out"
-    elif candidate.get("unsafe_content_detected") is True:
+    elif candidate.get("unsafe_content_detected") is True and not candidate.get("private_replay_allowed"):
         status = "unsafe_or_scope_violation"
         timeout_owner = None
         verification = no_verification_result("unsafe_candidate_patch")
@@ -749,13 +780,14 @@ def execute_workspace_mode(
         timeout_owner = None
         verification = no_verification_result("no_scoreable_source_diff")
     else:
+        replay_patch_path = Path(str(candidate.get("replay_patch_path") or patch_path))
         verification = verify_candidate_patch(
             task_path=task_path,
             source_repo=source_repo,
             workspace_root=workspace_root,
             workspace_name=f"{run_id}__verify",
             artifact_dir=artifact_dir,
-            patch_path=patch_path,
+            patch_path=replay_patch_path,
             acut_id=acut_id,
             attempt=attempt,
             run_id=run_id,
@@ -782,6 +814,8 @@ def execute_workspace_mode(
         "head_drifted": candidate.get("head_drifted"),
         "candidate_patch_sha256": candidate.get("sha256"),
         "candidate_patch_size_bytes": candidate.get("size_bytes"),
+        "replay_patch_path": candidate.get("replay_patch_path"),
+        "replay_patch_private": bool(candidate.get("private_replay_allowed")),
         "candidate_patch_from_base_ref": True,
         "candidate_patch_extraction_error": extraction_error,
         "scrubbed_secret_like_env_var_count": scrubbed_env_var_count,

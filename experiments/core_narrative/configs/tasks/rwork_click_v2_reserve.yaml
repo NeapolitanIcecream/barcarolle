@@ -1,0 +1,125 @@
+schema_version: core-narrative.task-split.v1
+prepared_at: "2026-05-13T00:00:00+08:00"
+status: candidate_selected_pending_admission_smoke
+split: RWork
+benchmark_split: RWork-v2-reserve
+repo_slug: click
+repository: pallets/click
+locked_target_commit: 8bd8b4a074c55c03b6eb5666edc44a9c43df38a2
+local_checkout_cache: experiments/core_narrative/external_repos/click
+selection_policy:
+  objective: Preregistered reserve tasks for M5-W2, usable only before primary execution starts or for a globally documented task exclusion.
+  replacement_rule: Reserve substitution must preserve family balance and be recorded before scoring.
+  admission_rule: A reserve is not executable until no-op failure and reference-pass smoke are both proven.
+task_count: 4
+tasks:
+  - task_id: click__rwork__191
+    repo_slug: click
+    split: rwork
+    benchmark_split: RWork-v2-reserve
+    locked_target_repository: pallets/click
+    locked_target_commit: 8bd8b4a074c55c03b6eb5666edc44a9c43df38a2
+    source:
+      kind: commit
+      public_url: https://github.com/pallets/click/commit/f2ae679984c3dfaa0c7639686cd793f59eb4d9b8
+      anchor_id: commit:f2ae679984c3dfaa0c7639686cd793f59eb4d9b8
+      base_commit: 565f36d5bc4a15d304337b749e113fb4477b1843
+      target_commit: f2ae679984c3dfaa0c7639686cd793f59eb4d9b8
+    task_family: prompt/termui/output rendering
+    task_statement_path: inline:problem_statement
+    problem_statement: Render Choice defaults from Enum values consistently in option help.
+    allowed_context: &reserve_allowed
+      include_git_history_before_base: true
+      include_issue_text: true
+      include_pr_text: false
+      include_reference_patch: false
+    disallowed_context: &reserve_disallowed
+      - reference patch or target diff
+      - hidden verifier files
+      - ACUT outputs or public model results
+      - future execution results for this task
+    verifier:
+      command: .venv/bin/python -m pytest -q tests/test_options.py::test_choice_default_rendering
+      timeout_seconds: 60
+    expected: &reserve_expected
+      no_op_fails: false
+      reference_passes: false
+    leakage: &reserve_leakage
+      reviewed: true
+      notes: Preregistered reserve candidate; requires admission smoke before substitution.
+    admission: &reserve_admission
+      status: needs_review
+      reviewer: codex-m5-w2-selection
+      rationale: Reserve candidate selected; pending executable admission smoke.
+
+  - task_id: click__rwork__192
+    repo_slug: click
+    split: rwork
+    benchmark_split: RWork-v2-reserve
+    locked_target_repository: pallets/click
+    locked_target_commit: 8bd8b4a074c55c03b6eb5666edc44a9c43df38a2
+    source:
+      kind: pull_request
+      public_url: https://github.com/pallets/click/pull/2622
+      anchor_id: pallets/click#2622
+      base_commit: 1787497713fa389435ed732c9b26274c3cdc458d
+      target_commit: 4271fe283dc9365563aebb369ada8d20eee015a8
+    task_family: type conversion / parameter normalization
+    task_statement_path: inline:problem_statement
+    problem_statement: Add a Choice invalid-message helper so invalid choice errors can be customized consistently.
+    allowed_context: *reserve_allowed
+    disallowed_context: *reserve_disallowed
+    verifier:
+      command: .venv/bin/python -m pytest -q tests/test_types.py::test_choice_get_invalid_choice_message
+      timeout_seconds: 60
+    expected: *reserve_expected
+    leakage: *reserve_leakage
+    admission: *reserve_admission
+
+  - task_id: click__rwork__193
+    repo_slug: click
+    split: rwork
+    benchmark_split: RWork-v2-reserve
+    locked_target_repository: pallets/click
+    locked_target_commit: 8bd8b4a074c55c03b6eb5666edc44a9c43df38a2
+    source:
+      kind: commit
+      public_url: https://github.com/pallets/click/commit/d8e987eae723fbb0ccc355d125d0e179a1bf5fd8
+      anchor_id: commit:d8e987eae723fbb0ccc355d125d0e179a1bf5fd8
+      base_commit: b6afbf05ea6dbc8a4e7cdd448dd345c783973137
+      target_commit: d8e987eae723fbb0ccc355d125d0e179a1bf5fd8
+    task_family: CliRunner/testing/input-output isolation
+    task_statement_path: inline:problem_statement
+    problem_statement: Keep CliRunner prompt output intact when logging is enabled during invocation.
+    allowed_context: *reserve_allowed
+    disallowed_context: *reserve_disallowed
+    verifier:
+      command: .venv/bin/python -m pytest -q --log-cli-level 30 tests/test_testing_logging.py::test_runner_logger
+      timeout_seconds: 60
+    expected: *reserve_expected
+    leakage: *reserve_leakage
+    admission: *reserve_admission
+
+  - task_id: click__rwork__194
+    repo_slug: click
+    split: rwork
+    benchmark_split: RWork-v2-reserve
+    locked_target_repository: pallets/click
+    locked_target_commit: 8bd8b4a074c55c03b6eb5666edc44a9c43df38a2
+    source:
+      kind: commit
+      public_url: https://github.com/pallets/click/commit/f3a4363d1e8383df496adb31f2a6ed037f85380c
+      anchor_id: commit:f3a4363d1e8383df496adb31f2a6ed037f85380c
+      base_commit: b7cf06970e40a3144eb963ff34ed7c38934afb40
+      target_commit: f3a4363d1e8383df496adb31f2a6ed037f85380c
+    task_family: CliRunner/testing/input-output isolation
+    task_statement_path: inline:problem_statement
+    problem_statement: Flush unflushed stderr writes when CliRunner.invoke finalizes an isolated command.
+    allowed_context: *reserve_allowed
+    disallowed_context: *reserve_disallowed
+    verifier:
+      command: .venv/bin/python -m pytest -q tests/test_testing.py::test_isolation_flushes_unflushed_stderr
+      timeout_seconds: 60
+    expected: *reserve_expected
+    leakage: *reserve_leakage
+    admission: *reserve_admission

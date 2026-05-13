@@ -26,6 +26,7 @@ CORE_ACUT_IDS = (
     "frontier-click-specialist",
     "cheap-generic-swe",
     "cheap-click-specialist",
+    "cheap-click-deep-specialist-v2",
 )
 DEFAULT_SPLIT_TASK_LIMITS = {
     "G_score": 2,

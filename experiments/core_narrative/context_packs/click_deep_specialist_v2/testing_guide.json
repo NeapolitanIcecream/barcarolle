@@ -1,0 +1,37 @@
+{
+  "schema_version": "core-narrative.click-deep-specialist.testing-guide.v1",
+  "default_strategy": [
+    "Start with the smallest focused pytest selection that exercises the changed behavior.",
+    "Run the adjacent public test module before broadening across Click surfaces.",
+    "Prefer CliRunner-based assertions for command behavior; inspect Result fields instead of relying only on process exit.",
+    "When changing core option semantics, include tests that distinguish command-line input, envvar input, default_map, declared defaults, and prompts when relevant.",
+    "Avoid running hidden verifier paths, target commits, reference patches, or task-private artifacts in the ACUT run workspace."
+  ],
+  "commands": [
+    {
+      "surface": "option/default/envvar/flag_value",
+      "command": ".venv/bin/python -m pytest -q tests/test_options.py tests/test_defaults.py"
+    },
+    {
+      "surface": "CliRunner/testing/input-output isolation",
+      "command": ".venv/bin/python -m pytest -q tests/test_testing.py tests/test_chain.py"
+    },
+    {
+      "surface": "prompt/termui/output rendering",
+      "command": ".venv/bin/python -m pytest -q tests/test_termui.py tests/test_formatting.py"
+    },
+    {
+      "surface": "type conversion / parameter normalization",
+      "command": ".venv/bin/python -m pytest -q tests/test_types.py tests/test_arguments.py"
+    },
+    {
+      "surface": "cross-module smoke",
+      "command": ".venv/bin/python -m pytest -q tests/test_basic.py tests/test_context.py tests/test_options.py tests/test_testing.py"
+    }
+  ],
+  "interpretation": {
+    "local_tests": "ACUT-run local tests are auxiliary only; primary scoring comes from the fresh verifier workspace.",
+    "failing_unrelated_tests": "Record the narrowed failing surface and avoid broad unrelated refactors unless needed for the requested behavior.",
+    "no_best_of_n": "One primary attempt per ACUT/task; do not rely on retries to improve W2 scores."
+  }
+}

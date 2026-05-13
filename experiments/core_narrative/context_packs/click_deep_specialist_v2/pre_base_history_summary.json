@@ -1,0 +1,20 @@
+{
+  "schema_version": "core-narrative.click-deep-specialist.pre-base-history-summary.v1",
+  "locked_click_commit": "8bd8b4a074c55c03b6eb5666edc44a9c43df38a2",
+  "history_policy": {
+    "scope": "Task-agnostic public Click history visible before M5 task execution.",
+    "target_task_diffs_used": false,
+    "reference_patches_used": false,
+    "hidden_verifiers_used": false,
+    "acut_outputs_used": false,
+    "future_rwork_history_used": false,
+    "exact_solution_patterns_recorded": false
+  },
+  "summary": [
+    "Recent public Click work repeatedly changes option default display, ParameterSource ordering, and default_map behavior; treat source tracking as part of semantics, not metadata.",
+    "CliRunner changes often involve compatibility with standard Python streams and filesystem or environment isolation; verify restoration and explicit stream arguments.",
+    "Documentation migrations and formatting cleanups are common around behavior changes; do not infer behavior solely from docs-only anchors.",
+    "Tests have been moving toward randomized and parallel-friendly behavior; avoid changes that rely on global state persisting across invocations.",
+    "Public source, docs, and tests are acceptable task-agnostic context; task target commits, hidden verifier material, reference patches, and candidate outputs remain forbidden."
+  ]
+}

@@ -1,0 +1,51 @@
+schema_version: core-narrative.task.v1
+task_id: click__rwork__105
+repo_slug: click
+split: rwork
+source:
+  kind: pull_request
+  public_url: https://github.com/pallets/click/pull/2818
+  anchor_id: pallets/click#2818
+  base_commit: 5961d31fb566f089ad468a5b26a32f1ebfa7f63e
+  target_commit: 88328fc8743d43566081d9f17acad5f5552f5a87
+task_family: CliRunner/testing/input-output isolation
+task_statement_path: public/statement.md
+allowed_context:
+  include_git_history_before_base: true
+  include_issue_text: true
+  include_pr_text: true
+  include_reference_patch: false
+disallowed_context:
+- reference patch or target diff for pull request 2818
+- hidden verifier files
+- ACUT outputs or public model results
+- future execution results for this task
+verifier:
+  command: verifier/run.sh
+  timeout_seconds: 60
+expected:
+  no_op_fails: true
+  reference_passes: true
+leakage:
+  reviewed: true
+  notes: M5-W2 admission smoke on 2026-05-13 proved no-op failure and reference patch
+    pass.
+admission:
+  status: accepted
+  reviewer: codex-m5-w2-selection
+  rationale: 'Accepted after admission smoke: no-op failed and reference patch passed.'
+metadata:
+  materialized_from: experiments/core_narrative/configs/tasks/rwork_click_v2.yaml
+  benchmark_split: RWork-v2
+  locked_target_repository: pallets/click
+  locked_target_commit: 8bd8b4a074c55c03b6eb5666edc44a9c43df38a2
+  source_compare:
+    changed_files:
+    - src/click/testing.py
+    - tests/test_testing.py
+  expected_touched_area:
+  - src/click/testing.py CliRunner initialization and invoke defaults
+  - tests/test_testing.py catch_exceptions behavior
+  visible_context_guidance: Provide the PR title and behavior summary. Hide the implementation
+    diff and target tests.
+  risk_notes: null

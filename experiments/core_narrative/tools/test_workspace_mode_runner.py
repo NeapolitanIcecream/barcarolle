@@ -453,6 +453,73 @@ class WorkspaceModeRunnerTests(unittest.TestCase):
         ignored = [item for item in result["candidate_patch"]["untracked_files"] if item["disposition"] == "ignored_harness"]
         self.assertGreaterEqual(len(ignored), 5)
 
+    def test_source_derived_url_only_patch_uses_private_replay_and_public_redacted_preview(self) -> None:
+        """Source-context URLs do not block scoring, but the raw patch stays out of public artifacts."""
+        source_url = "http" + "s://source.example.invalid/issue/123"
+        source, base_commit = self.init_source_repo({"module.py": f"# {source_url}\nVALUE = 1\n"})
+        task_path = self.write_task(
+            base_commit=base_commit,
+            verifier_python="from pathlib import Path\nassert Path('module.py').read_text().endswith('VALUE = 2\\n')",
+        )
+
+        result = runner.execute_workspace_mode(
+            task_path=task_path,
+            source_repo=source,
+            acut_id="unit-acut",
+            attempt=1,
+            run_id="source-url-context",
+            artifact_dir=self.root / "artifacts" / "source-url-context",
+            workspace_root=self.workspaces,
+            command=[
+                sys.executable,
+                "-c",
+                "from pathlib import Path; Path('module.py').write_text(Path('module.py').read_text().replace('VALUE = 1', 'VALUE = 2'), encoding='utf-8')",
+            ],
+            acut_timeout_seconds=5,
+            verifier_timeout_seconds=5,
+            install_workspaces=False,
+        )
+
+        candidate = result["candidate_patch"]
+        self.assertEqual(result["status"], "verified_pass")
+        self.assertTrue(candidate["unsafe_content_detected"])
+        self.assertTrue(candidate["private_replay_allowed"])
+        self.assertFalse(Path(candidate["path"]).exists())
+        self.assertEqual(candidate["unsafe_content_policy"]["decision"], "allow_private_replay_source_derived_url_only")
+        self.assertTrue(candidate["redacted_preview"]["written"])
+        redacted_preview = Path(candidate["redacted_preview"]["path"]).read_text(encoding="utf-8")
+        self.assertIn("<redacted:url>", redacted_preview)
+        self.assertNotIn(source_url, redacted_preview)
+        private_patch = Path(candidate["private_replay_patch"]["path"])
+        self.assertTrue(private_patch.exists())
+        self.assertIn(".core_narrative", private_patch.parts)
+        self.assertIn(source_url, private_patch.read_text(encoding="utf-8"))
+        self.assertEqual(result["metadata"]["verifier_result_source"], "fresh_verification_workspace")
+        self.assertTrue(result["metadata"]["replay_patch_private"])
+
+    def test_model_generated_url_in_patch_stays_unsafe_or_scope_violation(self) -> None:
+        """Added-line URLs still block verifier replay as true unsafe output."""
+        result = self.run_case(
+            command=[
+                sys.executable,
+                "-c",
+                (
+                    "from pathlib import Path; "
+                    "url = 'http' + 's://model.example.invalid/generated'; "
+                    "Path('module.py').write_text('VALUE = 2\\nURL = ' + repr(url) + '\\n', encoding='utf-8')"
+                ),
+            ],
+            run_id="model-generated-url",
+        )
+
+        candidate = result["candidate_patch"]
+        self.assertEqual(result["status"], "unsafe_or_scope_violation")
+        self.assertFalse(result["verification"]["attempted"])
+        self.assertTrue(candidate["unsafe_content_detected"])
+        self.assertFalse(candidate["private_replay_allowed"])
+        self.assertEqual(candidate["unsafe_content_policy"]["decision"], "reject_true_or_ambiguous_unsafe")
+        self.assertIsNone(candidate["private_replay_patch"])
+
     def test_nonzero_acut_exit_does_not_override_successful_fresh_verification(self) -> None:
         """A non-zero ACUT command can still verify if it leaves a valid diff."""
         result = self.run_case(

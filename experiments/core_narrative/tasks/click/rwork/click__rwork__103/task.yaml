@@ -1,0 +1,51 @@
+schema_version: core-narrative.task.v1
+task_id: click__rwork__103
+repo_slug: click
+split: rwork
+source:
+  kind: pull_request
+  public_url: https://github.com/pallets/click/pull/3152
+  anchor_id: pallets/click#3152
+  base_commit: 7f7bbe4569ea68e8dabee232eade069ef3310aea
+  target_commit: ebcd548d50662bc8fa4f8b9ec7fe13cb8310bfaa
+task_family: option/default/envvar/flag_value semantics
+task_statement_path: public/statement.md
+allowed_context:
+  include_git_history_before_base: true
+  include_issue_text: true
+  include_pr_text: true
+  include_reference_patch: false
+disallowed_context:
+- reference patch or target diff for pull request 3152
+- hidden verifier files
+- ACUT outputs or public model results
+- future execution results for this task
+verifier:
+  command: verifier/run.sh
+  timeout_seconds: 60
+expected:
+  no_op_fails: true
+  reference_passes: true
+leakage:
+  reviewed: true
+  notes: M5-W2 admission smoke on 2026-05-13 proved no-op failure and reference patch
+    pass.
+admission:
+  status: accepted
+  reviewer: codex-m5-w2-selection
+  rationale: 'Accepted after admission smoke: no-op failed and reference patch passed.'
+metadata:
+  materialized_from: experiments/core_narrative/configs/tasks/rwork_click_v2.yaml
+  benchmark_split: RWork-v2
+  locked_target_repository: pallets/click
+  locked_target_commit: 8bd8b4a074c55c03b6eb5666edc44a9c43df38a2
+  source_compare:
+    changed_files:
+    - src/click/core.py
+    - tests/test_options.py
+  expected_touched_area:
+  - src/click/core.py option value processing
+  - tests/test_options.py zero-or-one argument flag_value cases
+  visible_context_guidance: Provide the PR title and behavior summary. Hide the implementation
+    diff and target tests.
+  risk_notes: null

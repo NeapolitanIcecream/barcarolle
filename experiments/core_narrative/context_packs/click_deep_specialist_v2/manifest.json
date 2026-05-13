@@ -1,0 +1,81 @@
+{
+  "artifacts": {
+    "context_prompt": {
+      "bytes": 4775,
+      "path": "context_prompt.md",
+      "sha256": "43c19bcd5fb050b0e95c090c324c73a5da2bd237847efc97a2a38c662126a234"
+    },
+    "module_map": {
+      "bytes": 2236,
+      "path": "module_map.json",
+      "sha256": "5ae169f24c6cc9801f50155b8c996d2f18aacc24b5ec2587b0e81de341879496"
+    },
+    "pre_base_history_summary": {
+      "bytes": 1355,
+      "path": "pre_base_history_summary.json",
+      "sha256": "4a8ad2eb8cbefc880be1054fc7bbb8516cad09cc76bdb8c1270857424a9a6a95"
+    },
+    "semantic_invariants": {
+      "bytes": 3436,
+      "path": "semantic_invariants.json",
+      "sha256": "6a71e9e19209ed3fecdb4de453c665592cdb387915612667d4979bc71913c182"
+    },
+    "testing_guide": {
+      "bytes": 1967,
+      "path": "testing_guide.json",
+      "sha256": "63302a48eac92e5c4ba28a51ad79bc7ebb1d0d1b2f329da4dc417127019804e6"
+    }
+  },
+  "generated_at": "2026-05-13T00:00:00+08:00",
+  "generation_timing": {
+    "relative_to_specialist_acut_execution": "before M5-W2 primary ACUT execution",
+    "task_agnostic": true,
+    "uses_observed_acut_outputs": false
+  },
+  "generator": {
+    "command": "manual task-agnostic synthesis from locked Click public source/docs/tests and bounded public pre-base history notes",
+    "history_mining": "bounded_task_agnostic_public_history_summary",
+    "tool": "codex_m5_w2_context_pack_scaffold"
+  },
+  "leakage_guards": {
+    "bearer_tokens_recorded": false,
+    "benchmark_solution_patch_content_recorded": false,
+    "credential_values_recorded": false,
+    "full_base_url_values_recorded": false,
+    "full_urls_recorded": false,
+    "hidden_verifier_paths_recorded": false,
+    "hostnames_recorded": false,
+    "ip_addresses_recorded": false,
+    "post_hoc_pilot_artifacts_recorded": false,
+    "resolved_endpoint_values_recorded": false,
+    "resolved_secrets_recorded": false,
+    "rwork_final_diffs_recorded": false,
+    "target_commits_recorded": false
+  },
+  "locked_click_commit": "8bd8b4a074c55c03b6eb5666edc44a9c43df38a2",
+  "marker": "CLICK_SPECIALIST_CONTEXT_PACK_V1",
+  "pack_hash": "4c4906338af6c57bf833363937073d6045b820d1157f77adcc7687e372a59f75",
+  "pack_id": "click_deep_specialist_context_pack_v2",
+  "schema_version": "core-narrative.click-specialist-context-pack.v1",
+  "section_ids": [
+    "module_map",
+    "semantic_invariants",
+    "testing_guide",
+    "pre_base_history_summary",
+    "leakage_boundary"
+  ],
+  "source_material_policy": {
+    "acut_outputs_or_failed_patches_used": false,
+    "current_task_answer_patterns_used": false,
+    "future_rwork_history_used": false,
+    "git_history_mining_used": true,
+    "hidden_human_hints_used": false,
+    "hidden_verifier_tests_used": false,
+    "network_fetched_docs_used": false,
+    "public_committed_source_docs_tests_examples_only": true,
+    "rbench_rwork_gold_patches_used": false,
+    "reference_patches_used": false,
+    "target_commits_used": false
+  },
+  "source_root_label": "experiments/core_narrative/external_repos/click"
+}

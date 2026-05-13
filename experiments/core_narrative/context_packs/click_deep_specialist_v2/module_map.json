@@ -1,0 +1,46 @@
+{
+  "schema_version": "core-narrative.click-deep-specialist.module-map.v1",
+  "locked_click_commit": "8bd8b4a074c55c03b6eb5666edc44a9c43df38a2",
+  "modules": [
+    {
+      "path": "src/click/core.py",
+      "responsibility": "Command, Group, Context, Parameter, Option, Argument, default/envvar/prompt/source resolution, and help formatting entry points.",
+      "adjacent_tests": ["tests/test_basic.py", "tests/test_context.py", "tests/test_defaults.py", "tests/test_options.py"]
+    },
+    {
+      "path": "src/click/types.py",
+      "responsibility": "ParamType conversion, composite types, ranges, files, paths, UUID, DateTime, and conversion error rendering.",
+      "adjacent_tests": ["tests/test_types.py", "tests/test_options.py", "tests/test_arguments.py"]
+    },
+    {
+      "path": "src/click/testing.py",
+      "responsibility": "CliRunner isolation, synthetic stdin/stdout/stderr streams, filesystem isolation, env overrides, and result capture.",
+      "adjacent_tests": ["tests/test_testing.py", "tests/test_chain.py"]
+    },
+    {
+      "path": "src/click/termui.py",
+      "responsibility": "Prompting, confirmation, progress bars, echo helpers, terminal input/output wrappers, and hidden input behavior.",
+      "adjacent_tests": ["tests/test_termui.py"]
+    },
+    {
+      "path": "src/click/parser.py",
+      "responsibility": "Low-level option token parsing, long/short option matching, value arity, and parser state.",
+      "adjacent_tests": ["tests/test_parser.py"]
+    },
+    {
+      "path": "src/click/decorators.py",
+      "responsibility": "Decorator-facing construction of commands, options, arguments, context settings, and pass helpers.",
+      "adjacent_tests": ["tests/test_basic.py", "tests/test_options.py"]
+    },
+    {
+      "path": "src/click/formatting.py",
+      "responsibility": "HelpFormatter and wrapping behavior used by command help, option help, and terminal output.",
+      "adjacent_tests": ["tests/test_formatting.py", "tests/test_help.py"]
+    },
+    {
+      "path": "src/click/shell_completion.py",
+      "responsibility": "Completion protocols, shell-specific completion output, and incomplete value handling.",
+      "adjacent_tests": ["tests/test_shell_completion.py"]
+    }
+  ]
+}

@@ -1,0 +1,48 @@
+{
+  "schema_version": "core-narrative.click-deep-specialist.semantic-invariants.v1",
+  "families": [
+    {
+      "family": "option_default_envvar_flag_value",
+      "invariants": [
+        "Keep source provenance distinct: command-line values, environment values, prompts, default_map, and declared defaults should remain distinguishable through ParameterSource.",
+        "Treat envvar values as external string input before conversion; do not assume Python boolean identity from environment text.",
+        "For flags, separate user activation from declared default behavior; flag_value is the activated value, while defaults and default_map still follow default semantics.",
+        "When comparing defaults with flag values, avoid invoking arbitrary callable objects just to establish equality or display text.",
+        "For multiple declarations sharing one destination parameter, evaluate each option's default behavior before collapsing to the final parameter value."
+      ],
+      "primary_modules": ["src/click/core.py", "src/click/types.py"],
+      "test_surfaces": ["tests/test_options.py", "tests/test_defaults.py", "tests/test_types.py"]
+    },
+    {
+      "family": "cli_runner_testing_io_isolation",
+      "invariants": [
+        "CliRunner.invoke should isolate Click-managed stdin, stdout, stderr, cwd, env, and exception capture without leaking hidden verifier files into the run workspace.",
+        "Synthetic stdin must behave enough like a readable text stream for file parameters, prompts, echoing, and EOF handling.",
+        "If a helper temporarily patches global stream-related state, restoration after invoke is part of the behavior contract.",
+        "Result.output, stdout_bytes, stderr_bytes, return_value, exception, and exit_code should be checked according to the invoked command's standalone_mode behavior."
+      ],
+      "primary_modules": ["src/click/testing.py", "src/click/_compat.py"],
+      "test_surfaces": ["tests/test_testing.py", "tests/test_chain.py"]
+    },
+    {
+      "family": "prompt_termui_output_rendering",
+      "invariants": [
+        "Prompt rendering combines option metadata, default display, confirmation behavior, hidden input, and terminal stream capabilities.",
+        "Visible default text can differ from the internal default value; keep display-only strings out of conversion logic.",
+        "Terminal width, color stripping, hidden prompts, and pager/progress output should be tested through Click helpers rather than raw print assumptions."
+      ],
+      "primary_modules": ["src/click/termui.py", "src/click/core.py", "src/click/formatting.py"],
+      "test_surfaces": ["tests/test_termui.py", "tests/test_options.py", "tests/test_formatting.py"]
+    },
+    {
+      "family": "type_conversion_parameter_normalization",
+      "invariants": [
+        "ParamType.convert owns user-visible conversion errors; Option and Argument should not duplicate type-specific validation when conversion can handle it.",
+        "Composite and repeated parameters require normalization at the boundary between parser output and type conversion.",
+        "Path and File types cross filesystem, stream, and lazy-open behavior; tests should cover value, exception, and cleanup semantics."
+      ],
+      "primary_modules": ["src/click/types.py", "src/click/core.py"],
+      "test_surfaces": ["tests/test_types.py", "tests/test_arguments.py", "tests/test_options.py"]
+    }
+  ]
+}
