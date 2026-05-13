@@ -1,0 +1,15 @@
+{
+  "bundle_root": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/m5_w2_primary",
+  "config": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/configs/m5_w2_matrix.yaml",
+  "generated_at": "2026-05-13T08:23:17.938285Z",
+  "mode": "live",
+  "phase": "primary",
+  "reproduction_command": "PYTHONPATH=experiments/core_narrative/tools python3 experiments/core_narrative/tools/m5_w2_workspace_runner.py --config /Users/chenmohan/gits/barcarolle/experiments/core_narrative/configs/m5_w2_matrix.yaml --bundle-root /Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/m5_w2_primary --run-prefix m5_w2_20260513 --phase primary --mode live --attempt 1",
+  "results_written": 40,
+  "runner_id": "m5-w2-primary-v1",
+  "schema_version": "core-narrative.m5-w2-summary.v1",
+  "status": "completed",
+  "summary": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/m5_w2_primary/summary.json",
+  "summary_status": "w2_primary_complete_gate_failed",
+  "tool": "m5_w2_workspace_runner"
+}

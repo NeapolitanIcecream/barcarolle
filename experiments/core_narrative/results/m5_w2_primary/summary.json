@@ -1,0 +1,639 @@
+{
+  "artifacts": {
+    "cost_ledger": "experiments/core_narrative/results/m5_w2_primary/cost_ledger.jsonl",
+    "manifest": "experiments/core_narrative/results/m5_w2_primary/raw_artifacts_manifest.json",
+    "normalized_result_matrix": "experiments/core_narrative/results/m5_w2_primary/normalized_result_matrix.json",
+    "report": "experiments/core_narrative/results/m5_w2_primary/reports/w2_primary_summary.md",
+    "summary": "experiments/core_narrative/results/m5_w2_primary/summary.json"
+  },
+  "cells": [
+    {
+      "acut_id": "cheap-click-deep-specialist-v2",
+      "normalized_result": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/m5_w2_primary/normalized/m5_w2_20260513__live__w2__cheap-click-deep-specialist-v2__click__rwork__101__attempt1.json",
+      "present": true,
+      "score_action": "fixed_denominator_one",
+      "score_value": 1,
+      "status": "verified_pass",
+      "task_id": "click__rwork__101"
+    },
+    {
+      "acut_id": "cheap-click-deep-specialist-v2",
+      "normalized_result": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/m5_w2_primary/normalized/m5_w2_20260513__live__w2__cheap-click-deep-specialist-v2__click__rwork__102__attempt1.json",
+      "present": true,
+      "score_action": "fixed_denominator_zero",
+      "score_value": 0,
+      "status": "verified_fail",
+      "task_id": "click__rwork__102"
+    },
+    {
+      "acut_id": "cheap-click-deep-specialist-v2",
+      "normalized_result": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/m5_w2_primary/normalized/m5_w2_20260513__live__w2__cheap-click-deep-specialist-v2__click__rwork__103__attempt1.json",
+      "present": true,
+      "score_action": "fixed_denominator_one",
+      "score_value": 1,
+      "status": "verified_pass",
+      "task_id": "click__rwork__103"
+    },
+    {
+      "acut_id": "cheap-click-deep-specialist-v2",
+      "normalized_result": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/m5_w2_primary/normalized/m5_w2_20260513__live__w2__cheap-click-deep-specialist-v2__click__rwork__104__attempt1.json",
+      "present": true,
+      "score_action": "fixed_denominator_one",
+      "score_value": 1,
+      "status": "verified_pass",
+      "task_id": "click__rwork__104"
+    },
+    {
+      "acut_id": "cheap-click-deep-specialist-v2",
+      "normalized_result": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/m5_w2_primary/normalized/m5_w2_20260513__live__w2__cheap-click-deep-specialist-v2__click__rwork__105__attempt1.json",
+      "present": true,
+      "score_action": "fixed_denominator_one",
+      "score_value": 1,
+      "status": "verified_pass",
+      "task_id": "click__rwork__105"
+    },
+    {
+      "acut_id": "cheap-click-deep-specialist-v2",
+      "normalized_result": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/m5_w2_primary/normalized/m5_w2_20260513__live__w2__cheap-click-deep-specialist-v2__click__rwork__106__attempt1.json",
+      "present": true,
+      "score_action": "fixed_denominator_zero",
+      "score_value": 0,
+      "status": "verified_fail",
+      "task_id": "click__rwork__106"
+    },
+    {
+      "acut_id": "cheap-click-deep-specialist-v2",
+      "normalized_result": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/m5_w2_primary/normalized/m5_w2_20260513__live__w2__cheap-click-deep-specialist-v2__click__rwork__107__attempt1.json",
+      "present": true,
+      "score_action": "fixed_denominator_zero",
+      "score_value": 0,
+      "status": "verified_fail",
+      "task_id": "click__rwork__107"
+    },
+    {
+      "acut_id": "cheap-click-deep-specialist-v2",
+      "normalized_result": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/m5_w2_primary/normalized/m5_w2_20260513__live__w2__cheap-click-deep-specialist-v2__click__rwork__108__attempt1.json",
+      "present": true,
+      "score_action": "fixed_denominator_one",
+      "score_value": 1,
+      "status": "verified_pass",
+      "task_id": "click__rwork__108"
+    },
+    {
+      "acut_id": "cheap-click-deep-specialist-v2",
+      "normalized_result": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/m5_w2_primary/normalized/m5_w2_20260513__live__w2__cheap-click-deep-specialist-v2__click__rwork__109__attempt1.json",
+      "present": true,
+      "score_action": "fixed_denominator_zero",
+      "score_value": 0,
+      "status": "verified_fail",
+      "task_id": "click__rwork__109"
+    },
+    {
+      "acut_id": "cheap-click-deep-specialist-v2",
+      "normalized_result": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/m5_w2_primary/normalized/m5_w2_20260513__live__w2__cheap-click-deep-specialist-v2__click__rwork__110__attempt1.json",
+      "present": true,
+      "score_action": "fixed_denominator_zero",
+      "score_value": 0,
+      "status": "verified_fail",
+      "task_id": "click__rwork__110"
+    },
+    {
+      "acut_id": "cheap-click-specialist",
+      "normalized_result": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/m5_w2_primary/normalized/m5_w2_20260513__live__w2__cheap-click-specialist__click__rwork__101__attempt1.json",
+      "present": true,
+      "score_action": "fixed_denominator_one",
+      "score_value": 1,
+      "status": "verified_pass",
+      "task_id": "click__rwork__101"
+    },
+    {
+      "acut_id": "cheap-click-specialist",
+      "normalized_result": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/m5_w2_primary/normalized/m5_w2_20260513__live__w2__cheap-click-specialist__click__rwork__102__attempt1.json",
+      "present": true,
+      "score_action": "fixed_denominator_zero",
+      "score_value": 0,
+      "status": "verified_fail",
+      "task_id": "click__rwork__102"
+    },
+    {
+      "acut_id": "cheap-click-specialist",
+      "normalized_result": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/m5_w2_primary/normalized/m5_w2_20260513__live__w2__cheap-click-specialist__click__rwork__103__attempt1.json",
+      "present": true,
+      "score_action": "fixed_denominator_zero",
+      "score_value": 0,
+      "status": "no_diff",
+      "task_id": "click__rwork__103"
+    },
+    {
+      "acut_id": "cheap-click-specialist",
+      "normalized_result": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/m5_w2_primary/normalized/m5_w2_20260513__live__w2__cheap-click-specialist__click__rwork__104__attempt1.json",
+      "present": true,
+      "score_action": "fixed_denominator_one",
+      "score_value": 1,
+      "status": "verified_pass",
+      "task_id": "click__rwork__104"
+    },
+    {
+      "acut_id": "cheap-click-specialist",
+      "normalized_result": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/m5_w2_primary/normalized/m5_w2_20260513__live__w2__cheap-click-specialist__click__rwork__105__attempt1.json",
+      "present": true,
+      "score_action": "fixed_denominator_one",
+      "score_value": 1,
+      "status": "verified_pass",
+      "task_id": "click__rwork__105"
+    },
+    {
+      "acut_id": "cheap-click-specialist",
+      "normalized_result": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/m5_w2_primary/normalized/m5_w2_20260513__live__w2__cheap-click-specialist__click__rwork__106__attempt1.json",
+      "present": true,
+      "score_action": "fixed_denominator_zero",
+      "score_value": 0,
+      "status": "verified_fail",
+      "task_id": "click__rwork__106"
+    },
+    {
+      "acut_id": "cheap-click-specialist",
+      "normalized_result": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/m5_w2_primary/normalized/m5_w2_20260513__live__w2__cheap-click-specialist__click__rwork__107__attempt1.json",
+      "present": true,
+      "score_action": "fixed_denominator_zero",
+      "score_value": 0,
+      "status": "verified_fail",
+      "task_id": "click__rwork__107"
+    },
+    {
+      "acut_id": "cheap-click-specialist",
+      "normalized_result": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/m5_w2_primary/normalized/m5_w2_20260513__live__w2__cheap-click-specialist__click__rwork__108__attempt1.json",
+      "present": true,
+      "score_action": "fixed_denominator_one",
+      "score_value": 1,
+      "status": "verified_pass",
+      "task_id": "click__rwork__108"
+    },
+    {
+      "acut_id": "cheap-click-specialist",
+      "normalized_result": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/m5_w2_primary/normalized/m5_w2_20260513__live__w2__cheap-click-specialist__click__rwork__109__attempt1.json",
+      "present": true,
+      "score_action": "fixed_denominator_zero",
+      "score_value": 0,
+      "status": "verified_fail",
+      "task_id": "click__rwork__109"
+    },
+    {
+      "acut_id": "cheap-click-specialist",
+      "normalized_result": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/m5_w2_primary/normalized/m5_w2_20260513__live__w2__cheap-click-specialist__click__rwork__110__attempt1.json",
+      "present": true,
+      "score_action": "fixed_denominator_zero",
+      "score_value": 0,
+      "status": "verified_fail",
+      "task_id": "click__rwork__110"
+    },
+    {
+      "acut_id": "cheap-generic-swe",
+      "normalized_result": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/m5_w2_primary/normalized/m5_w2_20260513__live__w2__cheap-generic-swe__click__rwork__101__attempt1.json",
+      "present": true,
+      "score_action": "fixed_denominator_one",
+      "score_value": 1,
+      "status": "verified_pass",
+      "task_id": "click__rwork__101"
+    },
+    {
+      "acut_id": "cheap-generic-swe",
+      "normalized_result": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/m5_w2_primary/normalized/m5_w2_20260513__live__w2__cheap-generic-swe__click__rwork__102__attempt1.json",
+      "present": true,
+      "score_action": "fixed_denominator_zero",
+      "score_value": 0,
+      "status": "verified_fail",
+      "task_id": "click__rwork__102"
+    },
+    {
+      "acut_id": "cheap-generic-swe",
+      "normalized_result": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/m5_w2_primary/normalized/m5_w2_20260513__live__w2__cheap-generic-swe__click__rwork__103__attempt1.json",
+      "present": true,
+      "score_action": "fixed_denominator_one",
+      "score_value": 1,
+      "status": "verified_pass",
+      "task_id": "click__rwork__103"
+    },
+    {
+      "acut_id": "cheap-generic-swe",
+      "normalized_result": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/m5_w2_primary/normalized/m5_w2_20260513__live__w2__cheap-generic-swe__click__rwork__104__attempt1.json",
+      "present": true,
+      "score_action": "fixed_denominator_one",
+      "score_value": 1,
+      "status": "verified_pass",
+      "task_id": "click__rwork__104"
+    },
+    {
+      "acut_id": "cheap-generic-swe",
+      "normalized_result": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/m5_w2_primary/normalized/m5_w2_20260513__live__w2__cheap-generic-swe__click__rwork__105__attempt1.json",
+      "present": true,
+      "score_action": "fixed_denominator_one",
+      "score_value": 1,
+      "status": "verified_pass",
+      "task_id": "click__rwork__105"
+    },
+    {
+      "acut_id": "cheap-generic-swe",
+      "normalized_result": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/m5_w2_primary/normalized/m5_w2_20260513__live__w2__cheap-generic-swe__click__rwork__106__attempt1.json",
+      "present": true,
+      "score_action": "fixed_denominator_zero",
+      "score_value": 0,
+      "status": "verified_fail",
+      "task_id": "click__rwork__106"
+    },
+    {
+      "acut_id": "cheap-generic-swe",
+      "normalized_result": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/m5_w2_primary/normalized/m5_w2_20260513__live__w2__cheap-generic-swe__click__rwork__107__attempt1.json",
+      "present": true,
+      "score_action": "fixed_denominator_zero",
+      "score_value": 0,
+      "status": "verified_fail",
+      "task_id": "click__rwork__107"
+    },
+    {
+      "acut_id": "cheap-generic-swe",
+      "normalized_result": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/m5_w2_primary/normalized/m5_w2_20260513__live__w2__cheap-generic-swe__click__rwork__108__attempt1.json",
+      "present": true,
+      "score_action": "fixed_denominator_one",
+      "score_value": 1,
+      "status": "verified_pass",
+      "task_id": "click__rwork__108"
+    },
+    {
+      "acut_id": "cheap-generic-swe",
+      "normalized_result": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/m5_w2_primary/normalized/m5_w2_20260513__live__w2__cheap-generic-swe__click__rwork__109__attempt1.json",
+      "present": true,
+      "score_action": "fixed_denominator_zero",
+      "score_value": 0,
+      "status": "verified_fail",
+      "task_id": "click__rwork__109"
+    },
+    {
+      "acut_id": "cheap-generic-swe",
+      "normalized_result": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/m5_w2_primary/normalized/m5_w2_20260513__live__w2__cheap-generic-swe__click__rwork__110__attempt1.json",
+      "present": true,
+      "score_action": "fixed_denominator_zero",
+      "score_value": 0,
+      "status": "verified_fail",
+      "task_id": "click__rwork__110"
+    },
+    {
+      "acut_id": "frontier-generic-swe",
+      "normalized_result": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/m5_w2_primary/normalized/m5_w2_20260513__live__w2__frontier-generic-swe__click__rwork__101__attempt1.json",
+      "present": true,
+      "score_action": "fixed_denominator_one",
+      "score_value": 1,
+      "status": "verified_pass",
+      "task_id": "click__rwork__101"
+    },
+    {
+      "acut_id": "frontier-generic-swe",
+      "normalized_result": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/m5_w2_primary/normalized/m5_w2_20260513__live__w2__frontier-generic-swe__click__rwork__102__attempt1.json",
+      "present": true,
+      "score_action": "fixed_denominator_zero",
+      "score_value": 0,
+      "status": "verified_fail",
+      "task_id": "click__rwork__102"
+    },
+    {
+      "acut_id": "frontier-generic-swe",
+      "normalized_result": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/m5_w2_primary/normalized/m5_w2_20260513__live__w2__frontier-generic-swe__click__rwork__103__attempt1.json",
+      "present": true,
+      "score_action": "fixed_denominator_one",
+      "score_value": 1,
+      "status": "verified_pass",
+      "task_id": "click__rwork__103"
+    },
+    {
+      "acut_id": "frontier-generic-swe",
+      "normalized_result": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/m5_w2_primary/normalized/m5_w2_20260513__live__w2__frontier-generic-swe__click__rwork__104__attempt1.json",
+      "present": true,
+      "score_action": "fixed_denominator_one",
+      "score_value": 1,
+      "status": "verified_pass",
+      "task_id": "click__rwork__104"
+    },
+    {
+      "acut_id": "frontier-generic-swe",
+      "normalized_result": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/m5_w2_primary/normalized/m5_w2_20260513__live__w2__frontier-generic-swe__click__rwork__105__attempt1.json",
+      "present": true,
+      "score_action": "fixed_denominator_one",
+      "score_value": 1,
+      "status": "verified_pass",
+      "task_id": "click__rwork__105"
+    },
+    {
+      "acut_id": "frontier-generic-swe",
+      "normalized_result": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/m5_w2_primary/normalized/m5_w2_20260513__live__w2__frontier-generic-swe__click__rwork__106__attempt1.json",
+      "present": true,
+      "score_action": "fixed_denominator_zero",
+      "score_value": 0,
+      "status": "verified_fail",
+      "task_id": "click__rwork__106"
+    },
+    {
+      "acut_id": "frontier-generic-swe",
+      "normalized_result": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/m5_w2_primary/normalized/m5_w2_20260513__live__w2__frontier-generic-swe__click__rwork__107__attempt1.json",
+      "present": true,
+      "score_action": "fixed_denominator_zero",
+      "score_value": 0,
+      "status": "verified_fail",
+      "task_id": "click__rwork__107"
+    },
+    {
+      "acut_id": "frontier-generic-swe",
+      "normalized_result": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/m5_w2_primary/normalized/m5_w2_20260513__live__w2__frontier-generic-swe__click__rwork__108__attempt1.json",
+      "present": true,
+      "score_action": "fixed_denominator_zero",
+      "score_value": 0,
+      "status": "no_diff",
+      "task_id": "click__rwork__108"
+    },
+    {
+      "acut_id": "frontier-generic-swe",
+      "normalized_result": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/m5_w2_primary/normalized/m5_w2_20260513__live__w2__frontier-generic-swe__click__rwork__109__attempt1.json",
+      "present": true,
+      "score_action": "fixed_denominator_zero",
+      "score_value": 0,
+      "status": "verified_fail",
+      "task_id": "click__rwork__109"
+    },
+    {
+      "acut_id": "frontier-generic-swe",
+      "normalized_result": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/m5_w2_primary/normalized/m5_w2_20260513__live__w2__frontier-generic-swe__click__rwork__110__attempt1.json",
+      "present": true,
+      "score_action": "fixed_denominator_zero",
+      "score_value": 0,
+      "status": "verified_fail",
+      "task_id": "click__rwork__110"
+    }
+  ],
+  "config": "experiments/core_narrative/configs/m5_w2_matrix.yaml",
+  "fixed_denominator": 40,
+  "gates": {
+    "context_effect": {
+      "cheap_generic_score": 5,
+      "deep_score": 5,
+      "expression": "cheap-click-deep-specialist-v2 >= cheap-generic-swe + 2 tasks",
+      "margin_tasks": 0,
+      "passed": false
+    },
+    "next_action": "stop_and_write_negative_result",
+    "nfl_candidate": {
+      "deep_score": 5,
+      "expression": "cheap-click-deep-specialist-v2 > frontier-generic-swe",
+      "frontier_generic_score": 4,
+      "margin_tasks": 1,
+      "passed": true
+    },
+    "status": "failed"
+  },
+  "generated_at": "2026-05-13T08:23:48.320788Z",
+  "infra_reruns_exclusions": {
+    "cells": [],
+    "count": 0
+  },
+  "manifest_digest_sha256": "49711354b5a564de807b99357ace805830885e651e0881b7bfe451853e34bee6",
+  "missing_cells": 0,
+  "paired_metrics": {
+    "deep_vs_cheap_generic": {
+      "baseline_acut": "cheap-generic-swe",
+      "cells": [
+        {
+          "baseline_score": 1,
+          "outcome": "tie",
+          "subject_score": 1,
+          "task_id": "click__rwork__101"
+        },
+        {
+          "baseline_score": 0,
+          "outcome": "tie",
+          "subject_score": 0,
+          "task_id": "click__rwork__102"
+        },
+        {
+          "baseline_score": 1,
+          "outcome": "tie",
+          "subject_score": 1,
+          "task_id": "click__rwork__103"
+        },
+        {
+          "baseline_score": 1,
+          "outcome": "tie",
+          "subject_score": 1,
+          "task_id": "click__rwork__104"
+        },
+        {
+          "baseline_score": 1,
+          "outcome": "tie",
+          "subject_score": 1,
+          "task_id": "click__rwork__105"
+        },
+        {
+          "baseline_score": 0,
+          "outcome": "tie",
+          "subject_score": 0,
+          "task_id": "click__rwork__106"
+        },
+        {
+          "baseline_score": 0,
+          "outcome": "tie",
+          "subject_score": 0,
+          "task_id": "click__rwork__107"
+        },
+        {
+          "baseline_score": 1,
+          "outcome": "tie",
+          "subject_score": 1,
+          "task_id": "click__rwork__108"
+        },
+        {
+          "baseline_score": 0,
+          "outcome": "tie",
+          "subject_score": 0,
+          "task_id": "click__rwork__109"
+        },
+        {
+          "baseline_score": 0,
+          "outcome": "tie",
+          "subject_score": 0,
+          "task_id": "click__rwork__110"
+        }
+      ],
+      "losses": 0,
+      "subject_acut": "cheap-click-deep-specialist-v2",
+      "ties": 10,
+      "unscored": 0,
+      "wins": 0
+    },
+    "deep_vs_frontier_generic": {
+      "baseline_acut": "frontier-generic-swe",
+      "cells": [
+        {
+          "baseline_score": 1,
+          "outcome": "tie",
+          "subject_score": 1,
+          "task_id": "click__rwork__101"
+        },
+        {
+          "baseline_score": 0,
+          "outcome": "tie",
+          "subject_score": 0,
+          "task_id": "click__rwork__102"
+        },
+        {
+          "baseline_score": 1,
+          "outcome": "tie",
+          "subject_score": 1,
+          "task_id": "click__rwork__103"
+        },
+        {
+          "baseline_score": 1,
+          "outcome": "tie",
+          "subject_score": 1,
+          "task_id": "click__rwork__104"
+        },
+        {
+          "baseline_score": 1,
+          "outcome": "tie",
+          "subject_score": 1,
+          "task_id": "click__rwork__105"
+        },
+        {
+          "baseline_score": 0,
+          "outcome": "tie",
+          "subject_score": 0,
+          "task_id": "click__rwork__106"
+        },
+        {
+          "baseline_score": 0,
+          "outcome": "tie",
+          "subject_score": 0,
+          "task_id": "click__rwork__107"
+        },
+        {
+          "baseline_score": 0,
+          "outcome": "win",
+          "subject_score": 1,
+          "task_id": "click__rwork__108"
+        },
+        {
+          "baseline_score": 0,
+          "outcome": "tie",
+          "subject_score": 0,
+          "task_id": "click__rwork__109"
+        },
+        {
+          "baseline_score": 0,
+          "outcome": "tie",
+          "subject_score": 0,
+          "task_id": "click__rwork__110"
+        }
+      ],
+      "losses": 0,
+      "subject_acut": "cheap-click-deep-specialist-v2",
+      "ties": 9,
+      "unscored": 0,
+      "wins": 1
+    }
+  },
+  "present_cells": 40,
+  "primary_score_ready": true,
+  "runner_id": "m5-w2-primary-v1",
+  "schema_version": "core-narrative.m5-w2-summary.v1",
+  "score_action_counts": {
+    "fixed_denominator_one": 18,
+    "fixed_denominator_zero": 22
+  },
+  "status": "w2_primary_complete_gate_failed",
+  "status_counts": {
+    "no_diff": 2,
+    "verified_fail": 20,
+    "verified_pass": 18
+  },
+  "tool": "m5_w2_workspace_runner",
+  "triage_paused": {
+    "cells": [],
+    "count": 0
+  },
+  "w2_by_acut": {
+    "cheap-click-deep-specialist-v2": {
+      "W2_verified_score": 5,
+      "acut_id": "cheap-click-deep-specialist-v2",
+      "effective_denominator_after_recorded_global_infra_exclusions": 10,
+      "fixed_denominator": 10,
+      "missing_cells": 0,
+      "no_diff_count": 0,
+      "policy_hold_count": 0,
+      "present_cells": 10,
+      "primary_score_ready": true,
+      "score_percent_fixed": 50.0,
+      "source_derived_private_replay_count": 0,
+      "status_counts": {
+        "verified_fail": 5,
+        "verified_pass": 5
+      },
+      "true_unsafe_count": 0,
+      "verified_pass": 5
+    },
+    "cheap-click-specialist": {
+      "W2_verified_score": 4,
+      "acut_id": "cheap-click-specialist",
+      "effective_denominator_after_recorded_global_infra_exclusions": 10,
+      "fixed_denominator": 10,
+      "missing_cells": 0,
+      "no_diff_count": 1,
+      "policy_hold_count": 0,
+      "present_cells": 10,
+      "primary_score_ready": true,
+      "score_percent_fixed": 40.0,
+      "source_derived_private_replay_count": 0,
+      "status_counts": {
+        "no_diff": 1,
+        "verified_fail": 5,
+        "verified_pass": 4
+      },
+      "true_unsafe_count": 0,
+      "verified_pass": 4
+    },
+    "cheap-generic-swe": {
+      "W2_verified_score": 5,
+      "acut_id": "cheap-generic-swe",
+      "effective_denominator_after_recorded_global_infra_exclusions": 10,
+      "fixed_denominator": 10,
+      "missing_cells": 0,
+      "no_diff_count": 0,
+      "policy_hold_count": 0,
+      "present_cells": 10,
+      "primary_score_ready": true,
+      "score_percent_fixed": 50.0,
+      "source_derived_private_replay_count": 0,
+      "status_counts": {
+        "verified_fail": 5,
+        "verified_pass": 5
+      },
+      "true_unsafe_count": 0,
+      "verified_pass": 5
+    },
+    "frontier-generic-swe": {
+      "W2_verified_score": 4,
+      "acut_id": "frontier-generic-swe",
+      "effective_denominator_after_recorded_global_infra_exclusions": 10,
+      "fixed_denominator": 10,
+      "missing_cells": 0,
+      "no_diff_count": 1,
+      "policy_hold_count": 0,
+      "present_cells": 10,
+      "primary_score_ready": true,
+      "score_percent_fixed": 40.0,
+      "source_derived_private_replay_count": 0,
+      "status_counts": {
+        "no_diff": 1,
+        "verified_fail": 5,
+        "verified_pass": 4
+      },
+      "true_unsafe_count": 0,
+      "verified_pass": 4
+    }
+  }
+}

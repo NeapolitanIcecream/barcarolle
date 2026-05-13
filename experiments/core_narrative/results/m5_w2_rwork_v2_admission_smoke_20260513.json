@@ -1,0 +1,292 @@
+{
+  "accepted_count": 10,
+  "finished_at": "2026-05-13T04:32:14.916659Z",
+  "private_root": "experiments/core_narrative/large_artifacts/m5_w2_admission_smoke_20260513",
+  "public_artifact_redacted": true,
+  "schema_version": "core-narrative.m5-w2-admission-smoke.v1",
+  "started_at": "2026-05-13T04:31:53.960145Z",
+  "status": "passed",
+  "task_count": 10,
+  "tasks": [
+    {
+      "noop": {
+        "expected_no_op_fails": true,
+        "private_run_id": "m5_w2_admission_noop__click__rwork__101",
+        "public_artifact_redacted": true,
+        "smoke_kind": "noop_base_verifier",
+        "status": "failed",
+        "task_id": "click__rwork__101",
+        "verifier_exit_code": 1
+      },
+      "reference": {
+        "oracle_status": "reference_passed",
+        "private_run_id": "validity_audit_20260512__reference__click__rwork__101",
+        "public_artifact_redacted": true,
+        "reference_patch": {
+          "changed_file_count": 2,
+          "patch_bytes": 3621,
+          "patch_sha256": "4cad9d43377b065653bdaf770b37b9844a0b50ae742c2dfe843f5a2fd96b3cde"
+        },
+        "smoke_kind": "source_target_reference_patch",
+        "status": "passed",
+        "task_id": "click__rwork__101",
+        "verifier_artifacts_redacted": true,
+        "verifier_duration_seconds": 0.298,
+        "verifier_exit_code": 0
+      },
+      "task_id": "click__rwork__101"
+    },
+    {
+      "noop": {
+        "expected_no_op_fails": true,
+        "private_run_id": "m5_w2_admission_noop__click__rwork__102",
+        "public_artifact_redacted": true,
+        "smoke_kind": "noop_base_verifier",
+        "status": "failed",
+        "task_id": "click__rwork__102",
+        "verifier_exit_code": 1
+      },
+      "reference": {
+        "oracle_status": "reference_passed",
+        "private_run_id": "validity_audit_20260512__reference__click__rwork__102",
+        "public_artifact_redacted": true,
+        "reference_patch": {
+          "changed_file_count": 2,
+          "patch_bytes": 2082,
+          "patch_sha256": "c7910f2c2bc5685cb6d41c0e9be170e16e2f3ac9c9845019bcd003f6db6804e3"
+        },
+        "smoke_kind": "source_target_reference_patch",
+        "status": "passed",
+        "task_id": "click__rwork__102",
+        "verifier_artifacts_redacted": true,
+        "verifier_duration_seconds": 0.331,
+        "verifier_exit_code": 0
+      },
+      "task_id": "click__rwork__102"
+    },
+    {
+      "noop": {
+        "expected_no_op_fails": true,
+        "private_run_id": "m5_w2_admission_noop__click__rwork__103",
+        "public_artifact_redacted": true,
+        "smoke_kind": "noop_base_verifier",
+        "status": "failed",
+        "task_id": "click__rwork__103",
+        "verifier_exit_code": 1
+      },
+      "reference": {
+        "oracle_status": "reference_passed",
+        "private_run_id": "validity_audit_20260512__reference__click__rwork__103",
+        "public_artifact_redacted": true,
+        "reference_patch": {
+          "changed_file_count": 2,
+          "patch_bytes": 2867,
+          "patch_sha256": "33c48579ed6756dee8025d613ad49b91ddd110be51ef8428bf5fecef24835ad1"
+        },
+        "smoke_kind": "source_target_reference_patch",
+        "status": "passed",
+        "task_id": "click__rwork__103",
+        "verifier_artifacts_redacted": true,
+        "verifier_duration_seconds": 0.353,
+        "verifier_exit_code": 0
+      },
+      "task_id": "click__rwork__103"
+    },
+    {
+      "noop": {
+        "expected_no_op_fails": true,
+        "private_run_id": "m5_w2_admission_noop__click__rwork__104",
+        "public_artifact_redacted": true,
+        "smoke_kind": "noop_base_verifier",
+        "status": "failed",
+        "task_id": "click__rwork__104",
+        "verifier_exit_code": 1
+      },
+      "reference": {
+        "oracle_status": "reference_passed",
+        "private_run_id": "validity_audit_20260512__reference__click__rwork__104",
+        "public_artifact_redacted": true,
+        "reference_patch": {
+          "changed_file_count": 2,
+          "patch_bytes": 5012,
+          "patch_sha256": "e7a549c27dd6c953fcac2486a6f2bce3b990ed1cf58d5090c3593076b226eb7d"
+        },
+        "smoke_kind": "source_target_reference_patch",
+        "status": "passed",
+        "task_id": "click__rwork__104",
+        "verifier_artifacts_redacted": true,
+        "verifier_duration_seconds": 0.316,
+        "verifier_exit_code": 0
+      },
+      "task_id": "click__rwork__104"
+    },
+    {
+      "noop": {
+        "expected_no_op_fails": true,
+        "private_run_id": "m5_w2_admission_noop__click__rwork__105",
+        "public_artifact_redacted": true,
+        "smoke_kind": "noop_base_verifier",
+        "status": "failed",
+        "task_id": "click__rwork__105",
+        "verifier_exit_code": 1
+      },
+      "reference": {
+        "oracle_status": "reference_passed",
+        "private_run_id": "validity_audit_20260512__reference__click__rwork__105",
+        "public_artifact_redacted": true,
+        "reference_patch": {
+          "changed_file_count": 2,
+          "patch_bytes": 3492,
+          "patch_sha256": "d0815ef19841b9c6802640086c15d8a90e71f90a6e5f62b86ad54db21d24090c"
+        },
+        "smoke_kind": "source_target_reference_patch",
+        "status": "passed",
+        "task_id": "click__rwork__105",
+        "verifier_artifacts_redacted": true,
+        "verifier_duration_seconds": 0.307,
+        "verifier_exit_code": 0
+      },
+      "task_id": "click__rwork__105"
+    },
+    {
+      "noop": {
+        "expected_no_op_fails": true,
+        "private_run_id": "m5_w2_admission_noop__click__rwork__106",
+        "public_artifact_redacted": true,
+        "smoke_kind": "noop_base_verifier",
+        "status": "failed",
+        "task_id": "click__rwork__106",
+        "verifier_exit_code": 1
+      },
+      "reference": {
+        "oracle_status": "reference_passed",
+        "private_run_id": "validity_audit_20260512__reference__click__rwork__106",
+        "public_artifact_redacted": true,
+        "reference_patch": {
+          "changed_file_count": 4,
+          "patch_bytes": 6387,
+          "patch_sha256": "90c0377193c92707cab83aef96d6e9c4969d4652d312274917dc808eacc4d9fa"
+        },
+        "smoke_kind": "source_target_reference_patch",
+        "status": "passed",
+        "task_id": "click__rwork__106",
+        "verifier_artifacts_redacted": true,
+        "verifier_duration_seconds": 0.426,
+        "verifier_exit_code": 0
+      },
+      "task_id": "click__rwork__106"
+    },
+    {
+      "noop": {
+        "expected_no_op_fails": true,
+        "private_run_id": "m5_w2_admission_noop__click__rwork__107",
+        "public_artifact_redacted": true,
+        "smoke_kind": "noop_base_verifier",
+        "status": "failed",
+        "task_id": "click__rwork__107",
+        "verifier_exit_code": 1
+      },
+      "reference": {
+        "oracle_status": "reference_passed",
+        "private_run_id": "validity_audit_20260512__reference__click__rwork__107",
+        "public_artifact_redacted": true,
+        "reference_patch": {
+          "changed_file_count": 2,
+          "patch_bytes": 4121,
+          "patch_sha256": "692451856f4da273d7b9c0871e67bfe7278c573c20e5197de3da462f19695ae9"
+        },
+        "smoke_kind": "source_target_reference_patch",
+        "status": "passed",
+        "task_id": "click__rwork__107",
+        "verifier_artifacts_redacted": true,
+        "verifier_duration_seconds": 0.319,
+        "verifier_exit_code": 0
+      },
+      "task_id": "click__rwork__107"
+    },
+    {
+      "noop": {
+        "expected_no_op_fails": true,
+        "private_run_id": "m5_w2_admission_noop__click__rwork__108",
+        "public_artifact_redacted": true,
+        "smoke_kind": "noop_base_verifier",
+        "status": "failed",
+        "task_id": "click__rwork__108",
+        "verifier_exit_code": 1
+      },
+      "reference": {
+        "oracle_status": "reference_passed",
+        "private_run_id": "validity_audit_20260512__reference__click__rwork__108",
+        "public_artifact_redacted": true,
+        "reference_patch": {
+          "changed_file_count": 3,
+          "patch_bytes": 5258,
+          "patch_sha256": "ad59d6871cb4671495adf9b73b0f4dfbf167e481941990cc13ac946be685d5da"
+        },
+        "smoke_kind": "source_target_reference_patch",
+        "status": "passed",
+        "task_id": "click__rwork__108",
+        "verifier_artifacts_redacted": true,
+        "verifier_duration_seconds": 0.398,
+        "verifier_exit_code": 0
+      },
+      "task_id": "click__rwork__108"
+    },
+    {
+      "noop": {
+        "expected_no_op_fails": true,
+        "private_run_id": "m5_w2_admission_noop__click__rwork__109",
+        "public_artifact_redacted": true,
+        "smoke_kind": "noop_base_verifier",
+        "status": "failed",
+        "task_id": "click__rwork__109",
+        "verifier_exit_code": 1
+      },
+      "reference": {
+        "oracle_status": "reference_passed",
+        "private_run_id": "validity_audit_20260512__reference__click__rwork__109",
+        "public_artifact_redacted": true,
+        "reference_patch": {
+          "changed_file_count": 4,
+          "patch_bytes": 11681,
+          "patch_sha256": "69138adf9d55bdaa02953e784c587ca6573881fc2a3ade0db6d5167df318e89a"
+        },
+        "smoke_kind": "source_target_reference_patch",
+        "status": "passed",
+        "task_id": "click__rwork__109",
+        "verifier_artifacts_redacted": true,
+        "verifier_duration_seconds": 0.296,
+        "verifier_exit_code": 0
+      },
+      "task_id": "click__rwork__109"
+    },
+    {
+      "noop": {
+        "expected_no_op_fails": true,
+        "private_run_id": "m5_w2_admission_noop__click__rwork__110",
+        "public_artifact_redacted": true,
+        "smoke_kind": "noop_base_verifier",
+        "status": "failed",
+        "task_id": "click__rwork__110",
+        "verifier_exit_code": 1
+      },
+      "reference": {
+        "oracle_status": "reference_passed",
+        "private_run_id": "validity_audit_20260512__reference__click__rwork__110",
+        "public_artifact_redacted": true,
+        "reference_patch": {
+          "changed_file_count": 4,
+          "patch_bytes": 13564,
+          "patch_sha256": "da275c6e5a932d10fe4dd9e2caeead9a6e98e2c265c91c38626f525e53eb2211"
+        },
+        "smoke_kind": "source_target_reference_patch",
+        "status": "passed",
+        "task_id": "click__rwork__110",
+        "verifier_artifacts_redacted": true,
+        "verifier_duration_seconds": 0.347,
+        "verifier_exit_code": 0
+      },
+      "task_id": "click__rwork__110"
+    }
+  ]
+}

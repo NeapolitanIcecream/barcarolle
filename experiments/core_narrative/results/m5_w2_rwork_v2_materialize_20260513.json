@@ -1,0 +1,126 @@
+{
+  "by_split": {
+    "rwork": 10
+  },
+  "hidden_verifier_file_count": 14,
+  "output_root": "experiments/core_narrative/tasks",
+  "status": "materialized",
+  "task_count": 10,
+  "tasks": [
+    {
+      "hidden_verifier_files": [
+        "tests/test_defaults.py"
+      ],
+      "split": "rwork",
+      "statement": "experiments/core_narrative/tasks/click/rwork/click__rwork__101/public/statement.md",
+      "task_dir": "experiments/core_narrative/tasks/click/rwork/click__rwork__101",
+      "task_id": "click__rwork__101",
+      "task_manifest": "experiments/core_narrative/tasks/click/rwork/click__rwork__101/task.yaml",
+      "verifier": "experiments/core_narrative/tasks/click/rwork/click__rwork__101/verifier/run.sh"
+    },
+    {
+      "hidden_verifier_files": [
+        "tests/test_options.py"
+      ],
+      "split": "rwork",
+      "statement": "experiments/core_narrative/tasks/click/rwork/click__rwork__102/public/statement.md",
+      "task_dir": "experiments/core_narrative/tasks/click/rwork/click__rwork__102",
+      "task_id": "click__rwork__102",
+      "task_manifest": "experiments/core_narrative/tasks/click/rwork/click__rwork__102/task.yaml",
+      "verifier": "experiments/core_narrative/tasks/click/rwork/click__rwork__102/verifier/run.sh"
+    },
+    {
+      "hidden_verifier_files": [
+        "tests/test_options.py"
+      ],
+      "split": "rwork",
+      "statement": "experiments/core_narrative/tasks/click/rwork/click__rwork__103/public/statement.md",
+      "task_dir": "experiments/core_narrative/tasks/click/rwork/click__rwork__103",
+      "task_id": "click__rwork__103",
+      "task_manifest": "experiments/core_narrative/tasks/click/rwork/click__rwork__103/task.yaml",
+      "verifier": "experiments/core_narrative/tasks/click/rwork/click__rwork__103/verifier/run.sh"
+    },
+    {
+      "hidden_verifier_files": [
+        "tests/test_testing.py"
+      ],
+      "split": "rwork",
+      "statement": "experiments/core_narrative/tasks/click/rwork/click__rwork__104/public/statement.md",
+      "task_dir": "experiments/core_narrative/tasks/click/rwork/click__rwork__104",
+      "task_id": "click__rwork__104",
+      "task_manifest": "experiments/core_narrative/tasks/click/rwork/click__rwork__104/task.yaml",
+      "verifier": "experiments/core_narrative/tasks/click/rwork/click__rwork__104/verifier/run.sh"
+    },
+    {
+      "hidden_verifier_files": [
+        "tests/test_testing.py"
+      ],
+      "split": "rwork",
+      "statement": "experiments/core_narrative/tasks/click/rwork/click__rwork__105/public/statement.md",
+      "task_dir": "experiments/core_narrative/tasks/click/rwork/click__rwork__105",
+      "task_id": "click__rwork__105",
+      "task_manifest": "experiments/core_narrative/tasks/click/rwork/click__rwork__105/task.yaml",
+      "verifier": "experiments/core_narrative/tasks/click/rwork/click__rwork__105/verifier/run.sh"
+    },
+    {
+      "hidden_verifier_files": [
+        "tests/test_options.py",
+        "tests/test_termui.py"
+      ],
+      "split": "rwork",
+      "statement": "experiments/core_narrative/tasks/click/rwork/click__rwork__106/public/statement.md",
+      "task_dir": "experiments/core_narrative/tasks/click/rwork/click__rwork__106",
+      "task_id": "click__rwork__106",
+      "task_manifest": "experiments/core_narrative/tasks/click/rwork/click__rwork__106/task.yaml",
+      "verifier": "experiments/core_narrative/tasks/click/rwork/click__rwork__106/verifier/run.sh"
+    },
+    {
+      "hidden_verifier_files": [
+        "tests/test_utils.py"
+      ],
+      "split": "rwork",
+      "statement": "experiments/core_narrative/tasks/click/rwork/click__rwork__107/public/statement.md",
+      "task_dir": "experiments/core_narrative/tasks/click/rwork/click__rwork__107",
+      "task_id": "click__rwork__107",
+      "task_manifest": "experiments/core_narrative/tasks/click/rwork/click__rwork__107/task.yaml",
+      "verifier": "experiments/core_narrative/tasks/click/rwork/click__rwork__107/verifier/run.sh"
+    },
+    {
+      "hidden_verifier_files": [
+        "tests/test_arguments.py",
+        "tests/test_options.py"
+      ],
+      "split": "rwork",
+      "statement": "experiments/core_narrative/tasks/click/rwork/click__rwork__108/public/statement.md",
+      "task_dir": "experiments/core_narrative/tasks/click/rwork/click__rwork__108",
+      "task_id": "click__rwork__108",
+      "task_manifest": "experiments/core_narrative/tasks/click/rwork/click__rwork__108/task.yaml",
+      "verifier": "experiments/core_narrative/tasks/click/rwork/click__rwork__108/verifier/run.sh"
+    },
+    {
+      "hidden_verifier_files": [
+        "tests/test_basic.py"
+      ],
+      "split": "rwork",
+      "statement": "experiments/core_narrative/tasks/click/rwork/click__rwork__109/public/statement.md",
+      "task_dir": "experiments/core_narrative/tasks/click/rwork/click__rwork__109",
+      "task_id": "click__rwork__109",
+      "task_manifest": "experiments/core_narrative/tasks/click/rwork/click__rwork__109/task.yaml",
+      "verifier": "experiments/core_narrative/tasks/click/rwork/click__rwork__109/verifier/run.sh"
+    },
+    {
+      "hidden_verifier_files": [
+        "tests/test_commands.py",
+        "tests/test_options.py",
+        "tests/test_arguments.py"
+      ],
+      "split": "rwork",
+      "statement": "experiments/core_narrative/tasks/click/rwork/click__rwork__110/public/statement.md",
+      "task_dir": "experiments/core_narrative/tasks/click/rwork/click__rwork__110",
+      "task_id": "click__rwork__110",
+      "task_manifest": "experiments/core_narrative/tasks/click/rwork/click__rwork__110/task.yaml",
+      "verifier": "experiments/core_narrative/tasks/click/rwork/click__rwork__110/verifier/run.sh"
+    }
+  ],
+  "tool": "materialize_task_pack"
+}
