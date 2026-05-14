@@ -1,0 +1,44 @@
+{
+  "admission_decision": "accepted",
+  "base_anchor_digest": "b91ad8d834f5eedd9315fba7b46d773e80dcc0a86786e5d5c1e9c5ce8f38ebcb",
+  "changed_file_set_digest": "427c0af3b6aa7ae3858071fbb68b083a314caf22a9b5734c34d242c17bebad79",
+  "claim_boundary": [
+    "This is a one-candidate source-only Golden-Oracle smoke pilot, not a frozen Rich denominator.",
+    "Raw source commits, raw subjects, reference patches, and hidden verifier files are retained only in ignored private artifacts.",
+    "No ACUT primary attempt or model call was made."
+  ],
+  "family": "parser/mixed integration",
+  "generated_at": "2026-05-14T17:01:01.149747Z",
+  "hidden_verifier_digest": "ba89c13059edabbdde6e8e0fcd2ffdb2e404a31efbfc0c510a546ea58b66fbc7",
+  "model_calls_made": 0,
+  "no_op_result": {
+    "public_artifact_redacted": true,
+    "status": "failed",
+    "verifier_exit_code": 1
+  },
+  "oracle_priority": "high",
+  "oracle_template": "unicode_data_py38_cache_fallback",
+  "pilot_scope": "one_source_only_golden_oracle_candidate",
+  "primary_runs_authorized": false,
+  "private_artifact_root": "experiments/core_narrative/large_artifacts/rich_r_source_oracle_pilot_py38_cache_20260515",
+  "reference_patch_bytes": 535,
+  "reference_patch_digest": "adbbfdf9d10918eacd49c70c41f936bf99ce98c021e6d827d1261ba90ac4a99d",
+  "reference_result": {
+    "public_artifact_redacted": true,
+    "status": "passed",
+    "verifier_exit_code": 0
+  },
+  "repo_slug": "rich",
+  "schema_version": "core-narrative.rich-source-oracle-pilot.v1",
+  "source_anchor_digest": "bd835f36b6789cdf0788d8e7280c45b20ebc62929b76467d8c80ff0affbf6656",
+  "source_file_count": 1,
+  "split": "R",
+  "statement_digest": "9d329b17d83d91ee347188a429f4d15b73d3324c5eb6892e326a7e54554be904",
+  "status": "completed",
+  "subject_digest": "f2b6b1eb2b38b77d2179edc07e7d2ce5cd95856a98d2f1dbb0a3dbdf4631a84b",
+  "surface": "source_without_tests",
+  "test_file_count": 0,
+  "test_node_count": 1,
+  "tool": "rich_source_oracle_pilot",
+  "triage_code": "behavior_edge_case_probe"
+}

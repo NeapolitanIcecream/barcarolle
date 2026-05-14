@@ -1,0 +1,44 @@
+{
+  "admission_decision": "accepted",
+  "base_anchor_digest": "0ffbd7da042d1d82ad4737ce28a630b589785a223239b061145039dc2aec3ade",
+  "changed_file_set_digest": "9bdcf114eef25d8d94240707ef7bd293ea0fa653247df099a53f3698f36caa7e",
+  "claim_boundary": [
+    "This is a one-candidate source-only Golden-Oracle smoke pilot, not a frozen Rich denominator.",
+    "Raw source commits, raw subjects, reference patches, and hidden verifier files are retained only in ignored private artifacts.",
+    "No ACUT primary attempt or model call was made."
+  ],
+  "family": "table/panel/layout",
+  "generated_at": "2026-05-14T17:04:10.532219Z",
+  "hidden_verifier_digest": "703b3038a3d4799f24c05677c4a0567b66ef426c1d398d20b8a04d0b3caabc34",
+  "model_calls_made": 0,
+  "no_op_result": {
+    "public_artifact_redacted": true,
+    "status": "failed",
+    "verifier_exit_code": 1
+  },
+  "oracle_priority": "medium",
+  "oracle_template": "cell_string_basic_api",
+  "pilot_scope": "one_source_only_golden_oracle_candidate",
+  "primary_runs_authorized": false,
+  "private_artifact_root": "experiments/core_narrative/large_artifacts/rich_r_source_oracle_pilot_cell_string_20260515",
+  "reference_patch_bytes": 6789,
+  "reference_patch_digest": "6f665b479ac361baeb6e59ba2457f00b63690b43265ae95f3189cf9185996bee",
+  "reference_result": {
+    "public_artifact_redacted": true,
+    "status": "passed",
+    "verifier_exit_code": 0
+  },
+  "repo_slug": "rich",
+  "schema_version": "core-narrative.rich-source-oracle-pilot.v1",
+  "source_anchor_digest": "4fc11766e99af09f6e3378a350451315e525ed39009aa121307fdc5f76749caf",
+  "source_file_count": 1,
+  "split": "R",
+  "statement_digest": "289da9e7a5a5af6cc271541f7fceda1766103e781d39e603e4008269b9379887",
+  "status": "completed",
+  "subject_digest": "0dec079612661f4f38508e6a1b813079cc7540bdcfda682cf9fd0a422e51ff42",
+  "surface": "source_without_tests",
+  "test_file_count": 0,
+  "test_node_count": 1,
+  "tool": "rich_source_oracle_pilot",
+  "triage_code": "manual_probe_required"
+}

@@ -1,12 +1,12 @@
 {
   "schema_version": "core-narrative.repository-local-benchmark-completion-audit.v1",
   "audit_id": "repository-local-benchmark-20260514-completion-audit",
-  "audited_at": "2026-05-14T16:52:47Z",
+  "audited_at": "2026-05-14T17:06:50Z",
   "objective_file": "/Users/chenmohan/Downloads/barcarolle-research-0514-1.md",
   "overall_verdict": "not_complete_blocked_before_task_admission_and_primary_runs",
   "active_goal_should_be_marked_complete": false,
   "basis": {
-    "commit": "7db24e9",
+    "commit": "daaf40d4",
     "branch": "codex/rgw-full-workspace-v1",
     "repository_admission_report": "experiments/core_narrative/reports/2026-05-14_repository_local_benchmark_admission.md",
     "repository_gate_report": "experiments/core_narrative/reports/2026-05-14_repository_local_benchmark_gate.md",
@@ -38,7 +38,15 @@
     "rich_replacement_oracle_pilot": "experiments/core_narrative/results/rich_replacement_oracle_pilot_20260514.json",
     "rich_replacement_oracle_pilot_zerospan": "experiments/core_narrative/results/rich_replacement_oracle_pilot_zerospan_20260514.json",
     "rich_replacement_oracle_pilot_vs16": "experiments/core_narrative/results/rich_replacement_oracle_pilot_vs16_20260514.json",
-    "rich_direct_without_nodes_oracle_pilot": "experiments/core_narrative/results/rich_direct_without_nodes_oracle_pilot_20260514.json"
+    "rich_direct_without_nodes_oracle_pilot": "experiments/core_narrative/results/rich_direct_without_nodes_oracle_pilot_20260514.json",
+    "rich_r_source_oracle_pilot_cell_string": "experiments/core_narrative/results/rich_r_source_oracle_pilot_cell_string_20260515.json",
+    "rich_r_source_oracle_pilot_cell_table": "experiments/core_narrative/results/rich_r_source_oracle_pilot_cell_table_20260515.json",
+    "rich_r_source_oracle_pilot_pretty_console": "experiments/core_narrative/results/rich_r_source_oracle_pilot_pretty_console_20260515.json",
+    "rich_r_source_oracle_pilot_progress_docstring": "experiments/core_narrative/results/rich_r_source_oracle_pilot_progress_docstring_20260515.json",
+    "rich_r_source_oracle_pilot_py38_cache": "experiments/core_narrative/results/rich_r_source_oracle_pilot_py38_cache_20260515.json",
+    "rich_r_source_oracle_pilot_split_text": "experiments/core_narrative/results/rich_r_source_oracle_pilot_split_text_20260515.json",
+    "rich_r_source_oracle_pilot_unicode_invalid": "experiments/core_narrative/results/rich_r_source_oracle_pilot_unicode_invalid_20260515.json",
+    "rich_r_source_oracle_pilot_unicode_load": "experiments/core_narrative/results/rich_r_source_oracle_pilot_unicode_load_20260515.json"
   },
   "additional_feasibility_observations": {
     "rich_ambient_collect_only": {
@@ -518,6 +526,47 @@
       "model_calls_made": 0,
       "primary_runs_authorized": false,
       "interpretation": "Rich W* reached 20 accepted primary candidates but cannot reach the 25-task primary-plus-reserve target or 40-candidate pool under the current frozen W* scan."
+    },
+    "rich_r_source_oracle_pilots_primary_batch": {
+      "status": "completed",
+      "split": "R",
+      "accepted_r_direct_smoke_tasks": 8,
+      "accepted_r_source_only_golden_oracle_tasks": 12,
+      "accepted_r_tasks_total_after_pilots": 20,
+      "additional_acceptances_needed_for_20_r_primary_after_pilots": 0,
+      "additional_acceptances_needed_for_20_r_primary_plus_5_reserve_after_pilots": 5,
+      "remaining_queued_r_oracle_work_items_after_pilots": 17,
+      "model_calls_made": 0,
+      "primary_runs_authorized": false,
+      "accepted_artifacts": [
+        "experiments/core_narrative/results/rich_r_source_oracle_pilot_cache_20260515.json",
+        "experiments/core_narrative/results/rich_r_source_oracle_pilot_cell_string_20260515.json",
+        "experiments/core_narrative/results/rich_r_source_oracle_pilot_cell_table_20260515.json",
+        "experiments/core_narrative/results/rich_r_source_oracle_pilot_pretty_console_20260515.json",
+        "experiments/core_narrative/results/rich_r_source_oracle_pilot_progress_20260515.json",
+        "experiments/core_narrative/results/rich_r_source_oracle_pilot_progress_docstring_20260515.json",
+        "experiments/core_narrative/results/rich_r_source_oracle_pilot_py38_cache_20260515.json",
+        "experiments/core_narrative/results/rich_r_source_oracle_pilot_split_lines_20260515.json",
+        "experiments/core_narrative/results/rich_r_source_oracle_pilot_split_text_20260515.json",
+        "experiments/core_narrative/results/rich_r_source_oracle_pilot_traceback_20260515.json",
+        "experiments/core_narrative/results/rich_r_source_oracle_pilot_unicode_invalid_20260515.json",
+        "experiments/core_narrative/results/rich_r_source_oracle_pilot_unicode_load_20260515.json"
+      ],
+      "oracle_templates": [
+        "cells_cached_len_unicode_version",
+        "cell_string_basic_api",
+        "cell_table_metadata_api",
+        "pretty_ipython_custom_console",
+        "progress_disabled_stop_no_blank_line",
+        "progress_reset_visible_docstring",
+        "unicode_data_py38_cache_fallback",
+        "segment_split_lines_terminator",
+        "cell_string_split_text",
+        "traceback_locals_depth_overflow_options",
+        "unicode_data_invalid_version_fallback",
+        "unicode_data_load_latest_table"
+      ],
+      "interpretation": "Rich R reached 20 accepted primary candidates after 8 direct-smoke admissions and 12 source-only Golden-Oracle pilots. R reserve remains incomplete: 5 more accepted tasks are needed for 20 primary plus 5 reserve, and no denominator is frozen."
     }
   },
   "checklist": [
@@ -569,13 +618,21 @@
         "experiments/core_narrative/results/rich_replacement_oracle_pilot_20260514.json",
         "experiments/core_narrative/results/rich_replacement_oracle_pilot_zerospan_20260514.json",
         "experiments/core_narrative/results/rich_replacement_oracle_pilot_vs16_20260514.json",
-        "experiments/core_narrative/results/rich_direct_without_nodes_oracle_pilot_20260514.json"
+        "experiments/core_narrative/results/rich_direct_without_nodes_oracle_pilot_20260514.json",
+        "experiments/core_narrative/results/rich_r_source_oracle_pilot_cell_string_20260515.json",
+        "experiments/core_narrative/results/rich_r_source_oracle_pilot_cell_table_20260515.json",
+        "experiments/core_narrative/results/rich_r_source_oracle_pilot_pretty_console_20260515.json",
+        "experiments/core_narrative/results/rich_r_source_oracle_pilot_progress_docstring_20260515.json",
+        "experiments/core_narrative/results/rich_r_source_oracle_pilot_py38_cache_20260515.json",
+        "experiments/core_narrative/results/rich_r_source_oracle_pilot_split_text_20260515.json",
+        "experiments/core_narrative/results/rich_r_source_oracle_pilot_unicode_invalid_20260515.json",
+        "experiments/core_narrative/results/rich_r_source_oracle_pilot_unicode_load_20260515.json"
       ],
-      "gap": "Candidate supply, test-surface presence, family counts, recommendation, Rich collect-only feasibility, Rich task-readiness counts, direct-oracle W* and R smoke outcomes, the W* and R Golden-Oracle queues, eleven source-only W* Golden-Oracle admission pilots, four source-only R Golden-Oracle admission pilots, three replacement-oracle admission pilots, and one direct-without-node Oracle pilot are present. Full denominator-scale per-task historical smoke and measured test runtime are not yet measured."
+      "gap": "Candidate supply, test-surface presence, family counts, recommendation, Rich collect-only feasibility, Rich task-readiness counts, direct-oracle W* and R smoke outcomes, the W* and R Golden-Oracle queues, eleven source-only W* Golden-Oracle admission pilots, twelve source-only R Golden-Oracle admission pilots, three replacement-oracle admission pilots, and one direct-without-node Oracle pilot are present. Full denominator-scale per-task historical smoke and measured test runtime are not yet measured."
     },
     {
       "requirement": "Task 2: construct Click C/R/W* task sets: C 20-40, R 40 candidates -> 20 primary + 5 reserve, W* 40 candidates -> 20 primary + 5 reserve, with no-op/reference/leakage/family/difficulty/digests.",
-      "status": "partially_covered_for_rich_w_star_primary_and_r_admission_subset_only",
+      "status": "partially_covered_for_rich_w_star_primary_and_r_primary_only",
       "evidence": [
         "experiments/core_narrative/reports/2026-05-14_repository_local_benchmark_gate.md",
         "experiments/core_narrative/reports/2026-05-14_rich_task_admission_readiness.md",
@@ -603,9 +660,17 @@
         "experiments/core_narrative/reports/2026-05-14_rich_replacement_oracle_pilot.md",
         "experiments/core_narrative/reports/2026-05-14_rich_replacement_oracle_pilot_zerospan.md",
         "experiments/core_narrative/reports/2026-05-14_rich_replacement_oracle_pilot_vs16.md",
-        "experiments/core_narrative/reports/2026-05-14_rich_direct_without_nodes_oracle_pilot.md"
+        "experiments/core_narrative/reports/2026-05-14_rich_direct_without_nodes_oracle_pilot.md",
+        "experiments/core_narrative/reports/2026-05-15_rich_r_source_oracle_pilot_cell_string.md",
+        "experiments/core_narrative/reports/2026-05-15_rich_r_source_oracle_pilot_cell_table.md",
+        "experiments/core_narrative/reports/2026-05-15_rich_r_source_oracle_pilot_pretty_console.md",
+        "experiments/core_narrative/reports/2026-05-15_rich_r_source_oracle_pilot_progress_docstring.md",
+        "experiments/core_narrative/reports/2026-05-15_rich_r_source_oracle_pilot_py38_cache.md",
+        "experiments/core_narrative/reports/2026-05-15_rich_r_source_oracle_pilot_split_text.md",
+        "experiments/core_narrative/reports/2026-05-15_rich_r_source_oracle_pilot_unicode_invalid.md",
+        "experiments/core_narrative/reports/2026-05-15_rich_r_source_oracle_pilot_unicode_load.md"
       ],
-      "gap": "Click W* has only 14 task-design candidates in the frozen window, below the 20-task gate. Rich has 20 accepted W* primary candidates, but only 23 stricter W* design candidates, so the 5-task reserve target and 40-candidate pool target remain unmet. Rich R has 12 accepted tasks: 8 direct-smoke and 4 source-only Golden-Oracle. It still needs at least 8 more accepted primary tasks and 13 more accepted primary-plus-reserve tasks from queued oracle admission. C task construction is not done, and no full denominator is frozen."
+      "gap": "Click W* has only 14 task-design candidates in the frozen window, below the 20-task gate. Rich has 20 accepted W* primary candidates, but only 23 stricter W* design candidates, so the 5-task W* reserve target and 40-candidate pool target remain unmet. Rich R has 20 accepted primary tasks: 8 direct-smoke and 12 source-only Golden-Oracle. Rich R still needs 5 reserve acceptances for 20 primary plus 5 reserve. C task construction is not done, and no full denominator is frozen."
     },
     {
       "requirement": "Task 3: Codex role isolation for Golden-Selector, Golden-Taskwright, Golden-Oracle, Golden-Auditor with prompt hashes, artifact digests, and admission decisions.",
@@ -651,7 +716,7 @@
     },
     {
       "requirement": "Output: task generation validity report.",
-      "status": "partial_w_star_r_smoke_queue_pilots_only",
+      "status": "partial_w_star_and_r_primary_only",
       "evidence": [
         "experiments/core_narrative/reports/2026-05-14_rich_direct_smoke_pilot.md",
         "experiments/core_narrative/reports/2026-05-14_rich_direct_smoke_batch.md",
@@ -677,9 +742,17 @@
         "experiments/core_narrative/reports/2026-05-14_rich_replacement_oracle_pilot.md",
         "experiments/core_narrative/reports/2026-05-14_rich_replacement_oracle_pilot_zerospan.md",
         "experiments/core_narrative/reports/2026-05-14_rich_replacement_oracle_pilot_vs16.md",
-        "experiments/core_narrative/reports/2026-05-14_rich_direct_without_nodes_oracle_pilot.md"
+        "experiments/core_narrative/reports/2026-05-14_rich_direct_without_nodes_oracle_pilot.md",
+        "experiments/core_narrative/reports/2026-05-15_rich_r_source_oracle_pilot_cell_string.md",
+        "experiments/core_narrative/reports/2026-05-15_rich_r_source_oracle_pilot_cell_table.md",
+        "experiments/core_narrative/reports/2026-05-15_rich_r_source_oracle_pilot_pretty_console.md",
+        "experiments/core_narrative/reports/2026-05-15_rich_r_source_oracle_pilot_progress_docstring.md",
+        "experiments/core_narrative/reports/2026-05-15_rich_r_source_oracle_pilot_py38_cache.md",
+        "experiments/core_narrative/reports/2026-05-15_rich_r_source_oracle_pilot_split_text.md",
+        "experiments/core_narrative/reports/2026-05-15_rich_r_source_oracle_pilot_unicode_invalid.md",
+        "experiments/core_narrative/reports/2026-05-15_rich_r_source_oracle_pilot_unicode_load.md"
       ],
-      "gap": "Rich W* now has 20 accepted primary candidates through no-op/reference admission smoke. Rich R has 12 accepted tasks after 8 direct-smoke acceptances and 4 source-only Golden-Oracle pilots, but the remaining queued R work has not passed admission smoke. Full C/R/W* task generation validity is not produced because W* reserve, R primary/reserve, and C task sets are missing."
+      "gap": "Rich W* has 20 accepted primary candidates, and Rich R has 20 accepted primary candidates after 8 direct-smoke acceptances and 12 source-only Golden-Oracle pilots. Full C/R/W* task generation validity is not produced because W* reserve, R reserve, and C task sets are missing."
     },
     {
       "requirement": "Output: R/W* primary result report.",
@@ -712,5 +785,5 @@
       "gap": "No primary results exist, so this is verified only for the repository-admission and gate phase."
     }
   ],
-  "next_required_step": "Continue no-op/reference admission smoke for remaining queued Rich R Golden-Oracle work, plus C extension/readiness, Rich ACUT variants, and an explicit W* reserve-gate decision before any primary model attempts."
+  "next_required_step": "Continue Rich R reserve admission or C extension/readiness, plus Rich ACUT variants and an explicit W* reserve-gate decision before any primary model attempts."
 }

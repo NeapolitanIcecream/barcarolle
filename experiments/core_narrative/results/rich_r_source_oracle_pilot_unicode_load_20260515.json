@@ -1,0 +1,44 @@
+{
+  "admission_decision": "accepted",
+  "base_anchor_digest": "f7fa88065db7f6e49270b89fbd56b8803148caf4bdbe9447053fd8ec813b3bd5",
+  "changed_file_set_digest": "dda2d1d2a7e9acdf2d1848387ba47a0c9733bf52fb8f1e9e1315cbcd261862dc",
+  "claim_boundary": [
+    "This is a one-candidate source-only Golden-Oracle smoke pilot, not a frozen Rich denominator.",
+    "Raw source commits, raw subjects, reference patches, and hidden verifier files are retained only in ignored private artifacts.",
+    "No ACUT primary attempt or model call was made."
+  ],
+  "family": "parser/mixed integration",
+  "generated_at": "2026-05-14T17:03:24.678102Z",
+  "hidden_verifier_digest": "887367d942aa89f0009b8bbe1cc73e637f7c86671670a267e62fd0fdfa7a9d86",
+  "model_calls_made": 0,
+  "no_op_result": {
+    "public_artifact_redacted": true,
+    "status": "failed",
+    "verifier_exit_code": 1
+  },
+  "oracle_priority": "medium",
+  "oracle_template": "unicode_data_load_latest_table",
+  "pilot_scope": "one_source_only_golden_oracle_candidate",
+  "primary_runs_authorized": false,
+  "private_artifact_root": "experiments/core_narrative/large_artifacts/rich_r_source_oracle_pilot_unicode_load_20260515",
+  "reference_patch_bytes": 246155,
+  "reference_patch_digest": "64156e7360bb308c594bd86a8f8306e07b26cc8c9b486530076e705f7616ec05",
+  "reference_result": {
+    "public_artifact_redacted": true,
+    "status": "passed",
+    "verifier_exit_code": 0
+  },
+  "repo_slug": "rich",
+  "schema_version": "core-narrative.rich-source-oracle-pilot.v1",
+  "source_anchor_digest": "4e37d59255a0fabe56d0305494171e049826cadd847eaeb5a8cdea95ec320c3f",
+  "source_file_count": 23,
+  "split": "R",
+  "statement_digest": "0fe9d931dfec324cd466b0cf4ff93841c698112b4013c5d872402828b5c154c3",
+  "status": "completed",
+  "subject_digest": "9bd1c33e5c89dc7c3febbb27e5bb6dfc07024fbea0b5cf9a33c5167f17bdfd9d",
+  "surface": "source_without_tests",
+  "test_file_count": 0,
+  "test_node_count": 1,
+  "tool": "rich_source_oracle_pilot",
+  "triage_code": "manual_probe_required"
+}

@@ -1,0 +1,44 @@
+{
+  "admission_decision": "accepted",
+  "base_anchor_digest": "31b7fb9e90bffd4a59f0322eb5947c8673818d789b4b77e0e6f0afdb98914c98",
+  "changed_file_set_digest": "77d13adf0fa7cbb6c2fa6adba6462b8d37e1797ab2f23229c8b6d84d7ba0fb6d",
+  "claim_boundary": [
+    "This is a one-candidate source-only Golden-Oracle smoke pilot, not a frozen Rich denominator.",
+    "Raw source commits, raw subjects, reference patches, and hidden verifier files are retained only in ignored private artifacts.",
+    "No ACUT primary attempt or model call was made."
+  ],
+  "family": "progress/live/status rendering",
+  "generated_at": "2026-05-14T17:06:29.790929Z",
+  "hidden_verifier_digest": "898583aefeb65dc33850c41dd0cd0b240c31bd098c1fca53d777a81d4865f3ce",
+  "model_calls_made": 0,
+  "no_op_result": {
+    "public_artifact_redacted": true,
+    "status": "failed",
+    "verifier_exit_code": 1
+  },
+  "oracle_priority": "low",
+  "oracle_template": "progress_reset_visible_docstring",
+  "pilot_scope": "one_source_only_golden_oracle_candidate",
+  "primary_runs_authorized": false,
+  "private_artifact_root": "experiments/core_narrative/large_artifacts/rich_r_source_oracle_pilot_progress_docstring_20260515",
+  "reference_patch_bytes": 793,
+  "reference_patch_digest": "c3b57b40bdcdc52cff9e64d0896eb9304f62d700130bb744b2bb1359be753648",
+  "reference_result": {
+    "public_artifact_redacted": true,
+    "status": "passed",
+    "verifier_exit_code": 0
+  },
+  "repo_slug": "rich",
+  "schema_version": "core-narrative.rich-source-oracle-pilot.v1",
+  "source_anchor_digest": "3a6309e7b0fdc7aeebce8629e6cef353ed72865194343a5ac5a99975b20a8905",
+  "source_file_count": 1,
+  "split": "R",
+  "statement_digest": "a5aa08c3f0ce0e4b0f7cb425e27d6ceded855afc55c32cc3cc08f71954d1edf3",
+  "status": "completed",
+  "subject_digest": "247499209ab0801d58e4702c06ec938ecf612ec4a9b38fd8de5f99a55fd019cd",
+  "surface": "source_without_tests",
+  "test_file_count": 0,
+  "test_node_count": 1,
+  "tool": "rich_source_oracle_pilot",
+  "triage_code": "deprioritized_low_behavior_signal"
+}

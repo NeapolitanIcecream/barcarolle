@@ -1,0 +1,44 @@
+{
+  "admission_decision": "accepted",
+  "base_anchor_digest": "4fc11766e99af09f6e3378a350451315e525ed39009aa121307fdc5f76749caf",
+  "changed_file_set_digest": "9bdcf114eef25d8d94240707ef7bd293ea0fa653247df099a53f3698f36caa7e",
+  "claim_boundary": [
+    "This is a one-candidate source-only Golden-Oracle smoke pilot, not a frozen Rich denominator.",
+    "Raw source commits, raw subjects, reference patches, and hidden verifier files are retained only in ignored private artifacts.",
+    "No ACUT primary attempt or model call was made."
+  ],
+  "family": "table/panel/layout",
+  "generated_at": "2026-05-14T17:05:22.299089Z",
+  "hidden_verifier_digest": "a477a4125f6704235066d8841bc33d98f574b73d85c765a79f152ea15b3c09e9",
+  "model_calls_made": 0,
+  "no_op_result": {
+    "public_artifact_redacted": true,
+    "status": "failed",
+    "verifier_exit_code": 1
+  },
+  "oracle_priority": "medium",
+  "oracle_template": "cell_table_metadata_api",
+  "pilot_scope": "one_source_only_golden_oracle_candidate",
+  "primary_runs_authorized": false,
+  "private_artifact_root": "experiments/core_narrative/large_artifacts/rich_r_source_oracle_pilot_cell_table_20260515",
+  "reference_patch_bytes": 1498,
+  "reference_patch_digest": "a185be516dd26bd3ef18bc30da6655d5fbd43e2d300718e71cc40cc16f8f04c9",
+  "reference_result": {
+    "public_artifact_redacted": true,
+    "status": "passed",
+    "verifier_exit_code": 0
+  },
+  "repo_slug": "rich",
+  "schema_version": "core-narrative.rich-source-oracle-pilot.v1",
+  "source_anchor_digest": "f7fa88065db7f6e49270b89fbd56b8803148caf4bdbe9447053fd8ec813b3bd5",
+  "source_file_count": 1,
+  "split": "R",
+  "statement_digest": "791d3fbe10bcd508e215efb71009821c58a87e0758afeed771a403f4d1dde5c9",
+  "status": "completed",
+  "subject_digest": "661d64a106c7158ba98bda8b15d5677e6308f0bb7f34b11ea9eb9312fa0d33bf",
+  "surface": "source_without_tests",
+  "test_file_count": 0,
+  "test_node_count": 1,
+  "tool": "rich_source_oracle_pilot",
+  "triage_code": "manual_probe_required"
+}

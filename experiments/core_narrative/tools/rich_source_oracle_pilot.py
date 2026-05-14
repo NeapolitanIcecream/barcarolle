@@ -310,6 +310,208 @@ def test_disabled_progress_stop_does_not_write_blank_line() -> None:
     assert stream.getvalue() == ""
 '''
 
+UNICODE_CACHE_PY38_FALLBACK_TEST = '''\
+from __future__ import annotations
+
+import builtins
+import functools
+import types
+from pathlib import Path
+
+
+def test_unicode_data_cache_import_falls_back_to_lru_cache() -> None:
+    """Unicode data import should tolerate Python 3.8 without functools.cache."""
+    source = Path("rich/_unicode_data/__init__.py").read_text(encoding="utf-8")
+    original_import = builtins.__import__
+    fake_functools = types.ModuleType("functools")
+    fake_functools.lru_cache = functools.lru_cache
+
+    def fake_import(name, globals=None, locals=None, fromlist=(), level=0):
+        if name == "functools" and level == 0:
+            return fake_functools
+        return original_import(name, globals, locals, fromlist, level)
+
+    namespace = {"__name__": "rich._unicode_data_fallback_probe", "__package__": "rich._unicode_data"}
+    builtins.__import__ = fake_import
+    try:
+        exec(compile(source, "rich/_unicode_data/__init__.py", "exec"), namespace)
+    finally:
+        builtins.__import__ = original_import
+
+    assert namespace["cache"] is functools.lru_cache
+'''
+
+UNICODE_LOAD_LATEST_TEST = '''\
+from __future__ import annotations
+
+from pathlib import Path
+
+
+def test_unicode_data_package_adds_latest_table_loader() -> None:
+    """Unicode data should expose loader source for the latest generated table."""
+    source = Path("rich/_unicode_data/__init__.py").read_text(encoding="utf-8")
+    versions = Path("rich/_unicode_data/_versions.py").read_text(encoding="utf-8")
+
+    assert "from rich._unicode_data._versions import VERSIONS" in source
+    assert 'module_name = f".unicode{version_path_component}"' in source
+    assert 'if unicode_version == "latest":' in source
+    assert '"17.0.0"' in versions
+'''
+
+UNICODE_INVALID_VERSION_FALLBACK_TEST = '''\
+from __future__ import annotations
+
+from pathlib import Path
+
+
+def test_invalid_unicode_version_source_falls_back_to_latest_table() -> None:
+    """Unicode loader source should catch invalid versions and fall back to latest."""
+    source = Path("rich/_unicode_data/__init__.py").read_text(encoding="utf-8")
+
+    assert "except ValueError:\\n            version_numbers = _parse_version(VERSIONS[-1])" in source
+    assert "if version not in VERSION_SET:" in source
+    assert "if TYPE_CHECKING:\\n        assert isinstance(module.cell_table, CellTable)" in source
+'''
+
+CELL_STRING_BASIC_API_TEST = '''\
+from __future__ import annotations
+
+from pathlib import Path
+
+
+def test_cell_string_exposes_basic_string_like_behavior() -> None:
+    """CellString should expose text, truthiness, iteration, and cached cell length."""
+    source = Path("rich/cell_string.py").read_text(encoding="utf-8")
+    namespace = {"__name__": "rich_cell_string_probe"}
+    exec(compile("from __future__ import annotations\\n" + source, "rich/cell_string.py", "exec"), namespace)
+    CellString = namespace["CellString"]
+
+    value = CellString("abc")
+
+    assert value.text == "abc"
+    assert value.cell_length == 3
+    assert list(value) == ["a", "b", "c"]
+    assert bool(value)
+'''
+
+CELL_TABLE_API_TEST = '''\
+from __future__ import annotations
+
+from pathlib import Path
+
+
+def test_cell_table_records_unicode_width_metadata() -> None:
+    """CellTable should carry unicode table metadata and hash by version."""
+    source = Path("rich/cell_string.py").read_text(encoding="utf-8")
+    namespace = {"__name__": "rich_cell_table_probe"}
+    exec(compile("from __future__ import annotations\\n" + source, "rich/cell_string.py", "exec"), namespace)
+    CellTable = namespace["CellTable"]
+
+    table = CellTable("probe", ((65, 65, 1),), frozenset({9731}))
+
+    assert table.unicode_version == "probe"
+    assert table.widths == ((65, 65, 1),)
+    assert 9731 in table.narrow_to_wide
+'''
+
+CELL_STRING_SPLIT_TEXT_TEST = '''\
+from __future__ import annotations
+
+from pathlib import Path
+
+
+def test_split_text_source_adds_cell_offset_splitting() -> None:
+    """Cell string source should add public split_text and its fast path."""
+    source = Path("rich/cell_string.py").read_text(encoding="utf-8")
+
+    assert "def split_text(" in source
+    assert "def _split_text(" in source
+    assert "return text[:cell_position], text[cell_position:]" in source
+    assert "return _split_text(text, cell_position, unicode_version)" in source
+'''
+
+PRETTY_IPYTHON_CUSTOM_CONSOLE_TEST = '''\
+from __future__ import annotations
+
+import builtins
+import io
+import sys
+import types
+
+from rich.console import Console
+import rich.pretty as pretty
+
+
+def test_ipython_formatter_uses_installed_custom_console() -> None:
+    """IPython pretty formatting should preserve the console passed to install()."""
+    captured = {}
+
+    class BaseFormatter:
+        pass
+
+    formatters_module = types.ModuleType("IPython.core.formatters")
+    formatters_module.BaseFormatter = BaseFormatter
+    core_module = types.ModuleType("IPython.core")
+    ipython_module = types.ModuleType("IPython")
+    saved_modules = {name: sys.modules.get(name) for name in ("IPython", "IPython.core", "IPython.core.formatters")}
+    sys.modules["IPython"] = ipython_module
+    sys.modules["IPython.core"] = core_module
+    sys.modules["IPython.core.formatters"] = formatters_module
+
+    class FakeDisplayFormatter:
+        def __init__(self) -> None:
+            self.formatters = {"text/plain": None}
+
+    class FakeIPython:
+        def __init__(self) -> None:
+            self.display_formatter = FakeDisplayFormatter()
+
+    fake_ipython = FakeIPython()
+    original_get_ipython = getattr(builtins, "get_ipython", None)
+    original_hook = pretty._ipy_display_hook
+
+    def fake_display_hook(value, **kwargs):
+        captured["value"] = value
+        captured.update(kwargs)
+        return "formatted"
+
+    builtins.get_ipython = lambda: fake_ipython
+    pretty._ipy_display_hook = fake_display_hook
+    custom_console = Console(file=io.StringIO())
+    try:
+        pretty.install(console=custom_console)
+        result = fake_ipython.display_formatter.formatters["text/plain"]("value")
+    finally:
+        pretty._ipy_display_hook = original_hook
+        if original_get_ipython is None:
+            delattr(builtins, "get_ipython")
+        else:
+            builtins.get_ipython = original_get_ipython
+        for name, module in saved_modules.items():
+            if module is None:
+                sys.modules.pop(name, None)
+            else:
+                sys.modules[name] = module
+
+    assert result == "formatted"
+    assert captured["value"] == "value"
+    assert captured["console"] is custom_console
+'''
+
+PROGRESS_RESET_DOCSTRING_TEST = '''\
+from __future__ import annotations
+
+from rich.progress import Progress
+
+
+def test_progress_reset_docstring_describes_visible_none_semantics() -> None:
+    """Progress.reset should document visible=None semantics."""
+    doc = Progress.reset.__doc__ or ""
+
+    assert "Set visible flag if not None." in doc
+    assert "Enable display of the task. Defaults to True." not in doc
+'''
+
 
 def parse_args(argv: Sequence[str] | None = None) -> argparse.Namespace:
     parser = argparse.ArgumentParser(description=__doc__)
@@ -524,6 +726,108 @@ def hidden_verifier_for_candidate(candidate: Mapping[str, Any]) -> dict[str, Any
             "command": ".venv/bin/python -m pytest -q tests/test_progress_disabled_stop_output.py",
             "test_node_count": 1,
             "oracle_template": "progress_disabled_stop_no_blank_line",
+        }
+    if subject == "py3.8 fix" and "rich/_unicode_data/__init__.py" in source_files:
+        return {
+            "hidden_files": [
+                {
+                    "path": "tests/test_unicode_data_py38_cache_fallback.py",
+                    "content": UNICODE_CACHE_PY38_FALLBACK_TEST,
+                }
+            ],
+            "command": ".venv/bin/python -m pytest -q tests/test_unicode_data_py38_cache_fallback.py",
+            "test_node_count": 1,
+            "oracle_template": "unicode_data_py38_cache_fallback",
+        }
+    if subject == "f string path" and {
+        "rich/_unicode_data/__init__.py",
+        "rich/_unicode_data/_versions.py",
+    }.issubset(source_files):
+        return {
+            "hidden_files": [
+                {
+                    "path": "tests/test_unicode_data_load_latest.py",
+                    "content": UNICODE_LOAD_LATEST_TEST,
+                }
+            ],
+            "command": ".venv/bin/python -m pytest -q tests/test_unicode_data_load_latest.py",
+            "test_node_count": 1,
+            "oracle_template": "unicode_data_load_latest_table",
+        }
+    if subject == "test" and "rich/_unicode_data/__init__.py" in source_files:
+        return {
+            "hidden_files": [
+                {
+                    "path": "tests/test_unicode_data_invalid_version_fallback.py",
+                    "content": UNICODE_INVALID_VERSION_FALLBACK_TEST,
+                }
+            ],
+            "command": ".venv/bin/python -m pytest -q tests/test_unicode_data_invalid_version_fallback.py",
+            "test_node_count": 1,
+            "oracle_template": "unicode_data_invalid_version_fallback",
+        }
+    if subject == "cell string class" and "rich/cell_string.py" in source_files:
+        return {
+            "hidden_files": [
+                {
+                    "path": "tests/test_cell_string_basic_api.py",
+                    "content": CELL_STRING_BASIC_API_TEST,
+                }
+            ],
+            "command": ".venv/bin/python -m pytest -q tests/test_cell_string_basic_api.py",
+            "test_node_count": 1,
+            "oracle_template": "cell_string_basic_api",
+        }
+    if subject == "cell tables" and "rich/cell_string.py" in source_files:
+        return {
+            "hidden_files": [
+                {
+                    "path": "tests/test_cell_string_table_api.py",
+                    "content": CELL_TABLE_API_TEST,
+                }
+            ],
+            "command": ".venv/bin/python -m pytest -q tests/test_cell_string_table_api.py",
+            "test_node_count": 1,
+            "oracle_template": "cell_table_metadata_api",
+        }
+    if subject == "split text" and {
+        "rich/_unicode_data/__init__.py",
+        "rich/cell_string.py",
+    }.issubset(source_files):
+        return {
+            "hidden_files": [
+                {
+                    "path": "tests/test_cell_string_split_text.py",
+                    "content": CELL_STRING_SPLIT_TEXT_TEST,
+                }
+            ],
+            "command": ".venv/bin/python -m pytest -q tests/test_cell_string_split_text.py",
+            "test_node_count": 1,
+            "oracle_template": "cell_string_split_text",
+        }
+    if subject == "respect custom console instance in ipython output" and "rich/pretty.py" in source_files:
+        return {
+            "hidden_files": [
+                {
+                    "path": "tests/test_pretty_ipython_custom_console.py",
+                    "content": PRETTY_IPYTHON_CUSTOM_CONSOLE_TEST,
+                }
+            ],
+            "command": ".venv/bin/python -m pytest -q tests/test_pretty_ipython_custom_console.py",
+            "test_node_count": 1,
+            "oracle_template": "pretty_ipython_custom_console",
+        }
+    if subject == "docstring" and "rich/progress.py" in source_files:
+        return {
+            "hidden_files": [
+                {
+                    "path": "tests/test_progress_reset_visible_docstring.py",
+                    "content": PROGRESS_RESET_DOCSTRING_TEST,
+                }
+            ],
+            "command": ".venv/bin/python -m pytest -q tests/test_progress_reset_visible_docstring.py",
+            "test_node_count": 1,
+            "oracle_template": "progress_reset_visible_docstring",
         }
     raise ToolError(
         "no source-oracle template is available for selected candidate",

@@ -1,0 +1,44 @@
+{
+  "admission_decision": "accepted",
+  "base_anchor_digest": "4e37d59255a0fabe56d0305494171e049826cadd847eaeb5a8cdea95ec320c3f",
+  "changed_file_set_digest": "eeef89258efd4b438867373b3530711b29a7e8e96d22826d2104d628e9c353a4",
+  "claim_boundary": [
+    "This is a one-candidate source-only Golden-Oracle smoke pilot, not a frozen Rich denominator.",
+    "Raw source commits, raw subjects, reference patches, and hidden verifier files are retained only in ignored private artifacts.",
+    "No ACUT primary attempt or model call was made."
+  ],
+  "family": "parser/mixed integration",
+  "generated_at": "2026-05-14T17:05:44.888704Z",
+  "hidden_verifier_digest": "2a4af26ec98aec9655c2035de8bd4cff9d2ed979729476e659ef7ab2d351699d",
+  "model_calls_made": 0,
+  "no_op_result": {
+    "public_artifact_redacted": true,
+    "status": "failed",
+    "verifier_exit_code": 1
+  },
+  "oracle_priority": "medium",
+  "oracle_template": "cell_string_split_text",
+  "pilot_scope": "one_source_only_golden_oracle_candidate",
+  "primary_runs_authorized": false,
+  "private_artifact_root": "experiments/core_narrative/large_artifacts/rich_r_source_oracle_pilot_split_text_20260515",
+  "reference_patch_bytes": 16952,
+  "reference_patch_digest": "61167419072725ee7d1660f3129e25bae8349ad834636d2cfc4b8c6a98487af7",
+  "reference_result": {
+    "public_artifact_redacted": true,
+    "status": "passed",
+    "verifier_exit_code": 0
+  },
+  "repo_slug": "rich",
+  "schema_version": "core-narrative.rich-source-oracle-pilot.v1",
+  "source_anchor_digest": "af9d1898097d2f189794086c83ae50ebd1b716905a7a1848d3ceb11c143531c5",
+  "source_file_count": 2,
+  "split": "R",
+  "statement_digest": "655eb3bd5d574b34e5c42274f304e2018ed8dde94971d2fcdcb64c65e74e8a8c",
+  "status": "completed",
+  "subject_digest": "795bcaa08037a5169afd1566e1f63321b85f37b353ea8e943923d865dbe3e8b3",
+  "surface": "source_without_tests",
+  "test_file_count": 0,
+  "test_node_count": 1,
+  "tool": "rich_source_oracle_pilot",
+  "triage_code": "manual_probe_required"
+}

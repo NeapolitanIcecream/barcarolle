@@ -1,0 +1,44 @@
+{
+  "admission_decision": "accepted",
+  "base_anchor_digest": "be40afd459ad48110ba5e7411efbe48306b476126d6c81b3b3b65628f7c860d1",
+  "changed_file_set_digest": "2ad5ff88dad31cd9677d2beece61c777f2ea8a501dccd92efed76947acb5b432",
+  "claim_boundary": [
+    "This is a one-candidate source-only Golden-Oracle smoke pilot, not a frozen Rich denominator.",
+    "Raw source commits, raw subjects, reference patches, and hidden verifier files are retained only in ignored private artifacts.",
+    "No ACUT primary attempt or model call was made."
+  ],
+  "family": "console/rendering",
+  "generated_at": "2026-05-14T17:06:06.643566Z",
+  "hidden_verifier_digest": "de561178602a22d02fb06cd48517dc0491f139e7068b0990f5035aded2770bd5",
+  "model_calls_made": 0,
+  "no_op_result": {
+    "public_artifact_redacted": true,
+    "status": "failed",
+    "verifier_exit_code": 1
+  },
+  "oracle_priority": "medium",
+  "oracle_template": "pretty_ipython_custom_console",
+  "pilot_scope": "one_source_only_golden_oracle_candidate",
+  "primary_runs_authorized": false,
+  "private_artifact_root": "experiments/core_narrative/large_artifacts/rich_r_source_oracle_pilot_pretty_console_20260515",
+  "reference_patch_bytes": 498,
+  "reference_patch_digest": "e96215ac346e76a6cf698ac0dc6b3fa192ebed96de9e7266112dc3cd730f4208",
+  "reference_result": {
+    "public_artifact_redacted": true,
+    "status": "passed",
+    "verifier_exit_code": 0
+  },
+  "repo_slug": "rich",
+  "schema_version": "core-narrative.rich-source-oracle-pilot.v1",
+  "source_anchor_digest": "37f4f8f881717734b44244cae39e9b8b83174b37f0fff9f2fa20bbdbdc39a626",
+  "source_file_count": 1,
+  "split": "R",
+  "statement_digest": "3f42793cb9e6f682ea65e6a78a2f431e35264c88dab5984ae098498f24b4b36d",
+  "status": "completed",
+  "subject_digest": "0936ee7aa549c372ccb44aee6c510db31cfc6f30cf922d8a725db34246235735",
+  "surface": "source_without_tests",
+  "test_file_count": 0,
+  "test_node_count": 1,
+  "tool": "rich_source_oracle_pilot",
+  "triage_code": "manual_probe_required"
+}

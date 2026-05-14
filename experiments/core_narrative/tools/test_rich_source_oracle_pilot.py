@@ -252,6 +252,122 @@ class RichSourceOraclePilotTests(unittest.TestCase):
         self.assertIn("Progress(console=console, disable=True)", content)
         self.assertIn('stream.getvalue() == ""', content)
 
+    def test_hidden_verifier_template_covers_py38_unicode_cache_fallback(self) -> None:
+        """The R unicode verifier checks fallback when functools.cache is unavailable."""
+        verifier = pilot.hidden_verifier_for_candidate(
+            {
+                "subject": "py3.8 fix",
+                "source_files": ["rich/_unicode_data/__init__.py"],
+            }
+        )
+
+        self.assertEqual(verifier["oracle_template"], "unicode_data_py38_cache_fallback")
+        self.assertIn("tests/test_unicode_data_py38_cache_fallback.py", verifier["command"])
+        content = verifier["hidden_files"][0]["content"]
+        self.assertIn("fake_functools.lru_cache", content)
+        self.assertIn('namespace["cache"] is functools.lru_cache', content)
+
+    def test_hidden_verifier_template_covers_unicode_data_loader(self) -> None:
+        """The R unicode loader verifier checks latest table import."""
+        verifier = pilot.hidden_verifier_for_candidate(
+            {
+                "subject": "f string path",
+                "source_files": ["rich/_unicode_data/__init__.py", "rich/_unicode_data/_versions.py"],
+            }
+        )
+
+        self.assertEqual(verifier["oracle_template"], "unicode_data_load_latest_table")
+        self.assertIn("tests/test_unicode_data_load_latest.py", verifier["command"])
+        content = verifier["hidden_files"][0]["content"]
+        self.assertIn("module_name", content)
+        self.assertIn('"17.0.0"', content)
+
+    def test_hidden_verifier_template_covers_unicode_invalid_version_fallback(self) -> None:
+        """The R unicode fallback verifier checks invalid version handling."""
+        verifier = pilot.hidden_verifier_for_candidate(
+            {
+                "subject": "test",
+                "source_files": ["rich/_unicode_data/__init__.py"],
+            }
+        )
+
+        self.assertEqual(verifier["oracle_template"], "unicode_data_invalid_version_fallback")
+        self.assertIn("tests/test_unicode_data_invalid_version_fallback.py", verifier["command"])
+        self.assertIn("version_numbers = _parse_version(VERSIONS[-1])", verifier["hidden_files"][0]["content"])
+
+    def test_hidden_verifier_template_covers_cell_string_api(self) -> None:
+        """The R CellString verifier checks basic string-like behavior."""
+        verifier = pilot.hidden_verifier_for_candidate(
+            {
+                "subject": "cell string class",
+                "source_files": ["rich/cell_string.py"],
+            }
+        )
+
+        self.assertEqual(verifier["oracle_template"], "cell_string_basic_api")
+        self.assertIn("tests/test_cell_string_basic_api.py", verifier["command"])
+        content = verifier["hidden_files"][0]["content"]
+        self.assertIn("exec(compile", content)
+        self.assertIn("CellString(\"abc\")", content)
+        self.assertIn("list(value)", content)
+
+    def test_hidden_verifier_template_covers_cell_table_api(self) -> None:
+        """The R CellTable verifier checks unicode metadata storage."""
+        verifier = pilot.hidden_verifier_for_candidate(
+            {
+                "subject": "cell tables",
+                "source_files": ["rich/cell_string.py"],
+            }
+        )
+
+        self.assertEqual(verifier["oracle_template"], "cell_table_metadata_api")
+        self.assertIn("tests/test_cell_string_table_api.py", verifier["command"])
+        content = verifier["hidden_files"][0]["content"]
+        self.assertIn("exec(compile", content)
+        self.assertIn("CellTable(\"probe\"", content)
+        self.assertIn("narrow_to_wide", content)
+
+    def test_hidden_verifier_template_covers_cell_split_text(self) -> None:
+        """The R split-text verifier checks splitting at a cell offset."""
+        verifier = pilot.hidden_verifier_for_candidate(
+            {
+                "subject": "split text",
+                "source_files": ["rich/_unicode_data/__init__.py", "rich/cell_string.py"],
+            }
+        )
+
+        self.assertEqual(verifier["oracle_template"], "cell_string_split_text")
+        self.assertIn("tests/test_cell_string_split_text.py", verifier["command"])
+        self.assertIn("def split_text(", verifier["hidden_files"][0]["content"])
+
+    def test_hidden_verifier_template_covers_pretty_ipython_custom_console(self) -> None:
+        """The R pretty verifier checks IPython formatting uses the installed console."""
+        verifier = pilot.hidden_verifier_for_candidate(
+            {
+                "subject": "Respect custom console instance in IPython output",
+                "source_files": ["rich/pretty.py"],
+            }
+        )
+
+        self.assertEqual(verifier["oracle_template"], "pretty_ipython_custom_console")
+        self.assertIn("tests/test_pretty_ipython_custom_console.py", verifier["command"])
+        content = verifier["hidden_files"][0]["content"]
+        self.assertIn("fake_ipython.display_formatter", content)
+        self.assertIn('captured["console"] is custom_console', content)
+
+    def test_hidden_verifier_template_covers_progress_reset_docstring(self) -> None:
+        """The R progress-doc verifier checks visible=None documentation."""
+        verifier = pilot.hidden_verifier_for_candidate(
+            {
+                "subject": "docstring",
+                "source_files": ["rich/progress.py"],
+            }
+        )
+
+        self.assertEqual(verifier["oracle_template"], "progress_reset_visible_docstring")
+        self.assertIn("tests/test_progress_reset_visible_docstring.py", verifier["command"])
+        self.assertIn("Set visible flag if not None.", verifier["hidden_files"][0]["content"])
+
     def test_source_only_candidates_respect_requested_split(self) -> None:
         """R queue pilots select source-only candidates from R, not W*."""
         candidates = [
