@@ -16,8 +16,8 @@ Do not mark the active goal complete from the current state. The next concrete u
 |---|---|---|---|
 | Pivot main line to repository-local benchmark generation and tuning validation; NFL only bonus | covered | `configs/repository_local_benchmark_20260514.yaml` | none |
 | Freeze C/R/W* split at T0 `2026-05-14`; W* fixed to `2026-02-14`..`2026-05-14` | covered | `results/repository_local_benchmark_admission_20260514.json`, `configs/repository_local_benchmark_20260514.yaml` | none |
-| Task 1: repository admission for Click/Rich/Black with counts, feasibility, family diversity, dependency risk, recommendation | partially covered | `reports/2026-05-14_repository_local_benchmark_admission.md`, `results/rich_task_admission_feasibility_20260514.json` | Rich collect-only feasibility is measured; full per-task historical smoke and measured test runtime are not. |
-| Task 2: Click C/R/W* construction with no-op/reference/leakage/family/difficulty/digests | blocked, not done | `reports/2026-05-14_repository_local_benchmark_gate.md` | Click W* supply is below gate; no 0514 Click denominator was admitted. |
+| Task 1: repository admission for Click/Rich/Black with counts, feasibility, family diversity, dependency risk, recommendation | partially covered | `reports/2026-05-14_repository_local_benchmark_admission.md`, `results/rich_task_admission_feasibility_20260514.json`, `results/rich_task_admission_readiness_20260514.json` | Rich collect-only feasibility and stricter readiness counts are measured; full per-task historical smoke and measured test runtime are not. |
+| Task 2: Click C/R/W* construction with no-op/reference/leakage/family/difficulty/digests | blocked, not done | `reports/2026-05-14_repository_local_benchmark_gate.md`, `reports/2026-05-14_rich_task_admission_readiness.md` | Click W* supply is below gate. Rich can continue into task admission but has only 23 stricter W* design candidates, 8 direct smoke-ready candidates, and no admitted denominator. |
 | Task 3: Golden-Selector/Taskwright/Oracle/Auditor role isolation with prompt hashes, artifact digests, admission decisions | specified, not executed | `configs/repository_local_benchmark_20260514.yaml` | No 0514 role-run outputs or prompt hashes exist. |
 | Task 4: ACUT/intervention manifests A0-A5, A4 limited to public statement + repo tree/source | partially covered | A0/A2/A3/A5 existing, A1/A4 Click variants added, `tools/repository_localization_hints.py` | Rich execution needs Rich or repository-neutral intervention variants. |
 | Task 5: run R and W* one primary attempt per ACUT/task with fixed denominator and hidden verifier | not done | Gate report records non-action | No denominator was admitted; no primary attempts authorized or run. |
@@ -36,6 +36,7 @@ Do not mark the active goal complete from the current state. The next concrete u
 - `experiments/core_narrative/reports/2026-05-14_repository_local_benchmark_gate.md`
 - `experiments/core_narrative/configs/repository_local_benchmark_20260514.yaml`
 - `experiments/core_narrative/results/rich_task_admission_feasibility_20260514.json`
+- `experiments/core_narrative/results/rich_task_admission_readiness_20260514.json`
 - ACUT manifests for A0-A5, including the newly added A1 and A4 Click variants.
 - `experiments/core_narrative/tools/repository_local_benchmark_admission.py`
 - `experiments/core_narrative/tools/repository_localization_hints.py`
@@ -66,6 +67,16 @@ observed: 981 tests collected in 0.52s
 
 This narrows the dependency-feasibility gap for Rich. It is still not task admission, because no historical base workspaces, no hidden verifiers, no no-op failures, and no reference-patch passes were checked.
 
+Rich task-admission readiness:
+
+```text
+artifact: experiments/core_narrative/results/rich_task_admission_readiness_20260514.json
+R: 37 design candidates, 12 direct smoke-ready, 3 short of the 40-candidate pool target
+W*: 23 design candidates, 8 direct smoke-ready, 14 source-only requiring Golden-Oracle, 17 short of the 40-candidate pool target
+```
+
+This is stricter than repository admission because it deduplicates normalized subjects and requires extractable pytest nodes for direct smoke readiness. It still does not admit tasks.
+
 ## Verification Commands
 
 Completed during the gate phase:
@@ -83,4 +94,4 @@ These commands verify the committed gate tools and manifests. They do not verify
 
 ## Next Work
 
-Proceed with Rich task admission if the 0514 line continues. Rich passed repository admission, but W* has only a small direct source+test oracle surface; reaching 20 accepted W* tasks will require Golden-Oracle construction for source-only candidates before any ACUT primary attempt.
+Proceed with Rich task admission if the 0514 line continues. Rich passed repository admission, but the stricter readiness scan shows W* has only 8 direct smoke-ready candidates and 23 design candidates. Reaching an accepted denominator will require Golden-Oracle construction for source-only candidates, and the 40-candidate pool target remains unmet unless the gate is explicitly revised.

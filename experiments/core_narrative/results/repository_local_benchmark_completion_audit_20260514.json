@@ -11,7 +11,8 @@
     "repository_admission_report": "experiments/core_narrative/reports/2026-05-14_repository_local_benchmark_admission.md",
     "repository_gate_report": "experiments/core_narrative/reports/2026-05-14_repository_local_benchmark_gate.md",
     "protocol": "experiments/core_narrative/configs/repository_local_benchmark_20260514.yaml",
-    "rich_task_admission_feasibility": "experiments/core_narrative/results/rich_task_admission_feasibility_20260514.json"
+    "rich_task_admission_feasibility": "experiments/core_narrative/results/rich_task_admission_feasibility_20260514.json",
+    "rich_task_admission_readiness": "experiments/core_narrative/results/rich_task_admission_readiness_20260514.json"
   },
   "additional_feasibility_observations": {
     "rich_ambient_collect_only": {
@@ -37,6 +38,19 @@
       "collected_tests": 981,
       "reported_collect_duration_seconds": 0.52,
       "interpretation": "Rich collection is feasible in an isolated environment after installing the project plus pytest and attrs."
+    },
+    "rich_task_admission_readiness": {
+      "artifact": "experiments/core_narrative/results/rich_task_admission_readiness_20260514.json",
+      "status": "rich_task_admission_readiness_completed",
+      "R_design_candidates": 37,
+      "R_direct_smoke_ready_candidates": 12,
+      "R_candidate_pool_gap_to_40": 3,
+      "W_star_design_candidates": 23,
+      "W_star_direct_smoke_ready_candidates": 8,
+      "W_star_source_only_golden_oracle_required": 14,
+      "W_star_direct_tests_without_extractable_nodes": 1,
+      "W_star_candidate_pool_gap_to_40": 17,
+      "interpretation": "Rich can continue into task admission, but primary runs remain unauthorized. W* needs Golden-Oracle construction and still falls short of the 40-candidate target under the stricter readiness scan."
     }
   },
   "checklist": [
@@ -61,17 +75,19 @@
       "evidence": [
         "experiments/core_narrative/reports/2026-05-14_repository_local_benchmark_admission.md",
         "experiments/core_narrative/results/repository_local_benchmark_admission_20260514.json",
-        "experiments/core_narrative/results/rich_task_admission_feasibility_20260514.json"
+        "experiments/core_narrative/results/rich_task_admission_feasibility_20260514.json",
+        "experiments/core_narrative/results/rich_task_admission_readiness_20260514.json"
       ],
-      "gap": "Candidate supply, test-surface presence, family counts, recommendation, and Rich collect-only feasibility are present. Full per-task historical smoke and measured test runtime are not yet measured."
+      "gap": "Candidate supply, test-surface presence, family counts, recommendation, Rich collect-only feasibility, and Rich task-readiness counts are present. Full per-task historical smoke and measured test runtime are not yet measured."
     },
     {
       "requirement": "Task 2: construct Click C/R/W* task sets: C 20-40, R 40 candidates -> 20 primary + 5 reserve, W* 40 candidates -> 20 primary + 5 reserve, with no-op/reference/leakage/family/difficulty/digests.",
       "status": "blocked_not_done",
       "evidence": [
-        "experiments/core_narrative/reports/2026-05-14_repository_local_benchmark_gate.md"
+        "experiments/core_narrative/reports/2026-05-14_repository_local_benchmark_gate.md",
+        "experiments/core_narrative/reports/2026-05-14_rich_task_admission_readiness.md"
       ],
-      "gap": "Click W* has only 14 task-design candidates in the frozen window, below the 20-task gate. No 0514 Click C/R/W* denominator was admitted or smoked."
+      "gap": "Click W* has only 14 task-design candidates in the frozen window, below the 20-task gate. Rich readiness can continue but has only 23 stricter W* design candidates, 8 direct smoke-ready candidates, and no admitted denominator. No 0514 C/R/W* denominator was admitted or smoked."
     },
     {
       "requirement": "Task 3: Codex role isolation for Golden-Selector, Golden-Taskwright, Golden-Oracle, Golden-Auditor with prompt hashes, artifact digests, and admission decisions.",
