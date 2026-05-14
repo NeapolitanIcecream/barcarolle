@@ -16,7 +16,7 @@ Do not mark the active goal complete from the current state. The next concrete u
 |---|---|---|---|
 | Pivot main line to repository-local benchmark generation and tuning validation; NFL only bonus | covered | `configs/repository_local_benchmark_20260514.yaml` | none |
 | Freeze C/R/W* split at T0 `2026-05-14`; W* fixed to `2026-02-14`..`2026-05-14` | covered | `results/repository_local_benchmark_admission_20260514.json`, `configs/repository_local_benchmark_20260514.yaml` | none |
-| Task 1: repository admission for Click/Rich/Black with counts, feasibility, family diversity, dependency risk, recommendation | partially covered | `reports/2026-05-14_repository_local_benchmark_admission.md` | Dependency-risk and measured test-runtime feasibility are not fully measured. |
+| Task 1: repository admission for Click/Rich/Black with counts, feasibility, family diversity, dependency risk, recommendation | partially covered | `reports/2026-05-14_repository_local_benchmark_admission.md`, `results/rich_task_admission_feasibility_20260514.json` | Rich collect-only feasibility is measured; full per-task historical smoke and measured test runtime are not. |
 | Task 2: Click C/R/W* construction with no-op/reference/leakage/family/difficulty/digests | blocked, not done | `reports/2026-05-14_repository_local_benchmark_gate.md` | Click W* supply is below gate; no 0514 Click denominator was admitted. |
 | Task 3: Golden-Selector/Taskwright/Oracle/Auditor role isolation with prompt hashes, artifact digests, admission decisions | specified, not executed | `configs/repository_local_benchmark_20260514.yaml` | No 0514 role-run outputs or prompt hashes exist. |
 | Task 4: ACUT/intervention manifests A0-A5, A4 limited to public statement + repo tree/source | partially covered | A0/A2/A3/A5 existing, A1/A4 Click variants added, `tools/repository_localization_hints.py` | Rich execution needs Rich or repository-neutral intervention variants. |
@@ -35,6 +35,7 @@ Do not mark the active goal complete from the current state. The next concrete u
 - `experiments/core_narrative/reports/2026-05-14_repository_local_benchmark_admission.md`
 - `experiments/core_narrative/reports/2026-05-14_repository_local_benchmark_gate.md`
 - `experiments/core_narrative/configs/repository_local_benchmark_20260514.yaml`
+- `experiments/core_narrative/results/rich_task_admission_feasibility_20260514.json`
 - ACUT manifests for A0-A5, including the newly added A1 and A4 Click variants.
 - `experiments/core_narrative/tools/repository_local_benchmark_admission.py`
 - `experiments/core_narrative/tools/repository_localization_hints.py`
@@ -52,6 +53,18 @@ missing imports: markdown_it, attr
 ```
 
 `pyproject.toml` declares `markdown-it-py` as a project dependency and `attrs` as a dev dependency, so Rich task admission should use an isolated install that includes project and dev/test dependencies. This does not block Rich repository admission, but it remains a concrete dependency-readiness task before smoke-tested task admission.
+
+Follow-up isolated check:
+
+```text
+setup: python3 -m venv /tmp/barcarolle-rich-feasibility-venv
+setup: pip install -e . pytest attrs
+command: /tmp/barcarolle-rich-feasibility-venv/bin/python -m pytest -q --collect-only tests
+exit_code: 0
+observed: 981 tests collected in 0.52s
+```
+
+This narrows the dependency-feasibility gap for Rich. It is still not task admission, because no historical base workspaces, no hidden verifiers, no no-op failures, and no reference-patch passes were checked.
 
 ## Verification Commands
 

@@ -10,7 +10,8 @@
     "branch": "codex/rgw-full-workspace-v1",
     "repository_admission_report": "experiments/core_narrative/reports/2026-05-14_repository_local_benchmark_admission.md",
     "repository_gate_report": "experiments/core_narrative/reports/2026-05-14_repository_local_benchmark_gate.md",
-    "protocol": "experiments/core_narrative/configs/repository_local_benchmark_20260514.yaml"
+    "protocol": "experiments/core_narrative/configs/repository_local_benchmark_20260514.yaml",
+    "rich_task_admission_feasibility": "experiments/core_narrative/results/rich_task_admission_feasibility_20260514.json"
   },
   "additional_feasibility_observations": {
     "rich_ambient_collect_only": {
@@ -28,6 +29,14 @@
         "pyproject.toml declares attrs under tool.poetry.dev-dependencies"
       ],
       "interpretation": "Rich has a large pytest surface, but a clean task-admission runner must install project and dev dependencies before smoke tests."
+    },
+    "rich_isolated_collect_only": {
+      "command": "/tmp/barcarolle-rich-feasibility-venv/bin/python -m pytest -q --collect-only tests",
+      "cwd": "experiments/core_narrative/external_repos/rich",
+      "exit_code": 0,
+      "collected_tests": 981,
+      "reported_collect_duration_seconds": 0.52,
+      "interpretation": "Rich collection is feasible in an isolated environment after installing the project plus pytest and attrs."
     }
   },
   "checklist": [
@@ -51,9 +60,10 @@
       "status": "partially_covered",
       "evidence": [
         "experiments/core_narrative/reports/2026-05-14_repository_local_benchmark_admission.md",
-        "experiments/core_narrative/results/repository_local_benchmark_admission_20260514.json"
+        "experiments/core_narrative/results/repository_local_benchmark_admission_20260514.json",
+        "experiments/core_narrative/results/rich_task_admission_feasibility_20260514.json"
       ],
-      "gap": "Candidate supply, test-surface presence, family counts, and recommendation are present. Full dependency-risk and measured test-runtime feasibility are not yet measured."
+      "gap": "Candidate supply, test-surface presence, family counts, recommendation, and Rich collect-only feasibility are present. Full per-task historical smoke and measured test runtime are not yet measured."
     },
     {
       "requirement": "Task 2: construct Click C/R/W* task sets: C 20-40, R 40 candidates -> 20 primary + 5 reserve, W* 40 candidates -> 20 primary + 5 reserve, with no-op/reference/leakage/family/difficulty/digests.",

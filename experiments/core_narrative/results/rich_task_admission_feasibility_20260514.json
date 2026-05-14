@@ -1,0 +1,53 @@
+{
+  "schema_version": "core-narrative.repository-task-admission-feasibility.v1",
+  "repo_slug": "rich",
+  "repository": "Textualize/rich",
+  "generated_at": "2026-05-14T14:34:17Z",
+  "status": "collect_only_feasible_with_isolated_dependencies",
+  "model_calls_made": 0,
+  "source_checkout": "experiments/core_narrative/external_repos/rich",
+  "checks": [
+    {
+      "check_id": "ambient_collect_only",
+      "command": "python3 -m pytest -q --collect-only tests",
+      "exit_code": 2,
+      "collected_tests_before_errors": 919,
+      "collection_errors": 4,
+      "missing_imports_observed": [
+        "markdown_it",
+        "attr"
+      ],
+      "interpretation": "Ambient Python is not sufficient for Rich task admission."
+    },
+    {
+      "check_id": "isolated_pip_editable_collect_only",
+      "setup_commands": [
+        "python3 -m venv /tmp/barcarolle-rich-feasibility-venv",
+        "/tmp/barcarolle-rich-feasibility-venv/bin/python -m pip install -q --upgrade pip",
+        "/tmp/barcarolle-rich-feasibility-venv/bin/python -m pip install -q -e . pytest attrs"
+      ],
+      "collect_command": "/tmp/barcarolle-rich-feasibility-venv/bin/python -m pytest -q --collect-only tests",
+      "exit_code": 0,
+      "collected_tests": 981,
+      "reported_collect_duration_seconds": 0.52,
+      "interpretation": "Rich test collection is feasible when project dependencies and the attrs dev dependency are installed in an isolated environment."
+    }
+  ],
+  "dependency_observations": {
+    "pyproject_project_dependencies_include": [
+      "markdown-it-py",
+      "pygments"
+    ],
+    "pyproject_dev_dependencies_relevant_to_collection": [
+      "pytest",
+      "attrs"
+    ],
+    "tox_policy": "tox runs poetry install before pytest"
+  },
+  "claim_boundary": [
+    "This is collect-only feasibility at the current Rich checkout, not no-op/reference task smoke.",
+    "It does not admit any R or W* task.",
+    "Historical base commits may have different dependency surfaces and still require per-task smoke."
+  ],
+  "next_required_step": "Implement Rich task-admission smoke with isolated install commands that include project dependencies and attrs, then build Golden-Oracle verifiers for source-only W* candidates."
+}
