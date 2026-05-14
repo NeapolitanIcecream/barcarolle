@@ -1,0 +1,145 @@
+{
+  "schema_version": "core-narrative.repository-local-benchmark-completion-audit.v1",
+  "audit_id": "repository-local-benchmark-20260514-completion-audit",
+  "audited_at": "2026-05-14T14:31:37Z",
+  "objective_file": "/Users/chenmohan/Downloads/barcarolle-research-0514-1.md",
+  "overall_verdict": "not_complete_blocked_before_task_admission_and_primary_runs",
+  "active_goal_should_be_marked_complete": false,
+  "basis": {
+    "commit": "7db24e9",
+    "branch": "codex/rgw-full-workspace-v1",
+    "repository_admission_report": "experiments/core_narrative/reports/2026-05-14_repository_local_benchmark_admission.md",
+    "repository_gate_report": "experiments/core_narrative/reports/2026-05-14_repository_local_benchmark_gate.md",
+    "protocol": "experiments/core_narrative/configs/repository_local_benchmark_20260514.yaml"
+  },
+  "additional_feasibility_observations": {
+    "rich_ambient_collect_only": {
+      "command": "python3 -m pytest -q --collect-only tests",
+      "cwd": "experiments/core_narrative/external_repos/rich",
+      "exit_code": 2,
+      "collected_tests_before_errors": 919,
+      "collection_errors": 4,
+      "missing_imports_observed": [
+        "markdown_it",
+        "attr"
+      ],
+      "dependency_declarations_observed": [
+        "pyproject.toml declares markdown-it-py under tool.poetry.dependencies",
+        "pyproject.toml declares attrs under tool.poetry.dev-dependencies"
+      ],
+      "interpretation": "Rich has a large pytest surface, but a clean task-admission runner must install project and dev dependencies before smoke tests."
+    }
+  },
+  "checklist": [
+    {
+      "requirement": "Pivot main line to repository-local benchmark generation and tuning validation; NFL only bonus.",
+      "status": "covered",
+      "evidence": [
+        "experiments/core_narrative/configs/repository_local_benchmark_20260514.yaml"
+      ]
+    },
+    {
+      "requirement": "Freeze C/R/W* split at T0=2026-05-14, with W* fixed to 2026-02-14..2026-05-14 and no borrowing earlier work.",
+      "status": "covered",
+      "evidence": [
+        "experiments/core_narrative/results/repository_local_benchmark_admission_20260514.json",
+        "experiments/core_narrative/configs/repository_local_benchmark_20260514.yaml"
+      ]
+    },
+    {
+      "requirement": "Task 1: repository admission for Click, Rich, Black with candidate counts, test feasibility, family diversity, dependency risk, and recommendation.",
+      "status": "partially_covered",
+      "evidence": [
+        "experiments/core_narrative/reports/2026-05-14_repository_local_benchmark_admission.md",
+        "experiments/core_narrative/results/repository_local_benchmark_admission_20260514.json"
+      ],
+      "gap": "Candidate supply, test-surface presence, family counts, and recommendation are present. Full dependency-risk and measured test-runtime feasibility are not yet measured."
+    },
+    {
+      "requirement": "Task 2: construct Click C/R/W* task sets: C 20-40, R 40 candidates -> 20 primary + 5 reserve, W* 40 candidates -> 20 primary + 5 reserve, with no-op/reference/leakage/family/difficulty/digests.",
+      "status": "blocked_not_done",
+      "evidence": [
+        "experiments/core_narrative/reports/2026-05-14_repository_local_benchmark_gate.md"
+      ],
+      "gap": "Click W* has only 14 task-design candidates in the frozen window, below the 20-task gate. No 0514 Click C/R/W* denominator was admitted or smoked."
+    },
+    {
+      "requirement": "Task 3: Codex role isolation for Golden-Selector, Golden-Taskwright, Golden-Oracle, Golden-Auditor with prompt hashes, artifact digests, and admission decisions.",
+      "status": "specified_not_executed",
+      "evidence": [
+        "experiments/core_narrative/configs/repository_local_benchmark_20260514.yaml"
+      ],
+      "gap": "Roles and required artifacts are specified, but no 0514 role-run outputs or prompt hashes were generated for task admission."
+    },
+    {
+      "requirement": "Task 4: ACUT/intervention manifest for A0-A5, including A4 public-statement + repo source localization only.",
+      "status": "partially_covered",
+      "evidence": [
+        "experiments/core_narrative/configs/acuts/cheap-generic-swe.yaml",
+        "experiments/core_narrative/configs/acuts/cheap-click-inert-control-v1.yaml",
+        "experiments/core_narrative/configs/acuts/cheap-click-deep-specialist-v2.yaml",
+        "experiments/core_narrative/configs/acuts/cheap-click-rbench-calibrated-v1.yaml",
+        "experiments/core_narrative/configs/acuts/cheap-click-localization-tool-v1.yaml",
+        "experiments/core_narrative/configs/acuts/frontier-generic-swe.yaml",
+        "experiments/core_narrative/tools/repository_localization_hints.py"
+      ],
+      "gap": "A1 and A4 Click-specific manifests were created and validated. Rich execution would require Rich or repository-neutral A1/A2/A3/A4 variants."
+    },
+    {
+      "requirement": "Task 5: run R and W* with one primary attempt per ACUT/task, no best-of-N, fixed denominator, workspace fresh replay, hidden verifier, frozen status mapping.",
+      "status": "not_done",
+      "evidence": [
+        "experiments/core_narrative/reports/2026-05-14_repository_local_benchmark_gate.md"
+      ],
+      "gap": "No R/W* denominator was admitted, so no primary attempts were authorized or run."
+    },
+    {
+      "requirement": "Task 6: analyze R_score, W*_score, paired deltas, inert control, R-selected, W*-best, selection regret, R/W* rank correlation, family effects, and R_barcarolle vs random-R if possible.",
+      "status": "not_done",
+      "gap": "No primary results exist to analyze."
+    },
+    {
+      "requirement": "Output: repository admission report.",
+      "status": "covered",
+      "evidence": [
+        "experiments/core_narrative/reports/2026-05-14_repository_local_benchmark_admission.md"
+      ]
+    },
+    {
+      "requirement": "Output: task generation validity report.",
+      "status": "not_done",
+      "gap": "No 0514 task admission was run."
+    },
+    {
+      "requirement": "Output: R/W* primary result report.",
+      "status": "not_done",
+      "gap": "No primary attempts were run."
+    },
+    {
+      "requirement": "Output: decision-validity report.",
+      "status": "gate_only",
+      "evidence": [
+        "experiments/core_narrative/reports/2026-05-14_repository_local_benchmark_gate.md"
+      ],
+      "gap": "The gate decision is documented. R -> W* decision validity cannot be assessed without runs."
+    },
+    {
+      "requirement": "Output: threats-to-validity report.",
+      "status": "gate_only",
+      "evidence": [
+        "experiments/core_narrative/reports/2026-05-14_repository_local_benchmark_gate.md"
+      ],
+      "gap": "Gate-level threats are documented. Full experiment threats remain pending."
+    },
+    {
+      "requirement": "Do not use W* results to modify R; do not use ACUT outputs to choose W*; do not mix old M5/M6 denominator; do not lower gates post hoc; do not overclaim W* freshness.",
+      "status": "covered_for_actions_taken",
+      "evidence": [
+        "experiments/core_narrative/reports/2026-05-14_repository_local_benchmark_gate.md",
+        "experiments/core_narrative/configs/repository_local_benchmark_20260514.yaml"
+      ],
+      "gap": "No primary results exist, so this is verified only for the repository-admission and gate phase."
+    }
+  ],
+  "next_required_step": "Run task admission for Rich, including Golden-Oracle construction for source-only W* candidates, or revise the preregistered repository gate before any primary model attempts."
+}
