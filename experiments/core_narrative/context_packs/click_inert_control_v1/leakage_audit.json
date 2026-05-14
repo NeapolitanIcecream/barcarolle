@@ -1,0 +1,20 @@
+{
+  "schema_version": "core-narrative.inert-context-pack-leakage-audit.v1",
+  "pack_id": "click_inert_control_context_pack_v1",
+  "generated_at": "2026-05-14T00:00:00+08:00",
+  "status": "passed_for_protocol_prep",
+  "claim": "The inert control pack contains no repository-specific facts, task-specific material, reference patches, hidden verifier details, target commits, or ACUT outputs.",
+  "forbidden_sources_checked": {
+    "target_commits_used": false,
+    "reference_patches_used": false,
+    "hidden_verifiers_used": false,
+    "final_diffs_used": false,
+    "acut_outputs_used": false,
+    "failed_patches_used": false,
+    "secrets_or_private_endpoints_recorded": false
+  },
+  "public_artifact_policy": {
+    "raw_reference_diffs_copied": false,
+    "raw_prompt_contains_secret_or_endpoint": false
+  }
+}

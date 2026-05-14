@@ -1,0 +1,72 @@
+{
+  "schema_version": "core-narrative.repository-local-benchmark-gate.v1",
+  "gate_id": "repository-local-benchmark-20260514-gate",
+  "status": "blocked_before_primary_runs",
+  "generated_at": "2026-05-14T14:26:10Z",
+  "model_calls_made": 0,
+  "task_admission_runs_made": 0,
+  "primary_attempts_made": 0,
+  "basis_artifacts": {
+    "protocol": "experiments/core_narrative/configs/repository_local_benchmark_20260514.yaml",
+    "repository_admission_json": "experiments/core_narrative/results/repository_local_benchmark_admission_20260514.json",
+    "repository_admission_report": "experiments/core_narrative/reports/2026-05-14_repository_local_benchmark_admission.md"
+  },
+  "repository_gate": {
+    "click": {
+      "admission_ready": false,
+      "strict_R_task_design_candidates": 2,
+      "extended_R_task_design_candidates": 53,
+      "W_star_task_design_candidates": 14,
+      "W_star_direct_oracle_candidates": 11,
+      "W_star_task_design_families": 4,
+      "blockers": [
+        "w_star_task_design_candidate_count_below_20",
+        "strict_r_window_needs_allowed_earlier_extension"
+      ],
+      "decision": "not_authorized_for_full_0514_primary_runs"
+    },
+    "rich": {
+      "admission_ready": true,
+      "strict_R_task_design_candidates": 47,
+      "extended_R_task_design_candidates": 74,
+      "W_star_task_design_candidates": 25,
+      "W_star_direct_oracle_candidates": 9,
+      "W_star_task_design_families": 5,
+      "blockers": [],
+      "decision": "recommended_execution_repo_for_task_admission"
+    },
+    "black": {
+      "admission_ready": false,
+      "strict_R_task_design_candidates": 20,
+      "extended_R_task_design_candidates": 46,
+      "W_star_task_design_candidates": 16,
+      "W_star_direct_oracle_candidates": 12,
+      "W_star_task_design_families": 4,
+      "blockers": [
+        "w_star_task_design_candidate_count_below_20"
+      ],
+      "decision": "not_authorized_for_full_0514_primary_runs"
+    }
+  },
+  "recommendation": {
+    "primary_repo": null,
+    "recommended_execution_repo": "rich",
+    "replication_repo": "rich",
+    "fallback_replication_repo": null
+  },
+  "requested_outputs": {
+    "repository_admission_report": "produced",
+    "task_generation_validity_report": "not_produced_gate_blocked_before_task_admission",
+    "R_W_star_primary_result_report": "not_produced_no_primary_attempts_authorized",
+    "decision_validity_report": "gate_report_only",
+    "threats_to_validity_report": "gate_report_only"
+  },
+  "non_actions": [
+    "No W* results were used to modify R.",
+    "No ACUT outputs were used to choose W*.",
+    "No old M5/M6 denominator was mixed into the 0514 denominator.",
+    "No success gate was lowered post hoc.",
+    "No W* freshness claim is treated as proof of model-training exclusion."
+  ],
+  "next_required_step": "Run task admission for Rich or revise the preregistered repository gate before any primary model attempts."
+}

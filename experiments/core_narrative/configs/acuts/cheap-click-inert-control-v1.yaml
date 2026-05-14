@@ -1,0 +1,72 @@
+schema_version: core-narrative.acut.v1
+manifest_version: "1.0"
+acut_id: cheap-click-inert-control-v1
+display_name: Cheap Click Inert Control v1
+purpose: A1 inert-control ACUT for repository-local benchmark intervention sensitivity.
+frozen: true
+provider: openai
+model: openai/gpt-5.4-mini
+model_parameters:
+  reasoning_effort: medium
+prompt_policy_digest: policy-digest-20260514:cheap-click-inert-control-v1
+tool_permissions:
+  filesystem: workspace-write
+  network: disabled
+  allowed_tools:
+    - filesystem:read
+    - filesystem:write
+    - shell
+    - code_edit
+    - git:status
+    - git:diff
+    - git:show
+retrieval_context_strategy:
+  strategy_id: click-inert-control-v1
+  description: Matched cheap-tier control receiving inert non-actionable context with no repository facts or task hints.
+  allowed_sources:
+    - public_task_statement
+    - files explicitly inspected in the workspace
+    - click_inert_control_context_pack_v1
+  forbidden_sources:
+    - target commits
+    - reference patches
+    - final diffs
+    - hidden verifier files
+    - ACUT outputs or failed patches
+    - W* results or R scores
+runtime_budget:
+  max_wall_seconds: 3600
+  max_turns: 18
+  max_tokens: 64000
+  max_cost_usd: null
+  max_test_commands: 10
+  retry_policy:
+    primary_attempts: 1
+    retries_allowed: false
+network_policy:
+  mode: disabled
+  allowed_hosts: []
+execution_mode: codex_cli
+adapter_or_harness_basis: workspace-mode-runner source-derived-url-only-v1 policy
+frozen_at: "2026-05-14T00:00:00+08:00"
+operator: codex-core-narrative-coordinator
+metadata:
+  repository_local_design:
+    intervention_label: A1_inert_control
+    matched_baseline: cheap-generic-swe
+    claim_role: Should not materially outperform A0; detects token/context placebo effects.
+  inert_context_pack:
+    pack_id: click_inert_control_context_pack_v1
+    marker: CLICK_INERT_CONTROL_CONTEXT_PACK_V1
+    pack_hash: 7422633b4838a2475e1bd82e433a9eaa873a4d1ec5f33af65532b9f416791ec7
+    manifest_path: experiments/core_narrative/context_packs/click_inert_control_v1/manifest.json
+    context_prompt_path: experiments/core_narrative/context_packs/click_inert_control_v1/context_prompt.md
+  calibration_basis:
+    uses_C_tasks: false
+    uses_R_tasks: false
+    uses_W_star_tasks: false
+    uses_acut_outputs: false
+  score_fields:
+    r_score: null
+    w_star_score: null
+    g_score: null

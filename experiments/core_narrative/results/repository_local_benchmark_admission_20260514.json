@@ -1,0 +1,2589 @@
+{
+  "generated_at": "2026-05-14T14:25:54.936281Z",
+  "model_calls_made": 0,
+  "next_required_step": "Run task admission for the recommended ready execution repo; do not use ACUT outputs or W* results to modify R.",
+  "objective": "Barcarolle repository-local benchmark admission for C/R/W* experiment line",
+  "recommendation": {
+    "basis": "Click remains the historical evidence repo, but the new C/R/W* execution repo must pass the 20-task W* design-supply gate. If Click is blocked, choose the ready repo with the strongest W* and extended-R task-design counts.",
+    "fallback_replication_repo": null,
+    "primary_repo": null,
+    "recommended_execution_repo": "rich",
+    "replication_repo": "rich"
+  },
+  "repositories": [
+    {
+      "W_star_ready": false,
+      "admission_ready": false,
+      "blockers": [
+        "w_star_task_design_candidate_count_below_20",
+        "strict_r_window_needs_allowed_earlier_extension"
+      ],
+      "extended_R": {
+        "candidate_count": 23,
+        "candidate_family_counts": {
+          "CliRunner/testing/input-output isolation": 5,
+          "option/default/envvar/flag semantics": 8,
+          "parser/mixed integration": 5,
+          "prompt/termui/output rendering": 3,
+          "type conversion/parameter normalization": 2
+        },
+        "family_count": 5,
+        "low_signal_subject_count": 30,
+        "non_merge_commit_count": 215,
+        "oracle_direct_candidate_count": 23,
+        "sample_candidate_digests": [
+          {
+            "changed_file_count": 3,
+            "changed_python_file_count": 2,
+            "committed_at": "2025-11-19T15:07:25-06:00",
+            "family": "option/default/envvar/flag semantics",
+            "source_anchor_digest": "91e5f7d3abcc8be826920a9ddcaf48436d296f745a367048fa190e118afb132e",
+            "subject_digest": "0907371b861b4a7b6543c692a0fe4dacaa1a4676f856b9216cd0b448e8366dce",
+            "surface": "source_and_tests"
+          },
+          {
+            "changed_file_count": 3,
+            "changed_python_file_count": 2,
+            "committed_at": "2025-11-19T14:45:44-06:00",
+            "family": "option/default/envvar/flag semantics",
+            "source_anchor_digest": "7d54b9f9fef6e29117e2792f2a5873ba66b0d81d3a052c888eaf664bfb3ac6d9",
+            "subject_digest": "308a57f7c066817f16bcd6f9300ae43df425fa21160d2fa2e9d40d4ebf5e32fe",
+            "surface": "source_and_tests"
+          },
+          {
+            "changed_file_count": 3,
+            "changed_python_file_count": 2,
+            "committed_at": "2025-11-12T10:07:50+04:00",
+            "family": "parser/mixed integration",
+            "source_anchor_digest": "cb9f4f53fcce7366ba7b348df67955562c9f8da6decff92466d0df983452e946",
+            "subject_digest": "3018e6d0573f68d0397e6ad73c612a08edd8acff04c61ccbb767d6a5ea994612",
+            "surface": "source_and_tests"
+          },
+          {
+            "changed_file_count": 4,
+            "changed_python_file_count": 3,
+            "committed_at": "2025-09-25T13:14:00-05:00",
+            "family": "option/default/envvar/flag semantics",
+            "source_anchor_digest": "3f890f6d9a3dd978fdb098c1770c6b9b71a6cb9bb207f41e2c4583747f10c981",
+            "subject_digest": "ac775105707d97b8be28514a4c6fa3fe9ec1ca2b233eb229b5ad1ae0faa61eca",
+            "surface": "source_and_tests"
+          },
+          {
+            "changed_file_count": 2,
+            "changed_python_file_count": 2,
+            "committed_at": "2025-09-24T09:17:13-05:00",
+            "family": "type conversion/parameter normalization",
+            "source_anchor_digest": "58d97b0956c544501bdf8f10dd43d7e4d84e2457cfe6d77066494a5b05361c13",
+            "subject_digest": "3e6d8c9948018c5ab51e90cb1ae1ae3995e9fd6a788deff02e7bdd90a628d38a",
+            "surface": "source_and_tests"
+          },
+          {
+            "changed_file_count": 3,
+            "changed_python_file_count": 2,
+            "committed_at": "2025-09-24T08:59:19+02:00",
+            "family": "parser/mixed integration",
+            "source_anchor_digest": "6b877629935225ed31b493e39bb9da425799287f69afac58dc9ab762f145f47e",
+            "subject_digest": "85bd0f6056fbad8a5bae88d3b366cbd1f05d60ee4fbcc7f3cb76bbdf36f6d153",
+            "surface": "source_and_tests"
+          },
+          {
+            "changed_file_count": 5,
+            "changed_python_file_count": 3,
+            "committed_at": "2025-08-26T08:58:40+04:00",
+            "family": "option/default/envvar/flag semantics",
+            "source_anchor_digest": "288b5905258091b4bfb623a77f2a624ca5e88fffc20f40c28957e74753c2c6ae",
+            "subject_digest": "15428ed64defb1273cd421d7c36b55edf31abf6ac98651cda94e73c32353f1d7",
+            "surface": "source_and_tests"
+          },
+          {
+            "changed_file_count": 3,
+            "changed_python_file_count": 2,
+            "committed_at": "2025-08-23T18:39:26+04:00",
+            "family": "option/default/envvar/flag semantics",
+            "source_anchor_digest": "dc5e0aa76f354cc99acede7d57bcd84e10c18e4ae1b98eda723467640ab5f4e5",
+            "subject_digest": "df0d659be4f9920de0f91efa8d26527f4a7b3a79c68acf3881d872d9d7a63a78",
+            "surface": "source_and_tests"
+          },
+          {
+            "changed_file_count": 2,
+            "changed_python_file_count": 2,
+            "committed_at": "2025-08-23T15:24:13+04:00",
+            "family": "option/default/envvar/flag semantics",
+            "source_anchor_digest": "197cd3e3d1278708ac695562c0a1866f7edf80496d9da39d2a35df82d8dd5b7f",
+            "subject_digest": "93d8a5e2f01a79022d4e331be6dfc016adf93ce4ace6ad4716dae5a5189706eb",
+            "surface": "source_and_tests"
+          },
+          {
+            "changed_file_count": 6,
+            "changed_python_file_count": 4,
+            "committed_at": "2025-08-23T15:16:15+04:00",
+            "family": "prompt/termui/output rendering",
+            "source_anchor_digest": "a9f5331cd52e2d5248a7c4599c92b6c3a8cdeb744b2264a65cfdf367d4fce7b2",
+            "subject_digest": "c2dfca3d7e243d30f3d54dd0eee7b6550197156e68274eecddef703b4fe607e3",
+            "surface": "source_and_tests"
+          }
+        ],
+        "sample_task_design_candidate_digests": [
+          {
+            "changed_file_count": 3,
+            "changed_python_file_count": 2,
+            "committed_at": "2025-11-19T15:07:25-06:00",
+            "family": "option/default/envvar/flag semantics",
+            "source_anchor_digest": "91e5f7d3abcc8be826920a9ddcaf48436d296f745a367048fa190e118afb132e",
+            "subject_digest": "0907371b861b4a7b6543c692a0fe4dacaa1a4676f856b9216cd0b448e8366dce",
+            "surface": "source_and_tests"
+          },
+          {
+            "changed_file_count": 3,
+            "changed_python_file_count": 2,
+            "committed_at": "2025-11-19T14:45:44-06:00",
+            "family": "option/default/envvar/flag semantics",
+            "source_anchor_digest": "7d54b9f9fef6e29117e2792f2a5873ba66b0d81d3a052c888eaf664bfb3ac6d9",
+            "subject_digest": "308a57f7c066817f16bcd6f9300ae43df425fa21160d2fa2e9d40d4ebf5e32fe",
+            "surface": "source_and_tests"
+          },
+          {
+            "changed_file_count": 3,
+            "changed_python_file_count": 2,
+            "committed_at": "2025-11-12T10:07:50+04:00",
+            "family": "parser/mixed integration",
+            "source_anchor_digest": "cb9f4f53fcce7366ba7b348df67955562c9f8da6decff92466d0df983452e946",
+            "subject_digest": "3018e6d0573f68d0397e6ad73c612a08edd8acff04c61ccbb767d6a5ea994612",
+            "surface": "source_and_tests"
+          },
+          {
+            "changed_file_count": 1,
+            "changed_python_file_count": 1,
+            "committed_at": "2025-09-30T18:28:57+02:00",
+            "family": "prompt/termui/output rendering",
+            "source_anchor_digest": "07126883ecaa84856935a290221d5dfef6927284a14f0be4c6c7a4c19e9cf2da",
+            "subject_digest": "da537eabc06e888459c92ba2d37164bdd6ed3976c25f76a751ab9c4141aa8b2c",
+            "surface": "source_without_tests"
+          },
+          {
+            "changed_file_count": 4,
+            "changed_python_file_count": 3,
+            "committed_at": "2025-09-25T13:14:00-05:00",
+            "family": "option/default/envvar/flag semantics",
+            "source_anchor_digest": "3f890f6d9a3dd978fdb098c1770c6b9b71a6cb9bb207f41e2c4583747f10c981",
+            "subject_digest": "ac775105707d97b8be28514a4c6fa3fe9ec1ca2b233eb229b5ad1ae0faa61eca",
+            "surface": "source_and_tests"
+          },
+          {
+            "changed_file_count": 1,
+            "changed_python_file_count": 1,
+            "committed_at": "2025-09-25T11:11:19-07:00",
+            "family": "prompt/termui/output rendering",
+            "source_anchor_digest": "ea6ce21d12d8a02ed4ddde4a3f223082dca484ad05abace8b76e6195895bd610",
+            "subject_digest": "0df1ec5e362e0b613b114ffb10da837782e540325db5dd73d0f25261952039bd",
+            "surface": "source_without_tests"
+          },
+          {
+            "changed_file_count": 1,
+            "changed_python_file_count": 1,
+            "committed_at": "2025-09-25T09:32:24-07:00",
+            "family": "prompt/termui/output rendering",
+            "source_anchor_digest": "bd3ffbfa1d3d3b8fc7248bb9bd823861f1e00800e1fc2dcb6088224f015fc56d",
+            "subject_digest": "b44224bea8f7aed54964431cdcc2d04ce0bbc7872c0f2b12f6698aea523d67a6",
+            "surface": "source_without_tests"
+          },
+          {
+            "changed_file_count": 1,
+            "changed_python_file_count": 1,
+            "committed_at": "2025-09-24T09:17:13-05:00",
+            "family": "parser/mixed integration",
+            "source_anchor_digest": "b028b4dbb613a9a699293a50e6978988de47120fbb69e4de09fe6fe806b06ba7",
+            "subject_digest": "a66e14dd0a2bb7a910687e864e5fbb7cdac6e404eab7258eb4b3911780c993cf",
+            "surface": "source_without_tests"
+          },
+          {
+            "changed_file_count": 2,
+            "changed_python_file_count": 2,
+            "committed_at": "2025-09-24T09:17:13-05:00",
+            "family": "type conversion/parameter normalization",
+            "source_anchor_digest": "58d97b0956c544501bdf8f10dd43d7e4d84e2457cfe6d77066494a5b05361c13",
+            "subject_digest": "3e6d8c9948018c5ab51e90cb1ae1ae3995e9fd6a788deff02e7bdd90a628d38a",
+            "surface": "source_and_tests"
+          },
+          {
+            "changed_file_count": 3,
+            "changed_python_file_count": 2,
+            "committed_at": "2025-09-24T08:59:19+02:00",
+            "family": "parser/mixed integration",
+            "source_anchor_digest": "6b877629935225ed31b493e39bb9da425799287f69afac58dc9ab762f145f47e",
+            "subject_digest": "85bd0f6056fbad8a5bae88d3b366cbd1f05d60ee4fbcc7f3cb76bbdf36f6d153",
+            "surface": "source_and_tests"
+          }
+        ],
+        "surface_counts": {
+          "docs_or_meta_only": 130,
+          "other": 3,
+          "source_and_tests": 25,
+          "source_without_tests": 34,
+          "tests_without_source": 23
+        },
+        "task_design_candidate_count": 53,
+        "task_design_family_count": 5,
+        "task_design_family_counts": {
+          "CliRunner/testing/input-output isolation": 7,
+          "option/default/envvar/flag semantics": 9,
+          "parser/mixed integration": 26,
+          "prompt/termui/output rendering": 9,
+          "type conversion/parameter normalization": 2
+        },
+        "window_end": "2026-02-13",
+        "window_start": "2025-05-14"
+      },
+      "extended_R_ready": true,
+      "family_ready": true,
+      "language": "python",
+      "limitations": [
+        "This is repository admission, not task admission; no hidden verifier smoke has run.",
+        "oracle_direct_candidate_count requires source and test changes in the same commit.",
+        "task_design_candidate_count also includes source-only changes that would require Golden-Oracle verifier construction.",
+        "Candidate counts exclude low-signal subjects, but they are not accepted tasks.",
+        "Source anchors are digested to avoid publishing W* target commits in this planning artifact."
+      ],
+      "metadata": {
+        "head_committed_at": "2026-04-22T12:07:29-07:00",
+        "head_digest": "5d89db634ba22e4c2028e28fb91ae0fc5b83abc4d82794f715edcf2c3a146cfc",
+        "path": "experiments/core_narrative/external_repos/click",
+        "tag_sample": [
+          "8.3.3",
+          "8.3.2",
+          "8.3.1",
+          "8.3.0",
+          "8.2.2"
+        ]
+      },
+      "repo_slug": "click",
+      "repository": "pallets/click",
+      "role": "primary_evidence_candidate",
+      "strict_R_ready": false,
+      "test_command": "python -m pytest -q",
+      "test_surface": {
+        "noxfile_exists": false,
+        "pyproject_exists": true,
+        "tests_dir_exists": true,
+        "tox_ini_exists": false
+      },
+      "windows": {
+        "C": {
+          "candidate_count": 353,
+          "candidate_family_counts": {
+            "CliRunner/testing/input-output isolation": 43,
+            "option/default/envvar/flag semantics": 102,
+            "parser/mixed integration": 98,
+            "prompt/termui/output rendering": 52,
+            "type conversion/parameter normalization": 58
+          },
+          "family_count": 5,
+          "low_signal_subject_count": 286,
+          "non_merge_commit_count": 1938,
+          "oracle_direct_candidate_count": 353,
+          "sample_candidate_digests": [
+            {
+              "changed_file_count": 3,
+              "changed_python_file_count": 2,
+              "committed_at": "2025-11-12T10:07:50+04:00",
+              "family": "parser/mixed integration",
+              "source_anchor_digest": "cb9f4f53fcce7366ba7b348df67955562c9f8da6decff92466d0df983452e946",
+              "subject_digest": "3018e6d0573f68d0397e6ad73c612a08edd8acff04c61ccbb767d6a5ea994612",
+              "surface": "source_and_tests"
+            },
+            {
+              "changed_file_count": 4,
+              "changed_python_file_count": 3,
+              "committed_at": "2025-09-25T13:14:00-05:00",
+              "family": "option/default/envvar/flag semantics",
+              "source_anchor_digest": "3f890f6d9a3dd978fdb098c1770c6b9b71a6cb9bb207f41e2c4583747f10c981",
+              "subject_digest": "ac775105707d97b8be28514a4c6fa3fe9ec1ca2b233eb229b5ad1ae0faa61eca",
+              "surface": "source_and_tests"
+            },
+            {
+              "changed_file_count": 2,
+              "changed_python_file_count": 2,
+              "committed_at": "2025-09-24T09:17:13-05:00",
+              "family": "type conversion/parameter normalization",
+              "source_anchor_digest": "58d97b0956c544501bdf8f10dd43d7e4d84e2457cfe6d77066494a5b05361c13",
+              "subject_digest": "3e6d8c9948018c5ab51e90cb1ae1ae3995e9fd6a788deff02e7bdd90a628d38a",
+              "surface": "source_and_tests"
+            },
+            {
+              "changed_file_count": 3,
+              "changed_python_file_count": 2,
+              "committed_at": "2025-09-24T08:59:19+02:00",
+              "family": "parser/mixed integration",
+              "source_anchor_digest": "6b877629935225ed31b493e39bb9da425799287f69afac58dc9ab762f145f47e",
+              "subject_digest": "85bd0f6056fbad8a5bae88d3b366cbd1f05d60ee4fbcc7f3cb76bbdf36f6d153",
+              "surface": "source_and_tests"
+            },
+            {
+              "changed_file_count": 5,
+              "changed_python_file_count": 3,
+              "committed_at": "2025-08-26T08:58:40+04:00",
+              "family": "option/default/envvar/flag semantics",
+              "source_anchor_digest": "288b5905258091b4bfb623a77f2a624ca5e88fffc20f40c28957e74753c2c6ae",
+              "subject_digest": "15428ed64defb1273cd421d7c36b55edf31abf6ac98651cda94e73c32353f1d7",
+              "surface": "source_and_tests"
+            },
+            {
+              "changed_file_count": 3,
+              "changed_python_file_count": 2,
+              "committed_at": "2025-08-23T18:39:26+04:00",
+              "family": "option/default/envvar/flag semantics",
+              "source_anchor_digest": "dc5e0aa76f354cc99acede7d57bcd84e10c18e4ae1b98eda723467640ab5f4e5",
+              "subject_digest": "df0d659be4f9920de0f91efa8d26527f4a7b3a79c68acf3881d872d9d7a63a78",
+              "surface": "source_and_tests"
+            },
+            {
+              "changed_file_count": 2,
+              "changed_python_file_count": 2,
+              "committed_at": "2025-08-23T15:24:13+04:00",
+              "family": "option/default/envvar/flag semantics",
+              "source_anchor_digest": "197cd3e3d1278708ac695562c0a1866f7edf80496d9da39d2a35df82d8dd5b7f",
+              "subject_digest": "93d8a5e2f01a79022d4e331be6dfc016adf93ce4ace6ad4716dae5a5189706eb",
+              "surface": "source_and_tests"
+            },
+            {
+              "changed_file_count": 6,
+              "changed_python_file_count": 4,
+              "committed_at": "2025-08-23T15:16:15+04:00",
+              "family": "prompt/termui/output rendering",
+              "source_anchor_digest": "a9f5331cd52e2d5248a7c4599c92b6c3a8cdeb744b2264a65cfdf367d4fce7b2",
+              "subject_digest": "c2dfca3d7e243d30f3d54dd0eee7b6550197156e68274eecddef703b4fe607e3",
+              "surface": "source_and_tests"
+            },
+            {
+              "changed_file_count": 11,
+              "changed_python_file_count": 9,
+              "committed_at": "2025-08-16T14:17:51+04:00",
+              "family": "prompt/termui/output rendering",
+              "source_anchor_digest": "89092daf7d686d158fc0d9df7ffc0498d7a742bb31efaa78f52c35d884d19387",
+              "subject_digest": "6afe48c17ff9dfdd7354fcd02ee6d6e2ba4448be7f81c6ae4a9ee069febb6f16",
+              "surface": "source_and_tests"
+            },
+            {
+              "changed_file_count": 2,
+              "changed_python_file_count": 2,
+              "committed_at": "2025-08-09T14:43:46+01:00",
+              "family": "parser/mixed integration",
+              "source_anchor_digest": "8d61bcc3200803ef5c0254913a24248f9fc8e08841bee6876262e57d1f0f2d4c",
+              "subject_digest": "b73e444f89e33ccf3e2dd91c8bb6c1db4b670b5c37f15019d73be6a80e36fb4a",
+              "surface": "source_and_tests"
+            }
+          ],
+          "sample_task_design_candidate_digests": [
+            {
+              "changed_file_count": 3,
+              "changed_python_file_count": 2,
+              "committed_at": "2025-11-12T10:07:50+04:00",
+              "family": "parser/mixed integration",
+              "source_anchor_digest": "cb9f4f53fcce7366ba7b348df67955562c9f8da6decff92466d0df983452e946",
+              "subject_digest": "3018e6d0573f68d0397e6ad73c612a08edd8acff04c61ccbb767d6a5ea994612",
+              "surface": "source_and_tests"
+            },
+            {
+              "changed_file_count": 1,
+              "changed_python_file_count": 1,
+              "committed_at": "2025-09-30T18:28:57+02:00",
+              "family": "prompt/termui/output rendering",
+              "source_anchor_digest": "07126883ecaa84856935a290221d5dfef6927284a14f0be4c6c7a4c19e9cf2da",
+              "subject_digest": "da537eabc06e888459c92ba2d37164bdd6ed3976c25f76a751ab9c4141aa8b2c",
+              "surface": "source_without_tests"
+            },
+            {
+              "changed_file_count": 4,
+              "changed_python_file_count": 3,
+              "committed_at": "2025-09-25T13:14:00-05:00",
+              "family": "option/default/envvar/flag semantics",
+              "source_anchor_digest": "3f890f6d9a3dd978fdb098c1770c6b9b71a6cb9bb207f41e2c4583747f10c981",
+              "subject_digest": "ac775105707d97b8be28514a4c6fa3fe9ec1ca2b233eb229b5ad1ae0faa61eca",
+              "surface": "source_and_tests"
+            },
+            {
+              "changed_file_count": 1,
+              "changed_python_file_count": 1,
+              "committed_at": "2025-09-25T11:11:19-07:00",
+              "family": "prompt/termui/output rendering",
+              "source_anchor_digest": "ea6ce21d12d8a02ed4ddde4a3f223082dca484ad05abace8b76e6195895bd610",
+              "subject_digest": "0df1ec5e362e0b613b114ffb10da837782e540325db5dd73d0f25261952039bd",
+              "surface": "source_without_tests"
+            },
+            {
+              "changed_file_count": 1,
+              "changed_python_file_count": 1,
+              "committed_at": "2025-09-25T09:32:24-07:00",
+              "family": "prompt/termui/output rendering",
+              "source_anchor_digest": "bd3ffbfa1d3d3b8fc7248bb9bd823861f1e00800e1fc2dcb6088224f015fc56d",
+              "subject_digest": "b44224bea8f7aed54964431cdcc2d04ce0bbc7872c0f2b12f6698aea523d67a6",
+              "surface": "source_without_tests"
+            },
+            {
+              "changed_file_count": 1,
+              "changed_python_file_count": 1,
+              "committed_at": "2025-09-24T09:17:13-05:00",
+              "family": "parser/mixed integration",
+              "source_anchor_digest": "b028b4dbb613a9a699293a50e6978988de47120fbb69e4de09fe6fe806b06ba7",
+              "subject_digest": "a66e14dd0a2bb7a910687e864e5fbb7cdac6e404eab7258eb4b3911780c993cf",
+              "surface": "source_without_tests"
+            },
+            {
+              "changed_file_count": 2,
+              "changed_python_file_count": 2,
+              "committed_at": "2025-09-24T09:17:13-05:00",
+              "family": "type conversion/parameter normalization",
+              "source_anchor_digest": "58d97b0956c544501bdf8f10dd43d7e4d84e2457cfe6d77066494a5b05361c13",
+              "subject_digest": "3e6d8c9948018c5ab51e90cb1ae1ae3995e9fd6a788deff02e7bdd90a628d38a",
+              "surface": "source_and_tests"
+            },
+            {
+              "changed_file_count": 3,
+              "changed_python_file_count": 2,
+              "committed_at": "2025-09-24T08:59:19+02:00",
+              "family": "parser/mixed integration",
+              "source_anchor_digest": "6b877629935225ed31b493e39bb9da425799287f69afac58dc9ab762f145f47e",
+              "subject_digest": "85bd0f6056fbad8a5bae88d3b366cbd1f05d60ee4fbcc7f3cb76bbdf36f6d153",
+              "surface": "source_and_tests"
+            },
+            {
+              "changed_file_count": 2,
+              "changed_python_file_count": 1,
+              "committed_at": "2025-09-13T09:27:46-04:00",
+              "family": "prompt/termui/output rendering",
+              "source_anchor_digest": "448a9aa8a361fa844867c550976b0372abfa7d849152b00b81de16e610c1dbaa",
+              "subject_digest": "29e2394158212acf5f5771e133ce6f6b481a728806f12a22cb982f9fe9bbbe24",
+              "surface": "source_without_tests"
+            },
+            {
+              "changed_file_count": 1,
+              "changed_python_file_count": 1,
+              "committed_at": "2025-09-12T13:23:37+09:00",
+              "family": "parser/mixed integration",
+              "source_anchor_digest": "fd35a084c7c3dba134401a687a4889bfbe641d00aea19960cf56117359c9ea18",
+              "subject_digest": "01c04be52e3bb79efcf1e50428d8f4ec844029e844ae0f1288c9ebfee3608090",
+              "surface": "source_without_tests"
+            }
+          ],
+          "surface_counts": {
+            "docs_or_meta_only": 689,
+            "other": 172,
+            "source_and_tests": 372,
+            "source_without_tests": 604,
+            "tests_without_source": 101
+          },
+          "task_design_candidate_count": 893,
+          "task_design_family_count": 5,
+          "task_design_family_counts": {
+            "CliRunner/testing/input-output isolation": 64,
+            "option/default/envvar/flag semantics": 157,
+            "parser/mixed integration": 410,
+            "prompt/termui/output rendering": 157,
+            "type conversion/parameter normalization": 105
+          },
+          "window_end": "2025-11-13",
+          "window_start": "1970-01-01"
+        },
+        "R": {
+          "candidate_count": 2,
+          "candidate_family_counts": {
+            "option/default/envvar/flag semantics": 2
+          },
+          "family_count": 1,
+          "low_signal_subject_count": 5,
+          "non_merge_commit_count": 17,
+          "oracle_direct_candidate_count": 2,
+          "sample_candidate_digests": [
+            {
+              "changed_file_count": 3,
+              "changed_python_file_count": 2,
+              "committed_at": "2025-11-19T15:07:25-06:00",
+              "family": "option/default/envvar/flag semantics",
+              "source_anchor_digest": "91e5f7d3abcc8be826920a9ddcaf48436d296f745a367048fa190e118afb132e",
+              "subject_digest": "0907371b861b4a7b6543c692a0fe4dacaa1a4676f856b9216cd0b448e8366dce",
+              "surface": "source_and_tests"
+            },
+            {
+              "changed_file_count": 3,
+              "changed_python_file_count": 2,
+              "committed_at": "2025-11-19T14:45:44-06:00",
+              "family": "option/default/envvar/flag semantics",
+              "source_anchor_digest": "7d54b9f9fef6e29117e2792f2a5873ba66b0d81d3a052c888eaf664bfb3ac6d9",
+              "subject_digest": "308a57f7c066817f16bcd6f9300ae43df425fa21160d2fa2e9d40d4ebf5e32fe",
+              "surface": "source_and_tests"
+            }
+          ],
+          "sample_task_design_candidate_digests": [
+            {
+              "changed_file_count": 3,
+              "changed_python_file_count": 2,
+              "committed_at": "2025-11-19T15:07:25-06:00",
+              "family": "option/default/envvar/flag semantics",
+              "source_anchor_digest": "91e5f7d3abcc8be826920a9ddcaf48436d296f745a367048fa190e118afb132e",
+              "subject_digest": "0907371b861b4a7b6543c692a0fe4dacaa1a4676f856b9216cd0b448e8366dce",
+              "surface": "source_and_tests"
+            },
+            {
+              "changed_file_count": 3,
+              "changed_python_file_count": 2,
+              "committed_at": "2025-11-19T14:45:44-06:00",
+              "family": "option/default/envvar/flag semantics",
+              "source_anchor_digest": "7d54b9f9fef6e29117e2792f2a5873ba66b0d81d3a052c888eaf664bfb3ac6d9",
+              "subject_digest": "308a57f7c066817f16bcd6f9300ae43df425fa21160d2fa2e9d40d4ebf5e32fe",
+              "surface": "source_and_tests"
+            }
+          ],
+          "surface_counts": {
+            "docs_or_meta_only": 15,
+            "source_and_tests": 2
+          },
+          "task_design_candidate_count": 2,
+          "task_design_family_count": 1,
+          "task_design_family_counts": {
+            "option/default/envvar/flag semantics": 2
+          },
+          "window_end": "2026-02-13",
+          "window_start": "2025-11-14"
+        },
+        "W_star": {
+          "candidate_count": 11,
+          "candidate_family_counts": {
+            "CliRunner/testing/input-output isolation": 3,
+            "option/default/envvar/flag semantics": 4,
+            "prompt/termui/output rendering": 3,
+            "type conversion/parameter normalization": 1
+          },
+          "family_count": 4,
+          "low_signal_subject_count": 15,
+          "non_merge_commit_count": 43,
+          "oracle_direct_candidate_count": 11,
+          "sample_candidate_digests": [
+            {
+              "changed_file_count": 4,
+              "changed_python_file_count": 2,
+              "committed_at": "2026-04-14T09:55:10+02:00",
+              "family": "CliRunner/testing/input-output isolation",
+              "source_anchor_digest": "da0da57966f3b8fb18905cebe9d8d0e2e82dc8df8e605f1cf8258f9314c05e0a",
+              "subject_digest": "48d7f5b934ee8cd2913d005aafb112beca6c2f2b468d29f7799c050238825dd2",
+              "surface": "source_and_tests"
+            },
+            {
+              "changed_file_count": 3,
+              "changed_python_file_count": 2,
+              "committed_at": "2026-04-13T20:29:10+02:00",
+              "family": "prompt/termui/output rendering",
+              "source_anchor_digest": "e425e8dca02607f41e42c6638f7e38c3d8e74a65c1bcbb09c40053bbb1c81238",
+              "subject_digest": "1fbea97909213412d787020bb711ac242d74eb62449ab5f061e54275da3d9b2a",
+              "surface": "source_and_tests"
+            },
+            {
+              "changed_file_count": 5,
+              "changed_python_file_count": 4,
+              "committed_at": "2026-04-13T20:28:39+02:00",
+              "family": "prompt/termui/output rendering",
+              "source_anchor_digest": "9a05529c99bb278e39ee4b3850cb874c0c1ebdfea9d975042dbfdcc7b0a21672",
+              "subject_digest": "2c923183def8c21a7cf247f1073be447803d553e4a6083833c28a734ef7277f5",
+              "surface": "source_and_tests"
+            },
+            {
+              "changed_file_count": 2,
+              "changed_python_file_count": 2,
+              "committed_at": "2026-04-10T18:12:24+02:00",
+              "family": "type conversion/parameter normalization",
+              "source_anchor_digest": "483fb5936246a6c96c5ad389ff0f6cdf8d7aa0faaa000443e6fb5c963d04025b",
+              "subject_digest": "9d9561be3abd2947e76c9506971f7e23a4ac7dc7e681373531420e6272b4c280",
+              "surface": "source_and_tests"
+            },
+            {
+              "changed_file_count": 4,
+              "changed_python_file_count": 2,
+              "committed_at": "2026-04-09T16:23:44+02:00",
+              "family": "CliRunner/testing/input-output isolation",
+              "source_anchor_digest": "1d5adaa584defd9e0b6c09f04c543cdcc5ddb1032e57f1a6af6764e244409bb0",
+              "subject_digest": "c8506eb3dd2425e9e6c86d2fa8889daf3b3de1365ac5d37cbd2608eeaad02ca4",
+              "surface": "source_and_tests"
+            },
+            {
+              "changed_file_count": 3,
+              "changed_python_file_count": 2,
+              "committed_at": "2026-04-09T14:46:44+02:00",
+              "family": "option/default/envvar/flag semantics",
+              "source_anchor_digest": "bb68eced52dae9134ca324ab40b484888f01e7374b67f0c7eb1796f9389beda7",
+              "subject_digest": "64e211520e0c1fc7bf475fa40091d1bbb5710de2e9cba341b0dffc79d29dbaf0",
+              "surface": "source_and_tests"
+            },
+            {
+              "changed_file_count": 3,
+              "changed_python_file_count": 2,
+              "committed_at": "2026-04-08T16:31:40+02:00",
+              "family": "prompt/termui/output rendering",
+              "source_anchor_digest": "385db30e37995f26ef1d6be44dfc0b74402faf3459de9fce8ff2869d6cba4b27",
+              "subject_digest": "6b64f243eaaaf34d000d6870fabca3c5ef67cea8a1a202877d59964ac812f899",
+              "surface": "source_and_tests"
+            },
+            {
+              "changed_file_count": 2,
+              "changed_python_file_count": 2,
+              "committed_at": "2026-04-08T16:29:07+02:00",
+              "family": "option/default/envvar/flag semantics",
+              "source_anchor_digest": "e3452fcad9f73a054017acbd474d97462f4dc6fcfe40b905fba7679ff6a696df",
+              "subject_digest": "4b1046e22cd908ed1a3f871ae3fb10c118c402644334299d227edcb12ff84dfd",
+              "surface": "source_and_tests"
+            },
+            {
+              "changed_file_count": 4,
+              "changed_python_file_count": 3,
+              "committed_at": "2026-03-01T20:27:16+04:00",
+              "family": "option/default/envvar/flag semantics",
+              "source_anchor_digest": "51cdf0a05eb859743b8871eb2ad3e55590543dfb0b03d1a18b26e5a7735c5c5a",
+              "subject_digest": "77006bc76928163206105136426ba6fc55f26e7b12cd392101c72a6340c7814d",
+              "surface": "source_and_tests"
+            },
+            {
+              "changed_file_count": 3,
+              "changed_python_file_count": 2,
+              "committed_at": "2026-02-28T13:03:13+04:00",
+              "family": "CliRunner/testing/input-output isolation",
+              "source_anchor_digest": "35defd8a5718f59fc83d90424f93852d6114a28be373f5caef62caa975653012",
+              "subject_digest": "e2989f79a8c80d0e3ccc0eca475e4d0d9eb27188bdc63ea62e587e6566acd514",
+              "surface": "source_and_tests"
+            }
+          ],
+          "sample_task_design_candidate_digests": [
+            {
+              "changed_file_count": 2,
+              "changed_python_file_count": 1,
+              "committed_at": "2026-04-14T09:58:04+02:00",
+              "family": "option/default/envvar/flag semantics",
+              "source_anchor_digest": "8b31a18cd73f00ad308ef14b78cb198845a54aa78536fd3ab1c34aa5f078a54f",
+              "subject_digest": "4b34c55d3d8d4f113886e8f4bf45ad926e41e2bd93c7e4275439aaed28532bd4",
+              "surface": "source_without_tests"
+            },
+            {
+              "changed_file_count": 4,
+              "changed_python_file_count": 2,
+              "committed_at": "2026-04-14T09:55:10+02:00",
+              "family": "CliRunner/testing/input-output isolation",
+              "source_anchor_digest": "da0da57966f3b8fb18905cebe9d8d0e2e82dc8df8e605f1cf8258f9314c05e0a",
+              "subject_digest": "48d7f5b934ee8cd2913d005aafb112beca6c2f2b468d29f7799c050238825dd2",
+              "surface": "source_and_tests"
+            },
+            {
+              "changed_file_count": 3,
+              "changed_python_file_count": 2,
+              "committed_at": "2026-04-13T20:29:10+02:00",
+              "family": "prompt/termui/output rendering",
+              "source_anchor_digest": "e425e8dca02607f41e42c6638f7e38c3d8e74a65c1bcbb09c40053bbb1c81238",
+              "subject_digest": "1fbea97909213412d787020bb711ac242d74eb62449ab5f061e54275da3d9b2a",
+              "surface": "source_and_tests"
+            },
+            {
+              "changed_file_count": 5,
+              "changed_python_file_count": 4,
+              "committed_at": "2026-04-13T20:28:39+02:00",
+              "family": "prompt/termui/output rendering",
+              "source_anchor_digest": "9a05529c99bb278e39ee4b3850cb874c0c1ebdfea9d975042dbfdcc7b0a21672",
+              "subject_digest": "2c923183def8c21a7cf247f1073be447803d553e4a6083833c28a734ef7277f5",
+              "surface": "source_and_tests"
+            },
+            {
+              "changed_file_count": 2,
+              "changed_python_file_count": 2,
+              "committed_at": "2026-04-10T18:12:24+02:00",
+              "family": "type conversion/parameter normalization",
+              "source_anchor_digest": "483fb5936246a6c96c5ad389ff0f6cdf8d7aa0faaa000443e6fb5c963d04025b",
+              "subject_digest": "9d9561be3abd2947e76c9506971f7e23a4ac7dc7e681373531420e6272b4c280",
+              "surface": "source_and_tests"
+            },
+            {
+              "changed_file_count": 4,
+              "changed_python_file_count": 2,
+              "committed_at": "2026-04-09T16:23:44+02:00",
+              "family": "CliRunner/testing/input-output isolation",
+              "source_anchor_digest": "1d5adaa584defd9e0b6c09f04c543cdcc5ddb1032e57f1a6af6764e244409bb0",
+              "subject_digest": "c8506eb3dd2425e9e6c86d2fa8889daf3b3de1365ac5d37cbd2608eeaad02ca4",
+              "surface": "source_and_tests"
+            },
+            {
+              "changed_file_count": 3,
+              "changed_python_file_count": 2,
+              "committed_at": "2026-04-09T14:46:44+02:00",
+              "family": "option/default/envvar/flag semantics",
+              "source_anchor_digest": "bb68eced52dae9134ca324ab40b484888f01e7374b67f0c7eb1796f9389beda7",
+              "subject_digest": "64e211520e0c1fc7bf475fa40091d1bbb5710de2e9cba341b0dffc79d29dbaf0",
+              "surface": "source_and_tests"
+            },
+            {
+              "changed_file_count": 3,
+              "changed_python_file_count": 2,
+              "committed_at": "2026-04-08T16:31:40+02:00",
+              "family": "prompt/termui/output rendering",
+              "source_anchor_digest": "385db30e37995f26ef1d6be44dfc0b74402faf3459de9fce8ff2869d6cba4b27",
+              "subject_digest": "6b64f243eaaaf34d000d6870fabca3c5ef67cea8a1a202877d59964ac812f899",
+              "surface": "source_and_tests"
+            },
+            {
+              "changed_file_count": 2,
+              "changed_python_file_count": 2,
+              "committed_at": "2026-04-08T16:29:07+02:00",
+              "family": "option/default/envvar/flag semantics",
+              "source_anchor_digest": "e3452fcad9f73a054017acbd474d97462f4dc6fcfe40b905fba7679ff6a696df",
+              "subject_digest": "4b1046e22cd908ed1a3f871ae3fb10c118c402644334299d227edcb12ff84dfd",
+              "surface": "source_and_tests"
+            },
+            {
+              "changed_file_count": 1,
+              "changed_python_file_count": 1,
+              "committed_at": "2026-03-02T13:17:20+04:00",
+              "family": "option/default/envvar/flag semantics",
+              "source_anchor_digest": "2f004f9647f24afac287aaa6ecb6bdbffb789f4736e96c5261de8725d0efb8f7",
+              "subject_digest": "af4da7f1a10ae090f0187140d89a43fe3b119a90ec204e3c403863dc101a1322",
+              "surface": "source_without_tests"
+            }
+          ],
+          "surface_counts": {
+            "docs_or_meta_only": 21,
+            "source_and_tests": 13,
+            "source_without_tests": 5,
+            "tests_without_source": 4
+          },
+          "task_design_candidate_count": 14,
+          "task_design_family_count": 4,
+          "task_design_family_counts": {
+            "CliRunner/testing/input-output isolation": 3,
+            "option/default/envvar/flag semantics": 7,
+            "prompt/termui/output rendering": 3,
+            "type conversion/parameter normalization": 1
+          },
+          "window_end": "2026-05-14",
+          "window_start": "2026-02-14"
+        }
+      }
+    },
+    {
+      "W_star_ready": true,
+      "admission_ready": true,
+      "blockers": [],
+      "extended_R": {
+        "candidate_count": 19,
+        "candidate_family_counts": {
+          "console/rendering": 3,
+          "markup/text/emoji": 4,
+          "parser/mixed integration": 5,
+          "progress/live/status rendering": 3,
+          "table/panel/layout": 3,
+          "traceback/logging/inspect": 1
+        },
+        "family_count": 6,
+        "low_signal_subject_count": 20,
+        "non_merge_commit_count": 138,
+        "oracle_direct_candidate_count": 19,
+        "sample_candidate_digests": [
+          {
+            "changed_file_count": 2,
+            "changed_python_file_count": 2,
+            "committed_at": "2026-02-01T15:24:39Z",
+            "family": "parser/mixed integration",
+            "source_anchor_digest": "056b42140da348dd71a17720e84c52a55764c8580e122739119ec3098ab644d8",
+            "subject_digest": "2fb9b2cf8a4584802f581bbdf3f90931b2d21b7bd6232148fccae3574bce6a90",
+            "surface": "source_and_tests"
+          },
+          {
+            "changed_file_count": 4,
+            "changed_python_file_count": 2,
+            "committed_at": "2026-02-01T15:00:41Z",
+            "family": "parser/mixed integration",
+            "source_anchor_digest": "6a8b0e9a159cfc8c09c88a19776075cda02d5305aebd3a94037600a3878d9c12",
+            "subject_digest": "eb473684420679d71da4414c89db9a4d7ec115f3cb26938dbe64756b7abbcaa5",
+            "surface": "source_and_tests"
+          },
+          {
+            "changed_file_count": 4,
+            "changed_python_file_count": 2,
+            "committed_at": "2026-01-24T21:33:23Z",
+            "family": "parser/mixed integration",
+            "source_anchor_digest": "94ff42c0aff06f65e0563f579d0b22a01464f1e0620e0a8422c451b17c4445f6",
+            "subject_digest": "7f3760c7c3dead4ef243f7650ebed24c41f75aa4884e1c7feee513060ce7b1dd",
+            "surface": "source_and_tests"
+          },
+          {
+            "changed_file_count": 6,
+            "changed_python_file_count": 5,
+            "committed_at": "2026-01-24T12:01:02Z",
+            "family": "parser/mixed integration",
+            "source_anchor_digest": "68eec90276740e01069213ff99a763c27cfabefae52e1e56f1c4f625282b9ebf",
+            "subject_digest": "e9d89897622a8578948c1fea2e81a4473f5519b912af8119a883c1758c1ff578",
+            "surface": "source_and_tests"
+          },
+          {
+            "changed_file_count": 2,
+            "changed_python_file_count": 2,
+            "committed_at": "2026-01-23T15:04:35Z",
+            "family": "console/rendering",
+            "source_anchor_digest": "c71a0f830028443d46bcf7f5732fe65bf606fda3e12954685761d69981654aa4",
+            "subject_digest": "162bc0b470f3553c125138d45b155613e21d31b7d78e475202d03f51a4907f8d",
+            "surface": "source_and_tests"
+          },
+          {
+            "changed_file_count": 2,
+            "changed_python_file_count": 2,
+            "committed_at": "2026-01-23T13:30:56Z",
+            "family": "markup/text/emoji",
+            "source_anchor_digest": "ee0b6677894781bd343dd7b5cf2d67ee8cc73333f8bad1b8667b302b7f4a162d",
+            "subject_digest": "f2960464ba6f9b3cf7a26bd02229c9f33c6bf78c483ac97f5d57a973894eaf75",
+            "surface": "source_and_tests"
+          },
+          {
+            "changed_file_count": 3,
+            "changed_python_file_count": 3,
+            "committed_at": "2026-01-23T11:20:32Z",
+            "family": "table/panel/layout",
+            "source_anchor_digest": "fe432b4e7435059c32357546d340377f39a10b202dd1c35943674d3563712ada",
+            "subject_digest": "384b5bc5afb8d7cf8d916419b3a7c9b9056c591c51bb25e208678e67398db607",
+            "surface": "source_and_tests"
+          },
+          {
+            "changed_file_count": 4,
+            "changed_python_file_count": 3,
+            "committed_at": "2026-01-22T16:55:11Z",
+            "family": "progress/live/status rendering",
+            "source_anchor_digest": "94b0b33b51a857f393b51f73291a9c285a514187013621f36a716e68a7cc357d",
+            "subject_digest": "e40fcbfa0670685b72c04a8cb069ec43f583f21cfc7d2907b610745cf66153cb",
+            "surface": "source_and_tests"
+          },
+          {
+            "changed_file_count": 6,
+            "changed_python_file_count": 6,
+            "committed_at": "2026-01-22T14:07:03Z",
+            "family": "markup/text/emoji",
+            "source_anchor_digest": "72a68e77490ef56b9a6b6ebd5a66825257cc9abf2876980dc78089c4016fc1af",
+            "subject_digest": "59830ebc3a4184110566bf1a290d08473dfdcbd492ce498b14cd1a5e2fa2e441",
+            "surface": "source_and_tests"
+          },
+          {
+            "changed_file_count": 24,
+            "changed_python_file_count": 24,
+            "committed_at": "2026-01-20T15:53:39Z",
+            "family": "table/panel/layout",
+            "source_anchor_digest": "94771c7e8b71f76ce58923c6fa51438c30bef0fd2b13adb57bad2cb640b8040b",
+            "subject_digest": "2cb9da14534cb0b0bb6011c90ad86a93c96f45fa522dc521289b5643283d4edf",
+            "surface": "source_and_tests"
+          }
+        ],
+        "sample_task_design_candidate_digests": [
+          {
+            "changed_file_count": 2,
+            "changed_python_file_count": 1,
+            "committed_at": "2026-02-01T16:12:26Z",
+            "family": "parser/mixed integration",
+            "source_anchor_digest": "dfb3edb4a848a10dffce4bfd6788dc91c1971e7edd8f20cd40dec500b8d5e47e",
+            "subject_digest": "e55dea01f8db239db05a5d9f104b7670fa59de3d9621aa9336b6d86a8a620731",
+            "surface": "source_without_tests"
+          },
+          {
+            "changed_file_count": 1,
+            "changed_python_file_count": 1,
+            "committed_at": "2026-02-01T15:59:59Z",
+            "family": "parser/mixed integration",
+            "source_anchor_digest": "35537f4329de73e3640528341a2bf441a9fcf661782eba123fc8624cbed7a238",
+            "subject_digest": "7baef513d86be18f6ca73ec5c6709ee3aac2d69d3b16155ad8df8ed913bcb19e",
+            "surface": "source_without_tests"
+          },
+          {
+            "changed_file_count": 2,
+            "changed_python_file_count": 2,
+            "committed_at": "2026-02-01T15:24:39Z",
+            "family": "parser/mixed integration",
+            "source_anchor_digest": "056b42140da348dd71a17720e84c52a55764c8580e122739119ec3098ab644d8",
+            "subject_digest": "2fb9b2cf8a4584802f581bbdf3f90931b2d21b7bd6232148fccae3574bce6a90",
+            "surface": "source_and_tests"
+          },
+          {
+            "changed_file_count": 1,
+            "changed_python_file_count": 1,
+            "committed_at": "2026-02-01T15:08:09Z",
+            "family": "parser/mixed integration",
+            "source_anchor_digest": "ede36199306b876693f3ff5404ff6e2c016d77231f88ae73ae45b7c07c029c45",
+            "subject_digest": "a9d50aa01d7091c2f075add5b2fb29f6ecdb148b2e2e5b0d49a0404cd721b133",
+            "surface": "source_without_tests"
+          },
+          {
+            "changed_file_count": 4,
+            "changed_python_file_count": 2,
+            "committed_at": "2026-02-01T15:00:41Z",
+            "family": "parser/mixed integration",
+            "source_anchor_digest": "6a8b0e9a159cfc8c09c88a19776075cda02d5305aebd3a94037600a3878d9c12",
+            "subject_digest": "eb473684420679d71da4414c89db9a4d7ec115f3cb26938dbe64756b7abbcaa5",
+            "surface": "source_and_tests"
+          },
+          {
+            "changed_file_count": 4,
+            "changed_python_file_count": 2,
+            "committed_at": "2026-01-24T21:33:23Z",
+            "family": "parser/mixed integration",
+            "source_anchor_digest": "94ff42c0aff06f65e0563f579d0b22a01464f1e0620e0a8422c451b17c4445f6",
+            "subject_digest": "7f3760c7c3dead4ef243f7650ebed24c41f75aa4884e1c7feee513060ce7b1dd",
+            "surface": "source_and_tests"
+          },
+          {
+            "changed_file_count": 1,
+            "changed_python_file_count": 1,
+            "committed_at": "2026-01-24T12:24:41Z",
+            "family": "progress/live/status rendering",
+            "source_anchor_digest": "3a6309e7b0fdc7aeebce8629e6cef353ed72865194343a5ac5a99975b20a8905",
+            "subject_digest": "247499209ab0801d58e4702c06ec938ecf612ec4a9b38fd8de5f99a55fd019cd",
+            "surface": "source_without_tests"
+          },
+          {
+            "changed_file_count": 6,
+            "changed_python_file_count": 5,
+            "committed_at": "2026-01-24T12:01:02Z",
+            "family": "parser/mixed integration",
+            "source_anchor_digest": "68eec90276740e01069213ff99a763c27cfabefae52e1e56f1c4f625282b9ebf",
+            "subject_digest": "e9d89897622a8578948c1fea2e81a4473f5519b912af8119a883c1758c1ff578",
+            "surface": "source_and_tests"
+          },
+          {
+            "changed_file_count": 1,
+            "changed_python_file_count": 1,
+            "committed_at": "2026-01-24T12:18:12+05:30",
+            "family": "console/rendering",
+            "source_anchor_digest": "cad3ec2e2b8f09bb06ec2096ec00a8c9659a9675ecceb6d6ff8c5a1300cee18e",
+            "subject_digest": "8548c29f67aba14f0a09aced5661d0958d34ec6e08f5a69a673ebb5241fe6ca1",
+            "surface": "source_without_tests"
+          },
+          {
+            "changed_file_count": 1,
+            "changed_python_file_count": 1,
+            "committed_at": "2026-01-23T16:20:59Z",
+            "family": "table/panel/layout",
+            "source_anchor_digest": "5fba83ba142f9b23311c70bca54fe330664494895dcd4d5ea02ae157e1510606",
+            "subject_digest": "df3bbfc17f895de0080c0ff033443bb371883e9c22dcd2a03a800c4b380a8164",
+            "surface": "source_without_tests"
+          }
+        ],
+        "surface_counts": {
+          "docs_or_meta_only": 49,
+          "other": 1,
+          "source_and_tests": 19,
+          "source_without_tests": 59,
+          "tests_without_source": 10
+        },
+        "task_design_candidate_count": 74,
+        "task_design_family_count": 6,
+        "task_design_family_counts": {
+          "console/rendering": 9,
+          "markup/text/emoji": 6,
+          "parser/mixed integration": 27,
+          "progress/live/status rendering": 14,
+          "table/panel/layout": 9,
+          "traceback/logging/inspect": 9
+        },
+        "window_end": "2026-02-13",
+        "window_start": "2025-05-14"
+      },
+      "extended_R_ready": true,
+      "family_ready": true,
+      "language": "python",
+      "limitations": [
+        "This is repository admission, not task admission; no hidden verifier smoke has run.",
+        "oracle_direct_candidate_count requires source and test changes in the same commit.",
+        "task_design_candidate_count also includes source-only changes that would require Golden-Oracle verifier construction.",
+        "Candidate counts exclude low-signal subjects, but they are not accepted tasks.",
+        "Source anchors are digested to avoid publishing W* target commits in this planning artifact."
+      ],
+      "metadata": {
+        "head_committed_at": "2026-04-12T16:40:06+07:00",
+        "head_digest": "742480613eee6fba5ac561e249021660b5d3e79bb94dc68e3321461ec856b32f",
+        "path": "experiments/core_narrative/external_repos/rich",
+        "tag_sample": [
+          "v15.0.0",
+          "v14.3.4",
+          "v14.3.3",
+          "v14.3.2",
+          "v14.3.1"
+        ]
+      },
+      "repo_slug": "rich",
+      "repository": "Textualize/rich",
+      "role": "replication_candidate",
+      "strict_R_ready": true,
+      "test_command": "python -m pytest -q",
+      "test_surface": {
+        "noxfile_exists": false,
+        "pyproject_exists": true,
+        "tests_dir_exists": true,
+        "tox_ini_exists": true
+      },
+      "windows": {
+        "C": {
+          "candidate_count": 481,
+          "candidate_family_counts": {
+            "console/rendering": 137,
+            "markup/text/emoji": 57,
+            "parser/mixed integration": 119,
+            "progress/live/status rendering": 115,
+            "table/panel/layout": 33,
+            "traceback/logging/inspect": 20
+          },
+          "family_count": 6,
+          "low_signal_subject_count": 348,
+          "non_merge_commit_count": 3260,
+          "oracle_direct_candidate_count": 481,
+          "sample_candidate_digests": [
+            {
+              "changed_file_count": 2,
+              "changed_python_file_count": 2,
+              "committed_at": "2025-11-13T09:06:57+02:00",
+              "family": "markup/text/emoji",
+              "source_anchor_digest": "f29a393fed8a175b2dacb84bd59e2e3dfea27de68609953063066aa0ef85eeb6",
+              "subject_digest": "d310c35fef268f42489eedb8c80abf41ad3b645bb5790fc69b38acf0a975c950",
+              "surface": "source_and_tests"
+            },
+            {
+              "changed_file_count": 5,
+              "changed_python_file_count": 4,
+              "committed_at": "2025-10-09T09:35:09+01:00",
+              "family": "markup/text/emoji",
+              "source_anchor_digest": "1dbdf77e86ff37e076682811ae3b06587f70eec11065fcc63d0039a712bc06f2",
+              "subject_digest": "f98a1f302fc72bdab0a3e2726a18cc31e0e92807a223cb38d1ab64e2ad3f20e1",
+              "surface": "source_and_tests"
+            },
+            {
+              "changed_file_count": 2,
+              "changed_python_file_count": 2,
+              "committed_at": "2025-06-22T15:30:38+01:00",
+              "family": "parser/mixed integration",
+              "source_anchor_digest": "c077a693b0753586f18e368ef03b6e2192ec0d89c60a4263553d4401a8377fcc",
+              "subject_digest": "fcb12f8fb930f8e6466253a965f77c3d4cc64738347cd4b055f0c5aa30b4b01f",
+              "surface": "source_and_tests"
+            },
+            {
+              "changed_file_count": 5,
+              "changed_python_file_count": 3,
+              "committed_at": "2025-06-20T21:23:40+01:00",
+              "family": "console/rendering",
+              "source_anchor_digest": "bb8b26cc25875d0b1299f1b721feb2bcbf7706e232b391c20610c3af4231d494",
+              "subject_digest": "59022e7ff576c9a7506e0af431c11005746d8f0764c22e000754204884e7bf47",
+              "surface": "source_and_tests"
+            },
+            {
+              "changed_file_count": 2,
+              "changed_python_file_count": 2,
+              "committed_at": "2025-06-20T14:34:53Z",
+              "family": "console/rendering",
+              "source_anchor_digest": "ea3fdcc0f8b5984f3ca32671ca39831204bd5de0072b43e4e53335589bd78cdd",
+              "subject_digest": "3eeaaeebb52f32bc11927b4e6af46676e24728bb0addd7f3d5f689403809e5f2",
+              "surface": "source_and_tests"
+            },
+            {
+              "changed_file_count": 7,
+              "changed_python_file_count": 6,
+              "committed_at": "2025-06-18T08:29:31+01:00",
+              "family": "progress/live/status rendering",
+              "source_anchor_digest": "6348a133c0e5059959c67815afb049da938c96a46edbf55b299f9e5bd67f6ec3",
+              "subject_digest": "f98a1f302fc72bdab0a3e2726a18cc31e0e92807a223cb38d1ab64e2ad3f20e1",
+              "surface": "source_and_tests"
+            },
+            {
+              "changed_file_count": 12,
+              "changed_python_file_count": 12,
+              "committed_at": "2025-06-15T11:02:57-04:00",
+              "family": "progress/live/status rendering",
+              "source_anchor_digest": "11951d02abde795d82a57baf0b7a2cfa7aa5b3f2a07c10b3553ee4737ca041cf",
+              "subject_digest": "16411360e03ae35d9a4d97ba65335cd7585bc64a105bf0db11c588eff6972636",
+              "surface": "source_and_tests"
+            },
+            {
+              "changed_file_count": 3,
+              "changed_python_file_count": 2,
+              "committed_at": "2025-05-01T21:49:07+01:00",
+              "family": "table/panel/layout",
+              "source_anchor_digest": "00a7fe07d07b8cb3719e68c09a37e8be06a8127034e81af7a53435aef889b882",
+              "subject_digest": "b945695ccf908183d9fee9776fc4eeb6d529ea5ce1473ec2a377447dba3a671b",
+              "surface": "source_and_tests"
+            },
+            {
+              "changed_file_count": 2,
+              "changed_python_file_count": 2,
+              "committed_at": "2025-03-28T14:07:57Z",
+              "family": "traceback/logging/inspect",
+              "source_anchor_digest": "e03104921ace4d9bd5705578439f50c41825920a43462c980c36716835719c86",
+              "subject_digest": "f182bfd0a09c76fe09c4065468a3c74545c5cd827f00bf0fb8b90772ccfa80ca",
+              "surface": "source_and_tests"
+            },
+            {
+              "changed_file_count": 4,
+              "changed_python_file_count": 2,
+              "committed_at": "2025-03-28T11:37:27Z",
+              "family": "console/rendering",
+              "source_anchor_digest": "1a11bcce54bba95e8bb1748a1fb9d6cfeed6253dac9c5f3a2b2af5202c43c4b6",
+              "subject_digest": "18fe2c43a4dabb42a5563388bd67e9e465063aa6e49fc8a1452dc43e710c5112",
+              "surface": "source_and_tests"
+            }
+          ],
+          "sample_task_design_candidate_digests": [
+            {
+              "changed_file_count": 2,
+              "changed_python_file_count": 2,
+              "committed_at": "2025-11-13T09:06:57+02:00",
+              "family": "markup/text/emoji",
+              "source_anchor_digest": "f29a393fed8a175b2dacb84bd59e2e3dfea27de68609953063066aa0ef85eeb6",
+              "subject_digest": "d310c35fef268f42489eedb8c80abf41ad3b645bb5790fc69b38acf0a975c950",
+              "surface": "source_and_tests"
+            },
+            {
+              "changed_file_count": 5,
+              "changed_python_file_count": 4,
+              "committed_at": "2025-10-09T09:35:09+01:00",
+              "family": "markup/text/emoji",
+              "source_anchor_digest": "1dbdf77e86ff37e076682811ae3b06587f70eec11065fcc63d0039a712bc06f2",
+              "subject_digest": "f98a1f302fc72bdab0a3e2726a18cc31e0e92807a223cb38d1ab64e2ad3f20e1",
+              "surface": "source_and_tests"
+            },
+            {
+              "changed_file_count": 2,
+              "changed_python_file_count": 1,
+              "committed_at": "2025-08-14T13:54:47-04:00",
+              "family": "markup/text/emoji",
+              "source_anchor_digest": "b5275255bdae33d569ed70facc15d8621873e8336fc1c2dfe9362a73afd664cb",
+              "subject_digest": "b5199cd50678b26c9c0a0649693ce451dd5c0ce1e10a2f5d26faa4f4a34cdb50",
+              "surface": "source_without_tests"
+            },
+            {
+              "changed_file_count": 1,
+              "changed_python_file_count": 1,
+              "committed_at": "2025-07-25T07:55:09+01:00",
+              "family": "console/rendering",
+              "source_anchor_digest": "dbd4027cff0686bd64602db934158b6eed5063b9ba9bb539508134a27a17ad70",
+              "subject_digest": "a46de8182e780da89d2c11b6ac538fac83ec5ad4b6a8234c3b2cd22eb21d65d1",
+              "surface": "source_without_tests"
+            },
+            {
+              "changed_file_count": 1,
+              "changed_python_file_count": 1,
+              "committed_at": "2025-06-24T13:34:17+01:00",
+              "family": "progress/live/status rendering",
+              "source_anchor_digest": "7d31fcb5aab732b289bd74349d7d9ab07021f51abd2793ba69091a406f075840",
+              "subject_digest": "b340f921d284645bdacf6c31fbaf339f9c9db436dbd8007e6c84d9063aa8f706",
+              "surface": "source_without_tests"
+            },
+            {
+              "changed_file_count": 1,
+              "changed_python_file_count": 1,
+              "committed_at": "2025-06-24T08:51:00+01:00",
+              "family": "parser/mixed integration",
+              "source_anchor_digest": "c9411868ce157c72c12ceb2bd19136efb0284a41c96ace1617b68c8cfd9b8480",
+              "subject_digest": "0f87da87a1680de53935f430c2fbcb8567a6f24e71eab39be858f1d7ad76b141",
+              "surface": "source_without_tests"
+            },
+            {
+              "changed_file_count": 1,
+              "changed_python_file_count": 1,
+              "committed_at": "2025-06-23T16:37:38+01:00",
+              "family": "parser/mixed integration",
+              "source_anchor_digest": "a9a9ae43df8580001b496e3cb7ada18e5b523d8955efbbc71a97d76dad81d65c",
+              "subject_digest": "446e447a7cbaba465b00c4d3f2b03eee50e3589f881a439e9b419883bf76e71b",
+              "surface": "source_without_tests"
+            },
+            {
+              "changed_file_count": 2,
+              "changed_python_file_count": 2,
+              "committed_at": "2025-06-22T15:30:38+01:00",
+              "family": "parser/mixed integration",
+              "source_anchor_digest": "c077a693b0753586f18e368ef03b6e2192ec0d89c60a4263553d4401a8377fcc",
+              "subject_digest": "fcb12f8fb930f8e6466253a965f77c3d4cc64738347cd4b055f0c5aa30b4b01f",
+              "surface": "source_and_tests"
+            },
+            {
+              "changed_file_count": 2,
+              "changed_python_file_count": 1,
+              "committed_at": "2025-06-22T15:10:56+01:00",
+              "family": "parser/mixed integration",
+              "source_anchor_digest": "b70af6cf25453409f639a4e351f6201a19e0665bb957e2b5b372edd02d899895",
+              "subject_digest": "fcb12f8fb930f8e6466253a965f77c3d4cc64738347cd4b055f0c5aa30b4b01f",
+              "surface": "source_without_tests"
+            },
+            {
+              "changed_file_count": 5,
+              "changed_python_file_count": 3,
+              "committed_at": "2025-06-20T21:23:40+01:00",
+              "family": "console/rendering",
+              "source_anchor_digest": "bb8b26cc25875d0b1299f1b721feb2bcbf7706e232b391c20610c3af4231d494",
+              "subject_digest": "59022e7ff576c9a7506e0af431c11005746d8f0764c22e000754204884e7bf47",
+              "surface": "source_and_tests"
+            }
+          ],
+          "surface_counts": {
+            "docs_or_meta_only": 949,
+            "other": 203,
+            "source_and_tests": 498,
+            "source_without_tests": 1299,
+            "tests_without_source": 311
+          },
+          "task_design_candidate_count": 1731,
+          "task_design_family_count": 6,
+          "task_design_family_counts": {
+            "console/rendering": 475,
+            "markup/text/emoji": 157,
+            "parser/mixed integration": 555,
+            "progress/live/status rendering": 298,
+            "table/panel/layout": 119,
+            "traceback/logging/inspect": 127
+          },
+          "window_end": "2025-11-13",
+          "window_start": "1970-01-01"
+        },
+        "R": {
+          "candidate_count": 12,
+          "candidate_family_counts": {
+            "console/rendering": 1,
+            "markup/text/emoji": 2,
+            "parser/mixed integration": 4,
+            "progress/live/status rendering": 1,
+            "table/panel/layout": 3,
+            "traceback/logging/inspect": 1
+          },
+          "family_count": 6,
+          "low_signal_subject_count": 11,
+          "non_merge_commit_count": 78,
+          "oracle_direct_candidate_count": 12,
+          "sample_candidate_digests": [
+            {
+              "changed_file_count": 2,
+              "changed_python_file_count": 2,
+              "committed_at": "2026-02-01T15:24:39Z",
+              "family": "parser/mixed integration",
+              "source_anchor_digest": "056b42140da348dd71a17720e84c52a55764c8580e122739119ec3098ab644d8",
+              "subject_digest": "2fb9b2cf8a4584802f581bbdf3f90931b2d21b7bd6232148fccae3574bce6a90",
+              "surface": "source_and_tests"
+            },
+            {
+              "changed_file_count": 4,
+              "changed_python_file_count": 2,
+              "committed_at": "2026-02-01T15:00:41Z",
+              "family": "parser/mixed integration",
+              "source_anchor_digest": "6a8b0e9a159cfc8c09c88a19776075cda02d5305aebd3a94037600a3878d9c12",
+              "subject_digest": "eb473684420679d71da4414c89db9a4d7ec115f3cb26938dbe64756b7abbcaa5",
+              "surface": "source_and_tests"
+            },
+            {
+              "changed_file_count": 4,
+              "changed_python_file_count": 2,
+              "committed_at": "2026-01-24T21:33:23Z",
+              "family": "parser/mixed integration",
+              "source_anchor_digest": "94ff42c0aff06f65e0563f579d0b22a01464f1e0620e0a8422c451b17c4445f6",
+              "subject_digest": "7f3760c7c3dead4ef243f7650ebed24c41f75aa4884e1c7feee513060ce7b1dd",
+              "surface": "source_and_tests"
+            },
+            {
+              "changed_file_count": 6,
+              "changed_python_file_count": 5,
+              "committed_at": "2026-01-24T12:01:02Z",
+              "family": "parser/mixed integration",
+              "source_anchor_digest": "68eec90276740e01069213ff99a763c27cfabefae52e1e56f1c4f625282b9ebf",
+              "subject_digest": "e9d89897622a8578948c1fea2e81a4473f5519b912af8119a883c1758c1ff578",
+              "surface": "source_and_tests"
+            },
+            {
+              "changed_file_count": 2,
+              "changed_python_file_count": 2,
+              "committed_at": "2026-01-23T15:04:35Z",
+              "family": "console/rendering",
+              "source_anchor_digest": "c71a0f830028443d46bcf7f5732fe65bf606fda3e12954685761d69981654aa4",
+              "subject_digest": "162bc0b470f3553c125138d45b155613e21d31b7d78e475202d03f51a4907f8d",
+              "surface": "source_and_tests"
+            },
+            {
+              "changed_file_count": 2,
+              "changed_python_file_count": 2,
+              "committed_at": "2026-01-23T13:30:56Z",
+              "family": "markup/text/emoji",
+              "source_anchor_digest": "ee0b6677894781bd343dd7b5cf2d67ee8cc73333f8bad1b8667b302b7f4a162d",
+              "subject_digest": "f2960464ba6f9b3cf7a26bd02229c9f33c6bf78c483ac97f5d57a973894eaf75",
+              "surface": "source_and_tests"
+            },
+            {
+              "changed_file_count": 3,
+              "changed_python_file_count": 3,
+              "committed_at": "2026-01-23T11:20:32Z",
+              "family": "table/panel/layout",
+              "source_anchor_digest": "fe432b4e7435059c32357546d340377f39a10b202dd1c35943674d3563712ada",
+              "subject_digest": "384b5bc5afb8d7cf8d916419b3a7c9b9056c591c51bb25e208678e67398db607",
+              "surface": "source_and_tests"
+            },
+            {
+              "changed_file_count": 4,
+              "changed_python_file_count": 3,
+              "committed_at": "2026-01-22T16:55:11Z",
+              "family": "progress/live/status rendering",
+              "source_anchor_digest": "94b0b33b51a857f393b51f73291a9c285a514187013621f36a716e68a7cc357d",
+              "subject_digest": "e40fcbfa0670685b72c04a8cb069ec43f583f21cfc7d2907b610745cf66153cb",
+              "surface": "source_and_tests"
+            },
+            {
+              "changed_file_count": 6,
+              "changed_python_file_count": 6,
+              "committed_at": "2026-01-22T14:07:03Z",
+              "family": "markup/text/emoji",
+              "source_anchor_digest": "72a68e77490ef56b9a6b6ebd5a66825257cc9abf2876980dc78089c4016fc1af",
+              "subject_digest": "59830ebc3a4184110566bf1a290d08473dfdcbd492ce498b14cd1a5e2fa2e441",
+              "surface": "source_and_tests"
+            },
+            {
+              "changed_file_count": 24,
+              "changed_python_file_count": 24,
+              "committed_at": "2026-01-20T15:53:39Z",
+              "family": "table/panel/layout",
+              "source_anchor_digest": "94771c7e8b71f76ce58923c6fa51438c30bef0fd2b13adb57bad2cb640b8040b",
+              "subject_digest": "2cb9da14534cb0b0bb6011c90ad86a93c96f45fa522dc521289b5643283d4edf",
+              "surface": "source_and_tests"
+            }
+          ],
+          "sample_task_design_candidate_digests": [
+            {
+              "changed_file_count": 2,
+              "changed_python_file_count": 1,
+              "committed_at": "2026-02-01T16:12:26Z",
+              "family": "parser/mixed integration",
+              "source_anchor_digest": "dfb3edb4a848a10dffce4bfd6788dc91c1971e7edd8f20cd40dec500b8d5e47e",
+              "subject_digest": "e55dea01f8db239db05a5d9f104b7670fa59de3d9621aa9336b6d86a8a620731",
+              "surface": "source_without_tests"
+            },
+            {
+              "changed_file_count": 1,
+              "changed_python_file_count": 1,
+              "committed_at": "2026-02-01T15:59:59Z",
+              "family": "parser/mixed integration",
+              "source_anchor_digest": "35537f4329de73e3640528341a2bf441a9fcf661782eba123fc8624cbed7a238",
+              "subject_digest": "7baef513d86be18f6ca73ec5c6709ee3aac2d69d3b16155ad8df8ed913bcb19e",
+              "surface": "source_without_tests"
+            },
+            {
+              "changed_file_count": 2,
+              "changed_python_file_count": 2,
+              "committed_at": "2026-02-01T15:24:39Z",
+              "family": "parser/mixed integration",
+              "source_anchor_digest": "056b42140da348dd71a17720e84c52a55764c8580e122739119ec3098ab644d8",
+              "subject_digest": "2fb9b2cf8a4584802f581bbdf3f90931b2d21b7bd6232148fccae3574bce6a90",
+              "surface": "source_and_tests"
+            },
+            {
+              "changed_file_count": 1,
+              "changed_python_file_count": 1,
+              "committed_at": "2026-02-01T15:08:09Z",
+              "family": "parser/mixed integration",
+              "source_anchor_digest": "ede36199306b876693f3ff5404ff6e2c016d77231f88ae73ae45b7c07c029c45",
+              "subject_digest": "a9d50aa01d7091c2f075add5b2fb29f6ecdb148b2e2e5b0d49a0404cd721b133",
+              "surface": "source_without_tests"
+            },
+            {
+              "changed_file_count": 4,
+              "changed_python_file_count": 2,
+              "committed_at": "2026-02-01T15:00:41Z",
+              "family": "parser/mixed integration",
+              "source_anchor_digest": "6a8b0e9a159cfc8c09c88a19776075cda02d5305aebd3a94037600a3878d9c12",
+              "subject_digest": "eb473684420679d71da4414c89db9a4d7ec115f3cb26938dbe64756b7abbcaa5",
+              "surface": "source_and_tests"
+            },
+            {
+              "changed_file_count": 4,
+              "changed_python_file_count": 2,
+              "committed_at": "2026-01-24T21:33:23Z",
+              "family": "parser/mixed integration",
+              "source_anchor_digest": "94ff42c0aff06f65e0563f579d0b22a01464f1e0620e0a8422c451b17c4445f6",
+              "subject_digest": "7f3760c7c3dead4ef243f7650ebed24c41f75aa4884e1c7feee513060ce7b1dd",
+              "surface": "source_and_tests"
+            },
+            {
+              "changed_file_count": 1,
+              "changed_python_file_count": 1,
+              "committed_at": "2026-01-24T12:24:41Z",
+              "family": "progress/live/status rendering",
+              "source_anchor_digest": "3a6309e7b0fdc7aeebce8629e6cef353ed72865194343a5ac5a99975b20a8905",
+              "subject_digest": "247499209ab0801d58e4702c06ec938ecf612ec4a9b38fd8de5f99a55fd019cd",
+              "surface": "source_without_tests"
+            },
+            {
+              "changed_file_count": 6,
+              "changed_python_file_count": 5,
+              "committed_at": "2026-01-24T12:01:02Z",
+              "family": "parser/mixed integration",
+              "source_anchor_digest": "68eec90276740e01069213ff99a763c27cfabefae52e1e56f1c4f625282b9ebf",
+              "subject_digest": "e9d89897622a8578948c1fea2e81a4473f5519b912af8119a883c1758c1ff578",
+              "surface": "source_and_tests"
+            },
+            {
+              "changed_file_count": 1,
+              "changed_python_file_count": 1,
+              "committed_at": "2026-01-24T12:18:12+05:30",
+              "family": "console/rendering",
+              "source_anchor_digest": "cad3ec2e2b8f09bb06ec2096ec00a8c9659a9675ecceb6d6ff8c5a1300cee18e",
+              "subject_digest": "8548c29f67aba14f0a09aced5661d0958d34ec6e08f5a69a673ebb5241fe6ca1",
+              "surface": "source_without_tests"
+            },
+            {
+              "changed_file_count": 1,
+              "changed_python_file_count": 1,
+              "committed_at": "2026-01-23T16:20:59Z",
+              "family": "table/panel/layout",
+              "source_anchor_digest": "5fba83ba142f9b23311c70bca54fe330664494895dcd4d5ea02ae157e1510606",
+              "subject_digest": "df3bbfc17f895de0080c0ff033443bb371883e9c22dcd2a03a800c4b380a8164",
+              "surface": "source_without_tests"
+            }
+          ],
+          "surface_counts": {
+            "docs_or_meta_only": 22,
+            "source_and_tests": 12,
+            "source_without_tests": 37,
+            "tests_without_source": 7
+          },
+          "task_design_candidate_count": 47,
+          "task_design_family_count": 6,
+          "task_design_family_counts": {
+            "console/rendering": 5,
+            "markup/text/emoji": 3,
+            "parser/mixed integration": 23,
+            "progress/live/status rendering": 4,
+            "table/panel/layout": 8,
+            "traceback/logging/inspect": 4
+          },
+          "window_end": "2026-02-13",
+          "window_start": "2025-11-14"
+        },
+        "W_star": {
+          "candidate_count": 9,
+          "candidate_family_counts": {
+            "console/rendering": 3,
+            "parser/mixed integration": 4,
+            "table/panel/layout": 1,
+            "traceback/logging/inspect": 1
+          },
+          "family_count": 4,
+          "low_signal_subject_count": 7,
+          "non_merge_commit_count": 48,
+          "oracle_direct_candidate_count": 9,
+          "sample_candidate_digests": [
+            {
+              "changed_file_count": 2,
+              "changed_python_file_count": 2,
+              "committed_at": "2026-04-12T14:39:10+07:00",
+              "family": "table/panel/layout",
+              "source_anchor_digest": "a78cea88b24e53a04f1f6d124ac699eb78697a9f6b614ca716a76a8403bb7146",
+              "subject_digest": "907d756d0346fa3154d367788ad4eb5930979aa4075f4d824a49d1e5525adfd8",
+              "surface": "source_and_tests"
+            },
+            {
+              "changed_file_count": 2,
+              "changed_python_file_count": 2,
+              "committed_at": "2026-04-12T11:05:57+07:00",
+              "family": "parser/mixed integration",
+              "source_anchor_digest": "7a57b2d77aa84518a2b21958a8788be520d63fa2c787719f064588ec82073727",
+              "subject_digest": "d55341f5af6524222999ce9ed9fa7dd2b885d5553772a9ae8a0ba57058e709f4",
+              "surface": "source_and_tests"
+            },
+            {
+              "changed_file_count": 2,
+              "changed_python_file_count": 2,
+              "committed_at": "2026-04-11T17:32:51+07:00",
+              "family": "console/rendering",
+              "source_anchor_digest": "7cd2e502198c282bc837c44e342b6d417224393ffd34742e7f4d121aa20b3c51",
+              "subject_digest": "d5a70e6999c0b59ebc54d59967e6cac3ccee10c648f38b1eeb1c2923b8fa8a59",
+              "surface": "source_and_tests"
+            },
+            {
+              "changed_file_count": 2,
+              "changed_python_file_count": 2,
+              "committed_at": "2026-04-11T16:22:32+07:00",
+              "family": "console/rendering",
+              "source_anchor_digest": "a2388849a251af948595912f8a048748ac6474c164cc152c7b3b9632dc89e7f4",
+              "subject_digest": "8a423ae958022b3f961e4497a1a12aab3630912086a0d522d98252161b3230a0",
+              "surface": "source_and_tests"
+            },
+            {
+              "changed_file_count": 4,
+              "changed_python_file_count": 4,
+              "committed_at": "2026-04-09T00:55:29-05:00",
+              "family": "traceback/logging/inspect",
+              "source_anchor_digest": "c18710f209162d977b5c65ffff231fb534d8361f9a18840b857e62c39c4a0d7c",
+              "subject_digest": "1e85f421ed8b09e3ed5522c553c6bcfb5257cedce759307d19a74b9ffe1c24ab",
+              "surface": "source_and_tests"
+            },
+            {
+              "changed_file_count": 7,
+              "changed_python_file_count": 5,
+              "committed_at": "2026-04-09T00:10:07-05:00",
+              "family": "console/rendering",
+              "source_anchor_digest": "fa5b93cbd14755c9c32be026e052c3153e28f4f027f1f0e9d9b217a1127da213",
+              "subject_digest": "47160e903d24b97a70d8a965ecbe6766375bb6a7fe7b9ec72ad2049d04eed1cd",
+              "surface": "source_and_tests"
+            },
+            {
+              "changed_file_count": 2,
+              "changed_python_file_count": 2,
+              "committed_at": "2026-02-19T16:44:19Z",
+              "family": "parser/mixed integration",
+              "source_anchor_digest": "f326623e430b07e7f64a553f7b25d9442cd1d65df26f60f9de7d629bf8fb07b5",
+              "subject_digest": "19b41e3357c8dae7ddebdc7f6b8bde6523b7bbd2066ee39e52933f979a4b6152",
+              "surface": "source_and_tests"
+            },
+            {
+              "changed_file_count": 2,
+              "changed_python_file_count": 2,
+              "committed_at": "2026-02-19T15:49:21Z",
+              "family": "parser/mixed integration",
+              "source_anchor_digest": "ce0b26cad60a57ee6c348f4640158f60549d9731f43bd27b0bc57b506479ffd3",
+              "subject_digest": "6b5d61e56078e71fb44287c3741c4998eb027e6f7a0c910a93cf5fd272c07f3f",
+              "surface": "source_and_tests"
+            },
+            {
+              "changed_file_count": 3,
+              "changed_python_file_count": 2,
+              "committed_at": "2026-02-19T14:02:23Z",
+              "family": "parser/mixed integration",
+              "source_anchor_digest": "a5651c3c40dd06bdaef1cdc09f362f37b59fbaf1443fdacc07a63c4ec1ad9b61",
+              "subject_digest": "ddf3e5b43f8243e47f3efb9bb61b6d4b123989eeb89112f5e2df726b84fbf5b9",
+              "surface": "source_and_tests"
+            }
+          ],
+          "sample_task_design_candidate_digests": [
+            {
+              "changed_file_count": 1,
+              "changed_python_file_count": 1,
+              "committed_at": "2026-04-12T14:39:42+07:00",
+              "family": "parser/mixed integration",
+              "source_anchor_digest": "f9aea3b040d01fa43c3ada2cfc7d2595e8211a485b397b418edcf3c1fbcb0a28",
+              "subject_digest": "ad1a2bafd2e4a6b804dcd785da0e623e67bf9b86f6c37c8dc91b741b854f6871",
+              "surface": "source_without_tests"
+            },
+            {
+              "changed_file_count": 2,
+              "changed_python_file_count": 2,
+              "committed_at": "2026-04-12T14:39:10+07:00",
+              "family": "table/panel/layout",
+              "source_anchor_digest": "a78cea88b24e53a04f1f6d124ac699eb78697a9f6b614ca716a76a8403bb7146",
+              "subject_digest": "907d756d0346fa3154d367788ad4eb5930979aa4075f4d824a49d1e5525adfd8",
+              "surface": "source_and_tests"
+            },
+            {
+              "changed_file_count": 2,
+              "changed_python_file_count": 2,
+              "committed_at": "2026-04-12T11:05:57+07:00",
+              "family": "parser/mixed integration",
+              "source_anchor_digest": "7a57b2d77aa84518a2b21958a8788be520d63fa2c787719f064588ec82073727",
+              "subject_digest": "d55341f5af6524222999ce9ed9fa7dd2b885d5553772a9ae8a0ba57058e709f4",
+              "surface": "source_and_tests"
+            },
+            {
+              "changed_file_count": 1,
+              "changed_python_file_count": 1,
+              "committed_at": "2026-04-12T10:30:28+07:00",
+              "family": "console/rendering",
+              "source_anchor_digest": "34b7daed9fa32891c0e4a6c79382c39f98728165e1142a07e7d9de9ca7eddd82",
+              "subject_digest": "50a66195d31a5bb6afd46c844c16e396a6aaeb4c61b3f5e601ab4f487cd3f880",
+              "surface": "source_without_tests"
+            },
+            {
+              "changed_file_count": 2,
+              "changed_python_file_count": 2,
+              "committed_at": "2026-04-11T17:32:51+07:00",
+              "family": "console/rendering",
+              "source_anchor_digest": "7cd2e502198c282bc837c44e342b6d417224393ffd34742e7f4d121aa20b3c51",
+              "subject_digest": "d5a70e6999c0b59ebc54d59967e6cac3ccee10c648f38b1eeb1c2923b8fa8a59",
+              "surface": "source_and_tests"
+            },
+            {
+              "changed_file_count": 3,
+              "changed_python_file_count": 1,
+              "committed_at": "2026-04-11T16:29:35+07:00",
+              "family": "console/rendering",
+              "source_anchor_digest": "6a99c6bb35fc70ce1e2b3317f586864d1c70da1d68f98cdc7ee7144f6dfd8908",
+              "subject_digest": "1775d1e32da71cc75acd6fde38419ea6af94e8acbf4b600e7194a27717d7468b",
+              "surface": "source_without_tests"
+            },
+            {
+              "changed_file_count": 1,
+              "changed_python_file_count": 1,
+              "committed_at": "2026-04-11T16:25:39+07:00",
+              "family": "console/rendering",
+              "source_anchor_digest": "df4a8b31a1b8de365362db04498fe73401977b43cfe45ae6195513be3aa9a0c4",
+              "subject_digest": "baf7016e7081633dfcfe1f4b1d030fc5976e06750a25e37303ef79b3cc61c013",
+              "surface": "source_without_tests"
+            },
+            {
+              "changed_file_count": 2,
+              "changed_python_file_count": 2,
+              "committed_at": "2026-04-11T16:22:32+07:00",
+              "family": "console/rendering",
+              "source_anchor_digest": "a2388849a251af948595912f8a048748ac6474c164cc152c7b3b9632dc89e7f4",
+              "subject_digest": "8a423ae958022b3f961e4497a1a12aab3630912086a0d522d98252161b3230a0",
+              "surface": "source_and_tests"
+            },
+            {
+              "changed_file_count": 2,
+              "changed_python_file_count": 2,
+              "committed_at": "2026-04-11T15:59:45+07:00",
+              "family": "parser/mixed integration",
+              "source_anchor_digest": "09a9d22385c762351be9eb18b1d250d93d8cd6d10c28bf2a46cee5774c5e25e6",
+              "subject_digest": "a41a08a1e787f9709cf7559b48f9957fa158675738ae848e1128c75642ba59dc",
+              "surface": "source_without_tests"
+            },
+            {
+              "changed_file_count": 1,
+              "changed_python_file_count": 1,
+              "committed_at": "2026-04-11T09:34:40+07:00",
+              "family": "console/rendering",
+              "source_anchor_digest": "04b099b06a7b0e25e3efddb68eaacc0e825cb69f3e78c759cb05449684b541de",
+              "subject_digest": "f8fd8e84e5d029290a7de562095cd9d86a6e7fdfec86d76e007ceefb676c5b0a",
+              "surface": "source_without_tests"
+            }
+          ],
+          "surface_counts": {
+            "docs_or_meta_only": 14,
+            "other": 1,
+            "source_and_tests": 9,
+            "source_without_tests": 16,
+            "tests_without_source": 8
+          },
+          "task_design_candidate_count": 25,
+          "task_design_family_count": 5,
+          "task_design_family_counts": {
+            "console/rendering": 12,
+            "markup/text/emoji": 2,
+            "parser/mixed integration": 9,
+            "table/panel/layout": 1,
+            "traceback/logging/inspect": 1
+          },
+          "window_end": "2026-05-14",
+          "window_start": "2026-02-14"
+        }
+      }
+    },
+    {
+      "W_star_ready": false,
+      "admission_ready": false,
+      "blockers": [
+        "w_star_task_design_candidate_count_below_20"
+      ],
+      "extended_R": {
+        "candidate_count": 35,
+        "candidate_family_counts": {
+          "fixtures/mixed integration": 3,
+          "formatting behavior": 22,
+          "mode/config semantics": 6,
+          "parser/AST": 4
+        },
+        "family_count": 4,
+        "low_signal_subject_count": 46,
+        "non_merge_commit_count": 146,
+        "oracle_direct_candidate_count": 35,
+        "sample_candidate_digests": [
+          {
+            "changed_file_count": 3,
+            "changed_python_file_count": 2,
+            "committed_at": "2026-01-23T10:05:02-06:00",
+            "family": "fixtures/mixed integration",
+            "source_anchor_digest": "f0495236f10a59a6db2f91e055fe8c19a1df9047417c7a7a75bc575aef7fded8",
+            "subject_digest": "1e36bd8f2f198b6589c3e33ff0bf7f37214967b783e5a8d340b2209334908c70",
+            "surface": "source_and_tests"
+          },
+          {
+            "changed_file_count": 3,
+            "changed_python_file_count": 2,
+            "committed_at": "2026-01-22T18:52:37-06:00",
+            "family": "mode/config semantics",
+            "source_anchor_digest": "24735c1974a8b62c05da6995c3e1ce617f0b117ea74c04c62b164800cda95598",
+            "subject_digest": "c37ca0750a574ca22665ead0102a4356394bf9d181d2c51248f23003638e87d9",
+            "surface": "source_and_tests"
+          },
+          {
+            "changed_file_count": 9,
+            "changed_python_file_count": 6,
+            "committed_at": "2026-01-22T18:35:19-06:00",
+            "family": "formatting behavior",
+            "source_anchor_digest": "3a2af3fd0fa3984ae56b11095d66138b0fdaf656227f4766aaffa56df211e161",
+            "subject_digest": "c7207274373c330ec51ebdb7469a2bbfeb168216223a0136fa994aea4869ab98",
+            "surface": "source_and_tests"
+          },
+          {
+            "changed_file_count": 3,
+            "changed_python_file_count": 2,
+            "committed_at": "2026-01-22T18:35:05-06:00",
+            "family": "parser/AST",
+            "source_anchor_digest": "03549521a90d8e09aae12e752299263b5e06eff4dbf02e6f2039db013b496d8f",
+            "subject_digest": "71b69246ad53d8b5f29299e1914de82fce342dc59d997a9dc235937e42f7a0ca",
+            "surface": "source_and_tests"
+          },
+          {
+            "changed_file_count": 3,
+            "changed_python_file_count": 2,
+            "committed_at": "2026-01-15T22:32:17-06:00",
+            "family": "formatting behavior",
+            "source_anchor_digest": "6a46547837cb3f405ca1845aeccf6063919812a425877b3617eef2321e3c1995",
+            "subject_digest": "175b2308b9aff76d283a2f13d6b1eac68231231da66e83e75acfdd66f0b11c08",
+            "surface": "source_and_tests"
+          },
+          {
+            "changed_file_count": 8,
+            "changed_python_file_count": 4,
+            "committed_at": "2026-01-15T21:07:25-06:00",
+            "family": "mode/config semantics",
+            "source_anchor_digest": "401a1a2b91f7d4f64c0fbb5f20508b4f7fb99f1944a2e635b4182f04e28dc9c0",
+            "subject_digest": "95fb7140c7d78e2181b992a00df3a502582504a8cb6a302df330237448e5da15",
+            "surface": "source_and_tests"
+          },
+          {
+            "changed_file_count": 3,
+            "changed_python_file_count": 2,
+            "committed_at": "2025-12-07T18:43:08-06:00",
+            "family": "formatting behavior",
+            "source_anchor_digest": "663a5a623df52e8b529df89a84f524785d5e6e607758adb64429aa75d0e31147",
+            "subject_digest": "08e9292138e21f313f67f6f70594a82487ce20bfaa47c379686fe97436dcccb4",
+            "surface": "source_and_tests"
+          },
+          {
+            "changed_file_count": 4,
+            "changed_python_file_count": 3,
+            "committed_at": "2025-12-07T18:22:30-06:00",
+            "family": "formatting behavior",
+            "source_anchor_digest": "c2ee2c823d7d2e9ea61824a183ba3f164ce3cb78cba6215be2a34003c2631ad4",
+            "subject_digest": "3debe921f2941836d90ae439ec5230effec8903ce3d512effd2b4b89e03f9931",
+            "surface": "source_and_tests"
+          },
+          {
+            "changed_file_count": 4,
+            "changed_python_file_count": 3,
+            "committed_at": "2025-12-06T19:46:21-06:00",
+            "family": "formatting behavior",
+            "source_anchor_digest": "53a485519abaaebe4a3666acdc7bfed463d146704863f17dc54eae049f2a3caf",
+            "subject_digest": "cdf11fea0624f7ea3773a7a89e2e9ba4f41cc8b1cb7a4422811e6532b7d4e76b",
+            "surface": "source_and_tests"
+          },
+          {
+            "changed_file_count": 4,
+            "changed_python_file_count": 3,
+            "committed_at": "2025-12-02T09:30:56-06:00",
+            "family": "formatting behavior",
+            "source_anchor_digest": "7d0f9852fbea996f7376264a22da4afef822f8dd779d0f1567ebf8bd2989b229",
+            "subject_digest": "86e486557c4ec1d2b555b635a3b7ee63891a1818c89d5448853805b1b8561710",
+            "surface": "source_and_tests"
+          }
+        ],
+        "sample_task_design_candidate_digests": [
+          {
+            "changed_file_count": 3,
+            "changed_python_file_count": 2,
+            "committed_at": "2026-01-23T10:05:02-06:00",
+            "family": "fixtures/mixed integration",
+            "source_anchor_digest": "f0495236f10a59a6db2f91e055fe8c19a1df9047417c7a7a75bc575aef7fded8",
+            "subject_digest": "1e36bd8f2f198b6589c3e33ff0bf7f37214967b783e5a8d340b2209334908c70",
+            "surface": "source_and_tests"
+          },
+          {
+            "changed_file_count": 2,
+            "changed_python_file_count": 1,
+            "committed_at": "2026-01-23T10:04:48-06:00",
+            "family": "fixtures/mixed integration",
+            "source_anchor_digest": "03d890e107e8ac2ff8f1014ba3a1838e2a8fb5bd4e11690f0acebad2b68376a9",
+            "subject_digest": "d6e4aea279f0b82bccdd35856bf0d15bc928ae54eb6d607a37925e3bc4578be0",
+            "surface": "source_without_tests"
+          },
+          {
+            "changed_file_count": 3,
+            "changed_python_file_count": 2,
+            "committed_at": "2026-01-22T18:52:37-06:00",
+            "family": "mode/config semantics",
+            "source_anchor_digest": "24735c1974a8b62c05da6995c3e1ce617f0b117ea74c04c62b164800cda95598",
+            "subject_digest": "c37ca0750a574ca22665ead0102a4356394bf9d181d2c51248f23003638e87d9",
+            "surface": "source_and_tests"
+          },
+          {
+            "changed_file_count": 9,
+            "changed_python_file_count": 6,
+            "committed_at": "2026-01-22T18:35:19-06:00",
+            "family": "formatting behavior",
+            "source_anchor_digest": "3a2af3fd0fa3984ae56b11095d66138b0fdaf656227f4766aaffa56df211e161",
+            "subject_digest": "c7207274373c330ec51ebdb7469a2bbfeb168216223a0136fa994aea4869ab98",
+            "surface": "source_and_tests"
+          },
+          {
+            "changed_file_count": 3,
+            "changed_python_file_count": 2,
+            "committed_at": "2026-01-22T18:35:05-06:00",
+            "family": "parser/AST",
+            "source_anchor_digest": "03549521a90d8e09aae12e752299263b5e06eff4dbf02e6f2039db013b496d8f",
+            "subject_digest": "71b69246ad53d8b5f29299e1914de82fce342dc59d997a9dc235937e42f7a0ca",
+            "surface": "source_and_tests"
+          },
+          {
+            "changed_file_count": 3,
+            "changed_python_file_count": 2,
+            "committed_at": "2026-01-15T22:32:17-06:00",
+            "family": "formatting behavior",
+            "source_anchor_digest": "6a46547837cb3f405ca1845aeccf6063919812a425877b3617eef2321e3c1995",
+            "subject_digest": "175b2308b9aff76d283a2f13d6b1eac68231231da66e83e75acfdd66f0b11c08",
+            "surface": "source_and_tests"
+          },
+          {
+            "changed_file_count": 8,
+            "changed_python_file_count": 4,
+            "committed_at": "2026-01-15T21:07:25-06:00",
+            "family": "mode/config semantics",
+            "source_anchor_digest": "401a1a2b91f7d4f64c0fbb5f20508b4f7fb99f1944a2e635b4182f04e28dc9c0",
+            "subject_digest": "95fb7140c7d78e2181b992a00df3a502582504a8cb6a302df330237448e5da15",
+            "surface": "source_and_tests"
+          },
+          {
+            "changed_file_count": 3,
+            "changed_python_file_count": 2,
+            "committed_at": "2025-12-07T18:43:08-06:00",
+            "family": "formatting behavior",
+            "source_anchor_digest": "663a5a623df52e8b529df89a84f524785d5e6e607758adb64429aa75d0e31147",
+            "subject_digest": "08e9292138e21f313f67f6f70594a82487ce20bfaa47c379686fe97436dcccb4",
+            "surface": "source_and_tests"
+          },
+          {
+            "changed_file_count": 4,
+            "changed_python_file_count": 3,
+            "committed_at": "2025-12-07T18:22:30-06:00",
+            "family": "formatting behavior",
+            "source_anchor_digest": "c2ee2c823d7d2e9ea61824a183ba3f164ce3cb78cba6215be2a34003c2631ad4",
+            "subject_digest": "3debe921f2941836d90ae439ec5230effec8903ce3d512effd2b4b89e03f9931",
+            "surface": "source_and_tests"
+          },
+          {
+            "changed_file_count": 4,
+            "changed_python_file_count": 3,
+            "committed_at": "2025-12-06T19:46:21-06:00",
+            "family": "formatting behavior",
+            "source_anchor_digest": "53a485519abaaebe4a3666acdc7bfed463d146704863f17dc54eae049f2a3caf",
+            "subject_digest": "cdf11fea0624f7ea3773a7a89e2e9ba4f41cc8b1cb7a4422811e6532b7d4e76b",
+            "surface": "source_and_tests"
+          }
+        ],
+        "surface_counts": {
+          "docs_or_meta_only": 67,
+          "other": 21,
+          "source_and_tests": 37,
+          "source_without_tests": 13,
+          "tests_without_source": 8
+        },
+        "task_design_candidate_count": 46,
+        "task_design_family_count": 4,
+        "task_design_family_counts": {
+          "fixtures/mixed integration": 9,
+          "formatting behavior": 25,
+          "mode/config semantics": 7,
+          "parser/AST": 5
+        },
+        "window_end": "2026-02-13",
+        "window_start": "2025-05-14"
+      },
+      "extended_R_ready": true,
+      "family_ready": true,
+      "language": "python",
+      "limitations": [
+        "This is repository admission, not task admission; no hidden verifier smoke has run.",
+        "oracle_direct_candidate_count requires source and test changes in the same commit.",
+        "task_design_candidate_count also includes source-only changes that would require Golden-Oracle verifier construction.",
+        "Candidate counts exclude low-signal subjects, but they are not accepted tasks.",
+        "Source anchors are digested to avoid publishing W* target commits in this planning artifact."
+      ],
+      "metadata": {
+        "head_committed_at": "2026-05-12T09:43:13-05:00",
+        "head_digest": "c556060066afd0a4375295a6abd253491ca02a451b614432bb33c04517a673db",
+        "path": "experiments/core_narrative/external_repos/black",
+        "tag_sample": [
+          "26.3.1",
+          "26.3.0",
+          "26.1.0",
+          "25.12.0",
+          "26.1a1"
+        ]
+      },
+      "repo_slug": "black",
+      "repository": "psf/black",
+      "role": "replication_fallback_candidate",
+      "strict_R_ready": true,
+      "test_command": "python -m pytest -q",
+      "test_surface": {
+        "noxfile_exists": false,
+        "pyproject_exists": true,
+        "tests_dir_exists": true,
+        "tox_ini_exists": true
+      },
+      "windows": {
+        "C": {
+          "candidate_count": 334,
+          "candidate_family_counts": {
+            "CLI/integration": 3,
+            "cache/filesystem": 16,
+            "fixtures/mixed integration": 64,
+            "formatting behavior": 147,
+            "mode/config semantics": 57,
+            "parser/AST": 47
+          },
+          "family_count": 6,
+          "low_signal_subject_count": 386,
+          "non_merge_commit_count": 2072,
+          "oracle_direct_candidate_count": 334,
+          "sample_candidate_digests": [
+            {
+              "changed_file_count": 16,
+              "changed_python_file_count": 12,
+              "committed_at": "2025-11-05T23:44:18+05:30",
+              "family": "formatting behavior",
+              "source_anchor_digest": "b74360e0bc57f74f17fc890cdea6fc978c79b7e881e6b5d468b94edb8c81bcc2",
+              "subject_digest": "425696a3d2f65c130f411efebf1760595268cea6324e93b855ed66baabd32a4a",
+              "surface": "source_and_tests"
+            },
+            {
+              "changed_file_count": 5,
+              "changed_python_file_count": 4,
+              "committed_at": "2025-10-26T17:00:43-05:00",
+              "family": "formatting behavior",
+              "source_anchor_digest": "708c3fc18e65416191736bec9cd7fd676428924bb5f31432f17a084dfd4d1ce6",
+              "subject_digest": "f0d7c2a5adc7303553f5540663c6ea6aedd69d4ddd7cd142b5a39266a53e4d14",
+              "surface": "source_and_tests"
+            },
+            {
+              "changed_file_count": 3,
+              "changed_python_file_count": 2,
+              "committed_at": "2025-10-26T14:37:06-05:00",
+              "family": "formatting behavior",
+              "source_anchor_digest": "93bc81737ca55841ae624ba2d0201d48ac1ec5c6c9887180a76c0353e7c7bb2e",
+              "subject_digest": "b0e117700c43fd6488512a1ac4415d0c1f11833012966af57c3a60c6ae0e8a4b",
+              "surface": "source_and_tests"
+            },
+            {
+              "changed_file_count": 7,
+              "changed_python_file_count": 3,
+              "committed_at": "2025-10-26T10:14:48-05:00",
+              "family": "formatting behavior",
+              "source_anchor_digest": "c3376c2c553acccb36980936833f916594447d5545708a378e2dce8fd7132e52",
+              "subject_digest": "364a9926deaa67c9ab65397ba989e39184a86020d69fd4bd6c25b45c8e10cca0",
+              "surface": "source_and_tests"
+            },
+            {
+              "changed_file_count": 4,
+              "changed_python_file_count": 2,
+              "committed_at": "2025-10-18T19:47:50-05:00",
+              "family": "mode/config semantics",
+              "source_anchor_digest": "05432a8cb7d389b80720378b7f15d74dd9bcfefc018e0def2da8de0cd006bdc6",
+              "subject_digest": "95a8bd227fea994863eda9d4708b709f5bed981e7efa961d018fabb367301795",
+              "surface": "source_and_tests"
+            },
+            {
+              "changed_file_count": 9,
+              "changed_python_file_count": 6,
+              "committed_at": "2025-10-18T08:36:18-05:00",
+              "family": "formatting behavior",
+              "source_anchor_digest": "67d73a845de32eae38c3836baae9b4204c2c5a338d13dea09a63681deafcf226",
+              "subject_digest": "c0fd1bced60d46ae221260864bc4c903f0fe97b9b3e1f83d020a563cd2451020",
+              "surface": "source_and_tests"
+            },
+            {
+              "changed_file_count": 6,
+              "changed_python_file_count": 3,
+              "committed_at": "2025-10-06T12:30:20-07:00",
+              "family": "formatting behavior",
+              "source_anchor_digest": "82403d568a5c896632418cf798929b5be34bba40262d95a476ee04533943ac50",
+              "subject_digest": "0949c17bac5834d47c600b3ae41a9cf60bdb81db953f216e8b8a44ce247f0d31",
+              "surface": "source_and_tests"
+            },
+            {
+              "changed_file_count": 7,
+              "changed_python_file_count": 4,
+              "committed_at": "2025-09-24T23:04:17-05:00",
+              "family": "parser/AST",
+              "source_anchor_digest": "8e37b072b58106f5073e5efc58bc3423b723495bef6e985d740bb23b58941b5e",
+              "subject_digest": "a7449e03bb1f3c97309ca04cb6194ae064b19d72278c2956d0bcac0795d4797b",
+              "surface": "source_and_tests"
+            },
+            {
+              "changed_file_count": 7,
+              "changed_python_file_count": 4,
+              "committed_at": "2025-09-18T11:49:07-07:00",
+              "family": "mode/config semantics",
+              "source_anchor_digest": "416f7e85fbda48c5558a89def1cec82aed32188a49b50d1b6772a76ee10cc352",
+              "subject_digest": "5b37677d72551f4b8c73974f7be1b737a61af5d5b8a96f06f9bb0c890dbbbfc3",
+              "surface": "source_and_tests"
+            },
+            {
+              "changed_file_count": 6,
+              "changed_python_file_count": 3,
+              "committed_at": "2025-09-08T08:19:33-05:00",
+              "family": "formatting behavior",
+              "source_anchor_digest": "6357b215059b40f9892e5ac48ba6f863c95e585b2852bab26a92b43fc3a80d04",
+              "subject_digest": "5ed1f33d7561e3e9f9a46a9d553845abfa245eaefac47d1f5e125a9cce36a498",
+              "surface": "source_and_tests"
+            }
+          ],
+          "sample_task_design_candidate_digests": [
+            {
+              "changed_file_count": 16,
+              "changed_python_file_count": 12,
+              "committed_at": "2025-11-05T23:44:18+05:30",
+              "family": "formatting behavior",
+              "source_anchor_digest": "b74360e0bc57f74f17fc890cdea6fc978c79b7e881e6b5d468b94edb8c81bcc2",
+              "subject_digest": "425696a3d2f65c130f411efebf1760595268cea6324e93b855ed66baabd32a4a",
+              "surface": "source_and_tests"
+            },
+            {
+              "changed_file_count": 5,
+              "changed_python_file_count": 4,
+              "committed_at": "2025-10-26T17:00:43-05:00",
+              "family": "formatting behavior",
+              "source_anchor_digest": "708c3fc18e65416191736bec9cd7fd676428924bb5f31432f17a084dfd4d1ce6",
+              "subject_digest": "f0d7c2a5adc7303553f5540663c6ea6aedd69d4ddd7cd142b5a39266a53e4d14",
+              "surface": "source_and_tests"
+            },
+            {
+              "changed_file_count": 3,
+              "changed_python_file_count": 2,
+              "committed_at": "2025-10-26T14:37:06-05:00",
+              "family": "formatting behavior",
+              "source_anchor_digest": "93bc81737ca55841ae624ba2d0201d48ac1ec5c6c9887180a76c0353e7c7bb2e",
+              "subject_digest": "b0e117700c43fd6488512a1ac4415d0c1f11833012966af57c3a60c6ae0e8a4b",
+              "surface": "source_and_tests"
+            },
+            {
+              "changed_file_count": 7,
+              "changed_python_file_count": 3,
+              "committed_at": "2025-10-26T10:14:48-05:00",
+              "family": "formatting behavior",
+              "source_anchor_digest": "c3376c2c553acccb36980936833f916594447d5545708a378e2dce8fd7132e52",
+              "subject_digest": "364a9926deaa67c9ab65397ba989e39184a86020d69fd4bd6c25b45c8e10cca0",
+              "surface": "source_and_tests"
+            },
+            {
+              "changed_file_count": 2,
+              "changed_python_file_count": 1,
+              "committed_at": "2025-10-20T11:09:00-05:00",
+              "family": "formatting behavior",
+              "source_anchor_digest": "d4373cc95878eeb7074d1c55cf883fd83046e1b3ff2c6608a481acb2755aaf46",
+              "subject_digest": "0deb2089b64cc6128f90a77a616a5c1f653dafb37d5a38c3684c3b594e0eea46",
+              "surface": "source_without_tests"
+            },
+            {
+              "changed_file_count": 4,
+              "changed_python_file_count": 2,
+              "committed_at": "2025-10-18T19:47:50-05:00",
+              "family": "mode/config semantics",
+              "source_anchor_digest": "05432a8cb7d389b80720378b7f15d74dd9bcfefc018e0def2da8de0cd006bdc6",
+              "subject_digest": "95a8bd227fea994863eda9d4708b709f5bed981e7efa961d018fabb367301795",
+              "surface": "source_and_tests"
+            },
+            {
+              "changed_file_count": 9,
+              "changed_python_file_count": 6,
+              "committed_at": "2025-10-18T08:36:18-05:00",
+              "family": "formatting behavior",
+              "source_anchor_digest": "67d73a845de32eae38c3836baae9b4204c2c5a338d13dea09a63681deafcf226",
+              "subject_digest": "c0fd1bced60d46ae221260864bc4c903f0fe97b9b3e1f83d020a563cd2451020",
+              "surface": "source_and_tests"
+            },
+            {
+              "changed_file_count": 6,
+              "changed_python_file_count": 3,
+              "committed_at": "2025-10-06T12:30:20-07:00",
+              "family": "formatting behavior",
+              "source_anchor_digest": "82403d568a5c896632418cf798929b5be34bba40262d95a476ee04533943ac50",
+              "subject_digest": "0949c17bac5834d47c600b3ae41a9cf60bdb81db953f216e8b8a44ce247f0d31",
+              "surface": "source_and_tests"
+            },
+            {
+              "changed_file_count": 7,
+              "changed_python_file_count": 4,
+              "committed_at": "2025-09-24T23:04:17-05:00",
+              "family": "parser/AST",
+              "source_anchor_digest": "8e37b072b58106f5073e5efc58bc3423b723495bef6e985d740bb23b58941b5e",
+              "subject_digest": "a7449e03bb1f3c97309ca04cb6194ae064b19d72278c2956d0bcac0795d4797b",
+              "surface": "source_and_tests"
+            },
+            {
+              "changed_file_count": 7,
+              "changed_python_file_count": 4,
+              "committed_at": "2025-09-18T11:49:07-07:00",
+              "family": "mode/config semantics",
+              "source_anchor_digest": "416f7e85fbda48c5558a89def1cec82aed32188a49b50d1b6772a76ee10cc352",
+              "subject_digest": "5b37677d72551f4b8c73974f7be1b737a61af5d5b8a96f06f9bb0c890dbbbfc3",
+              "surface": "source_and_tests"
+            }
+          ],
+          "surface_counts": {
+            "docs_or_meta_only": 809,
+            "other": 413,
+            "source_and_tests": 351,
+            "source_without_tests": 185,
+            "tests_without_source": 314
+          },
+          "task_design_candidate_count": 491,
+          "task_design_family_count": 6,
+          "task_design_family_counts": {
+            "CLI/integration": 8,
+            "cache/filesystem": 24,
+            "fixtures/mixed integration": 138,
+            "formatting behavior": 164,
+            "mode/config semantics": 73,
+            "parser/AST": 84
+          },
+          "window_end": "2025-11-13",
+          "window_start": "1970-01-01"
+        },
+        "R": {
+          "candidate_count": 17,
+          "candidate_family_counts": {
+            "fixtures/mixed integration": 1,
+            "formatting behavior": 13,
+            "mode/config semantics": 2,
+            "parser/AST": 1
+          },
+          "family_count": 4,
+          "low_signal_subject_count": 17,
+          "non_merge_commit_count": 55,
+          "oracle_direct_candidate_count": 17,
+          "sample_candidate_digests": [
+            {
+              "changed_file_count": 3,
+              "changed_python_file_count": 2,
+              "committed_at": "2026-01-23T10:05:02-06:00",
+              "family": "fixtures/mixed integration",
+              "source_anchor_digest": "f0495236f10a59a6db2f91e055fe8c19a1df9047417c7a7a75bc575aef7fded8",
+              "subject_digest": "1e36bd8f2f198b6589c3e33ff0bf7f37214967b783e5a8d340b2209334908c70",
+              "surface": "source_and_tests"
+            },
+            {
+              "changed_file_count": 3,
+              "changed_python_file_count": 2,
+              "committed_at": "2026-01-22T18:52:37-06:00",
+              "family": "mode/config semantics",
+              "source_anchor_digest": "24735c1974a8b62c05da6995c3e1ce617f0b117ea74c04c62b164800cda95598",
+              "subject_digest": "c37ca0750a574ca22665ead0102a4356394bf9d181d2c51248f23003638e87d9",
+              "surface": "source_and_tests"
+            },
+            {
+              "changed_file_count": 9,
+              "changed_python_file_count": 6,
+              "committed_at": "2026-01-22T18:35:19-06:00",
+              "family": "formatting behavior",
+              "source_anchor_digest": "3a2af3fd0fa3984ae56b11095d66138b0fdaf656227f4766aaffa56df211e161",
+              "subject_digest": "c7207274373c330ec51ebdb7469a2bbfeb168216223a0136fa994aea4869ab98",
+              "surface": "source_and_tests"
+            },
+            {
+              "changed_file_count": 3,
+              "changed_python_file_count": 2,
+              "committed_at": "2026-01-22T18:35:05-06:00",
+              "family": "parser/AST",
+              "source_anchor_digest": "03549521a90d8e09aae12e752299263b5e06eff4dbf02e6f2039db013b496d8f",
+              "subject_digest": "71b69246ad53d8b5f29299e1914de82fce342dc59d997a9dc235937e42f7a0ca",
+              "surface": "source_and_tests"
+            },
+            {
+              "changed_file_count": 3,
+              "changed_python_file_count": 2,
+              "committed_at": "2026-01-15T22:32:17-06:00",
+              "family": "formatting behavior",
+              "source_anchor_digest": "6a46547837cb3f405ca1845aeccf6063919812a425877b3617eef2321e3c1995",
+              "subject_digest": "175b2308b9aff76d283a2f13d6b1eac68231231da66e83e75acfdd66f0b11c08",
+              "surface": "source_and_tests"
+            },
+            {
+              "changed_file_count": 8,
+              "changed_python_file_count": 4,
+              "committed_at": "2026-01-15T21:07:25-06:00",
+              "family": "mode/config semantics",
+              "source_anchor_digest": "401a1a2b91f7d4f64c0fbb5f20508b4f7fb99f1944a2e635b4182f04e28dc9c0",
+              "subject_digest": "95fb7140c7d78e2181b992a00df3a502582504a8cb6a302df330237448e5da15",
+              "surface": "source_and_tests"
+            },
+            {
+              "changed_file_count": 3,
+              "changed_python_file_count": 2,
+              "committed_at": "2025-12-07T18:43:08-06:00",
+              "family": "formatting behavior",
+              "source_anchor_digest": "663a5a623df52e8b529df89a84f524785d5e6e607758adb64429aa75d0e31147",
+              "subject_digest": "08e9292138e21f313f67f6f70594a82487ce20bfaa47c379686fe97436dcccb4",
+              "surface": "source_and_tests"
+            },
+            {
+              "changed_file_count": 4,
+              "changed_python_file_count": 3,
+              "committed_at": "2025-12-07T18:22:30-06:00",
+              "family": "formatting behavior",
+              "source_anchor_digest": "c2ee2c823d7d2e9ea61824a183ba3f164ce3cb78cba6215be2a34003c2631ad4",
+              "subject_digest": "3debe921f2941836d90ae439ec5230effec8903ce3d512effd2b4b89e03f9931",
+              "surface": "source_and_tests"
+            },
+            {
+              "changed_file_count": 4,
+              "changed_python_file_count": 3,
+              "committed_at": "2025-12-06T19:46:21-06:00",
+              "family": "formatting behavior",
+              "source_anchor_digest": "53a485519abaaebe4a3666acdc7bfed463d146704863f17dc54eae049f2a3caf",
+              "subject_digest": "cdf11fea0624f7ea3773a7a89e2e9ba4f41cc8b1cb7a4422811e6532b7d4e76b",
+              "surface": "source_and_tests"
+            },
+            {
+              "changed_file_count": 4,
+              "changed_python_file_count": 3,
+              "committed_at": "2025-12-02T09:30:56-06:00",
+              "family": "formatting behavior",
+              "source_anchor_digest": "7d0f9852fbea996f7376264a22da4afef822f8dd779d0f1567ebf8bd2989b229",
+              "subject_digest": "86e486557c4ec1d2b555b635a3b7ee63891a1818c89d5448853805b1b8561710",
+              "surface": "source_and_tests"
+            }
+          ],
+          "sample_task_design_candidate_digests": [
+            {
+              "changed_file_count": 3,
+              "changed_python_file_count": 2,
+              "committed_at": "2026-01-23T10:05:02-06:00",
+              "family": "fixtures/mixed integration",
+              "source_anchor_digest": "f0495236f10a59a6db2f91e055fe8c19a1df9047417c7a7a75bc575aef7fded8",
+              "subject_digest": "1e36bd8f2f198b6589c3e33ff0bf7f37214967b783e5a8d340b2209334908c70",
+              "surface": "source_and_tests"
+            },
+            {
+              "changed_file_count": 2,
+              "changed_python_file_count": 1,
+              "committed_at": "2026-01-23T10:04:48-06:00",
+              "family": "fixtures/mixed integration",
+              "source_anchor_digest": "03d890e107e8ac2ff8f1014ba3a1838e2a8fb5bd4e11690f0acebad2b68376a9",
+              "subject_digest": "d6e4aea279f0b82bccdd35856bf0d15bc928ae54eb6d607a37925e3bc4578be0",
+              "surface": "source_without_tests"
+            },
+            {
+              "changed_file_count": 3,
+              "changed_python_file_count": 2,
+              "committed_at": "2026-01-22T18:52:37-06:00",
+              "family": "mode/config semantics",
+              "source_anchor_digest": "24735c1974a8b62c05da6995c3e1ce617f0b117ea74c04c62b164800cda95598",
+              "subject_digest": "c37ca0750a574ca22665ead0102a4356394bf9d181d2c51248f23003638e87d9",
+              "surface": "source_and_tests"
+            },
+            {
+              "changed_file_count": 9,
+              "changed_python_file_count": 6,
+              "committed_at": "2026-01-22T18:35:19-06:00",
+              "family": "formatting behavior",
+              "source_anchor_digest": "3a2af3fd0fa3984ae56b11095d66138b0fdaf656227f4766aaffa56df211e161",
+              "subject_digest": "c7207274373c330ec51ebdb7469a2bbfeb168216223a0136fa994aea4869ab98",
+              "surface": "source_and_tests"
+            },
+            {
+              "changed_file_count": 3,
+              "changed_python_file_count": 2,
+              "committed_at": "2026-01-22T18:35:05-06:00",
+              "family": "parser/AST",
+              "source_anchor_digest": "03549521a90d8e09aae12e752299263b5e06eff4dbf02e6f2039db013b496d8f",
+              "subject_digest": "71b69246ad53d8b5f29299e1914de82fce342dc59d997a9dc235937e42f7a0ca",
+              "surface": "source_and_tests"
+            },
+            {
+              "changed_file_count": 3,
+              "changed_python_file_count": 2,
+              "committed_at": "2026-01-15T22:32:17-06:00",
+              "family": "formatting behavior",
+              "source_anchor_digest": "6a46547837cb3f405ca1845aeccf6063919812a425877b3617eef2321e3c1995",
+              "subject_digest": "175b2308b9aff76d283a2f13d6b1eac68231231da66e83e75acfdd66f0b11c08",
+              "surface": "source_and_tests"
+            },
+            {
+              "changed_file_count": 8,
+              "changed_python_file_count": 4,
+              "committed_at": "2026-01-15T21:07:25-06:00",
+              "family": "mode/config semantics",
+              "source_anchor_digest": "401a1a2b91f7d4f64c0fbb5f20508b4f7fb99f1944a2e635b4182f04e28dc9c0",
+              "subject_digest": "95fb7140c7d78e2181b992a00df3a502582504a8cb6a302df330237448e5da15",
+              "surface": "source_and_tests"
+            },
+            {
+              "changed_file_count": 3,
+              "changed_python_file_count": 2,
+              "committed_at": "2025-12-07T18:43:08-06:00",
+              "family": "formatting behavior",
+              "source_anchor_digest": "663a5a623df52e8b529df89a84f524785d5e6e607758adb64429aa75d0e31147",
+              "subject_digest": "08e9292138e21f313f67f6f70594a82487ce20bfaa47c379686fe97436dcccb4",
+              "surface": "source_and_tests"
+            },
+            {
+              "changed_file_count": 4,
+              "changed_python_file_count": 3,
+              "committed_at": "2025-12-07T18:22:30-06:00",
+              "family": "formatting behavior",
+              "source_anchor_digest": "c2ee2c823d7d2e9ea61824a183ba3f164ce3cb78cba6215be2a34003c2631ad4",
+              "subject_digest": "3debe921f2941836d90ae439ec5230effec8903ce3d512effd2b4b89e03f9931",
+              "surface": "source_and_tests"
+            },
+            {
+              "changed_file_count": 4,
+              "changed_python_file_count": 3,
+              "committed_at": "2025-12-06T19:46:21-06:00",
+              "family": "formatting behavior",
+              "source_anchor_digest": "53a485519abaaebe4a3666acdc7bfed463d146704863f17dc54eae049f2a3caf",
+              "subject_digest": "cdf11fea0624f7ea3773a7a89e2e9ba4f41cc8b1cb7a4422811e6532b7d4e76b",
+              "surface": "source_and_tests"
+            }
+          ],
+          "surface_counts": {
+            "docs_or_meta_only": 28,
+            "other": 5,
+            "source_and_tests": 19,
+            "source_without_tests": 3
+          },
+          "task_design_candidate_count": 20,
+          "task_design_family_count": 4,
+          "task_design_family_counts": {
+            "fixtures/mixed integration": 2,
+            "formatting behavior": 14,
+            "mode/config semantics": 2,
+            "parser/AST": 2
+          },
+          "window_end": "2026-02-13",
+          "window_start": "2025-11-14"
+        },
+        "W_star": {
+          "candidate_count": 12,
+          "candidate_family_counts": {
+            "fixtures/mixed integration": 2,
+            "formatting behavior": 5,
+            "mode/config semantics": 3,
+            "parser/AST": 2
+          },
+          "family_count": 4,
+          "low_signal_subject_count": 30,
+          "non_merge_commit_count": 78,
+          "oracle_direct_candidate_count": 12,
+          "sample_candidate_digests": [
+            {
+              "changed_file_count": 3,
+              "changed_python_file_count": 2,
+              "committed_at": "2026-05-12T09:43:13-05:00",
+              "family": "formatting behavior",
+              "source_anchor_digest": "c556060066afd0a4375295a6abd253491ca02a451b614432bb33c04517a673db",
+              "subject_digest": "9df64eb438a1b43d76a695de4c19777fff95bf0c9b2c0a59ce8b105d3a246d82",
+              "surface": "source_and_tests"
+            },
+            {
+              "changed_file_count": 3,
+              "changed_python_file_count": 2,
+              "committed_at": "2026-05-11T17:27:30-05:00",
+              "family": "formatting behavior",
+              "source_anchor_digest": "68cedc07e0a7ba5be83c0c6461dc0e896549036d06fbb47727bb6f43c6171462",
+              "subject_digest": "6fe53d6bbfd15d92c8b678e99f9df4552d206550175711467ff426714670e191",
+              "surface": "source_and_tests"
+            },
+            {
+              "changed_file_count": 5,
+              "changed_python_file_count": 4,
+              "committed_at": "2026-04-27T09:35:59-05:00",
+              "family": "parser/AST",
+              "source_anchor_digest": "db6817ad887267df524d84bda9b899cc3a88ad03f910c83f31276c5db0448d7f",
+              "subject_digest": "6979a26eb6265a294d7834ac42ec1f75debcd148eae48d1181d2f2c35c612601",
+              "surface": "source_and_tests"
+            },
+            {
+              "changed_file_count": 5,
+              "changed_python_file_count": 3,
+              "committed_at": "2026-04-14T09:44:44-05:00",
+              "family": "formatting behavior",
+              "source_anchor_digest": "6e2daf3e35ff047f864ba3a1a7f7abb3a3ae19ece969641dc846eb8ba9430a8f",
+              "subject_digest": "1f6daae782f77fc681df401cabc4c1eff652cfb3aaabf935a6b0f6470b278808",
+              "surface": "source_and_tests"
+            },
+            {
+              "changed_file_count": 6,
+              "changed_python_file_count": 3,
+              "committed_at": "2026-04-13T21:55:15-07:00",
+              "family": "mode/config semantics",
+              "source_anchor_digest": "9e2bde601e600129f839bba89668daa37126e8e96d0cb6eba3753210abad3e2d",
+              "subject_digest": "e2cd073e134b129fa20800310e1602cc3908521548207f6dab78a6fa3389f90e",
+              "surface": "source_and_tests"
+            },
+            {
+              "changed_file_count": 3,
+              "changed_python_file_count": 2,
+              "committed_at": "2026-04-13T06:09:18-05:00",
+              "family": "formatting behavior",
+              "source_anchor_digest": "ac14ceda9a538a0510ed058205ed5faae0b75b33c842a4f1aea0268c9407b97a",
+              "subject_digest": "67ba5b4e650afc605348fd343a006632567b8e07742e0623a1029ab44db6fb84",
+              "surface": "source_and_tests"
+            },
+            {
+              "changed_file_count": 3,
+              "changed_python_file_count": 2,
+              "committed_at": "2026-04-12T20:49:01-05:00",
+              "family": "mode/config semantics",
+              "source_anchor_digest": "bfd4653f15a954e911b7d42310577307f66ac34216e71f474ecaf265e9bd9968",
+              "subject_digest": "6b38973116319e87a854cbc88c4bde8f41f698e786d7adaec359c8586386ab88",
+              "surface": "source_and_tests"
+            },
+            {
+              "changed_file_count": 12,
+              "changed_python_file_count": 9,
+              "committed_at": "2026-03-21T09:20:42-07:00",
+              "family": "parser/AST",
+              "source_anchor_digest": "6af8a2460427881af45dd1f238ae624adcbcbfe00d14449b60f0185da0a0f691",
+              "subject_digest": "abe75678038f4bf8b282d39718099f5961af35d8b1807d1bdd2f60d6dec2dcda",
+              "surface": "source_and_tests"
+            },
+            {
+              "changed_file_count": 5,
+              "changed_python_file_count": 4,
+              "committed_at": "2026-03-11T19:57:24-07:00",
+              "family": "mode/config semantics",
+              "source_anchor_digest": "3b728b908c1564554d173662e6035e44c9ff29ce3e91c168d998a81ec5bd512b",
+              "subject_digest": "c0eac220c1a6dd90b2db6d9c49de0ce6104324c896822ad0c6b72422a0c095ee",
+              "surface": "source_and_tests"
+            },
+            {
+              "changed_file_count": 3,
+              "changed_python_file_count": 2,
+              "committed_at": "2026-03-01T20:34:58-06:00",
+              "family": "fixtures/mixed integration",
+              "source_anchor_digest": "2a97cc6db71661a3f00748e2ebad7d046209349836133a650763fa125b93ff77",
+              "subject_digest": "cd7aba68565fec7d4682862e5f48a768c62d11d2e986e46770d982dbf8477410",
+              "surface": "source_and_tests"
+            }
+          ],
+          "sample_task_design_candidate_digests": [
+            {
+              "changed_file_count": 3,
+              "changed_python_file_count": 2,
+              "committed_at": "2026-05-12T09:43:13-05:00",
+              "family": "formatting behavior",
+              "source_anchor_digest": "c556060066afd0a4375295a6abd253491ca02a451b614432bb33c04517a673db",
+              "subject_digest": "9df64eb438a1b43d76a695de4c19777fff95bf0c9b2c0a59ce8b105d3a246d82",
+              "surface": "source_and_tests"
+            },
+            {
+              "changed_file_count": 3,
+              "changed_python_file_count": 2,
+              "committed_at": "2026-05-11T17:27:30-05:00",
+              "family": "formatting behavior",
+              "source_anchor_digest": "68cedc07e0a7ba5be83c0c6461dc0e896549036d06fbb47727bb6f43c6171462",
+              "subject_digest": "6fe53d6bbfd15d92c8b678e99f9df4552d206550175711467ff426714670e191",
+              "surface": "source_and_tests"
+            },
+            {
+              "changed_file_count": 5,
+              "changed_python_file_count": 4,
+              "committed_at": "2026-04-27T09:35:59-05:00",
+              "family": "parser/AST",
+              "source_anchor_digest": "db6817ad887267df524d84bda9b899cc3a88ad03f910c83f31276c5db0448d7f",
+              "subject_digest": "6979a26eb6265a294d7834ac42ec1f75debcd148eae48d1181d2f2c35c612601",
+              "surface": "source_and_tests"
+            },
+            {
+              "changed_file_count": 5,
+              "changed_python_file_count": 3,
+              "committed_at": "2026-04-14T09:44:44-05:00",
+              "family": "formatting behavior",
+              "source_anchor_digest": "6e2daf3e35ff047f864ba3a1a7f7abb3a3ae19ece969641dc846eb8ba9430a8f",
+              "subject_digest": "1f6daae782f77fc681df401cabc4c1eff652cfb3aaabf935a6b0f6470b278808",
+              "surface": "source_and_tests"
+            },
+            {
+              "changed_file_count": 6,
+              "changed_python_file_count": 3,
+              "committed_at": "2026-04-13T21:55:15-07:00",
+              "family": "mode/config semantics",
+              "source_anchor_digest": "9e2bde601e600129f839bba89668daa37126e8e96d0cb6eba3753210abad3e2d",
+              "subject_digest": "e2cd073e134b129fa20800310e1602cc3908521548207f6dab78a6fa3389f90e",
+              "surface": "source_and_tests"
+            },
+            {
+              "changed_file_count": 3,
+              "changed_python_file_count": 2,
+              "committed_at": "2026-04-13T06:09:18-05:00",
+              "family": "formatting behavior",
+              "source_anchor_digest": "ac14ceda9a538a0510ed058205ed5faae0b75b33c842a4f1aea0268c9407b97a",
+              "subject_digest": "67ba5b4e650afc605348fd343a006632567b8e07742e0623a1029ab44db6fb84",
+              "surface": "source_and_tests"
+            },
+            {
+              "changed_file_count": 3,
+              "changed_python_file_count": 2,
+              "committed_at": "2026-04-12T20:49:01-05:00",
+              "family": "mode/config semantics",
+              "source_anchor_digest": "bfd4653f15a954e911b7d42310577307f66ac34216e71f474ecaf265e9bd9968",
+              "subject_digest": "6b38973116319e87a854cbc88c4bde8f41f698e786d7adaec359c8586386ab88",
+              "surface": "source_and_tests"
+            },
+            {
+              "changed_file_count": 3,
+              "changed_python_file_count": 3,
+              "committed_at": "2026-03-29T12:28:01-05:00",
+              "family": "parser/AST",
+              "source_anchor_digest": "46a442281df4066d4729da6e48fa4d2f274de5a350fff0a7112dbb8ad4f66649",
+              "subject_digest": "a2be0902bd6ca5b2eb9fec41ac30339c3660d65232ea80d4404571f6cdfd062b",
+              "surface": "source_without_tests"
+            },
+            {
+              "changed_file_count": 12,
+              "changed_python_file_count": 9,
+              "committed_at": "2026-03-21T09:20:42-07:00",
+              "family": "parser/AST",
+              "source_anchor_digest": "6af8a2460427881af45dd1f238ae624adcbcbfe00d14449b60f0185da0a0f691",
+              "subject_digest": "abe75678038f4bf8b282d39718099f5961af35d8b1807d1bdd2f60d6dec2dcda",
+              "surface": "source_and_tests"
+            },
+            {
+              "changed_file_count": 5,
+              "changed_python_file_count": 4,
+              "committed_at": "2026-03-11T19:57:24-07:00",
+              "family": "mode/config semantics",
+              "source_anchor_digest": "3b728b908c1564554d173662e6035e44c9ff29ce3e91c168d998a81ec5bd512b",
+              "subject_digest": "c0eac220c1a6dd90b2db6d9c49de0ce6104324c896822ad0c6b72422a0c095ee",
+              "surface": "source_and_tests"
+            }
+          ],
+          "surface_counts": {
+            "docs_or_meta_only": 48,
+            "other": 7,
+            "source_and_tests": 13,
+            "source_without_tests": 7,
+            "tests_without_source": 3
+          },
+          "task_design_candidate_count": 16,
+          "task_design_family_count": 4,
+          "task_design_family_counts": {
+            "fixtures/mixed integration": 3,
+            "formatting behavior": 5,
+            "mode/config semantics": 5,
+            "parser/AST": 3
+          },
+          "window_end": "2026-05-14",
+          "window_start": "2026-02-14"
+        }
+      }
+    }
+  ],
+  "schema_version": "core-narrative.repository-local-admission.v1",
+  "status": "repository_admission_completed",
+  "time_split": {
+    "C": {
+      "end": "2025-11-13",
+      "role": "calibration_only"
+    },
+    "R": {
+      "end": "2026-02-13",
+      "role": "repository_benchmark_selection",
+      "start": "2025-11-14"
+    },
+    "T0": "2026-05-14",
+    "W_star": {
+      "end": "2026-05-14",
+      "role": "criterion_work_set",
+      "start": "2026-02-14"
+    },
+    "allowed_extension": "C and R may extend earlier if task supply is thin; W* must not borrow earlier work.",
+    "extended_R_scan": {
+      "end": "2026-02-13",
+      "start": "2025-05-14"
+    }
+  },
+  "tool": "repository_local_benchmark_admission"
+}

@@ -1,0 +1,167 @@
+schema_version: core-narrative.repository-local-benchmark-protocol.v1
+protocol_id: repository-local-benchmark-20260514
+status: gate_frozen_not_authorized_for_primary_runs
+frozen_at: "2026-05-14T00:00:00+08:00"
+objective: Repository-local benchmark tuning validation, with NFL evidence retained only as a secondary bonus line.
+
+time_split:
+  T0: "2026-05-14"
+  C:
+    role: calibration_only
+    end: "2025-11-13"
+    target_primary_tasks: 20-40
+    notes:
+      - May extend earlier if task supply is thin.
+  R:
+    role: repository_benchmark_selection
+    start: "2025-11-14"
+    end: "2026-02-13"
+    target_primary_tasks: 20
+    target_reserve_tasks: 5
+    target_candidate_tasks: 40
+    notes:
+      - May extend earlier if task supply is thin.
+      - Must not be modified using W* results.
+  W_star:
+    role: criterion_work_set
+    start: "2026-02-14"
+    end: "2026-05-14"
+    target_primary_tasks: 20
+    target_reserve_tasks: 5
+    target_candidate_tasks: 40
+    notes:
+      - Must not borrow earlier work.
+      - Freshness is a time split constraint, not proof of model-training exclusion.
+
+repository_admission:
+  evidence_json: experiments/core_narrative/results/repository_local_benchmark_admission_20260514.json
+  evidence_report: experiments/core_narrative/reports/2026-05-14_repository_local_benchmark_admission.md
+  admission_gate:
+    minimum_w_star_task_design_candidates: 20
+    minimum_r_task_design_candidates: 20
+    r_extension_allowed: true
+    minimum_task_design_families: 4
+  verdicts:
+    click:
+      authorized_for_full_0514_primary_runs: false
+      blockers:
+        - w_star_task_design_candidate_count_below_20
+        - strict_r_window_needs_allowed_earlier_extension
+      boundary: Do not run Click R/W* primary for the 0514 full benchmark without a new task-supply artifact or a revised preregistered gate.
+    rich:
+      authorized_for_task_admission: true
+      recommended_execution_repo: true
+      boundary: Task admission must still build no-op fail/ref-patch pass/hidden-verifier evidence before model attempts.
+    black:
+      authorized_for_full_0514_primary_runs: false
+      blockers:
+        - w_star_task_design_candidate_count_below_20
+  recommendation:
+    primary_repo: null
+    recommended_execution_repo: rich
+    replication_repo: rich
+    fallback_replication_repo: null
+
+task_admission_required_fields:
+  - public_task_statement
+  - noop_fails
+  - reference_patch_passes
+  - hidden_verifier_path
+  - leakage_audit
+  - family
+  - difficulty
+  - artifact_digests
+  - source_anchor_digest
+  - oracle_directness
+
+golden_role_isolation:
+  selector:
+    responsibility: Choose candidate anchors using only repository-admission outputs and frozen split rules.
+    required_artifacts:
+      - prompt_hash
+      - selection_manifest_digest
+      - admission_decision
+  taskwright:
+    responsibility: Draft public statements and task metadata without seeing ACUT outputs or W* scores.
+    required_artifacts:
+      - prompt_hash
+      - task_manifest_digest
+      - leakage_audit_digest
+  oracle:
+    responsibility: Build hidden verifiers and reference patches; source-only anchors require Golden-Oracle verifier construction.
+    required_artifacts:
+      - prompt_hash
+      - verifier_digest
+      - reference_patch_digest
+  auditor:
+    responsibility: Validate no-op fail/ref-patch pass, leakage, split membership, and denominator freeze.
+    required_artifacts:
+      - prompt_hash
+      - audit_report_digest
+      - admission_decision
+
+acuts:
+  A0_generic_baseline:
+    manifest: experiments/core_narrative/configs/acuts/cheap-generic-swe.yaml
+    status: existing
+  A1_inert_control:
+    manifest: experiments/core_narrative/configs/acuts/cheap-click-inert-control-v1.yaml
+    status: click_specific_created
+    note: Rich execution needs a Rich or repository-neutral inert variant before task runs.
+  A2_static_repo_context:
+    manifest: experiments/core_narrative/configs/acuts/cheap-click-deep-specialist-v2.yaml
+    status: existing_click_specific
+  A3_c_derived_repo_calibrated_playbook:
+    manifest: experiments/core_narrative/configs/acuts/cheap-click-rbench-calibrated-v1.yaml
+    status: existing_click_specific
+  A4_code_understanding_localization_tool:
+    manifest: experiments/core_narrative/configs/acuts/cheap-click-localization-tool-v1.yaml
+    status: click_specific_created
+    source_policy:
+      allowed:
+        - public_task_statement
+        - repository_tree
+        - repository_source
+      forbidden:
+        - reference_patch
+        - target_diff
+        - hidden_verifier
+        - target_commit
+        - ACUT_outputs
+        - W_star_results
+  A5_frontier_generic_reference:
+    manifest: experiments/core_narrative/configs/acuts/frontier-generic-swe.yaml
+    status: existing
+
+execution_freeze:
+  attempts_per_acut_task: 1
+  best_of_n: false
+  fixed_denominator: true
+  replay_mode: workspace_mode_fresh_replay
+  source_policy: source_derived_url_only_v1
+  hidden_verifier_required: true
+  status_mapping: frozen_existing_rgw_status_semantics
+  retry_policy:
+    acut_specific_retry: false
+    replacement_tasks_after_denominator_freeze: false
+
+not_authorized_until_task_admission:
+  - run_R_primary
+  - run_W_star_primary
+  - run_G
+  - use_W_star_results_to_modify_R
+  - use_ACUT_outputs_to_choose_W_star
+  - lower_success_gate_post_hoc
+  - mix_old_M5_or_M6_denominators
+
+analysis_plan_after_authorized_runs:
+  - R_score
+  - W_star_score
+  - paired_deltas
+  - inert_control_check
+  - R_selected
+  - W_star_best
+  - selection_regret
+  - rank_correlation_R_W_star
+  - family_effects
+  - R_barcarolle_vs_random_R_if_available

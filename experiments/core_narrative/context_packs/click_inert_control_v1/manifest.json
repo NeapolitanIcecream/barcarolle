@@ -1,0 +1,30 @@
+{
+  "schema_version": "core-narrative.inert-context-pack.v1",
+  "pack_id": "click_inert_control_context_pack_v1",
+  "marker": "CLICK_INERT_CONTROL_CONTEXT_PACK_V1",
+  "pack_hash": "7422633b4838a2475e1bd82e433a9eaa873a4d1ec5f33af65532b9f416791ec7",
+  "generated_at": "2026-05-14T00:00:00+08:00",
+  "purpose": "A1 inert control for repository-local benchmark intervention sensitivity.",
+  "artifacts": {
+    "context_prompt": {
+      "path": "context_prompt.md",
+      "sha256": "7422633b4838a2475e1bd82e433a9eaa873a4d1ec5f33af65532b9f416791ec7"
+    }
+  },
+  "source_material_policy": {
+    "repo_facts_used": false,
+    "task_specific_material_used": false,
+    "w_star_material_used": false,
+    "r_material_used": false,
+    "reference_patches_used": false,
+    "hidden_verifier_tests_used": false,
+    "acut_outputs_or_failed_patches_used": false
+  },
+  "leakage_guards": {
+    "credential_values_recorded": false,
+    "target_commits_recorded": false,
+    "reference_diffs_recorded": false,
+    "hidden_verifier_paths_recorded": false,
+    "acut_outputs_recorded": false
+  }
+}
