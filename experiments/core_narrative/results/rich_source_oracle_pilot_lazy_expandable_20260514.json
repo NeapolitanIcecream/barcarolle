@@ -1,0 +1,44 @@
+{
+  "admission_decision": "accepted",
+  "base_anchor_digest": "ed69406e11fb2f426d6e3933d1033a6ab2246a7d13c9d1e30190e4818cca656b",
+  "changed_file_set_digest": "8f507d88f3d034716fad069c6a73da25e2915a216a2bdda6db2e8d0c13a0020a",
+  "claim_boundary": [
+    "This is a one-candidate source-only Golden-Oracle smoke pilot, not a frozen Rich denominator.",
+    "Raw source commits, raw subjects, reference patches, and hidden verifier files are retained only in ignored private artifacts.",
+    "No ACUT primary attempt or model call was made."
+  ],
+  "family": "console/rendering",
+  "generated_at": "2026-05-14T16:07:08.453130Z",
+  "hidden_verifier_digest": "186faf093878d8a26053bbedfa57a16fdde3d9237c1105f6cdd5e90efd579ec7",
+  "model_calls_made": 0,
+  "no_op_result": {
+    "public_artifact_redacted": true,
+    "status": "failed",
+    "verifier_exit_code": 1
+  },
+  "oracle_priority": "medium",
+  "oracle_template": "console_collect_renderables_lazy_pretty_import",
+  "pilot_scope": "one_source_only_golden_oracle_candidate",
+  "primary_runs_authorized": false,
+  "private_artifact_root": "experiments/core_narrative/large_artifacts/rich_source_oracle_pilot_lazy_expandable_20260514",
+  "reference_patch_bytes": 1005,
+  "reference_patch_digest": "0c8fc74f2bc104c751d5986b2b0318d88955bbb6cd73912d1f0d5f368cddf0a9",
+  "reference_result": {
+    "public_artifact_redacted": true,
+    "status": "passed",
+    "verifier_exit_code": 0
+  },
+  "repo_slug": "rich",
+  "schema_version": "core-narrative.rich-source-oracle-pilot.v1",
+  "source_anchor_digest": "34e3597c992d91b6d7eda041c4a93c3437f93982a1e975033f98a11b4f9dc558",
+  "source_file_count": 1,
+  "split": "W_star",
+  "statement_digest": "484ce9907399bb30804694fb63adf1f5fd14b2b4ddb618b2fd3fe601cae614b2",
+  "status": "completed",
+  "subject_digest": "cff4bae4ebfa8c0fc65d78c19cecc57fa68f5d5590c94569982acd5a22201b6c",
+  "surface": "source_without_tests",
+  "test_file_count": 0,
+  "test_node_count": 1,
+  "tool": "rich_source_oracle_pilot",
+  "triage_code": "manual_probe_required"
+}

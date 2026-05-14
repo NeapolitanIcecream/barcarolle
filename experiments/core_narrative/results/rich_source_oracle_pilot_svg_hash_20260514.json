@@ -1,0 +1,44 @@
+{
+  "admission_decision": "accepted",
+  "base_anchor_digest": "fa5b93cbd14755c9c32be026e052c3153e28f4f027f1f0e9d9b217a1127da213",
+  "changed_file_set_digest": "8f507d88f3d034716fad069c6a73da25e2915a216a2bdda6db2e8d0c13a0020a",
+  "claim_boundary": [
+    "This is a one-candidate source-only Golden-Oracle smoke pilot, not a frozen Rich denominator.",
+    "Raw source commits, raw subjects, reference patches, and hidden verifier files are retained only in ignored private artifacts.",
+    "No ACUT primary attempt or model call was made."
+  ],
+  "family": "console/rendering",
+  "generated_at": "2026-05-14T16:00:20.115588Z",
+  "hidden_verifier_digest": "0c563cb8adbb2eedb7830cc5d972f54c1a2a6433734b9e13588efefa944ed2ee",
+  "model_calls_made": 0,
+  "no_op_result": {
+    "public_artifact_redacted": true,
+    "status": "failed",
+    "verifier_exit_code": 1
+  },
+  "oracle_priority": "low",
+  "oracle_template": "console_dead_svg_hash_removed",
+  "pilot_scope": "one_source_only_golden_oracle_candidate",
+  "primary_runs_authorized": false,
+  "private_artifact_root": "experiments/core_narrative/large_artifacts/rich_source_oracle_pilot_svg_hash_20260514",
+  "reference_patch_bytes": 609,
+  "reference_patch_digest": "154658fe37df51d31246872ec216b8418b04a1c7117d2ef5d182f8fbe02e05da",
+  "reference_result": {
+    "public_artifact_redacted": true,
+    "status": "passed",
+    "verifier_exit_code": 0
+  },
+  "repo_slug": "rich",
+  "schema_version": "core-narrative.rich-source-oracle-pilot.v1",
+  "source_anchor_digest": "f31f22f035fd330abe18a410b48b670b1c56e5db90dff4b716fedcaede83c90b",
+  "source_file_count": 1,
+  "split": "W_star",
+  "statement_digest": "4f0580c98bd388a8b99c625f30759b45413c4e1ccc34177d844cdc6301017a0f",
+  "status": "completed",
+  "subject_digest": "b432b2a758046b65dd9aeeedf17eaa5464ada014f23d1b4ef014207916d3fcff",
+  "surface": "source_without_tests",
+  "test_file_count": 0,
+  "test_node_count": 1,
+  "tool": "rich_source_oracle_pilot",
+  "triage_code": "deprioritized_low_behavior_signal"
+}

@@ -1,0 +1,44 @@
+{
+  "admission_decision": "accepted",
+  "base_anchor_digest": "34e3597c992d91b6d7eda041c4a93c3437f93982a1e975033f98a11b4f9dc558",
+  "changed_file_set_digest": "4dd1f47c6d57e52e14479f1ff5192fee2ea17f9a6e4916ae04b71df43810ed78",
+  "claim_boundary": [
+    "This is a one-candidate source-only Golden-Oracle smoke pilot, not a frozen Rich denominator.",
+    "Raw source commits, raw subjects, reference patches, and hidden verifier files are retained only in ignored private artifacts.",
+    "No ACUT primary attempt or model call was made."
+  ],
+  "family": "markup/text/emoji",
+  "generated_at": "2026-05-14T16:07:24.489743Z",
+  "hidden_verifier_digest": "02c6dc10befe76435edab0cb3d0109046f0dc7895fcb6921b09d8cdb5f4c1e8c",
+  "model_calls_made": 0,
+  "no_op_result": {
+    "public_artifact_redacted": true,
+    "status": "failed",
+    "verifier_exit_code": 1
+  },
+  "oracle_priority": "low",
+  "oracle_template": "emoji_module_main_lazy_codes_import",
+  "pilot_scope": "one_source_only_golden_oracle_candidate",
+  "primary_runs_authorized": false,
+  "private_artifact_root": "experiments/core_narrative/large_artifacts/rich_source_oracle_pilot_emoji_main_20260514",
+  "reference_patch_bytes": 397,
+  "reference_patch_digest": "44c54e3b8ae0fca32717b5e49e17b990895d7123bdd1c63a4ce271fb1f44eaa3",
+  "reference_result": {
+    "public_artifact_redacted": true,
+    "status": "passed",
+    "verifier_exit_code": 0
+  },
+  "repo_slug": "rich",
+  "schema_version": "core-narrative.rich-source-oracle-pilot.v1",
+  "source_anchor_digest": "5ca58930f85f8158c75233ab0b41fc186649d0268e1928726a7ce9c45c522899",
+  "source_file_count": 1,
+  "split": "W_star",
+  "statement_digest": "43c55ba0bedcf74d9352a52b9c4604582e09e3fb9af67ff074ee94e850caa6ee",
+  "status": "completed",
+  "subject_digest": "d942f64886578d8747312e368ed92d9f6b2a8d45556f0f924e2444fe911d15af",
+  "surface": "source_without_tests",
+  "test_file_count": 0,
+  "test_node_count": 1,
+  "tool": "rich_source_oracle_pilot",
+  "triage_code": "deprioritized_low_behavior_signal"
+}

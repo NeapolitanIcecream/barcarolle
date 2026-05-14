@@ -93,6 +93,26 @@ def test_link_style_ids_use_adjacent_counter_prefixes() -> None:
     assert prefixes[2] == prefixes[1] + 1
 '''
 
+PEP604_TYPING_ALIAS_SHIM = '''\
+def _permit_pep604_typing_aliases() -> None:
+    import typing
+
+    def _alias_or(self, other):
+        return typing.Union[self, other]
+
+    def _alias_ror(self, other):
+        return typing.Union[other, self]
+
+    for name in ("_CallableGenericAlias", "_GenericAlias"):
+        alias_type = getattr(typing, name, None)
+        if alias_type is not None:
+            alias_type.__or__ = _alias_or
+            alias_type.__ror__ = _alias_ror
+
+
+_permit_pep604_typing_aliases()
+'''
+
 PATHLIKE_ANNOTATIONS_TEST = '''\
 from __future__ import annotations
 
@@ -118,6 +138,59 @@ def test_console_save_paths_use_typed_pathlike() -> None:
     for method_name in ("save_text", "save_html", "save_svg"):
         annotation = getattr(Console, method_name).__annotations__["path"]
         assert _annotation_has_str_pathlike(annotation), (method_name, annotation)
+'''
+
+SVG_HASH_REMOVED_TEST = '''\
+from __future__ import annotations
+
+import rich.console as console_module
+
+
+def test_dead_svg_hash_helper_is_removed() -> None:
+    """The obsolete private SVG hash helper should not remain in rich.console."""
+    assert not hasattr(console_module, "_svg_hash")
+'''
+
+CURRENTFRAME_NONE_TEST = PEP604_TYPING_ALIAS_SHIM + '''\
+from rich.console import Console
+
+
+def test_caller_frame_info_accepts_none_currentframe() -> None:
+    """Caller frame lookup should accept None and fall back to inspect.currentframe."""
+    filename, line_number, locals_map = Console._caller_frame_info(0, currentframe=None)
+    assert isinstance(filename, str)
+    assert isinstance(line_number, int)
+    assert isinstance(locals_map, dict)
+'''
+
+LAZY_PRETTY_IMPORT_TEST = PEP604_TYPING_ALIAS_SHIM + '''\
+import sys
+
+from rich.console import Console
+
+
+def test_collecting_plain_text_does_not_import_pretty_module() -> None:
+    """Plain text collection should not eagerly import the pretty printer."""
+    sys.modules.pop("rich.pretty", None)
+    console = Console()
+
+    console._collect_renderables(["plain text"], sep=" ", end="\\n")
+
+    assert "rich.pretty" not in sys.modules
+'''
+
+EMOJI_MAIN_LAZY_IMPORT_TEST = PEP604_TYPING_ALIAS_SHIM + '''\
+import contextlib
+import io
+import runpy
+
+
+def test_emoji_module_main_runs_after_lazy_code_table_import() -> None:
+    """The rich.emoji module entrypoint should import the code table before rendering."""
+    stream = io.StringIO()
+    with contextlib.redirect_stdout(stream):
+        runpy.run_module("rich.emoji", run_name="__main__")
+    assert stream.getvalue()
 '''
 
 
@@ -187,6 +260,30 @@ def hidden_verifier_for_candidate(candidate: Mapping[str, Any]) -> dict[str, Any
             "test_node_count": 1,
             "oracle_template": "style_link_id_counter_sequence",
         }
+    if subject == "made current frame none-able" and "rich/console.py" in source_files:
+        return {
+            "hidden_files": [
+                {
+                    "path": "tests/test_console_currentframe_none.py",
+                    "content": CURRENTFRAME_NONE_TEST,
+                }
+            ],
+            "command": ".venv/bin/python -m pytest -q tests/test_console_currentframe_none.py",
+            "test_node_count": 1,
+            "oracle_template": "console_caller_frame_currentframe_none",
+        }
+    if subject == "lazy is_expandable" and "rich/console.py" in source_files:
+        return {
+            "hidden_files": [
+                {
+                    "path": "tests/test_console_lazy_pretty_import.py",
+                    "content": LAZY_PRETTY_IMPORT_TEST,
+                }
+            ],
+            "command": ".venv/bin/python -m pytest -q tests/test_console_lazy_pretty_import.py",
+            "test_node_count": 1,
+            "oracle_template": "console_collect_renderables_lazy_pretty_import",
+        }
     if subject == "drop 3.8" and "rich/console.py" in source_files:
         return {
             "hidden_files": [
@@ -198,6 +295,30 @@ def hidden_verifier_for_candidate(candidate: Mapping[str, Any]) -> dict[str, Any
             "command": ".venv/bin/python -m pytest -q tests/test_console_pathlike_annotations.py",
             "test_node_count": 1,
             "oracle_template": "console_save_pathlike_str_annotations",
+        }
+    if subject == "refactor: remove dead _svg_hash function" and "rich/console.py" in source_files:
+        return {
+            "hidden_files": [
+                {
+                    "path": "tests/test_console_svg_hash_removed.py",
+                    "content": SVG_HASH_REMOVED_TEST,
+                }
+            ],
+            "command": ".venv/bin/python -m pytest -q tests/test_console_svg_hash_removed.py",
+            "test_node_count": 1,
+            "oracle_template": "console_dead_svg_hash_removed",
+        }
+    if subject == "import" and "rich/emoji.py" in source_files:
+        return {
+            "hidden_files": [
+                {
+                    "path": "tests/test_emoji_module_main.py",
+                    "content": EMOJI_MAIN_LAZY_IMPORT_TEST,
+                }
+            ],
+            "command": ".venv/bin/python -m pytest -q tests/test_emoji_module_main.py",
+            "test_node_count": 1,
+            "oracle_template": "emoji_module_main_lazy_codes_import",
         }
     raise ToolError(
         "no source-oracle template is available for selected candidate",

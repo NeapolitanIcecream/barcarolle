@@ -72,6 +72,36 @@ class RichSourceOraclePilotTests(unittest.TestCase):
         self.assertIn("tests/test_style_link_id_sequence.py", verifier["command"])
         self.assertIn("prefixes[1] == prefixes[0] + 1", verifier["hidden_files"][0]["content"])
 
+    def test_hidden_verifier_template_covers_currentframe_none_behavior(self) -> None:
+        """The currentframe verifier checks None falls back to inspect.currentframe."""
+        verifier = pilot.hidden_verifier_for_candidate(
+            {
+                "subject": "made current frame None-able",
+                "source_files": ["rich/console.py"],
+            }
+        )
+
+        self.assertEqual(verifier["oracle_template"], "console_caller_frame_currentframe_none")
+        self.assertIn("tests/test_console_currentframe_none.py", verifier["command"])
+        content = verifier["hidden_files"][0]["content"]
+        self.assertIn("_permit_pep604_typing_aliases", content)
+        self.assertIn("currentframe=None", content)
+
+    def test_hidden_verifier_template_covers_lazy_pretty_import_behavior(self) -> None:
+        """The lazy-is-expandable verifier checks plain text avoids eager pretty imports."""
+        verifier = pilot.hidden_verifier_for_candidate(
+            {
+                "subject": "lazy is_expandable",
+                "source_files": ["rich/console.py"],
+            }
+        )
+
+        self.assertEqual(verifier["oracle_template"], "console_collect_renderables_lazy_pretty_import")
+        self.assertIn("tests/test_console_lazy_pretty_import.py", verifier["command"])
+        content = verifier["hidden_files"][0]["content"]
+        self.assertIn('sys.modules.pop("rich.pretty", None)', content)
+        self.assertIn('assert "rich.pretty" not in sys.modules', content)
+
     def test_hidden_verifier_template_covers_console_pathlike_annotations(self) -> None:
         """The drop-3.8 verifier checks save helpers expose typed PathLike[str] annotations."""
         verifier = pilot.hidden_verifier_for_candidate(
@@ -86,6 +116,34 @@ class RichSourceOraclePilotTests(unittest.TestCase):
         content = verifier["hidden_files"][0]["content"]
         self.assertIn('("save_text", "save_html", "save_svg")', content)
         self.assertIn("typing.get_args(candidate) == (str,)", content)
+
+    def test_hidden_verifier_template_covers_dead_svg_hash_removal(self) -> None:
+        """The SVG hash verifier checks the obsolete private helper is absent."""
+        verifier = pilot.hidden_verifier_for_candidate(
+            {
+                "subject": "refactor: remove dead _svg_hash function",
+                "source_files": ["rich/console.py"],
+            }
+        )
+
+        self.assertEqual(verifier["oracle_template"], "console_dead_svg_hash_removed")
+        self.assertIn("tests/test_console_svg_hash_removed.py", verifier["command"])
+        self.assertIn('not hasattr(console_module, "_svg_hash")', verifier["hidden_files"][0]["content"])
+
+    def test_hidden_verifier_template_covers_emoji_module_main_import(self) -> None:
+        """The emoji main verifier checks the module entrypoint imports the lazy code table."""
+        verifier = pilot.hidden_verifier_for_candidate(
+            {
+                "subject": "import",
+                "source_files": ["rich/emoji.py"],
+            }
+        )
+
+        self.assertEqual(verifier["oracle_template"], "emoji_module_main_lazy_codes_import")
+        self.assertIn("tests/test_emoji_module_main.py", verifier["command"])
+        content = verifier["hidden_files"][0]["content"]
+        self.assertIn('runpy.run_module("rich.emoji", run_name="__main__")', content)
+        self.assertIn("contextlib.redirect_stdout", content)
 
     def test_public_result_redacts_raw_source_anchors_and_subject(self) -> None:
         """Public pilot results keep raw commits, subjects, and hidden files private."""

@@ -1,0 +1,44 @@
+{
+  "admission_decision": "accepted",
+  "base_anchor_digest": "c18710f209162d977b5c65ffff231fb534d8361f9a18840b857e62c39c4a0d7c",
+  "changed_file_set_digest": "8f507d88f3d034716fad069c6a73da25e2915a216a2bdda6db2e8d0c13a0020a",
+  "claim_boundary": [
+    "This is a one-candidate source-only Golden-Oracle smoke pilot, not a frozen Rich denominator.",
+    "Raw source commits, raw subjects, reference patches, and hidden verifier files are retained only in ignored private artifacts.",
+    "No ACUT primary attempt or model call was made."
+  ],
+  "family": "console/rendering",
+  "generated_at": "2026-05-14T16:06:52.613092Z",
+  "hidden_verifier_digest": "b47014c544476ecc0d21d119ab36d73e2a47f08a4c8ffa396ed320e20e994bdf",
+  "model_calls_made": 0,
+  "no_op_result": {
+    "public_artifact_redacted": true,
+    "status": "failed",
+    "verifier_exit_code": 1
+  },
+  "oracle_priority": "high",
+  "oracle_template": "console_caller_frame_currentframe_none",
+  "pilot_scope": "one_source_only_golden_oracle_candidate",
+  "primary_runs_authorized": false,
+  "private_artifact_root": "experiments/core_narrative/large_artifacts/rich_source_oracle_pilot_currentframe_20260514",
+  "reference_patch_bytes": 1307,
+  "reference_patch_digest": "92f0d977b77e08efb48c805e13d889bdf90a522c83aaf9da37b6b264ef9c36d3",
+  "reference_result": {
+    "public_artifact_redacted": true,
+    "status": "passed",
+    "verifier_exit_code": 0
+  },
+  "repo_slug": "rich",
+  "schema_version": "core-narrative.rich-source-oracle-pilot.v1",
+  "source_anchor_digest": "925cce95be5969acbae500a3050c053889565ffe8fb24b3cdec38687de500d2f",
+  "source_file_count": 1,
+  "split": "W_star",
+  "statement_digest": "13d5b4169fed41efa3857e7a237c4d6faa5867e5634ca6bce08108c80df1597e",
+  "status": "completed",
+  "subject_digest": "d5cf7be88ccba8cbfe8efc655a6f1f26adf8bc91071cacebdf8816c5d8ca35e2",
+  "surface": "source_without_tests",
+  "test_file_count": 0,
+  "test_node_count": 1,
+  "tool": "rich_source_oracle_pilot",
+  "triage_code": "behavior_edge_case_probe"
+}
