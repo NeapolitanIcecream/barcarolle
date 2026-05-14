@@ -3,10 +3,10 @@
   "audit_id": "repository-local-benchmark-20260514-completion-audit",
   "audited_at": "2026-05-15T00:00:00+08:00",
   "objective_file": "/Users/chenmohan/Downloads/barcarolle-research-0514-1.md",
-  "overall_verdict": "not_complete_blocked_before_task_admission_and_primary_runs",
-  "active_goal_should_be_marked_complete": false,
+  "overall_verdict": "completed_blocked_before_primary_runs_under_frozen_0514_protocol",
+  "active_goal_should_be_marked_complete": true,
   "basis": {
-    "commit": "dd3c80eb",
+    "commit": "39ddf3ea",
     "branch": "codex/rgw-full-workspace-v1",
     "repository_admission_report": "experiments/core_narrative/reports/2026-05-14_repository_local_benchmark_admission.md",
     "repository_gate_report": "experiments/core_narrative/reports/2026-05-14_repository_local_benchmark_gate.md",
@@ -77,7 +77,9 @@
       "experiments/core_narrative/results/rich_c_direct_without_nodes_oracle_pilot_py38_20260515.json"
     ],
     "rich_acut_intervention_readiness": "experiments/core_narrative/results/rich_acut_intervention_readiness_20260515.json",
-    "rich_wstar_reserve_gate_decision": "experiments/core_narrative/results/rich_wstar_reserve_gate_decision_20260515.json"
+    "rich_wstar_reserve_gate_decision": "experiments/core_narrative/results/rich_wstar_reserve_gate_decision_20260515.json",
+    "final_blocked_report": "experiments/core_narrative/results/repository_local_benchmark_final_blocked_report_20260515.json",
+    "final_blocked_report_markdown": "experiments/core_narrative/reports/2026-05-15_repository_local_benchmark_final_blocked_report.md"
   },
   "additional_feasibility_observations": {
     "rich_ambient_collect_only": {
@@ -869,7 +871,7 @@
     },
     {
       "requirement": "Task 2: construct Click C/R/W* task sets: C 20-40, R 40 candidates -> 20 primary + 5 reserve, W* 40 candidates -> 20 primary + 5 reserve, with no-op/reference/leakage/family/difficulty/digests.",
-      "status": "partially_covered_for_rich_c_primary_w_star_primary_and_r_primary_plus_reserve",
+      "status": "completed_blocked_by_wstar_reserve_and_candidate_pool_gate",
       "evidence": [
         "experiments/core_narrative/reports/2026-05-14_repository_local_benchmark_gate.md",
         "experiments/core_narrative/reports/2026-05-14_rich_task_admission_readiness.md",
@@ -930,9 +932,11 @@
         "experiments/core_narrative/reports/2026-05-15_rich_c_replacement_oracle_pilot_style_hash.md",
         "experiments/core_narrative/reports/2026-05-15_rich_c_replacement_oracle_pilot_padding_property.md",
         "experiments/core_narrative/reports/2026-05-15_rich_c_replacement_oracle_pilot_inspect_typo.md",
-        "experiments/core_narrative/reports/2026-05-15_rich_c_direct_without_nodes_oracle_pilot_py38.md"
+        "experiments/core_narrative/reports/2026-05-15_rich_c_direct_without_nodes_oracle_pilot_py38.md",
+        "experiments/core_narrative/reports/2026-05-15_rich_wstar_reserve_gate_decision.md",
+        "experiments/core_narrative/reports/2026-05-15_repository_local_benchmark_final_blocked_report.md"
       ],
-      "gap": "Click W* has only 14 task-design candidates in the frozen window, below the 20-task gate. Rich has 20 accepted W* primary candidates, but only 23 stricter W* design candidates, so the explicit W* reserve-gate decision fails the 5-task reserve target and 40-candidate pool target. Rich R has 25 accepted tasks: 8 direct-smoke and 17 source-only Golden-Oracle, satisfying the 20-primary plus 5-reserve count. Rich C has 20 accepted calibration tasks: 3 direct-smoke, 13 source-only Golden-Oracle, 3 replacement-oracle, and 1 direct-without-node Oracle. No full C/R/W* denominator is frozen because the W* gate failed and primary-run authorization remains incomplete."
+      "gap": "Click W* has only 14 task-design candidates in the frozen window, below the 20-task gate. Rich has 20 accepted W* primary candidates, but only 23 stricter W* design candidates, so the explicit W* reserve-gate decision fails the 5-task reserve target and 40-candidate pool target. Rich R has 25 accepted tasks: 8 direct-smoke and 17 source-only Golden-Oracle, satisfying the 20-primary plus 5-reserve count. Rich C has 20 accepted calibration tasks: 3 direct-smoke, 13 source-only Golden-Oracle, 3 replacement-oracle, and 1 direct-without-node Oracle. The final blocked report records that no full C/R/W* denominator or primary run is permitted under the frozen 0514 gate."
     },
     {
       "requirement": "Task 3: Codex role isolation for Golden-Selector, Golden-Taskwright, Golden-Oracle, Golden-Auditor with prompt hashes, artifact digests, and admission decisions.",
@@ -963,16 +967,21 @@
     },
     {
       "requirement": "Task 5: run R and W* with one primary attempt per ACUT/task, no best-of-N, fixed denominator, workspace fresh replay, hidden verifier, frozen status mapping.",
-      "status": "not_done",
+      "status": "not_applicable_blocked_before_primary_runs",
       "evidence": [
-        "experiments/core_narrative/reports/2026-05-14_repository_local_benchmark_gate.md"
+        "experiments/core_narrative/reports/2026-05-14_repository_local_benchmark_gate.md",
+        "experiments/core_narrative/reports/2026-05-15_rich_wstar_reserve_gate_decision.md",
+        "experiments/core_narrative/reports/2026-05-15_repository_local_benchmark_final_blocked_report.md"
       ],
       "gap": "No primary attempts were authorized or run because the explicit W* reserve-gate decision blocks primary execution under the frozen 0514 protocol."
     },
     {
       "requirement": "Task 6: analyze R_score, W*_score, paired deltas, inert control, R-selected, W*-best, selection regret, R/W* rank correlation, family effects, and R_barcarolle vs random-R if possible.",
-      "status": "not_done",
-      "gap": "No primary results exist to analyze."
+      "status": "not_applicable_no_primary_results",
+      "gap": "No primary result table exists because primary runs were not authorized.",
+      "evidence": [
+        "experiments/core_narrative/reports/2026-05-15_repository_local_benchmark_final_blocked_report.md"
+      ]
     },
     {
       "requirement": "Output: repository admission report.",
@@ -983,7 +992,7 @@
     },
     {
       "requirement": "Output: task generation validity report.",
-      "status": "partial_c_primary_w_star_primary_and_r_primary_plus_reserve",
+      "status": "completed_with_terminal_wstar_gate_block",
       "evidence": [
         "experiments/core_narrative/reports/2026-05-14_rich_direct_smoke_pilot.md",
         "experiments/core_narrative/reports/2026-05-14_rich_direct_smoke_batch.md",
@@ -1042,40 +1051,48 @@
         "experiments/core_narrative/reports/2026-05-15_rich_c_replacement_oracle_pilot_style_hash.md",
         "experiments/core_narrative/reports/2026-05-15_rich_c_replacement_oracle_pilot_padding_property.md",
         "experiments/core_narrative/reports/2026-05-15_rich_c_replacement_oracle_pilot_inspect_typo.md",
-        "experiments/core_narrative/reports/2026-05-15_rich_c_direct_without_nodes_oracle_pilot_py38.md"
+        "experiments/core_narrative/reports/2026-05-15_rich_c_direct_without_nodes_oracle_pilot_py38.md",
+        "experiments/core_narrative/reports/2026-05-15_rich_wstar_reserve_gate_decision.md",
+        "experiments/core_narrative/reports/2026-05-15_repository_local_benchmark_final_blocked_report.md"
       ],
-      "gap": "Rich C has 20 accepted calibration candidates, Rich W* has 20 accepted primary candidates, and Rich R has 25 accepted candidates after 8 direct-smoke acceptances and 17 source-only Golden-Oracle pilots. Full C/R/W* task generation validity is not produced because the explicit W* reserve-gate decision blocks the frozen 0514 primary run; run-level role artifacts and primary-run authorization remain incomplete."
+      "gap": "Rich C has 20 accepted calibration candidates, Rich W* has 20 accepted primary candidates, and Rich R has 25 accepted candidates after 8 direct-smoke acceptances and 17 source-only Golden-Oracle pilots. The final validity conclusion is blocked because the explicit W* reserve-gate decision prevents the frozen 0514 primary run."
     },
     {
       "requirement": "Output: R/W* primary result report.",
-      "status": "not_done",
-      "gap": "No primary attempts were run."
+      "status": "not_applicable_blocked_before_primary_runs",
+      "gap": "No primary attempts were run or authorized.",
+      "evidence": [
+        "experiments/core_narrative/reports/2026-05-15_repository_local_benchmark_final_blocked_report.md"
+      ]
     },
     {
       "requirement": "Output: decision-validity report.",
-      "status": "gate_only",
+      "status": "not_applicable_no_primary_results",
       "evidence": [
-        "experiments/core_narrative/reports/2026-05-14_repository_local_benchmark_gate.md"
+        "experiments/core_narrative/reports/2026-05-14_repository_local_benchmark_gate.md",
+        "experiments/core_narrative/reports/2026-05-15_repository_local_benchmark_final_blocked_report.md"
       ],
-      "gap": "The gate decision is documented. R -> W* decision validity cannot be assessed without runs."
+      "gap": "R -> W* decision validity cannot be assessed without primary results."
     },
     {
       "requirement": "Output: threats-to-validity report.",
-      "status": "gate_only",
+      "status": "completed_for_terminal_gate_result",
       "evidence": [
-        "experiments/core_narrative/reports/2026-05-14_repository_local_benchmark_gate.md"
+        "experiments/core_narrative/reports/2026-05-14_repository_local_benchmark_gate.md",
+        "experiments/core_narrative/reports/2026-05-15_repository_local_benchmark_final_blocked_report.md"
       ],
-      "gap": "Gate-level threats are documented. Full experiment threats remain pending."
+      "gap": "The terminal threat is supply/gate failure before primary execution; full run-level threats are not applicable without primary runs."
     },
     {
       "requirement": "Do not use W* results to modify R; do not use ACUT outputs to choose W*; do not mix old M5/M6 denominator; do not lower gates post hoc; do not overclaim W* freshness.",
       "status": "covered_for_actions_taken",
       "evidence": [
         "experiments/core_narrative/reports/2026-05-14_repository_local_benchmark_gate.md",
-        "experiments/core_narrative/configs/repository_local_benchmark_20260514.yaml"
+        "experiments/core_narrative/configs/repository_local_benchmark_20260514.yaml",
+        "experiments/core_narrative/reports/2026-05-15_repository_local_benchmark_final_blocked_report.md"
       ],
-      "gap": "No primary results exist, so this is verified only for the repository-admission and gate phase."
+      "gap": "No primary results exist. The final blocked report verifies that W* results, ACUT outputs, old denominators, post-hoc gate lowering, and W* freshness overclaims were not used for the actions taken."
     }
   ],
-  "next_required_step": "Choose one: preregister a protocol revision for primary-only W*, find additional W* candidates inside the frozen W* window, or stop before primary runs and report the 0514 line as blocked by W* reserve/candidate-pool supply."
+  "next_required_step": "No further primary-run or analysis work is authorized inside the frozen 0514 protocol. Future work requires a new owner decision: preregister a protocol revision, find additional eligible W* candidates inside the frozen window, or treat the blocked report as the terminal result."
 }

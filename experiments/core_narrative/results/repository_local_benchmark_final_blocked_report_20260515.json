@@ -1,0 +1,149 @@
+{
+  "artifact_inputs": {
+    "completion_audit": "experiments/core_narrative/results/repository_local_benchmark_completion_audit_20260514.json",
+    "rich_acut_intervention_readiness": "experiments/core_narrative/results/rich_acut_intervention_readiness_20260515.json",
+    "rich_wstar_reserve_gate_decision": "experiments/core_narrative/results/rich_wstar_reserve_gate_decision_20260515.json"
+  },
+  "claim_boundary": [
+    "This is a terminal blocked-experiment report, not a primary result report.",
+    "No R, W*, or G primary model attempts were authorized or run after the W* gate decision.",
+    "R_score, W*_score, paired deltas, selection regret, rank correlation, and family effects are not claimed.",
+    "Raw subjects, raw commits, reference patches, hidden verifiers, and ACUT outputs are not included."
+  ],
+  "completion_conclusion": {
+    "active_goal_should_be_marked_complete": true,
+    "reason": "The selected stop-and-report branch has been executed. No further primary-run or analysis work is permitted inside the frozen 0514 protocol without a new preregistered revision or new eligible W* supply."
+  },
+  "deliverable_status": [
+    {
+      "artifact": "experiments/core_narrative/reports/2026-05-14_repository_local_benchmark_admission.md",
+      "deliverable": "repository_admission_report",
+      "status": "completed"
+    },
+    {
+      "artifact": "experiments/core_narrative/reports/2026-05-14_repository_local_benchmark_completion_audit.md",
+      "deliverable": "task_generation_validity_report",
+      "status": "completed_with_terminal_wstar_gate_block"
+    },
+    {
+      "deliverable": "role_isolation_artifacts",
+      "reason": "The W* reserve/candidate-pool gate failed before role-run task admission artifacts were needed.",
+      "status": "not_executed_blocked_before_primary_runs"
+    },
+    {
+      "artifact": "experiments/core_narrative/reports/2026-05-15_rich_acut_intervention_readiness.md",
+      "deliverable": "acut_intervention_manifest",
+      "status": "completed_for_rich_execution_plan"
+    },
+    {
+      "deliverable": "r_wstar_primary_result_report",
+      "reason": "No R, W*, or G primary attempts were authorized or run.",
+      "status": "not_applicable_blocked_before_primary_runs"
+    },
+    {
+      "deliverable": "decision_validity_report",
+      "reason": "R -> W* selection validity cannot be estimated without primary results.",
+      "status": "not_applicable_no_primary_results"
+    },
+    {
+      "artifact": "experiments/core_narrative/reports/2026-05-15_repository_local_benchmark_final_blocked_report.md",
+      "deliverable": "threats_to_validity_report",
+      "status": "completed_for_terminal_gate_result"
+    }
+  ],
+  "generated_at": "2026-05-14T18:31:18.553199Z",
+  "model_calls_made_after_terminal_gate": 0,
+  "next_valid_paths": [
+    "Create a preregistered protocol revision if the experiment owner accepts a primary-only W* run without reserve.",
+    "Or find additional W* candidates within the frozen W* window without using ACUT outputs or W* results.",
+    "Publish or keep the blocked 0514 line as the terminal result; do not run primary attempts under the current frozen protocol."
+  ],
+  "objective_file": "/Users/chenmohan/Downloads/barcarolle-research-0514-1.md",
+  "phase_status": [
+    {
+      "evidence": [
+        "experiments/core_narrative/reports/2026-05-14_repository_local_benchmark_admission.md"
+      ],
+      "phase": "repository_admission",
+      "status": "completed"
+    },
+    {
+      "phase": "task_admission",
+      "status": "completed_until_terminal_wstar_supply_gate",
+      "summary": "Rich C reached 20 accepted calibration candidates; Rich R reached 25 accepted primary-plus-reserve candidates; Rich W* reached 20 accepted primary candidates but cannot reach the 25 primary-plus-reserve target or 40-candidate pool under the frozen scan.",
+      "wstar_gate": {
+        "accepted_primary": 20,
+        "candidate_pool_gap": 17,
+        "maximum_possible_admissions_under_current_scan": 23,
+        "reserve_gap_even_if_all_remaining_admitted": 2,
+        "target_primary": 20,
+        "target_primary_plus_reserve": 25
+      }
+    },
+    {
+      "evidence": [
+        "experiments/core_narrative/reports/2026-05-15_rich_acut_intervention_readiness.md"
+      ],
+      "phase": "acut_manifest_readiness",
+      "status": "completed_for_rich_execution_plan"
+    },
+    {
+      "g_attempts": 0,
+      "phase": "primary_execution",
+      "r_primary_attempts": 0,
+      "status": "not_applicable_blocked_before_primary_runs",
+      "w_star_primary_attempts": 0
+    },
+    {
+      "phase": "analysis",
+      "r_score_available": false,
+      "selection_regret_available": false,
+      "status": "not_applicable_no_primary_results",
+      "w_star_score_available": false
+    }
+  ],
+  "primary_execution": {
+    "g_attempts": 0,
+    "r_primary_attempts": 0,
+    "reason": "The frozen 0514 protocol requires W* reserve and candidate-pool gates before primary execution; the explicit W* decision fails those gates.",
+    "run_g": false,
+    "run_r_primary": false,
+    "run_w_star_primary": false,
+    "w_star_primary_attempts": 0
+  },
+  "primary_runs_authorized": false,
+  "prior_next_allowed_actions": [
+    "Create a preregistered protocol revision if the experiment owner accepts a primary-only W* run without reserve.",
+    "Or find additional W* candidates within the frozen W* window without using ACUT outputs or W* results.",
+    "Or stop before primary runs and report the 0514 line as blocked by W* reserve/candidate-pool supply."
+  ],
+  "prohibitions_preserved": {
+    "lowered_success_gate_post_hoc": false,
+    "mixed_old_m5_m6_denominator": false,
+    "overclaimed_wstar_freshness": false,
+    "used_acut_outputs_to_choose_wstar": false,
+    "used_wstar_results_to_modify_r": false
+  },
+  "report_id": "repository-local-benchmark-final-blocked-report-20260515",
+  "schema_version": "core-narrative.repository-local-benchmark-final-blocked-report.v1",
+  "selected_terminal_path": "stop_before_primary_runs_and_report_blocked_by_wstar_supply",
+  "status": "completed_blocked_before_primary_runs",
+  "terminal_gate": {
+    "accepted_w_star_primary_count": 20,
+    "candidate_pool_gap": 17,
+    "candidate_pool_gate_reached": false,
+    "decision": "w_star_primary_reached_but_reserve_and_pool_gates_failed",
+    "full_gate_reached": false,
+    "maximum_possible_w_star_admissions_under_current_scan": 23,
+    "primary_floor_reached": true,
+    "remaining_unadmitted_w_star_design_candidates": 3,
+    "repo_slug": "rich",
+    "reserve_gap_even_if_all_remaining_admitted": 2,
+    "reserve_gate_reached": false,
+    "split": "W_star",
+    "target_primary_count": 20,
+    "target_primary_plus_reserve_count": 25,
+    "target_reserve_count": 5
+  },
+  "tool": "repository_local_benchmark_final_blocked_report"
+}
