@@ -3,6 +3,7 @@
 
 from __future__ import annotations
 
+import datetime as dt
 from pathlib import Path
 import unittest
 from unittest.mock import patch
@@ -484,6 +485,43 @@ class RichSourceOraclePilotTests(unittest.TestCase):
             selected = pilot.source_only_oracle_candidates(Path("/repo"), split="R")
 
         self.assertEqual([candidate["subject"] for candidate in selected], ["split lines terminator"])
+
+    def test_source_only_candidates_passes_extended_c_scan_start(self) -> None:
+        """C source-only pilots can use the preregistered earlier C boundary."""
+        seen = {}
+
+        def fake_discover(repo_path: Path, *, c_scan_start=None):
+            seen["c_scan_start"] = c_scan_start
+            return [
+                {
+                    "commit": "a" * 40,
+                    "base_commit": "b" * 40,
+                    "subject": "candidate",
+                    "committed_at": "2025-04-14T00:00:00+00:00",
+                    "window": "C",
+                    "family": "parser/mixed integration",
+                    "surface": "source_without_tests",
+                    "source_file_count": 1,
+                    "test_file_count": 0,
+                    "test_node_count": 0,
+                    "changed_file_set_digest": "digest",
+                    "oracle_requirement": "golden_oracle_required",
+                    "direct_smoke_ready": False,
+                },
+                {
+                    "subject": "direct",
+                    "window": "C",
+                    "family": "parser/mixed integration",
+                    "oracle_requirement": "direct_reference_tests_available",
+                },
+            ]
+
+        c_scan_start = dt.datetime(2025, 4, 14, tzinfo=dt.timezone.utc)
+        with patch.object(pilot, "discover_candidates", side_effect=fake_discover):
+            selected = pilot.source_only_oracle_candidates(Path("/repo"), split="C", c_scan_start=c_scan_start)
+
+        self.assertEqual([candidate["subject"] for candidate in selected], ["candidate"])
+        self.assertEqual(seen["c_scan_start"], c_scan_start)
 
     def test_public_result_redacts_raw_source_anchors_and_subject(self) -> None:
         """Public pilot results keep raw commits, subjects, and hidden files private."""

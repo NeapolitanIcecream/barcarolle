@@ -3,6 +3,7 @@
 
 from __future__ import annotations
 
+import datetime as dt
 import unittest
 
 import rich_task_admission_readiness as readiness
@@ -16,6 +17,26 @@ class RichTaskAdmissionReadinessTests(unittest.TestCase):
         self.assertEqual(readiness.window_for_date("2026-02-13T23:59:59+00:00"), "R")
         self.assertEqual(readiness.window_for_date("2026-02-14T00:00:00+00:00"), "W_star")
         self.assertEqual(readiness.window_for_date("2026-05-14T23:59:59+00:00"), "W_star")
+
+    def test_window_for_date_accepts_preregistered_earlier_c_start(self) -> None:
+        """C can be extended earlier when calibration supply is thin."""
+        c_start = dt.datetime(2025, 4, 14, tzinfo=dt.timezone.utc)
+
+        self.assertEqual(
+            readiness.window_for_date("2025-04-14T00:00:00+00:00", c_scan_start=c_start),
+            "C",
+        )
+        self.assertEqual(
+            readiness.window_for_date("2025-04-13T23:59:59+00:00", c_scan_start=c_start),
+            "older_C_not_scanned",
+        )
+
+    def test_parse_c_scan_start_returns_utc_midnight(self) -> None:
+        """CLI C extension dates are parsed as UTC-inclusive day starts."""
+        self.assertEqual(
+            readiness.parse_c_scan_start("2025-04-14"),
+            dt.datetime(2025, 4, 14, tzinfo=dt.timezone.utc),
+        )
 
     def test_extract_test_nodes_reports_added_and_modified_pytest_nodes(self) -> None:
         """Direct-oracle candidates can use added tests and modified test hunk context."""

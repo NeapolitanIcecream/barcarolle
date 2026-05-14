@@ -24,6 +24,7 @@ from rich_direct_smoke_pilot import (
     sha256_text,
 )
 from rich_task_admission_readiness import discover_candidates
+from rich_task_admission_readiness import parse_c_scan_start
 
 
 TOOL = "rich_direct_smoke_batch"
@@ -41,6 +42,7 @@ def parse_args(argv: Sequence[str] | None = None) -> argparse.Namespace:
     parser.add_argument("--output", default=str(DEFAULT_OUTPUT), help="Public redacted JSON output.")
     parser.add_argument("--report", default=str(DEFAULT_REPORT), help="Public markdown report.")
     parser.add_argument("--split", choices=["C", "R", "W_star"], default="W_star", help="Time split to smoke.")
+    parser.add_argument("--c-scan-start", default=None, help="Inclusive start date for C calibration scan.")
     parser.add_argument("--candidate-limit", type=int, help="Limit number of direct candidates to smoke.")
     parser.add_argument("--install-timeout-seconds", type=int, default=240)
     parser.add_argument("--verifier-timeout-seconds", type=int, default=120)
@@ -50,10 +52,10 @@ def parse_args(argv: Sequence[str] | None = None) -> argparse.Namespace:
     return parser.parse_args(list(argv) if argv is not None else None)
 
 
-def direct_candidates(repo_path: Path, split: str = "W_star") -> list[Mapping[str, Any]]:
+def direct_candidates(repo_path: Path, split: str = "W_star", *, c_scan_start: Any = None) -> list[Mapping[str, Any]]:
     return [
         candidate
-        for candidate in discover_candidates(repo_path)
+        for candidate in discover_candidates(repo_path, c_scan_start=c_scan_start)
         if candidate.get("window") == split and candidate.get("direct_smoke_ready")
     ]
 
@@ -206,7 +208,8 @@ def run(argv: Sequence[str] | None = None) -> int:
     if args.force:
         shutil.rmtree(private_root, ignore_errors=True)
     private_root.mkdir(parents=True, exist_ok=True)
-    candidates = direct_candidates(repo_path, args.split)
+    c_scan_start = parse_c_scan_start(args.c_scan_start) if args.c_scan_start else None
+    candidates = direct_candidates(repo_path, args.split, c_scan_start=c_scan_start)
     if args.candidate_limit is not None:
         if args.candidate_limit < 0:
             raise ToolError("--candidate-limit must be non-negative")

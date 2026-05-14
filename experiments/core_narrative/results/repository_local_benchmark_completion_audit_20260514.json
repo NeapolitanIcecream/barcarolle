@@ -1,12 +1,12 @@
 {
   "schema_version": "core-narrative.repository-local-benchmark-completion-audit.v1",
   "audit_id": "repository-local-benchmark-20260514-completion-audit",
-  "audited_at": "2026-05-14T17:21:02Z",
+  "audited_at": "2026-05-14T17:36:34Z",
   "objective_file": "/Users/chenmohan/Downloads/barcarolle-research-0514-1.md",
   "overall_verdict": "not_complete_blocked_before_task_admission_and_primary_runs",
   "active_goal_should_be_marked_complete": false,
   "basis": {
-    "commit": "bea0bb48",
+    "commit": "a423f258",
     "branch": "codex/rgw-full-workspace-v1",
     "repository_admission_report": "experiments/core_narrative/reports/2026-05-14_repository_local_benchmark_admission.md",
     "repository_gate_report": "experiments/core_narrative/reports/2026-05-14_repository_local_benchmark_gate.md",
@@ -51,7 +51,10 @@
     "rich_r_source_oracle_pilot_cells_refine": "experiments/core_narrative/results/rich_r_source_oracle_pilot_cells_refine_20260515.json",
     "rich_r_source_oracle_pilot_unicode_comment": "experiments/core_narrative/results/rich_r_source_oracle_pilot_unicode_comment_20260515.json",
     "rich_r_source_oracle_pilot_unicode_cell_table": "experiments/core_narrative/results/rich_r_source_oracle_pilot_unicode_cell_table_20260515.json",
-    "rich_r_source_oracle_pilot_table_doc": "experiments/core_narrative/results/rich_r_source_oracle_pilot_table_doc_20260515.json"
+    "rich_r_source_oracle_pilot_table_doc": "experiments/core_narrative/results/rich_r_source_oracle_pilot_table_doc_20260515.json",
+    "rich_c_extended_task_admission_readiness": "experiments/core_narrative/results/rich_c_extended_task_admission_readiness_20260515.json",
+    "rich_c_direct_smoke_batch": "experiments/core_narrative/results/rich_c_direct_smoke_batch_20260515.json",
+    "rich_c_source_oracle_queue": "experiments/core_narrative/results/rich_c_source_oracle_queue_20260515.json"
   },
   "additional_feasibility_observations": {
     "rich_ambient_collect_only": {
@@ -598,6 +601,61 @@
         "table_column_expand_doc_removed"
       ],
       "interpretation": "Rich R reached 25 accepted candidates after 8 direct-smoke admissions and 17 source-only Golden-Oracle pilots, satisfying the 20-primary plus 5-reserve count. No full C/R/W* denominator is frozen because C construction, W* reserve gate resolution, Rich ACUT variants, and primary-run authorization remain incomplete."
+    },
+    "rich_c_extended_task_admission_readiness": {
+      "artifact": "experiments/core_narrative/results/rich_c_extended_task_admission_readiness_20260515.json",
+      "status": "completed",
+      "split": "C",
+      "c_scan_start": "2025-04-14",
+      "c_scan_end": "2025-11-13",
+      "c_design_candidates": 20,
+      "c_direct_smoke_ready_candidates": 6,
+      "c_source_only_golden_oracle_required": 13,
+      "c_direct_tests_without_extractable_nodes": 1,
+      "c_family_count": 6,
+      "can_form_20_c_primary_from_design_candidates": true,
+      "candidate_pool_gap_to_40": 20,
+      "model_calls_made": 0,
+      "primary_runs_authorized": false,
+      "interpretation": "Extending C earlier to 2025-04-14 reaches the 20-task calibration design-candidate floor without borrowing from R or W*. This is readiness evidence only; no C denominator is frozen."
+    },
+    "rich_c_direct_smoke_batch": {
+      "artifact": "experiments/core_narrative/results/rich_c_direct_smoke_batch_20260515.json",
+      "status": "completed",
+      "split": "C",
+      "smoked_candidate_count": 6,
+      "accepted_count": 3,
+      "rejected_count": 3,
+      "blocked_count": 0,
+      "noop_status_counts": {
+        "failed": 3,
+        "passed_unexpected": 3
+      },
+      "reference_status_counts": {
+        "passed": 6
+      },
+      "model_calls_made": 0,
+      "primary_runs_authorized": false,
+      "interpretation": "Three extended-C direct candidates passed no-op/reference admission smoke. The remaining direct candidates need replacement hidden verifiers before they can be admitted."
+    },
+    "rich_c_source_oracle_queue": {
+      "artifact": "experiments/core_narrative/results/rich_c_source_oracle_queue_20260515.json",
+      "status": "completed",
+      "split": "C",
+      "accepted_direct_count": 3,
+      "oracle_work_item_count": 17,
+      "source_only_golden_oracle_work_items": 13,
+      "direct_tests_without_extractable_nodes": 1,
+      "direct_smoke_replacement_oracles": 3,
+      "additional_acceptances_needed_for_20_c_primary": 17,
+      "additional_acceptances_needed_for_20_c_primary_plus_5_reserve": 22,
+      "maximum_admitted_design_count_if_all_oracles_pass": 20,
+      "can_reach_20_c_primary_if_all_oracles_pass": true,
+      "can_reach_20_c_primary_plus_5_reserve_under_current_design_supply": false,
+      "candidate_pool_gap_to_40": 20,
+      "model_calls_made": 0,
+      "primary_runs_authorized": false,
+      "interpretation": "Rich C now has a redacted Golden-Oracle construction queue after extended-C direct smoke. It can reach 20 calibration tasks only if all 17 queued C verifier-construction items pass admission smoke; no C denominator is frozen."
     }
   },
   "checklist": [
@@ -662,13 +720,16 @@
         "experiments/core_narrative/results/rich_r_source_oracle_pilot_cells_refine_20260515.json",
         "experiments/core_narrative/results/rich_r_source_oracle_pilot_unicode_comment_20260515.json",
         "experiments/core_narrative/results/rich_r_source_oracle_pilot_unicode_cell_table_20260515.json",
-        "experiments/core_narrative/results/rich_r_source_oracle_pilot_table_doc_20260515.json"
+        "experiments/core_narrative/results/rich_r_source_oracle_pilot_table_doc_20260515.json",
+        "experiments/core_narrative/results/rich_c_extended_task_admission_readiness_20260515.json",
+        "experiments/core_narrative/results/rich_c_direct_smoke_batch_20260515.json",
+        "experiments/core_narrative/results/rich_c_source_oracle_queue_20260515.json"
       ],
-      "gap": "Candidate supply, test-surface presence, family counts, recommendation, Rich collect-only feasibility, Rich task-readiness counts, direct-oracle W* and R smoke outcomes, the W* and R Golden-Oracle queues, eleven source-only W* Golden-Oracle admission pilots, seventeen source-only R Golden-Oracle admission pilots, three replacement-oracle admission pilots, and one direct-without-node Oracle pilot are present. Full denominator-scale per-task historical smoke and measured test runtime are not yet measured."
+      "gap": "Candidate supply, test-surface presence, family counts, recommendation, Rich collect-only feasibility, Rich task-readiness counts, direct-oracle W*, R, and C smoke outcomes, the W*, R, and C Golden-Oracle queues, eleven source-only W* Golden-Oracle admission pilots, seventeen source-only R Golden-Oracle admission pilots, three replacement-oracle admission pilots, and one direct-without-node Oracle pilot are present. Extended C readiness found 20 design candidates and a 17-item C oracle queue. Full denominator-scale per-task historical smoke and measured test runtime are not yet measured."
     },
     {
       "requirement": "Task 2: construct Click C/R/W* task sets: C 20-40, R 40 candidates -> 20 primary + 5 reserve, W* 40 candidates -> 20 primary + 5 reserve, with no-op/reference/leakage/family/difficulty/digests.",
-      "status": "partially_covered_for_rich_w_star_primary_and_r_primary_plus_reserve_only",
+      "status": "partially_covered_for_rich_c_readiness_w_star_primary_and_r_primary_plus_reserve",
       "evidence": [
         "experiments/core_narrative/reports/2026-05-14_repository_local_benchmark_gate.md",
         "experiments/core_narrative/reports/2026-05-14_rich_task_admission_readiness.md",
@@ -709,9 +770,12 @@
         "experiments/core_narrative/reports/2026-05-15_rich_r_source_oracle_pilot_cells_refine.md",
         "experiments/core_narrative/reports/2026-05-15_rich_r_source_oracle_pilot_unicode_comment.md",
         "experiments/core_narrative/reports/2026-05-15_rich_r_source_oracle_pilot_unicode_cell_table.md",
-        "experiments/core_narrative/reports/2026-05-15_rich_r_source_oracle_pilot_table_doc.md"
+        "experiments/core_narrative/reports/2026-05-15_rich_r_source_oracle_pilot_table_doc.md",
+        "experiments/core_narrative/reports/2026-05-15_rich_c_extended_task_admission_readiness.md",
+        "experiments/core_narrative/reports/2026-05-15_rich_c_direct_smoke_batch.md",
+        "experiments/core_narrative/reports/2026-05-15_rich_c_source_oracle_queue.md"
       ],
-      "gap": "Click W* has only 14 task-design candidates in the frozen window, below the 20-task gate. Rich has 20 accepted W* primary candidates, but only 23 stricter W* design candidates, so the 5-task W* reserve target and 40-candidate pool target remain unmet. Rich R has 25 accepted tasks: 8 direct-smoke and 17 source-only Golden-Oracle, satisfying the 20-primary plus 5-reserve count. C task construction is not done, and no full denominator is frozen."
+      "gap": "Click W* has only 14 task-design candidates in the frozen window, below the 20-task gate. Rich has 20 accepted W* primary candidates, but only 23 stricter W* design candidates, so the 5-task W* reserve target and 40-candidate pool target remain unmet. Rich R has 25 accepted tasks: 8 direct-smoke and 17 source-only Golden-Oracle, satisfying the 20-primary plus 5-reserve count. Rich C extended readiness has 20 design candidates and 3 accepted direct-smoke tasks, but it needs all 17 queued C oracle items to pass to reach 20 calibration tasks. No full C/R/W* denominator is frozen."
     },
     {
       "requirement": "Task 3: Codex role isolation for Golden-Selector, Golden-Taskwright, Golden-Oracle, Golden-Auditor with prompt hashes, artifact digests, and admission decisions.",
@@ -757,7 +821,7 @@
     },
     {
       "requirement": "Output: task generation validity report.",
-      "status": "partial_w_star_primary_and_r_primary_plus_reserve_only",
+      "status": "partial_c_readiness_w_star_primary_and_r_primary_plus_reserve",
       "evidence": [
         "experiments/core_narrative/reports/2026-05-14_rich_direct_smoke_pilot.md",
         "experiments/core_narrative/reports/2026-05-14_rich_direct_smoke_batch.md",
@@ -796,9 +860,12 @@
         "experiments/core_narrative/reports/2026-05-15_rich_r_source_oracle_pilot_cells_refine.md",
         "experiments/core_narrative/reports/2026-05-15_rich_r_source_oracle_pilot_unicode_comment.md",
         "experiments/core_narrative/reports/2026-05-15_rich_r_source_oracle_pilot_unicode_cell_table.md",
-        "experiments/core_narrative/reports/2026-05-15_rich_r_source_oracle_pilot_table_doc.md"
+        "experiments/core_narrative/reports/2026-05-15_rich_r_source_oracle_pilot_table_doc.md",
+        "experiments/core_narrative/reports/2026-05-15_rich_c_extended_task_admission_readiness.md",
+        "experiments/core_narrative/reports/2026-05-15_rich_c_direct_smoke_batch.md",
+        "experiments/core_narrative/reports/2026-05-15_rich_c_source_oracle_queue.md"
       ],
-      "gap": "Rich W* has 20 accepted primary candidates, and Rich R has 25 accepted candidates after 8 direct-smoke acceptances and 17 source-only Golden-Oracle pilots. Full C/R/W* task generation validity is not produced because W* reserve and C task sets are missing."
+      "gap": "Rich W* has 20 accepted primary candidates, Rich R has 25 accepted candidates after 8 direct-smoke acceptances and 17 source-only Golden-Oracle pilots, and Rich C has 20 extended-scan design candidates with 3 accepted direct-smoke tasks plus 17 queued oracle items. Full C/R/W* task generation validity is not produced because C oracle admission is incomplete and W* reserve is missing."
     },
     {
       "requirement": "Output: R/W* primary result report.",
@@ -831,5 +898,5 @@
       "gap": "No primary results exist, so this is verified only for the repository-admission and gate phase."
     }
   ],
-  "next_required_step": "Continue C extension/readiness, plus Rich ACUT variants and an explicit W* reserve-gate decision before any primary model attempts."
+  "next_required_step": "Admit the 17 queued C Golden-Oracle items, then complete Rich ACUT variants and make an explicit W* reserve-gate decision before any primary model attempts."
 }

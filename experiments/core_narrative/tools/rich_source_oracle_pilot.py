@@ -24,7 +24,7 @@ from rich_direct_smoke_pilot import (
     verifier_script,
 )
 from rich_source_oracle_queue import item_sort_key, public_source_oracle_item, triage_source_only_candidate
-from rich_task_admission_readiness import changed_file_set_digest, discover_candidates
+from rich_task_admission_readiness import changed_file_set_digest, discover_candidates, parse_c_scan_start
 
 
 TOOL = "rich_source_oracle_pilot"
@@ -589,6 +589,7 @@ def parse_args(argv: Sequence[str] | None = None) -> argparse.Namespace:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--repo", default=str(DEFAULT_REPO), help="Local Rich checkout.")
     parser.add_argument("--split", choices=["C", "R", "W_star"], default="W_star", help="Time split to admit.")
+    parser.add_argument("--c-scan-start", default=None, help="Inclusive start date for C calibration scan.")
     parser.add_argument("--private-root", default=str(DEFAULT_PRIVATE_ROOT), help="Ignored private artifact root.")
     parser.add_argument("--output", default=str(DEFAULT_OUTPUT), help="Public redacted JSON output.")
     parser.add_argument("--report", default=str(DEFAULT_REPORT), help="Public markdown report.")
@@ -601,10 +602,10 @@ def parse_args(argv: Sequence[str] | None = None) -> argparse.Namespace:
     return parser.parse_args(list(argv) if argv is not None else None)
 
 
-def source_only_oracle_candidates(repo_path: Path, split: str = "W_star") -> list[Mapping[str, Any]]:
+def source_only_oracle_candidates(repo_path: Path, split: str = "W_star", *, c_scan_start: Any = None) -> list[Mapping[str, Any]]:
     candidates = [
         candidate
-        for candidate in discover_candidates(repo_path)
+        for candidate in discover_candidates(repo_path, c_scan_start=c_scan_start)
         if candidate.get("window") == split and candidate.get("oracle_requirement") == "golden_oracle_required"
     ]
     return sorted(
@@ -968,8 +969,8 @@ def hidden_verifier_for_candidate(candidate: Mapping[str, Any]) -> dict[str, Any
     )
 
 
-def select_candidate(repo_path: Path, index: int, split: str = "W_star") -> Mapping[str, Any]:
-    candidates = source_only_oracle_candidates(repo_path, split)
+def select_candidate(repo_path: Path, index: int, split: str = "W_star", *, c_scan_start: Any = None) -> Mapping[str, Any]:
+    candidates = source_only_oracle_candidates(repo_path, split, c_scan_start=c_scan_start)
     if not candidates:
         raise ToolError("no Rich source-only Golden-Oracle candidates found", split=split)
     if index < 0 or index >= len(candidates):
@@ -1144,7 +1145,8 @@ def run(argv: Sequence[str] | None = None) -> int:
     if args.force:
         shutil.rmtree(private_root, ignore_errors=True)
     private_root.mkdir(parents=True, exist_ok=True)
-    candidate = select_candidate(repo_path, args.candidate_index, args.split)
+    c_scan_start = parse_c_scan_start(args.c_scan_start) if args.c_scan_start else None
+    candidate = select_candidate(repo_path, args.candidate_index, args.split, c_scan_start=c_scan_start)
     verifier = hidden_verifier_for_candidate(candidate)
     task_pack = materialize_task_pack(
         candidate,

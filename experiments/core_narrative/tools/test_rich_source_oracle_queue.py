@@ -3,6 +3,7 @@
 
 from __future__ import annotations
 
+import datetime as dt
 import tempfile
 from pathlib import Path
 import unittest
@@ -167,8 +168,8 @@ class RichSourceOracleQueueTests(unittest.TestCase):
         self.assertEqual(raised.exception.details["direct_batch_split"], "W_star")
         self.assertEqual(raised.exception.details["split"], "R")
 
-    def test_run_forwards_requested_split_to_payload_builder(self) -> None:
-        """The CLI split flag controls the queue split used for payload construction."""
+    def test_run_forwards_requested_split_and_c_scan_start_to_payload_builder(self) -> None:
+        """The CLI split and C extension flags control queue payload construction."""
         with tempfile.TemporaryDirectory() as directory:
             output = Path(directory) / "queue.json"
             report = Path(directory) / "queue.md"
@@ -186,10 +187,22 @@ class RichSourceOracleQueueTests(unittest.TestCase):
                 }
 
             with patch.object(queue, "build_payload", side_effect=fake_build_payload), patch.object(queue, "emit_json"):
-                exit_code = queue.run(["--split", "R", "--output", str(output), "--report", str(report)])
+                exit_code = queue.run(
+                    [
+                        "--split",
+                        "C",
+                        "--c-scan-start",
+                        "2025-04-14",
+                        "--output",
+                        str(output),
+                        "--report",
+                        str(report),
+                    ]
+                )
 
         self.assertEqual(exit_code, 0)
-        self.assertEqual(captured["split"], "R")
+        self.assertEqual(captured["split"], "C")
+        self.assertEqual(captured["c_scan_start"], dt.datetime(2025, 4, 14, tzinfo=dt.timezone.utc))
 
     def test_low_signal_source_subjects_are_deprioritized(self) -> None:
         """Cosmetic source-only changes should not consume early Oracle attention."""

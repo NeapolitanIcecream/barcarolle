@@ -15,6 +15,7 @@ from rich_task_admission_readiness import (
     DEFAULT_REPO,
     changed_file_set_digest,
     discover_candidates,
+    parse_c_scan_start,
     public_candidate_row,
     repo_relative,
     sha256_text,
@@ -46,6 +47,7 @@ def parse_args(argv: Sequence[str] | None = None) -> argparse.Namespace:
     parser.add_argument("--repo", default=str(DEFAULT_REPO), help="Local Rich checkout.")
     parser.add_argument("--direct-batch", default=str(DEFAULT_DIRECT_BATCH), help="Public direct-smoke batch JSON.")
     parser.add_argument("--split", choices=["C", "R", "W_star"], default="W_star", help="Time split to queue.")
+    parser.add_argument("--c-scan-start", default=None, help="Inclusive start date for C calibration scan.")
     parser.add_argument("--private-root", default=str(DEFAULT_PRIVATE_ROOT), help="Ignored private artifact root.")
     parser.add_argument("--output", default=str(DEFAULT_OUTPUT), help="Public redacted JSON output.")
     parser.add_argument("--report", default=str(DEFAULT_REPORT), help="Public markdown report.")
@@ -302,6 +304,7 @@ def build_payload(
     direct_batch_path: Path,
     private_root: Path,
     split: str = "W_star",
+    c_scan_start: Any = None,
 ) -> dict[str, Any]:
     direct_batch = load_direct_batch(direct_batch_path)
     direct_batch_split = direct_batch.get("split") or "W_star"
@@ -311,7 +314,7 @@ def build_payload(
             direct_batch_split=direct_batch_split,
             split=split,
         )
-    candidates = discover_candidates(repo_path)
+    candidates = discover_candidates(repo_path, c_scan_start=c_scan_start)
     split_candidates = [candidate for candidate in candidates if candidate.get("window") == split]
     items = build_queue_items(split_candidates, direct_batch, split)
     summary = summarize_queue(
@@ -389,11 +392,13 @@ def run(argv: Sequence[str] | None = None) -> int:
     args = parse_args(argv)
     output = Path(args.output)
     report = Path(args.report)
+    c_scan_start = parse_c_scan_start(args.c_scan_start) if args.c_scan_start else None
     payload = build_payload(
         repo_path=Path(args.repo).resolve(),
         direct_batch_path=Path(args.direct_batch).resolve(),
         private_root=Path(args.private_root).resolve(),
         split=args.split,
+        c_scan_start=c_scan_start,
     )
     write_json(output, payload)
     report.parent.mkdir(parents=True, exist_ok=True)

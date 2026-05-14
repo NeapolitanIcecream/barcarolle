@@ -3,6 +3,8 @@
 
 from __future__ import annotations
 
+import datetime as dt
+from pathlib import Path
 import unittest
 
 import rich_direct_smoke_batch as batch
@@ -32,6 +34,29 @@ class RichDirectSmokeBatchTests(unittest.TestCase):
         self.assertEqual(payload["model_calls_made"], 0)
         self.assertEqual(payload["split"], "R")
         self.assertIn("not a frozen Rich denominator", " ".join(payload["claim_boundary"]))
+
+    def test_direct_candidates_passes_extended_c_scan_start(self) -> None:
+        """C direct-smoke discovery can use the preregistered earlier C boundary."""
+        seen = {}
+        original = batch.discover_candidates
+
+        def fake_discover(repo_path: Path, *, c_scan_start=None):
+            seen["c_scan_start"] = c_scan_start
+            return [
+                {"window": "C", "direct_smoke_ready": True},
+                {"window": "R", "direct_smoke_ready": True},
+                {"window": "C", "direct_smoke_ready": False},
+            ]
+
+        c_scan_start = dt.datetime(2025, 4, 14, tzinfo=dt.timezone.utc)
+        batch.discover_candidates = fake_discover
+        try:
+            candidates = batch.direct_candidates(Path("."), "C", c_scan_start=c_scan_start)
+        finally:
+            batch.discover_candidates = original
+
+        self.assertEqual(candidates, [{"window": "C", "direct_smoke_ready": True}])
+        self.assertEqual(seen["c_scan_start"], c_scan_start)
 
 
 if __name__ == "__main__":

@@ -49,7 +49,20 @@ def parse_args(argv: Sequence[str] | None = None) -> argparse.Namespace:
     parser.add_argument("--repo", default=str(DEFAULT_REPO), help="Local Rich checkout.")
     parser.add_argument("--output", default=str(DEFAULT_OUTPUT), help="Structured JSON output.")
     parser.add_argument("--report", default=str(DEFAULT_REPORT), help="Markdown report output.")
+    parser.add_argument(
+        "--c-scan-start",
+        default=C_SCAN_START.date().isoformat(),
+        help="Inclusive start date for C calibration scan; may be earlier than the default if C supply is thin.",
+    )
     return parser.parse_args(list(argv) if argv is not None else None)
+
+
+def parse_c_scan_start(value: str) -> dt.datetime:
+    try:
+        parsed = dt.date.fromisoformat(value)
+    except ValueError as exc:
+        raise ToolError("C scan start must be an ISO date", value=value) from exc
+    return dt.datetime(parsed.year, parsed.month, parsed.day, tzinfo=dt.timezone.utc)
 
 
 def repo_relative(path: Path) -> str:
@@ -78,15 +91,16 @@ def parse_git_datetime(value: str) -> dt.datetime:
     return parsed.astimezone(dt.timezone.utc)
 
 
-def window_for_date(value: str) -> str:
+def window_for_date(value: str, *, c_scan_start: dt.datetime | None = None) -> str:
     when = parse_git_datetime(value)
-    if C_SCAN_START <= when <= C_END:
+    c_start = c_scan_start or C_SCAN_START
+    if c_start <= when <= C_END:
         return "C"
     if R_START <= when <= R_END:
         return "R"
     if W_STAR_START <= when <= T0:
         return "W_star"
-    if when < C_SCAN_START:
+    if when < c_start:
         return "older_C_not_scanned"
     if when > T0:
         return "future"
@@ -174,8 +188,15 @@ def oracle_requirement(surface: str, *, test_node_count: int) -> str:
     return "not_task_design_candidate"
 
 
-def candidate_from_commit(repo_path: Path, commit: str, committed_at: str, subject: str) -> dict[str, Any] | None:
-    window = window_for_date(committed_at)
+def candidate_from_commit(
+    repo_path: Path,
+    commit: str,
+    committed_at: str,
+    subject: str,
+    *,
+    c_scan_start: dt.datetime | None = None,
+) -> dict[str, Any] | None:
+    window = window_for_date(committed_at, c_scan_start=c_scan_start)
     if window not in {"C", "R", "W_star"} or SKIP_SUBJECT_RE.search(subject):
         return None
     files = changed_files(repo_path, commit)
@@ -211,12 +232,13 @@ def candidate_from_commit(repo_path: Path, commit: str, committed_at: str, subje
     }
 
 
-def commit_rows(repo_path: Path) -> list[dict[str, str]]:
+def commit_rows(repo_path: Path, *, c_scan_start: dt.datetime | None = None) -> list[dict[str, str]]:
+    since = c_scan_start or C_SCAN_START
     completed = run_git(
         repo_path,
         "log",
         "--no-merges",
-        f"--since={C_SCAN_START.isoformat()}",
+        f"--since={since.isoformat()}",
         f"--until={T0.isoformat()}",
         "--format=%H%x00%cI%x00%s",
         timeout=180,
@@ -231,15 +253,21 @@ def commit_rows(repo_path: Path) -> list[dict[str, str]]:
     return rows
 
 
-def discover_candidates(repo_path: Path) -> list[dict[str, Any]]:
-    rows = commit_rows(repo_path)
+def discover_candidates(repo_path: Path, *, c_scan_start: dt.datetime | None = None) -> list[dict[str, Any]]:
+    rows = commit_rows(repo_path, c_scan_start=c_scan_start)
     candidates: list[dict[str, Any]] = []
     seen_subjects: set[str] = set()
     for row in rows:
         subject_key = re.sub(r"\s*\(#\d+\)\s*$", "", row["subject"]).lower()
         if subject_key in seen_subjects:
             continue
-        candidate = candidate_from_commit(repo_path, row["commit"], row["committed_at"], row["subject"])
+        candidate = candidate_from_commit(
+            repo_path,
+            row["commit"],
+            row["committed_at"],
+            row["subject"],
+            c_scan_start=c_scan_start,
+        )
         if candidate is None:
             continue
         seen_subjects.add(subject_key)
@@ -309,10 +337,11 @@ def repo_metadata(repo_path: Path) -> dict[str, Any]:
     }
 
 
-def build_payload(repo_path: Path) -> dict[str, Any]:
+def build_payload(repo_path: Path, *, c_scan_start: dt.datetime | None = None) -> dict[str, Any]:
     if not (repo_path / ".git").exists():
         raise ToolError("Rich checkout is missing", repo_path=str(repo_path))
-    candidates = discover_candidates(repo_path)
+    c_start = c_scan_start or C_SCAN_START
+    candidates = discover_candidates(repo_path, c_scan_start=c_start)
     windows = {window: summarize_window(candidates, window) for window in ["C", "R", "W_star"]}
     w_star = windows["W_star"]
     r_window = windows["R"]
@@ -327,7 +356,7 @@ def build_payload(repo_path: Path) -> dict[str, Any]:
         "metadata": repo_metadata(repo_path),
         "time_split": {
             "T0": "2026-05-14",
-            "C_scanned": {"start": C_SCAN_START.date().isoformat(), "end": C_END.date().isoformat()},
+            "C_scanned": {"start": c_start.date().isoformat(), "end": C_END.date().isoformat()},
             "R": {"start": R_START.date().isoformat(), "end": R_END.date().isoformat()},
             "W_star": {"start": W_STAR_START.date().isoformat(), "end": T0.date().isoformat()},
         },
@@ -359,6 +388,8 @@ def build_payload(repo_path: Path) -> dict[str, Any]:
 
 
 def render_report(payload: Mapping[str, Any]) -> str:
+    time_split = payload.get("time_split") if isinstance(payload.get("time_split"), Mapping) else {}
+    c_scanned = time_split.get("C_scanned") if isinstance(time_split.get("C_scanned"), Mapping) else {}
     lines = [
         "# Rich Task-Admission Readiness",
         "",
@@ -370,7 +401,7 @@ def render_report(payload: Mapping[str, Any]) -> str:
         "- This scan deduplicates commits by normalized subject before counting task-design rows.",
         "- Direct smoke-ready requires source changes, test changes, and extractable pytest nodes from the target diff.",
         "- Source-only rows remain task-design candidates, but require Golden-Oracle verifier construction before admission.",
-        "- C is scanned only from `2025-05-14` to `2025-11-13`; older C can still be used if calibration supply is thin.",
+        f"- C is scanned from `{c_scanned.get('start')}` to `{c_scanned.get('end')}`; older C can still be used if calibration supply is thin.",
         "",
         "## Summary",
         "",
@@ -416,7 +447,7 @@ def run(argv: Sequence[str] | None = None) -> int:
     args = parse_args(argv)
     output = Path(args.output)
     report = Path(args.report)
-    payload = build_payload(Path(args.repo).resolve())
+    payload = build_payload(Path(args.repo).resolve(), c_scan_start=parse_c_scan_start(args.c_scan_start))
     write_json(output, payload)
     report.parent.mkdir(parents=True, exist_ok=True)
     report.write_text(render_report(payload), encoding="utf-8")

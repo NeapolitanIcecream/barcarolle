@@ -18,6 +18,7 @@ from rich_task_admission_readiness import (
     DEFAULT_REPO,
     changed_file_set_digest,
     discover_candidates,
+    parse_c_scan_start,
     run_git,
     sha256_text,
     source_anchor_digest,
@@ -41,6 +42,7 @@ def parse_args(argv: Sequence[str] | None = None) -> argparse.Namespace:
     parser.add_argument("--output", default=str(DEFAULT_OUTPUT), help="Public redacted JSON output.")
     parser.add_argument("--report", default=str(DEFAULT_REPORT), help="Public markdown report.")
     parser.add_argument("--split", choices=["C", "R", "W_star"], default="W_star", help="Time split to smoke.")
+    parser.add_argument("--c-scan-start", default=None, help="Inclusive start date for C calibration scan.")
     parser.add_argument("--candidate-index", type=int, default=0, help="Zero-based direct candidate index within the split.")
     parser.add_argument("--install-timeout-seconds", type=int, default=240)
     parser.add_argument("--verifier-timeout-seconds", type=int, default=120)
@@ -445,10 +447,10 @@ def render_report(payload: Mapping[str, Any]) -> str:
     )
 
 
-def select_candidate(repo_path: Path, index: int, split: str = "W_star") -> Mapping[str, Any]:
+def select_candidate(repo_path: Path, index: int, split: str = "W_star", *, c_scan_start: Any = None) -> Mapping[str, Any]:
     candidates = [
         candidate
-        for candidate in discover_candidates(repo_path)
+        for candidate in discover_candidates(repo_path, c_scan_start=c_scan_start)
         if candidate.get("window") == split and candidate.get("direct_smoke_ready")
     ]
     if not candidates:
@@ -465,7 +467,8 @@ def run(argv: Sequence[str] | None = None) -> int:
     if args.force:
         shutil.rmtree(private_root, ignore_errors=True)
     private_root.mkdir(parents=True, exist_ok=True)
-    candidate = select_candidate(repo_path, args.candidate_index, args.split)
+    c_scan_start = parse_c_scan_start(args.c_scan_start) if args.c_scan_start else None
+    candidate = select_candidate(repo_path, args.candidate_index, args.split, c_scan_start=c_scan_start)
     split_slug = str(args.split).lower().replace("_", "")
     task_pack = materialize_task_pack(
         candidate,
