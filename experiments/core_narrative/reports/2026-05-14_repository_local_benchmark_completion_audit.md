@@ -39,6 +39,7 @@ Do not mark the active goal complete from the current state. The next concrete u
 - `experiments/core_narrative/results/rich_task_admission_readiness_20260514.json`
 - `experiments/core_narrative/results/rich_direct_smoke_pilot_20260514.json`
 - `experiments/core_narrative/results/rich_direct_smoke_batch_20260514.json`
+- `experiments/core_narrative/results/rich_direct_smoke_batch_diagnostics_20260514.json`
 - ACUT manifests for A0-A5, including the newly added A1 and A4 Click variants.
 - `experiments/core_narrative/tools/repository_local_benchmark_admission.py`
 - `experiments/core_narrative/tools/repository_localization_hints.py`
@@ -106,6 +107,16 @@ model calls: 0
 ```
 
 This advances task admission for the direct-oracle subset only. It remains below the 20-primary denominator target and does not include source-only candidates requiring Golden-Oracle construction.
+
+Rejected direct-smoke diagnostics:
+
+```text
+artifact: experiments/core_narrative/results/rich_direct_smoke_batch_diagnostics_20260514.json
+non-discriminating existing tests: 2
+no-op timeout or hanging verifier: 1
+```
+
+The next admission step is to build replacement Golden-Oracle verifiers for no-op-passing tests and prune or replace the timeout verifier. This still remains short of a denominator.
 
 ## Verification Commands
 

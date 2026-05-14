@@ -1,0 +1,62 @@
+{
+  "schema_version": "core-narrative.rich-direct-smoke-batch-diagnostics.v1",
+  "tool": "manual_diagnostic_from_private_batch_artifacts",
+  "status": "completed",
+  "generated_at": "2026-05-14T14:56:00Z",
+  "source_batch": "experiments/core_narrative/results/rich_direct_smoke_batch_20260514.json",
+  "model_calls_made": 0,
+  "primary_runs_authorized": false,
+  "summary": {
+    "accepted_count": 5,
+    "rejected_count": 3,
+    "blocked_count": 1,
+    "rejection_categories": {
+      "non_discriminating_existing_tests": 2,
+      "noop_timeout_or_hanging_verifier": 1
+    }
+  },
+  "rejected_candidates": [
+    {
+      "batch_candidate_index": 6,
+      "source_anchor_digest_prefix": "f326623e430b",
+      "subject_digest": "19b41e3357c8dae7ddebdc7f6b8bde6523b7bbd2066ee39e52933f979a4b6152",
+      "changed_file_set_digest": "aacd90554dbdd1d3a12ca057f7d659da9a4a3fc3ce09059b20813f495b6ebe2f",
+      "family": "parser/mixed integration",
+      "test_node_count": 3,
+      "noop_status": "passed_unexpected",
+      "reference_status": "passed",
+      "diagnosis": "Existing extracted target tests passed on the base tree, so the direct verifier is non-discriminating.",
+      "next_action": "Construct a Golden-Oracle verifier or reject this candidate from the denominator."
+    },
+    {
+      "batch_candidate_index": 7,
+      "source_anchor_digest_prefix": "ce0b26cad60a",
+      "subject_digest": "6b5d61e56078e71fb44287c3741c4998eb027e6f7a0c910a93cf5fd272c07f3f",
+      "changed_file_set_digest": "aacd90554dbdd1d3a12ca057f7d659da9a4a3fc3ce09059b20813f495b6ebe2f",
+      "family": "parser/mixed integration",
+      "test_node_count": 4,
+      "noop_status": "blocked_timeout",
+      "reference_status": "passed",
+      "diagnosis": "No-op verifier timed out after partial pytest progress, so the direct verifier is not admission-safe as selected.",
+      "next_action": "Prune or replace verifier nodes before re-smoke; otherwise reject this candidate from the denominator."
+    },
+    {
+      "batch_candidate_index": 8,
+      "source_anchor_digest_prefix": "a5651c3c40dd",
+      "subject_digest": "ddf3e5b43f8243e47f3efb9bb61b6d4b123989eeb89112f5e2df726b84fbf5b9",
+      "changed_file_set_digest": "aacd90554dbdd1d3a12ca057f7d659da9a4a3fc3ce09059b20813f495b6ebe2f",
+      "family": "parser/mixed integration",
+      "test_node_count": 1,
+      "noop_status": "passed_unexpected",
+      "reference_status": "passed",
+      "diagnosis": "Existing extracted target test passed on the base tree, so the direct verifier is non-discriminating.",
+      "next_action": "Construct a Golden-Oracle verifier or reject this candidate from the denominator."
+    }
+  ],
+  "claim_boundary": [
+    "Diagnostics are derived from ignored private smoke artifacts and redacted public batch output.",
+    "No raw source commits, reference patches, hidden verifier files, or target diffs are published here.",
+    "This does not admit source-only candidates and does not authorize primary ACUT runs."
+  ]
+}
+

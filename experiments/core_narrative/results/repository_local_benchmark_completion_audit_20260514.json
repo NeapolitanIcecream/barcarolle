@@ -14,7 +14,8 @@
     "rich_task_admission_feasibility": "experiments/core_narrative/results/rich_task_admission_feasibility_20260514.json",
     "rich_task_admission_readiness": "experiments/core_narrative/results/rich_task_admission_readiness_20260514.json",
     "rich_direct_smoke_pilot": "experiments/core_narrative/results/rich_direct_smoke_pilot_20260514.json",
-    "rich_direct_smoke_batch": "experiments/core_narrative/results/rich_direct_smoke_batch_20260514.json"
+    "rich_direct_smoke_batch": "experiments/core_narrative/results/rich_direct_smoke_batch_20260514.json",
+    "rich_direct_smoke_batch_diagnostics": "experiments/core_narrative/results/rich_direct_smoke_batch_diagnostics_20260514.json"
   },
   "additional_feasibility_observations": {
     "rich_ambient_collect_only": {
@@ -86,6 +87,13 @@
       "model_calls_made": 0,
       "primary_runs_authorized": false,
       "interpretation": "All current Rich W* direct-oracle candidates were smoke-tested. Five passed admission smoke, but this remains far below the 20-primary denominator target and excludes source-only Golden-Oracle candidates."
+    },
+    "rich_direct_smoke_batch_diagnostics": {
+      "artifact": "experiments/core_narrative/results/rich_direct_smoke_batch_diagnostics_20260514.json",
+      "status": "completed",
+      "non_discriminating_existing_tests": 2,
+      "noop_timeout_or_hanging_verifier": 1,
+      "interpretation": "Rejected direct candidates have actionable next steps: construct replacement Golden-Oracle verifiers for no-op-passing tests and prune/replace the timeout verifier."
     }
   },
   "checklist": [
@@ -113,7 +121,8 @@
         "experiments/core_narrative/results/rich_task_admission_feasibility_20260514.json",
         "experiments/core_narrative/results/rich_task_admission_readiness_20260514.json",
         "experiments/core_narrative/results/rich_direct_smoke_pilot_20260514.json",
-        "experiments/core_narrative/results/rich_direct_smoke_batch_20260514.json"
+        "experiments/core_narrative/results/rich_direct_smoke_batch_20260514.json",
+        "experiments/core_narrative/results/rich_direct_smoke_batch_diagnostics_20260514.json"
       ],
       "gap": "Candidate supply, test-surface presence, family counts, recommendation, Rich collect-only feasibility, Rich task-readiness counts, and direct-oracle W* smoke outcomes are present. Full denominator-scale per-task historical smoke and measured test runtime are not yet measured."
     },
