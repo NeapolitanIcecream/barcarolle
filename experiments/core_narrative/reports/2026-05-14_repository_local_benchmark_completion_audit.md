@@ -6,7 +6,7 @@ Objective file: `/Users/chenmohan/Downloads/barcarolle-research-0514-1.md`
 
 ## Verdict
 
-The 2026-05-14 experiment is not complete as a full C/R/W* benchmark run. The completed work is a repository-admission and protocol-gate phase plus Rich W* direct-smoke, Golden-Oracle queue preparation, three accepted source-only Golden-Oracle pilots, and three accepted replacement-oracle pilots. Click primary execution remains blocked because Click has only 14 W* task-design candidates in the frozen `2026-02-14` to `2026-05-14` window, below the 20-task gate.
+The 2026-05-14 experiment is not complete as a full C/R/W* benchmark run. The completed work is a repository-admission and protocol-gate phase plus Rich W* direct-smoke, Golden-Oracle queue preparation, three accepted source-only Golden-Oracle pilots, three accepted replacement-oracle pilots, and one accepted direct-without-node Oracle pilot. Click primary execution remains blocked because Click has only 14 W* task-design candidates in the frozen `2026-02-14` to `2026-05-14` window, below the 20-task gate.
 
 Do not mark the active goal complete from the current state. The next concrete unblocked step is continued Rich Golden-Oracle verifier construction and no-op/reference admission smoke for the remaining queued W* work items, or a separately preregistered gate revision.
 
@@ -16,14 +16,14 @@ Do not mark the active goal complete from the current state. The next concrete u
 |---|---|---|---|
 | Pivot main line to repository-local benchmark generation and tuning validation; NFL only bonus | covered | `configs/repository_local_benchmark_20260514.yaml` | none |
 | Freeze C/R/W* split at T0 `2026-05-14`; W* fixed to `2026-02-14`..`2026-05-14` | covered | `results/repository_local_benchmark_admission_20260514.json`, `configs/repository_local_benchmark_20260514.yaml` | none |
-| Task 1: repository admission for Click/Rich/Black with counts, feasibility, family diversity, dependency risk, recommendation | partially covered | `reports/2026-05-14_repository_local_benchmark_admission.md`, `results/rich_task_admission_feasibility_20260514.json`, `results/rich_task_admission_readiness_20260514.json`, `results/rich_direct_smoke_batch_20260514.json`, `results/rich_source_oracle_queue_20260514.json`, `results/rich_source_oracle_pilot_20260514.json`, `results/rich_source_oracle_pilot_emoji_20260514.json`, `results/rich_source_oracle_pilot_linkids_20260514.json`, `results/rich_replacement_oracle_pilot_20260514.json`, `results/rich_replacement_oracle_pilot_zerospan_20260514.json`, `results/rich_replacement_oracle_pilot_vs16_20260514.json` | Rich collect-only feasibility, stricter readiness counts, direct-oracle W* smoke outcomes, the W* Golden-Oracle queue, three source-only W* Golden-Oracle admission pilots, and three replacement-oracle admission pilots are measured; full denominator-scale per-task historical smoke and measured test runtime are not. |
-| Task 2: Click C/R/W* construction with no-op/reference/leakage/family/difficulty/digests | blocked, not done | `reports/2026-05-14_repository_local_benchmark_gate.md`, `reports/2026-05-14_rich_task_admission_readiness.md`, `reports/2026-05-14_rich_direct_smoke_batch.md`, `reports/2026-05-14_rich_source_oracle_queue.md`, `reports/2026-05-14_rich_source_oracle_pilot.md`, `reports/2026-05-14_rich_source_oracle_pilot_emoji.md`, `reports/2026-05-14_rich_source_oracle_pilot_linkids.md`, `reports/2026-05-14_rich_replacement_oracle_pilot.md`, `reports/2026-05-14_rich_replacement_oracle_pilot_zerospan.md`, `reports/2026-05-14_rich_replacement_oracle_pilot_vs16.md` | Click W* supply is below gate. Rich has 23 stricter W* design candidates and 8 direct smoke-ready candidates; all 8 direct candidates were smoked and 5 were accepted. Three source-only Golden-Oracle candidates and three replacement-oracle candidates were also accepted, raising admitted Rich W* tasks to 11. No denominator is admitted or frozen. |
+| Task 1: repository admission for Click/Rich/Black with counts, feasibility, family diversity, dependency risk, recommendation | partially covered | `reports/2026-05-14_repository_local_benchmark_admission.md`, `results/rich_task_admission_feasibility_20260514.json`, `results/rich_task_admission_readiness_20260514.json`, `results/rich_direct_smoke_batch_20260514.json`, `results/rich_source_oracle_queue_20260514.json`, `results/rich_source_oracle_pilot_20260514.json`, `results/rich_source_oracle_pilot_emoji_20260514.json`, `results/rich_source_oracle_pilot_linkids_20260514.json`, `results/rich_replacement_oracle_pilot_20260514.json`, `results/rich_replacement_oracle_pilot_zerospan_20260514.json`, `results/rich_replacement_oracle_pilot_vs16_20260514.json`, `results/rich_direct_without_nodes_oracle_pilot_20260514.json` | Rich collect-only feasibility, stricter readiness counts, direct-oracle W* smoke outcomes, the W* Golden-Oracle queue, three source-only W* Golden-Oracle admission pilots, three replacement-oracle admission pilots, and one direct-without-node Oracle pilot are measured; full denominator-scale per-task historical smoke and measured test runtime are not. |
+| Task 2: Click C/R/W* construction with no-op/reference/leakage/family/difficulty/digests | blocked, not done | `reports/2026-05-14_repository_local_benchmark_gate.md`, `reports/2026-05-14_rich_task_admission_readiness.md`, `reports/2026-05-14_rich_direct_smoke_batch.md`, `reports/2026-05-14_rich_source_oracle_queue.md`, `reports/2026-05-14_rich_source_oracle_pilot.md`, `reports/2026-05-14_rich_source_oracle_pilot_emoji.md`, `reports/2026-05-14_rich_source_oracle_pilot_linkids.md`, `reports/2026-05-14_rich_replacement_oracle_pilot.md`, `reports/2026-05-14_rich_replacement_oracle_pilot_zerospan.md`, `reports/2026-05-14_rich_replacement_oracle_pilot_vs16.md`, `reports/2026-05-14_rich_direct_without_nodes_oracle_pilot.md` | Click W* supply is below gate. Rich has 23 stricter W* design candidates and 8 direct smoke-ready candidates; all 8 direct candidates were smoked and 5 were accepted. Three source-only Golden-Oracle candidates, three replacement-oracle candidates, and one direct-without-node Oracle candidate were also accepted, raising admitted Rich W* tasks to 12. No denominator is admitted or frozen. |
 | Task 3: Golden-Selector/Taskwright/Oracle/Auditor role isolation with prompt hashes, artifact digests, admission decisions | specified, not executed | `configs/repository_local_benchmark_20260514.yaml` | No 0514 role-run outputs or prompt hashes exist. |
 | Task 4: ACUT/intervention manifests A0-A5, A4 limited to public statement + repo tree/source | partially covered | A0/A2/A3/A5 existing, A1/A4 Click variants added, `tools/repository_localization_hints.py` | Rich execution needs Rich or repository-neutral intervention variants. |
 | Task 5: run R and W* one primary attempt per ACUT/task with fixed denominator and hidden verifier | not done | Gate report records non-action | No denominator was admitted; no primary attempts authorized or run. |
 | Task 6: analyze R_score, W*_score, paired deltas, R-selected, W*-best, regret, correlation, family effects, ablation | not done | none | No primary result table exists. |
 | Output: repository admission report | covered | `reports/2026-05-14_repository_local_benchmark_admission.md` | none |
-| Output: task generation validity report | partial W* smoke only | `reports/2026-05-14_rich_direct_smoke_batch.md`, `reports/2026-05-14_rich_source_oracle_queue.md`, `reports/2026-05-14_rich_source_oracle_pilot.md`, `reports/2026-05-14_rich_source_oracle_pilot_emoji.md`, `reports/2026-05-14_rich_source_oracle_pilot_linkids.md`, `reports/2026-05-14_rich_replacement_oracle_pilot.md`, `reports/2026-05-14_rich_replacement_oracle_pilot_zerospan.md`, `reports/2026-05-14_rich_replacement_oracle_pilot_vs16.md` | All 8 current Rich W* direct-oracle candidates were smoked; 5 passed no-op/reference smoke, 2 no-op passed unexpectedly, and 1 no-op timed out. The W* Golden-Oracle construction queue has 18 work items; 3 source-only Golden-Oracle pilots and 3 replacement-oracle pilots passed no-op/reference admission smoke. Full C/R/W* task generation validity is not produced. |
+| Output: task generation validity report | partial W* smoke only | `reports/2026-05-14_rich_direct_smoke_batch.md`, `reports/2026-05-14_rich_source_oracle_queue.md`, `reports/2026-05-14_rich_source_oracle_pilot.md`, `reports/2026-05-14_rich_source_oracle_pilot_emoji.md`, `reports/2026-05-14_rich_source_oracle_pilot_linkids.md`, `reports/2026-05-14_rich_replacement_oracle_pilot.md`, `reports/2026-05-14_rich_replacement_oracle_pilot_zerospan.md`, `reports/2026-05-14_rich_replacement_oracle_pilot_vs16.md`, `reports/2026-05-14_rich_direct_without_nodes_oracle_pilot.md` | All 8 current Rich W* direct-oracle candidates were smoked; 5 passed no-op/reference smoke, 2 no-op passed unexpectedly, and 1 no-op timed out. The W* Golden-Oracle construction queue has 18 work items; 3 source-only Golden-Oracle pilots, 3 replacement-oracle pilots, and 1 direct-without-node Oracle pilot passed no-op/reference admission smoke. Full C/R/W* task generation validity is not produced. |
 | Output: R/W* primary result report | not done | none | No primary attempts were run. |
 | Output: decision-validity report | gate only | `reports/2026-05-14_repository_local_benchmark_gate.md` | R -> W* decision validity cannot be assessed without runs. |
 | Output: threats-to-validity report | gate only | `reports/2026-05-14_repository_local_benchmark_gate.md` | Full experiment threats remain pending. |
@@ -47,6 +47,7 @@ Do not mark the active goal complete from the current state. The next concrete u
 - `experiments/core_narrative/results/rich_replacement_oracle_pilot_20260514.json`
 - `experiments/core_narrative/results/rich_replacement_oracle_pilot_zerospan_20260514.json`
 - `experiments/core_narrative/results/rich_replacement_oracle_pilot_vs16_20260514.json`
+- `experiments/core_narrative/results/rich_direct_without_nodes_oracle_pilot_20260514.json`
 - ACUT manifests for A0-A5, including the newly added A1 and A4 Click variants.
 - `experiments/core_narrative/tools/repository_local_benchmark_admission.py`
 - `experiments/core_narrative/tools/repository_localization_hints.py`
@@ -228,7 +229,21 @@ additional acceptances needed for 20 primary: 9
 model calls: 0
 ```
 
-Together these admit three source-only Rich W* tasks and three replacement-oracle W* tasks through no-op/reference smoke. They still do not freeze a denominator or authorize any primary model attempt.
+Direct-without-node Oracle pilot:
+
+```text
+artifact: experiments/core_narrative/results/rich_direct_without_nodes_oracle_pilot_20260514.json
+scope: one W* direct-tests-without-extractable-nodes candidate
+oracle template: import_side_effects_lazy_inspect_console
+no-op status: failed
+reference status: passed
+admission decision: accepted
+accepted W* tasks after pilot: 12
+additional acceptances needed for 20 primary: 8
+model calls: 0
+```
+
+Together these admit three source-only Rich W* tasks, three replacement-oracle W* tasks, and one direct-without-node W* task through no-op/reference smoke. They still do not freeze a denominator or authorize any primary model attempt.
 
 ## Verification Commands
 
@@ -249,6 +264,7 @@ python3 -m json.tool experiments/core_narrative/results/rich_source_oracle_pilot
 python3 -m json.tool experiments/core_narrative/results/rich_replacement_oracle_pilot_20260514.json
 python3 -m json.tool experiments/core_narrative/results/rich_replacement_oracle_pilot_zerospan_20260514.json
 python3 -m json.tool experiments/core_narrative/results/rich_replacement_oracle_pilot_vs16_20260514.json
+python3 -m json.tool experiments/core_narrative/results/rich_direct_without_nodes_oracle_pilot_20260514.json
 python3 -m json.tool experiments/core_narrative/results/repository_local_benchmark_completion_audit_20260514.json
 git diff --check
 ```
@@ -257,4 +273,4 @@ These commands verify the committed gate and queue tools and manifests. They do 
 
 ## Next Work
 
-Proceed with Rich Golden-Oracle verifier construction and no-op/reference admission smoke if the 0514 line continues. Rich currently has 11 accepted W* tasks: 5 direct-smoke tasks, 3 source-only Golden-Oracle pilots, and 3 replacement-oracle pilots. Reaching 20 primary tasks requires 9 more accepted W* tasks. The 20-primary plus 5-reserve target and the 40-candidate pool target remain unmet unless the gate is explicitly revised.
+Proceed with Rich Golden-Oracle verifier construction and no-op/reference admission smoke if the 0514 line continues. Rich currently has 12 accepted W* tasks: 5 direct-smoke tasks, 3 source-only Golden-Oracle pilots, 3 replacement-oracle pilots, and 1 direct-without-node Oracle pilot. Reaching 20 primary tasks requires 8 more accepted W* tasks. The 20-primary plus 5-reserve target and the 40-candidate pool target remain unmet unless the gate is explicitly revised.

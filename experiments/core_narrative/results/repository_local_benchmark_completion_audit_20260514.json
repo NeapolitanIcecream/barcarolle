@@ -1,7 +1,7 @@
 {
   "schema_version": "core-narrative.repository-local-benchmark-completion-audit.v1",
   "audit_id": "repository-local-benchmark-20260514-completion-audit",
-  "audited_at": "2026-05-14T15:36:21Z",
+  "audited_at": "2026-05-14T15:45:31Z",
   "objective_file": "/Users/chenmohan/Downloads/barcarolle-research-0514-1.md",
   "overall_verdict": "not_complete_blocked_before_task_admission_and_primary_runs",
   "active_goal_should_be_marked_complete": false,
@@ -22,7 +22,8 @@
     "rich_source_oracle_pilot_linkids": "experiments/core_narrative/results/rich_source_oracle_pilot_linkids_20260514.json",
     "rich_replacement_oracle_pilot": "experiments/core_narrative/results/rich_replacement_oracle_pilot_20260514.json",
     "rich_replacement_oracle_pilot_zerospan": "experiments/core_narrative/results/rich_replacement_oracle_pilot_zerospan_20260514.json",
-    "rich_replacement_oracle_pilot_vs16": "experiments/core_narrative/results/rich_replacement_oracle_pilot_vs16_20260514.json"
+    "rich_replacement_oracle_pilot_vs16": "experiments/core_narrative/results/rich_replacement_oracle_pilot_vs16_20260514.json",
+    "rich_direct_without_nodes_oracle_pilot": "experiments/core_narrative/results/rich_direct_without_nodes_oracle_pilot_20260514.json"
   },
   "additional_feasibility_observations": {
     "rich_ambient_collect_only": {
@@ -222,7 +223,24 @@
       "remaining_queued_oracle_work_items_after_replacement_pilots": 12,
       "model_calls_made": 0,
       "primary_runs_authorized": false,
-      "interpretation": "A third Rich W* rejected direct candidate passed replacement-oracle no-op/reference admission smoke. This raises admitted W* task count to 11, still below the 20-primary denominator target."
+      "interpretation": "A third Rich W* rejected direct candidate passed replacement-oracle no-op/reference admission smoke. This raised admitted W* task count to 11 before the direct-without-node Oracle pilot, still below the 20-primary denominator target."
+    },
+    "rich_direct_without_nodes_oracle_pilot": {
+      "artifact": "experiments/core_narrative/results/rich_direct_without_nodes_oracle_pilot_20260514.json",
+      "status": "completed",
+      "split": "W_star",
+      "family": "traceback/logging/inspect",
+      "oracle_template": "import_side_effects_lazy_inspect_console",
+      "no_op_status": "failed",
+      "reference_status": "passed",
+      "admission_decision": "accepted",
+      "accepted_direct_without_node_oracle_tasks_total": 1,
+      "accepted_w_star_tasks_total_after_direct_without_node_pilot": 12,
+      "additional_acceptances_needed_for_20_primary_after_direct_without_node_pilot": 8,
+      "remaining_queued_oracle_work_items_after_direct_without_node_pilot": 11,
+      "model_calls_made": 0,
+      "primary_runs_authorized": false,
+      "interpretation": "One Rich W* direct-tests-without-extractable-nodes candidate passed no-op/reference admission smoke. This raises admitted W* task count to 12, still below the 20-primary denominator target."
     }
   },
   "checklist": [
@@ -258,9 +276,10 @@
         "experiments/core_narrative/results/rich_source_oracle_pilot_linkids_20260514.json",
         "experiments/core_narrative/results/rich_replacement_oracle_pilot_20260514.json",
         "experiments/core_narrative/results/rich_replacement_oracle_pilot_zerospan_20260514.json",
-        "experiments/core_narrative/results/rich_replacement_oracle_pilot_vs16_20260514.json"
+        "experiments/core_narrative/results/rich_replacement_oracle_pilot_vs16_20260514.json",
+        "experiments/core_narrative/results/rich_direct_without_nodes_oracle_pilot_20260514.json"
       ],
-      "gap": "Candidate supply, test-surface presence, family counts, recommendation, Rich collect-only feasibility, Rich task-readiness counts, direct-oracle W* smoke outcomes, the W* Golden-Oracle queue, three source-only W* Golden-Oracle admission pilots, and three replacement-oracle admission pilots are present. Full denominator-scale per-task historical smoke and measured test runtime are not yet measured."
+      "gap": "Candidate supply, test-surface presence, family counts, recommendation, Rich collect-only feasibility, Rich task-readiness counts, direct-oracle W* smoke outcomes, the W* Golden-Oracle queue, three source-only W* Golden-Oracle admission pilots, three replacement-oracle admission pilots, and one direct-without-node Oracle pilot are present. Full denominator-scale per-task historical smoke and measured test runtime are not yet measured."
     },
     {
       "requirement": "Task 2: construct Click C/R/W* task sets: C 20-40, R 40 candidates -> 20 primary + 5 reserve, W* 40 candidates -> 20 primary + 5 reserve, with no-op/reference/leakage/family/difficulty/digests.",
@@ -276,9 +295,10 @@
         "experiments/core_narrative/reports/2026-05-14_rich_source_oracle_pilot_linkids.md",
         "experiments/core_narrative/reports/2026-05-14_rich_replacement_oracle_pilot.md",
         "experiments/core_narrative/reports/2026-05-14_rich_replacement_oracle_pilot_zerospan.md",
-        "experiments/core_narrative/reports/2026-05-14_rich_replacement_oracle_pilot_vs16.md"
+        "experiments/core_narrative/reports/2026-05-14_rich_replacement_oracle_pilot_vs16.md",
+        "experiments/core_narrative/reports/2026-05-14_rich_direct_without_nodes_oracle_pilot.md"
       ],
-      "gap": "Click W* has only 14 task-design candidates in the frozen window, below the 20-task gate. Rich has 23 stricter W* design candidates and 8 direct smoke-ready candidates; all 8 direct candidates were smoked and 5 were accepted. Three source-only Golden-Oracle candidates and three replacement-oracle candidates were also accepted, raising admitted Rich W* tasks to 11. No 0514 C/R/W* denominator was admitted or frozen."
+      "gap": "Click W* has only 14 task-design candidates in the frozen window, below the 20-task gate. Rich has 23 stricter W* design candidates and 8 direct smoke-ready candidates; all 8 direct candidates were smoked and 5 were accepted. Three source-only Golden-Oracle candidates, three replacement-oracle candidates, and one direct-without-node Oracle candidate were also accepted, raising admitted Rich W* tasks to 12. No 0514 C/R/W* denominator was admitted or frozen."
     },
     {
       "requirement": "Task 3: Codex role isolation for Golden-Selector, Golden-Taskwright, Golden-Oracle, Golden-Auditor with prompt hashes, artifact digests, and admission decisions.",
@@ -334,9 +354,10 @@
         "experiments/core_narrative/reports/2026-05-14_rich_source_oracle_pilot_linkids.md",
         "experiments/core_narrative/reports/2026-05-14_rich_replacement_oracle_pilot.md",
         "experiments/core_narrative/reports/2026-05-14_rich_replacement_oracle_pilot_zerospan.md",
-        "experiments/core_narrative/reports/2026-05-14_rich_replacement_oracle_pilot_vs16.md"
+        "experiments/core_narrative/reports/2026-05-14_rich_replacement_oracle_pilot_vs16.md",
+        "experiments/core_narrative/reports/2026-05-14_rich_direct_without_nodes_oracle_pilot.md"
       ],
-      "gap": "All 8 current Rich W* direct-oracle candidates were smoked; 5 passed no-op/reference admission smoke, 2 no-op passed unexpectedly, and 1 no-op timed out. The W* Golden-Oracle construction queue has 18 work items; 3 source-only Golden-Oracle pilots and 3 replacement-oracle pilots passed no-op/reference admission smoke. Full task generation validity for C/R/W* is not produced."
+      "gap": "All 8 current Rich W* direct-oracle candidates were smoked; 5 passed no-op/reference admission smoke, 2 no-op passed unexpectedly, and 1 no-op timed out. The W* Golden-Oracle construction queue has 18 work items; 3 source-only Golden-Oracle pilots, 3 replacement-oracle pilots, and 1 direct-without-node Oracle pilot passed no-op/reference admission smoke. Full task generation validity for C/R/W* is not produced."
     },
     {
       "requirement": "Output: R/W* primary result report.",

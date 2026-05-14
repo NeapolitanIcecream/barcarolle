@@ -1,0 +1,42 @@
+{
+  "admission_decision": "accepted",
+  "base_anchor_digest": "f31f22f035fd330abe18a410b48b670b1c56e5db90dff4b716fedcaede83c90b",
+  "changed_file_set_digest": "0f7e7c951c24da1d268765c304ee346de4d1d630955d915e618f29cc76bdfdc9",
+  "claim_boundary": [
+    "This is a one-candidate direct-without-node Oracle smoke pilot, not a frozen Rich denominator.",
+    "Raw source commits, raw subjects, reference patches, and hidden verifier files are retained only in ignored private artifacts.",
+    "No ACUT primary attempt or model call was made."
+  ],
+  "family": "traceback/logging/inspect",
+  "generated_at": "2026-05-14T15:45:23.568352Z",
+  "hidden_verifier_digest": "ac39b2962582d685e103f281f753fe617274670cc9048457ac0dd5a6d50cfd17",
+  "model_calls_made": 0,
+  "no_op_result": {
+    "public_artifact_redacted": true,
+    "status": "failed",
+    "verifier_exit_code": 1
+  },
+  "oracle_template": "import_side_effects_lazy_inspect_console",
+  "pilot_scope": "one_direct_tests_without_extractable_nodes_candidate",
+  "primary_runs_authorized": false,
+  "private_artifact_root": "experiments/core_narrative/large_artifacts/rich_direct_without_nodes_oracle_pilot_20260514",
+  "reference_patch_bytes": 2772,
+  "reference_patch_digest": "537c3d1804f3d265de8cab9de016d18fbe160e345e20c0c599d9f9f6d769591b",
+  "reference_result": {
+    "public_artifact_redacted": true,
+    "status": "passed",
+    "verifier_exit_code": 0
+  },
+  "repo_slug": "rich",
+  "schema_version": "core-narrative.rich-direct-without-nodes-oracle-pilot.v1",
+  "source_anchor_digest": "c18710f209162d977b5c65ffff231fb534d8361f9a18840b857e62c39c4a0d7c",
+  "source_file_count": 3,
+  "split": "W_star",
+  "statement_digest": "c80cc32f5ea8f083b1b39e342f4bfc1679279578ada461ea96a968a031456749",
+  "status": "completed",
+  "subject_digest": "1e85f421ed8b09e3ed5522c553c6bcfb5257cedce759307d19a74b9ffe1c24ab",
+  "surface": "source_and_tests",
+  "test_file_count": 1,
+  "test_node_count": 1,
+  "tool": "rich_direct_without_nodes_oracle_pilot"
+}
