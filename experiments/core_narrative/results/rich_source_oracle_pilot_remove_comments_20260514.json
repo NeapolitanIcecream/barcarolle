@@ -1,0 +1,44 @@
+{
+  "admission_decision": "accepted",
+  "base_anchor_digest": "a78cea88b24e53a04f1f6d124ac699eb78697a9f6b614ca716a76a8403bb7146",
+  "changed_file_set_digest": "9637ba26e1a378f6282b34ef7889e7b40b6d6f81426e77d60156ee19318f41f6",
+  "claim_boundary": [
+    "This is a one-candidate source-only Golden-Oracle smoke pilot, not a frozen Rich denominator.",
+    "Raw source commits, raw subjects, reference patches, and hidden verifier files are retained only in ignored private artifacts.",
+    "No ACUT primary attempt or model call was made."
+  ],
+  "family": "parser/mixed integration",
+  "generated_at": "2026-05-14T16:14:31.326790Z",
+  "hidden_verifier_digest": "7823bea7e2e642f345acae89a6f517102293f1bfeeeb889da248bddce25da6cb",
+  "model_calls_made": 0,
+  "no_op_result": {
+    "public_artifact_redacted": true,
+    "status": "failed",
+    "verifier_exit_code": 1
+  },
+  "oracle_priority": "low",
+  "oracle_template": "markdown_tabledata_stale_comments_removed",
+  "pilot_scope": "one_source_only_golden_oracle_candidate",
+  "primary_runs_authorized": false,
+  "private_artifact_root": "experiments/core_narrative/large_artifacts/rich_source_oracle_pilot_remove_comments_20260514",
+  "reference_patch_bytes": 501,
+  "reference_patch_digest": "6942836140fb68482f231d70471f8a9b1c5aa6f6e97b45820e6f2ab75e8e6274",
+  "reference_result": {
+    "public_artifact_redacted": true,
+    "status": "passed",
+    "verifier_exit_code": 0
+  },
+  "repo_slug": "rich",
+  "schema_version": "core-narrative.rich-source-oracle-pilot.v1",
+  "source_anchor_digest": "f9aea3b040d01fa43c3ada2cfc7d2595e8211a485b397b418edcf3c1fbcb0a28",
+  "source_file_count": 1,
+  "split": "W_star",
+  "statement_digest": "3d3719f9ebf26088f952ce04e191fe43fe806af48605cae91274d98694ce8632",
+  "status": "completed",
+  "subject_digest": "ad1a2bafd2e4a6b804dcd785da0e623e67bf9b86f6c37c8dc91b741b854f6871",
+  "surface": "source_without_tests",
+  "test_file_count": 0,
+  "test_node_count": 1,
+  "tool": "rich_source_oracle_pilot",
+  "triage_code": "deprioritized_low_behavior_signal"
+}

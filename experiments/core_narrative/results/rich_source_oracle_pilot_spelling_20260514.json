@@ -1,0 +1,44 @@
+{
+  "admission_decision": "accepted",
+  "base_anchor_digest": "f326623e430b07e7f64a553f7b25d9442cd1d65df26f60f9de7d629bf8fb07b5",
+  "changed_file_set_digest": "f62001e805a7b08d7c4bba9cb3e2900153ebb5dbba9a46446c9a297272a38bfc",
+  "claim_boundary": [
+    "This is a one-candidate source-only Golden-Oracle smoke pilot, not a frozen Rich denominator.",
+    "Raw source commits, raw subjects, reference patches, and hidden verifier files are retained only in ignored private artifacts.",
+    "No ACUT primary attempt or model call was made."
+  ],
+  "family": "parser/mixed integration",
+  "generated_at": "2026-05-14T16:14:15.949897Z",
+  "hidden_verifier_digest": "842de5e9beb32f40efeb4a0ca99681cfc6e1faa4ffa6b44057f0956ecc6cf4e2",
+  "model_calls_made": 0,
+  "no_op_result": {
+    "public_artifact_redacted": true,
+    "status": "failed",
+    "verifier_exit_code": 1
+  },
+  "oracle_priority": "low",
+  "oracle_template": "cells_split_graphemes_docstring_spelling",
+  "pilot_scope": "one_source_only_golden_oracle_candidate",
+  "primary_runs_authorized": false,
+  "private_artifact_root": "experiments/core_narrative/large_artifacts/rich_source_oracle_pilot_spelling_20260514",
+  "reference_patch_bytes": 815,
+  "reference_patch_digest": "7a81e2041238159ade31995554771f148836568f921cba51107e821fbf590b94",
+  "reference_result": {
+    "public_artifact_redacted": true,
+    "status": "passed",
+    "verifier_exit_code": 0
+  },
+  "repo_slug": "rich",
+  "schema_version": "core-narrative.rich-source-oracle-pilot.v1",
+  "source_anchor_digest": "57e095d35933091dbd775e8fb59beeb0352a898ff422189123a6f7f6400960ce",
+  "source_file_count": 1,
+  "split": "W_star",
+  "statement_digest": "8a3849d65e72a9d4590727d9906fdc6a7a5e9630d589b916c17dd736cd519565",
+  "status": "completed",
+  "subject_digest": "1ff13fab66be01ebfabe5bac71b6943e72a263b9f1482da0e0606951ee81c353",
+  "surface": "source_without_tests",
+  "test_file_count": 0,
+  "test_node_count": 1,
+  "tool": "rich_source_oracle_pilot",
+  "triage_code": "deprioritized_low_behavior_signal"
+}

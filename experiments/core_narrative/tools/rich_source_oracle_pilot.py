@@ -193,6 +193,45 @@ def test_emoji_module_main_runs_after_lazy_code_table_import() -> None:
     assert stream.getvalue()
 '''
 
+CALLER_FRAME_DOCSTRING_TEST = PEP604_TYPING_ALIAS_SHIM + '''\
+from rich.console import Console
+
+
+def test_caller_frame_docstring_documents_none_default() -> None:
+    """The caller frame helper docstring should document the None default."""
+    doc = Console._caller_frame_info.__doc__ or ""
+    assert "Defaults to None" in doc
+    assert "inspect.currentframe()" in doc
+    assert "Defaults to ``sys._getframe``" not in doc
+'''
+
+SPLIT_GRAPHEMES_DOCSTRING_TEST = '''\
+from __future__ import annotations
+
+from rich.cells import split_graphemes
+
+
+def test_split_graphemes_docstring_spells_additionally() -> None:
+    """The split_graphemes docstring should spell additionally correctly."""
+    doc = split_graphemes.__doc__ or ""
+    assert "additionally" in doc
+    assert "additonally" not in doc
+'''
+
+MARKDOWN_STALE_COMMENTS_REMOVED_TEST = '''\
+from __future__ import annotations
+
+from pathlib import Path
+
+
+def test_tabledata_append_stale_commented_code_removed() -> None:
+    """The obsolete commented-out TableDataElement append code should be removed."""
+    source = Path("rich/markdown.py").read_text(encoding="utf-8")
+    assert "# text = Text(text)" not in source
+    assert "# text.stylize(context.current_style)" not in source
+    assert "# self.content.append_text(text)" not in source
+'''
+
 
 def parse_args(argv: Sequence[str] | None = None) -> argparse.Namespace:
     parser = argparse.ArgumentParser(description=__doc__)
@@ -296,6 +335,18 @@ def hidden_verifier_for_candidate(candidate: Mapping[str, Any]) -> dict[str, Any
             "test_node_count": 1,
             "oracle_template": "console_save_pathlike_str_annotations",
         }
+    if subject == "fix docstring" and "rich/console.py" in source_files:
+        return {
+            "hidden_files": [
+                {
+                    "path": "tests/test_console_caller_frame_docstring.py",
+                    "content": CALLER_FRAME_DOCSTRING_TEST,
+                }
+            ],
+            "command": ".venv/bin/python -m pytest -q tests/test_console_caller_frame_docstring.py",
+            "test_node_count": 1,
+            "oracle_template": "console_caller_frame_docstring_none_default",
+        }
     if subject == "refactor: remove dead _svg_hash function" and "rich/console.py" in source_files:
         return {
             "hidden_files": [
@@ -319,6 +370,30 @@ def hidden_verifier_for_candidate(candidate: Mapping[str, Any]) -> dict[str, Any
             "command": ".venv/bin/python -m pytest -q tests/test_emoji_module_main.py",
             "test_node_count": 1,
             "oracle_template": "emoji_module_main_lazy_codes_import",
+        }
+    if subject == "spelling" and "rich/cells.py" in source_files:
+        return {
+            "hidden_files": [
+                {
+                    "path": "tests/test_cells_split_graphemes_docstring.py",
+                    "content": SPLIT_GRAPHEMES_DOCSTRING_TEST,
+                }
+            ],
+            "command": ".venv/bin/python -m pytest -q tests/test_cells_split_graphemes_docstring.py",
+            "test_node_count": 1,
+            "oracle_template": "cells_split_graphemes_docstring_spelling",
+        }
+    if subject == "remove comments" and "rich/markdown.py" in source_files:
+        return {
+            "hidden_files": [
+                {
+                    "path": "tests/test_markdown_stale_comments_removed.py",
+                    "content": MARKDOWN_STALE_COMMENTS_REMOVED_TEST,
+                }
+            ],
+            "command": ".venv/bin/python -m pytest -q tests/test_markdown_stale_comments_removed.py",
+            "test_node_count": 1,
+            "oracle_template": "markdown_tabledata_stale_comments_removed",
         }
     raise ToolError(
         "no source-oracle template is available for selected candidate",

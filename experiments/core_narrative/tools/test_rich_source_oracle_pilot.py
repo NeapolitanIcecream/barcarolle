@@ -39,8 +39,8 @@ class RichSourceOraclePilotTests(unittest.TestCase):
     def test_unknown_source_only_candidate_blocks_without_template(self) -> None:
         """Source-only pilots fail closed when no hidden-verifier template exists."""
         candidate = self.kbd_candidate()
-        candidate["subject"] = "remove comments"
-        candidate["source_files"] = ["rich/markdown.py"]
+        candidate["subject"] = "ws"
+        candidate["source_files"] = ["rich/ansi.py"]
 
         with self.assertRaises(ToolError):
             pilot.hidden_verifier_for_candidate(candidate)
@@ -117,6 +117,21 @@ class RichSourceOraclePilotTests(unittest.TestCase):
         self.assertIn('("save_text", "save_html", "save_svg")', content)
         self.assertIn("typing.get_args(candidate) == (str,)", content)
 
+    def test_hidden_verifier_template_covers_caller_frame_docstring(self) -> None:
+        """The docstring verifier checks the caller-frame helper documents None correctly."""
+        verifier = pilot.hidden_verifier_for_candidate(
+            {
+                "subject": "fix docstring",
+                "source_files": ["rich/console.py"],
+            }
+        )
+
+        self.assertEqual(verifier["oracle_template"], "console_caller_frame_docstring_none_default")
+        self.assertIn("tests/test_console_caller_frame_docstring.py", verifier["command"])
+        content = verifier["hidden_files"][0]["content"]
+        self.assertIn("Defaults to None", content)
+        self.assertIn("inspect.currentframe()", content)
+
     def test_hidden_verifier_template_covers_dead_svg_hash_removal(self) -> None:
         """The SVG hash verifier checks the obsolete private helper is absent."""
         verifier = pilot.hidden_verifier_for_candidate(
@@ -144,6 +159,36 @@ class RichSourceOraclePilotTests(unittest.TestCase):
         content = verifier["hidden_files"][0]["content"]
         self.assertIn('runpy.run_module("rich.emoji", run_name="__main__")', content)
         self.assertIn("contextlib.redirect_stdout", content)
+
+    def test_hidden_verifier_template_covers_split_graphemes_docstring_spelling(self) -> None:
+        """The spelling verifier checks the split_graphemes docstring typo is gone."""
+        verifier = pilot.hidden_verifier_for_candidate(
+            {
+                "subject": " spelling",
+                "source_files": ["rich/cells.py"],
+            }
+        )
+
+        self.assertEqual(verifier["oracle_template"], "cells_split_graphemes_docstring_spelling")
+        self.assertIn("tests/test_cells_split_graphemes_docstring.py", verifier["command"])
+        content = verifier["hidden_files"][0]["content"]
+        self.assertIn('"additionally" in doc', content)
+        self.assertIn('"additonally" not in doc', content)
+
+    def test_hidden_verifier_template_covers_stale_markdown_comment_removal(self) -> None:
+        """The comment-removal verifier checks obsolete commented TableDataElement code is absent."""
+        verifier = pilot.hidden_verifier_for_candidate(
+            {
+                "subject": "remove comments",
+                "source_files": ["rich/markdown.py"],
+            }
+        )
+
+        self.assertEqual(verifier["oracle_template"], "markdown_tabledata_stale_comments_removed")
+        self.assertIn("tests/test_markdown_stale_comments_removed.py", verifier["command"])
+        content = verifier["hidden_files"][0]["content"]
+        self.assertIn("# text = Text(text)", content)
+        self.assertIn("# self.content.append_text(text)", content)
 
     def test_public_result_redacts_raw_source_anchors_and_subject(self) -> None:
         """Public pilot results keep raw commits, subjects, and hidden files private."""

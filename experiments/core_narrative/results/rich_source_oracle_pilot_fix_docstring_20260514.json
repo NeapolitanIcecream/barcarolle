@@ -1,0 +1,44 @@
+{
+  "admission_decision": "accepted",
+  "base_anchor_digest": "a1e0feedd37278e6a1b259e4b55b8a919652f182ec53ef3ab3891b86cff7c1da",
+  "changed_file_set_digest": "8f507d88f3d034716fad069c6a73da25e2915a216a2bdda6db2e8d0c13a0020a",
+  "claim_boundary": [
+    "This is a one-candidate source-only Golden-Oracle smoke pilot, not a frozen Rich denominator.",
+    "Raw source commits, raw subjects, reference patches, and hidden verifier files are retained only in ignored private artifacts.",
+    "No ACUT primary attempt or model call was made."
+  ],
+  "family": "console/rendering",
+  "generated_at": "2026-05-14T16:14:00.327359Z",
+  "hidden_verifier_digest": "26189ac8074cf96b7cb60ff79a27dc188234960329c666d6f06d3d6d894f146a",
+  "model_calls_made": 0,
+  "no_op_result": {
+    "public_artifact_redacted": true,
+    "status": "failed",
+    "verifier_exit_code": 1
+  },
+  "oracle_priority": "low",
+  "oracle_template": "console_caller_frame_docstring_none_default",
+  "pilot_scope": "one_source_only_golden_oracle_candidate",
+  "primary_runs_authorized": false,
+  "private_artifact_root": "experiments/core_narrative/large_artifacts/rich_source_oracle_pilot_fix_docstring_20260514",
+  "reference_patch_bytes": 647,
+  "reference_patch_digest": "376631eb6ed2fafd8636b7a67efe0f6c5ee44c1af0b6729006e66dbdaef09e29",
+  "reference_result": {
+    "public_artifact_redacted": true,
+    "status": "passed",
+    "verifier_exit_code": 0
+  },
+  "repo_slug": "rich",
+  "schema_version": "core-narrative.rich-source-oracle-pilot.v1",
+  "source_anchor_digest": "eddc3960633325b3de60d7b26b988b62f21695b85ef699142f1ba2ed99d66227",
+  "source_file_count": 1,
+  "split": "W_star",
+  "statement_digest": "5b6eea3426a98b79b6f53c0684960c89a2b15d27a33158a15db0776041486803",
+  "status": "completed",
+  "subject_digest": "37f44829cea3ccdf11951a980fa7df6228e8bf4f79f63def9c5120b959c9bd9c",
+  "surface": "source_without_tests",
+  "test_file_count": 0,
+  "test_node_count": 1,
+  "tool": "rich_source_oracle_pilot",
+  "triage_code": "deprioritized_low_behavior_signal"
+}
