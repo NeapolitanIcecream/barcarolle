@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Build the Rich W* Golden-Oracle construction queue."""
+"""Build a Rich Golden-Oracle construction queue for a time split."""
 
 from __future__ import annotations
 
@@ -45,6 +45,7 @@ def parse_args(argv: Sequence[str] | None = None) -> argparse.Namespace:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--repo", default=str(DEFAULT_REPO), help="Local Rich checkout.")
     parser.add_argument("--direct-batch", default=str(DEFAULT_DIRECT_BATCH), help="Public direct-smoke batch JSON.")
+    parser.add_argument("--split", choices=["C", "R", "W_star"], default="W_star", help="Time split to queue.")
     parser.add_argument("--private-root", default=str(DEFAULT_PRIVATE_ROOT), help="Ignored private artifact root.")
     parser.add_argument("--output", default=str(DEFAULT_OUTPUT), help="Public redacted JSON output.")
     parser.add_argument("--report", default=str(DEFAULT_REPORT), help="Public markdown report.")
@@ -209,11 +210,15 @@ def item_sort_key(item: Mapping[str, Any]) -> tuple[int, str, int]:
     )
 
 
-def build_queue_items(candidates: Sequence[Mapping[str, Any]], direct_batch: Mapping[str, Any]) -> list[dict[str, Any]]:
+def build_queue_items(
+    candidates: Sequence[Mapping[str, Any]],
+    direct_batch: Mapping[str, Any],
+    split: str = "W_star",
+) -> list[dict[str, Any]]:
     raw_items: list[dict[str, Any]] = []
     queue_index = 1
     for candidate in candidates:
-        if candidate.get("window") != "W_star":
+        if candidate.get("window") != split:
             continue
         if candidate.get("oracle_requirement") == "golden_oracle_required":
             raw_items.append(public_source_oracle_item(candidate, index=queue_index))
@@ -254,7 +259,11 @@ def summarize_queue(*, items: Sequence[Mapping[str, Any]], accepted_direct: int,
     }
 
 
-def private_queue_payload(candidates: Sequence[Mapping[str, Any]], direct_batch: Mapping[str, Any]) -> dict[str, Any]:
+def private_queue_payload(
+    candidates: Sequence[Mapping[str, Any]],
+    direct_batch: Mapping[str, Any],
+    split: str = "W_star",
+) -> dict[str, Any]:
     source_candidates = [
         {
             "commit": candidate.get("commit"),
@@ -274,32 +283,45 @@ def private_queue_payload(candidates: Sequence[Mapping[str, Any]], direct_batch:
             else None,
         }
         for candidate in candidates
-        if candidate.get("window") == "W_star"
+        if candidate.get("window") == split
         and candidate.get("oracle_requirement") in {"golden_oracle_required", "direct_tests_without_extractable_nodes"}
     ]
     return {
         "generated_at": iso_now(),
         "repo_slug": "rich",
-        "split": "W_star",
+        "split": split,
         "private_raw_candidate_count": len(source_candidates),
         "source_candidates": source_candidates,
         "rejected_direct_results": rejected_direct_results(direct_batch),
     }
 
 
-def build_payload(*, repo_path: Path, direct_batch_path: Path, private_root: Path) -> dict[str, Any]:
+def build_payload(
+    *,
+    repo_path: Path,
+    direct_batch_path: Path,
+    private_root: Path,
+    split: str = "W_star",
+) -> dict[str, Any]:
     direct_batch = load_direct_batch(direct_batch_path)
+    direct_batch_split = direct_batch.get("split") or "W_star"
+    if direct_batch_split != split:
+        raise ToolError(
+            "direct-smoke batch split does not match queue split",
+            direct_batch_split=direct_batch_split,
+            split=split,
+        )
     candidates = discover_candidates(repo_path)
-    w_star_candidates = [candidate for candidate in candidates if candidate.get("window") == "W_star"]
-    items = build_queue_items(w_star_candidates, direct_batch)
+    split_candidates = [candidate for candidate in candidates if candidate.get("window") == split]
+    items = build_queue_items(split_candidates, direct_batch, split)
     summary = summarize_queue(
         items=items,
         accepted_direct=accepted_direct_count(direct_batch),
-        design_candidate_count=len(w_star_candidates),
+        design_candidate_count=len(split_candidates),
     )
     private_root.mkdir(parents=True, exist_ok=True)
     private_payload_path = private_root / "rich_source_oracle_queue_private.json"
-    write_json(private_payload_path, private_queue_payload(w_star_candidates, direct_batch))
+    write_json(private_payload_path, private_queue_payload(split_candidates, direct_batch, split))
     return {
         "schema_version": SCHEMA_VERSION,
         "tool": TOOL,
@@ -307,7 +329,7 @@ def build_payload(*, repo_path: Path, direct_batch_path: Path, private_root: Pat
         "generated_at": iso_now(),
         "model_calls_made": 0,
         "repo_slug": "rich",
-        "split": "W_star",
+        "split": split,
         "private_artifact_root": repo_relative(private_root),
         "private_queue_artifact": repo_relative(private_payload_path),
         "primary_runs_authorized": False,
@@ -316,7 +338,7 @@ def build_payload(*, repo_path: Path, direct_batch_path: Path, private_root: Pat
             "primary_target": PRIMARY_TARGET,
             "reserve_target": RESERVE_TARGET,
             "candidate_pool_target": CANDIDATE_POOL_TARGET,
-            "design_candidate_count": len(w_star_candidates),
+            "design_candidate_count": len(split_candidates),
             **summary,
         },
         "queue_items": items,
@@ -325,7 +347,7 @@ def build_payload(*, repo_path: Path, direct_batch_path: Path, private_root: Pat
             "Queue priority is heuristic triage only; no hidden verifier has been accepted from this artifact.",
             "Raw commits, raw subjects, source file lists, and private smoke details are retained only in ignored private artifacts.",
             "No ACUT primary attempt or model call was made.",
-            "The 20-primary plus 5-reserve target remains unreachable under the current W* design count unless the gate is explicitly revised.",
+            "The 20-primary plus 5-reserve target may still require additional Golden-Oracle construction or an explicit gate decision.",
         ],
     }
 
@@ -333,14 +355,15 @@ def build_payload(*, repo_path: Path, direct_batch_path: Path, private_root: Pat
 def render_report(payload: Mapping[str, Any]) -> str:
     boundary = payload.get("denominator_boundary") if isinstance(payload.get("denominator_boundary"), Mapping) else {}
     lines = [
-        "# Rich W* Golden-Oracle Queue",
+        "# Rich Golden-Oracle Queue",
         "",
         f"Status: `{payload.get('status')}`",
+        f"Split: `{payload.get('split')}`",
         f"Generated at: `{payload.get('generated_at')}`",
         "",
         "## Denominator Boundary",
         "",
-        f"- Accepted direct W* tasks: `{boundary.get('accepted_direct_count')}`",
+        f"- Accepted direct tasks: `{boundary.get('accepted_direct_count')}`",
         f"- Oracle work items: `{boundary.get('oracle_work_item_count')}`",
         f"- Additional acceptances needed for 20 primary: `{boundary.get('additional_acceptances_needed_for_20_primary')}`",
         f"- Maximum admitted design count if all queued oracles pass: `{boundary.get('maximum_admitted_design_count_if_all_oracles_pass')}`",
@@ -370,6 +393,7 @@ def run(argv: Sequence[str] | None = None) -> int:
         repo_path=Path(args.repo).resolve(),
         direct_batch_path=Path(args.direct_batch).resolve(),
         private_root=Path(args.private_root).resolve(),
+        split=args.split,
     )
     write_json(output, payload)
     report.parent.mkdir(parents=True, exist_ok=True)
