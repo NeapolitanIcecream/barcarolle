@@ -1,0 +1,87 @@
+schema_version: core-narrative.acut.v1
+manifest_version: "1.0"
+acut_id: cheap-rich-static-context-v1
+display_name: Cheap Rich Static Context v1
+purpose: A2 task-agnostic Rich static-context treatment for repository-local benchmark intervention sensitivity.
+frozen: true
+provider: openai
+model: openai/gpt-5.4-mini
+model_parameters:
+  reasoning_effort: medium
+prompt_policy_digest: policy-digest-20260515:cheap-rich-static-context-v1
+prompt_policy_reference: null
+tool_permissions:
+  filesystem: workspace-write
+  network: disabled
+  allowed_tools:
+    - filesystem:read
+    - filesystem:write
+    - shell
+    - code_edit
+    - git:status
+    - git:diff
+    - git:show
+retrieval_context_strategy:
+  strategy_id: rich-static-context-v1
+  description: Use a task-agnostic Rich module map, semantic invariant list, and testing guide while keeping the same cheap model tier and execution budget as cheap-generic-swe.
+  allowed_sources:
+    - public_task_statement
+    - files explicitly named in the task statement
+    - files surfaced by failing tests or import errors
+    - adjacent public tests
+    - direct symbol and filename search results
+    - rich_static_context_pack_v1
+    - public Rich source, tests, docs, and examples
+  forbidden_sources:
+    - target commits
+    - reference patches
+    - final diffs
+    - hidden verifier files
+    - ACUT outputs or failed patches
+    - W* results or R scores
+    - task-specific private benchmark artifacts
+runtime_budget:
+  max_wall_seconds: 3600
+  max_turns: 18
+  max_tokens: 64000
+  max_cost_usd: null
+  max_test_commands: 10
+  retry_policy:
+    primary_attempts: 1
+    retries_allowed: false
+network_policy:
+  mode: disabled
+  allowed_hosts: []
+execution_mode: codex_cli
+adapter_or_harness_basis: workspace-mode-runner source-derived-url-only-v1 policy
+frozen_at: "2026-05-15T00:00:00+08:00"
+operator: codex-core-narrative-coordinator
+metadata:
+  repository_local_design:
+    intervention_label: A2_static_repo_context
+    matched_baseline: cheap-generic-swe
+    claim_role: Tests task-agnostic Rich context without C-derived calibration or localization-tool output.
+  specialist_context:
+    rich_task_agnostic_context_allowed: true
+    context_pack:
+      pack_id: rich_static_context_pack_v1
+      marker: RICH_STATIC_CONTEXT_PACK_V1
+      pack_hash: dc828c486f21ffd9a2a4516d1f9267274c53fdb942b0b00a288856f326d5663d
+      manifest_path: experiments/core_narrative/context_packs/rich_static_context_v1/manifest.json
+      context_prompt_path: experiments/core_narrative/context_packs/rich_static_context_v1/context_prompt.md
+      section_ids:
+        - module_map
+        - semantic_invariants
+        - testing_guide
+        - pre_base_history_summary
+        - calibration_boundary
+      task_specific_tuning_allowed: false
+  calibration_basis:
+    uses_C_tasks: false
+    uses_R_tasks: false
+    uses_W_star_tasks: false
+    uses_acut_outputs: false
+  score_fields:
+    r_score: null
+    w_star_score: null
+    g_score: null

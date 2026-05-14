@@ -1,0 +1,47 @@
+{
+  "schema_version": "core-narrative.rich-static-context-artifact.v1",
+  "artifact_id": "rich_static_testing_guide_v1",
+  "source_material": "Task-agnostic Rich public test tree.",
+  "families": [
+    {
+      "surface": "console/rendering",
+      "focused_commands": [
+        ".venv/bin/python -m pytest -q tests/test_console.py tests/test_segment.py",
+        ".venv/bin/python -m pytest -q tests/test_measure.py tests/test_align.py tests/test_padding.py"
+      ]
+    },
+    {
+      "surface": "text/style/markup/cells",
+      "focused_commands": [
+        ".venv/bin/python -m pytest -q tests/test_text.py tests/test_style.py tests/test_markup.py",
+        ".venv/bin/python -m pytest -q tests/test_cells.py tests/test_emoji.py"
+      ]
+    },
+    {
+      "surface": "layout containers",
+      "focused_commands": [
+        ".venv/bin/python -m pytest -q tests/test_table.py tests/test_panel.py tests/test_columns.py",
+        ".venv/bin/python -m pytest -q tests/test_rule.py tests/test_tree.py tests/test_layout.py"
+      ]
+    },
+    {
+      "surface": "progress/live/status",
+      "focused_commands": [
+        ".venv/bin/python -m pytest -q tests/test_progress.py tests/test_live.py tests/test_live_render.py",
+        ".venv/bin/python -m pytest -q tests/test_status.py tests/test_spinner.py"
+      ]
+    },
+    {
+      "surface": "traceback/syntax/logging/inspect/pretty",
+      "focused_commands": [
+        ".venv/bin/python -m pytest -q tests/test_traceback.py tests/test_syntax.py",
+        ".venv/bin/python -m pytest -q tests/test_logging.py tests/test_inspect.py tests/test_pretty.py"
+      ]
+    }
+  ],
+  "rules": [
+    "Start with the smallest adjacent public test module, then run the hidden verifier only through the benchmark harness.",
+    "Keep tests deterministic and in-process; avoid real terminal state, network calls, or environment-specific output assumptions.",
+    "If a task touches rendering width or line wrapping, include a segment, measurement, or text assertion that exercises the changed width path."
+  ]
+}

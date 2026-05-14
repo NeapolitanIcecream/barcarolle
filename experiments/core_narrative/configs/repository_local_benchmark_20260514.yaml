@@ -105,18 +105,21 @@ acuts:
     manifest: experiments/core_narrative/configs/acuts/cheap-generic-swe.yaml
     status: existing
   A1_inert_control:
-    manifest: experiments/core_narrative/configs/acuts/cheap-click-inert-control-v1.yaml
-    status: click_specific_created
-    note: Rich execution needs a Rich or repository-neutral inert variant before task runs.
+    manifest: experiments/core_narrative/configs/acuts/cheap-rich-inert-control-v1.yaml
+    status: rich_specific_created
+    legacy_click_manifest: experiments/core_narrative/configs/acuts/cheap-click-inert-control-v1.yaml
   A2_static_repo_context:
-    manifest: experiments/core_narrative/configs/acuts/cheap-click-deep-specialist-v2.yaml
-    status: existing_click_specific
+    manifest: experiments/core_narrative/configs/acuts/cheap-rich-static-context-v1.yaml
+    status: rich_specific_created
+    legacy_click_manifest: experiments/core_narrative/configs/acuts/cheap-click-deep-specialist-v2.yaml
   A3_c_derived_repo_calibrated_playbook:
-    manifest: experiments/core_narrative/configs/acuts/cheap-click-rbench-calibrated-v1.yaml
-    status: existing_click_specific
+    manifest: experiments/core_narrative/configs/acuts/cheap-rich-c-calibrated-v1.yaml
+    status: rich_specific_created
+    legacy_click_manifest: experiments/core_narrative/configs/acuts/cheap-click-rbench-calibrated-v1.yaml
   A4_code_understanding_localization_tool:
-    manifest: experiments/core_narrative/configs/acuts/cheap-click-localization-tool-v1.yaml
-    status: click_specific_created
+    manifest: experiments/core_narrative/configs/acuts/cheap-rich-localization-tool-v1.yaml
+    status: rich_specific_created
+    legacy_click_manifest: experiments/core_narrative/configs/acuts/cheap-click-localization-tool-v1.yaml
     source_policy:
       allowed:
         - public_task_statement

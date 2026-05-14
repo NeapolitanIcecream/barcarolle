@@ -1,0 +1,13 @@
+{
+  "schema_version": "core-narrative.rich-static-context-artifact.v1",
+  "artifact_id": "rich_static_semantic_invariants_v1",
+  "source_material": "Task-agnostic Rich public source, tests, and docs.",
+  "invariants": [
+    "Rich renderables should preserve Console protocol boundaries: objects are measured and rendered through console options, render hooks, and Segment streams rather than by ad hoc string conversion.",
+    "Text, Style, markup, emoji, and cell-width changes should preserve grapheme width, combining character, variation selector, and East Asian width behavior unless the public task requires a visible rendering change.",
+    "Live, Progress, Status, and Spinner changes should preserve refresh behavior, nested rendering state, terminal-control output, and deterministic non-terminal behavior under tests.",
+    "Traceback, Syntax, Logging, Inspect, and Pretty changes should preserve public formatting behavior and keep introspection or syntax-highlighting imports lazy where the surrounding module expects it.",
+    "Presentation containers such as Table, Panel, Columns, Rule, Tree, and Layout should keep measurement and rendering responsibilities separated; avoid broad rewrites when a focused render or measurement path owns the bug.",
+    "Public tests should verify user-visible output, render segments, stream capture, import side effects, or documented API behavior rather than exact internal implementation details unless the task is explicitly a source-level compatibility change."
+  ]
+}

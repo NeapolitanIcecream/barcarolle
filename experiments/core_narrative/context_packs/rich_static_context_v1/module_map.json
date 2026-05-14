@@ -1,0 +1,32 @@
+{
+  "schema_version": "core-narrative.rich-static-context-artifact.v1",
+  "artifact_id": "rich_static_module_map_v1",
+  "source_material": "Rich public source tree, tests, and docs only; no task-specific target commits, reference patches, hidden verifiers, or ACUT outputs.",
+  "entries": [
+    {
+      "surface": "console orchestration and render pipeline",
+      "modules": ["rich/console.py", "rich/segment.py", "rich/measure.py", "rich/align.py", "rich/padding.py"],
+      "tests": ["tests/test_console.py", "tests/test_segment.py", "tests/test_measure.py", "tests/test_align.py", "tests/test_padding.py"]
+    },
+    {
+      "surface": "text, style, markup, emoji, and cell-width behavior",
+      "modules": ["rich/text.py", "rich/style.py", "rich/markup.py", "rich/emoji.py", "rich/cells.py", "rich/_emoji_replace.py"],
+      "tests": ["tests/test_text.py", "tests/test_style.py", "tests/test_markup.py", "tests/test_emoji.py", "tests/test_cells.py"]
+    },
+    {
+      "surface": "tables, panels, columns, rules, trees, and layout containers",
+      "modules": ["rich/table.py", "rich/panel.py", "rich/columns.py", "rich/rule.py", "rich/tree.py", "rich/layout.py"],
+      "tests": ["tests/test_table.py", "tests/test_panel.py", "tests/test_columns.py", "tests/test_rule.py", "tests/test_tree.py", "tests/test_layout.py"]
+    },
+    {
+      "surface": "progress, live rendering, status, and spinner updates",
+      "modules": ["rich/progress.py", "rich/live.py", "rich/live_render.py", "rich/status.py", "rich/spinner.py"],
+      "tests": ["tests/test_progress.py", "tests/test_live.py", "tests/test_live_render.py", "tests/test_status.py", "tests/test_spinner.py"]
+    },
+    {
+      "surface": "tracebacks, syntax highlighting, logging, inspect, and pretty printing",
+      "modules": ["rich/traceback.py", "rich/syntax.py", "rich/logging.py", "rich/_inspect.py", "rich/pretty.py"],
+      "tests": ["tests/test_traceback.py", "tests/test_syntax.py", "tests/test_logging.py", "tests/test_inspect.py", "tests/test_pretty.py"]
+    }
+  ]
+}

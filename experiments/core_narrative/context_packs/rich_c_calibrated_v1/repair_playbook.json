@@ -1,0 +1,34 @@
+{
+  "schema_version": "core-narrative.rich-c-calibrated-playbook.v1",
+  "artifact_id": "rich_c_calibrated_repair_playbook_v1",
+  "source_material": "Abstract synthesis from admitted Rich C calibration tasks and public Rich source/tests only.",
+  "calibration_boundary": {
+    "uses_c_tasks": true,
+    "uses_r_tasks": false,
+    "uses_w_star_tasks": false,
+    "uses_acut_outputs": false,
+    "uses_hidden_verifier_implementation": false,
+    "uses_raw_commits_or_subjects": false
+  },
+  "family_taxonomy": [
+    "console rendering, measurement, and options",
+    "text, style, cells, unicode, and markup",
+    "progress, live, status, and spinner rendering",
+    "traceback, syntax, logging, inspect, and pretty diagnostics",
+    "documentation, type annotations, demos, and public source contracts"
+  ],
+  "abstract_repair_patterns": [
+    "Map the public symptom to the owning render or measurement protocol before changing general-purpose helpers.",
+    "For rendering issues, preserve Segment and Console option flow; prefer focused changes in the module that owns the visible output.",
+    "For text, style, unicode, and cell-width issues, test grapheme boundaries, variation selectors, combining characters, and cached width behavior.",
+    "For progress/live/status issues, verify refresh ordering and nested or stacked live-display behavior under deterministic tests.",
+    "For diagnostics and syntax work, check import laziness, type annotations, recursion guards, and explicit None checks where public formatting depends on them.",
+    "For source-level compatibility tasks, treat public docstrings, annotations, comments used by docs, and demo output as observable contracts when the task statement names them."
+  ],
+  "maintainer_style_regression_tests": [
+    "Use the closest existing public test module and add a focused regression test for the user-visible behavior.",
+    "Prefer rendering, measurement, or import-side-effect assertions over broad snapshot rewrites.",
+    "Use source-level assertions only when the behavior under test is a public docstring, annotation, demo message, or compatibility branch removal.",
+    "Run the narrow test first, then the adjacent module, and rely on fresh hidden-verifier replay for scoring."
+  ]
+}

@@ -1,0 +1,27 @@
+{
+  "schema_version": "core-narrative.context-pack-leakage-audit.v1",
+  "pack_id": "rich_static_context_pack_v1",
+  "status": "passed",
+  "source_material_policy": {
+    "public_committed_source_docs_tests_examples_only": true,
+    "network_fetched_docs_used": false,
+    "c_reference_patches_used": false,
+    "r_or_w_star_reference_patches_used": false,
+    "hidden_verifier_tests_used": false,
+    "acut_outputs_or_failed_patches_used": false,
+    "task_specific_material_used": false
+  },
+  "leakage_guards": {
+    "credential_values_recorded": false,
+    "bearer_tokens_recorded": false,
+    "resolved_secrets_recorded": false,
+    "full_base_url_values_recorded": false,
+    "full_urls_recorded": false,
+    "hostnames_recorded": false,
+    "ip_addresses_recorded": false,
+    "target_commits_recorded": false,
+    "reference_diffs_recorded": false,
+    "hidden_verifier_paths_recorded": false,
+    "acut_outputs_recorded": false
+  }
+}

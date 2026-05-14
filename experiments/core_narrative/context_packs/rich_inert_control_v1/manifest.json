@@ -1,0 +1,37 @@
+{
+  "schema_version": "core-narrative.inert-context-pack.v1",
+  "pack_id": "rich_inert_control_context_pack_v1",
+  "marker": "RICH_INERT_CONTROL_CONTEXT_PACK_V1",
+  "pack_hash": "a4365af810ab0669a334d34fdf6220ae65e7851b8db1ba8e96835ae2b64d4fa5",
+  "generated_at": "2026-05-15T00:00:00+08:00",
+  "purpose": "A1 inert control for Rich repository-local benchmark intervention sensitivity.",
+  "artifacts": {
+    "context_prompt": {
+      "path": "context_prompt.md",
+      "sha256": "a4365af810ab0669a334d34fdf6220ae65e7851b8db1ba8e96835ae2b64d4fa5",
+      "bytes": 691
+    },
+    "leakage_audit": {
+      "path": "leakage_audit.json",
+      "sha256": "b98ac4ff062d33ea0cd9f3ff3fa45b46979bfe4399d5d924f2ce2d1291c5d931",
+      "bytes": 612
+    }
+  },
+  "source_material_policy": {
+    "repo_facts_used": false,
+    "task_specific_material_used": false,
+    "c_material_used": false,
+    "r_material_used": false,
+    "w_star_material_used": false,
+    "reference_patches_used": false,
+    "hidden_verifier_tests_used": false,
+    "acut_outputs_or_failed_patches_used": false
+  },
+  "leakage_guards": {
+    "credential_values_recorded": false,
+    "target_commits_recorded": false,
+    "reference_diffs_recorded": false,
+    "hidden_verifier_paths_recorded": false,
+    "acut_outputs_recorded": false
+  }
+}

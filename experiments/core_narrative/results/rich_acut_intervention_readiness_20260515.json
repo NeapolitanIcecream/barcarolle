@@ -1,0 +1,95 @@
+{
+  "schema_version": "core-narrative.rich-acut-intervention-readiness.v1",
+  "artifact_id": "rich-acut-intervention-readiness-20260515",
+  "status": "completed",
+  "generated_at": "2026-05-15T00:00:00+08:00",
+  "repo_slug": "rich",
+  "model_calls_made": 0,
+  "primary_runs_authorized": false,
+  "protocol_config": {
+    "path": "experiments/core_narrative/configs/repository_local_benchmark_20260514.yaml",
+    "sha256": "8b340e5f7739aa14d4ece4a71a46eefafa5b0e57d82f58b8b5aedc595ea80e17"
+  },
+  "interventions": [
+    {
+      "label": "A0_generic_baseline",
+      "status": "existing_generic",
+      "manifest_path": "experiments/core_narrative/configs/acuts/cheap-generic-swe.yaml",
+      "context_pack_path": null,
+      "uses_c_tasks": false,
+      "uses_r_tasks": false,
+      "uses_w_star_tasks": false,
+      "uses_acut_outputs": false
+    },
+    {
+      "label": "A1_inert_control",
+      "status": "rich_specific_created",
+      "manifest_path": "experiments/core_narrative/configs/acuts/cheap-rich-inert-control-v1.yaml",
+      "manifest_sha256": "b64e959a8d890b50a7ddf7e79a18a307b1802c50040d9c035951ce3d203e93c2",
+      "context_pack_path": "experiments/core_narrative/context_packs/rich_inert_control_v1/manifest.json",
+      "context_pack_sha256": "da07018c393bb82d6b7cba3cf88a27e2b9f426fe33a5624b5cf50363cc8fbb66",
+      "pack_hash": "a4365af810ab0669a334d34fdf6220ae65e7851b8db1ba8e96835ae2b64d4fa5",
+      "uses_c_tasks": false,
+      "uses_r_tasks": false,
+      "uses_w_star_tasks": false,
+      "uses_acut_outputs": false
+    },
+    {
+      "label": "A2_static_repo_context",
+      "status": "rich_specific_created",
+      "manifest_path": "experiments/core_narrative/configs/acuts/cheap-rich-static-context-v1.yaml",
+      "manifest_sha256": "4eeb8ad966a53844746497311a3b80bb47e0718626c5d15d3c9e6b4fb24faa06",
+      "context_pack_path": "experiments/core_narrative/context_packs/rich_static_context_v1/manifest.json",
+      "context_pack_sha256": "621bd556d616fb4879cf82974bced08e69273c1dca4d1cc0cdb56a2aa631b6e7",
+      "pack_hash": "dc828c486f21ffd9a2a4516d1f9267274c53fdb942b0b00a288856f326d5663d",
+      "uses_c_tasks": false,
+      "uses_r_tasks": false,
+      "uses_w_star_tasks": false,
+      "uses_acut_outputs": false
+    },
+    {
+      "label": "A3_c_derived_repo_calibrated_playbook",
+      "status": "rich_specific_created",
+      "manifest_path": "experiments/core_narrative/configs/acuts/cheap-rich-c-calibrated-v1.yaml",
+      "manifest_sha256": "450ad0c6d6733769cf59b51f29753e633543e318a6489b971e677752eed62f81",
+      "context_pack_path": "experiments/core_narrative/context_packs/rich_c_calibrated_v1/manifest.json",
+      "context_pack_sha256": "70834fa17efc9c927472373d5acc5bd80c1c25517db7ada5d3b48afb5d1a6d63",
+      "pack_hash": "2975369afa44036591a1f95dfc935b3ac79dd8da2398e145b61e33eebafd10a1",
+      "uses_c_tasks": true,
+      "uses_c_tasks_as_abstract_calibration": true,
+      "uses_raw_c_commits_or_subjects": false,
+      "uses_c_reference_patch_text": false,
+      "uses_r_tasks": false,
+      "uses_w_star_tasks": false,
+      "uses_acut_outputs": false
+    },
+    {
+      "label": "A4_code_understanding_localization_tool",
+      "status": "rich_specific_created",
+      "manifest_path": "experiments/core_narrative/configs/acuts/cheap-rich-localization-tool-v1.yaml",
+      "manifest_sha256": "1c152fe4fc20ade3752a778bd00bb432ffccde9818f822146ac3a6aae2dbda5a",
+      "context_pack_path": null,
+      "uses_c_tasks": false,
+      "uses_r_tasks": false,
+      "uses_w_star_tasks": false,
+      "uses_acut_outputs": false,
+      "localization_tool_source_policy": "public_statement_and_repo_source_only"
+    },
+    {
+      "label": "A5_frontier_generic_reference",
+      "status": "existing_generic",
+      "manifest_path": "experiments/core_narrative/configs/acuts/frontier-generic-swe.yaml",
+      "context_pack_path": null,
+      "uses_c_tasks": false,
+      "uses_r_tasks": false,
+      "uses_w_star_tasks": false,
+      "uses_acut_outputs": false
+    }
+  ],
+  "claim_boundary": [
+    "This artifact creates Rich-ready intervention manifests and context packs only.",
+    "No Rich C/R/W* primary model attempt was made.",
+    "The W* reserve and candidate-pool gate remains unresolved.",
+    "Raw target commits, raw subjects, reference patches, hidden verifiers, and ACUT outputs are not included."
+  ]
+}

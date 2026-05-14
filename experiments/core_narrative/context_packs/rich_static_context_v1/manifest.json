@@ -1,0 +1,81 @@
+{
+  "schema_version": "core-narrative.rich-static-context-pack.v1",
+  "pack_id": "rich_static_context_pack_v1",
+  "marker": "RICH_STATIC_CONTEXT_PACK_V1",
+  "pack_hash": "dc828c486f21ffd9a2a4516d1f9267274c53fdb942b0b00a288856f326d5663d",
+  "generated_at": "2026-05-15T00:00:00+08:00",
+  "generator": {
+    "tool": "codex_repository_local_acut_scaffold",
+    "command": "manual task-agnostic synthesis from locked Rich public source/docs/tests and bounded public pre-base history notes",
+    "history_mining": "bounded_task_agnostic_public_history_summary"
+  },
+  "generation_timing": {
+    "relative_to_rich_primary_execution": "before any Rich C/R/W* primary ACUT execution",
+    "task_agnostic": true,
+    "uses_observed_acut_outputs": false
+  },
+  "locked_rich_commit_digest": "99c37821a82d2ae39a322d4321df395b45529191df012553aedb6947a65e6367",
+  "source_root_label": "experiments/core_narrative/external_repos/rich",
+  "section_ids": [
+    "module_map",
+    "semantic_invariants",
+    "testing_guide",
+    "pre_base_history_summary",
+    "calibration_boundary"
+  ],
+  "artifacts": {
+    "context_prompt": {
+      "path": "context_prompt.md",
+      "sha256": "dc828c486f21ffd9a2a4516d1f9267274c53fdb942b0b00a288856f326d5663d",
+      "bytes": 3666
+    },
+    "module_map": {
+      "path": "module_map.json",
+      "sha256": "a6fd3c617b42650400e5446de0d70f98a7494b8860c8a3bff5379b1c9630c5d9",
+      "bytes": 2043
+    },
+    "semantic_invariants": {
+      "path": "semantic_invariants.json",
+      "sha256": "116a83e989f456251196375ce789432c46dea8d8c1843131abedceb763fab29f",
+      "bytes": 1523
+    },
+    "testing_guide": {
+      "path": "testing_guide.json",
+      "sha256": "ee5758180a6d4923a6762cb29eb52242e1a84b9369237e52c358946e7f177b47",
+      "bytes": 2048
+    },
+    "pre_base_history_summary": {
+      "path": "pre_base_history_summary.json",
+      "sha256": "f01f2fe8440ea4a8aac1140c2b89748a369de1c5975ceb3755592c4641df6945",
+      "bytes": 980
+    },
+    "leakage_audit": {
+      "path": "leakage_audit.json",
+      "sha256": "1803295ff218a06d0e3221ea1088ac21626732429c4a19f34ff8c106cef2aee0",
+      "bytes": 942
+    }
+  },
+  "source_material_policy": {
+    "public_committed_source_docs_tests_examples_only": true,
+    "network_fetched_docs_used": false,
+    "c_reference_patches_used": false,
+    "r_or_w_star_reference_patches_used": false,
+    "hidden_verifier_tests_used": false,
+    "acut_outputs_or_failed_patches_used": false,
+    "task_specific_material_used": false,
+    "git_history_mining_used": true
+  },
+  "leakage_guards": {
+    "credential_values_recorded": false,
+    "bearer_tokens_recorded": false,
+    "resolved_secrets_recorded": false,
+    "full_base_url_values_recorded": false,
+    "full_urls_recorded": false,
+    "hostnames_recorded": false,
+    "ip_addresses_recorded": false,
+    "target_commits_recorded": false,
+    "reference_diffs_recorded": false,
+    "hidden_verifier_paths_recorded": false,
+    "acut_outputs_recorded": false
+  }
+}

@@ -1,0 +1,93 @@
+schema_version: core-narrative.acut.v1
+manifest_version: "1.0"
+acut_id: cheap-rich-c-calibrated-v1
+display_name: Cheap Rich C-Calibrated v1
+purpose: A3 Rich repository-calibrated treatment derived only from admitted C calibration abstractions.
+frozen: true
+provider: openai
+model: openai/gpt-5.4-mini
+model_parameters:
+  reasoning_effort: medium
+prompt_policy_digest: policy-digest-20260515:cheap-rich-c-calibrated-v1
+prompt_policy_reference: null
+tool_permissions:
+  filesystem: workspace-write
+  network: disabled
+  allowed_tools:
+    - filesystem:read
+    - filesystem:write
+    - shell
+    - code_edit
+    - git:status
+    - git:diff
+    - git:show
+retrieval_context_strategy:
+  strategy_id: rich-c-calibrated-v1
+  description: Use a Rich repair playbook abstracted from admitted C calibration outcomes while keeping the same cheap model tier and execution budget as cheap-generic-swe.
+  allowed_sources:
+    - public_task_statement
+    - files explicitly named in the task statement
+    - files surfaced by failing tests or import errors
+    - adjacent public tests
+    - direct symbol and filename search results
+    - rich_c_calibrated_context_pack_v1
+    - public Rich source, tests, docs, and examples
+  forbidden_sources:
+    - W* target commits
+    - W* reference patches
+    - W* final diffs
+    - W* hidden verifier files
+    - W* ACUT outputs or failed patches
+    - R scores or W* results
+    - task-specific private benchmark artifacts
+runtime_budget:
+  max_wall_seconds: 3600
+  max_turns: 18
+  max_tokens: 64000
+  max_cost_usd: null
+  max_test_commands: 10
+  retry_policy:
+    primary_attempts: 1
+    retries_allowed: false
+network_policy:
+  mode: disabled
+  allowed_hosts: []
+execution_mode: codex_cli
+adapter_or_harness_basis: workspace-mode-runner source-derived-url-only-v1 policy
+frozen_at: "2026-05-15T00:00:00+08:00"
+operator: codex-core-narrative-coordinator
+metadata:
+  repository_local_design:
+    intervention_label: A3_c_derived_repo_calibrated_playbook
+    matched_baseline: cheap-generic-swe
+    claim_role: Tests whether C-derived Rich repair abstractions improve held-out task performance.
+  specialist_context:
+    rich_c_calibrated_context_allowed: true
+    context_pack:
+      pack_id: rich_c_calibrated_context_pack_v1
+      marker: RICH_C_CALIBRATED_CONTEXT_PACK_V1
+      pack_hash: 2975369afa44036591a1f95dfc935b3ac79dd8da2398e145b61e33eebafd10a1
+      manifest_path: experiments/core_narrative/context_packs/rich_c_calibrated_v1/manifest.json
+      context_prompt_path: experiments/core_narrative/context_packs/rich_c_calibrated_v1/context_prompt.md
+      artifacts:
+        repair_playbook:
+          path: experiments/core_narrative/context_packs/rich_c_calibrated_v1/repair_playbook.json
+          sha256: bbbd5d189959f323b38acc26254ecefc9c3d5135e53c3f64d63d2960e64fc57a
+      section_ids:
+        - c_family_taxonomy
+        - abstract_repair_patterns
+        - maintainer_style_regression_tests
+        - calibration_boundary
+      task_specific_tuning_allowed: false
+  calibration_basis:
+    uses_C_tasks: true
+    uses_C_tasks_as_abstract_calibration: true
+    uses_raw_C_commits_or_subjects: false
+    uses_C_reference_patch_text: false
+    uses_R_tasks: false
+    uses_W_star_tasks: false
+    uses_acut_outputs: false
+  score_fields:
+    r_score: null
+    w_star_score: null
+    g_score: null

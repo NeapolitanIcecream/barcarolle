@@ -1,0 +1,18 @@
+{
+  "schema_version": "core-narrative.context-pack-leakage-audit.v1",
+  "pack_id": "rich_inert_control_context_pack_v1",
+  "status": "passed",
+  "repo_facts_used": false,
+  "task_specific_material_used": false,
+  "c_material_used": false,
+  "r_material_used": false,
+  "w_star_material_used": false,
+  "reference_patches_used": false,
+  "hidden_verifier_tests_used": false,
+  "acut_outputs_or_failed_patches_used": false,
+  "credential_values_recorded": false,
+  "target_commits_recorded": false,
+  "reference_diffs_recorded": false,
+  "hidden_verifier_paths_recorded": false,
+  "acut_outputs_recorded": false
+}

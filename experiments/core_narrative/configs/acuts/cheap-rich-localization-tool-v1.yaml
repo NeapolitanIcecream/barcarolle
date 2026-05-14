@@ -1,0 +1,79 @@
+schema_version: core-narrative.acut.v1
+manifest_version: "1.0"
+acut_id: cheap-rich-localization-tool-v1
+display_name: Cheap Rich Localization Tool v1
+purpose: A4 code-understanding/localization intervention for Rich repository-local benchmark sensitivity.
+frozen: true
+provider: openai
+model: openai/gpt-5.4-mini
+model_parameters:
+  reasoning_effort: medium
+prompt_policy_digest: policy-digest-20260515:cheap-rich-localization-tool-v1
+prompt_policy_reference: null
+tool_permissions:
+  filesystem: workspace-write
+  network: disabled
+  allowed_tools:
+    - filesystem:read
+    - filesystem:write
+    - shell
+    - code_edit
+    - git:status
+    - git:diff
+    - git:show
+    - repository_localization_hints
+retrieval_context_strategy:
+  strategy_id: rich-public-statement-source-localization-v1
+  description: Provide non-answer Rich localization hints derived only from the public task statement and repository source tree.
+  allowed_sources:
+    - public_task_statement
+    - repository tree and source files at the task base commit
+    - output of experiments/core_narrative/tools/repository_localization_hints.py
+  forbidden_sources:
+    - reference patch touched files
+    - target commits
+    - target diffs
+    - hidden verifier files
+    - final diffs
+    - ACUT outputs or failed patches
+    - W* results or R scores
+runtime_budget:
+  max_wall_seconds: 3600
+  max_turns: 18
+  max_tokens: 64000
+  max_cost_usd: null
+  max_test_commands: 10
+  retry_policy:
+    primary_attempts: 1
+    retries_allowed: false
+network_policy:
+  mode: disabled
+  allowed_hosts: []
+execution_mode: codex_cli
+adapter_or_harness_basis: workspace-mode-runner source-derived-url-only-v1 policy plus repository-localization-hints-v1
+frozen_at: "2026-05-15T00:00:00+08:00"
+operator: codex-core-narrative-coordinator
+metadata:
+  repository_local_design:
+    intervention_label: A4_code_understanding_localization_tool
+    matched_baseline: cheap-generic-swe
+    claim_role: Test whether non-answer repository localization improves held-out Rich work performance.
+  localization_tool:
+    tool_path: experiments/core_narrative/tools/repository_localization_hints.py
+    tool_schema: core-narrative.repository-localization-hints.v1
+    max_files: 5
+    max_symbols: 10
+    source_policy: public_statement_and_repo_source_only
+    uses_reference_patch: false
+    uses_target_diff: false
+    uses_hidden_verifier: false
+    uses_target_commit: false
+  calibration_basis:
+    uses_C_tasks: false
+    uses_R_tasks: false
+    uses_W_star_tasks: false
+    uses_acut_outputs: false
+  score_fields:
+    r_score: null
+    w_star_score: null
+    g_score: null

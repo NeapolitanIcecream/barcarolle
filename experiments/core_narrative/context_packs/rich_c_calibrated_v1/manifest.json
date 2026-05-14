@@ -1,0 +1,69 @@
+{
+  "schema_version": "core-narrative.rich-c-calibrated-context-pack.v1",
+  "pack_id": "rich_c_calibrated_context_pack_v1",
+  "marker": "RICH_C_CALIBRATED_CONTEXT_PACK_V1",
+  "pack_hash": "2975369afa44036591a1f95dfc935b3ac79dd8da2398e145b61e33eebafd10a1",
+  "generated_at": "2026-05-15T00:00:00+08:00",
+  "generator": {
+    "tool": "codex_repository_local_acut_scaffold",
+    "command": "manual synthesis from admitted Rich C calibration outcomes and public Rich source/tests",
+    "history_mining": "bounded_public_history"
+  },
+  "generation_timing": {
+    "relative_to_rich_primary_execution": "after Rich C admission and before any Rich C/R/W* primary ACUT execution",
+    "uses_observed_acut_outputs": false,
+    "uses_w_star_material": false
+  },
+  "source_root_label": "experiments/core_narrative/external_repos/rich",
+  "section_ids": [
+    "c_family_taxonomy",
+    "abstract_repair_patterns",
+    "maintainer_style_regression_tests",
+    "calibration_boundary"
+  ],
+  "artifacts": {
+    "context_prompt": {
+      "path": "context_prompt.md",
+      "sha256": "2975369afa44036591a1f95dfc935b3ac79dd8da2398e145b61e33eebafd10a1",
+      "bytes": 2732
+    },
+    "repair_playbook": {
+      "path": "repair_playbook.json",
+      "sha256": "bbbd5d189959f323b38acc26254ecefc9c3d5135e53c3f64d63d2960e64fc57a",
+      "bytes": 2258
+    },
+    "leakage_audit": {
+      "path": "leakage_audit.json",
+      "sha256": "ed6f3fbe91704746e1f4378b201c920b657c8dc6fc3ce294081d930d177b478e",
+      "bytes": 1134
+    }
+  },
+  "source_material_policy": {
+    "public_committed_source_docs_tests_examples_only": true,
+    "uses_c_tasks": true,
+    "uses_c_tasks_as_abstract_calibration": true,
+    "uses_raw_c_commits_or_subjects": false,
+    "uses_c_reference_patch_text": false,
+    "uses_r_tasks": false,
+    "uses_w_star_tasks": false,
+    "uses_hidden_verifier_tests": false,
+    "uses_acut_outputs_or_failed_patches": false,
+    "git_history_mining_used": true
+  },
+  "leakage_guards": {
+    "credential_values_recorded": false,
+    "bearer_tokens_recorded": false,
+    "resolved_secrets_recorded": false,
+    "full_base_url_values_recorded": false,
+    "full_urls_recorded": false,
+    "hostnames_recorded": false,
+    "ip_addresses_recorded": false,
+    "target_commits_recorded": false,
+    "reference_diffs_recorded": false,
+    "hidden_verifier_paths_recorded": false,
+    "acut_outputs_recorded": false,
+    "w_star_target_commits_recorded": false,
+    "w_star_reference_diffs_recorded": false,
+    "w_star_acut_outputs_recorded": false
+  }
+}

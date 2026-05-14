@@ -1,0 +1,11 @@
+{
+  "schema_version": "core-narrative.rich-static-context-artifact.v1",
+  "artifact_id": "rich_static_pre_base_history_summary_v1",
+  "source_material": "Bounded task-agnostic public Rich history summary; no target commits, reference patches, hidden verifiers, or ACUT outputs.",
+  "summary": [
+    "Recent Rich maintenance commonly adjusts small rendering edge cases, import-laziness boundaries, type annotations, docstrings, and demo output without changing broad architecture.",
+    "Console, live/progress, traceback/syntax, text/style/cells, and table/panel surfaces have many nearby tests; prefer reading adjacent tests before changing core render protocols.",
+    "Source-only changes can still represent user-visible behavior when they affect import side effects, public docstrings, type annotations, or documented demonstration behavior.",
+    "A narrow patch with one focused regression test is usually preferable to a broad formatter or render-pipeline rewrite."
+  ]
+}

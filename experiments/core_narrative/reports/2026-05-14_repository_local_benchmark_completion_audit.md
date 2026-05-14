@@ -6,9 +6,9 @@ Objective file: `/Users/chenmohan/Downloads/barcarolle-research-0514-1.md`
 
 ## Verdict
 
-The 2026-05-14 experiment is not complete as a full C/R/W* benchmark run. The completed work is a repository-admission and protocol-gate phase plus Rich W* direct-smoke, Golden-Oracle queue preparation, eleven accepted source-only Golden-Oracle pilots, three accepted replacement-oracle pilots, one accepted direct-without-node Oracle pilot, one Rich R direct-smoke batch with 8 accepted direct tasks, one Rich R Golden-Oracle queue, seventeen accepted Rich R source-only Golden-Oracle pilots, and Rich C admission through direct smoke plus all queued C Oracle pilots. Rich now has 20 accepted W* primary candidates, 25 accepted R primary-plus-reserve candidates, and 20 accepted C calibration candidates. The W* reserve target, role artifacts, Rich ACUT variants, primary model runs, and R/W* analysis are still missing. Click primary execution remains blocked because Click has only 14 W* task-design candidates in the frozen `2026-02-14` to `2026-05-14` window, below the 20-task gate.
+The 2026-05-14 experiment is not complete as a full C/R/W* benchmark run. The completed work is a repository-admission and protocol-gate phase plus Rich W* direct-smoke, Golden-Oracle queue preparation, eleven accepted source-only Golden-Oracle pilots, three accepted replacement-oracle pilots, one accepted direct-without-node Oracle pilot, one Rich R direct-smoke batch with 8 accepted direct tasks, one Rich R Golden-Oracle queue, seventeen accepted Rich R source-only Golden-Oracle pilots, Rich C admission through direct smoke plus all queued C Oracle pilots, and Rich A0-A5 intervention manifests. Rich now has 20 accepted W* primary candidates, 25 accepted R primary-plus-reserve candidates, 20 accepted C calibration candidates, and Rich-ready A0-A5 ACUT variants. The W* reserve target, role artifacts, primary model runs, and R/W* analysis are still missing. Click primary execution remains blocked because Click has only 14 W* task-design candidates in the frozen `2026-02-14` to `2026-05-14` window, below the 20-task gate.
 
-Do not mark the active goal complete from the current state. The next concrete unblocked step is Rich ACUT variants plus an explicit decision on the W* reserve gate before any primary model attempt.
+Do not mark the active goal complete from the current state. The next concrete unblocked step is an explicit decision on the W* reserve gate plus run-level role artifacts before any primary model attempt.
 
 ## Prompt-To-Artifact Checklist
 
@@ -17,13 +17,13 @@ Do not mark the active goal complete from the current state. The next concrete u
 | Pivot main line to repository-local benchmark generation and tuning validation; NFL only bonus | covered | `configs/repository_local_benchmark_20260514.yaml` | none |
 | Freeze C/R/W* split at T0 `2026-05-14`; W* fixed to `2026-02-14`..`2026-05-14` | covered | `results/repository_local_benchmark_admission_20260514.json`, `configs/repository_local_benchmark_20260514.yaml` | none |
 | Task 1: repository admission for Click/Rich/Black with counts, feasibility, family diversity, dependency risk, recommendation | partially covered | `reports/2026-05-14_repository_local_benchmark_admission.md`, Rich readiness/smoke/oracle artifacts for W*, R, and C | Rich collect-only feasibility, stricter readiness counts, direct-oracle W*, R, and C smoke outcomes, the W*, R, and C Golden-Oracle queues, eleven source-only W* Golden-Oracle admission pilots, seventeen source-only R Golden-Oracle admission pilots, and all queued C Oracle admission pilots are measured. Rich C now has 20 accepted calibration candidates. Full denominator-scale per-task historical smoke and measured test runtime are not yet measured. |
-| Task 2: Click C/R/W* construction with no-op/reference/leakage/family/difficulty/digests | partially covered for Rich C primary, Rich W* primary, and Rich R primary plus reserve | Rich W*/R admission reports plus Rich C readiness, direct-smoke, source-only, replacement, and direct-without-node pilot reports | Click W* supply is below gate. Rich has 20 accepted W* primary candidates, but only 23 stricter W* design candidates, so the 5-task W* reserve target and 40-candidate pool target remain unmet. Rich R has 25 accepted tasks: 8 direct-smoke and 17 source-only Golden-Oracle, satisfying the 20-primary plus 5-reserve count. Rich C has 20 accepted calibration tasks: 3 direct-smoke, 13 source-only Golden-Oracle, 3 replacement-oracle, and 1 direct-without-node Oracle. No full C/R/W* denominator is frozen because W* reserve/gate resolution, Rich ACUT variants, and primary-run authorization remain incomplete. |
+| Task 2: Click C/R/W* construction with no-op/reference/leakage/family/difficulty/digests | partially covered for Rich C primary, Rich W* primary, and Rich R primary plus reserve | Rich W*/R admission reports plus Rich C readiness, direct-smoke, source-only, replacement, and direct-without-node pilot reports | Click W* supply is below gate. Rich has 20 accepted W* primary candidates, but only 23 stricter W* design candidates, so the 5-task W* reserve target and 40-candidate pool target remain unmet. Rich R has 25 accepted tasks: 8 direct-smoke and 17 source-only Golden-Oracle, satisfying the 20-primary plus 5-reserve count. Rich C has 20 accepted calibration tasks: 3 direct-smoke, 13 source-only Golden-Oracle, 3 replacement-oracle, and 1 direct-without-node Oracle. No full C/R/W* denominator is frozen because W* reserve/gate resolution and primary-run authorization remain incomplete. |
 | Task 3: Golden-Selector/Taskwright/Oracle/Auditor role isolation with prompt hashes, artifact digests, admission decisions | specified, not executed | `configs/repository_local_benchmark_20260514.yaml` | No 0514 role-run outputs or prompt hashes exist. |
-| Task 4: ACUT/intervention manifests A0-A5, A4 limited to public statement + repo tree/source | partially covered | A0/A2/A3/A5 existing, A1/A4 Click variants added, `tools/repository_localization_hints.py` | Rich execution needs Rich or repository-neutral intervention variants. |
-| Task 5: run R and W* one primary attempt per ACUT/task with fixed denominator and hidden verifier | not done | Gate report records non-action | No denominator was admitted; no primary attempts authorized or run. |
+| Task 4: ACUT/intervention manifests A0-A5, A4 limited to public statement + repo tree/source | covered for Rich execution plan | Rich A1/A2/A3/A4 manifests, generic A0/A5 manifests, Rich context packs, `tools/repository_localization_hints.py` | No primary attempts authorized or run. |
+| Task 5: run R and W* one primary attempt per ACUT/task with fixed denominator and hidden verifier | not done | Gate report records non-action | W* reserve/gate decision and run-level role artifacts remain incomplete; no primary attempts authorized or run. |
 | Task 6: analyze R_score, W*_score, paired deltas, R-selected, W*-best, regret, correlation, family effects, ablation | not done | none | No primary result table exists. |
 | Output: repository admission report | covered | `reports/2026-05-14_repository_local_benchmark_admission.md` | none |
-| Output: task generation validity report | partial C primary, W* primary, and R primary plus reserve | Rich W*/R admission reports plus Rich C readiness, direct-smoke, source-only, replacement, and direct-without-node pilot reports | Rich C has 20 accepted calibration candidates, Rich W* has 20 accepted primary candidates, and Rich R has 25 accepted candidates after 8 direct-smoke acceptances and 17 source-only Golden-Oracle pilots. Full C/R/W* task generation validity is not produced because W* reserve/gate resolution, Rich ACUT variants, role artifacts, and primary-run authorization remain incomplete. |
+| Output: task generation validity report | partial C primary, W* primary, and R primary plus reserve | Rich W*/R admission reports plus Rich C readiness, direct-smoke, source-only, replacement, and direct-without-node pilot reports | Rich C has 20 accepted calibration candidates, Rich W* has 20 accepted primary candidates, and Rich R has 25 accepted candidates after 8 direct-smoke acceptances and 17 source-only Golden-Oracle pilots. Full C/R/W* task generation validity is not produced because W* reserve/gate resolution, role artifacts, and primary-run authorization remain incomplete. |
 | Output: R/W* primary result report | not done | none | No primary attempts were run. |
 | Output: decision-validity report | gate only | `reports/2026-05-14_repository_local_benchmark_gate.md` | R -> W* decision validity cannot be assessed without runs. |
 | Output: threats-to-validity report | gate only | `reports/2026-05-14_repository_local_benchmark_gate.md` | Full experiment threats remain pending. |
@@ -80,7 +80,7 @@ Do not mark the active goal complete from the current state. The next concrete u
 - `experiments/core_narrative/results/rich_replacement_oracle_pilot_zerospan_20260514.json`
 - `experiments/core_narrative/results/rich_replacement_oracle_pilot_vs16_20260514.json`
 - `experiments/core_narrative/results/rich_direct_without_nodes_oracle_pilot_20260514.json`
-- ACUT manifests for A0-A5, including the newly added A1 and A4 Click variants.
+- ACUT manifests for Rich A0-A5, including Rich A1 inert, A2 static context, A3 C-derived playbook, and A4 localization-tool variants.
 - `experiments/core_narrative/tools/repository_local_benchmark_admission.py`
 - `experiments/core_narrative/tools/repository_localization_hints.py`
 
@@ -349,7 +349,24 @@ admission decisions: accepted=4
 model calls: 0
 ```
 
-Together with the direct-smoke batch, these pilots satisfy the Rich C 20-task calibration floor. They do not add a C reserve, solve the W* reserve/gate issue, add Rich ACUT variants, or authorize primary model attempts.
+Together with the direct-smoke batch, these pilots satisfy the Rich C 20-task calibration floor. They do not add a C reserve, solve the W* reserve/gate issue, or authorize primary model attempts.
+
+## Rich ACUT Variants
+
+Rich intervention readiness:
+
+```text
+A0 generic baseline: existing
+A1 inert control: created
+A2 static Rich context: created
+A3 C-derived Rich playbook: created
+A4 public-statement/source-only localization tool: created
+A5 frontier generic reference: existing
+model calls: 0
+primary runs authorized: false
+```
+
+The A3 context pack uses admitted Rich C outcomes only as abstract calibration. It does not include raw commits, raw subjects, reference patch text, hidden verifier implementation, W* material, R scores, W* results, or ACUT outputs.
 
 Rejected direct-smoke diagnostics:
 
@@ -654,6 +671,7 @@ python3 -m json.tool experiments/core_narrative/results/rich_c_source_oracle_que
 python3 -m json.tool experiments/core_narrative/results/rich_c_source_oracle_pilot_text_typos_20260515.json
 python3 -m json.tool experiments/core_narrative/results/rich_c_replacement_oracle_pilot_style_hash_20260515.json
 python3 -m json.tool experiments/core_narrative/results/rich_c_direct_without_nodes_oracle_pilot_py38_20260515.json
+python3 -m json.tool experiments/core_narrative/results/rich_acut_intervention_readiness_20260515.json
 python3 -m json.tool experiments/core_narrative/results/rich_replacement_oracle_pilot_20260514.json
 python3 -m json.tool experiments/core_narrative/results/rich_replacement_oracle_pilot_zerospan_20260514.json
 python3 -m json.tool experiments/core_narrative/results/rich_replacement_oracle_pilot_vs16_20260514.json
@@ -662,8 +680,8 @@ python3 -m json.tool experiments/core_narrative/results/repository_local_benchma
 git diff --check
 ```
 
-These commands verify the committed gate, queue, pilot, C-readiness, and representative C-admission tools and manifests. They do not verify W* reserve resolution, model runs, or R/W* analysis because those phases have not been executed.
+These commands verify the committed gate, queue, pilot, C-readiness, representative C-admission, and Rich ACUT readiness tools and manifests. They do not verify W* reserve resolution, model runs, or R/W* analysis because those phases have not been executed.
 
 ## Next Work
 
-Proceed with Rich ACUT variants and an explicit W* reserve-gate decision. Rich currently has 20 accepted C calibration candidates, 20 accepted W* primary candidates, 25 accepted R primary-plus-reserve candidates, and 12 remaining queued R oracle work items. The W* 5-reserve target, the 40-candidate pool target, role artifacts, Rich ACUT variants, primary runs, and analysis remain unmet.
+Proceed with an explicit W* reserve-gate decision and run-level role artifacts. Rich currently has 20 accepted C calibration candidates, 20 accepted W* primary candidates, 25 accepted R primary-plus-reserve candidates, Rich-ready A0-A5 intervention manifests, and 12 remaining queued R oracle work items. The W* 5-reserve target, the 40-candidate pool target, role artifacts, primary runs, and analysis remain unmet.

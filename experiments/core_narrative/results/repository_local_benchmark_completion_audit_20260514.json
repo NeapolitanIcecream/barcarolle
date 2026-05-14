@@ -1,12 +1,12 @@
 {
   "schema_version": "core-narrative.repository-local-benchmark-completion-audit.v1",
   "audit_id": "repository-local-benchmark-20260514-completion-audit",
-  "audited_at": "2026-05-14T17:58:45Z",
+  "audited_at": "2026-05-15T00:00:00+08:00",
   "objective_file": "/Users/chenmohan/Downloads/barcarolle-research-0514-1.md",
   "overall_verdict": "not_complete_blocked_before_task_admission_and_primary_runs",
   "active_goal_should_be_marked_complete": false,
   "basis": {
-    "commit": "fe9bd731",
+    "commit": "dd3c80eb",
     "branch": "codex/rgw-full-workspace-v1",
     "repository_admission_report": "experiments/core_narrative/reports/2026-05-14_repository_local_benchmark_admission.md",
     "repository_gate_report": "experiments/core_narrative/reports/2026-05-14_repository_local_benchmark_gate.md",
@@ -75,7 +75,8 @@
       "experiments/core_narrative/results/rich_c_replacement_oracle_pilot_padding_property_20260515.json",
       "experiments/core_narrative/results/rich_c_replacement_oracle_pilot_inspect_typo_20260515.json",
       "experiments/core_narrative/results/rich_c_direct_without_nodes_oracle_pilot_py38_20260515.json"
-    ]
+    ],
+    "rich_acut_intervention_readiness": "experiments/core_narrative/results/rich_acut_intervention_readiness_20260515.json"
   },
   "additional_feasibility_observations": {
     "rich_ambient_collect_only": {
@@ -621,7 +622,7 @@
         "unicode_data_cell_table_type_import",
         "table_column_expand_doc_removed"
       ],
-      "interpretation": "Rich R reached 25 accepted candidates after 8 direct-smoke admissions and 17 source-only Golden-Oracle pilots, satisfying the 20-primary plus 5-reserve count. No full C/R/W* denominator is frozen because C construction, W* reserve gate resolution, Rich ACUT variants, and primary-run authorization remain incomplete."
+      "interpretation": "Rich R reached 25 accepted candidates after 8 direct-smoke admissions and 17 source-only Golden-Oracle pilots, satisfying the 20-primary plus 5-reserve count. No full C/R/W* denominator is frozen because C construction, W* reserve gate resolution, and primary-run authorization remain incomplete."
     },
     "rich_c_extended_task_admission_readiness": {
       "artifact": "experiments/core_narrative/results/rich_c_extended_task_admission_readiness_20260515.json",
@@ -743,7 +744,25 @@
         "inspect_docstring_comment_typo",
         "py38_compat_branch_removal"
       ],
-      "interpretation": "Rich C reached 20 accepted calibration candidates after 3 direct-smoke admissions, 13 source-only Golden-Oracle pilots, 3 replacement-oracle pilots, and 1 direct-without-node Oracle pilot. This satisfies the C 20-task calibration floor but does not create a 5-task C reserve, solve W* reserve supply, add Rich ACUT variants, or authorize primary model runs."
+      "interpretation": "Rich C reached 20 accepted calibration candidates after 3 direct-smoke admissions, 13 source-only Golden-Oracle pilots, 3 replacement-oracle pilots, and 1 direct-without-node Oracle pilot. This satisfies the C 20-task calibration floor but does not create a 5-task C reserve, solve W* reserve supply, or authorize primary model runs."
+    },
+    "rich_acut_intervention_readiness": {
+      "status": "completed",
+      "repo_slug": "rich",
+      "model_calls_made": 0,
+      "primary_runs_authorized": false,
+      "rich_specific_interventions_created": [
+        "A1_inert_control",
+        "A2_static_repo_context",
+        "A3_c_derived_repo_calibrated_playbook",
+        "A4_code_understanding_localization_tool"
+      ],
+      "generic_interventions_reused": [
+        "A0_generic_baseline",
+        "A5_frontier_generic_reference"
+      ],
+      "artifact": "experiments/core_narrative/results/rich_acut_intervention_readiness_20260515.json",
+      "interpretation": "Rich now has A0-A5 intervention manifests for the 0514 line. The A3 playbook uses admitted C outcomes only as abstract calibration and does not include W* material, hidden verifiers, raw commits, raw subjects, or ACUT outputs."
     }
   },
   "checklist": [
@@ -897,7 +916,7 @@
         "experiments/core_narrative/reports/2026-05-15_rich_c_replacement_oracle_pilot_inspect_typo.md",
         "experiments/core_narrative/reports/2026-05-15_rich_c_direct_without_nodes_oracle_pilot_py38.md"
       ],
-      "gap": "Click W* has only 14 task-design candidates in the frozen window, below the 20-task gate. Rich has 20 accepted W* primary candidates, but only 23 stricter W* design candidates, so the 5-task W* reserve target and 40-candidate pool target remain unmet. Rich R has 25 accepted tasks: 8 direct-smoke and 17 source-only Golden-Oracle, satisfying the 20-primary plus 5-reserve count. Rich C has 20 accepted calibration tasks: 3 direct-smoke, 13 source-only Golden-Oracle, 3 replacement-oracle, and 1 direct-without-node Oracle. No full C/R/W* denominator is frozen because W* reserve/gate resolution, Rich ACUT variants, and primary-run authorization remain incomplete."
+      "gap": "Click W* has only 14 task-design candidates in the frozen window, below the 20-task gate. Rich has 20 accepted W* primary candidates, but only 23 stricter W* design candidates, so the 5-task W* reserve target and 40-candidate pool target remain unmet. Rich R has 25 accepted tasks: 8 direct-smoke and 17 source-only Golden-Oracle, satisfying the 20-primary plus 5-reserve count. Rich C has 20 accepted calibration tasks: 3 direct-smoke, 13 source-only Golden-Oracle, 3 replacement-oracle, and 1 direct-without-node Oracle. No full C/R/W* denominator is frozen because W* reserve/gate resolution and primary-run authorization remain incomplete."
     },
     {
       "requirement": "Task 3: Codex role isolation for Golden-Selector, Golden-Taskwright, Golden-Oracle, Golden-Auditor with prompt hashes, artifact digests, and admission decisions.",
@@ -909,17 +928,22 @@
     },
     {
       "requirement": "Task 4: ACUT/intervention manifest for A0-A5, including A4 public-statement + repo source localization only.",
-      "status": "partially_covered",
+      "status": "covered_for_rich_execution_plan",
       "evidence": [
         "experiments/core_narrative/configs/acuts/cheap-generic-swe.yaml",
+        "experiments/core_narrative/configs/acuts/cheap-rich-inert-control-v1.yaml",
+        "experiments/core_narrative/configs/acuts/cheap-rich-static-context-v1.yaml",
+        "experiments/core_narrative/configs/acuts/cheap-rich-c-calibrated-v1.yaml",
+        "experiments/core_narrative/configs/acuts/cheap-rich-localization-tool-v1.yaml",
+        "experiments/core_narrative/configs/acuts/frontier-generic-swe.yaml",
+        "experiments/core_narrative/results/rich_acut_intervention_readiness_20260515.json",
+        "experiments/core_narrative/tools/repository_localization_hints.py",
         "experiments/core_narrative/configs/acuts/cheap-click-inert-control-v1.yaml",
         "experiments/core_narrative/configs/acuts/cheap-click-deep-specialist-v2.yaml",
         "experiments/core_narrative/configs/acuts/cheap-click-rbench-calibrated-v1.yaml",
-        "experiments/core_narrative/configs/acuts/cheap-click-localization-tool-v1.yaml",
-        "experiments/core_narrative/configs/acuts/frontier-generic-swe.yaml",
-        "experiments/core_narrative/tools/repository_localization_hints.py"
+        "experiments/core_narrative/configs/acuts/cheap-click-localization-tool-v1.yaml"
       ],
-      "gap": "A1 and A4 Click-specific manifests were created and validated. Rich execution would require Rich or repository-neutral A1/A2/A3/A4 variants."
+      "gap": "Rich A0-A5 intervention manifests now exist, including A1 inert, A2 static Rich context, A3 C-derived playbook, A4 public-statement/source-only localization, and generic A0/A5 references. No primary attempts were authorized or run."
     },
     {
       "requirement": "Task 5: run R and W* with one primary attempt per ACUT/task, no best-of-N, fixed denominator, workspace fresh replay, hidden verifier, frozen status mapping.",
@@ -927,7 +951,7 @@
       "evidence": [
         "experiments/core_narrative/reports/2026-05-14_repository_local_benchmark_gate.md"
       ],
-      "gap": "No R/W* denominator was admitted, so no primary attempts were authorized or run."
+      "gap": "No primary attempts were authorized or run because the W* reserve/gate decision and run-level role artifacts remain incomplete."
     },
     {
       "requirement": "Task 6: analyze R_score, W*_score, paired deltas, inert control, R-selected, W*-best, selection regret, R/W* rank correlation, family effects, and R_barcarolle vs random-R if possible.",
@@ -1004,7 +1028,7 @@
         "experiments/core_narrative/reports/2026-05-15_rich_c_replacement_oracle_pilot_inspect_typo.md",
         "experiments/core_narrative/reports/2026-05-15_rich_c_direct_without_nodes_oracle_pilot_py38.md"
       ],
-      "gap": "Rich C has 20 accepted calibration candidates, Rich W* has 20 accepted primary candidates, and Rich R has 25 accepted candidates after 8 direct-smoke acceptances and 17 source-only Golden-Oracle pilots. Full C/R/W* task generation validity is not produced because W* reserve/gate resolution, Rich ACUT variants, role artifacts, and primary-run authorization remain incomplete."
+      "gap": "Rich C has 20 accepted calibration candidates, Rich W* has 20 accepted primary candidates, and Rich R has 25 accepted candidates after 8 direct-smoke acceptances and 17 source-only Golden-Oracle pilots. Full C/R/W* task generation validity is not produced because W* reserve/gate resolution, role artifacts, and primary-run authorization remain incomplete."
     },
     {
       "requirement": "Output: R/W* primary result report.",
@@ -1037,5 +1061,5 @@
       "gap": "No primary results exist, so this is verified only for the repository-admission and gate phase."
     }
   ],
-  "next_required_step": "Complete Rich ACUT variants and make an explicit W* reserve-gate decision before any primary model attempts."
+  "next_required_step": "Make an explicit W* reserve-gate decision and produce run-level role artifacts before any primary model attempts."
 }
