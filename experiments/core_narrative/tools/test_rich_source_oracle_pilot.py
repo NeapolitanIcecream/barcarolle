@@ -59,6 +59,19 @@ class RichSourceOraclePilotTests(unittest.TestCase):
         self.assertIn("rich._emoji_codes", verifier["hidden_files"][0]["content"])
         self.assertIn("Emoji(\"smiley\")", verifier["hidden_files"][0]["content"])
 
+    def test_hidden_verifier_template_covers_link_id_counter_behavior(self) -> None:
+        """The link-ID pilot verifier checks adjacent generated counter prefixes."""
+        verifier = pilot.hidden_verifier_for_candidate(
+            {
+                "subject": "Use faster generator for link IDs",
+                "source_files": ["rich/style.py"],
+            }
+        )
+
+        self.assertEqual(verifier["oracle_template"], "style_link_id_counter_sequence")
+        self.assertIn("tests/test_style_link_id_sequence.py", verifier["command"])
+        self.assertIn("prefixes[1] == prefixes[0] + 1", verifier["hidden_files"][0]["content"])
+
     def test_public_result_redacts_raw_source_anchors_and_subject(self) -> None:
         """Public pilot results keep raw commits, subjects, and hidden files private."""
         candidate = self.kbd_candidate()

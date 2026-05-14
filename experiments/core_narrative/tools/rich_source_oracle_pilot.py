@@ -77,6 +77,22 @@ def test_emoji_code_table_loads_only_after_first_lookup() -> None:
     assert "rich._emoji_codes" in sys.modules
 '''
 
+LINK_ID_SEQUENCE_TEST = '''\
+from __future__ import annotations
+
+from rich.style import Style
+
+
+def test_link_style_ids_use_adjacent_counter_prefixes() -> None:
+    """Consecutive link style IDs should use adjacent counter prefixes."""
+    suffix = str(hash(None))
+    link_ids = [Style(link=f"https://example.com/{index}")._link_id for index in range(3)]
+    prefixes = [int(link_id[: -len(suffix)]) for link_id in link_ids]
+
+    assert prefixes[1] == prefixes[0] + 1
+    assert prefixes[2] == prefixes[1] + 1
+'''
+
 
 def parse_args(argv: Sequence[str] | None = None) -> argparse.Namespace:
     parser = argparse.ArgumentParser(description=__doc__)
@@ -131,6 +147,18 @@ def hidden_verifier_for_candidate(candidate: Mapping[str, Any]) -> dict[str, Any
             "command": ".venv/bin/python -m pytest -q tests/test_emoji_lazy_import.py",
             "test_node_count": 1,
             "oracle_template": "emoji_code_table_lazy_import",
+        }
+    if subject == "use faster generator for link ids" and "rich/style.py" in source_files:
+        return {
+            "hidden_files": [
+                {
+                    "path": "tests/test_style_link_id_sequence.py",
+                    "content": LINK_ID_SEQUENCE_TEST,
+                }
+            ],
+            "command": ".venv/bin/python -m pytest -q tests/test_style_link_id_sequence.py",
+            "test_node_count": 1,
+            "oracle_template": "style_link_id_counter_sequence",
         }
     raise ToolError(
         "no source-oracle template is available for selected candidate",

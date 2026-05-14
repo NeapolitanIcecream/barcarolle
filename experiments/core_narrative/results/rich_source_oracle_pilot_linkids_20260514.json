@@ -1,0 +1,44 @@
+{
+  "admission_decision": "accepted",
+  "base_anchor_digest": "754a157f45a788470392e01d1824e989ba1466e919f88467e958a7f3889cd379",
+  "changed_file_set_digest": "8377f7de033726ba3e6db9ff8805d54d35f39bd1b68ea17c20dd2ecaedc8c00f",
+  "claim_boundary": [
+    "This is a one-candidate source-only Golden-Oracle smoke pilot, not a frozen Rich denominator.",
+    "Raw source commits, raw subjects, reference patches, and hidden verifier files are retained only in ignored private artifacts.",
+    "No ACUT primary attempt or model call was made."
+  ],
+  "family": "parser/mixed integration",
+  "generated_at": "2026-05-14T15:23:14.220760Z",
+  "hidden_verifier_digest": "1185f0ba12ee26c338da17e627d980293f453ae04d51160f01dc975cefd37a85",
+  "model_calls_made": 0,
+  "no_op_result": {
+    "public_artifact_redacted": true,
+    "status": "failed",
+    "verifier_exit_code": 1
+  },
+  "oracle_priority": "medium",
+  "oracle_template": "style_link_id_counter_sequence",
+  "pilot_scope": "one_source_only_golden_oracle_candidate",
+  "primary_runs_authorized": false,
+  "private_artifact_root": "experiments/core_narrative/large_artifacts/rich_source_oracle_pilot_linkids_20260514",
+  "reference_patch_bytes": 2616,
+  "reference_patch_digest": "42548a56dfbd0ef821d309a634e2defc9d9706facebdcc09b55c92393ef9b59a",
+  "reference_result": {
+    "public_artifact_redacted": true,
+    "status": "passed",
+    "verifier_exit_code": 0
+  },
+  "repo_slug": "rich",
+  "schema_version": "core-narrative.rich-source-oracle-pilot.v1",
+  "source_anchor_digest": "da449551481fa1ff428b732d1ab35673603432c65639c197733d0411a9a2e11d",
+  "source_file_count": 1,
+  "split": "W_star",
+  "statement_digest": "01fdf7bc5114c7c125f1169ee905050c71bad7ff93c522b3fcb6f6b0ba2d1209",
+  "status": "completed",
+  "subject_digest": "798eb95fb90106178382ac013eb6cfabb51a398a5123020597e5b4844a3d0fb6",
+  "surface": "source_without_tests",
+  "test_file_count": 0,
+  "test_node_count": 1,
+  "tool": "rich_source_oracle_pilot",
+  "triage_code": "performance_or_import_behavior_probe"
+}
