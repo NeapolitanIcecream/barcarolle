@@ -3,7 +3,9 @@
 
 from __future__ import annotations
 
+from pathlib import Path
 import unittest
+from unittest.mock import patch
 
 from _common import ToolError
 import rich_source_oracle_pilot as pilot
@@ -189,6 +191,65 @@ class RichSourceOraclePilotTests(unittest.TestCase):
         content = verifier["hidden_files"][0]["content"]
         self.assertIn("# text = Text(text)", content)
         self.assertIn("# self.content.append_text(text)", content)
+
+    def test_hidden_verifier_template_covers_split_lines_terminator(self) -> None:
+        """The R verifier checks newline termination is exposed per split line."""
+        verifier = pilot.hidden_verifier_for_candidate(
+            {
+                "subject": "split lines terminator",
+                "source_files": ["rich/console.py", "rich/segment.py"],
+            }
+        )
+
+        self.assertEqual(verifier["oracle_template"], "segment_split_lines_terminator")
+        self.assertIn("tests/test_segment_split_lines_terminator.py", verifier["command"])
+        content = verifier["hidden_files"][0]["content"]
+        self.assertIn("split_lines_terminator", content)
+        self.assertIn('(["alpha"], True)', content)
+
+    def test_source_only_candidates_respect_requested_split(self) -> None:
+        """R queue pilots select source-only candidates from R, not W*."""
+        candidates = [
+            {
+                "commit": "a" * 40,
+                "base_commit": "b" * 40,
+                "subject": "split lines terminator",
+                "committed_at": "2026-01-23T00:00:00+00:00",
+                "window": "R",
+                "family": "console/rendering",
+                "surface": "source_without_tests",
+                "source_files": ["rich/console.py", "rich/segment.py"],
+                "test_files": [],
+                "source_file_count": 2,
+                "test_file_count": 0,
+                "test_node_count": 0,
+                "changed_file_set_digest": "r-files",
+                "oracle_requirement": "golden_oracle_required",
+                "direct_smoke_ready": False,
+            },
+            {
+                "commit": "c" * 40,
+                "base_commit": "d" * 40,
+                "subject": "support html inline",
+                "committed_at": "2026-04-12T00:00:00+00:00",
+                "window": "W_star",
+                "family": "parser/mixed integration",
+                "surface": "source_without_tests",
+                "source_files": ["rich/default_styles.py", "rich/markdown.py"],
+                "test_files": [],
+                "source_file_count": 2,
+                "test_file_count": 0,
+                "test_node_count": 0,
+                "changed_file_set_digest": "w-files",
+                "oracle_requirement": "golden_oracle_required",
+                "direct_smoke_ready": False,
+            },
+        ]
+
+        with patch.object(pilot, "discover_candidates", return_value=candidates):
+            selected = pilot.source_only_oracle_candidates(Path("/repo"), split="R")
+
+        self.assertEqual([candidate["subject"] for candidate in selected], ["split lines terminator"])
 
     def test_public_result_redacts_raw_source_anchors_and_subject(self) -> None:
         """Public pilot results keep raw commits, subjects, and hidden files private."""

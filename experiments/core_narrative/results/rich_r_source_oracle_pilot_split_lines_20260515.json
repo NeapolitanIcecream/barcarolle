@@ -1,0 +1,44 @@
+{
+  "admission_decision": "accepted",
+  "base_anchor_digest": "df31f763d3feb1ae0c1cf43d96a56af02286f947a678e39663172fab963dc8eb",
+  "changed_file_set_digest": "6f7051e0e4f558f561cedd3711e4ff68f3ecb98648c303a6d9f83c77ad43bf5e",
+  "claim_boundary": [
+    "This is a one-candidate source-only Golden-Oracle smoke pilot, not a frozen Rich denominator.",
+    "Raw source commits, raw subjects, reference patches, and hidden verifier files are retained only in ignored private artifacts.",
+    "No ACUT primary attempt or model call was made."
+  ],
+  "family": "console/rendering",
+  "generated_at": "2026-05-14T16:46:30.339521Z",
+  "hidden_verifier_digest": "3f0a56230de6811801e8f80cf56632f347dfe4e1b0a2005bdc4c23eca291682e",
+  "model_calls_made": 0,
+  "no_op_result": {
+    "public_artifact_redacted": true,
+    "status": "failed",
+    "verifier_exit_code": 1
+  },
+  "oracle_priority": "medium",
+  "oracle_template": "segment_split_lines_terminator",
+  "pilot_scope": "one_source_only_golden_oracle_candidate",
+  "primary_runs_authorized": false,
+  "private_artifact_root": "experiments/core_narrative/large_artifacts/rich_r_source_oracle_pilot_split_lines_20260515",
+  "reference_patch_bytes": 2237,
+  "reference_patch_digest": "d861b7e970b778afe4dfc87eac122c30a3d58407dc124b0f5462376cdda4a615",
+  "reference_result": {
+    "public_artifact_redacted": true,
+    "status": "passed",
+    "verifier_exit_code": 0
+  },
+  "repo_slug": "rich",
+  "schema_version": "core-narrative.rich-source-oracle-pilot.v1",
+  "source_anchor_digest": "6fb13a59f083c69fc0026f3ded6e9a7ada34b10de584ccca12407f5a449e01c4",
+  "source_file_count": 2,
+  "split": "R",
+  "statement_digest": "0784932c4b1b743b0434181cf20a3e0860fe2a611c9f1fadc6d5eb9c92f40ba3",
+  "status": "completed",
+  "subject_digest": "0536e83257469416f51e163139b8695ff91f0900cdb780b0ae0389716eb7ca57",
+  "surface": "source_without_tests",
+  "test_file_count": 0,
+  "test_node_count": 1,
+  "tool": "rich_source_oracle_pilot",
+  "triage_code": "manual_probe_required"
+}

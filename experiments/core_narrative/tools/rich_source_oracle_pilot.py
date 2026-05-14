@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Run one Rich W* source-only Golden-Oracle admission smoke pilot."""
+"""Run one Rich source-only Golden-Oracle admission smoke pilot for a time split."""
 
 from __future__ import annotations
 
@@ -33,6 +33,10 @@ REPO_ROOT = Path(__file__).resolve().parents[3]
 DEFAULT_PRIVATE_ROOT = REPO_ROOT / "experiments/core_narrative/large_artifacts/rich_source_oracle_pilot_20260514"
 DEFAULT_OUTPUT = REPO_ROOT / "experiments/core_narrative/results/rich_source_oracle_pilot_20260514.json"
 DEFAULT_REPORT = REPO_ROOT / "experiments/core_narrative/reports/2026-05-14_rich_source_oracle_pilot.md"
+
+
+def split_slug(split: str) -> str:
+    return split.lower().replace("_star", "star")
 
 
 KBD_INLINE_TEST = '''\
@@ -232,10 +236,28 @@ def test_tabledata_append_stale_commented_code_removed() -> None:
     assert "# self.content.append_text(text)" not in source
 '''
 
+SPLIT_LINES_TERMINATOR_TEST = '''\
+from __future__ import annotations
+
+from rich.segment import Segment
+
+
+def test_split_lines_terminator_reports_trailing_newline_per_line() -> None:
+    """Line splitting should report whether each yielded line ended with a newline."""
+    lines = list(Segment.split_lines_terminator([Segment("alpha\\nbeta\\n"), Segment("gamma")]))
+
+    assert [([segment.text for segment in line], add_new_line) for line, add_new_line in lines] == [
+        (["alpha"], True),
+        (["beta"], True),
+        (["gamma"], False),
+    ]
+'''
+
 
 def parse_args(argv: Sequence[str] | None = None) -> argparse.Namespace:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--repo", default=str(DEFAULT_REPO), help="Local Rich checkout.")
+    parser.add_argument("--split", choices=["C", "R", "W_star"], default="W_star", help="Time split to admit.")
     parser.add_argument("--private-root", default=str(DEFAULT_PRIVATE_ROOT), help="Ignored private artifact root.")
     parser.add_argument("--output", default=str(DEFAULT_OUTPUT), help="Public redacted JSON output.")
     parser.add_argument("--report", default=str(DEFAULT_REPORT), help="Public markdown report.")
@@ -248,11 +270,11 @@ def parse_args(argv: Sequence[str] | None = None) -> argparse.Namespace:
     return parser.parse_args(list(argv) if argv is not None else None)
 
 
-def source_only_oracle_candidates(repo_path: Path) -> list[Mapping[str, Any]]:
+def source_only_oracle_candidates(repo_path: Path, split: str = "W_star") -> list[Mapping[str, Any]]:
     candidates = [
         candidate
         for candidate in discover_candidates(repo_path)
-        if candidate.get("window") == "W_star" and candidate.get("oracle_requirement") == "golden_oracle_required"
+        if candidate.get("window") == split and candidate.get("oracle_requirement") == "golden_oracle_required"
     ]
     return sorted(
         candidates,
@@ -395,6 +417,18 @@ def hidden_verifier_for_candidate(candidate: Mapping[str, Any]) -> dict[str, Any
             "test_node_count": 1,
             "oracle_template": "markdown_tabledata_stale_comments_removed",
         }
+    if subject == "split lines terminator" and {"rich/console.py", "rich/segment.py"}.issubset(source_files):
+        return {
+            "hidden_files": [
+                {
+                    "path": "tests/test_segment_split_lines_terminator.py",
+                    "content": SPLIT_LINES_TERMINATOR_TEST,
+                }
+            ],
+            "command": ".venv/bin/python -m pytest -q tests/test_segment_split_lines_terminator.py",
+            "test_node_count": 1,
+            "oracle_template": "segment_split_lines_terminator",
+        }
     raise ToolError(
         "no source-oracle template is available for selected candidate",
         subject_digest=sha256_text(str(candidate.get("subject", ""))),
@@ -402,12 +436,12 @@ def hidden_verifier_for_candidate(candidate: Mapping[str, Any]) -> dict[str, Any
     )
 
 
-def select_candidate(repo_path: Path, index: int) -> Mapping[str, Any]:
-    candidates = source_only_oracle_candidates(repo_path)
+def select_candidate(repo_path: Path, index: int, split: str = "W_star") -> Mapping[str, Any]:
+    candidates = source_only_oracle_candidates(repo_path, split)
     if not candidates:
-        raise ToolError("no Rich W* source-only Golden-Oracle candidates found")
+        raise ToolError("no Rich source-only Golden-Oracle candidates found", split=split)
     if index < 0 or index >= len(candidates):
-        raise ToolError("candidate index out of range", index=index, candidate_count=len(candidates))
+        raise ToolError("candidate index out of range", index=index, candidate_count=len(candidates), split=split)
     return candidates[index]
 
 
@@ -428,6 +462,7 @@ def materialize_task_pack(
     verifier: Mapping[str, Any],
     task_dir: Path,
     *,
+    split: str = "W_star",
     task_id: str = "rich__wstar_source_oracle_pilot__001",
 ) -> dict[str, Any]:
     shutil.rmtree(task_dir, ignore_errors=True)
@@ -454,7 +489,7 @@ def materialize_task_pack(
         "schema_version": "core-narrative.task.v1",
         "task_id": task_id,
         "repo_slug": "rich",
-        "split": "W_star",
+        "split": split,
         "source": {
             "kind": "commit_or_pull_request",
             "base_commit": candidate["base_commit"],
@@ -495,6 +530,7 @@ def public_result(
     noop: Mapping[str, Any],
     reference: Mapping[str, Any],
     private_root: str,
+    split: str = "W_star",
 ) -> dict[str, Any]:
     decision = admission_decision(str(noop.get("status")), str(reference.get("status")))
     triage = triage_source_only_candidate(candidate)
@@ -505,7 +541,7 @@ def public_result(
         "generated_at": iso_now(),
         "model_calls_made": 0,
         "repo_slug": "rich",
-        "split": "W_star",
+        "split": split,
         "pilot_scope": "one_source_only_golden_oracle_candidate",
         "oracle_template": verifier.get("oracle_template"),
         "source_anchor_digest": source_anchor_digest(str(candidate["commit"])),
@@ -551,6 +587,7 @@ def render_report(payload: Mapping[str, Any]) -> str:
             "# Rich Source-Only Golden-Oracle Pilot",
             "",
             f"Status: `{payload.get('status')}`",
+            f"Split: `{payload.get('split')}`",
             f"Generated at: `{payload.get('generated_at')}`",
             "",
             "## Result",
@@ -562,7 +599,7 @@ def render_report(payload: Mapping[str, Any]) -> str:
             f"- Family: `{payload.get('family')}`",
             f"- Test node count: `{payload.get('test_node_count')}`",
             "",
-            "Primary R/W* model attempts remain unauthorized. This pilot checks one source-only Rich W* candidate only.",
+            "Primary R/W* model attempts remain unauthorized. This pilot checks one source-only Rich candidate only.",
             "",
         ]
     )
@@ -575,9 +612,15 @@ def run(argv: Sequence[str] | None = None) -> int:
     if args.force:
         shutil.rmtree(private_root, ignore_errors=True)
     private_root.mkdir(parents=True, exist_ok=True)
-    candidate = select_candidate(repo_path, args.candidate_index)
+    candidate = select_candidate(repo_path, args.candidate_index, args.split)
     verifier = hidden_verifier_for_candidate(candidate)
-    task_pack = materialize_task_pack(candidate, verifier, private_root / "candidate_task_pack")
+    task_pack = materialize_task_pack(
+        candidate,
+        verifier,
+        private_root / "candidate_task_pack",
+        split=args.split,
+        task_id=f"rich__{split_slug(args.split)}_source_oracle_pilot__{args.candidate_index + 1:03d}",
+    )
     task_path = Path(task_pack["task_path"])
     reference_patch = patch_for_candidate(repo_path, candidate)
     reference_digest = sha256_text(reference_patch)
@@ -606,6 +649,7 @@ def run(argv: Sequence[str] | None = None) -> int:
         noop=noop,
         reference=reference,
         private_root=repo_relative(private_root),
+        split=args.split,
     )
     output = Path(args.output)
     report = Path(args.report)
