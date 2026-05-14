@@ -72,6 +72,21 @@ class RichSourceOraclePilotTests(unittest.TestCase):
         self.assertIn("tests/test_style_link_id_sequence.py", verifier["command"])
         self.assertIn("prefixes[1] == prefixes[0] + 1", verifier["hidden_files"][0]["content"])
 
+    def test_hidden_verifier_template_covers_console_pathlike_annotations(self) -> None:
+        """The drop-3.8 verifier checks save helpers expose typed PathLike[str] annotations."""
+        verifier = pilot.hidden_verifier_for_candidate(
+            {
+                "subject": "drop 3.8",
+                "source_files": ["rich/console.py"],
+            }
+        )
+
+        self.assertEqual(verifier["oracle_template"], "console_save_pathlike_str_annotations")
+        self.assertIn("tests/test_console_pathlike_annotations.py", verifier["command"])
+        content = verifier["hidden_files"][0]["content"]
+        self.assertIn('("save_text", "save_html", "save_svg")', content)
+        self.assertIn("typing.get_args(candidate) == (str,)", content)
+
     def test_public_result_redacts_raw_source_anchors_and_subject(self) -> None:
         """Public pilot results keep raw commits, subjects, and hidden files private."""
         candidate = self.kbd_candidate()

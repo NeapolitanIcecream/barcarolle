@@ -93,6 +93,33 @@ def test_link_style_ids_use_adjacent_counter_prefixes() -> None:
     assert prefixes[2] == prefixes[1] + 1
 '''
 
+PATHLIKE_ANNOTATIONS_TEST = '''\
+from __future__ import annotations
+
+import os
+import typing
+
+from rich.console import Console
+
+
+def _annotation_has_str_pathlike(annotation: object) -> bool:
+    if typing.get_origin(annotation) is typing.Union:
+        candidates = typing.get_args(annotation)
+    else:
+        candidates = (annotation,)
+    return any(
+        typing.get_origin(candidate) is os.PathLike and typing.get_args(candidate) == (str,)
+        for candidate in candidates
+    )
+
+
+def test_console_save_paths_use_typed_pathlike() -> None:
+    """Save helpers should type PathLike with str after dropping Python 3.8."""
+    for method_name in ("save_text", "save_html", "save_svg"):
+        annotation = getattr(Console, method_name).__annotations__["path"]
+        assert _annotation_has_str_pathlike(annotation), (method_name, annotation)
+'''
+
 
 def parse_args(argv: Sequence[str] | None = None) -> argparse.Namespace:
     parser = argparse.ArgumentParser(description=__doc__)
@@ -159,6 +186,18 @@ def hidden_verifier_for_candidate(candidate: Mapping[str, Any]) -> dict[str, Any
             "command": ".venv/bin/python -m pytest -q tests/test_style_link_id_sequence.py",
             "test_node_count": 1,
             "oracle_template": "style_link_id_counter_sequence",
+        }
+    if subject == "drop 3.8" and "rich/console.py" in source_files:
+        return {
+            "hidden_files": [
+                {
+                    "path": "tests/test_console_pathlike_annotations.py",
+                    "content": PATHLIKE_ANNOTATIONS_TEST,
+                }
+            ],
+            "command": ".venv/bin/python -m pytest -q tests/test_console_pathlike_annotations.py",
+            "test_node_count": 1,
+            "oracle_template": "console_save_pathlike_str_annotations",
         }
     raise ToolError(
         "no source-oracle template is available for selected candidate",
