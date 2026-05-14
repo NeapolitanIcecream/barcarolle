@@ -1,0 +1,63 @@
+{
+  "accepted_w_star_primary_count": 20,
+  "candidate_pool_gap": 17,
+  "candidate_pool_target": 40,
+  "claim_boundary": [
+    "This artifact does not freeze a full C/R/W* denominator.",
+    "Raw subjects, raw commits, reference patches, and hidden verifier files are not included.",
+    "No ACUT primary attempt or model call was made."
+  ],
+  "decision": "w_star_primary_count_reached_but_reserve_and_pool_targets_unmet",
+  "generated_at": "2026-05-14T16:21:25.489434Z",
+  "maximum_possible_w_star_admissions_under_current_scan": 23,
+  "model_calls_made": 0,
+  "primary_runs_authorized": false,
+  "remaining_candidates": [
+    {
+      "base_anchor_digest": "ce0b26cad60a57ee6c348f4640158f60549d9731f43bd27b0bc57b506479ffd3",
+      "changed_file_set_digest": "f62001e805a7b08d7c4bba9cb3e2900153ebb5dbba9a46446c9a297272a38bfc",
+      "family": "parser/mixed integration",
+      "oracle_priority": "high",
+      "reserve_blocker_code": "condition_equivalent_under_loop_invariant",
+      "reserve_blocker_reason": "The changed branch is equivalent under split_graphemes loop bounds; no no-op/reference discriminator was found.",
+      "source_anchor_digest": "71f06c79e0a8875a72cd3281c1da18758c98c21c566cb44948319f6eb1a0bec3",
+      "subject_digest": "dc8227ff47655b4c26730fba348b7ba79a227168cd4eef90934ebb3e561617ca",
+      "surface": "source_without_tests",
+      "triage_code": "behavior_edge_case_probe"
+    },
+    {
+      "base_anchor_digest": "45f9b6c73ab94a827128aa6d1c8d89f32acd8d39a79bb63baae578b1575eb726",
+      "changed_file_set_digest": "553c7cb6e2dc8d36061af089a40199982f7126b3f2556fc92f0de21128661683",
+      "family": "console/rendering",
+      "oracle_priority": "low",
+      "reserve_blocker_code": "whitespace_only_source_cleanup",
+      "reserve_blocker_reason": "No semantic, API, docstring, import, or rendering discriminator was found.",
+      "source_anchor_digest": "34b7daed9fa32891c0e4a6c79382c39f98728165e1142a07e7d9de9ca7eddd82",
+      "subject_digest": "50a66195d31a5bb6afd46c844c16e396a6aaeb4c61b3f5e601ab4f487cd3f880",
+      "surface": "source_without_tests",
+      "triage_code": "deprioritized_low_behavior_signal"
+    },
+    {
+      "base_anchor_digest": "eddc3960633325b3de60d7b26b988b62f21695b85ef699142f1ba2ed99d66227",
+      "changed_file_set_digest": "8f507d88f3d034716fad069c6a73da25e2915a216a2bdda6db2e8d0c13a0020a",
+      "family": "console/rendering",
+      "oracle_priority": "low",
+      "reserve_blocker_code": "local_alias_refactor_behavior_equivalent",
+      "reserve_blocker_reason": "The change renames local aliases only; observable rendering behavior is unchanged.",
+      "source_anchor_digest": "ed69406e11fb2f426d6e3933d1033a6ab2246a7d13c9d1e30190e4818cca656b",
+      "subject_digest": "17422553e91dafb5f04bbdfc1f07d46f460587ee95943b91fd0c6ff4008c3548",
+      "surface": "source_without_tests",
+      "triage_code": "deprioritized_low_behavior_signal"
+    }
+  ],
+  "remaining_unadmitted_w_star_design_candidates": 3,
+  "repo_slug": "rich",
+  "reserve_gap_even_if_all_remaining_admitted": 2,
+  "schema_version": "core-narrative.rich-wstar-reserve-feasibility.v1",
+  "split": "W_star",
+  "status": "completed",
+  "target_primary_count": 20,
+  "target_primary_plus_reserve_count": 25,
+  "target_reserve_count": 5,
+  "tool": "rich_wstar_reserve_feasibility"
+}

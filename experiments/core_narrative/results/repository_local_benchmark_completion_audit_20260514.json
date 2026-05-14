@@ -1,7 +1,7 @@
 {
   "schema_version": "core-narrative.repository-local-benchmark-completion-audit.v1",
   "audit_id": "repository-local-benchmark-20260514-completion-audit",
-  "audited_at": "2026-05-14T16:14:42Z",
+  "audited_at": "2026-05-14T16:21:42Z",
   "objective_file": "/Users/chenmohan/Downloads/barcarolle-research-0514-1.md",
   "overall_verdict": "not_complete_blocked_before_task_admission_and_primary_runs",
   "active_goal_should_be_marked_complete": false,
@@ -28,6 +28,7 @@
     "rich_source_oracle_pilot_fix_docstring": "experiments/core_narrative/results/rich_source_oracle_pilot_fix_docstring_20260514.json",
     "rich_source_oracle_pilot_spelling": "experiments/core_narrative/results/rich_source_oracle_pilot_spelling_20260514.json",
     "rich_source_oracle_pilot_remove_comments": "experiments/core_narrative/results/rich_source_oracle_pilot_remove_comments_20260514.json",
+    "rich_wstar_reserve_feasibility": "experiments/core_narrative/results/rich_wstar_reserve_feasibility_20260514.json",
     "rich_replacement_oracle_pilot": "experiments/core_narrative/results/rich_replacement_oracle_pilot_20260514.json",
     "rich_replacement_oracle_pilot_zerospan": "experiments/core_narrative/results/rich_replacement_oracle_pilot_zerospan_20260514.json",
     "rich_replacement_oracle_pilot_vs16": "experiments/core_narrative/results/rich_replacement_oracle_pilot_vs16_20260514.json",
@@ -385,6 +386,18 @@
       "model_calls_made": 0,
       "primary_runs_authorized": false,
       "interpretation": "An eleventh Rich W* source-only Golden-Oracle candidate passed no-op/reference admission smoke. This raises admitted W* task count to 20, reaching the primary W* task count but not the W* reserve target, C/R construction, denominator freeze, or primary-run authorization."
+    },
+    "rich_wstar_reserve_feasibility": {
+      "artifact": "experiments/core_narrative/results/rich_wstar_reserve_feasibility_20260514.json",
+      "status": "completed",
+      "accepted_w_star_primary_count": 20,
+      "remaining_unadmitted_w_star_design_candidates": 3,
+      "maximum_possible_w_star_admissions_under_current_scan": 23,
+      "reserve_gap_even_if_all_remaining_admitted": 2,
+      "candidate_pool_gap": 17,
+      "model_calls_made": 0,
+      "primary_runs_authorized": false,
+      "interpretation": "Rich W* reached 20 accepted primary candidates but cannot reach the 25-task primary-plus-reserve target or 40-candidate pool under the current frozen W* scan."
     }
   },
   "checklist": [
@@ -426,6 +439,7 @@
         "experiments/core_narrative/results/rich_source_oracle_pilot_fix_docstring_20260514.json",
         "experiments/core_narrative/results/rich_source_oracle_pilot_spelling_20260514.json",
         "experiments/core_narrative/results/rich_source_oracle_pilot_remove_comments_20260514.json",
+        "experiments/core_narrative/results/rich_wstar_reserve_feasibility_20260514.json",
         "experiments/core_narrative/results/rich_replacement_oracle_pilot_20260514.json",
         "experiments/core_narrative/results/rich_replacement_oracle_pilot_zerospan_20260514.json",
         "experiments/core_narrative/results/rich_replacement_oracle_pilot_vs16_20260514.json",
@@ -453,6 +467,7 @@
         "experiments/core_narrative/reports/2026-05-14_rich_source_oracle_pilot_fix_docstring.md",
         "experiments/core_narrative/reports/2026-05-14_rich_source_oracle_pilot_spelling.md",
         "experiments/core_narrative/reports/2026-05-14_rich_source_oracle_pilot_remove_comments.md",
+        "experiments/core_narrative/reports/2026-05-14_rich_wstar_reserve_feasibility.md",
         "experiments/core_narrative/reports/2026-05-14_rich_replacement_oracle_pilot.md",
         "experiments/core_narrative/reports/2026-05-14_rich_replacement_oracle_pilot_zerospan.md",
         "experiments/core_narrative/reports/2026-05-14_rich_replacement_oracle_pilot_vs16.md",
@@ -520,6 +535,7 @@
         "experiments/core_narrative/reports/2026-05-14_rich_source_oracle_pilot_fix_docstring.md",
         "experiments/core_narrative/reports/2026-05-14_rich_source_oracle_pilot_spelling.md",
         "experiments/core_narrative/reports/2026-05-14_rich_source_oracle_pilot_remove_comments.md",
+        "experiments/core_narrative/reports/2026-05-14_rich_wstar_reserve_feasibility.md",
         "experiments/core_narrative/reports/2026-05-14_rich_replacement_oracle_pilot.md",
         "experiments/core_narrative/reports/2026-05-14_rich_replacement_oracle_pilot_zerospan.md",
         "experiments/core_narrative/reports/2026-05-14_rich_replacement_oracle_pilot_vs16.md",
