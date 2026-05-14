@@ -37,7 +37,7 @@ class RichReplacementOraclePilotTests(unittest.TestCase):
     def test_unknown_replacement_candidate_blocks_without_template(self) -> None:
         """Replacement pilots fail closed when no hidden-verifier template exists."""
         candidate = self.candidate()
-        candidate["subject"] = "refinements, and tests"
+        candidate["subject"] = "unhandled replacement candidate"
 
         with self.assertRaises(ToolError):
             pilot.hidden_verifier_for_candidate(candidate)
@@ -51,6 +51,17 @@ class RichReplacementOraclePilotTests(unittest.TestCase):
         self.assertEqual(verifier["oracle_template"], "split_graphemes_leading_zero_width_span")
         self.assertIn("tests/test_cells_split_graphemes_zero_width_span.py", verifier["command"])
         self.assertIn("spans == [(0, 1, 0)]", verifier["hidden_files"][0]["content"])
+
+    def test_hidden_verifier_template_covers_variation_selector_timeout(self) -> None:
+        """The refinement verifier checks leading zero-width plus VS16 handling."""
+        candidate = self.candidate()
+        candidate["subject"] = "refinements, and tests"
+        verifier = pilot.hidden_verifier_for_candidate(candidate)
+
+        self.assertEqual(verifier["oracle_template"], "split_graphemes_leading_zero_width_variation_selector")
+        self.assertIn("tests/test_cells_split_graphemes_variation_selector.py", verifier["command"])
+        self.assertIn("signal.alarm(1)", verifier["hidden_files"][0]["content"])
+        self.assertIn("spans == [(0, 2, 0)]", verifier["hidden_files"][0]["content"])
 
     def test_public_result_redacts_raw_source_anchors_subject_and_hidden_test(self) -> None:
         """Public replacement results keep raw source and hidden verifier details private."""

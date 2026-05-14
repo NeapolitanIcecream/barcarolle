@@ -73,6 +73,32 @@ def test_split_graphemes_covers_leading_zero_width_character() -> None:
     assert width == 0
 '''
 
+SPLIT_GRAPHEMES_VARIATION_SELECTOR_TEST = '''\
+from __future__ import annotations
+
+import signal
+
+from rich.cells import split_graphemes
+
+
+def _timeout(_signum: int, _frame: object) -> None:
+    raise AssertionError("split_graphemes did not return for leading zero-width plus VS16")
+
+
+def test_split_graphemes_covers_leading_zero_width_with_variation_selector() -> None:
+    """Leading zero-width plus VS16 should be represented as one zero-width span."""
+    previous_handler = signal.signal(signal.SIGALRM, _timeout)
+    signal.alarm(1)
+    try:
+        spans, width = split_graphemes("\\u0301\\ufe0f")
+    finally:
+        signal.alarm(0)
+        signal.signal(signal.SIGALRM, previous_handler)
+
+    assert spans == [(0, 2, 0)]
+    assert width == 0
+'''
+
 
 def parse_args(argv: Sequence[str] | None = None) -> argparse.Namespace:
     parser = argparse.ArgumentParser(description=__doc__)
@@ -142,6 +168,18 @@ def hidden_verifier_for_candidate(candidate: Mapping[str, Any]) -> dict[str, Any
             "command": ".venv/bin/python -m pytest -q tests/test_cells_split_graphemes_zero_width_span.py",
             "test_node_count": 1,
             "oracle_template": "split_graphemes_leading_zero_width_span",
+        }
+    if subject == "refinements, and tests" and "rich/cells.py" in source_files:
+        return {
+            "hidden_files": [
+                {
+                    "path": "tests/test_cells_split_graphemes_variation_selector.py",
+                    "content": SPLIT_GRAPHEMES_VARIATION_SELECTOR_TEST,
+                }
+            ],
+            "command": ".venv/bin/python -m pytest -q tests/test_cells_split_graphemes_variation_selector.py",
+            "test_node_count": 1,
+            "oracle_template": "split_graphemes_leading_zero_width_variation_selector",
         }
     raise ToolError(
         "no replacement-oracle template is available for selected candidate",

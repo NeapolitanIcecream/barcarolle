@@ -1,0 +1,45 @@
+{
+  "admission_decision": "accepted",
+  "base_anchor_digest": "71f06c79e0a8875a72cd3281c1da18758c98c21c566cb44948319f6eb1a0bec3",
+  "batch_candidate_index": 6,
+  "changed_file_set_digest": "aacd90554dbdd1d3a12ca057f7d659da9a4a3fc3ce09059b20813f495b6ebe2f",
+  "claim_boundary": [
+    "This is a one-candidate replacement-oracle smoke pilot, not a frozen Rich denominator.",
+    "Raw source commits, raw subjects, reference patches, and hidden verifier files are retained only in ignored private artifacts.",
+    "No ACUT primary attempt or model call was made."
+  ],
+  "family": "parser/mixed integration",
+  "generated_at": "2026-05-14T15:36:11.664245Z",
+  "hidden_verifier_digest": "79e99d2d425d2928f0cbc46c00f20502daad3e1cd428b2703dd68689e83c7133",
+  "model_calls_made": 0,
+  "no_op_result": {
+    "public_artifact_redacted": true,
+    "status": "failed",
+    "verifier_exit_code": 1
+  },
+  "oracle_template": "split_graphemes_leading_zero_width_variation_selector",
+  "pilot_scope": "one_rejected_direct_candidate_replacement_oracle",
+  "primary_runs_authorized": false,
+  "prior_no_op_status": "passed_unexpected",
+  "prior_reference_status": "passed",
+  "private_artifact_root": "experiments/core_narrative/large_artifacts/rich_replacement_oracle_pilot_vs16_20260514",
+  "reference_patch_bytes": 4212,
+  "reference_patch_digest": "c1afb1d3a6dab2070b874724356c0119b5194b6300441616446a2b83f84deb5c",
+  "reference_result": {
+    "public_artifact_redacted": true,
+    "status": "passed",
+    "verifier_exit_code": 0
+  },
+  "repo_slug": "rich",
+  "schema_version": "core-narrative.rich-replacement-oracle-pilot.v1",
+  "source_anchor_digest": "f326623e430b07e7f64a553f7b25d9442cd1d65df26f60f9de7d629bf8fb07b5",
+  "source_file_count": 1,
+  "split": "W_star",
+  "statement_digest": "d8f7af8013805941bc4ed36d14ca4ea4ef01147ab4d3ea7e056e2fe1e4551afe",
+  "status": "completed",
+  "subject_digest": "19b41e3357c8dae7ddebdc7f6b8bde6523b7bbd2066ee39e52933f979a4b6152",
+  "surface": "source_and_tests",
+  "test_file_count": 1,
+  "test_node_count": 1,
+  "tool": "rich_replacement_oracle_pilot"
+}
