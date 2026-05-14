@@ -76,7 +76,8 @@
       "experiments/core_narrative/results/rich_c_replacement_oracle_pilot_inspect_typo_20260515.json",
       "experiments/core_narrative/results/rich_c_direct_without_nodes_oracle_pilot_py38_20260515.json"
     ],
-    "rich_acut_intervention_readiness": "experiments/core_narrative/results/rich_acut_intervention_readiness_20260515.json"
+    "rich_acut_intervention_readiness": "experiments/core_narrative/results/rich_acut_intervention_readiness_20260515.json",
+    "rich_wstar_reserve_gate_decision": "experiments/core_narrative/results/rich_wstar_reserve_gate_decision_20260515.json"
   },
   "additional_feasibility_observations": {
     "rich_ambient_collect_only": {
@@ -622,7 +623,7 @@
         "unicode_data_cell_table_type_import",
         "table_column_expand_doc_removed"
       ],
-      "interpretation": "Rich R reached 25 accepted candidates after 8 direct-smoke admissions and 17 source-only Golden-Oracle pilots, satisfying the 20-primary plus 5-reserve count. No full C/R/W* denominator is frozen because C construction, W* reserve gate resolution, and primary-run authorization remain incomplete."
+      "interpretation": "Rich R reached 25 accepted candidates after 8 direct-smoke admissions and 17 source-only Golden-Oracle pilots, satisfying the 20-primary plus 5-reserve count. No full C/R/W* denominator is frozen because the W* reserve gate explicitly failed under the frozen scan and primary-run authorization remains incomplete."
     },
     "rich_c_extended_task_admission_readiness": {
       "artifact": "experiments/core_narrative/results/rich_c_extended_task_admission_readiness_20260515.json",
@@ -763,6 +764,21 @@
       ],
       "artifact": "experiments/core_narrative/results/rich_acut_intervention_readiness_20260515.json",
       "interpretation": "Rich now has A0-A5 intervention manifests for the 0514 line. The A3 playbook uses admitted C outcomes only as abstract calibration and does not include W* material, hidden verifiers, raw commits, raw subjects, or ACUT outputs."
+    },
+    "rich_wstar_reserve_gate_decision": {
+      "status": "completed",
+      "split": "W_star",
+      "accepted_w_star_primary_count": 20,
+      "target_primary_count": 20,
+      "target_reserve_count": 5,
+      "maximum_possible_w_star_admissions_under_current_scan": 23,
+      "reserve_gap_even_if_all_remaining_admitted": 2,
+      "candidate_pool_gap": 17,
+      "decision": "w_star_primary_reached_but_reserve_and_pool_gates_failed",
+      "model_calls_made": 0,
+      "primary_runs_authorized": false,
+      "artifact": "experiments/core_narrative/results/rich_wstar_reserve_gate_decision_20260515.json",
+      "interpretation": "The explicit W* reserve-gate decision keeps primary runs unauthorized. Rich W* reached the 20-task primary floor, but the frozen scan cannot reach the 25-task primary-plus-reserve target and remains 17 candidates short of the 40-candidate pool target."
     }
   },
   "checklist": [
@@ -916,7 +932,7 @@
         "experiments/core_narrative/reports/2026-05-15_rich_c_replacement_oracle_pilot_inspect_typo.md",
         "experiments/core_narrative/reports/2026-05-15_rich_c_direct_without_nodes_oracle_pilot_py38.md"
       ],
-      "gap": "Click W* has only 14 task-design candidates in the frozen window, below the 20-task gate. Rich has 20 accepted W* primary candidates, but only 23 stricter W* design candidates, so the 5-task W* reserve target and 40-candidate pool target remain unmet. Rich R has 25 accepted tasks: 8 direct-smoke and 17 source-only Golden-Oracle, satisfying the 20-primary plus 5-reserve count. Rich C has 20 accepted calibration tasks: 3 direct-smoke, 13 source-only Golden-Oracle, 3 replacement-oracle, and 1 direct-without-node Oracle. No full C/R/W* denominator is frozen because W* reserve/gate resolution and primary-run authorization remain incomplete."
+      "gap": "Click W* has only 14 task-design candidates in the frozen window, below the 20-task gate. Rich has 20 accepted W* primary candidates, but only 23 stricter W* design candidates, so the explicit W* reserve-gate decision fails the 5-task reserve target and 40-candidate pool target. Rich R has 25 accepted tasks: 8 direct-smoke and 17 source-only Golden-Oracle, satisfying the 20-primary plus 5-reserve count. Rich C has 20 accepted calibration tasks: 3 direct-smoke, 13 source-only Golden-Oracle, 3 replacement-oracle, and 1 direct-without-node Oracle. No full C/R/W* denominator is frozen because the W* gate failed and primary-run authorization remains incomplete."
     },
     {
       "requirement": "Task 3: Codex role isolation for Golden-Selector, Golden-Taskwright, Golden-Oracle, Golden-Auditor with prompt hashes, artifact digests, and admission decisions.",
@@ -951,7 +967,7 @@
       "evidence": [
         "experiments/core_narrative/reports/2026-05-14_repository_local_benchmark_gate.md"
       ],
-      "gap": "No primary attempts were authorized or run because the W* reserve/gate decision and run-level role artifacts remain incomplete."
+      "gap": "No primary attempts were authorized or run because the explicit W* reserve-gate decision blocks primary execution under the frozen 0514 protocol."
     },
     {
       "requirement": "Task 6: analyze R_score, W*_score, paired deltas, inert control, R-selected, W*-best, selection regret, R/W* rank correlation, family effects, and R_barcarolle vs random-R if possible.",
@@ -1028,7 +1044,7 @@
         "experiments/core_narrative/reports/2026-05-15_rich_c_replacement_oracle_pilot_inspect_typo.md",
         "experiments/core_narrative/reports/2026-05-15_rich_c_direct_without_nodes_oracle_pilot_py38.md"
       ],
-      "gap": "Rich C has 20 accepted calibration candidates, Rich W* has 20 accepted primary candidates, and Rich R has 25 accepted candidates after 8 direct-smoke acceptances and 17 source-only Golden-Oracle pilots. Full C/R/W* task generation validity is not produced because W* reserve/gate resolution, role artifacts, and primary-run authorization remain incomplete."
+      "gap": "Rich C has 20 accepted calibration candidates, Rich W* has 20 accepted primary candidates, and Rich R has 25 accepted candidates after 8 direct-smoke acceptances and 17 source-only Golden-Oracle pilots. Full C/R/W* task generation validity is not produced because the explicit W* reserve-gate decision blocks the frozen 0514 primary run; run-level role artifacts and primary-run authorization remain incomplete."
     },
     {
       "requirement": "Output: R/W* primary result report.",
@@ -1061,5 +1077,5 @@
       "gap": "No primary results exist, so this is verified only for the repository-admission and gate phase."
     }
   ],
-  "next_required_step": "Make an explicit W* reserve-gate decision and produce run-level role artifacts before any primary model attempts."
+  "next_required_step": "Choose one: preregister a protocol revision for primary-only W*, find additional W* candidates inside the frozen W* window, or stop before primary runs and report the 0514 line as blocked by W* reserve/candidate-pool supply."
 }

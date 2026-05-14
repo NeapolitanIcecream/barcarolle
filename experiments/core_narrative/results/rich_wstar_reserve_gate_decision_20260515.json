@@ -1,0 +1,46 @@
+{
+  "accepted_w_star_primary_count": 20,
+  "authorization": {
+    "reason": "This decision does not authorize primary model attempts; W* reserve/candidate-pool gates remain failed under the frozen 0514 protocol.",
+    "run_g": false,
+    "run_r_primary": false,
+    "run_w_star_primary": false
+  },
+  "candidate_pool_gap": 17,
+  "candidate_pool_gate_reached": false,
+  "claim_boundary": [
+    "This artifact records a gate decision only.",
+    "No ACUT primary attempt or model call was made.",
+    "Raw subjects, raw commits, reference patches, and hidden verifier files are not included."
+  ],
+  "decision": "w_star_primary_reached_but_reserve_and_pool_gates_failed",
+  "feasibility_artifact": "experiments/core_narrative/results/rich_wstar_reserve_feasibility_20260514.json",
+  "full_gate_reached": false,
+  "generated_at": "2026-05-14T18:19:22.170154Z",
+  "maximum_possible_w_star_admissions_under_current_scan": 23,
+  "model_calls_made": 0,
+  "next_allowed_actions": [
+    "Create a preregistered protocol revision if the experiment owner accepts a primary-only W* run without reserve.",
+    "Or find additional W* candidates within the frozen W* window without using ACUT outputs or W* results.",
+    "Or stop before primary runs and report the 0514 line as blocked by W* reserve/candidate-pool supply."
+  ],
+  "policy_basis": [
+    "W* must not borrow earlier work.",
+    "Do not lower success gates post hoc.",
+    "Do not use W* results to modify R.",
+    "Do not use ACUT outputs to choose W*."
+  ],
+  "primary_floor_reached": true,
+  "primary_runs_authorized": false,
+  "remaining_unadmitted_w_star_design_candidates": 3,
+  "repo_slug": "rich",
+  "reserve_gap_even_if_all_remaining_admitted": 2,
+  "reserve_gate_reached": false,
+  "schema_version": "core-narrative.rich-wstar-reserve-gate-decision.v1",
+  "split": "W_star",
+  "status": "completed",
+  "target_primary_count": 20,
+  "target_primary_plus_reserve_count": 25,
+  "target_reserve_count": 5,
+  "tool": "rich_wstar_reserve_gate_decision"
+}
