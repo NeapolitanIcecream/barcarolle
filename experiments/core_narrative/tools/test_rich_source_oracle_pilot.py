@@ -368,6 +368,79 @@ class RichSourceOraclePilotTests(unittest.TestCase):
         self.assertIn("tests/test_progress_reset_visible_docstring.py", verifier["command"])
         self.assertIn("Set visible flag if not None.", verifier["hidden_files"][0]["content"])
 
+    def test_hidden_verifier_template_covers_cells_variation_selector_simplification(self) -> None:
+        """The R cells verifier checks the simplified variation-selector branch."""
+        verifier = pilot.hidden_verifier_for_candidate(
+            {
+                "subject": "simplify",
+                "source_files": ["rich/cells.py"],
+            }
+        )
+
+        self.assertEqual(verifier["oracle_template"], "cells_variation_selector_branch_simplified")
+        self.assertIn("tests/test_cells_variation_selector_simplified.py", verifier["command"])
+        content = verifier["hidden_files"][0]["content"]
+        self.assertIn("character ==", content)
+        self.assertIn("last_measured_character", content)
+
+    def test_hidden_verifier_template_covers_cells_binary_search_unpack(self) -> None:
+        """The R cells verifier checks direct tuple unpacking in binary search."""
+        verifier = pilot.hidden_verifier_for_candidate(
+            {
+                "subject": "refine",
+                "source_files": ["rich/cells.py"],
+            }
+        )
+
+        self.assertEqual(verifier["oracle_template"], "cells_binary_search_entry_unpack")
+        self.assertIn("tests/test_cells_binary_search_unpack.py", verifier["command"])
+        content = verifier["hidden_files"][0]["content"]
+        self.assertIn("start, end, width = table[index]", content)
+        self.assertIn("entry = table[index]", content)
+
+    def test_hidden_verifier_template_covers_unicode_fallback_comment(self) -> None:
+        """The R unicode verifier checks the completed fallback comment."""
+        verifier = pilot.hidden_verifier_for_candidate(
+            {
+                "subject": "Update rich/_unicode_data/__init__.py",
+                "source_files": ["rich/_unicode_data/__init__.py"],
+            }
+        )
+
+        self.assertEqual(verifier["oracle_template"], "unicode_data_fallback_comment_completed")
+        self.assertIn("tests/test_unicode_data_fallback_comment.py", verifier["command"])
+        self.assertIn("seems reasonable", verifier["hidden_files"][0]["content"])
+
+    def test_hidden_verifier_template_covers_unicode_cell_table_import(self) -> None:
+        """The R unicode verifier checks the CellTable type-checking import."""
+        verifier = pilot.hidden_verifier_for_candidate(
+            {
+                "subject": "remove reference to cell strings",
+                "source_files": ["rich/_unicode_data/__init__.py"],
+            }
+        )
+
+        self.assertEqual(verifier["oracle_template"], "unicode_data_cell_table_type_import")
+        self.assertIn("tests/test_unicode_data_cell_table_type_import.py", verifier["command"])
+        content = verifier["hidden_files"][0]["content"]
+        self.assertIn("from rich.cells import CellTable", content)
+        self.assertIn("from rich.cell_string import CellTable", content)
+
+    def test_hidden_verifier_template_covers_table_column_doc_cleanup(self) -> None:
+        """The R table verifier checks the removed Column expand doc entry."""
+        verifier = pilot.hidden_verifier_for_candidate(
+            {
+                "subject": "remove error docstring",
+                "source_files": ["rich/table.py"],
+            }
+        )
+
+        self.assertEqual(verifier["oracle_template"], "table_column_expand_doc_removed")
+        self.assertIn("tests/test_table_column_expand_doc_removed.py", verifier["command"])
+        content = verifier["hidden_files"][0]["content"]
+        self.assertIn("expand (bool, optional)", content)
+        self.assertIn("source.count(expand_doc) == 2", content)
+
     def test_source_only_candidates_respect_requested_split(self) -> None:
         """R queue pilots select source-only candidates from R, not W*."""
         candidates = [

@@ -1,0 +1,44 @@
+{
+  "admission_decision": "accepted",
+  "base_anchor_digest": "3ae6aa458c5632f7e7b789843379d8825605c9295ea71226ce4d6de6d1fa6947",
+  "changed_file_set_digest": "4c7707ac28d4db22da68fbd39268aa6ac03d8ac753f2e2f7024dc080b023fb0d",
+  "claim_boundary": [
+    "This is a one-candidate source-only Golden-Oracle smoke pilot, not a frozen Rich denominator.",
+    "Raw source commits, raw subjects, reference patches, and hidden verifier files are retained only in ignored private artifacts.",
+    "No ACUT primary attempt or model call was made."
+  ],
+  "family": "table/panel/layout",
+  "generated_at": "2026-05-14T17:20:49.302936Z",
+  "hidden_verifier_digest": "850ea11dcf133631a1c260e667b62f82370ef938f4d51eae2f29c35008515054",
+  "model_calls_made": 0,
+  "no_op_result": {
+    "public_artifact_redacted": true,
+    "status": "failed",
+    "verifier_exit_code": 1
+  },
+  "oracle_priority": "low",
+  "oracle_template": "table_column_expand_doc_removed",
+  "pilot_scope": "one_source_only_golden_oracle_candidate",
+  "primary_runs_authorized": false,
+  "private_artifact_root": "experiments/core_narrative/large_artifacts/rich_r_source_oracle_pilot_table_doc_20260515",
+  "reference_patch_bytes": 862,
+  "reference_patch_digest": "c951532c2e70e40d3f5bd8eff47a8fcaac49cbde91c3c18f6ddd1ebcadb6621a",
+  "reference_result": {
+    "public_artifact_redacted": true,
+    "status": "passed",
+    "verifier_exit_code": 0
+  },
+  "repo_slug": "rich",
+  "schema_version": "core-narrative.rich-source-oracle-pilot.v1",
+  "source_anchor_digest": "5fba83ba142f9b23311c70bca54fe330664494895dcd4d5ea02ae157e1510606",
+  "source_file_count": 1,
+  "split": "R",
+  "statement_digest": "d004681d6120b458ed79de9bc846e1fc894944fa4987279b93f4829aff6bc897",
+  "status": "completed",
+  "subject_digest": "df3bbfc17f895de0080c0ff033443bb371883e9c22dcd2a03a800c4b380a8164",
+  "surface": "source_without_tests",
+  "test_file_count": 0,
+  "test_node_count": 1,
+  "tool": "rich_source_oracle_pilot",
+  "triage_code": "deprioritized_low_behavior_signal"
+}

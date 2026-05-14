@@ -1,0 +1,44 @@
+{
+  "admission_decision": "accepted",
+  "base_anchor_digest": "94771c7e8b71f76ce58923c6fa51438c30bef0fd2b13adb57bad2cb640b8040b",
+  "changed_file_set_digest": "427c0af3b6aa7ae3858071fbb68b083a314caf22a9b5734c34d242c17bebad79",
+  "claim_boundary": [
+    "This is a one-candidate source-only Golden-Oracle smoke pilot, not a frozen Rich denominator.",
+    "Raw source commits, raw subjects, reference patches, and hidden verifier files are retained only in ignored private artifacts.",
+    "No ACUT primary attempt or model call was made."
+  ],
+  "family": "parser/mixed integration",
+  "generated_at": "2026-05-14T17:19:26.728267Z",
+  "hidden_verifier_digest": "f368b5a77f14ccab1276fc01f31c39685093bcad39891d5043bb896e6be84027",
+  "model_calls_made": 0,
+  "no_op_result": {
+    "public_artifact_redacted": true,
+    "status": "failed",
+    "verifier_exit_code": 1
+  },
+  "oracle_priority": "medium",
+  "oracle_template": "unicode_data_cell_table_type_import",
+  "pilot_scope": "one_source_only_golden_oracle_candidate",
+  "primary_runs_authorized": false,
+  "private_artifact_root": "experiments/core_narrative/large_artifacts/rich_r_source_oracle_pilot_unicode_cell_table_20260515",
+  "reference_patch_bytes": 418,
+  "reference_patch_digest": "e91c9f13adbfbd02fce2ae2e198fe3fa58bcf2aecbd28168728055b3b6d4424d",
+  "reference_result": {
+    "public_artifact_redacted": true,
+    "status": "passed",
+    "verifier_exit_code": 0
+  },
+  "repo_slug": "rich",
+  "schema_version": "core-narrative.rich-source-oracle-pilot.v1",
+  "source_anchor_digest": "c65b0b7d1138fd2ec7530c9a1465689da9c8cbfd7868a1028a1b201ea6c153b0",
+  "source_file_count": 1,
+  "split": "R",
+  "statement_digest": "f282b62dab5797f4abd0aacaeb9f7058e71f6419158e162f723f2bbfede3b7c2",
+  "status": "completed",
+  "subject_digest": "8d942ec0718cdeb84dfa86d4096c3f8cd8237e9539a17fead70155948cd9c685",
+  "surface": "source_without_tests",
+  "test_file_count": 0,
+  "test_node_count": 1,
+  "tool": "rich_source_oracle_pilot",
+  "triage_code": "manual_probe_required"
+}

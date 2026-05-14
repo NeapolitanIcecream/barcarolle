@@ -1,0 +1,44 @@
+{
+  "admission_decision": "accepted",
+  "base_anchor_digest": "35537f4329de73e3640528341a2bf441a9fcf661782eba123fc8624cbed7a238",
+  "changed_file_set_digest": "f62001e805a7b08d7c4bba9cb3e2900153ebb5dbba9a46446c9a297272a38bfc",
+  "claim_boundary": [
+    "This is a one-candidate source-only Golden-Oracle smoke pilot, not a frozen Rich denominator.",
+    "Raw source commits, raw subjects, reference patches, and hidden verifier files are retained only in ignored private artifacts.",
+    "No ACUT primary attempt or model call was made."
+  ],
+  "family": "parser/mixed integration",
+  "generated_at": "2026-05-14T17:18:21.768011Z",
+  "hidden_verifier_digest": "1bb27e6c6ea7190042612239d9706517a46b47233d341241537cbf412fb3fd78",
+  "model_calls_made": 0,
+  "no_op_result": {
+    "public_artifact_redacted": true,
+    "status": "failed",
+    "verifier_exit_code": 1
+  },
+  "oracle_priority": "medium",
+  "oracle_template": "cells_variation_selector_branch_simplified",
+  "pilot_scope": "one_source_only_golden_oracle_candidate",
+  "primary_runs_authorized": false,
+  "private_artifact_root": "experiments/core_narrative/large_artifacts/rich_r_source_oracle_pilot_cells_simplify_20260515",
+  "reference_patch_bytes": 549,
+  "reference_patch_digest": "6de154fb6f02847ea16eff9576f9c303295933b742a31f479e1c09f92424ba6d",
+  "reference_result": {
+    "public_artifact_redacted": true,
+    "status": "passed",
+    "verifier_exit_code": 0
+  },
+  "repo_slug": "rich",
+  "schema_version": "core-narrative.rich-source-oracle-pilot.v1",
+  "source_anchor_digest": "dfb3edb4a848a10dffce4bfd6788dc91c1971e7edd8f20cd40dec500b8d5e47e",
+  "source_file_count": 1,
+  "split": "R",
+  "statement_digest": "dc723d901c659b2ebf4a72eef49a7eeb948baf2b43114830cf3ca4c79f9a8d51",
+  "status": "completed",
+  "subject_digest": "e55dea01f8db239db05a5d9f104b7670fa59de3d9621aa9336b6d86a8a620731",
+  "surface": "source_without_tests",
+  "test_file_count": 0,
+  "test_node_count": 1,
+  "tool": "rich_source_oracle_pilot",
+  "triage_code": "manual_probe_required"
+}

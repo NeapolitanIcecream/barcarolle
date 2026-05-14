@@ -512,6 +512,78 @@ def test_progress_reset_docstring_describes_visible_none_semantics() -> None:
     assert "Enable display of the task. Defaults to True." not in doc
 '''
 
+CELLS_VARIATION_SELECTOR_SIMPLIFIED_TEST = '''\
+from __future__ import annotations
+
+from pathlib import Path
+
+
+def test_cell_len_variation_selector_branch_is_simplified() -> None:
+    """Cell width source should simplify the variation-selector branch."""
+    source = Path("rich/cells.py").read_text(encoding="utf-8")
+
+    assert 'elif character == "\\\\ufe0f" and last_measured_character:' not in source
+    assert 'elif last_measured_character:' in source
+'''
+
+CELLS_BINARY_SEARCH_UNPACK_TEST = '''\
+from __future__ import annotations
+
+from pathlib import Path
+
+
+def test_cell_width_binary_search_unpacks_table_entries() -> None:
+    """Cell width lookup should unpack start, end, and width directly."""
+    source = Path("rich/cells.py").read_text(encoding="utf-8")
+
+    assert "start, end, width = table[index]" in source
+    assert "entry = table[index]" not in source
+    assert "return entry[2]" not in source
+'''
+
+UNICODE_FALLBACK_COMMENT_TEST = '''\
+from __future__ import annotations
+
+from pathlib import Path
+
+
+def test_unicode_data_invalid_environment_comment_is_complete() -> None:
+    """Unicode data source should keep the invalid-env fallback comment complete."""
+    source = Path("rich/_unicode_data/__init__.py").read_text(encoding="utf-8")
+
+    assert "Fallback to using the latest version seems reasonable" in source
+    assert "Fallback to using the latest version seems s" not in source
+'''
+
+UNICODE_CELL_TABLE_TYPE_IMPORT_TEST = '''\
+from __future__ import annotations
+
+from pathlib import Path
+
+
+def test_unicode_data_type_checking_import_uses_cells_module() -> None:
+    """Unicode data type checking should refer to rich.cells.CellTable."""
+    source = Path("rich/_unicode_data/__init__.py").read_text(encoding="utf-8")
+
+    assert "from rich.cells import CellTable" in source
+    assert "from rich.cell_string import CellTable" not in source
+'''
+
+TABLE_COLUMN_EXPAND_DOC_REMOVED_TEST = '''\
+from __future__ import annotations
+
+from pathlib import Path
+
+
+def test_column_docstring_does_not_list_removed_expand_argument() -> None:
+    """Column docs should not list the removed expand argument."""
+    source = Path("rich/table.py").read_text(encoding="utf-8")
+    expand_doc = "expand (bool, optional): Expand the table to fit the available space"
+
+    assert "class Column:" in source
+    assert source.count(expand_doc) == 2
+'''
+
 
 def parse_args(argv: Sequence[str] | None = None) -> argparse.Namespace:
     parser = argparse.ArgumentParser(description=__doc__)
@@ -828,6 +900,66 @@ def hidden_verifier_for_candidate(candidate: Mapping[str, Any]) -> dict[str, Any
             "command": ".venv/bin/python -m pytest -q tests/test_progress_reset_visible_docstring.py",
             "test_node_count": 1,
             "oracle_template": "progress_reset_visible_docstring",
+        }
+    if subject == "simplify" and "rich/cells.py" in source_files:
+        return {
+            "hidden_files": [
+                {
+                    "path": "tests/test_cells_variation_selector_simplified.py",
+                    "content": CELLS_VARIATION_SELECTOR_SIMPLIFIED_TEST,
+                }
+            ],
+            "command": ".venv/bin/python -m pytest -q tests/test_cells_variation_selector_simplified.py",
+            "test_node_count": 1,
+            "oracle_template": "cells_variation_selector_branch_simplified",
+        }
+    if subject == "refine" and "rich/cells.py" in source_files:
+        return {
+            "hidden_files": [
+                {
+                    "path": "tests/test_cells_binary_search_unpack.py",
+                    "content": CELLS_BINARY_SEARCH_UNPACK_TEST,
+                }
+            ],
+            "command": ".venv/bin/python -m pytest -q tests/test_cells_binary_search_unpack.py",
+            "test_node_count": 1,
+            "oracle_template": "cells_binary_search_entry_unpack",
+        }
+    if subject == "update rich/_unicode_data/__init__.py" and "rich/_unicode_data/__init__.py" in source_files:
+        return {
+            "hidden_files": [
+                {
+                    "path": "tests/test_unicode_data_fallback_comment.py",
+                    "content": UNICODE_FALLBACK_COMMENT_TEST,
+                }
+            ],
+            "command": ".venv/bin/python -m pytest -q tests/test_unicode_data_fallback_comment.py",
+            "test_node_count": 1,
+            "oracle_template": "unicode_data_fallback_comment_completed",
+        }
+    if subject == "remove reference to cell strings" and "rich/_unicode_data/__init__.py" in source_files:
+        return {
+            "hidden_files": [
+                {
+                    "path": "tests/test_unicode_data_cell_table_type_import.py",
+                    "content": UNICODE_CELL_TABLE_TYPE_IMPORT_TEST,
+                }
+            ],
+            "command": ".venv/bin/python -m pytest -q tests/test_unicode_data_cell_table_type_import.py",
+            "test_node_count": 1,
+            "oracle_template": "unicode_data_cell_table_type_import",
+        }
+    if subject == "remove error docstring" and "rich/table.py" in source_files:
+        return {
+            "hidden_files": [
+                {
+                    "path": "tests/test_table_column_expand_doc_removed.py",
+                    "content": TABLE_COLUMN_EXPAND_DOC_REMOVED_TEST,
+                }
+            ],
+            "command": ".venv/bin/python -m pytest -q tests/test_table_column_expand_doc_removed.py",
+            "test_node_count": 1,
+            "oracle_template": "table_column_expand_doc_removed",
         }
     raise ToolError(
         "no source-oracle template is available for selected candidate",
