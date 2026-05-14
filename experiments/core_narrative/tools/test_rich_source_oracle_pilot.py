@@ -207,6 +207,51 @@ class RichSourceOraclePilotTests(unittest.TestCase):
         self.assertIn("split_lines_terminator", content)
         self.assertIn('(["alpha"], True)', content)
 
+    def test_hidden_verifier_template_covers_cached_cell_len_unicode_version(self) -> None:
+        """The R cache verifier checks short text accepts a unicode_version key."""
+        verifier = pilot.hidden_verifier_for_candidate(
+            {
+                "subject": "restore caching behavior",
+                "source_files": ["rich/cells.py"],
+            }
+        )
+
+        self.assertEqual(verifier["oracle_template"], "cells_cached_len_unicode_version")
+        self.assertIn("tests/test_cells_cached_len_unicode_version.py", verifier["command"])
+        content = verifier["hidden_files"][0]["content"]
+        self.assertIn('cached_cell_len("abc", "latest")', content)
+        self.assertIn("cache_info().misses == 2", content)
+
+    def test_hidden_verifier_template_covers_traceback_locals_options(self) -> None:
+        """The R traceback verifier checks new locals rendering options are accepted."""
+        verifier = pilot.hidden_verifier_for_candidate(
+            {
+                "subject": "feat: Traceback - Expose more locals rendering options",
+                "source_files": ["rich/scope.py", "rich/traceback.py"],
+            }
+        )
+
+        self.assertEqual(verifier["oracle_template"], "traceback_locals_depth_overflow_options")
+        self.assertIn("tests/test_traceback_locals_options.py", verifier["command"])
+        content = verifier["hidden_files"][0]["content"]
+        self.assertIn("locals_max_depth=1", content)
+        self.assertIn('locals_overflow="ellipsis"', content)
+
+    def test_hidden_verifier_template_covers_disabled_progress_stop_output(self) -> None:
+        """The R progress verifier checks disabled progress emits no blank line."""
+        verifier = pilot.hidden_verifier_for_candidate(
+            {
+                "subject": "Update progress.py",
+                "source_files": ["rich/progress.py"],
+            }
+        )
+
+        self.assertEqual(verifier["oracle_template"], "progress_disabled_stop_no_blank_line")
+        self.assertIn("tests/test_progress_disabled_stop_output.py", verifier["command"])
+        content = verifier["hidden_files"][0]["content"]
+        self.assertIn("Progress(console=console, disable=True)", content)
+        self.assertIn('stream.getvalue() == ""', content)
+
     def test_source_only_candidates_respect_requested_split(self) -> None:
         """R queue pilots select source-only candidates from R, not W*."""
         candidates = [

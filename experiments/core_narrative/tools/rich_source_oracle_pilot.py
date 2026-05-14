@@ -253,6 +253,63 @@ def test_split_lines_terminator_reports_trailing_newline_per_line() -> None:
     ]
 '''
 
+CACHED_CELL_LEN_UNICODE_VERSION_TEST = '''\
+from __future__ import annotations
+
+from rich.cells import cached_cell_len
+
+
+def test_cached_cell_len_accepts_unicode_version_for_short_text() -> None:
+    """The short-text cache should include unicode_version in its key."""
+    cached_cell_len.cache_clear()
+
+    assert cached_cell_len("abc", "auto") == 3
+    assert cached_cell_len("abc", "latest") == 3
+    assert cached_cell_len.cache_info().misses == 2
+'''
+
+TRACEBACK_LOCALS_OPTIONS_TEST = '''\
+from __future__ import annotations
+
+from rich.traceback import Traceback
+
+
+def test_traceback_from_exception_accepts_locals_depth_and_overflow() -> None:
+    """Traceback construction should expose locals depth and overflow controls."""
+    traceback = Traceback.from_exception(
+        ValueError,
+        ValueError("boom"),
+        None,
+        show_locals=True,
+        locals_max_depth=1,
+        locals_overflow="ellipsis",
+    )
+
+    assert traceback.locals_max_depth == 1
+    assert traceback.locals_overflow == "ellipsis"
+'''
+
+PROGRESS_DISABLE_NO_BLANK_LINE_TEST = '''\
+from __future__ import annotations
+
+import io
+
+from rich.console import Console
+from rich.progress import Progress
+
+
+def test_disabled_progress_stop_does_not_write_blank_line() -> None:
+    """Stopping disabled progress should not write an extra blank line."""
+    stream = io.StringIO()
+    console = Console(file=stream, force_terminal=False)
+    progress = Progress(console=console, disable=True)
+
+    progress.start()
+    progress.stop()
+
+    assert stream.getvalue() == ""
+'''
+
 
 def parse_args(argv: Sequence[str] | None = None) -> argparse.Namespace:
     parser = argparse.ArgumentParser(description=__doc__)
@@ -428,6 +485,45 @@ def hidden_verifier_for_candidate(candidate: Mapping[str, Any]) -> dict[str, Any
             "command": ".venv/bin/python -m pytest -q tests/test_segment_split_lines_terminator.py",
             "test_node_count": 1,
             "oracle_template": "segment_split_lines_terminator",
+        }
+    if subject == "restore caching behavior" and "rich/cells.py" in source_files:
+        return {
+            "hidden_files": [
+                {
+                    "path": "tests/test_cells_cached_len_unicode_version.py",
+                    "content": CACHED_CELL_LEN_UNICODE_VERSION_TEST,
+                }
+            ],
+            "command": ".venv/bin/python -m pytest -q tests/test_cells_cached_len_unicode_version.py",
+            "test_node_count": 1,
+            "oracle_template": "cells_cached_len_unicode_version",
+        }
+    if subject == "feat: traceback - expose more locals rendering options" and {
+        "rich/scope.py",
+        "rich/traceback.py",
+    }.issubset(source_files):
+        return {
+            "hidden_files": [
+                {
+                    "path": "tests/test_traceback_locals_options.py",
+                    "content": TRACEBACK_LOCALS_OPTIONS_TEST,
+                }
+            ],
+            "command": ".venv/bin/python -m pytest -q tests/test_traceback_locals_options.py",
+            "test_node_count": 1,
+            "oracle_template": "traceback_locals_depth_overflow_options",
+        }
+    if subject == "update progress.py" and "rich/progress.py" in source_files:
+        return {
+            "hidden_files": [
+                {
+                    "path": "tests/test_progress_disabled_stop_output.py",
+                    "content": PROGRESS_DISABLE_NO_BLANK_LINE_TEST,
+                }
+            ],
+            "command": ".venv/bin/python -m pytest -q tests/test_progress_disabled_stop_output.py",
+            "test_node_count": 1,
+            "oracle_template": "progress_disabled_stop_no_blank_line",
         }
     raise ToolError(
         "no source-oracle template is available for selected candidate",

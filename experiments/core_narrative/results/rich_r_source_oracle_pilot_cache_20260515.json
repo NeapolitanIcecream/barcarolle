@@ -1,0 +1,44 @@
+{
+  "admission_decision": "accepted",
+  "base_anchor_digest": "5289f2fb733ad3bf7079d6247bb6d3a9a71ae24133d46be49de705c541fd9fd6",
+  "changed_file_set_digest": "f62001e805a7b08d7c4bba9cb3e2900153ebb5dbba9a46446c9a297272a38bfc",
+  "claim_boundary": [
+    "This is a one-candidate source-only Golden-Oracle smoke pilot, not a frozen Rich denominator.",
+    "Raw source commits, raw subjects, reference patches, and hidden verifier files are retained only in ignored private artifacts.",
+    "No ACUT primary attempt or model call was made."
+  ],
+  "family": "parser/mixed integration",
+  "generated_at": "2026-05-14T16:51:54.709126Z",
+  "hidden_verifier_digest": "12d8b5df2451e48fef81e86253013ac624f5af480e8bb47d4744521683828101",
+  "model_calls_made": 0,
+  "no_op_result": {
+    "public_artifact_redacted": true,
+    "status": "failed",
+    "verifier_exit_code": 1
+  },
+  "oracle_priority": "medium",
+  "oracle_template": "cells_cached_len_unicode_version",
+  "pilot_scope": "one_source_only_golden_oracle_candidate",
+  "primary_runs_authorized": false,
+  "private_artifact_root": "experiments/core_narrative/large_artifacts/rich_r_source_oracle_pilot_cache_20260515",
+  "reference_patch_bytes": 1766,
+  "reference_patch_digest": "2b1a89e3afbc8d4c8adca1efeaec669e43ff4ae1601ab5c27bb6265388100873",
+  "reference_result": {
+    "public_artifact_redacted": true,
+    "status": "passed",
+    "verifier_exit_code": 0
+  },
+  "repo_slug": "rich",
+  "schema_version": "core-narrative.rich-source-oracle-pilot.v1",
+  "source_anchor_digest": "aa58019454fa3b632b5520177583d62ede03339eef6acbd38a9603fa76d33bed",
+  "source_file_count": 1,
+  "split": "R",
+  "statement_digest": "e1ea9dbfd4e99a5e0a291fee69a1e9cc5e67babf9293f43536350f86fa4286cd",
+  "status": "completed",
+  "subject_digest": "63874d0945acdc635a5481fa2d0a8acc784350c467e2b638f668835f8afc2827",
+  "surface": "source_without_tests",
+  "test_file_count": 0,
+  "test_node_count": 1,
+  "tool": "rich_source_oracle_pilot",
+  "triage_code": "manual_probe_required"
+}

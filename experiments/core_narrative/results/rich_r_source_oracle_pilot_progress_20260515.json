@@ -1,0 +1,44 @@
+{
+  "admission_decision": "accepted",
+  "base_anchor_digest": "be40afd459ad48110ba5e7411efbe48306b476126d6c81b3b3b65628f7c860d1",
+  "changed_file_set_digest": "77d13adf0fa7cbb6c2fa6adba6462b8d37e1797ab2f23229c8b6d84d7ba0fb6d",
+  "claim_boundary": [
+    "This is a one-candidate source-only Golden-Oracle smoke pilot, not a frozen Rich denominator.",
+    "Raw source commits, raw subjects, reference patches, and hidden verifier files are retained only in ignored private artifacts.",
+    "No ACUT primary attempt or model call was made."
+  ],
+  "family": "progress/live/status rendering",
+  "generated_at": "2026-05-14T16:52:39.278870Z",
+  "hidden_verifier_digest": "c6b5e89771d22b0d4e2bdbafa162756fbc424a5ee713177ccf3038f2848fdb99",
+  "model_calls_made": 0,
+  "no_op_result": {
+    "public_artifact_redacted": true,
+    "status": "failed",
+    "verifier_exit_code": 1
+  },
+  "oracle_priority": "medium",
+  "oracle_template": "progress_disabled_stop_no_blank_line",
+  "pilot_scope": "one_source_only_golden_oracle_candidate",
+  "primary_runs_authorized": false,
+  "private_artifact_root": "experiments/core_narrative/large_artifacts/rich_r_source_oracle_pilot_progress_20260515",
+  "reference_patch_bytes": 625,
+  "reference_patch_digest": "be95e3ac75cb3af78f859328a5bb084018edea0265460e8a6b6f1ce46dc1c28b",
+  "reference_result": {
+    "public_artifact_redacted": true,
+    "status": "passed",
+    "verifier_exit_code": 0
+  },
+  "repo_slug": "rich",
+  "schema_version": "core-narrative.rich-source-oracle-pilot.v1",
+  "source_anchor_digest": "789775be27861517699565f75551a1ed6280257bfc0c11f70947fa92f5516d18",
+  "source_file_count": 1,
+  "split": "R",
+  "statement_digest": "d5fcdb573c5151c6683480b2eb91a8d6a935b8b33890019188036344d85d9b47",
+  "status": "completed",
+  "subject_digest": "7e0caded2286dabf4eae7779be063606ec9f932633bf74fb2f61bb293492f120",
+  "surface": "source_without_tests",
+  "test_file_count": 0,
+  "test_node_count": 1,
+  "tool": "rich_source_oracle_pilot",
+  "triage_code": "manual_probe_required"
+}
