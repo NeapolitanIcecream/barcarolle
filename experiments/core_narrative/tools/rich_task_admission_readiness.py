@@ -192,11 +192,16 @@ def candidate_from_commit(repo_path: Path, commit: str, committed_at: str, subje
     family = classify_family("rich", subject, files)
     return {
         "commit": commit,
+        "base_commit": parent,
         "committed_at": committed_at,
         "subject": subject,
         "window": window,
         "family": family,
         "surface": surface,
+        "source_files": source_files,
+        "test_files": test_files,
+        "test_nodes": test_nodes,
+        "verifier_command": ".venv/bin/python -m pytest -q " + " ".join(test_nodes) if test_nodes else "",
         "source_file_count": len(source_files),
         "test_file_count": len(test_files),
         "test_node_count": len(test_nodes),

@@ -16,14 +16,14 @@ Do not mark the active goal complete from the current state. The next concrete u
 |---|---|---|---|
 | Pivot main line to repository-local benchmark generation and tuning validation; NFL only bonus | covered | `configs/repository_local_benchmark_20260514.yaml` | none |
 | Freeze C/R/W* split at T0 `2026-05-14`; W* fixed to `2026-02-14`..`2026-05-14` | covered | `results/repository_local_benchmark_admission_20260514.json`, `configs/repository_local_benchmark_20260514.yaml` | none |
-| Task 1: repository admission for Click/Rich/Black with counts, feasibility, family diversity, dependency risk, recommendation | partially covered | `reports/2026-05-14_repository_local_benchmark_admission.md`, `results/rich_task_admission_feasibility_20260514.json`, `results/rich_task_admission_readiness_20260514.json` | Rich collect-only feasibility and stricter readiness counts are measured; full per-task historical smoke and measured test runtime are not. |
-| Task 2: Click C/R/W* construction with no-op/reference/leakage/family/difficulty/digests | blocked, not done | `reports/2026-05-14_repository_local_benchmark_gate.md`, `reports/2026-05-14_rich_task_admission_readiness.md` | Click W* supply is below gate. Rich can continue into task admission but has only 23 stricter W* design candidates, 8 direct smoke-ready candidates, and no admitted denominator. |
+| Task 1: repository admission for Click/Rich/Black with counts, feasibility, family diversity, dependency risk, recommendation | partially covered | `reports/2026-05-14_repository_local_benchmark_admission.md`, `results/rich_task_admission_feasibility_20260514.json`, `results/rich_task_admission_readiness_20260514.json`, `results/rich_direct_smoke_pilot_20260514.json` | Rich collect-only feasibility, stricter readiness counts, and one accepted direct-smoke pilot are measured; full denominator-scale per-task historical smoke and measured test runtime are not. |
+| Task 2: Click C/R/W* construction with no-op/reference/leakage/family/difficulty/digests | blocked, not done | `reports/2026-05-14_repository_local_benchmark_gate.md`, `reports/2026-05-14_rich_task_admission_readiness.md`, `reports/2026-05-14_rich_direct_smoke_pilot.md` | Click W* supply is below gate. Rich can continue into task admission but has only 23 stricter W* design candidates and 8 direct smoke-ready candidates. One Rich W* direct-smoke pilot was accepted, but no denominator is admitted or frozen. |
 | Task 3: Golden-Selector/Taskwright/Oracle/Auditor role isolation with prompt hashes, artifact digests, admission decisions | specified, not executed | `configs/repository_local_benchmark_20260514.yaml` | No 0514 role-run outputs or prompt hashes exist. |
 | Task 4: ACUT/intervention manifests A0-A5, A4 limited to public statement + repo tree/source | partially covered | A0/A2/A3/A5 existing, A1/A4 Click variants added, `tools/repository_localization_hints.py` | Rich execution needs Rich or repository-neutral intervention variants. |
 | Task 5: run R and W* one primary attempt per ACUT/task with fixed denominator and hidden verifier | not done | Gate report records non-action | No denominator was admitted; no primary attempts authorized or run. |
 | Task 6: analyze R_score, W*_score, paired deltas, R-selected, W*-best, regret, correlation, family effects, ablation | not done | none | No primary result table exists. |
 | Output: repository admission report | covered | `reports/2026-05-14_repository_local_benchmark_admission.md` | none |
-| Output: task generation validity report | not done | none | No 0514 task admission was run. |
+| Output: task generation validity report | pilot only | `reports/2026-05-14_rich_direct_smoke_pilot.md` | One Rich direct-oracle W* candidate passed no-op/reference smoke. Full C/R/W* task generation validity is not produced. |
 | Output: R/W* primary result report | not done | none | No primary attempts were run. |
 | Output: decision-validity report | gate only | `reports/2026-05-14_repository_local_benchmark_gate.md` | R -> W* decision validity cannot be assessed without runs. |
 | Output: threats-to-validity report | gate only | `reports/2026-05-14_repository_local_benchmark_gate.md` | Full experiment threats remain pending. |
@@ -37,6 +37,7 @@ Do not mark the active goal complete from the current state. The next concrete u
 - `experiments/core_narrative/configs/repository_local_benchmark_20260514.yaml`
 - `experiments/core_narrative/results/rich_task_admission_feasibility_20260514.json`
 - `experiments/core_narrative/results/rich_task_admission_readiness_20260514.json`
+- `experiments/core_narrative/results/rich_direct_smoke_pilot_20260514.json`
 - ACUT manifests for A0-A5, including the newly added A1 and A4 Click variants.
 - `experiments/core_narrative/tools/repository_local_benchmark_admission.py`
 - `experiments/core_narrative/tools/repository_localization_hints.py`
@@ -77,12 +78,26 @@ W*: 23 design candidates, 8 direct smoke-ready, 14 source-only requiring Golden-
 
 This is stricter than repository admission because it deduplicates normalized subjects and requires extractable pytest nodes for direct smoke readiness. It still does not admit tasks.
 
+Rich direct-smoke pilot:
+
+```text
+artifact: experiments/core_narrative/results/rich_direct_smoke_pilot_20260514.json
+scope: one W* direct-oracle candidate
+no-op status: failed
+reference status: passed
+admission decision: accepted
+model calls: 0
+```
+
+This admits one pilot candidate only. It does not freeze a denominator or authorize any primary model attempt.
+
 ## Verification Commands
 
 Completed during the gate phase:
 
 ```text
 PYTHONPATH=experiments/core_narrative/tools python3 -m unittest experiments/core_narrative/tools/test_repository_local_benchmark_admission.py experiments/core_narrative/tools/test_repository_localization_hints.py
+PYTHONPATH=experiments/core_narrative/tools python3 -m unittest experiments/core_narrative/tools/test_rich_task_admission_readiness.py experiments/core_narrative/tools/test_rich_direct_smoke_pilot.py
 PYTHONPATH=experiments/core_narrative/tools python3 -m unittest experiments/core_narrative/tools/test_m6_w3_freeze_integrity_audit.py experiments/core_narrative/tools/test_m6_w3_task_admission.py
 PYTHONPATH=experiments/core_narrative/tools python3 -m unittest experiments/core_narrative/tools/test_apply_source_derived_url_policy.py experiments/core_narrative/tools/test_workspace_mode_runner.py experiments/core_narrative/tools/test_rgw_status_semantics.py
 PYTHONPATH=experiments/core_narrative/tools python3 experiments/core_narrative/tools/validate_acut_manifest.py experiments/core_narrative/configs/acuts/cheap-click-inert-control-v1.yaml experiments/core_narrative/configs/acuts/cheap-click-localization-tool-v1.yaml

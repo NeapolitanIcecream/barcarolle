@@ -1,0 +1,41 @@
+{
+  "admission_decision": "accepted",
+  "base_anchor_digest": "b81f97bd6c8f3b07cd672f4d65bd82f55db230f5d69eff6504821c7d7a166c7f",
+  "changed_file_set_digest": "ea64b9d1892f7d5fdc7985c736a229a9473325e87be2575c84d19e18e9bb59e4",
+  "claim_boundary": [
+    "This is a one-candidate direct-smoke pilot, not a frozen Rich denominator.",
+    "Raw source commits and hidden verifier files are retained only in ignored private artifacts.",
+    "No ACUT primary attempt or model call was made."
+  ],
+  "family": "table/panel/layout",
+  "generated_at": "2026-05-14T14:45:08.294302Z",
+  "hidden_verifier_digest": "309da3d671859e2eba1d0912d3834d14738ba933402b8c3004be53de31e70be6",
+  "model_calls_made": 0,
+  "no_op_result": {
+    "public_artifact_redacted": true,
+    "status": "failed",
+    "verifier_exit_code": 1
+  },
+  "pilot_scope": "one_direct_oracle_candidate",
+  "primary_runs_authorized": false,
+  "private_artifact_root": "experiments/core_narrative/large_artifacts/rich_direct_smoke_pilot_20260514",
+  "reference_patch_bytes": 2117,
+  "reference_patch_digest": "d2c1f367e71a16daf9bdacf49e19adf7b87c836342ca9e83ec16462e6caeaea5",
+  "reference_result": {
+    "public_artifact_redacted": true,
+    "status": "passed",
+    "verifier_exit_code": 0
+  },
+  "repo_slug": "rich",
+  "schema_version": "core-narrative.rich-direct-smoke-pilot.v1",
+  "source_anchor_digest": "a78cea88b24e53a04f1f6d124ac699eb78697a9f6b614ca716a76a8403bb7146",
+  "source_file_count": 1,
+  "split": "W_star",
+  "statement_digest": "11335d4e09fe67be095b03910a2c3ac828a8b2dad8527f7e832de88a8773ee21",
+  "status": "completed",
+  "subject_digest": "907d756d0346fa3154d367788ad4eb5930979aa4075f4d824a49d1e5525adfd8",
+  "surface": "source_and_tests",
+  "test_file_count": 1,
+  "test_node_count": 2,
+  "tool": "rich_direct_smoke_pilot"
+}
