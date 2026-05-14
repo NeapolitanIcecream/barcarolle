@@ -16,14 +16,14 @@ Do not mark the active goal complete from the current state. The next concrete u
 |---|---|---|---|
 | Pivot main line to repository-local benchmark generation and tuning validation; NFL only bonus | covered | `configs/repository_local_benchmark_20260514.yaml` | none |
 | Freeze C/R/W* split at T0 `2026-05-14`; W* fixed to `2026-02-14`..`2026-05-14` | covered | `results/repository_local_benchmark_admission_20260514.json`, `configs/repository_local_benchmark_20260514.yaml` | none |
-| Task 1: repository admission for Click/Rich/Black with counts, feasibility, family diversity, dependency risk, recommendation | partially covered | `reports/2026-05-14_repository_local_benchmark_admission.md`, `results/rich_task_admission_feasibility_20260514.json`, `results/rich_task_admission_readiness_20260514.json`, `results/rich_direct_smoke_pilot_20260514.json` | Rich collect-only feasibility, stricter readiness counts, and one accepted direct-smoke pilot are measured; full denominator-scale per-task historical smoke and measured test runtime are not. |
-| Task 2: Click C/R/W* construction with no-op/reference/leakage/family/difficulty/digests | blocked, not done | `reports/2026-05-14_repository_local_benchmark_gate.md`, `reports/2026-05-14_rich_task_admission_readiness.md`, `reports/2026-05-14_rich_direct_smoke_pilot.md` | Click W* supply is below gate. Rich can continue into task admission but has only 23 stricter W* design candidates and 8 direct smoke-ready candidates. One Rich W* direct-smoke pilot was accepted, but no denominator is admitted or frozen. |
+| Task 1: repository admission for Click/Rich/Black with counts, feasibility, family diversity, dependency risk, recommendation | partially covered | `reports/2026-05-14_repository_local_benchmark_admission.md`, `results/rich_task_admission_feasibility_20260514.json`, `results/rich_task_admission_readiness_20260514.json`, `results/rich_direct_smoke_batch_20260514.json` | Rich collect-only feasibility, stricter readiness counts, and direct-oracle W* smoke outcomes are measured; full denominator-scale per-task historical smoke and measured test runtime are not. |
+| Task 2: Click C/R/W* construction with no-op/reference/leakage/family/difficulty/digests | blocked, not done | `reports/2026-05-14_repository_local_benchmark_gate.md`, `reports/2026-05-14_rich_task_admission_readiness.md`, `reports/2026-05-14_rich_direct_smoke_batch.md` | Click W* supply is below gate. Rich has 23 stricter W* design candidates and 8 direct smoke-ready candidates; all 8 direct candidates were smoked and 5 were accepted. No denominator is admitted or frozen. |
 | Task 3: Golden-Selector/Taskwright/Oracle/Auditor role isolation with prompt hashes, artifact digests, admission decisions | specified, not executed | `configs/repository_local_benchmark_20260514.yaml` | No 0514 role-run outputs or prompt hashes exist. |
 | Task 4: ACUT/intervention manifests A0-A5, A4 limited to public statement + repo tree/source | partially covered | A0/A2/A3/A5 existing, A1/A4 Click variants added, `tools/repository_localization_hints.py` | Rich execution needs Rich or repository-neutral intervention variants. |
 | Task 5: run R and W* one primary attempt per ACUT/task with fixed denominator and hidden verifier | not done | Gate report records non-action | No denominator was admitted; no primary attempts authorized or run. |
 | Task 6: analyze R_score, W*_score, paired deltas, R-selected, W*-best, regret, correlation, family effects, ablation | not done | none | No primary result table exists. |
 | Output: repository admission report | covered | `reports/2026-05-14_repository_local_benchmark_admission.md` | none |
-| Output: task generation validity report | pilot only | `reports/2026-05-14_rich_direct_smoke_pilot.md` | One Rich direct-oracle W* candidate passed no-op/reference smoke. Full C/R/W* task generation validity is not produced. |
+| Output: task generation validity report | partial direct-smoke only | `reports/2026-05-14_rich_direct_smoke_batch.md` | All 8 current Rich W* direct-oracle candidates were smoked; 5 passed no-op/reference smoke, 2 no-op passed unexpectedly, and 1 no-op timed out. Full C/R/W* task generation validity is not produced. |
 | Output: R/W* primary result report | not done | none | No primary attempts were run. |
 | Output: decision-validity report | gate only | `reports/2026-05-14_repository_local_benchmark_gate.md` | R -> W* decision validity cannot be assessed without runs. |
 | Output: threats-to-validity report | gate only | `reports/2026-05-14_repository_local_benchmark_gate.md` | Full experiment threats remain pending. |
@@ -38,6 +38,7 @@ Do not mark the active goal complete from the current state. The next concrete u
 - `experiments/core_narrative/results/rich_task_admission_feasibility_20260514.json`
 - `experiments/core_narrative/results/rich_task_admission_readiness_20260514.json`
 - `experiments/core_narrative/results/rich_direct_smoke_pilot_20260514.json`
+- `experiments/core_narrative/results/rich_direct_smoke_batch_20260514.json`
 - ACUT manifests for A0-A5, including the newly added A1 and A4 Click variants.
 - `experiments/core_narrative/tools/repository_local_benchmark_admission.py`
 - `experiments/core_narrative/tools/repository_localization_hints.py`
@@ -90,6 +91,21 @@ model calls: 0
 ```
 
 This admits one pilot candidate only. It does not freeze a denominator or authorize any primary model attempt.
+
+Rich direct-smoke batch:
+
+```text
+artifact: experiments/core_narrative/results/rich_direct_smoke_batch_20260514.json
+scope: all 8 current Rich W* direct-oracle candidates
+accepted: 5
+rejected: 3
+blocked: 1
+no-op statuses: failed=5, passed_unexpected=2, blocked_timeout=1
+reference statuses: passed=8
+model calls: 0
+```
+
+This advances task admission for the direct-oracle subset only. It remains below the 20-primary denominator target and does not include source-only candidates requiring Golden-Oracle construction.
 
 ## Verification Commands
 

@@ -13,7 +13,8 @@
     "protocol": "experiments/core_narrative/configs/repository_local_benchmark_20260514.yaml",
     "rich_task_admission_feasibility": "experiments/core_narrative/results/rich_task_admission_feasibility_20260514.json",
     "rich_task_admission_readiness": "experiments/core_narrative/results/rich_task_admission_readiness_20260514.json",
-    "rich_direct_smoke_pilot": "experiments/core_narrative/results/rich_direct_smoke_pilot_20260514.json"
+    "rich_direct_smoke_pilot": "experiments/core_narrative/results/rich_direct_smoke_pilot_20260514.json",
+    "rich_direct_smoke_batch": "experiments/core_narrative/results/rich_direct_smoke_batch_20260514.json"
   },
   "additional_feasibility_observations": {
     "rich_ambient_collect_only": {
@@ -65,6 +66,26 @@
       "model_calls_made": 0,
       "primary_runs_authorized": false,
       "interpretation": "One Rich W* direct-oracle candidate passed no-op/reference admission smoke. This is pilot evidence only and does not freeze a denominator."
+    },
+    "rich_direct_smoke_batch": {
+      "artifact": "experiments/core_narrative/results/rich_direct_smoke_batch_20260514.json",
+      "status": "completed",
+      "split": "W_star",
+      "smoked_candidate_count": 8,
+      "accepted_count": 5,
+      "rejected_count": 3,
+      "blocked_count": 1,
+      "noop_status_counts": {
+        "blocked_timeout": 1,
+        "failed": 5,
+        "passed_unexpected": 2
+      },
+      "reference_status_counts": {
+        "passed": 8
+      },
+      "model_calls_made": 0,
+      "primary_runs_authorized": false,
+      "interpretation": "All current Rich W* direct-oracle candidates were smoke-tested. Five passed admission smoke, but this remains far below the 20-primary denominator target and excludes source-only Golden-Oracle candidates."
     }
   },
   "checklist": [
@@ -91,9 +112,10 @@
         "experiments/core_narrative/results/repository_local_benchmark_admission_20260514.json",
         "experiments/core_narrative/results/rich_task_admission_feasibility_20260514.json",
         "experiments/core_narrative/results/rich_task_admission_readiness_20260514.json",
-        "experiments/core_narrative/results/rich_direct_smoke_pilot_20260514.json"
+        "experiments/core_narrative/results/rich_direct_smoke_pilot_20260514.json",
+        "experiments/core_narrative/results/rich_direct_smoke_batch_20260514.json"
       ],
-      "gap": "Candidate supply, test-surface presence, family counts, recommendation, Rich collect-only feasibility, Rich task-readiness counts, and one accepted direct-smoke pilot are present. Full denominator-scale per-task historical smoke and measured test runtime are not yet measured."
+      "gap": "Candidate supply, test-surface presence, family counts, recommendation, Rich collect-only feasibility, Rich task-readiness counts, and direct-oracle W* smoke outcomes are present. Full denominator-scale per-task historical smoke and measured test runtime are not yet measured."
     },
     {
       "requirement": "Task 2: construct Click C/R/W* task sets: C 20-40, R 40 candidates -> 20 primary + 5 reserve, W* 40 candidates -> 20 primary + 5 reserve, with no-op/reference/leakage/family/difficulty/digests.",
@@ -101,9 +123,10 @@
       "evidence": [
         "experiments/core_narrative/reports/2026-05-14_repository_local_benchmark_gate.md",
         "experiments/core_narrative/reports/2026-05-14_rich_task_admission_readiness.md",
-        "experiments/core_narrative/reports/2026-05-14_rich_direct_smoke_pilot.md"
+        "experiments/core_narrative/reports/2026-05-14_rich_direct_smoke_pilot.md",
+        "experiments/core_narrative/reports/2026-05-14_rich_direct_smoke_batch.md"
       ],
-      "gap": "Click W* has only 14 task-design candidates in the frozen window, below the 20-task gate. Rich readiness can continue but has only 23 stricter W* design candidates and 8 direct smoke-ready candidates. One Rich W* direct-smoke pilot was accepted, but no 0514 C/R/W* denominator was admitted or frozen."
+      "gap": "Click W* has only 14 task-design candidates in the frozen window, below the 20-task gate. Rich has 23 stricter W* design candidates and 8 direct smoke-ready candidates; all 8 direct candidates were smoked and 5 were accepted. No 0514 C/R/W* denominator was admitted or frozen."
     },
     {
       "requirement": "Task 3: Codex role isolation for Golden-Selector, Golden-Taskwright, Golden-Oracle, Golden-Auditor with prompt hashes, artifact digests, and admission decisions.",
@@ -151,9 +174,10 @@
       "requirement": "Output: task generation validity report.",
       "status": "pilot_only",
       "evidence": [
-        "experiments/core_narrative/reports/2026-05-14_rich_direct_smoke_pilot.md"
+        "experiments/core_narrative/reports/2026-05-14_rich_direct_smoke_pilot.md",
+        "experiments/core_narrative/reports/2026-05-14_rich_direct_smoke_batch.md"
       ],
-      "gap": "One Rich direct-oracle W* candidate passed no-op/reference smoke. Full task generation validity for C/R/W* is not produced."
+      "gap": "All 8 current Rich W* direct-oracle candidates were smoked; 5 passed no-op/reference admission smoke, 2 no-op passed unexpectedly, and 1 no-op timed out. Full task generation validity for C/R/W* is not produced."
     },
     {
       "requirement": "Output: R/W* primary result report.",

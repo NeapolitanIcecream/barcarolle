@@ -162,13 +162,18 @@ def problem_statement(subject: str) -> str:
     return cleaned + "."
 
 
-def materialize_task_pack(candidate: Mapping[str, Any], task_dir: Path, repo_path: Path) -> dict[str, Any]:
+def materialize_task_pack(
+    candidate: Mapping[str, Any],
+    task_dir: Path,
+    repo_path: Path,
+    *,
+    task_id: str = "rich__wstar_direct_pilot__001",
+) -> dict[str, Any]:
     shutil.rmtree(task_dir, ignore_errors=True)
     public_dir = task_dir / "public"
     verifier_dir = task_dir / "verifier"
     public_dir.mkdir(parents=True)
     verifier_dir.mkdir(parents=True)
-    task_id = "rich__wstar_direct_pilot__001"
     (public_dir / "statement.md").write_text(
         f"# {task_id}\n\n## Problem Statement\n\n{problem_statement(str(candidate['subject']))}\n",
         encoding="utf-8",
