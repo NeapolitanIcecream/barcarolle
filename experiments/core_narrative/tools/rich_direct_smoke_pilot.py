@@ -40,7 +40,8 @@ def parse_args(argv: Sequence[str] | None = None) -> argparse.Namespace:
     parser.add_argument("--private-root", default=str(DEFAULT_PRIVATE_ROOT), help="Ignored private artifact root.")
     parser.add_argument("--output", default=str(DEFAULT_OUTPUT), help="Public redacted JSON output.")
     parser.add_argument("--report", default=str(DEFAULT_REPORT), help="Public markdown report.")
-    parser.add_argument("--candidate-index", type=int, default=0, help="Zero-based W* direct candidate index.")
+    parser.add_argument("--split", choices=["C", "R", "W_star"], default="W_star", help="Time split to smoke.")
+    parser.add_argument("--candidate-index", type=int, default=0, help="Zero-based direct candidate index within the split.")
     parser.add_argument("--install-timeout-seconds", type=int, default=240)
     parser.add_argument("--verifier-timeout-seconds", type=int, default=120)
     parser.add_argument("--venv-python", default=sys.executable)
@@ -168,6 +169,7 @@ def materialize_task_pack(
     repo_path: Path,
     *,
     task_id: str = "rich__wstar_direct_pilot__001",
+    split: str = "W_star",
 ) -> dict[str, Any]:
     shutil.rmtree(task_dir, ignore_errors=True)
     public_dir = task_dir / "public"
@@ -193,7 +195,7 @@ def materialize_task_pack(
         "schema_version": "core-narrative.task.v1",
         "task_id": task_id,
         "repo_slug": "rich",
-        "split": "W_star",
+        "split": split,
         "source": {
             "kind": "commit_or_pull_request",
             "base_commit": candidate["base_commit"],
@@ -372,6 +374,7 @@ def public_result(
     noop: Mapping[str, Any],
     reference: Mapping[str, Any],
     private_root: str,
+    split: str = "W_star",
 ) -> dict[str, Any]:
     decision = admission_decision(str(noop.get("status")), str(reference.get("status")))
     return {
@@ -381,7 +384,7 @@ def public_result(
         "generated_at": iso_now(),
         "model_calls_made": 0,
         "repo_slug": "rich",
-        "split": "W_star",
+        "split": split,
         "pilot_scope": "one_direct_oracle_candidate",
         "source_anchor_digest": source_anchor_digest(str(candidate["commit"])),
         "base_anchor_digest": source_anchor_digest(str(candidate["base_commit"])),
@@ -419,6 +422,7 @@ def public_result(
 
 
 def render_report(payload: Mapping[str, Any]) -> str:
+    split = payload.get("split", "W_star")
     return "\n".join(
         [
             "# Rich Direct-Smoke Pilot",
@@ -431,23 +435,24 @@ def render_report(payload: Mapping[str, Any]) -> str:
             f"- Admission decision: `{payload.get('admission_decision')}`",
             f"- No-op status: `{payload.get('no_op_result', {}).get('status') if isinstance(payload.get('no_op_result'), Mapping) else None}`",
             f"- Reference status: `{payload.get('reference_result', {}).get('status') if isinstance(payload.get('reference_result'), Mapping) else None}`",
+            f"- Split: `{split}`",
             f"- Family: `{payload.get('family')}`",
             f"- Test node count: `{payload.get('test_node_count')}`",
             "",
-            "Primary R/W* model attempts remain unauthorized. This pilot checks one direct-oracle Rich W* candidate only.",
+            f"Primary R/W* model attempts remain unauthorized. This pilot checks one direct-oracle Rich `{split}` candidate only.",
             "",
         ]
     )
 
 
-def select_candidate(repo_path: Path, index: int) -> Mapping[str, Any]:
+def select_candidate(repo_path: Path, index: int, split: str = "W_star") -> Mapping[str, Any]:
     candidates = [
         candidate
         for candidate in discover_candidates(repo_path)
-        if candidate.get("window") == "W_star" and candidate.get("direct_smoke_ready")
+        if candidate.get("window") == split and candidate.get("direct_smoke_ready")
     ]
     if not candidates:
-        raise ToolError("no Rich W* direct-smoke candidates found")
+        raise ToolError("no Rich direct-smoke candidates found", split=split)
     if index < 0 or index >= len(candidates):
         raise ToolError("candidate index out of range", index=index, candidate_count=len(candidates))
     return candidates[index]
@@ -460,8 +465,15 @@ def run(argv: Sequence[str] | None = None) -> int:
     if args.force:
         shutil.rmtree(private_root, ignore_errors=True)
     private_root.mkdir(parents=True, exist_ok=True)
-    candidate = select_candidate(repo_path, args.candidate_index)
-    task_pack = materialize_task_pack(candidate, private_root / "candidate_task_pack", repo_path)
+    candidate = select_candidate(repo_path, args.candidate_index, args.split)
+    split_slug = str(args.split).lower().replace("_", "")
+    task_pack = materialize_task_pack(
+        candidate,
+        private_root / "candidate_task_pack",
+        repo_path,
+        task_id=f"rich__{split_slug}_direct_pilot__001",
+        split=args.split,
+    )
     task_path = Path(task_pack["task_path"])
     hidden_digest = hidden_verifier_digest(repo_path, candidate)
     reference_patch = patch_for_candidate(repo_path, candidate)
@@ -491,6 +503,7 @@ def run(argv: Sequence[str] | None = None) -> int:
         noop=noop,
         reference=reference,
         private_root=repo_relative(private_root),
+        split=args.split,
     )
     output = Path(args.output)
     report = Path(args.report)

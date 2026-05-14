@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Run direct-oracle admission smoke for Rich W* candidates with existing tests."""
+"""Run direct-oracle admission smoke for Rich candidates with existing tests."""
 
 from __future__ import annotations
 
@@ -40,7 +40,8 @@ def parse_args(argv: Sequence[str] | None = None) -> argparse.Namespace:
     parser.add_argument("--private-root", default=str(DEFAULT_PRIVATE_ROOT), help="Ignored private artifact root.")
     parser.add_argument("--output", default=str(DEFAULT_OUTPUT), help="Public redacted JSON output.")
     parser.add_argument("--report", default=str(DEFAULT_REPORT), help="Public markdown report.")
-    parser.add_argument("--candidate-limit", type=int, help="Limit number of W* direct candidates to smoke.")
+    parser.add_argument("--split", choices=["C", "R", "W_star"], default="W_star", help="Time split to smoke.")
+    parser.add_argument("--candidate-limit", type=int, help="Limit number of direct candidates to smoke.")
     parser.add_argument("--install-timeout-seconds", type=int, default=240)
     parser.add_argument("--verifier-timeout-seconds", type=int, default=120)
     parser.add_argument("--venv-python", default=sys.executable)
@@ -49,12 +50,16 @@ def parse_args(argv: Sequence[str] | None = None) -> argparse.Namespace:
     return parser.parse_args(list(argv) if argv is not None else None)
 
 
-def direct_w_star_candidates(repo_path: Path) -> list[Mapping[str, Any]]:
+def direct_candidates(repo_path: Path, split: str = "W_star") -> list[Mapping[str, Any]]:
     return [
         candidate
         for candidate in discover_candidates(repo_path)
-        if candidate.get("window") == "W_star" and candidate.get("direct_smoke_ready")
+        if candidate.get("window") == split and candidate.get("direct_smoke_ready")
     ]
+
+
+def direct_w_star_candidates(repo_path: Path) -> list[Mapping[str, Any]]:
+    return direct_candidates(repo_path, "W_star")
 
 
 def summarize_results(results: Sequence[Mapping[str, Any]]) -> dict[str, Any]:
@@ -88,7 +93,7 @@ def summarize_results(results: Sequence[Mapping[str, Any]]) -> dict[str, Any]:
     }
 
 
-def public_summary(*, results: Sequence[Mapping[str, Any]], private_root: str) -> dict[str, Any]:
+def public_summary(*, results: Sequence[Mapping[str, Any]], private_root: str, split: str = "W_star") -> dict[str, Any]:
     summary = summarize_results(results)
     return {
         "schema_version": SCHEMA_VERSION,
@@ -97,7 +102,7 @@ def public_summary(*, results: Sequence[Mapping[str, Any]], private_root: str) -
         "generated_at": iso_now(),
         "model_calls_made": 0,
         "repo_slug": "rich",
-        "split": "W_star",
+        "split": split,
         "batch_scope": "all_current_direct_oracle_candidates",
         "private_artifact_root": private_root,
         "primary_runs_authorized": False,
@@ -105,7 +110,7 @@ def public_summary(*, results: Sequence[Mapping[str, Any]], private_root: str) -
         "results": list(results),
         "claim_boundary": [
             "This direct-smoke batch is not a frozen Rich denominator.",
-            "Only W* candidates with source changes, test changes, and extractable pytest nodes are smoked.",
+            "Only candidates with source changes, test changes, and extractable pytest nodes are smoked.",
             "Source-only candidates still require Golden-Oracle verifier construction.",
             "Raw commits, reference patches, and hidden verifier files are retained only in ignored private artifacts.",
             "No ACUT primary attempt or model call was made.",
@@ -122,13 +127,16 @@ def smoke_candidate(
     install_timeout: int,
     verifier_timeout: int,
     venv_python: str,
+    split: str = "W_star",
 ) -> Mapping[str, Any]:
     candidate_root = private_root / f"candidate_{index:03d}"
+    split_slug = split.lower().replace("_", "")
     task_pack = materialize_task_pack(
         candidate,
         candidate_root / "candidate_task_pack",
         repo_path,
-        task_id=f"rich__wstar_direct_batch__{index:03d}",
+        task_id=f"rich__{split_slug}_direct_batch__{index:03d}",
+        split=split,
     )
     task_path = Path(task_pack["task_path"])
     hidden_digest = hidden_verifier_digest(repo_path, candidate)
@@ -158,6 +166,7 @@ def smoke_candidate(
         noop=noop,
         reference=reference,
         private_root=repo_relative(candidate_root),
+        split=split,
     )
     result["batch_candidate_index"] = index
     result["pilot_scope"] = "direct_oracle_batch_candidate"
@@ -165,6 +174,7 @@ def smoke_candidate(
 
 
 def render_report(payload: Mapping[str, Any]) -> str:
+    split = payload.get("split", "W_star")
     lines = [
         "# Rich Direct-Smoke Batch",
         "",
@@ -173,6 +183,7 @@ def render_report(payload: Mapping[str, Any]) -> str:
         "",
         "## Result",
         "",
+        f"- Split: `{split}`",
         f"- Smoked candidates: `{payload.get('smoked_candidate_count')}`",
         f"- Accepted: `{payload.get('accepted_count')}`",
         f"- Rejected: `{payload.get('rejected_count')}`",
@@ -195,13 +206,13 @@ def run(argv: Sequence[str] | None = None) -> int:
     if args.force:
         shutil.rmtree(private_root, ignore_errors=True)
     private_root.mkdir(parents=True, exist_ok=True)
-    candidates = direct_w_star_candidates(repo_path)
+    candidates = direct_candidates(repo_path, args.split)
     if args.candidate_limit is not None:
         if args.candidate_limit < 0:
             raise ToolError("--candidate-limit must be non-negative")
         candidates = candidates[: args.candidate_limit]
     if not candidates:
-        raise ToolError("no Rich W* direct-smoke candidates found")
+        raise ToolError("no Rich direct-smoke candidates found", split=args.split)
     results = [
         smoke_candidate(
             repo_path=repo_path,
@@ -211,10 +222,11 @@ def run(argv: Sequence[str] | None = None) -> int:
             install_timeout=args.install_timeout_seconds,
             verifier_timeout=args.verifier_timeout_seconds,
             venv_python=args.venv_python,
+            split=args.split,
         )
         for index, candidate in enumerate(candidates, start=1)
     ]
-    payload = public_summary(results=results, private_root=repo_relative(private_root))
+    payload = public_summary(results=results, private_root=repo_relative(private_root), split=args.split)
     output = Path(args.output)
     report = Path(args.report)
     write_json(output, payload)

@@ -26,10 +26,11 @@ class RichDirectSmokeBatchTests(unittest.TestCase):
 
     def test_public_summary_preserves_no_primary_run_boundary(self) -> None:
         """Direct-smoke batches never authorize ACUT primary attempts."""
-        payload = batch.public_summary(results=[], private_root="experiments/core_narrative/large_artifacts/example")
+        payload = batch.public_summary(results=[], private_root="experiments/core_narrative/large_artifacts/example", split="R")
 
         self.assertFalse(payload["primary_runs_authorized"])
         self.assertEqual(payload["model_calls_made"], 0)
+        self.assertEqual(payload["split"], "R")
         self.assertIn("not a frozen Rich denominator", " ".join(payload["claim_boundary"]))
 
 
