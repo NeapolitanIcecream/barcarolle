@@ -45,6 +45,20 @@ class RichSourceOraclePilotTests(unittest.TestCase):
         with self.assertRaises(ToolError):
             pilot.hidden_verifier_for_candidate(candidate)
 
+    def test_hidden_verifier_template_covers_lazy_emoji_import_behavior(self) -> None:
+        """The emoji pilot verifier checks lazy loading before the first emoji lookup."""
+        verifier = pilot.hidden_verifier_for_candidate(
+            {
+                "subject": "lazy load emoji",
+                "source_files": ["rich/_emoji_replace.py", "rich/emoji.py"],
+            }
+        )
+
+        self.assertEqual(verifier["oracle_template"], "emoji_code_table_lazy_import")
+        self.assertIn("tests/test_emoji_lazy_import.py", verifier["command"])
+        self.assertIn("rich._emoji_codes", verifier["hidden_files"][0]["content"])
+        self.assertIn("Emoji(\"smiley\")", verifier["hidden_files"][0]["content"])
+
     def test_public_result_redacts_raw_source_anchors_and_subject(self) -> None:
         """Public pilot results keep raw commits, subjects, and hidden files private."""
         candidate = self.kbd_candidate()

@@ -60,6 +60,23 @@ def test_inline_kbd_html_renders_as_styled_inline_markdown() -> None:
     assert style.color is not None
 '''
 
+LAZY_EMOJI_TEST = '''\
+from __future__ import annotations
+
+import sys
+
+
+def test_emoji_code_table_loads_only_after_first_lookup() -> None:
+    """Importing rich.emoji should not eagerly load the emoji code table."""
+    sys.modules.pop("rich._emoji_codes", None)
+
+    import rich.emoji as emoji_module
+
+    assert "rich._emoji_codes" not in sys.modules
+    assert str(emoji_module.Emoji("smiley"))
+    assert "rich._emoji_codes" in sys.modules
+'''
+
 
 def parse_args(argv: Sequence[str] | None = None) -> argparse.Namespace:
     parser = argparse.ArgumentParser(description=__doc__)
@@ -102,6 +119,18 @@ def hidden_verifier_for_candidate(candidate: Mapping[str, Any]) -> dict[str, Any
             "command": ".venv/bin/python -m pytest -q tests/test_markdown_html_inline_kbd.py",
             "test_node_count": 1,
             "oracle_template": "markdown_inline_kbd_html",
+        }
+    if subject == "lazy load emoji" and {"rich/_emoji_replace.py", "rich/emoji.py"}.issubset(source_files):
+        return {
+            "hidden_files": [
+                {
+                    "path": "tests/test_emoji_lazy_import.py",
+                    "content": LAZY_EMOJI_TEST,
+                }
+            ],
+            "command": ".venv/bin/python -m pytest -q tests/test_emoji_lazy_import.py",
+            "test_node_count": 1,
+            "oracle_template": "emoji_code_table_lazy_import",
         }
     raise ToolError(
         "no source-oracle template is available for selected candidate",

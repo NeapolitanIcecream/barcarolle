@@ -1,0 +1,44 @@
+{
+  "admission_decision": "accepted",
+  "base_anchor_digest": "b2154466be6ec2b348b253170b5e5f05c890d87c82b086e3e086c1f92556214b",
+  "changed_file_set_digest": "974480ab33d2c28a8320894dfb1f706eb178804405f049d5fdbb2208cccc41a1",
+  "claim_boundary": [
+    "This is a one-candidate source-only Golden-Oracle smoke pilot, not a frozen Rich denominator.",
+    "Raw source commits, raw subjects, reference patches, and hidden verifier files are retained only in ignored private artifacts.",
+    "No ACUT primary attempt or model call was made."
+  ],
+  "family": "markup/text/emoji",
+  "generated_at": "2026-05-14T15:19:42.911270Z",
+  "hidden_verifier_digest": "b39ae635570025a7019d7dbcfbccf9c27edb9e16c929f02910550eed333c9e6c",
+  "model_calls_made": 0,
+  "no_op_result": {
+    "public_artifact_redacted": true,
+    "status": "failed",
+    "verifier_exit_code": 1
+  },
+  "oracle_priority": "medium",
+  "oracle_template": "emoji_code_table_lazy_import",
+  "pilot_scope": "one_source_only_golden_oracle_candidate",
+  "primary_runs_authorized": false,
+  "private_artifact_root": "experiments/core_narrative/large_artifacts/rich_source_oracle_pilot_emoji_20260514",
+  "reference_patch_bytes": 2352,
+  "reference_patch_digest": "63e488214d4a63600956b7f075ef92ee2434f9ed665288c240a634bafc6e5480",
+  "reference_result": {
+    "public_artifact_redacted": true,
+    "status": "passed",
+    "verifier_exit_code": 0
+  },
+  "repo_slug": "rich",
+  "schema_version": "core-narrative.rich-source-oracle-pilot.v1",
+  "source_anchor_digest": "a1e0feedd37278e6a1b259e4b55b8a919652f182ec53ef3ab3891b86cff7c1da",
+  "source_file_count": 2,
+  "split": "W_star",
+  "statement_digest": "b33d118f1ece1c442454d98aadf3631125604ddacf5849f5350c5bf53a725e2a",
+  "status": "completed",
+  "subject_digest": "09843c7601b117e3c82a9aea6f6fb91798f2133f7b4e87ade2b805aeff9ffac7",
+  "surface": "source_without_tests",
+  "test_file_count": 0,
+  "test_node_count": 1,
+  "tool": "rich_source_oracle_pilot",
+  "triage_code": "performance_or_import_behavior_probe"
+}
