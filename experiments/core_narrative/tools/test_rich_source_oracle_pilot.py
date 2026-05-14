@@ -442,6 +442,115 @@ class RichSourceOraclePilotTests(unittest.TestCase):
         self.assertIn("expand (bool, optional)", content)
         self.assertIn("source.count(expand_doc) == 2", content)
 
+    def test_hidden_verifier_templates_cover_rich_c_source_oracle_candidates(self) -> None:
+        """The C source-only queue has templates for each current source-only candidate."""
+        cases = [
+            (
+                "Fix two typos",
+                ["rich/text.py"],
+                "text_append_docstring_typo_fixed",
+                "tests/test_text_append_docstring_typo.py",
+                "more performant than Text.append",
+            ),
+            (
+                "fix(logging): fix tracebacks_code_width type hint",
+                ["rich/logging.py"],
+                "logging_tracebacks_code_width_optional_type",
+                "tests/test_logging_tracebacks_code_width_type.py",
+                "Optional[int]",
+            ),
+            (
+                "optimize size",
+                ["rich/console.py"],
+                "console_options_single_size_lookup",
+                "tests/test_console_options_size_lookup.py",
+                "size_lookups == 1",
+            ),
+            (
+                "sponsorship message",
+                ["rich/__main__.py"],
+                "rich_main_sponsor_panel_message",
+                "tests/test_rich_main_sponsor_message.py",
+                "github.com/sponsors/willmcgugan",
+            ),
+            (
+                "indentation",
+                ["rich/syntax.py"],
+                "syntax_guess_lexer_docstring_indent",
+                "tests/test_syntax_guess_lexer_docstring_indent.py",
+                "path (AnyStr)",
+            ),
+            (
+                "detect recursion in Exception Groups",
+                ["rich/traceback.py"],
+                "traceback_exception_group_recursion_guard",
+                "tests/test_traceback_exception_group_recursion.py",
+                "grouped_exceptions.add(exception)",
+            ),
+            (
+                "name change",
+                ["rich/traceback.py"],
+                "traceback_visited_exceptions_name",
+                "tests/test_traceback_visited_exceptions_name.py",
+                "_visited_exceptions",
+            ),
+            (
+                "no need for this",
+                ["rich/traceback.py"],
+                "traceback_duplicate_group_preserves_group_flag",
+                "tests/test_traceback_duplicate_group_flag.py",
+                "stack.is_group = False",
+            ),
+            (
+                "docs",
+                ["rich/live.py"],
+                "live_render_stack_comment",
+                "tests/test_live_stack_render_comment.py",
+                "The first Live instance",
+            ),
+            (
+                "nested flag",
+                ["rich/console.py", "rich/live.py"],
+                "live_nested_flag_refresh",
+                "tests/test_live_nested_flag.py",
+                "self._nested = False",
+            ),
+            (
+                "permit nested live",
+                ["rich/console.py", "rich/live.py"],
+                "console_live_stack_allows_nested_live",
+                "tests/test_console_live_stack.py",
+                "_live_stack",
+            ),
+            (
+                "avoid displaying spinners in a table",
+                ["rich/spinner.py"],
+                "spinner_main_group_without_table_panel",
+                "tests/test_spinner_main_group.py",
+                "all_spinners = Group(",
+            ),
+            (
+                "Add back `# pragma: no cover`",
+                ["rich/progress.py"],
+                "progress_self_type_checking_no_cover",
+                "tests/test_progress_self_no_cover.py",
+                "# pragma: no cover",
+            ),
+        ]
+
+        for subject, source_files, template, test_path, content_needle in cases:
+            with self.subTest(subject=subject):
+                verifier = pilot.hidden_verifier_for_candidate(
+                    {
+                        "subject": subject,
+                        "source_files": source_files,
+                    }
+                )
+
+                self.assertEqual(verifier["oracle_template"], template)
+                self.assertIn(test_path, verifier["command"])
+                self.assertIn(content_needle, verifier["hidden_files"][0]["content"])
+
     def test_source_only_candidates_respect_requested_split(self) -> None:
         """R queue pilots select source-only candidates from R, not W*."""
         candidates = [

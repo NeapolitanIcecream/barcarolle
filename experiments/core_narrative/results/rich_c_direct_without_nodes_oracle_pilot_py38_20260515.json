@@ -1,0 +1,42 @@
+{
+  "admission_decision": "accepted",
+  "base_anchor_digest": "27492eaa1a80c342f6e0813000ae500aaaa09f29caadab9bb6852e228b181e1e",
+  "changed_file_set_digest": "7766581c1b54e79074119106bd15c2df4db580aee927933eada7a23cd6926a49",
+  "claim_boundary": [
+    "This is a one-candidate direct-without-node Oracle smoke pilot, not a frozen Rich denominator.",
+    "Raw source commits, raw subjects, reference patches, and hidden verifier files are retained only in ignored private artifacts.",
+    "No ACUT primary attempt or model call was made."
+  ],
+  "family": "progress/live/status rendering",
+  "generated_at": "2026-05-14T17:58:38.375461Z",
+  "hidden_verifier_digest": "e89e28fec1efd72589aac2ab65def88d079b6fd851a55ecf28b84cdea2b9a08a",
+  "model_calls_made": 0,
+  "no_op_result": {
+    "public_artifact_redacted": true,
+    "status": "failed",
+    "verifier_exit_code": 1
+  },
+  "oracle_template": "py38_compat_branch_removal",
+  "pilot_scope": "one_direct_tests_without_extractable_nodes_candidate",
+  "primary_runs_authorized": false,
+  "private_artifact_root": "experiments/core_narrative/large_artifacts/rich_c_direct_without_nodes_oracle_pilot_py38_20260515",
+  "reference_patch_bytes": 5023,
+  "reference_patch_digest": "e561159e82dc5213cdbf3ed240083e3d5ffff170aaf3dfba183791ded31337a6",
+  "reference_result": {
+    "public_artifact_redacted": true,
+    "status": "passed",
+    "verifier_exit_code": 0
+  },
+  "repo_slug": "rich",
+  "schema_version": "core-narrative.rich-direct-without-nodes-oracle-pilot.v1",
+  "source_anchor_digest": "11951d02abde795d82a57baf0b7a2cfa7aa5b3f2a07c10b3553ee4737ca041cf",
+  "source_file_count": 9,
+  "split": "C",
+  "statement_digest": "c57c519fd8470e8568633778580a0d98ac60bc8a4b91f6f752e4315f85b906e9",
+  "status": "completed",
+  "subject_digest": "16411360e03ae35d9a4d97ba65335cd7585bc64a105bf0db11c588eff6972636",
+  "surface": "source_and_tests",
+  "test_file_count": 1,
+  "test_node_count": 1,
+  "tool": "rich_direct_without_nodes_oracle_pilot"
+}

@@ -1,0 +1,44 @@
+{
+  "admission_decision": "accepted",
+  "base_anchor_digest": "608d396dafe13405949fe5470e9c7408aa43a64c1554c8a6da6f929fd197f981",
+  "changed_file_set_digest": "86c15bcde7a7cd984f08f455af7720795a57a154c46cedb703fe889a2ea835b7",
+  "claim_boundary": [
+    "This is a one-candidate source-only Golden-Oracle smoke pilot, not a frozen Rich denominator.",
+    "Raw source commits, raw subjects, reference patches, and hidden verifier files are retained only in ignored private artifacts.",
+    "No ACUT primary attempt or model call was made."
+  ],
+  "family": "markup/text/emoji",
+  "generated_at": "2026-05-14T17:49:16.819174Z",
+  "hidden_verifier_digest": "33ce4e2b80028e8398ec1b7b12cf7f5051f83762012e2455b17478bd545ac12d",
+  "model_calls_made": 0,
+  "no_op_result": {
+    "public_artifact_redacted": true,
+    "status": "failed",
+    "verifier_exit_code": 1
+  },
+  "oracle_priority": "high",
+  "oracle_template": "text_append_docstring_typo_fixed",
+  "pilot_scope": "one_source_only_golden_oracle_candidate",
+  "primary_runs_authorized": false,
+  "private_artifact_root": "experiments/core_narrative/large_artifacts/rich_c_source_oracle_pilot_text_typos_20260515",
+  "reference_patch_bytes": 469,
+  "reference_patch_digest": "5fe3aebecfaab2913299bec81424cbd8a10beae6dc56b9f6d1393abfad739d81",
+  "reference_result": {
+    "public_artifact_redacted": true,
+    "status": "passed",
+    "verifier_exit_code": 0
+  },
+  "repo_slug": "rich",
+  "schema_version": "core-narrative.rich-source-oracle-pilot.v1",
+  "source_anchor_digest": "b5275255bdae33d569ed70facc15d8621873e8336fc1c2dfe9362a73afd664cb",
+  "source_file_count": 1,
+  "split": "C",
+  "statement_digest": "7123284d262467cf06fcb93403506dbce4c7b180ea27d0773c3e71d1af361971",
+  "status": "completed",
+  "subject_digest": "b5199cd50678b26c9c0a0649693ce451dd5c0ce1e10a2f5d26faa4f4a34cdb50",
+  "surface": "source_without_tests",
+  "test_file_count": 0,
+  "test_node_count": 1,
+  "tool": "rich_source_oracle_pilot",
+  "triage_code": "behavior_edge_case_probe"
+}

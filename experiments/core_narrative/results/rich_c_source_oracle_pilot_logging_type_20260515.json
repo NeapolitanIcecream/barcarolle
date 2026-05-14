@@ -1,0 +1,44 @@
+{
+  "admission_decision": "accepted",
+  "base_anchor_digest": "08ef0a286ef73fba9e73fa2c8a1731db2483372ca9cc5a75441646e327609b19",
+  "changed_file_set_digest": "db173d743c0bbab5b7d6f327ef0485c183ed567bec8ef332659e1180b553fb92",
+  "claim_boundary": [
+    "This is a one-candidate source-only Golden-Oracle smoke pilot, not a frozen Rich denominator.",
+    "Raw source commits, raw subjects, reference patches, and hidden verifier files are retained only in ignored private artifacts.",
+    "No ACUT primary attempt or model call was made."
+  ],
+  "family": "traceback/logging/inspect",
+  "generated_at": "2026-05-14T17:49:38.277105Z",
+  "hidden_verifier_digest": "0e30b6d7f057ba765ddd14629fc03211c223884b26176eccae44c094bec759f6",
+  "model_calls_made": 0,
+  "no_op_result": {
+    "public_artifact_redacted": true,
+    "status": "failed",
+    "verifier_exit_code": 1
+  },
+  "oracle_priority": "high",
+  "oracle_template": "logging_tracebacks_code_width_optional_type",
+  "pilot_scope": "one_source_only_golden_oracle_candidate",
+  "primary_runs_authorized": false,
+  "private_artifact_root": "experiments/core_narrative/large_artifacts/rich_c_source_oracle_pilot_logging_type_20260515",
+  "reference_patch_bytes": 516,
+  "reference_patch_digest": "fa4bcb81f2c95cf2c427a2320513aa046d0c89348a7ab15c8a6887836e9c201e",
+  "reference_result": {
+    "public_artifact_redacted": true,
+    "status": "passed",
+    "verifier_exit_code": 0
+  },
+  "repo_slug": "rich",
+  "schema_version": "core-narrative.rich-source-oracle-pilot.v1",
+  "source_anchor_digest": "5940e610acdae326feee345c14f5505931e7e9de0f4473a3310cf6b90b581cee",
+  "source_file_count": 1,
+  "split": "C",
+  "statement_digest": "d50a5c4d684cb96975e3dc813437ed5417a6ac731194208db5eebd4bdfb5b94b",
+  "status": "completed",
+  "subject_digest": "9e96056fa36ceca36debc1defa312b64017fa5c5e00fbd332e981036cd63a978",
+  "surface": "source_without_tests",
+  "test_file_count": 0,
+  "test_node_count": 1,
+  "tool": "rich_source_oracle_pilot",
+  "triage_code": "behavior_edge_case_probe"
+}

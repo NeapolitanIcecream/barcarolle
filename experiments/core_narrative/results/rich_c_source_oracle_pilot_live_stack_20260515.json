@@ -1,0 +1,44 @@
+{
+  "admission_decision": "accepted",
+  "base_anchor_digest": "935a333da8be1efc1bb418f637ae5b90d64ca3a4afdff14af7604afafaac0d1e",
+  "changed_file_set_digest": "75604b2aff9c6a0f965b7c5ba8a52def49c23aa61b2fd5348952de18ba97c8f8",
+  "claim_boundary": [
+    "This is a one-candidate source-only Golden-Oracle smoke pilot, not a frozen Rich denominator.",
+    "Raw source commits, raw subjects, reference patches, and hidden verifier files are retained only in ignored private artifacts.",
+    "No ACUT primary attempt or model call was made."
+  ],
+  "family": "progress/live/status rendering",
+  "generated_at": "2026-05-14T17:52:48.603171Z",
+  "hidden_verifier_digest": "4906d9a500d978c35df1e07befc78e2396ddc4342cbd019df63b675f9f23cbcc",
+  "model_calls_made": 0,
+  "no_op_result": {
+    "public_artifact_redacted": true,
+    "status": "failed",
+    "verifier_exit_code": 1
+  },
+  "oracle_priority": "medium",
+  "oracle_template": "console_live_stack_allows_nested_live",
+  "pilot_scope": "one_source_only_golden_oracle_candidate",
+  "primary_runs_authorized": false,
+  "private_artifact_root": "experiments/core_narrative/large_artifacts/rich_c_source_oracle_pilot_live_stack_20260515",
+  "reference_patch_bytes": 4327,
+  "reference_patch_digest": "8ea70426fb627a5fd5ca49600df3e3f23defdc89ce4a078b2cfeafcc4b1a8d09",
+  "reference_result": {
+    "public_artifact_redacted": true,
+    "status": "passed",
+    "verifier_exit_code": 0
+  },
+  "repo_slug": "rich",
+  "schema_version": "core-narrative.rich-source-oracle-pilot.v1",
+  "source_anchor_digest": "770fbe6298443a1d84db560914e420b2b7592ba0f977e9bc7fe88c230dc54170",
+  "source_file_count": 2,
+  "split": "C",
+  "statement_digest": "27bd88921e4ad679ea5e897c0dfe5bd81c964955f196a4c099e6c816cab1df92",
+  "status": "completed",
+  "subject_digest": "cc473b4f7dd73c32e17e4be18314f024729c7fb102cde08b001e710f1f448c3a",
+  "surface": "source_without_tests",
+  "test_file_count": 0,
+  "test_node_count": 1,
+  "tool": "rich_source_oracle_pilot",
+  "triage_code": "manual_probe_required"
+}

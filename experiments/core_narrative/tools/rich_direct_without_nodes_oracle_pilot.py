@@ -21,7 +21,7 @@ from rich_direct_smoke_pilot import (
     source_anchor_digest,
 )
 from rich_source_oracle_pilot import hidden_verifier_digest, materialize_task_pack
-from rich_task_admission_readiness import changed_file_set_digest, discover_candidates
+from rich_task_admission_readiness import changed_file_set_digest, discover_candidates, parse_c_scan_start
 
 
 TOOL = "rich_direct_without_nodes_oracle_pilot"
@@ -60,6 +60,34 @@ if __name__ == "__main__":
     test_protocol_repr_and_syntax_imports_avoid_inspect_and_console_side_effects()
 '''
 
+PY38_BRANCH_REMOVAL_TEST = '''\
+from __future__ import annotations
+
+from pathlib import Path
+
+
+def test_python38_compatibility_branches_are_removed_from_runtime_modules() -> None:
+    """Runtime modules should no longer branch on sys.version_info >= (3, 8)."""
+    runtime_files = [
+        "rich/_ratio.py",
+        "rich/align.py",
+        "rich/box.py",
+        "rich/console.py",
+        "rich/control.py",
+        "rich/emoji.py",
+        "rich/live_render.py",
+        "rich/markdown.py",
+        "rich/progress.py",
+    ]
+
+    for path in runtime_files:
+        source = Path(path).read_text(encoding="utf-8")
+        assert "sys.version_info >= (3, 8)" not in source, path
+
+    assert "from typing import Literal, Protocol, runtime_checkable" in Path("rich/console.py").read_text(encoding="utf-8")
+    assert "from typing import TYPE_CHECKING, Iterable, Optional, Literal" in Path("rich/align.py").read_text(encoding="utf-8")
+'''
+
 
 def parse_args(argv: Sequence[str] | None = None) -> argparse.Namespace:
     parser = argparse.ArgumentParser(description=__doc__)
@@ -67,6 +95,8 @@ def parse_args(argv: Sequence[str] | None = None) -> argparse.Namespace:
     parser.add_argument("--private-root", default=str(DEFAULT_PRIVATE_ROOT), help="Ignored private artifact root.")
     parser.add_argument("--output", default=str(DEFAULT_OUTPUT), help="Public redacted JSON output.")
     parser.add_argument("--report", default=str(DEFAULT_REPORT), help="Public markdown report.")
+    parser.add_argument("--split", choices=["C", "R", "W_star"], default="W_star", help="Time split to admit.")
+    parser.add_argument("--c-scan-start", default=None, help="Inclusive start date for C calibration scan.")
     parser.add_argument("--candidate-index", type=int, default=0, help="Zero-based direct-without-node candidate index.")
     parser.add_argument("--install-timeout-seconds", type=int, default=240)
     parser.add_argument("--verifier-timeout-seconds", type=int, default=120)
@@ -76,18 +106,18 @@ def parse_args(argv: Sequence[str] | None = None) -> argparse.Namespace:
     return parser.parse_args(list(argv) if argv is not None else None)
 
 
-def direct_without_nodes_candidates(repo_path: Path) -> list[Mapping[str, Any]]:
+def direct_without_nodes_candidates(repo_path: Path, split: str = "W_star", *, c_scan_start: Any = None) -> list[Mapping[str, Any]]:
     return [
         candidate
-        for candidate in discover_candidates(repo_path)
-        if candidate.get("window") == "W_star" and candidate.get("oracle_requirement") == "direct_tests_without_extractable_nodes"
+        for candidate in discover_candidates(repo_path, c_scan_start=c_scan_start)
+        if candidate.get("window") == split and candidate.get("oracle_requirement") == "direct_tests_without_extractable_nodes"
     ]
 
 
-def select_candidate(repo_path: Path, index: int) -> Mapping[str, Any]:
-    candidates = direct_without_nodes_candidates(repo_path)
+def select_candidate(repo_path: Path, index: int, split: str = "W_star", *, c_scan_start: Any = None) -> Mapping[str, Any]:
+    candidates = direct_without_nodes_candidates(repo_path, split, c_scan_start=c_scan_start)
     if not candidates:
-        raise ToolError("no Rich W* direct-without-node Oracle candidates found")
+        raise ToolError("no Rich direct-without-node Oracle candidates found", split=split)
     if index < 0 or index >= len(candidates):
         raise ToolError("candidate index out of range", index=index, candidate_count=len(candidates))
     return candidates[index]
@@ -109,6 +139,29 @@ def hidden_verifier_for_candidate(candidate: Mapping[str, Any]) -> dict[str, Any
             "test_node_count": 1,
             "oracle_template": "import_side_effects_lazy_inspect_console",
         }
+    py38_removed_required = {
+        "rich/_ratio.py",
+        "rich/align.py",
+        "rich/box.py",
+        "rich/console.py",
+        "rich/control.py",
+        "rich/emoji.py",
+        "rich/live_render.py",
+        "rich/markdown.py",
+        "rich/progress.py",
+    }
+    if subject == "remove all `sys.version_info >= (3, 8)` checks as python 3.7 is no longer supported" and py38_removed_required.issubset(source_files):
+        return {
+            "hidden_files": [
+                {
+                    "path": "tests/test_py38_branch_removal.py",
+                    "content": PY38_BRANCH_REMOVAL_TEST,
+                }
+            ],
+            "command": ".venv/bin/python -m pytest -q tests/test_py38_branch_removal.py",
+            "test_node_count": 1,
+            "oracle_template": "py38_compat_branch_removal",
+        }
     raise ToolError(
         "no direct-without-node Oracle template is available for selected candidate",
         subject_digest=sha256_text(str(candidate.get("subject", ""))),
@@ -125,6 +178,7 @@ def public_result(
     noop: Mapping[str, Any],
     reference: Mapping[str, Any],
     private_root: str,
+    split: str = "W_star",
 ) -> dict[str, Any]:
     decision = admission_decision(str(noop.get("status")), str(reference.get("status")))
     return {
@@ -134,7 +188,7 @@ def public_result(
         "generated_at": iso_now(),
         "model_calls_made": 0,
         "repo_slug": "rich",
-        "split": "W_star",
+        "split": split,
         "pilot_scope": "one_direct_tests_without_extractable_nodes_candidate",
         "oracle_template": verifier.get("oracle_template"),
         "source_anchor_digest": source_anchor_digest(str(candidate["commit"])),
@@ -188,7 +242,7 @@ def render_report(payload: Mapping[str, Any]) -> str:
             f"- Oracle template: `{payload.get('oracle_template')}`",
             f"- Family: `{payload.get('family')}`",
             "",
-            "Primary R/W* model attempts remain unauthorized. This pilot checks one Rich W* direct-tests-without-extractable-nodes candidate only.",
+            f"Primary model attempts remain unauthorized. This pilot checks one Rich `{payload.get('split')}` direct-tests-without-extractable-nodes candidate only.",
             "",
         ]
     )
@@ -201,13 +255,15 @@ def run(argv: Sequence[str] | None = None) -> int:
     if args.force:
         shutil.rmtree(private_root, ignore_errors=True)
     private_root.mkdir(parents=True, exist_ok=True)
-    candidate = select_candidate(repo_path, args.candidate_index)
+    c_scan_start = parse_c_scan_start(args.c_scan_start) if args.c_scan_start else None
+    candidate = select_candidate(repo_path, args.candidate_index, args.split, c_scan_start=c_scan_start)
     verifier = hidden_verifier_for_candidate(candidate)
+    split_slug = str(args.split).lower().replace("_", "")
     task_pack = materialize_task_pack(
         candidate,
         verifier,
         private_root / "candidate_task_pack",
-        task_id="rich__wstar_direct_without_nodes_oracle__001",
+        task_id=f"rich__{split_slug}_direct_without_nodes_oracle__{args.candidate_index + 1:03d}",
     )
     task_path = Path(task_pack["task_path"])
     reference_patch = patch_for_candidate(repo_path, candidate)
@@ -237,6 +293,7 @@ def run(argv: Sequence[str] | None = None) -> int:
         noop=noop,
         reference=reference,
         private_root=repo_relative(private_root),
+        split=args.split,
     )
     output = Path(args.output)
     report = Path(args.report)

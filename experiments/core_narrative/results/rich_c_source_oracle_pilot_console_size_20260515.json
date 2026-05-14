@@ -1,0 +1,44 @@
+{
+  "admission_decision": "accepted",
+  "base_anchor_digest": "acc4e94c697bc15f06c9870384ba1c51fa21563de712f044ca1653dfdc690d47",
+  "changed_file_set_digest": "8f507d88f3d034716fad069c6a73da25e2915a216a2bdda6db2e8d0c13a0020a",
+  "claim_boundary": [
+    "This is a one-candidate source-only Golden-Oracle smoke pilot, not a frozen Rich denominator.",
+    "Raw source commits, raw subjects, reference patches, and hidden verifier files are retained only in ignored private artifacts.",
+    "No ACUT primary attempt or model call was made."
+  ],
+  "family": "console/rendering",
+  "generated_at": "2026-05-14T17:50:30.214194Z",
+  "hidden_verifier_digest": "18a01027008ed76d109b4509187abad688f7b49e795917a37688c10d0c801aeb",
+  "model_calls_made": 0,
+  "no_op_result": {
+    "public_artifact_redacted": true,
+    "status": "failed",
+    "verifier_exit_code": 1
+  },
+  "oracle_priority": "medium",
+  "oracle_template": "console_options_single_size_lookup",
+  "pilot_scope": "one_source_only_golden_oracle_candidate",
+  "primary_runs_authorized": false,
+  "private_artifact_root": "experiments/core_narrative/large_artifacts/rich_c_source_oracle_pilot_console_size_20260515",
+  "reference_patch_bytes": 685,
+  "reference_patch_digest": "127afd8558c2a99af1427b35d2207b32a514f1deab48d25f10afc697ce50f627",
+  "reference_result": {
+    "public_artifact_redacted": true,
+    "status": "passed",
+    "verifier_exit_code": 0
+  },
+  "repo_slug": "rich",
+  "schema_version": "core-narrative.rich-source-oracle-pilot.v1",
+  "source_anchor_digest": "dbd4027cff0686bd64602db934158b6eed5063b9ba9bb539508134a27a17ad70",
+  "source_file_count": 1,
+  "split": "C",
+  "statement_digest": "5e4ddf817cd63d0ef936cab1f1591977e4fbed3e4274d3fbfb9ca99ac65c86dc",
+  "status": "completed",
+  "subject_digest": "a46de8182e780da89d2c11b6ac538fac83ec5ad4b6a8234c3b2cd22eb21d65d1",
+  "surface": "source_without_tests",
+  "test_file_count": 0,
+  "test_node_count": 1,
+  "tool": "rich_source_oracle_pilot",
+  "triage_code": "manual_probe_required"
+}

@@ -584,6 +584,210 @@ def test_column_docstring_does_not_list_removed_expand_argument() -> None:
     assert source.count(expand_doc) == 2
 '''
 
+TEXT_APPEND_DOCSTRING_TYPO_TEST = '''\
+from __future__ import annotations
+
+from rich.text import Text
+
+
+def test_text_append_text_docstring_uses_than_not_that() -> None:
+    """Text.append_text should document that it is more performant than Text.append."""
+    doc = Text.append_text.__doc__ or ""
+
+    assert "more performant than Text.append" in doc
+    assert "more performant that Text.append" not in doc
+'''
+
+LOGGING_TRACEBACK_CODE_WIDTH_OPTIONAL_TEST = '''\
+from __future__ import annotations
+
+from pathlib import Path
+
+
+def test_richhandler_tracebacks_code_width_annotation_allows_none() -> None:
+    """RichHandler should type tracebacks_code_width as Optional[int]."""
+    source = Path("rich/logging.py").read_text(encoding="utf-8")
+
+    assert "tracebacks_code_width: Optional[int] = 88" in source
+    assert "tracebacks_code_width: int = 88" not in source
+'''
+
+CONSOLE_OPTIONS_SINGLE_SIZE_LOOKUP_TEST = '''\
+from __future__ import annotations
+
+import io
+
+from rich.console import Console, ConsoleDimensions
+
+
+class CountingConsole(Console):
+    def __init__(self) -> None:
+        super().__init__(file=io.StringIO(), force_terminal=False)
+        self.size_lookups = 0
+
+    @property
+    def size(self) -> ConsoleDimensions:
+        self.size_lookups += 1
+        return ConsoleDimensions(123, 45)
+
+
+def test_console_options_reuses_single_size_lookup() -> None:
+    """Console.options should reuse one size lookup for height, size, and width."""
+    console = CountingConsole()
+
+    options = console.options
+
+    assert options.max_height == 45
+    assert options.max_width == 123
+    assert options.size == ConsoleDimensions(123, 45)
+    assert console.size_lookups == 1
+'''
+
+RICH_MAIN_SPONSOR_MESSAGE_TEST = '''\
+from __future__ import annotations
+
+from pathlib import Path
+
+
+def test_rich_module_main_uses_new_sponsor_panel_message() -> None:
+    """The rich module demo should include the sponsor URL panel message."""
+    source = Path("rich/__main__.py").read_text(encoding="utf-8")
+
+    assert "github.com/sponsors/willmcgugan" in source
+    assert "Help ensure Rich is maintained" in source
+    assert "sponsor_message = Table.grid" not in source
+'''
+
+SYNTAX_GUESS_LEXER_DOCSTRING_INDENT_TEST = '''\
+from __future__ import annotations
+
+from pathlib import Path
+
+
+def test_syntax_guess_lexer_docstring_argument_indentation() -> None:
+    """Syntax.guess_lexer docs should align Args entries consistently."""
+    source = Path("rich/syntax.py").read_text(encoding="utf-8")
+
+    assert "            path (AnyStr): The path to the file" in source
+    assert "             path (AnyStr): The path to the file" not in source
+'''
+
+TRACEBACK_EXCEPTION_GROUP_RECURSION_TEST = '''\
+from __future__ import annotations
+
+from pathlib import Path
+
+
+def test_traceback_extract_tracks_exception_group_recursion() -> None:
+    """Traceback extraction should track grouped exceptions while recursing."""
+    source = Path("rich/traceback.py").read_text(encoding="utf-8")
+
+    assert "_grouped_exceptions: set[BaseException] | None = None" in source
+    assert "grouped_exceptions.add(exception)" in source
+    assert "if not grouped_exceptions:" in source
+'''
+
+TRACEBACK_VISITED_EXCEPTIONS_NAME_TEST = '''\
+from __future__ import annotations
+
+from pathlib import Path
+
+
+def test_traceback_extract_uses_visited_exceptions_and_none_cause_checks() -> None:
+    """Traceback extraction should use visited-exception naming and explicit None checks."""
+    source = Path("rich/traceback.py").read_text(encoding="utf-8")
+
+    assert "_visited_exceptions: set[BaseException] | None = None" in source
+    assert "_grouped_exceptions" not in source
+    assert "if cause is not None and cause is not exc_value:" in source
+    assert 'if cause and not getattr(exc_value, "__suppress_context__", False):' not in source
+'''
+
+TRACEBACK_DUPLICATE_GROUP_PRESERVES_GROUP_TEST = '''\
+from __future__ import annotations
+
+from pathlib import Path
+
+
+def test_traceback_duplicate_exception_group_entry_does_not_clear_group_flag() -> None:
+    """Duplicate grouped exceptions should be skipped without clearing stack.is_group."""
+    source = Path("rich/traceback.py").read_text(encoding="utf-8")
+
+    assert "if exception in grouped_exceptions:" in source
+    assert "if exception in grouped_exceptions:\\n                            stack.is_group = False" not in source
+'''
+
+LIVE_RENDER_STACK_COMMENT_TEST = '''\
+from __future__ import annotations
+
+from pathlib import Path
+
+
+def test_live_render_documents_first_live_stack_rendering() -> None:
+    """Live rendering source should document that the first Live renders the stack."""
+    source = Path("rich/live.py").read_text(encoding="utf-8")
+
+    assert "The first Live instance will render everything in the Live stack" in source
+'''
+
+LIVE_NESTED_FLAG_TEST = '''\
+from __future__ import annotations
+
+from pathlib import Path
+
+
+def test_live_nested_instances_track_nested_flag() -> None:
+    """Nested Live instances should track nested state and refresh the outer Live."""
+    source = Path("rich/live.py").read_text(encoding="utf-8")
+
+    assert "self._nested = False" in source
+    assert "if self._nested:" in source
+    assert "self.console._live_stack[0].refresh()" in source
+'''
+
+CONSOLE_LIVE_STACK_TEST = '''\
+from __future__ import annotations
+
+from pathlib import Path
+
+
+def test_console_permits_nested_live_stack() -> None:
+    """Console should keep a live stack instead of rejecting a second Live."""
+    source = Path("rich/console.py").read_text(encoding="utf-8")
+
+    assert "self._live_stack: list[Live] = []" in source
+    assert "return len(self._live_stack) == 1" in source
+    assert 'raise errors.LiveError("Only one live display may be active at once")' not in source
+'''
+
+SPINNER_MAIN_GROUP_TEST = '''\
+from __future__ import annotations
+
+from pathlib import Path
+
+
+def test_spinner_module_main_renders_group_without_table_panel_wrapper() -> None:
+    """The spinner module demo should render a Group rather than a table/panel wrapper."""
+    source = Path("rich/spinner.py").read_text(encoding="utf-8")
+
+    assert "all_spinners = Group(" in source
+    assert "Panel(all_spinners" not in source
+    assert "Columns(" not in source
+'''
+
+PROGRESS_SELF_TYPE_CHECKING_PRAGMA_TEST = '''\
+from __future__ import annotations
+
+from pathlib import Path
+
+
+def test_progress_self_type_checking_import_keeps_no_cover_pragma() -> None:
+    """The typing_extensions Self fallback import should keep its no-cover pragma."""
+    source = Path("rich/progress.py").read_text(encoding="utf-8")
+
+    assert "from typing_extensions import Self  # pragma: no cover" in source
+'''
+
 
 def parse_args(argv: Sequence[str] | None = None) -> argparse.Namespace:
     parser = argparse.ArgumentParser(description=__doc__)
@@ -961,6 +1165,162 @@ def hidden_verifier_for_candidate(candidate: Mapping[str, Any]) -> dict[str, Any
             "command": ".venv/bin/python -m pytest -q tests/test_table_column_expand_doc_removed.py",
             "test_node_count": 1,
             "oracle_template": "table_column_expand_doc_removed",
+        }
+    if subject == "fix two typos" and "rich/text.py" in source_files:
+        return {
+            "hidden_files": [
+                {
+                    "path": "tests/test_text_append_docstring_typo.py",
+                    "content": TEXT_APPEND_DOCSTRING_TYPO_TEST,
+                }
+            ],
+            "command": ".venv/bin/python -m pytest -q tests/test_text_append_docstring_typo.py",
+            "test_node_count": 1,
+            "oracle_template": "text_append_docstring_typo_fixed",
+        }
+    if subject == "fix(logging): fix tracebacks_code_width type hint" and "rich/logging.py" in source_files:
+        return {
+            "hidden_files": [
+                {
+                    "path": "tests/test_logging_tracebacks_code_width_type.py",
+                    "content": LOGGING_TRACEBACK_CODE_WIDTH_OPTIONAL_TEST,
+                }
+            ],
+            "command": ".venv/bin/python -m pytest -q tests/test_logging_tracebacks_code_width_type.py",
+            "test_node_count": 1,
+            "oracle_template": "logging_tracebacks_code_width_optional_type",
+        }
+    if subject == "optimize size" and "rich/console.py" in source_files:
+        return {
+            "hidden_files": [
+                {
+                    "path": "tests/test_console_options_size_lookup.py",
+                    "content": CONSOLE_OPTIONS_SINGLE_SIZE_LOOKUP_TEST,
+                }
+            ],
+            "command": ".venv/bin/python -m pytest -q tests/test_console_options_size_lookup.py",
+            "test_node_count": 1,
+            "oracle_template": "console_options_single_size_lookup",
+        }
+    if subject == "sponsorship message" and "rich/__main__.py" in source_files:
+        return {
+            "hidden_files": [
+                {
+                    "path": "tests/test_rich_main_sponsor_message.py",
+                    "content": RICH_MAIN_SPONSOR_MESSAGE_TEST,
+                }
+            ],
+            "command": ".venv/bin/python -m pytest -q tests/test_rich_main_sponsor_message.py",
+            "test_node_count": 1,
+            "oracle_template": "rich_main_sponsor_panel_message",
+        }
+    if subject == "indentation" and "rich/syntax.py" in source_files:
+        return {
+            "hidden_files": [
+                {
+                    "path": "tests/test_syntax_guess_lexer_docstring_indent.py",
+                    "content": SYNTAX_GUESS_LEXER_DOCSTRING_INDENT_TEST,
+                }
+            ],
+            "command": ".venv/bin/python -m pytest -q tests/test_syntax_guess_lexer_docstring_indent.py",
+            "test_node_count": 1,
+            "oracle_template": "syntax_guess_lexer_docstring_indent",
+        }
+    if subject == "detect recursion in exception groups" and "rich/traceback.py" in source_files:
+        return {
+            "hidden_files": [
+                {
+                    "path": "tests/test_traceback_exception_group_recursion.py",
+                    "content": TRACEBACK_EXCEPTION_GROUP_RECURSION_TEST,
+                }
+            ],
+            "command": ".venv/bin/python -m pytest -q tests/test_traceback_exception_group_recursion.py",
+            "test_node_count": 1,
+            "oracle_template": "traceback_exception_group_recursion_guard",
+        }
+    if subject == "name change" and "rich/traceback.py" in source_files:
+        return {
+            "hidden_files": [
+                {
+                    "path": "tests/test_traceback_visited_exceptions_name.py",
+                    "content": TRACEBACK_VISITED_EXCEPTIONS_NAME_TEST,
+                }
+            ],
+            "command": ".venv/bin/python -m pytest -q tests/test_traceback_visited_exceptions_name.py",
+            "test_node_count": 1,
+            "oracle_template": "traceback_visited_exceptions_name",
+        }
+    if subject == "no need for this" and "rich/traceback.py" in source_files:
+        return {
+            "hidden_files": [
+                {
+                    "path": "tests/test_traceback_duplicate_group_flag.py",
+                    "content": TRACEBACK_DUPLICATE_GROUP_PRESERVES_GROUP_TEST,
+                }
+            ],
+            "command": ".venv/bin/python -m pytest -q tests/test_traceback_duplicate_group_flag.py",
+            "test_node_count": 1,
+            "oracle_template": "traceback_duplicate_group_preserves_group_flag",
+        }
+    if subject == "docs" and "rich/live.py" in source_files:
+        return {
+            "hidden_files": [
+                {
+                    "path": "tests/test_live_stack_render_comment.py",
+                    "content": LIVE_RENDER_STACK_COMMENT_TEST,
+                }
+            ],
+            "command": ".venv/bin/python -m pytest -q tests/test_live_stack_render_comment.py",
+            "test_node_count": 1,
+            "oracle_template": "live_render_stack_comment",
+        }
+    if subject == "nested flag" and {"rich/console.py", "rich/live.py"}.issubset(source_files):
+        return {
+            "hidden_files": [
+                {
+                    "path": "tests/test_live_nested_flag.py",
+                    "content": LIVE_NESTED_FLAG_TEST,
+                }
+            ],
+            "command": ".venv/bin/python -m pytest -q tests/test_live_nested_flag.py",
+            "test_node_count": 1,
+            "oracle_template": "live_nested_flag_refresh",
+        }
+    if subject == "permit nested live" and {"rich/console.py", "rich/live.py"}.issubset(source_files):
+        return {
+            "hidden_files": [
+                {
+                    "path": "tests/test_console_live_stack.py",
+                    "content": CONSOLE_LIVE_STACK_TEST,
+                }
+            ],
+            "command": ".venv/bin/python -m pytest -q tests/test_console_live_stack.py",
+            "test_node_count": 1,
+            "oracle_template": "console_live_stack_allows_nested_live",
+        }
+    if subject == "avoid displaying spinners in a table" and "rich/spinner.py" in source_files:
+        return {
+            "hidden_files": [
+                {
+                    "path": "tests/test_spinner_main_group.py",
+                    "content": SPINNER_MAIN_GROUP_TEST,
+                }
+            ],
+            "command": ".venv/bin/python -m pytest -q tests/test_spinner_main_group.py",
+            "test_node_count": 1,
+            "oracle_template": "spinner_main_group_without_table_panel",
+        }
+    if subject == "add back `# pragma: no cover`" and "rich/progress.py" in source_files:
+        return {
+            "hidden_files": [
+                {
+                    "path": "tests/test_progress_self_no_cover.py",
+                    "content": PROGRESS_SELF_TYPE_CHECKING_PRAGMA_TEST,
+                }
+            ],
+            "command": ".venv/bin/python -m pytest -q tests/test_progress_self_no_cover.py",
+            "test_node_count": 1,
+            "oracle_template": "progress_self_type_checking_no_cover",
         }
     raise ToolError(
         "no source-oracle template is available for selected candidate",

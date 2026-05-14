@@ -8,7 +8,7 @@ from pathlib import Path
 from typing import Any, Mapping, Sequence
 
 from _common import ToolError, emit_json, fail, iso_now, write_json
-from rich_direct_smoke_batch import DEFAULT_OUTPUT as DEFAULT_DIRECT_BATCH, direct_w_star_candidates
+from rich_direct_smoke_batch import DEFAULT_OUTPUT as DEFAULT_DIRECT_BATCH, direct_candidates
 from rich_direct_smoke_pilot import (
     DEFAULT_REPO,
     admission_decision,
@@ -22,7 +22,7 @@ from rich_direct_smoke_pilot import (
 )
 from rich_source_oracle_pilot import hidden_verifier_digest, materialize_task_pack
 from rich_source_oracle_queue import load_direct_batch
-from rich_task_admission_readiness import changed_file_set_digest
+from rich_task_admission_readiness import changed_file_set_digest, parse_c_scan_start
 
 
 TOOL = "rich_replacement_oracle_pilot"
@@ -99,6 +99,54 @@ def test_split_graphemes_covers_leading_zero_width_with_variation_selector() -> 
     assert width == 0
 '''
 
+STYLE_HASH_ATTRGETTER_TEST = '''\
+from __future__ import annotations
+
+from pathlib import Path
+
+
+def test_style_hash_uses_attrgetter_and_pickle_loads() -> None:
+    """Style hashing source should use attrgetter and pickle serialization."""
+    source = Path("rich/style.py").read_text(encoding="utf-8")
+
+    assert "from operator import attrgetter" in source
+    assert "from pickle import dumps, loads" in source
+    assert "_hash_getter = attrgetter(" in source
+    assert "self._hash = hash(_hash_getter(self))" in source
+    assert "from marshal import dumps, loads" not in source
+'''
+
+SYNTAX_PADDING_PROPERTY_DESCRIPTOR_TEST = '''\
+from __future__ import annotations
+
+from pathlib import Path
+
+
+def test_syntax_padding_uses_descriptor_property() -> None:
+    """Syntax.padding should use the PaddingProperty descriptor."""
+    source = Path("rich/syntax.py").read_text(encoding="utf-8")
+
+    assert "class PaddingProperty:" in source
+    assert "def __get__(self, obj: Syntax, objtype: Type[Syntax])" in source
+    assert "def __set__(self, obj: Syntax, padding: PaddingDimensions)" in source
+    assert "padding = PaddingProperty()" in source
+    assert "def padding(self, padding: PaddingDimensions)" not in source
+'''
+
+INSPECT_DOCSTRING_TYPO_TEST = '''\
+from __future__ import annotations
+
+from pathlib import Path
+
+
+def test_inspect_docstring_comment_spells_docstring() -> None:
+    """Inspect source comments should spell docstring correctly."""
+    source = Path("rich/_inspect.py").read_text(encoding="utf-8")
+
+    assert "docstring's indentation" in source
+    assert "doctring's indentation" not in source
+'''
+
 
 def parse_args(argv: Sequence[str] | None = None) -> argparse.Namespace:
     parser = argparse.ArgumentParser(description=__doc__)
@@ -107,6 +155,8 @@ def parse_args(argv: Sequence[str] | None = None) -> argparse.Namespace:
     parser.add_argument("--private-root", default=str(DEFAULT_PRIVATE_ROOT), help="Ignored private artifact root.")
     parser.add_argument("--output", default=str(DEFAULT_OUTPUT), help="Public redacted JSON output.")
     parser.add_argument("--report", default=str(DEFAULT_REPORT), help="Public markdown report.")
+    parser.add_argument("--split", choices=["C", "R", "W_star"], default="W_star", help="Time split to admit.")
+    parser.add_argument("--c-scan-start", default=None, help="Inclusive start date for C calibration scan.")
     parser.add_argument("--batch-candidate-index", type=int, default=8, help="One-based direct-smoke batch candidate index.")
     parser.add_argument("--install-timeout-seconds", type=int, default=240)
     parser.add_argument("--verifier-timeout-seconds", type=int, default=120)
@@ -128,10 +178,17 @@ def direct_batch_result(direct_batch: Mapping[str, Any], batch_candidate_index: 
     raise ToolError("direct-smoke batch candidate was not found", batch_candidate_index=batch_candidate_index)
 
 
-def select_candidate(repo_path: Path, direct_batch: Mapping[str, Any], batch_candidate_index: int) -> tuple[Mapping[str, Any], Mapping[str, Any]]:
+def select_candidate(
+    repo_path: Path,
+    direct_batch: Mapping[str, Any],
+    batch_candidate_index: int,
+    split: str = "W_star",
+    *,
+    c_scan_start: Any = None,
+) -> tuple[Mapping[str, Any], Mapping[str, Any]]:
     if batch_candidate_index <= 0:
         raise ToolError("batch candidate index must be one-based", batch_candidate_index=batch_candidate_index)
-    candidates = direct_w_star_candidates(repo_path)
+    candidates = direct_candidates(repo_path, split, c_scan_start=c_scan_start)
     if batch_candidate_index > len(candidates):
         raise ToolError(
             "batch candidate index is out of range",
@@ -181,6 +238,42 @@ def hidden_verifier_for_candidate(candidate: Mapping[str, Any]) -> dict[str, Any
             "test_node_count": 1,
             "oracle_template": "split_graphemes_leading_zero_width_variation_selector",
         }
+    if subject == "test fixes" and "rich/style.py" in source_files:
+        return {
+            "hidden_files": [
+                {
+                    "path": "tests/test_style_hash_attrgetter.py",
+                    "content": STYLE_HASH_ATTRGETTER_TEST,
+                }
+            ],
+            "command": ".venv/bin/python -m pytest -q tests/test_style_hash_attrgetter.py",
+            "test_node_count": 1,
+            "oracle_template": "style_hash_attrgetter_pickle",
+        }
+    if subject == "padding property" and "rich/syntax.py" in source_files:
+        return {
+            "hidden_files": [
+                {
+                    "path": "tests/test_syntax_padding_property_descriptor.py",
+                    "content": SYNTAX_PADDING_PROPERTY_DESCRIPTOR_TEST,
+                }
+            ],
+            "command": ".venv/bin/python -m pytest -q tests/test_syntax_padding_property_descriptor.py",
+            "test_node_count": 1,
+            "oracle_template": "syntax_padding_property_descriptor",
+        }
+    if subject == "fix small typo in comments" and "rich/_inspect.py" in source_files:
+        return {
+            "hidden_files": [
+                {
+                    "path": "tests/test_inspect_docstring_typo.py",
+                    "content": INSPECT_DOCSTRING_TYPO_TEST,
+                }
+            ],
+            "command": ".venv/bin/python -m pytest -q tests/test_inspect_docstring_typo.py",
+            "test_node_count": 1,
+            "oracle_template": "inspect_docstring_comment_typo",
+        }
     raise ToolError(
         "no replacement-oracle template is available for selected candidate",
         subject_digest=sha256_text(str(candidate.get("subject", ""))),
@@ -198,6 +291,7 @@ def public_result(
     noop: Mapping[str, Any],
     reference: Mapping[str, Any],
     private_root: str,
+    split: str = "W_star",
 ) -> dict[str, Any]:
     decision = admission_decision(str(noop.get("status")), str(reference.get("status")))
     return {
@@ -207,7 +301,7 @@ def public_result(
         "generated_at": iso_now(),
         "model_calls_made": 0,
         "repo_slug": "rich",
-        "split": "W_star",
+        "split": split,
         "pilot_scope": "one_rejected_direct_candidate_replacement_oracle",
         "batch_candidate_index": direct_result.get("batch_candidate_index"),
         "prior_no_op_status": direct_result.get("no_op_result", {}).get("status")
@@ -269,7 +363,7 @@ def render_report(payload: Mapping[str, Any]) -> str:
             f"- Oracle template: `{payload.get('oracle_template')}`",
             f"- Family: `{payload.get('family')}`",
             "",
-            "Primary R/W* model attempts remain unauthorized. This pilot checks one rejected direct Rich W* candidate only.",
+            f"Primary model attempts remain unauthorized. This pilot checks one rejected direct Rich `{payload.get('split')}` candidate only.",
             "",
         ]
     )
@@ -285,13 +379,21 @@ def run(argv: Sequence[str] | None = None) -> int:
         shutil.rmtree(private_root, ignore_errors=True)
     private_root.mkdir(parents=True, exist_ok=True)
     direct_batch = load_direct_batch(Path(args.direct_batch).resolve())
-    candidate, direct_result = select_candidate(repo_path, direct_batch, args.batch_candidate_index)
+    c_scan_start = parse_c_scan_start(args.c_scan_start) if args.c_scan_start else None
+    candidate, direct_result = select_candidate(
+        repo_path,
+        direct_batch,
+        args.batch_candidate_index,
+        args.split,
+        c_scan_start=c_scan_start,
+    )
     verifier = hidden_verifier_for_candidate(candidate)
+    split_slug = str(args.split).lower().replace("_", "")
     task_pack = materialize_task_pack(
         candidate,
         verifier,
         private_root / "candidate_task_pack",
-        task_id=f"rich__wstar_replacement_oracle__{args.batch_candidate_index:03d}",
+        task_id=f"rich__{split_slug}_replacement_oracle__{args.batch_candidate_index:03d}",
     )
     task_path = Path(task_pack["task_path"])
     reference_patch = patch_for_candidate(repo_path, candidate)
@@ -322,6 +424,7 @@ def run(argv: Sequence[str] | None = None) -> int:
         noop=noop,
         reference=reference,
         private_root=repo_relative(private_root),
+        split=args.split,
     )
     output = Path(args.output)
     report = Path(args.report)

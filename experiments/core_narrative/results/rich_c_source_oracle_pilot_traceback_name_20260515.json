@@ -1,0 +1,44 @@
+{
+  "admission_decision": "accepted",
+  "base_anchor_digest": "7e7d07c43a8e86c235fbcfa91172a0a5fedbc7be5bea1d6cdf1aa655a1d1738e",
+  "changed_file_set_digest": "3bab0d4fe663dda10527e7d4afa9f636b46e2fb8e73414b88f9492c58f0c6200",
+  "claim_boundary": [
+    "This is a one-candidate source-only Golden-Oracle smoke pilot, not a frozen Rich denominator.",
+    "Raw source commits, raw subjects, reference patches, and hidden verifier files are retained only in ignored private artifacts.",
+    "No ACUT primary attempt or model call was made."
+  ],
+  "family": "traceback/logging/inspect",
+  "generated_at": "2026-05-14T17:51:38.889453Z",
+  "hidden_verifier_digest": "49a40aaa5c45da8c5d7f0a67951720966969f05e481c50421b838518316a4aa7",
+  "model_calls_made": 0,
+  "no_op_result": {
+    "public_artifact_redacted": true,
+    "status": "failed",
+    "verifier_exit_code": 1
+  },
+  "oracle_priority": "medium",
+  "oracle_template": "traceback_visited_exceptions_name",
+  "pilot_scope": "one_source_only_golden_oracle_candidate",
+  "primary_runs_authorized": false,
+  "private_artifact_root": "experiments/core_narrative/large_artifacts/rich_c_source_oracle_pilot_traceback_name_20260515",
+  "reference_patch_bytes": 2631,
+  "reference_patch_digest": "691b1215260d2b396e6ef7bf4c36a4fef63e0e90f7ca0b5c85d6c73f0d3f06bb",
+  "reference_result": {
+    "public_artifact_redacted": true,
+    "status": "passed",
+    "verifier_exit_code": 0
+  },
+  "repo_slug": "rich",
+  "schema_version": "core-narrative.rich-source-oracle-pilot.v1",
+  "source_anchor_digest": "4def44020a69695bd3d7f870124c31c7f913f1da41d51f5d07dfa9cd4d438eca",
+  "source_file_count": 1,
+  "split": "C",
+  "statement_digest": "d7b49372bcbd476f9e04f0fb6fbbc503e7913bf70f53670d4e8fa21fec9ecec9",
+  "status": "completed",
+  "subject_digest": "e093849b008012dda8feb4d956127791a56b0414188401dce5d1fd69a9a2d1d2",
+  "surface": "source_without_tests",
+  "test_file_count": 0,
+  "test_node_count": 1,
+  "tool": "rich_source_oracle_pilot",
+  "triage_code": "manual_probe_required"
+}
