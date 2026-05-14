@@ -42,6 +42,16 @@ class RichReplacementOraclePilotTests(unittest.TestCase):
         with self.assertRaises(ToolError):
             pilot.hidden_verifier_for_candidate(candidate)
 
+    def test_hidden_verifier_template_covers_zero_width_span_behavior(self) -> None:
+        """The span verifier checks that leading zero-width characters are represented."""
+        candidate = self.candidate()
+        candidate["subject"] = "test cases"
+        verifier = pilot.hidden_verifier_for_candidate(candidate)
+
+        self.assertEqual(verifier["oracle_template"], "split_graphemes_leading_zero_width_span")
+        self.assertIn("tests/test_cells_split_graphemes_zero_width_span.py", verifier["command"])
+        self.assertIn("spans == [(0, 1, 0)]", verifier["hidden_files"][0]["content"])
+
     def test_public_result_redacts_raw_source_anchors_subject_and_hidden_test(self) -> None:
         """Public replacement results keep raw source and hidden verifier details private."""
         candidate = self.candidate()

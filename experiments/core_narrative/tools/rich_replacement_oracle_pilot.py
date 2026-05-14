@@ -59,6 +59,20 @@ def test_split_graphemes_returns_for_leading_zero_width_character() -> None:
     assert width == 0
 '''
 
+SPLIT_GRAPHEMES_ZERO_WIDTH_SPAN_TEST = '''\
+from __future__ import annotations
+
+from rich.cells import split_graphemes
+
+
+def test_split_graphemes_covers_leading_zero_width_character() -> None:
+    """Leading zero-width characters should produce a zero-width span."""
+    spans, width = split_graphemes("\\u0301")
+
+    assert spans == [(0, 1, 0)]
+    assert width == 0
+'''
+
 
 def parse_args(argv: Sequence[str] | None = None) -> argparse.Namespace:
     parser = argparse.ArgumentParser(description=__doc__)
@@ -116,6 +130,18 @@ def hidden_verifier_for_candidate(candidate: Mapping[str, Any]) -> dict[str, Any
             "command": ".venv/bin/python -m pytest -q tests/test_cells_split_graphemes_timeout.py",
             "test_node_count": 1,
             "oracle_template": "split_graphemes_leading_zero_width_timeout",
+        }
+    if subject == "test cases" and "rich/cells.py" in source_files:
+        return {
+            "hidden_files": [
+                {
+                    "path": "tests/test_cells_split_graphemes_zero_width_span.py",
+                    "content": SPLIT_GRAPHEMES_ZERO_WIDTH_SPAN_TEST,
+                }
+            ],
+            "command": ".venv/bin/python -m pytest -q tests/test_cells_split_graphemes_zero_width_span.py",
+            "test_node_count": 1,
+            "oracle_template": "split_graphemes_leading_zero_width_span",
         }
     raise ToolError(
         "no replacement-oracle template is available for selected candidate",
