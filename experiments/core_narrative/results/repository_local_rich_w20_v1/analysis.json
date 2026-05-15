@@ -1,0 +1,123 @@
+{
+  "schema_version": "core-narrative.repository-local-rich-w20-analysis.v1",
+  "protocol_id": "repository-local-rich-w20-v1",
+  "generated_at": "2026-05-15T10:55:00Z",
+  "source_summary": "experiments/core_narrative/results/repository_local_rich_w20_v1/summary.json",
+  "primary_status": {
+    "status": "primary_complete",
+    "normalized_result_count": 160,
+    "r_present_cells": 80,
+    "w_star_present_cells": 80,
+    "requires_rerun_or_exclusion_cells": 0,
+    "triage_paused_cells": 0
+  },
+  "scores_by_acut": {
+    "A0": {
+      "acut_id": "cheap-generic-swe",
+      "role": "generic_baseline",
+      "r_passed": 5,
+      "r_denominator": 20,
+      "r_score_percent": 25.0,
+      "w_star_passed": 8,
+      "w_star_denominator": 20,
+      "w_star_score_percent": 40.0
+    },
+    "A1": {
+      "acut_id": "cheap-rich-inert-control-v1",
+      "role": "same_token_inert_control",
+      "r_passed": 2,
+      "r_denominator": 20,
+      "r_score_percent": 10.0,
+      "w_star_passed": 9,
+      "w_star_denominator": 20,
+      "w_star_score_percent": 45.0
+    },
+    "A3": {
+      "acut_id": "cheap-rich-c-calibrated-v1",
+      "role": "repository_calibrated_playbook",
+      "r_passed": 3,
+      "r_denominator": 20,
+      "r_score_percent": 15.0,
+      "w_star_passed": 6,
+      "w_star_denominator": 20,
+      "w_star_score_percent": 30.0
+    },
+    "A4": {
+      "acut_id": "cheap-rich-localization-tool-v1",
+      "role": "code_understanding_localization",
+      "r_passed": 2,
+      "r_denominator": 20,
+      "r_score_percent": 10.0,
+      "w_star_passed": 8,
+      "w_star_denominator": 20,
+      "w_star_score_percent": 40.0
+    }
+  },
+  "selection": {
+    "r_selected_slot": "A0",
+    "r_selected_acut_id": "cheap-generic-swe",
+    "w_star_best_slot": "A1",
+    "w_star_best_acut_id": "cheap-rich-inert-control-v1",
+    "r_selected_w_star_passed": 8,
+    "w_star_best_passed": 9,
+    "selection_regret_tasks": 1
+  },
+  "deltas_vs_a0": {
+    "A1": {
+      "r_delta_tasks": -3,
+      "w_star_delta_tasks": 1
+    },
+    "A3": {
+      "r_delta_tasks": -2,
+      "w_star_delta_tasks": -2
+    },
+    "A4": {
+      "r_delta_tasks": -3,
+      "w_star_delta_tasks": 0
+    }
+  },
+  "success_criteria": {
+    "A4_vs_A0_w_star_min_delta_tasks": {
+      "required": 4,
+      "observed": 0,
+      "passed": false
+    },
+    "r_selected_vs_A0_w_star_min_delta_tasks": {
+      "required": 3,
+      "observed": 0,
+      "passed": false
+    },
+    "r_selected_within_tasks_of_w_star_best": {
+      "thresholds": [
+        1,
+        2
+      ],
+      "observed_regret": 1,
+      "passed_within_1": true,
+      "passed_within_2": true
+    },
+    "inert_control_guard": {
+      "r_selected_slot": "A0",
+      "guard_triggered": false,
+      "passed": true
+    }
+  },
+  "status_distribution": {
+    "R": {
+      "verified_pass": 12,
+      "verified_fail": 66,
+      "unsafe_or_scope_violation": 2
+    },
+    "W_star": {
+      "verified_pass": 31,
+      "verified_fail": 40,
+      "unsafe_or_scope_violation": 9
+    }
+  },
+  "conclusion": {
+    "allowed_claim": "reduced_scale_repository_local_decision_validity_pilot",
+    "primary_completed": true,
+    "success_criteria_met": false,
+    "summary": "The reduced Rich-W20 primary run completed, but the frozen success criteria were not met. R selected A0, while W_star best was A1 with one task of selection regret. A4 did not improve over A0 on W_star."
+  }
+}

@@ -435,9 +435,9 @@
           "normalized_result": "experiments/core_narrative/results/repository_local_rich_w20_v1/normalized/repository_local_rich_w20_v1_20260515__live__R__rich__r__012__A4__cheap-rich-localization-tool-v1__attempt1.json",
           "present": true,
           "protocol_task_id": "rich__r__012",
-          "score_action": "rerun_or_global_exclusion_required",
-          "score_value": null,
-          "status": "llm_backend_unavailable"
+          "score_action": "fixed_denominator_zero",
+          "score_value": 0,
+          "status": "verified_fail"
         },
         {
           "acut_id": "cheap-generic-swe",
@@ -459,292 +459,282 @@
         },
         {
           "acut_id": "cheap-rich-inert-control-v1",
-          "normalized_result": null,
-          "present": false,
+          "normalized_result": "experiments/core_narrative/results/repository_local_rich_w20_v1/normalized/repository_local_rich_w20_v1_20260515__live__R__rich__r__013__A1__cheap-rich-inert-control-v1__attempt1.json",
+          "present": true,
           "protocol_task_id": "rich__r__013",
-          "score_action": "missing_primary_attempt",
-          "score_value": null,
-          "status": "missing"
+          "score_action": "fixed_denominator_zero",
+          "score_value": 0,
+          "status": "verified_fail"
         },
         {
           "acut_id": "cheap-rich-localization-tool-v1",
-          "normalized_result": null,
-          "present": false,
+          "normalized_result": "experiments/core_narrative/results/repository_local_rich_w20_v1/normalized/repository_local_rich_w20_v1_20260515__live__R__rich__r__013__A4__cheap-rich-localization-tool-v1__attempt1.json",
+          "present": true,
           "protocol_task_id": "rich__r__013",
-          "score_action": "missing_primary_attempt",
-          "score_value": null,
-          "status": "missing"
+          "score_action": "fixed_denominator_zero",
+          "score_value": 0,
+          "status": "verified_fail"
         },
         {
           "acut_id": "cheap-generic-swe",
-          "normalized_result": null,
-          "present": false,
+          "normalized_result": "experiments/core_narrative/results/repository_local_rich_w20_v1/normalized/repository_local_rich_w20_v1_20260515__live__R__rich__r__014__A0__cheap-generic-swe__attempt1.json",
+          "present": true,
           "protocol_task_id": "rich__r__014",
-          "score_action": "missing_primary_attempt",
-          "score_value": null,
-          "status": "missing"
+          "score_action": "fixed_denominator_one",
+          "score_value": 1,
+          "status": "verified_pass"
         },
         {
           "acut_id": "cheap-rich-c-calibrated-v1",
-          "normalized_result": null,
-          "present": false,
+          "normalized_result": "experiments/core_narrative/results/repository_local_rich_w20_v1/normalized/repository_local_rich_w20_v1_20260515__live__R__rich__r__014__A3__cheap-rich-c-calibrated-v1__attempt1.json",
+          "present": true,
           "protocol_task_id": "rich__r__014",
-          "score_action": "missing_primary_attempt",
-          "score_value": null,
-          "status": "missing"
+          "score_action": "fixed_denominator_one",
+          "score_value": 1,
+          "status": "verified_pass"
         },
         {
           "acut_id": "cheap-rich-inert-control-v1",
-          "normalized_result": null,
-          "present": false,
+          "normalized_result": "experiments/core_narrative/results/repository_local_rich_w20_v1/normalized/repository_local_rich_w20_v1_20260515__live__R__rich__r__014__A1__cheap-rich-inert-control-v1__attempt1.json",
+          "present": true,
           "protocol_task_id": "rich__r__014",
-          "score_action": "missing_primary_attempt",
-          "score_value": null,
-          "status": "missing"
+          "score_action": "fixed_denominator_one",
+          "score_value": 1,
+          "status": "verified_pass"
         },
         {
           "acut_id": "cheap-rich-localization-tool-v1",
-          "normalized_result": null,
-          "present": false,
+          "normalized_result": "experiments/core_narrative/results/repository_local_rich_w20_v1/normalized/repository_local_rich_w20_v1_20260515__live__R__rich__r__014__A4__cheap-rich-localization-tool-v1__attempt1.json",
+          "present": true,
           "protocol_task_id": "rich__r__014",
-          "score_action": "missing_primary_attempt",
-          "score_value": null,
-          "status": "missing"
+          "score_action": "fixed_denominator_one",
+          "score_value": 1,
+          "status": "verified_pass"
         },
         {
           "acut_id": "cheap-generic-swe",
-          "normalized_result": null,
-          "present": false,
+          "normalized_result": "experiments/core_narrative/results/repository_local_rich_w20_v1/normalized/repository_local_rich_w20_v1_20260515__live__R__rich__r__015__A0__cheap-generic-swe__attempt1.json",
+          "present": true,
           "protocol_task_id": "rich__r__015",
-          "score_action": "missing_primary_attempt",
-          "score_value": null,
-          "status": "missing"
+          "score_action": "fixed_denominator_zero",
+          "score_value": 0,
+          "status": "verified_fail"
         },
         {
           "acut_id": "cheap-rich-c-calibrated-v1",
-          "normalized_result": null,
-          "present": false,
+          "normalized_result": "experiments/core_narrative/results/repository_local_rich_w20_v1/normalized/repository_local_rich_w20_v1_20260515__live__R__rich__r__015__A3__cheap-rich-c-calibrated-v1__attempt1.json",
+          "present": true,
           "protocol_task_id": "rich__r__015",
-          "score_action": "missing_primary_attempt",
-          "score_value": null,
-          "status": "missing"
+          "score_action": "fixed_denominator_zero",
+          "score_value": 0,
+          "status": "verified_fail"
         },
         {
           "acut_id": "cheap-rich-inert-control-v1",
-          "normalized_result": null,
-          "present": false,
+          "normalized_result": "experiments/core_narrative/results/repository_local_rich_w20_v1/normalized/repository_local_rich_w20_v1_20260515__live__R__rich__r__015__A1__cheap-rich-inert-control-v1__attempt1.json",
+          "present": true,
           "protocol_task_id": "rich__r__015",
-          "score_action": "missing_primary_attempt",
-          "score_value": null,
-          "status": "missing"
+          "score_action": "fixed_denominator_zero",
+          "score_value": 0,
+          "status": "verified_fail"
         },
         {
           "acut_id": "cheap-rich-localization-tool-v1",
-          "normalized_result": null,
-          "present": false,
+          "normalized_result": "experiments/core_narrative/results/repository_local_rich_w20_v1/normalized/repository_local_rich_w20_v1_20260515__live__R__rich__r__015__A4__cheap-rich-localization-tool-v1__attempt1.json",
+          "present": true,
           "protocol_task_id": "rich__r__015",
-          "score_action": "missing_primary_attempt",
-          "score_value": null,
-          "status": "missing"
+          "score_action": "fixed_denominator_zero",
+          "score_value": 0,
+          "status": "verified_fail"
         },
         {
           "acut_id": "cheap-generic-swe",
-          "normalized_result": null,
-          "present": false,
+          "normalized_result": "experiments/core_narrative/results/repository_local_rich_w20_v1/normalized/repository_local_rich_w20_v1_20260515__live__R__rich__r__016__A0__cheap-generic-swe__attempt1.json",
+          "present": true,
           "protocol_task_id": "rich__r__016",
-          "score_action": "missing_primary_attempt",
-          "score_value": null,
-          "status": "missing"
+          "score_action": "fixed_denominator_zero",
+          "score_value": 0,
+          "status": "verified_fail"
         },
         {
           "acut_id": "cheap-rich-c-calibrated-v1",
-          "normalized_result": null,
-          "present": false,
+          "normalized_result": "experiments/core_narrative/results/repository_local_rich_w20_v1/normalized/repository_local_rich_w20_v1_20260515__live__R__rich__r__016__A3__cheap-rich-c-calibrated-v1__attempt1.json",
+          "present": true,
           "protocol_task_id": "rich__r__016",
-          "score_action": "missing_primary_attempt",
-          "score_value": null,
-          "status": "missing"
+          "score_action": "fixed_denominator_zero",
+          "score_value": 0,
+          "status": "verified_fail"
         },
         {
           "acut_id": "cheap-rich-inert-control-v1",
-          "normalized_result": null,
-          "present": false,
+          "normalized_result": "experiments/core_narrative/results/repository_local_rich_w20_v1/normalized/repository_local_rich_w20_v1_20260515__live__R__rich__r__016__A1__cheap-rich-inert-control-v1__attempt1.json",
+          "present": true,
           "protocol_task_id": "rich__r__016",
-          "score_action": "missing_primary_attempt",
-          "score_value": null,
-          "status": "missing"
+          "score_action": "fixed_denominator_zero",
+          "score_value": 0,
+          "status": "verified_fail"
         },
         {
           "acut_id": "cheap-rich-localization-tool-v1",
-          "normalized_result": null,
-          "present": false,
+          "normalized_result": "experiments/core_narrative/results/repository_local_rich_w20_v1/normalized/repository_local_rich_w20_v1_20260515__live__R__rich__r__016__A4__cheap-rich-localization-tool-v1__attempt1.json",
+          "present": true,
           "protocol_task_id": "rich__r__016",
-          "score_action": "missing_primary_attempt",
-          "score_value": null,
-          "status": "missing"
+          "score_action": "fixed_denominator_zero",
+          "score_value": 0,
+          "status": "verified_fail"
         },
         {
           "acut_id": "cheap-generic-swe",
-          "normalized_result": null,
-          "present": false,
+          "normalized_result": "experiments/core_narrative/results/repository_local_rich_w20_v1/normalized/repository_local_rich_w20_v1_20260515__live__R__rich__r__017__A0__cheap-generic-swe__attempt1.json",
+          "present": true,
           "protocol_task_id": "rich__r__017",
-          "score_action": "missing_primary_attempt",
-          "score_value": null,
-          "status": "missing"
+          "score_action": "fixed_denominator_zero",
+          "score_value": 0,
+          "status": "verified_fail"
         },
         {
           "acut_id": "cheap-rich-c-calibrated-v1",
-          "normalized_result": null,
-          "present": false,
+          "normalized_result": "experiments/core_narrative/results/repository_local_rich_w20_v1/normalized/repository_local_rich_w20_v1_20260515__live__R__rich__r__017__A3__cheap-rich-c-calibrated-v1__attempt1.json",
+          "present": true,
           "protocol_task_id": "rich__r__017",
-          "score_action": "missing_primary_attempt",
-          "score_value": null,
-          "status": "missing"
+          "score_action": "fixed_denominator_zero",
+          "score_value": 0,
+          "status": "verified_fail"
         },
         {
           "acut_id": "cheap-rich-inert-control-v1",
-          "normalized_result": null,
-          "present": false,
+          "normalized_result": "experiments/core_narrative/results/repository_local_rich_w20_v1/normalized/repository_local_rich_w20_v1_20260515__live__R__rich__r__017__A1__cheap-rich-inert-control-v1__attempt1.json",
+          "present": true,
           "protocol_task_id": "rich__r__017",
-          "score_action": "missing_primary_attempt",
-          "score_value": null,
-          "status": "missing"
+          "score_action": "fixed_denominator_zero",
+          "score_value": 0,
+          "status": "verified_fail"
         },
         {
           "acut_id": "cheap-rich-localization-tool-v1",
-          "normalized_result": null,
-          "present": false,
+          "normalized_result": "experiments/core_narrative/results/repository_local_rich_w20_v1/normalized/repository_local_rich_w20_v1_20260515__live__R__rich__r__017__A4__cheap-rich-localization-tool-v1__attempt1.json",
+          "present": true,
           "protocol_task_id": "rich__r__017",
-          "score_action": "missing_primary_attempt",
-          "score_value": null,
-          "status": "missing"
+          "score_action": "fixed_denominator_zero",
+          "score_value": 0,
+          "status": "verified_fail"
         },
         {
           "acut_id": "cheap-generic-swe",
-          "normalized_result": null,
-          "present": false,
+          "normalized_result": "experiments/core_narrative/results/repository_local_rich_w20_v1/normalized/repository_local_rich_w20_v1_20260515__live__R__rich__r__018__A0__cheap-generic-swe__attempt1.json",
+          "present": true,
           "protocol_task_id": "rich__r__018",
-          "score_action": "missing_primary_attempt",
-          "score_value": null,
-          "status": "missing"
+          "score_action": "fixed_denominator_zero",
+          "score_value": 0,
+          "status": "verified_fail"
         },
         {
           "acut_id": "cheap-rich-c-calibrated-v1",
-          "normalized_result": null,
-          "present": false,
+          "normalized_result": "experiments/core_narrative/results/repository_local_rich_w20_v1/normalized/repository_local_rich_w20_v1_20260515__live__R__rich__r__018__A3__cheap-rich-c-calibrated-v1__attempt1.json",
+          "present": true,
           "protocol_task_id": "rich__r__018",
-          "score_action": "missing_primary_attempt",
-          "score_value": null,
-          "status": "missing"
+          "score_action": "fixed_denominator_zero",
+          "score_value": 0,
+          "status": "verified_fail"
         },
         {
           "acut_id": "cheap-rich-inert-control-v1",
-          "normalized_result": null,
-          "present": false,
+          "normalized_result": "experiments/core_narrative/results/repository_local_rich_w20_v1/normalized/repository_local_rich_w20_v1_20260515__live__R__rich__r__018__A1__cheap-rich-inert-control-v1__attempt1.json",
+          "present": true,
           "protocol_task_id": "rich__r__018",
-          "score_action": "missing_primary_attempt",
-          "score_value": null,
-          "status": "missing"
+          "score_action": "fixed_denominator_zero",
+          "score_value": 0,
+          "status": "verified_fail"
         },
         {
           "acut_id": "cheap-rich-localization-tool-v1",
-          "normalized_result": null,
-          "present": false,
+          "normalized_result": "experiments/core_narrative/results/repository_local_rich_w20_v1/normalized/repository_local_rich_w20_v1_20260515__live__R__rich__r__018__A4__cheap-rich-localization-tool-v1__attempt1.json",
+          "present": true,
           "protocol_task_id": "rich__r__018",
-          "score_action": "missing_primary_attempt",
-          "score_value": null,
-          "status": "missing"
+          "score_action": "fixed_denominator_zero",
+          "score_value": 0,
+          "status": "verified_fail"
         },
         {
           "acut_id": "cheap-generic-swe",
-          "normalized_result": null,
-          "present": false,
+          "normalized_result": "experiments/core_narrative/results/repository_local_rich_w20_v1/normalized/repository_local_rich_w20_v1_20260515__live__R__rich__r__019__A0__cheap-generic-swe__attempt1.json",
+          "present": true,
           "protocol_task_id": "rich__r__019",
-          "score_action": "missing_primary_attempt",
-          "score_value": null,
-          "status": "missing"
+          "score_action": "fixed_denominator_zero",
+          "score_value": 0,
+          "status": "verified_fail"
         },
         {
           "acut_id": "cheap-rich-c-calibrated-v1",
-          "normalized_result": null,
-          "present": false,
+          "normalized_result": "experiments/core_narrative/results/repository_local_rich_w20_v1/normalized/repository_local_rich_w20_v1_20260515__live__R__rich__r__019__A3__cheap-rich-c-calibrated-v1__attempt1.json",
+          "present": true,
           "protocol_task_id": "rich__r__019",
-          "score_action": "missing_primary_attempt",
-          "score_value": null,
-          "status": "missing"
+          "score_action": "fixed_denominator_zero",
+          "score_value": 0,
+          "status": "verified_fail"
         },
         {
           "acut_id": "cheap-rich-inert-control-v1",
-          "normalized_result": null,
-          "present": false,
+          "normalized_result": "experiments/core_narrative/results/repository_local_rich_w20_v1/normalized/repository_local_rich_w20_v1_20260515__live__R__rich__r__019__A1__cheap-rich-inert-control-v1__attempt1.json",
+          "present": true,
           "protocol_task_id": "rich__r__019",
-          "score_action": "missing_primary_attempt",
-          "score_value": null,
-          "status": "missing"
+          "score_action": "fixed_denominator_zero",
+          "score_value": 0,
+          "status": "verified_fail"
         },
         {
           "acut_id": "cheap-rich-localization-tool-v1",
-          "normalized_result": null,
-          "present": false,
+          "normalized_result": "experiments/core_narrative/results/repository_local_rich_w20_v1/normalized/repository_local_rich_w20_v1_20260515__live__R__rich__r__019__A4__cheap-rich-localization-tool-v1__attempt1.json",
+          "present": true,
           "protocol_task_id": "rich__r__019",
-          "score_action": "missing_primary_attempt",
-          "score_value": null,
-          "status": "missing"
+          "score_action": "fixed_denominator_zero",
+          "score_value": 0,
+          "status": "verified_fail"
         },
         {
           "acut_id": "cheap-generic-swe",
-          "normalized_result": null,
-          "present": false,
+          "normalized_result": "experiments/core_narrative/results/repository_local_rich_w20_v1/normalized/repository_local_rich_w20_v1_20260515__live__R__rich__r__020__A0__cheap-generic-swe__attempt1.json",
+          "present": true,
           "protocol_task_id": "rich__r__020",
-          "score_action": "missing_primary_attempt",
-          "score_value": null,
-          "status": "missing"
+          "score_action": "fixed_denominator_zero",
+          "score_value": 0,
+          "status": "verified_fail"
         },
         {
           "acut_id": "cheap-rich-c-calibrated-v1",
-          "normalized_result": null,
-          "present": false,
+          "normalized_result": "experiments/core_narrative/results/repository_local_rich_w20_v1/normalized/repository_local_rich_w20_v1_20260515__live__R__rich__r__020__A3__cheap-rich-c-calibrated-v1__attempt1.json",
+          "present": true,
           "protocol_task_id": "rich__r__020",
-          "score_action": "missing_primary_attempt",
-          "score_value": null,
-          "status": "missing"
+          "score_action": "fixed_denominator_zero",
+          "score_value": 0,
+          "status": "verified_fail"
         },
         {
           "acut_id": "cheap-rich-inert-control-v1",
-          "normalized_result": null,
-          "present": false,
+          "normalized_result": "experiments/core_narrative/results/repository_local_rich_w20_v1/normalized/repository_local_rich_w20_v1_20260515__live__R__rich__r__020__A1__cheap-rich-inert-control-v1__attempt1.json",
+          "present": true,
           "protocol_task_id": "rich__r__020",
-          "score_action": "missing_primary_attempt",
-          "score_value": null,
-          "status": "missing"
+          "score_action": "fixed_denominator_zero",
+          "score_value": 0,
+          "status": "verified_fail"
         },
         {
           "acut_id": "cheap-rich-localization-tool-v1",
-          "normalized_result": null,
-          "present": false,
+          "normalized_result": "experiments/core_narrative/results/repository_local_rich_w20_v1/normalized/repository_local_rich_w20_v1_20260515__live__R__rich__r__020__A4__cheap-rich-localization-tool-v1__attempt1.json",
+          "present": true,
           "protocol_task_id": "rich__r__020",
-          "score_action": "missing_primary_attempt",
-          "score_value": null,
-          "status": "missing"
+          "score_action": "fixed_denominator_zero",
+          "score_value": 0,
+          "status": "verified_fail"
         }
       ],
       "expected_cells": 80,
-      "infra_cells": [
-        {
-          "acut_id": "cheap-rich-localization-tool-v1",
-          "normalized_result": "experiments/core_narrative/results/repository_local_rich_w20_v1/normalized/repository_local_rich_w20_v1_20260515__live__R__rich__r__012__A4__cheap-rich-localization-tool-v1__attempt1.json",
-          "present": true,
-          "protocol_task_id": "rich__r__012",
-          "score_action": "rerun_or_global_exclusion_required",
-          "score_value": null,
-          "status": "llm_backend_unavailable"
-        }
-      ],
-      "missing_cells": 30,
-      "passed": 8,
-      "present_cells": 50,
-      "primary_score_ready": false,
-      "score_percent_fixed_denominator": 10.0,
+      "infra_cells": [],
+      "missing_cells": 0,
+      "passed": 12,
+      "present_cells": 80,
+      "primary_score_ready": true,
+      "score_percent_fixed_denominator": 15.0,
       "split": "R",
       "triage_paused_cells": []
     },
@@ -1488,17 +1478,17 @@
     "result_order": "readiness_task_order_then_acut_order"
   },
   "expected_primary_attempts": 160,
-  "generated_at": "2026-05-15T09:09:51.307647Z",
+  "generated_at": "2026-05-15T10:54:34.426996Z",
   "mode": "live",
-  "normalized_result_count": 130,
+  "normalized_result_count": 160,
   "runner_id": "repository-local-rich-w20-v1",
   "rw_table": {
     "cheap-generic-swe": {
       "acut_id": "cheap-generic-swe",
       "r_fixed_denominator": 20,
-      "r_passed": 4,
-      "r_primary_score_ready": false,
-      "r_score_percent_fixed": 20.0,
+      "r_passed": 5,
+      "r_primary_score_ready": true,
+      "r_score_percent_fixed": 25.0,
       "role": "generic_baseline",
       "slot": "A0",
       "w_star_fixed_denominator": 20,
@@ -1509,9 +1499,9 @@
     "cheap-rich-c-calibrated-v1": {
       "acut_id": "cheap-rich-c-calibrated-v1",
       "r_fixed_denominator": 20,
-      "r_passed": 2,
-      "r_primary_score_ready": false,
-      "r_score_percent_fixed": 10.0,
+      "r_passed": 3,
+      "r_primary_score_ready": true,
+      "r_score_percent_fixed": 15.0,
       "role": "repository_calibrated_playbook",
       "slot": "A3",
       "w_star_fixed_denominator": 20,
@@ -1522,9 +1512,9 @@
     "cheap-rich-inert-control-v1": {
       "acut_id": "cheap-rich-inert-control-v1",
       "r_fixed_denominator": 20,
-      "r_passed": 1,
-      "r_primary_score_ready": false,
-      "r_score_percent_fixed": 5.0,
+      "r_passed": 2,
+      "r_primary_score_ready": true,
+      "r_score_percent_fixed": 10.0,
       "role": "same_token_inert_control",
       "slot": "A1",
       "w_star_fixed_denominator": 20,
@@ -1535,9 +1525,9 @@
     "cheap-rich-localization-tool-v1": {
       "acut_id": "cheap-rich-localization-tool-v1",
       "r_fixed_denominator": 20,
-      "r_passed": 1,
-      "r_primary_score_ready": false,
-      "r_score_percent_fixed": 5.0,
+      "r_passed": 2,
+      "r_primary_score_ready": true,
+      "r_score_percent_fixed": 10.0,
       "role": "code_understanding_localization",
       "slot": "A4",
       "w_star_fixed_denominator": 20,
@@ -1547,6 +1537,6 @@
     }
   },
   "schema_version": "core-narrative.repository-local-rich-w20-summary.v1",
-  "status": "primary_incomplete_or_infra_blocked",
+  "status": "primary_complete",
   "tool": "repository_local_rich_w20_primary_runner"
 }
