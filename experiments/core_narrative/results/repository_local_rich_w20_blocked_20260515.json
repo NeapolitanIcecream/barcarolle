@@ -2,8 +2,10 @@
   "schema_version": "core-narrative.repository-local-rich-w20-blocked.v1",
   "protocol_id": "repository-local-rich-w20-v1",
   "generated_at": "2026-05-15T03:48:22Z",
-  "status": "blocked_before_formal_primary_start",
-  "primary_runs_authorized": false,
+  "status": "superseded_transport_specific_blocker",
+  "superseded_at": "2026-05-15T04:03:46Z",
+  "superseded_by": "experiments/core_narrative/results/repository_local_rich_w20_route_probe_20260515.json",
+  "primary_runs_authorized": true,
   "readiness": {
     "artifact": "experiments/core_narrative/results/repository_local_rich_w20_protocol_readiness_20260515.json",
     "status": "preregistered_reduced_protocol_primary_not_run",
@@ -18,9 +20,11 @@
   },
   "route_probe": {
     "artifact": "experiments/core_narrative/results/repository_local_rich_w20_route_probe_20260515.json",
-    "status": "blocked",
+    "status": "passed",
     "blocking_route": "gpt-5.4-mini",
-    "blocking_failure_class": "no_available_distributor_channel"
+    "blocking_failure_class": "no_available_distributor_channel",
+    "blocking_transport": "barcarolle",
+    "authorized_transport": "default"
   },
   "aborted_live_attempts": {
     "public_normalized_results_written_before_pause": 60,
@@ -31,7 +35,8 @@
   "acceptance_conditions": {
     "frozen_scan_meaning": "Before primary starts, the protocol must show frozen ACUT manifests, frozen task identities, fixed route policy, no raw commits or subjects in public artifacts, clean runner/preflight gates, and a passing live route probe.",
     "current_result": "not_satisfied",
-    "failed_condition": "passing live route probe"
+    "failed_condition": "passing live route probe for Barcarolle transport",
+    "superseded_result": "satisfied by default Codex provider probe"
   },
   "next_unblock_steps": [
     "Restore or approve a serving live route for the frozen cheap primary model.",

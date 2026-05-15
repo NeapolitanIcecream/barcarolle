@@ -36,7 +36,7 @@ SOURCE_REPO = REPO_ROOT / "experiments/core_narrative/external_repos/rich"
 WORKSPACE_MODE_RUNNER = REPO_ROOT / "experiments/core_narrative/tools/workspace_mode_runner.py"
 CODEX_CLI_PATCH_COMMAND = REPO_ROOT / "experiments/core_narrative/tools/codex_cli_patch_command.py"
 ACUT_TIMEOUT_SECONDS = 3600
-VERIFIER_TIMEOUT_SECONDS = 120
+VERIFIER_TIMEOUT_SECONDS = 1200
 
 
 def parse_args(argv: Sequence[str] | None = None) -> argparse.Namespace:
@@ -55,6 +55,12 @@ def parse_args(argv: Sequence[str] | None = None) -> argparse.Namespace:
     parser.add_argument("--max-workers", type=int, default=4)
     parser.add_argument("--acut-timeout-seconds", type=int, default=ACUT_TIMEOUT_SECONDS)
     parser.add_argument("--verifier-timeout-seconds", type=int, default=VERIFIER_TIMEOUT_SECONDS)
+    parser.add_argument(
+        "--codex-provider-mode",
+        choices=("default", "barcarolle"),
+        default="default",
+        help="Provider transport passed to codex_cli_patch_command.",
+    )
     parser.add_argument("--install-workspaces", action="store_true", default=True)
     parser.add_argument("--no-install-workspaces", dest="install_workspaces", action="store_false")
     parser.add_argument("--force", action="store_true")
@@ -259,6 +265,8 @@ def workspace_mode_command(
             str(artifact_dir_path / "codex_cli_patch_command.json"),
             "--codex-timeout-seconds",
             str(args.acut_timeout_seconds),
+            "--codex-provider-mode",
+            str(args.codex_provider_mode),
         ]
     )
     if args.mode == "dry-run":
@@ -600,6 +608,12 @@ def reproduction_command(args: argparse.Namespace) -> str:
         str(args.mode),
         "--max-workers",
         str(args.max_workers),
+        "--codex-provider-mode",
+        str(args.codex_provider_mode),
+        "--acut-timeout-seconds",
+        str(args.acut_timeout_seconds),
+        "--verifier-timeout-seconds",
+        str(args.verifier_timeout_seconds),
     ]
     return " ".join(shlex.quote(part) for part in parts)
 

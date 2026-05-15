@@ -1,0 +1,54 @@
+{
+  "cheap-generic-swe": {
+    "acut_id": "cheap-generic-swe",
+    "r_fixed_denominator": 20,
+    "r_passed": 4,
+    "r_primary_score_ready": false,
+    "r_score_percent_fixed": 20.0,
+    "role": "generic_baseline",
+    "slot": "A0",
+    "w_star_fixed_denominator": 20,
+    "w_star_passed": 8,
+    "w_star_primary_score_ready": true,
+    "w_star_score_percent_fixed": 40.0
+  },
+  "cheap-rich-c-calibrated-v1": {
+    "acut_id": "cheap-rich-c-calibrated-v1",
+    "r_fixed_denominator": 20,
+    "r_passed": 2,
+    "r_primary_score_ready": false,
+    "r_score_percent_fixed": 10.0,
+    "role": "repository_calibrated_playbook",
+    "slot": "A3",
+    "w_star_fixed_denominator": 20,
+    "w_star_passed": 6,
+    "w_star_primary_score_ready": true,
+    "w_star_score_percent_fixed": 30.0
+  },
+  "cheap-rich-inert-control-v1": {
+    "acut_id": "cheap-rich-inert-control-v1",
+    "r_fixed_denominator": 20,
+    "r_passed": 1,
+    "r_primary_score_ready": false,
+    "r_score_percent_fixed": 5.0,
+    "role": "same_token_inert_control",
+    "slot": "A1",
+    "w_star_fixed_denominator": 20,
+    "w_star_passed": 9,
+    "w_star_primary_score_ready": true,
+    "w_star_score_percent_fixed": 45.0
+  },
+  "cheap-rich-localization-tool-v1": {
+    "acut_id": "cheap-rich-localization-tool-v1",
+    "r_fixed_denominator": 20,
+    "r_passed": 1,
+    "r_primary_score_ready": false,
+    "r_score_percent_fixed": 5.0,
+    "role": "code_understanding_localization",
+    "slot": "A4",
+    "w_star_fixed_denominator": 20,
+    "w_star_passed": 8,
+    "w_star_primary_score_ready": true,
+    "w_star_score_percent_fixed": 40.0
+  }
+}

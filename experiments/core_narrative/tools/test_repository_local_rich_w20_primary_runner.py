@@ -136,6 +136,48 @@ class RepositoryLocalRichW20PrimaryRunnerTests(unittest.TestCase):
             [f"{row[0]['protocol_task_id']}::{row[1]['acut_id']}" for row in cells],
         )
 
+    def test_workspace_command_passes_default_codex_provider_mode(self) -> None:
+        """Rich-W20 primary uses the probed default Codex transport with the frozen model route."""
+        runner = load_module()
+        artifact_dir = self.root / "private" / "raw" / "run"
+        args = SimpleNamespace(
+            attempt=1,
+            workspace_root=str(self.root / "workspaces"),
+            acut_timeout_seconds=3600,
+            verifier_timeout_seconds=120,
+            install_workspaces=False,
+            mode="live",
+            codex_provider_mode="default",
+        )
+
+        command = runner.workspace_mode_command(
+            task=task("W_star", 1),
+            acut=acut("A0", "cheap-generic-swe"),
+            args=args,
+            run_id="run",
+            artifact_dir_path=artifact_dir,
+        )
+
+        self.assertIn("--codex-provider-mode", command)
+        self.assertEqual(command[command.index("--codex-provider-mode") + 1], "default")
+
+    def test_reproduction_command_records_timeout_controls(self) -> None:
+        """Run diagnostics include the verifier timeout used for primary execution."""
+        runner = load_module()
+        args = SimpleNamespace(
+            phase="primary",
+            mode="live",
+            max_workers=4,
+            codex_provider_mode="default",
+            acut_timeout_seconds=3600,
+            verifier_timeout_seconds=1200,
+        )
+
+        command = runner.reproduction_command(args)
+
+        self.assertIn("--acut-timeout-seconds 3600", command)
+        self.assertIn("--verifier-timeout-seconds 1200", command)
+
     def test_normalized_workspace_payload_omits_raw_commit_and_subject_fields(self) -> None:
         """Public normalized results keep digests and private paths without copying raw task source fields."""
         runner = load_module()

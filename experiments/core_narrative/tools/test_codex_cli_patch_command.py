@@ -299,6 +299,44 @@ class CodexCliPatchCommandTests(unittest.TestCase):
         self.assertFalse(summary["workspace_patch"]["usable_patch"])
         self.assertEqual(summary["workspace_patch"]["size_bytes"], 0)
 
+    def test_default_provider_mode_uses_user_auth_without_barcarolle_env_or_temp_codex_home(self) -> None:
+        """The default Codex transport keeps the model route but avoids the Barcarolle override."""
+        fake_codex = self.write_fake_codex(
+            """
+            from pathlib import Path
+
+            if "CODEX_HOME" in os.environ:
+                sys.exit(81)
+            if "BARCAROLLE_LLM_API_KEY" in os.environ or "BARCAROLLE_LLM_BASE_URL" in os.environ:
+                sys.exit(82)
+            if any("model_provider" in arg or "model_catalog_json" in arg for arg in sys.argv):
+                sys.exit(83)
+            Path("module.py").write_text("VALUE = 2\\n", encoding="utf-8")
+            sys.exit(0)
+            """
+        )
+        artifact_dir = self.root / "artifacts-default-provider"
+        summary_path = self.root / "summary-default-provider.json"
+
+        completed = self.run_patch_command(
+            fake_codex=fake_codex,
+            artifact_dir=artifact_dir,
+            summary_path=summary_path,
+            extra_args=["--codex-provider-mode", "default"],
+        )
+
+        self.assertEqual(completed.returncode, 0, completed.stderr)
+        summary = json.loads(summary_path.read_text(encoding="utf-8"))
+        command = summary["codex_exec"]["command"]
+        self.assertEqual(summary["status"], "codex_exec_completed")
+        self.assertEqual(summary["codex_provider_mode"], "default")
+        self.assertTrue(summary["workspace_patch"]["usable_patch"])
+        self.assertNotIn("model_provider", json.dumps(command))
+        self.assertNotIn("model_catalog_json", json.dumps(command))
+        self.assertFalse(summary["provider_override"]["used_for_execution"])
+        self.assertFalse(summary["model_catalog"]["used_for_execution"])
+        self.assertTrue(summary["llm_env_policy"]["default_codex_auth_used"])
+
     def test_timeout_records_structured_failure_capture_with_redacted_artifacts(self) -> None:
         """Regression: timed-out codex exec runs need non-log redacted diagnostics."""
         fake_codex = self.write_fake_codex(

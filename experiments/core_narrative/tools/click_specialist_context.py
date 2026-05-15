@@ -73,29 +73,34 @@ def load_json(path: Path) -> dict[str, Any]:
     return data
 
 
-def specialist_context_config(acut: Mapping[str, Any]) -> tuple[bool, Mapping[str, Any] | None]:
+def specialist_context_config(acut: Mapping[str, Any]) -> tuple[bool, Mapping[str, Any] | None, list[str]]:
     metadata = acut.get("metadata") if isinstance(acut.get("metadata"), dict) else {}
     specialist = metadata.get("specialist_context") if isinstance(metadata.get("specialist_context"), dict) else {}
-    allowed = specialist.get("click_task_agnostic_context_allowed") is True
+    allowed_keys = [
+        str(key)
+        for key, value in specialist.items()
+        if str(key).endswith("_context_allowed") and value is True
+    ]
+    allowed = bool(allowed_keys)
     context_pack = specialist.get("context_pack")
     if context_pack is not None and not isinstance(context_pack, dict):
         raise ToolError("metadata.specialist_context.context_pack must be an object when present")
-    return allowed, context_pack
+    return allowed, context_pack, allowed_keys
 
 
 def load_click_specialist_context(acut: Mapping[str, Any], acut_path: str | Path) -> tuple[str, dict[str, Any]]:
-    allowed, context_pack = specialist_context_config(acut)
+    allowed, context_pack, allowed_keys = specialist_context_config(acut)
     if not allowed:
         if context_pack is not None:
-            raise ToolError("generic ACUT must not declare a Click specialist context pack")
-        return "", disabled_evidence("acut does not allow click specialist context")
+            raise ToolError("ACUT must explicitly allow specialist context before declaring a context pack")
+        return "", disabled_evidence("acut does not allow specialist context")
     if context_pack is None:
-        raise ToolError("Click-specialist ACUT is missing metadata.specialist_context.context_pack")
+        raise ToolError("Specialist ACUT is missing metadata.specialist_context.context_pack")
 
     required = ["pack_id", "marker", "pack_hash", "manifest_path", "context_prompt_path", "section_ids"]
     missing = [key for key in required if key not in context_pack]
     if missing:
-        raise ToolError("Click specialist context pack config is missing required fields", missing=missing)
+        raise ToolError("specialist context pack config is missing required fields", missing=missing)
 
     repo_root = find_repo_root(Path(acut_path).resolve())
     manifest_path = resolve_repo_path(str(context_pack["manifest_path"]), repo_root, "manifest_path")
@@ -117,11 +122,17 @@ def load_click_specialist_context(acut: Mapping[str, Any], acut_path: str | Path
         raise ToolError("Click specialist context marker mismatch")
     if manifest.get("pack_hash") != pack_hash:
         raise ToolError("Click specialist context pack hash mismatch")
-    if marker != PACK_MARKER:
-        raise ToolError("unexpected Click specialist context marker", marker=marker)
     manifest_sections = [str(item) for item in manifest.get("section_ids", [])]
     if manifest_sections != section_ids:
-        raise ToolError("Click specialist context section id mismatch")
+        raise ToolError("specialist context section id mismatch")
+    if marker.startswith("CLICK_"):
+        section_marker_prefix = "CLICK"
+        if marker != PACK_MARKER:
+            raise ToolError("unexpected Click specialist context marker", marker=marker)
+    elif marker.startswith("RICH_"):
+        section_marker_prefix = "RICH"
+    else:
+        raise ToolError("unexpected specialist context marker", marker=marker)
 
     artifacts = manifest.get("artifacts") if isinstance(manifest.get("artifacts"), dict) else {}
     prompt_artifact = artifacts.get("context_prompt") if isinstance(artifacts.get("context_prompt"), dict) else {}
@@ -131,9 +142,11 @@ def load_click_specialist_context(acut: Mapping[str, Any], acut_path: str | Path
         raise ToolError("Click specialist context prompt hash mismatch")
 
     prompt_text = prompt_path.read_text(encoding="utf-8")
-    section_markers = {section_id: f"[CLICK_SECTION:{section_id}]" in prompt_text for section_id in section_ids}
+    section_markers = {
+        section_id: f"[{section_marker_prefix}_SECTION:{section_id}]" in prompt_text for section_id in section_ids
+    }
     if marker not in prompt_text or not all(section_markers.values()):
-        raise ToolError("Click specialist context prompt is missing required markers")
+        raise ToolError("specialist context prompt is missing required markers")
 
     leakage_guards = manifest.get("leakage_guards") if isinstance(manifest.get("leakage_guards"), dict) else {}
     source_policy = (
@@ -145,6 +158,8 @@ def load_click_specialist_context(acut: Mapping[str, Any], acut_path: str | Path
         "pack_id": pack_id,
         "pack_hash": pack_hash,
         "marker": marker,
+        "allowed_flags": allowed_keys,
+        "section_marker_prefix": section_marker_prefix,
         "manifest_path": str(manifest_path),
         "manifest_sha256": sha256_file(manifest_path),
         "context_prompt_path": str(prompt_path),
@@ -181,7 +196,10 @@ def prompt_injection_evidence(prompt: str, evidence: Mapping[str, Any]) -> dict[
     section_ids = [str(item) for item in evidence.get("section_ids", [])]
     marker = str(evidence.get("marker") or PACK_MARKER)
     pack_hash = evidence.get("pack_hash")
-    prompt_sections = {section_id: f"[CLICK_SECTION:{section_id}]" in prompt for section_id in section_ids}
+    section_marker_prefix = str(evidence.get("section_marker_prefix") or "CLICK")
+    prompt_sections = {
+        section_id: f"[{section_marker_prefix}_SECTION:{section_id}]" in prompt for section_id in section_ids
+    }
     prompt_evidence = dict(evidence)
     prompt_evidence["prompt_checks"] = {
         "marker_present": marker in prompt,

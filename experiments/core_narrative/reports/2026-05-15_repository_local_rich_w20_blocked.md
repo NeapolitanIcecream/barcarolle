@@ -2,6 +2,8 @@
 
 Generated: 2026-05-15T03:48:22Z
 
+Superseded: 2026-05-15T04:03:46Z. The Barcarolle transport remains blocked, but the same frozen `gpt-5.4-mini` route passed a minimal probe through the user's authenticated default Codex provider. Primary runs after that point use `--codex-provider-mode default`.
+
 ## Status
 
 The reduced Rich-W20 protocol is preregistered and the live budget preflight passed, but full primary is not authorized.

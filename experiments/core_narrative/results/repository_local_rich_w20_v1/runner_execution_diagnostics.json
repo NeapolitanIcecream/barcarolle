@@ -1,0 +1,13 @@
+{
+  "generated_at": "2026-05-15T09:09:51.309619Z",
+  "mode": "live",
+  "phase": "summary",
+  "reproduction_command": "PYTHONPATH=experiments/core_narrative/tools python3 experiments/core_narrative/tools/repository_local_rich_w20_primary_runner.py --phase summary --mode live --max-workers 4 --codex-provider-mode default --acut-timeout-seconds 3600 --verifier-timeout-seconds 2400",
+  "results_written": 0,
+  "runner_id": "repository-local-rich-w20-v1",
+  "schema_version": "core-narrative.repository-local-rich-w20-summary.v1",
+  "status": "completed",
+  "summary": "experiments/core_narrative/results/repository_local_rich_w20_v1/summary.json",
+  "summary_status": "primary_incomplete_or_infra_blocked",
+  "tool": "repository_local_rich_w20_primary_runner"
+}

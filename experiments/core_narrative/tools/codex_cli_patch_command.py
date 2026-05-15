@@ -106,6 +106,12 @@ def parse_args(argv: Sequence[str]) -> argparse.Namespace:
     parser.add_argument("--acut", required=True, help="ACUT manifest JSON/YAML path.")
     parser.add_argument("--model", help="Model route. Defaults to the ACUT manifest model.")
     parser.add_argument(
+        "--codex-provider-mode",
+        choices=("barcarolle", "default"),
+        default="barcarolle",
+        help="Codex provider transport. 'default' uses the user's authenticated Codex provider.",
+    )
+    parser.add_argument(
         "--artifact-dir",
         help=(
             "Directory for inner Codex CLI artifacts. Defaults to "
@@ -259,7 +265,7 @@ def build_prompt(
     task: Mapping[str, Any],
     statement: str,
     acut: Mapping[str, Any],
-    click_specialist_context: str,
+    specialist_context: str,
     max_manifest_chars: int,
 ) -> tuple[str, bool]:
     acut_json = json.dumps(concise_acut_summary(acut), indent=2, sort_keys=True)
@@ -285,12 +291,12 @@ def build_prompt(
         "ACUT manifest summary:",
         acut_json,
     ]
-    if click_specialist_context:
+    if specialist_context:
         sections.extend(
             [
                 "",
-                "Task-agnostic Click specialist context:",
-                click_specialist_context,
+                "Task-agnostic specialist context:",
+                specialist_context,
             ]
         )
     prompt = "\n".join(sections)
@@ -335,9 +341,10 @@ def build_codex_command(
     model: str,
     model_catalog_path: Path,
     final_output_path: Path,
-    endpoint: str,
+    provider_mode: str,
+    endpoint: str | None,
 ) -> list[str]:
-    return [
+    command = [
         codex_bin,
         "-a",
         "never",
@@ -352,16 +359,22 @@ def build_codex_command(
         str(workspace),
         "--model",
         model,
-        "-c",
-        f'model_provider="{PROVIDER_ID}"',
-        "-c",
-        provider_config(endpoint),
-        "-c",
-        f"model_catalog_json={toml_string(str(model_catalog_path))}",
-        "-o",
-        str(final_output_path),
-        "-",
     ]
+    if provider_mode == "barcarolle":
+        if endpoint is None:
+            raise ToolError("Barcarolle provider mode requires BARCAROLLE_LLM_BASE_URL")
+        command.extend(
+            [
+                "-c",
+                f'model_provider="{PROVIDER_ID}"',
+                "-c",
+                provider_config(endpoint),
+                "-c",
+                f"model_catalog_json={toml_string(str(model_catalog_path))}",
+            ]
+        )
+    command.extend(["-o", str(final_output_path), "-"])
+    return command
 
 
 def build_display_command(
@@ -371,8 +384,9 @@ def build_display_command(
     model: str,
     model_catalog_path: Path,
     final_output_path: Path,
+    provider_mode: str,
 ) -> list[str]:
-    return [
+    command = [
         codex_bin,
         "-a",
         "never",
@@ -387,22 +401,31 @@ def build_display_command(
         str(workspace),
         "--model",
         model,
-        "-c",
-        f'model_provider="{PROVIDER_ID}"',
-        "-c",
-        display_provider_config(),
-        "-c",
-        f"model_catalog_json={toml_string(str(model_catalog_path))}",
-        "-o",
-        str(final_output_path),
-        "-",
     ]
+    if provider_mode == "barcarolle":
+        command.extend(
+            [
+                "-c",
+                f'model_provider="{PROVIDER_ID}"',
+                "-c",
+                display_provider_config(),
+                "-c",
+                f"model_catalog_json={toml_string(str(model_catalog_path))}",
+            ]
+        )
+    command.extend(["-o", str(final_output_path), "-"])
+    return command
 
 
-def env_summary(env: Mapping[str, str]) -> dict[str, Any]:
+def env_summary(env: Mapping[str, str], provider_mode: str = "barcarolle") -> dict[str, Any]:
     return {
+        "codex_provider_mode": provider_mode,
         "allowed_variable_names": list(REQUIRED_LLM_ENV_VARS),
-        "required_present": {name: bool(env.get(name)) for name in REQUIRED_LLM_ENV_VARS},
+        "required_present": {name: bool(env.get(name)) for name in REQUIRED_LLM_ENV_VARS}
+        if provider_mode == "barcarolle"
+        else {},
+        "default_codex_auth_used": provider_mode == "default",
+        "default_codex_auth_values_recorded": False,
         "values_recorded": False,
         "endpoint_value_recorded": False,
         "command_arguments_checked": True,
@@ -654,6 +677,7 @@ def payload_base(
         "model_catalog": {
             "path": str(model_catalog_path),
             "routes": list(ACTIVE_MODEL_ROUTES),
+            "used_for_execution": extra.get("codex_provider_mode") != "default" if extra else True,
             "provider_prefixed_routes": False,
             "bare_model_routes": True,
             "shell_tool_enabled": True,
@@ -669,8 +693,12 @@ def payload_base(
             "credential_env_key": "BARCAROLLE_LLM_API_KEY",
             "credential_value_recorded": False,
             "catalog_refresh_warnings_nonfatal": True,
+            "used_for_execution": extra.get("codex_provider_mode") != "default" if extra else True,
         },
-        "llm_env_policy": env_summary(os.environ),
+        "llm_env_policy": env_summary(
+            os.environ,
+            str(extra.get("codex_provider_mode") or "barcarolle") if extra else "barcarolle",
+        ),
         "codex_exec": {
             "command": list(command),
             "prompt_passed_via_stdin": True,
@@ -805,7 +833,7 @@ def run(argv: Sequence[str]) -> int:
         task=task,
         statement=statement,
         acut=acut,
-        click_specialist_context=context_text,
+        specialist_context=context_text,
         max_manifest_chars=args.max_manifest_chars,
     )
     context_pack_evidence = prompt_injection_evidence(prompt, context_evidence)
@@ -815,6 +843,7 @@ def run(argv: Sequence[str]) -> int:
         model=model,
         model_catalog_path=model_catalog_path,
         final_output_path=final_output_path,
+        provider_mode=args.codex_provider_mode,
     )
 
     started_at = iso_now()
@@ -853,21 +882,26 @@ def run(argv: Sequence[str]) -> int:
                     "executed": False,
                 },
                 "scrubbed_env_var_count": scrubbed_env_var_count,
+                "codex_provider_mode": args.codex_provider_mode,
             },
         )
         write_summary(args.summary_output, payload)
         return 0
 
-    endpoint = require_live_env(os.environ)
+    endpoint = require_live_env(os.environ) if args.codex_provider_mode == "barcarolle" else None
     command = build_codex_command(
         codex_bin=args.codex_bin,
         workspace=workspace,
         model=model,
         model_catalog_path=model_catalog_path,
         final_output_path=final_output_path,
+        provider_mode=args.codex_provider_mode,
         endpoint=endpoint,
     )
-    codex_env = {**acut_env, "CODEX_HOME": str(codex_home)}
+    if args.codex_provider_mode == "barcarolle":
+        codex_env = {**acut_env, "CODEX_HOME": str(codex_home)}
+    else:
+        codex_env = {name: value for name, value in acut_env.items() if name not in REQUIRED_LLM_ENV_VARS}
     stdout_path = artifact_dir / "codex_exec.stdout.txt"
     stderr_path = artifact_dir / "codex_exec.stderr.txt"
     run = run_codex_exec(
@@ -939,6 +973,7 @@ def run(argv: Sequence[str]) -> int:
                 workspace_patch=workspace_patch,
             ),
             "scrubbed_env_var_count": scrubbed_env_var_count,
+            "codex_provider_mode": args.codex_provider_mode,
         },
     )
     write_summary(args.summary_output, payload)

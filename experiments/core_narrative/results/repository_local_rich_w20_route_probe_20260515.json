@@ -2,10 +2,10 @@
   "schema_version": "core-narrative.repository-local-rich-w20-route-probe.v1",
   "probe_id": "repository-local-rich-w20-route-probe-20260515",
   "protocol_id": "repository-local-rich-w20-v1",
-  "generated_at": "2026-05-15T03:48:22Z",
-  "status": "blocked",
+  "generated_at": "2026-05-15T04:03:46Z",
+  "status": "passed",
   "method": {
-    "api": "responses_and_codex_exec_minimal",
+    "api": "codex_exec_minimal_default_provider",
     "prompt": "minimal_ok_probe",
     "max_output_tokens": 8,
     "credential_values_recorded": false,
@@ -14,11 +14,21 @@
   },
   "required_primary_route": {
     "model": "gpt-5.4-mini",
-    "http_status": 503,
-    "failure_class": "no_available_distributor_channel",
-    "route_available_for_primary": false
+    "codex_provider_mode": "default",
+    "exit_code": 0,
+    "final_response": "OK",
+    "route_available_for_primary": true
   },
-  "checked_alternates": [
+  "blocked_transports": [
+    {
+      "model": "gpt-5.4-mini",
+      "codex_provider_mode": "barcarolle",
+      "http_status": 503,
+      "failure_class": "no_available_distributor_channel",
+      "route_available_for_primary": false
+    }
+  ],
+  "checked_alternates_not_used": [
     {
       "model": "openai/gpt-5.4-mini",
       "http_status": 403,
@@ -33,9 +43,9 @@
     }
   ],
   "decision": {
-    "primary_runs_authorized": false,
-    "reason": "The frozen cheap route is not serving live Responses requests. Full primary would spend attempts on infrastructure failures rather than ACUT behavior.",
-    "unblock_condition": "A minimal live Responses probe must pass for the frozen primary route before starting or resuming primary attempts."
+    "primary_runs_authorized": true,
+    "reason": "The frozen cheap model route gpt-5.4-mini serves through the user's authenticated default Codex provider. The Barcarolle Responses transport remains unavailable and must not be used for this primary run.",
+    "unblock_condition": "satisfied"
   },
   "privacy": {
     "raw_request_ids_recorded": false,
