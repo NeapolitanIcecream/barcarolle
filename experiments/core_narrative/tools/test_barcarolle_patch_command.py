@@ -76,7 +76,7 @@ class BarcarollePatchCommandTests(unittest.TestCase):
                 {
                     "acut_id": "cheap-generic-swe",
                     "provider": "openai",
-                    "model": "openai/gpt-5.4-mini",
+                    "model": "gpt-5.4-mini",
                     "model_parameters": {"reasoning_effort": "medium"},
                 }
             ),
@@ -393,7 +393,7 @@ class BarcarollePatchCommandTests(unittest.TestCase):
             with self.assertRaises(patch_command_module.ToolError) as caught:
                 patch_command_module.call_live_model(
                     acut={
-                        "model": "openai/gpt-5.5",
+                        "model": "gpt-5.4",
                         "model_parameters": {"reasoning_effort": "medium"},
                     },
                     prompt="prepared prompt",
@@ -729,14 +729,14 @@ class BarcarollePatchCommandTests(unittest.TestCase):
         """The default direct HTTP transport is non-streaming and chat-completions shaped."""
         endpoint, endpoint_kind = resolve_live_endpoint("http" + "s://" + "llm-gateway.example.invalid/v1")
         payload = live_request_payload(
-            {"model": "openai/gpt-5.4-mini", "model_parameters": {"reasoning_effort": "medium"}},
+            {"model": "gpt-5.4-mini", "model_parameters": {"reasoning_effort": "medium"}},
             "prepared prompt",
             endpoint_kind,
         )
 
         self.assertEqual(endpoint_kind, "chat_completions")
         self.assertTrue(endpoint.endswith("/chat/completions"))
-        self.assertEqual(payload["model"], "openai/gpt-5.4-mini")
+        self.assertEqual(payload["model"], "gpt-5.4-mini")
         self.assertIn("messages", payload)
         self.assertNotIn("input", payload)
         self.assertNotIn("stream", payload)
@@ -747,7 +747,7 @@ class BarcarollePatchCommandTests(unittest.TestCase):
         """The strict direct-output contract asks chat-completions routes for JSON object output."""
         endpoint, endpoint_kind = resolve_live_endpoint("http" + "s://" + "llm-gateway.example.invalid/v1")
         payload = live_request_payload(
-            {"model": "openai/gpt-5.5", "model_parameters": {"reasoning_effort": "medium"}},
+            {"model": "gpt-5.4", "model_parameters": {"reasoning_effort": "medium"}},
             "prepared prompt",
             endpoint_kind,
             STRUCTURED_FILES_OUTPUT_CONTRACT,

@@ -5,7 +5,7 @@ display_name: Cheap Rich C-Calibrated v1
 purpose: A3 Rich repository-calibrated treatment derived only from admitted C calibration abstractions.
 frozen: true
 provider: openai
-model: openai/gpt-5.4-mini
+model: gpt-5.4-mini
 model_parameters:
   reasoning_effort: medium
 prompt_policy_digest: policy-digest-20260515:cheap-rich-c-calibrated-v1

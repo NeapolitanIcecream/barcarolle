@@ -32,7 +32,7 @@ budget:
 cost_estimation:
   record_actual_when_available: true
   conservative_defaults:
-    openai_gpt_5_5:
+    gpt_5_4_frontier:
       input_usd_per_1m_tokens: 5.0
       output_usd_per_1m_tokens: 30.0
     anthropic_opus_class:

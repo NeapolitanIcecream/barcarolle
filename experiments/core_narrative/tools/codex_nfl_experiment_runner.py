@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 import argparse
+import concurrent.futures
 import difflib
 import hashlib
 import json
@@ -98,6 +99,12 @@ def parse_args(argv: Sequence[str]) -> argparse.Namespace:
     parser.add_argument("--max-context-chars", type=int, help="Forwarded to the direct runner.")
     parser.add_argument("--max-file-chars", type=int, help="Forwarded to the direct runner.")
     parser.add_argument("--skip-noop-check", action="store_true")
+    parser.add_argument(
+        "--max-workers",
+        type=int,
+        default=4,
+        help="Maximum concurrent task/ACUT cells for batch execution.",
+    )
     return parser.parse_args(list(argv))
 
 
@@ -1201,6 +1208,21 @@ def run_one(args: argparse.Namespace, task: Mapping[str, Any], acut_id: str) -> 
     return result
 
 
+def iter_cells(tasks: Sequence[Mapping[str, Any]], acuts: Sequence[str]) -> list[tuple[Mapping[str, Any], str]]:
+    return [(task, acut_id) for task in tasks for acut_id in acuts]
+
+
+def run_cells(args: argparse.Namespace, tasks: Sequence[Mapping[str, Any]], acuts: Sequence[str]) -> list[dict[str, Any]]:
+    cells = iter_cells(tasks, acuts)
+    max_workers = int(getattr(args, "max_workers", 1))
+    if max_workers == 1 or len(cells) <= 1:
+        return [run_one(args, task, acut_id) for task, acut_id in cells]
+
+    with concurrent.futures.ThreadPoolExecutor(max_workers=max_workers) as pool:
+        futures = [pool.submit(run_one, args, task, acut_id) for task, acut_id in cells]
+        return [future.result() for future in futures]
+
+
 def aggregate(results: Sequence[Mapping[str, Any]]) -> dict[str, Any]:
     counts: dict[str, int] = {}
     by_acut: dict[str, dict[str, int]] = {}
@@ -1246,6 +1268,8 @@ def main(argv: Sequence[str] | None = None) -> int:
     try:
         if args.attempt < 1:
             raise ToolError("--attempt must be at least 1")
+        if args.max_workers < 1:
+            raise ToolError("--max-workers must be at least 1", max_workers=args.max_workers)
         task_split = str(args.task_split).lower()
         split_manifest_path = Path(args.task_split_manifest) if args.task_split_manifest else task_split_manifest_path(task_split)
         split_manifest = load_manifest(split_manifest_path)
@@ -1281,10 +1305,7 @@ def main(argv: Sequence[str] | None = None) -> int:
                         manifest_path=str(split_manifest_path),
                     )
             selected_tasks.append(task)
-        results: list[dict[str, Any]] = []
-        for task in selected_tasks:
-            for acut_id in args.acuts:
-                results.append(run_one(args, task, acut_id))
+        results = run_cells(args, selected_tasks, args.acuts)
         payload = {
             "tool": TOOL,
             "runner_id": RUNNER_ID,
@@ -1297,6 +1318,11 @@ def main(argv: Sequence[str] | None = None) -> int:
             "tasks": args.tasks,
             "acuts": args.acuts,
             "attempt": args.attempt,
+            "concurrency": {
+                "max_workers": args.max_workers,
+                "executor": "ThreadPoolExecutor",
+                "result_order": "task_order_then_acut_order",
+            },
             "started_at": started_at_for_batch(results),
             "finished_at": iso_now(),
             "aggregate": aggregate(results),

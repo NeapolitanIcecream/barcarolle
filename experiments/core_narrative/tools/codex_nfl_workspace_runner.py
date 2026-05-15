@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 import argparse
+import concurrent.futures
 import hashlib
 import json
 import os
@@ -66,6 +67,12 @@ def parse_args(argv: Sequence[str] | None = None) -> argparse.Namespace:
     parser.add_argument("--force", action="store_true")
     parser.add_argument("--output", help="Optional command output JSON.")
     parser.add_argument("--execute-gold-patch", action="store_true")
+    parser.add_argument(
+        "--max-workers",
+        type=int,
+        default=4,
+        help="Maximum concurrent workspace-mode cells for sentinel/primary Click runs.",
+    )
     return parser.parse_args(list(argv) if argv is not None else None)
 
 
@@ -666,6 +673,35 @@ def run_click_cell(
     return normalized
 
 
+def run_click_cells(
+    cells: Iterable[tuple[str, str, str]],
+    *,
+    args: argparse.Namespace,
+    config_path: Path,
+) -> list[dict[str, Any]]:
+    ordered_cells = list(cells)
+    max_workers = int(getattr(args, "max_workers", 1))
+    if max_workers == 1 or len(ordered_cells) <= 1:
+        return [
+            run_click_cell(axis=axis, task_id=task_id, acut_id=acut_id, args=args, config_path=config_path)
+            for axis, task_id, acut_id in ordered_cells
+        ]
+
+    with concurrent.futures.ThreadPoolExecutor(max_workers=max_workers) as pool:
+        futures = [
+            pool.submit(
+                run_click_cell,
+                axis=axis,
+                task_id=task_id,
+                acut_id=acut_id,
+                args=args,
+                config_path=config_path,
+            )
+            for axis, task_id, acut_id in ordered_cells
+        ]
+        return [future.result() for future in futures]
+
+
 def run_g6_smoke(args: argparse.Namespace, config_path: Path) -> dict[str, Any]:
     bundle_root = Path(args.bundle_root)
     smoke_output = bundle_root / "g6_gold_patch_smoke.json"
@@ -1132,6 +1168,8 @@ def reproduction_command(args: argparse.Namespace) -> str:
         str(args.mode),
         "--attempt",
         str(args.attempt),
+        "--max-workers",
+        str(args.max_workers),
     ]
     if args.force:
         parts.append("--force")
@@ -1164,16 +1202,20 @@ def execute(args: argparse.Namespace) -> dict[str, Any]:
     if args.phase == "g6-smoke":
         g6_smoke = run_g6_smoke(args, config_path)
     elif args.phase == "sentinels":
-        for axis, task_id, acut_id in SENTINEL_CELLS:
-            results.append(run_click_cell(axis=axis, task_id=task_id, acut_id=acut_id, args=args, config_path=config_path))
+        results.extend(run_click_cells(SENTINEL_CELLS, args=args, config_path=config_path))
     elif args.phase == "primary":
-        for axis, task_id, acut_id in iter_primary_cells(design):
-            if axis == "general":
-                continue
-            results.append(run_click_cell(axis=axis, task_id=task_id, acut_id=acut_id, args=args, config_path=config_path))
+        click_cells = [(axis, task_id, acut_id) for axis, task_id, acut_id in iter_primary_cells(design) if axis != "general"]
+        results.extend(run_click_cells(click_cells, args=args, config_path=config_path))
         results.extend(run_general_infra_records(design=design, args=args, config_path=config_path))
     summary = build_summary(design, bundle_root, config_path)
-    return {
+    concurrency = {
+        "max_workers": args.max_workers,
+        "applies_to_phases": ["sentinels", "primary"],
+        "executor": "ThreadPoolExecutor",
+        "result_order": "input_cell_order",
+    }
+    diagnostics_path = bundle_root / "runner_execution_diagnostics.json"
+    payload = {
         "tool": TOOL,
         "runner_id": RUNNER_ID,
         "schema_version": SUMMARY_SCHEMA_VERSION,
@@ -1183,12 +1225,16 @@ def execute(args: argparse.Namespace) -> dict[str, Any]:
         "generated_at": iso_now(),
         "config": str(config_path),
         "bundle_root": str(bundle_root),
+        "concurrency": concurrency,
         "results_written": len(results),
         "g6_smoke_status": g6_smoke.get("status") if isinstance(g6_smoke, Mapping) else None,
         "summary": str(bundle_root / "summary.json"),
         "summary_status": summary["status"],
+        "diagnostics": str(diagnostics_path),
         "reproduction_command": reproduction_command(args),
     }
+    write_json(diagnostics_path, payload)
+    return payload
 
 
 def main(argv: Sequence[str] | None = None) -> int:
@@ -1196,6 +1242,8 @@ def main(argv: Sequence[str] | None = None) -> int:
     try:
         if args.attempt != 1:
             raise ToolError("RGW-full-workspace-v1 freezes primary_attempts_per_acut_task at 1", attempt=args.attempt)
+        if args.max_workers < 1:
+            raise ToolError("max-workers must be at least 1", max_workers=args.max_workers)
         payload = execute(args)
         emit_json(payload, args.output)
         return 0

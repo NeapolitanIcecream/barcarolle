@@ -2,7 +2,7 @@ schema_version: core-narrative.acut.v1
 acut_id: higher-budget-repo-depth
 display_name: Higher Budget Repo Depth
 provider: openai
-model: gpt-5.5
+model: gpt-5.4
 model_parameters:
   reasoning_effort: xhigh
 prompt_policy_digest: policy-digest-v1:higher-budget-repo-depth

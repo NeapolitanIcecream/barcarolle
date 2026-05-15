@@ -194,7 +194,7 @@ def canonical_self_check_fixture() -> dict[str, Any]:
         "schema_version": "core-narrative.acut.v1",
         "acut_id": "fixture-acut",
         "provider": "openai",
-        "model": "gpt-5.5",
+        "model": "gpt-5.4",
         "prompt_policy_digest": "sha256:fixture",
         "frozen_at": "2026-04-28T00:00:00Z",
         "operator": "schema-toolsmith",

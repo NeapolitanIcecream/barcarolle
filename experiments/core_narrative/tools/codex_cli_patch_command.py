@@ -49,14 +49,14 @@ COMMAND_CONTRACT_ID = "codex-cli-patch-command-v1"
 PROVIDER_ID = "barcarolle"
 PROVIDER_DISPLAY_NAME = "Barcarolle"
 PROVIDER_WIRE_API = "responses"
-ACTIVE_MODEL_ROUTES = ("openai/gpt-5.4-mini", "openai/gpt-5.5")
+ACTIVE_MODEL_ROUTES = ("gpt-5.4-mini", "gpt-5.4")
 CATALOG_BASE_SLUGS = {
-    "openai/gpt-5.4-mini": "gpt-5.4-mini",
-    "openai/gpt-5.5": "gpt-5.5",
+    "gpt-5.4-mini": "gpt-5.4-mini",
+    "gpt-5.4": "gpt-5.4",
 }
 MODEL_DISPLAY_NAMES = {
-    "openai/gpt-5.4-mini": "OpenAI GPT-5.4 Mini via Barcarolle",
-    "openai/gpt-5.5": "OpenAI GPT-5.5 via Barcarolle",
+    "gpt-5.4-mini": "GPT-5.4 Mini via Barcarolle",
+    "gpt-5.4": "GPT-5.4 via Barcarolle",
 }
 DEFAULT_CODEX_TIMEOUT_SECONDS = 3600
 DEFAULT_FAILURE_CAPTURE_TAIL_CHARS = 2000
@@ -104,7 +104,7 @@ def parse_args(argv: Sequence[str]) -> argparse.Namespace:
         help="Optional task statement path override, relative to --workspace by default.",
     )
     parser.add_argument("--acut", required=True, help="ACUT manifest JSON/YAML path.")
-    parser.add_argument("--model", help="Provider-prefixed model route. Defaults to the ACUT manifest model.")
+    parser.add_argument("--model", help="Model route. Defaults to the ACUT manifest model.")
     parser.add_argument(
         "--artifact-dir",
         help=(
@@ -652,7 +652,8 @@ def payload_base(
         "model_catalog": {
             "path": str(model_catalog_path),
             "routes": list(ACTIVE_MODEL_ROUTES),
-            "provider_prefixed_routes": True,
+            "provider_prefixed_routes": False,
+            "bare_model_routes": True,
             "shell_tool_enabled": True,
             "edit_tool_enabled": True,
             "non_interactive_base_instructions": True,

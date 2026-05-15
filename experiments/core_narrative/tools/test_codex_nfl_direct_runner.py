@@ -64,7 +64,7 @@ class CodexNflDirectRunnerTests(unittest.TestCase):
                 {
                     "acut_id": "cheap-generic-swe",
                     "provider": "openai",
-                    "model": "openai/gpt-5.4-mini",
+                    "model": "gpt-5.4-mini",
                     "model_parameters": {"reasoning_effort": "medium"},
                 }
             ),

@@ -67,8 +67,8 @@ active_default_slice:
     - cheap-generic-swe
     - cheap-click-specialist
   model_routes:
-    cheap_tier: openai/gpt-5.4-mini
-    frontier_tier: openai/gpt-5.5
+    cheap_tier: gpt-5.4-mini
+    frontier_tier: gpt-5.4
   deferred_acuts:
     - higher-budget-repo-depth
     - retrieval-history-augmented
@@ -244,26 +244,24 @@ pilot_slice:
     record_hostname: false
     record_ip_address: false
   model_route_fix:
-    status: reviewed_no_issues_integrated
-    diagnostic_basis: no_secret_parent_diagnostics_and_focused_health_check
-    bare_model_ids_not_routable:
-      - gpt-5.4-mini
+    status: superseded_by_20260515_endpoint_switch
+    diagnostic_basis: endpoint_switch_requires_bare_model_routes
+    provider_prefix_removed: true
+    unavailable_models:
       - gpt-5.5
-    provider_prefixed_routes:
-      cheap_tier: openai/gpt-5.4-mini
-      frontier_tier: openai/gpt-5.5
+    active_model_routes:
+      cheap_tier: gpt-5.4-mini
+      frontier_tier: gpt-5.4
     active_acut_configs_updated:
       - experiments/core_narrative/configs/acuts/frontier-generic-swe.yaml
       - experiments/core_narrative/configs/acuts/frontier-click-specialist.yaml
       - experiments/core_narrative/configs/acuts/cheap-generic-swe.yaml
       - experiments/core_narrative/configs/acuts/cheap-click-specialist.yaml
     health_check_artifact: experiments/core_narrative/results/normalized/model_route_health_20260429T1437.json
-    health_check_status: provider_prefixed_routes_http_2xx
+    health_check_status: legacy_prefixed_route_check_superseded
     max_completion_or_output_tokens_minimum: 16
     response_text_recorded: false
-    cost_ledger_records:
-      - model_route_health__openai_gpt_5_4_mini__20260429T1437
-      - model_route_health__openai_gpt_5_5__20260429T1437
+    legacy_cost_ledger_record_count: 2
     cumulative_estimated_cost_usd_after_health_check: 6.0008
     model_calls_allowed: false
     required_before_next_pilot_attempt: focused_review_no_issues_and_explicit_one_attempt_start_decision
@@ -297,7 +295,7 @@ pilot_slice:
     task_id: click__rbench__003
     split: rbench
     attempt: 1
-    model_route: openai/gpt-5.4-mini
+    model_route: gpt-5.4-mini
     projected_cost_usd: 3.00
     projected_cumulative_estimated_cost_usd: 9.0008
     broad_execution: false
@@ -356,8 +354,8 @@ pilot_slice:
       base_url_env: BARCAROLLE_LLM_BASE_URL
       record_resolved_base_url: false
     model_catalog_routes:
-      - openai/gpt-5.4-mini
-      - openai/gpt-5.5
+      - gpt-5.4-mini
+      - gpt-5.4
     no_model_smoke:
       direct_dry_run: passed
       adapter_wrapped_dry_run: passed
@@ -435,7 +433,7 @@ pilot_slice:
     task_id: click__rbench__001
     split: rbench
     attempt: 1
-    model_route: openai/gpt-5.4-mini
+    model_route: gpt-5.4-mini
     harness: reviewed_codex_cli_patch_command
     specialist_context_pack: reviewed_no_issues_integrated
     execution_start_decision_recorded: true
@@ -576,7 +574,7 @@ pilot_slice:
     task_id: click__rbench__001
     split: rbench
     attempt: 1
-    model_route: openai/gpt-5.4-mini
+    model_route: gpt-5.4-mini
     purpose: recovery_replacement_candidate_for_infra_failed_pilot_004_after_reviewed_empty_patch_gate
     harness: reviewed_codex_cli_patch_command
     specialist_context_pack: reviewed_no_issues_integrated
@@ -760,7 +758,7 @@ pilot_slice:
     task_id: click__rbench__001
     split: rbench
     attempt: 1
-    model_route: openai/gpt-5.4-mini
+    model_route: gpt-5.4-mini
     purpose: diagnostic_recovery_candidate_after_reviewed_failure_capture_r1
     harness: reviewed_codex_cli_patch_command
     specialist_context_pack: reviewed_no_issues_integrated
@@ -887,7 +885,7 @@ pilot_slice:
       task_id: click__rbench__001
       split: rbench
       attempt: 1
-      model_route: openai/gpt-5.4-mini
+      model_route: gpt-5.4-mini
       purpose: recovery_candidate_for_prior_non_scorable_generic_attempt_after_reviewed_codex_cli_harness_and_nonzero_exit_normalization
       rationale: "Use the paired generic cell on click__rbench__001 under the current reviewed harness before any further cheap-click-specialist repeat on the same task."
       harness: reviewed_codex_cli_patch_command
@@ -966,7 +964,7 @@ pilot_slice:
     task_id: click__rbench__001
     split: rbench
     attempt: 1
-    model_route: openai/gpt-5.5
+    model_route: gpt-5.4
     purpose: transport_discriminating_candidate_after_reviewed_cheap_route_streaming_disconnects
     rationale: "Pilot 006 and pilot 007 failed before verifier with the same reviewed streaming-disconnect class on the cheap route across specialist and generic treatments; this candidate tests the frontier route without specialist context and without broad execution."
     harness: reviewed_codex_cli_patch_command
@@ -1049,7 +1047,7 @@ pilot_slice:
       compared_runs:
         - run_id: pilot_006__cheap-click-specialist__click__rbench__001__attempt1
           acut_id: cheap-click-specialist
-          model_route: openai/gpt-5.4-mini
+          model_route: gpt-5.4-mini
           specialist_context_pack_injected: true
           adapter_status: command_failed
           normalized_status: missing_for_legacy_nonzero_path
@@ -1062,7 +1060,7 @@ pilot_slice:
           verifier_run: false
         - run_id: pilot_007__cheap-generic-swe__click__rbench__001__attempt1
           acut_id: cheap-generic-swe
-          model_route: openai/gpt-5.4-mini
+          model_route: gpt-5.4-mini
           specialist_context_pack_injected: false
           adapter_status: command_failed
           normalized_status: infra_failed
@@ -1075,7 +1073,7 @@ pilot_slice:
           verifier_run: false
         - run_id: pilot_008__frontier-generic-swe__click__rbench__001__attempt1
           acut_id: frontier-generic-swe
-          model_route: openai/gpt-5.5
+          model_route: gpt-5.4
           specialist_context_pack_injected: false
           adapter_status: command_failed
           normalized_status: infra_failed

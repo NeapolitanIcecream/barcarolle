@@ -5,7 +5,7 @@ display_name: Cheap Click Deep Specialist v2
 purpose: Cheap-tier Click specialist treatment for M5-W2 repository-specific advantage stress testing.
 frozen: true
 provider: openai
-model: openai/gpt-5.4-mini
+model: gpt-5.4-mini
 model_parameters:
   reasoning_effort: medium
 prompt_policy_digest: policy-digest-m5:cheap-click-deep-specialist-v2

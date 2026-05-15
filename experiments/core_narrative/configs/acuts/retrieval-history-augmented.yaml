@@ -2,7 +2,7 @@ schema_version: core-narrative.acut.v1
 acut_id: retrieval-history-augmented
 display_name: Retrieval History Augmented
 provider: openai
-model: gpt-5.5
+model: gpt-5.4
 model_parameters:
   reasoning_effort: high
 prompt_policy_digest: policy-digest-v1:retrieval-history-augmented

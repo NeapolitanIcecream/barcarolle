@@ -1,0 +1,115 @@
+schema_version: "core-narrative.repository-local-protocol.v1"
+protocol_id: repository-local-rich-w20-v1
+status: preregistered_reduced_protocol_primary_not_run
+frozen_at: "2026-05-15T00:00:00+08:00"
+parent_protocol: repository-local-benchmark-20260514
+revision_type: preregistered_reduced_scale_decision_validity_pilot
+readiness_artifact: experiments/core_narrative/results/repository_local_rich_w20_protocol_readiness_20260515.json
+
+boundary:
+  original_0514_status: completed_blocked_before_primary_runs_under_frozen_protocol
+  original_0514_decision: w_star_primary_reached_but_reserve_and_pool_gates_failed
+  does_not_satisfy_original_reserve_gate: true
+  does_not_satisfy_original_40_candidate_pool_gate: true
+  does_not_rewrite_0514_terminal_block: true
+
+repository:
+  repo_slug: rich
+  source_repo: experiments/core_narrative/external_repos/rich
+
+denominators:
+  W_star:
+    source: readiness_artifact.denominators.W_star.primary_tasks
+    primary_task_count: 20
+    reserve_required: false
+    candidate_pool_required: false
+  R:
+    source: readiness_artifact.denominators.R.primary_tasks
+    primary_task_count: 20
+    reserve_task_count: 5
+    reserve_substitution_rule: only_before_primary_scoring_and_never_based_on_acut_outputs
+
+acuts:
+  order:
+    - A0
+    - A1
+    - A3
+    - A4
+  entries:
+    A0:
+      role: generic_baseline
+      acut_id: cheap-generic-swe
+      manifest: experiments/core_narrative/configs/acuts/cheap-generic-swe.yaml
+      model: gpt-5.4-mini
+    A1:
+      role: same_token_inert_control
+      acut_id: cheap-rich-inert-control-v1
+      manifest: experiments/core_narrative/configs/acuts/cheap-rich-inert-control-v1.yaml
+      model: gpt-5.4-mini
+    A3:
+      role: repository_calibrated_playbook
+      acut_id: cheap-rich-c-calibrated-v1
+      manifest: experiments/core_narrative/configs/acuts/cheap-rich-c-calibrated-v1.yaml
+      model: gpt-5.4-mini
+    A4:
+      role: code_understanding_localization
+      acut_id: cheap-rich-localization-tool-v1
+      manifest: experiments/core_narrative/configs/acuts/cheap-rich-localization-tool-v1.yaml
+      model: gpt-5.4-mini
+  optional_excluded_by_default:
+    A5:
+      role: frontier_generic_reference
+      model: gpt-5.4
+      reason: not required for the reduced decision-validity pilot budget
+
+model_route_policy:
+  provider_prefix_removed: true
+  cheap_route: gpt-5.4-mini
+  frontier_route: gpt-5.4
+  unavailable_models:
+    - gpt-5.5
+
+runner:
+  workspace_mode_batch_runner: experiments/core_narrative/tools/codex_nfl_workspace_runner.py
+  direct_batch_runner: experiments/core_narrative/tools/codex_nfl_experiment_runner.py
+  required_min_workers: 4
+  default_max_workers: 4
+  cli_flag: --max-workers
+  result_order: input_cell_order
+  diagnostic_field: concurrency.max_workers
+
+run_controls:
+  primary_attempts_per_acut_task: 1
+  best_of_n: false
+  acut_specific_retry: false
+  fresh_workspace_replay: true
+  hidden_verifier: true
+  deterministic_run_order: readiness_order_then_acut_order
+  status_mapping: workspace_mode_fixed_denominator_semantics
+  no_acut_outputs_used_to_select_w_star: true
+  no_w_star_results_used_to_modify_r: true
+  old_m5_m6_denominators_separate: true
+
+pre_primary_gates:
+  no_op_fails_all_primary_tasks: true
+  reference_passes_all_primary_tasks: true
+  hidden_verifier_digest_recorded_all_primary_tasks: true
+  public_statement_digest_recorded_all_primary_tasks: true
+  leakage_reviewed_all_primary_tasks: true
+  live_api_cost_preflight_required_before_primary_attempts: true
+  reduced_protocol_owner_start_decision_required_before_primary_attempts: true
+
+success_criteria:
+  A4_vs_A0_w_star_min_delta_tasks: 4
+  r_selected_vs_A0_w_star_min_delta_tasks: 3
+  r_selected_within_tasks_of_w_star_best:
+    - 1
+    - 2
+  inert_control_guard: A1 must not be selected as winner unless W* also supports it.
+
+reporting_boundaries:
+  allowed_claim: reduced_scale_repository_local_decision_validity_pilot
+  disallowed_claims:
+    - full_benchmark_generation_robustness
+    - original_0514_protocol_success
+    - no_free_lunch_support_without_completed_G_R_W_evidence

@@ -26,7 +26,7 @@ class CodexNflWorkspaceRunnerTests(unittest.TestCase):
         artifact_dir.mkdir(parents=True)
         (artifact_dir / "candidate.patch").write_text("diff --git a/a b/a\n", encoding="utf-8")
         (artifact_dir / "codex_cli_patch_command.json").write_text(
-            json.dumps({"model_call_made": True, "model": "openai/gpt-5.4-mini"}),
+            json.dumps({"model_call_made": True, "model": "gpt-5.4-mini"}),
             encoding="utf-8",
         )
         payload = {
@@ -477,6 +477,67 @@ class CodexNflWorkspaceRunnerTests(unittest.TestCase):
         self.assertEqual(normalized["status"], "timeout")
         self.assertEqual(normalized["timeout_owner"], "verifier")
         self.assertEqual(normalized["metadata"]["status_semantics"]["score_action"], "rerun_or_global_exclusion_required")
+
+    def test_run_click_cells_uses_configured_concurrency_and_preserves_result_order(self) -> None:
+        """Primary batch execution can run at least four cells concurrently without reordering output."""
+        cells = [
+            ("rbench", "click__rbench__001", "cheap-generic-swe"),
+            ("rbench", "click__rbench__002", "cheap-click-specialist"),
+            ("rwork", "click__rwork__001", "frontier-generic-swe"),
+            ("rwork", "click__rwork__002", "frontier-click-specialist"),
+        ]
+        args = SimpleNamespace(max_workers=4)
+        submitted: list[tuple[str, str, str]] = []
+
+        class FakeFuture:
+            def __init__(self, value: dict[str, str]) -> None:
+                self.value = value
+
+            def result(self) -> dict[str, str]:
+                return self.value
+
+        class FakeExecutor:
+            max_workers_seen: int | None = None
+
+            def __init__(self, max_workers: int) -> None:
+                FakeExecutor.max_workers_seen = max_workers
+
+            def __enter__(self) -> "FakeExecutor":
+                return self
+
+            def __exit__(self, *_exc: object) -> None:
+                return None
+
+            def submit(self, fn: object, **kwargs: object) -> FakeFuture:
+                submitted.append((str(kwargs["axis"]), str(kwargs["task_id"]), str(kwargs["acut_id"])))
+                return FakeFuture({"run_id": f"{kwargs['axis']}::{kwargs['task_id']}::{kwargs['acut_id']}"})
+
+        with mock.patch.object(runner.concurrent.futures, "ThreadPoolExecutor", FakeExecutor):
+            records = runner.run_click_cells(cells, args=args, config_path=self.root / "config.yaml")
+
+        self.assertEqual(FakeExecutor.max_workers_seen, 4)
+        self.assertEqual(submitted, cells)
+        self.assertEqual(
+            [record["run_id"] for record in records],
+            [f"{axis}::{task_id}::{acut_id}" for axis, task_id, acut_id in cells],
+        )
+
+    def test_main_rejects_non_positive_max_workers(self) -> None:
+        """Invalid concurrency settings fail before any batch work starts."""
+        emitted: list[Exception] = []
+
+        def fake_fail(_tool: str, exc: Exception) -> int:
+            emitted.append(exc)
+            return 99
+
+        with mock.patch.object(runner, "execute") as execute:
+            with mock.patch.object(runner, "fail", side_effect=fake_fail):
+                code = runner.main(["--max-workers", "0"])
+
+        self.assertEqual(code, 99)
+        execute.assert_not_called()
+        self.assertIsInstance(emitted[0], runner.ToolError)
+        self.assertIn("max-workers must be at least 1", str(emitted[0]))
 
 
 if __name__ == "__main__":

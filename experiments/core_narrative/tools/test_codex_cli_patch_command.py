@@ -74,7 +74,7 @@ class CodexCliPatchCommandTests(unittest.TestCase):
                 {
                     "acut_id": "cheap-generic-swe",
                     "provider": "barcarolle",
-                    "model": "openai/gpt-5.4-mini",
+                    "model": "gpt-5.4-mini",
                 }
             ),
             encoding="utf-8",
@@ -102,7 +102,7 @@ class CodexCliPatchCommandTests(unittest.TestCase):
                                 "apply_patch_tool_type": "freeform"
                             }},
                             {{
-                                "slug": "gpt-5.5",
+                                "slug": "gpt-5.4",
                                 "shell_type": "shell_command",
                                 "apply_patch_tool_type": "freeform"
                             }}

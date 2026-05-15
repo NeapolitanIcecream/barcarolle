@@ -68,7 +68,7 @@ class OpenClawDirectRunnerTests(unittest.TestCase):
                 {
                     "acut_id": "cheap-generic-swe",
                     "provider": "openai",
-                    "model": "openai/gpt-5.4-mini",
+                    "model": "gpt-5.4-mini",
                     "model_parameters": {"reasoning_effort": "medium"},
                 }
             ),
@@ -150,7 +150,7 @@ class OpenClawDirectRunnerTests(unittest.TestCase):
             fake_urlopen,
         ):
             text, usage, _profile = runner_module.call_live_model(
-                acut={"model": "openai/gpt-5.4-mini", "model_parameters": {}},
+                acut={"model": "gpt-5.4-mini", "model_parameters": {}},
                 prompt="Return JSON edits.",
                 timeout_seconds=1,
                 max_response_bytes=10_000,
@@ -198,7 +198,7 @@ class OpenClawDirectRunnerTests(unittest.TestCase):
             fake_urlopen,
         ):
             _text, _usage, profile = runner_module.call_live_model(
-                acut={"model": "openai/gpt-5.4-mini", "model_parameters": {}},
+                acut={"model": "gpt-5.4-mini", "model_parameters": {}},
                 prompt="Return JSON edits.",
                 timeout_seconds=1,
                 max_response_bytes=10_000,
@@ -236,7 +236,7 @@ class OpenClawDirectRunnerTests(unittest.TestCase):
             task_statement="When prompting for a click.Choice value, display the available choices.",
             acut={
                 "acut_id": "frontier-click-specialist",
-                "model": "openai/gpt-5.5",
+                "model": "gpt-5.4",
                 "retrieval_context_strategy": {"strategy_id": "click-specialist-task-agnostic-v2"},
                 "runtime_budget": {},
             },
@@ -279,7 +279,7 @@ class OpenClawDirectRunnerTests(unittest.TestCase):
             task_statement="Preserve the first real default for shared options.",
             acut={
                 "acut_id": "cheap-generic-swe",
-                "model": "openai/gpt-5.4-mini",
+                "model": "gpt-5.4-mini",
                 "retrieval_context_strategy": {},
                 "runtime_budget": {},
             },
@@ -350,7 +350,7 @@ class OpenClawDirectRunnerTests(unittest.TestCase):
         prompt = runner_module.build_prompt(
             task=task,
             task_statement="Allow prompt_required to control whether optional values prompt.",
-            acut={"acut_id": "cheap-generic-swe", "model": "openai/gpt-5.4-mini"},
+            acut={"acut_id": "cheap-generic-swe", "model": "gpt-5.4-mini"},
             context_files=[payload],
             specialist_context=None,
             max_context_chars=40_000,
@@ -417,7 +417,7 @@ class OpenClawDirectRunnerTests(unittest.TestCase):
         prompt = runner_module.build_prompt(
             task=task,
             task_statement="Reconcile default value passing with flag activation.",
-            acut={"acut_id": "cheap-generic-swe", "model": "openai/gpt-5.4-mini"},
+            acut={"acut_id": "cheap-generic-swe", "model": "gpt-5.4-mini"},
             context_files=[payload],
             specialist_context=None,
             max_context_chars=10_000,
@@ -492,7 +492,7 @@ class OpenClawDirectRunnerTests(unittest.TestCase):
         prompt = runner_module.build_prompt(
             task=task,
             task_statement="Reconcile default value passing with flag activation.",
-            acut={"acut_id": "cheap-generic-swe", "model": "openai/gpt-5.4-mini"},
+            acut={"acut_id": "cheap-generic-swe", "model": "gpt-5.4-mini"},
             context_files=[payload],
             specialist_context=None,
             max_context_chars=40_000,
@@ -960,7 +960,7 @@ class OpenClawDirectRunnerTests(unittest.TestCase):
                 {
                     "acut_id": "cheap-click-specialist",
                     "provider": "openai",
-                    "model": "openai/gpt-5.4-mini",
+                    "model": "gpt-5.4-mini",
                     "model_parameters": {"reasoning_effort": "medium"},
                 }
             ),
@@ -2040,7 +2040,7 @@ class OpenClawDirectRunnerTests(unittest.TestCase):
                 network_attempted=True,
                 request_profile={
                     "endpoint_kind": "chat_completions",
-                    "model": "openai/gpt-5.4-mini",
+                    "model": "gpt-5.4-mini",
                     "prompt_sha256": "unit-prompt",
                 },
             )

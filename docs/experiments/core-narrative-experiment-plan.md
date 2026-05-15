@@ -142,7 +142,7 @@ Budget policy:
 - Treat `$240` as the soft stop where the coordinator must decide whether remaining runs are worth the remaining budget.
 - Treat `$300` as the hard stop. No new ACUT patch-generation run may start once the ledger reaches or is projected to exceed `$300`.
 - Prefer directly-run, budget-constrained evidence over broad but unaffordable coverage.
-- If actual provider billing is not returned by the API or runner, estimate cost conservatively using SOTA pricing. For OpenAI `gpt-5.5`, use `$5 / 1M input tokens` and `$30 / 1M output tokens`; for Anthropic Opus-class pricing, use `$5 / 1M input tokens` and `$25 / 1M output tokens`; for unknown SOTA-compatible endpoints, default to the higher OpenAI estimate.
+- If actual provider billing is not returned by the API or runner, estimate cost conservatively using SOTA pricing. For frontier `gpt-5.4`, use `$5 / 1M input tokens` and `$30 / 1M output tokens`; for Anthropic Opus-class pricing, use `$5 / 1M input tokens` and `$25 / 1M output tokens`; for unknown SOTA-compatible endpoints, default to the higher frontier estimate.
 - Record both actual usage, when available, and conservative estimated usage.
 
 Budget-constrained execution profile:
@@ -500,7 +500,7 @@ Use this shape for each worker by default, replacing `WORKER_REPO` with the work
 ```bash
 codex exec \
   -C WORKER_REPO \
-  -m gpt-5.5 \
+  -m gpt-5.4 \
   -c model_reasoning_effort=\"xhigh\" \
   - < .codex-workflows/core-narrative-experiment/workers/<worker>/prompt.md \
   > .codex-workflows/core-narrative-experiment/workers/<worker>/cli.log \
@@ -512,7 +512,7 @@ If the user explicitly approves YOLO-mode subprocesses for this experiment, use 
 ```bash
 codex exec \
   -C WORKER_REPO \
-  -m gpt-5.5 \
+  -m gpt-5.4 \
   -c model_reasoning_effort=\"xhigh\" \
   --dangerously-bypass-approvals-and-sandbox \
   - < .codex-workflows/core-narrative-experiment/workers/<worker>/prompt.md \

@@ -605,6 +605,93 @@ class CodexNflExperimentRunnerTests(unittest.TestCase):
         self.assertEqual(payload["status"], "completed")
         self.assertIsNone(payload["started_at"])
         self.assertEqual(payload["aggregate"]["infra_failed"], 1)
+        self.assertEqual(payload["concurrency"]["max_workers"], 4)
+
+    def test_run_cells_uses_configured_concurrency_and_preserves_result_order(self) -> None:
+        """Batch runs can execute at least four task/ACUT cells concurrently without reordering results."""
+        runner = load_runner_module()
+        tasks = [
+            {"task_id": "click__rbench__001", "split": "rbench"},
+            {"task_id": "click__rbench__002", "split": "rbench"},
+        ]
+        acuts = ["cheap-generic-swe", "cheap-click-specialist"]
+        args = SimpleNamespace(max_workers=4)
+        submitted: list[tuple[str, str]] = []
+
+        class FakeFuture:
+            def __init__(self, value: dict[str, str]) -> None:
+                self.value = value
+
+            def result(self) -> dict[str, str]:
+                return self.value
+
+        class FakeExecutor:
+            max_workers_seen: int | None = None
+
+            def __init__(self, max_workers: int) -> None:
+                FakeExecutor.max_workers_seen = max_workers
+
+            def __enter__(self) -> "FakeExecutor":
+                return self
+
+            def __exit__(self, *_exc: object) -> None:
+                return None
+
+            def submit(self, fn: object, args_obj: object, task: dict[str, str], acut_id: str) -> FakeFuture:
+                submitted.append((task["task_id"], acut_id))
+                return FakeFuture({"run_id": f"{task['task_id']}::{acut_id}"})
+
+        with mock.patch.object(runner.concurrent.futures, "ThreadPoolExecutor", FakeExecutor):
+            records = runner.run_cells(args, tasks, acuts)
+
+        self.assertEqual(FakeExecutor.max_workers_seen, 4)
+        self.assertEqual(
+            submitted,
+            [
+                ("click__rbench__001", "cheap-generic-swe"),
+                ("click__rbench__001", "cheap-click-specialist"),
+                ("click__rbench__002", "cheap-generic-swe"),
+                ("click__rbench__002", "cheap-click-specialist"),
+            ],
+        )
+        self.assertEqual(
+            [record["run_id"] for record in records],
+            [
+                "click__rbench__001::cheap-generic-swe",
+                "click__rbench__001::cheap-click-specialist",
+                "click__rbench__002::cheap-generic-swe",
+                "click__rbench__002::cheap-click-specialist",
+            ],
+        )
+
+    def test_main_rejects_non_positive_max_workers_before_running_cells(self) -> None:
+        """Invalid direct-runner concurrency settings fail before any task starts."""
+        runner = load_runner_module()
+        emitted: list[Exception] = []
+
+        def fake_fail(_tool: str, exc: Exception) -> int:
+            emitted.append(exc)
+            return 97
+
+        with mock.patch.object(runner, "run_cells") as run_cells:
+            with mock.patch.object(runner, "fail", side_effect=fake_fail):
+                code = runner.main(
+                    [
+                        "--tasks",
+                        "click__rbench__001",
+                        "--acuts",
+                        "cheap-generic-swe",
+                        "--output",
+                        str(self.root / "summary.json"),
+                        "--max-workers",
+                        "0",
+                    ]
+                )
+
+        self.assertEqual(code, 97)
+        run_cells.assert_not_called()
+        self.assertIsInstance(emitted[0], runner.ToolError)
+        self.assertIn("--max-workers must be at least 1", str(emitted[0]))
 
     def test_run_direct_runner_default_mock_response_is_parseable_noop_edit(self) -> None:
         """Regression: default mock mode should smoke the runner instead of sending empty edits."""

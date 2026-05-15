@@ -27,7 +27,7 @@ from _llm_budget import (
 
 TOOL = "append_cost_record"
 PRICING_PROFILES = {
-    "openai-gpt-5.5": (Decimal("5"), Decimal("30")),
+    "gpt-5.4-frontier": (Decimal("5"), Decimal("30")),
     "anthropic-opus": (Decimal("5"), Decimal("25")),
     "unknown-sota": (Decimal("5"), Decimal("30")),
 }
