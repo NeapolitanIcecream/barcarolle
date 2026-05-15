@@ -1,0 +1,46 @@
+{
+  "schema_version": "core-narrative.repository-local-rich-w20-route-probe.v1",
+  "probe_id": "repository-local-rich-w20-route-probe-20260515",
+  "protocol_id": "repository-local-rich-w20-v1",
+  "generated_at": "2026-05-15T03:48:22Z",
+  "status": "blocked",
+  "method": {
+    "api": "responses_and_codex_exec_minimal",
+    "prompt": "minimal_ok_probe",
+    "max_output_tokens": 8,
+    "credential_values_recorded": false,
+    "endpoint_value_recorded": false,
+    "response_text_recorded": false
+  },
+  "required_primary_route": {
+    "model": "gpt-5.4-mini",
+    "http_status": 503,
+    "failure_class": "no_available_distributor_channel",
+    "route_available_for_primary": false
+  },
+  "checked_alternates": [
+    {
+      "model": "openai/gpt-5.4-mini",
+      "http_status": 403,
+      "failure_class": "provider_terms_rejected",
+      "route_available_for_primary": false
+    },
+    {
+      "model": "openai/gpt-5.4",
+      "http_status": 403,
+      "failure_class": "provider_terms_rejected",
+      "route_available_for_primary": false
+    }
+  ],
+  "decision": {
+    "primary_runs_authorized": false,
+    "reason": "The frozen cheap route is not serving live Responses requests. Full primary would spend attempts on infrastructure failures rather than ACUT behavior.",
+    "unblock_condition": "A minimal live Responses probe must pass for the frozen primary route before starting or resuming primary attempts."
+  },
+  "privacy": {
+    "raw_request_ids_recorded": false,
+    "raw_endpoint_recorded": false,
+    "credential_values_recorded": false,
+    "raw_response_body_recorded": false
+  }
+}

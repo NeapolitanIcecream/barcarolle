@@ -1,0 +1,41 @@
+{
+  "schema_version": "core-narrative.repository-local-rich-w20-start-decision.v1",
+  "decision_id": "repository-local-rich-w20-start-20260515",
+  "protocol_id": "repository-local-rich-w20-v1",
+  "decided_at": "2026-05-15T03:48:22Z",
+  "decision": "hold_primary_until_live_route_probe_passes",
+  "owner_request": "complete_experiment",
+  "basis": {
+    "readiness_artifact": "experiments/core_narrative/results/repository_local_rich_w20_protocol_readiness_20260515.json",
+    "readiness_status": "preregistered_reduced_protocol_primary_not_run",
+    "budget_preflight_artifact": "experiments/core_narrative/results/repository_local_rich_w20_live_preflight_20260515.json",
+    "budget_preflight_status": "passed",
+    "route_probe_artifact": "experiments/core_narrative/results/repository_local_rich_w20_route_probe_20260515.json",
+    "route_probe_status": "blocked",
+    "w_star_primary_task_count": 20,
+    "r_primary_task_count": 20,
+    "acut_count": 4,
+    "planned_primary_attempts": 160,
+    "runner_min_workers": 4,
+    "model_routes": {
+      "cheap": "gpt-5.4-mini",
+      "frontier": "gpt-5.4"
+    }
+  },
+  "conditions": {
+    "live_preflight_required": true,
+    "live_preflight_artifact": "experiments/core_narrative/results/repository_local_rich_w20_live_preflight_20260515.json",
+    "live_route_probe_required": true,
+    "live_route_probe_artifact": "experiments/core_narrative/results/repository_local_rich_w20_route_probe_20260515.json",
+    "primary_runs_authorized": false,
+    "do_not_run_under_original_0514_protocol": true,
+    "do_not_claim_original_reserve_or_candidate_pool_gate_success": true,
+    "do_not_use_acut_outputs_to_select_w_star": true,
+    "do_not_use_w_star_results_to_modify_r": true
+  },
+  "privacy": {
+    "record_raw_commits": false,
+    "record_subject_text_values": false,
+    "record_reference_patch_bodies": false
+  }
+}

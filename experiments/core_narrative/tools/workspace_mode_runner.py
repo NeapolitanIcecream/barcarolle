@@ -774,6 +774,9 @@ def execute_workspace_mode(
         if acut_summary.get("command_error"):
             status = "acut_command_error"
             error = str(acut_summary["command_error"])
+        elif acut_summary.get("exit_code") not in (0, None):
+            status = "acut_command_error"
+            error = f"ACUT command exited with code {acut_summary.get('exit_code')}"
         else:
             status = "no_diff"
             error = None

@@ -17,6 +17,7 @@ WORKSPACE_MODE_STATUSES = {
     "base_tree_mismatch",
     "candidate_patch_extraction_error",
     "acut_command_error",
+    "llm_backend_unavailable",
 }
 
 PRIMARY_PASS_STATUSES = {"verified_pass"}
@@ -24,6 +25,7 @@ INFRASTRUCTURE_STATUSES = {
     "verifier_infra_error",
     "base_tree_mismatch",
     "candidate_patch_extraction_error",
+    "llm_backend_unavailable",
 }
 TRIAGE_PAUSED_STATUSES = {"patch_apply_error"}
 ACUT_ZERO_STATUSES = {

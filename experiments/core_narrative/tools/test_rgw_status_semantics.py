@@ -32,7 +32,12 @@ class RgwStatusSemanticsTests(unittest.TestCase):
 
     def test_infra_statuses_require_rerun_or_global_exclusion(self) -> None:
         """Infrastructure statuses are not silently counted as model failures."""
-        for status in ("verifier_infra_error", "base_tree_mismatch", "candidate_patch_extraction_error"):
+        for status in (
+            "verifier_infra_error",
+            "base_tree_mismatch",
+            "candidate_patch_extraction_error",
+            "llm_backend_unavailable",
+        ):
             with self.subTest(status=status):
                 result = classify_status(status)
                 self.assertEqual(result["score_action"], "rerun_or_global_exclusion_required")

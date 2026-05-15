@@ -139,6 +139,18 @@ class WorkspaceModeRunnerTests(unittest.TestCase):
         self.assertFalse(result["verification"]["attempted"])
         self.assertEqual(result["candidate_patch"]["size_bytes"], 0)
 
+    def test_nonzero_acut_exit_without_diff_is_command_error(self) -> None:
+        """A failed ACUT command with no patch is not silently counted as no_diff."""
+        result = self.run_case(
+            command=[sys.executable, "-c", "import sys; print('failed before editing'); sys.exit(7)"],
+            run_id="nonzero-no-diff",
+        )
+
+        self.assertEqual(result["status"], "acut_command_error")
+        self.assertEqual(result["metadata"]["acut_command_status"], "nonzero")
+        self.assertEqual(result["metadata"]["acut_exit_code"], 7)
+        self.assertFalse(result["verification"]["attempted"])
+
     def test_prepare_result_preserves_prepare_payload_and_command_artifact(self) -> None:
         """Workspace preparation returns the child payload and keeps the wrapper artifact separate."""
         result = self.run_case(command=[sys.executable, "-c", "print('nothing changed')"], run_id="prepare-artifacts")

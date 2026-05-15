@@ -1,0 +1,47 @@
+{
+  "schema_version": "core-narrative.repository-local-rich-w20-blocked.v1",
+  "protocol_id": "repository-local-rich-w20-v1",
+  "generated_at": "2026-05-15T03:48:22Z",
+  "status": "blocked_before_formal_primary_start",
+  "primary_runs_authorized": false,
+  "readiness": {
+    "artifact": "experiments/core_narrative/results/repository_local_rich_w20_protocol_readiness_20260515.json",
+    "status": "preregistered_reduced_protocol_primary_not_run",
+    "pre_primary_checks_passed": true
+  },
+  "budget_preflight": {
+    "artifact": "experiments/core_narrative/results/repository_local_rich_w20_live_preflight_20260515.json",
+    "status": "passed",
+    "projected_cumulative_estimated_cost_usd": 204.217436,
+    "soft_stop_usd": 240.0,
+    "hard_cap_usd": 300.0
+  },
+  "route_probe": {
+    "artifact": "experiments/core_narrative/results/repository_local_rich_w20_route_probe_20260515.json",
+    "status": "blocked",
+    "blocking_route": "gpt-5.4-mini",
+    "blocking_failure_class": "no_available_distributor_channel"
+  },
+  "aborted_live_attempts": {
+    "public_normalized_results_written_before_pause": 60,
+    "private_raw_run_dirs_written_before_pause": 64,
+    "treatment": "excluded_from_primary_scoring; rerun required after route probe passes",
+    "reason": "Underlying codex_cli_patch_command exited nonzero because the LLM backend route was unavailable."
+  },
+  "acceptance_conditions": {
+    "frozen_scan_meaning": "Before primary starts, the protocol must show frozen ACUT manifests, frozen task identities, fixed route policy, no raw commits or subjects in public artifacts, clean runner/preflight gates, and a passing live route probe.",
+    "current_result": "not_satisfied",
+    "failed_condition": "passing live route probe"
+  },
+  "next_unblock_steps": [
+    "Restore or approve a serving live route for the frozen cheap primary model.",
+    "Regenerate the route probe artifact with status passed.",
+    "Only then run repository_local_rich_w20_primary_runner.py --phase primary --mode live --max-workers 4."
+  ],
+  "privacy": {
+    "raw_commits_recorded": false,
+    "subject_text_values_recorded": false,
+    "reference_patch_bodies_recorded": false,
+    "credential_values_recorded": false
+  }
+}
