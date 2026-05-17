@@ -1,0 +1,3204 @@
+{
+  "blockers": [],
+  "generated_at": "2026-05-15T17:17:07.576052Z",
+  "mode": "dry-run",
+  "model_calls_made": 0,
+  "next_required_steps": [
+    "Run remaining Phase 2 E primary attempts on the frozen matrix."
+  ],
+  "phase": "prepare",
+  "private_root_available_privately": true,
+  "private_root_recorded_publicly": false,
+  "private_root_sha256": "4bd74677242c4d0cffc10037fcce0dc6ed9b1dfac127f3b0de510d81b5c539b7",
+  "protocol_id": "external-calibrated-repo-benchmark-v1",
+  "raw_material_policy": {
+    "private_roots_are_ignored_artifact_roots": true,
+    "public_artifacts_sanitized_after_runner_completion": true,
+    "raw_base_commits_recorded_publicly": false,
+    "raw_candidate_patches_recorded_publicly": false,
+    "raw_predictions_recorded_publicly": false,
+    "raw_problem_statements_recorded_publicly": false,
+    "raw_swebench_logs_recorded_publicly": false
+  },
+  "result_count": 48,
+  "results": [
+    {
+      "base_commit_sha256": "a2607c0de2348ce5adb4d70bc165f808689b8583662b93c1bd0247c02366ae4d",
+      "instance_id": "sympy__sympy-15017",
+      "private_task_manifest_available_privately": true,
+      "private_task_manifest_recorded_publicly": false,
+      "private_task_manifest_sha256": "c39b13f3aabbe9e7484dda0bf4c1fe827f5968368f693c7ed42bc4a22a58c08a",
+      "private_task_pack_available_privately": true,
+      "private_task_pack_recorded_publicly": false,
+      "private_task_pack_sha256": "205970bcc0a4e7be8ec13a2db4ab8922297996b51f61fbb3f1df7a746ffc4bf2",
+      "problem_statement_sha256": "b106dd1aed96c16195e44e41b0d863086366cf9c597e31787a38816ae04efb2a",
+      "problem_statement_size_bytes": 1010,
+      "raw_base_commit_emitted": false,
+      "raw_gold_patch_emitted": false,
+      "raw_problem_statement_emitted": false,
+      "raw_test_patch_emitted": false,
+      "task_family": "core/mixed",
+      "task_ordinal": 1
+    },
+    {
+      "base_commit_sha256": "80b09315a0ae044d23d77f3cfc4001b29fafc811defba70280a6cbb886a2de9b",
+      "instance_id": "sympy__sympy-19783",
+      "private_task_manifest_available_privately": true,
+      "private_task_manifest_recorded_publicly": false,
+      "private_task_manifest_sha256": "505b58a065ad25383ed10ccf19b10dc07a6a7d6a6dbd56f7d54f58ba3aabe07d",
+      "private_task_pack_available_privately": true,
+      "private_task_pack_recorded_publicly": false,
+      "private_task_pack_sha256": "69dedd247e32fc6f8ecc0d5a4c153746e53cda0cf9662fdb7240d734563c41f4",
+      "problem_statement_sha256": "6c701bb3840d26e89d9d3fef6d91d7d72ba7ed68cf6c2347f8d5c2eb275425c5",
+      "problem_statement_size_bytes": 422,
+      "raw_base_commit_emitted": false,
+      "raw_gold_patch_emitted": false,
+      "raw_problem_statement_emitted": false,
+      "raw_test_patch_emitted": false,
+      "task_family": "core/mixed",
+      "task_ordinal": 2
+    },
+    {
+      "base_commit_sha256": "4ba294514d318a5d874067042f74575a50babfa09768d81b2c28660b40d07468",
+      "instance_id": "sympy__sympy-14976",
+      "private_task_manifest_available_privately": true,
+      "private_task_manifest_recorded_publicly": false,
+      "private_task_manifest_sha256": "42fd828615bebfd34ac67c42420131796680f3fbe15e29677e720f306c4054b0",
+      "private_task_pack_available_privately": true,
+      "private_task_pack_recorded_publicly": false,
+      "private_task_pack_sha256": "a8b55cbd657bfa68b4c464988165d854f91b83b8a8702743d1375d7f202243f3",
+      "problem_statement_sha256": "3c0d98bb2098e4b8be846f95279696c6ab55e3ab5f22f05c946c0af281f81bda",
+      "problem_statement_size_bytes": 680,
+      "raw_base_commit_emitted": false,
+      "raw_gold_patch_emitted": false,
+      "raw_problem_statement_emitted": false,
+      "raw_test_patch_emitted": false,
+      "task_family": "calculus/integration/solving",
+      "task_ordinal": 3
+    },
+    {
+      "base_commit_sha256": "5236c65ff94cf09278909a96596440aec25de6f354e8d2bdac2c7b3ce9f3736a",
+      "instance_id": "sympy__sympy-13615",
+      "private_task_manifest_available_privately": true,
+      "private_task_manifest_recorded_publicly": false,
+      "private_task_manifest_sha256": "94514f45aa950fbf3bbd9b59f5e880a7db685d11096464b7e36bb03f1f33d471",
+      "private_task_pack_available_privately": true,
+      "private_task_pack_recorded_publicly": false,
+      "private_task_pack_sha256": "d6e4baf93ea4c4367f3353f9b8c5c526f0ebed32e0ba3bd45b7bcb8d011c46a5",
+      "problem_statement_sha256": "0104f2ab13e8c9bc42244c2d12fdc0850b05a7c0723f6303e75c9888ae27f5fb",
+      "problem_statement_size_bytes": 201,
+      "raw_base_commit_emitted": false,
+      "raw_gold_patch_emitted": false,
+      "raw_problem_statement_emitted": false,
+      "raw_test_patch_emitted": false,
+      "task_family": "core/mixed",
+      "task_ordinal": 4
+    },
+    {
+      "base_commit_sha256": "250efe47a9c9641534a54051ce9733cbbcae9ca253d8591af8f8e65d008a3674",
+      "instance_id": "sympy__sympy-18211",
+      "private_task_manifest_available_privately": true,
+      "private_task_manifest_recorded_publicly": false,
+      "private_task_manifest_sha256": "0fcf1ab7e245b018d101a58ed710b511a3277d9c5062bc479dd56e3ab5824f20",
+      "private_task_pack_available_privately": true,
+      "private_task_pack_recorded_publicly": false,
+      "private_task_pack_sha256": "815f1491c1e8742d089ebea8b4b9aff203b4a61330347876856c38170fdb196d",
+      "problem_statement_sha256": "e2e6d8d8bb9ce663b29aaccb73683ba91e87ceb98a7d613750de91f2d4b245a5",
+      "problem_statement_size_bytes": 842,
+      "raw_base_commit_emitted": false,
+      "raw_gold_patch_emitted": false,
+      "raw_problem_statement_emitted": false,
+      "raw_test_patch_emitted": false,
+      "task_family": "calculus/integration/solving",
+      "task_ordinal": 5
+    },
+    {
+      "base_commit_sha256": "dc14579c592e63961842eb01926751d6b07364be60d1e558e9c019b0748ddfdf",
+      "instance_id": "sympy__sympy-15599",
+      "private_task_manifest_available_privately": true,
+      "private_task_manifest_recorded_publicly": false,
+      "private_task_manifest_sha256": "331ce30c828f59ca5a88f72e6c6685e1e8275234b9fa85f71c5cda097cba1d03",
+      "private_task_pack_available_privately": true,
+      "private_task_pack_recorded_publicly": false,
+      "private_task_pack_sha256": "31958a048b812209bc7c557b8e7542d1929e90717573a3cc3c937f55a7c45cd2",
+      "problem_statement_sha256": "cf4081c50e2bce78ef90503152dbf7f94f2f8cf0323ee9cd68cf0e3a60835d6e",
+      "problem_statement_size_bytes": 1828,
+      "raw_base_commit_emitted": false,
+      "raw_gold_patch_emitted": false,
+      "raw_problem_statement_emitted": false,
+      "raw_test_patch_emitted": false,
+      "task_family": "expression simplification/canonicalization",
+      "task_ordinal": 6
+    },
+    {
+      "base_commit_sha256": "c1feb3901cc6051c5ad584f214c5162fc092e84f84cf7d8c2bd10102aae4eab8",
+      "instance_id": "sympy__sympy-22914",
+      "private_task_manifest_available_privately": true,
+      "private_task_manifest_recorded_publicly": false,
+      "private_task_manifest_sha256": "3d725946a8cdd46839773abd3d227cf7efc1543d1e732925475f0935e04ab222",
+      "private_task_pack_available_privately": true,
+      "private_task_pack_recorded_publicly": false,
+      "private_task_pack_sha256": "add7e1868efb0d710666df4ef6302fbfa80a567247ff9fd566bed6aebf06b329",
+      "problem_statement_sha256": "6d0642aa48ec6648e34338c6c374b48eb3b7e27a65a15538a22954f66b47a4c0",
+      "problem_statement_size_bytes": 628,
+      "raw_base_commit_emitted": false,
+      "raw_gold_patch_emitted": false,
+      "raw_problem_statement_emitted": false,
+      "raw_test_patch_emitted": false,
+      "task_family": "calculus/integration/solving",
+      "task_ordinal": 7
+    },
+    {
+      "base_commit_sha256": "b3ed924ae263772401921c57b9057da29daa20bd3fb3fe7a8d41bf7d29808a5d",
+      "instance_id": "sympy__sympy-24562",
+      "private_task_manifest_available_privately": true,
+      "private_task_manifest_recorded_publicly": false,
+      "private_task_manifest_sha256": "fc06d48645154015c84756006c97e1641d9cd573135773e32459c7afe699736b",
+      "private_task_pack_available_privately": true,
+      "private_task_pack_recorded_publicly": false,
+      "private_task_pack_sha256": "c5e36e33ee69b37cf77afb90dedf9d659ee459796849d5ebb2cb1b4694b46579",
+      "problem_statement_sha256": "b0d650e7d0c5a65c71332089cc3c86f85c07ab1175b3847c401d8e328c520f1c",
+      "problem_statement_size_bytes": 222,
+      "raw_base_commit_emitted": false,
+      "raw_gold_patch_emitted": false,
+      "raw_problem_statement_emitted": false,
+      "raw_test_patch_emitted": false,
+      "task_family": "core/mixed",
+      "task_ordinal": 8
+    },
+    {
+      "base_commit_sha256": "d77feb3855d9e4dc80d43f014a0888df79e4a790c373889a71ef7eddac38629d",
+      "instance_id": "sympy__sympy-20916",
+      "private_task_manifest_available_privately": true,
+      "private_task_manifest_recorded_publicly": false,
+      "private_task_manifest_sha256": "96e1e886b06a59378f6748aeddec27b2ab098e0dfbd2cffd3169f57bb18c1cca",
+      "private_task_pack_available_privately": true,
+      "private_task_pack_recorded_publicly": false,
+      "private_task_pack_sha256": "42f171947b55b324b5ad1e820890c643015cfb0a61434c3928f1969b86a1094e",
+      "problem_statement_sha256": "728c710a38f30dcfc83a99f11302f2ff4f69c34b26b6d1daf40f27e289fe550c",
+      "problem_statement_size_bytes": 176,
+      "raw_base_commit_emitted": false,
+      "raw_gold_patch_emitted": false,
+      "raw_problem_statement_emitted": false,
+      "raw_test_patch_emitted": false,
+      "task_family": "calculus/integration/solving",
+      "task_ordinal": 9
+    },
+    {
+      "base_commit_sha256": "70f2a0ef187a44918108960e5c4ebf5de8f1b66564fdb37dd803a3dded04ae1c",
+      "instance_id": "sympy__sympy-21847",
+      "private_task_manifest_available_privately": true,
+      "private_task_manifest_recorded_publicly": false,
+      "private_task_manifest_sha256": "8e1732eb014be0bdda4b62dfe5d317e048ce0d5f7f43dcc704d1f40f92210288",
+      "private_task_pack_available_privately": true,
+      "private_task_pack_recorded_publicly": false,
+      "private_task_pack_sha256": "c70dc8209aa2f38618388e9bfa048b9a0fa3a74509ce6a773e79cefac177e875",
+      "problem_statement_sha256": "94d91698afcd1df16f19769e6eb73afc4229159f92d2f0fcaa6fa9cf41116fdd",
+      "problem_statement_size_bytes": 1061,
+      "raw_base_commit_emitted": false,
+      "raw_gold_patch_emitted": false,
+      "raw_problem_statement_emitted": false,
+      "raw_test_patch_emitted": false,
+      "task_family": "polys/number theory",
+      "task_ordinal": 10
+    },
+    {
+      "base_commit_sha256": "99feb5a9762cb4c0f0e931fb2ae679e0903f61c22515c9cb36c09edc6492dcac",
+      "instance_id": "sympy__sympy-13091",
+      "private_task_manifest_available_privately": true,
+      "private_task_manifest_recorded_publicly": false,
+      "private_task_manifest_sha256": "0a98260f31875924c9e6e63f58f978a77e4cc93775832db5db921631dbb1da4c",
+      "private_task_pack_available_privately": true,
+      "private_task_pack_recorded_publicly": false,
+      "private_task_pack_sha256": "1488284f667f9a752d7e1ba2dd4d040b1760bb496450ccfdc8d3e99937839b77",
+      "problem_statement_sha256": "56dd1975c2cdb9924609fb6ce9a46f4a1269dce8da33bf80032d1c9d8a73e7db",
+      "problem_statement_size_bytes": 1823,
+      "raw_base_commit_emitted": false,
+      "raw_gold_patch_emitted": false,
+      "raw_problem_statement_emitted": false,
+      "raw_test_patch_emitted": false,
+      "task_family": "polys/number theory",
+      "task_ordinal": 11
+    },
+    {
+      "base_commit_sha256": "46baa750145fbcefbb2c971c6d161649d145c34d7ba575fdeb8a999e27b8fd85",
+      "instance_id": "sympy__sympy-13372",
+      "private_task_manifest_available_privately": true,
+      "private_task_manifest_recorded_publicly": false,
+      "private_task_manifest_sha256": "dee2e078fe39134471fcec087e21471c0c18f658224ea50ca4611f35df812892",
+      "private_task_pack_available_privately": true,
+      "private_task_pack_recorded_publicly": false,
+      "private_task_pack_sha256": "912ec5f81bba0b3d7c208f113288b5fd907cc63f16829e533843dd6dbf4ef77f",
+      "problem_statement_sha256": "fea79ea0704f92ccaa0cf508934dd810021e6742c6176ab08533ba3941178b69",
+      "problem_statement_size_bytes": 1183,
+      "raw_base_commit_emitted": false,
+      "raw_gold_patch_emitted": false,
+      "raw_problem_statement_emitted": false,
+      "raw_test_patch_emitted": false,
+      "task_family": "calculus/integration/solving",
+      "task_ordinal": 12
+    },
+    {
+      "base_commit_sha256": "e231eb896d6d914d4ae6a18f514e3fe5b95de3921aee2405c7f5f2cd8b08c851",
+      "instance_id": "sympy__sympy-12419",
+      "private_task_manifest_available_privately": true,
+      "private_task_manifest_recorded_publicly": false,
+      "private_task_manifest_sha256": "eddddb77c12f7b3f49a6c0e772436d754a88f767d2ebd949ebe10a17a18767a9",
+      "private_task_pack_available_privately": true,
+      "private_task_pack_recorded_publicly": false,
+      "private_task_pack_sha256": "c32400e06edaa41ce731123308a76daaba3c2f2055fd701dcbc7c08dcbd127e5",
+      "problem_statement_sha256": "48b311ac971aa2fe020b8dd89cd7d2aac3278d4b668921c6b07a29cb914ed4a5",
+      "problem_statement_size_bytes": 1141,
+      "raw_base_commit_emitted": false,
+      "raw_gold_patch_emitted": false,
+      "raw_problem_statement_emitted": false,
+      "raw_test_patch_emitted": false,
+      "task_family": "assumptions/predicates",
+      "task_ordinal": 13
+    },
+    {
+      "base_commit_sha256": "f55ab62c4d1dcff9dc35d7236f669e98ec79258adaa46652a56f3f2db638954e",
+      "instance_id": "sympy__sympy-23824",
+      "private_task_manifest_available_privately": true,
+      "private_task_manifest_recorded_publicly": false,
+      "private_task_manifest_sha256": "e7cd4b5e6be3efcdcd2d365edbae5c0c00e0cc074990093f5bce799b0a597b86",
+      "private_task_pack_available_privately": true,
+      "private_task_pack_recorded_publicly": false,
+      "private_task_pack_sha256": "a8bfd37e123a78f5af00e04d1544477b893c9f2c2433aba4ea72b16e4b813e25",
+      "problem_statement_sha256": "6e2c57adb3bb75a9841d6ebb74f72bd5f711a1a11df1ed32906681eb3613dabd",
+      "problem_statement_size_bytes": 2103,
+      "raw_base_commit_emitted": false,
+      "raw_gold_patch_emitted": false,
+      "raw_problem_statement_emitted": false,
+      "raw_test_patch_emitted": false,
+      "task_family": "matrices/linear algebra",
+      "task_ordinal": 14
+    },
+    {
+      "base_commit_sha256": "b83d9bf082200159d8f5be8b725d96cda2de1e5ba8eaf9663d8ddaca9507b580",
+      "instance_id": "sympy__sympy-24066",
+      "private_task_manifest_available_privately": true,
+      "private_task_manifest_recorded_publicly": false,
+      "private_task_manifest_sha256": "f498b7bc2bde6931f9f8d137200f99e54e5d293dc5889d7f16fe6977ca283504",
+      "private_task_pack_available_privately": true,
+      "private_task_pack_recorded_publicly": false,
+      "private_task_pack_sha256": "961a7fdc98c88053b28851d5c067886b18f9a9c5ec6a0ebae15ac3abef04da60",
+      "problem_statement_sha256": "f96812d2e3e17bd07f17b6e553bc354c0bd522bf3dcf81aec841676c8a371b7b",
+      "problem_statement_size_bytes": 605,
+      "raw_base_commit_emitted": false,
+      "raw_gold_patch_emitted": false,
+      "raw_problem_statement_emitted": false,
+      "raw_test_patch_emitted": false,
+      "task_family": "expression simplification/canonicalization",
+      "task_ordinal": 15
+    },
+    {
+      "base_commit_sha256": "a05ef376986e3f53bdbe9369dca8fab0ae7355d13528b388c15da41c2ec5d131",
+      "instance_id": "sympy__sympy-24661",
+      "private_task_manifest_available_privately": true,
+      "private_task_manifest_recorded_publicly": false,
+      "private_task_manifest_sha256": "8bfa44eb3fbc79cdbbca626736555e593099dbd1925112ce3b869b6b12e269cd",
+      "private_task_pack_available_privately": true,
+      "private_task_pack_recorded_publicly": false,
+      "private_task_pack_sha256": "58bf2664a86aaea524fccf550314f84c63207a829ff6bd81118176e8cf08f1c5",
+      "problem_statement_sha256": "6d2fd3a85268058e45ba93bb541d2addc5f70c2995aacea9c9193cfffbb51d4f",
+      "problem_statement_size_bytes": 351,
+      "raw_base_commit_emitted": false,
+      "raw_gold_patch_emitted": false,
+      "raw_problem_statement_emitted": false,
+      "raw_test_patch_emitted": false,
+      "task_family": "printing/parsing/syntax",
+      "task_ordinal": 16
+    },
+    {
+      "base_commit_sha256": "dcc694af1340b40f610246ec204b293db9cdfc652ba3f79112e525749b01fc09",
+      "instance_id": "sympy__sympy-13877",
+      "private_task_manifest_available_privately": true,
+      "private_task_manifest_recorded_publicly": false,
+      "private_task_manifest_sha256": "75284df6a4bfe9af33b2ab2f604f948b9d62493f248f714ef5ee7b917f3b8cce",
+      "private_task_pack_available_privately": true,
+      "private_task_pack_recorded_publicly": false,
+      "private_task_pack_sha256": "fa60b6f9118070e92395d79a46e340f3a66947952e35f0f4377d6da00f1071c0",
+      "problem_statement_sha256": "e8eb7f7fe32ffe357b6a54186c56ae0f9326084bf90504838895599d08e0dbc8",
+      "problem_statement_size_bytes": 4361,
+      "raw_base_commit_emitted": false,
+      "raw_gold_patch_emitted": false,
+      "raw_problem_statement_emitted": false,
+      "raw_test_patch_emitted": false,
+      "task_family": "matrices/linear algebra",
+      "task_ordinal": 17
+    },
+    {
+      "base_commit_sha256": "116d5a9064897e273206a49ea087a9c811e49998a340543ba99c94080a9d302f",
+      "instance_id": "sympy__sympy-13798",
+      "private_task_manifest_available_privately": true,
+      "private_task_manifest_recorded_publicly": false,
+      "private_task_manifest_sha256": "397619df540ee7c92533d3f212b35ebfc1f45bf4677e9400ec3eae30a83d89b7",
+      "private_task_pack_available_privately": true,
+      "private_task_pack_recorded_publicly": false,
+      "private_task_pack_sha256": "32c51336c564a80252bfc27a8be96d048d9ab125183fccc618c90c53246f4129",
+      "problem_statement_sha256": "aa83d8763f10cb6dcd1d8abdb848d6332241bf6710ce4e27aa7e49160fd529a6",
+      "problem_statement_size_bytes": 861,
+      "raw_base_commit_emitted": false,
+      "raw_gold_patch_emitted": false,
+      "raw_problem_statement_emitted": false,
+      "raw_test_patch_emitted": false,
+      "task_family": "calculus/integration/solving",
+      "task_ordinal": 18
+    },
+    {
+      "base_commit_sha256": "15ad79e5b67bd7960863db3d6988fb73d127a02b9b32ecbedb33fa602e2b47c1",
+      "instance_id": "sympy__sympy-15976",
+      "private_task_manifest_available_privately": true,
+      "private_task_manifest_recorded_publicly": false,
+      "private_task_manifest_sha256": "abe989fae84fd8758748d2a01f63287ce3c6c122cf84bc19e7fd19941db8666e",
+      "private_task_pack_available_privately": true,
+      "private_task_pack_recorded_publicly": false,
+      "private_task_pack_sha256": "6b38d6de953e4c899a238246d8c881e3c5e8eed3088f6cdc0493a2398ab02e44",
+      "problem_statement_sha256": "2b1a85414c4df764477586489a407c5be000ef58e9ae013aef7711bb9c2f4f75",
+      "problem_statement_size_bytes": 1053,
+      "raw_base_commit_emitted": false,
+      "raw_gold_patch_emitted": false,
+      "raw_problem_statement_emitted": false,
+      "raw_test_patch_emitted": false,
+      "task_family": "printing/parsing/syntax",
+      "task_ordinal": 19
+    },
+    {
+      "base_commit_sha256": "5a4ae9f34a69bedc82b5e96b4090b83ba07faaa36195de1c5ca9317b68118bd3",
+      "instance_id": "sympy__sympy-20154",
+      "private_task_manifest_available_privately": true,
+      "private_task_manifest_recorded_publicly": false,
+      "private_task_manifest_sha256": "68a98d049b2f40dee670f1b42180d30b0ff233be052bfb017fbad4f0a94df154",
+      "private_task_pack_available_privately": true,
+      "private_task_pack_recorded_publicly": false,
+      "private_task_pack_sha256": "f20fb8c32ebc0f8a41cb505dc1d3d1c42576de7c5ff14fb655bc78cb189fe134",
+      "problem_statement_sha256": "16cda9e1dbc96941a98fa2f54a1545709b1a3aefe133b20841f69d6391bef6dd",
+      "problem_statement_size_bytes": 552,
+      "raw_base_commit_emitted": false,
+      "raw_gold_patch_emitted": false,
+      "raw_problem_statement_emitted": false,
+      "raw_test_patch_emitted": false,
+      "task_family": "core/mixed",
+      "task_ordinal": 20
+    },
+    {
+      "base_commit_sha256": "00f1d4f4a5077d03ac2337ef72944f6f708f82fa308705ab91fb10dedacb07ce",
+      "instance_id": "sympy__sympy-20438",
+      "private_task_manifest_available_privately": true,
+      "private_task_manifest_recorded_publicly": false,
+      "private_task_manifest_sha256": "9650186360d4af76a3851aaf4a597b38e158f48b4b2eb86bb5594e3ecb976333",
+      "private_task_pack_available_privately": true,
+      "private_task_pack_recorded_publicly": false,
+      "private_task_pack_sha256": "cedcee46024d758a536b9a5468cbd12aea88b3ce7d68a2a4a0942811c27805b8",
+      "problem_statement_sha256": "ab48dc1dc9b89443d93044930f964e8d4dfe25706fceb03dddf2295c060d339a",
+      "problem_statement_size_bytes": 1269,
+      "raw_base_commit_emitted": false,
+      "raw_gold_patch_emitted": false,
+      "raw_problem_statement_emitted": false,
+      "raw_test_patch_emitted": false,
+      "task_family": "calculus/integration/solving",
+      "task_ordinal": 21
+    },
+    {
+      "base_commit_sha256": "50105c6ae1ad3943e4ee0cafd99e2e9eab44c0ef63e0bca25c1fd1f37b3b2a0e",
+      "instance_id": "sympy__sympy-18763",
+      "private_task_manifest_available_privately": true,
+      "private_task_manifest_recorded_publicly": false,
+      "private_task_manifest_sha256": "8c02372ed2dafe926f865b6166138e395533b2d61b3e1a6a89712b6fa06c6a00",
+      "private_task_pack_available_privately": true,
+      "private_task_pack_recorded_publicly": false,
+      "private_task_pack_sha256": "e2e973dce1fbf08e2ff0eb834e8613a5ac1156d2ce578a69e3c43ef36c0b8626",
+      "problem_statement_sha256": "5c1164a6c4ec868668f2fdd4b75e440df221ae6f0f1716e1854884efb8aa3851",
+      "problem_statement_size_bytes": 567,
+      "raw_base_commit_emitted": false,
+      "raw_gold_patch_emitted": false,
+      "raw_problem_statement_emitted": false,
+      "raw_test_patch_emitted": false,
+      "task_family": "printing/parsing/syntax",
+      "task_ordinal": 22
+    },
+    {
+      "base_commit_sha256": "0c4704088af1a3ad46ae0b05dfdfea840dd00820ddfe232b351e6cafb535876f",
+      "instance_id": "sympy__sympy-21930",
+      "private_task_manifest_available_privately": true,
+      "private_task_manifest_recorded_publicly": false,
+      "private_task_manifest_sha256": "306a2870099e2e73a5b28c1c65277eb95fc510d9f6f4824e10a771c7f633131d",
+      "private_task_pack_available_privately": true,
+      "private_task_pack_recorded_publicly": false,
+      "private_task_pack_sha256": "39d18f3405c2524a72bbc0a27a8a17fb618425514dd4d39685ff367e23a1d9b6",
+      "problem_statement_sha256": "867fbad616cdb7324c99258b4bd7ad7f6b4a2fb66f7945b669f9ae279ad38535",
+      "problem_statement_size_bytes": 707,
+      "raw_base_commit_emitted": false,
+      "raw_gold_patch_emitted": false,
+      "raw_problem_statement_emitted": false,
+      "raw_test_patch_emitted": false,
+      "task_family": "printing/parsing/syntax",
+      "task_ordinal": 23
+    },
+    {
+      "base_commit_sha256": "5c5033144d5153ae8d4cf4c0b094b6c4d614e9bd88297237f862b2583dc6de9b",
+      "instance_id": "sympy__sympy-20428",
+      "private_task_manifest_available_privately": true,
+      "private_task_manifest_recorded_publicly": false,
+      "private_task_manifest_sha256": "28c7d8717a8f68b129123d9004484271d9bd9d1fec7125a19fc814e7f7f18827",
+      "private_task_pack_available_privately": true,
+      "private_task_pack_recorded_publicly": false,
+      "private_task_pack_sha256": "5afc881a98ae516500bf62a69a728c81fe87fe5942aa2ffd4bfb55916809075f",
+      "problem_statement_sha256": "3e20082eaadedd75f04a9afb22c1256f85d6e4768296ee14bdfbb5ba6a255fff",
+      "problem_statement_size_bytes": 3710,
+      "raw_base_commit_emitted": false,
+      "raw_gold_patch_emitted": false,
+      "raw_problem_statement_emitted": false,
+      "raw_test_patch_emitted": false,
+      "task_family": "polys/number theory",
+      "task_ordinal": 24
+    },
+    {
+      "base_commit_sha256": "0f1df31f3367868222dd304ddcd86014750a31c20c4331a2c78094f800ae433b",
+      "instance_id": "sympy__sympy-15349",
+      "private_task_manifest_available_privately": true,
+      "private_task_manifest_recorded_publicly": false,
+      "private_task_manifest_sha256": "e65d6ed5f185c4ca4f3786e9102ed35a2b08bbdb3c121fe922e2d630b38c37a0",
+      "private_task_pack_available_privately": true,
+      "private_task_pack_recorded_publicly": false,
+      "private_task_pack_sha256": "e1b32470c505f12b5f3ee049cb11ce6fca14b43d7239622127d4fe623da61f3f",
+      "problem_statement_sha256": "9e23e96a13f172fc27e87972f1f4f86c22ebb28407ed8dbdce0a665c3c04c412",
+      "problem_statement_size_bytes": 725,
+      "raw_base_commit_emitted": false,
+      "raw_gold_patch_emitted": false,
+      "raw_problem_statement_emitted": false,
+      "raw_test_patch_emitted": false,
+      "task_family": "matrices/linear algebra",
+      "task_ordinal": 25
+    },
+    {
+      "base_commit_sha256": "cf63ac44c82cf5bce0df7c61a61a6653efb0dd163475bc76c0833362be2148e1",
+      "instance_id": "sympy__sympy-13757",
+      "private_task_manifest_available_privately": true,
+      "private_task_manifest_recorded_publicly": false,
+      "private_task_manifest_sha256": "55ffd3e19ee540eff8399fe9ccec6b3607aafa1ac6f1e7ec30cc01607217fdbd",
+      "private_task_pack_available_privately": true,
+      "private_task_pack_recorded_publicly": false,
+      "private_task_pack_sha256": "8cd35aae704d051aa2785ba23f3e9e944f96d48d6a8c499fcf05e7cecf212d86",
+      "problem_statement_sha256": "63fe3a94f352bfa567c1934f7dacc6d0c86db8ed628f4595b73c1f3f0bf9a4c4",
+      "problem_statement_size_bytes": 421,
+      "raw_base_commit_emitted": false,
+      "raw_gold_patch_emitted": false,
+      "raw_problem_statement_emitted": false,
+      "raw_test_patch_emitted": false,
+      "task_family": "polys/number theory",
+      "task_ordinal": 26
+    },
+    {
+      "base_commit_sha256": "1b5dc3acd19dd4c7876c606e30943a08e57d22baadee7dfc96e4f75d8432aea0",
+      "instance_id": "sympy__sympy-22080",
+      "private_task_manifest_available_privately": true,
+      "private_task_manifest_recorded_publicly": false,
+      "private_task_manifest_sha256": "0b75890de0fe2890964db3641b559a93e22a20bf0dd48d1c6bdb5f9c5681e2ee",
+      "private_task_pack_available_privately": true,
+      "private_task_pack_recorded_publicly": false,
+      "private_task_pack_sha256": "15bd0f683c7fed6cf711ac0b83eb408ffa26ad3cb61ccc3de1f0b7797f196016",
+      "problem_statement_sha256": "e4e025ba043919887cf1773f79e5bb6f7b7ad8eab54718e8ec0d0ff2f4c37b14",
+      "problem_statement_size_bytes": 645,
+      "raw_base_commit_emitted": false,
+      "raw_gold_patch_emitted": false,
+      "raw_problem_statement_emitted": false,
+      "raw_test_patch_emitted": false,
+      "task_family": "calculus/integration/solving",
+      "task_ordinal": 27
+    },
+    {
+      "base_commit_sha256": "948f691802b2dd24a958390f97426ec735a76bab4108810eca5bfc10e1c12743",
+      "instance_id": "sympy__sympy-16886",
+      "private_task_manifest_available_privately": true,
+      "private_task_manifest_recorded_publicly": false,
+      "private_task_manifest_sha256": "de32c6d21702f1087cfafa7e44cabde008b2483bf8fb52588224409387472f4a",
+      "private_task_pack_available_privately": true,
+      "private_task_pack_recorded_publicly": false,
+      "private_task_pack_sha256": "c21336b708c0d8f12fdc389e4ea08d0db29bae2c36ab0b7c0da2b04313c3d2e7",
+      "problem_statement_sha256": "8bcff84556fbb7d34383e0f16d01027922121a39bb63b881fcd3d8f5e2e74f29",
+      "problem_statement_size_bytes": 185,
+      "raw_base_commit_emitted": false,
+      "raw_gold_patch_emitted": false,
+      "raw_problem_statement_emitted": false,
+      "raw_test_patch_emitted": false,
+      "task_family": "core/mixed",
+      "task_ordinal": 28
+    },
+    {
+      "base_commit_sha256": "9d9b181f24d7909c4ca641858f672ba8cb026e936c311fbe696285d5e0f21ced",
+      "instance_id": "sympy__sympy-16450",
+      "private_task_manifest_available_privately": true,
+      "private_task_manifest_recorded_publicly": false,
+      "private_task_manifest_sha256": "05f0251939a096221cfcaed22e4d57786a1c2799e1111450dbf62db8480709b6",
+      "private_task_pack_available_privately": true,
+      "private_task_pack_recorded_publicly": false,
+      "private_task_pack_sha256": "c23fa7b52295891b0bf20c23c1fa6b434e5d94210ae1752b54cdd6d00adc37a5",
+      "problem_statement_sha256": "b52fc0b413e314219a9e63f3137553f66603fecadc83cc12f34a4136d03bcd60",
+      "problem_statement_size_bytes": 1610,
+      "raw_base_commit_emitted": false,
+      "raw_gold_patch_emitted": false,
+      "raw_problem_statement_emitted": false,
+      "raw_test_patch_emitted": false,
+      "task_family": "assumptions/predicates",
+      "task_ordinal": 29
+    },
+    {
+      "base_commit_sha256": "35d073ecf9bf0878b7388a64a755633b1cc6422825a63717e3a3937742d1336a",
+      "instance_id": "sympy__sympy-13852",
+      "private_task_manifest_available_privately": true,
+      "private_task_manifest_recorded_publicly": false,
+      "private_task_manifest_sha256": "55d0774862196701337d27979339af7bc26aa1be8f958ea3e949d409fd39c50e",
+      "private_task_pack_available_privately": true,
+      "private_task_pack_recorded_publicly": false,
+      "private_task_pack_sha256": "28e3731f8b2190af30a61e68e644a27648d110b2b76e7ba41abb4e19dc13c068",
+      "problem_statement_sha256": "51eca986eb401e0dc2856252c823632a51285a5a0d70bd046d46c39362d0df02",
+      "problem_statement_size_bytes": 1892,
+      "raw_base_commit_emitted": false,
+      "raw_gold_patch_emitted": false,
+      "raw_problem_statement_emitted": false,
+      "raw_test_patch_emitted": false,
+      "task_family": "calculus/integration/solving",
+      "task_ordinal": 30
+    },
+    {
+      "base_commit_sha256": "8e53d60e29989b124bb0947e9fbd97d8cdb1574daa0f93c5e04f7d80b859a573",
+      "instance_id": "sympy__sympy-13480",
+      "private_task_manifest_available_privately": true,
+      "private_task_manifest_recorded_publicly": false,
+      "private_task_manifest_sha256": "97fa2a226b211404227e435ddc51bcc58fa166106c24b7d61a027674e172bb37",
+      "private_task_pack_available_privately": true,
+      "private_task_pack_recorded_publicly": false,
+      "private_task_pack_sha256": "8853ba3e804b8b9c8ee36db3f7981a622d677dab325eb4c3a3d65ca3a5ae886c",
+      "problem_statement_sha256": "f08f8be58202a7048af4813f1d9533b70f45c070ab93f6399a5c1c89217507e6",
+      "problem_statement_size_bytes": 430,
+      "raw_base_commit_emitted": false,
+      "raw_gold_patch_emitted": false,
+      "raw_problem_statement_emitted": false,
+      "raw_test_patch_emitted": false,
+      "task_family": "calculus/integration/solving",
+      "task_ordinal": 31
+    },
+    {
+      "base_commit_sha256": "8b0b9aeb0b2a3af9aeb076a90e0437d33324ce75153832e87e8eda28c0d1b0a7",
+      "instance_id": "sympy__sympy-16792",
+      "private_task_manifest_available_privately": true,
+      "private_task_manifest_recorded_publicly": false,
+      "private_task_manifest_sha256": "1653df833d7dfe42e6b55137ab82d75c7197de345285efb963ad5f218431a597",
+      "private_task_pack_available_privately": true,
+      "private_task_pack_recorded_publicly": false,
+      "private_task_pack_sha256": "af07feafd9ce6a56271e95cb2b9c2fb3b247e117c503a712da18fe4007b5be79",
+      "problem_statement_sha256": "48b3d6d8e3ddfc9a78b57d8f79cf5ca78ba55a990f1eba937b998fd9160a77a8",
+      "problem_statement_size_bytes": 1930,
+      "raw_base_commit_emitted": false,
+      "raw_gold_patch_emitted": false,
+      "raw_problem_statement_emitted": false,
+      "raw_test_patch_emitted": false,
+      "task_family": "matrices/linear algebra",
+      "task_ordinal": 32
+    },
+    {
+      "base_commit_sha256": "f6a091808d226e2f54ace6035ffe3651964c10c275fc85f2085c255225ccd603",
+      "instance_id": "sympy__sympy-13031",
+      "private_task_manifest_available_privately": true,
+      "private_task_manifest_recorded_publicly": false,
+      "private_task_manifest_sha256": "5fa9c60890749f8451d0148d29e8a51915f0f495f16526fcd5016e07b1ab0d80",
+      "private_task_pack_available_privately": true,
+      "private_task_pack_recorded_publicly": false,
+      "private_task_pack_sha256": "de0421339f63c8dc0c79a0b43095a6af32a6158f35328eacc8a5b47018246932",
+      "problem_statement_sha256": "5d95a063a1ada8b9273255940d122605d87ea3ab2aa27f524725442be780b5c6",
+      "problem_statement_size_bytes": 717,
+      "raw_base_commit_emitted": false,
+      "raw_gold_patch_emitted": false,
+      "raw_problem_statement_emitted": false,
+      "raw_test_patch_emitted": false,
+      "task_family": "matrices/linear algebra",
+      "task_ordinal": 33
+    },
+    {
+      "base_commit_sha256": "73750d1151aeaef42079d0831ccd556ce339d4ff4c58d2f269eebe2c1eeb86a4",
+      "instance_id": "sympy__sympy-24443",
+      "private_task_manifest_available_privately": true,
+      "private_task_manifest_recorded_publicly": false,
+      "private_task_manifest_sha256": "398b798611bf1d86a1afb80728bdd4bbe9c2935e4288538296e533ff4c0f4eb2",
+      "private_task_pack_available_privately": true,
+      "private_task_pack_recorded_publicly": false,
+      "private_task_pack_sha256": "c9b1ffeb978683feb46edb04d775b327943542efac8bd80bcb2e3ae83b23578a",
+      "problem_statement_sha256": "465efb86a6aacc25222e99cb78b1cdd86248af5a67b27ae1c4a043c1c126c0d4",
+      "problem_statement_size_bytes": 687,
+      "raw_base_commit_emitted": false,
+      "raw_gold_patch_emitted": false,
+      "raw_problem_statement_emitted": false,
+      "raw_test_patch_emitted": false,
+      "task_family": "core/mixed",
+      "task_ordinal": 34
+    },
+    {
+      "base_commit_sha256": "9900eb0803f33dd441e3ff4ac14cd75a9f769d4598d8650b6a0aa12ccbb9a276",
+      "instance_id": "sympy__sympy-23950",
+      "private_task_manifest_available_privately": true,
+      "private_task_manifest_recorded_publicly": false,
+      "private_task_manifest_sha256": "0142f26d6508bdcda736368d315f52789637731b27803caadf7ed936c474e4fd",
+      "private_task_pack_available_privately": true,
+      "private_task_pack_recorded_publicly": false,
+      "private_task_pack_sha256": "dadb84600d4d80b3c84f73b374ad5199cf5cfb2a3c84f44406f78be37c52aacf",
+      "problem_statement_sha256": "b56221e6a6bb28b09a09c076fdba0cbf1cb9d256956c52345ec825ccd52f61db",
+      "problem_statement_size_bytes": 766,
+      "raw_base_commit_emitted": false,
+      "raw_gold_patch_emitted": false,
+      "raw_problem_statement_emitted": false,
+      "raw_test_patch_emitted": false,
+      "task_family": "core/mixed",
+      "task_ordinal": 35
+    },
+    {
+      "base_commit_sha256": "231c5e979746c68a53604b8e1b674421f232c88c824140a4b43ffffb02e0e8b5",
+      "instance_id": "sympy__sympy-18698",
+      "private_task_manifest_available_privately": true,
+      "private_task_manifest_recorded_publicly": false,
+      "private_task_manifest_sha256": "7c23f6e0e73189a2fb8dc3b67b52bc03c89afb30da6efc21a33f21ef2df06dc4",
+      "private_task_pack_available_privately": true,
+      "private_task_pack_recorded_publicly": false,
+      "private_task_pack_sha256": "30609274689e98c5f3bc83756b39aea77cb4188cbecba1f5a15ab7456eaa385b",
+      "problem_statement_sha256": "cd81e74232a1271cd69ffe8a0ed157acd609e130503b78ae962414616718a537",
+      "problem_statement_size_bytes": 458,
+      "raw_base_commit_emitted": false,
+      "raw_gold_patch_emitted": false,
+      "raw_problem_statement_emitted": false,
+      "raw_test_patch_emitted": false,
+      "task_family": "polys/number theory",
+      "task_ordinal": 36
+    },
+    {
+      "base_commit_sha256": "583e2981f10bc4d4080f47661f076fa6b41780c26bbe55c1cbba718c02f65b3d",
+      "instance_id": "sympy__sympy-23262",
+      "private_task_manifest_available_privately": true,
+      "private_task_manifest_recorded_publicly": false,
+      "private_task_manifest_sha256": "d979e09b0400a1fa1e568b6a69298c0664a8eb6ca2535fdb9c7c69f68dbc9255",
+      "private_task_pack_available_privately": true,
+      "private_task_pack_recorded_publicly": false,
+      "private_task_pack_sha256": "9b57d698052a038159e1b15ff540f3274de09661144d1957cdfcfc99ad99e27c",
+      "problem_statement_sha256": "c0c0ac5aecba195d382f82e1b5d1519cc8053e29b967bdc2805137079c9fd3b7",
+      "problem_statement_size_bytes": 1033,
+      "raw_base_commit_emitted": false,
+      "raw_gold_patch_emitted": false,
+      "raw_problem_statement_emitted": false,
+      "raw_test_patch_emitted": false,
+      "task_family": "assumptions/predicates",
+      "task_ordinal": 37
+    },
+    {
+      "base_commit_sha256": "3e31ac91be582d27e6a1b827e0f2081d7f84fc5ab048de8db0f0fc45a1b35b9d",
+      "instance_id": "sympy__sympy-20801",
+      "private_task_manifest_available_privately": true,
+      "private_task_manifest_recorded_publicly": false,
+      "private_task_manifest_sha256": "e459abe302a2c9216039441467955f7ba602896a7e6a74c73226554ff03ad839",
+      "private_task_pack_available_privately": true,
+      "private_task_pack_recorded_publicly": false,
+      "private_task_pack_sha256": "44d191521937038cef232f9036d0304b0ccc9236731f29548762ad231f1d70c0",
+      "problem_statement_sha256": "d97c4296d41c2a7cdf87b6e2de16dd10a5755318d9bde720c8677b8787c20ec3",
+      "problem_statement_size_bytes": 509,
+      "raw_base_commit_emitted": false,
+      "raw_gold_patch_emitted": false,
+      "raw_problem_statement_emitted": false,
+      "raw_test_patch_emitted": false,
+      "task_family": "assumptions/predicates",
+      "task_ordinal": 38
+    },
+    {
+      "base_commit_sha256": "bb4d78cd4d24356becc7bc83cb7dcd2288debd08c69f1ee2c0e60f3b1dbb1491",
+      "instance_id": "sympy__sympy-12481",
+      "private_task_manifest_available_privately": true,
+      "private_task_manifest_recorded_publicly": false,
+      "private_task_manifest_sha256": "e255152f2bc76db7c114598e2dfd38e752b163f8bbc5106bad7574c875b0920a",
+      "private_task_pack_available_privately": true,
+      "private_task_pack_recorded_publicly": false,
+      "private_task_pack_sha256": "f504987c3e5c7e9c534e94efbf4f671406ad6427af2b0a512cbc61cd11c1a782",
+      "problem_statement_sha256": "5be18855c5c93b9af1ad839da500cb74d1bb38ff8e1f93340baedcd8df0249cc",
+      "problem_statement_size_bytes": 407,
+      "raw_base_commit_emitted": false,
+      "raw_gold_patch_emitted": false,
+      "raw_problem_statement_emitted": false,
+      "raw_test_patch_emitted": false,
+      "task_family": "core/mixed",
+      "task_ordinal": 39
+    },
+    {
+      "base_commit_sha256": "859d28c7be5b853ac920d802ddbb3412244f521e63e3096fd42a18f174ec2ff9",
+      "instance_id": "sympy__sympy-20590",
+      "private_task_manifest_available_privately": true,
+      "private_task_manifest_recorded_publicly": false,
+      "private_task_manifest_sha256": "e5c94b9da759d2dc58f24efa3e38a4507a66cdc9cbf3e59b2419e212559b1d27",
+      "private_task_pack_available_privately": true,
+      "private_task_pack_recorded_publicly": false,
+      "private_task_pack_sha256": "52bd20dfb33c865ca99aa628c7e121ffa57c2e81fc11194edd15dfef093b65f2",
+      "problem_statement_sha256": "e2f8e16a69eabf97334f7852f8675d8d470ef7a3e990ab484c6427bd7ad9ff52",
+      "problem_statement_size_bytes": 758,
+      "raw_base_commit_emitted": false,
+      "raw_gold_patch_emitted": false,
+      "raw_problem_statement_emitted": false,
+      "raw_test_patch_emitted": false,
+      "task_family": "assumptions/predicates",
+      "task_ordinal": 40
+    },
+    {
+      "base_commit_sha256": "94a2ca982dab921c6452b46668343e8cdbded706a4b7db2baa68e70bf2e65cc2",
+      "instance_id": "sympy__sympy-19954",
+      "private_task_manifest_available_privately": true,
+      "private_task_manifest_recorded_publicly": false,
+      "private_task_manifest_sha256": "2a1cdf3a6c80babc6a2987a2fed7bab44d8c373e9670a73a8e1f81c624e4d42a",
+      "private_task_pack_available_privately": true,
+      "private_task_pack_recorded_publicly": false,
+      "private_task_pack_sha256": "ccddc302c8925633b529356a33540444ecc79eb0eb05291c442bc120d41f0b57",
+      "problem_statement_sha256": "173f90e5d7bbeb35fddaaccfcd44c94f30a06f4c2a68f379aec6aba11f302cdd",
+      "problem_statement_size_bytes": 921,
+      "raw_base_commit_emitted": false,
+      "raw_gold_patch_emitted": false,
+      "raw_problem_statement_emitted": false,
+      "raw_test_patch_emitted": false,
+      "task_family": "calculus/integration/solving",
+      "task_ordinal": 41
+    },
+    {
+      "base_commit_sha256": "0c0b2398bf814c0648829bec3b93eaaf9a478762f9e19d6097dc919c8c07e963",
+      "instance_id": "sympy__sympy-19495",
+      "private_task_manifest_available_privately": true,
+      "private_task_manifest_recorded_publicly": false,
+      "private_task_manifest_sha256": "4363ca78589b3c603f4a9840c9ab9d1fa94f336d3626cf62c40c7143c05e3f55",
+      "private_task_pack_available_privately": true,
+      "private_task_pack_recorded_publicly": false,
+      "private_task_pack_sha256": "132c45cc3ddd724ac9e7a7429a4e8f38c758d66c678553422c37c2c98b7f68ce",
+      "problem_statement_sha256": "a608f9c2e5cfc35840160135755897f7a04207162f2909999258e38ddc336973",
+      "problem_statement_size_bytes": 1537,
+      "raw_base_commit_emitted": false,
+      "raw_gold_patch_emitted": false,
+      "raw_problem_statement_emitted": false,
+      "raw_test_patch_emitted": false,
+      "task_family": "calculus/integration/solving",
+      "task_ordinal": 42
+    },
+    {
+      "base_commit_sha256": "59a5ff50457cf0e9b8e60f184c664c652cb272f9a4296084a59c244223c466a0",
+      "instance_id": "sympy__sympy-14531",
+      "private_task_manifest_available_privately": true,
+      "private_task_manifest_recorded_publicly": false,
+      "private_task_manifest_sha256": "193316981a08945e4e4c0657b1dc8264b546550252c95da2222aff15aa25b94c",
+      "private_task_pack_available_privately": true,
+      "private_task_pack_recorded_publicly": false,
+      "private_task_pack_sha256": "d991f6aa2dea418752b76a2874ee2dc2c0c62142b2e41ebc3610a3d61aaf6fbb",
+      "problem_statement_sha256": "8cf843dcf782552dff92511ba20491f033530e49ebbf1594db04bef5a60ada92",
+      "problem_statement_size_bytes": 668,
+      "raw_base_commit_emitted": false,
+      "raw_gold_patch_emitted": false,
+      "raw_problem_statement_emitted": false,
+      "raw_test_patch_emitted": false,
+      "task_family": "calculus/integration/solving",
+      "task_ordinal": 43
+    },
+    {
+      "base_commit_sha256": "de94564f3c7a6d97917a9a7cb61c1ef5aa1d18d3bf629671d320f7e780d7d8ee",
+      "instance_id": "sympy__sympy-19040",
+      "private_task_manifest_available_privately": true,
+      "private_task_manifest_recorded_publicly": false,
+      "private_task_manifest_sha256": "e54d3987bb410b48bac6fb086d986d2bb1751e58784a85e3d6ae1725a4ea0485",
+      "private_task_pack_available_privately": true,
+      "private_task_pack_recorded_publicly": false,
+      "private_task_pack_sha256": "682f114559ce8499127840ea8dd71fb84b827209750316d2acfcc34dabbd0839",
+      "problem_statement_sha256": "42bb887eb79aa3dcd7183824fdce7ccc38d867dff8242d8edad92a705e0bbd58",
+      "problem_statement_size_bytes": 1889,
+      "raw_base_commit_emitted": false,
+      "raw_gold_patch_emitted": false,
+      "raw_problem_statement_emitted": false,
+      "raw_test_patch_emitted": false,
+      "task_family": "polys/number theory",
+      "task_ordinal": 44
+    },
+    {
+      "base_commit_sha256": "bed295b8ae0b7f572d34351160f1a64c749e48a943ad892ce123909120eb7aec",
+      "instance_id": "sympy__sympy-14248",
+      "private_task_manifest_available_privately": true,
+      "private_task_manifest_recorded_publicly": false,
+      "private_task_manifest_sha256": "672b3298c22bb08d72e5ed15e1a7cc0850d7cb8f960e6d4c54be9bda39458739",
+      "private_task_pack_available_privately": true,
+      "private_task_pack_recorded_publicly": false,
+      "private_task_pack_sha256": "4cee0b7db1a815827443effb03f7febf6f259fb5adfcae59ecb7c1c2e5543ffe",
+      "problem_statement_sha256": "056549bbb76a727325fc85b052ecb5d1c9ba9d70d702cf011b407e3877e5c383",
+      "problem_statement_size_bytes": 585,
+      "raw_base_commit_emitted": false,
+      "raw_gold_patch_emitted": false,
+      "raw_problem_statement_emitted": false,
+      "raw_test_patch_emitted": false,
+      "task_family": "matrices/linear algebra",
+      "task_ordinal": 45
+    },
+    {
+      "base_commit_sha256": "fea560acf86d4ba5f28b967c6ce4dfee47e9e9247514f4936333011abb10834d",
+      "instance_id": "sympy__sympy-17630",
+      "private_task_manifest_available_privately": true,
+      "private_task_manifest_recorded_publicly": false,
+      "private_task_manifest_sha256": "e0af17e4e9b54b057d0127993365670670b81292e514cff1e7b58b9ce67b1cd3",
+      "private_task_pack_available_privately": true,
+      "private_task_pack_recorded_publicly": false,
+      "private_task_pack_sha256": "3dbca9b33832bad87ec82b4ed7a5b01efb0d22c51b8d240ec9aaf9edfeae9d86",
+      "problem_statement_sha256": "1edfd6e1183bb765b9186e8d8fdfe541d80ef44766baf7b722b7626235719599",
+      "problem_statement_size_bytes": 3430,
+      "raw_base_commit_emitted": false,
+      "raw_gold_patch_emitted": false,
+      "raw_problem_statement_emitted": false,
+      "raw_test_patch_emitted": false,
+      "task_family": "matrices/linear algebra",
+      "task_ordinal": 46
+    },
+    {
+      "base_commit_sha256": "d4244193e20add5c490b1bfe0df89b71af882b0b9ed9337cc595417b74ee82ca",
+      "instance_id": "sympy__sympy-23413",
+      "private_task_manifest_available_privately": true,
+      "private_task_manifest_recorded_publicly": false,
+      "private_task_manifest_sha256": "4c5aefc67240deb8c4ce42302acf027c214b34b22ad28a5c9fd4413e1685a0ac",
+      "private_task_pack_available_privately": true,
+      "private_task_pack_recorded_publicly": false,
+      "private_task_pack_sha256": "b9681f9c09e38c97b2921b99510ade719a30e24178eb88432f26a8827d0ab1b0",
+      "problem_statement_sha256": "ab4fff5ca11234b934a212b8d896ccf0c1aaa53e998524f54bff44dc41daa64d",
+      "problem_statement_size_bytes": 353,
+      "raw_base_commit_emitted": false,
+      "raw_gold_patch_emitted": false,
+      "raw_problem_statement_emitted": false,
+      "raw_test_patch_emitted": false,
+      "task_family": "matrices/linear algebra",
+      "task_ordinal": 47
+    },
+    {
+      "base_commit_sha256": "6aa749933e6c29b461e7bde7631f0447b10a1bdecdea9d5272b86705ca308d76",
+      "instance_id": "sympy__sympy-16597",
+      "private_task_manifest_available_privately": true,
+      "private_task_manifest_recorded_publicly": false,
+      "private_task_manifest_sha256": "5c25eb7633309a46fb638861812cffca1a6d6ba4a4b2beca31c8998e90b37bd3",
+      "private_task_pack_available_privately": true,
+      "private_task_pack_recorded_publicly": false,
+      "private_task_pack_sha256": "285a44ace4c4befd06ed8865f030cfc92a0aae25138c8851a4b456e801865be1",
+      "problem_statement_sha256": "1b04ffa8e91360cc91e2397541d3f8c5f34ffc0cb5cd84b0015747240c26932c",
+      "problem_statement_size_bytes": 611,
+      "raw_base_commit_emitted": false,
+      "raw_gold_patch_emitted": false,
+      "raw_problem_statement_emitted": false,
+      "raw_test_patch_emitted": false,
+      "task_family": "assumptions/predicates",
+      "task_ordinal": 48
+    }
+  ],
+  "schema_version": "external-calibrated-repo-benchmark.e-runner.v1",
+  "score_summaries": [],
+  "selected_cell_count": 288,
+  "selected_cells": [
+    {
+      "acut_id": "external-sympy-a0-gpt54-medium-concise",
+      "acut_slot": "A0",
+      "attempt": 1,
+      "instance_id": "sympy__sympy-15017",
+      "run_id": "external_calibrated_sympy_e_a0_001_attempt1",
+      "task_ordinal": 1
+    },
+    {
+      "acut_id": "external-sympy-a0-gpt54-medium-concise",
+      "acut_slot": "A0",
+      "attempt": 1,
+      "instance_id": "sympy__sympy-19783",
+      "run_id": "external_calibrated_sympy_e_a0_002_attempt1",
+      "task_ordinal": 2
+    },
+    {
+      "acut_id": "external-sympy-a0-gpt54-medium-concise",
+      "acut_slot": "A0",
+      "attempt": 1,
+      "instance_id": "sympy__sympy-14976",
+      "run_id": "external_calibrated_sympy_e_a0_003_attempt1",
+      "task_ordinal": 3
+    },
+    {
+      "acut_id": "external-sympy-a0-gpt54-medium-concise",
+      "acut_slot": "A0",
+      "attempt": 1,
+      "instance_id": "sympy__sympy-13615",
+      "run_id": "external_calibrated_sympy_e_a0_004_attempt1",
+      "task_ordinal": 4
+    },
+    {
+      "acut_id": "external-sympy-a0-gpt54-medium-concise",
+      "acut_slot": "A0",
+      "attempt": 1,
+      "instance_id": "sympy__sympy-18211",
+      "run_id": "external_calibrated_sympy_e_a0_005_attempt1",
+      "task_ordinal": 5
+    },
+    {
+      "acut_id": "external-sympy-a0-gpt54-medium-concise",
+      "acut_slot": "A0",
+      "attempt": 1,
+      "instance_id": "sympy__sympy-15599",
+      "run_id": "external_calibrated_sympy_e_a0_006_attempt1",
+      "task_ordinal": 6
+    },
+    {
+      "acut_id": "external-sympy-a0-gpt54-medium-concise",
+      "acut_slot": "A0",
+      "attempt": 1,
+      "instance_id": "sympy__sympy-22914",
+      "run_id": "external_calibrated_sympy_e_a0_007_attempt1",
+      "task_ordinal": 7
+    },
+    {
+      "acut_id": "external-sympy-a0-gpt54-medium-concise",
+      "acut_slot": "A0",
+      "attempt": 1,
+      "instance_id": "sympy__sympy-24562",
+      "run_id": "external_calibrated_sympy_e_a0_008_attempt1",
+      "task_ordinal": 8
+    },
+    {
+      "acut_id": "external-sympy-a0-gpt54-medium-concise",
+      "acut_slot": "A0",
+      "attempt": 1,
+      "instance_id": "sympy__sympy-20916",
+      "run_id": "external_calibrated_sympy_e_a0_009_attempt1",
+      "task_ordinal": 9
+    },
+    {
+      "acut_id": "external-sympy-a0-gpt54-medium-concise",
+      "acut_slot": "A0",
+      "attempt": 1,
+      "instance_id": "sympy__sympy-21847",
+      "run_id": "external_calibrated_sympy_e_a0_010_attempt1",
+      "task_ordinal": 10
+    },
+    {
+      "acut_id": "external-sympy-a0-gpt54-medium-concise",
+      "acut_slot": "A0",
+      "attempt": 1,
+      "instance_id": "sympy__sympy-13091",
+      "run_id": "external_calibrated_sympy_e_a0_011_attempt1",
+      "task_ordinal": 11
+    },
+    {
+      "acut_id": "external-sympy-a0-gpt54-medium-concise",
+      "acut_slot": "A0",
+      "attempt": 1,
+      "instance_id": "sympy__sympy-13372",
+      "run_id": "external_calibrated_sympy_e_a0_012_attempt1",
+      "task_ordinal": 12
+    },
+    {
+      "acut_id": "external-sympy-a0-gpt54-medium-concise",
+      "acut_slot": "A0",
+      "attempt": 1,
+      "instance_id": "sympy__sympy-12419",
+      "run_id": "external_calibrated_sympy_e_a0_013_attempt1",
+      "task_ordinal": 13
+    },
+    {
+      "acut_id": "external-sympy-a0-gpt54-medium-concise",
+      "acut_slot": "A0",
+      "attempt": 1,
+      "instance_id": "sympy__sympy-23824",
+      "run_id": "external_calibrated_sympy_e_a0_014_attempt1",
+      "task_ordinal": 14
+    },
+    {
+      "acut_id": "external-sympy-a0-gpt54-medium-concise",
+      "acut_slot": "A0",
+      "attempt": 1,
+      "instance_id": "sympy__sympy-24066",
+      "run_id": "external_calibrated_sympy_e_a0_015_attempt1",
+      "task_ordinal": 15
+    },
+    {
+      "acut_id": "external-sympy-a0-gpt54-medium-concise",
+      "acut_slot": "A0",
+      "attempt": 1,
+      "instance_id": "sympy__sympy-24661",
+      "run_id": "external_calibrated_sympy_e_a0_016_attempt1",
+      "task_ordinal": 16
+    },
+    {
+      "acut_id": "external-sympy-a0-gpt54-medium-concise",
+      "acut_slot": "A0",
+      "attempt": 1,
+      "instance_id": "sympy__sympy-13877",
+      "run_id": "external_calibrated_sympy_e_a0_017_attempt1",
+      "task_ordinal": 17
+    },
+    {
+      "acut_id": "external-sympy-a0-gpt54-medium-concise",
+      "acut_slot": "A0",
+      "attempt": 1,
+      "instance_id": "sympy__sympy-13798",
+      "run_id": "external_calibrated_sympy_e_a0_018_attempt1",
+      "task_ordinal": 18
+    },
+    {
+      "acut_id": "external-sympy-a0-gpt54-medium-concise",
+      "acut_slot": "A0",
+      "attempt": 1,
+      "instance_id": "sympy__sympy-15976",
+      "run_id": "external_calibrated_sympy_e_a0_019_attempt1",
+      "task_ordinal": 19
+    },
+    {
+      "acut_id": "external-sympy-a0-gpt54-medium-concise",
+      "acut_slot": "A0",
+      "attempt": 1,
+      "instance_id": "sympy__sympy-20154",
+      "run_id": "external_calibrated_sympy_e_a0_020_attempt1",
+      "task_ordinal": 20
+    },
+    {
+      "acut_id": "external-sympy-a0-gpt54-medium-concise",
+      "acut_slot": "A0",
+      "attempt": 1,
+      "instance_id": "sympy__sympy-20438",
+      "run_id": "external_calibrated_sympy_e_a0_021_attempt1",
+      "task_ordinal": 21
+    },
+    {
+      "acut_id": "external-sympy-a0-gpt54-medium-concise",
+      "acut_slot": "A0",
+      "attempt": 1,
+      "instance_id": "sympy__sympy-18763",
+      "run_id": "external_calibrated_sympy_e_a0_022_attempt1",
+      "task_ordinal": 22
+    },
+    {
+      "acut_id": "external-sympy-a0-gpt54-medium-concise",
+      "acut_slot": "A0",
+      "attempt": 1,
+      "instance_id": "sympy__sympy-21930",
+      "run_id": "external_calibrated_sympy_e_a0_023_attempt1",
+      "task_ordinal": 23
+    },
+    {
+      "acut_id": "external-sympy-a0-gpt54-medium-concise",
+      "acut_slot": "A0",
+      "attempt": 1,
+      "instance_id": "sympy__sympy-20428",
+      "run_id": "external_calibrated_sympy_e_a0_024_attempt1",
+      "task_ordinal": 24
+    },
+    {
+      "acut_id": "external-sympy-a0-gpt54-medium-concise",
+      "acut_slot": "A0",
+      "attempt": 1,
+      "instance_id": "sympy__sympy-15349",
+      "run_id": "external_calibrated_sympy_e_a0_025_attempt1",
+      "task_ordinal": 25
+    },
+    {
+      "acut_id": "external-sympy-a0-gpt54-medium-concise",
+      "acut_slot": "A0",
+      "attempt": 1,
+      "instance_id": "sympy__sympy-13757",
+      "run_id": "external_calibrated_sympy_e_a0_026_attempt1",
+      "task_ordinal": 26
+    },
+    {
+      "acut_id": "external-sympy-a0-gpt54-medium-concise",
+      "acut_slot": "A0",
+      "attempt": 1,
+      "instance_id": "sympy__sympy-22080",
+      "run_id": "external_calibrated_sympy_e_a0_027_attempt1",
+      "task_ordinal": 27
+    },
+    {
+      "acut_id": "external-sympy-a0-gpt54-medium-concise",
+      "acut_slot": "A0",
+      "attempt": 1,
+      "instance_id": "sympy__sympy-16886",
+      "run_id": "external_calibrated_sympy_e_a0_028_attempt1",
+      "task_ordinal": 28
+    },
+    {
+      "acut_id": "external-sympy-a0-gpt54-medium-concise",
+      "acut_slot": "A0",
+      "attempt": 1,
+      "instance_id": "sympy__sympy-16450",
+      "run_id": "external_calibrated_sympy_e_a0_029_attempt1",
+      "task_ordinal": 29
+    },
+    {
+      "acut_id": "external-sympy-a0-gpt54-medium-concise",
+      "acut_slot": "A0",
+      "attempt": 1,
+      "instance_id": "sympy__sympy-13852",
+      "run_id": "external_calibrated_sympy_e_a0_030_attempt1",
+      "task_ordinal": 30
+    },
+    {
+      "acut_id": "external-sympy-a0-gpt54-medium-concise",
+      "acut_slot": "A0",
+      "attempt": 1,
+      "instance_id": "sympy__sympy-13480",
+      "run_id": "external_calibrated_sympy_e_a0_031_attempt1",
+      "task_ordinal": 31
+    },
+    {
+      "acut_id": "external-sympy-a0-gpt54-medium-concise",
+      "acut_slot": "A0",
+      "attempt": 1,
+      "instance_id": "sympy__sympy-16792",
+      "run_id": "external_calibrated_sympy_e_a0_032_attempt1",
+      "task_ordinal": 32
+    },
+    {
+      "acut_id": "external-sympy-a0-gpt54-medium-concise",
+      "acut_slot": "A0",
+      "attempt": 1,
+      "instance_id": "sympy__sympy-13031",
+      "run_id": "external_calibrated_sympy_e_a0_033_attempt1",
+      "task_ordinal": 33
+    },
+    {
+      "acut_id": "external-sympy-a0-gpt54-medium-concise",
+      "acut_slot": "A0",
+      "attempt": 1,
+      "instance_id": "sympy__sympy-24443",
+      "run_id": "external_calibrated_sympy_e_a0_034_attempt1",
+      "task_ordinal": 34
+    },
+    {
+      "acut_id": "external-sympy-a0-gpt54-medium-concise",
+      "acut_slot": "A0",
+      "attempt": 1,
+      "instance_id": "sympy__sympy-23950",
+      "run_id": "external_calibrated_sympy_e_a0_035_attempt1",
+      "task_ordinal": 35
+    },
+    {
+      "acut_id": "external-sympy-a0-gpt54-medium-concise",
+      "acut_slot": "A0",
+      "attempt": 1,
+      "instance_id": "sympy__sympy-18698",
+      "run_id": "external_calibrated_sympy_e_a0_036_attempt1",
+      "task_ordinal": 36
+    },
+    {
+      "acut_id": "external-sympy-a0-gpt54-medium-concise",
+      "acut_slot": "A0",
+      "attempt": 1,
+      "instance_id": "sympy__sympy-23262",
+      "run_id": "external_calibrated_sympy_e_a0_037_attempt1",
+      "task_ordinal": 37
+    },
+    {
+      "acut_id": "external-sympy-a0-gpt54-medium-concise",
+      "acut_slot": "A0",
+      "attempt": 1,
+      "instance_id": "sympy__sympy-20801",
+      "run_id": "external_calibrated_sympy_e_a0_038_attempt1",
+      "task_ordinal": 38
+    },
+    {
+      "acut_id": "external-sympy-a0-gpt54-medium-concise",
+      "acut_slot": "A0",
+      "attempt": 1,
+      "instance_id": "sympy__sympy-12481",
+      "run_id": "external_calibrated_sympy_e_a0_039_attempt1",
+      "task_ordinal": 39
+    },
+    {
+      "acut_id": "external-sympy-a0-gpt54-medium-concise",
+      "acut_slot": "A0",
+      "attempt": 1,
+      "instance_id": "sympy__sympy-20590",
+      "run_id": "external_calibrated_sympy_e_a0_040_attempt1",
+      "task_ordinal": 40
+    },
+    {
+      "acut_id": "external-sympy-a0-gpt54-medium-concise",
+      "acut_slot": "A0",
+      "attempt": 1,
+      "instance_id": "sympy__sympy-19954",
+      "run_id": "external_calibrated_sympy_e_a0_041_attempt1",
+      "task_ordinal": 41
+    },
+    {
+      "acut_id": "external-sympy-a0-gpt54-medium-concise",
+      "acut_slot": "A0",
+      "attempt": 1,
+      "instance_id": "sympy__sympy-19495",
+      "run_id": "external_calibrated_sympy_e_a0_042_attempt1",
+      "task_ordinal": 42
+    },
+    {
+      "acut_id": "external-sympy-a0-gpt54-medium-concise",
+      "acut_slot": "A0",
+      "attempt": 1,
+      "instance_id": "sympy__sympy-14531",
+      "run_id": "external_calibrated_sympy_e_a0_043_attempt1",
+      "task_ordinal": 43
+    },
+    {
+      "acut_id": "external-sympy-a0-gpt54-medium-concise",
+      "acut_slot": "A0",
+      "attempt": 1,
+      "instance_id": "sympy__sympy-19040",
+      "run_id": "external_calibrated_sympy_e_a0_044_attempt1",
+      "task_ordinal": 44
+    },
+    {
+      "acut_id": "external-sympy-a0-gpt54-medium-concise",
+      "acut_slot": "A0",
+      "attempt": 1,
+      "instance_id": "sympy__sympy-14248",
+      "run_id": "external_calibrated_sympy_e_a0_045_attempt1",
+      "task_ordinal": 45
+    },
+    {
+      "acut_id": "external-sympy-a0-gpt54-medium-concise",
+      "acut_slot": "A0",
+      "attempt": 1,
+      "instance_id": "sympy__sympy-17630",
+      "run_id": "external_calibrated_sympy_e_a0_046_attempt1",
+      "task_ordinal": 46
+    },
+    {
+      "acut_id": "external-sympy-a0-gpt54-medium-concise",
+      "acut_slot": "A0",
+      "attempt": 1,
+      "instance_id": "sympy__sympy-23413",
+      "run_id": "external_calibrated_sympy_e_a0_047_attempt1",
+      "task_ordinal": 47
+    },
+    {
+      "acut_id": "external-sympy-a0-gpt54-medium-concise",
+      "acut_slot": "A0",
+      "attempt": 1,
+      "instance_id": "sympy__sympy-16597",
+      "run_id": "external_calibrated_sympy_e_a0_048_attempt1",
+      "task_ordinal": 48
+    },
+    {
+      "acut_id": "external-sympy-a1-gpt54-low-concise",
+      "acut_slot": "A1",
+      "attempt": 1,
+      "instance_id": "sympy__sympy-15017",
+      "run_id": "external_calibrated_sympy_e_a1_001_attempt1",
+      "task_ordinal": 1
+    },
+    {
+      "acut_id": "external-sympy-a1-gpt54-low-concise",
+      "acut_slot": "A1",
+      "attempt": 1,
+      "instance_id": "sympy__sympy-19783",
+      "run_id": "external_calibrated_sympy_e_a1_002_attempt1",
+      "task_ordinal": 2
+    },
+    {
+      "acut_id": "external-sympy-a1-gpt54-low-concise",
+      "acut_slot": "A1",
+      "attempt": 1,
+      "instance_id": "sympy__sympy-14976",
+      "run_id": "external_calibrated_sympy_e_a1_003_attempt1",
+      "task_ordinal": 3
+    },
+    {
+      "acut_id": "external-sympy-a1-gpt54-low-concise",
+      "acut_slot": "A1",
+      "attempt": 1,
+      "instance_id": "sympy__sympy-13615",
+      "run_id": "external_calibrated_sympy_e_a1_004_attempt1",
+      "task_ordinal": 4
+    },
+    {
+      "acut_id": "external-sympy-a1-gpt54-low-concise",
+      "acut_slot": "A1",
+      "attempt": 1,
+      "instance_id": "sympy__sympy-18211",
+      "run_id": "external_calibrated_sympy_e_a1_005_attempt1",
+      "task_ordinal": 5
+    },
+    {
+      "acut_id": "external-sympy-a1-gpt54-low-concise",
+      "acut_slot": "A1",
+      "attempt": 1,
+      "instance_id": "sympy__sympy-15599",
+      "run_id": "external_calibrated_sympy_e_a1_006_attempt1",
+      "task_ordinal": 6
+    },
+    {
+      "acut_id": "external-sympy-a1-gpt54-low-concise",
+      "acut_slot": "A1",
+      "attempt": 1,
+      "instance_id": "sympy__sympy-22914",
+      "run_id": "external_calibrated_sympy_e_a1_007_attempt1",
+      "task_ordinal": 7
+    },
+    {
+      "acut_id": "external-sympy-a1-gpt54-low-concise",
+      "acut_slot": "A1",
+      "attempt": 1,
+      "instance_id": "sympy__sympy-24562",
+      "run_id": "external_calibrated_sympy_e_a1_008_attempt1",
+      "task_ordinal": 8
+    },
+    {
+      "acut_id": "external-sympy-a1-gpt54-low-concise",
+      "acut_slot": "A1",
+      "attempt": 1,
+      "instance_id": "sympy__sympy-20916",
+      "run_id": "external_calibrated_sympy_e_a1_009_attempt1",
+      "task_ordinal": 9
+    },
+    {
+      "acut_id": "external-sympy-a1-gpt54-low-concise",
+      "acut_slot": "A1",
+      "attempt": 1,
+      "instance_id": "sympy__sympy-21847",
+      "run_id": "external_calibrated_sympy_e_a1_010_attempt1",
+      "task_ordinal": 10
+    },
+    {
+      "acut_id": "external-sympy-a1-gpt54-low-concise",
+      "acut_slot": "A1",
+      "attempt": 1,
+      "instance_id": "sympy__sympy-13091",
+      "run_id": "external_calibrated_sympy_e_a1_011_attempt1",
+      "task_ordinal": 11
+    },
+    {
+      "acut_id": "external-sympy-a1-gpt54-low-concise",
+      "acut_slot": "A1",
+      "attempt": 1,
+      "instance_id": "sympy__sympy-13372",
+      "run_id": "external_calibrated_sympy_e_a1_012_attempt1",
+      "task_ordinal": 12
+    },
+    {
+      "acut_id": "external-sympy-a1-gpt54-low-concise",
+      "acut_slot": "A1",
+      "attempt": 1,
+      "instance_id": "sympy__sympy-12419",
+      "run_id": "external_calibrated_sympy_e_a1_013_attempt1",
+      "task_ordinal": 13
+    },
+    {
+      "acut_id": "external-sympy-a1-gpt54-low-concise",
+      "acut_slot": "A1",
+      "attempt": 1,
+      "instance_id": "sympy__sympy-23824",
+      "run_id": "external_calibrated_sympy_e_a1_014_attempt1",
+      "task_ordinal": 14
+    },
+    {
+      "acut_id": "external-sympy-a1-gpt54-low-concise",
+      "acut_slot": "A1",
+      "attempt": 1,
+      "instance_id": "sympy__sympy-24066",
+      "run_id": "external_calibrated_sympy_e_a1_015_attempt1",
+      "task_ordinal": 15
+    },
+    {
+      "acut_id": "external-sympy-a1-gpt54-low-concise",
+      "acut_slot": "A1",
+      "attempt": 1,
+      "instance_id": "sympy__sympy-24661",
+      "run_id": "external_calibrated_sympy_e_a1_016_attempt1",
+      "task_ordinal": 16
+    },
+    {
+      "acut_id": "external-sympy-a1-gpt54-low-concise",
+      "acut_slot": "A1",
+      "attempt": 1,
+      "instance_id": "sympy__sympy-13877",
+      "run_id": "external_calibrated_sympy_e_a1_017_attempt1",
+      "task_ordinal": 17
+    },
+    {
+      "acut_id": "external-sympy-a1-gpt54-low-concise",
+      "acut_slot": "A1",
+      "attempt": 1,
+      "instance_id": "sympy__sympy-13798",
+      "run_id": "external_calibrated_sympy_e_a1_018_attempt1",
+      "task_ordinal": 18
+    },
+    {
+      "acut_id": "external-sympy-a1-gpt54-low-concise",
+      "acut_slot": "A1",
+      "attempt": 1,
+      "instance_id": "sympy__sympy-15976",
+      "run_id": "external_calibrated_sympy_e_a1_019_attempt1",
+      "task_ordinal": 19
+    },
+    {
+      "acut_id": "external-sympy-a1-gpt54-low-concise",
+      "acut_slot": "A1",
+      "attempt": 1,
+      "instance_id": "sympy__sympy-20154",
+      "run_id": "external_calibrated_sympy_e_a1_020_attempt1",
+      "task_ordinal": 20
+    },
+    {
+      "acut_id": "external-sympy-a1-gpt54-low-concise",
+      "acut_slot": "A1",
+      "attempt": 1,
+      "instance_id": "sympy__sympy-20438",
+      "run_id": "external_calibrated_sympy_e_a1_021_attempt1",
+      "task_ordinal": 21
+    },
+    {
+      "acut_id": "external-sympy-a1-gpt54-low-concise",
+      "acut_slot": "A1",
+      "attempt": 1,
+      "instance_id": "sympy__sympy-18763",
+      "run_id": "external_calibrated_sympy_e_a1_022_attempt1",
+      "task_ordinal": 22
+    },
+    {
+      "acut_id": "external-sympy-a1-gpt54-low-concise",
+      "acut_slot": "A1",
+      "attempt": 1,
+      "instance_id": "sympy__sympy-21930",
+      "run_id": "external_calibrated_sympy_e_a1_023_attempt1",
+      "task_ordinal": 23
+    },
+    {
+      "acut_id": "external-sympy-a1-gpt54-low-concise",
+      "acut_slot": "A1",
+      "attempt": 1,
+      "instance_id": "sympy__sympy-20428",
+      "run_id": "external_calibrated_sympy_e_a1_024_attempt1",
+      "task_ordinal": 24
+    },
+    {
+      "acut_id": "external-sympy-a1-gpt54-low-concise",
+      "acut_slot": "A1",
+      "attempt": 1,
+      "instance_id": "sympy__sympy-15349",
+      "run_id": "external_calibrated_sympy_e_a1_025_attempt1",
+      "task_ordinal": 25
+    },
+    {
+      "acut_id": "external-sympy-a1-gpt54-low-concise",
+      "acut_slot": "A1",
+      "attempt": 1,
+      "instance_id": "sympy__sympy-13757",
+      "run_id": "external_calibrated_sympy_e_a1_026_attempt1",
+      "task_ordinal": 26
+    },
+    {
+      "acut_id": "external-sympy-a1-gpt54-low-concise",
+      "acut_slot": "A1",
+      "attempt": 1,
+      "instance_id": "sympy__sympy-22080",
+      "run_id": "external_calibrated_sympy_e_a1_027_attempt1",
+      "task_ordinal": 27
+    },
+    {
+      "acut_id": "external-sympy-a1-gpt54-low-concise",
+      "acut_slot": "A1",
+      "attempt": 1,
+      "instance_id": "sympy__sympy-16886",
+      "run_id": "external_calibrated_sympy_e_a1_028_attempt1",
+      "task_ordinal": 28
+    },
+    {
+      "acut_id": "external-sympy-a1-gpt54-low-concise",
+      "acut_slot": "A1",
+      "attempt": 1,
+      "instance_id": "sympy__sympy-16450",
+      "run_id": "external_calibrated_sympy_e_a1_029_attempt1",
+      "task_ordinal": 29
+    },
+    {
+      "acut_id": "external-sympy-a1-gpt54-low-concise",
+      "acut_slot": "A1",
+      "attempt": 1,
+      "instance_id": "sympy__sympy-13852",
+      "run_id": "external_calibrated_sympy_e_a1_030_attempt1",
+      "task_ordinal": 30
+    },
+    {
+      "acut_id": "external-sympy-a1-gpt54-low-concise",
+      "acut_slot": "A1",
+      "attempt": 1,
+      "instance_id": "sympy__sympy-13480",
+      "run_id": "external_calibrated_sympy_e_a1_031_attempt1",
+      "task_ordinal": 31
+    },
+    {
+      "acut_id": "external-sympy-a1-gpt54-low-concise",
+      "acut_slot": "A1",
+      "attempt": 1,
+      "instance_id": "sympy__sympy-16792",
+      "run_id": "external_calibrated_sympy_e_a1_032_attempt1",
+      "task_ordinal": 32
+    },
+    {
+      "acut_id": "external-sympy-a1-gpt54-low-concise",
+      "acut_slot": "A1",
+      "attempt": 1,
+      "instance_id": "sympy__sympy-13031",
+      "run_id": "external_calibrated_sympy_e_a1_033_attempt1",
+      "task_ordinal": 33
+    },
+    {
+      "acut_id": "external-sympy-a1-gpt54-low-concise",
+      "acut_slot": "A1",
+      "attempt": 1,
+      "instance_id": "sympy__sympy-24443",
+      "run_id": "external_calibrated_sympy_e_a1_034_attempt1",
+      "task_ordinal": 34
+    },
+    {
+      "acut_id": "external-sympy-a1-gpt54-low-concise",
+      "acut_slot": "A1",
+      "attempt": 1,
+      "instance_id": "sympy__sympy-23950",
+      "run_id": "external_calibrated_sympy_e_a1_035_attempt1",
+      "task_ordinal": 35
+    },
+    {
+      "acut_id": "external-sympy-a1-gpt54-low-concise",
+      "acut_slot": "A1",
+      "attempt": 1,
+      "instance_id": "sympy__sympy-18698",
+      "run_id": "external_calibrated_sympy_e_a1_036_attempt1",
+      "task_ordinal": 36
+    },
+    {
+      "acut_id": "external-sympy-a1-gpt54-low-concise",
+      "acut_slot": "A1",
+      "attempt": 1,
+      "instance_id": "sympy__sympy-23262",
+      "run_id": "external_calibrated_sympy_e_a1_037_attempt1",
+      "task_ordinal": 37
+    },
+    {
+      "acut_id": "external-sympy-a1-gpt54-low-concise",
+      "acut_slot": "A1",
+      "attempt": 1,
+      "instance_id": "sympy__sympy-20801",
+      "run_id": "external_calibrated_sympy_e_a1_038_attempt1",
+      "task_ordinal": 38
+    },
+    {
+      "acut_id": "external-sympy-a1-gpt54-low-concise",
+      "acut_slot": "A1",
+      "attempt": 1,
+      "instance_id": "sympy__sympy-12481",
+      "run_id": "external_calibrated_sympy_e_a1_039_attempt1",
+      "task_ordinal": 39
+    },
+    {
+      "acut_id": "external-sympy-a1-gpt54-low-concise",
+      "acut_slot": "A1",
+      "attempt": 1,
+      "instance_id": "sympy__sympy-20590",
+      "run_id": "external_calibrated_sympy_e_a1_040_attempt1",
+      "task_ordinal": 40
+    },
+    {
+      "acut_id": "external-sympy-a1-gpt54-low-concise",
+      "acut_slot": "A1",
+      "attempt": 1,
+      "instance_id": "sympy__sympy-19954",
+      "run_id": "external_calibrated_sympy_e_a1_041_attempt1",
+      "task_ordinal": 41
+    },
+    {
+      "acut_id": "external-sympy-a1-gpt54-low-concise",
+      "acut_slot": "A1",
+      "attempt": 1,
+      "instance_id": "sympy__sympy-19495",
+      "run_id": "external_calibrated_sympy_e_a1_042_attempt1",
+      "task_ordinal": 42
+    },
+    {
+      "acut_id": "external-sympy-a1-gpt54-low-concise",
+      "acut_slot": "A1",
+      "attempt": 1,
+      "instance_id": "sympy__sympy-14531",
+      "run_id": "external_calibrated_sympy_e_a1_043_attempt1",
+      "task_ordinal": 43
+    },
+    {
+      "acut_id": "external-sympy-a1-gpt54-low-concise",
+      "acut_slot": "A1",
+      "attempt": 1,
+      "instance_id": "sympy__sympy-19040",
+      "run_id": "external_calibrated_sympy_e_a1_044_attempt1",
+      "task_ordinal": 44
+    },
+    {
+      "acut_id": "external-sympy-a1-gpt54-low-concise",
+      "acut_slot": "A1",
+      "attempt": 1,
+      "instance_id": "sympy__sympy-14248",
+      "run_id": "external_calibrated_sympy_e_a1_045_attempt1",
+      "task_ordinal": 45
+    },
+    {
+      "acut_id": "external-sympy-a1-gpt54-low-concise",
+      "acut_slot": "A1",
+      "attempt": 1,
+      "instance_id": "sympy__sympy-17630",
+      "run_id": "external_calibrated_sympy_e_a1_046_attempt1",
+      "task_ordinal": 46
+    },
+    {
+      "acut_id": "external-sympy-a1-gpt54-low-concise",
+      "acut_slot": "A1",
+      "attempt": 1,
+      "instance_id": "sympy__sympy-23413",
+      "run_id": "external_calibrated_sympy_e_a1_047_attempt1",
+      "task_ordinal": 47
+    },
+    {
+      "acut_id": "external-sympy-a1-gpt54-low-concise",
+      "acut_slot": "A1",
+      "attempt": 1,
+      "instance_id": "sympy__sympy-16597",
+      "run_id": "external_calibrated_sympy_e_a1_048_attempt1",
+      "task_ordinal": 48
+    },
+    {
+      "acut_id": "external-sympy-a2-gpt54-high-concise",
+      "acut_slot": "A2",
+      "attempt": 1,
+      "instance_id": "sympy__sympy-15017",
+      "run_id": "external_calibrated_sympy_e_a2_001_attempt1",
+      "task_ordinal": 1
+    },
+    {
+      "acut_id": "external-sympy-a2-gpt54-high-concise",
+      "acut_slot": "A2",
+      "attempt": 1,
+      "instance_id": "sympy__sympy-19783",
+      "run_id": "external_calibrated_sympy_e_a2_002_attempt1",
+      "task_ordinal": 2
+    },
+    {
+      "acut_id": "external-sympy-a2-gpt54-high-concise",
+      "acut_slot": "A2",
+      "attempt": 1,
+      "instance_id": "sympy__sympy-14976",
+      "run_id": "external_calibrated_sympy_e_a2_003_attempt1",
+      "task_ordinal": 3
+    },
+    {
+      "acut_id": "external-sympy-a2-gpt54-high-concise",
+      "acut_slot": "A2",
+      "attempt": 1,
+      "instance_id": "sympy__sympy-13615",
+      "run_id": "external_calibrated_sympy_e_a2_004_attempt1",
+      "task_ordinal": 4
+    },
+    {
+      "acut_id": "external-sympy-a2-gpt54-high-concise",
+      "acut_slot": "A2",
+      "attempt": 1,
+      "instance_id": "sympy__sympy-18211",
+      "run_id": "external_calibrated_sympy_e_a2_005_attempt1",
+      "task_ordinal": 5
+    },
+    {
+      "acut_id": "external-sympy-a2-gpt54-high-concise",
+      "acut_slot": "A2",
+      "attempt": 1,
+      "instance_id": "sympy__sympy-15599",
+      "run_id": "external_calibrated_sympy_e_a2_006_attempt1",
+      "task_ordinal": 6
+    },
+    {
+      "acut_id": "external-sympy-a2-gpt54-high-concise",
+      "acut_slot": "A2",
+      "attempt": 1,
+      "instance_id": "sympy__sympy-22914",
+      "run_id": "external_calibrated_sympy_e_a2_007_attempt1",
+      "task_ordinal": 7
+    },
+    {
+      "acut_id": "external-sympy-a2-gpt54-high-concise",
+      "acut_slot": "A2",
+      "attempt": 1,
+      "instance_id": "sympy__sympy-24562",
+      "run_id": "external_calibrated_sympy_e_a2_008_attempt1",
+      "task_ordinal": 8
+    },
+    {
+      "acut_id": "external-sympy-a2-gpt54-high-concise",
+      "acut_slot": "A2",
+      "attempt": 1,
+      "instance_id": "sympy__sympy-20916",
+      "run_id": "external_calibrated_sympy_e_a2_009_attempt1",
+      "task_ordinal": 9
+    },
+    {
+      "acut_id": "external-sympy-a2-gpt54-high-concise",
+      "acut_slot": "A2",
+      "attempt": 1,
+      "instance_id": "sympy__sympy-21847",
+      "run_id": "external_calibrated_sympy_e_a2_010_attempt1",
+      "task_ordinal": 10
+    },
+    {
+      "acut_id": "external-sympy-a2-gpt54-high-concise",
+      "acut_slot": "A2",
+      "attempt": 1,
+      "instance_id": "sympy__sympy-13091",
+      "run_id": "external_calibrated_sympy_e_a2_011_attempt1",
+      "task_ordinal": 11
+    },
+    {
+      "acut_id": "external-sympy-a2-gpt54-high-concise",
+      "acut_slot": "A2",
+      "attempt": 1,
+      "instance_id": "sympy__sympy-13372",
+      "run_id": "external_calibrated_sympy_e_a2_012_attempt1",
+      "task_ordinal": 12
+    },
+    {
+      "acut_id": "external-sympy-a2-gpt54-high-concise",
+      "acut_slot": "A2",
+      "attempt": 1,
+      "instance_id": "sympy__sympy-12419",
+      "run_id": "external_calibrated_sympy_e_a2_013_attempt1",
+      "task_ordinal": 13
+    },
+    {
+      "acut_id": "external-sympy-a2-gpt54-high-concise",
+      "acut_slot": "A2",
+      "attempt": 1,
+      "instance_id": "sympy__sympy-23824",
+      "run_id": "external_calibrated_sympy_e_a2_014_attempt1",
+      "task_ordinal": 14
+    },
+    {
+      "acut_id": "external-sympy-a2-gpt54-high-concise",
+      "acut_slot": "A2",
+      "attempt": 1,
+      "instance_id": "sympy__sympy-24066",
+      "run_id": "external_calibrated_sympy_e_a2_015_attempt1",
+      "task_ordinal": 15
+    },
+    {
+      "acut_id": "external-sympy-a2-gpt54-high-concise",
+      "acut_slot": "A2",
+      "attempt": 1,
+      "instance_id": "sympy__sympy-24661",
+      "run_id": "external_calibrated_sympy_e_a2_016_attempt1",
+      "task_ordinal": 16
+    },
+    {
+      "acut_id": "external-sympy-a2-gpt54-high-concise",
+      "acut_slot": "A2",
+      "attempt": 1,
+      "instance_id": "sympy__sympy-13877",
+      "run_id": "external_calibrated_sympy_e_a2_017_attempt1",
+      "task_ordinal": 17
+    },
+    {
+      "acut_id": "external-sympy-a2-gpt54-high-concise",
+      "acut_slot": "A2",
+      "attempt": 1,
+      "instance_id": "sympy__sympy-13798",
+      "run_id": "external_calibrated_sympy_e_a2_018_attempt1",
+      "task_ordinal": 18
+    },
+    {
+      "acut_id": "external-sympy-a2-gpt54-high-concise",
+      "acut_slot": "A2",
+      "attempt": 1,
+      "instance_id": "sympy__sympy-15976",
+      "run_id": "external_calibrated_sympy_e_a2_019_attempt1",
+      "task_ordinal": 19
+    },
+    {
+      "acut_id": "external-sympy-a2-gpt54-high-concise",
+      "acut_slot": "A2",
+      "attempt": 1,
+      "instance_id": "sympy__sympy-20154",
+      "run_id": "external_calibrated_sympy_e_a2_020_attempt1",
+      "task_ordinal": 20
+    },
+    {
+      "acut_id": "external-sympy-a2-gpt54-high-concise",
+      "acut_slot": "A2",
+      "attempt": 1,
+      "instance_id": "sympy__sympy-20438",
+      "run_id": "external_calibrated_sympy_e_a2_021_attempt1",
+      "task_ordinal": 21
+    },
+    {
+      "acut_id": "external-sympy-a2-gpt54-high-concise",
+      "acut_slot": "A2",
+      "attempt": 1,
+      "instance_id": "sympy__sympy-18763",
+      "run_id": "external_calibrated_sympy_e_a2_022_attempt1",
+      "task_ordinal": 22
+    },
+    {
+      "acut_id": "external-sympy-a2-gpt54-high-concise",
+      "acut_slot": "A2",
+      "attempt": 1,
+      "instance_id": "sympy__sympy-21930",
+      "run_id": "external_calibrated_sympy_e_a2_023_attempt1",
+      "task_ordinal": 23
+    },
+    {
+      "acut_id": "external-sympy-a2-gpt54-high-concise",
+      "acut_slot": "A2",
+      "attempt": 1,
+      "instance_id": "sympy__sympy-20428",
+      "run_id": "external_calibrated_sympy_e_a2_024_attempt1",
+      "task_ordinal": 24
+    },
+    {
+      "acut_id": "external-sympy-a2-gpt54-high-concise",
+      "acut_slot": "A2",
+      "attempt": 1,
+      "instance_id": "sympy__sympy-15349",
+      "run_id": "external_calibrated_sympy_e_a2_025_attempt1",
+      "task_ordinal": 25
+    },
+    {
+      "acut_id": "external-sympy-a2-gpt54-high-concise",
+      "acut_slot": "A2",
+      "attempt": 1,
+      "instance_id": "sympy__sympy-13757",
+      "run_id": "external_calibrated_sympy_e_a2_026_attempt1",
+      "task_ordinal": 26
+    },
+    {
+      "acut_id": "external-sympy-a2-gpt54-high-concise",
+      "acut_slot": "A2",
+      "attempt": 1,
+      "instance_id": "sympy__sympy-22080",
+      "run_id": "external_calibrated_sympy_e_a2_027_attempt1",
+      "task_ordinal": 27
+    },
+    {
+      "acut_id": "external-sympy-a2-gpt54-high-concise",
+      "acut_slot": "A2",
+      "attempt": 1,
+      "instance_id": "sympy__sympy-16886",
+      "run_id": "external_calibrated_sympy_e_a2_028_attempt1",
+      "task_ordinal": 28
+    },
+    {
+      "acut_id": "external-sympy-a2-gpt54-high-concise",
+      "acut_slot": "A2",
+      "attempt": 1,
+      "instance_id": "sympy__sympy-16450",
+      "run_id": "external_calibrated_sympy_e_a2_029_attempt1",
+      "task_ordinal": 29
+    },
+    {
+      "acut_id": "external-sympy-a2-gpt54-high-concise",
+      "acut_slot": "A2",
+      "attempt": 1,
+      "instance_id": "sympy__sympy-13852",
+      "run_id": "external_calibrated_sympy_e_a2_030_attempt1",
+      "task_ordinal": 30
+    },
+    {
+      "acut_id": "external-sympy-a2-gpt54-high-concise",
+      "acut_slot": "A2",
+      "attempt": 1,
+      "instance_id": "sympy__sympy-13480",
+      "run_id": "external_calibrated_sympy_e_a2_031_attempt1",
+      "task_ordinal": 31
+    },
+    {
+      "acut_id": "external-sympy-a2-gpt54-high-concise",
+      "acut_slot": "A2",
+      "attempt": 1,
+      "instance_id": "sympy__sympy-16792",
+      "run_id": "external_calibrated_sympy_e_a2_032_attempt1",
+      "task_ordinal": 32
+    },
+    {
+      "acut_id": "external-sympy-a2-gpt54-high-concise",
+      "acut_slot": "A2",
+      "attempt": 1,
+      "instance_id": "sympy__sympy-13031",
+      "run_id": "external_calibrated_sympy_e_a2_033_attempt1",
+      "task_ordinal": 33
+    },
+    {
+      "acut_id": "external-sympy-a2-gpt54-high-concise",
+      "acut_slot": "A2",
+      "attempt": 1,
+      "instance_id": "sympy__sympy-24443",
+      "run_id": "external_calibrated_sympy_e_a2_034_attempt1",
+      "task_ordinal": 34
+    },
+    {
+      "acut_id": "external-sympy-a2-gpt54-high-concise",
+      "acut_slot": "A2",
+      "attempt": 1,
+      "instance_id": "sympy__sympy-23950",
+      "run_id": "external_calibrated_sympy_e_a2_035_attempt1",
+      "task_ordinal": 35
+    },
+    {
+      "acut_id": "external-sympy-a2-gpt54-high-concise",
+      "acut_slot": "A2",
+      "attempt": 1,
+      "instance_id": "sympy__sympy-18698",
+      "run_id": "external_calibrated_sympy_e_a2_036_attempt1",
+      "task_ordinal": 36
+    },
+    {
+      "acut_id": "external-sympy-a2-gpt54-high-concise",
+      "acut_slot": "A2",
+      "attempt": 1,
+      "instance_id": "sympy__sympy-23262",
+      "run_id": "external_calibrated_sympy_e_a2_037_attempt1",
+      "task_ordinal": 37
+    },
+    {
+      "acut_id": "external-sympy-a2-gpt54-high-concise",
+      "acut_slot": "A2",
+      "attempt": 1,
+      "instance_id": "sympy__sympy-20801",
+      "run_id": "external_calibrated_sympy_e_a2_038_attempt1",
+      "task_ordinal": 38
+    },
+    {
+      "acut_id": "external-sympy-a2-gpt54-high-concise",
+      "acut_slot": "A2",
+      "attempt": 1,
+      "instance_id": "sympy__sympy-12481",
+      "run_id": "external_calibrated_sympy_e_a2_039_attempt1",
+      "task_ordinal": 39
+    },
+    {
+      "acut_id": "external-sympy-a2-gpt54-high-concise",
+      "acut_slot": "A2",
+      "attempt": 1,
+      "instance_id": "sympy__sympy-20590",
+      "run_id": "external_calibrated_sympy_e_a2_040_attempt1",
+      "task_ordinal": 40
+    },
+    {
+      "acut_id": "external-sympy-a2-gpt54-high-concise",
+      "acut_slot": "A2",
+      "attempt": 1,
+      "instance_id": "sympy__sympy-19954",
+      "run_id": "external_calibrated_sympy_e_a2_041_attempt1",
+      "task_ordinal": 41
+    },
+    {
+      "acut_id": "external-sympy-a2-gpt54-high-concise",
+      "acut_slot": "A2",
+      "attempt": 1,
+      "instance_id": "sympy__sympy-19495",
+      "run_id": "external_calibrated_sympy_e_a2_042_attempt1",
+      "task_ordinal": 42
+    },
+    {
+      "acut_id": "external-sympy-a2-gpt54-high-concise",
+      "acut_slot": "A2",
+      "attempt": 1,
+      "instance_id": "sympy__sympy-14531",
+      "run_id": "external_calibrated_sympy_e_a2_043_attempt1",
+      "task_ordinal": 43
+    },
+    {
+      "acut_id": "external-sympy-a2-gpt54-high-concise",
+      "acut_slot": "A2",
+      "attempt": 1,
+      "instance_id": "sympy__sympy-19040",
+      "run_id": "external_calibrated_sympy_e_a2_044_attempt1",
+      "task_ordinal": 44
+    },
+    {
+      "acut_id": "external-sympy-a2-gpt54-high-concise",
+      "acut_slot": "A2",
+      "attempt": 1,
+      "instance_id": "sympy__sympy-14248",
+      "run_id": "external_calibrated_sympy_e_a2_045_attempt1",
+      "task_ordinal": 45
+    },
+    {
+      "acut_id": "external-sympy-a2-gpt54-high-concise",
+      "acut_slot": "A2",
+      "attempt": 1,
+      "instance_id": "sympy__sympy-17630",
+      "run_id": "external_calibrated_sympy_e_a2_046_attempt1",
+      "task_ordinal": 46
+    },
+    {
+      "acut_id": "external-sympy-a2-gpt54-high-concise",
+      "acut_slot": "A2",
+      "attempt": 1,
+      "instance_id": "sympy__sympy-23413",
+      "run_id": "external_calibrated_sympy_e_a2_047_attempt1",
+      "task_ordinal": 47
+    },
+    {
+      "acut_id": "external-sympy-a2-gpt54-high-concise",
+      "acut_slot": "A2",
+      "attempt": 1,
+      "instance_id": "sympy__sympy-16597",
+      "run_id": "external_calibrated_sympy_e_a2_048_attempt1",
+      "task_ordinal": 48
+    },
+    {
+      "acut_id": "external-sympy-a3-gpt55-high-concise",
+      "acut_slot": "A3",
+      "attempt": 1,
+      "instance_id": "sympy__sympy-15017",
+      "run_id": "external_calibrated_sympy_e_a3_001_attempt1",
+      "task_ordinal": 1
+    },
+    {
+      "acut_id": "external-sympy-a3-gpt55-high-concise",
+      "acut_slot": "A3",
+      "attempt": 1,
+      "instance_id": "sympy__sympy-19783",
+      "run_id": "external_calibrated_sympy_e_a3_002_attempt1",
+      "task_ordinal": 2
+    },
+    {
+      "acut_id": "external-sympy-a3-gpt55-high-concise",
+      "acut_slot": "A3",
+      "attempt": 1,
+      "instance_id": "sympy__sympy-14976",
+      "run_id": "external_calibrated_sympy_e_a3_003_attempt1",
+      "task_ordinal": 3
+    },
+    {
+      "acut_id": "external-sympy-a3-gpt55-high-concise",
+      "acut_slot": "A3",
+      "attempt": 1,
+      "instance_id": "sympy__sympy-13615",
+      "run_id": "external_calibrated_sympy_e_a3_004_attempt1",
+      "task_ordinal": 4
+    },
+    {
+      "acut_id": "external-sympy-a3-gpt55-high-concise",
+      "acut_slot": "A3",
+      "attempt": 1,
+      "instance_id": "sympy__sympy-18211",
+      "run_id": "external_calibrated_sympy_e_a3_005_attempt1",
+      "task_ordinal": 5
+    },
+    {
+      "acut_id": "external-sympy-a3-gpt55-high-concise",
+      "acut_slot": "A3",
+      "attempt": 1,
+      "instance_id": "sympy__sympy-15599",
+      "run_id": "external_calibrated_sympy_e_a3_006_attempt1",
+      "task_ordinal": 6
+    },
+    {
+      "acut_id": "external-sympy-a3-gpt55-high-concise",
+      "acut_slot": "A3",
+      "attempt": 1,
+      "instance_id": "sympy__sympy-22914",
+      "run_id": "external_calibrated_sympy_e_a3_007_attempt1",
+      "task_ordinal": 7
+    },
+    {
+      "acut_id": "external-sympy-a3-gpt55-high-concise",
+      "acut_slot": "A3",
+      "attempt": 1,
+      "instance_id": "sympy__sympy-24562",
+      "run_id": "external_calibrated_sympy_e_a3_008_attempt1",
+      "task_ordinal": 8
+    },
+    {
+      "acut_id": "external-sympy-a3-gpt55-high-concise",
+      "acut_slot": "A3",
+      "attempt": 1,
+      "instance_id": "sympy__sympy-20916",
+      "run_id": "external_calibrated_sympy_e_a3_009_attempt1",
+      "task_ordinal": 9
+    },
+    {
+      "acut_id": "external-sympy-a3-gpt55-high-concise",
+      "acut_slot": "A3",
+      "attempt": 1,
+      "instance_id": "sympy__sympy-21847",
+      "run_id": "external_calibrated_sympy_e_a3_010_attempt1",
+      "task_ordinal": 10
+    },
+    {
+      "acut_id": "external-sympy-a3-gpt55-high-concise",
+      "acut_slot": "A3",
+      "attempt": 1,
+      "instance_id": "sympy__sympy-13091",
+      "run_id": "external_calibrated_sympy_e_a3_011_attempt1",
+      "task_ordinal": 11
+    },
+    {
+      "acut_id": "external-sympy-a3-gpt55-high-concise",
+      "acut_slot": "A3",
+      "attempt": 1,
+      "instance_id": "sympy__sympy-13372",
+      "run_id": "external_calibrated_sympy_e_a3_012_attempt1",
+      "task_ordinal": 12
+    },
+    {
+      "acut_id": "external-sympy-a3-gpt55-high-concise",
+      "acut_slot": "A3",
+      "attempt": 1,
+      "instance_id": "sympy__sympy-12419",
+      "run_id": "external_calibrated_sympy_e_a3_013_attempt1",
+      "task_ordinal": 13
+    },
+    {
+      "acut_id": "external-sympy-a3-gpt55-high-concise",
+      "acut_slot": "A3",
+      "attempt": 1,
+      "instance_id": "sympy__sympy-23824",
+      "run_id": "external_calibrated_sympy_e_a3_014_attempt1",
+      "task_ordinal": 14
+    },
+    {
+      "acut_id": "external-sympy-a3-gpt55-high-concise",
+      "acut_slot": "A3",
+      "attempt": 1,
+      "instance_id": "sympy__sympy-24066",
+      "run_id": "external_calibrated_sympy_e_a3_015_attempt1",
+      "task_ordinal": 15
+    },
+    {
+      "acut_id": "external-sympy-a3-gpt55-high-concise",
+      "acut_slot": "A3",
+      "attempt": 1,
+      "instance_id": "sympy__sympy-24661",
+      "run_id": "external_calibrated_sympy_e_a3_016_attempt1",
+      "task_ordinal": 16
+    },
+    {
+      "acut_id": "external-sympy-a3-gpt55-high-concise",
+      "acut_slot": "A3",
+      "attempt": 1,
+      "instance_id": "sympy__sympy-13877",
+      "run_id": "external_calibrated_sympy_e_a3_017_attempt1",
+      "task_ordinal": 17
+    },
+    {
+      "acut_id": "external-sympy-a3-gpt55-high-concise",
+      "acut_slot": "A3",
+      "attempt": 1,
+      "instance_id": "sympy__sympy-13798",
+      "run_id": "external_calibrated_sympy_e_a3_018_attempt1",
+      "task_ordinal": 18
+    },
+    {
+      "acut_id": "external-sympy-a3-gpt55-high-concise",
+      "acut_slot": "A3",
+      "attempt": 1,
+      "instance_id": "sympy__sympy-15976",
+      "run_id": "external_calibrated_sympy_e_a3_019_attempt1",
+      "task_ordinal": 19
+    },
+    {
+      "acut_id": "external-sympy-a3-gpt55-high-concise",
+      "acut_slot": "A3",
+      "attempt": 1,
+      "instance_id": "sympy__sympy-20154",
+      "run_id": "external_calibrated_sympy_e_a3_020_attempt1",
+      "task_ordinal": 20
+    },
+    {
+      "acut_id": "external-sympy-a3-gpt55-high-concise",
+      "acut_slot": "A3",
+      "attempt": 1,
+      "instance_id": "sympy__sympy-20438",
+      "run_id": "external_calibrated_sympy_e_a3_021_attempt1",
+      "task_ordinal": 21
+    },
+    {
+      "acut_id": "external-sympy-a3-gpt55-high-concise",
+      "acut_slot": "A3",
+      "attempt": 1,
+      "instance_id": "sympy__sympy-18763",
+      "run_id": "external_calibrated_sympy_e_a3_022_attempt1",
+      "task_ordinal": 22
+    },
+    {
+      "acut_id": "external-sympy-a3-gpt55-high-concise",
+      "acut_slot": "A3",
+      "attempt": 1,
+      "instance_id": "sympy__sympy-21930",
+      "run_id": "external_calibrated_sympy_e_a3_023_attempt1",
+      "task_ordinal": 23
+    },
+    {
+      "acut_id": "external-sympy-a3-gpt55-high-concise",
+      "acut_slot": "A3",
+      "attempt": 1,
+      "instance_id": "sympy__sympy-20428",
+      "run_id": "external_calibrated_sympy_e_a3_024_attempt1",
+      "task_ordinal": 24
+    },
+    {
+      "acut_id": "external-sympy-a3-gpt55-high-concise",
+      "acut_slot": "A3",
+      "attempt": 1,
+      "instance_id": "sympy__sympy-15349",
+      "run_id": "external_calibrated_sympy_e_a3_025_attempt1",
+      "task_ordinal": 25
+    },
+    {
+      "acut_id": "external-sympy-a3-gpt55-high-concise",
+      "acut_slot": "A3",
+      "attempt": 1,
+      "instance_id": "sympy__sympy-13757",
+      "run_id": "external_calibrated_sympy_e_a3_026_attempt1",
+      "task_ordinal": 26
+    },
+    {
+      "acut_id": "external-sympy-a3-gpt55-high-concise",
+      "acut_slot": "A3",
+      "attempt": 1,
+      "instance_id": "sympy__sympy-22080",
+      "run_id": "external_calibrated_sympy_e_a3_027_attempt1",
+      "task_ordinal": 27
+    },
+    {
+      "acut_id": "external-sympy-a3-gpt55-high-concise",
+      "acut_slot": "A3",
+      "attempt": 1,
+      "instance_id": "sympy__sympy-16886",
+      "run_id": "external_calibrated_sympy_e_a3_028_attempt1",
+      "task_ordinal": 28
+    },
+    {
+      "acut_id": "external-sympy-a3-gpt55-high-concise",
+      "acut_slot": "A3",
+      "attempt": 1,
+      "instance_id": "sympy__sympy-16450",
+      "run_id": "external_calibrated_sympy_e_a3_029_attempt1",
+      "task_ordinal": 29
+    },
+    {
+      "acut_id": "external-sympy-a3-gpt55-high-concise",
+      "acut_slot": "A3",
+      "attempt": 1,
+      "instance_id": "sympy__sympy-13852",
+      "run_id": "external_calibrated_sympy_e_a3_030_attempt1",
+      "task_ordinal": 30
+    },
+    {
+      "acut_id": "external-sympy-a3-gpt55-high-concise",
+      "acut_slot": "A3",
+      "attempt": 1,
+      "instance_id": "sympy__sympy-13480",
+      "run_id": "external_calibrated_sympy_e_a3_031_attempt1",
+      "task_ordinal": 31
+    },
+    {
+      "acut_id": "external-sympy-a3-gpt55-high-concise",
+      "acut_slot": "A3",
+      "attempt": 1,
+      "instance_id": "sympy__sympy-16792",
+      "run_id": "external_calibrated_sympy_e_a3_032_attempt1",
+      "task_ordinal": 32
+    },
+    {
+      "acut_id": "external-sympy-a3-gpt55-high-concise",
+      "acut_slot": "A3",
+      "attempt": 1,
+      "instance_id": "sympy__sympy-13031",
+      "run_id": "external_calibrated_sympy_e_a3_033_attempt1",
+      "task_ordinal": 33
+    },
+    {
+      "acut_id": "external-sympy-a3-gpt55-high-concise",
+      "acut_slot": "A3",
+      "attempt": 1,
+      "instance_id": "sympy__sympy-24443",
+      "run_id": "external_calibrated_sympy_e_a3_034_attempt1",
+      "task_ordinal": 34
+    },
+    {
+      "acut_id": "external-sympy-a3-gpt55-high-concise",
+      "acut_slot": "A3",
+      "attempt": 1,
+      "instance_id": "sympy__sympy-23950",
+      "run_id": "external_calibrated_sympy_e_a3_035_attempt1",
+      "task_ordinal": 35
+    },
+    {
+      "acut_id": "external-sympy-a3-gpt55-high-concise",
+      "acut_slot": "A3",
+      "attempt": 1,
+      "instance_id": "sympy__sympy-18698",
+      "run_id": "external_calibrated_sympy_e_a3_036_attempt1",
+      "task_ordinal": 36
+    },
+    {
+      "acut_id": "external-sympy-a3-gpt55-high-concise",
+      "acut_slot": "A3",
+      "attempt": 1,
+      "instance_id": "sympy__sympy-23262",
+      "run_id": "external_calibrated_sympy_e_a3_037_attempt1",
+      "task_ordinal": 37
+    },
+    {
+      "acut_id": "external-sympy-a3-gpt55-high-concise",
+      "acut_slot": "A3",
+      "attempt": 1,
+      "instance_id": "sympy__sympy-20801",
+      "run_id": "external_calibrated_sympy_e_a3_038_attempt1",
+      "task_ordinal": 38
+    },
+    {
+      "acut_id": "external-sympy-a3-gpt55-high-concise",
+      "acut_slot": "A3",
+      "attempt": 1,
+      "instance_id": "sympy__sympy-12481",
+      "run_id": "external_calibrated_sympy_e_a3_039_attempt1",
+      "task_ordinal": 39
+    },
+    {
+      "acut_id": "external-sympy-a3-gpt55-high-concise",
+      "acut_slot": "A3",
+      "attempt": 1,
+      "instance_id": "sympy__sympy-20590",
+      "run_id": "external_calibrated_sympy_e_a3_040_attempt1",
+      "task_ordinal": 40
+    },
+    {
+      "acut_id": "external-sympy-a3-gpt55-high-concise",
+      "acut_slot": "A3",
+      "attempt": 1,
+      "instance_id": "sympy__sympy-19954",
+      "run_id": "external_calibrated_sympy_e_a3_041_attempt1",
+      "task_ordinal": 41
+    },
+    {
+      "acut_id": "external-sympy-a3-gpt55-high-concise",
+      "acut_slot": "A3",
+      "attempt": 1,
+      "instance_id": "sympy__sympy-19495",
+      "run_id": "external_calibrated_sympy_e_a3_042_attempt1",
+      "task_ordinal": 42
+    },
+    {
+      "acut_id": "external-sympy-a3-gpt55-high-concise",
+      "acut_slot": "A3",
+      "attempt": 1,
+      "instance_id": "sympy__sympy-14531",
+      "run_id": "external_calibrated_sympy_e_a3_043_attempt1",
+      "task_ordinal": 43
+    },
+    {
+      "acut_id": "external-sympy-a3-gpt55-high-concise",
+      "acut_slot": "A3",
+      "attempt": 1,
+      "instance_id": "sympy__sympy-19040",
+      "run_id": "external_calibrated_sympy_e_a3_044_attempt1",
+      "task_ordinal": 44
+    },
+    {
+      "acut_id": "external-sympy-a3-gpt55-high-concise",
+      "acut_slot": "A3",
+      "attempt": 1,
+      "instance_id": "sympy__sympy-14248",
+      "run_id": "external_calibrated_sympy_e_a3_045_attempt1",
+      "task_ordinal": 45
+    },
+    {
+      "acut_id": "external-sympy-a3-gpt55-high-concise",
+      "acut_slot": "A3",
+      "attempt": 1,
+      "instance_id": "sympy__sympy-17630",
+      "run_id": "external_calibrated_sympy_e_a3_046_attempt1",
+      "task_ordinal": 46
+    },
+    {
+      "acut_id": "external-sympy-a3-gpt55-high-concise",
+      "acut_slot": "A3",
+      "attempt": 1,
+      "instance_id": "sympy__sympy-23413",
+      "run_id": "external_calibrated_sympy_e_a3_047_attempt1",
+      "task_ordinal": 47
+    },
+    {
+      "acut_id": "external-sympy-a3-gpt55-high-concise",
+      "acut_slot": "A3",
+      "attempt": 1,
+      "instance_id": "sympy__sympy-16597",
+      "run_id": "external_calibrated_sympy_e_a3_048_attempt1",
+      "task_ordinal": 48
+    },
+    {
+      "acut_id": "external-sympy-a4-gpt54mini-high-concise",
+      "acut_slot": "A4",
+      "attempt": 1,
+      "instance_id": "sympy__sympy-15017",
+      "run_id": "external_calibrated_sympy_e_a4_001_attempt1",
+      "task_ordinal": 1
+    },
+    {
+      "acut_id": "external-sympy-a4-gpt54mini-high-concise",
+      "acut_slot": "A4",
+      "attempt": 1,
+      "instance_id": "sympy__sympy-19783",
+      "run_id": "external_calibrated_sympy_e_a4_002_attempt1",
+      "task_ordinal": 2
+    },
+    {
+      "acut_id": "external-sympy-a4-gpt54mini-high-concise",
+      "acut_slot": "A4",
+      "attempt": 1,
+      "instance_id": "sympy__sympy-14976",
+      "run_id": "external_calibrated_sympy_e_a4_003_attempt1",
+      "task_ordinal": 3
+    },
+    {
+      "acut_id": "external-sympy-a4-gpt54mini-high-concise",
+      "acut_slot": "A4",
+      "attempt": 1,
+      "instance_id": "sympy__sympy-13615",
+      "run_id": "external_calibrated_sympy_e_a4_004_attempt1",
+      "task_ordinal": 4
+    },
+    {
+      "acut_id": "external-sympy-a4-gpt54mini-high-concise",
+      "acut_slot": "A4",
+      "attempt": 1,
+      "instance_id": "sympy__sympy-18211",
+      "run_id": "external_calibrated_sympy_e_a4_005_attempt1",
+      "task_ordinal": 5
+    },
+    {
+      "acut_id": "external-sympy-a4-gpt54mini-high-concise",
+      "acut_slot": "A4",
+      "attempt": 1,
+      "instance_id": "sympy__sympy-15599",
+      "run_id": "external_calibrated_sympy_e_a4_006_attempt1",
+      "task_ordinal": 6
+    },
+    {
+      "acut_id": "external-sympy-a4-gpt54mini-high-concise",
+      "acut_slot": "A4",
+      "attempt": 1,
+      "instance_id": "sympy__sympy-22914",
+      "run_id": "external_calibrated_sympy_e_a4_007_attempt1",
+      "task_ordinal": 7
+    },
+    {
+      "acut_id": "external-sympy-a4-gpt54mini-high-concise",
+      "acut_slot": "A4",
+      "attempt": 1,
+      "instance_id": "sympy__sympy-24562",
+      "run_id": "external_calibrated_sympy_e_a4_008_attempt1",
+      "task_ordinal": 8
+    },
+    {
+      "acut_id": "external-sympy-a4-gpt54mini-high-concise",
+      "acut_slot": "A4",
+      "attempt": 1,
+      "instance_id": "sympy__sympy-20916",
+      "run_id": "external_calibrated_sympy_e_a4_009_attempt1",
+      "task_ordinal": 9
+    },
+    {
+      "acut_id": "external-sympy-a4-gpt54mini-high-concise",
+      "acut_slot": "A4",
+      "attempt": 1,
+      "instance_id": "sympy__sympy-21847",
+      "run_id": "external_calibrated_sympy_e_a4_010_attempt1",
+      "task_ordinal": 10
+    },
+    {
+      "acut_id": "external-sympy-a4-gpt54mini-high-concise",
+      "acut_slot": "A4",
+      "attempt": 1,
+      "instance_id": "sympy__sympy-13091",
+      "run_id": "external_calibrated_sympy_e_a4_011_attempt1",
+      "task_ordinal": 11
+    },
+    {
+      "acut_id": "external-sympy-a4-gpt54mini-high-concise",
+      "acut_slot": "A4",
+      "attempt": 1,
+      "instance_id": "sympy__sympy-13372",
+      "run_id": "external_calibrated_sympy_e_a4_012_attempt1",
+      "task_ordinal": 12
+    },
+    {
+      "acut_id": "external-sympy-a4-gpt54mini-high-concise",
+      "acut_slot": "A4",
+      "attempt": 1,
+      "instance_id": "sympy__sympy-12419",
+      "run_id": "external_calibrated_sympy_e_a4_013_attempt1",
+      "task_ordinal": 13
+    },
+    {
+      "acut_id": "external-sympy-a4-gpt54mini-high-concise",
+      "acut_slot": "A4",
+      "attempt": 1,
+      "instance_id": "sympy__sympy-23824",
+      "run_id": "external_calibrated_sympy_e_a4_014_attempt1",
+      "task_ordinal": 14
+    },
+    {
+      "acut_id": "external-sympy-a4-gpt54mini-high-concise",
+      "acut_slot": "A4",
+      "attempt": 1,
+      "instance_id": "sympy__sympy-24066",
+      "run_id": "external_calibrated_sympy_e_a4_015_attempt1",
+      "task_ordinal": 15
+    },
+    {
+      "acut_id": "external-sympy-a4-gpt54mini-high-concise",
+      "acut_slot": "A4",
+      "attempt": 1,
+      "instance_id": "sympy__sympy-24661",
+      "run_id": "external_calibrated_sympy_e_a4_016_attempt1",
+      "task_ordinal": 16
+    },
+    {
+      "acut_id": "external-sympy-a4-gpt54mini-high-concise",
+      "acut_slot": "A4",
+      "attempt": 1,
+      "instance_id": "sympy__sympy-13877",
+      "run_id": "external_calibrated_sympy_e_a4_017_attempt1",
+      "task_ordinal": 17
+    },
+    {
+      "acut_id": "external-sympy-a4-gpt54mini-high-concise",
+      "acut_slot": "A4",
+      "attempt": 1,
+      "instance_id": "sympy__sympy-13798",
+      "run_id": "external_calibrated_sympy_e_a4_018_attempt1",
+      "task_ordinal": 18
+    },
+    {
+      "acut_id": "external-sympy-a4-gpt54mini-high-concise",
+      "acut_slot": "A4",
+      "attempt": 1,
+      "instance_id": "sympy__sympy-15976",
+      "run_id": "external_calibrated_sympy_e_a4_019_attempt1",
+      "task_ordinal": 19
+    },
+    {
+      "acut_id": "external-sympy-a4-gpt54mini-high-concise",
+      "acut_slot": "A4",
+      "attempt": 1,
+      "instance_id": "sympy__sympy-20154",
+      "run_id": "external_calibrated_sympy_e_a4_020_attempt1",
+      "task_ordinal": 20
+    },
+    {
+      "acut_id": "external-sympy-a4-gpt54mini-high-concise",
+      "acut_slot": "A4",
+      "attempt": 1,
+      "instance_id": "sympy__sympy-20438",
+      "run_id": "external_calibrated_sympy_e_a4_021_attempt1",
+      "task_ordinal": 21
+    },
+    {
+      "acut_id": "external-sympy-a4-gpt54mini-high-concise",
+      "acut_slot": "A4",
+      "attempt": 1,
+      "instance_id": "sympy__sympy-18763",
+      "run_id": "external_calibrated_sympy_e_a4_022_attempt1",
+      "task_ordinal": 22
+    },
+    {
+      "acut_id": "external-sympy-a4-gpt54mini-high-concise",
+      "acut_slot": "A4",
+      "attempt": 1,
+      "instance_id": "sympy__sympy-21930",
+      "run_id": "external_calibrated_sympy_e_a4_023_attempt1",
+      "task_ordinal": 23
+    },
+    {
+      "acut_id": "external-sympy-a4-gpt54mini-high-concise",
+      "acut_slot": "A4",
+      "attempt": 1,
+      "instance_id": "sympy__sympy-20428",
+      "run_id": "external_calibrated_sympy_e_a4_024_attempt1",
+      "task_ordinal": 24
+    },
+    {
+      "acut_id": "external-sympy-a4-gpt54mini-high-concise",
+      "acut_slot": "A4",
+      "attempt": 1,
+      "instance_id": "sympy__sympy-15349",
+      "run_id": "external_calibrated_sympy_e_a4_025_attempt1",
+      "task_ordinal": 25
+    },
+    {
+      "acut_id": "external-sympy-a4-gpt54mini-high-concise",
+      "acut_slot": "A4",
+      "attempt": 1,
+      "instance_id": "sympy__sympy-13757",
+      "run_id": "external_calibrated_sympy_e_a4_026_attempt1",
+      "task_ordinal": 26
+    },
+    {
+      "acut_id": "external-sympy-a4-gpt54mini-high-concise",
+      "acut_slot": "A4",
+      "attempt": 1,
+      "instance_id": "sympy__sympy-22080",
+      "run_id": "external_calibrated_sympy_e_a4_027_attempt1",
+      "task_ordinal": 27
+    },
+    {
+      "acut_id": "external-sympy-a4-gpt54mini-high-concise",
+      "acut_slot": "A4",
+      "attempt": 1,
+      "instance_id": "sympy__sympy-16886",
+      "run_id": "external_calibrated_sympy_e_a4_028_attempt1",
+      "task_ordinal": 28
+    },
+    {
+      "acut_id": "external-sympy-a4-gpt54mini-high-concise",
+      "acut_slot": "A4",
+      "attempt": 1,
+      "instance_id": "sympy__sympy-16450",
+      "run_id": "external_calibrated_sympy_e_a4_029_attempt1",
+      "task_ordinal": 29
+    },
+    {
+      "acut_id": "external-sympy-a4-gpt54mini-high-concise",
+      "acut_slot": "A4",
+      "attempt": 1,
+      "instance_id": "sympy__sympy-13852",
+      "run_id": "external_calibrated_sympy_e_a4_030_attempt1",
+      "task_ordinal": 30
+    },
+    {
+      "acut_id": "external-sympy-a4-gpt54mini-high-concise",
+      "acut_slot": "A4",
+      "attempt": 1,
+      "instance_id": "sympy__sympy-13480",
+      "run_id": "external_calibrated_sympy_e_a4_031_attempt1",
+      "task_ordinal": 31
+    },
+    {
+      "acut_id": "external-sympy-a4-gpt54mini-high-concise",
+      "acut_slot": "A4",
+      "attempt": 1,
+      "instance_id": "sympy__sympy-16792",
+      "run_id": "external_calibrated_sympy_e_a4_032_attempt1",
+      "task_ordinal": 32
+    },
+    {
+      "acut_id": "external-sympy-a4-gpt54mini-high-concise",
+      "acut_slot": "A4",
+      "attempt": 1,
+      "instance_id": "sympy__sympy-13031",
+      "run_id": "external_calibrated_sympy_e_a4_033_attempt1",
+      "task_ordinal": 33
+    },
+    {
+      "acut_id": "external-sympy-a4-gpt54mini-high-concise",
+      "acut_slot": "A4",
+      "attempt": 1,
+      "instance_id": "sympy__sympy-24443",
+      "run_id": "external_calibrated_sympy_e_a4_034_attempt1",
+      "task_ordinal": 34
+    },
+    {
+      "acut_id": "external-sympy-a4-gpt54mini-high-concise",
+      "acut_slot": "A4",
+      "attempt": 1,
+      "instance_id": "sympy__sympy-23950",
+      "run_id": "external_calibrated_sympy_e_a4_035_attempt1",
+      "task_ordinal": 35
+    },
+    {
+      "acut_id": "external-sympy-a4-gpt54mini-high-concise",
+      "acut_slot": "A4",
+      "attempt": 1,
+      "instance_id": "sympy__sympy-18698",
+      "run_id": "external_calibrated_sympy_e_a4_036_attempt1",
+      "task_ordinal": 36
+    },
+    {
+      "acut_id": "external-sympy-a4-gpt54mini-high-concise",
+      "acut_slot": "A4",
+      "attempt": 1,
+      "instance_id": "sympy__sympy-23262",
+      "run_id": "external_calibrated_sympy_e_a4_037_attempt1",
+      "task_ordinal": 37
+    },
+    {
+      "acut_id": "external-sympy-a4-gpt54mini-high-concise",
+      "acut_slot": "A4",
+      "attempt": 1,
+      "instance_id": "sympy__sympy-20801",
+      "run_id": "external_calibrated_sympy_e_a4_038_attempt1",
+      "task_ordinal": 38
+    },
+    {
+      "acut_id": "external-sympy-a4-gpt54mini-high-concise",
+      "acut_slot": "A4",
+      "attempt": 1,
+      "instance_id": "sympy__sympy-12481",
+      "run_id": "external_calibrated_sympy_e_a4_039_attempt1",
+      "task_ordinal": 39
+    },
+    {
+      "acut_id": "external-sympy-a4-gpt54mini-high-concise",
+      "acut_slot": "A4",
+      "attempt": 1,
+      "instance_id": "sympy__sympy-20590",
+      "run_id": "external_calibrated_sympy_e_a4_040_attempt1",
+      "task_ordinal": 40
+    },
+    {
+      "acut_id": "external-sympy-a4-gpt54mini-high-concise",
+      "acut_slot": "A4",
+      "attempt": 1,
+      "instance_id": "sympy__sympy-19954",
+      "run_id": "external_calibrated_sympy_e_a4_041_attempt1",
+      "task_ordinal": 41
+    },
+    {
+      "acut_id": "external-sympy-a4-gpt54mini-high-concise",
+      "acut_slot": "A4",
+      "attempt": 1,
+      "instance_id": "sympy__sympy-19495",
+      "run_id": "external_calibrated_sympy_e_a4_042_attempt1",
+      "task_ordinal": 42
+    },
+    {
+      "acut_id": "external-sympy-a4-gpt54mini-high-concise",
+      "acut_slot": "A4",
+      "attempt": 1,
+      "instance_id": "sympy__sympy-14531",
+      "run_id": "external_calibrated_sympy_e_a4_043_attempt1",
+      "task_ordinal": 43
+    },
+    {
+      "acut_id": "external-sympy-a4-gpt54mini-high-concise",
+      "acut_slot": "A4",
+      "attempt": 1,
+      "instance_id": "sympy__sympy-19040",
+      "run_id": "external_calibrated_sympy_e_a4_044_attempt1",
+      "task_ordinal": 44
+    },
+    {
+      "acut_id": "external-sympy-a4-gpt54mini-high-concise",
+      "acut_slot": "A4",
+      "attempt": 1,
+      "instance_id": "sympy__sympy-14248",
+      "run_id": "external_calibrated_sympy_e_a4_045_attempt1",
+      "task_ordinal": 45
+    },
+    {
+      "acut_id": "external-sympy-a4-gpt54mini-high-concise",
+      "acut_slot": "A4",
+      "attempt": 1,
+      "instance_id": "sympy__sympy-17630",
+      "run_id": "external_calibrated_sympy_e_a4_046_attempt1",
+      "task_ordinal": 46
+    },
+    {
+      "acut_id": "external-sympy-a4-gpt54mini-high-concise",
+      "acut_slot": "A4",
+      "attempt": 1,
+      "instance_id": "sympy__sympy-23413",
+      "run_id": "external_calibrated_sympy_e_a4_047_attempt1",
+      "task_ordinal": 47
+    },
+    {
+      "acut_id": "external-sympy-a4-gpt54mini-high-concise",
+      "acut_slot": "A4",
+      "attempt": 1,
+      "instance_id": "sympy__sympy-16597",
+      "run_id": "external_calibrated_sympy_e_a4_048_attempt1",
+      "task_ordinal": 48
+    },
+    {
+      "acut_id": "external-sympy-a5-gpt54-high-rich-agents",
+      "acut_slot": "A5",
+      "attempt": 1,
+      "instance_id": "sympy__sympy-15017",
+      "run_id": "external_calibrated_sympy_e_a5_001_attempt1",
+      "task_ordinal": 1
+    },
+    {
+      "acut_id": "external-sympy-a5-gpt54-high-rich-agents",
+      "acut_slot": "A5",
+      "attempt": 1,
+      "instance_id": "sympy__sympy-19783",
+      "run_id": "external_calibrated_sympy_e_a5_002_attempt1",
+      "task_ordinal": 2
+    },
+    {
+      "acut_id": "external-sympy-a5-gpt54-high-rich-agents",
+      "acut_slot": "A5",
+      "attempt": 1,
+      "instance_id": "sympy__sympy-14976",
+      "run_id": "external_calibrated_sympy_e_a5_003_attempt1",
+      "task_ordinal": 3
+    },
+    {
+      "acut_id": "external-sympy-a5-gpt54-high-rich-agents",
+      "acut_slot": "A5",
+      "attempt": 1,
+      "instance_id": "sympy__sympy-13615",
+      "run_id": "external_calibrated_sympy_e_a5_004_attempt1",
+      "task_ordinal": 4
+    },
+    {
+      "acut_id": "external-sympy-a5-gpt54-high-rich-agents",
+      "acut_slot": "A5",
+      "attempt": 1,
+      "instance_id": "sympy__sympy-18211",
+      "run_id": "external_calibrated_sympy_e_a5_005_attempt1",
+      "task_ordinal": 5
+    },
+    {
+      "acut_id": "external-sympy-a5-gpt54-high-rich-agents",
+      "acut_slot": "A5",
+      "attempt": 1,
+      "instance_id": "sympy__sympy-15599",
+      "run_id": "external_calibrated_sympy_e_a5_006_attempt1",
+      "task_ordinal": 6
+    },
+    {
+      "acut_id": "external-sympy-a5-gpt54-high-rich-agents",
+      "acut_slot": "A5",
+      "attempt": 1,
+      "instance_id": "sympy__sympy-22914",
+      "run_id": "external_calibrated_sympy_e_a5_007_attempt1",
+      "task_ordinal": 7
+    },
+    {
+      "acut_id": "external-sympy-a5-gpt54-high-rich-agents",
+      "acut_slot": "A5",
+      "attempt": 1,
+      "instance_id": "sympy__sympy-24562",
+      "run_id": "external_calibrated_sympy_e_a5_008_attempt1",
+      "task_ordinal": 8
+    },
+    {
+      "acut_id": "external-sympy-a5-gpt54-high-rich-agents",
+      "acut_slot": "A5",
+      "attempt": 1,
+      "instance_id": "sympy__sympy-20916",
+      "run_id": "external_calibrated_sympy_e_a5_009_attempt1",
+      "task_ordinal": 9
+    },
+    {
+      "acut_id": "external-sympy-a5-gpt54-high-rich-agents",
+      "acut_slot": "A5",
+      "attempt": 1,
+      "instance_id": "sympy__sympy-21847",
+      "run_id": "external_calibrated_sympy_e_a5_010_attempt1",
+      "task_ordinal": 10
+    },
+    {
+      "acut_id": "external-sympy-a5-gpt54-high-rich-agents",
+      "acut_slot": "A5",
+      "attempt": 1,
+      "instance_id": "sympy__sympy-13091",
+      "run_id": "external_calibrated_sympy_e_a5_011_attempt1",
+      "task_ordinal": 11
+    },
+    {
+      "acut_id": "external-sympy-a5-gpt54-high-rich-agents",
+      "acut_slot": "A5",
+      "attempt": 1,
+      "instance_id": "sympy__sympy-13372",
+      "run_id": "external_calibrated_sympy_e_a5_012_attempt1",
+      "task_ordinal": 12
+    },
+    {
+      "acut_id": "external-sympy-a5-gpt54-high-rich-agents",
+      "acut_slot": "A5",
+      "attempt": 1,
+      "instance_id": "sympy__sympy-12419",
+      "run_id": "external_calibrated_sympy_e_a5_013_attempt1",
+      "task_ordinal": 13
+    },
+    {
+      "acut_id": "external-sympy-a5-gpt54-high-rich-agents",
+      "acut_slot": "A5",
+      "attempt": 1,
+      "instance_id": "sympy__sympy-23824",
+      "run_id": "external_calibrated_sympy_e_a5_014_attempt1",
+      "task_ordinal": 14
+    },
+    {
+      "acut_id": "external-sympy-a5-gpt54-high-rich-agents",
+      "acut_slot": "A5",
+      "attempt": 1,
+      "instance_id": "sympy__sympy-24066",
+      "run_id": "external_calibrated_sympy_e_a5_015_attempt1",
+      "task_ordinal": 15
+    },
+    {
+      "acut_id": "external-sympy-a5-gpt54-high-rich-agents",
+      "acut_slot": "A5",
+      "attempt": 1,
+      "instance_id": "sympy__sympy-24661",
+      "run_id": "external_calibrated_sympy_e_a5_016_attempt1",
+      "task_ordinal": 16
+    },
+    {
+      "acut_id": "external-sympy-a5-gpt54-high-rich-agents",
+      "acut_slot": "A5",
+      "attempt": 1,
+      "instance_id": "sympy__sympy-13877",
+      "run_id": "external_calibrated_sympy_e_a5_017_attempt1",
+      "task_ordinal": 17
+    },
+    {
+      "acut_id": "external-sympy-a5-gpt54-high-rich-agents",
+      "acut_slot": "A5",
+      "attempt": 1,
+      "instance_id": "sympy__sympy-13798",
+      "run_id": "external_calibrated_sympy_e_a5_018_attempt1",
+      "task_ordinal": 18
+    },
+    {
+      "acut_id": "external-sympy-a5-gpt54-high-rich-agents",
+      "acut_slot": "A5",
+      "attempt": 1,
+      "instance_id": "sympy__sympy-15976",
+      "run_id": "external_calibrated_sympy_e_a5_019_attempt1",
+      "task_ordinal": 19
+    },
+    {
+      "acut_id": "external-sympy-a5-gpt54-high-rich-agents",
+      "acut_slot": "A5",
+      "attempt": 1,
+      "instance_id": "sympy__sympy-20154",
+      "run_id": "external_calibrated_sympy_e_a5_020_attempt1",
+      "task_ordinal": 20
+    },
+    {
+      "acut_id": "external-sympy-a5-gpt54-high-rich-agents",
+      "acut_slot": "A5",
+      "attempt": 1,
+      "instance_id": "sympy__sympy-20438",
+      "run_id": "external_calibrated_sympy_e_a5_021_attempt1",
+      "task_ordinal": 21
+    },
+    {
+      "acut_id": "external-sympy-a5-gpt54-high-rich-agents",
+      "acut_slot": "A5",
+      "attempt": 1,
+      "instance_id": "sympy__sympy-18763",
+      "run_id": "external_calibrated_sympy_e_a5_022_attempt1",
+      "task_ordinal": 22
+    },
+    {
+      "acut_id": "external-sympy-a5-gpt54-high-rich-agents",
+      "acut_slot": "A5",
+      "attempt": 1,
+      "instance_id": "sympy__sympy-21930",
+      "run_id": "external_calibrated_sympy_e_a5_023_attempt1",
+      "task_ordinal": 23
+    },
+    {
+      "acut_id": "external-sympy-a5-gpt54-high-rich-agents",
+      "acut_slot": "A5",
+      "attempt": 1,
+      "instance_id": "sympy__sympy-20428",
+      "run_id": "external_calibrated_sympy_e_a5_024_attempt1",
+      "task_ordinal": 24
+    },
+    {
+      "acut_id": "external-sympy-a5-gpt54-high-rich-agents",
+      "acut_slot": "A5",
+      "attempt": 1,
+      "instance_id": "sympy__sympy-15349",
+      "run_id": "external_calibrated_sympy_e_a5_025_attempt1",
+      "task_ordinal": 25
+    },
+    {
+      "acut_id": "external-sympy-a5-gpt54-high-rich-agents",
+      "acut_slot": "A5",
+      "attempt": 1,
+      "instance_id": "sympy__sympy-13757",
+      "run_id": "external_calibrated_sympy_e_a5_026_attempt1",
+      "task_ordinal": 26
+    },
+    {
+      "acut_id": "external-sympy-a5-gpt54-high-rich-agents",
+      "acut_slot": "A5",
+      "attempt": 1,
+      "instance_id": "sympy__sympy-22080",
+      "run_id": "external_calibrated_sympy_e_a5_027_attempt1",
+      "task_ordinal": 27
+    },
+    {
+      "acut_id": "external-sympy-a5-gpt54-high-rich-agents",
+      "acut_slot": "A5",
+      "attempt": 1,
+      "instance_id": "sympy__sympy-16886",
+      "run_id": "external_calibrated_sympy_e_a5_028_attempt1",
+      "task_ordinal": 28
+    },
+    {
+      "acut_id": "external-sympy-a5-gpt54-high-rich-agents",
+      "acut_slot": "A5",
+      "attempt": 1,
+      "instance_id": "sympy__sympy-16450",
+      "run_id": "external_calibrated_sympy_e_a5_029_attempt1",
+      "task_ordinal": 29
+    },
+    {
+      "acut_id": "external-sympy-a5-gpt54-high-rich-agents",
+      "acut_slot": "A5",
+      "attempt": 1,
+      "instance_id": "sympy__sympy-13852",
+      "run_id": "external_calibrated_sympy_e_a5_030_attempt1",
+      "task_ordinal": 30
+    },
+    {
+      "acut_id": "external-sympy-a5-gpt54-high-rich-agents",
+      "acut_slot": "A5",
+      "attempt": 1,
+      "instance_id": "sympy__sympy-13480",
+      "run_id": "external_calibrated_sympy_e_a5_031_attempt1",
+      "task_ordinal": 31
+    },
+    {
+      "acut_id": "external-sympy-a5-gpt54-high-rich-agents",
+      "acut_slot": "A5",
+      "attempt": 1,
+      "instance_id": "sympy__sympy-16792",
+      "run_id": "external_calibrated_sympy_e_a5_032_attempt1",
+      "task_ordinal": 32
+    },
+    {
+      "acut_id": "external-sympy-a5-gpt54-high-rich-agents",
+      "acut_slot": "A5",
+      "attempt": 1,
+      "instance_id": "sympy__sympy-13031",
+      "run_id": "external_calibrated_sympy_e_a5_033_attempt1",
+      "task_ordinal": 33
+    },
+    {
+      "acut_id": "external-sympy-a5-gpt54-high-rich-agents",
+      "acut_slot": "A5",
+      "attempt": 1,
+      "instance_id": "sympy__sympy-24443",
+      "run_id": "external_calibrated_sympy_e_a5_034_attempt1",
+      "task_ordinal": 34
+    },
+    {
+      "acut_id": "external-sympy-a5-gpt54-high-rich-agents",
+      "acut_slot": "A5",
+      "attempt": 1,
+      "instance_id": "sympy__sympy-23950",
+      "run_id": "external_calibrated_sympy_e_a5_035_attempt1",
+      "task_ordinal": 35
+    },
+    {
+      "acut_id": "external-sympy-a5-gpt54-high-rich-agents",
+      "acut_slot": "A5",
+      "attempt": 1,
+      "instance_id": "sympy__sympy-18698",
+      "run_id": "external_calibrated_sympy_e_a5_036_attempt1",
+      "task_ordinal": 36
+    },
+    {
+      "acut_id": "external-sympy-a5-gpt54-high-rich-agents",
+      "acut_slot": "A5",
+      "attempt": 1,
+      "instance_id": "sympy__sympy-23262",
+      "run_id": "external_calibrated_sympy_e_a5_037_attempt1",
+      "task_ordinal": 37
+    },
+    {
+      "acut_id": "external-sympy-a5-gpt54-high-rich-agents",
+      "acut_slot": "A5",
+      "attempt": 1,
+      "instance_id": "sympy__sympy-20801",
+      "run_id": "external_calibrated_sympy_e_a5_038_attempt1",
+      "task_ordinal": 38
+    },
+    {
+      "acut_id": "external-sympy-a5-gpt54-high-rich-agents",
+      "acut_slot": "A5",
+      "attempt": 1,
+      "instance_id": "sympy__sympy-12481",
+      "run_id": "external_calibrated_sympy_e_a5_039_attempt1",
+      "task_ordinal": 39
+    },
+    {
+      "acut_id": "external-sympy-a5-gpt54-high-rich-agents",
+      "acut_slot": "A5",
+      "attempt": 1,
+      "instance_id": "sympy__sympy-20590",
+      "run_id": "external_calibrated_sympy_e_a5_040_attempt1",
+      "task_ordinal": 40
+    },
+    {
+      "acut_id": "external-sympy-a5-gpt54-high-rich-agents",
+      "acut_slot": "A5",
+      "attempt": 1,
+      "instance_id": "sympy__sympy-19954",
+      "run_id": "external_calibrated_sympy_e_a5_041_attempt1",
+      "task_ordinal": 41
+    },
+    {
+      "acut_id": "external-sympy-a5-gpt54-high-rich-agents",
+      "acut_slot": "A5",
+      "attempt": 1,
+      "instance_id": "sympy__sympy-19495",
+      "run_id": "external_calibrated_sympy_e_a5_042_attempt1",
+      "task_ordinal": 42
+    },
+    {
+      "acut_id": "external-sympy-a5-gpt54-high-rich-agents",
+      "acut_slot": "A5",
+      "attempt": 1,
+      "instance_id": "sympy__sympy-14531",
+      "run_id": "external_calibrated_sympy_e_a5_043_attempt1",
+      "task_ordinal": 43
+    },
+    {
+      "acut_id": "external-sympy-a5-gpt54-high-rich-agents",
+      "acut_slot": "A5",
+      "attempt": 1,
+      "instance_id": "sympy__sympy-19040",
+      "run_id": "external_calibrated_sympy_e_a5_044_attempt1",
+      "task_ordinal": 44
+    },
+    {
+      "acut_id": "external-sympy-a5-gpt54-high-rich-agents",
+      "acut_slot": "A5",
+      "attempt": 1,
+      "instance_id": "sympy__sympy-14248",
+      "run_id": "external_calibrated_sympy_e_a5_045_attempt1",
+      "task_ordinal": 45
+    },
+    {
+      "acut_id": "external-sympy-a5-gpt54-high-rich-agents",
+      "acut_slot": "A5",
+      "attempt": 1,
+      "instance_id": "sympy__sympy-17630",
+      "run_id": "external_calibrated_sympy_e_a5_046_attempt1",
+      "task_ordinal": 46
+    },
+    {
+      "acut_id": "external-sympy-a5-gpt54-high-rich-agents",
+      "acut_slot": "A5",
+      "attempt": 1,
+      "instance_id": "sympy__sympy-23413",
+      "run_id": "external_calibrated_sympy_e_a5_047_attempt1",
+      "task_ordinal": 47
+    },
+    {
+      "acut_id": "external-sympy-a5-gpt54-high-rich-agents",
+      "acut_slot": "A5",
+      "attempt": 1,
+      "instance_id": "sympy__sympy-16597",
+      "run_id": "external_calibrated_sympy_e_a5_048_attempt1",
+      "task_ordinal": 48
+    }
+  ],
+  "status": "prepared",
+  "tool": "external_calibrated_e_runner",
+  "workspace_root_available_privately": true,
+  "workspace_root_recorded_publicly": false,
+  "workspace_root_sha256": "1889cc21ed3f9b4a1a7e0fe004f35ae9530ac525b5de689a69a6aaa9172d3e5c"
+}

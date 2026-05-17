@@ -1,0 +1,33 @@
+{
+  "admission_status": "accepted",
+  "base_commit_digest": "0fd3e8c366d8098a2145af9dd30b9d6a465530a6f6158a229f885f9d90277fed",
+  "blockers": [],
+  "candidate_id": "sympy_b_anchor_041",
+  "changed_file_anchor_digest": "86a91182b73bd6bd3d26323124038230895257d6bb5826b6113a928b22f2de79",
+  "difficulty": "medium",
+  "family": "polys/number theory",
+  "hidden_file_count": 2,
+  "hidden_verifier_digest": "f27189700255cd8dcee8677f00e301341812bb48473492782b43a59d8253893f",
+  "leakage": {
+    "public_statement_has_hidden_verifier": false,
+    "public_statement_has_reference_patch": false,
+    "public_statement_has_target_commit": false,
+    "selected_using_acut_outputs": false,
+    "selected_using_e_results": false
+  },
+  "no_op_fails": true,
+  "noop_duration_seconds": 3.492,
+  "noop_status": "failed",
+  "oracle_directness": "direct_source_and_tests_commit",
+  "public_statement_digest": "aa92b95bc30d0700608273b281d2d98ce3a549853b46826f3cce345532cf0029",
+  "reference_duration_seconds": 2.91,
+  "reference_patch_digest": "6d9c167f29c4969f19f265e8dd396822dbb8a0c8ee9d6dbe1add8015b84e0f83",
+  "reference_patch_passes": true,
+  "reference_status": "passed",
+  "repo": "sympy/sympy",
+  "schema_version": "external-calibrated-repo-benchmark.b-candidate-sheet.v1",
+  "source_anchor_digest": "f7c1a118853bceea0fe7ab64fed7de5ed3842bc8314e04396d348a54236f56f9",
+  "source_time": "2026-04-11T16:49:04+02:00",
+  "task_id": "sympy__b__041",
+  "test_node_count": 2
+}

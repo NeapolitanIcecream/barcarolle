@@ -1,0 +1,35 @@
+{
+  "admission_status": "rejected",
+  "base_commit_digest": "145ce588c9522ea72f678df18d046f500c047d220f468dea91a64b635de6c70c",
+  "blockers": [
+    "reference_patch_did_not_pass"
+  ],
+  "candidate_id": "sympy_b_anchor_079",
+  "changed_file_anchor_digest": "b260bec289daebea118e047168ad6d09bce6830aff405d7969559e6a5df3660a",
+  "difficulty": "medium-hard",
+  "family": "matrices/linear algebra",
+  "hidden_file_count": 4,
+  "hidden_verifier_digest": "76736436ffb685a7c041743e621321b5e6972e15081e48f1bcbad77133ae51e5",
+  "leakage": {
+    "public_statement_has_hidden_verifier": false,
+    "public_statement_has_reference_patch": false,
+    "public_statement_has_target_commit": false,
+    "selected_using_acut_outputs": false,
+    "selected_using_e_results": false
+  },
+  "no_op_fails": true,
+  "noop_duration_seconds": 1.911,
+  "noop_status": "failed",
+  "oracle_directness": "direct_source_and_tests_commit",
+  "public_statement_digest": "2cc252b6cde092646595d3e9e88e0987cb9529770d991f2395b7e819373ace01",
+  "reference_duration_seconds": 1.624,
+  "reference_patch_digest": "91d6fa73d3f910113e1ff328ca949271ea4edaa698ed4fe571743b54f4293766",
+  "reference_patch_passes": false,
+  "reference_status": "failed",
+  "repo": "sympy/sympy",
+  "schema_version": "external-calibrated-repo-benchmark.b-candidate-sheet.v1",
+  "source_anchor_digest": "3ee8228d59ef3a32e98eaccce96553a1e0d3f676e254915d3775fbeab2b9b2c0",
+  "source_time": "2026-02-18T19:52:18+01:00",
+  "task_id": "sympy__b__079",
+  "test_node_count": 7
+}

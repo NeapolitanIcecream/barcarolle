@@ -1,0 +1,31 @@
+{
+  "admission_status": "accepted",
+  "base_commit_digest": "3cc1eeaad980db796b5cea177cef9779c00d112839df715e14d7f8293bfc4d8f",
+  "blockers": [],
+  "candidate_id": "sympy_b_anchor_033",
+  "changed_file_anchor_digest": "1fc6b85cfa6a3ca77251c4c779af30c64a519f8e2719b5bd5f0c0e2f3ce1b070",
+  "difficulty": "easy-medium",
+  "family": "printing/parsing/syntax",
+  "hidden_file_count": 1,
+  "hidden_verifier_digest": "a553764709a183c5f4772dc66e001216ce8c7252e34f041bc6c0836920f5dbbf",
+  "leakage": {
+    "public_statement_has_hidden_verifier": false,
+    "public_statement_has_reference_patch": false,
+    "public_statement_has_target_commit": false,
+    "selected_using_acut_outputs": false,
+    "selected_using_e_results": false
+  },
+  "no_op_fails": true,
+  "noop_status": "failed",
+  "oracle_directness": "direct_source_and_tests_commit",
+  "public_statement_digest": "c2b41da2b2765779116bce8c5b53173cb1bc819c4113cfb4b4c8a38321dc5e67",
+  "reference_patch_digest": "98f6d94cbda22ea3857062d12e88c47d0b46762eef3005c6d2ff4dea3f64091d",
+  "reference_patch_passes": true,
+  "reference_status": "passed",
+  "repo": "sympy/sympy",
+  "schema_version": "external-calibrated-repo-benchmark.b-candidate-sheet.v1",
+  "source_anchor_digest": "278df93b7d14d88eefae1d08b5ae7c059b759e208937efdda32bebdd6d88ce73",
+  "source_time": "2026-03-20T20:45:50-04:00",
+  "task_id": "sympy__b__033",
+  "test_node_count": 1
+}

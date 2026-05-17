@@ -1,0 +1,72 @@
+{
+  "acut_command": {
+    "exit_code": 0,
+    "status": "zero",
+    "timed_out": false
+  },
+  "acut_id": "external-sympy-a3-gpt55-high-concise",
+  "acut_slot": "A3",
+  "artifacts": {
+    "private_artifact_dir_available_privately": true,
+    "private_artifact_dir_recorded_publicly": false,
+    "private_artifact_dir_sha256": "b35ac6b344dbc756cbff53377b3bab7b7e23c968eb3aa03c8b4e9ec72bab03e3",
+    "private_driver_command_available_privately": true,
+    "private_driver_command_recorded_publicly": false,
+    "private_driver_command_sha256": "97526a7ebcf5fb55b0263de30addd768853e1d6d553e83aa1c83f4ed1f1ca7a4",
+    "private_workspace_output_available_privately": true,
+    "private_workspace_output_recorded_publicly": false,
+    "private_workspace_output_sha256": "ddd4187161dfc36dbb420d279555f9b011ab19a254659db216e0e33fe646ccc8",
+    "public_cell_result": "experiments/core_narrative/results/external_b_pilot/external_calibrated_b_pilot_a3_008_cell_20260516.json"
+  },
+  "attempt": 1,
+  "candidate_id": "sympy_b_anchor_010",
+  "candidate_patch": {
+    "has_scoreable_diff": true,
+    "private_path_available_privately": true,
+    "private_path_recorded_publicly": false,
+    "private_path_sha256": "d8d7b0f57f81080edd1e031153b305c546524b200c37d8fb917414846245c83c",
+    "private_replay_allowed": false,
+    "raw_candidate_patch_size_bytes": 2196,
+    "raw_patch_recorded_publicly": false,
+    "sha256": "e74adc76f83a99660931ea372061ed3bdccb06a06caeba2907b234fd87e51a3c",
+    "size_bytes": 2196,
+    "unsafe_content_detected": false
+  },
+  "difficulty": "medium",
+  "duration_seconds": 286.477,
+  "external_verifier_infra_errors": 0,
+  "family": "matrices/linear algebra",
+  "model_call_made": true,
+  "modified_scope": {
+    "authorized_by_user_at": "2026-05-16",
+    "b10_pilot_authorized_by_user_modified_plan": true,
+    "b_task_ordinal_cutoff": 10,
+    "runs_originally_blocked_until_full_e_spread_gate": true
+  },
+  "phase": "b",
+  "privacy": {
+    "raw_base_commit_recorded_publicly": false,
+    "raw_candidate_patch_recorded_publicly": false,
+    "raw_hidden_verifier_recorded_publicly": false,
+    "raw_reference_patch_recorded_publicly": false,
+    "raw_verifier_output_recorded_publicly": false
+  },
+  "protocol_id": "external-calibrated-repo-benchmark-v1",
+  "run_id": "external_calibrated_sympy_b_a3_008_attempt1",
+  "schema_version": "external-calibrated-repo-benchmark.b-pilot-cell.v1",
+  "score": 0,
+  "status": "verified_fail",
+  "task_id": "sympy__b__010",
+  "task_ordinal": 8,
+  "timeout_owner": null,
+  "tool": "external_calibrated_b_pilot_ad_hoc",
+  "verification": {
+    "attempted": true,
+    "normalized_result_private_path_available_privately": true,
+    "normalized_result_private_path_recorded_publicly": false,
+    "normalized_result_private_path_sha256": "d9deb91de2dec86a9b1eb021d6871448102815dcdc7c50e7a32219cb61c4a20a",
+    "raw_verifier_logs_recorded_publicly": false,
+    "status": "verified_fail",
+    "verifier_exit_code": 1
+  }
+}

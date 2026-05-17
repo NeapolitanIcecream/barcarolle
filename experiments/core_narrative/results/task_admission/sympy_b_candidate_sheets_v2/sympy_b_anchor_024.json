@@ -1,0 +1,15 @@
+{
+  "admission_status": "rejected",
+  "blockers": [
+    "materialization_or_smoke_error"
+  ],
+  "candidate_id": "sympy_b_anchor_024",
+  "difficulty": "easy-medium",
+  "error_digest": "b7273d115186400646fd27147144324dfcdc17a2bf25db844f25919c1d0c4553",
+  "error_type": "ToolError",
+  "family": "matrices/linear algebra",
+  "repo": "sympy/sympy",
+  "schema_version": "external-calibrated-repo-benchmark.b-candidate-sheet.v1",
+  "source_anchor_digest": "ebd733c8d34070199fe73c0b43b6a1cb4bc7b23c25ab35ad1918678a499e034c",
+  "task_id": "sympy__b__024"
+}

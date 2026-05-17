@@ -1,0 +1,65 @@
+{
+  "acut_authorized": true,
+  "b_audit": {
+    "accepted_count": 40,
+    "blockers": [],
+    "candidate_count": 40,
+    "noop_fail_rate": 1.0,
+    "primary": {
+      "blockers": [],
+      "declared_task_count": 20,
+      "noop_fail_rate": 1.0,
+      "reference_patch_pass_rate": 1.0,
+      "status": "pass",
+      "task_count": 20
+    },
+    "primary_task_count": 20,
+    "reference_patch_pass_rate": 1.0,
+    "reserve": {
+      "blockers": [],
+      "declared_task_count": 20,
+      "noop_fail_rate": 1.0,
+      "reference_patch_pass_rate": 1.0,
+      "status": "pass",
+      "task_count": 20
+    },
+    "reserve_task_count": 20,
+    "status": "pass",
+    "warnings": []
+  },
+  "blockers": [],
+  "candidate_noop_gate_weak": false,
+  "e_audit": {
+    "blockers": [],
+    "status": "pass",
+    "task_count": 48,
+    "warnings": []
+  },
+  "freeze_integrity_passed": true,
+  "generated_at": "2026-05-15T16:50:58.119167Z",
+  "model_calls_made": 0,
+  "next_required_steps": [
+    "Freeze ACUT profiles and execution manifests.",
+    "Run one primary ACUT attempt per frozen task with network disabled."
+  ],
+  "protocol_audit": {
+    "blockers": [],
+    "status": "pass",
+    "warnings": []
+  },
+  "protocol_id": "external-calibrated-repo-benchmark-v1",
+  "redaction_audit": {
+    "blockers": [],
+    "ignored_private_paths": {
+      "b_private_artifact_root": true,
+      "b_workspace_root": true
+    },
+    "public_raw_artifact_paths": [],
+    "raw_value_leaks": [],
+    "status": "pass"
+  },
+  "schema_version": "external-calibrated-repo-benchmark.freeze-integrity-audit.v1",
+  "status": "passed",
+  "tool": "external_calibrated_freeze_integrity_audit",
+  "warnings": []
+}

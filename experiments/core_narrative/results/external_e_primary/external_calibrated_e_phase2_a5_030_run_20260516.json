@@ -1,0 +1,133 @@
+{
+  "blockers": [],
+  "generated_at": "2026-05-16T10:22:07.180157Z",
+  "mode": "live",
+  "model_calls_made": 1,
+  "next_required_steps": [
+    "Run remaining Phase 2 E primary attempts on the frozen matrix."
+  ],
+  "phase": "run",
+  "private_root_available_privately": true,
+  "private_root_recorded_publicly": false,
+  "private_root_sha256": "4bd74677242c4d0cffc10037fcce0dc6ed9b1dfac127f3b0de510d81b5c539b7",
+  "protocol_id": "external-calibrated-repo-benchmark-v1",
+  "raw_material_policy": {
+    "private_roots_are_ignored_artifact_roots": true,
+    "public_artifacts_sanitized_after_runner_completion": true,
+    "raw_base_commits_recorded_publicly": false,
+    "raw_candidate_patches_recorded_publicly": false,
+    "raw_predictions_recorded_publicly": false,
+    "raw_problem_statements_recorded_publicly": false,
+    "raw_swebench_logs_recorded_publicly": false
+  },
+  "result_count": 1,
+  "results": [
+    {
+      "acut_command": {
+        "duration_seconds": 306.19,
+        "exit_code": 0,
+        "stderr_artifact_available_privately": true,
+        "stderr_artifact_recorded_publicly": false,
+        "stderr_artifact_sha256": "22196c29e4ef40a2ddb191b36d2a7280e0a01b80b4cb9d1375450a60eb5e6709",
+        "stdout_artifact_available_privately": true,
+        "stdout_artifact_recorded_publicly": false,
+        "stdout_artifact_sha256": "9416561cd80fd878adf51eee94c75af1513350d8d76ef074a0c089675d540942",
+        "summary_artifact_available_privately": true,
+        "summary_artifact_recorded_publicly": false,
+        "summary_artifact_sha256": "3db0c89497b9a2f5c3bb50cffdec9800816413527001ba8ca1478ff170ddfa07",
+        "timed_out": false
+      },
+      "acut_id": "external-sympy-a5-gpt54-high-rich-agents",
+      "acut_manifest": "experiments/core_narrative/configs/acuts/external_calibrated_sympy/external-sympy-a5-gpt54-high-rich-agents.yaml",
+      "acut_slot": "A5",
+      "attempt": 1,
+      "candidate_patch": {
+        "candidate_patch_private_path_available_privately": true,
+        "candidate_patch_private_path_recorded_publicly": false,
+        "candidate_patch_private_path_sha256": "2cbde1558af69c3b12e0ff3b03e2c44bbc56a77add4b26539032f348da72d301",
+        "candidate_patch_sha256": null,
+        "candidate_patch_size_bytes": 0,
+        "has_scoreable_diff": true,
+        "head_drifted": false,
+        "private_replay_allowed": true,
+        "raw_candidate_patch_size_bytes": 3292,
+        "raw_patch_recorded_publicly": false,
+        "unsafe_content_detected": true
+      },
+      "extraction_error": null,
+      "finished_at": "2026-05-16T10:22:07.179235Z",
+      "instance_id": "sympy__sympy-13852",
+      "mode": "live",
+      "model_call_made": true,
+      "phase": "e",
+      "prepare": {
+        "base_ref_sha256": "0c85d319392258b516dec0781c3bb87a450a834c97bfe311bf7da3dbb4dfdb7b",
+        "base_tree_recorded_publicly": false,
+        "base_tree_sha256": "3a4444677350a7e7ea2b46ba71f077b3d97726f08ab563b1ddc86d5a803d90a2",
+        "prompt_policy": {
+          "committed_into_run_base": true,
+          "content_recorded_publicly": false,
+          "installed": true,
+          "sha256": "6ca9fe258dd9ac0e5e058b9bdda072dd275c291dc71027df2bd1634a39ffadd5",
+          "size_bytes": 429,
+          "source_reference": "experiments/core_narrative/configs/acuts/external_calibrated_sympy/agents/rich.md",
+          "workspace_path": "AGENTS.md"
+        },
+        "workspace_available_privately": true,
+        "workspace_recorded_publicly": false,
+        "workspace_sha256": "67e3518895dded1af85f82f80a51ea90c8e7dafed0eb736fc86471919876748c"
+      },
+      "private_artifact_dir_available_privately": true,
+      "private_artifact_dir_recorded_publicly": false,
+      "private_artifact_dir_sha256": "ca63c95b3ce56443a9c11790d9fa2cebd98758061c99fb839d28d5ba8dd44c5c",
+      "protocol_id": "external-calibrated-repo-benchmark-v1",
+      "raw_patch_recorded_publicly": false,
+      "ready_for_swebench_scoring": true,
+      "run_id": "external_calibrated_sympy_e_a5_030_attempt1",
+      "schema_version": "external-calibrated-repo-benchmark.e-runner.v1",
+      "started_at": "2026-05-16T10:16:59.376464Z",
+      "status": "patch_ready_for_swebench",
+      "task_pack": {
+        "base_commit_sha256": "35d073ecf9bf0878b7388a64a755633b1cc6422825a63717e3a3937742d1336a",
+        "instance_id": "sympy__sympy-13852",
+        "private_task_manifest_available_privately": true,
+        "private_task_manifest_recorded_publicly": false,
+        "private_task_manifest_sha256": "55d0774862196701337d27979339af7bc26aa1be8f958ea3e949d409fd39c50e",
+        "private_task_pack_available_privately": true,
+        "private_task_pack_recorded_publicly": false,
+        "private_task_pack_sha256": "28e3731f8b2190af30a61e68e644a27648d110b2b76e7ba41abb4e19dc13c068",
+        "problem_statement_sha256": "51eca986eb401e0dc2856252c823632a51285a5a0d70bd046d46c39362d0df02",
+        "problem_statement_size_bytes": 1892,
+        "raw_base_commit_emitted": false,
+        "raw_gold_patch_emitted": false,
+        "raw_problem_statement_emitted": false,
+        "raw_test_patch_emitted": false,
+        "task_family": "calculus/integration/solving",
+        "task_ordinal": 30
+      },
+      "timeout_owner": null,
+      "tool": "external_calibrated_e_runner",
+      "workspace_available_privately": true,
+      "workspace_recorded_publicly": false,
+      "workspace_sha256": "67e3518895dded1af85f82f80a51ea90c8e7dafed0eb736fc86471919876748c"
+    }
+  ],
+  "schema_version": "external-calibrated-repo-benchmark.e-runner.v1",
+  "score_summaries": [],
+  "selected_cell_count": 1,
+  "selected_cells": [
+    {
+      "acut_id": "external-sympy-a5-gpt54-high-rich-agents",
+      "acut_slot": "A5",
+      "attempt": 1,
+      "instance_id": "sympy__sympy-13852",
+      "run_id": "external_calibrated_sympy_e_a5_030_attempt1",
+      "task_ordinal": 30
+    }
+  ],
+  "status": "run_completed",
+  "tool": "external_calibrated_e_runner",
+  "workspace_root_available_privately": true,
+  "workspace_root_recorded_publicly": false,
+  "workspace_root_sha256": "1889cc21ed3f9b4a1a7e0fe004f35ae9530ac525b5de689a69a6aaa9172d3e5c"
+}

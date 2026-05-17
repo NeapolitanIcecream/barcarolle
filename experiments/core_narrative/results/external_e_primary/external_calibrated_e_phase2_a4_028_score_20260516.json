@@ -1,0 +1,203 @@
+{
+  "blockers": [],
+  "generated_at": "2026-05-16T08:57:32.386865Z",
+  "mode": "live",
+  "model_calls_made": 0,
+  "next_required_steps": [
+    "Inspect E spread gate after all ACUT E scores are complete."
+  ],
+  "phase": "score",
+  "private_root_available_privately": true,
+  "private_root_recorded_publicly": false,
+  "private_root_sha256": "4bd74677242c4d0cffc10037fcce0dc6ed9b1dfac127f3b0de510d81b5c539b7",
+  "protocol_id": "external-calibrated-repo-benchmark-v1",
+  "raw_material_policy": {
+    "private_roots_are_ignored_artifact_roots": true,
+    "public_artifacts_sanitized_after_runner_completion": true,
+    "raw_base_commits_recorded_publicly": false,
+    "raw_candidate_patches_recorded_publicly": false,
+    "raw_predictions_recorded_publicly": false,
+    "raw_problem_statements_recorded_publicly": false,
+    "raw_swebench_logs_recorded_publicly": false
+  },
+  "result_count": 1,
+  "results": [
+    {
+      "acut_command": {
+        "duration_seconds": 89.526,
+        "exit_code": 0,
+        "stderr_artifact_available_privately": true,
+        "stderr_artifact_recorded_publicly": false,
+        "stderr_artifact_sha256": "bce3eaead2a14a7f9fb550dea686fa244a92329ffa22ff5ef6e832277645daea",
+        "stdout_artifact_available_privately": true,
+        "stdout_artifact_recorded_publicly": false,
+        "stdout_artifact_sha256": "8a380bf1ecef4e125621868137de6fd7932c082a5f272c28c6d5bcabf0392bbd",
+        "summary_artifact_available_privately": true,
+        "summary_artifact_recorded_publicly": false,
+        "summary_artifact_sha256": "217633915482f2a30b5ebeb74fa036ffe6546316f525dc6c3fb9083ad1b5b03b",
+        "timed_out": false
+      },
+      "acut_id": "external-sympy-a4-gpt54mini-high-concise",
+      "acut_manifest": "experiments/core_narrative/configs/acuts/external_calibrated_sympy/external-sympy-a4-gpt54mini-high-concise.yaml",
+      "acut_slot": "A4",
+      "attempt": 1,
+      "candidate_patch": {
+        "candidate_patch_private_path_available_privately": true,
+        "candidate_patch_private_path_recorded_publicly": false,
+        "candidate_patch_private_path_sha256": "99cb83f0d582b11f41dde564fe031454a6d9485b57f462930e2f14be6bc3d171",
+        "candidate_patch_sha256": "c320f319d67d403377110001f1d740e6bafdedcbb50314920a9ea9f9da0cf367",
+        "candidate_patch_size_bytes": 1089,
+        "has_scoreable_diff": true,
+        "head_drifted": false,
+        "private_replay_allowed": false,
+        "raw_candidate_patch_size_bytes": 1089,
+        "raw_patch_recorded_publicly": false,
+        "unsafe_content_detected": false
+      },
+      "extraction_error": null,
+      "finished_at": "2026-05-16T08:56:44.324454Z",
+      "instance_id": "sympy__sympy-16886",
+      "mode": "live",
+      "model_call_made": true,
+      "phase": "e",
+      "prepare": {
+        "base_ref_sha256": "6d7ba878cd4312210c043bfe98b666a36b5cd874d198e0a4847e2f055fc781a1",
+        "base_tree_recorded_publicly": false,
+        "base_tree_sha256": "8110b1bbee92d9dc78db66591073c1001a78d066df128cacb1b46b6ec1b2b492",
+        "prompt_policy": {
+          "committed_into_run_base": true,
+          "content_recorded_publicly": false,
+          "installed": true,
+          "sha256": "fc27479d6152b636cb84638a2f65c3087bb464136e1d65a31f2ca2b46f4bbe31",
+          "size_bytes": 293,
+          "source_reference": "experiments/core_narrative/configs/acuts/external_calibrated_sympy/agents/concise.md",
+          "workspace_path": "AGENTS.md"
+        },
+        "workspace_available_privately": true,
+        "workspace_recorded_publicly": false,
+        "workspace_sha256": "ace552cf61dd385a5e61737cf6b4996bdde9b28ee60dd1bd610747880cac5718"
+      },
+      "private_artifact_dir_available_privately": true,
+      "private_artifact_dir_recorded_publicly": false,
+      "private_artifact_dir_sha256": "36387e3ad1b7a23d2107ec25cc632ceab62d028f715e83197f4f93cb623938cf",
+      "protocol_id": "external-calibrated-repo-benchmark-v1",
+      "raw_patch_recorded_publicly": false,
+      "ready_for_swebench_scoring": true,
+      "run_id": "external_calibrated_sympy_e_a4_028_attempt1",
+      "schema_version": "external-calibrated-repo-benchmark.e-runner.v1",
+      "started_at": "2026-05-16T08:55:12.910337Z",
+      "status": "patch_ready_for_swebench",
+      "task_pack": {
+        "base_commit_sha256": "948f691802b2dd24a958390f97426ec735a76bab4108810eca5bfc10e1c12743",
+        "instance_id": "sympy__sympy-16886",
+        "private_task_manifest_available_privately": true,
+        "private_task_manifest_recorded_publicly": false,
+        "private_task_manifest_sha256": "de32c6d21702f1087cfafa7e44cabde008b2483bf8fb52588224409387472f4a",
+        "private_task_pack_available_privately": true,
+        "private_task_pack_recorded_publicly": false,
+        "private_task_pack_sha256": "c21336b708c0d8f12fdc389e4ea08d0db29bae2c36ab0b7c0da2b04313c3d2e7",
+        "problem_statement_sha256": "8bcff84556fbb7d34383e0f16d01027922121a39bb63b881fcd3d8f5e2e74f29",
+        "problem_statement_size_bytes": 185,
+        "raw_base_commit_emitted": false,
+        "raw_gold_patch_emitted": false,
+        "raw_problem_statement_emitted": false,
+        "raw_test_patch_emitted": false,
+        "task_family": "core/mixed",
+        "task_ordinal": 28
+      },
+      "timeout_owner": null,
+      "tool": "external_calibrated_e_runner",
+      "workspace_available_privately": true,
+      "workspace_recorded_publicly": false,
+      "workspace_sha256": "ace552cf61dd385a5e61737cf6b4996bdde9b28ee60dd1bd610747880cac5718"
+    }
+  ],
+  "schema_version": "external-calibrated-repo-benchmark.e-runner.v1",
+  "score_summaries": [
+    {
+      "acut_id": "external-sympy-a4-gpt54mini-high-concise",
+      "acut_slot": "A4",
+      "attempted_instances": 1,
+      "cells": [
+        {
+          "acut_id": "external-sympy-a4-gpt54mini-high-concise",
+          "acut_slot": "A4",
+          "instance_id": "sympy__sympy-16886",
+          "run_id": "external_calibrated_sympy_e_a4_028_attempt1",
+          "score": 1,
+          "status": "resolved"
+        }
+      ],
+      "harness": {
+        "duration_seconds": 47.789,
+        "exit_code": 0,
+        "raw_dir_available_privately": true,
+        "raw_dir_recorded_publicly": false,
+        "raw_dir_sha256": "d30a1d41feb906a4b299ac9a95d9883d1d63f435aff9775a5ce6546094a3db14",
+        "raw_logs_recorded_publicly": false,
+        "stderr": {
+          "byte_count": 4362,
+          "line_count": 25,
+          "sha256": "f833b0e0185d380bddb583a685a396afff6e256ee3434f5c7c36b4c743984088"
+        },
+        "stdout": {
+          "byte_count": 432,
+          "line_count": 15,
+          "sha256": "db4eaab997652ce5d3a2da3288cf48fa0192f5b1576eb88a53d43ee13bc9c39c"
+        },
+        "timeout_error": null
+      },
+      "prediction_summary": {
+        "prediction_count": 1,
+        "predictions_path_available_privately": true,
+        "predictions_path_recorded_publicly": false,
+        "predictions_path_sha256": "2feb798af2904082806a3ecf403f81bf6387484576cb2261361658abf9ebb2bb",
+        "predictions_sha256": "87333ea1269f7d4e7edc9bc3e04512a5d0c5e651fa9a4e74558e9e48d1fa5d25",
+        "raw_model_patches_recorded_publicly": false,
+        "records": [
+          {
+            "instance_id": "sympy__sympy-16886",
+            "model_name_or_path": "external-sympy-a4-gpt54mini-high-concise",
+            "model_patch_recorded_publicly": false,
+            "model_patch_sha256": "c320f319d67d403377110001f1d740e6bafdedcbb50314920a9ea9f9da0cf367",
+            "model_patch_size_bytes": 1089
+          }
+        ]
+      },
+      "protocol_id": "external-calibrated-repo-benchmark-v1",
+      "raw_harness_logs_recorded_publicly": false,
+      "raw_patch_recorded_publicly": false,
+      "resolved_instances": 1,
+      "run_id": "external_calibrated_sympy_e_score_a4_20260516",
+      "schema_version": "external-calibrated-repo-benchmark.e-score-table.v1",
+      "score_table": [
+        {
+          "acut_id": "external-sympy-a4-gpt54mini-high-concise",
+          "acut_slot": "A4",
+          "external_verifier_infra_errors": 0,
+          "score_denominator": 1,
+          "score_numerator": 1,
+          "score_rate": 1.0
+        }
+      ],
+      "status": "scored",
+      "tool": "external_calibrated_e_runner"
+    }
+  ],
+  "selected_cell_count": 1,
+  "selected_cells": [
+    {
+      "acut_id": "external-sympy-a4-gpt54mini-high-concise",
+      "acut_slot": "A4",
+      "attempt": 1,
+      "instance_id": "sympy__sympy-16886",
+      "run_id": "external_calibrated_sympy_e_a4_028_attempt1",
+      "task_ordinal": 28
+    }
+  ],
+  "status": "scored",
+  "tool": "external_calibrated_e_runner",
+  "workspace_root_available_privately": true,
+  "workspace_root_recorded_publicly": false,
+  "workspace_root_sha256": "1889cc21ed3f9b4a1a7e0fe004f35ae9530ac525b5de689a69a6aaa9172d3e5c"
+}

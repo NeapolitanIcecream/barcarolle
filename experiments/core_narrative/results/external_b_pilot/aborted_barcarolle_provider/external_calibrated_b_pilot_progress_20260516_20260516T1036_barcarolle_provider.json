@@ -1,0 +1,220 @@
+{
+  "b_task_ordinals": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10
+  ],
+  "by_acut_slot": [
+    {
+      "acut_id": "external-sympy-a0-gpt54-medium-concise",
+      "acut_slot": "A0",
+      "cell_count": 1,
+      "infra_error_count": 1,
+      "resolved_count": 0,
+      "scored_count": 0
+    },
+    {
+      "acut_id": "external-sympy-a1-gpt54-low-concise",
+      "acut_slot": "A1",
+      "cell_count": 1,
+      "infra_error_count": 1,
+      "resolved_count": 0,
+      "scored_count": 0
+    },
+    {
+      "acut_id": null,
+      "acut_slot": "A2",
+      "cell_count": 0,
+      "infra_error_count": 0,
+      "resolved_count": 0,
+      "scored_count": 0
+    },
+    {
+      "acut_id": null,
+      "acut_slot": "A3",
+      "cell_count": 0,
+      "infra_error_count": 0,
+      "resolved_count": 0,
+      "scored_count": 0
+    },
+    {
+      "acut_id": null,
+      "acut_slot": "A4",
+      "cell_count": 0,
+      "infra_error_count": 0,
+      "resolved_count": 0,
+      "scored_count": 0
+    },
+    {
+      "acut_id": null,
+      "acut_slot": "A5",
+      "cell_count": 0,
+      "infra_error_count": 0,
+      "resolved_count": 0,
+      "scored_count": 0
+    }
+  ],
+  "cell_count_completed": 2,
+  "cell_count_planned": 60,
+  "cells": [
+    {
+      "acut_command": {
+        "exit_code": 1,
+        "status": "nonzero",
+        "timed_out": false
+      },
+      "acut_id": "external-sympy-a0-gpt54-medium-concise",
+      "acut_slot": "A0",
+      "artifacts": {
+        "private_artifact_dir_available_privately": true,
+        "private_artifact_dir_recorded_publicly": false,
+        "private_artifact_dir_sha256": "5f232a439ed1eb18bc64e2272f1a3dfed5d483dd275a465335775351b6039b04",
+        "private_driver_command_available_privately": true,
+        "private_driver_command_recorded_publicly": false,
+        "private_driver_command_sha256": "0d12b4bc97f22bf7f0b2bc13a79b39970b7fcc883813f647ddec921112af0b4b",
+        "private_workspace_output_available_privately": true,
+        "private_workspace_output_recorded_publicly": false,
+        "private_workspace_output_sha256": "c14a4940b83cfa7e2409bd8a250f3af402c2b4cee194fca3792b588fda63f9f1",
+        "public_cell_result": "experiments/core_narrative/results/external_b_pilot/external_calibrated_b_pilot_a0_001_cell_20260516.json"
+      },
+      "attempt": 1,
+      "candidate_id": "sympy_b_anchor_001",
+      "candidate_patch": {
+        "has_scoreable_diff": false,
+        "private_path_available_privately": true,
+        "private_path_recorded_publicly": false,
+        "private_path_sha256": "abcb426f622330da12d4b7f4f79818b1eac32431dbea3ddf890879192e76d958",
+        "private_replay_allowed": false,
+        "raw_candidate_patch_size_bytes": 0,
+        "raw_patch_recorded_publicly": false,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "size_bytes": 0,
+        "unsafe_content_detected": false
+      },
+      "difficulty": "medium-hard",
+      "duration_seconds": 31.286,
+      "external_verifier_infra_errors": 1,
+      "family": "polys/number theory",
+      "model_call_made": true,
+      "modified_scope": {
+        "authorized_by_user_at": "2026-05-16",
+        "b10_pilot_authorized_by_user_modified_plan": true,
+        "b_task_ordinal_cutoff": 10,
+        "runs_originally_blocked_until_full_e_spread_gate": true
+      },
+      "phase": "b",
+      "privacy": {
+        "raw_base_commit_recorded_publicly": false,
+        "raw_candidate_patch_recorded_publicly": false,
+        "raw_hidden_verifier_recorded_publicly": false,
+        "raw_reference_patch_recorded_publicly": false,
+        "raw_verifier_output_recorded_publicly": false
+      },
+      "protocol_id": "external-calibrated-repo-benchmark-v1",
+      "run_id": "external_calibrated_sympy_b_a0_001_attempt1",
+      "schema_version": "external-calibrated-repo-benchmark.b-pilot-cell.v1",
+      "score": null,
+      "status": "acut_route_infra_error",
+      "task_id": "sympy__b__001",
+      "task_ordinal": 1,
+      "timeout_owner": null,
+      "tool": "external_calibrated_b_pilot_ad_hoc",
+      "verification": {
+        "attempted": false,
+        "normalized_result_private_path_available_privately": false,
+        "normalized_result_private_path_recorded_publicly": false,
+        "raw_verifier_logs_recorded_publicly": false,
+        "status": "not_attempted",
+        "verifier_exit_code": null
+      }
+    },
+    {
+      "acut_command": {
+        "exit_code": 1,
+        "status": "nonzero",
+        "timed_out": false
+      },
+      "acut_id": "external-sympy-a1-gpt54-low-concise",
+      "acut_slot": "A1",
+      "artifacts": {
+        "private_artifact_dir_available_privately": true,
+        "private_artifact_dir_recorded_publicly": false,
+        "private_artifact_dir_sha256": "f0f9f49bfbc3467030059ed8e0ec1dab9e75f75d908fd20beaf8a00971ea1279",
+        "private_driver_command_available_privately": true,
+        "private_driver_command_recorded_publicly": false,
+        "private_driver_command_sha256": "779609dc8bc2a559d097fae7468913a13aa32daa521bf8953b05a0cce3705124",
+        "private_workspace_output_available_privately": true,
+        "private_workspace_output_recorded_publicly": false,
+        "private_workspace_output_sha256": "7d1cb836e794269d120f26c296333b427730c24f6115267c7c402b8dd8625a82",
+        "public_cell_result": "experiments/core_narrative/results/external_b_pilot/external_calibrated_b_pilot_a1_001_cell_20260516.json"
+      },
+      "attempt": 1,
+      "candidate_id": "sympy_b_anchor_001",
+      "candidate_patch": {
+        "has_scoreable_diff": false,
+        "private_path_available_privately": true,
+        "private_path_recorded_publicly": false,
+        "private_path_sha256": "5b50baeea08b0bf940c35b64b94ac0b145b802099f31dd880f4b16ca63478e8b",
+        "private_replay_allowed": false,
+        "raw_candidate_patch_size_bytes": 0,
+        "raw_patch_recorded_publicly": false,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "size_bytes": 0,
+        "unsafe_content_detected": false
+      },
+      "difficulty": "medium-hard",
+      "duration_seconds": 31.777,
+      "external_verifier_infra_errors": 1,
+      "family": "polys/number theory",
+      "model_call_made": true,
+      "modified_scope": {
+        "authorized_by_user_at": "2026-05-16",
+        "b10_pilot_authorized_by_user_modified_plan": true,
+        "b_task_ordinal_cutoff": 10,
+        "runs_originally_blocked_until_full_e_spread_gate": true
+      },
+      "phase": "b",
+      "privacy": {
+        "raw_base_commit_recorded_publicly": false,
+        "raw_candidate_patch_recorded_publicly": false,
+        "raw_hidden_verifier_recorded_publicly": false,
+        "raw_reference_patch_recorded_publicly": false,
+        "raw_verifier_output_recorded_publicly": false
+      },
+      "protocol_id": "external-calibrated-repo-benchmark-v1",
+      "run_id": "external_calibrated_sympy_b_a1_001_attempt1",
+      "schema_version": "external-calibrated-repo-benchmark.b-pilot-cell.v1",
+      "score": null,
+      "status": "acut_route_infra_error",
+      "task_id": "sympy__b__001",
+      "task_ordinal": 1,
+      "timeout_owner": null,
+      "tool": "external_calibrated_b_pilot_ad_hoc",
+      "verification": {
+        "attempted": false,
+        "normalized_result_private_path_available_privately": false,
+        "normalized_result_private_path_recorded_publicly": false,
+        "raw_verifier_logs_recorded_publicly": false,
+        "status": "not_attempted",
+        "verifier_exit_code": null
+      }
+    }
+  ],
+  "created_at_utc": "2026-05-16T10:36:20Z",
+  "modified_plan": {
+    "b_task_ordinal_cutoff": 10,
+    "e_task_ordinal_cutoff_completed": 30,
+    "pause_after_checkpoint": true
+  },
+  "protocol_id": "external-calibrated-repo-benchmark-v1",
+  "schema_version": "external-calibrated-repo-benchmark.b-pilot-progress.v1",
+  "scope": "phase3_b_first_ten_task_ordinals_all_acut_slots",
+  "tool": "external_calibrated_b_pilot_ad_hoc"
+}

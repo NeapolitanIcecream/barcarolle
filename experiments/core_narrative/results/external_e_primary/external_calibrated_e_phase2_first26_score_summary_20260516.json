@@ -1,0 +1,2604 @@
+{
+  "schema_version": "external-calibrated-repo-benchmark.e-score-progress-summary.v1",
+  "tool": "external_calibrated_e_progress_summary_ad_hoc",
+  "protocol_id": "external-calibrated-repo-benchmark-v1",
+  "scope": "phase2_e_first_twenty_six_task_ordinals",
+  "cell_count": 156,
+  "task_ordinals": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24,
+    25,
+    26
+  ],
+  "cells": [
+    {
+      "acut_id": "external-sympy-a0-gpt54-medium-concise",
+      "acut_slot": "A0",
+      "external_verifier_infra_errors": 0,
+      "instance_id": "sympy__sympy-15017",
+      "score": 0,
+      "score_artifact": "experiments/core_narrative/results/external_e_primary/external_calibrated_e_phase2_a0_001_score_20260516.json",
+      "status": "unresolved",
+      "task_ordinal": 1
+    },
+    {
+      "acut_id": "external-sympy-a0-gpt54-medium-concise",
+      "acut_slot": "A0",
+      "external_verifier_infra_errors": 0,
+      "instance_id": "sympy__sympy-19783",
+      "score": 1,
+      "score_artifact": "experiments/core_narrative/results/external_e_primary/external_calibrated_e_phase2_a0_002_score_20260516.json",
+      "status": "resolved",
+      "task_ordinal": 2
+    },
+    {
+      "acut_id": "external-sympy-a0-gpt54-medium-concise",
+      "acut_slot": "A0",
+      "external_verifier_infra_errors": 0,
+      "instance_id": "sympy__sympy-14976",
+      "score": 0,
+      "score_artifact": "experiments/core_narrative/results/external_e_primary/external_calibrated_e_phase2_a0_003_score_20260516.json",
+      "status": "unresolved",
+      "task_ordinal": 3
+    },
+    {
+      "acut_id": "external-sympy-a0-gpt54-medium-concise",
+      "acut_slot": "A0",
+      "external_verifier_infra_errors": 0,
+      "instance_id": "sympy__sympy-13615",
+      "score": 1,
+      "score_artifact": "experiments/core_narrative/results/external_e_primary/external_calibrated_e_phase2_a0_004_score_20260516.json",
+      "status": "resolved",
+      "task_ordinal": 4
+    },
+    {
+      "acut_id": "external-sympy-a0-gpt54-medium-concise",
+      "acut_slot": "A0",
+      "external_verifier_infra_errors": 0,
+      "instance_id": "sympy__sympy-18211",
+      "score": 0,
+      "score_artifact": "experiments/core_narrative/results/external_e_primary/external_calibrated_e_phase2_a0_005_score_20260516.json",
+      "status": "unresolved",
+      "task_ordinal": 5
+    },
+    {
+      "acut_id": "external-sympy-a0-gpt54-medium-concise",
+      "acut_slot": "A0",
+      "external_verifier_infra_errors": 0,
+      "instance_id": "sympy__sympy-15599",
+      "score": 0,
+      "score_artifact": "experiments/core_narrative/results/external_e_primary/external_calibrated_e_phase2_a0_006_score_20260516.json",
+      "status": "unresolved",
+      "task_ordinal": 6
+    },
+    {
+      "acut_id": "external-sympy-a0-gpt54-medium-concise",
+      "acut_slot": "A0",
+      "external_verifier_infra_errors": 0,
+      "instance_id": "sympy__sympy-22914",
+      "score": 1,
+      "score_artifact": "experiments/core_narrative/results/external_e_primary/external_calibrated_e_phase2_a0_007_score_20260516.json",
+      "status": "resolved",
+      "task_ordinal": 7
+    },
+    {
+      "acut_id": "external-sympy-a0-gpt54-medium-concise",
+      "acut_slot": "A0",
+      "external_verifier_infra_errors": 0,
+      "instance_id": "sympy__sympy-24562",
+      "score": 1,
+      "score_artifact": "experiments/core_narrative/results/external_e_primary/external_calibrated_e_phase2_a0_008_score_20260516.json",
+      "status": "resolved",
+      "task_ordinal": 8
+    },
+    {
+      "acut_id": "external-sympy-a0-gpt54-medium-concise",
+      "acut_slot": "A0",
+      "external_verifier_infra_errors": 0,
+      "instance_id": "sympy__sympy-20916",
+      "score": 0,
+      "score_artifact": "experiments/core_narrative/results/external_e_primary/external_calibrated_e_phase2_a0_009_score_20260516.json",
+      "status": "unresolved",
+      "task_ordinal": 9
+    },
+    {
+      "acut_id": "external-sympy-a0-gpt54-medium-concise",
+      "acut_slot": "A0",
+      "external_verifier_infra_errors": 0,
+      "instance_id": "sympy__sympy-21847",
+      "score": 1,
+      "score_artifact": "experiments/core_narrative/results/external_e_primary/external_calibrated_e_phase2_a0_010_score_20260516.json",
+      "status": "resolved",
+      "task_ordinal": 10
+    },
+    {
+      "acut_id": "external-sympy-a0-gpt54-medium-concise",
+      "acut_slot": "A0",
+      "external_verifier_infra_errors": 0,
+      "instance_id": "sympy__sympy-13091",
+      "score": 0,
+      "score_artifact": "experiments/core_narrative/results/external_e_primary/external_calibrated_e_phase2_a0_011_score_20260516.json",
+      "status": "unresolved",
+      "task_ordinal": 11
+    },
+    {
+      "acut_id": "external-sympy-a0-gpt54-medium-concise",
+      "acut_slot": "A0",
+      "external_verifier_infra_errors": 0,
+      "instance_id": "sympy__sympy-13372",
+      "score": 1,
+      "score_artifact": "experiments/core_narrative/results/external_e_primary/external_calibrated_e_phase2_a0_012_score_20260516.json",
+      "status": "resolved",
+      "task_ordinal": 12
+    },
+    {
+      "acut_id": "external-sympy-a0-gpt54-medium-concise",
+      "acut_slot": "A0",
+      "external_verifier_infra_errors": 0,
+      "instance_id": "sympy__sympy-12419",
+      "score": 1,
+      "score_artifact": "experiments/core_narrative/results/external_e_primary/external_calibrated_e_phase2_a0_013_score_20260516.json",
+      "status": "resolved",
+      "task_ordinal": 13
+    },
+    {
+      "acut_id": "external-sympy-a0-gpt54-medium-concise",
+      "acut_slot": "A0",
+      "external_verifier_infra_errors": 0,
+      "instance_id": "sympy__sympy-23824",
+      "score": 1,
+      "score_artifact": "experiments/core_narrative/results/external_e_primary/external_calibrated_e_phase2_a0_014_score_20260516.json",
+      "status": "resolved",
+      "task_ordinal": 14
+    },
+    {
+      "acut_id": "external-sympy-a0-gpt54-medium-concise",
+      "acut_slot": "A0",
+      "external_verifier_infra_errors": 0,
+      "instance_id": "sympy__sympy-24066",
+      "score": 1,
+      "score_artifact": "experiments/core_narrative/results/external_e_primary/external_calibrated_e_phase2_a0_015_score_20260516.json",
+      "status": "resolved",
+      "task_ordinal": 15
+    },
+    {
+      "acut_id": "external-sympy-a0-gpt54-medium-concise",
+      "acut_slot": "A0",
+      "external_verifier_infra_errors": 0,
+      "instance_id": "sympy__sympy-24661",
+      "score": 1,
+      "score_artifact": "experiments/core_narrative/results/external_e_primary/external_calibrated_e_phase2_a0_016_score_20260516.json",
+      "status": "resolved",
+      "task_ordinal": 16
+    },
+    {
+      "acut_id": "external-sympy-a0-gpt54-medium-concise",
+      "acut_slot": "A0",
+      "external_verifier_infra_errors": 0,
+      "instance_id": "sympy__sympy-13877",
+      "score": 0,
+      "score_artifact": "experiments/core_narrative/results/external_e_primary/external_calibrated_e_phase2_a0_017_score_20260516.json",
+      "status": "empty_patch",
+      "task_ordinal": 17
+    },
+    {
+      "acut_id": "external-sympy-a0-gpt54-medium-concise",
+      "acut_slot": "A0",
+      "external_verifier_infra_errors": 0,
+      "instance_id": "sympy__sympy-13798",
+      "score": 0,
+      "score_artifact": "experiments/core_narrative/results/external_e_primary/external_calibrated_e_phase2_a0_018_score_20260516.json",
+      "status": "unresolved",
+      "task_ordinal": 18
+    },
+    {
+      "acut_id": "external-sympy-a0-gpt54-medium-concise",
+      "acut_slot": "A0",
+      "external_verifier_infra_errors": 0,
+      "instance_id": "sympy__sympy-15976",
+      "score": 1,
+      "score_artifact": "experiments/core_narrative/results/external_e_primary/external_calibrated_e_phase2_a0_019_score_20260516.json",
+      "status": "resolved",
+      "task_ordinal": 19
+    },
+    {
+      "acut_id": "external-sympy-a0-gpt54-medium-concise",
+      "acut_slot": "A0",
+      "external_verifier_infra_errors": 0,
+      "instance_id": "sympy__sympy-20154",
+      "score": 1,
+      "score_artifact": "experiments/core_narrative/results/external_e_primary/external_calibrated_e_phase2_a0_020_score_20260516.json",
+      "status": "resolved",
+      "task_ordinal": 20
+    },
+    {
+      "acut_id": "external-sympy-a0-gpt54-medium-concise",
+      "acut_slot": "A0",
+      "external_verifier_infra_errors": 0,
+      "instance_id": "sympy__sympy-20438",
+      "score": 0,
+      "score_artifact": "experiments/core_narrative/results/external_e_primary/external_calibrated_e_phase2_a0_021_score_20260516.json",
+      "status": "unresolved",
+      "task_ordinal": 21
+    },
+    {
+      "acut_id": "external-sympy-a0-gpt54-medium-concise",
+      "acut_slot": "A0",
+      "external_verifier_infra_errors": 0,
+      "instance_id": "sympy__sympy-18763",
+      "score": 0,
+      "score_artifact": "experiments/core_narrative/results/external_e_primary/external_calibrated_e_phase2_a0_022_score_20260516.json",
+      "status": "unresolved",
+      "task_ordinal": 22
+    },
+    {
+      "acut_id": "external-sympy-a0-gpt54-medium-concise",
+      "acut_slot": "A0",
+      "external_verifier_infra_errors": 0,
+      "instance_id": "sympy__sympy-21930",
+      "score": 0,
+      "score_artifact": "experiments/core_narrative/results/external_e_primary/external_calibrated_e_phase2_a0_023_score_20260516.json",
+      "status": "unresolved",
+      "task_ordinal": 23
+    },
+    {
+      "acut_id": "external-sympy-a0-gpt54-medium-concise",
+      "acut_slot": "A0",
+      "external_verifier_infra_errors": 0,
+      "instance_id": "sympy__sympy-20428",
+      "score": 0,
+      "score_artifact": "experiments/core_narrative/results/external_e_primary/external_calibrated_e_phase2_a0_024_score_20260516.json",
+      "status": "unresolved",
+      "task_ordinal": 24
+    },
+    {
+      "acut_id": "external-sympy-a0-gpt54-medium-concise",
+      "acut_slot": "A0",
+      "external_verifier_infra_errors": 0,
+      "instance_id": "sympy__sympy-15349",
+      "score": 1,
+      "score_artifact": "experiments/core_narrative/results/external_e_primary/external_calibrated_e_phase2_a0_025_score_20260516.json",
+      "status": "resolved",
+      "task_ordinal": 25
+    },
+    {
+      "acut_id": "external-sympy-a0-gpt54-medium-concise",
+      "acut_slot": "A0",
+      "external_verifier_infra_errors": 0,
+      "instance_id": "sympy__sympy-13757",
+      "score": 1,
+      "score_artifact": "experiments/core_narrative/results/external_e_primary/external_calibrated_e_phase2_a0_026_score_20260516.json",
+      "status": "resolved",
+      "task_ordinal": 26
+    },
+    {
+      "acut_id": "external-sympy-a1-gpt54-low-concise",
+      "acut_slot": "A1",
+      "external_verifier_infra_errors": 0,
+      "instance_id": "sympy__sympy-15017",
+      "score": 0,
+      "score_artifact": "experiments/core_narrative/results/external_e_primary/external_calibrated_e_phase2_a1_001_score_20260516.json",
+      "status": "unresolved",
+      "task_ordinal": 1
+    },
+    {
+      "acut_id": "external-sympy-a1-gpt54-low-concise",
+      "acut_slot": "A1",
+      "external_verifier_infra_errors": 0,
+      "instance_id": "sympy__sympy-19783",
+      "score": 1,
+      "score_artifact": "experiments/core_narrative/results/external_e_primary/external_calibrated_e_phase2_a1_002_score_20260516.json",
+      "status": "resolved",
+      "task_ordinal": 2
+    },
+    {
+      "acut_id": "external-sympy-a1-gpt54-low-concise",
+      "acut_slot": "A1",
+      "external_verifier_infra_errors": 0,
+      "instance_id": "sympy__sympy-14976",
+      "score": 0,
+      "score_artifact": "experiments/core_narrative/results/external_e_primary/external_calibrated_e_phase2_a1_003_score_20260516.json",
+      "status": "unresolved",
+      "task_ordinal": 3
+    },
+    {
+      "acut_id": "external-sympy-a1-gpt54-low-concise",
+      "acut_slot": "A1",
+      "external_verifier_infra_errors": 0,
+      "instance_id": "sympy__sympy-13615",
+      "score": 1,
+      "score_artifact": "experiments/core_narrative/results/external_e_primary/external_calibrated_e_phase2_a1_004_score_20260516.json",
+      "status": "resolved",
+      "task_ordinal": 4
+    },
+    {
+      "acut_id": "external-sympy-a1-gpt54-low-concise",
+      "acut_slot": "A1",
+      "external_verifier_infra_errors": 0,
+      "instance_id": "sympy__sympy-18211",
+      "score": 0,
+      "score_artifact": "experiments/core_narrative/results/external_e_primary/external_calibrated_e_phase2_a1_005_score_20260516.json",
+      "status": "unresolved",
+      "task_ordinal": 5
+    },
+    {
+      "acut_id": "external-sympy-a1-gpt54-low-concise",
+      "acut_slot": "A1",
+      "external_verifier_infra_errors": 0,
+      "instance_id": "sympy__sympy-15599",
+      "score": 0,
+      "score_artifact": "experiments/core_narrative/results/external_e_primary/external_calibrated_e_phase2_a1_006_score_20260516.json",
+      "status": "unresolved",
+      "task_ordinal": 6
+    },
+    {
+      "acut_id": "external-sympy-a1-gpt54-low-concise",
+      "acut_slot": "A1",
+      "external_verifier_infra_errors": 0,
+      "instance_id": "sympy__sympy-22914",
+      "score": 1,
+      "score_artifact": "experiments/core_narrative/results/external_e_primary/external_calibrated_e_phase2_a1_007_score_20260516.json",
+      "status": "resolved",
+      "task_ordinal": 7
+    },
+    {
+      "acut_id": "external-sympy-a1-gpt54-low-concise",
+      "acut_slot": "A1",
+      "external_verifier_infra_errors": 0,
+      "instance_id": "sympy__sympy-24562",
+      "score": 1,
+      "score_artifact": "experiments/core_narrative/results/external_e_primary/external_calibrated_e_phase2_a1_008_score_20260516.json",
+      "status": "resolved",
+      "task_ordinal": 8
+    },
+    {
+      "acut_id": "external-sympy-a1-gpt54-low-concise",
+      "acut_slot": "A1",
+      "external_verifier_infra_errors": 0,
+      "instance_id": "sympy__sympy-20916",
+      "score": 0,
+      "score_artifact": "experiments/core_narrative/results/external_e_primary/external_calibrated_e_phase2_a1_009_score_20260516.json",
+      "status": "unresolved",
+      "task_ordinal": 9
+    },
+    {
+      "acut_id": "external-sympy-a1-gpt54-low-concise",
+      "acut_slot": "A1",
+      "external_verifier_infra_errors": 0,
+      "instance_id": "sympy__sympy-21847",
+      "score": 1,
+      "score_artifact": "experiments/core_narrative/results/external_e_primary/external_calibrated_e_phase2_a1_010_score_20260516.json",
+      "status": "resolved",
+      "task_ordinal": 10
+    },
+    {
+      "acut_id": "external-sympy-a1-gpt54-low-concise",
+      "acut_slot": "A1",
+      "external_verifier_infra_errors": 0,
+      "instance_id": "sympy__sympy-13091",
+      "score": 0,
+      "score_artifact": "experiments/core_narrative/results/external_e_primary/external_calibrated_e_phase2_a1_011_score_20260516.json",
+      "status": "unresolved",
+      "task_ordinal": 11
+    },
+    {
+      "acut_id": "external-sympy-a1-gpt54-low-concise",
+      "acut_slot": "A1",
+      "external_verifier_infra_errors": 0,
+      "instance_id": "sympy__sympy-13372",
+      "score": 1,
+      "score_artifact": "experiments/core_narrative/results/external_e_primary/external_calibrated_e_phase2_a1_012_score_20260516.json",
+      "status": "resolved",
+      "task_ordinal": 12
+    },
+    {
+      "acut_id": "external-sympy-a1-gpt54-low-concise",
+      "acut_slot": "A1",
+      "external_verifier_infra_errors": 0,
+      "instance_id": "sympy__sympy-12419",
+      "score": 1,
+      "score_artifact": "experiments/core_narrative/results/external_e_primary/external_calibrated_e_phase2_a1_013_score_20260516.json",
+      "status": "resolved",
+      "task_ordinal": 13
+    },
+    {
+      "acut_id": "external-sympy-a1-gpt54-low-concise",
+      "acut_slot": "A1",
+      "external_verifier_infra_errors": 0,
+      "instance_id": "sympy__sympy-23824",
+      "score": 1,
+      "score_artifact": "experiments/core_narrative/results/external_e_primary/external_calibrated_e_phase2_a1_014_score_20260516.json",
+      "status": "resolved",
+      "task_ordinal": 14
+    },
+    {
+      "acut_id": "external-sympy-a1-gpt54-low-concise",
+      "acut_slot": "A1",
+      "external_verifier_infra_errors": 0,
+      "instance_id": "sympy__sympy-24066",
+      "score": 1,
+      "score_artifact": "experiments/core_narrative/results/external_e_primary/external_calibrated_e_phase2_a1_015_score_20260516.json",
+      "status": "resolved",
+      "task_ordinal": 15
+    },
+    {
+      "acut_id": "external-sympy-a1-gpt54-low-concise",
+      "acut_slot": "A1",
+      "external_verifier_infra_errors": 0,
+      "instance_id": "sympy__sympy-24661",
+      "score": 1,
+      "score_artifact": "experiments/core_narrative/results/external_e_primary/external_calibrated_e_phase2_a1_016_score_20260516.json",
+      "status": "resolved",
+      "task_ordinal": 16
+    },
+    {
+      "acut_id": "external-sympy-a1-gpt54-low-concise",
+      "acut_slot": "A1",
+      "external_verifier_infra_errors": 0,
+      "instance_id": "sympy__sympy-13877",
+      "score": 0,
+      "score_artifact": "experiments/core_narrative/results/external_e_primary/external_calibrated_e_phase2_a1_017_score_20260516.json",
+      "status": "empty_patch",
+      "task_ordinal": 17
+    },
+    {
+      "acut_id": "external-sympy-a1-gpt54-low-concise",
+      "acut_slot": "A1",
+      "external_verifier_infra_errors": 0,
+      "instance_id": "sympy__sympy-13798",
+      "score": 0,
+      "score_artifact": "experiments/core_narrative/results/external_e_primary/external_calibrated_e_phase2_a1_018_score_20260516.json",
+      "status": "unresolved",
+      "task_ordinal": 18
+    },
+    {
+      "acut_id": "external-sympy-a1-gpt54-low-concise",
+      "acut_slot": "A1",
+      "external_verifier_infra_errors": 0,
+      "instance_id": "sympy__sympy-15976",
+      "score": 1,
+      "score_artifact": "experiments/core_narrative/results/external_e_primary/external_calibrated_e_phase2_a1_019_score_20260516.json",
+      "status": "resolved",
+      "task_ordinal": 19
+    },
+    {
+      "acut_id": "external-sympy-a1-gpt54-low-concise",
+      "acut_slot": "A1",
+      "external_verifier_infra_errors": 0,
+      "instance_id": "sympy__sympy-20154",
+      "score": 1,
+      "score_artifact": "experiments/core_narrative/results/external_e_primary/external_calibrated_e_phase2_a1_020_score_20260516.json",
+      "status": "resolved",
+      "task_ordinal": 20
+    },
+    {
+      "acut_id": "external-sympy-a1-gpt54-low-concise",
+      "acut_slot": "A1",
+      "external_verifier_infra_errors": 0,
+      "instance_id": "sympy__sympy-20438",
+      "score": 0,
+      "score_artifact": "experiments/core_narrative/results/external_e_primary/external_calibrated_e_phase2_a1_021_score_20260516.json",
+      "status": "unresolved",
+      "task_ordinal": 21
+    },
+    {
+      "acut_id": "external-sympy-a1-gpt54-low-concise",
+      "acut_slot": "A1",
+      "external_verifier_infra_errors": 0,
+      "instance_id": "sympy__sympy-18763",
+      "score": 0,
+      "score_artifact": "experiments/core_narrative/results/external_e_primary/external_calibrated_e_phase2_a1_022_score_20260516.json",
+      "status": "unresolved",
+      "task_ordinal": 22
+    },
+    {
+      "acut_id": "external-sympy-a1-gpt54-low-concise",
+      "acut_slot": "A1",
+      "external_verifier_infra_errors": 0,
+      "instance_id": "sympy__sympy-21930",
+      "score": 0,
+      "score_artifact": "experiments/core_narrative/results/external_e_primary/external_calibrated_e_phase2_a1_023_score_20260516.json",
+      "status": "unresolved",
+      "task_ordinal": 23
+    },
+    {
+      "acut_id": "external-sympy-a1-gpt54-low-concise",
+      "acut_slot": "A1",
+      "external_verifier_infra_errors": 0,
+      "instance_id": "sympy__sympy-20428",
+      "score": 0,
+      "score_artifact": "experiments/core_narrative/results/external_e_primary/external_calibrated_e_phase2_a1_024_score_20260516.json",
+      "status": "unresolved",
+      "task_ordinal": 24
+    },
+    {
+      "acut_id": "external-sympy-a1-gpt54-low-concise",
+      "acut_slot": "A1",
+      "external_verifier_infra_errors": 0,
+      "instance_id": "sympy__sympy-15349",
+      "score": 1,
+      "score_artifact": "experiments/core_narrative/results/external_e_primary/external_calibrated_e_phase2_a1_025_score_20260516.json",
+      "status": "resolved",
+      "task_ordinal": 25
+    },
+    {
+      "acut_id": "external-sympy-a1-gpt54-low-concise",
+      "acut_slot": "A1",
+      "external_verifier_infra_errors": 0,
+      "instance_id": "sympy__sympy-13757",
+      "score": 0,
+      "score_artifact": "experiments/core_narrative/results/external_e_primary/external_calibrated_e_phase2_a1_026_score_20260516.json",
+      "status": "empty_patch",
+      "task_ordinal": 26
+    },
+    {
+      "acut_id": "external-sympy-a2-gpt54-high-concise",
+      "acut_slot": "A2",
+      "external_verifier_infra_errors": 0,
+      "instance_id": "sympy__sympy-15017",
+      "score": 0,
+      "score_artifact": "experiments/core_narrative/results/external_e_primary/external_calibrated_e_phase2_a2_001_score_20260516.json",
+      "status": "unresolved",
+      "task_ordinal": 1
+    },
+    {
+      "acut_id": "external-sympy-a2-gpt54-high-concise",
+      "acut_slot": "A2",
+      "external_verifier_infra_errors": 0,
+      "instance_id": "sympy__sympy-19783",
+      "score": 1,
+      "score_artifact": "experiments/core_narrative/results/external_e_primary/external_calibrated_e_phase2_a2_002_score_20260516.json",
+      "status": "resolved",
+      "task_ordinal": 2
+    },
+    {
+      "acut_id": "external-sympy-a2-gpt54-high-concise",
+      "acut_slot": "A2",
+      "external_verifier_infra_errors": 0,
+      "instance_id": "sympy__sympy-14976",
+      "score": 1,
+      "score_artifact": "experiments/core_narrative/results/external_e_primary/external_calibrated_e_phase2_a2_003_score_20260516.json",
+      "status": "resolved",
+      "task_ordinal": 3
+    },
+    {
+      "acut_id": "external-sympy-a2-gpt54-high-concise",
+      "acut_slot": "A2",
+      "external_verifier_infra_errors": 0,
+      "instance_id": "sympy__sympy-13615",
+      "score": 1,
+      "score_artifact": "experiments/core_narrative/results/external_e_primary/external_calibrated_e_phase2_a2_004_score_20260516.json",
+      "status": "resolved",
+      "task_ordinal": 4
+    },
+    {
+      "acut_id": "external-sympy-a2-gpt54-high-concise",
+      "acut_slot": "A2",
+      "external_verifier_infra_errors": 0,
+      "instance_id": "sympy__sympy-18211",
+      "score": 0,
+      "score_artifact": "experiments/core_narrative/results/external_e_primary/external_calibrated_e_phase2_a2_005_score_20260516.json",
+      "status": "unresolved",
+      "task_ordinal": 5
+    },
+    {
+      "acut_id": "external-sympy-a2-gpt54-high-concise",
+      "acut_slot": "A2",
+      "external_verifier_infra_errors": 0,
+      "instance_id": "sympy__sympy-15599",
+      "score": 1,
+      "score_artifact": "experiments/core_narrative/results/external_e_primary/external_calibrated_e_phase2_a2_006_score_20260516.json",
+      "status": "resolved",
+      "task_ordinal": 6
+    },
+    {
+      "acut_id": "external-sympy-a2-gpt54-high-concise",
+      "acut_slot": "A2",
+      "external_verifier_infra_errors": 0,
+      "instance_id": "sympy__sympy-22914",
+      "score": 1,
+      "score_artifact": "experiments/core_narrative/results/external_e_primary/external_calibrated_e_phase2_a2_007_score_20260516.json",
+      "status": "resolved",
+      "task_ordinal": 7
+    },
+    {
+      "acut_id": "external-sympy-a2-gpt54-high-concise",
+      "acut_slot": "A2",
+      "external_verifier_infra_errors": 0,
+      "instance_id": "sympy__sympy-24562",
+      "score": 1,
+      "score_artifact": "experiments/core_narrative/results/external_e_primary/external_calibrated_e_phase2_a2_008_score_20260516.json",
+      "status": "resolved",
+      "task_ordinal": 8
+    },
+    {
+      "acut_id": "external-sympy-a2-gpt54-high-concise",
+      "acut_slot": "A2",
+      "external_verifier_infra_errors": 0,
+      "instance_id": "sympy__sympy-20916",
+      "score": 0,
+      "score_artifact": "experiments/core_narrative/results/external_e_primary/external_calibrated_e_phase2_a2_009_score_20260516.json",
+      "status": "unresolved",
+      "task_ordinal": 9
+    },
+    {
+      "acut_id": "external-sympy-a2-gpt54-high-concise",
+      "acut_slot": "A2",
+      "external_verifier_infra_errors": 0,
+      "instance_id": "sympy__sympy-21847",
+      "score": 1,
+      "score_artifact": "experiments/core_narrative/results/external_e_primary/external_calibrated_e_phase2_a2_010_score_20260516.json",
+      "status": "resolved",
+      "task_ordinal": 10
+    },
+    {
+      "acut_id": "external-sympy-a2-gpt54-high-concise",
+      "acut_slot": "A2",
+      "external_verifier_infra_errors": 0,
+      "instance_id": "sympy__sympy-13091",
+      "score": 0,
+      "score_artifact": "experiments/core_narrative/results/external_e_primary/external_calibrated_e_phase2_a2_011_score_20260516.json",
+      "status": "unresolved",
+      "task_ordinal": 11
+    },
+    {
+      "acut_id": "external-sympy-a2-gpt54-high-concise",
+      "acut_slot": "A2",
+      "external_verifier_infra_errors": 0,
+      "instance_id": "sympy__sympy-13372",
+      "score": 1,
+      "score_artifact": "experiments/core_narrative/results/external_e_primary/external_calibrated_e_phase2_a2_012_score_20260516.json",
+      "status": "resolved",
+      "task_ordinal": 12
+    },
+    {
+      "acut_id": "external-sympy-a2-gpt54-high-concise",
+      "acut_slot": "A2",
+      "external_verifier_infra_errors": 0,
+      "instance_id": "sympy__sympy-12419",
+      "score": 1,
+      "score_artifact": "experiments/core_narrative/results/external_e_primary/external_calibrated_e_phase2_a2_013_score_20260516.json",
+      "status": "resolved",
+      "task_ordinal": 13
+    },
+    {
+      "acut_id": "external-sympy-a2-gpt54-high-concise",
+      "acut_slot": "A2",
+      "external_verifier_infra_errors": 0,
+      "instance_id": "sympy__sympy-23824",
+      "score": 1,
+      "score_artifact": "experiments/core_narrative/results/external_e_primary/external_calibrated_e_phase2_a2_014_score_20260516.json",
+      "status": "resolved",
+      "task_ordinal": 14
+    },
+    {
+      "acut_id": "external-sympy-a2-gpt54-high-concise",
+      "acut_slot": "A2",
+      "external_verifier_infra_errors": 0,
+      "instance_id": "sympy__sympy-24066",
+      "score": 1,
+      "score_artifact": "experiments/core_narrative/results/external_e_primary/external_calibrated_e_phase2_a2_015_score_20260516.json",
+      "status": "resolved",
+      "task_ordinal": 15
+    },
+    {
+      "acut_id": "external-sympy-a2-gpt54-high-concise",
+      "acut_slot": "A2",
+      "external_verifier_infra_errors": 0,
+      "instance_id": "sympy__sympy-24661",
+      "score": 1,
+      "score_artifact": "experiments/core_narrative/results/external_e_primary/external_calibrated_e_phase2_a2_016_score_20260516.json",
+      "status": "resolved",
+      "task_ordinal": 16
+    },
+    {
+      "acut_id": "external-sympy-a2-gpt54-high-concise",
+      "acut_slot": "A2",
+      "external_verifier_infra_errors": 0,
+      "instance_id": "sympy__sympy-13877",
+      "score": 0,
+      "score_artifact": "experiments/core_narrative/results/external_e_primary/external_calibrated_e_phase2_a2_017_score_20260516.json",
+      "status": "unresolved",
+      "task_ordinal": 17
+    },
+    {
+      "acut_id": "external-sympy-a2-gpt54-high-concise",
+      "acut_slot": "A2",
+      "external_verifier_infra_errors": 0,
+      "instance_id": "sympy__sympy-13798",
+      "score": 0,
+      "score_artifact": "experiments/core_narrative/results/external_e_primary/external_calibrated_e_phase2_a2_018_score_20260516.json",
+      "status": "unresolved",
+      "task_ordinal": 18
+    },
+    {
+      "acut_id": "external-sympy-a2-gpt54-high-concise",
+      "acut_slot": "A2",
+      "external_verifier_infra_errors": 0,
+      "instance_id": "sympy__sympy-15976",
+      "score": 0,
+      "score_artifact": "experiments/core_narrative/results/external_e_primary/external_calibrated_e_phase2_a2_019_score_20260516.json",
+      "status": "unresolved",
+      "task_ordinal": 19
+    },
+    {
+      "acut_id": "external-sympy-a2-gpt54-high-concise",
+      "acut_slot": "A2",
+      "external_verifier_infra_errors": 0,
+      "instance_id": "sympy__sympy-20154",
+      "score": 1,
+      "score_artifact": "experiments/core_narrative/results/external_e_primary/external_calibrated_e_phase2_a2_020_score_20260516.json",
+      "status": "resolved",
+      "task_ordinal": 20
+    },
+    {
+      "acut_id": "external-sympy-a2-gpt54-high-concise",
+      "acut_slot": "A2",
+      "external_verifier_infra_errors": 0,
+      "instance_id": "sympy__sympy-20438",
+      "score": 0,
+      "score_artifact": "experiments/core_narrative/results/external_e_primary/external_calibrated_e_phase2_a2_021_score_20260516.json",
+      "status": "unresolved",
+      "task_ordinal": 21
+    },
+    {
+      "acut_id": "external-sympy-a2-gpt54-high-concise",
+      "acut_slot": "A2",
+      "external_verifier_infra_errors": 0,
+      "instance_id": "sympy__sympy-18763",
+      "score": 0,
+      "score_artifact": "experiments/core_narrative/results/external_e_primary/external_calibrated_e_phase2_a2_022_score_20260516.json",
+      "status": "unresolved",
+      "task_ordinal": 22
+    },
+    {
+      "acut_id": "external-sympy-a2-gpt54-high-concise",
+      "acut_slot": "A2",
+      "external_verifier_infra_errors": 0,
+      "instance_id": "sympy__sympy-21930",
+      "score": 0,
+      "score_artifact": "experiments/core_narrative/results/external_e_primary/external_calibrated_e_phase2_a2_023_score_20260516.json",
+      "status": "unresolved",
+      "task_ordinal": 23
+    },
+    {
+      "acut_id": "external-sympy-a2-gpt54-high-concise",
+      "acut_slot": "A2",
+      "external_verifier_infra_errors": 0,
+      "instance_id": "sympy__sympy-20428",
+      "score": 0,
+      "score_artifact": "experiments/core_narrative/results/external_e_primary/external_calibrated_e_phase2_a2_024_score_20260516.json",
+      "status": "unresolved",
+      "task_ordinal": 24
+    },
+    {
+      "acut_id": "external-sympy-a2-gpt54-high-concise",
+      "acut_slot": "A2",
+      "external_verifier_infra_errors": 0,
+      "instance_id": "sympy__sympy-15349",
+      "score": 1,
+      "score_artifact": "experiments/core_narrative/results/external_e_primary/external_calibrated_e_phase2_a2_025_score_20260516.json",
+      "status": "resolved",
+      "task_ordinal": 25
+    },
+    {
+      "acut_id": "external-sympy-a2-gpt54-high-concise",
+      "acut_slot": "A2",
+      "external_verifier_infra_errors": 0,
+      "instance_id": "sympy__sympy-13757",
+      "score": 0,
+      "score_artifact": "experiments/core_narrative/results/external_e_primary/external_calibrated_e_phase2_a2_026_score_20260516.json",
+      "status": "empty_patch",
+      "task_ordinal": 26
+    },
+    {
+      "acut_id": "external-sympy-a3-gpt55-high-concise",
+      "acut_slot": "A3",
+      "external_verifier_infra_errors": 0,
+      "instance_id": "sympy__sympy-15017",
+      "score": 0,
+      "score_artifact": "experiments/core_narrative/results/external_e_primary/external_calibrated_e_phase2_a3_001_score_20260516.json",
+      "status": "unresolved",
+      "task_ordinal": 1
+    },
+    {
+      "acut_id": "external-sympy-a3-gpt55-high-concise",
+      "acut_slot": "A3",
+      "external_verifier_infra_errors": 0,
+      "instance_id": "sympy__sympy-19783",
+      "score": 0,
+      "score_artifact": "experiments/core_narrative/results/external_e_primary/external_calibrated_e_phase2_a3_002_score_20260516.json",
+      "status": "unresolved",
+      "task_ordinal": 2
+    },
+    {
+      "acut_id": "external-sympy-a3-gpt55-high-concise",
+      "acut_slot": "A3",
+      "external_verifier_infra_errors": 0,
+      "instance_id": "sympy__sympy-14976",
+      "score": 1,
+      "score_artifact": "experiments/core_narrative/results/external_e_primary/external_calibrated_e_phase2_a3_003_score_20260516.json",
+      "status": "resolved",
+      "task_ordinal": 3
+    },
+    {
+      "acut_id": "external-sympy-a3-gpt55-high-concise",
+      "acut_slot": "A3",
+      "external_verifier_infra_errors": 0,
+      "instance_id": "sympy__sympy-13615",
+      "score": 1,
+      "score_artifact": "experiments/core_narrative/results/external_e_primary/external_calibrated_e_phase2_a3_004_score_20260516.json",
+      "status": "resolved",
+      "task_ordinal": 4
+    },
+    {
+      "acut_id": "external-sympy-a3-gpt55-high-concise",
+      "acut_slot": "A3",
+      "external_verifier_infra_errors": 0,
+      "instance_id": "sympy__sympy-18211",
+      "score": 1,
+      "score_artifact": "experiments/core_narrative/results/external_e_primary/external_calibrated_e_phase2_a3_005_score_20260516.json",
+      "status": "resolved",
+      "task_ordinal": 5
+    },
+    {
+      "acut_id": "external-sympy-a3-gpt55-high-concise",
+      "acut_slot": "A3",
+      "external_verifier_infra_errors": 0,
+      "instance_id": "sympy__sympy-15599",
+      "score": 1,
+      "score_artifact": "experiments/core_narrative/results/external_e_primary/external_calibrated_e_phase2_a3_006_score_20260516.json",
+      "status": "resolved",
+      "task_ordinal": 6
+    },
+    {
+      "acut_id": "external-sympy-a3-gpt55-high-concise",
+      "acut_slot": "A3",
+      "external_verifier_infra_errors": 0,
+      "instance_id": "sympy__sympy-22914",
+      "score": 1,
+      "score_artifact": "experiments/core_narrative/results/external_e_primary/external_calibrated_e_phase2_a3_007_score_20260516.json",
+      "status": "resolved",
+      "task_ordinal": 7
+    },
+    {
+      "acut_id": "external-sympy-a3-gpt55-high-concise",
+      "acut_slot": "A3",
+      "external_verifier_infra_errors": 0,
+      "instance_id": "sympy__sympy-24562",
+      "score": 1,
+      "score_artifact": "experiments/core_narrative/results/external_e_primary/external_calibrated_e_phase2_a3_008_score_20260516.json",
+      "status": "resolved",
+      "task_ordinal": 8
+    },
+    {
+      "acut_id": "external-sympy-a3-gpt55-high-concise",
+      "acut_slot": "A3",
+      "external_verifier_infra_errors": 0,
+      "instance_id": "sympy__sympy-20916",
+      "score": 0,
+      "score_artifact": "experiments/core_narrative/results/external_e_primary/external_calibrated_e_phase2_a3_009_score_20260516.json",
+      "status": "unresolved",
+      "task_ordinal": 9
+    },
+    {
+      "acut_id": "external-sympy-a3-gpt55-high-concise",
+      "acut_slot": "A3",
+      "external_verifier_infra_errors": 0,
+      "instance_id": "sympy__sympy-21847",
+      "score": 1,
+      "score_artifact": "experiments/core_narrative/results/external_e_primary/external_calibrated_e_phase2_a3_010_score_20260516.json",
+      "status": "resolved",
+      "task_ordinal": 10
+    },
+    {
+      "acut_id": "external-sympy-a3-gpt55-high-concise",
+      "acut_slot": "A3",
+      "external_verifier_infra_errors": 0,
+      "instance_id": "sympy__sympy-13091",
+      "score": 0,
+      "score_artifact": "experiments/core_narrative/results/external_e_primary/external_calibrated_e_phase2_a3_011_score_20260516.json",
+      "status": "unresolved",
+      "task_ordinal": 11
+    },
+    {
+      "acut_id": "external-sympy-a3-gpt55-high-concise",
+      "acut_slot": "A3",
+      "external_verifier_infra_errors": 0,
+      "instance_id": "sympy__sympy-13372",
+      "score": 1,
+      "score_artifact": "experiments/core_narrative/results/external_e_primary/external_calibrated_e_phase2_a3_012_score_20260516.json",
+      "status": "resolved",
+      "task_ordinal": 12
+    },
+    {
+      "acut_id": "external-sympy-a3-gpt55-high-concise",
+      "acut_slot": "A3",
+      "external_verifier_infra_errors": 0,
+      "instance_id": "sympy__sympy-12419",
+      "score": 1,
+      "score_artifact": "experiments/core_narrative/results/external_e_primary/external_calibrated_e_phase2_a3_013_score_20260516.json",
+      "status": "resolved",
+      "task_ordinal": 13
+    },
+    {
+      "acut_id": "external-sympy-a3-gpt55-high-concise",
+      "acut_slot": "A3",
+      "external_verifier_infra_errors": 0,
+      "instance_id": "sympy__sympy-23824",
+      "score": 1,
+      "score_artifact": "experiments/core_narrative/results/external_e_primary/external_calibrated_e_phase2_a3_014_score_20260516.json",
+      "status": "resolved",
+      "task_ordinal": 14
+    },
+    {
+      "acut_id": "external-sympy-a3-gpt55-high-concise",
+      "acut_slot": "A3",
+      "external_verifier_infra_errors": 0,
+      "instance_id": "sympy__sympy-24066",
+      "score": 1,
+      "score_artifact": "experiments/core_narrative/results/external_e_primary/external_calibrated_e_phase2_a3_015_score_20260516.json",
+      "status": "resolved",
+      "task_ordinal": 15
+    },
+    {
+      "acut_id": "external-sympy-a3-gpt55-high-concise",
+      "acut_slot": "A3",
+      "external_verifier_infra_errors": 0,
+      "instance_id": "sympy__sympy-24661",
+      "score": 1,
+      "score_artifact": "experiments/core_narrative/results/external_e_primary/external_calibrated_e_phase2_a3_016_score_20260516.json",
+      "status": "resolved",
+      "task_ordinal": 16
+    },
+    {
+      "acut_id": "external-sympy-a3-gpt55-high-concise",
+      "acut_slot": "A3",
+      "external_verifier_infra_errors": 0,
+      "instance_id": "sympy__sympy-13877",
+      "score": 1,
+      "score_artifact": "experiments/core_narrative/results/external_e_primary/external_calibrated_e_phase2_a3_017_score_20260516.json",
+      "status": "resolved",
+      "task_ordinal": 17
+    },
+    {
+      "acut_id": "external-sympy-a3-gpt55-high-concise",
+      "acut_slot": "A3",
+      "external_verifier_infra_errors": 0,
+      "instance_id": "sympy__sympy-13798",
+      "score": 0,
+      "score_artifact": "experiments/core_narrative/results/external_e_primary/external_calibrated_e_phase2_a3_018_score_20260516.json",
+      "status": "unresolved",
+      "task_ordinal": 18
+    },
+    {
+      "acut_id": "external-sympy-a3-gpt55-high-concise",
+      "acut_slot": "A3",
+      "external_verifier_infra_errors": 0,
+      "instance_id": "sympy__sympy-15976",
+      "score": 1,
+      "score_artifact": "experiments/core_narrative/results/external_e_primary/external_calibrated_e_phase2_a3_019_score_20260516.json",
+      "status": "resolved",
+      "task_ordinal": 19
+    },
+    {
+      "acut_id": "external-sympy-a3-gpt55-high-concise",
+      "acut_slot": "A3",
+      "external_verifier_infra_errors": 0,
+      "instance_id": "sympy__sympy-20154",
+      "score": 1,
+      "score_artifact": "experiments/core_narrative/results/external_e_primary/external_calibrated_e_phase2_a3_020_score_20260516.json",
+      "status": "resolved",
+      "task_ordinal": 20
+    },
+    {
+      "acut_id": "external-sympy-a3-gpt55-high-concise",
+      "acut_slot": "A3",
+      "external_verifier_infra_errors": 0,
+      "instance_id": "sympy__sympy-20438",
+      "score": 0,
+      "score_artifact": "experiments/core_narrative/results/external_e_primary/external_calibrated_e_phase2_a3_021_score_20260516.json",
+      "status": "unresolved",
+      "task_ordinal": 21
+    },
+    {
+      "acut_id": "external-sympy-a3-gpt55-high-concise",
+      "acut_slot": "A3",
+      "external_verifier_infra_errors": 0,
+      "instance_id": "sympy__sympy-18763",
+      "score": 0,
+      "score_artifact": "experiments/core_narrative/results/external_e_primary/external_calibrated_e_phase2_a3_022_score_20260516.json",
+      "status": "unresolved",
+      "task_ordinal": 22
+    },
+    {
+      "acut_id": "external-sympy-a3-gpt55-high-concise",
+      "acut_slot": "A3",
+      "external_verifier_infra_errors": 0,
+      "instance_id": "sympy__sympy-21930",
+      "score": 0,
+      "score_artifact": "experiments/core_narrative/results/external_e_primary/external_calibrated_e_phase2_a3_023_score_20260516.json",
+      "status": "unresolved",
+      "task_ordinal": 23
+    },
+    {
+      "acut_id": "external-sympy-a3-gpt55-high-concise",
+      "acut_slot": "A3",
+      "external_verifier_infra_errors": 0,
+      "instance_id": "sympy__sympy-20428",
+      "score": 0,
+      "score_artifact": "experiments/core_narrative/results/external_e_primary/external_calibrated_e_phase2_a3_024_score_20260516.json",
+      "status": "unresolved",
+      "task_ordinal": 24
+    },
+    {
+      "acut_id": "external-sympy-a3-gpt55-high-concise",
+      "acut_slot": "A3",
+      "external_verifier_infra_errors": 0,
+      "instance_id": "sympy__sympy-15349",
+      "score": 1,
+      "score_artifact": "experiments/core_narrative/results/external_e_primary/external_calibrated_e_phase2_a3_025_score_20260516.json",
+      "status": "resolved",
+      "task_ordinal": 25
+    },
+    {
+      "acut_id": "external-sympy-a3-gpt55-high-concise",
+      "acut_slot": "A3",
+      "external_verifier_infra_errors": 0,
+      "instance_id": "sympy__sympy-13757",
+      "score": 1,
+      "score_artifact": "experiments/core_narrative/results/external_e_primary/external_calibrated_e_phase2_a3_026_score_20260516.json",
+      "status": "resolved",
+      "task_ordinal": 26
+    },
+    {
+      "acut_id": "external-sympy-a4-gpt54mini-high-concise",
+      "acut_slot": "A4",
+      "external_verifier_infra_errors": 0,
+      "instance_id": "sympy__sympy-15017",
+      "score": 0,
+      "score_artifact": "experiments/core_narrative/results/external_e_primary/external_calibrated_e_phase2_a4_001_score_20260516.json",
+      "status": "unresolved",
+      "task_ordinal": 1
+    },
+    {
+      "acut_id": "external-sympy-a4-gpt54mini-high-concise",
+      "acut_slot": "A4",
+      "external_verifier_infra_errors": 0,
+      "instance_id": "sympy__sympy-19783",
+      "score": 1,
+      "score_artifact": "experiments/core_narrative/results/external_e_primary/external_calibrated_e_phase2_a4_002_score_20260516.json",
+      "status": "resolved",
+      "task_ordinal": 2
+    },
+    {
+      "acut_id": "external-sympy-a4-gpt54mini-high-concise",
+      "acut_slot": "A4",
+      "external_verifier_infra_errors": 0,
+      "instance_id": "sympy__sympy-14976",
+      "score": 1,
+      "score_artifact": "experiments/core_narrative/results/external_e_primary/external_calibrated_e_phase2_a4_003_score_20260516.json",
+      "status": "resolved",
+      "task_ordinal": 3
+    },
+    {
+      "acut_id": "external-sympy-a4-gpt54mini-high-concise",
+      "acut_slot": "A4",
+      "external_verifier_infra_errors": 0,
+      "instance_id": "sympy__sympy-13615",
+      "score": 1,
+      "score_artifact": "experiments/core_narrative/results/external_e_primary/external_calibrated_e_phase2_a4_004_score_20260516.json",
+      "status": "resolved",
+      "task_ordinal": 4
+    },
+    {
+      "acut_id": "external-sympy-a4-gpt54mini-high-concise",
+      "acut_slot": "A4",
+      "external_verifier_infra_errors": 0,
+      "instance_id": "sympy__sympy-18211",
+      "score": 1,
+      "score_artifact": "experiments/core_narrative/results/external_e_primary/external_calibrated_e_phase2_a4_005_score_20260516.json",
+      "status": "resolved",
+      "task_ordinal": 5
+    },
+    {
+      "acut_id": "external-sympy-a4-gpt54mini-high-concise",
+      "acut_slot": "A4",
+      "external_verifier_infra_errors": 0,
+      "instance_id": "sympy__sympy-15599",
+      "score": 0,
+      "score_artifact": "experiments/core_narrative/results/external_e_primary/external_calibrated_e_phase2_a4_006_score_20260516.json",
+      "status": "unresolved",
+      "task_ordinal": 6
+    },
+    {
+      "acut_id": "external-sympy-a4-gpt54mini-high-concise",
+      "acut_slot": "A4",
+      "external_verifier_infra_errors": 0,
+      "instance_id": "sympy__sympy-22914",
+      "score": 1,
+      "score_artifact": "experiments/core_narrative/results/external_e_primary/external_calibrated_e_phase2_a4_007_score_20260516.json",
+      "status": "resolved",
+      "task_ordinal": 7
+    },
+    {
+      "acut_id": "external-sympy-a4-gpt54mini-high-concise",
+      "acut_slot": "A4",
+      "external_verifier_infra_errors": 0,
+      "instance_id": "sympy__sympy-24562",
+      "score": 1,
+      "score_artifact": "experiments/core_narrative/results/external_e_primary/external_calibrated_e_phase2_a4_008_score_20260516.json",
+      "status": "resolved",
+      "task_ordinal": 8
+    },
+    {
+      "acut_id": "external-sympy-a4-gpt54mini-high-concise",
+      "acut_slot": "A4",
+      "external_verifier_infra_errors": 0,
+      "instance_id": "sympy__sympy-20916",
+      "score": 0,
+      "score_artifact": "experiments/core_narrative/results/external_e_primary/external_calibrated_e_phase2_a4_009_score_20260516.json",
+      "status": "unresolved",
+      "task_ordinal": 9
+    },
+    {
+      "acut_id": "external-sympy-a4-gpt54mini-high-concise",
+      "acut_slot": "A4",
+      "external_verifier_infra_errors": 0,
+      "instance_id": "sympy__sympy-21847",
+      "score": 1,
+      "score_artifact": "experiments/core_narrative/results/external_e_primary/external_calibrated_e_phase2_a4_010_score_20260516.json",
+      "status": "resolved",
+      "task_ordinal": 10
+    },
+    {
+      "acut_id": "external-sympy-a4-gpt54mini-high-concise",
+      "acut_slot": "A4",
+      "external_verifier_infra_errors": 0,
+      "instance_id": "sympy__sympy-13091",
+      "score": 0,
+      "score_artifact": "experiments/core_narrative/results/external_e_primary/external_calibrated_e_phase2_a4_011_score_20260516.json",
+      "status": "unresolved",
+      "task_ordinal": 11
+    },
+    {
+      "acut_id": "external-sympy-a4-gpt54mini-high-concise",
+      "acut_slot": "A4",
+      "external_verifier_infra_errors": 0,
+      "instance_id": "sympy__sympy-13372",
+      "score": 1,
+      "score_artifact": "experiments/core_narrative/results/external_e_primary/external_calibrated_e_phase2_a4_012_score_20260516.json",
+      "status": "resolved",
+      "task_ordinal": 12
+    },
+    {
+      "acut_id": "external-sympy-a4-gpt54mini-high-concise",
+      "acut_slot": "A4",
+      "external_verifier_infra_errors": 0,
+      "instance_id": "sympy__sympy-12419",
+      "score": 1,
+      "score_artifact": "experiments/core_narrative/results/external_e_primary/external_calibrated_e_phase2_a4_013_score_20260516.json",
+      "status": "resolved",
+      "task_ordinal": 13
+    },
+    {
+      "acut_id": "external-sympy-a4-gpt54mini-high-concise",
+      "acut_slot": "A4",
+      "external_verifier_infra_errors": 0,
+      "instance_id": "sympy__sympy-23824",
+      "score": 1,
+      "score_artifact": "experiments/core_narrative/results/external_e_primary/external_calibrated_e_phase2_a4_014_score_20260516.json",
+      "status": "resolved",
+      "task_ordinal": 14
+    },
+    {
+      "acut_id": "external-sympy-a4-gpt54mini-high-concise",
+      "acut_slot": "A4",
+      "external_verifier_infra_errors": 0,
+      "instance_id": "sympy__sympy-24066",
+      "score": 1,
+      "score_artifact": "experiments/core_narrative/results/external_e_primary/external_calibrated_e_phase2_a4_015_score_20260516.json",
+      "status": "resolved",
+      "task_ordinal": 15
+    },
+    {
+      "acut_id": "external-sympy-a4-gpt54mini-high-concise",
+      "acut_slot": "A4",
+      "external_verifier_infra_errors": 0,
+      "instance_id": "sympy__sympy-24661",
+      "score": 1,
+      "score_artifact": "experiments/core_narrative/results/external_e_primary/external_calibrated_e_phase2_a4_016_score_20260516.json",
+      "status": "resolved",
+      "task_ordinal": 16
+    },
+    {
+      "acut_id": "external-sympy-a4-gpt54mini-high-concise",
+      "acut_slot": "A4",
+      "external_verifier_infra_errors": 0,
+      "instance_id": "sympy__sympy-13877",
+      "score": 0,
+      "score_artifact": "experiments/core_narrative/results/external_e_primary/external_calibrated_e_phase2_a4_017_score_20260516.json",
+      "status": "empty_patch",
+      "task_ordinal": 17
+    },
+    {
+      "acut_id": "external-sympy-a4-gpt54mini-high-concise",
+      "acut_slot": "A4",
+      "external_verifier_infra_errors": 0,
+      "instance_id": "sympy__sympy-13798",
+      "score": 0,
+      "score_artifact": "experiments/core_narrative/results/external_e_primary/external_calibrated_e_phase2_a4_018_score_20260516.json",
+      "status": "unresolved",
+      "task_ordinal": 18
+    },
+    {
+      "acut_id": "external-sympy-a4-gpt54mini-high-concise",
+      "acut_slot": "A4",
+      "external_verifier_infra_errors": 0,
+      "instance_id": "sympy__sympy-15976",
+      "score": 1,
+      "score_artifact": "experiments/core_narrative/results/external_e_primary/external_calibrated_e_phase2_a4_019_score_20260516.json",
+      "status": "resolved",
+      "task_ordinal": 19
+    },
+    {
+      "acut_id": "external-sympy-a4-gpt54mini-high-concise",
+      "acut_slot": "A4",
+      "external_verifier_infra_errors": 0,
+      "instance_id": "sympy__sympy-20154",
+      "score": 1,
+      "score_artifact": "experiments/core_narrative/results/external_e_primary/external_calibrated_e_phase2_a4_020_score_20260516.json",
+      "status": "resolved",
+      "task_ordinal": 20
+    },
+    {
+      "acut_id": "external-sympy-a4-gpt54mini-high-concise",
+      "acut_slot": "A4",
+      "external_verifier_infra_errors": 0,
+      "instance_id": "sympy__sympy-20438",
+      "score": 0,
+      "score_artifact": "experiments/core_narrative/results/external_e_primary/external_calibrated_e_phase2_a4_021_score_20260516.json",
+      "status": "unresolved",
+      "task_ordinal": 21
+    },
+    {
+      "acut_id": "external-sympy-a4-gpt54mini-high-concise",
+      "acut_slot": "A4",
+      "external_verifier_infra_errors": 0,
+      "instance_id": "sympy__sympy-18763",
+      "score": 0,
+      "score_artifact": "experiments/core_narrative/results/external_e_primary/external_calibrated_e_phase2_a4_022_score_20260516.json",
+      "status": "unresolved",
+      "task_ordinal": 22
+    },
+    {
+      "acut_id": "external-sympy-a4-gpt54mini-high-concise",
+      "acut_slot": "A4",
+      "external_verifier_infra_errors": 0,
+      "instance_id": "sympy__sympy-21930",
+      "score": 0,
+      "score_artifact": "experiments/core_narrative/results/external_e_primary/external_calibrated_e_phase2_a4_023_score_20260516.json",
+      "status": "unresolved",
+      "task_ordinal": 23
+    },
+    {
+      "acut_id": "external-sympy-a4-gpt54mini-high-concise",
+      "acut_slot": "A4",
+      "external_verifier_infra_errors": 0,
+      "instance_id": "sympy__sympy-20428",
+      "score": 0,
+      "score_artifact": "experiments/core_narrative/results/external_e_primary/external_calibrated_e_phase2_a4_024_score_20260516.json",
+      "status": "unresolved",
+      "task_ordinal": 24
+    },
+    {
+      "acut_id": "external-sympy-a4-gpt54mini-high-concise",
+      "acut_slot": "A4",
+      "external_verifier_infra_errors": 0,
+      "instance_id": "sympy__sympy-15349",
+      "score": 1,
+      "score_artifact": "experiments/core_narrative/results/external_e_primary/external_calibrated_e_phase2_a4_025_score_20260516.json",
+      "status": "resolved",
+      "task_ordinal": 25
+    },
+    {
+      "acut_id": "external-sympy-a4-gpt54mini-high-concise",
+      "acut_slot": "A4",
+      "external_verifier_infra_errors": 0,
+      "instance_id": "sympy__sympy-13757",
+      "score": 1,
+      "score_artifact": "experiments/core_narrative/results/external_e_primary/external_calibrated_e_phase2_a4_026_score_20260516.json",
+      "status": "resolved",
+      "task_ordinal": 26
+    },
+    {
+      "acut_id": "external-sympy-a5-gpt54-high-rich-agents",
+      "acut_slot": "A5",
+      "external_verifier_infra_errors": 0,
+      "instance_id": "sympy__sympy-15017",
+      "score": 1,
+      "score_artifact": "experiments/core_narrative/results/external_e_primary/external_calibrated_e_phase2_a5_001_score_20260516.json",
+      "status": "resolved",
+      "task_ordinal": 1
+    },
+    {
+      "acut_id": "external-sympy-a5-gpt54-high-rich-agents",
+      "acut_slot": "A5",
+      "external_verifier_infra_errors": 0,
+      "instance_id": "sympy__sympy-19783",
+      "score": 1,
+      "score_artifact": "experiments/core_narrative/results/external_e_primary/external_calibrated_e_phase2_a5_002_score_20260516.json",
+      "status": "resolved",
+      "task_ordinal": 2
+    },
+    {
+      "acut_id": "external-sympy-a5-gpt54-high-rich-agents",
+      "acut_slot": "A5",
+      "external_verifier_infra_errors": 0,
+      "instance_id": "sympy__sympy-14976",
+      "score": 0,
+      "score_artifact": "experiments/core_narrative/results/external_e_primary/external_calibrated_e_phase2_a5_003_score_20260516.json",
+      "status": "unresolved",
+      "task_ordinal": 3
+    },
+    {
+      "acut_id": "external-sympy-a5-gpt54-high-rich-agents",
+      "acut_slot": "A5",
+      "external_verifier_infra_errors": 0,
+      "instance_id": "sympy__sympy-13615",
+      "score": 1,
+      "score_artifact": "experiments/core_narrative/results/external_e_primary/external_calibrated_e_phase2_a5_004_score_20260516.json",
+      "status": "resolved",
+      "task_ordinal": 4
+    },
+    {
+      "acut_id": "external-sympy-a5-gpt54-high-rich-agents",
+      "acut_slot": "A5",
+      "external_verifier_infra_errors": 0,
+      "instance_id": "sympy__sympy-18211",
+      "score": 1,
+      "score_artifact": "experiments/core_narrative/results/external_e_primary/external_calibrated_e_phase2_a5_005_score_20260516.json",
+      "status": "resolved",
+      "task_ordinal": 5
+    },
+    {
+      "acut_id": "external-sympy-a5-gpt54-high-rich-agents",
+      "acut_slot": "A5",
+      "external_verifier_infra_errors": 0,
+      "instance_id": "sympy__sympy-15599",
+      "score": 0,
+      "score_artifact": "experiments/core_narrative/results/external_e_primary/external_calibrated_e_phase2_a5_006_score_20260516.json",
+      "status": "unresolved",
+      "task_ordinal": 6
+    },
+    {
+      "acut_id": "external-sympy-a5-gpt54-high-rich-agents",
+      "acut_slot": "A5",
+      "external_verifier_infra_errors": 0,
+      "instance_id": "sympy__sympy-22914",
+      "score": 1,
+      "score_artifact": "experiments/core_narrative/results/external_e_primary/external_calibrated_e_phase2_a5_007_score_20260516.json",
+      "status": "resolved",
+      "task_ordinal": 7
+    },
+    {
+      "acut_id": "external-sympy-a5-gpt54-high-rich-agents",
+      "acut_slot": "A5",
+      "external_verifier_infra_errors": 0,
+      "instance_id": "sympy__sympy-24562",
+      "score": 1,
+      "score_artifact": "experiments/core_narrative/results/external_e_primary/external_calibrated_e_phase2_a5_008_score_20260516.json",
+      "status": "resolved",
+      "task_ordinal": 8
+    },
+    {
+      "acut_id": "external-sympy-a5-gpt54-high-rich-agents",
+      "acut_slot": "A5",
+      "external_verifier_infra_errors": 0,
+      "instance_id": "sympy__sympy-20916",
+      "score": 0,
+      "score_artifact": "experiments/core_narrative/results/external_e_primary/external_calibrated_e_phase2_a5_009_score_20260516.json",
+      "status": "unresolved",
+      "task_ordinal": 9
+    },
+    {
+      "acut_id": "external-sympy-a5-gpt54-high-rich-agents",
+      "acut_slot": "A5",
+      "external_verifier_infra_errors": 0,
+      "instance_id": "sympy__sympy-21847",
+      "score": 1,
+      "score_artifact": "experiments/core_narrative/results/external_e_primary/external_calibrated_e_phase2_a5_010_score_20260516.json",
+      "status": "resolved",
+      "task_ordinal": 10
+    },
+    {
+      "acut_id": "external-sympy-a5-gpt54-high-rich-agents",
+      "acut_slot": "A5",
+      "external_verifier_infra_errors": 0,
+      "instance_id": "sympy__sympy-13091",
+      "score": 0,
+      "score_artifact": "experiments/core_narrative/results/external_e_primary/external_calibrated_e_phase2_a5_011_score_20260516.json",
+      "status": "unresolved",
+      "task_ordinal": 11
+    },
+    {
+      "acut_id": "external-sympy-a5-gpt54-high-rich-agents",
+      "acut_slot": "A5",
+      "external_verifier_infra_errors": 0,
+      "instance_id": "sympy__sympy-13372",
+      "score": 1,
+      "score_artifact": "experiments/core_narrative/results/external_e_primary/external_calibrated_e_phase2_a5_012_score_20260516.json",
+      "status": "resolved",
+      "task_ordinal": 12
+    },
+    {
+      "acut_id": "external-sympy-a5-gpt54-high-rich-agents",
+      "acut_slot": "A5",
+      "external_verifier_infra_errors": 0,
+      "instance_id": "sympy__sympy-12419",
+      "score": 1,
+      "score_artifact": "experiments/core_narrative/results/external_e_primary/external_calibrated_e_phase2_a5_013_score_20260516.json",
+      "status": "resolved",
+      "task_ordinal": 13
+    },
+    {
+      "acut_id": "external-sympy-a5-gpt54-high-rich-agents",
+      "acut_slot": "A5",
+      "external_verifier_infra_errors": 0,
+      "instance_id": "sympy__sympy-23824",
+      "score": 1,
+      "score_artifact": "experiments/core_narrative/results/external_e_primary/external_calibrated_e_phase2_a5_014_score_20260516.json",
+      "status": "resolved",
+      "task_ordinal": 14
+    },
+    {
+      "acut_id": "external-sympy-a5-gpt54-high-rich-agents",
+      "acut_slot": "A5",
+      "external_verifier_infra_errors": 0,
+      "instance_id": "sympy__sympy-24066",
+      "score": 1,
+      "score_artifact": "experiments/core_narrative/results/external_e_primary/external_calibrated_e_phase2_a5_015_score_20260516.json",
+      "status": "resolved",
+      "task_ordinal": 15
+    },
+    {
+      "acut_id": "external-sympy-a5-gpt54-high-rich-agents",
+      "acut_slot": "A5",
+      "external_verifier_infra_errors": 0,
+      "instance_id": "sympy__sympy-24661",
+      "score": 1,
+      "score_artifact": "experiments/core_narrative/results/external_e_primary/external_calibrated_e_phase2_a5_016_score_20260516.json",
+      "status": "resolved",
+      "task_ordinal": 16
+    },
+    {
+      "acut_id": "external-sympy-a5-gpt54-high-rich-agents",
+      "acut_slot": "A5",
+      "external_verifier_infra_errors": 0,
+      "instance_id": "sympy__sympy-13877",
+      "score": 0,
+      "score_artifact": "experiments/core_narrative/results/external_e_primary/external_calibrated_e_phase2_a5_017_score_20260516.json",
+      "status": "empty_patch",
+      "task_ordinal": 17
+    },
+    {
+      "acut_id": "external-sympy-a5-gpt54-high-rich-agents",
+      "acut_slot": "A5",
+      "external_verifier_infra_errors": 0,
+      "instance_id": "sympy__sympy-13798",
+      "score": 0,
+      "score_artifact": "experiments/core_narrative/results/external_e_primary/external_calibrated_e_phase2_a5_018_score_20260516.json",
+      "status": "unresolved",
+      "task_ordinal": 18
+    },
+    {
+      "acut_id": "external-sympy-a5-gpt54-high-rich-agents",
+      "acut_slot": "A5",
+      "external_verifier_infra_errors": 0,
+      "instance_id": "sympy__sympy-15976",
+      "score": 1,
+      "score_artifact": "experiments/core_narrative/results/external_e_primary/external_calibrated_e_phase2_a5_019_score_20260516.json",
+      "status": "resolved",
+      "task_ordinal": 19
+    },
+    {
+      "acut_id": "external-sympy-a5-gpt54-high-rich-agents",
+      "acut_slot": "A5",
+      "external_verifier_infra_errors": 0,
+      "instance_id": "sympy__sympy-20154",
+      "score": 1,
+      "score_artifact": "experiments/core_narrative/results/external_e_primary/external_calibrated_e_phase2_a5_020_score_20260516.json",
+      "status": "resolved",
+      "task_ordinal": 20
+    },
+    {
+      "acut_id": "external-sympy-a5-gpt54-high-rich-agents",
+      "acut_slot": "A5",
+      "external_verifier_infra_errors": 0,
+      "instance_id": "sympy__sympy-20438",
+      "score": 0,
+      "score_artifact": "experiments/core_narrative/results/external_e_primary/external_calibrated_e_phase2_a5_021_score_20260516.json",
+      "status": "unresolved",
+      "task_ordinal": 21
+    },
+    {
+      "acut_id": "external-sympy-a5-gpt54-high-rich-agents",
+      "acut_slot": "A5",
+      "external_verifier_infra_errors": 0,
+      "instance_id": "sympy__sympy-18763",
+      "score": 0,
+      "score_artifact": "experiments/core_narrative/results/external_e_primary/external_calibrated_e_phase2_a5_022_score_20260516.json",
+      "status": "unresolved",
+      "task_ordinal": 22
+    },
+    {
+      "acut_id": "external-sympy-a5-gpt54-high-rich-agents",
+      "acut_slot": "A5",
+      "external_verifier_infra_errors": 0,
+      "instance_id": "sympy__sympy-21930",
+      "score": 0,
+      "score_artifact": "experiments/core_narrative/results/external_e_primary/external_calibrated_e_phase2_a5_023_score_20260516.json",
+      "status": "unresolved",
+      "task_ordinal": 23
+    },
+    {
+      "acut_id": "external-sympy-a5-gpt54-high-rich-agents",
+      "acut_slot": "A5",
+      "external_verifier_infra_errors": 0,
+      "instance_id": "sympy__sympy-20428",
+      "score": 0,
+      "score_artifact": "experiments/core_narrative/results/external_e_primary/external_calibrated_e_phase2_a5_024_score_20260516.json",
+      "status": "unresolved",
+      "task_ordinal": 24
+    },
+    {
+      "acut_id": "external-sympy-a5-gpt54-high-rich-agents",
+      "acut_slot": "A5",
+      "external_verifier_infra_errors": 0,
+      "instance_id": "sympy__sympy-15349",
+      "score": 1,
+      "score_artifact": "experiments/core_narrative/results/external_e_primary/external_calibrated_e_phase2_a5_025_score_20260516.json",
+      "status": "resolved",
+      "task_ordinal": 25
+    },
+    {
+      "acut_id": "external-sympy-a5-gpt54-high-rich-agents",
+      "acut_slot": "A5",
+      "external_verifier_infra_errors": 0,
+      "instance_id": "sympy__sympy-13757",
+      "score": 0,
+      "score_artifact": "experiments/core_narrative/results/external_e_primary/external_calibrated_e_phase2_a5_026_score_20260516.json",
+      "status": "empty_patch",
+      "task_ordinal": 26
+    }
+  ],
+  "score_artifacts_summarized": [
+    "experiments/core_narrative/results/external_e_primary/external_calibrated_e_phase2_a0_001_score_20260516.json",
+    "experiments/core_narrative/results/external_e_primary/external_calibrated_e_phase2_a0_002_score_20260516.json",
+    "experiments/core_narrative/results/external_e_primary/external_calibrated_e_phase2_a0_003_score_20260516.json",
+    "experiments/core_narrative/results/external_e_primary/external_calibrated_e_phase2_a0_004_score_20260516.json",
+    "experiments/core_narrative/results/external_e_primary/external_calibrated_e_phase2_a0_005_score_20260516.json",
+    "experiments/core_narrative/results/external_e_primary/external_calibrated_e_phase2_a0_006_score_20260516.json",
+    "experiments/core_narrative/results/external_e_primary/external_calibrated_e_phase2_a0_007_score_20260516.json",
+    "experiments/core_narrative/results/external_e_primary/external_calibrated_e_phase2_a0_008_score_20260516.json",
+    "experiments/core_narrative/results/external_e_primary/external_calibrated_e_phase2_a0_009_score_20260516.json",
+    "experiments/core_narrative/results/external_e_primary/external_calibrated_e_phase2_a0_010_score_20260516.json",
+    "experiments/core_narrative/results/external_e_primary/external_calibrated_e_phase2_a0_011_score_20260516.json",
+    "experiments/core_narrative/results/external_e_primary/external_calibrated_e_phase2_a0_012_score_20260516.json",
+    "experiments/core_narrative/results/external_e_primary/external_calibrated_e_phase2_a0_013_score_20260516.json",
+    "experiments/core_narrative/results/external_e_primary/external_calibrated_e_phase2_a0_014_score_20260516.json",
+    "experiments/core_narrative/results/external_e_primary/external_calibrated_e_phase2_a0_015_score_20260516.json",
+    "experiments/core_narrative/results/external_e_primary/external_calibrated_e_phase2_a0_016_score_20260516.json",
+    "experiments/core_narrative/results/external_e_primary/external_calibrated_e_phase2_a0_017_score_20260516.json",
+    "experiments/core_narrative/results/external_e_primary/external_calibrated_e_phase2_a0_018_score_20260516.json",
+    "experiments/core_narrative/results/external_e_primary/external_calibrated_e_phase2_a0_019_score_20260516.json",
+    "experiments/core_narrative/results/external_e_primary/external_calibrated_e_phase2_a0_020_score_20260516.json",
+    "experiments/core_narrative/results/external_e_primary/external_calibrated_e_phase2_a0_021_score_20260516.json",
+    "experiments/core_narrative/results/external_e_primary/external_calibrated_e_phase2_a0_022_score_20260516.json",
+    "experiments/core_narrative/results/external_e_primary/external_calibrated_e_phase2_a0_023_score_20260516.json",
+    "experiments/core_narrative/results/external_e_primary/external_calibrated_e_phase2_a0_024_score_20260516.json",
+    "experiments/core_narrative/results/external_e_primary/external_calibrated_e_phase2_a0_025_score_20260516.json",
+    "experiments/core_narrative/results/external_e_primary/external_calibrated_e_phase2_a0_026_score_20260516.json",
+    "experiments/core_narrative/results/external_e_primary/external_calibrated_e_phase2_a1_001_score_20260516.json",
+    "experiments/core_narrative/results/external_e_primary/external_calibrated_e_phase2_a1_002_score_20260516.json",
+    "experiments/core_narrative/results/external_e_primary/external_calibrated_e_phase2_a1_003_score_20260516.json",
+    "experiments/core_narrative/results/external_e_primary/external_calibrated_e_phase2_a1_004_score_20260516.json",
+    "experiments/core_narrative/results/external_e_primary/external_calibrated_e_phase2_a1_005_score_20260516.json",
+    "experiments/core_narrative/results/external_e_primary/external_calibrated_e_phase2_a1_006_score_20260516.json",
+    "experiments/core_narrative/results/external_e_primary/external_calibrated_e_phase2_a1_007_score_20260516.json",
+    "experiments/core_narrative/results/external_e_primary/external_calibrated_e_phase2_a1_008_score_20260516.json",
+    "experiments/core_narrative/results/external_e_primary/external_calibrated_e_phase2_a1_009_score_20260516.json",
+    "experiments/core_narrative/results/external_e_primary/external_calibrated_e_phase2_a1_010_score_20260516.json",
+    "experiments/core_narrative/results/external_e_primary/external_calibrated_e_phase2_a1_011_score_20260516.json",
+    "experiments/core_narrative/results/external_e_primary/external_calibrated_e_phase2_a1_012_score_20260516.json",
+    "experiments/core_narrative/results/external_e_primary/external_calibrated_e_phase2_a1_013_score_20260516.json",
+    "experiments/core_narrative/results/external_e_primary/external_calibrated_e_phase2_a1_014_score_20260516.json",
+    "experiments/core_narrative/results/external_e_primary/external_calibrated_e_phase2_a1_015_score_20260516.json",
+    "experiments/core_narrative/results/external_e_primary/external_calibrated_e_phase2_a1_016_score_20260516.json",
+    "experiments/core_narrative/results/external_e_primary/external_calibrated_e_phase2_a1_017_score_20260516.json",
+    "experiments/core_narrative/results/external_e_primary/external_calibrated_e_phase2_a1_018_score_20260516.json",
+    "experiments/core_narrative/results/external_e_primary/external_calibrated_e_phase2_a1_019_score_20260516.json",
+    "experiments/core_narrative/results/external_e_primary/external_calibrated_e_phase2_a1_020_score_20260516.json",
+    "experiments/core_narrative/results/external_e_primary/external_calibrated_e_phase2_a1_021_score_20260516.json",
+    "experiments/core_narrative/results/external_e_primary/external_calibrated_e_phase2_a1_022_score_20260516.json",
+    "experiments/core_narrative/results/external_e_primary/external_calibrated_e_phase2_a1_023_score_20260516.json",
+    "experiments/core_narrative/results/external_e_primary/external_calibrated_e_phase2_a1_024_score_20260516.json",
+    "experiments/core_narrative/results/external_e_primary/external_calibrated_e_phase2_a1_025_score_20260516.json",
+    "experiments/core_narrative/results/external_e_primary/external_calibrated_e_phase2_a1_026_score_20260516.json",
+    "experiments/core_narrative/results/external_e_primary/external_calibrated_e_phase2_a2_001_score_20260516.json",
+    "experiments/core_narrative/results/external_e_primary/external_calibrated_e_phase2_a2_002_score_20260516.json",
+    "experiments/core_narrative/results/external_e_primary/external_calibrated_e_phase2_a2_003_score_20260516.json",
+    "experiments/core_narrative/results/external_e_primary/external_calibrated_e_phase2_a2_004_score_20260516.json",
+    "experiments/core_narrative/results/external_e_primary/external_calibrated_e_phase2_a2_005_score_20260516.json",
+    "experiments/core_narrative/results/external_e_primary/external_calibrated_e_phase2_a2_006_score_20260516.json",
+    "experiments/core_narrative/results/external_e_primary/external_calibrated_e_phase2_a2_007_score_20260516.json",
+    "experiments/core_narrative/results/external_e_primary/external_calibrated_e_phase2_a2_008_score_20260516.json",
+    "experiments/core_narrative/results/external_e_primary/external_calibrated_e_phase2_a2_009_score_20260516.json",
+    "experiments/core_narrative/results/external_e_primary/external_calibrated_e_phase2_a2_010_score_20260516.json",
+    "experiments/core_narrative/results/external_e_primary/external_calibrated_e_phase2_a2_011_score_20260516.json",
+    "experiments/core_narrative/results/external_e_primary/external_calibrated_e_phase2_a2_012_score_20260516.json",
+    "experiments/core_narrative/results/external_e_primary/external_calibrated_e_phase2_a2_013_score_20260516.json",
+    "experiments/core_narrative/results/external_e_primary/external_calibrated_e_phase2_a2_014_score_20260516.json",
+    "experiments/core_narrative/results/external_e_primary/external_calibrated_e_phase2_a2_015_score_20260516.json",
+    "experiments/core_narrative/results/external_e_primary/external_calibrated_e_phase2_a2_016_score_20260516.json",
+    "experiments/core_narrative/results/external_e_primary/external_calibrated_e_phase2_a2_017_score_20260516.json",
+    "experiments/core_narrative/results/external_e_primary/external_calibrated_e_phase2_a2_018_score_20260516.json",
+    "experiments/core_narrative/results/external_e_primary/external_calibrated_e_phase2_a2_019_score_20260516.json",
+    "experiments/core_narrative/results/external_e_primary/external_calibrated_e_phase2_a2_020_score_20260516.json",
+    "experiments/core_narrative/results/external_e_primary/external_calibrated_e_phase2_a2_021_score_20260516.json",
+    "experiments/core_narrative/results/external_e_primary/external_calibrated_e_phase2_a2_022_score_20260516.json",
+    "experiments/core_narrative/results/external_e_primary/external_calibrated_e_phase2_a2_023_score_20260516.json",
+    "experiments/core_narrative/results/external_e_primary/external_calibrated_e_phase2_a2_024_score_20260516.json",
+    "experiments/core_narrative/results/external_e_primary/external_calibrated_e_phase2_a2_025_score_20260516.json",
+    "experiments/core_narrative/results/external_e_primary/external_calibrated_e_phase2_a2_026_score_20260516.json",
+    "experiments/core_narrative/results/external_e_primary/external_calibrated_e_phase2_a3_001_score_20260516.json",
+    "experiments/core_narrative/results/external_e_primary/external_calibrated_e_phase2_a3_002_score_20260516.json",
+    "experiments/core_narrative/results/external_e_primary/external_calibrated_e_phase2_a3_003_score_20260516.json",
+    "experiments/core_narrative/results/external_e_primary/external_calibrated_e_phase2_a3_004_score_20260516.json",
+    "experiments/core_narrative/results/external_e_primary/external_calibrated_e_phase2_a3_005_score_20260516.json",
+    "experiments/core_narrative/results/external_e_primary/external_calibrated_e_phase2_a3_006_score_20260516.json",
+    "experiments/core_narrative/results/external_e_primary/external_calibrated_e_phase2_a3_007_score_20260516.json",
+    "experiments/core_narrative/results/external_e_primary/external_calibrated_e_phase2_a3_008_score_20260516.json",
+    "experiments/core_narrative/results/external_e_primary/external_calibrated_e_phase2_a3_009_score_20260516.json",
+    "experiments/core_narrative/results/external_e_primary/external_calibrated_e_phase2_a3_010_score_20260516.json",
+    "experiments/core_narrative/results/external_e_primary/external_calibrated_e_phase2_a3_011_score_20260516.json",
+    "experiments/core_narrative/results/external_e_primary/external_calibrated_e_phase2_a3_012_score_20260516.json",
+    "experiments/core_narrative/results/external_e_primary/external_calibrated_e_phase2_a3_013_score_20260516.json",
+    "experiments/core_narrative/results/external_e_primary/external_calibrated_e_phase2_a3_014_score_20260516.json",
+    "experiments/core_narrative/results/external_e_primary/external_calibrated_e_phase2_a3_015_score_20260516.json",
+    "experiments/core_narrative/results/external_e_primary/external_calibrated_e_phase2_a3_016_score_20260516.json",
+    "experiments/core_narrative/results/external_e_primary/external_calibrated_e_phase2_a3_017_score_20260516.json",
+    "experiments/core_narrative/results/external_e_primary/external_calibrated_e_phase2_a3_018_score_20260516.json",
+    "experiments/core_narrative/results/external_e_primary/external_calibrated_e_phase2_a3_019_score_20260516.json",
+    "experiments/core_narrative/results/external_e_primary/external_calibrated_e_phase2_a3_020_score_20260516.json",
+    "experiments/core_narrative/results/external_e_primary/external_calibrated_e_phase2_a3_021_score_20260516.json",
+    "experiments/core_narrative/results/external_e_primary/external_calibrated_e_phase2_a3_022_score_20260516.json",
+    "experiments/core_narrative/results/external_e_primary/external_calibrated_e_phase2_a3_023_score_20260516.json",
+    "experiments/core_narrative/results/external_e_primary/external_calibrated_e_phase2_a3_024_score_20260516.json",
+    "experiments/core_narrative/results/external_e_primary/external_calibrated_e_phase2_a3_025_score_20260516.json",
+    "experiments/core_narrative/results/external_e_primary/external_calibrated_e_phase2_a3_026_score_20260516.json",
+    "experiments/core_narrative/results/external_e_primary/external_calibrated_e_phase2_a4_001_score_20260516.json",
+    "experiments/core_narrative/results/external_e_primary/external_calibrated_e_phase2_a4_002_score_20260516.json",
+    "experiments/core_narrative/results/external_e_primary/external_calibrated_e_phase2_a4_003_score_20260516.json",
+    "experiments/core_narrative/results/external_e_primary/external_calibrated_e_phase2_a4_004_score_20260516.json",
+    "experiments/core_narrative/results/external_e_primary/external_calibrated_e_phase2_a4_005_score_20260516.json",
+    "experiments/core_narrative/results/external_e_primary/external_calibrated_e_phase2_a4_006_score_20260516.json",
+    "experiments/core_narrative/results/external_e_primary/external_calibrated_e_phase2_a4_007_score_20260516.json",
+    "experiments/core_narrative/results/external_e_primary/external_calibrated_e_phase2_a4_008_score_20260516.json",
+    "experiments/core_narrative/results/external_e_primary/external_calibrated_e_phase2_a4_009_score_20260516.json",
+    "experiments/core_narrative/results/external_e_primary/external_calibrated_e_phase2_a4_010_score_20260516.json",
+    "experiments/core_narrative/results/external_e_primary/external_calibrated_e_phase2_a4_011_score_20260516.json",
+    "experiments/core_narrative/results/external_e_primary/external_calibrated_e_phase2_a4_012_score_20260516.json",
+    "experiments/core_narrative/results/external_e_primary/external_calibrated_e_phase2_a4_013_score_20260516.json",
+    "experiments/core_narrative/results/external_e_primary/external_calibrated_e_phase2_a4_014_score_20260516.json",
+    "experiments/core_narrative/results/external_e_primary/external_calibrated_e_phase2_a4_015_score_20260516.json",
+    "experiments/core_narrative/results/external_e_primary/external_calibrated_e_phase2_a4_016_score_20260516.json",
+    "experiments/core_narrative/results/external_e_primary/external_calibrated_e_phase2_a4_017_score_20260516.json",
+    "experiments/core_narrative/results/external_e_primary/external_calibrated_e_phase2_a4_018_score_20260516.json",
+    "experiments/core_narrative/results/external_e_primary/external_calibrated_e_phase2_a4_019_score_20260516.json",
+    "experiments/core_narrative/results/external_e_primary/external_calibrated_e_phase2_a4_020_score_20260516.json",
+    "experiments/core_narrative/results/external_e_primary/external_calibrated_e_phase2_a4_021_score_20260516.json",
+    "experiments/core_narrative/results/external_e_primary/external_calibrated_e_phase2_a4_022_score_20260516.json",
+    "experiments/core_narrative/results/external_e_primary/external_calibrated_e_phase2_a4_023_score_20260516.json",
+    "experiments/core_narrative/results/external_e_primary/external_calibrated_e_phase2_a4_024_score_20260516.json",
+    "experiments/core_narrative/results/external_e_primary/external_calibrated_e_phase2_a4_025_score_20260516.json",
+    "experiments/core_narrative/results/external_e_primary/external_calibrated_e_phase2_a4_026_score_20260516.json",
+    "experiments/core_narrative/results/external_e_primary/external_calibrated_e_phase2_a5_001_score_20260516.json",
+    "experiments/core_narrative/results/external_e_primary/external_calibrated_e_phase2_a5_002_score_20260516.json",
+    "experiments/core_narrative/results/external_e_primary/external_calibrated_e_phase2_a5_003_score_20260516.json",
+    "experiments/core_narrative/results/external_e_primary/external_calibrated_e_phase2_a5_004_score_20260516.json",
+    "experiments/core_narrative/results/external_e_primary/external_calibrated_e_phase2_a5_005_score_20260516.json",
+    "experiments/core_narrative/results/external_e_primary/external_calibrated_e_phase2_a5_006_score_20260516.json",
+    "experiments/core_narrative/results/external_e_primary/external_calibrated_e_phase2_a5_007_score_20260516.json",
+    "experiments/core_narrative/results/external_e_primary/external_calibrated_e_phase2_a5_008_score_20260516.json",
+    "experiments/core_narrative/results/external_e_primary/external_calibrated_e_phase2_a5_009_score_20260516.json",
+    "experiments/core_narrative/results/external_e_primary/external_calibrated_e_phase2_a5_010_score_20260516.json",
+    "experiments/core_narrative/results/external_e_primary/external_calibrated_e_phase2_a5_011_score_20260516.json",
+    "experiments/core_narrative/results/external_e_primary/external_calibrated_e_phase2_a5_012_score_20260516.json",
+    "experiments/core_narrative/results/external_e_primary/external_calibrated_e_phase2_a5_013_score_20260516.json",
+    "experiments/core_narrative/results/external_e_primary/external_calibrated_e_phase2_a5_014_score_20260516.json",
+    "experiments/core_narrative/results/external_e_primary/external_calibrated_e_phase2_a5_015_score_20260516.json",
+    "experiments/core_narrative/results/external_e_primary/external_calibrated_e_phase2_a5_016_score_20260516.json",
+    "experiments/core_narrative/results/external_e_primary/external_calibrated_e_phase2_a5_017_score_20260516.json",
+    "experiments/core_narrative/results/external_e_primary/external_calibrated_e_phase2_a5_018_score_20260516.json",
+    "experiments/core_narrative/results/external_e_primary/external_calibrated_e_phase2_a5_019_score_20260516.json",
+    "experiments/core_narrative/results/external_e_primary/external_calibrated_e_phase2_a5_020_score_20260516.json",
+    "experiments/core_narrative/results/external_e_primary/external_calibrated_e_phase2_a5_021_score_20260516.json",
+    "experiments/core_narrative/results/external_e_primary/external_calibrated_e_phase2_a5_022_score_20260516.json",
+    "experiments/core_narrative/results/external_e_primary/external_calibrated_e_phase2_a5_023_score_20260516.json",
+    "experiments/core_narrative/results/external_e_primary/external_calibrated_e_phase2_a5_024_score_20260516.json",
+    "experiments/core_narrative/results/external_e_primary/external_calibrated_e_phase2_a5_025_score_20260516.json",
+    "experiments/core_narrative/results/external_e_primary/external_calibrated_e_phase2_a5_026_score_20260516.json"
+  ],
+  "score_table": [
+    {
+      "acut_id": "external-sympy-a0-gpt54-medium-concise",
+      "acut_slot": "A0",
+      "cells": [
+        {
+          "score": 0,
+          "status": "unresolved",
+          "task_ordinal": 1
+        },
+        {
+          "score": 1,
+          "status": "resolved",
+          "task_ordinal": 2
+        },
+        {
+          "score": 0,
+          "status": "unresolved",
+          "task_ordinal": 3
+        },
+        {
+          "score": 1,
+          "status": "resolved",
+          "task_ordinal": 4
+        },
+        {
+          "score": 0,
+          "status": "unresolved",
+          "task_ordinal": 5
+        },
+        {
+          "score": 0,
+          "status": "unresolved",
+          "task_ordinal": 6
+        },
+        {
+          "score": 1,
+          "status": "resolved",
+          "task_ordinal": 7
+        },
+        {
+          "score": 1,
+          "status": "resolved",
+          "task_ordinal": 8
+        },
+        {
+          "score": 0,
+          "status": "unresolved",
+          "task_ordinal": 9
+        },
+        {
+          "score": 1,
+          "status": "resolved",
+          "task_ordinal": 10
+        },
+        {
+          "score": 0,
+          "status": "unresolved",
+          "task_ordinal": 11
+        },
+        {
+          "score": 1,
+          "status": "resolved",
+          "task_ordinal": 12
+        },
+        {
+          "score": 1,
+          "status": "resolved",
+          "task_ordinal": 13
+        },
+        {
+          "score": 1,
+          "status": "resolved",
+          "task_ordinal": 14
+        },
+        {
+          "score": 1,
+          "status": "resolved",
+          "task_ordinal": 15
+        },
+        {
+          "score": 1,
+          "status": "resolved",
+          "task_ordinal": 16
+        },
+        {
+          "score": 0,
+          "status": "empty_patch",
+          "task_ordinal": 17
+        },
+        {
+          "score": 0,
+          "status": "unresolved",
+          "task_ordinal": 18
+        },
+        {
+          "score": 1,
+          "status": "resolved",
+          "task_ordinal": 19
+        },
+        {
+          "score": 1,
+          "status": "resolved",
+          "task_ordinal": 20
+        },
+        {
+          "score": 0,
+          "status": "unresolved",
+          "task_ordinal": 21
+        },
+        {
+          "score": 0,
+          "status": "unresolved",
+          "task_ordinal": 22
+        },
+        {
+          "score": 0,
+          "status": "unresolved",
+          "task_ordinal": 23
+        },
+        {
+          "score": 0,
+          "status": "unresolved",
+          "task_ordinal": 24
+        },
+        {
+          "score": 1,
+          "status": "resolved",
+          "task_ordinal": 25
+        },
+        {
+          "score": 1,
+          "status": "resolved",
+          "task_ordinal": 26
+        }
+      ],
+      "external_verifier_infra_errors": 0,
+      "score_denominator": 26,
+      "score_numerator": 14,
+      "score_rate": 0.5384615384615384
+    },
+    {
+      "acut_id": "external-sympy-a1-gpt54-low-concise",
+      "acut_slot": "A1",
+      "cells": [
+        {
+          "score": 0,
+          "status": "unresolved",
+          "task_ordinal": 1
+        },
+        {
+          "score": 1,
+          "status": "resolved",
+          "task_ordinal": 2
+        },
+        {
+          "score": 0,
+          "status": "unresolved",
+          "task_ordinal": 3
+        },
+        {
+          "score": 1,
+          "status": "resolved",
+          "task_ordinal": 4
+        },
+        {
+          "score": 0,
+          "status": "unresolved",
+          "task_ordinal": 5
+        },
+        {
+          "score": 0,
+          "status": "unresolved",
+          "task_ordinal": 6
+        },
+        {
+          "score": 1,
+          "status": "resolved",
+          "task_ordinal": 7
+        },
+        {
+          "score": 1,
+          "status": "resolved",
+          "task_ordinal": 8
+        },
+        {
+          "score": 0,
+          "status": "unresolved",
+          "task_ordinal": 9
+        },
+        {
+          "score": 1,
+          "status": "resolved",
+          "task_ordinal": 10
+        },
+        {
+          "score": 0,
+          "status": "unresolved",
+          "task_ordinal": 11
+        },
+        {
+          "score": 1,
+          "status": "resolved",
+          "task_ordinal": 12
+        },
+        {
+          "score": 1,
+          "status": "resolved",
+          "task_ordinal": 13
+        },
+        {
+          "score": 1,
+          "status": "resolved",
+          "task_ordinal": 14
+        },
+        {
+          "score": 1,
+          "status": "resolved",
+          "task_ordinal": 15
+        },
+        {
+          "score": 1,
+          "status": "resolved",
+          "task_ordinal": 16
+        },
+        {
+          "score": 0,
+          "status": "empty_patch",
+          "task_ordinal": 17
+        },
+        {
+          "score": 0,
+          "status": "unresolved",
+          "task_ordinal": 18
+        },
+        {
+          "score": 1,
+          "status": "resolved",
+          "task_ordinal": 19
+        },
+        {
+          "score": 1,
+          "status": "resolved",
+          "task_ordinal": 20
+        },
+        {
+          "score": 0,
+          "status": "unresolved",
+          "task_ordinal": 21
+        },
+        {
+          "score": 0,
+          "status": "unresolved",
+          "task_ordinal": 22
+        },
+        {
+          "score": 0,
+          "status": "unresolved",
+          "task_ordinal": 23
+        },
+        {
+          "score": 0,
+          "status": "unresolved",
+          "task_ordinal": 24
+        },
+        {
+          "score": 1,
+          "status": "resolved",
+          "task_ordinal": 25
+        },
+        {
+          "score": 0,
+          "status": "empty_patch",
+          "task_ordinal": 26
+        }
+      ],
+      "external_verifier_infra_errors": 0,
+      "score_denominator": 26,
+      "score_numerator": 13,
+      "score_rate": 0.5
+    },
+    {
+      "acut_id": "external-sympy-a2-gpt54-high-concise",
+      "acut_slot": "A2",
+      "cells": [
+        {
+          "score": 0,
+          "status": "unresolved",
+          "task_ordinal": 1
+        },
+        {
+          "score": 1,
+          "status": "resolved",
+          "task_ordinal": 2
+        },
+        {
+          "score": 1,
+          "status": "resolved",
+          "task_ordinal": 3
+        },
+        {
+          "score": 1,
+          "status": "resolved",
+          "task_ordinal": 4
+        },
+        {
+          "score": 0,
+          "status": "unresolved",
+          "task_ordinal": 5
+        },
+        {
+          "score": 1,
+          "status": "resolved",
+          "task_ordinal": 6
+        },
+        {
+          "score": 1,
+          "status": "resolved",
+          "task_ordinal": 7
+        },
+        {
+          "score": 1,
+          "status": "resolved",
+          "task_ordinal": 8
+        },
+        {
+          "score": 0,
+          "status": "unresolved",
+          "task_ordinal": 9
+        },
+        {
+          "score": 1,
+          "status": "resolved",
+          "task_ordinal": 10
+        },
+        {
+          "score": 0,
+          "status": "unresolved",
+          "task_ordinal": 11
+        },
+        {
+          "score": 1,
+          "status": "resolved",
+          "task_ordinal": 12
+        },
+        {
+          "score": 1,
+          "status": "resolved",
+          "task_ordinal": 13
+        },
+        {
+          "score": 1,
+          "status": "resolved",
+          "task_ordinal": 14
+        },
+        {
+          "score": 1,
+          "status": "resolved",
+          "task_ordinal": 15
+        },
+        {
+          "score": 1,
+          "status": "resolved",
+          "task_ordinal": 16
+        },
+        {
+          "score": 0,
+          "status": "unresolved",
+          "task_ordinal": 17
+        },
+        {
+          "score": 0,
+          "status": "unresolved",
+          "task_ordinal": 18
+        },
+        {
+          "score": 0,
+          "status": "unresolved",
+          "task_ordinal": 19
+        },
+        {
+          "score": 1,
+          "status": "resolved",
+          "task_ordinal": 20
+        },
+        {
+          "score": 0,
+          "status": "unresolved",
+          "task_ordinal": 21
+        },
+        {
+          "score": 0,
+          "status": "unresolved",
+          "task_ordinal": 22
+        },
+        {
+          "score": 0,
+          "status": "unresolved",
+          "task_ordinal": 23
+        },
+        {
+          "score": 0,
+          "status": "unresolved",
+          "task_ordinal": 24
+        },
+        {
+          "score": 1,
+          "status": "resolved",
+          "task_ordinal": 25
+        },
+        {
+          "score": 0,
+          "status": "empty_patch",
+          "task_ordinal": 26
+        }
+      ],
+      "external_verifier_infra_errors": 0,
+      "score_denominator": 26,
+      "score_numerator": 14,
+      "score_rate": 0.5384615384615384
+    },
+    {
+      "acut_id": "external-sympy-a3-gpt55-high-concise",
+      "acut_slot": "A3",
+      "cells": [
+        {
+          "score": 0,
+          "status": "unresolved",
+          "task_ordinal": 1
+        },
+        {
+          "score": 0,
+          "status": "unresolved",
+          "task_ordinal": 2
+        },
+        {
+          "score": 1,
+          "status": "resolved",
+          "task_ordinal": 3
+        },
+        {
+          "score": 1,
+          "status": "resolved",
+          "task_ordinal": 4
+        },
+        {
+          "score": 1,
+          "status": "resolved",
+          "task_ordinal": 5
+        },
+        {
+          "score": 1,
+          "status": "resolved",
+          "task_ordinal": 6
+        },
+        {
+          "score": 1,
+          "status": "resolved",
+          "task_ordinal": 7
+        },
+        {
+          "score": 1,
+          "status": "resolved",
+          "task_ordinal": 8
+        },
+        {
+          "score": 0,
+          "status": "unresolved",
+          "task_ordinal": 9
+        },
+        {
+          "score": 1,
+          "status": "resolved",
+          "task_ordinal": 10
+        },
+        {
+          "score": 0,
+          "status": "unresolved",
+          "task_ordinal": 11
+        },
+        {
+          "score": 1,
+          "status": "resolved",
+          "task_ordinal": 12
+        },
+        {
+          "score": 1,
+          "status": "resolved",
+          "task_ordinal": 13
+        },
+        {
+          "score": 1,
+          "status": "resolved",
+          "task_ordinal": 14
+        },
+        {
+          "score": 1,
+          "status": "resolved",
+          "task_ordinal": 15
+        },
+        {
+          "score": 1,
+          "status": "resolved",
+          "task_ordinal": 16
+        },
+        {
+          "score": 1,
+          "status": "resolved",
+          "task_ordinal": 17
+        },
+        {
+          "score": 0,
+          "status": "unresolved",
+          "task_ordinal": 18
+        },
+        {
+          "score": 1,
+          "status": "resolved",
+          "task_ordinal": 19
+        },
+        {
+          "score": 1,
+          "status": "resolved",
+          "task_ordinal": 20
+        },
+        {
+          "score": 0,
+          "status": "unresolved",
+          "task_ordinal": 21
+        },
+        {
+          "score": 0,
+          "status": "unresolved",
+          "task_ordinal": 22
+        },
+        {
+          "score": 0,
+          "status": "unresolved",
+          "task_ordinal": 23
+        },
+        {
+          "score": 0,
+          "status": "unresolved",
+          "task_ordinal": 24
+        },
+        {
+          "score": 1,
+          "status": "resolved",
+          "task_ordinal": 25
+        },
+        {
+          "score": 1,
+          "status": "resolved",
+          "task_ordinal": 26
+        }
+      ],
+      "external_verifier_infra_errors": 0,
+      "score_denominator": 26,
+      "score_numerator": 17,
+      "score_rate": 0.6538461538461539
+    },
+    {
+      "acut_id": "external-sympy-a4-gpt54mini-high-concise",
+      "acut_slot": "A4",
+      "cells": [
+        {
+          "score": 0,
+          "status": "unresolved",
+          "task_ordinal": 1
+        },
+        {
+          "score": 1,
+          "status": "resolved",
+          "task_ordinal": 2
+        },
+        {
+          "score": 1,
+          "status": "resolved",
+          "task_ordinal": 3
+        },
+        {
+          "score": 1,
+          "status": "resolved",
+          "task_ordinal": 4
+        },
+        {
+          "score": 1,
+          "status": "resolved",
+          "task_ordinal": 5
+        },
+        {
+          "score": 0,
+          "status": "unresolved",
+          "task_ordinal": 6
+        },
+        {
+          "score": 1,
+          "status": "resolved",
+          "task_ordinal": 7
+        },
+        {
+          "score": 1,
+          "status": "resolved",
+          "task_ordinal": 8
+        },
+        {
+          "score": 0,
+          "status": "unresolved",
+          "task_ordinal": 9
+        },
+        {
+          "score": 1,
+          "status": "resolved",
+          "task_ordinal": 10
+        },
+        {
+          "score": 0,
+          "status": "unresolved",
+          "task_ordinal": 11
+        },
+        {
+          "score": 1,
+          "status": "resolved",
+          "task_ordinal": 12
+        },
+        {
+          "score": 1,
+          "status": "resolved",
+          "task_ordinal": 13
+        },
+        {
+          "score": 1,
+          "status": "resolved",
+          "task_ordinal": 14
+        },
+        {
+          "score": 1,
+          "status": "resolved",
+          "task_ordinal": 15
+        },
+        {
+          "score": 1,
+          "status": "resolved",
+          "task_ordinal": 16
+        },
+        {
+          "score": 0,
+          "status": "empty_patch",
+          "task_ordinal": 17
+        },
+        {
+          "score": 0,
+          "status": "unresolved",
+          "task_ordinal": 18
+        },
+        {
+          "score": 1,
+          "status": "resolved",
+          "task_ordinal": 19
+        },
+        {
+          "score": 1,
+          "status": "resolved",
+          "task_ordinal": 20
+        },
+        {
+          "score": 0,
+          "status": "unresolved",
+          "task_ordinal": 21
+        },
+        {
+          "score": 0,
+          "status": "unresolved",
+          "task_ordinal": 22
+        },
+        {
+          "score": 0,
+          "status": "unresolved",
+          "task_ordinal": 23
+        },
+        {
+          "score": 0,
+          "status": "unresolved",
+          "task_ordinal": 24
+        },
+        {
+          "score": 1,
+          "status": "resolved",
+          "task_ordinal": 25
+        },
+        {
+          "score": 1,
+          "status": "resolved",
+          "task_ordinal": 26
+        }
+      ],
+      "external_verifier_infra_errors": 0,
+      "score_denominator": 26,
+      "score_numerator": 16,
+      "score_rate": 0.6153846153846154
+    },
+    {
+      "acut_id": "external-sympy-a5-gpt54-high-rich-agents",
+      "acut_slot": "A5",
+      "cells": [
+        {
+          "score": 1,
+          "status": "resolved",
+          "task_ordinal": 1
+        },
+        {
+          "score": 1,
+          "status": "resolved",
+          "task_ordinal": 2
+        },
+        {
+          "score": 0,
+          "status": "unresolved",
+          "task_ordinal": 3
+        },
+        {
+          "score": 1,
+          "status": "resolved",
+          "task_ordinal": 4
+        },
+        {
+          "score": 1,
+          "status": "resolved",
+          "task_ordinal": 5
+        },
+        {
+          "score": 0,
+          "status": "unresolved",
+          "task_ordinal": 6
+        },
+        {
+          "score": 1,
+          "status": "resolved",
+          "task_ordinal": 7
+        },
+        {
+          "score": 1,
+          "status": "resolved",
+          "task_ordinal": 8
+        },
+        {
+          "score": 0,
+          "status": "unresolved",
+          "task_ordinal": 9
+        },
+        {
+          "score": 1,
+          "status": "resolved",
+          "task_ordinal": 10
+        },
+        {
+          "score": 0,
+          "status": "unresolved",
+          "task_ordinal": 11
+        },
+        {
+          "score": 1,
+          "status": "resolved",
+          "task_ordinal": 12
+        },
+        {
+          "score": 1,
+          "status": "resolved",
+          "task_ordinal": 13
+        },
+        {
+          "score": 1,
+          "status": "resolved",
+          "task_ordinal": 14
+        },
+        {
+          "score": 1,
+          "status": "resolved",
+          "task_ordinal": 15
+        },
+        {
+          "score": 1,
+          "status": "resolved",
+          "task_ordinal": 16
+        },
+        {
+          "score": 0,
+          "status": "empty_patch",
+          "task_ordinal": 17
+        },
+        {
+          "score": 0,
+          "status": "unresolved",
+          "task_ordinal": 18
+        },
+        {
+          "score": 1,
+          "status": "resolved",
+          "task_ordinal": 19
+        },
+        {
+          "score": 1,
+          "status": "resolved",
+          "task_ordinal": 20
+        },
+        {
+          "score": 0,
+          "status": "unresolved",
+          "task_ordinal": 21
+        },
+        {
+          "score": 0,
+          "status": "unresolved",
+          "task_ordinal": 22
+        },
+        {
+          "score": 0,
+          "status": "unresolved",
+          "task_ordinal": 23
+        },
+        {
+          "score": 0,
+          "status": "unresolved",
+          "task_ordinal": 24
+        },
+        {
+          "score": 1,
+          "status": "resolved",
+          "task_ordinal": 25
+        },
+        {
+          "score": 0,
+          "status": "empty_patch",
+          "task_ordinal": 26
+        }
+      ],
+      "external_verifier_infra_errors": 0,
+      "score_denominator": 26,
+      "score_numerator": 15,
+      "score_rate": 0.5769230769230769
+    }
+  ],
+  "raw_problem_statements_recorded_publicly": false,
+  "raw_base_commits_recorded_publicly": false,
+  "raw_candidate_patches_recorded_publicly": false,
+  "raw_predictions_recorded_publicly": false,
+  "raw_swebench_logs_recorded_publicly": false,
+  "e_spread_gate_ready": false,
+  "e_spread_gate_ready_reason": "only_156_of_288_phase2_cells_scored"
+}

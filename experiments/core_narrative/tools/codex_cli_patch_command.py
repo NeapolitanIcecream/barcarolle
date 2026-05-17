@@ -49,14 +49,16 @@ COMMAND_CONTRACT_ID = "codex-cli-patch-command-v1"
 PROVIDER_ID = "barcarolle"
 PROVIDER_DISPLAY_NAME = "Barcarolle"
 PROVIDER_WIRE_API = "responses"
-ACTIVE_MODEL_ROUTES = ("gpt-5.4-mini", "gpt-5.4")
+ACTIVE_MODEL_ROUTES = ("gpt-5.4-mini", "gpt-5.4", "gpt-5.5")
 CATALOG_BASE_SLUGS = {
     "gpt-5.4-mini": "gpt-5.4-mini",
     "gpt-5.4": "gpt-5.4",
+    "gpt-5.5": "gpt-5.5",
 }
 MODEL_DISPLAY_NAMES = {
     "gpt-5.4-mini": "GPT-5.4 Mini via Barcarolle",
     "gpt-5.4": "GPT-5.4 via Barcarolle",
+    "gpt-5.5": "GPT-5.5 via Barcarolle",
 }
 DEFAULT_CODEX_TIMEOUT_SECONDS = 3600
 DEFAULT_FAILURE_CAPTURE_TAIL_CHARS = 2000
@@ -172,6 +174,14 @@ def resolve_model(acut: Mapping[str, Any], requested_model: str | None) -> str:
             supported_models=list(ACTIVE_MODEL_ROUTES),
         )
     return model
+
+
+def acut_model_config(acut: Mapping[str, Any], key: str) -> str | None:
+    params = acut.get("model_parameters")
+    if not isinstance(params, Mapping):
+        return None
+    value = params.get(key)
+    return value if isinstance(value, str) and value else None
 
 
 def toml_string(value: str) -> str:
@@ -339,6 +349,8 @@ def build_codex_command(
     codex_bin: str,
     workspace: Path,
     model: str,
+    reasoning_effort: str | None,
+    model_verbosity: str | None,
     model_catalog_path: Path,
     final_output_path: Path,
     provider_mode: str,
@@ -360,6 +372,10 @@ def build_codex_command(
         "--model",
         model,
     ]
+    if reasoning_effort:
+        command.extend(["-c", f"model_reasoning_effort={toml_string(reasoning_effort)}"])
+    if model_verbosity:
+        command.extend(["-c", f"model_verbosity={toml_string(model_verbosity)}"])
     if provider_mode == "barcarolle":
         if endpoint is None:
             raise ToolError("Barcarolle provider mode requires BARCAROLLE_LLM_BASE_URL")
@@ -382,6 +398,8 @@ def build_display_command(
     codex_bin: str,
     workspace: Path,
     model: str,
+    reasoning_effort: str | None,
+    model_verbosity: str | None,
     model_catalog_path: Path,
     final_output_path: Path,
     provider_mode: str,
@@ -402,6 +420,10 @@ def build_display_command(
         "--model",
         model,
     ]
+    if reasoning_effort:
+        command.extend(["-c", f"model_reasoning_effort={toml_string(reasoning_effort)}"])
+    if model_verbosity:
+        command.extend(["-c", f"model_verbosity={toml_string(model_verbosity)}"])
     if provider_mode == "barcarolle":
         command.extend(
             [
@@ -824,6 +846,8 @@ def run(argv: Sequence[str]) -> int:
     if "acut_id" not in acut:
         raise ToolError("ACUT manifest is missing required fields", missing=["acut_id"])
     model = resolve_model(acut, args.model)
+    reasoning_effort = acut_model_config(acut, "reasoning_effort")
+    model_verbosity = acut_model_config(acut, "model_verbosity")
     context_text, context_evidence = load_click_specialist_context(acut, args.acut)
 
     acut_env, scrubbed_env_var_count = llm_safe_subprocess_env(os.environ)
@@ -841,6 +865,8 @@ def run(argv: Sequence[str]) -> int:
         codex_bin=args.codex_bin,
         workspace=workspace,
         model=model,
+        reasoning_effort=reasoning_effort,
+        model_verbosity=model_verbosity,
         model_catalog_path=model_catalog_path,
         final_output_path=final_output_path,
         provider_mode=args.codex_provider_mode,
@@ -893,6 +919,8 @@ def run(argv: Sequence[str]) -> int:
         codex_bin=args.codex_bin,
         workspace=workspace,
         model=model,
+        reasoning_effort=reasoning_effort,
+        model_verbosity=model_verbosity,
         model_catalog_path=model_catalog_path,
         final_output_path=final_output_path,
         provider_mode=args.codex_provider_mode,

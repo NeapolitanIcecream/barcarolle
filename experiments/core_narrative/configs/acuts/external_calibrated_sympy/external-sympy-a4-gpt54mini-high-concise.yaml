@@ -1,0 +1,73 @@
+schema_version: core-narrative.acut.v1
+manifest_version: external-calibrated-sympy-v1
+acut_id: external-sympy-a4-gpt54mini-high-concise
+display_name: A4 Codex GPT-5.4 Mini High Concise
+purpose: Low-cost model contrast.
+frozen: true
+provider: openai
+model: gpt-5.4-mini
+model_parameters:
+  reasoning_effort: high
+  model_verbosity: low
+  reasoning_summary: auto
+prompt_policy_digest: sha256:dba9b66fa48b333fbad49859bc07c419579f3f1934d906a6e5f899dafa9c27cb
+prompt_policy_reference: experiments/core_narrative/configs/acuts/external_calibrated_sympy/agents/concise.md
+tool_permissions:
+  filesystem: workspace-write
+  network: disabled
+  allowed_tools:
+  - filesystem:read
+  - filesystem:write
+  - shell
+  - code_edit
+  - git:status
+  - git:diff
+  - git:show
+  custom_localization_or_retrieval_tool_allowed: false
+retrieval_context_strategy:
+  strategy_id: external-sympy-local-evidence-v1
+  allowed_sources:
+  - public_task_statement
+  - local_filesystem
+  - targeted_tests
+  - bounded_symbol_search
+  forbidden_sources:
+  - SWE-bench gold patches
+  - SWE-bench test patches
+  - SWE-bench problem statements outside the task prompt
+  - B reference patches
+  - B hidden verifiers
+  - ACUT outputs
+  - network resources
+runtime_budget:
+  timeout_seconds: 3600
+  max_turns: 18
+  max_shell_commands: 55
+  max_test_commands: 10
+  retry_policy:
+    primary_attempts: 1
+    retries_allowed: false
+    best_of_n: false
+network_policy:
+  mode: disabled
+  allowed_hosts: []
+execution_mode: codex_cli_non_interactive_fresh_workspace
+adapter_or_harness_basis: workspace_mode_runner.py + codex_cli_patch_command.py +
+  apply_and_verify.py
+frozen_at: '2026-05-15T16:59:02.385035Z'
+operator: codex-external-calibrated-coordinator
+notes: Frozen for external-calibrated SymPy SWE-bench/B benchmark validation; no model
+  calls made during profile freeze.
+metadata:
+  slot: A4
+  protocol_id: external-calibrated-repo-benchmark-v1
+  model_tier: cheap
+  agents_md_profile: concise
+  agents_md_digest: fc27479d6152b636cb84638a2f65c3087bb464136e1d65a31f2ca2b46f4bbe31
+  codex_cli_version_observed: codex-cli 0.130.0
+  model_availability_checked_via: codex debug models --bundled
+  model_available_in_bundled_catalog: true
+  primary_attempts_per_task: 1
+  manual_steering_allowed: false
+  network_access_allowed: false
+  custom_tooling_as_primary_intervention: false

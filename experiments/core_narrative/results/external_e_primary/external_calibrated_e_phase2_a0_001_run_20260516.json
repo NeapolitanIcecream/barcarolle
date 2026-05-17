@@ -1,0 +1,133 @@
+{
+  "blockers": [],
+  "generated_at": "2026-05-15T17:22:47.357118Z",
+  "mode": "live",
+  "model_calls_made": 1,
+  "next_required_steps": [
+    "Run remaining Phase 2 E primary attempts on the frozen matrix."
+  ],
+  "phase": "run",
+  "private_root_available_privately": true,
+  "private_root_recorded_publicly": false,
+  "private_root_sha256": "4bd74677242c4d0cffc10037fcce0dc6ed9b1dfac127f3b0de510d81b5c539b7",
+  "protocol_id": "external-calibrated-repo-benchmark-v1",
+  "raw_material_policy": {
+    "private_roots_are_ignored_artifact_roots": true,
+    "public_artifacts_sanitized_after_runner_completion": true,
+    "raw_base_commits_recorded_publicly": false,
+    "raw_candidate_patches_recorded_publicly": false,
+    "raw_predictions_recorded_publicly": false,
+    "raw_problem_statements_recorded_publicly": false,
+    "raw_swebench_logs_recorded_publicly": false
+  },
+  "result_count": 1,
+  "results": [
+    {
+      "acut_command": {
+        "duration_seconds": 252.109,
+        "exit_code": 0,
+        "stderr_artifact_available_privately": true,
+        "stderr_artifact_recorded_publicly": false,
+        "stderr_artifact_sha256": "626df8c5f8aee7b8b70465f0c1c6ef83e3afbcafc55c82f09ee98c459aa7530b",
+        "stdout_artifact_available_privately": true,
+        "stdout_artifact_recorded_publicly": false,
+        "stdout_artifact_sha256": "25d931cfbc24f559296a5614ed84184b35ca857ab4a0cf66475c5dba7aa42e5b",
+        "summary_artifact_available_privately": true,
+        "summary_artifact_recorded_publicly": false,
+        "summary_artifact_sha256": "9ba41ffc646d20bbe49ce799abfb6f755fa55fa8d17040485de5e3d0c9bc3fd3",
+        "timed_out": false
+      },
+      "acut_id": "external-sympy-a0-gpt54-medium-concise",
+      "acut_manifest": "experiments/core_narrative/configs/acuts/external_calibrated_sympy/external-sympy-a0-gpt54-medium-concise.yaml",
+      "acut_slot": "A0",
+      "attempt": 1,
+      "candidate_patch": {
+        "candidate_patch_private_path_available_privately": true,
+        "candidate_patch_private_path_recorded_publicly": false,
+        "candidate_patch_private_path_sha256": "fcb4063d466239cb890c6b306f1ddcc59760af6d0972689a04b9f2c862f38275",
+        "candidate_patch_sha256": "abb24b9036af420dabfe3030e6e10e9af576e8e52260585976dcb734ea6b3183",
+        "candidate_patch_size_bytes": 2176,
+        "has_scoreable_diff": true,
+        "head_drifted": false,
+        "private_replay_allowed": false,
+        "raw_candidate_patch_size_bytes": 2176,
+        "raw_patch_recorded_publicly": false,
+        "unsafe_content_detected": false
+      },
+      "extraction_error": null,
+      "finished_at": "2026-05-15T17:22:47.356566Z",
+      "instance_id": "sympy__sympy-15017",
+      "mode": "live",
+      "model_call_made": true,
+      "phase": "e",
+      "prepare": {
+        "base_ref_sha256": "a27ac58e6f5788e8e8c2aa4bbc8935a594bf62679d372839063a17c45c7df62f",
+        "base_tree_recorded_publicly": false,
+        "base_tree_sha256": "14f8333b728a90658ad0caacf596a0679d6136beba4f9718220881a2d92a7c57",
+        "prompt_policy": {
+          "committed_into_run_base": true,
+          "content_recorded_publicly": false,
+          "installed": true,
+          "sha256": "fc27479d6152b636cb84638a2f65c3087bb464136e1d65a31f2ca2b46f4bbe31",
+          "size_bytes": 293,
+          "source_reference": "experiments/core_narrative/configs/acuts/external_calibrated_sympy/agents/concise.md",
+          "workspace_path": "AGENTS.md"
+        },
+        "workspace_available_privately": true,
+        "workspace_recorded_publicly": false,
+        "workspace_sha256": "c323f95bb1e0e147497f4d22d1bb831dfdfb7679c90a7f2a70a5a47a9e6ceaa6"
+      },
+      "private_artifact_dir_available_privately": true,
+      "private_artifact_dir_recorded_publicly": false,
+      "private_artifact_dir_sha256": "ef4954dfbe1a661a422ea9d12928ca3afe2f1ac30a857b0d104c2e31df4c59c8",
+      "protocol_id": "external-calibrated-repo-benchmark-v1",
+      "raw_patch_recorded_publicly": false,
+      "ready_for_swebench_scoring": true,
+      "run_id": "external_calibrated_sympy_e_a0_001_attempt1",
+      "schema_version": "external-calibrated-repo-benchmark.e-runner.v1",
+      "started_at": "2026-05-15T17:18:27.865406Z",
+      "status": "patch_ready_for_swebench",
+      "task_pack": {
+        "base_commit_sha256": "a2607c0de2348ce5adb4d70bc165f808689b8583662b93c1bd0247c02366ae4d",
+        "instance_id": "sympy__sympy-15017",
+        "private_task_manifest_available_privately": true,
+        "private_task_manifest_recorded_publicly": false,
+        "private_task_manifest_sha256": "c39b13f3aabbe9e7484dda0bf4c1fe827f5968368f693c7ed42bc4a22a58c08a",
+        "private_task_pack_available_privately": true,
+        "private_task_pack_recorded_publicly": false,
+        "private_task_pack_sha256": "205970bcc0a4e7be8ec13a2db4ab8922297996b51f61fbb3f1df7a746ffc4bf2",
+        "problem_statement_sha256": "b106dd1aed96c16195e44e41b0d863086366cf9c597e31787a38816ae04efb2a",
+        "problem_statement_size_bytes": 1010,
+        "raw_base_commit_emitted": false,
+        "raw_gold_patch_emitted": false,
+        "raw_problem_statement_emitted": false,
+        "raw_test_patch_emitted": false,
+        "task_family": "core/mixed",
+        "task_ordinal": 1
+      },
+      "timeout_owner": null,
+      "tool": "external_calibrated_e_runner",
+      "workspace_available_privately": true,
+      "workspace_recorded_publicly": false,
+      "workspace_sha256": "c323f95bb1e0e147497f4d22d1bb831dfdfb7679c90a7f2a70a5a47a9e6ceaa6"
+    }
+  ],
+  "schema_version": "external-calibrated-repo-benchmark.e-runner.v1",
+  "score_summaries": [],
+  "selected_cell_count": 1,
+  "selected_cells": [
+    {
+      "acut_id": "external-sympy-a0-gpt54-medium-concise",
+      "acut_slot": "A0",
+      "attempt": 1,
+      "instance_id": "sympy__sympy-15017",
+      "run_id": "external_calibrated_sympy_e_a0_001_attempt1",
+      "task_ordinal": 1
+    }
+  ],
+  "status": "run_completed",
+  "tool": "external_calibrated_e_runner",
+  "workspace_root_available_privately": true,
+  "workspace_root_recorded_publicly": false,
+  "workspace_root_sha256": "1889cc21ed3f9b4a1a7e0fe004f35ae9530ac525b5de689a69a6aaa9172d3e5c"
+}

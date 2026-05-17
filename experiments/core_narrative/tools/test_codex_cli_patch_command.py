@@ -75,6 +75,10 @@ class CodexCliPatchCommandTests(unittest.TestCase):
                     "acut_id": "cheap-generic-swe",
                     "provider": "barcarolle",
                     "model": "gpt-5.4-mini",
+                    "model_parameters": {
+                        "reasoning_effort": "high",
+                        "model_verbosity": "low",
+                    },
                 }
             ),
             encoding="utf-8",
@@ -103,6 +107,11 @@ class CodexCliPatchCommandTests(unittest.TestCase):
                             }},
                             {{
                                 "slug": "gpt-5.4",
+                                "shell_type": "shell_command",
+                                "apply_patch_tool_type": "freeform"
+                            }},
+                            {{
+                                "slug": "gpt-5.5",
                                 "shell_type": "shell_command",
                                 "apply_patch_tool_type": "freeform"
                             }}
@@ -336,6 +345,26 @@ class CodexCliPatchCommandTests(unittest.TestCase):
         self.assertFalse(summary["provider_override"]["used_for_execution"])
         self.assertFalse(summary["model_catalog"]["used_for_execution"])
         self.assertTrue(summary["llm_env_policy"]["default_codex_auth_used"])
+
+    def test_codex_command_includes_reasoning_effort_and_verbosity_from_acut(self) -> None:
+        """ACUT effort profiles must affect the actual codex exec invocation."""
+        fake_codex = self.write_fake_codex(
+            """
+            Path = __import__("pathlib").Path
+            Path("module.py").write_text("VALUE = 3\\n", encoding="utf-8")
+            sys.exit(0)
+            """
+        )
+        artifact_dir = self.root / "artifacts-effort"
+        summary_path = self.root / "summary-effort.json"
+
+        completed = self.run_patch_command(fake_codex=fake_codex, artifact_dir=artifact_dir, summary_path=summary_path)
+
+        self.assertEqual(completed.returncode, 0, completed.stderr)
+        summary = json.loads(summary_path.read_text(encoding="utf-8"))
+        command = summary["codex_exec"]["command"]
+        self.assertIn('model_reasoning_effort="high"', command)
+        self.assertIn('model_verbosity="low"', command)
 
     def test_timeout_records_structured_failure_capture_with_redacted_artifacts(self) -> None:
         """Regression: timed-out codex exec runs need non-log redacted diagnostics."""

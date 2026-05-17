@@ -1,0 +1,15 @@
+{
+  "admission_status": "rejected",
+  "blockers": [
+    "materialization_or_smoke_error"
+  ],
+  "candidate_id": "sympy_b_anchor_075",
+  "difficulty": "medium",
+  "error_digest": "3dd2738989d94ceb0407f090a8e2393b7fc605ed0ee5cc9c7d49cc09cc17a1f9",
+  "error_type": "ToolError",
+  "family": "printing/parsing/syntax",
+  "repo": "sympy/sympy",
+  "schema_version": "external-calibrated-repo-benchmark.b-candidate-sheet.v1",
+  "source_anchor_digest": "d1f2aa2f68fcf98dd893577db7803702fc61aa888129441d463759b3b559ae80",
+  "task_id": "sympy__b__075"
+}

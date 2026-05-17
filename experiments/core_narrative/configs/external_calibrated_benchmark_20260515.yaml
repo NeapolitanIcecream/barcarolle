@@ -1,0 +1,270 @@
+schema_version: external-calibrated-repo-benchmark.protocol.v1
+protocol_id: external-calibrated-repo-benchmark-v1
+status: phase2_e_runs_authorized
+generated_at: "2026-05-16T01:02:30+08:00"
+objective: External calibrated benchmark validation using SWE-bench Verified as E and repository-local B tasks as the calibration/control substrate.
+
+admission_artifacts:
+  repository_admission_json: experiments/core_narrative/results/repository_admission/external_calibrated_phase0_admission_20260515.json
+  repository_admission_report: experiments/core_narrative/reports/00_repository_admission.md
+  swebench_gold_smoke_summary: experiments/core_narrative/results/repository_admission/swebench_gold_smoke_summary_20260515.json
+  external_e_slice_config: experiments/core_narrative/configs/external/swebench_sympy_e_v1.yaml
+  external_e_task_smoke: experiments/core_narrative/results/external/e_task_smoke.json
+  external_e_freeze_report: experiments/core_narrative/reports/external_e_task_freeze_report.md
+  b_anchor_selection_json: experiments/core_narrative/results/task_admission/sympy_b_anchor_selection_v2_20260516.json
+  b_anchor_candidates_manifest: experiments/core_narrative/configs/tasks/sympy_barcarolle_b_candidates_v2.yaml
+  b_anchor_selection_report: experiments/core_narrative/reports/sympy_b_anchor_selection_v2_report.md
+  b_task_admission_summary: experiments/core_narrative/results/task_admission/sympy_b_admission_summary_v2.json
+  b_primary_manifest: experiments/core_narrative/configs/tasks/sympy_barcarolle_b_v2.yaml
+  b_reserve_manifest: experiments/core_narrative/configs/tasks/sympy_barcarolle_b_v2_reserve.yaml
+  b_candidate_sheets_dir: experiments/core_narrative/results/task_admission/sympy_b_candidate_sheets_v2
+  b_task_generation_report: experiments/core_narrative/reports/sympy_b_task_generation_v2_report.md
+  freeze_integrity_audit_json: experiments/core_narrative/results/audits/external_calibrated_freeze_integrity_audit_20260516.json
+  freeze_integrity_audit_report: experiments/core_narrative/reports/external_calibrated_freeze_integrity_audit.md
+  acut_freeze_json: experiments/core_narrative/results/acut_profiles/external_calibrated_acut_freeze_20260516.json
+  acut_freeze_report: experiments/core_narrative/reports/external_acut_freeze_report.md
+  acut_execution_matrix: experiments/core_narrative/configs/external/sympy_external_acut_execution_matrix_v1.yaml
+  acut_profile_dir: experiments/core_narrative/configs/acuts/external_calibrated_sympy
+  codex_route_preflight_json: experiments/core_narrative/results/acut_profiles/external_calibrated_codex_route_preflight_20260516.json
+  codex_route_preflight_report: experiments/core_narrative/reports/external_codex_route_preflight_report.md
+  official_harness_checkout: experiments/core_narrative/external_repos/SWE-bench
+  official_harness_python: experiments/core_narrative/cache/swebench_eval_py313_venv/bin/python
+
+external_anchor:
+  primary_dataset: SWE-bench/SWE-bench_Verified
+  primary_split: test
+  fallback_dataset: SWE-bench/SWE-bench
+  fallback_split: test
+  recommended_repository: sympy/sympy
+  candidate_repo_counts:
+    sympy:
+      verified: 75
+      full: 386
+      recent_b_design_candidates: 828
+      recent_direct_oracle_candidates: 335
+      recent_candidate_families: 7
+    django:
+      verified: 231
+      full: 850
+      recent_b_design_candidates: 448
+      recent_direct_oracle_candidates: 350
+      recent_candidate_families: 5
+    sphinx:
+      verified: 44
+      full: 187
+      recent_b_design_candidates: 182
+      recent_direct_oracle_candidates: 98
+      recent_candidate_families: 5
+
+phase0_gate:
+  status: external_and_b_primary_frozen
+  completed:
+    - cloned official SWE-bench harness
+    - installed official SWE-bench harness in Python 3.13 venv
+    - fetched and digested SWE-bench Verified and Full metadata
+    - scanned sympy, django, and sphinx local history supply
+    - ran redacted 48-instance SymPy SWE-bench Verified gold smoke
+    - froze the target-size external E slice
+    - selected 40 SymPy B anchors without E gold/raw materials
+    - rejected the first B pool as insufficient because evaluated-candidate no-op fail rate was 0.75
+    - selected 80 v2 SymPy B anchors without E gold/raw materials
+    - screened 80 v2 anchors and froze a 40-task admitted generated-candidate universe
+    - froze 20 primary B tasks and 20 reserve B tasks
+    - passed v2 E/B freeze integrity and redaction audit
+    - froze 6 Codex CLI ACUT profiles and not-started E/B execution matrices
+    - passed live synthetic Codex route preflight for all 5 distinct model/effort routes
+  current_smoke:
+    run_id: external_calibrated_sympy_e_v1_gold_smoke_20260515_w48
+    sample_size: 48
+    completed_instances: 48
+    resolved_instances: 48
+    error_instances: 0
+    raw_gold_patch_eval_test_artifacts_retained: false
+  current_b_admission:
+    candidate_pool_mode: screened_admitted_pool
+    screened_anchor_count: 80
+    screened_anchor_accepted_count: 51
+    generated_candidate_count: 40
+    accepted_task_count: 40
+    primary_task_count: 20
+    reserve_task_count: 20
+    generated_candidate_reference_patch_pass_rate: 1.0
+    generated_candidate_noop_fail_rate: 1.0
+    screened_anchor_reference_patch_pass_rate: 0.8375
+    screened_anchor_noop_fail_rate: 0.7625
+    reference_runtime_median_seconds: 1.497
+    noop_runtime_median_seconds: 1.853
+    primary_reference_patch_pass_rate: 1.0
+    primary_noop_fail_rate: 1.0
+  blockers: []
+  next_required_step: Run Phase 2 E attempts on the frozen E matrix; do not run B until the E spread gate passes.
+  freeze_integrity_audit:
+    status: passed
+    freeze_integrity_passed: true
+    acut_authorized: true
+    blockers: []
+    warnings: []
+    result: experiments/core_narrative/results/audits/external_calibrated_freeze_integrity_audit_20260516.json
+    report: experiments/core_narrative/reports/external_calibrated_freeze_integrity_audit.md
+
+e_denominator:
+  status: frozen_target_size
+  freeze_allowed: true
+  target_size: 48
+  min_size: 30
+  resolved_count_after_infra_smoke: 48
+  error_count_after_infra_smoke: 0
+  freeze_artifacts:
+    config: experiments/core_narrative/configs/external/swebench_sympy_e_v1.yaml
+    result: experiments/core_narrative/results/external/e_task_smoke.json
+    report: experiments/core_narrative/reports/external_e_task_freeze_report.md
+  candidate_population:
+    dataset: SWE-bench/SWE-bench_Verified
+    split: test
+    repository: sympy/sympy
+    visible_instance_id_policy: instance ids may be recorded; problem statements, patches, test patches, and base commits must not be emitted into B-generation artifacts.
+  freeze_rule_after_infra_smoke:
+    include_only_instances_with_successful_gold_harness_smoke: true
+    replacement_after_freeze: false
+    best_of_n: false
+    attempts_per_acut_task: 1
+    acut_specific_retry: false
+
+b_task_generation:
+  status: b_primary_and_reserve_frozen
+  source_repository: sympy/sympy
+  source_checkout: experiments/core_narrative/external_repos/sympy
+  time_cutoff_t0_utc: "2026-05-14T23:59:59Z"
+  anchor_selection:
+    candidate_count: 80
+    future_primary_target: 20
+    future_reserve_target: 20
+    manifest: experiments/core_narrative/configs/tasks/sympy_barcarolle_b_candidates_v2.yaml
+    result: experiments/core_narrative/results/task_admission/sympy_b_anchor_selection_v2_20260516.json
+    report: experiments/core_narrative/reports/sympy_b_anchor_selection_v2_report.md
+    private_provenance_root: experiments/core_narrative/large_artifacts/external_calibrated_b_anchor_selection_v2_20260516
+    task_admission_completed: true
+  task_admission:
+    status: admitted_frozen
+    candidate_pool_mode: screened_admitted_pool
+    screened_anchor_count: 80
+    screened_anchor_accepted_count: 51
+    generated_candidate_count: 40
+    accepted_task_count: 40
+    primary_task_count: 20
+    reserve_task_count: 20
+    generated_candidate_reference_patch_pass_rate: 1.0
+    generated_candidate_noop_fail_rate: 1.0
+    screened_anchor_reference_patch_pass_rate: 0.8375
+    screened_anchor_noop_fail_rate: 0.7625
+    reference_runtime_median_seconds: 1.497
+    reference_runtime_p90_seconds: 2.411
+    noop_runtime_median_seconds: 1.853
+    noop_runtime_p90_seconds: 2.952
+    primary_reference_patch_pass_rate: 1.0
+    primary_noop_fail_rate: 1.0
+    primary_manifest: experiments/core_narrative/configs/tasks/sympy_barcarolle_b_v2.yaml
+    reserve_manifest: experiments/core_narrative/configs/tasks/sympy_barcarolle_b_v2_reserve.yaml
+    summary: experiments/core_narrative/results/task_admission/sympy_b_admission_summary_v2.json
+    candidate_sheets_dir: experiments/core_narrative/results/task_admission/sympy_b_candidate_sheets_v2
+    report: experiments/core_narrative/reports/sympy_b_task_generation_v2_report.md
+    private_artifact_root: experiments/core_narrative/large_artifacts/external_calibrated_b_task_admission_v2_20260516
+  selection_inputs_allowed:
+    - repository admission metadata
+    - source/test file paths and commit metadata summarized by digest
+    - ACUT-independent task design proxies
+  selection_inputs_forbidden:
+    - E gold patches
+    - E test patches
+    - E problem statements as calibration examples
+    - E base commit SHAs in B-generation context
+    - ACUT outputs
+    - failed patches or near-miss scores
+  admission_required_before_model_runs:
+    - public_task_statement
+    - noop_fails
+    - reference_patch_passes
+    - hidden_verifier_path
+    - leakage_audit
+    - family
+    - difficulty
+    - artifact_digests
+    - source_anchor_digest
+    - oracle_directness
+
+acut_execution_controls:
+  codex_cli_version_observed: codex-cli 0.130.0
+  entrypoint: codex exec
+  execution_mode: non_interactive_fresh_workspace
+  network_policy:
+    mode: disabled_for_acut_runs
+    allowed_hosts: []
+  retry_policy:
+    primary_attempts_per_acut_task: 1
+    best_of_n: false
+    acut_specific_retry: false
+    replacement_tasks_after_denominator_freeze: false
+  output_contract:
+    patch_required: true
+    run_metadata_required: true
+    raw_hidden_verifier_material_in_context: false
+
+acut_matrix:
+  A0_codex_gpt54_medium_concise:
+    status: frozen
+    manifest: experiments/core_narrative/configs/acuts/external_calibrated_sympy/external-sympy-a0-gpt54-medium-concise.yaml
+    codex_profile: external-sympy-a0-gpt54-medium-concise
+    model_tier: frontier
+    model: gpt-5.4
+    reasoning_effort: medium
+    repository_specific_context: none
+  A1_codex_gpt54_low_concise:
+    status: frozen
+    manifest: experiments/core_narrative/configs/acuts/external_calibrated_sympy/external-sympy-a1-gpt54-low-concise.yaml
+    codex_profile: external-sympy-a1-gpt54-low-concise
+    model_tier: frontier
+    model: gpt-5.4
+    reasoning_effort: low
+    repository_specific_context: none
+  A2_codex_gpt54_high_concise:
+    status: frozen
+    manifest: experiments/core_narrative/configs/acuts/external_calibrated_sympy/external-sympy-a2-gpt54-high-concise.yaml
+    codex_profile: external-sympy-a2-gpt54-high-concise
+    model_tier: frontier
+    model: gpt-5.4
+    reasoning_effort: high
+    repository_specific_context: none
+  A3_codex_gpt55_high_concise:
+    status: frozen
+    manifest: experiments/core_narrative/configs/acuts/external_calibrated_sympy/external-sympy-a3-gpt55-high-concise.yaml
+    codex_profile: external-sympy-a3-gpt55-high-concise
+    model_tier: strongest_available
+    model: gpt-5.5
+    reasoning_effort: high
+    repository_specific_context: none
+  A4_codex_gpt54mini_high_concise:
+    status: frozen
+    manifest: experiments/core_narrative/configs/acuts/external_calibrated_sympy/external-sympy-a4-gpt54mini-high-concise.yaml
+    codex_profile: external-sympy-a4-gpt54mini-high-concise
+    model_tier: cheap
+    model: gpt-5.4-mini
+    reasoning_effort: high
+    repository_specific_context: none
+    custom_localization_or_retrieval_tool_allowed: false
+  A5_codex_gpt54_high_rich_agents:
+    status: frozen
+    manifest: experiments/core_narrative/configs/acuts/external_calibrated_sympy/external-sympy-a5-gpt54-high-rich-agents.yaml
+    codex_profile: external-sympy-a5-gpt54-high-rich-agents
+    model_tier: frontier
+    model: gpt-5.4
+    reasoning_effort: high
+    repository_specific_context: task_agnostic_sympy_rich_agents_md
+
+not_authorized_until_next_gate:
+  - run_ACUT_on_B
+  - declare_final_primary_repo
+  - tune_A3_from_E_results
+  - use_E_gold_or_hidden_material_in_B_generation
+
+authorized_next:
+  - run_phase2_E_primary_attempts_on_frozen_matrix

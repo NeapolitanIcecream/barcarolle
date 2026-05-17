@@ -1,0 +1,594 @@
+{
+  "b_phase3_first10": {
+    "by_acut_slot": [
+      {
+        "acut_id": "external-sympy-a0-gpt54-medium-concise",
+        "acut_slot": "A0",
+        "cell_count": 10,
+        "external_verifier_infra_error_count": 0,
+        "private_replay_allowed_count": 0,
+        "resolved_count": 2,
+        "score_rate": 0.2,
+        "score_rate_for_report": "0.2",
+        "scored_count": 10,
+        "status_counts": {
+          "verified_fail": 8,
+          "verified_pass": 2
+        },
+        "unresolved_count": 8,
+        "unsafe_candidate_patch_count": 0
+      },
+      {
+        "acut_id": "external-sympy-a1-gpt54-low-concise",
+        "acut_slot": "A1",
+        "cell_count": 10,
+        "external_verifier_infra_error_count": 0,
+        "private_replay_allowed_count": 0,
+        "resolved_count": 3,
+        "score_rate": 0.3,
+        "score_rate_for_report": "0.3",
+        "scored_count": 10,
+        "status_counts": {
+          "verified_fail": 7,
+          "verified_pass": 3
+        },
+        "unresolved_count": 7,
+        "unsafe_candidate_patch_count": 0
+      },
+      {
+        "acut_id": "external-sympy-a2-gpt54-high-concise",
+        "acut_slot": "A2",
+        "cell_count": 10,
+        "external_verifier_infra_error_count": 0,
+        "private_replay_allowed_count": 0,
+        "resolved_count": 3,
+        "score_rate": 0.3,
+        "score_rate_for_report": "0.3",
+        "scored_count": 10,
+        "status_counts": {
+          "verified_fail": 7,
+          "verified_pass": 3
+        },
+        "unresolved_count": 7,
+        "unsafe_candidate_patch_count": 0
+      },
+      {
+        "acut_id": "external-sympy-a3-gpt55-high-concise",
+        "acut_slot": "A3",
+        "cell_count": 10,
+        "external_verifier_infra_error_count": 0,
+        "private_replay_allowed_count": 0,
+        "resolved_count": 2,
+        "score_rate": 0.2,
+        "score_rate_for_report": "0.2",
+        "scored_count": 10,
+        "status_counts": {
+          "verified_fail": 8,
+          "verified_pass": 2
+        },
+        "unresolved_count": 8,
+        "unsafe_candidate_patch_count": 0
+      },
+      {
+        "acut_id": "external-sympy-a4-gpt54mini-high-concise",
+        "acut_slot": "A4",
+        "cell_count": 10,
+        "external_verifier_infra_error_count": 0,
+        "private_replay_allowed_count": 0,
+        "resolved_count": 2,
+        "score_rate": 0.2,
+        "score_rate_for_report": "0.2",
+        "scored_count": 10,
+        "status_counts": {
+          "verified_fail": 8,
+          "verified_pass": 2
+        },
+        "unresolved_count": 8,
+        "unsafe_candidate_patch_count": 0
+      },
+      {
+        "acut_id": "external-sympy-a5-gpt54-high-rich-agents",
+        "acut_slot": "A5",
+        "cell_count": 10,
+        "external_verifier_infra_error_count": 0,
+        "private_replay_allowed_count": 0,
+        "resolved_count": 2,
+        "score_rate": 0.2,
+        "score_rate_for_report": "0.2",
+        "scored_count": 10,
+        "status_counts": {
+          "verified_fail": 8,
+          "verified_pass": 2
+        },
+        "unresolved_count": 8,
+        "unsafe_candidate_patch_count": 0
+      }
+    ],
+    "cell_count": 60,
+    "external_verifier_infra_error_count": 0,
+    "resolved_count": 14,
+    "scope": "phase3_b_first_ten_task_ordinals_all_acut_slots",
+    "score_rate": 0.23333333333333334,
+    "score_rate_for_report": "0.233333",
+    "scored_cell_count": 60,
+    "status_counts": {
+      "verified_fail": 46,
+      "verified_pass": 14
+    },
+    "task_count": 10,
+    "task_rows": [
+      {
+        "candidate_id": "sympy_b_anchor_001",
+        "difficulty": "medium-hard",
+        "external_verifier_infra_errors": {
+          "A0": 0,
+          "A1": 0,
+          "A2": 0,
+          "A3": 0,
+          "A4": 0,
+          "A5": 0
+        },
+        "family": "polys/number theory",
+        "scores": {
+          "A0": 0,
+          "A1": 0,
+          "A2": 0,
+          "A3": 0,
+          "A4": 0,
+          "A5": 0
+        },
+        "statuses": {
+          "A0": "verified_fail",
+          "A1": "verified_fail",
+          "A2": "verified_fail",
+          "A3": "verified_fail",
+          "A4": "verified_fail",
+          "A5": "verified_fail"
+        },
+        "task_id": "sympy__b__001",
+        "task_ordinal": 1
+      },
+      {
+        "candidate_id": "sympy_b_anchor_003",
+        "difficulty": "medium-hard",
+        "external_verifier_infra_errors": {
+          "A0": 0,
+          "A1": 0,
+          "A2": 0,
+          "A3": 0,
+          "A4": 0,
+          "A5": 0
+        },
+        "family": "matrices/linear algebra",
+        "scores": {
+          "A0": 0,
+          "A1": 0,
+          "A2": 0,
+          "A3": 0,
+          "A4": 0,
+          "A5": 0
+        },
+        "statuses": {
+          "A0": "verified_fail",
+          "A1": "verified_fail",
+          "A2": "verified_fail",
+          "A3": "verified_fail",
+          "A4": "verified_fail",
+          "A5": "verified_fail"
+        },
+        "task_id": "sympy__b__003",
+        "task_ordinal": 2
+      },
+      {
+        "candidate_id": "sympy_b_anchor_004",
+        "difficulty": "easy-medium",
+        "external_verifier_infra_errors": {
+          "A0": 0,
+          "A1": 0,
+          "A2": 0,
+          "A3": 0,
+          "A4": 0,
+          "A5": 0
+        },
+        "family": "calculus/integration/solving",
+        "scores": {
+          "A0": 1,
+          "A1": 1,
+          "A2": 1,
+          "A3": 1,
+          "A4": 1,
+          "A5": 1
+        },
+        "statuses": {
+          "A0": "verified_pass",
+          "A1": "verified_pass",
+          "A2": "verified_pass",
+          "A3": "verified_pass",
+          "A4": "verified_pass",
+          "A5": "verified_pass"
+        },
+        "task_id": "sympy__b__004",
+        "task_ordinal": 3
+      },
+      {
+        "candidate_id": "sympy_b_anchor_005",
+        "difficulty": "medium-hard",
+        "external_verifier_infra_errors": {
+          "A0": 0,
+          "A1": 0,
+          "A2": 0,
+          "A3": 0,
+          "A4": 0,
+          "A5": 0
+        },
+        "family": "printing/parsing/syntax",
+        "scores": {
+          "A0": 0,
+          "A1": 0,
+          "A2": 0,
+          "A3": 0,
+          "A4": 0,
+          "A5": 0
+        },
+        "statuses": {
+          "A0": "verified_fail",
+          "A1": "verified_fail",
+          "A2": "verified_fail",
+          "A3": "verified_fail",
+          "A4": "verified_fail",
+          "A5": "verified_fail"
+        },
+        "task_id": "sympy__b__005",
+        "task_ordinal": 4
+      },
+      {
+        "candidate_id": "sympy_b_anchor_006",
+        "difficulty": "easy-medium",
+        "external_verifier_infra_errors": {
+          "A0": 0,
+          "A1": 0,
+          "A2": 0,
+          "A3": 0,
+          "A4": 0,
+          "A5": 0
+        },
+        "family": "assumptions/predicates",
+        "scores": {
+          "A0": 1,
+          "A1": 1,
+          "A2": 1,
+          "A3": 1,
+          "A4": 1,
+          "A5": 1
+        },
+        "statuses": {
+          "A0": "verified_pass",
+          "A1": "verified_pass",
+          "A2": "verified_pass",
+          "A3": "verified_pass",
+          "A4": "verified_pass",
+          "A5": "verified_pass"
+        },
+        "task_id": "sympy__b__006",
+        "task_ordinal": 5
+      },
+      {
+        "candidate_id": "sympy_b_anchor_007",
+        "difficulty": "medium",
+        "external_verifier_infra_errors": {
+          "A0": 0,
+          "A1": 0,
+          "A2": 0,
+          "A3": 0,
+          "A4": 0,
+          "A5": 0
+        },
+        "family": "expression simplification/canonicalization",
+        "scores": {
+          "A0": 0,
+          "A1": 0,
+          "A2": 0,
+          "A3": 0,
+          "A4": 0,
+          "A5": 0
+        },
+        "statuses": {
+          "A0": "verified_fail",
+          "A1": "verified_fail",
+          "A2": "verified_fail",
+          "A3": "verified_fail",
+          "A4": "verified_fail",
+          "A5": "verified_fail"
+        },
+        "task_id": "sympy__b__007",
+        "task_ordinal": 6
+      },
+      {
+        "candidate_id": "sympy_b_anchor_008",
+        "difficulty": "easy-medium",
+        "external_verifier_infra_errors": {
+          "A0": 0,
+          "A1": 0,
+          "A2": 0,
+          "A3": 0,
+          "A4": 0,
+          "A5": 0
+        },
+        "family": "polys/number theory",
+        "scores": {
+          "A0": 0,
+          "A1": 0,
+          "A2": 0,
+          "A3": 0,
+          "A4": 0,
+          "A5": 0
+        },
+        "statuses": {
+          "A0": "verified_fail",
+          "A1": "verified_fail",
+          "A2": "verified_fail",
+          "A3": "verified_fail",
+          "A4": "verified_fail",
+          "A5": "verified_fail"
+        },
+        "task_id": "sympy__b__008",
+        "task_ordinal": 7
+      },
+      {
+        "candidate_id": "sympy_b_anchor_010",
+        "difficulty": "medium",
+        "external_verifier_infra_errors": {
+          "A0": 0,
+          "A1": 0,
+          "A2": 0,
+          "A3": 0,
+          "A4": 0,
+          "A5": 0
+        },
+        "family": "matrices/linear algebra",
+        "scores": {
+          "A0": 0,
+          "A1": 0,
+          "A2": 0,
+          "A3": 0,
+          "A4": 0,
+          "A5": 0
+        },
+        "statuses": {
+          "A0": "verified_fail",
+          "A1": "verified_fail",
+          "A2": "verified_fail",
+          "A3": "verified_fail",
+          "A4": "verified_fail",
+          "A5": "verified_fail"
+        },
+        "task_id": "sympy__b__010",
+        "task_ordinal": 8
+      },
+      {
+        "candidate_id": "sympy_b_anchor_012",
+        "difficulty": "easy-medium",
+        "external_verifier_infra_errors": {
+          "A0": 0,
+          "A1": 0,
+          "A2": 0,
+          "A3": 0,
+          "A4": 0,
+          "A5": 0
+        },
+        "family": "printing/parsing/syntax",
+        "scores": {
+          "A0": 0,
+          "A1": 0,
+          "A2": 0,
+          "A3": 0,
+          "A4": 0,
+          "A5": 0
+        },
+        "statuses": {
+          "A0": "verified_fail",
+          "A1": "verified_fail",
+          "A2": "verified_fail",
+          "A3": "verified_fail",
+          "A4": "verified_fail",
+          "A5": "verified_fail"
+        },
+        "task_id": "sympy__b__012",
+        "task_ordinal": 9
+      },
+      {
+        "candidate_id": "sympy_b_anchor_014",
+        "difficulty": "medium",
+        "external_verifier_infra_errors": {
+          "A0": 0,
+          "A1": 0,
+          "A2": 0,
+          "A3": 0,
+          "A4": 0,
+          "A5": 0
+        },
+        "family": "expression simplification/canonicalization",
+        "scores": {
+          "A0": 0,
+          "A1": 1,
+          "A2": 1,
+          "A3": 0,
+          "A4": 0,
+          "A5": 0
+        },
+        "statuses": {
+          "A0": "verified_fail",
+          "A1": "verified_pass",
+          "A2": "verified_pass",
+          "A3": "verified_fail",
+          "A4": "verified_fail",
+          "A5": "verified_fail"
+        },
+        "task_id": "sympy__b__014",
+        "task_ordinal": 10
+      }
+    ]
+  },
+  "created_at_utc": "2026-05-16T17:05:38.653831Z",
+  "e_phase2_first30": {
+    "by_acut_slot": [
+      {
+        "acut_id": "external-sympy-a0-gpt54-medium-concise",
+        "acut_slot": "A0",
+        "cell_count": 30,
+        "empty_patch_count": 1,
+        "external_verifier_infra_error_count": 0,
+        "resolved_count": 16,
+        "resolved_rate": 0.5333333333333333,
+        "resolved_rate_for_report": "0.533333",
+        "unresolved_count": 14
+      },
+      {
+        "acut_id": "external-sympy-a1-gpt54-low-concise",
+        "acut_slot": "A1",
+        "cell_count": 30,
+        "empty_patch_count": 2,
+        "external_verifier_infra_error_count": 0,
+        "resolved_count": 15,
+        "resolved_rate": 0.5,
+        "resolved_rate_for_report": "0.5",
+        "unresolved_count": 15
+      },
+      {
+        "acut_id": "external-sympy-a2-gpt54-high-concise",
+        "acut_slot": "A2",
+        "cell_count": 30,
+        "empty_patch_count": 2,
+        "external_verifier_infra_error_count": 0,
+        "resolved_count": 16,
+        "resolved_rate": 0.5333333333333333,
+        "resolved_rate_for_report": "0.533333",
+        "unresolved_count": 14
+      },
+      {
+        "acut_id": "external-sympy-a3-gpt55-high-concise",
+        "acut_slot": "A3",
+        "cell_count": 30,
+        "empty_patch_count": 0,
+        "external_verifier_infra_error_count": 0,
+        "resolved_count": 19,
+        "resolved_rate": 0.6333333333333333,
+        "resolved_rate_for_report": "0.633333",
+        "unresolved_count": 11
+      },
+      {
+        "acut_id": "external-sympy-a4-gpt54mini-high-concise",
+        "acut_slot": "A4",
+        "cell_count": 30,
+        "empty_patch_count": 1,
+        "external_verifier_infra_error_count": 0,
+        "resolved_count": 18,
+        "resolved_rate": 0.6,
+        "resolved_rate_for_report": "0.6",
+        "unresolved_count": 12
+      },
+      {
+        "acut_id": "external-sympy-a5-gpt54-high-rich-agents",
+        "acut_slot": "A5",
+        "cell_count": 30,
+        "empty_patch_count": 3,
+        "external_verifier_infra_error_count": 0,
+        "resolved_count": 17,
+        "resolved_rate": 0.5666666666666667,
+        "resolved_rate_for_report": "0.566667",
+        "unresolved_count": 13
+      }
+    ],
+    "cell_count": 180,
+    "e_spread_gate_ready": false,
+    "e_spread_gate_reason": "only_180_of_288_phase2_cells_scored",
+    "empty_patch_count": 9,
+    "external_verifier_infra_error_count": 0,
+    "resolved_count": 101,
+    "resolved_rate": 0.5611111111111111,
+    "resolved_rate_for_report": "0.561111",
+    "scope": "phase2_e_first_thirty_task_ordinals",
+    "scored_cell_count": 180,
+    "task_count": 30
+  },
+  "modified_plan": {
+    "authorized_by_user_at": "2026-05-16",
+    "b_task_ordinal_cutoff_completed": 10,
+    "e_task_ordinal_cutoff_completed": 30,
+    "goal_may_be_marked_complete_after_checkpoint": true,
+    "no_additional_experiment_cells_started_after_b10": true,
+    "original_b_gate_overridden_by_user_modified_plan": true,
+    "pause_after_checkpoint": true
+  },
+  "pause_state": {
+    "experiment_paused": true,
+    "reason": "user_modified_plan_checkpoint_reached",
+    "remaining_original_b_cells_not_started_in_this_modified_scope": 60,
+    "remaining_original_e_cells_not_started_in_this_modified_scope": 108
+  },
+  "privacy": {
+    "private_paths_recorded_publicly": false,
+    "public_artifacts_sanitized_after_runner_completion": true,
+    "raw_base_commits_recorded_publicly": false,
+    "raw_candidate_patches_recorded_publicly": false,
+    "raw_hidden_verifier_material_recorded_publicly": false,
+    "raw_problem_statements_recorded_publicly": false,
+    "raw_reference_or_gold_patches_recorded_publicly": false,
+    "raw_verifier_outputs_recorded_publicly": false
+  },
+  "protocol_id": "external-calibrated-repo-benchmark-v1",
+  "public_artifacts": {
+    "b_first10_summary_json": "experiments/core_narrative/results/external_b_pilot/external_calibrated_b_pilot_first10_summary_20260516.json",
+    "b_first10_summary_report": "experiments/core_narrative/reports/external_b_pilot_first10_summary_report.md",
+    "checkpoint_json": "experiments/core_narrative/results/external_checkpoint/external_calibrated_checkpoint_e30_b10_20260516.json",
+    "checkpoint_report": "experiments/core_narrative/reports/external_calibrated_checkpoint_e30_b10_report.md",
+    "e_first30_summary_json": "experiments/core_narrative/results/external_e_primary/external_calibrated_e_phase2_first30_score_summary_20260516.json",
+    "e_first30_summary_report": "experiments/core_narrative/reports/external_e_phase2_first30_score_summary_report.md"
+  },
+  "schema_version": "external-calibrated-repo-benchmark.checkpoint.e30-b10.v1",
+  "status": "paused_after_modified_plan_checkpoint",
+  "validation": {
+    "private_content_scan": {
+      "checks": {
+        "patch_or_log_snippets": 1108,
+        "raw_base_commits": 125,
+        "raw_target_commits": 77,
+        "statement_snippets": 340
+      },
+      "private_content_hits": 0,
+      "public_files_scanned": 849,
+      "status": "passed"
+    },
+    "process_check": {
+      "residual_experiment_processes": 0,
+      "status": "passed"
+    },
+    "public_marker_scan": {
+      "json_value_private_marker_hits": 0,
+      "raw_path_or_private_filename_hits": 0,
+      "scope": [
+        "external_e_primary public results",
+        "external_b_pilot public results",
+        "E phase2 public reports",
+        "B first10 public report"
+      ],
+      "status": "passed"
+    },
+    "pytest": {
+      "passed": 52,
+      "status": "passed",
+      "warning_note": "urllib3 LibreSSL warning from system Python; no test failures.",
+      "warnings": 1
+    },
+    "sanitization": {
+      "b_private_references_redacted_before_summary": 638,
+      "b_public_json_files_changed_before_summary": 67,
+      "b_public_json_files_seen_before_summary": 67,
+      "e_private_references_redacted": 4418,
+      "e_public_json_files_changed": 361,
+      "e_public_json_files_seen": 389,
+      "e_raw_base_tree_values_redacted": 360,
+      "status": "passed"
+    }
+  }
+}

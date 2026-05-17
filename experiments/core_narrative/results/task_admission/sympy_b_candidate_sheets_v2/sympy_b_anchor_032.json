@@ -1,0 +1,33 @@
+{
+  "admission_status": "accepted",
+  "base_commit_digest": "1c6dc774f3c808daae8d57a0e32a46f6ab11dc0bd5c136c330229fef70d82d26",
+  "blockers": [],
+  "candidate_id": "sympy_b_anchor_032",
+  "changed_file_anchor_digest": "fdda39abd9e2c628e6fea8cdcb8d941621fe186da37b68eaa3a4372bc5f93030",
+  "difficulty": "easy-medium",
+  "family": "calculus/integration/solving",
+  "hidden_file_count": 1,
+  "hidden_verifier_digest": "10b0a39475ea5d3a792c4e403b97a19b5e64d1bee6315533dff53833b6c673d3",
+  "leakage": {
+    "public_statement_has_hidden_verifier": false,
+    "public_statement_has_reference_patch": false,
+    "public_statement_has_target_commit": false,
+    "selected_using_acut_outputs": false,
+    "selected_using_e_results": false
+  },
+  "no_op_fails": true,
+  "noop_duration_seconds": 1.645,
+  "noop_status": "failed",
+  "oracle_directness": "direct_source_and_tests_commit",
+  "public_statement_digest": "3ac1f54c259ccc3084db3a243106ce542a49766ccc214d8a3126568f18a91551",
+  "reference_duration_seconds": 1.256,
+  "reference_patch_digest": "85a4a90d798e8e7154445d6f111db76332abdf19b244509853637ea07ef70d3d",
+  "reference_patch_passes": true,
+  "reference_status": "passed",
+  "repo": "sympy/sympy",
+  "schema_version": "external-calibrated-repo-benchmark.b-candidate-sheet.v1",
+  "source_anchor_digest": "1ff162aacaea74cf2d34748f714b8e274b48ace7a49a5fa19899f8988f7f2773",
+  "source_time": "2025-09-04T09:18:33+12:00",
+  "task_id": "sympy__b__032",
+  "test_node_count": 1
+}

@@ -1,0 +1,73 @@
+schema_version: core-narrative.acut.v1
+manifest_version: external-calibrated-sympy-v1
+acut_id: external-sympy-a5-gpt54-high-rich-agents
+display_name: A5 Codex GPT-5.4 High Rich AGENTS
+purpose: Task-agnostic SymPy AGENTS.md guidance contrast.
+frozen: true
+provider: openai
+model: gpt-5.4
+model_parameters:
+  reasoning_effort: high
+  model_verbosity: low
+  reasoning_summary: auto
+prompt_policy_digest: sha256:3e7a60e7d85f4aadc8cf488a68d212fec71ada65822a77bc4b3a9af54bf84656
+prompt_policy_reference: experiments/core_narrative/configs/acuts/external_calibrated_sympy/agents/rich.md
+tool_permissions:
+  filesystem: workspace-write
+  network: disabled
+  allowed_tools:
+  - filesystem:read
+  - filesystem:write
+  - shell
+  - code_edit
+  - git:status
+  - git:diff
+  - git:show
+  custom_localization_or_retrieval_tool_allowed: false
+retrieval_context_strategy:
+  strategy_id: external-sympy-local-evidence-v1
+  allowed_sources:
+  - public_task_statement
+  - local_filesystem
+  - targeted_tests
+  - bounded_symbol_search
+  forbidden_sources:
+  - SWE-bench gold patches
+  - SWE-bench test patches
+  - SWE-bench problem statements outside the task prompt
+  - B reference patches
+  - B hidden verifiers
+  - ACUT outputs
+  - network resources
+runtime_budget:
+  timeout_seconds: 3600
+  max_turns: 18
+  max_shell_commands: 55
+  max_test_commands: 10
+  retry_policy:
+    primary_attempts: 1
+    retries_allowed: false
+    best_of_n: false
+network_policy:
+  mode: disabled
+  allowed_hosts: []
+execution_mode: codex_cli_non_interactive_fresh_workspace
+adapter_or_harness_basis: workspace_mode_runner.py + codex_cli_patch_command.py +
+  apply_and_verify.py
+frozen_at: '2026-05-15T16:59:02.385035Z'
+operator: codex-external-calibrated-coordinator
+notes: Frozen for external-calibrated SymPy SWE-bench/B benchmark validation; no model
+  calls made during profile freeze.
+metadata:
+  slot: A5
+  protocol_id: external-calibrated-repo-benchmark-v1
+  model_tier: frontier
+  agents_md_profile: rich
+  agents_md_digest: 6ca9fe258dd9ac0e5e058b9bdda072dd275c291dc71027df2bd1634a39ffadd5
+  codex_cli_version_observed: codex-cli 0.130.0
+  model_availability_checked_via: codex debug models --bundled
+  model_available_in_bundled_catalog: true
+  primary_attempts_per_task: 1
+  manual_steering_allowed: false
+  network_access_allowed: false
+  custom_tooling_as_primary_intervention: false

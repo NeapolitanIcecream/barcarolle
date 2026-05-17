@@ -1,0 +1,35 @@
+{
+  "admission_status": "rejected",
+  "base_commit_digest": "9addc06b81fbaa9e52ec91addc141319a0626e8d93dab8dd1099a685bdb55049",
+  "blockers": [
+    "reference_patch_did_not_pass"
+  ],
+  "candidate_id": "sympy_b_anchor_047",
+  "changed_file_anchor_digest": "747a67b12b61f1b3ca7080fe4047e3e4b3dda27027a9f4fa76fceb01dbd9c3ad",
+  "difficulty": "medium",
+  "family": "polys/number theory",
+  "hidden_file_count": 1,
+  "hidden_verifier_digest": "ad7b6f0c68a299bbba6df5056b630a76090d5c49078e96fc130bd961954f903f",
+  "leakage": {
+    "public_statement_has_hidden_verifier": false,
+    "public_statement_has_reference_patch": false,
+    "public_statement_has_target_commit": false,
+    "selected_using_acut_outputs": false,
+    "selected_using_e_results": false
+  },
+  "no_op_fails": true,
+  "noop_duration_seconds": 1.602,
+  "noop_status": "failed",
+  "oracle_directness": "direct_source_and_tests_commit",
+  "public_statement_digest": "4a115bb2db40a4af0a5d08926c9127a748ef74f6b095a5faa945a954611acd75",
+  "reference_duration_seconds": 1.209,
+  "reference_patch_digest": "3c88b88dd306ae22243794c5b9face9dda8aef2cbfcb68c6595d730bbb7753a3",
+  "reference_patch_passes": false,
+  "reference_status": "failed",
+  "repo": "sympy/sympy",
+  "schema_version": "external-calibrated-repo-benchmark.b-candidate-sheet.v1",
+  "source_anchor_digest": "41aee1d971b7d0a1845d78eee1addf73120f8adc9d0a48521f7588d4e2a1b394",
+  "source_time": "2025-07-04T20:22:59+05:30",
+  "task_id": "sympy__b__047",
+  "test_node_count": 3
+}
