@@ -8,6 +8,7 @@ Operational companions:
 - [Phase 0 source-adapter follow-up runbook](phase-0-source-adapter-followup-runbook.md)
 - [Phase 0 headroom matrix follow-up runbook](phase-0-headroom-matrix-followup-runbook.md)
 - [Phase 0 closeout follow-up runbook](phase-0-closeout-followup-runbook.md)
+- [Phase 0 measured endpoint runbook](phase-0-measured-endpoint-runbook.md)
 
 ## Goal
 

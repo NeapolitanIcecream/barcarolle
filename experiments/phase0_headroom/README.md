@@ -17,6 +17,12 @@ reaches `ready_for_headroom_matrix`, continue from
 follow-up, use `docs/experiments/phase-0-closeout-followup-runbook.md` to return
 to the original Phase 0 Step 8/9 decision memo and commit hygiene.
 
+For future measured runs, use
+`docs/experiments/phase-0-measured-endpoint-runbook.md`. That runbook requires
+all LLM and ACUT calls to use `LLM_BASE_URL` plus `LLM_API_KEY`, records token
+usage and measured cost, and uses those measurements to decide whether to scale
+task count or ACUT count.
+
 Phase 0 asks whether repo-specific benchmark signal exists before building a
 larger benchmark compiler:
 
