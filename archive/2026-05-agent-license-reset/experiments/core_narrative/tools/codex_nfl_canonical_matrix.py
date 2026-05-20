@@ -13,6 +13,7 @@ from typing import Any, Mapping, Sequence
 
 import codex_nfl_experiment_runner as batch
 from _common import ToolError, emit_json, fail, iso_now, load_manifest
+from rgw_status_semantics import classify_status
 
 
 TOOL = "codex_nfl_canonical_matrix"
@@ -22,7 +23,17 @@ CORE_ACUTS = [
     "frontier-generic-swe",
     "frontier-click-specialist",
 ]
-SCOREABLE_STATUSES = {"passed", "failed", "timeout", "invalid_submission"}
+SCOREABLE_STATUSES = {
+    "passed",
+    "failed",
+    "timeout",
+    "invalid_submission",
+    "verified_pass",
+    "verified_fail",
+    "no_diff",
+    "unsafe_or_scope_violation",
+    "acut_command_error",
+}
 PRIMARY_METADATA_FIELDS = [
     "runner_id",
     "direct_runner_id",
@@ -113,6 +124,10 @@ def read_json(path: Path) -> dict[str, Any] | None:
 
 def is_live_batch_candidate(payload: Mapping[str, Any]) -> bool:
     metadata = payload.get("metadata") if isinstance(payload.get("metadata"), dict) else {}
+    if payload.get("runner_id") == "rgw-full-workspace-v1" and payload.get("tool") == "codex_nfl_workspace_runner":
+        if metadata.get("direct_runner_status") == "dry_run_completed":
+            return False
+        return metadata.get("model_call_made") is True
     if metadata.get("runner_id") != batch.RUNNER_ID or metadata.get("batch_tool") != batch.TOOL:
         return False
     if metadata.get("direct_runner_status") == "dry_run_completed":
@@ -124,9 +139,30 @@ def failure_label(payload: Mapping[str, Any]) -> str:
     metadata = payload.get("metadata") if isinstance(payload.get("metadata"), dict) else {}
     failure_class = metadata.get("failure_class")
     status = str(payload.get("status"))
+    score_action = payload.get("score_action")
+    if isinstance(score_action, str) and score_action:
+        return f"{status}:{score_action}"
     if isinstance(failure_class, str) and failure_class:
         return f"{status}:{failure_class}"
     return status
+
+
+def is_scoreable_payload(payload: Mapping[str, Any]) -> bool:
+    score_value = payload.get("score_value")
+    if isinstance(score_value, int):
+        return True
+    if payload.get("triage_paused") is True or payload.get("requires_rerun_or_exclusion") is True:
+        return False
+    return payload.get("status") in SCOREABLE_STATUSES
+
+
+def is_primary_pass(payload: Mapping[str, Any]) -> bool:
+    status = payload.get("status")
+    if status == "verified_pass":
+        return True
+    if status == "passed":
+        return True
+    return payload.get("primary_pass") is True
 
 
 def metadata_coverage(payload: Mapping[str, Any]) -> dict[str, Any]:
@@ -150,7 +186,9 @@ def summarize_payload(path: Path, payload: Mapping[str, Any]) -> dict[str, Any]:
         "split": str(payload.get("split", "")).lower(),
         "attempt": payload.get("attempt"),
         "status": payload.get("status"),
-        "scoreable": payload.get("status") in SCOREABLE_STATUSES,
+        "scoreable": is_scoreable_payload(payload),
+        "primary_pass": is_primary_pass(payload),
+        "score_action": payload.get("score_action") or classify_status(str(payload.get("status")), payload).get("score_action"),
         "failure_label": failure_label(payload),
         "started_at": payload.get("started_at"),
         "finished_at": payload.get("finished_at"),
@@ -270,7 +308,7 @@ def build_matrix(split: str, task_ids: Sequence[str], root: Path) -> dict[str, A
     for acut in CORE_ACUTS:
         canonical = [cells[f"{acut}::{task}"]["canonical_latest"] for task in task_ids]
         present = [record for record in canonical if isinstance(record, dict)]
-        passed = sum(1 for record in present if record.get("status") == "passed")
+        passed = sum(1 for record in present if record.get("primary_pass") is True)
         scoreable = sum(1 for record in present if record.get("scoreable"))
         fixed_denominator = len(task_ids)
         acut_status_counts: dict[str, int] = {}

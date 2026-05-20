@@ -1,0 +1,15 @@
+{
+  "base_commit": "5c1239b0116b66492cdd0848144ab3c78a04495a",
+  "output_path": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/rgw_full_workspace_v1/raw/rgw_full_workspace_v1_20260512__rwork__frontier-generic-swe__click__rwork__001__attempt1/prepare_run_workspace_payload.json",
+  "repo_slug": "click",
+  "split": "rwork",
+  "statement_path": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/workspaces/rgw_full_workspace_v1/rgw_full_workspace_v1_20260512__rwork__frontier-generic-swe__click__rwork__001__attempt1__run/.core_narrative/statement.md",
+  "status": "prepared",
+  "target_commit_absence_checked": true,
+  "task_id": "click__rwork__001",
+  "task_package_path": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/workspaces/rgw_full_workspace_v1/rgw_full_workspace_v1_20260512__rwork__frontier-generic-swe__click__rwork__001__attempt1__run/.core_narrative/task.json",
+  "tool": "prepare_workspace",
+  "warnings": [],
+  "workspace": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/workspaces/rgw_full_workspace_v1/rgw_full_workspace_v1_20260512__rwork__frontier-generic-swe__click__rwork__001__attempt1__run",
+  "workspace_history_mode": "base_tree_only_synthetic_git"
+}

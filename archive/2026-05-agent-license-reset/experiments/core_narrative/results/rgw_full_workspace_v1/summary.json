@@ -1,0 +1,1481 @@
+{
+  "artifacts": {
+    "cost_ledger": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/rgw_full_workspace_v1/cost_ledger.jsonl",
+    "grw_table": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/rgw_full_workspace_v1/grw_table.json",
+    "infra_reruns_exclusions": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/rgw_full_workspace_v1/infra_reruns_exclusions.json",
+    "manifest": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/rgw_full_workspace_v1/raw_artifacts_manifest.json",
+    "normalized_result_matrix": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/rgw_full_workspace_v1/normalized_result_matrix.json",
+    "reversal_analysis": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/rgw_full_workspace_v1/reversal_analysis.json",
+    "summary": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/rgw_full_workspace_v1/summary.json",
+    "threats_to_validity": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/rgw_full_workspace_v1/reports/threats_to_validity.md"
+  },
+  "axes": {
+    "general": {
+      "axis": "general",
+      "cells": [
+        {
+          "acut_id": "cheap-click-specialist",
+          "normalized_result": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/rgw_full_workspace_v1/normalized/rgw_full_workspace_v1_20260512__general__cheap-click-specialist__instance_NodeBB__NodeBB-51d8f3b195bddb13a13ddc0de110722774d9bb1b-vf2cf3cbd463b7ad942381f1c6d077626485a1e9e__attempt1.json",
+          "present": true,
+          "score_action": "rerun_or_global_exclusion_required",
+          "score_value": null,
+          "status": "verifier_infra_error",
+          "task_id": "instance_NodeBB__NodeBB-51d8f3b195bddb13a13ddc0de110722774d9bb1b-vf2cf3cbd463b7ad942381f1c6d077626485a1e9e"
+        },
+        {
+          "acut_id": "cheap-click-specialist",
+          "normalized_result": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/rgw_full_workspace_v1/normalized/rgw_full_workspace_v1_20260512__general__cheap-click-specialist__instance_NodeBB__NodeBB-84dfda59e6a0e8a77240f939a7cb8757e6eaf945-v2c59007b1005cd5cd14cbb523ca5229db1fd2dd8__attempt1.json",
+          "present": true,
+          "score_action": "rerun_or_global_exclusion_required",
+          "score_value": null,
+          "status": "verifier_infra_error",
+          "task_id": "instance_NodeBB__NodeBB-84dfda59e6a0e8a77240f939a7cb8757e6eaf945-v2c59007b1005cd5cd14cbb523ca5229db1fd2dd8"
+        },
+        {
+          "acut_id": "cheap-click-specialist",
+          "normalized_result": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/rgw_full_workspace_v1/normalized/rgw_full_workspace_v1_20260512__general__cheap-click-specialist__instance_ansible__ansible-984216f52e76b904e5b0fa0fb956ab4f1e0a7751-v1055803c3a812189a1133297f7f5468579283f86__attempt1.json",
+          "present": true,
+          "score_action": "rerun_or_global_exclusion_required",
+          "score_value": null,
+          "status": "verifier_infra_error",
+          "task_id": "instance_ansible__ansible-984216f52e76b904e5b0fa0fb956ab4f1e0a7751-v1055803c3a812189a1133297f7f5468579283f86"
+        },
+        {
+          "acut_id": "cheap-click-specialist",
+          "normalized_result": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/rgw_full_workspace_v1/normalized/rgw_full_workspace_v1_20260512__general__cheap-click-specialist__instance_ansible__ansible-d33bedc48fdd933b5abd65a77c081876298e2f07-v0f01c69f1e2528b935359cfe578530722bca2c59__attempt1.json",
+          "present": true,
+          "score_action": "rerun_or_global_exclusion_required",
+          "score_value": null,
+          "status": "verifier_infra_error",
+          "task_id": "instance_ansible__ansible-d33bedc48fdd933b5abd65a77c081876298e2f07-v0f01c69f1e2528b935359cfe578530722bca2c59"
+        },
+        {
+          "acut_id": "cheap-click-specialist",
+          "normalized_result": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/rgw_full_workspace_v1/normalized/rgw_full_workspace_v1_20260512__general__cheap-click-specialist__instance_element-hq__element-web-5dfde12c1c1c0b6e48f17e3405468593e39d9492-vnan__attempt1.json",
+          "present": true,
+          "score_action": "rerun_or_global_exclusion_required",
+          "score_value": null,
+          "status": "verifier_infra_error",
+          "task_id": "instance_element-hq__element-web-5dfde12c1c1c0b6e48f17e3405468593e39d9492-vnan"
+        },
+        {
+          "acut_id": "cheap-click-specialist",
+          "normalized_result": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/rgw_full_workspace_v1/normalized/rgw_full_workspace_v1_20260512__general__cheap-click-specialist__instance_element-hq__element-web-776ffa47641c7ec6d142ab4a47691c30ebf83c2e__attempt1.json",
+          "present": true,
+          "score_action": "rerun_or_global_exclusion_required",
+          "score_value": null,
+          "status": "verifier_infra_error",
+          "task_id": "instance_element-hq__element-web-776ffa47641c7ec6d142ab4a47691c30ebf83c2e"
+        },
+        {
+          "acut_id": "cheap-generic-swe",
+          "normalized_result": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/rgw_full_workspace_v1/normalized/rgw_full_workspace_v1_20260512__general__cheap-generic-swe__instance_NodeBB__NodeBB-51d8f3b195bddb13a13ddc0de110722774d9bb1b-vf2cf3cbd463b7ad942381f1c6d077626485a1e9e__attempt1.json",
+          "present": true,
+          "score_action": "rerun_or_global_exclusion_required",
+          "score_value": null,
+          "status": "verifier_infra_error",
+          "task_id": "instance_NodeBB__NodeBB-51d8f3b195bddb13a13ddc0de110722774d9bb1b-vf2cf3cbd463b7ad942381f1c6d077626485a1e9e"
+        },
+        {
+          "acut_id": "cheap-generic-swe",
+          "normalized_result": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/rgw_full_workspace_v1/normalized/rgw_full_workspace_v1_20260512__general__cheap-generic-swe__instance_NodeBB__NodeBB-84dfda59e6a0e8a77240f939a7cb8757e6eaf945-v2c59007b1005cd5cd14cbb523ca5229db1fd2dd8__attempt1.json",
+          "present": true,
+          "score_action": "rerun_or_global_exclusion_required",
+          "score_value": null,
+          "status": "verifier_infra_error",
+          "task_id": "instance_NodeBB__NodeBB-84dfda59e6a0e8a77240f939a7cb8757e6eaf945-v2c59007b1005cd5cd14cbb523ca5229db1fd2dd8"
+        },
+        {
+          "acut_id": "cheap-generic-swe",
+          "normalized_result": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/rgw_full_workspace_v1/normalized/rgw_full_workspace_v1_20260512__general__cheap-generic-swe__instance_ansible__ansible-984216f52e76b904e5b0fa0fb956ab4f1e0a7751-v1055803c3a812189a1133297f7f5468579283f86__attempt1.json",
+          "present": true,
+          "score_action": "rerun_or_global_exclusion_required",
+          "score_value": null,
+          "status": "verifier_infra_error",
+          "task_id": "instance_ansible__ansible-984216f52e76b904e5b0fa0fb956ab4f1e0a7751-v1055803c3a812189a1133297f7f5468579283f86"
+        },
+        {
+          "acut_id": "cheap-generic-swe",
+          "normalized_result": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/rgw_full_workspace_v1/normalized/rgw_full_workspace_v1_20260512__general__cheap-generic-swe__instance_ansible__ansible-d33bedc48fdd933b5abd65a77c081876298e2f07-v0f01c69f1e2528b935359cfe578530722bca2c59__attempt1.json",
+          "present": true,
+          "score_action": "rerun_or_global_exclusion_required",
+          "score_value": null,
+          "status": "verifier_infra_error",
+          "task_id": "instance_ansible__ansible-d33bedc48fdd933b5abd65a77c081876298e2f07-v0f01c69f1e2528b935359cfe578530722bca2c59"
+        },
+        {
+          "acut_id": "cheap-generic-swe",
+          "normalized_result": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/rgw_full_workspace_v1/normalized/rgw_full_workspace_v1_20260512__general__cheap-generic-swe__instance_element-hq__element-web-5dfde12c1c1c0b6e48f17e3405468593e39d9492-vnan__attempt1.json",
+          "present": true,
+          "score_action": "rerun_or_global_exclusion_required",
+          "score_value": null,
+          "status": "verifier_infra_error",
+          "task_id": "instance_element-hq__element-web-5dfde12c1c1c0b6e48f17e3405468593e39d9492-vnan"
+        },
+        {
+          "acut_id": "cheap-generic-swe",
+          "normalized_result": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/rgw_full_workspace_v1/normalized/rgw_full_workspace_v1_20260512__general__cheap-generic-swe__instance_element-hq__element-web-776ffa47641c7ec6d142ab4a47691c30ebf83c2e__attempt1.json",
+          "present": true,
+          "score_action": "rerun_or_global_exclusion_required",
+          "score_value": null,
+          "status": "verifier_infra_error",
+          "task_id": "instance_element-hq__element-web-776ffa47641c7ec6d142ab4a47691c30ebf83c2e"
+        },
+        {
+          "acut_id": "frontier-click-specialist",
+          "normalized_result": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/rgw_full_workspace_v1/normalized/rgw_full_workspace_v1_20260512__general__frontier-click-specialist__instance_NodeBB__NodeBB-51d8f3b195bddb13a13ddc0de110722774d9bb1b-vf2cf3cbd463b7ad942381f1c6d077626485a1e9e__attempt1.json",
+          "present": true,
+          "score_action": "rerun_or_global_exclusion_required",
+          "score_value": null,
+          "status": "verifier_infra_error",
+          "task_id": "instance_NodeBB__NodeBB-51d8f3b195bddb13a13ddc0de110722774d9bb1b-vf2cf3cbd463b7ad942381f1c6d077626485a1e9e"
+        },
+        {
+          "acut_id": "frontier-click-specialist",
+          "normalized_result": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/rgw_full_workspace_v1/normalized/rgw_full_workspace_v1_20260512__general__frontier-click-specialist__instance_NodeBB__NodeBB-84dfda59e6a0e8a77240f939a7cb8757e6eaf945-v2c59007b1005cd5cd14cbb523ca5229db1fd2dd8__attempt1.json",
+          "present": true,
+          "score_action": "rerun_or_global_exclusion_required",
+          "score_value": null,
+          "status": "verifier_infra_error",
+          "task_id": "instance_NodeBB__NodeBB-84dfda59e6a0e8a77240f939a7cb8757e6eaf945-v2c59007b1005cd5cd14cbb523ca5229db1fd2dd8"
+        },
+        {
+          "acut_id": "frontier-click-specialist",
+          "normalized_result": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/rgw_full_workspace_v1/normalized/rgw_full_workspace_v1_20260512__general__frontier-click-specialist__instance_ansible__ansible-984216f52e76b904e5b0fa0fb956ab4f1e0a7751-v1055803c3a812189a1133297f7f5468579283f86__attempt1.json",
+          "present": true,
+          "score_action": "rerun_or_global_exclusion_required",
+          "score_value": null,
+          "status": "verifier_infra_error",
+          "task_id": "instance_ansible__ansible-984216f52e76b904e5b0fa0fb956ab4f1e0a7751-v1055803c3a812189a1133297f7f5468579283f86"
+        },
+        {
+          "acut_id": "frontier-click-specialist",
+          "normalized_result": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/rgw_full_workspace_v1/normalized/rgw_full_workspace_v1_20260512__general__frontier-click-specialist__instance_ansible__ansible-d33bedc48fdd933b5abd65a77c081876298e2f07-v0f01c69f1e2528b935359cfe578530722bca2c59__attempt1.json",
+          "present": true,
+          "score_action": "rerun_or_global_exclusion_required",
+          "score_value": null,
+          "status": "verifier_infra_error",
+          "task_id": "instance_ansible__ansible-d33bedc48fdd933b5abd65a77c081876298e2f07-v0f01c69f1e2528b935359cfe578530722bca2c59"
+        },
+        {
+          "acut_id": "frontier-click-specialist",
+          "normalized_result": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/rgw_full_workspace_v1/normalized/rgw_full_workspace_v1_20260512__general__frontier-click-specialist__instance_element-hq__element-web-5dfde12c1c1c0b6e48f17e3405468593e39d9492-vnan__attempt1.json",
+          "present": true,
+          "score_action": "rerun_or_global_exclusion_required",
+          "score_value": null,
+          "status": "verifier_infra_error",
+          "task_id": "instance_element-hq__element-web-5dfde12c1c1c0b6e48f17e3405468593e39d9492-vnan"
+        },
+        {
+          "acut_id": "frontier-click-specialist",
+          "normalized_result": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/rgw_full_workspace_v1/normalized/rgw_full_workspace_v1_20260512__general__frontier-click-specialist__instance_element-hq__element-web-776ffa47641c7ec6d142ab4a47691c30ebf83c2e__attempt1.json",
+          "present": true,
+          "score_action": "rerun_or_global_exclusion_required",
+          "score_value": null,
+          "status": "verifier_infra_error",
+          "task_id": "instance_element-hq__element-web-776ffa47641c7ec6d142ab4a47691c30ebf83c2e"
+        },
+        {
+          "acut_id": "frontier-generic-swe",
+          "normalized_result": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/rgw_full_workspace_v1/normalized/rgw_full_workspace_v1_20260512__general__frontier-generic-swe__instance_NodeBB__NodeBB-51d8f3b195bddb13a13ddc0de110722774d9bb1b-vf2cf3cbd463b7ad942381f1c6d077626485a1e9e__attempt1.json",
+          "present": true,
+          "score_action": "rerun_or_global_exclusion_required",
+          "score_value": null,
+          "status": "verifier_infra_error",
+          "task_id": "instance_NodeBB__NodeBB-51d8f3b195bddb13a13ddc0de110722774d9bb1b-vf2cf3cbd463b7ad942381f1c6d077626485a1e9e"
+        },
+        {
+          "acut_id": "frontier-generic-swe",
+          "normalized_result": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/rgw_full_workspace_v1/normalized/rgw_full_workspace_v1_20260512__general__frontier-generic-swe__instance_NodeBB__NodeBB-84dfda59e6a0e8a77240f939a7cb8757e6eaf945-v2c59007b1005cd5cd14cbb523ca5229db1fd2dd8__attempt1.json",
+          "present": true,
+          "score_action": "rerun_or_global_exclusion_required",
+          "score_value": null,
+          "status": "verifier_infra_error",
+          "task_id": "instance_NodeBB__NodeBB-84dfda59e6a0e8a77240f939a7cb8757e6eaf945-v2c59007b1005cd5cd14cbb523ca5229db1fd2dd8"
+        },
+        {
+          "acut_id": "frontier-generic-swe",
+          "normalized_result": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/rgw_full_workspace_v1/normalized/rgw_full_workspace_v1_20260512__general__frontier-generic-swe__instance_ansible__ansible-984216f52e76b904e5b0fa0fb956ab4f1e0a7751-v1055803c3a812189a1133297f7f5468579283f86__attempt1.json",
+          "present": true,
+          "score_action": "rerun_or_global_exclusion_required",
+          "score_value": null,
+          "status": "verifier_infra_error",
+          "task_id": "instance_ansible__ansible-984216f52e76b904e5b0fa0fb956ab4f1e0a7751-v1055803c3a812189a1133297f7f5468579283f86"
+        },
+        {
+          "acut_id": "frontier-generic-swe",
+          "normalized_result": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/rgw_full_workspace_v1/normalized/rgw_full_workspace_v1_20260512__general__frontier-generic-swe__instance_ansible__ansible-d33bedc48fdd933b5abd65a77c081876298e2f07-v0f01c69f1e2528b935359cfe578530722bca2c59__attempt1.json",
+          "present": true,
+          "score_action": "rerun_or_global_exclusion_required",
+          "score_value": null,
+          "status": "verifier_infra_error",
+          "task_id": "instance_ansible__ansible-d33bedc48fdd933b5abd65a77c081876298e2f07-v0f01c69f1e2528b935359cfe578530722bca2c59"
+        },
+        {
+          "acut_id": "frontier-generic-swe",
+          "normalized_result": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/rgw_full_workspace_v1/normalized/rgw_full_workspace_v1_20260512__general__frontier-generic-swe__instance_element-hq__element-web-5dfde12c1c1c0b6e48f17e3405468593e39d9492-vnan__attempt1.json",
+          "present": true,
+          "score_action": "rerun_or_global_exclusion_required",
+          "score_value": null,
+          "status": "verifier_infra_error",
+          "task_id": "instance_element-hq__element-web-5dfde12c1c1c0b6e48f17e3405468593e39d9492-vnan"
+        },
+        {
+          "acut_id": "frontier-generic-swe",
+          "normalized_result": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/rgw_full_workspace_v1/normalized/rgw_full_workspace_v1_20260512__general__frontier-generic-swe__instance_element-hq__element-web-776ffa47641c7ec6d142ab4a47691c30ebf83c2e__attempt1.json",
+          "present": true,
+          "score_action": "rerun_or_global_exclusion_required",
+          "score_value": null,
+          "status": "verifier_infra_error",
+          "task_id": "instance_element-hq__element-web-776ffa47641c7ec6d142ab4a47691c30ebf83c2e"
+        }
+      ],
+      "effective_denominator_after_recorded_global_infra_exclusions": 0,
+      "expected_cells": 24,
+      "fixed_denominator": 24,
+      "infra_cells": [
+        {
+          "acut_id": "cheap-click-specialist",
+          "normalized_result": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/rgw_full_workspace_v1/normalized/rgw_full_workspace_v1_20260512__general__cheap-click-specialist__instance_NodeBB__NodeBB-51d8f3b195bddb13a13ddc0de110722774d9bb1b-vf2cf3cbd463b7ad942381f1c6d077626485a1e9e__attempt1.json",
+          "present": true,
+          "score_action": "rerun_or_global_exclusion_required",
+          "score_value": null,
+          "status": "verifier_infra_error",
+          "task_id": "instance_NodeBB__NodeBB-51d8f3b195bddb13a13ddc0de110722774d9bb1b-vf2cf3cbd463b7ad942381f1c6d077626485a1e9e"
+        },
+        {
+          "acut_id": "cheap-click-specialist",
+          "normalized_result": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/rgw_full_workspace_v1/normalized/rgw_full_workspace_v1_20260512__general__cheap-click-specialist__instance_NodeBB__NodeBB-84dfda59e6a0e8a77240f939a7cb8757e6eaf945-v2c59007b1005cd5cd14cbb523ca5229db1fd2dd8__attempt1.json",
+          "present": true,
+          "score_action": "rerun_or_global_exclusion_required",
+          "score_value": null,
+          "status": "verifier_infra_error",
+          "task_id": "instance_NodeBB__NodeBB-84dfda59e6a0e8a77240f939a7cb8757e6eaf945-v2c59007b1005cd5cd14cbb523ca5229db1fd2dd8"
+        },
+        {
+          "acut_id": "cheap-click-specialist",
+          "normalized_result": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/rgw_full_workspace_v1/normalized/rgw_full_workspace_v1_20260512__general__cheap-click-specialist__instance_ansible__ansible-984216f52e76b904e5b0fa0fb956ab4f1e0a7751-v1055803c3a812189a1133297f7f5468579283f86__attempt1.json",
+          "present": true,
+          "score_action": "rerun_or_global_exclusion_required",
+          "score_value": null,
+          "status": "verifier_infra_error",
+          "task_id": "instance_ansible__ansible-984216f52e76b904e5b0fa0fb956ab4f1e0a7751-v1055803c3a812189a1133297f7f5468579283f86"
+        },
+        {
+          "acut_id": "cheap-click-specialist",
+          "normalized_result": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/rgw_full_workspace_v1/normalized/rgw_full_workspace_v1_20260512__general__cheap-click-specialist__instance_ansible__ansible-d33bedc48fdd933b5abd65a77c081876298e2f07-v0f01c69f1e2528b935359cfe578530722bca2c59__attempt1.json",
+          "present": true,
+          "score_action": "rerun_or_global_exclusion_required",
+          "score_value": null,
+          "status": "verifier_infra_error",
+          "task_id": "instance_ansible__ansible-d33bedc48fdd933b5abd65a77c081876298e2f07-v0f01c69f1e2528b935359cfe578530722bca2c59"
+        },
+        {
+          "acut_id": "cheap-click-specialist",
+          "normalized_result": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/rgw_full_workspace_v1/normalized/rgw_full_workspace_v1_20260512__general__cheap-click-specialist__instance_element-hq__element-web-5dfde12c1c1c0b6e48f17e3405468593e39d9492-vnan__attempt1.json",
+          "present": true,
+          "score_action": "rerun_or_global_exclusion_required",
+          "score_value": null,
+          "status": "verifier_infra_error",
+          "task_id": "instance_element-hq__element-web-5dfde12c1c1c0b6e48f17e3405468593e39d9492-vnan"
+        },
+        {
+          "acut_id": "cheap-click-specialist",
+          "normalized_result": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/rgw_full_workspace_v1/normalized/rgw_full_workspace_v1_20260512__general__cheap-click-specialist__instance_element-hq__element-web-776ffa47641c7ec6d142ab4a47691c30ebf83c2e__attempt1.json",
+          "present": true,
+          "score_action": "rerun_or_global_exclusion_required",
+          "score_value": null,
+          "status": "verifier_infra_error",
+          "task_id": "instance_element-hq__element-web-776ffa47641c7ec6d142ab4a47691c30ebf83c2e"
+        },
+        {
+          "acut_id": "cheap-generic-swe",
+          "normalized_result": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/rgw_full_workspace_v1/normalized/rgw_full_workspace_v1_20260512__general__cheap-generic-swe__instance_NodeBB__NodeBB-51d8f3b195bddb13a13ddc0de110722774d9bb1b-vf2cf3cbd463b7ad942381f1c6d077626485a1e9e__attempt1.json",
+          "present": true,
+          "score_action": "rerun_or_global_exclusion_required",
+          "score_value": null,
+          "status": "verifier_infra_error",
+          "task_id": "instance_NodeBB__NodeBB-51d8f3b195bddb13a13ddc0de110722774d9bb1b-vf2cf3cbd463b7ad942381f1c6d077626485a1e9e"
+        },
+        {
+          "acut_id": "cheap-generic-swe",
+          "normalized_result": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/rgw_full_workspace_v1/normalized/rgw_full_workspace_v1_20260512__general__cheap-generic-swe__instance_NodeBB__NodeBB-84dfda59e6a0e8a77240f939a7cb8757e6eaf945-v2c59007b1005cd5cd14cbb523ca5229db1fd2dd8__attempt1.json",
+          "present": true,
+          "score_action": "rerun_or_global_exclusion_required",
+          "score_value": null,
+          "status": "verifier_infra_error",
+          "task_id": "instance_NodeBB__NodeBB-84dfda59e6a0e8a77240f939a7cb8757e6eaf945-v2c59007b1005cd5cd14cbb523ca5229db1fd2dd8"
+        },
+        {
+          "acut_id": "cheap-generic-swe",
+          "normalized_result": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/rgw_full_workspace_v1/normalized/rgw_full_workspace_v1_20260512__general__cheap-generic-swe__instance_ansible__ansible-984216f52e76b904e5b0fa0fb956ab4f1e0a7751-v1055803c3a812189a1133297f7f5468579283f86__attempt1.json",
+          "present": true,
+          "score_action": "rerun_or_global_exclusion_required",
+          "score_value": null,
+          "status": "verifier_infra_error",
+          "task_id": "instance_ansible__ansible-984216f52e76b904e5b0fa0fb956ab4f1e0a7751-v1055803c3a812189a1133297f7f5468579283f86"
+        },
+        {
+          "acut_id": "cheap-generic-swe",
+          "normalized_result": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/rgw_full_workspace_v1/normalized/rgw_full_workspace_v1_20260512__general__cheap-generic-swe__instance_ansible__ansible-d33bedc48fdd933b5abd65a77c081876298e2f07-v0f01c69f1e2528b935359cfe578530722bca2c59__attempt1.json",
+          "present": true,
+          "score_action": "rerun_or_global_exclusion_required",
+          "score_value": null,
+          "status": "verifier_infra_error",
+          "task_id": "instance_ansible__ansible-d33bedc48fdd933b5abd65a77c081876298e2f07-v0f01c69f1e2528b935359cfe578530722bca2c59"
+        },
+        {
+          "acut_id": "cheap-generic-swe",
+          "normalized_result": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/rgw_full_workspace_v1/normalized/rgw_full_workspace_v1_20260512__general__cheap-generic-swe__instance_element-hq__element-web-5dfde12c1c1c0b6e48f17e3405468593e39d9492-vnan__attempt1.json",
+          "present": true,
+          "score_action": "rerun_or_global_exclusion_required",
+          "score_value": null,
+          "status": "verifier_infra_error",
+          "task_id": "instance_element-hq__element-web-5dfde12c1c1c0b6e48f17e3405468593e39d9492-vnan"
+        },
+        {
+          "acut_id": "cheap-generic-swe",
+          "normalized_result": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/rgw_full_workspace_v1/normalized/rgw_full_workspace_v1_20260512__general__cheap-generic-swe__instance_element-hq__element-web-776ffa47641c7ec6d142ab4a47691c30ebf83c2e__attempt1.json",
+          "present": true,
+          "score_action": "rerun_or_global_exclusion_required",
+          "score_value": null,
+          "status": "verifier_infra_error",
+          "task_id": "instance_element-hq__element-web-776ffa47641c7ec6d142ab4a47691c30ebf83c2e"
+        },
+        {
+          "acut_id": "frontier-click-specialist",
+          "normalized_result": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/rgw_full_workspace_v1/normalized/rgw_full_workspace_v1_20260512__general__frontier-click-specialist__instance_NodeBB__NodeBB-51d8f3b195bddb13a13ddc0de110722774d9bb1b-vf2cf3cbd463b7ad942381f1c6d077626485a1e9e__attempt1.json",
+          "present": true,
+          "score_action": "rerun_or_global_exclusion_required",
+          "score_value": null,
+          "status": "verifier_infra_error",
+          "task_id": "instance_NodeBB__NodeBB-51d8f3b195bddb13a13ddc0de110722774d9bb1b-vf2cf3cbd463b7ad942381f1c6d077626485a1e9e"
+        },
+        {
+          "acut_id": "frontier-click-specialist",
+          "normalized_result": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/rgw_full_workspace_v1/normalized/rgw_full_workspace_v1_20260512__general__frontier-click-specialist__instance_NodeBB__NodeBB-84dfda59e6a0e8a77240f939a7cb8757e6eaf945-v2c59007b1005cd5cd14cbb523ca5229db1fd2dd8__attempt1.json",
+          "present": true,
+          "score_action": "rerun_or_global_exclusion_required",
+          "score_value": null,
+          "status": "verifier_infra_error",
+          "task_id": "instance_NodeBB__NodeBB-84dfda59e6a0e8a77240f939a7cb8757e6eaf945-v2c59007b1005cd5cd14cbb523ca5229db1fd2dd8"
+        },
+        {
+          "acut_id": "frontier-click-specialist",
+          "normalized_result": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/rgw_full_workspace_v1/normalized/rgw_full_workspace_v1_20260512__general__frontier-click-specialist__instance_ansible__ansible-984216f52e76b904e5b0fa0fb956ab4f1e0a7751-v1055803c3a812189a1133297f7f5468579283f86__attempt1.json",
+          "present": true,
+          "score_action": "rerun_or_global_exclusion_required",
+          "score_value": null,
+          "status": "verifier_infra_error",
+          "task_id": "instance_ansible__ansible-984216f52e76b904e5b0fa0fb956ab4f1e0a7751-v1055803c3a812189a1133297f7f5468579283f86"
+        },
+        {
+          "acut_id": "frontier-click-specialist",
+          "normalized_result": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/rgw_full_workspace_v1/normalized/rgw_full_workspace_v1_20260512__general__frontier-click-specialist__instance_ansible__ansible-d33bedc48fdd933b5abd65a77c081876298e2f07-v0f01c69f1e2528b935359cfe578530722bca2c59__attempt1.json",
+          "present": true,
+          "score_action": "rerun_or_global_exclusion_required",
+          "score_value": null,
+          "status": "verifier_infra_error",
+          "task_id": "instance_ansible__ansible-d33bedc48fdd933b5abd65a77c081876298e2f07-v0f01c69f1e2528b935359cfe578530722bca2c59"
+        },
+        {
+          "acut_id": "frontier-click-specialist",
+          "normalized_result": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/rgw_full_workspace_v1/normalized/rgw_full_workspace_v1_20260512__general__frontier-click-specialist__instance_element-hq__element-web-5dfde12c1c1c0b6e48f17e3405468593e39d9492-vnan__attempt1.json",
+          "present": true,
+          "score_action": "rerun_or_global_exclusion_required",
+          "score_value": null,
+          "status": "verifier_infra_error",
+          "task_id": "instance_element-hq__element-web-5dfde12c1c1c0b6e48f17e3405468593e39d9492-vnan"
+        },
+        {
+          "acut_id": "frontier-click-specialist",
+          "normalized_result": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/rgw_full_workspace_v1/normalized/rgw_full_workspace_v1_20260512__general__frontier-click-specialist__instance_element-hq__element-web-776ffa47641c7ec6d142ab4a47691c30ebf83c2e__attempt1.json",
+          "present": true,
+          "score_action": "rerun_or_global_exclusion_required",
+          "score_value": null,
+          "status": "verifier_infra_error",
+          "task_id": "instance_element-hq__element-web-776ffa47641c7ec6d142ab4a47691c30ebf83c2e"
+        },
+        {
+          "acut_id": "frontier-generic-swe",
+          "normalized_result": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/rgw_full_workspace_v1/normalized/rgw_full_workspace_v1_20260512__general__frontier-generic-swe__instance_NodeBB__NodeBB-51d8f3b195bddb13a13ddc0de110722774d9bb1b-vf2cf3cbd463b7ad942381f1c6d077626485a1e9e__attempt1.json",
+          "present": true,
+          "score_action": "rerun_or_global_exclusion_required",
+          "score_value": null,
+          "status": "verifier_infra_error",
+          "task_id": "instance_NodeBB__NodeBB-51d8f3b195bddb13a13ddc0de110722774d9bb1b-vf2cf3cbd463b7ad942381f1c6d077626485a1e9e"
+        },
+        {
+          "acut_id": "frontier-generic-swe",
+          "normalized_result": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/rgw_full_workspace_v1/normalized/rgw_full_workspace_v1_20260512__general__frontier-generic-swe__instance_NodeBB__NodeBB-84dfda59e6a0e8a77240f939a7cb8757e6eaf945-v2c59007b1005cd5cd14cbb523ca5229db1fd2dd8__attempt1.json",
+          "present": true,
+          "score_action": "rerun_or_global_exclusion_required",
+          "score_value": null,
+          "status": "verifier_infra_error",
+          "task_id": "instance_NodeBB__NodeBB-84dfda59e6a0e8a77240f939a7cb8757e6eaf945-v2c59007b1005cd5cd14cbb523ca5229db1fd2dd8"
+        },
+        {
+          "acut_id": "frontier-generic-swe",
+          "normalized_result": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/rgw_full_workspace_v1/normalized/rgw_full_workspace_v1_20260512__general__frontier-generic-swe__instance_ansible__ansible-984216f52e76b904e5b0fa0fb956ab4f1e0a7751-v1055803c3a812189a1133297f7f5468579283f86__attempt1.json",
+          "present": true,
+          "score_action": "rerun_or_global_exclusion_required",
+          "score_value": null,
+          "status": "verifier_infra_error",
+          "task_id": "instance_ansible__ansible-984216f52e76b904e5b0fa0fb956ab4f1e0a7751-v1055803c3a812189a1133297f7f5468579283f86"
+        },
+        {
+          "acut_id": "frontier-generic-swe",
+          "normalized_result": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/rgw_full_workspace_v1/normalized/rgw_full_workspace_v1_20260512__general__frontier-generic-swe__instance_ansible__ansible-d33bedc48fdd933b5abd65a77c081876298e2f07-v0f01c69f1e2528b935359cfe578530722bca2c59__attempt1.json",
+          "present": true,
+          "score_action": "rerun_or_global_exclusion_required",
+          "score_value": null,
+          "status": "verifier_infra_error",
+          "task_id": "instance_ansible__ansible-d33bedc48fdd933b5abd65a77c081876298e2f07-v0f01c69f1e2528b935359cfe578530722bca2c59"
+        },
+        {
+          "acut_id": "frontier-generic-swe",
+          "normalized_result": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/rgw_full_workspace_v1/normalized/rgw_full_workspace_v1_20260512__general__frontier-generic-swe__instance_element-hq__element-web-5dfde12c1c1c0b6e48f17e3405468593e39d9492-vnan__attempt1.json",
+          "present": true,
+          "score_action": "rerun_or_global_exclusion_required",
+          "score_value": null,
+          "status": "verifier_infra_error",
+          "task_id": "instance_element-hq__element-web-5dfde12c1c1c0b6e48f17e3405468593e39d9492-vnan"
+        },
+        {
+          "acut_id": "frontier-generic-swe",
+          "normalized_result": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/rgw_full_workspace_v1/normalized/rgw_full_workspace_v1_20260512__general__frontier-generic-swe__instance_element-hq__element-web-776ffa47641c7ec6d142ab4a47691c30ebf83c2e__attempt1.json",
+          "present": true,
+          "score_action": "rerun_or_global_exclusion_required",
+          "score_value": null,
+          "status": "verifier_infra_error",
+          "task_id": "instance_element-hq__element-web-776ffa47641c7ec6d142ab4a47691c30ebf83c2e"
+        }
+      ],
+      "missing_cells": 0,
+      "passed": 0,
+      "present_cells": 24,
+      "primary_score_ready": false,
+      "score_action_counts": {
+        "rerun_or_global_exclusion_required": 24
+      },
+      "score_percent_effective_denominator": null,
+      "score_percent_fixed_denominator": 0.0,
+      "status_counts": {
+        "verifier_infra_error": 24
+      },
+      "triage_paused_cells": []
+    },
+    "rbench": {
+      "axis": "rbench",
+      "cells": [
+        {
+          "acut_id": "cheap-click-specialist",
+          "normalized_result": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/rgw_full_workspace_v1/normalized/rgw_full_workspace_v1_20260512__rbench__cheap-click-specialist__click__rbench__001__attempt1.json",
+          "present": true,
+          "score_action": "fixed_denominator_zero",
+          "score_value": 0,
+          "status": "verified_fail",
+          "task_id": "click__rbench__001"
+        },
+        {
+          "acut_id": "cheap-click-specialist",
+          "normalized_result": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/rgw_full_workspace_v1/normalized/rgw_full_workspace_v1_20260512__rbench__cheap-click-specialist__click__rbench__002__attempt1.json",
+          "present": true,
+          "score_action": "fixed_denominator_one",
+          "score_value": 1,
+          "status": "verified_pass",
+          "task_id": "click__rbench__002"
+        },
+        {
+          "acut_id": "cheap-click-specialist",
+          "normalized_result": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/rgw_full_workspace_v1/normalized/rgw_full_workspace_v1_20260512__rbench__cheap-click-specialist__click__rbench__003__attempt1.json",
+          "present": true,
+          "score_action": "fixed_denominator_zero",
+          "score_value": 0,
+          "status": "verified_fail",
+          "task_id": "click__rbench__003"
+        },
+        {
+          "acut_id": "cheap-click-specialist",
+          "normalized_result": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/rgw_full_workspace_v1/normalized/rgw_full_workspace_v1_20260512__rbench__cheap-click-specialist__click__rbench__004__attempt1.json",
+          "present": true,
+          "score_action": "fixed_denominator_zero",
+          "score_value": 0,
+          "status": "verified_fail",
+          "task_id": "click__rbench__004"
+        },
+        {
+          "acut_id": "cheap-click-specialist",
+          "normalized_result": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/rgw_full_workspace_v1/normalized/rgw_full_workspace_v1_20260512__rbench__cheap-click-specialist__click__rbench__005__attempt1.json",
+          "present": true,
+          "score_action": "fixed_denominator_one",
+          "score_value": 1,
+          "status": "verified_pass",
+          "task_id": "click__rbench__005"
+        },
+        {
+          "acut_id": "cheap-click-specialist",
+          "normalized_result": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/rgw_full_workspace_v1/normalized/rgw_full_workspace_v1_20260512__rbench__cheap-click-specialist__click__rbench__006__attempt1.json",
+          "present": true,
+          "score_action": "fixed_denominator_zero",
+          "score_value": 0,
+          "status": "verified_fail",
+          "task_id": "click__rbench__006"
+        },
+        {
+          "acut_id": "cheap-click-specialist",
+          "normalized_result": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/rgw_full_workspace_v1/normalized/rgw_full_workspace_v1_20260512__rbench__cheap-click-specialist__click__rbench__007__attempt1.json",
+          "present": true,
+          "score_action": "fixed_denominator_one",
+          "score_value": 1,
+          "status": "verified_pass",
+          "task_id": "click__rbench__007"
+        },
+        {
+          "acut_id": "cheap-click-specialist",
+          "normalized_result": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/rgw_full_workspace_v1/normalized/rgw_full_workspace_v1_20260512__rbench__cheap-click-specialist__click__rbench__008__attempt1.json",
+          "present": true,
+          "score_action": "fixed_denominator_zero",
+          "score_value": 0,
+          "status": "verified_fail",
+          "task_id": "click__rbench__008"
+        },
+        {
+          "acut_id": "cheap-generic-swe",
+          "normalized_result": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/rgw_full_workspace_v1/normalized/rgw_full_workspace_v1_20260512__rbench__cheap-generic-swe__click__rbench__001__attempt1.json",
+          "present": true,
+          "score_action": "fixed_denominator_zero",
+          "score_value": 0,
+          "status": "verified_fail",
+          "task_id": "click__rbench__001"
+        },
+        {
+          "acut_id": "cheap-generic-swe",
+          "normalized_result": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/rgw_full_workspace_v1/normalized/rgw_full_workspace_v1_20260512__rbench__cheap-generic-swe__click__rbench__002__attempt1.json",
+          "present": true,
+          "score_action": "fixed_denominator_one",
+          "score_value": 1,
+          "status": "verified_pass",
+          "task_id": "click__rbench__002"
+        },
+        {
+          "acut_id": "cheap-generic-swe",
+          "normalized_result": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/rgw_full_workspace_v1/normalized/rgw_full_workspace_v1_20260512__rbench__cheap-generic-swe__click__rbench__003__attempt1.json",
+          "present": true,
+          "score_action": "fixed_denominator_zero",
+          "score_value": 0,
+          "status": "verified_fail",
+          "task_id": "click__rbench__003"
+        },
+        {
+          "acut_id": "cheap-generic-swe",
+          "normalized_result": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/rgw_full_workspace_v1/normalized/rgw_full_workspace_v1_20260512__rbench__cheap-generic-swe__click__rbench__004__attempt1.json",
+          "present": true,
+          "score_action": "fixed_denominator_zero",
+          "score_value": 0,
+          "status": "verified_fail",
+          "task_id": "click__rbench__004"
+        },
+        {
+          "acut_id": "cheap-generic-swe",
+          "normalized_result": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/rgw_full_workspace_v1/normalized/rgw_full_workspace_v1_20260512__rbench__cheap-generic-swe__click__rbench__005__attempt1.json",
+          "present": true,
+          "score_action": "fixed_denominator_one",
+          "score_value": 1,
+          "status": "verified_pass",
+          "task_id": "click__rbench__005"
+        },
+        {
+          "acut_id": "cheap-generic-swe",
+          "normalized_result": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/rgw_full_workspace_v1/normalized/rgw_full_workspace_v1_20260512__rbench__cheap-generic-swe__click__rbench__006__attempt1.json",
+          "present": true,
+          "score_action": "fixed_denominator_zero",
+          "score_value": 0,
+          "status": "verified_fail",
+          "task_id": "click__rbench__006"
+        },
+        {
+          "acut_id": "cheap-generic-swe",
+          "normalized_result": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/rgw_full_workspace_v1/normalized/rgw_full_workspace_v1_20260512__rbench__cheap-generic-swe__click__rbench__007__attempt1.json",
+          "present": true,
+          "score_action": "fixed_denominator_zero",
+          "score_value": 0,
+          "status": "verified_fail",
+          "task_id": "click__rbench__007"
+        },
+        {
+          "acut_id": "cheap-generic-swe",
+          "normalized_result": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/rgw_full_workspace_v1/normalized/rgw_full_workspace_v1_20260512__rbench__cheap-generic-swe__click__rbench__008__attempt1.json",
+          "present": true,
+          "score_action": "fixed_denominator_zero",
+          "score_value": 0,
+          "status": "verified_fail",
+          "task_id": "click__rbench__008"
+        },
+        {
+          "acut_id": "frontier-click-specialist",
+          "normalized_result": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/rgw_full_workspace_v1/normalized/rgw_full_workspace_v1_20260512__rbench__frontier-click-specialist__click__rbench__001__attempt1.json",
+          "present": true,
+          "score_action": "fixed_denominator_zero",
+          "score_value": 0,
+          "status": "verified_fail",
+          "task_id": "click__rbench__001"
+        },
+        {
+          "acut_id": "frontier-click-specialist",
+          "normalized_result": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/rgw_full_workspace_v1/normalized/rgw_full_workspace_v1_20260512__rbench__frontier-click-specialist__click__rbench__002__attempt1.json",
+          "present": true,
+          "score_action": "fixed_denominator_one",
+          "score_value": 1,
+          "status": "verified_pass",
+          "task_id": "click__rbench__002"
+        },
+        {
+          "acut_id": "frontier-click-specialist",
+          "normalized_result": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/rgw_full_workspace_v1/normalized/rgw_full_workspace_v1_20260512__rbench__frontier-click-specialist__click__rbench__003__attempt1.json",
+          "present": true,
+          "score_action": "fixed_denominator_one",
+          "score_value": 1,
+          "status": "verified_pass",
+          "task_id": "click__rbench__003"
+        },
+        {
+          "acut_id": "frontier-click-specialist",
+          "normalized_result": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/rgw_full_workspace_v1/normalized/rgw_full_workspace_v1_20260512__rbench__frontier-click-specialist__click__rbench__004__attempt1.json",
+          "present": true,
+          "score_action": "fixed_denominator_zero",
+          "score_value": 0,
+          "status": "verified_fail",
+          "task_id": "click__rbench__004"
+        },
+        {
+          "acut_id": "frontier-click-specialist",
+          "normalized_result": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/rgw_full_workspace_v1/normalized/rgw_full_workspace_v1_20260512__rbench__frontier-click-specialist__click__rbench__005__attempt1.json",
+          "present": true,
+          "score_action": "fixed_denominator_one",
+          "score_value": 1,
+          "status": "verified_pass",
+          "task_id": "click__rbench__005"
+        },
+        {
+          "acut_id": "frontier-click-specialist",
+          "normalized_result": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/rgw_full_workspace_v1/normalized/rgw_full_workspace_v1_20260512__rbench__frontier-click-specialist__click__rbench__006__attempt1.json",
+          "present": true,
+          "score_action": "fixed_denominator_one",
+          "score_value": 1,
+          "status": "verified_pass",
+          "task_id": "click__rbench__006"
+        },
+        {
+          "acut_id": "frontier-click-specialist",
+          "normalized_result": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/rgw_full_workspace_v1/normalized/rgw_full_workspace_v1_20260512__rbench__frontier-click-specialist__click__rbench__007__attempt1.json",
+          "present": true,
+          "score_action": "fixed_denominator_one",
+          "score_value": 1,
+          "status": "verified_pass",
+          "task_id": "click__rbench__007"
+        },
+        {
+          "acut_id": "frontier-click-specialist",
+          "normalized_result": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/rgw_full_workspace_v1/normalized/rgw_full_workspace_v1_20260512__rbench__frontier-click-specialist__click__rbench__008__attempt1.json",
+          "present": true,
+          "score_action": "fixed_denominator_zero",
+          "score_value": 0,
+          "status": "verified_fail",
+          "task_id": "click__rbench__008"
+        },
+        {
+          "acut_id": "frontier-generic-swe",
+          "normalized_result": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/rgw_full_workspace_v1/normalized/rgw_full_workspace_v1_20260512__rbench__frontier-generic-swe__click__rbench__001__attempt1.json",
+          "present": true,
+          "score_action": "fixed_denominator_zero",
+          "score_value": 0,
+          "status": "verified_fail",
+          "task_id": "click__rbench__001"
+        },
+        {
+          "acut_id": "frontier-generic-swe",
+          "normalized_result": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/rgw_full_workspace_v1/normalized/rgw_full_workspace_v1_20260512__rbench__frontier-generic-swe__click__rbench__002__attempt1.json",
+          "present": true,
+          "score_action": "fixed_denominator_one",
+          "score_value": 1,
+          "status": "verified_pass",
+          "task_id": "click__rbench__002"
+        },
+        {
+          "acut_id": "frontier-generic-swe",
+          "normalized_result": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/rgw_full_workspace_v1/normalized/rgw_full_workspace_v1_20260512__rbench__frontier-generic-swe__click__rbench__003__attempt1.json",
+          "present": true,
+          "score_action": "fixed_denominator_one",
+          "score_value": 1,
+          "status": "verified_pass",
+          "task_id": "click__rbench__003"
+        },
+        {
+          "acut_id": "frontier-generic-swe",
+          "normalized_result": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/rgw_full_workspace_v1/normalized/rgw_full_workspace_v1_20260512__rbench__frontier-generic-swe__click__rbench__004__attempt1.json",
+          "present": true,
+          "score_action": "fixed_denominator_zero",
+          "score_value": 0,
+          "status": "verified_fail",
+          "task_id": "click__rbench__004"
+        },
+        {
+          "acut_id": "frontier-generic-swe",
+          "normalized_result": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/rgw_full_workspace_v1/normalized/rgw_full_workspace_v1_20260512__rbench__frontier-generic-swe__click__rbench__005__attempt1.json",
+          "present": true,
+          "score_action": "fixed_denominator_one",
+          "score_value": 1,
+          "status": "verified_pass",
+          "task_id": "click__rbench__005"
+        },
+        {
+          "acut_id": "frontier-generic-swe",
+          "normalized_result": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/rgw_full_workspace_v1/normalized/rgw_full_workspace_v1_20260512__rbench__frontier-generic-swe__click__rbench__006__attempt1.json",
+          "present": true,
+          "score_action": "fixed_denominator_one",
+          "score_value": 1,
+          "status": "verified_pass",
+          "task_id": "click__rbench__006"
+        },
+        {
+          "acut_id": "frontier-generic-swe",
+          "normalized_result": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/rgw_full_workspace_v1/normalized/rgw_full_workspace_v1_20260512__rbench__frontier-generic-swe__click__rbench__007__attempt1.json",
+          "present": true,
+          "score_action": "fixed_denominator_one",
+          "score_value": 1,
+          "status": "verified_pass",
+          "task_id": "click__rbench__007"
+        },
+        {
+          "acut_id": "frontier-generic-swe",
+          "normalized_result": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/rgw_full_workspace_v1/normalized/rgw_full_workspace_v1_20260512__rbench__frontier-generic-swe__click__rbench__008__attempt1.json",
+          "present": true,
+          "score_action": "fixed_denominator_zero",
+          "score_value": 0,
+          "status": "verified_fail",
+          "task_id": "click__rbench__008"
+        }
+      ],
+      "effective_denominator_after_recorded_global_infra_exclusions": 32,
+      "expected_cells": 32,
+      "fixed_denominator": 32,
+      "infra_cells": [],
+      "missing_cells": 0,
+      "passed": 15,
+      "present_cells": 32,
+      "primary_score_ready": true,
+      "score_action_counts": {
+        "fixed_denominator_one": 15,
+        "fixed_denominator_zero": 17
+      },
+      "score_percent_effective_denominator": 46.875,
+      "score_percent_fixed_denominator": 46.875,
+      "status_counts": {
+        "verified_fail": 17,
+        "verified_pass": 15
+      },
+      "triage_paused_cells": []
+    },
+    "rwork": {
+      "axis": "rwork",
+      "cells": [
+        {
+          "acut_id": "cheap-click-specialist",
+          "normalized_result": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/rgw_full_workspace_v1/normalized/rgw_full_workspace_v1_20260512__rwork__cheap-click-specialist__click__rwork__001__attempt1.json",
+          "present": true,
+          "score_action": "fixed_denominator_zero",
+          "score_value": 0,
+          "status": "verified_fail",
+          "task_id": "click__rwork__001"
+        },
+        {
+          "acut_id": "cheap-click-specialist",
+          "normalized_result": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/rgw_full_workspace_v1/normalized/rgw_full_workspace_v1_20260512__rwork__cheap-click-specialist__click__rwork__002__attempt1.json",
+          "present": true,
+          "score_action": "fixed_denominator_one",
+          "score_value": 1,
+          "status": "verified_pass",
+          "task_id": "click__rwork__002"
+        },
+        {
+          "acut_id": "cheap-click-specialist",
+          "normalized_result": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/rgw_full_workspace_v1/normalized/rgw_full_workspace_v1_20260512__rwork__cheap-click-specialist__click__rwork__003__attempt1.json",
+          "present": true,
+          "score_action": "fixed_denominator_one",
+          "score_value": 1,
+          "status": "verified_pass",
+          "task_id": "click__rwork__003"
+        },
+        {
+          "acut_id": "cheap-click-specialist",
+          "normalized_result": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/rgw_full_workspace_v1/normalized/rgw_full_workspace_v1_20260512__rwork__cheap-click-specialist__click__rwork__004__attempt1.json",
+          "present": true,
+          "score_action": "fixed_denominator_zero",
+          "score_value": 0,
+          "status": "unsafe_or_scope_violation",
+          "task_id": "click__rwork__004"
+        },
+        {
+          "acut_id": "cheap-click-specialist",
+          "normalized_result": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/rgw_full_workspace_v1/normalized/rgw_full_workspace_v1_20260512__rwork__cheap-click-specialist__click__rwork__005__attempt1.json",
+          "present": true,
+          "score_action": "fixed_denominator_zero",
+          "score_value": 0,
+          "status": "verified_fail",
+          "task_id": "click__rwork__005"
+        },
+        {
+          "acut_id": "cheap-click-specialist",
+          "normalized_result": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/rgw_full_workspace_v1/normalized/rgw_full_workspace_v1_20260512__rwork__cheap-click-specialist__click__rwork__006__attempt1.json",
+          "present": true,
+          "score_action": "fixed_denominator_zero",
+          "score_value": 0,
+          "status": "unsafe_or_scope_violation",
+          "task_id": "click__rwork__006"
+        },
+        {
+          "acut_id": "cheap-generic-swe",
+          "normalized_result": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/rgw_full_workspace_v1/normalized/rgw_full_workspace_v1_20260512__rwork__cheap-generic-swe__click__rwork__001__attempt1.json",
+          "present": true,
+          "score_action": "fixed_denominator_zero",
+          "score_value": 0,
+          "status": "no_diff",
+          "task_id": "click__rwork__001"
+        },
+        {
+          "acut_id": "cheap-generic-swe",
+          "normalized_result": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/rgw_full_workspace_v1/normalized/rgw_full_workspace_v1_20260512__rwork__cheap-generic-swe__click__rwork__002__attempt1.json",
+          "present": true,
+          "score_action": "fixed_denominator_one",
+          "score_value": 1,
+          "status": "verified_pass",
+          "task_id": "click__rwork__002"
+        },
+        {
+          "acut_id": "cheap-generic-swe",
+          "normalized_result": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/rgw_full_workspace_v1/normalized/rgw_full_workspace_v1_20260512__rwork__cheap-generic-swe__click__rwork__003__attempt1.json",
+          "present": true,
+          "score_action": "fixed_denominator_zero",
+          "score_value": 0,
+          "status": "unsafe_or_scope_violation",
+          "task_id": "click__rwork__003"
+        },
+        {
+          "acut_id": "cheap-generic-swe",
+          "normalized_result": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/rgw_full_workspace_v1/normalized/rgw_full_workspace_v1_20260512__rwork__cheap-generic-swe__click__rwork__004__attempt1.json",
+          "present": true,
+          "score_action": "fixed_denominator_zero",
+          "score_value": 0,
+          "status": "unsafe_or_scope_violation",
+          "task_id": "click__rwork__004"
+        },
+        {
+          "acut_id": "cheap-generic-swe",
+          "normalized_result": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/rgw_full_workspace_v1/normalized/rgw_full_workspace_v1_20260512__rwork__cheap-generic-swe__click__rwork__005__attempt1.json",
+          "present": true,
+          "score_action": "fixed_denominator_one",
+          "score_value": 1,
+          "status": "verified_pass",
+          "task_id": "click__rwork__005"
+        },
+        {
+          "acut_id": "cheap-generic-swe",
+          "normalized_result": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/rgw_full_workspace_v1/normalized/rgw_full_workspace_v1_20260512__rwork__cheap-generic-swe__click__rwork__006__attempt1.json",
+          "present": true,
+          "score_action": "fixed_denominator_zero",
+          "score_value": 0,
+          "status": "unsafe_or_scope_violation",
+          "task_id": "click__rwork__006"
+        },
+        {
+          "acut_id": "frontier-click-specialist",
+          "normalized_result": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/rgw_full_workspace_v1/normalized/rgw_full_workspace_v1_20260512__rwork__frontier-click-specialist__click__rwork__001__attempt1.json",
+          "present": true,
+          "score_action": "fixed_denominator_zero",
+          "score_value": 0,
+          "status": "no_diff",
+          "task_id": "click__rwork__001"
+        },
+        {
+          "acut_id": "frontier-click-specialist",
+          "normalized_result": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/rgw_full_workspace_v1/normalized/rgw_full_workspace_v1_20260512__rwork__frontier-click-specialist__click__rwork__002__attempt1.json",
+          "present": true,
+          "score_action": "fixed_denominator_one",
+          "score_value": 1,
+          "status": "verified_pass",
+          "task_id": "click__rwork__002"
+        },
+        {
+          "acut_id": "frontier-click-specialist",
+          "normalized_result": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/rgw_full_workspace_v1/normalized/rgw_full_workspace_v1_20260512__rwork__frontier-click-specialist__click__rwork__003__attempt1.json",
+          "present": true,
+          "score_action": "fixed_denominator_one",
+          "score_value": 1,
+          "status": "verified_pass",
+          "task_id": "click__rwork__003"
+        },
+        {
+          "acut_id": "frontier-click-specialist",
+          "normalized_result": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/rgw_full_workspace_v1/normalized/rgw_full_workspace_v1_20260512__rwork__frontier-click-specialist__click__rwork__004__attempt1.json",
+          "present": true,
+          "score_action": "fixed_denominator_zero",
+          "score_value": 0,
+          "status": "unsafe_or_scope_violation",
+          "task_id": "click__rwork__004"
+        },
+        {
+          "acut_id": "frontier-click-specialist",
+          "normalized_result": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/rgw_full_workspace_v1/normalized/rgw_full_workspace_v1_20260512__rwork__frontier-click-specialist__click__rwork__005__attempt1.json",
+          "present": true,
+          "score_action": "fixed_denominator_zero",
+          "score_value": 0,
+          "status": "verified_fail",
+          "task_id": "click__rwork__005"
+        },
+        {
+          "acut_id": "frontier-click-specialist",
+          "normalized_result": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/rgw_full_workspace_v1/normalized/rgw_full_workspace_v1_20260512__rwork__frontier-click-specialist__click__rwork__006__attempt1.json",
+          "present": true,
+          "score_action": "fixed_denominator_zero",
+          "score_value": 0,
+          "status": "no_diff",
+          "task_id": "click__rwork__006"
+        },
+        {
+          "acut_id": "frontier-generic-swe",
+          "normalized_result": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/rgw_full_workspace_v1/normalized/rgw_full_workspace_v1_20260512__rwork__frontier-generic-swe__click__rwork__001__attempt1.json",
+          "present": true,
+          "score_action": "fixed_denominator_zero",
+          "score_value": 0,
+          "status": "verified_fail",
+          "task_id": "click__rwork__001"
+        },
+        {
+          "acut_id": "frontier-generic-swe",
+          "normalized_result": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/rgw_full_workspace_v1/normalized/rgw_full_workspace_v1_20260512__rwork__frontier-generic-swe__click__rwork__002__attempt1.json",
+          "present": true,
+          "score_action": "fixed_denominator_one",
+          "score_value": 1,
+          "status": "verified_pass",
+          "task_id": "click__rwork__002"
+        },
+        {
+          "acut_id": "frontier-generic-swe",
+          "normalized_result": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/rgw_full_workspace_v1/normalized/rgw_full_workspace_v1_20260512__rwork__frontier-generic-swe__click__rwork__003__attempt1.json",
+          "present": true,
+          "score_action": "fixed_denominator_zero",
+          "score_value": 0,
+          "status": "unsafe_or_scope_violation",
+          "task_id": "click__rwork__003"
+        },
+        {
+          "acut_id": "frontier-generic-swe",
+          "normalized_result": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/rgw_full_workspace_v1/normalized/rgw_full_workspace_v1_20260512__rwork__frontier-generic-swe__click__rwork__004__attempt1.json",
+          "present": true,
+          "score_action": "fixed_denominator_zero",
+          "score_value": 0,
+          "status": "unsafe_or_scope_violation",
+          "task_id": "click__rwork__004"
+        },
+        {
+          "acut_id": "frontier-generic-swe",
+          "normalized_result": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/rgw_full_workspace_v1/normalized/rgw_full_workspace_v1_20260512__rwork__frontier-generic-swe__click__rwork__005__attempt1.json",
+          "present": true,
+          "score_action": "fixed_denominator_one",
+          "score_value": 1,
+          "status": "verified_pass",
+          "task_id": "click__rwork__005"
+        },
+        {
+          "acut_id": "frontier-generic-swe",
+          "normalized_result": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/rgw_full_workspace_v1/normalized/rgw_full_workspace_v1_20260512__rwork__frontier-generic-swe__click__rwork__006__attempt1.json",
+          "present": true,
+          "score_action": "fixed_denominator_zero",
+          "score_value": 0,
+          "status": "unsafe_or_scope_violation",
+          "task_id": "click__rwork__006"
+        }
+      ],
+      "effective_denominator_after_recorded_global_infra_exclusions": 24,
+      "expected_cells": 24,
+      "fixed_denominator": 24,
+      "infra_cells": [],
+      "missing_cells": 0,
+      "passed": 8,
+      "present_cells": 24,
+      "primary_score_ready": true,
+      "score_action_counts": {
+        "fixed_denominator_one": 8,
+        "fixed_denominator_zero": 16
+      },
+      "score_percent_effective_denominator": 33.333333333333336,
+      "score_percent_fixed_denominator": 33.333333333333336,
+      "status_counts": {
+        "no_diff": 3,
+        "unsafe_or_scope_violation": 9,
+        "verified_fail": 4,
+        "verified_pass": 8
+      },
+      "triage_paused_cells": []
+    }
+  },
+  "config": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/configs/rgw_full_workspace_v1.yaml",
+  "generated_at": "2026-05-12T06:59:53.532269Z",
+  "grw_table": {
+    "cheap-click-specialist": {
+      "acut_id": "cheap-click-specialist",
+      "g_effective_denominator": 0,
+      "g_fixed_denominator": 6,
+      "g_passed": 0,
+      "g_primary_score_ready": false,
+      "g_score_percent_effective": null,
+      "g_score_percent_fixed": 0.0,
+      "g_status_counts": {
+        "verifier_infra_error": 6
+      },
+      "r_effective_denominator": 8,
+      "r_fixed_denominator": 8,
+      "r_passed": 3,
+      "r_primary_score_ready": true,
+      "r_score_percent_effective": 37.5,
+      "r_score_percent_fixed": 37.5,
+      "r_status_counts": {
+        "verified_fail": 5,
+        "verified_pass": 3
+      },
+      "w_effective_denominator": 6,
+      "w_fixed_denominator": 6,
+      "w_passed": 2,
+      "w_primary_score_ready": true,
+      "w_score_percent_effective": 33.333333333333336,
+      "w_score_percent_fixed": 33.333333333333336,
+      "w_status_counts": {
+        "unsafe_or_scope_violation": 2,
+        "verified_fail": 2,
+        "verified_pass": 2
+      }
+    },
+    "cheap-generic-swe": {
+      "acut_id": "cheap-generic-swe",
+      "g_effective_denominator": 0,
+      "g_fixed_denominator": 6,
+      "g_passed": 0,
+      "g_primary_score_ready": false,
+      "g_score_percent_effective": null,
+      "g_score_percent_fixed": 0.0,
+      "g_status_counts": {
+        "verifier_infra_error": 6
+      },
+      "r_effective_denominator": 8,
+      "r_fixed_denominator": 8,
+      "r_passed": 2,
+      "r_primary_score_ready": true,
+      "r_score_percent_effective": 25.0,
+      "r_score_percent_fixed": 25.0,
+      "r_status_counts": {
+        "verified_fail": 6,
+        "verified_pass": 2
+      },
+      "w_effective_denominator": 6,
+      "w_fixed_denominator": 6,
+      "w_passed": 2,
+      "w_primary_score_ready": true,
+      "w_score_percent_effective": 33.333333333333336,
+      "w_score_percent_fixed": 33.333333333333336,
+      "w_status_counts": {
+        "no_diff": 1,
+        "unsafe_or_scope_violation": 3,
+        "verified_pass": 2
+      }
+    },
+    "frontier-click-specialist": {
+      "acut_id": "frontier-click-specialist",
+      "g_effective_denominator": 0,
+      "g_fixed_denominator": 6,
+      "g_passed": 0,
+      "g_primary_score_ready": false,
+      "g_score_percent_effective": null,
+      "g_score_percent_fixed": 0.0,
+      "g_status_counts": {
+        "verifier_infra_error": 6
+      },
+      "r_effective_denominator": 8,
+      "r_fixed_denominator": 8,
+      "r_passed": 5,
+      "r_primary_score_ready": true,
+      "r_score_percent_effective": 62.5,
+      "r_score_percent_fixed": 62.5,
+      "r_status_counts": {
+        "verified_fail": 3,
+        "verified_pass": 5
+      },
+      "w_effective_denominator": 6,
+      "w_fixed_denominator": 6,
+      "w_passed": 2,
+      "w_primary_score_ready": true,
+      "w_score_percent_effective": 33.333333333333336,
+      "w_score_percent_fixed": 33.333333333333336,
+      "w_status_counts": {
+        "no_diff": 2,
+        "unsafe_or_scope_violation": 1,
+        "verified_fail": 1,
+        "verified_pass": 2
+      }
+    },
+    "frontier-generic-swe": {
+      "acut_id": "frontier-generic-swe",
+      "g_effective_denominator": 0,
+      "g_fixed_denominator": 6,
+      "g_passed": 0,
+      "g_primary_score_ready": false,
+      "g_score_percent_effective": null,
+      "g_score_percent_fixed": 0.0,
+      "g_status_counts": {
+        "verifier_infra_error": 6
+      },
+      "r_effective_denominator": 8,
+      "r_fixed_denominator": 8,
+      "r_passed": 5,
+      "r_primary_score_ready": true,
+      "r_score_percent_effective": 62.5,
+      "r_score_percent_fixed": 62.5,
+      "r_status_counts": {
+        "verified_fail": 3,
+        "verified_pass": 5
+      },
+      "w_effective_denominator": 6,
+      "w_fixed_denominator": 6,
+      "w_passed": 2,
+      "w_primary_score_ready": true,
+      "w_score_percent_effective": 33.333333333333336,
+      "w_score_percent_fixed": 33.333333333333336,
+      "w_status_counts": {
+        "unsafe_or_scope_violation": 3,
+        "verified_fail": 1,
+        "verified_pass": 2
+      }
+    }
+  },
+  "infra_reruns_exclusions": {
+    "cells": [
+      {
+        "acut_id": "cheap-click-specialist",
+        "axis": "general",
+        "normalized_result": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/rgw_full_workspace_v1/normalized/rgw_full_workspace_v1_20260512__general__cheap-click-specialist__instance_NodeBB__NodeBB-51d8f3b195bddb13a13ddc0de110722774d9bb1b-vf2cf3cbd463b7ad942381f1c6d077626485a1e9e__attempt1.json",
+        "run_id": "rgw_full_workspace_v1_20260512__general__cheap-click-specialist__instance_NodeBB__NodeBB-51d8f3b195bddb13a13ddc0de110722774d9bb1b-vf2cf3cbd463b7ad942381f1c6d077626485a1e9e__attempt1",
+        "score_action": "rerun_or_global_exclusion_required",
+        "status": "verifier_infra_error",
+        "task_id": "instance_NodeBB__NodeBB-51d8f3b195bddb13a13ddc0de110722774d9bb1b-vf2cf3cbd463b7ad942381f1c6d077626485a1e9e"
+      },
+      {
+        "acut_id": "cheap-click-specialist",
+        "axis": "general",
+        "normalized_result": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/rgw_full_workspace_v1/normalized/rgw_full_workspace_v1_20260512__general__cheap-click-specialist__instance_NodeBB__NodeBB-84dfda59e6a0e8a77240f939a7cb8757e6eaf945-v2c59007b1005cd5cd14cbb523ca5229db1fd2dd8__attempt1.json",
+        "run_id": "rgw_full_workspace_v1_20260512__general__cheap-click-specialist__instance_NodeBB__NodeBB-84dfda59e6a0e8a77240f939a7cb8757e6eaf945-v2c59007b1005cd5cd14cbb523ca5229db1fd2dd8__attempt1",
+        "score_action": "rerun_or_global_exclusion_required",
+        "status": "verifier_infra_error",
+        "task_id": "instance_NodeBB__NodeBB-84dfda59e6a0e8a77240f939a7cb8757e6eaf945-v2c59007b1005cd5cd14cbb523ca5229db1fd2dd8"
+      },
+      {
+        "acut_id": "cheap-click-specialist",
+        "axis": "general",
+        "normalized_result": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/rgw_full_workspace_v1/normalized/rgw_full_workspace_v1_20260512__general__cheap-click-specialist__instance_ansible__ansible-984216f52e76b904e5b0fa0fb956ab4f1e0a7751-v1055803c3a812189a1133297f7f5468579283f86__attempt1.json",
+        "run_id": "rgw_full_workspace_v1_20260512__general__cheap-click-specialist__instance_ansible__ansible-984216f52e76b904e5b0fa0fb956ab4f1e0a7751-v1055803c3a812189a1133297f7f5468579283f86__attempt1",
+        "score_action": "rerun_or_global_exclusion_required",
+        "status": "verifier_infra_error",
+        "task_id": "instance_ansible__ansible-984216f52e76b904e5b0fa0fb956ab4f1e0a7751-v1055803c3a812189a1133297f7f5468579283f86"
+      },
+      {
+        "acut_id": "cheap-click-specialist",
+        "axis": "general",
+        "normalized_result": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/rgw_full_workspace_v1/normalized/rgw_full_workspace_v1_20260512__general__cheap-click-specialist__instance_ansible__ansible-d33bedc48fdd933b5abd65a77c081876298e2f07-v0f01c69f1e2528b935359cfe578530722bca2c59__attempt1.json",
+        "run_id": "rgw_full_workspace_v1_20260512__general__cheap-click-specialist__instance_ansible__ansible-d33bedc48fdd933b5abd65a77c081876298e2f07-v0f01c69f1e2528b935359cfe578530722bca2c59__attempt1",
+        "score_action": "rerun_or_global_exclusion_required",
+        "status": "verifier_infra_error",
+        "task_id": "instance_ansible__ansible-d33bedc48fdd933b5abd65a77c081876298e2f07-v0f01c69f1e2528b935359cfe578530722bca2c59"
+      },
+      {
+        "acut_id": "cheap-click-specialist",
+        "axis": "general",
+        "normalized_result": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/rgw_full_workspace_v1/normalized/rgw_full_workspace_v1_20260512__general__cheap-click-specialist__instance_element-hq__element-web-5dfde12c1c1c0b6e48f17e3405468593e39d9492-vnan__attempt1.json",
+        "run_id": "rgw_full_workspace_v1_20260512__general__cheap-click-specialist__instance_element-hq__element-web-5dfde12c1c1c0b6e48f17e3405468593e39d9492-vnan__attempt1",
+        "score_action": "rerun_or_global_exclusion_required",
+        "status": "verifier_infra_error",
+        "task_id": "instance_element-hq__element-web-5dfde12c1c1c0b6e48f17e3405468593e39d9492-vnan"
+      },
+      {
+        "acut_id": "cheap-click-specialist",
+        "axis": "general",
+        "normalized_result": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/rgw_full_workspace_v1/normalized/rgw_full_workspace_v1_20260512__general__cheap-click-specialist__instance_element-hq__element-web-776ffa47641c7ec6d142ab4a47691c30ebf83c2e__attempt1.json",
+        "run_id": "rgw_full_workspace_v1_20260512__general__cheap-click-specialist__instance_element-hq__element-web-776ffa47641c7ec6d142ab4a47691c30ebf83c2e__attempt1",
+        "score_action": "rerun_or_global_exclusion_required",
+        "status": "verifier_infra_error",
+        "task_id": "instance_element-hq__element-web-776ffa47641c7ec6d142ab4a47691c30ebf83c2e"
+      },
+      {
+        "acut_id": "cheap-generic-swe",
+        "axis": "general",
+        "normalized_result": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/rgw_full_workspace_v1/normalized/rgw_full_workspace_v1_20260512__general__cheap-generic-swe__instance_NodeBB__NodeBB-51d8f3b195bddb13a13ddc0de110722774d9bb1b-vf2cf3cbd463b7ad942381f1c6d077626485a1e9e__attempt1.json",
+        "run_id": "rgw_full_workspace_v1_20260512__general__cheap-generic-swe__instance_NodeBB__NodeBB-51d8f3b195bddb13a13ddc0de110722774d9bb1b-vf2cf3cbd463b7ad942381f1c6d077626485a1e9e__attempt1",
+        "score_action": "rerun_or_global_exclusion_required",
+        "status": "verifier_infra_error",
+        "task_id": "instance_NodeBB__NodeBB-51d8f3b195bddb13a13ddc0de110722774d9bb1b-vf2cf3cbd463b7ad942381f1c6d077626485a1e9e"
+      },
+      {
+        "acut_id": "cheap-generic-swe",
+        "axis": "general",
+        "normalized_result": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/rgw_full_workspace_v1/normalized/rgw_full_workspace_v1_20260512__general__cheap-generic-swe__instance_NodeBB__NodeBB-84dfda59e6a0e8a77240f939a7cb8757e6eaf945-v2c59007b1005cd5cd14cbb523ca5229db1fd2dd8__attempt1.json",
+        "run_id": "rgw_full_workspace_v1_20260512__general__cheap-generic-swe__instance_NodeBB__NodeBB-84dfda59e6a0e8a77240f939a7cb8757e6eaf945-v2c59007b1005cd5cd14cbb523ca5229db1fd2dd8__attempt1",
+        "score_action": "rerun_or_global_exclusion_required",
+        "status": "verifier_infra_error",
+        "task_id": "instance_NodeBB__NodeBB-84dfda59e6a0e8a77240f939a7cb8757e6eaf945-v2c59007b1005cd5cd14cbb523ca5229db1fd2dd8"
+      },
+      {
+        "acut_id": "cheap-generic-swe",
+        "axis": "general",
+        "normalized_result": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/rgw_full_workspace_v1/normalized/rgw_full_workspace_v1_20260512__general__cheap-generic-swe__instance_ansible__ansible-984216f52e76b904e5b0fa0fb956ab4f1e0a7751-v1055803c3a812189a1133297f7f5468579283f86__attempt1.json",
+        "run_id": "rgw_full_workspace_v1_20260512__general__cheap-generic-swe__instance_ansible__ansible-984216f52e76b904e5b0fa0fb956ab4f1e0a7751-v1055803c3a812189a1133297f7f5468579283f86__attempt1",
+        "score_action": "rerun_or_global_exclusion_required",
+        "status": "verifier_infra_error",
+        "task_id": "instance_ansible__ansible-984216f52e76b904e5b0fa0fb956ab4f1e0a7751-v1055803c3a812189a1133297f7f5468579283f86"
+      },
+      {
+        "acut_id": "cheap-generic-swe",
+        "axis": "general",
+        "normalized_result": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/rgw_full_workspace_v1/normalized/rgw_full_workspace_v1_20260512__general__cheap-generic-swe__instance_ansible__ansible-d33bedc48fdd933b5abd65a77c081876298e2f07-v0f01c69f1e2528b935359cfe578530722bca2c59__attempt1.json",
+        "run_id": "rgw_full_workspace_v1_20260512__general__cheap-generic-swe__instance_ansible__ansible-d33bedc48fdd933b5abd65a77c081876298e2f07-v0f01c69f1e2528b935359cfe578530722bca2c59__attempt1",
+        "score_action": "rerun_or_global_exclusion_required",
+        "status": "verifier_infra_error",
+        "task_id": "instance_ansible__ansible-d33bedc48fdd933b5abd65a77c081876298e2f07-v0f01c69f1e2528b935359cfe578530722bca2c59"
+      },
+      {
+        "acut_id": "cheap-generic-swe",
+        "axis": "general",
+        "normalized_result": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/rgw_full_workspace_v1/normalized/rgw_full_workspace_v1_20260512__general__cheap-generic-swe__instance_element-hq__element-web-5dfde12c1c1c0b6e48f17e3405468593e39d9492-vnan__attempt1.json",
+        "run_id": "rgw_full_workspace_v1_20260512__general__cheap-generic-swe__instance_element-hq__element-web-5dfde12c1c1c0b6e48f17e3405468593e39d9492-vnan__attempt1",
+        "score_action": "rerun_or_global_exclusion_required",
+        "status": "verifier_infra_error",
+        "task_id": "instance_element-hq__element-web-5dfde12c1c1c0b6e48f17e3405468593e39d9492-vnan"
+      },
+      {
+        "acut_id": "cheap-generic-swe",
+        "axis": "general",
+        "normalized_result": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/rgw_full_workspace_v1/normalized/rgw_full_workspace_v1_20260512__general__cheap-generic-swe__instance_element-hq__element-web-776ffa47641c7ec6d142ab4a47691c30ebf83c2e__attempt1.json",
+        "run_id": "rgw_full_workspace_v1_20260512__general__cheap-generic-swe__instance_element-hq__element-web-776ffa47641c7ec6d142ab4a47691c30ebf83c2e__attempt1",
+        "score_action": "rerun_or_global_exclusion_required",
+        "status": "verifier_infra_error",
+        "task_id": "instance_element-hq__element-web-776ffa47641c7ec6d142ab4a47691c30ebf83c2e"
+      },
+      {
+        "acut_id": "frontier-click-specialist",
+        "axis": "general",
+        "normalized_result": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/rgw_full_workspace_v1/normalized/rgw_full_workspace_v1_20260512__general__frontier-click-specialist__instance_NodeBB__NodeBB-51d8f3b195bddb13a13ddc0de110722774d9bb1b-vf2cf3cbd463b7ad942381f1c6d077626485a1e9e__attempt1.json",
+        "run_id": "rgw_full_workspace_v1_20260512__general__frontier-click-specialist__instance_NodeBB__NodeBB-51d8f3b195bddb13a13ddc0de110722774d9bb1b-vf2cf3cbd463b7ad942381f1c6d077626485a1e9e__attempt1",
+        "score_action": "rerun_or_global_exclusion_required",
+        "status": "verifier_infra_error",
+        "task_id": "instance_NodeBB__NodeBB-51d8f3b195bddb13a13ddc0de110722774d9bb1b-vf2cf3cbd463b7ad942381f1c6d077626485a1e9e"
+      },
+      {
+        "acut_id": "frontier-click-specialist",
+        "axis": "general",
+        "normalized_result": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/rgw_full_workspace_v1/normalized/rgw_full_workspace_v1_20260512__general__frontier-click-specialist__instance_NodeBB__NodeBB-84dfda59e6a0e8a77240f939a7cb8757e6eaf945-v2c59007b1005cd5cd14cbb523ca5229db1fd2dd8__attempt1.json",
+        "run_id": "rgw_full_workspace_v1_20260512__general__frontier-click-specialist__instance_NodeBB__NodeBB-84dfda59e6a0e8a77240f939a7cb8757e6eaf945-v2c59007b1005cd5cd14cbb523ca5229db1fd2dd8__attempt1",
+        "score_action": "rerun_or_global_exclusion_required",
+        "status": "verifier_infra_error",
+        "task_id": "instance_NodeBB__NodeBB-84dfda59e6a0e8a77240f939a7cb8757e6eaf945-v2c59007b1005cd5cd14cbb523ca5229db1fd2dd8"
+      },
+      {
+        "acut_id": "frontier-click-specialist",
+        "axis": "general",
+        "normalized_result": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/rgw_full_workspace_v1/normalized/rgw_full_workspace_v1_20260512__general__frontier-click-specialist__instance_ansible__ansible-984216f52e76b904e5b0fa0fb956ab4f1e0a7751-v1055803c3a812189a1133297f7f5468579283f86__attempt1.json",
+        "run_id": "rgw_full_workspace_v1_20260512__general__frontier-click-specialist__instance_ansible__ansible-984216f52e76b904e5b0fa0fb956ab4f1e0a7751-v1055803c3a812189a1133297f7f5468579283f86__attempt1",
+        "score_action": "rerun_or_global_exclusion_required",
+        "status": "verifier_infra_error",
+        "task_id": "instance_ansible__ansible-984216f52e76b904e5b0fa0fb956ab4f1e0a7751-v1055803c3a812189a1133297f7f5468579283f86"
+      },
+      {
+        "acut_id": "frontier-click-specialist",
+        "axis": "general",
+        "normalized_result": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/rgw_full_workspace_v1/normalized/rgw_full_workspace_v1_20260512__general__frontier-click-specialist__instance_ansible__ansible-d33bedc48fdd933b5abd65a77c081876298e2f07-v0f01c69f1e2528b935359cfe578530722bca2c59__attempt1.json",
+        "run_id": "rgw_full_workspace_v1_20260512__general__frontier-click-specialist__instance_ansible__ansible-d33bedc48fdd933b5abd65a77c081876298e2f07-v0f01c69f1e2528b935359cfe578530722bca2c59__attempt1",
+        "score_action": "rerun_or_global_exclusion_required",
+        "status": "verifier_infra_error",
+        "task_id": "instance_ansible__ansible-d33bedc48fdd933b5abd65a77c081876298e2f07-v0f01c69f1e2528b935359cfe578530722bca2c59"
+      },
+      {
+        "acut_id": "frontier-click-specialist",
+        "axis": "general",
+        "normalized_result": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/rgw_full_workspace_v1/normalized/rgw_full_workspace_v1_20260512__general__frontier-click-specialist__instance_element-hq__element-web-5dfde12c1c1c0b6e48f17e3405468593e39d9492-vnan__attempt1.json",
+        "run_id": "rgw_full_workspace_v1_20260512__general__frontier-click-specialist__instance_element-hq__element-web-5dfde12c1c1c0b6e48f17e3405468593e39d9492-vnan__attempt1",
+        "score_action": "rerun_or_global_exclusion_required",
+        "status": "verifier_infra_error",
+        "task_id": "instance_element-hq__element-web-5dfde12c1c1c0b6e48f17e3405468593e39d9492-vnan"
+      },
+      {
+        "acut_id": "frontier-click-specialist",
+        "axis": "general",
+        "normalized_result": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/rgw_full_workspace_v1/normalized/rgw_full_workspace_v1_20260512__general__frontier-click-specialist__instance_element-hq__element-web-776ffa47641c7ec6d142ab4a47691c30ebf83c2e__attempt1.json",
+        "run_id": "rgw_full_workspace_v1_20260512__general__frontier-click-specialist__instance_element-hq__element-web-776ffa47641c7ec6d142ab4a47691c30ebf83c2e__attempt1",
+        "score_action": "rerun_or_global_exclusion_required",
+        "status": "verifier_infra_error",
+        "task_id": "instance_element-hq__element-web-776ffa47641c7ec6d142ab4a47691c30ebf83c2e"
+      },
+      {
+        "acut_id": "frontier-generic-swe",
+        "axis": "general",
+        "normalized_result": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/rgw_full_workspace_v1/normalized/rgw_full_workspace_v1_20260512__general__frontier-generic-swe__instance_NodeBB__NodeBB-51d8f3b195bddb13a13ddc0de110722774d9bb1b-vf2cf3cbd463b7ad942381f1c6d077626485a1e9e__attempt1.json",
+        "run_id": "rgw_full_workspace_v1_20260512__general__frontier-generic-swe__instance_NodeBB__NodeBB-51d8f3b195bddb13a13ddc0de110722774d9bb1b-vf2cf3cbd463b7ad942381f1c6d077626485a1e9e__attempt1",
+        "score_action": "rerun_or_global_exclusion_required",
+        "status": "verifier_infra_error",
+        "task_id": "instance_NodeBB__NodeBB-51d8f3b195bddb13a13ddc0de110722774d9bb1b-vf2cf3cbd463b7ad942381f1c6d077626485a1e9e"
+      },
+      {
+        "acut_id": "frontier-generic-swe",
+        "axis": "general",
+        "normalized_result": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/rgw_full_workspace_v1/normalized/rgw_full_workspace_v1_20260512__general__frontier-generic-swe__instance_NodeBB__NodeBB-84dfda59e6a0e8a77240f939a7cb8757e6eaf945-v2c59007b1005cd5cd14cbb523ca5229db1fd2dd8__attempt1.json",
+        "run_id": "rgw_full_workspace_v1_20260512__general__frontier-generic-swe__instance_NodeBB__NodeBB-84dfda59e6a0e8a77240f939a7cb8757e6eaf945-v2c59007b1005cd5cd14cbb523ca5229db1fd2dd8__attempt1",
+        "score_action": "rerun_or_global_exclusion_required",
+        "status": "verifier_infra_error",
+        "task_id": "instance_NodeBB__NodeBB-84dfda59e6a0e8a77240f939a7cb8757e6eaf945-v2c59007b1005cd5cd14cbb523ca5229db1fd2dd8"
+      },
+      {
+        "acut_id": "frontier-generic-swe",
+        "axis": "general",
+        "normalized_result": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/rgw_full_workspace_v1/normalized/rgw_full_workspace_v1_20260512__general__frontier-generic-swe__instance_ansible__ansible-984216f52e76b904e5b0fa0fb956ab4f1e0a7751-v1055803c3a812189a1133297f7f5468579283f86__attempt1.json",
+        "run_id": "rgw_full_workspace_v1_20260512__general__frontier-generic-swe__instance_ansible__ansible-984216f52e76b904e5b0fa0fb956ab4f1e0a7751-v1055803c3a812189a1133297f7f5468579283f86__attempt1",
+        "score_action": "rerun_or_global_exclusion_required",
+        "status": "verifier_infra_error",
+        "task_id": "instance_ansible__ansible-984216f52e76b904e5b0fa0fb956ab4f1e0a7751-v1055803c3a812189a1133297f7f5468579283f86"
+      },
+      {
+        "acut_id": "frontier-generic-swe",
+        "axis": "general",
+        "normalized_result": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/rgw_full_workspace_v1/normalized/rgw_full_workspace_v1_20260512__general__frontier-generic-swe__instance_ansible__ansible-d33bedc48fdd933b5abd65a77c081876298e2f07-v0f01c69f1e2528b935359cfe578530722bca2c59__attempt1.json",
+        "run_id": "rgw_full_workspace_v1_20260512__general__frontier-generic-swe__instance_ansible__ansible-d33bedc48fdd933b5abd65a77c081876298e2f07-v0f01c69f1e2528b935359cfe578530722bca2c59__attempt1",
+        "score_action": "rerun_or_global_exclusion_required",
+        "status": "verifier_infra_error",
+        "task_id": "instance_ansible__ansible-d33bedc48fdd933b5abd65a77c081876298e2f07-v0f01c69f1e2528b935359cfe578530722bca2c59"
+      },
+      {
+        "acut_id": "frontier-generic-swe",
+        "axis": "general",
+        "normalized_result": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/rgw_full_workspace_v1/normalized/rgw_full_workspace_v1_20260512__general__frontier-generic-swe__instance_element-hq__element-web-5dfde12c1c1c0b6e48f17e3405468593e39d9492-vnan__attempt1.json",
+        "run_id": "rgw_full_workspace_v1_20260512__general__frontier-generic-swe__instance_element-hq__element-web-5dfde12c1c1c0b6e48f17e3405468593e39d9492-vnan__attempt1",
+        "score_action": "rerun_or_global_exclusion_required",
+        "status": "verifier_infra_error",
+        "task_id": "instance_element-hq__element-web-5dfde12c1c1c0b6e48f17e3405468593e39d9492-vnan"
+      },
+      {
+        "acut_id": "frontier-generic-swe",
+        "axis": "general",
+        "normalized_result": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/rgw_full_workspace_v1/normalized/rgw_full_workspace_v1_20260512__general__frontier-generic-swe__instance_element-hq__element-web-776ffa47641c7ec6d142ab4a47691c30ebf83c2e__attempt1.json",
+        "run_id": "rgw_full_workspace_v1_20260512__general__frontier-generic-swe__instance_element-hq__element-web-776ffa47641c7ec6d142ab4a47691c30ebf83c2e__attempt1",
+        "score_action": "rerun_or_global_exclusion_required",
+        "status": "verifier_infra_error",
+        "task_id": "instance_element-hq__element-web-776ffa47641c7ec6d142ab4a47691c30ebf83c2e"
+      }
+    ],
+    "count": 24
+  },
+  "manifest_digest_sha256": "7cdc314be75a7b34027e54c9532e79d21147e2bcd20ecbcb56c814f9b699b72c",
+  "reversal_analysis": {
+    "r_rank_order": [
+      {
+        "acut_id": "frontier-click-specialist",
+        "rank": 1,
+        "score_percent": 62.5
+      },
+      {
+        "acut_id": "frontier-generic-swe",
+        "rank": 2,
+        "score_percent": 62.5
+      },
+      {
+        "acut_id": "cheap-click-specialist",
+        "rank": 3,
+        "score_percent": 37.5
+      },
+      {
+        "acut_id": "cheap-generic-swe",
+        "rank": 4,
+        "score_percent": 25.0
+      }
+    ],
+    "rank_deltas": [
+      {
+        "acut_id": "cheap-click-specialist",
+        "r_rank": 3,
+        "w_rank": 1
+      },
+      {
+        "acut_id": "cheap-generic-swe",
+        "r_rank": 4,
+        "w_rank": 2
+      },
+      {
+        "acut_id": "frontier-click-specialist",
+        "r_rank": 1,
+        "w_rank": 3
+      },
+      {
+        "acut_id": "frontier-generic-swe",
+        "r_rank": 2,
+        "w_rank": 4
+      }
+    ],
+    "statement": "Ranking reversal observed.",
+    "status": "reversal_observed",
+    "w_rank_order": [
+      {
+        "acut_id": "cheap-click-specialist",
+        "rank": 1,
+        "score_percent": 33.333333333333336
+      },
+      {
+        "acut_id": "cheap-generic-swe",
+        "rank": 2,
+        "score_percent": 33.333333333333336
+      },
+      {
+        "acut_id": "frontier-click-specialist",
+        "rank": 3,
+        "score_percent": 33.333333333333336
+      },
+      {
+        "acut_id": "frontier-generic-swe",
+        "rank": 4,
+        "score_percent": 33.333333333333336
+      }
+    ]
+  },
+  "runner_id": "rgw-full-workspace-v1",
+  "schema_version": "core-narrative.rgw-full-workspace-summary.v1",
+  "status": "primary_incomplete_or_infra_blocked",
+  "status_semantics": {
+    "fixed_denominator_zero": [
+      "verified_fail",
+      "no_diff",
+      "timeout/acut",
+      "unsafe_or_scope_violation",
+      "acut_command_error"
+    ],
+    "infrastructure_rerun_or_global_exclusion_required": [
+      "verifier_infra_error",
+      "base_tree_mismatch",
+      "candidate_patch_extraction_error",
+      "timeout/verifier_or_unknown"
+    ],
+    "primary_pass_only": [
+      "verified_pass"
+    ],
+    "triage_paused_before_primary_scoring": [
+      "patch_apply_error"
+    ]
+  },
+  "tool": "codex_nfl_workspace_runner",
+  "triage_paused": {
+    "cells": [],
+    "count": 0
+  }
+}

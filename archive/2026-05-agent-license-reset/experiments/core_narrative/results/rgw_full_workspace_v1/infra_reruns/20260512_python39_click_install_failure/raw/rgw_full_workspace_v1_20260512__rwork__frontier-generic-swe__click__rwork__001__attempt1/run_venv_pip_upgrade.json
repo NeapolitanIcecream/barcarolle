@@ -1,0 +1,22 @@
+{
+  "command": [
+    ".venv/bin/python",
+    "-m",
+    "pip",
+    "install",
+    "-q",
+    "--upgrade",
+    "pip"
+  ],
+  "command_error": null,
+  "cwd": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/workspaces/rgw_full_workspace_v1/rgw_full_workspace_v1_20260512__rwork__frontier-generic-swe__click__rwork__001__attempt1__run",
+  "duration_seconds": 1.558,
+  "exit_code": 0,
+  "finished_at": "2026-05-12T02:15:27.598807Z",
+  "name": "run_venv_pip_upgrade",
+  "started_at": "2026-05-12T02:15:26.040967Z",
+  "stderr_artifact": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/rgw_full_workspace_v1/raw/rgw_full_workspace_v1_20260512__rwork__frontier-generic-swe__click__rwork__001__attempt1/run_venv_pip_upgrade.stderr.txt",
+  "stdout_artifact": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/rgw_full_workspace_v1/raw/rgw_full_workspace_v1_20260512__rwork__frontier-generic-swe__click__rwork__001__attempt1/run_venv_pip_upgrade.stdout.txt",
+  "summary_artifact": "/Users/chenmohan/gits/barcarolle/experiments/core_narrative/results/rgw_full_workspace_v1/raw/rgw_full_workspace_v1_20260512__rwork__frontier-generic-swe__click__rwork__001__attempt1/run_venv_pip_upgrade.json",
+  "timed_out": false
+}

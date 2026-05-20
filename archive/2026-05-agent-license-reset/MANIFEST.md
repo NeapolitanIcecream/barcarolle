@@ -32,6 +32,9 @@ new claim. In particular:
 - G-score was unavailable in the committed M3-lite evidence;
 - W evidence was limited and included invalid submissions;
 - Click R0 was provisional release hygiene, not final benchmark authority.
+- The RGW full workspace v1 validity audit from `91ab66e3` is preserved under
+  this archive as old-core-narrative evidence, not active benchmark-compiler
+  evidence.
 
 ## Reusable Components
 
@@ -59,6 +62,10 @@ Observed local inventory before archive:
 
 - `m5_w2_primary`: about 1.3G, 80 manifest-listed runs, 108602 manifest-listed raw artifacts.
 - `rgw_full_workspace_v1`: about 1.8G, mixed general/RBench/RWork workspace-mode runs.
+
+Small tracked RGW full workspace v1 summaries, normalized outputs, validity
+audit reports, and supporting tools are also archived here. Larger local raw
+subtrees remain ignored.
 
 Promote only small summaries or manifests from these directories if future Phase
 0 work needs them.
