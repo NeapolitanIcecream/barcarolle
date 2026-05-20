@@ -44,6 +44,7 @@ an active deliverable for this restart.
 - [Phase 0 headroom experiment plan](docs/experiments/phase-0-headroom-plan.md)
 - [Phase 0 runbook](docs/experiments/phase-0-runbook.md)
 - [Phase 0 source-adapter follow-up runbook](docs/experiments/phase-0-source-adapter-followup-runbook.md)
+- [Phase 0 headroom matrix follow-up runbook](docs/experiments/phase-0-headroom-matrix-followup-runbook.md)
 - [Restart consensus notes](docs/restart/2026-05-20-restart-consensus.md)
 
 ## Legacy Archive

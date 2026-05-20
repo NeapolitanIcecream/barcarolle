@@ -11,7 +11,9 @@ uv run --project experiments/phase0_headroom pytest experiments/phase0_headroom/
 
 The operating plan is `docs/experiments/phase-0-runbook.md`. If Phase 0 stops
 at `repair_source_adapter`, continue from
-`docs/experiments/phase-0-source-adapter-followup-runbook.md`.
+`docs/experiments/phase-0-source-adapter-followup-runbook.md`. If that follow-up
+reaches `ready_for_headroom_matrix`, continue from
+`docs/experiments/phase-0-headroom-matrix-followup-runbook.md`.
 
 Phase 0 asks whether repo-specific benchmark signal exists before building a
 larger benchmark compiler:
