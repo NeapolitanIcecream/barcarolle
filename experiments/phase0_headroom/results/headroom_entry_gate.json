@@ -1,0 +1,129 @@
+{
+  "blocking_reasons": [],
+  "can_continue_phase0": true,
+  "decision": "can_continue_phase0",
+  "gates": [
+    {
+      "details": {
+        "decision": "ready_for_headroom_matrix"
+      },
+      "evidence_path": "experiments/phase0_headroom/reports/phase0_source_adapter_followup_decision.md",
+      "name": "source_adapter_decision",
+      "status": "pass"
+    },
+    {
+      "details": {
+        "status": "ready_not_run_after_source_adapter_repair"
+      },
+      "evidence_path": "experiments/phase0_headroom/results/headroom_matrix.json",
+      "name": "matrix_status",
+      "status": "pass"
+    },
+    {
+      "details": {
+        "certified_count": 6,
+        "near_certified_count": 0
+      },
+      "evidence_path": "experiments/phase0_headroom/certified_tasks/toolz_certification_funnel.csv",
+      "name": "certified_count",
+      "status": "pass"
+    },
+    {
+      "details": {
+        "benchmark_grade": true,
+        "release_status": "benchmark_grade_candidate"
+      },
+      "evidence_path": "experiments/phase0_headroom/releases/toolz_phase0_mini_release.json",
+      "name": "release_status",
+      "status": "pass"
+    },
+    {
+      "details": {
+        "B_real": [
+          "toolz__hist__001",
+          "toolz__hist__002",
+          "toolz__hist__003"
+        ],
+        "W_real": [
+          "toolz__hist__004",
+          "toolz__hist__010",
+          "toolz__hist__016"
+        ],
+        "duplicates": []
+      },
+      "evidence_path": "experiments/phase0_headroom/releases/toolz_phase0_task_table.csv",
+      "name": "split_minimum",
+      "status": "pass"
+    },
+    {
+      "details": {
+        "draft_tasks": [],
+        "not_final_reviewed_tasks": []
+      },
+      "evidence_path": "experiments/phase0_headroom/certified_tasks/toolz_task_statements.jsonl",
+      "name": "statement_status",
+      "status": "pass"
+    },
+    {
+      "details": {
+        "inconsistencies": []
+      },
+      "evidence_path": "experiments/phase0_headroom/certified_tasks/ and experiments/phase0_headroom/releases/",
+      "name": "review_consistency",
+      "status": "pass"
+    },
+    {
+      "details": {
+        "forbidden_text_task_ids": []
+      },
+      "evidence_path": "experiments/phase0_headroom/certified_tasks/toolz_task_statements.jsonl",
+      "name": "leakage_policy",
+      "status": "pass"
+    },
+    {
+      "details": {
+        "certified_jsonl_count": 6,
+        "missing_or_nonpass": []
+      },
+      "evidence_path": "experiments/phase0_headroom/certified_tasks/toolz_certified_tasks.jsonl",
+      "name": "mechanical_gates",
+      "status": "pass"
+    },
+    {
+      "details": {
+        "current_cumulative_estimated_cost_usd": 0.0,
+        "hard_stop_usd": 200.0,
+        "projected_cumulative_cost_usd": 60.0,
+        "projected_default_matrix_cost_usd": 60.0,
+        "soft_stop_usd": 160.0
+      },
+      "evidence_path": "experiments/phase0_headroom/results/cost_ledger.jsonl",
+      "name": "budget",
+      "status": "pass"
+    },
+    {
+      "details": {
+        "command": "uv run --project experiments/phase0_headroom pytest -q experiments/phase0_headroom/tools",
+        "duration_seconds": 0.122,
+        "passed": true,
+        "returncode": 0,
+        "stderr_tail": "",
+        "stdout_tail": "................                                                         [100%]\n16 passed in 0.02s\n"
+      },
+      "evidence_path": "uv run --project experiments/phase0_headroom pytest -q experiments/phase0_headroom/tools",
+      "name": "tooling",
+      "status": "pass"
+    },
+    {
+      "details": {
+        "staged_ignored_paths": [],
+        "tracked_ignored_paths": []
+      },
+      "evidence_path": "git status --short --ignored experiments/phase0_headroom docs/experiments .gitignore",
+      "name": "artifact_hygiene",
+      "status": "pass"
+    }
+  ],
+  "generated_at": "2026-05-20T08:50:32+00:00",
+  "schema_version": "barcarolle.phase0_headroom_entry_gate.v1"
+}
