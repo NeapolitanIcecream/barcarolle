@@ -2,8 +2,8 @@
   "benchmark_grade": false,
   "certified_task_count": 0,
   "diagnostic_reason": "fewer than 6 certified tasks; near-certified tasks are listed for diagnosis only",
-  "generated_at": "2026-05-20T07:31:07+00:00",
-  "near_certified_task_count": 9,
+  "generated_at": "2026-05-20T07:39:35+00:00",
+  "near_certified_task_count": 6,
   "release_id": "toolz-phase0-mini-diagnostic",
   "release_status": "diagnostic_only",
   "repo_id": "toolz",
@@ -22,9 +22,9 @@
       "click__rbench__004"
     ],
     "W_real": [
+      "toolz__hist__003",
+      "toolz__hist__004",
       "toolz__hist__010",
-      "toolz__hist__012",
-      "toolz__hist__013",
       "toolz__hist__016"
     ]
   },
@@ -80,30 +80,30 @@
         "functoolz"
       ],
       "split": "W_real",
+      "task_id": "toolz__hist__003",
+      "task_type_proxy": "behavior_or_maintenance",
+      "weight": 1.0
+    },
+    {
+      "certification_status": "near_certified",
+      "counts_toward_benchmark_grade": false,
+      "module_or_package": [
+        "functoolz"
+      ],
+      "split": "W_real",
+      "task_id": "toolz__hist__004",
+      "task_type_proxy": "feature_or_api_extension",
+      "weight": 1.0
+    },
+    {
+      "certification_status": "near_certified",
+      "counts_toward_benchmark_grade": false,
+      "module_or_package": [
+        "functoolz"
+      ],
+      "split": "W_real",
       "task_id": "toolz__hist__010",
       "task_type_proxy": "feature_or_api_extension",
-      "weight": 1.0
-    },
-    {
-      "certification_status": "near_certified",
-      "counts_toward_benchmark_grade": false,
-      "module_or_package": [
-        "_signatures"
-      ],
-      "split": "W_real",
-      "task_id": "toolz__hist__012",
-      "task_type_proxy": "feature_or_api_extension",
-      "weight": 1.0
-    },
-    {
-      "certification_status": "near_certified",
-      "counts_toward_benchmark_grade": false,
-      "module_or_package": [
-        "dicttoolz"
-      ],
-      "split": "W_real",
-      "task_id": "toolz__hist__013",
-      "task_type_proxy": "bug_or_behavior_fix",
       "weight": 1.0
     },
     {

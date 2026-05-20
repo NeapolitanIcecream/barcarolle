@@ -15,254 +15,254 @@
       "tracked_in_git": false
     }
   ],
-  "generated_at": "2026-05-20T07:31:07+00:00",
+  "generated_at": "2026-05-20T07:39:35+00:00",
   "git_policy": "raw files and external repositories are ignored; this manifest is the committed reference.",
   "raw_files": [
     {
       "bytes": 1723,
       "path": "experiments/phase0_headroom/results/raw/certification/toolz__hist__001_noop.txt",
       "producer": "phase0_driver.py certification pytest probe",
-      "sha256": "073f66b5e6568a3f4b39d180f58d8d6f86afcffdb6a0cc7cb04762bf2156daca"
+      "sha256": "f0d7088209189aa981abaa3777c5037ac01fc4c4d8b64a146b63cb8ca6b74ef4"
     },
     {
       "bytes": 100,
       "path": "experiments/phase0_headroom/results/raw/certification/toolz__hist__001_reference_1.txt",
       "producer": "phase0_driver.py certification pytest probe",
-      "sha256": "1b5ff76ed892901aa786586dee5d75aee45af0222d1745d4a2a5b02d04e2c2f6"
+      "sha256": "6011321d57b41f129e03491cfb6fab6e7a90956083b19ce6ad5ced5b1b73dbcd"
     },
     {
       "bytes": 100,
       "path": "experiments/phase0_headroom/results/raw/certification/toolz__hist__001_reference_2.txt",
       "producer": "phase0_driver.py certification pytest probe",
-      "sha256": "7f25f63fd21d430d9f2ca05a0cd3d531741ec679d9e1c5b022406e597151da46"
+      "sha256": "fc214a5fce6fe165dc1ec4f910a580677c66a9bf3d1565da2eb3c1910d69d2fd"
     },
     {
       "bytes": 1901,
       "path": "experiments/phase0_headroom/results/raw/certification/toolz__hist__002_noop.txt",
       "producer": "phase0_driver.py certification pytest probe",
-      "sha256": "358f9eb629c57057688ec6c74f0dae43681fc89a0ec98561c7c4798585d13248"
+      "sha256": "78eb33c8e3b48e1507972f874ba33f6aceb83f065e145131f85c272edc135ff4"
     },
     {
       "bytes": 100,
       "path": "experiments/phase0_headroom/results/raw/certification/toolz__hist__002_reference_1.txt",
       "producer": "phase0_driver.py certification pytest probe",
-      "sha256": "1b5ff76ed892901aa786586dee5d75aee45af0222d1745d4a2a5b02d04e2c2f6"
+      "sha256": "41ab358cbfbfa96ba2328dccfe5acd52fd3407b06557d9a1186e83831276c644"
     },
     {
       "bytes": 100,
       "path": "experiments/phase0_headroom/results/raw/certification/toolz__hist__002_reference_2.txt",
       "producer": "phase0_driver.py certification pytest probe",
-      "sha256": "7f25f63fd21d430d9f2ca05a0cd3d531741ec679d9e1c5b022406e597151da46"
+      "sha256": "fc214a5fce6fe165dc1ec4f910a580677c66a9bf3d1565da2eb3c1910d69d2fd"
     },
     {
-      "bytes": 2878,
+      "bytes": 2979,
       "path": "experiments/phase0_headroom/results/raw/certification/toolz__hist__003_noop.txt",
       "producer": "phase0_driver.py certification pytest probe",
-      "sha256": "2a415ecad8ac97f4bc5fb9d3481f8bd49d8d9d19e896a66ee816872eaf6fa7d8"
+      "sha256": "712c29511447ca1c699ba64b50240ad400ad3648ce763dc68e0f40b8a66930de"
     },
     {
       "bytes": 100,
       "path": "experiments/phase0_headroom/results/raw/certification/toolz__hist__003_reference_1.txt",
       "producer": "phase0_driver.py certification pytest probe",
-      "sha256": "1b5ff76ed892901aa786586dee5d75aee45af0222d1745d4a2a5b02d04e2c2f6"
+      "sha256": "6011321d57b41f129e03491cfb6fab6e7a90956083b19ce6ad5ced5b1b73dbcd"
     },
     {
       "bytes": 100,
       "path": "experiments/phase0_headroom/results/raw/certification/toolz__hist__003_reference_2.txt",
       "producer": "phase0_driver.py certification pytest probe",
-      "sha256": "7f25f63fd21d430d9f2ca05a0cd3d531741ec679d9e1c5b022406e597151da46"
+      "sha256": "fc214a5fce6fe165dc1ec4f910a580677c66a9bf3d1565da2eb3c1910d69d2fd"
     },
     {
-      "bytes": 2726,
+      "bytes": 2767,
       "path": "experiments/phase0_headroom/results/raw/certification/toolz__hist__004_noop.txt",
       "producer": "phase0_driver.py certification pytest probe",
-      "sha256": "45fd13f39a5f5e7b46bed18ef0075b68b8dddd19836db3299fecef6074b182f8"
+      "sha256": "0e2a865a0e8319cc33134fe8e74b26a39fd23c2995b8f8bd97a533bcfbd5c3ef"
     },
     {
       "bytes": 100,
       "path": "experiments/phase0_headroom/results/raw/certification/toolz__hist__004_reference_1.txt",
       "producer": "phase0_driver.py certification pytest probe",
-      "sha256": "1b5ff76ed892901aa786586dee5d75aee45af0222d1745d4a2a5b02d04e2c2f6"
+      "sha256": "41ab358cbfbfa96ba2328dccfe5acd52fd3407b06557d9a1186e83831276c644"
     },
     {
       "bytes": 100,
       "path": "experiments/phase0_headroom/results/raw/certification/toolz__hist__004_reference_2.txt",
       "producer": "phase0_driver.py certification pytest probe",
-      "sha256": "7f25f63fd21d430d9f2ca05a0cd3d531741ec679d9e1c5b022406e597151da46"
+      "sha256": "fc214a5fce6fe165dc1ec4f910a580677c66a9bf3d1565da2eb3c1910d69d2fd"
     },
     {
-      "bytes": 3460,
+      "bytes": 6314,
       "path": "experiments/phase0_headroom/results/raw/certification/toolz__hist__005_noop.txt",
       "producer": "phase0_driver.py certification pytest probe",
-      "sha256": "dc4f33222bd7b1ef3e32b38bd61af9ec25afcffb617c5d5356528c47bde4fa96"
+      "sha256": "9797c4b4b53649d3ae7963b223202ed175a45c69e7614adb0f7a1f797d6b02d1"
     },
     {
-      "bytes": 1220,
+      "bytes": 4172,
       "path": "experiments/phase0_headroom/results/raw/certification/toolz__hist__005_reference_1.txt",
       "producer": "phase0_driver.py certification pytest probe",
-      "sha256": "5e94747f81e594fbf30d6b327cff4aa00840538332a314b78d35160cf3627761"
+      "sha256": "8989dfeff115148421c1e06f04736dce129de5184ba9e5ae8ac302a547ec8b02"
     },
     {
-      "bytes": 1220,
+      "bytes": 4172,
       "path": "experiments/phase0_headroom/results/raw/certification/toolz__hist__005_reference_2.txt",
       "producer": "phase0_driver.py certification pytest probe",
-      "sha256": "c89cc1f3d9352693438b5e5acd50b22eac297c5d9ad093bd8674d41aefe26d42"
+      "sha256": "caa69c1457724f1a3015e80913623099578672c2f6b06734d67837a390d4aa82"
     },
     {
-      "bytes": 1215,
+      "bytes": 4171,
       "path": "experiments/phase0_headroom/results/raw/certification/toolz__hist__006_noop.txt",
       "producer": "phase0_driver.py certification pytest probe",
-      "sha256": "36e2ec9555f499cfbffcbc303b46988d6312c1ccbf97ae94ef84e16108f75c9a"
+      "sha256": "9357aede91bb6255cabd8d22aca9cb42b1afbf6b7c2115b8fd56f64cc75f37b3"
     },
     {
-      "bytes": 1220,
+      "bytes": 4172,
       "path": "experiments/phase0_headroom/results/raw/certification/toolz__hist__006_reference_1.txt",
       "producer": "phase0_driver.py certification pytest probe",
-      "sha256": "57523a590b621ae366836fba5d545ed02c66907ef66a84514dfc947042ba8d64"
+      "sha256": "c367f7f74016299caeda0f68f97fb9d4a6cd5d2844d1d14f3e195ce46234c198"
     },
     {
-      "bytes": 1220,
+      "bytes": 4172,
       "path": "experiments/phase0_headroom/results/raw/certification/toolz__hist__006_reference_2.txt",
       "producer": "phase0_driver.py certification pytest probe",
-      "sha256": "c80f0cd817b69925e14c7a8e1faf0e930822323be9efe22daecd75e490c58dfc"
+      "sha256": "39e715732360bb0e686ba6bb715e2d8803331db73303a602cfa5225a43e81776"
     },
     {
       "bytes": 100,
       "path": "experiments/phase0_headroom/results/raw/certification/toolz__hist__007_noop.txt",
       "producer": "phase0_driver.py certification pytest probe",
-      "sha256": "1d1a5d9ac9a170aa3ef087d4256b75f291bb2efdde513b80743f0257e47ef3d5"
+      "sha256": "4ddbd16954cfb5e60c6cf002f06a063dee4945ab115d0e16c3054799b11b7287"
     },
     {
       "bytes": 100,
       "path": "experiments/phase0_headroom/results/raw/certification/toolz__hist__007_reference_1.txt",
       "producer": "phase0_driver.py certification pytest probe",
-      "sha256": "f28a990ca32c81fb3d823f7a9d7e26efcc6963f7e67a3b9516504161b9ae0ace"
+      "sha256": "4ddbd16954cfb5e60c6cf002f06a063dee4945ab115d0e16c3054799b11b7287"
     },
     {
       "bytes": 100,
       "path": "experiments/phase0_headroom/results/raw/certification/toolz__hist__007_reference_2.txt",
       "producer": "phase0_driver.py certification pytest probe",
-      "sha256": "3365b83468ec23a345de1bf6c55f5d5c470e7e9a9b5c11cf1301f8b80aad50a5"
+      "sha256": "6cc5a5656b396be7b9cb651c87da1afbc043495e08fc106194d6d762bf4b5225"
     },
     {
-      "bytes": 100,
+      "bytes": 3602,
       "path": "experiments/phase0_headroom/results/raw/certification/toolz__hist__008_noop.txt",
       "producer": "phase0_driver.py certification pytest probe",
-      "sha256": "03913b0a0ce732ced3bdb8e48e9ea9b7d156488d39babece64e9a91ba56b10fd"
+      "sha256": "10a764fbd24105d5c0f1cf758136c438bc9c7f1eb75a3740277a63819468aa86"
     },
     {
-      "bytes": 100,
+      "bytes": 3602,
       "path": "experiments/phase0_headroom/results/raw/certification/toolz__hist__008_reference_1.txt",
       "producer": "phase0_driver.py certification pytest probe",
-      "sha256": "03913b0a0ce732ced3bdb8e48e9ea9b7d156488d39babece64e9a91ba56b10fd"
+      "sha256": "054b19e3d7a60bbf34a3465550c627b8159544bb505864a5a65da594f0068b42"
     },
     {
-      "bytes": 100,
+      "bytes": 3602,
       "path": "experiments/phase0_headroom/results/raw/certification/toolz__hist__008_reference_2.txt",
       "producer": "phase0_driver.py certification pytest probe",
-      "sha256": "c68827a00a7fc5c21c14ed5d9d664e792a95b47c5c0f745973459c57984863f3"
+      "sha256": "1582a226e2f14875938b0f7963798298739688d53f14751c106d562ce319b3c4"
     },
     {
-      "bytes": 1296,
+      "bytes": 7581,
       "path": "experiments/phase0_headroom/results/raw/certification/toolz__hist__009_noop.txt",
       "producer": "phase0_driver.py certification pytest probe",
-      "sha256": "780000c692f358b93d21d5c4f5d2847b6299286122321a6acb48775b6358ee45"
+      "sha256": "d5feced8e60ba8ed609123ee26df2ef30ba0cfec1edbcc7c58d8db7b5c798c70"
     },
     {
-      "bytes": 1301,
+      "bytes": 7581,
       "path": "experiments/phase0_headroom/results/raw/certification/toolz__hist__009_reference_1.txt",
       "producer": "phase0_driver.py certification pytest probe",
-      "sha256": "44c063d85b4a4d85f855daa9ec0f5edad94b9a3a90e56fc0110bcefadceee5a5"
+      "sha256": "ac6a94fbb61ece1e2f7c951ada614b6f94400a55a5db96888ce55303a8494aa3"
     },
     {
-      "bytes": 1301,
+      "bytes": 7581,
       "path": "experiments/phase0_headroom/results/raw/certification/toolz__hist__009_reference_2.txt",
       "producer": "phase0_driver.py certification pytest probe",
-      "sha256": "86ff50e76885489823f3bd2dff48343f66961dd6bda9563710337bfcf01df619"
+      "sha256": "92b4a9a7c59e3fc50cc20b9ce8b31d7c716a156b0cdd6f270273ae3bc153ac68"
     },
     {
-      "bytes": 1174,
+      "bytes": 1238,
       "path": "experiments/phase0_headroom/results/raw/certification/toolz__hist__010_noop.txt",
       "producer": "phase0_driver.py certification pytest probe",
-      "sha256": "c4207edca2cb6c5ac76468d58c04ce4f9162dee96a2c0178696f560ab7527e60"
+      "sha256": "c9a2713cd88a38f36be3cbd5f89768f8c3afb57059d57dbcad3e7e4d327f9883"
     },
     {
       "bytes": 100,
       "path": "experiments/phase0_headroom/results/raw/certification/toolz__hist__010_reference_1.txt",
       "producer": "phase0_driver.py certification pytest probe",
-      "sha256": "1e9fae498dc3f5dc2b7cdbf42bdd3720f869466093b49aa978eda4e346a0b93f"
+      "sha256": "26814eeb58fd18b885a6cc3db83f9f687eea01c309b0e9551a632133599d698c"
     },
     {
       "bytes": 100,
       "path": "experiments/phase0_headroom/results/raw/certification/toolz__hist__010_reference_2.txt",
       "producer": "phase0_driver.py certification pytest probe",
-      "sha256": "22c8bf2ce6a3c5ccf20ceae58e7b5d06984bbd856498755c7e647918079cd54f"
+      "sha256": "b8b2596366d4e8315d4c299b8a85fc348bcd3db839b1b553d19095f1ef2de8ae"
     },
     {
       "bytes": 100,
       "path": "experiments/phase0_headroom/results/raw/certification/toolz__hist__011_noop.txt",
       "producer": "phase0_driver.py certification pytest probe",
-      "sha256": "28ae798389a34d388a357f75a43f17f9e5f2e602742bbb3789cfd354f4c40922"
+      "sha256": "341bb1cc596b0725beef84ecf424103499c352f71c1053b17aeda6fc021386db"
     },
     {
       "bytes": 100,
       "path": "experiments/phase0_headroom/results/raw/certification/toolz__hist__011_reference_1.txt",
       "producer": "phase0_driver.py certification pytest probe",
-      "sha256": "ecee444fa174259143140b2f0dce740e1bd7d04b16bf2ac8c1e8a25f3ee91a1c"
+      "sha256": "341bb1cc596b0725beef84ecf424103499c352f71c1053b17aeda6fc021386db"
     },
     {
       "bytes": 100,
       "path": "experiments/phase0_headroom/results/raw/certification/toolz__hist__011_reference_2.txt",
       "producer": "phase0_driver.py certification pytest probe",
-      "sha256": "ee81fb3dd444851d02981b406bcf1b912aec5557a0bd8adaa2a26e1bb8859254"
+      "sha256": "6079d710499e939349a958fc73f664984efe7abc0181f99403436f79214cf2a6"
     },
     {
-      "bytes": 2635,
+      "bytes": 3581,
       "path": "experiments/phase0_headroom/results/raw/certification/toolz__hist__012_noop.txt",
       "producer": "phase0_driver.py certification pytest probe",
-      "sha256": "9960549b637ebdb457e9643c5d4d47916fc400c92583c198477b03ccc900a07d"
+      "sha256": "ada2577407b45548fd90dbf94b20c1fcf78cac0325c4425ac86c223793830cc0"
     },
     {
-      "bytes": 100,
+      "bytes": 3554,
       "path": "experiments/phase0_headroom/results/raw/certification/toolz__hist__012_reference_1.txt",
       "producer": "phase0_driver.py certification pytest probe",
-      "sha256": "7a8f003daec95cba1751167fc1c0d0b44b38cfda67757f34b421215cc98d88a7"
+      "sha256": "1fae09fdbd0d0c95f70a3a5e41f74f2161ec812d3ad44c5972b063b7753abde4"
     },
     {
-      "bytes": 100,
+      "bytes": 3554,
       "path": "experiments/phase0_headroom/results/raw/certification/toolz__hist__012_reference_2.txt",
       "producer": "phase0_driver.py certification pytest probe",
-      "sha256": "4b7ce4c7618cbece8724f797ecf4175841832c2384cfd6cd5f0745d3a96108fc"
+      "sha256": "3d36a7c73ac2c04dadb517164216b9142baf2469904eeac073e10031c2ece0be"
     },
     {
-      "bytes": 2672,
+      "bytes": 1209,
       "path": "experiments/phase0_headroom/results/raw/certification/toolz__hist__013_noop.txt",
       "producer": "phase0_driver.py certification pytest probe",
-      "sha256": "f780c117926060667474b2fa960e43a5e7d3d0e565b67e8befe6666454450a41"
+      "sha256": "ed9dc6d8db2c8024fb70d010107f06ebc45fadcc97c0c4027376e9e5deb254b3"
     },
     {
-      "bytes": 676,
+      "bytes": 1219,
       "path": "experiments/phase0_headroom/results/raw/certification/toolz__hist__013_reference_1.txt",
       "producer": "phase0_driver.py certification pytest probe",
-      "sha256": "cb7314944552650a73f01b5cbd0654ff803edf22da9a0a525930bbcea4b8fcfc"
+      "sha256": "3cf08fd4243679b959dac1ca70d8acae17f1d417cbd450ebb5d3e595bbcd6e10"
     },
     {
-      "bytes": 676,
+      "bytes": 1219,
       "path": "experiments/phase0_headroom/results/raw/certification/toolz__hist__013_reference_2.txt",
       "producer": "phase0_driver.py certification pytest probe",
-      "sha256": "f70d6f79ccf29167a59264c9b63084dac989fd56bbb5597b5d9329a48e41404a"
+      "sha256": "ec5d7c64beb6c35535cfdb8ec8b9e8e0355212bfa353722f032dce2db8e44e13"
     },
     {
       "bytes": 99,
       "path": "experiments/phase0_headroom/results/raw/certification/toolz__hist__014_noop.txt",
       "producer": "phase0_driver.py certification pytest probe",
-      "sha256": "fbe2bcab5b9a060bc74be13d9a2f35c6c439f78e332c178aca1c27113b4d7f2b"
+      "sha256": "a53230d616ddb708c968136bda4af46c2faffd27117763965c8b45195c1e4c41"
     },
     {
       "bytes": 99,
       "path": "experiments/phase0_headroom/results/raw/certification/toolz__hist__014_reference_1.txt",
       "producer": "phase0_driver.py certification pytest probe",
-      "sha256": "fbe2bcab5b9a060bc74be13d9a2f35c6c439f78e332c178aca1c27113b4d7f2b"
+      "sha256": "3bd10bb798a3f22f0359a343bbc5c1729e4cd75581bdd90b7dcd130b64acff9b"
     },
     {
       "bytes": 99,
@@ -274,37 +274,37 @@
       "bytes": 261,
       "path": "experiments/phase0_headroom/results/raw/certification/toolz__hist__015_noop.txt",
       "producer": "phase0_driver.py certification pytest probe",
-      "sha256": "59b4653b03801c7cd359176121313058454e86686ed863ca6431c3b3154070e2"
+      "sha256": "5af0fc110ea5f345f51b7ecf712be81de0cd704a5e6ab2dcc757fc789bef7b19"
     },
     {
-      "bytes": 2464,
+      "bytes": 3651,
       "path": "experiments/phase0_headroom/results/raw/certification/toolz__hist__015_reference_1.txt",
       "producer": "phase0_driver.py certification pytest probe",
-      "sha256": "75bcea1d649d5362fd6485f9751881ae6a98c3b920e6857b18d6fa483b95ddc8"
+      "sha256": "64de49de3e70655b454ef36b65c0c77c43a1cd71867c7a82dd7c8f03aacb0c9d"
     },
     {
-      "bytes": 2464,
+      "bytes": 3651,
       "path": "experiments/phase0_headroom/results/raw/certification/toolz__hist__015_reference_2.txt",
       "producer": "phase0_driver.py certification pytest probe",
-      "sha256": "a43c5bb7f9dbe7e235169a098ae9a16c5fe7fcf94303c522b03ef4c54235c3c6"
+      "sha256": "1c2abb6c25b0ff917d4333f82123f04b33872caa76102581dbde60aebdedff76"
     },
     {
       "bytes": 1782,
       "path": "experiments/phase0_headroom/results/raw/certification/toolz__hist__016_noop.txt",
       "producer": "phase0_driver.py certification pytest probe",
-      "sha256": "183d54000b497839a99a8fd4da97d53044d13dbf64300897202516ced2791bfd"
+      "sha256": "05dc4f292469714fede9eb35e80b7a5252dcca1c482ffbf241170c86edaffba8"
     },
     {
       "bytes": 100,
       "path": "experiments/phase0_headroom/results/raw/certification/toolz__hist__016_reference_1.txt",
       "producer": "phase0_driver.py certification pytest probe",
-      "sha256": "82d7d42458a6ad6da8965b7a964ab3fd4177c6cf59225bf670f7ec41904ff69d"
+      "sha256": "9c8d8a80fc963fba670b97e8cb20ff3b068dc271f004ce462c5a0a7ce7d4ac64"
     },
     {
       "bytes": 100,
       "path": "experiments/phase0_headroom/results/raw/certification/toolz__hist__016_reference_2.txt",
       "producer": "phase0_driver.py certification pytest probe",
-      "sha256": "0a5360b856da05c4ced3b8f184d8051929350c13914be27377884a4ad38ec79e"
+      "sha256": "8a4359a4fa6768b8fd5c6bb087894a66862c2010d0b377cd699817e4a42b0daa"
     }
   ],
   "raw_root": "experiments/phase0_headroom/results/raw",

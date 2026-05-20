@@ -1,7 +1,7 @@
 stage,count
 candidate,16
 executable,16
-oracle_valid,9
+oracle_valid,6
 certified,0
-near_certified,9
-rejected,7
+near_certified,6
+rejected,10

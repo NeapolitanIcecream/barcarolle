@@ -144,6 +144,17 @@ def debug_artifact(root: Path, name: str, payload: dict[str, Any]) -> Path:
     return path
 
 
+def python_command(root: Path) -> list[str]:
+    uv = shutil.which("uv")
+    if uv:
+        return [uv, "run", "--project", str(root / EXP_REL), "python"]
+    return ["python3"]
+
+
+def python_command_display(root: Path) -> str:
+    return " ".join(python_command(root)).replace(str(root) + "/", "")
+
+
 def ensure_layout(root: Path) -> None:
     for rel in [
         "configs",
@@ -223,6 +234,7 @@ def initialize_preflight(root: Path) -> None:
         f"- Generated UTC: `{datetime.now(timezone.utc).replace(microsecond=0).isoformat()}`",
         f"- Shell: `{shell}`",
         f"- Python: `{platform.python_version()}` at `{sys.executable}`",
+        f"- Phase 0 Python command: `{python_command_display(root)}`",
         "- Disk:",
         "",
         "```text",
@@ -280,7 +292,10 @@ require_ledger_before_paid_call: true
 allow_parallel_paid_workers: false
 ledger_path: experiments/phase0_headroom/results/cost_ledger.jsonl
 """
-    execution_yaml = f"""workspace_root: experiments/phase0_headroom/workspaces
+    execution_yaml = f"""tooling_manager: uv
+phase0_project: experiments/phase0_headroom/pyproject.toml
+python_command: {json.dumps(python_command_display(root))}
+workspace_root: experiments/phase0_headroom/workspaces
 external_repos_root: experiments/phase0_headroom/external_repos
 raw_artifacts_root: experiments/phase0_headroom/results/raw
 cache_root: experiments/phase0_headroom/cache
@@ -297,8 +312,8 @@ primary_shell: {os.environ.get("SHELL", "")}
     report = """# Phase 0 Budget Plan
 
 The hard LLM API cap is USD 200. The soft stop is USD 160, and USD 180 is the
-stop-and-ask threshold. This run uses deterministic repository mining and local
-test execution only; no paid model call is approved by default.
+stop-and-ask threshold. This run uses `uv`-managed deterministic repository
+mining and local test execution only; no paid model call is approved by default.
 
 Before any paid batch, the worker must read
 `experiments/phase0_headroom/results/cost_ledger.jsonl`, compute cumulative
@@ -514,7 +529,7 @@ def count_candidates_since(anchors: list[dict[str, Any]], since: str) -> int:
 def write_repository_selection(root: Path, anchors: list[dict[str, Any]], clone_info: dict[str, Any]) -> None:
     repo = root / PRIMARY_REPO_LOCAL
     smoke = run_command(
-        ["python3", "-m", "pytest", "toolz/tests", "-q", "--ignore=toolz/tests/test_package.py"],
+        [*python_command(root), "-m", "pytest", "toolz/tests", "-q", "--ignore=toolz/tests/test_package.py"],
         repo,
         timeout=90,
         env={**os.environ, "PYTHONPATH": str(repo)},
@@ -541,8 +556,8 @@ def write_repository_selection(root: Path, anchors: list[dict[str, Any]], clone_
             "url": PRIMARY_REPO_URL,
             "language": "Python",
             "package_manager": "setuptools/pyproject",
-            "default_test_command": "PYTHONPATH=. python3 -m pytest <changed test files> -q",
-            "install_command": "not required for changed-test certification probe; full package metadata test requires editable install",
+            "default_test_command": f"PYTHONPATH=. {python_command_display(root)} -m pytest <changed test files> -q",
+            "install_command": "phase0 tooling dependencies are resolved by uv; target repo editable install is not required for changed-test certification probe",
             "median_test_runtime_estimate_seconds": 1,
             "external_service_risk": "low",
             "candidate_anchor_estimate": anchor_count,
@@ -558,7 +573,7 @@ def write_repository_selection(root: Path, anchors: list[dict[str, Any]], clone_
             "median_test_runtime_estimate_seconds": 5,
             "external_service_risk": "low",
             "candidate_anchor_estimate": "117 path-touching commits observed; code-plus-test count not fully certified",
-            "why_selected_or_rejected": f"backup only: current checkout requires Python >=3.10 while the default interpreter is {py_version}; using it would add interpreter provisioning risk to Phase 0.",
+            "why_selected_or_rejected": "backup only: observed supply is promising, but switching primary after toolz passed the local buildability and supply gates would expand Phase 0 scope.",
         },
         {
             "repo_id": "itsdangerous",
@@ -641,7 +656,7 @@ def write_repository_selection(root: Path, anchors: list[dict[str, Any]], clone_
         f"- Local path: `{clone_info['local_path']}`",
         f"- Remote: `{clone_info['remote']}`",
         f"- HEAD: `{clone_info['head']}`",
-        f"- Smoke command: `PYTHONPATH=. python3 -m pytest toolz/tests -q --ignore=toolz/tests/test_package.py`",
+        f"- Smoke command: `PYTHONPATH=. {python_command_display(root)} -m pytest toolz/tests -q --ignore=toolz/tests/test_package.py`",
         f"- Smoke exit code: `{smoke.returncode}`",
         f"- Smoke tail: `{' | '.join(smoke_tail)}`",
         f"- Code-plus-test history anchors since {HISTORY_SINCE}: `{anchor_count}`",
@@ -943,7 +958,7 @@ def certify_candidate(root: Path, candidate: dict[str, Any]) -> dict[str, Any]:
 
     env_base = {**os.environ, "PYTHONPATH": str(base_ws)}
     noop = run_command(
-        ["python3", "-m", "pytest", "-q", *test_files],
+        [*python_command(root), "-m", "pytest", "-q", *test_files],
         base_ws,
         timeout=CERTIFICATION_TIMEOUT_SECONDS,
         env=env_base,
@@ -972,7 +987,7 @@ def certify_candidate(root: Path, candidate: dict[str, Any]) -> dict[str, Any]:
     ref_runs = []
     for run_index in [1, 2]:
         ref = run_command(
-            ["python3", "-m", "pytest", "-q", *test_files],
+            [*python_command(root), "-m", "pytest", "-q", *test_files],
             ref_ws,
             timeout=CERTIFICATION_TIMEOUT_SECONDS,
             env=env_ref,

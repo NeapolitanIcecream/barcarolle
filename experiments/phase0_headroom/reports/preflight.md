@@ -1,15 +1,16 @@
 # Phase 0 Preflight
 
 - Branch: `codex/restart-benchmark-compiler`
-- HEAD: `8a94b7998938545c820ef5b0ceaf87273f4dad0b`
-- Generated UTC: `2026-05-20T07:30:41+00:00`
+- HEAD: `6a2d3a7893e69bde700aaad4e7e867c1947de459`
+- Generated UTC: `2026-05-20T07:39:13+00:00`
 - Shell: `/bin/zsh`
-- Python: `3.9.6` at `/Applications/Xcode.app/Contents/Developer/usr/bin/python3`
+- Python: `3.11.13` at `/Users/chenmohan/gits/barcarolle/experiments/phase0_headroom/.venv/bin/python3`
+- Phase 0 Python command: `/opt/homebrew/bin/uv run --project experiments/phase0_headroom python`
 - Disk:
 
 ```text
 Filesystem      Size    Used   Avail Capacity iused ifree %iused  Mounted on
-/dev/disk3s5   926Gi   551Gi   347Gi    62%     13M  3.6G    0%   /System/Volumes/Data
+/dev/disk3s5   926Gi   552Gi   347Gi    62%     13M  3.6G    0%   /System/Volumes/Data
 ```
 
 ## Ignore Checks
@@ -22,7 +23,7 @@ Filesystem      Size    Used   Avail Capacity iused ifree %iused  Mounted on
 
 ## Archive Reuse Inventory
 
-- Archived core-narrative files seen at max depth 3: `6228`
+- Archived core-narrative files seen at max depth 3: `6298`
 - Active `experiments/core_narrative` tracked files: `0`
 - Reuse policy: reference archived Click manifests, release metadata, verifier discipline, and score taxonomy; do not copy raw outputs.
 

@@ -14,7 +14,7 @@ Decision: `repair_source_adapter`.
 - Distribution mismatch rows with absolute gap >= 0.15: `12`.
 - Certification attempted tasks: `16`.
 - Certified benchmark-grade tasks: `0`.
-- Near-certified diagnostic tasks: `9`.
+- Near-certified diagnostic tasks: `6`.
 - Mini release status: `diagnostic_only`.
 - Headroom matrix: `blocked_underpowered`; no ACUT runs started.
 

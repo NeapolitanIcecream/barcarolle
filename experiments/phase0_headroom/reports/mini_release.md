@@ -3,7 +3,7 @@
 Release status: `diagnostic_only`.
 
 - Certified tasks: `0`.
-- Near-certified tasks available for diagnosis: `9`.
+- Near-certified tasks available for diagnosis: `6`.
 - `B_real` diagnostic tasks: `4`.
 - `W_real` diagnostic tasks: `4`.
 - `G_mini` archived Click comparator tasks: `4`.

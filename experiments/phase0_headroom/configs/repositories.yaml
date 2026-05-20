@@ -13,12 +13,12 @@ repositories:
     url: "https://github.com/pytoolz/toolz.git"
     language: "Python"
     package_manager: "setuptools/pyproject"
-    default_test_command: "PYTHONPATH=. python3 -m pytest <changed test files> -q"
-    install_command: "not required for changed-test certification probe; full package metadata test requires editable install"
+    default_test_command: "PYTHONPATH=. /opt/homebrew/bin/uv run --project experiments/phase0_headroom python -m pytest <changed test files> -q"
+    install_command: "phase0 tooling dependencies are resolved by uv; target repo editable install is not required for changed-test certification probe"
     median_test_runtime_estimate_seconds: 1
     external_service_risk: "low"
     candidate_anchor_estimate: 50
-    why_selected_or_rejected: "selected primary: supports local Python 3.9.6, has 50 code-plus-test history anchors since 2016-01-01, and smoke command exited 0."
+    why_selected_or_rejected: "selected primary: supports local Python 3.11.13, has 50 code-plus-test history anchors since 2016-01-01, and smoke command exited 0."
   - repo_id: humanize
     url: "https://github.com/python-humanize/humanize.git"
     language: "Python"
@@ -28,7 +28,7 @@ repositories:
     median_test_runtime_estimate_seconds: 5
     external_service_risk: "low"
     candidate_anchor_estimate: "117 path-touching commits observed; code-plus-test count not fully certified"
-    why_selected_or_rejected: "backup only: current checkout requires Python >=3.10 while the default interpreter is 3.9.6; using it would add interpreter provisioning risk to Phase 0."
+    why_selected_or_rejected: "backup only: observed supply is promising, but switching primary after toolz passed the local buildability and supply gates would expand Phase 0 scope."
   - repo_id: itsdangerous
     url: "https://github.com/pallets/itsdangerous.git"
     language: "Python"

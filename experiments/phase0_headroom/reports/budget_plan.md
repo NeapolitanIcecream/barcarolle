@@ -1,8 +1,8 @@
 # Phase 0 Budget Plan
 
 The hard LLM API cap is USD 200. The soft stop is USD 160, and USD 180 is the
-stop-and-ask threshold. This run uses deterministic repository mining and local
-test execution only; no paid model call is approved by default.
+stop-and-ask threshold. This run uses `uv`-managed deterministic repository
+mining and local test execution only; no paid model call is approved by default.
 
 Before any paid batch, the worker must read
 `experiments/phase0_headroom/results/cost_ledger.jsonl`, compute cumulative
