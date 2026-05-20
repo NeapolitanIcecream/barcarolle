@@ -82,26 +82,57 @@ tuning feedback and regression coverage rather than predictive validity.
 
 ## Experiment 0.3: Task Supply Funnel
 
-For each candidate repository, build a funnel:
+For each candidate repository, build a supply funnel followed by certification
+gates. The funnel should distinguish "can be made executable" from
+"benchmark-grade".
 
 ```text
 candidate anchors
 -> replayable checkouts
 -> environment build success
 -> oracle extractable
--> no-op fail / reference pass
--> low-flakiness tasks
+-> oracle validity checks
+-> stability and leakage checks
+-> scope and labeling checks
 -> benchmark-grade tasks
 ```
 
-Record rejection reasons, manual review minutes, and artifact sizes.
+Required certification gates:
+
+- no-op fail;
+- reference pass;
+- known-bad fail, using the original failing change, a reverted reference patch,
+  or a small negative-control mutation where available;
+- low flakiness under repeated runs;
+- ambiguity review for underspecified or multi-solution tasks;
+- solution-leakage review across issue text, PR comments, docs, tests, and
+  generated statements;
+- scope-clarity review, excluding tasks that bundle unrelated changes;
+- cost boundedness for setup, agent run, and verifier runtime;
+- feature-taxonomy coverage for module, task type, difficulty proxy, oracle
+  type, dependency radius, and failure category.
+
+Record rejection reasons at the first failing gate and preserve secondary
+warnings when useful. Reports must separate:
+
+- `candidate`: sourced but not replayed;
+- `executable`: checkout, build, and oracle are available;
+- `oracle_valid`: no-op/reference/known-bad checks pass;
+- `certified`: all required gates pass;
+- `near_certified`: one or more review gates are missing, weak, or manual-only.
+
+Also record manual review minutes, rerun counts, runtime/cost summaries, and
+artifact sizes.
 
 Pass condition:
 
-At least one repository can produce enough certified or near-certified tasks for
-a 20-50 task MVP release, or the funnel clearly identifies which source adapter
-or minimal generator capability must be added next. Generator success is judged
-by certified yield and task quality, not by novelty as a standalone task factory.
+At least one repository can produce enough `certified` tasks for a 20-50 task
+MVP release, or the funnel clearly identifies which source adapter, generator
+capability, oracle repair, or review gate must be improved next. `near_certified`
+tasks may justify continuing the project, but they do not count as
+benchmark-grade release tasks until the missing gates are closed. Generator
+success is judged by certified yield and task quality, not by novelty as a
+standalone task factory.
 
 ## Repository Selection
 
@@ -152,7 +183,8 @@ Proceed to Phase 1 only when Phase 0 produces:
 
 - at least one target-profile draft with measurable distribution mismatch;
 - at least one headroom analysis comparing same-repo and general predictors;
-- one task-supply funnel with benchmark-grade yield estimates;
+- one task-supply funnel with gate-level rejection reasons and certified
+  benchmark-grade yield estimates;
 - a decision memo choosing whether to pursue predictive validity, tuning
   feedback, or regression-benchmark positioning, and noting whether downstream
   license/admission productization is plausible after the evidence improves.
