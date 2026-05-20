@@ -1,5 +1,12 @@
 schema_version: barcarolle.phase0_headroom_matrix_config.v1
 release_id: toolz-phase0-mini-source-adapter-candidate
+status: historical_codex_cli_default_disabled
+active_for_paid_runs: false
+canonical_successor: experiments/phase0_headroom/configs/measured_endpoint_matrix.yaml
+notes: >
+  This file records the earlier Codex CLI matrix shape for historical continuity.
+  New paid Phase 0 runs must use the measured endpoint path backed by
+  LLM_BASE_URL plus LLM_API_KEY and the measured cost ledger.
 default_matrix:
   acuts:
     - id: codex_cli_gpt_5_3_codex_spark

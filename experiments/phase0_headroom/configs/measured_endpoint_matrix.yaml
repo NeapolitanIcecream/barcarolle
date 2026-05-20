@@ -1,0 +1,61 @@
+schema_version: barcarolle.measured_endpoint_matrix_config.v1
+release_id: toolz-phase0-mini-source-adapter-candidate
+status: active_measured_endpoint_calibration
+endpoint_config: experiments/phase0_headroom/configs/endpoint.yaml
+model_selection: experiments/phase0_headroom/configs/model_selection.yaml
+cost_ledger: experiments/phase0_headroom/results/measured_cost_ledger.jsonl
+cost_summary: experiments/phase0_headroom/results/measured_cost_summary.json
+output_contract: unified_diff_patch_in_fenced_or_plain_text
+runner: experiments/phase0_headroom/tools/measured_endpoint_run.py
+active_acut:
+  id: gpt-5.4-mini
+  model_or_agent_name: gpt-5.4-mini
+  request_api: /v1/chat/completions
+  usage_required: true
+  subscription_fallback: disabled
+overnight_budget:
+  soft_cap_usd: 25
+  hard_cap_usd: 60
+  stop_before_batch_projected_cumulative_usd: 40
+current_calibration:
+  status: measured_endpoint_calibration_complete
+  paid_model_calls_started: 4
+  estimated_cost_usd: 0.11133
+  scoreable_cell_count: 2
+  terminal_status_counts:
+    invalid_output: 2
+    verified_fail: 2
+  scheduled_task_ids:
+    - toolz__hist__001
+    - toolz__hist__003
+    - toolz__hist__004
+    - toolz__hist__010
+splits:
+  B_real:
+    certified_task_ids:
+      - toolz__hist__001
+      - toolz__hist__002
+      - toolz__hist__003
+    measured_calibration_task_ids:
+      - toolz__hist__001
+      - toolz__hist__003
+  W_real:
+    certified_task_ids:
+      - toolz__hist__004
+      - toolz__hist__010
+      - toolz__hist__016
+    measured_calibration_task_ids:
+      - toolz__hist__004
+      - toolz__hist__010
+  G_mini:
+    policy: include_only_if_scoreable_same_protocol
+    protocol_status: blocked_metadata_only
+    scoreable_same_protocol_count: 0
+    archived_metadata_task_ids:
+      - click__rbench__001
+      - click__rbench__002
+      - click__rbench__003
+      - click__rbench__004
+claim_scope: underpowered_directional_diagnostic
+scale_up_approved: false
+next_gate: repair_generic_comparator_first
