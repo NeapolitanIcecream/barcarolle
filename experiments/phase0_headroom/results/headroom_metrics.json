@@ -1,9 +1,9 @@
 {
   "binomial_negative_log_likelihood": null,
   "brier_score": null,
-  "directional_diagnostics": "not computed; certification blocker must be repaired before spending ACUT budget",
+  "directional_diagnostics": "not computed; follow-up repaired certification only and did not run ACUTs",
   "mae": null,
   "rmse": null,
   "schema_version": "barcarolle.phase0_headroom_metrics.v1",
-  "status": "underpowered_blocked"
+  "status": "not_run_ready_after_source_adapter_repair"
 }

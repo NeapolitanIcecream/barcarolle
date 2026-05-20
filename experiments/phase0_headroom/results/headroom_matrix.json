@@ -1,17 +1,29 @@
 {
-  "blocker": "mini release is diagnostic only because certified task count is below 6",
   "cumulative_estimated_cost_usd": 0.0,
-  "missing_cells": [
-    "B_real and W_real have near-certified diagnostic tasks only",
-    "no ACUT task-solving runs were started",
-    "G_mini uses archived Click metadata and has no current same-protocol ACUT cells"
-  ],
+  "next_matrix": {
+    "B_real": [
+      "toolz__hist__001",
+      "toolz__hist__002",
+      "toolz__hist__003"
+    ],
+    "G_mini": [
+      "click__rbench__001",
+      "click__rbench__002",
+      "click__rbench__003",
+      "click__rbench__004"
+    ],
+    "W_real": [
+      "toolz__hist__004",
+      "toolz__hist__010",
+      "toolz__hist__016"
+    ],
+    "acuts": [
+      "one_cheap_acut"
+    ],
+    "projected_max_cost_usd": 60
+  },
+  "notes": "Source-adapter repair removed the certification blocker; no ACUT cells were run in this follow-up.",
   "paid_model_calls_started": 0,
-  "requested_comparisons": [
-    "G_mini -> W_real",
-    "B_real -> W_real",
-    "G_mini + B_real -> W_real"
-  ],
   "schema_version": "barcarolle.phase0_headroom_matrix.v1",
-  "status": "blocked"
+  "status": "ready_not_run_after_source_adapter_repair"
 }
