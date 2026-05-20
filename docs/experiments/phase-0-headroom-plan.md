@@ -2,7 +2,10 @@
 
 Status: restart draft, 2026-05-20.
 
-Operational companion: [Phase 0 runbook](phase-0-runbook.md).
+Operational companions:
+
+- [Phase 0 runbook](phase-0-runbook.md)
+- [Phase 0 source-adapter follow-up runbook](phase-0-source-adapter-followup-runbook.md)
 
 ## Goal
 

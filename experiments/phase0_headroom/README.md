@@ -9,7 +9,9 @@ uv run --project experiments/phase0_headroom python experiments/phase0_headroom/
 uv run --project experiments/phase0_headroom pytest experiments/phase0_headroom/tools -q
 ```
 
-The operating plan is `docs/experiments/phase-0-runbook.md`.
+The operating plan is `docs/experiments/phase-0-runbook.md`. If Phase 0 stops
+at `repair_source_adapter`, continue from
+`docs/experiments/phase-0-source-adapter-followup-runbook.md`.
 
 Phase 0 asks whether repo-specific benchmark signal exists before building a
 larger benchmark compiler:
