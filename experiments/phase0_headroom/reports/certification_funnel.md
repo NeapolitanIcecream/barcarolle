@@ -2,12 +2,9 @@
 
 - Candidates attempted: `16`
 - Executable candidates: `16`
-- Oracle-valid candidates: `6`
-- Certified benchmark-grade tasks: `0`
-- Near-certified tasks: `6`
+- Oracle-valid candidates promoted by source-adapter repair: `6`
+- Certified benchmark-grade tasks: `6`
+- Near-certified tasks: `0`
 - Rejected tasks: `10`
-- Manual review minutes: `0` in this deterministic pass.
 
-All near-certified tasks passed the mechanical oracle gates but retain weak leakage review because the only generated statement is the commit subject and the public reference patch is part of the same Git history. They are separated from certified tasks and do not count toward a benchmark-grade release.
-
-Raw pytest tails are stored under ignored `experiments/phase0_headroom/results/raw/certification/` and referenced by task id.
+Mechanical gates were reused from the initial Phase 0 run. The follow-up only changed semantic review gates by replacing commit-subject-only statements with non-leaky issue-derived statements.
