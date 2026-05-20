@@ -1,0 +1,10 @@
+max_total_usd: 200
+soft_stop_usd: 160
+stop_and_ask_usd: 180
+reserve_usd: 20
+paid_agent_runs_max_usd: 120
+optional_llm_review_max_usd: 40
+reporting_llm_max_usd: 20
+require_ledger_before_paid_call: true
+allow_parallel_paid_workers: false
+ledger_path: experiments/phase0_headroom/results/cost_ledger.jsonl

@@ -1,0 +1,167 @@
+{
+  "benchmark_grade": false,
+  "certified_task_count": 0,
+  "diagnostic_reason": "fewer than 6 certified tasks; near-certified tasks are listed for diagnosis only",
+  "generated_at": "2026-05-20T07:31:07+00:00",
+  "near_certified_task_count": 9,
+  "release_id": "toolz-phase0-mini-diagnostic",
+  "release_status": "diagnostic_only",
+  "repo_id": "toolz",
+  "schema_version": "barcarolle.phase0_mini_release.v1",
+  "splits": {
+    "B_real": [
+      "toolz__hist__001",
+      "toolz__hist__002",
+      "toolz__hist__003",
+      "toolz__hist__004"
+    ],
+    "G_mini": [
+      "click__rbench__001",
+      "click__rbench__002",
+      "click__rbench__003",
+      "click__rbench__004"
+    ],
+    "W_real": [
+      "toolz__hist__010",
+      "toolz__hist__012",
+      "toolz__hist__013",
+      "toolz__hist__016"
+    ]
+  },
+  "tasks": [
+    {
+      "certification_status": "near_certified",
+      "counts_toward_benchmark_grade": false,
+      "module_or_package": [
+        "functoolz"
+      ],
+      "split": "B_real",
+      "task_id": "toolz__hist__001",
+      "task_type_proxy": "feature_or_api_extension",
+      "weight": 1.0
+    },
+    {
+      "certification_status": "near_certified",
+      "counts_toward_benchmark_grade": false,
+      "module_or_package": [
+        "functoolz"
+      ],
+      "split": "B_real",
+      "task_id": "toolz__hist__002",
+      "task_type_proxy": "feature_or_api_extension",
+      "weight": 1.0
+    },
+    {
+      "certification_status": "near_certified",
+      "counts_toward_benchmark_grade": false,
+      "module_or_package": [
+        "functoolz"
+      ],
+      "split": "B_real",
+      "task_id": "toolz__hist__003",
+      "task_type_proxy": "behavior_or_maintenance",
+      "weight": 1.0
+    },
+    {
+      "certification_status": "near_certified",
+      "counts_toward_benchmark_grade": false,
+      "module_or_package": [
+        "functoolz"
+      ],
+      "split": "B_real",
+      "task_id": "toolz__hist__004",
+      "task_type_proxy": "feature_or_api_extension",
+      "weight": 1.0
+    },
+    {
+      "certification_status": "near_certified",
+      "counts_toward_benchmark_grade": false,
+      "module_or_package": [
+        "functoolz"
+      ],
+      "split": "W_real",
+      "task_id": "toolz__hist__010",
+      "task_type_proxy": "feature_or_api_extension",
+      "weight": 1.0
+    },
+    {
+      "certification_status": "near_certified",
+      "counts_toward_benchmark_grade": false,
+      "module_or_package": [
+        "_signatures"
+      ],
+      "split": "W_real",
+      "task_id": "toolz__hist__012",
+      "task_type_proxy": "feature_or_api_extension",
+      "weight": 1.0
+    },
+    {
+      "certification_status": "near_certified",
+      "counts_toward_benchmark_grade": false,
+      "module_or_package": [
+        "dicttoolz"
+      ],
+      "split": "W_real",
+      "task_id": "toolz__hist__013",
+      "task_type_proxy": "bug_or_behavior_fix",
+      "weight": 1.0
+    },
+    {
+      "certification_status": "near_certified",
+      "counts_toward_benchmark_grade": false,
+      "module_or_package": [
+        "itertoolz"
+      ],
+      "split": "W_real",
+      "task_id": "toolz__hist__016",
+      "task_type_proxy": "bug_or_behavior_fix",
+      "weight": 1.0
+    },
+    {
+      "certification_status": "archived_click_release_metadata",
+      "counts_toward_benchmark_grade": false,
+      "module_or_package": [
+        "core"
+      ],
+      "split": "G_mini",
+      "task_id": "click__rbench__001",
+      "task_type_proxy": "behavior_or_maintenance",
+      "weight": 1.0
+    },
+    {
+      "certification_status": "archived_click_release_metadata",
+      "counts_toward_benchmark_grade": false,
+      "module_or_package": [
+        "missing"
+      ],
+      "split": "G_mini",
+      "task_id": "click__rbench__002",
+      "task_type_proxy": "behavior_or_maintenance",
+      "weight": 1.0
+    },
+    {
+      "certification_status": "archived_click_release_metadata",
+      "counts_toward_benchmark_grade": false,
+      "module_or_package": [
+        "core",
+        "termui"
+      ],
+      "split": "G_mini",
+      "task_id": "click__rbench__003",
+      "task_type_proxy": "behavior_or_maintenance",
+      "weight": 1.0
+    },
+    {
+      "certification_status": "archived_click_release_metadata",
+      "counts_toward_benchmark_grade": false,
+      "module_or_package": [
+        "missing"
+      ],
+      "split": "G_mini",
+      "task_id": "click__rbench__004",
+      "task_type_proxy": "behavior_or_maintenance",
+      "weight": 1.0
+    }
+  ],
+  "weighting": "unweighted; no benchmark-grade stratified weights because certified yield is below threshold"
+}

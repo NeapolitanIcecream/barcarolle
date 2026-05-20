@@ -1,0 +1,17 @@
+{
+  "blocker": "mini release is diagnostic only because certified task count is below 6",
+  "cumulative_estimated_cost_usd": 0.0,
+  "missing_cells": [
+    "B_real and W_real have near-certified diagnostic tasks only",
+    "no ACUT task-solving runs were started",
+    "G_mini uses archived Click metadata and has no current same-protocol ACUT cells"
+  ],
+  "paid_model_calls_started": 0,
+  "requested_comparisons": [
+    "G_mini -> W_real",
+    "B_real -> W_real",
+    "G_mini + B_real -> W_real"
+  ],
+  "schema_version": "barcarolle.phase0_headroom_matrix.v1",
+  "status": "blocked"
+}
