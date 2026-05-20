@@ -23,6 +23,8 @@ from typing import Any
 
 EXP_REL = Path("experiments/phase0_headroom")
 TOOLZ_REPO_REL = EXP_REL / "external_repos" / "toolz"
+CLICK_REPO_REL = Path("archive/2026-05-agent-license-reset/experiments/core_narrative/external_repos/click")
+GENERIC_COMPARATOR_REL = EXP_REL / "generic_comparator" / "click_r0"
 RAW_REL = EXP_REL / "results" / "raw" / "measured_endpoint"
 WORKSPACE_REL = EXP_REL / "workspaces" / "measured_endpoint"
 PRIMARY_MODEL = "gpt-5.4-mini"
@@ -285,6 +287,7 @@ def ledger_record(
 
 
 def summarize_cost(rows: list[dict[str, Any]]) -> dict[str, Any]:
+    call_rows = [row for row in rows if row.get("event") != "projected_acut_batch"]
     totals = {
         "input_tokens": 0,
         "cached_input_tokens": 0,
@@ -294,7 +297,7 @@ def summarize_cost(rows: list[dict[str, Any]]) -> dict[str, Any]:
         "usage_observed_count": 0,
     }
     latencies: list[float] = []
-    for row in rows:
+    for row in call_rows:
         for key in ["input_tokens", "cached_input_tokens", "output_tokens", "reasoning_output_tokens"]:
             totals[key] += int(row.get(key) or 0)
         totals["estimated_cost_usd"] += float(row.get("estimated_cost_usd") or 0.0)
@@ -308,9 +311,9 @@ def summarize_cost(rows: list[dict[str, Any]]) -> dict[str, Any]:
     return {
         "schema_version": "barcarolle.measured_cost_summary.v1",
         "generated_at": iso_now(),
-        "call_count": len(rows),
+        "call_count": len(call_rows),
         "usage_observed_count": totals["usage_observed_count"],
-        "usage_observed_rate": None if not rows else round(totals["usage_observed_count"] / len(rows), 4),
+        "usage_observed_rate": None if not call_rows else round(totals["usage_observed_count"] / len(call_rows), 4),
         "input_tokens": totals["input_tokens"],
         "cached_input_tokens": totals["cached_input_tokens"],
         "output_tokens": totals["output_tokens"],
@@ -485,9 +488,12 @@ def run_calibration_task(
     task: dict[str, Any],
     statement: dict[str, Any],
     split: str,
+    *,
+    run_label: str = "calibration1",
+    ledger_phase: str = "calibration_batch",
 ) -> tuple[dict[str, Any], dict[str, Any], dict[str, Any]]:
     repo = root / TOOLZ_REPO_REL
-    run_id = f"measured_{model.replace('/', '_')}__{task['task_id']}__calibration1"
+    run_id = f"measured_{model.replace('/', '_')}__{task['task_id']}__{run_label}"
     solver_ws = root / WORKSPACE_REL / "calibration" / run_id / "solver"
     verify_ws = root / WORKSPACE_REL / "calibration" / run_id / "verify"
     raw_dir = root / RAW_REL / "calibration" / run_id
@@ -521,7 +527,7 @@ def run_calibration_task(
     ledger = ledger_record(
         endpoint=endpoint,
         run_id=run_id,
-        phase="calibration_batch",
+        phase=ledger_phase,
         event="endpoint_acut_task",
         model=model,
         request_api="/v1/chat/completions",
@@ -577,6 +583,470 @@ def run_calibration_task(
         }
     )
     return submission, verifier, ledger
+
+
+def load_generic_manifests(root: Path, protocol: dict[str, Any]) -> list[dict[str, Any]]:
+    manifests: list[dict[str, Any]] = []
+    for row in protocol.get("tasks", []):
+        if not row.get("same_protocol_scoreable"):
+            continue
+        manifest_path = row.get("active_manifest")
+        if not isinstance(manifest_path, str) or not manifest_path:
+            continue
+        manifest = read_json(root / manifest_path)
+        manifests.append(manifest)
+    return manifests
+
+
+def generic_comparator_prompt(manifest: dict[str, Any], workspace: Path) -> str:
+    file_blocks = []
+    for path in manifest.get("prompt_code_files", []):
+        content = (workspace / path).read_text(encoding="utf-8")
+        file_blocks.append(f"### {path}\n```python\n{content}\n```")
+    expected_area = "\n".join(f"- {item}" for item in manifest.get("scope_review", {}).get("expected_touched_area", []))
+    return "\n\n".join(
+        [
+            "You are a patch-generation coding agent. Produce a minimal unified diff only.",
+            "Do not edit tests. Do not mention or use hidden tests. Do not use network resources.",
+            "Return output beginning with diff --git and no prose.",
+            "",
+            "Task statement:",
+            str(manifest["solver_facing_statement"]),
+            "",
+            "Scope boundary:",
+            expected_area,
+            "",
+            "Repository files at the base commit:",
+            *file_blocks,
+        ]
+    )
+
+
+def setup_click_verifier_environment(workspace: Path, raw_dir: Path) -> tuple[bool, dict[str, str]]:
+    raw_dir.mkdir(parents=True, exist_ok=True)
+    venv_result = run_command(["python3", "-m", "venv", ".venv"], workspace, timeout=180)
+    venv_stdout = raw_dir / "venv_stdout.txt"
+    venv_stderr = raw_dir / "venv_stderr.txt"
+    venv_stdout.write_text(venv_result.stdout, encoding="utf-8")
+    venv_stderr.write_text(venv_result.stderr, encoding="utf-8")
+    if venv_result.returncode != 0:
+        return False, {"setup_error": "venv_create_failed", "stdout": str(venv_stdout), "stderr": str(venv_stderr)}
+
+    install_result = run_command([".venv/bin/python", "-m", "pip", "install", "-q", "-e", ".", "pytest"], workspace, timeout=300)
+    install_stdout = raw_dir / "venv_install_stdout.txt"
+    install_stderr = raw_dir / "venv_install_stderr.txt"
+    install_stdout.write_text(install_result.stdout, encoding="utf-8")
+    install_stderr.write_text(install_result.stderr, encoding="utf-8")
+    if install_result.returncode != 0:
+        return False, {"setup_error": "venv_install_failed", "stdout": str(install_stdout), "stderr": str(install_stderr)}
+    return True, {
+        "venv_stdout": str(venv_stdout),
+        "venv_stderr": str(venv_stderr),
+        "install_stdout": str(install_stdout),
+        "install_stderr": str(install_stderr),
+    }
+
+
+def run_generic_comparator_task(
+    endpoint: Endpoint,
+    root: Path,
+    model: str,
+    manifest: dict[str, Any],
+) -> tuple[dict[str, Any], dict[str, Any], dict[str, Any]]:
+    repo = root / CLICK_REPO_REL
+    task_id = manifest["task_id"]
+    run_id = f"measured_{model.replace('/', '_')}__{task_id}__matrix1"
+    solver_ws = root / WORKSPACE_REL / "matrix" / run_id / "solver"
+    verify_ws = root / WORKSPACE_REL / "matrix" / run_id / "verify"
+    raw_dir = root / RAW_REL / "matrix" / run_id
+    archive_tree(repo, manifest["base_commit"], solver_ws)
+    initialize_workspace_git(solver_ws)
+    prompt = generic_comparator_prompt(manifest, solver_ws)
+    (raw_dir / "prompt.txt").parent.mkdir(parents=True, exist_ok=True)
+    (raw_dir / "prompt.txt").write_text(prompt, encoding="utf-8")
+    response, meta = chat_completion(endpoint, model, [{"role": "user", "content": prompt}], 1800, raw_dir / "response.json")
+    content = (response.get("choices") or [{}])[0].get("message", {}).get("content", "")
+    patch_text = extract_unified_diff(content)
+    patch_path = raw_dir / "submission.patch"
+    patch_path.write_text(patch_text, encoding="utf-8")
+    patch_nonempty = bool(patch_text.strip())
+    submission = {
+        "schema_version": "barcarolle.measured_endpoint_submission.v1",
+        "run_id": run_id,
+        "generated_at": iso_now(),
+        "model": model,
+        "task_id": task_id,
+        "split": "G_mini",
+        "status": "submitted" if meta["status"] == "success" and patch_nonempty else "invalid_output",
+        "http_status": meta["http_status"],
+        "patch_sha256": sha256_file(patch_path),
+        "raw_artifacts": {
+            "prompt": str((raw_dir / "prompt.txt").relative_to(root)),
+            "response": str((raw_dir / "response.json").relative_to(root)),
+            "patch": str(patch_path.relative_to(root)),
+        },
+    }
+    ledger = ledger_record(
+        endpoint=endpoint,
+        run_id=run_id,
+        phase="expanded_matrix",
+        event="endpoint_acut_task",
+        model=model,
+        request_api="/v1/chat/completions",
+        status="success" if meta["status"] == "success" else "failed",
+        latency_seconds=meta["latency"],
+        payload=response,
+        artifact_ref=str((raw_dir / "response.json").relative_to(root)),
+    )
+    verifier = {
+        "schema_version": "barcarolle.measured_endpoint_verifier.v1",
+        "run_id": run_id,
+        "generated_at": iso_now(),
+        "model": model,
+        "task_id": task_id,
+        "split": "G_mini",
+        "status": "invalid_output",
+        "verifier_exit_code": None,
+        "harness_error": None,
+    }
+    if submission["status"] != "submitted":
+        return submission, verifier, ledger
+
+    archive_tree(repo, manifest["base_commit"], verify_ws)
+    initialize_workspace_git(verify_ws)
+    applied, apply_method, apply_error = apply_submission_patch(verify_ws, patch_path)
+    verifier["patch_apply_method"] = apply_method
+    if not applied:
+        verifier["harness_error"] = "submission_patch_did_not_apply"
+        verifier["patch_apply_error_tail"] = apply_error
+        return submission, verifier, ledger
+    edited_tests = [path for path in changed_paths(verify_ws) if "/tests/" in path or path.startswith("tests/")]
+    if edited_tests:
+        verifier["harness_error"] = "submission_edited_tests"
+        verifier["edited_tests"] = edited_tests
+        return submission, verifier, ledger
+    setup_ok, setup_artifacts = setup_click_verifier_environment(verify_ws, raw_dir)
+    if not setup_ok:
+        verifier["status"] = "harness_error"
+        verifier["harness_error"] = setup_artifacts["setup_error"]
+        verifier["raw_artifacts"] = {key: str(Path(value).relative_to(root)) for key, value in setup_artifacts.items() if key != "setup_error"}
+        return submission, verifier, ledger
+    stdout_path = raw_dir / "verifier_stdout.txt"
+    stderr_path = raw_dir / "verifier_stderr.txt"
+    package_dir = root / GENERIC_COMPARATOR_REL / task_id
+    result = run_command([str((package_dir / manifest["oracle_command"]).resolve())], verify_ws, timeout=int(manifest["cost_bound"]["expected_timeout_seconds"]) + 120)
+    stdout_path.write_text(result.stdout, encoding="utf-8")
+    stderr_path.write_text(result.stderr, encoding="utf-8")
+    raw_artifacts = {
+        "stdout": str(stdout_path.relative_to(root)),
+        "stderr": str(stderr_path.relative_to(root)),
+    }
+    raw_artifacts.update({key: str(Path(value).relative_to(root)) for key, value in setup_artifacts.items()})
+    verifier.update(
+        {
+            "status": "timeout" if result.timed_out else "verified_pass" if result.returncode == 0 else "verified_fail",
+            "verifier_exit_code": result.returncode,
+            "duration_seconds": round(result.duration_seconds, 3),
+            "raw_artifacts": raw_artifacts,
+        }
+    )
+    return submission, verifier, ledger
+
+
+def expanded_matrix_plan(toolz_task_ids: list[str], existing_submissions: list[dict[str, Any]], generic: dict[str, Any]) -> dict[str, list[str]]:
+    existing_task_ids = {row["task_id"] for row in existing_submissions}
+    missing_toolz = [task_id for task_id in toolz_task_ids if task_id not in existing_task_ids]
+    generic_task_ids = [row["task_id"] for row in generic.get("tasks", []) if row.get("same_protocol_scoreable") and row["task_id"] not in existing_task_ids]
+    return {
+        "missing_toolz_task_ids": missing_toolz,
+        "generic_task_ids": generic_task_ids,
+        "scheduled_task_ids": [*missing_toolz, *generic_task_ids],
+    }
+
+
+def projected_batch_row(endpoint: Endpoint, model: str, plan: dict[str, list[str]], prior_ledger_rows: list[dict[str, Any]]) -> dict[str, Any]:
+    prior_task_costs = [
+        float(row["estimated_cost_usd"])
+        for row in prior_ledger_rows
+        if row.get("event") == "endpoint_acut_task" and row.get("estimated_cost_usd") is not None
+    ]
+    mean_task_cost = (sum(prior_task_costs) / len(prior_task_costs)) if prior_task_costs else 0.05
+    projected_cost = round(mean_task_cost * len(plan["scheduled_task_ids"]), 8)
+    return {
+        "schema_version": "barcarolle.projected_cost.v1",
+        "run_id": "overnight_matrix_a_projected_batch",
+        "timestamp": iso_now(),
+        "phase": "expanded_matrix",
+        "event": "projected_acut_batch",
+        "endpoint_host_hash": endpoint.host_hash,
+        "model": model,
+        "scheduled_task_ids": plan["scheduled_task_ids"],
+        "missing_toolz_task_ids": plan["missing_toolz_task_ids"],
+        "generic_task_ids": plan["generic_task_ids"],
+        "prior_mean_endpoint_task_cost_usd": round(mean_task_cost, 8),
+        "projected_batch_cost_usd": projected_cost,
+        "budget_soft_cap_usd": 25,
+        "budget_hard_cap_usd": 60,
+        "projected_cumulative_spend_usd": round(projected_cost + sum(float(row.get("estimated_cost_usd") or 0.0) for row in prior_ledger_rows), 8),
+    }
+
+
+def release_toolz_task_ids(root: Path) -> list[str]:
+    release = read_json(root / EXP_REL / "releases" / "toolz_phase0_mini_release.json")
+    return [*release["splits"].get("B_real", []), *release["splits"].get("W_real", [])]
+
+
+def expanded_cost_realignment_payload(summary: dict[str, Any], rows: list[dict[str, Any]], generic: dict[str, Any]) -> dict[str, Any]:
+    scoreable = sum(1 for row in rows if row["scoreable_cell"] is True)
+    submitted = len(rows)
+    estimated = float(summary.get("estimated_cost_usd") or 0.0)
+    generic_scoreable = sum(1 for row in rows if row["split"] == "G_mini" and row["scoreable_cell"] is True)
+    return {
+        "schema_version": "barcarolle.cost_realignment.v1",
+        "generated_at": iso_now(),
+        "decision": "matrix_a_complete_stay_diagnostic",
+        "calibration_estimated_cost_usd": estimated,
+        "scoreable_same_repo_cells": sum(1 for row in rows if row["split"] in {"B_real", "W_real"} and row["scoreable_cell"] is True),
+        "scoreable_g_mini_cells": generic_scoreable,
+        "cost_per_submitted_cell_usd": None if submitted == 0 else round(estimated / submitted, 8),
+        "cost_per_scoreable_cell_usd": None if scoreable == 0 else round(estimated / scoreable, 8),
+        "usage_observed_rate": summary.get("usage_observed_rate"),
+        "generic_comparator_status": generic["status"],
+        "projected_cumulative_spend_if_scaled_usd": None,
+        "scale_up_approved": False,
+        "rationale": "Matrix A repairs the G_mini protocol but remains too small for predictive-validity claims.",
+    }
+
+
+def annotate_matrix_metrics(metrics: dict[str, Any]) -> dict[str, Any]:
+    metrics = dict(metrics)
+    metrics["status"] = "measured_endpoint_matrix_a"
+    split_metrics = metrics.get("split_metrics", {})
+    metrics["g_mini_to_w_real_available"] = (
+        split_metrics.get("G_mini", {}).get("scoreable_cell_count", 0) >= 3
+        and split_metrics.get("W_real", {}).get("scoreable_cell_count", 0) > 0
+    )
+    metrics["g_mini_plus_b_real_to_w_real_available"] = (
+        metrics["g_mini_to_w_real_available"]
+        and split_metrics.get("B_real", {}).get("scoreable_cell_count", 0) > 0
+    )
+    metrics["invalid_output_rate"] = None
+    cell_count = sum(item.get("cell_count", 0) for item in split_metrics.values())
+    if cell_count:
+        metrics["invalid_output_rate"] = round(metrics.get("invalid_or_harness_error_count", 0) / cell_count, 4)
+    return metrics
+
+
+def write_expanded_cost_report(root: Path, summary: dict[str, Any], realignment: dict[str, Any], rows: list[dict[str, Any]]) -> None:
+    status_counts = Counter(row["terminal_status"] for row in rows)
+    paid_task_calls = sum(1 for row in read_jsonl(root / EXP_REL / "results" / "measured_cost_ledger.jsonl") if row.get("event") == "endpoint_acut_task")
+    write_text(
+        root / EXP_REL / "reports" / "measured_cost_report.md",
+        "\n".join(
+            [
+                "# Measured Cost Report",
+                "",
+                f"Measured call count: `{summary['call_count']}`.",
+                f"Paid task-solving calls: `{paid_task_calls}`.",
+                f"Usage observed rate: `{summary['usage_observed_rate']}`.",
+                f"Input tokens: `{summary['input_tokens']}`.",
+                f"Cached input tokens: `{summary['cached_input_tokens']}`.",
+                f"Output tokens: `{summary['output_tokens']}`.",
+                f"Estimated cost: `${summary['estimated_cost_usd']:.8f}`.",
+                f"Pricing source: `{summary['pricing_source']}`.",
+                f"Median latency seconds: `{summary['median_latency_seconds']}`.",
+                "",
+                "## Matrix A Outcomes",
+                "",
+                *[f"- `{status}`: `{count}`" for status, count in sorted(status_counts.items())],
+                "",
+                "## Scale Decision",
+                "",
+                f"Decision: `{realignment['decision']}`.",
+                f"Cost per submitted cell: `{realignment['cost_per_submitted_cell_usd']}`.",
+                f"Cost per scoreable cell: `{realignment['cost_per_scoreable_cell_usd']}`.",
+                "No second ACUT or optional Matrix B is approved from this underpowered Matrix A alone.",
+                "",
+            ]
+        ),
+    )
+
+
+def write_expanded_headroom_outputs(root: Path, rows: list[dict[str, Any]], metrics: dict[str, Any], summary: dict[str, Any], model: str) -> None:
+    write_csv(
+        root / EXP_REL / "results" / "headroom_score_table.csv",
+        rows,
+        [
+            "acut_id",
+            "task_id",
+            "split",
+            "attempt",
+            "submission_status",
+            "terminal_status",
+            "verifier_exit_code",
+            "scoreable_cell",
+            "agent_failure",
+            "harness_error",
+        ],
+    )
+    write_json(root / EXP_REL / "results" / "headroom_metrics.json", metrics)
+    write_json(
+        root / EXP_REL / "results" / "headroom_matrix.json",
+        {
+            "schema_version": "barcarolle.phase0_headroom_matrix.v1",
+            "generated_at": iso_now(),
+            "status": "measured_endpoint_matrix_a_complete",
+            "acut_id": model,
+            "paid_model_calls_started": sum(1 for row in read_jsonl(root / EXP_REL / "results" / "measured_cost_ledger.jsonl") if row.get("event") == "endpoint_acut_task"),
+            "paid_acut_batches_started": 2,
+            "scheduled_task_ids": [row["task_id"] for row in rows],
+            "terminal_status_counts": dict(Counter(row["terminal_status"] for row in rows)),
+            "scoreable_cell_count": metrics["scoreable_cell_count"],
+            "estimated_cost_usd": summary["estimated_cost_usd"],
+            "g_mini_protocol_status": metrics["g_mini_protocol_status"],
+            "g_mini_to_w_real_available": metrics["g_mini_to_w_real_available"],
+            "g_mini_plus_b_real_to_w_real_available": metrics["g_mini_plus_b_real_to_w_real_available"],
+            "scale_up_approved": False,
+        },
+    )
+    write_text(
+        root / EXP_REL / "reports" / "headroom_analysis.md",
+        "\n".join(
+            [
+                "# Phase 0 Headroom Analysis",
+                "",
+                "Status: `measured_endpoint_matrix_a_complete`.",
+                "",
+                "Matrix A uses the measured endpoint path with the current `gpt-5.4-mini` model. It reuses compatible calibration cells and adds the missing `toolz` cells plus the repaired Click `G_mini` comparator cells.",
+                "",
+                "## Matrix Cells",
+                "",
+                "| Task | Split | Terminal Status | Scoreable |",
+                "|---|---|---:|---:|",
+                *[f"| `{row['task_id']}` | `{row['split']}` | `{row['terminal_status']}` | `{row['scoreable_cell']}` |" for row in rows],
+                "",
+                "Predictive metrics remain `not_applicable_underpowered`; the run is a protocol and harness diagnostic, not a final predictive-validity estimate.",
+                "",
+            ]
+        ),
+    )
+
+
+def write_expanded_final_memo(root: Path, model: str, summary: dict[str, Any], realignment: dict[str, Any], metrics: dict[str, Any]) -> None:
+    write_text(
+        root / EXP_REL / "reports" / "phase0_decision_memo.md",
+        "\n".join(
+            [
+                "# Phase 0 Decision Memo",
+                "",
+                "Decision: `proceed_regression_benchmark`.",
+                "",
+                "## Scope",
+                "",
+                "Phase 0 now has measured endpoint evidence for same-repo tasks and a repaired same-protocol generic comparator matrix.",
+                "",
+                f"- Endpoint-selected primary ACUT model: `{model}`.",
+                "- Primary target repository: `toolz`.",
+                "- Generic comparator source: active Click R0 packages under `experiments/phase0_headroom/generic_comparator/click_r0/`.",
+                "- Canonical measured ledger: `experiments/phase0_headroom/results/measured_cost_ledger.jsonl`.",
+                f"- Estimated measured endpoint spend: `USD {summary['estimated_cost_usd']:.8f}`.",
+                "- Actual provider-billed cost: `null` because the endpoint response did not expose billing dollars.",
+                "",
+                "## Evidence Summary",
+                "",
+                "- Certified same-repo tasks after source-adapter repair: `6`.",
+                "- Same-protocol `G_mini` comparator tasks: `4`.",
+                "- Generic comparator protocol: `scoreable_same_protocol`.",
+                f"- Matrix scoreable cells: `{metrics['scoreable_cell_count']}`.",
+                f"- Matrix harness or invalid-output cells: `{metrics['invalid_or_harness_error_count']}`.",
+                f"- Measured endpoint calls recorded: `{summary['call_count']}`.",
+                f"- Input tokens: `{summary['input_tokens']}`.",
+                f"- Cached input tokens: `{summary['cached_input_tokens']}`.",
+                f"- Output tokens: `{summary['output_tokens']}`.",
+                f"- Usage observed rate: `{summary['usage_observed_rate']}`.",
+                f"- Cost per scoreable cell: `{realignment['cost_per_scoreable_cell_usd']}`.",
+                f"- `G_mini -> W_real` availability: `{metrics['g_mini_to_w_real_available']}`.",
+                f"- `G_mini + B_real -> W_real` availability: `{metrics['g_mini_plus_b_real_to_w_real_available']}`.",
+                "",
+                "## What Phase 0 Supports",
+                "",
+                "Phase 0 supports continuing as a measured regression-benchmark compiler. The endpoint path can discover models, record token usage, run same-repo and generic comparator cells, and separate verified failures from harness or invalid-output outcomes.",
+                "",
+                "## What Phase 0 Does Not Support",
+                "",
+                "Phase 0 still does not support predictive-validity claims. Matrix A is too small and too harness-sensitive to justify moving to `proceed_predictive`.",
+                "",
+                "## Threats To Validity",
+                "",
+                "- One primary target repository.",
+                "- Small Matrix A sample.",
+                "- Generic comparator packages are recovered from archived Click R0 material.",
+                "- Pricing uses conservative user-estimate-required rates rather than endpoint billing data.",
+                "- MAE, RMSE, and Brier score remain `not_applicable_underpowered`.",
+                "",
+                "## Next Smallest Useful Experiment",
+                "",
+                "Initialize the Phase 1 compiler skeleton around task/release schemas, target profiles, stratified weighting, splits, uncertainty, and scorecards before any broader paid residual-validation run.",
+                "",
+            ]
+        ),
+    )
+
+
+def run_expanded_matrix(endpoint: Endpoint, root: Path, model: str) -> None:
+    generic = read_json(root / EXP_REL / "results" / "generic_comparator_protocol.json")
+    if int(generic.get("scoreable_same_protocol_count") or 0) < 3:
+        raise RuntimeError("generic comparator protocol must have at least three scoreable tasks before Matrix A")
+    tasks, statements, splits = load_task_maps(root)
+    existing_submissions = read_jsonl(root / EXP_REL / "results" / "measured_endpoint_submissions.jsonl")
+    existing_verifiers = read_jsonl(root / EXP_REL / "results" / "measured_endpoint_verifier_results.jsonl")
+    ledger_rows = read_jsonl(root / EXP_REL / "results" / "measured_cost_ledger.jsonl")
+    plan = expanded_matrix_plan(release_toolz_task_ids(root), existing_submissions, generic)
+    projected = projected_batch_row(endpoint, model, plan, ledger_rows)
+    write_jsonl(root / EXP_REL / "results" / "overnight_projected_cost_ledger.jsonl", [projected])
+    if projected["projected_cumulative_spend_usd"] > 40:
+        raise RuntimeError("projected Matrix A spend exceeds overnight batch gate")
+
+    submissions = list(existing_submissions)
+    verifiers = list(existing_verifiers)
+    generic_by_task = {manifest["task_id"]: manifest for manifest in load_generic_manifests(root, generic)}
+    for task_id in plan["missing_toolz_task_ids"]:
+        submission, verifier, ledger = run_calibration_task(
+            endpoint,
+            root,
+            model,
+            tasks[task_id],
+            statements[task_id],
+            splits[task_id],
+            run_label="matrix1",
+            ledger_phase="expanded_matrix",
+        )
+        submissions.append(submission)
+        verifiers.append(verifier)
+        ledger_rows.append(ledger)
+        if not ledger.get("usage_observed"):
+            break
+    if all(row.get("usage_observed", True) for row in ledger_rows[-len(plan["missing_toolz_task_ids"]):]):
+        for task_id in plan["generic_task_ids"]:
+            submission, verifier, ledger = run_generic_comparator_task(endpoint, root, model, generic_by_task[task_id])
+            submissions.append(submission)
+            verifiers.append(verifier)
+            ledger_rows.append(ledger)
+            if not ledger.get("usage_observed"):
+                break
+
+    write_jsonl(root / EXP_REL / "results" / "measured_endpoint_submissions.jsonl", submissions)
+    write_jsonl(root / EXP_REL / "results" / "measured_endpoint_verifier_results.jsonl", verifiers)
+    write_jsonl(root / EXP_REL / "results" / "measured_cost_ledger.jsonl", ledger_rows)
+    rows = score_rows(submissions, verifiers)
+    summary = summarize_cost(ledger_rows)
+    metrics = annotate_matrix_metrics(metrics_payload(rows, generic["status"]))
+    realignment = expanded_cost_realignment_payload(summary, rows, generic)
+    write_json(root / EXP_REL / "results" / "measured_cost_summary.json", summary)
+    write_json(root / EXP_REL / "results" / "cost_realignment.json", realignment)
+    write_expanded_cost_report(root, summary, realignment, rows)
+    write_expanded_headroom_outputs(root, rows, metrics, summary, model)
+    write_expanded_final_memo(root, model, summary, realignment, metrics)
 
 
 def score_rows(submissions: list[dict[str, Any]], verifiers: list[dict[str, Any]]) -> list[dict[str, Any]]:
@@ -1014,9 +1484,14 @@ def main() -> int:
     parser = argparse.ArgumentParser(description="Run the Phase 0 measured endpoint runbook.")
     parser.add_argument("--root", default=".")
     parser.add_argument("--reverify-existing", action="store_true", help="Re-score existing raw calibration patches without new endpoint calls.")
+    parser.add_argument("--run-expanded-matrix", action="store_true", help="Run Matrix A by reusing existing calibration cells and adding missing toolz plus scoreable G_mini cells.")
     args = parser.parse_args()
     root = Path(args.root).resolve()
     endpoint = endpoint_from_env()
+
+    if args.run_expanded_matrix:
+        run_expanded_matrix(endpoint, root, PRIMARY_MODEL)
+        return 0
 
     if args.reverify_existing:
         generic = read_json(root / EXP_REL / "results" / "generic_comparator_protocol.json")

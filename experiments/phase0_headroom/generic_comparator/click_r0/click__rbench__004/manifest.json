@@ -7,6 +7,9 @@
   "task_time": "2018-05-14T16:43:30-04:00",
   "solver_facing_statement": "Teach CliRunner results to expose separated stdout and stderr while preserving the mixed output stream used by existing tests.",
   "base_checkout_or_workspace_recipe": "Archive the base commit from archive/2026-05-agent-license-reset/experiments/core_narrative/external_repos/click into a base-tree-only synthetic git workspace.",
+  "prompt_code_files": [
+    "click/testing.py"
+  ],
   "oracle_command": "verifier/run.sh",
   "archive_task_manifest": "audit/archive_task.yaml",
   "reference_patch_or_reference_behavior": "A reference implementation passes tests/test_testing.py::test_stderr under the hidden verifier.",

@@ -1,15 +1,15 @@
 {
   "actual_cost_usd": null,
   "cached_input_tokens": 0,
-  "call_count": 6,
-  "estimated_cost_usd": 0.11133,
-  "generated_at": "2026-05-20T12:06:09+00:00",
-  "input_tokens": 32425,
-  "median_latency_seconds": 2.075,
-  "output_tokens": 937,
+  "call_count": 12,
+  "estimated_cost_usd": 0.329271,
+  "generated_at": "2026-05-20T14:55:42+00:00",
+  "input_tokens": 85467,
+  "median_latency_seconds": 3.171,
+  "output_tokens": 4858,
   "pricing_source": "user_estimate_required_conservative_default",
   "reasoning_output_tokens": 0,
   "schema_version": "barcarolle.measured_cost_summary.v1",
-  "usage_observed_count": 6,
+  "usage_observed_count": 12,
   "usage_observed_rate": 1.0
 }

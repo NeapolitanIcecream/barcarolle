@@ -7,6 +7,10 @@
   "task_time": "2016-11-02T10:28:41+01:00",
   "solver_facing_statement": "When prompting for a click.Choice value, display the available choices in the prompt, while preserving support for defaults and show_choices=False.",
   "base_checkout_or_workspace_recipe": "Archive the base commit from archive/2026-05-agent-license-reset/experiments/core_narrative/external_repos/click into a base-tree-only synthetic git workspace.",
+  "prompt_code_files": [
+    "click/core.py",
+    "click/termui.py"
+  ],
   "oracle_command": "verifier/run.sh",
   "archive_task_manifest": "audit/archive_task.yaml",
   "reference_patch_or_reference_behavior": "A reference implementation passes tests/test_termui.py::test_choices_list_in_prompt under the hidden verifier.",

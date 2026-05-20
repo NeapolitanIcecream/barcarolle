@@ -1,28 +1,38 @@
 {
   "brier_score": "not_applicable_underpowered",
   "claim_scope": "measured_endpoint_diagnostic",
-  "g_mini_protocol_status": "blocked_metadata_only",
-  "generated_at": "2026-05-20T12:06:09+00:00",
-  "invalid_or_harness_error_count": 2,
+  "g_mini_plus_b_real_to_w_real_available": false,
+  "g_mini_protocol_status": "scoreable_same_protocol",
+  "g_mini_to_w_real_available": false,
+  "generated_at": "2026-05-20T14:55:42+00:00",
+  "invalid_or_harness_error_count": 8,
+  "invalid_output_rate": 0.8,
   "mae": "not_applicable_underpowered",
   "rmse": "not_applicable_underpowered",
   "schema_version": "barcarolle.phase0_headroom_metrics.v1",
   "scoreable_cell_count": 2,
   "split_metrics": {
     "B_real": {
-      "cell_count": 2,
+      "cell_count": 3,
       "pass_rate": 0.0,
       "scoreable_cell_count": 1,
       "verified_fail_count": 1,
       "verified_pass_count": 0
     },
+    "G_mini": {
+      "cell_count": 4,
+      "pass_rate": null,
+      "scoreable_cell_count": 0,
+      "verified_fail_count": 0,
+      "verified_pass_count": 0
+    },
     "W_real": {
-      "cell_count": 2,
+      "cell_count": 3,
       "pass_rate": 0.0,
       "scoreable_cell_count": 1,
       "verified_fail_count": 1,
       "verified_pass_count": 0
     }
   },
-  "status": "measured_endpoint_calibration"
+  "status": "measured_endpoint_matrix_a"
 }

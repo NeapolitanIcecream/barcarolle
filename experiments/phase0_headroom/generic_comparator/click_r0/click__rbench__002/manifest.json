@@ -7,6 +7,9 @@
   "task_time": "2014-06-14T18:56:54+01:00",
   "solver_facing_statement": "Add support for controlling whether CliRunner.invoke catches exceptions, including a runner-level default and an invoke-time override.",
   "base_checkout_or_workspace_recipe": "Archive the base commit from archive/2026-05-agent-license-reset/experiments/core_narrative/external_repos/click into a base-tree-only synthetic git workspace.",
+  "prompt_code_files": [
+    "click/testing.py"
+  ],
   "oracle_command": "verifier/run.sh",
   "archive_task_manifest": "audit/archive_task.yaml",
   "reference_patch_or_reference_behavior": "A reference implementation passes tests/test_testing.py::test_catch_exceptions under the hidden verifier.",

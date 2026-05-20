@@ -37,3 +37,18 @@ Generated UTC: `2026-05-20T14:35:07Z`.
 - Required same-protocol scoreable `G_mini` tasks: `3`.
 - Paid calls used for comparator repair: `0`.
 - Step 2 decision: `run_measured_endpoint_comparator_matrix`.
+
+## Step 3A Measured Endpoint Matrix A
+
+- Matrix branch taken because Step 2 produced `4` same-protocol scoreable `G_mini` packages.
+- Existing compatible calibration cells reused: `4`.
+- New paid Matrix A cells run: `6`.
+- Toolz cells added: `toolz__hist__002`, `toolz__hist__016`.
+- G_mini cells added: `click__rbench__001`, `click__rbench__002`, `click__rbench__003`, `click__rbench__004`.
+- Usage observed rate after Matrix A: `1.0`.
+- Estimated endpoint spend after Matrix A: `USD 0.329271`.
+- Matrix A terminal statuses: `invalid_output=8`, `verified_fail=2`.
+- Scoreable Matrix A cells: `2`.
+- Scoreable G_mini Matrix A cells: `0`.
+- Scale-up approved after Matrix A: `false`.
+- Step 3A decision: stay diagnostic and initialize the Phase 1 compiler skeleton.

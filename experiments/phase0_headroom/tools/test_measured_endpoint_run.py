@@ -101,3 +101,56 @@ def test_apply_submission_patch_falls_back_to_patch_tool(monkeypatch, tmp_path: 
     assert error == ""
     assert calls[0][:3] == ["git", "apply", "--check"]
     assert calls[1][0] == "patch"
+
+
+def test_summarize_cost_ignores_projected_batch_rows() -> None:
+    rows = [
+        {"event": "projected_acut_batch", "estimated_cost_usd": 0.5, "usage_observed": None},
+        {"event": "endpoint_acut_task", "usage_observed": True, "input_tokens": 10, "cached_input_tokens": 0, "output_tokens": 5, "reasoning_output_tokens": 0, "estimated_cost_usd": 0.1, "latency_seconds": 1.0},
+    ]
+
+    summary = measured.summarize_cost(rows)
+
+    assert summary["call_count"] == 1
+    assert summary["usage_observed_count"] == 1
+    assert summary["estimated_cost_usd"] == 0.1
+
+
+def test_expanded_matrix_plan_reuses_existing_submissions() -> None:
+    toolz_ids = ["toolz__hist__001", "toolz__hist__002", "toolz__hist__003"]
+    existing = [
+        {"task_id": "toolz__hist__001"},
+        {"task_id": "toolz__hist__003"},
+    ]
+    generic = {
+        "tasks": [
+            {"task_id": "click__rbench__001", "same_protocol_scoreable": True},
+            {"task_id": "click__rbench__002", "same_protocol_scoreable": False},
+        ]
+    }
+
+    plan = measured.expanded_matrix_plan(toolz_ids, existing, generic)
+
+    assert plan["missing_toolz_task_ids"] == ["toolz__hist__002"]
+    assert plan["generic_task_ids"] == ["click__rbench__001"]
+    assert plan["scheduled_task_ids"] == ["toolz__hist__002", "click__rbench__001"]
+
+
+def test_generic_prompt_uses_acut_statement_without_audit_provenance(tmp_path: Path) -> None:
+    workspace = tmp_path / "workspace"
+    workspace.mkdir()
+    (workspace / "click").mkdir()
+    (workspace / "click" / "core.py").write_text("def f():\n    return 1\n", encoding="utf-8")
+    manifest = {
+        "task_id": "click__rbench__001",
+        "solver_facing_statement": "Fix the visible behavior.",
+        "scope_review": {"expected_touched_area": ["click/core.py"]},
+        "prompt_code_files": ["click/core.py"],
+    }
+
+    prompt = measured.generic_comparator_prompt(manifest, workspace)
+
+    assert "Fix the visible behavior." in prompt
+    assert "click/core.py" in prompt
+    assert "audit/provenance" not in prompt
+    assert "target_commit" not in prompt
