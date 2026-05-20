@@ -1,9 +1,30 @@
 {
-  "binomial_negative_log_likelihood": null,
-  "brier_score": null,
-  "directional_diagnostics": "not computed; follow-up repaired certification only and did not run ACUTs",
-  "mae": null,
-  "rmse": null,
+  "binomial_negative_log_likelihood": "not_applicable_underpowered",
+  "brier_score": "not_applicable_underpowered",
+  "claim_scope": "underpowered_directional_diagnostic",
+  "directional_notes": "single-ACUT same-repo diagnostics only; no predictive validity claim",
+  "g_mini_protocol_status": "not_scoreable_same_protocol",
+  "generated_at": "2026-05-20T08:56:11+00:00",
+  "invalid_or_harness_error_count": 0,
+  "mae": "not_applicable_underpowered",
+  "rmse": "not_applicable_underpowered",
   "schema_version": "barcarolle.phase0_headroom_metrics.v1",
-  "status": "not_run_ready_after_source_adapter_repair"
+  "scoreable_cell_count": 6,
+  "split_metrics": {
+    "B_real": {
+      "cell_count": 3,
+      "pass_rate": 0.3333,
+      "scoreable_cell_count": 3,
+      "verified_fail_count": 2,
+      "verified_pass_count": 1
+    },
+    "W_real": {
+      "cell_count": 3,
+      "pass_rate": 0.3333,
+      "scoreable_cell_count": 3,
+      "verified_fail_count": 2,
+      "verified_pass_count": 1
+    }
+  },
+  "status": "scored_underpowered"
 }

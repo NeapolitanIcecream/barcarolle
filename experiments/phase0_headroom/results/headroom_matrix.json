@@ -1,29 +1,32 @@
 {
-  "cumulative_estimated_cost_usd": 0.0,
-  "next_matrix": {
-    "B_real": [
-      "toolz__hist__001",
-      "toolz__hist__002",
-      "toolz__hist__003"
-    ],
-    "G_mini": [
-      "click__rbench__001",
-      "click__rbench__002",
-      "click__rbench__003",
-      "click__rbench__004"
-    ],
-    "W_real": [
-      "toolz__hist__004",
-      "toolz__hist__010",
-      "toolz__hist__016"
-    ],
-    "acuts": [
-      "one_cheap_acut"
-    ],
-    "projected_max_cost_usd": 60
-  },
-  "notes": "Source-adapter repair removed the certification blocker; no ACUT cells were run in this follow-up.",
-  "paid_model_calls_started": 0,
+  "acut_id": "codex_cli_gpt_5_3_codex_spark",
+  "claim_scope": "underpowered_directional_diagnostic",
+  "cumulative_estimated_cost_usd": 60.0,
+  "g_mini_included": false,
+  "g_mini_protocol_status": "not_scoreable_same_protocol",
+  "generated_at": "2026-05-20T08:56:11+00:00",
+  "paid_acut_batches_started": 1,
+  "paid_model_calls_started": 6,
+  "same_repo_task_ids": [
+    "toolz__hist__001",
+    "toolz__hist__002",
+    "toolz__hist__003",
+    "toolz__hist__004",
+    "toolz__hist__010",
+    "toolz__hist__016"
+  ],
+  "scheduled_task_ids": [
+    "toolz__hist__001",
+    "toolz__hist__002",
+    "toolz__hist__003",
+    "toolz__hist__004",
+    "toolz__hist__010",
+    "toolz__hist__016"
+  ],
   "schema_version": "barcarolle.phase0_headroom_matrix.v1",
-  "status": "ready_not_run_after_source_adapter_repair"
+  "status": "completed_underpowered_same_repo_matrix",
+  "terminal_status_counts": {
+    "verified_fail": 4,
+    "verified_pass": 2
+  }
 }

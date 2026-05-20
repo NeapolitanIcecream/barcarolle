@@ -1,0 +1,7 @@
+acut_id,task_id,split,attempt,submission_status,terminal_status,verifier_exit_code,scoreable_cell,agent_failure,harness_error
+codex_cli_gpt_5_3_codex_spark,toolz__hist__001,B_real,1,submitted,verified_fail,1,True,True,False
+codex_cli_gpt_5_3_codex_spark,toolz__hist__002,B_real,1,submitted,verified_fail,1,True,True,False
+codex_cli_gpt_5_3_codex_spark,toolz__hist__003,B_real,1,submitted,verified_pass,0,True,False,False
+codex_cli_gpt_5_3_codex_spark,toolz__hist__004,W_real,1,submitted,verified_fail,1,True,True,False
+codex_cli_gpt_5_3_codex_spark,toolz__hist__010,W_real,1,submitted,verified_pass,0,True,False,False
+codex_cli_gpt_5_3_codex_spark,toolz__hist__016,W_real,1,submitted,verified_fail,1,True,True,False
