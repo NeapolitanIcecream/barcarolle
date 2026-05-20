@@ -212,6 +212,17 @@ experiments/core_narrative/results/raw/*/logs/
 experiments/core_narrative/results/raw/*/inner/codex_home_*/
 experiments/core_narrative/results/raw/*/verifier.stdout.txt
 
+# Archived legacy experiment local artifacts
+archive/2026-05-agent-license-reset/experiments/core_narrative/workspaces/
+archive/2026-05-agent-license-reset/experiments/core_narrative/external_repos/
+archive/2026-05-agent-license-reset/experiments/core_narrative/cache/
+archive/2026-05-agent-license-reset/experiments/core_narrative/large_artifacts/
+archive/2026-05-agent-license-reset/experiments/core_narrative/results/m5_w2_primary/
+archive/2026-05-agent-license-reset/experiments/core_narrative/results/rgw_full_workspace_v1/
+archive/2026-05-agent-license-reset/experiments/core_narrative/results/raw/*/logs/
+archive/2026-05-agent-license-reset/experiments/core_narrative/results/raw/*/inner/codex_home_*/
+archive/2026-05-agent-license-reset/experiments/core_narrative/results/raw/*/verifier.stdout.txt
+
 # Cloudflare/Wrangler local cache
 .wrangler/
 
