@@ -49,13 +49,13 @@ splits:
       - toolz__hist__010
   G_mini:
     policy: include_only_if_scoreable_same_protocol
-    protocol_status: blocked_metadata_only
-    scoreable_same_protocol_count: 0
+    protocol_status: scoreable_same_protocol
+    scoreable_same_protocol_count: 4
     archived_metadata_task_ids:
       - click__rbench__001
       - click__rbench__002
       - click__rbench__003
       - click__rbench__004
 claim_scope: underpowered_directional_diagnostic
-scale_up_approved: false
-next_gate: repair_generic_comparator_first
+scale_up_approved: true
+next_gate: run_measured_endpoint_comparator_matrix

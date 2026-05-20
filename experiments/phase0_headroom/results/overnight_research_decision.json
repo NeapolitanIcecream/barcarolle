@@ -1,0 +1,14 @@
+{
+  "schema_version": "barcarolle.overnight_research_decision.v1",
+  "generated_at": "2026-05-20T14:58:00+00:00",
+  "decision": "generic_comparator_repaired",
+  "branch_taken": "generic_comparator_repaired",
+  "phase0_decision_before_overnight": "proceed_regression_benchmark",
+  "phase0_decision_current": "proceed_regression_benchmark",
+  "estimated_endpoint_spend_usd": 0.11133,
+  "overnight_estimated_endpoint_spend_usd": 0.0,
+  "generic_comparator_status": "scoreable_same_protocol",
+  "scoreable_same_protocol_g_mini_tasks": 4,
+  "next_step": "run_measured_endpoint_comparator_matrix",
+  "phase1_skeleton_exists": false
+}

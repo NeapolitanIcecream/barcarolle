@@ -1,38 +1,43 @@
 {
-  "decision": "repair_generic_comparator_first",
-  "generated_at": "2026-05-20T12:03:35+00:00",
+  "decision": "run_measured_endpoint_comparator_matrix",
+  "generated_at": "2026-05-20T14:58:00+00:00",
   "required_scoreable_same_protocol_count": 3,
   "schema_version": "barcarolle.generic_comparator_protocol.v1",
-  "scoreable_same_protocol_count": 0,
-  "status": "blocked_metadata_only",
+  "scoreable_same_protocol_count": 4,
+  "status": "scoreable_same_protocol",
   "tasks": [
     {
-      "reason": "archived Click metadata lacks active Phase 0 base checkout, solver statement, and verifier package",
+      "active_manifest": "experiments/phase0_headroom/generic_comparator/click_r0/click__rbench__001/manifest.json",
+      "reason": "active Phase 0 package has base checkout recipe, ACUT-visible statement, hidden verifier, and archived admission gates",
       "repo_id": "click",
-      "same_protocol_scoreable": false,
-      "status": "metadata_only",
+      "same_protocol_scoreable": true,
+      "status": "scoreable_same_protocol",
       "task_id": "click__rbench__001"
     },
     {
-      "reason": "archived Click metadata lacks active Phase 0 base checkout, solver statement, and verifier package",
+      "active_manifest": "experiments/phase0_headroom/generic_comparator/click_r0/click__rbench__002/manifest.json",
+      "reason": "active Phase 0 package has base checkout recipe, ACUT-visible statement, hidden verifier, and archived admission gates",
       "repo_id": "click",
-      "same_protocol_scoreable": false,
-      "status": "metadata_only",
+      "same_protocol_scoreable": true,
+      "status": "scoreable_same_protocol",
       "task_id": "click__rbench__002"
     },
     {
-      "reason": "archived Click metadata lacks active Phase 0 base checkout, solver statement, and verifier package",
+      "active_manifest": "experiments/phase0_headroom/generic_comparator/click_r0/click__rbench__003/manifest.json",
+      "reason": "active Phase 0 package has base checkout recipe, ACUT-visible statement, hidden verifier, and archived admission gates",
       "repo_id": "click",
-      "same_protocol_scoreable": false,
-      "status": "metadata_only",
+      "same_protocol_scoreable": true,
+      "status": "scoreable_same_protocol",
       "task_id": "click__rbench__003"
     },
     {
-      "reason": "archived Click metadata lacks active Phase 0 base checkout, solver statement, and verifier package",
+      "active_manifest": "experiments/phase0_headroom/generic_comparator/click_r0/click__rbench__004/manifest.json",
+      "reason": "active Phase 0 package has base checkout recipe, ACUT-visible statement, hidden verifier, and archived admission gates",
       "repo_id": "click",
-      "same_protocol_scoreable": false,
-      "status": "metadata_only",
+      "same_protocol_scoreable": true,
+      "status": "scoreable_same_protocol",
       "task_id": "click__rbench__004"
     }
-  ]
+  ],
+  "validation_artifact": "experiments/phase0_headroom/results/generic_comparator_dry_run.json"
 }

@@ -27,3 +27,13 @@ Generated UTC: `2026-05-20T14:35:07Z`.
 - `configs/measured_endpoint_matrix.yaml` is the canonical active measured-endpoint matrix config for any future paid Phase 0 run.
 - `reports/phase0_decision_memo.md` already points to `results/measured_cost_ledger.jsonl` and states that `G_mini` is blocked.
 - `results/headroom_matrix.json` and `results/headroom_score_table.csv` reflect the measured endpoint calibration, not the old Codex CLI run.
+
+## Step 2 Bounded Generic Comparator Repair
+
+- Current release `G_mini` candidates: `click__rbench__001`, `click__rbench__002`, `click__rbench__003`, `click__rbench__004`.
+- Archive evidence found: Click R0 task manifests, ACUT-visible statements, hidden verifiers, audit provenance, release hygiene metadata, and admission results.
+- Active package root: `experiments/phase0_headroom/generic_comparator/click_r0/`.
+- Same-protocol scoreable `G_mini` tasks after repair: `4`.
+- Required same-protocol scoreable `G_mini` tasks: `3`.
+- Paid calls used for comparator repair: `0`.
+- Step 2 decision: `run_measured_endpoint_comparator_matrix`.
