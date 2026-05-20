@@ -1,32 +1,22 @@
 {
-  "acut_id": "codex_cli_gpt_5_3_codex_spark",
-  "claim_scope": "underpowered_directional_diagnostic",
-  "cumulative_estimated_cost_usd": 60.0,
-  "g_mini_included": false,
-  "g_mini_protocol_status": "not_scoreable_same_protocol",
-  "generated_at": "2026-05-20T08:56:11+00:00",
+  "acut_id": "gpt-5.4-mini",
+  "estimated_cost_usd": 0.11133,
+  "g_mini_protocol_status": "blocked_metadata_only",
+  "generated_at": "2026-05-20T12:06:09+00:00",
   "paid_acut_batches_started": 1,
-  "paid_model_calls_started": 6,
-  "same_repo_task_ids": [
-    "toolz__hist__001",
-    "toolz__hist__002",
-    "toolz__hist__003",
-    "toolz__hist__004",
-    "toolz__hist__010",
-    "toolz__hist__016"
-  ],
+  "paid_model_calls_started": 4,
+  "scale_up_approved": false,
   "scheduled_task_ids": [
     "toolz__hist__001",
-    "toolz__hist__002",
     "toolz__hist__003",
     "toolz__hist__004",
-    "toolz__hist__010",
-    "toolz__hist__016"
+    "toolz__hist__010"
   ],
   "schema_version": "barcarolle.phase0_headroom_matrix.v1",
-  "status": "completed_underpowered_same_repo_matrix",
+  "scoreable_cell_count": 2,
+  "status": "measured_endpoint_calibration_complete",
   "terminal_status_counts": {
-    "verified_fail": 4,
-    "verified_pass": 2
+    "invalid_output": 2,
+    "verified_fail": 2
   }
 }

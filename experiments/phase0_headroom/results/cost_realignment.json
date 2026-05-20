@@ -1,0 +1,13 @@
+{
+  "calibration_estimated_cost_usd": 0.11133,
+  "cost_per_scoreable_cell_usd": 0.055665,
+  "decision": "repair_generic_comparator_first",
+  "generated_at": "2026-05-20T12:06:09+00:00",
+  "generic_comparator_status": "blocked_metadata_only",
+  "projected_cumulative_spend_if_scaled_usd": null,
+  "rationale": "Same-repo calibration is measured, but G_mini comparator protocol remains blocked.",
+  "scale_up_approved": false,
+  "schema_version": "barcarolle.cost_realignment.v1",
+  "scoreable_same_repo_cells": 2,
+  "usage_observed_rate": 1.0
+}

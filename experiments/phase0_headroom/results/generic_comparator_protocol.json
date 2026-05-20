@@ -1,0 +1,38 @@
+{
+  "decision": "repair_generic_comparator_first",
+  "generated_at": "2026-05-20T12:03:35+00:00",
+  "required_scoreable_same_protocol_count": 3,
+  "schema_version": "barcarolle.generic_comparator_protocol.v1",
+  "scoreable_same_protocol_count": 0,
+  "status": "blocked_metadata_only",
+  "tasks": [
+    {
+      "reason": "archived Click metadata lacks active Phase 0 base checkout, solver statement, and verifier package",
+      "repo_id": "click",
+      "same_protocol_scoreable": false,
+      "status": "metadata_only",
+      "task_id": "click__rbench__001"
+    },
+    {
+      "reason": "archived Click metadata lacks active Phase 0 base checkout, solver statement, and verifier package",
+      "repo_id": "click",
+      "same_protocol_scoreable": false,
+      "status": "metadata_only",
+      "task_id": "click__rbench__002"
+    },
+    {
+      "reason": "archived Click metadata lacks active Phase 0 base checkout, solver statement, and verifier package",
+      "repo_id": "click",
+      "same_protocol_scoreable": false,
+      "status": "metadata_only",
+      "task_id": "click__rbench__003"
+    },
+    {
+      "reason": "archived Click metadata lacks active Phase 0 base checkout, solver statement, and verifier package",
+      "repo_id": "click",
+      "same_protocol_scoreable": false,
+      "status": "metadata_only",
+      "task_id": "click__rbench__004"
+    }
+  ]
+}

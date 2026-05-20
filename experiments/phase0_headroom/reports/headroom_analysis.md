@@ -1,25 +1,16 @@
 # Phase 0 Headroom Analysis
 
-Status: `scored_underpowered`.
+Status: `measured_endpoint_calibration_complete`.
 
-This matrix is underpowered directional evidence only. It uses one ACUT, six certified `toolz` same-repo tasks, and no same-protocol `G_mini` cells.
+The measured endpoint run replaces the earlier Codex-subscription cost estimate for Phase 0 calibration. It remains underpowered and diagnostic only.
 
-## Split Metrics
-
-| Split | Cells | Scoreable | Pass | Fail | Pass Rate |
-|---|---:|---:|---:|---:|---:|
-| `B_real` | `3` | `3` | `1` | `2` | `0.3333` |
-| `W_real` | `3` | `3` | `1` | `2` | `0.3333` |
-
-## Cell Outcomes
+## Calibration Cells
 
 | Task | Split | Terminal Status | Scoreable |
 |---|---|---:|---:|
-| `toolz__hist__001` | `B_real` | `verified_fail` | `True` |
-| `toolz__hist__002` | `B_real` | `verified_fail` | `True` |
-| `toolz__hist__003` | `B_real` | `verified_pass` | `True` |
+| `toolz__hist__001` | `B_real` | `invalid_output` | `False` |
+| `toolz__hist__003` | `B_real` | `verified_fail` | `True` |
 | `toolz__hist__004` | `W_real` | `verified_fail` | `True` |
-| `toolz__hist__010` | `W_real` | `verified_pass` | `True` |
-| `toolz__hist__016` | `W_real` | `verified_fail` | `True` |
+| `toolz__hist__010` | `W_real` | `invalid_output` | `False` |
 
-MAE, RMSE, Brier score, and residual-style predictive metrics are `not_applicable_underpowered` for a one-ACUT matrix.
+Predictive metrics remain `not_applicable_underpowered` because `G_mini` is not same-protocol scoreable and the calibration matrix is small.
