@@ -15,6 +15,8 @@
   "matrix_a_invalid_or_harness_error_cells": 8,
   "matrix_a_scoreable_g_mini_cells": 0,
   "matrix_a_scale_up_approved": false,
-  "next_step": "initialize_phase1_compiler_skeleton",
-  "phase1_skeleton_exists": false
+  "next_step": "write_overnight_closeout",
+  "phase1_skeleton_exists": true,
+  "phase1_release_artifact": "experiments/phase1_compiler/results/toolz_phase1_draft_release.json",
+  "phase1_weighted_score_artifact": "experiments/phase1_compiler/results/toolz_phase1_weighted_score.json"
 }

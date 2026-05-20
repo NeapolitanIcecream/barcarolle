@@ -52,3 +52,13 @@ Generated UTC: `2026-05-20T14:35:07Z`.
 - Scoreable G_mini Matrix A cells: `0`.
 - Scale-up approved after Matrix A: `false`.
 - Step 3A decision: stay diagnostic and initialize the Phase 1 compiler skeleton.
+
+## Step 4 Phase 1 Compiler Skeleton
+
+- Workspace initialized with `uv`: `experiments/phase1_compiler/`.
+- Schemas implemented as dataclasses plus a schema catalog.
+- Phase 0 importer wrote `experiments/phase1_compiler/results/toolz_phase1_draft_release.json`.
+- Weighted score summary wrote `experiments/phase1_compiler/results/toolz_phase1_weighted_score.json`.
+- Current weighted score status: `insufficient_evidence`.
+- `uv run --project experiments/phase1_compiler pytest -q`: `4 passed`.
+- Skeleton boundary: implemented compiler scaffolding only; no Phase 1 predictive validation claimed.

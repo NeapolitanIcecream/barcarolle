@@ -1,0 +1,14 @@
+{
+  "schema_version": "barcarolle.phase1.schema_catalog.v1",
+  "schemas": {
+    "task_manifest": "TaskManifest dataclass in tools/phase1_compiler.py",
+    "release_manifest": "ReleaseManifest dataclass in tools/phase1_compiler.py",
+    "target_profile": "TargetProfile dataclass in tools/phase1_compiler.py",
+    "certification_report": "CertificationReport dataclass in tools/phase1_compiler.py",
+    "agent_run_manifest": "AgentRunManifest dataclass in tools/phase1_compiler.py",
+    "scorecard": "Scorecard and ScorecardCell dataclasses in tools/phase1_compiler.py",
+    "weighted_score_summary": "WeightedScoreSummary dataclass in tools/phase1_compiler.py"
+  },
+  "status": "skeleton_only",
+  "validation_boundary": "Structural validation and weighting behavior are implemented; predictive validation is future work."
+}
