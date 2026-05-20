@@ -18,5 +18,7 @@
   "next_step": "write_overnight_closeout",
   "phase1_skeleton_exists": true,
   "phase1_release_artifact": "experiments/phase1_compiler/results/toolz_phase1_draft_release.json",
-  "phase1_weighted_score_artifact": "experiments/phase1_compiler/results/toolz_phase1_weighted_score.json"
+  "phase1_weighted_score_artifact": "experiments/phase1_compiler/results/toolz_phase1_weighted_score.json",
+  "closeout_status": "complete",
+  "next_smallest_useful_runbook": "targeted_output_contract_repair_before_broader_residual_validation"
 }

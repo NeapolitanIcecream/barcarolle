@@ -62,3 +62,10 @@ Generated UTC: `2026-05-20T14:35:07Z`.
 - Current weighted score status: `insufficient_evidence`.
 - `uv run --project experiments/phase1_compiler pytest -q`: `4 passed`.
 - Skeleton boundary: implemented compiler scaffolding only; no Phase 1 predictive validation claimed.
+
+## Step 6 Final Closeout
+
+- Final report: `experiments/phase0_headroom/reports/overnight_research_report.md`.
+- Decision artifact: `experiments/phase0_headroom/results/overnight_research_decision.json`.
+- Final branch decision: `generic_comparator_repaired`.
+- Next smallest useful runbook: targeted output-contract repair before broader residual validation.
