@@ -1,0 +1,6 @@
+schema_version: barcarolle.model_selection.v1
+primary_acut_model: gpt-5.4-mini
+stronger_comparison_model: null
+selection_source: endpoint_model_discovery
+models_path_used: /v1/models
+requires_user_override: false
