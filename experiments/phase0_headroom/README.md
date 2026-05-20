@@ -13,7 +13,9 @@ The operating plan is `docs/experiments/phase-0-runbook.md`. If Phase 0 stops
 at `repair_source_adapter`, continue from
 `docs/experiments/phase-0-source-adapter-followup-runbook.md`. If that follow-up
 reaches `ready_for_headroom_matrix`, continue from
-`docs/experiments/phase-0-headroom-matrix-followup-runbook.md`.
+`docs/experiments/phase-0-headroom-matrix-followup-runbook.md`. After the matrix
+follow-up, use `docs/experiments/phase-0-closeout-followup-runbook.md` to return
+to the original Phase 0 Step 8/9 decision memo and commit hygiene.
 
 Phase 0 asks whether repo-specific benchmark signal exists before building a
 larger benchmark compiler:
