@@ -24,14 +24,55 @@ You are executing /Users/chenmohan/gits/barcarolle/docs/experiments/phase-0-runb
 
 Work in /Users/chenmohan/gits/barcarolle. Do not spend more than USD 200 in
 LLM API calls. Treat USD 160 as the soft stop and USD 180 as the stop-and-ask
-threshold. Prefer deterministic scripts and local checks. Keep a process log in
-experiments/phase0_headroom/reports/process.md. Commit small manifests, configs,
-reports, and scripts only. Do not commit large raw artifacts.
+threshold. Prefer deterministic scripts and local checks. Use uv for repo-local
+Python tooling unless a target repository explicitly requires its own package
+manager. Keep a process log in experiments/phase0_headroom/reports/process.md.
+Commit small manifests, configs, reports, and scripts only. Do not commit large
+raw artifacts.
 
 At each runbook step, update the process log with status, outputs, budget used,
-and the next acceptance gate. If an acceptance gate fails, stop expanding scope
-and write the blocker into the decision memo.
+and the next acceptance gate. After one or more cohesive accepted steps, make a
+checkpoint commit whose message names the completed step range. If an acceptance
+gate fails, stop expanding scope and write the blocker into the decision memo.
 ```
+
+## Execution Defaults
+
+Use modern, maintained tooling, but keep the Phase 0 surface small.
+
+For repo-local Python code under `experiments/phase0_headroom/`, use `uv` as the
+default environment and dependency manager:
+
+- create or update `experiments/phase0_headroom/pyproject.toml` when scripts need
+  Python dependencies or test configuration;
+- commit `uv.lock` if dependency resolution is needed for repeatability;
+- run scripts and tests through `uv run`, for example
+  `uv run python experiments/phase0_headroom/tools/phase0_driver.py ...` and
+  `uv run pytest experiments/phase0_headroom/tools`;
+- add dependencies with `uv add` or `uv add --dev`, scoped to the Phase 0
+  package;
+- do not commit `.venv`, wheel caches, downloaded repositories, or target-repo
+  dependency caches.
+
+If a selected target repository uses npm, pnpm, poetry, cargo, tox, hatch, make,
+or another native tool, use that tool inside the ignored target checkout. The
+Barcarolle orchestration scripts should still run through `uv` unless there is a
+clear blocker recorded in `reports/process.md`.
+
+Checkpoint commits are part of the runbook, not an afterthought. A good commit
+contains one accepted step or a small set of cohesive accepted steps. Use these
+default boundaries unless the evidence naturally splits smaller:
+
+- Step 0-1: preflight, budget, and execution config;
+- Step 2-3: repository selection and target-profile mismatch;
+- Step 4-5: candidate supply and certification funnel;
+- Step 6-8: mini release, budgeted headroom matrix, and decision memo;
+- Step 9: final hygiene fixes only, if needed.
+
+Before each checkpoint commit, run `git diff --check`, run the relevant local
+tests or dry runs, and stage only small reviewable artifacts. The commit message
+should name the completed step range, for example
+`Complete phase 0 steps 2-3 target profile`.
 
 ## Budget Rules
 
@@ -151,7 +192,8 @@ Input:
 
 Actions:
 
-1. Record branch, HEAD commit, date, shell, Python version, and available disk.
+1. Record branch, HEAD commit, date, shell, Python version, `uv --version`, and
+   available disk.
 2. Create `experiments/phase0_headroom/reports/process.md`.
 3. Create `experiments/phase0_headroom/results/cost_ledger.jsonl` if absent.
 4. Check that `.gitignore` excludes large workspaces, caches, and raw artifacts.
@@ -168,6 +210,7 @@ Acceptance:
 
 - process log exists;
 - budget ledger exists;
+- `uv` availability is recorded, or the process log explains the fallback;
 - no paid model call has been made;
 - active `experiments/core_narrative` remains absent from tracked files.
 
@@ -180,12 +223,14 @@ Stop if:
 
 Actions:
 
-1. Create `experiments/phase0_headroom/configs/budget.yaml`.
-2. Set `max_total_usd: 200`, `soft_stop_usd: 160`,
+1. Create or update `experiments/phase0_headroom/pyproject.toml` for repo-local
+   Phase 0 tooling if Python scripts or tests are added.
+2. Create `experiments/phase0_headroom/configs/budget.yaml`.
+3. Set `max_total_usd: 200`, `soft_stop_usd: 160`,
    `stop_and_ask_usd: 180`, and `reserve_usd: 20`.
-3. Create `experiments/phase0_headroom/configs/execution.yaml` with local
+4. Create `experiments/phase0_headroom/configs/execution.yaml` with local
    workspace roots, raw artifact roots, timeout defaults, and no-model defaults.
-4. Add a short `reports/budget_plan.md` explaining how cost is measured.
+5. Add a short `reports/budget_plan.md` explaining how cost is measured.
 
 Suggested `budget.yaml`:
 
@@ -205,11 +250,14 @@ Outputs:
 
 - `configs/budget.yaml`
 - `configs/execution.yaml`
+- `pyproject.toml` and `uv.lock`, if repo-local Python dependencies are needed
 - `reports/budget_plan.md`
 
 Acceptance:
 
 - a new worker can read the configs and know when to stop;
+- repo-local scripts can be run with `uv run`, or the process log explains why
+  no Python package setup was needed;
 - no command can be described as "approved" unless it names the ledger path and
   projected cost.
 
@@ -498,12 +546,17 @@ Actions:
 1. Run `git status --short --ignored`.
 2. Confirm ignored raw artifacts are not staged.
 3. Run `git diff --check`.
-4. Stage only configs, scripts, small manifests, tables, and reports.
-5. Commit with a message that names the completed step.
+4. Run relevant local tests or dry runs, preferably through `uv run` for
+   repo-local Python tooling.
+5. Stage only configs, scripts, small manifests, tables, and reports.
+6. Commit any remaining accepted work with a message that names the completed
+   step or step range.
 
 Acceptance:
 
 - committed artifacts are small and reviewable;
+- each accepted step range has a checkpoint commit, or the process log explains
+  why the work was intentionally grouped differently;
 - `experiments/phase0_headroom/results/cost_ledger.jsonl` is committed only if
   it contains no secrets, endpoints, raw prompts, or private responses;
 - raw model responses and full workspaces remain out of Git;
