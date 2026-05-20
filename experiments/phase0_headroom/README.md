@@ -2,6 +2,9 @@
 
 This directory is for the Barcarolle restart experiments.
 
+Run the experiment from
+`docs/experiments/phase-0-runbook.md`.
+
 Phase 0 asks whether repo-specific benchmark signal exists before building a
 larger benchmark compiler:
 

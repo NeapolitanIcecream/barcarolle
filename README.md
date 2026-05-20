@@ -42,6 +42,7 @@ an active deliverable for this restart.
 
 - [System design](docs/architecture/system-design.md)
 - [Phase 0 headroom experiment plan](docs/experiments/phase-0-headroom-plan.md)
+- [Phase 0 runbook](docs/experiments/phase-0-runbook.md)
 - [Restart consensus notes](docs/restart/2026-05-20-restart-consensus.md)
 
 ## Legacy Archive

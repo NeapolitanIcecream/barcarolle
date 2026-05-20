@@ -2,6 +2,8 @@
 
 Status: restart draft, 2026-05-20.
 
+Operational companion: [Phase 0 runbook](phase-0-runbook.md).
+
 ## Goal
 
 Phase 0 decides whether the benchmark-compiler claim is worth pursuing before
