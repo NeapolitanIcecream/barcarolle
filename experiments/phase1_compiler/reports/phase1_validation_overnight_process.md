@@ -85,3 +85,29 @@ Decision:
   `humanize_source_provenance_fallback_confirmed`.
 - This is acceptable for an operational pilot, but not for validation-grade
   claims.
+
+## Step 3 Adapter And Cost Gates
+
+Adapter preflight commands were run with `source ~/.zshrc` before invocation.
+The workspace preflight tool writes one `{result_prefix}_preflight` artifact, so
+the second adapter run overwrites the first. Both command outputs were checked:
+
+| Adapter | Status | Endpoint proof | Missing env | Blockers |
+| --- | --- | --- | --- | --- |
+| `codex_workspace` | `ready` | `codex_eligible` | `[]` | `[]` |
+| `kilo_workspace` | `ready` | `kilo_eligible` | `[]` | `[]` |
+
+The committed preflight artifact currently reflects the final `kilo_workspace`
+run for prefix `phase1_validation_humanize_holdout_smoke`.
+
+Smoke projection:
+
+- Cells: `4`.
+- Conservative cost: `2.00` USD.
+- Projected cumulative cost: `24.5529578` USD.
+
+Cost gate:
+
+- Projected cumulative cost remains below the `140` USD pre-batch stop
+  threshold.
+- Prior usage observed rate is `0.9221`, above the `0.85` stop threshold.
