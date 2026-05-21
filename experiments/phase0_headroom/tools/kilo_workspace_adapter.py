@@ -56,24 +56,32 @@ def write_kilo_config(config_root: Path, base_url: str) -> Path:
     return path
 
 
-def build_prompt() -> str:
-    return "\n".join(
-        [
-            "Read the attached task statement.",
-            "Inspect the repository in the current workspace.",
-            "Modify only implementation files needed for the requested behavior.",
-            "Do not edit tests, hidden verifier files, generated caches, or files outside the workspace.",
-            "Leave the final answer brief. The evaluation harness will capture git diff after you finish.",
-        ]
-    )
+def build_prompt(completion_mode: str = "current") -> str:
+    lines = [
+        "Read the attached task statement.",
+        "Inspect the repository in the current workspace.",
+        "Modify only implementation files needed for the requested behavior.",
+        "Do not edit tests, hidden verifier files, generated caches, or files outside the workspace.",
+    ]
+    if completion_mode == "strict-final":
+        lines.extend(
+            [
+                "Do not ask follow-up questions.",
+                "Do not show suggestions after editing.",
+                "After edits are complete, provide one brief final answer and terminate.",
+            ]
+        )
+    else:
+        lines.append("Leave the final answer brief. The evaluation harness will capture git diff after you finish.")
+    return "\n".join(lines)
 
 
-def build_kilo_command(workspace: Path, statement_file: Path, timeout_seconds: int) -> list[str]:
+def build_kilo_command(workspace: Path, statement_file: Path, timeout_seconds: int, completion_mode: str = "current") -> list[str]:
     del timeout_seconds
     return [
         "kilo",
         "run",
-        build_prompt(),
+        build_prompt(completion_mode),
         "--pure",
         "--auto",
         "--format",
@@ -117,6 +125,7 @@ def main() -> int:
     parser.add_argument("--statement-file", required=True)
     parser.add_argument("--raw-dir", default=None)
     parser.add_argument("--timeout", type=int, default=900)
+    parser.add_argument("--completion-mode", choices=["current", "strict-final"], default="current")
     args = parser.parse_args()
 
     base = os.environ.get("LLM_BASE_URL")
@@ -146,7 +155,7 @@ def main() -> int:
                 "LLM_API_KEY": key,
             }
         )
-        command = build_kilo_command(workspace, statement_file, args.timeout)
+        command = build_kilo_command(workspace, statement_file, args.timeout, completion_mode=args.completion_mode)
         return run_child(command, workspace, env, args.timeout)
 
 

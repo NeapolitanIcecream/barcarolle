@@ -12,7 +12,7 @@ import subprocess
 import tarfile
 import time
 import urllib.parse
-from dataclasses import dataclass, field
+from dataclasses import dataclass, field, replace
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
@@ -700,6 +700,16 @@ def load_phase0_packages(root: Path) -> list[TaskPackage]:
     return [*load_toolz_packages(root), *load_generic_packages(root)]
 
 
+def select_packages(packages: list[TaskPackage], mode: str, task_ids: list[str] | None = None) -> list[TaskPackage]:
+    if task_ids:
+        wanted = set(task_ids)
+        return [package for package in packages if package.task_id in wanted]
+    if mode == "smoke":
+        wanted = {"toolz__hist__002", "click__rbench__001"}
+        return [package for package in packages if package.task_id in wanted]
+    return packages
+
+
 def score_rows(submissions: list[dict[str, Any]], verifiers: list[dict[str, Any]]) -> list[dict[str, Any]]:
     verifier_by_run = {row["run_id"]: row for row in verifiers}
     rows = []
@@ -989,11 +999,15 @@ def run_matrix(
     adapter_id: str | None = None,
     matrix_config_path: Path | str | None = None,
     result_prefix: str = "workspace_acut",
+    task_ids: list[str] | None = None,
+    timeout_seconds: int | None = None,
 ) -> None:
     exp = phase0_root(root)
     resolved_adapter_config = resolve_repo_path(root, adapter_config_path, CONFIG_REL)
     resolved_matrix_config = resolve_repo_path(root, matrix_config_path, MATRIX_CONFIG_REL)
     config = resolve_adapter_config(resolved_adapter_config, adapter_id)
+    if timeout_seconds is not None:
+        config = replace(config, timeout_seconds=timeout_seconds)
     if not config.command_template.strip():
         raise RuntimeError("ACUT workspace command is not configured")
     submission_path = result_file(exp, result_prefix, "submissions", ".jsonl")
@@ -1001,10 +1015,7 @@ def run_matrix(
     cost_path = result_file(exp, result_prefix, "cost_ledger", ".jsonl")
     existing_submissions = read_jsonl(submission_path)
     reusable_task_ids = existing_task_ids_for_adapter(existing_submissions, config.adapter_id) if mode == "matrix" else set()
-    packages = load_phase0_packages(root)
-    if mode == "smoke":
-        wanted = {"toolz__hist__002", "click__rbench__001"}
-        packages = [package for package in packages if package.task_id in wanted]
+    packages = select_packages(load_phase0_packages(root), mode=mode, task_ids=task_ids)
     submissions: list[dict[str, Any]] = []
     verifiers: list[dict[str, Any]] = []
     cost_rows: list[dict[str, Any]] = []
@@ -1089,6 +1100,8 @@ def main() -> int:
         command_parser.add_argument("--adapter-id", default=None, help="Adapter id to select when --adapter-config contains adapters.")
         command_parser.add_argument("--matrix-config", default=None, help="Path to the matrix config to associate with this run.")
         command_parser.add_argument("--result-prefix", default="workspace_acut", help="Prefix for result and report artifact filenames.")
+        command_parser.add_argument("--task-id", action="append", default=None, help="Task id to run; repeat to run a bounded subset.")
+        command_parser.add_argument("--timeout-seconds", type=int, default=None, help="Override the selected adapter timeout for this run.")
 
     for name in ["preflight", "smoke", "run-matrix", "summarize"]:
         add_common_options(subcommands.add_parser(name))
@@ -1097,9 +1110,27 @@ def main() -> int:
     if args.command == "preflight":
         preflight(root, adapter_config_path=args.adapter_config, adapter_id=args.adapter_id, result_prefix=args.result_prefix)
     elif args.command == "smoke":
-        run_matrix(root, "smoke", adapter_config_path=args.adapter_config, adapter_id=args.adapter_id, matrix_config_path=args.matrix_config, result_prefix=args.result_prefix)
+        run_matrix(
+            root,
+            "smoke",
+            adapter_config_path=args.adapter_config,
+            adapter_id=args.adapter_id,
+            matrix_config_path=args.matrix_config,
+            result_prefix=args.result_prefix,
+            task_ids=args.task_id,
+            timeout_seconds=args.timeout_seconds,
+        )
     elif args.command == "run-matrix":
-        run_matrix(root, "matrix", adapter_config_path=args.adapter_config, adapter_id=args.adapter_id, matrix_config_path=args.matrix_config, result_prefix=args.result_prefix)
+        run_matrix(
+            root,
+            "matrix",
+            adapter_config_path=args.adapter_config,
+            adapter_id=args.adapter_id,
+            matrix_config_path=args.matrix_config,
+            result_prefix=args.result_prefix,
+            task_ids=args.task_id,
+            timeout_seconds=args.timeout_seconds,
+        )
     elif args.command == "summarize":
         summarize(root, result_prefix=args.result_prefix)
     return 0

@@ -162,6 +162,26 @@ def test_result_prefix_isolates_result_files(tmp_path: Path) -> None:
     assert (exp / "results" / "prefix_b_submissions.jsonl").exists()
 
 
+def test_select_packages_prefers_explicit_task_ids_over_smoke_defaults(tmp_path: Path) -> None:
+    repo, base_commit = make_repo(tmp_path)
+    packages = [
+        package_for(repo, base_commit, tmp_path),
+        workspace_acut.TaskPackage(
+            task_id="click__rbench__001",
+            repo_id="click",
+            split="G_mini",
+            source_repo=repo,
+            base_commit=base_commit,
+            solver_facing_statement="Keep me out of an explicit probe.",
+            verifier_command=["true"],
+        ),
+    ]
+
+    selected = workspace_acut.select_packages(packages, mode="smoke", task_ids=["fake__001"])
+
+    assert [package.task_id for package in selected] == ["fake__001"]
+
+
 def test_workspace_adapter_captures_git_diff_and_verifies_in_fresh_workspace(tmp_path: Path) -> None:
     repo, base_commit = make_repo(tmp_path)
     fake_acut = write_fake_acut(

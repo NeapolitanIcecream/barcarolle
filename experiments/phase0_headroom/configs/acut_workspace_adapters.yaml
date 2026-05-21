@@ -29,7 +29,7 @@ adapters:
     harness_name: kilo
     acut_id: kilo_workspace_gpt_5_4_mini
     model_or_agent_name: gpt-5.4-mini
-    command_template: uv run --project /Users/chenmohan/gits/barcarolle/experiments/phase0_headroom python /Users/chenmohan/gits/barcarolle/experiments/phase0_headroom/tools/kilo_workspace_adapter.py --workspace {workspace} --statement-file {statement_file} --raw-dir {raw_dir} --timeout {timeout_seconds}
+    command_template: uv run --project /Users/chenmohan/gits/barcarolle/experiments/phase0_headroom python /Users/chenmohan/gits/barcarolle/experiments/phase0_headroom/tools/kilo_workspace_adapter.py --workspace {workspace} --statement-file {statement_file} --raw-dir {raw_dir} --timeout {timeout_seconds} --completion-mode strict-final
     timeout_seconds: 900
     requires_env:
       - LLM_BASE_URL

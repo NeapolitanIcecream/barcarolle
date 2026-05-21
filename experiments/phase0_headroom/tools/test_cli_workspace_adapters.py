@@ -62,6 +62,23 @@ def test_kilo_command_delivers_statement_file_and_workspace() -> None:
     assert "LLM_API_KEY=" not in rendered
 
 
+def test_kilo_strict_final_mode_tells_cli_to_finalize_and_exit() -> None:
+    command = kilo_workspace_adapter.build_kilo_command(
+        workspace=Path("/tmp/workspace"),
+        statement_file=Path("/tmp/workspace/.barcarolle/statement.md"),
+        timeout_seconds=300,
+        completion_mode="strict-final",
+    )
+
+    prompt = command[2]
+
+    assert "provide one brief final answer and terminate" in prompt
+    assert "Do not ask follow-up questions" in prompt
+    assert "Do not show suggestions after editing" in prompt
+    assert "--auto" in command
+    assert "LLM_API_KEY=" not in " ".join(command)
+
+
 def test_merge_rows_by_run_id_replaces_existing_rows() -> None:
     merged = workspace_acut_run.merge_rows_by_run_id(
         [{"run_id": "a", "status": "old"}, {"run_id": "b", "status": "kept"}],
