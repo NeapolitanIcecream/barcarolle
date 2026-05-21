@@ -23,6 +23,12 @@ all LLM and ACUT calls to use `LLM_BASE_URL` plus `LLM_API_KEY`, records token
 usage and measured cost, and uses those measurements to decide whether to scale
 task count or ACUT count.
 
+For scoreable ACUT reruns after the measured Matrix A output-contract failure,
+use `docs/experiments/phase-0-workspace-acut-adapter-runbook.md`. That runbook
+keeps Barcarolle on the benchmark side of the boundary: it prepares clean solver
+workspaces, invokes a configured endpoint-backed ACUT harness, captures the
+resulting `git diff`, and verifies the patch in a fresh hidden-oracle workspace.
+
 Phase 0 asks whether repo-specific benchmark signal exists before building a
 larger benchmark compiler:
 

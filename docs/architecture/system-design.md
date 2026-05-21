@@ -13,10 +13,41 @@ The evaluated subject remains the ACUT, or Agent Configuration Under Test:
 model, prompt or skill policy, tools, retrieval, runtime budget, harness,
 execution mode, and adapter boundary.
 
+## ACUT Harness Boundary
+
+Barcarolle evaluates ACUTs; it does not implement the ACUT's agent harness. The
+ACUT owns file search, editing strategy, tool use, public-test policy,
+multi-turn retry behavior, model calls, retrieval, and trace internals.
+
+Barcarolle's execution boundary is a workspace adapter:
+
+```text
+task package + clean solver workspace
+        ↓
+configured ACUT harness mutates the workspace
+        ↓
+Barcarolle captures git diff
+        ↓
+fresh verifier workspace + hidden oracle
+        ↓
+score, cost, latency, and failure taxonomy
+```
+
+The benchmark side must provide only solver-visible task statements and allowed
+context to the solver workspace. Hidden tests, reference patches, source
+provenance that leaks the answer, and verifier commands remain outside the ACUT
+workspace.
+
+One-shot chat-completion diff generation is not the primary scoreable protocol.
+It may be retained as a diagnostic baseline, but Phase 0+ scoreable ACUT runs
+should let the ACUT harness modify a real worktree and let Barcarolle capture
+the resulting patch with Git.
+
 ## Scope Boundaries
 
 - Do not frame another general-purpose SWE task generator as the core
   contribution.
+- Do not reimplement an ACUT agent harness inside Barcarolle.
 - Do not make license issuance or G0-G5 authorization the primary deliverable in
   this research phase.
 - Do not rely on ranking reversal as the main research claim.
