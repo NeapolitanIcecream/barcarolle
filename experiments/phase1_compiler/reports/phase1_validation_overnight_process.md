@@ -62,3 +62,26 @@ Planned Humanize internal unseen ACUT holdout tasks:
 
 The plan includes both `B_real` and `W_real` coverage and keeps the evidence
 label at `internal_unseen_acut_holdout_not_future_holdout`.
+
+## Step 2 Source Provenance Audit
+
+Created:
+
+- `experiments/phase1_compiler/tools/phase1_source_provenance_audit.py`
+- `experiments/phase1_compiler/results/phase1_source_provenance_audit.json`
+- `experiments/phase1_compiler/reports/phase1_source_provenance_audit.md`
+
+Audit result:
+
+- Toolz: `6/6` certified tasks have issue/PR-derived usable context.
+- Humanize: `0/12` certified tasks have issue/PR-derived usable context.
+- Humanize: `12/12` certified tasks remain commit-message fallback only.
+- GitHub commit-to-PR metadata lookup was attempted and found `0` pull request
+  metadata matches for the 12 certified Humanize target commits.
+
+Decision:
+
+- Humanize source provenance status:
+  `humanize_source_provenance_fallback_confirmed`.
+- This is acceptable for an operational pilot, but not for validation-grade
+  claims.
