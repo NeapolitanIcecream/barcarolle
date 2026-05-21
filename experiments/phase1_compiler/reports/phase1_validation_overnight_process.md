@@ -111,3 +111,32 @@ Cost gate:
 - Projected cumulative cost remains below the `140` USD pre-batch stop
   threshold.
 - Prior usage observed rate is `0.9221`, above the `0.85` stop threshold.
+
+## Step 4 Humanize Holdout Smoke
+
+Paid ACUT smoke cells were run sequentially:
+
+- Codex: `humanize__hist__002`, `humanize__hist__010`.
+- Kilo: `humanize__hist__002`, `humanize__hist__010`.
+
+Smoke outcome:
+
+- Cells: `4`.
+- Scoreable cells: `4`.
+- Terminal statuses: `verified_fail=4`.
+- Policy violations: `0`.
+- Usage observed rate for smoke prefix: `1.0`.
+- Observed-or-conservative smoke cost: `1.2234708` USD.
+
+Cumulative cost reconciliation was refreshed with all prior Phase 0 prefixes
+plus `phase1_validation_humanize_holdout_smoke`:
+
+- Cumulative calls: `81`.
+- Cumulative usage observed rate: `0.9259`.
+- Cumulative observed-or-conservative estimated spend: `23.7764286` USD.
+
+Decision:
+
+- Smoke passes the scoreability, policy, usage, and cost gates.
+- The verified failures are valid experimental signal, not a harness blocker.
+- Continue to the main Humanize holdout batch.
