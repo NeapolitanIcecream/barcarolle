@@ -95,6 +95,9 @@ class ScorecardCell:
     scoreable: bool
     module_or_package: list[str]
     weight: float = 1.0
+    adapter_id: str = ""
+    acut_id: str = ""
+    harness_name: str = ""
 
     @property
     def compatible(self) -> bool:
@@ -113,6 +116,7 @@ class ScorecardCell:
 class Scorecard:
     run_id: str
     cells: list[ScorecardCell]
+    source_score_table: str = ""
 
 
 @dataclass(frozen=True)
@@ -123,6 +127,11 @@ class WeightedScoreSummary:
     evidence_status: str
     stratum_scores: dict[str, dict[str, Any]]
     insufficient_evidence: list[str]
+    source_score_table: str = ""
+    acut_ids: list[str] = field(default_factory=list)
+    cell_count: int = 0
+    compatible_cell_count: int = 0
+    incompatible_cell_count: int = 0
 
 
 def read_json(path: Path) -> dict[str, Any]:
@@ -195,8 +204,25 @@ def load_target_profile(phase0_root: Path = PHASE0_ROOT) -> TargetProfile:
     )
 
 
-def scorecard_from_phase0(release: ReleaseManifest, phase0_root: Path = PHASE0_ROOT) -> Scorecard:
-    rows = read_csv(phase0_root / "results" / "headroom_score_table.csv")
+def resolve_score_table_path(phase0_root: Path, score_table_path: Path | str | None = None) -> Path:
+    if score_table_path is None:
+        return phase0_root / "results" / "headroom_score_table.csv"
+    path = Path(score_table_path)
+    if path.is_absolute():
+        return path
+    if path.exists():
+        return path
+    return phase0_root / "results" / path
+
+
+def scorecard_from_phase0(
+    release: ReleaseManifest,
+    phase0_root: Path = PHASE0_ROOT,
+    score_table_path: Path | str | None = None,
+    run_id: str = "phase0_headroom_matrix",
+) -> Scorecard:
+    resolved_score_table = resolve_score_table_path(phase0_root, score_table_path)
+    rows = read_csv(resolved_score_table)
     task_by_id = {task.task_id: task for task in release.tasks}
     cells = []
     for row in rows:
@@ -211,9 +237,12 @@ def scorecard_from_phase0(release: ReleaseManifest, phase0_root: Path = PHASE0_R
                 scoreable=row["scoreable_cell"] == "True",
                 module_or_package=task.module_or_package,
                 weight=task.weight,
+                adapter_id=row.get("adapter_id", ""),
+                acut_id=row.get("acut_id", ""),
+                harness_name=row.get("harness_name", ""),
             )
         )
-    return Scorecard(run_id="phase0_headroom_matrix", cells=cells)
+    return Scorecard(run_id=run_id, cells=cells, source_score_table=str(resolved_score_table))
 
 
 def compute_weighted_score(scorecard: Scorecard, target_profile: TargetProfile) -> WeightedScoreSummary:
@@ -260,6 +289,11 @@ def compute_weighted_score(scorecard: Scorecard, target_profile: TargetProfile) 
         evidence_status="compatible" if weighted_score is not None else "insufficient_evidence",
         stratum_scores=stratum_scores,
         insufficient_evidence=insufficient,
+        source_score_table=scorecard.source_score_table,
+        acut_ids=sorted({cell.acut_id for cell in scorecard.cells if cell.acut_id}),
+        cell_count=len(scorecard.cells),
+        compatible_cell_count=sum(1 for cell in scorecard.cells if cell.compatible),
+        incompatible_cell_count=sum(1 for cell in scorecard.cells if not cell.compatible),
     )
 
 
@@ -267,7 +301,12 @@ def run_import_phase0(args: argparse.Namespace) -> None:
     phase0_root = Path(args.phase0_root).resolve()
     release = import_phase0_release(phase0_root)
     target_profile = load_target_profile(phase0_root)
-    scorecard = scorecard_from_phase0(release, phase0_root)
+    scorecard = scorecard_from_phase0(
+        release,
+        phase0_root,
+        score_table_path=getattr(args, "score_table", None),
+        run_id=getattr(args, "run_id", "phase0_headroom_matrix"),
+    )
     weighted = compute_weighted_score(scorecard, target_profile)
     output_dir = Path(args.output_dir)
     write_json(output_dir / "toolz_phase1_draft_release.json", asdict(release))
@@ -280,6 +319,8 @@ def main() -> int:
     import_parser = subcommands.add_parser("import-phase0", help="Import the current Phase 0 toolz release.")
     import_parser.add_argument("--phase0-root", default=str(PHASE0_ROOT))
     import_parser.add_argument("--output-dir", default=str(ROOT / "results"))
+    import_parser.add_argument("--score-table", default=None)
+    import_parser.add_argument("--run-id", default="phase0_headroom_matrix")
     args = parser.parse_args()
     if args.command == "import-phase0":
         run_import_phase0(args)

@@ -112,3 +112,25 @@ Results:
 
 Step 6 thresholds passed. MAE, RMSE, Brier, and ordering accuracy remain
 `not_applicable_underpowered`.
+
+## Step 7 Phase 1 Refresh
+
+The Phase 1 compiler was refreshed from:
+
+```text
+experiments/phase0_headroom/results/codex_kilo_workspace_followup_score_table.csv
+```
+
+Outputs:
+
+- `experiments/phase1_compiler/results/toolz_phase1_draft_release.json`
+- `experiments/phase1_compiler/results/toolz_phase1_weighted_score.json`
+
+The weighted summary identifies both ACUTs:
+
+- `codex_workspace_gpt_5_4_mini`
+- `kilo_workspace_gpt_5_4_mini`
+
+It imports `20` cells, treats `19` as compatible, keeps the one policy
+violation incompatible, and preserves overall `insufficient_evidence` instead
+of introducing a predictive-validity claim.

@@ -1,5 +1,12 @@
 {
+  "acut_ids": [
+    "codex_workspace_gpt_5_4_mini",
+    "kilo_workspace_gpt_5_4_mini"
+  ],
+  "cell_count": 20,
+  "compatible_cell_count": 19,
   "evidence_status": "insufficient_evidence",
+  "incompatible_cell_count": 1,
   "insufficient_evidence": [
     "__init__",
     "_signatures",
@@ -9,11 +16,11 @@
     "curried",
     "dicttoolz",
     "functoolz",
-    "itertoolz",
     "sandbox"
   ],
-  "run_id": "phase0_headroom_matrix",
+  "run_id": "codex_kilo_workspace_followup_matrix",
   "schema_version": "barcarolle.phase1.weighted_score_summary.v1",
+  "source_score_table": "experiments/phase0_headroom/results/codex_kilo_workspace_followup_score_table.csv",
   "stratum_scores": {
     "__init__": {
       "compatible_cell_count": 0,
@@ -65,17 +72,17 @@
       "target_weight": 0.04938271604938271
     },
     "functoolz": {
-      "compatible_cell_count": 2,
+      "compatible_cell_count": 9,
       "evidence_status": "insufficient_evidence",
-      "incompatible_cell_count": 3,
+      "incompatible_cell_count": 1,
       "score": null,
       "target_weight": 0.345679012345679
     },
     "itertoolz": {
-      "compatible_cell_count": 0,
-      "evidence_status": "insufficient_evidence",
-      "incompatible_cell_count": 1,
-      "score": null,
+      "compatible_cell_count": 2,
+      "evidence_status": "compatible",
+      "incompatible_cell_count": 0,
+      "score": 0.0,
       "target_weight": 0.14814814814814814
     },
     "sandbox": {
