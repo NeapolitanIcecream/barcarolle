@@ -1,6 +1,6 @@
 # Workspace Cost Usage Report
 
-Generated at `2026-05-21T10:16:30+00:00`.
+Generated at `2026-05-21T10:40:39+00:00`.
 
 Provider-billed dollars remain unavailable for these workspace ACUT runs. The canonical spend estimate is therefore the observed-token estimate priced through `experiments/phase0_headroom/configs/model_pricing.yaml`; missing usage, if any, is shown separately as the previous conservative fallback.
 
@@ -10,6 +10,7 @@ Provider-billed dollars remain unavailable for these workspace ACUT runs. The ca
 | codex_kilo_workspace_followup_smoke | 6 | 1.0000 | 3.00000000 | 1.53421560 | 1.53421560 | 0 | 54.188 |
 | codex_kilo_workspace_followup | 20 | 1.0000 | 10.00000000 | 5.64126960 | 5.64126960 | 0 | 45.57 |
 | kilo_completion_probe | 3 | 1.0000 | 1.50000000 | 0.61331400 | 0.61331400 | 0 | 19.065 |
+| codex_kilo_workspace_stability | 20 | 1.0000 | 10.00000000 | 4.70140020 | 4.70140020 | 0 | 38.895 |
 
 ## Per-Harness Observed Cost
 
@@ -28,6 +29,10 @@ Provider-billed dollars remain unavailable for these workspace ACUT runs. The ca
 
 ### kilo_completion_probe
 - `kilo_workspace`: `USD 0.61331400`.
+
+### codex_kilo_workspace_stability
+- `codex_workspace`: `USD 2.51145480`.
+- `kilo_workspace`: `USD 2.18994540`.
 
 ## Notes
 
