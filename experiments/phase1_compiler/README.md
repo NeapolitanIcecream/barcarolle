@@ -1,27 +1,62 @@
-# Phase 1 Compiler Skeleton
+# Phase 1 MVP Compiler
 
-This workspace is a minimal Barcarolle Phase 1 compiler skeleton. It does not claim Phase 1 predictive validation.
+This workspace builds the Barcarolle Phase 1 MVP compiler artifacts from
+committed Phase 0 evidence. It does not run ACUT harnesses and does not claim
+predictive validation.
 
-It currently provides:
-
-- typed dataclass schemas for task manifests, release manifests, target profiles, certification reports, agent run manifests, scorecards, and weighted score summaries;
-- a converter from the current Phase 0 `toolz` mini release into a draft Phase 1 release manifest;
-- a small stratified weighting module that marks missing or incompatible evidence as `insufficient_evidence`;
-- tests for schema validation and weighted score computation.
-
-Run:
+Run tests:
 
 ```bash
 uv run --project experiments/phase1_compiler pytest -q
-uv run --project experiments/phase1_compiler python experiments/phase1_compiler/tools/phase1_compiler.py import-phase0
 ```
 
-The Phase 1 MVP implementation handoff is:
+Build the MVP artifact set:
+
+```bash
+uv run --project experiments/phase1_compiler python \
+  experiments/phase1_compiler/tools/phase1_compiler.py \
+  build-mvp \
+  --config experiments/phase1_compiler/configs/phase1_mvp.yaml
+```
+
+Validate generated outputs:
+
+```bash
+uv run --project experiments/phase1_compiler python \
+  experiments/phase1_compiler/tools/phase1_compiler.py \
+  validate \
+  --config experiments/phase1_compiler/configs/phase1_mvp.yaml
+```
+
+The main outputs are written to:
 
 ```text
-docs/experiments/phase-1-mvp-compiler-runbook.md
+experiments/phase1_compiler/results/
+experiments/phase1_compiler/reports/
 ```
 
-That runbook starts from `ready_for_phase1_mvp`, imports Toolz and humanize
-evidence, and builds compiler artifacts while keeping predictive validation,
-pure harness effects, and production ranking out of scope.
+Key closeout report:
+
+```text
+experiments/phase1_compiler/reports/phase1_mvp_closeout.md
+```
+
+## Evidence Boundary
+
+The MVP compiler imports:
+
+- Toolz as the primary target repo;
+- humanize as the second target repo;
+- Click only as a generic comparator;
+- repaired Codex/Kilo workspace score tables;
+- Phase 0 certification and cost summaries.
+
+The current evidence supports compiler infrastructure only. These claims remain
+explicitly disallowed:
+
+- `predictive_validity_established`
+- `pure_harness_effect`
+- `production_benchmark_ranking`
+
+The next step is a Phase 1 validation-design runbook, with source-adapter
+hardening before any validation-grade claim.

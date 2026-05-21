@@ -1,0 +1,83 @@
+{
+  "allowed_claims": [
+    "phase1_mvp_compiler_infrastructure",
+    "insufficient_evidence_for_predictive_validation",
+    "same_endpoint_model_different_cli_harnesses",
+    "source_provenance_issue_derived",
+    "source_provenance_commit_message_fallback",
+    "generic_comparator_archived_click_r0"
+  ],
+  "certification_counts_by_repo": {
+    "humanize": {
+      "certified": 12,
+      "near_certified": 4
+    },
+    "toolz": {
+      "certified": 6,
+      "rejected": 10
+    }
+  },
+  "claim_scope": "phase1_mvp_compiler_infrastructure",
+  "cost_summary": {
+    "call_count": 77,
+    "observed_or_conservative_estimated_cost_usd": 22.5529578,
+    "provider_billed_cost_status": "unavailable",
+    "usage_observed_rate": 0.9221
+  },
+  "disallowed_claims": [
+    "predictive_validity_established",
+    "pure_harness_effect",
+    "production_benchmark_ranking"
+  ],
+  "evidence_status": "mvp_compiler_artifacts_built_insufficient_for_predictive_validation",
+  "generated_at": "2026-05-21T14:41:07+00:00",
+  "next_runbook_recommendation": "write Phase 1 validation-design runbook with source-adapter hardening as a prerequisite for validation-grade claims",
+  "predictive_validity_established": false,
+  "production_ranking_status": "not_produced",
+  "readiness_gate_consumed": "ready_for_phase1_mvp",
+  "release_id": "phase1_mvp_multi_repo_release",
+  "release_status": "pilot_grade",
+  "repos_imported": [
+    {
+      "certified_task_count": 6,
+      "legacy_benchmark_grade": true,
+      "repo_id": "toolz",
+      "role": "primary_target_repo",
+      "source_provenance": "source_provenance_issue_derived",
+      "source_release": "experiments/phase0_headroom/releases/toolz_phase0_mini_release.json",
+      "source_release_status": "benchmark_grade_candidate"
+    },
+    {
+      "certified_task_count": 12,
+      "legacy_benchmark_grade": true,
+      "legacy_pilot_grade": true,
+      "repo_id": "humanize",
+      "role": "second_target_repo",
+      "source_provenance": "source_provenance_commit_message_fallback",
+      "source_release": "experiments/phase0_headroom/releases/humanize_phase0_pilot_release.json",
+      "source_release_status": "pilot_grade"
+    }
+  ],
+  "schema_version": "barcarolle.phase1.mvp_closeout.v1",
+  "scorecard_cells_by_result_prefix": {
+    "codex_kilo_workspace_followup": 20,
+    "codex_kilo_workspace_stability": 20,
+    "humanize_pre_phase1_workspace": 8
+  },
+  "task_counts_by_repo": {
+    "humanize": 12,
+    "toolz": 6
+  },
+  "weighted_score_evidence": {
+    "diagnostic_score_type": "diagnostic_observed_pass_rate",
+    "insufficient_evidence": [
+      "future_holdout_unavailable_in_current_evidence",
+      "predictive_validity_not_established",
+      "humanize_source_provenance_commit_message_fallback",
+      "toolz_followup_and_stability_are_not_independent_future_validation_samples",
+      "generic_comparator_click_not_a_target_repo_validation_sample",
+      "policy_violations_present_in_imported_scorecards"
+    ],
+    "predictive_score": null
+  }
+}

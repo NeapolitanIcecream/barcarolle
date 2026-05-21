@@ -43,6 +43,8 @@ Before starting Phase 1 MVP implementation, use
 a bounded second-repository pilot, keeps the repaired workspace ACUT protocol,
 imports usage, and writes an explicit Phase 1 readiness gate without claiming
 predictive validity.
+The resulting Phase 1 MVP compiler closeout is
+`../phase1_compiler/reports/phase1_mvp_closeout.md`.
 
 Phase 0 asks whether repo-specific benchmark signal exists before building a
 larger benchmark compiler:
