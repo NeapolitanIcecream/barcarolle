@@ -42,3 +42,23 @@ Current budget position:
 - Projected cumulative after smoke plus main: `30.5529578` USD.
 - These projections are below the `140` USD pre-batch stop threshold and the
   `160` USD unattended stop threshold.
+
+## Step 1 Overnight Plan
+
+Created:
+
+- `experiments/phase1_compiler/configs/phase1_validation_overnight.yaml`
+- `experiments/phase1_compiler/results/phase1_validation_overnight_plan.json`
+
+Planned Humanize internal unseen ACUT holdout tasks:
+
+- Smoke: `humanize__hist__002`, `humanize__hist__010`.
+- Main: `humanize__hist__003`, `humanize__hist__004`,
+  `humanize__hist__007`, `humanize__hist__008`,
+  `humanize__hist__012`, `humanize__hist__015`.
+- Already solved and excluded: `humanize__hist__005`,
+  `humanize__hist__006`, `humanize__hist__013`,
+  `humanize__hist__014`.
+
+The plan includes both `B_real` and `W_real` coverage and keeps the evidence
+label at `internal_unseen_acut_holdout_not_future_holdout`.
