@@ -1,0 +1,15 @@
+{
+  "schema_version": "barcarolle.workspace_acut_matrix.v1",
+  "generated_at": "2026-05-21T03:35:45Z",
+  "status": "blocked_endpoint_proof",
+  "blocker": "both_harnesses_failed_endpoint_proof",
+  "comparison_design": "same_model_cross_harness",
+  "scheduled_cell_count": 0,
+  "terminal_status_counts": {},
+  "scoreable_cell_count": 0,
+  "adapter_statuses": {
+    "codex_workspace": "codex_blocked_endpoint_proof",
+    "kilo_workspace": "kilo_blocked_endpoint_proof"
+  },
+  "decision": "smoke_and_full_matrix_not_run"
+}

@@ -1,0 +1,18 @@
+{
+  "schema_version": "barcarolle.workspace_acut_metrics.v1",
+  "generated_at": "2026-05-21T03:35:45Z",
+  "status": "blocked_endpoint_proof",
+  "blocker": "codex_blocked_endpoint_proof,kilo_blocked_endpoint_proof",
+  "total_cells": 0,
+  "scoreable_cell_count": 0,
+  "terminal_status_counts": {},
+  "split_metrics": {},
+  "cost_per_submitted_cell_usd": null,
+  "cost_per_scoreable_cell_usd": null,
+  "median_latency_seconds": null,
+  "g_mini_to_w_real_available": false,
+  "g_mini_plus_b_real_to_w_real_available": false,
+  "mae": "not_applicable_underpowered",
+  "rmse": "not_applicable_underpowered",
+  "brier_score": "not_applicable_underpowered"
+}

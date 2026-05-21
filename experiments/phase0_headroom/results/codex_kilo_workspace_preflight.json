@@ -1,0 +1,67 @@
+{
+  "schema_version": "barcarolle.codex_kilo_workspace_preflight.v1",
+  "generated_at": "2026-05-21T03:35:45Z",
+  "status": "blocked_endpoint_proof",
+  "branch": "codex/restart-benchmark-compiler",
+  "head": "fd673bec",
+  "comparison_design": "same_model_cross_harness",
+  "preferred_model": "gpt-5.4-mini",
+  "adapter_config": "experiments/phase0_headroom/configs/acut_workspace_adapters.yaml",
+  "required_env_present": true,
+  "missing_env": [],
+  "endpoint_host_hash": "9952174049b2",
+  "local_subscription_fallback": "disabled",
+  "openai_or_provider_fallback": "disabled",
+  "generic_comparator_scoreable_same_protocol_count": 4,
+  "step0_checks": {
+    "codex_present": true,
+    "kilo_present": true,
+    "codex_exec_help": true,
+    "kilo_run_help": true,
+    "git_diff_check": true,
+    "phase0_tool_tests": true,
+    "phase1_compiler_tests": true
+  },
+  "adapters": [
+    {
+      "adapter_id": "codex_workspace",
+      "acut_id": "codex_workspace_gpt_5_4_mini",
+      "harness_name": "codex",
+      "model_or_agent_name": "gpt-5.4-mini",
+      "endpoint_proof_status": "codex_blocked_endpoint_proof",
+      "eligible": false,
+      "command_template_configured": false,
+      "proof_mode": "non_scoreable_endpoint_probe",
+      "credential_source": "OPENAI_API_KEY mapped from LLM_API_KEY in a temporary CODEX_HOME",
+      "endpoint_source": "openai_base_url mapped from LLM_BASE_URL",
+      "terminal_error_class": "responses_websocket_unexpected_status_then_stream_disconnected",
+      "scoreable_calls_authorized": false
+    },
+    {
+      "adapter_id": "kilo_workspace",
+      "acut_id": "kilo_workspace_gpt_5_4_mini",
+      "harness_name": "kilo",
+      "model_or_agent_name": "gpt-5.4-mini",
+      "endpoint_proof_status": "kilo_blocked_endpoint_proof",
+      "eligible": false,
+      "command_template_configured": false,
+      "proof_mode": "non_scoreable_endpoint_probe",
+      "credential_source": "temporary Kilo auth/config attempts sourced only from LLM_API_KEY",
+      "endpoint_source": "temporary Kilo config sourced only from LLM_BASE_URL",
+      "terminal_error_class": "provider_auth_header_missing_after_llm_key_mapping",
+      "scoreable_calls_authorized": false
+    }
+  ],
+  "budget": {
+    "soft_cap_usd": 10,
+    "hard_cap_usd": 25,
+    "stop_before_batch_projected_incremental_usd": 15,
+    "estimated_cost_usd": 0.0,
+    "usage_observed": false
+  },
+  "blockers": [
+    "codex_blocked_endpoint_proof",
+    "kilo_blocked_endpoint_proof"
+  ],
+  "decision": "stop_before_scoreable_workspace_acut_calls"
+}

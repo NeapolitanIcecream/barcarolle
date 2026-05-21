@@ -14,8 +14,9 @@ adapters:
       - LLM_BASE_URL
       - LLM_API_KEY
     endpoint_proof:
-      status: pending
-      evidence: null
+      status: codex_blocked_endpoint_proof
+      evidence: experiments/phase0_headroom/reports/codex_kilo_workspace_preflight.md
+      blocker: responses_websocket_stream_did_not_complete
     workspace_arg_style: template
     statement_delivery: file
     usage_observation:
@@ -33,8 +34,9 @@ adapters:
       - LLM_BASE_URL
       - LLM_API_KEY
     endpoint_proof:
-      status: pending
-      evidence: null
+      status: kilo_blocked_endpoint_proof
+      evidence: experiments/phase0_headroom/reports/codex_kilo_workspace_preflight.md
+      blocker: provider_auth_header_missing_after_llm_key_mapping
     workspace_arg_style: template
     statement_delivery: file
     usage_observation:
