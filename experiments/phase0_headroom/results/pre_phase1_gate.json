@@ -1,0 +1,52 @@
+{
+  "cost_evidence": {
+    "actual_provider_billed_cost_usd": null,
+    "humanize_observed_or_conservative_estimated_cost_usd": 2.3785506,
+    "pricing_source": "user_estimate_required_conservative_default",
+    "total_call_count": 77,
+    "total_observed_or_conservative_estimated_cost_usd": 22.5529578,
+    "total_usage_observed_rate": 0.9221
+  },
+  "generated_at": "2026-05-21T12:26:32Z",
+  "open_blockers": [],
+  "phase0_decision": "proceed_regression_benchmark",
+  "phase1_allowed_scope": [
+    "multi_repo_compiler_mvp",
+    "source_adapter_and_certification_infrastructure",
+    "workspace_acut_import_and_score_tables",
+    "readiness_and_artifact_hygiene_reports"
+  ],
+  "phase1_disallowed_claims": [
+    "predictive_validity_established",
+    "pure_harness_effect",
+    "production_benchmark_ranking"
+  ],
+  "predictive_validity_established": false,
+  "schema_version": "barcarolle.pre_phase1_gate.v1",
+  "second_repo_evidence": {
+    "certified_task_count": 12,
+    "hidden_oracle_leakage_detected": false,
+    "kilo_timeout_rows": 0,
+    "policy_violation_count": 0,
+    "release_id": "humanize_phase0_pilot",
+    "release_status": "pilot_grade",
+    "result_prefix": "humanize_pre_phase1_workspace",
+    "scoreable_cell_count": 8,
+    "scoreable_rate": 1.0,
+    "scheduled_cell_count": 8,
+    "test_edit_policy_violations": 0,
+    "usage_observed_rate": 1.0
+  },
+  "status": "ready_for_phase1_mvp",
+  "toolz_evidence": {
+    "decision": "proceed_regression_benchmark",
+    "predictive_validity_established": false,
+    "repaired_followup_scoreable_cells": 19,
+    "stability_kilo_timeout_rows": 0,
+    "stability_scoreable_cells": 18,
+    "source_reports": [
+      "experiments/phase0_headroom/reports/phase0_decision_memo.md",
+      "experiments/phase0_headroom/reports/codex_kilo_workspace_stability_analysis.md"
+    ]
+  }
+}
