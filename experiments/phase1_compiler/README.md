@@ -15,3 +15,13 @@ Run:
 uv run --project experiments/phase1_compiler pytest -q
 uv run --project experiments/phase1_compiler python experiments/phase1_compiler/tools/phase1_compiler.py import-phase0
 ```
+
+The Phase 1 MVP implementation handoff is:
+
+```text
+docs/experiments/phase-1-mvp-compiler-runbook.md
+```
+
+That runbook starts from `ready_for_phase1_mvp`, imports Toolz and humanize
+evidence, and builds compiler artifacts while keeping predictive validation,
+pure harness effects, and production ranking out of scope.
