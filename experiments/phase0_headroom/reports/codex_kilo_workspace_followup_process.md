@@ -62,3 +62,27 @@ Results:
 
 Step 3 continuation gate passed. The next runbook step is the 6-cell policy
 smoke.
+
+## Step 4 Policy Smoke
+
+Smoke command used result prefix `codex_kilo_workspace_followup_smoke` and task
+ids:
+
+- `click__rbench__002`
+- `click__rbench__003`
+- `toolz__hist__010`
+
+Results:
+
+- Scheduled cells: `6`.
+- Scoreable outcomes: `6/6`.
+- Terminal statuses: `verified_pass=2`, `verified_fail=4`.
+- Codex: `3/3` scoreable.
+- Kilo: `3/3` scoreable and `3/3` non-timeout.
+- Click test-edit policy violations: `0/4`.
+- Captured diffs stayed inside editable paths for all six solver workspaces.
+- Estimated smoke cost: `USD 3.00`.
+
+Step 5 continuation gates passed. The repaired matrix is projected at
+`20 * USD 0.50 = USD 10.00`; it will be run as two sequential `USD 5.00`
+batches so no single paid batch exceeds the `USD 8` stop-before-batch rule.
