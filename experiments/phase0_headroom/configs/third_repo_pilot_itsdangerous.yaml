@@ -1,0 +1,28 @@
+schema_version: barcarolle.second_repo_pilot.v1
+selected_repo_id: itsdangerous
+status: selected
+repo_url: https://github.com/pallets/itsdangerous.git
+local_repo: experiments/phase0_headroom/external_repos/itsdangerous
+test_environment:
+  pythonpath_mode: src_if_present_else_repo_root
+  command_template: uv run --project experiments/phase0_headroom --with "pytest>=9" --with "setuptools<81" python -m pytest -q {test_files}
+preferred_task_count:
+  certification_attempts: 24
+  pilot_certified_min: 4
+  benchmark_grade_min: 6
+  paid_matrix_default_tasks: 4
+  paid_matrix_optional_tasks_max: 8
+acut:
+  adapters_config: experiments/phase0_headroom/configs/acut_workspace_adapters.yaml
+  adapters:
+    - codex_workspace
+    - kilo_workspace
+  result_prefix: phase1_validation_third_repo_itsdangerous
+budget:
+  soft_cap_usd: 20
+  hard_cap_usd: 45
+  stop_before_batch_projected_incremental_usd: 12
+parallelism:
+  paid_acut_concurrency: 1
+  allow_cross_harness_paid_parallelism: false
+claim_scope: third_repo_operational_pilot_not_predictive_validation

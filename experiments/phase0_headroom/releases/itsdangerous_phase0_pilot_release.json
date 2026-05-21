@@ -1,0 +1,40 @@
+{
+  "benchmark_grade": false,
+  "certified_task_count": 1,
+  "claim_scope": "second_repo_operational_pilot_not_predictive_validation",
+  "generated_at": "2026-05-21T16:25:18+00:00",
+  "pilot_grade": false,
+  "quality_gates": {
+    "b_real_count": 0,
+    "benchmark_min": 6,
+    "pilot_min": 4,
+    "w_real_count": 1
+  },
+  "release_id": "itsdangerous_phase0_pilot",
+  "release_status": "diagnostic_only",
+  "repo_id": "itsdangerous",
+  "schema_version": "barcarolle.second_repo_pilot_release.v1",
+  "splits": {
+    "B_real": [],
+    "W_real": [
+      "itsdangerous__hist__010"
+    ]
+  },
+  "tasks": [
+    {
+      "base_commit": "93ae366874bbd4f69d90495c45b2cd336387496c",
+      "code_files": [
+        "src/itsdangerous/signer.py"
+      ],
+      "module_or_package": [
+        "signer"
+      ],
+      "split": "W_real",
+      "target_commit": "7f4dcf83a07bb3d53f4e0e65ef1b43327b4cca90",
+      "task_id": "itsdangerous__hist__010",
+      "test_files": [
+        "tests/test_itsdangerous/test_serializer.py"
+      ]
+    }
+  ]
+}

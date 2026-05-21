@@ -212,3 +212,32 @@ Evidence boundary:
 
 - This is repeat reliability evidence.
 - It is not an independent validation sample and not a future holdout.
+
+## Step 7 Third Repo Pilot Attempt
+
+Attempted local-only third repo certification for `itsdangerous`.
+
+Created sanitized third-repo artifacts under:
+
+- `experiments/phase0_headroom/configs/third_repo_pilot_itsdangerous.yaml`
+- `experiments/phase0_headroom/candidate_sources/itsdangerous_*`
+- `experiments/phase0_headroom/certified_tasks/itsdangerous_*`
+- `experiments/phase0_headroom/releases/itsdangerous_phase0_pilot_release.json`
+- `experiments/phase0_headroom/reports/itsdangerous_mini_release.md`
+- `experiments/phase0_headroom/target_profiles/itsdangerous_target_profile.json`
+
+Local certification outcome:
+
+- Certified tasks: `1`.
+- Near-certified tasks: `10`.
+- Release status: `diagnostic_only`.
+- B/W split: `B_real=0`, `W_real=1`.
+- Main failing gates: `reference_pass=7`, `no_op_fail=3`.
+
+Decision:
+
+- Stop before any third-repo paid ACUT cells.
+- Reason: certification failed below the pilot threshold and lacks balanced
+  B/W coverage.
+- Decision label contribution:
+  `phase1_third_repo_certification_blocker`.
