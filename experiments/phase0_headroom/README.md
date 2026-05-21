@@ -34,6 +34,9 @@ For the first realistic cross-harness comparison, use
 configures Codex CLI and Kilo CLI as two workspace ACUT harnesses, proves their
 endpoint-backed eligibility, runs per-harness smoke cells, and only then permits
 the paired 20-cell Phase 0 matrix.
+For the Kilo non-interactive command-shape lesson, see
+`reports/kilo_noninteractive_command_shape_check.md`: keep the prompt before
+`--file`, or use `--` before the prompt if file options must appear first.
 
 Before starting Phase 1 MVP implementation, use
 `docs/experiments/phase-0-pre-phase-1-second-repo-runbook.md`. That runbook adds
