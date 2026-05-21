@@ -35,6 +35,12 @@ configures Codex CLI and Kilo CLI as two workspace ACUT harnesses, proves their
 endpoint-backed eligibility, runs per-harness smoke cells, and only then permits
 the paired 20-cell Phase 0 matrix.
 
+Before starting Phase 1 MVP implementation, use
+`docs/experiments/phase-0-pre-phase-1-second-repo-runbook.md`. That runbook adds
+a bounded second-repository pilot, keeps the repaired workspace ACUT protocol,
+imports usage, and writes an explicit Phase 1 readiness gate without claiming
+predictive validity.
+
 Phase 0 asks whether repo-specific benchmark signal exists before building a
 larger benchmark compiler:
 
