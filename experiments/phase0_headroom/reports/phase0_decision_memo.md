@@ -4,7 +4,7 @@ Decision: `proceed_regression_benchmark`.
 
 ## Scope
 
-Phase 0 now has measured endpoint evidence for same-repo tasks, a repaired same-protocol generic comparator matrix, and an implemented workspace ACUT adapter. A Codex/Kilo cross-harness workspace preflight was added; later diagnosis resolved both endpoint proofs through isolated provider configurations, but no scoreable workspace ACUT task-solving call has run.
+Phase 0 now has measured endpoint evidence for same-repo tasks, a repaired same-protocol generic comparator matrix, and an implemented workspace ACUT adapter. A Codex/Kilo cross-harness workspace preflight was added; later diagnosis resolved both endpoint proofs through isolated provider configurations, and non-scoreable command-template dry-runs passed for both wrappers. No scoreable workspace ACUT task-solving call has run.
 
 - Endpoint-selected primary ACUT model: `gpt-5.4-mini`.
 - Primary target repository: `toolz`.
@@ -13,7 +13,7 @@ Phase 0 now has measured endpoint evidence for same-repo tasks, a repaired same-
 - Workspace ACUT adapter config: `experiments/phase0_headroom/configs/acut_workspace_adapter.yaml`.
 - Workspace ACUT preflight: `blocked_no_acut_command`.
 - Codex/Kilo workspace ACUT config: `experiments/phase0_headroom/configs/acut_workspace_adapters.yaml`.
-- Codex/Kilo workspace ACUT preflight: `blocked_workspace_command_template`.
+- Codex/Kilo workspace ACUT preflight: `ready_for_smoke`.
 - Codex workspace status: `codex_eligible` for endpoint proof after custom-provider diagnosis; no scoreable workspace task run.
 - Kilo workspace status: `kilo_eligible` for endpoint proof after `openai-compatible` diagnosis; no scoreable workspace task run.
 - Estimated measured endpoint spend: `USD 0.32927100`.
@@ -54,10 +54,10 @@ Phase 0 still does not support predictive-validity claims. Matrix A is too small
 - Generic comparator packages are recovered from archived Click R0 material.
 - Pricing uses conservative user-estimate-required rates rather than endpoint billing data.
 - MAE, RMSE, and Brier score remain `not_applicable_underpowered`.
-- Workspace adapter preflight remains blocked until the working Codex and Kilo provider shapes are turned into workspace command templates.
+- Workspace adapter preflight is ready for the Codex/Kilo smoke subset; the full matrix remains gated on smoke scoreability.
 - Codex CLI proof initially failed when using `openai_base_url` alone; post-run diagnosis showed a custom `model_provider` with `env_key="LLM_API_KEY"` and `supports_websockets=false` completes against the endpoint.
 - Kilo proof initially failed because the attempted config did not attach authentication; post-run diagnosis showed the documented `openai-compatible` provider with `apiKey: "{env:LLM_API_KEY}"` completes against the endpoint and passes a temporary workspace edit dry-run.
 
 ## Next Smallest Useful Experiment
 
-Convert the working Codex custom-provider proof and Kilo `openai-compatible` proof into workspace command templates. The next smallest useful run is non-scoreable command-template dry runs for both harnesses, followed by the 4-cell Codex/Kilo smoke subset only after both templates pass proof.
+Run the 4-cell Codex/Kilo smoke subset with `toolz__hist__002` and `click__rbench__001` for each harness. Stop before the full matrix unless both harnesses produce at least one scoreable smoke cell.

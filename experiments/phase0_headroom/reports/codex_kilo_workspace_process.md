@@ -11,6 +11,7 @@
   - `kilo_workspace`: `kilo_blocked_endpoint_proof`.
 - Later isolated diagnosis resolved the Codex endpoint proof blocker. The working Codex shape is a custom `model_provider` with `env_key="LLM_API_KEY"`, `/v1` `base_url`, `wire_api="responses"`, and `supports_websockets=false`. This does not retroactively run or score any workspace task.
 - Later isolated diagnosis also resolved the Kilo endpoint proof blocker. The working Kilo shape is an `openai-compatible` provider with `apiKey: "{env:LLM_API_KEY}"`, a `/v1` `baseURL`, a custom `gpt-5.4-mini` model entry, and `--model openai-compatible/gpt-5.4-mini`. A temporary workspace dry-run edited only the requested file, but no scoreable workspace ACUT cell was run.
+- Command templates were added for both adapters through repo-local wrapper scripts. Non-scoreable temporary git workspace dry-runs passed for both wrappers: each changed only `target.txt` to `PONG\n`.
 
 ## Cost And Scope
 
@@ -22,7 +23,7 @@
 
 ## Next Smallest Runbook
 
-Resolve workspace command setup before any scoreable workspace ACUT call:
+Run the scoreable smoke subset before any full matrix:
 
-- Codex: convert the working custom-provider proof into a workspace command template that mutates `{workspace}` and captures `git diff`.
-- Kilo: convert the working `openai-compatible` proof into a workspace command template that reads `{statement_file}`, mutates `{workspace}`, and captures `git diff`.
+- Run `codex_workspace` and `kilo_workspace` on `toolz__hist__002` and `click__rbench__001`.
+- Stop before the full matrix if either harness has zero scoreable smoke cells or if adapter-side replay fails.

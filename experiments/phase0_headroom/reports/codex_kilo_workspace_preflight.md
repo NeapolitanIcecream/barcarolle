@@ -1,12 +1,13 @@
 # Codex Kilo Workspace Preflight
 
-Status: `blocked_workspace_command_template`.
+Status: `ready_for_smoke`.
 
 - Branch: `codex/restart-benchmark-compiler`.
 - HEAD: `fd673bec`.
 - Comparison design: `same_model_cross_harness`.
 - Preferred model: `gpt-5.4-mini`.
 - Adapter config: `experiments/phase0_headroom/configs/acut_workspace_adapters.yaml`.
+- Matrix config: `experiments/phase0_headroom/configs/codex_kilo_workspace_matrix.yaml`.
 - Required endpoint env present: `true`.
 - Endpoint host hash: `9952174049b2`.
 - Local subscription fallback: `disabled`.
@@ -41,3 +42,12 @@ A later isolated diagnosis showed that Kilo is endpoint-capable when configured 
 The Kilo status is therefore updated in the adapter config to `kilo_eligible` for endpoint proof. A non-scoreable temporary workspace dry-run also succeeded, but no scoreable workspace ACUT task has been run.
 
 Detailed note: `experiments/phase0_headroom/reports/kilo_endpoint_diagnosis.md`.
+
+## Workspace Command Template Dry-Run
+
+Both adapters now have configured command templates that invoke repo-local wrapper scripts through `uv run --project experiments/phase0_headroom`.
+
+- `codex_workspace`: temporary git workspace dry-run returned code `0`, changed only `target.txt`, and left `target.txt` as `PONG\n`.
+- `kilo_workspace`: temporary git workspace dry-run returned code `0`, changed only `target.txt`, and left `target.txt` as `PONG\n`.
+
+These dry-runs are not scoreable ACUT cells. They only prove that each wrapper reads a statement file, uses isolated endpoint config, and mutates the supplied workspace.

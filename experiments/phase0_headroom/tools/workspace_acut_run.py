@@ -742,6 +742,19 @@ def cost_summary(rows: list[dict[str, Any]]) -> dict[str, Any]:
     }
 
 
+def merge_rows_by_run_id(existing: list[dict[str, Any]], new_rows: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    order: list[str] = []
+    by_run_id: dict[str, dict[str, Any]] = {}
+    for row in [*existing, *new_rows]:
+        run_id = str(row.get("run_id") or "")
+        if not run_id:
+            continue
+        if run_id not in by_run_id:
+            order.append(run_id)
+        by_run_id[run_id] = row
+    return [by_run_id[run_id] for run_id in order]
+
+
 def write_empty_result_files(root: Path, status: str, reason: str, result_prefix: str = "workspace_acut") -> None:
     exp = phase0_root(root)
     write_jsonl(result_file(exp, result_prefix, "submissions", ".jsonl"), [])
@@ -972,9 +985,15 @@ def run_matrix(
                 "notes": "adapter captured workspace diff; harness usage report not imported",
             }
         )
-    write_jsonl(result_file(exp, result_prefix, "submissions", ".jsonl"), submissions)
-    write_jsonl(result_file(exp, result_prefix, "verifier_results", ".jsonl"), verifiers)
-    write_jsonl(result_file(exp, result_prefix, "cost_ledger", ".jsonl"), cost_rows)
+    submission_path = result_file(exp, result_prefix, "submissions", ".jsonl")
+    verifier_path = result_file(exp, result_prefix, "verifier_results", ".jsonl")
+    cost_path = result_file(exp, result_prefix, "cost_ledger", ".jsonl")
+    submissions = merge_rows_by_run_id(read_jsonl(submission_path), submissions)
+    verifiers = merge_rows_by_run_id(read_jsonl(verifier_path), verifiers)
+    cost_rows = merge_rows_by_run_id(read_jsonl(cost_path), cost_rows)
+    write_jsonl(submission_path, submissions)
+    write_jsonl(verifier_path, verifiers)
+    write_jsonl(cost_path, cost_rows)
     rows = score_rows(submissions, verifiers)
     write_csv(result_file(exp, result_prefix, "score_table", ".csv"), rows, SCORE_FIELDS)
     summary = cost_summary(cost_rows)
@@ -989,7 +1008,7 @@ def run_matrix(
             "status": "workspace_acut_smoke_complete" if mode == "smoke" else "workspace_acut_matrix_complete",
             "adapter_config": display_path(root, resolved_adapter_config),
             "matrix_config": display_path(root, resolved_matrix_config),
-            "adapter_id": config.adapter_id,
+            "adapter_ids": sorted({row.get("adapter_id", config.adapter_id) for row in submissions}),
             "scheduled_cell_count": len(rows),
             "terminal_status_counts": metrics["terminal_status_counts"],
             "scoreable_cell_count": metrics["scoreable_cell_count"],

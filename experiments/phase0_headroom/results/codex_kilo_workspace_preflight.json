@@ -1,13 +1,14 @@
 {
   "schema_version": "barcarolle.codex_kilo_workspace_preflight.v1",
   "generated_at": "2026-05-21T03:35:45Z",
-  "updated_at": "2026-05-21T04:51:34Z",
-  "status": "blocked_workspace_command_template",
+  "updated_at": "2026-05-21T05:17:15Z",
+  "status": "ready_for_smoke",
   "branch": "codex/restart-benchmark-compiler",
   "head": "fd673bec",
   "comparison_design": "same_model_cross_harness",
   "preferred_model": "gpt-5.4-mini",
   "adapter_config": "experiments/phase0_headroom/configs/acut_workspace_adapters.yaml",
+  "matrix_config": "experiments/phase0_headroom/configs/codex_kilo_workspace_matrix.yaml",
   "required_env_present": true,
   "missing_env": [],
   "endpoint_host_hash": "9952174049b2",
@@ -31,11 +32,12 @@
       "model_or_agent_name": "gpt-5.4-mini",
       "endpoint_proof_status": "codex_eligible",
       "eligible": true,
-      "command_template_configured": false,
+      "command_template_configured": true,
       "proof_mode": "non_scoreable_endpoint_probe",
       "credential_source": "custom model_provider env_key=LLM_API_KEY in a temporary CODEX_HOME",
       "endpoint_source": "custom model_provider base_url=LLM_BASE_URL with /v1",
       "terminal_error_class": null,
+      "workspace_command_dry_run_status": "passed",
       "scoreable_calls_authorized": false
     },
     {
@@ -45,11 +47,12 @@
       "model_or_agent_name": "gpt-5.4-mini",
       "endpoint_proof_status": "kilo_eligible",
       "eligible": true,
-      "command_template_configured": false,
+      "command_template_configured": true,
       "proof_mode": "non_scoreable_endpoint_probe",
       "credential_source": "openai-compatible provider options apiKey={env:LLM_API_KEY} in temporary XDG_CONFIG_HOME",
       "endpoint_source": "openai-compatible provider options baseURL=LLM_BASE_URL with /v1",
       "terminal_error_class": null,
+      "workspace_command_dry_run_status": "passed",
       "scoreable_calls_authorized": false
     }
   ],
@@ -60,17 +63,16 @@
     "estimated_cost_usd": 0.0,
     "usage_observed": false
   },
-  "blockers": [
-    "workspace_command_templates_not_configured"
-  ],
+  "blockers": [],
   "post_run_diagnosis": {
-    "diagnosis_head": "8041be76",
+    "diagnosis_head": "78c761bf",
     "codex_endpoint_status": "codex_eligible",
     "codex_lesson": "custom_model_provider_env_key_llm_api_key_supports_websockets_false",
     "codex_scoreable_workspace_calls_run": false,
     "kilo_endpoint_status": "kilo_eligible",
     "kilo_lesson": "openai_compatible_provider_api_key_env_llm_api_key_base_url_v1",
     "kilo_temp_workspace_edit_dry_run": true,
+    "codex_temp_workspace_edit_dry_run": true,
     "kilo_scoreable_workspace_calls_run": false,
     "codex_evidence": "experiments/phase0_headroom/reports/codex_endpoint_failure_diagnosis.md",
     "kilo_evidence": "experiments/phase0_headroom/reports/kilo_endpoint_diagnosis.md"
