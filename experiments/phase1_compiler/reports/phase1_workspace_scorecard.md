@@ -1,6 +1,6 @@
 # Phase 1 Workspace Scorecard
 
-Generated: `2026-05-21T14:41:07+00:00`.
+Generated: `2026-05-21T16:26:10+00:00`.
 
 - Comparison label: `same_endpoint_model_different_cli_harnesses`.
 - Total cells: `48`.

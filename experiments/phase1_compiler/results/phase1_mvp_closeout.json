@@ -19,10 +19,10 @@
   },
   "claim_scope": "phase1_mvp_compiler_infrastructure",
   "cost_summary": {
-    "call_count": 77,
-    "observed_or_conservative_estimated_cost_usd": 22.5529578,
+    "call_count": 109,
+    "observed_or_conservative_estimated_cost_usd": 31.026435,
     "provider_billed_cost_status": "unavailable",
-    "usage_observed_rate": 0.9221
+    "usage_observed_rate": 0.945
   },
   "disallowed_claims": [
     "predictive_validity_established",
@@ -30,7 +30,7 @@
     "production_benchmark_ranking"
   ],
   "evidence_status": "mvp_compiler_artifacts_built_insufficient_for_predictive_validation",
-  "generated_at": "2026-05-21T14:41:07+00:00",
+  "generated_at": "2026-05-21T16:26:10+00:00",
   "next_runbook_recommendation": "write Phase 1 validation-design runbook with source-adapter hardening as a prerequisite for validation-grade claims",
   "predictive_validity_established": false,
   "production_ranking_status": "not_produced",

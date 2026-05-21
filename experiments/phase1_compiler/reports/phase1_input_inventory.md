@@ -1,12 +1,12 @@
 # Phase 1 Input Inventory
 
-Generated: `2026-05-21T14:41:07+00:00`.
+Generated: `2026-05-21T16:26:10+00:00`.
 
 - Claim scope: `phase1_mvp_compiler_infrastructure`.
 - Predictive validity established: `false`.
 - Target repos: `toolz, humanize`.
 - Generic comparators: `click`.
-- Usage ledger calls: `77`.
+- Usage ledger calls: `109`.
 
 ## Task Counts
 

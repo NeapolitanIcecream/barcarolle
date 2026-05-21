@@ -1,12 +1,12 @@
 # Phase 1 Cost Summary
 
-Generated: `2026-05-21T14:41:07+00:00`.
+Generated: `2026-05-21T16:26:10+00:00`.
 
-- Calls: `77`.
-- Usage observed rate: `0.9221`.
+- Calls: `109`.
+- Usage observed rate: `0.945`.
 - Provider-billed cost status: `unavailable`.
-- Observed-token estimate USD: `19.5529578`.
-- Observed-or-conservative estimate USD: `22.5529578`.
+- Observed-token estimate USD: `28.026435`.
+- Observed-or-conservative estimate USD: `31.026435`.
 - Pricing source: `user_estimate_required_conservative_default`.
 
 Provider-billed dollars remain unavailable; this summary uses the Phase 0 local price table estimate.

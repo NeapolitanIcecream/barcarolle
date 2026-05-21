@@ -241,3 +241,19 @@ Decision:
   B/W coverage.
 - Decision label contribution:
   `phase1_third_repo_certification_blocker`.
+
+## Step 8 MVP Rebuild
+
+Rebuilt Phase 1 MVP artifacts with:
+
+```bash
+uv run --project experiments/phase1_compiler python experiments/phase1_compiler/tools/phase1_compiler.py build-mvp --config experiments/phase1_compiler/configs/phase1_mvp.yaml
+uv run --project experiments/phase1_compiler python experiments/phase1_compiler/tools/phase1_compiler.py validate --config experiments/phase1_compiler/configs/phase1_mvp.yaml
+```
+
+Validation result:
+
+- `status=valid`.
+- All Phase 1 MVP `predictive_validity_established` fields remain `false`.
+- New overnight validation artifacts did not change historical MVP claim
+  boundaries.
