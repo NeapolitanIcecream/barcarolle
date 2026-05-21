@@ -8,5 +8,5 @@
   "repo_id": "humanize",
   "repo_url": "https://github.com/python-humanize/humanize.git",
   "schema_version": "barcarolle.target_profile.v1",
-  "test_command": "uv run --project experiments/phase0_headroom --with freezegun --with \"pytest>=9\" python -m pytest -q {test_files}"
+  "test_command": "uv run --project experiments/phase0_headroom --with \"setuptools<81\" --with freezegun --with \"pytest>=9\" python -m pytest -q {test_files}"
 }

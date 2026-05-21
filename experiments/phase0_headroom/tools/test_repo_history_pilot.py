@@ -119,3 +119,30 @@ def test_commit_context_ref_uses_message_without_patch(tmp_path: Path) -> None:
     assert ref["source_kind"] == "commit_message_fallback"
     assert ref["summary"] == "Describe behavior"
     assert ref["body_summary"] == "Fixes #123"
+
+
+def test_uv_commands_include_editable_workspace() -> None:
+    command = pilot.command_test_files("uv run --project experiments/phase0_headroom python -m pytest -q {test_files}", ["/tmp/ws/tests/test_time.py"])
+
+    wrapped = pilot.with_editable_workspace(command, Path("/tmp/ws"))
+
+    assert wrapped[:4] == ["uv", "run", "--with-editable", "/tmp/ws"]
+    assert wrapped[-1] == "/tmp/ws/tests/test_time.py"
+
+
+def test_apply_patch_text_does_not_target_parent_repo(tmp_path: Path) -> None:
+    outer = tmp_path / "outer"
+    workspace = outer / "ignored" / "workspace"
+    workspace.mkdir(parents=True)
+    pilot.run_command(["git", "init"], outer)
+    (workspace / "module.py").write_text("value = 1\n", encoding="utf-8")
+    patch = """diff --git a/module.py b/module.py
+--- a/module.py
++++ b/module.py
+@@ -1 +1 @@
+-value = 1
++value = 2
+"""
+
+    assert pilot.apply_patch_text(workspace, patch)
+    assert (workspace / "module.py").read_text(encoding="utf-8") == "value = 2\n"

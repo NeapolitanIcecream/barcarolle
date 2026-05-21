@@ -1,0 +1,223 @@
+{
+  "benchmark_grade": true,
+  "certified_task_count": 12,
+  "claim_scope": "second_repo_operational_pilot_not_predictive_validation",
+  "generated_at": "2026-05-21T12:09:15+00:00",
+  "pilot_grade": true,
+  "quality_gates": {
+    "b_real_count": 6,
+    "benchmark_min": 6,
+    "pilot_min": 4,
+    "w_real_count": 6
+  },
+  "release_id": "humanize_phase0_pilot",
+  "release_status": "pilot_grade",
+  "repo_id": "humanize",
+  "schema_version": "barcarolle.second_repo_pilot_release.v1",
+  "splits": {
+    "B_real": [
+      "humanize__hist__002",
+      "humanize__hist__003",
+      "humanize__hist__004",
+      "humanize__hist__005",
+      "humanize__hist__006",
+      "humanize__hist__007"
+    ],
+    "W_real": [
+      "humanize__hist__010",
+      "humanize__hist__012",
+      "humanize__hist__008",
+      "humanize__hist__013",
+      "humanize__hist__014",
+      "humanize__hist__015"
+    ]
+  },
+  "tasks": [
+    {
+      "base_commit": "d64655aa8f2736b1131ff8a91a128daed7f36cc3",
+      "code_files": [
+        "src/humanize/time.py"
+      ],
+      "module_or_package": [
+        "time"
+      ],
+      "split": "B_real",
+      "target_commit": "3605332011b4a2f7141b0bffad83eb53c80e1648",
+      "task_id": "humanize__hist__002",
+      "test_files": [
+        "tests/test_time.py"
+      ]
+    },
+    {
+      "base_commit": "22a0a136e7358f22797c120bbd85acf48822d13e",
+      "code_files": [
+        "src/humanize/time.py"
+      ],
+      "module_or_package": [
+        "time"
+      ],
+      "split": "B_real",
+      "target_commit": "1afc39e78689ef2d735d2f7bbb4ce5eb6bd31705",
+      "task_id": "humanize__hist__003",
+      "test_files": [
+        "tests/test_time.py"
+      ]
+    },
+    {
+      "base_commit": "6543192c2c63d6cfea101181e5939c1bff990683",
+      "code_files": [
+        "src/humanize/number.py"
+      ],
+      "module_or_package": [
+        "number"
+      ],
+      "split": "B_real",
+      "target_commit": "5dfd2b04582808a9a7f921a47df6226c2cba0959",
+      "task_id": "humanize__hist__004",
+      "test_files": [
+        "tests/test_number.py"
+      ]
+    },
+    {
+      "base_commit": "aaca29f35306c48c9965047ac5d39807a33652a7",
+      "code_files": [
+        "src/humanize/number.py"
+      ],
+      "module_or_package": [
+        "number"
+      ],
+      "split": "B_real",
+      "target_commit": "2f179b6b5c1e2eb88240e3ec42ff9edeb946ea65",
+      "task_id": "humanize__hist__005",
+      "test_files": [
+        "tests/test_number.py"
+      ]
+    },
+    {
+      "base_commit": "aaca29f35306c48c9965047ac5d39807a33652a7",
+      "code_files": [
+        "src/humanize/filesize.py"
+      ],
+      "module_or_package": [
+        "filesize"
+      ],
+      "split": "B_real",
+      "target_commit": "db9678288054dba85f5ce8959c20cc2436f7a1fa",
+      "task_id": "humanize__hist__006",
+      "test_files": [
+        "tests/test_filesize.py"
+      ]
+    },
+    {
+      "base_commit": "c18f013eaf4676e6b0ad8be9149100e0b481d389",
+      "code_files": [
+        "src/humanize/number.py"
+      ],
+      "module_or_package": [
+        "number"
+      ],
+      "split": "B_real",
+      "target_commit": "f14d5c18284f631f4356f9d1b5eb8e043b2db720",
+      "task_id": "humanize__hist__007",
+      "test_files": [
+        "tests/test_number.py"
+      ]
+    },
+    {
+      "base_commit": "16f1b6581573f829b7cbb0cde71ba8b1828e6332",
+      "code_files": [
+        "src/humanize/i18n.py"
+      ],
+      "module_or_package": [
+        "i18n"
+      ],
+      "split": "W_real",
+      "target_commit": "2d891b89ebfb6a33e98ecfdd718fc6e50b4a263f",
+      "task_id": "humanize__hist__008",
+      "test_files": [
+        "tests/test_i18n.py"
+      ]
+    },
+    {
+      "base_commit": "c6f301fedda6a14e325da203a3b3a480566639fc",
+      "code_files": [
+        "src/humanize/time.py"
+      ],
+      "module_or_package": [
+        "time"
+      ],
+      "split": "W_real",
+      "target_commit": "1f3663eb8cef765161c04e3bfa6da8c32cbaa6ce",
+      "task_id": "humanize__hist__010",
+      "test_files": [
+        "tests/test_time.py"
+      ]
+    },
+    {
+      "base_commit": "22afe14caad95b7592ed405cf1c5d2fe71b40e9d",
+      "code_files": [
+        "src/humanize/time.py"
+      ],
+      "module_or_package": [
+        "time"
+      ],
+      "split": "W_real",
+      "target_commit": "3c800b067ced822850ec193ea425947c9e6509e7",
+      "task_id": "humanize__hist__012",
+      "test_files": [
+        "tests/test_time.py"
+      ]
+    },
+    {
+      "base_commit": "9d9de69177154b41b2d6ef412d1487639e99833d",
+      "code_files": [
+        "src/humanize/time.py"
+      ],
+      "module_or_package": [
+        "time"
+      ],
+      "split": "W_real",
+      "target_commit": "62706fd4cb90ebeb9bf85685bad8ab1fa9d0c742",
+      "task_id": "humanize__hist__013",
+      "test_files": [
+        "tests/test_time.py"
+      ]
+    },
+    {
+      "base_commit": "0cbd1ababec2dcdd71e57856f9b0cce8c4d21b51",
+      "code_files": [
+        "src/humanize/__init__.py",
+        "src/humanize/i18n.py",
+        "src/humanize/number.py"
+      ],
+      "module_or_package": [
+        "__init__",
+        "i18n",
+        "number"
+      ],
+      "split": "W_real",
+      "target_commit": "cb0ac5989cea442e5e4b2f4effc3906aad1a1d1a",
+      "task_id": "humanize__hist__014",
+      "test_files": [
+        "tests/test_i18n.py"
+      ]
+    },
+    {
+      "base_commit": "a0f03c137ab33a9b4896789b94edb95ab635f9df",
+      "code_files": [
+        "src/humanize/__init__.py",
+        "src/humanize/number.py"
+      ],
+      "module_or_package": [
+        "__init__",
+        "number"
+      ],
+      "split": "W_real",
+      "target_commit": "eb186830db8a78b32afbf4196c13e239ba7ef109",
+      "task_id": "humanize__hist__015",
+      "test_files": [
+        "tests/test_number.py"
+      ]
+    }
+  ]
+}

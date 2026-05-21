@@ -336,6 +336,12 @@ def command_test_files(command_template: str, test_files: list[str]) -> list[str
     return shlex.split(command_template.format(test_files=test_arg))
 
 
+def with_editable_workspace(command: list[str], workspace: Path) -> list[str]:
+    if len(command) >= 2 and command[:2] == ["uv", "run"]:
+        return [*command[:2], "--with-editable", str(workspace), *command[2:]]
+    return command
+
+
 def pythonpath_for(workspace: Path) -> str:
     src = workspace / "src"
     return str(src if src.exists() else workspace)
@@ -360,15 +366,19 @@ def test_patch(repo: Path, base: str, target: str, test_files: list[str]) -> str
 
 
 def apply_patch_text(workspace: Path, patch_text: str) -> bool:
-    proc = subprocess.run(["git", "apply", "-"], cwd=workspace, input=patch_text, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True, check=False)
+    env = os.environ.copy()
+    env["GIT_CEILING_DIRECTORIES"] = str(workspace.parent)
+    proc = subprocess.run(["git", "apply", "-"], cwd=workspace, env=env, input=patch_text, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True, check=False)
     return proc.returncode == 0
 
 
-def run_candidate_tests(config: PilotConfig, workspace: Path, test_files: list[str], timeout: int = 120) -> CommandResult:
+def run_candidate_tests(config: PilotConfig, workspace: Path, test_files: list[str], cwd: Path, timeout: int = 120) -> CommandResult:
     env = os.environ.copy()
     env["PYTHONPATH"] = pythonpath_for(workspace)
-    command = command_test_files(config.command_template, test_files)
-    return run_command(command, workspace, timeout=timeout, env=env)
+    env[f"SETUPTOOLS_SCM_PRETEND_VERSION_FOR_{config.repo_id.upper().replace('-', '_')}"] = "0.0.0"
+    workspace_test_files = [str(workspace / path) for path in test_files]
+    command = with_editable_workspace(command_test_files(config.command_template, workspace_test_files), workspace)
+    return run_command(command, cwd, timeout=timeout, env=env)
 
 
 def certify_candidate(root: Path, exp: Path, config: PilotConfig, candidate: dict[str, Any], statement: dict[str, Any]) -> dict[str, Any]:
@@ -392,12 +402,12 @@ def certify_candidate(root: Path, exp: Path, config: PilotConfig, candidate: dic
     if not apply_patch_text(base_ws, patch):
         gates["no_op_fail"] = "fail"
         return certification_row(candidate, statement, gates, commands, "hidden test patch did not apply to base", "rejected")
-    no_op = run_candidate_tests(config, base_ws, list(candidate["test_files"]))
+    no_op = run_candidate_tests(config, base_ws, list(candidate["test_files"]), root)
     commands.append(command_record("noop_test_patch_on_base", no_op))
     gates["no_op_fail"] = "pass" if no_op.returncode != 0 else "fail"
-    ref1 = run_candidate_tests(config, target_ws, list(candidate["test_files"]))
+    ref1 = run_candidate_tests(config, target_ws, list(candidate["test_files"]), root)
     commands.append(command_record("reference_run_1", ref1))
-    ref2 = run_candidate_tests(config, target_ws, list(candidate["test_files"]))
+    ref2 = run_candidate_tests(config, target_ws, list(candidate["test_files"]), root)
     commands.append(command_record("reference_run_2", ref2))
     gates["reference_pass"] = "pass" if ref1.returncode == 0 and ref2.returncode == 0 else "fail"
     gates["known_bad_fail"] = "pass" if no_op.returncode != 0 else "fail"
