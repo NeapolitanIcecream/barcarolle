@@ -524,9 +524,13 @@ def source_context(root: Path, config_path: Path) -> None:
     reviews: list[dict[str, Any]] = []
     for candidate in candidates:
         pr_refs = github_pr_refs(config, str(candidate["target_commit"]))
+        if not pr_refs:
+            pr_refs = [commit_context_ref(config, candidate)]
+        for ref in pr_refs:
+            ref["task_id"] = candidate["task_id"]
         allowed_refs = [ref["ref"] for ref in pr_refs if ref["classification"] == "problem_context"]
         context_status = "non_leaky_context_found" if allowed_refs else "no_non_leaky_source_context"
-        contexts.extend(pr_refs or [{"task_id": candidate["task_id"], "ref": f"commit:{candidate['target_commit']}", "classification": "unusable", "summary": "No linked PR context found."}])
+        contexts.extend(pr_refs or [{"task_id": candidate["task_id"], "ref": f"commit:{candidate['target_commit']}", "classification": "unusable", "summary": "No linked PR or commit-message context found."}])
         statement = {
             "schema_version": "barcarolle.repo_history_statement.v1",
             "task_id": candidate["task_id"],
@@ -582,10 +586,24 @@ def github_pr_refs(config: PilotConfig, commit: str) -> list[dict[str, Any]]:
     return refs
 
 
+def commit_context_ref(config: PilotConfig, candidate: dict[str, Any]) -> dict[str, Any]:
+    commit = str(candidate["target_commit"])
+    result = run_command(["git", "show", "-s", "--format=%b", commit], config.local_repo, timeout=30)
+    body = " ".join(result.stdout.split())[:240] if result.returncode == 0 else ""
+    return {
+        "task_id": str(candidate["task_id"]),
+        "ref": f"commit:{commit}",
+        "classification": "problem_context",
+        "source_kind": "commit_message_fallback",
+        "summary": str(candidate.get("subject") or "Repair the described behavior").strip(),
+        "body_summary": body,
+    }
+
+
 def solver_statement(candidate: dict[str, Any], refs: list[dict[str, Any]]) -> str:
     title = refs[0]["summary"] if refs else str(candidate.get("subject") or "Repair the described behavior")
     module = ", ".join(candidate.get("module_or_package") or [])
-    return f"Repair the humanize behavior described by the selected issue or pull request summary: {title}. Focus on the {module or 'affected'} module and preserve existing public behavior."
+    return f"Repair the humanize behavior described by the selected public context summary: {title}. Focus on the {module or 'affected'} module and preserve existing public behavior."
 
 
 def certify(root: Path, config_path: Path) -> None:

@@ -90,3 +90,32 @@ def test_committed_json_rows_do_not_copy_raw_source_text(tmp_path: Path) -> None
     assert "def naturaltime" not in serialized
     assert "diff --git" not in serialized
     assert json.loads(serialized)["task_id"] == "humanize__hist__001"
+
+
+def test_commit_context_ref_uses_message_without_patch(tmp_path: Path) -> None:
+    repo = tmp_path / "repo"
+    repo.mkdir()
+    pilot.run_command(["git", "init"], repo)
+    pilot.run_command(["git", "config", "user.email", "test@example.invalid"], repo)
+    pilot.run_command(["git", "config", "user.name", "Test User"], repo)
+    (repo / "module.py").write_text("value = 1\n", encoding="utf-8")
+    pilot.run_command(["git", "add", "module.py"], repo)
+    pilot.run_command(["git", "commit", "-m", "Describe behavior", "-m", "Fixes #123"], repo)
+    commit = pilot.git_lines(repo, ["rev-parse", "HEAD"])[0]
+    config = pilot.PilotConfig(
+        repo_id="humanize",
+        repo_url="https://example.invalid/humanize.git",
+        local_repo=repo,
+        command_template="python -m pytest -q {test_files}",
+        certification_attempts=1,
+        pilot_certified_min=1,
+        benchmark_grade_min=1,
+        result_prefix="humanize_pre_phase1_workspace",
+    )
+
+    ref = pilot.commit_context_ref(config, {"task_id": "humanize__hist__001", "target_commit": commit, "subject": "Describe behavior"})
+
+    assert ref["classification"] == "problem_context"
+    assert ref["source_kind"] == "commit_message_fallback"
+    assert ref["summary"] == "Describe behavior"
+    assert ref["body_summary"] == "Fixes #123"
