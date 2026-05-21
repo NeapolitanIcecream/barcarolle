@@ -24,11 +24,15 @@ CLICK_REPO_REL = Path("archive/2026-05-agent-license-reset/experiments/core_narr
 RAW_REL = Path("results/raw/workspace_acut")
 WORKSPACE_REL = Path("workspaces/workspace_acut")
 CONFIG_REL = EXP_REL / "configs" / "acut_workspace_adapter.yaml"
+ADAPTER_CONFIGS_REL = EXP_REL / "configs" / "acut_workspace_adapters.yaml"
 MATRIX_CONFIG_REL = EXP_REL / "configs" / "workspace_acut_matrix.yaml"
 RESULTS_REL = Path("results")
 REPORTS_REL = Path("reports")
 SCORE_FIELDS = [
+    "adapter_id",
     "acut_id",
+    "harness_name",
+    "model_or_agent_name",
     "task_id",
     "split",
     "attempt",
@@ -58,6 +62,9 @@ class AdapterConfig:
     acut_id: str
     model_or_agent_name: str
     command_template: str
+    harness_name: str = ""
+    command_template_source: str = "missing"
+    endpoint_proof_status: str = "pending"
     timeout_seconds: int = 900
     requires_env: list[str] = field(default_factory=lambda: ["LLM_BASE_URL", "LLM_API_KEY"])
     usage_mode: str = "harness_report_optional"
@@ -172,6 +179,37 @@ def sha256_file(path: Path) -> str:
         for chunk in iter(lambda: handle.read(1024 * 1024), b""):
             digest.update(chunk)
     return digest.hexdigest()
+
+
+def safe_path_component(value: str) -> str:
+    safe = "".join(ch if ch.isalnum() or ch in {"_", "-", "."} else "_" for ch in value.strip())
+    return safe or "default"
+
+
+def result_file(exp: Path, result_prefix: str, stem: str, suffix: str) -> Path:
+    return exp / RESULTS_REL / f"{safe_path_component(result_prefix)}_{stem}{suffix}"
+
+
+def report_file(exp: Path, result_prefix: str, stem: str) -> Path:
+    return exp / REPORTS_REL / f"{safe_path_component(result_prefix)}_{stem}.md"
+
+
+def resolve_repo_path(root: Path, path: Path | str | None, default: Path) -> Path:
+    chosen = default if path is None else Path(path)
+    return chosen if chosen.is_absolute() else root / chosen
+
+
+def display_path(root: Path, path: Path) -> str:
+    try:
+        return str(path.relative_to(root))
+    except ValueError:
+        return str(path)
+
+
+def artifact_namespace(result_prefix: str | None, adapter_id: str) -> Path:
+    if not result_prefix or result_prefix == "workspace_acut":
+        return Path()
+    return Path(safe_path_component(result_prefix)) / safe_path_component(adapter_id)
 
 
 def endpoint_host_hash() -> str | None:
@@ -290,11 +328,13 @@ def inject_hidden_oracle(root: Path, package: TaskPackage, verifier_workspace: P
     return True, None
 
 
-def run_workspace_cell(root: Path, package: TaskPackage, config: AdapterConfig, run_id: str) -> CellResult:
+def run_workspace_cell(root: Path, package: TaskPackage, config: AdapterConfig, run_id: str, result_prefix: str | None = None) -> CellResult:
     exp = phase0_root(root)
-    raw_dir = exp / RAW_REL / run_id
-    solver_workspace = exp / WORKSPACE_REL / run_id / "solver"
-    verifier_workspace = exp / WORKSPACE_REL / run_id / "verifier"
+    namespace = artifact_namespace(result_prefix, config.adapter_id)
+    raw_dir = exp / RAW_REL / namespace / run_id
+    workspace_root = exp / WORKSPACE_REL / namespace / run_id
+    solver_workspace = workspace_root / "solver"
+    verifier_workspace = workspace_root / "verifier"
     archive_tree(package.source_repo, package.base_commit, solver_workspace)
     initialize_workspace_git(solver_workspace)
     statement_file = write_statement_file(solver_workspace, package)
@@ -326,7 +366,10 @@ def run_workspace_cell(root: Path, package: TaskPackage, config: AdapterConfig, 
         "generated_at": iso_now(),
         "adapter_id": config.adapter_id,
         "acut_id": config.acut_id,
+        "harness_name": config.harness_name,
         "model_or_agent_name": config.model_or_agent_name,
+        "command_template_source": config.command_template_source,
+        "endpoint_proof_status": config.endpoint_proof_status,
         "task_id": package.task_id,
         "repo_id": package.repo_id,
         "split": package.split,
@@ -345,7 +388,10 @@ def run_workspace_cell(root: Path, package: TaskPackage, config: AdapterConfig, 
         "generated_at": iso_now(),
         "adapter_id": config.adapter_id,
         "acut_id": config.acut_id,
+        "harness_name": config.harness_name,
         "model_or_agent_name": config.model_or_agent_name,
+        "command_template_source": config.command_template_source,
+        "endpoint_proof_status": config.endpoint_proof_status,
         "task_id": package.task_id,
         "repo_id": package.repo_id,
         "split": package.split,
@@ -407,12 +453,41 @@ def parse_scalar(raw: str) -> Any:
         return None
     if value in {"true", "false"}:
         return value == "true"
-    if value.startswith('"') and value.endswith('"'):
+    if (value.startswith('"') and value.endswith('"')) or (value.startswith("'") and value.endswith("'")):
         return value[1:-1]
     try:
         return int(value)
     except ValueError:
         return value
+
+
+def command_template_with_source(data: dict[str, Any], env: dict[str, str]) -> tuple[str, str]:
+    configured = str(data.get("command_template") or "")
+    if configured.strip():
+        return configured, "config"
+    env_command = env.get("ACUT_WORKSPACE_COMMAND") or ""
+    if env_command.strip():
+        return env_command, "ACUT_WORKSPACE_COMMAND"
+    return "", "missing"
+
+
+def adapter_config_from_data(data: dict[str, Any], env: dict[str, str]) -> AdapterConfig:
+    command_template, command_template_source = command_template_with_source(data, env)
+    usage = data.get("usage_observation") if isinstance(data.get("usage_observation"), dict) else {}
+    endpoint_proof = data.get("endpoint_proof") if isinstance(data.get("endpoint_proof"), dict) else {}
+    return AdapterConfig(
+        adapter_id=str(data.get("adapter_id") or "endpoint_workspace_acut"),
+        acut_id=str(data.get("acut_id") or ""),
+        harness_name=str(data.get("harness_name") or data.get("harness") or ""),
+        model_or_agent_name=str(data.get("model_or_agent_name") or ""),
+        command_template=command_template,
+        command_template_source=command_template_source,
+        endpoint_proof_status=str(data.get("endpoint_proof_status") or endpoint_proof.get("status") or "pending"),
+        timeout_seconds=int(data.get("timeout_seconds") or 900),
+        requires_env=[str(item) for item in data.get("requires_env", ["LLM_BASE_URL", "LLM_API_KEY"])],
+        usage_mode=str(usage.get("mode") or "harness_report_optional"),
+        usage_report_path=usage.get("report_path"),
+    )
 
 
 def load_adapter_config(path: Path, env: dict[str, str] | None = None) -> AdapterConfig:
@@ -447,18 +522,85 @@ def load_adapter_config(path: Path, env: dict[str, str] | None = None) -> Adapte
                 data[key] = {}
         else:
             data[key] = parse_scalar(raw_value)
-    command_template = str(data.get("command_template") or env.get("ACUT_WORKSPACE_COMMAND") or "")
-    usage = data.get("usage_observation") if isinstance(data.get("usage_observation"), dict) else {}
-    return AdapterConfig(
-        adapter_id=str(data.get("adapter_id") or "endpoint_workspace_acut"),
-        acut_id=str(data.get("acut_id") or ""),
-        model_or_agent_name=str(data.get("model_or_agent_name") or ""),
-        command_template=command_template,
-        timeout_seconds=int(data.get("timeout_seconds") or 900),
-        requires_env=[str(item) for item in data.get("requires_env", ["LLM_BASE_URL", "LLM_API_KEY"])],
-        usage_mode=str(usage.get("mode") or "harness_report_optional"),
-        usage_report_path=usage.get("report_path"),
-    )
+    return adapter_config_from_data(data, env)
+
+
+def load_adapter_configs(path: Path, env: dict[str, str] | None = None) -> dict[str, AdapterConfig]:
+    env = env or os.environ
+    text = path.read_text(encoding="utf-8")
+    if "\nadapters:" not in f"\n{text}":
+        config = load_adapter_config(path, env)
+        return {config.adapter_id: config}
+
+    adapters: list[dict[str, Any]] = []
+    current: dict[str, Any] | None = None
+    nested_key: str | None = None
+    list_key: str | None = None
+    in_adapters = False
+    for line in text.splitlines():
+        stripped = line.strip()
+        if not stripped or stripped.startswith("#"):
+            continue
+        indent = len(line) - len(line.lstrip(" "))
+        if indent == 0:
+            in_adapters = stripped == "adapters:"
+            nested_key = None
+            list_key = None
+            continue
+        if not in_adapters:
+            continue
+        if stripped.startswith("- ") and indent <= 2:
+            if current is not None:
+                adapters.append(current)
+            current = {}
+            nested_key = None
+            list_key = None
+            item = stripped[2:].strip()
+            if ":" in item:
+                key, value = item.split(":", 1)
+                current[key.strip()] = parse_scalar(value)
+            continue
+        if current is None:
+            continue
+        if stripped.startswith("- ") and list_key:
+            current.setdefault(list_key, []).append(stripped[2:].strip())
+            continue
+        if ":" not in stripped:
+            continue
+        key, value = stripped.split(":", 1)
+        key = key.strip()
+        raw_value = value.strip()
+        if indent <= 4:
+            nested_key = None
+            list_key = None
+            if raw_value == "":
+                if key in {"requires_env"}:
+                    current[key] = []
+                    list_key = key
+                else:
+                    current[key] = {}
+                    nested_key = key
+            else:
+                current[key] = parse_scalar(raw_value)
+        elif nested_key:
+            current.setdefault(nested_key, {})[key] = parse_scalar(raw_value)
+    if current is not None:
+        adapters.append(current)
+
+    configs = [adapter_config_from_data(adapter, env) for adapter in adapters]
+    return {config.adapter_id: config for config in configs}
+
+
+def resolve_adapter_config(path: Path, adapter_id: str | None = None, env: dict[str, str] | None = None) -> AdapterConfig:
+    configs = load_adapter_configs(path, env)
+    if len(configs) == 1 and adapter_id is None:
+        return next(iter(configs.values()))
+    if not adapter_id:
+        raise ValueError(f"adapter_id is required for multi-adapter config: {path}")
+    if adapter_id not in configs:
+        available = ", ".join(sorted(configs)) or "<none>"
+        raise ValueError(f"adapter_id {adapter_id!r} not found in {path}; available: {available}")
+    return configs[adapter_id]
 
 
 def load_jsonl_map(path: Path) -> dict[str, dict[str, Any]]:
@@ -535,7 +677,10 @@ def score_rows(submissions: list[dict[str, Any]], verifiers: list[dict[str, Any]
         terminal = verifier.get("status") or submission["status"]
         rows.append(
             {
+                "adapter_id": submission.get("adapter_id", ""),
                 "acut_id": submission.get("acut_id", ""),
+                "harness_name": submission.get("harness_name", ""),
+                "model_or_agent_name": submission.get("model_or_agent_name", ""),
                 "task_id": submission["task_id"],
                 "split": submission["split"],
                 "attempt": 1,
@@ -597,20 +742,20 @@ def cost_summary(rows: list[dict[str, Any]]) -> dict[str, Any]:
     }
 
 
-def write_empty_result_files(root: Path, status: str, reason: str) -> None:
+def write_empty_result_files(root: Path, status: str, reason: str, result_prefix: str = "workspace_acut") -> None:
     exp = phase0_root(root)
-    write_jsonl(exp / "results" / "workspace_acut_submissions.jsonl", [])
-    write_jsonl(exp / "results" / "workspace_acut_verifier_results.jsonl", [])
-    write_csv(exp / "results" / "workspace_acut_score_table.csv", [], SCORE_FIELDS)
-    write_jsonl(exp / "results" / "workspace_acut_cost_ledger.jsonl", [])
+    write_jsonl(result_file(exp, result_prefix, "submissions", ".jsonl"), [])
+    write_jsonl(result_file(exp, result_prefix, "verifier_results", ".jsonl"), [])
+    write_csv(result_file(exp, result_prefix, "score_table", ".csv"), [], SCORE_FIELDS)
+    write_jsonl(result_file(exp, result_prefix, "cost_ledger", ".jsonl"), [])
     summary = cost_summary([])
-    write_json(exp / "results" / "workspace_acut_cost_summary.json", summary)
+    write_json(result_file(exp, result_prefix, "cost_summary", ".json"), summary)
     metrics = metrics_payload([], summary)
     metrics["status"] = status
     metrics["blocker"] = reason
-    write_json(exp / "results" / "workspace_acut_metrics.json", metrics)
+    write_json(result_file(exp, result_prefix, "metrics", ".json"), metrics)
     write_json(
-        exp / "results" / "workspace_acut_matrix.json",
+        result_file(exp, result_prefix, "matrix", ".json"),
         {
             "schema_version": "barcarolle.workspace_acut_matrix.v1",
             "generated_at": iso_now(),
@@ -692,11 +837,18 @@ def write_workspace_matrix_config(root: Path) -> None:
     )
 
 
-def preflight(root: Path) -> dict[str, Any]:
-    write_default_adapter_config(root)
+def preflight(
+    root: Path,
+    adapter_config_path: Path | str | None = None,
+    adapter_id: str | None = None,
+    result_prefix: str = "workspace_acut",
+) -> dict[str, Any]:
+    resolved_adapter_config = resolve_repo_path(root, adapter_config_path, CONFIG_REL)
+    if resolved_adapter_config == root / CONFIG_REL:
+        write_default_adapter_config(root)
     write_workspace_matrix_config(root)
     exp = phase0_root(root)
-    config = load_adapter_config(root / CONFIG_REL)
+    config = resolve_adapter_config(resolved_adapter_config, adapter_id)
     missing_env = [name for name in config.requires_env if not os.environ.get(name)]
     configured = bool(config.command_template.strip())
     first_token = shlex.split(config.command_template)[0] if configured and shlex.split(config.command_template) else None
@@ -719,9 +871,11 @@ def preflight(root: Path) -> dict[str, Any]:
         "status": status,
         "adapter_id": config.adapter_id,
         "acut_id_configured": bool(config.acut_id),
+        "harness_name": config.harness_name,
         "model_or_agent_name_configured": bool(config.model_or_agent_name),
         "command_template_configured": configured,
-        "command_template_source": "config_or_ACUT_WORKSPACE_COMMAND" if configured else "missing",
+        "command_template_source": config.command_template_source,
+        "endpoint_proof_status": config.endpoint_proof_status,
         "command_first_token": first_token,
         "command_exists": command_exists,
         "required_env_present": not missing_env,
@@ -734,20 +888,24 @@ def preflight(root: Path) -> dict[str, Any]:
         "cost_policy": "stop_without_configured_endpoint_backed_harness",
         "blockers": blockers,
     }
-    write_json(exp / "results" / "workspace_acut_preflight.json", payload)
+    write_json(result_file(exp, result_prefix, "preflight", ".json"), payload)
     if status != "ready":
-        write_empty_result_files(root, status, ",".join(blockers))
+        write_empty_result_files(root, status, ",".join(blockers), result_prefix=result_prefix)
     write_text(
-        exp / "reports" / "workspace_acut_preflight.md",
+        report_file(exp, result_prefix, "preflight"),
         "\n".join(
             [
                 "# Workspace ACUT Preflight",
                 "",
                 f"Status: `{status}`.",
                 "",
-                f"- Adapter config: `experiments/phase0_headroom/configs/acut_workspace_adapter.yaml`.",
+                f"- Adapter config: `{display_path(root, resolved_adapter_config)}`.",
+                f"- Adapter id: `{config.adapter_id}`.",
+                f"- Harness: `{config.harness_name}`.",
                 f"- Command configured: `{configured}`.",
+                f"- Command template source: `{config.command_template_source}`.",
                 f"- Command exists: `{command_exists}`.",
+                f"- Endpoint proof status: `{config.endpoint_proof_status}`.",
                 f"- Required endpoint env present: `{not missing_env}`.",
                 f"- Endpoint host hash: `{payload['endpoint_host_hash']}`.",
                 "- Local Codex/ChatGPT subscription fallback: `disabled`.",
@@ -765,9 +923,18 @@ def preflight(root: Path) -> dict[str, Any]:
     return payload
 
 
-def run_matrix(root: Path, mode: str) -> None:
+def run_matrix(
+    root: Path,
+    mode: str,
+    adapter_config_path: Path | str | None = None,
+    adapter_id: str | None = None,
+    matrix_config_path: Path | str | None = None,
+    result_prefix: str = "workspace_acut",
+) -> None:
     exp = phase0_root(root)
-    config = load_adapter_config(root / CONFIG_REL)
+    resolved_adapter_config = resolve_repo_path(root, adapter_config_path, CONFIG_REL)
+    resolved_matrix_config = resolve_repo_path(root, matrix_config_path, MATRIX_CONFIG_REL)
+    config = resolve_adapter_config(resolved_adapter_config, adapter_id)
     if not config.command_template.strip():
         raise RuntimeError("ACUT workspace command is not configured")
     packages = load_phase0_packages(root)
@@ -778,8 +945,12 @@ def run_matrix(root: Path, mode: str) -> None:
     verifiers: list[dict[str, Any]] = []
     cost_rows: list[dict[str, Any]] = []
     for package in packages:
-        run_id = f"workspace_{config.acut_id or 'acut'}__{package.task_id}__{mode}1"
-        result = run_workspace_cell(root, package, config, run_id)
+        run_acut_id = config.acut_id or "acut"
+        if result_prefix == "workspace_acut":
+            run_id = f"workspace_{run_acut_id}__{package.task_id}__{mode}1"
+        else:
+            run_id = f"{safe_path_component(result_prefix)}_{safe_path_component(config.adapter_id)}__{run_acut_id}__{package.task_id}__{mode}1"
+        result = run_workspace_cell(root, package, config, run_id, result_prefix=result_prefix)
         submissions.append(result.submission)
         verifiers.append(result.verifier)
         cost_rows.append(
@@ -788,6 +959,11 @@ def run_matrix(root: Path, mode: str) -> None:
                 "run_id": run_id,
                 "timestamp": iso_now(),
                 "event": "workspace_acut_cell",
+                "adapter_id": config.adapter_id,
+                "acut_id": config.acut_id,
+                "harness_name": config.harness_name,
+                "model_or_agent_name": config.model_or_agent_name,
+                "endpoint_proof_status": config.endpoint_proof_status,
                 "task_id": package.task_id,
                 "status": result.verifier["status"],
                 "usage_observed": False,
@@ -796,21 +972,24 @@ def run_matrix(root: Path, mode: str) -> None:
                 "notes": "adapter captured workspace diff; harness usage report not imported",
             }
         )
-    write_jsonl(exp / "results" / "workspace_acut_submissions.jsonl", submissions)
-    write_jsonl(exp / "results" / "workspace_acut_verifier_results.jsonl", verifiers)
-    write_jsonl(exp / "results" / "workspace_acut_cost_ledger.jsonl", cost_rows)
+    write_jsonl(result_file(exp, result_prefix, "submissions", ".jsonl"), submissions)
+    write_jsonl(result_file(exp, result_prefix, "verifier_results", ".jsonl"), verifiers)
+    write_jsonl(result_file(exp, result_prefix, "cost_ledger", ".jsonl"), cost_rows)
     rows = score_rows(submissions, verifiers)
-    write_csv(exp / "results" / "workspace_acut_score_table.csv", rows, SCORE_FIELDS)
+    write_csv(result_file(exp, result_prefix, "score_table", ".csv"), rows, SCORE_FIELDS)
     summary = cost_summary(cost_rows)
-    write_json(exp / "results" / "workspace_acut_cost_summary.json", summary)
+    write_json(result_file(exp, result_prefix, "cost_summary", ".json"), summary)
     metrics = metrics_payload(rows, summary)
-    write_json(exp / "results" / "workspace_acut_metrics.json", metrics)
+    write_json(result_file(exp, result_prefix, "metrics", ".json"), metrics)
     write_json(
-        exp / "results" / "workspace_acut_matrix.json",
+        result_file(exp, result_prefix, "matrix", ".json"),
         {
             "schema_version": "barcarolle.workspace_acut_matrix.v1",
             "generated_at": iso_now(),
             "status": "workspace_acut_smoke_complete" if mode == "smoke" else "workspace_acut_matrix_complete",
+            "adapter_config": display_path(root, resolved_adapter_config),
+            "matrix_config": display_path(root, resolved_matrix_config),
+            "adapter_id": config.adapter_id,
             "scheduled_cell_count": len(rows),
             "terminal_status_counts": metrics["terminal_status_counts"],
             "scoreable_cell_count": metrics["scoreable_cell_count"],
@@ -818,36 +997,41 @@ def run_matrix(root: Path, mode: str) -> None:
     )
 
 
-def summarize(root: Path) -> None:
+def summarize(root: Path, result_prefix: str = "workspace_acut") -> None:
     exp = phase0_root(root)
-    submissions = read_jsonl(exp / "results" / "workspace_acut_submissions.jsonl")
-    verifiers = read_jsonl(exp / "results" / "workspace_acut_verifier_results.jsonl")
-    cost_rows = read_jsonl(exp / "results" / "workspace_acut_cost_ledger.jsonl")
+    submissions = read_jsonl(result_file(exp, result_prefix, "submissions", ".jsonl"))
+    verifiers = read_jsonl(result_file(exp, result_prefix, "verifier_results", ".jsonl"))
+    cost_rows = read_jsonl(result_file(exp, result_prefix, "cost_ledger", ".jsonl"))
     rows = score_rows(submissions, verifiers)
     summary = cost_summary(cost_rows)
-    write_csv(exp / "results" / "workspace_acut_score_table.csv", rows, SCORE_FIELDS)
-    write_json(exp / "results" / "workspace_acut_cost_summary.json", summary)
-    write_json(exp / "results" / "workspace_acut_metrics.json", metrics_payload(rows, summary))
+    write_csv(result_file(exp, result_prefix, "score_table", ".csv"), rows, SCORE_FIELDS)
+    write_json(result_file(exp, result_prefix, "cost_summary", ".json"), summary)
+    write_json(result_file(exp, result_prefix, "metrics", ".json"), metrics_payload(rows, summary))
 
 
 def main() -> int:
     parser = argparse.ArgumentParser(description="Run the Phase 0 workspace ACUT adapter.")
     parser.add_argument("--root", default=".")
     subcommands = parser.add_subparsers(dest="command", required=True)
-    subcommands.add_parser("preflight")
-    subcommands.add_parser("smoke")
-    subcommands.add_parser("run-matrix")
-    subcommands.add_parser("summarize")
+
+    def add_common_options(command_parser: argparse.ArgumentParser) -> None:
+        command_parser.add_argument("--adapter-config", default=None, help="Path to a single-adapter or multi-adapter workspace ACUT config.")
+        command_parser.add_argument("--adapter-id", default=None, help="Adapter id to select when --adapter-config contains adapters.")
+        command_parser.add_argument("--matrix-config", default=None, help="Path to the matrix config to associate with this run.")
+        command_parser.add_argument("--result-prefix", default="workspace_acut", help="Prefix for result and report artifact filenames.")
+
+    for name in ["preflight", "smoke", "run-matrix", "summarize"]:
+        add_common_options(subcommands.add_parser(name))
     args = parser.parse_args()
     root = Path(args.root).resolve()
     if args.command == "preflight":
-        preflight(root)
+        preflight(root, adapter_config_path=args.adapter_config, adapter_id=args.adapter_id, result_prefix=args.result_prefix)
     elif args.command == "smoke":
-        run_matrix(root, "smoke")
+        run_matrix(root, "smoke", adapter_config_path=args.adapter_config, adapter_id=args.adapter_id, matrix_config_path=args.matrix_config, result_prefix=args.result_prefix)
     elif args.command == "run-matrix":
-        run_matrix(root, "matrix")
+        run_matrix(root, "matrix", adapter_config_path=args.adapter_config, adapter_id=args.adapter_id, matrix_config_path=args.matrix_config, result_prefix=args.result_prefix)
     elif args.command == "summarize":
-        summarize(root)
+        summarize(root, result_prefix=args.result_prefix)
     return 0
 
 
