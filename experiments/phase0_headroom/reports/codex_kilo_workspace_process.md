@@ -31,6 +31,8 @@
   Kilo `acut_harness_error`, and Kilo `verified_fail`.
 - The full matrix then reused existing smoke rows intentionally and ran the
   remaining cells per adapter, sequentially and within budget.
+- Commit `0cc85197` recorded the 20-cell matrix outputs, full analysis, updated
+  preflight status, and Phase 0 decision memo.
 
 ## Full Matrix
 
@@ -81,3 +83,13 @@ compare:
 - optional wrapper-side JSON event monitoring that treats a clear terminal
   state as completion only when a diff has been captured and no tool call is
   running.
+
+## Final Hygiene
+
+- `git diff --check`: passed.
+- `uv run --project experiments/phase0_headroom pytest -q experiments/phase0_headroom/tools`:
+  `38 passed`.
+- `uv run --project experiments/phase1_compiler pytest -q`: `4 passed`.
+- `git status --short`: clean after committing tracked artifacts.
+- Ignored paths include `.venv`, caches, raw logs, cloned external repos, and
+  solver/verifier workspaces; none are staged.
