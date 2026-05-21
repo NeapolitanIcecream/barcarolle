@@ -263,6 +263,14 @@ def apply_patch(workspace: Path, patch_path: Path) -> tuple[bool, str]:
     return True, ""
 
 
+def verifier_env_for(package: TaskPackage, workspace: Path) -> dict[str, str]:
+    env = os.environ.copy()
+    pythonpath = str(workspace / "src" if (workspace / "src").exists() else workspace)
+    env["PYTHONPATH"] = f"{pythonpath}{os.pathsep}{env['PYTHONPATH']}" if env.get("PYTHONPATH") else pythonpath
+    env[f"SETUPTOOLS_SCM_PRETEND_VERSION_FOR_{package.repo_id.upper().replace('-', '_')}"] = "0.0.0"
+    return env
+
+
 def render_command(template: str, *, workspace: Path, statement_file: Path, task_id: str, run_id: str, raw_dir: Path, timeout_seconds: int) -> list[str]:
     rendered = template.format(
         workspace=str(workspace),
@@ -461,7 +469,7 @@ def run_workspace_cell(root: Path, package: TaskPackage, config: AdapterConfig, 
 
     verify_stdout = raw_dir / "verifier_stdout.txt"
     verify_stderr = raw_dir / "verifier_stderr.txt"
-    verify = run_command(package.verifier_command, verifier_workspace, timeout=package.timeout_seconds)
+    verify = run_command(package.verifier_command, verifier_workspace, timeout=package.timeout_seconds, env=verifier_env_for(package, verifier_workspace))
     verify_stdout.write_text(verify.stdout, encoding="utf-8")
     verify_stderr.write_text(verify.stderr, encoding="utf-8")
     verifier.update(
@@ -696,8 +704,81 @@ def load_generic_packages(root: Path) -> list[TaskPackage]:
     return packages
 
 
+def command_test_files(command_template: str, test_files: list[str]) -> list[str]:
+    test_arg = " ".join(shlex.quote(path) for path in test_files)
+    return shlex.split(command_template.format(test_files=test_arg))
+
+
+def absolute_uv_project(command: list[str], exp: Path) -> list[str]:
+    rewritten = list(command)
+    for index, value in enumerate(rewritten[:-1]):
+        if value == "--project" and rewritten[index + 1] == str(EXP_REL):
+            rewritten[index + 1] = str(exp)
+    return rewritten
+
+
+def with_editable_current_worktree(command: list[str]) -> list[str]:
+    if len(command) >= 2 and command[:2] == ["uv", "run"]:
+        return [*command[:2], "--with-editable", ".", *command[2:]]
+    return command
+
+
+def load_repo_history_pilot_packages(root: Path, repo_id: str) -> list[TaskPackage]:
+    exp = phase0_root(root)
+    release_path = exp / "releases" / f"{repo_id}_phase0_pilot_release.json"
+    certified_path = exp / "certified_tasks" / f"{repo_id}_certified_tasks.jsonl"
+    profile_path = exp / "target_profiles" / f"{repo_id}_target_profile.json"
+    if not (release_path.exists() and certified_path.exists() and profile_path.exists()):
+        return []
+    release = read_json(release_path)
+    if not release.get("pilot_grade"):
+        return []
+    certified = load_jsonl_map(certified_path)
+    profile = read_json(profile_path)
+    source_repo = Path(profile.get("local_repo") or exp / "external_repos" / repo_id)
+    if not source_repo.is_absolute():
+        source_repo = root / source_repo
+    split_by_task = {task_id: split for split, task_ids in release.get("splits", {}).items() for task_id in task_ids}
+    packages: list[TaskPackage] = []
+    for task in release.get("tasks", []):
+        task_id = task["task_id"]
+        row = certified[task_id]
+        test_files = list(row.get("test_files", []))
+        command = command_test_files(str(row.get("harness_test_command") or profile.get("test_command") or "python -m pytest -q {test_files}"), test_files)
+        command = with_editable_current_worktree(absolute_uv_project(command, exp))
+        packages.append(
+            TaskPackage(
+                task_id=task_id,
+                repo_id=repo_id,
+                split=split_by_task.get(task_id, str(task.get("split") or "")),
+                source_repo=source_repo,
+                base_commit=row["base_commit"],
+                target_commit=row["target_commit"],
+                solver_facing_statement=row["solver_facing_statement"],
+                verifier_command=command,
+                allowed_code_paths=list(row.get("code_files", [])),
+                test_paths=test_files,
+                timeout_seconds=180,
+                scope_boundaries=row.get("scope_boundaries", ""),
+            )
+        )
+    return packages
+
+
+def load_second_repo_packages(root: Path) -> list[TaskPackage]:
+    exp = phase0_root(root)
+    packages: list[TaskPackage] = []
+    releases = sorted((exp / "releases").glob("*_phase0_pilot_release.json"))
+    for release_path in releases:
+        repo_id = release_path.name.removesuffix("_phase0_pilot_release.json")
+        if repo_id == "toolz":
+            continue
+        packages.extend(load_repo_history_pilot_packages(root, repo_id))
+    return packages
+
+
 def load_phase0_packages(root: Path) -> list[TaskPackage]:
-    return [*load_toolz_packages(root), *load_generic_packages(root)]
+    return [*load_toolz_packages(root), *load_generic_packages(root), *load_second_repo_packages(root)]
 
 
 def select_packages(packages: list[TaskPackage], mode: str, task_ids: list[str] | None = None) -> list[TaskPackage]:

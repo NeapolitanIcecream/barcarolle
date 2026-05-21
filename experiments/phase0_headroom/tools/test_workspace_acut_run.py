@@ -302,6 +302,49 @@ def test_click_generic_statements_do_not_present_tests_as_editable() -> None:
     assert "tests/test_termui.py regression coverage" in section(click_003, "Non-Editable Paths")
 
 
+def test_load_repo_history_pilot_package_uses_editable_verifier(tmp_path: Path) -> None:
+    repo, base_commit = make_repo(tmp_path)
+    exp = workspace_acut.phase0_root(tmp_path)
+    (exp / "certified_tasks").mkdir()
+    (exp / "releases").mkdir()
+    (exp / "target_profiles").mkdir()
+    target_commit = base_commit
+    certified = {
+        "task_id": "humanize__hist__002",
+        "base_commit": base_commit,
+        "target_commit": target_commit,
+        "solver_facing_statement": "Update naturaldelta behavior.",
+        "harness_test_command": "uv run --project experiments/phase0_headroom --with \"setuptools<81\" --with freezegun --with \"pytest>=9\" python -m pytest -q {test_files}",
+        "code_files": ["src/humanize/time.py"],
+        "test_files": ["tests/test_time.py"],
+        "scope_boundaries": "Modify only humanize time behavior.",
+    }
+    workspace_acut.write_jsonl(exp / "certified_tasks" / "humanize_certified_tasks.jsonl", [certified])
+    workspace_acut.write_json(
+        exp / "releases" / "humanize_phase0_pilot_release.json",
+        {
+            "pilot_grade": True,
+            "splits": {"B_real": ["humanize__hist__002"], "W_real": []},
+            "tasks": [{"task_id": "humanize__hist__002", "split": "B_real"}],
+        },
+    )
+    workspace_acut.write_json(
+        exp / "target_profiles" / "humanize_target_profile.json",
+        {"local_repo": str(repo), "test_command": certified["harness_test_command"]},
+    )
+
+    packages = workspace_acut.load_repo_history_pilot_packages(tmp_path, "humanize")
+
+    assert len(packages) == 1
+    package = packages[0]
+    assert package.repo_id == "humanize"
+    assert package.source_repo == repo
+    assert package.allowed_code_paths == ["src/humanize/time.py"]
+    assert package.test_paths == ["tests/test_time.py"]
+    assert package.verifier_command[:4] == ["uv", "run", "--with-editable", "."]
+    assert str(exp) in package.verifier_command
+
+
 def test_toolz_statement_keeps_useful_scope_boundary() -> None:
     packages = {package.task_id: package for package in workspace_acut.load_toolz_packages(Path.cwd())}
 
