@@ -1,0 +1,23 @@
+{
+  "acut_id_configured": false,
+  "adapter_id": "endpoint_workspace_acut",
+  "blockers": [
+    "no_acut_workspace_command_configured"
+  ],
+  "command_exists": false,
+  "command_first_token": null,
+  "command_template_configured": false,
+  "command_template_source": "missing",
+  "cost_policy": "stop_without_configured_endpoint_backed_harness",
+  "endpoint_host_hash": "9952174049b2",
+  "generated_at": "2026-05-21T02:52:31+00:00",
+  "generic_comparator_scoreable_same_protocol_count": 4,
+  "local_subscription_fallback": "disabled",
+  "missing_env": [],
+  "model_or_agent_name_configured": false,
+  "openai_or_provider_fallback": "disabled",
+  "required_env_present": true,
+  "schema_version": "barcarolle.workspace_acut_preflight.v1",
+  "status": "blocked_no_acut_command",
+  "usage_observation_mode": "harness_report_optional"
+}

@@ -1,0 +1,9 @@
+{
+  "blocker": "no_acut_workspace_command_configured",
+  "generated_at": "2026-05-21T02:52:31+00:00",
+  "scheduled_cell_count": 0,
+  "schema_version": "barcarolle.workspace_acut_matrix.v1",
+  "scoreable_cell_count": 0,
+  "status": "blocked_no_acut_command",
+  "terminal_status_counts": {}
+}
