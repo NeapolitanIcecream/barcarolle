@@ -61,6 +61,11 @@ Findings:
 - `--command` is not a shell-command escape hatch for task solving. A side
   probe showed it dispatches Kilo internal commands such as `init`, `review`,
   `local-review`, `local-review-uncommitted`, and `kilo-config`.
+- A later local mock-endpoint side check found that Kilo `7.3.1` requires the
+  prompt to appear before `--file <statement>`; otherwise the array-valued
+  `--file` option consumes the prompt as a file path. The repo adapter already
+  uses the working order, and the mock probe confirmed that this order sends
+  both prompt and statement attachment to `/v1/chat/completions`.
 - Kilo is not always timing out: four Kilo cells completed normally and
   produced JSON event streams.
 - Timeout workspaces still contain implementation diffs, so several timeout

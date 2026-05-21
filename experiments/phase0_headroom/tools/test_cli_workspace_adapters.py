@@ -48,9 +48,12 @@ def test_kilo_command_delivers_statement_file_and_workspace() -> None:
     )
 
     rendered = " ".join(command)
+    prompt_index = 2
+    file_option_index = command.index("--file")
 
     assert command[:2] == ["kilo", "run"]
-    assert command[2].startswith("Read the attached task statement.")
+    assert command[prompt_index].startswith("Read the attached task statement.")
+    assert prompt_index < file_option_index
     assert "--pure" in command
     assert "--auto" in command
     assert "--format" in command

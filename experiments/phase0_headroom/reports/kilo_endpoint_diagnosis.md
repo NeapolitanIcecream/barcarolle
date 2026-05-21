@@ -20,6 +20,9 @@ The relevant documented shape is:
 - Provider options support `apiKey: "{env:VAR}"` and `baseURL`.
 - Custom model metadata goes under `provider.<provider_id>.models.<model_id>`.
 - `kilo run --auto` is the non-interactive mode, and it still respects permission configuration.
+- For `kilo run`, keep the prompt before `--file <path>`. In Kilo `7.3.1`,
+  `--file` is an array option; if `--file <path>` appears before the prompt,
+  Kilo treats the prompt as another file path and exits with `File not found`.
 
 ## What Failed Before
 
@@ -64,6 +67,11 @@ Do not write `LLM_API_KEY` into config files. Let Kilo read it through `{env:LLM
 
 - Direct endpoint check: `/v1/chat/completions` returned HTTP 200 for non-streaming and streaming `gpt-5.4-mini` calls.
 - Local recording proxy: `kilo run` sent `POST /v1/chat/completions`, `stream: true`, `model: gpt-5.4-mini`, and `Authorization: Bearer <LLM_API_KEY>`.
+- Local command-shape probe: both current adapter order
+  `kilo run <prompt> ... --file <statement>` and
+  `kilo run ... <prompt> --file <statement>` delivered the prompt plus
+  statement attachment to the mocked endpoint; `kilo run ... --file=<statement>
+  <prompt>` failed before any model request.
 - Real endpoint Kilo proof: `kilo run --pure --format json --model openai-compatible/gpt-5.4-mini` returned code `0`, emitted `PONG`, and reported usage.
 - Real endpoint workspace dry-run: in a temporary workspace, Kilo changed only `target.txt` from `before\n` to `PONG\n` and returned code `0`.
 
