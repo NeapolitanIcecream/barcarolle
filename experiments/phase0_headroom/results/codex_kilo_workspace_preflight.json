@@ -1,10 +1,10 @@
 {
   "schema_version": "barcarolle.codex_kilo_workspace_preflight.v1",
   "generated_at": "2026-05-21T03:35:45Z",
-  "updated_at": "2026-05-21T05:38:57Z",
-  "status": "workspace_acut_smoke_complete",
+  "updated_at": "2026-05-21T07:22:56Z",
+  "status": "workspace_acut_matrix_complete",
   "branch": "codex/restart-benchmark-compiler",
-  "head": "fd673bec",
+  "head": "e0523984",
   "comparison_design": "same_model_cross_harness",
   "preferred_model": "gpt-5.4-mini",
   "adapter_config": "experiments/phase0_headroom/configs/acut_workspace_adapters.yaml",
@@ -43,6 +43,12 @@
         "verified_fail"
       ],
       "smoke_scoreable_cell_count": 2,
+      "full_matrix_terminal_status_counts": {
+        "policy_violation": 4,
+        "verified_fail": 3,
+        "verified_pass": 3
+      },
+      "full_matrix_scoreable_cell_count": 6,
       "scoreable_calls_authorized": true
     },
     {
@@ -63,6 +69,13 @@
         "verified_fail"
       ],
       "smoke_scoreable_cell_count": 1,
+      "full_matrix_terminal_status_counts": {
+        "acut_harness_error": 6,
+        "policy_violation": 1,
+        "verified_fail": 2,
+        "verified_pass": 1
+      },
+      "full_matrix_scoreable_cell_count": 3,
       "scoreable_calls_authorized": true
     }
   ],
@@ -70,12 +83,12 @@
     "soft_cap_usd": 10,
     "hard_cap_usd": 25,
     "stop_before_batch_projected_incremental_usd": 15,
-    "estimated_cost_usd": 2.0,
+    "estimated_cost_usd": 10.0,
     "usage_observed": false
   },
   "blockers": [],
   "post_run_diagnosis": {
-    "diagnosis_head": "78c761bf",
+    "diagnosis_head": "e0523984",
     "codex_endpoint_status": "codex_eligible",
     "codex_lesson": "custom_model_provider_env_key_llm_api_key_supports_websockets_false",
     "codex_scoreable_workspace_calls_run": true,
@@ -84,6 +97,18 @@
     "kilo_temp_workspace_edit_dry_run": true,
     "codex_temp_workspace_edit_dry_run": true,
     "kilo_scoreable_workspace_calls_run": true,
+    "kilo_noninteractive_probe": {
+      "local_kilo_version": "7.3.1",
+      "local_help_supports_auto": true,
+      "local_help_supports_dangerously_skip_permissions": false,
+      "docs_support_auto_mode": true,
+      "command_flag_is_shell_command": false,
+      "observed_timeout_pattern": "some Kilo cells edit the workspace and then do not exit before the adapter timeout",
+      "preserved_log_terminal_events": [
+        "suggestion.shown",
+        "session.idle"
+      ]
+    },
     "codex_evidence": "experiments/phase0_headroom/reports/codex_endpoint_failure_diagnosis.md",
     "kilo_evidence": "experiments/phase0_headroom/reports/kilo_endpoint_diagnosis.md"
   },
@@ -97,5 +122,21 @@
       "verified_pass": 1
     }
   },
-  "decision": "stop_before_full_matrix_until_result_reuse_protocol_is_clear"
+  "matrix": {
+    "scheduled_cell_count": 20,
+    "scoreable_cell_count": 9,
+    "estimated_cost_usd": 10.0,
+    "terminal_status_counts": {
+      "acut_harness_error": 6,
+      "policy_violation": 5,
+      "verified_fail": 5,
+      "verified_pass": 4
+    },
+    "g_mini_to_w_real_available": true,
+    "g_mini_plus_b_real_to_w_real_available": true,
+    "mae": "not_applicable_underpowered",
+    "rmse": "not_applicable_underpowered",
+    "brier_score": "not_applicable_underpowered"
+  },
+  "decision": "proceed_regression_benchmark"
 }

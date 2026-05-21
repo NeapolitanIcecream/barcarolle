@@ -4,15 +4,16 @@
     "codex_workspace",
     "kilo_workspace"
   ],
-  "generated_at": "2026-05-21T05:37:04+00:00",
+  "generated_at": "2026-05-21T07:13:12+00:00",
   "matrix_config": "experiments/phase0_headroom/configs/codex_kilo_workspace_matrix.yaml",
-  "scheduled_cell_count": 4,
+  "scheduled_cell_count": 20,
   "schema_version": "barcarolle.workspace_acut_matrix.v1",
-  "scoreable_cell_count": 3,
-  "status": "workspace_acut_smoke_complete",
+  "scoreable_cell_count": 9,
+  "status": "workspace_acut_matrix_complete",
   "terminal_status_counts": {
-    "acut_harness_error": 1,
-    "verified_fail": 2,
-    "verified_pass": 1
+    "acut_harness_error": 6,
+    "policy_violation": 5,
+    "verified_fail": 5,
+    "verified_pass": 4
   }
 }
