@@ -1,0 +1,44 @@
+schema_version: barcarolle.acut_workspace_adapters_config.v1
+preferred_model: gpt-5.4-mini
+comparison_design: same_model_cross_harness
+local_subscription_fallback: disabled
+openai_or_provider_fallback: disabled
+adapters:
+  - adapter_id: codex_workspace
+    harness_name: codex
+    acut_id: codex_workspace_gpt_5_4_mini
+    model_or_agent_name: gpt-5.4-mini
+    command_template: ""
+    timeout_seconds: 900
+    requires_env:
+      - LLM_BASE_URL
+      - LLM_API_KEY
+    endpoint_proof:
+      status: pending
+      evidence: null
+    workspace_arg_style: template
+    statement_delivery: file
+    usage_observation:
+      mode: harness_report_optional
+      report_path: null
+    allowed_network: acut_harness_defined
+    raw_log_policy: ignored_path_only
+  - adapter_id: kilo_workspace
+    harness_name: kilo
+    acut_id: kilo_workspace_gpt_5_4_mini
+    model_or_agent_name: gpt-5.4-mini
+    command_template: ""
+    timeout_seconds: 900
+    requires_env:
+      - LLM_BASE_URL
+      - LLM_API_KEY
+    endpoint_proof:
+      status: pending
+      evidence: null
+    workspace_arg_style: template
+    statement_delivery: file
+    usage_observation:
+      mode: harness_report_optional
+      report_path: null
+    allowed_network: acut_harness_defined
+    raw_log_policy: ignored_path_only
