@@ -14,9 +14,10 @@ adapters:
       - LLM_BASE_URL
       - LLM_API_KEY
     endpoint_proof:
-      status: codex_blocked_endpoint_proof
-      evidence: experiments/phase0_headroom/reports/codex_kilo_workspace_preflight.md
-      blocker: responses_websocket_stream_did_not_complete
+      status: codex_eligible
+      evidence: experiments/phase0_headroom/reports/codex_endpoint_failure_diagnosis.md
+      blocker: null
+      lesson: use_custom_model_provider_with_env_key_and_disable_websockets
     workspace_arg_style: template
     statement_delivery: file
     usage_observation:
