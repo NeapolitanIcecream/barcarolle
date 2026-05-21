@@ -1,14 +1,155 @@
 {
-  "schema_version": "barcarolle.phase1.schema_catalog.v1",
-  "schemas": {
-    "task_manifest": "TaskManifest dataclass in tools/phase1_compiler.py",
-    "release_manifest": "ReleaseManifest dataclass in tools/phase1_compiler.py",
-    "target_profile": "TargetProfile dataclass in tools/phase1_compiler.py",
-    "certification_report": "CertificationReport dataclass in tools/phase1_compiler.py",
-    "agent_run_manifest": "AgentRunManifest dataclass in tools/phase1_compiler.py",
-    "scorecard": "Scorecard and ScorecardCell dataclasses in tools/phase1_compiler.py",
-    "weighted_score_summary": "WeightedScoreSummary dataclass in tools/phase1_compiler.py"
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": true,
+  "properties": {
+    "claim_scope": {
+      "const": "phase1_mvp_compiler_infrastructure"
+    },
+    "disallowed_claims": {
+      "items": {
+        "enum": [
+          "predictive_validity_established",
+          "pure_harness_effect",
+          "production_benchmark_ranking"
+        ]
+      },
+      "type": "array"
+    },
+    "generic_comparators": {
+      "items": {
+        "properties": {
+          "repo_id": {
+            "type": "string"
+          },
+          "role": {
+            "const": "generic_comparator"
+          },
+          "source_provenance": {
+            "type": "string"
+          },
+          "tasks": {
+            "type": "array"
+          }
+        },
+        "required": [
+          "repo_id",
+          "role",
+          "source_provenance"
+        ],
+        "type": "object"
+      },
+      "type": "array"
+    },
+    "predictive_validity_established": {
+      "const": false
+    },
+    "release_id": {
+      "type": "string"
+    },
+    "repos": {
+      "items": {
+        "properties": {
+          "certified_task_count": {
+            "minimum": 0,
+            "type": "integer"
+          },
+          "repo_id": {
+            "type": "string"
+          },
+          "role": {
+            "enum": [
+              "primary_target_repo",
+              "second_target_repo"
+            ]
+          },
+          "source_provenance": {
+            "enum": [
+              "source_provenance_issue_derived",
+              "source_provenance_commit_message_fallback"
+            ]
+          }
+        },
+        "required": [
+          "repo_id",
+          "role",
+          "source_provenance",
+          "certified_task_count"
+        ],
+        "type": "object"
+      },
+      "type": "array"
+    },
+    "schema_version": {
+      "const": "barcarolle.phase1.release.v1"
+    },
+    "status": {
+      "enum": [
+        "diagnostic_only",
+        "pilot_grade",
+        "benchmark_grade_candidate",
+        "validation_grade"
+      ]
+    },
+    "tasks": {
+      "items": {
+        "properties": {
+          "certification_status": {
+            "type": "string"
+          },
+          "module_or_package": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "repo_id": {
+            "type": "string"
+          },
+          "role": {
+            "enum": [
+              "primary_target_repo",
+              "second_target_repo"
+            ]
+          },
+          "source_provenance": {
+            "type": "string"
+          },
+          "split": {
+            "enum": [
+              "B_real",
+              "W_real"
+            ]
+          },
+          "task_id": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "task_id",
+          "repo_id",
+          "split",
+          "role",
+          "source_provenance",
+          "certification_status"
+        ],
+        "type": "object"
+      },
+      "type": "array"
+    }
   },
-  "status": "skeleton_only",
-  "validation_boundary": "Structural validation and weighting behavior are implemented; predictive validation is future work."
+  "required": [
+    "schema_version",
+    "release_id",
+    "status",
+    "claim_scope",
+    "predictive_validity_established",
+    "repos",
+    "tasks",
+    "splits",
+    "source_provenance",
+    "certification_summary",
+    "disallowed_claims"
+  ],
+  "title": "Barcarolle Phase 1 MVP Release",
+  "type": "object"
 }

@@ -1,6 +1,9 @@
 from __future__ import annotations
 
+import json
 from pathlib import Path
+
+import pytest
 
 import phase1_compiler as compiler
 
@@ -82,3 +85,112 @@ def test_import_cli_writes_release_and_weighted_summary(tmp_path: Path) -> None:
 
     assert (tmp_path / "toolz_phase1_draft_release.json").exists()
     assert (tmp_path / "toolz_phase1_weighted_score.json").exists()
+
+
+def test_inventory_generation_records_targets_and_comparator(tmp_path: Path) -> None:
+    args = type("Args", (), {"config": str(compiler.DEFAULT_CONFIG), "output_root": str(tmp_path)})()
+
+    payload = compiler.run_inventory(args)
+
+    assert payload["predictive_validity_established"] is False
+    assert {repo["repo_id"] for repo in payload["target_repos"]} == {"toolz", "humanize"}
+    assert payload["generic_comparators"] == [
+        {"repo_id": "click", "role": "generic_comparator", "source_provenance": "generic_comparator_archived_click_r0"}
+    ]
+    assert (tmp_path / "results" / "phase1_input_inventory.json").exists()
+    assert (tmp_path / "reports" / "phase1_input_inventory.md").exists()
+
+
+def test_inventory_fails_closed_on_missing_artifact(tmp_path: Path) -> None:
+    config_text = compiler.DEFAULT_CONFIG.read_text(encoding="utf-8")
+    config_path = tmp_path / "phase1_mvp.yaml"
+    config_path.write_text(
+        config_text.replace(
+            "experiments/phase0_headroom/results/pre_phase1_gate.json",
+            "experiments/phase0_headroom/results/does_not_exist.json",
+        ),
+        encoding="utf-8",
+    )
+    args = type("Args", (), {"config": str(config_path), "output_root": str(tmp_path)})()
+
+    with pytest.raises(FileNotFoundError):
+        compiler.run_inventory(args)
+
+
+def test_schema_files_are_json_and_phase1_release_validates() -> None:
+    for name in [
+        "phase1_release.schema.json",
+        "phase1_scorecard.schema.json",
+        "phase1_certification_rollup.schema.json",
+    ]:
+        payload = json.loads((compiler.ROOT / "schemas" / name).read_text(encoding="utf-8"))
+        assert payload["$schema"] == "https://json-schema.org/draft/2020-12/schema"
+
+    release = compiler.build_release_payload(compiler.load_mvp_config())
+
+    compiler.validate_phase1_release_payload(release)
+    assert release["status"] == "pilot_grade"
+    assert len([task for task in release["tasks"] if task["repo_id"] == "toolz"]) == 6
+    assert len([task for task in release["tasks"] if task["repo_id"] == "humanize"]) == 12
+    assert release["generic_comparators"][0]["repo_id"] == "click"
+    assert len(release["generic_comparators"][0]["tasks"]) == 4
+
+
+def test_invalid_predictive_validity_claim_is_rejected() -> None:
+    release = compiler.build_release_payload(compiler.load_mvp_config())
+    release["predictive_validity_established"] = True
+
+    with pytest.raises(compiler.ValidationError):
+        compiler.validate_phase1_release_payload(release)
+
+
+def test_invalid_repo_role_is_rejected() -> None:
+    release = compiler.build_release_payload(compiler.load_mvp_config())
+    release["repos"][0]["role"] = "production_benchmark_repo"
+
+    with pytest.raises(compiler.ValidationError):
+        compiler.validate_phase1_release_payload(release)
+
+
+def test_humanize_legacy_benchmark_grade_does_not_override_pilot_status() -> None:
+    release = compiler.build_release_payload(compiler.load_mvp_config())
+    humanize = next(repo for repo in release["repos"] if repo["repo_id"] == "humanize")
+
+    assert humanize["legacy_benchmark_grade"] is True
+    assert humanize["source_release_status"] == "pilot_grade"
+    assert release["status"] == "pilot_grade"
+
+
+def test_scorecard_import_preserves_humanize_cells_and_result_prefixes(tmp_path: Path) -> None:
+    args = type("Args", (), {"config": str(compiler.DEFAULT_CONFIG), "output_root": str(tmp_path)})()
+
+    payload = compiler.run_import_scorecards(args)
+
+    assert payload["summary"]["humanize_cell_count"] == 8
+    assert set(payload["summary"]["by_result_prefix"]) == {
+        "codex_kilo_workspace_followup",
+        "codex_kilo_workspace_stability",
+        "humanize_pre_phase1_workspace",
+    }
+    assert any(cell["policy_violation"] for cell in payload["cells"])
+    assert all(cell["comparison_label"] == "same_endpoint_model_different_cli_harnesses" for cell in payload["cells"])
+
+
+def test_build_mvp_orchestration_writes_all_outputs(tmp_path: Path) -> None:
+    args = type("Args", (), {"config": str(compiler.DEFAULT_CONFIG), "output_root": str(tmp_path)})()
+
+    result = compiler.run_build_mvp(args)
+
+    assert result["commands"] == compiler.BUILD_MVP_COMMANDS
+    for name in [
+        "phase1_input_inventory.json",
+        "phase1_certification_rollup.json",
+        "phase1_mvp_release.json",
+        "phase1_split_plan.json",
+        "phase1_workspace_scorecard.json",
+        "phase1_cost_summary.json",
+        "phase1_weighted_score.json",
+        "phase1_uncertainty_summary.json",
+        "phase1_mvp_closeout.json",
+    ]:
+        assert (tmp_path / "results" / name).exists()
