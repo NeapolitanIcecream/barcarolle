@@ -4,7 +4,7 @@ Decision: `proceed_regression_benchmark`.
 
 ## Scope
 
-Phase 0 now has measured endpoint evidence for same-repo tasks, a repaired same-protocol generic comparator matrix, and an implemented workspace ACUT adapter. The adapter has not yet run a real endpoint-backed ACUT because no workspace ACUT command is configured.
+Phase 0 now has measured endpoint evidence for same-repo tasks, a repaired same-protocol generic comparator matrix, and an implemented workspace ACUT adapter. A Codex/Kilo cross-harness workspace preflight was added, but both candidate harnesses are blocked at endpoint proof and no scoreable workspace ACUT task-solving call has run.
 
 - Endpoint-selected primary ACUT model: `gpt-5.4-mini`.
 - Primary target repository: `toolz`.
@@ -12,6 +12,10 @@ Phase 0 now has measured endpoint evidence for same-repo tasks, a repaired same-
 - Canonical measured ledger: `experiments/phase0_headroom/results/measured_cost_ledger.jsonl`.
 - Workspace ACUT adapter config: `experiments/phase0_headroom/configs/acut_workspace_adapter.yaml`.
 - Workspace ACUT preflight: `blocked_no_acut_command`.
+- Codex/Kilo workspace ACUT config: `experiments/phase0_headroom/configs/acut_workspace_adapters.yaml`.
+- Codex/Kilo workspace ACUT preflight: `blocked_endpoint_proof`.
+- Codex workspace status: `codex_blocked_endpoint_proof`.
+- Kilo workspace status: `kilo_blocked_endpoint_proof`.
 - Estimated measured endpoint spend: `USD 0.32927100`.
 - Actual provider-billed cost: `null` because the endpoint response did not expose billing dollars.
 
@@ -32,14 +36,16 @@ Phase 0 now has measured endpoint evidence for same-repo tasks, a repaired same-
 - `G_mini + B_real -> W_real` availability: `False`.
 - Workspace ACUT task-solving calls recorded: `0`.
 - Workspace ACUT incremental spend: `USD 0`.
+- Codex/Kilo workspace ACUT scoreable cells recorded: `0`.
+- Codex/Kilo workspace ACUT estimated scoreable-run spend: `USD 0`.
 
 ## What Phase 0 Supports
 
-Phase 0 supports continuing as a measured regression-benchmark compiler. The endpoint path can discover models, record token usage, run same-repo and generic comparator cells, and separate verified failures from harness or invalid-output outcomes. The workspace adapter now supplies the intended scoreable ACUT boundary once a real endpoint-backed harness command is configured.
+Phase 0 supports continuing as a measured regression-benchmark compiler. The endpoint path can discover models, record token usage, run same-repo and generic comparator cells, and separate verified failures from harness or invalid-output outcomes. The workspace adapter now supplies the intended scoreable ACUT boundary and can isolate multiple harnesses once real endpoint-backed harness commands are proven.
 
 ## What Phase 0 Does Not Support
 
-Phase 0 still does not support predictive-validity claims. Matrix A is too small and too harness-sensitive to justify moving to `proceed_predictive`, and the workspace adapter has not yet run a real ACUT smoke subset.
+Phase 0 still does not support predictive-validity claims. Matrix A is too small and too harness-sensitive to justify moving to `proceed_predictive`, and the workspace adapter has not yet run a real ACUT smoke subset. The Codex/Kilo comparison also does not yet support cross-harness conclusions because both harnesses failed endpoint proof.
 
 ## Threats To Validity
 
@@ -49,7 +55,9 @@ Phase 0 still does not support predictive-validity claims. Matrix A is too small
 - Pricing uses conservative user-estimate-required rates rather than endpoint billing data.
 - MAE, RMSE, and Brier score remain `not_applicable_underpowered`.
 - Workspace adapter preflight is blocked until a command template proves endpoint-backed ACUT execution through `LLM_BASE_URL` and `LLM_API_KEY`.
+- Codex CLI proof reached the configured endpoint path but did not complete the Responses stream.
+- Kilo proof reached the configured endpoint path but did not attach authentication from the attempted `LLM_API_KEY` mappings.
 
 ## Next Smallest Useful Experiment
 
-Configure an endpoint-backed workspace ACUT harness command, rerun preflight, then run a 2-cell smoke subset before any full matrix. Do not use the old diff-only prompt path as scoreable evidence.
+Resolve endpoint proof for Codex and Kilo before any scoreable workspace ACUT call. The next smallest useful run is a non-scoreable transport/auth proof that completes for each harness using only `LLM_BASE_URL` and `LLM_API_KEY`, followed by the 4-cell Codex/Kilo smoke subset only after both proofs pass.
