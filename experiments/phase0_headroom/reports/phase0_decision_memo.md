@@ -48,6 +48,30 @@ workspace usage accounting, and a repaired-matrix stability repeat.
 - Stability observed-token spend: `USD 4.70140020`.
 - MAE, RMSE, and Brier score remain `not_applicable_underpowered`.
 
+## Follow-Up Artifacts
+
+- Cost report:
+  `experiments/phase0_headroom/reports/workspace_cost_usage_report.md`.
+- Workspace usage ledger:
+  `experiments/phase0_headroom/results/workspace_usage_ledger.jsonl`.
+- Parallelism policy:
+  `experiments/phase0_headroom/configs/parallelism_policy.yaml`.
+- Scope review:
+  `experiments/phase0_headroom/reports/toolz_hist_010_scope_review.md`.
+- Stability analysis:
+  `experiments/phase0_headroom/reports/codex_kilo_workspace_stability_analysis.md`.
+
+Cost accounting changed the repaired follow-up from a conservative `USD 10.00`
+estimate to an observed-token `USD 5.64126960` estimate, a `USD 4.35873040`
+reduction. The stability repeat changed from a conservative `USD 10.00`
+estimate to an observed-token `USD 4.70140020` estimate, a `USD 5.29859980`
+reduction.
+
+Paid ACUT concurrency remains `1`; cross-harness paid parallelism remains
+disabled. `toolz__hist__010` package export edits remain out-of-scope for the
+certified task boundary. A repaired-matrix stability repeat was run; no
+second-repository pilot was run in this follow-up.
+
 ## What Phase 0 Supports
 
 Phase 0 supports continuing as a measured regression-benchmark compiler. The
