@@ -20,6 +20,7 @@ def test_code_test_path_classification_for_src_and_flat_layouts() -> None:
             "docs/index.md",
             "humanize/filesize.py",
             "test_filesize.py",
+            "setup.py",
         ]
     )
 

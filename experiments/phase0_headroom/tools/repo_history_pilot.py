@@ -55,7 +55,18 @@ REJECT_SUBJECT_TERMS = [
     "black",
     "pyupgrade",
     "flake8",
+    "pytest",
+    "setup.py test",
+    "freezegun",
+    "drop support",
+    "code inspection",
+    "type hint",
+    "typing",
+    "autotyping",
+    "add tests",
+    "tests for",
 ]
+PROJECT_CONFIG_PY_FILES = {"setup.py", "noxfile.py", "conftest.py"}
 
 
 @dataclass(frozen=True)
@@ -161,6 +172,8 @@ def is_test_path(path: str) -> bool:
 def is_code_path(path: str) -> bool:
     if not path.endswith(".py") or is_test_path(path):
         return False
+    if path in PROJECT_CONFIG_PY_FILES:
+        return False
     return not path.startswith(("docs/", ".github/", "ci/"))
 
 
@@ -246,7 +259,7 @@ def numstat(repo: Path, commit: str) -> tuple[int, int]:
     return added, deleted
 
 
-def mining_rows(root: Path, config: PilotConfig, max_anchors: int = 50) -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:
+def mining_rows(root: Path, config: PilotConfig, max_anchors: int = 500) -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:
     repo = config.local_repo
     raw = subprocess.check_output(
         ["git", "log", "--since=2020-01-01", "--reverse", "--format=%x1e%H%x09%P%x09%ad%x09%s", "--date=iso-strict", "--name-only"],
@@ -495,6 +508,8 @@ def mine(root: Path, config_path: Path) -> None:
             "layout": "src" if (config.local_repo / "src").exists() else "flat",
             "test_command": config.command_template,
             "missing_data": [],
+            "missing_data_policy": "empty missing_data means no known target-profile fields were silently omitted",
+            "history_scan_limit": 500,
             "candidate_count": len(candidates),
         },
     )
