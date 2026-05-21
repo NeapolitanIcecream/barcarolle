@@ -1,0 +1,18 @@
+schema_version: barcarolle.stability_followup_matrix.v1
+selected_path: repaired_matrix_repeat
+reason: >
+  Repaired Codex/Kilo follow-up usage import is complete, provider-billed
+  dollars remain unknown, and the observed-token estimate for repeating the
+  same 20-cell matrix is within the Phase 0 soft cap. The remaining scope
+  question for toolz__hist__010 has been recorded without changing metadata.
+budget:
+  projected_observed_token_cost_usd: 5.6412696
+  conservative_fallback_cost_usd: 10.0
+  soft_cap_usd: 12
+  hard_cap_usd: 25
+  stop_before_batch_projected_incremental_usd: 8
+parallelism:
+  paid_acut_concurrency: 1
+  allow_cross_harness_paid_parallelism: false
+source_cost_report: experiments/phase0_headroom/reports/workspace_cost_usage_report.md
+source_reconciliation: experiments/phase0_headroom/results/workspace_cost_reconciliation.json
