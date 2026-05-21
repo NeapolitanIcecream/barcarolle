@@ -1,21 +1,25 @@
 {
   "schema_version": "barcarolle.workspace_acut_matrix.v1",
   "generated_at": "2026-05-21T03:35:45Z",
-  "updated_at": "2026-05-21T04:41:52Z",
-  "status": "partially_blocked_endpoint_proof",
-  "blocker": "kilo_workspace_failed_endpoint_proof",
+  "updated_at": "2026-05-21T04:51:34Z",
+  "status": "blocked_workspace_command_template",
+  "blocker": "workspace_command_templates_not_configured",
   "comparison_design": "same_model_cross_harness",
   "scheduled_cell_count": 0,
   "terminal_status_counts": {},
   "scoreable_cell_count": 0,
   "adapter_statuses": {
     "codex_workspace": "codex_eligible",
-    "kilo_workspace": "kilo_blocked_endpoint_proof"
+    "kilo_workspace": "kilo_eligible"
   },
   "post_run_diagnosis": {
+    "diagnosis_head": "8041be76",
     "codex_endpoint_status": "codex_eligible",
+    "kilo_endpoint_status": "kilo_eligible",
     "codex_scoreable_workspace_calls_run": false,
-    "evidence": "experiments/phase0_headroom/reports/codex_endpoint_failure_diagnosis.md"
+    "kilo_scoreable_workspace_calls_run": false,
+    "codex_evidence": "experiments/phase0_headroom/reports/codex_endpoint_failure_diagnosis.md",
+    "kilo_evidence": "experiments/phase0_headroom/reports/kilo_endpoint_diagnosis.md"
   },
   "decision": "smoke_and_full_matrix_not_run"
 }

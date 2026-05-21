@@ -35,9 +35,10 @@ adapters:
       - LLM_BASE_URL
       - LLM_API_KEY
     endpoint_proof:
-      status: kilo_blocked_endpoint_proof
-      evidence: experiments/phase0_headroom/reports/codex_kilo_workspace_preflight.md
-      blocker: provider_auth_header_missing_after_llm_key_mapping
+      status: kilo_eligible
+      evidence: experiments/phase0_headroom/reports/kilo_endpoint_diagnosis.md
+      blocker: null
+      lesson: use_openai_compatible_provider_with_env_api_key_and_v1_base_url
     workspace_arg_style: template
     statement_delivery: file
     usage_observation:

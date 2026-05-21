@@ -41,4 +41,4 @@ Do not write `LLM_API_KEY` into config files. Let Codex read it through `env_key
 
 ## Implication
 
-The Codex endpoint blocker was a configuration issue, not endpoint or model unavailability. Kilo remains separately blocked until its provider/auth path attaches an authentication header sourced from `LLM_API_KEY`.
+The Codex endpoint blocker was a configuration issue, not endpoint or model unavailability. Kilo was investigated separately in `experiments/phase0_headroom/reports/kilo_endpoint_diagnosis.md`.

@@ -10,6 +10,7 @@
   - `codex_workspace`: `codex_blocked_endpoint_proof`.
   - `kilo_workspace`: `kilo_blocked_endpoint_proof`.
 - Later isolated diagnosis resolved the Codex endpoint proof blocker. The working Codex shape is a custom `model_provider` with `env_key="LLM_API_KEY"`, `/v1` `base_url`, `wire_api="responses"`, and `supports_websockets=false`. This does not retroactively run or score any workspace task.
+- Later isolated diagnosis also resolved the Kilo endpoint proof blocker. The working Kilo shape is an `openai-compatible` provider with `apiKey: "{env:LLM_API_KEY}"`, a `/v1` `baseURL`, a custom `gpt-5.4-mini` model entry, and `--model openai-compatible/gpt-5.4-mini`. A temporary workspace dry-run edited only the requested file, but no scoreable workspace ACUT cell was run.
 
 ## Cost And Scope
 
@@ -21,7 +22,7 @@
 
 ## Next Smallest Runbook
 
-Resolve remaining endpoint proof and workspace command setup before any scoreable workspace ACUT call:
+Resolve workspace command setup before any scoreable workspace ACUT call:
 
 - Codex: convert the working custom-provider proof into a workspace command template that mutates `{workspace}` and captures `git diff`.
-- Kilo: provide a Kilo provider/auth config path that attaches an auth header sourced from `LLM_API_KEY` while using `LLM_BASE_URL`.
+- Kilo: convert the working `openai-compatible` proof into a workspace command template that reads `{statement_file}`, mutates `{workspace}`, and captures `git diff`.

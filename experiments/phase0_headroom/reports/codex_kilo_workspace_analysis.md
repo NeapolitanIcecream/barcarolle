@@ -1,11 +1,10 @@
 # Codex Kilo Workspace Analysis
 
-The Codex/Kilo cross-harness comparison is not scoreable yet. Both candidate harnesses are blocked at endpoint proof, so the experiment stopped before smoke and full matrix execution.
+The Codex/Kilo cross-harness comparison is not scoreable yet. Post-run diagnosis resolved endpoint proof for both harnesses, but the experiment still stopped before smoke and full matrix execution because scoreable workspace command templates have not been run.
 
-The main decision is operational rather than statistical: no `same_model_cross_harness` estimate should be computed from this run. The adapter code can isolate multiple harnesses, but no candidate currently has a proven command template that satisfies the endpoint and credential constraints.
+The main decision is operational rather than statistical: no `same_model_cross_harness` estimate should be computed from this run. The adapter code can isolate multiple harnesses, and both candidates now have proven endpoint/provider shapes, but neither has a scoreable ACUT smoke result.
 
 Required next evidence:
 
-- A successful non-scoreable Codex proof using `LLM_BASE_URL` and `LLM_API_KEY`, without local subscription auth.
-- A successful non-scoreable Kilo proof using `LLM_BASE_URL` and `LLM_API_KEY`, without provider credentials from outside those variables.
-- Only after both proofs pass should the four-cell smoke matrix run.
+- Codex and Kilo workspace command templates that read `{statement_file}`, mutate `{workspace}`, and leave `git diff` as the submission artifact.
+- A four-cell smoke matrix using the now-proven endpoint/provider shapes before any full matrix run.
