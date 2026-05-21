@@ -140,3 +140,41 @@ Decision:
 - Smoke passes the scoreability, policy, usage, and cost gates.
 - The verified failures are valid experimental signal, not a harness blocker.
 - Continue to the main Humanize holdout batch.
+
+## Step 5 Main Humanize Holdout Batch
+
+Paid ACUT main cells were run sequentially:
+
+- Codex: `humanize__hist__003`, `humanize__hist__004`,
+  `humanize__hist__007`, `humanize__hist__008`,
+  `humanize__hist__012`, `humanize__hist__015`.
+- Kilo: `humanize__hist__003`, `humanize__hist__004`,
+  `humanize__hist__007`, `humanize__hist__008`,
+  `humanize__hist__012`, `humanize__hist__015`.
+
+Main outcome:
+
+- Cells: `12`.
+- Scoreable cells: `12`.
+- Terminal statuses: `verified_pass=7`, `verified_fail=5`.
+- Policy violations: `0`.
+- Usage observed rate for main prefix: `1.0`.
+- Observed-or-conservative main cost: `3.1270734` USD.
+
+Combined smoke plus main:
+
+- Cells: `16`.
+- Scoreable cells: `16`.
+- Policy violations: `0`.
+
+Cumulative cost reconciliation after smoke plus main:
+
+- Cumulative calls: `93`.
+- Cumulative usage observed rate: `0.9355`.
+- Cumulative observed-or-conservative estimated spend: `26.903502` USD.
+
+Decision:
+
+- The main holdout batch passes scoreability, policy, usage, and cost gates.
+- Because Humanize source provenance remains fallback-only, the next preferred
+  branch is a Humanize stability repeat rather than paid third-repo work.
