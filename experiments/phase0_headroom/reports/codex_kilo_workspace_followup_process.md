@@ -13,6 +13,10 @@
   and preserved the benchmark-side test-edit rejection gate.
 - Commit `83f6a67d` added Kilo `strict-final` completion mode, bounded task-id
   runner selection, timeout override support, and the follow-up matrix config.
+- Commit `ba69d683` recorded the Kilo completion probe.
+- Commit `1c43dbdb` recorded the 6-cell follow-up policy smoke.
+- Commit `0029236d` recorded the repaired 20-cell Codex/Kilo matrix.
+- Commit `1ba2ebff` refreshed Phase 1 artifacts from the repaired matrix.
 
 ## Step 1 Diagnosis
 
@@ -134,3 +138,15 @@ The weighted summary identifies both ACUTs:
 It imports `20` cells, treats `19` as compatible, keeps the one policy
 violation incompatible, and preserves overall `insufficient_evidence` instead
 of introducing a predictive-validity claim.
+
+## Final Hygiene
+
+- `git diff --check`: passed.
+- `uv run --project experiments/phase0_headroom pytest -q experiments/phase0_headroom/tools`:
+  `43 passed`.
+- `uv run --project experiments/phase1_compiler pytest -q`: `5 passed`.
+- Ignored-only artifacts under the checked scopes are `.venv`, caches, raw
+  logs, cloned external repos, and solver/verifier workspaces.
+- No raw prompts, full completions, ACUT transcripts, raw patches, solver
+  workspaces, verifier workspaces, cloned repositories, `.venv`, caches, or
+  full logs are staged.
