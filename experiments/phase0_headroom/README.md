@@ -29,6 +29,12 @@ keeps Barcarolle on the benchmark side of the boundary: it prepares clean solver
 workspaces, invokes a configured endpoint-backed ACUT harness, captures the
 resulting `git diff`, and verifies the patch in a fresh hidden-oracle workspace.
 
+For the first realistic cross-harness comparison, use
+`docs/experiments/phase-0-codex-kilo-workspace-acut-runbook.md`. That runbook
+configures Codex CLI and Kilo CLI as two workspace ACUT harnesses, proves their
+endpoint-backed eligibility, runs per-harness smoke cells, and only then permits
+the paired 20-cell Phase 0 matrix.
+
 Phase 0 asks whether repo-specific benchmark signal exists before building a
 larger benchmark compiler:
 

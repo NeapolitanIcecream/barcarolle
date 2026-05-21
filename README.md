@@ -48,6 +48,7 @@ an active deliverable for this restart.
 - [Phase 0 closeout follow-up runbook](docs/experiments/phase-0-closeout-followup-runbook.md)
 - [Phase 0 measured endpoint runbook](docs/experiments/phase-0-measured-endpoint-runbook.md)
 - [Phase 0 workspace ACUT adapter runbook](docs/experiments/phase-0-workspace-acut-adapter-runbook.md)
+- [Phase 0 Codex vs Kilo workspace ACUT runbook](docs/experiments/phase-0-codex-kilo-workspace-acut-runbook.md)
 - [Restart consensus notes](docs/restart/2026-05-20-restart-consensus.md)
 
 ## Legacy Archive
