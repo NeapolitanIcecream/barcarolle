@@ -50,6 +50,13 @@ def package_for(repo: Path, base_commit: str, tmp_path: Path) -> workspace_acut.
     )
 
 
+def section(text: str, heading: str) -> str:
+    start = text.index(f"## {heading}")
+    rest = text[start + len(f"## {heading}") :]
+    next_heading = rest.find("\n## ")
+    return rest if next_heading == -1 else rest[:next_heading]
+
+
 def write_multi_adapter_config(tmp_path: Path, command: str) -> Path:
     path = tmp_path / "acut_workspace_adapters.yaml"
     path.write_text(
@@ -228,6 +235,61 @@ def test_workspace_adapter_blocks_prohibited_test_edits(tmp_path: Path) -> None:
     assert result.verifier["status"] == "policy_violation"
     assert result.verifier["harness_error"] == "submission_edited_tests"
     assert result.verifier["changed_paths"] == ["tests/test_calc.py"]
+
+
+def test_statement_policy_lists_only_allowed_code_paths_as_editable(tmp_path: Path) -> None:
+    package = workspace_acut.TaskPackage(
+        task_id="click__fake",
+        repo_id="click",
+        split="G_mini",
+        source_repo=tmp_path,
+        base_commit="base",
+        solver_facing_statement="Update CliRunner behavior.",
+        verifier_command=["true"],
+        allowed_code_paths=["click/testing.py"],
+        scope_boundaries="\n".join(
+            [
+                "click/testing.py implementation behavior",
+                "tests/test_testing.py regression coverage",
+            ]
+        ),
+    )
+
+    text = workspace_acut.render_statement(package)
+
+    assert "## Editable Paths" in text
+    assert "- click/testing.py" in section(text, "Editable Paths")
+    assert "tests/test_testing.py" not in section(text, "Editable Paths")
+    assert "tests/test_testing.py regression coverage" not in section(text, "Scope Boundary")
+    assert "tests/test_testing.py regression coverage" in section(text, "Non-Editable Paths")
+    assert "Do not edit tests" in section(text, "Non-Editable Paths")
+
+
+def test_click_generic_statements_do_not_present_tests_as_editable() -> None:
+    packages = {package.task_id: package for package in workspace_acut.load_generic_packages(Path.cwd())}
+
+    click_002 = workspace_acut.render_statement(packages["click__rbench__002"])
+    click_003 = workspace_acut.render_statement(packages["click__rbench__003"])
+
+    assert "- click/testing.py" in section(click_002, "Editable Paths")
+    assert "tests/test_testing.py" not in section(click_002, "Editable Paths")
+    assert "tests/test_testing.py regression coverage" in section(click_002, "Non-Editable Paths")
+
+    editable_003 = section(click_003, "Editable Paths")
+    assert "- click/core.py" in editable_003
+    assert "- click/termui.py" in editable_003
+    assert "tests/test_termui.py" not in editable_003
+    assert "tests/test_termui.py regression coverage" in section(click_003, "Non-Editable Paths")
+
+
+def test_toolz_statement_keeps_useful_scope_boundary() -> None:
+    packages = {package.task_id: package for package in workspace_acut.load_toolz_packages(Path.cwd())}
+
+    text = workspace_acut.render_statement(packages["toolz__hist__010"])
+
+    assert "- toolz/functoolz.py" in section(text, "Editable Paths")
+    assert "Add the helper without changing existing pipe behavior." in section(text, "Scope Boundary")
+    assert "Hidden verifier material" in text
 
 
 def test_workspace_adapter_classifies_nonzero_acut_exit(tmp_path: Path) -> None:

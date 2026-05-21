@@ -275,32 +275,62 @@ def render_command(template: str, *, workspace: Path, statement_file: Path, task
     return shlex.split(rendered)
 
 
-def write_statement_file(workspace: Path, package: TaskPackage) -> Path:
-    statement = workspace / ".barcarolle" / "statement.md"
-    write_text(
-        statement,
-        "\n".join(
-            [
-                f"# {package.task_id}",
-                "",
-                "## Task",
-                "",
-                package.solver_facing_statement,
-                "",
-                "## Scope Boundary",
-                "",
-                package.scope_boundaries or "Keep the change focused on the requested behavior.",
-                "",
-                "Hidden verifier material, source provenance, target commits, and reference patches are not solver-visible.",
-                "",
-            ]
-        ),
-    )
-    return statement
-
-
 def is_test_path(path: str) -> bool:
     return path.startswith("tests/") or "/tests/" in path
+
+
+def split_scope_boundaries(scope_boundaries: str) -> tuple[list[str], list[str]]:
+    editable_scope: list[str] = []
+    verifier_only_scope: list[str] = []
+    for raw_line in scope_boundaries.splitlines():
+        line = raw_line.strip()
+        if not line:
+            continue
+        if "tests/" in line or "/tests/" in line:
+            verifier_only_scope.append(line)
+        else:
+            editable_scope.append(line)
+    return editable_scope, verifier_only_scope
+
+
+def render_statement(package: TaskPackage) -> str:
+    editable_scope, verifier_only_scope = split_scope_boundaries(package.scope_boundaries)
+    editable_paths = package.allowed_code_paths or ["<implementation files needed for the requested behavior>"]
+    scope_lines = editable_scope or ["Keep the change focused on the requested behavior."]
+    non_editable_lines = [
+        "Do not edit tests, hidden verifier files, generated caches, lockfiles, or files outside the listed editable paths.",
+        *[f"Verifier-only context, do not edit: {line}" for line in verifier_only_scope],
+    ]
+    return "\n".join(
+        [
+            f"# {package.task_id}",
+            "",
+            "## Task",
+            "",
+            package.solver_facing_statement,
+            "",
+            "## Editable Paths",
+            "",
+            *[f"- {path}" for path in editable_paths],
+            "",
+            "## Non-Editable Paths",
+            "",
+            *[f"- {line}" for line in non_editable_lines],
+            "",
+            "## Scope Boundary",
+            "",
+            *[f"- {line}" for line in scope_lines],
+            "",
+            "Hidden verifier material, source provenance, target commits, and reference patches are not solver-visible.",
+            "",
+        ]
+    )
+
+
+def write_statement_file(workspace: Path, package: TaskPackage) -> Path:
+    statement = workspace / ".barcarolle" / "statement.md"
+    write_text(statement, render_statement(package))
+    return statement
 
 
 def policy_violation(changed: list[str], package: TaskPackage) -> tuple[str | None, list[str]]:
