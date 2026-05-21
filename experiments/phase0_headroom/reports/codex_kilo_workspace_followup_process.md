@@ -86,3 +86,29 @@ Results:
 Step 5 continuation gates passed. The repaired matrix is projected at
 `20 * USD 0.50 = USD 10.00`; it will be run as two sequential `USD 5.00`
 batches so no single paid batch exceeds the `USD 8` stop-before-batch rule.
+
+## Step 6 Repaired Matrix
+
+The repaired 20-cell matrix used result prefix `codex_kilo_workspace_followup`
+and was run in two sequential paid batches:
+
+- Codex batch: `10` cells, projected `USD 5.00`.
+- Kilo batch: `10` cells, projected `USD 5.00`.
+
+Results:
+
+- Scheduled cells: `20`.
+- Scoreable cells: `19/20`.
+- Terminal statuses: `verified_pass=7`, `verified_fail=12`,
+  `policy_violation=1`.
+- Codex scoreable cells: `10/10`.
+- Kilo scoreable cells: `9/10`.
+- `G_mini` scoreable cells: `8/8`.
+- Kilo timeout rows: `0/10`.
+- Test-edit policy violations: `0`.
+- Remaining policy violation: Kilo edited out-of-scope exports for
+  `toolz__hist__010` (`toolz/__init__.py`, `toolz/curried/__init__.py`).
+- Estimated repaired matrix cost: `USD 10.00`.
+
+Step 6 thresholds passed. MAE, RMSE, Brier, and ordering accuracy remain
+`not_applicable_underpowered`.
