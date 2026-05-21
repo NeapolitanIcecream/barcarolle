@@ -1,0 +1,4 @@
+adapter_id,acut_id,harness_name,model_or_agent_name,task_id,split,attempt,submission_status,terminal_status,verifier_exit_code,scoreable_cell,agent_failure,harness_error
+kilo_workspace,kilo_workspace_gpt_5_4_mini,kilo,gpt-5.4-mini,toolz__hist__001,B_real,1,submitted,verified_pass,0,True,False,False
+kilo_workspace,kilo_workspace_gpt_5_4_mini,kilo,gpt-5.4-mini,toolz__hist__002,B_real,1,submitted,verified_pass,0,True,False,False
+kilo_workspace,kilo_workspace_gpt_5_4_mini,kilo,gpt-5.4-mini,click__rbench__004,G_mini,1,submitted,verified_fail,1,True,True,False
