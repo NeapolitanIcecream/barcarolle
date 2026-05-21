@@ -1,6 +1,6 @@
 # Codex Kilo Workspace Preflight
 
-Status: `ready_for_smoke`.
+Status: `workspace_acut_smoke_complete`.
 
 - Branch: `codex/restart-benchmark-compiler`.
 - HEAD: `fd673bec`.
@@ -16,8 +16,8 @@ Status: `ready_for_smoke`.
 
 ## Eligibility
 
-- `codex_workspace`: `codex_eligible` after post-run diagnosis; no scoreable workspace task-solving call run.
-- `kilo_workspace`: `kilo_eligible` after post-run diagnosis; no scoreable workspace ACUT call run.
+- `codex_workspace`: `codex_eligible`; smoke scoreable cells `2/2`.
+- `kilo_workspace`: `kilo_eligible`; smoke scoreable cells `1/2`.
 
 ## Evidence
 
@@ -25,7 +25,7 @@ The initial Codex proof was tested with a temporary `CODEX_HOME`, `--ignore-user
 
 The initial Kilo proof was tested with temporary HOME/config state and only `LLM_BASE_URL` plus `LLM_API_KEY` as the source credentials. Provider/model configuration reached the configured endpoint path, but the request was rejected because the attempted mapping did not attach an authentication header.
 
-No smoke or full workspace matrix cells were run.
+The smoke subset has run. The full workspace matrix has not run.
 
 ## Post-Run Diagnosis
 
@@ -51,3 +51,20 @@ Both adapters now have configured command templates that invoke repo-local wrapp
 - `kilo_workspace`: temporary git workspace dry-run returned code `0`, changed only `target.txt`, and left `target.txt` as `PONG\n`.
 
 These dry-runs are not scoreable ACUT cells. They only prove that each wrapper reads a statement file, uses isolated endpoint config, and mutates the supplied workspace.
+
+## Smoke Result
+
+Smoke ran sequentially, two cells per harness:
+
+- `codex_workspace x toolz__hist__002`: `verified_pass`.
+- `codex_workspace x click__rbench__001`: `verified_fail`.
+- `kilo_workspace x toolz__hist__002`: `acut_harness_error` after timeout.
+- `kilo_workspace x click__rbench__001`: `verified_fail`.
+
+Summary:
+
+- Scheduled cells: `4`.
+- Scoreable cells: `3`.
+- Terminal status counts: `verified_pass=1`, `verified_fail=2`, `acut_harness_error=1`.
+- Estimated smoke cost: `USD 2.0` using a conservative `USD 0.50` per-cell estimate because harness usage is not imported.
+- Solver workspaces contained no hidden verifier material in the checked paths.

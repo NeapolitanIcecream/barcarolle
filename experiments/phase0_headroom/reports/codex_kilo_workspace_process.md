@@ -12,18 +12,20 @@
 - Later isolated diagnosis resolved the Codex endpoint proof blocker. The working Codex shape is a custom `model_provider` with `env_key="LLM_API_KEY"`, `/v1` `base_url`, `wire_api="responses"`, and `supports_websockets=false`. This does not retroactively run or score any workspace task.
 - Later isolated diagnosis also resolved the Kilo endpoint proof blocker. The working Kilo shape is an `openai-compatible` provider with `apiKey: "{env:LLM_API_KEY}"`, a `/v1` `baseURL`, a custom `gpt-5.4-mini` model entry, and `--model openai-compatible/gpt-5.4-mini`. A temporary workspace dry-run edited only the requested file, but no scoreable workspace ACUT cell was run.
 - Command templates were added for both adapters through repo-local wrapper scripts. Non-scoreable temporary git workspace dry-runs passed for both wrappers: each changed only `target.txt` to `PONG\n`.
+- Smoke ran sequentially for both adapters on `toolz__hist__002` and `click__rbench__001`.
+- Smoke terminal statuses: Codex `verified_pass`, `verified_fail`; Kilo `acut_harness_error`, `verified_fail`.
 
 ## Cost And Scope
 
-- Scoreable workspace ACUT cells run: `0`.
-- Smoke matrix run: `false`.
+- Workspace ACUT smoke cells run: `4` scheduled, `3` scoreable.
+- Smoke matrix run: `true`.
 - Full matrix run: `false`.
-- Usage observed from proof probes: `false`.
-- Estimated scoreable-run cost: `0.0`.
+- Usage observed from harness output: `false`.
+- Estimated scoreable-run cost: `2.0` for smoke, using a conservative `USD 0.50` per-cell estimate.
 
 ## Next Smallest Runbook
 
-Run the scoreable smoke subset before any full matrix:
+Resolve the full-matrix result protocol before any full matrix:
 
-- Run `codex_workspace` and `kilo_workspace` on `toolz__hist__002` and `click__rbench__001`.
-- Stop before the full matrix if either harness has zero scoreable smoke cells or if adapter-side replay fails.
+- The smoke gate produced at least one scoreable cell per harness, so full matrix is not blocked by the Step 5 scoreability rule.
+- Before running full matrix, ensure full-run result rows do not double-count smoke rows unless smoke cells are intentionally reused.

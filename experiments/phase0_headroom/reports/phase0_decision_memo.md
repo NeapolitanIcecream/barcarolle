@@ -4,7 +4,7 @@ Decision: `proceed_regression_benchmark`.
 
 ## Scope
 
-Phase 0 now has measured endpoint evidence for same-repo tasks, a repaired same-protocol generic comparator matrix, and an implemented workspace ACUT adapter. A Codex/Kilo cross-harness workspace preflight was added; later diagnosis resolved both endpoint proofs through isolated provider configurations, and non-scoreable command-template dry-runs passed for both wrappers. No scoreable workspace ACUT task-solving call has run.
+Phase 0 now has measured endpoint evidence for same-repo tasks, a repaired same-protocol generic comparator matrix, and an implemented workspace ACUT adapter. A Codex/Kilo cross-harness workspace preflight was added; later diagnosis resolved both endpoint proofs through isolated provider configurations, non-scoreable command-template dry-runs passed for both wrappers, and the 4-cell smoke subset completed.
 
 - Endpoint-selected primary ACUT model: `gpt-5.4-mini`.
 - Primary target repository: `toolz`.
@@ -13,9 +13,9 @@ Phase 0 now has measured endpoint evidence for same-repo tasks, a repaired same-
 - Workspace ACUT adapter config: `experiments/phase0_headroom/configs/acut_workspace_adapter.yaml`.
 - Workspace ACUT preflight: `blocked_no_acut_command`.
 - Codex/Kilo workspace ACUT config: `experiments/phase0_headroom/configs/acut_workspace_adapters.yaml`.
-- Codex/Kilo workspace ACUT preflight: `ready_for_smoke`.
-- Codex workspace status: `codex_eligible` for endpoint proof after custom-provider diagnosis; no scoreable workspace task run.
-- Kilo workspace status: `kilo_eligible` for endpoint proof after `openai-compatible` diagnosis; no scoreable workspace task run.
+- Codex/Kilo workspace ACUT preflight: `workspace_acut_smoke_complete`.
+- Codex workspace status: `codex_eligible`; smoke scoreable cells `2/2`.
+- Kilo workspace status: `kilo_eligible`; smoke scoreable cells `1/2`.
 - Estimated measured endpoint spend: `USD 0.32927100`.
 - Actual provider-billed cost: `null` because the endpoint response did not expose billing dollars.
 
@@ -34,10 +34,10 @@ Phase 0 now has measured endpoint evidence for same-repo tasks, a repaired same-
 - Cost per scoreable cell: `0.1646355`.
 - `G_mini -> W_real` availability: `False`.
 - `G_mini + B_real -> W_real` availability: `False`.
-- Workspace ACUT task-solving calls recorded: `0`.
-- Workspace ACUT incremental spend: `USD 0`.
-- Codex/Kilo workspace ACUT scoreable cells recorded: `0`.
-- Codex/Kilo workspace ACUT estimated scoreable-run spend: `USD 0`.
+- Workspace ACUT task-solving calls recorded: `4` Codex/Kilo smoke cells.
+- Workspace ACUT incremental spend: `USD 2.0` estimated.
+- Codex/Kilo workspace ACUT scoreable cells recorded: `3`.
+- Codex/Kilo workspace ACUT estimated scoreable-run spend: `USD 2.0`.
 
 ## What Phase 0 Supports
 
@@ -45,7 +45,7 @@ Phase 0 supports continuing as a measured regression-benchmark compiler. The end
 
 ## What Phase 0 Does Not Support
 
-Phase 0 still does not support predictive-validity claims. Matrix A is too small and too harness-sensitive to justify moving to `proceed_predictive`, and the workspace adapter has not yet run a real ACUT smoke subset. The Codex/Kilo comparison also does not yet support cross-harness conclusions because neither harness has run a scoreable workspace task.
+Phase 0 still does not support predictive-validity claims. Matrix A is too small and too harness-sensitive to justify moving to `proceed_predictive`, and the Codex/Kilo workspace evidence is only a 4-cell smoke subset.
 
 ## Threats To Validity
 
@@ -54,10 +54,10 @@ Phase 0 still does not support predictive-validity claims. Matrix A is too small
 - Generic comparator packages are recovered from archived Click R0 material.
 - Pricing uses conservative user-estimate-required rates rather than endpoint billing data.
 - MAE, RMSE, and Brier score remain `not_applicable_underpowered`.
-- Workspace adapter preflight is ready for the Codex/Kilo smoke subset; the full matrix remains gated on smoke scoreability.
+- Workspace adapter smoke completed, but the full matrix remains gated on clarifying result reuse versus double-counting smoke rows.
 - Codex CLI proof initially failed when using `openai_base_url` alone; post-run diagnosis showed a custom `model_provider` with `env_key="LLM_API_KEY"` and `supports_websockets=false` completes against the endpoint.
 - Kilo proof initially failed because the attempted config did not attach authentication; post-run diagnosis showed the documented `openai-compatible` provider with `apiKey: "{env:LLM_API_KEY}"` completes against the endpoint and passes a temporary workspace edit dry-run.
 
 ## Next Smallest Useful Experiment
 
-Run the 4-cell Codex/Kilo smoke subset with `toolz__hist__002` and `click__rbench__001` for each harness. Stop before the full matrix unless both harnesses produce at least one scoreable smoke cell.
+Clarify the full-matrix result protocol so smoke rows are either intentionally reused or not double-counted, then run the 20-cell Codex/Kilo matrix if the cost projection remains within budget.

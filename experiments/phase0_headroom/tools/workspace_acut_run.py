@@ -43,6 +43,7 @@ SCORE_FIELDS = [
     "agent_failure",
     "harness_error",
 ]
+CONSERVATIVE_WORKSPACE_CELL_ESTIMATE_USD = 0.50
 
 
 @dataclass
@@ -707,6 +708,16 @@ def metrics_payload(rows: list[dict[str, Any]], cost_summary: dict[str, Any]) ->
             "verified_fail_count": sum(1 for row in scoreable if row["terminal_status"] == "verified_fail"),
             "pass_rate": None if not scoreable else round(sum(1 for row in scoreable if row["terminal_status"] == "verified_pass") / len(scoreable), 4),
         }
+    harness_metrics: dict[str, dict[str, Any]] = {}
+    for adapter_id in sorted({row.get("adapter_id", "") for row in rows}):
+        harness_rows = [row for row in rows if row.get("adapter_id", "") == adapter_id]
+        scoreable = [row for row in harness_rows if row["scoreable_cell"] is True]
+        harness_metrics[adapter_id] = {
+            "cell_count": len(harness_rows),
+            "scoreable_cell_count": len(scoreable),
+            "scoreable_rate": None if not harness_rows else round(len(scoreable) / len(harness_rows), 4),
+            "terminal_status_counts": {status: sum(1 for row in harness_rows if row["terminal_status"] == status) for status in sorted({row["terminal_status"] for row in harness_rows})},
+        }
     total = len(rows)
     scoreable_total = sum(1 for row in rows if row["scoreable_cell"] is True)
     return {
@@ -717,6 +728,7 @@ def metrics_payload(rows: list[dict[str, Any]], cost_summary: dict[str, Any]) ->
         "scoreable_cell_count": scoreable_total,
         "terminal_status_counts": {status: sum(1 for row in rows if row["terminal_status"] == status) for status in sorted({row["terminal_status"] for row in rows})},
         "split_metrics": split_metrics,
+        "harness_metrics": harness_metrics,
         "cost_per_submitted_cell_usd": None if total == 0 else round(float(cost_summary.get("estimated_cost_usd") or 0.0) / total, 8),
         "cost_per_scoreable_cell_usd": None if scoreable_total == 0 else round(float(cost_summary.get("estimated_cost_usd") or 0.0) / scoreable_total, 8),
         "median_latency_seconds": cost_summary.get("median_latency_seconds"),
@@ -753,6 +765,10 @@ def merge_rows_by_run_id(existing: list[dict[str, Any]], new_rows: list[dict[str
             order.append(run_id)
         by_run_id[run_id] = row
     return [by_run_id[run_id] for run_id in order]
+
+
+def existing_task_ids_for_adapter(rows: list[dict[str, Any]], adapter_id: str) -> set[str]:
+    return {str(row.get("task_id")) for row in rows if row.get("adapter_id") == adapter_id and row.get("task_id")}
 
 
 def write_empty_result_files(root: Path, status: str, reason: str, result_prefix: str = "workspace_acut") -> None:
@@ -950,6 +966,11 @@ def run_matrix(
     config = resolve_adapter_config(resolved_adapter_config, adapter_id)
     if not config.command_template.strip():
         raise RuntimeError("ACUT workspace command is not configured")
+    submission_path = result_file(exp, result_prefix, "submissions", ".jsonl")
+    verifier_path = result_file(exp, result_prefix, "verifier_results", ".jsonl")
+    cost_path = result_file(exp, result_prefix, "cost_ledger", ".jsonl")
+    existing_submissions = read_jsonl(submission_path)
+    reusable_task_ids = existing_task_ids_for_adapter(existing_submissions, config.adapter_id) if mode == "matrix" else set()
     packages = load_phase0_packages(root)
     if mode == "smoke":
         wanted = {"toolz__hist__002", "click__rbench__001"}
@@ -958,6 +979,8 @@ def run_matrix(
     verifiers: list[dict[str, Any]] = []
     cost_rows: list[dict[str, Any]] = []
     for package in packages:
+        if package.task_id in reusable_task_ids:
+            continue
         run_acut_id = config.acut_id or "acut"
         if result_prefix == "workspace_acut":
             run_id = f"workspace_{run_acut_id}__{package.task_id}__{mode}1"
@@ -980,15 +1003,12 @@ def run_matrix(
                 "task_id": package.task_id,
                 "status": result.verifier["status"],
                 "usage_observed": False,
-                "estimated_cost_usd": 0.0,
+                "estimated_cost_usd": CONSERVATIVE_WORKSPACE_CELL_ESTIMATE_USD,
                 "latency_seconds": result.submission.get("latency_seconds"),
-                "notes": "adapter captured workspace diff; harness usage report not imported",
+                "notes": "adapter captured workspace diff; harness usage report not imported; conservative per-cell estimate applied",
             }
         )
-    submission_path = result_file(exp, result_prefix, "submissions", ".jsonl")
-    verifier_path = result_file(exp, result_prefix, "verifier_results", ".jsonl")
-    cost_path = result_file(exp, result_prefix, "cost_ledger", ".jsonl")
-    submissions = merge_rows_by_run_id(read_jsonl(submission_path), submissions)
+    submissions = merge_rows_by_run_id(existing_submissions, submissions)
     verifiers = merge_rows_by_run_id(read_jsonl(verifier_path), verifiers)
     cost_rows = merge_rows_by_run_id(read_jsonl(cost_path), cost_rows)
     write_jsonl(submission_path, submissions)
@@ -999,6 +1019,7 @@ def run_matrix(
     summary = cost_summary(cost_rows)
     write_json(result_file(exp, result_prefix, "cost_summary", ".json"), summary)
     metrics = metrics_payload(rows, summary)
+    metrics["status"] = "workspace_acut_smoke_complete" if mode == "smoke" else "workspace_acut_matrix_complete"
     write_json(result_file(exp, result_prefix, "metrics", ".json"), metrics)
     write_json(
         result_file(exp, result_prefix, "matrix", ".json"),

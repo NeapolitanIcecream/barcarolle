@@ -69,3 +69,16 @@ def test_merge_rows_by_run_id_replaces_existing_rows() -> None:
     )
 
     assert merged == [{"run_id": "a", "status": "new"}, {"run_id": "b", "status": "kept"}]
+
+
+def test_existing_task_ids_for_adapter_selects_only_matching_adapter() -> None:
+    task_ids = workspace_acut_run.existing_task_ids_for_adapter(
+        [
+            {"adapter_id": "codex_workspace", "task_id": "toolz__hist__002"},
+            {"adapter_id": "kilo_workspace", "task_id": "toolz__hist__002"},
+            {"adapter_id": "codex_workspace", "task_id": "click__rbench__001"},
+        ],
+        "codex_workspace",
+    )
+
+    assert task_ids == {"toolz__hist__002", "click__rbench__001"}

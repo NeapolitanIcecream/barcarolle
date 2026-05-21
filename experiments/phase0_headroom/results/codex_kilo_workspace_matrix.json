@@ -1,27 +1,18 @@
 {
+  "adapter_config": "experiments/phase0_headroom/configs/acut_workspace_adapters.yaml",
+  "adapter_ids": [
+    "codex_workspace",
+    "kilo_workspace"
+  ],
+  "generated_at": "2026-05-21T05:37:04+00:00",
+  "matrix_config": "experiments/phase0_headroom/configs/codex_kilo_workspace_matrix.yaml",
+  "scheduled_cell_count": 4,
   "schema_version": "barcarolle.workspace_acut_matrix.v1",
-  "generated_at": "2026-05-21T03:35:45Z",
-  "updated_at": "2026-05-21T05:17:15Z",
-  "status": "ready_for_smoke",
-  "blocker": null,
-  "comparison_design": "same_model_cross_harness",
-  "scheduled_cell_count": 0,
-  "terminal_status_counts": {},
-  "scoreable_cell_count": 0,
-  "adapter_statuses": {
-    "codex_workspace": "codex_eligible",
-    "kilo_workspace": "kilo_eligible"
-  },
-  "post_run_diagnosis": {
-    "diagnosis_head": "78c761bf",
-    "codex_endpoint_status": "codex_eligible",
-    "kilo_endpoint_status": "kilo_eligible",
-    "codex_temp_workspace_edit_dry_run": true,
-    "kilo_temp_workspace_edit_dry_run": true,
-    "codex_scoreable_workspace_calls_run": false,
-    "kilo_scoreable_workspace_calls_run": false,
-    "codex_evidence": "experiments/phase0_headroom/reports/codex_endpoint_failure_diagnosis.md",
-    "kilo_evidence": "experiments/phase0_headroom/reports/kilo_endpoint_diagnosis.md"
-  },
-  "decision": "smoke_and_full_matrix_not_run"
+  "scoreable_cell_count": 3,
+  "status": "workspace_acut_smoke_complete",
+  "terminal_status_counts": {
+    "acut_harness_error": 1,
+    "verified_fail": 2,
+    "verified_pass": 1
+  }
 }

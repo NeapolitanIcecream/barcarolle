@@ -1,8 +1,8 @@
 {
   "schema_version": "barcarolle.codex_kilo_workspace_preflight.v1",
   "generated_at": "2026-05-21T03:35:45Z",
-  "updated_at": "2026-05-21T05:17:15Z",
-  "status": "ready_for_smoke",
+  "updated_at": "2026-05-21T05:38:57Z",
+  "status": "workspace_acut_smoke_complete",
   "branch": "codex/restart-benchmark-compiler",
   "head": "fd673bec",
   "comparison_design": "same_model_cross_harness",
@@ -38,7 +38,12 @@
       "endpoint_source": "custom model_provider base_url=LLM_BASE_URL with /v1",
       "terminal_error_class": null,
       "workspace_command_dry_run_status": "passed",
-      "scoreable_calls_authorized": false
+      "smoke_terminal_statuses": [
+        "verified_pass",
+        "verified_fail"
+      ],
+      "smoke_scoreable_cell_count": 2,
+      "scoreable_calls_authorized": true
     },
     {
       "adapter_id": "kilo_workspace",
@@ -53,14 +58,19 @@
       "endpoint_source": "openai-compatible provider options baseURL=LLM_BASE_URL with /v1",
       "terminal_error_class": null,
       "workspace_command_dry_run_status": "passed",
-      "scoreable_calls_authorized": false
+      "smoke_terminal_statuses": [
+        "acut_harness_error",
+        "verified_fail"
+      ],
+      "smoke_scoreable_cell_count": 1,
+      "scoreable_calls_authorized": true
     }
   ],
   "budget": {
     "soft_cap_usd": 10,
     "hard_cap_usd": 25,
     "stop_before_batch_projected_incremental_usd": 15,
-    "estimated_cost_usd": 0.0,
+    "estimated_cost_usd": 2.0,
     "usage_observed": false
   },
   "blockers": [],
@@ -68,14 +78,24 @@
     "diagnosis_head": "78c761bf",
     "codex_endpoint_status": "codex_eligible",
     "codex_lesson": "custom_model_provider_env_key_llm_api_key_supports_websockets_false",
-    "codex_scoreable_workspace_calls_run": false,
+    "codex_scoreable_workspace_calls_run": true,
     "kilo_endpoint_status": "kilo_eligible",
     "kilo_lesson": "openai_compatible_provider_api_key_env_llm_api_key_base_url_v1",
     "kilo_temp_workspace_edit_dry_run": true,
     "codex_temp_workspace_edit_dry_run": true,
-    "kilo_scoreable_workspace_calls_run": false,
+    "kilo_scoreable_workspace_calls_run": true,
     "codex_evidence": "experiments/phase0_headroom/reports/codex_endpoint_failure_diagnosis.md",
     "kilo_evidence": "experiments/phase0_headroom/reports/kilo_endpoint_diagnosis.md"
   },
-  "decision": "stop_before_scoreable_workspace_acut_calls"
+  "smoke": {
+    "scheduled_cell_count": 4,
+    "scoreable_cell_count": 3,
+    "estimated_cost_usd": 2.0,
+    "terminal_status_counts": {
+      "acut_harness_error": 1,
+      "verified_fail": 2,
+      "verified_pass": 1
+    }
+  },
+  "decision": "stop_before_full_matrix_until_result_reuse_protocol_is_clear"
 }
