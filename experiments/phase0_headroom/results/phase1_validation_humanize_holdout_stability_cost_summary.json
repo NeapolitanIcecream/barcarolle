@@ -1,25 +1,25 @@
 {
   "actual_provider_billed_cost_usd": null,
-  "call_count": 8,
-  "conservative_estimated_cost_usd": 4.0,
+  "call_count": 16,
+  "conservative_estimated_cost_usd": 8.0,
   "conservative_fallback_for_missing_usage_usd": 0,
   "generated_at": "2026-05-21T16:23:36+00:00",
-  "median_latency_seconds": 67.388,
+  "median_latency_seconds": 48.897,
   "missing_usage_cell_count": 0,
   "missing_usage_run_ids": [],
-  "observed_or_conservative_estimated_cost_usd": 2.3785506,
-  "observed_token_estimated_cost_usd": 2.3785506,
+  "observed_or_conservative_estimated_cost_usd": 4.122933,
+  "observed_token_estimated_cost_usd": 4.122933,
   "per_harness_observed_token_cost_usd": {
-    "codex_workspace": 1.3503444,
-    "kilo_workspace": 1.0282062
+    "codex_workspace": 2.788377,
+    "kilo_workspace": 1.334556
   },
   "per_split_observed_token_cost_usd": {
-    "B_real": 0.4587642,
-    "W_real": 1.9197864
+    "B_real": 1.9212942,
+    "W_real": 2.2016388
   },
   "pricing_source": "user_estimate_required_conservative_default",
-  "result_prefix": "humanize_pre_phase1_workspace",
+  "result_prefix": "phase1_validation_humanize_holdout_stability",
   "schema_version": "barcarolle.workspace_acut_cost_summary.v2",
-  "usage_observed_count": 8,
+  "usage_observed_count": 16,
   "usage_observed_rate": 1.0
 }

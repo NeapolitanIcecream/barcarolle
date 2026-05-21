@@ -178,3 +178,37 @@ Decision:
 - The main holdout batch passes scoreability, policy, usage, and cost gates.
 - Because Humanize source provenance remains fallback-only, the next preferred
   branch is a Humanize stability repeat rather than paid third-repo work.
+
+## Step 6 Humanize Holdout Stability Repeat
+
+Paid ACUT stability cells were run sequentially across the eight internal
+holdout tasks:
+
+- `humanize__hist__002`
+- `humanize__hist__003`
+- `humanize__hist__004`
+- `humanize__hist__007`
+- `humanize__hist__008`
+- `humanize__hist__010`
+- `humanize__hist__012`
+- `humanize__hist__015`
+
+Stability outcome:
+
+- Cells: `16`.
+- Scoreable cells: `16`.
+- Terminal statuses: `verified_pass=5`, `verified_fail=11`.
+- Policy violations: `0`.
+- Usage observed rate for stability prefix: `1.0`.
+- Observed-or-conservative stability cost: `4.122933` USD.
+
+Cumulative cost reconciliation after stability:
+
+- Cumulative calls: `109`.
+- Cumulative usage observed rate: `0.945`.
+- Cumulative observed-or-conservative estimated spend: `31.026435` USD.
+
+Evidence boundary:
+
+- This is repeat reliability evidence.
+- It is not an independent validation sample and not a future holdout.
