@@ -144,3 +144,46 @@ Entry-gate decision:
 
 Proceed to the attrs B_eval paid batch if scoped tests and `git diff --check`
 pass. No paid ACUT or paid LLM calls were made in Step 2.
+
+## Step 3 Paid Attrs B_eval
+
+Executed paid B_eval cells sequentially:
+
+- `codex_workspace`: `attrs__hist__001`, `attrs__hist__003`, `attrs__hist__004`, `attrs__hist__008`
+- `kilo_workspace`: `attrs__hist__001`, `attrs__hist__003`, `attrs__hist__004`, `attrs__hist__008`
+
+Score table summary:
+
+- terminal cells: `8/8`
+- scoreable cells: `8/8`
+- verified pass: `7`
+- verified fail: `1`
+- policy violations: `0`
+- harness errors: `0`
+- adapter cells: `4` Codex, `4` Kilo
+
+Cost and usage:
+
+- usage observed cells: `8/8`
+- usage observed rate: `1.0`
+- B_eval observed-or-conservative estimated cost: `$6.4833018`
+- conservative fallback for missing usage: `$0`
+- cumulative observed-or-conservative estimate after import: `$53.4708656`
+- cumulative usage observed rate after import: `0.9524`
+
+Hidden oracle leak check:
+
+- no `*_hidden_tests.patch` files were found under B_eval solver workspaces
+- raw artifacts and workspaces remain under ignored paths
+
+## Step 4 H_future Continuation Decision
+
+The B_eval gate passed:
+
+- at least `6/8` cells are scoreable: yes, `8/8`
+- policy violations are `0`: yes
+- usage/cost is observed or conservatively bounded: yes
+- cumulative spend remains below the `$80.00` unattended stop cap: yes
+- adapter failures are not recurring harness errors: yes
+
+Decision: continue to the paid attrs H_future batch.
