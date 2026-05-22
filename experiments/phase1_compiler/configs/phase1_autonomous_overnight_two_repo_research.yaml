@@ -1,0 +1,71 @@
+schema_version: barcarolle.phase1_autonomous_overnight_two_repo_research.v1
+status: preflight_recorded
+runbook: docs/experiments/phase-1-autonomous-overnight-two-repo-research-runbook.md
+claim_scope: two_repo_preregistered_paid_validation_run
+predictive_validity_established: false
+
+frozen_design:
+  preregistration: experiments/phase1_compiler/results/phase1_two_repo_future_holdout_preregistration.json
+  selected_repos:
+    - boltons
+    - attrs
+  existing_paid_evidence:
+    boltons_b_eval_prefix: phase1_future_holdout_b_eval
+    boltons_h_future_prefix: phase1_future_holdout_h_future
+  planned_second_repo:
+    repo_id: attrs
+    b_eval_prefix: phase1_two_repo_future_holdout_attrs_b_eval
+    h_future_prefix: phase1_two_repo_future_holdout_attrs_h_future
+    b_eval_tasks:
+      - attrs__hist__001
+      - attrs__hist__003
+      - attrs__hist__004
+      - attrs__hist__008
+    h_future_tasks:
+      - attrs__hist__012
+      - attrs__hist__013
+      - attrs__hist__023
+      - attrs__hist__027
+
+workspace_acut:
+  adapter_config: experiments/phase0_headroom/configs/acut_workspace_adapters.yaml
+  matrix_config: experiments/phase1_compiler/configs/phase1_two_repo_future_holdout_validation.yaml
+  adapters:
+    - codex_workspace
+    - kilo_workspace
+  paid_parallelism: disabled
+  run_paid_cells_only_after_entry_gate: true
+
+endpoint_rule:
+  required_env:
+    - LLM_BASE_URL
+    - LLM_API_KEY
+  checked_by_preflight_without_printing_values: true
+  local_subscription_fallback: disabled
+  openai_api_key_fallback: disabled
+  provider_specific_fallback: disabled
+
+budget:
+  current_cumulative_observed_or_conservative_usd: 46.99
+  overnight_incremental_soft_cap_usd: 20.0
+  overnight_incremental_hard_cap_usd: 35.0
+  absolute_unattended_stop_cap_usd: 80.0
+  conservative_cell_estimate_usd: 0.50
+  planned_attrs_paid_cells: 16
+  planned_attrs_conservative_increment_usd: 8.0
+
+acceptance:
+  min_target_repos: 2
+  min_holdout_scoreable_cells: 12
+  policy_violations_max: 0
+  non_scoreable_cells_max_per_split: 2
+  usage_observed_rate_min: 0.85
+  holdout_tuning_allowed: false
+
+outputs:
+  preflight: experiments/phase1_compiler/results/phase1_autonomous_overnight_two_repo_preflight.json
+  process_report: experiments/phase1_compiler/reports/phase1_autonomous_overnight_two_repo_process.md
+  metrics: experiments/phase1_compiler/results/phase1_two_repo_future_holdout_prediction_metrics.json
+  metrics_report: experiments/phase1_compiler/reports/phase1_two_repo_future_holdout_prediction_metrics.md
+  decision: experiments/phase1_compiler/results/phase1_autonomous_overnight_two_repo_decision.json
+  decision_report: experiments/phase1_compiler/reports/phase1_autonomous_overnight_two_repo_decision.md
