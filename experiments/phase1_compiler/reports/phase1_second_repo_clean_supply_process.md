@@ -147,3 +147,33 @@ Promoted rows have local certification status `certified`, non-leaky public
 problem context, clean overlay gates passing, outcome-unseen task ids, and
 target-commit-unseen status. Review records list all rejected candidates and
 blockers.
+
+## Step 4 Build Second-Repo Clean Supply Overlay
+
+Ran:
+
+- `phase1_clean_outcome_unseen_supply_mining.py build-second-repo-overlay --config experiments/phase1_compiler/configs/phase1_second_repo_clean_outcome_unseen_supply.yaml --repo-id attrs`
+
+Generated:
+
+- `experiments/phase1_compiler/results/phase1_second_repo_clean_supply_overlay.json`
+- `experiments/phase1_compiler/reports/phase1_second_repo_clean_supply_overlay.md`
+
+Overlay result:
+
+- evidence level: `clean_supply_overlay_sidecar`
+- selected repo: `attrs`
+- clean supply ready: `true`
+- validation size: `preferred`
+- selected B_eval tasks: `attrs__hist__001`, `attrs__hist__003`, `attrs__hist__004`, `attrs__hist__008`
+- selected H_future tasks: `attrs__hist__012`, `attrs__hist__013`, `attrs__hist__023`, `attrs__hist__027`
+- reserve clean tasks: `attrs__hist__009`, `attrs__hist__010`, `attrs__hist__032`, `attrs__hist__033`, `attrs__hist__035`, `attrs__hist__036`, `attrs__hist__039`, `attrs__hist__041`, `attrs__hist__045`, `attrs__hist__047`
+- `T_compile_end`: `2020-08-20T19:01:34+02:00`
+- `T_holdout_start`: `2020-09-03T19:01:34+02:00`
+- embargo gap: `14` days
+- paid ACUT calls made: `false`
+- paid LLM calls made: `false`
+- predictive validity established: `false`
+
+The overlay is sidecar evidence only. Canonical Boltons release artifacts and
+canonical hardening outputs were not mutated.
