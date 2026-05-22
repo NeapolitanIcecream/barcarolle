@@ -159,3 +159,26 @@ Future-holdout preregistration:
 The future-holdout supply output records clean tasks as
 `clean_supply_overlay_sidecar` evidence. No canonical hardening output was
 mutated.
+
+## Step 7 Decision
+
+Ran:
+
+- `phase1_clean_outcome_unseen_supply_mining.py decide`
+
+Generated:
+
+- `experiments/phase1_compiler/results/phase1_clean_outcome_unseen_supply_decision.json`
+- `experiments/phase1_compiler/reports/phase1_clean_outcome_unseen_supply_decision.md`
+
+Final local decision:
+
+- primary decision: `boltons_clean_supply_ready_for_preregistered_validation`
+- recommended next runbook: `run_preregistered_clean_future_holdout_paid_validation`
+- clean supply ready: `true`
+- future-holdout preregistration status: `frozen`
+- selected future-holdout repos: `boltons`
+- newly promoted task ids: `boltons__clean_ext__001`, `boltons__clean_ext__008`, `boltons__clean_ext__010`, `boltons__clean_ext__017`
+- predictive validity established: `false`
+- paid ACUT calls made: `false`
+- paid LLM calls made: `false`
