@@ -98,3 +98,22 @@ Boltons supply screen:
 
 `boltons` exceeds the strong-candidate threshold, so `attrs` was not cloned or
 screened. Wrote the candidate screen JSON and report.
+
+## Step 5 Source Context
+
+`gh auth status` showed an authenticated GitHub CLI session. Source-context
+generation used sanitized PR metadata and stored no raw API responses.
+
+Boltons source-context yield:
+
+- statements: `32`
+- reviewed non-leaky PR-context statements: `22`
+- context-missing statements: `10`
+- reviewed statements with `commit:` refs: `0`
+- source context rows: `32`
+- PR rows: `22`
+- commit fallback rows: `10`
+
+All generated statements use `Repair the boltons behavior`; none contain stale
+`humanize` or `itsdangerous` behavior text. Source yield is above the strong
+threshold, so no linked-issue adapter extension was needed.
