@@ -152,3 +152,16 @@ Release result:
 
 The certified task and release artifacts contain no stale `humanize` or
 `itsdangerous` behavior statements.
+
+## Step 8 Active Replacement Selection
+
+Selected `boltons` as the active Phase 1 third repo replacement:
+
+- active repo: `boltons`
+- selection status: `selected_local_pilot`
+- source release: `experiments/phase0_headroom/releases/boltons_phase0_pilot_release.json`
+- replacement for: `itsdangerous`
+
+`attrs` remains unscreened because `boltons` passed supply, source, local
+certification, and release gates. Itsdangerous artifacts remain available as
+historical/replaced evidence.

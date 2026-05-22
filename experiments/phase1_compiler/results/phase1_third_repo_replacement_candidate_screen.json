@@ -17,7 +17,20 @@
       "repo_id": "boltons",
       "screen_status": "candidate_supply_ok",
       "selected_candidates_missing_code_or_tests": 0
+    },
+    {
+      "candidate_count_after_filter": null,
+      "local_repo_default_branch": "",
+      "local_repo_head": "",
+      "maintenance_subject_hits": null,
+      "max_changed_lines": null,
+      "next_action": "not_screened_because_boltons_selected",
+      "repo_id": "attrs",
+      "screen_status": "not_screened_boltons_selected",
+      "selected_candidates_missing_code_or_tests": null
     }
   ],
-  "schema_version": "barcarolle.phase1.third_repo_replacement_candidate_screen.v1"
+  "schema_version": "barcarolle.phase1.third_repo_replacement_candidate_screen.v1",
+  "selected_repo_id": "boltons",
+  "selection_status": "selected_local_pilot"
 }

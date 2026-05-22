@@ -2,6 +2,8 @@
 
 Screened repos: `boltons`.
 
+Selected replacement repo: `boltons`.
+
 `boltons` passed the supply screen:
 
 - candidates after filter: `32`
@@ -13,6 +15,7 @@ Screened repos: `boltons`.
 - default branch: `origin/master`
 
 `attrs` was not cloned or screened because `boltons` met the usable and strong
-supply thresholds.
+supply thresholds, then reached local pilot-grade release.
 
-Next action: build source context for `boltons`.
+Next action: refresh Phase 1 hardening overlays with `boltons` as the active
+replacement for `itsdangerous`.
