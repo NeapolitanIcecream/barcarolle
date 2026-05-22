@@ -38,6 +38,32 @@ runbook were tracked by Git.
 
 No paid calls were made.
 
+## Step 3 Re-Mine Candidates
+
+Removed only the ignored workspace path
+`experiments/phase0_headroom/workspaces/repo_history_pilot/itsdangerous`, then
+ran:
+
+`uv run --project experiments/phase0_headroom python experiments/phase0_headroom/tools/repo_history_pilot.py --root . --config experiments/phase0_headroom/configs/third_repo_pilot_itsdangerous_repair_v2.yaml mine`
+
+Repaired mining produced `6` selected candidates. This is below the runbook's
+preferred `8` candidate threshold, so the third repo is supply-limited unless
+later certification evidence justifies a narrow pilot.
+
+Candidate checks:
+
+- selected candidates with both code and test files: `6`
+- selected candidates missing code or tests: `0`
+- maximum selected changed-line count: `91`
+- selected maintenance/project-churn subjects matching the repair blocklist: `0`
+- accepted without manual review: `1`
+- manual-review-required due to cross-module or docs/config touches: `5`
+
+The regenerated supply funnel records filter status, reject reasons,
+manual-review reasons, and changed-line counts for auditability.
+
+No paid calls were made.
+
 ## Step 2 Versioned Repair Config
 
 Created
