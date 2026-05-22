@@ -1,6 +1,6 @@
 # Phase 1 Boltons Paid ACUT Smoke Process
 
-Status: in progress.
+Status: complete.
 
 Generated: 2026-05-22T06:24:22Z.
 
@@ -207,3 +207,19 @@ Decision label:
 Recommended next runbook:
 
 - `write_phase1_validation_design_and_future_holdout_runbook`
+
+## Step 8 Final Verification
+
+Final verification passed:
+
+- `git diff --check`
+- `uv run --project experiments/phase0_headroom pytest -q experiments/phase0_headroom/tools` -> `69 passed in 1.85s`
+- `uv run --project experiments/phase1_compiler pytest -q` -> `28 passed in 0.34s`
+- `uv run --project experiments/phase1_compiler python experiments/phase1_compiler/tools/phase1_compiler.py validate --config experiments/phase1_compiler/configs/phase1_mvp.yaml` -> `status=valid`
+
+Final artifact hygiene:
+
+- `git status --short --ignored` showed only ignored `.pytest_cache`, `.venv`, `external_repos`, `results/raw`, `tools/__pycache__`, and `workspaces` paths under the scoped experiment directories.
+- `git ls-files` for raw, workspace, external repo, venv, and cache paths returned no tracked files.
+
+No push was performed.
