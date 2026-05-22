@@ -81,3 +81,20 @@ Boltons local repo state:
 
 The cloned repository remains under the ignored `external_repos` path and is not
 tracked by Git.
+
+## Step 4 Candidate Supply Screen
+
+Ran mining for `boltons` with
+`experiments/phase0_headroom/configs/third_repo_replacement_boltons_v1.yaml`.
+
+Boltons supply screen:
+
+- candidate count after filter: `32`
+- candidates with both code and tests: `32`
+- candidates missing code or tests: `0`
+- maximum selected changed-line count: `235`
+- subject-level maintenance/project-churn hits: `0`
+- manual-review candidates: `6`
+
+`boltons` exceeds the strong-candidate threshold, so `attrs` was not cloned or
+screened. Wrote the candidate screen JSON and report.

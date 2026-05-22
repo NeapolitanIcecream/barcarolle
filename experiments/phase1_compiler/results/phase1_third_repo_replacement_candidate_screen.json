@@ -1,0 +1,23 @@
+{
+  "candidate_order": [
+    "boltons",
+    "attrs"
+  ],
+  "generated_at": "2026-05-22T05:51:50Z",
+  "paid_acut_calls_made": false,
+  "paid_llm_calls_made": false,
+  "rows": [
+    {
+      "candidate_count_after_filter": 32,
+      "local_repo_default_branch": "origin/master",
+      "local_repo_head": "207651ee6055aabd0d9cdeac2e00140cdc208d44",
+      "maintenance_subject_hits": 0,
+      "max_changed_lines": 235,
+      "next_action": "build_source_context_for_boltons",
+      "repo_id": "boltons",
+      "screen_status": "candidate_supply_ok",
+      "selected_candidates_missing_code_or_tests": 0
+    }
+  ],
+  "schema_version": "barcarolle.phase1.third_repo_replacement_candidate_screen.v1"
+}
