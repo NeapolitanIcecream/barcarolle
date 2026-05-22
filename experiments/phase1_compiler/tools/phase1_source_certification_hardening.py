@@ -19,7 +19,10 @@ ROOT = Path(__file__).resolve().parents[1]
 REPO_ROOT = ROOT.parents[1]
 PHASE0_ROOT = REPO_ROOT / "experiments" / "phase0_headroom"
 PHASE1_ROOT = REPO_ROOT / "experiments" / "phase1_compiler"
-REPOS = ("toolz", "humanize", "itsdangerous")
+BASE_REPOS = ("toolz", "humanize")
+DEFAULT_THIRD_REPO = "itsdangerous"
+REPOS = (*BASE_REPOS, DEFAULT_THIRD_REPO)
+REPLACEMENT_SELECTION_CONFIG = PHASE1_ROOT / "configs" / "phase1_third_repo_replacement_selection.yaml"
 
 SOURCE_TIERS = (
     "benchmark_grade_source",
@@ -114,6 +117,60 @@ def digest_text(text: str, length: int = 16) -> str:
 
 def rel(path: Path) -> str:
     return str(path.resolve().relative_to(REPO_ROOT))
+
+
+def load_replacement_selection_config(path: Path = REPLACEMENT_SELECTION_CONFIG) -> dict[str, Any]:
+    if not path.exists():
+        return {
+            "candidate_order": ["boltons", "attrs"],
+            "active_selection": {"repo_id": "", "selection_status": "pending", "replacement_for": DEFAULT_THIRD_REPO},
+        }
+    raw: dict[str, Any] = {"candidate_order": [], "active_selection": {}}
+    section = ""
+    for line in path.read_text(encoding="utf-8").splitlines():
+        if not line.strip() or line.lstrip().startswith("#"):
+            continue
+        indent = len(line) - len(line.lstrip(" "))
+        stripped = line.strip()
+        if indent == 0 and stripped.endswith(":"):
+            section = stripped[:-1]
+            raw.setdefault(section, [] if section == "candidate_order" else {})
+            continue
+        if section == "candidate_order" and stripped.startswith("- "):
+            raw["candidate_order"].append(stripped[2:].strip().strip('"'))
+            continue
+        if ":" not in stripped:
+            continue
+        key, value = stripped.split(":", 1)
+        value = value.strip().strip('"')
+        if indent == 0:
+            raw[key] = value
+            section = key
+        elif section == "active_selection":
+            raw["active_selection"][key] = value
+    raw.setdefault("candidate_order", ["boltons", "attrs"])
+    raw.setdefault("active_selection", {})
+    raw["active_selection"].setdefault("replacement_for", DEFAULT_THIRD_REPO)
+    return raw
+
+
+def active_third_repo(selection: dict[str, Any] | None = None) -> str:
+    selected = selection if selection is not None else load_replacement_selection_config()
+    repo_id = str((selected.get("active_selection") or {}).get("repo_id") or "").strip()
+    return repo_id or DEFAULT_THIRD_REPO
+
+
+def repo_ids_for_hardening(selection: dict[str, Any] | None = None) -> tuple[str, ...]:
+    return (*BASE_REPOS, active_third_repo(selection))
+
+
+def replaced_repo_summary(selection: dict[str, Any] | None = None) -> dict[str, dict[str, str]]:
+    selected = selection if selection is not None else load_replacement_selection_config()
+    active_repo = active_third_repo(selected)
+    replaced = str((selected.get("active_selection") or {}).get("replacement_for") or DEFAULT_THIRD_REPO)
+    if active_repo and active_repo != replaced:
+        return {replaced: {"replacement_status": f"replaced_by_{active_repo}"}}
+    return {}
 
 
 def read_jsonl(path: Path) -> list[dict[str, Any]]:
@@ -365,11 +422,12 @@ def source_overlay_row(task: dict[str, Any], context: dict[str, Any], config: di
     }
 
 
-def build_source_provenance_overlay(config: dict[str, Any], generated_at: str) -> dict[str, Any]:
+def build_source_provenance_overlay(config: dict[str, Any], generated_at: str, repo_ids: tuple[str, ...] | None = None) -> dict[str, Any]:
+    active_repos = repo_ids or repo_ids_for_hardening()
     tasks = []
     summary: dict[str, Any] = {}
     source_files = []
-    for repo_id in REPOS:
+    for repo_id in active_repos:
         contexts = load_contexts(repo_id)
         rows = load_repo_rows(repo_id)
         source_files.extend(
@@ -771,10 +829,11 @@ def candidate_filter_row(task: dict[str, Any], config: dict[str, Any]) -> dict[s
     }
 
 
-def build_candidate_filter_audit(config: dict[str, Any], generated_at: str) -> dict[str, Any]:
+def build_candidate_filter_audit(config: dict[str, Any], generated_at: str, repo_ids: tuple[str, ...] | None = None) -> dict[str, Any]:
+    active_repos = repo_ids or repo_ids_for_hardening()
     rows = []
     summary: dict[str, Any] = {}
-    for repo_id in REPOS:
+    for repo_id in active_repos:
         candidates = load_candidates(repo_id)
         repo_rows = [candidate_filter_row(row, config) for row in candidates]
         rows.extend(repo_rows)
@@ -861,10 +920,11 @@ def oracle_alignment_row(task: dict[str, Any], source_tier: str) -> dict[str, An
     }
 
 
-def build_oracle_alignment_audit(source_overlay: dict[str, Any], generated_at: str) -> dict[str, Any]:
+def build_oracle_alignment_audit(source_overlay: dict[str, Any], generated_at: str, repo_ids: tuple[str, ...] | None = None) -> dict[str, Any]:
+    active_repos = repo_ids or tuple(source_overlay.get("repo_summary", {}).keys()) or repo_ids_for_hardening()
     source_by_task = {row["task_id"]: row for row in source_overlay["tasks"]}
     rows = []
-    for repo_id in REPOS:
+    for repo_id in active_repos:
         statements = load_statements(repo_id)
         for task in load_repo_rows(repo_id):
             merged = dict(task)
@@ -873,7 +933,7 @@ def build_oracle_alignment_audit(source_overlay: dict[str, Any], generated_at: s
             rows.append(oracle_alignment_row(merged, str(source_tier)))
     rows.sort(key=lambda row: (row["repo_id"], row["task_id"]))
     repo_summary = {}
-    for repo_id in REPOS:
+    for repo_id in active_repos:
         repo_rows = [row for row in rows if row["repo_id"] == repo_id]
         status_counts = Counter(row["oracle_alignment_status"] for row in repo_rows)
         risk_counts = Counter(flag for row in repo_rows for flag in row["risk_flags"])
@@ -1006,13 +1066,13 @@ def environment_probe_variants(task: dict[str, Any], target_ws: Path) -> list[tu
     ]
 
 
-def run_environment_probes_for_task(task: dict[str, Any]) -> list[dict[str, Any]]:
-    target_ws = PHASE0_ROOT / "workspaces" / "repo_history_pilot" / "itsdangerous" / str(task.get("task_id")) / "target"
+def run_environment_probes_for_task(task: dict[str, Any], repo_id: str) -> list[dict[str, Any]]:
+    target_ws = PHASE0_ROOT / "workspaces" / "repo_history_pilot" / repo_id / str(task.get("task_id")) / "target"
     if not target_ws.exists():
         return [{"variant": "workspace_missing", "command_hash": "", "returncode": None, "duration_seconds": 0, "timed_out": False}]
     env = os.environ.copy()
     env["PYTHONPATH"] = str(target_ws / "src")
-    env["SETUPTOOLS_SCM_PRETEND_VERSION_FOR_ITSDANGEROUS"] = "0.0.0"
+    env[f"SETUPTOOLS_SCM_PRETEND_VERSION_FOR_{repo_id.upper().replace('-', '_')}"] = "0.0.0"
     probe_rows = []
     for variant, command in environment_probe_variants(task, target_ws):
         record = run_command(command, REPO_ROOT, timeout=45, env=env)
@@ -1026,16 +1086,17 @@ def run_environment_probes_for_task(task: dict[str, Any]) -> list[dict[str, Any]
     return probe_rows
 
 
-def build_environment_synthesis_diagnosis(generated_at: str, run_environment_probes: bool) -> dict[str, Any]:
-    near = load_repo_rows("itsdangerous")
+def build_environment_synthesis_diagnosis(generated_at: str, run_environment_probes: bool, active_repo_id: str | None = None) -> dict[str, Any]:
+    repo_id = active_repo_id or active_third_repo()
+    near = load_repo_rows(repo_id)
     near = [row for row in near if row.get("status") == "near_certified"]
     rows = []
     supported = set()
     for task in near:
         category = failure_category(task)
-        target_ws = PHASE0_ROOT / "workspaces" / "repo_history_pilot" / "itsdangerous" / str(task.get("task_id")) / "target"
+        target_ws = PHASE0_ROOT / "workspaces" / "repo_history_pilot" / repo_id / str(task.get("task_id")) / "target"
         missing_test_files = [path for path in task.get("test_files") or [] if not (target_ws / path).exists()]
-        probes = run_environment_probes_for_task(task) if run_environment_probes and category == "reference_pass_failure" else []
+        probes = run_environment_probes_for_task(task, repo_id) if run_environment_probes and category == "reference_pass_failure" else []
         repaired_variant = next((probe["variant"] for probe in probes if probe.get("returncode") == 0), "")
         if category == "reference_pass_failure" and repaired_variant:
             environment_status = "repaired_environment_variant_found"
@@ -1054,7 +1115,7 @@ def build_environment_synthesis_diagnosis(generated_at: str, run_environment_pro
         rows.append(
             {
                 "task_id": str(task.get("task_id", "")),
-                "repo_id": "itsdangerous",
+                "repo_id": repo_id,
                 "first_failing_gate": str(task.get("first_failing_gate") or ""),
                 "failure_category": category,
                 "environment_status": environment_status,
@@ -1071,7 +1132,7 @@ def build_environment_synthesis_diagnosis(generated_at: str, run_environment_pro
         "generated_at": generated_at,
         "claim_scope": "environment_synthesis_diagnosis",
         "predictive_validity_established": False,
-        "repo_id": "itsdangerous",
+        "repo_id": repo_id,
         "run_environment_probes": run_environment_probes,
         "summary": {
             "near_certified_count": len(rows),
@@ -1089,13 +1150,15 @@ def build_hardened_certification_overlay(
     candidate_filter_audit: dict[str, Any],
     environment_diagnosis: dict[str, Any],
     generated_at: str,
+    repo_ids: tuple[str, ...] | None = None,
 ) -> dict[str, Any]:
+    active_repos = repo_ids or tuple(source_overlay.get("repo_summary", {}).keys()) or repo_ids_for_hardening()
     source_by_task = {row["task_id"]: row for row in source_overlay["tasks"]}
     oracle_by_task = {row["task_id"]: row for row in oracle_audit["tasks"]}
     filter_by_task = {row["task_id"]: row for row in candidate_filter_audit["tasks"]}
     environment_by_task = {row["task_id"]: row for row in environment_diagnosis["tasks"]}
     rows = []
-    for repo_id in REPOS:
+    for repo_id in active_repos:
         for task in load_repo_rows(repo_id):
             task_id = str(task.get("task_id"))
             source = source_by_task.get(task_id, {})
@@ -1153,7 +1216,7 @@ def build_hardened_certification_overlay(
             )
     rows.sort(key=lambda row: (row["repo_id"], row["task_id"]))
     repo_summary = {}
-    for repo_id in REPOS:
+    for repo_id in active_repos:
         repo_rows = [row for row in rows if row["repo_id"] == repo_id]
         counts = Counter(row["hardened_status"] for row in repo_rows)
         repo_summary[repo_id] = {
@@ -1248,10 +1311,11 @@ def choose_primary_decision(
     oracle_audit: dict[str, Any],
     environment_diagnosis: dict[str, Any],
     hardened_overlay: dict[str, Any],
+    active_repo_id: str = DEFAULT_THIRD_REPO,
 ) -> str:
     risk_counts = oracle_audit.get("summary", {}).get("risk_flag_counts", {})
     supported = set(environment_diagnosis.get("summary", {}).get("supported_decisions", []))
-    its_hardened = hardened_overlay.get("repo_summary", {}).get("itsdangerous", {})
+    active_hardened = hardened_overlay.get("repo_summary", {}).get(active_repo_id, {})
     toolz_hardened = hardened_overlay.get("repo_summary", {}).get("toolz", {})
     if risk_counts.get("statement_source_mismatch", 0) > 0:
         return "certification_implementation_bug_found"
@@ -1261,10 +1325,10 @@ def choose_primary_decision(
         return "third_repo_candidate_pool_repair_needed"
     if "oracle_weakness" in supported:
         return "replace_third_repo_before_paid_acut"
-    if humanize_repaired_count < 6 and its_hardened.get("benchmark_grade_candidate_count", 0) < 4:
+    if humanize_repaired_count < 6 and active_hardened.get("benchmark_grade_candidate_count", 0) < 4:
         return "humanize_source_blocker_confirmed_third_repo_repair_needed"
     if toolz_hardened.get("benchmark_grade_candidate_count", 0) >= 6 and (
-        humanize_repaired_count >= 6 or its_hardened.get("benchmark_grade_candidate_count", 0) >= 4
+        humanize_repaired_count >= 6 or active_hardened.get("benchmark_grade_candidate_count", 0) >= 4
     ):
         return "source_certification_hardening_complete_ready_for_future_holdout_design"
     return "replace_third_repo_before_future_holdout"
@@ -1276,12 +1340,15 @@ def build_final_decision(payloads: dict[str, Any], generated_at: str) -> dict[st
     oracle_audit = payloads["oracle_alignment_audit"]
     environment = payloads["environment_synthesis_diagnosis"]
     hardened = payloads["hardened_certification_overlay"]
+    selection = payloads.get("replacement_selection") or {}
+    active_repo_id = active_third_repo(selection)
     primary = choose_primary_decision(
         int(humanize_summary["repaired_to_problem_context_count"]),
         source_overlay,
         oracle_audit,
         environment,
         hardened,
+        active_repo_id=active_repo_id,
     )
     supported = set(environment["summary"]["supported_decisions"])
     third_repo_decision = "third_repo_manual_review_required"
@@ -1314,7 +1381,7 @@ def build_final_decision(payloads: dict[str, Any], generated_at: str) -> dict[st
             "experiments/phase1_compiler/tools/phase1_source_certification_hardening.py",
             "experiments/phase1_compiler/tests/test_phase1_source_certification_hardening.py",
         ],
-        "repos_analyzed": list(REPOS),
+        "repos_analyzed": list(payloads.get("repo_ids") or repo_ids_for_hardening(selection)),
         "source_tier_counts": {
             repo: summary["source_tier_counts"] for repo, summary in source_overlay["repo_summary"].items()
         },
@@ -1332,6 +1399,11 @@ def build_final_decision(payloads: dict[str, Any], generated_at: str) -> dict[st
             for repo, summary in hardened["repo_summary"].items()
         },
         "humanize_decision": humanize_summary["humanize_decision"],
+        "active_third_repo": active_repo_id,
+        "third_repo_replacement": {
+            "active_repo_id": active_repo_id,
+            "replaced_repos": replaced_repo_summary(selection),
+        },
         "itsdangerous_decision": {
             "third_repo_decision": third_repo_decision,
             "supported_failure_modes": environment["summary"]["supported_decisions"],
@@ -1366,19 +1438,24 @@ def build_final_decision(payloads: dict[str, Any], generated_at: str) -> dict[st
 def build_all_payloads(use_github: bool, run_environment_probes: bool, generated_at: str | None = None) -> dict[str, Any]:
     generated = generated_at or now_utc()
     config = default_hardening_config()
+    selection = load_replacement_selection_config()
+    repo_ids = repo_ids_for_hardening(selection)
+    active_repo_id = active_third_repo(selection)
     plan = build_hardening_plan(generated)
-    source_overlay = build_source_provenance_overlay(config, generated)
+    source_overlay = build_source_provenance_overlay(config, generated, repo_ids=repo_ids)
     humanize_rows, humanize_summary = build_humanize_hardened_sources(use_github=use_github, generated_at=generated)
-    oracle_audit = build_oracle_alignment_audit(source_overlay, generated)
-    environment = build_environment_synthesis_diagnosis(generated, run_environment_probes)
-    candidate_filter = build_candidate_filter_audit(config, generated)
-    hardened = build_hardened_certification_overlay(source_overlay, oracle_audit, candidate_filter, environment, generated)
+    oracle_audit = build_oracle_alignment_audit(source_overlay, generated, repo_ids=repo_ids)
+    environment = build_environment_synthesis_diagnosis(generated, run_environment_probes, active_repo_id=active_repo_id)
+    candidate_filter = build_candidate_filter_audit(config, generated, repo_ids=repo_ids)
+    hardened = build_hardened_certification_overlay(source_overlay, oracle_audit, candidate_filter, environment, generated, repo_ids=repo_ids)
     head = git_head()
     payloads = {
         "generated_at": generated,
         "starting_head": runbook_starting_head(),
         "final_head": head,
         "config": config,
+        "replacement_selection": selection,
+        "repo_ids": repo_ids,
         "plan": plan,
         "source_overlay": source_overlay,
         "humanize_hardened_rows": humanize_rows,
@@ -1394,7 +1471,7 @@ def build_all_payloads(use_github: bool, run_environment_probes: bool, generated
 
 def table_counts(summary: dict[str, Any], keys: list[str]) -> list[str]:
     lines = ["| Repo | " + " | ".join(keys) + " |", "| --- | " + " | ".join("---:" for _ in keys) + " |"]
-    for repo_id in REPOS:
+    for repo_id in summary:
         repo = summary.get(repo_id, {})
         lines.append("| `" + repo_id + "` | " + " | ".join(str(repo.get(key, 0)) for key in keys) + " |")
     return lines

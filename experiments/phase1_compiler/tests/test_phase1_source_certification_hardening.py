@@ -15,6 +15,17 @@ def test_commit_message_fallback_source_is_diagnostic_only() -> None:
     assert row["reason"] == "commit_message_fallback_only"
 
 
+def test_commit_message_fallback_for_replacement_repo_is_diagnostic_only() -> None:
+    config = hardening.default_hardening_config()
+    task = {"task_id": "boltons__hist__002", "repo_id": "boltons", "status": "certified"}
+    context = {"source_kind": "commit_message_fallback", "ref": "commit:abc123", "classification": "diagnostic_only_context"}
+
+    row = hardening.source_overlay_row(task, context, config)
+
+    assert row["phase1_source_tier"] == "diagnostic_only_source"
+    assert row["benchmark_grade_eligible"] is False
+
+
 def test_issue_or_pr_problem_context_can_be_benchmark_grade_source() -> None:
     config = hardening.default_hardening_config()
     task = {"task_id": "toolz__hist__001", "repo_id": "toolz", "status": "certified"}
@@ -116,3 +127,30 @@ def test_primary_decision_replaces_third_repo_when_oracle_weakness_remains_after
     )
 
     assert label == "replace_third_repo_before_paid_acut"
+
+
+def test_selected_replacement_repo_is_active_and_itsdangerous_is_replaced() -> None:
+    selection = {
+        "active_selection": {
+            "repo_id": "boltons",
+            "selection_status": "selected_local_pilot",
+            "replacement_for": "itsdangerous",
+        }
+    }
+
+    assert hardening.repo_ids_for_hardening(selection) == ("toolz", "humanize", "boltons")
+    assert hardening.replaced_repo_summary(selection) == {"itsdangerous": {"replacement_status": "replaced_by_boltons"}}
+
+
+def test_selected_replacement_repo_appears_in_empty_source_overlay_summary(monkeypatch) -> None:
+    monkeypatch.setattr(hardening, "load_repo_rows", lambda repo_id, include_near=True: [])
+    monkeypatch.setattr(hardening, "load_contexts", lambda repo_id: {})
+
+    payload = hardening.build_source_provenance_overlay(
+        hardening.default_hardening_config(),
+        "2026-05-22T00:00:00+00:00",
+        repo_ids=("toolz", "humanize", "boltons"),
+    )
+
+    assert set(payload["repo_summary"]) == {"toolz", "humanize", "boltons"}
+    assert payload["predictive_validity_established"] is False

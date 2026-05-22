@@ -9,6 +9,7 @@ import repo_history_pilot as pilot
 def test_stable_task_id_generation() -> None:
     assert pilot.stable_task_id("humanize", 1) == "humanize__hist__001"
     assert pilot.stable_task_id("humanize", 16) == "humanize__hist__016"
+    assert pilot.stable_task_id("boltons", 1) == "boltons__hist__001"
 
 
 def test_code_test_path_classification_for_src_and_flat_layouts() -> None:
@@ -157,6 +158,17 @@ def test_solver_statement_uses_candidate_repo_id() -> None:
     assert "humanize behavior" not in statement
 
 
+def test_solver_statement_uses_boltons_for_replacement_repo() -> None:
+    statement = pilot.solver_statement(
+        {"repo_id": "boltons", "module_or_package": ["iterutils"]},
+        [{"summary": "handle empty iterables without raising"}],
+    )
+
+    assert "boltons behavior" in statement
+    assert "itsdangerous behavior" not in statement
+    assert "humanize behavior" not in statement
+
+
 def test_candidate_filter_rejects_maintenance_dependency_subjects() -> None:
     decision = pilot.candidate_filter_decision(
         subject="update dev dependencies",
@@ -203,6 +215,43 @@ def test_candidate_filter_rejects_project_file_heavy_changes() -> None:
 
     assert decision["candidate_filter_status"] == "rejected"
     assert "project_file_heavy" in decision["reject_reasons"]
+
+
+def test_github_pr_refs_store_sanitized_body_summary_without_raw_response(monkeypatch) -> None:
+    body = "x" * 1000
+
+    def fake_run_command(command, cwd, timeout=120, env=None):
+        return pilot.CommandResult(
+            0,
+            json.dumps([{"number": 42, "title": "Fix behavior", "body": body}]),
+            "",
+            0.01,
+        )
+
+    monkeypatch.setattr(pilot, "run_command", fake_run_command)
+    config = pilot.PilotConfig(
+        repo_id="boltons",
+        repo_url="https://github.com/mahmoud/boltons.git",
+        local_repo=Path("/tmp/boltons"),
+        command_template="python -m pytest -q {test_files}",
+        certification_attempts=1,
+        pilot_certified_min=1,
+        benchmark_grade_min=1,
+        result_prefix="boltons_replacement",
+    )
+
+    refs = pilot.github_pr_refs(config, "abc123")
+
+    assert refs == [
+        {
+            "body_summary": "x" * 240,
+            "classification": "problem_context",
+            "ref": "pr:42",
+            "summary": "Fix behavior",
+            "task_id": "",
+        }
+    ]
+    assert "raw_response" not in refs[0]
 
 
 def test_uv_commands_include_editable_workspace() -> None:

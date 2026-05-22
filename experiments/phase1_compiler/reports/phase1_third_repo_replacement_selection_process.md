@@ -30,3 +30,24 @@ Baseline checks passed:
 
 The runbook's raw, workspace, external repo, venv, and cache paths are not
 tracked by Git.
+
+## Step 1 Replacement-Repo Support
+
+The Phase 0 repo-history pilot remains generic for replacement repos:
+
+- `stable_task_id("boltons", 1)` returns `boltons__hist__001`
+- solver statements use the active candidate repo ID
+- commit-message fallback remains diagnostic-only
+- deterministic candidate filtering applies independent of repo ID
+- PR metadata rows store sanitized summaries, not raw API responses
+
+The Phase 1 hardening tool now reads the active third repo from
+`phase1_third_repo_replacement_selection.yaml` when present. Without an active
+selection it preserves the historical default of `itsdangerous`; with a selected
+replacement it focuses overlays on `toolz`, `humanize`, and the selected repo,
+while marking Itsdangerous as replaced evidence.
+
+Regression checks:
+
+- `uv run --project experiments/phase0_headroom pytest -q experiments/phase0_headroom/tools/test_repo_history_pilot.py` -> `16 passed`
+- `uv run --project experiments/phase1_compiler pytest -q experiments/phase1_compiler/tests/test_phase1_source_certification_hardening.py` -> `11 passed`
