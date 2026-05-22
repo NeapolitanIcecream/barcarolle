@@ -1341,7 +1341,12 @@ def closeout_next_runbook_recommendation(
     hardening_decision: dict[str, Any] | None,
     paid_smoke_decision: dict[str, Any] | None = None,
     future_holdout_decision: dict[str, Any] | None = None,
+    retrospective_decision: dict[str, Any] | None = None,
 ) -> str:
+    if retrospective_decision:
+        recommendation = str(retrospective_decision.get("recommended_next_runbook") or "").strip()
+        if recommendation:
+            return recommendation
     if future_holdout_decision:
         recommendation = str(future_holdout_decision.get("recommended_next_runbook") or "").strip()
         if recommendation:
@@ -1370,9 +1375,11 @@ def build_closeout_payload(config: dict[str, Any]) -> dict[str, Any]:
     hardening_decision_path = ROOT / "results" / "phase1_certification_hardening_decision.json"
     paid_smoke_decision_path = ROOT / "results" / "phase1_boltons_paid_acut_smoke_decision.json"
     future_holdout_decision_path = ROOT / "results" / "phase1_future_holdout_decision.json"
+    retrospective_decision_path = ROOT / "results" / "phase1_retrospective_validation_decision.json"
     hardening_sidecar: dict[str, Any] | None = None
     paid_smoke_decision: dict[str, Any] | None = None
     future_holdout_decision: dict[str, Any] | None = None
+    retrospective_decision: dict[str, Any] | None = None
     if hardening_overlay_path.exists() and hardening_decision_path.exists():
         hardening_overlay = read_json(hardening_overlay_path)
         hardening_decision = read_json(hardening_decision_path)
@@ -1423,6 +1430,24 @@ def build_closeout_payload(config: dict[str, Any]) -> dict[str, Any]:
             "status": "not_available",
             "note": "Future holdout validation decision has not been generated for this MVP build.",
         }
+    if retrospective_decision_path.exists():
+        retrospective_decision = read_json(retrospective_decision_path)
+        retrospective_sidecar = {
+            "status": "available_as_retrospective_sidecar_evidence",
+            "decision": rel(retrospective_decision_path),
+            "primary_decision_label": retrospective_decision.get("primary_decision_label"),
+            "evidence_level": retrospective_decision.get("retrospective_evidence_level"),
+            "included_repos": retrospective_decision.get("included_retrospective_repos", []),
+            "included_task_count": len(retrospective_decision.get("included_retrospective_task_ids", [])),
+            "clean_supply_extension_ready": retrospective_decision.get("clean_supply_extension_ready"),
+            "optional_paid_clean_validation_ran": retrospective_decision.get("optional_paid_clean_validation_ran"),
+            "predictive_validity_established": retrospective_decision.get("predictive_validity_established"),
+        }
+    else:
+        retrospective_sidecar = {
+            "status": "not_available",
+            "note": "Retrospective validation decision has not been generated for this MVP build.",
+        }
     return {
         "schema_version": "barcarolle.phase1.mvp_closeout.v1",
         "generated_at": now_utc(),
@@ -1458,11 +1483,13 @@ def build_closeout_payload(config: dict[str, Any]) -> dict[str, Any]:
         },
         "paid_smoke_sidecar_evidence": paid_smoke_sidecar,
         "future_holdout_sidecar_evidence": future_holdout_sidecar,
+        "retrospective_validation_sidecar_evidence": retrospective_sidecar,
         "production_ranking_status": "not_produced",
         "next_runbook_recommendation": closeout_next_runbook_recommendation(
             hardening_decision if hardening_sidecar else None,
             paid_smoke_decision,
             future_holdout_decision,
+            retrospective_decision,
         ),
     }
 
@@ -1489,6 +1516,8 @@ def closeout_report(payload: dict[str, Any]) -> str:
             "Boltons paid-smoke rows are operational scoreability evidence only.",
             f"Future holdout sidecar evidence: `{payload['future_holdout_sidecar_evidence']['status']}`.",
             "Future-holdout evidence is reported as design, blocker, smoke, or validation sidecar evidence only.",
+            f"Retrospective validation sidecar evidence: `{payload['retrospective_validation_sidecar_evidence']['status']}`.",
+            "Retrospective validation evidence remains outcome-seen and is not reported as clean future holdout.",
             "",
             f"Next runbook recommendation: {payload['next_runbook_recommendation']}.",
         ]

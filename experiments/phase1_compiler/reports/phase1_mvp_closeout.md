@@ -1,6 +1,6 @@
 # Phase 1 MVP Closeout
 
-Generated: `2026-05-22T07:46:30+00:00`.
+Generated: `2026-05-22T08:19:44+00:00`.
 
 - Release: `phase1_mvp_multi_repo_release`.
 - Status: `pilot_grade`.
@@ -16,5 +16,7 @@ Paid smoke sidecar evidence: `available_as_operational_smoke_evidence`.
 Boltons paid-smoke rows are operational scoreability evidence only.
 Future holdout sidecar evidence: `available_as_future_holdout_sidecar_evidence`.
 Future-holdout evidence is reported as design, blocker, smoke, or validation sidecar evidence only.
+Retrospective validation sidecar evidence: `available_as_retrospective_sidecar_evidence`.
+Retrospective validation evidence remains outcome-seen and is not reported as clean future holdout.
 
-Next runbook recommendation: mine_and_certify_fresh_outcome_unseen_tasks_for_future_holdout.
+Next runbook recommendation: mine_additional_clean_outcome_unseen_supply.

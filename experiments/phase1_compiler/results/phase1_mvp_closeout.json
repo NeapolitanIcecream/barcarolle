@@ -41,7 +41,7 @@
     "selected_repos": [],
     "status": "available_as_future_holdout_sidecar_evidence"
   },
-  "generated_at": "2026-05-22T07:46:30+00:00",
+  "generated_at": "2026-05-22T08:19:44+00:00",
   "hardening_sidecar_evidence": {
     "active_third_repo": "boltons",
     "decision": "experiments/phase1_compiler/results/phase1_certification_hardening_decision.json",
@@ -97,7 +97,7 @@
       }
     }
   },
-  "next_runbook_recommendation": "mine_and_certify_fresh_outcome_unseen_tasks_for_future_holdout",
+  "next_runbook_recommendation": "mine_additional_clean_outcome_unseen_supply",
   "paid_smoke_sidecar_evidence": {
     "combined_scoreable_cells": 13,
     "combined_total_cells": 14,
@@ -137,6 +137,20 @@
       "source_release_status": "pilot_grade"
     }
   ],
+  "retrospective_validation_sidecar_evidence": {
+    "clean_supply_extension_ready": false,
+    "decision": "experiments/phase1_compiler/results/phase1_retrospective_validation_decision.json",
+    "evidence_level": "outcome_seen_retrospective_locked",
+    "included_repos": [
+      "boltons",
+      "toolz"
+    ],
+    "included_task_count": 13,
+    "optional_paid_clean_validation_ran": false,
+    "predictive_validity_established": false,
+    "primary_decision_label": "retrospective_validation_complete_clean_supply_still_blocked",
+    "status": "available_as_retrospective_sidecar_evidence"
+  },
   "schema_version": "barcarolle.phase1.mvp_closeout.v1",
   "scorecard_cells_by_result_prefix": {
     "codex_kilo_workspace_followup": 20,

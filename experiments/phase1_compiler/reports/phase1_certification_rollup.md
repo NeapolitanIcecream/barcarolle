@@ -1,6 +1,6 @@
 # Phase 1 Certification Rollup
 
-Generated: `2026-05-22T07:46:30+00:00`.
+Generated: `2026-05-22T08:19:44+00:00`.
 
 | Repo | Funnel tasks | Certified | Near-certified | Rejected |
 | --- | ---: | ---: | ---: | ---: |

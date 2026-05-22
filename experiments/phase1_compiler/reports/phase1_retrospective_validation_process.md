@@ -187,3 +187,27 @@ Decision:
 - predictive validity established: `false`
 - production ranking status: `not_produced`
 - recommended next runbook: `mine_additional_clean_outcome_unseen_supply`
+
+## Step 9 Phase 1 Boundary Refresh
+
+Updated the Phase 1 closeout boundary so
+`phase1_retrospective_validation_decision.json` is imported as retrospective
+sidecar evidence.
+
+Rebuilt and validated:
+
+```bash
+uv run --project experiments/phase1_compiler python experiments/phase1_compiler/tools/phase1_compiler.py build-mvp --config experiments/phase1_compiler/configs/phase1_mvp.yaml
+uv run --project experiments/phase1_compiler python experiments/phase1_compiler/tools/phase1_compiler.py validate --config experiments/phase1_compiler/configs/phase1_mvp.yaml
+```
+
+Validation returned `status=valid`.
+
+Closeout state:
+
+- predictive validity established: `false`
+- production ranking status: `not_produced`
+- strict future holdout sidecar evidence: `future_holdout_supply_blocked`
+- retrospective validation sidecar evidence: `retrospective_validation_complete_clean_supply_still_blocked`
+- retrospective evidence level: `outcome_seen_retrospective_locked`
+- next runbook recommendation: `mine_additional_clean_outcome_unseen_supply`
