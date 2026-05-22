@@ -1,6 +1,6 @@
 # Phase 1 Clean Outcome-Unseen Supply Overlay
 
-Generated: `2026-05-22T10:19:12+00:00`.
+Generated: `2026-05-22T10:21:31+00:00`.
 
 - Evidence level: `clean_supply_overlay_sidecar`.
 - Clean supply ready: `true`.

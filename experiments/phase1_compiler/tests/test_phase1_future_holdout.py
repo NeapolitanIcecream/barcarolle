@@ -147,3 +147,56 @@ def test_unknown_model_snapshot_preserves_repo_time_holdout_without_contaminatio
 
     assert plan["repo_time_holdout_not_contamination_proof"] is True
     assert plan["predictive_validity_established"] is False
+
+
+def test_clean_supply_overlay_rows_are_eligible_without_mutating_hardening_status() -> None:
+    row = {
+        **task("boltons__clean_ext__001"),
+        "clean_supply_evidence_level": "clean_supply_overlay_sidecar",
+        "clean_overlay_promotion_decision": "promote_to_clean_benchmark_candidate",
+        "original_hardening_status": "diagnostic_only",
+    }
+
+    classified = holdout.classify_task(
+        row,
+        benchmark_grade_task_ids=set(),
+        outcome_seen_task_ids=set(),
+        diagnostic_only_repos=set(),
+        excluded_target_repos=set(),
+    )
+
+    assert classified.clean_eligible is True
+    assert classified.exclusion_reasons == []
+
+
+def test_clean_supply_overlay_payload_is_converted_to_sidecar_candidate_tasks() -> None:
+    payload = {
+        "evidence_level": "clean_supply_overlay_sidecar",
+        "promoted_tasks": [
+            {
+                "task_id": "boltons__clean_ext__001",
+                "repo_id": "boltons",
+                "task_time": "2022-12-07T18:22:36-08:00",
+                "promotion_decision": "promote_to_clean_benchmark_candidate",
+                "original_hardening_status": "diagnostic_only",
+            }
+        ],
+    }
+
+    rows = holdout.overlay_candidate_tasks(payload, source_path="overlay.json")
+
+    assert rows == [
+        {
+            "task_id": "boltons__clean_ext__001",
+            "repo_id": "boltons",
+            "task_time": "2022-12-07T18:22:36-08:00",
+            "status": "certified",
+            "module_or_package": [],
+            "task_type_proxy": "behavior_or_feature_or_bugfix",
+            "clean_supply_evidence_level": "clean_supply_overlay_sidecar",
+            "clean_overlay_promotion_decision": "promote_to_clean_benchmark_candidate",
+            "clean_supply_overlay_source": "overlay.json",
+            "original_hardening_status": "diagnostic_only",
+            "target_commit_unseen": True,
+        }
+    ]

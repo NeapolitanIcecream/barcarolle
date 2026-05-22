@@ -25,7 +25,7 @@
     }
   },
   "evidence_level": "clean_supply_overlay_sidecar",
-  "generated_at": "2026-05-22T10:19:12+00:00",
+  "generated_at": "2026-05-22T10:21:31+00:00",
   "minimum_clean_split": {
     "B_real": 2,
     "W_real": 2
@@ -78,6 +78,11 @@
   "promoted_tasks": [
     {
       "clean_overlay_promotion_decision": "prior_promoted_clean_supply",
+      "module_or_package": [
+        "iterutils"
+      ],
+      "original_hardening_reject_reasons": [],
+      "original_hardening_status": "manual_review_required",
       "original_task_id": "boltons__hist__011",
       "repo_id": "boltons",
       "source": "prior_clean_supply_overlay",
@@ -88,6 +93,11 @@
     },
     {
       "clean_overlay_promotion_decision": "prior_promoted_clean_supply",
+      "module_or_package": [
+        "iterutils"
+      ],
+      "original_hardening_reject_reasons": [],
+      "original_hardening_status": "manual_review_required",
       "original_task_id": "boltons__hist__022",
       "repo_id": "boltons",
       "source": "prior_clean_supply_overlay",
@@ -98,6 +108,11 @@
     },
     {
       "clean_overlay_promotion_decision": "prior_promoted_clean_supply",
+      "module_or_package": [
+        "tbutils"
+      ],
+      "original_hardening_reject_reasons": [],
+      "original_hardening_status": "manual_review_required",
       "original_task_id": "boltons__hist__023",
       "repo_id": "boltons",
       "source": "prior_clean_supply_overlay",
@@ -108,6 +123,11 @@
     },
     {
       "clean_overlay_promotion_decision": "prior_promoted_clean_supply",
+      "module_or_package": [
+        "cacheutils"
+      ],
+      "original_hardening_reject_reasons": [],
+      "original_hardening_status": "manual_review_required",
       "original_task_id": "boltons__hist__027",
       "repo_id": "boltons",
       "source": "prior_clean_supply_overlay",

@@ -1,29 +1,35 @@
 {
-  "blockers": [
-    "no_repo_has_minimum_clean_outcome_unseen_supply"
-  ],
-  "clean_supply_ready": false,
+  "blockers": [],
+  "clean_supply_ready": true,
   "config": "experiments/phase1_compiler/configs/phase1_future_holdout_validation.yaml",
   "cutoff_primary_axis": "repo_task_time",
   "embargo_gap_days": 14,
-  "generated_at": "2026-05-22T07:44:26+00:00",
+  "generated_at": "2026-05-22T10:21:31+00:00",
   "model_snapshot_date": null,
   "model_snapshot_status": "unknown",
   "outcome_seen_task_count": 29,
   "predictive_validity_established": false,
   "repo_plans": {
     "boltons": {
-      "T_compile_end": null,
-      "T_holdout_start": null,
-      "b_eval_task_ids": [],
-      "blockers": [
-        "insufficient_clean_outcome_unseen_supply"
+      "T_compile_end": "2020-06-22T01:19:35-04:00",
+      "T_holdout_start": "2020-07-06T01:19:35-04:00",
+      "b_eval_task_ids": [
+        "boltons__clean_ext__001",
+        "boltons__clean_ext__008",
+        "boltons__clean_ext__010",
+        "boltons__hist__011"
       ],
-      "clean_task_count": 0,
-      "clean_validation_ready": false,
-      "h_future_task_ids": [],
+      "blockers": [],
+      "clean_task_count": 8,
+      "clean_validation_ready": true,
+      "h_future_task_ids": [
+        "boltons__clean_ext__017",
+        "boltons__hist__022",
+        "boltons__hist__023",
+        "boltons__hist__027"
+      ],
       "repo_id": "boltons",
-      "validation_size": "blocked"
+      "validation_size": "preferred"
     },
     "toolz": {
       "T_compile_end": null,
@@ -42,14 +48,76 @@
   "repo_summary": {
     "boltons": {
       "benchmark_grade_candidate_count": 7,
-      "certified_task_count": 16,
-      "clean_outcome_unseen_count": 0,
-      "clean_task_ids": [],
+      "certified_task_count": 24,
+      "clean_outcome_unseen_count": 8,
+      "clean_task_ids": [
+        "boltons__clean_ext__001",
+        "boltons__clean_ext__008",
+        "boltons__clean_ext__010",
+        "boltons__hist__011",
+        "boltons__clean_ext__017",
+        "boltons__hist__022",
+        "boltons__hist__023",
+        "boltons__hist__027"
+      ],
+      "clean_task_source_counts": {
+        "clean_supply_overlay_sidecar": 8
+      },
+      "clean_tasks": [
+        {
+          "clean_supply_overlay_source": "experiments/phase1_compiler/results/phase1_clean_outcome_unseen_supply_overlay.json",
+          "original_hardening_status": "diagnostic_only",
+          "source": "clean_supply_overlay_sidecar",
+          "task_id": "boltons__clean_ext__001"
+        },
+        {
+          "clean_supply_overlay_source": "experiments/phase1_compiler/results/phase1_clean_outcome_unseen_supply_overlay.json",
+          "original_hardening_status": "diagnostic_only",
+          "source": "clean_supply_overlay_sidecar",
+          "task_id": "boltons__clean_ext__008"
+        },
+        {
+          "clean_supply_overlay_source": "experiments/phase1_compiler/results/phase1_clean_outcome_unseen_supply_overlay.json",
+          "original_hardening_status": "diagnostic_only",
+          "source": "clean_supply_overlay_sidecar",
+          "task_id": "boltons__clean_ext__010"
+        },
+        {
+          "clean_supply_overlay_source": "experiments/phase1_compiler/results/phase1_clean_outcome_unseen_supply_overlay.json",
+          "original_hardening_status": "manual_review_required",
+          "source": "clean_supply_overlay_sidecar",
+          "task_id": "boltons__hist__011"
+        },
+        {
+          "clean_supply_overlay_source": "experiments/phase1_compiler/results/phase1_clean_outcome_unseen_supply_overlay.json",
+          "original_hardening_status": "diagnostic_only",
+          "source": "clean_supply_overlay_sidecar",
+          "task_id": "boltons__clean_ext__017"
+        },
+        {
+          "clean_supply_overlay_source": "experiments/phase1_compiler/results/phase1_clean_outcome_unseen_supply_overlay.json",
+          "original_hardening_status": "manual_review_required",
+          "source": "clean_supply_overlay_sidecar",
+          "task_id": "boltons__hist__022"
+        },
+        {
+          "clean_supply_overlay_source": "experiments/phase1_compiler/results/phase1_clean_outcome_unseen_supply_overlay.json",
+          "original_hardening_status": "manual_review_required",
+          "source": "clean_supply_overlay_sidecar",
+          "task_id": "boltons__hist__023"
+        },
+        {
+          "clean_supply_overlay_source": "experiments/phase1_compiler/results/phase1_clean_outcome_unseen_supply_overlay.json",
+          "original_hardening_status": "manual_review_required",
+          "source": "clean_supply_overlay_sidecar",
+          "task_id": "boltons__hist__027"
+        }
+      ],
       "exclusion_reason_counts": {
         "not_benchmark_grade_or_hardening_rejected": 9,
         "previous_acut_outcome_seen": 7
       },
-      "minimum_clean_split_ready": false,
+      "minimum_clean_split_ready": true,
       "missing_task_time_count": 0,
       "previous_acut_outcome_seen_count": 7
     },
@@ -58,6 +126,8 @@
       "certified_task_count": 6,
       "clean_outcome_unseen_count": 0,
       "clean_task_ids": [],
+      "clean_task_source_counts": {},
+      "clean_tasks": [],
       "exclusion_reason_counts": {
         "previous_acut_outcome_seen": 6
       },
@@ -67,5 +137,7 @@
     }
   },
   "schema_version": "barcarolle.phase1.future_holdout_clean_supply.v1",
-  "selected_repos": []
+  "selected_repos": [
+    "boltons"
+  ]
 }

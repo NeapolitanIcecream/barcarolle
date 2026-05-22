@@ -1,17 +1,17 @@
 # Phase 1 Future Holdout Clean Supply
 
-Generated: `2026-05-22T07:44:26+00:00`.
+Generated: `2026-05-22T10:21:31+00:00`.
 
-- Clean supply ready: `false`.
-- Selected repos: `none`.
+- Clean supply ready: `true`.
+- Selected repos: `boltons`.
 - Model snapshot status: `unknown`.
 - Predictive validity established: `false`.
 
 | Repo | Certified | Benchmark-grade | Outcome-seen | Clean outcome-unseen | Minimum split ready |
 | --- | ---: | ---: | ---: | ---: | --- |
-| `boltons` | 16 | 7 | 7 | 0 | `false` |
+| `boltons` | 24 | 7 | 7 | 8 | `true` |
 | `toolz` | 6 | 6 | 6 | 0 | `false` |
 
 ## Blockers
 
-- `no_repo_has_minimum_clean_outcome_unseen_supply`
+- None.

@@ -8,11 +8,11 @@
     "usage_observed_count": 116,
     "usage_observed_rate": 0.9431
   },
-  "generated_at": "2026-05-22T07:45:30+00:00",
+  "generated_at": "2026-05-22T10:21:31+00:00",
   "h_future": null,
   "mae": null,
   "policy_violation_count": 0,
   "predictive_validity_established": false,
   "schema_version": "barcarolle.phase1.future_holdout_prediction_metrics.v1",
-  "status": "not_run_clean_supply_blocked"
+  "status": "not_run_paid_validation_deferred"
 }

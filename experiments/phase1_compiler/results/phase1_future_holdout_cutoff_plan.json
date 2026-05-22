@@ -1,23 +1,31 @@
 {
   "cutoff_primary_axis": "repo_task_time",
   "embargo_gap_days": 14,
-  "generated_at": "2026-05-22T07:44:38+00:00",
+  "generated_at": "2026-05-22T10:21:31+00:00",
   "model_snapshot_date": null,
   "model_snapshot_status": "unknown",
   "predictive_validity_established": false,
   "repo_plans": {
     "boltons": {
-      "T_compile_end": null,
-      "T_holdout_start": null,
-      "b_eval_task_ids": [],
-      "blockers": [
-        "insufficient_clean_outcome_unseen_supply"
+      "T_compile_end": "2020-06-22T01:19:35-04:00",
+      "T_holdout_start": "2020-07-06T01:19:35-04:00",
+      "b_eval_task_ids": [
+        "boltons__clean_ext__001",
+        "boltons__clean_ext__008",
+        "boltons__clean_ext__010",
+        "boltons__hist__011"
       ],
-      "clean_task_count": 0,
-      "clean_validation_ready": false,
-      "h_future_task_ids": [],
+      "blockers": [],
+      "clean_task_count": 8,
+      "clean_validation_ready": true,
+      "h_future_task_ids": [
+        "boltons__clean_ext__017",
+        "boltons__hist__022",
+        "boltons__hist__023",
+        "boltons__hist__027"
+      ],
       "repo_id": "boltons",
-      "validation_size": "blocked"
+      "validation_size": "preferred"
     },
     "toolz": {
       "T_compile_end": null,
@@ -35,5 +43,7 @@
   },
   "repo_time_holdout_not_contamination_proof": true,
   "schema_version": "barcarolle.phase1.future_holdout_cutoff_plan.v1",
-  "selected_repos": []
+  "selected_repos": [
+    "boltons"
+  ]
 }

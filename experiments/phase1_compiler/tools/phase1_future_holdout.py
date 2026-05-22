@@ -171,12 +171,20 @@ def classify_task(
     task_id = str(row.get("task_id") or "")
     repo_id = str(row.get("repo_id") or repo_from_task_id(task_id))
     reasons = []
+    clean_overlay_promoted = (
+        row.get("clean_supply_evidence_level") == "clean_supply_overlay_sidecar"
+        and row.get("clean_overlay_promotion_decision")
+        in {"promote_to_clean_benchmark_candidate", "prior_promoted_clean_supply"}
+        and row.get("target_commit_unseen", True) is not False
+    )
     if repo_id in excluded_target_repos:
         reasons.append("generic_comparator")
     if repo_id in diagnostic_only_repos:
         reasons.append("diagnostic_only_source_provenance")
-    if task_id not in benchmark_grade_task_ids:
+    if task_id not in benchmark_grade_task_ids and not clean_overlay_promoted:
         reasons.append("not_benchmark_grade_or_hardening_rejected")
+    if row.get("target_commit_unseen", True) is False:
+        reasons.append("previous_acut_target_commit_seen")
     if task_id in outcome_seen_task_ids:
         reasons.append("previous_acut_outcome_seen")
     if not row.get("task_time"):
@@ -204,6 +212,52 @@ def load_candidate_tasks(config: dict[str, Any]) -> list[dict[str, Any]]:
             row = dict(row)
             row.setdefault("repo_id", repo_id)
             rows.append(row)
+    rows.extend(load_clean_supply_overlay_tasks(config))
+    return rows
+
+
+def clean_supply_overlay_paths(config: dict[str, Any]) -> list[Path]:
+    raw = config.get("clean_supply_overlays", [])
+    if isinstance(raw, str):
+        raw = [raw]
+    paths = []
+    for item in raw:
+        path = Path(str(item))
+        paths.append(path if path.is_absolute() else REPO_ROOT / path)
+    return paths
+
+
+def overlay_candidate_tasks(payload: dict[str, Any], *, source_path: str) -> list[dict[str, Any]]:
+    if payload.get("evidence_level") != "clean_supply_overlay_sidecar":
+        return []
+    rows: list[dict[str, Any]] = []
+    for row in payload.get("promoted_tasks", []):
+        if not row.get("task_id") or not row.get("repo_id") or not row.get("task_time"):
+            continue
+        decision = row.get("promotion_decision") or row.get("clean_overlay_promotion_decision")
+        rows.append(
+            {
+                "task_id": str(row["task_id"]),
+                "repo_id": str(row["repo_id"]),
+                "task_time": row["task_time"],
+                "status": "certified",
+                "module_or_package": row.get("module_or_package", []),
+                "task_type_proxy": row.get("task_type_proxy", "behavior_or_feature_or_bugfix"),
+                "clean_supply_evidence_level": "clean_supply_overlay_sidecar",
+                "clean_overlay_promotion_decision": decision,
+                "clean_supply_overlay_source": source_path,
+                "original_hardening_status": row.get("original_hardening_status"),
+                "target_commit_unseen": row.get("target_commit_unseen", True),
+            }
+        )
+    return rows
+
+
+def load_clean_supply_overlay_tasks(config: dict[str, Any]) -> list[dict[str, Any]]:
+    rows: list[dict[str, Any]] = []
+    for path in clean_supply_overlay_paths(config):
+        if path.exists():
+            rows.extend(overlay_candidate_tasks(read_json(path), source_path=rel(path)))
     return rows
 
 
@@ -345,6 +399,18 @@ def build_supply(config: dict[str, Any]) -> dict[str, Any]:
             "missing_task_time_count": reason_counts.get("missing_task_time", 0),
             "exclusion_reason_counts": dict(sorted(reason_counts.items())),
             "clean_task_ids": [str(row["task_id"]) for row in sort_clean_tasks(clean_rows)],
+            "clean_task_source_counts": dict(
+                sorted(Counter(str(row.get("clean_supply_evidence_level") or "hardening_overlay") for row in clean_rows).items())
+            ),
+            "clean_tasks": [
+                {
+                    "task_id": str(row["task_id"]),
+                    "source": str(row.get("clean_supply_evidence_level") or "hardening_overlay"),
+                    "clean_supply_overlay_source": row.get("clean_supply_overlay_source"),
+                    "original_hardening_status": row.get("original_hardening_status"),
+                }
+                for row in sort_clean_tasks(clean_rows)
+            ],
             "minimum_clean_split_ready": plan["clean_validation_ready"],
         }
 
@@ -605,6 +671,12 @@ def build_score_and_decision(config: dict[str, Any]) -> tuple[dict[str, Any], di
         return metrics, decision
 
     if not b_path.exists() or not h_path.exists():
+        b_eval_task_ids = []
+        h_future_task_ids = []
+        for repo_id in supply["selected_repos"]:
+            plan = supply["repo_plans"].get(repo_id, {})
+            b_eval_task_ids.extend(plan.get("b_eval_task_ids", []))
+            h_future_task_ids.extend(plan.get("h_future_task_ids", []))
         metrics = {
             "schema_version": "barcarolle.phase1.future_holdout_prediction_metrics.v1",
             "generated_at": now_utc(),
@@ -622,10 +694,17 @@ def build_score_and_decision(config: dict[str, Any]) -> tuple[dict[str, Any], di
             "primary_decision_label": "future_holdout_design_frozen_ready_for_paid_validation",
             "paid_acut_calls_made": False,
             "selected_repos": supply["selected_repos"],
+            "cutoff_primary_axis": "repo_task_time",
             "blockers": [],
+            "b_eval_task_ids": b_eval_task_ids,
+            "h_future_task_ids": h_future_task_ids,
+            "b_eval_scoreable_cells": 0,
+            "h_future_scoreable_cells": 0,
+            "policy_violation_count": 0,
+            "incremental_observed_or_conservative_estimated_cost_usd": 0.0,
             "predictive_validity_established": False,
             "production_ranking_status": "not_produced",
-            "recommended_next_runbook": "run_preregistered_phase1_future_holdout_paid_validation",
+            "recommended_next_runbook": "run_preregistered_clean_future_holdout_paid_validation",
         }
         return metrics, decision
 

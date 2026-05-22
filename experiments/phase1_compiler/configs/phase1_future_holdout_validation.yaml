@@ -39,6 +39,9 @@ source_artifacts:
   workspace_scorecard: experiments/phase1_compiler/results/phase1_workspace_scorecard.json
   cost_reconciliation: experiments/phase0_headroom/results/workspace_cost_reconciliation.json
 
+clean_supply_overlays:
+  - experiments/phase1_compiler/results/phase1_clean_outcome_unseen_supply_overlay.json
+
 clean_split_minimums:
   minimum_b_eval_tasks_per_repo: 2
   minimum_h_future_tasks_per_repo: 2

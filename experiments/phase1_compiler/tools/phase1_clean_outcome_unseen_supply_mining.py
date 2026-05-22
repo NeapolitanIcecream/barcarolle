@@ -255,6 +255,9 @@ def prior_promoted_tasks(config: dict[str, Any]) -> list[dict[str, Any]]:
                     "split": str(split),
                     "task_time": source.get("task_time"),
                     "target_commit": source.get("target_commit"),
+                    "module_or_package": source.get("module_or_package", []),
+                    "original_hardening_status": (source.get("hardening") or {}).get("hardened_status"),
+                    "original_hardening_reject_reasons": (source.get("hardening") or {}).get("hardened_reject_reasons", []),
                     "source": "prior_clean_supply_overlay",
                     "clean_overlay_promotion_decision": "prior_promoted_clean_supply",
                 }

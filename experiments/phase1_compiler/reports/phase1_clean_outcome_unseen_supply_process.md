@@ -128,3 +128,34 @@ Overlay result:
 
 The overlay records original hardening status and clean overlay promotion
 rationale for extension tasks. The canonical hardening overlay was not mutated.
+
+## Step 6 Future-Holdout Integration
+
+Updated:
+
+- `experiments/phase1_compiler/tools/phase1_future_holdout.py`
+- `experiments/phase1_compiler/configs/phase1_future_holdout_validation.yaml`
+- `experiments/phase1_compiler/tests/test_phase1_future_holdout.py`
+
+Future-holdout config now names
+`experiments/phase1_compiler/results/phase1_clean_outcome_unseen_supply_overlay.json`
+as an explicit clean-supply overlay sidecar.
+
+Validation commands:
+
+- `uv run --project experiments/phase1_compiler pytest -q experiments/phase1_compiler/tests/test_phase1_future_holdout.py` -> `9 passed`
+- `phase1_future_holdout.py audit-supply` -> `clean_supply_ready=true`, selected repo `boltons`
+- `phase1_future_holdout.py design-cutoff` -> selected repo `boltons`
+- `phase1_future_holdout.py preregister` -> `status=frozen`
+- `phase1_future_holdout.py score` -> `future_holdout_design_frozen_ready_for_paid_validation`
+
+Future-holdout preregistration:
+
+- `B_eval`: `boltons__clean_ext__001`, `boltons__clean_ext__008`, `boltons__clean_ext__010`, `boltons__hist__011`
+- `H_future`: `boltons__clean_ext__017`, `boltons__hist__022`, `boltons__hist__023`, `boltons__hist__027`
+- recommended next runbook: `run_preregistered_clean_future_holdout_paid_validation`
+- predictive validity established: `false`
+
+The future-holdout supply output records clean tasks as
+`clean_supply_overlay_sidecar` evidence. No canonical hardening output was
+mutated.
