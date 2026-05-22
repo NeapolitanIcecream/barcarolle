@@ -1,6 +1,6 @@
 # Phase 1 Third Repo Repair Remine Process
 
-Status: local repair/remine completed; final verification pending.
+Status: local repair/remine completed and verified.
 
 Generated: 2026-05-22.
 
@@ -176,3 +176,19 @@ Closeout boundary checks:
 
 The compiler closeout now reuses the hardening sidecar's current next-runbook
 recommendation instead of stale local-repair wording.
+
+## Step 11 Final Verification
+
+Final verification passed:
+
+- `git diff --check`
+- `uv run --project experiments/phase0_headroom pytest -q experiments/phase0_headroom/tools` -> `67 passed in 1.60s`
+- `uv run --project experiments/phase1_compiler pytest -q` -> `22 passed in 0.28s`
+- `uv run --project experiments/phase1_compiler python experiments/phase1_compiler/tools/phase1_compiler.py validate --config experiments/phase1_compiler/configs/phase1_mvp.yaml` -> `status=valid`
+- `git ls-files` for raw, workspace, external repo, venv, and cache paths named
+  by the runbook returned no tracked files
+- `git status --short` was clean after the verification commit inputs were
+  inspected; `git status --short --ignored` showed only ignored cache, venv,
+  external repo, raw result, and workspace paths
+
+No paid calls were made in this runbook.
