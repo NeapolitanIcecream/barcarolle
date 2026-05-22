@@ -1,0 +1,94 @@
+schema_version: barcarolle.phase1_retrospective_validation_and_clean_supply.v1
+status: configured
+claim_scope: retrospective_locked_validation_not_clean_future_holdout
+predictive_validity_established: false
+
+evidence_levels:
+  primary_retrospective: outcome_seen_retrospective_locked
+  strict_holdout: clean_future_holdout
+
+retrospective_track:
+  paid_acut_calls: disabled
+  inclusion_rule: use_all_primary_eligible_outcome_seen_rows
+  split_source: historical_B_real_W_real
+  primary_result_prefixes:
+    toolz:
+      - codex_kilo_workspace_followup
+    boltons:
+      - phase1_validation_boltons_paid_smoke
+      - phase1_validation_boltons_paid_extension
+  diagnostic_result_prefixes:
+    - codex_kilo_workspace_stability
+    - humanize_pre_phase1_workspace
+    - phase1_validation_humanize_holdout_smoke
+    - phase1_validation_humanize_holdout
+    - phase1_validation_humanize_holdout_stability
+  excluded_target_repos:
+    - click
+    - generic_comparators
+  diagnostic_only_repos:
+    - humanize
+  duplicate_policy:
+    toolz_stability_repeat: diagnostic_only
+    same_task_same_adapter_primary_prefix_duplicate: keep_latest_by_prefix_order
+
+clean_supply_track:
+  paid_acut_calls: disabled_until_clean_supply_ready
+  candidate_source: current_boltons_manual_review_required
+  candidate_task_ids:
+    - boltons__hist__011
+    - boltons__hist__014
+    - boltons__hist__022
+    - boltons__hist__023
+    - boltons__hist__027
+  promotion_requires:
+    - benchmark_grade_source_context
+    - oracle_alignment
+    - scope_clarity
+    - no_solution_exposure
+    - no_project_or_docs_only_work
+    - outcome_unseen
+  minimum_clean_split:
+    b_eval_tasks: 2
+    h_future_tasks: 2
+  preferred_clean_split:
+    b_eval_tasks: 3
+    h_future_tasks: 3
+
+endpoint_rule:
+  required_env:
+    - LLM_BASE_URL
+    - LLM_API_KEY
+  local_subscription_fallback: disabled
+  openai_api_key_fallback: disabled
+  provider_specific_fallback: disabled
+
+adapters:
+  config: experiments/phase0_headroom/configs/acut_workspace_adapters.yaml
+  ids:
+    - codex_workspace
+    - kilo_workspace
+
+budget:
+  conservative_cell_estimate_usd: 0.50
+  optional_clean_validation_cells_min: 8
+  incremental_hard_cap_usd: 20.00
+  total_observed_or_conservative_stop_cap_usd: 80.00
+
+result_prefixes:
+  optional_clean_b_eval: phase1_clean_future_holdout_b_eval
+  optional_clean_h_future: phase1_clean_future_holdout_h_future
+
+source_artifacts:
+  workspace_scorecard: experiments/phase1_compiler/results/phase1_workspace_scorecard.json
+  hardening_overlay: experiments/phase1_compiler/results/phase1_hardened_certification_overlay.json
+  boltons_certified_tasks: experiments/phase0_headroom/certified_tasks/boltons_certified_tasks.jsonl
+  boltons_release: experiments/phase0_headroom/releases/boltons_phase0_pilot_release.json
+  toolz_certified_tasks: experiments/phase0_headroom/certified_tasks/toolz_certified_tasks.jsonl
+  toolz_release: experiments/phase0_headroom/releases/toolz_phase0_mini_release.json
+  cost_reconciliation: experiments/phase0_headroom/results/workspace_cost_reconciliation.json
+
+acceptance:
+  retrospective_policy_violations_max: 3
+  clean_validation_policy_violations_max: 0
+  strict_predictive_validity_claim_allowed: false
