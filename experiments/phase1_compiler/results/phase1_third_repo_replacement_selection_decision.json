@@ -1,0 +1,62 @@
+{
+  "allowed_claims": [
+    "third_repo_replacement_local_screening",
+    "third_repo_replacement_source_adapter_hardening",
+    "third_repo_replacement_local_certification",
+    "third_repo_replacement_hardening_overlay",
+    "ready_for_paid_third_repo_acut_smoke_runbook",
+    "insufficient_evidence_for_predictive_validation"
+  ],
+  "b_real_count": 8,
+  "candidate_count_after_filter": 32,
+  "candidate_order": [
+    "boltons",
+    "attrs"
+  ],
+  "candidate_summaries": [
+    {
+      "candidate_count_after_filter": 32,
+      "certified_task_count": 16,
+      "hardened_benchmark_candidate_count": 7,
+      "release_status": "pilot_grade",
+      "repo_id": "boltons",
+      "reviewed_non_leaky_statement_count": 22,
+      "screen_status": "candidate_supply_ok",
+      "selection_status": "selected_local_pilot"
+    },
+    {
+      "candidate_count_after_filter": null,
+      "certified_task_count": null,
+      "hardened_benchmark_candidate_count": null,
+      "release_status": "not_screened",
+      "repo_id": "attrs",
+      "reviewed_non_leaky_statement_count": null,
+      "screen_status": "not_screened_boltons_selected",
+      "selection_status": "not_selected"
+    }
+  ],
+  "certified_task_count": 16,
+  "disallowed_claims": [
+    "predictive_validity_established",
+    "future_holdout_predictive_validity",
+    "production_benchmark_ranking",
+    "pure_harness_effect",
+    "paid_acut_validation_completed",
+    "replacement_repo_benchmark_grade_if_source_or_oracle_gates_fail"
+  ],
+  "final_head": "2033ccdc3d2ec78e45a34201e53401051d410d36",
+  "hardened_benchmark_candidate_count": 7,
+  "paid_acut_calls_made": false,
+  "paid_llm_calls_made": false,
+  "primary_decision_label": "ready_for_paid_third_repo_acut_smoke_runbook",
+  "ready_for_paid_smoke": true,
+  "recommended_next_runbook": "run_small_paid_third_repo_acut_smoke_with_selected_replacement_repo",
+  "release_status": "pilot_grade",
+  "replaced_repo_id": "itsdangerous",
+  "reviewed_non_leaky_statement_count": 22,
+  "schema_version": "barcarolle.phase1.third_repo_replacement_selection_decision.v1",
+  "selected_repo_id": "boltons",
+  "selected_repo_status": "selected_local_pilot",
+  "starting_head": "7e97c7264de7bd5c3703663da56af7fe17e78ebb",
+  "w_real_count": 8
+}

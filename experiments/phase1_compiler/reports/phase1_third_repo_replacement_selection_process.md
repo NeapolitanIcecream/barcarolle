@@ -212,3 +212,15 @@ Closeout boundary checks:
 - active third repo in sidecar: `boltons`
 - hardening primary decision: `ready_for_paid_third_repo_acut_smoke_runbook`
 - next runbook recommendation: `run_small_paid_third_repo_acut_smoke_with_selected_replacement_repo`
+
+## Step 11 Final Replacement Decision
+
+Wrote:
+
+- `experiments/phase1_compiler/results/phase1_third_repo_replacement_selection_decision.json`
+- `experiments/phase1_compiler/reports/phase1_third_repo_replacement_selection_decision.md`
+
+Final decision: `ready_for_paid_third_repo_acut_smoke_runbook`.
+
+The next runbook may run a small paid ACUT smoke for `boltons`; this runbook did
+not run any paid ACUT or experiment LLM calls.
