@@ -117,3 +117,21 @@ Boltons source-context yield:
 All generated statements use `Repair the boltons behavior`; none contain stale
 `humanize` or `itsdangerous` behavior text. Source yield is above the strong
 threshold, so no linked-issue adapter extension was needed.
+
+## Step 6 Local Certification
+
+Removed the ignored workspace path
+`experiments/phase0_headroom/workspaces/repo_history_pilot/boltons`, then ran
+local certification for `boltons`.
+
+Boltons certification result:
+
+- certified tasks: `16`
+- near/rejected tasks: `16`
+- first failing gates: `ambiguity_review=8`, `reference_pass=5`,
+  `no_op_fail=3`
+- commit-fallback-only benchmark-grade tasks: `0`
+
+The repo exceeds both the minimum paid-smoke certification threshold (`4`) and
+the preferred benchmark-candidate threshold (`6`). Reference failures did not
+dominate, so no bounded environment variant was needed.
