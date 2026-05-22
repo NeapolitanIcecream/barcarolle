@@ -67,3 +67,29 @@ Config properties:
 - smoke tasks: `boltons__hist__007`, `boltons__hist__017`, `boltons__hist__024`, `boltons__hist__026`
 - extension tasks: `boltons__hist__019`, `boltons__hist__020`, `boltons__hist__031`
 - predictive validity established: `false`
+
+## Step 2 Adapter Preflight
+
+Ran adapter preflight for both workspace ACUT harnesses.
+
+Codex preflight:
+
+- status: `ready`
+- adapter: `codex_workspace`
+- endpoint proof: `codex_eligible`
+- required env present: `true`
+- local subscription fallback: `disabled`
+- OpenAI/provider fallback: `disabled`
+- blockers: `[]`
+
+Kilo preflight:
+
+- status: `ready`
+- adapter: `kilo_workspace`
+- endpoint proof: `kilo_eligible`
+- required env present: `true`
+- local subscription fallback: `disabled`
+- OpenAI/provider fallback: `disabled`
+- blockers: `[]`
+
+No paid task-solving cells have run yet.
