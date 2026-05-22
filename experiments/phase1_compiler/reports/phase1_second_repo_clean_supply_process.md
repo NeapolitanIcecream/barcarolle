@@ -116,3 +116,34 @@ Mining result:
 The source-context writer prefers linked issue reports over PR bodies when PR
 metadata references a public issue, and stores only sanitized summaries rather
 than raw GitHub API responses.
+
+## Step 3 Certify And Review Candidates
+
+Ran:
+
+- `phase1_clean_outcome_unseen_supply_mining.py certify-second-repo --config experiments/phase1_compiler/configs/phase1_second_repo_clean_outcome_unseen_supply.yaml --repo-id attrs`
+
+Generated:
+
+- `experiments/phase0_headroom/certified_tasks/attrs_clean_outcome_unseen_supply_certified_tasks.jsonl`
+- `experiments/phase0_headroom/certified_tasks/attrs_clean_outcome_unseen_supply_review_records.jsonl`
+- `experiments/phase1_compiler/results/phase1_second_repo_clean_supply_candidate_inventory.json`
+- `experiments/phase1_compiler/results/phase1_second_repo_clean_supply_review.json`
+- `experiments/phase1_compiler/reports/phase1_second_repo_clean_supply_candidate_inventory.md`
+- `experiments/phase1_compiler/reports/phase1_second_repo_clean_supply_review.md`
+
+Review result:
+
+- local certification attempts: `48`
+- local certification status counts: `certified=21`, `near_certified=27`
+- promoted clean attrs candidates: `18`
+- rejected candidates: `30`
+- promoted task ids: `attrs__hist__001`, `attrs__hist__003`, `attrs__hist__004`, `attrs__hist__008`, `attrs__hist__009`, `attrs__hist__010`, `attrs__hist__012`, `attrs__hist__013`, `attrs__hist__023`, `attrs__hist__027`, `attrs__hist__032`, `attrs__hist__033`, `attrs__hist__035`, `attrs__hist__036`, `attrs__hist__039`, `attrs__hist__041`, `attrs__hist__045`, `attrs__hist__047`
+- rejection blocker counts include `local_certification_gate_failed:reference_pass=21`, `solution_exposure_risk=7`, `scope_context_project_heavy_or_ambiguous=5`, `commit_message_only_source=5`
+- paid ACUT calls made: `false`
+- paid LLM calls made: `false`
+
+Promoted rows have local certification status `certified`, non-leaky public
+problem context, clean overlay gates passing, outcome-unseen task ids, and
+target-commit-unseen status. Review records list all rejected candidates and
+blockers.
