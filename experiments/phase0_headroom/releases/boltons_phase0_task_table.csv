@@ -1,0 +1,17 @@
+task_id,split,module_or_package,status
+boltons__hist__006,B_real,funcutils,certified
+boltons__hist__007,B_real,socketutils,certified
+boltons__hist__011,B_real,iterutils,certified
+boltons__hist__013,B_real,funcutils,certified
+boltons__hist__014,B_real,"fileutils,jsonutils",certified
+boltons__hist__017,B_real,urlutils,certified
+boltons__hist__019,B_real,ioutils,certified
+boltons__hist__020,B_real,timeutils,certified
+boltons__hist__022,W_real,iterutils,certified
+boltons__hist__023,W_real,tbutils,certified
+boltons__hist__024,W_real,dictutils,certified
+boltons__hist__025,W_real,funcutils,certified
+boltons__hist__026,W_real,dictutils,certified
+boltons__hist__027,W_real,cacheutils,certified
+boltons__hist__028,W_real,iterutils,certified
+boltons__hist__031,W_real,iterutils,certified

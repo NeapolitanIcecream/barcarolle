@@ -135,3 +135,20 @@ Boltons certification result:
 The repo exceeds both the minimum paid-smoke certification threshold (`4`) and
 the preferred benchmark-candidate threshold (`6`). Reference failures did not
 dominate, so no bounded environment variant was needed.
+
+## Step 7 Replacement Release Assembly
+
+Assembled and summarized the boltons release.
+
+Release result:
+
+- release status: `pilot_grade`
+- pilot grade: `true`
+- benchmark grade: `true`
+- certified tasks: `16`
+- B_real tasks: `8`
+- W_real tasks: `8`
+- claim scope: `third_repo_replacement_local_screen_not_predictive_validation`
+
+The certified task and release artifacts contain no stale `humanize` or
+`itsdangerous` behavior statements.
