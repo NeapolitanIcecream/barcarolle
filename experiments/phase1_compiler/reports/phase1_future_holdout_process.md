@@ -1,6 +1,6 @@
 # Phase 1 Future Holdout Validation Process
 
-Status: in progress.
+Status: complete.
 
 Generated: 2026-05-22T07:40:03Z.
 
@@ -175,3 +175,19 @@ Closeout state:
 - paid smoke sidecar evidence: `available_as_operational_smoke_evidence`
 - future holdout sidecar evidence: `available_as_future_holdout_sidecar_evidence`
 - next runbook recommendation: `mine_and_certify_fresh_outcome_unseen_tasks_for_future_holdout`
+
+## Step 11 Final Verification
+
+Final verification passed:
+
+- `git diff --check`
+- `uv run --project experiments/phase0_headroom pytest -q experiments/phase0_headroom/tools` -> `69 passed in 1.42s`
+- `uv run --project experiments/phase1_compiler pytest -q` -> `35 passed in 0.28s`
+- `uv run --project experiments/phase1_compiler python experiments/phase1_compiler/tools/phase1_compiler.py validate --config experiments/phase1_compiler/configs/phase1_mvp.yaml` -> `status=valid`
+- `git status --short` -> clean
+
+Artifact hygiene:
+
+- `git ls-files` for raw, workspace, external repo, venv, and cache paths returned no tracked files.
+
+No push was performed.
