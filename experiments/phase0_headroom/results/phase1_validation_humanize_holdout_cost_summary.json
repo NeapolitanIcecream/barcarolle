@@ -3,7 +3,7 @@
   "call_count": 12,
   "conservative_estimated_cost_usd": 6.0,
   "conservative_fallback_for_missing_usage_usd": 0,
-  "generated_at": "2026-05-22T06:28:49+00:00",
+  "generated_at": "2026-05-22T06:42:45+00:00",
   "median_latency_seconds": 61.058,
   "missing_usage_cell_count": 0,
   "missing_usage_run_ids": [],
