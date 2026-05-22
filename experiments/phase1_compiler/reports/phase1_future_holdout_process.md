@@ -40,3 +40,21 @@ Baseline checks passed:
 Raw, workspace, external repo, venv, and cache paths are not tracked by Git.
 
 No paid calls have been made in this runbook.
+
+## Step 1 Future Holdout Config
+
+Created `experiments/phase1_compiler/configs/phase1_future_holdout_validation.yaml`.
+
+Config properties:
+
+- claim scope: `future_holdout_design_not_predictive_validity`
+- predictive validity established: `false`
+- primary cutoff axis: `repo_task_time`
+- model release/snapshot date role: `contamination_guard_only`
+- model snapshot status: `unknown_until_recorded`
+- embargo gap: `14` days
+- previous ACUT outcomes disallowed in clean validation: `true`
+- Humanize validation-grade use: diagnostic-only unless source provenance is repaired
+- generic comparators excluded from target holdout
+- paid ACUT concurrency: `1`
+- total observed-or-conservative stop cap: `80.00`
