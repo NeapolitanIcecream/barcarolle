@@ -182,3 +182,22 @@ Final local decision:
 - predictive validity established: `false`
 - paid ACUT calls made: `false`
 - paid LLM calls made: `false`
+
+## Step 8 Phase 1 Boundary Refresh
+
+Updated Phase 1 MVP closeout import logic to include
+`phase1_clean_outcome_unseen_supply_decision.json` as sidecar evidence.
+
+Ran:
+
+- `uv run --project experiments/phase1_compiler python experiments/phase1_compiler/tools/phase1_compiler.py build-mvp --config experiments/phase1_compiler/configs/phase1_mvp.yaml`
+- `uv run --project experiments/phase1_compiler python experiments/phase1_compiler/tools/phase1_compiler.py validate --config experiments/phase1_compiler/configs/phase1_mvp.yaml` -> `status=valid`
+
+Closeout result:
+
+- clean outcome-unseen supply sidecar: `available_as_clean_outcome_unseen_supply_sidecar_evidence`
+- sidecar decision: `boltons_clean_supply_ready_for_preregistered_validation`
+- future-holdout preregistration status: `frozen`
+- next runbook recommendation: `run_preregistered_clean_future_holdout_paid_validation`
+- predictive validity established: `false`
+- production ranking: `not_produced`

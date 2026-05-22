@@ -177,11 +177,13 @@ def test_closeout_identifies_active_replacement_repo_sidecar() -> None:
 
     assert payload["hardening_sidecar_evidence"]["active_third_repo"] == "boltons"
     assert payload["hardening_sidecar_evidence"]["third_repo_replacement"]["active_repo_id"] == "boltons"
-    assert payload["future_holdout_sidecar_evidence"]["primary_decision_label"] == "future_holdout_supply_blocked"
+    assert payload["future_holdout_sidecar_evidence"]["primary_decision_label"] == "future_holdout_design_frozen_ready_for_paid_validation"
     assert payload["retrospective_validation_sidecar_evidence"]["primary_decision_label"] == "retrospective_validation_complete_clean_supply_still_blocked"
     assert payload["clean_supply_breal_extension_sidecar_evidence"]["primary_decision_label"] == "clean_supply_breal_extension_still_blocked"
     assert payload["clean_supply_breal_extension_sidecar_evidence"]["clean_supply_ready"] is False
-    assert payload["next_runbook_recommendation"] == "continue_mining_clean_outcome_unseen_supply"
+    assert payload["clean_outcome_unseen_supply_sidecar_evidence"]["primary_decision_label"] == "boltons_clean_supply_ready_for_preregistered_validation"
+    assert payload["clean_outcome_unseen_supply_sidecar_evidence"]["future_holdout_preregistration_status"] == "frozen"
+    assert payload["next_runbook_recommendation"] == "run_preregistered_clean_future_holdout_paid_validation"
 
 
 def test_scorecard_import_preserves_humanize_cells_and_result_prefixes(tmp_path: Path) -> None:

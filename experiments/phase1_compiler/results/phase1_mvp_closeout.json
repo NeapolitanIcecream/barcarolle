@@ -18,6 +18,24 @@
     }
   },
   "claim_scope": "phase1_mvp_compiler_infrastructure",
+  "clean_outcome_unseen_supply_sidecar_evidence": {
+    "clean_supply_ready": true,
+    "decision": "experiments/phase1_compiler/results/phase1_clean_outcome_unseen_supply_decision.json",
+    "future_holdout_preregistration_status": "frozen",
+    "future_holdout_selected_repos": [
+      "boltons"
+    ],
+    "newly_promoted_task_ids": [
+      "boltons__clean_ext__001",
+      "boltons__clean_ext__008",
+      "boltons__clean_ext__010",
+      "boltons__clean_ext__017"
+    ],
+    "paid_acut_calls_made": false,
+    "predictive_validity_established": false,
+    "primary_decision_label": "boltons_clean_supply_ready_for_preregistered_validation",
+    "status": "available_as_clean_outcome_unseen_supply_sidecar_evidence"
+  },
   "clean_supply_breal_extension_sidecar_evidence": {
     "clean_supply_ready": false,
     "decision": "experiments/phase1_compiler/results/phase1_clean_supply_breal_extension_decision.json",
@@ -47,11 +65,13 @@
     "paid_acut_calls_made": false,
     "policy_violation_count": 0,
     "predictive_validity_established": false,
-    "primary_decision_label": "future_holdout_supply_blocked",
-    "selected_repos": [],
+    "primary_decision_label": "future_holdout_design_frozen_ready_for_paid_validation",
+    "selected_repos": [
+      "boltons"
+    ],
     "status": "available_as_future_holdout_sidecar_evidence"
   },
-  "generated_at": "2026-05-22T08:49:17+00:00",
+  "generated_at": "2026-05-22T10:23:01+00:00",
   "hardening_sidecar_evidence": {
     "active_third_repo": "boltons",
     "decision": "experiments/phase1_compiler/results/phase1_certification_hardening_decision.json",
@@ -107,7 +127,7 @@
       }
     }
   },
-  "next_runbook_recommendation": "continue_mining_clean_outcome_unseen_supply",
+  "next_runbook_recommendation": "run_preregistered_clean_future_holdout_paid_validation",
   "paid_smoke_sidecar_evidence": {
     "combined_scoreable_cells": 13,
     "combined_total_cells": 14,

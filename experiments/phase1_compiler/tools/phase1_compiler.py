@@ -1343,7 +1343,12 @@ def closeout_next_runbook_recommendation(
     future_holdout_decision: dict[str, Any] | None = None,
     retrospective_decision: dict[str, Any] | None = None,
     clean_supply_breal_extension_decision: dict[str, Any] | None = None,
+    clean_outcome_unseen_supply_decision: dict[str, Any] | None = None,
 ) -> str:
+    if clean_outcome_unseen_supply_decision:
+        recommendation = str(clean_outcome_unseen_supply_decision.get("recommended_next_runbook") or "").strip()
+        if recommendation:
+            return recommendation
     if clean_supply_breal_extension_decision:
         recommendation = str(clean_supply_breal_extension_decision.get("recommended_next_runbook") or "").strip()
         if recommendation:
@@ -1382,11 +1387,13 @@ def build_closeout_payload(config: dict[str, Any]) -> dict[str, Any]:
     future_holdout_decision_path = ROOT / "results" / "phase1_future_holdout_decision.json"
     retrospective_decision_path = ROOT / "results" / "phase1_retrospective_validation_decision.json"
     clean_supply_breal_extension_decision_path = ROOT / "results" / "phase1_clean_supply_breal_extension_decision.json"
+    clean_outcome_unseen_supply_decision_path = ROOT / "results" / "phase1_clean_outcome_unseen_supply_decision.json"
     hardening_sidecar: dict[str, Any] | None = None
     paid_smoke_decision: dict[str, Any] | None = None
     future_holdout_decision: dict[str, Any] | None = None
     retrospective_decision: dict[str, Any] | None = None
     clean_supply_breal_extension_decision: dict[str, Any] | None = None
+    clean_outcome_unseen_supply_decision: dict[str, Any] | None = None
     if hardening_overlay_path.exists() and hardening_decision_path.exists():
         hardening_overlay = read_json(hardening_overlay_path)
         hardening_decision = read_json(hardening_decision_path)
@@ -1472,6 +1479,26 @@ def build_closeout_payload(config: dict[str, Any]) -> dict[str, Any]:
             "status": "not_available",
             "note": "Clean supply B_real extension decision has not been generated for this MVP build.",
         }
+    if clean_outcome_unseen_supply_decision_path.exists():
+        clean_outcome_unseen_supply_decision = read_json(clean_outcome_unseen_supply_decision_path)
+        clean_outcome_unseen_supply_sidecar = {
+            "status": "available_as_clean_outcome_unseen_supply_sidecar_evidence",
+            "decision": rel(clean_outcome_unseen_supply_decision_path),
+            "primary_decision_label": clean_outcome_unseen_supply_decision.get("primary_decision_label"),
+            "clean_supply_ready": clean_outcome_unseen_supply_decision.get("clean_supply_ready"),
+            "future_holdout_preregistration_status": clean_outcome_unseen_supply_decision.get(
+                "future_holdout_preregistration_status"
+            ),
+            "future_holdout_selected_repos": clean_outcome_unseen_supply_decision.get("future_holdout_selected_repos", []),
+            "newly_promoted_task_ids": clean_outcome_unseen_supply_decision.get("newly_promoted_task_ids", []),
+            "paid_acut_calls_made": clean_outcome_unseen_supply_decision.get("paid_acut_calls_made"),
+            "predictive_validity_established": clean_outcome_unseen_supply_decision.get("predictive_validity_established"),
+        }
+    else:
+        clean_outcome_unseen_supply_sidecar = {
+            "status": "not_available",
+            "note": "Clean outcome-unseen supply mining decision has not been generated for this MVP build.",
+        }
     return {
         "schema_version": "barcarolle.phase1.mvp_closeout.v1",
         "generated_at": now_utc(),
@@ -1509,6 +1536,7 @@ def build_closeout_payload(config: dict[str, Any]) -> dict[str, Any]:
         "future_holdout_sidecar_evidence": future_holdout_sidecar,
         "retrospective_validation_sidecar_evidence": retrospective_sidecar,
         "clean_supply_breal_extension_sidecar_evidence": clean_supply_breal_extension_sidecar,
+        "clean_outcome_unseen_supply_sidecar_evidence": clean_outcome_unseen_supply_sidecar,
         "production_ranking_status": "not_produced",
         "next_runbook_recommendation": closeout_next_runbook_recommendation(
             hardening_decision if hardening_sidecar else None,
@@ -1516,6 +1544,7 @@ def build_closeout_payload(config: dict[str, Any]) -> dict[str, Any]:
             future_holdout_decision,
             retrospective_decision,
             clean_supply_breal_extension_decision,
+            clean_outcome_unseen_supply_decision,
         ),
     }
 
@@ -1546,6 +1575,8 @@ def closeout_report(payload: dict[str, Any]) -> str:
             "Retrospective validation evidence remains outcome-seen and is not reported as clean future holdout.",
             f"Clean supply B_real extension sidecar evidence: `{payload['clean_supply_breal_extension_sidecar_evidence']['status']}`.",
             "Clean-supply extension evidence is reported as local supply readiness only, not validation evidence.",
+            f"Clean outcome-unseen supply sidecar evidence: `{payload['clean_outcome_unseen_supply_sidecar_evidence']['status']}`.",
+            "Clean outcome-unseen supply evidence is reported as preregistration readiness only, not paid validation evidence.",
             "",
             f"Next runbook recommendation: {payload['next_runbook_recommendation']}.",
         ]

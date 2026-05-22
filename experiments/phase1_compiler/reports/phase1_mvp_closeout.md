@@ -1,6 +1,6 @@
 # Phase 1 MVP Closeout
 
-Generated: `2026-05-22T08:49:17+00:00`.
+Generated: `2026-05-22T10:23:01+00:00`.
 
 - Release: `phase1_mvp_multi_repo_release`.
 - Status: `pilot_grade`.
@@ -20,5 +20,7 @@ Retrospective validation sidecar evidence: `available_as_retrospective_sidecar_e
 Retrospective validation evidence remains outcome-seen and is not reported as clean future holdout.
 Clean supply B_real extension sidecar evidence: `available_as_clean_supply_extension_sidecar_evidence`.
 Clean-supply extension evidence is reported as local supply readiness only, not validation evidence.
+Clean outcome-unseen supply sidecar evidence: `available_as_clean_outcome_unseen_supply_sidecar_evidence`.
+Clean outcome-unseen supply evidence is reported as preregistration readiness only, not paid validation evidence.
 
-Next runbook recommendation: continue_mining_clean_outcome_unseen_supply.
+Next runbook recommendation: run_preregistered_clean_future_holdout_paid_validation.

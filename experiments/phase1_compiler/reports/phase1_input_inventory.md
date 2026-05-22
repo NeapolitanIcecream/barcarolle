@@ -1,6 +1,6 @@
 # Phase 1 Input Inventory
 
-Generated: `2026-05-22T08:49:17+00:00`.
+Generated: `2026-05-22T10:23:01+00:00`.
 
 - Claim scope: `phase1_mvp_compiler_infrastructure`.
 - Predictive validity established: `false`.
