@@ -1,12 +1,12 @@
 # Phase 1 Input Inventory
 
-Generated: `2026-05-22T06:04:20+00:00`.
+Generated: `2026-05-22T06:45:09+00:00`.
 
 - Claim scope: `phase1_mvp_compiler_infrastructure`.
 - Predictive validity established: `false`.
 - Target repos: `toolz, humanize`.
 - Generic comparators: `click`.
-- Usage ledger calls: `109`.
+- Usage ledger calls: `123`.
 
 ## Task Counts
 
@@ -22,6 +22,8 @@ Generated: `2026-05-22T06:04:20+00:00`.
 | `codex_kilo_workspace_followup` | 20 | 19 |
 | `codex_kilo_workspace_stability` | 20 | 18 |
 | `humanize_pre_phase1_workspace` | 8 | 8 |
+| `phase1_validation_boltons_paid_smoke` | 8 | 7 |
+| `phase1_validation_boltons_paid_extension` | 6 | 6 |
 
 ## Known Limitations
 

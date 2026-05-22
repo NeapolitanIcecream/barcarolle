@@ -189,9 +189,24 @@ def test_scorecard_import_preserves_humanize_cells_and_result_prefixes(tmp_path:
         "codex_kilo_workspace_followup",
         "codex_kilo_workspace_stability",
         "humanize_pre_phase1_workspace",
+        "phase1_validation_boltons_paid_smoke",
+        "phase1_validation_boltons_paid_extension",
     }
+    assert payload["summary"]["by_repo"]["boltons"] == 14
+    assert payload["summary"]["by_result_prefix"]["phase1_validation_boltons_paid_smoke"]["role"] == "third_repo_boltons_operational_smoke"
+    assert payload["summary"]["by_result_prefix"]["phase1_validation_boltons_paid_extension"]["scoreable_cell_count"] == 6
     assert any(cell["policy_violation"] for cell in payload["cells"])
     assert all(cell["comparison_label"] == "same_endpoint_model_different_cli_harnesses" for cell in payload["cells"])
+
+
+def test_optional_boltons_extension_score_table_is_not_required_when_unconfigured(tmp_path: Path) -> None:
+    config = compiler.load_mvp_config()
+    config["source_artifacts"].pop("boltons_paid_extension_score_table", None)
+
+    sources = compiler.score_table_sources(config)
+
+    assert ("boltons_paid_smoke_score_table", "phase1_validation_boltons_paid_smoke", "third_repo_boltons_operational_smoke") in sources
+    assert not any(source[0] == "boltons_paid_extension_score_table" for source in sources)
 
 
 def test_build_mvp_orchestration_writes_all_outputs(tmp_path: Path) -> None:

@@ -9,6 +9,8 @@ source_artifacts:
   toolz_score_table: experiments/phase0_headroom/results/codex_kilo_workspace_followup_score_table.csv
   toolz_stability_score_table: experiments/phase0_headroom/results/codex_kilo_workspace_stability_score_table.csv
   humanize_score_table: experiments/phase0_headroom/results/humanize_pre_phase1_workspace_score_table.csv
+  boltons_paid_smoke_score_table: experiments/phase0_headroom/results/phase1_validation_boltons_paid_smoke_score_table.csv
+  boltons_paid_extension_score_table: experiments/phase0_headroom/results/phase1_validation_boltons_paid_extension_score_table.csv
   workspace_cost_reconciliation: experiments/phase0_headroom/results/workspace_cost_reconciliation.json
   workspace_usage_ledger: experiments/phase0_headroom/results/workspace_usage_ledger.jsonl
   toolz_certification_funnel: experiments/phase0_headroom/certified_tasks/toolz_certification_funnel.csv

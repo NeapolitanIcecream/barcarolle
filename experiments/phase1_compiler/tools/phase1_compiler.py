@@ -44,10 +44,18 @@ GATE_ORDER = [
     "cost_boundedness",
     "taxonomy_labelability",
 ]
-SCORE_TABLE_SOURCES = [
+BASE_SCORE_TABLE_SOURCES = [
     ("toolz_score_table", "codex_kilo_workspace_followup", "repaired_toolz_click_matrix"),
     ("toolz_stability_score_table", "codex_kilo_workspace_stability", "repaired_toolz_click_stability_repeat"),
     ("humanize_score_table", "humanize_pre_phase1_workspace", "second_repo_humanize_pilot_matrix"),
+]
+OPTIONAL_SCORE_TABLE_SOURCES = [
+    ("boltons_paid_smoke_score_table", "phase1_validation_boltons_paid_smoke", "third_repo_boltons_operational_smoke"),
+    (
+        "boltons_paid_extension_score_table",
+        "phase1_validation_boltons_paid_extension",
+        "third_repo_boltons_operational_extension",
+    ),
 ]
 REQUIRED_SCORE_COLUMNS = {
     "adapter_id",
@@ -352,6 +360,13 @@ def require_artifacts(config: dict[str, Any], keys: list[str] | None = None) -> 
     return paths
 
 
+def score_table_sources(config: dict[str, Any]) -> list[tuple[str, str, str]]:
+    sources = list(BASE_SCORE_TABLE_SOURCES)
+    configured = config.get("source_artifacts", {})
+    sources.extend(source for source in OPTIONAL_SCORE_TABLE_SOURCES if source[0] in configured)
+    return sources
+
+
 def output_root_from_args(args: argparse.Namespace) -> Path:
     return Path(getattr(args, "output_root", ROOT)).resolve()
 
@@ -545,7 +560,7 @@ def build_inventory_payload(config: dict[str, Any]) -> dict[str, Any]:
     certified_counts["humanize"] = int(humanize_release.get("certified_task_count", 0))
 
     score_counts: dict[str, Any] = {}
-    for key, prefix, role in SCORE_TABLE_SOURCES:
+    for key, prefix, role in score_table_sources(config):
         rows = read_csv(artifact_path(config, key))
         score_counts[prefix] = {
             "source_artifact_key": key,
@@ -998,10 +1013,11 @@ def normalize_score_row(row: dict[str, str], source_key: str, prefix: str, role:
 
 
 def build_scorecard_payload(config: dict[str, Any]) -> dict[str, Any]:
-    require_artifacts(config, [key for key, _, _ in SCORE_TABLE_SOURCES])
+    sources = score_table_sources(config)
+    require_artifacts(config, [key for key, _, _ in sources])
     cells = []
     summaries: dict[str, Any] = {}
-    for source_key, prefix, role in SCORE_TABLE_SOURCES:
+    for source_key, prefix, role in sources:
         source_path = artifact_path(config, source_key)
         rows = read_csv(source_path)
         if not rows:
@@ -1041,6 +1057,7 @@ def build_scorecard_payload(config: dict[str, Any]) -> dict[str, Any]:
             "repaired Toolz/Click followup and stability repeat are preserved as separate result prefixes",
             "stability repeat is diagnostic repeat evidence, not an independent future validation sample",
             "Click rows are generic comparator rows and not target-repo evaluation tasks",
+            "Boltons paid smoke rows are operational workspace-ACUT scoreability evidence, not predictive-validation evidence",
         ],
         "disallowed_claims": config["disallowed_claims"],
     }
@@ -1320,7 +1337,14 @@ def run_uncertainty_summary(args: argparse.Namespace) -> dict[str, Any]:
     return payload
 
 
-def closeout_next_runbook_recommendation(hardening_decision: dict[str, Any] | None) -> str:
+def closeout_next_runbook_recommendation(
+    hardening_decision: dict[str, Any] | None,
+    paid_smoke_decision: dict[str, Any] | None = None,
+) -> str:
+    if paid_smoke_decision:
+        recommendation = str(paid_smoke_decision.get("recommended_next_runbook") or "").strip()
+        if recommendation:
+            return recommendation
     if hardening_decision:
         recommendation = str(hardening_decision.get("recommended_next_runbook") or "").strip()
         if recommendation:
@@ -1339,7 +1363,9 @@ def build_closeout_payload(config: dict[str, Any]) -> dict[str, Any]:
     weighted = build_weighted_score_payload(config)
     hardening_overlay_path = ROOT / "results" / "phase1_hardened_certification_overlay.json"
     hardening_decision_path = ROOT / "results" / "phase1_certification_hardening_decision.json"
+    paid_smoke_decision_path = ROOT / "results" / "phase1_boltons_paid_acut_smoke_decision.json"
     hardening_sidecar: dict[str, Any] | None = None
+    paid_smoke_decision: dict[str, Any] | None = None
     if hardening_overlay_path.exists() and hardening_decision_path.exists():
         hardening_overlay = read_json(hardening_overlay_path)
         hardening_decision = read_json(hardening_decision_path)
@@ -1354,6 +1380,23 @@ def build_closeout_payload(config: dict[str, Any]) -> dict[str, Any]:
             ),
             "third_repo_replacement": hardening_decision.get("third_repo_replacement", {}),
             "repo_summary": hardening_overlay.get("repo_summary", {}),
+        }
+    if paid_smoke_decision_path.exists():
+        paid_smoke_decision = read_json(paid_smoke_decision_path)
+        paid_smoke_sidecar = {
+            "status": "available_as_operational_smoke_evidence",
+            "decision": rel(paid_smoke_decision_path),
+            "primary_decision_label": paid_smoke_decision.get("primary_decision_label"),
+            "result_prefixes": paid_smoke_decision.get("result_prefixes", []),
+            "combined_total_cells": paid_smoke_decision.get("combined_total_cells"),
+            "combined_scoreable_cells": paid_smoke_decision.get("combined_scoreable_cells"),
+            "policy_violation_count": paid_smoke_decision.get("policy_violation_count"),
+            "predictive_validity_established": paid_smoke_decision.get("predictive_validity_established"),
+        }
+    else:
+        paid_smoke_sidecar = {
+            "status": "not_available",
+            "note": "Boltons paid ACUT smoke decision has not been generated for this MVP build.",
         }
     return {
         "schema_version": "barcarolle.phase1.mvp_closeout.v1",
@@ -1388,8 +1431,12 @@ def build_closeout_payload(config: dict[str, Any]) -> dict[str, Any]:
             "status": "not_available",
             "note": "Phase 1 source-certification hardening overlay has not been generated for this MVP build.",
         },
+        "paid_smoke_sidecar_evidence": paid_smoke_sidecar,
         "production_ranking_status": "not_produced",
-        "next_runbook_recommendation": closeout_next_runbook_recommendation(hardening_decision if hardening_sidecar else None),
+        "next_runbook_recommendation": closeout_next_runbook_recommendation(
+            hardening_decision if hardening_sidecar else None,
+            paid_smoke_decision,
+        ),
     }
 
 
@@ -1411,6 +1458,8 @@ def closeout_report(payload: dict[str, Any]) -> str:
             "",
             f"Hardening sidecar evidence: `{payload['hardening_sidecar_evidence']['status']}`.",
             "The hardening overlay is reported as sidecar evidence and is not silently mixed into the historical MVP scorecards.",
+            f"Paid smoke sidecar evidence: `{payload['paid_smoke_sidecar_evidence']['status']}`.",
+            "Boltons paid-smoke rows are operational scoreability evidence only.",
             "",
             f"Next runbook recommendation: {payload['next_runbook_recommendation']}.",
         ]

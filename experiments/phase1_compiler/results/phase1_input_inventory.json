@@ -5,7 +5,7 @@
   },
   "claim_scope": "phase1_mvp_compiler_infrastructure",
   "cost_summary_present": true,
-  "generated_at": "2026-05-22T06:04:20+00:00",
+  "generated_at": "2026-05-22T06:45:09+00:00",
   "generic_comparators": [
     {
       "repo_id": "click",
@@ -68,9 +68,37 @@
         "verified_fail": 5,
         "verified_pass": 3
       }
+    },
+    "phase1_validation_boltons_paid_extension": {
+      "repo_counts": {
+        "boltons": 6
+      },
+      "role": "third_repo_boltons_operational_extension",
+      "row_count": 6,
+      "scoreable_cell_count": 6,
+      "source_artifact_key": "boltons_paid_extension_score_table",
+      "terminal_status_counts": {
+        "verified_fail": 2,
+        "verified_pass": 4
+      }
+    },
+    "phase1_validation_boltons_paid_smoke": {
+      "repo_counts": {
+        "boltons": 8
+      },
+      "role": "third_repo_boltons_operational_smoke",
+      "row_count": 8,
+      "scoreable_cell_count": 7,
+      "source_artifact_key": "boltons_paid_smoke_score_table",
+      "terminal_status_counts": {
+        "invalid_output": 1,
+        "verified_pass": 7
+      }
     }
   },
   "source_artifacts": {
+    "boltons_paid_extension_score_table": "experiments/phase0_headroom/results/phase1_validation_boltons_paid_extension_score_table.csv",
+    "boltons_paid_smoke_score_table": "experiments/phase0_headroom/results/phase1_validation_boltons_paid_smoke_score_table.csv",
     "humanize_certification_funnel": "experiments/phase0_headroom/certified_tasks/humanize_certification_funnel.csv",
     "humanize_certified_tasks": "experiments/phase0_headroom/certified_tasks/humanize_certified_tasks.jsonl",
     "humanize_release": "experiments/phase0_headroom/releases/humanize_phase0_pilot_release.json",
@@ -104,5 +132,5 @@
     "humanize": 12,
     "toolz": 6
   },
-  "usage_ledger_call_count": 109
+  "usage_ledger_call_count": 123
 }
