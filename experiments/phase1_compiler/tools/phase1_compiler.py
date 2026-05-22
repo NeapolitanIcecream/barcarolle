@@ -1345,6 +1345,10 @@ def closeout_next_runbook_recommendation(
     clean_supply_breal_extension_decision: dict[str, Any] | None = None,
     clean_outcome_unseen_supply_decision: dict[str, Any] | None = None,
 ) -> str:
+    if future_holdout_decision and future_holdout_decision.get("paid_acut_calls_made") is True:
+        recommendation = str(future_holdout_decision.get("recommended_next_runbook") or "").strip()
+        if recommendation:
+            return recommendation
     if clean_outcome_unseen_supply_decision:
         recommendation = str(clean_outcome_unseen_supply_decision.get("recommended_next_runbook") or "").strip()
         if recommendation:

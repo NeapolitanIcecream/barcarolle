@@ -47,10 +47,10 @@
     "status": "available_as_clean_supply_extension_sidecar_evidence"
   },
   "cost_summary": {
-    "call_count": 123,
-    "observed_or_conservative_estimated_cost_usd": 37.6472432,
+    "call_count": 139,
+    "observed_or_conservative_estimated_cost_usd": 46.9875638,
     "provider_billed_cost_status": "unavailable",
-    "usage_observed_rate": 0.9431
+    "usage_observed_rate": 0.9496
   },
   "disallowed_claims": [
     "predictive_validity_established",
@@ -59,19 +59,19 @@
   ],
   "evidence_status": "mvp_compiler_artifacts_built_insufficient_for_predictive_validation",
   "future_holdout_sidecar_evidence": {
-    "b_eval_scoreable_cells": 0,
+    "b_eval_scoreable_cells": 8,
     "decision": "experiments/phase1_compiler/results/phase1_future_holdout_decision.json",
-    "h_future_scoreable_cells": 0,
-    "paid_acut_calls_made": false,
+    "h_future_scoreable_cells": 8,
+    "paid_acut_calls_made": true,
     "policy_violation_count": 0,
     "predictive_validity_established": false,
-    "primary_decision_label": "future_holdout_design_frozen_ready_for_paid_validation",
+    "primary_decision_label": "boltons_clean_future_holdout_pilot_complete_insufficient_sample",
     "selected_repos": [
       "boltons"
     ],
     "status": "available_as_future_holdout_sidecar_evidence"
   },
-  "generated_at": "2026-05-22T10:23:01+00:00",
+  "generated_at": "2026-05-22T11:32:05+00:00",
   "hardening_sidecar_evidence": {
     "active_third_repo": "boltons",
     "decision": "experiments/phase1_compiler/results/phase1_certification_hardening_decision.json",
@@ -127,7 +127,7 @@
       }
     }
   },
-  "next_runbook_recommendation": "run_preregistered_clean_future_holdout_paid_validation",
+  "next_runbook_recommendation": "mine_second_repo_clean_outcome_unseen_supply_for_two_repo_validation",
   "paid_smoke_sidecar_evidence": {
     "combined_scoreable_cells": 13,
     "combined_total_cells": 14,

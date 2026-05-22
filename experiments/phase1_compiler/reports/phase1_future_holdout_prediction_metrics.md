@@ -1,11 +1,11 @@
 # Phase 1 Future Holdout Prediction Metrics
 
-Generated: `2026-05-22T10:21:31+00:00`.
+Generated: `2026-05-22T11:30:54+00:00`.
 
-- Status: `not_run_paid_validation_deferred`.
-- B_eval score data: `None`.
-- H_future score data: `None`.
-- MAE: `None`.
+- Status: `computed`.
+- B_eval score data: `{'cell_count': 8, 'scoreable_cell_count': 8, 'pass_count': 7, 'pass_rate': 0.875, 'policy_violation_count': 0, 'non_scoreable_count': 0, 'by_adapter': {'codex_workspace': {'cell_count': 4, 'scoreable_cell_count': 4, 'pass_count': 4, 'pass_rate': 1.0}, 'kilo_workspace': {'cell_count': 4, 'scoreable_cell_count': 4, 'pass_count': 3, 'pass_rate': 0.75}}}`.
+- H_future score data: `{'cell_count': 8, 'scoreable_cell_count': 8, 'pass_count': 7, 'pass_rate': 0.875, 'policy_violation_count': 0, 'non_scoreable_count': 0, 'by_adapter': {'codex_workspace': {'cell_count': 4, 'scoreable_cell_count': 4, 'pass_count': 3, 'pass_rate': 0.75}, 'kilo_workspace': {'cell_count': 4, 'scoreable_cell_count': 4, 'pass_count': 4, 'pass_rate': 1.0}}}`.
+- MAE: `0.25`.
 - Policy violations: `0`.
-- Observed-or-conservative cost USD: `37.6472432`.
+- Observed-or-conservative cost USD: `46.9875638`.
 - Predictive validity established: `false`.

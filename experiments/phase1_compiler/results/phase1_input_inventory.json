@@ -5,7 +5,7 @@
   },
   "claim_scope": "phase1_mvp_compiler_infrastructure",
   "cost_summary_present": true,
-  "generated_at": "2026-05-22T10:23:01+00:00",
+  "generated_at": "2026-05-22T11:32:05+00:00",
   "generic_comparators": [
     {
       "repo_id": "click",
@@ -132,5 +132,5 @@
     "humanize": 12,
     "toolz": 6
   },
-  "usage_ledger_call_count": 123
+  "usage_ledger_call_count": 139
 }

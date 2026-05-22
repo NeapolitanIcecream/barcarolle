@@ -613,6 +613,84 @@ def summarize_score_rows(rows: list[dict[str, str]]) -> dict[str, Any]:
     }
 
 
+def paid_validation_decision_outcome(
+    config: dict[str, Any],
+    supply: dict[str, Any],
+    *,
+    b_summary: dict[str, Any],
+    h_summary: dict[str, Any],
+    policy_violation_count: int,
+) -> dict[str, Any]:
+    acceptance = config["acceptance"]
+    selected_repos = list(supply.get("selected_repos", []))
+    max_policy_violations = int(acceptance["policy_violations_max"])
+    max_non_scoreable = int(acceptance["non_scoreable_cells_max_per_split"])
+    min_repos = int(acceptance["predictive_validity_claim_min_repos"])
+    min_holdout_scoreable = int(acceptance["predictive_validity_claim_min_holdout_scoreable_cells"])
+    blockers: list[str] = []
+
+    if policy_violation_count > max_policy_violations:
+        blockers.append("policy_violation_count_exceeds_acceptance_gate")
+        return {
+            "primary_decision_label": "future_holdout_validation_blocked_policy_or_cost",
+            "blockers": blockers,
+            "recommended_next_runbook": "repair_workspace_acut_scoreability_or_cost_accounting",
+            "predictive_validity_established": False,
+        }
+
+    if int(b_summary["non_scoreable_count"]) > max_non_scoreable or int(h_summary["non_scoreable_count"]) > max_non_scoreable:
+        blockers.append("non_scoreable_cells_exceed_acceptance_gate")
+        return {
+            "primary_decision_label": "future_holdout_validation_blocked_non_scoreable_cells",
+            "blockers": blockers,
+            "recommended_next_runbook": "repair_workspace_acut_scoreability_or_cost_accounting",
+            "predictive_validity_established": False,
+        }
+
+    if len(selected_repos) < min_repos:
+        blockers.append("predictive_validity_min_target_repos_not_met")
+    if int(h_summary["scoreable_cell_count"]) < min_holdout_scoreable:
+        blockers.append("predictive_validity_min_holdout_scoreable_cells_not_met")
+    if blockers:
+        label = (
+            "boltons_clean_future_holdout_pilot_complete_insufficient_sample"
+            if selected_repos == ["boltons"]
+            else "clean_future_holdout_pilot_complete_insufficient_sample"
+        )
+        return {
+            "primary_decision_label": label,
+            "blockers": blockers,
+            "recommended_next_runbook": "mine_second_repo_clean_outcome_unseen_supply_for_two_repo_validation",
+            "predictive_validity_established": False,
+        }
+
+    return {
+        "primary_decision_label": "ready_for_phase1_predictive_validation_scaleup",
+        "blockers": [],
+        "recommended_next_runbook": "preregister_second_repo_clean_future_holdout_validation",
+        "predictive_validity_established": False,
+    }
+
+
+def task_ids_from_supply(supply: dict[str, Any], split_name: str) -> list[str]:
+    key = f"{split_name}_task_ids"
+    task_ids: list[str] = []
+    for repo_id in supply.get("selected_repos", []):
+        plan = supply.get("repo_plans", {}).get(repo_id, {})
+        task_ids.extend(str(task_id) for task_id in plan.get(key, []))
+    return task_ids
+
+
+def prefix_observed_or_conservative_cost(prefix: str) -> float:
+    path = PHASE0_ROOT / "results" / f"{prefix}_cost_summary.json"
+    if not path.exists():
+        return 0.0
+    summary = read_json(path)
+    if "observed_or_conservative_estimated_cost_usd" in summary:
+        return float(summary.get("observed_or_conservative_estimated_cost_usd") or 0.0)
+    return float(summary.get("estimated_cost_usd") or 0.0)
+
+
 def build_score_and_decision(config: dict[str, Any]) -> tuple[dict[str, Any], dict[str, Any]]:
     supply_path = ROOT / "results" / "phase1_future_holdout_clean_supply.json"
     supply = read_json(supply_path) if supply_path.exists() else build_supply(config)
@@ -730,21 +808,48 @@ def build_score_and_decision(config: dict[str, Any]) -> tuple[dict[str, Any], di
         "cost_summary": cost,
         "predictive_validity_established": False,
     }
+    outcome = paid_validation_decision_outcome(
+        config,
+        supply,
+        b_summary=b_summary,
+        h_summary=h_summary,
+        policy_violation_count=metrics["policy_violation_count"],
+    )
+    incremental_cost = round(prefix_observed_or_conservative_cost(b_prefix) + prefix_observed_or_conservative_cost(h_prefix), 8)
     decision = {
         "schema_version": "barcarolle.phase1.future_holdout_decision.v1",
         "generated_at": now_utc(),
-        "primary_decision_label": "future_holdout_validation_smoke_complete_insufficient_sample",
+        "primary_decision_label": outcome["primary_decision_label"],
         "paid_acut_calls_made": True,
         "selected_repos": supply["selected_repos"],
+        "cutoff_primary_axis": "repo_task_time",
+        "blockers": outcome["blockers"],
+        "b_eval_task_ids": task_ids_from_supply(supply, "b_eval"),
+        "h_future_task_ids": task_ids_from_supply(supply, "h_future"),
         "b_eval_scoreable_cells": b_summary["scoreable_cell_count"],
         "h_future_scoreable_cells": h_summary["scoreable_cell_count"],
         "policy_violation_count": metrics["policy_violation_count"],
         "observed_or_conservative_estimated_cost_usd": cost.get("observed_or_conservative_estimated_cost_usd"),
-        "predictive_validity_established": False,
+        "incremental_observed_or_conservative_estimated_cost_usd": incremental_cost,
+        "predictive_validity_established": outcome["predictive_validity_established"],
         "production_ranking_status": "not_produced",
-        "recommended_next_runbook": "scale_preregistered_phase1_predictive_validation"
-        if len(supply["selected_repos"]) >= 2 and h_summary["scoreable_cell_count"] >= 12 and metrics["policy_violation_count"] == 0
-        else "mine_and_certify_fresh_outcome_unseen_tasks_for_future_holdout",
+        "recommended_next_runbook": outcome["recommended_next_runbook"],
+        "allowed_claims": [
+            "preregistered_clean_future_holdout_paid_validation_run",
+            "boltons_clean_future_holdout_pilot_complete",
+            "workspace_acut_future_holdout_cells_scoreable",
+            "same_endpoint_model_different_cli_harnesses",
+            "observed_or_conservative_cost_accounting",
+            "insufficient_evidence_for_predictive_validation",
+            "ready_for_second_repo_clean_supply_scaleup",
+        ],
+        "disallowed_claims": [
+            "predictive_validity_established_without_acceptance_thresholds",
+            "production_benchmark_ranking",
+            "pure_harness_effect",
+            "contamination_proof_evaluation_if_model_snapshot_unknown",
+            "clean_future_holdout_validated_without_paid_holdout_run",
+        ],
     }
     return metrics, decision
 

@@ -194,3 +194,44 @@ Usage and cost:
 
 The paid Boltons clean future-holdout pilot has complete score tables for both
 splits and may proceed to metrics and decision import.
+
+## Step 5 Metrics And Decision
+
+Future-holdout scoring and Phase 1 MVP boundary import passed.
+
+Prediction metrics:
+
+- `B_eval` cells: `8`
+- `B_eval` scoreable cells: `8`
+- `B_eval` pass rate: `0.875`
+- `H_future` cells: `8`
+- `H_future` scoreable cells: `8`
+- `H_future` pass rate: `0.875`
+- absolute error per adapter: `codex_workspace=0.25`, `kilo_workspace=0.25`
+- MAE: `0.25`
+- policy violations: `0`
+
+Decision:
+
+- primary label: `boltons_clean_future_holdout_pilot_complete_insufficient_sample`
+- paid ACUT calls made: `true`
+- selected repos: `boltons`
+- `B_eval` scoreable cells: `8`
+- `H_future` scoreable cells: `8`
+- policy violations: `0`
+- incremental observed-or-conservative cost: `USD 9.3403206`
+- cumulative observed-or-conservative cost: `USD 46.9875638`
+- predictive validity established: `false`
+- blockers: `predictive_validity_min_target_repos_not_met`, `predictive_validity_min_holdout_scoreable_cells_not_met`
+- recommended next runbook: `mine_second_repo_clean_outcome_unseen_supply_for_two_repo_validation`
+
+MVP closeout was rebuilt and validated with the paid future-holdout sidecar
+evidence. The closeout recommendation now follows the paid future-holdout
+decision.
+
+Validation:
+
+- `uv run --project experiments/phase1_compiler pytest -q` -> `57 passed in 0.37s`
+- `uv run --project experiments/phase0_headroom pytest -q experiments/phase0_headroom/tools` -> `74 passed in 2.21s`
+- `uv run --project experiments/phase1_compiler python experiments/phase1_compiler/tools/phase1_compiler.py validate --config experiments/phase1_compiler/configs/phase1_mvp.yaml` -> `status=valid`
+- `git diff --check` -> passed

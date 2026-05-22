@@ -1,6 +1,6 @@
 # Phase 1 MVP Closeout
 
-Generated: `2026-05-22T10:23:01+00:00`.
+Generated: `2026-05-22T11:32:05+00:00`.
 
 - Release: `phase1_mvp_multi_repo_release`.
 - Status: `pilot_grade`.
@@ -23,4 +23,4 @@ Clean-supply extension evidence is reported as local supply readiness only, not 
 Clean outcome-unseen supply sidecar evidence: `available_as_clean_outcome_unseen_supply_sidecar_evidence`.
 Clean outcome-unseen supply evidence is reported as preregistration readiness only, not paid validation evidence.
 
-Next runbook recommendation: run_preregistered_clean_future_holdout_paid_validation.
+Next runbook recommendation: mine_second_repo_clean_outcome_unseen_supply_for_two_repo_validation.

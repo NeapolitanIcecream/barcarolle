@@ -200,3 +200,31 @@ def test_clean_supply_overlay_payload_is_converted_to_sidecar_candidate_tasks() 
             "target_commit_unseen": True,
         }
     ]
+
+
+def test_boltons_only_paid_scoreable_run_closes_as_pilot_not_predictive() -> None:
+    config = {
+        "acceptance": {
+            "policy_violations_max": 0,
+            "non_scoreable_cells_max_per_split": 2,
+            "predictive_validity_claim_min_repos": 2,
+            "predictive_validity_claim_min_holdout_scoreable_cells": 12,
+        }
+    }
+    supply = {"selected_repos": ["boltons"]}
+    b_summary = {"scoreable_cell_count": 8, "non_scoreable_count": 0}
+    h_summary = {"scoreable_cell_count": 8, "non_scoreable_count": 0}
+
+    outcome = holdout.paid_validation_decision_outcome(
+        config,
+        supply,
+        b_summary=b_summary,
+        h_summary=h_summary,
+        policy_violation_count=0,
+    )
+
+    assert outcome["primary_decision_label"] == "boltons_clean_future_holdout_pilot_complete_insufficient_sample"
+    assert outcome["predictive_validity_established"] is False
+    assert "predictive_validity_min_target_repos_not_met" in outcome["blockers"]
+    assert "predictive_validity_min_holdout_scoreable_cells_not_met" in outcome["blockers"]
+    assert outcome["recommended_next_runbook"] == "mine_second_repo_clean_outcome_unseen_supply_for_two_repo_validation"
