@@ -48,3 +48,22 @@ The runbook's raw, workspace, external repo, venv, and cache paths are not
 tracked by Git.
 
 No paid calls have been made yet in this runbook.
+
+## Step 1 Smoke Config
+
+Created `experiments/phase1_compiler/configs/phase1_boltons_paid_acut_smoke.yaml`.
+
+Config properties:
+
+- selected repo: `boltons`
+- smoke prefix: `phase1_validation_boltons_paid_smoke`
+- extension prefix: `phase1_validation_boltons_paid_extension`
+- paid ACUT calls: `enabled_small_smoke`
+- direct paid LLM calls: disabled except ACUT harness internals
+- required endpoint env: `LLM_BASE_URL`, `LLM_API_KEY`
+- local subscription fallback: disabled
+- OpenAI/provider fallback: disabled
+- paid ACUT concurrency: `1`
+- smoke tasks: `boltons__hist__007`, `boltons__hist__017`, `boltons__hist__024`, `boltons__hist__026`
+- extension tasks: `boltons__hist__019`, `boltons__hist__020`, `boltons__hist__031`
+- predictive validity established: `false`
