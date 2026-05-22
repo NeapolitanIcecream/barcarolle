@@ -88,3 +88,50 @@ Verification:
 - `uv run --project experiments/phase1_compiler pytest -q` -> `41 passed in 0.34s`
 
 No paid calls have been made in this step.
+
+## Step 3 Retrospective Locked Validation
+
+Ran:
+
+```bash
+uv run --project experiments/phase1_compiler python experiments/phase1_compiler/tools/phase1_retrospective_validation.py plan --config experiments/phase1_compiler/configs/phase1_retrospective_validation_and_clean_supply.yaml
+uv run --project experiments/phase1_compiler python experiments/phase1_compiler/tools/phase1_retrospective_validation.py score --config experiments/phase1_compiler/configs/phase1_retrospective_validation_and_clean_supply.yaml
+```
+
+Plan result:
+
+- evidence level: `outcome_seen_retrospective_locked`
+- included repos: `boltons`, `toolz`
+- included task count: `13`
+- included row count: `26`
+- clean future holdout: `false`
+- predictive validity established: `false`
+
+Included task ids:
+
+- `boltons__hist__007`
+- `boltons__hist__017`
+- `boltons__hist__019`
+- `boltons__hist__020`
+- `boltons__hist__024`
+- `boltons__hist__026`
+- `boltons__hist__031`
+- `toolz__hist__001`
+- `toolz__hist__002`
+- `toolz__hist__003`
+- `toolz__hist__004`
+- `toolz__hist__010`
+- `toolz__hist__016`
+
+Metrics result:
+
+- pooled MAE: `0.541667`
+- scoreable cells: `24`
+- policy violations: `1`
+- Boltons Codex B->W absolute error: `0.25`
+- Boltons Kilo B->W absolute error: `0.25`
+- Toolz Codex B->W absolute error: `0.666667`
+- Toolz Kilo B->W absolute error: `1.0`
+
+This is outcome-seen retrospective evidence only. No clean future-holdout or
+predictive-validity claim is made.
