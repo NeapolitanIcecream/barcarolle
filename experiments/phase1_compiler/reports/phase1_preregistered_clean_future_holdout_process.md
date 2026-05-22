@@ -156,3 +156,41 @@ Usage and cost:
 - cumulative stop cap: `USD 80.00`
 
 The `H_future` batch may proceed.
+
+## Step 4 Paid H_future Batch
+
+Paid `H_future` batch complete.
+
+Scheduled cells:
+
+- Codex adapter: `4`
+- Kilo adapter: `4`
+- Total: `8`
+
+Terminal status counts:
+
+- `verified_pass`: `7`
+- `verified_fail`: `1`
+
+Scoreability and policy:
+
+- scoreable cells: `8/8`
+- non-scoreable cells: `0`
+- policy violations: `0`
+- solver hidden/oracle filename scan: no matches under solver workspaces
+
+Per-adapter results:
+
+- `codex_workspace`: `4/4` scoreable, `3` verified pass, `1` verified fail
+- `kilo_workspace`: `4/4` scoreable, `4` verified pass
+
+Usage and cost:
+
+- prefix usage observed rate: `1.0000`
+- prefix observed-or-conservative cost: `USD 4.8642324`
+- cumulative workspace usage observed rate: `0.9496`
+- cumulative observed-or-conservative cost: `USD 46.9875638`
+- cumulative stop cap: `USD 80.00`
+
+The paid Boltons clean future-holdout pilot has complete score tables for both
+splits and may proceed to metrics and decision import.

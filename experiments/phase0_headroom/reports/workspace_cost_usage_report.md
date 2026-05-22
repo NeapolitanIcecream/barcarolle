@@ -1,6 +1,6 @@
 # Workspace Cost Usage Report
 
-Generated at `2026-05-22T11:17:52+00:00`.
+Generated at `2026-05-22T11:28:22+00:00`.
 
 Provider-billed dollars remain unavailable for these workspace ACUT runs. The canonical spend estimate is therefore the observed-token estimate priced through `experiments/phase0_headroom/configs/model_pricing.yaml`; missing usage, if any, is shown separately as the previous conservative fallback.
 
@@ -18,6 +18,7 @@ Provider-billed dollars remain unavailable for these workspace ACUT runs. The ca
 | phase1_validation_boltons_paid_smoke | 8 | 0.8750 | 4.00000000 | 3.17627580 | 3.67627580 | 1 | 37.453 |
 | phase1_validation_boltons_paid_extension | 6 | 1.0000 | 3.00000000 | 2.94453240 | 2.94453240 | 0 | 43.003 |
 | phase1_future_holdout_b_eval | 8 | 1.0000 | 4.00000000 | 4.47608820 | 4.47608820 | 0 | 58.155 |
+| phase1_future_holdout_h_future | 8 | 1.0000 | 4.00000000 | 4.86423240 | 4.86423240 | 0 | 57.154 |
 
 ## Per-Harness Observed Cost
 
@@ -69,6 +70,10 @@ Provider-billed dollars remain unavailable for these workspace ACUT runs. The ca
 ### phase1_future_holdout_b_eval
 - `codex_workspace`: `USD 2.52736680`.
 - `kilo_workspace`: `USD 1.94872140`.
+
+### phase1_future_holdout_h_future
+- `codex_workspace`: `USD 2.86099500`.
+- `kilo_workspace`: `USD 2.00323740`.
 
 ## Notes
 
