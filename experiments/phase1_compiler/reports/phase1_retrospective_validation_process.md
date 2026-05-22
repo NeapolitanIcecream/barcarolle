@@ -58,3 +58,33 @@ Config properties:
 - clean-supply candidate source: current Boltons manual-review-required candidates
 - clean-supply paid ACUT calls: disabled until clean supply is ready
 - predictive validity established: `false`
+
+## Step 2 Retrospective Validation Tooling
+
+Added deterministic retrospective validation tooling:
+
+- `experiments/phase1_compiler/tools/phase1_retrospective_validation.py`
+- `experiments/phase1_compiler/tests/test_phase1_retrospective_validation.py`
+
+Implemented commands:
+
+- `plan`
+- `score`
+- `review-clean-supply`
+- `decide`
+
+Tooling behavior covered by tests:
+
+- outcome-seen rows are allowed only under the retrospective evidence level
+- Click and Humanize are excluded from primary target validation
+- Toolz stability repeat is diagnostic-only
+- B_real/W_real pass-rate error calculation
+- non-scoreable rows do not enter pass-rate denominators
+- predictive validity is never claimed by the retrospective metrics payload
+
+Verification:
+
+- `uv run --project experiments/phase1_compiler pytest -q experiments/phase1_compiler/tests/test_phase1_retrospective_validation.py` -> `6 passed in 0.01s`
+- `uv run --project experiments/phase1_compiler pytest -q` -> `41 passed in 0.34s`
+
+No paid calls have been made in this step.
