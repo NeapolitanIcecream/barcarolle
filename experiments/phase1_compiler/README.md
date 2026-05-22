@@ -58,5 +58,9 @@ explicitly disallowed:
 - `pure_harness_effect`
 - `production_benchmark_ranking`
 
-The next step is a Phase 1 validation-design runbook, with source-adapter
-hardening before any validation-grade claim.
+The Phase 1 source-certification hardening artifacts are sidecar evidence under
+`experiments/phase1_compiler/results/phase1_hardened_certification_overlay.json`
+and
+`experiments/phase1_compiler/results/phase1_certification_hardening_decision.json`.
+They do not change the historical MVP scorecards or establish predictive
+validity.

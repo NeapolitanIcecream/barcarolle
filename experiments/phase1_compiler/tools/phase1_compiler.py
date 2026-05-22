@@ -1326,6 +1326,19 @@ def build_closeout_payload(config: dict[str, Any]) -> dict[str, Any]:
     scorecard = build_scorecard_payload(config)
     cost = build_cost_summary_payload(config)
     weighted = build_weighted_score_payload(config)
+    hardening_overlay_path = ROOT / "results" / "phase1_hardened_certification_overlay.json"
+    hardening_decision_path = ROOT / "results" / "phase1_certification_hardening_decision.json"
+    hardening_sidecar: dict[str, Any] | None = None
+    if hardening_overlay_path.exists() and hardening_decision_path.exists():
+        hardening_overlay = read_json(hardening_overlay_path)
+        hardening_decision = read_json(hardening_decision_path)
+        hardening_sidecar = {
+            "status": "available_as_sidecar_evidence",
+            "overlay": rel(hardening_overlay_path),
+            "decision": rel(hardening_decision_path),
+            "primary_decision_label": hardening_decision.get("primary_decision_label"),
+            "repo_summary": hardening_overlay.get("repo_summary", {}),
+        }
     return {
         "schema_version": "barcarolle.phase1.mvp_closeout.v1",
         "generated_at": now_utc(),
@@ -1354,8 +1367,17 @@ def build_closeout_payload(config: dict[str, Any]) -> dict[str, Any]:
             "predictive_score": None,
             "insufficient_evidence": weighted["insufficient_evidence"],
         },
+        "hardening_sidecar_evidence": hardening_sidecar
+        or {
+            "status": "not_available",
+            "note": "Phase 1 source-certification hardening overlay has not been generated for this MVP build.",
+        },
         "production_ranking_status": "not_produced",
-        "next_runbook_recommendation": "write Phase 1 validation-design runbook with source-adapter hardening as a prerequisite for validation-grade claims",
+        "next_runbook_recommendation": (
+            "run local third-repo remine with fixed statement template, candidate filter, and environment repair before paid ACUT scale-up"
+            if hardening_sidecar
+            else "write Phase 1 validation-design runbook with source-adapter hardening as a prerequisite for validation-grade claims"
+        ),
     }
 
 
@@ -1374,6 +1396,9 @@ def closeout_report(payload: dict[str, Any]) -> str:
             "",
             "The `ready_for_phase1_mvp` gate has been consumed into an MVP compiler artifact set. "
             "The artifact set is infrastructure evidence only; it is not a predictive-validation result.",
+            "",
+            f"Hardening sidecar evidence: `{payload['hardening_sidecar_evidence']['status']}`.",
+            "The hardening overlay is reported as sidecar evidence and is not silently mixed into the historical MVP scorecards.",
             "",
             f"Next runbook recommendation: {payload['next_runbook_recommendation']}.",
         ]

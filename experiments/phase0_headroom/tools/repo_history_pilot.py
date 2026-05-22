@@ -613,7 +613,8 @@ def commit_context_ref(config: PilotConfig, candidate: dict[str, Any]) -> dict[s
 def solver_statement(candidate: dict[str, Any], refs: list[dict[str, Any]]) -> str:
     title = refs[0]["summary"] if refs else str(candidate.get("subject") or "Repair the described behavior")
     module = ", ".join(candidate.get("module_or_package") or [])
-    return f"Repair the humanize behavior described by the selected public context summary: {title}. Focus on the {module or 'affected'} module and preserve existing public behavior."
+    repo_id = str(candidate.get("repo_id") or "target repository")
+    return f"Repair the {repo_id} behavior described by the selected public context summary: {title}. Focus on the {module or 'affected'} module and preserve existing public behavior."
 
 
 def certify(root: Path, config_path: Path) -> None:

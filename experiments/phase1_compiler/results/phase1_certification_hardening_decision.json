@@ -1,0 +1,114 @@
+{
+  "allowed_claims": [
+    "source_adapter_hardening",
+    "certification_gate_hardening",
+    "source_provenance_overlay",
+    "oracle_alignment_audit",
+    "environment_synthesis_diagnosis",
+    "third_repo_certification_diagnosis",
+    "insufficient_evidence_for_predictive_validation"
+  ],
+  "disallowed_claims": [
+    "predictive_validity_established",
+    "future_holdout_predictive_validity",
+    "production_benchmark_ranking",
+    "pure_harness_effect",
+    "humanize_benchmark_grade_if_commit_fallback_only",
+    "third_repo_pilot_grade_if_unbalanced_or_under_certified"
+  ],
+  "environment_diagnosis_counts": {
+    "no_op_fail_failure": 3,
+    "reference_pass_failure": 7
+  },
+  "final_head": "92facd0d557f78ea14a6c79f70c1a0de30c5d4b0",
+  "generated_at": "2026-05-22T03:29:58+00:00",
+  "hardened_certification_counts": {
+    "humanize": {
+      "benchmark_grade_candidate_count": 0,
+      "diagnostic_only_count": 16,
+      "manual_review_required_count": 0,
+      "rejected_count": 0
+    },
+    "itsdangerous": {
+      "benchmark_grade_candidate_count": 0,
+      "diagnostic_only_count": 1,
+      "manual_review_required_count": 0,
+      "rejected_count": 10
+    },
+    "toolz": {
+      "benchmark_grade_candidate_count": 6,
+      "diagnostic_only_count": 0,
+      "manual_review_required_count": 0,
+      "rejected_count": 0
+    }
+  },
+  "humanize_decision": "humanize_source_blocker_confirmed_operational_pilot_only",
+  "itsdangerous_decision": {
+    "certification_statement_template_bug": true,
+    "supported_failure_modes": [
+      "candidate_pool_bad",
+      "certification_implementation_bug",
+      "environment_synthesis_mismatch",
+      "oracle_weakness"
+    ],
+    "third_repo_decision": "repair_itsdangerous_candidate_filter_and_remine"
+  },
+  "oracle_alignment_counts": {
+    "humanize": {
+      "aligned": 0,
+      "diagnostic_only": 16,
+      "manual_review_required": 0,
+      "reject": 0
+    },
+    "itsdangerous": {
+      "aligned": 0,
+      "diagnostic_only": 1,
+      "manual_review_required": 1,
+      "reject": 9
+    },
+    "toolz": {
+      "aligned": 6,
+      "diagnostic_only": 0,
+      "manual_review_required": 0,
+      "reject": 0
+    }
+  },
+  "paid_acut_calls_made": false,
+  "paid_llm_calls_made": false,
+  "predictive_validity_established": false,
+  "primary_decision_label": "certification_implementation_bug_found",
+  "recommended_next_runbook": "fix_itsdangerous_statement_template_environment_and_candidate_filter_then_remine_certify_without_paid_acut",
+  "repos_analyzed": [
+    "toolz",
+    "humanize",
+    "itsdangerous"
+  ],
+  "schema_version": "barcarolle.phase1.certification_hardening_decision.v1",
+  "source_tier_counts": {
+    "humanize": {
+      "benchmark_grade_source": 0,
+      "diagnostic_only_source": 16,
+      "manual_review_source": 0,
+      "reject_source": 0
+    },
+    "itsdangerous": {
+      "benchmark_grade_source": 5,
+      "diagnostic_only_source": 1,
+      "manual_review_source": 5,
+      "reject_source": 0
+    },
+    "toolz": {
+      "benchmark_grade_source": 6,
+      "diagnostic_only_source": 0,
+      "manual_review_source": 0,
+      "reject_source": 0
+    }
+  },
+  "starting_head": "65971fb03852b43bf40f9f1c0442b3fbd3eb8b9d",
+  "third_repo_should_be_repaired_or_replaced": "repair_after_statement_template_environment_and_candidate_filter_fix",
+  "tools_or_configs_added": [
+    "experiments/phase1_compiler/configs/phase1_source_certification_hardening.yaml",
+    "experiments/phase1_compiler/tools/phase1_source_certification_hardening.py",
+    "experiments/phase1_compiler/tests/test_phase1_source_certification_hardening.py"
+  ]
+}

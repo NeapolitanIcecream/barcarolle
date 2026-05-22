@@ -30,8 +30,56 @@
     "production_benchmark_ranking"
   ],
   "evidence_status": "mvp_compiler_artifacts_built_insufficient_for_predictive_validation",
-  "generated_at": "2026-05-21T16:26:10+00:00",
-  "next_runbook_recommendation": "write Phase 1 validation-design runbook with source-adapter hardening as a prerequisite for validation-grade claims",
+  "generated_at": "2026-05-22T03:30:21+00:00",
+  "hardening_sidecar_evidence": {
+    "decision": "experiments/phase1_compiler/results/phase1_certification_hardening_decision.json",
+    "overlay": "experiments/phase1_compiler/results/phase1_hardened_certification_overlay.json",
+    "primary_decision_label": "certification_implementation_bug_found",
+    "repo_summary": {
+      "humanize": {
+        "benchmark_grade_candidate_count": 0,
+        "blocking_gates": {
+          "changed_lines_over:250": 1,
+          "execution_gate_failed:no_op_fail": 3,
+          "execution_gate_failed:reference_pass": 1,
+          "project_file_heavy": 1,
+          "solution_exposure_risk": 1,
+          "source_diagnostic_only": 16
+        },
+        "diagnostic_only_count": 16,
+        "manual_review_required_count": 0,
+        "rejected_count": 0,
+        "task_count": 16
+      },
+      "itsdangerous": {
+        "benchmark_grade_candidate_count": 0,
+        "blocking_gates": {
+          "changed_lines_over:250": 3,
+          "execution_gate_failed:no_op_fail": 3,
+          "execution_gate_failed:reference_pass": 7,
+          "oracle_alignment_reject": 9,
+          "project_file_heavy": 4,
+          "reject_subject_term:deprecate": 1,
+          "reject_subject_term:remove deprecated": 1,
+          "solution_exposure_risk": 5
+        },
+        "diagnostic_only_count": 1,
+        "manual_review_required_count": 0,
+        "rejected_count": 10,
+        "task_count": 11
+      },
+      "toolz": {
+        "benchmark_grade_candidate_count": 6,
+        "blocking_gates": {},
+        "diagnostic_only_count": 0,
+        "manual_review_required_count": 0,
+        "rejected_count": 0,
+        "task_count": 6
+      }
+    },
+    "status": "available_as_sidecar_evidence"
+  },
+  "next_runbook_recommendation": "run local third-repo remine with fixed statement template, candidate filter, and environment repair before paid ACUT scale-up",
   "predictive_validity_established": false,
   "production_ranking_status": "not_produced",
   "readiness_gate_consumed": "ready_for_phase1_mvp",

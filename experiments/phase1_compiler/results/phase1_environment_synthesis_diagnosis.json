@@ -1,0 +1,464 @@
+{
+  "claim_scope": "environment_synthesis_diagnosis",
+  "generated_at": "2026-05-22T03:29:58+00:00",
+  "predictive_validity_established": false,
+  "repo_id": "itsdangerous",
+  "run_environment_probes": true,
+  "schema_version": "barcarolle.phase1.environment_synthesis_diagnosis.v1",
+  "summary": {
+    "environment_status_counts": {
+      "not_environment_failure": 3,
+      "reference_environment_unrepaired": 2,
+      "repaired_environment_variant_found": 5
+    },
+    "failure_category_counts": {
+      "no_op_fail_failure": 3,
+      "reference_pass_failure": 7
+    },
+    "near_certified_count": 10,
+    "supported_decisions": [
+      "candidate_pool_bad",
+      "certification_implementation_bug",
+      "environment_synthesis_mismatch",
+      "oracle_weakness"
+    ]
+  },
+  "tasks": [
+    {
+      "environment_status": "reference_environment_unrepaired",
+      "failure_category": "reference_pass_failure",
+      "first_failing_gate": "reference_pass",
+      "probe_results": [
+        {
+          "command_hash": "b2e70da7431f",
+          "duration_seconds": 0.112,
+          "returncode": 4,
+          "stderr_tail_hash": "e9351c0c86c1",
+          "stdout_tail_hash": "a6fc53a5cef0",
+          "timed_out": false,
+          "variant": "configured_command"
+        },
+        {
+          "command_hash": "54dcbfeba06e",
+          "duration_seconds": 0.106,
+          "returncode": 4,
+          "stderr_tail_hash": "e9351c0c86c1",
+          "stdout_tail_hash": "a6fc53a5cef0",
+          "timed_out": false,
+          "variant": "pytest_current_with_editable"
+        },
+        {
+          "command_hash": "5fa39bd30425",
+          "duration_seconds": 0.1,
+          "returncode": 4,
+          "stderr_tail_hash": "e9351c0c86c1",
+          "stdout_tail_hash": "a6fc53a5cef0",
+          "timed_out": false,
+          "variant": "pytest_legacy_7_with_editable"
+        },
+        {
+          "command_hash": "d71c61a0ee67",
+          "duration_seconds": 0.099,
+          "returncode": 4,
+          "stderr_tail_hash": "e9351c0c86c1",
+          "stdout_tail_hash": "a6fc53a5cef0",
+          "timed_out": false,
+          "variant": "pytest_legacy_6_with_editable"
+        },
+        {
+          "command_hash": "a80b2c4ea7a3",
+          "duration_seconds": 0.097,
+          "returncode": 4,
+          "stderr_tail_hash": "e9351c0c86c1",
+          "stdout_tail_hash": "a6fc53a5cef0",
+          "timed_out": false,
+          "variant": "repo_declared_test_extra_if_present"
+        }
+      ],
+      "raw_command_output_committed": false,
+      "repaired_variant": "",
+      "repo_id": "itsdangerous",
+      "target_missing_test_files": [
+        "tests/test_itsdangerous/test_compat.py"
+      ],
+      "task_id": "itsdangerous__hist__001"
+    },
+    {
+      "environment_status": "repaired_environment_variant_found",
+      "failure_category": "reference_pass_failure",
+      "first_failing_gate": "reference_pass",
+      "probe_results": [
+        {
+          "command_hash": "3b6325b177e4",
+          "duration_seconds": 0.137,
+          "returncode": 2,
+          "stderr_tail_hash": "b6c98bf49296",
+          "stdout_tail_hash": "1a03c63ceeb1",
+          "timed_out": false,
+          "variant": "configured_command"
+        },
+        {
+          "command_hash": "5115a5994f67",
+          "duration_seconds": 0.147,
+          "returncode": 2,
+          "stderr_tail_hash": "b6c98bf49296",
+          "stdout_tail_hash": "1a03c63ceeb1",
+          "timed_out": false,
+          "variant": "pytest_current_with_editable"
+        },
+        {
+          "command_hash": "37eacdcd2432",
+          "duration_seconds": 0.12,
+          "returncode": 2,
+          "stderr_tail_hash": "b6c98bf49296",
+          "stdout_tail_hash": "87d08da80c14",
+          "timed_out": false,
+          "variant": "pytest_legacy_7_with_editable"
+        },
+        {
+          "command_hash": "a5e1e21599bc",
+          "duration_seconds": 0.121,
+          "returncode": 2,
+          "stderr_tail_hash": "b6c98bf49296",
+          "stdout_tail_hash": "87d08da80c14",
+          "timed_out": false,
+          "variant": "pytest_legacy_6_with_editable"
+        },
+        {
+          "command_hash": "5096626287a1",
+          "duration_seconds": 0.214,
+          "returncode": 0,
+          "stderr_tail_hash": "b6c98bf49296",
+          "stdout_tail_hash": "b55450c43668",
+          "timed_out": false,
+          "variant": "repo_declared_test_extra_if_present"
+        }
+      ],
+      "raw_command_output_committed": false,
+      "repaired_variant": "repo_declared_test_extra_if_present",
+      "repo_id": "itsdangerous",
+      "target_missing_test_files": [],
+      "task_id": "itsdangerous__hist__002"
+    },
+    {
+      "environment_status": "repaired_environment_variant_found",
+      "failure_category": "reference_pass_failure",
+      "first_failing_gate": "reference_pass",
+      "probe_results": [
+        {
+          "command_hash": "ea084b12a43b",
+          "duration_seconds": 0.139,
+          "returncode": 2,
+          "stderr_tail_hash": "b6c98bf49296",
+          "stdout_tail_hash": "3e279d7def87",
+          "timed_out": false,
+          "variant": "configured_command"
+        },
+        {
+          "command_hash": "02935b7f96d6",
+          "duration_seconds": 0.149,
+          "returncode": 2,
+          "stderr_tail_hash": "b6c98bf49296",
+          "stdout_tail_hash": "3e279d7def87",
+          "timed_out": false,
+          "variant": "pytest_current_with_editable"
+        },
+        {
+          "command_hash": "958dac65108c",
+          "duration_seconds": 0.12,
+          "returncode": 2,
+          "stderr_tail_hash": "b6c98bf49296",
+          "stdout_tail_hash": "ce25c0b7bba2",
+          "timed_out": false,
+          "variant": "pytest_legacy_7_with_editable"
+        },
+        {
+          "command_hash": "64196401caad",
+          "duration_seconds": 0.123,
+          "returncode": 2,
+          "stderr_tail_hash": "b6c98bf49296",
+          "stdout_tail_hash": "ce25c0b7bba2",
+          "timed_out": false,
+          "variant": "pytest_legacy_6_with_editable"
+        },
+        {
+          "command_hash": "f9f9666d3133",
+          "duration_seconds": 0.218,
+          "returncode": 0,
+          "stderr_tail_hash": "b6c98bf49296",
+          "stdout_tail_hash": "177eb68c9818",
+          "timed_out": false,
+          "variant": "repo_declared_test_extra_if_present"
+        }
+      ],
+      "raw_command_output_committed": false,
+      "repaired_variant": "repo_declared_test_extra_if_present",
+      "repo_id": "itsdangerous",
+      "target_missing_test_files": [],
+      "task_id": "itsdangerous__hist__003"
+    },
+    {
+      "environment_status": "repaired_environment_variant_found",
+      "failure_category": "reference_pass_failure",
+      "first_failing_gate": "reference_pass",
+      "probe_results": [
+        {
+          "command_hash": "85f3736155ed",
+          "duration_seconds": 0.145,
+          "returncode": 2,
+          "stderr_tail_hash": "b6c98bf49296",
+          "stdout_tail_hash": "135ea484f083",
+          "timed_out": false,
+          "variant": "configured_command"
+        },
+        {
+          "command_hash": "f22e07e45f42",
+          "duration_seconds": 0.155,
+          "returncode": 2,
+          "stderr_tail_hash": "b6c98bf49296",
+          "stdout_tail_hash": "730cd9424aca",
+          "timed_out": false,
+          "variant": "pytest_current_with_editable"
+        },
+        {
+          "command_hash": "98700faefea3",
+          "duration_seconds": 0.132,
+          "returncode": 2,
+          "stderr_tail_hash": "b6c98bf49296",
+          "stdout_tail_hash": "96ce4a4d140a",
+          "timed_out": false,
+          "variant": "pytest_legacy_7_with_editable"
+        },
+        {
+          "command_hash": "5fefa9a45608",
+          "duration_seconds": 0.196,
+          "returncode": 2,
+          "stderr_tail_hash": "b6c98bf49296",
+          "stdout_tail_hash": "9b66aa4e44fe",
+          "timed_out": false,
+          "variant": "pytest_legacy_6_with_editable"
+        },
+        {
+          "command_hash": "f99a068c3f36",
+          "duration_seconds": 0.311,
+          "returncode": 0,
+          "stderr_tail_hash": "b6c98bf49296",
+          "stdout_tail_hash": "263d64ffcfb1",
+          "timed_out": false,
+          "variant": "repo_declared_test_extra_if_present"
+        }
+      ],
+      "raw_command_output_committed": false,
+      "repaired_variant": "repo_declared_test_extra_if_present",
+      "repo_id": "itsdangerous",
+      "target_missing_test_files": [],
+      "task_id": "itsdangerous__hist__004"
+    },
+    {
+      "environment_status": "repaired_environment_variant_found",
+      "failure_category": "reference_pass_failure",
+      "first_failing_gate": "reference_pass",
+      "probe_results": [
+        {
+          "command_hash": "61b6fe0470e7",
+          "duration_seconds": 0.159,
+          "returncode": 2,
+          "stderr_tail_hash": "b6c98bf49296",
+          "stdout_tail_hash": "ed95a715ce66",
+          "timed_out": false,
+          "variant": "configured_command"
+        },
+        {
+          "command_hash": "b0a2f2c2c4bb",
+          "duration_seconds": 0.157,
+          "returncode": 2,
+          "stderr_tail_hash": "b6c98bf49296",
+          "stdout_tail_hash": "ed95a715ce66",
+          "timed_out": false,
+          "variant": "pytest_current_with_editable"
+        },
+        {
+          "command_hash": "dc9dacfb800d",
+          "duration_seconds": 0.132,
+          "returncode": 2,
+          "stderr_tail_hash": "b6c98bf49296",
+          "stdout_tail_hash": "530bafd547d6",
+          "timed_out": false,
+          "variant": "pytest_legacy_7_with_editable"
+        },
+        {
+          "command_hash": "93c853eecd6e",
+          "duration_seconds": 0.149,
+          "returncode": 2,
+          "stderr_tail_hash": "b6c98bf49296",
+          "stdout_tail_hash": "530bafd547d6",
+          "timed_out": false,
+          "variant": "pytest_legacy_6_with_editable"
+        },
+        {
+          "command_hash": "f2b90de176c5",
+          "duration_seconds": 0.219,
+          "returncode": 0,
+          "stderr_tail_hash": "b6c98bf49296",
+          "stdout_tail_hash": "01b20c961178",
+          "timed_out": false,
+          "variant": "repo_declared_test_extra_if_present"
+        }
+      ],
+      "raw_command_output_committed": false,
+      "repaired_variant": "repo_declared_test_extra_if_present",
+      "repo_id": "itsdangerous",
+      "target_missing_test_files": [],
+      "task_id": "itsdangerous__hist__005"
+    },
+    {
+      "environment_status": "reference_environment_unrepaired",
+      "failure_category": "reference_pass_failure",
+      "first_failing_gate": "reference_pass",
+      "probe_results": [
+        {
+          "command_hash": "979e12ce5e4f",
+          "duration_seconds": 0.098,
+          "returncode": 4,
+          "stderr_tail_hash": "91c222bd69bd",
+          "stdout_tail_hash": "a6fc53a5cef0",
+          "timed_out": false,
+          "variant": "configured_command"
+        },
+        {
+          "command_hash": "2f18d86667f3",
+          "duration_seconds": 0.119,
+          "returncode": 4,
+          "stderr_tail_hash": "91c222bd69bd",
+          "stdout_tail_hash": "a6fc53a5cef0",
+          "timed_out": false,
+          "variant": "pytest_current_with_editable"
+        },
+        {
+          "command_hash": "fab998affb58",
+          "duration_seconds": 0.103,
+          "returncode": 4,
+          "stderr_tail_hash": "91c222bd69bd",
+          "stdout_tail_hash": "a6fc53a5cef0",
+          "timed_out": false,
+          "variant": "pytest_legacy_7_with_editable"
+        },
+        {
+          "command_hash": "cae6367147fc",
+          "duration_seconds": 0.102,
+          "returncode": 4,
+          "stderr_tail_hash": "91c222bd69bd",
+          "stdout_tail_hash": "4ee135a71ecd",
+          "timed_out": false,
+          "variant": "pytest_legacy_6_with_editable"
+        },
+        {
+          "command_hash": "55e7fc810c53",
+          "duration_seconds": 0.112,
+          "returncode": 4,
+          "stderr_tail_hash": "91c222bd69bd",
+          "stdout_tail_hash": "a6fc53a5cef0",
+          "timed_out": false,
+          "variant": "repo_declared_test_extra_if_present"
+        }
+      ],
+      "raw_command_output_committed": false,
+      "repaired_variant": "",
+      "repo_id": "itsdangerous",
+      "target_missing_test_files": [
+        "tests/test_itsdangerous/test_jws.py"
+      ],
+      "task_id": "itsdangerous__hist__006"
+    },
+    {
+      "environment_status": "repaired_environment_variant_found",
+      "failure_category": "reference_pass_failure",
+      "first_failing_gate": "reference_pass",
+      "probe_results": [
+        {
+          "command_hash": "9218547de277",
+          "duration_seconds": 0.15,
+          "returncode": 2,
+          "stderr_tail_hash": "b6c98bf49296",
+          "stdout_tail_hash": "1d8bf8b970e1",
+          "timed_out": false,
+          "variant": "configured_command"
+        },
+        {
+          "command_hash": "34f7e55b0c2e",
+          "duration_seconds": 0.172,
+          "returncode": 2,
+          "stderr_tail_hash": "b6c98bf49296",
+          "stdout_tail_hash": "5004e34bcb40",
+          "timed_out": false,
+          "variant": "pytest_current_with_editable"
+        },
+        {
+          "command_hash": "4e210baea693",
+          "duration_seconds": 0.127,
+          "returncode": 2,
+          "stderr_tail_hash": "b6c98bf49296",
+          "stdout_tail_hash": "b9d48717874c",
+          "timed_out": false,
+          "variant": "pytest_legacy_7_with_editable"
+        },
+        {
+          "command_hash": "2ecbd722600d",
+          "duration_seconds": 0.129,
+          "returncode": 2,
+          "stderr_tail_hash": "b6c98bf49296",
+          "stdout_tail_hash": "b9d48717874c",
+          "timed_out": false,
+          "variant": "pytest_legacy_6_with_editable"
+        },
+        {
+          "command_hash": "cacadb02aadd",
+          "duration_seconds": 0.229,
+          "returncode": 0,
+          "stderr_tail_hash": "b6c98bf49296",
+          "stdout_tail_hash": "642992eaf49a",
+          "timed_out": false,
+          "variant": "repo_declared_test_extra_if_present"
+        }
+      ],
+      "raw_command_output_committed": false,
+      "repaired_variant": "repo_declared_test_extra_if_present",
+      "repo_id": "itsdangerous",
+      "target_missing_test_files": [],
+      "task_id": "itsdangerous__hist__007"
+    },
+    {
+      "environment_status": "not_environment_failure",
+      "failure_category": "no_op_fail_failure",
+      "first_failing_gate": "no_op_fail",
+      "probe_results": [],
+      "raw_command_output_committed": false,
+      "repaired_variant": "",
+      "repo_id": "itsdangerous",
+      "target_missing_test_files": [],
+      "task_id": "itsdangerous__hist__008"
+    },
+    {
+      "environment_status": "not_environment_failure",
+      "failure_category": "no_op_fail_failure",
+      "first_failing_gate": "no_op_fail",
+      "probe_results": [],
+      "raw_command_output_committed": false,
+      "repaired_variant": "",
+      "repo_id": "itsdangerous",
+      "target_missing_test_files": [],
+      "task_id": "itsdangerous__hist__009"
+    },
+    {
+      "environment_status": "not_environment_failure",
+      "failure_category": "no_op_fail_failure",
+      "first_failing_gate": "no_op_fail",
+      "probe_results": [],
+      "raw_command_output_committed": false,
+      "repaired_variant": "",
+      "repo_id": "itsdangerous",
+      "target_missing_test_files": [],
+      "task_id": "itsdangerous__hist__011"
+    }
+  ]
+}

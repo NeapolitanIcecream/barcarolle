@@ -1,0 +1,507 @@
+{
+  "claim_scope": "oracle_alignment_audit",
+  "generated_at": "2026-05-22T03:29:58+00:00",
+  "predictive_validity_established": false,
+  "repo_summary": {
+    "humanize": {
+      "status_counts": {
+        "aligned": 0,
+        "diagnostic_only": 16,
+        "manual_review_required": 0,
+        "reject": 0
+      },
+      "task_count": 16,
+      "top_risk_flags": {
+        "narrow_test_risk": 3,
+        "target_fails_hidden_tests": 1,
+        "test_edits_only_or_config_heavy_change": 3,
+        "weak_oracle_risk": 3,
+        "wide_test_risk": 1
+      }
+    },
+    "itsdangerous": {
+      "status_counts": {
+        "aligned": 0,
+        "diagnostic_only": 1,
+        "manual_review_required": 1,
+        "reject": 9
+      },
+      "task_count": 11,
+      "top_risk_flags": {
+        "large_cross_module_change_risk": 1,
+        "maintenance_or_dependency_update_risk": 4,
+        "narrow_test_risk": 2,
+        "statement_source_mismatch": 11,
+        "target_fails_hidden_tests": 7,
+        "test_edits_only_or_config_heavy_change": 7,
+        "weak_oracle_risk": 3,
+        "wide_test_risk": 5
+      }
+    },
+    "toolz": {
+      "status_counts": {
+        "aligned": 6,
+        "diagnostic_only": 0,
+        "manual_review_required": 0,
+        "reject": 0
+      },
+      "task_count": 6,
+      "top_risk_flags": {}
+    }
+  },
+  "schema_version": "barcarolle.phase1.oracle_alignment_audit.v1",
+  "summary": {
+    "risk_flag_counts": {
+      "large_cross_module_change_risk": 1,
+      "maintenance_or_dependency_update_risk": 4,
+      "multi_issue_patch_risk": 1,
+      "narrow_test_risk": 5,
+      "statement_source_mismatch": 11,
+      "target_fails_hidden_tests": 8,
+      "test_edits_only_or_config_heavy_change": 10,
+      "weak_oracle_risk": 6,
+      "wide_test_risk": 6
+    },
+    "status_counts": {
+      "aligned": 6,
+      "diagnostic_only": 17,
+      "manual_review_required": 1,
+      "reject": 9
+    }
+  },
+  "tasks": [
+    {
+      "narrow_test_risk": false,
+      "oracle_alignment_status": "diagnostic_only",
+      "phase0_status": "near_certified",
+      "repo_id": "humanize",
+      "risk_flags": [
+        "test_edits_only_or_config_heavy_change",
+        "weak_oracle_risk"
+      ],
+      "source_tier": "diagnostic_only_source",
+      "task_id": "humanize__hist__001",
+      "weak_oracle_risk": true,
+      "wide_test_risk": false
+    },
+    {
+      "narrow_test_risk": false,
+      "oracle_alignment_status": "diagnostic_only",
+      "phase0_status": "certified",
+      "repo_id": "humanize",
+      "risk_flags": [
+        "test_edits_only_or_config_heavy_change"
+      ],
+      "source_tier": "diagnostic_only_source",
+      "task_id": "humanize__hist__002",
+      "weak_oracle_risk": false,
+      "wide_test_risk": false
+    },
+    {
+      "narrow_test_risk": false,
+      "oracle_alignment_status": "diagnostic_only",
+      "phase0_status": "certified",
+      "repo_id": "humanize",
+      "risk_flags": [],
+      "source_tier": "diagnostic_only_source",
+      "task_id": "humanize__hist__003",
+      "weak_oracle_risk": false,
+      "wide_test_risk": false
+    },
+    {
+      "narrow_test_risk": false,
+      "oracle_alignment_status": "diagnostic_only",
+      "phase0_status": "certified",
+      "repo_id": "humanize",
+      "risk_flags": [],
+      "source_tier": "diagnostic_only_source",
+      "task_id": "humanize__hist__004",
+      "weak_oracle_risk": false,
+      "wide_test_risk": false
+    },
+    {
+      "narrow_test_risk": false,
+      "oracle_alignment_status": "diagnostic_only",
+      "phase0_status": "certified",
+      "repo_id": "humanize",
+      "risk_flags": [],
+      "source_tier": "diagnostic_only_source",
+      "task_id": "humanize__hist__005",
+      "weak_oracle_risk": false,
+      "wide_test_risk": false
+    },
+    {
+      "narrow_test_risk": false,
+      "oracle_alignment_status": "diagnostic_only",
+      "phase0_status": "certified",
+      "repo_id": "humanize",
+      "risk_flags": [],
+      "source_tier": "diagnostic_only_source",
+      "task_id": "humanize__hist__006",
+      "weak_oracle_risk": false,
+      "wide_test_risk": false
+    },
+    {
+      "narrow_test_risk": false,
+      "oracle_alignment_status": "diagnostic_only",
+      "phase0_status": "certified",
+      "repo_id": "humanize",
+      "risk_flags": [],
+      "source_tier": "diagnostic_only_source",
+      "task_id": "humanize__hist__007",
+      "weak_oracle_risk": false,
+      "wide_test_risk": false
+    },
+    {
+      "narrow_test_risk": false,
+      "oracle_alignment_status": "diagnostic_only",
+      "phase0_status": "certified",
+      "repo_id": "humanize",
+      "risk_flags": [],
+      "source_tier": "diagnostic_only_source",
+      "task_id": "humanize__hist__008",
+      "weak_oracle_risk": false,
+      "wide_test_risk": false
+    },
+    {
+      "narrow_test_risk": false,
+      "oracle_alignment_status": "diagnostic_only",
+      "phase0_status": "near_certified",
+      "repo_id": "humanize",
+      "risk_flags": [
+        "test_edits_only_or_config_heavy_change",
+        "weak_oracle_risk"
+      ],
+      "source_tier": "diagnostic_only_source",
+      "task_id": "humanize__hist__009",
+      "weak_oracle_risk": true,
+      "wide_test_risk": false
+    },
+    {
+      "narrow_test_risk": false,
+      "oracle_alignment_status": "diagnostic_only",
+      "phase0_status": "certified",
+      "repo_id": "humanize",
+      "risk_flags": [],
+      "source_tier": "diagnostic_only_source",
+      "task_id": "humanize__hist__010",
+      "weak_oracle_risk": false,
+      "wide_test_risk": false
+    },
+    {
+      "narrow_test_risk": true,
+      "oracle_alignment_status": "diagnostic_only",
+      "phase0_status": "near_certified",
+      "repo_id": "humanize",
+      "risk_flags": [
+        "narrow_test_risk",
+        "target_fails_hidden_tests"
+      ],
+      "source_tier": "diagnostic_only_source",
+      "task_id": "humanize__hist__011",
+      "weak_oracle_risk": false,
+      "wide_test_risk": false
+    },
+    {
+      "narrow_test_risk": false,
+      "oracle_alignment_status": "diagnostic_only",
+      "phase0_status": "certified",
+      "repo_id": "humanize",
+      "risk_flags": [],
+      "source_tier": "diagnostic_only_source",
+      "task_id": "humanize__hist__012",
+      "weak_oracle_risk": false,
+      "wide_test_risk": false
+    },
+    {
+      "narrow_test_risk": false,
+      "oracle_alignment_status": "diagnostic_only",
+      "phase0_status": "certified",
+      "repo_id": "humanize",
+      "risk_flags": [],
+      "source_tier": "diagnostic_only_source",
+      "task_id": "humanize__hist__013",
+      "weak_oracle_risk": false,
+      "wide_test_risk": false
+    },
+    {
+      "narrow_test_risk": true,
+      "oracle_alignment_status": "diagnostic_only",
+      "phase0_status": "certified",
+      "repo_id": "humanize",
+      "risk_flags": [
+        "narrow_test_risk"
+      ],
+      "source_tier": "diagnostic_only_source",
+      "task_id": "humanize__hist__014",
+      "weak_oracle_risk": false,
+      "wide_test_risk": false
+    },
+    {
+      "narrow_test_risk": true,
+      "oracle_alignment_status": "diagnostic_only",
+      "phase0_status": "certified",
+      "repo_id": "humanize",
+      "risk_flags": [
+        "narrow_test_risk"
+      ],
+      "source_tier": "diagnostic_only_source",
+      "task_id": "humanize__hist__015",
+      "weak_oracle_risk": false,
+      "wide_test_risk": false
+    },
+    {
+      "narrow_test_risk": false,
+      "oracle_alignment_status": "diagnostic_only",
+      "phase0_status": "near_certified",
+      "repo_id": "humanize",
+      "risk_flags": [
+        "weak_oracle_risk",
+        "wide_test_risk"
+      ],
+      "source_tier": "diagnostic_only_source",
+      "task_id": "humanize__hist__016",
+      "weak_oracle_risk": true,
+      "wide_test_risk": true
+    },
+    {
+      "narrow_test_risk": false,
+      "oracle_alignment_status": "reject",
+      "phase0_status": "near_certified",
+      "repo_id": "itsdangerous",
+      "risk_flags": [
+        "large_cross_module_change_risk",
+        "multi_issue_patch_risk",
+        "statement_source_mismatch",
+        "target_fails_hidden_tests",
+        "wide_test_risk"
+      ],
+      "source_tier": "manual_review_source",
+      "task_id": "itsdangerous__hist__001",
+      "weak_oracle_risk": false,
+      "wide_test_risk": true
+    },
+    {
+      "narrow_test_risk": true,
+      "oracle_alignment_status": "reject",
+      "phase0_status": "near_certified",
+      "repo_id": "itsdangerous",
+      "risk_flags": [
+        "narrow_test_risk",
+        "statement_source_mismatch",
+        "target_fails_hidden_tests"
+      ],
+      "source_tier": "benchmark_grade_source",
+      "task_id": "itsdangerous__hist__002",
+      "weak_oracle_risk": false,
+      "wide_test_risk": false
+    },
+    {
+      "narrow_test_risk": false,
+      "oracle_alignment_status": "reject",
+      "phase0_status": "near_certified",
+      "repo_id": "itsdangerous",
+      "risk_flags": [
+        "statement_source_mismatch",
+        "target_fails_hidden_tests",
+        "test_edits_only_or_config_heavy_change"
+      ],
+      "source_tier": "manual_review_source",
+      "task_id": "itsdangerous__hist__003",
+      "weak_oracle_risk": false,
+      "wide_test_risk": false
+    },
+    {
+      "narrow_test_risk": false,
+      "oracle_alignment_status": "reject",
+      "phase0_status": "near_certified",
+      "repo_id": "itsdangerous",
+      "risk_flags": [
+        "maintenance_or_dependency_update_risk",
+        "statement_source_mismatch",
+        "target_fails_hidden_tests",
+        "test_edits_only_or_config_heavy_change"
+      ],
+      "source_tier": "benchmark_grade_source",
+      "task_id": "itsdangerous__hist__004",
+      "weak_oracle_risk": false,
+      "wide_test_risk": false
+    },
+    {
+      "narrow_test_risk": false,
+      "oracle_alignment_status": "reject",
+      "phase0_status": "near_certified",
+      "repo_id": "itsdangerous",
+      "risk_flags": [
+        "statement_source_mismatch",
+        "target_fails_hidden_tests",
+        "test_edits_only_or_config_heavy_change"
+      ],
+      "source_tier": "benchmark_grade_source",
+      "task_id": "itsdangerous__hist__005",
+      "weak_oracle_risk": false,
+      "wide_test_risk": false
+    },
+    {
+      "narrow_test_risk": true,
+      "oracle_alignment_status": "reject",
+      "phase0_status": "near_certified",
+      "repo_id": "itsdangerous",
+      "risk_flags": [
+        "maintenance_or_dependency_update_risk",
+        "narrow_test_risk",
+        "statement_source_mismatch",
+        "target_fails_hidden_tests",
+        "wide_test_risk"
+      ],
+      "source_tier": "manual_review_source",
+      "task_id": "itsdangerous__hist__006",
+      "weak_oracle_risk": false,
+      "wide_test_risk": true
+    },
+    {
+      "narrow_test_risk": false,
+      "oracle_alignment_status": "reject",
+      "phase0_status": "near_certified",
+      "repo_id": "itsdangerous",
+      "risk_flags": [
+        "statement_source_mismatch",
+        "target_fails_hidden_tests"
+      ],
+      "source_tier": "manual_review_source",
+      "task_id": "itsdangerous__hist__007",
+      "weak_oracle_risk": false,
+      "wide_test_risk": false
+    },
+    {
+      "narrow_test_risk": false,
+      "oracle_alignment_status": "diagnostic_only",
+      "phase0_status": "near_certified",
+      "repo_id": "itsdangerous",
+      "risk_flags": [
+        "maintenance_or_dependency_update_risk",
+        "statement_source_mismatch",
+        "test_edits_only_or_config_heavy_change",
+        "weak_oracle_risk",
+        "wide_test_risk"
+      ],
+      "source_tier": "diagnostic_only_source",
+      "task_id": "itsdangerous__hist__008",
+      "weak_oracle_risk": true,
+      "wide_test_risk": true
+    },
+    {
+      "narrow_test_risk": false,
+      "oracle_alignment_status": "reject",
+      "phase0_status": "near_certified",
+      "repo_id": "itsdangerous",
+      "risk_flags": [
+        "maintenance_or_dependency_update_risk",
+        "statement_source_mismatch",
+        "test_edits_only_or_config_heavy_change",
+        "weak_oracle_risk",
+        "wide_test_risk"
+      ],
+      "source_tier": "benchmark_grade_source",
+      "task_id": "itsdangerous__hist__009",
+      "weak_oracle_risk": true,
+      "wide_test_risk": true
+    },
+    {
+      "narrow_test_risk": false,
+      "oracle_alignment_status": "manual_review_required",
+      "phase0_status": "certified",
+      "repo_id": "itsdangerous",
+      "risk_flags": [
+        "statement_source_mismatch",
+        "test_edits_only_or_config_heavy_change"
+      ],
+      "source_tier": "manual_review_source",
+      "task_id": "itsdangerous__hist__010",
+      "weak_oracle_risk": false,
+      "wide_test_risk": false
+    },
+    {
+      "narrow_test_risk": false,
+      "oracle_alignment_status": "reject",
+      "phase0_status": "near_certified",
+      "repo_id": "itsdangerous",
+      "risk_flags": [
+        "statement_source_mismatch",
+        "test_edits_only_or_config_heavy_change",
+        "weak_oracle_risk",
+        "wide_test_risk"
+      ],
+      "source_tier": "benchmark_grade_source",
+      "task_id": "itsdangerous__hist__011",
+      "weak_oracle_risk": true,
+      "wide_test_risk": true
+    },
+    {
+      "narrow_test_risk": false,
+      "oracle_alignment_status": "aligned",
+      "phase0_status": "certified",
+      "repo_id": "toolz",
+      "risk_flags": [],
+      "source_tier": "benchmark_grade_source",
+      "task_id": "toolz__hist__001",
+      "weak_oracle_risk": false,
+      "wide_test_risk": false
+    },
+    {
+      "narrow_test_risk": false,
+      "oracle_alignment_status": "aligned",
+      "phase0_status": "certified",
+      "repo_id": "toolz",
+      "risk_flags": [],
+      "source_tier": "benchmark_grade_source",
+      "task_id": "toolz__hist__002",
+      "weak_oracle_risk": false,
+      "wide_test_risk": false
+    },
+    {
+      "narrow_test_risk": false,
+      "oracle_alignment_status": "aligned",
+      "phase0_status": "certified",
+      "repo_id": "toolz",
+      "risk_flags": [],
+      "source_tier": "benchmark_grade_source",
+      "task_id": "toolz__hist__003",
+      "weak_oracle_risk": false,
+      "wide_test_risk": false
+    },
+    {
+      "narrow_test_risk": false,
+      "oracle_alignment_status": "aligned",
+      "phase0_status": "certified",
+      "repo_id": "toolz",
+      "risk_flags": [],
+      "source_tier": "benchmark_grade_source",
+      "task_id": "toolz__hist__004",
+      "weak_oracle_risk": false,
+      "wide_test_risk": false
+    },
+    {
+      "narrow_test_risk": false,
+      "oracle_alignment_status": "aligned",
+      "phase0_status": "certified",
+      "repo_id": "toolz",
+      "risk_flags": [],
+      "source_tier": "benchmark_grade_source",
+      "task_id": "toolz__hist__010",
+      "weak_oracle_risk": false,
+      "wide_test_risk": false
+    },
+    {
+      "narrow_test_risk": false,
+      "oracle_alignment_status": "aligned",
+      "phase0_status": "certified",
+      "repo_id": "toolz",
+      "risk_flags": [],
+      "source_tier": "benchmark_grade_source",
+      "task_id": "toolz__hist__016",
+      "weak_oracle_risk": false,
+      "wide_test_risk": false
+    }
+  ]
+}

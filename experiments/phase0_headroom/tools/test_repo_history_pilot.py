@@ -121,6 +121,16 @@ def test_commit_context_ref_uses_message_without_patch(tmp_path: Path) -> None:
     assert ref["body_summary"] == "Fixes #123"
 
 
+def test_solver_statement_uses_candidate_repo_id() -> None:
+    statement = pilot.solver_statement(
+        {"repo_id": "itsdangerous", "module_or_package": ["signer"]},
+        [{"summary": "support FIPS builds without SHA-1"}],
+    )
+
+    assert "itsdangerous behavior" in statement
+    assert "humanize behavior" not in statement
+
+
 def test_uv_commands_include_editable_workspace() -> None:
     command = pilot.command_test_files("uv run --project experiments/phase0_headroom python -m pytest -q {test_files}", ["/tmp/ws/tests/test_time.py"])
 

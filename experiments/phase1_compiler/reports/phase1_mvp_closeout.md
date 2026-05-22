@@ -1,6 +1,6 @@
 # Phase 1 MVP Closeout
 
-Generated: `2026-05-21T16:26:10+00:00`.
+Generated: `2026-05-22T03:30:21+00:00`.
 
 - Release: `phase1_mvp_multi_repo_release`.
 - Status: `pilot_grade`.
@@ -10,4 +10,7 @@ Generated: `2026-05-21T16:26:10+00:00`.
 
 The `ready_for_phase1_mvp` gate has been consumed into an MVP compiler artifact set. The artifact set is infrastructure evidence only; it is not a predictive-validation result.
 
-Next runbook recommendation: write Phase 1 validation-design runbook with source-adapter hardening as a prerequisite for validation-grade claims.
+Hardening sidecar evidence: `available_as_sidecar_evidence`.
+The hardening overlay is reported as sidecar evidence and is not silently mixed into the historical MVP scorecards.
+
+Next runbook recommendation: run local third-repo remine with fixed statement template, candidate filter, and environment repair before paid ACUT scale-up.
