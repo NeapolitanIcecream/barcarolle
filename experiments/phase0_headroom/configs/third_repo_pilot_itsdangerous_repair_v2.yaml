@@ -32,7 +32,7 @@ candidate_filter_policy:
   manual_review_if_docs_or_config_change_present: true
 test_environment:
   pythonpath_mode: src_if_present_else_repo_root
-  command_template: uv run --project experiments/phase0_headroom --with "pytest>=9" --with "setuptools<81" python -m pytest -q {test_files}
+  command_template: uv run --project experiments/phase0_headroom --with "pytest<8" --with "setuptools<81" --with "freezegun" python -m pytest -q {test_files}
 preferred_task_count:
   certification_attempts: 32
   pilot_certified_min: 4

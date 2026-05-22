@@ -1,8 +1,8 @@
 # itsdangerous Mini Release
 
-Release status: `diagnostic_only`.
-Pilot grade: `False`.
+Release status: `pilot_grade`.
+Pilot grade: `True`.
 Benchmark grade: `False`.
-Certified task count: `1`.
-B_real tasks: `0`.
-W_real tasks: `1`.
+Certified task count: `4`.
+B_real tasks: `2`.
+W_real tasks: `2`.
