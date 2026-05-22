@@ -1,6 +1,6 @@
 {
   "config": "experiments/phase1_compiler/configs/phase1_second_repo_clean_outcome_unseen_supply.yaml",
-  "generated_at": "2026-05-22T12:49:08+00:00",
+  "generated_at": "2026-05-22T15:54:12+00:00",
   "paid_acut_calls_made": false,
   "paid_llm_calls_made": false,
   "predictive_validity_established": false,
@@ -45,27 +45,27 @@
       },
       "local_command_records": [
         {
-          "duration_seconds": 5.658,
+          "duration_seconds": 8.235,
           "returncode": 1,
           "role": "noop_test_patch_on_base",
-          "stderr_tail_hash": "e1136298d012",
-          "stdout_tail_hash": "fceef4419d4c",
+          "stderr_tail_hash": "46c8251dfaea",
+          "stdout_tail_hash": "d62d3307155f",
           "timed_out": false
         },
         {
-          "duration_seconds": 4.852,
+          "duration_seconds": 7.556,
           "returncode": 0,
           "role": "reference_run_1",
-          "stderr_tail_hash": "4e89b8e5a806",
-          "stdout_tail_hash": "72a55b23ae05",
+          "stderr_tail_hash": "7314d52a36e4",
+          "stdout_tail_hash": "ac7417fc30c8",
           "timed_out": false
         },
         {
-          "duration_seconds": 4.066,
+          "duration_seconds": 5.253,
           "returncode": 0,
           "role": "reference_run_2",
           "stderr_tail_hash": "b6c98bf49296",
-          "stdout_tail_hash": "a49b8944dafc",
+          "stdout_tail_hash": "6f8b7ca01804",
           "timed_out": false
         }
       ],
@@ -141,27 +141,27 @@
       },
       "local_command_records": [
         {
-          "duration_seconds": 4.841,
+          "duration_seconds": 5.387,
           "returncode": 1,
           "role": "noop_test_patch_on_base",
-          "stderr_tail_hash": "55f1cdfe2f64",
-          "stdout_tail_hash": "7b6111505745",
+          "stderr_tail_hash": "3aabcbaae522",
+          "stdout_tail_hash": "c4abac1ce955",
           "timed_out": false
         },
         {
-          "duration_seconds": 5.489,
+          "duration_seconds": 6.104,
           "returncode": 0,
           "role": "reference_run_1",
-          "stderr_tail_hash": "9f14ef1e3a4a",
-          "stdout_tail_hash": "ecee8a4c82e9",
+          "stderr_tail_hash": "e2f7b3b2f260",
+          "stdout_tail_hash": "b0d0b5c22bac",
           "timed_out": false
         },
         {
-          "duration_seconds": 3.887,
+          "duration_seconds": 5.217,
           "returncode": 0,
           "role": "reference_run_2",
           "stderr_tail_hash": "b6c98bf49296",
-          "stdout_tail_hash": "c4eda2979827",
+          "stdout_tail_hash": "17bfdd7bf5ea",
           "timed_out": false
         }
       ],
@@ -235,27 +235,27 @@
       },
       "local_command_records": [
         {
-          "duration_seconds": 5.218,
+          "duration_seconds": 5.939,
           "returncode": 1,
           "role": "noop_test_patch_on_base",
-          "stderr_tail_hash": "3cb4343621f2",
-          "stdout_tail_hash": "8cdf7bb57615",
+          "stderr_tail_hash": "e06e82fd8bfa",
+          "stdout_tail_hash": "3eb243005b33",
           "timed_out": false
         },
         {
-          "duration_seconds": 5.031,
+          "duration_seconds": 6.221,
           "returncode": 0,
           "role": "reference_run_1",
           "stderr_tail_hash": "d231ae65670d",
-          "stdout_tail_hash": "952e75e7b25b",
+          "stdout_tail_hash": "6343a4a36278",
           "timed_out": false
         },
         {
-          "duration_seconds": 4.359,
+          "duration_seconds": 4.141,
           "returncode": 0,
           "role": "reference_run_2",
           "stderr_tail_hash": "b6c98bf49296",
-          "stdout_tail_hash": "b8d60f20751c",
+          "stdout_tail_hash": "1cdaee115735",
           "timed_out": false
         }
       ],
@@ -335,7 +335,7 @@
       },
       "local_command_records": [
         {
-          "duration_seconds": 0.744,
+          "duration_seconds": 0.9,
           "returncode": 2,
           "role": "noop_test_patch_on_base",
           "stderr_tail_hash": "b6535fe23ad7",
@@ -343,15 +343,15 @@
           "timed_out": false
         },
         {
-          "duration_seconds": 0.719,
+          "duration_seconds": 0.877,
           "returncode": 0,
           "role": "reference_run_1",
-          "stderr_tail_hash": "5973a989970e",
+          "stderr_tail_hash": "5ec173de5936",
           "stdout_tail_hash": "c158a421635b",
           "timed_out": false
         },
         {
-          "duration_seconds": 0.122,
+          "duration_seconds": 0.147,
           "returncode": 0,
           "role": "reference_run_2",
           "stderr_tail_hash": "b6c98bf49296",
@@ -431,23 +431,23 @@
       },
       "local_command_records": [
         {
-          "duration_seconds": 0.736,
+          "duration_seconds": 0.881,
           "returncode": 1,
           "role": "noop_test_patch_on_base",
           "stderr_tail_hash": "a32e0abd7574",
-          "stdout_tail_hash": "3ab6f6b4099d",
+          "stdout_tail_hash": "628df5579c37",
           "timed_out": false
         },
         {
-          "duration_seconds": 0.751,
+          "duration_seconds": 0.875,
           "returncode": 0,
           "role": "reference_run_1",
-          "stderr_tail_hash": "25af1f1ab336",
+          "stderr_tail_hash": "9c81fdfcf9a9",
           "stdout_tail_hash": "7815cae0d920",
           "timed_out": false
         },
         {
-          "duration_seconds": 0.123,
+          "duration_seconds": 0.146,
           "returncode": 0,
           "role": "reference_run_2",
           "stderr_tail_hash": "b6c98bf49296",
@@ -526,15 +526,15 @@
       },
       "local_command_records": [
         {
-          "duration_seconds": 0.862,
+          "duration_seconds": 0.907,
           "returncode": 1,
           "role": "noop_test_patch_on_base",
-          "stderr_tail_hash": "65c096eb3360",
+          "stderr_tail_hash": "dfacc1618ef5",
           "stdout_tail_hash": "6367d108523f",
           "timed_out": false
         },
         {
-          "duration_seconds": 1.08,
+          "duration_seconds": 0.874,
           "returncode": 0,
           "role": "reference_run_1",
           "stderr_tail_hash": "be7d939463fb",
@@ -542,7 +542,7 @@
           "timed_out": false
         },
         {
-          "duration_seconds": 0.156,
+          "duration_seconds": 0.144,
           "returncode": 0,
           "role": "reference_run_2",
           "stderr_tail_hash": "b6c98bf49296",
@@ -623,7 +623,7 @@
       },
       "local_command_records": [
         {
-          "duration_seconds": 0.882,
+          "duration_seconds": 0.95,
           "returncode": 1,
           "role": "noop_test_patch_on_base",
           "stderr_tail_hash": "5ffc9f24cd76",
@@ -631,15 +631,15 @@
           "timed_out": false
         },
         {
-          "duration_seconds": 0.849,
+          "duration_seconds": 0.925,
           "returncode": 0,
           "role": "reference_run_1",
-          "stderr_tail_hash": "ee547a799cf2",
+          "stderr_tail_hash": "5bf8c065f07e",
           "stdout_tail_hash": "95f2dba45838",
           "timed_out": false
         },
         {
-          "duration_seconds": 0.173,
+          "duration_seconds": 0.176,
           "returncode": 0,
           "role": "reference_run_2",
           "stderr_tail_hash": "b6c98bf49296",
@@ -719,7 +719,7 @@
       },
       "local_command_records": [
         {
-          "duration_seconds": 0.846,
+          "duration_seconds": 0.913,
           "returncode": 1,
           "role": "noop_test_patch_on_base",
           "stderr_tail_hash": "1c27fabeb8eb",
@@ -727,7 +727,7 @@
           "timed_out": false
         },
         {
-          "duration_seconds": 0.817,
+          "duration_seconds": 0.868,
           "returncode": 0,
           "role": "reference_run_1",
           "stderr_tail_hash": "b611e613511a",
@@ -735,7 +735,7 @@
           "timed_out": false
         },
         {
-          "duration_seconds": 0.14,
+          "duration_seconds": 0.145,
           "returncode": 0,
           "role": "reference_run_2",
           "stderr_tail_hash": "b6c98bf49296",
@@ -813,23 +813,23 @@
       },
       "local_command_records": [
         {
-          "duration_seconds": 0.894,
+          "duration_seconds": 0.959,
           "returncode": 1,
           "role": "noop_test_patch_on_base",
           "stderr_tail_hash": "d74d284d49b1",
-          "stdout_tail_hash": "3bad8415980b",
+          "stdout_tail_hash": "da8572e40357",
           "timed_out": false
         },
         {
-          "duration_seconds": 0.881,
+          "duration_seconds": 0.909,
           "returncode": 0,
           "role": "reference_run_1",
-          "stderr_tail_hash": "f4267327fa46",
+          "stderr_tail_hash": "048eab5a8854",
           "stdout_tail_hash": "5fdc2b6ebf1c",
           "timed_out": false
         },
         {
-          "duration_seconds": 0.161,
+          "duration_seconds": 0.167,
           "returncode": 0,
           "role": "reference_run_2",
           "stderr_tail_hash": "b6c98bf49296",
@@ -911,7 +911,7 @@
       },
       "local_command_records": [
         {
-          "duration_seconds": 0.914,
+          "duration_seconds": 0.966,
           "returncode": 1,
           "role": "noop_test_patch_on_base",
           "stderr_tail_hash": "59a474c7f279",
@@ -919,15 +919,15 @@
           "timed_out": false
         },
         {
-          "duration_seconds": 0.845,
+          "duration_seconds": 0.877,
           "returncode": 0,
           "role": "reference_run_1",
-          "stderr_tail_hash": "1b304096f19a",
+          "stderr_tail_hash": "9abe0ef7da57",
           "stdout_tail_hash": "71288863ec95",
           "timed_out": false
         },
         {
-          "duration_seconds": 0.144,
+          "duration_seconds": 0.148,
           "returncode": 0,
           "role": "reference_run_2",
           "stderr_tail_hash": "b6c98bf49296",
@@ -1007,23 +1007,23 @@
       },
       "local_command_records": [
         {
-          "duration_seconds": 0.927,
+          "duration_seconds": 0.969,
           "returncode": 1,
           "role": "noop_test_patch_on_base",
           "stderr_tail_hash": "7b8e9ab4d274",
-          "stdout_tail_hash": "3d245e1ee7b6",
+          "stdout_tail_hash": "5f886b0d7dc4",
           "timed_out": false
         },
         {
-          "duration_seconds": 0.904,
+          "duration_seconds": 0.972,
           "returncode": 0,
           "role": "reference_run_1",
-          "stderr_tail_hash": "046f125f789e",
+          "stderr_tail_hash": "cd76f20ca24f",
           "stdout_tail_hash": "feb813d7a7aa",
           "timed_out": false
         },
         {
-          "duration_seconds": 0.195,
+          "duration_seconds": 0.198,
           "returncode": 0,
           "role": "reference_run_2",
           "stderr_tail_hash": "b6c98bf49296",
@@ -1105,15 +1105,15 @@
       },
       "local_command_records": [
         {
-          "duration_seconds": 0.859,
+          "duration_seconds": 0.909,
           "returncode": 2,
           "role": "noop_test_patch_on_base",
-          "stderr_tail_hash": "e5d54ef46a5f",
+          "stderr_tail_hash": "63b1462b4f7a",
           "stdout_tail_hash": "e8e1c39629a8",
           "timed_out": false
         },
         {
-          "duration_seconds": 0.868,
+          "duration_seconds": 0.904,
           "returncode": 0,
           "role": "reference_run_1",
           "stderr_tail_hash": "1168eb089fbe",
@@ -1121,7 +1121,7 @@
           "timed_out": false
         },
         {
-          "duration_seconds": 0.157,
+          "duration_seconds": 0.158,
           "returncode": 0,
           "role": "reference_run_2",
           "stderr_tail_hash": "b6c98bf49296",
@@ -1202,23 +1202,23 @@
       },
       "local_command_records": [
         {
-          "duration_seconds": 0.894,
+          "duration_seconds": 0.916,
           "returncode": 1,
           "role": "noop_test_patch_on_base",
           "stderr_tail_hash": "15fb4db58925",
-          "stdout_tail_hash": "d5bcd9a74321",
+          "stdout_tail_hash": "329c9c4f8350",
           "timed_out": false
         },
         {
-          "duration_seconds": 0.843,
+          "duration_seconds": 0.894,
           "returncode": 0,
           "role": "reference_run_1",
-          "stderr_tail_hash": "4f8aba0c005f",
+          "stderr_tail_hash": "4437221703e6",
           "stdout_tail_hash": "9acd31e10db4",
           "timed_out": false
         },
         {
-          "duration_seconds": 0.146,
+          "duration_seconds": 0.15,
           "returncode": 0,
           "role": "reference_run_2",
           "stderr_tail_hash": "b6c98bf49296",
@@ -1298,23 +1298,23 @@
       },
       "local_command_records": [
         {
-          "duration_seconds": 0.856,
+          "duration_seconds": 0.922,
           "returncode": 2,
           "role": "noop_test_patch_on_base",
-          "stderr_tail_hash": "175366f71c30",
-          "stdout_tail_hash": "b83b2417f645",
+          "stderr_tail_hash": "831da6f3bc3f",
+          "stdout_tail_hash": "3e0bc2252dc4",
           "timed_out": false
         },
         {
-          "duration_seconds": 0.859,
+          "duration_seconds": 0.891,
           "returncode": 0,
           "role": "reference_run_1",
-          "stderr_tail_hash": "3c4ca477e832",
+          "stderr_tail_hash": "6209278e9945",
           "stdout_tail_hash": "bea5a77cc685",
           "timed_out": false
         },
         {
-          "duration_seconds": 0.151,
+          "duration_seconds": 0.148,
           "returncode": 0,
           "role": "reference_run_2",
           "stderr_tail_hash": "b6c98bf49296",
@@ -1396,23 +1396,23 @@
       },
       "local_command_records": [
         {
-          "duration_seconds": 0.9,
+          "duration_seconds": 0.995,
           "returncode": 1,
           "role": "noop_test_patch_on_base",
-          "stderr_tail_hash": "42a3f657eaa6",
+          "stderr_tail_hash": "cd109e2be9bf",
           "stdout_tail_hash": "4f5b1e6993e2",
           "timed_out": false
         },
         {
-          "duration_seconds": 0.924,
+          "duration_seconds": 0.947,
           "returncode": 0,
           "role": "reference_run_1",
-          "stderr_tail_hash": "4ef353f01c61",
-          "stdout_tail_hash": "45adaf21c561",
+          "stderr_tail_hash": "988fbaa2ba06",
+          "stdout_tail_hash": "0274a2573790",
           "timed_out": false
         },
         {
-          "duration_seconds": 0.183,
+          "duration_seconds": 0.179,
           "returncode": 0,
           "role": "reference_run_2",
           "stderr_tail_hash": "b6c98bf49296",
@@ -1496,27 +1496,27 @@
       },
       "local_command_records": [
         {
-          "duration_seconds": 4.251,
+          "duration_seconds": 4.51,
           "returncode": 1,
           "role": "noop_test_patch_on_base",
-          "stderr_tail_hash": "3d89fdba6583",
-          "stdout_tail_hash": "73f9c4b3a3fa",
+          "stderr_tail_hash": "abad908bfeac",
+          "stdout_tail_hash": "37a9456d8b24",
           "timed_out": false
         },
         {
-          "duration_seconds": 4.377,
+          "duration_seconds": 4.247,
           "returncode": 0,
           "role": "reference_run_1",
-          "stderr_tail_hash": "96d21987843b",
-          "stdout_tail_hash": "b7740c283ad0",
+          "stderr_tail_hash": "ca708a2a941d",
+          "stdout_tail_hash": "0455f9afb833",
           "timed_out": false
         },
         {
-          "duration_seconds": 3.41,
+          "duration_seconds": 4.57,
           "returncode": 0,
           "role": "reference_run_2",
           "stderr_tail_hash": "b6c98bf49296",
-          "stdout_tail_hash": "c2a7d56ac17a",
+          "stdout_tail_hash": "0a612d427f17",
           "timed_out": false
         }
       ],
@@ -1595,23 +1595,23 @@
       },
       "local_command_records": [
         {
-          "duration_seconds": 0.869,
+          "duration_seconds": 0.934,
           "returncode": 2,
           "role": "noop_test_patch_on_base",
-          "stderr_tail_hash": "460081b6eced",
+          "stderr_tail_hash": "fe8273207d8e",
           "stdout_tail_hash": "0051c8729d91",
           "timed_out": false
         },
         {
-          "duration_seconds": 0.903,
+          "duration_seconds": 0.971,
           "returncode": 0,
           "role": "reference_run_1",
-          "stderr_tail_hash": "d0ad9c97a912",
-          "stdout_tail_hash": "8bd56ee15b41",
+          "stderr_tail_hash": "1836da6dd324",
+          "stdout_tail_hash": "2f3bd075642c",
           "timed_out": false
         },
         {
-          "duration_seconds": 0.183,
+          "duration_seconds": 0.196,
           "returncode": 0,
           "role": "reference_run_2",
           "stderr_tail_hash": "b6c98bf49296",
@@ -1691,15 +1691,15 @@
       },
       "local_command_records": [
         {
-          "duration_seconds": 0.989,
+          "duration_seconds": 1.038,
           "returncode": 1,
           "role": "noop_test_patch_on_base",
-          "stderr_tail_hash": "dfd096909695",
+          "stderr_tail_hash": "84ae29484561",
           "stdout_tail_hash": "8700f8c2ae69",
           "timed_out": false
         },
         {
-          "duration_seconds": 0.893,
+          "duration_seconds": 0.953,
           "returncode": 0,
           "role": "reference_run_1",
           "stderr_tail_hash": "6bada484c5b4",
@@ -1707,7 +1707,7 @@
           "timed_out": false
         },
         {
-          "duration_seconds": 0.183,
+          "duration_seconds": 0.184,
           "returncode": 0,
           "role": "reference_run_2",
           "stderr_tail_hash": "b6c98bf49296",
@@ -1818,27 +1818,27 @@
       },
       "local_command_records": [
         {
-          "duration_seconds": 5.658,
+          "duration_seconds": 8.235,
           "returncode": 1,
           "role": "noop_test_patch_on_base",
-          "stderr_tail_hash": "e1136298d012",
-          "stdout_tail_hash": "fceef4419d4c",
+          "stderr_tail_hash": "46c8251dfaea",
+          "stdout_tail_hash": "d62d3307155f",
           "timed_out": false
         },
         {
-          "duration_seconds": 4.852,
+          "duration_seconds": 7.556,
           "returncode": 0,
           "role": "reference_run_1",
-          "stderr_tail_hash": "4e89b8e5a806",
-          "stdout_tail_hash": "72a55b23ae05",
+          "stderr_tail_hash": "7314d52a36e4",
+          "stdout_tail_hash": "ac7417fc30c8",
           "timed_out": false
         },
         {
-          "duration_seconds": 4.066,
+          "duration_seconds": 5.253,
           "returncode": 0,
           "role": "reference_run_2",
           "stderr_tail_hash": "b6c98bf49296",
-          "stdout_tail_hash": "a49b8944dafc",
+          "stdout_tail_hash": "6f8b7ca01804",
           "timed_out": false
         }
       ],
@@ -1915,27 +1915,27 @@
       },
       "local_command_records": [
         {
-          "duration_seconds": 0.84,
+          "duration_seconds": 1.049,
           "returncode": 2,
           "role": "noop_test_patch_on_base",
-          "stderr_tail_hash": "5639aa089aa1",
-          "stdout_tail_hash": "fd8260450c2f",
+          "stderr_tail_hash": "cfee947acc1c",
+          "stdout_tail_hash": "6cf6acfb4823",
           "timed_out": false
         },
         {
-          "duration_seconds": 0.803,
+          "duration_seconds": 0.967,
           "returncode": 0,
           "role": "reference_run_1",
-          "stderr_tail_hash": "129df7f9b69b",
-          "stdout_tail_hash": "b307ea769f59",
+          "stderr_tail_hash": "8eba4a6450e1",
+          "stdout_tail_hash": "fd45b7a2eb51",
           "timed_out": false
         },
         {
-          "duration_seconds": 0.146,
+          "duration_seconds": 0.178,
           "returncode": 0,
           "role": "reference_run_2",
           "stderr_tail_hash": "b6c98bf49296",
-          "stdout_tail_hash": "094ec040b95f",
+          "stdout_tail_hash": "90f99727514a",
           "timed_out": false
         }
       ],
@@ -2016,27 +2016,27 @@
       },
       "local_command_records": [
         {
-          "duration_seconds": 4.841,
+          "duration_seconds": 5.387,
           "returncode": 1,
           "role": "noop_test_patch_on_base",
-          "stderr_tail_hash": "55f1cdfe2f64",
-          "stdout_tail_hash": "7b6111505745",
+          "stderr_tail_hash": "3aabcbaae522",
+          "stdout_tail_hash": "c4abac1ce955",
           "timed_out": false
         },
         {
-          "duration_seconds": 5.489,
+          "duration_seconds": 6.104,
           "returncode": 0,
           "role": "reference_run_1",
-          "stderr_tail_hash": "9f14ef1e3a4a",
-          "stdout_tail_hash": "ecee8a4c82e9",
+          "stderr_tail_hash": "e2f7b3b2f260",
+          "stdout_tail_hash": "b0d0b5c22bac",
           "timed_out": false
         },
         {
-          "duration_seconds": 3.887,
+          "duration_seconds": 5.217,
           "returncode": 0,
           "role": "reference_run_2",
           "stderr_tail_hash": "b6c98bf49296",
-          "stdout_tail_hash": "c4eda2979827",
+          "stdout_tail_hash": "17bfdd7bf5ea",
           "timed_out": false
         }
       ],
@@ -2110,27 +2110,27 @@
       },
       "local_command_records": [
         {
-          "duration_seconds": 5.218,
+          "duration_seconds": 5.939,
           "returncode": 1,
           "role": "noop_test_patch_on_base",
-          "stderr_tail_hash": "3cb4343621f2",
-          "stdout_tail_hash": "8cdf7bb57615",
+          "stderr_tail_hash": "e06e82fd8bfa",
+          "stdout_tail_hash": "3eb243005b33",
           "timed_out": false
         },
         {
-          "duration_seconds": 5.031,
+          "duration_seconds": 6.221,
           "returncode": 0,
           "role": "reference_run_1",
           "stderr_tail_hash": "d231ae65670d",
-          "stdout_tail_hash": "952e75e7b25b",
+          "stdout_tail_hash": "6343a4a36278",
           "timed_out": false
         },
         {
-          "duration_seconds": 4.359,
+          "duration_seconds": 4.141,
           "returncode": 0,
           "role": "reference_run_2",
           "stderr_tail_hash": "b6c98bf49296",
-          "stdout_tail_hash": "b8d60f20751c",
+          "stdout_tail_hash": "1cdaee115735",
           "timed_out": false
         }
       ],
@@ -2206,27 +2206,27 @@
       },
       "local_command_records": [
         {
-          "duration_seconds": 0.766,
+          "duration_seconds": 0.942,
           "returncode": 1,
           "role": "noop_test_patch_on_base",
           "stderr_tail_hash": "247e32a25155",
-          "stdout_tail_hash": "eafd2d51a4ec",
+          "stdout_tail_hash": "c844a6c8b271",
           "timed_out": false
         },
         {
-          "duration_seconds": 0.751,
+          "duration_seconds": 0.897,
           "returncode": 1,
           "role": "reference_run_1",
-          "stderr_tail_hash": "110a937c8985",
-          "stdout_tail_hash": "fb9ab2eb42ac",
+          "stderr_tail_hash": "665bc84a5664",
+          "stdout_tail_hash": "9d6107cd7bb3",
           "timed_out": false
         },
         {
-          "duration_seconds": 0.138,
+          "duration_seconds": 0.161,
           "returncode": 1,
           "role": "reference_run_2",
           "stderr_tail_hash": "b6c98bf49296",
-          "stdout_tail_hash": "89b8c143f84c",
+          "stdout_tail_hash": "f81da17cb53d",
           "timed_out": false
         }
       ],
@@ -2305,27 +2305,27 @@
       },
       "local_command_records": [
         {
-          "duration_seconds": 0.872,
+          "duration_seconds": 1.002,
           "returncode": 2,
           "role": "noop_test_patch_on_base",
-          "stderr_tail_hash": "ee925905ffe2",
-          "stdout_tail_hash": "c12c5b060a99",
+          "stderr_tail_hash": "72826537e2e2",
+          "stdout_tail_hash": "19d68fb8e214",
           "timed_out": false
         },
         {
-          "duration_seconds": 0.821,
+          "duration_seconds": 0.991,
           "returncode": 0,
           "role": "reference_run_1",
-          "stderr_tail_hash": "487af85c81af",
-          "stdout_tail_hash": "aef4a50312e7",
+          "stderr_tail_hash": "187515745f68",
+          "stdout_tail_hash": "76f17ecfb4b7",
           "timed_out": false
         },
         {
-          "duration_seconds": 0.147,
+          "duration_seconds": 0.186,
           "returncode": 0,
           "role": "reference_run_2",
           "stderr_tail_hash": "b6c98bf49296",
-          "stdout_tail_hash": "8ee478d15541",
+          "stdout_tail_hash": "ea7ed0516efe",
           "timed_out": false
         }
       ],
@@ -2410,15 +2410,15 @@
       },
       "local_command_records": [
         {
-          "duration_seconds": 0.752,
+          "duration_seconds": 0.949,
           "returncode": 1,
           "role": "noop_test_patch_on_base",
-          "stderr_tail_hash": "fe63dad81db3",
-          "stdout_tail_hash": "e39510d324fc",
+          "stderr_tail_hash": "12e9f86675de",
+          "stdout_tail_hash": "ed06a8e7fb97",
           "timed_out": false
         },
         {
-          "duration_seconds": 0.765,
+          "duration_seconds": 0.896,
           "returncode": 0,
           "role": "reference_run_1",
           "stderr_tail_hash": "c0ef65843545",
@@ -2426,11 +2426,11 @@
           "timed_out": false
         },
         {
-          "duration_seconds": 0.13,
+          "duration_seconds": 0.151,
           "returncode": 0,
           "role": "reference_run_2",
           "stderr_tail_hash": "b6c98bf49296",
-          "stdout_tail_hash": "b63176793a02",
+          "stdout_tail_hash": "a0e319b60796",
           "timed_out": false
         }
       ],
@@ -2513,7 +2513,7 @@
       },
       "local_command_records": [
         {
-          "duration_seconds": 0.744,
+          "duration_seconds": 0.9,
           "returncode": 2,
           "role": "noop_test_patch_on_base",
           "stderr_tail_hash": "b6535fe23ad7",
@@ -2521,15 +2521,15 @@
           "timed_out": false
         },
         {
-          "duration_seconds": 0.719,
+          "duration_seconds": 0.877,
           "returncode": 0,
           "role": "reference_run_1",
-          "stderr_tail_hash": "5973a989970e",
+          "stderr_tail_hash": "5ec173de5936",
           "stdout_tail_hash": "c158a421635b",
           "timed_out": false
         },
         {
-          "duration_seconds": 0.122,
+          "duration_seconds": 0.147,
           "returncode": 0,
           "role": "reference_run_2",
           "stderr_tail_hash": "b6c98bf49296",
@@ -2609,23 +2609,23 @@
       },
       "local_command_records": [
         {
-          "duration_seconds": 0.736,
+          "duration_seconds": 0.881,
           "returncode": 1,
           "role": "noop_test_patch_on_base",
           "stderr_tail_hash": "a32e0abd7574",
-          "stdout_tail_hash": "3ab6f6b4099d",
+          "stdout_tail_hash": "628df5579c37",
           "timed_out": false
         },
         {
-          "duration_seconds": 0.751,
+          "duration_seconds": 0.875,
           "returncode": 0,
           "role": "reference_run_1",
-          "stderr_tail_hash": "25af1f1ab336",
+          "stderr_tail_hash": "9c81fdfcf9a9",
           "stdout_tail_hash": "7815cae0d920",
           "timed_out": false
         },
         {
-          "duration_seconds": 0.123,
+          "duration_seconds": 0.146,
           "returncode": 0,
           "role": "reference_run_2",
           "stderr_tail_hash": "b6c98bf49296",
@@ -2704,15 +2704,15 @@
       },
       "local_command_records": [
         {
-          "duration_seconds": 0.862,
+          "duration_seconds": 0.907,
           "returncode": 1,
           "role": "noop_test_patch_on_base",
-          "stderr_tail_hash": "65c096eb3360",
+          "stderr_tail_hash": "dfacc1618ef5",
           "stdout_tail_hash": "6367d108523f",
           "timed_out": false
         },
         {
-          "duration_seconds": 1.08,
+          "duration_seconds": 0.874,
           "returncode": 0,
           "role": "reference_run_1",
           "stderr_tail_hash": "be7d939463fb",
@@ -2720,7 +2720,7 @@
           "timed_out": false
         },
         {
-          "duration_seconds": 0.156,
+          "duration_seconds": 0.144,
           "returncode": 0,
           "role": "reference_run_2",
           "stderr_tail_hash": "b6c98bf49296",
@@ -2800,27 +2800,27 @@
       },
       "local_command_records": [
         {
-          "duration_seconds": 4.889,
+          "duration_seconds": 4.203,
           "returncode": 1,
           "role": "noop_test_patch_on_base",
-          "stderr_tail_hash": "367ca1b7e5f4",
-          "stdout_tail_hash": "6440d888d981",
+          "stderr_tail_hash": "dcf38c45bc48",
+          "stdout_tail_hash": "7042d478dc04",
           "timed_out": false
         },
         {
-          "duration_seconds": 4.228,
+          "duration_seconds": 4.885,
           "returncode": 1,
           "role": "reference_run_1",
-          "stderr_tail_hash": "cd8a97626fe2",
-          "stdout_tail_hash": "a963644d0f11",
+          "stderr_tail_hash": "71870ba4fb5c",
+          "stdout_tail_hash": "1748986dee0c",
           "timed_out": false
         },
         {
-          "duration_seconds": 3.309,
+          "duration_seconds": 4.363,
           "returncode": 1,
           "role": "reference_run_2",
           "stderr_tail_hash": "b6c98bf49296",
-          "stdout_tail_hash": "5e11a7ecdb5b",
+          "stdout_tail_hash": "5d3f58cf0d28",
           "timed_out": false
         }
       ],
@@ -2899,7 +2899,7 @@
       },
       "local_command_records": [
         {
-          "duration_seconds": 0.882,
+          "duration_seconds": 0.95,
           "returncode": 1,
           "role": "noop_test_patch_on_base",
           "stderr_tail_hash": "5ffc9f24cd76",
@@ -2907,15 +2907,15 @@
           "timed_out": false
         },
         {
-          "duration_seconds": 0.849,
+          "duration_seconds": 0.925,
           "returncode": 0,
           "role": "reference_run_1",
-          "stderr_tail_hash": "ee547a799cf2",
+          "stderr_tail_hash": "5bf8c065f07e",
           "stdout_tail_hash": "95f2dba45838",
           "timed_out": false
         },
         {
-          "duration_seconds": 0.173,
+          "duration_seconds": 0.176,
           "returncode": 0,
           "role": "reference_run_2",
           "stderr_tail_hash": "b6c98bf49296",
@@ -2995,7 +2995,7 @@
       },
       "local_command_records": [
         {
-          "duration_seconds": 0.846,
+          "duration_seconds": 0.913,
           "returncode": 1,
           "role": "noop_test_patch_on_base",
           "stderr_tail_hash": "1c27fabeb8eb",
@@ -3003,7 +3003,7 @@
           "timed_out": false
         },
         {
-          "duration_seconds": 0.817,
+          "duration_seconds": 0.868,
           "returncode": 0,
           "role": "reference_run_1",
           "stderr_tail_hash": "b611e613511a",
@@ -3011,7 +3011,7 @@
           "timed_out": false
         },
         {
-          "duration_seconds": 0.14,
+          "duration_seconds": 0.145,
           "returncode": 0,
           "role": "reference_run_2",
           "stderr_tail_hash": "b6c98bf49296",
@@ -3090,27 +3090,27 @@
       },
       "local_command_records": [
         {
-          "duration_seconds": 5.579,
+          "duration_seconds": 6.516,
           "returncode": 1,
           "role": "noop_test_patch_on_base",
-          "stderr_tail_hash": "0e429263ecd5",
-          "stdout_tail_hash": "248b611fee89",
+          "stderr_tail_hash": "3cc011371a41",
+          "stdout_tail_hash": "93d35b7ce013",
           "timed_out": false
         },
         {
-          "duration_seconds": 5.58,
+          "duration_seconds": 5.207,
           "returncode": 1,
           "role": "reference_run_1",
-          "stderr_tail_hash": "0e115d9f99d0",
-          "stdout_tail_hash": "8b80adb05887",
+          "stderr_tail_hash": "6f1af39ec54b",
+          "stdout_tail_hash": "5e7b29007d3d",
           "timed_out": false
         },
         {
-          "duration_seconds": 4.423,
+          "duration_seconds": 4.583,
           "returncode": 1,
           "role": "reference_run_2",
           "stderr_tail_hash": "b6c98bf49296",
-          "stdout_tail_hash": "54057952672e",
+          "stdout_tail_hash": "e01b4ed171e0",
           "timed_out": false
         }
       ],
@@ -3189,27 +3189,27 @@
       },
       "local_command_records": [
         {
-          "duration_seconds": 4.072,
+          "duration_seconds": 4.274,
           "returncode": 1,
           "role": "noop_test_patch_on_base",
           "stderr_tail_hash": "69c773d47934",
-          "stdout_tail_hash": "88791f355778",
+          "stdout_tail_hash": "118248d0aa0d",
           "timed_out": false
         },
         {
-          "duration_seconds": 4.172,
+          "duration_seconds": 4.462,
           "returncode": 1,
           "role": "reference_run_1",
-          "stderr_tail_hash": "d75e4f6a7969",
-          "stdout_tail_hash": "bd5a929bb138",
+          "stderr_tail_hash": "3cf1b18898f6",
+          "stdout_tail_hash": "9f56d90c0393",
           "timed_out": false
         },
         {
-          "duration_seconds": 2.954,
+          "duration_seconds": 4.04,
           "returncode": 1,
           "role": "reference_run_2",
           "stderr_tail_hash": "b6c98bf49296",
-          "stdout_tail_hash": "a4a75b7fac55",
+          "stdout_tail_hash": "d65feb0cc477",
           "timed_out": false
         }
       ],
@@ -3289,7 +3289,7 @@
       },
       "local_command_records": [
         {
-          "duration_seconds": 0.852,
+          "duration_seconds": 0.886,
           "returncode": 0,
           "role": "noop_test_patch_on_base",
           "stderr_tail_hash": "66380545ee64",
@@ -3297,7 +3297,7 @@
           "timed_out": false
         },
         {
-          "duration_seconds": 0.826,
+          "duration_seconds": 0.891,
           "returncode": 0,
           "role": "reference_run_1",
           "stderr_tail_hash": "09f46a6663bd",
@@ -3305,7 +3305,7 @@
           "timed_out": false
         },
         {
-          "duration_seconds": 0.146,
+          "duration_seconds": 0.15,
           "returncode": 0,
           "role": "reference_run_2",
           "stderr_tail_hash": "b6c98bf49296",
@@ -3389,15 +3389,15 @@
       },
       "local_command_records": [
         {
-          "duration_seconds": 0.905,
+          "duration_seconds": 0.949,
           "returncode": 1,
           "role": "noop_test_patch_on_base",
-          "stderr_tail_hash": "0d5d5c255b45",
+          "stderr_tail_hash": "91e0cb6055b7",
           "stdout_tail_hash": "967c7e314a71",
           "timed_out": false
         },
         {
-          "duration_seconds": 0.879,
+          "duration_seconds": 0.922,
           "returncode": 1,
           "role": "reference_run_1",
           "stderr_tail_hash": "fdc3775f0c73",
@@ -3405,7 +3405,7 @@
           "timed_out": false
         },
         {
-          "duration_seconds": 0.181,
+          "duration_seconds": 0.179,
           "returncode": 1,
           "role": "reference_run_2",
           "stderr_tail_hash": "b6c98bf49296",
@@ -3486,19 +3486,19 @@
       },
       "local_command_records": [
         {
-          "duration_seconds": 0.902,
+          "duration_seconds": 1.046,
           "returncode": 1,
           "role": "noop_test_patch_on_base",
-          "stderr_tail_hash": "853935cfd497",
-          "stdout_tail_hash": "6f272c53aaa6",
+          "stderr_tail_hash": "0e8e28753773",
+          "stdout_tail_hash": "db1dc7c7dde9",
           "timed_out": false
         },
         {
-          "duration_seconds": 0.919,
+          "duration_seconds": 0.947,
           "returncode": 1,
           "role": "reference_run_1",
-          "stderr_tail_hash": "947477b6edfa",
-          "stdout_tail_hash": "c576810fad0a",
+          "stderr_tail_hash": "e6aff6a62707",
+          "stdout_tail_hash": "6ee66b6636a4",
           "timed_out": false
         },
         {
@@ -3506,7 +3506,7 @@
           "returncode": 1,
           "role": "reference_run_2",
           "stderr_tail_hash": "b6c98bf49296",
-          "stdout_tail_hash": "8996b6f11769",
+          "stdout_tail_hash": "c680e7dfa314",
           "timed_out": false
         }
       ],
@@ -3583,15 +3583,15 @@
       },
       "local_command_records": [
         {
-          "duration_seconds": 0.826,
+          "duration_seconds": 0.923,
           "returncode": 0,
           "role": "noop_test_patch_on_base",
-          "stderr_tail_hash": "9bddd0aa962a",
+          "stderr_tail_hash": "ece83ea95592",
           "stdout_tail_hash": "5b8755fc48cd",
           "timed_out": false
         },
         {
-          "duration_seconds": 0.859,
+          "duration_seconds": 0.886,
           "returncode": 0,
           "role": "reference_run_1",
           "stderr_tail_hash": "2a695b2eca3c",
@@ -3599,7 +3599,7 @@
           "timed_out": false
         },
         {
-          "duration_seconds": 0.146,
+          "duration_seconds": 0.153,
           "returncode": 0,
           "role": "reference_run_2",
           "stderr_tail_hash": "b6c98bf49296",
@@ -3680,7 +3680,7 @@
       },
       "local_command_records": [
         {
-          "duration_seconds": 0.889,
+          "duration_seconds": 0.944,
           "returncode": 1,
           "role": "noop_test_patch_on_base",
           "stderr_tail_hash": "dba3a6d2a5e8",
@@ -3688,15 +3688,15 @@
           "timed_out": false
         },
         {
-          "duration_seconds": 0.886,
+          "duration_seconds": 0.977,
           "returncode": 1,
           "role": "reference_run_1",
-          "stderr_tail_hash": "a896fbeb0802",
+          "stderr_tail_hash": "48e74cca32a7",
           "stdout_tail_hash": "d4af9f1a13f5",
           "timed_out": false
         },
         {
-          "duration_seconds": 0.184,
+          "duration_seconds": 0.193,
           "returncode": 1,
           "role": "reference_run_2",
           "stderr_tail_hash": "b6c98bf49296",
@@ -3781,27 +3781,27 @@
       },
       "local_command_records": [
         {
-          "duration_seconds": 0.975,
+          "duration_seconds": 1.013,
           "returncode": 2,
           "role": "noop_test_patch_on_base",
-          "stderr_tail_hash": "f75058800d6a",
-          "stdout_tail_hash": "363ea073d8fe",
+          "stderr_tail_hash": "45f270d5451c",
+          "stdout_tail_hash": "bbb1cac9a5db",
           "timed_out": false
         },
         {
-          "duration_seconds": 10.773,
+          "duration_seconds": 11.376,
           "returncode": 1,
           "role": "reference_run_1",
-          "stderr_tail_hash": "f28e839e1c5e",
-          "stdout_tail_hash": "93d4f7b35c8f",
+          "stderr_tail_hash": "115fcd28ae1a",
+          "stdout_tail_hash": "a0ee5fb37068",
           "timed_out": false
         },
         {
-          "duration_seconds": 11.219,
+          "duration_seconds": 10.046,
           "returncode": 1,
           "role": "reference_run_2",
           "stderr_tail_hash": "b6c98bf49296",
-          "stdout_tail_hash": "c21881344b0b",
+          "stdout_tail_hash": "dda65b4dac4e",
           "timed_out": false
         }
       ],
@@ -3884,27 +3884,27 @@
       },
       "local_command_records": [
         {
-          "duration_seconds": 0.929,
+          "duration_seconds": 1.035,
           "returncode": 2,
           "role": "noop_test_patch_on_base",
-          "stderr_tail_hash": "94515576a7b1",
-          "stdout_tail_hash": "80440f2063e8",
+          "stderr_tail_hash": "0282de94031f",
+          "stdout_tail_hash": "2cf8720c4676",
           "timed_out": false
         },
         {
-          "duration_seconds": 3.84,
+          "duration_seconds": 4.349,
           "returncode": 1,
           "role": "reference_run_1",
-          "stderr_tail_hash": "601810ee85a7",
-          "stdout_tail_hash": "053685b973b3",
+          "stderr_tail_hash": "d146df6496e2",
+          "stdout_tail_hash": "177faf008ed7",
           "timed_out": false
         },
         {
-          "duration_seconds": 3.566,
+          "duration_seconds": 4.16,
           "returncode": 1,
           "role": "reference_run_2",
           "stderr_tail_hash": "b6c98bf49296",
-          "stdout_tail_hash": "4f17967c866a",
+          "stdout_tail_hash": "e2faaeb38c8c",
           "timed_out": false
         }
       ],
@@ -3982,23 +3982,23 @@
       },
       "local_command_records": [
         {
-          "duration_seconds": 0.894,
+          "duration_seconds": 0.959,
           "returncode": 1,
           "role": "noop_test_patch_on_base",
           "stderr_tail_hash": "d74d284d49b1",
-          "stdout_tail_hash": "3bad8415980b",
+          "stdout_tail_hash": "da8572e40357",
           "timed_out": false
         },
         {
-          "duration_seconds": 0.881,
+          "duration_seconds": 0.909,
           "returncode": 0,
           "role": "reference_run_1",
-          "stderr_tail_hash": "f4267327fa46",
+          "stderr_tail_hash": "048eab5a8854",
           "stdout_tail_hash": "5fdc2b6ebf1c",
           "timed_out": false
         },
         {
-          "duration_seconds": 0.161,
+          "duration_seconds": 0.167,
           "returncode": 0,
           "role": "reference_run_2",
           "stderr_tail_hash": "b6c98bf49296",
@@ -4079,27 +4079,27 @@
       },
       "local_command_records": [
         {
-          "duration_seconds": 5.795,
+          "duration_seconds": 6.133,
           "returncode": 1,
           "role": "noop_test_patch_on_base",
-          "stderr_tail_hash": "417338b36c4c",
-          "stdout_tail_hash": "516052601214",
+          "stderr_tail_hash": "6cba421c20d5",
+          "stdout_tail_hash": "c413257528e7",
           "timed_out": false
         },
         {
-          "duration_seconds": 5.651,
+          "duration_seconds": 7.989,
           "returncode": 1,
           "role": "reference_run_1",
-          "stderr_tail_hash": "c416bd8425bc",
-          "stdout_tail_hash": "7f2b828ebfaa",
+          "stderr_tail_hash": "94d8decff040",
+          "stdout_tail_hash": "8fa33c93c86d",
           "timed_out": false
         },
         {
-          "duration_seconds": 5.368,
+          "duration_seconds": 4.93,
           "returncode": 1,
           "role": "reference_run_2",
           "stderr_tail_hash": "b6c98bf49296",
-          "stdout_tail_hash": "d5a88926935d",
+          "stdout_tail_hash": "304414e48c70",
           "timed_out": false
         }
       ],
@@ -4175,27 +4175,27 @@
       },
       "local_command_records": [
         {
-          "duration_seconds": 3.67,
+          "duration_seconds": 5.346,
           "returncode": 1,
           "role": "noop_test_patch_on_base",
           "stderr_tail_hash": "71114bd25e15",
-          "stdout_tail_hash": "2df2dfaa4a8e",
+          "stdout_tail_hash": "979888a6968f",
           "timed_out": false
         },
         {
-          "duration_seconds": 4.5,
+          "duration_seconds": 4.404,
           "returncode": 1,
           "role": "reference_run_1",
           "stderr_tail_hash": "e17882046743",
-          "stdout_tail_hash": "0afbca65406c",
+          "stdout_tail_hash": "70a743902832",
           "timed_out": false
         },
         {
-          "duration_seconds": 3.975,
+          "duration_seconds": 3.592,
           "returncode": 1,
           "role": "reference_run_2",
           "stderr_tail_hash": "b6c98bf49296",
-          "stdout_tail_hash": "90543d491c5c",
+          "stdout_tail_hash": "5ac8e992a721",
           "timed_out": false
         }
       ],
@@ -4275,27 +4275,27 @@
       },
       "local_command_records": [
         {
-          "duration_seconds": 4.27,
+          "duration_seconds": 5.225,
           "returncode": 1,
           "role": "noop_test_patch_on_base",
           "stderr_tail_hash": "f6e3b272c353",
-          "stdout_tail_hash": "2a5a0c87c67c",
+          "stdout_tail_hash": "3c9820079e28",
           "timed_out": false
         },
         {
-          "duration_seconds": 4.349,
+          "duration_seconds": 4.731,
           "returncode": 1,
           "role": "reference_run_1",
           "stderr_tail_hash": "8d8353ea6a09",
-          "stdout_tail_hash": "41caad83d783",
+          "stdout_tail_hash": "40658ff1d07b",
           "timed_out": false
         },
         {
-          "duration_seconds": 3.421,
+          "duration_seconds": 3.233,
           "returncode": 1,
           "role": "reference_run_2",
           "stderr_tail_hash": "b6c98bf49296",
-          "stdout_tail_hash": "3dca68fc12dc",
+          "stdout_tail_hash": "4857f40dfd3e",
           "timed_out": false
         }
       ],
@@ -4376,7 +4376,7 @@
       },
       "local_command_records": [
         {
-          "duration_seconds": 0.914,
+          "duration_seconds": 0.966,
           "returncode": 1,
           "role": "noop_test_patch_on_base",
           "stderr_tail_hash": "59a474c7f279",
@@ -4384,15 +4384,15 @@
           "timed_out": false
         },
         {
-          "duration_seconds": 0.845,
+          "duration_seconds": 0.877,
           "returncode": 0,
           "role": "reference_run_1",
-          "stderr_tail_hash": "1b304096f19a",
+          "stderr_tail_hash": "9abe0ef7da57",
           "stdout_tail_hash": "71288863ec95",
           "timed_out": false
         },
         {
-          "duration_seconds": 0.144,
+          "duration_seconds": 0.148,
           "returncode": 0,
           "role": "reference_run_2",
           "stderr_tail_hash": "b6c98bf49296",
@@ -4471,27 +4471,27 @@
       },
       "local_command_records": [
         {
-          "duration_seconds": 4.531,
+          "duration_seconds": 4.946,
           "returncode": 1,
           "role": "noop_test_patch_on_base",
           "stderr_tail_hash": "1e183bba0550",
-          "stdout_tail_hash": "707b27913bd4",
+          "stdout_tail_hash": "4a6cbef56582",
           "timed_out": false
         },
         {
-          "duration_seconds": 3.846,
+          "duration_seconds": 4.502,
           "returncode": 1,
           "role": "reference_run_1",
-          "stderr_tail_hash": "d3f72fd7e865",
-          "stdout_tail_hash": "526ed2bd5e65",
+          "stderr_tail_hash": "12721d589951",
+          "stdout_tail_hash": "1dfd3bde3fa4",
           "timed_out": false
         },
         {
-          "duration_seconds": 3.373,
+          "duration_seconds": 5.008,
           "returncode": 1,
           "role": "reference_run_2",
           "stderr_tail_hash": "b6c98bf49296",
-          "stdout_tail_hash": "b4859fd8261c",
+          "stdout_tail_hash": "b7e6c1e9711e",
           "timed_out": false
         }
       ],
@@ -4570,27 +4570,27 @@
       },
       "local_command_records": [
         {
-          "duration_seconds": 6.186,
+          "duration_seconds": 6.683,
           "returncode": 1,
           "role": "noop_test_patch_on_base",
-          "stderr_tail_hash": "30b82d486140",
-          "stdout_tail_hash": "f1539abd9f0f",
+          "stderr_tail_hash": "50a6aab51d4a",
+          "stdout_tail_hash": "d9418bf022e1",
           "timed_out": false
         },
         {
-          "duration_seconds": 5.426,
+          "duration_seconds": 6.729,
           "returncode": 0,
           "role": "reference_run_1",
           "stderr_tail_hash": "57c1b1409491",
-          "stdout_tail_hash": "2ac0e4785f08",
+          "stdout_tail_hash": "7de2acae92e9",
           "timed_out": false
         },
         {
-          "duration_seconds": 6.206,
+          "duration_seconds": 6.506,
           "returncode": 0,
           "role": "reference_run_2",
           "stderr_tail_hash": "b6c98bf49296",
-          "stdout_tail_hash": "9c4af4d09a39",
+          "stdout_tail_hash": "232683fdc4b6",
           "timed_out": false
         }
       ],
@@ -4668,23 +4668,23 @@
       },
       "local_command_records": [
         {
-          "duration_seconds": 0.904,
+          "duration_seconds": 0.948,
           "returncode": 2,
           "role": "noop_test_patch_on_base",
           "stderr_tail_hash": "a61486558458",
-          "stdout_tail_hash": "fd2a63174517",
+          "stdout_tail_hash": "1a7270c65ebb",
           "timed_out": false
         },
         {
-          "duration_seconds": 0.899,
+          "duration_seconds": 0.996,
           "returncode": 2,
           "role": "reference_run_1",
-          "stderr_tail_hash": "bdca2596fe4e",
+          "stderr_tail_hash": "e82953ed9b95",
           "stdout_tail_hash": "80f4b8b1706b",
           "timed_out": false
         },
         {
-          "duration_seconds": 0.182,
+          "duration_seconds": 0.185,
           "returncode": 2,
           "role": "reference_run_2",
           "stderr_tail_hash": "b6c98bf49296",
@@ -4766,27 +4766,27 @@
       },
       "local_command_records": [
         {
-          "duration_seconds": 3.987,
+          "duration_seconds": 5.013,
           "returncode": 1,
           "role": "noop_test_patch_on_base",
-          "stderr_tail_hash": "d08149d2a74f",
-          "stdout_tail_hash": "c568ac72d9a6",
+          "stderr_tail_hash": "210362719ef8",
+          "stdout_tail_hash": "5c9f4c0b48ce",
           "timed_out": false
         },
         {
-          "duration_seconds": 3.942,
+          "duration_seconds": 4.466,
           "returncode": 1,
           "role": "reference_run_1",
-          "stderr_tail_hash": "3e5cbaf1c82a",
-          "stdout_tail_hash": "49f346149150",
+          "stderr_tail_hash": "718efcd9fd47",
+          "stdout_tail_hash": "0b8ca38603e2",
           "timed_out": false
         },
         {
-          "duration_seconds": 4.054,
+          "duration_seconds": 4.127,
           "returncode": 1,
           "role": "reference_run_2",
           "stderr_tail_hash": "b6c98bf49296",
-          "stdout_tail_hash": "ee229fa45bd3",
+          "stdout_tail_hash": "2bc8c4ca9e7b",
           "timed_out": false
         }
       ],
@@ -4867,23 +4867,23 @@
       },
       "local_command_records": [
         {
-          "duration_seconds": 0.927,
+          "duration_seconds": 0.969,
           "returncode": 1,
           "role": "noop_test_patch_on_base",
           "stderr_tail_hash": "7b8e9ab4d274",
-          "stdout_tail_hash": "3d245e1ee7b6",
+          "stdout_tail_hash": "5f886b0d7dc4",
           "timed_out": false
         },
         {
-          "duration_seconds": 0.904,
+          "duration_seconds": 0.972,
           "returncode": 0,
           "role": "reference_run_1",
-          "stderr_tail_hash": "046f125f789e",
+          "stderr_tail_hash": "cd76f20ca24f",
           "stdout_tail_hash": "feb813d7a7aa",
           "timed_out": false
         },
         {
-          "duration_seconds": 0.195,
+          "duration_seconds": 0.198,
           "returncode": 0,
           "role": "reference_run_2",
           "stderr_tail_hash": "b6c98bf49296",
@@ -4965,15 +4965,15 @@
       },
       "local_command_records": [
         {
-          "duration_seconds": 0.859,
+          "duration_seconds": 0.909,
           "returncode": 2,
           "role": "noop_test_patch_on_base",
-          "stderr_tail_hash": "e5d54ef46a5f",
+          "stderr_tail_hash": "63b1462b4f7a",
           "stdout_tail_hash": "e8e1c39629a8",
           "timed_out": false
         },
         {
-          "duration_seconds": 0.868,
+          "duration_seconds": 0.904,
           "returncode": 0,
           "role": "reference_run_1",
           "stderr_tail_hash": "1168eb089fbe",
@@ -4981,7 +4981,7 @@
           "timed_out": false
         },
         {
-          "duration_seconds": 0.157,
+          "duration_seconds": 0.158,
           "returncode": 0,
           "role": "reference_run_2",
           "stderr_tail_hash": "b6c98bf49296",
@@ -5062,15 +5062,15 @@
       },
       "local_command_records": [
         {
-          "duration_seconds": 0.899,
+          "duration_seconds": 0.983,
           "returncode": 1,
           "role": "noop_test_patch_on_base",
-          "stderr_tail_hash": "9ab10aedac7a",
-          "stdout_tail_hash": "6e1723c158eb",
+          "stderr_tail_hash": "8570eb2a8416",
+          "stdout_tail_hash": "fdaa1df96aab",
           "timed_out": false
         },
         {
-          "duration_seconds": 0.893,
+          "duration_seconds": 0.953,
           "returncode": 1,
           "role": "reference_run_1",
           "stderr_tail_hash": "321bb4ccd7fe",
@@ -5078,7 +5078,7 @@
           "timed_out": false
         },
         {
-          "duration_seconds": 0.188,
+          "duration_seconds": 0.181,
           "returncode": 1,
           "role": "reference_run_2",
           "stderr_tail_hash": "b6c98bf49296",
@@ -5159,23 +5159,23 @@
       },
       "local_command_records": [
         {
-          "duration_seconds": 0.894,
+          "duration_seconds": 0.916,
           "returncode": 1,
           "role": "noop_test_patch_on_base",
           "stderr_tail_hash": "15fb4db58925",
-          "stdout_tail_hash": "d5bcd9a74321",
+          "stdout_tail_hash": "329c9c4f8350",
           "timed_out": false
         },
         {
-          "duration_seconds": 0.843,
+          "duration_seconds": 0.894,
           "returncode": 0,
           "role": "reference_run_1",
-          "stderr_tail_hash": "4f8aba0c005f",
+          "stderr_tail_hash": "4437221703e6",
           "stdout_tail_hash": "9acd31e10db4",
           "timed_out": false
         },
         {
-          "duration_seconds": 0.146,
+          "duration_seconds": 0.15,
           "returncode": 0,
           "role": "reference_run_2",
           "stderr_tail_hash": "b6c98bf49296",
@@ -5255,23 +5255,23 @@
       },
       "local_command_records": [
         {
-          "duration_seconds": 0.856,
+          "duration_seconds": 0.922,
           "returncode": 2,
           "role": "noop_test_patch_on_base",
-          "stderr_tail_hash": "175366f71c30",
-          "stdout_tail_hash": "b83b2417f645",
+          "stderr_tail_hash": "831da6f3bc3f",
+          "stdout_tail_hash": "3e0bc2252dc4",
           "timed_out": false
         },
         {
-          "duration_seconds": 0.859,
+          "duration_seconds": 0.891,
           "returncode": 0,
           "role": "reference_run_1",
-          "stderr_tail_hash": "3c4ca477e832",
+          "stderr_tail_hash": "6209278e9945",
           "stdout_tail_hash": "bea5a77cc685",
           "timed_out": false
         },
         {
-          "duration_seconds": 0.151,
+          "duration_seconds": 0.148,
           "returncode": 0,
           "role": "reference_run_2",
           "stderr_tail_hash": "b6c98bf49296",
@@ -5354,27 +5354,27 @@
       },
       "local_command_records": [
         {
-          "duration_seconds": 0.888,
+          "duration_seconds": 0.988,
           "returncode": 2,
           "role": "noop_test_patch_on_base",
           "stderr_tail_hash": "304770d4b429",
-          "stdout_tail_hash": "28a7a2ae4524",
+          "stdout_tail_hash": "3f9ab9426e9e",
           "timed_out": false
         },
         {
-          "duration_seconds": 0.904,
+          "duration_seconds": 0.934,
           "returncode": 2,
           "role": "reference_run_1",
-          "stderr_tail_hash": "c66ddcf35c9f",
+          "stderr_tail_hash": "6ba459dc95c0",
           "stdout_tail_hash": "7398d0c3829a",
           "timed_out": false
         },
         {
-          "duration_seconds": 0.171,
+          "duration_seconds": 0.18,
           "returncode": 2,
           "role": "reference_run_2",
           "stderr_tail_hash": "b6c98bf49296",
-          "stdout_tail_hash": "81345f2a4a77",
+          "stdout_tail_hash": "ff7eac25275b",
           "timed_out": false
         }
       ],
@@ -5458,23 +5458,23 @@
       },
       "local_command_records": [
         {
-          "duration_seconds": 0.915,
+          "duration_seconds": 0.955,
           "returncode": 2,
           "role": "noop_test_patch_on_base",
-          "stderr_tail_hash": "daf5e1ed7a79",
+          "stderr_tail_hash": "2792964f149c",
           "stdout_tail_hash": "f04253d54988",
           "timed_out": false
         },
         {
-          "duration_seconds": 0.941,
+          "duration_seconds": 0.931,
           "returncode": 0,
           "role": "reference_run_1",
-          "stderr_tail_hash": "57663c391a43",
+          "stderr_tail_hash": "5fc78a1b0856",
           "stdout_tail_hash": "984eb6bcdffd",
           "timed_out": false
         },
         {
-          "duration_seconds": 0.182,
+          "duration_seconds": 0.184,
           "returncode": 0,
           "role": "reference_run_2",
           "stderr_tail_hash": "b6c98bf49296",
@@ -5559,23 +5559,23 @@
       },
       "local_command_records": [
         {
-          "duration_seconds": 0.9,
+          "duration_seconds": 0.995,
           "returncode": 1,
           "role": "noop_test_patch_on_base",
-          "stderr_tail_hash": "42a3f657eaa6",
+          "stderr_tail_hash": "cd109e2be9bf",
           "stdout_tail_hash": "4f5b1e6993e2",
           "timed_out": false
         },
         {
-          "duration_seconds": 0.924,
+          "duration_seconds": 0.947,
           "returncode": 0,
           "role": "reference_run_1",
-          "stderr_tail_hash": "4ef353f01c61",
-          "stdout_tail_hash": "45adaf21c561",
+          "stderr_tail_hash": "988fbaa2ba06",
+          "stdout_tail_hash": "0274a2573790",
           "timed_out": false
         },
         {
-          "duration_seconds": 0.183,
+          "duration_seconds": 0.179,
           "returncode": 0,
           "role": "reference_run_2",
           "stderr_tail_hash": "b6c98bf49296",
@@ -5660,23 +5660,23 @@
       },
       "local_command_records": [
         {
-          "duration_seconds": 0.89,
+          "duration_seconds": 0.929,
           "returncode": 2,
           "role": "noop_test_patch_on_base",
-          "stderr_tail_hash": "4255c0c6b9d9",
-          "stdout_tail_hash": "5a513f376899",
+          "stderr_tail_hash": "3cf6309b12ab",
+          "stdout_tail_hash": "5b92cf8e4e73",
           "timed_out": false
         },
         {
-          "duration_seconds": 0.884,
+          "duration_seconds": 0.94,
           "returncode": 2,
           "role": "reference_run_1",
-          "stderr_tail_hash": "af298110596d",
+          "stderr_tail_hash": "197159df6a76",
           "stdout_tail_hash": "d5580c086359",
           "timed_out": false
         },
         {
-          "duration_seconds": 0.171,
+          "duration_seconds": 0.172,
           "returncode": 2,
           "role": "reference_run_2",
           "stderr_tail_hash": "b6c98bf49296",
@@ -5764,27 +5764,27 @@
       },
       "local_command_records": [
         {
-          "duration_seconds": 4.251,
+          "duration_seconds": 4.51,
           "returncode": 1,
           "role": "noop_test_patch_on_base",
-          "stderr_tail_hash": "3d89fdba6583",
-          "stdout_tail_hash": "73f9c4b3a3fa",
+          "stderr_tail_hash": "abad908bfeac",
+          "stdout_tail_hash": "37a9456d8b24",
           "timed_out": false
         },
         {
-          "duration_seconds": 4.377,
+          "duration_seconds": 4.247,
           "returncode": 0,
           "role": "reference_run_1",
-          "stderr_tail_hash": "96d21987843b",
-          "stdout_tail_hash": "b7740c283ad0",
+          "stderr_tail_hash": "ca708a2a941d",
+          "stdout_tail_hash": "0455f9afb833",
           "timed_out": false
         },
         {
-          "duration_seconds": 3.41,
+          "duration_seconds": 4.57,
           "returncode": 0,
           "role": "reference_run_2",
           "stderr_tail_hash": "b6c98bf49296",
-          "stdout_tail_hash": "c2a7d56ac17a",
+          "stdout_tail_hash": "0a612d427f17",
           "timed_out": false
         }
       ],
@@ -5905,7 +5905,7 @@
       },
       "local_command_records": [
         {
-          "duration_seconds": 1.177,
+          "duration_seconds": 1.222,
           "returncode": 2,
           "role": "noop_test_patch_on_base",
           "stderr_tail_hash": "b7473b4458f4",
@@ -5913,15 +5913,15 @@
           "timed_out": false
         },
         {
-          "duration_seconds": 1.168,
+          "duration_seconds": 1.221,
           "returncode": 2,
           "role": "reference_run_1",
-          "stderr_tail_hash": "b75cfbe618c7",
+          "stderr_tail_hash": "0e837b3bb8af",
           "stdout_tail_hash": "baae224c44a6",
           "timed_out": false
         },
         {
-          "duration_seconds": 0.252,
+          "duration_seconds": 0.25,
           "returncode": 2,
           "role": "reference_run_2",
           "stderr_tail_hash": "b6c98bf49296",
@@ -6044,23 +6044,23 @@
       },
       "local_command_records": [
         {
-          "duration_seconds": 0.916,
+          "duration_seconds": 0.957,
           "returncode": 2,
           "role": "noop_test_patch_on_base",
-          "stderr_tail_hash": "6dddc51d0c63",
+          "stderr_tail_hash": "246bc71a237a",
           "stdout_tail_hash": "64b8aa0ca59f",
           "timed_out": false
         },
         {
-          "duration_seconds": 0.883,
+          "duration_seconds": 0.934,
           "returncode": 2,
           "role": "reference_run_1",
-          "stderr_tail_hash": "d2743a889f81",
+          "stderr_tail_hash": "fe7225202999",
           "stdout_tail_hash": "99818ec14c93",
           "timed_out": false
         },
         {
-          "duration_seconds": 0.169,
+          "duration_seconds": 0.175,
           "returncode": 2,
           "role": "reference_run_2",
           "stderr_tail_hash": "b6c98bf49296",
@@ -6141,27 +6141,27 @@
       },
       "local_command_records": [
         {
-          "duration_seconds": 3.782,
+          "duration_seconds": 4.131,
           "returncode": 1,
           "role": "noop_test_patch_on_base",
-          "stderr_tail_hash": "1cbe13a1e94c",
-          "stdout_tail_hash": "0b9312bc63cc",
+          "stderr_tail_hash": "2876b3e27443",
+          "stdout_tail_hash": "ad22e3fc3f10",
           "timed_out": false
         },
         {
-          "duration_seconds": 4.654,
+          "duration_seconds": 3.817,
           "returncode": 1,
           "role": "reference_run_1",
-          "stderr_tail_hash": "fe19d22f979a",
-          "stdout_tail_hash": "673836411196",
+          "stderr_tail_hash": "744661daac07",
+          "stdout_tail_hash": "ef5a218cbb30",
           "timed_out": false
         },
         {
-          "duration_seconds": 3.42,
+          "duration_seconds": 2.821,
           "returncode": 1,
           "role": "reference_run_2",
           "stderr_tail_hash": "b6c98bf49296",
-          "stdout_tail_hash": "2db7b6e9fd50",
+          "stdout_tail_hash": "6fa9c2407101",
           "timed_out": false
         }
       ],
@@ -6240,23 +6240,23 @@
       },
       "local_command_records": [
         {
-          "duration_seconds": 0.869,
+          "duration_seconds": 0.934,
           "returncode": 2,
           "role": "noop_test_patch_on_base",
-          "stderr_tail_hash": "460081b6eced",
+          "stderr_tail_hash": "fe8273207d8e",
           "stdout_tail_hash": "0051c8729d91",
           "timed_out": false
         },
         {
-          "duration_seconds": 0.903,
+          "duration_seconds": 0.971,
           "returncode": 0,
           "role": "reference_run_1",
-          "stderr_tail_hash": "d0ad9c97a912",
-          "stdout_tail_hash": "8bd56ee15b41",
+          "stderr_tail_hash": "1836da6dd324",
+          "stdout_tail_hash": "2f3bd075642c",
           "timed_out": false
         },
         {
-          "duration_seconds": 0.183,
+          "duration_seconds": 0.196,
           "returncode": 0,
           "role": "reference_run_2",
           "stderr_tail_hash": "b6c98bf49296",
@@ -6336,23 +6336,23 @@
       },
       "local_command_records": [
         {
-          "duration_seconds": 0.84,
+          "duration_seconds": 0.921,
           "returncode": 0,
           "role": "noop_test_patch_on_base",
-          "stderr_tail_hash": "391d0cf83b90",
+          "stderr_tail_hash": "0e9e1bb1b97c",
           "stdout_tail_hash": "79285b25c1de",
           "timed_out": false
         },
         {
-          "duration_seconds": 0.834,
+          "duration_seconds": 0.892,
           "returncode": 0,
           "role": "reference_run_1",
-          "stderr_tail_hash": "19fea4b7502c",
+          "stderr_tail_hash": "6c628e4c7029",
           "stdout_tail_hash": "79285b25c1de",
           "timed_out": false
         },
         {
-          "duration_seconds": 0.146,
+          "duration_seconds": 0.15,
           "returncode": 0,
           "role": "reference_run_2",
           "stderr_tail_hash": "b6c98bf49296",
@@ -6436,15 +6436,15 @@
       },
       "local_command_records": [
         {
-          "duration_seconds": 0.989,
+          "duration_seconds": 1.038,
           "returncode": 1,
           "role": "noop_test_patch_on_base",
-          "stderr_tail_hash": "dfd096909695",
+          "stderr_tail_hash": "84ae29484561",
           "stdout_tail_hash": "8700f8c2ae69",
           "timed_out": false
         },
         {
-          "duration_seconds": 0.893,
+          "duration_seconds": 0.953,
           "returncode": 0,
           "role": "reference_run_1",
           "stderr_tail_hash": "6bada484c5b4",
@@ -6452,7 +6452,7 @@
           "timed_out": false
         },
         {
-          "duration_seconds": 0.183,
+          "duration_seconds": 0.184,
           "returncode": 0,
           "role": "reference_run_2",
           "stderr_tail_hash": "b6c98bf49296",
@@ -6538,27 +6538,27 @@
       },
       "local_command_records": [
         {
-          "duration_seconds": 4.291,
+          "duration_seconds": 4.344,
           "returncode": 0,
           "role": "noop_test_patch_on_base",
           "stderr_tail_hash": "b41d57304369",
-          "stdout_tail_hash": "1123c958aeaf",
+          "stdout_tail_hash": "fc90cc504456",
           "timed_out": false
         },
         {
-          "duration_seconds": 3.976,
+          "duration_seconds": 4.303,
           "returncode": 0,
           "role": "reference_run_1",
-          "stderr_tail_hash": "d302ef389869",
-          "stdout_tail_hash": "d328711aa997",
+          "stderr_tail_hash": "fa3b54b811c1",
+          "stdout_tail_hash": "9e16aa471114",
           "timed_out": false
         },
         {
-          "duration_seconds": 3.739,
+          "duration_seconds": 3.313,
           "returncode": 0,
           "role": "reference_run_2",
           "stderr_tail_hash": "b6c98bf49296",
-          "stdout_tail_hash": "162ca56328c9",
+          "stdout_tail_hash": "7ab75f2b8a51",
           "timed_out": false
         }
       ],

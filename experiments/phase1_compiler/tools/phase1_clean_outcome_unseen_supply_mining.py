@@ -753,12 +753,18 @@ def second_repo_inventory_payload(
     contexts: list[dict[str, Any]] | None = None,
     reviews: list[dict[str, Any]] | None = None,
     certification_rows: list[dict[str, Any]] | None = None,
+    prior_inventory: dict[str, Any] | None = None,
 ) -> dict[str, Any]:
-    anchors = anchors or []
     candidates = candidates if candidates is not None else read_jsonl(second_repo_candidate_path(config, repo_id, "candidates"))
     contexts = contexts if contexts is not None else read_jsonl(second_repo_candidate_path(config, repo_id, "source_context"))
     reviews = reviews or []
     certification_rows = certification_rows or []
+    if anchors is None:
+        anchors_scanned = int((prior_inventory or {}).get("anchors_scanned") or 0)
+        filter_counts = (prior_inventory or {}).get("first_filter_counts") or first_filter_counts([])
+    else:
+        anchors_scanned = len(anchors)
+        filter_counts = first_filter_counts(anchors)
     context_status_counts = Counter(source_status_from_context(row) for row in contexts)
     promotion_counts = Counter(row.get("promotion_decision", "not_reviewed") for row in reviews)
     blocker_counts: Counter[str] = Counter()
@@ -773,11 +779,11 @@ def second_repo_inventory_payload(
         "repo_id": repo_id,
         "repo_url": config["candidate_repos"][repo_id]["repo_url"],
         "local_repo": config["candidate_repos"][repo_id]["local_repo"],
-        "anchors_scanned": len(anchors),
+        "anchors_scanned": anchors_scanned,
         "max_history_anchors": int(config["mining"]["max_history_anchors"]),
         "candidate_count": len(candidates),
         "source_context_count": len(contexts),
-        "first_filter_counts": first_filter_counts(anchors),
+        "first_filter_counts": filter_counts,
         "source_context_status_counts": dict(sorted(context_status_counts.items())),
         "local_certification_attempt_count": len(certification_rows),
         "local_certification_status_counts": dict(sorted(certification_counts.items())),
@@ -1411,6 +1417,8 @@ def run_certify_second_repo(args: argparse.Namespace) -> dict[str, Any]:
     pilot_config = second_repo_pilot_config(config, repo_id)
     candidates = read_jsonl(second_repo_candidate_path(config, repo_id, "candidates"))
     contexts = read_jsonl(second_repo_candidate_path(config, repo_id, "source_context"))
+    inventory_path = configured_output_path(config, "candidate_inventory")
+    prior_inventory = read_json(inventory_path) if inventory_path.exists() else None
     selected_context = selected_context_for_task(contexts)
     certification_rows: list[dict[str, Any]] = []
     reviews: list[dict[str, Any]] = []
@@ -1443,7 +1451,15 @@ def run_certify_second_repo(args: argparse.Namespace) -> dict[str, Any]:
     promoted = [row for row in reviews if row.get("promotion_decision") == "promote_to_clean_benchmark_candidate"]
     write_jsonl(second_repo_certified_path(config, repo_id, "certified_tasks"), promoted)
     write_jsonl(second_repo_certified_path(config, repo_id, "review_records"), reviews)
-    inventory = second_repo_inventory_payload(config, repo_id=repo_id, reviews=reviews, certification_rows=certification_rows)
+    inventory = second_repo_inventory_payload(
+        config,
+        repo_id=repo_id,
+        candidates=candidates,
+        contexts=contexts,
+        reviews=reviews,
+        certification_rows=certification_rows,
+        prior_inventory=prior_inventory,
+    )
     review = second_repo_review_payload(config, repo_id=repo_id, reviews=reviews)
     write_json(configured_output_path(config, "candidate_inventory"), inventory)
     write_text(configured_output_path(config, "candidate_inventory_report"), second_repo_inventory_report(inventory))

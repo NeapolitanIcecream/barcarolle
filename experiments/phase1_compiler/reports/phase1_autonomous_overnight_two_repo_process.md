@@ -51,3 +51,44 @@ Initial branch selection:
 The preflight evidence supports continuing toward Branch B, the paid gates path,
 after the required local metadata consistency check. No paid calls were made in
 Step 0.
+
+## Step 1 Metadata Repair
+
+The runbook's known issue was present:
+
+- `phase1_second_repo_clean_supply_process.md` recorded attrs anchors scanned as `388`.
+- `phase1_second_repo_clean_supply_candidate_inventory.json` and its Markdown report recorded anchors scanned as `0`.
+
+Root cause:
+
+- `certify-second-repo` rewrote the second-repo candidate inventory after local
+  certification.
+- That path did not pass mining anchors into `second_repo_inventory_payload`, so
+  the helper replaced mining-stage anchor and first-filter counts with empty
+  values.
+
+Repair:
+
+- Added a regression test for preserving prior mining counts during certification inventory rewrites.
+- Updated `second_repo_inventory_payload` to preserve prior `anchors_scanned`
+  and `first_filter_counts` when certification updates the inventory without
+  rerunning mining.
+- Updated `certify-second-repo` to read the existing candidate inventory and to
+  pass candidates, contexts, certification rows, reviews, and prior mining
+  counts into the rebuilt inventory.
+
+Regenerated local artifacts without paid calls:
+
+- `mine-second-repo --config experiments/phase1_compiler/configs/phase1_second_repo_clean_outcome_unseen_supply.yaml --repo-id attrs`
+- `certify-second-repo --config experiments/phase1_compiler/configs/phase1_second_repo_clean_outcome_unseen_supply.yaml --repo-id attrs`
+
+Post-repair counts:
+
+- anchors scanned: `388`
+- selected candidate rows: `48`
+- source context rows: `48`
+- local certification attempts: `48`
+- local certification status counts: `certified=21`, `near_certified=27`
+- promoted clean attrs candidates: `18`
+
+No paid ACUT or paid LLM calls were made in Step 1.

@@ -1,13 +1,38 @@
 {
-  "anchors_scanned": 0,
+  "anchors_scanned": 388,
   "candidate_count": 48,
   "config": "experiments/phase1_compiler/configs/phase1_second_repo_clean_outcome_unseen_supply.yaml",
   "first_filter_counts": {
-    "anchor_status_counts": {},
-    "candidate_filter_status_counts": {},
-    "reject_reason_counts": {}
+    "anchor_status_counts": {
+      "candidate": 48,
+      "rejected": 340
+    },
+    "candidate_filter_status_counts": {
+      "accepted": 54,
+      "manual_review_required": 21,
+      "rejected": 313
+    },
+    "reject_reason_counts": {
+      "changed_lines_over:250": 18,
+      "no_behavior_code_file": 267,
+      "no_changed_test_file": 291,
+      "project_file_heavy": 52,
+      "reject_subject_term:black": 2,
+      "reject_subject_term:bump": 1,
+      "reject_subject_term:deprecate": 2,
+      "reject_subject_term:docs": 29,
+      "reject_subject_term:documentation": 2,
+      "reject_subject_term:flake8": 1,
+      "reject_subject_term:format": 3,
+      "reject_subject_term:isort": 2,
+      "reject_subject_term:mypy": 11,
+      "reject_subject_term:pre-commit": 17,
+      "reject_subject_term:release": 1,
+      "reject_subject_term:typing": 3,
+      "reject_subject_term:typo": 13
+    }
   },
-  "generated_at": "2026-05-22T12:49:08+00:00",
+  "generated_at": "2026-05-22T15:54:12+00:00",
   "local_certification_attempt_count": 48,
   "local_certification_status_counts": {
     "certified": 21,

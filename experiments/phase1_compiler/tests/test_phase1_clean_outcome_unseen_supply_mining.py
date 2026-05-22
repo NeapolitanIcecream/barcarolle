@@ -262,3 +262,38 @@ def test_second_repo_overlay_uses_preferred_chronological_split() -> None:
         "attrs__hist__008",
     ]
     assert overlay["predictive_validity_established"] is False
+
+
+def test_second_repo_inventory_preserves_mining_anchor_counts_during_certification() -> None:
+    """Regression: certification rewrites must not reset mined anchor counts to zero."""
+    config = {
+        "_path": "experiments/phase1_compiler/configs/phase1_second_repo_clean_outcome_unseen_supply.yaml",
+        "candidate_repos": {
+            "attrs": {
+                "repo_url": "https://github.com/python-attrs/attrs.git",
+                "local_repo": "experiments/phase0_headroom/external_repos/attrs",
+            }
+        },
+        "mining": {"max_history_anchors": 1000},
+    }
+    prior_inventory = {
+        "anchors_scanned": 388,
+        "first_filter_counts": {
+            "anchor_status_counts": {"accepted": 48, "rejected": 340},
+            "candidate_filter_status_counts": {"candidate": 48, "rejected": 340},
+            "reject_reason_counts": {"docs_only": 12},
+        },
+    }
+
+    inventory = mining.second_repo_inventory_payload(
+        config,
+        repo_id="attrs",
+        candidates=[second_repo_certified_row()],
+        contexts=[attrs_problem_context()],
+        reviews=[],
+        certification_rows=[],
+        prior_inventory=prior_inventory,
+    )
+
+    assert inventory["anchors_scanned"] == 388
+    assert inventory["first_filter_counts"] == prior_inventory["first_filter_counts"]

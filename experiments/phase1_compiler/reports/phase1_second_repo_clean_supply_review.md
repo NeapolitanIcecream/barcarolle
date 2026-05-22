@@ -1,6 +1,6 @@
 # Phase 1 Second-Repo Clean Supply Review
 
-Generated: `2026-05-22T12:49:08+00:00`.
+Generated: `2026-05-22T15:54:12+00:00`.
 
 - Repo: `attrs`.
 - Promoted task count: `18`.
