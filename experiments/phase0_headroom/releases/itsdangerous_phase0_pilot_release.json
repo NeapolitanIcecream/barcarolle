@@ -1,8 +1,8 @@
 {
   "benchmark_grade": false,
   "certified_task_count": 1,
-  "claim_scope": "second_repo_operational_pilot_not_predictive_validation",
-  "generated_at": "2026-05-21T16:25:18+00:00",
+  "claim_scope": "third_repo_local_repair_remine_not_predictive_validation",
+  "generated_at": "2026-05-22T03:49:24+00:00",
   "pilot_grade": false,
   "quality_gates": {
     "b_real_count": 0,
@@ -17,7 +17,7 @@
   "splits": {
     "B_real": [],
     "W_real": [
-      "itsdangerous__hist__010"
+      "itsdangerous__hist__006"
     ]
   },
   "tasks": [
@@ -31,7 +31,7 @@
       ],
       "split": "W_real",
       "target_commit": "7f4dcf83a07bb3d53f4e0e65ef1b43327b4cca90",
-      "task_id": "itsdangerous__hist__010",
+      "task_id": "itsdangerous__hist__006",
       "test_files": [
         "tests/test_itsdangerous/test_serializer.py"
       ]

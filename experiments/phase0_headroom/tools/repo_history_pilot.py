@@ -111,6 +111,7 @@ class PilotConfig:
     pilot_certified_min: int
     benchmark_grade_min: int
     result_prefix: str
+    claim_scope: str = "second_repo_operational_pilot_not_predictive_validation"
 
 
 @dataclass(frozen=True)
@@ -190,6 +191,7 @@ def load_config(root: Path, path: Path) -> PilotConfig:
         pilot_certified_min=int(raw.get("preferred_task_count.pilot_certified_min", "4")),
         benchmark_grade_min=int(raw.get("preferred_task_count.benchmark_grade_min", "6")),
         result_prefix=raw.get("acut.result_prefix", f"{repo_id}_pre_phase1_workspace"),
+        claim_scope=raw.get("claim_scope", "second_repo_operational_pilot_not_predictive_validation"),
     )
 
 
@@ -595,7 +597,7 @@ def release_payload(config: PilotConfig, certified: list[dict[str, Any]]) -> dic
             "b_real_count": b_count,
             "w_real_count": w_count,
         },
-        "claim_scope": "second_repo_operational_pilot_not_predictive_validation",
+        "claim_scope": config.claim_scope,
     }
 
 

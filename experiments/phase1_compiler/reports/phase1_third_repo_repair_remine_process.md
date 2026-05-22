@@ -38,6 +38,31 @@ runbook were tracked by Git.
 
 No paid calls were made.
 
+## Step 6 Repaired Release Assembly
+
+Ran:
+
+`uv run --project experiments/phase0_headroom python experiments/phase0_headroom/tools/repo_history_pilot.py --root . --config experiments/phase0_headroom/configs/third_repo_pilot_itsdangerous_repair_v2.yaml assemble-release`
+
+`uv run --project experiments/phase0_headroom python experiments/phase0_headroom/tools/repo_history_pilot.py --root . --config experiments/phase0_headroom/configs/third_repo_pilot_itsdangerous_repair_v2.yaml summarize`
+
+Release result:
+
+- `release_status: diagnostic_only`
+- `pilot_grade: false`
+- `benchmark_grade: false`
+- `certified_task_count: 1`
+- `B_real: 0`
+- `W_real: 1`
+- `claim_scope: third_repo_local_repair_remine_not_predictive_validation`
+
+The release builder now reads `claim_scope` from the active config, so the
+Itsdangerous repair manifest no longer carries the generic second-repo claim
+scope. The regenerated certified task and release manifest do not contain
+`Repair the humanize behavior`.
+
+No paid calls were made.
+
 ## Step 5 Re-Certification
 
 Ran:
