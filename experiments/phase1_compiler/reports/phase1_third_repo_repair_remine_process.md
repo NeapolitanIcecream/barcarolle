@@ -38,6 +38,31 @@ runbook were tracked by Git.
 
 No paid calls were made.
 
+## Step 4 Source Context And Statements
+
+`gh auth status` showed an authenticated GitHub CLI session, so the source
+context regeneration used GitHub PR metadata. Raw API responses were not stored.
+
+Ran:
+
+`uv run --project experiments/phase0_headroom python experiments/phase0_headroom/tools/repo_history_pilot.py --root . --config experiments/phase0_headroom/configs/third_repo_pilot_itsdangerous_repair_v2.yaml source-context`
+
+Regenerated source-context checks:
+
+- statements: `6`
+- reviewed non-leaky PR-context statements: `6`
+- context-missing statements: `0`
+- reviewed statements with `commit:` refs: `0`
+- source context rows: `6`
+- PR rows: `6`
+- commit fallback rows: `0`
+
+The stale template bug is absent from regenerated source context and statements:
+no regenerated Itsdangerous statement contains `Repair the humanize behavior`;
+all regenerated statements contain `Repair the itsdangerous behavior`.
+
+No paid calls were made.
+
 ## Step 3 Re-Mine Candidates
 
 Removed only the ignored workspace path
