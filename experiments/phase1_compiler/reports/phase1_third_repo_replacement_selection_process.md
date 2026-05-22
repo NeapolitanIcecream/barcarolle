@@ -66,3 +66,18 @@ candidate order `boltons`, `attrs` and active selection `pending`.
 
 Config parser checks loaded both replacement repo configs and the Phase 1
 selection config successfully.
+
+## Step 3 Candidate Repo Materialization
+
+`experiments/phase0_headroom/external_repos/boltons` is ignored by
+`.gitignore`. The repo was absent, then cloned from
+`https://github.com/mahmoud/boltons.git` and fetched with tags/prune.
+
+Boltons local repo state:
+
+- status: `## master...origin/master`
+- HEAD: `207651ee6055aabd0d9cdeac2e00140cdc208d44`
+- default branch: `origin/master`
+
+The cloned repository remains under the ignored `external_repos` path and is not
+tracked by Git.
