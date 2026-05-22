@@ -18,6 +18,16 @@
     }
   },
   "claim_scope": "phase1_mvp_compiler_infrastructure",
+  "clean_supply_breal_extension_sidecar_evidence": {
+    "clean_supply_ready": false,
+    "decision": "experiments/phase1_compiler/results/phase1_clean_supply_breal_extension_decision.json",
+    "newly_promoted_task_ids": [],
+    "paid_acut_calls_made": false,
+    "predictive_validity_established": false,
+    "primary_decision_label": "clean_supply_breal_extension_still_blocked",
+    "repo_id": "boltons",
+    "status": "available_as_clean_supply_extension_sidecar_evidence"
+  },
   "cost_summary": {
     "call_count": 123,
     "observed_or_conservative_estimated_cost_usd": 37.6472432,
@@ -41,7 +51,7 @@
     "selected_repos": [],
     "status": "available_as_future_holdout_sidecar_evidence"
   },
-  "generated_at": "2026-05-22T08:19:44+00:00",
+  "generated_at": "2026-05-22T08:49:17+00:00",
   "hardening_sidecar_evidence": {
     "active_third_repo": "boltons",
     "decision": "experiments/phase1_compiler/results/phase1_certification_hardening_decision.json",
@@ -97,7 +107,7 @@
       }
     }
   },
-  "next_runbook_recommendation": "mine_additional_clean_outcome_unseen_supply",
+  "next_runbook_recommendation": "continue_mining_clean_outcome_unseen_supply",
   "paid_smoke_sidecar_evidence": {
     "combined_scoreable_cells": 13,
     "combined_total_cells": 14,

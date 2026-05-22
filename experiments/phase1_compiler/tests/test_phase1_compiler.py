@@ -179,7 +179,9 @@ def test_closeout_identifies_active_replacement_repo_sidecar() -> None:
     assert payload["hardening_sidecar_evidence"]["third_repo_replacement"]["active_repo_id"] == "boltons"
     assert payload["future_holdout_sidecar_evidence"]["primary_decision_label"] == "future_holdout_supply_blocked"
     assert payload["retrospective_validation_sidecar_evidence"]["primary_decision_label"] == "retrospective_validation_complete_clean_supply_still_blocked"
-    assert payload["next_runbook_recommendation"] == "mine_additional_clean_outcome_unseen_supply"
+    assert payload["clean_supply_breal_extension_sidecar_evidence"]["primary_decision_label"] == "clean_supply_breal_extension_still_blocked"
+    assert payload["clean_supply_breal_extension_sidecar_evidence"]["clean_supply_ready"] is False
+    assert payload["next_runbook_recommendation"] == "continue_mining_clean_outcome_unseen_supply"
 
 
 def test_scorecard_import_preserves_humanize_cells_and_result_prefixes(tmp_path: Path) -> None:

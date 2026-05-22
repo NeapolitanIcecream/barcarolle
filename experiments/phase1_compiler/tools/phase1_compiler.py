@@ -1342,7 +1342,12 @@ def closeout_next_runbook_recommendation(
     paid_smoke_decision: dict[str, Any] | None = None,
     future_holdout_decision: dict[str, Any] | None = None,
     retrospective_decision: dict[str, Any] | None = None,
+    clean_supply_breal_extension_decision: dict[str, Any] | None = None,
 ) -> str:
+    if clean_supply_breal_extension_decision:
+        recommendation = str(clean_supply_breal_extension_decision.get("recommended_next_runbook") or "").strip()
+        if recommendation:
+            return recommendation
     if retrospective_decision:
         recommendation = str(retrospective_decision.get("recommended_next_runbook") or "").strip()
         if recommendation:
@@ -1376,10 +1381,12 @@ def build_closeout_payload(config: dict[str, Any]) -> dict[str, Any]:
     paid_smoke_decision_path = ROOT / "results" / "phase1_boltons_paid_acut_smoke_decision.json"
     future_holdout_decision_path = ROOT / "results" / "phase1_future_holdout_decision.json"
     retrospective_decision_path = ROOT / "results" / "phase1_retrospective_validation_decision.json"
+    clean_supply_breal_extension_decision_path = ROOT / "results" / "phase1_clean_supply_breal_extension_decision.json"
     hardening_sidecar: dict[str, Any] | None = None
     paid_smoke_decision: dict[str, Any] | None = None
     future_holdout_decision: dict[str, Any] | None = None
     retrospective_decision: dict[str, Any] | None = None
+    clean_supply_breal_extension_decision: dict[str, Any] | None = None
     if hardening_overlay_path.exists() and hardening_decision_path.exists():
         hardening_overlay = read_json(hardening_overlay_path)
         hardening_decision = read_json(hardening_decision_path)
@@ -1448,6 +1455,23 @@ def build_closeout_payload(config: dict[str, Any]) -> dict[str, Any]:
             "status": "not_available",
             "note": "Retrospective validation decision has not been generated for this MVP build.",
         }
+    if clean_supply_breal_extension_decision_path.exists():
+        clean_supply_breal_extension_decision = read_json(clean_supply_breal_extension_decision_path)
+        clean_supply_breal_extension_sidecar = {
+            "status": "available_as_clean_supply_extension_sidecar_evidence",
+            "decision": rel(clean_supply_breal_extension_decision_path),
+            "primary_decision_label": clean_supply_breal_extension_decision.get("primary_decision_label"),
+            "repo_id": clean_supply_breal_extension_decision.get("repo_id"),
+            "clean_supply_ready": clean_supply_breal_extension_decision.get("clean_supply_ready"),
+            "newly_promoted_task_ids": clean_supply_breal_extension_decision.get("newly_promoted_task_ids", []),
+            "paid_acut_calls_made": clean_supply_breal_extension_decision.get("paid_acut_calls_made"),
+            "predictive_validity_established": clean_supply_breal_extension_decision.get("predictive_validity_established"),
+        }
+    else:
+        clean_supply_breal_extension_sidecar = {
+            "status": "not_available",
+            "note": "Clean supply B_real extension decision has not been generated for this MVP build.",
+        }
     return {
         "schema_version": "barcarolle.phase1.mvp_closeout.v1",
         "generated_at": now_utc(),
@@ -1484,12 +1508,14 @@ def build_closeout_payload(config: dict[str, Any]) -> dict[str, Any]:
         "paid_smoke_sidecar_evidence": paid_smoke_sidecar,
         "future_holdout_sidecar_evidence": future_holdout_sidecar,
         "retrospective_validation_sidecar_evidence": retrospective_sidecar,
+        "clean_supply_breal_extension_sidecar_evidence": clean_supply_breal_extension_sidecar,
         "production_ranking_status": "not_produced",
         "next_runbook_recommendation": closeout_next_runbook_recommendation(
             hardening_decision if hardening_sidecar else None,
             paid_smoke_decision,
             future_holdout_decision,
             retrospective_decision,
+            clean_supply_breal_extension_decision,
         ),
     }
 
@@ -1518,6 +1544,8 @@ def closeout_report(payload: dict[str, Any]) -> str:
             "Future-holdout evidence is reported as design, blocker, smoke, or validation sidecar evidence only.",
             f"Retrospective validation sidecar evidence: `{payload['retrospective_validation_sidecar_evidence']['status']}`.",
             "Retrospective validation evidence remains outcome-seen and is not reported as clean future holdout.",
+            f"Clean supply B_real extension sidecar evidence: `{payload['clean_supply_breal_extension_sidecar_evidence']['status']}`.",
+            "Clean-supply extension evidence is reported as local supply readiness only, not validation evidence.",
             "",
             f"Next runbook recommendation: {payload['next_runbook_recommendation']}.",
         ]

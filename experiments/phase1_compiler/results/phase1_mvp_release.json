@@ -27,7 +27,7 @@
     "pure_harness_effect",
     "production_benchmark_ranking"
   ],
-  "generated_at": "2026-05-22T08:19:44+00:00",
+  "generated_at": "2026-05-22T08:49:17+00:00",
   "generic_comparators": [
     {
       "repo_id": "click",

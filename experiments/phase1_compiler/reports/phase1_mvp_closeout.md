@@ -1,6 +1,6 @@
 # Phase 1 MVP Closeout
 
-Generated: `2026-05-22T08:19:44+00:00`.
+Generated: `2026-05-22T08:49:17+00:00`.
 
 - Release: `phase1_mvp_multi_repo_release`.
 - Status: `pilot_grade`.
@@ -18,5 +18,7 @@ Future holdout sidecar evidence: `available_as_future_holdout_sidecar_evidence`.
 Future-holdout evidence is reported as design, blocker, smoke, or validation sidecar evidence only.
 Retrospective validation sidecar evidence: `available_as_retrospective_sidecar_evidence`.
 Retrospective validation evidence remains outcome-seen and is not reported as clean future holdout.
+Clean supply B_real extension sidecar evidence: `available_as_clean_supply_extension_sidecar_evidence`.
+Clean-supply extension evidence is reported as local supply readiness only, not validation evidence.
 
-Next runbook recommendation: mine_additional_clean_outcome_unseen_supply.
+Next runbook recommendation: continue_mining_clean_outcome_unseen_supply.

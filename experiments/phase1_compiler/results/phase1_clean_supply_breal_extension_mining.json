@@ -1,0 +1,78 @@
+{
+  "candidate_reviews": [
+    {
+      "allowed_context_refs": [
+        "pr:244"
+      ],
+      "candidate_filter_status": "accepted",
+      "changed_files": [
+        "boltons/funcutils.py",
+        "tests/test_funcutils_fb_py3.py"
+      ],
+      "changed_line_total": 12,
+      "current_hardened_status": "rejected",
+      "extension_action": "reject_for_extension_overlay",
+      "manual_review_reasons": [],
+      "module_or_package": [
+        "funcutils"
+      ],
+      "oracle_alignment_status": "aligned",
+      "outcome_seen": false,
+      "project_or_config_heavy_risk": false,
+      "project_or_docs_only_risk": false,
+      "promotion_blockers": [
+        "solution_exposure_risk"
+      ],
+      "promotion_decision": "reject_for_clean_holdout",
+      "scope_clarity_status": "clear_behavior_scope",
+      "solution_exposure_risk": "solution_exposure_risk",
+      "source_context_status": "non_leaky_problem_context",
+      "split": "B_real",
+      "subject": "different build_from default with partials",
+      "task_id": "boltons__hist__006",
+      "task_time": "2020-03-25T10:22:48-04:00"
+    },
+    {
+      "allowed_context_refs": [
+        "pr:278"
+      ],
+      "candidate_filter_status": "accepted",
+      "changed_files": [
+        "boltons/funcutils.py",
+        "tests/test_funcutils.py"
+      ],
+      "changed_line_total": 30,
+      "current_hardened_status": "rejected",
+      "extension_action": "reject_for_extension_overlay",
+      "manual_review_reasons": [],
+      "module_or_package": [
+        "funcutils"
+      ],
+      "oracle_alignment_status": "aligned",
+      "outcome_seen": false,
+      "project_or_config_heavy_risk": false,
+      "project_or_docs_only_risk": false,
+      "promotion_blockers": [
+        "solution_exposure_risk"
+      ],
+      "promotion_decision": "reject_for_clean_holdout",
+      "scope_clarity_status": "clear_behavior_scope",
+      "solution_exposure_risk": "solution_exposure_risk",
+      "source_context_status": "non_leaky_problem_context",
+      "split": "B_real",
+      "subject": "Adds noop function satisfying PEP 559 (#278)",
+      "task_id": "boltons__hist__013",
+      "task_time": "2021-02-21T22:35:25-08:00"
+    }
+  ],
+  "config": "experiments/phase1_compiler/configs/phase1_clean_supply_breal_extension.yaml",
+  "extension_candidate_source": "experiments/phase0_headroom/candidate_sources/boltons_clean_supply_breal_extension_candidates.jsonl",
+  "extension_review_records": "experiments/phase0_headroom/certified_tasks/boltons_clean_supply_breal_extension_reviews.jsonl",
+  "generated_at": "2026-05-22T08:48:36+00:00",
+  "paid_acut_calls_made": false,
+  "paid_llm_calls_made": false,
+  "predictive_validity_established": false,
+  "promoted_extension_count": 0,
+  "promoted_extension_task_ids": [],
+  "schema_version": "barcarolle.phase1.clean_supply_breal_extension_mining.v1"
+}
