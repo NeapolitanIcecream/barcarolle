@@ -165,3 +165,25 @@ Candidate decisions:
 The minimum clean split requires at least two B_eval and two H_future tasks.
 Only one B_real task was promoted, so Steps 5 through 7 are skipped and no paid
 clean validation runs in this runbook.
+
+## Step 8 Decision
+
+Ran:
+
+```bash
+uv run --project experiments/phase1_compiler python experiments/phase1_compiler/tools/phase1_retrospective_validation.py decide --config experiments/phase1_compiler/configs/phase1_retrospective_validation_and_clean_supply.yaml
+```
+
+Decision:
+
+- primary label: `retrospective_validation_complete_clean_supply_still_blocked`
+- retrospective evidence level: `outcome_seen_retrospective_locked`
+- included retrospective repos: `boltons`, `toolz`
+- retrospective pooled MAE: `0.541667`
+- clean supply extension ready: `false`
+- promoted clean task ids: `boltons__hist__011`, `boltons__hist__022`, `boltons__hist__023`, `boltons__hist__027`
+- optional paid clean validation ran: `false`
+- policy violations in retrospective rows: `1`
+- predictive validity established: `false`
+- production ranking status: `not_produced`
+- recommended next runbook: `mine_additional_clean_outcome_unseen_supply`
