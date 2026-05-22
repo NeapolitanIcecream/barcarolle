@@ -191,3 +191,24 @@ Hardening decision:
 - primary decision: `ready_for_paid_third_repo_acut_smoke_runbook`
 - recommended next runbook: `run_small_paid_third_repo_acut_smoke_with_selected_replacement_repo`
 - predictive validity: `false`
+
+## Step 10 Compiler Boundary Refresh
+
+Updated the MVP closeout sidecar wiring so it explicitly identifies the active
+replacement repo from the hardening decision.
+
+Ran:
+
+- `uv run --project experiments/phase1_compiler python experiments/phase1_compiler/tools/phase1_compiler.py build-mvp --config experiments/phase1_compiler/configs/phase1_mvp.yaml`
+- `uv run --project experiments/phase1_compiler python experiments/phase1_compiler/tools/phase1_compiler.py validate --config experiments/phase1_compiler/configs/phase1_mvp.yaml`
+
+Validation returned `status=valid`.
+
+Closeout boundary checks:
+
+- predictive validity established: `false`
+- production ranking status: `not_produced`
+- hardening sidecar status: `available_as_sidecar_evidence`
+- active third repo in sidecar: `boltons`
+- hardening primary decision: `ready_for_paid_third_repo_acut_smoke_runbook`
+- next runbook recommendation: `run_small_paid_third_repo_acut_smoke_with_selected_replacement_repo`

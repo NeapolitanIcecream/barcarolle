@@ -1348,6 +1348,11 @@ def build_closeout_payload(config: dict[str, Any]) -> dict[str, Any]:
             "overlay": rel(hardening_overlay_path),
             "decision": rel(hardening_decision_path),
             "primary_decision_label": hardening_decision.get("primary_decision_label"),
+            "active_third_repo": (
+                hardening_decision.get("active_third_repo")
+                or (hardening_decision.get("third_repo_replacement") or {}).get("active_repo_id")
+            ),
+            "third_repo_replacement": hardening_decision.get("third_repo_replacement", {}),
             "repo_summary": hardening_overlay.get("repo_summary", {}),
         }
     return {

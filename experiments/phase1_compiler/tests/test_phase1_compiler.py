@@ -172,6 +172,13 @@ def test_closeout_reuses_hardening_next_runbook_recommendation() -> None:
     assert recommendation == "select_replacement_third_repo_and_locally_certify_without_paid_acut"
 
 
+def test_closeout_identifies_active_replacement_repo_sidecar() -> None:
+    payload = compiler.build_closeout_payload(compiler.load_mvp_config())
+
+    assert payload["hardening_sidecar_evidence"]["active_third_repo"] == "boltons"
+    assert payload["hardening_sidecar_evidence"]["third_repo_replacement"]["active_repo_id"] == "boltons"
+
+
 def test_scorecard_import_preserves_humanize_cells_and_result_prefixes(tmp_path: Path) -> None:
     args = type("Args", (), {"config": str(compiler.DEFAULT_CONFIG), "output_root": str(tmp_path)})()
 
