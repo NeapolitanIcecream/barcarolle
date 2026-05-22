@@ -1,0 +1,10 @@
+{
+  "actual_cost_usd": null,
+  "call_count": 2,
+  "estimated_cost_usd": 1.0,
+  "generated_at": "2026-05-22T06:28:49+00:00",
+  "median_latency_seconds": 65.681,
+  "schema_version": "barcarolle.workspace_acut_cost_summary.v1",
+  "usage_observed_count": 0,
+  "usage_observed_rate": 0.0
+}

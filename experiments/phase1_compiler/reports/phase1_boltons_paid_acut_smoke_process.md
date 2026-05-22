@@ -93,3 +93,29 @@ Kilo preflight:
 - blockers: `[]`
 
 No paid task-solving cells have run yet.
+
+## Step 3 Paid Canary
+
+Ran the canary task `boltons__hist__007` sequentially for both adapters under
+the `phase1_validation_boltons_paid_smoke` prefix.
+
+Paid cells run in this step: `2`.
+
+Canary result:
+
+- total cells: `2`
+- scoreable cells: `2`
+- terminal statuses: `verified_pass=2`
+- Codex scoreable cells: `1/1`
+- Kilo scoreable cells: `1/1`
+- policy violations: `0`
+- cost per scoreable cell: `0.50`
+
+Usage/cost after canary:
+
+- call count: `111`
+- usage observed count: `105`
+- usage observed rate: `0.9459`
+- observed-or-conservative estimated cost: `32.1847776`
+
+The canary met acceptance criteria and cost remained below the `60.00` stop cap.
