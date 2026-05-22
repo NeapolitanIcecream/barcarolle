@@ -294,3 +294,73 @@ def test_two_repo_preregistration_blocks_when_capacity_is_below_threshold() -> N
     assert prereg["status"] == "blocked_clean_supply"
     assert prereg["recommended_next_runbook"] == "expand_clean_supply_sources_or_add_manual_canaries"
     assert prereg["predictive_validity_established"] is False
+
+
+def test_two_repo_repo_adapter_errors_feed_pooled_mae() -> None:
+    repo_metrics = {
+        "boltons": {
+            "b_eval": {
+                "by_adapter": {
+                    "codex_workspace": {"pass_rate": 1.0},
+                    "kilo_workspace": {"pass_rate": 0.75},
+                }
+            },
+            "h_future": {
+                "by_adapter": {
+                    "codex_workspace": {"pass_rate": 0.75},
+                    "kilo_workspace": {"pass_rate": 1.0},
+                }
+            },
+        },
+        "attrs": {
+            "b_eval": {
+                "by_adapter": {
+                    "codex_workspace": {"pass_rate": 0.75},
+                    "kilo_workspace": {"pass_rate": 1.0},
+                }
+            },
+            "h_future": {
+                "by_adapter": {
+                    "codex_workspace": {"pass_rate": 0.0},
+                    "kilo_workspace": {"pass_rate": 1 / 3},
+                }
+            },
+        },
+    }
+
+    errors, pooled_mae = holdout.repo_adapter_absolute_errors(repo_metrics)
+
+    assert errors["boltons"]["codex_workspace"] == 0.25
+    assert errors["boltons"]["kilo_workspace"] == 0.25
+    assert errors["attrs"]["codex_workspace"] == 0.75
+    assert errors["attrs"]["kilo_workspace"] == 0.666667
+    assert pooled_mae == 0.479167
+
+
+def test_two_repo_paid_validation_policy_violation_blocks_predictive_validity() -> None:
+    config = {
+        "acceptance": {
+            "min_target_repos": 2,
+            "min_holdout_scoreable_cells": 12,
+            "policy_violations_max": 0,
+            "non_scoreable_cells_max_per_split": 2,
+        },
+        "guardrails": {"tune_on_holdout_tasks": False},
+    }
+    preregistration = {"status": "frozen", "holdout_tuning_forbidden": True}
+    metrics = {
+        "selected_repos": ["boltons", "attrs"],
+        "b_eval": {"scoreable_cell_count": 16, "non_scoreable_count": 0},
+        "h_future": {"scoreable_cell_count": 15, "non_scoreable_count": 1},
+        "policy_violation_count": 1,
+        "frozen_design": {"status": "matched"},
+    }
+
+    outcome = holdout.two_repo_paid_validation_decision_outcome(config, preregistration, metrics)
+
+    assert outcome["primary_decision_label"] == "two_repo_paid_validation_complete_insufficient_evidence"
+    assert outcome["predictive_validity_established"] is False
+    assert outcome["threshold_checks"]["selected_target_repos_at_least_min"] is True
+    assert outcome["threshold_checks"]["h_future_scoreable_cells_at_least_min"] is True
+    assert outcome["threshold_checks"]["policy_violations_within_gate"] is False
+    assert "policy_violation_count_exceeds_acceptance_gate" in outcome["blockers"]

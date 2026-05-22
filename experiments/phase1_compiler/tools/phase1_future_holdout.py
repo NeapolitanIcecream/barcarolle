@@ -754,6 +754,377 @@ def summarize_score_rows(rows: list[dict[str, str]]) -> dict[str, Any]:
     }
 
 
+def prefix_verifier_results(prefix: str) -> Path:
+    return PHASE0_ROOT / "results" / f"{prefix}_verifier_results.jsonl"
+
+
+def prefix_verifier_result_map(prefix: str) -> dict[tuple[str, str, str], dict[str, Any]]:
+    path = prefix_verifier_results(prefix)
+    if not path.exists():
+        return {}
+    result: dict[tuple[str, str, str], dict[str, Any]] = {}
+    for row in read_jsonl(path):
+        key = (str(row.get("adapter_id") or ""), str(row.get("split") or ""), str(row.get("task_id") or ""))
+        result[key] = row
+    return result
+
+
+def unique_task_ids(rows: list[dict[str, str]]) -> list[str]:
+    return sorted({str(row.get("task_id") or "") for row in rows if row.get("task_id")})
+
+
+def repo_adapter_absolute_errors(repo_metrics: dict[str, dict[str, Any]]) -> tuple[dict[str, dict[str, float | None]], float | None]:
+    errors: dict[str, dict[str, float | None]] = {}
+    values: list[float] = []
+    for repo_id in sorted(repo_metrics):
+        b_by_adapter = repo_metrics[repo_id].get("b_eval", {}).get("by_adapter", {})
+        h_by_adapter = repo_metrics[repo_id].get("h_future", {}).get("by_adapter", {})
+        errors[repo_id] = {}
+        for adapter_id in sorted(set(b_by_adapter) | set(h_by_adapter)):
+            b_rate = b_by_adapter.get(adapter_id, {}).get("pass_rate")
+            h_rate = h_by_adapter.get(adapter_id, {}).get("pass_rate")
+            if b_rate is None or h_rate is None:
+                errors[repo_id][adapter_id] = None
+                continue
+            value = round(abs(float(b_rate) - float(h_rate)), 6)
+            errors[repo_id][adapter_id] = value
+            values.append(value)
+    return errors, round(sum(values) / len(values), 6) if values else None
+
+
+def two_repo_prefix_plan(config: dict[str, Any], clean_supply: dict[str, Any]) -> dict[str, dict[str, str]]:
+    existing = clean_supply.get("existing_paid_evidence", {}).get("boltons") or config.get("existing_paid_evidence", {}).get("boltons", {})
+    second_repo_id = str(clean_supply.get("second_repo_clean_supply", {}).get("repo_id") or "")
+    if not second_repo_id:
+        selected_repos = [repo for repo in clean_supply.get("selected_repos", []) if repo != "boltons"]
+        second_repo_id = str(selected_repos[0]) if selected_repos else "second_repo"
+    second_prefixes = clean_supply.get("second_repo_planned_paid_prefixes") or config["second_repo_planned_paid_prefixes"]
+    return {
+        "boltons": {
+            "b_eval": str(existing["b_eval_prefix"]),
+            "h_future": str(existing["h_future_prefix"]),
+        },
+        second_repo_id: {
+            "b_eval": str(second_prefixes["b_eval"]),
+            "h_future": str(second_prefixes["h_future"]),
+        },
+    }
+
+
+def two_repo_expected_task_ids(config: dict[str, Any], clean_supply: dict[str, Any]) -> dict[str, dict[str, list[str]]]:
+    boltons_cfg = config["existing_paid_evidence"]["boltons"]
+    boltons_decision = read_json(config_path(boltons_cfg["decision"]))
+    second_repo_id = str(clean_supply.get("second_repo_clean_supply", {}).get("repo_id") or "attrs")
+    second = clean_supply.get("second_repo_clean_supply", {})
+    return {
+        "boltons": {
+            "b_eval": list(boltons_decision.get("b_eval_task_ids", [])),
+            "h_future": list(boltons_decision.get("h_future_task_ids", [])),
+        },
+        second_repo_id: {
+            "b_eval": list(config.get("splits", {}).get("b_eval") or second.get("selected_b_eval_task_ids", [])),
+            "h_future": list(config.get("splits", {}).get("h_future") or second.get("selected_h_future_task_ids", [])),
+        },
+    }
+
+
+def frozen_design_match_status(
+    expected: dict[str, dict[str, list[str]]],
+    actual: dict[str, dict[str, list[str]]],
+) -> dict[str, Any]:
+    mismatches: list[dict[str, Any]] = []
+    for repo_id in sorted(expected):
+        for split in ("b_eval", "h_future"):
+            expected_ids = sorted(expected.get(repo_id, {}).get(split, []))
+            actual_ids = sorted(actual.get(repo_id, {}).get(split, []))
+            if expected_ids != actual_ids:
+                mismatches.append(
+                    {
+                        "repo_id": repo_id,
+                        "split": split,
+                        "expected_task_ids": expected_ids,
+                        "actual_task_ids": actual_ids,
+                    }
+                )
+    return {
+        "status": "matched" if not mismatches else "mismatch",
+        "expected_task_ids": expected,
+        "actual_task_ids": actual,
+        "mismatches": mismatches,
+    }
+
+
+def two_repo_policy_violation_rows(
+    *,
+    repo_id: str,
+    split: str,
+    prefix: str,
+    rows: list[dict[str, str]],
+) -> list[dict[str, Any]]:
+    verifier = prefix_verifier_result_map(prefix)
+    violations = []
+    for row in rows:
+        if row.get("terminal_status") != "policy_violation":
+            continue
+        key = (str(row.get("adapter_id") or ""), split, str(row.get("task_id") or ""))
+        verifier_row = verifier.get(key, {})
+        violations.append(
+            {
+                "repo_id": repo_id,
+                "split": split,
+                "prefix": prefix,
+                "adapter_id": row.get("adapter_id"),
+                "task_id": row.get("task_id"),
+                "terminal_status": row.get("terminal_status"),
+                "harness_error": verifier_row.get("harness_error") or row.get("harness_error"),
+                "changed_paths": verifier_row.get("changed_paths", []),
+            }
+        )
+    return violations
+
+
+def two_repo_paid_validation_decision_outcome(
+    config: dict[str, Any],
+    preregistration: dict[str, Any],
+    metrics: dict[str, Any],
+) -> dict[str, Any]:
+    acceptance = config["acceptance"]
+    selected_repos = list(metrics.get("selected_repos", []))
+    policy_violation_count = int(metrics.get("policy_violation_count") or 0)
+    b_eval = metrics.get("b_eval") or {}
+    h_future = metrics.get("h_future") or {}
+    guardrails = config.get("guardrails", {})
+    frozen_design = metrics.get("frozen_design") or {}
+
+    max_non_scoreable = int(acceptance.get("non_scoreable_cells_max_per_split", 0))
+    checks = {
+        "selected_target_repos_at_least_min": len(selected_repos) >= int(acceptance["min_target_repos"]),
+        "h_future_scoreable_cells_at_least_min": int(h_future.get("scoreable_cell_count") or 0)
+        >= int(acceptance["min_holdout_scoreable_cells"]),
+        "policy_violations_within_gate": policy_violation_count <= int(acceptance["policy_violations_max"]),
+        "b_eval_non_scoreable_cells_within_gate": int(b_eval.get("non_scoreable_count") or 0) <= max_non_scoreable,
+        "h_future_non_scoreable_cells_within_gate": int(h_future.get("non_scoreable_count") or 0) <= max_non_scoreable,
+        "holdout_tuning_did_not_occur": guardrails.get("tune_on_holdout_tasks") is False
+        and preregistration.get("holdout_tuning_forbidden") is True,
+        "metrics_computed_from_frozen_design": frozen_design.get("status") == "matched"
+        and preregistration.get("status") == "frozen",
+    }
+    checks["preregistered_decision_logic_passed"] = all(checks.values())
+
+    blocker_names = {
+        "selected_target_repos_at_least_min": "selected_target_repos_below_minimum",
+        "h_future_scoreable_cells_at_least_min": "h_future_scoreable_cells_below_minimum",
+        "policy_violations_within_gate": "policy_violation_count_exceeds_acceptance_gate",
+        "b_eval_non_scoreable_cells_within_gate": "b_eval_non_scoreable_cells_exceed_acceptance_gate",
+        "h_future_non_scoreable_cells_within_gate": "h_future_non_scoreable_cells_exceed_acceptance_gate",
+        "holdout_tuning_did_not_occur": "holdout_tuning_guardrail_not_satisfied",
+        "metrics_computed_from_frozen_design": "metrics_not_computed_from_frozen_design",
+    }
+    blockers = [blocker_names[key] for key, passed in checks.items() if key in blocker_names and not passed]
+    predictive_validity_established = bool(checks["preregistered_decision_logic_passed"])
+
+    if predictive_validity_established:
+        label = "two_repo_paid_validation_complete_predictive_threshold_met"
+        recommended = "prepare_phase1_predictive_validation_scaleup_without_claiming_production_ranking"
+    else:
+        label = "two_repo_paid_validation_complete_insufficient_evidence"
+        recommended = (
+            "repair_workspace_acut_scoreability_or_policy_violation_then_rerun_preregistered_two_repo_validation"
+            if policy_violation_count
+            else "increase_clean_future_holdout_supply_or_repeat_preregistered_validation"
+        )
+    return {
+        "primary_decision_label": label,
+        "threshold_checks": checks,
+        "blockers": blockers,
+        "recommended_next_runbook": recommended,
+        "predictive_validity_established": predictive_validity_established,
+    }
+
+
+def build_two_repo_score_and_decision(config: dict[str, Any]) -> tuple[dict[str, Any], dict[str, Any]]:
+    clean_supply = read_json(configured_output_path(config, "clean_supply"))
+    preregistration = read_json(configured_output_path(config, "preregistration"))
+    prefix_plan = two_repo_prefix_plan(config, clean_supply)
+    expected_task_ids = two_repo_expected_task_ids(config, clean_supply)
+
+    repo_metrics: dict[str, dict[str, Any]] = {}
+    actual_task_ids: dict[str, dict[str, list[str]]] = {}
+    all_b_rows: list[dict[str, str]] = []
+    all_h_rows: list[dict[str, str]] = []
+    policy_violations: list[dict[str, Any]] = []
+    missing_score_tables: list[str] = []
+    cost_by_prefix: dict[str, float] = {}
+
+    for repo_id, split_prefixes in prefix_plan.items():
+        repo_metrics[repo_id] = {}
+        actual_task_ids[repo_id] = {}
+        for split in ("b_eval", "h_future"):
+            prefix = split_prefixes[split]
+            score_path = prefix_score_table(prefix)
+            cost_by_prefix[prefix] = prefix_observed_or_conservative_cost(prefix)
+            if not score_path.exists():
+                missing_score_tables.append(rel(score_path))
+                rows: list[dict[str, str]] = []
+            else:
+                rows = read_csv(score_path)
+            summary = summarize_score_rows(rows)
+            summary["prefix"] = prefix
+            summary["task_ids"] = unique_task_ids(rows)
+            repo_metrics[repo_id][split] = summary
+            actual_task_ids[repo_id][split] = summary["task_ids"]
+            policy_violations.extend(two_repo_policy_violation_rows(repo_id=repo_id, split=split, prefix=prefix, rows=rows))
+            if split == "b_eval":
+                all_b_rows.extend(rows)
+            else:
+                all_h_rows.extend(rows)
+
+    b_summary = summarize_score_rows(all_b_rows)
+    h_summary = summarize_score_rows(all_h_rows)
+    errors, pooled_mae = repo_adapter_absolute_errors(repo_metrics)
+    frozen_design = frozen_design_match_status(expected_task_ids, actual_task_ids)
+    cost_summary = read_json(PHASE0_ROOT / "results" / "workspace_cost_reconciliation.json").get("totals", {})
+    incremental_cost = round(sum(cost_by_prefix.values()), 8)
+    policy_violation_count = b_summary["policy_violation_count"] + h_summary["policy_violation_count"]
+    status = "computed" if not missing_score_tables else "missing_score_tables"
+
+    metrics = {
+        "schema_version": "barcarolle.phase1.two_repo_future_holdout_prediction_metrics.v1",
+        "generated_at": now_utc(),
+        "status": status,
+        "config": rel(config["_path"]),
+        "preregistration": rel(configured_output_path(config, "preregistration")),
+        "selected_repos": clean_supply.get("selected_repos", []),
+        "repo_prefixes": prefix_plan,
+        "repo_metrics": repo_metrics,
+        "b_eval": b_summary,
+        "h_future": h_summary,
+        "absolute_error_per_repo_adapter": errors,
+        "pooled_mae": pooled_mae,
+        "policy_violation_count": policy_violation_count,
+        "policy_violations": policy_violations,
+        "non_scoreable_count": b_summary["non_scoreable_count"] + h_summary["non_scoreable_count"],
+        "total_h_future_scoreable_cells": h_summary["scoreable_cell_count"],
+        "cost_summary": cost_summary,
+        "cost_by_prefix": cost_by_prefix,
+        "incremental_observed_or_conservative_estimated_cost_usd": incremental_cost,
+        "frozen_design": frozen_design,
+        "missing_score_tables": missing_score_tables,
+        "predictive_validity_established": False,
+    }
+
+    if missing_score_tables:
+        label = "two_repo_paid_validation_blocked_before_paid_calls" if len(missing_score_tables) == 4 else "two_repo_paid_validation_blocked_after_partial_run"
+        outcome = {
+            "primary_decision_label": label,
+            "threshold_checks": {},
+            "blockers": ["missing_score_tables"],
+            "recommended_next_runbook": "complete_missing_preregistered_paid_cells_before_scoring",
+            "predictive_validity_established": False,
+        }
+    else:
+        outcome = two_repo_paid_validation_decision_outcome(config, preregistration, metrics)
+    metrics["predictive_validity_established"] = outcome["predictive_validity_established"]
+
+    second_repo_id = next((repo for repo in clean_supply.get("selected_repos", []) if repo != "boltons"), None)
+    decision = {
+        "schema_version": "barcarolle.phase1.two_repo_future_holdout_decision.v1",
+        "generated_at": now_utc(),
+        "primary_decision_label": outcome["primary_decision_label"],
+        "paid_acut_calls_made": not missing_score_tables,
+        "paid_second_repo_acut_calls_made": all(
+            prefix_score_table(prefix_plan[second_repo_id][split]).exists() for split in ("b_eval", "h_future")
+        )
+        if second_repo_id
+        else False,
+        "selected_repos": clean_supply.get("selected_repos", []),
+        "selected_repo_id": second_repo_id,
+        "two_repo_preregistration_status": preregistration.get("status"),
+        "b_eval_scoreable_cells": b_summary["scoreable_cell_count"],
+        "h_future_scoreable_cells": h_summary["scoreable_cell_count"],
+        "policy_violation_count": policy_violation_count,
+        "non_scoreable_count": metrics["non_scoreable_count"],
+        "pooled_mae": pooled_mae,
+        "threshold_checks": outcome["threshold_checks"],
+        "blockers": outcome["blockers"],
+        "observed_or_conservative_estimated_cost_usd": cost_summary.get("observed_or_conservative_estimated_cost_usd"),
+        "incremental_observed_or_conservative_estimated_cost_usd": incremental_cost,
+        "predictive_validity_established": outcome["predictive_validity_established"],
+        "production_ranking_status": "not_produced",
+        "recommended_next_runbook": outcome["recommended_next_runbook"],
+        "allowed_claims": [
+            "two_repo_preregistered_paid_validation_run",
+            "attrs_paid_future_holdout_cells_scoreable",
+            "two_repo_future_holdout_metrics_computed",
+            "same_endpoint_model_different_cli_harnesses",
+            "observed_or_conservative_cost_accounting",
+            "phase1_predictive_validation_pilot_complete",
+            "insufficient_evidence_for_predictive_validation",
+            "paid_validation_blocked_with_precise_reason",
+        ],
+        "disallowed_claims": [
+            "production_benchmark_ranking",
+            "pure_harness_effect",
+            "contamination_proof_evaluation_if_model_snapshot_unknown",
+            "predictive_validity_established_without_two_repo_thresholds",
+            "predictive_validity_established_with_policy_violations",
+            "predictive_validity_established_if_holdout_was_used_for_tuning",
+            "validation_grade_humanize_if_commit_fallback_only",
+        ],
+    }
+    return metrics, decision
+
+
+def two_repo_prediction_metrics_report(payload: dict[str, Any]) -> str:
+    return "\n".join(
+        [
+            "# Phase 1 Two-Repo Future Holdout Prediction Metrics",
+            "",
+            f"Generated: `{payload['generated_at']}`.",
+            "",
+            f"- Status: `{payload['status']}`.",
+            f"- Selected repos: `{', '.join(payload.get('selected_repos', []))}`.",
+            f"- B_eval scoreable cells: `{payload['b_eval']['scoreable_cell_count']}`.",
+            f"- H_future scoreable cells: `{payload['h_future']['scoreable_cell_count']}`.",
+            f"- Policy violations: `{payload['policy_violation_count']}`.",
+            f"- Non-scoreable cells: `{payload['non_scoreable_count']}`.",
+            f"- Pooled MAE: `{payload['pooled_mae']}`.",
+            f"- Frozen design status: `{payload['frozen_design']['status']}`.",
+            f"- Observed-or-conservative cost USD: `{payload['cost_summary'].get('observed_or_conservative_estimated_cost_usd')}`.",
+            f"- Incremental two-repo validation cost USD: `{payload['incremental_observed_or_conservative_estimated_cost_usd']}`.",
+            f"- Predictive validity established: `{str(payload['predictive_validity_established']).lower()}`.",
+        ]
+    )
+
+
+def two_repo_decision_report(payload: dict[str, Any]) -> str:
+    lines = [
+        "# Phase 1 Two-Repo Future Holdout Decision",
+        "",
+        f"Primary decision: `{payload['primary_decision_label']}`.",
+        "",
+        f"- Paid ACUT calls made: `{str(payload['paid_acut_calls_made']).lower()}`.",
+        f"- Paid second-repo ACUT calls made: `{str(payload['paid_second_repo_acut_calls_made']).lower()}`.",
+        f"- Selected repos: `{', '.join(payload.get('selected_repos', []))}`.",
+        f"- Selected second repo: `{payload.get('selected_repo_id')}`.",
+        f"- Preregistration status: `{payload.get('two_repo_preregistration_status')}`.",
+        f"- B_eval scoreable cells: `{payload['b_eval_scoreable_cells']}`.",
+        f"- H_future scoreable cells: `{payload['h_future_scoreable_cells']}`.",
+        f"- Policy violations: `{payload['policy_violation_count']}`.",
+        f"- Non-scoreable cells: `{payload['non_scoreable_count']}`.",
+        f"- Pooled MAE: `{payload['pooled_mae']}`.",
+        f"- Observed-or-conservative cost USD: `{payload.get('observed_or_conservative_estimated_cost_usd')}`.",
+        f"- Incremental observed-or-conservative cost USD: `{payload.get('incremental_observed_or_conservative_estimated_cost_usd')}`.",
+        f"- Predictive validity established: `{str(payload['predictive_validity_established']).lower()}`.",
+        f"- Production ranking: `{payload['production_ranking_status']}`.",
+        f"- Recommended next runbook: `{payload['recommended_next_runbook']}`.",
+    ]
+    if payload.get("blockers"):
+        lines.extend(["", "## Blockers", ""])
+        lines.extend(f"- `{item}`" for item in payload["blockers"])
+    return "\n".join(lines)
+
+
 def paid_validation_decision_outcome(
     config: dict[str, Any],
     supply: dict[str, Any],
@@ -1083,9 +1454,22 @@ def run_two_repo_preregister(args: argparse.Namespace) -> dict[str, Any]:
     return preregistration
 
 
+def run_two_repo_score(args: argparse.Namespace) -> dict[str, Any]:
+    config = load_two_repo_config(Path(args.config))
+    metrics, decision = build_two_repo_score_and_decision(config)
+    write_json(configured_output_path(config, "prediction_metrics"), metrics)
+    write_text(configured_output_path(config, "prediction_metrics_report"), two_repo_prediction_metrics_report(metrics))
+    write_json(configured_output_path(config, "decision"), decision)
+    write_text(configured_output_path(config, "decision_report"), two_repo_decision_report(decision))
+    return decision
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(description="Phase 1 future-holdout design and scoring helper.")
-    parser.add_argument("command", choices=["audit-supply", "design-cutoff", "preregister", "score", "two-repo-preregister"])
+    parser.add_argument(
+        "command",
+        choices=["audit-supply", "design-cutoff", "preregister", "score", "two-repo-preregister", "two-repo-score"],
+    )
     parser.add_argument("--config", default=str(DEFAULT_CONFIG))
     args = parser.parse_args()
     runners = {
@@ -1094,6 +1478,7 @@ def main() -> None:
         "preregister": run_preregister,
         "score": run_score,
         "two-repo-preregister": run_two_repo_preregister,
+        "two-repo-score": run_two_repo_score,
     }
     payload = runners[args.command](args)
     print(json.dumps({"status": payload.get("primary_decision_label") or payload.get("status") or "ok"}, sort_keys=True))

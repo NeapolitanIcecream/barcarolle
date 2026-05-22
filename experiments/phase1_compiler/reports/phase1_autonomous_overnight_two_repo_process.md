@@ -229,3 +229,50 @@ Runbook implication:
 
 The paid attrs H_future batch completed, but the policy violation means the
 two-repo predictive-validity threshold cannot be marked established.
+
+## Step 6 Two-Repo Metrics
+
+Extended `phase1_future_holdout.py` with a `two-repo-score` command so the
+frozen two-repo design can be scored from the Boltons paid prefixes and the attrs
+paid prefixes.
+
+Metrics inputs:
+
+- Boltons B_eval: `phase1_future_holdout_b_eval`
+- Boltons H_future: `phase1_future_holdout_h_future`
+- attrs B_eval: `phase1_two_repo_future_holdout_attrs_b_eval`
+- attrs H_future: `phase1_two_repo_future_holdout_attrs_h_future`
+
+Generated artifacts:
+
+- `experiments/phase1_compiler/results/phase1_two_repo_future_holdout_prediction_metrics.json`
+- `experiments/phase1_compiler/reports/phase1_two_repo_future_holdout_prediction_metrics.md`
+- `experiments/phase1_compiler/results/phase1_two_repo_future_holdout_decision.json`
+- `experiments/phase1_compiler/reports/phase1_two_repo_future_holdout_decision.md`
+
+Two-repo score summary:
+
+- selected repos: `boltons`, `attrs`
+- B_eval scoreable cells: `16`
+- H_future scoreable cells: `15`
+- policy violations: `1`
+- non-scoreable cells: `1`
+- pooled MAE across repo/adapter cells: `0.479167`
+- frozen design match: `matched`
+- incremental observed-or-conservative cost across the four validation prefixes:
+  `$24.5357028`
+
+Threshold checks:
+
+- selected repos at least `2`: pass
+- H_future scoreable cells at least `12`: pass
+- policy violations equal `0`: fail
+- holdout tuning did not occur: pass
+- metrics computed from frozen design: pass
+
+Decision:
+
+- primary decision:
+  `two_repo_paid_validation_complete_insufficient_evidence`
+- predictive validity established: `false`
+- blocker: `policy_violation_count_exceeds_acceptance_gate`

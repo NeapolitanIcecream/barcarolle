@@ -52,6 +52,10 @@ output_paths:
   clean_supply: experiments/phase1_compiler/results/phase1_two_repo_future_holdout_clean_supply.json
   preregistration: experiments/phase1_compiler/results/phase1_two_repo_future_holdout_preregistration.json
   preregistration_report: experiments/phase1_compiler/reports/phase1_two_repo_future_holdout_preregistration.md
+  prediction_metrics: experiments/phase1_compiler/results/phase1_two_repo_future_holdout_prediction_metrics.json
+  prediction_metrics_report: experiments/phase1_compiler/reports/phase1_two_repo_future_holdout_prediction_metrics.md
+  decision: experiments/phase1_compiler/results/phase1_two_repo_future_holdout_decision.json
+  decision_report: experiments/phase1_compiler/reports/phase1_two_repo_future_holdout_decision.md
 
 guardrails:
   run_second_repo_paid_cells_now: true
