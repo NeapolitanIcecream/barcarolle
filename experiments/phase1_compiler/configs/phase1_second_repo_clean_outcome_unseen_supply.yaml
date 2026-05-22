@@ -25,10 +25,16 @@ candidate_repos:
     repo_url: https://github.com/python-attrs/attrs.git
     local_repo: experiments/phase0_headroom/external_repos/attrs
     candidate_source_prefix: attrs_clean_outcome_unseen_supply
+    test_environment:
+      pythonpath_mode: src_if_present_else_repo_root
+      command_template: uv run --project experiments/phase0_headroom --with "pytest>=7,<8" --with "setuptools<81" --with "hypothesis<6" python -m pytest -q {test_files}
   toolz:
     repo_url: https://github.com/pytoolz/toolz.git
     local_repo: experiments/phase0_headroom/external_repos/toolz
     candidate_source_prefix: toolz_clean_outcome_unseen_supply
+    test_environment:
+      pythonpath_mode: src_if_present_else_repo_root
+      command_template: uv run --project experiments/phase0_headroom --with "pytest>=8,<9" python -m pytest -q {test_files}
 
 mining:
   max_history_anchors: 1000
@@ -36,6 +42,7 @@ mining:
   prefer_issue_or_pr_context: true
   require_local_repo_under_ignored_path: true
   require_cutoff_feasibility: true
+  embargo_gap_days: 14
 
 promotion_policy:
   require_outcome_unseen: true

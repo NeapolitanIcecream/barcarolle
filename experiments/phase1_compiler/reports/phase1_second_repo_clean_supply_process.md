@@ -72,3 +72,47 @@ solution-leaky, project-heavy ambiguous, docs-only, and config-only candidates.
 
 Output paths are namespaced to second-repo sidecar artifacts and do not mutate
 canonical Boltons release or hardening outputs.
+
+## Step 2 Prepare Local Repo And Candidate Anchors
+
+Confirmed the attrs clone path is ignored by Git:
+
+- `git check-ignore -v experiments/phase0_headroom/external_repos/attrs` -> `.gitignore:224:experiments/phase0_headroom/external_repos/`
+
+Cloned and fetched attrs under
+`experiments/phase0_headroom/external_repos/attrs`. The clone remains under an
+ignored external-repo path and is not committed.
+
+Added second-repo commands to
+`experiments/phase1_compiler/tools/phase1_clean_outcome_unseen_supply_mining.py`
+and focused policy tests in
+`experiments/phase1_compiler/tests/test_phase1_clean_outcome_unseen_supply_mining.py`.
+
+Validation:
+
+- `uv run --project experiments/phase1_compiler pytest -q experiments/phase1_compiler/tests/test_phase1_clean_outcome_unseen_supply_mining.py` -> `12 passed in 0.02s`
+
+Ran:
+
+- `phase1_clean_outcome_unseen_supply_mining.py mine-second-repo --config experiments/phase1_compiler/configs/phase1_second_repo_clean_outcome_unseen_supply.yaml --repo-id attrs`
+
+Generated:
+
+- `experiments/phase0_headroom/candidate_sources/attrs_clean_outcome_unseen_supply_candidates.jsonl`
+- `experiments/phase0_headroom/candidate_sources/attrs_clean_outcome_unseen_supply_source_context.jsonl`
+- `experiments/phase1_compiler/results/phase1_second_repo_clean_supply_candidate_inventory.json`
+- `experiments/phase1_compiler/reports/phase1_second_repo_clean_supply_candidate_inventory.md`
+
+Mining result:
+
+- anchors scanned: `388`
+- selected candidate rows: `48`
+- source context rows: `48`
+- source context status counts: `non_leaky_problem_context=43`, `commit_message_only_source=5`
+- first filter counts: `candidate=48`, `rejected=340`
+- paid ACUT calls made: `false`
+- paid LLM calls made: `false`
+
+The source-context writer prefers linked issue reports over PR bodies when PR
+metadata references a public issue, and stores only sanitized summaries rather
+than raw GitHub API responses.

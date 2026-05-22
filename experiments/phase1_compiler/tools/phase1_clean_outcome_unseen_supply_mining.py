@@ -5,6 +5,7 @@ import csv
 import json
 import re
 import subprocess
+import sys
 from collections import Counter
 from datetime import datetime, timezone
 from pathlib import Path
@@ -16,7 +17,14 @@ from phase1_future_holdout import parse_task_time, select_cutoff_for_repo, simpl
 ROOT = Path(__file__).resolve().parents[1]
 REPO_ROOT = ROOT.parents[1]
 PHASE0_ROOT = REPO_ROOT / "experiments" / "phase0_headroom"
+PHASE0_TOOLS = PHASE0_ROOT / "tools"
+if str(PHASE0_TOOLS) not in sys.path:
+    sys.path.insert(0, str(PHASE0_TOOLS))
+
+import repo_history_pilot  # noqa: E402
+
 DEFAULT_CONFIG = ROOT / "configs" / "phase1_clean_outcome_unseen_supply_mining.yaml"
+SECOND_REPO_CONFIG = ROOT / "configs" / "phase1_second_repo_clean_outcome_unseen_supply.yaml"
 
 CORE_CERTIFICATION_GATES = [
     "checkout",
@@ -43,6 +51,15 @@ REPO_OWNER = {
     "attrs": "python-attrs/attrs",
     "boltons": "mahmoud/boltons",
 }
+SOLUTION_EXPOSURE_SUMMARY_TERMS = [
+    "rework",
+    "refactor",
+    "rename",
+    "move ",
+    "wrapped ",
+    "revert ",
+    "polish",
+]
 
 
 def now_utc() -> str:
@@ -97,6 +114,14 @@ def load_config(path: Path = DEFAULT_CONFIG) -> dict[str, Any]:
     return config
 
 
+def load_second_repo_config(path: Path = SECOND_REPO_CONFIG) -> dict[str, Any]:
+    config = simple_yaml_load(path)
+    if config.get("schema_version") != "barcarolle.phase1_second_repo_clean_outcome_unseen_supply.v1":
+        raise ValueError("unexpected second repo clean supply config schema_version")
+    config["_path"] = str(path)
+    return config
+
+
 def artifact_path(config: dict[str, Any], key: str) -> Path:
     raw = config["source_artifacts"][key]
     path = Path(str(raw))
@@ -113,12 +138,30 @@ def report_path(name: str) -> Path:
     return ROOT / "reports" / name
 
 
+def configured_output_path(config: dict[str, Any], key: str) -> Path:
+    raw = config["output_paths"][key]
+    path = Path(str(raw))
+    return path if path.is_absolute() else REPO_ROOT / path
+
+
 def phase0_candidate_path(repo_id: str, suffix: str) -> Path:
     return PHASE0_ROOT / "candidate_sources" / f"{repo_id}_clean_outcome_unseen_supply_{suffix}.jsonl"
 
 
 def phase0_certified_path(repo_id: str, suffix: str) -> Path:
     return PHASE0_ROOT / "certified_tasks" / f"{repo_id}_clean_outcome_unseen_supply_{suffix}.jsonl"
+
+
+def second_repo_prefix(config: dict[str, Any], repo_id: str) -> str:
+    return str(config["candidate_repos"][repo_id]["candidate_source_prefix"])
+
+
+def second_repo_candidate_path(config: dict[str, Any], repo_id: str, suffix: str) -> Path:
+    return PHASE0_ROOT / "candidate_sources" / f"{second_repo_prefix(config, repo_id)}_{suffix}.jsonl"
+
+
+def second_repo_certified_path(config: dict[str, Any], repo_id: str, suffix: str) -> Path:
+    return PHASE0_ROOT / "certified_tasks" / f"{second_repo_prefix(config, repo_id)}_{suffix}.jsonl"
 
 
 def repo_from_task_id(task_id: str) -> str:
@@ -274,6 +317,13 @@ def issue_numbers_from_subject(subject: str) -> list[int]:
     return list(dict.fromkeys(numbers))
 
 
+def issue_numbers_from_text(text: str) -> list[int]:
+    numbers = issue_numbers_from_subject(text)
+    for match in re.finditer(r"\bissue\s+(\d+)", text, flags=re.IGNORECASE):
+        numbers.append(int(match.group(1)))
+    return list(dict.fromkeys(numbers))
+
+
 def run_gh_issue_lookup(repo_id: str, number: int) -> dict[str, Any] | None:
     owner_repo = REPO_OWNER.get(repo_id)
     if not owner_repo:
@@ -292,6 +342,46 @@ def run_gh_issue_lookup(repo_id: str, number: int) -> dict[str, Any] | None:
     try:
         payload = json.loads(proc.stdout)
     except json.JSONDecodeError:
+        return None
+    title = " ".join(str(payload.get("title") or "").split())
+    body = " ".join(str(payload.get("body") or "").split())[:240]
+    if not title:
+        return None
+    return {
+        "ref": f"issue:{number}",
+        "classification": "problem_context",
+        "summary": title,
+        "body_summary": body,
+        "state": payload.get("state"),
+    }
+
+
+def run_gh_issue_only_lookup(repo_id: str, number: int) -> dict[str, Any] | None:
+    owner_repo = REPO_OWNER.get(repo_id)
+    if not owner_repo:
+        return None
+    proc = subprocess.run(
+        [
+            "gh",
+            "api",
+            f"repos/{owner_repo}/issues/{number}",
+            "--jq",
+            "{number,title,body:(.body // \"\"),state,is_pull_request:(.pull_request != null)}",
+        ],
+        cwd=REPO_ROOT,
+        text=True,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+        timeout=30,
+        check=False,
+    )
+    if proc.returncode != 0:
+        return None
+    try:
+        payload = json.loads(proc.stdout)
+    except json.JSONDecodeError:
+        return None
+    if payload.get("is_pull_request"):
         return None
     title = " ".join(str(payload.get("title") or "").split())
     body = " ".join(str(payload.get("body") or "").split())[:240]
@@ -458,6 +548,165 @@ def review_candidate(
     }
 
 
+def second_repo_pilot_config(config: dict[str, Any], repo_id: str) -> repo_history_pilot.PilotConfig:
+    repo = config["candidate_repos"][repo_id]
+    local_repo = Path(str(repo["local_repo"]))
+    if not local_repo.is_absolute():
+        local_repo = REPO_ROOT / local_repo
+    return repo_history_pilot.PilotConfig(
+        repo_id=repo_id,
+        repo_url=str(repo["repo_url"]),
+        local_repo=local_repo,
+        command_template=str(repo["test_environment"]["command_template"]),
+        certification_attempts=int(config["mining"]["max_certification_attempts"]),
+        pilot_certified_min=int(config["minimum_clean_split"]["B_eval"]) + int(config["minimum_clean_split"]["H_future"]),
+        benchmark_grade_min=int(config["preferred_clean_split"]["B_eval"]) + int(config["preferred_clean_split"]["H_future"]),
+        result_prefix=f"phase1_second_repo_clean_supply_{repo_id}",
+        claim_scope=str(config["claim_scope"]),
+    )
+
+
+def second_repo_order(config: dict[str, Any]) -> list[str]:
+    return [str(config["primary_candidate_repo"]), *[str(repo_id) for repo_id in config.get("fallback_candidate_repos", [])]]
+
+
+def source_context_rows_for_candidates(
+    pilot_config: repo_history_pilot.PilotConfig,
+    candidates: list[dict[str, Any]],
+) -> tuple[list[dict[str, Any]], dict[str, dict[str, Any]]]:
+    rows: list[dict[str, Any]] = []
+    statement_by_task: dict[str, dict[str, Any]] = {}
+    for candidate in candidates:
+        pr_refs = repo_history_pilot.github_pr_refs(pilot_config, str(candidate["target_commit"]))
+        issue_refs: list[dict[str, Any]] = []
+        for ref in pr_refs:
+            text = f"{ref.get('summary', '')} {ref.get('body_summary', '')}"
+            for number in issue_numbers_from_text(text):
+                issue_ref = run_gh_issue_only_lookup(pilot_config.repo_id, number)
+                if issue_ref:
+                    issue_refs.append(issue_ref)
+        refs = issue_refs or pr_refs
+        if not refs:
+            refs = [repo_history_pilot.commit_context_ref(pilot_config, candidate)]
+        for ref in refs:
+            ref = dict(ref)
+            ref["schema_version"] = "barcarolle.phase1.second_repo_clean_supply_source_context.v1"
+            ref["repo_id"] = pilot_config.repo_id
+            ref["task_id"] = candidate["task_id"]
+            ref["target_commit"] = candidate["target_commit"]
+            rows.append(ref)
+        allowed_refs = repo_history_pilot.allowed_context_refs(refs)
+        statement_by_task[str(candidate["task_id"])] = {
+            "schema_version": "barcarolle.repo_history_statement.v1",
+            "task_id": candidate["task_id"],
+            "repo_id": pilot_config.repo_id,
+            "base_commit": candidate["base_commit"],
+            "target_commit": candidate["target_commit"],
+            "solver_facing_statement": repo_history_pilot.solver_statement(candidate, refs),
+            "scope_boundaries": (
+                f"Modify only implementation files needed for this {pilot_config.repo_id} behavior; "
+                "do not edit tests or generated metadata."
+            ),
+            "allowed_context_refs": allowed_refs,
+            "excluded_context_refs": [ref["ref"] for ref in refs if ref["classification"] != "problem_context"],
+            "oracle_refs": candidate["test_files"],
+            "harness_test_command": pilot_config.command_template,
+            "statement_review_status": "reviewed" if allowed_refs else "near_certified_context_missing",
+            "source_context_status": "non_leaky_context_found" if allowed_refs else "no_non_leaky_source_context",
+        }
+    return rows, statement_by_task
+
+
+def selected_context_for_task(contexts: list[dict[str, Any]]) -> dict[str, dict[str, Any]]:
+    grouped: dict[str, list[dict[str, Any]]] = {}
+    for row in contexts:
+        grouped.setdefault(str(row.get("task_id")), []).append(row)
+    selected: dict[str, dict[str, Any]] = {}
+    for task_id, rows in grouped.items():
+        problem = [row for row in rows if row.get("classification") == "problem_context"]
+        selected[task_id] = problem[0] if problem else rows[0]
+    return selected
+
+
+def context_has_solution_exposure(context: dict[str, Any]) -> bool:
+    summary = str(context.get("summary") or "").lower()
+    body = str(context.get("body_summary") or "").lower()
+    if summary.startswith(("fix ", "fixed ", "don't ", "dont ", "add ")):
+        return any(term in body for term in SOLUTION_EXPOSURE_SUMMARY_TERMS)
+    combined = f"{summary} {body}"
+    return any(term in combined for term in SOLUTION_EXPOSURE_SUMMARY_TERMS)
+
+
+def review_second_repo_candidate(
+    row: dict[str, Any],
+    *,
+    context: dict[str, Any],
+    outcome_seen_task_ids: set[str],
+    outcome_seen_target_commits: set[str],
+) -> dict[str, Any]:
+    task_id = str(row["task_id"])
+    target_commit = str(row.get("target_commit") or "")
+    blockers: list[str] = []
+    if task_id in outcome_seen_task_ids:
+        blockers.append("previous_acut_outcome_seen")
+    if target_commit and target_commit in outcome_seen_target_commits:
+        blockers.append("previous_acut_target_commit_seen")
+    source_status = source_status_from_context(context)
+    if source_status == "commit_message_only_source":
+        blockers.append("commit_message_only_source")
+    elif source_status != "non_leaky_problem_context":
+        blockers.append("non_leaky_problem_context_missing")
+    if row.get("status") != "certified":
+        first_gate = str(row.get("first_failing_gate") or "unknown")
+        blockers.append(f"local_certification_gate_failed:{first_gate}")
+    if project_or_docs_only(row):
+        blockers.append("project_or_docs_only_change")
+    if project_or_config_heavy(row):
+        blockers.append("scope_context_project_heavy_or_ambiguous")
+    if context_has_solution_exposure(context):
+        blockers.append("solution_exposure_risk")
+
+    blockers = unique_preserve(blockers)
+    decision = "promote_to_clean_benchmark_candidate" if not blockers else "reject_for_clean_holdout"
+    gates = dict(row.get("gates", {}))
+    if source_status == "non_leaky_problem_context" and "scope_context_project_heavy_or_ambiguous" not in blockers:
+        gates["ambiguity_review"] = "pass"
+    if source_status == "non_leaky_problem_context" and "solution_exposure_risk" not in blockers:
+        gates["solution_leakage_review"] = "pass"
+    clean_first_failing_gate = ""
+    for gate, status in gates.items():
+        if status != "pass":
+            clean_first_failing_gate = gate
+            break
+    return {
+        "schema_version": "barcarolle.phase1.second_repo_clean_supply_review.v1",
+        "task_id": task_id,
+        "repo_id": row.get("repo_id"),
+        "split": row.get("split", "candidate"),
+        "task_time": row.get("task_time"),
+        "base_commit": row.get("base_commit"),
+        "target_commit": target_commit,
+        "target_commit_unseen": target_commit not in outcome_seen_target_commits,
+        "subject": row.get("subject"),
+        "module_or_package": row.get("module_or_package", []),
+        "changed_files": row.get("changed_files", []),
+        "test_files": row.get("test_files", []),
+        "candidate_filter_status": row.get("candidate_filter_status"),
+        "source_context_status": source_status,
+        "allowed_context_refs": [context["ref"]] if source_status == "non_leaky_problem_context" else [],
+        "sanitized_context": context,
+        "original_local_certification_status": row.get("status"),
+        "local_certification_gates": row.get("gates", {}),
+        "clean_overlay_certification_gates": gates,
+        "clean_overlay_first_failing_gate": clean_first_failing_gate,
+        "local_command_records": row.get("commands", []),
+        "promotion_decision": decision,
+        "promotion_blockers": blockers,
+        "promotion_rationale": "local_certification_and_non_leaky_public_context" if decision == "promote_to_clean_benchmark_candidate" else "",
+        "predictive_validity_established": False,
+    }
+
+
 def cutoff_feasibility_for_tasks(config: dict[str, Any], tasks: list[dict[str, Any]]) -> dict[str, Any]:
     minimum = config["target"]["required_future_holdout_minimum"]
     future_config = simple_yaml_load(artifact_path(config, "future_holdout_config"))
@@ -480,6 +729,237 @@ def cutoff_feasibility_for_tasks(config: dict[str, Any], tasks: list[dict[str, A
             model_snapshot_status="unknown",
         )
     return plans
+
+
+def first_filter_counts(anchors: list[dict[str, Any]]) -> dict[str, Any]:
+    status_counts = Counter(str(row.get("status") or "unknown") for row in anchors)
+    candidate_filter_counts = Counter(str(row.get("candidate_filter_status") or "unknown") for row in anchors)
+    reject_counts: Counter[str] = Counter()
+    for row in anchors:
+        reject_counts.update(str(reason) for reason in row.get("reject_reasons", []) if reason)
+    return {
+        "anchor_status_counts": dict(sorted(status_counts.items())),
+        "candidate_filter_status_counts": dict(sorted(candidate_filter_counts.items())),
+        "reject_reason_counts": dict(sorted(reject_counts.items())),
+    }
+
+
+def second_repo_inventory_payload(
+    config: dict[str, Any],
+    *,
+    repo_id: str,
+    anchors: list[dict[str, Any]] | None = None,
+    candidates: list[dict[str, Any]] | None = None,
+    contexts: list[dict[str, Any]] | None = None,
+    reviews: list[dict[str, Any]] | None = None,
+    certification_rows: list[dict[str, Any]] | None = None,
+) -> dict[str, Any]:
+    anchors = anchors or []
+    candidates = candidates if candidates is not None else read_jsonl(second_repo_candidate_path(config, repo_id, "candidates"))
+    contexts = contexts if contexts is not None else read_jsonl(second_repo_candidate_path(config, repo_id, "source_context"))
+    reviews = reviews or []
+    certification_rows = certification_rows or []
+    context_status_counts = Counter(source_status_from_context(row) for row in contexts)
+    promotion_counts = Counter(row.get("promotion_decision", "not_reviewed") for row in reviews)
+    blocker_counts: Counter[str] = Counter()
+    for row in reviews:
+        blocker_counts.update(row.get("promotion_blockers", []))
+    certification_counts = Counter(row.get("status", "not_attempted") for row in certification_rows)
+    promoted = [row for row in reviews if row.get("promotion_decision") == "promote_to_clean_benchmark_candidate"]
+    return {
+        "schema_version": "barcarolle.phase1.second_repo_clean_supply_candidate_inventory.v1",
+        "generated_at": now_utc(),
+        "config": rel(config["_path"]),
+        "repo_id": repo_id,
+        "repo_url": config["candidate_repos"][repo_id]["repo_url"],
+        "local_repo": config["candidate_repos"][repo_id]["local_repo"],
+        "anchors_scanned": len(anchors),
+        "max_history_anchors": int(config["mining"]["max_history_anchors"]),
+        "candidate_count": len(candidates),
+        "source_context_count": len(contexts),
+        "first_filter_counts": first_filter_counts(anchors),
+        "source_context_status_counts": dict(sorted(context_status_counts.items())),
+        "local_certification_attempt_count": len(certification_rows),
+        "local_certification_status_counts": dict(sorted(certification_counts.items())),
+        "promotion_decision_counts": dict(sorted(promotion_counts.items())),
+        "promotion_blocker_counts": dict(sorted(blocker_counts.items())),
+        "promoted_task_ids": [str(row["task_id"]) for row in promoted],
+        "paid_llm_calls_made": False,
+        "paid_acut_calls_made": False,
+        "predictive_validity_established": False,
+    }
+
+
+def second_repo_inventory_report(payload: dict[str, Any]) -> str:
+    return "\n".join(
+        [
+            "# Phase 1 Second-Repo Clean Supply Candidate Inventory",
+            "",
+            f"Generated: `{payload['generated_at']}`.",
+            "",
+            f"- Repo: `{payload['repo_id']}`.",
+            f"- Anchors scanned: `{payload['anchors_scanned']}`.",
+            f"- Candidate count: `{payload['candidate_count']}`.",
+            f"- Source context rows: `{payload['source_context_count']}`.",
+            f"- Certification attempts: `{payload['local_certification_attempt_count']}`.",
+            f"- Promoted candidates: `{len(payload['promoted_task_ids'])}`.",
+            f"- Paid LLM calls made: `{str(payload['paid_llm_calls_made']).lower()}`.",
+            f"- Paid ACUT calls made: `{str(payload['paid_acut_calls_made']).lower()}`.",
+            f"- Predictive validity established: `false`.",
+            "",
+            f"- First filter counts: `{payload['first_filter_counts']}`.",
+            f"- Source context status counts: `{payload['source_context_status_counts']}`.",
+            f"- Local certification status counts: `{payload['local_certification_status_counts']}`.",
+            f"- Promotion blocker counts: `{payload['promotion_blocker_counts']}`.",
+        ]
+    )
+
+
+def statement_from_clean_context(
+    pilot_config: repo_history_pilot.PilotConfig,
+    candidate: dict[str, Any],
+    contexts: list[dict[str, Any]],
+) -> dict[str, Any]:
+    refs = [row for row in contexts if row.get("task_id") == candidate.get("task_id")]
+    if not refs:
+        refs = [repo_history_pilot.commit_context_ref(pilot_config, candidate)]
+    allowed_refs = repo_history_pilot.allowed_context_refs(refs)
+    return {
+        "schema_version": "barcarolle.repo_history_statement.v1",
+        "task_id": candidate["task_id"],
+        "repo_id": pilot_config.repo_id,
+        "base_commit": candidate["base_commit"],
+        "target_commit": candidate["target_commit"],
+        "solver_facing_statement": repo_history_pilot.solver_statement(candidate, refs),
+        "scope_boundaries": (
+            f"Modify only implementation files needed for this {pilot_config.repo_id} behavior; "
+            "do not edit tests or generated metadata."
+        ),
+        "allowed_context_refs": allowed_refs,
+        "excluded_context_refs": [ref["ref"] for ref in refs if ref["classification"] != "problem_context"],
+        "oracle_refs": candidate["test_files"],
+        "harness_test_command": pilot_config.command_template,
+        "statement_review_status": "reviewed" if allowed_refs else "near_certified_context_missing",
+        "source_context_status": "non_leaky_context_found" if allowed_refs else "no_non_leaky_source_context",
+    }
+
+
+def second_repo_review_payload(config: dict[str, Any], *, repo_id: str, reviews: list[dict[str, Any]]) -> dict[str, Any]:
+    promoted = [row for row in reviews if row.get("promotion_decision") == "promote_to_clean_benchmark_candidate"]
+    rejected_counts: Counter[str] = Counter()
+    for row in reviews:
+        if row.get("promotion_decision") != "promote_to_clean_benchmark_candidate":
+            rejected_counts.update(row.get("promotion_blockers", []) or ["not_promoted"])
+    return {
+        "schema_version": "barcarolle.phase1.second_repo_clean_supply_review.v1",
+        "generated_at": now_utc(),
+        "config": rel(config["_path"]),
+        "repo_id": repo_id,
+        "paid_llm_calls_made": False,
+        "paid_acut_calls_made": False,
+        "promoted_task_ids": [str(row["task_id"]) for row in promoted],
+        "promoted_reviews": promoted,
+        "review_records": reviews,
+        "rejected_counts": dict(sorted(rejected_counts.items())),
+        "predictive_validity_established": False,
+    }
+
+
+def second_repo_review_report(payload: dict[str, Any]) -> str:
+    lines = [
+        "# Phase 1 Second-Repo Clean Supply Review",
+        "",
+        f"Generated: `{payload['generated_at']}`.",
+        "",
+        f"- Repo: `{payload['repo_id']}`.",
+        f"- Promoted task count: `{len(payload['promoted_task_ids'])}`.",
+        f"- Paid LLM calls made: `{str(payload['paid_llm_calls_made']).lower()}`.",
+        f"- Paid ACUT calls made: `{str(payload['paid_acut_calls_made']).lower()}`.",
+        f"- Predictive validity established: `false`.",
+        "",
+        "| Task | Status | Decision | Blockers |",
+        "| --- | --- | --- | --- |",
+    ]
+    for row in payload["review_records"]:
+        blockers = ", ".join(row.get("promotion_blockers", [])) or "none"
+        lines.append(
+            f"| `{row['task_id']}` | `{row.get('original_local_certification_status')}` | "
+            f"`{row['promotion_decision']}` | `{blockers}` |"
+        )
+    return "\n".join(lines)
+
+
+def second_repo_overlay_payload(config: dict[str, Any], *, repo_id: str, promoted_reviews: list[dict[str, Any]]) -> dict[str, Any]:
+    preferred = config["preferred_clean_split"]
+    minimum = config["minimum_clean_split"]
+    plan = select_cutoff_for_repo(
+        repo_id,
+        promoted_reviews,
+        embargo_gap_days=int(config["mining"]["embargo_gap_days"]),
+        preferred_b=int(preferred["B_eval"]),
+        preferred_h=int(preferred["H_future"]),
+        minimum_b=int(minimum["B_eval"]),
+        minimum_h=int(minimum["H_future"]),
+        model_snapshot_date=None,
+        model_snapshot_status="unknown",
+    )
+    b_eval_ids = plan.get("b_eval_task_ids", [])
+    h_future_ids = plan.get("h_future_task_ids", [])
+    selected_ids = set(b_eval_ids) | set(h_future_ids)
+    selected_tasks = []
+    for row in promoted_reviews:
+        row = dict(row)
+        if row["task_id"] in b_eval_ids:
+            row["selected_split"] = "B_eval"
+        elif row["task_id"] in h_future_ids:
+            row["selected_split"] = "H_future"
+        else:
+            row["selected_split"] = "reserve_clean_supply"
+        selected_tasks.append(row)
+    return {
+        "schema_version": "barcarolle.phase1.second_repo_clean_supply_overlay.v1",
+        "generated_at": now_utc(),
+        "config": rel(config["_path"]),
+        "evidence_level": "clean_supply_overlay_sidecar",
+        "selected_repo_id": repo_id,
+        "promoted_task_ids": [str(row["task_id"]) for row in promoted_reviews],
+        "selected_task_ids": unique_preserve([*b_eval_ids, *h_future_ids]),
+        "selected_b_eval_task_ids": b_eval_ids,
+        "selected_h_future_task_ids": h_future_ids,
+        "reserve_clean_task_ids": [str(row["task_id"]) for row in promoted_reviews if str(row["task_id"]) not in selected_ids],
+        "promoted_tasks": selected_tasks,
+        "minimum_clean_split": minimum,
+        "preferred_clean_split": preferred,
+        "cutoff_feasibility": plan,
+        "clean_supply_ready": bool(plan.get("clean_validation_ready")),
+        "paid_llm_calls_made": False,
+        "paid_acut_calls_made": False,
+        "predictive_validity_established": False,
+    }
+
+
+def second_repo_overlay_report(payload: dict[str, Any]) -> str:
+    return "\n".join(
+        [
+            "# Phase 1 Second-Repo Clean Supply Overlay",
+            "",
+            f"Generated: `{payload['generated_at']}`.",
+            "",
+            f"- Evidence level: `{payload['evidence_level']}`.",
+            f"- Selected repo: `{payload['selected_repo_id']}`.",
+            f"- Clean supply ready: `{str(payload['clean_supply_ready']).lower()}`.",
+            f"- B_eval tasks: `{', '.join(payload['selected_b_eval_task_ids']) if payload['selected_b_eval_task_ids'] else 'none'}`.",
+            f"- H_future tasks: `{', '.join(payload['selected_h_future_task_ids']) if payload['selected_h_future_task_ids'] else 'none'}`.",
+            f"- Reserve clean tasks: `{', '.join(payload['reserve_clean_task_ids']) if payload['reserve_clean_task_ids'] else 'none'}`.",
+            f"- Paid LLM calls made: `{str(payload['paid_llm_calls_made']).lower()}`.",
+            f"- Paid ACUT calls made: `{str(payload['paid_acut_calls_made']).lower()}`.",
+            f"- Predictive validity established: `false`.",
+            "",
+            f"- T_compile_end: `{payload['cutoff_feasibility'].get('T_compile_end')}`.",
+            f"- T_holdout_start: `{payload['cutoff_feasibility'].get('T_holdout_start')}`.",
+            f"- Validation size: `{payload['cutoff_feasibility'].get('validation_size')}`.",
+        ]
+    )
 
 
 def overlay_payload(
@@ -898,10 +1378,108 @@ def run_decide(args: argparse.Namespace) -> dict[str, Any]:
     return payload
 
 
+def resolve_second_repo_id(config: dict[str, Any], requested: str | None) -> str:
+    repo_id = requested or str(config["primary_candidate_repo"])
+    if repo_id not in config["candidate_repos"]:
+        raise ValueError(f"unknown candidate repo: {repo_id}")
+    return repo_id
+
+
+def run_mine_second_repo(args: argparse.Namespace) -> dict[str, Any]:
+    config = load_second_repo_config(Path(args.config))
+    repo_id = resolve_second_repo_id(config, args.repo_id)
+    pilot_config = second_repo_pilot_config(config, repo_id)
+    if not pilot_config.local_repo.exists():
+        raise FileNotFoundError(f"local repo missing: {pilot_config.local_repo}")
+    anchors, candidates = repo_history_pilot.mining_rows(
+        REPO_ROOT,
+        pilot_config,
+        max_anchors=int(config["mining"]["max_history_anchors"]),
+    )
+    contexts, _statements = source_context_rows_for_candidates(pilot_config, candidates)
+    write_jsonl(second_repo_candidate_path(config, repo_id, "candidates"), candidates)
+    write_jsonl(second_repo_candidate_path(config, repo_id, "source_context"), contexts)
+    payload = second_repo_inventory_payload(config, repo_id=repo_id, anchors=anchors, candidates=candidates, contexts=contexts)
+    write_json(configured_output_path(config, "candidate_inventory"), payload)
+    write_text(configured_output_path(config, "candidate_inventory_report"), second_repo_inventory_report(payload))
+    return payload
+
+
+def run_certify_second_repo(args: argparse.Namespace) -> dict[str, Any]:
+    config = load_second_repo_config(Path(args.config))
+    repo_id = resolve_second_repo_id(config, args.repo_id)
+    pilot_config = second_repo_pilot_config(config, repo_id)
+    candidates = read_jsonl(second_repo_candidate_path(config, repo_id, "candidates"))
+    contexts = read_jsonl(second_repo_candidate_path(config, repo_id, "source_context"))
+    selected_context = selected_context_for_task(contexts)
+    certification_rows: list[dict[str, Any]] = []
+    reviews: list[dict[str, Any]] = []
+    seen_ids = load_outcome_seen_task_ids(
+        {
+            "source_artifacts": {
+                "workspace_scorecard": "experiments/phase1_compiler/results/phase1_workspace_scorecard.json",
+            }
+        }
+    )
+    seen_commits = load_outcome_seen_target_commits(
+        {
+            "source_artifacts": {
+                "workspace_scorecard": "experiments/phase1_compiler/results/phase1_workspace_scorecard.json",
+            }
+        }
+    )
+    for candidate in candidates[: int(config["mining"]["max_certification_attempts"])]:
+        statement = statement_from_clean_context(pilot_config, candidate, contexts)
+        certified_row = repo_history_pilot.certify_candidate(REPO_ROOT, PHASE0_ROOT, pilot_config, candidate, statement)
+        certification_rows.append(certified_row)
+        reviews.append(
+            review_second_repo_candidate(
+                certified_row,
+                context=selected_context.get(str(candidate["task_id"]), {}),
+                outcome_seen_task_ids=seen_ids,
+                outcome_seen_target_commits=seen_commits,
+            )
+        )
+    promoted = [row for row in reviews if row.get("promotion_decision") == "promote_to_clean_benchmark_candidate"]
+    write_jsonl(second_repo_certified_path(config, repo_id, "certified_tasks"), promoted)
+    write_jsonl(second_repo_certified_path(config, repo_id, "review_records"), reviews)
+    inventory = second_repo_inventory_payload(config, repo_id=repo_id, reviews=reviews, certification_rows=certification_rows)
+    review = second_repo_review_payload(config, repo_id=repo_id, reviews=reviews)
+    write_json(configured_output_path(config, "candidate_inventory"), inventory)
+    write_text(configured_output_path(config, "candidate_inventory_report"), second_repo_inventory_report(inventory))
+    write_json(configured_output_path(config, "review"), review)
+    write_text(configured_output_path(config, "review_report"), second_repo_review_report(review))
+    return review
+
+
+def run_build_second_repo_overlay(args: argparse.Namespace) -> dict[str, Any]:
+    config = load_second_repo_config(Path(args.config))
+    repo_id = resolve_second_repo_id(config, args.repo_id)
+    review = read_json(configured_output_path(config, "review"))
+    payload = second_repo_overlay_payload(config, repo_id=repo_id, promoted_reviews=review.get("promoted_reviews", []))
+    write_json(configured_output_path(config, "overlay"), payload)
+    write_text(configured_output_path(config, "overlay_report"), second_repo_overlay_report(payload))
+    return payload
+
+
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(description="Continue clean outcome-unseen supply mining for Phase 1.")
-    parser.add_argument("command", choices=["audit-state", "mine-boltons", "review-candidates", "mine-backup", "build-overlay", "decide"])
+    parser.add_argument(
+        "command",
+        choices=[
+            "audit-state",
+            "mine-boltons",
+            "review-candidates",
+            "mine-backup",
+            "build-overlay",
+            "decide",
+            "mine-second-repo",
+            "certify-second-repo",
+            "build-second-repo-overlay",
+        ],
+    )
     parser.add_argument("--config", default=str(DEFAULT_CONFIG))
+    parser.add_argument("--repo-id")
     return parser
 
 
@@ -914,6 +1492,9 @@ def main(argv: list[str] | None = None) -> int:
         "mine-backup": run_mine_backup,
         "build-overlay": run_build_overlay,
         "decide": run_decide,
+        "mine-second-repo": run_mine_second_repo,
+        "certify-second-repo": run_certify_second_repo,
+        "build-second-repo-overlay": run_build_second_repo_overlay,
     }
     payload = runners[args.command](args)
     if args.command != "audit-state":
