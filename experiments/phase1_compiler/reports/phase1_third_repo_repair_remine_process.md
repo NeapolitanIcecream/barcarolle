@@ -38,6 +38,29 @@ runbook were tracked by Git.
 
 No paid calls were made.
 
+## Step 2 Versioned Repair Config
+
+Created
+`experiments/phase0_headroom/configs/third_repo_pilot_itsdangerous_repair_v2.yaml`.
+The original Itsdangerous config remains present and unchanged.
+
+The repair config sets:
+
+- `schema_version: barcarolle.third_repo_pilot.repair_v2.v1`
+- `status: selected_for_repair_remine`
+- `claim_scope: third_repo_local_repair_remine_not_predictive_validation`
+- `paid_acut_calls: disabled`
+- `paid_llm_calls: disabled`
+- `certification_attempts: 32`
+- `pilot_certified_min: 4`
+- `benchmark_grade_min: 6`
+
+The config records commit-message fallback as diagnostic-only and carries the
+candidate-filter policy enforced by the repaired tool. Loading the config through
+`repo_history_pilot.load_config` succeeded.
+
+No paid calls were made.
+
 ## Step 1 Source Adapter Semantics
 
 The Phase 0 repo-history adapter was repaired before regenerating artifacts.

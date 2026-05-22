@@ -1,0 +1,44 @@
+schema_version: barcarolle.third_repo_pilot.repair_v2.v1
+selected_repo_id: itsdangerous
+status: selected_for_repair_remine
+repo_url: https://github.com/pallets/itsdangerous.git
+local_repo: experiments/phase0_headroom/external_repos/itsdangerous
+claim_scope: third_repo_local_repair_remine_not_predictive_validation
+paid_acut_calls: disabled
+paid_llm_calls: disabled
+source_policy:
+  commit_message_fallback: diagnostic_only
+  issue_or_pr_problem_context_required_for_benchmark_grade: true
+candidate_filter_policy:
+  reject_if_changed_lines_over: 250
+  reject_if_project_file_heavy: true
+  reject_if_no_behavior_code_file: true
+  reject_subject_terms:
+    - update dev dependencies
+    - update project files
+    - drop support
+    - remove deprecated
+    - deprecate
+    - typing
+    - lint
+    - format
+    - pre-commit
+    - docs
+    - documentation
+    - release
+    - bump
+    - dependabot
+  manual_review_if_cross_module_count_over: 3
+  manual_review_if_docs_or_config_change_present: true
+test_environment:
+  pythonpath_mode: src_if_present_else_repo_root
+  command_template: uv run --project experiments/phase0_headroom --with "pytest>=9" --with "setuptools<81" python -m pytest -q {test_files}
+preferred_task_count:
+  certification_attempts: 32
+  pilot_certified_min: 4
+  benchmark_grade_min: 6
+acut:
+  adapters: []
+  result_prefix: phase1_validation_third_repo_itsdangerous_repair_v2
+budget:
+  expected_provider_cost_change_usd: 0
