@@ -58,3 +58,34 @@ Config properties:
 - generic comparators excluded from target holdout
 - paid ACUT concurrency: `1`
 - total observed-or-conservative stop cap: `80.00`
+
+## Step 2 Clean-Supply And Cutoff Tooling
+
+Added deterministic future-holdout tooling:
+
+- `experiments/phase1_compiler/tools/phase1_future_holdout.py`
+- `experiments/phase1_compiler/tests/test_phase1_future_holdout.py`
+
+Implemented commands:
+
+- `audit-supply`
+- `design-cutoff`
+- `preregister`
+- `score`
+
+Tooling behavior covered by tests:
+
+- repo-time sorting with aware timestamps
+- embargo calculation between `T_compile_end` and `T_holdout_start`
+- exclusion of tasks with previous ACUT outcomes
+- exclusion of Humanize validation-grade use while it remains diagnostic-only
+- fallback from preferred to minimum counts
+- blocker output when clean supply is insufficient
+- unknown model snapshot permits repo-time holdout only and blocks contamination-proof claims
+
+Verification:
+
+- `uv run --project experiments/phase1_compiler pytest -q experiments/phase1_compiler/tests/test_phase1_future_holdout.py` -> `7 passed in 0.01s`
+- `uv run --project experiments/phase1_compiler pytest -q` -> `35 passed in 0.30s`
+
+No paid calls have been made in this step.
