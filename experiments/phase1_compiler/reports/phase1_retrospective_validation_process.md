@@ -135,3 +135,33 @@ Metrics result:
 
 This is outcome-seen retrospective evidence only. No clean future-holdout or
 predictive-validity claim is made.
+
+## Step 4 Clean Supply Candidate Review
+
+Ran:
+
+```bash
+uv run --project experiments/phase1_compiler python experiments/phase1_compiler/tools/phase1_retrospective_validation.py review-clean-supply --config experiments/phase1_compiler/configs/phase1_retrospective_validation_and_clean_supply.yaml
+```
+
+Review result:
+
+- clean supply extension ready: `false`
+- promoted clean task ids: `boltons__hist__011`, `boltons__hist__022`, `boltons__hist__023`, `boltons__hist__027`
+- promoted B_real tasks: `boltons__hist__011`
+- promoted W_real tasks: `boltons__hist__022`, `boltons__hist__023`, `boltons__hist__027`
+- kept manual-review-required: `boltons__hist__014`
+
+Candidate decisions:
+
+| Task | Split | Outcome seen | Decision | Reason |
+| --- | --- | --- | --- | --- |
+| `boltons__hist__011` | `B_real` | `false` | `promote_to_clean_benchmark_candidate` | non-leaky PR context, aligned oracle, clear enough behavioral scope |
+| `boltons__hist__014` | `B_real` | `false` | `keep_manual_review_required` | `scope_context_project_heavy_or_ambiguous` |
+| `boltons__hist__022` | `W_real` | `false` | `promote_to_clean_benchmark_candidate` | non-leaky PR context, aligned oracle, clear enough behavioral scope |
+| `boltons__hist__023` | `W_real` | `false` | `promote_to_clean_benchmark_candidate` | non-leaky PR context, aligned oracle, clear behavioral scope |
+| `boltons__hist__027` | `W_real` | `false` | `promote_to_clean_benchmark_candidate` | non-leaky PR context, aligned oracle, clear enough behavioral scope |
+
+The minimum clean split requires at least two B_eval and two H_future tasks.
+Only one B_real task was promoted, so Steps 5 through 7 are skipped and no paid
+clean validation runs in this runbook.
