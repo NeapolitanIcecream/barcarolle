@@ -252,3 +252,47 @@ MVP closeout sidecars:
 - second-repo clean supply sidecar: `available_as_second_repo_clean_supply_sidecar_evidence`
 - two-repo future-holdout preregistration sidecar: `available_as_two_repo_future_holdout_preregistration_sidecar_evidence`
 - next runbook recommendation: `run_two_repo_preregistered_clean_future_holdout_paid_validation`
+
+## Step 7 Final Validation And Hygiene
+
+Final validation commands:
+
+- `git diff --check` -> passed
+- `uv run --project experiments/phase1_compiler pytest -q` -> `65 passed in 0.36s`
+- `uv run --project experiments/phase0_headroom pytest -q experiments/phase0_headroom/tools` -> `74 passed in 2.21s`
+- `uv run --project experiments/phase1_compiler python experiments/phase1_compiler/tools/phase1_compiler.py validate --config experiments/phase1_compiler/configs/phase1_mvp.yaml` -> `status=valid`
+
+Hygiene checks:
+
+- `git diff --cached --name-only` was empty before final closeout staging.
+- `experiments/phase0_headroom/external_repos/attrs` is ignored.
+- `experiments/phase0_headroom/workspaces` is ignored.
+- `experiments/phase0_headroom/results/raw` is ignored.
+- No raw GitHub API payloads, solver workspaces, verifier workspaces, cloned repos, caches, or secrets were staged.
+- The runbook document itself is included in the final closeout commit so the worktree can close cleanly with the executed specification preserved.
+
+Commits made by step:
+
+- Step 0: `6152e989` - `Record second repo clean supply preflight`
+- Step 1: `e5f08489` - `Configure second repo clean supply mining`
+- Step 2: `71d85b9f` - `Mine attrs clean outcome-unseen candidates`
+- Step 3: `3d246608` - `Review attrs clean outcome-unseen candidates`
+- Step 4: `d8e8edbf` - `Build second repo clean supply overlay`
+- Step 5: `c1775322` - `Freeze two repo future holdout design`
+- Step 6: `277d7aea` - `Decide second repo clean supply readiness`
+
+Final outcome:
+
+- selected second repo: `attrs`
+- candidate anchors scanned: `388`
+- selected attrs candidates: `48`
+- local certification attempts: `48`
+- locally certified attrs tasks: `21`
+- promoted clean attrs tasks: `18`
+- selected B_eval tasks: `attrs__hist__001`, `attrs__hist__003`, `attrs__hist__004`, `attrs__hist__008`
+- selected H_future tasks: `attrs__hist__012`, `attrs__hist__013`, `attrs__hist__023`, `attrs__hist__027`
+- two-repo preregistration: `frozen`
+- paid second-repo ACUT calls made: `false`
+- paid LLM calls made: `false`
+- predictive validity established: `false`
+- final next runbook: `run_two_repo_preregistered_clean_future_holdout_paid_validation`
