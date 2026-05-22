@@ -14,6 +14,7 @@ ROOT = Path(__file__).resolve().parents[1]
 REPO_ROOT = ROOT.parents[1]
 PHASE0_ROOT = REPO_ROOT / "experiments" / "phase0_headroom"
 DEFAULT_CONFIG = ROOT / "configs" / "phase1_future_holdout_validation.yaml"
+TWO_REPO_CONFIG = ROOT / "configs" / "phase1_two_repo_future_holdout_validation.yaml"
 
 
 def now_utc() -> str:
@@ -100,12 +101,29 @@ def load_config(path: Path = DEFAULT_CONFIG) -> dict[str, Any]:
     return config
 
 
+def load_two_repo_config(path: Path = TWO_REPO_CONFIG) -> dict[str, Any]:
+    config = simple_yaml_load(path)
+    if config.get("schema_version") != "barcarolle.phase1_two_repo_future_holdout_validation.v1":
+        raise ValueError("unexpected two repo future holdout config schema_version")
+    config["_path"] = str(path)
+    return config
+
+
 def artifact_path(config: dict[str, Any], key: str) -> Path:
     raw = config["source_artifacts"][key]
     path = Path(str(raw))
     if not path.is_absolute():
         path = REPO_ROOT / path
     return path
+
+
+def config_path(raw: str | Path) -> Path:
+    path = Path(str(raw))
+    return path if path.is_absolute() else REPO_ROOT / path
+
+
+def configured_output_path(config: dict[str, Any], key: str) -> Path:
+    return config_path(config["output_paths"][key])
 
 
 def read_json(path: Path) -> dict[str, Any]:
@@ -583,6 +601,129 @@ def preregistration_report(payload: dict[str, Any]) -> str:
     )
 
 
+def build_two_repo_clean_supply(config: dict[str, Any]) -> dict[str, Any]:
+    repos = [str(repo_id) for repo_id in config["repos"]]
+    adapters = [str(adapter_id) for adapter_id in config["adapters"]["ids"]]
+    boltons_cfg = config["existing_paid_evidence"]["boltons"]
+    boltons_decision = read_json(config_path(boltons_cfg["decision"]))
+    second_overlay = read_json(config_path(config["second_repo_clean_supply_overlay"]))
+    second_repo_id = str(second_overlay["selected_repo_id"])
+    second_b_eval_tasks = [str(task_id) for task_id in second_overlay.get("selected_b_eval_task_ids", [])]
+    second_h_future_tasks = [str(task_id) for task_id in second_overlay.get("selected_h_future_task_ids", [])]
+    planned_b_eval_cells = len(second_b_eval_tasks) * len(adapters)
+    planned_h_future_cells = len(second_h_future_tasks) * len(adapters)
+    existing_h_future_cells = int(boltons_decision.get("h_future_scoreable_cells") or boltons_cfg.get("h_future_scoreable_cells") or 0)
+    existing_b_eval_cells = int(boltons_decision.get("b_eval_scoreable_cells") or boltons_cfg.get("b_eval_scoreable_cells") or 0)
+    total_planned_h_future_capacity = existing_h_future_cells + planned_h_future_cells
+    selected_repos = ["boltons", second_repo_id] if "boltons" in repos and second_repo_id in repos else repos
+    blockers: list[str] = []
+    if second_overlay.get("clean_supply_ready") is not True:
+        blockers.append("second_repo_clean_supply_below_minimum")
+    if len(selected_repos) < int(config["acceptance"]["min_target_repos"]):
+        blockers.append("two_repo_min_target_repos_not_met")
+    if total_planned_h_future_capacity < int(config["acceptance"]["min_holdout_scoreable_cells"]):
+        blockers.append("min_holdout_scoreable_cells_not_met_if_second_repo_scoreable")
+    if int(boltons_decision.get("policy_violation_count") or 0) > int(config["acceptance"]["policy_violations_max"]):
+        blockers.append("existing_paid_policy_violation_count_exceeds_gate")
+    return {
+        "schema_version": "barcarolle.phase1.two_repo_future_holdout_clean_supply.v1",
+        "generated_at": now_utc(),
+        "config": rel(config["_path"]),
+        "selected_repos": selected_repos,
+        "clean_supply_ready": not blockers,
+        "existing_paid_evidence": {
+            "boltons": {
+                "decision": rel(config_path(boltons_cfg["decision"])),
+                "primary_decision_label": boltons_decision.get("primary_decision_label"),
+                "b_eval_prefix": boltons_cfg["b_eval_prefix"],
+                "h_future_prefix": boltons_cfg["h_future_prefix"],
+                "b_eval_scoreable_cells": existing_b_eval_cells,
+                "h_future_scoreable_cells": existing_h_future_cells,
+                "policy_violation_count": int(boltons_decision.get("policy_violation_count") or 0),
+                "predictive_validity_established": bool(boltons_decision.get("predictive_validity_established")),
+            }
+        },
+        "second_repo_clean_supply": {
+            "repo_id": second_repo_id,
+            "overlay": rel(config_path(config["second_repo_clean_supply_overlay"])),
+            "clean_supply_ready": bool(second_overlay.get("clean_supply_ready")),
+            "selected_b_eval_task_ids": second_b_eval_tasks,
+            "selected_h_future_task_ids": second_h_future_tasks,
+            "validation_size": second_overlay.get("cutoff_feasibility", {}).get("validation_size"),
+            "T_compile_end": second_overlay.get("cutoff_feasibility", {}).get("T_compile_end"),
+            "T_holdout_start": second_overlay.get("cutoff_feasibility", {}).get("T_holdout_start"),
+        },
+        "second_repo_planned_paid_prefixes": config["second_repo_planned_paid_prefixes"],
+        "adapters": adapters,
+        "planned_second_repo_b_eval_cells": planned_b_eval_cells,
+        "planned_second_repo_h_future_cells": planned_h_future_cells,
+        "total_h_future_scoreable_capacity_if_second_repo_scoreable": total_planned_h_future_capacity,
+        "acceptance": config["acceptance"],
+        "blockers": blockers,
+        "paid_second_repo_acut_calls_made": False,
+        "paid_acut_calls_made": False,
+        "predictive_validity_established": False,
+    }
+
+
+def two_repo_preregistration_payload(config: dict[str, Any], clean_supply: dict[str, Any]) -> dict[str, Any]:
+    status = "frozen" if clean_supply["clean_supply_ready"] else "blocked_clean_supply"
+    return {
+        "schema_version": "barcarolle.phase1.two_repo_future_holdout_preregistration.v1",
+        "generated_at": now_utc(),
+        "config": rel(config["_path"]),
+        "status": status,
+        "selected_repos": clean_supply["selected_repos"],
+        "existing_paid_evidence": clean_supply["existing_paid_evidence"],
+        "second_repo_planned_paid_prefixes": clean_supply["second_repo_planned_paid_prefixes"],
+        "planned_second_repo_tasks": {
+            "b_eval": clean_supply["second_repo_clean_supply"]["selected_b_eval_task_ids"],
+            "h_future": clean_supply["second_repo_clean_supply"]["selected_h_future_task_ids"],
+        },
+        "planned_second_repo_cells": {
+            "b_eval": clean_supply["planned_second_repo_b_eval_cells"],
+            "h_future": clean_supply["planned_second_repo_h_future_cells"],
+        },
+        "total_h_future_scoreable_capacity_if_second_repo_scoreable": clean_supply[
+            "total_h_future_scoreable_capacity_if_second_repo_scoreable"
+        ],
+        "acceptance": config["acceptance"],
+        "adapters": clean_supply["adapters"],
+        "holdout_tuning_forbidden": True,
+        "paid_second_repo_acut_calls_made": False,
+        "paid_acut_calls_made": False,
+        "blockers": clean_supply["blockers"],
+        "recommended_next_runbook": (
+            "run_two_repo_preregistered_clean_future_holdout_paid_validation"
+            if status == "frozen"
+            else "expand_clean_supply_sources_or_add_manual_canaries"
+        ),
+        "predictive_validity_established": False,
+    }
+
+
+def two_repo_preregistration_report(payload: dict[str, Any]) -> str:
+    return "\n".join(
+        [
+            "# Phase 1 Two-Repo Future Holdout Preregistration",
+            "",
+            f"Generated: `{payload['generated_at']}`.",
+            "",
+            f"- Status: `{payload['status']}`.",
+            f"- Selected repos: `{', '.join(payload['selected_repos'])}`.",
+            f"- Planned second-repo B_eval tasks: `{', '.join(payload['planned_second_repo_tasks']['b_eval'])}`.",
+            f"- Planned second-repo H_future tasks: `{', '.join(payload['planned_second_repo_tasks']['h_future'])}`.",
+            f"- Existing Boltons H_future scoreable cells: `{payload['existing_paid_evidence']['boltons']['h_future_scoreable_cells']}`.",
+            f"- Planned second-repo H_future cells: `{payload['planned_second_repo_cells']['h_future']}`.",
+            f"- Total H_future capacity if second repo is scoreable: `{payload['total_h_future_scoreable_capacity_if_second_repo_scoreable']}`.",
+            f"- Paid second-repo ACUT calls made: `{str(payload['paid_second_repo_acut_calls_made']).lower()}`.",
+            f"- Holdout tuning forbidden: `{str(payload['holdout_tuning_forbidden']).lower()}`.",
+            f"- Predictive validity established: `false`.",
+            f"- Recommended next runbook: `{payload['recommended_next_runbook']}`.",
+        ]
+    )
+
+
 def prefix_score_table(prefix: str) -> Path:
     return PHASE0_ROOT / "results" / f"{prefix}_score_table.csv"
 
@@ -932,9 +1073,19 @@ def run_score(args: argparse.Namespace) -> dict[str, Any]:
     return decision
 
 
+def run_two_repo_preregister(args: argparse.Namespace) -> dict[str, Any]:
+    config = load_two_repo_config(Path(args.config))
+    clean_supply = build_two_repo_clean_supply(config)
+    preregistration = two_repo_preregistration_payload(config, clean_supply)
+    write_json(configured_output_path(config, "clean_supply"), clean_supply)
+    write_json(configured_output_path(config, "preregistration"), preregistration)
+    write_text(configured_output_path(config, "preregistration_report"), two_repo_preregistration_report(preregistration))
+    return preregistration
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(description="Phase 1 future-holdout design and scoring helper.")
-    parser.add_argument("command", choices=["audit-supply", "design-cutoff", "preregister", "score"])
+    parser.add_argument("command", choices=["audit-supply", "design-cutoff", "preregister", "score", "two-repo-preregister"])
     parser.add_argument("--config", default=str(DEFAULT_CONFIG))
     args = parser.parse_args()
     runners = {
@@ -942,6 +1093,7 @@ def main() -> None:
         "design-cutoff": run_design_cutoff,
         "preregister": run_preregister,
         "score": run_score,
+        "two-repo-preregister": run_two_repo_preregister,
     }
     payload = runners[args.command](args)
     print(json.dumps({"status": payload.get("primary_decision_label") or payload.get("status") or "ok"}, sort_keys=True))

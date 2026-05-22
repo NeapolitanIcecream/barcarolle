@@ -228,3 +228,69 @@ def test_boltons_only_paid_scoreable_run_closes_as_pilot_not_predictive() -> Non
     assert "predictive_validity_min_target_repos_not_met" in outcome["blockers"]
     assert "predictive_validity_min_holdout_scoreable_cells_not_met" in outcome["blockers"]
     assert outcome["recommended_next_runbook"] == "mine_second_repo_clean_outcome_unseen_supply_for_two_repo_validation"
+
+
+def test_two_repo_preregistration_combines_existing_paid_and_planned_clean_supply() -> None:
+    config = {
+        "_path": "experiments/phase1_compiler/configs/phase1_two_repo_future_holdout_validation.yaml",
+        "acceptance": {
+            "min_target_repos": 2,
+            "min_holdout_scoreable_cells": 12,
+            "policy_violations_max": 0,
+            "non_scoreable_cells_max_per_split": 2,
+        },
+        "second_repo_planned_paid_prefixes": {
+            "b_eval": "phase1_two_repo_future_holdout_attrs_b_eval",
+            "h_future": "phase1_two_repo_future_holdout_attrs_h_future",
+        },
+        "adapters": {"ids": ["codex_workspace", "kilo_workspace"]},
+    }
+    clean_supply = {
+        "clean_supply_ready": True,
+        "selected_repos": ["boltons", "attrs"],
+        "existing_paid_evidence": {"boltons": {"h_future_scoreable_cells": 8}},
+        "second_repo_clean_supply": {
+            "selected_b_eval_task_ids": ["attrs__hist__001", "attrs__hist__002"],
+            "selected_h_future_task_ids": ["attrs__hist__003", "attrs__hist__004"],
+        },
+        "second_repo_planned_paid_prefixes": config["second_repo_planned_paid_prefixes"],
+        "planned_second_repo_b_eval_cells": 4,
+        "planned_second_repo_h_future_cells": 4,
+        "total_h_future_scoreable_capacity_if_second_repo_scoreable": 12,
+        "adapters": config["adapters"]["ids"],
+        "blockers": [],
+    }
+
+    prereg = holdout.two_repo_preregistration_payload(config, clean_supply)
+
+    assert prereg["status"] == "frozen"
+    assert prereg["selected_repos"] == ["boltons", "attrs"]
+    assert prereg["planned_second_repo_cells"]["h_future"] == 4
+    assert prereg["total_h_future_scoreable_capacity_if_second_repo_scoreable"] == 12
+    assert prereg["paid_second_repo_acut_calls_made"] is False
+    assert prereg["predictive_validity_established"] is False
+
+
+def test_two_repo_preregistration_blocks_when_capacity_is_below_threshold() -> None:
+    config = {
+        "_path": "experiments/phase1_compiler/configs/phase1_two_repo_future_holdout_validation.yaml",
+        "acceptance": {"min_target_repos": 2, "min_holdout_scoreable_cells": 12},
+    }
+    clean_supply = {
+        "clean_supply_ready": False,
+        "selected_repos": ["boltons", "attrs"],
+        "existing_paid_evidence": {"boltons": {"h_future_scoreable_cells": 8}},
+        "second_repo_clean_supply": {"selected_b_eval_task_ids": [], "selected_h_future_task_ids": []},
+        "second_repo_planned_paid_prefixes": {},
+        "planned_second_repo_b_eval_cells": 0,
+        "planned_second_repo_h_future_cells": 0,
+        "total_h_future_scoreable_capacity_if_second_repo_scoreable": 8,
+        "adapters": ["codex_workspace", "kilo_workspace"],
+        "blockers": ["min_holdout_scoreable_cells_not_met_if_second_repo_scoreable"],
+    }
+
+    prereg = holdout.two_repo_preregistration_payload(config, clean_supply)
+
+    assert prereg["status"] == "blocked_clean_supply"
+    assert prereg["recommended_next_runbook"] == "expand_clean_supply_sources_or_add_manual_canaries"
+    assert prereg["predictive_validity_established"] is False

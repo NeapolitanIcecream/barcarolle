@@ -177,3 +177,42 @@ Overlay result:
 
 The overlay is sidecar evidence only. Canonical Boltons release artifacts and
 canonical hardening outputs were not mutated.
+
+## Step 5 Freeze Two-Repo Future-Holdout Design
+
+Created `experiments/phase1_compiler/configs/phase1_two_repo_future_holdout_validation.yaml`.
+
+Updated `experiments/phase1_compiler/tools/phase1_future_holdout.py` and
+`experiments/phase1_compiler/tests/test_phase1_future_holdout.py` with a
+two-repo preregistration mode that imports:
+
+- existing Boltons paid sidecar evidence from `experiments/phase1_compiler/results/phase1_future_holdout_decision.json`
+- attrs clean-supply overlay evidence from `experiments/phase1_compiler/results/phase1_second_repo_clean_supply_overlay.json`
+
+Validation:
+
+- `uv run --project experiments/phase1_compiler pytest -q experiments/phase1_compiler/tests/test_phase1_future_holdout.py` -> `12 passed in 0.02s`
+
+Ran:
+
+- `phase1_future_holdout.py two-repo-preregister --config experiments/phase1_compiler/configs/phase1_two_repo_future_holdout_validation.yaml`
+
+Generated:
+
+- `experiments/phase1_compiler/results/phase1_two_repo_future_holdout_clean_supply.json`
+- `experiments/phase1_compiler/results/phase1_two_repo_future_holdout_preregistration.json`
+- `experiments/phase1_compiler/reports/phase1_two_repo_future_holdout_preregistration.md`
+
+Preregistration result:
+
+- status: `frozen`
+- selected repos: `boltons`, `attrs`
+- existing Boltons H_future scoreable cells: `8`
+- planned attrs H_future cells: `8`
+- total H_future scoreable capacity if attrs paid run is scoreable: `16`
+- planned attrs B_eval tasks: `attrs__hist__001`, `attrs__hist__003`, `attrs__hist__004`, `attrs__hist__008`
+- planned attrs H_future tasks: `attrs__hist__012`, `attrs__hist__013`, `attrs__hist__023`, `attrs__hist__027`
+- paid second-repo ACUT calls made: `false`
+- holdout tuning forbidden: `true`
+- predictive validity established: `false`
+- recommended next runbook: `run_two_repo_preregistered_clean_future_holdout_paid_validation`
