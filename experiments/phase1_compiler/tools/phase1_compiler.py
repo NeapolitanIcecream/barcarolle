@@ -1345,7 +1345,12 @@ def closeout_next_runbook_recommendation(
     clean_supply_breal_extension_decision: dict[str, Any] | None = None,
     clean_outcome_unseen_supply_decision: dict[str, Any] | None = None,
     second_repo_clean_supply_decision: dict[str, Any] | None = None,
+    two_repo_future_holdout_decision: dict[str, Any] | None = None,
 ) -> str:
+    if two_repo_future_holdout_decision and two_repo_future_holdout_decision.get("paid_acut_calls_made") is True:
+        recommendation = str(two_repo_future_holdout_decision.get("recommended_next_runbook") or "").strip()
+        if recommendation:
+            return recommendation
     if second_repo_clean_supply_decision:
         recommendation = str(second_repo_clean_supply_decision.get("recommended_next_runbook") or "").strip()
         if recommendation:
@@ -1429,6 +1434,7 @@ def build_closeout_payload(config: dict[str, Any]) -> dict[str, Any]:
     clean_outcome_unseen_supply_decision_path = ROOT / "results" / "phase1_clean_outcome_unseen_supply_decision.json"
     second_repo_clean_supply_decision_path = ROOT / "results" / "phase1_second_repo_clean_supply_decision.json"
     two_repo_future_holdout_preregistration_path = ROOT / "results" / "phase1_two_repo_future_holdout_preregistration.json"
+    two_repo_future_holdout_decision_path = ROOT / "results" / "phase1_two_repo_future_holdout_decision.json"
     hardening_sidecar: dict[str, Any] | None = None
     paid_smoke_decision: dict[str, Any] | None = None
     future_holdout_decision: dict[str, Any] | None = None
@@ -1436,6 +1442,7 @@ def build_closeout_payload(config: dict[str, Any]) -> dict[str, Any]:
     clean_supply_breal_extension_decision: dict[str, Any] | None = None
     clean_outcome_unseen_supply_decision: dict[str, Any] | None = None
     second_repo_clean_supply_decision: dict[str, Any] | None = None
+    two_repo_future_holdout_decision: dict[str, Any] | None = None
     if hardening_overlay_path.exists() and hardening_decision_path.exists():
         hardening_overlay = read_json(hardening_overlay_path)
         hardening_decision = read_json(hardening_decision_path)
@@ -1581,6 +1588,31 @@ def build_closeout_payload(config: dict[str, Any]) -> dict[str, Any]:
             "status": "not_available",
             "note": "Two-repo future-holdout preregistration has not been generated for this MVP build.",
         }
+    if two_repo_future_holdout_decision_path.exists():
+        two_repo_future_holdout_decision = read_json(two_repo_future_holdout_decision_path)
+        two_repo_future_holdout_paid_sidecar = {
+            "status": "available_as_two_repo_future_holdout_paid_sidecar_evidence",
+            "decision": rel(two_repo_future_holdout_decision_path),
+            "primary_decision_label": two_repo_future_holdout_decision.get("primary_decision_label"),
+            "selected_repos": two_repo_future_holdout_decision.get("selected_repos", []),
+            "selected_repo_id": two_repo_future_holdout_decision.get("selected_repo_id"),
+            "paid_acut_calls_made": two_repo_future_holdout_decision.get("paid_acut_calls_made"),
+            "paid_second_repo_acut_calls_made": two_repo_future_holdout_decision.get(
+                "paid_second_repo_acut_calls_made"
+            ),
+            "b_eval_scoreable_cells": two_repo_future_holdout_decision.get("b_eval_scoreable_cells"),
+            "h_future_scoreable_cells": two_repo_future_holdout_decision.get("h_future_scoreable_cells"),
+            "policy_violation_count": two_repo_future_holdout_decision.get("policy_violation_count"),
+            "predictive_validity_established": two_repo_future_holdout_decision.get(
+                "predictive_validity_established"
+            ),
+            "recommended_next_runbook": two_repo_future_holdout_decision.get("recommended_next_runbook"),
+        }
+    else:
+        two_repo_future_holdout_paid_sidecar = {
+            "status": "not_available",
+            "note": "Two-repo paid future-holdout decision has not been generated for this MVP build.",
+        }
     return {
         "schema_version": "barcarolle.phase1.mvp_closeout.v1",
         "generated_at": now_utc(),
@@ -1621,6 +1653,7 @@ def build_closeout_payload(config: dict[str, Any]) -> dict[str, Any]:
         "clean_outcome_unseen_supply_sidecar_evidence": clean_outcome_unseen_supply_sidecar,
         "second_repo_clean_supply_sidecar_evidence": second_repo_clean_supply_sidecar,
         "two_repo_future_holdout_preregistration_sidecar_evidence": two_repo_future_holdout_sidecar,
+        "two_repo_future_holdout_paid_sidecar_evidence": two_repo_future_holdout_paid_sidecar,
         "clean_future_holdout_scale_up_decision": clean_future_holdout_scale_up_decision(future_holdout_decision),
         "production_ranking_status": "not_produced",
         "next_runbook_recommendation": closeout_next_runbook_recommendation(
@@ -1631,6 +1664,7 @@ def build_closeout_payload(config: dict[str, Any]) -> dict[str, Any]:
             clean_supply_breal_extension_decision,
             clean_outcome_unseen_supply_decision,
             second_repo_clean_supply_decision,
+            two_repo_future_holdout_decision,
         ),
     }
 
@@ -1668,9 +1702,18 @@ def closeout_report(payload: dict[str, Any]) -> str:
             f"Clean outcome-unseen supply sidecar evidence: `{payload['clean_outcome_unseen_supply_sidecar_evidence']['status']}`.",
             "Clean outcome-unseen supply evidence is reported as preregistration readiness only, not paid validation evidence.",
             f"Second-repo clean supply sidecar evidence: `{payload['second_repo_clean_supply_sidecar_evidence']['status']}`.",
-            "Second-repo clean supply evidence is local supply/preregistration evidence only; no second-repo paid cells have run.",
+            "Second-repo clean supply evidence is local supply/preregistration evidence; paid validation is reported separately when available.",
             f"Two-repo future-holdout preregistration sidecar evidence: `{payload['two_repo_future_holdout_preregistration_sidecar_evidence']['status']}`.",
-            "Two-repo future-holdout preregistration is a frozen design only until the planned paid validation run executes.",
+            "Two-repo future-holdout preregistration is the frozen design; paid execution is reported separately when available.",
+            f"Two-repo future-holdout paid sidecar evidence: `{payload['two_repo_future_holdout_paid_sidecar_evidence']['status']}`.",
+            (
+                "Two-repo paid validation result: "
+                f"`{payload['two_repo_future_holdout_paid_sidecar_evidence'].get('primary_decision_label', 'not_available')}`; "
+                f"H_future scoreable cells "
+                f"`{payload['two_repo_future_holdout_paid_sidecar_evidence'].get('h_future_scoreable_cells')}`; "
+                f"policy violations "
+                f"`{payload['two_repo_future_holdout_paid_sidecar_evidence'].get('policy_violation_count')}`."
+            ),
             "",
             f"Next runbook recommendation: {payload['next_runbook_recommendation']}.",
         ]

@@ -58,10 +58,10 @@
     "status": "available_as_clean_supply_extension_sidecar_evidence"
   },
   "cost_summary": {
-    "call_count": 139,
-    "observed_or_conservative_estimated_cost_usd": 46.9875638,
+    "call_count": 155,
+    "observed_or_conservative_estimated_cost_usd": 62.182946,
     "provider_billed_cost_status": "unavailable",
-    "usage_observed_rate": 0.9496
+    "usage_observed_rate": 0.9548
   },
   "disallowed_claims": [
     "predictive_validity_established",
@@ -82,7 +82,7 @@
     ],
     "status": "available_as_future_holdout_sidecar_evidence"
   },
-  "generated_at": "2026-05-22T12:55:43+00:00",
+  "generated_at": "2026-05-22T16:36:55+00:00",
   "hardening_sidecar_evidence": {
     "active_third_repo": "boltons",
     "decision": "experiments/phase1_compiler/results/phase1_certification_hardening_decision.json",
@@ -138,7 +138,7 @@
       }
     }
   },
-  "next_runbook_recommendation": "run_two_repo_preregistered_clean_future_holdout_paid_validation",
+  "next_runbook_recommendation": "repair_workspace_acut_scoreability_or_policy_violation_then_rerun_preregistered_two_repo_validation",
   "paid_smoke_sidecar_evidence": {
     "combined_scoreable_cells": 13,
     "combined_total_cells": 14,
@@ -217,6 +217,23 @@
   "task_counts_by_repo": {
     "humanize": 12,
     "toolz": 6
+  },
+  "two_repo_future_holdout_paid_sidecar_evidence": {
+    "b_eval_scoreable_cells": 16,
+    "decision": "experiments/phase1_compiler/results/phase1_two_repo_future_holdout_decision.json",
+    "h_future_scoreable_cells": 15,
+    "paid_acut_calls_made": true,
+    "paid_second_repo_acut_calls_made": true,
+    "policy_violation_count": 1,
+    "predictive_validity_established": false,
+    "primary_decision_label": "two_repo_paid_validation_complete_insufficient_evidence",
+    "recommended_next_runbook": "repair_workspace_acut_scoreability_or_policy_violation_then_rerun_preregistered_two_repo_validation",
+    "selected_repo_id": "attrs",
+    "selected_repos": [
+      "boltons",
+      "attrs"
+    ],
+    "status": "available_as_two_repo_future_holdout_paid_sidecar_evidence"
   },
   "two_repo_future_holdout_preregistration_sidecar_evidence": {
     "paid_second_repo_acut_calls_made": false,

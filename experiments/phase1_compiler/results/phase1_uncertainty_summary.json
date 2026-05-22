@@ -7,7 +7,7 @@
   ],
   "future_holdout_prediction_interval": null,
   "future_holdout_status": "unavailable_in_current_evidence",
-  "generated_at": "2026-05-22T12:55:43+00:00",
+  "generated_at": "2026-05-22T16:36:55+00:00",
   "observed_score_uncertainty": {
     "humanize": {
       "compatible_cell_count": 8,

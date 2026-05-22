@@ -187,6 +187,28 @@ def test_closeout_prioritizes_second_repo_preregistration_decision() -> None:
     assert recommendation == "run_two_repo_preregistered_clean_future_holdout_paid_validation"
 
 
+def test_closeout_prioritizes_two_repo_paid_decision_after_it_exists() -> None:
+    recommendation = compiler.closeout_next_runbook_recommendation(
+        {"recommended_next_runbook": "older_hardening_path"},
+        future_holdout_decision={
+            "paid_acut_calls_made": True,
+            "recommended_next_runbook": "mine_second_repo_clean_outcome_unseen_supply_for_two_repo_validation",
+        },
+        second_repo_clean_supply_decision={
+            "recommended_next_runbook": "run_two_repo_preregistered_clean_future_holdout_paid_validation"
+        },
+        two_repo_future_holdout_decision={
+            "paid_acut_calls_made": True,
+            "recommended_next_runbook": "repair_workspace_acut_scoreability_or_policy_violation_then_rerun_preregistered_two_repo_validation",
+        },
+    )
+
+    assert (
+        recommendation
+        == "repair_workspace_acut_scoreability_or_policy_violation_then_rerun_preregistered_two_repo_validation"
+    )
+
+
 def test_closeout_identifies_active_replacement_repo_sidecar() -> None:
     payload = compiler.build_closeout_payload(compiler.load_mvp_config())
 
@@ -214,7 +236,17 @@ def test_closeout_identifies_active_replacement_repo_sidecar() -> None:
         payload["two_repo_future_holdout_preregistration_sidecar_evidence"]["preregistration_status"]
         == "frozen"
     )
-    assert payload["next_runbook_recommendation"] == "run_two_repo_preregistered_clean_future_holdout_paid_validation"
+    assert (
+        payload["two_repo_future_holdout_paid_sidecar_evidence"]["primary_decision_label"]
+        == "two_repo_paid_validation_complete_insufficient_evidence"
+    )
+    assert payload["two_repo_future_holdout_paid_sidecar_evidence"]["paid_second_repo_acut_calls_made"] is True
+    assert payload["two_repo_future_holdout_paid_sidecar_evidence"]["h_future_scoreable_cells"] == 15
+    assert payload["two_repo_future_holdout_paid_sidecar_evidence"]["policy_violation_count"] == 1
+    assert (
+        payload["next_runbook_recommendation"]
+        == "repair_workspace_acut_scoreability_or_policy_violation_then_rerun_preregistered_two_repo_validation"
+    )
 
 
 def test_scorecard_import_preserves_humanize_cells_and_result_prefixes(tmp_path: Path) -> None:

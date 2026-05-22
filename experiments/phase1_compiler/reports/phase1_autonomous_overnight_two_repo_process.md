@@ -276,3 +276,27 @@ Decision:
   `two_repo_paid_validation_complete_insufficient_evidence`
 - predictive validity established: `false`
 - blocker: `policy_violation_count_exceeds_acceptance_gate`
+
+## Step 7 Phase 1 Closeout Rebuild
+
+Rebuilt Phase 1 MVP artifacts:
+
+- `phase1_compiler.py build-mvp --config experiments/phase1_compiler/configs/phase1_mvp.yaml`
+- `phase1_compiler.py validate --config experiments/phase1_compiler/configs/phase1_mvp.yaml`
+
+Validation status:
+
+- `status=valid`
+- all generated `predictive_validity_established` fields remained `false`
+- production ranking remained `not_produced`
+
+Closeout update:
+
+- imported `phase1_two_repo_future_holdout_decision.json` as
+  `two_repo_future_holdout_paid_sidecar_evidence`
+- recorded selected repos `boltons`, `attrs`
+- recorded paid attrs run completed: `paid_second_repo_acut_calls_made=true`
+- recorded H_future scoreable cells: `15`
+- recorded policy violations: `1`
+- next runbook recommendation:
+  `repair_workspace_acut_scoreability_or_policy_violation_then_rerun_preregistered_two_repo_validation`
