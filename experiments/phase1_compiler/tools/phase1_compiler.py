@@ -1379,6 +1379,36 @@ def closeout_next_runbook_recommendation(
     return "write Phase 1 validation-design runbook with source-adapter hardening as a prerequisite for validation-grade claims"
 
 
+def clean_future_holdout_scale_up_decision(future_holdout_decision: dict[str, Any] | None) -> dict[str, Any]:
+    if not future_holdout_decision or future_holdout_decision.get("paid_acut_calls_made") is not True:
+        return {
+            "status": "not_applicable_before_paid_future_holdout",
+            "next_path": "run_preregistered_clean_future_holdout_paid_validation",
+            "predictive_validity_established": False,
+        }
+    predictive_validity_established = bool(future_holdout_decision.get("predictive_validity_established"))
+    selected_repos = list(future_holdout_decision.get("selected_repos") or [])
+    holdout_scoreable = int(future_holdout_decision.get("h_future_scoreable_cells") or 0)
+    if predictive_validity_established:
+        return {
+            "status": "ready_for_phase1_predictive_validation_scaleup",
+            "next_path": future_holdout_decision.get("recommended_next_runbook"),
+            "predictive_validity_established": True,
+        }
+    return {
+        "status": "boltons_clean_future_holdout_pilot_complete",
+        "statement": (
+            "Boltons clean future-holdout pilot complete. Predictive validity remains unestablished because "
+            "the acceptance threshold requires at least two target repos and at least 12 holdout scoreable cells."
+        ),
+        "selected_repos": selected_repos,
+        "h_future_scoreable_cells": holdout_scoreable,
+        "next_path": future_holdout_decision.get("recommended_next_runbook"),
+        "second_repo_paid_work_allowed": False,
+        "predictive_validity_established": False,
+    }
+
+
 def build_closeout_payload(config: dict[str, Any]) -> dict[str, Any]:
     release = build_release_payload(config)
     certification = build_certification_rollup_payload(config)
@@ -1541,6 +1571,7 @@ def build_closeout_payload(config: dict[str, Any]) -> dict[str, Any]:
         "retrospective_validation_sidecar_evidence": retrospective_sidecar,
         "clean_supply_breal_extension_sidecar_evidence": clean_supply_breal_extension_sidecar,
         "clean_outcome_unseen_supply_sidecar_evidence": clean_outcome_unseen_supply_sidecar,
+        "clean_future_holdout_scale_up_decision": clean_future_holdout_scale_up_decision(future_holdout_decision),
         "production_ranking_status": "not_produced",
         "next_runbook_recommendation": closeout_next_runbook_recommendation(
             hardening_decision if hardening_sidecar else None,
@@ -1575,6 +1606,10 @@ def closeout_report(payload: dict[str, Any]) -> str:
             "Boltons paid-smoke rows are operational scoreability evidence only.",
             f"Future holdout sidecar evidence: `{payload['future_holdout_sidecar_evidence']['status']}`.",
             "Future-holdout evidence is reported as design, blocker, smoke, or validation sidecar evidence only.",
+            (
+                "Clean future-holdout scale-up decision: "
+                f"{payload['clean_future_holdout_scale_up_decision'].get('statement', payload['clean_future_holdout_scale_up_decision']['status'])}"
+            ),
             f"Retrospective validation sidecar evidence: `{payload['retrospective_validation_sidecar_evidence']['status']}`.",
             "Retrospective validation evidence remains outcome-seen and is not reported as clean future holdout.",
             f"Clean supply B_real extension sidecar evidence: `{payload['clean_supply_breal_extension_sidecar_evidence']['status']}`.",

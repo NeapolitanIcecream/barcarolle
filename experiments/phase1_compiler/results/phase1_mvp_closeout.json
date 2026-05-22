@@ -18,6 +18,17 @@
     }
   },
   "claim_scope": "phase1_mvp_compiler_infrastructure",
+  "clean_future_holdout_scale_up_decision": {
+    "h_future_scoreable_cells": 8,
+    "next_path": "mine_second_repo_clean_outcome_unseen_supply_for_two_repo_validation",
+    "predictive_validity_established": false,
+    "second_repo_paid_work_allowed": false,
+    "selected_repos": [
+      "boltons"
+    ],
+    "statement": "Boltons clean future-holdout pilot complete. Predictive validity remains unestablished because the acceptance threshold requires at least two target repos and at least 12 holdout scoreable cells.",
+    "status": "boltons_clean_future_holdout_pilot_complete"
+  },
   "clean_outcome_unseen_supply_sidecar_evidence": {
     "clean_supply_ready": true,
     "decision": "experiments/phase1_compiler/results/phase1_clean_outcome_unseen_supply_decision.json",
@@ -71,7 +82,7 @@
     ],
     "status": "available_as_future_holdout_sidecar_evidence"
   },
-  "generated_at": "2026-05-22T11:32:05+00:00",
+  "generated_at": "2026-05-22T11:33:37+00:00",
   "hardening_sidecar_evidence": {
     "active_third_repo": "boltons",
     "decision": "experiments/phase1_compiler/results/phase1_certification_hardening_decision.json",

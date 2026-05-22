@@ -182,6 +182,9 @@ def test_closeout_identifies_active_replacement_repo_sidecar() -> None:
         == "boltons_clean_future_holdout_pilot_complete_insufficient_sample"
     )
     assert payload["future_holdout_sidecar_evidence"]["paid_acut_calls_made"] is True
+    assert payload["clean_future_holdout_scale_up_decision"]["status"] == "boltons_clean_future_holdout_pilot_complete"
+    assert payload["clean_future_holdout_scale_up_decision"]["second_repo_paid_work_allowed"] is False
+    assert "at least two target repos" in payload["clean_future_holdout_scale_up_decision"]["statement"]
     assert payload["retrospective_validation_sidecar_evidence"]["primary_decision_label"] == "retrospective_validation_complete_clean_supply_still_blocked"
     assert payload["clean_supply_breal_extension_sidecar_evidence"]["primary_decision_label"] == "clean_supply_breal_extension_still_blocked"
     assert payload["clean_supply_breal_extension_sidecar_evidence"]["clean_supply_ready"] is False

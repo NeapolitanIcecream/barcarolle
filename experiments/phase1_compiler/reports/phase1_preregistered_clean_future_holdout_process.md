@@ -235,3 +235,32 @@ Validation:
 - `uv run --project experiments/phase0_headroom pytest -q experiments/phase0_headroom/tools` -> `74 passed in 2.21s`
 - `uv run --project experiments/phase1_compiler python experiments/phase1_compiler/tools/phase1_compiler.py validate --config experiments/phase1_compiler/configs/phase1_mvp.yaml` -> `status=valid`
 - `git diff --check` -> passed
+
+## Step 6 Scale-Up Decision
+
+No second-repo paid work ran in this step.
+
+Closeout decision:
+
+```text
+Boltons clean future-holdout pilot complete. Predictive validity remains unestablished because the acceptance threshold requires at least two target repos and at least 12 holdout scoreable cells.
+```
+
+Scale-up path:
+
+- status: `boltons_clean_future_holdout_pilot_complete`
+- selected repos: `boltons`
+- `H_future` scoreable cells: `8`
+- second-repo paid work allowed in this runbook: `false`
+- next path: `mine_second_repo_clean_outcome_unseen_supply_for_two_repo_validation`
+- predictive validity established: `false`
+
+The next stronger-claim path must first mine/certify second-repo clean supply
+and freeze a separate two-repo preregistration before any second-repo paid
+validation cells run.
+
+Validation:
+
+- `uv run --project experiments/phase1_compiler pytest -q` -> `57 passed in 0.37s`
+- `uv run --project experiments/phase1_compiler python experiments/phase1_compiler/tools/phase1_compiler.py validate --config experiments/phase1_compiler/configs/phase1_mvp.yaml` -> `status=valid`
+- `git diff --check` -> passed
