@@ -104,3 +104,27 @@ Boltons mining result:
 Because Boltons supply is cutoff-feasible, attrs backup screening is skipped.
 
 No paid calls have been made in this runbook.
+
+## Step 5 Build Clean-Supply Overlay
+
+Ran:
+
+- `phase1_clean_outcome_unseen_supply_mining.py build-overlay`
+
+Generated:
+
+- `experiments/phase1_compiler/results/phase1_clean_outcome_unseen_supply_overlay.json`
+- `experiments/phase1_compiler/reports/phase1_clean_outcome_unseen_supply_overlay.md`
+
+Overlay result:
+
+- evidence level: `clean_supply_overlay_sidecar`
+- clean supply ready: `true`
+- promoted `B_real`: `boltons__hist__011`, `boltons__clean_ext__001`, `boltons__clean_ext__008`, `boltons__clean_ext__010`, `boltons__clean_ext__017`
+- promoted `W_real`: `boltons__hist__022`, `boltons__hist__023`, `boltons__hist__027`
+- future-holdout cutoff feasibility for `boltons`: `clean_validation_ready=true`
+- selected cutoff: `T_compile_end=2020-06-22T01:19:35-04:00`, `T_holdout_start=2020-07-06T01:19:35-04:00`
+- predictive validity established: `false`
+
+The overlay records original hardening status and clean overlay promotion
+rationale for extension tasks. The canonical hardening overlay was not mutated.
