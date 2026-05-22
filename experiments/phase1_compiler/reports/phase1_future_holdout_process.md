@@ -153,3 +153,25 @@ Decision:
 - predictive validity established: `false`
 - production ranking: `not_produced`
 - recommended next runbook: `mine_and_certify_fresh_outcome_unseen_tasks_for_future_holdout`
+
+## Step 10 Phase 1 Boundary Refresh
+
+Updated the Phase 1 closeout boundary so
+`phase1_future_holdout_decision.json` is imported as sidecar evidence.
+
+Rebuilt and validated:
+
+```bash
+uv run --project experiments/phase1_compiler python experiments/phase1_compiler/tools/phase1_compiler.py build-mvp --config experiments/phase1_compiler/configs/phase1_mvp.yaml
+uv run --project experiments/phase1_compiler python experiments/phase1_compiler/tools/phase1_compiler.py validate --config experiments/phase1_compiler/configs/phase1_mvp.yaml
+```
+
+Validation returned `status=valid`.
+
+Closeout state:
+
+- predictive validity established: `false`
+- production ranking status: `not_produced`
+- paid smoke sidecar evidence: `available_as_operational_smoke_evidence`
+- future holdout sidecar evidence: `available_as_future_holdout_sidecar_evidence`
+- next runbook recommendation: `mine_and_certify_fresh_outcome_unseen_tasks_for_future_holdout`

@@ -177,6 +177,8 @@ def test_closeout_identifies_active_replacement_repo_sidecar() -> None:
 
     assert payload["hardening_sidecar_evidence"]["active_third_repo"] == "boltons"
     assert payload["hardening_sidecar_evidence"]["third_repo_replacement"]["active_repo_id"] == "boltons"
+    assert payload["future_holdout_sidecar_evidence"]["primary_decision_label"] == "future_holdout_supply_blocked"
+    assert payload["next_runbook_recommendation"] == "mine_and_certify_fresh_outcome_unseen_tasks_for_future_holdout"
 
 
 def test_scorecard_import_preserves_humanize_cells_and_result_prefixes(tmp_path: Path) -> None:
