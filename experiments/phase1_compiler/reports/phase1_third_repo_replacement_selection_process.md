@@ -1,6 +1,6 @@
 # Phase 1 Third Repo Replacement Selection Process
 
-Status: in progress.
+Status: completed and verified.
 
 Generated: 2026-05-22T05:51:50Z.
 
@@ -224,3 +224,18 @@ Final decision: `ready_for_paid_third_repo_acut_smoke_runbook`.
 
 The next runbook may run a small paid ACUT smoke for `boltons`; this runbook did
 not run any paid ACUT or experiment LLM calls.
+
+## Step 12 Final Verification
+
+Final verification passed:
+
+- `git diff --check`
+- `uv run --project experiments/phase0_headroom pytest -q experiments/phase0_headroom/tools` -> `69 passed in 1.72s`
+- `uv run --project experiments/phase1_compiler pytest -q` -> `27 passed in 0.32s`
+- `uv run --project experiments/phase1_compiler python experiments/phase1_compiler/tools/phase1_compiler.py validate --config experiments/phase1_compiler/configs/phase1_mvp.yaml` -> `status=valid`
+- `git ls-files` for raw, workspace, external repo, venv, and cache paths named
+  by the runbook returned no tracked files
+- `git status --short` was clean; `git status --short --ignored` showed only
+  ignored cache, venv, external repo, raw result, and workspace paths
+
+No paid calls were made in this runbook.
