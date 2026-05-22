@@ -115,10 +115,36 @@ def test_commit_context_ref_uses_message_without_patch(tmp_path: Path) -> None:
 
     ref = pilot.commit_context_ref(config, {"task_id": "humanize__hist__001", "target_commit": commit, "subject": "Describe behavior"})
 
-    assert ref["classification"] == "problem_context"
+    assert ref["classification"] == "diagnostic_only_context"
     assert ref["source_kind"] == "commit_message_fallback"
     assert ref["summary"] == "Describe behavior"
     assert ref["body_summary"] == "Fixes #123"
+
+
+def test_commit_message_fallback_alone_does_not_produce_allowed_context_refs(tmp_path: Path) -> None:
+    repo = tmp_path / "repo"
+    repo.mkdir()
+    pilot.run_command(["git", "init"], repo)
+    pilot.run_command(["git", "config", "user.email", "test@example.invalid"], repo)
+    pilot.run_command(["git", "config", "user.name", "Test User"], repo)
+    (repo / "module.py").write_text("value = 1\n", encoding="utf-8")
+    pilot.run_command(["git", "add", "module.py"], repo)
+    pilot.run_command(["git", "commit", "-m", "Fix a behavior"], repo)
+    commit = pilot.git_lines(repo, ["rev-parse", "HEAD"])[0]
+    config = pilot.PilotConfig(
+        repo_id="humanize",
+        repo_url="https://example.invalid/humanize.git",
+        local_repo=repo,
+        command_template="python -m pytest -q {test_files}",
+        certification_attempts=1,
+        pilot_certified_min=1,
+        benchmark_grade_min=1,
+        result_prefix="humanize_pre_phase1_workspace",
+    )
+
+    ref = pilot.commit_context_ref(config, {"task_id": "humanize__hist__001", "target_commit": commit, "subject": "Fix a behavior"})
+
+    assert pilot.allowed_context_refs([ref]) == []
 
 
 def test_solver_statement_uses_candidate_repo_id() -> None:
@@ -129,6 +155,54 @@ def test_solver_statement_uses_candidate_repo_id() -> None:
 
     assert "itsdangerous behavior" in statement
     assert "humanize behavior" not in statement
+
+
+def test_candidate_filter_rejects_maintenance_dependency_subjects() -> None:
+    decision = pilot.candidate_filter_decision(
+        subject="update dev dependencies",
+        changed_files=["src/itsdangerous/timed.py", "tests/test_itsdangerous/test_serializer.py"],
+        code_files=["src/itsdangerous/timed.py"],
+        added=4,
+        deleted=2,
+        modules=["timed"],
+    )
+
+    assert decision["candidate_filter_status"] == "rejected"
+    assert "reject_subject_term:update dev dependencies" in decision["reject_reasons"]
+
+
+def test_candidate_filter_rejects_large_changes_over_250_lines() -> None:
+    decision = pilot.candidate_filter_decision(
+        subject="fix timestamp behavior",
+        changed_files=["src/itsdangerous/timed.py", "tests/test_itsdangerous/test_timed.py"],
+        code_files=["src/itsdangerous/timed.py"],
+        added=200,
+        deleted=51,
+        modules=["timed"],
+    )
+
+    assert decision["candidate_filter_status"] == "rejected"
+    assert "changed_lines_over:250" in decision["reject_reasons"]
+
+
+def test_candidate_filter_rejects_project_file_heavy_changes() -> None:
+    decision = pilot.candidate_filter_decision(
+        subject="fix serializer behavior",
+        changed_files=[
+            ".github/workflows/tests.yaml",
+            "pyproject.toml",
+            "requirements/tests.txt",
+            "src/itsdangerous/serializer.py",
+            "tests/test_itsdangerous/test_serializer.py",
+        ],
+        code_files=["src/itsdangerous/serializer.py"],
+        added=12,
+        deleted=8,
+        modules=["serializer"],
+    )
+
+    assert decision["candidate_filter_status"] == "rejected"
+    assert "project_file_heavy" in decision["reject_reasons"]
 
 
 def test_uv_commands_include_editable_workspace() -> None:

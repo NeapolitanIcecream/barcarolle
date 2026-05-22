@@ -37,3 +37,26 @@ No raw result, workspace, external repo, venv, or cache paths named by the
 runbook were tracked by Git.
 
 No paid calls were made.
+
+## Step 1 Source Adapter Semantics
+
+The Phase 0 repo-history adapter was repaired before regenerating artifacts.
+
+- `solver_statement` uses the candidate `repo_id`; the Itsdangerous regression
+  test requires `itsdangerous behavior` and excludes `humanize behavior`.
+- Commit-message fallback is now diagnostic-only. It can still emit a sanitized
+  commit summary and body summary, but it does not produce
+  `allowed_context_refs` and cannot by itself mark a statement as `reviewed`.
+- Candidate filtering now rejects deterministic maintenance and project churn:
+  configured subject terms, no behavior code file, project-file-heavy changes,
+  and changes above 250 added plus deleted lines.
+- Cross-module changes above three modules and docs/config-touching changes are
+  marked for manual review in the supply diagnostics.
+- The supply funnel CSV now records filter status, reject reasons, manual-review
+  reasons, and changed-line counts.
+
+Regression check:
+
+- `uv run --project experiments/phase0_headroom pytest -q experiments/phase0_headroom/tools/test_repo_history_pilot.py` -> `14 passed in 0.20s`
+
+No paid calls were made.

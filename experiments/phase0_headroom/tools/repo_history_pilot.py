@@ -38,6 +38,8 @@ GATE_ORDER = [
     "taxonomy_labelability",
 ]
 REJECT_SUBJECT_TERMS = [
+    "update dev dependencies",
+    "update project files",
     "docs",
     "documentation",
     "pre-commit",
@@ -47,6 +49,8 @@ REJECT_SUBJECT_TERMS = [
     "release",
     "bump",
     "dependabot",
+    "remove deprecated",
+    "deprecate",
     "translation",
     "locale",
     "format",
@@ -67,6 +71,34 @@ REJECT_SUBJECT_TERMS = [
     "tests for",
 ]
 PROJECT_CONFIG_PY_FILES = {"setup.py", "noxfile.py", "conftest.py"}
+PROJECT_OR_CONFIG_PREFIXES = (
+    ".devcontainer/",
+    ".github/",
+    "ci/",
+    "docs/",
+    "requirements/",
+)
+PROJECT_OR_CONFIG_FILES = {
+    ".editorconfig",
+    ".flake8",
+    ".gitignore",
+    ".pre-commit-config.yaml",
+    ".readthedocs.yaml",
+    "CHANGES.rst",
+    "LICENSE.txt",
+    "MANIFEST.in",
+    "README.md",
+    "README.rst",
+    "conftest.py",
+    "noxfile.py",
+    "pyproject.toml",
+    "setup.cfg",
+    "setup.py",
+    "tox.ini",
+    "uv.lock",
+}
+MAX_CERTIFICATION_CHANGED_LINES = 250
+MANUAL_REVIEW_CROSS_MODULE_LIMIT = 3
 
 
 @dataclass(frozen=True)
@@ -172,9 +204,13 @@ def is_test_path(path: str) -> bool:
 def is_code_path(path: str) -> bool:
     if not path.endswith(".py") or is_test_path(path):
         return False
-    if path in PROJECT_CONFIG_PY_FILES:
+    if path in PROJECT_CONFIG_PY_FILES or is_project_or_config_path(path):
         return False
-    return not path.startswith(("docs/", ".github/", "ci/"))
+    return True
+
+
+def is_project_or_config_path(path: str) -> bool:
+    return path in PROJECT_OR_CONFIG_FILES or path.startswith(PROJECT_OR_CONFIG_PREFIXES)
 
 
 def classify_paths(paths: list[str]) -> tuple[list[str], list[str]]:
@@ -204,6 +240,55 @@ def change_size_bucket(total_lines: int) -> str:
     if total_lines <= 200:
         return "m_81_200"
     return "l_201_plus"
+
+
+def subject_reject_term(subject: str) -> str:
+    lower = subject.lower()
+    for term in REJECT_SUBJECT_TERMS:
+        if term in lower:
+            return term
+    return ""
+
+
+def candidate_filter_decision(
+    *,
+    subject: str,
+    changed_files: list[str],
+    code_files: list[str],
+    added: int,
+    deleted: int,
+    modules: list[str],
+) -> dict[str, Any]:
+    project_paths = [path for path in changed_files if is_project_or_config_path(path)]
+    reject_reasons: list[str] = []
+    manual_review_reasons: list[str] = []
+    term = subject_reject_term(subject)
+    if term:
+        reject_reasons.append(f"reject_subject_term:{term}")
+    if project_paths and len(project_paths) >= max(2, len(code_files) + 1):
+        reject_reasons.append("project_file_heavy")
+    if not code_files:
+        reject_reasons.append("no_behavior_code_file")
+    if added + deleted > MAX_CERTIFICATION_CHANGED_LINES:
+        reject_reasons.append(f"changed_lines_over:{MAX_CERTIFICATION_CHANGED_LINES}")
+    if len(set(modules)) > MANUAL_REVIEW_CROSS_MODULE_LIMIT:
+        manual_review_reasons.append(f"cross_module_count_over:{MANUAL_REVIEW_CROSS_MODULE_LIMIT}")
+    if project_paths:
+        manual_review_reasons.append("docs_or_config_change_present")
+    if reject_reasons:
+        status = "rejected"
+    elif manual_review_reasons:
+        status = "manual_review_required"
+    else:
+        status = "accepted"
+    return {
+        "candidate_filter_status": status,
+        "reject_reasons": reject_reasons,
+        "manual_review_reasons": manual_review_reasons,
+        "changed_line_count": added + deleted,
+        "project_or_config_file_count": len(project_paths),
+        "code_file_count": len(code_files),
+    }
 
 
 def first_failing_gate(gates: dict[str, str]) -> str:
@@ -282,7 +367,19 @@ def mining_rows(root: Path, config: PilotConfig, max_anchors: int = 500) -> tupl
         paths = lines[1:]
         code_files, test_files = classify_paths(paths)
         added, deleted = numstat(repo, commit)
-        rejected = any(term in subject.lower() for term in REJECT_SUBJECT_TERMS)
+        modules = module_names(code_files)
+        decision = candidate_filter_decision(
+            subject=subject,
+            changed_files=paths,
+            code_files=code_files,
+            added=added,
+            deleted=deleted,
+            modules=modules,
+        )
+        reject_reasons = list(decision["reject_reasons"])
+        if not test_files:
+            reject_reasons.append("no_changed_test_file")
+        selected = bool(test_files) and decision["candidate_filter_status"] != "rejected"
         anchor = {
             "schema_version": "barcarolle.repo_history_anchor.v1",
             "repo_id": config.repo_id,
@@ -296,8 +393,11 @@ def mining_rows(root: Path, config: PilotConfig, max_anchors: int = 500) -> tupl
             "test_files": test_files,
             "changed_lines_added": added,
             "changed_lines_deleted": deleted,
-            "status": "candidate" if code_files and test_files and not rejected else "rejected",
-            "reject_reason": "" if code_files and test_files and not rejected else "not_code_plus_test_or_rejected_subject",
+            "status": "candidate" if selected else "rejected",
+            "candidate_filter_status": decision["candidate_filter_status"],
+            "reject_reason": "" if selected else ";".join(reject_reasons),
+            "reject_reasons": reject_reasons,
+            "manual_review_reasons": decision["manual_review_reasons"],
         }
         anchors.append(anchor)
         if anchor["status"] != "candidate":
@@ -319,7 +419,9 @@ def mining_rows(root: Path, config: PilotConfig, max_anchors: int = 500) -> tupl
                 "changed_lines_added": added,
                 "changed_lines_deleted": deleted,
                 "change_size_bucket": change_size_bucket(added + deleted),
-                "module_or_package": module_names(code_files),
+                "module_or_package": modules,
+                "candidate_filter_status": decision["candidate_filter_status"],
+                "manual_review_reasons": decision["manual_review_reasons"],
                 "task_type_proxy": "behavior_or_feature_or_bugfix",
                 "source_type": "git_commit",
                 "status": "selected_for_certification",
@@ -505,8 +607,17 @@ def mine(root: Path, config_path: Path) -> None:
     write_jsonl(exp / CANDIDATE_REL / f"{config.repo_id}_candidates.jsonl", candidates)
     write_csv(
         exp / CANDIDATE_REL / f"{config.repo_id}_supply_funnel.csv",
-        [{"status": row["status"], "reject_reason": row.get("reject_reason", "")} for row in anchors],
-        ["status", "reject_reason"],
+        [
+            {
+                "status": row["status"],
+                "candidate_filter_status": row.get("candidate_filter_status", ""),
+                "reject_reason": row.get("reject_reason", ""),
+                "manual_review_reasons": ";".join(row.get("manual_review_reasons") or []),
+                "changed_line_count": int(row.get("changed_lines_added") or 0) + int(row.get("changed_lines_deleted") or 0),
+            }
+            for row in anchors
+        ],
+        ["status", "candidate_filter_status", "reject_reason", "manual_review_reasons", "changed_line_count"],
     )
     write_json(
         exp / TARGET_PROFILES_REL / f"{config.repo_id}_target_profile.json",
@@ -538,7 +649,7 @@ def source_context(root: Path, config_path: Path) -> None:
             pr_refs = [commit_context_ref(config, candidate)]
         for ref in pr_refs:
             ref["task_id"] = candidate["task_id"]
-        allowed_refs = [ref["ref"] for ref in pr_refs if ref["classification"] == "problem_context"]
+        allowed_refs = allowed_context_refs(pr_refs)
         context_status = "non_leaky_context_found" if allowed_refs else "no_non_leaky_source_context"
         contexts.extend(pr_refs or [{"task_id": candidate["task_id"], "ref": f"commit:{candidate['target_commit']}", "classification": "unusable", "summary": "No linked PR or commit-message context found."}])
         statement = {
@@ -603,11 +714,15 @@ def commit_context_ref(config: PilotConfig, candidate: dict[str, Any]) -> dict[s
     return {
         "task_id": str(candidate["task_id"]),
         "ref": f"commit:{commit}",
-        "classification": "problem_context",
+        "classification": "diagnostic_only_context",
         "source_kind": "commit_message_fallback",
         "summary": str(candidate.get("subject") or "Repair the described behavior").strip(),
         "body_summary": body,
     }
+
+
+def allowed_context_refs(refs: list[dict[str, Any]]) -> list[str]:
+    return [ref["ref"] for ref in refs if ref.get("classification") == "problem_context" and not str(ref.get("ref", "")).startswith("commit:")]
 
 
 def solver_statement(candidate: dict[str, Any], refs: list[dict[str, Any]]) -> str:
