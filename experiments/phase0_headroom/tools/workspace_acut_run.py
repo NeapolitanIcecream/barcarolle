@@ -87,6 +87,7 @@ class TaskPackage:
     target_commit: str | None = None
     timeout_seconds: int = 180
     scope_boundaries: str = ""
+    metadata: dict[str, Any] = field(default_factory=dict)
 
 
 @dataclass
@@ -155,6 +156,55 @@ def read_jsonl(path: Path) -> list[dict[str, Any]]:
     if not path.exists() or path.stat().st_size == 0:
         return []
     return [json.loads(line) for line in path.read_text(encoding="utf-8").splitlines() if line.strip()]
+
+
+def simple_yaml_load(path: Path) -> dict[str, Any]:
+    rows: list[tuple[int, str]] = []
+    for raw in path.read_text(encoding="utf-8").splitlines():
+        if not raw.strip() or raw.lstrip().startswith("#"):
+            continue
+        rows.append((len(raw) - len(raw.lstrip(" ")), raw.strip()))
+
+    def parse_block(index: int, indent: int) -> tuple[Any, int]:
+        if index >= len(rows):
+            return {}, index
+        is_list = rows[index][0] == indent and rows[index][1].startswith("- ")
+        if is_list:
+            items = []
+            while index < len(rows) and rows[index][0] == indent and rows[index][1].startswith("- "):
+                item = rows[index][1][2:].strip()
+                index += 1
+                items.append(parse_scalar(item))
+            return items, index
+
+        mapping: dict[str, Any] = {}
+        while index < len(rows):
+            row_indent, text = rows[index]
+            if row_indent < indent:
+                break
+            if row_indent > indent:
+                raise ValueError(f"unsupported YAML indentation near: {text}")
+            if ":" not in text:
+                raise ValueError(f"unsupported YAML line: {text}")
+            key, raw_value = text.split(":", 1)
+            index += 1
+            if raw_value.strip():
+                mapping[key.strip()] = parse_scalar(raw_value)
+                continue
+            if index >= len(rows) or rows[index][0] <= row_indent:
+                mapping[key.strip()] = {}
+                continue
+            mapping[key.strip()], index = parse_block(index, rows[index][0])
+        return mapping, index
+
+    if not rows:
+        return {}
+    parsed, final_index = parse_block(0, 0)
+    if final_index != len(rows):
+        raise ValueError(f"unparsed YAML content in {path}")
+    if not isinstance(parsed, dict):
+        raise ValueError(f"expected mapping YAML root in {path}")
+    return parsed
 
 
 def write_jsonl(path: Path, rows: list[dict[str, Any]]) -> None:
@@ -341,6 +391,24 @@ def write_statement_file(workspace: Path, package: TaskPackage) -> Path:
     return statement
 
 
+def package_submission_metadata(package: TaskPackage) -> dict[str, Any]:
+    if not package.metadata:
+        return {}
+    allowed_keys = {
+        "evidence_level",
+        "task_time",
+        "changed_files",
+        "test_files",
+        "allowed_context_refs",
+        "original_hardening_status",
+        "clean_overlay_promotion_decision",
+        "promotion_rationale",
+        "source_context_status",
+        "metadata_sources",
+    }
+    return {key: package.metadata[key] for key in sorted(allowed_keys) if key in package.metadata}
+
+
 def policy_violation(changed: list[str], package: TaskPackage) -> tuple[str | None, list[str]]:
     edited_tests = [path for path in changed if is_test_path(path)]
     if edited_tests:
@@ -420,6 +488,7 @@ def run_workspace_cell(root: Path, package: TaskPackage, config: AdapterConfig, 
             "stderr": str(stderr_path.relative_to(exp)),
             "patch": str(patch_path.relative_to(exp)),
         },
+        "task_package_metadata": package_submission_metadata(package),
     }
     verifier = {
         "schema_version": "barcarolle.workspace_acut_verifier.v1",
@@ -646,6 +715,184 @@ def load_jsonl_map(path: Path) -> dict[str, dict[str, Any]]:
     return {row["task_id"]: row for row in read_jsonl(path)}
 
 
+def config_path(root: Path, raw: Any) -> Path:
+    path = Path(str(raw))
+    return path if path.is_absolute() else root / path
+
+
+def load_workspace_matrix_config(root: Path, matrix_config_path: Path | str | None) -> dict[str, Any]:
+    path = resolve_repo_path(root, matrix_config_path, MATRIX_CONFIG_REL)
+    if not path.exists():
+        return {}
+    config = simple_yaml_load(path)
+    config["_path"] = str(path)
+    return config
+
+
+def matrix_task_ids(config: dict[str, Any]) -> list[str]:
+    splits = config.get("splits") if isinstance(config.get("splits"), dict) else {}
+    ordered: list[str] = []
+    for split_name in ["b_eval", "h_future", "B_eval", "H_future"]:
+        raw = splits.get(split_name)
+        if isinstance(raw, list):
+            ordered.extend(str(item) for item in raw)
+    return ordered
+
+
+def split_for_matrix_task(config: dict[str, Any]) -> dict[str, str]:
+    splits = config.get("splits") if isinstance(config.get("splits"), dict) else {}
+    mapping: dict[str, str] = {}
+    for split_name, raw in splits.items():
+        if not isinstance(raw, list):
+            continue
+        label = "B_eval" if str(split_name).lower() == "b_eval" else "H_future" if str(split_name).lower() == "h_future" else str(split_name)
+        for task_id in raw:
+            mapping[str(task_id)] = label
+    return mapping
+
+
+def clean_overlay_statement(row: dict[str, Any], metadata: dict[str, Any], verifier_command_display: str) -> str:
+    context = metadata.get("sanitized_context") if isinstance(metadata.get("sanitized_context"), dict) else {}
+    refs = metadata.get("allowed_context_refs") or []
+    code_files = [path for path in metadata.get("changed_files", []) if not is_test_path(str(path))]
+    lines = [
+        "Repair the public behavior described by the sanitized problem context.",
+        "",
+    ]
+    if refs:
+        lines.append(f"Allowed public context refs: {', '.join(str(ref) for ref in refs)}.")
+    if context.get("summary"):
+        lines.append(f"Problem summary: {context['summary']}")
+    if context.get("body_summary"):
+        lines.append(f"Problem details: {context['body_summary']}")
+    if code_files:
+        lines.append(f"Editable implementation scope: {', '.join(str(path) for path in code_files)}.")
+    if verifier_command_display:
+        lines.append(f"Verifier command metadata: {verifier_command_display}")
+    lines.append("Preserve existing public behavior and do not edit tests or generated metadata.")
+    return "\n".join(lines)
+
+
+def command_display(template: str, test_files: list[str]) -> str:
+    test_arg = " ".join(shlex.quote(path) for path in test_files)
+    return template.format(test_files=test_arg)
+
+
+def clean_overlay_package_for(
+    *,
+    root: Path,
+    exp: Path,
+    source_repo: Path,
+    row: dict[str, Any],
+    overlay_row: dict[str, Any],
+    split: str,
+    overlay_path: Path,
+    clean_ext_path: Path,
+    canonical_path: Path,
+    release_path: Path,
+    profile: dict[str, Any],
+) -> TaskPackage:
+    task_id = str(row["task_id"])
+    test_files = [str(path) for path in row.get("test_files", [])]
+    changed_files = [str(path) for path in row.get("changed_files") or [*row.get("code_files", []), *test_files]]
+    code_files = [str(path) for path in row.get("code_files") or [path for path in changed_files if not is_test_path(path)]]
+    command_template = str(row.get("harness_test_command") or profile.get("test_command") or "python -m pytest -q {test_files}")
+    verifier_command = with_editable_current_worktree(absolute_uv_project(command_test_files(command_template, test_files), exp))
+    context = row.get("sanitized_context") or overlay_row.get("sanitized_context") or {}
+    promotion_decision = row.get("promotion_decision") or row.get("clean_overlay_promotion_decision") or overlay_row.get("promotion_decision") or overlay_row.get("clean_overlay_promotion_decision")
+    metadata = {
+        "evidence_level": "clean_supply_overlay_sidecar",
+        "task_time": row.get("task_time") or overlay_row.get("task_time"),
+        "base_commit": row.get("base_commit"),
+        "target_commit": row.get("target_commit") or overlay_row.get("target_commit"),
+        "changed_files": changed_files,
+        "test_files": test_files,
+        "allowed_context_refs": row.get("allowed_context_refs") or overlay_row.get("allowed_context_refs") or [],
+        "sanitized_context": context,
+        "source_context_status": row.get("source_context_status") or overlay_row.get("source_context_status"),
+        "original_hardening_status": row.get("original_hardening_status") or overlay_row.get("original_hardening_status"),
+        "original_hardening_reject_reasons": row.get("original_hardening_reject_reasons") or overlay_row.get("original_hardening_reject_reasons") or [],
+        "clean_overlay_promotion_decision": promotion_decision,
+        "promotion_rationale": row.get("promotion_rationale") or overlay_row.get("promotion_rationale"),
+        "metadata_sources": {
+            "clean_supply_overlay": display_path(root, overlay_path),
+            "clean_ext_certified_tasks": display_path(root, clean_ext_path),
+            "canonical_boltons_certified_tasks": display_path(root, canonical_path),
+            "canonical_boltons_release": display_path(root, release_path),
+        },
+    }
+    statement = (
+        clean_overlay_statement(row, metadata, command_display(command_template, test_files))
+        if context
+        else str(row.get("solver_facing_statement") or "Repair the public behavior described by the certified task context.")
+    )
+    return TaskPackage(
+        task_id=task_id,
+        repo_id=str(row.get("repo_id") or "boltons"),
+        split=split,
+        source_repo=source_repo,
+        base_commit=str(row["base_commit"]),
+        target_commit=str(row.get("target_commit") or overlay_row.get("target_commit") or ""),
+        solver_facing_statement=statement,
+        verifier_command=verifier_command,
+        allowed_code_paths=code_files,
+        test_paths=test_files,
+        timeout_seconds=180,
+        scope_boundaries=str(row.get("scope_boundaries") or "Modify only implementation files needed for this behavior; do not edit tests."),
+        metadata=metadata,
+    )
+
+
+def load_clean_overlay_packages(root: Path, matrix_config_path: Path | str | None = None) -> list[TaskPackage]:
+    config = load_workspace_matrix_config(root, matrix_config_path)
+    if not config or not config.get("clean_supply_overlay"):
+        return []
+    exp = phase0_root(root)
+    overlay_path = config_path(root, config["clean_supply_overlay"])
+    clean_ext_path = config_path(root, config["clean_ext_certified_tasks"])
+    canonical_path = config_path(root, config["canonical_boltons_certified_tasks"])
+    release_path = config_path(root, config["canonical_boltons_release"])
+    profile_path = config_path(root, config.get("boltons_target_profile", EXP_REL / "target_profiles" / "boltons_target_profile.json"))
+    overlay = read_json(overlay_path)
+    clean_ext = load_jsonl_map(clean_ext_path)
+    canonical = load_jsonl_map(canonical_path)
+    profile = read_json(profile_path) if profile_path.exists() else {}
+    source_repo = Path(str(profile.get("local_repo") or exp / "external_repos" / "boltons"))
+    if not source_repo.is_absolute():
+        source_repo = root / source_repo
+    overlay_by_id = {str(row["task_id"]): row for row in overlay.get("promoted_tasks", []) if row.get("task_id")}
+    split_by_id = split_for_matrix_task(config)
+    ordered_ids = [*matrix_task_ids(config)]
+    for task_id in overlay_by_id:
+        if task_id not in ordered_ids:
+            ordered_ids.append(task_id)
+
+    packages: list[TaskPackage] = []
+    for task_id in ordered_ids:
+        row = {**canonical.get(task_id, {}), **clean_ext.get(task_id, {})}
+        if not row:
+            continue
+        row.setdefault("task_id", task_id)
+        overlay_row = overlay_by_id.get(task_id, {})
+        split = split_by_id.get(task_id) or str(row.get("split") or overlay_row.get("split") or "")
+        packages.append(
+            clean_overlay_package_for(
+                root=root,
+                exp=exp,
+                source_repo=source_repo,
+                row=row,
+                overlay_row=overlay_row,
+                split=split,
+                overlay_path=overlay_path,
+                clean_ext_path=clean_ext_path,
+                canonical_path=canonical_path,
+                release_path=release_path,
+                profile=profile,
+            )
+        )
+    return packages
+
+
 def load_toolz_packages(root: Path) -> list[TaskPackage]:
     exp = phase0_root(root)
     tasks = load_jsonl_map(exp / "certified_tasks" / "toolz_certified_tasks.jsonl")
@@ -777,14 +1024,22 @@ def load_second_repo_packages(root: Path) -> list[TaskPackage]:
     return packages
 
 
-def load_phase0_packages(root: Path) -> list[TaskPackage]:
-    return [*load_toolz_packages(root), *load_generic_packages(root), *load_second_repo_packages(root)]
+def load_phase0_packages(root: Path, matrix_config_path: Path | str | None = None) -> list[TaskPackage]:
+    overlay_packages = load_clean_overlay_packages(root, matrix_config_path)
+    matrix_config = load_workspace_matrix_config(root, matrix_config_path)
+    if matrix_config.get("clean_supply_overlay"):
+        return overlay_packages
+    overlay_task_ids = {package.task_id for package in overlay_packages}
+    base_packages = [*load_toolz_packages(root), *load_generic_packages(root), *load_second_repo_packages(root)]
+    if overlay_task_ids:
+        base_packages = [package for package in base_packages if package.task_id not in overlay_task_ids]
+    return [*base_packages, *overlay_packages]
 
 
 def select_packages(packages: list[TaskPackage], mode: str, task_ids: list[str] | None = None) -> list[TaskPackage]:
     if task_ids:
-        wanted = set(task_ids)
-        return [package for package in packages if package.task_id in wanted]
+        by_task_id = {package.task_id: package for package in packages}
+        return [by_task_id[task_id] for task_id in task_ids if task_id in by_task_id]
     if mode == "smoke":
         wanted = {"toolz__hist__002", "click__rbench__001"}
         return [package for package in packages if package.task_id in wanted]
@@ -918,6 +1173,68 @@ def write_empty_result_files(root: Path, status: str, reason: str, result_prefix
     )
 
 
+def inspect_packages(
+    root: Path,
+    matrix_config_path: Path | str | None = None,
+    result_prefix: str = "workspace_acut",
+    task_ids: list[str] | None = None,
+) -> dict[str, Any]:
+    exp = phase0_root(root)
+    resolved_matrix_config = resolve_repo_path(root, matrix_config_path, MATRIX_CONFIG_REL)
+    config = load_workspace_matrix_config(root, matrix_config_path)
+    configured_task_ids = matrix_task_ids(config)
+    requested_task_ids = task_ids or configured_task_ids
+    packages = load_phase0_packages(root, matrix_config_path=resolved_matrix_config)
+    selected = select_packages(packages, mode="matrix", task_ids=requested_task_ids) if requested_task_ids else packages
+    selected_ids = [package.task_id for package in selected]
+    missing = [task_id for task_id in requested_task_ids if task_id not in selected_ids]
+    payload = {
+        "schema_version": "barcarolle.workspace_acut_package_inspection.v1",
+        "generated_at": iso_now(),
+        "status": "ready" if not missing else "blocked_missing_task_packages",
+        "matrix_config": display_path(root, resolved_matrix_config),
+        "configured_task_ids": configured_task_ids,
+        "requested_task_ids": requested_task_ids,
+        "selected_task_ids": selected_ids,
+        "missing_task_ids": missing,
+        "package_count": len(selected),
+        "paid_acut_calls_made": False,
+        "packages": [
+            {
+                "task_id": package.task_id,
+                "repo_id": package.repo_id,
+                "split": package.split,
+                "base_commit": package.base_commit,
+                "target_commit": package.target_commit,
+                "source_repo": display_path(root, package.source_repo),
+                "allowed_code_paths": package.allowed_code_paths,
+                "test_paths": package.test_paths,
+                "statement_sha256": sha256_text(render_statement(package)),
+                "metadata": package_submission_metadata(package),
+            }
+            for package in selected
+        ],
+    }
+    write_json(result_file(exp, result_prefix, "package_inspection", ".json"), payload)
+    write_text(
+        report_file(exp, result_prefix, "package_inspection"),
+        "\n".join(
+            [
+                "# Workspace ACUT Package Inspection",
+                "",
+                f"Status: `{payload['status']}`.",
+                "",
+                f"- Matrix config: `{payload['matrix_config']}`.",
+                f"- Selected task ids: `{', '.join(selected_ids) if selected_ids else 'none'}`.",
+                f"- Missing task ids: `{', '.join(missing) if missing else 'none'}`.",
+                "- Paid ACUT calls made: `false`.",
+                "",
+            ]
+        ),
+    )
+    return payload
+
+
 def write_default_adapter_config(root: Path) -> None:
     path = root / CONFIG_REL
     if path.exists():
@@ -991,6 +1308,7 @@ def preflight(
     root: Path,
     adapter_config_path: Path | str | None = None,
     adapter_id: str | None = None,
+    matrix_config_path: Path | str | None = None,
     result_prefix: str = "workspace_acut",
 ) -> dict[str, Any]:
     resolved_adapter_config = resolve_repo_path(root, adapter_config_path, CONFIG_REL)
@@ -999,6 +1317,7 @@ def preflight(
     write_workspace_matrix_config(root)
     exp = phase0_root(root)
     config = resolve_adapter_config(resolved_adapter_config, adapter_id)
+    package_inspection = inspect_packages(root, matrix_config_path=matrix_config_path, result_prefix=result_prefix)
     missing_env = [name for name in config.requires_env if not os.environ.get(name)]
     configured = bool(config.command_template.strip())
     first_token = shlex.split(config.command_template)[0] if configured and shlex.split(config.command_template) else None
@@ -1014,6 +1333,9 @@ def preflight(
         blockers.append("acut_command_not_found")
     if int(protocol.get("scoreable_same_protocol_count") or 0) < 3:
         blockers.append("generic_comparator_below_three_scoreable_tasks")
+        status = "blocked_preflight_failed"
+    if package_inspection["status"] != "ready":
+        blockers.append("matrix_task_package_selection_failed")
         status = "blocked_preflight_failed"
     payload = {
         "schema_version": "barcarolle.workspace_acut_preflight.v1",
@@ -1037,6 +1359,10 @@ def preflight(
         "usage_observation_mode": config.usage_mode,
         "cost_policy": "stop_without_configured_endpoint_backed_harness",
         "blockers": blockers,
+        "matrix_config": package_inspection["matrix_config"],
+        "configured_task_ids": package_inspection["configured_task_ids"],
+        "selected_task_ids": package_inspection["selected_task_ids"],
+        "missing_task_ids": package_inspection["missing_task_ids"],
     }
     write_json(result_file(exp, result_prefix, "preflight", ".json"), payload)
     if status != "ready":
@@ -1061,6 +1387,9 @@ def preflight(
                 "- Local Codex/ChatGPT subscription fallback: `disabled`.",
                 f"- Generic comparator same-protocol tasks: `{protocol.get('scoreable_same_protocol_count')}`.",
                 f"- Usage observation mode: `{config.usage_mode}`.",
+                f"- Matrix config: `{payload['matrix_config']}`.",
+                f"- Selected task ids: `{', '.join(payload['selected_task_ids']) if payload['selected_task_ids'] else 'none'}`.",
+                f"- Missing task ids: `{', '.join(payload['missing_task_ids']) if payload['missing_task_ids'] else 'none'}`.",
                 "",
                 "## Blockers",
                 "",
@@ -1096,7 +1425,7 @@ def run_matrix(
     cost_path = result_file(exp, result_prefix, "cost_ledger", ".jsonl")
     existing_submissions = read_jsonl(submission_path)
     reusable_task_ids = existing_task_ids_for_adapter(existing_submissions, config.adapter_id) if mode == "matrix" else set()
-    packages = select_packages(load_phase0_packages(root), mode=mode, task_ids=task_ids)
+    packages = select_packages(load_phase0_packages(root, matrix_config_path=resolved_matrix_config), mode=mode, task_ids=task_ids)
     submissions: list[dict[str, Any]] = []
     verifiers: list[dict[str, Any]] = []
     cost_rows: list[dict[str, Any]] = []
@@ -1184,12 +1513,18 @@ def main() -> int:
         command_parser.add_argument("--task-id", action="append", default=None, help="Task id to run; repeat to run a bounded subset.")
         command_parser.add_argument("--timeout-seconds", type=int, default=None, help="Override the selected adapter timeout for this run.")
 
-    for name in ["preflight", "smoke", "run-matrix", "summarize"]:
+    for name in ["preflight", "smoke", "run-matrix", "summarize", "inspect-packages"]:
         add_common_options(subcommands.add_parser(name))
     args = parser.parse_args()
     root = Path(args.root).resolve()
     if args.command == "preflight":
-        preflight(root, adapter_config_path=args.adapter_config, adapter_id=args.adapter_id, result_prefix=args.result_prefix)
+        preflight(
+            root,
+            adapter_config_path=args.adapter_config,
+            adapter_id=args.adapter_id,
+            matrix_config_path=args.matrix_config,
+            result_prefix=args.result_prefix,
+        )
     elif args.command == "smoke":
         run_matrix(
             root,
@@ -1214,6 +1549,8 @@ def main() -> int:
         )
     elif args.command == "summarize":
         summarize(root, result_prefix=args.result_prefix)
+    elif args.command == "inspect-packages":
+        inspect_packages(root, matrix_config_path=args.matrix_config, result_prefix=args.result_prefix, task_ids=args.task_id)
     return 0
 
 

@@ -33,3 +33,54 @@ untracked:
 ```
 
 No conflicting existing changes were found.
+
+## Step 1 Clean-Overlay Workspace Task Loading
+
+Tooling support passed without paid ACUT calls.
+
+Added run configs:
+
+- `experiments/phase1_compiler/configs/phase1_preregistered_clean_future_holdout_paid_validation.yaml`
+- `experiments/phase0_headroom/configs/phase1_preregistered_clean_future_holdout_workspace_matrix.yaml`
+
+Updated workspace ACUT tooling:
+
+- `experiments/phase0_headroom/tools/workspace_acut_run.py`
+- `experiments/phase0_headroom/tools/test_workspace_acut_run.py`
+
+Sanitized diagnostic artifacts:
+
+- `experiments/phase0_headroom/results/phase1_future_holdout_package_inspection_package_inspection.json`
+- `experiments/phase0_headroom/reports/phase1_future_holdout_package_inspection_package_inspection.md`
+- `experiments/phase1_compiler/results/phase1_preregistered_clean_future_holdout_tooling_check.json`
+- `experiments/phase1_compiler/reports/phase1_preregistered_clean_future_holdout_tooling_check.md`
+
+Package inspection:
+
+- status: `ready`
+- package count: `8`
+- missing task ids: `none`
+- evidence level: `clean_supply_overlay_sidecar`
+- paid ACUT calls made: `false`
+
+Selected task ids:
+
+```text
+boltons__clean_ext__001
+boltons__clean_ext__008
+boltons__clean_ext__010
+boltons__hist__011
+boltons__clean_ext__017
+boltons__hist__022
+boltons__hist__023
+boltons__hist__027
+```
+
+Canonical Boltons release, canonical Boltons certified tasks, and the hardening
+overlay were not modified.
+
+Validation:
+
+- `uv run --project experiments/phase0_headroom pytest -q experiments/phase0_headroom/tools/test_workspace_acut_run.py` -> `18 passed in 1.74s`
+- `uv run --project experiments/phase1_compiler pytest -q experiments/phase1_compiler/tests/test_phase1_future_holdout.py` -> `9 passed in 0.01s`
+- `git diff --check` -> passed

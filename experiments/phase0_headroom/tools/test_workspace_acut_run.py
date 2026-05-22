@@ -99,6 +99,113 @@ def write_multi_adapter_config(tmp_path: Path, command: str) -> Path:
     return path
 
 
+def write_clean_overlay_fixture(tmp_path: Path) -> tuple[Path, Path, Path, str]:
+    root = tmp_path
+    repo, base_commit = make_repo(tmp_path)
+    exp = root / "experiments" / "phase0_headroom"
+    phase1 = root / "experiments" / "phase1_compiler"
+    (exp / "certified_tasks").mkdir(parents=True)
+    (exp / "releases").mkdir(parents=True)
+    (exp / "target_profiles").mkdir(parents=True)
+    (phase1 / "results").mkdir(parents=True)
+    (exp / "configs").mkdir(parents=True)
+
+    sidecar_row = {
+        "task_id": "boltons__clean_ext__001",
+        "repo_id": "boltons",
+        "base_commit": base_commit,
+        "target_commit": "target-clean-ext-001",
+        "task_time": "2020-01-06T22:29:17-08:00",
+        "changed_files": ["calc.py", "tests/test_calc.py"],
+        "test_files": ["tests/test_calc.py"],
+        "allowed_context_refs": ["issue:231"],
+        "sanitized_context": {
+            "classification": "problem_context",
+            "ref": "issue:231",
+            "summary": "calc.value returns the wrong public value",
+            "body_summary": "A public issue reports that calc.value should return 2.",
+        },
+        "original_hardening_status": "diagnostic_only",
+        "promotion_decision": "promote_to_clean_benchmark_candidate",
+        "promotion_rationale": "source_context_repaired_with_sanitized_public_issue",
+        "subject": "SECRET implementation: return 2",
+        "harness_test_command": "python -m pytest -q {test_files}",
+    }
+    canonical_row = {
+        "task_id": "boltons__hist__011",
+        "repo_id": "boltons",
+        "base_commit": base_commit,
+        "target_commit": "target-hist-011",
+        "task_time": "2020-06-22T01:19:35-04:00",
+        "code_files": ["calc.py"],
+        "changed_files": ["calc.py", "tests/test_calc.py"],
+        "test_files": ["tests/test_calc.py"],
+        "solver_facing_statement": "Repair the public calc behavior.",
+        "harness_test_command": "python -m pytest -q {test_files}",
+        "scope_boundaries": "Modify only calc.py; do not edit tests.",
+    }
+    workspace_acut.write_jsonl(exp / "certified_tasks" / "boltons_clean_outcome_unseen_supply_certified_tasks.jsonl", [sidecar_row])
+    workspace_acut.write_jsonl(exp / "certified_tasks" / "boltons_certified_tasks.jsonl", [canonical_row])
+    release_path = exp / "releases" / "boltons_phase0_pilot_release.json"
+    workspace_acut.write_json(
+        release_path,
+        {
+            "pilot_grade": True,
+            "splits": {"B_real": ["boltons__hist__011"], "W_real": []},
+            "tasks": [{"task_id": "boltons__hist__011", "split": "B_real"}],
+        },
+    )
+    workspace_acut.write_json(exp / "target_profiles" / "boltons_target_profile.json", {"local_repo": str(repo), "test_command": "python -m pytest -q {test_files}"})
+    workspace_acut.write_json(
+        phase1 / "results" / "phase1_clean_outcome_unseen_supply_overlay.json",
+        {
+            "evidence_level": "clean_supply_overlay_sidecar",
+            "promoted_tasks": [
+                {
+                    "task_id": "boltons__clean_ext__001",
+                    "repo_id": "boltons",
+                    "task_time": "2020-01-06T22:29:17-08:00",
+                    "promotion_decision": "promote_to_clean_benchmark_candidate",
+                    "promotion_rationale": "source_context_repaired_with_sanitized_public_issue",
+                    "original_hardening_status": "diagnostic_only",
+                    "sanitized_context": sidecar_row["sanitized_context"],
+                },
+                {
+                    "task_id": "boltons__hist__011",
+                    "repo_id": "boltons",
+                    "task_time": "2020-06-22T01:19:35-04:00",
+                    "clean_overlay_promotion_decision": "prior_promoted_clean_supply",
+                    "original_hardening_status": "manual_review_required",
+                },
+            ],
+        },
+    )
+    matrix_path = exp / "configs" / "phase1_preregistered_clean_future_holdout_workspace_matrix.yaml"
+    matrix_path.write_text(
+        "\n".join(
+            [
+                "schema_version: barcarolle.phase1_preregistered_clean_future_holdout_workspace_matrix.v1",
+                "status: configured",
+                "clean_supply_overlay: experiments/phase1_compiler/results/phase1_clean_outcome_unseen_supply_overlay.json",
+                "clean_ext_certified_tasks: experiments/phase0_headroom/certified_tasks/boltons_clean_outcome_unseen_supply_certified_tasks.jsonl",
+                "canonical_boltons_certified_tasks: experiments/phase0_headroom/certified_tasks/boltons_certified_tasks.jsonl",
+                "canonical_boltons_release: experiments/phase0_headroom/releases/boltons_phase0_pilot_release.json",
+                "result_prefixes:",
+                "  b_eval: phase1_future_holdout_b_eval",
+                "  h_future: phase1_future_holdout_h_future",
+                "splits:",
+                "  b_eval:",
+                "    - boltons__clean_ext__001",
+                "  h_future:",
+                "    - boltons__hist__011",
+                "",
+            ]
+        ),
+        encoding="utf-8",
+    )
+    return root, matrix_path, release_path, base_commit
+
+
 def test_multi_adapter_config_requires_adapter_id(tmp_path: Path) -> None:
     config_path = write_multi_adapter_config(tmp_path, f"{sys.executable} fake.py --workspace {{workspace}}")
 
@@ -180,6 +287,71 @@ def test_select_packages_prefers_explicit_task_ids_over_smoke_defaults(tmp_path:
     selected = workspace_acut.select_packages(packages, mode="smoke", task_ids=["fake__001"])
 
     assert [package.task_id for package in selected] == ["fake__001"]
+
+
+def test_clean_overlay_task_ids_can_be_selected_by_task_id(tmp_path: Path) -> None:
+    root, matrix_path, _release_path, _base_commit = write_clean_overlay_fixture(tmp_path)
+
+    packages = workspace_acut.load_phase0_packages(root, matrix_config_path=matrix_path)
+    selected = workspace_acut.select_packages(packages, mode="matrix", task_ids=["boltons__clean_ext__001"])
+
+    assert [package.task_id for package in selected] == ["boltons__clean_ext__001"]
+    assert selected[0].repo_id == "boltons"
+    assert selected[0].metadata["evidence_level"] == "clean_supply_overlay_sidecar"
+
+
+def test_clean_overlay_loader_does_not_rewrite_canonical_release(tmp_path: Path) -> None:
+    root, matrix_path, release_path, _base_commit = write_clean_overlay_fixture(tmp_path)
+    before = release_path.read_text(encoding="utf-8")
+
+    workspace_acut.load_phase0_packages(root, matrix_config_path=matrix_path)
+
+    assert release_path.read_text(encoding="utf-8") == before
+
+
+def test_clean_overlay_statement_uses_public_context_without_target_diff(tmp_path: Path) -> None:
+    root, matrix_path, _release_path, _base_commit = write_clean_overlay_fixture(tmp_path)
+    package = {
+        package.task_id: package for package in workspace_acut.load_phase0_packages(root, matrix_config_path=matrix_path)
+    }["boltons__clean_ext__001"]
+
+    text = workspace_acut.render_statement(package)
+
+    assert "calc.value returns the wrong public value" in text
+    assert "issue:231" in text
+    assert "calc.py" in section(text, "Editable Paths")
+    assert "python -m pytest -q tests/test_calc.py" in text
+    assert "target-clean-ext-001" not in text
+    assert "SECRET implementation" not in text
+    assert "diff --git" not in text
+
+
+def test_clean_overlay_provenance_is_recorded_as_sidecar_metadata(tmp_path: Path) -> None:
+    root, matrix_path, _release_path, _base_commit = write_clean_overlay_fixture(tmp_path)
+    package = {
+        package.task_id: package for package in workspace_acut.load_phase0_packages(root, matrix_config_path=matrix_path)
+    }["boltons__clean_ext__001"]
+
+    assert package.metadata["evidence_level"] == "clean_supply_overlay_sidecar"
+    assert package.metadata["task_time"] == "2020-01-06T22:29:17-08:00"
+    assert package.metadata["changed_files"] == ["calc.py", "tests/test_calc.py"]
+    assert package.metadata["allowed_context_refs"] == ["issue:231"]
+    assert package.metadata["original_hardening_status"] == "diagnostic_only"
+    assert package.metadata["promotion_rationale"] == "source_context_repaired_with_sanitized_public_issue"
+    assert package.metadata["sanitized_context"]["classification"] == "problem_context"
+
+
+def test_future_holdout_prefixes_keep_separate_score_tables(tmp_path: Path) -> None:
+    exp = workspace_acut.phase0_root(tmp_path)
+
+    workspace_acut.write_empty_result_files(tmp_path, "ready", "", result_prefix="phase1_future_holdout_b_eval")
+    workspace_acut.write_empty_result_files(tmp_path, "ready", "", result_prefix="phase1_future_holdout_h_future")
+
+    assert (exp / "results" / "phase1_future_holdout_b_eval_score_table.csv").exists()
+    assert (exp / "results" / "phase1_future_holdout_h_future_score_table.csv").exists()
+    assert (exp / "results" / "phase1_future_holdout_b_eval_score_table.csv") != (
+        exp / "results" / "phase1_future_holdout_h_future_score_table.csv"
+    )
 
 
 def test_workspace_adapter_captures_git_diff_and_verifies_in_fresh_workspace(tmp_path: Path) -> None:
