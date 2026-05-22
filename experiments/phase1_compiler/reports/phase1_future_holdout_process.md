@@ -89,3 +89,43 @@ Verification:
 - `uv run --project experiments/phase1_compiler pytest -q` -> `35 passed in 0.30s`
 
 No paid calls have been made in this step.
+
+## Step 3 Clean Supply Audit
+
+Ran:
+
+```bash
+uv run --project experiments/phase1_compiler python experiments/phase1_compiler/tools/phase1_future_holdout.py audit-supply --config experiments/phase1_compiler/configs/phase1_future_holdout_validation.yaml
+```
+
+Result:
+
+- selected repos: none
+- clean supply ready: `false`
+- blockers: `no_repo_has_minimum_clean_outcome_unseen_supply`
+
+Repo summary:
+
+| Repo | Certified | Benchmark-grade | Previous ACUT outcome seen | Clean outcome-unseen |
+| --- | ---: | ---: | ---: | ---: |
+| `boltons` | 16 | 7 | 7 | 0 |
+| `toolz` | 6 | 6 | 6 | 0 |
+
+The current benchmark-grade Boltons and Toolz tasks are not clean future-holdout
+tasks because they already have workspace ACUT outcomes. No paid validation
+cells are allowed on this branch.
+
+## Step 4 Cutoff Plan
+
+Ran `design-cutoff` to record a deterministic blocked cutoff plan.
+
+Cutoff result:
+
+- selected repos: none
+- model snapshot status: `unknown`
+- repo-time holdout not contamination-proof: `true`
+- `boltons`: blocked by `insufficient_clean_outcome_unseen_supply`
+- `toolz`: blocked by `insufficient_clean_outcome_unseen_supply`
+
+Because no repo has minimum clean outcome-unseen supply, Steps 5 through 8 are
+skipped and the runbook proceeds directly to Step 9 without paid validation.

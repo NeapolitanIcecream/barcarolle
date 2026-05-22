@@ -1,0 +1,39 @@
+{
+  "cutoff_primary_axis": "repo_task_time",
+  "embargo_gap_days": 14,
+  "generated_at": "2026-05-22T07:44:38+00:00",
+  "model_snapshot_date": null,
+  "model_snapshot_status": "unknown",
+  "predictive_validity_established": false,
+  "repo_plans": {
+    "boltons": {
+      "T_compile_end": null,
+      "T_holdout_start": null,
+      "b_eval_task_ids": [],
+      "blockers": [
+        "insufficient_clean_outcome_unseen_supply"
+      ],
+      "clean_task_count": 0,
+      "clean_validation_ready": false,
+      "h_future_task_ids": [],
+      "repo_id": "boltons",
+      "validation_size": "blocked"
+    },
+    "toolz": {
+      "T_compile_end": null,
+      "T_holdout_start": null,
+      "b_eval_task_ids": [],
+      "blockers": [
+        "insufficient_clean_outcome_unseen_supply"
+      ],
+      "clean_task_count": 0,
+      "clean_validation_ready": false,
+      "h_future_task_ids": [],
+      "repo_id": "toolz",
+      "validation_size": "blocked"
+    }
+  },
+  "repo_time_holdout_not_contamination_proof": true,
+  "schema_version": "barcarolle.phase1.future_holdout_cutoff_plan.v1",
+  "selected_repos": []
+}
