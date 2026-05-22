@@ -51,3 +51,18 @@ Regression checks:
 
 - `uv run --project experiments/phase0_headroom pytest -q experiments/phase0_headroom/tools/test_repo_history_pilot.py` -> `16 passed`
 - `uv run --project experiments/phase1_compiler pytest -q experiments/phase1_compiler/tests/test_phase1_source_certification_hardening.py` -> `11 passed`
+
+## Step 2 Replacement Configs
+
+Created:
+
+- `experiments/phase0_headroom/configs/third_repo_replacement_boltons_v1.yaml`
+- `experiments/phase0_headroom/configs/third_repo_replacement_attrs_v1.yaml`
+- `experiments/phase1_compiler/configs/phase1_third_repo_replacement_selection.yaml`
+
+Both repo configs point to ignored `external_repos` paths, disable paid calls,
+and use local-only claim scope. The Phase 1 selection config is configured with
+candidate order `boltons`, `attrs` and active selection `pending`.
+
+Config parser checks loaded both replacement repo configs and the Phase 1
+selection config successfully.
