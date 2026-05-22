@@ -1,0 +1,42 @@
+{
+  "allowed_claims": [
+    "second_repo_clean_supply_mining_completed",
+    "second_repo_clean_supply_overlay_created",
+    "attrs_clean_supply_ready_for_two_repo_preregistration",
+    "two_repo_future_holdout_design_preregistered",
+    "insufficient_evidence_for_predictive_validation"
+  ],
+  "blockers": [],
+  "clean_supply_ready": true,
+  "generated_at": "2026-05-22T12:55:09Z",
+  "paid_acut_calls_made": false,
+  "paid_llm_calls_made": false,
+  "paid_second_repo_acut_calls_made": false,
+  "predictive_validity_established": false,
+  "primary_decision_label": "two_repo_future_holdout_design_frozen_ready_for_paid_validation",
+  "promoted_task_count": 18,
+  "recommended_next_runbook": "run_two_repo_preregistered_clean_future_holdout_paid_validation",
+  "schema_version": "barcarolle.phase1.second_repo_clean_supply_decision.v1",
+  "selected_b_eval_task_ids": [
+    "attrs__hist__001",
+    "attrs__hist__003",
+    "attrs__hist__004",
+    "attrs__hist__008"
+  ],
+  "selected_h_future_task_ids": [
+    "attrs__hist__012",
+    "attrs__hist__013",
+    "attrs__hist__023",
+    "attrs__hist__027"
+  ],
+  "selected_repo_id": "attrs",
+  "selected_repos": [
+    "boltons",
+    "attrs"
+  ],
+  "second_repo_clean_supply_overlay": "experiments/phase1_compiler/results/phase1_second_repo_clean_supply_overlay.json",
+  "total_h_future_scoreable_capacity_if_second_repo_scoreable": 16,
+  "two_repo_clean_supply": "experiments/phase1_compiler/results/phase1_two_repo_future_holdout_clean_supply.json",
+  "two_repo_preregistration": "experiments/phase1_compiler/results/phase1_two_repo_future_holdout_preregistration.json",
+  "two_repo_preregistration_status": "frozen"
+}

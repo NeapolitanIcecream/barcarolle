@@ -216,3 +216,39 @@ Preregistration result:
 - holdout tuning forbidden: `true`
 - predictive validity established: `false`
 - recommended next runbook: `run_two_repo_preregistered_clean_future_holdout_paid_validation`
+
+## Step 6 Decision And MVP Closeout Import
+
+Generated:
+
+- `experiments/phase1_compiler/results/phase1_second_repo_clean_supply_decision.json`
+- `experiments/phase1_compiler/reports/phase1_second_repo_clean_supply_decision.md`
+
+Decision result:
+
+- primary decision: `two_repo_future_holdout_design_frozen_ready_for_paid_validation`
+- selected repo: `attrs`
+- selected repos: `boltons`, `attrs`
+- clean supply ready: `true`
+- two-repo preregistration status: `frozen`
+- paid second-repo ACUT calls made: `false`
+- paid LLM calls made: `false`
+- predictive validity established: `false`
+- recommended next runbook: `run_two_repo_preregistered_clean_future_holdout_paid_validation`
+
+Updated `experiments/phase1_compiler/tools/phase1_compiler.py` so MVP closeout
+imports the second-repo decision and two-repo preregistration as sidecar
+evidence. The closeout recommendation now comes from the second-repo clean
+supply decision after the two-repo design is frozen.
+
+Validation:
+
+- `uv run --project experiments/phase1_compiler pytest -q experiments/phase1_compiler/tests/test_phase1_compiler.py` -> `17 passed in 0.05s`
+- `uv run --project experiments/phase1_compiler python experiments/phase1_compiler/tools/phase1_compiler.py build-mvp --config experiments/phase1_compiler/configs/phase1_mvp.yaml`
+- `uv run --project experiments/phase1_compiler python experiments/phase1_compiler/tools/phase1_compiler.py validate --config experiments/phase1_compiler/configs/phase1_mvp.yaml` -> `status=valid`
+
+MVP closeout sidecars:
+
+- second-repo clean supply sidecar: `available_as_second_repo_clean_supply_sidecar_evidence`
+- two-repo future-holdout preregistration sidecar: `available_as_two_repo_future_holdout_preregistration_sidecar_evidence`
+- next runbook recommendation: `run_two_repo_preregistered_clean_future_holdout_paid_validation`

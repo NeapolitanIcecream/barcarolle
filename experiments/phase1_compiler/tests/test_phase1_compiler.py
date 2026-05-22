@@ -172,6 +172,21 @@ def test_closeout_reuses_hardening_next_runbook_recommendation() -> None:
     assert recommendation == "select_replacement_third_repo_and_locally_certify_without_paid_acut"
 
 
+def test_closeout_prioritizes_second_repo_preregistration_decision() -> None:
+    recommendation = compiler.closeout_next_runbook_recommendation(
+        {"recommended_next_runbook": "older_hardening_path"},
+        future_holdout_decision={
+            "paid_acut_calls_made": True,
+            "recommended_next_runbook": "mine_second_repo_clean_outcome_unseen_supply_for_two_repo_validation",
+        },
+        second_repo_clean_supply_decision={
+            "recommended_next_runbook": "run_two_repo_preregistered_clean_future_holdout_paid_validation"
+        },
+    )
+
+    assert recommendation == "run_two_repo_preregistered_clean_future_holdout_paid_validation"
+
+
 def test_closeout_identifies_active_replacement_repo_sidecar() -> None:
     payload = compiler.build_closeout_payload(compiler.load_mvp_config())
 
@@ -190,7 +205,16 @@ def test_closeout_identifies_active_replacement_repo_sidecar() -> None:
     assert payload["clean_supply_breal_extension_sidecar_evidence"]["clean_supply_ready"] is False
     assert payload["clean_outcome_unseen_supply_sidecar_evidence"]["primary_decision_label"] == "boltons_clean_supply_ready_for_preregistered_validation"
     assert payload["clean_outcome_unseen_supply_sidecar_evidence"]["future_holdout_preregistration_status"] == "frozen"
-    assert payload["next_runbook_recommendation"] == "mine_second_repo_clean_outcome_unseen_supply_for_two_repo_validation"
+    assert (
+        payload["second_repo_clean_supply_sidecar_evidence"]["primary_decision_label"]
+        == "two_repo_future_holdout_design_frozen_ready_for_paid_validation"
+    )
+    assert payload["second_repo_clean_supply_sidecar_evidence"]["paid_second_repo_acut_calls_made"] is False
+    assert (
+        payload["two_repo_future_holdout_preregistration_sidecar_evidence"]["preregistration_status"]
+        == "frozen"
+    )
+    assert payload["next_runbook_recommendation"] == "run_two_repo_preregistered_clean_future_holdout_paid_validation"
 
 
 def test_scorecard_import_preserves_humanize_cells_and_result_prefixes(tmp_path: Path) -> None:
