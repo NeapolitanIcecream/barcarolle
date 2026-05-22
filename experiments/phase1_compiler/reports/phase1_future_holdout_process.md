@@ -129,3 +129,27 @@ Cutoff result:
 
 Because no repo has minimum clean outcome-unseen supply, Steps 5 through 8 are
 skipped and the runbook proceeds directly to Step 9 without paid validation.
+
+## Step 9 Score And Decide
+
+Ran:
+
+```bash
+uv run --project experiments/phase1_compiler python experiments/phase1_compiler/tools/phase1_future_holdout.py score --config experiments/phase1_compiler/configs/phase1_future_holdout_validation.yaml
+```
+
+Decision:
+
+- primary label: `future_holdout_supply_blocked`
+- paid ACUT calls made: `false`
+- selected repos: none
+- `B_eval` task ids: none
+- `H_future` task ids: none
+- `B_eval` scoreable cells: `0`
+- `H_future` scoreable cells: `0`
+- policy violations: `0`
+- observed-or-conservative estimated cost: `37.6472432`
+- incremental observed-or-conservative cost in this runbook: `0.0`
+- predictive validity established: `false`
+- production ranking: `not_produced`
+- recommended next runbook: `mine_and_certify_fresh_outcome_unseen_tasks_for_future_holdout`
