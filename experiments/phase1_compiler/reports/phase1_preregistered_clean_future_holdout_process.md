@@ -119,3 +119,40 @@ Cost gate:
 - paid parallelism: disabled
 
 Next step may run the paid `B_eval` batch sequentially.
+
+## Step 3 Paid B_eval Batch
+
+Paid `B_eval` batch complete.
+
+Scheduled cells:
+
+- Codex adapter: `4`
+- Kilo adapter: `4`
+- Total: `8`
+
+Terminal status counts:
+
+- `verified_pass`: `7`
+- `verified_fail`: `1`
+
+Scoreability and policy:
+
+- scoreable cells: `8/8`
+- non-scoreable cells: `0`
+- policy violations: `0`
+- solver hidden/oracle filename scan: no matches under solver workspaces
+
+Per-adapter results:
+
+- `codex_workspace`: `4/4` scoreable, `4` verified pass
+- `kilo_workspace`: `4/4` scoreable, `3` verified pass, `1` verified fail
+
+Usage and cost:
+
+- prefix usage observed rate: `1.0000`
+- prefix observed-or-conservative cost: `USD 4.4760882`
+- cumulative workspace usage observed rate: `0.9466`
+- cumulative observed-or-conservative cost: `USD 42.1233314`
+- cumulative stop cap: `USD 80.00`
+
+The `H_future` batch may proceed.
