@@ -300,3 +300,32 @@ Closeout update:
 - recorded policy violations: `1`
 - next runbook recommendation:
   `repair_workspace_acut_scoreability_or_policy_violation_then_rerun_preregistered_two_repo_validation`
+
+## Step 8 Optional Local Analysis
+
+Skipped. The required paid validation, two-repo metrics, closeout rebuild, and
+final decision artifacts were sufficient for this runbook.
+
+## Step 9 Final Decision
+
+Final artifacts:
+
+- `experiments/phase1_compiler/results/phase1_autonomous_overnight_two_repo_decision.json`
+- `experiments/phase1_compiler/reports/phase1_autonomous_overnight_two_repo_decision.md`
+
+Final label:
+
+- `two_repo_paid_validation_complete_insufficient_evidence`
+
+Reason:
+
+- the two-repo paid validation completed;
+- selected repos were `boltons` and `attrs`;
+- H_future scoreable cells were `15`, above the threshold of `12`;
+- metrics were computed from the frozen design;
+- predictive validity remained `false` because the preregistered policy gate
+  requires `0` policy violations and the run recorded `1`.
+
+Final next step:
+
+`repair_workspace_acut_scoreability_or_policy_violation_then_rerun_preregistered_two_repo_validation`.
