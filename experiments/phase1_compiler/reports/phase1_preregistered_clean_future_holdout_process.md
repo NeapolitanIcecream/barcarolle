@@ -1,6 +1,6 @@
 # Phase 1 Preregistered Clean Future-Holdout Paid Validation Process
 
-Status: in progress.
+Status: complete.
 
 Generated: 2026-05-22T10:56:23Z.
 
@@ -264,3 +264,51 @@ Validation:
 - `uv run --project experiments/phase1_compiler pytest -q` -> `57 passed in 0.37s`
 - `uv run --project experiments/phase1_compiler python experiments/phase1_compiler/tools/phase1_compiler.py validate --config experiments/phase1_compiler/configs/phase1_mvp.yaml` -> `status=valid`
 - `git diff --check` -> passed
+
+## Step 7 Final Repository Hygiene
+
+Final hygiene passed.
+
+Commits made by step:
+
+- Step 0: `f0e63096` `Record preregistered clean future holdout preflight`
+- Step 1: `8f7389fa` `Support clean overlay tasks in workspace ACUT runner`
+- Step 2: `61d54105` `Record clean future holdout paid entry gate`
+- Step 3: `3678b29c` `Run clean future holdout B_eval batch`
+- Step 4: `21fee608` `Run clean future holdout H_future batch`
+- Step 5: `171c3218` `Compute clean future holdout metrics and decision`
+- Step 6: `c5de1e55` `Record clean future holdout scale-up decision`
+
+Paid cell counts:
+
+- `phase1_future_holdout_b_eval`: `8` cells, `8` scoreable, usage observed rate `1.0000`, observed-or-conservative cost `USD 4.4760882`
+- `phase1_future_holdout_h_future`: `8` cells, `8` scoreable, usage observed rate `1.0000`, observed-or-conservative cost `USD 4.8642324`
+
+Final decision:
+
+- primary label: `boltons_clean_future_holdout_pilot_complete_insufficient_sample`
+- paid ACUT calls made: `true`
+- selected repos: `boltons`
+- policy violations: `0`
+- incremental observed-or-conservative cost: `USD 9.3403206`
+- cumulative workspace calls in reconciliation: `139`
+- cumulative usage observed rate: `0.9496`
+- cumulative observed-or-conservative spend: `USD 46.9875638`
+- predictive validity established: `false`
+- production ranking: `not_produced`
+- next recommended runbook: `mine_second_repo_clean_outcome_unseen_supply_for_two_repo_validation`
+
+Artifact hygiene:
+
+- `git status --short` before final report edit: clean
+- `git diff --cached --name-only`: empty
+- raw, workspace, and external repo paths are ignored
+- no raw, workspace, external repo, `.venv`, or `__pycache__` paths are tracked
+
+Final validation:
+
+- `git diff --check` -> passed
+- `uv run --project experiments/phase1_compiler pytest -q` -> `57 passed in 0.37s`
+- `uv run --project experiments/phase1_compiler python experiments/phase1_compiler/tools/phase1_compiler.py validate --config experiments/phase1_compiler/configs/phase1_mvp.yaml` -> `status=valid`
+
+No push was performed.
