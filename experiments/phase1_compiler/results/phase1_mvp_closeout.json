@@ -30,7 +30,7 @@
     "production_benchmark_ranking"
   ],
   "evidence_status": "mvp_compiler_artifacts_built_insufficient_for_predictive_validation",
-  "generated_at": "2026-05-22T06:45:09+00:00",
+  "generated_at": "2026-05-22T06:46:19+00:00",
   "hardening_sidecar_evidence": {
     "active_third_repo": "boltons",
     "decision": "experiments/phase1_compiler/results/phase1_certification_hardening_decision.json",
@@ -86,10 +86,19 @@
       }
     }
   },
-  "next_runbook_recommendation": "run_small_paid_third_repo_acut_smoke_with_selected_replacement_repo",
+  "next_runbook_recommendation": "write_phase1_validation_design_and_future_holdout_runbook",
   "paid_smoke_sidecar_evidence": {
-    "note": "Boltons paid ACUT smoke decision has not been generated for this MVP build.",
-    "status": "not_available"
+    "combined_scoreable_cells": 13,
+    "combined_total_cells": 14,
+    "decision": "experiments/phase1_compiler/results/phase1_boltons_paid_acut_smoke_decision.json",
+    "policy_violation_count": 0,
+    "predictive_validity_established": false,
+    "primary_decision_label": "boltons_paid_smoke_complete_ready_for_phase1_validation_design",
+    "result_prefixes": [
+      "phase1_validation_boltons_paid_smoke",
+      "phase1_validation_boltons_paid_extension"
+    ],
+    "status": "available_as_operational_smoke_evidence"
   },
   "predictive_validity_established": false,
   "production_ranking_status": "not_produced",

@@ -119,3 +119,91 @@ Usage/cost after canary:
 - observed-or-conservative estimated cost: `32.1847776`
 
 The canary met acceptance criteria and cost remained below the `60.00` stop cap.
+
+## Step 4 Balanced Paid Smoke
+
+Ran the full balanced smoke task set sequentially for both adapters under the
+`phase1_validation_boltons_paid_smoke` prefix.
+
+Paid cells in the balanced smoke prefix: `8`.
+
+Smoke result:
+
+- total cells: `8`
+- scoreable cells: `7`
+- terminal statuses: `verified_pass=7`, `invalid_output=1`
+- policy violations: `0`
+- B_real scoreable cells: `4/4`
+- W_real scoreable cells: `3/4`
+- Codex scoreable cells: `4/4`
+- Kilo scoreable cells: `3/4`
+
+Usage/cost after balanced smoke:
+
+- call count: `117`
+- usage observed count: `110`
+- usage observed rate: `0.9402`
+- observed-or-conservative estimated cost: `34.7027108`
+
+The balanced smoke met acceptance criteria and cost remained below the `60.00`
+stop cap.
+
+## Step 5 Optional Hardened-Task Extension
+
+Ran the optional extension task set sequentially for both adapters under the
+`phase1_validation_boltons_paid_extension` prefix.
+
+Paid cells in the extension prefix: `6`.
+
+Extension result:
+
+- total cells: `6`
+- scoreable cells: `6`
+- terminal statuses: `verified_pass=4`, `verified_fail=2`
+- policy violations: `0`
+- Codex scoreable cells: `3/3`
+- Kilo scoreable cells: `3/3`
+
+Combined smoke plus extension result:
+
+- total cells: `14`
+- scoreable cells: `13`
+- policy violations: `0`
+
+Usage/cost after extension:
+
+- call count: `123`
+- usage observed count: `116`
+- usage observed rate: `0.9431`
+- observed-or-conservative estimated cost: `37.6472432`
+- incremental observed-or-conservative cost since preflight: `6.6208082`
+
+The extension met acceptance criteria and cost remained below the `60.00` stop
+cap.
+
+## Step 6 Phase 1 Boundary Import
+
+Imported the Boltons paid smoke and extension score tables into the Phase 1 MVP
+scorecard as operational sidecar evidence:
+
+- `phase1_validation_boltons_paid_smoke`: `8` rows, `7` scoreable, `0` policy violations.
+- `phase1_validation_boltons_paid_extension`: `6` rows, `6` scoreable, `0` policy violations.
+
+Updated the compiler so optional Boltons score tables are imported only when
+configured. The Phase 1 compiler validation returned `status=valid`, predictive
+validity stayed `false`, and production ranking stayed `not_produced`.
+
+## Step 7 Final Smoke Decision
+
+Wrote the final decision artifacts:
+
+- `experiments/phase1_compiler/results/phase1_boltons_paid_acut_smoke_decision.json`
+- `experiments/phase1_compiler/reports/phase1_boltons_paid_acut_smoke_decision.md`
+
+Decision label:
+
+- `boltons_paid_smoke_complete_ready_for_phase1_validation_design`
+
+Recommended next runbook:
+
+- `write_phase1_validation_design_and_future_holdout_runbook`

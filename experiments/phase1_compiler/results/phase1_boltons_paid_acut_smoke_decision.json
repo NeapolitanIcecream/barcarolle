@@ -1,0 +1,65 @@
+{
+  "allowed_claims": [
+    "boltons_paid_acut_smoke_run",
+    "workspace_acut_scoreability_smoke",
+    "same_endpoint_model_different_cli_harnesses",
+    "observed_or_conservative_cost_accounting",
+    "ready_for_boltons_paid_extension",
+    "ready_for_phase1_validation_design_after_paid_smoke",
+    "insufficient_evidence_for_predictive_validation"
+  ],
+  "combined_scoreable_cells": 13,
+  "combined_total_cells": 14,
+  "direct_paid_llm_calls_made": false,
+  "disallowed_claims": [
+    "predictive_validity_established",
+    "future_holdout_predictive_validity",
+    "production_benchmark_ranking",
+    "pure_harness_effect",
+    "paid_acut_validation_completed"
+  ],
+  "endpoint_env_used": [
+    "LLM_BASE_URL",
+    "LLM_API_KEY"
+  ],
+  "extension_scoreable_cells": 6,
+  "extension_task_ids": [
+    "boltons__hist__019",
+    "boltons__hist__020",
+    "boltons__hist__031"
+  ],
+  "extension_terminal_status_counts": {
+    "verified_fail": 2,
+    "verified_pass": 4
+  },
+  "extension_total_cells": 6,
+  "final_head": "e8d64bbf142d7a89c7b1650203b55b0d1a0a3f09",
+  "incremental_observed_or_conservative_estimated_cost_usd": 6.6208082,
+  "observed_or_conservative_estimated_cost_usd": 37.6472432,
+  "paid_acut_calls_made": true,
+  "policy_violation_count": 0,
+  "predictive_validity_established": false,
+  "primary_decision_label": "boltons_paid_smoke_complete_ready_for_phase1_validation_design",
+  "production_ranking_status": "not_produced",
+  "recommended_next_runbook": "write_phase1_validation_design_and_future_holdout_runbook",
+  "result_prefixes": [
+    "phase1_validation_boltons_paid_smoke",
+    "phase1_validation_boltons_paid_extension"
+  ],
+  "schema_version": "barcarolle.phase1.boltons_paid_acut_smoke_decision.v1",
+  "selected_repo_id": "boltons",
+  "smoke_scoreable_cells": 7,
+  "smoke_task_ids": [
+    "boltons__hist__007",
+    "boltons__hist__017",
+    "boltons__hist__024",
+    "boltons__hist__026"
+  ],
+  "smoke_terminal_status_counts": {
+    "invalid_output": 1,
+    "verified_pass": 7
+  },
+  "smoke_total_cells": 8,
+  "starting_head": "074c7b3a4e3bd9fd0a8a2d5341586d171c4e5f8f",
+  "usage_observed_rate": 0.9431
+}
