@@ -1,6 +1,6 @@
 {
   "claim_scope": "candidate_selection_overlay",
-  "generated_at": "2026-05-22T03:29:58+00:00",
+  "generated_at": "2026-05-22T03:54:32+00:00",
   "policy": {
     "manual_review_if_cross_module_count_over": 3,
     "manual_review_if_docs_or_config_change_present": true,
@@ -34,18 +34,11 @@
     },
     "itsdangerous": {
       "accepted_count": 1,
-      "candidate_count": 11,
+      "candidate_count": 6,
       "manual_review_required_count": 5,
-      "rejected_count": 5,
+      "rejected_count": 0,
       "remaining_after_filter_count": 6,
-      "top_reject_reasons": {
-        "changed_lines_over:250": 3,
-        "project_file_heavy": 4,
-        "reject_subject_term:deprecate": 1,
-        "reject_subject_term:remove deprecated": 1,
-        "reject_subject_term:update dev dependencies": 1,
-        "reject_subject_term:update project files": 1
-      }
+      "top_reject_reasons": {}
     },
     "toolz": {
       "accepted_count": 14,
@@ -286,22 +279,6 @@
       "task_id": "itsdangerous__hist__003"
     },
     {
-      "candidate_filter_status": "rejected",
-      "changed_line_count": 40,
-      "code_file_count": 1,
-      "manual_review_reasons": [
-        "docs_or_config_change_present"
-      ],
-      "project_or_config_file_count": 3,
-      "reject_reasons": [
-        "reject_subject_term:deprecate",
-        "project_file_heavy"
-      ],
-      "repo_id": "itsdangerous",
-      "target_commit": "53f34c9a8fed28aa0f58502001ed2d75d23d3104",
-      "task_id": "itsdangerous__hist__004"
-    },
-    {
       "candidate_filter_status": "manual_review_required",
       "changed_line_count": 19,
       "code_file_count": 1,
@@ -312,23 +289,7 @@
       "reject_reasons": [],
       "repo_id": "itsdangerous",
       "target_commit": "526b1ea02934f529606dcbf3c3340ab429dcde04",
-      "task_id": "itsdangerous__hist__005"
-    },
-    {
-      "candidate_filter_status": "rejected",
-      "changed_line_count": 482,
-      "code_file_count": 3,
-      "manual_review_reasons": [
-        "docs_or_config_change_present"
-      ],
-      "project_or_config_file_count": 2,
-      "reject_reasons": [
-        "reject_subject_term:remove deprecated",
-        "changed_lines_over:250"
-      ],
-      "repo_id": "itsdangerous",
-      "target_commit": "506ca21d8cc1d16313270c37b6990c9e7762f68e",
-      "task_id": "itsdangerous__hist__006"
+      "task_id": "itsdangerous__hist__004"
     },
     {
       "candidate_filter_status": "accepted",
@@ -339,40 +300,7 @@
       "reject_reasons": [],
       "repo_id": "itsdangerous",
       "target_commit": "177196d3a5c7ad37b8ccbd0f88445aced07f1ca0",
-      "task_id": "itsdangerous__hist__007"
-    },
-    {
-      "candidate_filter_status": "rejected",
-      "changed_line_count": 108,
-      "code_file_count": 1,
-      "manual_review_reasons": [
-        "docs_or_config_change_present"
-      ],
-      "project_or_config_file_count": 7,
-      "reject_reasons": [
-        "reject_subject_term:update dev dependencies",
-        "project_file_heavy"
-      ],
-      "repo_id": "itsdangerous",
-      "target_commit": "11e882bb4a74d571bed0e3f6b4e004eeb2daa970",
-      "task_id": "itsdangerous__hist__008"
-    },
-    {
-      "candidate_filter_status": "rejected",
-      "changed_line_count": 817,
-      "code_file_count": 1,
-      "manual_review_reasons": [
-        "docs_or_config_change_present"
-      ],
-      "project_or_config_file_count": 30,
-      "reject_reasons": [
-        "reject_subject_term:update project files",
-        "project_file_heavy",
-        "changed_lines_over:250"
-      ],
-      "repo_id": "itsdangerous",
-      "target_commit": "9a25d989cd65c4991c2c8ac46ef55e0e8dfe49ab",
-      "task_id": "itsdangerous__hist__009"
+      "task_id": "itsdangerous__hist__005"
     },
     {
       "candidate_filter_status": "manual_review_required",
@@ -385,23 +313,7 @@
       "reject_reasons": [],
       "repo_id": "itsdangerous",
       "target_commit": "7f4dcf83a07bb3d53f4e0e65ef1b43327b4cca90",
-      "task_id": "itsdangerous__hist__010"
-    },
-    {
-      "candidate_filter_status": "rejected",
-      "changed_line_count": 998,
-      "code_file_count": 1,
-      "manual_review_reasons": [
-        "docs_or_config_change_present"
-      ],
-      "project_or_config_file_count": 4,
-      "reject_reasons": [
-        "project_file_heavy",
-        "changed_lines_over:250"
-      ],
-      "repo_id": "itsdangerous",
-      "target_commit": "7edfa12ed562c5d5e9d6faa06812e42f02efb0e0",
-      "task_id": "itsdangerous__hist__011"
+      "task_id": "itsdangerous__hist__006"
     },
     {
       "candidate_filter_status": "accepted",

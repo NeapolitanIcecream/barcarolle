@@ -1,17 +1,17 @@
 # Phase 1 Certification Hardening Decision
 
-Generated: `2026-05-22T03:29:58+00:00`.
+Generated: `2026-05-22T03:54:32+00:00`.
 
-Primary decision: `certification_implementation_bug_found`.
+Primary decision: `replace_third_repo_before_paid_acut`.
 
 ## Answers
 
 - Humanize benchmark-grade after hardening: `no`; decision `humanize_source_blocker_confirmed_operational_pilot_only` because certified tasks remain commit-message fallback unless repaired to non-leaky problem context.
-- Itsdangerous failure mode: `candidate_pool_bad, certification_implementation_bug, environment_synthesis_mismatch, oracle_weakness`.
-- Third repo path: `repair_itsdangerous_candidate_filter_and_remine`.
-- Next runbook: `fix_itsdangerous_statement_template_environment_and_candidate_filter_then_remine_certify_without_paid_acut`.
+- Itsdangerous failure mode: `oracle_weakness`.
+- Third repo path: `replace_third_repo_before_paid_acut`.
+- Next runbook: `select_replacement_third_repo_and_locally_certify_without_paid_acut`.
 
-Task selection and certification implementation both need repair: candidate filtering catches maintenance/project churn, environment probes identify missing test extras, and oracle audit flags the Itsdangerous statement-template mismatch.
+The third-repo path must not proceed to paid ACUT scale-up unless local hardening yields enough benchmark-grade candidates. Current blockers are reported by the source, oracle, environment, and hardened-certification overlays.
 
 ## Prohibited Claims
 

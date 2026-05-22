@@ -1,6 +1,6 @@
 {
   "claim_scope": "source_provenance_overlay",
-  "generated_at": "2026-05-22T03:29:58+00:00",
+  "generated_at": "2026-05-22T03:54:32+00:00",
   "predictive_validity_established": false,
   "repo_summary": {
     "humanize": {
@@ -16,16 +16,16 @@
       "task_count": 16
     },
     "itsdangerous": {
-      "benchmark_grade_eligible_count": 5,
-      "certified_count": 1,
-      "near_certified_count": 10,
+      "benchmark_grade_eligible_count": 2,
+      "certified_count": 4,
+      "near_certified_count": 2,
       "source_tier_counts": {
-        "benchmark_grade_source": 5,
-        "diagnostic_only_source": 1,
-        "manual_review_source": 5,
+        "benchmark_grade_source": 2,
+        "diagnostic_only_source": 0,
+        "manual_review_source": 4,
         "reject_source": 0
       },
-      "task_count": 11
+      "task_count": 6
     },
     "toolz": {
       "benchmark_grade_eligible_count": 6,
@@ -277,7 +277,7 @@
     {
       "benchmark_grade_eligible": true,
       "manual_review_required": false,
-      "phase0_status": "near_certified",
+      "phase0_status": "certified",
       "phase1_source_tier": "benchmark_grade_source",
       "reason": "non_leaky_problem_context",
       "repo_id": "itsdangerous",
@@ -290,7 +290,7 @@
     {
       "benchmark_grade_eligible": false,
       "manual_review_required": true,
-      "phase0_status": "near_certified",
+      "phase0_status": "certified",
       "phase1_source_tier": "manual_review_source",
       "reason": "solution_exposure_or_mixed_context_requires_review",
       "repo_id": "itsdangerous",
@@ -303,20 +303,7 @@
     {
       "benchmark_grade_eligible": true,
       "manual_review_required": false,
-      "phase0_status": "near_certified",
-      "phase1_source_tier": "benchmark_grade_source",
-      "reason": "non_leaky_problem_context",
-      "repo_id": "itsdangerous",
-      "solution_exposure_risk": false,
-      "source_kind": "pull_request",
-      "source_ref": "pr:153",
-      "target_commit": "53f34c9a8fed28aa0f58502001ed2d75d23d3104",
-      "task_id": "itsdangerous__hist__004"
-    },
-    {
-      "benchmark_grade_eligible": true,
-      "manual_review_required": false,
-      "phase0_status": "near_certified",
+      "phase0_status": "certified",
       "phase1_source_tier": "benchmark_grade_source",
       "reason": "non_leaky_problem_context",
       "repo_id": "itsdangerous",
@@ -324,20 +311,7 @@
       "source_kind": "pull_request",
       "source_ref": "pr:154",
       "target_commit": "526b1ea02934f529606dcbf3c3340ab429dcde04",
-      "task_id": "itsdangerous__hist__005"
-    },
-    {
-      "benchmark_grade_eligible": false,
-      "manual_review_required": true,
-      "phase0_status": "near_certified",
-      "phase1_source_tier": "manual_review_source",
-      "reason": "solution_exposure_or_mixed_context_requires_review",
-      "repo_id": "itsdangerous",
-      "solution_exposure_risk": true,
-      "source_kind": "pull_request",
-      "source_ref": "pr:273",
-      "target_commit": "506ca21d8cc1d16313270c37b6990c9e7762f68e",
-      "task_id": "itsdangerous__hist__006"
+      "task_id": "itsdangerous__hist__004"
     },
     {
       "benchmark_grade_eligible": false,
@@ -350,33 +324,7 @@
       "source_kind": "pull_request",
       "source_ref": "pr:296",
       "target_commit": "177196d3a5c7ad37b8ccbd0f88445aced07f1ca0",
-      "task_id": "itsdangerous__hist__007"
-    },
-    {
-      "benchmark_grade_eligible": false,
-      "manual_review_required": false,
-      "phase0_status": "near_certified",
-      "phase1_source_tier": "diagnostic_only_source",
-      "reason": "commit_message_fallback_only",
-      "repo_id": "itsdangerous",
-      "solution_exposure_risk": false,
-      "source_kind": "commit_message_fallback",
-      "source_ref": "commit:11e882bb4a74d571bed0e3f6b4e004eeb2daa970",
-      "target_commit": "11e882bb4a74d571bed0e3f6b4e004eeb2daa970",
-      "task_id": "itsdangerous__hist__008"
-    },
-    {
-      "benchmark_grade_eligible": true,
-      "manual_review_required": false,
-      "phase0_status": "near_certified",
-      "phase1_source_tier": "benchmark_grade_source",
-      "reason": "non_leaky_problem_context",
-      "repo_id": "itsdangerous",
-      "solution_exposure_risk": false,
-      "source_kind": "pull_request",
-      "source_ref": "pr:369",
-      "target_commit": "9a25d989cd65c4991c2c8ac46ef55e0e8dfe49ab",
-      "task_id": "itsdangerous__hist__009"
+      "task_id": "itsdangerous__hist__005"
     },
     {
       "benchmark_grade_eligible": false,
@@ -389,20 +337,7 @@
       "source_kind": "pull_request",
       "source_ref": "pr:378",
       "target_commit": "7f4dcf83a07bb3d53f4e0e65ef1b43327b4cca90",
-      "task_id": "itsdangerous__hist__010"
-    },
-    {
-      "benchmark_grade_eligible": true,
-      "manual_review_required": false,
-      "phase0_status": "near_certified",
-      "phase1_source_tier": "benchmark_grade_source",
-      "reason": "non_leaky_problem_context",
-      "repo_id": "itsdangerous",
-      "solution_exposure_risk": false,
-      "source_kind": "pull_request",
-      "source_ref": "pr:405",
-      "target_commit": "7edfa12ed562c5d5e9d6faa06812e42f02efb0e0",
-      "task_id": "itsdangerous__hist__011"
+      "task_id": "itsdangerous__hist__006"
     },
     {
       "benchmark_grade_eligible": true,

@@ -161,6 +161,17 @@ def test_humanize_legacy_benchmark_grade_does_not_override_pilot_status() -> Non
     assert release["status"] == "pilot_grade"
 
 
+def test_closeout_reuses_hardening_next_runbook_recommendation() -> None:
+    recommendation = compiler.closeout_next_runbook_recommendation(
+        {
+            "primary_decision_label": "replace_third_repo_before_paid_acut",
+            "recommended_next_runbook": "select_replacement_third_repo_and_locally_certify_without_paid_acut",
+        }
+    )
+
+    assert recommendation == "select_replacement_third_repo_and_locally_certify_without_paid_acut"
+
+
 def test_scorecard_import_preserves_humanize_cells_and_result_prefixes(tmp_path: Path) -> None:
     args = type("Args", (), {"config": str(compiler.DEFAULT_CONFIG), "output_root": str(tmp_path)})()
 

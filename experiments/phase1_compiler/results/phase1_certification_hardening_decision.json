@@ -6,6 +6,8 @@
     "oracle_alignment_audit",
     "environment_synthesis_diagnosis",
     "third_repo_certification_diagnosis",
+    "third_repo_local_pilot_grade_candidate",
+    "third_repo_replacement_needed",
     "insufficient_evidence_for_predictive_validation"
   ],
   "disallowed_claims": [
@@ -17,11 +19,11 @@
     "third_repo_pilot_grade_if_unbalanced_or_under_certified"
   ],
   "environment_diagnosis_counts": {
-    "no_op_fail_failure": 3,
-    "reference_pass_failure": 7
+    "no_op_fail_failure": 1,
+    "reference_pass_failure": 1
   },
-  "final_head": "92facd0d557f78ea14a6c79f70c1a0de30c5d4b0",
-  "generated_at": "2026-05-22T03:29:58+00:00",
+  "final_head": "9856cbfe95712a1291e60f81dd6b2d23335fd4fe",
+  "generated_at": "2026-05-22T03:54:32+00:00",
   "hardened_certification_counts": {
     "humanize": {
       "benchmark_grade_candidate_count": 0,
@@ -31,9 +33,9 @@
     },
     "itsdangerous": {
       "benchmark_grade_candidate_count": 0,
-      "diagnostic_only_count": 1,
-      "manual_review_required_count": 0,
-      "rejected_count": 10
+      "diagnostic_only_count": 0,
+      "manual_review_required_count": 2,
+      "rejected_count": 4
     },
     "toolz": {
       "benchmark_grade_candidate_count": 6,
@@ -44,14 +46,11 @@
   },
   "humanize_decision": "humanize_source_blocker_confirmed_operational_pilot_only",
   "itsdangerous_decision": {
-    "certification_statement_template_bug": true,
+    "certification_statement_template_bug": false,
     "supported_failure_modes": [
-      "candidate_pool_bad",
-      "certification_implementation_bug",
-      "environment_synthesis_mismatch",
       "oracle_weakness"
     ],
-    "third_repo_decision": "repair_itsdangerous_candidate_filter_and_remine"
+    "third_repo_decision": "replace_third_repo_before_paid_acut"
   },
   "oracle_alignment_counts": {
     "humanize": {
@@ -62,9 +61,9 @@
     },
     "itsdangerous": {
       "aligned": 0,
-      "diagnostic_only": 1,
-      "manual_review_required": 1,
-      "reject": 9
+      "diagnostic_only": 0,
+      "manual_review_required": 4,
+      "reject": 2
     },
     "toolz": {
       "aligned": 6,
@@ -76,8 +75,8 @@
   "paid_acut_calls_made": false,
   "paid_llm_calls_made": false,
   "predictive_validity_established": false,
-  "primary_decision_label": "certification_implementation_bug_found",
-  "recommended_next_runbook": "fix_itsdangerous_statement_template_environment_and_candidate_filter_then_remine_certify_without_paid_acut",
+  "primary_decision_label": "replace_third_repo_before_paid_acut",
+  "recommended_next_runbook": "select_replacement_third_repo_and_locally_certify_without_paid_acut",
   "repos_analyzed": [
     "toolz",
     "humanize",
@@ -92,9 +91,9 @@
       "reject_source": 0
     },
     "itsdangerous": {
-      "benchmark_grade_source": 5,
-      "diagnostic_only_source": 1,
-      "manual_review_source": 5,
+      "benchmark_grade_source": 2,
+      "diagnostic_only_source": 0,
+      "manual_review_source": 4,
       "reject_source": 0
     },
     "toolz": {
@@ -105,7 +104,7 @@
     }
   },
   "starting_head": "65971fb03852b43bf40f9f1c0442b3fbd3eb8b9d",
-  "third_repo_should_be_repaired_or_replaced": "repair_after_statement_template_environment_and_candidate_filter_fix",
+  "third_repo_should_be_repaired_or_replaced": "replace_third_repo_before_paid_acut",
   "tools_or_configs_added": [
     "experiments/phase1_compiler/configs/phase1_source_certification_hardening.yaml",
     "experiments/phase1_compiler/tools/phase1_source_certification_hardening.py",

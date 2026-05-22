@@ -1,6 +1,6 @@
 {
   "claim_scope": "certification_gate_hardening",
-  "generated_at": "2026-05-22T03:29:58+00:00",
+  "generated_at": "2026-05-22T03:54:32+00:00",
   "predictive_validity_established": false,
   "repo_summary": {
     "humanize": {
@@ -21,19 +21,15 @@
     "itsdangerous": {
       "benchmark_grade_candidate_count": 0,
       "blocking_gates": {
-        "changed_lines_over:250": 3,
-        "execution_gate_failed:no_op_fail": 3,
-        "execution_gate_failed:reference_pass": 7,
-        "oracle_alignment_reject": 9,
-        "project_file_heavy": 4,
-        "reject_subject_term:deprecate": 1,
-        "reject_subject_term:remove deprecated": 1,
-        "solution_exposure_risk": 5
+        "execution_gate_failed:no_op_fail": 1,
+        "execution_gate_failed:reference_pass": 1,
+        "oracle_alignment_reject": 2,
+        "solution_exposure_risk": 4
       },
-      "diagnostic_only_count": 1,
-      "manual_review_required_count": 0,
-      "rejected_count": 10,
-      "task_count": 11
+      "diagnostic_only_count": 0,
+      "manual_review_required_count": 2,
+      "rejected_count": 4,
+      "task_count": 6
     },
     "toolz": {
       "benchmark_grade_candidate_count": 6,
@@ -295,135 +291,15 @@
     },
     {
       "candidate_filter_status": "manual_review_required",
-      "environment_status": "repaired_environment_variant_found",
-      "execution_gate_status": "failed:reference_pass",
-      "hardened_reject_reasons": [
-        "execution_gate_failed:reference_pass",
-        "oracle_alignment_reject"
-      ],
-      "hardened_status": "rejected",
-      "oracle_alignment_status": "reject",
-      "phase0_status": "near_certified",
+      "environment_status": "clean",
+      "execution_gate_status": "passed",
+      "hardened_reject_reasons": [],
+      "hardened_status": "manual_review_required",
+      "oracle_alignment_status": "manual_review_required",
+      "phase0_status": "certified",
       "repo_id": "itsdangerous",
       "source_tier": "benchmark_grade_source",
       "task_id": "itsdangerous__hist__002"
-    },
-    {
-      "candidate_filter_status": "manual_review_required",
-      "environment_status": "repaired_environment_variant_found",
-      "execution_gate_status": "failed:reference_pass",
-      "hardened_reject_reasons": [
-        "execution_gate_failed:reference_pass",
-        "oracle_alignment_reject",
-        "solution_exposure_risk"
-      ],
-      "hardened_status": "rejected",
-      "oracle_alignment_status": "reject",
-      "phase0_status": "near_certified",
-      "repo_id": "itsdangerous",
-      "source_tier": "manual_review_source",
-      "task_id": "itsdangerous__hist__003"
-    },
-    {
-      "candidate_filter_status": "rejected",
-      "environment_status": "repaired_environment_variant_found",
-      "execution_gate_status": "failed:reference_pass",
-      "hardened_reject_reasons": [
-        "execution_gate_failed:reference_pass",
-        "oracle_alignment_reject",
-        "project_file_heavy",
-        "reject_subject_term:deprecate"
-      ],
-      "hardened_status": "rejected",
-      "oracle_alignment_status": "reject",
-      "phase0_status": "near_certified",
-      "repo_id": "itsdangerous",
-      "source_tier": "benchmark_grade_source",
-      "task_id": "itsdangerous__hist__004"
-    },
-    {
-      "candidate_filter_status": "manual_review_required",
-      "environment_status": "repaired_environment_variant_found",
-      "execution_gate_status": "failed:reference_pass",
-      "hardened_reject_reasons": [
-        "execution_gate_failed:reference_pass",
-        "oracle_alignment_reject"
-      ],
-      "hardened_status": "rejected",
-      "oracle_alignment_status": "reject",
-      "phase0_status": "near_certified",
-      "repo_id": "itsdangerous",
-      "source_tier": "benchmark_grade_source",
-      "task_id": "itsdangerous__hist__005"
-    },
-    {
-      "candidate_filter_status": "rejected",
-      "environment_status": "reference_environment_unrepaired",
-      "execution_gate_status": "failed:reference_pass",
-      "hardened_reject_reasons": [
-        "changed_lines_over:250",
-        "execution_gate_failed:reference_pass",
-        "oracle_alignment_reject",
-        "reject_subject_term:remove deprecated",
-        "solution_exposure_risk"
-      ],
-      "hardened_status": "rejected",
-      "oracle_alignment_status": "reject",
-      "phase0_status": "near_certified",
-      "repo_id": "itsdangerous",
-      "source_tier": "manual_review_source",
-      "task_id": "itsdangerous__hist__006"
-    },
-    {
-      "candidate_filter_status": "accepted",
-      "environment_status": "repaired_environment_variant_found",
-      "execution_gate_status": "failed:reference_pass",
-      "hardened_reject_reasons": [
-        "execution_gate_failed:reference_pass",
-        "oracle_alignment_reject",
-        "solution_exposure_risk"
-      ],
-      "hardened_status": "rejected",
-      "oracle_alignment_status": "reject",
-      "phase0_status": "near_certified",
-      "repo_id": "itsdangerous",
-      "source_tier": "manual_review_source",
-      "task_id": "itsdangerous__hist__007"
-    },
-    {
-      "candidate_filter_status": "rejected",
-      "environment_status": "not_environment_failure",
-      "execution_gate_status": "failed:no_op_fail",
-      "hardened_reject_reasons": [
-        "execution_gate_failed:no_op_fail",
-        "project_file_heavy",
-        "reject_subject_term:update dev dependencies",
-        "source_diagnostic_only"
-      ],
-      "hardened_status": "diagnostic_only",
-      "oracle_alignment_status": "diagnostic_only",
-      "phase0_status": "near_certified",
-      "repo_id": "itsdangerous",
-      "source_tier": "diagnostic_only_source",
-      "task_id": "itsdangerous__hist__008"
-    },
-    {
-      "candidate_filter_status": "rejected",
-      "environment_status": "not_environment_failure",
-      "execution_gate_status": "failed:no_op_fail",
-      "hardened_reject_reasons": [
-        "changed_lines_over:250",
-        "execution_gate_failed:no_op_fail",
-        "oracle_alignment_reject",
-        "project_file_heavy",
-        "reject_subject_term:update project files"
-      ],
-      "hardened_status": "rejected",
-      "oracle_alignment_status": "reject",
-      "phase0_status": "near_certified",
-      "repo_id": "itsdangerous",
-      "source_tier": "benchmark_grade_source",
-      "task_id": "itsdangerous__hist__009"
     },
     {
       "candidate_filter_status": "manual_review_required",
@@ -437,24 +313,49 @@
       "phase0_status": "certified",
       "repo_id": "itsdangerous",
       "source_tier": "manual_review_source",
-      "task_id": "itsdangerous__hist__010"
+      "task_id": "itsdangerous__hist__003"
     },
     {
-      "candidate_filter_status": "rejected",
+      "candidate_filter_status": "manual_review_required",
+      "environment_status": "clean",
+      "execution_gate_status": "passed",
+      "hardened_reject_reasons": [],
+      "hardened_status": "manual_review_required",
+      "oracle_alignment_status": "manual_review_required",
+      "phase0_status": "certified",
+      "repo_id": "itsdangerous",
+      "source_tier": "benchmark_grade_source",
+      "task_id": "itsdangerous__hist__004"
+    },
+    {
+      "candidate_filter_status": "accepted",
       "environment_status": "not_environment_failure",
       "execution_gate_status": "failed:no_op_fail",
       "hardened_reject_reasons": [
-        "changed_lines_over:250",
         "execution_gate_failed:no_op_fail",
         "oracle_alignment_reject",
-        "project_file_heavy"
+        "solution_exposure_risk"
       ],
       "hardened_status": "rejected",
       "oracle_alignment_status": "reject",
       "phase0_status": "near_certified",
       "repo_id": "itsdangerous",
-      "source_tier": "benchmark_grade_source",
-      "task_id": "itsdangerous__hist__011"
+      "source_tier": "manual_review_source",
+      "task_id": "itsdangerous__hist__005"
+    },
+    {
+      "candidate_filter_status": "manual_review_required",
+      "environment_status": "clean",
+      "execution_gate_status": "passed",
+      "hardened_reject_reasons": [
+        "solution_exposure_risk"
+      ],
+      "hardened_status": "rejected",
+      "oracle_alignment_status": "manual_review_required",
+      "phase0_status": "certified",
+      "repo_id": "itsdangerous",
+      "source_tier": "manual_review_source",
+      "task_id": "itsdangerous__hist__006"
     },
     {
       "candidate_filter_status": "accepted",

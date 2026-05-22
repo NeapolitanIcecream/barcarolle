@@ -1,0 +1,46 @@
+{
+  "allowed_claims": [
+    "third_repo_source_adapter_repaired",
+    "third_repo_candidate_filter_repaired",
+    "third_repo_local_certification_replayed",
+    "third_repo_local_pilot_grade_candidate",
+    "third_repo_replacement_needed",
+    "insufficient_evidence_for_predictive_validation"
+  ],
+  "b_real_count": 2,
+  "candidate_count_after_filter": 6,
+  "certified_task_count": 4,
+  "commit_message_fallback_benchmark_grade_allowed": false,
+  "disallowed_claims": [
+    "predictive_validity_established",
+    "future_holdout_predictive_validity",
+    "production_benchmark_ranking",
+    "pure_harness_effect",
+    "paid_acut_validation_completed",
+    "itsdangerous_benchmark_grade_if_source_or_oracle_gates_fail"
+  ],
+  "final_head": "9856cbfe95712a1291e60f81dd6b2d23335fd4fe",
+  "hardened_benchmark_candidate_count": 0,
+  "paid_acut_calls_made": false,
+  "paid_llm_calls_made": false,
+  "primary_decision_label": "replace_third_repo_before_paid_acut",
+  "recommended_next_repositories": [
+    {
+      "reason": "simple Python test environment, low external-service risk, broader utility surface than Itsdangerous",
+      "repo_id": "boltons"
+    },
+    {
+      "reason": "high candidate-anchor estimate and low external-service risk, but broader hatch/test dependency surface than boltons",
+      "repo_id": "attrs"
+    }
+  ],
+  "recommended_next_runbook": "select_replacement_third_repo_and_locally_certify_without_paid_acut",
+  "release_status": "pilot_grade",
+  "repo_id": "itsdangerous",
+  "reviewed_non_leaky_statement_count": 6,
+  "schema_version": "barcarolle.phase1.third_repo_repair_remine_decision.v1",
+  "statement_template_bug_absent_from_regenerated_artifacts": true,
+  "statement_template_bug_fixed_in_code": true,
+  "starting_head": "b5e396bd52dcfb2441f1018c393b4a0566edc356",
+  "w_real_count": 2
+}

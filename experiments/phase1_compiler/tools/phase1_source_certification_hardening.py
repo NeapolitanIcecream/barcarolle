@@ -1048,7 +1048,7 @@ def build_environment_synthesis_diagnosis(generated_at: str, run_environment_pro
         else:
             environment_status = "not_environment_failure"
         if missing_test_files:
-            supported.add("certification_implementation_bug")
+            supported.add("oracle_weakness")
         if subject_has_term(str(task.get("subject") or ""), default_hardening_config()["candidate_filter_policy"]["reject_subject_terms"]):
             supported.add("candidate_pool_bad")
         rows.append(
@@ -1253,12 +1253,14 @@ def choose_primary_decision(
     supported = set(environment_diagnosis.get("summary", {}).get("supported_decisions", []))
     its_hardened = hardened_overlay.get("repo_summary", {}).get("itsdangerous", {})
     toolz_hardened = hardened_overlay.get("repo_summary", {}).get("toolz", {})
-    if risk_counts.get("statement_source_mismatch", 0) > 0 or "certification_implementation_bug" in supported:
+    if risk_counts.get("statement_source_mismatch", 0) > 0:
         return "certification_implementation_bug_found"
     if "environment_synthesis_mismatch" in supported:
         return "third_repo_environment_repair_needed"
     if "candidate_pool_bad" in supported:
         return "third_repo_candidate_pool_repair_needed"
+    if "oracle_weakness" in supported:
+        return "replace_third_repo_before_paid_acut"
     if humanize_repaired_count < 6 and its_hardened.get("benchmark_grade_candidate_count", 0) < 4:
         return "humanize_source_blocker_confirmed_third_repo_repair_needed"
     if toolz_hardened.get("benchmark_grade_candidate_count", 0) >= 6 and (
@@ -1287,8 +1289,19 @@ def build_final_decision(payloads: dict[str, Any], generated_at: str) -> dict[st
         third_repo_decision = "repair_itsdangerous_environment"
     elif primary == "third_repo_candidate_pool_repair_needed":
         third_repo_decision = "repair_itsdangerous_candidate_filter_and_remine"
+    elif primary == "replace_third_repo_before_paid_acut":
+        third_repo_decision = "replace_third_repo_before_paid_acut"
     elif "environment_synthesis_mismatch" in supported and "candidate_pool_bad" in supported:
         third_repo_decision = "repair_itsdangerous_candidate_filter_and_remine"
+    if primary == "replace_third_repo_before_paid_acut":
+        third_repo_should_be_repaired_or_replaced = "replace_third_repo_before_paid_acut"
+        recommended_next_runbook = "select_replacement_third_repo_and_locally_certify_without_paid_acut"
+    elif primary in {"third_repo_environment_repair_needed", "third_repo_candidate_pool_repair_needed"}:
+        third_repo_should_be_repaired_or_replaced = "repair_itsdangerous_before_paid_acut"
+        recommended_next_runbook = "fix_itsdangerous_environment_or_candidate_filter_then_remine_certify_without_paid_acut"
+    else:
+        third_repo_should_be_repaired_or_replaced = "repair_or_replace_third_repo_before_paid_acut"
+        recommended_next_runbook = "fix_itsdangerous_statement_template_environment_and_candidate_filter_then_remine_certify_without_paid_acut"
     return {
         "schema_version": "barcarolle.phase1.certification_hardening_decision.v1",
         "generated_at": generated_at,
@@ -1324,7 +1337,7 @@ def build_final_decision(payloads: dict[str, Any], generated_at: str) -> dict[st
             "supported_failure_modes": environment["summary"]["supported_decisions"],
             "certification_statement_template_bug": oracle_audit["summary"]["risk_flag_counts"].get("statement_source_mismatch", 0) > 0,
         },
-        "third_repo_should_be_repaired_or_replaced": "repair_after_statement_template_environment_and_candidate_filter_fix",
+        "third_repo_should_be_repaired_or_replaced": third_repo_should_be_repaired_or_replaced,
         "allowed_claims": [
             "source_adapter_hardening",
             "certification_gate_hardening",
@@ -1332,6 +1345,8 @@ def build_final_decision(payloads: dict[str, Any], generated_at: str) -> dict[st
             "oracle_alignment_audit",
             "environment_synthesis_diagnosis",
             "third_repo_certification_diagnosis",
+            "third_repo_local_pilot_grade_candidate",
+            "third_repo_replacement_needed",
             "insufficient_evidence_for_predictive_validation",
         ],
         "disallowed_claims": [
@@ -1342,7 +1357,7 @@ def build_final_decision(payloads: dict[str, Any], generated_at: str) -> dict[st
             "humanize_benchmark_grade_if_commit_fallback_only",
             "third_repo_pilot_grade_if_unbalanced_or_under_certified",
         ],
-        "recommended_next_runbook": "fix_itsdangerous_statement_template_environment_and_candidate_filter_then_remine_certify_without_paid_acut",
+        "recommended_next_runbook": recommended_next_runbook,
         "paid_acut_calls_made": False,
         "paid_llm_calls_made": False,
     }
@@ -1446,12 +1461,12 @@ def render_oracle_report(payload: dict[str, Any]) -> str:
             f"| `{repo_id}` | {counts['aligned']} | {counts['manual_review_required']} | "
             f"{counts['diagnostic_only']} | {counts['reject']} | {top} |"
         )
-    lines.extend(
-        [
-            "",
-            "The audit distinguishes weak-oracle failures from wide and narrow oracle risks. Itsdangerous statements currently contain a repo-name mismatch that requires certification repair before benchmark use.",
-        ]
-    )
+    mismatch_count = payload["summary"]["risk_flag_counts"].get("statement_source_mismatch", 0)
+    if mismatch_count:
+        note = "Itsdangerous statements contain a repo-name mismatch that requires certification repair before benchmark use."
+    else:
+        note = "Itsdangerous statements no longer show a repo-name mismatch; remaining blockers are oracle, source-quality, or execution-gate risks."
+    lines.extend(["", f"The audit distinguishes weak-oracle failures from wide and narrow oracle risks. {note}"])
     return "\n".join(lines)
 
 
@@ -1533,7 +1548,7 @@ def render_decision_report(payload: dict[str, Any]) -> str:
         f"- Third repo path: `{its['third_repo_decision']}`.",
         f"- Next runbook: `{payload['recommended_next_runbook']}`.",
         "",
-        "Task selection and certification implementation both need repair: candidate filtering catches maintenance/project churn, environment probes identify missing test extras, and oracle audit flags the Itsdangerous statement-template mismatch.",
+        "The third-repo path must not proceed to paid ACUT scale-up unless local hardening yields enough benchmark-grade candidates. Current blockers are reported by the source, oracle, environment, and hardened-certification overlays.",
         "",
         "## Prohibited Claims",
         "",

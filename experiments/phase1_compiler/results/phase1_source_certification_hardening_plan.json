@@ -1,8 +1,8 @@
 {
   "claim_scope": "source_adapter_and_certification_hardening",
   "current_humanize_fallback_count": 12,
-  "current_itsdangerous_certified_count": 1,
-  "current_itsdangerous_near_certified_count": 10,
+  "current_itsdangerous_certified_count": 4,
+  "current_itsdangerous_near_certified_count": 2,
   "expected_outputs": [
     "phase1_source_provenance_overlay",
     "humanize_hardened_source_context",
@@ -12,7 +12,7 @@
     "phase1_hardened_certification_overlay",
     "phase1_certification_hardening_decision"
   ],
-  "generated_at": "2026-05-22T03:29:58+00:00",
+  "generated_at": "2026-05-22T03:54:32+00:00",
   "humanize": {
     "certified_count": 12,
     "commit_message_fallback_count": 12,
@@ -27,9 +27,9 @@
     "certification_implementation_bug"
   ],
   "itsdangerous": {
-    "certified_count": 1,
+    "certified_count": 4,
     "decision_criteria": "pilot repair requires at least 4 certified tasks with balanced B/W and no diagnostic-only source gate",
-    "near_certified_count": 10
+    "near_certified_count": 2
   },
   "paid_acut_calls": "disabled",
   "paid_acut_cells_scheduled": false,

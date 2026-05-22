@@ -104,3 +104,15 @@ def test_primary_decision_reports_certification_bug_when_statement_mismatch_exis
     )
 
     assert label == "certification_implementation_bug_found"
+
+
+def test_primary_decision_replaces_third_repo_when_oracle_weakness_remains_after_template_repair() -> None:
+    label = hardening.choose_primary_decision(
+        humanize_repaired_count=0,
+        source_overlay={"repo_summary": {}},
+        oracle_audit={"summary": {"risk_flag_counts": {"statement_source_mismatch": 0}}},
+        environment_diagnosis={"summary": {"supported_decisions": ["oracle_weakness"]}},
+        hardened_overlay={"repo_summary": {"itsdangerous": {"benchmark_grade_candidate_count": 0}, "toolz": {"benchmark_grade_candidate_count": 6}}},
+    )
+
+    assert label == "replace_third_repo_before_paid_acut"

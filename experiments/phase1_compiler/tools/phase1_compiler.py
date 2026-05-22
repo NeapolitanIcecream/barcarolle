@@ -1320,6 +1320,17 @@ def run_uncertainty_summary(args: argparse.Namespace) -> dict[str, Any]:
     return payload
 
 
+def closeout_next_runbook_recommendation(hardening_decision: dict[str, Any] | None) -> str:
+    if hardening_decision:
+        recommendation = str(hardening_decision.get("recommended_next_runbook") or "").strip()
+        if recommendation:
+            return recommendation
+        if hardening_decision.get("primary_decision_label") == "replace_third_repo_before_paid_acut":
+            return "select_replacement_third_repo_and_locally_certify_without_paid_acut"
+        return "run local third-repo remine with fixed statement template, candidate filter, and environment repair before paid ACUT scale-up"
+    return "write Phase 1 validation-design runbook with source-adapter hardening as a prerequisite for validation-grade claims"
+
+
 def build_closeout_payload(config: dict[str, Any]) -> dict[str, Any]:
     release = build_release_payload(config)
     certification = build_certification_rollup_payload(config)
@@ -1373,11 +1384,7 @@ def build_closeout_payload(config: dict[str, Any]) -> dict[str, Any]:
             "note": "Phase 1 source-certification hardening overlay has not been generated for this MVP build.",
         },
         "production_ranking_status": "not_produced",
-        "next_runbook_recommendation": (
-            "run local third-repo remine with fixed statement template, candidate filter, and environment repair before paid ACUT scale-up"
-            if hardening_sidecar
-            else "write Phase 1 validation-design runbook with source-adapter hardening as a prerequisite for validation-grade claims"
-        ),
+        "next_runbook_recommendation": closeout_next_runbook_recommendation(hardening_decision if hardening_sidecar else None),
     }
 
 
