@@ -1,0 +1,69 @@
+schema_version: barcarolle.phase1_second_repo_clean_outcome_unseen_supply.v1
+status: configured
+claim_scope: second_repo_clean_supply_not_predictive_validation
+predictive_validity_established: false
+paid_acut_calls: disabled
+paid_llm_calls: disabled
+
+primary_candidate_repo: attrs
+fallback_candidate_repos:
+  - toolz
+
+minimum_clean_split:
+  B_eval: 2
+  H_future: 2
+
+preferred_clean_split:
+  B_eval: 4
+  H_future: 4
+
+prior_boltons_future_holdout_decision: experiments/phase1_compiler/results/phase1_future_holdout_decision.json
+prior_boltons_clean_overlay: experiments/phase1_compiler/results/phase1_clean_outcome_unseen_supply_overlay.json
+
+candidate_repos:
+  attrs:
+    repo_url: https://github.com/python-attrs/attrs.git
+    local_repo: experiments/phase0_headroom/external_repos/attrs
+    candidate_source_prefix: attrs_clean_outcome_unseen_supply
+  toolz:
+    repo_url: https://github.com/pytoolz/toolz.git
+    local_repo: experiments/phase0_headroom/external_repos/toolz
+    candidate_source_prefix: toolz_clean_outcome_unseen_supply
+
+mining:
+  max_history_anchors: 1000
+  max_certification_attempts: 48
+  prefer_issue_or_pr_context: true
+  require_local_repo_under_ignored_path: true
+  require_cutoff_feasibility: true
+
+promotion_policy:
+  require_outcome_unseen: true
+  require_target_commit_unseen: true
+  require_non_leaky_problem_context: true
+  reject_commit_message_only_source: true
+  reject_solution_exposure_risk: true
+  reject_project_heavy_ambiguous_context: true
+  reject_project_or_docs_only: true
+  require_oracle_alignment: true
+  require_local_certification_gates: true
+  require_future_holdout_cutoff_feasibility: true
+
+output_paths:
+  candidate_inventory: experiments/phase1_compiler/results/phase1_second_repo_clean_supply_candidate_inventory.json
+  candidate_inventory_report: experiments/phase1_compiler/reports/phase1_second_repo_clean_supply_candidate_inventory.md
+  review: experiments/phase1_compiler/results/phase1_second_repo_clean_supply_review.json
+  review_report: experiments/phase1_compiler/reports/phase1_second_repo_clean_supply_review.md
+  overlay: experiments/phase1_compiler/results/phase1_second_repo_clean_supply_overlay.json
+  overlay_report: experiments/phase1_compiler/reports/phase1_second_repo_clean_supply_overlay.md
+  two_repo_clean_supply: experiments/phase1_compiler/results/phase1_two_repo_future_holdout_clean_supply.json
+  two_repo_preregistration: experiments/phase1_compiler/results/phase1_two_repo_future_holdout_preregistration.json
+  two_repo_preregistration_report: experiments/phase1_compiler/reports/phase1_two_repo_future_holdout_preregistration.md
+  decision: experiments/phase1_compiler/results/phase1_second_repo_clean_supply_decision.json
+  decision_report: experiments/phase1_compiler/reports/phase1_second_repo_clean_supply_decision.md
+
+guardrails:
+  mutate_canonical_boltons_release: false
+  mutate_canonical_hardening_results: false
+  reuse_existing_acut_outcomes_as_clean_rows: false
+  run_second_repo_paid_acut_cells: false

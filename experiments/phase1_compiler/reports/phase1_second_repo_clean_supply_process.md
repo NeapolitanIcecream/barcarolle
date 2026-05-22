@@ -45,3 +45,30 @@ Baseline checks passed:
 - `uv run --project experiments/phase1_compiler python experiments/phase1_compiler/tools/phase1_compiler.py validate --config experiments/phase1_compiler/configs/phase1_mvp.yaml` -> `status=valid`
 
 No paid calls have been made in this runbook.
+
+## Step 1 Configure Second-Repo Mining
+
+Created `experiments/phase1_compiler/configs/phase1_second_repo_clean_outcome_unseen_supply.yaml`.
+
+Config properties:
+
+- claim scope: `second_repo_clean_supply_not_predictive_validation`
+- predictive validity established: `false`
+- paid ACUT calls: disabled
+- paid LLM calls: disabled
+- primary candidate repo: `attrs`
+- fallback candidate repo: `toolz`
+- minimum clean split: `B_eval >= 2`, `H_future >= 2`
+- preferred clean split: `B_eval >= 4`, `H_future >= 4`
+- attrs local repo path: `experiments/phase0_headroom/external_repos/attrs`
+- attrs candidate prefix: `attrs_clean_outcome_unseen_supply`
+- prior Boltons future-holdout decision: `experiments/phase1_compiler/results/phase1_future_holdout_decision.json`
+- prior Boltons clean overlay: `experiments/phase1_compiler/results/phase1_clean_outcome_unseen_supply_overlay.json`
+
+Promotion policy requires outcome-unseen tasks, target-commit-unseen tasks,
+non-leaky public problem context, local certification gates, oracle alignment,
+and future-holdout cutoff feasibility. It rejects commit-message-only,
+solution-leaky, project-heavy ambiguous, docs-only, and config-only candidates.
+
+Output paths are namespaced to second-repo sidecar artifacts and do not mutate
+canonical Boltons release or hardening outputs.
