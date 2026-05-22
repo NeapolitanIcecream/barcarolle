@@ -33,3 +33,20 @@ Baseline checks passed:
 Raw, workspace, external repo, venv, and cache paths are not tracked by Git.
 
 No paid calls have been made in this runbook.
+
+## Step 1 Config
+
+Created `experiments/phase1_compiler/configs/phase1_clean_supply_breal_extension.yaml`.
+
+Config properties:
+
+- claim scope: `clean_supply_extension_not_predictive_validation`
+- predictive validity established: `false`
+- paid ACUT calls: disabled
+- paid LLM calls: disabled
+- target repo: `boltons`
+- missing split: `B_real`
+- minimum clean split: `B_real >= 2`, `W_real >= 2`
+- first candidate: `boltons__hist__014`
+- current candidate blocker: `scope_context_project_heavy_or_ambiguous`
+- output mode: overlay evidence, not canonical release mutation
