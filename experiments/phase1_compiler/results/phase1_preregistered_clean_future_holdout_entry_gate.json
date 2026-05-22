@@ -1,0 +1,74 @@
+{
+  "acceptance": {
+    "b_eval_package_selection_matches_preregistration": true,
+    "cumulative_observed_or_conservative_below_usd_80": true,
+    "endpoint_env_present": true,
+    "future_holdout_score_tables_have_no_previous_paid_rows": true,
+    "h_future_package_selection_matches_preregistration": true,
+    "paid_parallelism_disabled": true,
+    "preflight_statuses_ready": true,
+    "projected_incremental_spend_below_usd_20": true
+  },
+  "adapter_preflights": [
+    {
+      "adapter_id": "codex_workspace",
+      "endpoint_proof_status": "codex_eligible",
+      "prefix": "phase1_future_holdout_b_eval_codex_preflight",
+      "required_env_present": true,
+      "status": "ready"
+    },
+    {
+      "adapter_id": "kilo_workspace",
+      "endpoint_proof_status": "kilo_eligible",
+      "prefix": "phase1_future_holdout_b_eval_kilo_preflight",
+      "required_env_present": true,
+      "status": "ready"
+    },
+    {
+      "adapter_id": "codex_workspace",
+      "endpoint_proof_status": "codex_eligible",
+      "prefix": "phase1_future_holdout_h_future_codex_preflight",
+      "required_env_present": true,
+      "status": "ready"
+    },
+    {
+      "adapter_id": "kilo_workspace",
+      "endpoint_proof_status": "kilo_eligible",
+      "prefix": "phase1_future_holdout_h_future_kilo_preflight",
+      "required_env_present": true,
+      "status": "ready"
+    }
+  ],
+  "b_eval": {
+    "existing_score_table_data_rows": 0,
+    "package_count": 4,
+    "selected_task_ids": [
+      "boltons__clean_ext__001",
+      "boltons__clean_ext__008",
+      "boltons__clean_ext__010",
+      "boltons__hist__011"
+    ]
+  },
+  "budget_gate": {
+    "conservative_cell_estimate_usd": 0.5,
+    "current_observed_or_conservative_cumulative_usd": 37.6472432,
+    "projected_cells": 16,
+    "projected_cumulative_after_preferred_batch_usd": 45.6472432,
+    "projected_incremental_usd": 8.0,
+    "total_observed_or_conservative_stop_cap_usd": 80.0
+  },
+  "generated_at": "2026-05-22T11:06:33Z",
+  "h_future": {
+    "existing_score_table_data_rows": 0,
+    "package_count": 4,
+    "selected_task_ids": [
+      "boltons__clean_ext__017",
+      "boltons__hist__022",
+      "boltons__hist__023",
+      "boltons__hist__027"
+    ]
+  },
+  "paid_acut_calls_made": false,
+  "paid_entry_gate_status": "ready_for_paid_b_eval_batch",
+  "schema_version": "barcarolle.phase1.preregistered_clean_future_holdout_entry_gate.v1"
+}

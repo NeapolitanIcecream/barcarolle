@@ -1,0 +1,18 @@
+{
+  "brier_score": "not_applicable_underpowered",
+  "cost_per_scoreable_cell_usd": null,
+  "cost_per_submitted_cell_usd": null,
+  "g_mini_plus_b_real_to_w_real_available": false,
+  "g_mini_to_w_real_available": false,
+  "generated_at": "2026-05-22T11:06:10+00:00",
+  "harness_metrics": {},
+  "mae": "not_applicable_underpowered",
+  "median_latency_seconds": null,
+  "rmse": "not_applicable_underpowered",
+  "schema_version": "barcarolle.workspace_acut_metrics.v1",
+  "scoreable_cell_count": 0,
+  "split_metrics": {},
+  "status": "not_run",
+  "terminal_status_counts": {},
+  "total_cells": 0
+}

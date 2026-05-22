@@ -84,3 +84,38 @@ Validation:
 - `uv run --project experiments/phase0_headroom pytest -q experiments/phase0_headroom/tools/test_workspace_acut_run.py` -> `18 passed in 1.74s`
 - `uv run --project experiments/phase1_compiler pytest -q experiments/phase1_compiler/tests/test_phase1_future_holdout.py` -> `9 passed in 0.01s`
 - `git diff --check` -> passed
+
+## Step 2 Local Dry-Run And Paid Entry Gate
+
+Paid entry gate passed without paid ACUT calls.
+
+Adapter preflights:
+
+| Prefix | Adapter | Endpoint proof | Required env | Status |
+| --- | --- | --- | --- | --- |
+| `phase1_future_holdout_b_eval_codex_preflight` | `codex_workspace` | `codex_eligible` | `true` | `ready` |
+| `phase1_future_holdout_b_eval_kilo_preflight` | `kilo_workspace` | `kilo_eligible` | `true` | `ready` |
+| `phase1_future_holdout_h_future_codex_preflight` | `codex_workspace` | `codex_eligible` | `true` | `ready` |
+| `phase1_future_holdout_h_future_kilo_preflight` | `kilo_workspace` | `kilo_eligible` | `true` | `ready` |
+
+Non-paid split inspections matched the frozen preregistration:
+
+- `B_eval`: `boltons__clean_ext__001`, `boltons__clean_ext__008`, `boltons__clean_ext__010`, `boltons__hist__011`
+- `H_future`: `boltons__clean_ext__017`, `boltons__hist__022`, `boltons__hist__023`, `boltons__hist__027`
+
+Existing prefix summaries:
+
+- `phase1_future_holdout_b_eval_score_table.csv`: header-only, `0` data rows
+- `phase1_future_holdout_h_future_score_table.csv`: header-only, `0` data rows
+
+Cost gate:
+
+- projected cells: `16`
+- conservative per-cell estimate: `USD 0.50`
+- projected incremental spend: `USD 8.00`
+- current observed-or-conservative cumulative spend: `USD 37.6472432`
+- projected cumulative after preferred batch: `USD 45.6472432`
+- total stop cap: `USD 80.00`
+- paid parallelism: disabled
+
+Next step may run the paid `B_eval` batch sequentially.

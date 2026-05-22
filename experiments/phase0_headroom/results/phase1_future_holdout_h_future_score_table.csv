@@ -1,0 +1,1 @@
+adapter_id,acut_id,harness_name,model_or_agent_name,task_id,split,attempt,submission_status,terminal_status,verifier_exit_code,scoreable_cell,agent_failure,harness_error
