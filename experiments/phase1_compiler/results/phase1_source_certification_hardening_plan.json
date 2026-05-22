@@ -12,7 +12,7 @@
     "phase1_hardened_certification_overlay",
     "phase1_certification_hardening_decision"
   ],
-  "generated_at": "2026-05-22T03:54:32+00:00",
+  "generated_at": "2026-05-22T06:02:33+00:00",
   "humanize": {
     "certified_count": 12,
     "commit_message_fallback_count": 12,

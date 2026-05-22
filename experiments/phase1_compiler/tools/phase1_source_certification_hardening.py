@@ -1319,6 +1319,8 @@ def choose_primary_decision(
     toolz_hardened = hardened_overlay.get("repo_summary", {}).get("toolz", {})
     if risk_counts.get("statement_source_mismatch", 0) > 0:
         return "certification_implementation_bug_found"
+    if active_repo_id != DEFAULT_THIRD_REPO and active_hardened.get("benchmark_grade_candidate_count", 0) >= 4:
+        return "ready_for_paid_third_repo_acut_smoke_runbook"
     if "environment_synthesis_mismatch" in supported:
         return "third_repo_environment_repair_needed"
     if "candidate_pool_bad" in supported:
@@ -1358,9 +1360,14 @@ def build_final_decision(payloads: dict[str, Any], generated_at: str) -> dict[st
         third_repo_decision = "repair_itsdangerous_candidate_filter_and_remine"
     elif primary == "replace_third_repo_before_paid_acut":
         third_repo_decision = "replace_third_repo_before_paid_acut"
+    elif primary == "ready_for_paid_third_repo_acut_smoke_runbook":
+        third_repo_decision = "ready_for_paid_third_repo_acut_smoke_runbook"
     elif "environment_synthesis_mismatch" in supported and "candidate_pool_bad" in supported:
         third_repo_decision = "repair_itsdangerous_candidate_filter_and_remine"
-    if primary == "replace_third_repo_before_paid_acut":
+    if primary == "ready_for_paid_third_repo_acut_smoke_runbook":
+        third_repo_should_be_repaired_or_replaced = "ready_for_paid_third_repo_acut_smoke_runbook"
+        recommended_next_runbook = "run_small_paid_third_repo_acut_smoke_with_selected_replacement_repo"
+    elif primary == "replace_third_repo_before_paid_acut":
         third_repo_should_be_repaired_or_replaced = "replace_third_repo_before_paid_acut"
         recommended_next_runbook = "select_replacement_third_repo_and_locally_certify_without_paid_acut"
     elif primary in {"third_repo_environment_repair_needed", "third_repo_candidate_pool_repair_needed"}:
@@ -1404,6 +1411,11 @@ def build_final_decision(payloads: dict[str, Any], generated_at: str) -> dict[st
             "active_repo_id": active_repo_id,
             "replaced_repos": replaced_repo_summary(selection),
         },
+        "third_repo_decision": {
+            "active_repo_id": active_repo_id,
+            "third_repo_decision": third_repo_decision,
+            "supported_failure_modes": environment["summary"]["supported_decisions"],
+        },
         "itsdangerous_decision": {
             "third_repo_decision": third_repo_decision,
             "supported_failure_modes": environment["summary"]["supported_decisions"],
@@ -1419,6 +1431,7 @@ def build_final_decision(payloads: dict[str, Any], generated_at: str) -> dict[st
             "third_repo_certification_diagnosis",
             "third_repo_local_pilot_grade_candidate",
             "third_repo_replacement_needed",
+            "ready_for_paid_third_repo_acut_smoke_runbook",
             "insufficient_evidence_for_predictive_validation",
         ],
         "disallowed_claims": [

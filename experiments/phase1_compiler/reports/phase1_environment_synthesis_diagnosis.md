@@ -1,6 +1,6 @@
 # Phase 1 Environment Synthesis Diagnosis
 
-Generated: `2026-05-22T03:54:32+00:00`.
+Generated: `2026-05-22T06:02:33+00:00`.
 
 - Environment probes run: `true`.
 - Supported decisions: `oracle_weakness`.
@@ -8,10 +8,11 @@ Generated: `2026-05-22T03:54:32+00:00`.
 
 | Failure category | Count |
 | --- | ---: |
-| `no_op_fail_failure` | 1 |
-| `reference_pass_failure` | 1 |
+| `no_op_fail_failure` | 3 |
+| `reference_pass_failure` | 5 |
+| `source_context_failure` | 8 |
 
 | Environment status | Count |
 | --- | ---: |
-| `not_environment_failure` | 1 |
-| `reference_environment_unrepaired` | 1 |
+| `not_environment_failure` | 11 |
+| `reference_environment_unrepaired` | 5 |

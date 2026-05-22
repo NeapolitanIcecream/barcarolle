@@ -1,15 +1,15 @@
 # Phase 1 Certification Hardening Decision
 
-Generated: `2026-05-22T03:54:32+00:00`.
+Generated: `2026-05-22T06:02:33+00:00`.
 
-Primary decision: `replace_third_repo_before_paid_acut`.
+Primary decision: `ready_for_paid_third_repo_acut_smoke_runbook`.
 
 ## Answers
 
 - Humanize benchmark-grade after hardening: `no`; decision `humanize_source_blocker_confirmed_operational_pilot_only` because certified tasks remain commit-message fallback unless repaired to non-leaky problem context.
 - Itsdangerous failure mode: `oracle_weakness`.
-- Third repo path: `replace_third_repo_before_paid_acut`.
-- Next runbook: `select_replacement_third_repo_and_locally_certify_without_paid_acut`.
+- Third repo path: `ready_for_paid_third_repo_acut_smoke_runbook`.
+- Next runbook: `run_small_paid_third_repo_acut_smoke_with_selected_replacement_repo`.
 
 The third-repo path must not proceed to paid ACUT scale-up unless local hardening yields enough benchmark-grade candidates. Current blockers are reported by the source, oracle, environment, and hardened-certification overlays.
 

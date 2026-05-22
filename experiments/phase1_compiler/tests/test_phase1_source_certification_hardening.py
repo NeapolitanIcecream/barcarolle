@@ -129,6 +129,19 @@ def test_primary_decision_replaces_third_repo_when_oracle_weakness_remains_after
     assert label == "replace_third_repo_before_paid_acut"
 
 
+def test_primary_decision_ready_when_replacement_has_enough_hardened_candidates() -> None:
+    label = hardening.choose_primary_decision(
+        humanize_repaired_count=0,
+        source_overlay={"repo_summary": {}},
+        oracle_audit={"summary": {"risk_flag_counts": {"statement_source_mismatch": 0}}},
+        environment_diagnosis={"summary": {"supported_decisions": ["oracle_weakness"]}},
+        hardened_overlay={"repo_summary": {"boltons": {"benchmark_grade_candidate_count": 7}, "toolz": {"benchmark_grade_candidate_count": 6}}},
+        active_repo_id="boltons",
+    )
+
+    assert label == "ready_for_paid_third_repo_acut_smoke_runbook"
+
+
 def test_selected_replacement_repo_is_active_and_itsdangerous_is_replaced() -> None:
     selection = {
         "active_selection": {

@@ -1,4 +1,5 @@
 {
+  "active_third_repo": "boltons",
   "allowed_claims": [
     "source_adapter_hardening",
     "certification_gate_hardening",
@@ -8,6 +9,7 @@
     "third_repo_certification_diagnosis",
     "third_repo_local_pilot_grade_candidate",
     "third_repo_replacement_needed",
+    "ready_for_paid_third_repo_acut_smoke_runbook",
     "insufficient_evidence_for_predictive_validation"
   ],
   "disallowed_claims": [
@@ -19,23 +21,24 @@
     "third_repo_pilot_grade_if_unbalanced_or_under_certified"
   ],
   "environment_diagnosis_counts": {
-    "no_op_fail_failure": 1,
-    "reference_pass_failure": 1
+    "no_op_fail_failure": 3,
+    "reference_pass_failure": 5,
+    "source_context_failure": 8
   },
-  "final_head": "9856cbfe95712a1291e60f81dd6b2d23335fd4fe",
-  "generated_at": "2026-05-22T03:54:32+00:00",
+  "final_head": "8af59d19ca9a1c665b049c393f708fb3f5a5fce0",
+  "generated_at": "2026-05-22T06:02:33+00:00",
   "hardened_certification_counts": {
+    "boltons": {
+      "benchmark_grade_candidate_count": 7,
+      "diagnostic_only_count": 10,
+      "manual_review_required_count": 5,
+      "rejected_count": 10
+    },
     "humanize": {
       "benchmark_grade_candidate_count": 0,
       "diagnostic_only_count": 16,
       "manual_review_required_count": 0,
       "rejected_count": 0
-    },
-    "itsdangerous": {
-      "benchmark_grade_candidate_count": 0,
-      "diagnostic_only_count": 0,
-      "manual_review_required_count": 2,
-      "rejected_count": 4
     },
     "toolz": {
       "benchmark_grade_candidate_count": 6,
@@ -50,20 +53,20 @@
     "supported_failure_modes": [
       "oracle_weakness"
     ],
-    "third_repo_decision": "replace_third_repo_before_paid_acut"
+    "third_repo_decision": "ready_for_paid_third_repo_acut_smoke_runbook"
   },
   "oracle_alignment_counts": {
+    "boltons": {
+      "aligned": 11,
+      "diagnostic_only": 10,
+      "manual_review_required": 5,
+      "reject": 6
+    },
     "humanize": {
       "aligned": 0,
       "diagnostic_only": 16,
       "manual_review_required": 0,
       "reject": 0
-    },
-    "itsdangerous": {
-      "aligned": 0,
-      "diagnostic_only": 0,
-      "manual_review_required": 4,
-      "reject": 2
     },
     "toolz": {
       "aligned": 6,
@@ -75,25 +78,25 @@
   "paid_acut_calls_made": false,
   "paid_llm_calls_made": false,
   "predictive_validity_established": false,
-  "primary_decision_label": "replace_third_repo_before_paid_acut",
-  "recommended_next_runbook": "select_replacement_third_repo_and_locally_certify_without_paid_acut",
+  "primary_decision_label": "ready_for_paid_third_repo_acut_smoke_runbook",
+  "recommended_next_runbook": "run_small_paid_third_repo_acut_smoke_with_selected_replacement_repo",
   "repos_analyzed": [
     "toolz",
     "humanize",
-    "itsdangerous"
+    "boltons"
   ],
   "schema_version": "barcarolle.phase1.certification_hardening_decision.v1",
   "source_tier_counts": {
+    "boltons": {
+      "benchmark_grade_source": 17,
+      "diagnostic_only_source": 10,
+      "manual_review_source": 5,
+      "reject_source": 0
+    },
     "humanize": {
       "benchmark_grade_source": 0,
       "diagnostic_only_source": 16,
       "manual_review_source": 0,
-      "reject_source": 0
-    },
-    "itsdangerous": {
-      "benchmark_grade_source": 2,
-      "diagnostic_only_source": 0,
-      "manual_review_source": 4,
       "reject_source": 0
     },
     "toolz": {
@@ -104,7 +107,22 @@
     }
   },
   "starting_head": "65971fb03852b43bf40f9f1c0442b3fbd3eb8b9d",
-  "third_repo_should_be_repaired_or_replaced": "replace_third_repo_before_paid_acut",
+  "third_repo_decision": {
+    "active_repo_id": "boltons",
+    "supported_failure_modes": [
+      "oracle_weakness"
+    ],
+    "third_repo_decision": "ready_for_paid_third_repo_acut_smoke_runbook"
+  },
+  "third_repo_replacement": {
+    "active_repo_id": "boltons",
+    "replaced_repos": {
+      "itsdangerous": {
+        "replacement_status": "replaced_by_boltons"
+      }
+    }
+  },
+  "third_repo_should_be_repaired_or_replaced": "ready_for_paid_third_repo_acut_smoke_runbook",
   "tools_or_configs_added": [
     "experiments/phase1_compiler/configs/phase1_source_certification_hardening.yaml",
     "experiments/phase1_compiler/tools/phase1_source_certification_hardening.py",

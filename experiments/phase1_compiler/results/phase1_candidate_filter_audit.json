@@ -1,6 +1,6 @@
 {
   "claim_scope": "candidate_selection_overlay",
-  "generated_at": "2026-05-22T03:54:32+00:00",
+  "generated_at": "2026-05-22T06:02:33+00:00",
   "policy": {
     "manual_review_if_cross_module_count_over": 3,
     "manual_review_if_docs_or_config_change_present": true,
@@ -21,6 +21,14 @@
   },
   "predictive_validity_established": false,
   "repo_summary": {
+    "boltons": {
+      "accepted_count": 26,
+      "candidate_count": 32,
+      "manual_review_required_count": 6,
+      "rejected_count": 0,
+      "remaining_after_filter_count": 32,
+      "top_reject_reasons": {}
+    },
     "humanize": {
       "accepted_count": 12,
       "candidate_count": 16,
@@ -31,14 +39,6 @@
         "changed_lines_over:250": 1,
         "project_file_heavy": 1
       }
-    },
-    "itsdangerous": {
-      "accepted_count": 1,
-      "candidate_count": 6,
-      "manual_review_required_count": 5,
-      "rejected_count": 0,
-      "remaining_after_filter_count": 6,
-      "top_reject_reasons": {}
     },
     "toolz": {
       "accepted_count": 14,
@@ -53,6 +53,370 @@
   },
   "schema_version": "barcarolle.phase1.candidate_filter_audit.v1",
   "tasks": [
+    {
+      "candidate_filter_status": "accepted",
+      "changed_line_count": 10,
+      "code_file_count": 1,
+      "manual_review_reasons": [],
+      "project_or_config_file_count": 0,
+      "reject_reasons": [],
+      "repo_id": "boltons",
+      "target_commit": "9b3392a81398d5d12a9faed9102678244cb15d79",
+      "task_id": "boltons__hist__001"
+    },
+    {
+      "candidate_filter_status": "accepted",
+      "changed_line_count": 53,
+      "code_file_count": 1,
+      "manual_review_reasons": [],
+      "project_or_config_file_count": 0,
+      "reject_reasons": [],
+      "repo_id": "boltons",
+      "target_commit": "07f76700dfd3d0fbbb8f001bc11013270c054221",
+      "task_id": "boltons__hist__002"
+    },
+    {
+      "candidate_filter_status": "accepted",
+      "changed_line_count": 13,
+      "code_file_count": 1,
+      "manual_review_reasons": [],
+      "project_or_config_file_count": 0,
+      "reject_reasons": [],
+      "repo_id": "boltons",
+      "target_commit": "98ef3be292848950f0c9cc8a5a2a8597daa69ee5",
+      "task_id": "boltons__hist__003"
+    },
+    {
+      "candidate_filter_status": "manual_review_required",
+      "changed_line_count": 12,
+      "code_file_count": 4,
+      "manual_review_reasons": [
+        "cross_module_count_over:3"
+      ],
+      "project_or_config_file_count": 0,
+      "reject_reasons": [],
+      "repo_id": "boltons",
+      "target_commit": "67e4ba4ce87c238d72e7d9cebbc540ed2f98d308",
+      "task_id": "boltons__hist__004"
+    },
+    {
+      "candidate_filter_status": "accepted",
+      "changed_line_count": 87,
+      "code_file_count": 1,
+      "manual_review_reasons": [],
+      "project_or_config_file_count": 0,
+      "reject_reasons": [],
+      "repo_id": "boltons",
+      "target_commit": "9dce539da36a7a084985b76210e9f767f7d97406",
+      "task_id": "boltons__hist__005"
+    },
+    {
+      "candidate_filter_status": "accepted",
+      "changed_line_count": 12,
+      "code_file_count": 1,
+      "manual_review_reasons": [],
+      "project_or_config_file_count": 0,
+      "reject_reasons": [],
+      "repo_id": "boltons",
+      "target_commit": "b1f55c2a0f604b1450b0c23ec2a0fc6f647c44df",
+      "task_id": "boltons__hist__006"
+    },
+    {
+      "candidate_filter_status": "accepted",
+      "changed_line_count": 80,
+      "code_file_count": 1,
+      "manual_review_reasons": [],
+      "project_or_config_file_count": 0,
+      "reject_reasons": [],
+      "repo_id": "boltons",
+      "target_commit": "0a20b37cc94784197a7353130cc61b5becfb12c7",
+      "task_id": "boltons__hist__007"
+    },
+    {
+      "candidate_filter_status": "accepted",
+      "changed_line_count": 29,
+      "code_file_count": 1,
+      "manual_review_reasons": [],
+      "project_or_config_file_count": 0,
+      "reject_reasons": [],
+      "repo_id": "boltons",
+      "target_commit": "4457decc614ee795804f2bb9c44ae9be30831d53",
+      "task_id": "boltons__hist__008"
+    },
+    {
+      "candidate_filter_status": "accepted",
+      "changed_line_count": 18,
+      "code_file_count": 1,
+      "manual_review_reasons": [],
+      "project_or_config_file_count": 0,
+      "reject_reasons": [],
+      "repo_id": "boltons",
+      "target_commit": "d35aacd96de6403a6864dd97d060c0d69cd8e491",
+      "task_id": "boltons__hist__009"
+    },
+    {
+      "candidate_filter_status": "accepted",
+      "changed_line_count": 13,
+      "code_file_count": 1,
+      "manual_review_reasons": [],
+      "project_or_config_file_count": 0,
+      "reject_reasons": [],
+      "repo_id": "boltons",
+      "target_commit": "41a926e64ff69e152d14dff87a2766b27ae2b53b",
+      "task_id": "boltons__hist__010"
+    },
+    {
+      "candidate_filter_status": "manual_review_required",
+      "changed_line_count": 126,
+      "code_file_count": 1,
+      "manual_review_reasons": [
+        "docs_or_config_change_present"
+      ],
+      "project_or_config_file_count": 1,
+      "reject_reasons": [],
+      "repo_id": "boltons",
+      "target_commit": "e79511e6e7a8472b229dd60f1fa7934aec03ab1e",
+      "task_id": "boltons__hist__011"
+    },
+    {
+      "candidate_filter_status": "accepted",
+      "changed_line_count": 14,
+      "code_file_count": 1,
+      "manual_review_reasons": [],
+      "project_or_config_file_count": 0,
+      "reject_reasons": [],
+      "repo_id": "boltons",
+      "target_commit": "754afddf141ea26956c88c7e13fe5e7ca7942654",
+      "task_id": "boltons__hist__012"
+    },
+    {
+      "candidate_filter_status": "accepted",
+      "changed_line_count": 30,
+      "code_file_count": 1,
+      "manual_review_reasons": [],
+      "project_or_config_file_count": 0,
+      "reject_reasons": [],
+      "repo_id": "boltons",
+      "target_commit": "4a11fbe1c8358bf76edad2c9fefcf4e5809e85a1",
+      "task_id": "boltons__hist__013"
+    },
+    {
+      "candidate_filter_status": "manual_review_required",
+      "changed_line_count": 235,
+      "code_file_count": 2,
+      "manual_review_reasons": [
+        "docs_or_config_change_present"
+      ],
+      "project_or_config_file_count": 1,
+      "reject_reasons": [],
+      "repo_id": "boltons",
+      "target_commit": "8e1526e8a5367e79b9542609a326c5ab1d7ad160",
+      "task_id": "boltons__hist__014"
+    },
+    {
+      "candidate_filter_status": "accepted",
+      "changed_line_count": 24,
+      "code_file_count": 1,
+      "manual_review_reasons": [],
+      "project_or_config_file_count": 0,
+      "reject_reasons": [],
+      "repo_id": "boltons",
+      "target_commit": "16a258e3750063d874ec85c5fb5bc21358206c5c",
+      "task_id": "boltons__hist__015"
+    },
+    {
+      "candidate_filter_status": "accepted",
+      "changed_line_count": 28,
+      "code_file_count": 1,
+      "manual_review_reasons": [],
+      "project_or_config_file_count": 0,
+      "reject_reasons": [],
+      "repo_id": "boltons",
+      "target_commit": "8177b933b418d91c7280909690f45589fbe004d2",
+      "task_id": "boltons__hist__016"
+    },
+    {
+      "candidate_filter_status": "accepted",
+      "changed_line_count": 22,
+      "code_file_count": 1,
+      "manual_review_reasons": [],
+      "project_or_config_file_count": 0,
+      "reject_reasons": [],
+      "repo_id": "boltons",
+      "target_commit": "395f690f4a24331c4554e2169ac18a15955a4eab",
+      "task_id": "boltons__hist__017"
+    },
+    {
+      "candidate_filter_status": "accepted",
+      "changed_line_count": 24,
+      "code_file_count": 1,
+      "manual_review_reasons": [],
+      "project_or_config_file_count": 0,
+      "reject_reasons": [],
+      "repo_id": "boltons",
+      "target_commit": "8ba3a7fa0d99b73f7f43c1aed82c571b941eecea",
+      "task_id": "boltons__hist__018"
+    },
+    {
+      "candidate_filter_status": "accepted",
+      "changed_line_count": 176,
+      "code_file_count": 1,
+      "manual_review_reasons": [],
+      "project_or_config_file_count": 0,
+      "reject_reasons": [],
+      "repo_id": "boltons",
+      "target_commit": "6505c6b5565275d484e0e3907a471944441f0c57",
+      "task_id": "boltons__hist__019"
+    },
+    {
+      "candidate_filter_status": "accepted",
+      "changed_line_count": 22,
+      "code_file_count": 1,
+      "manual_review_reasons": [],
+      "project_or_config_file_count": 0,
+      "reject_reasons": [],
+      "repo_id": "boltons",
+      "target_commit": "93185b224ebd60df01df88d64e574a3f651987c5",
+      "task_id": "boltons__hist__020"
+    },
+    {
+      "candidate_filter_status": "accepted",
+      "changed_line_count": 28,
+      "code_file_count": 1,
+      "manual_review_reasons": [],
+      "project_or_config_file_count": 0,
+      "reject_reasons": [],
+      "repo_id": "boltons",
+      "target_commit": "40a7b47c6e8235a1b2a4600d0ceec4f7ea0f9bb0",
+      "task_id": "boltons__hist__021"
+    },
+    {
+      "candidate_filter_status": "manual_review_required",
+      "changed_line_count": 78,
+      "code_file_count": 1,
+      "manual_review_reasons": [
+        "docs_or_config_change_present"
+      ],
+      "project_or_config_file_count": 1,
+      "reject_reasons": [],
+      "repo_id": "boltons",
+      "target_commit": "243de3fb2c9c59c660800f786ddc875628b34027",
+      "task_id": "boltons__hist__022"
+    },
+    {
+      "candidate_filter_status": "accepted",
+      "changed_line_count": 35,
+      "code_file_count": 1,
+      "manual_review_reasons": [],
+      "project_or_config_file_count": 0,
+      "reject_reasons": [],
+      "repo_id": "boltons",
+      "target_commit": "475462811ea4f9dea23c8af4cc2b6ead2dc03845",
+      "task_id": "boltons__hist__023"
+    },
+    {
+      "candidate_filter_status": "accepted",
+      "changed_line_count": 32,
+      "code_file_count": 1,
+      "manual_review_reasons": [],
+      "project_or_config_file_count": 0,
+      "reject_reasons": [],
+      "repo_id": "boltons",
+      "target_commit": "0341ab3d79e6430c0e6a4149df9c92679988a534",
+      "task_id": "boltons__hist__024"
+    },
+    {
+      "candidate_filter_status": "accepted",
+      "changed_line_count": 11,
+      "code_file_count": 1,
+      "manual_review_reasons": [],
+      "project_or_config_file_count": 0,
+      "reject_reasons": [],
+      "repo_id": "boltons",
+      "target_commit": "c2b04b4cb16410d7bf9ff781c78dee3ca908dc32",
+      "task_id": "boltons__hist__025"
+    },
+    {
+      "candidate_filter_status": "accepted",
+      "changed_line_count": 17,
+      "code_file_count": 1,
+      "manual_review_reasons": [],
+      "project_or_config_file_count": 0,
+      "reject_reasons": [],
+      "repo_id": "boltons",
+      "target_commit": "46599bc0d498dd8adc3aea833ce1445feed349dd",
+      "task_id": "boltons__hist__026"
+    },
+    {
+      "candidate_filter_status": "manual_review_required",
+      "changed_line_count": 46,
+      "code_file_count": 1,
+      "manual_review_reasons": [
+        "docs_or_config_change_present"
+      ],
+      "project_or_config_file_count": 1,
+      "reject_reasons": [],
+      "repo_id": "boltons",
+      "target_commit": "4815fc8dd1768da5f2d903846d2ab994aa57b0cf",
+      "task_id": "boltons__hist__027"
+    },
+    {
+      "candidate_filter_status": "accepted",
+      "changed_line_count": 112,
+      "code_file_count": 1,
+      "manual_review_reasons": [],
+      "project_or_config_file_count": 0,
+      "reject_reasons": [],
+      "repo_id": "boltons",
+      "target_commit": "3bbb9487aaa1e6d95a8d93aca7b58a4d0e9db966",
+      "task_id": "boltons__hist__028"
+    },
+    {
+      "candidate_filter_status": "accepted",
+      "changed_line_count": 7,
+      "code_file_count": 1,
+      "manual_review_reasons": [],
+      "project_or_config_file_count": 0,
+      "reject_reasons": [],
+      "repo_id": "boltons",
+      "target_commit": "6cac49ce4eba506a3582e8089bcc347c6b2fa70f",
+      "task_id": "boltons__hist__029"
+    },
+    {
+      "candidate_filter_status": "manual_review_required",
+      "changed_line_count": 24,
+      "code_file_count": 3,
+      "manual_review_reasons": [
+        "docs_or_config_change_present"
+      ],
+      "project_or_config_file_count": 1,
+      "reject_reasons": [],
+      "repo_id": "boltons",
+      "target_commit": "0e4dc6a7edb544612557950ee1d558df7298f8ad",
+      "task_id": "boltons__hist__030"
+    },
+    {
+      "candidate_filter_status": "accepted",
+      "changed_line_count": 131,
+      "code_file_count": 1,
+      "manual_review_reasons": [],
+      "project_or_config_file_count": 0,
+      "reject_reasons": [],
+      "repo_id": "boltons",
+      "target_commit": "1f07518303de8a087cb945c5c0375cbeeb09ba71",
+      "task_id": "boltons__hist__031"
+    },
+    {
+      "candidate_filter_status": "accepted",
+      "changed_line_count": 95,
+      "code_file_count": 1,
+      "manual_review_reasons": [],
+      "project_or_config_file_count": 0,
+      "reject_reasons": [],
+      "repo_id": "boltons",
+      "target_commit": "3bfcfdd04395b6cc74a5c0cdc72c8f64cc4ac01f",
+      "task_id": "boltons__hist__032"
+    },
     {
       "candidate_filter_status": "manual_review_required",
       "changed_line_count": 230,
@@ -238,82 +602,6 @@
       "repo_id": "humanize",
       "target_commit": "3c30cf577851b412024eb2e570ff9fbc2596bd21",
       "task_id": "humanize__hist__016"
-    },
-    {
-      "candidate_filter_status": "manual_review_required",
-      "changed_line_count": 91,
-      "code_file_count": 7,
-      "manual_review_reasons": [
-        "cross_module_count_over:3"
-      ],
-      "project_or_config_file_count": 0,
-      "reject_reasons": [],
-      "repo_id": "itsdangerous",
-      "target_commit": "228b7b1b2f26e98b82ae43aee1576cf5aa1322ea",
-      "task_id": "itsdangerous__hist__001"
-    },
-    {
-      "candidate_filter_status": "manual_review_required",
-      "changed_line_count": 37,
-      "code_file_count": 3,
-      "manual_review_reasons": [
-        "docs_or_config_change_present"
-      ],
-      "project_or_config_file_count": 1,
-      "reject_reasons": [],
-      "repo_id": "itsdangerous",
-      "target_commit": "910a7a94ee88b15d0677f65ed87d7ccbbd998048",
-      "task_id": "itsdangerous__hist__002"
-    },
-    {
-      "candidate_filter_status": "manual_review_required",
-      "changed_line_count": 17,
-      "code_file_count": 1,
-      "manual_review_reasons": [
-        "docs_or_config_change_present"
-      ],
-      "project_or_config_file_count": 1,
-      "reject_reasons": [],
-      "repo_id": "itsdangerous",
-      "target_commit": "c30678d19e37011890e2374cca04f7789e101793",
-      "task_id": "itsdangerous__hist__003"
-    },
-    {
-      "candidate_filter_status": "manual_review_required",
-      "changed_line_count": 19,
-      "code_file_count": 1,
-      "manual_review_reasons": [
-        "docs_or_config_change_present"
-      ],
-      "project_or_config_file_count": 1,
-      "reject_reasons": [],
-      "repo_id": "itsdangerous",
-      "target_commit": "526b1ea02934f529606dcbf3c3340ab429dcde04",
-      "task_id": "itsdangerous__hist__004"
-    },
-    {
-      "candidate_filter_status": "accepted",
-      "changed_line_count": 10,
-      "code_file_count": 1,
-      "manual_review_reasons": [],
-      "project_or_config_file_count": 0,
-      "reject_reasons": [],
-      "repo_id": "itsdangerous",
-      "target_commit": "177196d3a5c7ad37b8ccbd0f88445aced07f1ca0",
-      "task_id": "itsdangerous__hist__005"
-    },
-    {
-      "candidate_filter_status": "manual_review_required",
-      "changed_line_count": 18,
-      "code_file_count": 1,
-      "manual_review_reasons": [
-        "docs_or_config_change_present"
-      ],
-      "project_or_config_file_count": 1,
-      "reject_reasons": [],
-      "repo_id": "itsdangerous",
-      "target_commit": "7f4dcf83a07bb3d53f4e0e65ef1b43327b4cca90",
-      "task_id": "itsdangerous__hist__006"
     },
     {
       "candidate_filter_status": "accepted",

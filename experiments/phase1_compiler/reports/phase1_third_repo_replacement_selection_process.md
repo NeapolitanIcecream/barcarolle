@@ -165,3 +165,29 @@ Selected `boltons` as the active Phase 1 third repo replacement:
 `attrs` remains unscreened because `boltons` passed supply, source, local
 certification, and release gates. Itsdangerous artifacts remain available as
 historical/replaced evidence.
+
+## Step 9 Hardening Overlay Refresh
+
+Reran Phase 1 hardening overlays with `boltons` as the active third repo.
+
+Selected repo hardening summary:
+
+- active third repo: `boltons`
+- source rows: `32`
+- benchmark-grade source rows: `17`
+- local certified rows: `16`
+- oracle aligned rows: `11`
+- hardened benchmark-grade candidates: `7`
+- hardened manual-review tasks: `5`
+- hardened diagnostic-only tasks: `10`
+- hardened rejected tasks: `10`
+
+The active hardening summaries now cover `toolz`, `humanize`, and `boltons`.
+`itsdangerous` is no longer counted as the active third repo and is recorded as
+replaced by `boltons` in the hardening decision.
+
+Hardening decision:
+
+- primary decision: `ready_for_paid_third_repo_acut_smoke_runbook`
+- recommended next runbook: `run_small_paid_third_repo_acut_smoke_with_selected_replacement_repo`
+- predictive validity: `false`
