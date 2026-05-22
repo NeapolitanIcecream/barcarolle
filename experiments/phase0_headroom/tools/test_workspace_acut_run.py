@@ -206,6 +206,83 @@ def write_clean_overlay_fixture(tmp_path: Path) -> tuple[Path, Path, Path, str]:
     return root, matrix_path, release_path, base_commit
 
 
+def write_second_repo_clean_overlay_fixture(tmp_path: Path) -> tuple[Path, Path, Path]:
+    root = tmp_path
+    repo, base_commit = make_repo(tmp_path)
+    exp = root / "experiments" / "phase0_headroom"
+    phase1 = root / "experiments" / "phase1_compiler"
+    (exp / "certified_tasks").mkdir(parents=True)
+    (exp / "configs").mkdir(parents=True)
+    (phase1 / "configs").mkdir(parents=True)
+    (phase1 / "results").mkdir(parents=True)
+
+    row = {
+        "task_id": "attrs__hist__001",
+        "repo_id": "attrs",
+        "base_commit": base_commit,
+        "target_commit": base_commit,
+        "task_time": "2020-01-13T02:46:11-05:00",
+        "changed_files": ["calc.py", "tests/test_calc.py"],
+        "test_files": ["tests/test_calc.py"],
+        "allowed_context_refs": ["issue:611"],
+        "sanitized_context": {
+            "classification": "problem_context",
+            "ref": "issue:611",
+            "summary": "calc.value should preserve attrs behavior",
+            "body_summary": "A public attrs issue describes the behavior without implementation details.",
+        },
+        "promotion_decision": "promote_to_clean_benchmark_candidate",
+        "promotion_rationale": "local_certification_and_non_leaky_public_context",
+        "source_context_status": "non_leaky_problem_context",
+    }
+    workspace_acut.write_jsonl(exp / "certified_tasks" / "attrs_clean_outcome_unseen_supply_certified_tasks.jsonl", [row])
+    workspace_acut.write_json(
+        phase1 / "results" / "phase1_second_repo_clean_supply_overlay.json",
+        {
+            "evidence_level": "clean_supply_overlay_sidecar",
+            "selected_repo_id": "attrs",
+            "selected_b_eval_task_ids": ["attrs__hist__001"],
+            "selected_h_future_task_ids": [],
+            "promoted_task_ids": ["attrs__hist__001"],
+            "promoted_tasks": [row],
+            "config": "experiments/phase1_compiler/configs/phase1_second_repo_clean_outcome_unseen_supply.yaml",
+        },
+    )
+    (phase1 / "configs" / "phase1_second_repo_clean_outcome_unseen_supply.yaml").write_text(
+        "\n".join(
+            [
+                "schema_version: barcarolle.phase1_second_repo_clean_outcome_unseen_supply.v1",
+                "candidate_repos:",
+                "  attrs:",
+                "    repo_url: https://github.com/python-attrs/attrs.git",
+                f"    local_repo: {repo}",
+                "    candidate_source_prefix: attrs_clean_outcome_unseen_supply",
+                "    test_environment:",
+                "      command_template: uv run --project experiments/phase0_headroom --with pytest>=7,<8 python -m pytest -q {test_files}",
+                "",
+            ]
+        ),
+        encoding="utf-8",
+    )
+    matrix_path = phase1 / "configs" / "phase1_two_repo_future_holdout_validation.yaml"
+    matrix_path.write_text(
+        "\n".join(
+            [
+                "schema_version: barcarolle.phase1_two_repo_future_holdout_validation.v1",
+                "status: configured",
+                "second_repo_clean_supply_overlay: experiments/phase1_compiler/results/phase1_second_repo_clean_supply_overlay.json",
+                "splits:",
+                "  b_eval:",
+                "    - attrs__hist__001",
+                "  h_future:",
+                "",
+            ]
+        ),
+        encoding="utf-8",
+    )
+    return root, matrix_path, repo
+
+
 def test_multi_adapter_config_requires_adapter_id(tmp_path: Path) -> None:
     config_path = write_multi_adapter_config(tmp_path, f"{sys.executable} fake.py --workspace {{workspace}}")
 
@@ -298,6 +375,20 @@ def test_clean_overlay_task_ids_can_be_selected_by_task_id(tmp_path: Path) -> No
     assert [package.task_id for package in selected] == ["boltons__clean_ext__001"]
     assert selected[0].repo_id == "boltons"
     assert selected[0].metadata["evidence_level"] == "clean_supply_overlay_sidecar"
+
+
+def test_second_repo_clean_overlay_task_ids_can_be_selected_by_task_id(tmp_path: Path) -> None:
+    root, matrix_path, repo = write_second_repo_clean_overlay_fixture(tmp_path)
+
+    packages = workspace_acut.load_phase0_packages(root, matrix_config_path=matrix_path)
+    selected = workspace_acut.select_packages(packages, mode="matrix", task_ids=["attrs__hist__001"])
+
+    assert [package.task_id for package in selected] == ["attrs__hist__001"]
+    assert selected[0].repo_id == "attrs"
+    assert selected[0].source_repo == repo
+    assert selected[0].split == "B_eval"
+    assert selected[0].metadata["evidence_level"] == "clean_supply_overlay_sidecar"
+    assert "pytest>=7,<8" in " ".join(selected[0].verifier_command)
 
 
 def test_clean_overlay_loader_does_not_rewrite_canonical_release(tmp_path: Path) -> None:

@@ -92,3 +92,55 @@ Post-repair counts:
 - promoted clean attrs candidates: `18`
 
 No paid ACUT or paid LLM calls were made in Step 1.
+
+## Step 2 Attrs Paid Entry Gate
+
+Initial entry-gate preflight exposed a package-selection blocker:
+
+- all four preflight commands returned `ready`, but package inspection selected
+  the old Phase 0 matrix tasks because
+  `phase1_two_repo_future_holdout_validation.yaml` did not expose frozen attrs
+  tasks through runner-readable `splits`;
+- the workspace runner also lacked support for loading
+  `second_repo_clean_supply_overlay` packages from the attrs sidecar evidence.
+
+Benchmark-side repair:
+
+- added a regression test proving second-repo clean-overlay task ids can be
+  selected by task id;
+- added second-repo clean-supply overlay loading to
+  `workspace_acut_run.py`;
+- updated `phase1_two_repo_future_holdout_validation.yaml` with frozen attrs
+  `splits`, the attrs clean-supply certified-task source, and
+  `enabled_after_entry_gate` paid-call status.
+
+Re-run preflight evidence:
+
+| Prefix | Adapter | Status | Endpoint proof | Required env | Selected tasks | Missing |
+| --- | --- | --- | --- | --- | ---: | ---: |
+| `phase1_two_repo_future_holdout_attrs_b_eval_codex_preflight` | `codex_workspace` | `ready` | `codex_eligible` | `true` | `8` | `0` |
+| `phase1_two_repo_future_holdout_attrs_b_eval_kilo_preflight` | `kilo_workspace` | `ready` | `kilo_eligible` | `true` | `8` | `0` |
+| `phase1_two_repo_future_holdout_attrs_h_future_codex_preflight` | `codex_workspace` | `ready` | `codex_eligible` | `true` | `8` | `0` |
+| `phase1_two_repo_future_holdout_attrs_h_future_kilo_preflight` | `kilo_workspace` | `ready` | `kilo_eligible` | `true` | `8` | `0` |
+
+Frozen attrs tasks selected by package inspection:
+
+- B_eval: `attrs__hist__001`, `attrs__hist__003`, `attrs__hist__004`, `attrs__hist__008`
+- H_future: `attrs__hist__012`, `attrs__hist__013`, `attrs__hist__023`, `attrs__hist__027`
+
+Cost and prior-run gate:
+
+- current cumulative observed-or-conservative spend: `$46.99`
+- planned attrs paid cells: `16`
+- conservative planned attrs increment: `$8.00`
+- projected cumulative observed-or-conservative spend: `$54.99`, below the `$80.00` unattended stop cap
+- projected overnight increment: `$8.00`, below the `$35.00` hard cap
+- no prior paid score table or submission files exist for
+  `phase1_two_repo_future_holdout_attrs_b_eval` or
+  `phase1_two_repo_future_holdout_attrs_h_future`
+- paid parallelism remains disabled; planned paid cells will run sequentially
+
+Entry-gate decision:
+
+Proceed to the attrs B_eval paid batch if scoped tests and `git diff --check`
+pass. No paid ACUT or paid LLM calls were made in Step 2.

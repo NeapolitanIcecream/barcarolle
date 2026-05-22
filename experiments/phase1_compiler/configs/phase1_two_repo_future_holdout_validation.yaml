@@ -2,8 +2,8 @@ schema_version: barcarolle.phase1_two_repo_future_holdout_validation.v1
 status: configured
 claim_scope: two_repo_future_holdout_design_not_predictive_validation
 predictive_validity_established: false
-paid_second_repo_acut_calls: disabled
-paid_second_repo_llm_calls: disabled
+paid_second_repo_acut_calls: enabled_after_entry_gate
+paid_second_repo_llm_calls: enabled_after_entry_gate
 
 repos:
   - boltons
@@ -18,10 +18,23 @@ existing_paid_evidence:
     h_future_scoreable_cells: 8
 
 second_repo_clean_supply_overlay: experiments/phase1_compiler/results/phase1_second_repo_clean_supply_overlay.json
+second_repo_clean_supply_certified_tasks: experiments/phase0_headroom/certified_tasks/attrs_clean_outcome_unseen_supply_certified_tasks.jsonl
 
 second_repo_planned_paid_prefixes:
   b_eval: phase1_two_repo_future_holdout_attrs_b_eval
   h_future: phase1_two_repo_future_holdout_attrs_h_future
+
+splits:
+  b_eval:
+    - attrs__hist__001
+    - attrs__hist__003
+    - attrs__hist__004
+    - attrs__hist__008
+  h_future:
+    - attrs__hist__012
+    - attrs__hist__013
+    - attrs__hist__023
+    - attrs__hist__027
 
 adapters:
   config: experiments/phase0_headroom/configs/acut_workspace_adapters.yaml
@@ -41,6 +54,6 @@ output_paths:
   preregistration_report: experiments/phase1_compiler/reports/phase1_two_repo_future_holdout_preregistration.md
 
 guardrails:
-  run_second_repo_paid_cells_now: false
+  run_second_repo_paid_cells_now: true
   tune_on_holdout_tasks: false
   mix_outcome_seen_rows_into_clean_validation: false

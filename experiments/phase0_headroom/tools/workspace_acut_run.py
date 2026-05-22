@@ -893,6 +893,78 @@ def load_clean_overlay_packages(root: Path, matrix_config_path: Path | str | Non
     return packages
 
 
+def second_repo_split_for_overlay(config: dict[str, Any], overlay: dict[str, Any]) -> dict[str, str]:
+    split_by_id = split_for_matrix_task(config)
+    for task_id in overlay.get("selected_b_eval_task_ids", []):
+        split_by_id.setdefault(str(task_id), "B_eval")
+    for task_id in overlay.get("selected_h_future_task_ids", []):
+        split_by_id.setdefault(str(task_id), "H_future")
+    for row in overlay.get("promoted_tasks", []):
+        if row.get("task_id"):
+            split_by_id.setdefault(str(row["task_id"]), str(row.get("selected_split") or row.get("split") or ""))
+    return split_by_id
+
+
+def load_second_repo_clean_overlay_packages(root: Path, matrix_config_path: Path | str | None = None) -> list[TaskPackage]:
+    config = load_workspace_matrix_config(root, matrix_config_path)
+    if not config or not config.get("second_repo_clean_supply_overlay"):
+        return []
+    exp = phase0_root(root)
+    overlay_path = config_path(root, config["second_repo_clean_supply_overlay"])
+    overlay = read_json(overlay_path)
+    repo_id = str(overlay.get("selected_repo_id") or "")
+    if not repo_id:
+        return []
+
+    second_config_path = config_path(root, overlay.get("config") or "experiments/phase1_compiler/configs/phase1_second_repo_clean_outcome_unseen_supply.yaml")
+    second_config = simple_yaml_load(second_config_path) if second_config_path.exists() else {}
+    repo_config = second_config.get("candidate_repos", {}).get(repo_id, {})
+    prefix = str(repo_config.get("candidate_source_prefix") or f"{repo_id}_clean_outcome_unseen_supply")
+    certified_path = exp / "certified_tasks" / f"{prefix}_certified_tasks.jsonl"
+    certified = load_jsonl_map(certified_path)
+    test_environment = repo_config.get("test_environment") if isinstance(repo_config.get("test_environment"), dict) else {}
+    profile = {
+        "local_repo": repo_config.get("local_repo") or exp / "external_repos" / repo_id,
+        "test_command": test_environment.get("command_template") or "python -m pytest -q {test_files}",
+    }
+    source_repo = Path(str(profile["local_repo"]))
+    if not source_repo.is_absolute():
+        source_repo = root / source_repo
+
+    overlay_by_id = {str(row["task_id"]): row for row in overlay.get("promoted_tasks", []) if row.get("task_id")}
+    split_by_id = second_repo_split_for_overlay(config, overlay)
+    ordered_ids = [*matrix_task_ids(config)]
+    if not ordered_ids:
+        ordered_ids = [*overlay.get("selected_b_eval_task_ids", []), *overlay.get("selected_h_future_task_ids", [])]
+    for task_id in overlay_by_id:
+        if task_id not in ordered_ids:
+            ordered_ids.append(task_id)
+
+    packages: list[TaskPackage] = []
+    for task_id in ordered_ids:
+        overlay_row = overlay_by_id.get(str(task_id), {})
+        row = {**certified.get(str(task_id), {}), **overlay_row}
+        if not row:
+            continue
+        row.setdefault("task_id", str(task_id))
+        packages.append(
+            clean_overlay_package_for(
+                root=root,
+                exp=exp,
+                source_repo=source_repo,
+                row=row,
+                overlay_row=overlay_row,
+                split=split_by_id.get(str(task_id), str(row.get("split") or "")),
+                overlay_path=overlay_path,
+                clean_ext_path=certified_path,
+                canonical_path=certified_path,
+                release_path=second_config_path,
+                profile=profile,
+            )
+        )
+    return packages
+
+
 def load_toolz_packages(root: Path) -> list[TaskPackage]:
     exp = phase0_root(root)
     tasks = load_jsonl_map(exp / "certified_tasks" / "toolz_certified_tasks.jsonl")
@@ -1026,14 +1098,17 @@ def load_second_repo_packages(root: Path) -> list[TaskPackage]:
 
 def load_phase0_packages(root: Path, matrix_config_path: Path | str | None = None) -> list[TaskPackage]:
     overlay_packages = load_clean_overlay_packages(root, matrix_config_path)
+    second_repo_overlay_packages = load_second_repo_clean_overlay_packages(root, matrix_config_path)
     matrix_config = load_workspace_matrix_config(root, matrix_config_path)
+    if matrix_config.get("second_repo_clean_supply_overlay"):
+        return second_repo_overlay_packages
     if matrix_config.get("clean_supply_overlay"):
         return overlay_packages
-    overlay_task_ids = {package.task_id for package in overlay_packages}
+    overlay_task_ids = {package.task_id for package in [*overlay_packages, *second_repo_overlay_packages]}
     base_packages = [*load_toolz_packages(root), *load_generic_packages(root), *load_second_repo_packages(root)]
     if overlay_task_ids:
         base_packages = [package for package in base_packages if package.task_id not in overlay_task_ids]
-    return [*base_packages, *overlay_packages]
+    return [*base_packages, *overlay_packages, *second_repo_overlay_packages]
 
 
 def select_packages(packages: list[TaskPackage], mode: str, task_ids: list[str] | None = None) -> list[TaskPackage]:
