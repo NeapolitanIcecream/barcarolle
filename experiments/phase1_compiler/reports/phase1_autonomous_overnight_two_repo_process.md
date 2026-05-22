@@ -187,3 +187,45 @@ The B_eval gate passed:
 - adapter failures are not recurring harness errors: yes
 
 Decision: continue to the paid attrs H_future batch.
+
+## Step 5 Paid Attrs H_future
+
+Executed paid H_future cells sequentially:
+
+- `codex_workspace`: `attrs__hist__012`, `attrs__hist__013`, `attrs__hist__023`, `attrs__hist__027`
+- `kilo_workspace`: `attrs__hist__012`, `attrs__hist__013`, `attrs__hist__023`, `attrs__hist__027`
+
+Score table summary:
+
+- terminal cells: `8/8`
+- scoreable cells: `7/8`
+- verified pass: `1`
+- verified fail: `6`
+- policy violations: `1`
+- harness errors: `1`
+- adapter cells: `4` Codex, `4` Kilo
+
+Policy finding:
+
+- `kilo_workspace` on `attrs__hist__027` was recorded as
+  `policy_violation` with harness error
+  `submission_edited_out_of_scope_paths`.
+- The changed path was `src/attr/_make.py`.
+
+Cost and usage:
+
+- usage observed cells: `8/8`
+- usage observed rate: `1.0`
+- H_future observed-or-conservative estimated cost: `$8.7120804`
+- cumulative observed-or-conservative estimate after import: `$62.182946`
+- cumulative usage observed rate after import: `0.9548`
+
+Hidden oracle leak check:
+
+- no `*_hidden_tests.patch` files were found under H_future solver workspaces
+- raw artifacts and workspaces remain under ignored paths
+
+Runbook implication:
+
+The paid attrs H_future batch completed, but the policy violation means the
+two-repo predictive-validity threshold cannot be marked established.
