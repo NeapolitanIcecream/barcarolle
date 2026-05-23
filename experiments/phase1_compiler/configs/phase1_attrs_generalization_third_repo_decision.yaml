@@ -21,8 +21,11 @@ score_tables:
     h_future: experiments/phase0_headroom/results/phase1_two_repo_future_holdout_attrs_h_future_score_table.csv
 
 task_metadata:
-  boltons: experiments/phase0_headroom/certified_tasks/boltons_clean_outcome_unseen_supply_certified_tasks.jsonl
-  attrs: experiments/phase0_headroom/certified_tasks/attrs_clean_outcome_unseen_supply_certified_tasks.jsonl
+  boltons:
+    - experiments/phase0_headroom/certified_tasks/boltons_clean_outcome_unseen_supply_certified_tasks.jsonl
+    - experiments/phase0_headroom/certified_tasks/boltons_certified_tasks.jsonl
+  attrs:
+    - experiments/phase0_headroom/certified_tasks/attrs_clean_outcome_unseen_supply_certified_tasks.jsonl
 
 frozen_design:
   boltons:

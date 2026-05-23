@@ -39,3 +39,19 @@ Baseline checks passed:
 - `uv run --project experiments/phase0_headroom pytest -q experiments/phase0_headroom/tools`: `75 passed`.
 - `uv run --project experiments/phase1_compiler python experiments/phase1_compiler/tools/phase1_compiler.py validate --config experiments/phase1_compiler/configs/phase1_mvp.yaml`: `valid`.
 - `git diff --check`: passed.
+
+## Step 1 Outcome Matrix
+
+Built a sanitized cell-level matrix from the four two-repo score tables and
+joined safe task metadata from certification artifacts where available.
+
+Acceptance checks passed:
+
+- Planned cells: `32`.
+- Scoreable cells: `31`.
+- Policy violations: `1`.
+- The single policy violation is still `attrs__hist__027` / `kilo_workspace`.
+- The policy violation remains non-scoreable and is not counted as a verified fail.
+- Frozen design task ids match the preregistered task ids.
+- No raw verifier logs, raw patches, prompts, completions, or ACUT transcripts
+  are included.
