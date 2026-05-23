@@ -209,6 +209,24 @@ def test_closeout_prioritizes_two_repo_paid_decision_after_it_exists() -> None:
     )
 
 
+def test_closeout_prioritizes_policy_violation_repair_decision_after_triage() -> None:
+    recommendation = compiler.closeout_next_runbook_recommendation(
+        {"recommended_next_runbook": "older_hardening_path"},
+        two_repo_future_holdout_decision={
+            "paid_acut_calls_made": True,
+            "recommended_next_runbook": "repair_workspace_acut_scoreability_or_policy_violation_then_rerun_preregistered_two_repo_validation",
+        },
+        policy_violation_repair_decision={
+            "recommended_next_runbook": "analyze_attrs_h_future_generalization_or_mine_third_repo_without_rerunning_confirmed_violation"
+        },
+    )
+
+    assert (
+        recommendation
+        == "analyze_attrs_h_future_generalization_or_mine_third_repo_without_rerunning_confirmed_violation"
+    )
+
+
 def test_closeout_identifies_active_replacement_repo_sidecar() -> None:
     payload = compiler.build_closeout_payload(compiler.load_mvp_config())
 
@@ -244,8 +262,13 @@ def test_closeout_identifies_active_replacement_repo_sidecar() -> None:
     assert payload["two_repo_future_holdout_paid_sidecar_evidence"]["h_future_scoreable_cells"] == 15
     assert payload["two_repo_future_holdout_paid_sidecar_evidence"]["policy_violation_count"] == 1
     assert (
+        payload["policy_violation_repair_sidecar_evidence"]["terminal_state"]
+        == "confirmed_policy_violation_validation_remains_insufficient"
+    )
+    assert payload["policy_violation_repair_sidecar_evidence"]["paid_rerun_performed"] is False
+    assert (
         payload["next_runbook_recommendation"]
-        == "repair_workspace_acut_scoreability_or_policy_violation_then_rerun_preregistered_two_repo_validation"
+        == "analyze_attrs_h_future_generalization_or_mine_third_repo_without_rerunning_confirmed_violation"
     )
 
 

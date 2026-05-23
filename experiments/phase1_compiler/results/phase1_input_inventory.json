@@ -5,7 +5,7 @@
   },
   "claim_scope": "phase1_mvp_compiler_infrastructure",
   "cost_summary_present": true,
-  "generated_at": "2026-05-22T16:36:55+00:00",
+  "generated_at": "2026-05-23T10:05:57+00:00",
   "generic_comparators": [
     {
       "repo_id": "click",

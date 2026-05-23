@@ -82,7 +82,7 @@
     ],
     "status": "available_as_future_holdout_sidecar_evidence"
   },
-  "generated_at": "2026-05-22T16:36:55+00:00",
+  "generated_at": "2026-05-23T10:05:57+00:00",
   "hardening_sidecar_evidence": {
     "active_third_repo": "boltons",
     "decision": "experiments/phase1_compiler/results/phase1_certification_hardening_decision.json",
@@ -138,7 +138,7 @@
       }
     }
   },
-  "next_runbook_recommendation": "repair_workspace_acut_scoreability_or_policy_violation_then_rerun_preregistered_two_repo_validation",
+  "next_runbook_recommendation": "analyze_attrs_h_future_generalization_or_mine_third_repo_without_rerunning_confirmed_violation",
   "paid_smoke_sidecar_evidence": {
     "combined_scoreable_cells": 13,
     "combined_total_cells": 14,
@@ -151,6 +151,17 @@
       "phase1_validation_boltons_paid_extension"
     ],
     "status": "available_as_operational_smoke_evidence"
+  },
+  "policy_violation_repair_sidecar_evidence": {
+    "classification_label": "confirmed_acut_policy_violation_no_rerun",
+    "decision": "experiments/phase1_compiler/results/phase1_policy_violation_repair_decision.json",
+    "h_future_scoreable_cells": 15,
+    "paid_rerun_performed": false,
+    "policy_violation_count": 1,
+    "predictive_validity_established": false,
+    "recommended_next_runbook": "analyze_attrs_h_future_generalization_or_mine_third_repo_without_rerunning_confirmed_violation",
+    "status": "available_as_policy_violation_repair_decision",
+    "terminal_state": "confirmed_policy_violation_validation_remains_insufficient"
   },
   "predictive_validity_established": false,
   "production_ranking_status": "not_produced",

@@ -1,6 +1,6 @@
 # Phase 1 MVP Closeout
 
-Generated: `2026-05-22T16:36:55+00:00`.
+Generated: `2026-05-23T10:05:57+00:00`.
 
 - Release: `phase1_mvp_multi_repo_release`.
 - Status: `pilot_grade`.
@@ -29,5 +29,7 @@ Two-repo future-holdout preregistration sidecar evidence: `available_as_two_repo
 Two-repo future-holdout preregistration is the frozen design; paid execution is reported separately when available.
 Two-repo future-holdout paid sidecar evidence: `available_as_two_repo_future_holdout_paid_sidecar_evidence`.
 Two-repo paid validation result: `two_repo_paid_validation_complete_insufficient_evidence`; H_future scoreable cells `15`; policy violations `1`.
+Policy-violation repair sidecar evidence: `available_as_policy_violation_repair_decision`.
+Policy-violation repair result: `confirmed_policy_violation_validation_remains_insufficient`; paid rerun performed `false`.
 
-Next runbook recommendation: repair_workspace_acut_scoreability_or_policy_violation_then_rerun_preregistered_two_repo_validation.
+Next runbook recommendation: analyze_attrs_h_future_generalization_or_mine_third_repo_without_rerunning_confirmed_violation.

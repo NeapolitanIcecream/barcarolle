@@ -59,3 +59,24 @@ Checks:
 - Deterministic replay is not allowed under this classification.
 - Paid rerun is not allowed under this classification.
 - Predictive validity remains unclaimable while the policy violation count is `1`.
+
+## Step 4A Close Without Rerun
+
+- Recomputed two-repo metrics and decision from the original frozen prefixes.
+- Rebuilt and validated the Phase 1 MVP closeout.
+- Recorded the repair decision as `confirmed_policy_violation_validation_remains_insufficient`.
+- Added the repair decision as a closeout sidecar so the final closeout does not recommend rerunning the same confirmed policy violation.
+- Policy violation count remains `1`.
+- H_future scoreable cells remain `15`.
+- Predictive validity remains `false`.
+- Production ranking remains `not_produced`.
+- No deterministic replay was performed.
+- No paid rerun was performed.
+
+Checks:
+
+- `uv run --project experiments/phase1_compiler pytest -q experiments/phase1_compiler/tests/test_phase1_compiler.py`: 19 passed.
+- `uv run --project experiments/phase1_compiler pytest -q`: 71 passed.
+- `uv run --project experiments/phase0_headroom pytest -q experiments/phase0_headroom/tools`: 75 passed.
+- `uv run --project experiments/phase1_compiler python experiments/phase1_compiler/tools/phase1_compiler.py validate --config experiments/phase1_compiler/configs/phase1_mvp.yaml`: valid.
+- `git diff --check`: passed.

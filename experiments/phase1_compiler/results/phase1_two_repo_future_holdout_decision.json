@@ -22,7 +22,7 @@
     "predictive_validity_established_if_holdout_was_used_for_tuning",
     "validation_grade_humanize_if_commit_fallback_only"
   ],
-  "generated_at": "2026-05-23T09:59:16+00:00",
+  "generated_at": "2026-05-23T10:03:42+00:00",
   "h_future_scoreable_cells": 15,
   "incremental_observed_or_conservative_estimated_cost_usd": 24.5357028,
   "non_scoreable_count": 1,
