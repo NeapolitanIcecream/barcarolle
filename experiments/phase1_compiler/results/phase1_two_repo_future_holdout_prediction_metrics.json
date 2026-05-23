@@ -110,7 +110,7 @@
     "mismatches": [],
     "status": "matched"
   },
-  "generated_at": "2026-05-22T16:34:17+00:00",
+  "generated_at": "2026-05-23T09:59:16+00:00",
   "h_future": {
     "by_adapter": {
       "codex_workspace": {
@@ -140,8 +140,10 @@
   "policy_violations": [
     {
       "adapter_id": "kilo_workspace",
-      "changed_paths": [],
-      "harness_error": "True",
+      "changed_paths": [
+        "src/attr/_make.py"
+      ],
+      "harness_error": "submission_edited_out_of_scope_paths",
       "prefix": "phase1_two_repo_future_holdout_attrs_h_future",
       "repo_id": "attrs",
       "split": "h_future",

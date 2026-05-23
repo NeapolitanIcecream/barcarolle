@@ -866,7 +866,8 @@ def two_repo_policy_violation_rows(
     for row in rows:
         if row.get("terminal_status") != "policy_violation":
             continue
-        key = (str(row.get("adapter_id") or ""), split, str(row.get("task_id") or ""))
+        score_split = str(row.get("split") or split)
+        key = (str(row.get("adapter_id") or ""), score_split, str(row.get("task_id") or ""))
         verifier_row = verifier.get(key, {})
         violations.append(
             {

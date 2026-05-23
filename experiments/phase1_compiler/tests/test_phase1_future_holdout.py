@@ -364,3 +364,46 @@ def test_two_repo_paid_validation_policy_violation_blocks_predictive_validity() 
     assert outcome["threshold_checks"]["h_future_scoreable_cells_at_least_min"] is True
     assert outcome["threshold_checks"]["policy_violations_within_gate"] is False
     assert "policy_violation_count_exceeds_acceptance_gate" in outcome["blockers"]
+
+
+def test_two_repo_policy_violation_rows_keep_verifier_detail_with_score_split_case(monkeypatch) -> None:
+    def fake_verifier_result_map(prefix: str) -> dict:
+        assert prefix == "phase1_two_repo_future_holdout_attrs_h_future"
+        return {
+            ("kilo_workspace", "H_future", "attrs__hist__027"): {
+                "harness_error": "submission_edited_out_of_scope_paths",
+                "changed_paths": ["src/attr/_make.py"],
+            }
+        }
+
+    monkeypatch.setattr(holdout, "prefix_verifier_result_map", fake_verifier_result_map)
+
+    rows = [
+        {
+            "adapter_id": "kilo_workspace",
+            "task_id": "attrs__hist__027",
+            "split": "H_future",
+            "terminal_status": "policy_violation",
+            "harness_error": "True",
+        }
+    ]
+
+    violations = holdout.two_repo_policy_violation_rows(
+        repo_id="attrs",
+        split="h_future",
+        prefix="phase1_two_repo_future_holdout_attrs_h_future",
+        rows=rows,
+    )
+
+    assert violations == [
+        {
+            "repo_id": "attrs",
+            "split": "h_future",
+            "prefix": "phase1_two_repo_future_holdout_attrs_h_future",
+            "adapter_id": "kilo_workspace",
+            "task_id": "attrs__hist__027",
+            "terminal_status": "policy_violation",
+            "harness_error": "submission_edited_out_of_scope_paths",
+            "changed_paths": ["src/attr/_make.py"],
+        }
+    ]
