@@ -1347,7 +1347,12 @@ def closeout_next_runbook_recommendation(
     second_repo_clean_supply_decision: dict[str, Any] | None = None,
     two_repo_future_holdout_decision: dict[str, Any] | None = None,
     policy_violation_repair_decision: dict[str, Any] | None = None,
+    next_research_decision: dict[str, Any] | None = None,
 ) -> str:
+    if next_research_decision:
+        recommendation = str(next_research_decision.get("recommended_next_runbook") or "").strip()
+        if recommendation:
+            return recommendation
     if policy_violation_repair_decision:
         recommendation = str(policy_violation_repair_decision.get("recommended_next_runbook") or "").strip()
         if recommendation:
@@ -1441,6 +1446,7 @@ def build_closeout_payload(config: dict[str, Any]) -> dict[str, Any]:
     two_repo_future_holdout_preregistration_path = ROOT / "results" / "phase1_two_repo_future_holdout_preregistration.json"
     two_repo_future_holdout_decision_path = ROOT / "results" / "phase1_two_repo_future_holdout_decision.json"
     policy_violation_repair_decision_path = ROOT / "results" / "phase1_policy_violation_repair_decision.json"
+    attrs_generalization_next_research_decision_path = ROOT / "results" / "phase1_next_research_decision.json"
     hardening_sidecar: dict[str, Any] | None = None
     paid_smoke_decision: dict[str, Any] | None = None
     future_holdout_decision: dict[str, Any] | None = None
@@ -1450,6 +1456,7 @@ def build_closeout_payload(config: dict[str, Any]) -> dict[str, Any]:
     second_repo_clean_supply_decision: dict[str, Any] | None = None
     two_repo_future_holdout_decision: dict[str, Any] | None = None
     policy_violation_repair_decision: dict[str, Any] | None = None
+    attrs_generalization_next_research_decision: dict[str, Any] | None = None
     if hardening_overlay_path.exists() and hardening_decision_path.exists():
         hardening_overlay = read_json(hardening_overlay_path)
         hardening_decision = read_json(hardening_decision_path)
@@ -1640,6 +1647,28 @@ def build_closeout_payload(config: dict[str, Any]) -> dict[str, Any]:
             "status": "not_available",
             "note": "Policy-violation repair decision has not been generated for this MVP build.",
         }
+    if attrs_generalization_next_research_decision_path.exists():
+        attrs_generalization_next_research_decision = read_json(attrs_generalization_next_research_decision_path)
+        attrs_generalization_next_research_sidecar = {
+            "status": "available_as_attrs_generalization_next_research_decision",
+            "decision": rel(attrs_generalization_next_research_decision_path),
+            "primary_decision_label": attrs_generalization_next_research_decision.get("primary_decision_label"),
+            "selected_decision_count": attrs_generalization_next_research_decision.get("selected_decision_count"),
+            "recommended_next_runbook": attrs_generalization_next_research_decision.get("recommended_next_runbook"),
+            "paid_acut_calls_made": attrs_generalization_next_research_decision.get("paid_acut_calls_made"),
+            "paid_llm_calls_made": attrs_generalization_next_research_decision.get("paid_llm_calls_made"),
+            "third_repo_local_screening_started": attrs_generalization_next_research_decision.get(
+                "third_repo_local_screening_started"
+            ),
+            "predictive_validity_established": attrs_generalization_next_research_decision.get(
+                "predictive_validity_established"
+            ),
+        }
+    else:
+        attrs_generalization_next_research_sidecar = {
+            "status": "not_available",
+            "note": "Attrs generalization next-research decision has not been generated for this MVP build.",
+        }
     return {
         "schema_version": "barcarolle.phase1.mvp_closeout.v1",
         "generated_at": now_utc(),
@@ -1682,6 +1711,7 @@ def build_closeout_payload(config: dict[str, Any]) -> dict[str, Any]:
         "two_repo_future_holdout_preregistration_sidecar_evidence": two_repo_future_holdout_sidecar,
         "two_repo_future_holdout_paid_sidecar_evidence": two_repo_future_holdout_paid_sidecar,
         "policy_violation_repair_sidecar_evidence": policy_violation_repair_sidecar,
+        "attrs_generalization_next_research_sidecar_evidence": attrs_generalization_next_research_sidecar,
         "clean_future_holdout_scale_up_decision": clean_future_holdout_scale_up_decision(future_holdout_decision),
         "production_ranking_status": "not_produced",
         "next_runbook_recommendation": closeout_next_runbook_recommendation(
@@ -1694,6 +1724,7 @@ def build_closeout_payload(config: dict[str, Any]) -> dict[str, Any]:
             second_repo_clean_supply_decision,
             two_repo_future_holdout_decision,
             policy_violation_repair_decision,
+            attrs_generalization_next_research_decision,
         ),
     }
 
@@ -1749,6 +1780,11 @@ def closeout_report(payload: dict[str, Any]) -> str:
                 f"`{payload['policy_violation_repair_sidecar_evidence'].get('terminal_state', 'not_available')}`; "
                 f"paid rerun performed "
                 f"`{str(payload['policy_violation_repair_sidecar_evidence'].get('paid_rerun_performed')).lower()}`."
+            ),
+            f"Attrs generalization next-research sidecar evidence: `{payload['attrs_generalization_next_research_sidecar_evidence']['status']}`.",
+            (
+                "Attrs generalization decision: "
+                f"`{payload['attrs_generalization_next_research_sidecar_evidence'].get('primary_decision_label', 'not_available')}`."
             ),
             "",
             f"Next runbook recommendation: {payload['next_runbook_recommendation']}.",

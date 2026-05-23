@@ -7,6 +7,17 @@
     "source_provenance_commit_message_fallback",
     "generic_comparator_archived_click_r0"
   ],
+  "attrs_generalization_next_research_sidecar_evidence": {
+    "decision": "experiments/phase1_compiler/results/phase1_next_research_decision.json",
+    "paid_acut_calls_made": false,
+    "paid_llm_calls_made": false,
+    "predictive_validity_established": false,
+    "primary_decision_label": "report_two_repo_negative_or_underpowered_pilot",
+    "recommended_next_runbook": "write_two_repo_negative_or_underpowered_pilot_report_then_plan_weighted_or_third_repo_followup_if_needed",
+    "selected_decision_count": 1,
+    "status": "available_as_attrs_generalization_next_research_decision",
+    "third_repo_local_screening_started": false
+  },
   "certification_counts_by_repo": {
     "humanize": {
       "certified": 12,
@@ -82,7 +93,7 @@
     ],
     "status": "available_as_future_holdout_sidecar_evidence"
   },
-  "generated_at": "2026-05-23T10:05:57+00:00",
+  "generated_at": "2026-05-23T11:36:32+00:00",
   "hardening_sidecar_evidence": {
     "active_third_repo": "boltons",
     "decision": "experiments/phase1_compiler/results/phase1_certification_hardening_decision.json",
@@ -138,7 +149,7 @@
       }
     }
   },
-  "next_runbook_recommendation": "analyze_attrs_h_future_generalization_or_mine_third_repo_without_rerunning_confirmed_violation",
+  "next_runbook_recommendation": "write_two_repo_negative_or_underpowered_pilot_report_then_plan_weighted_or_third_repo_followup_if_needed",
   "paid_smoke_sidecar_evidence": {
     "combined_scoreable_cells": 13,
     "combined_total_cells": 14,

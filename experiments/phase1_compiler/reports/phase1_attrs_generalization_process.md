@@ -140,3 +140,31 @@ weighted/stratified compiler analysis runbook before deciding whether
 third-repo supply or future paid holdout validation is worth the cost.
 
 No third-repo local screening was started. No paid calls were made.
+
+## Step 6 Closeout
+
+Updated MVP closeout to import
+`experiments/phase1_compiler/results/phase1_next_research_decision.json` as
+attrs generalization sidecar evidence.
+
+Final summary:
+
+- Analyzed the two-repo outcome matrix, attrs H_future failure taxonomy,
+  uncertainty intervals, and baseline errors.
+- Learned that attrs H_future failure is broad across the planned tasks, not a
+  one-task artifact.
+- Learned that the pilot is both negative and underpowered: point estimates do
+  not support predictive validity, while the sample remains small.
+- Selected decision branch:
+  `report_two_repo_negative_or_underpowered_pilot`.
+- No third-repo local screening was started.
+- No paid ACUT calls or paid LLM calls were made.
+- Predictive validity remains `false`.
+- Production ranking remains `not_produced`.
+- MVP closeout recommendation now supersedes stale policy-violation rerun
+  advice with:
+  `write_two_repo_negative_or_underpowered_pilot_report_then_plan_weighted_or_third_repo_followup_if_needed`.
+
+Next concrete runbook recommendation: prepare a local-only
+weighted/stratified compiler analysis runbook before deciding whether
+third-repo supply or future paid holdout validation is worth the cost.

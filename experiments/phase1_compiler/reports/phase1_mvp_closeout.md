@@ -1,6 +1,6 @@
 # Phase 1 MVP Closeout
 
-Generated: `2026-05-23T10:05:57+00:00`.
+Generated: `2026-05-23T11:36:32+00:00`.
 
 - Release: `phase1_mvp_multi_repo_release`.
 - Status: `pilot_grade`.
@@ -31,5 +31,7 @@ Two-repo future-holdout paid sidecar evidence: `available_as_two_repo_future_hol
 Two-repo paid validation result: `two_repo_paid_validation_complete_insufficient_evidence`; H_future scoreable cells `15`; policy violations `1`.
 Policy-violation repair sidecar evidence: `available_as_policy_violation_repair_decision`.
 Policy-violation repair result: `confirmed_policy_violation_validation_remains_insufficient`; paid rerun performed `false`.
+Attrs generalization next-research sidecar evidence: `available_as_attrs_generalization_next_research_decision`.
+Attrs generalization decision: `report_two_repo_negative_or_underpowered_pilot`.
 
-Next runbook recommendation: analyze_attrs_h_future_generalization_or_mine_third_repo_without_rerunning_confirmed_violation.
+Next runbook recommendation: write_two_repo_negative_or_underpowered_pilot_report_then_plan_weighted_or_third_repo_followup_if_needed.

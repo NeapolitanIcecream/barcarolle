@@ -227,6 +227,23 @@ def test_closeout_prioritizes_policy_violation_repair_decision_after_triage() ->
     )
 
 
+def test_closeout_prioritizes_attrs_generalization_next_research_decision() -> None:
+    recommendation = compiler.closeout_next_runbook_recommendation(
+        {"recommended_next_runbook": "older_hardening_path"},
+        policy_violation_repair_decision={
+            "recommended_next_runbook": "analyze_attrs_h_future_generalization_or_mine_third_repo_without_rerunning_confirmed_violation"
+        },
+        next_research_decision={
+            "recommended_next_runbook": "write_two_repo_negative_or_underpowered_pilot_report_then_plan_weighted_or_third_repo_followup_if_needed"
+        },
+    )
+
+    assert (
+        recommendation
+        == "write_two_repo_negative_or_underpowered_pilot_report_then_plan_weighted_or_third_repo_followup_if_needed"
+    )
+
+
 def test_closeout_identifies_active_replacement_repo_sidecar() -> None:
     payload = compiler.build_closeout_payload(compiler.load_mvp_config())
 
@@ -267,8 +284,12 @@ def test_closeout_identifies_active_replacement_repo_sidecar() -> None:
     )
     assert payload["policy_violation_repair_sidecar_evidence"]["paid_rerun_performed"] is False
     assert (
+        payload["attrs_generalization_next_research_sidecar_evidence"]["primary_decision_label"]
+        == "report_two_repo_negative_or_underpowered_pilot"
+    )
+    assert (
         payload["next_runbook_recommendation"]
-        == "analyze_attrs_h_future_generalization_or_mine_third_repo_without_rerunning_confirmed_violation"
+        == "write_two_repo_negative_or_underpowered_pilot_report_then_plan_weighted_or_third_repo_followup_if_needed"
     )
 
 
