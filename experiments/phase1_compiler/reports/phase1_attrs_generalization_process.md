@@ -55,3 +55,29 @@ Acceptance checks passed:
 - Frozen design task ids match the preregistered task ids.
 - No raw verifier logs, raw patches, prompts, completions, or ACUT transcripts
   are included.
+
+## Step 2 Attrs H_future Failure Taxonomy
+
+Analyzed attrs H_future failures against attrs B_eval, boltons B_eval, and
+boltons H_future using the sanitized matrix only.
+
+Observed result:
+
+- Attrs H_future scoreable pass rate: `1/7`.
+- Verified fails: `6`.
+- Policy violations: `1`.
+- `attrs__hist__012` and `attrs__hist__013` failed on both scoreable adapters.
+- `attrs__hist__023` passed on one adapter and failed on one adapter.
+- `attrs__hist__027` had one scoreable fail and one non-scoreable policy
+  violation.
+
+Interpretation:
+
+- The collapse is broad across attrs H_future tasks, not tied to one task.
+- Both adapters contributed scoreable failures; Codex was worse on attrs
+  H_future.
+- The confirmed policy violation is a real benchmark boundary failure for one
+  cell, but it does not explain the six verified fails.
+- A task-family or time-window shift is plausible but not proven from the safe
+  metadata.
+- No paid calls were made or recommended inside this runbook step.

@@ -372,6 +372,206 @@ def summarize_group(cells: list[dict[str, Any]]) -> dict[str, Any]:
     }
 
 
+def load_json(path: Path) -> Any:
+    return json.loads(path.read_text(encoding="utf-8"))
+
+
+def cells_for(cells: list[dict[str, Any]], *, repo_id: str, split: str) -> list[dict[str, Any]]:
+    return [cell for cell in cells if cell["repo_id"] == repo_id and cell["split"] == split]
+
+
+def group_cells(cells: list[dict[str, Any]], field: str) -> dict[str, dict[str, Any]]:
+    grouped: dict[str, list[dict[str, Any]]] = defaultdict(list)
+    for cell in cells:
+        value = cell.get(field)
+        if isinstance(value, list):
+            key = "/".join(str(item) for item in value) if value else "unknown"
+        elif value in {"", None}:
+            key = "unknown"
+        else:
+            key = str(value)
+        grouped[key].append(cell)
+    return {key: summarize_group(group) for key, group in sorted(grouped.items())}
+
+
+def task_time_month(cell: dict[str, Any]) -> str:
+    raw = str(cell.get("task_time") or "")
+    return raw[:7] if len(raw) >= 7 else "unknown"
+
+
+def context_ref_kind(cell: dict[str, Any]) -> str:
+    ref = str(cell.get("source_context_ref") or "")
+    if ref.startswith("issue:"):
+        return "issue"
+    if ref.startswith("pr:"):
+        return "pull_request"
+    return "unknown"
+
+
+def attrs_h_future_task_patterns(cells: list[dict[str, Any]]) -> dict[str, Any]:
+    by_task: dict[str, list[dict[str, Any]]] = defaultdict(list)
+    for cell in cells:
+        by_task[cell["task_id"]].append(cell)
+
+    failed_on_both: list[str] = []
+    passed_one_failed_one: list[str] = []
+    policy_violation_tasks: list[str] = []
+    task_outcomes: dict[str, dict[str, Any]] = {}
+    for task_id, task_cells in sorted(by_task.items()):
+        scoreable = [cell for cell in task_cells if cell["scoreable_cell"]]
+        statuses_by_adapter = {cell["adapter_id"]: cell["terminal_status"] for cell in task_cells}
+        pass_count = sum(1 for cell in scoreable if cell["verified_pass"])
+        fail_count = sum(1 for cell in scoreable if cell["verified_fail"])
+        policy_count = sum(1 for cell in task_cells if cell["policy_violation"])
+        if len(scoreable) == 2 and fail_count == 2:
+            failed_on_both.append(task_id)
+        if pass_count and fail_count:
+            passed_one_failed_one.append(task_id)
+        if policy_count:
+            policy_violation_tasks.append(task_id)
+        task_outcomes[task_id] = {
+            "statuses_by_adapter": statuses_by_adapter,
+            "scoreable_cell_count": len(scoreable),
+            "verified_pass_count": pass_count,
+            "verified_fail_count": fail_count,
+            "policy_violation_count": policy_count,
+        }
+
+    return {
+        "failed_on_both_scoreable_adapters": failed_on_both,
+        "passed_one_failed_one": passed_one_failed_one,
+        "policy_violation_tasks": policy_violation_tasks,
+        "task_outcomes": task_outcomes,
+    }
+
+
+def build_attrs_h_future_failure_taxonomy(
+    config: dict[str, Any], matrix_payload: dict[str, Any] | None = None
+) -> dict[str, Any]:
+    if matrix_payload is None:
+        matrix_path = configured_output_path(config, "task_outcome_matrix")
+        matrix_payload = load_json(matrix_path) if matrix_path.exists() else build_task_outcome_matrix(config)
+    cells = matrix_payload["cells"]
+
+    comparison_groups = {
+        "attrs_b_eval": summarize_group(cells_for(cells, repo_id="attrs", split="B_eval")),
+        "attrs_h_future": summarize_group(cells_for(cells, repo_id="attrs", split="H_future")),
+        "boltons_b_eval": summarize_group(cells_for(cells, repo_id="boltons", split="B_eval")),
+        "boltons_h_future": summarize_group(cells_for(cells, repo_id="boltons", split="H_future")),
+    }
+    attrs_h = cells_for(cells, repo_id="attrs", split="H_future")
+    for cell in attrs_h:
+        cell["task_time_month"] = task_time_month(cell)
+        cell["source_context_ref_kind"] = context_ref_kind(cell)
+        cell["policy_boundary"] = "policy_violation" if cell["policy_violation"] else "scoreable_outcome"
+
+    concentrations = {
+        "by_module_or_package": group_cells(attrs_h, "module_or_package_label"),
+        "by_task_type": group_cells(attrs_h, "task_type"),
+        "by_source_context_kind": group_cells(attrs_h, "source_context_kind"),
+        "by_source_context_ref_kind": group_cells(attrs_h, "source_context_ref_kind"),
+        "by_changed_file_count": group_cells(attrs_h, "changed_file_count"),
+        "by_test_file_count": group_cells(attrs_h, "test_file_count"),
+        "by_adapter": group_cells(attrs_h, "adapter_id"),
+        "by_time_window": group_cells(attrs_h, "task_time_month"),
+        "by_scope_clarity": group_cells(attrs_h, "scope_clarity_gate"),
+        "by_policy_boundary": group_cells(attrs_h, "policy_boundary"),
+    }
+    patterns = attrs_h_future_task_patterns(attrs_h)
+
+    return {
+        "schema_version": "barcarolle.phase1.attrs_h_future_failure_taxonomy.v1",
+        "generated_at": now_utc(),
+        "status": "computed",
+        "config": rel(config.get("_path", DEFAULT_CONFIG)),
+        "source_matrix": rel(configured_output_path(config, "task_outcome_matrix"))
+        if config.get("output_paths")
+        else "",
+        "comparison_groups": comparison_groups,
+        "attrs_h_future": comparison_groups["attrs_h_future"],
+        "attrs_h_future_concentrations": concentrations,
+        "attrs_h_future_task_patterns": patterns,
+        "observed_outcomes": {
+            "all_four_attrs_h_future_tasks_have_at_least_one_non_pass_outcome": True,
+            "codex_attrs_h_future_scoreable_pass_rate": concentrations["by_adapter"]["codex_workspace"]["pass_rate"],
+            "kilo_attrs_h_future_scoreable_pass_rate": concentrations["by_adapter"]["kilo_workspace"]["pass_rate"],
+            "policy_violation_cell": {
+                "adapter_id": "kilo_workspace",
+                "split": "H_future",
+                "task_id": "attrs__hist__027",
+                "terminal_status": "policy_violation",
+                "scoreable_cell": False,
+            },
+        },
+        "interpretation": {
+            "breadth": "The attrs H_future collapse is broad across the four planned tasks, not a one-task artifact.",
+            "adapter": "Both adapters contributed scoreable failures; Codex failed all four attrs H_future tasks, while Kilo failed two of three scoreable attrs H_future cells and had one non-scoreable policy violation.",
+            "scope": "The confirmed policy violation is a benchmark boundary failure for one cell, but the scoreable collapse remains after excluding it.",
+            "task_family_shift": "A task-family or time-window shift is plausible because attrs H_future moved later and touched _make, _next_gen, and _funcs, but the metadata is not strong enough to claim this as root cause.",
+            "paid_validation": "The taxonomy does not justify more paid validation inside this runbook; it points to local uncertainty and baseline analysis before any spending decision.",
+        },
+        "main_findings": {
+            "breadth": "broad_multi_task_collapse",
+            "adapter_pattern": "both_adapters_with_codex_worse",
+            "policy_boundary": "one_confirmed_policy_violation_not_scoreable",
+            "benchmark_scope_problem": "one_cell_boundary_failure_not_full_collapse_explanation",
+            "task_family_shift": "plausible_not_proven",
+            "next_step": "local_uncertainty_and_baseline_analysis_before_more_paid_validation",
+        },
+        "sanitization": matrix_payload.get("sanitization", {}),
+        "predictive_validity_established": False,
+        "production_ranking_status": "not_produced",
+    }
+
+
+def attrs_h_future_failure_taxonomy_report(payload: dict[str, Any]) -> str:
+    attrs_h = payload["attrs_h_future"]
+    patterns = payload["attrs_h_future_task_patterns"]
+    lines = [
+        "# Phase 1 Attrs H_future Failure Taxonomy",
+        "",
+        f"Generated: `{payload['generated_at']}`.",
+        "",
+        "## Observed Outcomes",
+        "",
+        f"- Attrs H_future scoreable pass rate: `{attrs_h['verified_pass_count']}/{attrs_h['scoreable_cell_count']}` = `{attrs_h['pass_rate']:.6f}`.",
+        f"- Attrs H_future verified fails: `{attrs_h['verified_fail_count']}`.",
+        f"- Attrs H_future policy violations: `{attrs_h['policy_violation_count']}`.",
+        f"- Failed on both scoreable adapters: `{', '.join(patterns['failed_on_both_scoreable_adapters'])}`.",
+        f"- Passed on one adapter and failed on one adapter: `{', '.join(patterns['passed_one_failed_one'])}`.",
+        f"- Policy violation task: `{', '.join(patterns['policy_violation_tasks'])}`.",
+        "",
+        "## Concentration Checks",
+        "",
+        "| Check | Result |",
+        "|---|---|",
+    ]
+    for label, groups in payload["attrs_h_future_concentrations"].items():
+        rendered = ", ".join(
+            f"{key}: {row['verified_pass_count']}/{row['scoreable_cell_count']} pass, {row['policy_violation_count']} policy"
+            for key, row in groups.items()
+        )
+        lines.append(f"| `{label}` | {rendered} |")
+
+    lines.extend(
+        [
+            "",
+            "## Interpretation",
+            "",
+            "- Breadth: attrs H_future failure is broad, not tied to one task.",
+            "- Adapter pattern: both adapters have scoreable failures; Codex is worse on attrs H_future.",
+            "- Benchmark scope: the `attrs__hist__027` / `kilo_workspace` policy violation is real, but it is only one non-scoreable cell and does not explain the six verified fails.",
+            "- Task-family shift: plausible but not proven from the safe metadata. Change size, test count, source context status, and scope clarity do not isolate a single obvious stratum.",
+            "- Spending implication: this taxonomy supports more local analysis before any paid validation decision.",
+            "",
+            "## Claim Boundary",
+            "",
+            "This report does not claim root cause, pure harness effect, repaired policy violation, predictive validity, or production ranking.",
+        ]
+    )
+    return "\n".join(lines)
+
+
 def task_outcome_matrix_report(payload: dict[str, Any]) -> str:
     summary = payload["summary"]
     lines = [
@@ -444,6 +644,24 @@ def build_matrix_command(args: argparse.Namespace) -> None:
     print(json.dumps({"status": payload["status"], "summary": payload["summary"]}, indent=2, sort_keys=True))
 
 
+def taxonomy_command(args: argparse.Namespace) -> None:
+    config = load_config(args.config)
+    payload = build_attrs_h_future_failure_taxonomy(config)
+    write_json(configured_output_path(config, "failure_taxonomy"), payload)
+    write_text(configured_output_path(config, "failure_taxonomy_report"), attrs_h_future_failure_taxonomy_report(payload))
+    print(
+        json.dumps(
+            {
+                "status": payload["status"],
+                "attrs_h_future": payload["attrs_h_future"],
+                "main_findings": payload["main_findings"],
+            },
+            indent=2,
+            sort_keys=True,
+        )
+    )
+
+
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description="Phase 1 attrs generalization local analysis")
     subparsers = parser.add_subparsers(dest="command", required=True)
@@ -451,6 +669,10 @@ def main(argv: list[str] | None = None) -> int:
     matrix = subparsers.add_parser("build-matrix", help="Build the two-repo task outcome matrix")
     matrix.add_argument("--config", type=Path, default=DEFAULT_CONFIG)
     matrix.set_defaults(func=build_matrix_command)
+
+    taxonomy = subparsers.add_parser("build-taxonomy", help="Build the attrs H_future failure taxonomy")
+    taxonomy.add_argument("--config", type=Path, default=DEFAULT_CONFIG)
+    taxonomy.set_defaults(func=taxonomy_command)
 
     args = parser.parse_args(argv)
     args.func(args)

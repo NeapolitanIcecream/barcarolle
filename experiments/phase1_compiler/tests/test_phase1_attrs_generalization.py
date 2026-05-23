@@ -66,3 +66,24 @@ def test_task_outcome_matrix_reports_missing_planned_score_rows() -> None:
     assert payload["diagnostics"]["missing_planned_cells"] == [
         {"adapter_id": "codex_workspace", "repo_id": "demo", "split": "B_eval", "task_id": "demo__001"}
     ]
+
+
+def test_attrs_h_future_taxonomy_reports_broad_collapse_without_reclassifying_policy_violation() -> None:
+    config = attrs_gen.load_config(CONFIG)
+    matrix = attrs_gen.build_task_outcome_matrix(config)
+
+    taxonomy = attrs_gen.build_attrs_h_future_failure_taxonomy(config, matrix)
+
+    assert taxonomy["status"] == "computed"
+    assert taxonomy["main_findings"]["breadth"] == "broad_multi_task_collapse"
+    assert taxonomy["main_findings"]["adapter_pattern"] == "both_adapters_with_codex_worse"
+    assert taxonomy["main_findings"]["policy_boundary"] == "one_confirmed_policy_violation_not_scoreable"
+    assert taxonomy["attrs_h_future"]["scoreable_cell_count"] == 7
+    assert taxonomy["attrs_h_future"]["verified_fail_count"] == 6
+    assert taxonomy["attrs_h_future"]["policy_violation_count"] == 1
+    assert taxonomy["attrs_h_future_task_patterns"]["failed_on_both_scoreable_adapters"] == [
+        "attrs__hist__012",
+        "attrs__hist__013",
+    ]
+    assert taxonomy["attrs_h_future_task_patterns"]["passed_one_failed_one"] == ["attrs__hist__023"]
+    assert taxonomy["attrs_h_future_task_patterns"]["policy_violation_tasks"] == ["attrs__hist__027"]
