@@ -1,0 +1,104 @@
+{
+  "baseline_checks": {
+    "git_diff_check": "passed",
+    "phase0_headroom_tools_pytest": "75 passed",
+    "phase1_compiler_pytest": "69 passed",
+    "phase1_mvp_validate": "valid"
+  },
+  "current_two_repo_decision": {
+    "b_eval_scoreable_cells": 16,
+    "blockers": [
+      "policy_violation_count_exceeds_acceptance_gate"
+    ],
+    "h_future_scoreable_cells": 15,
+    "non_scoreable_count": 1,
+    "policy_violation_count": 1,
+    "pooled_mae": 0.479167,
+    "predictive_validity_established": false,
+    "primary_decision_label": "two_repo_paid_validation_complete_insufficient_evidence",
+    "production_ranking_status": "not_produced",
+    "recommended_next_runbook": "repair_workspace_acut_scoreability_or_policy_violation_then_rerun_preregistered_two_repo_validation",
+    "selected_repo_id": "attrs",
+    "selected_repos": [
+      "boltons",
+      "attrs"
+    ]
+  },
+  "environment": {
+    "branch": "codex/restart-benchmark-compiler",
+    "codex_version": "codex-cli 0.133.0",
+    "generated_at": "2026-05-23T09:57:48Z",
+    "head": "ad5e20e325c5917f0ea01e53068a0b58d6c2873d",
+    "kilo_version": "7.3.1",
+    "python3_version": "Python 3.9.6",
+    "uv_version": "uv 0.11.16 (Homebrew 2026-05-21 aarch64-apple-darwin)"
+  },
+  "git_preflight": {
+    "ahead_of_origin_by_commits": 175,
+    "existing_untracked_paths": [
+      "docs/experiments/phase-1-autonomous-overnight-two-repo-research-runbook.md",
+      "docs/experiments/phase-1-policy-violation-triage-bounded-rerun-runbook.md"
+    ],
+    "recent_head_commits": [
+      "ad5e20e3 Record autonomous two repo final decision",
+      "0aa6c643 Import two repo future holdout evidence",
+      "737e8ae7 Compute two repo future holdout metrics",
+      "14e8f242 Run attrs H_future paid batch",
+      "ad115177 Run attrs B_eval paid batch",
+      "980e6db4 Record attrs paid validation entry gate",
+      "3e01ff59 Repair second repo clean supply metadata",
+      "c297189a Record autonomous overnight two repo preflight",
+      "99bfab15 Close second repo clean supply run",
+      "277d7aea Decide second repo clean supply readiness",
+      "c1775322 Freeze two repo future holdout design",
+      "d8e8edbf Build second repo clean supply overlay"
+    ],
+    "status_short_branch": "## codex/restart-benchmark-compiler...origin/codex/restart-benchmark-compiler [ahead 175]"
+  },
+  "paid_calls_made_by_this_runbook": false,
+  "raw_artifact_staging_status": "not_staged",
+  "schema_version": "barcarolle.phase1.policy_violation_triage_preflight.v1",
+  "solver_workspace_oracle_boundary": {
+    "inspection_artifact": "experiments/phase0_headroom/results/phase1_two_repo_future_holdout_attrs_h_future_kilo_preflight_package_inspection.json",
+    "missing_task_ids": [],
+    "paid_acut_calls_made_during_inspection": false,
+    "selected_task_ids_include_blocker": true,
+    "status": "ready"
+  },
+  "violation_evidence": {
+    "adapter_id": "kilo_workspace",
+    "certified_changed_files": [
+      "changelog.d/774.change.rst",
+      "conftest.py",
+      "src/attr/__init__.pyi",
+      "src/attr/_funcs.py",
+      "tests/test_hooks.py"
+    ],
+    "score_row": {
+      "acut_id": "kilo_workspace_gpt_5_4_mini",
+      "harness_error": "True",
+      "scoreable_cell": "False",
+      "split": "H_future",
+      "submission_status": "submitted",
+      "terminal_status": "policy_violation",
+      "verifier_exit_code": ""
+    },
+    "submission_changed_paths": [
+      "conftest.py",
+      "src/attr/_make.py"
+    ],
+    "task_id": "attrs__hist__027",
+    "test_files": [
+      "tests/test_hooks.py"
+    ],
+    "verifier_row": {
+      "changed_paths": [
+        "src/attr/_make.py"
+      ],
+      "fresh_workspace": false,
+      "harness_error": "submission_edited_out_of_scope_paths",
+      "split": "H_future",
+      "status": "policy_violation"
+    }
+  }
+}
