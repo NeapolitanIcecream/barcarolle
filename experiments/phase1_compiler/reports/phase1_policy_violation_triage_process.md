@@ -80,3 +80,18 @@ Checks:
 - `uv run --project experiments/phase0_headroom pytest -q experiments/phase0_headroom/tools`: 75 passed.
 - `uv run --project experiments/phase1_compiler python experiments/phase1_compiler/tools/phase1_compiler.py validate --config experiments/phase1_compiler/configs/phase1_mvp.yaml`: valid.
 - `git diff --check`: passed.
+
+## Step 8 Final Closeout
+
+Terminal state: `confirmed_policy_violation_validation_remains_insufficient`.
+
+The single attrs H_future policy violation is a genuine ACUT boundary violation, not a benchmark task-scope metadata bug. The benchmark-side reporting bug was repaired so verifier detail is preserved in the two-repo metrics. No deterministic replay or paid rerun was performed.
+
+Final metrics:
+
+- Policy violation count: `1`.
+- H_future scoreable cells: `15`.
+- Predictive validity established: `false`.
+- Production ranking: `not_produced`.
+
+Next recommendation: analyze attrs H_future generalization and decide whether to report the two-repo result as negative or underpowered, or mine a third repo. Do not rerun the same confirmed policy-violation cell.
