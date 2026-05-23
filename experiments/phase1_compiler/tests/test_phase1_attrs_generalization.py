@@ -107,3 +107,20 @@ def test_two_repo_uncertainty_and_baselines_use_scoreable_cells_only() -> None:
     assert payload["baseline_errors"]["pooled_b_eval_to_pooled_h_future"]["absolute_error"] == 0.341667
     assert payload["baseline_errors"]["repo_specific_b_eval_to_same_repo_h_future"]["by_repo"]["attrs"]["absolute_error"] == 0.732143
     assert payload["conclusion"]["pilot_status"] == "negative_and_underpowered"
+
+
+def test_next_research_decision_reports_two_repo_negative_or_underpowered_pilot() -> None:
+    config = attrs_gen.load_config(CONFIG)
+    matrix = attrs_gen.build_task_outcome_matrix(config)
+    taxonomy = attrs_gen.build_attrs_h_future_failure_taxonomy(config, matrix)
+    uncertainty = attrs_gen.build_two_repo_uncertainty_and_baselines(config, matrix)
+
+    decision = attrs_gen.build_next_research_decision(config, matrix, taxonomy, uncertainty)
+
+    assert decision["primary_decision_label"] == "report_two_repo_negative_or_underpowered_pilot"
+    assert decision["selected_decision_count"] == 1
+    assert decision["paid_acut_calls_made"] is False
+    assert decision["paid_llm_calls_made"] is False
+    assert decision["predictive_validity_established"] is False
+    assert "rerun" not in decision["recommended_next_runbook"]
+    assert "predictive_validity_established" in decision["what_must_not_be_claimed"]

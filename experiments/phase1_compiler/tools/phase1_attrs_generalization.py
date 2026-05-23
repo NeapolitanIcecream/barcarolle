@@ -817,6 +817,149 @@ def two_repo_uncertainty_and_baselines_report(payload: dict[str, Any]) -> str:
     return "\n".join(lines)
 
 
+def load_or_build_taxonomy(config: dict[str, Any], matrix: dict[str, Any]) -> dict[str, Any]:
+    path = configured_output_path(config, "failure_taxonomy")
+    return load_json(path) if path.exists() else build_attrs_h_future_failure_taxonomy(config, matrix)
+
+
+def load_or_build_uncertainty(config: dict[str, Any], matrix: dict[str, Any]) -> dict[str, Any]:
+    path = configured_output_path(config, "uncertainty_and_baselines")
+    return load_json(path) if path.exists() else build_two_repo_uncertainty_and_baselines(config, matrix)
+
+
+def build_next_research_decision(
+    config: dict[str, Any],
+    matrix_payload: dict[str, Any] | None = None,
+    taxonomy_payload: dict[str, Any] | None = None,
+    uncertainty_payload: dict[str, Any] | None = None,
+) -> dict[str, Any]:
+    if matrix_payload is None:
+        matrix_path = configured_output_path(config, "task_outcome_matrix")
+        matrix_payload = load_json(matrix_path) if matrix_path.exists() else build_task_outcome_matrix(config)
+    if taxonomy_payload is None:
+        taxonomy_payload = load_or_build_taxonomy(config, matrix_payload)
+    if uncertainty_payload is None:
+        uncertainty_payload = load_or_build_uncertainty(config, matrix_payload)
+
+    primary = "report_two_repo_negative_or_underpowered_pilot"
+    alternatives = {
+        "build_weighted_compiler_analysis_before_more_paid_validation": {
+            "status": "defer_until_after_reporting",
+            "reason": "Task strata and time-window shift are plausible, but current safe metadata does not isolate a weighting fix strongly enough to supersede reporting the negative/underpowered pilot.",
+        },
+        "mine_third_repo_clean_supply_without_paid_acut": {
+            "status": "not_selected",
+            "reason": "A third repo could test whether attrs is an outlier only after future scoreable holdout cells; local supply alone would not change the immediate two-repo conclusion.",
+        },
+        "blocked_pending_user_protocol_or_budget_decision": {
+            "status": "not_selected",
+            "reason": "The next useful work can be completed locally as a clear research-facing pilot report.",
+        },
+    }
+
+    return {
+        "schema_version": "barcarolle.phase1.next_research_decision.v1",
+        "generated_at": now_utc(),
+        "status": "decided",
+        "config": rel(config.get("_path", DEFAULT_CONFIG)),
+        "primary_decision_label": primary,
+        "selected_decision_count": 1,
+        "candidate_decisions": {
+            primary: {
+                "status": "selected",
+                "reason": "The confirmed policy violation is genuine, attrs H_future collapse remains broad after excluding the non-scoreable cell, and uncertainty analysis shows the pilot is both negative and underpowered.",
+            },
+            **alternatives,
+        },
+        "main_conclusion": "This two-repo Phase 1 pilot did not establish predictive validity and should be reported as a negative or underpowered pilot before spending on more validation.",
+        "evidence": [
+            "Policy violation count is 1 and the violation remains a benchmark boundary failure, not a scoreable fail.",
+            "Attrs H_future scoreable pass rate is 1/7, while attrs B_eval is 7/8.",
+            "The attrs H_future collapse spans all four planned tasks by at least one non-pass outcome.",
+            "Pooled B_eval to pooled H_future absolute error is 0.341667.",
+            "The preserved preregistered pooled MAE is 0.479167.",
+            "Wilson intervals are wide with only two repos and 15 H_future scoreable cells.",
+        ],
+        "strongest_alternative_explanation": "Attrs may be an outlier or may have a later-window task-family shift that unweighted B_eval did not represent.",
+        "why_selected_branch_is_better": "Reporting is the branch that answers the proposal honestly with the evidence already available. Weighted analysis or third-repo supply may be useful follow-up work, but neither can turn the current two-repo result into predictive-validation evidence inside this local-only runbook.",
+        "what_must_not_be_claimed": [
+            "predictive_validity_established",
+            "production_benchmark_ranking",
+            "pure_harness_effect",
+            "attrs_policy_violation_repaired",
+            "third_repo_paid_validation_completed",
+            "third_repo_as_new_predictive_evidence_without_paid_holdout",
+        ],
+        "recommended_next_runbook": "write_two_repo_negative_or_underpowered_pilot_report_then_plan_weighted_or_third_repo_followup_if_needed",
+        "source_artifacts": {
+            "task_outcome_matrix": rel(configured_output_path(config, "task_outcome_matrix")),
+            "failure_taxonomy": rel(configured_output_path(config, "failure_taxonomy")),
+            "uncertainty_and_baselines": rel(configured_output_path(config, "uncertainty_and_baselines")),
+        },
+        "paid_acut_calls_made": False,
+        "paid_llm_calls_made": False,
+        "third_repo_local_screening_started": False,
+        "predictive_validity_established": False,
+        "production_ranking_status": "not_produced",
+    }
+
+
+def next_research_decision_report(payload: dict[str, Any]) -> str:
+    lines = [
+        "# Phase 1 Next Research Decision",
+        "",
+        f"Generated: `{payload['generated_at']}`.",
+        "",
+        "## Main Conclusion",
+        "",
+        payload["main_conclusion"],
+        "",
+        f"Primary decision label: `{payload['primary_decision_label']}`.",
+        "",
+        "## Evidence",
+        "",
+    ]
+    lines.extend(f"- {item}" for item in payload["evidence"])
+    lines.extend(
+        [
+            "",
+            "## Strongest Alternative Explanation",
+            "",
+            payload["strongest_alternative_explanation"],
+            "",
+            "## Why This Branch",
+            "",
+            payload["why_selected_branch_is_better"],
+            "",
+            "## Alternatives",
+            "",
+            "| Decision | Status | Reason |",
+            "|---|---|---|",
+        ]
+    )
+    for label, decision in payload["candidate_decisions"].items():
+        lines.append(f"| `{label}` | `{decision['status']}` | {decision['reason']} |")
+
+    lines.extend(
+        [
+            "",
+            "## Claim Boundary",
+            "",
+            "Must not claim:",
+            "",
+        ]
+    )
+    lines.extend(f"- `{claim}`" for claim in payload["what_must_not_be_claimed"])
+    lines.extend(
+        [
+            "",
+            "No paid ACUT or paid LLM calls were made. The decision does not recommend",
+            "rerunning the confirmed policy violation inside this runbook.",
+        ]
+    )
+    return "\n".join(lines)
+
+
 def task_outcome_matrix_report(payload: dict[str, Any]) -> str:
     summary = payload["summary"]
     lines = [
@@ -928,6 +1071,24 @@ def uncertainty_command(args: argparse.Namespace) -> None:
     )
 
 
+def decision_command(args: argparse.Namespace) -> None:
+    config = load_config(args.config)
+    payload = build_next_research_decision(config)
+    write_json(configured_output_path(config, "next_research_decision"), payload)
+    write_text(configured_output_path(config, "next_research_decision_report"), next_research_decision_report(payload))
+    print(
+        json.dumps(
+            {
+                "status": payload["status"],
+                "primary_decision_label": payload["primary_decision_label"],
+                "recommended_next_runbook": payload["recommended_next_runbook"],
+            },
+            indent=2,
+            sort_keys=True,
+        )
+    )
+
+
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description="Phase 1 attrs generalization local analysis")
     subparsers = parser.add_subparsers(dest="command", required=True)
@@ -943,6 +1104,10 @@ def main(argv: list[str] | None = None) -> int:
     uncertainty = subparsers.add_parser("build-uncertainty", help="Build uncertainty and baseline error analysis")
     uncertainty.add_argument("--config", type=Path, default=DEFAULT_CONFIG)
     uncertainty.set_defaults(func=uncertainty_command)
+
+    decision = subparsers.add_parser("decide", help="Decide the next Phase 1 research branch")
+    decision.add_argument("--config", type=Path, default=DEFAULT_CONFIG)
+    decision.set_defaults(func=decision_command)
 
     args = parser.parse_args(argv)
     args.func(args)

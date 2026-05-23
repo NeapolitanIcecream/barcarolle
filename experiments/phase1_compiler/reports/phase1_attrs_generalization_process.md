@@ -104,3 +104,22 @@ Key results:
 Conclusion: the pilot is both negative and underpowered. The point estimates do
 not support predictive validity, while the two-repo sample and 15 scoreable
 H_future cells leave wide uncertainty intervals.
+
+## Step 4 Next Research Decision
+
+Selected primary decision label:
+`report_two_repo_negative_or_underpowered_pilot`.
+
+Rationale:
+
+- The confirmed policy violation is genuine and remains non-scoreable.
+- Attrs H_future collapse remains broad after excluding the non-scoreable cell.
+- The uncertainty analysis shows the pilot is both negative and underpowered.
+- Third-repo local supply could be useful later, but it would not become
+  predictive-validation evidence without future scoreable holdout cells.
+- Weighted analysis could be a follow-up, but current safe metadata does not
+  isolate a strong enough weighting explanation to supersede reporting the
+  two-repo result now.
+
+No paid calls were made. The decision does not recommend rerunning the
+confirmed policy violation inside this runbook.
