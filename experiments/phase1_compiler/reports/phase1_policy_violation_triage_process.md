@@ -26,3 +26,26 @@ Baseline checks:
 - `uv run --project experiments/phase1_compiler python experiments/phase1_compiler/tools/phase1_compiler.py validate --config experiments/phase1_compiler/configs/phase1_mvp.yaml`: valid.
 
 Next step: confirm and repair the policy-violation detail reporting join if the metrics artifact still drops verifier details.
+
+## Step 1 Reporting Repair
+
+- Confirmed the reporting bug in `phase1_future_holdout.py`: policy violation rows were joined to verifier detail with the loop split label `h_future`, while verifier rows use the score split label `H_future`.
+- Added a focused regression test for preserving `submission_edited_out_of_scope_paths` and `["src/attr/_make.py"]`.
+- Recomputed two-repo metrics and decision from the frozen prefixes.
+- Policy violation count remains `1`.
+- The metrics artifact now preserves the verifier harness error and changed path detail.
+- No paid calls were made.
+
+Checks:
+
+- `uv run --project experiments/phase1_compiler pytest -q experiments/phase1_compiler/tests/test_phase1_future_holdout.py`: 15 passed.
+- `uv run --project experiments/phase1_compiler pytest -q`: 70 passed.
+- `git diff --check`: passed.
+
+## Step 2 Triage Facts
+
+- Created `phase1_policy_violation_triage_bounded_rerun.yaml`.
+- Created sanitized triage JSON and Markdown artifacts.
+- Raw patch content and ACUT transcripts were not copied into committed artifacts.
+- The factual triage records `src/attr/_make.py` as outside the current package metadata, certified changed files, and target-commit changed files.
+- Classification remains deferred to Step 3.
