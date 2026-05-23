@@ -572,6 +572,251 @@ def attrs_h_future_failure_taxonomy_report(payload: dict[str, Any]) -> str:
     return "\n".join(lines)
 
 
+def scoreable_rate(cells: list[dict[str, Any]]) -> dict[str, Any]:
+    scoreable = [cell for cell in cells if cell["scoreable_cell"]]
+    pass_count = sum(1 for cell in scoreable if cell["verified_pass"])
+    return {
+        "pass_count": pass_count,
+        "scoreable_cell_count": len(scoreable),
+        "pass_rate": round(pass_count / len(scoreable), 6) if scoreable else None,
+    }
+
+
+def wilson_interval(pass_count: int, n: int, confidence_level: float = 0.95) -> dict[str, Any]:
+    if n == 0:
+        return {
+            "confidence_level": confidence_level,
+            "interval_method": "wilson",
+            "lower": None,
+            "upper": None,
+        }
+    z = 1.959963984540054
+    phat = pass_count / n
+    denominator = 1 + z * z / n
+    center = (phat + z * z / (2 * n)) / denominator
+    half_width = z * ((phat * (1 - phat) + z * z / (4 * n)) / n) ** 0.5 / denominator
+    return {
+        "confidence_level": confidence_level,
+        "interval_method": "wilson",
+        "lower": round(max(0.0, center - half_width), 6),
+        "upper": round(min(1.0, center + half_width), 6),
+    }
+
+
+def interval_for_cells(cells: list[dict[str, Any]]) -> dict[str, Any]:
+    rate = scoreable_rate(cells)
+    return {
+        **rate,
+        **wilson_interval(rate["pass_count"], rate["scoreable_cell_count"]),
+    }
+
+
+def absolute_error(predicted: float | None, actual: float | None) -> float | None:
+    if predicted is None or actual is None:
+        return None
+    return round(abs(predicted - actual), 6)
+
+
+def mean_absolute_error(errors: list[float | None]) -> float | None:
+    values = [error for error in errors if error is not None]
+    if not values:
+        return None
+    return round(sum(values) / len(values), 6)
+
+
+def build_two_repo_uncertainty_and_baselines(
+    config: dict[str, Any], matrix_payload: dict[str, Any] | None = None
+) -> dict[str, Any]:
+    if matrix_payload is None:
+        matrix_path = configured_output_path(config, "task_outcome_matrix")
+        matrix_payload = load_json(matrix_path) if matrix_path.exists() else build_task_outcome_matrix(config)
+    cells = matrix_payload["cells"]
+    repos = list(config.get("selected_repos", [])) or sorted({cell["repo_id"] for cell in cells})
+    adapters = listish(config.get("adapters"))
+
+    pooled_b = [cell for cell in cells if cell["split"] == "B_eval"]
+    pooled_h = [cell for cell in cells if cell["split"] == "H_future"]
+    intervals = {
+        "pooled_b_eval": interval_for_cells(pooled_b),
+        "pooled_h_future": interval_for_cells(pooled_h),
+    }
+    for repo_id in repos:
+        intervals[f"{repo_id}_b_eval"] = interval_for_cells(cells_for(cells, repo_id=repo_id, split="B_eval"))
+        intervals[f"{repo_id}_h_future"] = interval_for_cells(cells_for(cells, repo_id=repo_id, split="H_future"))
+    for adapter_id in adapters:
+        intervals[f"{adapter_id}_b_eval"] = interval_for_cells(
+            [cell for cell in cells if cell["adapter_id"] == adapter_id and cell["split"] == "B_eval"]
+        )
+        intervals[f"{adapter_id}_h_future"] = interval_for_cells(
+            [cell for cell in cells if cell["adapter_id"] == adapter_id and cell["split"] == "H_future"]
+        )
+
+    pooled_b_rate = intervals["pooled_b_eval"]["pass_rate"]
+    pooled_h_rate = intervals["pooled_h_future"]["pass_rate"]
+    repo_errors: dict[str, Any] = {}
+    for repo_id in repos:
+        predicted = intervals[f"{repo_id}_b_eval"]["pass_rate"]
+        actual = intervals[f"{repo_id}_h_future"]["pass_rate"]
+        repo_errors[repo_id] = {
+            "predicted_pass_rate": predicted,
+            "actual_pass_rate": actual,
+            "absolute_error": absolute_error(predicted, actual),
+        }
+
+    adapter_errors: dict[str, Any] = {}
+    for adapter_id in adapters:
+        predicted = intervals[f"{adapter_id}_b_eval"]["pass_rate"]
+        actual = intervals[f"{adapter_id}_h_future"]["pass_rate"]
+        adapter_errors[adapter_id] = {
+            "predicted_pass_rate": predicted,
+            "actual_pass_rate": actual,
+            "absolute_error": absolute_error(predicted, actual),
+        }
+
+    repo_adapter_errors: dict[str, dict[str, Any]] = {}
+    unweighted_to_repo_adapter_errors: dict[str, Any] = {}
+    for repo_id in repos:
+        repo_adapter_errors[repo_id] = {}
+        for adapter_id in adapters:
+            b_cells = [
+                cell
+                for cell in cells
+                if cell["repo_id"] == repo_id and cell["adapter_id"] == adapter_id and cell["split"] == "B_eval"
+            ]
+            h_cells = [
+                cell
+                for cell in cells
+                if cell["repo_id"] == repo_id and cell["adapter_id"] == adapter_id and cell["split"] == "H_future"
+            ]
+            b_rate = scoreable_rate(b_cells)["pass_rate"]
+            h_rate = scoreable_rate(h_cells)["pass_rate"]
+            repo_adapter_errors[repo_id][adapter_id] = {
+                "predicted_pass_rate": b_rate,
+                "actual_pass_rate": h_rate,
+                "absolute_error": absolute_error(b_rate, h_rate),
+            }
+            key = f"{repo_id}/{adapter_id}"
+            unweighted_to_repo_adapter_errors[key] = {
+                "predicted_pass_rate": pooled_b_rate,
+                "actual_pass_rate": h_rate,
+                "absolute_error": absolute_error(pooled_b_rate, h_rate),
+            }
+
+    decision_path = config.get("source_decisions", {}).get("two_repo_future_holdout")
+    decision = load_json(config_path(decision_path)) if decision_path else {}
+    preregistered_mae = decision.get(
+        "pooled_mae",
+        mean_absolute_error(
+            [
+                adapter_result["absolute_error"]
+                for repo_result in repo_adapter_errors.values()
+                for adapter_result in repo_result.values()
+            ]
+        ),
+    )
+
+    return {
+        "schema_version": "barcarolle.phase1.two_repo_uncertainty_and_baselines.v1",
+        "generated_at": now_utc(),
+        "status": "computed",
+        "config": rel(config.get("_path", DEFAULT_CONFIG)),
+        "source_matrix": rel(configured_output_path(config, "task_outcome_matrix"))
+        if config.get("output_paths")
+        else "",
+        "intervals": intervals,
+        "baseline_errors": {
+            "pooled_b_eval_to_pooled_h_future": {
+                "predicted_pass_rate": pooled_b_rate,
+                "actual_pass_rate": pooled_h_rate,
+                "absolute_error": absolute_error(pooled_b_rate, pooled_h_rate),
+            },
+            "repo_specific_b_eval_to_same_repo_h_future": {
+                "by_repo": repo_errors,
+                "mean_absolute_error": mean_absolute_error([row["absolute_error"] for row in repo_errors.values()]),
+            },
+            "adapter_specific_b_eval_to_same_adapter_h_future": {
+                "by_adapter": adapter_errors,
+                "mean_absolute_error": mean_absolute_error([row["absolute_error"] for row in adapter_errors.values()]),
+            },
+            "unweighted_all_b_eval_predictor_to_h_future_repo_adapter_cells": {
+                "by_repo_adapter": unweighted_to_repo_adapter_errors,
+                "mean_absolute_error": mean_absolute_error(
+                    [row["absolute_error"] for row in unweighted_to_repo_adapter_errors.values()]
+                ),
+            },
+            "preregistered_repo_adapter_b_eval_to_same_repo_adapter_h_future": {
+                "by_repo_adapter": repo_adapter_errors,
+                "mean_absolute_error": mean_absolute_error(
+                    [
+                        adapter_result["absolute_error"]
+                        for repo_result in repo_adapter_errors.values()
+                        for adapter_result in repo_result.values()
+                    ]
+                ),
+            },
+        },
+        "preserved_preregistered_two_repo_result": {
+            "pooled_mae": round(float(preregistered_mae), 6),
+            "policy_violation_count": matrix_payload["summary"]["policy_violation_count"],
+            "predictive_validity_established": False,
+        },
+        "policy_violation_count": matrix_payload["summary"]["policy_violation_count"],
+        "non_scoreable_count": matrix_payload["summary"]["non_scoreable_count"],
+        "conclusion": {
+            "pilot_status": "negative_and_underpowered",
+            "rationale": [
+                "Point estimates are negative for predictive validity because B_eval materially overpredicts pooled H_future and attrs H_future.",
+                "The sample is underpowered: only two repos and 15 H_future scoreable cells, with Wilson intervals that remain wide.",
+                "The confirmed policy violation prevents a clean positive validation claim and remains non-scoreable.",
+            ],
+        },
+        "predictive_validity_established": False,
+        "production_ranking_status": "not_produced",
+    }
+
+
+def two_repo_uncertainty_and_baselines_report(payload: dict[str, Any]) -> str:
+    lines = [
+        "# Phase 1 Two-Repo Uncertainty And Baselines",
+        "",
+        f"Generated: `{payload['generated_at']}`.",
+        "",
+        "## Wilson Intervals",
+        "",
+        "| Group | Pass/scoreable | Pass rate | Wilson 95% interval |",
+        "|---|---:|---:|---:|",
+    ]
+    for key, row in payload["intervals"].items():
+        interval = f"[{row['lower']:.6f}, {row['upper']:.6f}]" if row["lower"] is not None else "n/a"
+        lines.append(
+            f"| `{key}` | `{row['pass_count']}/{row['scoreable_cell_count']}` | `{row['pass_rate']:.6f}` | `{interval}` |"
+        )
+
+    errors = payload["baseline_errors"]
+    lines.extend(
+        [
+            "",
+            "## Baseline Errors",
+            "",
+            f"- Pooled B_eval to pooled H_future absolute error: `{errors['pooled_b_eval_to_pooled_h_future']['absolute_error']}`.",
+            f"- Repo-specific B_eval to same-repo H_future MAE: `{errors['repo_specific_b_eval_to_same_repo_h_future']['mean_absolute_error']}`.",
+            f"- Adapter-specific B_eval to same-adapter H_future MAE: `{errors['adapter_specific_b_eval_to_same_adapter_h_future']['mean_absolute_error']}`.",
+            f"- Unweighted all-B_eval predictor to H_future repo/adapter MAE: `{errors['unweighted_all_b_eval_predictor_to_h_future_repo_adapter_cells']['mean_absolute_error']}`.",
+            f"- Preserved preregistered pooled MAE: `{payload['preserved_preregistered_two_repo_result']['pooled_mae']}`.",
+            "",
+            "## Interpretation",
+            "",
+            "The pilot is both negative and underpowered. The point estimates do not",
+            "support predictive validity: pooled B_eval overpredicts pooled H_future,",
+            "and attrs B_eval badly overpredicts attrs H_future. At the same time, the",
+            "sample has only two repos and 15 H_future scoreable cells, so the Wilson",
+            "intervals remain wide. The policy violation remains non-scoreable and",
+            "predictive validity remains `false`.",
+        ]
+    )
+    return "\n".join(lines)
+
+
 def task_outcome_matrix_report(payload: dict[str, Any]) -> str:
     summary = payload["summary"]
     lines = [
@@ -662,6 +907,27 @@ def taxonomy_command(args: argparse.Namespace) -> None:
     )
 
 
+def uncertainty_command(args: argparse.Namespace) -> None:
+    config = load_config(args.config)
+    payload = build_two_repo_uncertainty_and_baselines(config)
+    write_json(configured_output_path(config, "uncertainty_and_baselines"), payload)
+    write_text(
+        configured_output_path(config, "uncertainty_and_baselines_report"),
+        two_repo_uncertainty_and_baselines_report(payload),
+    )
+    print(
+        json.dumps(
+            {
+                "status": payload["status"],
+                "conclusion": payload["conclusion"],
+                "preserved_preregistered_two_repo_result": payload["preserved_preregistered_two_repo_result"],
+            },
+            indent=2,
+            sort_keys=True,
+        )
+    )
+
+
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description="Phase 1 attrs generalization local analysis")
     subparsers = parser.add_subparsers(dest="command", required=True)
@@ -673,6 +939,10 @@ def main(argv: list[str] | None = None) -> int:
     taxonomy = subparsers.add_parser("build-taxonomy", help="Build the attrs H_future failure taxonomy")
     taxonomy.add_argument("--config", type=Path, default=DEFAULT_CONFIG)
     taxonomy.set_defaults(func=taxonomy_command)
+
+    uncertainty = subparsers.add_parser("build-uncertainty", help="Build uncertainty and baseline error analysis")
+    uncertainty.add_argument("--config", type=Path, default=DEFAULT_CONFIG)
+    uncertainty.set_defaults(func=uncertainty_command)
 
     args = parser.parse_args(argv)
     args.func(args)

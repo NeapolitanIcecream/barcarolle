@@ -87,3 +87,23 @@ def test_attrs_h_future_taxonomy_reports_broad_collapse_without_reclassifying_po
     ]
     assert taxonomy["attrs_h_future_task_patterns"]["passed_one_failed_one"] == ["attrs__hist__023"]
     assert taxonomy["attrs_h_future_task_patterns"]["policy_violation_tasks"] == ["attrs__hist__027"]
+
+
+def test_two_repo_uncertainty_and_baselines_use_scoreable_cells_only() -> None:
+    config = attrs_gen.load_config(CONFIG)
+    matrix = attrs_gen.build_task_outcome_matrix(config)
+
+    payload = attrs_gen.build_two_repo_uncertainty_and_baselines(config, matrix)
+
+    assert payload["status"] == "computed"
+    assert payload["policy_violation_count"] == 1
+    assert payload["predictive_validity_established"] is False
+    assert payload["production_ranking_status"] == "not_produced"
+    assert payload["preserved_preregistered_two_repo_result"]["pooled_mae"] == 0.479167
+    assert payload["intervals"]["attrs_h_future"]["pass_count"] == 1
+    assert payload["intervals"]["attrs_h_future"]["scoreable_cell_count"] == 7
+    assert payload["intervals"]["pooled_h_future"]["pass_count"] == 8
+    assert payload["intervals"]["pooled_h_future"]["scoreable_cell_count"] == 15
+    assert payload["baseline_errors"]["pooled_b_eval_to_pooled_h_future"]["absolute_error"] == 0.341667
+    assert payload["baseline_errors"]["repo_specific_b_eval_to_same_repo_h_future"]["by_repo"]["attrs"]["absolute_error"] == 0.732143
+    assert payload["conclusion"]["pilot_status"] == "negative_and_underpowered"

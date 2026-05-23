@@ -1,0 +1,207 @@
+{
+  "baseline_errors": {
+    "adapter_specific_b_eval_to_same_adapter_h_future": {
+      "by_adapter": {
+        "codex_workspace": {
+          "absolute_error": 0.5,
+          "actual_pass_rate": 0.375,
+          "predicted_pass_rate": 0.875
+        },
+        "kilo_workspace": {
+          "absolute_error": 0.160714,
+          "actual_pass_rate": 0.714286,
+          "predicted_pass_rate": 0.875
+        }
+      },
+      "mean_absolute_error": 0.330357
+    },
+    "pooled_b_eval_to_pooled_h_future": {
+      "absolute_error": 0.341667,
+      "actual_pass_rate": 0.533333,
+      "predicted_pass_rate": 0.875
+    },
+    "preregistered_repo_adapter_b_eval_to_same_repo_adapter_h_future": {
+      "by_repo_adapter": {
+        "attrs": {
+          "codex_workspace": {
+            "absolute_error": 0.75,
+            "actual_pass_rate": 0.0,
+            "predicted_pass_rate": 0.75
+          },
+          "kilo_workspace": {
+            "absolute_error": 0.666667,
+            "actual_pass_rate": 0.333333,
+            "predicted_pass_rate": 1.0
+          }
+        },
+        "boltons": {
+          "codex_workspace": {
+            "absolute_error": 0.25,
+            "actual_pass_rate": 0.75,
+            "predicted_pass_rate": 1.0
+          },
+          "kilo_workspace": {
+            "absolute_error": 0.25,
+            "actual_pass_rate": 1.0,
+            "predicted_pass_rate": 0.75
+          }
+        }
+      },
+      "mean_absolute_error": 0.479167
+    },
+    "repo_specific_b_eval_to_same_repo_h_future": {
+      "by_repo": {
+        "attrs": {
+          "absolute_error": 0.732143,
+          "actual_pass_rate": 0.142857,
+          "predicted_pass_rate": 0.875
+        },
+        "boltons": {
+          "absolute_error": 0.0,
+          "actual_pass_rate": 0.875,
+          "predicted_pass_rate": 0.875
+        }
+      },
+      "mean_absolute_error": 0.366071
+    },
+    "unweighted_all_b_eval_predictor_to_h_future_repo_adapter_cells": {
+      "by_repo_adapter": {
+        "attrs/codex_workspace": {
+          "absolute_error": 0.875,
+          "actual_pass_rate": 0.0,
+          "predicted_pass_rate": 0.875
+        },
+        "attrs/kilo_workspace": {
+          "absolute_error": 0.541667,
+          "actual_pass_rate": 0.333333,
+          "predicted_pass_rate": 0.875
+        },
+        "boltons/codex_workspace": {
+          "absolute_error": 0.125,
+          "actual_pass_rate": 0.75,
+          "predicted_pass_rate": 0.875
+        },
+        "boltons/kilo_workspace": {
+          "absolute_error": 0.125,
+          "actual_pass_rate": 1.0,
+          "predicted_pass_rate": 0.875
+        }
+      },
+      "mean_absolute_error": 0.416667
+    }
+  },
+  "conclusion": {
+    "pilot_status": "negative_and_underpowered",
+    "rationale": [
+      "Point estimates are negative for predictive validity because B_eval materially overpredicts pooled H_future and attrs H_future.",
+      "The sample is underpowered: only two repos and 15 H_future scoreable cells, with Wilson intervals that remain wide.",
+      "The confirmed policy violation prevents a clean positive validation claim and remains non-scoreable."
+    ]
+  },
+  "config": "experiments/phase1_compiler/configs/phase1_attrs_generalization_third_repo_decision.yaml",
+  "generated_at": "2026-05-23T11:30:46+00:00",
+  "intervals": {
+    "attrs_b_eval": {
+      "confidence_level": 0.95,
+      "interval_method": "wilson",
+      "lower": 0.529112,
+      "pass_count": 7,
+      "pass_rate": 0.875,
+      "scoreable_cell_count": 8,
+      "upper": 0.977583
+    },
+    "attrs_h_future": {
+      "confidence_level": 0.95,
+      "interval_method": "wilson",
+      "lower": 0.02568,
+      "pass_count": 1,
+      "pass_rate": 0.142857,
+      "scoreable_cell_count": 7,
+      "upper": 0.513128
+    },
+    "boltons_b_eval": {
+      "confidence_level": 0.95,
+      "interval_method": "wilson",
+      "lower": 0.529112,
+      "pass_count": 7,
+      "pass_rate": 0.875,
+      "scoreable_cell_count": 8,
+      "upper": 0.977583
+    },
+    "boltons_h_future": {
+      "confidence_level": 0.95,
+      "interval_method": "wilson",
+      "lower": 0.529112,
+      "pass_count": 7,
+      "pass_rate": 0.875,
+      "scoreable_cell_count": 8,
+      "upper": 0.977583
+    },
+    "codex_workspace_b_eval": {
+      "confidence_level": 0.95,
+      "interval_method": "wilson",
+      "lower": 0.529112,
+      "pass_count": 7,
+      "pass_rate": 0.875,
+      "scoreable_cell_count": 8,
+      "upper": 0.977583
+    },
+    "codex_workspace_h_future": {
+      "confidence_level": 0.95,
+      "interval_method": "wilson",
+      "lower": 0.136844,
+      "pass_count": 3,
+      "pass_rate": 0.375,
+      "scoreable_cell_count": 8,
+      "upper": 0.694258
+    },
+    "kilo_workspace_b_eval": {
+      "confidence_level": 0.95,
+      "interval_method": "wilson",
+      "lower": 0.529112,
+      "pass_count": 7,
+      "pass_rate": 0.875,
+      "scoreable_cell_count": 8,
+      "upper": 0.977583
+    },
+    "kilo_workspace_h_future": {
+      "confidence_level": 0.95,
+      "interval_method": "wilson",
+      "lower": 0.358934,
+      "pass_count": 5,
+      "pass_rate": 0.714286,
+      "scoreable_cell_count": 7,
+      "upper": 0.917781
+    },
+    "pooled_b_eval": {
+      "confidence_level": 0.95,
+      "interval_method": "wilson",
+      "lower": 0.639772,
+      "pass_count": 14,
+      "pass_rate": 0.875,
+      "scoreable_cell_count": 16,
+      "upper": 0.965023
+    },
+    "pooled_h_future": {
+      "confidence_level": 0.95,
+      "interval_method": "wilson",
+      "lower": 0.30117,
+      "pass_count": 8,
+      "pass_rate": 0.533333,
+      "scoreable_cell_count": 15,
+      "upper": 0.751905
+    }
+  },
+  "non_scoreable_count": 1,
+  "policy_violation_count": 1,
+  "predictive_validity_established": false,
+  "preserved_preregistered_two_repo_result": {
+    "policy_violation_count": 1,
+    "pooled_mae": 0.479167,
+    "predictive_validity_established": false
+  },
+  "production_ranking_status": "not_produced",
+  "schema_version": "barcarolle.phase1.two_repo_uncertainty_and_baselines.v1",
+  "source_matrix": "experiments/phase1_compiler/results/phase1_two_repo_task_outcome_matrix.json",
+  "status": "computed"
+}

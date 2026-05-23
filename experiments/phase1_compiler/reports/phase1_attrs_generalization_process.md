@@ -81,3 +81,26 @@ Interpretation:
 - A task-family or time-window shift is plausible but not proven from the safe
   metadata.
 - No paid calls were made or recommended inside this runbook step.
+
+## Step 3 Uncertainty And Baselines
+
+Computed Wilson 95% intervals and baseline prediction errors from scoreable
+cells only.
+
+Key results:
+
+- Pooled B_eval pass rate: `14/16 = 0.875000`, Wilson interval
+  `[0.639772, 0.965023]`.
+- Pooled H_future pass rate: `8/15 = 0.533333`, Wilson interval
+  `[0.301170, 0.751905]`.
+- Attrs H_future pass rate: `1/7 = 0.142857`, Wilson interval
+  `[0.025680, 0.513128]`.
+- Pooled B_eval to pooled H_future absolute error: `0.341667`.
+- Repo-specific B_eval to same-repo H_future MAE: `0.366071`.
+- Adapter-specific B_eval to same-adapter H_future MAE: `0.330357`.
+- Unweighted all-B_eval predictor to H_future repo/adapter MAE: `0.416667`.
+- Preserved preregistered pooled MAE: `0.479167`.
+
+Conclusion: the pilot is both negative and underpowered. The point estimates do
+not support predictive validity, while the two-repo sample and 15 scoreable
+H_future cells leave wide uncertainty intervals.
