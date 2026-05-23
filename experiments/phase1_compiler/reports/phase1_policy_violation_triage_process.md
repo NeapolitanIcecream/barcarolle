@@ -49,3 +49,13 @@ Checks:
 - Raw patch content and ACUT transcripts were not copied into committed artifacts.
 - The factual triage records `src/attr/_make.py` as outside the current package metadata, certified changed files, and target-commit changed files.
 - Classification remains deferred to Step 3.
+
+## Step 3 Classification
+
+- Classification: `confirmed_acut_policy_violation_no_rerun`.
+- The violating path `src/attr/_make.py` is not supported by certified changed files, allowed code paths, target-commit changed files, candidate code files, or the sanitized solver-visible source context.
+- The benchmark-side bug found so far is reporting-only and has already been repaired.
+- Scope metadata is not classified as wrong.
+- Deterministic replay is not allowed under this classification.
+- Paid rerun is not allowed under this classification.
+- Predictive validity remains unclaimable while the policy violation count is `1`.
