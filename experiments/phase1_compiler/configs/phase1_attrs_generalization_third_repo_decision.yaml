@@ -71,6 +71,8 @@ output_paths:
   uncertainty_and_baselines_report: experiments/phase1_compiler/reports/phase1_two_repo_uncertainty_and_baselines.md
   next_research_decision: experiments/phase1_compiler/results/phase1_next_research_decision.json
   next_research_decision_report: experiments/phase1_compiler/reports/phase1_next_research_decision.md
+  negative_or_underpowered_pilot: experiments/phase1_compiler/results/phase1_two_repo_negative_or_underpowered_pilot.json
+  negative_or_underpowered_pilot_report: experiments/phase1_compiler/reports/phase1_two_repo_negative_or_underpowered_pilot.md
   mvp_closeout: experiments/phase1_compiler/results/phase1_mvp_closeout.json
   mvp_closeout_report: experiments/phase1_compiler/reports/phase1_mvp_closeout.md
 

@@ -124,3 +124,21 @@ def test_next_research_decision_reports_two_repo_negative_or_underpowered_pilot(
     assert decision["predictive_validity_established"] is False
     assert "rerun" not in decision["recommended_next_runbook"]
     assert "predictive_validity_established" in decision["what_must_not_be_claimed"]
+
+
+def test_negative_or_underpowered_pilot_report_keeps_claim_narrow() -> None:
+    config = attrs_gen.load_config(CONFIG)
+    matrix = attrs_gen.build_task_outcome_matrix(config)
+    taxonomy = attrs_gen.build_attrs_h_future_failure_taxonomy(config, matrix)
+    uncertainty = attrs_gen.build_two_repo_uncertainty_and_baselines(config, matrix)
+    decision = attrs_gen.build_next_research_decision(config, matrix, taxonomy, uncertainty)
+
+    report = attrs_gen.build_negative_or_underpowered_pilot_report(config, matrix, taxonomy, uncertainty, decision)
+
+    assert report["status"] == "reported"
+    assert report["pilot_result_label"] == "two_repo_negative_or_underpowered_pilot"
+    assert report["predictive_validity_established"] is False
+    assert report["production_ranking_status"] == "not_produced"
+    assert report["paid_acut_calls_made"] is False
+    assert report["third_repo_local_screening_started"] is False
+    assert "did not establish predictive validity" in report["narrow_claim"]

@@ -960,6 +960,148 @@ def next_research_decision_report(payload: dict[str, Any]) -> str:
     return "\n".join(lines)
 
 
+def load_or_build_decision(
+    config: dict[str, Any],
+    matrix: dict[str, Any],
+    taxonomy: dict[str, Any],
+    uncertainty: dict[str, Any],
+) -> dict[str, Any]:
+    path = configured_output_path(config, "next_research_decision")
+    return load_json(path) if path.exists() else build_next_research_decision(config, matrix, taxonomy, uncertainty)
+
+
+def build_negative_or_underpowered_pilot_report(
+    config: dict[str, Any],
+    matrix_payload: dict[str, Any] | None = None,
+    taxonomy_payload: dict[str, Any] | None = None,
+    uncertainty_payload: dict[str, Any] | None = None,
+    decision_payload: dict[str, Any] | None = None,
+) -> dict[str, Any]:
+    if matrix_payload is None:
+        matrix_path = configured_output_path(config, "task_outcome_matrix")
+        matrix_payload = load_json(matrix_path) if matrix_path.exists() else build_task_outcome_matrix(config)
+    if taxonomy_payload is None:
+        taxonomy_payload = load_or_build_taxonomy(config, matrix_payload)
+    if uncertainty_payload is None:
+        uncertainty_payload = load_or_build_uncertainty(config, matrix_payload)
+    if decision_payload is None:
+        decision_payload = load_or_build_decision(config, matrix_payload, taxonomy_payload, uncertainty_payload)
+
+    narrow_claim = (
+        "This Phase 1 pilot did not establish predictive validity. It did demonstrate that Barcarolle can build "
+        "and execute a clean two-repo validation and can report when evidence is insufficient."
+    )
+    return {
+        "schema_version": "barcarolle.phase1.two_repo_negative_or_underpowered_pilot.v1",
+        "generated_at": now_utc(),
+        "status": "reported",
+        "pilot_result_label": "two_repo_negative_or_underpowered_pilot",
+        "question": "Does the Barcarolle repo-specific benchmark signal predict held-out future target-repo work?",
+        "design": {
+            "selected_repos": config.get("selected_repos", []),
+            "adapters": listish(config.get("adapters")),
+            "planned_cells": matrix_payload["summary"]["planned_cell_count"],
+            "scoreable_cells": matrix_payload["summary"]["scoreable_cell_count"],
+            "h_future_scoreable_cells": uncertainty_payload["intervals"]["pooled_h_future"]["scoreable_cell_count"],
+            "policy_violation_count": matrix_payload["summary"]["policy_violation_count"],
+        },
+        "observed_result": {
+            "boltons_b_eval_pass_rate": uncertainty_payload["intervals"]["boltons_b_eval"]["pass_rate"],
+            "boltons_h_future_pass_rate": uncertainty_payload["intervals"]["boltons_h_future"]["pass_rate"],
+            "attrs_b_eval_pass_rate": uncertainty_payload["intervals"]["attrs_b_eval"]["pass_rate"],
+            "attrs_h_future_pass_rate": uncertainty_payload["intervals"]["attrs_h_future"]["pass_rate"],
+            "pooled_b_eval_to_pooled_h_future_absolute_error": uncertainty_payload["baseline_errors"][
+                "pooled_b_eval_to_pooled_h_future"
+            ]["absolute_error"],
+            "preserved_preregistered_pooled_mae": uncertainty_payload["preserved_preregistered_two_repo_result"][
+                "pooled_mae"
+            ],
+        },
+        "why_predictive_validity_was_not_established": [
+            "The preregistered acceptance gate has one confirmed policy violation.",
+            "Attrs H_future collapsed to 1/7 scoreable pass rate despite attrs B_eval at 7/8.",
+            "Baseline errors are too large to support the predictive-validity claim.",
+            "The two-repo sample and 15 scoreable H_future cells leave wide uncertainty intervals.",
+        ],
+        "attrs_h_future_meaning": taxonomy_payload["interpretation"]["breadth"],
+        "policy_violation_meaning": taxonomy_payload["interpretation"]["scope"],
+        "uncertainty_and_limits": uncertainty_payload["conclusion"]["rationale"],
+        "next_recommended_experiment": "Prepare a local-only weighted/stratified compiler analysis runbook before deciding whether third-repo supply or future paid holdout validation is worth the cost.",
+        "narrow_claim": narrow_claim,
+        "source_decision": decision_payload["primary_decision_label"],
+        "paid_acut_calls_made": False,
+        "paid_llm_calls_made": False,
+        "third_repo_local_screening_started": False,
+        "predictive_validity_established": False,
+        "production_ranking_status": "not_produced",
+    }
+
+
+def negative_or_underpowered_pilot_markdown(payload: dict[str, Any]) -> str:
+    observed = payload["observed_result"]
+    design = payload["design"]
+    lines = [
+        "# Phase 1 Two-Repo Negative Or Underpowered Pilot",
+        "",
+        f"Generated: `{payload['generated_at']}`.",
+        "",
+        "## Question",
+        "",
+        payload["question"],
+        "",
+        "## Design",
+        "",
+        f"- Repos: `{', '.join(design['selected_repos'])}`.",
+        f"- Adapters: `{', '.join(design['adapters'])}`.",
+        f"- Planned cells: `{design['planned_cells']}`.",
+        f"- Scoreable cells: `{design['scoreable_cells']}`.",
+        f"- H_future scoreable cells: `{design['h_future_scoreable_cells']}`.",
+        f"- Policy violations: `{design['policy_violation_count']}`.",
+        "",
+        "## Observed Result",
+        "",
+        f"- Boltons B_eval pass rate: `{observed['boltons_b_eval_pass_rate']}`.",
+        f"- Boltons H_future pass rate: `{observed['boltons_h_future_pass_rate']}`.",
+        f"- Attrs B_eval pass rate: `{observed['attrs_b_eval_pass_rate']}`.",
+        f"- Attrs H_future pass rate: `{observed['attrs_h_future_pass_rate']}`.",
+        f"- Pooled B_eval to pooled H_future absolute error: `{observed['pooled_b_eval_to_pooled_h_future_absolute_error']}`.",
+        f"- Preserved preregistered pooled MAE: `{observed['preserved_preregistered_pooled_mae']}`.",
+        "",
+        "## Why Predictive Validity Was Not Established",
+        "",
+    ]
+    lines.extend(f"- {item}" for item in payload["why_predictive_validity_was_not_established"])
+    lines.extend(
+        [
+            "",
+            "## What The Attrs H_future Result Means",
+            "",
+            payload["attrs_h_future_meaning"],
+            "",
+            "## What The Policy Violation Means",
+            "",
+            payload["policy_violation_meaning"],
+            "",
+            "## Uncertainty And Limits",
+            "",
+        ]
+    )
+    lines.extend(f"- {item}" for item in payload["uncertainty_and_limits"])
+    lines.extend(
+        [
+            "",
+            "## Next Recommended Experiment",
+            "",
+            payload["next_recommended_experiment"],
+            "",
+            "## Narrow Claim",
+            "",
+            payload["narrow_claim"],
+        ]
+    )
+    return "\n".join(lines)
+
+
 def task_outcome_matrix_report(payload: dict[str, Any]) -> str:
     summary = payload["summary"]
     lines = [
@@ -1089,6 +1231,27 @@ def decision_command(args: argparse.Namespace) -> None:
     )
 
 
+def pilot_report_command(args: argparse.Namespace) -> None:
+    config = load_config(args.config)
+    payload = build_negative_or_underpowered_pilot_report(config)
+    write_json(configured_output_path(config, "negative_or_underpowered_pilot"), payload)
+    write_text(
+        configured_output_path(config, "negative_or_underpowered_pilot_report"),
+        negative_or_underpowered_pilot_markdown(payload),
+    )
+    print(
+        json.dumps(
+            {
+                "status": payload["status"],
+                "pilot_result_label": payload["pilot_result_label"],
+                "predictive_validity_established": payload["predictive_validity_established"],
+            },
+            indent=2,
+            sort_keys=True,
+        )
+    )
+
+
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description="Phase 1 attrs generalization local analysis")
     subparsers = parser.add_subparsers(dest="command", required=True)
@@ -1108,6 +1271,10 @@ def main(argv: list[str] | None = None) -> int:
     decision = subparsers.add_parser("decide", help="Decide the next Phase 1 research branch")
     decision.add_argument("--config", type=Path, default=DEFAULT_CONFIG)
     decision.set_defaults(func=decision_command)
+
+    pilot = subparsers.add_parser("report-pilot", help="Write the negative or underpowered two-repo pilot report")
+    pilot.add_argument("--config", type=Path, default=DEFAULT_CONFIG)
+    pilot.set_defaults(func=pilot_report_command)
 
     args = parser.parse_args(argv)
     args.func(args)

@@ -123,3 +123,20 @@ Rationale:
 
 No paid calls were made. The decision does not recommend rerunning the
 confirmed policy violation inside this runbook.
+
+## Step 5A Negative Or Underpowered Pilot Report
+
+Because Step 4 selected `report_two_repo_negative_or_underpowered_pilot`, wrote
+the research-facing pilot report.
+
+Report conclusion:
+
+This Phase 1 pilot did not establish predictive validity. It did demonstrate
+that Barcarolle can build and execute a clean two-repo validation and can report
+when evidence is insufficient.
+
+Next recommended experiment from the report: prepare a local-only
+weighted/stratified compiler analysis runbook before deciding whether
+third-repo supply or future paid holdout validation is worth the cost.
+
+No third-repo local screening was started. No paid calls were made.
