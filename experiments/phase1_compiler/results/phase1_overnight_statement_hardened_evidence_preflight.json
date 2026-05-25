@@ -85,10 +85,13 @@
     {
       "blockers": [],
       "commit_target": "Classify statement-hardened paid failures",
-      "outputs": [],
-      "status": "pending",
+      "outputs": [
+        "experiments/phase1_compiler/results/phase1_overnight_statement_hardened_failure_taxonomy.json",
+        "experiments/phase1_compiler/reports/phase1_overnight_statement_hardened_failure_taxonomy.md"
+      ],
+      "status": "completed",
       "step": "3",
-      "updated_at": "2026-05-25T14:49:38Z"
+      "updated_at": "2026-05-25T14:51:09Z"
     },
     {
       "blockers": [],
