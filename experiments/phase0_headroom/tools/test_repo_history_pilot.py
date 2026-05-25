@@ -4,6 +4,7 @@ import json
 from pathlib import Path
 
 import repo_history_pilot as pilot
+import statement_quality
 
 
 def test_stable_task_id_generation() -> None:
@@ -244,7 +245,7 @@ def test_github_pr_refs_store_sanitized_body_summary_without_raw_response(monkey
 
     assert refs == [
         {
-            "body_summary": "x" * 240,
+            "body_summary": "x" * statement_quality.PUBLIC_BODY_SUMMARY_LIMIT,
             "classification": "problem_context",
             "ref": "pr:42",
             "summary": "Fix behavior",
