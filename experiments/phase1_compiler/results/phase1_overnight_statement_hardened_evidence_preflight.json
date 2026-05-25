@@ -142,10 +142,12 @@
     {
       "blockers": [],
       "commit_target": "Write proposal alignment memo for paid evidence",
-      "outputs": [],
-      "status": "pending",
+      "outputs": [
+        "experiments/phase1_compiler/reports/phase1_overnight_statement_hardened_proposal_alignment.md"
+      ],
+      "status": "completed",
       "step": "8",
-      "updated_at": "2026-05-25T14:49:38Z"
+      "updated_at": "2026-05-25T14:53:24Z"
     },
     {
       "blockers": [],

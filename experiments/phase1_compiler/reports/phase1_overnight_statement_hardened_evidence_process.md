@@ -30,6 +30,6 @@ Status: `pass`.
 | 5 | completed | Analyze predictive threshold and power | experiments/phase1_compiler/results/phase1_overnight_statement_hardened_threshold_analysis.json, experiments/phase1_compiler/reports/phase1_overnight_statement_hardened_threshold_analysis.md, experiments/phase1_compiler/results/phase1_overnight_statement_hardened_power_analysis.json, experiments/phase1_compiler/reports/phase1_overnight_statement_hardened_power_analysis.md |  |
 | 6 | completed | Rank compiler calibration options | experiments/phase1_compiler/results/phase1_overnight_statement_hardened_calibration_options.json, experiments/phase1_compiler/reports/phase1_overnight_statement_hardened_calibration_options.md |  |
 | 7 | completed | Assess local supply for statement-hardened expansion | experiments/phase1_compiler/results/phase1_overnight_statement_hardened_local_supply_analysis.json, experiments/phase1_compiler/reports/phase1_overnight_statement_hardened_local_supply_analysis.md |  |
-| 8 | pending | Write proposal alignment memo for paid evidence |  |  |
+| 8 | completed | Write proposal alignment memo for paid evidence | experiments/phase1_compiler/reports/phase1_overnight_statement_hardened_proposal_alignment.md |  |
 | 9 | pending | Decide next action from statement-hardened evidence |  |  |
 | 10 | pending | Record overnight statement-hardened analysis closeout |  |  |
