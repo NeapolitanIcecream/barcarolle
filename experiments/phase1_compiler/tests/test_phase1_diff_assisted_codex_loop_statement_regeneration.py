@@ -194,6 +194,35 @@ def test_review_validation_requires_all_pass_booleans_for_pass_status() -> None:
         codexloop.validate_review_payload(payload, generated)
 
 
+def test_review_validation_allows_rubric_reference_to_hidden_verifier() -> None:
+    statement = "Problem summary: public behavior.\nExpected behavior: public behavior should work."
+    generated = [
+        {
+            "task_id": "demo__001",
+            "statement": statement,
+            "statement_digest": codexloop.statement_digest(statement),
+        }
+    ]
+    payload = {
+        "reviews": [
+            {
+                "task_id": "demo__001",
+                "status": "pass",
+                "leakage_pass": True,
+                "sufficiency_pass": True,
+                "faithfulness_pass": True,
+                "scope_pass": True,
+                "formatting_pass": True,
+                "reasons": ["No hidden verifier content is present."],
+                "required_revision": "",
+                "statement_digest": codexloop.statement_digest(statement),
+            }
+        ]
+    }
+
+    codexloop.validate_review_payload(payload, generated)
+
+
 def test_deterministic_qa_cannot_create_pass_without_reviewer_pass(tmp_path: Path) -> None:
     built = packet(tmp_path)
     statement = codexloop.dryrun.generated_statement_text(built)

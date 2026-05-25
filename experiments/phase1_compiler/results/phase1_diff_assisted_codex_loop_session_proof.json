@@ -12,10 +12,11 @@
   "paid_acut_solver_cells_run": false,
   "raw_cli_logs_committed": false,
   "real_generator_codex_cli_session_started": true,
-  "real_reviewer_codex_cli_session_started": false,
+  "real_reviewer_codex_cli_session_started": true,
   "required_model": "gpt-5.5",
   "required_reasoning_effort": "xhigh",
-  "reviewer_process_file_present": false,
+  "reviewer_output_not_deterministic_rules_only": true,
+  "reviewer_process_file_present": true,
   "schema_version": "barcarolle.phase1.diff_assisted_codex_loop_session_proof.v1",
   "sessions": [
     {
@@ -28,6 +29,17 @@
       "role": "generator",
       "started_at": "2026-05-25T04:56:34Z",
       "tmux_session": "phase1-diffstmt-generator"
+    },
+    {
+      "command_shape": "tmux new-session -> run_reviewer.sh -> env -u LLM_BASE_URL -u LLM_API_KEY -u OPENAI_API_KEY -u OPENROUTER_API_KEY codex exec using local Codex Subscription",
+      "ended_at": "2026-05-25T05:09:16Z",
+      "output_path": "experiments/phase1_compiler/results/phase1_diff_assisted_codex_loop_statement_reviews.json",
+      "output_row_count": 22,
+      "process_file": ".codex-workflows/phase1-diff-assisted-statement-regeneration-codex-loop/reviewer/process.md",
+      "process_status": "delivered",
+      "role": "reviewer",
+      "started_at": "2026-05-25T05:04:12Z",
+      "tmux_session": "phase1-diffstmt-reviewer"
     }
   ]
 }
