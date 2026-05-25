@@ -1,0 +1,9 @@
+{
+  "created_at": "2026-05-25T02:04:56Z",
+  "manifest_frozen": false,
+  "paid_acut_calls_made": false,
+  "paid_llm_calls_made": false,
+  "predictive_validity_established": false,
+  "schema_version": "barcarolle.phase1_statement_hardened_preregistration.v1",
+  "status": "not_written_no_manifest"
+}
