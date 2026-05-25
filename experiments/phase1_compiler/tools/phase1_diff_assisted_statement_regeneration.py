@@ -22,6 +22,54 @@ import statement_quality  # noqa: E402
 
 
 DEFAULT_CONFIG = ROOT / "configs" / "phase1_diff_assisted_statement_regeneration.yaml"
+REVIEW_STATUSES = {"pass", "revise", "reject"}
+PROMPT_PACKET_KEYS = {
+    "task_id",
+    "repo_id",
+    "task_time",
+    "source_ref",
+    "source_kind",
+    "public_context",
+    "changed_files",
+    "implementation_files",
+    "test_files",
+    "module_or_package",
+    "certification_gate_summary",
+    "old_statement_quality",
+    "diff_summary",
+    "target_diff_digest",
+    "test_diff_digest",
+    "scope_metadata",
+}
+GENERATOR_CONTRACT = """You are the statement generator for a benchmark compiler sidecar artifact.
+Produce one solver-facing task statement from the allowed packet.
+Use public context plus diff summary to infer public behavior.
+Do not expose target diffs, gold patches, hidden tests, exact implementation steps, paid outcomes, or target commit hashes.
+Include: problem summary, behavior details, expected behavior, editable implementation paths, non-editable tests, and verifier metadata.
+Target 1500-2500 characters; soft max 4000; never substring-truncate.
+Return machine-readable JSON with keys: statement, notes."""
+REVIEWER_CONTRACT = """You are the statement reviewer for a benchmark compiler sidecar artifact.
+Return machine-readable JSON with status pass, revise, or reject.
+Check leakage, sufficiency, faithfulness, implementation-only scope, and formatting.
+Pass only if the statement is non-leaky, sufficient, faithful to public context and diff summary, and solvable without hidden tests.
+If revise, provide concrete edits. If reject, provide an exclusion reason."""
+REVISION_CONTRACT = """You are revising one solver-facing statement using reviewer feedback.
+Keep the same allowed packet and preserve all leakage boundaries.
+Apply concrete reviewer edits without adding raw diffs, gold patch text, hidden tests, exact implementation steps, paid outcomes, or target commit hashes.
+Return machine-readable JSON with keys: statement, notes."""
+FORBIDDEN_PROMPT_KEYS = {
+    "adapter_outcomes",
+    "historical_paid_context",
+    "hidden_verifier",
+    "paid_outcome",
+    "policy_violation",
+    "raw_diff",
+    "scoreable_cell",
+    "solver_trace",
+    "terminal_status",
+    "verified_fail",
+    "verified_pass",
+}
 
 
 def read_json(path: Path) -> dict[str, Any]:
@@ -304,6 +352,73 @@ def build_candidate_packets(config: dict[str, Any]) -> dict[str, Any]:
         "hidden_verifier_material_included": False,
         "historical_paid_outcomes_included": False,
         "packets": packets,
+    }
+
+
+def sanitize_for_prompt(value: Any) -> Any:
+    if isinstance(value, dict):
+        return {
+            str(key): sanitize_for_prompt(item)
+            for key, item in sorted(value.items())
+            if str(key) not in FORBIDDEN_PROMPT_KEYS
+        }
+    if isinstance(value, list):
+        return [sanitize_for_prompt(item) for item in value]
+    return value
+
+
+def prompt_packet(packet: dict[str, Any]) -> dict[str, Any]:
+    return {key: sanitize_for_prompt(packet[key]) for key in sorted(PROMPT_PACKET_KEYS) if key in packet}
+
+
+def build_statement_generator_prompt(packet: dict[str, Any]) -> str:
+    payload = {
+        "allowed_packet": prompt_packet(packet),
+        "contract": GENERATOR_CONTRACT,
+        "role": "statement_generator",
+    }
+    return json.dumps(payload, indent=2, sort_keys=True)
+
+
+def build_statement_reviewer_prompt(packet: dict[str, Any], statement: str) -> str:
+    payload = {
+        "allowed_packet": prompt_packet(packet),
+        "contract": REVIEWER_CONTRACT,
+        "generated_statement": statement,
+        "review_schema": review_schema(),
+        "role": "statement_reviewer",
+    }
+    return json.dumps(payload, indent=2, sort_keys=True)
+
+
+def build_statement_revision_prompt(packet: dict[str, Any], statement: str, feedback: dict[str, Any]) -> str:
+    payload = {
+        "allowed_packet": prompt_packet(packet),
+        "contract": REVISION_CONTRACT,
+        "current_statement": statement,
+        "reviewer_feedback": sanitize_for_prompt(feedback),
+        "role": "statement_revision",
+    }
+    return json.dumps(payload, indent=2, sort_keys=True)
+
+
+def review_schema() -> dict[str, Any]:
+    return {
+        "required_keys": [
+            "status",
+            "leakage_pass",
+            "sufficiency_pass",
+            "faithfulness_pass",
+            "scope_pass",
+            "formatting_pass",
+            "reasons",
+        ],
+        "status_values": sorted(REVIEW_STATUSES),
+        "status_rules": {
+            "pass": "all checks are true and reasons explain non-leakage and sufficiency",
+            "revise": "statement is potentially recoverable and concrete edits are provided",
+            "reject": "statement is leaky, unfaithful, insufficient, or unsalvageable within the iteration cap",
+        },
     }
 
 

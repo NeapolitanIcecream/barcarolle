@@ -137,3 +137,90 @@ def test_old_240_character_truncation_is_recoverable_packet_metadata() -> None:
 
     assert packet["old_statement_quality"]["body_summary_hit_old_cap"] is True
     assert packet["old_statement_quality"]["old_truncation_treated_as_recoverable_renderer_defect"] is True
+
+
+def test_generator_prompt_omits_paid_outcomes_hidden_fields_and_raw_statuses(tmp_path: Path) -> None:
+    config = minimal_config(tmp_path)
+    certified = {
+        "base_commit": config["_base"],
+        "changed_files": ["pkg/core.py", "tests/test_core.py"],
+        "target_commit": config["_target"],
+    }
+    packet = diffregen.build_candidate_packet(
+        config=config,
+        candidate=candidate_record(),
+        certified=certified,
+        source_context={
+            "body_summary": "Public issue body",
+            "classification": "problem_context",
+            "ref": "issue:1",
+            "summary": "Public issue title",
+        },
+    )
+    packet["historical_paid_context"] = {"terminal_status": "verified_pass"}
+    packet["hidden_verifier"] = "private oracle details"
+    packet["raw_diff"] = "diff --git a/pkg/core.py b/pkg/core.py"
+
+    prompt = diffregen.build_statement_generator_prompt(packet)
+
+    assert "historical_paid_context" not in prompt
+    assert "verified_pass" not in prompt
+    assert "private oracle details" not in prompt
+    assert "diff --git" not in prompt
+    assert "statement_generator" in prompt
+
+
+def test_reviewer_prompt_uses_machine_readable_review_schema(tmp_path: Path) -> None:
+    config = minimal_config(tmp_path)
+    packet = diffregen.build_candidate_packet(
+        config=config,
+        candidate=candidate_record(),
+        certified={
+            "base_commit": config["_base"],
+            "changed_files": ["pkg/core.py", "tests/test_core.py"],
+            "target_commit": config["_target"],
+        },
+        source_context={
+            "body_summary": "Public issue body",
+            "classification": "problem_context",
+            "ref": "issue:1",
+            "summary": "Public issue title",
+        },
+    )
+
+    prompt = diffregen.build_statement_reviewer_prompt(packet, "Problem summary: public behavior is wrong.")
+
+    assert '"status_values": [' in prompt
+    assert '"pass"' in prompt
+    assert '"revise"' in prompt
+    assert '"reject"' in prompt
+    assert "statement_reviewer" in prompt
+
+
+def test_revision_prompt_sanitizes_reviewer_feedback(tmp_path: Path) -> None:
+    config = minimal_config(tmp_path)
+    packet = diffregen.build_candidate_packet(
+        config=config,
+        candidate=candidate_record(),
+        certified={
+            "base_commit": config["_base"],
+            "changed_files": ["pkg/core.py", "tests/test_core.py"],
+            "target_commit": config["_target"],
+        },
+        source_context={
+            "body_summary": "Public issue body",
+            "classification": "problem_context",
+            "ref": "issue:1",
+            "summary": "Public issue title",
+        },
+    )
+
+    prompt = diffregen.build_statement_revision_prompt(
+        packet,
+        "Problem summary: public behavior is wrong.",
+        {"status": "revise", "terminal_status": "verified_fail", "reasons": ["add expected behavior"]},
+    )
+
+    assert "verified_fail" not in prompt
+    assert "add expected behavior" in prompt
+    assert "statement_revision" in prompt
