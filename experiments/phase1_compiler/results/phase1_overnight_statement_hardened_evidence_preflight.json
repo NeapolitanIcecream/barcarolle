@@ -63,10 +63,13 @@
     {
       "blockers": [],
       "commit_target": "Audit statement-hardened paid result integrity",
-      "outputs": [],
-      "status": "pending",
+      "outputs": [
+        "experiments/phase1_compiler/results/phase1_overnight_statement_hardened_integrity_audit.json",
+        "experiments/phase1_compiler/reports/phase1_overnight_statement_hardened_integrity_audit.md"
+      ],
+      "status": "completed",
       "step": "1",
-      "updated_at": "2026-05-25T14:49:38Z"
+      "updated_at": "2026-05-25T14:50:28Z"
     },
     {
       "blockers": [],

@@ -1,0 +1,85 @@
+{
+  "analysis_schema": "integrity_audit.v1",
+  "batch_metric_terminal_counts": {
+    "attrs_b_eval": {
+      "verified_fail": 2,
+      "verified_pass": 6
+    },
+    "attrs_h_future": {
+      "verified_fail": 4,
+      "verified_pass": 4
+    },
+    "boltons_b_eval": {
+      "verified_fail": 1,
+      "verified_pass": 7
+    },
+    "boltons_h_future": {
+      "verified_fail": 4,
+      "verified_pass": 4
+    }
+  },
+  "followup_runbook_written_by_worker": false,
+  "generated_at": "2026-05-25T14:50:28Z",
+  "input_artifact_digests": {
+    "experiments/phase0_headroom/results/phase1_statement_hardened_after_canonical_repair_attrs_b_eval_metrics.json": "sha256:8d66b047a71c9dc69ec13b90372dc44e68db195e853f86602efdc34c8714dcd1",
+    "experiments/phase0_headroom/results/phase1_statement_hardened_after_canonical_repair_attrs_b_eval_score_table.csv": "sha256:8209283f93bb8c1433e049ca173055c9e5964e3feddbbf26b42b5b02e4030102",
+    "experiments/phase0_headroom/results/phase1_statement_hardened_after_canonical_repair_attrs_h_future_metrics.json": "sha256:9590ba5c20dbe227d8cbbd3e3ebba225bdd518d052287d549e1ec8481e52e5bc",
+    "experiments/phase0_headroom/results/phase1_statement_hardened_after_canonical_repair_attrs_h_future_score_table.csv": "sha256:87eca29a3f7481a2cb31554d8c3867c6a76a1ae79e5a3edb5f42cfa885076baa",
+    "experiments/phase0_headroom/results/phase1_statement_hardened_after_canonical_repair_boltons_b_eval_metrics.json": "sha256:f09f62b7c2b55790ec9b3a15d581ffeec3ccd5b8b264122c2dfbe4790265fdde",
+    "experiments/phase0_headroom/results/phase1_statement_hardened_after_canonical_repair_boltons_b_eval_score_table.csv": "sha256:d0f9712a781a67f5c3a28b06783075703a84c56be30a8d89c0006ead74a5da6c",
+    "experiments/phase0_headroom/results/phase1_statement_hardened_after_canonical_repair_boltons_h_future_metrics.json": "sha256:bd5c92c12a476b687e6df9079d32b1b294553e59e9a601136178e59f99b85400",
+    "experiments/phase0_headroom/results/phase1_statement_hardened_after_canonical_repair_boltons_h_future_score_table.csv": "sha256:dbecd60984ee8c4ecab7c61618dfb1d98c0e5cee0647ad104ce06f5fcd8b73f3",
+    "experiments/phase0_headroom/results/workspace_cost_reconciliation.json": "sha256:1a8b60799e4c45d892a733776461f6bb03b924e27c21756c74e25cca2aff714a",
+    "experiments/phase0_headroom/results/workspace_usage_ledger.jsonl": "sha256:86a9d68f3a7cbdf4bc5f1b2eba6325da9510a69d5434fdad4611fb7d238d19a0",
+    "experiments/phase1_compiler/reports/phase1_statement_hardened_after_canonical_repair_paid_process.md": "sha256:1deb5dd798e9ece7a09d4cf48fc2e294351ffb16c454827c2c687bbcee9de344",
+    "experiments/phase1_compiler/results/phase1_statement_hardened_after_canonical_repair_inventory.json": "sha256:c02a5643f12e464b076fc4a9f1a47e2f72478b0c3cdcbc3e991e9e3f206a60f3",
+    "experiments/phase1_compiler/results/phase1_statement_hardened_after_canonical_repair_paid_decision.json": "sha256:3dd44feae2955c41ef820ae7dfb247564b90d1b253e19f28b340f7ac4b719893",
+    "experiments/phase1_compiler/results/phase1_statement_hardened_after_canonical_repair_paid_metrics.json": "sha256:edc87929175b3f247b06d3eddcdd80f9b3d873b9b3fef4030b4c72a7249c72af",
+    "experiments/phase1_compiler/results/phase1_statement_hardened_after_canonical_repair_paid_tooling_check.json": "sha256:f156260ec56011ff5f071dcc019330ad4ee446ca3f31b20aaa64547f246b2200",
+    "experiments/phase1_compiler/results/phase1_statement_hardened_after_canonical_repair_preregistration.json": "sha256:413270868eb6ea0f13f0ffa9f32a85c9870d71c30d20650e6a9e5847e8fb185e",
+    "experiments/phase1_compiler/results/phase1_statement_hardened_after_canonical_repair_release_manifest.json": "sha256:ce38a3cac154feffaa5137871999f9ff2ebaea0198e92b5ef00f2a1482dae8d0",
+    "experiments/phase1_compiler/results/phase1_statement_hardened_after_canonical_repair_release_preview.json": "sha256:9f7b7d9eba5f9a87257d604f7aa5844ae01b89af01927b89806e42f9dae1391d",
+    "experiments/phase1_compiler/results/phase1_statement_hardened_after_canonical_repair_screen.json": "sha256:9e84ff93f42fa48b226e6fd211f38ee137a1e5bb4af8cd0c9aaad9b78b0965ed"
+  },
+  "mismatches": [],
+  "new_paid_calls_made": false,
+  "observed_or_conservative_cost_usd": 9.9235152,
+  "old_paid_result_repaired": false,
+  "old_score_tables_merged": false,
+  "paid_metrics_cost_usd": 9.9235152,
+  "raw_artifact_paths_committed": [],
+  "release_id": "statement_hardened_after_canonical_split_repair_20260525",
+  "schema_version": "barcarolle.phase1_overnight_statement_hardened_evidence_analysis_output.v1",
+  "score_table_prefixes": [
+    "phase1_statement_hardened_after_canonical_repair_attrs_b_eval",
+    "phase1_statement_hardened_after_canonical_repair_attrs_h_future",
+    "phase1_statement_hardened_after_canonical_repair_boltons_b_eval",
+    "phase1_statement_hardened_after_canonical_repair_boltons_h_future"
+  ],
+  "score_table_task_ids": [
+    "attrs__hist__001",
+    "attrs__hist__003",
+    "attrs__hist__004",
+    "attrs__hist__008",
+    "attrs__hist__012",
+    "attrs__hist__013",
+    "attrs__hist__023",
+    "attrs__hist__027",
+    "boltons__clean_ext__001",
+    "boltons__clean_ext__008",
+    "boltons__clean_ext__010",
+    "boltons__clean_ext__017",
+    "boltons__hist__011",
+    "boltons__hist__022",
+    "boltons__hist__023",
+    "boltons__hist__027"
+  ],
+  "scoreable_cell_count": 32,
+  "status": "pass",
+  "terminal_status_counts": {
+    "verified_fail": 11,
+    "verified_pass": 21
+  },
+  "total_cells": 32,
+  "usage_observed_count": 32
+}

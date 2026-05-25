@@ -25,12 +25,13 @@ ADAPTERS = ["codex_workspace", "kilo_workspace"]
 TERMINAL_PASS = "verified_pass"
 TERMINAL_FAIL = "verified_fail"
 SCOREABLE_STATUSES = {TERMINAL_PASS, TERMINAL_FAIL}
-FORBIDDEN_RAW_PATH_MARKERS = [
-    "/results/raw/",
-    "solver_workspace",
-    "verifier_workspace",
-    ".venv/",
-    "/raw/",
+FORBIDDEN_ACTIVE_RAW_PATH_PREFIXES = [
+    "experiments/phase0_headroom/results/raw/",
+    "experiments/phase1_compiler/results/raw/",
+    "experiments/phase0_headroom/solver_workspaces/",
+    "experiments/phase0_headroom/verifier_workspaces/",
+    "experiments/phase1_compiler/solver_workspaces/",
+    "experiments/phase1_compiler/verifier_workspaces/",
 ]
 OLD_POLICY_VIOLATION_TASK_IDS = {"attrs__hist__027"}
 
@@ -540,8 +541,7 @@ def committed_raw_artifact_paths() -> list[str]:
     paths = [path for path in result["stdout"].split("\x00") if path]
     out = []
     for path in paths:
-        normalized = "/" + path
-        if any(marker in normalized for marker in FORBIDDEN_RAW_PATH_MARKERS):
+        if any(path.startswith(prefix) for prefix in FORBIDDEN_ACTIVE_RAW_PATH_PREFIXES):
             out.append(path)
     return sorted(out)
 

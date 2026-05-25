@@ -23,7 +23,7 @@ Status: `pass`.
 | Step | Status | Commit target | Outputs | Blockers |
 | --- | --- | --- | --- | --- |
 | 0 | completed | Record overnight statement-hardened analysis preflight |  |  |
-| 1 | pending | Audit statement-hardened paid result integrity |  |  |
+| 1 | completed | Audit statement-hardened paid result integrity | experiments/phase1_compiler/results/phase1_overnight_statement_hardened_integrity_audit.json, experiments/phase1_compiler/reports/phase1_overnight_statement_hardened_integrity_audit.md |  |
 | 2 | pending | Build statement-hardened task outcome matrix |  |  |
 | 3 | pending | Classify statement-hardened paid failures |  |  |
 | 4 | pending | Analyze statement-hardened result strata |  |  |
