@@ -120,10 +120,13 @@
     {
       "blockers": [],
       "commit_target": "Rank compiler calibration options",
-      "outputs": [],
-      "status": "pending",
+      "outputs": [
+        "experiments/phase1_compiler/results/phase1_overnight_statement_hardened_calibration_options.json",
+        "experiments/phase1_compiler/reports/phase1_overnight_statement_hardened_calibration_options.md"
+      ],
+      "status": "completed",
       "step": "6",
-      "updated_at": "2026-05-25T14:49:38Z"
+      "updated_at": "2026-05-25T14:52:39Z"
     },
     {
       "blockers": [],
