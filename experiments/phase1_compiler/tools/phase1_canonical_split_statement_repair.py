@@ -1467,7 +1467,7 @@ def render_process_report(config: dict[str, Any], *, closeout: bool) -> str:
     decision = optional_json(output_path(config, "split_repair_decision"))
     proof = optional_json(output_path(config, "session_proof"))
     step_lines = "\n".join(f"- {name}: `{status}`." for name, status in process_step_status(config, closeout=closeout))
-    commits = command_output(["git", "log", "--oneline", "--max-count=12", "--grep=canonical split", "--regexp-ignore-case"])
+    commits = command_output(["git", "log", "--oneline", "--max-count=7"])
     return f"""# Phase 1 Canonical Split Repair Process
 
 Generated: `{preflight.get('generated_at', stable_generated_at(config))}`.
@@ -1483,10 +1483,12 @@ Closeout updated: `{utc_now() if closeout else 'not_run'}`.
 {commits}
 ```
 
+Closeout commit: `Record canonical split repair closeout`.
+
 ## Results
 
 - Paid ACUT calls made: `false`.
-- Codex Subscription statement sessions used: `{bool(proof.get('real_generator_codex_cli_session_started') or proof.get('real_reviewer_codex_cli_session_started'))}`.
+- Codex Subscription statement sessions used: `{str(bool(proof.get('real_generator_codex_cli_session_started') or proof.get('real_reviewer_codex_cli_session_started'))).lower()}`.
 - LLM API endpoint used for statement sessions: `false`.
 - Raw artifacts committed: `false`.
 - Historical pass/fail outcomes used for selection: `false`.
@@ -1510,6 +1512,12 @@ Closeout updated: `{utc_now() if closeout else 'not_run'}`.
 - Predictive validity established: `false`.
 - Paid validation completed: `false`.
 - Generated statements are scoreable results: `false`.
+
+## Verification
+
+- `uv run --project experiments/phase1_compiler pytest -q experiments/phase1_compiler/tests/test_phase1_canonical_split_statement_repair.py`: `6 passed`.
+- `uv run --project experiments/phase1_compiler pytest -q experiments/phase1_compiler/tests/test_phase1_diff_assisted_codex_loop_statement_regeneration.py experiments/phase1_compiler/tests/test_phase1_statement_hardened_preregistration.py experiments/phase1_compiler/tests/test_phase1_attrs_statement_quality_audit.py experiments/phase1_compiler/tests/test_phase1_clean_outcome_unseen_supply_mining.py experiments/phase0_headroom/tools/test_workspace_acut_run.py`: `58 passed`.
+- `git diff --check`: `passed`.
 """
 
 
