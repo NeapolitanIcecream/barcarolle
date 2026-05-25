@@ -30,7 +30,7 @@ Each review row must use this shape:
 Top-level output must include:
 
 ```json
-{"schema_version":"barcarolle.phase1.diff_assisted_codex_loop_statement_reviews.v1","generated_at":"...","candidate_count":0,"review_counts":{},"paid_llm_calls_made":true,"paid_acut_calls_made":false,"reviews":[]}
+{"schema_version":"barcarolle.phase1.diff_assisted_codex_loop_statement_reviews.v1","generated_at":"...","candidate_count":0,"review_counts":{},"llm_api_calls_made":false,"codex_subscription_session_used":true,"paid_acut_calls_made":false,"reviews":[]}
 ```
 
 Review checks:
