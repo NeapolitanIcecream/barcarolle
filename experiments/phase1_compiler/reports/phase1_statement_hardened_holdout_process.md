@@ -41,11 +41,42 @@ Historical paid score tables are immutable inputs. This local run cannot establi
 ## Step Status
 
 - Step 0 preflight and evidence lock: completed.
-- Step 1 durable preregistration tooling: pending.
-- Step 2 candidate inventory: pending.
-- Step 3 candidate screen: pending.
-- Step 4 release previews: pending.
-- Step 5 manifest or blocker: pending.
-- Step 6 preregistration: pending.
-- Step 7 validation branch decision: pending.
-- Step 8 closeout: pending.
+- Step 1 durable preregistration tooling: completed.
+- Step 2 candidate inventory: completed.
+- Step 3 candidate screen: completed.
+- Step 4 release previews: completed.
+- Step 5 manifest or blocker: completed with blocker.
+- Step 6 preregistration: completed with no-preregistration report because no manifest was frozen.
+- Step 7 validation branch decision: completed.
+- Step 8 closeout: completed.
+
+## Commits Created
+
+- `8a359599` Record statement-hardened preregistration preflight
+- `0a30426c` Add statement-hardened preregistration tooling
+- `74eb08c4` Build statement-hardened candidate inventory
+- `979b8c63` Screen statement-hardened holdout supply
+- `8706ea03` Render statement-hardened release previews
+- `6510c9aa` Record statement-hardened release blocker
+- `a5bd9a6d` Write statement-hardened preregistration
+- `e64ad023` Decide statement-hardened validation branch
+- Record statement-hardened preregistration closeout, in the closeout commit that writes this final process report.
+
+## Tests And Checks
+
+- `uv run --project experiments/phase1_compiler pytest -q experiments/phase1_compiler/tests/test_phase1_statement_hardened_preregistration.py`: passed, `7 passed`.
+- `uv run --project experiments/phase1_compiler pytest -q experiments/phase1_compiler/tests/test_phase1_attrs_statement_quality_audit.py experiments/phase1_compiler/tests/test_phase1_clean_outcome_unseen_supply_mining.py experiments/phase0_headroom/tools/test_workspace_acut_run.py`: passed, `42 passed`.
+- `git diff --check`: passed before each commit and before the closeout commit.
+
+## Final Decision
+
+- Paid calls made: `false`.
+- Raw artifacts committed: `false`.
+- Release frozen: `false`.
+- Preregistration written: `false`.
+- No-preregistration report written: `true`.
+- Primary decision: `replacement_supply_needed_before_paid_validation`.
+- Paid validation blocked: `true`.
+- Next runbook path: `docs/experiments/phase-1-statement-hardened-replacement-supply-runbook.md`.
+
+The local screen found only `4` eligible candidates without using paid outcomes: `2` attrs B_eval-eligible tasks and `2` boltons B_eval-eligible tasks. It found `0` eligible H_future tasks for both repos under the strict statement-quality gate. The required two-repo release shape therefore cannot be frozen locally.
