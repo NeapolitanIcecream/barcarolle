@@ -678,6 +678,157 @@ def deterministic_statement_qa(packet: dict[str, Any], statement_row: dict[str, 
     }
 
 
+def regenerated_candidate_records(config: dict[str, Any]) -> list[dict[str, Any]]:
+    inventory = read_json(artifact_path(config, "statement_hardened_inventory"))
+    reviews = read_json(output_path(config, "statement_reviews"))
+    statements = read_statement_jsonl(output_path(config, "regenerated_statements"))
+    review_by_task = {row["task_id"]: row for row in reviews["reviews"]}
+    statement_by_task = {row["task_id"]: row for row in statements}
+    records: list[dict[str, Any]] = []
+    for candidate in inventory.get("candidates", []):
+        task_id = str(candidate["task_id"])
+        review = review_by_task.get(task_id, {})
+        statement = statement_by_task.get(task_id, {})
+        qa = review.get("deterministic_qa") or {}
+        eligible_after = review.get("final_status") == "pass" and qa.get("status") == "pass"
+        reasons: list[str] = []
+        if review.get("final_status") != "pass":
+            reasons.append(f"review_status:{review.get('final_status')}")
+        if qa.get("status") != "pass":
+            reasons.append(f"deterministic_qa_status:{qa.get('status')}")
+        records.append(
+            {
+                "task_id": task_id,
+                "repo_id": str(candidate["repo_id"]),
+                "task_time": str(candidate.get("task_time") or ""),
+                "release_split_eligibility": [str(split) for split in candidate.get("release_split_eligibility", [])],
+                "eligible_before_regeneration": bool(candidate.get("selection_eligible_without_paid_outcome")),
+                "eligible_after_regeneration": eligible_after,
+                "statement_digest": statement.get("statement_digest", ""),
+                "review_status": review.get("final_status", "missing"),
+                "deterministic_qa_status": qa.get("status", "missing"),
+                "old_statement_quality_gate": str(candidate.get("statement_quality_gate") or ""),
+                "old_statement_quality_risk_reasons": [str(reason) for reason in candidate.get("statement_quality_risk_reasons", [])],
+                "rejection_reasons_after_regeneration": reasons,
+            }
+        )
+    return records
+
+
+def select_by_repo_split(records: list[dict[str, Any]], *, repos: list[str], splits: list[str], per_split: int) -> dict[str, list[str]]:
+    selected = {f"{repo}/{split}": [] for repo in repos for split in splits}
+    for record in sorted(records, key=lambda row: (row["task_time"], row["task_id"])):
+        if not record["eligible_after_regeneration"]:
+            continue
+        repo = record["repo_id"]
+        if repo not in repos:
+            continue
+        for split in record["release_split_eligibility"]:
+            key = f"{repo}/{split}"
+            if key in selected and len(selected[key]) < per_split:
+                selected[key].append(record["task_id"])
+    return selected
+
+
+def build_statement_screen(config: dict[str, Any]) -> dict[str, Any]:
+    old_screen = read_json(artifact_path(config, "statement_hardened_screen"))
+    reviews = read_json(output_path(config, "statement_reviews"))
+    records = regenerated_candidate_records(config)
+    repos = [str(repo) for repo in config["selection"]["preferred_repos"]]
+    splits = [str(split) for split in config["selection"]["preferred_splits"]]
+    per_split = int(config["selection"]["tasks_per_repo_split"])
+    selected = select_by_repo_split(records, repos=repos, splits=splits, per_split=per_split)
+    selected_counts = {key: len(value) for key, value in sorted(selected.items())}
+    missing = {
+        key: [f"needed {per_split}, found {count} eligible regenerated statements without using paid outcomes"]
+        for key, count in selected_counts.items()
+        if count < per_split
+    }
+    review_counts = Counter(record["review_status"] for record in records)
+    qa_counts = Counter(record["deterministic_qa_status"] for record in records)
+    eligible_before = int(old_screen.get("summary", {}).get("eligible_candidate_count") or sum(1 for row in records if row["eligible_before_regeneration"]))
+    eligible_after = sum(1 for row in records if row["eligible_after_regeneration"])
+    return {
+        "schema_version": "barcarolle.phase1.diff_assisted_statement_screen.v1",
+        "generated_at": stable_generated_at(config),
+        "candidate_count": len(records),
+        "regenerated_statement_count": len(records),
+        "review_pass_count": review_counts.get("pass", 0),
+        "review_reject_count": review_counts.get("reject", 0),
+        "qa_pass_count": qa_counts.get("pass", 0),
+        "qa_reject_count": qa_counts.get("reject", 0),
+        "eligible_count_before_regeneration": eligible_before,
+        "eligible_count_after_regeneration": eligible_after,
+        "selected_task_ids_by_repo_split": selected,
+        "selected_counts_by_repo_split": selected_counts,
+        "remaining_missing_supply": missing,
+        "old_candidates_recovered": eligible_after > eligible_before,
+        "full_statement_hardened_release_recovered": not missing,
+        "replacement_supply_still_needed": bool(missing),
+        "paid_outcome_used_for_selection": False,
+        "paid_acut_calls_made": False,
+        "paid_llm_calls_made": bool(reviews.get("paid_llm_calls_made")),
+        "predictive_validity_established": False,
+        "candidate_screens": records,
+        "summary": {
+            "old_pool_recovery": "partial" if eligible_after > eligible_before and missing else "full" if not missing else "none",
+            "generation_review_failures_are_separate_from_true_task_invalidity": True,
+            "paid_validation_recommended": False,
+            "paid_validation_requires_subsequent_preregistration": True,
+        },
+    }
+
+
+def render_statement_screen_markdown(screen: dict[str, Any]) -> str:
+    lines = [
+        "# Phase 1 Diff-Assisted Statement Screen",
+        "",
+        f"Generated: `{screen['generated_at']}`.",
+        "",
+        "## Summary",
+        "",
+        f"- Candidate count: `{screen['candidate_count']}`.",
+        f"- Regenerated statement count: `{screen['regenerated_statement_count']}`.",
+        f"- Review pass/reject: `{screen['review_pass_count']}` / `{screen['review_reject_count']}`.",
+        f"- Deterministic QA pass/reject: `{screen['qa_pass_count']}` / `{screen['qa_reject_count']}`.",
+        f"- Eligible before regeneration: `{screen['eligible_count_before_regeneration']}`.",
+        f"- Eligible after regeneration: `{screen['eligible_count_after_regeneration']}`.",
+        f"- Selected counts by repo/split: `{screen['selected_counts_by_repo_split']}`.",
+        f"- Remaining missing supply: `{screen['remaining_missing_supply']}`.",
+        f"- Replacement supply still needed: `{screen['replacement_supply_still_needed']}`.",
+        "",
+        "## Interpretation",
+        "",
+        "The regenerated statements recover many old candidates that were previously rejected because the old renderer cut public body summaries at 240 characters. Generation, review, and QA failures are tracked separately from true task invalidity.",
+        "",
+        "Paid validation is not recommended here because no release manifest is frozen in this runbook. Future paid validation requires a subsequent preregistration runbook.",
+        "",
+        "## Candidate Outcomes",
+        "",
+    ]
+    for record in screen["candidate_screens"]:
+        lines.extend(
+            [
+                f"### {record['task_id']}",
+                "",
+                f"- Eligible before: `{record['eligible_before_regeneration']}`.",
+                f"- Eligible after: `{record['eligible_after_regeneration']}`.",
+                f"- Review: `{record['review_status']}`.",
+                f"- QA: `{record['deterministic_qa_status']}`.",
+                f"- After-regeneration rejection reasons: `{record['rejection_reasons_after_regeneration']}`.",
+                "",
+            ]
+        )
+    return "\n".join(lines)
+
+
+def write_statement_screen(config: dict[str, Any]) -> dict[str, Any]:
+    screen = build_statement_screen(config)
+    write_json(output_path(config, "statement_screen"), screen)
+    write_text(output_path(config, "statement_screen_report"), render_statement_screen_markdown(screen))
+    return screen
+
+
 def reviewer_verdict(packet: dict[str, Any], statement: str) -> dict[str, Any]:
     task_id = packet["task_id"]
     reasons: list[str] = []
@@ -921,7 +1072,7 @@ def write_candidate_packets(config: dict[str, Any]) -> dict[str, Any]:
 
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description="Build Phase 1 diff-assisted statement regeneration artifacts.")
-    parser.add_argument("mode", choices=["packets", "generate", "qa"])
+    parser.add_argument("mode", choices=["packets", "generate", "qa", "screen"])
     parser.add_argument("--config", type=Path, default=DEFAULT_CONFIG)
     args = parser.parse_args(argv)
 
@@ -932,6 +1083,8 @@ def main(argv: list[str] | None = None) -> int:
         write_generation_review(config)
     if args.mode == "qa":
         apply_deterministic_qa(config)
+    if args.mode == "screen":
+        write_statement_screen(config)
     return 0
 
 

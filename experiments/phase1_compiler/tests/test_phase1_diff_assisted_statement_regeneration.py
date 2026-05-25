@@ -392,3 +392,45 @@ def test_deterministic_qa_treats_old_truncation_as_recoverable_when_regenerated_
 
     assert qa["status"] == "pass"
     assert qa["checks"]["old_cap_disposition"] == "recoverable_after_regeneration"
+
+
+def test_select_by_repo_split_does_not_use_paid_outcomes() -> None:
+    records = [
+        {
+            "eligible_after_regeneration": True,
+            "historical_paid_context": {"terminal_status": "verified_fail"},
+            "release_split_eligibility": ["B_eval", "H_future"],
+            "repo_id": "demo",
+            "task_id": "demo__002",
+            "task_time": "2024-01-02T00:00:00+00:00",
+        },
+        {
+            "eligible_after_regeneration": True,
+            "historical_paid_context": {"terminal_status": "verified_pass"},
+            "release_split_eligibility": ["B_eval", "H_future"],
+            "repo_id": "demo",
+            "task_id": "demo__001",
+            "task_time": "2024-01-01T00:00:00+00:00",
+        },
+    ]
+
+    selected = diffregen.select_by_repo_split(records, repos=["demo"], splits=["B_eval"], per_split=1)
+
+    assert selected == {"demo/B_eval": ["demo__001"]}
+
+
+def test_select_by_repo_split_reports_repo_split_holes() -> None:
+    records = [
+        {
+            "eligible_after_regeneration": True,
+            "release_split_eligibility": ["B_eval"],
+            "repo_id": "demo",
+            "task_id": "demo__001",
+            "task_time": "2024-01-01T00:00:00+00:00",
+        }
+    ]
+
+    selected = diffregen.select_by_repo_split(records, repos=["demo"], splits=["B_eval", "H_future"], per_split=1)
+
+    assert selected["demo/B_eval"] == ["demo__001"]
+    assert selected["demo/H_future"] == []
