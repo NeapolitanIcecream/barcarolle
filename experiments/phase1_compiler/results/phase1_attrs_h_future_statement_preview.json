@@ -1,0 +1,130 @@
+{
+  "config": "/Users/chenmohan/gits/barcarolle/experiments/phase1_compiler/configs/phase1_attrs_h_future_statement_quality_audit.yaml",
+  "diagnostic_only": true,
+  "does_not_change_paid_outcomes": true,
+  "future_paid_validation_requires_new_preregistration": true,
+  "generated_at": "2026-05-25T01:34:18Z",
+  "paid_acut_calls_made": false,
+  "paid_llm_calls_made": false,
+  "predictive_validity_established": false,
+  "previews": [
+    {
+      "diagnostic_only": true,
+      "editable_implementation_scope": [
+        "src/attr/_make.py"
+      ],
+      "known_non_editable_test_paths": [
+        "tests/test_setattr.py"
+      ],
+      "preview_statement": "Repair attrs behavior described by sanitized public context `issue:680`.\nProblem summary: Using slots class overrides custom `__setattr__` in 20.1.0.\nProblem details excerpt: A public report says a slotted attrs class with a custom __setattr__ worked in 19.3.0, but 20.1.0 replaced that custom behavior with the default slotted behavior.\nEditable implementation scope: src/attr/_make.py.\nKnown non-editable test paths: tests/test_setattr.py.\nVerifier command metadata: uv run --project experiments/phase0_headroom --with \"pytest>=7,<8\" --with \"setuptools<81\" --with \"hypothesis<6\" python -m pytest -q tests/test_setattr.py\nPreserve existing public behavior and do not edit tests, generated metadata, or files outside the editable implementation scope.",
+      "problem_summary": "Using slots class overrides custom `__setattr__` in 20.1.0",
+      "scoreable_result": false,
+      "short_public_excerpt": "A public report says a slotted attrs class with a custom __setattr__ worked in 19.3.0, but 20.1.0 replaced that custom behavior with the default slotted behavior.",
+      "source_kind": "issue",
+      "source_ref": "issue:680",
+      "statement_quality_flags": {
+        "body_summary_hit_old_cap": true,
+        "risk_reasons": [
+          "body_summary_hit_old_240_char_cap",
+          "statement_ends_mid_code_fence",
+          "statement_probably_truncated"
+        ],
+        "statement_probably_truncated": true,
+        "statement_quality_gate": "material_risk"
+      },
+      "task_id": "attrs__hist__012",
+      "verifier_command_metadata": "uv run --project experiments/phase0_headroom --with \"pytest>=7,<8\" --with \"setuptools<81\" --with \"hypothesis<6\" python -m pytest -q tests/test_setattr.py"
+    },
+    {
+      "diagnostic_only": true,
+      "editable_implementation_scope": [
+        "src/attr/_next_gen.py"
+      ],
+      "known_non_editable_test_paths": [
+        "tests/test_next_gen.py"
+      ],
+      "preview_statement": "Repair attrs behavior described by sanitized public context `pr:687`.\nProblem summary: NG: make frozen classes comfortably subclassable.\nProblem details excerpt: A PR-context report says on_setattr=validate gets in the way for frozen define classes and for subclassing frozen classes in the next-gen API.\nEditable implementation scope: src/attr/_next_gen.py.\nKnown non-editable test paths: tests/test_next_gen.py.\nVerifier command metadata: uv run --project experiments/phase0_headroom --with \"pytest>=7,<8\" --with \"setuptools<81\" --with \"hypothesis<6\" python -m pytest -q tests/test_next_gen.py\nPreserve existing public behavior and do not edit tests, generated metadata, or files outside the editable implementation scope.",
+      "problem_summary": "NG: make frozen classes comfortably subclassable",
+      "scoreable_result": false,
+      "short_public_excerpt": "A PR-context report says on_setattr=validate gets in the way for frozen define classes and for subclassing frozen classes in the next-gen API.",
+      "source_kind": "pull_request",
+      "source_ref": "pr:687",
+      "statement_quality_flags": {
+        "body_summary_hit_old_cap": true,
+        "risk_reasons": [
+          "body_summary_hit_old_240_char_cap",
+          "statement_probably_truncated",
+          "pr_context_source"
+        ],
+        "statement_probably_truncated": true,
+        "statement_quality_gate": "material_risk"
+      },
+      "task_id": "attrs__hist__013",
+      "verifier_command_metadata": "uv run --project experiments/phase0_headroom --with \"pytest>=7,<8\" --with \"setuptools<81\" --with \"hypothesis<6\" python -m pytest -q tests/test_next_gen.py"
+    },
+    {
+      "diagnostic_only": true,
+      "editable_implementation_scope": [
+        "src/attr/_make.py"
+      ],
+      "known_non_editable_test_paths": [
+        "tests/test_annotations.py"
+      ],
+      "preview_statement": "Repair attrs behavior described by sanitized public context `issue:593`.\nProblem summary: Deferred type annotations are evaluated in the wrong execution context.\nProblem details excerpt: A public issue reproduces get_type_hints(C.__init__) for an attrs class using a deferred List[int] annotation and expects annotations to resolve in the correct context.\nEditable implementation scope: src/attr/_make.py.\nKnown non-editable test paths: tests/test_annotations.py.\nVerifier command metadata: uv run --project experiments/phase0_headroom --with \"pytest>=7,<8\" --with \"setuptools<81\" --with \"hypothesis<6\" python -m pytest -q tests/test_annotations.py\nPreserve existing public behavior and do not edit tests, generated metadata, or files outside the editable implementation scope.",
+      "problem_summary": "Deferred type annotations are evaluated in the wrong execution context",
+      "scoreable_result": false,
+      "short_public_excerpt": "A public issue reproduces get_type_hints(C.__init__) for an attrs class using a deferred List[int] annotation and expects annotations to resolve in the correct context.",
+      "source_kind": "issue",
+      "source_ref": "issue:593",
+      "statement_quality_flags": {
+        "body_summary_hit_old_cap": true,
+        "risk_reasons": [
+          "body_summary_hit_old_240_char_cap",
+          "statement_ends_mid_code_fence",
+          "statement_probably_truncated"
+        ],
+        "statement_probably_truncated": true,
+        "statement_quality_gate": "material_risk"
+      },
+      "task_id": "attrs__hist__023",
+      "verifier_command_metadata": "uv run --project experiments/phase0_headroom --with \"pytest>=7,<8\" --with \"setuptools<81\" --with \"hypothesis<6\" python -m pytest -q tests/test_annotations.py"
+    },
+    {
+      "diagnostic_only": true,
+      "editable_implementation_scope": [
+        "src/attr/__init__.pyi",
+        "src/attr/_funcs.py"
+      ],
+      "known_non_editable_test_paths": [
+        "tests/test_hooks.py"
+      ],
+      "preview_statement": "Repair attrs behavior described by sanitized public context `issue:766`.\nProblem summary: Field hooks are too clunky with Python 3.10 / string annotations.\nProblem details excerpt: A public issue says Python 3.10 string annotations made field hooks clunky and needed a public helper path for resolving string annotations on attrs fields.\nEditable implementation scope: src/attr/__init__.pyi, src/attr/_funcs.py.\nKnown non-editable test paths: tests/test_hooks.py.\nVerifier command metadata: uv run --project experiments/phase0_headroom --with \"pytest>=7,<8\" --with \"setuptools<81\" --with \"hypothesis<6\" python -m pytest -q tests/test_hooks.py\nPreserve existing public behavior and do not edit tests, generated metadata, or files outside the editable implementation scope.",
+      "problem_summary": "Field hooks are too clunky with Python 3.10 / string annotations",
+      "scoreable_result": false,
+      "short_public_excerpt": "A public issue says Python 3.10 string annotations made field hooks clunky and needed a public helper path for resolving string annotations on attrs fields.",
+      "source_kind": "issue",
+      "source_ref": "issue:766",
+      "statement_quality_flags": {
+        "body_summary_hit_old_cap": true,
+        "risk_reasons": [
+          "body_summary_hit_old_240_char_cap",
+          "statement_probably_truncated",
+          "resolve_types_attribs_api_behavior_under_specified"
+        ],
+        "statement_probably_truncated": true,
+        "statement_quality_gate": "material_risk"
+      },
+      "task_id": "attrs__hist__027",
+      "verifier_command_metadata": "uv run --project experiments/phase0_headroom --with \"pytest>=7,<8\" --with \"setuptools<81\" --with \"hypothesis<6\" python -m pytest -q tests/test_hooks.py"
+    }
+  ],
+  "production_ranking_status": "not_produced",
+  "schema_version": "barcarolle.phase1.attrs_h_future_statement_preview.v1",
+  "source_task_design_audit": "experiments/phase1_compiler/results/phase1_attrs_h_future_task_design_audit.json",
+  "status": "computed",
+  "summary": {
+    "preview_count": 4,
+    "scoreable_result_count": 0,
+    "statements_cut_mid_code_or_sentence": 0
+  }
+}

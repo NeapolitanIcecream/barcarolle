@@ -123,3 +123,19 @@ def test_sensitivity_reports_insufficient_clean_attrs_h_future_evidence() -> Non
     assert strict["scoreable_cells"] == 0
     assert strict["pass_rate"] is None
     assert strict["interpretation"] == "insufficient_clean_attrs_h_future_evidence"
+
+
+def test_statement_previews_use_implementation_scope_only() -> None:
+    config = audit.load_config(CONFIG)
+    task_audit = audit.build_task_design_audit(config)
+
+    preview = audit.build_statement_preview(config, task_audit)
+
+    assert preview["diagnostic_only"] is True
+    assert preview["does_not_change_paid_outcomes"] is True
+    for row in preview["previews"]:
+        assert row["editable_implementation_scope"]
+        assert all(not path.startswith("tests/") for path in row["editable_implementation_scope"])
+        assert all(path.startswith("tests/") for path in row["known_non_editable_test_paths"])
+        assert "```" not in row["preview_statement"]
+        assert "diff --git" not in row["preview_statement"]

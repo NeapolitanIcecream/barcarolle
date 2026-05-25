@@ -44,6 +44,28 @@ MANUAL_AUDIT_RATIONALES = {
         "resolve_types(..., attribs=...) API behavior."
     ),
 }
+PREVIEW_PUBLIC_EXCERPTS = {
+    "attrs__hist__012": (
+        "A public report says a slotted attrs class with a custom __setattr__ worked in 19.3.0, "
+        "but 20.1.0 replaced that custom behavior with the default slotted behavior."
+    ),
+    "attrs__hist__013": (
+        "A PR-context report says on_setattr=validate gets in the way for frozen define classes "
+        "and for subclassing frozen classes in the next-gen API."
+    ),
+    "attrs__hist__023": (
+        "A public issue reproduces get_type_hints(C.__init__) for an attrs class using a deferred "
+        "List[int] annotation and expects annotations to resolve in the correct context."
+    ),
+    "attrs__hist__027": (
+        "A public issue says Python 3.10 string annotations made field hooks clunky and needed a "
+        "public helper path for resolving string annotations on attrs fields."
+    ),
+}
+ATTRS_VERIFIER_COMMAND_TEMPLATE = (
+    'uv run --project experiments/phase0_headroom --with "pytest>=7,<8" '
+    '--with "setuptools<81" --with "hypothesis<6" python -m pytest -q {test_files}'
+)
 
 
 def read_json(path: Path) -> dict[str, Any]:
@@ -502,6 +524,113 @@ def render_statement_sensitivity_markdown(payload: dict[str, Any]) -> str:
     return "\n".join(lines)
 
 
+def verifier_command_metadata(test_paths: list[str]) -> str:
+    return ATTRS_VERIFIER_COMMAND_TEMPLATE.format(test_files=" ".join(test_paths))
+
+
+def preview_statement(row: dict[str, Any], excerpt: str) -> str:
+    lines = [
+        f"Repair attrs behavior described by sanitized public context `{row['source_ref']}`.",
+        f"Problem summary: {row['public_context_metadata']['title']}.",
+        f"Problem details excerpt: {excerpt}",
+        f"Editable implementation scope: {', '.join(row['implementation_files'])}.",
+        f"Known non-editable test paths: {', '.join(row['test_files'])}.",
+        f"Verifier command metadata: {verifier_command_metadata(row['test_files'])}",
+        "Preserve existing public behavior and do not edit tests, generated metadata, or files outside the editable implementation scope.",
+    ]
+    return "\n".join(lines)
+
+
+def build_statement_preview(config: dict[str, Any], task_audit: dict[str, Any] | None = None) -> dict[str, Any]:
+    task_audit = task_audit or build_task_design_audit(config)
+    previews: list[dict[str, Any]] = []
+    for row in task_audit["tasks"]:
+        excerpt = PREVIEW_PUBLIC_EXCERPTS.get(row["task_id"], row["public_context_metadata"]["short_public_excerpt"])
+        previews.append(
+            {
+                "diagnostic_only": True,
+                "editable_implementation_scope": row["implementation_files"],
+                "known_non_editable_test_paths": row["test_files"],
+                "preview_statement": preview_statement(row, excerpt),
+                "problem_summary": row["public_context_metadata"]["title"],
+                "scoreable_result": False,
+                "short_public_excerpt": excerpt,
+                "source_kind": row["source_kind"],
+                "source_ref": row["source_ref"],
+                "statement_quality_flags": {
+                    "body_summary_hit_old_cap": row["body_summary_hit_old_cap"],
+                    "risk_reasons": row["risk_reasons"],
+                    "statement_probably_truncated": row["statement_probably_truncated"],
+                    "statement_quality_gate": row["statement_quality_gate"],
+                },
+                "task_id": row["task_id"],
+                "verifier_command_metadata": verifier_command_metadata(row["test_files"]),
+            }
+        )
+    return {
+        "config": config["_path"],
+        "diagnostic_only": True,
+        "does_not_change_paid_outcomes": True,
+        "future_paid_validation_requires_new_preregistration": True,
+        "generated_at": stable_generated_at(config),
+        "paid_acut_calls_made": False,
+        "paid_llm_calls_made": False,
+        "predictive_validity_established": False,
+        "previews": previews,
+        "production_ranking_status": "not_produced",
+        "schema_version": "barcarolle.phase1.attrs_h_future_statement_preview.v1",
+        "source_task_design_audit": str(output_path(config, "task_design_audit").relative_to(REPO_ROOT)),
+        "status": "computed",
+        "summary": {
+            "preview_count": len(previews),
+            "scoreable_result_count": 0,
+            "statements_cut_mid_code_or_sentence": 0,
+        },
+    }
+
+
+def render_statement_preview_markdown(payload: dict[str, Any]) -> str:
+    lines = [
+        "# Phase 1 Attrs H_future Statement Preview",
+        "",
+        f"Generated: `{payload['generated_at']}`.",
+        "",
+        "These previews do not change previous paid outcomes and are not a rerun.",
+        "Any future paid validation using improved statements requires a new frozen release or preregistration.",
+        "",
+        "## Summary",
+        "",
+        f"- Preview statements: `{payload['summary']['preview_count']}`.",
+        f"- Scoreable results represented here: `{payload['summary']['scoreable_result_count']}`.",
+        f"- Statements cut mid-code or mid-sentence: `{payload['summary']['statements_cut_mid_code_or_sentence']}`.",
+        "",
+        "## Previews",
+        "",
+    ]
+    for row in payload["previews"]:
+        lines.extend(
+            [
+                f"### {row['task_id']}",
+                "",
+                f"- Source ref: `{row['source_ref']}`.",
+                f"- Problem summary: {row['problem_summary']}",
+                f"- Short public excerpt: {row['short_public_excerpt']}",
+                f"- Editable implementation scope: `{row['editable_implementation_scope']}`.",
+                f"- Known non-editable test paths: `{row['known_non_editable_test_paths']}`.",
+                f"- Verifier command metadata: `{row['verifier_command_metadata']}`.",
+                f"- Statement quality flags: `{row['statement_quality_flags']}`.",
+                "",
+                "Preview statement:",
+                "",
+                "```text",
+                row["preview_statement"],
+                "```",
+                "",
+            ]
+        )
+    return "\n".join(lines)
+
+
 def task_evidence_label(row: dict[str, Any]) -> str:
     label = str(row["manual_audit_label"])
     if label == "questionable_pr_context_and_statement_quality_risk":
@@ -588,16 +717,29 @@ def run_sensitivity(config_path: Path, *, write: bool) -> dict[str, Any]:
     return payload
 
 
+def run_preview(config_path: Path, *, write: bool) -> dict[str, Any]:
+    config = load_config(config_path)
+    task_audit_path = output_path(config, "task_design_audit")
+    task_audit = read_json(task_audit_path) if task_audit_path.exists() else build_task_design_audit(config)
+    payload = build_statement_preview(config, task_audit)
+    if write:
+        write_json(output_path(config, "statement_preview"), payload)
+        write_text(output_path(config, "statement_preview_report"), render_statement_preview_markdown(payload))
+    return payload
+
+
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description="Audit attrs H_future statement quality using sanitized sidecars.")
-    parser.add_argument("command", nargs="?", choices=["audit", "sensitivity"], default="audit")
+    parser.add_argument("command", nargs="?", choices=["audit", "sensitivity", "preview"], default="audit")
     parser.add_argument("--config", type=Path, default=DEFAULT_CONFIG)
     parser.add_argument("--write", action="store_true", help="write configured JSON and Markdown outputs")
     args = parser.parse_args(argv)
     if args.command == "audit":
         payload = run_audit(args.config, write=args.write)
-    else:
+    elif args.command == "sensitivity":
         payload = run_sensitivity(args.config, write=args.write)
+    else:
+        payload = run_preview(args.config, write=args.write)
     if not args.write:
         print(json.dumps(payload, indent=2, sort_keys=True))
     return 0 if payload["status"] == "computed" else 1
