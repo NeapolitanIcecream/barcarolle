@@ -1,0 +1,47 @@
+{
+  "brier_score": "not_applicable_underpowered",
+  "cost_per_scoreable_cell_usd": 0.5,
+  "cost_per_submitted_cell_usd": 0.5,
+  "g_mini_plus_b_real_to_w_real_available": false,
+  "g_mini_to_w_real_available": false,
+  "generated_at": "2026-05-25T11:42:46+00:00",
+  "harness_metrics": {
+    "codex_workspace": {
+      "cell_count": 4,
+      "scoreable_cell_count": 4,
+      "scoreable_rate": 1.0,
+      "terminal_status_counts": {
+        "verified_pass": 4
+      }
+    },
+    "kilo_workspace": {
+      "cell_count": 4,
+      "scoreable_cell_count": 4,
+      "scoreable_rate": 1.0,
+      "terminal_status_counts": {
+        "verified_fail": 1,
+        "verified_pass": 3
+      }
+    }
+  },
+  "mae": "not_applicable_underpowered",
+  "median_latency_seconds": 75.069,
+  "rmse": "not_applicable_underpowered",
+  "schema_version": "barcarolle.workspace_acut_metrics.v1",
+  "scoreable_cell_count": 8,
+  "split_metrics": {
+    "B_eval": {
+      "cell_count": 8,
+      "pass_rate": 0.875,
+      "scoreable_cell_count": 8,
+      "verified_fail_count": 1,
+      "verified_pass_count": 7
+    }
+  },
+  "status": "workspace_acut_matrix_complete",
+  "terminal_status_counts": {
+    "verified_fail": 1,
+    "verified_pass": 7
+  },
+  "total_cells": 8
+}
