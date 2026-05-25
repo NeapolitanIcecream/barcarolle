@@ -1,0 +1,60 @@
+{
+  "branch_status": "## codex/restart-benchmark-compiler...origin/codex/restart-benchmark-compiler [ahead 245]",
+  "checks": {
+    "followup_runbook_written_by_worker_false": true,
+    "paid_acut_calls_not_started": true,
+    "planned_cells_32": true,
+    "predictive_validity_established_false_before_paid_validation": true,
+    "preregistration_status_written": true,
+    "release_manifest_status_frozen": true,
+    "selected_task_count_16": true,
+    "validation_decision_ready_for_user_approved_paid_validation": true
+  },
+  "codex_version": "codex-cli 0.133.0",
+  "endpoint_env_present_after_zshrc": true,
+  "generated_at": "2026-05-25T11:02:40+00:00",
+  "git_diff_check": {
+    "returncode": 0,
+    "stderr": "",
+    "stdout": ""
+  },
+  "head": "347037b96071714abb46856ff6818eadcdf38b05",
+  "input_artifact_digests": {
+    "experiments/phase0_headroom/certified_tasks/attrs_clean_outcome_unseen_supply_certified_tasks.jsonl": "sha256:ac3ed7e8bd32a1303b8b2483ef4bf808492911b190caf260c437b5a83244bb16",
+    "experiments/phase0_headroom/certified_tasks/boltons_certified_tasks.jsonl": "sha256:214c8c01bc0a3948c967cacc8df9b8fa10647dbd5339da80ac3264c8c7c46cd0",
+    "experiments/phase0_headroom/certified_tasks/boltons_clean_outcome_unseen_supply_certified_tasks.jsonl": "sha256:6799d2eb553652d8330bd8c26075b11011705db46b1edf24704c9c97b6991f61",
+    "experiments/phase0_headroom/target_profiles/boltons_target_profile.json": "sha256:d4ad3295590f8d04cc716ffe32d14471dfe2e9575efd58c5d829a722a90fde5f",
+    "experiments/phase1_compiler/results/phase1_statement_hardened_after_canonical_repair_inventory.json": "sha256:c02a5643f12e464b076fc4a9f1a47e2f72478b0c3cdcbc3e991e9e3f206a60f3",
+    "experiments/phase1_compiler/results/phase1_statement_hardened_after_canonical_repair_preregistration.json": "sha256:413270868eb6ea0f13f0ffa9f32a85c9870d71c30d20650e6a9e5847e8fb185e",
+    "experiments/phase1_compiler/results/phase1_statement_hardened_after_canonical_repair_release_manifest.json": "sha256:ce38a3cac154feffaa5137871999f9ff2ebaea0198e92b5ef00f2a1482dae8d0",
+    "experiments/phase1_compiler/results/phase1_statement_hardened_after_canonical_repair_release_preview.json": "sha256:9f7b7d9eba5f9a87257d604f7aa5844ae01b89af01927b89806e42f9dae1391d",
+    "experiments/phase1_compiler/results/phase1_statement_hardened_after_canonical_repair_screen.json": "sha256:9e84ff93f42fa48b226e6fd211f38ee137a1e5bb4af8cd0c9aaad9b78b0965ed",
+    "experiments/phase1_compiler/results/phase1_statement_hardened_after_canonical_repair_validation_decision.json": "sha256:ae8de545a1ecf6d248bb169f45318aa76d0b8c91df26ed3d0e7456f1aa45d938"
+  },
+  "kilo_version": "7.3.1",
+  "paid_validation_approval": {
+    "granted_by": "coordinating_session",
+    "scope": "docs/experiments/phase-1-statement-hardened-paid-validation-runbook.md"
+  },
+  "python_version": "Python 3.11.13",
+  "selected_task_ids": [
+    "attrs__hist__001",
+    "attrs__hist__003",
+    "attrs__hist__004",
+    "attrs__hist__008",
+    "attrs__hist__012",
+    "attrs__hist__013",
+    "attrs__hist__023",
+    "attrs__hist__027",
+    "boltons__clean_ext__001",
+    "boltons__clean_ext__008",
+    "boltons__clean_ext__010",
+    "boltons__hist__011",
+    "boltons__clean_ext__017",
+    "boltons__hist__022",
+    "boltons__hist__023",
+    "boltons__hist__027"
+  ],
+  "status": "ready_for_paid_validation_loader_work",
+  "uv_version": "uv 0.11.16 (Homebrew 2026-05-21 aarch64-apple-darwin)"
+}
