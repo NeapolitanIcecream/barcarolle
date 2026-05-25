@@ -107,10 +107,15 @@
     {
       "blockers": [],
       "commit_target": "Analyze predictive threshold and power",
-      "outputs": [],
-      "status": "pending",
+      "outputs": [
+        "experiments/phase1_compiler/results/phase1_overnight_statement_hardened_threshold_analysis.json",
+        "experiments/phase1_compiler/reports/phase1_overnight_statement_hardened_threshold_analysis.md",
+        "experiments/phase1_compiler/results/phase1_overnight_statement_hardened_power_analysis.json",
+        "experiments/phase1_compiler/reports/phase1_overnight_statement_hardened_power_analysis.md"
+      ],
+      "status": "completed",
       "step": "5",
-      "updated_at": "2026-05-25T14:49:38Z"
+      "updated_at": "2026-05-25T14:52:13Z"
     },
     {
       "blockers": [],

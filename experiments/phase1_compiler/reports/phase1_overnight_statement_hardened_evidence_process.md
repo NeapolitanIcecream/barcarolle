@@ -27,7 +27,7 @@ Status: `pass`.
 | 2 | completed | Build statement-hardened task outcome matrix | experiments/phase1_compiler/results/phase1_overnight_statement_hardened_task_outcome_matrix.json, experiments/phase1_compiler/reports/phase1_overnight_statement_hardened_task_outcome_matrix.md |  |
 | 3 | completed | Classify statement-hardened paid failures | experiments/phase1_compiler/results/phase1_overnight_statement_hardened_failure_taxonomy.json, experiments/phase1_compiler/reports/phase1_overnight_statement_hardened_failure_taxonomy.md |  |
 | 4 | completed | Analyze statement-hardened result strata | experiments/phase1_compiler/results/phase1_overnight_statement_hardened_strata_analysis.json, experiments/phase1_compiler/reports/phase1_overnight_statement_hardened_strata_analysis.md |  |
-| 5 | pending | Analyze predictive threshold and power |  |  |
+| 5 | completed | Analyze predictive threshold and power | experiments/phase1_compiler/results/phase1_overnight_statement_hardened_threshold_analysis.json, experiments/phase1_compiler/reports/phase1_overnight_statement_hardened_threshold_analysis.md, experiments/phase1_compiler/results/phase1_overnight_statement_hardened_power_analysis.json, experiments/phase1_compiler/reports/phase1_overnight_statement_hardened_power_analysis.md |  |
 | 6 | pending | Rank compiler calibration options |  |  |
 | 7 | pending | Assess local supply for statement-hardened expansion |  |  |
 | 8 | pending | Write proposal alignment memo for paid evidence |  |  |
