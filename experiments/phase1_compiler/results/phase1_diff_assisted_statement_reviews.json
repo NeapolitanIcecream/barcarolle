@@ -1,5 +1,9 @@
 {
   "candidate_count": 22,
+  "deterministic_qa_counts": {
+    "pass": 19,
+    "reject": 3
+  },
   "estimated_incremental_cost_usd": 0.0,
   "generated_at": "2026-05-25T02:52:58Z",
   "paid_acut_calls_made": false,
@@ -17,6 +21,26 @@
         "leakage_pass": true,
         "scope_pass": true,
         "sufficiency_pass": true
+      },
+      "deterministic_qa": {
+        "checks": {
+          "closed_code_fences": true,
+          "editable_paths_are_implementation_only": true,
+          "expected_behavior_present": true,
+          "length_status": "target_range",
+          "no_hidden_verifier_markers": true,
+          "no_paid_outcome_status_text": true,
+          "no_raw_diff_markers": true,
+          "no_target_commit_hash": true,
+          "non_editable_tests_listed_separately": true,
+          "old_cap_disposition": "recoverable_after_regeneration",
+          "problem_summary_present": true,
+          "statement_digest_stable": true
+        },
+        "reasons": [
+          "deterministic_qa_passed"
+        ],
+        "status": "pass"
       },
       "final_status": "pass",
       "iteration_count": 1,
@@ -38,6 +62,26 @@
         "scope_pass": true,
         "sufficiency_pass": true
       },
+      "deterministic_qa": {
+        "checks": {
+          "closed_code_fences": true,
+          "editable_paths_are_implementation_only": true,
+          "expected_behavior_present": true,
+          "length_status": "target_range",
+          "no_hidden_verifier_markers": true,
+          "no_paid_outcome_status_text": true,
+          "no_raw_diff_markers": true,
+          "no_target_commit_hash": true,
+          "non_editable_tests_listed_separately": true,
+          "old_cap_disposition": "recoverable_after_regeneration",
+          "problem_summary_present": true,
+          "statement_digest_stable": true
+        },
+        "reasons": [
+          "deterministic_qa_passed"
+        ],
+        "status": "pass"
+      },
       "final_status": "pass",
       "iteration_count": 1,
       "reasons": [
@@ -57,6 +101,26 @@
         "leakage_pass": true,
         "scope_pass": true,
         "sufficiency_pass": true
+      },
+      "deterministic_qa": {
+        "checks": {
+          "closed_code_fences": true,
+          "editable_paths_are_implementation_only": true,
+          "expected_behavior_present": true,
+          "length_status": "target_range",
+          "no_hidden_verifier_markers": true,
+          "no_paid_outcome_status_text": true,
+          "no_raw_diff_markers": true,
+          "no_target_commit_hash": true,
+          "non_editable_tests_listed_separately": true,
+          "old_cap_disposition": "recoverable_after_regeneration",
+          "problem_summary_present": true,
+          "statement_digest_stable": true
+        },
+        "reasons": [
+          "deterministic_qa_passed"
+        ],
+        "status": "pass"
       },
       "final_status": "pass",
       "iteration_count": 1,
@@ -78,6 +142,26 @@
         "scope_pass": true,
         "sufficiency_pass": true
       },
+      "deterministic_qa": {
+        "checks": {
+          "closed_code_fences": true,
+          "editable_paths_are_implementation_only": true,
+          "expected_behavior_present": true,
+          "length_status": "target_range",
+          "no_hidden_verifier_markers": true,
+          "no_paid_outcome_status_text": true,
+          "no_raw_diff_markers": true,
+          "no_target_commit_hash": true,
+          "non_editable_tests_listed_separately": true,
+          "old_cap_disposition": "recoverable_after_regeneration",
+          "problem_summary_present": true,
+          "statement_digest_stable": true
+        },
+        "reasons": [
+          "deterministic_qa_passed"
+        ],
+        "status": "pass"
+      },
       "final_status": "pass",
       "iteration_count": 1,
       "reasons": [
@@ -97,6 +181,26 @@
         "leakage_pass": true,
         "scope_pass": true,
         "sufficiency_pass": true
+      },
+      "deterministic_qa": {
+        "checks": {
+          "closed_code_fences": true,
+          "editable_paths_are_implementation_only": true,
+          "expected_behavior_present": true,
+          "length_status": "target_range",
+          "no_hidden_verifier_markers": true,
+          "no_paid_outcome_status_text": true,
+          "no_raw_diff_markers": true,
+          "no_target_commit_hash": true,
+          "non_editable_tests_listed_separately": true,
+          "old_cap_disposition": "recoverable_after_regeneration",
+          "problem_summary_present": true,
+          "statement_digest_stable": true
+        },
+        "reasons": [
+          "deterministic_qa_passed"
+        ],
+        "status": "pass"
       },
       "final_status": "pass",
       "iteration_count": 1,
@@ -118,6 +222,26 @@
         "scope_pass": true,
         "sufficiency_pass": true
       },
+      "deterministic_qa": {
+        "checks": {
+          "closed_code_fences": true,
+          "editable_paths_are_implementation_only": true,
+          "expected_behavior_present": true,
+          "length_status": "target_range",
+          "no_hidden_verifier_markers": true,
+          "no_paid_outcome_status_text": true,
+          "no_raw_diff_markers": true,
+          "no_target_commit_hash": true,
+          "non_editable_tests_listed_separately": true,
+          "old_cap_disposition": "recoverable_after_regeneration",
+          "problem_summary_present": true,
+          "statement_digest_stable": true
+        },
+        "reasons": [
+          "deterministic_qa_passed"
+        ],
+        "status": "pass"
+      },
       "final_status": "pass",
       "iteration_count": 1,
       "reasons": [
@@ -137,6 +261,26 @@
         "leakage_pass": true,
         "scope_pass": true,
         "sufficiency_pass": true
+      },
+      "deterministic_qa": {
+        "checks": {
+          "closed_code_fences": true,
+          "editable_paths_are_implementation_only": true,
+          "expected_behavior_present": true,
+          "length_status": "target_range",
+          "no_hidden_verifier_markers": true,
+          "no_paid_outcome_status_text": true,
+          "no_raw_diff_markers": true,
+          "no_target_commit_hash": true,
+          "non_editable_tests_listed_separately": true,
+          "old_cap_disposition": "recoverable_after_regeneration",
+          "problem_summary_present": true,
+          "statement_digest_stable": true
+        },
+        "reasons": [
+          "deterministic_qa_passed"
+        ],
+        "status": "pass"
       },
       "final_status": "pass",
       "iteration_count": 1,
@@ -158,6 +302,26 @@
         "scope_pass": true,
         "sufficiency_pass": false
       },
+      "deterministic_qa": {
+        "checks": {
+          "closed_code_fences": true,
+          "editable_paths_are_implementation_only": true,
+          "expected_behavior_present": true,
+          "length_status": "target_range",
+          "no_hidden_verifier_markers": true,
+          "no_paid_outcome_status_text": true,
+          "no_raw_diff_markers": true,
+          "no_target_commit_hash": true,
+          "non_editable_tests_listed_separately": true,
+          "old_cap_disposition": "not_recovered_by_regeneration",
+          "problem_summary_present": true,
+          "statement_digest_stable": true
+        },
+        "reasons": [
+          "review_status:reject"
+        ],
+        "status": "reject"
+      },
       "final_status": "reject",
       "iteration_count": 1,
       "reasons": [
@@ -177,6 +341,26 @@
         "leakage_pass": true,
         "scope_pass": true,
         "sufficiency_pass": true
+      },
+      "deterministic_qa": {
+        "checks": {
+          "closed_code_fences": true,
+          "editable_paths_are_implementation_only": true,
+          "expected_behavior_present": true,
+          "length_status": "target_range",
+          "no_hidden_verifier_markers": true,
+          "no_paid_outcome_status_text": true,
+          "no_raw_diff_markers": true,
+          "no_target_commit_hash": true,
+          "non_editable_tests_listed_separately": true,
+          "old_cap_disposition": "recoverable_after_regeneration",
+          "problem_summary_present": true,
+          "statement_digest_stable": true
+        },
+        "reasons": [
+          "deterministic_qa_passed"
+        ],
+        "status": "pass"
       },
       "final_status": "pass",
       "iteration_count": 1,
@@ -198,6 +382,26 @@
         "scope_pass": true,
         "sufficiency_pass": true
       },
+      "deterministic_qa": {
+        "checks": {
+          "closed_code_fences": true,
+          "editable_paths_are_implementation_only": true,
+          "expected_behavior_present": true,
+          "length_status": "target_range",
+          "no_hidden_verifier_markers": true,
+          "no_paid_outcome_status_text": true,
+          "no_raw_diff_markers": true,
+          "no_target_commit_hash": true,
+          "non_editable_tests_listed_separately": true,
+          "old_cap_disposition": "recoverable_after_regeneration",
+          "problem_summary_present": true,
+          "statement_digest_stable": true
+        },
+        "reasons": [
+          "deterministic_qa_passed"
+        ],
+        "status": "pass"
+      },
       "final_status": "pass",
       "iteration_count": 1,
       "reasons": [
@@ -217,6 +421,26 @@
         "leakage_pass": true,
         "scope_pass": true,
         "sufficiency_pass": true
+      },
+      "deterministic_qa": {
+        "checks": {
+          "closed_code_fences": true,
+          "editable_paths_are_implementation_only": true,
+          "expected_behavior_present": true,
+          "length_status": "target_range",
+          "no_hidden_verifier_markers": true,
+          "no_paid_outcome_status_text": true,
+          "no_raw_diff_markers": true,
+          "no_target_commit_hash": true,
+          "non_editable_tests_listed_separately": true,
+          "old_cap_disposition": "recoverable_after_regeneration",
+          "problem_summary_present": true,
+          "statement_digest_stable": true
+        },
+        "reasons": [
+          "deterministic_qa_passed"
+        ],
+        "status": "pass"
       },
       "final_status": "pass",
       "iteration_count": 1,
@@ -238,6 +462,26 @@
         "scope_pass": true,
         "sufficiency_pass": true
       },
+      "deterministic_qa": {
+        "checks": {
+          "closed_code_fences": true,
+          "editable_paths_are_implementation_only": true,
+          "expected_behavior_present": true,
+          "length_status": "target_range",
+          "no_hidden_verifier_markers": true,
+          "no_paid_outcome_status_text": true,
+          "no_raw_diff_markers": true,
+          "no_target_commit_hash": true,
+          "non_editable_tests_listed_separately": true,
+          "old_cap_disposition": "recoverable_after_regeneration",
+          "problem_summary_present": true,
+          "statement_digest_stable": true
+        },
+        "reasons": [
+          "deterministic_qa_passed"
+        ],
+        "status": "pass"
+      },
       "final_status": "pass",
       "iteration_count": 1,
       "reasons": [
@@ -257,6 +501,26 @@
         "leakage_pass": true,
         "scope_pass": true,
         "sufficiency_pass": true
+      },
+      "deterministic_qa": {
+        "checks": {
+          "closed_code_fences": true,
+          "editable_paths_are_implementation_only": true,
+          "expected_behavior_present": true,
+          "length_status": "target_range",
+          "no_hidden_verifier_markers": true,
+          "no_paid_outcome_status_text": true,
+          "no_raw_diff_markers": true,
+          "no_target_commit_hash": true,
+          "non_editable_tests_listed_separately": true,
+          "old_cap_disposition": "recoverable_after_regeneration",
+          "problem_summary_present": true,
+          "statement_digest_stable": true
+        },
+        "reasons": [
+          "deterministic_qa_passed"
+        ],
+        "status": "pass"
       },
       "final_status": "pass",
       "iteration_count": 1,
@@ -278,6 +542,26 @@
         "scope_pass": true,
         "sufficiency_pass": true
       },
+      "deterministic_qa": {
+        "checks": {
+          "closed_code_fences": true,
+          "editable_paths_are_implementation_only": true,
+          "expected_behavior_present": true,
+          "length_status": "target_range",
+          "no_hidden_verifier_markers": true,
+          "no_paid_outcome_status_text": true,
+          "no_raw_diff_markers": true,
+          "no_target_commit_hash": true,
+          "non_editable_tests_listed_separately": true,
+          "old_cap_disposition": "recoverable_after_regeneration",
+          "problem_summary_present": true,
+          "statement_digest_stable": true
+        },
+        "reasons": [
+          "deterministic_qa_passed"
+        ],
+        "status": "pass"
+      },
       "final_status": "pass",
       "iteration_count": 1,
       "reasons": [
@@ -297,6 +581,26 @@
         "leakage_pass": true,
         "scope_pass": true,
         "sufficiency_pass": true
+      },
+      "deterministic_qa": {
+        "checks": {
+          "closed_code_fences": true,
+          "editable_paths_are_implementation_only": true,
+          "expected_behavior_present": true,
+          "length_status": "target_range",
+          "no_hidden_verifier_markers": true,
+          "no_paid_outcome_status_text": true,
+          "no_raw_diff_markers": true,
+          "no_target_commit_hash": true,
+          "non_editable_tests_listed_separately": true,
+          "old_cap_disposition": "recoverable_after_regeneration",
+          "problem_summary_present": true,
+          "statement_digest_stable": true
+        },
+        "reasons": [
+          "deterministic_qa_passed"
+        ],
+        "status": "pass"
       },
       "final_status": "pass",
       "iteration_count": 1,
@@ -318,6 +622,26 @@
         "scope_pass": true,
         "sufficiency_pass": true
       },
+      "deterministic_qa": {
+        "checks": {
+          "closed_code_fences": true,
+          "editable_paths_are_implementation_only": true,
+          "expected_behavior_present": true,
+          "length_status": "target_range",
+          "no_hidden_verifier_markers": true,
+          "no_paid_outcome_status_text": true,
+          "no_raw_diff_markers": true,
+          "no_target_commit_hash": true,
+          "non_editable_tests_listed_separately": true,
+          "old_cap_disposition": "recoverable_after_regeneration",
+          "problem_summary_present": true,
+          "statement_digest_stable": true
+        },
+        "reasons": [
+          "deterministic_qa_passed"
+        ],
+        "status": "pass"
+      },
       "final_status": "pass",
       "iteration_count": 1,
       "reasons": [
@@ -337,6 +661,26 @@
         "leakage_pass": true,
         "scope_pass": true,
         "sufficiency_pass": true
+      },
+      "deterministic_qa": {
+        "checks": {
+          "closed_code_fences": true,
+          "editable_paths_are_implementation_only": true,
+          "expected_behavior_present": true,
+          "length_status": "target_range",
+          "no_hidden_verifier_markers": true,
+          "no_paid_outcome_status_text": true,
+          "no_raw_diff_markers": true,
+          "no_target_commit_hash": true,
+          "non_editable_tests_listed_separately": true,
+          "old_cap_disposition": "recoverable_after_regeneration",
+          "problem_summary_present": true,
+          "statement_digest_stable": true
+        },
+        "reasons": [
+          "deterministic_qa_passed"
+        ],
+        "status": "pass"
       },
       "final_status": "pass",
       "iteration_count": 1,
@@ -358,6 +702,26 @@
         "scope_pass": true,
         "sufficiency_pass": true
       },
+      "deterministic_qa": {
+        "checks": {
+          "closed_code_fences": true,
+          "editable_paths_are_implementation_only": true,
+          "expected_behavior_present": true,
+          "length_status": "target_range",
+          "no_hidden_verifier_markers": true,
+          "no_paid_outcome_status_text": true,
+          "no_raw_diff_markers": true,
+          "no_target_commit_hash": true,
+          "non_editable_tests_listed_separately": true,
+          "old_cap_disposition": "recoverable_after_regeneration",
+          "problem_summary_present": true,
+          "statement_digest_stable": true
+        },
+        "reasons": [
+          "deterministic_qa_passed"
+        ],
+        "status": "pass"
+      },
       "final_status": "pass",
       "iteration_count": 1,
       "reasons": [
@@ -378,6 +742,26 @@
         "scope_pass": true,
         "sufficiency_pass": true
       },
+      "deterministic_qa": {
+        "checks": {
+          "closed_code_fences": true,
+          "editable_paths_are_implementation_only": true,
+          "expected_behavior_present": true,
+          "length_status": "target_range",
+          "no_hidden_verifier_markers": true,
+          "no_paid_outcome_status_text": true,
+          "no_raw_diff_markers": true,
+          "no_target_commit_hash": true,
+          "non_editable_tests_listed_separately": true,
+          "old_cap_disposition": "recoverable_after_regeneration",
+          "problem_summary_present": true,
+          "statement_digest_stable": true
+        },
+        "reasons": [
+          "deterministic_qa_passed"
+        ],
+        "status": "pass"
+      },
       "final_status": "pass",
       "iteration_count": 1,
       "reasons": [
@@ -397,6 +781,26 @@
         "leakage_pass": true,
         "scope_pass": true,
         "sufficiency_pass": false
+      },
+      "deterministic_qa": {
+        "checks": {
+          "closed_code_fences": true,
+          "editable_paths_are_implementation_only": true,
+          "expected_behavior_present": true,
+          "length_status": "target_range",
+          "no_hidden_verifier_markers": true,
+          "no_paid_outcome_status_text": true,
+          "no_raw_diff_markers": true,
+          "no_target_commit_hash": true,
+          "non_editable_tests_listed_separately": true,
+          "old_cap_disposition": "not_applicable",
+          "problem_summary_present": true,
+          "statement_digest_stable": true
+        },
+        "reasons": [
+          "review_status:reject"
+        ],
+        "status": "reject"
       },
       "final_status": "reject",
       "iteration_count": 1,
@@ -419,6 +823,26 @@
         "scope_pass": true,
         "sufficiency_pass": false
       },
+      "deterministic_qa": {
+        "checks": {
+          "closed_code_fences": true,
+          "editable_paths_are_implementation_only": true,
+          "expected_behavior_present": true,
+          "length_status": "target_range",
+          "no_hidden_verifier_markers": true,
+          "no_paid_outcome_status_text": true,
+          "no_raw_diff_markers": true,
+          "no_target_commit_hash": true,
+          "non_editable_tests_listed_separately": true,
+          "old_cap_disposition": "not_applicable",
+          "problem_summary_present": true,
+          "statement_digest_stable": true
+        },
+        "reasons": [
+          "review_status:reject"
+        ],
+        "status": "reject"
+      },
       "final_status": "reject",
       "iteration_count": 1,
       "reasons": [
@@ -438,6 +862,26 @@
         "leakage_pass": true,
         "scope_pass": true,
         "sufficiency_pass": true
+      },
+      "deterministic_qa": {
+        "checks": {
+          "closed_code_fences": true,
+          "editable_paths_are_implementation_only": true,
+          "expected_behavior_present": true,
+          "length_status": "target_range",
+          "no_hidden_verifier_markers": true,
+          "no_paid_outcome_status_text": true,
+          "no_raw_diff_markers": true,
+          "no_target_commit_hash": true,
+          "non_editable_tests_listed_separately": true,
+          "old_cap_disposition": "not_applicable",
+          "problem_summary_present": true,
+          "statement_digest_stable": true
+        },
+        "reasons": [
+          "deterministic_qa_passed"
+        ],
+        "status": "pass"
       },
       "final_status": "pass",
       "iteration_count": 1,

@@ -303,3 +303,92 @@ def test_reviewer_passes_non_leaky_sufficient_statement(tmp_path: Path) -> None:
     assert verdict["status"] == "pass"
     assert verdict["leakage_pass"] is True
     assert verdict["sufficiency_pass"] is True
+
+
+def test_deterministic_qa_cannot_pass_unclosed_code_fence(tmp_path: Path) -> None:
+    config = minimal_config(tmp_path)
+    packet = diffregen.build_candidate_packet(
+        config=config,
+        candidate=candidate_record(),
+        certified={
+            "base_commit": config["_base"],
+            "changed_files": ["pkg/core.py", "tests/test_core.py"],
+            "target_commit": config["_target"],
+        },
+        source_context={
+            "body_summary": "Public issue body",
+            "classification": "problem_context",
+            "ref": "issue:1",
+            "summary": "Public issue title",
+        },
+    )
+    statement = diffregen.generated_statement_text(packet) + "\n```python"
+    row = {"statement": statement, "statement_digest": f"sha256:{diffregen.statement_digest(statement)}"}
+    review = {"final_status": "pass", "statement_digest": row["statement_digest"]}
+
+    qa = diffregen.deterministic_statement_qa(packet, row, review)
+
+    assert qa["status"] == "reject"
+    assert "unclosed_code_fence" in qa["reasons"]
+
+
+def test_deterministic_qa_cannot_pass_raw_diff_hash_or_status_text(tmp_path: Path) -> None:
+    config = minimal_config(tmp_path)
+    packet = diffregen.build_candidate_packet(
+        config=config,
+        candidate=candidate_record(),
+        certified={
+            "base_commit": config["_base"],
+            "changed_files": ["pkg/core.py", "tests/test_core.py"],
+            "target_commit": config["_target"],
+        },
+        source_context={
+            "body_summary": "Public issue body",
+            "classification": "problem_context",
+            "ref": "issue:1",
+            "summary": "Public issue title",
+        },
+    )
+    statement = (
+        diffregen.generated_statement_text(packet)
+        + "\ndiff --git a/pkg/core.py b/pkg/core.py"
+        + "\n0123456789abcdef0123456789abcdef01234567"
+        + "\nverified_pass"
+    )
+    row = {"statement": statement, "statement_digest": f"sha256:{diffregen.statement_digest(statement)}"}
+    review = {"final_status": "pass", "statement_digest": row["statement_digest"]}
+
+    qa = diffregen.deterministic_statement_qa(packet, row, review)
+
+    assert qa["status"] == "reject"
+    assert "leakage:raw_diff_marker" in qa["reasons"]
+    assert "leakage:target_commit_hash" in qa["reasons"]
+    assert "paid_outcome_status" in qa["reasons"]
+
+
+def test_deterministic_qa_treats_old_truncation_as_recoverable_when_regenerated_statement_passes(tmp_path: Path) -> None:
+    config = minimal_config(tmp_path)
+    packet = diffregen.build_candidate_packet(
+        config=config,
+        candidate=candidate_record(),
+        certified={
+            "base_commit": config["_base"],
+            "changed_files": ["pkg/core.py", "tests/test_core.py"],
+            "target_commit": config["_target"],
+        },
+        source_context={
+            "body_summary": "Public issue body",
+            "classification": "problem_context",
+            "ref": "issue:1",
+            "summary": "Public issue title",
+        },
+    )
+    statement = diffregen.generated_statement_text(packet)
+    digest = f"sha256:{diffregen.statement_digest(statement)}"
+    row = {"statement": statement, "statement_digest": digest}
+    review = {"final_status": "pass", "statement_digest": digest}
+
+    qa = diffregen.deterministic_statement_qa(packet, row, review)
+
+    assert qa["status"] == "pass"
+    assert qa["checks"]["old_cap_disposition"] == "recoverable_after_regeneration"

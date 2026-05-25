@@ -80,6 +80,12 @@ FORBIDDEN_STATEMENT_PATTERNS = {
     "verified_fail": "paid_outcome_status",
     "policy_violation": "paid_or_policy_status",
 }
+HIDDEN_OR_STATUS_TERMS = {
+    "hidden verifier": "hidden_verifier_marker",
+    "verified_pass": "paid_outcome_status",
+    "verified_fail": "paid_outcome_status",
+    "policy_violation": "paid_or_policy_status",
+}
 TARGET_COMMIT_PATTERN = re.compile(r"\b[0-9a-f]{40}\b")
 BEHAVIOR_OVERRIDES = {
     "boltons__clean_ext__001": {
@@ -178,6 +184,10 @@ def read_jsonl(path: Path) -> list[dict[str, Any]]:
     if not path.exists():
         return []
     return [json.loads(line) for line in path.read_text(encoding="utf-8").splitlines() if line.strip()]
+
+
+def read_statement_jsonl(path: Path) -> list[dict[str, Any]]:
+    return read_jsonl(path)
 
 
 def write_json(path: Path, payload: Any) -> None:
@@ -594,6 +604,80 @@ def statement_leakage_reasons(statement: str) -> list[str]:
     return sorted(dict.fromkeys(reasons))
 
 
+def deterministic_statement_qa(packet: dict[str, Any], statement_row: dict[str, Any], review: dict[str, Any]) -> dict[str, Any]:
+    statement = str(statement_row.get("statement") or "")
+    reasons: list[str] = []
+    leakage = statement_leakage_reasons(statement)
+    if leakage:
+        reasons.extend(f"leakage:{reason}" for reason in leakage)
+    lowered = statement.lower()
+    for term, reason in HIDDEN_OR_STATUS_TERMS.items():
+        if term in lowered:
+            reasons.append(reason)
+    if not code_fences_closed(statement):
+        reasons.append("unclosed_code_fence")
+    if "Problem summary:" not in statement:
+        reasons.append("missing_problem_summary")
+    if "Expected behavior:" not in statement:
+        reasons.append("missing_expected_behavior")
+    if "Editable implementation paths:" not in statement:
+        reasons.append("missing_editable_paths_section")
+    if "Non-editable test paths:" not in statement:
+        reasons.append("missing_non_editable_tests_section")
+    editable_paths = [str(path) for path in packet.get("implementation_files", [])]
+    test_paths = [str(path) for path in packet.get("test_files", [])]
+    bad_editable = [path for path in editable_paths if not statement_quality.is_implementation_path(path)]
+    bad_tests = [path for path in test_paths if not statement_quality.is_test_path(path)]
+    if bad_editable:
+        reasons.append(f"editable_paths_not_implementation_only:{','.join(bad_editable)}")
+    if bad_tests:
+        reasons.append(f"non_editable_tests_not_test_paths:{','.join(bad_tests)}")
+    digest = f"sha256:{statement_digest(statement)}"
+    if digest != statement_row.get("statement_digest") or digest != review.get("statement_digest"):
+        reasons.append("statement_digest_mismatch")
+    length = len(statement)
+    length_status = "target_range" if 1500 <= length <= 2500 else "soft_range" if length <= 4000 else "too_long"
+    if length < 1500:
+        reasons.append("statement_below_target_length")
+    if length > 4000:
+        reasons.append("statement_exceeds_soft_max")
+    if review.get("final_status") != "pass":
+        reasons.append(f"review_status:{review.get('final_status')}")
+
+    if any(reason.startswith("leakage:") for reason in reasons) or "unclosed_code_fence" in reasons or "statement_exceeds_soft_max" in reasons:
+        status = "reject"
+    elif review.get("final_status") != "pass":
+        status = "reject"
+    elif reasons:
+        status = "needs_revision"
+    else:
+        status = "pass"
+    if status == "pass" and packet.get("old_statement_quality", {}).get("body_summary_hit_old_cap"):
+        old_cap_disposition = "recoverable_after_regeneration"
+    elif packet.get("old_statement_quality", {}).get("body_summary_hit_old_cap"):
+        old_cap_disposition = "not_recovered_by_regeneration"
+    else:
+        old_cap_disposition = "not_applicable"
+    return {
+        "status": status,
+        "reasons": sorted(dict.fromkeys(reasons)) or ["deterministic_qa_passed"],
+        "checks": {
+            "closed_code_fences": code_fences_closed(statement),
+            "no_target_commit_hash": TARGET_COMMIT_PATTERN.search(statement) is None,
+            "no_raw_diff_markers": not any(marker in statement for marker in ("diff --git", "\n@@")),
+            "no_hidden_verifier_markers": "hidden verifier" not in lowered,
+            "no_paid_outcome_status_text": not any(term in lowered for term in ("verified_pass", "verified_fail", "policy_violation")),
+            "editable_paths_are_implementation_only": not bad_editable,
+            "non_editable_tests_listed_separately": bool(test_paths) and "Non-editable test paths:" in statement,
+            "length_status": length_status,
+            "problem_summary_present": "Problem summary:" in statement,
+            "expected_behavior_present": "Expected behavior:" in statement,
+            "statement_digest_stable": "statement_digest_mismatch" not in reasons,
+            "old_cap_disposition": old_cap_disposition,
+        },
+    }
+
+
 def reviewer_verdict(packet: dict[str, Any], statement: str) -> dict[str, Any]:
     task_id = packet["task_id"]
     reasons: list[str] = []
@@ -732,6 +816,7 @@ def render_statement_reviews_markdown(reviews: dict[str, Any]) -> str:
         "",
         f"- Candidate statements reviewed: `{reviews['candidate_count']}`.",
         f"- Review counts: `{reviews['review_counts']}`.",
+        f"- Deterministic QA counts: `{reviews.get('deterministic_qa_counts', {})}`.",
         "- Paid LLM calls made: `false`.",
         "- Paid ACUT calls made: `false`.",
         "- Raw prompts or completions committed: `false`.",
@@ -746,8 +831,10 @@ def render_statement_reviews_markdown(reviews: dict[str, Any]) -> str:
                 "",
                 f"- Status: `{review['final_status']}`.",
                 f"- Checks: `{review['checks']}`.",
+                f"- Deterministic QA: `{review.get('deterministic_qa', {}).get('status', 'not_run')}`.",
                 f"- Statement length: `{review['statement_length']}`.",
                 f"- Reasons: `{review['reasons']}`.",
+                f"- QA reasons: `{review.get('deterministic_qa', {}).get('reasons', [])}`.",
                 "",
             ]
         )
@@ -761,6 +848,29 @@ def write_generation_review(config: dict[str, Any]) -> tuple[dict[str, Any], dic
     write_jsonl(output_path(config, "regenerated_statements"), statements)
     write_text(output_path(config, "statement_reviews_report"), render_statement_reviews_markdown(reviews))
     return plan, reviews, statements
+
+
+def apply_deterministic_qa(config: dict[str, Any]) -> dict[str, Any]:
+    packets = read_json(output_path(config, "candidate_packets"))["packets"]
+    packet_by_task = {packet["task_id"]: packet for packet in packets}
+    reviews = read_json(output_path(config, "statement_reviews"))
+    statements = read_statement_jsonl(output_path(config, "regenerated_statements"))
+    statement_by_task = {row["task_id"]: row for row in statements}
+    updated_reviews: list[dict[str, Any]] = []
+    for review in reviews["reviews"]:
+        task_id = review["task_id"]
+        qa = deterministic_statement_qa(packet_by_task[task_id], statement_by_task[task_id], review)
+        review = dict(review)
+        review["deterministic_qa"] = qa
+        updated_reviews.append(review)
+        statement_by_task[task_id]["deterministic_qa_status"] = qa["status"]
+        statement_by_task[task_id]["deterministic_qa_reasons"] = qa["reasons"]
+    reviews["reviews"] = updated_reviews
+    reviews["deterministic_qa_counts"] = dict(sorted(Counter(review["deterministic_qa"]["status"] for review in updated_reviews).items()))
+    write_json(output_path(config, "statement_reviews"), reviews)
+    write_jsonl(output_path(config, "regenerated_statements"), [statement_by_task[row["task_id"]] for row in statements])
+    write_text(output_path(config, "statement_reviews_report"), render_statement_reviews_markdown(reviews))
+    return reviews
 
 
 def render_candidate_packets_markdown(payload: dict[str, Any]) -> str:
@@ -811,7 +921,7 @@ def write_candidate_packets(config: dict[str, Any]) -> dict[str, Any]:
 
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description="Build Phase 1 diff-assisted statement regeneration artifacts.")
-    parser.add_argument("mode", choices=["packets", "generate"])
+    parser.add_argument("mode", choices=["packets", "generate", "qa"])
     parser.add_argument("--config", type=Path, default=DEFAULT_CONFIG)
     args = parser.parse_args(argv)
 
@@ -820,6 +930,8 @@ def main(argv: list[str] | None = None) -> int:
         write_candidate_packets(config)
     if args.mode == "generate":
         write_generation_review(config)
+    if args.mode == "qa":
+        apply_deterministic_qa(config)
     return 0
 
 
