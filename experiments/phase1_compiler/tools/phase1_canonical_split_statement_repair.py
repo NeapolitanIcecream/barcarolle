@@ -613,7 +613,17 @@ def build_candidate_packet_for_inventory_row(
     packet["canonical_repo_split"] = row["canonical_repo_split"]
     packet["canonical_split_source"] = "frozen_preregistration_entry_gate_and_two_repo_matrix_membership"
     packet["current_inventory_split_used_for_selection"] = False
-    return packet
+    return redact_commit_hash_like_text(packet)
+
+
+def redact_commit_hash_like_text(value: Any) -> Any:
+    if isinstance(value, dict):
+        return {key: redact_commit_hash_like_text(item) for key, item in value.items()}
+    if isinstance(value, list):
+        return [redact_commit_hash_like_text(item) for item in value]
+    if isinstance(value, str):
+        return TARGET_COMMIT_PATTERN.sub("[redacted-hex-hash]", value)
+    return value
 
 
 def build_missing_statement_packets(config: dict[str, Any]) -> dict[str, Any]:

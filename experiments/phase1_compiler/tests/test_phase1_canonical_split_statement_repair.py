@@ -143,6 +143,20 @@ def test_run_script_uses_local_subscription_and_unsets_endpoint_vars() -> None:
     assert "local Codex Subscription" in script
 
 
+def test_packet_redaction_removes_public_context_hex_hashes() -> None:
+    payload = {
+        "public_context": {
+            "body_excerpt": "See https://example.invalid/0123456789abcdef0123456789abcdef01234567/file.py",
+        },
+        "target_diff_digest": "sha256:" + ("a" * 64),
+    }
+
+    redacted = repair.redact_commit_hash_like_text(payload)
+
+    assert "0123456789abcdef0123456789abcdef01234567" not in redacted["public_context"]["body_excerpt"]
+    assert redacted["target_diff_digest"] == payload["target_diff_digest"]
+
+
 def test_canonical_screen_uses_canonical_split_not_current_inventory_split() -> None:
     screen = {
         "task_id": "boltons__clean_ext__017",
