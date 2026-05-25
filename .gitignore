@@ -199,6 +199,10 @@ cython_debug/
 .codex-workflows/*
 !.codex-workflows/core-narrative-experiment/
 !.codex-workflows/core-narrative-experiment/**
+!.codex-workflows/phase1-diff-assisted-statement-regeneration-codex-loop/
+!.codex-workflows/phase1-diff-assisted-statement-regeneration-codex-loop/**
+.codex-workflows/phase1-diff-assisted-statement-regeneration-codex-loop/**/*.log
+.codex-workflows/phase1-diff-assisted-statement-regeneration-codex-loop/**/output/
 .codex-workflows/**/cli.log
 .codex-workflows/**/cli-*.log
 .codex-workflows/**/launcher.log
