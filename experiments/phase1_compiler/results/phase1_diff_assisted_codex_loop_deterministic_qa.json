@@ -1,0 +1,475 @@
+{
+  "candidate_count": 22,
+  "deterministic_qa_created_pass_without_reviewer_pass": false,
+  "deterministic_qa_guardrail_only": true,
+  "generated_at": "2026-05-25T05:09:38Z",
+  "paid_acut_calls_made": false,
+  "qa_counts": {
+    "pass": 22
+  },
+  "rows": [
+    {
+      "checks": {
+        "closed_code_fences": true,
+        "editable_paths_are_implementation_only": true,
+        "expected_behavior_present": true,
+        "length_status": "target_range",
+        "no_hidden_verifier_markers": true,
+        "no_paid_outcome_status_text": true,
+        "no_raw_diff_markers": true,
+        "no_target_commit_hash": true,
+        "non_editable_tests_listed_separately": true,
+        "old_cap_disposition": "recoverable_after_regeneration",
+        "problem_summary_present": true,
+        "statement_digest_stable": true
+      },
+      "reasons": [
+        "deterministic_qa_passed"
+      ],
+      "status": "pass",
+      "task_id": "boltons__clean_ext__001"
+    },
+    {
+      "checks": {
+        "closed_code_fences": true,
+        "editable_paths_are_implementation_only": true,
+        "expected_behavior_present": true,
+        "length_status": "target_range",
+        "no_hidden_verifier_markers": true,
+        "no_paid_outcome_status_text": true,
+        "no_raw_diff_markers": true,
+        "no_target_commit_hash": true,
+        "non_editable_tests_listed_separately": true,
+        "old_cap_disposition": "recoverable_after_regeneration",
+        "problem_summary_present": true,
+        "statement_digest_stable": true
+      },
+      "reasons": [
+        "deterministic_qa_passed"
+      ],
+      "status": "pass",
+      "task_id": "boltons__clean_ext__008"
+    },
+    {
+      "checks": {
+        "closed_code_fences": true,
+        "editable_paths_are_implementation_only": true,
+        "expected_behavior_present": true,
+        "length_status": "target_range",
+        "no_hidden_verifier_markers": true,
+        "no_paid_outcome_status_text": true,
+        "no_raw_diff_markers": true,
+        "no_target_commit_hash": true,
+        "non_editable_tests_listed_separately": true,
+        "old_cap_disposition": "recoverable_after_regeneration",
+        "problem_summary_present": true,
+        "statement_digest_stable": true
+      },
+      "reasons": [
+        "deterministic_qa_passed"
+      ],
+      "status": "pass",
+      "task_id": "boltons__clean_ext__010"
+    },
+    {
+      "checks": {
+        "closed_code_fences": true,
+        "editable_paths_are_implementation_only": true,
+        "expected_behavior_present": true,
+        "length_status": "target_range",
+        "no_hidden_verifier_markers": true,
+        "no_paid_outcome_status_text": true,
+        "no_raw_diff_markers": true,
+        "no_target_commit_hash": true,
+        "non_editable_tests_listed_separately": true,
+        "old_cap_disposition": "not_applicable",
+        "problem_summary_present": true,
+        "statement_digest_stable": true
+      },
+      "reasons": [
+        "deterministic_qa_passed"
+      ],
+      "status": "pass",
+      "task_id": "boltons__clean_ext__017"
+    },
+    {
+      "checks": {
+        "closed_code_fences": true,
+        "editable_paths_are_implementation_only": true,
+        "expected_behavior_present": true,
+        "length_status": "target_range",
+        "no_hidden_verifier_markers": true,
+        "no_paid_outcome_status_text": true,
+        "no_raw_diff_markers": true,
+        "no_target_commit_hash": true,
+        "non_editable_tests_listed_separately": true,
+        "old_cap_disposition": "recoverable_after_regeneration",
+        "problem_summary_present": true,
+        "statement_digest_stable": true
+      },
+      "reasons": [
+        "deterministic_qa_passed"
+      ],
+      "status": "pass",
+      "task_id": "attrs__hist__001"
+    },
+    {
+      "checks": {
+        "closed_code_fences": true,
+        "editable_paths_are_implementation_only": true,
+        "expected_behavior_present": true,
+        "length_status": "target_range",
+        "no_hidden_verifier_markers": true,
+        "no_paid_outcome_status_text": true,
+        "no_raw_diff_markers": true,
+        "no_target_commit_hash": true,
+        "non_editable_tests_listed_separately": true,
+        "old_cap_disposition": "not_applicable",
+        "problem_summary_present": true,
+        "statement_digest_stable": true
+      },
+      "reasons": [
+        "deterministic_qa_passed"
+      ],
+      "status": "pass",
+      "task_id": "attrs__hist__003"
+    },
+    {
+      "checks": {
+        "closed_code_fences": true,
+        "editable_paths_are_implementation_only": true,
+        "expected_behavior_present": true,
+        "length_status": "target_range",
+        "no_hidden_verifier_markers": true,
+        "no_paid_outcome_status_text": true,
+        "no_raw_diff_markers": true,
+        "no_target_commit_hash": true,
+        "non_editable_tests_listed_separately": true,
+        "old_cap_disposition": "recoverable_after_regeneration",
+        "problem_summary_present": true,
+        "statement_digest_stable": true
+      },
+      "reasons": [
+        "deterministic_qa_passed"
+      ],
+      "status": "pass",
+      "task_id": "attrs__hist__004"
+    },
+    {
+      "checks": {
+        "closed_code_fences": true,
+        "editable_paths_are_implementation_only": true,
+        "expected_behavior_present": true,
+        "length_status": "target_range",
+        "no_hidden_verifier_markers": true,
+        "no_paid_outcome_status_text": true,
+        "no_raw_diff_markers": true,
+        "no_target_commit_hash": true,
+        "non_editable_tests_listed_separately": true,
+        "old_cap_disposition": "not_applicable",
+        "problem_summary_present": true,
+        "statement_digest_stable": true
+      },
+      "reasons": [
+        "deterministic_qa_passed"
+      ],
+      "status": "pass",
+      "task_id": "attrs__hist__008"
+    },
+    {
+      "checks": {
+        "closed_code_fences": true,
+        "editable_paths_are_implementation_only": true,
+        "expected_behavior_present": true,
+        "length_status": "target_range",
+        "no_hidden_verifier_markers": true,
+        "no_paid_outcome_status_text": true,
+        "no_raw_diff_markers": true,
+        "no_target_commit_hash": true,
+        "non_editable_tests_listed_separately": true,
+        "old_cap_disposition": "recoverable_after_regeneration",
+        "problem_summary_present": true,
+        "statement_digest_stable": true
+      },
+      "reasons": [
+        "deterministic_qa_passed"
+      ],
+      "status": "pass",
+      "task_id": "attrs__hist__009"
+    },
+    {
+      "checks": {
+        "closed_code_fences": true,
+        "editable_paths_are_implementation_only": true,
+        "expected_behavior_present": true,
+        "length_status": "target_range",
+        "no_hidden_verifier_markers": true,
+        "no_paid_outcome_status_text": true,
+        "no_raw_diff_markers": true,
+        "no_target_commit_hash": true,
+        "non_editable_tests_listed_separately": true,
+        "old_cap_disposition": "recoverable_after_regeneration",
+        "problem_summary_present": true,
+        "statement_digest_stable": true
+      },
+      "reasons": [
+        "deterministic_qa_passed"
+      ],
+      "status": "pass",
+      "task_id": "attrs__hist__010"
+    },
+    {
+      "checks": {
+        "closed_code_fences": true,
+        "editable_paths_are_implementation_only": true,
+        "expected_behavior_present": true,
+        "length_status": "target_range",
+        "no_hidden_verifier_markers": true,
+        "no_paid_outcome_status_text": true,
+        "no_raw_diff_markers": true,
+        "no_target_commit_hash": true,
+        "non_editable_tests_listed_separately": true,
+        "old_cap_disposition": "recoverable_after_regeneration",
+        "problem_summary_present": true,
+        "statement_digest_stable": true
+      },
+      "reasons": [
+        "deterministic_qa_passed"
+      ],
+      "status": "pass",
+      "task_id": "attrs__hist__012"
+    },
+    {
+      "checks": {
+        "closed_code_fences": true,
+        "editable_paths_are_implementation_only": true,
+        "expected_behavior_present": true,
+        "length_status": "target_range",
+        "no_hidden_verifier_markers": true,
+        "no_paid_outcome_status_text": true,
+        "no_raw_diff_markers": true,
+        "no_target_commit_hash": true,
+        "non_editable_tests_listed_separately": true,
+        "old_cap_disposition": "recoverable_after_regeneration",
+        "problem_summary_present": true,
+        "statement_digest_stable": true
+      },
+      "reasons": [
+        "deterministic_qa_passed"
+      ],
+      "status": "pass",
+      "task_id": "attrs__hist__013"
+    },
+    {
+      "checks": {
+        "closed_code_fences": true,
+        "editable_paths_are_implementation_only": true,
+        "expected_behavior_present": true,
+        "length_status": "target_range",
+        "no_hidden_verifier_markers": true,
+        "no_paid_outcome_status_text": true,
+        "no_raw_diff_markers": true,
+        "no_target_commit_hash": true,
+        "non_editable_tests_listed_separately": true,
+        "old_cap_disposition": "recoverable_after_regeneration",
+        "problem_summary_present": true,
+        "statement_digest_stable": true
+      },
+      "reasons": [
+        "deterministic_qa_passed"
+      ],
+      "status": "pass",
+      "task_id": "attrs__hist__023"
+    },
+    {
+      "checks": {
+        "closed_code_fences": true,
+        "editable_paths_are_implementation_only": true,
+        "expected_behavior_present": true,
+        "length_status": "target_range",
+        "no_hidden_verifier_markers": true,
+        "no_paid_outcome_status_text": true,
+        "no_raw_diff_markers": true,
+        "no_target_commit_hash": true,
+        "non_editable_tests_listed_separately": true,
+        "old_cap_disposition": "recoverable_after_regeneration",
+        "problem_summary_present": true,
+        "statement_digest_stable": true
+      },
+      "reasons": [
+        "deterministic_qa_passed"
+      ],
+      "status": "pass",
+      "task_id": "attrs__hist__027"
+    },
+    {
+      "checks": {
+        "closed_code_fences": true,
+        "editable_paths_are_implementation_only": true,
+        "expected_behavior_present": true,
+        "length_status": "target_range",
+        "no_hidden_verifier_markers": true,
+        "no_paid_outcome_status_text": true,
+        "no_raw_diff_markers": true,
+        "no_target_commit_hash": true,
+        "non_editable_tests_listed_separately": true,
+        "old_cap_disposition": "recoverable_after_regeneration",
+        "problem_summary_present": true,
+        "statement_digest_stable": true
+      },
+      "reasons": [
+        "deterministic_qa_passed"
+      ],
+      "status": "pass",
+      "task_id": "attrs__hist__032"
+    },
+    {
+      "checks": {
+        "closed_code_fences": true,
+        "editable_paths_are_implementation_only": true,
+        "expected_behavior_present": true,
+        "length_status": "target_range",
+        "no_hidden_verifier_markers": true,
+        "no_paid_outcome_status_text": true,
+        "no_raw_diff_markers": true,
+        "no_target_commit_hash": true,
+        "non_editable_tests_listed_separately": true,
+        "old_cap_disposition": "recoverable_after_regeneration",
+        "problem_summary_present": true,
+        "statement_digest_stable": true
+      },
+      "reasons": [
+        "deterministic_qa_passed"
+      ],
+      "status": "pass",
+      "task_id": "attrs__hist__033"
+    },
+    {
+      "checks": {
+        "closed_code_fences": true,
+        "editable_paths_are_implementation_only": true,
+        "expected_behavior_present": true,
+        "length_status": "target_range",
+        "no_hidden_verifier_markers": true,
+        "no_paid_outcome_status_text": true,
+        "no_raw_diff_markers": true,
+        "no_target_commit_hash": true,
+        "non_editable_tests_listed_separately": true,
+        "old_cap_disposition": "recoverable_after_regeneration",
+        "problem_summary_present": true,
+        "statement_digest_stable": true
+      },
+      "reasons": [
+        "deterministic_qa_passed"
+      ],
+      "status": "pass",
+      "task_id": "attrs__hist__035"
+    },
+    {
+      "checks": {
+        "closed_code_fences": true,
+        "editable_paths_are_implementation_only": true,
+        "expected_behavior_present": true,
+        "length_status": "target_range",
+        "no_hidden_verifier_markers": true,
+        "no_paid_outcome_status_text": true,
+        "no_raw_diff_markers": true,
+        "no_target_commit_hash": true,
+        "non_editable_tests_listed_separately": true,
+        "old_cap_disposition": "recoverable_after_regeneration",
+        "problem_summary_present": true,
+        "statement_digest_stable": true
+      },
+      "reasons": [
+        "deterministic_qa_passed"
+      ],
+      "status": "pass",
+      "task_id": "attrs__hist__036"
+    },
+    {
+      "checks": {
+        "closed_code_fences": true,
+        "editable_paths_are_implementation_only": true,
+        "expected_behavior_present": true,
+        "length_status": "target_range",
+        "no_hidden_verifier_markers": true,
+        "no_paid_outcome_status_text": true,
+        "no_raw_diff_markers": true,
+        "no_target_commit_hash": true,
+        "non_editable_tests_listed_separately": true,
+        "old_cap_disposition": "recoverable_after_regeneration",
+        "problem_summary_present": true,
+        "statement_digest_stable": true
+      },
+      "reasons": [
+        "deterministic_qa_passed"
+      ],
+      "status": "pass",
+      "task_id": "attrs__hist__039"
+    },
+    {
+      "checks": {
+        "closed_code_fences": true,
+        "editable_paths_are_implementation_only": true,
+        "expected_behavior_present": true,
+        "length_status": "target_range",
+        "no_hidden_verifier_markers": true,
+        "no_paid_outcome_status_text": true,
+        "no_raw_diff_markers": true,
+        "no_target_commit_hash": true,
+        "non_editable_tests_listed_separately": true,
+        "old_cap_disposition": "recoverable_after_regeneration",
+        "problem_summary_present": true,
+        "statement_digest_stable": true
+      },
+      "reasons": [
+        "deterministic_qa_passed"
+      ],
+      "status": "pass",
+      "task_id": "attrs__hist__041"
+    },
+    {
+      "checks": {
+        "closed_code_fences": true,
+        "editable_paths_are_implementation_only": true,
+        "expected_behavior_present": true,
+        "length_status": "target_range",
+        "no_hidden_verifier_markers": true,
+        "no_paid_outcome_status_text": true,
+        "no_raw_diff_markers": true,
+        "no_target_commit_hash": true,
+        "non_editable_tests_listed_separately": true,
+        "old_cap_disposition": "recoverable_after_regeneration",
+        "problem_summary_present": true,
+        "statement_digest_stable": true
+      },
+      "reasons": [
+        "deterministic_qa_passed"
+      ],
+      "status": "pass",
+      "task_id": "attrs__hist__045"
+    },
+    {
+      "checks": {
+        "closed_code_fences": true,
+        "editable_paths_are_implementation_only": true,
+        "expected_behavior_present": true,
+        "length_status": "target_range",
+        "no_hidden_verifier_markers": true,
+        "no_paid_outcome_status_text": true,
+        "no_raw_diff_markers": true,
+        "no_target_commit_hash": true,
+        "non_editable_tests_listed_separately": true,
+        "old_cap_disposition": "recoverable_after_regeneration",
+        "problem_summary_present": true,
+        "statement_digest_stable": true
+      },
+      "reasons": [
+        "deterministic_qa_passed"
+      ],
+      "status": "pass",
+      "task_id": "attrs__hist__047"
+    }
+  ],
+  "schema_version": "barcarolle.phase1.diff_assisted_codex_loop_deterministic_qa.v1"
+}

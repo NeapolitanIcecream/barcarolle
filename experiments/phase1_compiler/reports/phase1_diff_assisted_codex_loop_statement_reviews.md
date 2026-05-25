@@ -4,7 +4,7 @@ Generated: `2026-05-25T05:07:29Z`.
 
 - Candidate statements reviewed: `22`.
 - Review counts: `{'pass': 22}`.
-- Deterministic QA counts: `{}`.
+- Deterministic QA counts: `{'pass': 22}`.
 - LLM API calls made: `False`.
 - Codex Subscription session used: `True`.
 - Paid ACUT calls made: `false`.
@@ -16,7 +16,7 @@ Generated: `2026-05-25T05:07:29Z`.
 
 - Status: `pass`.
 - Checks: `{'leakage_pass': True, 'sufficiency_pass': True, 'faithfulness_pass': True, 'scope_pass': True, 'formatting_pass': True}`.
-- Deterministic QA: `not_run`.
+- Deterministic QA: `pass`.
 - Reasons: `['No prohibited leakage found: no raw diff hunk, gold patch text, hidden verifier content, raw test assertion, paid outcome/status, or target commit hash.', 'Statement has the required sections, is within the target length band, gives enough public behavior detail to attempt the task, and matches packet scope and context.']`.
 - Required revision: ``.
 
@@ -24,7 +24,7 @@ Generated: `2026-05-25T05:07:29Z`.
 
 - Status: `pass`.
 - Checks: `{'leakage_pass': True, 'sufficiency_pass': True, 'faithfulness_pass': True, 'scope_pass': True, 'formatting_pass': True}`.
-- Deterministic QA: `not_run`.
+- Deterministic QA: `pass`.
 - Reasons: `['No prohibited leakage found: no raw diff hunk, gold patch text, hidden verifier content, raw test assertion, paid outcome/status, or target commit hash.', 'Statement has the required sections, is within the target length band, gives enough public behavior detail to attempt the task, and matches packet scope and context.']`.
 - Required revision: ``.
 
@@ -32,7 +32,7 @@ Generated: `2026-05-25T05:07:29Z`.
 
 - Status: `pass`.
 - Checks: `{'leakage_pass': True, 'sufficiency_pass': True, 'faithfulness_pass': True, 'scope_pass': True, 'formatting_pass': True}`.
-- Deterministic QA: `not_run`.
+- Deterministic QA: `pass`.
 - Reasons: `['No prohibited leakage found: no raw diff hunk, gold patch text, hidden verifier content, raw test assertion, paid outcome/status, or target commit hash.', 'Statement has the required sections, is within the target length band, gives enough public behavior detail to attempt the task, and matches packet scope and context.']`.
 - Required revision: ``.
 
@@ -40,7 +40,7 @@ Generated: `2026-05-25T05:07:29Z`.
 
 - Status: `pass`.
 - Checks: `{'leakage_pass': True, 'sufficiency_pass': True, 'faithfulness_pass': True, 'scope_pass': True, 'formatting_pass': True}`.
-- Deterministic QA: `not_run`.
+- Deterministic QA: `pass`.
 - Reasons: `['No prohibited leakage found: no raw diff hunk, gold patch text, hidden verifier content, raw test assertion, paid outcome/status, or target commit hash.', 'Statement has the required sections, is within the target length band, gives enough public behavior detail to attempt the task, and matches packet scope and context.']`.
 - Required revision: ``.
 
@@ -48,7 +48,7 @@ Generated: `2026-05-25T05:07:29Z`.
 
 - Status: `pass`.
 - Checks: `{'leakage_pass': True, 'sufficiency_pass': True, 'faithfulness_pass': True, 'scope_pass': True, 'formatting_pass': True}`.
-- Deterministic QA: `not_run`.
+- Deterministic QA: `pass`.
 - Reasons: `['No prohibited leakage found: no raw diff hunk, gold patch text, hidden verifier content, raw test assertion, paid outcome/status, or target commit hash.', 'Statement has the required sections, is within the target length band, gives enough public behavior detail to attempt the task, and matches packet scope and context.']`.
 - Required revision: ``.
 
@@ -56,7 +56,7 @@ Generated: `2026-05-25T05:07:29Z`.
 
 - Status: `pass`.
 - Checks: `{'leakage_pass': True, 'sufficiency_pass': True, 'faithfulness_pass': True, 'scope_pass': True, 'formatting_pass': True}`.
-- Deterministic QA: `not_run`.
+- Deterministic QA: `pass`.
 - Reasons: `['No prohibited leakage found: no raw diff hunk, gold patch text, hidden verifier content, raw test assertion, paid outcome/status, or target commit hash.', 'Statement has the required sections, is within the target length band, gives enough public behavior detail to attempt the task, and matches packet scope and context.']`.
 - Required revision: ``.
 
@@ -64,7 +64,7 @@ Generated: `2026-05-25T05:07:29Z`.
 
 - Status: `pass`.
 - Checks: `{'leakage_pass': True, 'sufficiency_pass': True, 'faithfulness_pass': True, 'scope_pass': True, 'formatting_pass': True}`.
-- Deterministic QA: `not_run`.
+- Deterministic QA: `pass`.
 - Reasons: `['No prohibited leakage found: no raw diff hunk, gold patch text, hidden verifier content, raw test assertion, paid outcome/status, or target commit hash.', 'Statement has the required sections, is within the target length band, gives enough public behavior detail to attempt the task, and matches packet scope and context.']`.
 - Required revision: ``.
 
@@ -72,7 +72,7 @@ Generated: `2026-05-25T05:07:29Z`.
 
 - Status: `pass`.
 - Checks: `{'leakage_pass': True, 'sufficiency_pass': True, 'faithfulness_pass': True, 'scope_pass': True, 'formatting_pass': True}`.
-- Deterministic QA: `not_run`.
+- Deterministic QA: `pass`.
 - Reasons: `['No prohibited leakage found: no raw diff hunk, gold patch text, hidden verifier content, raw test assertion, paid outcome/status, or target commit hash.', 'Statement has the required sections, is within the target length band, gives enough public behavior detail to attempt the task, and matches packet scope and context.']`.
 - Required revision: ``.
 
@@ -80,7 +80,7 @@ Generated: `2026-05-25T05:07:29Z`.
 
 - Status: `pass`.
 - Checks: `{'leakage_pass': True, 'sufficiency_pass': True, 'faithfulness_pass': True, 'scope_pass': True, 'formatting_pass': True}`.
-- Deterministic QA: `not_run`.
+- Deterministic QA: `pass`.
 - Reasons: `['No prohibited leakage found: no raw diff hunk, gold patch text, hidden verifier content, raw test assertion, paid outcome/status, or target commit hash.', 'Statement has the required sections, is within the target length band, gives enough public behavior detail to attempt the task, and matches packet scope and context.']`.
 - Required revision: ``.
 
@@ -88,7 +88,7 @@ Generated: `2026-05-25T05:07:29Z`.
 
 - Status: `pass`.
 - Checks: `{'leakage_pass': True, 'sufficiency_pass': True, 'faithfulness_pass': True, 'scope_pass': True, 'formatting_pass': True}`.
-- Deterministic QA: `not_run`.
+- Deterministic QA: `pass`.
 - Reasons: `['No prohibited leakage found: no raw diff hunk, gold patch text, hidden verifier content, raw test assertion, paid outcome/status, or target commit hash.', 'Statement has the required sections, is within the target length band, gives enough public behavior detail to attempt the task, and matches packet scope and context.']`.
 - Required revision: ``.
 
@@ -96,7 +96,7 @@ Generated: `2026-05-25T05:07:29Z`.
 
 - Status: `pass`.
 - Checks: `{'leakage_pass': True, 'sufficiency_pass': True, 'faithfulness_pass': True, 'scope_pass': True, 'formatting_pass': True}`.
-- Deterministic QA: `not_run`.
+- Deterministic QA: `pass`.
 - Reasons: `['No prohibited leakage found: no raw diff hunk, gold patch text, hidden verifier content, raw test assertion, paid outcome/status, or target commit hash.', 'Statement has the required sections, is within the target length band, gives enough public behavior detail to attempt the task, and matches packet scope and context.']`.
 - Required revision: ``.
 
@@ -104,7 +104,7 @@ Generated: `2026-05-25T05:07:29Z`.
 
 - Status: `pass`.
 - Checks: `{'leakage_pass': True, 'sufficiency_pass': True, 'faithfulness_pass': True, 'scope_pass': True, 'formatting_pass': True}`.
-- Deterministic QA: `not_run`.
+- Deterministic QA: `pass`.
 - Reasons: `['No prohibited leakage found: no raw diff hunk, gold patch text, hidden verifier content, raw test assertion, paid outcome/status, or target commit hash.', 'Statement has the required sections, is within the target length band, gives enough public behavior detail to attempt the task, and matches packet scope and context.']`.
 - Required revision: ``.
 
@@ -112,7 +112,7 @@ Generated: `2026-05-25T05:07:29Z`.
 
 - Status: `pass`.
 - Checks: `{'leakage_pass': True, 'sufficiency_pass': True, 'faithfulness_pass': True, 'scope_pass': True, 'formatting_pass': True}`.
-- Deterministic QA: `not_run`.
+- Deterministic QA: `pass`.
 - Reasons: `['No prohibited leakage found: no raw diff hunk, gold patch text, hidden verifier content, raw test assertion, paid outcome/status, or target commit hash.', 'Statement has the required sections, is within the target length band, gives enough public behavior detail to attempt the task, and matches packet scope and context.']`.
 - Required revision: ``.
 
@@ -120,7 +120,7 @@ Generated: `2026-05-25T05:07:29Z`.
 
 - Status: `pass`.
 - Checks: `{'leakage_pass': True, 'sufficiency_pass': True, 'faithfulness_pass': True, 'scope_pass': True, 'formatting_pass': True}`.
-- Deterministic QA: `not_run`.
+- Deterministic QA: `pass`.
 - Reasons: `['No prohibited leakage found: no raw diff hunk, gold patch text, hidden verifier content, raw test assertion, paid outcome/status, or target commit hash.', 'Statement has the required sections, is within the target length band, gives enough public behavior detail to attempt the task, and matches packet scope and context.']`.
 - Required revision: ``.
 
@@ -128,7 +128,7 @@ Generated: `2026-05-25T05:07:29Z`.
 
 - Status: `pass`.
 - Checks: `{'leakage_pass': True, 'sufficiency_pass': True, 'faithfulness_pass': True, 'scope_pass': True, 'formatting_pass': True}`.
-- Deterministic QA: `not_run`.
+- Deterministic QA: `pass`.
 - Reasons: `['No prohibited leakage found: no raw diff hunk, gold patch text, hidden verifier content, raw test assertion, paid outcome/status, or target commit hash.', 'Statement has the required sections, is within the target length band, gives enough public behavior detail to attempt the task, and matches packet scope and context.']`.
 - Required revision: ``.
 
@@ -136,7 +136,7 @@ Generated: `2026-05-25T05:07:29Z`.
 
 - Status: `pass`.
 - Checks: `{'leakage_pass': True, 'sufficiency_pass': True, 'faithfulness_pass': True, 'scope_pass': True, 'formatting_pass': True}`.
-- Deterministic QA: `not_run`.
+- Deterministic QA: `pass`.
 - Reasons: `['No prohibited leakage found: no raw diff hunk, gold patch text, hidden verifier content, raw test assertion, paid outcome/status, or target commit hash.', 'Statement has the required sections, is within the target length band, gives enough public behavior detail to attempt the task, and matches packet scope and context.']`.
 - Required revision: ``.
 
@@ -144,7 +144,7 @@ Generated: `2026-05-25T05:07:29Z`.
 
 - Status: `pass`.
 - Checks: `{'leakage_pass': True, 'sufficiency_pass': True, 'faithfulness_pass': True, 'scope_pass': True, 'formatting_pass': True}`.
-- Deterministic QA: `not_run`.
+- Deterministic QA: `pass`.
 - Reasons: `['No prohibited leakage found: no raw diff hunk, gold patch text, hidden verifier content, raw test assertion, paid outcome/status, or target commit hash.', 'Statement has the required sections, is within the target length band, gives enough public behavior detail to attempt the task, and matches packet scope and context.']`.
 - Required revision: ``.
 
@@ -152,7 +152,7 @@ Generated: `2026-05-25T05:07:29Z`.
 
 - Status: `pass`.
 - Checks: `{'leakage_pass': True, 'sufficiency_pass': True, 'faithfulness_pass': True, 'scope_pass': True, 'formatting_pass': True}`.
-- Deterministic QA: `not_run`.
+- Deterministic QA: `pass`.
 - Reasons: `['No prohibited leakage found: no raw diff hunk, gold patch text, hidden verifier content, raw test assertion, paid outcome/status, or target commit hash.', 'Statement has the required sections, is within the target length band, gives enough public behavior detail to attempt the task, and matches packet scope and context.']`.
 - Required revision: ``.
 
@@ -160,7 +160,7 @@ Generated: `2026-05-25T05:07:29Z`.
 
 - Status: `pass`.
 - Checks: `{'leakage_pass': True, 'sufficiency_pass': True, 'faithfulness_pass': True, 'scope_pass': True, 'formatting_pass': True}`.
-- Deterministic QA: `not_run`.
+- Deterministic QA: `pass`.
 - Reasons: `['No prohibited leakage found: no raw diff hunk, gold patch text, hidden verifier content, raw test assertion, paid outcome/status, or target commit hash.', 'Statement has the required sections, is within the target length band, gives enough public behavior detail to attempt the task, and matches packet scope and context.']`.
 - Required revision: ``.
 
@@ -168,7 +168,7 @@ Generated: `2026-05-25T05:07:29Z`.
 
 - Status: `pass`.
 - Checks: `{'leakage_pass': True, 'sufficiency_pass': True, 'faithfulness_pass': True, 'scope_pass': True, 'formatting_pass': True}`.
-- Deterministic QA: `not_run`.
+- Deterministic QA: `pass`.
 - Reasons: `['No prohibited leakage found: no raw diff hunk, gold patch text, hidden verifier content, raw test assertion, paid outcome/status, or target commit hash.', 'Statement has the required sections, is within the target length band, gives enough public behavior detail to attempt the task, and matches packet scope and context.']`.
 - Required revision: ``.
 
@@ -176,7 +176,7 @@ Generated: `2026-05-25T05:07:29Z`.
 
 - Status: `pass`.
 - Checks: `{'leakage_pass': True, 'sufficiency_pass': True, 'faithfulness_pass': True, 'scope_pass': True, 'formatting_pass': True}`.
-- Deterministic QA: `not_run`.
+- Deterministic QA: `pass`.
 - Reasons: `['No prohibited leakage found: no raw diff hunk, gold patch text, hidden verifier content, raw test assertion, paid outcome/status, or target commit hash.', 'Statement has the required sections, is within the target length band, gives enough public behavior detail to attempt the task, and matches packet scope and context.']`.
 - Required revision: ``.
 
@@ -184,6 +184,6 @@ Generated: `2026-05-25T05:07:29Z`.
 
 - Status: `pass`.
 - Checks: `{'leakage_pass': True, 'sufficiency_pass': True, 'faithfulness_pass': True, 'scope_pass': True, 'formatting_pass': True}`.
-- Deterministic QA: `not_run`.
+- Deterministic QA: `pass`.
 - Reasons: `['No prohibited leakage found: no raw diff hunk, gold patch text, hidden verifier content, raw test assertion, paid outcome/status, or target commit hash.', 'Statement has the required sections, is within the target length band, gives enough public behavior detail to attempt the task, and matches packet scope and context.']`.
 - Required revision: ``.
