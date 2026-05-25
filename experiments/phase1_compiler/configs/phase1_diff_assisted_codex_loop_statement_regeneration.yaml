@@ -5,9 +5,14 @@ created_at: 2026-05-25T03:29:09Z
 policy:
   paid_acut_calls_enabled: false
   paid_solver_cells_enabled: false
-  paid_llm_generation_review_conditionally_enabled: true
-  endpoint_base_url_env: LLM_BASE_URL
-  endpoint_api_key_env: LLM_API_KEY
+  llm_api_generation_review_enabled: false
+  codex_subscription_generation_review_conditionally_enabled: true
+  generator_reviewer_llm_api_endpoint_enabled: false
+  endpoint_env_vars_unset_for_generator_reviewer:
+    - LLM_BASE_URL
+    - LLM_API_KEY
+    - OPENAI_API_KEY
+    - OPENROUTER_API_KEY
   required_codex_model: gpt-5.5
   required_reasoning_effort: xhigh
   historical_paid_outcomes_available_to_generator_reviewer: false

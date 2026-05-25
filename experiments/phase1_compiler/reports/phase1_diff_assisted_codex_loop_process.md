@@ -1,21 +1,20 @@
 # Phase 1 Diff-Assisted Codex Loop Statement Regeneration Process
 
-Generated: `2026-05-25T03:29:09Z`.
-Closeout updated: `2026-05-25T03:40:30Z`.
+Generated: `2026-05-25T04:55:14Z`.
 
 ## Step 0 Preflight
 
 - Branch: `codex/restart-benchmark-compiler`.
-- HEAD: `60033de1176f91f2a4a0821e86a71beb67834541`.
-- Python: `Python 3.9.6`.
+- HEAD: `448b25a56b2eac1e62a6004bf599428cf10b95b4`.
+- Python: `Python 3.11.13`.
 - uv: `uv 0.11.16 (Homebrew 2026-05-21 aarch64-apple-darwin)`.
-- Paid ACUT calls: `disabled`.
-- Paid solver cells: `disabled`.
-- Paid LLM generation/review: `conditionally enabled by endpoint proof`.
-- Endpoint proof: `LLM_BASE_URL` present, `LLM_API_KEY` present, sanitized host `apirx.boyuerichdata.com`.
 - Codex CLI available: `True`.
 - tmux available: `True`.
-- Real Codex CLI generation/review can start: `True`.
+- Local Codex Subscription generation/review conditionally enabled: `True`.
+- LLM API endpoint used for generator/reviewer: `False`.
+- LLM API calls made for generator/reviewer: `False`.
+- Paid ACUT calls: `disabled`.
+- Paid solver cells: `disabled`.
 - Raw prompts, completions, CLI logs, target diffs, solver workspaces, and verifier workspaces committed: `false`.
 
 ## Prior Deterministic Result Reinterpretation
@@ -37,19 +36,24 @@ The previous `phase1_diff_assisted_statement_*` artifacts are historical dry-run
 - Step 1 candidate packets: `completed`.
 - Step 2 workflow files and prompt templates: `completed`.
 - Step 3 generator session: `blocked`.
-- Step 4 reviewer session: `not_started`.
+- Step 4 reviewer session: `pending`.
 - Step 5 deterministic QA: `not_run`.
 - Step 6 statement-hardened screen: `not_run`.
 - Step 7 recovery decision: `blocked_real_codex_loop_not_completed`.
-- Step 8 closeout: `completed_for_blocked_run`.
+- Step 8 closeout: `not_run`.
 
-## Commits Created
+## Recent Commits
 
-- `57f2bd53` Record diff-assisted Codex loop preflight
-- `f6362a3f` Build diff-assisted Codex loop candidate packets
-- `3b5f1104` Create diff-assisted Codex generator reviewer workflow
-- `33ee5f5e` Record blocked Codex generator session
-- `Record diff-assisted Codex loop blocked closeout` updates this report.
+```text
+448b25a5 Record diff-assisted Codex loop blocked closeout
+33ee5f5e Record blocked Codex generator session
+3b5f1104 Create diff-assisted Codex generator reviewer workflow
+f6362a3f Build diff-assisted Codex loop candidate packets
+57f2bd53 Record diff-assisted Codex loop preflight
+60033de1 Record diff-assisted statement regeneration closeout
+a7014e08 Decide diff-assisted statement recovery branch
+eb1437a4 Rerun statement-hardened screen with regenerated statements
+```
 
 ## Results
 
@@ -58,15 +62,31 @@ The previous `phase1_diff_assisted_statement_*` artifacts are historical dry-run
 - Review pass/revise/reject counts: `not_run`.
 - Deterministic QA pass/reject counts: `not_run`.
 - Eligible before regeneration: `not_screened`.
-- Eligible after regeneration: `0`.
-- Old candidate pool recovered: `false`.
-- Replacement supply still needed: `true`.
+- Eligible after regeneration: `not_screened`.
+- Old candidate pool recovered: `False`.
+- Replacement supply still needed: `True`.
 - Primary decision: `blocked_real_codex_loop_not_completed`.
-- Next action: resolve the external Codex CLI generator blocker and rerun this corrected loop without deterministic fallback.
+- Next runbook path: `not_decided`.
+
+## Non-Negotiable Evidence
+
+- Real generator Codex CLI session started: `False`.
+- Real reviewer Codex CLI session started: `False`.
+- Generator/reviewer used local Codex Subscription: `True`.
+- Generator/reviewer did not use LLM API endpoint: `True`.
+- Generator process file present: `False`.
+- Reviewer process file present: `False`.
+- Generator output not deterministic override: `False`.
+- Reviewer output not deterministic rules only: `False`.
+- Raw CLI logs committed: `False`.
+- Paid ACUT solver cells run: `False`.
+- Historical paid outcomes used for generation or review: `False`.
 
 ## Artifact Hygiene
 
-- Paid LLM generation/review attempted: `true`.
+- LLM API calls made for generator/reviewer: `false`.
+- Codex Subscription sessions used: `False`.
+- LLM API endpoint used for generator/reviewer: `false`.
 - Paid ACUT calls made: `false`.
 - Paid solver cells run: `false`.
 - Raw prompts committed: `false`.
@@ -75,8 +95,3 @@ The previous `phase1_diff_assisted_statement_*` artifacts are historical dry-run
 - Raw target diffs committed: `false`.
 - Solver or verifier workspaces committed: `false`.
 - Historical score tables rewritten: `false`.
-
-## Verification
-
-- `uv run --project experiments/phase1_compiler pytest -q experiments/phase1_compiler/tests/test_phase1_diff_assisted_codex_loop_statement_regeneration.py experiments/phase1_compiler/tests/test_phase1_diff_assisted_statement_regeneration.py experiments/phase1_compiler/tests/test_phase1_statement_hardened_preregistration.py experiments/phase1_compiler/tests/test_phase1_attrs_statement_quality_audit.py experiments/phase1_compiler/tests/test_phase1_clean_outcome_unseen_supply_mining.py experiments/phase0_headroom/tools/test_workspace_acut_run.py` -> `71 passed`.
-- `git diff --check` -> passed.

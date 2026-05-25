@@ -119,6 +119,33 @@ def test_corrected_tool_has_no_deterministic_generate_mode() -> None:
     assert "generate" not in codexloop.MODES
 
 
+def test_run_script_uses_local_subscription_and_unsets_endpoint_vars(tmp_path: Path) -> None:
+    config = {
+        "generation_review": {
+            "workflow_dir": ".codex-workflows/test-local-subscription-workflow",
+            "generator_tmux_session": "generator-session",
+        },
+        "policy": {
+            "required_codex_model": "gpt-5.5",
+            "required_reasoning_effort": "xhigh",
+            "endpoint_env_vars_unset_for_generator_reviewer": [
+                "LLM_BASE_URL",
+                "LLM_API_KEY",
+                "OPENAI_API_KEY",
+                "OPENROUTER_API_KEY",
+            ],
+        },
+    }
+
+    script = codexloop.run_script_text("generator", config)
+
+    assert "env -u LLM_BASE_URL -u LLM_API_KEY -u OPENAI_API_KEY -u OPENROUTER_API_KEY" in script
+    assert "--ignore-user-config" not in script
+    assert "model_provider=\"barcarolle_llm\"" not in script
+    assert "LLM_API_KEY was missing" not in script
+    assert "local Codex Subscription" in script
+
+
 def test_generated_statement_validation_rejects_deterministic_override_marker() -> None:
     statement = "Problem summary: public behavior.\nExpected behavior: public behavior should work."
     rows = [

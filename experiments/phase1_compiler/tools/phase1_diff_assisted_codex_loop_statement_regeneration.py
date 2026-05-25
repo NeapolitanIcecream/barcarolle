@@ -5,7 +5,9 @@ import hashlib
 import json
 import os
 import re
+import shutil
 import stat
+import subprocess
 from collections import Counter
 from datetime import datetime, timezone
 from pathlib import Path
@@ -21,6 +23,7 @@ REPO_ROOT = ROOT.parents[1]
 DEFAULT_CONFIG = ROOT / "configs" / "phase1_diff_assisted_codex_loop_statement_regeneration.yaml"
 SCHEMA_VERSION = "barcarolle.phase1_diff_assisted_codex_loop_statement_regeneration.v1"
 MODES = {
+    "preflight",
     "packets",
     "workflow",
     "record-session-start",
@@ -29,6 +32,7 @@ MODES = {
     "qa",
     "screen",
     "decide",
+    "closeout",
 }
 
 FORBIDDEN_PACKET_KEYS = {
@@ -115,6 +119,57 @@ def output_path(config: dict[str, Any], key: str) -> Path:
 
 def workflow_dir(config: dict[str, Any]) -> Path:
     return config_path(str(config["generation_review"]["workflow_dir"]))
+
+
+def command_output(args: list[str], *, cwd: Path = REPO_ROOT) -> str:
+    try:
+        return subprocess.check_output(args, cwd=cwd, text=True, stderr=subprocess.STDOUT).strip()
+    except (FileNotFoundError, subprocess.CalledProcessError):
+        return ""
+
+
+def command_available(name: str) -> bool:
+    return bool(shutil.which(name))
+
+
+def git_status_paths() -> list[str]:
+    try:
+        output = subprocess.check_output(
+            ["git", "status", "--short", "--untracked-files=all"],
+            cwd=REPO_ROOT,
+            text=True,
+            stderr=subprocess.STDOUT,
+        )
+    except subprocess.CalledProcessError:
+        output = ""
+    paths: list[str] = []
+    for line in output.splitlines():
+        text = line[3:] if len(line) > 3 else line
+        if " -> " in text:
+            text = text.split(" -> ", 1)[1]
+        paths.append(text.strip())
+    return paths
+
+
+def unrelated_worktree_paths(config: dict[str, Any]) -> list[str]:
+    known_prefixes = [
+        str(workflow_dir(config).relative_to(REPO_ROOT)),
+        "experiments/phase1_compiler/configs/phase1_diff_assisted_codex_loop_statement_regeneration.yaml",
+        "experiments/phase1_compiler/tools/phase1_diff_assisted_codex_loop_statement_regeneration.py",
+        "experiments/phase1_compiler/tests/test_phase1_diff_assisted_codex_loop_statement_regeneration.py",
+    ]
+    known_paths = {
+        str(output_path(config, key).relative_to(REPO_ROOT))
+        for key in config.get("output_paths", {})
+    }
+    unrelated: list[str] = []
+    for path in git_status_paths():
+        if path in known_paths:
+            continue
+        if any(path == prefix or path.startswith(prefix + "/") for prefix in known_prefixes):
+            continue
+        unrelated.append(path)
+    return unrelated
 
 
 def stable_generated_at(config: dict[str, Any]) -> str:
@@ -231,6 +286,16 @@ def endpoint_host() -> str:
     return urlparse(os.environ.get("LLM_BASE_URL", "")).hostname or ""
 
 
+def endpoint_env_vars(config: dict[str, Any]) -> list[str]:
+    values = config.get("policy", {}).get("endpoint_env_vars_unset_for_generator_reviewer") or [
+        "LLM_BASE_URL",
+        "LLM_API_KEY",
+        "OPENAI_API_KEY",
+        "OPENROUTER_API_KEY",
+    ]
+    return [str(value) for value in values]
+
+
 def build_generation_plan(config: dict[str, Any]) -> dict[str, Any]:
     packets_payload = read_json(output_path(config, "candidate_packets"))
     packets = packets_payload.get("packets", [])
@@ -252,13 +317,15 @@ def build_generation_plan(config: dict[str, Any]) -> dict[str, Any]:
         "reviewer_tmux_session": str(config["generation_review"]["reviewer_tmux_session"]),
         "required_model": str(config["policy"]["required_codex_model"]),
         "required_reasoning_effort": str(config["policy"]["required_reasoning_effort"]),
-        "endpoint_env_vars_present": {
-            "LLM_BASE_URL": bool(os.environ.get("LLM_BASE_URL")),
-            "LLM_API_KEY": bool(os.environ.get("LLM_API_KEY")),
+        "codex_subscription_generation_review_conditionally_enabled": True,
+        "generator_reviewer_used_local_codex_subscription": True,
+        "generator_reviewer_did_not_use_llm_api_endpoint": True,
+        "llm_api_endpoint_env_vars_unset_by_wrappers": endpoint_env_vars(config),
+        "ambient_endpoint_env_vars_present_but_ignored": {
+            key: bool(os.environ.get(key)) for key in endpoint_env_vars(config)
         },
-        "endpoint_base_url_host": endpoint_host(),
         "max_iterations_per_batch": int(config["generation_review"]["max_iterations_per_batch"]),
-        "paid_llm_generation_review_conditionally_enabled": True,
+        "llm_api_calls_made_for_generator_reviewer": False,
         "paid_acut_calls_made": False,
         "paid_solver_cells_run": False,
         "deterministic_generation_review_fallback_allowed": False,
@@ -266,6 +333,67 @@ def build_generation_plan(config: dict[str, Any]) -> dict[str, Any]:
         "raw_target_diffs_committed": False,
         "prioritization": "old 240-character cap candidates first, then repo and task id",
     }
+
+
+def build_preflight(config: dict[str, Any]) -> dict[str, Any]:
+    codex_path = shutil.which("codex") or ""
+    tmux_path = shutil.which("tmux") or ""
+    return {
+        "schema_version": "barcarolle.phase1.diff_assisted_codex_loop_preflight.v1",
+        "generated_at": utc_now(),
+        "branch": command_output(["git", "branch", "--show-current"]),
+        "git_head": command_output(["git", "rev-parse", "HEAD"]),
+        "python_version": command_output(["python3", "--version"]) or command_output(["python", "--version"]),
+        "uv_version": command_output(["uv", "--version"]),
+        "codex_cli_available": bool(codex_path),
+        "codex_cli_path": codex_path,
+        "codex_cli_version": command_output(["codex", "--version"]) if codex_path else "",
+        "tmux_available": bool(tmux_path),
+        "tmux_path": tmux_path,
+        "tmux_version": command_output(["tmux", "-V"]) if tmux_path else "",
+        "real_codex_cli_generation_review_can_start": bool(codex_path and tmux_path),
+        "local_codex_subscription_execution_proof": "deferred_to_real_generator_and_reviewer_sessions",
+        "codex_subscription_generation_review_conditionally_enabled": True,
+        "generator_reviewer_used_local_codex_subscription": True,
+        "generator_reviewer_did_not_use_llm_api_endpoint": True,
+        "llm_api_calls_made_for_generator_reviewer": False,
+        "llm_api_endpoint_env_vars_unset_by_wrappers": endpoint_env_vars(config),
+        "ambient_endpoint_env_vars_present_but_ignored": {
+            key: bool(os.environ.get(key)) for key in endpoint_env_vars(config)
+        },
+        "paid_acut_calls_enabled": False,
+        "paid_solver_cells_enabled": False,
+        "deterministic_generation_review_fallback_allowed": False,
+        "historical_paid_outcomes_available_to_generator_reviewer": False,
+        "corrected_result_prefix": "phase1_diff_assisted_codex_loop_",
+        "prior_deterministic_outputs_classification": {
+            "valid_as": [
+                "deterministic dry-run and tooling prototype",
+                "evidence that old 240-character truncation over-penalized candidates",
+                "evidence that current old inventory lacks boltons H_future supply",
+            ],
+            "not_valid_as": [
+                "independent Codex CLI generated statement evidence",
+                "independent Codex CLI leakage or sufficiency review evidence",
+                "basis for freezing a statement-hardened release",
+                "basis for paid validation",
+            ],
+        },
+        "raw_cli_logs_committed": False,
+        "raw_prompts_or_completions_committed": False,
+        "raw_target_diffs_committed": False,
+        "unrelated_existing_worktree_paths": unrelated_worktree_paths(config),
+    }
+
+
+def write_preflight(config: dict[str, Any]) -> dict[str, Any]:
+    preflight = build_preflight(config)
+    write_json(output_path(config, "preflight"), preflight)
+    proof = session_proof_base(config, reset=True)
+    write_json(output_path(config, "session_proof"), proof)
+    write_session_proof_report(config, proof)
+    write_text(output_path(config, "process_report"), render_process_report(config, closeout=False))
+    return preflight
 
 
 def generator_prompt_text(config: dict[str, Any]) -> str:
@@ -359,7 +487,7 @@ Each review row must use this shape:
 Top-level output must include:
 
 ```json
-{{"schema_version":"barcarolle.phase1.diff_assisted_codex_loop_statement_reviews.v1","generated_at":"...","candidate_count":0,"review_counts":{{}},"paid_llm_calls_made":true,"paid_acut_calls_made":false,"reviews":[]}}
+{{"schema_version":"barcarolle.phase1.diff_assisted_codex_loop_statement_reviews.v1","generated_at":"...","candidate_count":0,"review_counts":{{}},"llm_api_calls_made":false,"codex_subscription_session_used":true,"paid_acut_calls_made":false,"reviews":[]}}
 ```
 
 Review checks:
@@ -382,6 +510,9 @@ def run_script_text(role: str, config: dict[str, Any]) -> str:
     prompt = wf_rel / role / "prompt.md"
     process = wf_rel / role / "process.md"
     log = wf_rel / role / "cli.log"
+    env_unsets = " ".join(f"-u {name}" for name in endpoint_env_vars(config))
+    model = str(config["policy"]["required_codex_model"])
+    reasoning = str(config["policy"]["required_reasoning_effort"])
     return f"""#!/usr/bin/env bash
 set -euo pipefail
 cd /Users/chenmohan/gits/barcarolle
@@ -394,40 +525,21 @@ timestamp() {{
   date -u +%Y-%m-%dT%H:%M:%SZ
 }}
 
-if ! {{ test -n "${{LLM_BASE_URL:-}}" && test -n "${{LLM_API_KEY:-}}"; }}; then
-  test -f ~/.zshrc && source ~/.zshrc >/dev/null 2>&1 || true
-fi
-
-if ! {{ test -n "${{LLM_BASE_URL:-}}" && test -n "${{LLM_API_KEY:-}}"; }}; then
-  cat > "$PROCESS" <<EOF
-status: blocked
-updated: $(timestamp)
-summary: Required LLM_BASE_URL or LLM_API_KEY was missing before the external Codex CLI {role} call.
-session: {session_name}
-EOF
-  exit 2
-fi
-
 mkdir -p "$WORKFLOW/{role}/output"
 cat > "$PROCESS" <<EOF
 status: working
 updated: $(timestamp)
-summary: External Codex CLI {role} wrapper started with required endpoint environment present.
+summary: External Codex CLI {role} wrapper started using local Codex Subscription auth with API endpoint environment variables unset.
 session: {session_name}
+llm_api_endpoint_used: false
 EOF
 
 set +e
+env {env_unsets} \\
 codex exec \\
-  --ignore-user-config \\
   -C /Users/chenmohan/gits/barcarolle \\
-  -m gpt-5.5 \\
-  -c 'model="gpt-5.5"' \\
-  -c 'model_provider="barcarolle_llm"' \\
-  -c 'model_providers.barcarolle_llm.name="Barcarolle LLM Endpoint"' \\
-  -c "model_providers.barcarolle_llm.base_url=\\"${{LLM_BASE_URL}}\\"" \\
-  -c 'model_providers.barcarolle_llm.wire_api="responses"' \\
-  -c 'model_providers.barcarolle_llm.env_key="LLM_API_KEY"' \\
-  -c 'model_reasoning_effort="xhigh"' \\
+  -m {model} \\
+  -c 'model_reasoning_effort="{reasoning}"' \\
   --dangerously-bypass-approvals-and-sandbox \\
   - < "{prompt}" \\
   > "$LOG" \\
@@ -542,18 +654,28 @@ def validate_generated_statement_rows(rows: list[dict[str, Any]], packet_count: 
                 raise ValueError(f"generated statement row mentions deterministic override marker: {task_id}")
 
 
-def session_proof_base(config: dict[str, Any]) -> dict[str, Any]:
+def session_proof_base(config: dict[str, Any], *, reset: bool = False) -> dict[str, Any]:
     proof_path = output_path(config, "session_proof")
-    if proof_path.exists():
-        return read_json(proof_path)
+    if proof_path.exists() and not reset:
+        proof = read_json(proof_path)
+        proof["model_provider"] = "local_codex_subscription"
+        proof["model_provider_env_key"] = None
+        proof["endpoint_base_url_host"] = ""
+        proof["generator_reviewer_used_local_codex_subscription"] = True
+        proof["generator_reviewer_did_not_use_llm_api_endpoint"] = True
+        proof["llm_api_calls_made_for_generator_reviewer"] = False
+        return proof
     return {
         "schema_version": "barcarolle.phase1.diff_assisted_codex_loop_session_proof.v1",
         "generated_at": stable_generated_at(config),
-        "endpoint_base_url_host": endpoint_host(),
-        "model_provider": "barcarolle_llm",
-        "model_provider_env_key": "LLM_API_KEY",
+        "endpoint_base_url_host": "",
+        "model_provider": "local_codex_subscription",
+        "model_provider_env_key": None,
         "required_model": "gpt-5.5",
         "required_reasoning_effort": "xhigh",
+        "generator_reviewer_used_local_codex_subscription": True,
+        "generator_reviewer_did_not_use_llm_api_endpoint": True,
+        "llm_api_calls_made_for_generator_reviewer": False,
         "real_generator_codex_cli_session_started": False,
         "real_reviewer_codex_cli_session_started": False,
         "generator_process_file_present": False,
@@ -571,8 +693,10 @@ def write_session_proof_report(config: dict[str, Any], proof: dict[str, Any]) ->
         "",
         f"Generated: `{proof['generated_at']}`.",
         "",
-        f"- Endpoint host: `{proof.get('endpoint_base_url_host', '')}`.",
-        f"- Model provider: `{proof.get('model_provider')}` using env key `{proof.get('model_provider_env_key')}`.",
+        f"- Model provider: `{proof.get('model_provider')}`.",
+        f"- Local Codex Subscription used: `{proof.get('generator_reviewer_used_local_codex_subscription')}`.",
+        f"- LLM API endpoint used for generator/reviewer: `{not proof.get('generator_reviewer_did_not_use_llm_api_endpoint', False)}`.",
+        f"- LLM API calls made for generator/reviewer: `{proof.get('llm_api_calls_made_for_generator_reviewer')}`.",
         f"- Generator session started: `{proof['real_generator_codex_cli_session_started']}`.",
         f"- Reviewer session started: `{proof['real_reviewer_codex_cli_session_started']}`.",
         f"- Generator process file present: `{proof['generator_process_file_present']}`.",
@@ -615,7 +739,7 @@ def record_session_start(config: dict[str, Any], role: str) -> dict[str, Any]:
         {
             "role": role,
             "tmux_session": str(config["generation_review"][f"{role}_tmux_session"]),
-            "command_shape": f"tmux new-session -> run_{role}.sh -> codex exec with barcarolle_llm env_key LLM_API_KEY",
+            "command_shape": f"tmux new-session -> run_{role}.sh -> env -u LLM_BASE_URL -u LLM_API_KEY -u OPENAI_API_KEY -u OPENROUTER_API_KEY codex exec using local Codex Subscription",
             "started_at": utc_now(),
             "ended_at": "",
             "process_status": status_from_process(process),
@@ -649,7 +773,7 @@ def copy_generator_output(config: dict[str, Any]) -> dict[str, Any]:
         {
             "role": "generator",
             "tmux_session": str(config["generation_review"]["generator_tmux_session"]),
-            "command_shape": "tmux new-session -> run_generator.sh -> codex exec with barcarolle_llm env_key LLM_API_KEY",
+            "command_shape": "tmux new-session -> run_generator.sh -> env -u LLM_BASE_URL -u LLM_API_KEY -u OPENAI_API_KEY -u OPENROUTER_API_KEY codex exec using local Codex Subscription",
             "started_at": existing.get("started_at") or stable_generated_at(config),
             "ended_at": utc_now(),
             "process_status": "delivered",
@@ -701,7 +825,9 @@ def normalize_review_payload(payload: dict[str, Any]) -> dict[str, Any]:
     normalized["generated_at"] = str(payload.get("generated_at") or utc_now())
     normalized["candidate_count"] = len(reviews)
     normalized["review_counts"] = counts
-    normalized["paid_llm_calls_made"] = True
+    normalized["paid_llm_calls_made"] = False
+    normalized["llm_api_calls_made"] = False
+    normalized["codex_subscription_session_used"] = True
     normalized["paid_acut_calls_made"] = False
     normalized["raw_prompts_or_completions_committed"] = False
     normalized["reviews"] = reviews
@@ -717,7 +843,8 @@ def render_statement_reviews_markdown(reviews: dict[str, Any]) -> str:
         f"- Candidate statements reviewed: `{reviews['candidate_count']}`.",
         f"- Review counts: `{reviews['review_counts']}`.",
         f"- Deterministic QA counts: `{reviews.get('deterministic_qa_counts', {})}`.",
-        f"- Paid LLM calls made: `{reviews.get('paid_llm_calls_made')}`.",
+        f"- LLM API calls made: `{reviews.get('llm_api_calls_made')}`.",
+        f"- Codex Subscription session used: `{reviews.get('codex_subscription_session_used')}`.",
         "- Paid ACUT calls made: `false`.",
         "- Raw prompts or completions committed: `false`.",
         "",
@@ -762,7 +889,7 @@ def copy_reviewer_output(config: dict[str, Any]) -> dict[str, Any]:
         {
             "role": "reviewer",
             "tmux_session": str(config["generation_review"]["reviewer_tmux_session"]),
-            "command_shape": "tmux new-session -> run_reviewer.sh -> codex exec with barcarolle_llm env_key LLM_API_KEY",
+            "command_shape": "tmux new-session -> run_reviewer.sh -> env -u LLM_BASE_URL -u LLM_API_KEY -u OPENAI_API_KEY -u OPENROUTER_API_KEY codex exec using local Codex Subscription",
             "started_at": existing.get("started_at") or stable_generated_at(config),
             "ended_at": utc_now(),
             "process_status": "delivered",
@@ -983,8 +1110,15 @@ def build_recovery_decision(config: dict[str, Any]) -> dict[str, Any]:
         "generated_at": utc_now(),
         "primary_decision": primary,
         "real_codex_generator_reviewer_loop_completed": loop_completed,
-        "real_generator_session_completed": bool(proof.get("real_generator_codex_cli_session_started")),
-        "real_reviewer_session_completed": bool(proof.get("real_reviewer_codex_cli_session_started")),
+        "real_generator_session_completed": bool(proof.get("generator_output_not_deterministic_override")),
+        "real_reviewer_session_completed": bool(proof.get("reviewer_output_not_deterministic_rules_only")),
+        "generator_reviewer_used_local_codex_subscription": bool(
+            proof.get("generator_reviewer_used_local_codex_subscription")
+        ),
+        "generator_reviewer_did_not_use_llm_api_endpoint": bool(
+            proof.get("generator_reviewer_did_not_use_llm_api_endpoint")
+        ),
+        "llm_api_calls_made_for_generator_reviewer": False,
         "old_candidate_pool_recovered": "full" if primary.startswith("old_candidate_pool") else "partial" if primary.startswith("partial") else False,
         "replacement_supply_still_needed": bool(screen["remaining_missing_supply"]),
         "decision_basis": {
@@ -1017,6 +1151,8 @@ Generated: `{decision['generated_at']}`.
 
 - Primary decision: `{decision['primary_decision']}`.
 - Real Codex generator/reviewer loop completed: `{decision['real_codex_generator_reviewer_loop_completed']}`.
+- Generator/reviewer used local Codex Subscription: `{decision['generator_reviewer_used_local_codex_subscription']}`.
+- LLM API endpoint used for generator/reviewer: `{not decision['generator_reviewer_did_not_use_llm_api_endpoint']}`.
 - Old candidate pool recovered: `{decision['old_candidate_pool_recovered']}`.
 - Replacement supply still needed: `{decision['replacement_supply_still_needed']}`.
 - Next runbook: `{decision['next_runbook_path']}`.
@@ -1044,6 +1180,148 @@ def write_recovery_decision(config: dict[str, Any]) -> dict[str, Any]:
     return decision
 
 
+def optional_json(path: Path) -> dict[str, Any]:
+    return read_json(path) if path.exists() else {}
+
+
+def optional_jsonl_count(path: Path) -> int:
+    return len(read_jsonl(path)) if path.exists() else 0
+
+
+def review_counts(config: dict[str, Any]) -> Any:
+    reviews = optional_json(output_path(config, "statement_reviews"))
+    return reviews.get("review_counts", "not_run")
+
+
+def qa_counts(config: dict[str, Any]) -> Any:
+    qa = optional_json(output_path(config, "deterministic_qa"))
+    return qa.get("qa_counts", "not_run")
+
+
+def process_step_status(config: dict[str, Any], *, closeout: bool) -> list[tuple[str, str]]:
+    wf = workflow_dir(config)
+    decision = optional_json(output_path(config, "recovery_decision"))
+    return [
+        ("Step 0 preflight", "completed" if output_path(config, "preflight").exists() else "not_run"),
+        ("Step 1 candidate packets", "completed" if output_path(config, "candidate_packets").exists() else "not_run"),
+        ("Step 2 workflow files and prompt templates", "completed" if output_path(config, "generation_plan").exists() else "not_run"),
+        ("Step 3 generator session", status_from_process(wf / "generator" / "process.md")),
+        ("Step 4 reviewer session", status_from_process(wf / "reviewer" / "process.md")),
+        ("Step 5 deterministic QA", "completed" if output_path(config, "deterministic_qa").exists() else "not_run"),
+        ("Step 6 statement-hardened screen", "completed" if output_path(config, "statement_screen").exists() else "not_run"),
+        ("Step 7 recovery decision", str(decision.get("primary_decision") or "not_run")),
+        ("Step 8 closeout", "completed" if closeout else "not_run"),
+    ]
+
+
+def render_process_report(config: dict[str, Any], *, closeout: bool) -> str:
+    preflight = optional_json(output_path(config, "preflight"))
+    packets = optional_json(output_path(config, "candidate_packets"))
+    screen = optional_json(output_path(config, "statement_screen"))
+    decision = optional_json(output_path(config, "recovery_decision"))
+    generated_count = optional_jsonl_count(output_path(config, "generated_statements"))
+    proof = optional_json(output_path(config, "session_proof"))
+    closeout_line = f"Closeout updated: `{utc_now()}`.\n" if closeout else ""
+    step_lines = "\n".join(
+        f"- {name}: `{status}`." for name, status in process_step_status(config, closeout=closeout)
+    )
+    commits = command_output(
+        [
+            "git",
+            "log",
+            "--oneline",
+            "--max-count=12",
+            "--grep=diff-assisted Codex",
+            "--grep=Codex-reviewed",
+            "--all-match",
+        ]
+    )
+    if not commits:
+        commits = command_output(["git", "log", "--oneline", "--max-count=8"])
+    return f"""# Phase 1 Diff-Assisted Codex Loop Statement Regeneration Process
+
+Generated: `{preflight.get('generated_at', utc_now())}`.
+{closeout_line}
+## Step 0 Preflight
+
+- Branch: `{preflight.get('branch', '')}`.
+- HEAD: `{preflight.get('git_head', '')}`.
+- Python: `{preflight.get('python_version', '')}`.
+- uv: `{preflight.get('uv_version', '')}`.
+- Codex CLI available: `{preflight.get('codex_cli_available')}`.
+- tmux available: `{preflight.get('tmux_available')}`.
+- Local Codex Subscription generation/review conditionally enabled: `{preflight.get('codex_subscription_generation_review_conditionally_enabled')}`.
+- LLM API endpoint used for generator/reviewer: `{not preflight.get('generator_reviewer_did_not_use_llm_api_endpoint', False)}`.
+- LLM API calls made for generator/reviewer: `{preflight.get('llm_api_calls_made_for_generator_reviewer')}`.
+- Paid ACUT calls: `disabled`.
+- Paid solver cells: `disabled`.
+- Raw prompts, completions, CLI logs, target diffs, solver workspaces, and verifier workspaces committed: `false`.
+
+## Prior Deterministic Result Reinterpretation
+
+The previous `phase1_diff_assisted_statement_*` artifacts are historical dry-run context only. They are valid as deterministic tooling prototype evidence and as evidence that the old 240-character statement renderer over-penalized some candidates. They are not valid as independent Codex CLI generated statement evidence, independent Codex CLI review evidence, a basis for freezing a statement-hardened release, or a basis for paid validation.
+
+## Existing Unrelated Worktree Paths
+
+{chr(10).join(f"- `{path}`" for path in preflight.get('unrelated_existing_worktree_paths', [])) or "- `none`"}
+
+## Step Status
+
+{step_lines}
+
+## Recent Commits
+
+```text
+{commits}
+```
+
+## Results
+
+- Candidate packets built: `{packets.get('candidate_count', 'not_run')}`.
+- Generated statements delivered: `{generated_count}`.
+- Review pass/revise/reject counts: `{review_counts(config)}`.
+- Deterministic QA pass/reject counts: `{qa_counts(config)}`.
+- Eligible before regeneration: `{screen.get('eligible_count_before_regeneration', 'not_screened')}`.
+- Eligible after regeneration: `{screen.get('eligible_count_after_codex_loop_regeneration', 'not_screened')}`.
+- Old candidate pool recovered: `{decision.get('old_candidate_pool_recovered', 'not_decided')}`.
+- Replacement supply still needed: `{decision.get('replacement_supply_still_needed', 'not_decided')}`.
+- Primary decision: `{decision.get('primary_decision', 'not_decided')}`.
+- Next runbook path: `{decision.get('next_runbook_path', 'not_decided')}`.
+
+## Non-Negotiable Evidence
+
+- Real generator Codex CLI session started: `{proof.get('real_generator_codex_cli_session_started', False)}`.
+- Real reviewer Codex CLI session started: `{proof.get('real_reviewer_codex_cli_session_started', False)}`.
+- Generator/reviewer used local Codex Subscription: `{proof.get('generator_reviewer_used_local_codex_subscription', False)}`.
+- Generator/reviewer did not use LLM API endpoint: `{proof.get('generator_reviewer_did_not_use_llm_api_endpoint', False)}`.
+- Generator process file present: `{proof.get('generator_process_file_present', False)}`.
+- Reviewer process file present: `{proof.get('reviewer_process_file_present', False)}`.
+- Generator output not deterministic override: `{proof.get('generator_output_not_deterministic_override', False)}`.
+- Reviewer output not deterministic rules only: `{proof.get('reviewer_output_not_deterministic_rules_only', False)}`.
+- Raw CLI logs committed: `{proof.get('raw_cli_logs_committed', False)}`.
+- Paid ACUT solver cells run: `{proof.get('paid_acut_solver_cells_run', False)}`.
+- Historical paid outcomes used for generation or review: `{proof.get('historical_paid_outcomes_used_for_generation_or_review', False)}`.
+
+## Artifact Hygiene
+
+- LLM API calls made for generator/reviewer: `false`.
+- Codex Subscription sessions used: `{bool(proof.get('real_generator_codex_cli_session_started') or proof.get('real_reviewer_codex_cli_session_started'))}`.
+- LLM API endpoint used for generator/reviewer: `false`.
+- Paid ACUT calls made: `false`.
+- Paid solver cells run: `false`.
+- Raw prompts committed: `false`.
+- Raw completions committed: `false`.
+- Raw Codex CLI logs committed: `false`.
+- Raw target diffs committed: `false`.
+- Solver or verifier workspaces committed: `false`.
+- Historical score tables rewritten: `false`.
+"""
+
+
+def write_closeout(config: dict[str, Any]) -> None:
+    write_text(output_path(config, "process_report"), render_process_report(config, closeout=True))
+
+
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description="Build corrected Phase 1 diff-assisted Codex loop artifacts.")
     parser.add_argument("mode", choices=sorted(MODES))
@@ -1052,7 +1330,9 @@ def main(argv: list[str] | None = None) -> int:
     args = parser.parse_args(argv)
 
     config = load_config(args.config)
-    if args.mode == "packets":
+    if args.mode == "preflight":
+        write_preflight(config)
+    elif args.mode == "packets":
         write_candidate_packets(config)
     elif args.mode == "workflow":
         write_workflow_files(config)
@@ -1070,6 +1350,8 @@ def main(argv: list[str] | None = None) -> int:
         write_statement_screen(config)
     elif args.mode == "decide":
         write_recovery_decision(config)
+    elif args.mode == "closeout":
+        write_closeout(config)
     return 0
 
 

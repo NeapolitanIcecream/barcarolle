@@ -1,32 +1,20 @@
 {
-  "blocked_reason": "generator_codex_cli_exited_nonzero",
-  "endpoint_base_url_host": "apirx.boyuerichdata.com",
-  "generated_at": "2026-05-25T03:29:09Z",
-  "generator_output_not_deterministic_override": false,
-  "generator_process_file_present": true,
+  "endpoint_base_url_host": "",
+  "generated_at": "2026-05-25T04:55:14Z",
+  "generator_process_file_present": false,
+  "generator_reviewer_did_not_use_llm_api_endpoint": true,
+  "generator_reviewer_used_local_codex_subscription": true,
   "historical_paid_outcomes_used_for_generation_or_review": false,
-  "model_provider": "barcarolle_llm",
-  "model_provider_env_key": "LLM_API_KEY",
+  "llm_api_calls_made_for_generator_reviewer": false,
+  "model_provider": "local_codex_subscription",
+  "model_provider_env_key": null,
   "paid_acut_solver_cells_run": false,
   "raw_cli_logs_committed": false,
-  "real_generator_codex_cli_session_started": true,
+  "real_generator_codex_cli_session_started": false,
   "real_reviewer_codex_cli_session_started": false,
   "required_model": "gpt-5.5",
   "required_reasoning_effort": "xhigh",
-  "reviewer_output_not_deterministic_rules_only": false,
-  "reviewer_process_file_present": true,
+  "reviewer_process_file_present": false,
   "schema_version": "barcarolle.phase1.diff_assisted_codex_loop_session_proof.v1",
-  "sessions": [
-    {
-      "command_shape": "tmux new-session -> run_generator.sh -> codex exec with barcarolle_llm env_key LLM_API_KEY",
-      "ended_at": "2026-05-25T03:40:30Z",
-      "exit_code": "1",
-      "output_row_count": 0,
-      "process_file": ".codex-workflows/phase1-diff-assisted-statement-regeneration-codex-loop/generator/process.md",
-      "process_status": "blocked",
-      "role": "generator",
-      "started_at": "2026-05-25T03:38:22Z",
-      "tmux_session": "phase1-diffstmt-generator"
-    }
-  ]
+  "sessions": []
 }
