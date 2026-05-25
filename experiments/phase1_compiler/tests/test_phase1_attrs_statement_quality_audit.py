@@ -1,6 +1,12 @@
 from __future__ import annotations
 
+from pathlib import Path
+
 import phase1_attrs_statement_quality_audit as audit
+
+
+REPO_ROOT = Path(__file__).resolve().parents[3]
+CONFIG = REPO_ROOT / "experiments" / "phase1_compiler" / "configs" / "phase1_attrs_h_future_statement_quality_audit.yaml"
 
 
 def capped_summary(text: str) -> str:
@@ -90,3 +96,30 @@ def test_severe_statement_risk_is_machine_readable() -> None:
     assert flags["diagnostics"]["risk_flag_count"] >= 2
     assert flags["diagnostics"]["failure_signal"] == "statement_quality_risk_detected"
 
+
+def test_sensitivity_preserves_original_attrs_h_future_metric() -> None:
+    config = audit.load_config(CONFIG)
+    task_audit = audit.build_task_design_audit(config)
+
+    sensitivity = audit.build_statement_sensitivity(config, task_audit)
+
+    original = sensitivity["views"]["original_attrs_h_future"]
+    assert original["scoreable_cells"] == 7
+    assert original["verified_pass"] == 1
+    assert original["verified_fail"] == 6
+    assert original["policy_violations"] == 1
+    assert original["pass_rate"] == 0.142857
+    assert original["comparison_to_attrs_b_eval"]["attrs_b_eval_pass_rate"] == 0.875
+
+
+def test_sensitivity_reports_insufficient_clean_attrs_h_future_evidence() -> None:
+    config = audit.load_config(CONFIG)
+    task_audit = audit.build_task_design_audit(config)
+
+    sensitivity = audit.build_statement_sensitivity(config, task_audit)
+
+    strict = sensitivity["views"]["strict_clean_statement_only"]
+    assert strict["included_tasks"] == []
+    assert strict["scoreable_cells"] == 0
+    assert strict["pass_rate"] is None
+    assert strict["interpretation"] == "insufficient_clean_attrs_h_future_evidence"

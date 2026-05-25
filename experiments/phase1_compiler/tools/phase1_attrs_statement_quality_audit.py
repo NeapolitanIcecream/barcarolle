@@ -382,6 +382,189 @@ def false_bool() -> bool:
     return False
 
 
+def rounded_rate(pass_count: int, scoreable_count: int) -> float | None:
+    if scoreable_count == 0:
+        return None
+    return round(pass_count / scoreable_count, 6)
+
+
+def matrix_cells(config: dict[str, Any]) -> list[dict[str, Any]]:
+    return list(read_json(artifact_path(config, "task_outcome_matrix")).get("cells", []))
+
+
+def attrs_b_eval_comparison(cells: list[dict[str, Any]]) -> dict[str, Any]:
+    b_eval = [cell for cell in cells if cell.get("repo_id") == "attrs" and cell.get("split") == "B_eval"]
+    scoreable = [cell for cell in b_eval if cell.get("scoreable_cell")]
+    passed = sum(1 for cell in scoreable if cell.get("terminal_status") == "verified_pass" or cell.get("verified_pass"))
+    failed = sum(1 for cell in scoreable if cell.get("terminal_status") == "verified_fail" or cell.get("verified_fail"))
+    return {
+        "attrs_b_eval_pass_rate": rounded_rate(passed, len(scoreable)),
+        "attrs_b_eval_scoreable_cells": len(scoreable),
+        "attrs_b_eval_verified_fail": failed,
+        "attrs_b_eval_verified_pass": passed,
+    }
+
+
+def sensitivity_view(
+    *,
+    name: str,
+    included_tasks: list[str],
+    excluded_tasks: list[str],
+    cells: list[dict[str, Any]],
+    attrs_b_eval: dict[str, Any],
+    interpretation: str,
+) -> dict[str, Any]:
+    included = [cell for cell in cells if cell.get("task_id") in set(included_tasks)]
+    scoreable = [cell for cell in included if cell.get("scoreable_cell")]
+    verified_pass = sum(1 for cell in scoreable if cell.get("terminal_status") == "verified_pass" or cell.get("verified_pass"))
+    verified_fail = sum(1 for cell in scoreable if cell.get("terminal_status") == "verified_fail" or cell.get("verified_fail"))
+    policy_violations = sum(1 for cell in included if cell.get("terminal_status") == "policy_violation" or cell.get("policy_violation"))
+    pass_rate = rounded_rate(verified_pass, len(scoreable))
+    b_eval_rate = attrs_b_eval["attrs_b_eval_pass_rate"]
+    comparison = dict(attrs_b_eval)
+    comparison["absolute_pass_rate_gap_vs_attrs_b_eval"] = None if pass_rate is None or b_eval_rate is None else round(b_eval_rate - pass_rate, 6)
+    return {
+        "comparison_to_attrs_b_eval": comparison,
+        "excluded_tasks": excluded_tasks,
+        "included_tasks": included_tasks,
+        "interpretation": interpretation if len(scoreable) else "insufficient_clean_attrs_h_future_evidence",
+        "name": name,
+        "pass_rate": pass_rate,
+        "policy_violations": policy_violations,
+        "scoreable_cells": len(scoreable),
+        "verified_fail": verified_fail,
+        "verified_pass": verified_pass,
+    }
+
+
+def build_statement_sensitivity(config: dict[str, Any], task_audit: dict[str, Any] | None = None) -> dict[str, Any]:
+    task_audit = task_audit or build_task_design_audit(config)
+    audited_tasks = [str(task_id) for task_id in task_audit["audited_tasks"]]
+    task_rows = {str(row["task_id"]): row for row in task_audit["tasks"]}
+    material_risk_tasks = [task_id for task_id in audited_tasks if task_rows[task_id]["statement_quality_gate"] == "material_risk"]
+    clean_statement_tasks = [task_id for task_id in audited_tasks if task_rows[task_id]["statement_quality_gate"] == "pass"]
+    cells = [
+        cell
+        for cell in matrix_cells(config)
+        if cell.get("repo_id") == config["audited_repo"] and cell.get("split") == config["audited_split"] and cell.get("task_id") in audited_tasks
+    ]
+    attrs_b_eval = attrs_b_eval_comparison(matrix_cells(config))
+
+    view_specs = [
+        (
+            "original_attrs_h_future",
+            audited_tasks,
+            [],
+            "original_paid_observation_preserved_as_1_of_7_scoreable_pass",
+        ),
+        (
+            "exclude_policy_violation_only",
+            audited_tasks,
+            [],
+            "policy_violation_cell_remains_non_scoreable_so_scoreable_metric_matches_original",
+        ),
+        (
+            "exclude_highest_risk_task_013",
+            [task_id for task_id in audited_tasks if task_id != "attrs__hist__013"],
+            ["attrs__hist__013"],
+            "sensitivity_only_not_corrected_score; removing the highest PR-context risk task still leaves attrs H_future far below B_eval",
+        ),
+        (
+            "exclude_highest_risk_tasks_013_027",
+            [task_id for task_id in audited_tasks if task_id not in {"attrs__hist__013", "attrs__hist__027"}],
+            ["attrs__hist__013", "attrs__hist__027"],
+            "sensitivity_only_not_corrected_score; remaining evidence is smaller and still below B_eval",
+        ),
+        (
+            "strict_clean_statement_only",
+            clean_statement_tasks,
+            [task_id for task_id in audited_tasks if task_id not in clean_statement_tasks],
+            "strict clean statement view after excluding material statement-quality risk",
+        ),
+        (
+            "all_statement_risk_excluded",
+            [task_id for task_id in audited_tasks if task_id not in material_risk_tasks],
+            material_risk_tasks,
+            "diagnostic view for clean evidence remaining after excluding all statement-risk tasks",
+        ),
+    ]
+    views = {
+        name: sensitivity_view(
+            name=name,
+            included_tasks=included,
+            excluded_tasks=excluded,
+            cells=cells,
+            attrs_b_eval=attrs_b_eval,
+            interpretation=interpretation,
+        )
+        for name, included, excluded, interpretation in view_specs
+    }
+    return {
+        "attrs_b_eval_comparison": attrs_b_eval,
+        "audited_tasks": audited_tasks,
+        "config": config["_path"],
+        "generated_at": stable_generated_at(config),
+        "original_paid_result_preserved": True,
+        "paid_acut_calls_made": False,
+        "paid_llm_calls_made": False,
+        "predictive_validity_established": False,
+        "production_ranking_status": "not_produced",
+        "schema_version": "barcarolle.phase1.attrs_h_future_statement_sensitivity.v1",
+        "source_task_design_audit": str(output_path(config, "task_design_audit").relative_to(REPO_ROOT)),
+        "status": "computed",
+        "summary": {
+            "material_statement_quality_risk_task_count": len(material_risk_tasks),
+            "original_attrs_h_future_pass_rate": views["original_attrs_h_future"]["pass_rate"],
+            "original_attrs_h_future_scoreable_cells": views["original_attrs_h_future"]["scoreable_cells"],
+            "strict_clean_statement_view_status": views["strict_clean_statement_only"]["interpretation"],
+        },
+        "views": views,
+    }
+
+
+def render_statement_sensitivity_markdown(payload: dict[str, Any]) -> str:
+    lines = [
+        "# Phase 1 Attrs H_future Statement-Risk Sensitivity",
+        "",
+        f"Generated: `{payload['generated_at']}`.",
+        "",
+        "These views are sensitivity analysis only. They do not correct, repair, rerun, or overwrite the paid result.",
+        "",
+        "## Summary",
+        "",
+        f"- Original attrs H_future remains `{payload['summary']['original_attrs_h_future_pass_rate']}` pass rate over `{payload['summary']['original_attrs_h_future_scoreable_cells']}` scoreable cells.",
+        f"- Material statement-quality risk tasks: `{payload['summary']['material_statement_quality_risk_task_count']}`.",
+        f"- Strict clean statement view: `{payload['summary']['strict_clean_statement_view_status']}`.",
+        "",
+        "## Views",
+        "",
+    ]
+    for name, view in payload["views"].items():
+        lines.extend(
+            [
+                f"### {name}",
+                "",
+                f"- Included tasks: `{view['included_tasks']}`.",
+                f"- Excluded tasks: `{view['excluded_tasks']}`.",
+                f"- Scoreable cells: `{view['scoreable_cells']}`.",
+                f"- Verified pass/fail: `{view['verified_pass']}/{view['verified_fail']}`.",
+                f"- Policy violations: `{view['policy_violations']}`.",
+                f"- Pass rate: `{view['pass_rate']}`.",
+                f"- Comparison to attrs B_eval: `{view['comparison_to_attrs_b_eval']}`.",
+                f"- Interpretation: `{view['interpretation']}`.",
+                "",
+            ]
+        )
+    lines.extend(
+        [
+            "## Boundary",
+            "",
+            "Excluding questionable tasks is a diagnostic sensitivity view, not a corrected score. If clean statement evidence is empty or too small, the correct conclusion is insufficient clean attrs H_future evidence.",
+        ]
+    )
+    return "\n".join(lines)
+
+
 def task_evidence_label(row: dict[str, Any]) -> str:
     label = str(row["manual_audit_label"])
     if label == "questionable_pr_context_and_statement_quality_risk":
@@ -457,12 +640,27 @@ def run_audit(config_path: Path, *, write: bool) -> dict[str, Any]:
     return payload
 
 
+def run_sensitivity(config_path: Path, *, write: bool) -> dict[str, Any]:
+    config = load_config(config_path)
+    task_audit_path = output_path(config, "task_design_audit")
+    task_audit = read_json(task_audit_path) if task_audit_path.exists() else build_task_design_audit(config)
+    payload = build_statement_sensitivity(config, task_audit)
+    if write:
+        write_json(output_path(config, "statement_sensitivity"), payload)
+        write_text(output_path(config, "statement_sensitivity_report"), render_statement_sensitivity_markdown(payload))
+    return payload
+
+
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description="Audit attrs H_future statement quality using sanitized sidecars.")
+    parser.add_argument("command", nargs="?", choices=["audit", "sensitivity"], default="audit")
     parser.add_argument("--config", type=Path, default=DEFAULT_CONFIG)
     parser.add_argument("--write", action="store_true", help="write configured JSON and Markdown outputs")
     args = parser.parse_args(argv)
-    payload = run_audit(args.config, write=args.write)
+    if args.command == "audit":
+        payload = run_audit(args.config, write=args.write)
+    else:
+        payload = run_sensitivity(args.config, write=args.write)
     if not args.write:
         print(json.dumps(payload, indent=2, sort_keys=True))
     return 0 if payload["status"] == "computed" else 1
