@@ -1,0 +1,33 @@
+{
+  "allow_cross_harness_paid_parallelism": false,
+  "blockers": [],
+  "codex_preflight_status": "ready",
+  "endpoint_env_present_after_zshrc": true,
+  "existing_paid_prefix_files": [],
+  "generated_at": "2026-05-25T11:09:50+00:00",
+  "kilo_preflight_status": "ready",
+  "paid_acut_concurrency": 1,
+  "projected_batch_cost_usd": 4.0,
+  "projected_incremental_cost_usd": 16.0,
+  "schema_version": "barcarolle.phase1_statement_hardened_paid_entry_gate.v1",
+  "selected_task_ids": [
+    "attrs__hist__001",
+    "attrs__hist__003",
+    "attrs__hist__004",
+    "attrs__hist__008",
+    "attrs__hist__012",
+    "attrs__hist__013",
+    "attrs__hist__023",
+    "attrs__hist__027",
+    "boltons__clean_ext__001",
+    "boltons__clean_ext__008",
+    "boltons__clean_ext__010",
+    "boltons__hist__011",
+    "boltons__clean_ext__017",
+    "boltons__hist__022",
+    "boltons__hist__023",
+    "boltons__hist__027"
+  ],
+  "selected_task_ids_match_expected": true,
+  "status": "ready"
+}
