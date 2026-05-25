@@ -434,3 +434,33 @@ def test_select_by_repo_split_reports_repo_split_holes() -> None:
 
     assert selected["demo/B_eval"] == ["demo__001"]
     assert selected["demo/H_future"] == []
+
+
+def test_recovery_decision_uses_partial_recovery_when_missing_supply_remains(tmp_path: Path, monkeypatch) -> None:
+    config = {
+        "output_paths": {
+            "preflight": str(tmp_path / "missing_preflight.json"),
+            "statement_screen": str(tmp_path / "screen.json"),
+        },
+        "created_at": "2026-05-25T00:00:00Z",
+    }
+    screen = {
+        "candidate_count": 2,
+        "eligible_count_after_regeneration": 1,
+        "eligible_count_before_regeneration": 0,
+        "full_statement_hardened_release_recovered": False,
+        "paid_llm_calls_made": False,
+        "qa_pass_count": 1,
+        "remaining_missing_supply": {"demo/H_future": ["needed 1, found 0"]},
+        "review_pass_count": 1,
+        "review_reject_count": 1,
+        "selected_counts_by_repo_split": {"demo/B_eval": 1, "demo/H_future": 0},
+    }
+    (tmp_path / "screen.json").write_text(json.dumps(screen), encoding="utf-8")
+    monkeypatch.setattr(diffregen, "REPO_ROOT", tmp_path)
+
+    decision = diffregen.build_recovery_decision(config)
+
+    assert decision["primary_decision"] == "partial_recovery_mine_targeted_replacement_supply"
+    assert decision["replacement_supply_still_needed"] is True
+    assert decision["predictive_validity_established"] is False

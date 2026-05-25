@@ -829,6 +829,127 @@ def write_statement_screen(config: dict[str, Any]) -> dict[str, Any]:
     return screen
 
 
+def build_recovery_decision(config: dict[str, Any]) -> dict[str, Any]:
+    screen = read_json(output_path(config, "statement_screen"))
+    if screen["full_statement_hardened_release_recovered"]:
+        primary = "old_candidate_pool_recovered_retry_preregistration"
+        next_runbook = "docs/experiments/phase-1-statement-hardened-preregistration-after-regeneration-runbook.md"
+    elif screen["eligible_count_after_regeneration"] > screen["eligible_count_before_regeneration"]:
+        primary = "partial_recovery_mine_targeted_replacement_supply"
+        next_runbook = "docs/experiments/phase-1-targeted-statement-hardened-replacement-supply-runbook.md"
+    elif screen.get("review_pass_count", 0) == 0:
+        primary = "regeneration_failed_old_pool_not_recoverable"
+        next_runbook = "docs/experiments/phase-1-targeted-statement-hardened-replacement-supply-runbook.md"
+    else:
+        primary = "regeneration_blocked_by_endpoint_or_budget"
+        next_runbook = "docs/experiments/phase-1-targeted-statement-hardened-replacement-supply-runbook.md"
+    return {
+        "schema_version": "barcarolle.phase1.diff_assisted_recovery_decision.v1",
+        "generated_at": stable_generated_at(config),
+        "primary_decision": primary,
+        "decision_basis": {
+            "candidate_count": screen["candidate_count"],
+            "review_pass_count": screen["review_pass_count"],
+            "review_reject_count": screen["review_reject_count"],
+            "qa_pass_count": screen["qa_pass_count"],
+            "eligible_count_before_regeneration": screen["eligible_count_before_regeneration"],
+            "eligible_count_after_regeneration": screen["eligible_count_after_regeneration"],
+            "selected_counts_by_repo_split": screen["selected_counts_by_repo_split"],
+            "remaining_missing_supply": screen["remaining_missing_supply"],
+        },
+        "old_candidate_pool_recovered": "partial" if primary.startswith("partial") else bool(primary.startswith("old_candidate_pool_recovered")),
+        "replacement_supply_still_needed": bool(screen["remaining_missing_supply"]),
+        "future_paid_validation_requires_new_preregistration": True,
+        "paid_validation_completed": False,
+        "paid_acut_calls_made": False,
+        "paid_llm_calls_made": bool(screen.get("paid_llm_calls_made")),
+        "predictive_validity_established": False,
+        "generated_statement_is_scoreable_result": False,
+        "old_paid_result_repaired": False,
+        "next_runbook_path": next_runbook,
+    }
+
+
+def render_recovery_decision_markdown(decision: dict[str, Any]) -> str:
+    basis = decision["decision_basis"]
+    return f"""# Phase 1 Diff-Assisted Recovery Decision
+
+Generated: `{decision['generated_at']}`.
+
+## Decision
+
+- Primary decision: `{decision['primary_decision']}`.
+- Old candidate pool recovered: `{decision['old_candidate_pool_recovered']}`.
+- Replacement supply still needed: `{decision['replacement_supply_still_needed']}`.
+- Next runbook: `{decision['next_runbook_path']}`.
+
+## Basis
+
+- Candidate count: `{basis['candidate_count']}`.
+- Review pass/reject: `{basis['review_pass_count']}` / `{basis['review_reject_count']}`.
+- Deterministic QA pass: `{basis['qa_pass_count']}`.
+- Eligible before regeneration: `{basis['eligible_count_before_regeneration']}`.
+- Eligible after regeneration: `{basis['eligible_count_after_regeneration']}`.
+- Selected counts by repo/split: `{basis['selected_counts_by_repo_split']}`.
+- Remaining missing supply: `{basis['remaining_missing_supply']}`.
+
+## Boundary
+
+The decision is based on regenerated statement review and deterministic QA, not old truncation flags alone. It does not claim predictive validity, paid validation, repaired historical paid results, or scoreable results from generated statements. Future paid validation requires a new preregistration after targeted replacement supply closes the remaining repo/split hole.
+"""
+
+
+def render_targeted_replacement_supply_runbook(decision: dict[str, Any]) -> str:
+    missing = decision["decision_basis"]["remaining_missing_supply"]
+    return f"""# Phase 1 Targeted Statement-Hardened Replacement Supply Runbook
+
+Status: follow-up runbook, 2026-05-25.
+
+This runbook follows `docs/experiments/phase-1-diff-assisted-statement-regeneration-runbook.md`.
+Diff-assisted regeneration partially recovered the old pool, but targeted replacement supply is still needed.
+
+## Starting Point
+
+- Review-passed regenerated statements: `{decision['decision_basis']['review_pass_count']}`.
+- Deterministic QA-passed regenerated statements: `{decision['decision_basis']['qa_pass_count']}`.
+- Eligible before regeneration: `{decision['decision_basis']['eligible_count_before_regeneration']}`.
+- Eligible after regeneration: `{decision['decision_basis']['eligible_count_after_regeneration']}`.
+- Selected counts by repo/split: `{decision['decision_basis']['selected_counts_by_repo_split']}`.
+- Remaining missing supply: `{missing}`.
+
+## Goal
+
+Mine targeted replacement candidates only for the remaining missing repo/split supply, prioritizing `boltons/H_future`.
+Do not discard the regenerated statements that already passed review and deterministic QA.
+
+## Boundaries
+
+- Paid ACUT calls remain disabled.
+- Do not rerun old scoreable cells.
+- Do not rewrite historical score tables.
+- Do not use historical paid outcomes for candidate selection.
+- Keep generated statements and review verdicts as sidecar artifacts until a later preregistration freezes a release.
+- Do not claim predictive validity or paid validation from this runbook.
+
+## Required Output
+
+Add or update targeted replacement-supply configs, tooling, results, and reports under `experiments/phase1_compiler/`.
+The final decision should say whether the remaining `boltons/H_future` hole is filled enough to run a new statement-hardened preregistration after regeneration.
+
+## Verification
+
+Run the scoped Phase 1 compiler tests for statement quality, clean supply mining, and preregistration screening, then run `git diff --check`.
+"""
+
+
+def write_recovery_decision(config: dict[str, Any]) -> dict[str, Any]:
+    decision = build_recovery_decision(config)
+    write_json(output_path(config, "recovery_decision"), decision)
+    write_text(output_path(config, "recovery_decision_report"), render_recovery_decision_markdown(decision))
+    write_text(REPO_ROOT / decision["next_runbook_path"], render_targeted_replacement_supply_runbook(decision))
+    return decision
+
+
 def reviewer_verdict(packet: dict[str, Any], statement: str) -> dict[str, Any]:
     task_id = packet["task_id"]
     reasons: list[str] = []
@@ -1072,7 +1193,7 @@ def write_candidate_packets(config: dict[str, Any]) -> dict[str, Any]:
 
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description="Build Phase 1 diff-assisted statement regeneration artifacts.")
-    parser.add_argument("mode", choices=["packets", "generate", "qa", "screen"])
+    parser.add_argument("mode", choices=["packets", "generate", "qa", "screen", "decide"])
     parser.add_argument("--config", type=Path, default=DEFAULT_CONFIG)
     args = parser.parse_args(argv)
 
@@ -1085,6 +1206,8 @@ def main(argv: list[str] | None = None) -> int:
         apply_deterministic_qa(config)
     if args.mode == "screen":
         write_statement_screen(config)
+    if args.mode == "decide":
+        write_recovery_decision(config)
     return 0
 
 

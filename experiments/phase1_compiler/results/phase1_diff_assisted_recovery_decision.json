@@ -1,0 +1,34 @@
+{
+  "decision_basis": {
+    "candidate_count": 22,
+    "eligible_count_after_regeneration": 19,
+    "eligible_count_before_regeneration": 4,
+    "qa_pass_count": 19,
+    "remaining_missing_supply": {
+      "boltons/H_future": [
+        "needed 4, found 0 eligible regenerated statements without using paid outcomes"
+      ]
+    },
+    "review_pass_count": 19,
+    "review_reject_count": 3,
+    "selected_counts_by_repo_split": {
+      "attrs/B_eval": 4,
+      "attrs/H_future": 4,
+      "boltons/B_eval": 4,
+      "boltons/H_future": 0
+    }
+  },
+  "future_paid_validation_requires_new_preregistration": true,
+  "generated_at": "2026-05-25T02:52:58Z",
+  "generated_statement_is_scoreable_result": false,
+  "next_runbook_path": "docs/experiments/phase-1-targeted-statement-hardened-replacement-supply-runbook.md",
+  "old_candidate_pool_recovered": "partial",
+  "old_paid_result_repaired": false,
+  "paid_acut_calls_made": false,
+  "paid_llm_calls_made": false,
+  "paid_validation_completed": false,
+  "predictive_validity_established": false,
+  "primary_decision": "partial_recovery_mine_targeted_replacement_supply",
+  "replacement_supply_still_needed": true,
+  "schema_version": "barcarolle.phase1.diff_assisted_recovery_decision.v1"
+}
