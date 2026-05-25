@@ -287,9 +287,22 @@ def read_score_table(prefix: str) -> list[dict[str, Any]]:
     return rows
 
 
+def read_jsonl(path: Path) -> list[dict[str, Any]]:
+    if not path.exists() or path.stat().st_size == 0:
+        return []
+    return [json.loads(line) for line in path.read_text(encoding="utf-8").splitlines() if line.strip()]
+
+
 def read_cost_summary(prefix: str) -> dict[str, Any]:
     path = PHASE0_ROOT / "results" / f"{prefix}_cost_summary.json"
     return read_json(path) if path.exists() else {}
+
+
+def cost_value(summary: dict[str, Any]) -> float:
+    for key in ["observed_or_conservative_estimated_cost_usd", "conservative_estimated_cost_usd", "estimated_cost_usd"]:
+        if summary.get(key) is not None:
+            return float(summary.get(key) or 0.0)
+    return 0.0
 
 
 def group_from_prefix_key(key: str) -> str:
@@ -309,6 +322,67 @@ def score_metrics(rows: list[dict[str, Any]]) -> dict[str, Any]:
         "pass_rate": None if not scoreable else round(pass_count / len(scoreable), 4),
         "terminal_status_counts": dict(sorted(terminal_counts.items())),
         "wilson_95": wilson_interval(pass_count, len(scoreable)),
+    }
+
+
+def median(values: list[float]) -> float | None:
+    if not values:
+        return None
+    ordered = sorted(values)
+    middle = len(ordered) // 2
+    if len(ordered) % 2 == 1:
+        return round(ordered[middle], 3)
+    return round((ordered[middle - 1] + ordered[middle]) / 2, 3)
+
+
+def conservative_cost_by_run_id(prefixes: list[str]) -> dict[str, float]:
+    costs: dict[str, float] = {}
+    for prefix in prefixes:
+        for row in read_jsonl(PHASE0_ROOT / "results" / f"{prefix}_cost_ledger.jsonl"):
+            if row.get("run_id"):
+                costs[str(row["run_id"])] = float(row.get("estimated_cost_usd") or 0.0)
+    return costs
+
+
+def usage_rows_for_prefixes(prefixes: list[str]) -> list[dict[str, Any]]:
+    wanted = set(prefixes)
+    return [row for row in read_jsonl(PHASE0_ROOT / "results" / "workspace_usage_ledger.jsonl") if row.get("result_prefix") in wanted]
+
+
+def adapter_cost_latency(prefixes: list[str]) -> dict[str, dict[str, Any]]:
+    conservative_by_run_id = conservative_cost_by_run_id(prefixes)
+    usage_rows = usage_rows_for_prefixes(prefixes)
+    by_adapter: dict[str, dict[str, Any]] = {}
+    for row in usage_rows:
+        adapter = str(row.get("adapter_id") or row.get("harness_name") or "unknown")
+        bucket = by_adapter.setdefault(
+            adapter,
+            {
+                "observed_token_cost_usd": 0.0,
+                "conservative_fallback_cost_usd": 0.0,
+                "usage_observed_count": 0,
+                "cell_count": 0,
+                "latencies": [],
+            },
+        )
+        bucket["cell_count"] += 1
+        if row.get("usage_observed") is True:
+            bucket["usage_observed_count"] += 1
+            bucket["observed_token_cost_usd"] += float(row.get("estimated_cost_usd") or 0.0)
+        else:
+            bucket["conservative_fallback_cost_usd"] += conservative_by_run_id.get(str(row.get("run_id")), 0.0)
+        if row.get("latency_seconds") is not None:
+            bucket["latencies"].append(float(row["latency_seconds"]))
+    return {
+        adapter: {
+            "observed_token_cost_usd": round(values["observed_token_cost_usd"], 8),
+            "conservative_fallback_cost_usd": round(values["conservative_fallback_cost_usd"], 8),
+            "observed_or_conservative_cost_usd": round(values["observed_token_cost_usd"] + values["conservative_fallback_cost_usd"], 8),
+            "usage_observed_count": values["usage_observed_count"],
+            "usage_observed_rate": None if values["cell_count"] == 0 else round(values["usage_observed_count"] / values["cell_count"], 4),
+            "median_latency_seconds": median(values["latencies"]),
+        }
+        for adapter, values in by_adapter.items()
     }
 
 
@@ -332,6 +406,7 @@ def adapter_disagreement_rate(rows: list[dict[str, Any]]) -> float | None:
 def compute_metrics(config_path: Path = DEFAULT_CONFIG) -> tuple[dict[str, Any], dict[str, Any]]:
     config = load_config(config_path)
     prefixes = result_prefixes(config)
+    prefix_values = list(prefixes.values())
     per_group: dict[str, Any] = {}
     all_rows: list[dict[str, Any]] = []
     total_cost = 0.0
@@ -339,29 +414,20 @@ def compute_metrics(config_path: Path = DEFAULT_CONFIG) -> tuple[dict[str, Any],
         rows = read_score_table(prefix)
         all_rows.extend({**row, "repo_split": group_from_prefix_key(key), "result_prefix": prefix} for row in rows)
         cost = read_cost_summary(prefix)
-        total_cost += float(cost.get("estimated_cost_usd") or 0.0)
+        prefix_cost = cost_value(cost)
+        total_cost += prefix_cost
         per_group[group_from_prefix_key(key)] = {
             **score_metrics(rows),
             "result_prefix": prefix,
-            "estimated_cost_usd": cost.get("estimated_cost_usd"),
+            "observed_or_conservative_cost_usd": prefix_cost,
             "median_latency_seconds": cost.get("median_latency_seconds"),
         }
 
     by_adapter: dict[str, Any] = {}
+    adapter_costs = adapter_cost_latency(prefix_values)
     for adapter in sorted({str(row.get("adapter_id")) for row in all_rows if row.get("adapter_id")}):
         adapter_rows = [row for row in all_rows if row.get("adapter_id") == adapter]
-        adapter_cost = 0.0
-        for prefix in prefixes.values():
-            ledger_path = PHASE0_ROOT / "results" / f"{prefix}_cost_ledger.jsonl"
-            if not ledger_path.exists():
-                continue
-            for line in ledger_path.read_text(encoding="utf-8").splitlines():
-                if not line.strip():
-                    continue
-                cost_row = json.loads(line)
-                if cost_row.get("adapter_id") == adapter:
-                    adapter_cost += float(cost_row.get("estimated_cost_usd") or 0.0)
-        by_adapter[adapter] = {**score_metrics(adapter_rows), "estimated_cost_usd": round(adapter_cost, 8)}
+        by_adapter[adapter] = {**score_metrics(adapter_rows), **adapter_costs.get(adapter, {})}
 
     policy_violations = sum(1 for row in all_rows if row.get("terminal_status") == "policy_violation")
     completed = len(all_rows) == int(float(config["budget"]["planned_cells"]))
@@ -408,6 +474,10 @@ def compute_metrics(config_path: Path = DEFAULT_CONFIG) -> tuple[dict[str, Any],
             "policy_violation_count": policy_violations,
             "cost_bounded": cost_bounded,
             "observed_or_conservative_cost_usd": metrics["observed_or_conservative_cost_usd"],
+            "repo_split_pass_rates": {
+                repo_split: row.get("pass_rate") for repo_split, row in sorted(per_group.items())
+            },
+            "b_eval_to_h_future_gap": metrics["b_eval_to_h_future_gap"],
         },
         "recommended_next_action": "Use this paid run as bounded evidence and have the coordinating session decide any follow-up runbook.",
         "followup_runbook_written_by_worker": False,
@@ -451,6 +521,11 @@ def write_metrics_report(config: dict[str, Any], metrics: dict[str, Any]) -> Non
         lines.append(
             f"- `{repo_split}`: scoreable `{row['scoreable_cell_count']}/{row['cell_count']}`, pass rate `{row['pass_rate']}`, statuses `{row['terminal_status_counts']}`."
         )
+    lines.extend(["", "## Adapters", ""])
+    for adapter_id, row in sorted(metrics["by_adapter"].items()):
+        lines.append(
+            f"- `{adapter_id}`: scoreable `{row['scoreable_cell_count']}/{row['cell_count']}`, pass rate `{row['pass_rate']}`, observed-or-conservative cost `${row.get('observed_or_conservative_cost_usd')}`, median latency `{row.get('median_latency_seconds')}` seconds."
+        )
     write_text(output_path(config, "metrics_report"), "\n".join(lines))
 
 
@@ -462,6 +537,8 @@ def write_decision_report(config: dict[str, Any], decision: dict[str, Any]) -> N
         "",
         f"- Predictive validity established: `{decision['predictive_validity_established']}`.",
         f"- Reason: {decision['reason']}",
+        f"- Repo/split pass rates: `{decision['evidence'].get('repo_split_pass_rates')}`.",
+        f"- B_eval to H_future gaps: `{decision['evidence'].get('b_eval_to_h_future_gap')}`.",
         f"- Recommended next action: {decision['recommended_next_action']}",
         f"- Follow-up runbook written by worker: `{decision['followup_runbook_written_by_worker']}`.",
         "- Old paid result repaired: `false`.",
