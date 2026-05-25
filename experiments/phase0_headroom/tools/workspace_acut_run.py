@@ -359,6 +359,7 @@ def render_statement(package: TaskPackage) -> str:
     scope_lines = editable_scope or ["Keep the change focused on the requested behavior."]
     non_editable_lines = [
         "Do not edit tests, hidden verifier files, generated caches, lockfiles, or files outside the listed editable paths.",
+        *[f"Do not edit: {path}" for path in package.test_paths],
         *[f"Verifier-only context, do not edit: {line}" for line in verifier_only_scope],
     ]
     return "\n".join(
@@ -402,12 +403,17 @@ def package_submission_metadata(package: TaskPackage) -> dict[str, Any]:
         "changed_files",
         "test_files",
         "allowed_context_refs",
+        "canonical_repo_split",
+        "canonical_split",
         "original_hardening_status",
         "clean_overlay_promotion_decision",
         "promotion_rationale",
         "statement_quality",
+        "statement_digest",
+        "statement_source",
         "source_context_status",
         "metadata_sources",
+        "verifier_command_metadata",
     }
     return {key: package.metadata[key] for key in sorted(allowed_keys) if key in package.metadata}
 
@@ -733,6 +739,16 @@ def load_workspace_matrix_config(root: Path, matrix_config_path: Path | str | No
 
 
 def matrix_task_ids(config: dict[str, Any]) -> list[str]:
+    repo_splits = config.get("repo_splits") if isinstance(config.get("repo_splits"), dict) else {}
+    if repo_splits:
+        ordered: list[str] = []
+        preferred = ["attrs/B_eval", "attrs/H_future", "boltons/B_eval", "boltons/H_future"]
+        for split_name in [*preferred, *sorted(key for key in repo_splits if key not in preferred)]:
+            raw = repo_splits.get(split_name)
+            if isinstance(raw, list):
+                ordered.extend(str(item) for item in raw)
+        return ordered
+
     splits = config.get("splits") if isinstance(config.get("splits"), dict) else {}
     ordered: list[str] = []
     for split_name in ["b_eval", "h_future", "B_eval", "H_future"]:
@@ -743,6 +759,17 @@ def matrix_task_ids(config: dict[str, Any]) -> list[str]:
 
 
 def split_for_matrix_task(config: dict[str, Any]) -> dict[str, str]:
+    repo_splits = config.get("repo_splits") if isinstance(config.get("repo_splits"), dict) else {}
+    if repo_splits:
+        mapping: dict[str, str] = {}
+        for split_name, raw in repo_splits.items():
+            if not isinstance(raw, list):
+                continue
+            label = str(split_name).split("/", 1)[1] if "/" in str(split_name) else str(split_name)
+            for task_id in raw:
+                mapping[str(task_id)] = label
+        return mapping
+
     splits = config.get("splits") if isinstance(config.get("splits"), dict) else {}
     mapping: dict[str, str] = {}
     for split_name, raw in splits.items():
@@ -974,6 +1001,180 @@ def load_second_repo_clean_overlay_packages(root: Path, matrix_config_path: Path
     return packages
 
 
+def ordered_statement_hardened_task_ids(manifest: dict[str, Any]) -> list[str]:
+    groups = manifest.get("canonical_selected_task_ids_by_repo_split")
+    if not isinstance(groups, dict):
+        return []
+    ordered: list[str] = []
+    preferred = ["attrs/B_eval", "attrs/H_future", "boltons/B_eval", "boltons/H_future"]
+    for repo_split in [*preferred, *sorted(key for key in groups if key not in preferred)]:
+        raw = groups.get(repo_split)
+        if isinstance(raw, list):
+            ordered.extend(str(task_id) for task_id in raw)
+    return ordered
+
+
+def statement_hardened_repo_split_map(manifest: dict[str, Any]) -> dict[str, str]:
+    groups = manifest.get("canonical_selected_task_ids_by_repo_split")
+    if not isinstance(groups, dict):
+        return {}
+    mapping: dict[str, str] = {}
+    for repo_split, task_ids in groups.items():
+        if not isinstance(task_ids, list):
+            continue
+        for task_id in task_ids:
+            mapping[str(task_id)] = str(repo_split)
+    return mapping
+
+
+def statement_hardened_attrs_profile(root: Path, exp: Path, config: dict[str, Any]) -> dict[str, Any]:
+    config_path_raw = config.get("attrs_repo_config") or "experiments/phase1_compiler/configs/phase1_second_repo_clean_outcome_unseen_supply.yaml"
+    attrs_config_path = config_path(root, config_path_raw)
+    attrs_config = simple_yaml_load(attrs_config_path) if attrs_config_path.exists() else {}
+    repo_config = attrs_config.get("candidate_repos", {}).get("attrs", {})
+    test_environment = repo_config.get("test_environment") if isinstance(repo_config.get("test_environment"), dict) else {}
+    return {
+        "local_repo": repo_config.get("local_repo") or exp / "external_repos" / "attrs",
+        "test_command": test_environment.get("command_template")
+        or 'uv run --project experiments/phase0_headroom --with "pytest>=7,<8" --with "setuptools<81" --with "hypothesis<6" python -m pytest -q {test_files}',
+    }
+
+
+def statement_hardened_certified_rows(config: dict[str, Any], root: Path) -> dict[str, dict[str, Any]]:
+    attrs_rows = load_jsonl_map(config_path(root, config["attrs_certified_tasks"]))
+    boltons_clean_rows = load_jsonl_map(config_path(root, config["boltons_clean_ext_certified_tasks"]))
+    boltons_canonical_rows = load_jsonl_map(config_path(root, config["boltons_canonical_certified_tasks"]))
+    rows: dict[str, dict[str, Any]] = {}
+    rows.update(attrs_rows)
+    rows.update(boltons_canonical_rows)
+    rows.update(boltons_clean_rows)
+    return rows
+
+
+def statement_hardened_source_repo(root: Path, exp: Path, repo_id: str, attrs_profile: dict[str, Any], boltons_profile: dict[str, Any]) -> Path:
+    profile = attrs_profile if repo_id == "attrs" else boltons_profile
+    source_repo = Path(str(profile.get("local_repo") or exp / "external_repos" / repo_id))
+    return source_repo if source_repo.is_absolute() else root / source_repo
+
+
+def statement_hardened_verifier_command(
+    row: dict[str, Any],
+    repo_id: str,
+    exp: Path,
+    attrs_profile: dict[str, Any],
+    boltons_profile: dict[str, Any],
+    test_files: list[str],
+) -> list[str]:
+    profile = attrs_profile if repo_id == "attrs" else boltons_profile
+    command_template = str(row.get("harness_test_command") or profile.get("test_command") or "python -m pytest -q {test_files}")
+    return with_editable_current_worktree(absolute_uv_project(command_test_files(command_template, test_files), exp))
+
+
+def load_statement_hardened_after_canonical_repair_packages(root: Path, matrix_config_path: Path | str | None = None) -> list[TaskPackage]:
+    config = load_workspace_matrix_config(root, matrix_config_path)
+    if not config or not config.get("release_manifest"):
+        return []
+    exp = phase0_root(root)
+    manifest_path = config_path(root, config["release_manifest"])
+    preview_path = config_path(root, config["release_preview"])
+    inventory_path = config_path(root, config["inventory"])
+    manifest = read_json(manifest_path)
+    preview = read_json(preview_path)
+    inventory = read_json(inventory_path)
+    if manifest.get("status") != "frozen":
+        raise ValueError("statement-hardened release manifest must be frozen")
+
+    preview_by_id = {str(row["task_id"]): row for row in preview.get("previews", []) if row.get("task_id")}
+    inventory_by_id = {str(row["task_id"]): row for row in inventory.get("rows", []) if row.get("task_id")}
+    certified_by_id = statement_hardened_certified_rows(config, root)
+    repo_split_by_id = statement_hardened_repo_split_map(manifest)
+    attrs_profile = statement_hardened_attrs_profile(root, exp, config)
+    boltons_profile_path = config_path(root, config.get("boltons_target_profile", EXP_REL / "target_profiles" / "boltons_target_profile.json"))
+    boltons_profile = read_json(boltons_profile_path) if boltons_profile_path.exists() else {}
+    selected_ids = matrix_task_ids(config) or ordered_statement_hardened_task_ids(manifest)
+    manifest_ids = set(ordered_statement_hardened_task_ids(manifest))
+    unexpected = [task_id for task_id in selected_ids if task_id not in manifest_ids]
+    if unexpected:
+        raise ValueError(f"matrix selects task ids outside the frozen statement-hardened manifest: {unexpected}")
+
+    packages: list[TaskPackage] = []
+    for task_id in selected_ids:
+        preview_row = preview_by_id.get(task_id)
+        inventory_row = inventory_by_id.get(task_id)
+        certified_row = certified_by_id.get(task_id)
+        if not (preview_row and inventory_row and certified_row):
+            continue
+        statement = str(preview_row.get("visible_statement") or inventory_row.get("full_visible_statement") or "")
+        statement_digest = str(preview_row.get("statement_digest") or inventory_row.get("statement_digest") or "")
+        if statement_digest != f"sha256:{sha256_text(statement)}":
+            raise ValueError(f"statement digest mismatch for {task_id}")
+        if statement_digest != manifest.get("statement_digests", {}).get(task_id):
+            raise ValueError(f"statement digest does not match frozen manifest for {task_id}")
+
+        repo_id = str(preview_row.get("repo_id") or inventory_row.get("repo_id") or certified_row.get("repo_id") or task_id.split("__", 1)[0])
+        repo_split = repo_split_by_id.get(task_id, str(preview_row.get("canonical_repo_split") or inventory_row.get("canonical_repo_split") or ""))
+        split = repo_split.split("/", 1)[1] if "/" in repo_split else str(inventory_row.get("canonical_split") or "")
+        editable_paths = [str(path) for path in manifest.get("editable_implementation_paths", {}).get(task_id, [])]
+        test_paths = [str(path) for path in manifest.get("non_editable_test_paths", {}).get(task_id, [])]
+        changed_files = [str(path) for path in certified_row.get("changed_files") or [*editable_paths, *test_paths]]
+        verifier_command = statement_hardened_verifier_command(
+            certified_row,
+            repo_id,
+            exp,
+            attrs_profile,
+            boltons_profile,
+            test_paths,
+        )
+        source_repo = statement_hardened_source_repo(root, exp, repo_id, attrs_profile, boltons_profile)
+        certified_source_key = (
+            "attrs_certified_tasks"
+            if repo_id == "attrs"
+            else "boltons_clean_ext_certified_tasks"
+            if task_id.startswith("boltons__clean_ext__")
+            else "boltons_canonical_certified_tasks"
+        )
+        metadata = {
+            "allowed_context_refs": preview_row.get("allowed_public_context_refs")
+            or inventory_row.get("allowed_public_context_refs")
+            or certified_row.get("allowed_context_refs")
+            or [],
+            "base_commit": certified_row.get("base_commit"),
+            "canonical_repo_split": repo_split,
+            "canonical_split": split,
+            "changed_files": changed_files,
+            "evidence_level": "statement_hardened_after_canonical_repair",
+            "metadata_sources": {
+                "certified_tasks": display_path(root, config_path(root, config[certified_source_key])),
+                "inventory": display_path(root, inventory_path),
+                "release_manifest": display_path(root, manifest_path),
+                "release_preview": display_path(root, preview_path),
+            },
+            "statement_digest": statement_digest,
+            "statement_source": preview_row.get("statement_source") or inventory_row.get("statement_source"),
+            "task_time": certified_row.get("task_time") or inventory_row.get("task_time"),
+            "test_files": test_paths,
+            "verifier_command_metadata": inventory_row.get("verifier_command_metadata"),
+        }
+        packages.append(
+            TaskPackage(
+                task_id=task_id,
+                repo_id=repo_id,
+                split=split,
+                source_repo=source_repo,
+                base_commit=str(certified_row["base_commit"]),
+                target_commit=str(certified_row.get("target_commit") or ""),
+                solver_facing_statement=statement,
+                verifier_command=verifier_command,
+                allowed_code_paths=editable_paths,
+                test_paths=test_paths,
+                timeout_seconds=180,
+                scope_boundaries="Modify only the listed editable implementation paths; do not edit tests or generated metadata.",
+                metadata=metadata,
+            )
+        )
+    return packages
+
+
 def load_toolz_packages(root: Path) -> list[TaskPackage]:
     exp = phase0_root(root)
     tasks = load_jsonl_map(exp / "certified_tasks" / "toolz_certified_tasks.jsonl")
@@ -1106,6 +1307,9 @@ def load_second_repo_packages(root: Path) -> list[TaskPackage]:
 
 
 def load_phase0_packages(root: Path, matrix_config_path: Path | str | None = None) -> list[TaskPackage]:
+    statement_hardened_packages = load_statement_hardened_after_canonical_repair_packages(root, matrix_config_path)
+    if statement_hardened_packages:
+        return statement_hardened_packages
     overlay_packages = load_clean_overlay_packages(root, matrix_config_path)
     second_repo_overlay_packages = load_second_repo_clean_overlay_packages(root, matrix_config_path)
     matrix_config = load_workspace_matrix_config(root, matrix_config_path)
@@ -1294,6 +1498,11 @@ def inspect_packages(
                 "allowed_code_paths": package.allowed_code_paths,
                 "test_paths": package.test_paths,
                 "statement_sha256": sha256_text(render_statement(package)),
+                "solver_facing_statement_digest": f"sha256:{sha256_text(package.solver_facing_statement)}",
+                "frozen_statement_digest": package.metadata.get("statement_digest"),
+                "statement_digest_matches_frozen": package.metadata.get("statement_digest") == f"sha256:{sha256_text(package.solver_facing_statement)}"
+                if package.metadata.get("statement_digest")
+                else None,
                 "metadata": package_submission_metadata(package),
             }
             for package in selected
