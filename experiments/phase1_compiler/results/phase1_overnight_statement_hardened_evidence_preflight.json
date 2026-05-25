@@ -12,6 +12,39 @@
     "required_inputs_exist": true,
     "scoreable_cells": true
   },
+  "closeout": {
+    "followup_runbook_written_by_worker": false,
+    "integrity_audit_status": "pass",
+    "new_paid_acut_calls_made": false,
+    "new_paid_llm_calls_made": false,
+    "primary_decision": "design_new_predictive_threshold_before_more_paid_validation",
+    "raw_artifacts_committed": false,
+    "steps_completed": [
+      "0",
+      "1",
+      "2",
+      "3",
+      "4",
+      "5",
+      "6",
+      "7",
+      "8",
+      "9",
+      "10"
+    ]
+  },
+  "commit_history": [
+    "7ced9b34 Record overnight statement-hardened analysis preflight",
+    "ef472860 Audit statement-hardened paid result integrity",
+    "8bb65216 Build statement-hardened task outcome matrix",
+    "4bc4f3ea Classify statement-hardened paid failures",
+    "bab9bdcd Analyze statement-hardened result strata",
+    "866d238a Analyze predictive threshold and power",
+    "cd2d5c29 Rank compiler calibration options",
+    "8a1be614 Assess local supply for statement-hardened expansion",
+    "06f4a398 Write proposal alignment memo for paid evidence",
+    "b9cf6e2d Decide next action from statement-hardened evidence"
+  ],
   "environment": {
     "branch": "codex/restart-benchmark-compiler",
     "date_utc": "2026-05-25T14:49:38Z",
@@ -50,7 +83,75 @@
   "release_id": "statement_hardened_after_canonical_split_repair_20260525",
   "runbook_path": "docs/experiments/phase-1-overnight-statement-hardened-evidence-analysis-runbook.md",
   "schema_version": "barcarolle.phase1_overnight_statement_hardened_evidence_analysis_output.v1",
-  "status": "pass",
+  "status": "completed",
+  "verification_commands": [
+    {
+      "args": [
+        "git",
+        "diff",
+        "--check"
+      ],
+      "duration_seconds": 0.021,
+      "name": "git diff --check",
+      "returncode": 0,
+      "status": "pass",
+      "stderr_tail": "",
+      "stdout_tail": ""
+    },
+    {
+      "args": [
+        "uv",
+        "run",
+        "--project",
+        "experiments/phase1_compiler",
+        "pytest",
+        "-q",
+        "experiments/phase1_compiler/tests/test_phase1_overnight_statement_hardened_evidence_analysis.py"
+      ],
+      "duration_seconds": 0.12,
+      "name": "overnight evidence tests",
+      "returncode": 0,
+      "status": "pass",
+      "stderr_tail": "",
+      "stdout_tail": ".....                                                                    [100%]\n5 passed in 0.03s"
+    },
+    {
+      "args": [
+        "uv",
+        "run",
+        "--project",
+        "experiments/phase1_compiler",
+        "pytest",
+        "-q",
+        "experiments/phase1_compiler/tests/test_phase1_statement_hardened_after_canonical_repair_paid_validation.py",
+        "experiments/phase1_compiler/tests/test_phase1_statement_hardened_after_canonical_repair_preregistration.py",
+        "experiments/phase1_compiler/tests/test_phase1_canonical_split_statement_repair.py"
+      ],
+      "duration_seconds": 0.195,
+      "name": "paid validation regression tests",
+      "returncode": 0,
+      "status": "pass",
+      "stderr_tail": "",
+      "stdout_tail": ".......................                                                  [100%]\n23 passed in 0.03s"
+    },
+    {
+      "args": [
+        "uv",
+        "run",
+        "--project",
+        "experiments/phase1_compiler",
+        "pytest",
+        "-q",
+        "experiments/phase1_compiler/tests/test_phase1_diff_assisted_codex_loop_statement_regeneration.py"
+      ],
+      "duration_seconds": 0.512,
+      "name": "diff assisted codex loop regression tests",
+      "returncode": 0,
+      "status": "pass",
+      "stderr_tail": "",
+      "stdout_tail": ".........                                                                [100%]\n9 passed in 0.42s"
+    }
+  ],
   "work_queue": [
     {
       "blockers": [],
@@ -163,10 +264,12 @@
     {
       "blockers": [],
       "commit_target": "Record overnight statement-hardened analysis closeout",
-      "outputs": [],
-      "status": "pending",
+      "outputs": [
+        "experiments/phase1_compiler/reports/phase1_overnight_statement_hardened_evidence_process.md"
+      ],
+      "status": "completed",
       "step": "10",
-      "updated_at": "2026-05-25T14:49:38Z"
+      "updated_at": "2026-05-25T14:54:50Z"
     }
   ]
 }

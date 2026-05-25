@@ -1,6 +1,6 @@
 # Overnight Statement-Hardened Evidence Process
 
-Status: `pass`.
+Status: `completed`.
 
 ## Boundary
 
@@ -32,11 +32,33 @@ Status: `pass`.
 | 7 | completed | Assess local supply for statement-hardened expansion | experiments/phase1_compiler/results/phase1_overnight_statement_hardened_local_supply_analysis.json, experiments/phase1_compiler/reports/phase1_overnight_statement_hardened_local_supply_analysis.md |  |
 | 8 | completed | Write proposal alignment memo for paid evidence | experiments/phase1_compiler/reports/phase1_overnight_statement_hardened_proposal_alignment.md |  |
 | 9 | completed | Decide next action from statement-hardened evidence | experiments/phase1_compiler/results/phase1_overnight_statement_hardened_next_action_decision.json, experiments/phase1_compiler/reports/phase1_overnight_statement_hardened_next_action_decision.md |  |
-| 10 | pending | Record overnight statement-hardened analysis closeout |  |  |
+| 10 | completed | Record overnight statement-hardened analysis closeout | experiments/phase1_compiler/reports/phase1_overnight_statement_hardened_evidence_process.md |  |
+
+## Verification
+
+| Command | Return code | Status | Seconds |
+| --- | --- | --- | --- |
+| git diff --check | 0 | pass | 0.021 |
+| overnight evidence tests | 0 | pass | 0.12 |
+| paid validation regression tests | 0 | pass | 0.195 |
+| diff assisted codex loop regression tests | 0 | pass | 0.512 |
+
+## Commits
+
+- `7ced9b34 Record overnight statement-hardened analysis preflight`
+- `ef472860 Audit statement-hardened paid result integrity`
+- `8bb65216 Build statement-hardened task outcome matrix`
+- `4bc4f3ea Classify statement-hardened paid failures`
+- `bab9bdcd Analyze statement-hardened result strata`
+- `866d238a Analyze predictive threshold and power`
+- `cd2d5c29 Rank compiler calibration options`
+- `8a1be614 Assess local supply for statement-hardened expansion`
+- `06f4a398 Write proposal alignment memo for paid evidence`
+- `b9cf6e2d Decide next action from statement-hardened evidence`
 
 ## Closeout
 
 - Integrity audit status: `pass`.
 - Primary decision: `design_new_predictive_threshold_before_more_paid_validation`.
-- Recommended next action: Do not run more paid validation until a quantitative predictive-validity threshold and a better matched local design are preregistered..
+- Recommended next action: Do not run more paid validation until a quantitative predictive-validity threshold and a better matched local design are preregistered.
 - Predictive validity established: `False`.

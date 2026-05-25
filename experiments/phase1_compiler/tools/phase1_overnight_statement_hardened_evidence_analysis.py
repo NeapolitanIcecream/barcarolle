@@ -416,6 +416,10 @@ def write_process_report(config: dict[str, Any], preflight: dict[str, Any]) -> N
                 ],
             )
         )
+    if preflight.get("commit_history"):
+        lines.extend(["", "## Commits", ""])
+        for commit in preflight["commit_history"]:
+            lines.append(f"- `{commit}`")
     if decision:
         lines.extend(
             [
@@ -424,7 +428,7 @@ def write_process_report(config: dict[str, Any], preflight: dict[str, Any]) -> N
                 "",
                 f"- Integrity audit status: `{decision.get('integrity_audit_status')}`.",
                 f"- Primary decision: `{decision.get('primary_decision')}`.",
-                f"- Recommended next action: {decision.get('recommended_next_action')}.",
+                f"- Recommended next action: {decision.get('recommended_next_action')}",
                 f"- Predictive validity established: `{decision.get('predictive_validity_established')}`.",
             ]
         )
@@ -1800,6 +1804,13 @@ def run_closeout(config: dict[str, Any]) -> dict[str, Any]:
             }
         )
     status = "completed" if all(item["returncode"] == 0 for item in results) else "verification_failed"
+    preflight = load_preflight(config)
+    base_head = preflight.get("environment", {}).get("head")
+    commit_history = []
+    if base_head:
+        commit_result = command_result(["git", "log", "--oneline", "--reverse", f"{base_head}..HEAD"])
+        if commit_result["returncode"] == 0 and commit_result["stdout"]:
+            commit_history = commit_result["stdout"].splitlines()
     update_queue_step(
         config,
         step="10",
@@ -1822,6 +1833,7 @@ def run_closeout(config: dict[str, Any]) -> dict[str, Any]:
                 if output_path(config, "next_action_decision").exists()
                 else None,
             },
+            "commit_history": commit_history,
         },
     )
     return {"schema_version": OUTPUT_SCHEMA_VERSION, "analysis_schema": "closeout.v1", "status": status, "verification_commands": results}
