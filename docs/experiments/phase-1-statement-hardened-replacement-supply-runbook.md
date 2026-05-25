@@ -6,7 +6,7 @@ Mine additional public-context, statement-quality-gated replacement tasks for th
 
 ## Missing Supply
 
-`{'boltons/B_eval': ['needed 4, found 2 eligible tasks without using paid outcomes'], 'boltons/H_future': ['needed 4, found 0 eligible tasks without using paid outcomes'], 'attrs/B_eval': ['needed 4, found 2 eligible tasks without using paid outcomes'], 'attrs/H_future': ['needed 4, found 0 eligible tasks without using paid outcomes']}`
+`{'attrs/B_eval': ['needed 4, found 2 eligible tasks without using paid outcomes'], 'attrs/H_future': ['needed 4, found 0 eligible tasks without using paid outcomes'], 'boltons/B_eval': ['needed 4, found 2 eligible tasks without using paid outcomes'], 'boltons/H_future': ['needed 4, found 0 eligible tasks without using paid outcomes']}`
 
 ## Boundary
 

@@ -1,0 +1,12 @@
+{
+  "generated_at": "2026-05-25T02:04:56Z",
+  "next_runbook_path": "docs/experiments/phase-1-statement-hardened-replacement-supply-runbook.md",
+  "paid_acut_calls_made": false,
+  "paid_llm_calls_made": false,
+  "paid_validation_blocked_until_user_approval": true,
+  "predictive_validity_established": false,
+  "primary_decision": "replacement_supply_needed_before_paid_validation",
+  "release_frozen": false,
+  "schema_version": "barcarolle.phase1_statement_hardened_validation_decision.v1",
+  "status": "decided"
+}
