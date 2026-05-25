@@ -1,0 +1,61 @@
+{
+  "agent_boundary": {
+    "codex_generator_reviewer_sessions_started": false,
+    "must_not_write_next_runbook": true,
+    "paid_acut_calls_made": false,
+    "paid_llm_calls_made": false,
+    "paid_solver_cells_run": false,
+    "provider_cost_change_usd": 0
+  },
+  "canonical_decision_checks": {
+    "canonical_review_qa_pass_count": 16,
+    "canonical_selected_task_count": 16,
+    "paid_acut_calls_made": false,
+    "paid_solver_cells_run": false,
+    "primary_decision": "canonical_split_repair_complete_retry_preregistration",
+    "statement_hardened_preregistration_ready_after_split_repair": true,
+    "targeted_replacement_supply_still_needed": false
+  },
+  "generated_at": "2026-05-25T08:11:58Z",
+  "git_status_short_branch": [
+    "## codex/restart-benchmark-compiler...origin/codex/restart-benchmark-compiler [ahead 235]",
+    " M AGENTS.md",
+    " M docs/experiments/phase-1-statement-hardened-holdout-preregistration-runbook.md",
+    " M docs/experiments/phase-1-statement-hardened-preregistration-after-canonical-split-repair-runbook.md",
+    " M docs/experiments/phase-1-targeted-statement-hardened-replacement-supply-runbook.md",
+    "?? docs/experiments/phase-1-attrs-generalization-third-repo-decision-runbook.md",
+    "?? docs/experiments/phase-1-attrs-h-future-statement-quality-audit-runbook.md",
+    "?? docs/experiments/phase-1-autonomous-overnight-two-repo-research-runbook.md",
+    "?? docs/experiments/phase-1-diff-assisted-statement-regeneration-runbook.md",
+    "?? docs/experiments/phase-1-policy-violation-triage-bounded-rerun-runbook.md"
+  ],
+  "pre_existing_dirty_files": [
+    "AGENTS.md",
+    "docs/experiments/phase-1-statement-hardened-holdout-preregistration-runbook.md",
+    "docs/experiments/phase-1-statement-hardened-preregistration-after-canonical-split-repair-runbook.md",
+    "docs/experiments/phase-1-targeted-statement-hardened-replacement-supply-runbook.md",
+    "docs/experiments/phase-1-attrs-generalization-third-repo-decision-runbook.md",
+    "docs/experiments/phase-1-attrs-h-future-statement-quality-audit-runbook.md",
+    "docs/experiments/phase-1-autonomous-overnight-two-repo-research-runbook.md",
+    "docs/experiments/phase-1-diff-assisted-statement-regeneration-runbook.md",
+    "docs/experiments/phase-1-policy-violation-triage-bounded-rerun-runbook.md"
+  ],
+  "required_input_artifact_digests": {
+    "AGENTS.md": "sha256:1f5f5001de31bfa6674ce87d19626dd6c40f749362efdf166518df4838ed9d0c",
+    "docs/experiments/phase-1-statement-hardened-preregistration-after-canonical-split-repair-runbook.md": "sha256:13559f4a1b6a63c0dd76fcbccd39207e1f6705bc80a00a67917773696443dceb",
+    "experiments/phase1_compiler/reports/phase1_canonical_split_repair_decision.md": "sha256:cbaba21a8413cbb0369ba7fb9a7cde81981e933bc3b1b80899d7d6a9a53ccc4d",
+    "experiments/phase1_compiler/reports/phase1_canonical_split_repair_process.md": "sha256:b7033fd31f07eaf858cef8712017dd731525daa373d52316c8ff13f78cf044f6",
+    "experiments/phase1_compiler/results/phase1_canonical_regenerated_statements.jsonl": "sha256:efd9177b19f84d992993eb3a16d4975f6c31a078914ffe13fc5f78eea91ae352",
+    "experiments/phase1_compiler/results/phase1_canonical_selected_inventory.json": "sha256:0f98c1454d7b7db49edbc670d894792353a0b44d1a9110ce12d5d28596f34b84",
+    "experiments/phase1_compiler/results/phase1_canonical_split_map.json": "sha256:caadbf80637e6b36781a82e1ff83c04258cd14759ead58ef835d248cb2f7eb0f",
+    "experiments/phase1_compiler/results/phase1_canonical_split_repair_decision.json": "sha256:063c7cab7dae58a86f6f771fafa67de35112fdd07ef04f1c4b7ad0015862ee29",
+    "experiments/phase1_compiler/results/phase1_canonical_statement_qa.json": "sha256:18e6be237a9cab210abf57ac0c06f4169119acf2f67311527140f64008fb511c",
+    "experiments/phase1_compiler/results/phase1_canonical_statement_reviews.json": "sha256:df7a4beba837c0506d9f58aa8ac7ac2f0da931450a2c144e14ffa09690ce52fe",
+    "experiments/phase1_compiler/results/phase1_canonical_statement_screen.json": "sha256:d42ceb4d6efa4ad2d7129be4c5a4f30cb33b126e4a9c4219560e40227d351cc2",
+    "experiments/phase1_compiler/results/phase1_diff_assisted_codex_loop_generated_statements.jsonl": "sha256:cc45c86e7cdffe6553c1f779079566ad8ea7d25018c9ac018e01c419d82a9a3c",
+    "experiments/phase1_compiler/results/phase1_diff_assisted_codex_loop_statement_reviews.json": "sha256:5d214899d794e2b52f2c5b7c8dc41fc93ae6acb4b70f0c93329800d120ba7bb0"
+  },
+  "schema_version": "barcarolle.phase1.statement_hardened_after_canonical_repair_preflight.v1",
+  "source_runbook": "docs/experiments/phase-1-statement-hardened-preregistration-after-canonical-split-repair-runbook.md",
+  "status": "pass"
+}
