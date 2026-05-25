@@ -1,0 +1,271 @@
+{
+  "audited_tasks": [
+    "attrs__hist__012",
+    "attrs__hist__013",
+    "attrs__hist__023",
+    "attrs__hist__027"
+  ],
+  "config": "/Users/chenmohan/gits/barcarolle/experiments/phase1_compiler/configs/phase1_attrs_h_future_statement_quality_audit.yaml",
+  "diagnostics": {
+    "failure_signal": "statement_quality_risk_detected",
+    "missing_task_inputs": [],
+    "raw_public_bodies_included": false
+  },
+  "generated_at": "2026-05-25T01:34:18Z",
+  "paid_acut_calls_made": false,
+  "paid_llm_calls_made": false,
+  "predictive_validity_established": false,
+  "production_ranking_status": "not_produced",
+  "sanitization": {
+    "raw_acut_transcripts_included": false,
+    "raw_public_issue_or_pr_bodies_included": false,
+    "raw_verifier_material_included": false
+  },
+  "schema_version": "barcarolle.phase1.attrs_h_future_task_design_audit.v1",
+  "status": "computed",
+  "summary": {
+    "audited_task_count": 4,
+    "clean_statement_task_count": 0,
+    "material_statement_quality_risk_count": 4,
+    "policy_violation_count": 1,
+    "pr_context_risk_count": 1,
+    "probably_truncated_count": 4,
+    "scoreable_fail_count": 6,
+    "scoreable_pass_count": 1
+  },
+  "tasks": [
+    {
+      "adapter_outcomes": {
+        "codex_workspace": "verified_fail",
+        "kilo_workspace": "verified_fail"
+      },
+      "body_summary_hit_old_cap": true,
+      "body_summary_length": 240,
+      "certification_gate_summary": {
+        "all_pass": true,
+        "failed_gates": [],
+        "gate_count": 11,
+        "gate_counts": {
+          "pass": 11
+        }
+      },
+      "changed_file_count": 4,
+      "implementation_file_count": 1,
+      "implementation_files": [
+        "src/attr/_make.py"
+      ],
+      "manual_audit_label": "valid_but_statement_quality_risk",
+      "manual_audit_rationale": "Mechanism and scope look plausible, but the solver-visible body summary ends inside a reproduction snippet at the historical 240-character cap.",
+      "module_or_package": [
+        "_make"
+      ],
+      "policy_violation_count": 0,
+      "pr_context_risk": false,
+      "public_context_metadata": {
+        "body_digest": "fc91fe82034054a4b09d960b58d162bbbe6eeee68795652e8ac2b12bffb06875",
+        "body_length": 240,
+        "lookup_status": "local_sanitized_context_only",
+        "short_public_excerpt": "In 19.3.0, it was possible to have a custom `__setattr__` on your `slots` class, but in 20.1.0 the custom `__setattr__` is replaced with the default one: ```python import attr @...",
+        "source_kind": "issue",
+        "source_ref": "issue:680",
+        "title": "Using slots class overrides custom `__setattr__` in 20.1.0"
+      },
+      "risk_reasons": [
+        "body_summary_hit_old_240_char_cap",
+        "statement_ends_mid_code_fence",
+        "statement_probably_truncated"
+      ],
+      "scope_metadata_matches_target_non_test_files": true,
+      "scoreable_fail_count": 2,
+      "scoreable_pass_count": 0,
+      "solver_statement_excerpt": "Repair the public behavior described by the sanitized problem context. Allowed public context refs: issue:680. Problem summary: Using slots class overrides custom `__setattr__` in 20.1.0 Problem details: In 19.3.0, it was possible to have a custom `__setattr__` on your `slots` class, but in 20.1.0 the custom `__setattr__` is replaced with the default one: ```python import attr @attr.s(slots=True) class A: def __setattr__(self, key, value): Editable implementation scope: src/attr/_make.py. Known non-editable test paths: tests/test_setattr.py.",
+      "source_kind": "issue",
+      "source_ref": "issue:680",
+      "statement_ends_mid_code_fence": true,
+      "statement_ends_mid_sentence": true,
+      "statement_probably_truncated": true,
+      "statement_quality_gate": "material_risk",
+      "statement_underspecified_risk": true,
+      "task_id": "attrs__hist__012",
+      "test_file_count": 1,
+      "test_files": [
+        "tests/test_setattr.py"
+      ]
+    },
+    {
+      "adapter_outcomes": {
+        "codex_workspace": "verified_fail",
+        "kilo_workspace": "verified_fail"
+      },
+      "body_summary_hit_old_cap": true,
+      "body_summary_length": 240,
+      "certification_gate_summary": {
+        "all_pass": true,
+        "failed_gates": [],
+        "gate_count": 11,
+        "gate_counts": {
+          "pass": 11
+        }
+      },
+      "changed_file_count": 3,
+      "implementation_file_count": 1,
+      "implementation_files": [
+        "src/attr/_next_gen.py"
+      ],
+      "manual_audit_label": "questionable_pr_context_and_statement_quality_risk",
+      "manual_audit_rationale": "Highest concern: the source is PR-context, the behavior is subtle next-gen frozen subclass handling, and the body summary ends mid-word at the historical 240-character cap.",
+      "module_or_package": [
+        "_next_gen"
+      ],
+      "policy_violation_count": 0,
+      "pr_context_risk": true,
+      "public_context_metadata": {
+        "body_digest": "89348974eb44bfeae24e34dffb7861f45f82b0e215fa6f7e5517e42ad429d1d8",
+        "body_length": 240,
+        "lookup_status": "local_sanitized_context_only",
+        "short_public_excerpt": "This is a fix for an inconvenience that @euresti mentioned in https://github.com/python-attrs/attrs/issues/668#issuecomment-678689981. `on_setattr=validate` gets into the way if...",
+        "source_kind": "pull_request",
+        "source_ref": "pr:687",
+        "title": "NG: make frozen classes comfortably subclassable"
+      },
+      "risk_reasons": [
+        "body_summary_hit_old_240_char_cap",
+        "statement_probably_truncated",
+        "pr_context_source"
+      ],
+      "scope_metadata_matches_target_non_test_files": true,
+      "scoreable_fail_count": 2,
+      "scoreable_pass_count": 0,
+      "solver_statement_excerpt": "Repair the public behavior described by the sanitized problem context. Allowed public context refs: pr:687. Problem summary: NG: make frozen classes comfortably subclassable Problem details: This is a fix for an inconvenience that @euresti mentioned in https://github.com/python-attrs/attrs/issues/668#issuecomment-678689981. `on_setattr=validate` gets into the way if you want to pass `define(frozen=True)` or if you subclass a fr Editable implementation scope: src/attr/_next_gen.py. Known non-editable test paths: tests/test_next_gen.py.",
+      "source_kind": "pull_request",
+      "source_ref": "pr:687",
+      "statement_ends_mid_code_fence": false,
+      "statement_ends_mid_sentence": true,
+      "statement_probably_truncated": true,
+      "statement_quality_gate": "material_risk",
+      "statement_underspecified_risk": true,
+      "task_id": "attrs__hist__013",
+      "test_file_count": 1,
+      "test_files": [
+        "tests/test_next_gen.py"
+      ]
+    },
+    {
+      "adapter_outcomes": {
+        "codex_workspace": "verified_fail",
+        "kilo_workspace": "verified_pass"
+      },
+      "body_summary_hit_old_cap": true,
+      "body_summary_length": 240,
+      "certification_gate_summary": {
+        "all_pass": true,
+        "failed_gates": [],
+        "gate_count": 11,
+        "gate_counts": {
+          "pass": 11
+        }
+      },
+      "changed_file_count": 2,
+      "implementation_file_count": 1,
+      "implementation_files": [
+        "src/attr/_make.py"
+      ],
+      "manual_audit_label": "mostly_valid_but_statement_quality_risk",
+      "manual_audit_rationale": "Mechanism and scope look plausible, but the expected-result context is cut at the historical 240-character cap.",
+      "module_or_package": [
+        "_make"
+      ],
+      "policy_violation_count": 0,
+      "pr_context_risk": false,
+      "public_context_metadata": {
+        "body_digest": "9ceed09c4e68d54c692eb2dde8044a1d8af1432f4a04ce2ff94ccaf2a5093b1b",
+        "body_length": 240,
+        "lookup_status": "local_sanitized_context_only",
+        "short_public_excerpt": "To reproduce, run the following program: ```python import attr from typing import List, get_type_hints @attr.s class C: x = attr.ib(type='List[int]') print(get_type_hints(C.__in...",
+        "source_kind": "issue",
+        "source_ref": "issue:593",
+        "title": "Deferred type annotations are evaluated in the wrong execution context"
+      },
+      "risk_reasons": [
+        "body_summary_hit_old_240_char_cap",
+        "statement_ends_mid_code_fence",
+        "statement_probably_truncated"
+      ],
+      "scope_metadata_matches_target_non_test_files": true,
+      "scoreable_fail_count": 1,
+      "scoreable_pass_count": 1,
+      "solver_statement_excerpt": "Repair the public behavior described by the sanitized problem context. Allowed public context refs: issue:593. Problem summary: Deferred type annotations are evaluated in the wrong execution context Problem details: To reproduce, run the following program: ```python import attr from typing import List, get_type_hints @attr.s class C: x = attr.ib(type='List[int]') print(get_type_hints(C.__init__)) ``` #### Expected result ``` {'return': <class 'NoneType Editable implementation scope: src/attr/_make.py. Known non-editable test paths: tests/test_annotations.py.",
+      "source_kind": "issue",
+      "source_ref": "issue:593",
+      "statement_ends_mid_code_fence": true,
+      "statement_ends_mid_sentence": true,
+      "statement_probably_truncated": true,
+      "statement_quality_gate": "material_risk",
+      "statement_underspecified_risk": true,
+      "task_id": "attrs__hist__023",
+      "test_file_count": 1,
+      "test_files": [
+        "tests/test_annotations.py"
+      ]
+    },
+    {
+      "adapter_outcomes": {
+        "codex_workspace": "verified_fail",
+        "kilo_workspace": "policy_violation"
+      },
+      "body_summary_hit_old_cap": true,
+      "body_summary_length": 240,
+      "certification_gate_summary": {
+        "all_pass": true,
+        "failed_gates": [],
+        "gate_count": 11,
+        "gate_counts": {
+          "pass": 11
+        }
+      },
+      "changed_file_count": 5,
+      "implementation_file_count": 2,
+      "implementation_files": [
+        "src/attr/__init__.pyi",
+        "src/attr/_funcs.py"
+      ],
+      "manual_audit_label": "valid_scope_but_under_specified_statement_risk",
+      "manual_audit_rationale": "Target scope appears plausible, but the statement likely under-specifies the public resolve_types(..., attribs=...) API behavior.",
+      "module_or_package": [
+        "_funcs"
+      ],
+      "policy_violation_count": 1,
+      "pr_context_risk": false,
+      "public_context_metadata": {
+        "body_digest": "119db08dc7320970c0257ef9059189e79c82a6bda908481e83ffa203497a31af",
+        "body_length": 240,
+        "lookup_status": "local_sanitized_context_only",
+        "short_public_excerpt": "Currently I had to exclude `test_hooks.py` on Python 3.10, because it would be too painful to make them work with string annotations. The problem is that there is no good helper...",
+        "source_kind": "issue",
+        "source_ref": "issue:766",
+        "title": "Field hooks are too clunky with Python 3.10 / string annotations"
+      },
+      "risk_reasons": [
+        "body_summary_hit_old_240_char_cap",
+        "statement_probably_truncated",
+        "resolve_types_attribs_api_behavior_under_specified"
+      ],
+      "scope_metadata_matches_target_non_test_files": true,
+      "scoreable_fail_count": 1,
+      "scoreable_pass_count": 0,
+      "solver_statement_excerpt": "Repair the public behavior described by the sanitized problem context. Allowed public context refs: issue:766. Problem summary: Field hooks are too clunky with Python 3.10 / string annotations Problem details: Currently I had to exclude `test_hooks.py` on Python 3.10, because it would be too painful to make them work with string annotations. The problem is that there is no good helper to transform `\"str\"` into `str`. We're supposed to be able to Editable implementation scope: src/attr/__init__.pyi, src/attr/_funcs.py. Known non-editable test paths: tests/test_hooks.py.",
+      "source_kind": "issue",
+      "source_ref": "issue:766",
+      "statement_ends_mid_code_fence": false,
+      "statement_ends_mid_sentence": true,
+      "statement_probably_truncated": true,
+      "statement_quality_gate": "material_risk",
+      "statement_underspecified_risk": true,
+      "task_id": "attrs__hist__027",
+      "test_file_count": 1,
+      "test_files": [
+        "tests/test_hooks.py"
+      ]
+    }
+  ]
+}

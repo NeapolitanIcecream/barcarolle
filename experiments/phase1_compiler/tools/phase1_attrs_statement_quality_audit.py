@@ -198,7 +198,7 @@ def statement_quality_flags(
         "statement_missing_public_problem_summary": missing_problem_summary,
         "statement_probably_truncated": probably_truncated,
         "statement_quality_gate": "material_risk" if material_risk else "pass",
-        "statement_underspecified_risk": bool(material_risk and not probably_truncated),
+        "statement_underspecified_risk": material_risk,
     }
 
 
@@ -391,6 +391,10 @@ def task_evidence_label(row: dict[str, Any]) -> str:
     return "safe_clean_predictive_evidence"
 
 
+def plausibly_explains_failure(row: dict[str, Any]) -> bool:
+    return row["statement_quality_gate"] == "material_risk" and row["scoreable_fail_count"] > 0
+
+
 def render_task_design_audit_markdown(payload: dict[str, Any]) -> str:
     lines = [
         "# Phase 1 Attrs H_future Task-Design Audit",
@@ -408,6 +412,13 @@ def render_task_design_audit_markdown(payload: dict[str, Any]) -> str:
         f"- Scoreable outcomes in these tasks: `{payload['summary']['scoreable_pass_count']}` pass, `{payload['summary']['scoreable_fail_count']}` fail.",
         f"- Policy violations remain non-scoreable: `{payload['summary']['policy_violation_count']}`.",
         "",
+        "## Audit Questions",
+        "",
+        "- Verifier/oracle machinery obviously broken: `no evidence from sanitized certification gates`.",
+        "- Task scope obviously wrong: `no`; scope metadata still points at target implementation files, though one cell remains a non-scoreable policy violation.",
+        "- Solver-facing statements likely incomplete: `yes`; all four audited tasks hit material statement-quality risk.",
+        "- Incompleteness plausibly explains failure: `yes for directional interpretation`; it is a confound, not a repaired score.",
+        "",
         "## Task Findings",
         "",
     ]
@@ -420,6 +431,7 @@ def render_task_design_audit_markdown(payload: dict[str, Any]) -> str:
                 f"- Outcomes: `{row['adapter_outcomes']}`; scoreable pass/fail `{row['scoreable_pass_count']}/{row['scoreable_fail_count']}`, policy violations `{row['policy_violation_count']}`.",
                 f"- Mechanism validity: certification gates all pass is `{row['certification_gate_summary']['all_pass']}`; scope metadata matches target non-test files is `{row['scope_metadata_matches_target_non_test_files']}`.",
                 f"- Statement quality: gate `{row['statement_quality_gate']}`, risk reasons `{row['risk_reasons']}`.",
+                f"- Could statement incompleteness plausibly explain failure: `{plausibly_explains_failure(row)}`.",
                 f"- Clean evidence label: `{task_evidence_label(row)}`.",
                 f"- Manual audit label: `{row['manual_audit_label']}`.",
                 f"- Rationale: {row['manual_audit_rationale']}",
@@ -458,4 +470,3 @@ def main(argv: list[str] | None = None) -> int:
 
 if __name__ == "__main__":
     raise SystemExit(main())
-
