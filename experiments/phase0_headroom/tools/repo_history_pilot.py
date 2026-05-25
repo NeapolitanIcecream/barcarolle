@@ -16,6 +16,8 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
+import statement_quality
+
 
 EXP_REL = Path("experiments/phase0_headroom")
 CANDIDATE_REL = Path("candidate_sources")
@@ -669,6 +671,11 @@ def source_context(root: Path, config_path: Path) -> None:
             "statement_review_status": "reviewed" if allowed_refs else "near_certified_context_missing",
             "source_context_status": context_status,
         }
+        if pr_refs:
+            quality = statement_quality.statement_quality_for_context(pr_refs[0], candidate)
+            statement["statement_quality"] = quality
+            if quality["statement_quality_gate"] == "material_risk":
+                statement["statement_review_status"] = "statement_quality_risk"
         statements.append(statement)
         reviews.append({"task_id": candidate["task_id"], "source_context_status": context_status, "statement_review_status": statement["statement_review_status"]})
     write_jsonl(exp / CANDIDATE_REL / f"{config.repo_id}_source_context.jsonl", contexts)
@@ -693,7 +700,7 @@ def github_pr_refs(config: PilotConfig, commit: str) -> list[dict[str, Any]]:
     refs: list[dict[str, Any]] = []
     for pull in pulls[:2]:
         title = str(pull.get("title") or "").strip()
-        body = " ".join(str(pull.get("body") or "").split())[:240]
+        body = statement_quality.sanitize_public_body_summary(pull.get("body"))
         number = pull.get("number")
         if not title:
             continue
@@ -712,7 +719,7 @@ def github_pr_refs(config: PilotConfig, commit: str) -> list[dict[str, Any]]:
 def commit_context_ref(config: PilotConfig, candidate: dict[str, Any]) -> dict[str, Any]:
     commit = str(candidate["target_commit"])
     result = run_command(["git", "show", "-s", "--format=%b", commit], config.local_repo, timeout=30)
-    body = " ".join(result.stdout.split())[:240] if result.returncode == 0 else ""
+    body = statement_quality.sanitize_public_body_summary(result.stdout) if result.returncode == 0 else ""
     return {
         "task_id": str(candidate["task_id"]),
         "ref": f"commit:{commit}",

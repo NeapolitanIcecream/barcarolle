@@ -190,6 +190,10 @@ def attrs_problem_context(summary: str = "Fix cache hash incompatibility") -> di
     }
 
 
+def capped_summary(text: str) -> str:
+    return (text + " " + ("x" * 240))[:240]
+
+
 def test_second_repo_review_rejects_outcome_seen_target_commits() -> None:
     review = mining.review_second_repo_candidate(
         second_repo_certified_row(target_commit := "attrs__hist__001"),
@@ -225,6 +229,24 @@ def test_second_repo_review_rejects_solution_leaky_pr_body_even_with_fix_title()
 
     assert review["promotion_decision"] == "reject_for_clean_holdout"
     assert "solution_exposure_risk" in review["promotion_blockers"]
+
+
+def test_second_repo_review_flags_severe_statement_truncation() -> None:
+    review = mining.review_second_repo_candidate(
+        second_repo_certified_row(),
+        context={
+            "ref": "issue:999",
+            "classification": "problem_context",
+            "summary": "Generated init annotations are incomplete",
+            "body_summary": capped_summary("Expected result: ```python {'return': <class 'NoneType"),
+        },
+        outcome_seen_task_ids=set(),
+        outcome_seen_target_commits=set(),
+    )
+
+    assert review["promotion_decision"] == "reject_for_clean_holdout"
+    assert "statement_quality_risk" in review["promotion_blockers"]
+    assert review["statement_quality"]["statement_probably_truncated"] is True
 
 
 def test_issue_numbers_from_text_finds_plain_issue_mentions() -> None:

@@ -430,6 +430,7 @@ def test_clean_overlay_provenance_is_recorded_as_sidecar_metadata(tmp_path: Path
     assert package.metadata["original_hardening_status"] == "diagnostic_only"
     assert package.metadata["promotion_rationale"] == "source_context_repaired_with_sanitized_public_issue"
     assert package.metadata["sanitized_context"]["classification"] == "problem_context"
+    assert package.metadata["statement_quality"]["statement_quality_gate"] == "pass"
 
 
 def test_future_holdout_prefixes_keep_separate_score_tables(tmp_path: Path) -> None:

@@ -17,6 +17,8 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
+import statement_quality
+
 
 EXP_REL = Path("experiments/phase0_headroom")
 TOOLZ_REPO_REL = EXP_REL / "external_repos" / "toolz"
@@ -403,6 +405,7 @@ def package_submission_metadata(package: TaskPackage) -> dict[str, Any]:
         "original_hardening_status",
         "clean_overlay_promotion_decision",
         "promotion_rationale",
+        "statement_quality",
         "source_context_status",
         "metadata_sources",
     }
@@ -810,6 +813,12 @@ def clean_overlay_package_for(
         "allowed_context_refs": row.get("allowed_context_refs") or overlay_row.get("allowed_context_refs") or [],
         "sanitized_context": context,
         "source_context_status": row.get("source_context_status") or overlay_row.get("source_context_status"),
+        "statement_quality": statement_quality.statement_quality_for_context(
+            context,
+            {**row, "changed_files": changed_files, "code_files": code_files, "test_files": test_files},
+        )
+        if context
+        else {},
         "original_hardening_status": row.get("original_hardening_status") or overlay_row.get("original_hardening_status"),
         "original_hardening_reject_reasons": row.get("original_hardening_reject_reasons") or overlay_row.get("original_hardening_reject_reasons") or [],
         "clean_overlay_promotion_decision": promotion_decision,

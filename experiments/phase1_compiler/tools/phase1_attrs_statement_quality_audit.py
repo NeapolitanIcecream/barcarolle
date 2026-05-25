@@ -4,6 +4,7 @@ import argparse
 import hashlib
 import json
 import re
+import sys
 from collections import Counter
 from pathlib import Path
 from typing import Any
@@ -13,8 +14,14 @@ from phase1_future_holdout import simple_yaml_load
 
 ROOT = Path(__file__).resolve().parents[1]
 REPO_ROOT = ROOT.parents[1]
+PHASE0_TOOLS = REPO_ROOT / "experiments" / "phase0_headroom" / "tools"
+if str(PHASE0_TOOLS) not in sys.path:
+    sys.path.insert(0, str(PHASE0_TOOLS))
+
+import statement_quality  # noqa: E402
+
 DEFAULT_CONFIG = ROOT / "configs" / "phase1_attrs_h_future_statement_quality_audit.yaml"
-OLD_BODY_SUMMARY_CAP = 240
+OLD_BODY_SUMMARY_CAP = statement_quality.OLD_BODY_SUMMARY_CAP
 TERMINAL_PUNCTUATION = {".", "!", "?", ")"}
 KNOWN_UNDERSPECIFIED_REFS = {
     "issue:766": "resolve_types_attribs_api_behavior_under_specified",
@@ -80,68 +87,39 @@ def load_config(path: Path = DEFAULT_CONFIG) -> dict[str, Any]:
 
 
 def source_kind(source_ref: str) -> str:
-    if source_ref.startswith("issue:"):
-        return "issue"
-    if source_ref.startswith("pr:"):
-        return "pull_request"
-    if source_ref.startswith("commit:"):
-        return "commit"
-    return "unknown"
+    return statement_quality.source_kind(source_ref)
 
 
 def normalize_text(value: Any) -> str:
-    return " ".join(str(value or "").split())
+    return statement_quality.normalize_text(value)
 
 
 def digest_text(value: str) -> str:
-    return hashlib.sha256(value.encode("utf-8")).hexdigest()
+    return statement_quality.digest_text(value)
 
 
 def short_excerpt(value: str, limit: int = 180) -> str:
-    text = normalize_text(value)
-    if len(text) <= limit:
-        return text
-    return text[: limit - 3].rstrip() + "..."
+    return statement_quality.short_excerpt(value, limit=limit)
 
 
 def is_test_path(path: str) -> bool:
-    return path.startswith("tests/") or path.startswith("test/") or "/tests/" in path or Path(path).name.startswith("test_")
+    return statement_quality.is_test_path(path)
 
 
 def is_implementation_path(path: str) -> bool:
-    if is_test_path(path):
-        return False
-    if path in {"conftest.py", "setup.py", "noxfile.py", "tox.ini", "pyproject.toml", "setup.cfg"}:
-        return False
-    if path.startswith("changelog.d/") or path.startswith("docs/") or path.startswith(".github/"):
-        return False
-    return path.endswith((".py", ".pyi"))
+    return statement_quality.is_implementation_path(path)
 
 
 def implementation_files(changed_files: list[str]) -> list[str]:
-    return sorted(path for path in changed_files if is_implementation_path(path))
+    return statement_quality.implementation_files(changed_files)
 
 
 def test_files(changed_files: list[str], explicit_test_files: list[str] | None = None) -> list[str]:
-    if explicit_test_files:
-        return sorted(str(path) for path in explicit_test_files)
-    return sorted(path for path in changed_files if is_test_path(path))
+    return statement_quality.test_files(changed_files, explicit_test_files)
 
 
 def ends_mid_sentence(body_summary: str, *, hit_cap: bool) -> bool:
-    text = body_summary.rstrip()
-    if not text:
-        return True
-    if not hit_cap:
-        return False
-    if text[-1] in TERMINAL_PUNCTUATION or text.endswith("```"):
-        return False
-    if text[-1] in {":", ",", ";", "-", "("}:
-        return True
-    tail_words = re.findall(r"[A-Za-z_]+", text[-40:].lower())
-    if tail_words and tail_words[-1] in {"a", "an", "the", "to", "be", "fr", "if", "or", "and"}:
-        return True
-    return True
+    return statement_quality.ends_mid_sentence(body_summary, hit_cap=hit_cap)
 
 
 def statement_quality_flags(
@@ -152,54 +130,13 @@ def statement_quality_flags(
     implementation_files: list[str],
     test_files: list[str],
 ) -> dict[str, Any]:
-    body = body_summary or ""
-    hit_cap = len(body) >= OLD_BODY_SUMMARY_CAP
-    mid_code_fence = body.count("```") % 2 == 1
-    mid_sentence = ends_mid_sentence(body, hit_cap=hit_cap)
-    nearly_empty = len(normalize_text(body)) < 20
-    missing_problem_summary = not normalize_text(title) or nearly_empty
-    missing_scope = not implementation_files
-    pr_risk = source_ref.startswith("pr:")
-    known_under_spec = KNOWN_UNDERSPECIFIED_REFS.get(source_ref)
-    probably_truncated = bool(hit_cap and (mid_code_fence or mid_sentence))
-
-    risk_reasons: list[str] = []
-    if hit_cap:
-        risk_reasons.append("body_summary_hit_old_240_char_cap")
-    if mid_code_fence:
-        risk_reasons.append("statement_ends_mid_code_fence")
-    if probably_truncated:
-        risk_reasons.append("statement_probably_truncated")
-    if pr_risk:
-        risk_reasons.append("pr_context_source")
-    if known_under_spec:
-        risk_reasons.append(known_under_spec)
-    if nearly_empty:
-        risk_reasons.append("empty_or_nearly_empty_body_summary")
-    if missing_problem_summary:
-        risk_reasons.append("statement_missing_public_problem_summary")
-    if missing_scope:
-        risk_reasons.append("statement_missing_editable_implementation_scope")
-
-    material_risk = bool(probably_truncated or pr_risk or known_under_spec or nearly_empty or missing_problem_summary or missing_scope)
-    return {
-        "body_summary_hit_old_cap": hit_cap,
-        "body_summary_length": len(body),
-        "diagnostics": {
-            "failure_signal": "statement_quality_risk_detected" if material_risk else "",
-            "risk_flag_count": len(risk_reasons),
-        },
-        "empty_or_nearly_empty_body_summary": nearly_empty,
-        "pr_context_risk": pr_risk,
-        "risk_reasons": risk_reasons,
-        "statement_ends_mid_code_fence": mid_code_fence,
-        "statement_ends_mid_sentence": mid_sentence,
-        "statement_missing_editable_implementation_scope": missing_scope,
-        "statement_missing_public_problem_summary": missing_problem_summary,
-        "statement_probably_truncated": probably_truncated,
-        "statement_quality_gate": "material_risk" if material_risk else "pass",
-        "statement_underspecified_risk": material_risk,
-    }
+    return statement_quality.statement_quality_flags(
+        source_ref=source_ref,
+        title=title,
+        body_summary=body_summary,
+        implementation_files=implementation_files,
+        test_files=test_files,
+    )
 
 
 def adapter_outcome_summary(cells: list[dict[str, Any]]) -> dict[str, Any]:

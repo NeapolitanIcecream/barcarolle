@@ -22,6 +22,7 @@ if str(PHASE0_TOOLS) not in sys.path:
     sys.path.insert(0, str(PHASE0_TOOLS))
 
 import repo_history_pilot  # noqa: E402
+import statement_quality  # noqa: E402
 
 DEFAULT_CONFIG = ROOT / "configs" / "phase1_clean_outcome_unseen_supply_mining.yaml"
 SECOND_REPO_CONFIG = ROOT / "configs" / "phase1_second_repo_clean_outcome_unseen_supply.yaml"
@@ -344,7 +345,7 @@ def run_gh_issue_lookup(repo_id: str, number: int) -> dict[str, Any] | None:
     except json.JSONDecodeError:
         return None
     title = " ".join(str(payload.get("title") or "").split())
-    body = " ".join(str(payload.get("body") or "").split())[:240]
+    body = statement_quality.sanitize_public_body_summary(payload.get("body"))
     if not title:
         return None
     return {
@@ -384,7 +385,7 @@ def run_gh_issue_only_lookup(repo_id: str, number: int) -> dict[str, Any] | None
     if payload.get("is_pull_request"):
         return None
     title = " ".join(str(payload.get("title") or "").split())
-    body = " ".join(str(payload.get("body") or "").split())[:240]
+    body = statement_quality.sanitize_public_body_summary(payload.get("body"))
     if not title:
         return None
     return {
@@ -484,6 +485,9 @@ def review_candidate(
         blockers.append("commit_message_only_source")
     elif source_status != "non_leaky_problem_context":
         blockers.append("non_leaky_problem_context_missing")
+    quality = statement_quality.statement_quality_for_context(context, row)
+    if quality["statement_quality_gate"] == "material_risk":
+        blockers.append("statement_quality_risk")
     reject_reasons = set(str(reason) for reason in row.get("hardened_reject_reasons", []))
     if "solution_exposure_risk" in reject_reasons:
         blockers.append("solution_exposure_risk")
@@ -514,6 +518,8 @@ def review_candidate(
         clean_gates["ambiguity_review"] = "pass"
     if source_status == "non_leaky_problem_context" and "solution_exposure_risk" not in blockers:
         clean_gates["solution_leakage_review"] = "pass"
+    if quality["statement_quality_gate"] == "material_risk":
+        clean_gates["ambiguity_review"] = "fail"
     clean_first_failing_gate = ""
     for gate, status in clean_gates.items():
         if status != "pass":
@@ -537,6 +543,7 @@ def review_candidate(
         "source_context_status": source_status,
         "allowed_context_refs": [context["ref"]] if source_status == "non_leaky_problem_context" else [],
         "sanitized_context": context,
+        "statement_quality": quality,
         "local_certification_gates": row.get("gates", {}),
         "clean_overlay_certification_gates": clean_gates,
         "clean_overlay_first_failing_gate": clean_first_failing_gate,
@@ -594,8 +601,10 @@ def source_context_rows_for_candidates(
             ref["repo_id"] = pilot_config.repo_id
             ref["task_id"] = candidate["task_id"]
             ref["target_commit"] = candidate["target_commit"]
+            ref["statement_quality"] = statement_quality.statement_quality_for_context(ref, candidate)
             rows.append(ref)
         allowed_refs = repo_history_pilot.allowed_context_refs(refs)
+        quality = statement_quality.statement_quality_for_context(refs[0], candidate)
         statement_by_task[str(candidate["task_id"])] = {
             "schema_version": "barcarolle.repo_history_statement.v1",
             "task_id": candidate["task_id"],
@@ -611,9 +620,12 @@ def source_context_rows_for_candidates(
             "excluded_context_refs": [ref["ref"] for ref in refs if ref["classification"] != "problem_context"],
             "oracle_refs": candidate["test_files"],
             "harness_test_command": pilot_config.command_template,
+            "statement_quality": quality,
             "statement_review_status": "reviewed" if allowed_refs else "near_certified_context_missing",
             "source_context_status": "non_leaky_context_found" if allowed_refs else "no_non_leaky_source_context",
         }
+        if quality["statement_quality_gate"] == "material_risk":
+            statement_by_task[str(candidate["task_id"])]["statement_review_status"] = "statement_quality_risk"
     return rows, statement_by_task
 
 
@@ -656,6 +668,9 @@ def review_second_repo_candidate(
         blockers.append("commit_message_only_source")
     elif source_status != "non_leaky_problem_context":
         blockers.append("non_leaky_problem_context_missing")
+    quality = statement_quality.statement_quality_for_context(context, row)
+    if quality["statement_quality_gate"] == "material_risk":
+        blockers.append("statement_quality_risk")
     if row.get("status") != "certified":
         first_gate = str(row.get("first_failing_gate") or "unknown")
         blockers.append(f"local_certification_gate_failed:{first_gate}")
@@ -673,6 +688,8 @@ def review_second_repo_candidate(
         gates["ambiguity_review"] = "pass"
     if source_status == "non_leaky_problem_context" and "solution_exposure_risk" not in blockers:
         gates["solution_leakage_review"] = "pass"
+    if quality["statement_quality_gate"] == "material_risk":
+        gates["ambiguity_review"] = "fail"
     clean_first_failing_gate = ""
     for gate, status in gates.items():
         if status != "pass":
@@ -695,6 +712,7 @@ def review_second_repo_candidate(
         "source_context_status": source_status,
         "allowed_context_refs": [context["ref"]] if source_status == "non_leaky_problem_context" else [],
         "sanitized_context": context,
+        "statement_quality": quality,
         "original_local_certification_status": row.get("status"),
         "local_certification_gates": row.get("gates", {}),
         "clean_overlay_certification_gates": gates,
@@ -830,7 +848,8 @@ def statement_from_clean_context(
     if not refs:
         refs = [repo_history_pilot.commit_context_ref(pilot_config, candidate)]
     allowed_refs = repo_history_pilot.allowed_context_refs(refs)
-    return {
+    quality = statement_quality.statement_quality_for_context(refs[0], candidate)
+    statement = {
         "schema_version": "barcarolle.repo_history_statement.v1",
         "task_id": candidate["task_id"],
         "repo_id": pilot_config.repo_id,
@@ -845,9 +864,13 @@ def statement_from_clean_context(
         "excluded_context_refs": [ref["ref"] for ref in refs if ref["classification"] != "problem_context"],
         "oracle_refs": candidate["test_files"],
         "harness_test_command": pilot_config.command_template,
+        "statement_quality": quality,
         "statement_review_status": "reviewed" if allowed_refs else "near_certified_context_missing",
         "source_context_status": "non_leaky_context_found" if allowed_refs else "no_non_leaky_source_context",
     }
+    if quality["statement_quality_gate"] == "material_risk":
+        statement["statement_review_status"] = "statement_quality_risk"
+    return statement
 
 
 def second_repo_review_payload(config: dict[str, Any], *, repo_id: str, reviews: list[dict[str, Any]]) -> dict[str, Any]:
