@@ -31,5 +31,12 @@ Status: `pass`.
 | 6 | completed | Rank compiler calibration options | experiments/phase1_compiler/results/phase1_overnight_statement_hardened_calibration_options.json, experiments/phase1_compiler/reports/phase1_overnight_statement_hardened_calibration_options.md |  |
 | 7 | completed | Assess local supply for statement-hardened expansion | experiments/phase1_compiler/results/phase1_overnight_statement_hardened_local_supply_analysis.json, experiments/phase1_compiler/reports/phase1_overnight_statement_hardened_local_supply_analysis.md |  |
 | 8 | completed | Write proposal alignment memo for paid evidence | experiments/phase1_compiler/reports/phase1_overnight_statement_hardened_proposal_alignment.md |  |
-| 9 | pending | Decide next action from statement-hardened evidence |  |  |
+| 9 | completed | Decide next action from statement-hardened evidence | experiments/phase1_compiler/results/phase1_overnight_statement_hardened_next_action_decision.json, experiments/phase1_compiler/reports/phase1_overnight_statement_hardened_next_action_decision.md |  |
 | 10 | pending | Record overnight statement-hardened analysis closeout |  |  |
+
+## Closeout
+
+- Integrity audit status: `pass`.
+- Primary decision: `design_new_predictive_threshold_before_more_paid_validation`.
+- Recommended next action: Do not run more paid validation until a quantitative predictive-validity threshold and a better matched local design are preregistered..
+- Predictive validity established: `False`.
