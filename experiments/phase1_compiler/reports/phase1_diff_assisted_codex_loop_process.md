@@ -1,6 +1,7 @@
 # Phase 1 Diff-Assisted Codex Loop Statement Regeneration Process
 
 Generated: `2026-05-25T04:55:14Z`.
+Closeout updated: `2026-05-25T05:10:29Z`.
 
 ## Step 0 Preflight
 
@@ -35,49 +36,49 @@ The previous `phase1_diff_assisted_statement_*` artifacts are historical dry-run
 - Step 0 preflight: `completed`.
 - Step 1 candidate packets: `completed`.
 - Step 2 workflow files and prompt templates: `completed`.
-- Step 3 generator session: `blocked`.
-- Step 4 reviewer session: `pending`.
-- Step 5 deterministic QA: `not_run`.
-- Step 6 statement-hardened screen: `not_run`.
-- Step 7 recovery decision: `blocked_real_codex_loop_not_completed`.
-- Step 8 closeout: `not_run`.
+- Step 3 generator session: `delivered`.
+- Step 4 reviewer session: `delivered`.
+- Step 5 deterministic QA: `completed`.
+- Step 6 statement-hardened screen: `completed`.
+- Step 7 recovery decision: `partial_recovery_mine_targeted_replacement_supply`.
+- Step 8 closeout: `completed`.
 
 ## Recent Commits
 
 ```text
-448b25a5 Record diff-assisted Codex loop blocked closeout
-33ee5f5e Record blocked Codex generator session
-3b5f1104 Create diff-assisted Codex generator reviewer workflow
-f6362a3f Build diff-assisted Codex loop candidate packets
-57f2bd53 Record diff-assisted Codex loop preflight
-60033de1 Record diff-assisted statement regeneration closeout
-a7014e08 Decide diff-assisted statement recovery branch
-eb1437a4 Rerun statement-hardened screen with regenerated statements
+dccbed35 Decide diff-assisted Codex loop recovery branch
+c2cc94ba Screen Codex-reviewed regenerated statements
+89edacae Run deterministic QA for Codex-reviewed statements
+00de1c8c Run real Codex statement reviewer session
+63a87ec0 Run real Codex statement generator session
+31b332ef Create diff-assisted Codex generator reviewer workflow
+f1af76d8 Build diff-assisted Codex loop candidate packets
+96645387 Record diff-assisted Codex loop preflight
 ```
 
 ## Results
 
 - Candidate packets built: `22`.
-- Generated statements delivered: `0`.
-- Review pass/revise/reject counts: `not_run`.
-- Deterministic QA pass/reject counts: `not_run`.
-- Eligible before regeneration: `not_screened`.
-- Eligible after regeneration: `not_screened`.
-- Old candidate pool recovered: `False`.
+- Generated statements delivered: `22`.
+- Review pass/revise/reject counts: `{'pass': 22}`.
+- Deterministic QA pass/reject counts: `{'pass': 22}`.
+- Eligible before regeneration: `4`.
+- Eligible after regeneration: `22`.
+- Old candidate pool recovered: `partial`.
 - Replacement supply still needed: `True`.
-- Primary decision: `blocked_real_codex_loop_not_completed`.
-- Next runbook path: `not_decided`.
+- Primary decision: `partial_recovery_mine_targeted_replacement_supply`.
+- Next runbook path: `docs/experiments/phase-1-targeted-statement-hardened-replacement-supply-runbook.md`.
 
 ## Non-Negotiable Evidence
 
-- Real generator Codex CLI session started: `False`.
-- Real reviewer Codex CLI session started: `False`.
+- Real generator Codex CLI session started: `True`.
+- Real reviewer Codex CLI session started: `True`.
 - Generator/reviewer used local Codex Subscription: `True`.
 - Generator/reviewer did not use LLM API endpoint: `True`.
-- Generator process file present: `False`.
-- Reviewer process file present: `False`.
-- Generator output not deterministic override: `False`.
-- Reviewer output not deterministic rules only: `False`.
+- Generator process file present: `True`.
+- Reviewer process file present: `True`.
+- Generator output not deterministic override: `True`.
+- Reviewer output not deterministic rules only: `True`.
 - Raw CLI logs committed: `False`.
 - Paid ACUT solver cells run: `False`.
 - Historical paid outcomes used for generation or review: `False`.
@@ -85,7 +86,7 @@ eb1437a4 Rerun statement-hardened screen with regenerated statements
 ## Artifact Hygiene
 
 - LLM API calls made for generator/reviewer: `false`.
-- Codex Subscription sessions used: `False`.
+- Codex Subscription sessions used: `True`.
 - LLM API endpoint used for generator/reviewer: `false`.
 - Paid ACUT calls made: `false`.
 - Paid solver cells run: `false`.
@@ -95,3 +96,9 @@ eb1437a4 Rerun statement-hardened screen with regenerated statements
 - Raw target diffs committed: `false`.
 - Solver or verifier workspaces committed: `false`.
 - Historical score tables rewritten: `false`.
+
+## Verification
+
+- `uv run --project experiments/phase1_compiler pytest -q experiments/phase1_compiler/tests/test_phase1_diff_assisted_codex_loop_statement_regeneration.py` -> `9 passed`.
+- `uv run --project experiments/phase1_compiler pytest -q experiments/phase1_compiler/tests/test_phase1_diff_assisted_statement_regeneration.py experiments/phase1_compiler/tests/test_phase1_statement_hardened_preregistration.py experiments/phase1_compiler/tests/test_phase1_attrs_statement_quality_audit.py experiments/phase1_compiler/tests/test_phase1_clean_outcome_unseen_supply_mining.py experiments/phase0_headroom/tools/test_workspace_acut_run.py` -> `64 passed`.
+- `git diff --check` -> passed.
