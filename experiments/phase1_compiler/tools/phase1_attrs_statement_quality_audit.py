@@ -631,6 +631,136 @@ def render_statement_preview_markdown(payload: dict[str, Any]) -> str:
     return "\n".join(lines)
 
 
+def decide_primary_status(task_audit: dict[str, Any], sensitivity: dict[str, Any]) -> str:
+    material = task_audit["summary"]["material_statement_quality_risk_count"]
+    audited = task_audit["summary"]["audited_task_count"]
+    strict = sensitivity["views"]["strict_clean_statement_only"]
+    if material == 0:
+        return "clean_negative_holdout_signal"
+    if material >= audited or strict["scoreable_cells"] == 0:
+        return "not_clean_enough_for_predictive_validity_claim"
+    return "negative_but_statement_quality_confounded"
+
+
+def decide_next_branch(primary_status: str, preview: dict[str, Any]) -> str:
+    if primary_status == "clean_negative_holdout_signal":
+        return "report_pilot_with_statement_quality_caveat"
+    if preview.get("summary", {}).get("preview_count") == 4:
+        return "prepare_statement_hardened_preregistration"
+    return "mine_replacement_clean_holdout_supply"
+
+
+def build_evidence_status(
+    config: dict[str, Any],
+    task_audit: dict[str, Any] | None = None,
+    sensitivity: dict[str, Any] | None = None,
+    preview: dict[str, Any] | None = None,
+) -> dict[str, Any]:
+    task_audit = task_audit or read_json(output_path(config, "task_design_audit"))
+    sensitivity = sensitivity or read_json(output_path(config, "statement_sensitivity"))
+    preview = preview or read_json(output_path(config, "statement_preview"))
+    primary_status = decide_primary_status(task_audit, sensitivity)
+    next_branch = decide_next_branch(primary_status, preview)
+    strict = sensitivity["views"]["strict_clean_statement_only"]
+    original = sensitivity["views"]["original_attrs_h_future"]
+    return {
+        "allowed_claims": [
+            "attrs_h_future_statement_quality_audited",
+            "attrs_h_future_task_design_confound_identified",
+            "two_repo_conclusion_sensitivity_quantified",
+            "statement_quality_gate_added",
+            "statement_preview_generated_without_paid_rerun",
+            "current_paid_result_preserved_as_original_observation",
+            "future_validation_requires_new_preregistration",
+            "insufficient_clean_evidence_for_predictive_validity",
+        ],
+        "attrs_h_future_collapse_treatment": "not clean enough for the proposal's predictive-validity claim",
+        "claims_not_made": [
+            "predictive_validity_established",
+            "production_benchmark_ranking",
+            "attrs_h_future_paid_result_repaired",
+            "attrs_policy_violation_repaired",
+            "rerun_equivalent_score_from_statement_preview",
+            "hidden_oracle_informed_statement_rewrite",
+            "task_generator_yield_as_main_contribution",
+        ],
+        "config": config["_path"],
+        "current_paid_result_preserved_as_original_observation": True,
+        "decision_rationale": [
+            "The original paid attrs H_future result remains 1/7 scoreable pass with one non-scoreable policy violation.",
+            "All four audited attrs H_future tasks have material statement-quality risk, mostly from old 240-character body summaries cut mid context.",
+            "The strict clean-statement sensitivity view has zero scoreable attrs H_future cells.",
+            "Statement previews are diagnostic only and cannot be treated as repaired scores.",
+        ],
+        "future_runbook": str(output_path(config, "future_runbook").relative_to(REPO_ROOT)),
+        "generated_at": stable_generated_at(config),
+        "next_branch": next_branch,
+        "paid_acut_calls_made": False,
+        "paid_llm_calls_made": False,
+        "plain_language_summary": {
+            "original_result": "attrs H_future remains 1/7 scoreable pass; the policy-violation cell remains non-scoreable.",
+            "audit_interpretation": "The collapse is directionally bad, but all four task statements are statement-quality risky enough to confound clean holdout interpretation.",
+            "next_step": "Prepare a new statement-hardened preregistration before any future paid validation.",
+        },
+        "predictive_validity_established": False,
+        "primary_status": primary_status,
+        "production_ranking_status": "not_produced",
+        "schema_version": "barcarolle.phase1.attrs_h_future_evidence_status.v1",
+        "source_artifacts": {
+            "statement_preview": str(output_path(config, "statement_preview").relative_to(REPO_ROOT)),
+            "statement_sensitivity": str(output_path(config, "statement_sensitivity").relative_to(REPO_ROOT)),
+            "task_design_audit": str(output_path(config, "task_design_audit").relative_to(REPO_ROOT)),
+        },
+        "status": "decided",
+        "strict_clean_statement_view": {
+            "included_tasks": strict["included_tasks"],
+            "interpretation": strict["interpretation"],
+            "scoreable_cells": strict["scoreable_cells"],
+        },
+        "original_attrs_h_future": {
+            "pass_rate": original["pass_rate"],
+            "policy_violations": original["policy_violations"],
+            "scoreable_cells": original["scoreable_cells"],
+            "verified_fail": original["verified_fail"],
+            "verified_pass": original["verified_pass"],
+        },
+    }
+
+
+def render_evidence_status_markdown(payload: dict[str, Any]) -> str:
+    return "\n".join(
+        [
+            "# Phase 1 Attrs H_future Evidence Status",
+            "",
+            f"Generated: `{payload['generated_at']}`.",
+            "",
+            f"Primary status: `{payload['primary_status']}`.",
+            f"Next branch: `{payload['next_branch']}`.",
+            "",
+            "## Decision",
+            "",
+            f"- Original result: {payload['plain_language_summary']['original_result']}",
+            f"- Audit interpretation: {payload['plain_language_summary']['audit_interpretation']}",
+            f"- Next step: {payload['plain_language_summary']['next_step']}",
+            "",
+            "## Rationale",
+            "",
+            *[f"- {item}" for item in payload["decision_rationale"]],
+            "",
+            "## Boundary",
+            "",
+            "- Predictive validity remains `false`.",
+            "- Production ranking remains `not_produced`.",
+            "- The statement previews are not rerun-equivalent scores.",
+            "- Future paid validation requires a new frozen release or preregistration.",
+            "",
+            "## Claims Not Made",
+            "",
+            *[f"- `{claim}`" for claim in payload["claims_not_made"]],
+        ]
+    )
+
+
 def task_evidence_label(row: dict[str, Any]) -> str:
     label = str(row["manual_audit_label"])
     if label == "questionable_pr_context_and_statement_quality_risk":
@@ -728,9 +858,18 @@ def run_preview(config_path: Path, *, write: bool) -> dict[str, Any]:
     return payload
 
 
+def run_status(config_path: Path, *, write: bool) -> dict[str, Any]:
+    config = load_config(config_path)
+    payload = build_evidence_status(config)
+    if write:
+        write_json(output_path(config, "evidence_status"), payload)
+        write_text(output_path(config, "evidence_status_report"), render_evidence_status_markdown(payload))
+    return payload
+
+
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description="Audit attrs H_future statement quality using sanitized sidecars.")
-    parser.add_argument("command", nargs="?", choices=["audit", "sensitivity", "preview"], default="audit")
+    parser.add_argument("command", nargs="?", choices=["audit", "sensitivity", "preview", "status"], default="audit")
     parser.add_argument("--config", type=Path, default=DEFAULT_CONFIG)
     parser.add_argument("--write", action="store_true", help="write configured JSON and Markdown outputs")
     args = parser.parse_args(argv)
@@ -738,11 +877,13 @@ def main(argv: list[str] | None = None) -> int:
         payload = run_audit(args.config, write=args.write)
     elif args.command == "sensitivity":
         payload = run_sensitivity(args.config, write=args.write)
-    else:
+    elif args.command == "preview":
         payload = run_preview(args.config, write=args.write)
+    else:
+        payload = run_status(args.config, write=args.write)
     if not args.write:
         print(json.dumps(payload, indent=2, sort_keys=True))
-    return 0 if payload["status"] == "computed" else 1
+    return 0 if payload["status"] in {"computed", "decided"} else 1
 
 
 if __name__ == "__main__":

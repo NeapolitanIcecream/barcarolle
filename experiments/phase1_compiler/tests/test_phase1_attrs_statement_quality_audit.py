@@ -139,3 +139,17 @@ def test_statement_previews_use_implementation_scope_only() -> None:
         assert all(path.startswith("tests/") for path in row["known_non_editable_test_paths"])
         assert "```" not in row["preview_statement"]
         assert "diff --git" not in row["preview_statement"]
+
+
+def test_evidence_status_marks_attrs_h_future_not_clean_enough() -> None:
+    config = audit.load_config(CONFIG)
+    task_audit = audit.build_task_design_audit(config)
+    sensitivity = audit.build_statement_sensitivity(config, task_audit)
+    preview = audit.build_statement_preview(config, task_audit)
+
+    status = audit.build_evidence_status(config, task_audit, sensitivity, preview)
+
+    assert status["primary_status"] == "not_clean_enough_for_predictive_validity_claim"
+    assert status["next_branch"] == "prepare_statement_hardened_preregistration"
+    assert status["predictive_validity_established"] is False
+    assert "predictive_validity_established" in status["claims_not_made"]
