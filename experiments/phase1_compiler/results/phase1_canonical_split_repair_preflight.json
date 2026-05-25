@@ -1,0 +1,54 @@
+{
+  "ambient_endpoint_env_vars_present_but_ignored": {
+    "LLM_API_KEY": true,
+    "LLM_BASE_URL": true,
+    "OPENAI_API_KEY": false,
+    "OPENROUTER_API_KEY": false
+  },
+  "branch": "codex/restart-benchmark-compiler",
+  "codex_cli_available": true,
+  "codex_cli_path": "/opt/homebrew/bin/codex",
+  "codex_cli_version": "codex-cli 0.133.0",
+  "generated_at": "2026-05-25T07:28:37Z",
+  "git_head": "a36b724fdcf207bf50d0da3cc30ce0dccc294c23",
+  "historical_pass_fail_outcomes_used_for_selection": false,
+  "latest_codex_loop_selected_counts_under_flawed_split_map": {
+    "attrs/B_eval": 4,
+    "attrs/H_future": 4,
+    "boltons/B_eval": 4,
+    "boltons/H_future": 0
+  },
+  "llm_api_calls_made_for_generator_reviewer": false,
+  "llm_api_endpoint_env_vars_unset_by_wrappers": [
+    "LLM_BASE_URL",
+    "LLM_API_KEY",
+    "OPENAI_API_KEY",
+    "OPENROUTER_API_KEY"
+  ],
+  "missing_canonical_boltons_tasks_expected_before_inventory_repair": [
+    "boltons__hist__011",
+    "boltons__hist__022",
+    "boltons__hist__023",
+    "boltons__hist__027"
+  ],
+  "paid_acut_calls_enabled": false,
+  "paid_solver_cells_enabled": false,
+  "previous_boltons_h_future_zero_reclassification": "suspected_inventory_and_split_mapping_bug",
+  "python_version": "Python 3.9.6",
+  "raw_artifacts_committed": false,
+  "replacement_mining_status": "deferred_until_canonical_split_repair_attempted",
+  "schema_version": "barcarolle.phase1.canonical_split_repair_preflight.v1",
+  "tmux_available": true,
+  "tmux_path": "/opt/homebrew/bin/tmux",
+  "tmux_version": "tmux 3.6b",
+  "unrelated_existing_worktree_paths": [
+    "docs/experiments/phase-1-statement-hardened-holdout-preregistration-runbook.md",
+    "docs/experiments/phase-1-targeted-statement-hardened-replacement-supply-runbook.md",
+    "docs/experiments/phase-1-attrs-generalization-third-repo-decision-runbook.md",
+    "docs/experiments/phase-1-attrs-h-future-statement-quality-audit-runbook.md",
+    "docs/experiments/phase-1-autonomous-overnight-two-repo-research-runbook.md",
+    "docs/experiments/phase-1-diff-assisted-statement-regeneration-runbook.md",
+    "docs/experiments/phase-1-policy-violation-triage-bounded-rerun-runbook.md"
+  ],
+  "uv_version": "uv 0.11.16 (Homebrew 2026-05-21 aarch64-apple-darwin)"
+}
