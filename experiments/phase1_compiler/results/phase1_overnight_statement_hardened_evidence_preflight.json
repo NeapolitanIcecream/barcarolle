@@ -96,10 +96,13 @@
     {
       "blockers": [],
       "commit_target": "Analyze statement-hardened result strata",
-      "outputs": [],
-      "status": "pending",
+      "outputs": [
+        "experiments/phase1_compiler/results/phase1_overnight_statement_hardened_strata_analysis.json",
+        "experiments/phase1_compiler/reports/phase1_overnight_statement_hardened_strata_analysis.md"
+      ],
+      "status": "completed",
       "step": "4",
-      "updated_at": "2026-05-25T14:49:38Z"
+      "updated_at": "2026-05-25T14:51:51Z"
     },
     {
       "blockers": [],

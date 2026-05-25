@@ -26,7 +26,7 @@ Status: `pass`.
 | 1 | completed | Audit statement-hardened paid result integrity | experiments/phase1_compiler/results/phase1_overnight_statement_hardened_integrity_audit.json, experiments/phase1_compiler/reports/phase1_overnight_statement_hardened_integrity_audit.md |  |
 | 2 | completed | Build statement-hardened task outcome matrix | experiments/phase1_compiler/results/phase1_overnight_statement_hardened_task_outcome_matrix.json, experiments/phase1_compiler/reports/phase1_overnight_statement_hardened_task_outcome_matrix.md |  |
 | 3 | completed | Classify statement-hardened paid failures | experiments/phase1_compiler/results/phase1_overnight_statement_hardened_failure_taxonomy.json, experiments/phase1_compiler/reports/phase1_overnight_statement_hardened_failure_taxonomy.md |  |
-| 4 | pending | Analyze statement-hardened result strata |  |  |
+| 4 | completed | Analyze statement-hardened result strata | experiments/phase1_compiler/results/phase1_overnight_statement_hardened_strata_analysis.json, experiments/phase1_compiler/reports/phase1_overnight_statement_hardened_strata_analysis.md |  |
 | 5 | pending | Analyze predictive threshold and power |  |  |
 | 6 | pending | Rank compiler calibration options |  |  |
 | 7 | pending | Assess local supply for statement-hardened expansion |  |  |
