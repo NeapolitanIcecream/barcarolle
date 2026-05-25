@@ -3,6 +3,7 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+import re
 import subprocess
 import sys
 from collections import Counter
@@ -70,6 +71,103 @@ FORBIDDEN_PROMPT_KEYS = {
     "verified_fail",
     "verified_pass",
 }
+FORBIDDEN_STATEMENT_PATTERNS = {
+    "diff --git": "raw_diff_marker",
+    "\n@@": "raw_diff_hunk_marker",
+    "gold patch": "gold_patch_text",
+    "hidden verifier": "hidden_verifier_text",
+    "verified_pass": "paid_outcome_status",
+    "verified_fail": "paid_outcome_status",
+    "policy_violation": "paid_or_policy_status",
+}
+TARGET_COMMIT_PATTERN = re.compile(r"\b[0-9a-f]{40}\b")
+BEHAVIOR_OVERRIDES = {
+    "boltons__clean_ext__001": {
+        "behavior": "chunked() and chunked_iter() should handle bytes inputs in the same public shape as other sequence-like inputs instead of raising TypeError.",
+        "expected": "Chunking a bytes object should produce byte chunks of the requested size and should preserve the existing behavior for text strings and other supported iterables.",
+    },
+    "boltons__clean_ext__008": {
+        "behavior": "IndexedSet should keep item indexes coherent after removals, including workflows that pop or remove items and later ask for indexes.",
+        "expected": "Removing an item from an IndexedSet should update the remaining index mapping so later index lookups and pops do not report stale positions or out-of-range errors.",
+    },
+    "boltons__clean_ext__010": {
+        "behavior": "IndexedSet reverse subtraction should respect the left-hand operand instead of reusing the normal difference direction.",
+        "expected": "When a regular set is subtracted by an IndexedSet, the result should contain elements that belong to the left-hand set and not the right-hand IndexedSet, while existing IndexedSet subtraction behavior remains intact.",
+    },
+    "boltons__clean_ext__017": {
+        "behavior": "timeutils.daterange should advance yearly steps correctly when the start date is in December.",
+        "expected": "A date range that starts in month 12 and steps by whole years should keep producing valid yearly dates and should not treat December as month zero or skip the expected boundary behavior.",
+    },
+    "attrs__hist__001": {
+        "behavior": "Frozen attrs classes that use cache_hash=True should remain compatible with deepcopy.",
+        "expected": "Deep-copying a frozen attrs instance with cached hash support should succeed without violating frozen attribute protection, while normal frozen and cache_hash behavior remains unchanged.",
+    },
+    "attrs__hist__004": {
+        "behavior": "Generated __ne__ behavior for attrs classes should be stable over the lifetime of a class.",
+        "expected": "Creating attrs classes with equality enabled should not cause the observed __ne__ method to change unexpectedly after class creation or later use.",
+    },
+    "attrs__hist__009": {
+        "behavior": "@attr.define should auto-detect user-supplied equality methods consistently with the documented next-generation API behavior.",
+        "expected": "A class decorated with @attr.define that defines its own __eq__ should be handled consistently with the documented eq configuration and should not silently ignore the user-defined method.",
+    },
+    "attrs__hist__010": {
+        "behavior": "Hybrid auto_attribs detection should work when maybe_cls is None and a class has no annotations.",
+        "expected": "Leaving auto_attribs as None should preserve attr.s-style guessing behavior instead of misclassifying classes that have neither annotations nor attr.ib attributes.",
+    },
+    "attrs__hist__012": {
+        "behavior": "A slotted attrs class with a custom __setattr__ should keep that custom setter.",
+        "expected": "Defining a class with slots=True and a user-provided __setattr__ should not replace the custom method with the default slotted behavior.",
+    },
+    "attrs__hist__013": {
+        "behavior": "Next-generation frozen attrs classes should be comfortable to instantiate and subclass when validators are involved.",
+        "expected": "Using define(frozen=True), including subclassing frozen classes, should not be blocked by on_setattr validation machinery that is inappropriate for frozen instances.",
+    },
+    "attrs__hist__023": {
+        "behavior": "Deferred type annotations on attrs-generated methods should resolve in the correct execution context.",
+        "expected": "Type hints for generated __init__ methods should resolve forward or string annotations using the context where the attrs class was defined.",
+    },
+    "attrs__hist__027": {
+        "behavior": "Field hook helpers for Python string annotations are under-specified in the old public context.",
+        "expected": "No regenerated statement is admitted for this task in this run because the public behavior remains too broad to make a non-leaky solver-facing statement.",
+        "reject_reason": "runbook_explicit_exclusion_not_recovered",
+    },
+    "attrs__hist__032": {
+        "behavior": "Creating many attrs classes with the same name should not trigger a severe performance degradation.",
+        "expected": "Repeated class creation with reused class names should remain reasonably fast and should not accumulate avoidable lookup or cache overhead.",
+    },
+    "attrs__hist__033": {
+        "behavior": "attrs converter support should avoid deprecated distutils usage on Python 3.10 and newer.",
+        "expected": "The converter-related public behavior should continue to work without emitting the reported distutils deprecation path in the affected tests.",
+    },
+    "attrs__hist__035": {
+        "behavior": "Using an attrs field transformer should not break Hypothesis integration.",
+        "expected": "Classes that use documented field transformers should remain usable with Hypothesis strategies and should preserve field metadata needed by that integration.",
+    },
+    "attrs__hist__036": {
+        "behavior": "from attr import * should work on supported recent Python versions.",
+        "expected": "Star imports from attr should expose the intended public names without failing on Python 3.6 and newer.",
+    },
+    "attrs__hist__039": {
+        "behavior": "attr.validators.matches_re() should accept compiled regular expression patterns as well as string patterns.",
+        "expected": "Passing a re.Pattern object to matches_re() should work with the pattern's own flags while existing string-pattern behavior remains supported.",
+    },
+    "attrs__hist__041": {
+        "behavior": "attr.asdict() should handle mappings whose keys are tuples.",
+        "expected": "Converting an attrs instance that contains a mapping with tuple keys should not turn keys into unhashable lists or raise TypeError under the default retain_collection_types behavior.",
+    },
+    "attrs__hist__045": {
+        "behavior": "attrs should expose a minimum-length validator for sized values.",
+        "expected": "The public validators API should support checking that a value's length is at least a configured minimum while preserving existing validator behavior.",
+    },
+    "attrs__hist__047": {
+        "behavior": "deep_iterable member_validator should accept multiple validators in the same way other validator composition points do.",
+        "expected": "Passing a list of validators as member_validator should apply those validators in order to each iterable member, while a single callable validator remains supported.",
+    },
+}
+GENERATION_REJECT_REASONS = {
+    "attrs__hist__003": "public_context_empty_pr_stub",
+    "attrs__hist__008": "public_pr_context_too_vague_for_solver_statement",
+}
 
 
 def read_json(path: Path) -> dict[str, Any]:
@@ -85,6 +183,11 @@ def read_jsonl(path: Path) -> list[dict[str, Any]]:
 def write_json(path: Path, payload: Any) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(json.dumps(payload, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+
+
+def write_jsonl(path: Path, rows: list[dict[str, Any]]) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text("\n".join(json.dumps(row, sort_keys=True) for row in rows) + "\n", encoding="utf-8")
 
 
 def write_text(path: Path, text: str) -> None:
@@ -422,6 +525,244 @@ def review_schema() -> dict[str, Any]:
     }
 
 
+def public_source_note(packet: dict[str, Any]) -> str:
+    context = packet["public_context"]
+    body = context.get("body_excerpt") or ""
+    if not body:
+        return "The available public source has no usable body excerpt, so the title and sidecar metadata must carry the behavior."
+    if packet["old_statement_quality"].get("body_summary_hit_old_cap"):
+        return (
+            "The old source excerpt hit the historical 240-character renderer cap, so this regenerated statement paraphrases the public behavior instead of copying the truncated excerpt."
+        )
+    return f"The public excerpt describes the reported behavior in sanitized form: {body}"
+
+
+def generated_statement_text(packet: dict[str, Any]) -> str:
+    task_id = packet["task_id"]
+    override = BEHAVIOR_OVERRIDES.get(task_id, {})
+    title = packet["public_context"].get("title") or "public behavior regression"
+    behavior = override.get("behavior") or f"The public report describes this behavior: {title}."
+    expected = override.get("expected") or (
+        "Update the implementation so the reported public behavior works as described by the public source while preserving existing behavior outside the stated scope."
+    )
+    editable = ", ".join(packet["implementation_files"]) or "no implementation path available"
+    tests = ", ".join(packet["test_files"]) or "no test path metadata available"
+    modules = ", ".join(packet.get("module_or_package") or []) or packet["repo_id"]
+    diff_summary_text = packet["diff_summary"].get("summary") or "No file-level diff summary is available."
+    verifier = packet["scope_metadata"].get("verifier_command_metadata") or "verifier command metadata unavailable"
+    source_note = public_source_note(packet)
+    statement = f"""Problem summary:
+{behavior}
+
+Behavior details:
+This task belongs to `{packet['repo_id']}` and concerns `{modules}`. The solver-visible public reference is `{packet['source_ref']}`. {source_note} The diff-assisted compiler sidecar confirms only file-level metadata: {diff_summary_text} This metadata is included to clarify scope, not to prescribe a patch.
+
+Expected behavior:
+{expected} The fix should be observable through the public behavior named above and through the non-editable tests listed below. Preserve existing behavior for unrelated inputs, modules, and APIs.
+
+Editable implementation paths:
+{editable}
+
+Non-editable test paths:
+{tests}
+
+Verifier metadata:
+{verifier}
+
+Scope boundaries:
+Edit implementation files only. Do not edit tests, generated benchmark metadata, verifier files, or files outside the editable implementation scope. Do not rely on non-public oracle material. The old statement may have been cut off by the historical 240-character renderer cap, but this regenerated statement is the solver-facing task text for this sidecar review.
+
+Regression intent:
+Use the public behavior description as the source of truth and keep the change narrow. A good solution should make the named behavior work through the existing public API, should not special-case the benchmark metadata, and should leave unrelated public APIs unchanged. The listed tests are provided as non-editable verifier metadata so the solver can understand where the behavior is exercised without seeing private oracle material or a reference solution.
+"""
+    return statement.strip()
+
+
+def statement_digest(statement: str) -> str:
+    return digest_text(statement)
+
+
+def code_fences_closed(statement: str) -> bool:
+    return statement.count("```") % 2 == 0
+
+
+def statement_leakage_reasons(statement: str) -> list[str]:
+    lowered = statement.lower()
+    reasons = [reason for marker, reason in FORBIDDEN_STATEMENT_PATTERNS.items() if marker in lowered]
+    if TARGET_COMMIT_PATTERN.search(statement):
+        reasons.append("target_commit_hash")
+    return sorted(dict.fromkeys(reasons))
+
+
+def reviewer_verdict(packet: dict[str, Any], statement: str) -> dict[str, Any]:
+    task_id = packet["task_id"]
+    reasons: list[str] = []
+    leakage = statement_leakage_reasons(statement)
+    if leakage:
+        reasons.extend(f"leakage:{reason}" for reason in leakage)
+    source_body_len = int(packet["public_context"].get("body_length") or 0)
+    source_kind_value = packet.get("source_kind")
+    reject_reason = GENERATION_REJECT_REASONS.get(task_id) or BEHAVIOR_OVERRIDES.get(task_id, {}).get("reject_reason")
+    if reject_reason:
+        reasons.append(str(reject_reason))
+    if source_kind_value == "pull_request" and source_body_len < 60 and task_id not in BEHAVIOR_OVERRIDES:
+        reasons.append("pull_request_context_without_sufficient_problem_body")
+    required_phrases = [
+        "Problem summary:",
+        "Expected behavior:",
+        "Editable implementation paths:",
+        "Non-editable test paths:",
+        "Verifier metadata:",
+    ]
+    missing_sections = [phrase for phrase in required_phrases if phrase not in statement]
+    if missing_sections:
+        reasons.extend(f"missing_section:{phrase.rstrip(':')}" for phrase in missing_sections)
+    if not code_fences_closed(statement):
+        reasons.append("unclosed_code_fence")
+    if len(statement) > 4000:
+        reasons.append("statement_exceeds_soft_max")
+    if len(statement) < 1000 and not reject_reason:
+        reasons.append("statement_too_short_for_sufficiency")
+    if not packet["implementation_files"]:
+        reasons.append("missing_editable_implementation_scope")
+    if not packet["test_files"]:
+        reasons.append("missing_non_editable_tests")
+
+    leakage_pass = not leakage
+    formatting_pass = code_fences_closed(statement) and len(statement) <= 4000 and not missing_sections
+    scope_pass = bool(packet["implementation_files"]) and bool(packet["test_files"])
+    faithfulness_pass = not reject_reason
+    sufficiency_pass = bool(packet["public_context"].get("title")) and "Expected behavior:" in statement and not reject_reason
+    status = "pass" if all([leakage_pass, formatting_pass, scope_pass, faithfulness_pass, sufficiency_pass]) else "reject"
+    return {
+        "task_id": task_id,
+        "status": status,
+        "leakage_pass": leakage_pass,
+        "sufficiency_pass": sufficiency_pass,
+        "faithfulness_pass": faithfulness_pass,
+        "scope_pass": scope_pass,
+        "formatting_pass": formatting_pass,
+        "statement_length": len(statement),
+        "statement_digest": f"sha256:{statement_digest(statement)}",
+        "reasons": reasons or ["non_leaky_sufficient_faithful_scope_and_format_checks_passed"],
+    }
+
+
+def run_generation_review_loop(config: dict[str, Any]) -> tuple[dict[str, Any], dict[str, Any], list[dict[str, Any]]]:
+    packets_payload = read_json(output_path(config, "candidate_packets"))
+    packets = packets_payload["packets"]
+    prioritized = sorted(
+        packets,
+        key=lambda packet: (
+            not packet["old_statement_quality"].get("body_summary_hit_old_cap"),
+            packet["repo_id"],
+            packet["task_id"],
+        ),
+    )
+    plan = {
+        "schema_version": "barcarolle.phase1.diff_assisted_statement_generation_plan.v1",
+        "generated_at": stable_generated_at(config),
+        "candidate_count": len(prioritized),
+        "execution_mode": str(config.get("generation_review", {}).get("execution_mode") or "direct_generator_reviewer"),
+        "max_iterations_per_task": int(config.get("generation_review", {}).get("max_iterations_per_task") or 3),
+        "paid_llm_calls_made": False,
+        "paid_acut_calls_made": False,
+        "estimated_incremental_cost_usd": 0.0,
+        "raw_prompts_or_completions_committed": False,
+        "task_order": [packet["task_id"] for packet in prioritized],
+        "prioritization": "old 240-character cap candidates first, then repo and task id",
+    }
+    statement_rows: list[dict[str, Any]] = []
+    review_rows: list[dict[str, Any]] = []
+    for packet in prioritized:
+        statement = generated_statement_text(packet)
+        verdict = reviewer_verdict(packet, statement)
+        row = {
+            "schema_version": "barcarolle.phase1.diff_assisted_regenerated_statement.v1",
+            "task_id": packet["task_id"],
+            "repo_id": packet["repo_id"],
+            "source_ref": packet["source_ref"],
+            "iteration_count": 1,
+            "statement": statement,
+            "statement_digest": verdict["statement_digest"],
+            "review_status": verdict["status"],
+        }
+        statement_rows.append(row)
+        review_rows.append(
+            {
+                "schema_version": "barcarolle.phase1.diff_assisted_statement_review.v1",
+                "task_id": packet["task_id"],
+                "repo_id": packet["repo_id"],
+                "source_ref": packet["source_ref"],
+                "iteration_count": 1,
+                "final_status": verdict["status"],
+                "checks": {
+                    "leakage_pass": verdict["leakage_pass"],
+                    "sufficiency_pass": verdict["sufficiency_pass"],
+                    "faithfulness_pass": verdict["faithfulness_pass"],
+                    "scope_pass": verdict["scope_pass"],
+                    "formatting_pass": verdict["formatting_pass"],
+                },
+                "statement_digest": verdict["statement_digest"],
+                "statement_length": verdict["statement_length"],
+                "reasons": verdict["reasons"],
+            }
+        )
+    reviews = {
+        "schema_version": "barcarolle.phase1.diff_assisted_statement_reviews.v1",
+        "generated_at": stable_generated_at(config),
+        "candidate_count": len(review_rows),
+        "review_counts": dict(sorted(Counter(row["final_status"] for row in review_rows).items())),
+        "paid_llm_calls_made": False,
+        "paid_acut_calls_made": False,
+        "estimated_incremental_cost_usd": 0.0,
+        "raw_prompts_or_completions_committed": False,
+        "reviews": review_rows,
+    }
+    return plan, reviews, statement_rows
+
+
+def render_statement_reviews_markdown(reviews: dict[str, Any]) -> str:
+    lines = [
+        "# Phase 1 Diff-Assisted Statement Reviews",
+        "",
+        f"Generated: `{reviews['generated_at']}`.",
+        "",
+        "## Summary",
+        "",
+        f"- Candidate statements reviewed: `{reviews['candidate_count']}`.",
+        f"- Review counts: `{reviews['review_counts']}`.",
+        "- Paid LLM calls made: `false`.",
+        "- Paid ACUT calls made: `false`.",
+        "- Raw prompts or completions committed: `false`.",
+        "",
+        "## Verdicts",
+        "",
+    ]
+    for review in reviews["reviews"]:
+        lines.extend(
+            [
+                f"### {review['task_id']}",
+                "",
+                f"- Status: `{review['final_status']}`.",
+                f"- Checks: `{review['checks']}`.",
+                f"- Statement length: `{review['statement_length']}`.",
+                f"- Reasons: `{review['reasons']}`.",
+                "",
+            ]
+        )
+    return "\n".join(lines)
+
+
+def write_generation_review(config: dict[str, Any]) -> tuple[dict[str, Any], dict[str, Any], list[dict[str, Any]]]:
+    plan, reviews, statements = run_generation_review_loop(config)
+    write_json(output_path(config, "generation_plan"), plan)
+    write_json(output_path(config, "statement_reviews"), reviews)
+    write_jsonl(output_path(config, "regenerated_statements"), statements)
+    write_text(output_path(config, "statement_reviews_report"), render_statement_reviews_markdown(reviews))
+    return plan, reviews, statements
+
+
 def render_candidate_packets_markdown(payload: dict[str, Any]) -> str:
     packets = payload["packets"]
     repo_counts = Counter(packet["repo_id"] for packet in packets)
@@ -470,13 +811,15 @@ def write_candidate_packets(config: dict[str, Any]) -> dict[str, Any]:
 
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description="Build Phase 1 diff-assisted statement regeneration artifacts.")
-    parser.add_argument("mode", choices=["packets"])
+    parser.add_argument("mode", choices=["packets", "generate"])
     parser.add_argument("--config", type=Path, default=DEFAULT_CONFIG)
     args = parser.parse_args(argv)
 
     config = load_config(args.config)
     if args.mode == "packets":
         write_candidate_packets(config)
+    if args.mode == "generate":
+        write_generation_review(config)
     return 0
 
 

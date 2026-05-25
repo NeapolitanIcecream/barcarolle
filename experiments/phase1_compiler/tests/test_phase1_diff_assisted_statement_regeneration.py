@@ -224,3 +224,82 @@ def test_revision_prompt_sanitizes_reviewer_feedback(tmp_path: Path) -> None:
     assert "verified_fail" not in prompt
     assert "add expected behavior" in prompt
     assert "statement_revision" in prompt
+
+
+def test_generated_statement_has_required_solver_visible_sections(tmp_path: Path) -> None:
+    config = minimal_config(tmp_path)
+    packet = diffregen.build_candidate_packet(
+        config=config,
+        candidate=candidate_record(),
+        certified={
+            "base_commit": config["_base"],
+            "changed_files": ["pkg/core.py", "tests/test_core.py"],
+            "target_commit": config["_target"],
+        },
+        source_context={
+            "body_summary": "Public issue body",
+            "classification": "problem_context",
+            "ref": "issue:1",
+            "summary": "Public issue title",
+        },
+    )
+
+    statement = diffregen.generated_statement_text(packet)
+
+    assert "Problem summary:" in statement
+    assert "Expected behavior:" in statement
+    assert "Editable implementation paths:" in statement
+    assert "Non-editable test paths:" in statement
+    assert "pkg/core.py" in statement
+    assert "tests/test_core.py" in statement
+    assert "diff --git" not in statement
+
+
+def test_reviewer_rejects_statement_with_raw_diff_marker(tmp_path: Path) -> None:
+    config = minimal_config(tmp_path)
+    packet = diffregen.build_candidate_packet(
+        config=config,
+        candidate=candidate_record(),
+        certified={
+            "base_commit": config["_base"],
+            "changed_files": ["pkg/core.py", "tests/test_core.py"],
+            "target_commit": config["_target"],
+        },
+        source_context={
+            "body_summary": "Public issue body",
+            "classification": "problem_context",
+            "ref": "issue:1",
+            "summary": "Public issue title",
+        },
+    )
+
+    verdict = diffregen.reviewer_verdict(packet, "Problem summary:\ndiff --git a/pkg/core.py b/pkg/core.py")
+
+    assert verdict["status"] == "reject"
+    assert "leakage:raw_diff_marker" in verdict["reasons"]
+
+
+def test_reviewer_passes_non_leaky_sufficient_statement(tmp_path: Path) -> None:
+    config = minimal_config(tmp_path)
+    packet = diffregen.build_candidate_packet(
+        config=config,
+        candidate=candidate_record(),
+        certified={
+            "base_commit": config["_base"],
+            "changed_files": ["pkg/core.py", "tests/test_core.py"],
+            "target_commit": config["_target"],
+        },
+        source_context={
+            "body_summary": "Public issue body",
+            "classification": "problem_context",
+            "ref": "issue:1",
+            "summary": "Public issue title",
+        },
+    )
+    statement = diffregen.generated_statement_text(packet)
+
+    verdict = diffregen.reviewer_verdict(packet, statement)
+
+    assert verdict["status"] == "pass"
+    assert verdict["leakage_pass"] is True
+    assert verdict["sufficiency_pass"] is True
