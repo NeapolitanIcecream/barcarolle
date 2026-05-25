@@ -23,6 +23,7 @@ SCHEMA_VERSION = "barcarolle.phase1_diff_assisted_codex_loop_statement_regenerat
 MODES = {
     "packets",
     "workflow",
+    "record-session-start",
     "copy-generator-output",
     "copy-reviewer-output",
     "qa",
@@ -599,6 +600,34 @@ def write_session_proof_report(config: dict[str, Any], proof: dict[str, Any]) ->
     write_text(output_path(config, "session_proof_report"), "\n".join(lines))
 
 
+def record_session_start(config: dict[str, Any], role: str) -> dict[str, Any]:
+    if role not in {"generator", "reviewer"}:
+        raise ValueError(f"unsupported session role: {role}")
+    wf = workflow_dir(config)
+    process = wf / role / "process.md"
+    proof = session_proof_base(config)
+    session_key = f"real_{role}_codex_cli_session_started"
+    proof[session_key] = True
+    proof[f"{role}_process_file_present"] = process.exists()
+    proof["sessions"] = [
+        session for session in proof.get("sessions", []) if session.get("role") != role
+    ] + [
+        {
+            "role": role,
+            "tmux_session": str(config["generation_review"][f"{role}_tmux_session"]),
+            "command_shape": f"tmux new-session -> run_{role}.sh -> codex exec with barcarolle_llm env_key LLM_API_KEY",
+            "started_at": utc_now(),
+            "ended_at": "",
+            "process_status": status_from_process(process),
+            "process_file": str(process.relative_to(REPO_ROOT)),
+            "output_row_count": 0,
+        }
+    ]
+    write_json(output_path(config, "session_proof"), proof)
+    write_session_proof_report(config, proof)
+    return proof
+
+
 def copy_generator_output(config: dict[str, Any]) -> dict[str, Any]:
     wf = workflow_dir(config)
     source = wf / "generator" / "output" / "generated_statements.jsonl"
@@ -613,6 +642,7 @@ def copy_generator_output(config: dict[str, Any]) -> dict[str, Any]:
     proof["real_generator_codex_cli_session_started"] = True
     proof["generator_process_file_present"] = process.exists()
     proof["generator_output_not_deterministic_override"] = True
+    existing = next((session for session in proof.get("sessions", []) if session.get("role") == "generator"), {})
     proof["sessions"] = [
         session for session in proof.get("sessions", []) if session.get("role") != "generator"
     ] + [
@@ -620,7 +650,7 @@ def copy_generator_output(config: dict[str, Any]) -> dict[str, Any]:
             "role": "generator",
             "tmux_session": str(config["generation_review"]["generator_tmux_session"]),
             "command_shape": "tmux new-session -> run_generator.sh -> codex exec with barcarolle_llm env_key LLM_API_KEY",
-            "started_at": stable_generated_at(config),
+            "started_at": existing.get("started_at") or stable_generated_at(config),
             "ended_at": utc_now(),
             "process_status": "delivered",
             "process_file": str(process.relative_to(REPO_ROOT)),
@@ -725,6 +755,7 @@ def copy_reviewer_output(config: dict[str, Any]) -> dict[str, Any]:
     proof["real_reviewer_codex_cli_session_started"] = True
     proof["reviewer_process_file_present"] = process.exists()
     proof["reviewer_output_not_deterministic_rules_only"] = True
+    existing = next((session for session in proof.get("sessions", []) if session.get("role") == "reviewer"), {})
     proof["sessions"] = [
         session for session in proof.get("sessions", []) if session.get("role") != "reviewer"
     ] + [
@@ -732,7 +763,7 @@ def copy_reviewer_output(config: dict[str, Any]) -> dict[str, Any]:
             "role": "reviewer",
             "tmux_session": str(config["generation_review"]["reviewer_tmux_session"]),
             "command_shape": "tmux new-session -> run_reviewer.sh -> codex exec with barcarolle_llm env_key LLM_API_KEY",
-            "started_at": stable_generated_at(config),
+            "started_at": existing.get("started_at") or stable_generated_at(config),
             "ended_at": utc_now(),
             "process_status": "delivered",
             "process_file": str(process.relative_to(REPO_ROOT)),
@@ -1017,6 +1048,7 @@ def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description="Build corrected Phase 1 diff-assisted Codex loop artifacts.")
     parser.add_argument("mode", choices=sorted(MODES))
     parser.add_argument("--config", type=Path, default=DEFAULT_CONFIG)
+    parser.add_argument("--role", choices=["generator", "reviewer"])
     args = parser.parse_args(argv)
 
     config = load_config(args.config)
@@ -1024,6 +1056,10 @@ def main(argv: list[str] | None = None) -> int:
         write_candidate_packets(config)
     elif args.mode == "workflow":
         write_workflow_files(config)
+    elif args.mode == "record-session-start":
+        if not args.role:
+            raise SystemExit("--role is required for record-session-start")
+        record_session_start(config, args.role)
     elif args.mode == "copy-generator-output":
         copy_generator_output(config)
     elif args.mode == "copy-reviewer-output":

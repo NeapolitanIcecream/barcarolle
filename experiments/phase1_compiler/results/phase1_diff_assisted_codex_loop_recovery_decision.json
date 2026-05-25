@@ -1,0 +1,31 @@
+{
+  "blocked_reason": "External Codex CLI generator session exited non-zero before delivering generated statements.",
+  "decision_basis": {
+    "candidate_count": 22,
+    "deterministic_qa_counts": {},
+    "eligible_count_after_codex_loop_regeneration": 0,
+    "eligible_count_before_regeneration": null,
+    "generated_statement_count": 0,
+    "remaining_missing_supply": "not_screened_because_real_codex_loop_blocked_before_generation",
+    "review_counts": {}
+  },
+  "generated_at": "2026-05-25T03:40:30Z",
+  "generated_statement_is_scoreable_result": false,
+  "historical_paid_outcomes_used_for_generation_or_review": false,
+  "next_action": "Resolve the external Codex CLI generator blocker, then rerun this corrected runbook from the generator step without deterministic fallback.",
+  "old_candidate_pool_recovered": false,
+  "old_paid_result_repaired": false,
+  "paid_acut_calls_made": false,
+  "paid_llm_generation_review_attempted": true,
+  "paid_solver_cells_run": false,
+  "paid_validation_completed": false,
+  "predictive_validity_established": false,
+  "primary_decision": "blocked_real_codex_loop_not_completed",
+  "real_codex_generator_reviewer_loop_completed": false,
+  "real_generator_session_completed": false,
+  "real_generator_session_started": true,
+  "real_reviewer_session_completed": false,
+  "real_reviewer_session_started": false,
+  "replacement_supply_still_needed": true,
+  "schema_version": "barcarolle.phase1.diff_assisted_codex_loop_recovery_decision.v1"
+}
