@@ -1,0 +1,46 @@
+{
+  "branch": "codex/restart-benchmark-compiler",
+  "codex_cli_available": true,
+  "codex_cli_path_present": true,
+  "corrected_result_prefix": "phase1_diff_assisted_codex_loop_",
+  "deterministic_generation_review_fallback_allowed": false,
+  "endpoint_base_url_host": "apirx.boyuerichdata.com",
+  "generated_at": "2026-05-25T03:29:09Z",
+  "git_head": "60033de1176f91f2a4a0821e86a71beb67834541",
+  "historical_paid_outcomes_available_to_generator_reviewer": false,
+  "llm_api_key_present": true,
+  "llm_base_url_present": true,
+  "paid_acut_calls_enabled": false,
+  "paid_llm_generation_review_conditionally_enabled": true,
+  "paid_solver_cells_enabled": false,
+  "prior_deterministic_outputs_classification": {
+    "valid_as": [
+      "deterministic dry-run and tooling prototype",
+      "evidence that old 240-character truncation over-penalized candidates",
+      "evidence that current old inventory lacks boltons H_future supply"
+    ],
+    "not_valid_as": [
+      "independent Codex CLI generated statement evidence",
+      "independent Codex CLI leakage or sufficiency review evidence",
+      "basis for freezing a statement-hardened release",
+      "basis for paid validation"
+    ]
+  },
+  "python_version": "Python 3.9.6",
+  "raw_cli_logs_committed": false,
+  "raw_prompts_or_completions_committed": false,
+  "raw_target_diffs_committed": false,
+  "real_codex_cli_generation_review_can_start": true,
+  "source_zshrc_if_needed": true,
+  "tmux_available": true,
+  "tmux_path_present": true,
+  "unrelated_existing_worktree_paths": [
+    "docs/experiments/phase-1-statement-hardened-holdout-preregistration-runbook.md",
+    "docs/experiments/phase-1-attrs-generalization-third-repo-decision-runbook.md",
+    "docs/experiments/phase-1-attrs-h-future-statement-quality-audit-runbook.md",
+    "docs/experiments/phase-1-autonomous-overnight-two-repo-research-runbook.md",
+    "docs/experiments/phase-1-diff-assisted-statement-regeneration-runbook.md",
+    "docs/experiments/phase-1-policy-violation-triage-bounded-rerun-runbook.md"
+  ],
+  "uv_version": "uv 0.11.16 (Homebrew 2026-05-21 aarch64-apple-darwin)"
+}
