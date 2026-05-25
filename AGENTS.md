@@ -67,3 +67,12 @@ only small sanitized manifests, summaries, reports, and digests.
 
 Use `uv` for repo-local Python tooling. Before committing experiment changes,
 run the scoped tests named by the relevant runbook and `git diff --check`.
+
+## Runbook Execution Boundary
+
+When executing a runbook, do not draft or create the next runbook unless the
+user explicitly asks for that in the same execution task. The executing agent
+should keep advancing the current runbook until it reaches a real stop
+condition, then record completed work, blockers, decisions, and recommended
+next actions in the closeout report. The coordinating user-facing session is
+responsible for interpreting the result and writing any follow-up runbook.
