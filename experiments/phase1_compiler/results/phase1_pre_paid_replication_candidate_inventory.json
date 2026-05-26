@@ -1,0 +1,2697 @@
+{
+  "analysis_schema": "candidate_inventory.v1",
+  "candidate_count": 60,
+  "duplicate_resolution": {
+    "duplicate_count": 0,
+    "duplicates": [],
+    "rule": "Task IDs are globally unique after reservoir-priority resolution."
+  },
+  "historical_outcome_policy": {
+    "outcome_fields_drive_target_profile_estimation": false,
+    "prior_paid_tasks_are_reference_only_for_new_paid_release": true,
+    "stored_in_separate_nested_field": true
+  },
+  "new_paid_acut_calls_made": false,
+  "new_paid_llm_calls_made": false,
+  "rows": [
+    {
+      "base_commit": "ac541fbe556eb8c085a9cea26616f0ebad6ef632",
+      "canonical_split_current": "B_eval",
+      "editable_paths": [
+        "src/attr/_make.py"
+      ],
+      "eligible_for_next_release": false,
+      "eligible_for_target_profile": true,
+      "exclusion_reasons": [
+        "already_used_in_prior_paid_release_reference_only"
+      ],
+      "historical_paid_outcome_available": true,
+      "historical_paid_outcome_summary": {
+        "adapter_disagreement": false,
+        "adapter_pass_count": 2,
+        "both_fail": false,
+        "both_pass": true,
+        "canonical_split": "B_eval"
+      },
+      "implementation_file_count": 1,
+      "implementation_file_count_bucket": "1",
+      "module_or_package": "_make",
+      "module_or_package_list": [
+        "_make"
+      ],
+      "raw_certification_status": "certified",
+      "repo_id": "attrs",
+      "source_context_length_bucket": null,
+      "source_kind": "issue",
+      "source_ref": "issue:611",
+      "source_reservoir": "attrs_clean_outcome_unseen",
+      "statement_digest": "sha256:72f3749b248f32afa7ab0639cb5918df46243c0727ffb5aca0e544fffca0a294",
+      "statement_length": 2123,
+      "statement_length_bucket": null,
+      "statement_quality_risks": [],
+      "statement_quality_status": "pass",
+      "statement_source": "reused_codex_loop",
+      "task_family_label": "attrs:_make",
+      "task_id": "attrs__hist__001",
+      "task_time": "2020-01-13T02:46:11-05:00",
+      "task_time_bucket": null,
+      "test_file_count": 1,
+      "test_file_count_bucket": "1",
+      "test_paths": [
+        "tests/test_make.py"
+      ]
+    },
+    {
+      "base_commit": "9fcfe3479f3e98d4909208039b6b98cc70837b9d",
+      "canonical_split_current": "B_eval",
+      "editable_paths": [
+        "src/attr/_make.py"
+      ],
+      "eligible_for_next_release": false,
+      "eligible_for_target_profile": true,
+      "exclusion_reasons": [
+        "already_used_in_prior_paid_release_reference_only"
+      ],
+      "historical_paid_outcome_available": true,
+      "historical_paid_outcome_summary": {
+        "adapter_disagreement": false,
+        "adapter_pass_count": 0,
+        "both_fail": true,
+        "both_pass": false,
+        "canonical_split": "B_eval"
+      },
+      "implementation_file_count": 1,
+      "implementation_file_count_bucket": "1",
+      "module_or_package": "_make",
+      "module_or_package_list": [
+        "_make"
+      ],
+      "raw_certification_status": "certified",
+      "repo_id": "attrs",
+      "source_context_length_bucket": null,
+      "source_kind": "pull_request",
+      "source_ref": "pr:506",
+      "source_reservoir": "attrs_clean_outcome_unseen",
+      "statement_digest": "sha256:c8d04730b328ad028598eee282911e825fc6617f782ac07d74415a896f5a72f0",
+      "statement_length": 2209,
+      "statement_length_bucket": null,
+      "statement_quality_risks": [],
+      "statement_quality_status": "pass",
+      "statement_source": "reused_codex_loop",
+      "task_family_label": "attrs:_make",
+      "task_id": "attrs__hist__003",
+      "task_time": "2020-03-06T13:54:27+01:00",
+      "task_time_bucket": null,
+      "test_file_count": 1,
+      "test_file_count_bucket": "1",
+      "test_paths": [
+        "tests/test_make.py"
+      ]
+    },
+    {
+      "base_commit": "609b10e84f5fb87d1f20300fb0368961da8f70d0",
+      "canonical_split_current": "B_eval",
+      "editable_paths": [
+        "src/attr/_make.py"
+      ],
+      "eligible_for_next_release": false,
+      "eligible_for_target_profile": true,
+      "exclusion_reasons": [
+        "already_used_in_prior_paid_release_reference_only"
+      ],
+      "historical_paid_outcome_available": true,
+      "historical_paid_outcome_summary": {
+        "adapter_disagreement": false,
+        "adapter_pass_count": 2,
+        "both_fail": false,
+        "both_pass": true,
+        "canonical_split": "B_eval"
+      },
+      "implementation_file_count": 1,
+      "implementation_file_count_bucket": "1",
+      "module_or_package": "_make",
+      "module_or_package_list": [
+        "_make"
+      ],
+      "raw_certification_status": "certified",
+      "repo_id": "attrs",
+      "source_context_length_bucket": null,
+      "source_kind": "issue",
+      "source_ref": "issue:626",
+      "source_reservoir": "attrs_clean_outcome_unseen",
+      "statement_digest": "sha256:6dc808c7d1efafc2397a84ca7321830cb67540128a34f91d1de9eb6d80e312dd",
+      "statement_length": 2187,
+      "statement_length_bucket": null,
+      "statement_quality_risks": [],
+      "statement_quality_status": "pass",
+      "statement_source": "reused_codex_loop",
+      "task_family_label": "attrs:_make",
+      "task_id": "attrs__hist__004",
+      "task_time": "2020-03-09T13:56:09Z",
+      "task_time_bucket": null,
+      "test_file_count": 1,
+      "test_file_count_bucket": "1",
+      "test_paths": [
+        "tests/test_make.py"
+      ]
+    },
+    {
+      "base_commit": "c67a649b3812891b23f9e6468c641808a9b2dfaa",
+      "canonical_split_current": "B_eval",
+      "editable_paths": [
+        "src/attr/__init__.py",
+        "src/attr/__init__.pyi",
+        "src/attr/_next_gen.py"
+      ],
+      "eligible_for_next_release": false,
+      "eligible_for_target_profile": true,
+      "exclusion_reasons": [
+        "already_used_in_prior_paid_release_reference_only"
+      ],
+      "historical_paid_outcome_available": true,
+      "historical_paid_outcome_summary": {
+        "adapter_disagreement": false,
+        "adapter_pass_count": 2,
+        "both_fail": false,
+        "both_pass": true,
+        "canonical_split": "B_eval"
+      },
+      "implementation_file_count": 3,
+      "implementation_file_count_bucket": "3_plus",
+      "module_or_package": "__init__, _next_gen",
+      "module_or_package_list": [
+        "__init__",
+        "_next_gen"
+      ],
+      "raw_certification_status": "certified",
+      "repo_id": "attrs",
+      "source_context_length_bucket": null,
+      "source_kind": "pull_request",
+      "source_ref": "pr:669",
+      "source_reservoir": "attrs_clean_outcome_unseen",
+      "statement_digest": "sha256:8c2d8b532d98e9be3c6b01e90eb16f8afd8bccddb322c0f2d45a9b43709ed652",
+      "statement_length": 2272,
+      "statement_length_bucket": null,
+      "statement_quality_risks": [],
+      "statement_quality_status": "pass",
+      "statement_source": "reused_codex_loop",
+      "task_family_label": "attrs:__init__:multi_file",
+      "task_id": "attrs__hist__008",
+      "task_time": "2020-08-20T19:01:34+02:00",
+      "task_time_bucket": null,
+      "test_file_count": 2,
+      "test_file_count_bucket": "2",
+      "test_paths": [
+        "tests/test_next_gen.py",
+        "tests/typing_example.py"
+      ]
+    },
+    {
+      "base_commit": "1a29941d5cf74ca585780495cb6c17fd013ec861",
+      "canonical_split_current": "candidate_pool",
+      "editable_paths": [
+        "src/attr/_next_gen.py"
+      ],
+      "eligible_for_next_release": true,
+      "eligible_for_target_profile": true,
+      "exclusion_reasons": [],
+      "historical_paid_outcome_available": false,
+      "historical_paid_outcome_summary": {},
+      "implementation_file_count": 1,
+      "implementation_file_count_bucket": "1",
+      "module_or_package": "_next_gen",
+      "module_or_package_list": [
+        "_next_gen"
+      ],
+      "raw_certification_status": "certified",
+      "repo_id": "attrs",
+      "source_context_length_bucket": "medium_250_1200",
+      "source_kind": "issue",
+      "source_ref": "issue:670",
+      "source_reservoir": "attrs_clean_outcome_unseen",
+      "statement_digest": "sha256:d7093948f7b1642f59730adb6d9280fee885aaed27d83b2e09bcfa76e1e6d784",
+      "statement_length": 177,
+      "statement_length_bucket": "short_lt_250",
+      "statement_quality_risks": [
+        "short_solver_statement_covered_by_certified_source_context"
+      ],
+      "statement_quality_status": "pass_with_minor_risk",
+      "statement_source": "deterministic_sanitized_context_summary",
+      "task_family_label": "attrs:_next_gen",
+      "task_id": "attrs__hist__009",
+      "task_time": "2020-08-21T05:19:15+02:00",
+      "task_time_bucket": "2020H2",
+      "test_file_count": 1,
+      "test_file_count_bucket": "1",
+      "test_paths": [
+        "tests/test_next_gen.py"
+      ]
+    },
+    {
+      "base_commit": "d02b76de16fbb011004e16106e63ac1896018e6c",
+      "canonical_split_current": "candidate_pool",
+      "editable_paths": [
+        "src/attr/_next_gen.py"
+      ],
+      "eligible_for_next_release": true,
+      "eligible_for_target_profile": true,
+      "exclusion_reasons": [],
+      "historical_paid_outcome_available": false,
+      "historical_paid_outcome_summary": {},
+      "implementation_file_count": 1,
+      "implementation_file_count_bucket": "1",
+      "module_or_package": "_next_gen",
+      "module_or_package_list": [
+        "_next_gen"
+      ],
+      "raw_certification_status": "certified",
+      "repo_id": "attrs",
+      "source_context_length_bucket": "medium_250_1200",
+      "source_kind": "issue",
+      "source_ref": "issue:673",
+      "source_reservoir": "attrs_clean_outcome_unseen",
+      "statement_digest": "sha256:4e2fdef1c81cadffca4690b1969312bf9f21ad76106fd596bb489598200c6dee",
+      "statement_length": 204,
+      "statement_length_bucket": "short_lt_250",
+      "statement_quality_risks": [],
+      "statement_quality_status": "pass",
+      "statement_source": "deterministic_sanitized_context_summary",
+      "task_family_label": "attrs:_next_gen",
+      "task_id": "attrs__hist__010",
+      "task_time": "2020-08-22T22:58:04-07:00",
+      "task_time_bucket": "2020H2",
+      "test_file_count": 1,
+      "test_file_count_bucket": "1",
+      "test_paths": [
+        "tests/test_next_gen.py"
+      ]
+    },
+    {
+      "base_commit": "bfd7bb49b467e7ab586deb475c23974a91df4dab",
+      "canonical_split_current": "H_future",
+      "editable_paths": [
+        "src/attr/_make.py"
+      ],
+      "eligible_for_next_release": false,
+      "eligible_for_target_profile": true,
+      "exclusion_reasons": [
+        "already_used_in_prior_paid_release_reference_only"
+      ],
+      "historical_paid_outcome_available": true,
+      "historical_paid_outcome_summary": {
+        "adapter_disagreement": false,
+        "adapter_pass_count": 0,
+        "both_fail": true,
+        "both_pass": false,
+        "canonical_split": "H_future"
+      },
+      "implementation_file_count": 1,
+      "implementation_file_count_bucket": "1",
+      "module_or_package": "_make",
+      "module_or_package_list": [
+        "_make"
+      ],
+      "raw_certification_status": "certified",
+      "repo_id": "attrs",
+      "source_context_length_bucket": null,
+      "source_kind": "issue",
+      "source_ref": "issue:680",
+      "source_reservoir": "attrs_clean_outcome_unseen",
+      "statement_digest": "sha256:eb3b31fd4bf8241f9088b47b989b307545e1a2ceae9b5782feacc02453246f16",
+      "statement_length": 2198,
+      "statement_length_bucket": null,
+      "statement_quality_risks": [],
+      "statement_quality_status": "pass",
+      "statement_source": "reused_codex_loop",
+      "task_family_label": "attrs:_make",
+      "task_id": "attrs__hist__012",
+      "task_time": "2020-09-05T09:46:06+02:00",
+      "task_time_bucket": null,
+      "test_file_count": 1,
+      "test_file_count_bucket": "1",
+      "test_paths": [
+        "tests/test_setattr.py"
+      ]
+    },
+    {
+      "base_commit": "48755905ee8088da927a6dc583d4962f7ca16b9b",
+      "canonical_split_current": "H_future",
+      "editable_paths": [
+        "src/attr/_next_gen.py"
+      ],
+      "eligible_for_next_release": false,
+      "eligible_for_target_profile": true,
+      "exclusion_reasons": [
+        "already_used_in_prior_paid_release_reference_only"
+      ],
+      "historical_paid_outcome_available": true,
+      "historical_paid_outcome_summary": {
+        "adapter_disagreement": false,
+        "adapter_pass_count": 0,
+        "both_fail": true,
+        "both_pass": false,
+        "canonical_split": "H_future"
+      },
+      "implementation_file_count": 1,
+      "implementation_file_count_bucket": "1",
+      "module_or_package": "_next_gen",
+      "module_or_package_list": [
+        "_next_gen"
+      ],
+      "raw_certification_status": "certified",
+      "repo_id": "attrs",
+      "source_context_length_bucket": null,
+      "source_kind": "pull_request",
+      "source_ref": "pr:687",
+      "source_reservoir": "attrs_clean_outcome_unseen",
+      "statement_digest": "sha256:702f3a1c5f7a6936944aa15727ab4c1fd973f0ed71f73b54386ee94cd75b4da3",
+      "statement_length": 2217,
+      "statement_length_bucket": null,
+      "statement_quality_risks": [],
+      "statement_quality_status": "pass",
+      "statement_source": "reused_codex_loop",
+      "task_family_label": "attrs:_next_gen",
+      "task_id": "attrs__hist__013",
+      "task_time": "2020-09-05T11:14:54+02:00",
+      "task_time_bucket": null,
+      "test_file_count": 1,
+      "test_file_count_bucket": "1",
+      "test_paths": [
+        "tests/test_next_gen.py"
+      ]
+    },
+    {
+      "base_commit": "78335e9b49eff2eaf2dc31d0bcc3caa0169cfc60",
+      "canonical_split_current": "H_future",
+      "editable_paths": [
+        "src/attr/_make.py"
+      ],
+      "eligible_for_next_release": false,
+      "eligible_for_target_profile": true,
+      "exclusion_reasons": [
+        "already_used_in_prior_paid_release_reference_only"
+      ],
+      "historical_paid_outcome_available": true,
+      "historical_paid_outcome_summary": {
+        "adapter_disagreement": false,
+        "adapter_pass_count": 2,
+        "both_fail": false,
+        "both_pass": true,
+        "canonical_split": "H_future"
+      },
+      "implementation_file_count": 1,
+      "implementation_file_count_bucket": "1",
+      "module_or_package": "_make",
+      "module_or_package_list": [
+        "_make"
+      ],
+      "raw_certification_status": "certified",
+      "repo_id": "attrs",
+      "source_context_length_bucket": null,
+      "source_kind": "issue",
+      "source_ref": "issue:593",
+      "source_reservoir": "attrs_clean_outcome_unseen",
+      "statement_digest": "sha256:3262b00021acd8bd07b3adcbe9de4e3fc297a763750ce60acfc831f9912d5390",
+      "statement_length": 2179,
+      "statement_length_bucket": null,
+      "statement_quality_risks": [],
+      "statement_quality_status": "pass",
+      "statement_source": "reused_codex_loop",
+      "task_family_label": "attrs:_make",
+      "task_id": "attrs__hist__023",
+      "task_time": "2021-02-18T21:50:41-08:00",
+      "task_time_bucket": null,
+      "test_file_count": 1,
+      "test_file_count_bucket": "1",
+      "test_paths": [
+        "tests/test_annotations.py"
+      ]
+    },
+    {
+      "base_commit": "ad59a62cae7f1f5355fb121d77eda5d5d1aa0cbd",
+      "canonical_split_current": "H_future",
+      "editable_paths": [
+        "src/attr/__init__.pyi",
+        "src/attr/_funcs.py"
+      ],
+      "eligible_for_next_release": false,
+      "eligible_for_target_profile": true,
+      "exclusion_reasons": [
+        "already_used_in_prior_paid_release_reference_only"
+      ],
+      "historical_paid_outcome_available": true,
+      "historical_paid_outcome_summary": {
+        "adapter_disagreement": false,
+        "adapter_pass_count": 2,
+        "both_fail": false,
+        "both_pass": true,
+        "canonical_split": "H_future"
+      },
+      "implementation_file_count": 2,
+      "implementation_file_count_bucket": "2",
+      "module_or_package": "_funcs",
+      "module_or_package_list": [
+        "_funcs"
+      ],
+      "raw_certification_status": "certified",
+      "repo_id": "attrs",
+      "source_context_length_bucket": null,
+      "source_kind": "issue",
+      "source_ref": "issue:766",
+      "source_reservoir": "attrs_clean_outcome_unseen",
+      "statement_digest": "sha256:f4bedc621b7cd8d458dcd08ff6134e823d21687ba30177122bde297e433486f6",
+      "statement_length": 2189,
+      "statement_length_bucket": null,
+      "statement_quality_risks": [],
+      "statement_quality_status": "pass",
+      "statement_source": "reused_codex_loop",
+      "task_family_label": "attrs:_funcs",
+      "task_id": "attrs__hist__027",
+      "task_time": "2021-03-05T16:01:04-08:00",
+      "task_time_bucket": null,
+      "test_file_count": 1,
+      "test_file_count_bucket": "1",
+      "test_paths": [
+        "tests/test_hooks.py"
+      ]
+    },
+    {
+      "base_commit": "fb154878ebd2758d2a3b4dc518d21fd4f73e12d2",
+      "canonical_split_current": "candidate_pool",
+      "editable_paths": [
+        "src/attr/_make.py"
+      ],
+      "eligible_for_next_release": true,
+      "eligible_for_target_profile": true,
+      "exclusion_reasons": [],
+      "historical_paid_outcome_available": false,
+      "historical_paid_outcome_summary": {},
+      "implementation_file_count": 1,
+      "implementation_file_count_bucket": "1",
+      "module_or_package": "_make",
+      "module_or_package_list": [
+        "_make"
+      ],
+      "raw_certification_status": "certified",
+      "repo_id": "attrs",
+      "source_context_length_bucket": "medium_250_1200",
+      "source_kind": "issue",
+      "source_ref": "issue:826",
+      "source_reservoir": "attrs_clean_outcome_unseen",
+      "statement_digest": "sha256:a865e45a9be163ed5f76fdd1876425ba91874ce48f75249e9f426f52d7c275e9",
+      "statement_length": 203,
+      "statement_length_bucket": "short_lt_250",
+      "statement_quality_risks": [],
+      "statement_quality_status": "pass",
+      "statement_source": "deterministic_sanitized_context_summary",
+      "task_family_label": "attrs:_make",
+      "task_id": "attrs__hist__032",
+      "task_time": "2021-06-30T08:28:56+02:00",
+      "task_time_bucket": "2021H1",
+      "test_file_count": 1,
+      "test_file_count_bucket": "1",
+      "test_paths": [
+        "tests/test_dunders.py"
+      ]
+    },
+    {
+      "base_commit": "2ca7aada707167cda9b3c8bbc2fd195e4f1aa422",
+      "canonical_split_current": "candidate_pool",
+      "editable_paths": [
+        "src/attr/converters.py"
+      ],
+      "eligible_for_next_release": true,
+      "eligible_for_target_profile": true,
+      "exclusion_reasons": [],
+      "historical_paid_outcome_available": false,
+      "historical_paid_outcome_summary": {},
+      "implementation_file_count": 1,
+      "implementation_file_count_bucket": "1",
+      "module_or_package": "converters",
+      "module_or_package_list": [
+        "converters"
+      ],
+      "raw_certification_status": "certified",
+      "repo_id": "attrs",
+      "source_context_length_bucket": "medium_250_1200",
+      "source_kind": "issue",
+      "source_ref": "issue:813",
+      "source_reservoir": "attrs_clean_outcome_unseen",
+      "statement_digest": "sha256:5316e44d103d049ad64128ce604f099fb79697e7ab0578c284d1ca946cb8d8f0",
+      "statement_length": 187,
+      "statement_length_bucket": "short_lt_250",
+      "statement_quality_risks": [],
+      "statement_quality_status": "pass",
+      "statement_source": "deterministic_sanitized_context_summary",
+      "task_family_label": "attrs:converters",
+      "task_id": "attrs__hist__033",
+      "task_time": "2021-08-10T01:45:28-04:00",
+      "task_time_bucket": "2021H2",
+      "test_file_count": 2,
+      "test_file_count_bucket": "2",
+      "test_paths": [
+        "tests/test_converters.py",
+        "tests/typing_example.py"
+      ]
+    },
+    {
+      "base_commit": "f31bb2850a520993396ebdae598056fb3e3af6f8",
+      "canonical_split_current": "candidate_pool",
+      "editable_paths": [
+        "src/attr/_make.py"
+      ],
+      "eligible_for_next_release": true,
+      "eligible_for_target_profile": true,
+      "exclusion_reasons": [],
+      "historical_paid_outcome_available": false,
+      "historical_paid_outcome_summary": {},
+      "implementation_file_count": 1,
+      "implementation_file_count_bucket": "1",
+      "module_or_package": "_make",
+      "module_or_package_list": [
+        "_make"
+      ],
+      "raw_certification_status": "certified",
+      "repo_id": "attrs",
+      "source_context_length_bucket": "medium_250_1200",
+      "source_kind": "issue",
+      "source_ref": "issue:821",
+      "source_reservoir": "attrs_clean_outcome_unseen",
+      "statement_digest": "sha256:eb3e8edddc25a81bf73a43d79ebbb59f02807a12bd7d04b983af5c879378d859",
+      "statement_length": 191,
+      "statement_length_bucket": "short_lt_250",
+      "statement_quality_risks": [],
+      "statement_quality_status": "pass",
+      "statement_source": "deterministic_sanitized_context_summary",
+      "task_family_label": "attrs:_make",
+      "task_id": "attrs__hist__035",
+      "task_time": "2021-09-22T21:58:32+02:00",
+      "task_time_bucket": "2021H2",
+      "test_file_count": 1,
+      "test_file_count_bucket": "1",
+      "test_paths": [
+        "tests/test_hooks.py"
+      ]
+    },
+    {
+      "base_commit": "407c5e3d9e87246497ebe17da6bac72bacfb3af6",
+      "canonical_split_current": "candidate_pool",
+      "editable_paths": [
+        "src/attr/__init__.py"
+      ],
+      "eligible_for_next_release": true,
+      "eligible_for_target_profile": true,
+      "exclusion_reasons": [],
+      "historical_paid_outcome_available": false,
+      "historical_paid_outcome_summary": {},
+      "implementation_file_count": 1,
+      "implementation_file_count_bucket": "1",
+      "module_or_package": "__init__",
+      "module_or_package_list": [
+        "__init__"
+      ],
+      "raw_certification_status": "certified",
+      "repo_id": "attrs",
+      "source_context_length_bucket": "medium_250_1200",
+      "source_kind": "pull_request",
+      "source_ref": "pr:848",
+      "source_reservoir": "attrs_clean_outcome_unseen",
+      "statement_digest": "sha256:e955b5a17560960b202f0b28dd2fa4f33ea3b1980588b5eb4858fdc9127c19d4",
+      "statement_length": 199,
+      "statement_length_bucket": "short_lt_250",
+      "statement_quality_risks": [],
+      "statement_quality_status": "pass",
+      "statement_source": "deterministic_sanitized_context_summary",
+      "task_family_label": "attrs:__init__",
+      "task_id": "attrs__hist__036",
+      "task_time": "2021-10-04T16:23:50+02:00",
+      "task_time_bucket": "2021H2",
+      "test_file_count": 2,
+      "test_file_count_bucket": "2",
+      "test_paths": [
+        "tests/attr_import_star.py",
+        "tests/test_import.py"
+      ]
+    },
+    {
+      "base_commit": "fe19f4b341dbba5cda14b11d6a184105891c67e5",
+      "canonical_split_current": "candidate_pool",
+      "editable_paths": [
+        "src/attr/validators.py"
+      ],
+      "eligible_for_next_release": true,
+      "eligible_for_target_profile": true,
+      "exclusion_reasons": [],
+      "historical_paid_outcome_available": false,
+      "historical_paid_outcome_summary": {},
+      "implementation_file_count": 1,
+      "implementation_file_count_bucket": "1",
+      "module_or_package": "validators",
+      "module_or_package_list": [
+        "validators"
+      ],
+      "raw_certification_status": "certified",
+      "repo_id": "attrs",
+      "source_context_length_bucket": "medium_250_1200",
+      "source_kind": "issue",
+      "source_ref": "issue:875",
+      "source_reservoir": "attrs_clean_outcome_unseen",
+      "statement_digest": "sha256:2c07453dee4bf82a5a3e92ff5f833d83520d489dc4f8501457d0f9914364b46a",
+      "statement_length": 194,
+      "statement_length_bucket": "short_lt_250",
+      "statement_quality_risks": [],
+      "statement_quality_status": "pass",
+      "statement_source": "deterministic_sanitized_context_summary",
+      "task_family_label": "attrs:validators",
+      "task_id": "attrs__hist__039",
+      "task_time": "2021-11-30T05:32:24Z",
+      "task_time_bucket": "2021H2",
+      "test_file_count": 2,
+      "test_file_count_bucket": "2",
+      "test_paths": [
+        "tests/test_validators.py",
+        "tests/typing_example.py"
+      ]
+    },
+    {
+      "base_commit": "17067930128e78a9c3c7c5280b5417b7bce82657",
+      "canonical_split_current": "candidate_pool",
+      "editable_paths": [
+        "src/attr/_funcs.py"
+      ],
+      "eligible_for_next_release": true,
+      "eligible_for_target_profile": true,
+      "exclusion_reasons": [],
+      "historical_paid_outcome_available": false,
+      "historical_paid_outcome_summary": {},
+      "implementation_file_count": 1,
+      "implementation_file_count_bucket": "1",
+      "module_or_package": "_funcs",
+      "module_or_package_list": [
+        "_funcs"
+      ],
+      "raw_certification_status": "certified",
+      "repo_id": "attrs",
+      "source_context_length_bucket": "medium_250_1200",
+      "source_kind": "issue",
+      "source_ref": "issue:646",
+      "source_reservoir": "attrs_clean_outcome_unseen",
+      "statement_digest": "sha256:a3de790c6a8d18fa1b395db9cb00463f5048664710dcab1b94efffc3d382cc73",
+      "statement_length": 205,
+      "statement_length_bucket": "short_lt_250",
+      "statement_quality_risks": [],
+      "statement_quality_status": "pass",
+      "statement_source": "deterministic_sanitized_context_summary",
+      "task_family_label": "attrs:_funcs",
+      "task_id": "attrs__hist__041",
+      "task_time": "2021-12-16T09:01:51+01:00",
+      "task_time_bucket": "2021H2",
+      "test_file_count": 2,
+      "test_file_count_bucket": "2",
+      "test_paths": [
+        "tests/test_funcs.py",
+        "tests/typing_example.py"
+      ]
+    },
+    {
+      "base_commit": "a080e54e025d4554e87a23058172406b81b09706",
+      "canonical_split_current": "candidate_pool",
+      "editable_paths": [
+        "src/attr/validators.py"
+      ],
+      "eligible_for_next_release": true,
+      "eligible_for_target_profile": true,
+      "exclusion_reasons": [],
+      "historical_paid_outcome_available": false,
+      "historical_paid_outcome_summary": {},
+      "implementation_file_count": 1,
+      "implementation_file_count_bucket": "1",
+      "module_or_package": "validators",
+      "module_or_package_list": [
+        "validators"
+      ],
+      "raw_certification_status": "certified",
+      "repo_id": "attrs",
+      "source_context_length_bucket": "medium_250_1200",
+      "source_kind": "pull_request",
+      "source_ref": "pr:916",
+      "source_reservoir": "attrs_clean_outcome_unseen",
+      "statement_digest": "sha256:bdb4e5bcdf3a4ab275d9bd9d328d33a71976d6a38d47a4f6b615cfcc975c33dd",
+      "statement_length": 170,
+      "statement_length_bucket": "short_lt_250",
+      "statement_quality_risks": [
+        "short_solver_statement_covered_by_certified_source_context"
+      ],
+      "statement_quality_status": "pass_with_minor_risk",
+      "statement_source": "deterministic_sanitized_context_summary",
+      "task_family_label": "attrs:validators",
+      "task_id": "attrs__hist__045",
+      "task_time": "2022-02-02T11:10:33+02:00",
+      "task_time_bucket": "2022H1",
+      "test_file_count": 1,
+      "test_file_count_bucket": "1",
+      "test_paths": [
+        "tests/test_validators.py"
+      ]
+    },
+    {
+      "base_commit": "b75436630fafde95ba2954052c5c4d7d4f506b28",
+      "canonical_split_current": "candidate_pool",
+      "editable_paths": [
+        "src/attr/validators.py"
+      ],
+      "eligible_for_next_release": true,
+      "eligible_for_target_profile": true,
+      "exclusion_reasons": [],
+      "historical_paid_outcome_available": false,
+      "historical_paid_outcome_summary": {},
+      "implementation_file_count": 1,
+      "implementation_file_count_bucket": "1",
+      "module_or_package": "validators",
+      "module_or_package_list": [
+        "validators"
+      ],
+      "raw_certification_status": "certified",
+      "repo_id": "attrs",
+      "source_context_length_bucket": "medium_250_1200",
+      "source_kind": "issue",
+      "source_ref": "issue:924",
+      "source_reservoir": "attrs_clean_outcome_unseen",
+      "statement_digest": "sha256:fbd678f29775b4c188bbd4dd3e3a55a6dfba8150b66352600555f575281ab089",
+      "statement_length": 230,
+      "statement_length_bucket": "short_lt_250",
+      "statement_quality_risks": [],
+      "statement_quality_status": "pass",
+      "statement_source": "deterministic_sanitized_context_summary",
+      "task_family_label": "attrs:validators",
+      "task_id": "attrs__hist__047",
+      "task_time": "2022-03-20T04:48:55-04:00",
+      "task_time_bucket": "2022H1",
+      "test_file_count": 1,
+      "test_file_count_bucket": "1",
+      "test_paths": [
+        "tests/test_validators.py"
+      ]
+    },
+    {
+      "base_commit": "1819f52f1ed655772c425057fc3e4a9899fba74d",
+      "canonical_split_current": "B_eval",
+      "editable_paths": [
+        "boltons/iterutils.py"
+      ],
+      "eligible_for_next_release": false,
+      "eligible_for_target_profile": true,
+      "exclusion_reasons": [
+        "already_used_in_prior_paid_release_reference_only"
+      ],
+      "historical_paid_outcome_available": true,
+      "historical_paid_outcome_summary": {
+        "adapter_disagreement": false,
+        "adapter_pass_count": 2,
+        "both_fail": false,
+        "both_pass": true,
+        "canonical_split": "B_eval"
+      },
+      "implementation_file_count": 1,
+      "implementation_file_count_bucket": "1",
+      "module_or_package": "iterutils",
+      "module_or_package_list": [
+        "iterutils"
+      ],
+      "raw_certification_status": "promote_to_clean_benchmark_candidate",
+      "repo_id": "boltons",
+      "source_context_length_bucket": null,
+      "source_kind": "issue",
+      "source_ref": "issue:231",
+      "source_reservoir": "boltons_clean_outcome_unseen",
+      "statement_digest": "sha256:2f0f8f1b0cef43b0c1bf8c3445c7501353e461194389d8ee64a7f367304f189c",
+      "statement_length": 2127,
+      "statement_length_bucket": null,
+      "statement_quality_risks": [],
+      "statement_quality_status": "pass",
+      "statement_source": "reused_codex_loop",
+      "task_family_label": "boltons:iterutils",
+      "task_id": "boltons__clean_ext__001",
+      "task_time": "2020-01-06T22:29:17-08:00",
+      "task_time_bucket": null,
+      "test_file_count": 1,
+      "test_file_count_bucket": "1",
+      "test_paths": [
+        "tests/test_iterutils.py"
+      ]
+    },
+    {
+      "base_commit": "480965a5896df81b01a3fe2851ef3284421a1c46",
+      "canonical_split_current": "candidate_pool",
+      "editable_paths": [
+        "boltons/funcutils.py"
+      ],
+      "eligible_for_next_release": true,
+      "eligible_for_target_profile": true,
+      "exclusion_reasons": [],
+      "historical_paid_outcome_available": false,
+      "historical_paid_outcome_summary": {},
+      "implementation_file_count": 1,
+      "implementation_file_count_bucket": "1",
+      "module_or_package": "funcutils",
+      "module_or_package_list": [
+        "funcutils"
+      ],
+      "raw_certification_status": "certified",
+      "repo_id": "boltons",
+      "source_context_length_bucket": "medium_250_1200",
+      "source_kind": "pull_request",
+      "source_ref": "pr:244",
+      "source_reservoir": "boltons_historical_certified",
+      "statement_digest": "sha256:d5e06615a42f95001fc138695f642e163dc5f92c9dfbde0f0db47988098c072a",
+      "statement_length": 225,
+      "statement_length_bucket": "short_lt_250",
+      "statement_quality_risks": [
+        "compact_certified_statement"
+      ],
+      "statement_quality_status": "pass_with_minor_risk",
+      "statement_source": "certified_solver_statement",
+      "task_family_label": "boltons:funcutils",
+      "task_id": "boltons__hist__006",
+      "task_time": "2020-03-25T10:22:48-04:00",
+      "task_time_bucket": "2020H1",
+      "test_file_count": 1,
+      "test_file_count_bucket": "1",
+      "test_paths": [
+        "tests/test_funcutils_fb_py3.py"
+      ]
+    },
+    {
+      "base_commit": "81e44a2319ce0bef0de44f1059762b97879cb35d",
+      "canonical_split_current": "candidate_pool",
+      "editable_paths": [
+        "boltons/socketutils.py"
+      ],
+      "eligible_for_next_release": true,
+      "eligible_for_target_profile": true,
+      "exclusion_reasons": [],
+      "historical_paid_outcome_available": false,
+      "historical_paid_outcome_summary": {},
+      "implementation_file_count": 1,
+      "implementation_file_count_bucket": "1",
+      "module_or_package": "socketutils",
+      "module_or_package_list": [
+        "socketutils"
+      ],
+      "raw_certification_status": "certified",
+      "repo_id": "boltons",
+      "source_context_length_bucket": "medium_250_1200",
+      "source_kind": "pull_request",
+      "source_ref": "pr:247",
+      "source_reservoir": "boltons_historical_certified",
+      "statement_digest": "sha256:310a2f4b43c3304a77db2b3543f8c9b10acb6c0e27e1ed039d0376ae796c66ea",
+      "statement_length": 218,
+      "statement_length_bucket": "short_lt_250",
+      "statement_quality_risks": [
+        "compact_certified_statement"
+      ],
+      "statement_quality_status": "pass_with_minor_risk",
+      "statement_source": "certified_solver_statement",
+      "task_family_label": "boltons:socketutils",
+      "task_id": "boltons__hist__007",
+      "task_time": "2020-03-28T09:38:32+01:00",
+      "task_time_bucket": "2020H1",
+      "test_file_count": 1,
+      "test_file_count_bucket": "1",
+      "test_paths": [
+        "tests/test_socketutils.py"
+      ]
+    },
+    {
+      "base_commit": "913aef46f58b9869cd93684917f5c231fba42b4a",
+      "canonical_split_current": "B_eval",
+      "editable_paths": [
+        "boltons/setutils.py"
+      ],
+      "eligible_for_next_release": false,
+      "eligible_for_target_profile": true,
+      "exclusion_reasons": [
+        "already_used_in_prior_paid_release_reference_only"
+      ],
+      "historical_paid_outcome_available": true,
+      "historical_paid_outcome_summary": {
+        "adapter_disagreement": false,
+        "adapter_pass_count": 2,
+        "both_fail": false,
+        "both_pass": true,
+        "canonical_split": "B_eval"
+      },
+      "implementation_file_count": 1,
+      "implementation_file_count_bucket": "1",
+      "module_or_package": "setutils",
+      "module_or_package_list": [
+        "setutils"
+      ],
+      "raw_certification_status": "promote_to_clean_benchmark_candidate",
+      "repo_id": "boltons",
+      "source_context_length_bucket": null,
+      "source_kind": "issue",
+      "source_ref": "issue:240",
+      "source_reservoir": "boltons_clean_outcome_unseen",
+      "statement_digest": "sha256:5c41a33c6e235518e1e984ebb9f4b1865b9b93c53797096f5b398ed14a53613c",
+      "statement_length": 2103,
+      "statement_length_bucket": null,
+      "statement_quality_risks": [],
+      "statement_quality_status": "pass",
+      "statement_source": "reused_codex_loop",
+      "task_family_label": "boltons:setutils",
+      "task_id": "boltons__clean_ext__008",
+      "task_time": "2020-03-29T19:27:42-07:00",
+      "task_time_bucket": null,
+      "test_file_count": 1,
+      "test_file_count_bucket": "1",
+      "test_paths": [
+        "tests/test_setutils.py"
+      ]
+    },
+    {
+      "base_commit": "47e0c3bfcbd3291a1366f34069f23e43659717cd",
+      "canonical_split_current": "B_eval",
+      "editable_paths": [
+        "boltons/setutils.py"
+      ],
+      "eligible_for_next_release": false,
+      "eligible_for_target_profile": true,
+      "exclusion_reasons": [
+        "already_used_in_prior_paid_release_reference_only"
+      ],
+      "historical_paid_outcome_available": true,
+      "historical_paid_outcome_summary": {
+        "adapter_disagreement": false,
+        "adapter_pass_count": 2,
+        "both_fail": false,
+        "both_pass": true,
+        "canonical_split": "B_eval"
+      },
+      "implementation_file_count": 1,
+      "implementation_file_count_bucket": "1",
+      "module_or_package": "setutils",
+      "module_or_package_list": [
+        "setutils"
+      ],
+      "raw_certification_status": "promote_to_clean_benchmark_candidate",
+      "repo_id": "boltons",
+      "source_context_length_bucket": null,
+      "source_kind": "issue",
+      "source_ref": "issue:252",
+      "source_reservoir": "boltons_clean_outcome_unseen",
+      "statement_digest": "sha256:1ffae607372921f374157f78e660822928ab076cf76906179213aee8cc9120c7",
+      "statement_length": 2178,
+      "statement_length_bucket": null,
+      "statement_quality_risks": [],
+      "statement_quality_status": "pass",
+      "statement_source": "reused_codex_loop",
+      "task_family_label": "boltons:setutils",
+      "task_id": "boltons__clean_ext__010",
+      "task_time": "2020-04-21T02:03:26-07:00",
+      "task_time_bucket": null,
+      "test_file_count": 1,
+      "test_file_count_bucket": "1",
+      "test_paths": [
+        "tests/test_setutils.py"
+      ]
+    },
+    {
+      "base_commit": "3d55169c278299854e9d083dfb9cb2a9a6faacd4",
+      "canonical_split_current": "B_eval",
+      "editable_paths": [
+        "boltons/iterutils.py"
+      ],
+      "eligible_for_next_release": false,
+      "eligible_for_target_profile": true,
+      "exclusion_reasons": [
+        "already_used_in_prior_paid_release_reference_only"
+      ],
+      "historical_paid_outcome_available": true,
+      "historical_paid_outcome_summary": {
+        "adapter_disagreement": true,
+        "adapter_pass_count": 1,
+        "both_fail": false,
+        "both_pass": false,
+        "canonical_split": "B_eval"
+      },
+      "implementation_file_count": 1,
+      "implementation_file_count_bucket": "1",
+      "module_or_package": "iterutils",
+      "module_or_package_list": [
+        "iterutils"
+      ],
+      "raw_certification_status": "certified",
+      "repo_id": "boltons",
+      "source_context_length_bucket": null,
+      "source_kind": "pull_request",
+      "source_ref": "pr:253",
+      "source_reservoir": "boltons_historical_certified",
+      "statement_digest": "sha256:6c415911ffde12152fd9ddc6911f88400fb276e133cd62d4518c89b48ed07877",
+      "statement_length": 2277,
+      "statement_length_bucket": null,
+      "statement_quality_risks": [],
+      "statement_quality_status": "pass",
+      "statement_source": "new_codex_loop",
+      "task_family_label": "boltons:iterutils",
+      "task_id": "boltons__hist__011",
+      "task_time": "2020-06-22T01:19:35-04:00",
+      "task_time_bucket": null,
+      "test_file_count": 1,
+      "test_file_count_bucket": "1",
+      "test_paths": [
+        "tests/test_iterutils.py"
+      ]
+    },
+    {
+      "base_commit": "aacfe37f733518235999c6b89e72b6680cf79f6d",
+      "canonical_split_current": "candidate_pool",
+      "editable_paths": [
+        "boltons/funcutils.py"
+      ],
+      "eligible_for_next_release": true,
+      "eligible_for_target_profile": true,
+      "exclusion_reasons": [],
+      "historical_paid_outcome_available": false,
+      "historical_paid_outcome_summary": {},
+      "implementation_file_count": 1,
+      "implementation_file_count_bucket": "1",
+      "module_or_package": "funcutils",
+      "module_or_package_list": [
+        "funcutils"
+      ],
+      "raw_certification_status": "certified",
+      "repo_id": "boltons",
+      "source_context_length_bucket": "short_lt_250",
+      "source_kind": "pull_request",
+      "source_ref": "pr:278",
+      "source_reservoir": "boltons_historical_certified",
+      "statement_digest": "sha256:8c36714785ef4f9048255e90b2761f34b48dc382fb5c10a2f53d4498bb8e2b7d",
+      "statement_length": 185,
+      "statement_length_bucket": "short_lt_250",
+      "statement_quality_risks": [
+        "compact_certified_statement"
+      ],
+      "statement_quality_status": "pass_with_minor_risk",
+      "statement_source": "certified_solver_statement",
+      "task_family_label": "boltons:funcutils",
+      "task_id": "boltons__hist__013",
+      "task_time": "2021-02-21T22:35:25-08:00",
+      "task_time_bucket": "2021H1",
+      "test_file_count": 1,
+      "test_file_count_bucket": "1",
+      "test_paths": [
+        "tests/test_funcutils.py"
+      ]
+    },
+    {
+      "base_commit": "8c5e87d7d7bd3ecd37cedccbf0e6110b5d1f5688",
+      "canonical_split_current": "candidate_pool",
+      "editable_paths": [
+        "boltons/fileutils.py",
+        "boltons/jsonutils.py"
+      ],
+      "eligible_for_next_release": true,
+      "eligible_for_target_profile": true,
+      "exclusion_reasons": [],
+      "historical_paid_outcome_available": false,
+      "historical_paid_outcome_summary": {},
+      "implementation_file_count": 2,
+      "implementation_file_count_bucket": "2",
+      "module_or_package": "fileutils, jsonutils",
+      "module_or_package_list": [
+        "fileutils",
+        "jsonutils"
+      ],
+      "raw_certification_status": "certified",
+      "repo_id": "boltons",
+      "source_context_length_bucket": "short_lt_250",
+      "source_kind": "pull_request",
+      "source_ref": "pr:286",
+      "source_reservoir": "boltons_historical_certified",
+      "statement_digest": "sha256:ad206abfa820e6bb0cd15fd09b050158fc1871a0c225f7107bd31ad89fd1b66d",
+      "statement_length": 172,
+      "statement_length_bucket": "short_lt_250",
+      "statement_quality_risks": [
+        "short_solver_statement_covered_by_certified_source_context",
+        "compact_certified_statement"
+      ],
+      "statement_quality_status": "pass_with_minor_risk",
+      "statement_source": "certified_solver_statement",
+      "task_family_label": "boltons:fileutils:multi_file",
+      "task_id": "boltons__hist__014",
+      "task_time": "2021-05-15T00:08:53-07:00",
+      "task_time_bucket": "2021H1",
+      "test_file_count": 1,
+      "test_file_count_bucket": "1",
+      "test_paths": [
+        "tests/test_jsonutils.py"
+      ]
+    },
+    {
+      "base_commit": "270e974975984f662f998c8f6eb0ebebd964de82",
+      "canonical_split_current": "candidate_pool",
+      "editable_paths": [
+        "boltons/urlutils.py"
+      ],
+      "eligible_for_next_release": true,
+      "eligible_for_target_profile": true,
+      "exclusion_reasons": [],
+      "historical_paid_outcome_available": false,
+      "historical_paid_outcome_summary": {},
+      "implementation_file_count": 1,
+      "implementation_file_count_bucket": "1",
+      "module_or_package": "urlutils",
+      "module_or_package_list": [
+        "urlutils"
+      ],
+      "raw_certification_status": "certified",
+      "repo_id": "boltons",
+      "source_context_length_bucket": "medium_250_1200",
+      "source_kind": "pull_request",
+      "source_ref": "pr:298",
+      "source_reservoir": "boltons_historical_certified",
+      "statement_digest": "sha256:db9f4db4effc9c4c854d05e6e054f8882b417a26cfe652bc962b09654e2991ef",
+      "statement_length": 212,
+      "statement_length_bucket": "short_lt_250",
+      "statement_quality_risks": [
+        "compact_certified_statement"
+      ],
+      "statement_quality_status": "pass_with_minor_risk",
+      "statement_source": "certified_solver_statement",
+      "task_family_label": "boltons:urlutils",
+      "task_id": "boltons__hist__017",
+      "task_time": "2022-01-16T07:08:40+08:00",
+      "task_time_bucket": "2022H1",
+      "test_file_count": 1,
+      "test_file_count_bucket": "1",
+      "test_paths": [
+        "tests/test_urlutils.py"
+      ]
+    },
+    {
+      "base_commit": "6c7fa3e05659fac6515f661153c89d4ad02df168",
+      "canonical_split_current": "H_future",
+      "editable_paths": [
+        "boltons/timeutils.py"
+      ],
+      "eligible_for_next_release": false,
+      "eligible_for_target_profile": true,
+      "exclusion_reasons": [
+        "already_used_in_prior_paid_release_reference_only"
+      ],
+      "historical_paid_outcome_available": true,
+      "historical_paid_outcome_summary": {
+        "adapter_disagreement": false,
+        "adapter_pass_count": 2,
+        "both_fail": false,
+        "both_pass": true,
+        "canonical_split": "H_future"
+      },
+      "implementation_file_count": 1,
+      "implementation_file_count_bucket": "1",
+      "module_or_package": "timeutils",
+      "module_or_package_list": [
+        "timeutils"
+      ],
+      "raw_certification_status": "promote_to_clean_benchmark_candidate",
+      "repo_id": "boltons",
+      "source_context_length_bucket": null,
+      "source_kind": "issue",
+      "source_ref": "issue:319",
+      "source_reservoir": "boltons_clean_outcome_unseen",
+      "statement_digest": "sha256:06e5da6b0d3af52a92b0d16be43b660f4b972bb3d7bbdd05445250d1b92f8d7a",
+      "statement_length": 2070,
+      "statement_length_bucket": null,
+      "statement_quality_risks": [],
+      "statement_quality_status": "pass",
+      "statement_source": "reused_codex_loop",
+      "task_family_label": "boltons:timeutils",
+      "task_id": "boltons__clean_ext__017",
+      "task_time": "2022-12-07T18:22:36-08:00",
+      "task_time_bucket": null,
+      "test_file_count": 1,
+      "test_file_count_bucket": "1",
+      "test_paths": [
+        "tests/test_timeutils.py"
+      ]
+    },
+    {
+      "base_commit": "9420cfeb3b1eb270fad876d002bf92567e619b0c",
+      "canonical_split_current": "candidate_pool",
+      "editable_paths": [
+        "boltons/ioutils.py"
+      ],
+      "eligible_for_next_release": true,
+      "eligible_for_target_profile": true,
+      "exclusion_reasons": [],
+      "historical_paid_outcome_available": false,
+      "historical_paid_outcome_summary": {},
+      "implementation_file_count": 1,
+      "implementation_file_count_bucket": "1",
+      "module_or_package": "ioutils",
+      "module_or_package_list": [
+        "ioutils"
+      ],
+      "raw_certification_status": "certified",
+      "repo_id": "boltons",
+      "source_context_length_bucket": "medium_250_1200",
+      "source_kind": "pull_request",
+      "source_ref": "pr:305",
+      "source_reservoir": "boltons_historical_certified",
+      "statement_digest": "sha256:69a77606cbd3145b5ef9317aeefbc31364b19126239d1317a28a71211b177c50",
+      "statement_length": 204,
+      "statement_length_bucket": "short_lt_250",
+      "statement_quality_risks": [
+        "compact_certified_statement"
+      ],
+      "statement_quality_status": "pass_with_minor_risk",
+      "statement_source": "certified_solver_statement",
+      "task_family_label": "boltons:ioutils",
+      "task_id": "boltons__hist__019",
+      "task_time": "2022-12-08T03:45:47-06:00",
+      "task_time_bucket": "2022H2",
+      "test_file_count": 1,
+      "test_file_count_bucket": "1",
+      "test_paths": [
+        "tests/test_ioutils.py"
+      ]
+    },
+    {
+      "base_commit": "6505c6b5565275d484e0e3907a471944441f0c57",
+      "canonical_split_current": "candidate_pool",
+      "editable_paths": [
+        "boltons/timeutils.py"
+      ],
+      "eligible_for_next_release": true,
+      "eligible_for_target_profile": true,
+      "exclusion_reasons": [],
+      "historical_paid_outcome_available": false,
+      "historical_paid_outcome_summary": {},
+      "implementation_file_count": 1,
+      "implementation_file_count_bucket": "1",
+      "module_or_package": "timeutils",
+      "module_or_package_list": [
+        "timeutils"
+      ],
+      "raw_certification_status": "certified",
+      "repo_id": "boltons",
+      "source_context_length_bucket": "medium_250_1200",
+      "source_kind": "pull_request",
+      "source_ref": "pr:302",
+      "source_reservoir": "boltons_historical_certified",
+      "statement_digest": "sha256:771ef43848f06daea80a68626a20f47d6633109f9abb50aee23971907b83ee74",
+      "statement_length": 209,
+      "statement_length_bucket": "short_lt_250",
+      "statement_quality_risks": [
+        "compact_certified_statement"
+      ],
+      "statement_quality_status": "pass_with_minor_risk",
+      "statement_source": "certified_solver_statement",
+      "task_family_label": "boltons:timeutils",
+      "task_id": "boltons__hist__020",
+      "task_time": "2022-12-08T15:51:37+06:00",
+      "task_time_bucket": "2022H2",
+      "test_file_count": 1,
+      "test_file_count_bucket": "1",
+      "test_paths": [
+        "tests/test_timeutils.py"
+      ]
+    },
+    {
+      "base_commit": "40a7b47c6e8235a1b2a4600d0ceec4f7ea0f9bb0",
+      "canonical_split_current": "H_future",
+      "editable_paths": [
+        "boltons/iterutils.py"
+      ],
+      "eligible_for_next_release": false,
+      "eligible_for_target_profile": true,
+      "exclusion_reasons": [
+        "already_used_in_prior_paid_release_reference_only"
+      ],
+      "historical_paid_outcome_available": true,
+      "historical_paid_outcome_summary": {
+        "adapter_disagreement": false,
+        "adapter_pass_count": 0,
+        "both_fail": true,
+        "both_pass": false,
+        "canonical_split": "H_future"
+      },
+      "implementation_file_count": 1,
+      "implementation_file_count_bucket": "1",
+      "module_or_package": "iterutils",
+      "module_or_package_list": [
+        "iterutils"
+      ],
+      "raw_certification_status": "certified",
+      "repo_id": "boltons",
+      "source_context_length_bucket": null,
+      "source_kind": "pull_request",
+      "source_ref": "pr:312",
+      "source_reservoir": "boltons_historical_certified",
+      "statement_digest": "sha256:df7b0201c0ef0ec9f236f2c53bb50a475d2cf0bbf688f6e9ef2a87fd231500c3",
+      "statement_length": 2378,
+      "statement_length_bucket": null,
+      "statement_quality_risks": [],
+      "statement_quality_status": "pass",
+      "statement_source": "new_codex_loop",
+      "task_family_label": "boltons:iterutils",
+      "task_id": "boltons__hist__022",
+      "task_time": "2023-02-20T07:22:09+01:00",
+      "task_time_bucket": null,
+      "test_file_count": 1,
+      "test_file_count_bucket": "1",
+      "test_paths": [
+        "tests/test_iterutils.py"
+      ]
+    },
+    {
+      "base_commit": "f892a2b46e7fd31c639723d1d9bf4d9ad63752d6",
+      "canonical_split_current": "H_future",
+      "editable_paths": [
+        "boltons/tbutils.py"
+      ],
+      "eligible_for_next_release": false,
+      "eligible_for_target_profile": true,
+      "exclusion_reasons": [
+        "already_used_in_prior_paid_release_reference_only"
+      ],
+      "historical_paid_outcome_available": true,
+      "historical_paid_outcome_summary": {
+        "adapter_disagreement": false,
+        "adapter_pass_count": 2,
+        "both_fail": false,
+        "both_pass": true,
+        "canonical_split": "H_future"
+      },
+      "implementation_file_count": 1,
+      "implementation_file_count_bucket": "1",
+      "module_or_package": "tbutils",
+      "module_or_package_list": [
+        "tbutils"
+      ],
+      "raw_certification_status": "certified",
+      "repo_id": "boltons",
+      "source_context_length_bucket": null,
+      "source_kind": "pull_request",
+      "source_ref": "pr:332",
+      "source_reservoir": "boltons_historical_certified",
+      "statement_digest": "sha256:a70aa84eb91022b28b2b418aa3fd34671a3ada779bc0e4c633e42faf7a055a7a",
+      "statement_length": 2264,
+      "statement_length_bucket": null,
+      "statement_quality_risks": [],
+      "statement_quality_status": "pass",
+      "statement_source": "new_codex_loop",
+      "task_family_label": "boltons:tbutils",
+      "task_id": "boltons__hist__023",
+      "task_time": "2023-04-02T15:11:27-04:00",
+      "task_time_bucket": null,
+      "test_file_count": 1,
+      "test_file_count_bucket": "1",
+      "test_paths": [
+        "tests/test_tbutils_parsed_exc.py"
+      ]
+    },
+    {
+      "base_commit": "475462811ea4f9dea23c8af4cc2b6ead2dc03845",
+      "canonical_split_current": "candidate_pool",
+      "editable_paths": [
+        "boltons/dictutils.py"
+      ],
+      "eligible_for_next_release": true,
+      "eligible_for_target_profile": true,
+      "exclusion_reasons": [],
+      "historical_paid_outcome_available": false,
+      "historical_paid_outcome_summary": {},
+      "implementation_file_count": 1,
+      "implementation_file_count_bucket": "1",
+      "module_or_package": "dictutils",
+      "module_or_package_list": [
+        "dictutils"
+      ],
+      "raw_certification_status": "certified",
+      "repo_id": "boltons",
+      "source_context_length_bucket": "short_lt_250",
+      "source_kind": "pull_request",
+      "source_ref": "pr:338",
+      "source_reservoir": "boltons_historical_certified",
+      "statement_digest": "sha256:4419c6662af8064f1d5dfcca74f12df51356fc4b03fd31a3db61d0c5f948c5e2",
+      "statement_length": 188,
+      "statement_length_bucket": "short_lt_250",
+      "statement_quality_risks": [
+        "compact_certified_statement"
+      ],
+      "statement_quality_status": "pass_with_minor_risk",
+      "statement_source": "certified_solver_statement",
+      "task_family_label": "boltons:dictutils",
+      "task_id": "boltons__hist__024",
+      "task_time": "2023-04-20T18:29:33-07:00",
+      "task_time_bucket": "2023H1",
+      "test_file_count": 1,
+      "test_file_count_bucket": "1",
+      "test_paths": [
+        "tests/test_dictutils.py"
+      ]
+    },
+    {
+      "base_commit": "0341ab3d79e6430c0e6a4149df9c92679988a534",
+      "canonical_split_current": "candidate_pool",
+      "editable_paths": [
+        "boltons/funcutils.py"
+      ],
+      "eligible_for_next_release": true,
+      "eligible_for_target_profile": true,
+      "exclusion_reasons": [],
+      "historical_paid_outcome_available": false,
+      "historical_paid_outcome_summary": {},
+      "implementation_file_count": 1,
+      "implementation_file_count_bucket": "1",
+      "module_or_package": "funcutils",
+      "module_or_package_list": [
+        "funcutils"
+      ],
+      "raw_certification_status": "certified",
+      "repo_id": "boltons",
+      "source_context_length_bucket": "medium_250_1200",
+      "source_kind": "pull_request",
+      "source_ref": "pr:336",
+      "source_reservoir": "boltons_historical_certified",
+      "statement_digest": "sha256:e54af86b9d8f888f1ef235a66dfc13d7cf682bad82bc7e9b09d0799312b4ee4b",
+      "statement_length": 203,
+      "statement_length_bucket": "short_lt_250",
+      "statement_quality_risks": [
+        "compact_certified_statement"
+      ],
+      "statement_quality_status": "pass_with_minor_risk",
+      "statement_source": "certified_solver_statement",
+      "task_family_label": "boltons:funcutils",
+      "task_id": "boltons__hist__025",
+      "task_time": "2023-04-21T13:05:37+05:30",
+      "task_time_bucket": "2023H1",
+      "test_file_count": 1,
+      "test_file_count_bucket": "1",
+      "test_paths": [
+        "tests/test_funcutils_fb_py3.py"
+      ]
+    },
+    {
+      "base_commit": "c2b04b4cb16410d7bf9ff781c78dee3ca908dc32",
+      "canonical_split_current": "candidate_pool",
+      "editable_paths": [
+        "boltons/dictutils.py"
+      ],
+      "eligible_for_next_release": true,
+      "eligible_for_target_profile": true,
+      "exclusion_reasons": [],
+      "historical_paid_outcome_available": false,
+      "historical_paid_outcome_summary": {},
+      "implementation_file_count": 1,
+      "implementation_file_count_bucket": "1",
+      "module_or_package": "dictutils",
+      "module_or_package_list": [
+        "dictutils"
+      ],
+      "raw_certification_status": "certified",
+      "repo_id": "boltons",
+      "source_context_length_bucket": "short_lt_250",
+      "source_kind": "pull_request",
+      "source_ref": "pr:341",
+      "source_reservoir": "boltons_historical_certified",
+      "statement_digest": "sha256:c593917c01f092f77ab106bdde180bd13437cbdf7b50b9f81e5344805a9f1305",
+      "statement_length": 181,
+      "statement_length_bucket": "short_lt_250",
+      "statement_quality_risks": [
+        "compact_certified_statement"
+      ],
+      "statement_quality_status": "pass_with_minor_risk",
+      "statement_source": "certified_solver_statement",
+      "task_family_label": "boltons:dictutils",
+      "task_id": "boltons__hist__026",
+      "task_time": "2023-05-07T01:25:38+08:00",
+      "task_time_bucket": "2023H1",
+      "test_file_count": 1,
+      "test_file_count_bucket": "1",
+      "test_paths": [
+        "tests/test_dictutils.py"
+      ]
+    },
+    {
+      "base_commit": "46599bc0d498dd8adc3aea833ce1445feed349dd",
+      "canonical_split_current": "H_future",
+      "editable_paths": [
+        "boltons/cacheutils.py"
+      ],
+      "eligible_for_next_release": false,
+      "eligible_for_target_profile": true,
+      "exclusion_reasons": [
+        "already_used_in_prior_paid_release_reference_only"
+      ],
+      "historical_paid_outcome_available": true,
+      "historical_paid_outcome_summary": {
+        "adapter_disagreement": false,
+        "adapter_pass_count": 0,
+        "both_fail": true,
+        "both_pass": false,
+        "canonical_split": "H_future"
+      },
+      "implementation_file_count": 1,
+      "implementation_file_count_bucket": "1",
+      "module_or_package": "cacheutils",
+      "module_or_package_list": [
+        "cacheutils"
+      ],
+      "raw_certification_status": "certified",
+      "repo_id": "boltons",
+      "source_context_length_bucket": null,
+      "source_kind": "pull_request",
+      "source_ref": "pr:349",
+      "source_reservoir": "boltons_historical_certified",
+      "statement_digest": "sha256:aa6f2e0c3059224df7a4fdfec91446117128820f639b9a65793186756cea575a",
+      "statement_length": 2367,
+      "statement_length_bucket": null,
+      "statement_quality_risks": [],
+      "statement_quality_status": "pass",
+      "statement_source": "new_codex_loop",
+      "task_family_label": "boltons:cacheutils",
+      "task_id": "boltons__hist__027",
+      "task_time": "2023-10-29T21:31:16-07:00",
+      "task_time_bucket": null,
+      "test_file_count": 1,
+      "test_file_count_bucket": "1",
+      "test_paths": [
+        "tests/test_cacheutils.py"
+      ]
+    },
+    {
+      "base_commit": "4815fc8dd1768da5f2d903846d2ab994aa57b0cf",
+      "canonical_split_current": "candidate_pool",
+      "editable_paths": [
+        "boltons/iterutils.py"
+      ],
+      "eligible_for_next_release": true,
+      "eligible_for_target_profile": true,
+      "exclusion_reasons": [],
+      "historical_paid_outcome_available": false,
+      "historical_paid_outcome_summary": {},
+      "implementation_file_count": 1,
+      "implementation_file_count_bucket": "1",
+      "module_or_package": "iterutils",
+      "module_or_package_list": [
+        "iterutils"
+      ],
+      "raw_certification_status": "certified",
+      "repo_id": "boltons",
+      "source_context_length_bucket": "medium_250_1200",
+      "source_kind": "pull_request",
+      "source_ref": "pr:350",
+      "source_reservoir": "boltons_historical_certified",
+      "statement_digest": "sha256:71f0497f24aef0026bf216fe241cebae8687564b6c139241ff364eefa438719e",
+      "statement_length": 195,
+      "statement_length_bucket": "short_lt_250",
+      "statement_quality_risks": [
+        "compact_certified_statement"
+      ],
+      "statement_quality_status": "pass_with_minor_risk",
+      "statement_source": "certified_solver_statement",
+      "task_family_label": "boltons:iterutils",
+      "task_id": "boltons__hist__028",
+      "task_time": "2023-10-31T11:31:12-07:00",
+      "task_time_bucket": "2023H2",
+      "test_file_count": 1,
+      "test_file_count_bucket": "1",
+      "test_paths": [
+        "tests/test_iterutils.py"
+      ]
+    },
+    {
+      "base_commit": "d9a927b5c1b0816eb6227c4cea8c0c6245035eb7",
+      "canonical_split_current": "candidate_pool",
+      "editable_paths": [
+        "boltons/iterutils.py"
+      ],
+      "eligible_for_next_release": true,
+      "eligible_for_target_profile": true,
+      "exclusion_reasons": [],
+      "historical_paid_outcome_available": false,
+      "historical_paid_outcome_summary": {},
+      "implementation_file_count": 1,
+      "implementation_file_count_bucket": "1",
+      "module_or_package": "iterutils",
+      "module_or_package_list": [
+        "iterutils"
+      ],
+      "raw_certification_status": "certified",
+      "repo_id": "boltons",
+      "source_context_length_bucket": "medium_250_1200",
+      "source_kind": "pull_request",
+      "source_ref": "pr:372",
+      "source_reservoir": "boltons_historical_certified",
+      "statement_digest": "sha256:f14bd76f7da712b53d099513de2a1e0bcea12142d36f0d440d4465a5298c12e8",
+      "statement_length": 227,
+      "statement_length_bucket": "short_lt_250",
+      "statement_quality_risks": [
+        "compact_certified_statement"
+      ],
+      "statement_quality_status": "pass_with_minor_risk",
+      "statement_source": "certified_solver_statement",
+      "task_family_label": "boltons:iterutils",
+      "task_id": "boltons__hist__031",
+      "task_time": "2024-06-30T00:24:35-07:00",
+      "task_time_bucket": "2024H1",
+      "test_file_count": 1,
+      "test_file_count_bucket": "1",
+      "test_paths": [
+        "tests/test_iterutils.py"
+      ]
+    },
+    {
+      "base_commit": "d64655aa8f2736b1131ff8a91a128daed7f36cc3",
+      "canonical_split_current": "candidate_pool",
+      "editable_paths": [
+        "src/humanize/time.py"
+      ],
+      "eligible_for_next_release": false,
+      "eligible_for_target_profile": false,
+      "exclusion_reasons": [
+        "repo_not_in_preregistered_two_repo_target_profile"
+      ],
+      "historical_paid_outcome_available": false,
+      "historical_paid_outcome_summary": {},
+      "implementation_file_count": 1,
+      "implementation_file_count_bucket": "1",
+      "module_or_package": "time",
+      "module_or_package_list": [
+        "time"
+      ],
+      "raw_certification_status": "certified",
+      "repo_id": "humanize",
+      "source_context_length_bucket": "medium_250_1200",
+      "source_kind": "commit",
+      "source_ref": "commit:3605332011b4a2f7141b0bffad83eb53c80e1648",
+      "source_reservoir": "humanize_certified",
+      "statement_digest": "sha256:521b4fa1195c6f5ac161a18840073906e9de3ef65f1c40aa5ee6fca3a521d7e2",
+      "statement_length": 208,
+      "statement_length_bucket": "short_lt_250",
+      "statement_quality_risks": [
+        "commit_anchored_source_context_minor_review_risk",
+        "compact_certified_statement",
+        "outside_preregistered_two_repo_scope"
+      ],
+      "statement_quality_status": "pass_with_minor_risk",
+      "statement_source": "certified_solver_statement",
+      "task_family_label": "humanize:time",
+      "task_id": "humanize__hist__002",
+      "task_time": "2020-02-12T13:56:07+02:00",
+      "task_time_bucket": "2020H1",
+      "test_file_count": 1,
+      "test_file_count_bucket": "1",
+      "test_paths": [
+        "tests/test_time.py"
+      ]
+    },
+    {
+      "base_commit": "22a0a136e7358f22797c120bbd85acf48822d13e",
+      "canonical_split_current": "candidate_pool",
+      "editable_paths": [
+        "src/humanize/time.py"
+      ],
+      "eligible_for_next_release": false,
+      "eligible_for_target_profile": false,
+      "exclusion_reasons": [
+        "repo_not_in_preregistered_two_repo_target_profile"
+      ],
+      "historical_paid_outcome_available": false,
+      "historical_paid_outcome_summary": {},
+      "implementation_file_count": 1,
+      "implementation_file_count_bucket": "1",
+      "module_or_package": "time",
+      "module_or_package_list": [
+        "time"
+      ],
+      "raw_certification_status": "certified",
+      "repo_id": "humanize",
+      "source_context_length_bucket": "short_lt_250",
+      "source_kind": "commit",
+      "source_ref": "commit:1afc39e78689ef2d735d2f7bbb4ce5eb6bd31705",
+      "source_reservoir": "humanize_certified",
+      "statement_digest": "sha256:aff04a0bc3a776751cffe02fb6ab69d0d54b172a9deb36fc5443f65d730b12c5",
+      "statement_length": 189,
+      "statement_length_bucket": "short_lt_250",
+      "statement_quality_risks": [
+        "commit_anchored_source_context_minor_review_risk",
+        "compact_certified_statement",
+        "outside_preregistered_two_repo_scope"
+      ],
+      "statement_quality_status": "pass_with_minor_risk",
+      "statement_source": "certified_solver_statement",
+      "task_family_label": "humanize:time",
+      "task_id": "humanize__hist__003",
+      "task_time": "2020-02-13T21:59:21+02:00",
+      "task_time_bucket": "2020H1",
+      "test_file_count": 1,
+      "test_file_count_bucket": "1",
+      "test_paths": [
+        "tests/test_time.py"
+      ]
+    },
+    {
+      "base_commit": "6543192c2c63d6cfea101181e5939c1bff990683",
+      "canonical_split_current": "candidate_pool",
+      "editable_paths": [
+        "src/humanize/number.py"
+      ],
+      "eligible_for_next_release": false,
+      "eligible_for_target_profile": false,
+      "exclusion_reasons": [
+        "repo_not_in_preregistered_two_repo_target_profile"
+      ],
+      "historical_paid_outcome_available": false,
+      "historical_paid_outcome_summary": {},
+      "implementation_file_count": 1,
+      "implementation_file_count_bucket": "1",
+      "module_or_package": "number",
+      "module_or_package_list": [
+        "number"
+      ],
+      "raw_certification_status": "certified",
+      "repo_id": "humanize",
+      "source_context_length_bucket": "short_lt_250",
+      "source_kind": "commit",
+      "source_ref": "commit:5dfd2b04582808a9a7f921a47df6226c2cba0959",
+      "source_reservoir": "humanize_certified",
+      "statement_digest": "sha256:110a8e065ac5c2bb96736156c5c53d9bf3fad151056bdf96806291945eb3e69d",
+      "statement_length": 187,
+      "statement_length_bucket": "short_lt_250",
+      "statement_quality_risks": [
+        "commit_anchored_source_context_minor_review_risk",
+        "compact_certified_statement",
+        "outside_preregistered_two_repo_scope"
+      ],
+      "statement_quality_status": "pass_with_minor_risk",
+      "statement_source": "certified_solver_statement",
+      "task_family_label": "humanize:number",
+      "task_id": "humanize__hist__004",
+      "task_time": "2020-02-19T00:29:02+02:00",
+      "task_time_bucket": "2020H1",
+      "test_file_count": 1,
+      "test_file_count_bucket": "1",
+      "test_paths": [
+        "tests/test_number.py"
+      ]
+    },
+    {
+      "base_commit": "aaca29f35306c48c9965047ac5d39807a33652a7",
+      "canonical_split_current": "candidate_pool",
+      "editable_paths": [
+        "src/humanize/number.py"
+      ],
+      "eligible_for_next_release": false,
+      "eligible_for_target_profile": false,
+      "exclusion_reasons": [
+        "repo_not_in_preregistered_two_repo_target_profile"
+      ],
+      "historical_paid_outcome_available": false,
+      "historical_paid_outcome_summary": {},
+      "implementation_file_count": 1,
+      "implementation_file_count_bucket": "1",
+      "module_or_package": "number",
+      "module_or_package_list": [
+        "number"
+      ],
+      "raw_certification_status": "certified",
+      "repo_id": "humanize",
+      "source_context_length_bucket": "short_lt_250",
+      "source_kind": "commit",
+      "source_ref": "commit:2f179b6b5c1e2eb88240e3ec42ff9edeb946ea65",
+      "source_reservoir": "humanize_certified",
+      "statement_digest": "sha256:99effd620511eaa5f7b82f2ce762c811dac71f21bcb745b54226aeaa4e654c4c",
+      "statement_length": 175,
+      "statement_length_bucket": "short_lt_250",
+      "statement_quality_risks": [
+        "short_solver_statement_covered_by_certified_source_context",
+        "commit_anchored_source_context_minor_review_risk",
+        "compact_certified_statement",
+        "outside_preregistered_two_repo_scope"
+      ],
+      "statement_quality_status": "pass_with_minor_risk",
+      "statement_source": "certified_solver_statement",
+      "task_family_label": "humanize:number",
+      "task_id": "humanize__hist__005",
+      "task_time": "2020-03-05T23:19:42+02:00",
+      "task_time_bucket": "2020H1",
+      "test_file_count": 1,
+      "test_file_count_bucket": "1",
+      "test_paths": [
+        "tests/test_number.py"
+      ]
+    },
+    {
+      "base_commit": "aaca29f35306c48c9965047ac5d39807a33652a7",
+      "canonical_split_current": "candidate_pool",
+      "editable_paths": [
+        "src/humanize/filesize.py"
+      ],
+      "eligible_for_next_release": false,
+      "eligible_for_target_profile": false,
+      "exclusion_reasons": [
+        "repo_not_in_preregistered_two_repo_target_profile"
+      ],
+      "historical_paid_outcome_available": false,
+      "historical_paid_outcome_summary": {},
+      "implementation_file_count": 1,
+      "implementation_file_count_bucket": "1",
+      "module_or_package": "filesize",
+      "module_or_package_list": [
+        "filesize"
+      ],
+      "raw_certification_status": "certified",
+      "repo_id": "humanize",
+      "source_context_length_bucket": "short_lt_250",
+      "source_kind": "commit",
+      "source_ref": "commit:db9678288054dba85f5ce8959c20cc2436f7a1fa",
+      "source_reservoir": "humanize_certified",
+      "statement_digest": "sha256:3a9e3670c63ad40422a324508add4dffe400ec15ef7816414cbcd4705d677230",
+      "statement_length": 192,
+      "statement_length_bucket": "short_lt_250",
+      "statement_quality_risks": [
+        "commit_anchored_source_context_minor_review_risk",
+        "compact_certified_statement",
+        "outside_preregistered_two_repo_scope"
+      ],
+      "statement_quality_status": "pass_with_minor_risk",
+      "statement_source": "certified_solver_statement",
+      "task_family_label": "humanize:filesize",
+      "task_id": "humanize__hist__006",
+      "task_time": "2020-03-05T23:55:56+02:00",
+      "task_time_bucket": "2020H1",
+      "test_file_count": 1,
+      "test_file_count_bucket": "1",
+      "test_paths": [
+        "tests/test_filesize.py"
+      ]
+    },
+    {
+      "base_commit": "c18f013eaf4676e6b0ad8be9149100e0b481d389",
+      "canonical_split_current": "candidate_pool",
+      "editable_paths": [
+        "src/humanize/number.py"
+      ],
+      "eligible_for_next_release": false,
+      "eligible_for_target_profile": false,
+      "exclusion_reasons": [
+        "repo_not_in_preregistered_two_repo_target_profile"
+      ],
+      "historical_paid_outcome_available": false,
+      "historical_paid_outcome_summary": {},
+      "implementation_file_count": 1,
+      "implementation_file_count_bucket": "1",
+      "module_or_package": "number",
+      "module_or_package_list": [
+        "number"
+      ],
+      "raw_certification_status": "certified",
+      "repo_id": "humanize",
+      "source_context_length_bucket": "short_lt_250",
+      "source_kind": "commit",
+      "source_ref": "commit:f14d5c18284f631f4356f9d1b5eb8e043b2db720",
+      "source_reservoir": "humanize_certified",
+      "statement_digest": "sha256:2217cf4db08e22c2583fe0a0ddd4b54f7531e764b876676bb4f1387b0e07a935",
+      "statement_length": 176,
+      "statement_length_bucket": "short_lt_250",
+      "statement_quality_risks": [
+        "short_solver_statement_covered_by_certified_source_context",
+        "commit_anchored_source_context_minor_review_risk",
+        "compact_certified_statement",
+        "outside_preregistered_two_repo_scope"
+      ],
+      "statement_quality_status": "pass_with_minor_risk",
+      "statement_source": "certified_solver_statement",
+      "task_family_label": "humanize:number",
+      "task_id": "humanize__hist__007",
+      "task_time": "2020-03-09T14:51:34+02:00",
+      "task_time_bucket": "2020H1",
+      "test_file_count": 1,
+      "test_file_count_bucket": "1",
+      "test_paths": [
+        "tests/test_number.py"
+      ]
+    },
+    {
+      "base_commit": "c6f301fedda6a14e325da203a3b3a480566639fc",
+      "canonical_split_current": "candidate_pool",
+      "editable_paths": [
+        "src/humanize/time.py"
+      ],
+      "eligible_for_next_release": false,
+      "eligible_for_target_profile": false,
+      "exclusion_reasons": [
+        "repo_not_in_preregistered_two_repo_target_profile"
+      ],
+      "historical_paid_outcome_available": false,
+      "historical_paid_outcome_summary": {},
+      "implementation_file_count": 1,
+      "implementation_file_count_bucket": "1",
+      "module_or_package": "time",
+      "module_or_package_list": [
+        "time"
+      ],
+      "raw_certification_status": "certified",
+      "repo_id": "humanize",
+      "source_context_length_bucket": "medium_250_1200",
+      "source_kind": "commit",
+      "source_ref": "commit:1f3663eb8cef765161c04e3bfa6da8c32cbaa6ce",
+      "source_reservoir": "humanize_certified",
+      "statement_digest": "sha256:b5fa5dbe5fbb136c1830ea03c0696c1dcfa3c05f328e41a23192f1251acf2a39",
+      "statement_length": 214,
+      "statement_length_bucket": "short_lt_250",
+      "statement_quality_risks": [
+        "commit_anchored_source_context_minor_review_risk",
+        "compact_certified_statement",
+        "outside_preregistered_two_repo_scope"
+      ],
+      "statement_quality_status": "pass_with_minor_risk",
+      "statement_source": "certified_solver_statement",
+      "task_family_label": "humanize:time",
+      "task_id": "humanize__hist__010",
+      "task_time": "2020-07-15T21:09:35+03:00",
+      "task_time_bucket": "2020H2",
+      "test_file_count": 1,
+      "test_file_count_bucket": "1",
+      "test_paths": [
+        "tests/test_time.py"
+      ]
+    },
+    {
+      "base_commit": "22afe14caad95b7592ed405cf1c5d2fe71b40e9d",
+      "canonical_split_current": "candidate_pool",
+      "editable_paths": [
+        "src/humanize/time.py"
+      ],
+      "eligible_for_next_release": false,
+      "eligible_for_target_profile": false,
+      "exclusion_reasons": [
+        "repo_not_in_preregistered_two_repo_target_profile"
+      ],
+      "historical_paid_outcome_available": false,
+      "historical_paid_outcome_summary": {},
+      "implementation_file_count": 1,
+      "implementation_file_count_bucket": "1",
+      "module_or_package": "time",
+      "module_or_package_list": [
+        "time"
+      ],
+      "raw_certification_status": "certified",
+      "repo_id": "humanize",
+      "source_context_length_bucket": "medium_250_1200",
+      "source_kind": "commit",
+      "source_ref": "commit:3c800b067ced822850ec193ea425947c9e6509e7",
+      "source_reservoir": "humanize_certified",
+      "statement_digest": "sha256:3c5e874ff8f0127ab1dd8b8788766536ef7432d9ca43216766b24d431704cdf4",
+      "statement_length": 203,
+      "statement_length_bucket": "short_lt_250",
+      "statement_quality_risks": [
+        "commit_anchored_source_context_minor_review_risk",
+        "compact_certified_statement",
+        "outside_preregistered_two_repo_scope"
+      ],
+      "statement_quality_status": "pass_with_minor_risk",
+      "statement_source": "certified_solver_statement",
+      "task_family_label": "humanize:time",
+      "task_id": "humanize__hist__012",
+      "task_time": "2020-07-16T18:16:48+02:00",
+      "task_time_bucket": "2020H2",
+      "test_file_count": 1,
+      "test_file_count_bucket": "1",
+      "test_paths": [
+        "tests/test_time.py"
+      ]
+    },
+    {
+      "base_commit": "16f1b6581573f829b7cbb0cde71ba8b1828e6332",
+      "canonical_split_current": "candidate_pool",
+      "editable_paths": [
+        "src/humanize/i18n.py"
+      ],
+      "eligible_for_next_release": false,
+      "eligible_for_target_profile": false,
+      "exclusion_reasons": [
+        "repo_not_in_preregistered_two_repo_target_profile"
+      ],
+      "historical_paid_outcome_available": false,
+      "historical_paid_outcome_summary": {},
+      "implementation_file_count": 1,
+      "implementation_file_count_bucket": "1",
+      "module_or_package": "i18n",
+      "module_or_package_list": [
+        "i18n"
+      ],
+      "raw_certification_status": "certified",
+      "repo_id": "humanize",
+      "source_context_length_bucket": "short_lt_250",
+      "source_kind": "commit",
+      "source_ref": "commit:2d891b89ebfb6a33e98ecfdd718fc6e50b4a263f",
+      "source_reservoir": "humanize_certified",
+      "statement_digest": "sha256:ffa7b3bda40eb9a018a423560f53a85d7a0ce6b6b35ea97ff0f057a325ea8d48",
+      "statement_length": 166,
+      "statement_length_bucket": "short_lt_250",
+      "statement_quality_risks": [
+        "short_solver_statement_covered_by_certified_source_context",
+        "commit_anchored_source_context_minor_review_risk",
+        "compact_certified_statement",
+        "outside_preregistered_two_repo_scope"
+      ],
+      "statement_quality_status": "pass_with_minor_risk",
+      "statement_source": "certified_solver_statement",
+      "task_family_label": "humanize:i18n",
+      "task_id": "humanize__hist__008",
+      "task_time": "2020-07-31T15:59:12+02:00",
+      "task_time_bucket": "2020H2",
+      "test_file_count": 1,
+      "test_file_count_bucket": "1",
+      "test_paths": [
+        "tests/test_i18n.py"
+      ]
+    },
+    {
+      "base_commit": "9d9de69177154b41b2d6ef412d1487639e99833d",
+      "canonical_split_current": "candidate_pool",
+      "editable_paths": [
+        "src/humanize/time.py"
+      ],
+      "eligible_for_next_release": false,
+      "eligible_for_target_profile": false,
+      "exclusion_reasons": [
+        "repo_not_in_preregistered_two_repo_target_profile"
+      ],
+      "historical_paid_outcome_available": false,
+      "historical_paid_outcome_summary": {},
+      "implementation_file_count": 1,
+      "implementation_file_count_bucket": "1",
+      "module_or_package": "time",
+      "module_or_package_list": [
+        "time"
+      ],
+      "raw_certification_status": "certified",
+      "repo_id": "humanize",
+      "source_context_length_bucket": "short_lt_250",
+      "source_kind": "commit",
+      "source_ref": "commit:62706fd4cb90ebeb9bf85685bad8ab1fa9d0c742",
+      "source_reservoir": "humanize_certified",
+      "statement_digest": "sha256:51070c3084d660ecb1546871a79f7355fd9aee74b0931fef3d297ec3f75f84af",
+      "statement_length": 191,
+      "statement_length_bucket": "short_lt_250",
+      "statement_quality_risks": [
+        "commit_anchored_source_context_minor_review_risk",
+        "compact_certified_statement",
+        "outside_preregistered_two_repo_scope"
+      ],
+      "statement_quality_status": "pass_with_minor_risk",
+      "statement_source": "certified_solver_statement",
+      "task_family_label": "humanize:time",
+      "task_id": "humanize__hist__013",
+      "task_time": "2020-10-19T14:58:56Z",
+      "task_time_bucket": "2020H2",
+      "test_file_count": 1,
+      "test_file_count_bucket": "1",
+      "test_paths": [
+        "tests/test_time.py"
+      ]
+    },
+    {
+      "base_commit": "0cbd1ababec2dcdd71e57856f9b0cce8c4d21b51",
+      "canonical_split_current": "candidate_pool",
+      "editable_paths": [
+        "src/humanize/__init__.py",
+        "src/humanize/i18n.py",
+        "src/humanize/number.py"
+      ],
+      "eligible_for_next_release": false,
+      "eligible_for_target_profile": false,
+      "exclusion_reasons": [
+        "repo_not_in_preregistered_two_repo_target_profile"
+      ],
+      "historical_paid_outcome_available": false,
+      "historical_paid_outcome_summary": {},
+      "implementation_file_count": 3,
+      "implementation_file_count_bucket": "3_plus",
+      "module_or_package": "__init__, i18n, number",
+      "module_or_package_list": [
+        "__init__",
+        "i18n",
+        "number"
+      ],
+      "raw_certification_status": "certified",
+      "repo_id": "humanize",
+      "source_context_length_bucket": "short_lt_250",
+      "source_kind": "commit",
+      "source_ref": "commit:cb0ac5989cea442e5e4b2f4effc3906aad1a1d1a",
+      "source_reservoir": "humanize_certified",
+      "statement_digest": "sha256:d6ee6b5e43faff5baecd374e59ce1ba7a34f8733a5c421ffb43928963f6d95dd",
+      "statement_length": 187,
+      "statement_length_bucket": "short_lt_250",
+      "statement_quality_risks": [
+        "commit_anchored_source_context_minor_review_risk",
+        "compact_certified_statement",
+        "outside_preregistered_two_repo_scope"
+      ],
+      "statement_quality_status": "pass_with_minor_risk",
+      "statement_source": "certified_solver_statement",
+      "task_family_label": "humanize:__init__:multi_file",
+      "task_id": "humanize__hist__014",
+      "task_time": "2020-11-27T17:12:47+02:00",
+      "task_time_bucket": "2020H2",
+      "test_file_count": 1,
+      "test_file_count_bucket": "1",
+      "test_paths": [
+        "tests/test_i18n.py"
+      ]
+    },
+    {
+      "base_commit": "a0f03c137ab33a9b4896789b94edb95ab635f9df",
+      "canonical_split_current": "candidate_pool",
+      "editable_paths": [
+        "src/humanize/__init__.py",
+        "src/humanize/number.py"
+      ],
+      "eligible_for_next_release": false,
+      "eligible_for_target_profile": false,
+      "exclusion_reasons": [
+        "repo_not_in_preregistered_two_repo_target_profile"
+      ],
+      "historical_paid_outcome_available": false,
+      "historical_paid_outcome_summary": {},
+      "implementation_file_count": 2,
+      "implementation_file_count_bucket": "2",
+      "module_or_package": "__init__, number",
+      "module_or_package_list": [
+        "__init__",
+        "number"
+      ],
+      "raw_certification_status": "certified",
+      "repo_id": "humanize",
+      "source_context_length_bucket": "short_lt_250",
+      "source_kind": "commit",
+      "source_ref": "commit:eb186830db8a78b32afbf4196c13e239ba7ef109",
+      "source_reservoir": "humanize_certified",
+      "statement_digest": "sha256:2d322bb6d4758123abd3a96795b39c6f7594e70a9677c1b209f048bf9738f0ce",
+      "statement_length": 182,
+      "statement_length_bucket": "short_lt_250",
+      "statement_quality_risks": [
+        "commit_anchored_source_context_minor_review_risk",
+        "compact_certified_statement",
+        "outside_preregistered_two_repo_scope"
+      ],
+      "statement_quality_status": "pass_with_minor_risk",
+      "statement_source": "certified_solver_statement",
+      "task_family_label": "humanize:__init__:multi_file",
+      "task_id": "humanize__hist__015",
+      "task_time": "2021-01-31T05:23:46Z",
+      "task_time_bucket": "2021H1",
+      "test_file_count": 1,
+      "test_file_count_bucket": "1",
+      "test_paths": [
+        "tests/test_number.py"
+      ]
+    },
+    {
+      "base_commit": "1a9b8d1f9968eb248bda69f39d373a6330b692ba",
+      "canonical_split_current": "candidate_pool",
+      "editable_paths": [
+        "src/itsdangerous/timed.py"
+      ],
+      "eligible_for_next_release": false,
+      "eligible_for_target_profile": false,
+      "exclusion_reasons": [
+        "repo_not_in_preregistered_two_repo_target_profile"
+      ],
+      "historical_paid_outcome_available": false,
+      "historical_paid_outcome_summary": {},
+      "implementation_file_count": 1,
+      "implementation_file_count_bucket": "1",
+      "module_or_package": "timed",
+      "module_or_package_list": [
+        "timed"
+      ],
+      "raw_certification_status": "certified",
+      "repo_id": "itsdangerous",
+      "source_context_length_bucket": "short_lt_250",
+      "source_kind": "pull_request",
+      "source_ref": "pr:133",
+      "source_reservoir": "itsdangerous_certified",
+      "statement_digest": "sha256:06a7413691efc77c8c49b98bdfb95d2b939395fef981912efd39920a40803d8f",
+      "statement_length": 203,
+      "statement_length_bucket": "short_lt_250",
+      "statement_quality_risks": [
+        "compact_certified_statement",
+        "outside_preregistered_two_repo_scope"
+      ],
+      "statement_quality_status": "pass_with_minor_risk",
+      "statement_source": "certified_solver_statement",
+      "task_family_label": "itsdangerous:timed",
+      "task_id": "itsdangerous__hist__003",
+      "task_time": "2019-05-31T23:12:24-04:00",
+      "task_time_bucket": "2019H1",
+      "test_file_count": 1,
+      "test_file_count_bucket": "1",
+      "test_paths": [
+        "tests/test_itsdangerous/test_timed.py"
+      ]
+    },
+    {
+      "base_commit": "3703fbdedd13b2630dd9be75a3638408c193765d",
+      "canonical_split_current": "candidate_pool",
+      "editable_paths": [
+        "src/itsdangerous/exc.py",
+        "src/itsdangerous/jws.py",
+        "src/itsdangerous/timed.py"
+      ],
+      "eligible_for_next_release": false,
+      "eligible_for_target_profile": false,
+      "exclusion_reasons": [
+        "repo_not_in_preregistered_two_repo_target_profile"
+      ],
+      "historical_paid_outcome_available": false,
+      "historical_paid_outcome_summary": {},
+      "implementation_file_count": 3,
+      "implementation_file_count_bucket": "3_plus",
+      "module_or_package": "exc, jws, timed",
+      "module_or_package_list": [
+        "exc",
+        "jws",
+        "timed"
+      ],
+      "raw_certification_status": "certified",
+      "repo_id": "itsdangerous",
+      "source_context_length_bucket": "short_lt_250",
+      "source_kind": "pull_request",
+      "source_ref": "pr:151",
+      "source_reservoir": "itsdangerous_certified",
+      "statement_digest": "sha256:9f57664f14fe73ab1c583f900d0a398d530614b2a7ef5a108ffd1d952b137e7d",
+      "statement_length": 191,
+      "statement_length_bucket": "short_lt_250",
+      "statement_quality_risks": [
+        "compact_certified_statement",
+        "outside_preregistered_two_repo_scope"
+      ],
+      "statement_quality_status": "pass_with_minor_risk",
+      "statement_source": "certified_solver_statement",
+      "task_family_label": "itsdangerous:exc:multi_file",
+      "task_id": "itsdangerous__hist__002",
+      "task_time": "2020-04-17T09:05:54-07:00",
+      "task_time_bucket": "2020H1",
+      "test_file_count": 1,
+      "test_file_count_bucket": "1",
+      "test_paths": [
+        "tests/test_itsdangerous/test_timed.py"
+      ]
+    },
+    {
+      "base_commit": "b11475aa0e1534f1fe7736d56140d81e872b1f5f",
+      "canonical_split_current": "candidate_pool",
+      "editable_paths": [
+        "src/itsdangerous/timed.py"
+      ],
+      "eligible_for_next_release": false,
+      "eligible_for_target_profile": false,
+      "exclusion_reasons": [
+        "repo_not_in_preregistered_two_repo_target_profile"
+      ],
+      "historical_paid_outcome_available": false,
+      "historical_paid_outcome_summary": {},
+      "implementation_file_count": 1,
+      "implementation_file_count_bucket": "1",
+      "module_or_package": "timed",
+      "module_or_package_list": [
+        "timed"
+      ],
+      "raw_certification_status": "certified",
+      "repo_id": "itsdangerous",
+      "source_context_length_bucket": "short_lt_250",
+      "source_kind": "pull_request",
+      "source_ref": "pr:154",
+      "source_reservoir": "itsdangerous_certified",
+      "statement_digest": "sha256:c60d6001342d1b4670ca412888794c4a6f2a816d3c20cf6a4d17f3b63454b912",
+      "statement_length": 180,
+      "statement_length_bucket": "short_lt_250",
+      "statement_quality_risks": [
+        "compact_certified_statement",
+        "outside_preregistered_two_repo_scope"
+      ],
+      "statement_quality_status": "pass_with_minor_risk",
+      "statement_source": "certified_solver_statement",
+      "task_family_label": "itsdangerous:timed",
+      "task_id": "itsdangerous__hist__004",
+      "task_time": "2020-04-17T12:46:35-07:00",
+      "task_time_bucket": "2020H1",
+      "test_file_count": 1,
+      "test_file_count_bucket": "1",
+      "test_paths": [
+        "tests/test_itsdangerous/test_timed.py"
+      ]
+    },
+    {
+      "base_commit": "93ae366874bbd4f69d90495c45b2cd336387496c",
+      "canonical_split_current": "candidate_pool",
+      "editable_paths": [
+        "src/itsdangerous/signer.py"
+      ],
+      "eligible_for_next_release": false,
+      "eligible_for_target_profile": false,
+      "exclusion_reasons": [
+        "repo_not_in_preregistered_two_repo_target_profile"
+      ],
+      "historical_paid_outcome_available": false,
+      "historical_paid_outcome_summary": {},
+      "implementation_file_count": 1,
+      "implementation_file_count_bucket": "1",
+      "module_or_package": "signer",
+      "module_or_package_list": [
+        "signer"
+      ],
+      "raw_certification_status": "certified",
+      "repo_id": "itsdangerous",
+      "source_context_length_bucket": "short_lt_250",
+      "source_kind": "pull_request",
+      "source_ref": "pr:378",
+      "source_reservoir": "itsdangerous_certified",
+      "statement_digest": "sha256:48fea9c555304741910886dfc80b24411c6b91e866555f6ae302b0c7636f7a43",
+      "statement_length": 183,
+      "statement_length_bucket": "short_lt_250",
+      "statement_quality_risks": [
+        "compact_certified_statement",
+        "outside_preregistered_two_repo_scope"
+      ],
+      "statement_quality_status": "pass_with_minor_risk",
+      "statement_source": "certified_solver_statement",
+      "task_family_label": "itsdangerous:signer",
+      "task_id": "itsdangerous__hist__006",
+      "task_time": "2024-04-16T13:05:56-07:00",
+      "task_time_bucket": "2024H1",
+      "test_file_count": 1,
+      "test_file_count_bucket": "1",
+      "test_paths": [
+        "tests/test_itsdangerous/test_serializer.py"
+      ]
+    },
+    {
+      "base_commit": "e052d819b2d8dcf50f0147b5659b9a530204d05f",
+      "canonical_split_current": "candidate_pool",
+      "editable_paths": [
+        "toolz/functoolz.py"
+      ],
+      "eligible_for_next_release": false,
+      "eligible_for_target_profile": false,
+      "exclusion_reasons": [
+        "repo_not_in_preregistered_two_repo_target_profile"
+      ],
+      "historical_paid_outcome_available": false,
+      "historical_paid_outcome_summary": {},
+      "implementation_file_count": 1,
+      "implementation_file_count_bucket": "1",
+      "module_or_package": "functoolz",
+      "module_or_package_list": [
+        "functoolz"
+      ],
+      "raw_certification_status": "certified",
+      "repo_id": "toolz",
+      "source_context_length_bucket": "short_lt_250",
+      "source_kind": "commit",
+      "source_ref": "commit:e221dc5fc5be90e9819453bba9ee621ea9193759",
+      "source_reservoir": "toolz_certified",
+      "statement_digest": "sha256:d7cefbe67118c0f70b739a4212488f3f6c893cecad03f11fcc6e2fa82827f130",
+      "statement_length": 163,
+      "statement_length_bucket": "short_lt_250",
+      "statement_quality_risks": [
+        "short_solver_statement_covered_by_certified_source_context",
+        "commit_anchored_source_context_minor_review_risk",
+        "outside_preregistered_two_repo_scope"
+      ],
+      "statement_quality_status": "pass_with_minor_risk",
+      "statement_source": "deterministic_sanitized_context_summary",
+      "task_family_label": "toolz:functoolz",
+      "task_id": "toolz__hist__001",
+      "task_time": "2018-05-16T21:43:35+02:00",
+      "task_time_bucket": "2018H1",
+      "test_file_count": 1,
+      "test_file_count_bucket": "1",
+      "test_paths": [
+        "toolz/tests/test_functoolz.py"
+      ]
+    },
+    {
+      "base_commit": "e221dc5fc5be90e9819453bba9ee621ea9193759",
+      "canonical_split_current": "candidate_pool",
+      "editable_paths": [
+        "toolz/functoolz.py"
+      ],
+      "eligible_for_next_release": false,
+      "eligible_for_target_profile": false,
+      "exclusion_reasons": [
+        "repo_not_in_preregistered_two_repo_target_profile"
+      ],
+      "historical_paid_outcome_available": false,
+      "historical_paid_outcome_summary": {},
+      "implementation_file_count": 1,
+      "implementation_file_count_bucket": "1",
+      "module_or_package": "functoolz",
+      "module_or_package_list": [
+        "functoolz"
+      ],
+      "raw_certification_status": "certified",
+      "repo_id": "toolz",
+      "source_context_length_bucket": "short_lt_250",
+      "source_kind": "commit",
+      "source_ref": "commit:ba5066732ff735b04330c5dfc9aa804ee6f8ad0a",
+      "source_reservoir": "toolz_certified",
+      "statement_digest": "sha256:5fb5df62d7cb377a3e8ca7d020473357930d847d3b9baeb321c8e2ff4f5d65b0",
+      "statement_length": 163,
+      "statement_length_bucket": "short_lt_250",
+      "statement_quality_risks": [
+        "short_solver_statement_covered_by_certified_source_context",
+        "commit_anchored_source_context_minor_review_risk",
+        "outside_preregistered_two_repo_scope"
+      ],
+      "statement_quality_status": "pass_with_minor_risk",
+      "statement_source": "deterministic_sanitized_context_summary",
+      "task_family_label": "toolz:functoolz",
+      "task_id": "toolz__hist__002",
+      "task_time": "2018-05-17T08:13:14+02:00",
+      "task_time_bucket": "2018H1",
+      "test_file_count": 1,
+      "test_file_count_bucket": "1",
+      "test_paths": [
+        "toolz/tests/test_functoolz.py"
+      ]
+    },
+    {
+      "base_commit": "d39d1ab8b86b08a47c69a66ca4aac4cdd836c42c",
+      "canonical_split_current": "candidate_pool",
+      "editable_paths": [
+        "toolz/functoolz.py"
+      ],
+      "eligible_for_next_release": false,
+      "eligible_for_target_profile": false,
+      "exclusion_reasons": [
+        "repo_not_in_preregistered_two_repo_target_profile"
+      ],
+      "historical_paid_outcome_available": false,
+      "historical_paid_outcome_summary": {},
+      "implementation_file_count": 1,
+      "implementation_file_count_bucket": "1",
+      "module_or_package": "functoolz",
+      "module_or_package_list": [
+        "functoolz"
+      ],
+      "raw_certification_status": "certified",
+      "repo_id": "toolz",
+      "source_context_length_bucket": "short_lt_250",
+      "source_kind": "commit",
+      "source_ref": "commit:9e878e1204158da905df76c241012a30146b8bc1",
+      "source_reservoir": "toolz_certified",
+      "statement_digest": "sha256:bcaae7be588528c0fe57f14461b8f6a1042ee7b98c92ed9e3e4abdd9334a0e7b",
+      "statement_length": 185,
+      "statement_length_bucket": "short_lt_250",
+      "statement_quality_risks": [
+        "commit_anchored_source_context_minor_review_risk",
+        "outside_preregistered_two_repo_scope"
+      ],
+      "statement_quality_status": "pass_with_minor_risk",
+      "statement_source": "deterministic_sanitized_context_summary",
+      "task_family_label": "toolz:functoolz",
+      "task_id": "toolz__hist__003",
+      "task_time": "2018-05-17T08:47:58+02:00",
+      "task_time_bucket": "2018H1",
+      "test_file_count": 1,
+      "test_file_count_bucket": "1",
+      "test_paths": [
+        "toolz/tests/test_functoolz.py"
+      ]
+    },
+    {
+      "base_commit": "9e878e1204158da905df76c241012a30146b8bc1",
+      "canonical_split_current": "candidate_pool",
+      "editable_paths": [
+        "toolz/functoolz.py"
+      ],
+      "eligible_for_next_release": false,
+      "eligible_for_target_profile": false,
+      "exclusion_reasons": [
+        "repo_not_in_preregistered_two_repo_target_profile"
+      ],
+      "historical_paid_outcome_available": false,
+      "historical_paid_outcome_summary": {},
+      "implementation_file_count": 1,
+      "implementation_file_count_bucket": "1",
+      "module_or_package": "functoolz",
+      "module_or_package_list": [
+        "functoolz"
+      ],
+      "raw_certification_status": "certified",
+      "repo_id": "toolz",
+      "source_context_length_bucket": "short_lt_250",
+      "source_kind": "commit",
+      "source_ref": "commit:5d95878603e759e4ee2a3149039cd0e2af07a329",
+      "source_reservoir": "toolz_certified",
+      "statement_digest": "sha256:1c14e136d193ce3b0940ae5073972c4f4be7f2e6ec29f964c4d1434d48d2afd8",
+      "statement_length": 166,
+      "statement_length_bucket": "short_lt_250",
+      "statement_quality_risks": [
+        "short_solver_statement_covered_by_certified_source_context",
+        "commit_anchored_source_context_minor_review_risk",
+        "outside_preregistered_two_repo_scope"
+      ],
+      "statement_quality_status": "pass_with_minor_risk",
+      "statement_source": "deterministic_sanitized_context_summary",
+      "task_family_label": "toolz:functoolz",
+      "task_id": "toolz__hist__004",
+      "task_time": "2018-05-17T19:31:37+02:00",
+      "task_time_bucket": "2018H1",
+      "test_file_count": 1,
+      "test_file_count_bucket": "1",
+      "test_paths": [
+        "toolz/tests/test_functoolz.py"
+      ]
+    },
+    {
+      "base_commit": "639043e5ead3c78ade96890336ffe33f9a8d6bb6",
+      "canonical_split_current": "candidate_pool",
+      "editable_paths": [
+        "toolz/functoolz.py"
+      ],
+      "eligible_for_next_release": false,
+      "eligible_for_target_profile": false,
+      "exclusion_reasons": [
+        "repo_not_in_preregistered_two_repo_target_profile"
+      ],
+      "historical_paid_outcome_available": false,
+      "historical_paid_outcome_summary": {},
+      "implementation_file_count": 1,
+      "implementation_file_count_bucket": "1",
+      "module_or_package": "functoolz",
+      "module_or_package_list": [
+        "functoolz"
+      ],
+      "raw_certification_status": "certified",
+      "repo_id": "toolz",
+      "source_context_length_bucket": "short_lt_250",
+      "source_kind": "commit",
+      "source_ref": "commit:9e97f73fee5fc68bd03adcee3b520593ed5063d6",
+      "source_reservoir": "toolz_certified",
+      "statement_digest": "sha256:32040e540cb2ded02d185a0970bb5e244d9c57d83ea2ddf1c8850edf817e3be0",
+      "statement_length": 172,
+      "statement_length_bucket": "short_lt_250",
+      "statement_quality_risks": [
+        "short_solver_statement_covered_by_certified_source_context",
+        "commit_anchored_source_context_minor_review_risk",
+        "outside_preregistered_two_repo_scope"
+      ],
+      "statement_quality_status": "pass_with_minor_risk",
+      "statement_source": "deterministic_sanitized_context_summary",
+      "task_family_label": "toolz:functoolz",
+      "task_id": "toolz__hist__010",
+      "task_time": "2019-06-30T14:22:33+01:00",
+      "task_time_bucket": "2019H1",
+      "test_file_count": 1,
+      "test_file_count_bucket": "1",
+      "test_paths": [
+        "toolz/tests/test_functoolz.py"
+      ]
+    },
+    {
+      "base_commit": "1fb2b9f1b69ab664a264944f4eafc290acce127d",
+      "canonical_split_current": "candidate_pool",
+      "editable_paths": [
+        "toolz/itertoolz.py"
+      ],
+      "eligible_for_next_release": false,
+      "eligible_for_target_profile": false,
+      "exclusion_reasons": [
+        "repo_not_in_preregistered_two_repo_target_profile"
+      ],
+      "historical_paid_outcome_available": false,
+      "historical_paid_outcome_summary": {},
+      "implementation_file_count": 1,
+      "implementation_file_count_bucket": "1",
+      "module_or_package": "itertoolz",
+      "module_or_package_list": [
+        "itertoolz"
+      ],
+      "raw_certification_status": "certified",
+      "repo_id": "toolz",
+      "source_context_length_bucket": "short_lt_250",
+      "source_kind": "commit",
+      "source_ref": "commit:5a7e078c941c990dcaca53ac6920e5d5c0b1475f",
+      "source_reservoir": "toolz_certified",
+      "statement_digest": "sha256:752be73fb738b86337d5d78c61f02566a5191529e80ce317be96dc3e112fdd7f",
+      "statement_length": 189,
+      "statement_length_bucket": "short_lt_250",
+      "statement_quality_risks": [
+        "commit_anchored_source_context_minor_review_risk",
+        "outside_preregistered_two_repo_scope"
+      ],
+      "statement_quality_status": "pass_with_minor_risk",
+      "statement_source": "deterministic_sanitized_context_summary",
+      "task_family_label": "toolz:itertoolz",
+      "task_id": "toolz__hist__016",
+      "task_time": "2025-10-16T15:54:43-07:00",
+      "task_time_bucket": "2025H2",
+      "test_file_count": 1,
+      "test_file_count_bucket": "1",
+      "test_paths": [
+        "toolz/tests/test_itertoolz.py"
+      ]
+    }
+  ],
+  "run_id": "phase1_pre_paid_replication_20260526",
+  "schema_version": "barcarolle.phase1_pre_paid_replication_compiler_readiness_output.v1",
+  "status": "pass",
+  "summary": {
+    "by_repo": {
+      "attrs": 18,
+      "boltons": 20,
+      "humanize": 12,
+      "itsdangerous": 4,
+      "toolz": 6
+    },
+    "by_reservoir": {
+      "attrs_clean_outcome_unseen": 18,
+      "boltons_clean_outcome_unseen": 4,
+      "boltons_historical_certified": 16,
+      "humanize_certified": 12,
+      "itsdangerous_certified": 4,
+      "toolz_certified": 6
+    },
+    "eligible_for_next_release_count": 22,
+    "eligible_for_target_profile_count": 38,
+    "excluded_count": 38,
+    "exclusion_reason_counts": {
+      "already_used_in_prior_paid_release_reference_only": 16,
+      "repo_not_in_preregistered_two_repo_target_profile": 22
+    },
+    "historical_paid_outcome_available_count": 16,
+    "statement_quality_status_counts": {
+      "pass": 24,
+      "pass_with_minor_risk": 36
+    }
+  }
+}
