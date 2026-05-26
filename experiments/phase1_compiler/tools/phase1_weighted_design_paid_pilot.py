@@ -222,6 +222,10 @@ def write_simple_yaml(path: str | Path, payload: dict[str, Any]) -> None:
                         lines.append(f"{prefix}  - {json.dumps(list_item, sort_keys=True)}")
                     else:
                         lines.append(f"{prefix}  - {list_item}")
+            elif isinstance(item, bool):
+                lines.append(f"{prefix}{key}: {str(item).lower()}")
+            elif item is None:
+                lines.append(f"{prefix}{key}: null")
             else:
                 lines.append(f"{prefix}{key}: {item}")
         return lines

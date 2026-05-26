@@ -1,0 +1,80 @@
+schema_version: barcarolle.phase1_weighted_design_paid_pilot_workspace_matrix.v1
+status: configured
+phase1_weighted_design_paid_pilot: true
+claim_scope: weighted_design_paid_pilot_run
+run_id: phase1_weighted_design_paid_pilot_20260526
+result_prefix: phase1_weighted_design_paid_pilot
+primary_release_candidate_id: barcarolle_weighted_time_family_matched
+local_baseline_candidate_ids:
+  - repo_unweighted_same_budget
+  - repo_stratified_by_target_profile
+historical_reference_candidate_id: prior_statement_hardened_release_as_historical_reference
+historical_reference_rerun: false
+candidate_inventory: experiments/phase1_compiler/results/phase1_pre_paid_replication_candidate_inventory.json
+release_candidates: experiments/phase1_compiler/results/phase1_pre_paid_replication_release_candidates.json
+release_selection: experiments/phase1_compiler/configs/phase1_pre_paid_replication_release_selection.yaml
+statement_quality_gate: experiments/phase1_compiler/results/phase1_pre_paid_replication_statement_quality_gate.json
+attrs_certified_tasks: experiments/phase0_headroom/certified_tasks/attrs_clean_outcome_unseen_supply_certified_tasks.jsonl
+boltons_clean_ext_certified_tasks: experiments/phase0_headroom/certified_tasks/boltons_clean_outcome_unseen_supply_certified_tasks.jsonl
+boltons_canonical_certified_tasks: experiments/phase0_headroom/certified_tasks/boltons_certified_tasks.jsonl
+boltons_target_profile: experiments/phase0_headroom/target_profiles/boltons_target_profile.json
+attrs_repo_config: experiments/phase1_compiler/configs/phase1_second_repo_clean_outcome_unseen_supply.yaml
+adapter_config: experiments/phase0_headroom/configs/acut_workspace_adapters.yaml
+task_ids:
+  - attrs__hist__009
+  - attrs__hist__010
+  - attrs__hist__032
+  - attrs__hist__033
+  - attrs__hist__035
+  - attrs__hist__036
+  - attrs__hist__039
+  - attrs__hist__041
+  - attrs__hist__045
+  - attrs__hist__047
+  - boltons__hist__006
+  - boltons__hist__007
+  - boltons__hist__013
+  - boltons__hist__014
+  - boltons__hist__017
+  - boltons__hist__019
+  - boltons__hist__020
+  - boltons__hist__024
+  - boltons__hist__025
+  - boltons__hist__026
+  - boltons__hist__028
+  - boltons__hist__031
+repo_splits:
+  attrs/B_eval:
+    - attrs__hist__009
+    - attrs__hist__032
+    - attrs__hist__036
+    - attrs__hist__047
+  attrs/H_future:
+    - attrs__hist__010
+    - attrs__hist__033
+    - attrs__hist__035
+    - attrs__hist__039
+    - attrs__hist__041
+    - attrs__hist__045
+  boltons/B_eval:
+    - boltons__hist__006
+    - boltons__hist__014
+    - boltons__hist__019
+    - boltons__hist__024
+    - boltons__hist__028
+  boltons/H_future:
+    - boltons__hist__007
+    - boltons__hist__013
+    - boltons__hist__017
+    - boltons__hist__020
+    - boltons__hist__025
+    - boltons__hist__026
+    - boltons__hist__031
+paid_parallelism:
+  paid_acut_concurrency: 1
+  allow_cross_harness_paid_parallelism: false
+result_policy:
+  raw_outputs_ignored_only: true
+  historical_paid_results_reused: false
+  current_inventory_split_used_for_selection: false
+  generated_statement_is_scoreable_result: false

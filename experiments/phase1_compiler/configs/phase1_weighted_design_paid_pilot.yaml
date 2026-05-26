@@ -20,7 +20,7 @@ budget:
   stop_before_next_batch_projected_total_cap_usd: 20.0
   single_batch_projected_cap_usd: 6.0
   paid_acut_concurrency: 1
-  allow_cross_harness_paid_parallelism: False
+  allow_cross_harness_paid_parallelism: false
 source_artifacts:
   release_selection: experiments/phase1_compiler/configs/phase1_pre_paid_replication_release_selection.yaml
   decision: experiments/phase1_compiler/results/phase1_pre_paid_replication_decision.json
