@@ -13,7 +13,7 @@ Plain-language summary: preflight passed. This run is local-only. Paid ACUT call
 - Step 4: Reference gate subclassification - `completed`.
 - Step 5: Recovered supply projection - `completed`.
 - Step 6: Third repo local environment gate - `completed`.
-- Step 7: Decision - `pending`.
+- Step 7: Decision - `completed`.
 - Step 8: Verification and closeout - `pending`.
 
 ## Preflight Notes
