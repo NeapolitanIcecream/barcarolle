@@ -2,7 +2,7 @@
 
 Run ID: `phase1_local_algorithm_bakeoff_20260526`.
 Runbook: `docs/experiments/phase-1-local-algorithm-bakeoff-runbook.md`.
-Generated at: `2026-05-26T06:08:03Z`.
+Generated at: `2026-05-26T06:09:26Z`.
 
 ## Boundary
 
@@ -14,7 +14,7 @@ Generated at: `2026-05-26T06:08:03Z`.
 ## Environment
 
 - Branch: `codex/restart-benchmark-compiler`.
-- HEAD at latest report write: `4c9a2c8f`.
+- HEAD at latest report write: `f76246ec`.
 - uv: `uv 0.11.16 (Homebrew 2026-05-21 aarch64-apple-darwin)`.
 - Python: `3.11.13`.
 
