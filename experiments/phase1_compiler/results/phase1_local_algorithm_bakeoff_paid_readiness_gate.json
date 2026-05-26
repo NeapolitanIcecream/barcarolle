@@ -1,0 +1,25 @@
+{
+  "analysis_schema": "paid_readiness_gate.v1",
+  "candidate_algorithm_if_ready": null,
+  "eligible_supply_by_repo": {
+    "attrs": 10,
+    "boltons": 12
+  },
+  "gates": {
+    "catastrophic_miss_gate": true,
+    "local_MAE_improvement_gate": false,
+    "preregistration_readiness_gate": false,
+    "split_stability_gate": false,
+    "supply_diagnostics_gate": false,
+    "weight_diagnostics_gate": true
+  },
+  "generated_at": "2026-05-26T06:17:28Z",
+  "mainline_recommendation": "keep_repo_stratified_as_mainline",
+  "new_paid_acut_calls_made": false,
+  "new_paid_llm_calls_made": false,
+  "no_paid_runbook_written_by_worker": true,
+  "run_id": "phase1_local_algorithm_bakeoff_20260526",
+  "schema_version": "barcarolle.phase1_local_algorithm_bakeoff_output.v1",
+  "smallest_local_blocker": "eligible certified task supply below 20-30 per target repo and no stable 15%+ local MAE improvement over stratified baseline",
+  "status": "not_ready_keep_stratified_mainline"
+}
