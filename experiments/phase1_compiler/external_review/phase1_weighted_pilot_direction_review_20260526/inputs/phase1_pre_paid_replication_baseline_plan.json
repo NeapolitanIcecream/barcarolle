@@ -1,0 +1,49 @@
+{
+  "adapter_policy": {
+    "disagreement": "diagnostic, not automatic exclusion unless preregistered before launch",
+    "primary": "average task-level outcome across preregistered adapters",
+    "secondary": "report each adapter separately"
+  },
+  "analysis_schema": "baseline_plan.v1",
+  "baseline_candidate_ids": [
+    "repo_unweighted_same_budget",
+    "repo_stratified_by_target_profile",
+    "prior_statement_hardened_release_as_historical_reference"
+  ],
+  "diagnostics": [
+    "per-repo gap",
+    "per-task-family gap",
+    "adapter disagreement",
+    "source-kind gap",
+    "statement-quality gap"
+  ],
+  "missing_or_non_scoreable_policy": {
+    "replacement_policy_after_outcomes_known": "no post-hoc replacement after terminal outcomes are known",
+    "replacement_policy_before_launch": "replace only before paid launch and rerun statement/source gates",
+    "scoreability_failure_policy": "100% planned cells must complete or every missing cell must follow the preregistered non-scoreable handling rule."
+  },
+  "new_paid_acut_calls_made": false,
+  "new_paid_llm_calls_made": false,
+  "primary_comparison": {
+    "name": "Barcarolle weighted predictor vs H_future observed pass rate",
+    "primary_gap_threshold": 0.15,
+    "primary_release_candidate_id": "barcarolle_weighted_time_family_matched"
+  },
+  "release_candidate_digest": "sha256:8e00f3224602bd4f960bb53d8a44c90386ff64c672a766e897b6388c3c5e3721",
+  "run_id": "phase1_pre_paid_replication_20260526",
+  "schema_version": "barcarolle.phase1_pre_paid_replication_compiler_readiness_output.v1",
+  "scoring_formulas": {
+    "MAE": "mean(abs(B_eval_predicted_pass_rate - H_future_observed_pass_rate)) across preregistered strata",
+    "RMSE": "sqrt(mean((B_eval_predicted_pass_rate - H_future_observed_pass_rate)^2)) across preregistered strata",
+    "insufficient_evidence": "label when scoreable support or interval half-width misses the preregistered gate",
+    "target_profile_weighted_pass_rate": "sum(task_weight * adapter_average_task_pass_indicator) / sum(task_weight)",
+    "unweighted_pass_rate": "sum(task_pass_indicator) / count(scoreable_tasks)",
+    "wilson_interval": "Wilson score interval by preregistered repo/split or stratum"
+  },
+  "status": "pass",
+  "success_failure_insufficient_evidence": {
+    "failure": "Any primary stratum exceeds the 0.15 absolute gap threshold or any primary policy gate fails.",
+    "insufficient_evidence": "Scoreable cells complete but precision half-width or sparse-stratum support misses the preregistered gate.",
+    "success": "All primary strata meet the 0.15 absolute gap threshold and policy/scoreability gates are zero-failure."
+  }
+}

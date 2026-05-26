@@ -194,6 +194,9 @@ cython_debug/
 # Local OS/editor artifacts
 .DS_Store
 
+# Local packaged review bundles
+experiments/phase1_compiler/external_review/*.zip
+
 # Local Codex workflow artifacts
 .codex-calibration/
 .codex-workflows/*

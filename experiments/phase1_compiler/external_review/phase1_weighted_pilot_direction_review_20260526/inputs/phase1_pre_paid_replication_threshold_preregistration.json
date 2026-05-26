@@ -1,0 +1,63 @@
+{
+  "analysis_schema": "threshold_preregistration.v1",
+  "frozen_before_release_selection": true,
+  "minimum_scoreability_rule": {
+    "allowed_missing_cell_handling": "Every missing cell must have a preregistered non-scoreable handling rule before launch; no post-hoc replacement after terminal outcomes are known.",
+    "planned_cells_complete_required": true
+  },
+  "new_paid_acut_calls_made": false,
+  "new_paid_llm_calls_made": false,
+  "policy_rule": {
+    "harness_errors": 0,
+    "hidden_oracle_access": 0,
+    "invalid_outputs": 0,
+    "policy_violations": 0,
+    "prohibited_test_edits": 0
+  },
+  "precision_rule": {
+    "interval_family": "Wilson or beta-binomial",
+    "mark_insufficient_when_half_width_exceeds_target": true,
+    "previous_cells_per_split_needed_for_0_15_half_width": 78,
+    "previous_task_units_per_split_needed_if_adapter_averaged": 78,
+    "target_gap_half_width": 0.15
+  },
+  "previous_paid_evidence_use_policy": {
+    "allowed": [
+      "motivate thresholds",
+      "motivate sample-size planning",
+      "motivate local compiler redesign"
+    ],
+    "not_allowed": [
+      "claim the next design was chosen without seeing previous outcomes",
+      "count previous H_future outcomes as validation for a post-hoc redesigned release",
+      "treat H_future as the target profile"
+    ],
+    "previous_current_evidence_met_threshold": false,
+    "previous_observed_gaps": {
+      "attrs": 0.25,
+      "boltons": 0.375
+    }
+  },
+  "primary_rule": {
+    "gap_threshold": 0.15,
+    "name": "stratified_absolute_gap_ci",
+    "rule": "For each preregistered repo or repo-family stratum, abs(B_eval_predicted_pass_rate - H_future_observed_pass_rate) <= 0.15.",
+    "success_condition": "Every preregistered primary stratum meets the absolute gap threshold and all primary policy/scoreability gates pass."
+  },
+  "run_id": "phase1_pre_paid_replication_20260526",
+  "schema_version": "barcarolle.phase1_pre_paid_replication_compiler_readiness_output.v1",
+  "secondary_diagnostics": [
+    "MAE between B_eval-predicted and H_future observed pass rates",
+    "RMSE between B_eval-predicted and H_future observed pass rates",
+    "binomial negative log likelihood if enough strata exist",
+    "Brier score if enough strata exist",
+    "calibration interval coverage",
+    "adapter disagreement rate"
+  ],
+  "status": "preregistered",
+  "target_profile_boundary": {
+    "H_future_is_validation_data_not_target_profile": true,
+    "target_profile_inputs_must_be_pre_holdout_metadata": true
+  },
+  "threshold_version": "phase1_pre_paid_replication_thresholds_20260526"
+}

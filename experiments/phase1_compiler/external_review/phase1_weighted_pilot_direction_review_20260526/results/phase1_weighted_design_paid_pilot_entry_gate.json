@@ -1,0 +1,52 @@
+{
+  "adapter_config_requires_llm_base_url_and_api_key": true,
+  "adapter_readiness": [
+    {
+      "adapter_id": "codex_workspace",
+      "command_exists": true,
+      "command_first_token": "uv",
+      "command_template_configured": true,
+      "endpoint_proof_status": "codex_eligible",
+      "harness_name": "codex",
+      "local_subscription_fallback": "disabled",
+      "openai_or_provider_fallback": "disabled",
+      "required_env": [
+        "LLM_BASE_URL",
+        "LLM_API_KEY"
+      ],
+      "required_env_present": true
+    },
+    {
+      "adapter_id": "kilo_workspace",
+      "command_exists": true,
+      "command_first_token": "uv",
+      "command_template_configured": true,
+      "endpoint_proof_status": "kilo_eligible",
+      "harness_name": "kilo",
+      "local_subscription_fallback": "disabled",
+      "openai_or_provider_fallback": "disabled",
+      "required_env": [
+        "LLM_BASE_URL",
+        "LLM_API_KEY"
+      ],
+      "required_env_present": true
+    }
+  ],
+  "blockers": [],
+  "cost_cap_usd": 25.0,
+  "cross_harness_paid_parallelism": "disabled",
+  "endpoint_env_present_after_zshrc": true,
+  "endpoint_secret_values_recorded": false,
+  "entry_gate_status": "ready_for_paid_pilot",
+  "generated_at": "2026-05-26T03:39:06Z",
+  "local_subscription_fallback": "disabled",
+  "max_projected_batch_cost_usd": 5.5819773,
+  "new_paid_acut_calls_made_before_entry_gate": false,
+  "openai_or_provider_fallback": "disabled",
+  "package_inspection_status": "ready",
+  "paid_acut_concurrency": 1,
+  "planned_cells": 44,
+  "projected_total_cost_usd": 13.6448334,
+  "run_id": "phase1_weighted_design_paid_pilot_20260526",
+  "schema_version": "barcarolle.phase1_weighted_design_paid_pilot_output.v1"
+}

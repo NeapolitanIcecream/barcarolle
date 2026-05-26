@@ -1,0 +1,848 @@
+{
+  "analysis_schema": "strata_matching.v1",
+  "candidate_pool_policy": {
+    "hidden_oracle_material_used": false,
+    "historical_outcomes_used_for_selection": false,
+    "prior_paid_outcome_tasks_excluded_from_new_paid_release": true
+  },
+  "designs": [
+    {
+      "design_id": "barcarolle_weighted_time_family_matched",
+      "metrics": {
+        "B_eval_to_H_future_metadata_gap": 0.1875,
+        "mean_l1_distance_to_target_profile": 0.582986,
+        "repo_split_metrics": [
+          {
+            "coverage_counts": {
+              "implementation_file_count_bucket": {
+                "1": 4
+              },
+              "module_or_package": {
+                "__init__": 1,
+                "_make": 1,
+                "_next_gen": 1,
+                "validators": 1
+              },
+              "source_kind": {
+                "issue": 3,
+                "pull_request": 1
+              },
+              "statement_quality_status": {
+                "pass": 3,
+                "pass_with_minor_risk": 1
+              },
+              "statement_source": {
+                "deterministic_sanitized_context_summary": 4
+              },
+              "task_family_label": {
+                "attrs:__init__": 1,
+                "attrs:_make": 1,
+                "attrs:_next_gen": 1,
+                "attrs:validators": 1
+              },
+              "task_time_bucket": {
+                "2020H2": 1,
+                "2021H1": 1,
+                "2021H2": 1,
+                "2022H1": 1
+              },
+              "test_file_count_bucket": {
+                "1": 3,
+                "2": 1
+              }
+            },
+            "l1_distance_to_target_profile": 0.5,
+            "repo_id": "attrs",
+            "single_task_strata_count": 15,
+            "split": "B_eval",
+            "task_count": 4
+          },
+          {
+            "coverage_counts": {
+              "implementation_file_count_bucket": {
+                "1": 4
+              },
+              "module_or_package": {
+                "_make": 1,
+                "_next_gen": 1,
+                "converters": 1,
+                "validators": 1
+              },
+              "source_kind": {
+                "issue": 3,
+                "pull_request": 1
+              },
+              "statement_quality_status": {
+                "pass": 3,
+                "pass_with_minor_risk": 1
+              },
+              "statement_source": {
+                "deterministic_sanitized_context_summary": 4
+              },
+              "task_family_label": {
+                "attrs:_make": 1,
+                "attrs:_next_gen": 1,
+                "attrs:converters": 1,
+                "attrs:validators": 1
+              },
+              "task_time_bucket": {
+                "2020H2": 1,
+                "2021H2": 2,
+                "2022H1": 1
+              },
+              "test_file_count_bucket": {
+                "1": 3,
+                "2": 1
+              }
+            },
+            "l1_distance_to_target_profile": 0.506945,
+            "repo_id": "attrs",
+            "single_task_strata_count": 13,
+            "split": "H_future",
+            "task_count": 4
+          },
+          {
+            "coverage_counts": {
+              "implementation_file_count_bucket": {
+                "1": 4
+              },
+              "module_or_package": {
+                "dictutils": 1,
+                "funcutils": 1,
+                "ioutils": 1,
+                "iterutils": 1
+              },
+              "source_kind": {
+                "pull_request": 4
+              },
+              "statement_quality_status": {
+                "pass_with_minor_risk": 4
+              },
+              "statement_source": {
+                "certified_solver_statement": 4
+              },
+              "task_family_label": {
+                "boltons:dictutils": 1,
+                "boltons:funcutils": 1,
+                "boltons:ioutils": 1,
+                "boltons:iterutils": 1
+              },
+              "task_time_bucket": {
+                "2020H1": 1,
+                "2022H2": 1,
+                "2023H1": 1,
+                "2023H2": 1
+              },
+              "test_file_count_bucket": {
+                "1": 4
+              }
+            },
+            "l1_distance_to_target_profile": 0.6625,
+            "repo_id": "boltons",
+            "single_task_strata_count": 12,
+            "split": "B_eval",
+            "task_count": 4
+          },
+          {
+            "coverage_counts": {
+              "implementation_file_count_bucket": {
+                "1": 4
+              },
+              "module_or_package": {
+                "dictutils": 1,
+                "funcutils": 1,
+                "iterutils": 1,
+                "socketutils": 1
+              },
+              "source_kind": {
+                "pull_request": 4
+              },
+              "statement_quality_status": {
+                "pass_with_minor_risk": 4
+              },
+              "statement_source": {
+                "certified_solver_statement": 4
+              },
+              "task_family_label": {
+                "boltons:dictutils": 1,
+                "boltons:funcutils": 1,
+                "boltons:iterutils": 1,
+                "boltons:socketutils": 1
+              },
+              "task_time_bucket": {
+                "2020H1": 1,
+                "2021H1": 1,
+                "2023H1": 1,
+                "2024H1": 1
+              },
+              "test_file_count_bucket": {
+                "1": 4
+              }
+            },
+            "l1_distance_to_target_profile": 0.6625,
+            "repo_id": "boltons",
+            "single_task_strata_count": 12,
+            "split": "H_future",
+            "task_count": 4
+          }
+        ]
+      },
+      "outcome_fields_used_for_selection": [],
+      "post_hoc_calibrated": false,
+      "selection_inputs": [
+        "task_time_bucket",
+        "task_family_label",
+        "module_or_package",
+        "source_kind",
+        "statement_source",
+        "statement_quality_status",
+        "implementation/test file count buckets"
+      ],
+      "task_ids_by_repo_split": {
+        "attrs/B_eval": [
+          "attrs__hist__009",
+          "attrs__hist__032",
+          "attrs__hist__036",
+          "attrs__hist__047"
+        ],
+        "attrs/H_future": [
+          "attrs__hist__010",
+          "attrs__hist__033",
+          "attrs__hist__035",
+          "attrs__hist__045"
+        ],
+        "boltons/B_eval": [
+          "boltons__hist__006",
+          "boltons__hist__019",
+          "boltons__hist__024",
+          "boltons__hist__028"
+        ],
+        "boltons/H_future": [
+          "boltons__hist__007",
+          "boltons__hist__013",
+          "boltons__hist__026",
+          "boltons__hist__031"
+        ]
+      }
+    },
+    {
+      "design_id": "repo_stratified_by_target_profile",
+      "metrics": {
+        "B_eval_to_H_future_metadata_gap": 0.46875,
+        "mean_l1_distance_to_target_profile": 0.690278,
+        "repo_split_metrics": [
+          {
+            "coverage_counts": {
+              "implementation_file_count_bucket": {
+                "1": 4
+              },
+              "module_or_package": {
+                "__init__": 1,
+                "_make": 1,
+                "_next_gen": 1,
+                "converters": 1
+              },
+              "source_kind": {
+                "issue": 3,
+                "pull_request": 1
+              },
+              "statement_quality_status": {
+                "pass": 3,
+                "pass_with_minor_risk": 1
+              },
+              "statement_source": {
+                "deterministic_sanitized_context_summary": 4
+              },
+              "task_family_label": {
+                "attrs:__init__": 1,
+                "attrs:_make": 1,
+                "attrs:_next_gen": 1,
+                "attrs:converters": 1
+              },
+              "task_time_bucket": {
+                "2020H2": 1,
+                "2021H1": 1,
+                "2021H2": 2
+              },
+              "test_file_count_bucket": {
+                "1": 2,
+                "2": 2
+              }
+            },
+            "l1_distance_to_target_profile": 0.625,
+            "repo_id": "attrs",
+            "single_task_strata_count": 12,
+            "split": "B_eval",
+            "task_count": 4
+          },
+          {
+            "coverage_counts": {
+              "implementation_file_count_bucket": {
+                "1": 4
+              },
+              "module_or_package": {
+                "_funcs": 1,
+                "_make": 1,
+                "_next_gen": 1,
+                "validators": 1
+              },
+              "source_kind": {
+                "issue": 4
+              },
+              "statement_quality_status": {
+                "pass": 4
+              },
+              "statement_source": {
+                "deterministic_sanitized_context_summary": 4
+              },
+              "task_family_label": {
+                "attrs:_funcs": 1,
+                "attrs:_make": 1,
+                "attrs:_next_gen": 1,
+                "attrs:validators": 1
+              },
+              "task_time_bucket": {
+                "2020H2": 1,
+                "2021H2": 3
+              },
+              "test_file_count_bucket": {
+                "1": 2,
+                "2": 2
+              }
+            },
+            "l1_distance_to_target_profile": 0.611111,
+            "repo_id": "attrs",
+            "single_task_strata_count": 9,
+            "split": "H_future",
+            "task_count": 4
+          },
+          {
+            "coverage_counts": {
+              "implementation_file_count_bucket": {
+                "1": 3,
+                "2": 1
+              },
+              "module_or_package": {
+                "dictutils": 1,
+                "fileutils, jsonutils": 1,
+                "funcutils": 1,
+                "ioutils": 1
+              },
+              "source_kind": {
+                "pull_request": 4
+              },
+              "statement_quality_status": {
+                "pass_with_minor_risk": 4
+              },
+              "statement_source": {
+                "certified_solver_statement": 4
+              },
+              "task_family_label": {
+                "boltons:dictutils": 1,
+                "boltons:fileutils:multi_file": 1,
+                "boltons:funcutils": 1,
+                "boltons:ioutils": 1
+              },
+              "task_time_bucket": {
+                "2021H1": 2,
+                "2022H2": 1,
+                "2023H1": 1
+              },
+              "test_file_count_bucket": {
+                "1": 4
+              }
+            },
+            "l1_distance_to_target_profile": 0.8125,
+            "repo_id": "boltons",
+            "single_task_strata_count": 11,
+            "split": "B_eval",
+            "task_count": 4
+          },
+          {
+            "coverage_counts": {
+              "implementation_file_count_bucket": {
+                "1": 4
+              },
+              "module_or_package": {
+                "dictutils": 1,
+                "funcutils": 2,
+                "iterutils": 1
+              },
+              "source_kind": {
+                "pull_request": 4
+              },
+              "statement_quality_status": {
+                "pass_with_minor_risk": 4
+              },
+              "statement_source": {
+                "certified_solver_statement": 4
+              },
+              "task_family_label": {
+                "boltons:dictutils": 1,
+                "boltons:funcutils": 2,
+                "boltons:iterutils": 1
+              },
+              "task_time_bucket": {
+                "2020H1": 1,
+                "2023H1": 2,
+                "2023H2": 1
+              },
+              "test_file_count_bucket": {
+                "1": 4
+              }
+            },
+            "l1_distance_to_target_profile": 0.7125,
+            "repo_id": "boltons",
+            "single_task_strata_count": 6,
+            "split": "H_future",
+            "task_count": 4
+          }
+        ]
+      },
+      "outcome_fields_used_for_selection": [],
+      "post_hoc_calibrated": false,
+      "selection_inputs": [
+        "task_time_bucket",
+        "task_family_label",
+        "module_or_package",
+        "source_kind",
+        "statement_source",
+        "statement_quality_status",
+        "implementation/test file count buckets"
+      ],
+      "task_ids_by_repo_split": {
+        "attrs/B_eval": [
+          "attrs__hist__009",
+          "attrs__hist__032",
+          "attrs__hist__033",
+          "attrs__hist__036"
+        ],
+        "attrs/H_future": [
+          "attrs__hist__010",
+          "attrs__hist__035",
+          "attrs__hist__039",
+          "attrs__hist__041"
+        ],
+        "boltons/B_eval": [
+          "boltons__hist__013",
+          "boltons__hist__014",
+          "boltons__hist__019",
+          "boltons__hist__024"
+        ],
+        "boltons/H_future": [
+          "boltons__hist__006",
+          "boltons__hist__025",
+          "boltons__hist__026",
+          "boltons__hist__028"
+        ]
+      }
+    },
+    {
+      "design_id": "repo_unweighted_same_budget",
+      "metrics": {
+        "B_eval_to_H_future_metadata_gap": 0.8125,
+        "mean_l1_distance_to_target_profile": 0.770139,
+        "repo_split_metrics": [
+          {
+            "coverage_counts": {
+              "implementation_file_count_bucket": {
+                "1": 4
+              },
+              "module_or_package": {
+                "_make": 1,
+                "_next_gen": 2,
+                "converters": 1
+              },
+              "source_kind": {
+                "issue": 4
+              },
+              "statement_quality_status": {
+                "pass": 3,
+                "pass_with_minor_risk": 1
+              },
+              "statement_source": {
+                "deterministic_sanitized_context_summary": 4
+              },
+              "task_family_label": {
+                "attrs:_make": 1,
+                "attrs:_next_gen": 2,
+                "attrs:converters": 1
+              },
+              "task_time_bucket": {
+                "2020H2": 2,
+                "2021H1": 1,
+                "2021H2": 1
+              },
+              "test_file_count_bucket": {
+                "1": 3,
+                "2": 1
+              }
+            },
+            "l1_distance_to_target_profile": 0.673611,
+            "repo_id": "attrs",
+            "single_task_strata_count": 8,
+            "split": "B_eval",
+            "task_count": 4
+          },
+          {
+            "coverage_counts": {
+              "implementation_file_count_bucket": {
+                "1": 4
+              },
+              "module_or_package": {
+                "__init__": 1,
+                "_funcs": 1,
+                "_make": 1,
+                "validators": 1
+              },
+              "source_kind": {
+                "issue": 3,
+                "pull_request": 1
+              },
+              "statement_quality_status": {
+                "pass": 4
+              },
+              "statement_source": {
+                "deterministic_sanitized_context_summary": 4
+              },
+              "task_family_label": {
+                "attrs:__init__": 1,
+                "attrs:_funcs": 1,
+                "attrs:_make": 1,
+                "attrs:validators": 1
+              },
+              "task_time_bucket": {
+                "2021H2": 4
+              },
+              "test_file_count_bucket": {
+                "1": 1,
+                "2": 3
+              }
+            },
+            "l1_distance_to_target_profile": 0.694445,
+            "repo_id": "attrs",
+            "single_task_strata_count": 10,
+            "split": "H_future",
+            "task_count": 4
+          },
+          {
+            "coverage_counts": {
+              "implementation_file_count_bucket": {
+                "1": 3,
+                "2": 1
+              },
+              "module_or_package": {
+                "fileutils, jsonutils": 1,
+                "funcutils": 2,
+                "socketutils": 1
+              },
+              "source_kind": {
+                "pull_request": 4
+              },
+              "statement_quality_status": {
+                "pass_with_minor_risk": 4
+              },
+              "statement_source": {
+                "certified_solver_statement": 4
+              },
+              "task_family_label": {
+                "boltons:fileutils:multi_file": 1,
+                "boltons:funcutils": 2,
+                "boltons:socketutils": 1
+              },
+              "task_time_bucket": {
+                "2020H1": 2,
+                "2021H1": 2
+              },
+              "test_file_count_bucket": {
+                "1": 4
+              }
+            },
+            "l1_distance_to_target_profile": 0.9,
+            "repo_id": "boltons",
+            "single_task_strata_count": 5,
+            "split": "B_eval",
+            "task_count": 4
+          },
+          {
+            "coverage_counts": {
+              "implementation_file_count_bucket": {
+                "1": 4
+              },
+              "module_or_package": {
+                "dictutils": 1,
+                "ioutils": 1,
+                "timeutils": 1,
+                "urlutils": 1
+              },
+              "source_kind": {
+                "pull_request": 4
+              },
+              "statement_quality_status": {
+                "pass_with_minor_risk": 4
+              },
+              "statement_source": {
+                "certified_solver_statement": 4
+              },
+              "task_family_label": {
+                "boltons:dictutils": 1,
+                "boltons:ioutils": 1,
+                "boltons:timeutils": 1,
+                "boltons:urlutils": 1
+              },
+              "task_time_bucket": {
+                "2022H1": 1,
+                "2022H2": 2,
+                "2023H1": 1
+              },
+              "test_file_count_bucket": {
+                "1": 4
+              }
+            },
+            "l1_distance_to_target_profile": 0.8125,
+            "repo_id": "boltons",
+            "single_task_strata_count": 10,
+            "split": "H_future",
+            "task_count": 4
+          }
+        ]
+      },
+      "outcome_fields_used_for_selection": [],
+      "post_hoc_calibrated": false,
+      "selection_inputs": [
+        "task_time_bucket",
+        "task_family_label",
+        "module_or_package",
+        "source_kind",
+        "statement_source",
+        "statement_quality_status",
+        "implementation/test file count buckets"
+      ],
+      "task_ids_by_repo_split": {
+        "attrs/B_eval": [
+          "attrs__hist__009",
+          "attrs__hist__010",
+          "attrs__hist__032",
+          "attrs__hist__033"
+        ],
+        "attrs/H_future": [
+          "attrs__hist__035",
+          "attrs__hist__036",
+          "attrs__hist__039",
+          "attrs__hist__041"
+        ],
+        "boltons/B_eval": [
+          "boltons__hist__006",
+          "boltons__hist__007",
+          "boltons__hist__013",
+          "boltons__hist__014"
+        ],
+        "boltons/H_future": [
+          "boltons__hist__017",
+          "boltons__hist__019",
+          "boltons__hist__020",
+          "boltons__hist__024"
+        ]
+      }
+    }
+  ],
+  "known_prior_confounds_addressed": [
+    "attrs next_gen/on_setattr concentration is measured as task-family support rather than silently dominating a split",
+    "boltons later-time H_future and family shift are matched or weighted before validation",
+    "statement source is explicit instead of mixing reused and generated statements without a feature"
+  ],
+  "new_paid_acut_calls_made": false,
+  "new_paid_llm_calls_made": false,
+  "prior_release_metadata_mismatch": {
+    "B_eval_to_H_future_metadata_gap": 0.46875,
+    "mean_l1_distance_to_target_profile": 0.722222,
+    "repo_split_metrics": [
+      {
+        "coverage_counts": {
+          "implementation_file_count_bucket": {
+            "1": 3,
+            "3_plus": 1
+          },
+          "module_or_package": {
+            "__init__, _next_gen": 1,
+            "_make": 3
+          },
+          "source_kind": {
+            "issue": 2,
+            "pull_request": 2
+          },
+          "statement_quality_status": {
+            "pass": 4
+          },
+          "statement_source": {
+            "reused_codex_loop": 4
+          },
+          "task_family_label": {
+            "attrs:__init__:multi_file": 1,
+            "attrs:_make": 3
+          },
+          "task_time_bucket": {
+            "None": 4
+          },
+          "test_file_count_bucket": {
+            "1": 3,
+            "2": 1
+          }
+        },
+        "l1_distance_to_target_profile": 0.680556,
+        "repo_id": "attrs",
+        "single_task_strata_count": 4,
+        "split": "B_eval",
+        "task_count": 4
+      },
+      {
+        "coverage_counts": {
+          "implementation_file_count_bucket": {
+            "1": 3,
+            "2": 1
+          },
+          "module_or_package": {
+            "_funcs": 1,
+            "_make": 2,
+            "_next_gen": 1
+          },
+          "source_kind": {
+            "issue": 3,
+            "pull_request": 1
+          },
+          "statement_quality_status": {
+            "pass": 4
+          },
+          "statement_source": {
+            "reused_codex_loop": 4
+          },
+          "task_family_label": {
+            "attrs:_funcs": 1,
+            "attrs:_make": 2,
+            "attrs:_next_gen": 1
+          },
+          "task_time_bucket": {
+            "None": 4
+          },
+          "test_file_count_bucket": {
+            "1": 4
+          }
+        },
+        "l1_distance_to_target_profile": 0.583334,
+        "repo_id": "attrs",
+        "single_task_strata_count": 6,
+        "split": "H_future",
+        "task_count": 4
+      },
+      {
+        "coverage_counts": {
+          "implementation_file_count_bucket": {
+            "1": 4
+          },
+          "module_or_package": {
+            "iterutils": 2,
+            "setutils": 2
+          },
+          "source_kind": {
+            "issue": 3,
+            "pull_request": 1
+          },
+          "statement_quality_status": {
+            "pass": 4
+          },
+          "statement_source": {
+            "new_codex_loop": 1,
+            "reused_codex_loop": 3
+          },
+          "task_family_label": {
+            "boltons:iterutils": 2,
+            "boltons:setutils": 2
+          },
+          "task_time_bucket": {
+            "None": 4
+          },
+          "test_file_count_bucket": {
+            "1": 4
+          }
+        },
+        "l1_distance_to_target_profile": 0.9,
+        "repo_id": "boltons",
+        "single_task_strata_count": 2,
+        "split": "B_eval",
+        "task_count": 4
+      },
+      {
+        "coverage_counts": {
+          "implementation_file_count_bucket": {
+            "1": 4
+          },
+          "module_or_package": {
+            "cacheutils": 1,
+            "iterutils": 1,
+            "tbutils": 1,
+            "timeutils": 1
+          },
+          "source_kind": {
+            "issue": 1,
+            "pull_request": 3
+          },
+          "statement_quality_status": {
+            "pass": 4
+          },
+          "statement_source": {
+            "new_codex_loop": 3,
+            "reused_codex_loop": 1
+          },
+          "task_family_label": {
+            "boltons:cacheutils": 1,
+            "boltons:iterutils": 1,
+            "boltons:tbutils": 1,
+            "boltons:timeutils": 1
+          },
+          "task_time_bucket": {
+            "None": 4
+          },
+          "test_file_count_bucket": {
+            "1": 4
+          }
+        },
+        "l1_distance_to_target_profile": 0.725,
+        "repo_id": "boltons",
+        "single_task_strata_count": 10,
+        "split": "H_future",
+        "task_count": 4
+      }
+    ],
+    "task_ids_by_repo_split": {
+      "attrs/B_eval": [
+        "attrs__hist__001",
+        "attrs__hist__003",
+        "attrs__hist__004",
+        "attrs__hist__008"
+      ],
+      "attrs/H_future": [
+        "attrs__hist__012",
+        "attrs__hist__013",
+        "attrs__hist__023",
+        "attrs__hist__027"
+      ],
+      "boltons/B_eval": [
+        "boltons__clean_ext__001",
+        "boltons__clean_ext__008",
+        "boltons__clean_ext__010",
+        "boltons__hist__011"
+      ],
+      "boltons/H_future": [
+        "boltons__clean_ext__017",
+        "boltons__hist__022",
+        "boltons__hist__023",
+        "boltons__hist__027"
+      ]
+    }
+  },
+  "recommended_design_id": "barcarolle_weighted_time_family_matched",
+  "run_id": "phase1_pre_paid_replication_20260526",
+  "schema_version": "barcarolle.phase1_pre_paid_replication_compiler_readiness_output.v1",
+  "status": "pass",
+  "target_profile_version": "phase1_pre_paid_replication_target_profiles_20260526"
+}
