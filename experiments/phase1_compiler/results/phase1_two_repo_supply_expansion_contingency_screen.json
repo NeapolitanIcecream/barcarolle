@@ -1,0 +1,70 @@
+{
+  "followup_runbook_written_by_worker": false,
+  "generated_at": "2026-05-26T07:26:54Z",
+  "paid_acut_calls_made": false,
+  "recommendation_category": "consider_third_repo_in_coordinating_session",
+  "run_id": "phase1_two_repo_supply_expansion_20260526",
+  "schema_version": "barcarolle.phase1_two_repo_certified_supply_expansion.v1",
+  "screened_repositories": [
+    {
+      "api_task_diversity": "high",
+      "dependency_environment_complexity": "low",
+      "estimated_certified_supply": "medium",
+      "history_depth": "high",
+      "issue_pr_quality": "moderate",
+      "likely_non_leaky_source_availability": "moderate",
+      "maintenance_timeline_coverage": "broad",
+      "repo_id": "toolz",
+      "test_suite_stability": "high"
+    },
+    {
+      "api_task_diversity": "medium",
+      "dependency_environment_complexity": "medium",
+      "estimated_certified_supply": "medium",
+      "history_depth": "high",
+      "issue_pr_quality": "moderate",
+      "likely_non_leaky_source_availability": "moderate",
+      "maintenance_timeline_coverage": "broad",
+      "repo_id": "humanize",
+      "test_suite_stability": "medium"
+    },
+    {
+      "api_task_diversity": "low",
+      "dependency_environment_complexity": "low",
+      "estimated_certified_supply": "low",
+      "history_depth": "medium",
+      "issue_pr_quality": "moderate",
+      "likely_non_leaky_source_availability": "moderate",
+      "maintenance_timeline_coverage": "medium",
+      "repo_id": "itsdangerous",
+      "test_suite_stability": "high"
+    },
+    {
+      "api_task_diversity": "high",
+      "dependency_environment_complexity": "medium_high",
+      "estimated_certified_supply": "high",
+      "history_depth": "high",
+      "issue_pr_quality": "high",
+      "likely_non_leaky_source_availability": "high",
+      "maintenance_timeline_coverage": "broad",
+      "repo_id": "rich",
+      "test_suite_stability": "medium"
+    },
+    {
+      "api_task_diversity": "medium",
+      "dependency_environment_complexity": "medium_high",
+      "estimated_certified_supply": "medium",
+      "history_depth": "high",
+      "issue_pr_quality": "high",
+      "likely_non_leaky_source_availability": "high",
+      "maintenance_timeline_coverage": "broad",
+      "repo_id": "requests",
+      "test_suite_stability": "medium"
+    }
+  ],
+  "status": "contingency_screen_completed",
+  "triggered_by_repos_below_minimum": [
+    "attrs",
+    "boltons"
+  ]
+}
