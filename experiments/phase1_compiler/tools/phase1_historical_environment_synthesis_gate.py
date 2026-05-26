@@ -1214,7 +1214,7 @@ def update_process(status_by_step: dict[str, str]) -> None:
     }
     for step, status in status_by_step.items():
         title = labels[step]
-        text = re.sub(rf"- {step}: {re.escape(title)} - `[^`]+`\\.", f"- {step}: {title} - `{status}`.", text)
+        text = re.sub(rf"- {step}: {re.escape(title)} - `[^`]+`\.", f"- {step}: {title} - `{status}`.", text)
     path.write_text(text, encoding="utf-8")
 
 
