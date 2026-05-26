@@ -127,3 +127,18 @@ def test_replay_variants_express_command_contract() -> None:
     assert "--with-editable" in by_name["A_current_barcarolle_command"].command
     assert by_name["C_no_editable_pythonpath"].editable_install is False
     assert by_name["D_pytest_config_visible"].test_path_style == "relative"
+
+
+def test_classify_error_labels_historical_environment_drift() -> None:
+    assert (
+        audit.classify_error("E   AttributeError: module 'collections' has no attribute 'Mapping'", 1)
+        == "python_version_drift"
+    )
+    assert (
+        audit.classify_error("Failed: [pytest] section in setup.cfg files is no longer supported", 1)
+        == "pytest_collection_or_config_error"
+    )
+    assert (
+        audit.classify_error("hypothesis/internal/cache.py\nTypeError: attributes() got an unexpected keyword argument 'slots'", 1)
+        == "dependency_version_drift"
+    )

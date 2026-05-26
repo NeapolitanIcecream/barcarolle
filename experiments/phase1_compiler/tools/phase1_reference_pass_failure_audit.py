@@ -363,12 +363,14 @@ def shape_path(path: Path, workspace: Path) -> str:
 
 def command_shape(command: list[str], workspace: Path) -> list[str]:
     shaped = []
+    workspace_text = str(workspace.resolve())
+    repo_text = str(REPO_ROOT.resolve())
     for part in command:
         text = str(part)
-        if str(workspace) in text:
-            text = text.replace(str(workspace), "<workspace>")
-        if str(REPO_ROOT) in text:
-            text = text.replace(str(REPO_ROOT), "<repo>")
+        if workspace_text != repo_text and workspace_text in text:
+            text = text.replace(workspace_text, "<workspace>")
+        if repo_text in text:
+            text = text.replace(repo_text, "<repo>")
         shaped.append(text)
     return shaped
 
@@ -398,7 +400,7 @@ def result_summary(
     workspace: Path,
     env: dict[str, str],
 ) -> dict[str, Any]:
-    combined = "\n".join([result.stderr[-2000:], result.stdout[-2000:]])
+    combined = "\n".join([result.stderr[-8000:], result.stdout[-8000:]])
     return {
         "role": role,
         "returncode": result.returncode,
@@ -416,22 +418,47 @@ def result_summary(
 
 
 def sanitized_error_snippet(text: str, workspace: Path | None = None) -> str:
-    lines = []
+    cleaned = []
     for raw in text.splitlines():
         line = raw.strip()
         if not line:
             continue
-        if str(REPO_ROOT) in line:
-            line = line.replace(str(REPO_ROOT), "<repo>")
-        if workspace is not None and str(workspace) in line:
-            line = line.replace(str(workspace), "<workspace>")
-        line = line.replace(str(PHASE0_ROOT), "<phase0>")
+        line = sanitize_line(line, workspace)
         if len(line) > ERROR_SNIPPET_LIMIT:
             line = line[: ERROR_SNIPPET_LIMIT - 3] + "..."
-        lines.append(line)
-        if len(lines) >= 2:
-            break
+        cleaned.append(line)
+    diagnostic_needles = (
+        "E   ",
+        "Failed:",
+        "TypeError:",
+        "AttributeError:",
+        "ImportError:",
+        "ModuleNotFoundError:",
+        "SyntaxError:",
+        "ERROR collecting",
+        "no longer supported",
+    )
+    diagnostics = [line for line in cleaned if any(needle in line for needle in diagnostic_needles)]
+    lines = diagnostics[:2] if diagnostics else cleaned[:2]
     return " | ".join(lines)
+
+
+def sanitize_line(line: str, workspace: Path | None = None) -> str:
+    home = str(Path.home())
+    replacements = [
+        (str(REPO_ROOT), "<repo>"),
+        (str(PHASE0_ROOT), "<phase0>"),
+        (f"{home}/.cache/uv", "<uv-cache>"),
+        (f"{home}/.local/share/uv/python", "<uv-python>"),
+        (home, "<home>"),
+    ]
+    if workspace is not None:
+        replacements.append((str(workspace), "<workspace>"))
+        replacements.append((rel(workspace), "<workspace>"))
+    for old, new in replacements:
+        if old and old in line:
+            line = line.replace(old, new)
+    return line
 
 
 def classify_error(text: str, returncode: int, timed_out: bool = False) -> str:
@@ -440,6 +467,14 @@ def classify_error(text: str, returncode: int, timed_out: bool = False) -> str:
         return "timeout"
     if returncode == 0:
         return "pass"
+    if "collections.mapping" in lowered or "module 'collections' has no attribute 'mapping'" in lowered:
+        return "python_version_drift"
+    if "cannot import name" in lowered and "from 'collections'" in lowered:
+        return "python_version_drift"
+    if "[pytest] section in setup.cfg files is no longer supported" in lowered:
+        return "pytest_collection_or_config_error"
+    if "unexpected keyword argument 'slots'" in lowered and "hypothesis" in lowered:
+        return "dependency_version_drift"
     patterns = [
         ("uv_project_path_missing", "project file not found"),
         ("uv_project_path_missing", "no such file or directory"),
@@ -452,9 +487,9 @@ def classify_error(text: str, returncode: int, timed_out: bool = False) -> str:
         ("import_api_drift", "importerror"),
         ("import_api_drift", "cannot import name"),
         ("python_version_drift", "syntaxerror"),
-        ("pytest_collection_error", "collected 0 items"),
-        ("pytest_collection_error", "error collecting"),
-        ("pytest_collection_error", "found no collectors"),
+        ("pytest_collection_or_config_error", "collected 0 items"),
+        ("pytest_collection_or_config_error", "error collecting"),
+        ("pytest_collection_or_config_error", "found no collectors"),
         ("assertion_failure", "assertionerror"),
     ]
     for label, needle in patterns:
@@ -628,7 +663,14 @@ def classify_replay_task(variant_summaries: list[dict[str, Any]], file_checks: l
             return "editable_install_fixes_failure"
         return "current_command_only_failure"
     error_classes = {row["error_class"] for row in variant_summaries if row["returncode"] != 0}
-    if error_classes & {"dependency_resolution_error", "missing_optional_dependency", "editable_install_error", "import_api_drift"}:
+    if error_classes & {
+        "dependency_resolution_error",
+        "dependency_version_drift",
+        "missing_optional_dependency",
+        "editable_install_error",
+        "import_api_drift",
+        "pytest_collection_or_config_error",
+    }:
         return "dependency_or_python_version_failure"
     if error_classes & {"python_version_drift"}:
         return "dependency_or_python_version_failure"
@@ -919,11 +961,11 @@ def environment_drift_audit(config: dict[str, Any]) -> dict[str, Any]:
 def environment_label(error_class: str, classification: str) -> str:
     if classification in {"workspace_cwd_fixes_failure", "editable_install_fixes_failure", "current_command_only_failure"}:
         return "local_validation_bug_signal"
-    if error_class in {"dependency_resolution_error", "missing_optional_dependency", "editable_install_error", "import_api_drift"}:
+    if error_class in {"dependency_resolution_error", "dependency_version_drift", "missing_optional_dependency", "editable_install_error", "import_api_drift"}:
         return "dependency_version_drift"
     if error_class == "python_version_drift":
         return "python_version_drift"
-    if error_class == "pytest_collection_error":
+    if error_class == "pytest_collection_or_config_error":
         return "pytest_collection_or_config_error"
     if error_class in {"assertion_failure", "test_assertion_failure"}:
         return "target_commit_itself_unstable_or_semantic_test_failure"
@@ -1021,11 +1063,11 @@ def taxonomy_label(replay_row: dict[str, Any], patch_row: dict[str, Any] | None,
         return str(patch_row["mismatch_label"])
     if replay_row.get("classification") in {"workspace_cwd_fixes_failure", "editable_install_fixes_failure", "current_command_only_failure"}:
         return "local_validation_bug"
-    if current_error_class in {"dependency_resolution_error", "missing_optional_dependency", "editable_install_error", "import_api_drift"}:
+    if current_error_class in {"dependency_resolution_error", "dependency_version_drift", "missing_optional_dependency", "editable_install_error", "import_api_drift"}:
         return "dependency_version_drift"
     if current_error_class == "python_version_drift":
         return "python_version_drift"
-    if current_error_class == "pytest_collection_error":
+    if current_error_class == "pytest_collection_or_config_error":
         return "pytest_collection_or_config_error"
     if current_error_class in {"assertion_failure", "test_assertion_failure"}:
         return "target_commit_itself_unstable"

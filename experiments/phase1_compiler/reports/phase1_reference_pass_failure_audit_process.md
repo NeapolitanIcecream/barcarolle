@@ -30,3 +30,15 @@ Completed on 2026-05-26.
 - Grouped failures by repo, year, module, test files, change size bucket, candidate filter status, source context status, reference return codes, stdout/stderr hashes, and duration bucket.
 - Selected 12 prioritized replay tasks, 6 per repo.
 - Stored only sanitized counts and hashes; no raw command logs were committed.
+
+## Steps 3-6: Replay And Audit Evidence
+
+Completed on 2026-05-26.
+
+- Replayed 12 representative `reference_pass` failures: 6 `attrs` tasks and 6 `boltons` tasks.
+- Ran four replay variants for each task: current command, workspace cwd, no editable install, and pytest-config-visible.
+- No variant made a sampled reference run pass.
+- Patch application audit found no sampled test-material mismatch: patched base test files matched target test files for all sampled tasks.
+- Command-contract audit found that replay uses the target workspace and editable install, but setup/import/collection/assertion failures are all currently recorded under the broad `reference_pass` gate.
+- Environment audit grouped the sampled failures as dependency version drift, pytest config incompatibility, and Python-version drift.
+- Raw replay logs remained under ignored scratch paths.
