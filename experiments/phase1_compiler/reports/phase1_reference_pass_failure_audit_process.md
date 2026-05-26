@@ -20,3 +20,13 @@ Completed on 2026-05-26.
 - Raw replay logs, stdout/stderr, and temporary workspaces must stay under ignored scratch paths.
 - Committed outputs should contain only sanitized counts, command shapes, hashes, bounded categories, and short representative snippets where needed.
 - No follow-up runbook will be drafted by this worker.
+
+## Step 1: Build Failure Inventory
+
+Completed on 2026-05-26.
+
+- Parsed `experiments/phase1_compiler/results/phase1_two_repo_supply_expansion_certification_attempts.json`.
+- Found 76 `reference_pass` failures: 54 for `attrs` and 22 for `boltons`.
+- Grouped failures by repo, year, module, test files, change size bucket, candidate filter status, source context status, reference return codes, stdout/stderr hashes, and duration bucket.
+- Selected 12 prioritized replay tasks, 6 per repo.
+- Stored only sanitized counts and hashes; no raw command logs were committed.
