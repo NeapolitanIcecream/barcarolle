@@ -13,7 +13,7 @@ Updated: `2026-05-26T03:36:22Z`.
 - Step 5: `completed` - Run Remaining Boltons Paid Cells; commit target `Run weighted design paid pilot boltons cells`.
 - Step 6: `completed` - Integrity Audit And Score Import; commit target `Audit weighted design paid pilot score tables`.
 - Step 7: `completed` - Compute Weighted And Baseline Metrics; commit target `Compute weighted design paid pilot metrics`.
-- Step 8: `pending` - Baseline Comparison And Error Analysis; commit target `Compare weighted design paid pilot baselines`.
+- Step 8: `completed` - Baseline Comparison And Error Analysis; commit target `Compare weighted design paid pilot baselines`.
 - Step 9: `pending` - Final Decision And Closeout; commit target `Record weighted design paid pilot decision`.
 
 ## Boundary Records

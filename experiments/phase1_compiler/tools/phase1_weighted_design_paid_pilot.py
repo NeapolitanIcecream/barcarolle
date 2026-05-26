@@ -1110,7 +1110,13 @@ def build_baseline_comparison(write: bool = True) -> dict[str, Any]:
         candidates.values(),
         key=lambda row: (float("inf") if row["max_abs_gap"] is None else float(row["max_abs_gap"]), row["candidate_id"]),
     )
-    best = sorted_candidates[0]["candidate_id"] if sorted_candidates else None
+    best_gap = None if not sorted_candidates else sorted_candidates[0]["max_abs_gap"]
+    best_ids = [
+        row["candidate_id"]
+        for row in sorted_candidates
+        if row["max_abs_gap"] == best_gap
+    ]
+    best = best_ids[0] if best_ids else None
     inv = inventory_by_task()
     failed_rows = [row for row in current_score_rows() if row.get("terminal_status") == "verified_fail"]
     failure_buckets: dict[str, Counter[str]] = {
@@ -1131,6 +1137,7 @@ def build_baseline_comparison(write: bool = True) -> dict[str, Any]:
         "run_id": RUN_ID,
         "status": "complete" if metrics["completed_cells"] == metrics["planned_cells"] else "partial_or_not_run",
         "best_pilot_design_by_max_gap": best,
+        "best_pilot_design_ids_by_max_gap": best_ids,
         "candidate_gap_summary": {
             candidate_id: {
                 "max_abs_gap": row["max_abs_gap"],
@@ -1164,7 +1171,7 @@ def write_baseline_comparison_report(payload: dict[str, Any]) -> None:
         "",
         f"Status: `{payload['status']}`.",
         "",
-        f"- Best pilot design by max gap: `{payload['best_pilot_design_by_max_gap']}`.",
+        f"- Best pilot design(s) by max gap: `{payload['best_pilot_design_ids_by_max_gap']}`.",
         f"- Historical reference rerun: `false`.",
         f"- Hidden oracle or raw transcript material used: `{payload['hidden_oracle_or_raw_transcript_material_used']}`.",
         "",
