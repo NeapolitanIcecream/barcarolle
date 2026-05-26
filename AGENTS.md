@@ -39,6 +39,25 @@ negative control. Scoreable Phase 0+ ACUT runs should use a workspace adapter
 that lets the ACUT harness modify a real worktree, with Barcarolle capturing the
 resulting `git diff`.
 
+## Modern Stack And Reuse Preference
+
+For both experiments and product development, prefer reusing mature, modern
+software stacks over building bespoke infrastructure. Before writing custom
+frameworks, parsers, runners, schedulers, report generators, storage layers, or
+statistics utilities, check whether the standard library, the current repo
+toolchain, or a well-maintained package already provides the needed capability.
+
+Use custom code when it is necessary for Barcarolle-specific benchmark
+boundaries, artifact hygiene, reproducibility, ACUT isolation, hidden-oracle
+protection, or when available tools would make the experiment harder to audit.
+Keep such custom code narrow, deterministic, and well tested.
+
+When adding a new dependency or adopting an external tool, choose actively
+maintained options with clear documentation, stable APIs, and good local
+testability. Record the reason in the relevant runbook, config, report, or
+commit message when the choice affects experiment validity or future
+maintenance.
+
 ## LLM Endpoint Rule
 
 All paid LLM or ACUT calls in active experiments must use:
