@@ -132,6 +132,10 @@ REQUIRED_CERTIFICATION_GATES = [
     "statement_quality_review",
 ]
 
+TIMEOUT_PRONE_TEST_FILES = {
+    "tests/test_ioutils.py",
+}
+
 DISALLOWED_CLAIMS = [
     "predictive_validity_established",
     "paid_replication_completed",
@@ -1221,7 +1225,13 @@ def statement_for_candidate(repo_id: str, candidate: dict[str, Any], context: di
 
 def prioritize_candidates(repo_id: str) -> list[dict[str, Any]]:
     contexts = context_by_task(repo_id)
-    candidates = [row for row in read_jsonl(phase0_candidate_path(repo_id, "candidates")) if row.get("raw_candidate_status") == "selected_for_source_context"]
+    plausible_context_statuses = {"non_leaky_problem_context", "diff_assisted_statement_needed"}
+    candidates = [
+        row
+        for row in read_jsonl(phase0_candidate_path(repo_id, "candidates"))
+        if row.get("raw_candidate_status") == "selected_for_source_context"
+        and contexts.get(str(row.get("task_id")), {}).get("source_context_status") in plausible_context_statuses
+    ]
 
     def key(row: dict[str, Any]) -> tuple[int, int, str, str]:
         context = contexts.get(str(row["task_id"]), {})
@@ -1274,6 +1284,67 @@ def review_certification_row(row: dict[str, Any], context: dict[str, Any], seen:
     return row
 
 
+def certification_runner_error_row(candidate: dict[str, Any], statement: dict[str, Any], exc: Exception) -> dict[str, Any]:
+    gates = {gate: "pending" for gate in repo_history_pilot.GATE_ORDER}
+    gates["checkout"] = "fail"
+    return {
+        **candidate,
+        "schema_version": "barcarolle.repo_history_certification.v1",
+        "status": "rejected",
+        "gates": gates,
+        "first_failing_gate": "checkout",
+        "failure_reason": f"certification_runner_error:{type(exc).__name__}",
+        "failure_digest": digest_text(str(exc)),
+        "known_bad_strategy": "no_op_baseline",
+        "commands": [],
+        "solver_facing_statement": statement.get("solver_facing_statement", ""),
+        "scope_boundaries": statement.get("scope_boundaries", ""),
+        "allowed_context_refs": statement.get("allowed_context_refs", []),
+        "excluded_context_refs": statement.get("excluded_context_refs", []),
+        "oracle_refs": statement.get("oracle_refs", []),
+        "harness_test_command": statement.get("harness_test_command", ""),
+        "statement_review_status": statement.get("statement_review_status", "missing"),
+    }
+
+
+def certification_cost_boundedness_skip_row(candidate: dict[str, Any], statement: dict[str, Any], reason: str) -> dict[str, Any]:
+    gates = {gate: "pending" for gate in repo_history_pilot.GATE_ORDER}
+    gates["cost_boundedness"] = "fail"
+    return {
+        **candidate,
+        "schema_version": "barcarolle.repo_history_certification.v1",
+        "status": "rejected",
+        "gates": gates,
+        "first_failing_gate": "cost_boundedness",
+        "failure_reason": reason,
+        "failure_digest": digest_text(reason),
+        "known_bad_strategy": "no_op_baseline",
+        "commands": [],
+        "solver_facing_statement": statement.get("solver_facing_statement", ""),
+        "scope_boundaries": statement.get("scope_boundaries", ""),
+        "allowed_context_refs": statement.get("allowed_context_refs", []),
+        "excluded_context_refs": statement.get("excluded_context_refs", []),
+        "oracle_refs": statement.get("oracle_refs", []),
+        "harness_test_command": statement.get("harness_test_command", ""),
+        "statement_review_status": statement.get("statement_review_status", "missing"),
+    }
+
+
+def timeout_prone_candidate(candidate: dict[str, Any]) -> bool:
+    return bool(set(str(path) for path in candidate.get("test_files", [])) & TIMEOUT_PRONE_TEST_FILES)
+
+
+def safe_certify_candidate(
+    cfg: repo_history_pilot.PilotConfig,
+    candidate: dict[str, Any],
+    statement: dict[str, Any],
+) -> dict[str, Any]:
+    try:
+        return repo_history_pilot.certify_candidate(REPO_ROOT, PHASE0_ROOT, cfg, candidate, statement)
+    except Exception as exc:  # Keep one bad/timeout candidate from aborting the replay.
+        return certification_runner_error_row(candidate, statement, exc)
+
+
 def certification_attempts() -> dict[str, Any]:
     if not output_path("source_contexts").exists():
         source_contexts()
@@ -1281,18 +1352,46 @@ def certification_attempts() -> dict[str, Any]:
     all_rows: list[dict[str, Any]] = []
     by_repo: dict[str, Any] = {}
     for repo_id in TARGET_REPOS:
+        existing_reviews = read_jsonl(phase0_certified_path(repo_id, "review_records"))
+        existing_statements = read_jsonl(phase0_certified_path(repo_id, "task_statements"))
+        if existing_reviews and existing_statements:
+            attempts = existing_reviews
+            status_counts = Counter(row.get("status", "unknown") for row in attempts)
+            decision_counts = Counter(row.get("promotion_decision", "unknown") for row in attempts)
+            first_gate_counts = Counter(row.get("review_first_failing_gate") or row.get("first_failing_gate") or "none" for row in attempts)
+            by_repo[repo_id] = {
+                "attempt_count": len(attempts),
+                "local_certification_status_counts": dict(sorted(status_counts.items())),
+                "promotion_decision_counts": dict(sorted(decision_counts.items())),
+                "first_failing_gate_counts": dict(sorted(first_gate_counts.items())),
+                "ready_count": decision_counts.get("locally_certified_statement_ready", 0),
+                "needs_endpoint_statement_generation_review_count": decision_counts.get("needs_endpoint_statement_generation_review", 0),
+                "resumed_from_existing_review_records": True,
+            }
+            all_rows.extend(attempts)
+            continue
         cfg = pilot_config(repo_id)
         contexts = context_by_task(repo_id)
         statements: list[dict[str, Any]] = []
         attempts: list[dict[str, Any]] = []
+        ready_target = max(0, MINIMUM_TARGET_PER_REPO - EXISTING_BAKEOFF_ELIGIBLE_COUNTS[repo_id])
+        ready_count = 0
         for candidate in prioritize_candidates(repo_id):
+            if ready_target and ready_count >= ready_target:
+                break
             context = contexts.get(str(candidate["task_id"]))
             if not context:
                 continue
             statement = statement_for_candidate(repo_id, candidate, context)
             statements.append(statement)
-            result = repo_history_pilot.certify_candidate(REPO_ROOT, PHASE0_ROOT, cfg, candidate, statement)
-            attempts.append(review_certification_row(result, context, seen))
+            if timeout_prone_candidate(candidate):
+                result = certification_cost_boundedness_skip_row(candidate, statement, "known_timeout_prone_changed_test_file")
+            else:
+                result = safe_certify_candidate(cfg, candidate, statement)
+            reviewed = review_certification_row(result, context, seen)
+            attempts.append(reviewed)
+            if reviewed.get("promotion_decision") == "locally_certified_statement_ready":
+                ready_count += 1
         write_jsonl(phase0_certified_path(repo_id, "review_records"), attempts)
         write_jsonl(phase0_certified_path(repo_id, "task_statements"), statements)
         status_counts = Counter(row.get("status", "unknown") for row in attempts)

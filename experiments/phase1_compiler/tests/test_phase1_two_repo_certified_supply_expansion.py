@@ -117,3 +117,8 @@ def test_pr_context_without_linked_issue_is_not_automatic_material_risk() -> Non
 
     assert normalized["source_context_status"] == "non_leaky_problem_context"
     assert normalized["supply_statement_quality_gate"] == "pass"
+
+
+def test_timeout_prone_changed_test_files_are_bounded_before_replay() -> None:
+    assert expansion.timeout_prone_candidate({"test_files": ["tests/test_ioutils.py"]}) is True
+    assert expansion.timeout_prone_candidate({"test_files": ["tests/test_timeutils.py"]}) is False
