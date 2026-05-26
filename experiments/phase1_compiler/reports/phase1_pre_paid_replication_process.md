@@ -17,8 +17,8 @@ Verification command family: `uv run --project experiments/phase1_compiler pytho
 | 4 | Diagnose And Repair Split Matching | completed | Design pre-paid replication split matching | 5d6e8b8a05e32737c4b3aa1c3e655f0f0f5ac97a |
 | 5 | Audit Statement And Source Quality Gates | completed | Audit pre-paid replication statement quality gates | e5b8b240b187acb85dccf348975043954557e877 |
 | 6 | Freeze Release Candidates And Baselines | completed | Freeze pre-paid replication release candidates | 48afa84f269af09544187886add14faa7f40345b |
-| 7 | Write The Baseline Comparison Plan | completed | Plan pre-paid replication baseline comparisons | pending_current_or_future_commit |
-| 8 | Update Power, Sample-Size, And Cost Planning | pending | Plan pre-paid replication power and cost | pending_current_or_future_commit |
+| 7 | Write The Baseline Comparison Plan | completed | Plan pre-paid replication baseline comparisons | 6f5144d2460aae8d86035387c6653e6fddca8493 |
+| 8 | Update Power, Sample-Size, And Cost Planning | completed | Plan pre-paid replication power and cost | pending_current_or_future_commit |
 | 9 | Build The Paid Replication Entry Package | pending | Build pre-paid replication entry package | pending_current_or_future_commit |
 | 10 | Final Decision And Closeout | pending | Record pre-paid replication readiness decision | pending_current_or_future_commit |
 
