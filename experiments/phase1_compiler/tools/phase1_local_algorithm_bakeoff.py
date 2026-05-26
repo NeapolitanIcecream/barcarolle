@@ -1864,11 +1864,12 @@ def build_ablation() -> dict[str, Any]:
         ablation_rows.append(
             {
                 "design_id": design_id,
+                "variant_count": summary["variant_count"],
                 "MAE_mean": summary["MAE_mean"],
                 "relative_MAE_improvement_over_stratified": round_float(improvement, 6),
                 "max_absolute_gap_max": summary["max_absolute_gap_max"],
                 "catastrophic_miss_rate_mean": summary["catastrophic_miss_rate_mean"],
-                "stable_across_variants": summary["MAE_sample_variance"] <= 0.0025 and summary["catastrophic_miss_rate_mean"] == 0,
+                "stable_across_variants": summary["variant_count"] > 1 and summary["MAE_sample_variance"] <= 0.0025 and summary["catastrophic_miss_rate_mean"] == 0,
             }
         )
     block = next(row for row in ablation_rows if row["design_id"] == BLOCK_ID)
@@ -1914,7 +1915,7 @@ def write_ablation_report(payload: dict[str, Any]) -> None:
         f"Best local candidate: `{payload['best_local_candidate']}`.",
         f"Mainline recommendation: `{payload['mainline_recommendation']}`.",
         "",
-        *markdown_table(payload["ablation_rows"], [("design_id", "Design"), ("MAE_mean", "MAE"), ("relative_MAE_improvement_over_stratified", "Improvement"), ("max_absolute_gap_max", "Worst max gap"), ("catastrophic_miss_rate_mean", "Miss rate"), ("stable_across_variants", "Stable")]),
+        *markdown_table(payload["ablation_rows"], [("design_id", "Design"), ("variant_count", "Variants"), ("MAE_mean", "MAE"), ("relative_MAE_improvement_over_stratified", "Improvement"), ("max_absolute_gap_max", "Worst max gap"), ("catastrophic_miss_rate_mean", "Miss rate"), ("stable_across_variants", "Stable")]),
         "",
         payload["recommendation_reason"],
         "",

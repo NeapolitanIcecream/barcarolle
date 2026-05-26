@@ -1,0 +1,94 @@
+{
+  "ablation_rows": [
+    {
+      "MAE_mean": 0.354167,
+      "catastrophic_miss_rate_mean": 0.5,
+      "design_id": "block_plus_shrinkage_weighted",
+      "max_absolute_gap_max": 0.458334,
+      "relative_MAE_improvement_over_stratified": -0.888891,
+      "stable_across_variants": false,
+      "variant_count": 1
+    },
+    {
+      "MAE_mean": 0.2875,
+      "catastrophic_miss_rate_mean": 0.4,
+      "design_id": "block_randomized_stratified",
+      "max_absolute_gap_max": 0.625,
+      "relative_MAE_improvement_over_stratified": -0.533333,
+      "stable_across_variants": false,
+      "variant_count": 5
+    },
+    {
+      "MAE_mean": 0.3125,
+      "catastrophic_miss_rate_mean": 0.5,
+      "design_id": "coverage_constrained_unweighted",
+      "max_absolute_gap_max": 0.375,
+      "relative_MAE_improvement_over_stratified": -0.666667,
+      "stable_across_variants": false,
+      "variant_count": 1
+    },
+    {
+      "MAE_mean": 0.531451,
+      "catastrophic_miss_rate_mean": 0.5,
+      "design_id": "old_weighted_target_profile",
+      "max_absolute_gap_max": 0.748092,
+      "relative_MAE_improvement_over_stratified": -1.834405,
+      "stable_across_variants": false,
+      "variant_count": 1
+    },
+    {
+      "MAE_mean": 0.1875,
+      "catastrophic_miss_rate_mean": 0.0,
+      "design_id": "repo_stratified_by_target_profile",
+      "max_absolute_gap_max": 0.25,
+      "relative_MAE_improvement_over_stratified": 0.0,
+      "stable_across_variants": false,
+      "variant_count": 1
+    },
+    {
+      "MAE_mean": 0.1875,
+      "catastrophic_miss_rate_mean": 0.0,
+      "design_id": "repo_unweighted_same_budget",
+      "max_absolute_gap_max": 0.25,
+      "relative_MAE_improvement_over_stratified": 0.0,
+      "stable_across_variants": false,
+      "variant_count": 1
+    },
+    {
+      "MAE_mean": 0.2375,
+      "catastrophic_miss_rate_mean": 0.3,
+      "design_id": "seeded_random_same_budget",
+      "max_absolute_gap_max": 0.75,
+      "relative_MAE_improvement_over_stratified": -0.266667,
+      "stable_across_variants": false,
+      "variant_count": 5
+    },
+    {
+      "MAE_mean": 0.0,
+      "catastrophic_miss_rate_mean": 0.0,
+      "design_id": "temporal_recent_baseline",
+      "max_absolute_gap_max": 0.0,
+      "relative_MAE_improvement_over_stratified": 1.0,
+      "stable_across_variants": false,
+      "variant_count": 1
+    }
+  ],
+  "analysis_schema": "ablation.v1",
+  "answers": {
+    "do_shrinkage_weights_help_after_blocking": false,
+    "does_any_algorithm_avoid_catastrophic_misses": true,
+    "does_any_algorithm_beat_stratified_by_15_to_25_percent_MAE_locally": true,
+    "does_blocking_alone_help": false,
+    "does_weighting_fail_ESS_or_max_weight_gates": false,
+    "is_improvement_stable_across_repos_windows_seeds": false
+  },
+  "best_local_candidate": "temporal_recent_baseline",
+  "generated_at": "2026-05-26T06:15:53Z",
+  "mainline_recommendation": "keep_repo_stratified_as_mainline",
+  "new_paid_acut_calls_made": false,
+  "new_paid_llm_calls_made": false,
+  "recommendation_reason": "Local evidence is too sparse and seed-sensitive to promote a new weighted or blocked compiler over the simple stratified baseline.",
+  "run_id": "phase1_local_algorithm_bakeoff_20260526",
+  "schema_version": "barcarolle.phase1_local_algorithm_bakeoff_output.v1",
+  "status": "pass"
+}
