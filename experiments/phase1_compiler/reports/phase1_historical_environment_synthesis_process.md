@@ -11,7 +11,7 @@ Plain-language summary: preflight passed. This run is local-only. Paid ACUT call
 - Step 2: Historical environment tool and tests - `completed`.
 - Step 3: Known failures replay under historical profiles - `completed`.
 - Step 4: Reference gate subclassification - `completed`.
-- Step 5: Recovered supply projection - `pending`.
+- Step 5: Recovered supply projection - `completed`.
 - Step 6: Third repo local environment gate - `pending`.
 - Step 7: Decision - `pending`.
 - Step 8: Verification and closeout - `pending`.
