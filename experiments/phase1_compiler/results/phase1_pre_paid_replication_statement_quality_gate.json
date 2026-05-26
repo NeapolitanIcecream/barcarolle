@@ -1,0 +1,1107 @@
+{
+  "analysis_schema": "statement_quality_gate.v1",
+  "audited_task_count": 38,
+  "audits": [
+    {
+      "checks": {
+        "clear_api_intent": true,
+        "clear_editable_scope": true,
+        "clear_expected_behavior": true,
+        "closed_code_fences_or_no_code_fences": true,
+        "diff_derived_detail_does_not_reveal_exact_patch": true,
+        "no_direct_solution_leakage_known": true,
+        "no_hard_truncation_detected": true,
+        "no_hidden_oracle_leakage_known": true,
+        "source_context_non_empty_or_statement_independent": true,
+        "statement_exists": true,
+        "statement_length_within_soft_target_range": true
+      },
+      "new_paid_llm_calls_made_for_statement": false,
+      "repo_id": "attrs",
+      "risk_notes": [],
+      "selected_release_ids": [
+        "prior_statement_hardened_release_as_historical_reference"
+      ],
+      "source_kind": "issue",
+      "statement_digest": "sha256:72f3749b248f32afa7ab0639cb5918df46243c0727ffb5aca0e544fffca0a294",
+      "statement_length": 2123,
+      "statement_source": "reused_codex_loop",
+      "task_id": "attrs__hist__001",
+      "verdict": "pass"
+    },
+    {
+      "checks": {
+        "clear_api_intent": true,
+        "clear_editable_scope": true,
+        "clear_expected_behavior": true,
+        "closed_code_fences_or_no_code_fences": true,
+        "diff_derived_detail_does_not_reveal_exact_patch": true,
+        "no_direct_solution_leakage_known": true,
+        "no_hard_truncation_detected": true,
+        "no_hidden_oracle_leakage_known": true,
+        "source_context_non_empty_or_statement_independent": true,
+        "statement_exists": true,
+        "statement_length_within_soft_target_range": true
+      },
+      "new_paid_llm_calls_made_for_statement": false,
+      "repo_id": "attrs",
+      "risk_notes": [],
+      "selected_release_ids": [
+        "prior_statement_hardened_release_as_historical_reference"
+      ],
+      "source_kind": "pull_request",
+      "statement_digest": "sha256:c8d04730b328ad028598eee282911e825fc6617f782ac07d74415a896f5a72f0",
+      "statement_length": 2209,
+      "statement_source": "reused_codex_loop",
+      "task_id": "attrs__hist__003",
+      "verdict": "pass"
+    },
+    {
+      "checks": {
+        "clear_api_intent": true,
+        "clear_editable_scope": true,
+        "clear_expected_behavior": true,
+        "closed_code_fences_or_no_code_fences": true,
+        "diff_derived_detail_does_not_reveal_exact_patch": true,
+        "no_direct_solution_leakage_known": true,
+        "no_hard_truncation_detected": true,
+        "no_hidden_oracle_leakage_known": true,
+        "source_context_non_empty_or_statement_independent": true,
+        "statement_exists": true,
+        "statement_length_within_soft_target_range": true
+      },
+      "new_paid_llm_calls_made_for_statement": false,
+      "repo_id": "attrs",
+      "risk_notes": [],
+      "selected_release_ids": [
+        "prior_statement_hardened_release_as_historical_reference"
+      ],
+      "source_kind": "issue",
+      "statement_digest": "sha256:6dc808c7d1efafc2397a84ca7321830cb67540128a34f91d1de9eb6d80e312dd",
+      "statement_length": 2187,
+      "statement_source": "reused_codex_loop",
+      "task_id": "attrs__hist__004",
+      "verdict": "pass"
+    },
+    {
+      "checks": {
+        "clear_api_intent": true,
+        "clear_editable_scope": true,
+        "clear_expected_behavior": true,
+        "closed_code_fences_or_no_code_fences": true,
+        "diff_derived_detail_does_not_reveal_exact_patch": true,
+        "no_direct_solution_leakage_known": true,
+        "no_hard_truncation_detected": true,
+        "no_hidden_oracle_leakage_known": true,
+        "source_context_non_empty_or_statement_independent": true,
+        "statement_exists": true,
+        "statement_length_within_soft_target_range": true
+      },
+      "new_paid_llm_calls_made_for_statement": false,
+      "repo_id": "attrs",
+      "risk_notes": [],
+      "selected_release_ids": [
+        "prior_statement_hardened_release_as_historical_reference"
+      ],
+      "source_kind": "pull_request",
+      "statement_digest": "sha256:8c2d8b532d98e9be3c6b01e90eb16f8afd8bccddb322c0f2d45a9b43709ed652",
+      "statement_length": 2272,
+      "statement_source": "reused_codex_loop",
+      "task_id": "attrs__hist__008",
+      "verdict": "pass"
+    },
+    {
+      "checks": {
+        "clear_api_intent": true,
+        "clear_editable_scope": true,
+        "clear_expected_behavior": true,
+        "closed_code_fences_or_no_code_fences": true,
+        "diff_derived_detail_does_not_reveal_exact_patch": true,
+        "no_direct_solution_leakage_known": true,
+        "no_hard_truncation_detected": true,
+        "no_hidden_oracle_leakage_known": true,
+        "source_context_non_empty_or_statement_independent": true,
+        "statement_exists": true,
+        "statement_length_within_soft_target_range": false
+      },
+      "new_paid_llm_calls_made_for_statement": false,
+      "repo_id": "attrs",
+      "risk_notes": [
+        "short_solver_statement_covered_by_certified_source_context"
+      ],
+      "selected_release_ids": [
+        "barcarolle_weighted_time_family_matched",
+        "repo_stratified_by_target_profile",
+        "repo_unweighted_same_budget"
+      ],
+      "source_kind": "issue",
+      "statement_digest": "sha256:d7093948f7b1642f59730adb6d9280fee885aaed27d83b2e09bcfa76e1e6d784",
+      "statement_length": 177,
+      "statement_source": "deterministic_sanitized_context_summary",
+      "task_id": "attrs__hist__009",
+      "verdict": "pass_with_minor_risk"
+    },
+    {
+      "checks": {
+        "clear_api_intent": true,
+        "clear_editable_scope": true,
+        "clear_expected_behavior": true,
+        "closed_code_fences_or_no_code_fences": true,
+        "diff_derived_detail_does_not_reveal_exact_patch": true,
+        "no_direct_solution_leakage_known": true,
+        "no_hard_truncation_detected": true,
+        "no_hidden_oracle_leakage_known": true,
+        "source_context_non_empty_or_statement_independent": true,
+        "statement_exists": true,
+        "statement_length_within_soft_target_range": true
+      },
+      "new_paid_llm_calls_made_for_statement": false,
+      "repo_id": "attrs",
+      "risk_notes": [],
+      "selected_release_ids": [
+        "barcarolle_weighted_time_family_matched",
+        "repo_stratified_by_target_profile",
+        "repo_unweighted_same_budget"
+      ],
+      "source_kind": "issue",
+      "statement_digest": "sha256:4e2fdef1c81cadffca4690b1969312bf9f21ad76106fd596bb489598200c6dee",
+      "statement_length": 204,
+      "statement_source": "deterministic_sanitized_context_summary",
+      "task_id": "attrs__hist__010",
+      "verdict": "pass"
+    },
+    {
+      "checks": {
+        "clear_api_intent": true,
+        "clear_editable_scope": true,
+        "clear_expected_behavior": true,
+        "closed_code_fences_or_no_code_fences": true,
+        "diff_derived_detail_does_not_reveal_exact_patch": true,
+        "no_direct_solution_leakage_known": true,
+        "no_hard_truncation_detected": true,
+        "no_hidden_oracle_leakage_known": true,
+        "source_context_non_empty_or_statement_independent": true,
+        "statement_exists": true,
+        "statement_length_within_soft_target_range": true
+      },
+      "new_paid_llm_calls_made_for_statement": false,
+      "repo_id": "attrs",
+      "risk_notes": [],
+      "selected_release_ids": [
+        "prior_statement_hardened_release_as_historical_reference"
+      ],
+      "source_kind": "issue",
+      "statement_digest": "sha256:eb3b31fd4bf8241f9088b47b989b307545e1a2ceae9b5782feacc02453246f16",
+      "statement_length": 2198,
+      "statement_source": "reused_codex_loop",
+      "task_id": "attrs__hist__012",
+      "verdict": "pass"
+    },
+    {
+      "checks": {
+        "clear_api_intent": true,
+        "clear_editable_scope": true,
+        "clear_expected_behavior": true,
+        "closed_code_fences_or_no_code_fences": true,
+        "diff_derived_detail_does_not_reveal_exact_patch": true,
+        "no_direct_solution_leakage_known": true,
+        "no_hard_truncation_detected": true,
+        "no_hidden_oracle_leakage_known": true,
+        "source_context_non_empty_or_statement_independent": true,
+        "statement_exists": true,
+        "statement_length_within_soft_target_range": true
+      },
+      "new_paid_llm_calls_made_for_statement": false,
+      "repo_id": "attrs",
+      "risk_notes": [],
+      "selected_release_ids": [
+        "prior_statement_hardened_release_as_historical_reference"
+      ],
+      "source_kind": "pull_request",
+      "statement_digest": "sha256:702f3a1c5f7a6936944aa15727ab4c1fd973f0ed71f73b54386ee94cd75b4da3",
+      "statement_length": 2217,
+      "statement_source": "reused_codex_loop",
+      "task_id": "attrs__hist__013",
+      "verdict": "pass"
+    },
+    {
+      "checks": {
+        "clear_api_intent": true,
+        "clear_editable_scope": true,
+        "clear_expected_behavior": true,
+        "closed_code_fences_or_no_code_fences": true,
+        "diff_derived_detail_does_not_reveal_exact_patch": true,
+        "no_direct_solution_leakage_known": true,
+        "no_hard_truncation_detected": true,
+        "no_hidden_oracle_leakage_known": true,
+        "source_context_non_empty_or_statement_independent": true,
+        "statement_exists": true,
+        "statement_length_within_soft_target_range": true
+      },
+      "new_paid_llm_calls_made_for_statement": false,
+      "repo_id": "attrs",
+      "risk_notes": [],
+      "selected_release_ids": [
+        "prior_statement_hardened_release_as_historical_reference"
+      ],
+      "source_kind": "issue",
+      "statement_digest": "sha256:3262b00021acd8bd07b3adcbe9de4e3fc297a763750ce60acfc831f9912d5390",
+      "statement_length": 2179,
+      "statement_source": "reused_codex_loop",
+      "task_id": "attrs__hist__023",
+      "verdict": "pass"
+    },
+    {
+      "checks": {
+        "clear_api_intent": true,
+        "clear_editable_scope": true,
+        "clear_expected_behavior": true,
+        "closed_code_fences_or_no_code_fences": true,
+        "diff_derived_detail_does_not_reveal_exact_patch": true,
+        "no_direct_solution_leakage_known": true,
+        "no_hard_truncation_detected": true,
+        "no_hidden_oracle_leakage_known": true,
+        "source_context_non_empty_or_statement_independent": true,
+        "statement_exists": true,
+        "statement_length_within_soft_target_range": true
+      },
+      "new_paid_llm_calls_made_for_statement": false,
+      "repo_id": "attrs",
+      "risk_notes": [],
+      "selected_release_ids": [
+        "prior_statement_hardened_release_as_historical_reference"
+      ],
+      "source_kind": "issue",
+      "statement_digest": "sha256:f4bedc621b7cd8d458dcd08ff6134e823d21687ba30177122bde297e433486f6",
+      "statement_length": 2189,
+      "statement_source": "reused_codex_loop",
+      "task_id": "attrs__hist__027",
+      "verdict": "pass"
+    },
+    {
+      "checks": {
+        "clear_api_intent": true,
+        "clear_editable_scope": true,
+        "clear_expected_behavior": true,
+        "closed_code_fences_or_no_code_fences": true,
+        "diff_derived_detail_does_not_reveal_exact_patch": true,
+        "no_direct_solution_leakage_known": true,
+        "no_hard_truncation_detected": true,
+        "no_hidden_oracle_leakage_known": true,
+        "source_context_non_empty_or_statement_independent": true,
+        "statement_exists": true,
+        "statement_length_within_soft_target_range": true
+      },
+      "new_paid_llm_calls_made_for_statement": false,
+      "repo_id": "attrs",
+      "risk_notes": [],
+      "selected_release_ids": [
+        "barcarolle_weighted_time_family_matched",
+        "repo_stratified_by_target_profile",
+        "repo_unweighted_same_budget"
+      ],
+      "source_kind": "issue",
+      "statement_digest": "sha256:a865e45a9be163ed5f76fdd1876425ba91874ce48f75249e9f426f52d7c275e9",
+      "statement_length": 203,
+      "statement_source": "deterministic_sanitized_context_summary",
+      "task_id": "attrs__hist__032",
+      "verdict": "pass"
+    },
+    {
+      "checks": {
+        "clear_api_intent": true,
+        "clear_editable_scope": true,
+        "clear_expected_behavior": true,
+        "closed_code_fences_or_no_code_fences": true,
+        "diff_derived_detail_does_not_reveal_exact_patch": true,
+        "no_direct_solution_leakage_known": true,
+        "no_hard_truncation_detected": true,
+        "no_hidden_oracle_leakage_known": true,
+        "source_context_non_empty_or_statement_independent": true,
+        "statement_exists": true,
+        "statement_length_within_soft_target_range": true
+      },
+      "new_paid_llm_calls_made_for_statement": false,
+      "repo_id": "attrs",
+      "risk_notes": [],
+      "selected_release_ids": [
+        "barcarolle_weighted_time_family_matched",
+        "repo_stratified_by_target_profile",
+        "repo_unweighted_same_budget"
+      ],
+      "source_kind": "issue",
+      "statement_digest": "sha256:5316e44d103d049ad64128ce604f099fb79697e7ab0578c284d1ca946cb8d8f0",
+      "statement_length": 187,
+      "statement_source": "deterministic_sanitized_context_summary",
+      "task_id": "attrs__hist__033",
+      "verdict": "pass"
+    },
+    {
+      "checks": {
+        "clear_api_intent": true,
+        "clear_editable_scope": true,
+        "clear_expected_behavior": true,
+        "closed_code_fences_or_no_code_fences": true,
+        "diff_derived_detail_does_not_reveal_exact_patch": true,
+        "no_direct_solution_leakage_known": true,
+        "no_hard_truncation_detected": true,
+        "no_hidden_oracle_leakage_known": true,
+        "source_context_non_empty_or_statement_independent": true,
+        "statement_exists": true,
+        "statement_length_within_soft_target_range": true
+      },
+      "new_paid_llm_calls_made_for_statement": false,
+      "repo_id": "attrs",
+      "risk_notes": [],
+      "selected_release_ids": [
+        "barcarolle_weighted_time_family_matched",
+        "repo_stratified_by_target_profile",
+        "repo_unweighted_same_budget"
+      ],
+      "source_kind": "issue",
+      "statement_digest": "sha256:eb3e8edddc25a81bf73a43d79ebbb59f02807a12bd7d04b983af5c879378d859",
+      "statement_length": 191,
+      "statement_source": "deterministic_sanitized_context_summary",
+      "task_id": "attrs__hist__035",
+      "verdict": "pass"
+    },
+    {
+      "checks": {
+        "clear_api_intent": true,
+        "clear_editable_scope": true,
+        "clear_expected_behavior": true,
+        "closed_code_fences_or_no_code_fences": true,
+        "diff_derived_detail_does_not_reveal_exact_patch": true,
+        "no_direct_solution_leakage_known": true,
+        "no_hard_truncation_detected": true,
+        "no_hidden_oracle_leakage_known": true,
+        "source_context_non_empty_or_statement_independent": true,
+        "statement_exists": true,
+        "statement_length_within_soft_target_range": true
+      },
+      "new_paid_llm_calls_made_for_statement": false,
+      "repo_id": "attrs",
+      "risk_notes": [],
+      "selected_release_ids": [
+        "barcarolle_weighted_time_family_matched",
+        "repo_stratified_by_target_profile",
+        "repo_unweighted_same_budget"
+      ],
+      "source_kind": "pull_request",
+      "statement_digest": "sha256:e955b5a17560960b202f0b28dd2fa4f33ea3b1980588b5eb4858fdc9127c19d4",
+      "statement_length": 199,
+      "statement_source": "deterministic_sanitized_context_summary",
+      "task_id": "attrs__hist__036",
+      "verdict": "pass"
+    },
+    {
+      "checks": {
+        "clear_api_intent": true,
+        "clear_editable_scope": true,
+        "clear_expected_behavior": true,
+        "closed_code_fences_or_no_code_fences": true,
+        "diff_derived_detail_does_not_reveal_exact_patch": true,
+        "no_direct_solution_leakage_known": true,
+        "no_hard_truncation_detected": true,
+        "no_hidden_oracle_leakage_known": true,
+        "source_context_non_empty_or_statement_independent": true,
+        "statement_exists": true,
+        "statement_length_within_soft_target_range": true
+      },
+      "new_paid_llm_calls_made_for_statement": false,
+      "repo_id": "attrs",
+      "risk_notes": [],
+      "selected_release_ids": [
+        "repo_stratified_by_target_profile",
+        "repo_unweighted_same_budget"
+      ],
+      "source_kind": "issue",
+      "statement_digest": "sha256:2c07453dee4bf82a5a3e92ff5f833d83520d489dc4f8501457d0f9914364b46a",
+      "statement_length": 194,
+      "statement_source": "deterministic_sanitized_context_summary",
+      "task_id": "attrs__hist__039",
+      "verdict": "pass"
+    },
+    {
+      "checks": {
+        "clear_api_intent": true,
+        "clear_editable_scope": true,
+        "clear_expected_behavior": true,
+        "closed_code_fences_or_no_code_fences": true,
+        "diff_derived_detail_does_not_reveal_exact_patch": true,
+        "no_direct_solution_leakage_known": true,
+        "no_hard_truncation_detected": true,
+        "no_hidden_oracle_leakage_known": true,
+        "source_context_non_empty_or_statement_independent": true,
+        "statement_exists": true,
+        "statement_length_within_soft_target_range": true
+      },
+      "new_paid_llm_calls_made_for_statement": false,
+      "repo_id": "attrs",
+      "risk_notes": [],
+      "selected_release_ids": [
+        "repo_stratified_by_target_profile",
+        "repo_unweighted_same_budget"
+      ],
+      "source_kind": "issue",
+      "statement_digest": "sha256:a3de790c6a8d18fa1b395db9cb00463f5048664710dcab1b94efffc3d382cc73",
+      "statement_length": 205,
+      "statement_source": "deterministic_sanitized_context_summary",
+      "task_id": "attrs__hist__041",
+      "verdict": "pass"
+    },
+    {
+      "checks": {
+        "clear_api_intent": true,
+        "clear_editable_scope": true,
+        "clear_expected_behavior": true,
+        "closed_code_fences_or_no_code_fences": true,
+        "diff_derived_detail_does_not_reveal_exact_patch": true,
+        "no_direct_solution_leakage_known": true,
+        "no_hard_truncation_detected": true,
+        "no_hidden_oracle_leakage_known": true,
+        "source_context_non_empty_or_statement_independent": true,
+        "statement_exists": true,
+        "statement_length_within_soft_target_range": false
+      },
+      "new_paid_llm_calls_made_for_statement": false,
+      "repo_id": "attrs",
+      "risk_notes": [
+        "short_solver_statement_covered_by_certified_source_context"
+      ],
+      "selected_release_ids": [
+        "barcarolle_weighted_time_family_matched"
+      ],
+      "source_kind": "pull_request",
+      "statement_digest": "sha256:bdb4e5bcdf3a4ab275d9bd9d328d33a71976d6a38d47a4f6b615cfcc975c33dd",
+      "statement_length": 170,
+      "statement_source": "deterministic_sanitized_context_summary",
+      "task_id": "attrs__hist__045",
+      "verdict": "pass_with_minor_risk"
+    },
+    {
+      "checks": {
+        "clear_api_intent": true,
+        "clear_editable_scope": true,
+        "clear_expected_behavior": true,
+        "closed_code_fences_or_no_code_fences": true,
+        "diff_derived_detail_does_not_reveal_exact_patch": true,
+        "no_direct_solution_leakage_known": true,
+        "no_hard_truncation_detected": true,
+        "no_hidden_oracle_leakage_known": true,
+        "source_context_non_empty_or_statement_independent": true,
+        "statement_exists": true,
+        "statement_length_within_soft_target_range": true
+      },
+      "new_paid_llm_calls_made_for_statement": false,
+      "repo_id": "attrs",
+      "risk_notes": [],
+      "selected_release_ids": [
+        "barcarolle_weighted_time_family_matched"
+      ],
+      "source_kind": "issue",
+      "statement_digest": "sha256:fbd678f29775b4c188bbd4dd3e3a55a6dfba8150b66352600555f575281ab089",
+      "statement_length": 230,
+      "statement_source": "deterministic_sanitized_context_summary",
+      "task_id": "attrs__hist__047",
+      "verdict": "pass"
+    },
+    {
+      "checks": {
+        "clear_api_intent": true,
+        "clear_editable_scope": true,
+        "clear_expected_behavior": true,
+        "closed_code_fences_or_no_code_fences": true,
+        "diff_derived_detail_does_not_reveal_exact_patch": true,
+        "no_direct_solution_leakage_known": true,
+        "no_hard_truncation_detected": true,
+        "no_hidden_oracle_leakage_known": true,
+        "source_context_non_empty_or_statement_independent": true,
+        "statement_exists": true,
+        "statement_length_within_soft_target_range": true
+      },
+      "new_paid_llm_calls_made_for_statement": false,
+      "repo_id": "boltons",
+      "risk_notes": [],
+      "selected_release_ids": [
+        "prior_statement_hardened_release_as_historical_reference"
+      ],
+      "source_kind": "issue",
+      "statement_digest": "sha256:2f0f8f1b0cef43b0c1bf8c3445c7501353e461194389d8ee64a7f367304f189c",
+      "statement_length": 2127,
+      "statement_source": "reused_codex_loop",
+      "task_id": "boltons__clean_ext__001",
+      "verdict": "pass"
+    },
+    {
+      "checks": {
+        "clear_api_intent": true,
+        "clear_editable_scope": true,
+        "clear_expected_behavior": true,
+        "closed_code_fences_or_no_code_fences": true,
+        "diff_derived_detail_does_not_reveal_exact_patch": true,
+        "no_direct_solution_leakage_known": true,
+        "no_hard_truncation_detected": true,
+        "no_hidden_oracle_leakage_known": true,
+        "source_context_non_empty_or_statement_independent": true,
+        "statement_exists": true,
+        "statement_length_within_soft_target_range": true
+      },
+      "new_paid_llm_calls_made_for_statement": false,
+      "repo_id": "boltons",
+      "risk_notes": [],
+      "selected_release_ids": [
+        "prior_statement_hardened_release_as_historical_reference"
+      ],
+      "source_kind": "issue",
+      "statement_digest": "sha256:5c41a33c6e235518e1e984ebb9f4b1865b9b93c53797096f5b398ed14a53613c",
+      "statement_length": 2103,
+      "statement_source": "reused_codex_loop",
+      "task_id": "boltons__clean_ext__008",
+      "verdict": "pass"
+    },
+    {
+      "checks": {
+        "clear_api_intent": true,
+        "clear_editable_scope": true,
+        "clear_expected_behavior": true,
+        "closed_code_fences_or_no_code_fences": true,
+        "diff_derived_detail_does_not_reveal_exact_patch": true,
+        "no_direct_solution_leakage_known": true,
+        "no_hard_truncation_detected": true,
+        "no_hidden_oracle_leakage_known": true,
+        "source_context_non_empty_or_statement_independent": true,
+        "statement_exists": true,
+        "statement_length_within_soft_target_range": true
+      },
+      "new_paid_llm_calls_made_for_statement": false,
+      "repo_id": "boltons",
+      "risk_notes": [],
+      "selected_release_ids": [
+        "prior_statement_hardened_release_as_historical_reference"
+      ],
+      "source_kind": "issue",
+      "statement_digest": "sha256:1ffae607372921f374157f78e660822928ab076cf76906179213aee8cc9120c7",
+      "statement_length": 2178,
+      "statement_source": "reused_codex_loop",
+      "task_id": "boltons__clean_ext__010",
+      "verdict": "pass"
+    },
+    {
+      "checks": {
+        "clear_api_intent": true,
+        "clear_editable_scope": true,
+        "clear_expected_behavior": true,
+        "closed_code_fences_or_no_code_fences": true,
+        "diff_derived_detail_does_not_reveal_exact_patch": true,
+        "no_direct_solution_leakage_known": true,
+        "no_hard_truncation_detected": true,
+        "no_hidden_oracle_leakage_known": true,
+        "source_context_non_empty_or_statement_independent": true,
+        "statement_exists": true,
+        "statement_length_within_soft_target_range": true
+      },
+      "new_paid_llm_calls_made_for_statement": false,
+      "repo_id": "boltons",
+      "risk_notes": [],
+      "selected_release_ids": [
+        "prior_statement_hardened_release_as_historical_reference"
+      ],
+      "source_kind": "issue",
+      "statement_digest": "sha256:06e5da6b0d3af52a92b0d16be43b660f4b972bb3d7bbdd05445250d1b92f8d7a",
+      "statement_length": 2070,
+      "statement_source": "reused_codex_loop",
+      "task_id": "boltons__clean_ext__017",
+      "verdict": "pass"
+    },
+    {
+      "checks": {
+        "clear_api_intent": true,
+        "clear_editable_scope": true,
+        "clear_expected_behavior": true,
+        "closed_code_fences_or_no_code_fences": true,
+        "diff_derived_detail_does_not_reveal_exact_patch": true,
+        "no_direct_solution_leakage_known": true,
+        "no_hard_truncation_detected": true,
+        "no_hidden_oracle_leakage_known": true,
+        "source_context_non_empty_or_statement_independent": true,
+        "statement_exists": true,
+        "statement_length_within_soft_target_range": true
+      },
+      "new_paid_llm_calls_made_for_statement": false,
+      "repo_id": "boltons",
+      "risk_notes": [
+        "compact_certified_statement"
+      ],
+      "selected_release_ids": [
+        "barcarolle_weighted_time_family_matched",
+        "repo_stratified_by_target_profile",
+        "repo_unweighted_same_budget"
+      ],
+      "source_kind": "pull_request",
+      "statement_digest": "sha256:d5e06615a42f95001fc138695f642e163dc5f92c9dfbde0f0db47988098c072a",
+      "statement_length": 225,
+      "statement_source": "certified_solver_statement",
+      "task_id": "boltons__hist__006",
+      "verdict": "pass_with_minor_risk"
+    },
+    {
+      "checks": {
+        "clear_api_intent": true,
+        "clear_editable_scope": true,
+        "clear_expected_behavior": true,
+        "closed_code_fences_or_no_code_fences": true,
+        "diff_derived_detail_does_not_reveal_exact_patch": true,
+        "no_direct_solution_leakage_known": true,
+        "no_hard_truncation_detected": true,
+        "no_hidden_oracle_leakage_known": true,
+        "source_context_non_empty_or_statement_independent": true,
+        "statement_exists": true,
+        "statement_length_within_soft_target_range": true
+      },
+      "new_paid_llm_calls_made_for_statement": false,
+      "repo_id": "boltons",
+      "risk_notes": [
+        "compact_certified_statement"
+      ],
+      "selected_release_ids": [
+        "barcarolle_weighted_time_family_matched",
+        "repo_unweighted_same_budget"
+      ],
+      "source_kind": "pull_request",
+      "statement_digest": "sha256:310a2f4b43c3304a77db2b3543f8c9b10acb6c0e27e1ed039d0376ae796c66ea",
+      "statement_length": 218,
+      "statement_source": "certified_solver_statement",
+      "task_id": "boltons__hist__007",
+      "verdict": "pass_with_minor_risk"
+    },
+    {
+      "checks": {
+        "clear_api_intent": true,
+        "clear_editable_scope": true,
+        "clear_expected_behavior": true,
+        "closed_code_fences_or_no_code_fences": true,
+        "diff_derived_detail_does_not_reveal_exact_patch": true,
+        "no_direct_solution_leakage_known": true,
+        "no_hard_truncation_detected": true,
+        "no_hidden_oracle_leakage_known": true,
+        "source_context_non_empty_or_statement_independent": true,
+        "statement_exists": true,
+        "statement_length_within_soft_target_range": true
+      },
+      "new_paid_llm_calls_made_for_statement": false,
+      "repo_id": "boltons",
+      "risk_notes": [],
+      "selected_release_ids": [
+        "prior_statement_hardened_release_as_historical_reference"
+      ],
+      "source_kind": "pull_request",
+      "statement_digest": "sha256:6c415911ffde12152fd9ddc6911f88400fb276e133cd62d4518c89b48ed07877",
+      "statement_length": 2277,
+      "statement_source": "new_codex_loop",
+      "task_id": "boltons__hist__011",
+      "verdict": "pass"
+    },
+    {
+      "checks": {
+        "clear_api_intent": true,
+        "clear_editable_scope": true,
+        "clear_expected_behavior": true,
+        "closed_code_fences_or_no_code_fences": true,
+        "diff_derived_detail_does_not_reveal_exact_patch": true,
+        "no_direct_solution_leakage_known": true,
+        "no_hard_truncation_detected": true,
+        "no_hidden_oracle_leakage_known": true,
+        "source_context_non_empty_or_statement_independent": true,
+        "statement_exists": true,
+        "statement_length_within_soft_target_range": true
+      },
+      "new_paid_llm_calls_made_for_statement": false,
+      "repo_id": "boltons",
+      "risk_notes": [
+        "compact_certified_statement"
+      ],
+      "selected_release_ids": [
+        "barcarolle_weighted_time_family_matched",
+        "repo_stratified_by_target_profile",
+        "repo_unweighted_same_budget"
+      ],
+      "source_kind": "pull_request",
+      "statement_digest": "sha256:8c36714785ef4f9048255e90b2761f34b48dc382fb5c10a2f53d4498bb8e2b7d",
+      "statement_length": 185,
+      "statement_source": "certified_solver_statement",
+      "task_id": "boltons__hist__013",
+      "verdict": "pass_with_minor_risk"
+    },
+    {
+      "checks": {
+        "clear_api_intent": true,
+        "clear_editable_scope": true,
+        "clear_expected_behavior": true,
+        "closed_code_fences_or_no_code_fences": true,
+        "diff_derived_detail_does_not_reveal_exact_patch": true,
+        "no_direct_solution_leakage_known": true,
+        "no_hard_truncation_detected": true,
+        "no_hidden_oracle_leakage_known": true,
+        "source_context_non_empty_or_statement_independent": true,
+        "statement_exists": true,
+        "statement_length_within_soft_target_range": false
+      },
+      "new_paid_llm_calls_made_for_statement": false,
+      "repo_id": "boltons",
+      "risk_notes": [
+        "short_solver_statement_covered_by_certified_source_context",
+        "compact_certified_statement"
+      ],
+      "selected_release_ids": [
+        "repo_stratified_by_target_profile",
+        "repo_unweighted_same_budget"
+      ],
+      "source_kind": "pull_request",
+      "statement_digest": "sha256:ad206abfa820e6bb0cd15fd09b050158fc1871a0c225f7107bd31ad89fd1b66d",
+      "statement_length": 172,
+      "statement_source": "certified_solver_statement",
+      "task_id": "boltons__hist__014",
+      "verdict": "pass_with_minor_risk"
+    },
+    {
+      "checks": {
+        "clear_api_intent": true,
+        "clear_editable_scope": true,
+        "clear_expected_behavior": true,
+        "closed_code_fences_or_no_code_fences": true,
+        "diff_derived_detail_does_not_reveal_exact_patch": true,
+        "no_direct_solution_leakage_known": true,
+        "no_hard_truncation_detected": true,
+        "no_hidden_oracle_leakage_known": true,
+        "source_context_non_empty_or_statement_independent": true,
+        "statement_exists": true,
+        "statement_length_within_soft_target_range": true
+      },
+      "new_paid_llm_calls_made_for_statement": false,
+      "repo_id": "boltons",
+      "risk_notes": [
+        "compact_certified_statement"
+      ],
+      "selected_release_ids": [
+        "repo_unweighted_same_budget"
+      ],
+      "source_kind": "pull_request",
+      "statement_digest": "sha256:db9f4db4effc9c4c854d05e6e054f8882b417a26cfe652bc962b09654e2991ef",
+      "statement_length": 212,
+      "statement_source": "certified_solver_statement",
+      "task_id": "boltons__hist__017",
+      "verdict": "pass_with_minor_risk"
+    },
+    {
+      "checks": {
+        "clear_api_intent": true,
+        "clear_editable_scope": true,
+        "clear_expected_behavior": true,
+        "closed_code_fences_or_no_code_fences": true,
+        "diff_derived_detail_does_not_reveal_exact_patch": true,
+        "no_direct_solution_leakage_known": true,
+        "no_hard_truncation_detected": true,
+        "no_hidden_oracle_leakage_known": true,
+        "source_context_non_empty_or_statement_independent": true,
+        "statement_exists": true,
+        "statement_length_within_soft_target_range": true
+      },
+      "new_paid_llm_calls_made_for_statement": false,
+      "repo_id": "boltons",
+      "risk_notes": [
+        "compact_certified_statement"
+      ],
+      "selected_release_ids": [
+        "barcarolle_weighted_time_family_matched",
+        "repo_stratified_by_target_profile",
+        "repo_unweighted_same_budget"
+      ],
+      "source_kind": "pull_request",
+      "statement_digest": "sha256:69a77606cbd3145b5ef9317aeefbc31364b19126239d1317a28a71211b177c50",
+      "statement_length": 204,
+      "statement_source": "certified_solver_statement",
+      "task_id": "boltons__hist__019",
+      "verdict": "pass_with_minor_risk"
+    },
+    {
+      "checks": {
+        "clear_api_intent": true,
+        "clear_editable_scope": true,
+        "clear_expected_behavior": true,
+        "closed_code_fences_or_no_code_fences": true,
+        "diff_derived_detail_does_not_reveal_exact_patch": true,
+        "no_direct_solution_leakage_known": true,
+        "no_hard_truncation_detected": true,
+        "no_hidden_oracle_leakage_known": true,
+        "source_context_non_empty_or_statement_independent": true,
+        "statement_exists": true,
+        "statement_length_within_soft_target_range": true
+      },
+      "new_paid_llm_calls_made_for_statement": false,
+      "repo_id": "boltons",
+      "risk_notes": [
+        "compact_certified_statement"
+      ],
+      "selected_release_ids": [
+        "repo_unweighted_same_budget"
+      ],
+      "source_kind": "pull_request",
+      "statement_digest": "sha256:771ef43848f06daea80a68626a20f47d6633109f9abb50aee23971907b83ee74",
+      "statement_length": 209,
+      "statement_source": "certified_solver_statement",
+      "task_id": "boltons__hist__020",
+      "verdict": "pass_with_minor_risk"
+    },
+    {
+      "checks": {
+        "clear_api_intent": true,
+        "clear_editable_scope": true,
+        "clear_expected_behavior": true,
+        "closed_code_fences_or_no_code_fences": true,
+        "diff_derived_detail_does_not_reveal_exact_patch": true,
+        "no_direct_solution_leakage_known": true,
+        "no_hard_truncation_detected": true,
+        "no_hidden_oracle_leakage_known": true,
+        "source_context_non_empty_or_statement_independent": true,
+        "statement_exists": true,
+        "statement_length_within_soft_target_range": true
+      },
+      "new_paid_llm_calls_made_for_statement": false,
+      "repo_id": "boltons",
+      "risk_notes": [],
+      "selected_release_ids": [
+        "prior_statement_hardened_release_as_historical_reference"
+      ],
+      "source_kind": "pull_request",
+      "statement_digest": "sha256:df7b0201c0ef0ec9f236f2c53bb50a475d2cf0bbf688f6e9ef2a87fd231500c3",
+      "statement_length": 2378,
+      "statement_source": "new_codex_loop",
+      "task_id": "boltons__hist__022",
+      "verdict": "pass"
+    },
+    {
+      "checks": {
+        "clear_api_intent": true,
+        "clear_editable_scope": true,
+        "clear_expected_behavior": true,
+        "closed_code_fences_or_no_code_fences": true,
+        "diff_derived_detail_does_not_reveal_exact_patch": true,
+        "no_direct_solution_leakage_known": true,
+        "no_hard_truncation_detected": true,
+        "no_hidden_oracle_leakage_known": true,
+        "source_context_non_empty_or_statement_independent": true,
+        "statement_exists": true,
+        "statement_length_within_soft_target_range": true
+      },
+      "new_paid_llm_calls_made_for_statement": false,
+      "repo_id": "boltons",
+      "risk_notes": [],
+      "selected_release_ids": [
+        "prior_statement_hardened_release_as_historical_reference"
+      ],
+      "source_kind": "pull_request",
+      "statement_digest": "sha256:a70aa84eb91022b28b2b418aa3fd34671a3ada779bc0e4c633e42faf7a055a7a",
+      "statement_length": 2264,
+      "statement_source": "new_codex_loop",
+      "task_id": "boltons__hist__023",
+      "verdict": "pass"
+    },
+    {
+      "checks": {
+        "clear_api_intent": true,
+        "clear_editable_scope": true,
+        "clear_expected_behavior": true,
+        "closed_code_fences_or_no_code_fences": true,
+        "diff_derived_detail_does_not_reveal_exact_patch": true,
+        "no_direct_solution_leakage_known": true,
+        "no_hard_truncation_detected": true,
+        "no_hidden_oracle_leakage_known": true,
+        "source_context_non_empty_or_statement_independent": true,
+        "statement_exists": true,
+        "statement_length_within_soft_target_range": true
+      },
+      "new_paid_llm_calls_made_for_statement": false,
+      "repo_id": "boltons",
+      "risk_notes": [
+        "compact_certified_statement"
+      ],
+      "selected_release_ids": [
+        "barcarolle_weighted_time_family_matched",
+        "repo_stratified_by_target_profile",
+        "repo_unweighted_same_budget"
+      ],
+      "source_kind": "pull_request",
+      "statement_digest": "sha256:4419c6662af8064f1d5dfcca74f12df51356fc4b03fd31a3db61d0c5f948c5e2",
+      "statement_length": 188,
+      "statement_source": "certified_solver_statement",
+      "task_id": "boltons__hist__024",
+      "verdict": "pass_with_minor_risk"
+    },
+    {
+      "checks": {
+        "clear_api_intent": true,
+        "clear_editable_scope": true,
+        "clear_expected_behavior": true,
+        "closed_code_fences_or_no_code_fences": true,
+        "diff_derived_detail_does_not_reveal_exact_patch": true,
+        "no_direct_solution_leakage_known": true,
+        "no_hard_truncation_detected": true,
+        "no_hidden_oracle_leakage_known": true,
+        "source_context_non_empty_or_statement_independent": true,
+        "statement_exists": true,
+        "statement_length_within_soft_target_range": true
+      },
+      "new_paid_llm_calls_made_for_statement": false,
+      "repo_id": "boltons",
+      "risk_notes": [
+        "compact_certified_statement"
+      ],
+      "selected_release_ids": [
+        "repo_stratified_by_target_profile"
+      ],
+      "source_kind": "pull_request",
+      "statement_digest": "sha256:e54af86b9d8f888f1ef235a66dfc13d7cf682bad82bc7e9b09d0799312b4ee4b",
+      "statement_length": 203,
+      "statement_source": "certified_solver_statement",
+      "task_id": "boltons__hist__025",
+      "verdict": "pass_with_minor_risk"
+    },
+    {
+      "checks": {
+        "clear_api_intent": true,
+        "clear_editable_scope": true,
+        "clear_expected_behavior": true,
+        "closed_code_fences_or_no_code_fences": true,
+        "diff_derived_detail_does_not_reveal_exact_patch": true,
+        "no_direct_solution_leakage_known": true,
+        "no_hard_truncation_detected": true,
+        "no_hidden_oracle_leakage_known": true,
+        "source_context_non_empty_or_statement_independent": true,
+        "statement_exists": true,
+        "statement_length_within_soft_target_range": true
+      },
+      "new_paid_llm_calls_made_for_statement": false,
+      "repo_id": "boltons",
+      "risk_notes": [
+        "compact_certified_statement"
+      ],
+      "selected_release_ids": [
+        "barcarolle_weighted_time_family_matched",
+        "repo_stratified_by_target_profile"
+      ],
+      "source_kind": "pull_request",
+      "statement_digest": "sha256:c593917c01f092f77ab106bdde180bd13437cbdf7b50b9f81e5344805a9f1305",
+      "statement_length": 181,
+      "statement_source": "certified_solver_statement",
+      "task_id": "boltons__hist__026",
+      "verdict": "pass_with_minor_risk"
+    },
+    {
+      "checks": {
+        "clear_api_intent": true,
+        "clear_editable_scope": true,
+        "clear_expected_behavior": true,
+        "closed_code_fences_or_no_code_fences": true,
+        "diff_derived_detail_does_not_reveal_exact_patch": true,
+        "no_direct_solution_leakage_known": true,
+        "no_hard_truncation_detected": true,
+        "no_hidden_oracle_leakage_known": true,
+        "source_context_non_empty_or_statement_independent": true,
+        "statement_exists": true,
+        "statement_length_within_soft_target_range": true
+      },
+      "new_paid_llm_calls_made_for_statement": false,
+      "repo_id": "boltons",
+      "risk_notes": [],
+      "selected_release_ids": [
+        "prior_statement_hardened_release_as_historical_reference"
+      ],
+      "source_kind": "pull_request",
+      "statement_digest": "sha256:aa6f2e0c3059224df7a4fdfec91446117128820f639b9a65793186756cea575a",
+      "statement_length": 2367,
+      "statement_source": "new_codex_loop",
+      "task_id": "boltons__hist__027",
+      "verdict": "pass"
+    },
+    {
+      "checks": {
+        "clear_api_intent": true,
+        "clear_editable_scope": true,
+        "clear_expected_behavior": true,
+        "closed_code_fences_or_no_code_fences": true,
+        "diff_derived_detail_does_not_reveal_exact_patch": true,
+        "no_direct_solution_leakage_known": true,
+        "no_hard_truncation_detected": true,
+        "no_hidden_oracle_leakage_known": true,
+        "source_context_non_empty_or_statement_independent": true,
+        "statement_exists": true,
+        "statement_length_within_soft_target_range": true
+      },
+      "new_paid_llm_calls_made_for_statement": false,
+      "repo_id": "boltons",
+      "risk_notes": [
+        "compact_certified_statement"
+      ],
+      "selected_release_ids": [
+        "barcarolle_weighted_time_family_matched",
+        "repo_stratified_by_target_profile"
+      ],
+      "source_kind": "pull_request",
+      "statement_digest": "sha256:71f0497f24aef0026bf216fe241cebae8687564b6c139241ff364eefa438719e",
+      "statement_length": 195,
+      "statement_source": "certified_solver_statement",
+      "task_id": "boltons__hist__028",
+      "verdict": "pass_with_minor_risk"
+    },
+    {
+      "checks": {
+        "clear_api_intent": true,
+        "clear_editable_scope": true,
+        "clear_expected_behavior": true,
+        "closed_code_fences_or_no_code_fences": true,
+        "diff_derived_detail_does_not_reveal_exact_patch": true,
+        "no_direct_solution_leakage_known": true,
+        "no_hard_truncation_detected": true,
+        "no_hidden_oracle_leakage_known": true,
+        "source_context_non_empty_or_statement_independent": true,
+        "statement_exists": true,
+        "statement_length_within_soft_target_range": true
+      },
+      "new_paid_llm_calls_made_for_statement": false,
+      "repo_id": "boltons",
+      "risk_notes": [
+        "compact_certified_statement"
+      ],
+      "selected_release_ids": [
+        "barcarolle_weighted_time_family_matched"
+      ],
+      "source_kind": "pull_request",
+      "statement_digest": "sha256:f14bd76f7da712b53d099513de2a1e0bcea12142d36f0d440d4465a5298c12e8",
+      "statement_length": 227,
+      "statement_source": "certified_solver_statement",
+      "task_id": "boltons__hist__031",
+      "verdict": "pass_with_minor_risk"
+    }
+  ],
+  "blocking_task_ids": [],
+  "llm_statement_prep_endpoint_policy": {
+    "LLM_API_KEY_required_if_needed": true,
+    "LLM_BASE_URL_required_if_needed": true,
+    "local_codex_subscription_used": false
+  },
+  "new_paid_llm_calls_made": false,
+  "recommended_and_baseline_release_ids": [
+    "barcarolle_weighted_time_family_matched",
+    "repo_unweighted_same_budget",
+    "repo_stratified_by_target_profile",
+    "prior_statement_hardened_release_as_historical_reference"
+  ],
+  "run_id": "phase1_pre_paid_replication_20260526",
+  "schema_version": "barcarolle.phase1_pre_paid_replication_compiler_readiness_output.v1",
+  "status": "pass",
+  "verdict_counts": {
+    "pass": 24,
+    "pass_with_minor_risk": 14
+  }
+}
