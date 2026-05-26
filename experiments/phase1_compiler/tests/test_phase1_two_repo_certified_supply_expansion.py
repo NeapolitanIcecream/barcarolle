@@ -94,3 +94,26 @@ def test_candidate_filter_requires_changed_tests_for_selection() -> None:
 
     assert decision["selected"] is False
     assert "no_changed_test_file" in decision["reject_reasons"]
+
+
+def test_pr_context_without_linked_issue_is_not_automatic_material_risk() -> None:
+    candidate = {
+        "repo_id": "boltons",
+        "task_id": "boltons__supply_expansion_20260526__003",
+        "target_commit": "target",
+        "subject": "Fix multiline exception messages",
+        "changed_files": ["boltons/excutils.py", "tests/test_excutils.py"],
+        "code_files": ["boltons/excutils.py"],
+        "test_files": ["tests/test_excutils.py"],
+    }
+    context = {
+        "ref": "pr:32",
+        "classification": "problem_context",
+        "summary": "Fix multiline exception messages",
+        "body_summary": "Traceback formatting should preserve multiline exception content.",
+    }
+
+    normalized = expansion.normalize_source_context("boltons", candidate, context)
+
+    assert normalized["source_context_status"] == "non_leaky_problem_context"
+    assert normalized["supply_statement_quality_gate"] == "pass"

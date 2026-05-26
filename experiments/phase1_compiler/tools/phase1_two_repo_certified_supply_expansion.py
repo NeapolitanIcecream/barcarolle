@@ -1044,6 +1044,29 @@ def context_has_solution_exposure(context: dict[str, Any]) -> bool:
     return any(term in f"{summary} {body}" for term in terms[:7])
 
 
+def supply_statement_quality_gate(quality: dict[str, Any], context: dict[str, Any]) -> str:
+    """Apply this runbook's softer source screen without the old PR/240-char penalties."""
+    title = " ".join(str(context.get("summary") or context.get("title_or_summary") or "").split())
+    risk_reasons = set(str(reason) for reason in quality.get("risk_reasons", []))
+    hard_reasons = risk_reasons - {
+        "body_summary_hit_old_240_char_cap",
+        "pr_context_source",
+        "pr_context_without_linked_issue",
+        "statement_probably_truncated",
+    }
+    if "statement_ends_mid_code_fence" in risk_reasons:
+        return "material_risk"
+    if "empty_or_nearly_empty_body_summary" in risk_reasons and len(title) < 24:
+        return "material_risk"
+    if "statement_missing_public_problem_summary" in risk_reasons and len(title) < 24:
+        return "material_risk"
+    if any(reason.endswith("_under_specified") for reason in risk_reasons):
+        return "material_risk"
+    if "statement_missing_editable_implementation_scope" in hard_reasons:
+        return "material_risk"
+    return "pass"
+
+
 def selected_context_for_candidate(repo_id: str, candidate: dict[str, Any]) -> dict[str, Any]:
     cfg = pilot_config(repo_id)
     pr_refs = repo_history_pilot.github_pr_refs(cfg, str(candidate["target_commit"]))
@@ -1076,18 +1099,17 @@ def normalize_source_context(repo_id: str, candidate: dict[str, Any], context: d
         "body_summary": body,
     }
     quality = statement_quality.statement_quality_for_context(normalized_for_quality, candidate)
+    supply_quality = supply_statement_quality_gate(quality, normalized_for_quality)
     leakage_risks: list[str] = []
     if context_has_solution_exposure(normalized_for_quality):
         leakage_risks.append("solution_exposure_risk")
-    if source_ref.startswith("pr:") and quality.get("pr_context_without_linked_issue"):
-        leakage_risks.append("pr_context_without_linked_issue")
     if source_ref.startswith("commit:"):
         status = "commit_message_only_source"
         confidence = "low"
     elif leakage_risks:
         status = "diff_assisted_statement_needed"
         confidence = "medium"
-    elif quality.get("statement_quality_gate") == "material_risk":
+    elif supply_quality == "material_risk":
         status = "diff_assisted_statement_needed"
         confidence = "medium"
     else:
@@ -1112,6 +1134,7 @@ def normalize_source_context(repo_id: str, candidate: dict[str, Any], context: d
         "source_context_status": status,
         "source_leakage_risks": leakage_risks,
         "statement_quality": quality,
+        "supply_statement_quality_gate": supply_quality,
         "source_context_digest": digest,
     }
 
@@ -1176,7 +1199,8 @@ def statement_for_candidate(repo_id: str, candidate: dict[str, Any], context: di
         "Do not edit tests, generated metadata, or benchmark artifacts."
     )
     quality_gate = (context.get("statement_quality") or {}).get("statement_quality_gate")
-    reviewed = context.get("source_context_status") == "non_leaky_problem_context" and quality_gate != "material_risk"
+    supply_quality = context.get("supply_statement_quality_gate") or quality_gate
+    reviewed = context.get("source_context_status") == "non_leaky_problem_context" and supply_quality != "material_risk"
     return {
         "schema_version": "barcarolle.repo_history_statement.v1",
         "task_id": candidate["task_id"],
@@ -1219,7 +1243,8 @@ def review_certification_row(row: dict[str, Any], context: dict[str, Any], seen:
         blockers.append("previous_acut_target_commit_seen")
     if context.get("source_context_status") != "non_leaky_problem_context":
         blockers.append(str(context.get("source_context_status") or "source_context_missing"))
-    if (context.get("statement_quality") or {}).get("statement_quality_gate") == "material_risk":
+    supply_quality = context.get("supply_statement_quality_gate") or (context.get("statement_quality") or {}).get("statement_quality_gate")
+    if supply_quality == "material_risk":
         blockers.append("statement_quality_risk")
     blockers.extend(str(reason) for reason in context.get("source_leakage_risks", []))
     gates = dict(row.get("gates") or {})
