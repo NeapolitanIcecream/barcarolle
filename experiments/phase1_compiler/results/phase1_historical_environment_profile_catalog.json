@@ -1,0 +1,87 @@
+{
+  "generated_at": "2026-05-26T09:05:21Z",
+  "per_task_profile_cap": 5,
+  "profile_count": 5,
+  "profiles": [
+    {
+      "cwd_mode": "target_workspace",
+      "dependency_constraints": [
+        "pytest>=8,<9",
+        "setuptools<81",
+        "hypothesis<6"
+      ],
+      "exclude_newer_date": "2026-05-26",
+      "extra_env": {},
+      "install_mode": "editable",
+      "max_seconds": 120,
+      "profile_id": "py311_current_editable",
+      "pytest_mode": "explicit_test_files",
+      "python_version": "3.11",
+      "why_selected": "baseline comparison using current-style dependencies without the Barcarolle project"
+    },
+    {
+      "cwd_mode": "target_workspace",
+      "dependency_constraints": [
+        "pytest>=7,<8",
+        "setuptools<81",
+        "hypothesis<6"
+      ],
+      "exclude_newer_date": "2022-12-31",
+      "extra_env": {},
+      "install_mode": "editable",
+      "max_seconds": 120,
+      "profile_id": "py310_pytest7_editable",
+      "pytest_mode": "explicit_test_files",
+      "python_version": "3.10",
+      "why_selected": "newer historical projects"
+    },
+    {
+      "cwd_mode": "target_workspace",
+      "dependency_constraints": [
+        "pytest<5",
+        "setuptools<58"
+      ],
+      "exclude_newer_date": "2021-12-31",
+      "extra_env": {},
+      "install_mode": "pythonpath_only",
+      "max_seconds": 120,
+      "profile_id": "py39_pytest_lt5_pythonpath",
+      "pytest_mode": "explicit_test_files",
+      "python_version": "3.9",
+      "why_selected": "old pytest cutoff-compatible runs without installing the target project"
+    },
+    {
+      "cwd_mode": "target_workspace",
+      "dependency_constraints": [
+        "pytest<4",
+        "setuptools<58"
+      ],
+      "exclude_newer_date": "2020-12-31",
+      "extra_env": {},
+      "install_mode": "pythonpath_only",
+      "max_seconds": 120,
+      "profile_id": "py38_pytest_lt4_pythonpath",
+      "pytest_mode": "explicit_test_files",
+      "python_version": "3.8",
+      "why_selected": "old attrs-era pytest configuration compatibility"
+    },
+    {
+      "cwd_mode": "target_workspace",
+      "dependency_constraints": [
+        "pytest<5",
+        "setuptools<58"
+      ],
+      "exclude_newer_date": "2019-12-31",
+      "extra_env": {},
+      "install_mode": "pythonpath_only",
+      "max_seconds": 120,
+      "profile_id": "py37_pytest4_pythonpath",
+      "pytest_mode": "explicit_test_files",
+      "python_version": "3.7",
+      "why_selected": "optional oldest bounded profile; skipped cleanly if uv cannot provide Python 3.7"
+    }
+  ],
+  "raw_logs_committed": false,
+  "run_id": "phase1_historical_environment_synthesis_gate_20260526",
+  "schema_version": "barcarolle.phase1_historical_environment_synthesis_gate.v1.profile_catalog.v1"
+}

@@ -161,29 +161,29 @@ def profile_catalog(config: dict[str, Any]) -> dict[str, Any]:
             "newer historical projects",
         ),
         profile_for(
-            "py39_pytest6_pythonpath",
+            "py39_pytest_lt5_pythonpath",
             "3.9",
-            ("pytest>=6,<7", "setuptools<66", "hypothesis<6"),
+            ("pytest<5", "setuptools<58"),
             "2021-12-31",
             "pythonpath_only",
             "target_workspace",
             "explicit_test_files",
-            "2020-2022 era projects or old setup builds",
+            "old pytest cutoff-compatible runs without installing the target project",
         ),
         profile_for(
-            "py38_pytest5_pythonpath",
+            "py38_pytest_lt4_pythonpath",
             "3.8",
-            ("pytest>=5,<6", "setuptools<58", "hypothesis<6"),
+            ("pytest<4", "setuptools<58"),
             "2020-12-31",
             "pythonpath_only",
             "target_workspace",
             "explicit_test_files",
-            "older pytest configuration compatibility",
+            "old attrs-era pytest configuration compatibility",
         ),
         profile_for(
             "py37_pytest4_pythonpath",
             "3.7",
-            ("pytest>=4,<5", "setuptools<58", "hypothesis<5"),
+            ("pytest<5", "setuptools<58"),
             "2019-12-31",
             "pythonpath_only",
             "target_workspace",
@@ -312,11 +312,11 @@ def infer_profile_candidates(
         "baseline using current reference-pass audit dependencies outside the Barcarolle project",
     )
     py310 = profile_for("py310_pytest7_editable", "3.10", ("pytest>=7,<8", "setuptools<81", "hypothesis<6"), date, "editable", "target_workspace", "explicit_test_files", "newer historical fallback")
-    py39 = profile_for("py39_pytest6_pythonpath", "3.9", ("pytest>=6,<7", "setuptools<66", "hypothesis<6"), date, "pythonpath_only", "target_workspace", "explicit_test_files", "old Python/API compatibility with build avoidance")
-    py38 = profile_for("py38_pytest5_pythonpath", "3.8", ("pytest>=5,<6", "setuptools<58", "hypothesis<6"), date, "pythonpath_only", "target_workspace", "explicit_test_files", "old pytest configuration compatibility")
-    py37 = profile_for("py37_pytest4_pythonpath", "3.7", ("pytest>=4,<5", "setuptools<58", "hypothesis<5"), date, "pythonpath_only", "target_workspace", "explicit_test_files", "optional oldest bounded fallback")
+    py39 = profile_for("py39_pytest_lt5_pythonpath", "3.9", ("pytest<5", "setuptools<58"), date, "pythonpath_only", "target_workspace", "explicit_test_files", "old Python/API compatibility with build avoidance")
+    py38 = profile_for("py38_pytest_lt4_pythonpath", "3.8", ("pytest<4", "setuptools<58"), date, "pythonpath_only", "target_workspace", "explicit_test_files", "old pytest configuration compatibility")
+    py37 = profile_for("py37_pytest4_pythonpath", "3.7", ("pytest<5", "setuptools<58"), date, "pythonpath_only", "target_workspace", "explicit_test_files", "optional oldest bounded fallback")
     if year <= 2018:
-        ordered = [baseline, py39, py38, py37, py310]
+        ordered = [baseline, py38, py39, py37, py310]
     elif year <= 2021:
         ordered = [baseline, py310, py39, py38, py37]
     else:
@@ -340,10 +340,11 @@ def classify_reference_subgate(returncode: int, stdout_tail: str, stderr_tail: s
         return "reference_timeout"
     unavailable = (
         "managed python" in text
+        or "no interpreter found" in text
         or "no download found" in text
         or "request failed" in text
         or "failed to download" in text
-        or "python 3.7" in text and "not found" in text
+        or ("python 3.7" in text and ("not found" in text or "no interpreter" in text))
     )
     if unavailable:
         return "reference_environment_unavailable"
@@ -596,7 +597,7 @@ def replay_known_failures(config: dict[str, Any], limit: int | None = None) -> d
                 "profiles_tried": [row["profile_id"] for row in attempts],
                 "winning_profile_id": winning_profile_id,
                 "recovered_reference_pass": bool(winning_profile_id),
-                "terminal_subgate_label": attempts[-1]["subgate_label"] if attempts else "reference_unknown_failed",
+                "terminal_subgate_label": terminal_subgate_label(attempts),
                 "attempts": attempts,
             }
         )
@@ -612,6 +613,23 @@ def replay_known_failures(config: dict[str, Any], limit: int | None = None) -> d
         "workspace_storage": rel(scratch_path(config, "replay_workspaces")),
         "rows": rows,
     }
+
+
+def terminal_subgate_label(attempts: list[dict[str, Any]]) -> str:
+    labels = [str(row.get("subgate_label", "reference_unknown_failed")) for row in attempts]
+    for label in [
+        "reference_pass",
+        "reference_assert_failed",
+        "reference_import_failed",
+        "reference_collect_failed",
+        "reference_install_failed",
+        "reference_environment_unavailable",
+        "reference_timeout",
+        "reference_unknown_failed",
+    ]:
+        if label in labels:
+            return label
+    return "reference_unknown_failed"
 
 
 def task_timeout_record(row: dict[str, Any], profile: EnvironmentProfile) -> dict[str, Any]:

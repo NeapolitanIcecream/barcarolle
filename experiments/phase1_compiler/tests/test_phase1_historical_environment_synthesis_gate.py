@@ -7,9 +7,9 @@ import phase1_historical_environment_synthesis_gate as gate
 
 def profile(**overrides: object) -> gate.EnvironmentProfile:
     values = {
-        "profile_id": "py39_pytest6_pythonpath",
+        "profile_id": "py39_pytest_lt5_pythonpath",
         "python_version": "3.9",
-        "dependency_constraints": ("pytest>=6,<7", "setuptools<66"),
+        "dependency_constraints": ("pytest<5", "setuptools<58"),
         "exclude_newer_date": "2020-12-31",
         "install_mode": "pythonpath_only",
         "cwd_mode": "target_workspace",
@@ -61,7 +61,7 @@ def test_classify_reference_subgate_separates_failure_modes() -> None:
         (2, "", "ERROR collecting tests/test_x.py", "reference_collect_failed"),
         (1, "E   AssertionError: expected 1", "", "reference_assert_failed"),
         (124, "", "command timed out", "reference_timeout"),
-        (1, "", "No download found for Python 3.7", "reference_environment_unavailable"),
+        (1, "", "No interpreter found for Python 3.7", "reference_environment_unavailable"),
         (1, "", "unexpected nonzero output", "reference_unknown_failed"),
     ]
 
