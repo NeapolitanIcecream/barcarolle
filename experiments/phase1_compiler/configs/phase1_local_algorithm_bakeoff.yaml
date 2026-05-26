@@ -1,0 +1,31 @@
+schema_version: barcarolle.phase1_local_algorithm_bakeoff.v1
+run_id: phase1_local_algorithm_bakeoff_20260526
+runbook: docs/experiments/phase-1-local-algorithm-bakeoff-runbook.md
+runbook_date: 2026-05-26
+local_only: true
+new_paid_acut_calls_allowed: false
+new_paid_llm_calls_allowed: false
+target_repos:
+  - attrs
+  - boltons
+tasks_per_repo_split: 4
+primary_gap_threshold: 0.15
+diagnostic_seeds:
+  - 2026052601
+  - 2026052602
+  - 2026052603
+  - 2026052604
+  - 2026052605
+feature_dimensions:
+  - repo_id
+  - work_cluster
+  - difficulty_band
+  - source_quality
+  - locality
+  - time_recency
+  - source_kind_group
+  - statement_quality_group
+min_support_per_stratum: 3
+dependency_decision:
+  add_dependencies: false
+  reason: The repo-local Phase 1 tooling uses standard-library deterministic JSON, CSV, and Markdown generation; the small candidate pools make exhaustive enumeration and capped fallback weighting tractable without a solver dependency.
