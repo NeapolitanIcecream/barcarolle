@@ -1,0 +1,171 @@
+{
+  "H_future_outcomes_used_for_profile_computation": false,
+  "analysis_schema": "target_profile_prototype.v1",
+  "generated_at": "2026-05-26T06:11:22Z",
+  "min_support_per_stratum": 3,
+  "new_paid_acut_calls_made": false,
+  "new_paid_llm_calls_made": false,
+  "outcome_fields_used": [],
+  "profiles": [
+    {
+      "candidate_support_count": 10,
+      "confidence_label": "surrogate_sparse",
+      "covered_target_mass": 0.3,
+      "feature_support_counts": {
+        "difficulty_band": {
+          "unknown": 10
+        },
+        "locality": {
+          "single_file": 10
+        },
+        "repo_id": {
+          "attrs": 10
+        },
+        "source_kind_group": {
+          "issue": 8,
+          "pull_request": 2
+        },
+        "source_quality": {
+          "clean": 8,
+          "minor_risk": 2
+        },
+        "statement_quality_group": {
+          "clean": 8,
+          "minor_risk": 2
+        },
+        "time_recency": {
+          "older": 5,
+          "recent": 5
+        },
+        "work_cluster": {
+          "rare_or_unknown": 7,
+          "validators": 3
+        }
+      },
+      "profile_weight_tables": {
+        "difficulty_band": {
+          "unknown": 1.0
+        },
+        "locality": {
+          "single_file": 1.0
+        },
+        "repo_id": {
+          "attrs": 1.0
+        },
+        "source_kind_group": {
+          "issue": 0.8,
+          "pull_request": 0.2
+        },
+        "source_quality": {
+          "clean": 0.8,
+          "minor_risk": 0.2
+        },
+        "statement_quality_group": {
+          "clean": 0.8,
+          "minor_risk": 0.2
+        },
+        "time_recency": {
+          "older": 0.5,
+          "recent": 0.5
+        },
+        "work_cluster": {
+          "rare_or_unknown": 0.7,
+          "validators": 0.3
+        }
+      },
+      "repo_id": "attrs",
+      "stratum_support_counts": {
+        "attrs|rare_or_unknown|unknown|clean|single_file|older|issue|clean": 4,
+        "attrs|rare_or_unknown|unknown|clean|single_file|recent|issue|clean": 1,
+        "attrs|rare_or_unknown|unknown|clean|single_file|recent|pull_request|clean": 1,
+        "attrs|rare_or_unknown|unknown|minor_risk|single_file|older|issue|minor_risk": 1,
+        "attrs|validators|unknown|clean|single_file|recent|issue|clean": 2,
+        "attrs|validators|unknown|minor_risk|single_file|recent|pull_request|minor_risk": 1
+      },
+      "support_warnings": [
+        "eligible task supply below 20-30 precision-run guidance"
+      ],
+      "uncovered_target_mass": 0.7
+    },
+    {
+      "candidate_support_count": 12,
+      "confidence_label": "surrogate_sparse",
+      "covered_target_mass": 0.25,
+      "feature_support_counts": {
+        "difficulty_band": {
+          "unknown": 12
+        },
+        "locality": {
+          "multi_file": 1,
+          "single_file": 11
+        },
+        "repo_id": {
+          "boltons": 12
+        },
+        "source_kind_group": {
+          "pull_request": 12
+        },
+        "source_quality": {
+          "minor_risk": 12
+        },
+        "statement_quality_group": {
+          "minor_risk": 12
+        },
+        "time_recency": {
+          "older": 6,
+          "recent": 6
+        },
+        "work_cluster": {
+          "funcutils": 3,
+          "rare_or_unknown": 9
+        }
+      },
+      "profile_weight_tables": {
+        "difficulty_band": {
+          "unknown": 1.0
+        },
+        "locality": {
+          "multi_file": 0.083333,
+          "single_file": 0.916667
+        },
+        "repo_id": {
+          "boltons": 1.0
+        },
+        "source_kind_group": {
+          "pull_request": 1.0
+        },
+        "source_quality": {
+          "minor_risk": 1.0
+        },
+        "statement_quality_group": {
+          "minor_risk": 1.0
+        },
+        "time_recency": {
+          "older": 0.5,
+          "recent": 0.5
+        },
+        "work_cluster": {
+          "funcutils": 0.25,
+          "rare_or_unknown": 0.75
+        }
+      },
+      "repo_id": "boltons",
+      "stratum_support_counts": {
+        "boltons|funcutils|unknown|minor_risk|single_file|older|pull_request|minor_risk": 2,
+        "boltons|funcutils|unknown|minor_risk|single_file|recent|pull_request|minor_risk": 1,
+        "boltons|rare_or_unknown|unknown|minor_risk|multi_file|older|pull_request|minor_risk": 1,
+        "boltons|rare_or_unknown|unknown|minor_risk|single_file|older|pull_request|minor_risk": 3,
+        "boltons|rare_or_unknown|unknown|minor_risk|single_file|recent|pull_request|minor_risk": 5
+      },
+      "support_warnings": [
+        "eligible task supply below 20-30 precision-run guidance"
+      ],
+      "uncovered_target_mass": 0.75
+    }
+  ],
+  "rare_unknown_bucket_required": true,
+  "run_id": "phase1_local_algorithm_bakeoff_20260526",
+  "schema_version": "barcarolle.phase1_local_algorithm_bakeoff_output.v1",
+  "status": "pass",
+  "target_profile_independence_status": "surrogate_candidate_metadata"
+}

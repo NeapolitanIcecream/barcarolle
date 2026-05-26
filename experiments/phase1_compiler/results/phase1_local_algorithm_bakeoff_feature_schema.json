@@ -1,0 +1,345 @@
+{
+  "H_future_outcomes_used_for_features": false,
+  "analysis_schema": "feature_schema.v1",
+  "feature_dimensions": [
+    {
+      "description": "Target repository id.",
+      "name": "repo_id",
+      "source": "candidate_inventory.repo_id"
+    },
+    {
+      "description": "Coarsened module root with rare_or_unknown merging.",
+      "name": "work_cluster",
+      "source": "module_or_package_list/module_or_package"
+    },
+    {
+      "description": "Unknown by default because no leakage-safe prior model is available.",
+      "name": "difficulty_band",
+      "source": "constant_unknown"
+    },
+    {
+      "description": "clean, minor_risk, or risky from statement quality status.",
+      "name": "source_quality",
+      "source": "statement_quality_status"
+    },
+    {
+      "description": "single_file or multi_file from implementation file count.",
+      "name": "locality",
+      "source": "implementation_file_count"
+    },
+    {
+      "description": "older or recent within repo by task time ordering.",
+      "name": "time_recency",
+      "source": "task_time"
+    },
+    {
+      "description": "issue, pull_request, commit, or other.",
+      "name": "source_kind_group",
+      "source": "source_kind"
+    },
+    {
+      "description": "clean, minor_risk, or risky from statement quality status.",
+      "name": "statement_quality_group",
+      "source": "statement_quality_status"
+    }
+  ],
+  "generated_at": "2026-05-26T06:11:22Z",
+  "new_paid_acut_calls_made": false,
+  "new_paid_llm_calls_made": false,
+  "rows": [
+    {
+      "difficulty_band": "unknown",
+      "feature_stratum": "attrs|rare_or_unknown|unknown|minor_risk|single_file|older|issue|minor_risk",
+      "locality": "single_file",
+      "repo_id": "attrs",
+      "source_kind_group": "issue",
+      "source_quality": "minor_risk",
+      "statement_quality_group": "minor_risk",
+      "task_id": "attrs__hist__009",
+      "time_recency": "older",
+      "work_cluster": "rare_or_unknown",
+      "work_cluster_raw": "_next_gen"
+    },
+    {
+      "difficulty_band": "unknown",
+      "feature_stratum": "attrs|rare_or_unknown|unknown|clean|single_file|older|issue|clean",
+      "locality": "single_file",
+      "repo_id": "attrs",
+      "source_kind_group": "issue",
+      "source_quality": "clean",
+      "statement_quality_group": "clean",
+      "task_id": "attrs__hist__010",
+      "time_recency": "older",
+      "work_cluster": "rare_or_unknown",
+      "work_cluster_raw": "_next_gen"
+    },
+    {
+      "difficulty_band": "unknown",
+      "feature_stratum": "attrs|rare_or_unknown|unknown|clean|single_file|older|issue|clean",
+      "locality": "single_file",
+      "repo_id": "attrs",
+      "source_kind_group": "issue",
+      "source_quality": "clean",
+      "statement_quality_group": "clean",
+      "task_id": "attrs__hist__032",
+      "time_recency": "older",
+      "work_cluster": "rare_or_unknown",
+      "work_cluster_raw": "_make"
+    },
+    {
+      "difficulty_band": "unknown",
+      "feature_stratum": "attrs|rare_or_unknown|unknown|clean|single_file|older|issue|clean",
+      "locality": "single_file",
+      "repo_id": "attrs",
+      "source_kind_group": "issue",
+      "source_quality": "clean",
+      "statement_quality_group": "clean",
+      "task_id": "attrs__hist__033",
+      "time_recency": "older",
+      "work_cluster": "rare_or_unknown",
+      "work_cluster_raw": "converters"
+    },
+    {
+      "difficulty_band": "unknown",
+      "feature_stratum": "attrs|rare_or_unknown|unknown|clean|single_file|older|issue|clean",
+      "locality": "single_file",
+      "repo_id": "attrs",
+      "source_kind_group": "issue",
+      "source_quality": "clean",
+      "statement_quality_group": "clean",
+      "task_id": "attrs__hist__035",
+      "time_recency": "older",
+      "work_cluster": "rare_or_unknown",
+      "work_cluster_raw": "_make"
+    },
+    {
+      "difficulty_band": "unknown",
+      "feature_stratum": "attrs|rare_or_unknown|unknown|clean|single_file|recent|pull_request|clean",
+      "locality": "single_file",
+      "repo_id": "attrs",
+      "source_kind_group": "pull_request",
+      "source_quality": "clean",
+      "statement_quality_group": "clean",
+      "task_id": "attrs__hist__036",
+      "time_recency": "recent",
+      "work_cluster": "rare_or_unknown",
+      "work_cluster_raw": "__init__"
+    },
+    {
+      "difficulty_band": "unknown",
+      "feature_stratum": "attrs|validators|unknown|clean|single_file|recent|issue|clean",
+      "locality": "single_file",
+      "repo_id": "attrs",
+      "source_kind_group": "issue",
+      "source_quality": "clean",
+      "statement_quality_group": "clean",
+      "task_id": "attrs__hist__039",
+      "time_recency": "recent",
+      "work_cluster": "validators",
+      "work_cluster_raw": "validators"
+    },
+    {
+      "difficulty_band": "unknown",
+      "feature_stratum": "attrs|rare_or_unknown|unknown|clean|single_file|recent|issue|clean",
+      "locality": "single_file",
+      "repo_id": "attrs",
+      "source_kind_group": "issue",
+      "source_quality": "clean",
+      "statement_quality_group": "clean",
+      "task_id": "attrs__hist__041",
+      "time_recency": "recent",
+      "work_cluster": "rare_or_unknown",
+      "work_cluster_raw": "_funcs"
+    },
+    {
+      "difficulty_band": "unknown",
+      "feature_stratum": "attrs|validators|unknown|minor_risk|single_file|recent|pull_request|minor_risk",
+      "locality": "single_file",
+      "repo_id": "attrs",
+      "source_kind_group": "pull_request",
+      "source_quality": "minor_risk",
+      "statement_quality_group": "minor_risk",
+      "task_id": "attrs__hist__045",
+      "time_recency": "recent",
+      "work_cluster": "validators",
+      "work_cluster_raw": "validators"
+    },
+    {
+      "difficulty_band": "unknown",
+      "feature_stratum": "attrs|validators|unknown|clean|single_file|recent|issue|clean",
+      "locality": "single_file",
+      "repo_id": "attrs",
+      "source_kind_group": "issue",
+      "source_quality": "clean",
+      "statement_quality_group": "clean",
+      "task_id": "attrs__hist__047",
+      "time_recency": "recent",
+      "work_cluster": "validators",
+      "work_cluster_raw": "validators"
+    },
+    {
+      "difficulty_band": "unknown",
+      "feature_stratum": "boltons|funcutils|unknown|minor_risk|single_file|older|pull_request|minor_risk",
+      "locality": "single_file",
+      "repo_id": "boltons",
+      "source_kind_group": "pull_request",
+      "source_quality": "minor_risk",
+      "statement_quality_group": "minor_risk",
+      "task_id": "boltons__hist__006",
+      "time_recency": "older",
+      "work_cluster": "funcutils",
+      "work_cluster_raw": "funcutils"
+    },
+    {
+      "difficulty_band": "unknown",
+      "feature_stratum": "boltons|rare_or_unknown|unknown|minor_risk|single_file|older|pull_request|minor_risk",
+      "locality": "single_file",
+      "repo_id": "boltons",
+      "source_kind_group": "pull_request",
+      "source_quality": "minor_risk",
+      "statement_quality_group": "minor_risk",
+      "task_id": "boltons__hist__007",
+      "time_recency": "older",
+      "work_cluster": "rare_or_unknown",
+      "work_cluster_raw": "socketutils"
+    },
+    {
+      "difficulty_band": "unknown",
+      "feature_stratum": "boltons|funcutils|unknown|minor_risk|single_file|older|pull_request|minor_risk",
+      "locality": "single_file",
+      "repo_id": "boltons",
+      "source_kind_group": "pull_request",
+      "source_quality": "minor_risk",
+      "statement_quality_group": "minor_risk",
+      "task_id": "boltons__hist__013",
+      "time_recency": "older",
+      "work_cluster": "funcutils",
+      "work_cluster_raw": "funcutils"
+    },
+    {
+      "difficulty_band": "unknown",
+      "feature_stratum": "boltons|rare_or_unknown|unknown|minor_risk|multi_file|older|pull_request|minor_risk",
+      "locality": "multi_file",
+      "repo_id": "boltons",
+      "source_kind_group": "pull_request",
+      "source_quality": "minor_risk",
+      "statement_quality_group": "minor_risk",
+      "task_id": "boltons__hist__014",
+      "time_recency": "older",
+      "work_cluster": "rare_or_unknown",
+      "work_cluster_raw": "fileutils"
+    },
+    {
+      "difficulty_band": "unknown",
+      "feature_stratum": "boltons|rare_or_unknown|unknown|minor_risk|single_file|older|pull_request|minor_risk",
+      "locality": "single_file",
+      "repo_id": "boltons",
+      "source_kind_group": "pull_request",
+      "source_quality": "minor_risk",
+      "statement_quality_group": "minor_risk",
+      "task_id": "boltons__hist__017",
+      "time_recency": "older",
+      "work_cluster": "rare_or_unknown",
+      "work_cluster_raw": "urlutils"
+    },
+    {
+      "difficulty_band": "unknown",
+      "feature_stratum": "boltons|rare_or_unknown|unknown|minor_risk|single_file|older|pull_request|minor_risk",
+      "locality": "single_file",
+      "repo_id": "boltons",
+      "source_kind_group": "pull_request",
+      "source_quality": "minor_risk",
+      "statement_quality_group": "minor_risk",
+      "task_id": "boltons__hist__019",
+      "time_recency": "older",
+      "work_cluster": "rare_or_unknown",
+      "work_cluster_raw": "ioutils"
+    },
+    {
+      "difficulty_band": "unknown",
+      "feature_stratum": "boltons|rare_or_unknown|unknown|minor_risk|single_file|recent|pull_request|minor_risk",
+      "locality": "single_file",
+      "repo_id": "boltons",
+      "source_kind_group": "pull_request",
+      "source_quality": "minor_risk",
+      "statement_quality_group": "minor_risk",
+      "task_id": "boltons__hist__020",
+      "time_recency": "recent",
+      "work_cluster": "rare_or_unknown",
+      "work_cluster_raw": "timeutils"
+    },
+    {
+      "difficulty_band": "unknown",
+      "feature_stratum": "boltons|rare_or_unknown|unknown|minor_risk|single_file|recent|pull_request|minor_risk",
+      "locality": "single_file",
+      "repo_id": "boltons",
+      "source_kind_group": "pull_request",
+      "source_quality": "minor_risk",
+      "statement_quality_group": "minor_risk",
+      "task_id": "boltons__hist__024",
+      "time_recency": "recent",
+      "work_cluster": "rare_or_unknown",
+      "work_cluster_raw": "dictutils"
+    },
+    {
+      "difficulty_band": "unknown",
+      "feature_stratum": "boltons|funcutils|unknown|minor_risk|single_file|recent|pull_request|minor_risk",
+      "locality": "single_file",
+      "repo_id": "boltons",
+      "source_kind_group": "pull_request",
+      "source_quality": "minor_risk",
+      "statement_quality_group": "minor_risk",
+      "task_id": "boltons__hist__025",
+      "time_recency": "recent",
+      "work_cluster": "funcutils",
+      "work_cluster_raw": "funcutils"
+    },
+    {
+      "difficulty_band": "unknown",
+      "feature_stratum": "boltons|rare_or_unknown|unknown|minor_risk|single_file|recent|pull_request|minor_risk",
+      "locality": "single_file",
+      "repo_id": "boltons",
+      "source_kind_group": "pull_request",
+      "source_quality": "minor_risk",
+      "statement_quality_group": "minor_risk",
+      "task_id": "boltons__hist__026",
+      "time_recency": "recent",
+      "work_cluster": "rare_or_unknown",
+      "work_cluster_raw": "dictutils"
+    },
+    {
+      "difficulty_band": "unknown",
+      "feature_stratum": "boltons|rare_or_unknown|unknown|minor_risk|single_file|recent|pull_request|minor_risk",
+      "locality": "single_file",
+      "repo_id": "boltons",
+      "source_kind_group": "pull_request",
+      "source_quality": "minor_risk",
+      "statement_quality_group": "minor_risk",
+      "task_id": "boltons__hist__028",
+      "time_recency": "recent",
+      "work_cluster": "rare_or_unknown",
+      "work_cluster_raw": "iterutils"
+    },
+    {
+      "difficulty_band": "unknown",
+      "feature_stratum": "boltons|rare_or_unknown|unknown|minor_risk|single_file|recent|pull_request|minor_risk",
+      "locality": "single_file",
+      "repo_id": "boltons",
+      "source_kind_group": "pull_request",
+      "source_quality": "minor_risk",
+      "statement_quality_group": "minor_risk",
+      "task_id": "boltons__hist__031",
+      "time_recency": "recent",
+      "work_cluster": "rare_or_unknown",
+      "work_cluster_raw": "iterutils"
+    }
+  ],
+  "run_id": "phase1_local_algorithm_bakeoff_20260526",
+  "schema_version": "barcarolle.phase1_local_algorithm_bakeoff_output.v1",
+  "sparse_strata_policy": {
+    "min_support_per_stratum": 3,
+    "rare_unknown_bucket_required": true,
+    "raw_task_family_label_primary_stratum": false
+  },
+  "status": "pass"
+}
