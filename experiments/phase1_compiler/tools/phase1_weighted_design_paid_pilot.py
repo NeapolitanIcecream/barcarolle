@@ -855,9 +855,15 @@ def current_cost_summary() -> dict[str, Any]:
 
 def build_integrity_audit(write: bool = True) -> dict[str, Any]:
     matrix = read_json(PHASE0_OUTPUT_PATHS["matrix"]) if path_from_repo(PHASE0_OUTPUT_PATHS["matrix"]).exists() else build_matrix(write=False)
+    planned_task_ids = matrix.get("task_ids")
+    if not isinstance(planned_task_ids, list):
+        if path_from_repo(OUTPUT_PATHS["batch_plan"]).exists():
+            planned_task_ids = read_json(OUTPUT_PATHS["batch_plan"]).get("task_ids", [])
+        else:
+            planned_task_ids = workspace_acut.matrix_task_ids(simple_yaml_load(path_from_repo(PHASE0_OUTPUT_PATHS["workspace_matrix_config"])))
     rows = current_score_rows()
     selected_pairs = {(row.get("task_id"), row.get("adapter_id")) for row in rows}
-    expected_pairs = {(task_id, adapter_id) for task_id in matrix["task_ids"] for adapter_id in PLANNED_ADAPTERS}
+    expected_pairs = {(task_id, adapter_id) for task_id in planned_task_ids for adapter_id in PLANNED_ADAPTERS}
     missing_pairs = sorted(expected_pairs - selected_pairs)
     extra_pairs = sorted(selected_pairs - expected_pairs)
     terminal_counts = Counter(str(row.get("terminal_status") or "") for row in rows)

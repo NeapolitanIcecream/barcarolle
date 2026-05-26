@@ -229,6 +229,8 @@ experiments/phase0_headroom/external_repos/
 experiments/phase0_headroom/cache/
 experiments/phase0_headroom/large_artifacts/
 experiments/phase0_headroom/results/raw/
+experiments/phase0_headroom/results/phase1_weighted_design_paid_pilot_submissions.jsonl
+experiments/phase0_headroom/results/phase1_weighted_design_paid_pilot_verifier_results.jsonl
 archive/2026-05-agent-license-reset/experiments/core_narrative/results/m5_w2_primary/
 archive/2026-05-agent-license-reset/experiments/core_narrative/results/rgw_full_workspace_v1/
 archive/2026-05-agent-license-reset/experiments/core_narrative/results/raw/*/logs/

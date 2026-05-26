@@ -50,7 +50,9 @@ def test_paid_pilot_package_loader_matches_frozen_statement_digests(tmp_path: Pa
         assert package.repo_id in {"attrs", "boltons"}
 
 
-def test_preflight_records_ready_gates_without_paid_calls() -> None:
+def test_preflight_records_ready_gates_without_paid_calls(monkeypatch) -> None:
+    monkeypatch.setattr(pilot, "existing_paid_outputs", lambda: [])
+
     payload = pilot.build_preflight(write=False)
 
     assert payload["status"] == "ready_for_local_entry_steps"
