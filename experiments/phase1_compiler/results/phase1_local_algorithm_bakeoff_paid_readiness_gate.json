@@ -13,7 +13,7 @@
     "supply_diagnostics_gate": false,
     "weight_diagnostics_gate": true
   },
-  "generated_at": "2026-05-26T06:17:28Z",
+  "generated_at": "2026-05-26T06:18:38Z",
   "mainline_recommendation": "keep_repo_stratified_as_mainline",
   "new_paid_acut_calls_made": false,
   "new_paid_llm_calls_made": false,

@@ -2,7 +2,7 @@
 
 Run ID: `phase1_local_algorithm_bakeoff_20260526`.
 Runbook: `docs/experiments/phase-1-local-algorithm-bakeoff-runbook.md`.
-Generated at: `2026-05-26T06:17:28Z`.
+Generated at: `2026-05-26T06:18:38Z`.
 
 ## Boundary
 
@@ -14,7 +14,7 @@ Generated at: `2026-05-26T06:17:28Z`.
 ## Environment
 
 - Branch: `codex/restart-benchmark-compiler`.
-- HEAD at latest report write: `0b4ed852`.
+- HEAD at latest report write: `156e81c2`.
 - uv: `uv 0.11.16 (Homebrew 2026-05-21 aarch64-apple-darwin)`.
 - Python: `3.11.13`.
 
@@ -50,3 +50,15 @@ Generated at: `2026-05-26T06:17:28Z`.
 ## Commit Tracking
 
 The exact final commit range is reported by the coordinating session after commits are created.
+
+Recent bakeoff-related commits visible before this report write:
+
+- `4c9a2c8fe991` Record local algorithm bakeoff preflight
+- `f76246eccdb1` Reproduce weighted pilot metrics for bakeoff
+- `9ac0ad92faca` Measure weighted objective underidentification
+- `303eb2e3c461` Define local bakeoff features and target profile prototype
+- `b61362662908` Build local bakeoff compiler candidates
+- `a701954bfb2e` Evaluate capped shrinkage weights
+- `985c7c841218` Run local bakeoff validation
+- `0b4ed852bf64` Compare local bakeoff ablations
+- `156e81c2527e` Evaluate local bakeoff paid readiness

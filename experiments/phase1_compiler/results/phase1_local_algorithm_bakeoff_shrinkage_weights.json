@@ -1,6 +1,6 @@
 {
   "analysis_schema": "shrinkage_weights.v1",
-  "generated_at": "2026-05-26T06:12:49Z",
+  "generated_at": "2026-05-26T06:18:38Z",
   "interpretation": "Capped shrinkage mostly falls back to uniform weights under sparse support; old weighted pilot weights remain reference-only.",
   "new_paid_acut_calls_made": false,
   "new_paid_llm_calls_made": false,

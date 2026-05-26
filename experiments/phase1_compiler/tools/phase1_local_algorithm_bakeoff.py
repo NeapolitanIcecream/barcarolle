@@ -524,18 +524,13 @@ def build_process_step_statuses(current_step: int | None = None, status: str = "
 
 
 def recent_bakeoff_commits() -> list[dict[str, str]]:
-    log = command_stdout(
-        [
-            "git",
-            "log",
-            "--max-count=20",
-            "--pretty=format:%H%x09%s",
-            "--grep=bakeoff",
-            "--grep=weighted objective",
-            "--grep=local bakeoff",
-            "--all-match",
-        ]
-    )
+    preflight_path = path_from_repo(OUTPUTS["preflight"])
+    if preflight_path.exists():
+        base_head = str(read_json(preflight_path).get("head") or "")
+        revspec = f"{base_head}..HEAD" if base_head else "HEAD"
+    else:
+        revspec = "HEAD"
+    log = command_stdout(["git", "log", "--reverse", "--pretty=format:%H%x09%s", revspec])
     commits = []
     for line in log.splitlines():
         if "\t" in line:
