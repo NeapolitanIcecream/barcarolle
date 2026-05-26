@@ -1,0 +1,2516 @@
+{
+  "analysis_schema": "candidate_designs.v1",
+  "candidate_designs": [
+    {
+      "design_id": "repo_unweighted_same_budget",
+      "design_kind": "baseline_existing_unweighted",
+      "diagnostics": {},
+      "fallback_rule": "not_applicable_existing_release_candidate",
+      "hidden_oracle_material_used": false,
+      "outcome_fields_used_for_selection": [],
+      "random_seed_policy": "deterministic_existing_release_candidate",
+      "selection_inputs": [
+        "task_time_bucket",
+        "task_family_label",
+        "module_or_package",
+        "source_kind",
+        "statement_source",
+        "statement_quality_status",
+        "implementation/test file count buckets"
+      ],
+      "split_assignment": {
+        "attrs/B_eval": [
+          "attrs__hist__009",
+          "attrs__hist__010",
+          "attrs__hist__032",
+          "attrs__hist__033"
+        ],
+        "attrs/H_future": [
+          "attrs__hist__035",
+          "attrs__hist__036",
+          "attrs__hist__039",
+          "attrs__hist__041"
+        ],
+        "boltons/B_eval": [
+          "boltons__hist__006",
+          "boltons__hist__007",
+          "boltons__hist__013",
+          "boltons__hist__014"
+        ],
+        "boltons/H_future": [
+          "boltons__hist__017",
+          "boltons__hist__019",
+          "boltons__hist__020",
+          "boltons__hist__024"
+        ]
+      },
+      "status": "evaluated",
+      "task_ids": [
+        "attrs__hist__009",
+        "attrs__hist__010",
+        "attrs__hist__032",
+        "attrs__hist__033",
+        "attrs__hist__035",
+        "attrs__hist__036",
+        "attrs__hist__039",
+        "attrs__hist__041",
+        "boltons__hist__006",
+        "boltons__hist__007",
+        "boltons__hist__013",
+        "boltons__hist__014",
+        "boltons__hist__017",
+        "boltons__hist__019",
+        "boltons__hist__020",
+        "boltons__hist__024"
+      ],
+      "weight_mode": "uniform",
+      "weights": {
+        "attrs/B_eval": {
+          "attrs__hist__009": 0.25,
+          "attrs__hist__010": 0.25,
+          "attrs__hist__032": 0.25,
+          "attrs__hist__033": 0.25
+        },
+        "attrs/H_future": {
+          "attrs__hist__035": 0.25,
+          "attrs__hist__036": 0.25,
+          "attrs__hist__039": 0.25,
+          "attrs__hist__041": 0.25
+        },
+        "boltons/B_eval": {
+          "boltons__hist__006": 0.25,
+          "boltons__hist__007": 0.25,
+          "boltons__hist__013": 0.25,
+          "boltons__hist__014": 0.25
+        },
+        "boltons/H_future": {
+          "boltons__hist__017": 0.25,
+          "boltons__hist__019": 0.25,
+          "boltons__hist__020": 0.25,
+          "boltons__hist__024": 0.25
+        }
+      }
+    },
+    {
+      "design_id": "repo_stratified_by_target_profile",
+      "design_kind": "baseline_existing_stratified",
+      "diagnostics": {},
+      "fallback_rule": "not_applicable_existing_release_candidate",
+      "hidden_oracle_material_used": false,
+      "outcome_fields_used_for_selection": [],
+      "random_seed_policy": "deterministic_existing_release_candidate",
+      "selection_inputs": [
+        "task_time_bucket",
+        "task_family_label",
+        "module_or_package",
+        "source_kind",
+        "statement_source",
+        "statement_quality_status",
+        "implementation/test file count buckets"
+      ],
+      "split_assignment": {
+        "attrs/B_eval": [
+          "attrs__hist__009",
+          "attrs__hist__032",
+          "attrs__hist__033",
+          "attrs__hist__036"
+        ],
+        "attrs/H_future": [
+          "attrs__hist__010",
+          "attrs__hist__035",
+          "attrs__hist__039",
+          "attrs__hist__041"
+        ],
+        "boltons/B_eval": [
+          "boltons__hist__013",
+          "boltons__hist__014",
+          "boltons__hist__019",
+          "boltons__hist__024"
+        ],
+        "boltons/H_future": [
+          "boltons__hist__006",
+          "boltons__hist__025",
+          "boltons__hist__026",
+          "boltons__hist__028"
+        ]
+      },
+      "status": "evaluated",
+      "task_ids": [
+        "attrs__hist__009",
+        "attrs__hist__010",
+        "attrs__hist__032",
+        "attrs__hist__033",
+        "attrs__hist__035",
+        "attrs__hist__036",
+        "attrs__hist__039",
+        "attrs__hist__041",
+        "boltons__hist__006",
+        "boltons__hist__013",
+        "boltons__hist__014",
+        "boltons__hist__019",
+        "boltons__hist__024",
+        "boltons__hist__025",
+        "boltons__hist__026",
+        "boltons__hist__028"
+      ],
+      "weight_mode": "uniform",
+      "weights": {
+        "attrs/B_eval": {
+          "attrs__hist__009": 0.25,
+          "attrs__hist__032": 0.25,
+          "attrs__hist__033": 0.25,
+          "attrs__hist__036": 0.25
+        },
+        "attrs/H_future": {
+          "attrs__hist__010": 0.25,
+          "attrs__hist__035": 0.25,
+          "attrs__hist__039": 0.25,
+          "attrs__hist__041": 0.25
+        },
+        "boltons/B_eval": {
+          "boltons__hist__013": 0.25,
+          "boltons__hist__014": 0.25,
+          "boltons__hist__019": 0.25,
+          "boltons__hist__024": 0.25
+        },
+        "boltons/H_future": {
+          "boltons__hist__006": 0.25,
+          "boltons__hist__025": 0.25,
+          "boltons__hist__026": 0.25,
+          "boltons__hist__028": 0.25
+        }
+      }
+    },
+    {
+      "design_id": "seeded_random_same_budget",
+      "design_kind": "seeded_random_same_budget",
+      "diagnostics": {
+        "mean_l1_distance_to_target_profile": 0.133333,
+        "repo_split_diagnostics": [
+          {
+            "covered_target_mass": 0.3,
+            "feature_stratum_counts": {
+              "attrs|rare_or_unknown|unknown|clean|single_file|older|issue|clean": 1,
+              "attrs|rare_or_unknown|unknown|clean|single_file|recent|pull_request|clean": 1,
+              "attrs|validators|unknown|clean|single_file|recent|issue|clean": 1,
+              "attrs|validators|unknown|minor_risk|single_file|recent|pull_request|minor_risk": 1
+            },
+            "mean_l1_distance_to_target_profile": 0.242857,
+            "repo_split": "attrs/B_eval",
+            "split": "B_eval",
+            "task_count": 4,
+            "uncovered_target_mass": 0.7
+          },
+          {
+            "covered_target_mass": 0.3,
+            "feature_stratum_counts": {
+              "attrs|rare_or_unknown|unknown|clean|single_file|older|issue|clean": 1,
+              "attrs|rare_or_unknown|unknown|clean|single_file|recent|issue|clean": 1,
+              "attrs|rare_or_unknown|unknown|minor_risk|single_file|older|issue|minor_risk": 1,
+              "attrs|validators|unknown|clean|single_file|recent|issue|clean": 1
+            },
+            "mean_l1_distance_to_target_profile": 0.1,
+            "repo_split": "attrs/H_future",
+            "split": "H_future",
+            "task_count": 4,
+            "uncovered_target_mass": 0.7
+          },
+          {
+            "covered_target_mass": 0.25,
+            "feature_stratum_counts": {
+              "boltons|funcutils|unknown|minor_risk|single_file|older|pull_request|minor_risk": 1,
+              "boltons|funcutils|unknown|minor_risk|single_file|recent|pull_request|minor_risk": 1,
+              "boltons|rare_or_unknown|unknown|minor_risk|single_file|older|pull_request|minor_risk": 1,
+              "boltons|rare_or_unknown|unknown|minor_risk|single_file|recent|pull_request|minor_risk": 1
+            },
+            "mean_l1_distance_to_target_profile": 0.095238,
+            "repo_split": "boltons/B_eval",
+            "split": "B_eval",
+            "task_count": 4,
+            "uncovered_target_mass": 0.75
+          },
+          {
+            "covered_target_mass": 0.25,
+            "feature_stratum_counts": {
+              "boltons|funcutils|unknown|minor_risk|single_file|older|pull_request|minor_risk": 1,
+              "boltons|rare_or_unknown|unknown|minor_risk|single_file|older|pull_request|minor_risk": 2,
+              "boltons|rare_or_unknown|unknown|minor_risk|single_file|recent|pull_request|minor_risk": 1
+            },
+            "mean_l1_distance_to_target_profile": 0.095238,
+            "repo_split": "boltons/H_future",
+            "split": "H_future",
+            "task_count": 4,
+            "uncovered_target_mass": 0.75
+          }
+        ]
+      },
+      "fallback_rule": "fallback_to_uniform_weights_and_record_sparse_support",
+      "hidden_oracle_material_used": false,
+      "outcome_fields_used_for_selection": [],
+      "random_seed_policy": "seeded_deterministic:2026052601",
+      "seed": 2026052601,
+      "selection_inputs": [
+        "candidate task ids",
+        "repo_id",
+        "task_time",
+        "coarse local bakeoff feature schema",
+        "sanitized pre-outcome candidate metadata"
+      ],
+      "split_assignment": {
+        "attrs/B_eval": [
+          "attrs__hist__010",
+          "attrs__hist__036",
+          "attrs__hist__039",
+          "attrs__hist__045"
+        ],
+        "attrs/H_future": [
+          "attrs__hist__009",
+          "attrs__hist__032",
+          "attrs__hist__041",
+          "attrs__hist__047"
+        ],
+        "boltons/B_eval": [
+          "boltons__hist__006",
+          "boltons__hist__007",
+          "boltons__hist__020",
+          "boltons__hist__025"
+        ],
+        "boltons/H_future": [
+          "boltons__hist__013",
+          "boltons__hist__017",
+          "boltons__hist__019",
+          "boltons__hist__031"
+        ]
+      },
+      "status": "evaluated",
+      "task_ids": [
+        "attrs__hist__009",
+        "attrs__hist__010",
+        "attrs__hist__032",
+        "attrs__hist__036",
+        "attrs__hist__039",
+        "attrs__hist__041",
+        "attrs__hist__045",
+        "attrs__hist__047",
+        "boltons__hist__006",
+        "boltons__hist__007",
+        "boltons__hist__013",
+        "boltons__hist__017",
+        "boltons__hist__019",
+        "boltons__hist__020",
+        "boltons__hist__025",
+        "boltons__hist__031"
+      ],
+      "weight_mode": "uniform",
+      "weights": {
+        "attrs/B_eval": {
+          "attrs__hist__010": 0.25,
+          "attrs__hist__036": 0.25,
+          "attrs__hist__039": 0.25,
+          "attrs__hist__045": 0.25
+        },
+        "attrs/H_future": {
+          "attrs__hist__009": 0.25,
+          "attrs__hist__032": 0.25,
+          "attrs__hist__041": 0.25,
+          "attrs__hist__047": 0.25
+        },
+        "boltons/B_eval": {
+          "boltons__hist__006": 0.25,
+          "boltons__hist__007": 0.25,
+          "boltons__hist__020": 0.25,
+          "boltons__hist__025": 0.25
+        },
+        "boltons/H_future": {
+          "boltons__hist__013": 0.25,
+          "boltons__hist__017": 0.25,
+          "boltons__hist__019": 0.25,
+          "boltons__hist__031": 0.25
+        }
+      }
+    },
+    {
+      "design_id": "temporal_recent_baseline",
+      "design_kind": "temporal_recent_baseline",
+      "diagnostics": {
+        "mean_l1_distance_to_target_profile": 0.215476,
+        "repo_split_diagnostics": [
+          {
+            "covered_target_mass": 0.3,
+            "feature_stratum_counts": {
+              "attrs|rare_or_unknown|unknown|clean|single_file|older|issue|clean": 3,
+              "attrs|rare_or_unknown|unknown|clean|single_file|recent|pull_request|clean": 1
+            },
+            "mean_l1_distance_to_target_profile": 0.285714,
+            "repo_split": "attrs/B_eval",
+            "split": "B_eval",
+            "task_count": 4,
+            "uncovered_target_mass": 0.7
+          },
+          {
+            "covered_target_mass": 0.3,
+            "feature_stratum_counts": {
+              "attrs|rare_or_unknown|unknown|clean|single_file|recent|issue|clean": 1,
+              "attrs|validators|unknown|clean|single_file|recent|issue|clean": 2,
+              "attrs|validators|unknown|minor_risk|single_file|recent|pull_request|minor_risk": 1
+            },
+            "mean_l1_distance_to_target_profile": 0.314286,
+            "repo_split": "attrs/H_future",
+            "split": "H_future",
+            "task_count": 4,
+            "uncovered_target_mass": 0.7
+          },
+          {
+            "covered_target_mass": 0.25,
+            "feature_stratum_counts": {
+              "boltons|rare_or_unknown|unknown|minor_risk|single_file|older|pull_request|minor_risk": 2,
+              "boltons|rare_or_unknown|unknown|minor_risk|single_file|recent|pull_request|minor_risk": 2
+            },
+            "mean_l1_distance_to_target_profile": 0.095238,
+            "repo_split": "boltons/B_eval",
+            "split": "B_eval",
+            "task_count": 4,
+            "uncovered_target_mass": 0.75
+          },
+          {
+            "covered_target_mass": 0.25,
+            "feature_stratum_counts": {
+              "boltons|funcutils|unknown|minor_risk|single_file|recent|pull_request|minor_risk": 1,
+              "boltons|rare_or_unknown|unknown|minor_risk|single_file|recent|pull_request|minor_risk": 3
+            },
+            "mean_l1_distance_to_target_profile": 0.166667,
+            "repo_split": "boltons/H_future",
+            "split": "H_future",
+            "task_count": 4,
+            "uncovered_target_mass": 0.75
+          }
+        ]
+      },
+      "fallback_rule": "fallback_to_uniform_weights_and_record_sparse_support",
+      "hidden_oracle_material_used": false,
+      "outcome_fields_used_for_selection": [],
+      "random_seed_policy": "none",
+      "seed": null,
+      "selection_inputs": [
+        "candidate task ids",
+        "repo_id",
+        "task_time",
+        "coarse local bakeoff feature schema",
+        "sanitized pre-outcome candidate metadata"
+      ],
+      "split_assignment": {
+        "attrs/B_eval": [
+          "attrs__hist__032",
+          "attrs__hist__033",
+          "attrs__hist__035",
+          "attrs__hist__036"
+        ],
+        "attrs/H_future": [
+          "attrs__hist__039",
+          "attrs__hist__041",
+          "attrs__hist__045",
+          "attrs__hist__047"
+        ],
+        "boltons/B_eval": [
+          "boltons__hist__017",
+          "boltons__hist__019",
+          "boltons__hist__020",
+          "boltons__hist__024"
+        ],
+        "boltons/H_future": [
+          "boltons__hist__025",
+          "boltons__hist__026",
+          "boltons__hist__028",
+          "boltons__hist__031"
+        ]
+      },
+      "status": "evaluated",
+      "task_ids": [
+        "attrs__hist__032",
+        "attrs__hist__033",
+        "attrs__hist__035",
+        "attrs__hist__036",
+        "attrs__hist__039",
+        "attrs__hist__041",
+        "attrs__hist__045",
+        "attrs__hist__047",
+        "boltons__hist__017",
+        "boltons__hist__019",
+        "boltons__hist__020",
+        "boltons__hist__024",
+        "boltons__hist__025",
+        "boltons__hist__026",
+        "boltons__hist__028",
+        "boltons__hist__031"
+      ],
+      "weight_mode": "uniform",
+      "weights": {
+        "attrs/B_eval": {
+          "attrs__hist__032": 0.25,
+          "attrs__hist__033": 0.25,
+          "attrs__hist__035": 0.25,
+          "attrs__hist__036": 0.25
+        },
+        "attrs/H_future": {
+          "attrs__hist__039": 0.25,
+          "attrs__hist__041": 0.25,
+          "attrs__hist__045": 0.25,
+          "attrs__hist__047": 0.25
+        },
+        "boltons/B_eval": {
+          "boltons__hist__017": 0.25,
+          "boltons__hist__019": 0.25,
+          "boltons__hist__020": 0.25,
+          "boltons__hist__024": 0.25
+        },
+        "boltons/H_future": {
+          "boltons__hist__025": 0.25,
+          "boltons__hist__026": 0.25,
+          "boltons__hist__028": 0.25,
+          "boltons__hist__031": 0.25
+        }
+      }
+    },
+    {
+      "design_id": "coverage_constrained_unweighted",
+      "design_kind": "coverage_constrained_unweighted",
+      "diagnostics": {
+        "mean_l1_distance_to_target_profile": 0.157143,
+        "repo_split_diagnostics": [
+          {
+            "covered_target_mass": 0.3,
+            "feature_stratum_counts": {
+              "attrs|rare_or_unknown|unknown|clean|single_file|older|issue|clean": 2,
+              "attrs|rare_or_unknown|unknown|clean|single_file|recent|pull_request|clean": 1,
+              "attrs|validators|unknown|clean|single_file|recent|issue|clean": 1
+            },
+            "mean_l1_distance_to_target_profile": 0.142857,
+            "repo_split": "attrs/B_eval",
+            "split": "B_eval",
+            "task_count": 4,
+            "uncovered_target_mass": 0.7
+          },
+          {
+            "covered_target_mass": 0.3,
+            "feature_stratum_counts": {
+              "attrs|rare_or_unknown|unknown|clean|single_file|older|issue|clean": 1,
+              "attrs|rare_or_unknown|unknown|clean|single_file|recent|issue|clean": 1,
+              "attrs|rare_or_unknown|unknown|minor_risk|single_file|older|issue|minor_risk": 1,
+              "attrs|validators|unknown|minor_risk|single_file|recent|pull_request|minor_risk": 1
+            },
+            "mean_l1_distance_to_target_profile": 0.2,
+            "repo_split": "attrs/H_future",
+            "split": "H_future",
+            "task_count": 4,
+            "uncovered_target_mass": 0.7
+          },
+          {
+            "covered_target_mass": 0.25,
+            "feature_stratum_counts": {
+              "boltons|funcutils|unknown|minor_risk|single_file|older|pull_request|minor_risk": 1,
+              "boltons|funcutils|unknown|minor_risk|single_file|recent|pull_request|minor_risk": 1,
+              "boltons|rare_or_unknown|unknown|minor_risk|single_file|older|pull_request|minor_risk": 2
+            },
+            "mean_l1_distance_to_target_profile": 0.166667,
+            "repo_split": "boltons/B_eval",
+            "split": "B_eval",
+            "task_count": 4,
+            "uncovered_target_mass": 0.75
+          },
+          {
+            "covered_target_mass": 0.25,
+            "feature_stratum_counts": {
+              "boltons|funcutils|unknown|minor_risk|single_file|older|pull_request|minor_risk": 1,
+              "boltons|rare_or_unknown|unknown|minor_risk|multi_file|older|pull_request|minor_risk": 1,
+              "boltons|rare_or_unknown|unknown|minor_risk|single_file|older|pull_request|minor_risk": 1,
+              "boltons|rare_or_unknown|unknown|minor_risk|single_file|recent|pull_request|minor_risk": 1
+            },
+            "mean_l1_distance_to_target_profile": 0.119048,
+            "repo_split": "boltons/H_future",
+            "split": "H_future",
+            "task_count": 4,
+            "uncovered_target_mass": 0.75
+          }
+        ]
+      },
+      "fallback_rule": "fallback_to_uniform_weights_and_record_sparse_support",
+      "hidden_oracle_material_used": false,
+      "outcome_fields_used_for_selection": [],
+      "random_seed_policy": "none",
+      "seed": null,
+      "selection_inputs": [
+        "candidate task ids",
+        "repo_id",
+        "task_time",
+        "coarse local bakeoff feature schema",
+        "sanitized pre-outcome candidate metadata"
+      ],
+      "split_assignment": {
+        "attrs/B_eval": [
+          "attrs__hist__010",
+          "attrs__hist__033",
+          "attrs__hist__036",
+          "attrs__hist__039"
+        ],
+        "attrs/H_future": [
+          "attrs__hist__009",
+          "attrs__hist__032",
+          "attrs__hist__041",
+          "attrs__hist__045"
+        ],
+        "boltons/B_eval": [
+          "boltons__hist__006",
+          "boltons__hist__007",
+          "boltons__hist__019",
+          "boltons__hist__025"
+        ],
+        "boltons/H_future": [
+          "boltons__hist__013",
+          "boltons__hist__014",
+          "boltons__hist__017",
+          "boltons__hist__020"
+        ]
+      },
+      "status": "evaluated",
+      "task_ids": [
+        "attrs__hist__009",
+        "attrs__hist__010",
+        "attrs__hist__032",
+        "attrs__hist__033",
+        "attrs__hist__036",
+        "attrs__hist__039",
+        "attrs__hist__041",
+        "attrs__hist__045",
+        "boltons__hist__006",
+        "boltons__hist__007",
+        "boltons__hist__013",
+        "boltons__hist__014",
+        "boltons__hist__017",
+        "boltons__hist__019",
+        "boltons__hist__020",
+        "boltons__hist__025"
+      ],
+      "weight_mode": "uniform",
+      "weights": {
+        "attrs/B_eval": {
+          "attrs__hist__010": 0.25,
+          "attrs__hist__033": 0.25,
+          "attrs__hist__036": 0.25,
+          "attrs__hist__039": 0.25
+        },
+        "attrs/H_future": {
+          "attrs__hist__009": 0.25,
+          "attrs__hist__032": 0.25,
+          "attrs__hist__041": 0.25,
+          "attrs__hist__045": 0.25
+        },
+        "boltons/B_eval": {
+          "boltons__hist__006": 0.25,
+          "boltons__hist__007": 0.25,
+          "boltons__hist__019": 0.25,
+          "boltons__hist__025": 0.25
+        },
+        "boltons/H_future": {
+          "boltons__hist__013": 0.25,
+          "boltons__hist__014": 0.25,
+          "boltons__hist__017": 0.25,
+          "boltons__hist__020": 0.25
+        }
+      }
+    },
+    {
+      "design_id": "block_randomized_stratified",
+      "design_kind": "block_randomized_stratified",
+      "diagnostics": {
+        "mean_l1_distance_to_target_profile": 0.167857,
+        "repo_split_diagnostics": [
+          {
+            "covered_target_mass": 0.3,
+            "feature_stratum_counts": {
+              "attrs|rare_or_unknown|unknown|clean|single_file|older|issue|clean": 1,
+              "attrs|rare_or_unknown|unknown|minor_risk|single_file|older|issue|minor_risk": 1,
+              "attrs|validators|unknown|clean|single_file|recent|issue|clean": 1,
+              "attrs|validators|unknown|minor_risk|single_file|recent|pull_request|minor_risk": 1
+            },
+            "mean_l1_distance_to_target_profile": 0.242857,
+            "repo_split": "attrs/B_eval",
+            "split": "B_eval",
+            "task_count": 4,
+            "uncovered_target_mass": 0.7
+          },
+          {
+            "covered_target_mass": 0.3,
+            "feature_stratum_counts": {
+              "attrs|rare_or_unknown|unknown|clean|single_file|older|issue|clean": 1,
+              "attrs|rare_or_unknown|unknown|clean|single_file|recent|issue|clean": 1,
+              "attrs|rare_or_unknown|unknown|clean|single_file|recent|pull_request|clean": 1,
+              "attrs|validators|unknown|clean|single_file|recent|issue|clean": 1
+            },
+            "mean_l1_distance_to_target_profile": 0.214286,
+            "repo_split": "attrs/H_future",
+            "split": "H_future",
+            "task_count": 4,
+            "uncovered_target_mass": 0.7
+          },
+          {
+            "covered_target_mass": 0.25,
+            "feature_stratum_counts": {
+              "boltons|funcutils|unknown|minor_risk|single_file|older|pull_request|minor_risk": 1,
+              "boltons|funcutils|unknown|minor_risk|single_file|recent|pull_request|minor_risk": 1,
+              "boltons|rare_or_unknown|unknown|minor_risk|single_file|older|pull_request|minor_risk": 1,
+              "boltons|rare_or_unknown|unknown|minor_risk|single_file|recent|pull_request|minor_risk": 1
+            },
+            "mean_l1_distance_to_target_profile": 0.095238,
+            "repo_split": "boltons/B_eval",
+            "split": "B_eval",
+            "task_count": 4,
+            "uncovered_target_mass": 0.75
+          },
+          {
+            "covered_target_mass": 0.25,
+            "feature_stratum_counts": {
+              "boltons|funcutils|unknown|minor_risk|single_file|older|pull_request|minor_risk": 1,
+              "boltons|rare_or_unknown|unknown|minor_risk|multi_file|older|pull_request|minor_risk": 1,
+              "boltons|rare_or_unknown|unknown|minor_risk|single_file|older|pull_request|minor_risk": 1,
+              "boltons|rare_or_unknown|unknown|minor_risk|single_file|recent|pull_request|minor_risk": 1
+            },
+            "mean_l1_distance_to_target_profile": 0.119048,
+            "repo_split": "boltons/H_future",
+            "split": "H_future",
+            "task_count": 4,
+            "uncovered_target_mass": 0.75
+          }
+        ]
+      },
+      "fallback_rule": "fallback_to_uniform_weights_and_record_sparse_support",
+      "hidden_oracle_material_used": false,
+      "outcome_fields_used_for_selection": [],
+      "random_seed_policy": "seeded_deterministic:2026052601",
+      "seed": 2026052601,
+      "selection_inputs": [
+        "candidate task ids",
+        "repo_id",
+        "task_time",
+        "coarse local bakeoff feature schema",
+        "sanitized pre-outcome candidate metadata"
+      ],
+      "split_assignment": {
+        "attrs/B_eval": [
+          "attrs__hist__009",
+          "attrs__hist__035",
+          "attrs__hist__045",
+          "attrs__hist__047"
+        ],
+        "attrs/H_future": [
+          "attrs__hist__032",
+          "attrs__hist__036",
+          "attrs__hist__039",
+          "attrs__hist__041"
+        ],
+        "boltons/B_eval": [
+          "boltons__hist__006",
+          "boltons__hist__007",
+          "boltons__hist__025",
+          "boltons__hist__028"
+        ],
+        "boltons/H_future": [
+          "boltons__hist__013",
+          "boltons__hist__014",
+          "boltons__hist__017",
+          "boltons__hist__031"
+        ]
+      },
+      "status": "evaluated",
+      "task_ids": [
+        "attrs__hist__009",
+        "attrs__hist__032",
+        "attrs__hist__035",
+        "attrs__hist__036",
+        "attrs__hist__039",
+        "attrs__hist__041",
+        "attrs__hist__045",
+        "attrs__hist__047",
+        "boltons__hist__006",
+        "boltons__hist__007",
+        "boltons__hist__013",
+        "boltons__hist__014",
+        "boltons__hist__017",
+        "boltons__hist__025",
+        "boltons__hist__028",
+        "boltons__hist__031"
+      ],
+      "weight_mode": "uniform",
+      "weights": {
+        "attrs/B_eval": {
+          "attrs__hist__009": 0.25,
+          "attrs__hist__035": 0.25,
+          "attrs__hist__045": 0.25,
+          "attrs__hist__047": 0.25
+        },
+        "attrs/H_future": {
+          "attrs__hist__032": 0.25,
+          "attrs__hist__036": 0.25,
+          "attrs__hist__039": 0.25,
+          "attrs__hist__041": 0.25
+        },
+        "boltons/B_eval": {
+          "boltons__hist__006": 0.25,
+          "boltons__hist__007": 0.25,
+          "boltons__hist__025": 0.25,
+          "boltons__hist__028": 0.25
+        },
+        "boltons/H_future": {
+          "boltons__hist__013": 0.25,
+          "boltons__hist__014": 0.25,
+          "boltons__hist__017": 0.25,
+          "boltons__hist__031": 0.25
+        }
+      }
+    },
+    {
+      "design_id": "old_weighted_target_profile",
+      "design_kind": "old_weighted_target_profile_reference",
+      "diagnostics": {},
+      "fallback_rule": "not_applicable_existing_release_candidate",
+      "hidden_oracle_material_used": false,
+      "outcome_fields_used_for_selection": [],
+      "random_seed_policy": "deterministic_existing_release_candidate",
+      "selection_inputs": [
+        "task_time_bucket",
+        "task_family_label",
+        "module_or_package",
+        "source_kind",
+        "statement_source",
+        "statement_quality_status",
+        "implementation/test file count buckets"
+      ],
+      "split_assignment": {
+        "attrs/B_eval": [
+          "attrs__hist__009",
+          "attrs__hist__032",
+          "attrs__hist__036",
+          "attrs__hist__047"
+        ],
+        "attrs/H_future": [
+          "attrs__hist__010",
+          "attrs__hist__033",
+          "attrs__hist__035",
+          "attrs__hist__045"
+        ],
+        "boltons/B_eval": [
+          "boltons__hist__006",
+          "boltons__hist__019",
+          "boltons__hist__024",
+          "boltons__hist__028"
+        ],
+        "boltons/H_future": [
+          "boltons__hist__007",
+          "boltons__hist__013",
+          "boltons__hist__026",
+          "boltons__hist__031"
+        ]
+      },
+      "status": "evaluated",
+      "task_ids": [
+        "attrs__hist__009",
+        "attrs__hist__010",
+        "attrs__hist__032",
+        "attrs__hist__033",
+        "attrs__hist__035",
+        "attrs__hist__036",
+        "attrs__hist__045",
+        "attrs__hist__047",
+        "boltons__hist__006",
+        "boltons__hist__007",
+        "boltons__hist__013",
+        "boltons__hist__019",
+        "boltons__hist__024",
+        "boltons__hist__026",
+        "boltons__hist__028",
+        "boltons__hist__031"
+      ],
+      "weight_mode": "existing_pre_paid_release_weights",
+      "weights": {
+        "attrs/B_eval": {
+          "attrs__hist__009": 0.16949147,
+          "attrs__hist__032": 0.31355932,
+          "attrs__hist__036": 0.22881366,
+          "attrs__hist__047": 0.28813555
+        },
+        "attrs/H_future": {
+          "attrs__hist__010": 0.27868849,
+          "attrs__hist__033": 0.28688528,
+          "attrs__hist__035": 0.33606555,
+          "attrs__hist__045": 0.09836069
+        },
+        "boltons/B_eval": {
+          "boltons__hist__006": 0.2519084,
+          "boltons__hist__019": 0.23664122,
+          "boltons__hist__024": 0.2519084,
+          "boltons__hist__028": 0.25954198
+        },
+        "boltons/H_future": {
+          "boltons__hist__007": 0.23664122,
+          "boltons__hist__013": 0.2519084,
+          "boltons__hist__026": 0.2519084,
+          "boltons__hist__031": 0.25954198
+        }
+      }
+    },
+    {
+      "design_id": "block_plus_shrinkage_weighted",
+      "design_kind": "block_plus_shrinkage_weighted",
+      "diagnostics": {
+        "mean_l1_distance_to_target_profile": 0.167857,
+        "repo_split_diagnostics": [
+          {
+            "covered_target_mass": 0.3,
+            "feature_stratum_counts": {
+              "attrs|rare_or_unknown|unknown|clean|single_file|older|issue|clean": 1,
+              "attrs|rare_or_unknown|unknown|minor_risk|single_file|older|issue|minor_risk": 1,
+              "attrs|validators|unknown|clean|single_file|recent|issue|clean": 1,
+              "attrs|validators|unknown|minor_risk|single_file|recent|pull_request|minor_risk": 1
+            },
+            "mean_l1_distance_to_target_profile": 0.242857,
+            "repo_split": "attrs/B_eval",
+            "split": "B_eval",
+            "task_count": 4,
+            "uncovered_target_mass": 0.7
+          },
+          {
+            "covered_target_mass": 0.3,
+            "feature_stratum_counts": {
+              "attrs|rare_or_unknown|unknown|clean|single_file|older|issue|clean": 1,
+              "attrs|rare_or_unknown|unknown|clean|single_file|recent|issue|clean": 1,
+              "attrs|rare_or_unknown|unknown|clean|single_file|recent|pull_request|clean": 1,
+              "attrs|validators|unknown|clean|single_file|recent|issue|clean": 1
+            },
+            "mean_l1_distance_to_target_profile": 0.214286,
+            "repo_split": "attrs/H_future",
+            "split": "H_future",
+            "task_count": 4,
+            "uncovered_target_mass": 0.7
+          },
+          {
+            "covered_target_mass": 0.25,
+            "feature_stratum_counts": {
+              "boltons|funcutils|unknown|minor_risk|single_file|older|pull_request|minor_risk": 1,
+              "boltons|funcutils|unknown|minor_risk|single_file|recent|pull_request|minor_risk": 1,
+              "boltons|rare_or_unknown|unknown|minor_risk|single_file|older|pull_request|minor_risk": 1,
+              "boltons|rare_or_unknown|unknown|minor_risk|single_file|recent|pull_request|minor_risk": 1
+            },
+            "mean_l1_distance_to_target_profile": 0.095238,
+            "repo_split": "boltons/B_eval",
+            "split": "B_eval",
+            "task_count": 4,
+            "uncovered_target_mass": 0.75
+          },
+          {
+            "covered_target_mass": 0.25,
+            "feature_stratum_counts": {
+              "boltons|funcutils|unknown|minor_risk|single_file|older|pull_request|minor_risk": 1,
+              "boltons|rare_or_unknown|unknown|minor_risk|multi_file|older|pull_request|minor_risk": 1,
+              "boltons|rare_or_unknown|unknown|minor_risk|single_file|older|pull_request|minor_risk": 1,
+              "boltons|rare_or_unknown|unknown|minor_risk|single_file|recent|pull_request|minor_risk": 1
+            },
+            "mean_l1_distance_to_target_profile": 0.119048,
+            "repo_split": "boltons/H_future",
+            "split": "H_future",
+            "task_count": 4,
+            "uncovered_target_mass": 0.75
+          }
+        ]
+      },
+      "fallback_rule": "fallback_to_uniform_weights_and_record_sparse_support",
+      "hidden_oracle_material_used": false,
+      "outcome_fields_used_for_selection": [],
+      "random_seed_policy": "seeded_deterministic:2026052601",
+      "seed": 2026052601,
+      "selection_inputs": [
+        "candidate task ids",
+        "repo_id",
+        "task_time",
+        "coarse local bakeoff feature schema",
+        "sanitized pre-outcome candidate metadata"
+      ],
+      "split_assignment": {
+        "attrs/B_eval": [
+          "attrs__hist__009",
+          "attrs__hist__035",
+          "attrs__hist__045",
+          "attrs__hist__047"
+        ],
+        "attrs/H_future": [
+          "attrs__hist__032",
+          "attrs__hist__036",
+          "attrs__hist__039",
+          "attrs__hist__041"
+        ],
+        "boltons/B_eval": [
+          "boltons__hist__006",
+          "boltons__hist__007",
+          "boltons__hist__025",
+          "boltons__hist__028"
+        ],
+        "boltons/H_future": [
+          "boltons__hist__013",
+          "boltons__hist__014",
+          "boltons__hist__017",
+          "boltons__hist__031"
+        ]
+      },
+      "status": "evaluated",
+      "task_ids": [
+        "attrs__hist__009",
+        "attrs__hist__032",
+        "attrs__hist__035",
+        "attrs__hist__036",
+        "attrs__hist__039",
+        "attrs__hist__041",
+        "attrs__hist__045",
+        "attrs__hist__047",
+        "boltons__hist__006",
+        "boltons__hist__007",
+        "boltons__hist__013",
+        "boltons__hist__014",
+        "boltons__hist__017",
+        "boltons__hist__025",
+        "boltons__hist__028",
+        "boltons__hist__031"
+      ],
+      "weight_mode": "capped_shrinkage_pending",
+      "weights": {
+        "attrs/B_eval": {
+          "attrs__hist__009": 0.25,
+          "attrs__hist__035": 0.25,
+          "attrs__hist__045": 0.25,
+          "attrs__hist__047": 0.25
+        },
+        "attrs/H_future": {
+          "attrs__hist__032": 0.25,
+          "attrs__hist__036": 0.25,
+          "attrs__hist__039": 0.25,
+          "attrs__hist__041": 0.25
+        },
+        "boltons/B_eval": {
+          "boltons__hist__006": 0.25,
+          "boltons__hist__007": 0.25,
+          "boltons__hist__025": 0.25,
+          "boltons__hist__028": 0.25
+        },
+        "boltons/H_future": {
+          "boltons__hist__013": 0.25,
+          "boltons__hist__014": 0.25,
+          "boltons__hist__017": 0.25,
+          "boltons__hist__031": 0.25
+        }
+      }
+    },
+    {
+      "design_id": "optional_block_plus_prior_difficulty",
+      "design_kind": "skipped_optional_prior_difficulty",
+      "diagnostics": {},
+      "fallback_rule": "skip_when_prior_is_not_leakage_safe",
+      "hidden_oracle_material_used": false,
+      "outcome_fields_used_for_selection": [],
+      "random_seed_policy": "not_applicable",
+      "selection_inputs": [],
+      "skip_reason": "No leakage-safe prior difficulty model is available in committed artifacts for rolling or nested validation.",
+      "split_assignment": {},
+      "status": "skipped",
+      "task_ids": [],
+      "weight_mode": "not_applicable",
+      "weights": {}
+    }
+  ],
+  "diagnostic_seed_variants": {
+    "block_randomized_stratified": [
+      {
+        "design_id": "block_randomized_stratified",
+        "design_kind": "block_randomized_stratified",
+        "diagnostics": {
+          "mean_l1_distance_to_target_profile": 0.167857,
+          "repo_split_diagnostics": [
+            {
+              "covered_target_mass": 0.3,
+              "feature_stratum_counts": {
+                "attrs|rare_or_unknown|unknown|clean|single_file|older|issue|clean": 1,
+                "attrs|rare_or_unknown|unknown|minor_risk|single_file|older|issue|minor_risk": 1,
+                "attrs|validators|unknown|clean|single_file|recent|issue|clean": 1,
+                "attrs|validators|unknown|minor_risk|single_file|recent|pull_request|minor_risk": 1
+              },
+              "mean_l1_distance_to_target_profile": 0.242857,
+              "repo_split": "attrs/B_eval",
+              "split": "B_eval",
+              "task_count": 4,
+              "uncovered_target_mass": 0.7
+            },
+            {
+              "covered_target_mass": 0.3,
+              "feature_stratum_counts": {
+                "attrs|rare_or_unknown|unknown|clean|single_file|older|issue|clean": 1,
+                "attrs|rare_or_unknown|unknown|clean|single_file|recent|issue|clean": 1,
+                "attrs|rare_or_unknown|unknown|clean|single_file|recent|pull_request|clean": 1,
+                "attrs|validators|unknown|clean|single_file|recent|issue|clean": 1
+              },
+              "mean_l1_distance_to_target_profile": 0.214286,
+              "repo_split": "attrs/H_future",
+              "split": "H_future",
+              "task_count": 4,
+              "uncovered_target_mass": 0.7
+            },
+            {
+              "covered_target_mass": 0.25,
+              "feature_stratum_counts": {
+                "boltons|funcutils|unknown|minor_risk|single_file|older|pull_request|minor_risk": 1,
+                "boltons|funcutils|unknown|minor_risk|single_file|recent|pull_request|minor_risk": 1,
+                "boltons|rare_or_unknown|unknown|minor_risk|single_file|older|pull_request|minor_risk": 1,
+                "boltons|rare_or_unknown|unknown|minor_risk|single_file|recent|pull_request|minor_risk": 1
+              },
+              "mean_l1_distance_to_target_profile": 0.095238,
+              "repo_split": "boltons/B_eval",
+              "split": "B_eval",
+              "task_count": 4,
+              "uncovered_target_mass": 0.75
+            },
+            {
+              "covered_target_mass": 0.25,
+              "feature_stratum_counts": {
+                "boltons|funcutils|unknown|minor_risk|single_file|older|pull_request|minor_risk": 1,
+                "boltons|rare_or_unknown|unknown|minor_risk|multi_file|older|pull_request|minor_risk": 1,
+                "boltons|rare_or_unknown|unknown|minor_risk|single_file|older|pull_request|minor_risk": 1,
+                "boltons|rare_or_unknown|unknown|minor_risk|single_file|recent|pull_request|minor_risk": 1
+              },
+              "mean_l1_distance_to_target_profile": 0.119048,
+              "repo_split": "boltons/H_future",
+              "split": "H_future",
+              "task_count": 4,
+              "uncovered_target_mass": 0.75
+            }
+          ]
+        },
+        "fallback_rule": "fallback_to_uniform_weights_and_record_sparse_support",
+        "hidden_oracle_material_used": false,
+        "outcome_fields_used_for_selection": [],
+        "random_seed_policy": "seeded_deterministic:2026052601",
+        "seed": 2026052601,
+        "selection_inputs": [
+          "candidate task ids",
+          "repo_id",
+          "task_time",
+          "coarse local bakeoff feature schema",
+          "sanitized pre-outcome candidate metadata"
+        ],
+        "split_assignment": {
+          "attrs/B_eval": [
+            "attrs__hist__009",
+            "attrs__hist__035",
+            "attrs__hist__045",
+            "attrs__hist__047"
+          ],
+          "attrs/H_future": [
+            "attrs__hist__032",
+            "attrs__hist__036",
+            "attrs__hist__039",
+            "attrs__hist__041"
+          ],
+          "boltons/B_eval": [
+            "boltons__hist__006",
+            "boltons__hist__007",
+            "boltons__hist__025",
+            "boltons__hist__028"
+          ],
+          "boltons/H_future": [
+            "boltons__hist__013",
+            "boltons__hist__014",
+            "boltons__hist__017",
+            "boltons__hist__031"
+          ]
+        },
+        "status": "evaluated",
+        "task_ids": [
+          "attrs__hist__009",
+          "attrs__hist__032",
+          "attrs__hist__035",
+          "attrs__hist__036",
+          "attrs__hist__039",
+          "attrs__hist__041",
+          "attrs__hist__045",
+          "attrs__hist__047",
+          "boltons__hist__006",
+          "boltons__hist__007",
+          "boltons__hist__013",
+          "boltons__hist__014",
+          "boltons__hist__017",
+          "boltons__hist__025",
+          "boltons__hist__028",
+          "boltons__hist__031"
+        ],
+        "weight_mode": "uniform",
+        "weights": {
+          "attrs/B_eval": {
+            "attrs__hist__009": 0.25,
+            "attrs__hist__035": 0.25,
+            "attrs__hist__045": 0.25,
+            "attrs__hist__047": 0.25
+          },
+          "attrs/H_future": {
+            "attrs__hist__032": 0.25,
+            "attrs__hist__036": 0.25,
+            "attrs__hist__039": 0.25,
+            "attrs__hist__041": 0.25
+          },
+          "boltons/B_eval": {
+            "boltons__hist__006": 0.25,
+            "boltons__hist__007": 0.25,
+            "boltons__hist__025": 0.25,
+            "boltons__hist__028": 0.25
+          },
+          "boltons/H_future": {
+            "boltons__hist__013": 0.25,
+            "boltons__hist__014": 0.25,
+            "boltons__hist__017": 0.25,
+            "boltons__hist__031": 0.25
+          }
+        }
+      },
+      {
+        "design_id": "block_randomized_stratified",
+        "design_kind": "block_randomized_stratified",
+        "diagnostics": {
+          "mean_l1_distance_to_target_profile": 0.167857,
+          "repo_split_diagnostics": [
+            {
+              "covered_target_mass": 0.3,
+              "feature_stratum_counts": {
+                "attrs|rare_or_unknown|unknown|clean|single_file|older|issue|clean": 1,
+                "attrs|rare_or_unknown|unknown|minor_risk|single_file|older|issue|minor_risk": 1,
+                "attrs|validators|unknown|clean|single_file|recent|issue|clean": 1,
+                "attrs|validators|unknown|minor_risk|single_file|recent|pull_request|minor_risk": 1
+              },
+              "mean_l1_distance_to_target_profile": 0.242857,
+              "repo_split": "attrs/B_eval",
+              "split": "B_eval",
+              "task_count": 4,
+              "uncovered_target_mass": 0.7
+            },
+            {
+              "covered_target_mass": 0.3,
+              "feature_stratum_counts": {
+                "attrs|rare_or_unknown|unknown|clean|single_file|older|issue|clean": 1,
+                "attrs|rare_or_unknown|unknown|clean|single_file|recent|issue|clean": 1,
+                "attrs|rare_or_unknown|unknown|clean|single_file|recent|pull_request|clean": 1,
+                "attrs|validators|unknown|clean|single_file|recent|issue|clean": 1
+              },
+              "mean_l1_distance_to_target_profile": 0.214286,
+              "repo_split": "attrs/H_future",
+              "split": "H_future",
+              "task_count": 4,
+              "uncovered_target_mass": 0.7
+            },
+            {
+              "covered_target_mass": 0.25,
+              "feature_stratum_counts": {
+                "boltons|funcutils|unknown|minor_risk|single_file|older|pull_request|minor_risk": 1,
+                "boltons|funcutils|unknown|minor_risk|single_file|recent|pull_request|minor_risk": 1,
+                "boltons|rare_or_unknown|unknown|minor_risk|single_file|older|pull_request|minor_risk": 1,
+                "boltons|rare_or_unknown|unknown|minor_risk|single_file|recent|pull_request|minor_risk": 1
+              },
+              "mean_l1_distance_to_target_profile": 0.095238,
+              "repo_split": "boltons/B_eval",
+              "split": "B_eval",
+              "task_count": 4,
+              "uncovered_target_mass": 0.75
+            },
+            {
+              "covered_target_mass": 0.25,
+              "feature_stratum_counts": {
+                "boltons|funcutils|unknown|minor_risk|single_file|older|pull_request|minor_risk": 1,
+                "boltons|rare_or_unknown|unknown|minor_risk|multi_file|older|pull_request|minor_risk": 1,
+                "boltons|rare_or_unknown|unknown|minor_risk|single_file|older|pull_request|minor_risk": 1,
+                "boltons|rare_or_unknown|unknown|minor_risk|single_file|recent|pull_request|minor_risk": 1
+              },
+              "mean_l1_distance_to_target_profile": 0.119048,
+              "repo_split": "boltons/H_future",
+              "split": "H_future",
+              "task_count": 4,
+              "uncovered_target_mass": 0.75
+            }
+          ]
+        },
+        "fallback_rule": "fallback_to_uniform_weights_and_record_sparse_support",
+        "hidden_oracle_material_used": false,
+        "outcome_fields_used_for_selection": [],
+        "random_seed_policy": "seeded_deterministic:2026052602",
+        "seed": 2026052602,
+        "selection_inputs": [
+          "candidate task ids",
+          "repo_id",
+          "task_time",
+          "coarse local bakeoff feature schema",
+          "sanitized pre-outcome candidate metadata"
+        ],
+        "split_assignment": {
+          "attrs/B_eval": [
+            "attrs__hist__009",
+            "attrs__hist__033",
+            "attrs__hist__039",
+            "attrs__hist__045"
+          ],
+          "attrs/H_future": [
+            "attrs__hist__032",
+            "attrs__hist__036",
+            "attrs__hist__041",
+            "attrs__hist__047"
+          ],
+          "boltons/B_eval": [
+            "boltons__hist__013",
+            "boltons__hist__019",
+            "boltons__hist__025",
+            "boltons__hist__031"
+          ],
+          "boltons/H_future": [
+            "boltons__hist__006",
+            "boltons__hist__014",
+            "boltons__hist__017",
+            "boltons__hist__028"
+          ]
+        },
+        "status": "evaluated",
+        "task_ids": [
+          "attrs__hist__009",
+          "attrs__hist__032",
+          "attrs__hist__033",
+          "attrs__hist__036",
+          "attrs__hist__039",
+          "attrs__hist__041",
+          "attrs__hist__045",
+          "attrs__hist__047",
+          "boltons__hist__006",
+          "boltons__hist__013",
+          "boltons__hist__014",
+          "boltons__hist__017",
+          "boltons__hist__019",
+          "boltons__hist__025",
+          "boltons__hist__028",
+          "boltons__hist__031"
+        ],
+        "weight_mode": "uniform",
+        "weights": {
+          "attrs/B_eval": {
+            "attrs__hist__009": 0.25,
+            "attrs__hist__033": 0.25,
+            "attrs__hist__039": 0.25,
+            "attrs__hist__045": 0.25
+          },
+          "attrs/H_future": {
+            "attrs__hist__032": 0.25,
+            "attrs__hist__036": 0.25,
+            "attrs__hist__041": 0.25,
+            "attrs__hist__047": 0.25
+          },
+          "boltons/B_eval": {
+            "boltons__hist__013": 0.25,
+            "boltons__hist__019": 0.25,
+            "boltons__hist__025": 0.25,
+            "boltons__hist__031": 0.25
+          },
+          "boltons/H_future": {
+            "boltons__hist__006": 0.25,
+            "boltons__hist__014": 0.25,
+            "boltons__hist__017": 0.25,
+            "boltons__hist__028": 0.25
+          }
+        }
+      },
+      {
+        "design_id": "block_randomized_stratified",
+        "design_kind": "block_randomized_stratified",
+        "diagnostics": {
+          "mean_l1_distance_to_target_profile": 0.167857,
+          "repo_split_diagnostics": [
+            {
+              "covered_target_mass": 0.3,
+              "feature_stratum_counts": {
+                "attrs|rare_or_unknown|unknown|clean|single_file|older|issue|clean": 1,
+                "attrs|rare_or_unknown|unknown|minor_risk|single_file|older|issue|minor_risk": 1,
+                "attrs|validators|unknown|clean|single_file|recent|issue|clean": 1,
+                "attrs|validators|unknown|minor_risk|single_file|recent|pull_request|minor_risk": 1
+              },
+              "mean_l1_distance_to_target_profile": 0.242857,
+              "repo_split": "attrs/B_eval",
+              "split": "B_eval",
+              "task_count": 4,
+              "uncovered_target_mass": 0.7
+            },
+            {
+              "covered_target_mass": 0.3,
+              "feature_stratum_counts": {
+                "attrs|rare_or_unknown|unknown|clean|single_file|older|issue|clean": 1,
+                "attrs|rare_or_unknown|unknown|clean|single_file|recent|issue|clean": 1,
+                "attrs|rare_or_unknown|unknown|clean|single_file|recent|pull_request|clean": 1,
+                "attrs|validators|unknown|clean|single_file|recent|issue|clean": 1
+              },
+              "mean_l1_distance_to_target_profile": 0.214286,
+              "repo_split": "attrs/H_future",
+              "split": "H_future",
+              "task_count": 4,
+              "uncovered_target_mass": 0.7
+            },
+            {
+              "covered_target_mass": 0.25,
+              "feature_stratum_counts": {
+                "boltons|funcutils|unknown|minor_risk|single_file|older|pull_request|minor_risk": 1,
+                "boltons|funcutils|unknown|minor_risk|single_file|recent|pull_request|minor_risk": 1,
+                "boltons|rare_or_unknown|unknown|minor_risk|single_file|recent|pull_request|minor_risk": 2
+              },
+              "mean_l1_distance_to_target_profile": 0.166667,
+              "repo_split": "boltons/B_eval",
+              "split": "B_eval",
+              "task_count": 4,
+              "uncovered_target_mass": 0.75
+            },
+            {
+              "covered_target_mass": 0.25,
+              "feature_stratum_counts": {
+                "boltons|funcutils|unknown|minor_risk|single_file|older|pull_request|minor_risk": 1,
+                "boltons|rare_or_unknown|unknown|minor_risk|multi_file|older|pull_request|minor_risk": 1,
+                "boltons|rare_or_unknown|unknown|minor_risk|single_file|recent|pull_request|minor_risk": 2
+              },
+              "mean_l1_distance_to_target_profile": 0.047619,
+              "repo_split": "boltons/H_future",
+              "split": "H_future",
+              "task_count": 4,
+              "uncovered_target_mass": 0.75
+            }
+          ]
+        },
+        "fallback_rule": "fallback_to_uniform_weights_and_record_sparse_support",
+        "hidden_oracle_material_used": false,
+        "outcome_fields_used_for_selection": [],
+        "random_seed_policy": "seeded_deterministic:2026052603",
+        "seed": 2026052603,
+        "selection_inputs": [
+          "candidate task ids",
+          "repo_id",
+          "task_time",
+          "coarse local bakeoff feature schema",
+          "sanitized pre-outcome candidate metadata"
+        ],
+        "split_assignment": {
+          "attrs/B_eval": [
+            "attrs__hist__009",
+            "attrs__hist__032",
+            "attrs__hist__039",
+            "attrs__hist__045"
+          ],
+          "attrs/H_future": [
+            "attrs__hist__035",
+            "attrs__hist__036",
+            "attrs__hist__041",
+            "attrs__hist__047"
+          ],
+          "boltons/B_eval": [
+            "boltons__hist__006",
+            "boltons__hist__025",
+            "boltons__hist__026",
+            "boltons__hist__028"
+          ],
+          "boltons/H_future": [
+            "boltons__hist__013",
+            "boltons__hist__014",
+            "boltons__hist__024",
+            "boltons__hist__031"
+          ]
+        },
+        "status": "evaluated",
+        "task_ids": [
+          "attrs__hist__009",
+          "attrs__hist__032",
+          "attrs__hist__035",
+          "attrs__hist__036",
+          "attrs__hist__039",
+          "attrs__hist__041",
+          "attrs__hist__045",
+          "attrs__hist__047",
+          "boltons__hist__006",
+          "boltons__hist__013",
+          "boltons__hist__014",
+          "boltons__hist__024",
+          "boltons__hist__025",
+          "boltons__hist__026",
+          "boltons__hist__028",
+          "boltons__hist__031"
+        ],
+        "weight_mode": "uniform",
+        "weights": {
+          "attrs/B_eval": {
+            "attrs__hist__009": 0.25,
+            "attrs__hist__032": 0.25,
+            "attrs__hist__039": 0.25,
+            "attrs__hist__045": 0.25
+          },
+          "attrs/H_future": {
+            "attrs__hist__035": 0.25,
+            "attrs__hist__036": 0.25,
+            "attrs__hist__041": 0.25,
+            "attrs__hist__047": 0.25
+          },
+          "boltons/B_eval": {
+            "boltons__hist__006": 0.25,
+            "boltons__hist__025": 0.25,
+            "boltons__hist__026": 0.25,
+            "boltons__hist__028": 0.25
+          },
+          "boltons/H_future": {
+            "boltons__hist__013": 0.25,
+            "boltons__hist__014": 0.25,
+            "boltons__hist__024": 0.25,
+            "boltons__hist__031": 0.25
+          }
+        }
+      },
+      {
+        "design_id": "block_randomized_stratified",
+        "design_kind": "block_randomized_stratified",
+        "diagnostics": {
+          "mean_l1_distance_to_target_profile": 0.15,
+          "repo_split_diagnostics": [
+            {
+              "covered_target_mass": 0.3,
+              "feature_stratum_counts": {
+                "attrs|rare_or_unknown|unknown|clean|single_file|older|issue|clean": 1,
+                "attrs|rare_or_unknown|unknown|minor_risk|single_file|older|issue|minor_risk": 1,
+                "attrs|validators|unknown|clean|single_file|recent|issue|clean": 1,
+                "attrs|validators|unknown|minor_risk|single_file|recent|pull_request|minor_risk": 1
+              },
+              "mean_l1_distance_to_target_profile": 0.242857,
+              "repo_split": "attrs/B_eval",
+              "split": "B_eval",
+              "task_count": 4,
+              "uncovered_target_mass": 0.7
+            },
+            {
+              "covered_target_mass": 0.3,
+              "feature_stratum_counts": {
+                "attrs|rare_or_unknown|unknown|clean|single_file|older|issue|clean": 1,
+                "attrs|rare_or_unknown|unknown|clean|single_file|recent|issue|clean": 1,
+                "attrs|rare_or_unknown|unknown|clean|single_file|recent|pull_request|clean": 1,
+                "attrs|validators|unknown|clean|single_file|recent|issue|clean": 1
+              },
+              "mean_l1_distance_to_target_profile": 0.214286,
+              "repo_split": "attrs/H_future",
+              "split": "H_future",
+              "task_count": 4,
+              "uncovered_target_mass": 0.7
+            },
+            {
+              "covered_target_mass": 0.25,
+              "feature_stratum_counts": {
+                "boltons|funcutils|unknown|minor_risk|single_file|older|pull_request|minor_risk": 1,
+                "boltons|funcutils|unknown|minor_risk|single_file|recent|pull_request|minor_risk": 1,
+                "boltons|rare_or_unknown|unknown|minor_risk|single_file|older|pull_request|minor_risk": 1,
+                "boltons|rare_or_unknown|unknown|minor_risk|single_file|recent|pull_request|minor_risk": 1
+              },
+              "mean_l1_distance_to_target_profile": 0.095238,
+              "repo_split": "boltons/B_eval",
+              "split": "B_eval",
+              "task_count": 4,
+              "uncovered_target_mass": 0.75
+            },
+            {
+              "covered_target_mass": 0.25,
+              "feature_stratum_counts": {
+                "boltons|funcutils|unknown|minor_risk|single_file|older|pull_request|minor_risk": 1,
+                "boltons|rare_or_unknown|unknown|minor_risk|multi_file|older|pull_request|minor_risk": 1,
+                "boltons|rare_or_unknown|unknown|minor_risk|single_file|recent|pull_request|minor_risk": 2
+              },
+              "mean_l1_distance_to_target_profile": 0.047619,
+              "repo_split": "boltons/H_future",
+              "split": "H_future",
+              "task_count": 4,
+              "uncovered_target_mass": 0.75
+            }
+          ]
+        },
+        "fallback_rule": "fallback_to_uniform_weights_and_record_sparse_support",
+        "hidden_oracle_material_used": false,
+        "outcome_fields_used_for_selection": [],
+        "random_seed_policy": "seeded_deterministic:2026052604",
+        "seed": 2026052604,
+        "selection_inputs": [
+          "candidate task ids",
+          "repo_id",
+          "task_time",
+          "coarse local bakeoff feature schema",
+          "sanitized pre-outcome candidate metadata"
+        ],
+        "split_assignment": {
+          "attrs/B_eval": [
+            "attrs__hist__009",
+            "attrs__hist__010",
+            "attrs__hist__045",
+            "attrs__hist__047"
+          ],
+          "attrs/H_future": [
+            "attrs__hist__032",
+            "attrs__hist__036",
+            "attrs__hist__039",
+            "attrs__hist__041"
+          ],
+          "boltons/B_eval": [
+            "boltons__hist__006",
+            "boltons__hist__017",
+            "boltons__hist__025",
+            "boltons__hist__031"
+          ],
+          "boltons/H_future": [
+            "boltons__hist__013",
+            "boltons__hist__014",
+            "boltons__hist__020",
+            "boltons__hist__024"
+          ]
+        },
+        "status": "evaluated",
+        "task_ids": [
+          "attrs__hist__009",
+          "attrs__hist__010",
+          "attrs__hist__032",
+          "attrs__hist__036",
+          "attrs__hist__039",
+          "attrs__hist__041",
+          "attrs__hist__045",
+          "attrs__hist__047",
+          "boltons__hist__006",
+          "boltons__hist__013",
+          "boltons__hist__014",
+          "boltons__hist__017",
+          "boltons__hist__020",
+          "boltons__hist__024",
+          "boltons__hist__025",
+          "boltons__hist__031"
+        ],
+        "weight_mode": "uniform",
+        "weights": {
+          "attrs/B_eval": {
+            "attrs__hist__009": 0.25,
+            "attrs__hist__010": 0.25,
+            "attrs__hist__045": 0.25,
+            "attrs__hist__047": 0.25
+          },
+          "attrs/H_future": {
+            "attrs__hist__032": 0.25,
+            "attrs__hist__036": 0.25,
+            "attrs__hist__039": 0.25,
+            "attrs__hist__041": 0.25
+          },
+          "boltons/B_eval": {
+            "boltons__hist__006": 0.25,
+            "boltons__hist__017": 0.25,
+            "boltons__hist__025": 0.25,
+            "boltons__hist__031": 0.25
+          },
+          "boltons/H_future": {
+            "boltons__hist__013": 0.25,
+            "boltons__hist__014": 0.25,
+            "boltons__hist__020": 0.25,
+            "boltons__hist__024": 0.25
+          }
+        }
+      },
+      {
+        "design_id": "block_randomized_stratified",
+        "design_kind": "block_randomized_stratified",
+        "diagnostics": {
+          "mean_l1_distance_to_target_profile": 0.15,
+          "repo_split_diagnostics": [
+            {
+              "covered_target_mass": 0.3,
+              "feature_stratum_counts": {
+                "attrs|rare_or_unknown|unknown|clean|single_file|recent|issue|clean": 1,
+                "attrs|rare_or_unknown|unknown|minor_risk|single_file|older|issue|minor_risk": 1,
+                "attrs|validators|unknown|clean|single_file|recent|issue|clean": 1,
+                "attrs|validators|unknown|minor_risk|single_file|recent|pull_request|minor_risk": 1
+              },
+              "mean_l1_distance_to_target_profile": 0.314286,
+              "repo_split": "attrs/B_eval",
+              "split": "B_eval",
+              "task_count": 4,
+              "uncovered_target_mass": 0.7
+            },
+            {
+              "covered_target_mass": 0.3,
+              "feature_stratum_counts": {
+                "attrs|rare_or_unknown|unknown|clean|single_file|older|issue|clean": 2,
+                "attrs|rare_or_unknown|unknown|clean|single_file|recent|pull_request|clean": 1,
+                "attrs|validators|unknown|clean|single_file|recent|issue|clean": 1
+              },
+              "mean_l1_distance_to_target_profile": 0.142857,
+              "repo_split": "attrs/H_future",
+              "split": "H_future",
+              "task_count": 4,
+              "uncovered_target_mass": 0.7
+            },
+            {
+              "covered_target_mass": 0.25,
+              "feature_stratum_counts": {
+                "boltons|funcutils|unknown|minor_risk|single_file|older|pull_request|minor_risk": 1,
+                "boltons|funcutils|unknown|minor_risk|single_file|recent|pull_request|minor_risk": 1,
+                "boltons|rare_or_unknown|unknown|minor_risk|single_file|older|pull_request|minor_risk": 1,
+                "boltons|rare_or_unknown|unknown|minor_risk|single_file|recent|pull_request|minor_risk": 1
+              },
+              "mean_l1_distance_to_target_profile": 0.095238,
+              "repo_split": "boltons/B_eval",
+              "split": "B_eval",
+              "task_count": 4,
+              "uncovered_target_mass": 0.75
+            },
+            {
+              "covered_target_mass": 0.25,
+              "feature_stratum_counts": {
+                "boltons|funcutils|unknown|minor_risk|single_file|older|pull_request|minor_risk": 1,
+                "boltons|rare_or_unknown|unknown|minor_risk|multi_file|older|pull_request|minor_risk": 1,
+                "boltons|rare_or_unknown|unknown|minor_risk|single_file|recent|pull_request|minor_risk": 2
+              },
+              "mean_l1_distance_to_target_profile": 0.047619,
+              "repo_split": "boltons/H_future",
+              "split": "H_future",
+              "task_count": 4,
+              "uncovered_target_mass": 0.75
+            }
+          ]
+        },
+        "fallback_rule": "fallback_to_uniform_weights_and_record_sparse_support",
+        "hidden_oracle_material_used": false,
+        "outcome_fields_used_for_selection": [],
+        "random_seed_policy": "seeded_deterministic:2026052605",
+        "seed": 2026052605,
+        "selection_inputs": [
+          "candidate task ids",
+          "repo_id",
+          "task_time",
+          "coarse local bakeoff feature schema",
+          "sanitized pre-outcome candidate metadata"
+        ],
+        "split_assignment": {
+          "attrs/B_eval": [
+            "attrs__hist__009",
+            "attrs__hist__041",
+            "attrs__hist__045",
+            "attrs__hist__047"
+          ],
+          "attrs/H_future": [
+            "attrs__hist__032",
+            "attrs__hist__035",
+            "attrs__hist__036",
+            "attrs__hist__039"
+          ],
+          "boltons/B_eval": [
+            "boltons__hist__013",
+            "boltons__hist__017",
+            "boltons__hist__025",
+            "boltons__hist__026"
+          ],
+          "boltons/H_future": [
+            "boltons__hist__006",
+            "boltons__hist__014",
+            "boltons__hist__020",
+            "boltons__hist__028"
+          ]
+        },
+        "status": "evaluated",
+        "task_ids": [
+          "attrs__hist__009",
+          "attrs__hist__032",
+          "attrs__hist__035",
+          "attrs__hist__036",
+          "attrs__hist__039",
+          "attrs__hist__041",
+          "attrs__hist__045",
+          "attrs__hist__047",
+          "boltons__hist__006",
+          "boltons__hist__013",
+          "boltons__hist__014",
+          "boltons__hist__017",
+          "boltons__hist__020",
+          "boltons__hist__025",
+          "boltons__hist__026",
+          "boltons__hist__028"
+        ],
+        "weight_mode": "uniform",
+        "weights": {
+          "attrs/B_eval": {
+            "attrs__hist__009": 0.25,
+            "attrs__hist__041": 0.25,
+            "attrs__hist__045": 0.25,
+            "attrs__hist__047": 0.25
+          },
+          "attrs/H_future": {
+            "attrs__hist__032": 0.25,
+            "attrs__hist__035": 0.25,
+            "attrs__hist__036": 0.25,
+            "attrs__hist__039": 0.25
+          },
+          "boltons/B_eval": {
+            "boltons__hist__013": 0.25,
+            "boltons__hist__017": 0.25,
+            "boltons__hist__025": 0.25,
+            "boltons__hist__026": 0.25
+          },
+          "boltons/H_future": {
+            "boltons__hist__006": 0.25,
+            "boltons__hist__014": 0.25,
+            "boltons__hist__020": 0.25,
+            "boltons__hist__028": 0.25
+          }
+        }
+      }
+    ],
+    "seeded_random_same_budget": [
+      {
+        "design_id": "seeded_random_same_budget",
+        "design_kind": "seeded_random_same_budget",
+        "diagnostics": {
+          "mean_l1_distance_to_target_profile": 0.133333,
+          "repo_split_diagnostics": [
+            {
+              "covered_target_mass": 0.3,
+              "feature_stratum_counts": {
+                "attrs|rare_or_unknown|unknown|clean|single_file|older|issue|clean": 1,
+                "attrs|rare_or_unknown|unknown|clean|single_file|recent|pull_request|clean": 1,
+                "attrs|validators|unknown|clean|single_file|recent|issue|clean": 1,
+                "attrs|validators|unknown|minor_risk|single_file|recent|pull_request|minor_risk": 1
+              },
+              "mean_l1_distance_to_target_profile": 0.242857,
+              "repo_split": "attrs/B_eval",
+              "split": "B_eval",
+              "task_count": 4,
+              "uncovered_target_mass": 0.7
+            },
+            {
+              "covered_target_mass": 0.3,
+              "feature_stratum_counts": {
+                "attrs|rare_or_unknown|unknown|clean|single_file|older|issue|clean": 1,
+                "attrs|rare_or_unknown|unknown|clean|single_file|recent|issue|clean": 1,
+                "attrs|rare_or_unknown|unknown|minor_risk|single_file|older|issue|minor_risk": 1,
+                "attrs|validators|unknown|clean|single_file|recent|issue|clean": 1
+              },
+              "mean_l1_distance_to_target_profile": 0.1,
+              "repo_split": "attrs/H_future",
+              "split": "H_future",
+              "task_count": 4,
+              "uncovered_target_mass": 0.7
+            },
+            {
+              "covered_target_mass": 0.25,
+              "feature_stratum_counts": {
+                "boltons|funcutils|unknown|minor_risk|single_file|older|pull_request|minor_risk": 1,
+                "boltons|funcutils|unknown|minor_risk|single_file|recent|pull_request|minor_risk": 1,
+                "boltons|rare_or_unknown|unknown|minor_risk|single_file|older|pull_request|minor_risk": 1,
+                "boltons|rare_or_unknown|unknown|minor_risk|single_file|recent|pull_request|minor_risk": 1
+              },
+              "mean_l1_distance_to_target_profile": 0.095238,
+              "repo_split": "boltons/B_eval",
+              "split": "B_eval",
+              "task_count": 4,
+              "uncovered_target_mass": 0.75
+            },
+            {
+              "covered_target_mass": 0.25,
+              "feature_stratum_counts": {
+                "boltons|funcutils|unknown|minor_risk|single_file|older|pull_request|minor_risk": 1,
+                "boltons|rare_or_unknown|unknown|minor_risk|single_file|older|pull_request|minor_risk": 2,
+                "boltons|rare_or_unknown|unknown|minor_risk|single_file|recent|pull_request|minor_risk": 1
+              },
+              "mean_l1_distance_to_target_profile": 0.095238,
+              "repo_split": "boltons/H_future",
+              "split": "H_future",
+              "task_count": 4,
+              "uncovered_target_mass": 0.75
+            }
+          ]
+        },
+        "fallback_rule": "fallback_to_uniform_weights_and_record_sparse_support",
+        "hidden_oracle_material_used": false,
+        "outcome_fields_used_for_selection": [],
+        "random_seed_policy": "seeded_deterministic:2026052601",
+        "seed": 2026052601,
+        "selection_inputs": [
+          "candidate task ids",
+          "repo_id",
+          "task_time",
+          "coarse local bakeoff feature schema",
+          "sanitized pre-outcome candidate metadata"
+        ],
+        "split_assignment": {
+          "attrs/B_eval": [
+            "attrs__hist__010",
+            "attrs__hist__036",
+            "attrs__hist__039",
+            "attrs__hist__045"
+          ],
+          "attrs/H_future": [
+            "attrs__hist__009",
+            "attrs__hist__032",
+            "attrs__hist__041",
+            "attrs__hist__047"
+          ],
+          "boltons/B_eval": [
+            "boltons__hist__006",
+            "boltons__hist__007",
+            "boltons__hist__020",
+            "boltons__hist__025"
+          ],
+          "boltons/H_future": [
+            "boltons__hist__013",
+            "boltons__hist__017",
+            "boltons__hist__019",
+            "boltons__hist__031"
+          ]
+        },
+        "status": "evaluated",
+        "task_ids": [
+          "attrs__hist__009",
+          "attrs__hist__010",
+          "attrs__hist__032",
+          "attrs__hist__036",
+          "attrs__hist__039",
+          "attrs__hist__041",
+          "attrs__hist__045",
+          "attrs__hist__047",
+          "boltons__hist__006",
+          "boltons__hist__007",
+          "boltons__hist__013",
+          "boltons__hist__017",
+          "boltons__hist__019",
+          "boltons__hist__020",
+          "boltons__hist__025",
+          "boltons__hist__031"
+        ],
+        "weight_mode": "uniform",
+        "weights": {
+          "attrs/B_eval": {
+            "attrs__hist__010": 0.25,
+            "attrs__hist__036": 0.25,
+            "attrs__hist__039": 0.25,
+            "attrs__hist__045": 0.25
+          },
+          "attrs/H_future": {
+            "attrs__hist__009": 0.25,
+            "attrs__hist__032": 0.25,
+            "attrs__hist__041": 0.25,
+            "attrs__hist__047": 0.25
+          },
+          "boltons/B_eval": {
+            "boltons__hist__006": 0.25,
+            "boltons__hist__007": 0.25,
+            "boltons__hist__020": 0.25,
+            "boltons__hist__025": 0.25
+          },
+          "boltons/H_future": {
+            "boltons__hist__013": 0.25,
+            "boltons__hist__017": 0.25,
+            "boltons__hist__019": 0.25,
+            "boltons__hist__031": 0.25
+          }
+        }
+      },
+      {
+        "design_id": "seeded_random_same_budget",
+        "design_kind": "seeded_random_same_budget",
+        "diagnostics": {
+          "mean_l1_distance_to_target_profile": 0.175,
+          "repo_split_diagnostics": [
+            {
+              "covered_target_mass": 0.3,
+              "feature_stratum_counts": {
+                "attrs|rare_or_unknown|unknown|clean|single_file|older|issue|clean": 2,
+                "attrs|rare_or_unknown|unknown|minor_risk|single_file|older|issue|minor_risk": 1,
+                "attrs|validators|unknown|clean|single_file|recent|issue|clean": 1
+              },
+              "mean_l1_distance_to_target_profile": 0.171429,
+              "repo_split": "attrs/B_eval",
+              "split": "B_eval",
+              "task_count": 4,
+              "uncovered_target_mass": 0.7
+            },
+            {
+              "covered_target_mass": 0.3,
+              "feature_stratum_counts": {
+                "attrs|rare_or_unknown|unknown|clean|single_file|recent|issue|clean": 1,
+                "attrs|rare_or_unknown|unknown|clean|single_file|recent|pull_request|clean": 1,
+                "attrs|validators|unknown|clean|single_file|recent|issue|clean": 1,
+                "attrs|validators|unknown|minor_risk|single_file|recent|pull_request|minor_risk": 1
+              },
+              "mean_l1_distance_to_target_profile": 0.314286,
+              "repo_split": "attrs/H_future",
+              "split": "H_future",
+              "task_count": 4,
+              "uncovered_target_mass": 0.7
+            },
+            {
+              "covered_target_mass": 0.25,
+              "feature_stratum_counts": {
+                "boltons|funcutils|unknown|minor_risk|single_file|older|pull_request|minor_risk": 1,
+                "boltons|rare_or_unknown|unknown|minor_risk|single_file|older|pull_request|minor_risk": 2,
+                "boltons|rare_or_unknown|unknown|minor_risk|single_file|recent|pull_request|minor_risk": 1
+              },
+              "mean_l1_distance_to_target_profile": 0.095238,
+              "repo_split": "boltons/B_eval",
+              "split": "B_eval",
+              "task_count": 4,
+              "uncovered_target_mass": 0.75
+            },
+            {
+              "covered_target_mass": 0.25,
+              "feature_stratum_counts": {
+                "boltons|rare_or_unknown|unknown|minor_risk|multi_file|older|pull_request|minor_risk": 1,
+                "boltons|rare_or_unknown|unknown|minor_risk|single_file|older|pull_request|minor_risk": 1,
+                "boltons|rare_or_unknown|unknown|minor_risk|single_file|recent|pull_request|minor_risk": 2
+              },
+              "mean_l1_distance_to_target_profile": 0.119048,
+              "repo_split": "boltons/H_future",
+              "split": "H_future",
+              "task_count": 4,
+              "uncovered_target_mass": 0.75
+            }
+          ]
+        },
+        "fallback_rule": "fallback_to_uniform_weights_and_record_sparse_support",
+        "hidden_oracle_material_used": false,
+        "outcome_fields_used_for_selection": [],
+        "random_seed_policy": "seeded_deterministic:2026052602",
+        "seed": 2026052602,
+        "selection_inputs": [
+          "candidate task ids",
+          "repo_id",
+          "task_time",
+          "coarse local bakeoff feature schema",
+          "sanitized pre-outcome candidate metadata"
+        ],
+        "split_assignment": {
+          "attrs/B_eval": [
+            "attrs__hist__009",
+            "attrs__hist__032",
+            "attrs__hist__035",
+            "attrs__hist__047"
+          ],
+          "attrs/H_future": [
+            "attrs__hist__036",
+            "attrs__hist__039",
+            "attrs__hist__041",
+            "attrs__hist__045"
+          ],
+          "boltons/B_eval": [
+            "boltons__hist__007",
+            "boltons__hist__013",
+            "boltons__hist__019",
+            "boltons__hist__020"
+          ],
+          "boltons/H_future": [
+            "boltons__hist__014",
+            "boltons__hist__017",
+            "boltons__hist__026",
+            "boltons__hist__031"
+          ]
+        },
+        "status": "evaluated",
+        "task_ids": [
+          "attrs__hist__009",
+          "attrs__hist__032",
+          "attrs__hist__035",
+          "attrs__hist__036",
+          "attrs__hist__039",
+          "attrs__hist__041",
+          "attrs__hist__045",
+          "attrs__hist__047",
+          "boltons__hist__007",
+          "boltons__hist__013",
+          "boltons__hist__014",
+          "boltons__hist__017",
+          "boltons__hist__019",
+          "boltons__hist__020",
+          "boltons__hist__026",
+          "boltons__hist__031"
+        ],
+        "weight_mode": "uniform",
+        "weights": {
+          "attrs/B_eval": {
+            "attrs__hist__009": 0.25,
+            "attrs__hist__032": 0.25,
+            "attrs__hist__035": 0.25,
+            "attrs__hist__047": 0.25
+          },
+          "attrs/H_future": {
+            "attrs__hist__036": 0.25,
+            "attrs__hist__039": 0.25,
+            "attrs__hist__041": 0.25,
+            "attrs__hist__045": 0.25
+          },
+          "boltons/B_eval": {
+            "boltons__hist__007": 0.25,
+            "boltons__hist__013": 0.25,
+            "boltons__hist__019": 0.25,
+            "boltons__hist__020": 0.25
+          },
+          "boltons/H_future": {
+            "boltons__hist__014": 0.25,
+            "boltons__hist__017": 0.25,
+            "boltons__hist__026": 0.25,
+            "boltons__hist__031": 0.25
+          }
+        }
+      },
+      {
+        "design_id": "seeded_random_same_budget",
+        "design_kind": "seeded_random_same_budget",
+        "diagnostics": {
+          "mean_l1_distance_to_target_profile": 0.154762,
+          "repo_split_diagnostics": [
+            {
+              "covered_target_mass": 0.3,
+              "feature_stratum_counts": {
+                "attrs|rare_or_unknown|unknown|clean|single_file|older|issue|clean": 1,
+                "attrs|rare_or_unknown|unknown|clean|single_file|recent|issue|clean": 1,
+                "attrs|rare_or_unknown|unknown|minor_risk|single_file|older|issue|minor_risk": 1,
+                "attrs|validators|unknown|minor_risk|single_file|recent|pull_request|minor_risk": 1
+              },
+              "mean_l1_distance_to_target_profile": 0.2,
+              "repo_split": "attrs/B_eval",
+              "split": "B_eval",
+              "task_count": 4,
+              "uncovered_target_mass": 0.7
+            },
+            {
+              "covered_target_mass": 0.3,
+              "feature_stratum_counts": {
+                "attrs|rare_or_unknown|unknown|clean|single_file|older|issue|clean": 2,
+                "attrs|validators|unknown|clean|single_file|recent|issue|clean": 2
+              },
+              "mean_l1_distance_to_target_profile": 0.228571,
+              "repo_split": "attrs/H_future",
+              "split": "H_future",
+              "task_count": 4,
+              "uncovered_target_mass": 0.7
+            },
+            {
+              "covered_target_mass": 0.25,
+              "feature_stratum_counts": {
+                "boltons|funcutils|unknown|minor_risk|single_file|older|pull_request|minor_risk": 1,
+                "boltons|funcutils|unknown|minor_risk|single_file|recent|pull_request|minor_risk": 1,
+                "boltons|rare_or_unknown|unknown|minor_risk|single_file|older|pull_request|minor_risk": 1,
+                "boltons|rare_or_unknown|unknown|minor_risk|single_file|recent|pull_request|minor_risk": 1
+              },
+              "mean_l1_distance_to_target_profile": 0.095238,
+              "repo_split": "boltons/B_eval",
+              "split": "B_eval",
+              "task_count": 4,
+              "uncovered_target_mass": 0.75
+            },
+            {
+              "covered_target_mass": 0.25,
+              "feature_stratum_counts": {
+                "boltons|funcutils|unknown|minor_risk|single_file|older|pull_request|minor_risk": 1,
+                "boltons|rare_or_unknown|unknown|minor_risk|single_file|recent|pull_request|minor_risk": 3
+              },
+              "mean_l1_distance_to_target_profile": 0.095238,
+              "repo_split": "boltons/H_future",
+              "split": "H_future",
+              "task_count": 4,
+              "uncovered_target_mass": 0.75
+            }
+          ]
+        },
+        "fallback_rule": "fallback_to_uniform_weights_and_record_sparse_support",
+        "hidden_oracle_material_used": false,
+        "outcome_fields_used_for_selection": [],
+        "random_seed_policy": "seeded_deterministic:2026052603",
+        "seed": 2026052603,
+        "selection_inputs": [
+          "candidate task ids",
+          "repo_id",
+          "task_time",
+          "coarse local bakeoff feature schema",
+          "sanitized pre-outcome candidate metadata"
+        ],
+        "split_assignment": {
+          "attrs/B_eval": [
+            "attrs__hist__009",
+            "attrs__hist__010",
+            "attrs__hist__041",
+            "attrs__hist__045"
+          ],
+          "attrs/H_future": [
+            "attrs__hist__032",
+            "attrs__hist__035",
+            "attrs__hist__039",
+            "attrs__hist__047"
+          ],
+          "boltons/B_eval": [
+            "boltons__hist__007",
+            "boltons__hist__013",
+            "boltons__hist__024",
+            "boltons__hist__025"
+          ],
+          "boltons/H_future": [
+            "boltons__hist__006",
+            "boltons__hist__026",
+            "boltons__hist__028",
+            "boltons__hist__031"
+          ]
+        },
+        "status": "evaluated",
+        "task_ids": [
+          "attrs__hist__009",
+          "attrs__hist__010",
+          "attrs__hist__032",
+          "attrs__hist__035",
+          "attrs__hist__039",
+          "attrs__hist__041",
+          "attrs__hist__045",
+          "attrs__hist__047",
+          "boltons__hist__006",
+          "boltons__hist__007",
+          "boltons__hist__013",
+          "boltons__hist__024",
+          "boltons__hist__025",
+          "boltons__hist__026",
+          "boltons__hist__028",
+          "boltons__hist__031"
+        ],
+        "weight_mode": "uniform",
+        "weights": {
+          "attrs/B_eval": {
+            "attrs__hist__009": 0.25,
+            "attrs__hist__010": 0.25,
+            "attrs__hist__041": 0.25,
+            "attrs__hist__045": 0.25
+          },
+          "attrs/H_future": {
+            "attrs__hist__032": 0.25,
+            "attrs__hist__035": 0.25,
+            "attrs__hist__039": 0.25,
+            "attrs__hist__047": 0.25
+          },
+          "boltons/B_eval": {
+            "boltons__hist__007": 0.25,
+            "boltons__hist__013": 0.25,
+            "boltons__hist__024": 0.25,
+            "boltons__hist__025": 0.25
+          },
+          "boltons/H_future": {
+            "boltons__hist__006": 0.25,
+            "boltons__hist__026": 0.25,
+            "boltons__hist__028": 0.25,
+            "boltons__hist__031": 0.25
+          }
+        }
+      },
+      {
+        "design_id": "seeded_random_same_budget",
+        "design_kind": "seeded_random_same_budget",
+        "diagnostics": {
+          "mean_l1_distance_to_target_profile": 0.128572,
+          "repo_split_diagnostics": [
+            {
+              "covered_target_mass": 0.3,
+              "feature_stratum_counts": {
+                "attrs|rare_or_unknown|unknown|clean|single_file|older|issue|clean": 2,
+                "attrs|validators|unknown|clean|single_file|recent|issue|clean": 1,
+                "attrs|validators|unknown|minor_risk|single_file|recent|pull_request|minor_risk": 1
+              },
+              "mean_l1_distance_to_target_profile": 0.1,
+              "repo_split": "attrs/B_eval",
+              "split": "B_eval",
+              "task_count": 4,
+              "uncovered_target_mass": 0.7
+            },
+            {
+              "covered_target_mass": 0.3,
+              "feature_stratum_counts": {
+                "attrs|rare_or_unknown|unknown|clean|single_file|older|issue|clean": 1,
+                "attrs|rare_or_unknown|unknown|clean|single_file|recent|pull_request|clean": 1,
+                "attrs|rare_or_unknown|unknown|minor_risk|single_file|older|issue|minor_risk": 1,
+                "attrs|validators|unknown|clean|single_file|recent|issue|clean": 1
+              },
+              "mean_l1_distance_to_target_profile": 0.057143,
+              "repo_split": "attrs/H_future",
+              "split": "H_future",
+              "task_count": 4,
+              "uncovered_target_mass": 0.7
+            },
+            {
+              "covered_target_mass": 0.25,
+              "feature_stratum_counts": {
+                "boltons|funcutils|unknown|minor_risk|single_file|older|pull_request|minor_risk": 2,
+                "boltons|funcutils|unknown|minor_risk|single_file|recent|pull_request|minor_risk": 1,
+                "boltons|rare_or_unknown|unknown|minor_risk|single_file|recent|pull_request|minor_risk": 1
+              },
+              "mean_l1_distance_to_target_profile": 0.166667,
+              "repo_split": "boltons/B_eval",
+              "split": "B_eval",
+              "task_count": 4,
+              "uncovered_target_mass": 0.75
+            },
+            {
+              "covered_target_mass": 0.25,
+              "feature_stratum_counts": {
+                "boltons|rare_or_unknown|unknown|minor_risk|multi_file|older|pull_request|minor_risk": 1,
+                "boltons|rare_or_unknown|unknown|minor_risk|single_file|older|pull_request|minor_risk": 2,
+                "boltons|rare_or_unknown|unknown|minor_risk|single_file|recent|pull_request|minor_risk": 1
+              },
+              "mean_l1_distance_to_target_profile": 0.190476,
+              "repo_split": "boltons/H_future",
+              "split": "H_future",
+              "task_count": 4,
+              "uncovered_target_mass": 0.75
+            }
+          ]
+        },
+        "fallback_rule": "fallback_to_uniform_weights_and_record_sparse_support",
+        "hidden_oracle_material_used": false,
+        "outcome_fields_used_for_selection": [],
+        "random_seed_policy": "seeded_deterministic:2026052604",
+        "seed": 2026052604,
+        "selection_inputs": [
+          "candidate task ids",
+          "repo_id",
+          "task_time",
+          "coarse local bakeoff feature schema",
+          "sanitized pre-outcome candidate metadata"
+        ],
+        "split_assignment": {
+          "attrs/B_eval": [
+            "attrs__hist__010",
+            "attrs__hist__033",
+            "attrs__hist__039",
+            "attrs__hist__045"
+          ],
+          "attrs/H_future": [
+            "attrs__hist__009",
+            "attrs__hist__032",
+            "attrs__hist__036",
+            "attrs__hist__047"
+          ],
+          "boltons/B_eval": [
+            "boltons__hist__006",
+            "boltons__hist__013",
+            "boltons__hist__024",
+            "boltons__hist__025"
+          ],
+          "boltons/H_future": [
+            "boltons__hist__007",
+            "boltons__hist__014",
+            "boltons__hist__019",
+            "boltons__hist__020"
+          ]
+        },
+        "status": "evaluated",
+        "task_ids": [
+          "attrs__hist__009",
+          "attrs__hist__010",
+          "attrs__hist__032",
+          "attrs__hist__033",
+          "attrs__hist__036",
+          "attrs__hist__039",
+          "attrs__hist__045",
+          "attrs__hist__047",
+          "boltons__hist__006",
+          "boltons__hist__007",
+          "boltons__hist__013",
+          "boltons__hist__014",
+          "boltons__hist__019",
+          "boltons__hist__020",
+          "boltons__hist__024",
+          "boltons__hist__025"
+        ],
+        "weight_mode": "uniform",
+        "weights": {
+          "attrs/B_eval": {
+            "attrs__hist__010": 0.25,
+            "attrs__hist__033": 0.25,
+            "attrs__hist__039": 0.25,
+            "attrs__hist__045": 0.25
+          },
+          "attrs/H_future": {
+            "attrs__hist__009": 0.25,
+            "attrs__hist__032": 0.25,
+            "attrs__hist__036": 0.25,
+            "attrs__hist__047": 0.25
+          },
+          "boltons/B_eval": {
+            "boltons__hist__006": 0.25,
+            "boltons__hist__013": 0.25,
+            "boltons__hist__024": 0.25,
+            "boltons__hist__025": 0.25
+          },
+          "boltons/H_future": {
+            "boltons__hist__007": 0.25,
+            "boltons__hist__014": 0.25,
+            "boltons__hist__019": 0.25,
+            "boltons__hist__020": 0.25
+          }
+        }
+      },
+      {
+        "design_id": "seeded_random_same_budget",
+        "design_kind": "seeded_random_same_budget",
+        "diagnostics": {
+          "mean_l1_distance_to_target_profile": 0.110714,
+          "repo_split_diagnostics": [
+            {
+              "covered_target_mass": 0.3,
+              "feature_stratum_counts": {
+                "attrs|rare_or_unknown|unknown|clean|single_file|older|issue|clean": 1,
+                "attrs|rare_or_unknown|unknown|clean|single_file|recent|pull_request|clean": 1,
+                "attrs|rare_or_unknown|unknown|minor_risk|single_file|older|issue|minor_risk": 1,
+                "attrs|validators|unknown|clean|single_file|recent|issue|clean": 1
+              },
+              "mean_l1_distance_to_target_profile": 0.057143,
+              "repo_split": "attrs/B_eval",
+              "split": "B_eval",
+              "task_count": 4,
+              "uncovered_target_mass": 0.7
+            },
+            {
+              "covered_target_mass": 0.3,
+              "feature_stratum_counts": {
+                "attrs|rare_or_unknown|unknown|clean|single_file|older|issue|clean": 1,
+                "attrs|rare_or_unknown|unknown|clean|single_file|recent|issue|clean": 1,
+                "attrs|validators|unknown|clean|single_file|recent|issue|clean": 1,
+                "attrs|validators|unknown|minor_risk|single_file|recent|pull_request|minor_risk": 1
+              },
+              "mean_l1_distance_to_target_profile": 0.171429,
+              "repo_split": "attrs/H_future",
+              "split": "H_future",
+              "task_count": 4,
+              "uncovered_target_mass": 0.7
+            },
+            {
+              "covered_target_mass": 0.25,
+              "feature_stratum_counts": {
+                "boltons|rare_or_unknown|unknown|minor_risk|single_file|older|pull_request|minor_risk": 2,
+                "boltons|rare_or_unknown|unknown|minor_risk|single_file|recent|pull_request|minor_risk": 2
+              },
+              "mean_l1_distance_to_target_profile": 0.095238,
+              "repo_split": "boltons/B_eval",
+              "split": "B_eval",
+              "task_count": 4,
+              "uncovered_target_mass": 0.75
+            },
+            {
+              "covered_target_mass": 0.25,
+              "feature_stratum_counts": {
+                "boltons|funcutils|unknown|minor_risk|single_file|older|pull_request|minor_risk": 1,
+                "boltons|funcutils|unknown|minor_risk|single_file|recent|pull_request|minor_risk": 1,
+                "boltons|rare_or_unknown|unknown|minor_risk|multi_file|older|pull_request|minor_risk": 1,
+                "boltons|rare_or_unknown|unknown|minor_risk|single_file|recent|pull_request|minor_risk": 1
+              },
+              "mean_l1_distance_to_target_profile": 0.119048,
+              "repo_split": "boltons/H_future",
+              "split": "H_future",
+              "task_count": 4,
+              "uncovered_target_mass": 0.75
+            }
+          ]
+        },
+        "fallback_rule": "fallback_to_uniform_weights_and_record_sparse_support",
+        "hidden_oracle_material_used": false,
+        "outcome_fields_used_for_selection": [],
+        "random_seed_policy": "seeded_deterministic:2026052605",
+        "seed": 2026052605,
+        "selection_inputs": [
+          "candidate task ids",
+          "repo_id",
+          "task_time",
+          "coarse local bakeoff feature schema",
+          "sanitized pre-outcome candidate metadata"
+        ],
+        "split_assignment": {
+          "attrs/B_eval": [
+            "attrs__hist__009",
+            "attrs__hist__010",
+            "attrs__hist__036",
+            "attrs__hist__047"
+          ],
+          "attrs/H_future": [
+            "attrs__hist__035",
+            "attrs__hist__039",
+            "attrs__hist__041",
+            "attrs__hist__045"
+          ],
+          "boltons/B_eval": [
+            "boltons__hist__007",
+            "boltons__hist__017",
+            "boltons__hist__024",
+            "boltons__hist__026"
+          ],
+          "boltons/H_future": [
+            "boltons__hist__006",
+            "boltons__hist__014",
+            "boltons__hist__020",
+            "boltons__hist__025"
+          ]
+        },
+        "status": "evaluated",
+        "task_ids": [
+          "attrs__hist__009",
+          "attrs__hist__010",
+          "attrs__hist__035",
+          "attrs__hist__036",
+          "attrs__hist__039",
+          "attrs__hist__041",
+          "attrs__hist__045",
+          "attrs__hist__047",
+          "boltons__hist__006",
+          "boltons__hist__007",
+          "boltons__hist__014",
+          "boltons__hist__017",
+          "boltons__hist__020",
+          "boltons__hist__024",
+          "boltons__hist__025",
+          "boltons__hist__026"
+        ],
+        "weight_mode": "uniform",
+        "weights": {
+          "attrs/B_eval": {
+            "attrs__hist__009": 0.25,
+            "attrs__hist__010": 0.25,
+            "attrs__hist__036": 0.25,
+            "attrs__hist__047": 0.25
+          },
+          "attrs/H_future": {
+            "attrs__hist__035": 0.25,
+            "attrs__hist__039": 0.25,
+            "attrs__hist__041": 0.25,
+            "attrs__hist__045": 0.25
+          },
+          "boltons/B_eval": {
+            "boltons__hist__007": 0.25,
+            "boltons__hist__017": 0.25,
+            "boltons__hist__024": 0.25,
+            "boltons__hist__026": 0.25
+          },
+          "boltons/H_future": {
+            "boltons__hist__006": 0.25,
+            "boltons__hist__014": 0.25,
+            "boltons__hist__020": 0.25,
+            "boltons__hist__025": 0.25
+          }
+        }
+      }
+    ]
+  },
+  "generated_at": "2026-05-26T06:12:09Z",
+  "new_paid_acut_calls_made": false,
+  "new_paid_llm_calls_made": false,
+  "run_id": "phase1_local_algorithm_bakeoff_20260526",
+  "schema_version": "barcarolle.phase1_local_algorithm_bakeoff_output.v1",
+  "selection_policy": {
+    "hidden_oracle_material_used": false,
+    "old_weighted_design_role": "baseline_reference_only",
+    "outcome_fields_used_for_selection": [],
+    "raw_transcripts_used": false
+  },
+  "status": "pass"
+}
