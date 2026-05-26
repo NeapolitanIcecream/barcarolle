@@ -7,7 +7,7 @@ Updated: `2026-05-26T03:36:22Z`.
 
 - Step 0: `completed` - Preflight And Approval Record; commit target `Record weighted design paid pilot preflight`.
 - Step 1: `completed` - Build Frozen Pilot Matrix And Package Inspection; commit target `Build weighted design paid pilot matrix`.
-- Step 2: `pending` - Tooling, Endpoint, And Entry Gate; commit target `Record weighted design paid pilot entry gate`.
+- Step 2: `completed` - Tooling, Endpoint, And Entry Gate; commit target `Record weighted design paid pilot entry gate`.
 - Step 3: `pending` - Run Paid Smoke Batch; commit target `Run weighted design paid pilot smoke batch`.
 - Step 4: `pending` - Run Remaining Attrs Paid Cells; commit target `Run weighted design paid pilot attrs cells`.
 - Step 5: `pending` - Run Remaining Boltons Paid Cells; commit target `Run weighted design paid pilot boltons cells`.
