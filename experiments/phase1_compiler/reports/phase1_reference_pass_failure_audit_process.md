@@ -42,3 +42,18 @@ Completed on 2026-05-26.
 - Command-contract audit found that replay uses the target workspace and editable install, but setup/import/collection/assertion failures are all currently recorded under the broad `reference_pass` gate.
 - Environment audit grouped the sampled failures as dependency version drift, pytest config incompatibility, and Python-version drift.
 - Raw replay logs remained under ignored scratch paths.
+
+## Steps 7-9: Reclassification And Closeout
+
+Completed on 2026-05-26.
+
+- No local validation-code bug was found in the sampled evidence, so no production replay fix was applied.
+- Reclassified all 76 `reference_pass` failures into the audit taxonomy. The 12 sampled failures were classified from replay evidence; 64 unsampled unique signatures remain `unclassified_reference_fail`.
+- The supply blocker remains: audited evidence did not add eligible tasks, leaving `attrs=10` and `boltons=15` eligible from the prior expansion.
+- Did not draft a follow-up runbook.
+
+Verification:
+
+- `uv run --project experiments/phase1_compiler pytest experiments/phase1_compiler/tests/test_phase1_reference_pass_failure_audit.py experiments/phase1_compiler/tests/test_phase1_two_repo_certified_supply_expansion.py -q`: passed, 13 tests.
+- `uv run --project experiments/phase1_compiler pytest experiments/phase1_compiler/tests -q`: passed, 178 tests.
+- `git diff --check`: passed.

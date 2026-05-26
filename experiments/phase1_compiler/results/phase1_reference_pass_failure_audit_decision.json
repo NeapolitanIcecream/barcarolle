@@ -1,0 +1,86 @@
+{
+  "after_audited_reclassification": {
+    "candidates_eligible_after_validation_code_fix": 0,
+    "candidates_needing_environment_synthesis_repair": 12,
+    "candidates_needing_remine_or_exclusion": 0,
+    "candidates_still_blocked": 76
+  },
+  "before": {
+    "attrs_eligible_total": 10,
+    "boltons_eligible_total": 15,
+    "reference_pass_failures": 76
+  },
+  "claims": [
+    "reference_pass_failure_audit_completed",
+    "reference_pass_failure_inventory_completed",
+    "reference_replay_reproduction_completed",
+    "command_contract_audit_completed",
+    "environment_drift_audit_completed",
+    "patch_application_audit_completed",
+    "local_validation_bug_not_found",
+    "reference_pass_failures_reclassified",
+    "paid_replication_not_run",
+    "new_paid_acut_cells_not_run",
+    "reference_pass_failures_remain_unexplained"
+  ],
+  "command_contract_findings": [
+    {
+      "finding": "reference replay uses the target workspace and editable install",
+      "points_to": "local_validation_bug_not_found"
+    },
+    {
+      "finding": "reference replay records every nonzero target command as reference_pass failure without separating install or collection failures",
+      "points_to": "historical_environment_model_gap"
+    },
+    {
+      "finding": "command_template contains a repo-root-relative --project path, so cwd variants must absolutize --project before they are meaningful",
+      "points_to": "command_contract_cwd_coupling"
+    }
+  ],
+  "environment_label_counts": {
+    "dependency_version_drift": 1,
+    "pytest_collection_or_config_error": 5,
+    "python_version_drift": 6
+  },
+  "generated_at": "2026-05-26T08:20:53Z",
+  "local_validation_code_bug_found": false,
+  "paid_acut_calls_made": false,
+  "paid_llm_calls_made": false,
+  "patch_mismatch_counts": {
+    "no_mismatch": 12
+  },
+  "recommended_next_action_categories": [
+    "design_historical_environment_synthesis_or_reclassification_policy",
+    "sample_more_unique_failure_signatures_before_overclaiming",
+    "continue_new_repo_screen_if_counts_remain_below_30"
+  ],
+  "reference_pass_failures": 76,
+  "root_cause_counts": {
+    "dependency_version_drift": 1,
+    "pytest_collection_or_config_error": 5,
+    "python_version_drift": 6,
+    "unclassified_reference_fail": 64
+  },
+  "run_id": "phase1_reference_pass_failure_audit_20260526",
+  "sampled_replays": 12,
+  "schema_version": "barcarolle.phase1_reference_pass_failure_audit.v1.decision.v1",
+  "status": "completed",
+  "supply_decision": "two_repo_supply_blocker_still_exists_screen_new_repo",
+  "verification": [
+    {
+      "command": "uv run --project experiments/phase1_compiler pytest experiments/phase1_compiler/tests/test_phase1_reference_pass_failure_audit.py experiments/phase1_compiler/tests/test_phase1_two_repo_certified_supply_expansion.py -q",
+      "result": "pass",
+      "summary": "13 passed in 0.02s"
+    },
+    {
+      "command": "uv run --project experiments/phase1_compiler pytest experiments/phase1_compiler/tests -q",
+      "result": "pass",
+      "summary": "178 passed in 38.32s"
+    },
+    {
+      "command": "git diff --check",
+      "result": "pass",
+      "summary": "no whitespace errors"
+    }
+  ]
+}

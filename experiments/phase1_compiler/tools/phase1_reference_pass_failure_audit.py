@@ -1206,7 +1206,7 @@ def decision_report(payload: dict[str, Any]) -> str:
         "",
         f"1. Was there a local validation-code bug? {bug_answer}",
         f"2. If yes, what was fixed and how was it tested? No production validation fix was applied in this run; the audit tool tests cover parsing, classification, and raw-output redaction.",
-        f"3. If no, what is the main reason reference_pass failed so often? The sampled evidence points mainly to historical environment/dependency drift and target-commit instability, with remaining unsampled signatures kept as unknown.",
+        f"3. If no, what is the main reason reference_pass failed so often? The sampled evidence points to historical environment model gaps: dependency version drift, pytest config incompatibility, and Python-version drift. Unsampled unique signatures remain unknown.",
         f"4. How many tasks changed category? {payload['reference_pass_failures']} reference-pass failures were reclassified from a single gate label into the taxonomy counts below.",
         f"5. Does this reopen attrs/boltons supply expansion? {payload['supply_decision']}.",
         "6. What should the coordinating session decide next? Use the categories below; no follow-up runbook was drafted by this worker.",
