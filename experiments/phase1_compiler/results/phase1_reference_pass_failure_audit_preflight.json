@@ -1,0 +1,61 @@
+{
+  "agent_rules_read": [
+    "AGENTS.md",
+    "docs/experiments/phase-1-reference-pass-failure-audit-runbook.md"
+  ],
+  "branch": "codex/restart-benchmark-compiler",
+  "claims": [
+    "paid_replication_not_run",
+    "new_paid_acut_cells_not_run"
+  ],
+  "current_reference_pass_failure_counts": {
+    "attrs": 54,
+    "boltons": 22
+  },
+  "generated_at": "2026-05-26T08:08:34Z",
+  "git_head": "a56c0510741b77e8d054cb5cf34c24bb3db2d164",
+  "git_status_short": "",
+  "guardrails": {
+    "hidden_oracle_material_used": false,
+    "paid_acut_calls": "disabled",
+    "paid_llm_calls": "disabled",
+    "paid_replication": "disabled",
+    "paid_task_solving_calls": "disabled",
+    "raw_acut_transcripts_used": false,
+    "raw_prompts_or_completions_used": false,
+    "solver_workspaces_used": false,
+    "verifier_workspaces_used": false
+  },
+  "input_presence": {
+    "missing": [],
+    "present_count": 20
+  },
+  "local_time": "2026-05-26T16:08:34+0800",
+  "python_version": "Python 3.9.6",
+  "run_id": "phase1_reference_pass_failure_audit_20260526",
+  "schema_version": "barcarolle.phase1_reference_pass_failure_audit.preflight.v1",
+  "status": "preflight_passed",
+  "summary_by_repo": {
+    "attrs": {
+      "attempt_count": 69,
+      "first_failing_gate_counts": {
+        "no_op_fail": 1,
+        "none": 10,
+        "reference_pass": 54,
+        "solution_leakage_review": 4
+      },
+      "ready_count": 10
+    },
+    "boltons": {
+      "attempt_count": 55,
+      "first_failing_gate_counts": {
+        "checkout": 16,
+        "none": 15,
+        "reference_pass": 22,
+        "solution_leakage_review": 2
+      },
+      "ready_count": 15
+    }
+  },
+  "uv_version": "uv 0.11.16 (Homebrew 2026-05-21 aarch64-apple-darwin)"
+}
