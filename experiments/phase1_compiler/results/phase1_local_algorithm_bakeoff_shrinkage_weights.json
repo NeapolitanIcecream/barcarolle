@@ -1,0 +1,152 @@
+{
+  "analysis_schema": "shrinkage_weights.v1",
+  "generated_at": "2026-05-26T06:12:49Z",
+  "interpretation": "Capped shrinkage mostly falls back to uniform weights under sparse support; old weighted pilot weights remain reference-only.",
+  "new_paid_acut_calls_made": false,
+  "new_paid_llm_calls_made": false,
+  "run_id": "phase1_local_algorithm_bakeoff_20260526",
+  "schema_version": "barcarolle.phase1_local_algorithm_bakeoff_output.v1",
+  "status": "pass",
+  "weight_gate": {
+    "fallback_rule": "uniform_fallback_when_infeasible_or_no_imbalance_improvement",
+    "max_weight_rule": "max_weight <= 2 / n_selected",
+    "min_ESS_ratio": 0.7,
+    "sum_weights_equals_one": true
+  },
+  "weighted_candidates": [
+    {
+      "candidate_id": "block_plus_shrinkage_weighted",
+      "diagnostics_by_repo_split": {
+        "attrs/B_eval": {
+          "ESS": 4.0,
+          "ESS_ratio": 1.0,
+          "fallback_reason": "capped_raking_did_not_materially_improve_target_imbalance_under_sparse_support",
+          "max_weight": 0.25,
+          "max_weight_allowed": 0.5,
+          "target_imbalance_after_weighting": 0.242857,
+          "target_imbalance_before_weighting": 0.242857,
+          "weight_status": "uniform_fallback"
+        },
+        "attrs/H_future": {
+          "ESS": 4.0,
+          "ESS_ratio": 1.0,
+          "fallback_reason": "capped_raking_did_not_materially_improve_target_imbalance_under_sparse_support",
+          "max_weight": 0.25,
+          "max_weight_allowed": 0.5,
+          "target_imbalance_after_weighting": 0.214286,
+          "target_imbalance_before_weighting": 0.214286,
+          "weight_status": "uniform_fallback"
+        },
+        "boltons/B_eval": {
+          "ESS": 3.2,
+          "ESS_ratio": 0.8,
+          "fallback_reason": null,
+          "max_weight": 0.375,
+          "max_weight_allowed": 0.5,
+          "target_imbalance_after_weighting": 0.023809,
+          "target_imbalance_before_weighting": 0.095238,
+          "weight_status": "optimized"
+        },
+        "boltons/H_future": {
+          "ESS": 2.88,
+          "ESS_ratio": 0.72,
+          "fallback_reason": null,
+          "max_weight": 0.5,
+          "max_weight_allowed": 0.5,
+          "target_imbalance_after_weighting": 0.0,
+          "target_imbalance_before_weighting": 0.119048,
+          "weight_status": "optimized"
+        }
+      },
+      "status": "uniform_fallback",
+      "weight_mode": "capped_shrinkage",
+      "weights_by_repo_split": {
+        "attrs/B_eval": {
+          "attrs__hist__009": 0.25,
+          "attrs__hist__035": 0.25,
+          "attrs__hist__045": 0.25,
+          "attrs__hist__047": 0.25
+        },
+        "attrs/H_future": {
+          "attrs__hist__032": 0.25,
+          "attrs__hist__036": 0.25,
+          "attrs__hist__039": 0.25,
+          "attrs__hist__041": 0.25
+        },
+        "boltons/B_eval": {
+          "boltons__hist__006": 0.125,
+          "boltons__hist__007": 0.375,
+          "boltons__hist__025": 0.125,
+          "boltons__hist__028": 0.375
+        },
+        "boltons/H_future": {
+          "boltons__hist__013": 0.2499999994,
+          "boltons__hist__014": 0.0833329998,
+          "boltons__hist__017": 0.1666670008,
+          "boltons__hist__031": 0.5
+        }
+      }
+    },
+    {
+      "candidate_id": "old_weighted_target_profile",
+      "diagnostics_by_repo_split": {
+        "attrs/B_eval": {
+          "ESS": 3.810618,
+          "ESS_ratio": 0.952655,
+          "max_weight": 0.31355932,
+          "max_weight_allowed": 0.5,
+          "weight_status": "existing_reference_weight"
+        },
+        "attrs/H_future": {
+          "ESS": 3.538754,
+          "ESS_ratio": 0.884689,
+          "max_weight": 0.33606555,
+          "max_weight_allowed": 0.5,
+          "weight_status": "existing_reference_weight"
+        },
+        "boltons/B_eval": {
+          "ESS": 3.995576,
+          "ESS_ratio": 0.998894,
+          "max_weight": 0.25954198,
+          "max_weight_allowed": 0.5,
+          "weight_status": "existing_reference_weight"
+        },
+        "boltons/H_future": {
+          "ESS": 3.995576,
+          "ESS_ratio": 0.998894,
+          "max_weight": 0.25954198,
+          "max_weight_allowed": 0.5,
+          "weight_status": "existing_reference_weight"
+        }
+      },
+      "status": "reference_only",
+      "weight_mode": "existing_pre_paid_release_weights_reference_only",
+      "weights_by_repo_split": {
+        "attrs/B_eval": {
+          "attrs__hist__009": 0.16949147,
+          "attrs__hist__032": 0.31355932,
+          "attrs__hist__036": 0.22881366,
+          "attrs__hist__047": 0.28813555
+        },
+        "attrs/H_future": {
+          "attrs__hist__010": 0.27868849,
+          "attrs__hist__033": 0.28688528,
+          "attrs__hist__035": 0.33606555,
+          "attrs__hist__045": 0.09836069
+        },
+        "boltons/B_eval": {
+          "boltons__hist__006": 0.2519084,
+          "boltons__hist__019": 0.23664122,
+          "boltons__hist__024": 0.2519084,
+          "boltons__hist__028": 0.25954198
+        },
+        "boltons/H_future": {
+          "boltons__hist__007": 0.23664122,
+          "boltons__hist__013": 0.2519084,
+          "boltons__hist__026": 0.2519084,
+          "boltons__hist__031": 0.25954198
+        }
+      }
+    }
+  ]
+}
