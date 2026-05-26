@@ -739,6 +739,10 @@ def load_workspace_matrix_config(root: Path, matrix_config_path: Path | str | No
 
 
 def matrix_task_ids(config: dict[str, Any]) -> list[str]:
+    raw_task_ids = config.get("task_ids")
+    if isinstance(raw_task_ids, list):
+        return [str(item) for item in raw_task_ids]
+
     repo_splits = config.get("repo_splits") if isinstance(config.get("repo_splits"), dict) else {}
     if repo_splits:
         ordered: list[str] = []
@@ -1070,6 +1074,134 @@ def statement_hardened_verifier_command(
     return with_editable_current_worktree(absolute_uv_project(command_test_files(command_template, test_files), exp))
 
 
+def pilot_implementation_files(raw: dict[str, Any]) -> list[str]:
+    if raw.get("code_files"):
+        return sorted(str(path) for path in raw["code_files"])
+    if raw.get("editable_paths"):
+        return sorted(str(path) for path in raw["editable_paths"])
+    changed = [str(path) for path in raw.get("changed_files", [])]
+    return sorted(path for path in changed if path.endswith(".py") and not is_test_path(path))
+
+
+def pilot_module_label(path: str) -> str:
+    label = path
+    if label.endswith(".pyi"):
+        label = label[:-4]
+    elif label.endswith(".py"):
+        label = label[:-3]
+    for prefix in ("src/", "boltons/", "toolz/"):
+        if label.startswith(prefix):
+            label = label[len(prefix) :]
+    return label.replace("/", ".")
+
+
+def pilot_module_list(raw: dict[str, Any], impl_files: list[str]) -> list[str]:
+    modules = raw.get("module_or_package") or raw.get("module_or_package_list") or raw.get("api_surface_touched")
+    if modules:
+        if isinstance(modules, str):
+            return [modules]
+        return [str(item) for item in modules]
+    return [pilot_module_label(path) for path in impl_files] or ["unknown_module"]
+
+
+def phase1_paid_pilot_statement_text(raw: dict[str, Any], inventory_row: dict[str, Any]) -> str:
+    if raw.get("solver_facing_statement"):
+        return str(raw["solver_facing_statement"])
+    context = raw.get("sanitized_context") or {}
+    summary = context.get("summary") or raw.get("subject") or "certified repository task"
+    modules = ", ".join(pilot_module_list({**raw, **inventory_row}, pilot_implementation_files({**raw, **inventory_row})))
+    return f"Repair the {inventory_row.get('repo_id', raw.get('repo_id', 'repository'))} behavior described by the public context summary: {summary}. Focus on the {modules} module and preserve existing public behavior."
+
+
+def load_phase1_weighted_design_paid_pilot_packages(root: Path, matrix_config_path: Path | str | None = None) -> list[TaskPackage]:
+    config = load_workspace_matrix_config(root, matrix_config_path)
+    if not config or not config.get("phase1_weighted_design_paid_pilot"):
+        return []
+
+    exp = phase0_root(root)
+    inventory_path = config_path(root, config["candidate_inventory"])
+    inventory = read_json(inventory_path)
+    inventory_by_id = {str(row["task_id"]): row for row in inventory.get("rows", []) if row.get("task_id")}
+    certified_by_id = statement_hardened_certified_rows(config, root)
+    split_by_id = split_for_matrix_task(config)
+    selected_ids = matrix_task_ids(config)
+    attrs_profile = statement_hardened_attrs_profile(root, exp, config)
+    boltons_profile_path = config_path(root, config.get("boltons_target_profile", EXP_REL / "target_profiles" / "boltons_target_profile.json"))
+    boltons_profile = read_json(boltons_profile_path) if boltons_profile_path.exists() else {}
+
+    packages: list[TaskPackage] = []
+    for task_id in selected_ids:
+        inventory_row = inventory_by_id.get(task_id)
+        certified_row = certified_by_id.get(task_id)
+        if not (inventory_row and certified_row):
+            continue
+        repo_id = str(inventory_row.get("repo_id") or certified_row.get("repo_id") or task_id.split("__", 1)[0])
+        editable_paths = [str(path) for path in inventory_row.get("editable_paths") or pilot_implementation_files(certified_row)]
+        test_paths = [str(path) for path in inventory_row.get("test_paths") or certified_row.get("test_files", [])]
+        statement = phase1_paid_pilot_statement_text(certified_row, inventory_row)
+        statement_digest = f"sha256:{sha256_text(statement)}"
+        if inventory_row.get("statement_digest") and statement_digest != inventory_row.get("statement_digest"):
+            raise ValueError(f"statement digest mismatch for {task_id}")
+        verifier_command = statement_hardened_verifier_command(
+            certified_row,
+            repo_id,
+            exp,
+            attrs_profile,
+            boltons_profile,
+            test_paths,
+        )
+        source_repo = statement_hardened_source_repo(root, exp, repo_id, attrs_profile, boltons_profile)
+        certified_source_key = (
+            "attrs_certified_tasks"
+            if repo_id == "attrs"
+            else "boltons_clean_ext_certified_tasks"
+            if task_id.startswith("boltons__clean_ext__")
+            else "boltons_canonical_certified_tasks"
+        )
+        metadata = {
+            "allowed_context_refs": certified_row.get("allowed_context_refs") or [],
+            "base_commit": certified_row.get("base_commit") or inventory_row.get("base_commit"),
+            "canonical_repo_split": split_by_id.get(task_id, ""),
+            "canonical_split": split_by_id.get(task_id, "").split("/", 1)[1] if "/" in split_by_id.get(task_id, "") else split_by_id.get(task_id, ""),
+            "changed_files": [str(path) for path in certified_row.get("changed_files", [*editable_paths, *test_paths])],
+            "evidence_level": "phase1_weighted_design_paid_pilot",
+            "metadata_sources": {
+                "certified_tasks": display_path(root, config_path(root, config[certified_source_key])),
+                "candidate_inventory": display_path(root, inventory_path),
+                "workspace_matrix": display_path(root, config_path(root, config.get("_path", matrix_config_path or MATRIX_CONFIG_REL))),
+            },
+            "source_kind": inventory_row.get("source_kind"),
+            "statement_digest": statement_digest,
+            "statement_quality": {
+                "status": inventory_row.get("statement_quality_status"),
+                "risks": inventory_row.get("statement_quality_risks") or [],
+            },
+            "statement_source": inventory_row.get("statement_source"),
+            "task_family_label": inventory_row.get("task_family_label"),
+            "task_time": certified_row.get("task_time") or inventory_row.get("task_time"),
+            "test_files": test_paths,
+            "verifier_command_metadata": inventory_row.get("verifier_command_metadata"),
+        }
+        packages.append(
+            TaskPackage(
+                task_id=task_id,
+                repo_id=repo_id,
+                split=metadata["canonical_split"],
+                source_repo=source_repo,
+                base_commit=str(certified_row.get("base_commit") or inventory_row["base_commit"]),
+                target_commit=str(certified_row.get("target_commit") or ""),
+                solver_facing_statement=statement,
+                verifier_command=verifier_command,
+                allowed_code_paths=editable_paths,
+                test_paths=test_paths,
+                timeout_seconds=180,
+                scope_boundaries="Modify only the listed editable implementation paths; do not edit tests or generated metadata.",
+                metadata=metadata,
+            )
+        )
+    return packages
+
+
 def load_statement_hardened_after_canonical_repair_packages(root: Path, matrix_config_path: Path | str | None = None) -> list[TaskPackage]:
     config = load_workspace_matrix_config(root, matrix_config_path)
     if not config or not config.get("release_manifest"):
@@ -1307,6 +1439,9 @@ def load_second_repo_packages(root: Path) -> list[TaskPackage]:
 
 
 def load_phase0_packages(root: Path, matrix_config_path: Path | str | None = None) -> list[TaskPackage]:
+    paid_pilot_packages = load_phase1_weighted_design_paid_pilot_packages(root, matrix_config_path)
+    if paid_pilot_packages:
+        return paid_pilot_packages
     statement_hardened_packages = load_statement_hardened_after_canonical_repair_packages(root, matrix_config_path)
     if statement_hardened_packages:
         return statement_hardened_packages

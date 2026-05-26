@@ -1,0 +1,90 @@
+schema_version: barcarolle.phase1_weighted_design_paid_pilot.v1
+run_id: phase1_weighted_design_paid_pilot_20260526
+source_run_id: phase1_pre_paid_replication_20260526
+runbook: docs/experiments/phase-1-weighted-design-paid-pilot-replication-runbook.md
+runbook_status: implementation_runbook
+runbook_date: 2026-05-26
+primary_release_candidate_id: barcarolle_weighted_time_family_matched
+local_baseline_candidate_ids:
+  - repo_unweighted_same_budget
+  - repo_stratified_by_target_profile
+historical_reference_candidate_id: prior_statement_hardened_release_as_historical_reference
+planned_adapters:
+  - codex_workspace
+  - kilo_workspace
+result_prefix: phase1_weighted_design_paid_pilot
+primary_gap_threshold: 0.15
+budget:
+  estimated_cost_per_cell_usd: 0.31010985
+  incremental_hard_cap_usd: 25.0
+  stop_before_next_batch_projected_total_cap_usd: 20.0
+  single_batch_projected_cap_usd: 6.0
+  paid_acut_concurrency: 1
+  allow_cross_harness_paid_parallelism: False
+source_artifacts:
+  release_selection: experiments/phase1_compiler/configs/phase1_pre_paid_replication_release_selection.yaml
+  decision: experiments/phase1_compiler/results/phase1_pre_paid_replication_decision.json
+  entry_gate: experiments/phase1_compiler/results/phase1_pre_paid_replication_entry_gate.json
+  release_candidates: experiments/phase1_compiler/results/phase1_pre_paid_replication_release_candidates.json
+  baseline_plan: experiments/phase1_compiler/results/phase1_pre_paid_replication_baseline_plan.json
+  threshold_preregistration: experiments/phase1_compiler/results/phase1_pre_paid_replication_threshold_preregistration.json
+  target_profiles: experiments/phase1_compiler/results/phase1_pre_paid_replication_target_profiles.json
+  statement_quality_gate: experiments/phase1_compiler/results/phase1_pre_paid_replication_statement_quality_gate.json
+  candidate_inventory: experiments/phase1_compiler/results/phase1_pre_paid_replication_candidate_inventory.json
+  historical_metrics: experiments/phase1_compiler/results/phase1_statement_hardened_after_canonical_repair_paid_metrics.json
+  historical_decision: experiments/phase1_compiler/results/phase1_statement_hardened_after_canonical_repair_paid_decision.json
+required_inputs:
+  - AGENTS.md
+  - docs/architecture/system-design.md
+  - experiments/phase1_compiler/configs/phase1_pre_paid_replication_release_selection.yaml
+  - experiments/phase1_compiler/results/phase1_pre_paid_replication_decision.json
+  - experiments/phase1_compiler/results/phase1_pre_paid_replication_entry_gate.json
+  - experiments/phase1_compiler/results/phase1_pre_paid_replication_release_candidates.json
+  - experiments/phase1_compiler/results/phase1_pre_paid_replication_baseline_plan.json
+  - experiments/phase1_compiler/results/phase1_pre_paid_replication_threshold_preregistration.json
+  - experiments/phase1_compiler/results/phase1_pre_paid_replication_target_profiles.json
+  - experiments/phase1_compiler/results/phase1_pre_paid_replication_statement_quality_gate.json
+  - experiments/phase1_compiler/results/phase1_pre_paid_replication_candidate_inventory.json
+  - experiments/phase0_headroom/certified_tasks/attrs_clean_outcome_unseen_supply_certified_tasks.jsonl
+  - experiments/phase0_headroom/certified_tasks/boltons_certified_tasks.jsonl
+  - experiments/phase0_headroom/certified_tasks/boltons_clean_outcome_unseen_supply_certified_tasks.jsonl
+  - experiments/phase0_headroom/configs/acut_workspace_adapters.yaml
+  - experiments/phase0_headroom/tools/workspace_acut_run.py
+  - experiments/phase0_headroom/tools/workspace_usage_import.py
+historical_reference_inputs:
+  - experiments/phase1_compiler/results/phase1_statement_hardened_after_canonical_repair_paid_metrics.json
+  - experiments/phase1_compiler/results/phase1_statement_hardened_after_canonical_repair_paid_decision.json
+  - experiments/phase0_headroom/results/phase1_statement_hardened_after_canonical_repair_attrs_b_eval_score_table.csv
+  - experiments/phase0_headroom/results/phase1_statement_hardened_after_canonical_repair_attrs_h_future_score_table.csv
+  - experiments/phase0_headroom/results/phase1_statement_hardened_after_canonical_repair_boltons_b_eval_score_table.csv
+  - experiments/phase0_headroom/results/phase1_statement_hardened_after_canonical_repair_boltons_h_future_score_table.csv
+output_paths:
+  config: experiments/phase1_compiler/configs/phase1_weighted_design_paid_pilot.yaml
+  preflight: experiments/phase1_compiler/results/phase1_weighted_design_paid_pilot_preflight.json
+  tooling_check: experiments/phase1_compiler/results/phase1_weighted_design_paid_pilot_tooling_check.json
+  entry_gate: experiments/phase1_compiler/results/phase1_weighted_design_paid_pilot_entry_gate.json
+  batch_plan: experiments/phase1_compiler/results/phase1_weighted_design_paid_pilot_batch_plan.json
+  integrity_audit: experiments/phase1_compiler/results/phase1_weighted_design_paid_pilot_integrity_audit.json
+  metrics: experiments/phase1_compiler/results/phase1_weighted_design_paid_pilot_metrics.json
+  baseline_comparison: experiments/phase1_compiler/results/phase1_weighted_design_paid_pilot_baseline_comparison.json
+  decision: experiments/phase1_compiler/results/phase1_weighted_design_paid_pilot_decision.json
+  process_report: experiments/phase1_compiler/reports/phase1_weighted_design_paid_pilot_process.md
+  preflight_report: experiments/phase1_compiler/reports/phase1_weighted_design_paid_pilot_preflight.md
+  tooling_check_report: experiments/phase1_compiler/reports/phase1_weighted_design_paid_pilot_tooling_check.md
+  entry_gate_report: experiments/phase1_compiler/reports/phase1_weighted_design_paid_pilot_entry_gate.md
+  batch_plan_report: experiments/phase1_compiler/reports/phase1_weighted_design_paid_pilot_batch_plan.md
+  integrity_audit_report: experiments/phase1_compiler/reports/phase1_weighted_design_paid_pilot_integrity_audit.md
+  metrics_report: experiments/phase1_compiler/reports/phase1_weighted_design_paid_pilot_metrics.md
+  baseline_comparison_report: experiments/phase1_compiler/reports/phase1_weighted_design_paid_pilot_baseline_comparison.md
+  decision_report: experiments/phase1_compiler/reports/phase1_weighted_design_paid_pilot_decision.md
+phase0_output_paths:
+  workspace_matrix_config: experiments/phase0_headroom/configs/phase1_weighted_design_paid_pilot_workspace_matrix.yaml
+  matrix: experiments/phase0_headroom/results/phase1_weighted_design_paid_pilot_matrix.json
+  package_inspection: experiments/phase0_headroom/results/phase1_weighted_design_paid_pilot_package_inspection.json
+  score_table: experiments/phase0_headroom/results/phase1_weighted_design_paid_pilot_score_table.csv
+  metrics: experiments/phase0_headroom/results/phase1_weighted_design_paid_pilot_metrics.json
+  cost_summary: experiments/phase0_headroom/results/phase1_weighted_design_paid_pilot_cost_summary.json
+  cost_ledger: experiments/phase0_headroom/results/phase1_weighted_design_paid_pilot_cost_ledger.jsonl
+  preflight: experiments/phase0_headroom/results/phase1_weighted_design_paid_pilot_preflight.json
+  package_inspection_report: experiments/phase0_headroom/reports/phase1_weighted_design_paid_pilot_package_inspection.md
+  preflight_report: experiments/phase0_headroom/reports/phase1_weighted_design_paid_pilot_preflight.md
