@@ -9,7 +9,7 @@ Updated: `2026-05-26T03:36:22Z`.
 - Step 1: `completed` - Build Frozen Pilot Matrix And Package Inspection; commit target `Build weighted design paid pilot matrix`.
 - Step 2: `completed` - Tooling, Endpoint, And Entry Gate; commit target `Record weighted design paid pilot entry gate`.
 - Step 3: `completed` - Run Paid Smoke Batch; commit target `Run weighted design paid pilot smoke batch`.
-- Step 4: `pending` - Run Remaining Attrs Paid Cells; commit target `Run weighted design paid pilot attrs cells`.
+- Step 4: `completed` - Run Remaining Attrs Paid Cells; commit target `Run weighted design paid pilot attrs cells`.
 - Step 5: `pending` - Run Remaining Boltons Paid Cells; commit target `Run weighted design paid pilot boltons cells`.
 - Step 6: `pending` - Integrity Audit And Score Import; commit target `Audit weighted design paid pilot score tables`.
 - Step 7: `pending` - Compute Weighted And Baseline Metrics; commit target `Compute weighted design paid pilot metrics`.
@@ -31,3 +31,12 @@ Updated: `2026-05-26T03:36:22Z`.
 - Terminal statuses: `verified_pass=2`, `verified_fail=2`.
 - Observed-or-conservative cost: `USD 2.0`.
 - Stop-gate result: `continue_to_remaining_attrs`.
+
+## Attrs Batch
+
+- Attrs cells completed including smoke: `20`.
+- Total cells completed after attrs batch: `22`.
+- Scoreable cells after attrs batch: `22`.
+- Terminal statuses after attrs batch: `verified_pass=12`, `verified_fail=10`.
+- Observed-or-conservative cost after attrs batch: `USD 11.0`.
+- Stop-gate result: `continue_to_boltons`.

@@ -4,14 +4,14 @@
     "codex_workspace",
     "kilo_workspace"
   ],
-  "generated_at": "2026-05-26T03:44:47+00:00",
+  "generated_at": "2026-05-26T04:00:45+00:00",
   "matrix_config": "experiments/phase0_headroom/configs/phase1_weighted_design_paid_pilot_workspace_matrix.yaml",
-  "scheduled_cell_count": 4,
+  "scheduled_cell_count": 22,
   "schema_version": "barcarolle.workspace_acut_matrix.v1",
-  "scoreable_cell_count": 4,
+  "scoreable_cell_count": 22,
   "status": "workspace_acut_matrix_complete",
   "terminal_status_counts": {
-    "verified_fail": 2,
-    "verified_pass": 2
+    "verified_fail": 10,
+    "verified_pass": 12
   }
 }
