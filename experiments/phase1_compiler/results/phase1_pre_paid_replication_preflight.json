@@ -1,0 +1,272 @@
+{
+  "analysis_schema": "preflight.v1",
+  "boundary_checks": {
+    "followup_runbook_written_by_worker_false": true,
+    "new_paid_acut_calls_made": false,
+    "new_paid_acut_replication_allowed_in_this_runbook": false,
+    "new_paid_llm_calls_made": false,
+    "previous_paid_scoreable_cells_eq_32": true,
+    "previous_policy_violations_eq_0": true,
+    "previous_predictive_validity_established_false": true
+  },
+  "branch": "codex/restart-benchmark-compiler",
+  "claim_boundary": {
+    "allowed_claims": [
+      "pre_paid_replication_readiness_completed",
+      "predictive_validity_threshold_preregistered",
+      "target_profile_estimated_from_pre_holdout_metadata",
+      "candidate_inventory_enriched",
+      "time_task_family_source_matching_completed",
+      "weighted_release_candidate_frozen",
+      "baseline_release_candidates_frozen",
+      "statement_quality_gate_completed",
+      "paid_replication_entry_package_ready",
+      "no_paid_acut_replication_run"
+    ],
+    "disallowed_claims_not_made": [
+      "predictive_validity_established",
+      "paid_replication_completed",
+      "production_benchmark_ranking",
+      "H_future_used_as_target_profile",
+      "hidden_oracle_informed_selection",
+      "post_hoc_release_claimed_as_preregistered",
+      "local_codex_subscription_used_for_paid_llm_calls",
+      "followup_runbook_written_by_worker"
+    ]
+  },
+  "environment": {
+    "python_direct_version": {
+      "args": [
+        "python",
+        "--version"
+      ],
+      "duration_seconds": 0.007,
+      "returncode": 0,
+      "stderr": "",
+      "stdout": "Python 3.11.13"
+    },
+    "uv_python_version": {
+      "args": [
+        "uv",
+        "run",
+        "python",
+        "--version"
+      ],
+      "duration_seconds": 0.018,
+      "returncode": 0,
+      "stderr": "",
+      "stdout": "Python 3.11.13"
+    },
+    "uv_version": "uv 0.11.16 (Homebrew 2026-05-21 aarch64-apple-darwin)"
+  },
+  "generated_at": "2026-05-26T02:17:54Z",
+  "git_status_short_branch": "## codex/restart-benchmark-compiler...origin/codex/restart-benchmark-compiler [ahead 266]\n?? docs/experiments/phase-1-overnight-statement-hardened-evidence-analysis-runbook.md\n?? docs/experiments/phase-1-pre-paid-replication-compiler-readiness-runbook.md\n?? experiments/phase1_compiler/configs/phase1_pre_paid_replication_compiler_readiness.yaml\n?? experiments/phase1_compiler/tests/test_phase1_pre_paid_replication_compiler_readiness.py\n?? experiments/phase1_compiler/tools/phase1_pre_paid_replication_compiler_readiness.py",
+  "head": "b728eff5d97ce9cc3fa1ccda28d222a91dc5576d",
+  "missing_required_inputs": [],
+  "no_paid_boundary": {
+    "paid_acut_calls_expected": false,
+    "paid_acut_replication_allowed_in_this_runbook": false,
+    "paid_llm_calls_expected": false,
+    "stop_before_paid_validation": true
+  },
+  "optional_inputs": [
+    {
+      "exists": false,
+      "path": "barcarolle-research-0519.md",
+      "sha256": null,
+      "tracked_by_git": false
+    },
+    {
+      "exists": true,
+      "path": "experiments/phase1_compiler/reports/phase1_statement_hardened_after_canonical_repair_paid_process.md",
+      "sha256": "sha256:1deb5dd798e9ece7a09d4cf48fc2e294351ffb16c454827c2c687bbcee9de344",
+      "tracked_by_git": true
+    },
+    {
+      "exists": true,
+      "path": "experiments/phase1_compiler/reports/phase1_statement_hardened_after_canonical_repair_preregistration.md",
+      "sha256": "sha256:d0774e60eafdefffc2c43456ac6ac24abcde3b3ca1fef052aee2315bb3cf30b3",
+      "tracked_by_git": true
+    },
+    {
+      "exists": true,
+      "path": "experiments/phase1_compiler/reports/phase1_statement_hardened_after_canonical_repair_release_manifest.md",
+      "sha256": "sha256:8e1bf9f6be140552a28947b22768f86c25ab779f1605ca9b4d563bfa0cc38a56",
+      "tracked_by_git": true
+    }
+  ],
+  "previous_evidence": {
+    "observed_b_eval_to_h_future_gaps": {
+      "attrs": 0.25,
+      "boltons": 0.375
+    },
+    "planned_cells": 32,
+    "policy_violation_count": 0,
+    "predictive_validity_established": false,
+    "release_id": "statement_hardened_after_canonical_split_repair_20260525",
+    "scoreable_cell_count": 32,
+    "terminal_status_counts": {
+      "verified_fail": 11,
+      "verified_pass": 21
+    }
+  },
+  "required_inputs": [
+    {
+      "exists": true,
+      "path": "AGENTS.md",
+      "sha256": "sha256:1f5f5001de31bfa6674ce87d19626dd6c40f749362efdf166518df4838ed9d0c",
+      "tracked_by_git": true
+    },
+    {
+      "exists": true,
+      "path": "docs/architecture/system-design.md",
+      "sha256": "sha256:bb42f48723f2413fbf2dcffbbc0a898b274997a08a1a42fb4005b44c70a7ca5e",
+      "tracked_by_git": true
+    },
+    {
+      "exists": true,
+      "path": "docs/experiments/phase-1-overnight-statement-hardened-evidence-analysis-runbook.md",
+      "sha256": "sha256:d8675d30169f3ee5187391b5191d8323af38667b508d1f5ad30e79e8af7f2ddd",
+      "tracked_by_git": false
+    },
+    {
+      "exists": true,
+      "path": "docs/experiments/phase-1-pre-paid-replication-compiler-readiness-runbook.md",
+      "sha256": "sha256:47a066e545e5342a66ba0d80cdd61c74325892439ff1f3df2b5a5a56e01d2cb0",
+      "tracked_by_git": false
+    },
+    {
+      "exists": true,
+      "path": "experiments/phase1_compiler/reports/phase1_overnight_statement_hardened_evidence_process.md",
+      "sha256": "sha256:8ec900fd4665e869733a1c726b17216a9335047d0ec96cf995415e1a5a8acf0a",
+      "tracked_by_git": true
+    },
+    {
+      "exists": true,
+      "path": "experiments/phase1_compiler/reports/phase1_overnight_statement_hardened_next_action_decision.md",
+      "sha256": "sha256:364399d00f7a00f501f7c35f9c723969273c3f2fef32e9c81943290bb1f78caf",
+      "tracked_by_git": true
+    },
+    {
+      "exists": true,
+      "path": "experiments/phase1_compiler/reports/phase1_overnight_statement_hardened_threshold_analysis.md",
+      "sha256": "sha256:2f10e963b8f0556627d3952047cc7334626cd5c8473bc234f0bd9e9f9ab0627e",
+      "tracked_by_git": true
+    },
+    {
+      "exists": true,
+      "path": "experiments/phase1_compiler/reports/phase1_overnight_statement_hardened_power_analysis.md",
+      "sha256": "sha256:6ee6386630b61c65d9a62b69472c45fefaf6ea0ce2df74d9d2cbe4a77f9fbd5f",
+      "tracked_by_git": true
+    },
+    {
+      "exists": true,
+      "path": "experiments/phase1_compiler/reports/phase1_overnight_statement_hardened_calibration_options.md",
+      "sha256": "sha256:0a64eb579c53d15b0184e8ed36b26a2192198b0f14e254990d28edd6c5253586",
+      "tracked_by_git": true
+    },
+    {
+      "exists": true,
+      "path": "experiments/phase1_compiler/reports/phase1_overnight_statement_hardened_local_supply_analysis.md",
+      "sha256": "sha256:198426986a0b5343a709d093866bba32ae3d8f669556422534b5818e1ca235a5",
+      "tracked_by_git": true
+    },
+    {
+      "exists": true,
+      "path": "experiments/phase1_compiler/results/phase1_overnight_statement_hardened_next_action_decision.json",
+      "sha256": "sha256:c111d002fde1451f348dc90fc0e29bcc207a216f5cc80a5d0b9ec79ee2043ca3",
+      "tracked_by_git": true
+    },
+    {
+      "exists": true,
+      "path": "experiments/phase1_compiler/results/phase1_overnight_statement_hardened_threshold_analysis.json",
+      "sha256": "sha256:77011291d30c36e383a8eaec08876bcd5a45d2b81bad5fa8316cceafff8d1a3d",
+      "tracked_by_git": true
+    },
+    {
+      "exists": true,
+      "path": "experiments/phase1_compiler/results/phase1_overnight_statement_hardened_power_analysis.json",
+      "sha256": "sha256:b04c225df7a8b23944ac8022cafe6e59801cc6f69bb983292941cd3042700a3f",
+      "tracked_by_git": true
+    },
+    {
+      "exists": true,
+      "path": "experiments/phase1_compiler/results/phase1_overnight_statement_hardened_calibration_options.json",
+      "sha256": "sha256:c213f136d99f504c6b7c0652083bbcaf53776f0c19fe9a93163b79e9414c6166",
+      "tracked_by_git": true
+    },
+    {
+      "exists": true,
+      "path": "experiments/phase1_compiler/results/phase1_overnight_statement_hardened_local_supply_analysis.json",
+      "sha256": "sha256:f5a59226a8491c5e9d56e6371d46e1a6a17f63baff559463bf75fc613710cb04",
+      "tracked_by_git": true
+    },
+    {
+      "exists": true,
+      "path": "experiments/phase1_compiler/results/phase1_overnight_statement_hardened_task_outcome_matrix.json",
+      "sha256": "sha256:4a0f9776b12a0d04b74407fd43467e844d1d851ca65e5c2ab86b6721cd539032",
+      "tracked_by_git": true
+    },
+    {
+      "exists": true,
+      "path": "experiments/phase1_compiler/results/phase1_statement_hardened_after_canonical_repair_release_manifest.json",
+      "sha256": "sha256:ce38a3cac154feffaa5137871999f9ff2ebaea0198e92b5ef00f2a1482dae8d0",
+      "tracked_by_git": true
+    },
+    {
+      "exists": true,
+      "path": "experiments/phase1_compiler/results/phase1_statement_hardened_after_canonical_repair_inventory.json",
+      "sha256": "sha256:c02a5643f12e464b076fc4a9f1a47e2f72478b0c3cdcbc3e991e9e3f206a60f3",
+      "tracked_by_git": true
+    },
+    {
+      "exists": true,
+      "path": "experiments/phase1_compiler/results/phase1_statement_hardened_after_canonical_repair_preregistration.json",
+      "sha256": "sha256:413270868eb6ea0f13f0ffa9f32a85c9870d71c30d20650e6a9e5847e8fb185e",
+      "tracked_by_git": true
+    },
+    {
+      "exists": true,
+      "path": "experiments/phase0_headroom/certified_tasks/attrs_clean_outcome_unseen_supply_certified_tasks.jsonl",
+      "sha256": "sha256:ac3ed7e8bd32a1303b8b2483ef4bf808492911b190caf260c437b5a83244bb16",
+      "tracked_by_git": true
+    },
+    {
+      "exists": true,
+      "path": "experiments/phase0_headroom/certified_tasks/boltons_clean_outcome_unseen_supply_certified_tasks.jsonl",
+      "sha256": "sha256:6799d2eb553652d8330bd8c26075b11011705db46b1edf24704c9c97b6991f61",
+      "tracked_by_git": true
+    },
+    {
+      "exists": true,
+      "path": "experiments/phase0_headroom/certified_tasks/boltons_certified_tasks.jsonl",
+      "sha256": "sha256:214c8c01bc0a3948c967cacc8df9b8fa10647dbd5339da80ac3264c8c7c46cd0",
+      "tracked_by_git": true
+    },
+    {
+      "exists": true,
+      "path": "experiments/phase0_headroom/certified_tasks/humanize_certified_tasks.jsonl",
+      "sha256": "sha256:d23d57e6a62dc825060ec594fa297a76af2b4fb8b5aa3db4bad99bf495713fe1",
+      "tracked_by_git": true
+    },
+    {
+      "exists": true,
+      "path": "experiments/phase0_headroom/certified_tasks/itsdangerous_certified_tasks.jsonl",
+      "sha256": "sha256:b6faacb0c6f5441a0b341a62b17b44fa1406aa365e177255b13650ff63d2da75",
+      "tracked_by_git": true
+    },
+    {
+      "exists": true,
+      "path": "experiments/phase0_headroom/certified_tasks/toolz_certified_tasks.jsonl",
+      "sha256": "sha256:83edc26281d4d25001f9b7a41d9b10de806096767e4827cc4b38160cd59f7006",
+      "tracked_by_git": true
+    }
+  ],
+  "run_id": "phase1_pre_paid_replication_20260526",
+  "schema_version": "barcarolle.phase1_pre_paid_replication_compiler_readiness_output.v1",
+  "status": "pass_with_notes",
+  "untracked_required_inputs": [
+    "docs/experiments/phase-1-overnight-statement-hardened-evidence-analysis-runbook.md",
+    "docs/experiments/phase-1-pre-paid-replication-compiler-readiness-runbook.md"
+  ]
+}
