@@ -1190,6 +1190,7 @@ def decision_report(payload: dict[str, Any]) -> str:
         f"- recommended_next_action_category: {payload['recommended_next_action_category']}",
         f"- paid_acut_calls_made: {payload['paid_acut_calls_made']}",
         f"- paid_llm_calls_made: {payload['paid_llm_calls_made']}",
+        f"- verification: {payload.get('verification', {})}",
         "",
         "## Research Questions",
         "",

@@ -1,6 +1,6 @@
 # Phase 1 Historical Environment Synthesis Process
 
-Status: Steps 0-2 completed at 2026-05-26T08:55:59Z.
+Status: Steps 0-8 completed at 2026-05-26T08:55:59Z.
 
 Plain-language summary: preflight passed. This run is local-only. Paid ACUT calls, paid replication, paid task-solving, and paid LLM statement generation are disabled. Historical target commands will use `uv run --no-project --isolated` so they do not inherit the Phase 1 compiler Python 3.11 project constraint.
 
@@ -14,7 +14,7 @@ Plain-language summary: preflight passed. This run is local-only. Paid ACUT call
 - Step 5: Recovered supply projection - `completed`.
 - Step 6: Third repo local environment gate - `completed`.
 - Step 7: Decision - `completed`.
-- Step 8: Verification and closeout - `pending`.
+- Step 8: Verification and closeout - `completed`.
 
 ## Preflight Notes
 

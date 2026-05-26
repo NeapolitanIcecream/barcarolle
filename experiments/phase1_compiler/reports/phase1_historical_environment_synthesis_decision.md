@@ -42,3 +42,11 @@ Plain-language summary: Historical environments improved diagnosis or recovered 
 - `third_repo_gate_screen_completed`
 - `toolz_local_gate_failed`
 - `humanize_local_gate_failed`
+
+## Verification
+
+- focused_historical_environment_tests: uv run --project experiments/phase1_compiler pytest experiments/phase1_compiler/tests/test_phase1_historical_environment_synthesis_gate.py -q (6 passed)
+- related_reference_pass_audit_tests: uv run --project experiments/phase1_compiler pytest experiments/phase1_compiler/tests/test_phase1_reference_pass_failure_audit.py -q (6 passed)
+- phase1_compiler_tests: uv run --project experiments/phase1_compiler pytest experiments/phase1_compiler/tests -q (184 passed)
+- git_diff_check: git diff --check (passed)
+- verified_at: 2026-05-26T09:10:43Z

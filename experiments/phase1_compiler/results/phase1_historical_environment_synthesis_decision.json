@@ -50,7 +50,10 @@
     "humanize"
   ],
   "verification": {
-    "focused_tests": "pending_closeout",
-    "git_diff_check": "pending_closeout"
+    "focused_historical_environment_tests": "uv run --project experiments/phase1_compiler pytest experiments/phase1_compiler/tests/test_phase1_historical_environment_synthesis_gate.py -q (6 passed)",
+    "git_diff_check": "git diff --check (passed)",
+    "phase1_compiler_tests": "uv run --project experiments/phase1_compiler pytest experiments/phase1_compiler/tests -q (184 passed)",
+    "related_reference_pass_audit_tests": "uv run --project experiments/phase1_compiler pytest experiments/phase1_compiler/tests/test_phase1_reference_pass_failure_audit.py -q (6 passed)",
+    "verified_at": "2026-05-26T09:10:43Z"
   }
 }
