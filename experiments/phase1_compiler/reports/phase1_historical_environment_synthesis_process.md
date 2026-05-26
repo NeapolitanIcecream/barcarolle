@@ -1,13 +1,13 @@
 # Phase 1 Historical Environment Synthesis Process
 
-Status: Step 0 completed at 2026-05-26T08:55:59Z.
+Status: Steps 0-1 completed at 2026-05-26T08:55:59Z.
 
 Plain-language summary: preflight passed. This run is local-only. Paid ACUT calls, paid replication, paid task-solving, and paid LLM statement generation are disabled. Historical target commands will use `uv run --no-project --isolated` so they do not inherit the Phase 1 compiler Python 3.11 project constraint.
 
 ## Ledger
 
 - Step 0: Preflight - `completed`.
-- Step 1: Input inventory - `pending`.
+- Step 1: Input inventory - `completed`.
 - Step 2: Historical environment tool and tests - `pending`.
 - Step 3: Known failures replay under historical profiles - `pending`.
 - Step 4: Reference gate subclassification - `pending`.
