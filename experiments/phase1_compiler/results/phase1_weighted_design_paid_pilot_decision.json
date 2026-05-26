@@ -1,0 +1,50 @@
+{
+  "baseline_candidate_ids": [
+    "repo_unweighted_same_budget",
+    "repo_stratified_by_target_profile"
+  ],
+  "baseline_gaps": {
+    "repo_stratified_by_target_profile": {
+      "attrs": 0.25,
+      "boltons": 0.125
+    },
+    "repo_unweighted_same_budget": {
+      "attrs": 0.25,
+      "boltons": 0.125
+    }
+  },
+  "disallowed_claims_made": [],
+  "final_decision": "weighted_pilot_complete_threshold_not_met",
+  "followup_runbook_written_by_worker": false,
+  "generated_at": "2026-05-26T04:23:08Z",
+  "historical_reference_remained_historical_only": true,
+  "new_paid_acut_calls_made": true,
+  "new_paid_llm_calls_made": true,
+  "observed_or_conservative_cost_usd": 22.0,
+  "paid_cells_completed": 44,
+  "paid_cells_planned": 44,
+  "policy_status": "pass",
+  "precision_status": "pilot_result_insufficient_precision",
+  "primary_release_candidate_id": "barcarolle_weighted_time_family_matched",
+  "primary_threshold_result": {
+    "gap_threshold": 0.15,
+    "max_abs_gap": 0.7481,
+    "met": false,
+    "per_repo_abs_gaps": {
+      "attrs": 0.3148,
+      "boltons": 0.7481
+    },
+    "primary_candidate_id": "barcarolle_weighted_time_family_matched"
+  },
+  "raw_artifacts_committed": false,
+  "run_id": "phase1_weighted_design_paid_pilot_20260526",
+  "schema_version": "barcarolle.phase1_weighted_design_paid_pilot_output.v1",
+  "scoreability_status": "pass",
+  "scoreable_cells": 44,
+  "smallest_next_action_recommended": "Have the coordinating session interpret the committed pilot decision and choose any bounded follow-up category.",
+  "weighted_design_beats_unweighted_and_stratified": false,
+  "weighted_design_gap": {
+    "attrs": 0.3148,
+    "boltons": 0.7481
+  }
+}
