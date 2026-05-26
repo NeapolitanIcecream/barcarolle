@@ -1,0 +1,138 @@
+{
+  "H_future_used_as_target_profile": false,
+  "by_repo": {
+    "attrs": {
+      "chronological_coverage_by_year": {
+        "2016": 1,
+        "2017": 3,
+        "2018": 2,
+        "2019": 4,
+        "2020": 2,
+        "2021": 6,
+        "2022": 2
+      },
+      "eligible_chronological_split_options": {
+        "B_eval_count": 10,
+        "B_eval_task_ids_preview": [
+          "attrs__supply_expansion_20260526__064",
+          "attrs__supply_expansion_20260526__071",
+          "attrs__supply_expansion_20260526__079",
+          "attrs__supply_expansion_20260526__084",
+          "attrs__supply_expansion_20260526__101",
+          "attrs__supply_expansion_20260526__107",
+          "attrs__supply_expansion_20260526__119",
+          "attrs__supply_expansion_20260526__122",
+          "attrs__supply_expansion_20260526__127",
+          "attrs__supply_expansion_20260526__128"
+        ],
+        "H_future_count": 10,
+        "H_future_task_ids_preview": [
+          "attrs__hist__009",
+          "attrs__hist__010",
+          "attrs__hist__032",
+          "attrs__hist__033",
+          "attrs__hist__035",
+          "attrs__hist__036",
+          "attrs__hist__039",
+          "attrs__hist__041",
+          "attrs__hist__045",
+          "attrs__hist__047"
+        ]
+      },
+      "minimum_per_window_support": 1,
+      "module_package_coverage": {
+        "__init__": 1,
+        "_funcs": 1,
+        "_make": 2,
+        "_next_gen": 2,
+        "converters": 1,
+        "unknown": 10,
+        "validators": 3
+      },
+      "per_repo_count": 20,
+      "pseudo_future_window_count": 7,
+      "source_kind_mix": {
+        "issue": 8,
+        "pull_request": 2,
+        "unknown": 10
+      }
+    },
+    "boltons": {
+      "chronological_coverage_by_year": {
+        "2015": 6,
+        "2016": 1,
+        "2017": 1,
+        "2018": 2,
+        "2019": 1,
+        "2020": 2,
+        "2021": 2,
+        "2022": 3,
+        "2023": 4,
+        "2024": 1,
+        "2025": 2,
+        "2026": 2
+      },
+      "eligible_chronological_split_options": {
+        "B_eval_count": 13,
+        "B_eval_task_ids_preview": [
+          "boltons__supply_expansion_20260526__001",
+          "boltons__supply_expansion_20260526__002",
+          "boltons__supply_expansion_20260526__003",
+          "boltons__supply_expansion_20260526__004",
+          "boltons__supply_expansion_20260526__006",
+          "boltons__supply_expansion_20260526__019",
+          "boltons__supply_expansion_20260526__048",
+          "boltons__supply_expansion_20260526__066",
+          "boltons__supply_expansion_20260526__093",
+          "boltons__supply_expansion_20260526__095"
+        ],
+        "H_future_count": 14,
+        "H_future_task_ids_preview": [
+          "boltons__hist__013",
+          "boltons__hist__014",
+          "boltons__hist__017",
+          "boltons__hist__019",
+          "boltons__hist__020",
+          "boltons__hist__024",
+          "boltons__hist__025",
+          "boltons__hist__026",
+          "boltons__hist__028",
+          "boltons__hist__031"
+        ]
+      },
+      "minimum_per_window_support": 1,
+      "module_package_coverage": {
+        "dictutils": 2,
+        "fileutils": 1,
+        "funcutils": 3,
+        "ioutils": 1,
+        "iterutils": 2,
+        "jsonutils": 1,
+        "socketutils": 1,
+        "timeutils": 1,
+        "unknown": 15,
+        "urlutils": 1
+      },
+      "per_repo_count": 27,
+      "pseudo_future_window_count": 12,
+      "source_kind_mix": {
+        "pull_request": 12,
+        "unknown": 15
+      }
+    }
+  },
+  "claims": [
+    "expanded_supply_below_minimum"
+  ],
+  "generated_at": "2026-05-26T07:25:44Z",
+  "local_bakeoff_rerun_blocker": "expanded supply does not add paid local outcomes, so B_eval/H_future gap metrics remain limited to the previous 10 attrs and 12 boltons outcome-seen tasks",
+  "local_bakeoff_rerun_meaningful": false,
+  "minimum_counts_met": false,
+  "paid_outcome_counts_by_repo": {
+    "attrs": 10,
+    "boltons": 12
+  },
+  "run_id": "phase1_two_repo_supply_expansion_20260526",
+  "schema_version": "barcarolle.phase1_two_repo_certified_supply_expansion.v1",
+  "status": "split_support_completed"
+}
