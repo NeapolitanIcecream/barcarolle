@@ -1,0 +1,656 @@
+{
+  "analysis_schema": "task_audit.v1",
+  "generated_at": "2026-05-26T06:08:01Z",
+  "local_absolute_paths_included": false,
+  "raw_prompt_completion_or_transcript_fields_included": false,
+  "raw_statement_fields_included": false,
+  "rows": [
+    {
+      "adapter_disagreement": false,
+      "adapter_outcomes": {
+        "codex_workspace": "verified_pass",
+        "kilo_workspace": "verified_pass"
+      },
+      "candidate_membership": [
+        "barcarolle_weighted_time_family_matched",
+        "repo_stratified_by_target_profile",
+        "repo_unweighted_same_budget"
+      ],
+      "implementation_file_count_bucket": "1",
+      "in_stratified_candidate": true,
+      "in_unweighted_candidate": true,
+      "in_weighted_candidate": true,
+      "module_or_package": "_next_gen",
+      "repo_id": "attrs",
+      "scoreable_cell_count": 2,
+      "source_kind": "issue",
+      "statement_quality_status": "pass_with_minor_risk",
+      "statement_source": "deterministic_sanitized_context_summary",
+      "task_family_label": "attrs:_next_gen",
+      "task_id": "attrs__hist__009",
+      "task_level_outcome": 1.0,
+      "task_time_bucket": "2020H2",
+      "terminal_status_counts": {
+        "verified_pass": 2
+      },
+      "test_file_count_bucket": "1"
+    },
+    {
+      "adapter_disagreement": false,
+      "adapter_outcomes": {
+        "codex_workspace": "verified_pass",
+        "kilo_workspace": "verified_pass"
+      },
+      "candidate_membership": [
+        "barcarolle_weighted_time_family_matched",
+        "repo_stratified_by_target_profile",
+        "repo_unweighted_same_budget"
+      ],
+      "implementation_file_count_bucket": "1",
+      "in_stratified_candidate": true,
+      "in_unweighted_candidate": true,
+      "in_weighted_candidate": true,
+      "module_or_package": "_next_gen",
+      "repo_id": "attrs",
+      "scoreable_cell_count": 2,
+      "source_kind": "issue",
+      "statement_quality_status": "pass",
+      "statement_source": "deterministic_sanitized_context_summary",
+      "task_family_label": "attrs:_next_gen",
+      "task_id": "attrs__hist__010",
+      "task_level_outcome": 1.0,
+      "task_time_bucket": "2020H2",
+      "terminal_status_counts": {
+        "verified_pass": 2
+      },
+      "test_file_count_bucket": "1"
+    },
+    {
+      "adapter_disagreement": false,
+      "adapter_outcomes": {
+        "codex_workspace": "verified_fail",
+        "kilo_workspace": "verified_fail"
+      },
+      "candidate_membership": [
+        "barcarolle_weighted_time_family_matched",
+        "repo_stratified_by_target_profile",
+        "repo_unweighted_same_budget"
+      ],
+      "implementation_file_count_bucket": "1",
+      "in_stratified_candidate": true,
+      "in_unweighted_candidate": true,
+      "in_weighted_candidate": true,
+      "module_or_package": "_make",
+      "repo_id": "attrs",
+      "scoreable_cell_count": 2,
+      "source_kind": "issue",
+      "statement_quality_status": "pass",
+      "statement_source": "deterministic_sanitized_context_summary",
+      "task_family_label": "attrs:_make",
+      "task_id": "attrs__hist__032",
+      "task_level_outcome": 0.0,
+      "task_time_bucket": "2021H1",
+      "terminal_status_counts": {
+        "verified_fail": 2
+      },
+      "test_file_count_bucket": "1"
+    },
+    {
+      "adapter_disagreement": false,
+      "adapter_outcomes": {
+        "codex_workspace": "verified_fail",
+        "kilo_workspace": "verified_fail"
+      },
+      "candidate_membership": [
+        "barcarolle_weighted_time_family_matched",
+        "repo_stratified_by_target_profile",
+        "repo_unweighted_same_budget"
+      ],
+      "implementation_file_count_bucket": "1",
+      "in_stratified_candidate": true,
+      "in_unweighted_candidate": true,
+      "in_weighted_candidate": true,
+      "module_or_package": "converters",
+      "repo_id": "attrs",
+      "scoreable_cell_count": 2,
+      "source_kind": "issue",
+      "statement_quality_status": "pass",
+      "statement_source": "deterministic_sanitized_context_summary",
+      "task_family_label": "attrs:converters",
+      "task_id": "attrs__hist__033",
+      "task_level_outcome": 0.0,
+      "task_time_bucket": "2021H2",
+      "terminal_status_counts": {
+        "verified_fail": 2
+      },
+      "test_file_count_bucket": "2"
+    },
+    {
+      "adapter_disagreement": false,
+      "adapter_outcomes": {
+        "codex_workspace": "verified_pass",
+        "kilo_workspace": "verified_pass"
+      },
+      "candidate_membership": [
+        "barcarolle_weighted_time_family_matched",
+        "repo_stratified_by_target_profile",
+        "repo_unweighted_same_budget"
+      ],
+      "implementation_file_count_bucket": "1",
+      "in_stratified_candidate": true,
+      "in_unweighted_candidate": true,
+      "in_weighted_candidate": true,
+      "module_or_package": "_make",
+      "repo_id": "attrs",
+      "scoreable_cell_count": 2,
+      "source_kind": "issue",
+      "statement_quality_status": "pass",
+      "statement_source": "deterministic_sanitized_context_summary",
+      "task_family_label": "attrs:_make",
+      "task_id": "attrs__hist__035",
+      "task_level_outcome": 1.0,
+      "task_time_bucket": "2021H2",
+      "terminal_status_counts": {
+        "verified_pass": 2
+      },
+      "test_file_count_bucket": "1"
+    },
+    {
+      "adapter_disagreement": false,
+      "adapter_outcomes": {
+        "codex_workspace": "verified_pass",
+        "kilo_workspace": "verified_pass"
+      },
+      "candidate_membership": [
+        "barcarolle_weighted_time_family_matched",
+        "repo_stratified_by_target_profile",
+        "repo_unweighted_same_budget"
+      ],
+      "implementation_file_count_bucket": "1",
+      "in_stratified_candidate": true,
+      "in_unweighted_candidate": true,
+      "in_weighted_candidate": true,
+      "module_or_package": "__init__",
+      "repo_id": "attrs",
+      "scoreable_cell_count": 2,
+      "source_kind": "pull_request",
+      "statement_quality_status": "pass",
+      "statement_source": "deterministic_sanitized_context_summary",
+      "task_family_label": "attrs:__init__",
+      "task_id": "attrs__hist__036",
+      "task_level_outcome": 1.0,
+      "task_time_bucket": "2021H2",
+      "terminal_status_counts": {
+        "verified_pass": 2
+      },
+      "test_file_count_bucket": "2"
+    },
+    {
+      "adapter_disagreement": false,
+      "adapter_outcomes": {
+        "codex_workspace": "verified_fail",
+        "kilo_workspace": "verified_fail"
+      },
+      "candidate_membership": [
+        "repo_stratified_by_target_profile",
+        "repo_unweighted_same_budget"
+      ],
+      "implementation_file_count_bucket": "1",
+      "in_stratified_candidate": true,
+      "in_unweighted_candidate": true,
+      "in_weighted_candidate": false,
+      "module_or_package": "validators",
+      "repo_id": "attrs",
+      "scoreable_cell_count": 2,
+      "source_kind": "issue",
+      "statement_quality_status": "pass",
+      "statement_source": "deterministic_sanitized_context_summary",
+      "task_family_label": "attrs:validators",
+      "task_id": "attrs__hist__039",
+      "task_level_outcome": 0.0,
+      "task_time_bucket": "2021H2",
+      "terminal_status_counts": {
+        "verified_fail": 2
+      },
+      "test_file_count_bucket": "2"
+    },
+    {
+      "adapter_disagreement": false,
+      "adapter_outcomes": {
+        "codex_workspace": "verified_pass",
+        "kilo_workspace": "verified_pass"
+      },
+      "candidate_membership": [
+        "repo_stratified_by_target_profile",
+        "repo_unweighted_same_budget"
+      ],
+      "implementation_file_count_bucket": "1",
+      "in_stratified_candidate": true,
+      "in_unweighted_candidate": true,
+      "in_weighted_candidate": false,
+      "module_or_package": "_funcs",
+      "repo_id": "attrs",
+      "scoreable_cell_count": 2,
+      "source_kind": "issue",
+      "statement_quality_status": "pass",
+      "statement_source": "deterministic_sanitized_context_summary",
+      "task_family_label": "attrs:_funcs",
+      "task_id": "attrs__hist__041",
+      "task_level_outcome": 1.0,
+      "task_time_bucket": "2021H2",
+      "terminal_status_counts": {
+        "verified_pass": 2
+      },
+      "test_file_count_bucket": "2"
+    },
+    {
+      "adapter_disagreement": false,
+      "adapter_outcomes": {
+        "codex_workspace": "verified_pass",
+        "kilo_workspace": "verified_pass"
+      },
+      "candidate_membership": [
+        "barcarolle_weighted_time_family_matched"
+      ],
+      "implementation_file_count_bucket": "1",
+      "in_stratified_candidate": false,
+      "in_unweighted_candidate": false,
+      "in_weighted_candidate": true,
+      "module_or_package": "validators",
+      "repo_id": "attrs",
+      "scoreable_cell_count": 2,
+      "source_kind": "pull_request",
+      "statement_quality_status": "pass_with_minor_risk",
+      "statement_source": "deterministic_sanitized_context_summary",
+      "task_family_label": "attrs:validators",
+      "task_id": "attrs__hist__045",
+      "task_level_outcome": 1.0,
+      "task_time_bucket": "2022H1",
+      "terminal_status_counts": {
+        "verified_pass": 2
+      },
+      "test_file_count_bucket": "1"
+    },
+    {
+      "adapter_disagreement": false,
+      "adapter_outcomes": {
+        "codex_workspace": "verified_fail",
+        "kilo_workspace": "verified_fail"
+      },
+      "candidate_membership": [
+        "barcarolle_weighted_time_family_matched"
+      ],
+      "implementation_file_count_bucket": "1",
+      "in_stratified_candidate": false,
+      "in_unweighted_candidate": false,
+      "in_weighted_candidate": true,
+      "module_or_package": "validators",
+      "repo_id": "attrs",
+      "scoreable_cell_count": 2,
+      "source_kind": "issue",
+      "statement_quality_status": "pass",
+      "statement_source": "deterministic_sanitized_context_summary",
+      "task_family_label": "attrs:validators",
+      "task_id": "attrs__hist__047",
+      "task_level_outcome": 0.0,
+      "task_time_bucket": "2022H1",
+      "terminal_status_counts": {
+        "verified_fail": 2
+      },
+      "test_file_count_bucket": "1"
+    },
+    {
+      "adapter_disagreement": false,
+      "adapter_outcomes": {
+        "codex_workspace": "verified_fail",
+        "kilo_workspace": "verified_fail"
+      },
+      "candidate_membership": [
+        "barcarolle_weighted_time_family_matched",
+        "repo_stratified_by_target_profile",
+        "repo_unweighted_same_budget"
+      ],
+      "implementation_file_count_bucket": "1",
+      "in_stratified_candidate": true,
+      "in_unweighted_candidate": true,
+      "in_weighted_candidate": true,
+      "module_or_package": "funcutils",
+      "repo_id": "boltons",
+      "scoreable_cell_count": 2,
+      "source_kind": "pull_request",
+      "statement_quality_status": "pass_with_minor_risk",
+      "statement_source": "certified_solver_statement",
+      "task_family_label": "boltons:funcutils",
+      "task_id": "boltons__hist__006",
+      "task_level_outcome": 0.0,
+      "task_time_bucket": "2020H1",
+      "terminal_status_counts": {
+        "verified_fail": 2
+      },
+      "test_file_count_bucket": "1"
+    },
+    {
+      "adapter_disagreement": false,
+      "adapter_outcomes": {
+        "codex_workspace": "verified_pass",
+        "kilo_workspace": "verified_pass"
+      },
+      "candidate_membership": [
+        "barcarolle_weighted_time_family_matched",
+        "repo_unweighted_same_budget"
+      ],
+      "implementation_file_count_bucket": "1",
+      "in_stratified_candidate": false,
+      "in_unweighted_candidate": true,
+      "in_weighted_candidate": true,
+      "module_or_package": "socketutils",
+      "repo_id": "boltons",
+      "scoreable_cell_count": 2,
+      "source_kind": "pull_request",
+      "statement_quality_status": "pass_with_minor_risk",
+      "statement_source": "certified_solver_statement",
+      "task_family_label": "boltons:socketutils",
+      "task_id": "boltons__hist__007",
+      "task_level_outcome": 1.0,
+      "task_time_bucket": "2020H1",
+      "terminal_status_counts": {
+        "verified_pass": 2
+      },
+      "test_file_count_bucket": "1"
+    },
+    {
+      "adapter_disagreement": false,
+      "adapter_outcomes": {
+        "codex_workspace": "verified_pass",
+        "kilo_workspace": "verified_pass"
+      },
+      "candidate_membership": [
+        "barcarolle_weighted_time_family_matched",
+        "repo_stratified_by_target_profile",
+        "repo_unweighted_same_budget"
+      ],
+      "implementation_file_count_bucket": "1",
+      "in_stratified_candidate": true,
+      "in_unweighted_candidate": true,
+      "in_weighted_candidate": true,
+      "module_or_package": "funcutils",
+      "repo_id": "boltons",
+      "scoreable_cell_count": 2,
+      "source_kind": "pull_request",
+      "statement_quality_status": "pass_with_minor_risk",
+      "statement_source": "certified_solver_statement",
+      "task_family_label": "boltons:funcutils",
+      "task_id": "boltons__hist__013",
+      "task_level_outcome": 1.0,
+      "task_time_bucket": "2021H1",
+      "terminal_status_counts": {
+        "verified_pass": 2
+      },
+      "test_file_count_bucket": "1"
+    },
+    {
+      "adapter_disagreement": true,
+      "adapter_outcomes": {
+        "codex_workspace": "verified_pass",
+        "kilo_workspace": "verified_fail"
+      },
+      "candidate_membership": [
+        "repo_stratified_by_target_profile",
+        "repo_unweighted_same_budget"
+      ],
+      "implementation_file_count_bucket": "2",
+      "in_stratified_candidate": true,
+      "in_unweighted_candidate": true,
+      "in_weighted_candidate": false,
+      "module_or_package": "fileutils, jsonutils",
+      "repo_id": "boltons",
+      "scoreable_cell_count": 2,
+      "source_kind": "pull_request",
+      "statement_quality_status": "pass_with_minor_risk",
+      "statement_source": "certified_solver_statement",
+      "task_family_label": "boltons:fileutils:multi_file",
+      "task_id": "boltons__hist__014",
+      "task_level_outcome": 0.5,
+      "task_time_bucket": "2021H1",
+      "terminal_status_counts": {
+        "verified_fail": 1,
+        "verified_pass": 1
+      },
+      "test_file_count_bucket": "1"
+    },
+    {
+      "adapter_disagreement": false,
+      "adapter_outcomes": {
+        "codex_workspace": "verified_pass",
+        "kilo_workspace": "verified_pass"
+      },
+      "candidate_membership": [
+        "repo_unweighted_same_budget"
+      ],
+      "implementation_file_count_bucket": "1",
+      "in_stratified_candidate": false,
+      "in_unweighted_candidate": true,
+      "in_weighted_candidate": false,
+      "module_or_package": "urlutils",
+      "repo_id": "boltons",
+      "scoreable_cell_count": 2,
+      "source_kind": "pull_request",
+      "statement_quality_status": "pass_with_minor_risk",
+      "statement_source": "certified_solver_statement",
+      "task_family_label": "boltons:urlutils",
+      "task_id": "boltons__hist__017",
+      "task_level_outcome": 1.0,
+      "task_time_bucket": "2022H1",
+      "terminal_status_counts": {
+        "verified_pass": 2
+      },
+      "test_file_count_bucket": "1"
+    },
+    {
+      "adapter_disagreement": false,
+      "adapter_outcomes": {
+        "codex_workspace": "verified_fail",
+        "kilo_workspace": "verified_fail"
+      },
+      "candidate_membership": [
+        "barcarolle_weighted_time_family_matched",
+        "repo_stratified_by_target_profile",
+        "repo_unweighted_same_budget"
+      ],
+      "implementation_file_count_bucket": "1",
+      "in_stratified_candidate": true,
+      "in_unweighted_candidate": true,
+      "in_weighted_candidate": true,
+      "module_or_package": "ioutils",
+      "repo_id": "boltons",
+      "scoreable_cell_count": 2,
+      "source_kind": "pull_request",
+      "statement_quality_status": "pass_with_minor_risk",
+      "statement_source": "certified_solver_statement",
+      "task_family_label": "boltons:ioutils",
+      "task_id": "boltons__hist__019",
+      "task_level_outcome": 0.0,
+      "task_time_bucket": "2022H2",
+      "terminal_status_counts": {
+        "verified_fail": 2
+      },
+      "test_file_count_bucket": "1"
+    },
+    {
+      "adapter_disagreement": false,
+      "adapter_outcomes": {
+        "codex_workspace": "verified_pass",
+        "kilo_workspace": "verified_pass"
+      },
+      "candidate_membership": [
+        "repo_unweighted_same_budget"
+      ],
+      "implementation_file_count_bucket": "1",
+      "in_stratified_candidate": false,
+      "in_unweighted_candidate": true,
+      "in_weighted_candidate": false,
+      "module_or_package": "timeutils",
+      "repo_id": "boltons",
+      "scoreable_cell_count": 2,
+      "source_kind": "pull_request",
+      "statement_quality_status": "pass_with_minor_risk",
+      "statement_source": "certified_solver_statement",
+      "task_family_label": "boltons:timeutils",
+      "task_id": "boltons__hist__020",
+      "task_level_outcome": 1.0,
+      "task_time_bucket": "2022H2",
+      "terminal_status_counts": {
+        "verified_pass": 2
+      },
+      "test_file_count_bucket": "1"
+    },
+    {
+      "adapter_disagreement": false,
+      "adapter_outcomes": {
+        "codex_workspace": "verified_pass",
+        "kilo_workspace": "verified_pass"
+      },
+      "candidate_membership": [
+        "barcarolle_weighted_time_family_matched",
+        "repo_stratified_by_target_profile",
+        "repo_unweighted_same_budget"
+      ],
+      "implementation_file_count_bucket": "1",
+      "in_stratified_candidate": true,
+      "in_unweighted_candidate": true,
+      "in_weighted_candidate": true,
+      "module_or_package": "dictutils",
+      "repo_id": "boltons",
+      "scoreable_cell_count": 2,
+      "source_kind": "pull_request",
+      "statement_quality_status": "pass_with_minor_risk",
+      "statement_source": "certified_solver_statement",
+      "task_family_label": "boltons:dictutils",
+      "task_id": "boltons__hist__024",
+      "task_level_outcome": 1.0,
+      "task_time_bucket": "2023H1",
+      "terminal_status_counts": {
+        "verified_pass": 2
+      },
+      "test_file_count_bucket": "1"
+    },
+    {
+      "adapter_disagreement": false,
+      "adapter_outcomes": {
+        "codex_workspace": "verified_pass",
+        "kilo_workspace": "verified_pass"
+      },
+      "candidate_membership": [
+        "repo_stratified_by_target_profile"
+      ],
+      "implementation_file_count_bucket": "1",
+      "in_stratified_candidate": true,
+      "in_unweighted_candidate": false,
+      "in_weighted_candidate": false,
+      "module_or_package": "funcutils",
+      "repo_id": "boltons",
+      "scoreable_cell_count": 2,
+      "source_kind": "pull_request",
+      "statement_quality_status": "pass_with_minor_risk",
+      "statement_source": "certified_solver_statement",
+      "task_family_label": "boltons:funcutils",
+      "task_id": "boltons__hist__025",
+      "task_level_outcome": 1.0,
+      "task_time_bucket": "2023H1",
+      "terminal_status_counts": {
+        "verified_pass": 2
+      },
+      "test_file_count_bucket": "1"
+    },
+    {
+      "adapter_disagreement": false,
+      "adapter_outcomes": {
+        "codex_workspace": "verified_pass",
+        "kilo_workspace": "verified_pass"
+      },
+      "candidate_membership": [
+        "barcarolle_weighted_time_family_matched",
+        "repo_stratified_by_target_profile"
+      ],
+      "implementation_file_count_bucket": "1",
+      "in_stratified_candidate": true,
+      "in_unweighted_candidate": false,
+      "in_weighted_candidate": true,
+      "module_or_package": "dictutils",
+      "repo_id": "boltons",
+      "scoreable_cell_count": 2,
+      "source_kind": "pull_request",
+      "statement_quality_status": "pass_with_minor_risk",
+      "statement_source": "certified_solver_statement",
+      "task_family_label": "boltons:dictutils",
+      "task_id": "boltons__hist__026",
+      "task_level_outcome": 1.0,
+      "task_time_bucket": "2023H1",
+      "terminal_status_counts": {
+        "verified_pass": 2
+      },
+      "test_file_count_bucket": "1"
+    },
+    {
+      "adapter_disagreement": false,
+      "adapter_outcomes": {
+        "codex_workspace": "verified_fail",
+        "kilo_workspace": "verified_fail"
+      },
+      "candidate_membership": [
+        "barcarolle_weighted_time_family_matched",
+        "repo_stratified_by_target_profile"
+      ],
+      "implementation_file_count_bucket": "1",
+      "in_stratified_candidate": true,
+      "in_unweighted_candidate": false,
+      "in_weighted_candidate": true,
+      "module_or_package": "iterutils",
+      "repo_id": "boltons",
+      "scoreable_cell_count": 2,
+      "source_kind": "pull_request",
+      "statement_quality_status": "pass_with_minor_risk",
+      "statement_source": "certified_solver_statement",
+      "task_family_label": "boltons:iterutils",
+      "task_id": "boltons__hist__028",
+      "task_level_outcome": 0.0,
+      "task_time_bucket": "2023H2",
+      "terminal_status_counts": {
+        "verified_fail": 2
+      },
+      "test_file_count_bucket": "1"
+    },
+    {
+      "adapter_disagreement": false,
+      "adapter_outcomes": {
+        "codex_workspace": "verified_pass",
+        "kilo_workspace": "verified_pass"
+      },
+      "candidate_membership": [
+        "barcarolle_weighted_time_family_matched"
+      ],
+      "implementation_file_count_bucket": "1",
+      "in_stratified_candidate": false,
+      "in_unweighted_candidate": false,
+      "in_weighted_candidate": true,
+      "module_or_package": "iterutils",
+      "repo_id": "boltons",
+      "scoreable_cell_count": 2,
+      "source_kind": "pull_request",
+      "statement_quality_status": "pass_with_minor_risk",
+      "statement_source": "certified_solver_statement",
+      "task_family_label": "boltons:iterutils",
+      "task_id": "boltons__hist__031",
+      "task_level_outcome": 1.0,
+      "task_time_bucket": "2024H1",
+      "terminal_status_counts": {
+        "verified_pass": 2
+      },
+      "test_file_count_bucket": "1"
+    }
+  ],
+  "run_id": "phase1_local_algorithm_bakeoff_20260526",
+  "schema_version": "barcarolle.phase1_local_algorithm_bakeoff_output.v1",
+  "status": "pass",
+  "task_count": 22
+}

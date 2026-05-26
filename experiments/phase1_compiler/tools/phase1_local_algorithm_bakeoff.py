@@ -181,7 +181,7 @@ def write_csv(path: str | Path, rows: list[dict[str, Any]], fieldnames: list[str
     resolved = path_from_repo(path)
     resolved.parent.mkdir(parents=True, exist_ok=True)
     with resolved.open("w", encoding="utf-8", newline="") as handle:
-        writer = csv.DictWriter(handle, fieldnames=fieldnames)
+        writer = csv.DictWriter(handle, fieldnames=fieldnames, lineterminator="\n")
         writer.writeheader()
         for row in rows:
             writer.writerow({key: row.get(key, "") for key in fieldnames})
