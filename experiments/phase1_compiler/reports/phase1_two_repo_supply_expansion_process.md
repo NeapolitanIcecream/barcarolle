@@ -1,7 +1,7 @@
 # Phase 1 Two-Repo Supply Expansion Process
 
 Run id: `phase1_two_repo_supply_expansion_20260526`.
-Updated: `2026-05-26T07:23:39Z`.
+Updated: `2026-05-26T07:24:11Z`.
 
 ## Boundary Rules
 
@@ -20,7 +20,7 @@ Updated: `2026-05-26T07:23:39Z`.
 - Step 4: Enrich Public Source Context - `done`.
 - Step 5: Local Certification Replay - `done`.
 - Step 6: Prepare Statement Generation Packets - `done`.
-- Step 7: Optional Endpoint Statement Generation And Review Loop - `pending`.
+- Step 7: Optional Endpoint Statement Generation And Review Loop - `done`.
 - Step 8: Eligibility Audit And Expanded Supply Freeze - `pending`.
 - Step 9: Split Support And Target-Profile Diagnostics - `pending`.
 - Step 10: Local Bakeoff Rerun On Expanded Supply - `pending`.
