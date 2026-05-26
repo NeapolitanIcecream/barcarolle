@@ -940,10 +940,14 @@ def screen_existing_repo_artifacts(config: dict[str, Any], repo_id: str) -> dict
 
 
 def repo_external_service_risk(repo_id: str) -> str:
-    repos = simple_yaml_load(PHASE0_ROOT / "configs" / "repositories.yaml").get("repositories", [])
-    for row in repos:
-        if row.get("repo_id") == repo_id:
-            return str(row.get("external_service_risk", "unknown"))
+    current_repo = ""
+    for raw_line in (PHASE0_ROOT / "configs" / "repositories.yaml").read_text(encoding="utf-8").splitlines():
+        stripped = raw_line.strip()
+        if stripped.startswith("- repo_id:"):
+            current_repo = stripped.split(":", 1)[1].strip().strip('"')
+            continue
+        if current_repo == repo_id and stripped.startswith("external_service_risk:"):
+            return stripped.split(":", 1)[1].strip().strip('"')
     return "unknown"
 
 

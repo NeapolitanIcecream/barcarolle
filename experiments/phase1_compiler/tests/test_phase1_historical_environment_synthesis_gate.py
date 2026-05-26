@@ -82,3 +82,7 @@ def test_sanitize_output_tail_redacts_repo_home_and_uv_cache_paths() -> None:
     assert str(Path.home()) not in sanitized
     assert "<repo>" in sanitized
     assert "<uv-cache>" in sanitized
+
+
+def test_repo_external_service_risk_reads_repository_list() -> None:
+    assert gate.repo_external_service_risk("toolz") == "low"
