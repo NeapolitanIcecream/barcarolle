@@ -10,8 +10,8 @@ Verification command family: `uv run --project experiments/phase1_compiler pytho
 
 | Step | Name | Status | Commit target | Commit hash |
 | --- | --- | --- | --- | --- |
-| 0 | Preflight And Boundary Check | completed | Record pre-paid replication readiness preflight | pending_current_or_future_commit |
-| 1 | Freeze Predictive-Validity Thresholds | pending | Preregister pre-paid replication predictive thresholds | pending_current_or_future_commit |
+| 0 | Preflight And Boundary Check | completed | Record pre-paid replication readiness preflight | 2d68c6f35204259cacece9dbaae57dcda31e2232 |
+| 1 | Freeze Predictive-Validity Thresholds | completed | Preregister pre-paid replication predictive thresholds | pending_current_or_future_commit |
 | 2 | Build The Enriched Candidate Inventory | pending | Build pre-paid replication candidate inventory | pending_current_or_future_commit |
 | 3 | Estimate Target Profiles | pending | Estimate pre-paid replication target profiles | pending_current_or_future_commit |
 | 4 | Diagnose And Repair Split Matching | pending | Design pre-paid replication split matching | pending_current_or_future_commit |

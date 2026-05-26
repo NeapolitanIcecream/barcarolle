@@ -1,0 +1,8 @@
+schema_version: barcarolle.phase1_pre_paid_replication_thresholds.v1
+run_id: phase1_pre_paid_replication_20260526
+threshold_version: phase1_pre_paid_replication_thresholds_20260526
+primary_gap_threshold: 0.15
+precision_half_width_target: 0.15
+scoreability_required: 100_percent_or_preregistered_non_scoreable_handling
+policy_violations_allowed: 0
+H_future_is_validation_data_not_target_profile: True
