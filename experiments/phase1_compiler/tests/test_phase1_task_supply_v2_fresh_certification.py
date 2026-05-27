@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+import os
+import sys
 from collections import Counter
 
 import phase1_task_supply_v2_fresh_certification as fresh
@@ -190,6 +192,20 @@ def test_dependency_resolution_failures_are_install_subgates() -> None:
     )
 
     assert subgate == "install_failed"
+
+
+def test_run_fresh_command_times_out_and_returns_text() -> None:
+    result = fresh.run_fresh_command(
+        [sys.executable, "-c", "import time; time.sleep(5)"],
+        fresh.REPO_ROOT,
+        timeout=1,
+        env=os.environ.copy(),
+    )
+
+    assert result.returncode == 124
+    assert result.timed_out is True
+    assert isinstance(result.stdout, str)
+    assert isinstance(result.stderr, str)
 
 
 def test_paid_ready_requires_at_least_three_repos_with_30_release_eligible_tasks() -> None:

@@ -4,6 +4,7 @@ import argparse
 import hashlib
 import json
 import os
+import signal
 import shutil
 import subprocess
 import sys
@@ -22,7 +23,6 @@ from phase1_historical_environment_synthesis_gate import (
     command_env,
     cwd_for,
     infer_profile_candidates,
-    run_command,
 )
 
 
@@ -439,6 +439,35 @@ def command_record(
     }
 
 
+def run_fresh_command(argv: list[str], cwd: Path, timeout: int, env: dict[str, str]) -> repo_history_pilot.CommandResult:
+    start = time.monotonic()
+    proc = subprocess.Popen(
+        argv,
+        cwd=cwd,
+        env=env,
+        text=True,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+        start_new_session=True,
+    )
+    try:
+        stdout, stderr = proc.communicate(timeout=timeout)
+        return repo_history_pilot.CommandResult(proc.returncode, stdout or "", stderr or "", time.monotonic() - start)
+    except subprocess.TimeoutExpired as exc:
+        try:
+            os.killpg(proc.pid, signal.SIGKILL)
+        except ProcessLookupError:
+            pass
+        stdout, stderr = proc.communicate()
+        return repo_history_pilot.CommandResult(
+            124,
+            ensure_text(stdout) or ensure_text(exc.stdout),
+            ensure_text(stderr) or ensure_text(exc.stderr),
+            time.monotonic() - start,
+            timed_out=True,
+        )
+
+
 def classify_execution_subgate(returncode: int, stdout_tail: str, stderr_tail: str) -> str:
     text = f"{stdout_tail}\n{stderr_tail}".lower()
     if returncode == 0:
@@ -549,7 +578,7 @@ def run_profile(
     test_files = list(row.get("test_files", []))
     timeout = int(config["certification_caps"]["single_command_timeout_seconds"])
     noop_command = fresh_uv_command(repo_id, profile, base_ws, test_files)
-    noop_result = run_command(noop_command, cwd_for(profile, base_ws), timeout, command_env(profile, repo_id, base_ws))
+    noop_result = run_fresh_command(noop_command, cwd_for(profile, base_ws), timeout, command_env(profile, repo_id, base_ws))
     write_raw_command_logs(config, str(row["candidate_id"]), "noop", profile.profile_id, noop_result)
     noop_record = command_record(role="noop", profile=profile, command=noop_command, workspace=base_ws, result=noop_result)
     records.append(noop_record)
@@ -560,14 +589,14 @@ def run_profile(
         return str(noop_record["subgate_label"]), records
 
     ref1_command = fresh_uv_command(repo_id, profile, target_ws, test_files)
-    ref1_result = run_command(ref1_command, cwd_for(profile, target_ws), timeout, command_env(profile, repo_id, target_ws))
+    ref1_result = run_fresh_command(ref1_command, cwd_for(profile, target_ws), timeout, command_env(profile, repo_id, target_ws))
     write_raw_command_logs(config, str(row["candidate_id"]), "reference_1", profile.profile_id, ref1_result)
     ref1_record = command_record(role="reference_1", profile=profile, command=ref1_command, workspace=target_ws, result=ref1_result)
     records.append(ref1_record)
     if ref1_result.returncode != 0:
         return str(ref1_record["subgate_label"]), records
 
-    ref2_result = run_command(ref1_command, cwd_for(profile, target_ws), timeout, command_env(profile, repo_id, target_ws))
+    ref2_result = run_fresh_command(ref1_command, cwd_for(profile, target_ws), timeout, command_env(profile, repo_id, target_ws))
     write_raw_command_logs(config, str(row["candidate_id"]), "reference_2", profile.profile_id, ref2_result)
     ref2_record = command_record(role="reference_2", profile=profile, command=ref1_command, workspace=target_ws, result=ref2_result)
     records.append(ref2_record)
