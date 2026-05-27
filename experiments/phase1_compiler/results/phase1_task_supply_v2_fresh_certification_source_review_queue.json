@@ -1,0 +1,264 @@
+{
+  "generated_at": "2026-05-27T10:42:15Z",
+  "queue_count": 25,
+  "queue_count_by_repo": {
+    "attrs": 3,
+    "boltons": 12,
+    "humanize": 9,
+    "toolz": 1
+  },
+  "rows": [
+    {
+      "allowed_context_refs": [],
+      "candidate_id": "attrs__v2__218",
+      "minimum_review_needed": "Find non-leaky public issue or PR context, or manually review statement provenance.",
+      "repo_id": "attrs",
+      "source_context_class": "commit_message_only_context",
+      "suggested_review_mode": "manual_review",
+      "technical_certified": true,
+      "why_not_release_eligible": "source_context_quality=commit_message_only_context is not release eligible in this run"
+    },
+    {
+      "allowed_context_refs": [],
+      "candidate_id": "attrs__v2__231",
+      "minimum_review_needed": "Find non-leaky public issue or PR context, or manually review statement provenance.",
+      "repo_id": "attrs",
+      "source_context_class": "commit_message_only_context",
+      "suggested_review_mode": "manual_review",
+      "technical_certified": true,
+      "why_not_release_eligible": "source_context_quality=commit_message_only_context is not release eligible in this run"
+    },
+    {
+      "allowed_context_refs": [],
+      "candidate_id": "attrs__v2__237",
+      "minimum_review_needed": "Find non-leaky public issue or PR context, or manually review statement provenance.",
+      "repo_id": "attrs",
+      "source_context_class": "commit_message_only_context",
+      "suggested_review_mode": "manual_review",
+      "technical_certified": true,
+      "why_not_release_eligible": "source_context_quality=commit_message_only_context is not release eligible in this run"
+    },
+    {
+      "allowed_context_refs": [],
+      "candidate_id": "boltons__v2__073",
+      "minimum_review_needed": "Find non-leaky public issue or PR context, or manually review statement provenance.",
+      "repo_id": "boltons",
+      "source_context_class": "commit_message_only_context",
+      "suggested_review_mode": "manual_review",
+      "technical_certified": true,
+      "why_not_release_eligible": "source_context_quality=commit_message_only_context is not release eligible in this run"
+    },
+    {
+      "allowed_context_refs": [],
+      "candidate_id": "boltons__v2__085",
+      "minimum_review_needed": "Find non-leaky public issue or PR context, or manually review statement provenance.",
+      "repo_id": "boltons",
+      "source_context_class": "commit_message_only_context",
+      "suggested_review_mode": "manual_review",
+      "technical_certified": true,
+      "why_not_release_eligible": "source_context_quality=commit_message_only_context is not release eligible in this run"
+    },
+    {
+      "allowed_context_refs": [],
+      "candidate_id": "boltons__v2__138",
+      "minimum_review_needed": "Find non-leaky public issue or PR context, or manually review statement provenance.",
+      "repo_id": "boltons",
+      "source_context_class": "commit_message_only_context",
+      "suggested_review_mode": "manual_review",
+      "technical_certified": true,
+      "why_not_release_eligible": "source_context_quality=commit_message_only_context is not release eligible in this run"
+    },
+    {
+      "allowed_context_refs": [],
+      "candidate_id": "boltons__v2__149",
+      "minimum_review_needed": "Find non-leaky public issue or PR context, or manually review statement provenance.",
+      "repo_id": "boltons",
+      "source_context_class": "commit_message_only_context",
+      "suggested_review_mode": "manual_review",
+      "technical_certified": true,
+      "why_not_release_eligible": "source_context_quality=commit_message_only_context is not release eligible in this run"
+    },
+    {
+      "allowed_context_refs": [],
+      "candidate_id": "boltons__v2__176",
+      "minimum_review_needed": "Find non-leaky public issue or PR context, or manually review statement provenance.",
+      "repo_id": "boltons",
+      "source_context_class": "commit_message_only_context",
+      "suggested_review_mode": "manual_review",
+      "technical_certified": true,
+      "why_not_release_eligible": "source_context_quality=commit_message_only_context is not release eligible in this run"
+    },
+    {
+      "allowed_context_refs": [],
+      "candidate_id": "boltons__v2__183",
+      "minimum_review_needed": "Find non-leaky public issue or PR context, or manually review statement provenance.",
+      "repo_id": "boltons",
+      "source_context_class": "commit_message_only_context",
+      "suggested_review_mode": "manual_review",
+      "technical_certified": true,
+      "why_not_release_eligible": "source_context_quality=commit_message_only_context is not release eligible in this run"
+    },
+    {
+      "allowed_context_refs": [],
+      "candidate_id": "boltons__v2__184",
+      "minimum_review_needed": "Find non-leaky public issue or PR context, or manually review statement provenance.",
+      "repo_id": "boltons",
+      "source_context_class": "commit_message_only_context",
+      "suggested_review_mode": "manual_review",
+      "technical_certified": true,
+      "why_not_release_eligible": "source_context_quality=commit_message_only_context is not release eligible in this run"
+    },
+    {
+      "allowed_context_refs": [],
+      "candidate_id": "boltons__v2__186",
+      "minimum_review_needed": "Find non-leaky public issue or PR context, or manually review statement provenance.",
+      "repo_id": "boltons",
+      "source_context_class": "commit_message_only_context",
+      "suggested_review_mode": "manual_review",
+      "technical_certified": true,
+      "why_not_release_eligible": "source_context_quality=commit_message_only_context is not release eligible in this run"
+    },
+    {
+      "allowed_context_refs": [],
+      "candidate_id": "boltons__v2__187",
+      "minimum_review_needed": "Find non-leaky public issue or PR context, or manually review statement provenance.",
+      "repo_id": "boltons",
+      "source_context_class": "commit_message_only_context",
+      "suggested_review_mode": "manual_review",
+      "technical_certified": true,
+      "why_not_release_eligible": "source_context_quality=commit_message_only_context is not release eligible in this run"
+    },
+    {
+      "allowed_context_refs": [],
+      "candidate_id": "boltons__v2__196",
+      "minimum_review_needed": "Find non-leaky public issue or PR context, or manually review statement provenance.",
+      "repo_id": "boltons",
+      "source_context_class": "commit_message_only_context",
+      "suggested_review_mode": "manual_review",
+      "technical_certified": true,
+      "why_not_release_eligible": "source_context_quality=commit_message_only_context is not release eligible in this run"
+    },
+    {
+      "allowed_context_refs": [],
+      "candidate_id": "boltons__v2__199",
+      "minimum_review_needed": "Find non-leaky public issue or PR context, or manually review statement provenance.",
+      "repo_id": "boltons",
+      "source_context_class": "commit_message_only_context",
+      "suggested_review_mode": "manual_review",
+      "technical_certified": true,
+      "why_not_release_eligible": "source_context_quality=commit_message_only_context is not release eligible in this run"
+    },
+    {
+      "allowed_context_refs": [],
+      "candidate_id": "boltons__v2__202",
+      "minimum_review_needed": "Find non-leaky public issue or PR context, or manually review statement provenance.",
+      "repo_id": "boltons",
+      "source_context_class": "commit_message_only_context",
+      "suggested_review_mode": "manual_review",
+      "technical_certified": true,
+      "why_not_release_eligible": "source_context_quality=commit_message_only_context is not release eligible in this run"
+    },
+    {
+      "allowed_context_refs": [],
+      "candidate_id": "humanize__v2__049",
+      "minimum_review_needed": "Find non-leaky public issue or PR context, or manually review statement provenance.",
+      "repo_id": "humanize",
+      "source_context_class": "commit_message_only_context",
+      "suggested_review_mode": "manual_review",
+      "technical_certified": true,
+      "why_not_release_eligible": "source_context_quality=commit_message_only_context is not release eligible in this run"
+    },
+    {
+      "allowed_context_refs": [],
+      "candidate_id": "humanize__v2__050",
+      "minimum_review_needed": "Find non-leaky public issue or PR context, or manually review statement provenance.",
+      "repo_id": "humanize",
+      "source_context_class": "commit_message_only_context",
+      "suggested_review_mode": "manual_review",
+      "technical_certified": true,
+      "why_not_release_eligible": "source_context_quality=commit_message_only_context is not release eligible in this run"
+    },
+    {
+      "allowed_context_refs": [],
+      "candidate_id": "humanize__v2__051",
+      "minimum_review_needed": "Find non-leaky public issue or PR context, or manually review statement provenance.",
+      "repo_id": "humanize",
+      "source_context_class": "commit_message_only_context",
+      "suggested_review_mode": "manual_review",
+      "technical_certified": true,
+      "why_not_release_eligible": "source_context_quality=commit_message_only_context is not release eligible in this run"
+    },
+    {
+      "allowed_context_refs": [],
+      "candidate_id": "humanize__v2__054",
+      "minimum_review_needed": "Find non-leaky public issue or PR context, or manually review statement provenance.",
+      "repo_id": "humanize",
+      "source_context_class": "commit_message_only_context",
+      "suggested_review_mode": "manual_review",
+      "technical_certified": true,
+      "why_not_release_eligible": "source_context_quality=commit_message_only_context is not release eligible in this run"
+    },
+    {
+      "allowed_context_refs": [],
+      "candidate_id": "humanize__v2__056",
+      "minimum_review_needed": "Find non-leaky public issue or PR context, or manually review statement provenance.",
+      "repo_id": "humanize",
+      "source_context_class": "commit_message_only_context",
+      "suggested_review_mode": "manual_review",
+      "technical_certified": true,
+      "why_not_release_eligible": "source_context_quality=commit_message_only_context is not release eligible in this run"
+    },
+    {
+      "allowed_context_refs": [],
+      "candidate_id": "humanize__v2__058",
+      "minimum_review_needed": "Find non-leaky public issue or PR context, or manually review statement provenance.",
+      "repo_id": "humanize",
+      "source_context_class": "commit_message_only_context",
+      "suggested_review_mode": "manual_review",
+      "technical_certified": true,
+      "why_not_release_eligible": "source_context_quality=commit_message_only_context is not release eligible in this run"
+    },
+    {
+      "allowed_context_refs": [],
+      "candidate_id": "humanize__v2__060",
+      "minimum_review_needed": "Find non-leaky public issue or PR context, or manually review statement provenance.",
+      "repo_id": "humanize",
+      "source_context_class": "commit_message_only_context",
+      "suggested_review_mode": "manual_review",
+      "technical_certified": true,
+      "why_not_release_eligible": "source_context_quality=commit_message_only_context is not release eligible in this run"
+    },
+    {
+      "allowed_context_refs": [],
+      "candidate_id": "humanize__v2__061",
+      "minimum_review_needed": "Find non-leaky public issue or PR context, or manually review statement provenance.",
+      "repo_id": "humanize",
+      "source_context_class": "commit_message_only_context",
+      "suggested_review_mode": "manual_review",
+      "technical_certified": true,
+      "why_not_release_eligible": "source_context_quality=commit_message_only_context is not release eligible in this run"
+    },
+    {
+      "allowed_context_refs": [],
+      "candidate_id": "humanize__v2__062",
+      "minimum_review_needed": "Find non-leaky public issue or PR context, or manually review statement provenance.",
+      "repo_id": "humanize",
+      "source_context_class": "commit_message_only_context",
+      "suggested_review_mode": "manual_review",
+      "technical_certified": true,
+      "why_not_release_eligible": "source_context_quality=commit_message_only_context is not release eligible in this run"
+    },
+    {
+      "allowed_context_refs": [],
+      "candidate_id": "toolz__v2__129",
+      "minimum_review_needed": "Find non-leaky public issue or PR context, or manually review statement provenance.",
+      "repo_id": "toolz",
+      "source_context_class": "commit_message_only_context",
+      "suggested_review_mode": "manual_review",
+      "technical_certified": true,
+      "why_not_release_eligible": "source_context_quality=commit_message_only_context is not release eligible in this run"
+    }
+  ],
+  "run_id": "phase1_task_supply_v2_fresh_certification_20260527",
+  "schema_version": "barcarolle.phase1_task_supply_v2_fresh_certification.v1.source_review_queue.v1"
+}

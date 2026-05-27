@@ -157,6 +157,18 @@ Paid-call statement: no paid ACUT calls, paid task-solving calls, paid replicati
 
 Artifact hygiene: raw stdout/stderr logs and workspaces were written only under ignored scratch paths.
 
+## Steps 6-8 - Review Queue, Paid Gate, And Decision
+
+What happened: the final summaries found 93 technical certifications, 68 release-eligible tasks, and 25 technical-but-not-release-eligible tasks in the source review queue. Release-eligible counts were attrs 28, boltons 35, toolz 5, and humanize 0.
+
+Why it matters: boltons cleared the 30-task release-eligible threshold, but attrs fell just short and toolz/humanize remained far below it. The run therefore does not meet the paid-readiness requirement of at least three repos with 30 or more release-eligible tasks.
+
+Readiness direction: the primary decision is `continue_source_context_repair`. Source-context repair could move attrs over 30, but a third repo still needs environment/certification repair or additional repo screening.
+
+Paid-call statement: no paid ACUT calls, paid task-solving calls, paid replication, or paid LLM statement-generation calls were made during summary generation or closeout.
+
+Artifact hygiene: committed summaries contain only sanitized counts, hashes, subgate labels, and short metadata. Raw logs and workspaces remain under ignored scratch paths.
+
 ## Step 5 - boltons Calibration Wave
 
 What happened: the boltons calibration wave attempted all 80 candidates selected by the configured cap. It produced 47 technical certifications and 35 release-eligible tasks.
