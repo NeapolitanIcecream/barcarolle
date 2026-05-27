@@ -144,3 +144,15 @@ Dirty/untracked tree entries at start:
 Ignored workspace/tmp/cache paths staged: `False`.
 
 Artifact hygiene: raw stdout/stderr logs, solver workspaces, verifier workspaces, target repo clones, caches, and `.venv` directories were not committed by this step.
+
+## Step 5 - attrs First Wave
+
+What happened: the attrs first wave attempted all 160 candidates selected by the configured first-wave cap. It produced 31 technical certifications and 28 release-eligible tasks.
+
+Why it matters: attrs now has fresh local evidence, but the first wave still falls below the 30 release-eligible threshold. The gap is source-context plus certification quality, not raw candidate inventory.
+
+Readiness direction: attrs argues for continued certification/source-context repair before paid validation. Failure subgates were specific: 63 `install_failed`, 44 `collect_failed`, 15 `reference_assert_failed`, and 7 `noop_assert_failed`.
+
+Paid-call statement: no paid ACUT calls, paid task-solving calls, paid replication, or paid LLM statement-generation calls were made during the attrs wave.
+
+Artifact hygiene: raw stdout/stderr logs and workspaces were written only under ignored scratch paths.
