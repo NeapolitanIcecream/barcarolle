@@ -157,6 +157,18 @@ Paid-call statement: no paid ACUT calls, paid task-solving calls, paid replicati
 
 Artifact hygiene: raw stdout/stderr logs and workspaces were written only under ignored scratch paths.
 
+## Step 5 - boltons Calibration Wave
+
+What happened: the boltons calibration wave attempted all 80 candidates selected by the configured cap. It produced 47 technical certifications and 35 release-eligible tasks.
+
+Why it matters: boltons is the only repo in this fresh run that cleared the 30 release-eligible threshold. It confirms that the certification runner can recover strong local evidence when the candidate and environment shape cooperate.
+
+Readiness direction: boltons argues for keeping repo-history v2 certification active, but paid readiness is still blocked because fewer than three repos reached 30 release-eligible tasks. Failure subgates were specific: 10 `reference_assert_failed`, 10 `noop_assert_failed`, 7 `collect_failed`, 5 `install_failed`, and 1 `import_failed`.
+
+Paid-call statement: no paid ACUT calls, paid task-solving calls, paid replication, or paid LLM statement-generation calls were made during the boltons wave.
+
+Artifact hygiene: raw stdout/stderr logs and workspaces were written only under ignored scratch paths.
+
 ## Step 5 - toolz First Wave
 
 What happened: the toolz first wave attempted all 160 candidates selected by the configured cap. It produced 6 technical certifications and 5 release-eligible tasks.
