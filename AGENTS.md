@@ -95,3 +95,9 @@ should keep advancing the current runbook until it reaches a real stop
 condition, then record completed work, blockers, decisions, and recommended
 next actions in the closeout report. The coordinating user-facing session is
 responsible for interpreting the result and writing any follow-up runbook.
+
+Runbooks should be executed with step-level acceptance. After each step, or
+after a small group of tightly related steps, record the evidence needed to show
+that the step is complete and make one or more appropriately scoped commits for
+the files changed by that step. Do not batch unrelated runbook phases into a
+single large commit.
