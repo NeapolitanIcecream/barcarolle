@@ -140,7 +140,16 @@ def short_hash(value: str) -> str:
 
 
 def hash_tail(text: str) -> str:
-    return short_hash(text[-TAIL_LIMIT:])
+    normalized = ensure_text(text)
+    return short_hash(normalized[-TAIL_LIMIT:])
+
+
+def ensure_text(value: Any) -> str:
+    if isinstance(value, bytes):
+        return value.decode("utf-8", errors="replace")
+    if value is None:
+        return ""
+    return str(value)
 
 
 def stable_dedup_key(row: dict[str, Any]) -> str:
@@ -403,7 +412,7 @@ def write_raw_command_logs(config: dict[str, Any], candidate_id: str, role: str,
     raw_dir = scratch_path(config, "raw_logs") / candidate_id
     raw_dir.mkdir(parents=True, exist_ok=True)
     for stream, text in [("stdout", result.stdout), ("stderr", result.stderr)]:
-        (raw_dir / f"{profile_id}.{role}.{stream}.txt").write_text(text, encoding="utf-8", errors="replace")
+        (raw_dir / f"{profile_id}.{role}.{stream}.txt").write_text(ensure_text(text), encoding="utf-8", errors="replace")
 
 
 def command_record(
@@ -414,7 +423,9 @@ def command_record(
     workspace: Path,
     result: Any,
 ) -> dict[str, Any]:
-    subgate = classify_execution_subgate(result.returncode, result.stdout[-TAIL_LIMIT:], result.stderr[-TAIL_LIMIT:])
+    stdout = ensure_text(result.stdout)
+    stderr = ensure_text(result.stderr)
+    subgate = classify_execution_subgate(result.returncode, stdout[-TAIL_LIMIT:], stderr[-TAIL_LIMIT:])
     return {
         "role": role,
         "profile_id": profile.profile_id,
@@ -422,8 +433,8 @@ def command_record(
         "returncode": result.returncode,
         "duration_seconds": round(result.duration_seconds, 3),
         "timed_out": bool(result.timed_out),
-        "stdout_tail_hash": hash_tail(result.stdout),
-        "stderr_tail_hash": hash_tail(result.stderr),
+        "stdout_tail_hash": hash_tail(stdout),
+        "stderr_tail_hash": hash_tail(stderr),
         "subgate_label": subgate,
     }
 

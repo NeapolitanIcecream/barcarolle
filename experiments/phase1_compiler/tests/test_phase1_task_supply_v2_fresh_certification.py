@@ -134,6 +134,30 @@ def test_command_record_does_not_store_raw_stdout_or_stderr() -> None:
     assert record["stderr_tail_hash"]
 
 
+def test_command_record_handles_timeout_bytes_output() -> None:
+    class Profile:
+        profile_id = "py311_current_editable"
+
+    class Result:
+        returncode = 124
+        stdout = b"partial bytes stdout"
+        stderr = b"partial bytes stderr timeout"
+        duration_seconds = 120.0
+        timed_out = True
+
+    record = fresh.command_record(
+        role="reference_1",
+        profile=Profile(),  # type: ignore[arg-type]
+        command=["python", "-m", "pytest"],
+        workspace=fresh.REPO_ROOT,
+        result=Result(),
+    )
+
+    assert record["timed_out"] is True
+    assert record["subgate_label"] == "timeout"
+    assert record["stdout_tail_hash"]
+
+
 def test_attrs_historical_profiles_include_hypothesis_for_old_conftest_imports() -> None:
     config = fresh.load_config()
     row = {
