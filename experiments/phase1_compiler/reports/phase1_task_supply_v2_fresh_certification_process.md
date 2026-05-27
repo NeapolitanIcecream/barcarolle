@@ -156,3 +156,15 @@ Readiness direction: attrs argues for continued certification/source-context rep
 Paid-call statement: no paid ACUT calls, paid task-solving calls, paid replication, or paid LLM statement-generation calls were made during the attrs wave.
 
 Artifact hygiene: raw stdout/stderr logs and workspaces were written only under ignored scratch paths.
+
+## Step 5 - humanize Wave
+
+What happened: the humanize wave attempted all 84 oracle-usable candidates selected by the configured cap. It produced 9 technical certifications and 0 release-eligible tasks.
+
+Why it matters: the broad v2 humanize pool did not preserve the high release-ready yield from the older narrow 16-candidate artifact. The technical passes are useful, but every humanize v2 candidate in this run has commit-message-only source context, so they require review before release counting.
+
+Readiness direction: humanize argues for source-context repair, not paid readiness. Failure subgates were specific: 62 `collect_failed`, 12 `install_failed`, and 1 `noop_assert_failed`.
+
+Paid-call statement: no paid ACUT calls, paid task-solving calls, paid replication, or paid LLM statement-generation calls were made during the humanize wave.
+
+Artifact hygiene: raw stdout/stderr logs and workspaces were written only under ignored scratch paths.
