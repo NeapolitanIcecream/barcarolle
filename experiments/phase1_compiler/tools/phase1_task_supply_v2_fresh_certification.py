@@ -414,8 +414,7 @@ def command_record(
     workspace: Path,
     result: Any,
 ) -> dict[str, Any]:
-    raw_label = classify_reference_subgate(result.returncode, result.stdout[-TAIL_LIMIT:], result.stderr[-TAIL_LIMIT:])
-    subgate = normalize_execution_subgate(raw_label)
+    subgate = classify_execution_subgate(result.returncode, result.stdout[-TAIL_LIMIT:], result.stderr[-TAIL_LIMIT:])
     return {
         "role": role,
         "profile_id": profile.profile_id,
@@ -427,6 +426,15 @@ def command_record(
         "stderr_tail_hash": hash_tail(result.stderr),
         "subgate_label": subgate,
     }
+
+
+def classify_execution_subgate(returncode: int, stdout_tail: str, stderr_tail: str) -> str:
+    text = f"{stdout_tail}\n{stderr_tail}".lower()
+    if returncode == 0:
+        return "technical_certified"
+    if "no solution found" in text or "unsatisfiable" in text or "failed to resolve" in text:
+        return "install_failed"
+    return normalize_execution_subgate(classify_reference_subgate(returncode, stdout_tail, stderr_tail))
 
 
 def terminal_from_profile_records(records: list[dict[str, Any]]) -> str:
@@ -473,9 +481,49 @@ def test_patch_for_row(config: dict[str, Any], row: dict[str, Any]) -> str:
 
 
 def profile_candidates(config: dict[str, Any], row: dict[str, Any]) -> list[EnvironmentProfile]:
-    profiles = infer_profile_candidates(str(row["repo_id"]), row.get("task_time"), repo_config(config, str(row["repo_id"])))
+    repo_id = str(row["repo_id"])
+    profiles = infer_profile_candidates(repo_id, row.get("task_time"), repo_config(config, repo_id))
+    profiles = [with_repo_specific_profile_dependencies(repo_id, profile) for profile in profiles]
     cap = int(config["certification_caps"]["environment_profiles_per_candidate"])
     return profiles[:cap]
+
+
+def with_repo_specific_profile_dependencies(repo_id: str, profile: EnvironmentProfile) -> EnvironmentProfile:
+    extra_constraints: tuple[str, ...] = ()
+    if repo_id == "attrs" and not any(item.startswith("hypothesis") for item in profile.dependency_constraints):
+        extra_constraints = ("hypothesis<6",)
+    if not extra_constraints:
+        return profile
+    return EnvironmentProfile(
+        profile_id=profile.profile_id,
+        python_version=profile.python_version,
+        dependency_constraints=tuple(profile.dependency_constraints) + extra_constraints,
+        exclude_newer_date=profile.exclude_newer_date,
+        install_mode=profile.install_mode,
+        cwd_mode=profile.cwd_mode,
+        pytest_mode=profile.pytest_mode,
+        extra_env=profile.extra_env,
+        max_seconds=profile.max_seconds,
+        why_selected=profile.why_selected,
+    )
+
+
+def fresh_uv_command(repo_id: str, profile: EnvironmentProfile, workspace: Path, test_files: list[str]) -> list[str]:
+    command = build_uv_command(profile, workspace, test_files)
+    if repo_id != "attrs" or not any(item.startswith("hypothesis") for item in profile.dependency_constraints):
+        return command
+    if "--exclude-newer-package" in command:
+        return command
+    try:
+        python_index = command.index("python")
+    except ValueError:
+        return command
+    return [
+        *command[:python_index],
+        "--exclude-newer-package",
+        "setuptools=2021-10-01",
+        *command[python_index:],
+    ]
 
 
 def run_profile(
@@ -489,7 +537,7 @@ def run_profile(
     repo_id = str(row["repo_id"])
     test_files = list(row.get("test_files", []))
     timeout = int(config["certification_caps"]["single_command_timeout_seconds"])
-    noop_command = build_uv_command(profile, base_ws, test_files)
+    noop_command = fresh_uv_command(repo_id, profile, base_ws, test_files)
     noop_result = run_command(noop_command, cwd_for(profile, base_ws), timeout, command_env(profile, repo_id, base_ws))
     write_raw_command_logs(config, str(row["candidate_id"]), "noop", profile.profile_id, noop_result)
     noop_record = command_record(role="noop", profile=profile, command=noop_command, workspace=base_ws, result=noop_result)
@@ -500,7 +548,7 @@ def run_profile(
     if noop_record["subgate_label"] != "reference_assert_failed":
         return str(noop_record["subgate_label"]), records
 
-    ref1_command = build_uv_command(profile, target_ws, test_files)
+    ref1_command = fresh_uv_command(repo_id, profile, target_ws, test_files)
     ref1_result = run_command(ref1_command, cwd_for(profile, target_ws), timeout, command_env(profile, repo_id, target_ws))
     write_raw_command_logs(config, str(row["candidate_id"]), "reference_1", profile.profile_id, ref1_result)
     ref1_record = command_record(role="reference_1", profile=profile, command=ref1_command, workspace=target_ws, result=ref1_result)

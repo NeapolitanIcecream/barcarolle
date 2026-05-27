@@ -134,6 +134,40 @@ def test_command_record_does_not_store_raw_stdout_or_stderr() -> None:
     assert record["stderr_tail_hash"]
 
 
+def test_attrs_historical_profiles_include_hypothesis_for_old_conftest_imports() -> None:
+    config = fresh.load_config()
+    row = {
+        "repo_id": "attrs",
+        "task_time": "2017-01-01T00:00:00+00:00",
+    }
+
+    profiles = fresh.profile_candidates(config, row)
+
+    historical_pythonpath = [profile for profile in profiles if profile.install_mode == "pythonpath_only"]
+    assert historical_pythonpath
+    assert all(any(item.startswith("hypothesis") for item in profile.dependency_constraints) for profile in historical_pythonpath)
+
+
+def test_attrs_hypothesis_commands_override_setuptools_cutoff_for_build_deps() -> None:
+    config = fresh.load_config()
+    profile = fresh.profile_candidates(config, {"repo_id": "attrs", "task_time": "2017-01-01T00:00:00+00:00"})[1]
+
+    command = fresh.fresh_uv_command("attrs", profile, fresh.REPO_ROOT, ["tests/test_funcs.py"])
+
+    assert "--exclude-newer-package" in command
+    assert "setuptools=2021-10-01" in command
+
+
+def test_dependency_resolution_failures_are_install_subgates() -> None:
+    subgate = fresh.classify_execution_subgate(
+        1,
+        "",
+        "No solution found when resolving: setuptools>=40.8.0; requirements are unsatisfiable.",
+    )
+
+    assert subgate == "install_failed"
+
+
 def test_paid_ready_requires_at_least_three_repos_with_30_release_eligible_tasks() -> None:
     config = fresh.load_config()
     funnel = {
