@@ -1,0 +1,96 @@
+{
+  "claims": [
+    "repo_inventory_completed"
+  ],
+  "generated_at": "2026-05-27T03:54:48Z",
+  "history_scan_cap_per_repo": 2000,
+  "rows": [
+    {
+      "commit_count_since_2010_or_cap": 1781,
+      "commit_count_with_both_implementation_and_test_changes": 336,
+      "commit_count_with_implementation_changes": 565,
+      "commit_count_with_test_changes": 438,
+      "default_branch": "main",
+      "head": "3823062f1296242fe1ac620834540ffae4eba488",
+      "known_external_service_risk": "low",
+      "local_repo": "experiments/phase0_headroom/external_repos/attrs",
+      "package_manager_hints": "uv/hatch/pyproject",
+      "present": true,
+      "repo_id": "attrs",
+      "repo_url": "https://github.com/python-attrs/attrs.git",
+      "source_license": "MIT",
+      "test_framework_hints": "pytest+hypothesis",
+      "visible_issue_or_pr_linkability_signal": {
+        "commit_subject_refs": 656,
+        "rate": 0.368
+      },
+      "worth_broad_mining_first": true
+    },
+    {
+      "commit_count_since_2010_or_cap": 1611,
+      "commit_count_with_both_implementation_and_test_changes": 201,
+      "commit_count_with_implementation_changes": 1028,
+      "commit_count_with_test_changes": 289,
+      "default_branch": "master",
+      "head": "207651ee6055aabd0d9cdeac2e00140cdc208d44",
+      "known_external_service_risk": "low",
+      "local_repo": "experiments/phase0_headroom/external_repos/boltons",
+      "package_manager_hints": "setuptools/pyproject",
+      "present": true,
+      "repo_id": "boltons",
+      "repo_url": "https://github.com/mahmoud/boltons.git",
+      "source_license": "BSD-style",
+      "test_framework_hints": "pytest",
+      "visible_issue_or_pr_linkability_signal": {
+        "commit_subject_refs": 174,
+        "rate": 0.108
+      },
+      "worth_broad_mining_first": true
+    },
+    {
+      "commit_count_since_2010_or_cap": 1230,
+      "commit_count_with_both_implementation_and_test_changes": 194,
+      "commit_count_with_implementation_changes": 559,
+      "commit_count_with_test_changes": 322,
+      "default_branch": "master",
+      "head": "568c2b8393973cd172a466546c9d95779c452438",
+      "known_external_service_risk": "low",
+      "local_repo": "experiments/phase0_headroom/external_repos/toolz",
+      "package_manager_hints": "setuptools/pyproject",
+      "present": true,
+      "repo_id": "toolz",
+      "repo_url": "https://github.com/pytoolz/toolz.git",
+      "source_license": "BSD-style",
+      "test_framework_hints": "pytest",
+      "visible_issue_or_pr_linkability_signal": {
+        "commit_subject_refs": 291,
+        "rate": 0.237
+      },
+      "worth_broad_mining_first": true
+    },
+    {
+      "commit_count_since_2010_or_cap": 1048,
+      "commit_count_with_both_implementation_and_test_changes": 85,
+      "commit_count_with_implementation_changes": 223,
+      "commit_count_with_test_changes": 167,
+      "default_branch": "main",
+      "head": "bde649fc2927c022dd2a9eedba2a1ed677b97902",
+      "known_external_service_risk": "low",
+      "local_repo": "experiments/phase0_headroom/external_repos/humanize",
+      "package_manager_hints": "hatch/pyproject",
+      "present": true,
+      "repo_id": "humanize",
+      "repo_url": "https://github.com/python-humanize/humanize.git",
+      "source_license": "MIT",
+      "test_framework_hints": "pytest",
+      "visible_issue_or_pr_linkability_signal": {
+        "commit_subject_refs": 378,
+        "rate": 0.361
+      },
+      "worth_broad_mining_first": true
+    }
+  ],
+  "run_id": "phase1_task_supply_v2_generator_bakeoff_20260527",
+  "schema_version": "barcarolle.phase1_task_supply_v2_generator_bakeoff.v1.repo_inventory.v1",
+  "status": "repo_inventory_completed"
+}

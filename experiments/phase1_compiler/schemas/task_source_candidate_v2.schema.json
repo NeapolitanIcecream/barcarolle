@@ -1,0 +1,121 @@
+{
+  "$id": "https://barcarolle.local/schemas/task_source_candidate_v2.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": true,
+  "properties": {
+    "base_commit": {
+      "minLength": 7,
+      "type": "string"
+    },
+    "candidate_id": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "environment": {
+      "required": [
+        "kind",
+        "profile_id",
+        "command_shape",
+        "dependency_time_policy"
+      ],
+      "type": "object"
+    },
+    "gold_patch_exposed_to_solver": {
+      "const": false
+    },
+    "language": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "oracle": {
+      "properties": {
+        "fail_to_pass": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "oracle_source": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "pass_to_pass": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        }
+      },
+      "required": [
+        "fail_to_pass",
+        "pass_to_pass",
+        "oracle_source"
+      ],
+      "type": "object"
+    },
+    "raw_artifact_paths_uncommitted": {
+      "items": {
+        "type": "string"
+      },
+      "type": "array"
+    },
+    "repo_id": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "repo_url": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "schema_version": {
+      "const": "barcarolle.task_source_candidate.v2"
+    },
+    "source_reservoir": {
+      "enum": [
+        "external_swe_bench_live_feasibility",
+        "external_swe_bench_plus_plus_feasibility",
+        "external_swe_smith_feasibility",
+        "manual_or_customer_future_direction",
+        "repo_history_v1_commit_with_tests",
+        "repo_history_v2_commit_with_tests",
+        "repo_history_v2_issue_without_changed_tests",
+        "repo_history_v2_pr_issue_with_tests",
+        "synthetic_or_generated_oracle_future_direction"
+      ]
+    }
+  },
+  "required": [
+    "schema_version",
+    "candidate_id",
+    "repo_id",
+    "repo_url",
+    "language",
+    "source_system",
+    "source_system_version",
+    "source_reservoir",
+    "source_license",
+    "upstream_task_id",
+    "base_commit",
+    "target_commit_optional",
+    "task_time",
+    "source_time",
+    "problem_statement",
+    "problem_statement_provenance",
+    "public_context_refs",
+    "oracle",
+    "environment",
+    "changed_files",
+    "implementation_files",
+    "test_files",
+    "reference_patch_digest_optional",
+    "gold_patch_available_to_barcarolle",
+    "gold_patch_exposed_to_solver",
+    "leakage_flags",
+    "ambiguity_flags",
+    "candidate_labels",
+    "source_confidence",
+    "raw_artifact_paths_uncommitted"
+  ],
+  "title": "Barcarolle TaskSourceCandidate v2",
+  "type": "object"
+}

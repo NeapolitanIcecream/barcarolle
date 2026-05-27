@@ -1,0 +1,83 @@
+{
+  "claims": [
+    "task_supply_future_directions_recorded"
+  ],
+  "generated_at": "2026-05-27T03:54:49Z",
+  "rows": [
+    {
+      "direction_id": "external_swe_bench_plus_plus_adapter",
+      "evidence_from_this_run": "blocked_by_missing_artifacts",
+      "main_risk": "missing or non-recertifiable artifacts",
+      "minimum_next_artifact": "licensed schema sample plus repository overlap table",
+      "recommended_priority": "later",
+      "status": "blocked",
+      "why_not_now": "Only paper-level feasibility was confirmed; local public adapter artifacts were not inspected."
+    },
+    {
+      "direction_id": "external_swe_smith_adapter",
+      "evidence_from_this_run": "blocked_by_runtime_cost",
+      "main_risk": "synthetic oracle distribution shift and container cost",
+      "minimum_next_artifact": "one target-repo profile mapping and local Barcarolle recertification plan",
+      "recommended_priority": "next",
+      "status": "feasible_spike_completed",
+      "why_not_now": "Docker/Ubuntu runtime is outside this local macOS-centered bakeoff and generated tasks must stay separate from eval supply."
+    },
+    {
+      "direction_id": "external_swe_bench_live_adapter",
+      "evidence_from_this_run": "feasible_only_as_design_reference",
+      "main_risk": "freshness and contamination policy complexity",
+      "minimum_next_artifact": "monthly split sample mapped into TaskSourceCandidate v2",
+      "recommended_priority": "next",
+      "status": "feasible_spike_completed",
+      "why_not_now": "Repo overlap and local recertification were not established."
+    },
+    {
+      "direction_id": "generated_oracle_pipeline",
+      "evidence_from_this_run": "repo_history_v2_issue_without_changed_tests candidates were inventoried as missing-oracle supply.",
+      "main_risk": "synthetic tests leaking target behavior or changing predictive value",
+      "minimum_next_artifact": "separate generated-oracle feasibility report with no eval-pool promotion",
+      "recommended_priority": "later",
+      "status": "deferred",
+      "why_not_now": "This run separated missing-oracle issue/PR candidates from changed-test supply and did not promote generated oracle tasks."
+    },
+    {
+      "direction_id": "endpoint_statement_generator_reviewer",
+      "evidence_from_this_run": "commit-message-only and weak public context counts show where generation/review would be useful later.",
+      "main_risk": "raw prompt/completion leakage and endpoint-policy violations",
+      "minimum_next_artifact": "endpoint-compliant wrapper proving LLM_BASE_URL and LLM_API_KEY usage",
+      "recommended_priority": "next",
+      "status": "deferred",
+      "why_not_now": "Paid LLM statement generation was disabled by this runbook."
+    },
+    {
+      "direction_id": "docker_or_nix_environment_factory",
+      "evidence_from_this_run": "environment profile matrix records bounded uv profile shapes.",
+      "main_risk": "runtime cost and hard-to-audit environment drift",
+      "minimum_next_artifact": "one repo-specific container profile with sanitized logs",
+      "recommended_priority": "later",
+      "status": "deferred",
+      "why_not_now": "Historical uv profiles were integrated first; full image factory was outside the local cap."
+    },
+    {
+      "direction_id": "manual_or_customer_regression_source",
+      "evidence_from_this_run": "schema includes manual_or_customer_future_direction reservoir.",
+      "main_risk": "license/provenance ambiguity",
+      "minimum_next_artifact": "one sanitized candidate packet and provenance checklist",
+      "recommended_priority": "park",
+      "status": "deferred",
+      "why_not_now": "No manual/customer source was provided in this run."
+    },
+    {
+      "direction_id": "multi_language_supply",
+      "evidence_from_this_run": "external systems show multi-language options, but local Barcarolle adapters were not built.",
+      "main_risk": "environment fragmentation",
+      "minimum_next_artifact": "language-specific candidate schema extension and one local verifier profile",
+      "recommended_priority": "later",
+      "status": "deferred",
+      "why_not_now": "The target repos and local certification path were Python-only."
+    }
+  ],
+  "run_id": "phase1_task_supply_v2_generator_bakeoff_20260527",
+  "schema_version": "barcarolle.phase1_task_supply_v2_generator_bakeoff.v1.future_directions.v1",
+  "status": "task_supply_future_directions_recorded"
+}

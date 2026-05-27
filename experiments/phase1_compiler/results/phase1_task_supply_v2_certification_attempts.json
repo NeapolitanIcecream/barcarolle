@@ -1,0 +1,4449 @@
+{
+  "basis": "matched v2 candidates against committed local certification artifacts; no paid ACUT or LLM calls were made",
+  "claims": [
+    "local_certification_bakeoff_completed"
+  ],
+  "generated_at": "2026-05-27T03:54:49Z",
+  "local_certification_attempt_cap_per_repo": 120,
+  "raw_logs_committed": false,
+  "rows": [
+    {
+      "artifact_ref": "experiments/phase1_compiler/results/phase1_two_repo_supply_expansion_certification_attempts.json",
+      "attempt_basis": "matched_committed_local_certification_artifact",
+      "candidate_id": "attrs__v2__044",
+      "first_failing_gate": "reference_pass",
+      "historical_environment_recovered_reference_pass": true,
+      "historical_environment_terminal_subgate": "reference_pass",
+      "module_or_package": [
+        "_make"
+      ],
+      "oracle_source": "changed_tests_from_repo_history",
+      "repo_id": "attrs",
+      "source_arm": "repo_history_v2_real",
+      "source_context_quality": "non_leaky_issue_or_pr_context",
+      "source_reservoir": "repo_history_v2_commit_with_tests",
+      "status": "near_certified",
+      "subgate_label": "reference_pass",
+      "time_bucket": "pre_2016"
+    },
+    {
+      "artifact_ref": "experiments/phase1_compiler/results/phase1_two_repo_supply_expansion_certification_attempts.json",
+      "attempt_basis": "matched_committed_local_certification_artifact",
+      "candidate_id": "attrs__v2__052",
+      "first_failing_gate": "reference_pass",
+      "historical_environment_recovered_reference_pass": true,
+      "historical_environment_terminal_subgate": "reference_pass",
+      "module_or_package": [
+        "_make"
+      ],
+      "oracle_source": "changed_tests_from_repo_history",
+      "repo_id": "attrs",
+      "source_arm": "repo_history_v2_real",
+      "source_context_quality": "non_leaky_issue_or_pr_context",
+      "source_reservoir": "repo_history_v2_commit_with_tests",
+      "status": "near_certified",
+      "subgate_label": "reference_pass",
+      "time_bucket": "pre_2016"
+    },
+    {
+      "artifact_ref": "experiments/phase1_compiler/results/phase1_two_repo_supply_expansion_certification_attempts.json",
+      "attempt_basis": "matched_committed_local_certification_artifact",
+      "candidate_id": "attrs__v2__056",
+      "first_failing_gate": "reference_pass",
+      "historical_environment_recovered_reference_pass": true,
+      "historical_environment_terminal_subgate": "reference_pass",
+      "module_or_package": [
+        "_make"
+      ],
+      "oracle_source": "changed_tests_from_repo_history",
+      "repo_id": "attrs",
+      "source_arm": "repo_history_v2_real",
+      "source_context_quality": "pr_title_only_context",
+      "source_reservoir": "repo_history_v2_commit_with_tests",
+      "status": "near_certified",
+      "subgate_label": "reference_pass",
+      "time_bucket": "2016_2019"
+    },
+    {
+      "artifact_ref": "experiments/phase1_compiler/results/phase1_two_repo_supply_expansion_certification_attempts.json",
+      "attempt_basis": "matched_committed_local_certification_artifact",
+      "candidate_id": "attrs__v2__059",
+      "first_failing_gate": "reference_pass",
+      "historical_environment_recovered_reference_pass": false,
+      "historical_environment_terminal_subgate": "reference_collect_failed",
+      "module_or_package": [
+        "_funcs"
+      ],
+      "oracle_source": "changed_tests_from_repo_history",
+      "repo_id": "attrs",
+      "source_arm": "repo_history_v2_real",
+      "source_context_quality": "non_leaky_issue_or_pr_context",
+      "source_reservoir": "repo_history_v2_commit_with_tests",
+      "status": "near_certified",
+      "subgate_label": "collect_failed",
+      "time_bucket": "2016_2019"
+    },
+    {
+      "artifact_ref": "experiments/phase1_compiler/results/phase1_two_repo_supply_expansion_certification_attempts.json",
+      "attempt_basis": "matched_committed_local_certification_artifact",
+      "candidate_id": "attrs__v2__060",
+      "first_failing_gate": "reference_pass",
+      "historical_environment_recovered_reference_pass": false,
+      "historical_environment_terminal_subgate": "reference_collect_failed",
+      "module_or_package": [
+        "_funcs"
+      ],
+      "oracle_source": "changed_tests_from_repo_history",
+      "repo_id": "attrs",
+      "source_arm": "repo_history_v2_real",
+      "source_context_quality": "non_leaky_issue_or_pr_context",
+      "source_reservoir": "repo_history_v2_commit_with_tests",
+      "status": "near_certified",
+      "subgate_label": "collect_failed",
+      "time_bucket": "2016_2019"
+    },
+    {
+      "artifact_ref": "experiments/phase1_compiler/results/phase1_two_repo_supply_expansion_certification_attempts.json",
+      "attempt_basis": "matched_committed_local_certification_artifact",
+      "candidate_id": "attrs__v2__061",
+      "first_failing_gate": "reference_pass",
+      "historical_environment_recovered_reference_pass": false,
+      "historical_environment_terminal_subgate": "reference_collect_failed",
+      "module_or_package": [
+        "_funcs"
+      ],
+      "oracle_source": "changed_tests_from_repo_history",
+      "repo_id": "attrs",
+      "source_arm": "repo_history_v2_real",
+      "source_context_quality": "non_leaky_issue_or_pr_context",
+      "source_reservoir": "repo_history_v2_commit_with_tests",
+      "status": "near_certified",
+      "subgate_label": "collect_failed",
+      "time_bucket": "2016_2019"
+    },
+    {
+      "artifact_ref": "experiments/phase1_compiler/results/phase1_two_repo_supply_expansion_certification_attempts.json",
+      "attempt_basis": "matched_committed_local_certification_artifact",
+      "candidate_id": "attrs__v2__064",
+      "first_failing_gate": "reference_pass",
+      "historical_environment_recovered_reference_pass": false,
+      "historical_environment_terminal_subgate": "reference_import_failed",
+      "module_or_package": [
+        "_funcs"
+      ],
+      "oracle_source": "changed_tests_from_repo_history",
+      "repo_id": "attrs",
+      "source_arm": "repo_history_v2_real",
+      "source_context_quality": "non_leaky_issue_or_pr_context",
+      "source_reservoir": "repo_history_v2_pr_issue_with_tests",
+      "status": "near_certified",
+      "subgate_label": "import_failed",
+      "time_bucket": "2016_2019"
+    },
+    {
+      "artifact_ref": "experiments/phase1_compiler/results/phase1_two_repo_supply_expansion_certification_attempts.json",
+      "attempt_basis": "matched_committed_local_certification_artifact",
+      "candidate_id": "attrs__v2__065",
+      "first_failing_gate": "reference_pass",
+      "historical_environment_recovered_reference_pass": false,
+      "historical_environment_terminal_subgate": "reference_import_failed",
+      "module_or_package": [
+        "_funcs",
+        "_make"
+      ],
+      "oracle_source": "changed_tests_from_repo_history",
+      "repo_id": "attrs",
+      "source_arm": "repo_history_v2_real",
+      "source_context_quality": "non_leaky_issue_or_pr_context",
+      "source_reservoir": "repo_history_v2_pr_issue_with_tests",
+      "status": "near_certified",
+      "subgate_label": "import_failed",
+      "time_bucket": "2016_2019"
+    },
+    {
+      "artifact_ref": "experiments/phase1_compiler/results/phase1_two_repo_supply_expansion_certification_attempts.json",
+      "attempt_basis": "matched_committed_local_certification_artifact",
+      "candidate_id": "attrs__v2__069",
+      "first_failing_gate": "reference_pass",
+      "historical_environment_recovered_reference_pass": false,
+      "historical_environment_terminal_subgate": "reference_import_failed",
+      "module_or_package": [
+        "__init__",
+        "_make",
+        "exceptions"
+      ],
+      "oracle_source": "changed_tests_from_repo_history",
+      "repo_id": "attrs",
+      "source_arm": "repo_history_v2_real",
+      "source_context_quality": "non_leaky_issue_or_pr_context",
+      "source_reservoir": "repo_history_v2_pr_issue_with_tests",
+      "status": "near_certified",
+      "subgate_label": "import_failed",
+      "time_bucket": "2016_2019"
+    },
+    {
+      "artifact_ref": "experiments/phase1_compiler/results/phase1_two_repo_supply_expansion_certification_attempts.json",
+      "attempt_basis": "matched_committed_local_certification_artifact",
+      "candidate_id": "attrs__v2__070",
+      "first_failing_gate": "reference_pass",
+      "historical_environment_recovered_reference_pass": false,
+      "historical_environment_terminal_subgate": "reference_import_failed",
+      "module_or_package": [
+        "_make"
+      ],
+      "oracle_source": "changed_tests_from_repo_history",
+      "repo_id": "attrs",
+      "source_arm": "repo_history_v2_real",
+      "source_context_quality": "non_leaky_issue_or_pr_context",
+      "source_reservoir": "repo_history_v2_pr_issue_with_tests",
+      "status": "near_certified",
+      "subgate_label": "import_failed",
+      "time_bucket": "2016_2019"
+    },
+    {
+      "artifact_ref": "experiments/phase1_compiler/results/phase1_two_repo_supply_expansion_certification_attempts.json",
+      "attempt_basis": "matched_committed_local_certification_artifact",
+      "candidate_id": "attrs__v2__072",
+      "first_failing_gate": "reference_pass",
+      "historical_environment_recovered_reference_pass": false,
+      "historical_environment_terminal_subgate": "reference_import_failed",
+      "module_or_package": [
+        "_make"
+      ],
+      "oracle_source": "changed_tests_from_repo_history",
+      "repo_id": "attrs",
+      "source_arm": "repo_history_v2_real",
+      "source_context_quality": "pr_title_only_context",
+      "source_reservoir": "repo_history_v2_pr_issue_with_tests",
+      "status": "near_certified",
+      "subgate_label": "import_failed",
+      "time_bucket": "2016_2019"
+    },
+    {
+      "artifact_ref": "experiments/phase1_compiler/results/phase1_two_repo_supply_expansion_certification_attempts.json",
+      "attempt_basis": "matched_committed_local_certification_artifact",
+      "candidate_id": "attrs__v2__080",
+      "first_failing_gate": "reference_pass",
+      "historical_environment_recovered_reference_pass": false,
+      "historical_environment_terminal_subgate": "reference_import_failed",
+      "module_or_package": [
+        "_make"
+      ],
+      "oracle_source": "changed_tests_from_repo_history",
+      "repo_id": "attrs",
+      "source_arm": "repo_history_v2_real",
+      "source_context_quality": "non_leaky_issue_or_pr_context",
+      "source_reservoir": "repo_history_v2_pr_issue_with_tests",
+      "status": "near_certified",
+      "subgate_label": "import_failed",
+      "time_bucket": "2016_2019"
+    },
+    {
+      "artifact_ref": "experiments/phase1_compiler/results/phase1_two_repo_supply_expansion_certification_attempts.json",
+      "attempt_basis": "matched_committed_local_certification_artifact",
+      "candidate_id": "attrs__v2__084",
+      "first_failing_gate": "reference_pass",
+      "historical_environment_recovered_reference_pass": false,
+      "historical_environment_terminal_subgate": "reference_import_failed",
+      "module_or_package": [
+        "_make"
+      ],
+      "oracle_source": "changed_tests_from_repo_history",
+      "repo_id": "attrs",
+      "source_arm": "repo_history_v2_real",
+      "source_context_quality": "non_leaky_issue_or_pr_context",
+      "source_reservoir": "repo_history_v2_pr_issue_with_tests",
+      "status": "near_certified",
+      "subgate_label": "import_failed",
+      "time_bucket": "2016_2019"
+    },
+    {
+      "artifact_ref": "experiments/phase1_compiler/results/phase1_two_repo_supply_expansion_certification_attempts.json",
+      "attempt_basis": "matched_committed_local_certification_artifact",
+      "candidate_id": "attrs__v2__090",
+      "first_failing_gate": "",
+      "historical_environment_recovered_reference_pass": false,
+      "historical_environment_terminal_subgate": "",
+      "module_or_package": [
+        "_make"
+      ],
+      "oracle_source": "changed_tests_from_repo_history",
+      "repo_id": "attrs",
+      "source_arm": "repo_history_v2_real",
+      "source_context_quality": "non_leaky_issue_or_pr_context",
+      "source_reservoir": "repo_history_v2_pr_issue_with_tests",
+      "status": "certified",
+      "subgate_label": "reference_pass",
+      "time_bucket": "2016_2019"
+    },
+    {
+      "artifact_ref": "experiments/phase1_compiler/results/phase1_two_repo_supply_expansion_certification_attempts.json",
+      "attempt_basis": "matched_committed_local_certification_artifact",
+      "candidate_id": "attrs__v2__091",
+      "first_failing_gate": "reference_pass",
+      "historical_environment_recovered_reference_pass": false,
+      "historical_environment_terminal_subgate": "reference_import_failed",
+      "module_or_package": [
+        "_make"
+      ],
+      "oracle_source": "changed_tests_from_repo_history",
+      "repo_id": "attrs",
+      "source_arm": "repo_history_v2_real",
+      "source_context_quality": "non_leaky_issue_or_pr_context",
+      "source_reservoir": "repo_history_v2_pr_issue_with_tests",
+      "status": "near_certified",
+      "subgate_label": "import_failed",
+      "time_bucket": "2016_2019"
+    },
+    {
+      "artifact_ref": "experiments/phase1_compiler/results/phase1_two_repo_supply_expansion_certification_attempts.json",
+      "attempt_basis": "matched_committed_local_certification_artifact",
+      "candidate_id": "attrs__v2__098",
+      "first_failing_gate": "reference_pass",
+      "historical_environment_recovered_reference_pass": false,
+      "historical_environment_terminal_subgate": "reference_collect_failed",
+      "module_or_package": [
+        "_make"
+      ],
+      "oracle_source": "changed_tests_from_repo_history",
+      "repo_id": "attrs",
+      "source_arm": "repo_history_v2_real",
+      "source_context_quality": "non_leaky_issue_or_pr_context",
+      "source_reservoir": "repo_history_v2_pr_issue_with_tests",
+      "status": "near_certified",
+      "subgate_label": "collect_failed",
+      "time_bucket": "2016_2019"
+    },
+    {
+      "artifact_ref": "experiments/phase1_compiler/results/phase1_two_repo_supply_expansion_certification_attempts.json",
+      "attempt_basis": "matched_committed_local_certification_artifact",
+      "candidate_id": "attrs__v2__099",
+      "first_failing_gate": "reference_pass",
+      "historical_environment_recovered_reference_pass": false,
+      "historical_environment_terminal_subgate": "reference_collect_failed",
+      "module_or_package": [
+        "_funcs"
+      ],
+      "oracle_source": "changed_tests_from_repo_history",
+      "repo_id": "attrs",
+      "source_arm": "repo_history_v2_real",
+      "source_context_quality": "non_leaky_issue_or_pr_context",
+      "source_reservoir": "repo_history_v2_pr_issue_with_tests",
+      "status": "near_certified",
+      "subgate_label": "collect_failed",
+      "time_bucket": "2016_2019"
+    },
+    {
+      "artifact_ref": "experiments/phase1_compiler/results/phase1_two_repo_supply_expansion_certification_attempts.json",
+      "attempt_basis": "matched_committed_local_certification_artifact",
+      "candidate_id": "attrs__v2__100",
+      "first_failing_gate": "",
+      "historical_environment_recovered_reference_pass": false,
+      "historical_environment_terminal_subgate": "",
+      "module_or_package": [
+        "__init__",
+        "converters"
+      ],
+      "oracle_source": "changed_tests_from_repo_history",
+      "repo_id": "attrs",
+      "source_arm": "repo_history_v2_real",
+      "source_context_quality": "non_leaky_issue_or_pr_context",
+      "source_reservoir": "repo_history_v2_pr_issue_with_tests",
+      "status": "certified",
+      "subgate_label": "reference_pass",
+      "time_bucket": "2016_2019"
+    },
+    {
+      "artifact_ref": "experiments/phase1_compiler/results/phase1_two_repo_supply_expansion_certification_attempts.json",
+      "attempt_basis": "matched_committed_local_certification_artifact",
+      "candidate_id": "attrs__v2__101",
+      "first_failing_gate": "reference_pass",
+      "historical_environment_recovered_reference_pass": false,
+      "historical_environment_terminal_subgate": "reference_collect_failed",
+      "module_or_package": [
+        "_make",
+        "validators"
+      ],
+      "oracle_source": "changed_tests_from_repo_history",
+      "repo_id": "attrs",
+      "source_arm": "repo_history_v2_real",
+      "source_context_quality": "non_leaky_issue_or_pr_context",
+      "source_reservoir": "repo_history_v2_pr_issue_with_tests",
+      "status": "near_certified",
+      "subgate_label": "collect_failed",
+      "time_bucket": "2016_2019"
+    },
+    {
+      "artifact_ref": "experiments/phase1_compiler/results/phase1_two_repo_supply_expansion_certification_attempts.json",
+      "attempt_basis": "matched_committed_local_certification_artifact",
+      "candidate_id": "attrs__v2__102",
+      "first_failing_gate": "reference_pass",
+      "historical_environment_recovered_reference_pass": false,
+      "historical_environment_terminal_subgate": "reference_collect_failed",
+      "module_or_package": [
+        "_make",
+        "exceptions"
+      ],
+      "oracle_source": "changed_tests_from_repo_history",
+      "repo_id": "attrs",
+      "source_arm": "repo_history_v2_real",
+      "source_context_quality": "non_leaky_issue_or_pr_context",
+      "source_reservoir": "repo_history_v2_pr_issue_with_tests",
+      "status": "near_certified",
+      "subgate_label": "collect_failed",
+      "time_bucket": "2016_2019"
+    },
+    {
+      "artifact_ref": "experiments/phase1_compiler/results/phase1_two_repo_supply_expansion_certification_attempts.json",
+      "attempt_basis": "matched_committed_local_certification_artifact",
+      "candidate_id": "attrs__v2__103",
+      "first_failing_gate": "reference_pass",
+      "historical_environment_recovered_reference_pass": false,
+      "historical_environment_terminal_subgate": "reference_collect_failed",
+      "module_or_package": [
+        "validators"
+      ],
+      "oracle_source": "changed_tests_from_repo_history",
+      "repo_id": "attrs",
+      "source_arm": "repo_history_v2_real",
+      "source_context_quality": "non_leaky_issue_or_pr_context",
+      "source_reservoir": "repo_history_v2_pr_issue_with_tests",
+      "status": "near_certified",
+      "subgate_label": "collect_failed",
+      "time_bucket": "2016_2019"
+    },
+    {
+      "artifact_ref": "experiments/phase1_compiler/results/phase1_two_repo_supply_expansion_certification_attempts.json",
+      "attempt_basis": "matched_committed_local_certification_artifact",
+      "candidate_id": "attrs__v2__104",
+      "first_failing_gate": "reference_pass",
+      "historical_environment_recovered_reference_pass": false,
+      "historical_environment_terminal_subgate": "reference_collect_failed",
+      "module_or_package": [
+        "_make",
+        "validators"
+      ],
+      "oracle_source": "changed_tests_from_repo_history",
+      "repo_id": "attrs",
+      "source_arm": "repo_history_v2_real",
+      "source_context_quality": "non_leaky_issue_or_pr_context",
+      "source_reservoir": "repo_history_v2_pr_issue_with_tests",
+      "status": "near_certified",
+      "subgate_label": "collect_failed",
+      "time_bucket": "2016_2019"
+    },
+    {
+      "artifact_ref": "experiments/phase1_compiler/results/phase1_two_repo_supply_expansion_certification_attempts.json",
+      "attempt_basis": "matched_committed_local_certification_artifact",
+      "candidate_id": "attrs__v2__105",
+      "first_failing_gate": "reference_pass",
+      "historical_environment_recovered_reference_pass": false,
+      "historical_environment_terminal_subgate": "reference_install_failed",
+      "module_or_package": [
+        "_make"
+      ],
+      "oracle_source": "changed_tests_from_repo_history",
+      "repo_id": "attrs",
+      "source_arm": "repo_history_v2_real",
+      "source_context_quality": "non_leaky_issue_or_pr_context",
+      "source_reservoir": "repo_history_v2_pr_issue_with_tests",
+      "status": "near_certified",
+      "subgate_label": "install_failed",
+      "time_bucket": "2016_2019"
+    },
+    {
+      "artifact_ref": "experiments/phase1_compiler/results/phase1_two_repo_supply_expansion_certification_attempts.json",
+      "attempt_basis": "matched_committed_local_certification_artifact",
+      "candidate_id": "attrs__v2__106",
+      "first_failing_gate": "reference_pass",
+      "historical_environment_recovered_reference_pass": false,
+      "historical_environment_terminal_subgate": "reference_install_failed",
+      "module_or_package": [
+        "_make"
+      ],
+      "oracle_source": "changed_tests_from_repo_history",
+      "repo_id": "attrs",
+      "source_arm": "repo_history_v2_real",
+      "source_context_quality": "non_leaky_issue_or_pr_context",
+      "source_reservoir": "repo_history_v2_pr_issue_with_tests",
+      "status": "near_certified",
+      "subgate_label": "install_failed",
+      "time_bucket": "2016_2019"
+    },
+    {
+      "artifact_ref": "experiments/phase1_compiler/results/phase1_two_repo_supply_expansion_certification_attempts.json",
+      "attempt_basis": "matched_committed_local_certification_artifact",
+      "candidate_id": "attrs__v2__108",
+      "first_failing_gate": "reference_pass",
+      "historical_environment_recovered_reference_pass": false,
+      "historical_environment_terminal_subgate": "reference_install_failed",
+      "module_or_package": [
+        "_funcs"
+      ],
+      "oracle_source": "changed_tests_from_repo_history",
+      "repo_id": "attrs",
+      "source_arm": "repo_history_v2_real",
+      "source_context_quality": "non_leaky_issue_or_pr_context",
+      "source_reservoir": "repo_history_v2_pr_issue_with_tests",
+      "status": "near_certified",
+      "subgate_label": "install_failed",
+      "time_bucket": "2016_2019"
+    },
+    {
+      "artifact_ref": "experiments/phase1_compiler/results/phase1_two_repo_supply_expansion_certification_attempts.json",
+      "attempt_basis": "matched_committed_local_certification_artifact",
+      "candidate_id": "attrs__v2__109",
+      "first_failing_gate": "",
+      "historical_environment_recovered_reference_pass": false,
+      "historical_environment_terminal_subgate": "",
+      "module_or_package": [
+        "_compat",
+        "_make"
+      ],
+      "oracle_source": "changed_tests_from_repo_history",
+      "repo_id": "attrs",
+      "source_arm": "repo_history_v2_real",
+      "source_context_quality": "non_leaky_issue_or_pr_context",
+      "source_reservoir": "repo_history_v2_pr_issue_with_tests",
+      "status": "certified",
+      "subgate_label": "reference_pass",
+      "time_bucket": "2016_2019"
+    },
+    {
+      "artifact_ref": "experiments/phase1_compiler/results/phase1_two_repo_supply_expansion_certification_attempts.json",
+      "attempt_basis": "matched_committed_local_certification_artifact",
+      "candidate_id": "attrs__v2__110",
+      "first_failing_gate": "reference_pass",
+      "historical_environment_recovered_reference_pass": false,
+      "historical_environment_terminal_subgate": "reference_install_failed",
+      "module_or_package": [
+        "_make"
+      ],
+      "oracle_source": "changed_tests_from_repo_history",
+      "repo_id": "attrs",
+      "source_arm": "repo_history_v2_real",
+      "source_context_quality": "non_leaky_issue_or_pr_context",
+      "source_reservoir": "repo_history_v2_pr_issue_with_tests",
+      "status": "near_certified",
+      "subgate_label": "install_failed",
+      "time_bucket": "2016_2019"
+    },
+    {
+      "artifact_ref": "experiments/phase1_compiler/results/phase1_two_repo_supply_expansion_certification_attempts.json",
+      "attempt_basis": "matched_committed_local_certification_artifact",
+      "candidate_id": "attrs__v2__112",
+      "first_failing_gate": "reference_pass",
+      "historical_environment_recovered_reference_pass": false,
+      "historical_environment_terminal_subgate": "reference_install_failed",
+      "module_or_package": [
+        "_compat",
+        "_make"
+      ],
+      "oracle_source": "changed_tests_from_repo_history",
+      "repo_id": "attrs",
+      "source_arm": "repo_history_v2_real",
+      "source_context_quality": "non_leaky_issue_or_pr_context",
+      "source_reservoir": "repo_history_v2_pr_issue_with_tests",
+      "status": "near_certified",
+      "subgate_label": "install_failed",
+      "time_bucket": "2016_2019"
+    },
+    {
+      "artifact_ref": "experiments/phase1_compiler/results/phase1_two_repo_supply_expansion_certification_attempts.json",
+      "attempt_basis": "matched_committed_local_certification_artifact",
+      "candidate_id": "attrs__v2__115",
+      "first_failing_gate": "reference_pass",
+      "historical_environment_recovered_reference_pass": false,
+      "historical_environment_terminal_subgate": "reference_install_failed",
+      "module_or_package": [
+        "_make"
+      ],
+      "oracle_source": "changed_tests_from_repo_history",
+      "repo_id": "attrs",
+      "source_arm": "repo_history_v2_real",
+      "source_context_quality": "non_leaky_issue_or_pr_context",
+      "source_reservoir": "repo_history_v2_pr_issue_with_tests",
+      "status": "near_certified",
+      "subgate_label": "install_failed",
+      "time_bucket": "2016_2019"
+    },
+    {
+      "artifact_ref": "experiments/phase1_compiler/results/phase1_two_repo_supply_expansion_certification_attempts.json",
+      "attempt_basis": "matched_committed_local_certification_artifact",
+      "candidate_id": "attrs__v2__118",
+      "first_failing_gate": "",
+      "historical_environment_recovered_reference_pass": false,
+      "historical_environment_terminal_subgate": "",
+      "module_or_package": [
+        "_compat"
+      ],
+      "oracle_source": "changed_tests_from_repo_history",
+      "repo_id": "attrs",
+      "source_arm": "repo_history_v2_real",
+      "source_context_quality": "non_leaky_issue_or_pr_context",
+      "source_reservoir": "repo_history_v2_pr_issue_with_tests",
+      "status": "certified",
+      "subgate_label": "reference_pass",
+      "time_bucket": "2016_2019"
+    },
+    {
+      "artifact_ref": "experiments/phase1_compiler/results/phase1_two_repo_supply_expansion_certification_attempts.json",
+      "attempt_basis": "matched_committed_local_certification_artifact",
+      "candidate_id": "attrs__v2__119",
+      "first_failing_gate": "reference_pass",
+      "historical_environment_recovered_reference_pass": false,
+      "historical_environment_terminal_subgate": "reference_install_failed",
+      "module_or_package": [
+        "_make"
+      ],
+      "oracle_source": "changed_tests_from_repo_history",
+      "repo_id": "attrs",
+      "source_arm": "repo_history_v2_real",
+      "source_context_quality": "non_leaky_issue_or_pr_context",
+      "source_reservoir": "repo_history_v2_pr_issue_with_tests",
+      "status": "near_certified",
+      "subgate_label": "install_failed",
+      "time_bucket": "2016_2019"
+    },
+    {
+      "artifact_ref": "experiments/phase1_compiler/results/phase1_two_repo_supply_expansion_certification_attempts.json",
+      "attempt_basis": "matched_committed_local_certification_artifact",
+      "candidate_id": "attrs__v2__120",
+      "first_failing_gate": "no_op_fail",
+      "historical_environment_recovered_reference_pass": false,
+      "historical_environment_terminal_subgate": "",
+      "module_or_package": [
+        "_make"
+      ],
+      "oracle_source": "changed_tests_from_repo_history",
+      "repo_id": "attrs",
+      "source_arm": "repo_history_v2_real",
+      "source_context_quality": "non_leaky_issue_or_pr_context",
+      "source_reservoir": "repo_history_v2_pr_issue_with_tests",
+      "status": "near_certified",
+      "subgate_label": "noop_assert_failed",
+      "time_bucket": "2016_2019"
+    },
+    {
+      "artifact_ref": "experiments/phase1_compiler/results/phase1_two_repo_supply_expansion_certification_attempts.json",
+      "attempt_basis": "matched_committed_local_certification_artifact",
+      "candidate_id": "attrs__v2__124",
+      "first_failing_gate": "reference_pass",
+      "historical_environment_recovered_reference_pass": false,
+      "historical_environment_terminal_subgate": "reference_install_failed",
+      "module_or_package": [
+        "_make"
+      ],
+      "oracle_source": "changed_tests_from_repo_history",
+      "repo_id": "attrs",
+      "source_arm": "repo_history_v2_real",
+      "source_context_quality": "non_leaky_issue_or_pr_context",
+      "source_reservoir": "repo_history_v2_pr_issue_with_tests",
+      "status": "near_certified",
+      "subgate_label": "install_failed",
+      "time_bucket": "2016_2019"
+    },
+    {
+      "artifact_ref": "experiments/phase1_compiler/results/phase1_two_repo_supply_expansion_certification_attempts.json",
+      "attempt_basis": "matched_committed_local_certification_artifact",
+      "candidate_id": "attrs__v2__125",
+      "first_failing_gate": "reference_pass",
+      "historical_environment_recovered_reference_pass": false,
+      "historical_environment_terminal_subgate": "reference_install_failed",
+      "module_or_package": [
+        "_make"
+      ],
+      "oracle_source": "changed_tests_from_repo_history",
+      "repo_id": "attrs",
+      "source_arm": "repo_history_v2_real",
+      "source_context_quality": "non_leaky_issue_or_pr_context",
+      "source_reservoir": "repo_history_v2_pr_issue_with_tests",
+      "status": "near_certified",
+      "subgate_label": "install_failed",
+      "time_bucket": "2016_2019"
+    },
+    {
+      "artifact_ref": "experiments/phase1_compiler/results/phase1_two_repo_supply_expansion_certification_attempts.json",
+      "attempt_basis": "matched_committed_local_certification_artifact",
+      "candidate_id": "attrs__v2__126",
+      "first_failing_gate": "reference_pass",
+      "historical_environment_recovered_reference_pass": false,
+      "historical_environment_terminal_subgate": "",
+      "module_or_package": [
+        "_make"
+      ],
+      "oracle_source": "changed_tests_from_repo_history",
+      "repo_id": "attrs",
+      "source_arm": "repo_history_v2_real",
+      "source_context_quality": "non_leaky_issue_or_pr_context",
+      "source_reservoir": "repo_history_v2_pr_issue_with_tests",
+      "status": "near_certified",
+      "subgate_label": "unknown_failed",
+      "time_bucket": "2016_2019"
+    },
+    {
+      "artifact_ref": "experiments/phase1_compiler/results/phase1_two_repo_supply_expansion_certification_attempts.json",
+      "attempt_basis": "matched_committed_local_certification_artifact",
+      "candidate_id": "attrs__v2__128",
+      "first_failing_gate": "reference_pass",
+      "historical_environment_recovered_reference_pass": false,
+      "historical_environment_terminal_subgate": "reference_collect_failed",
+      "module_or_package": [
+        "_make"
+      ],
+      "oracle_source": "changed_tests_from_repo_history",
+      "repo_id": "attrs",
+      "source_arm": "repo_history_v2_real",
+      "source_context_quality": "non_leaky_issue_or_pr_context",
+      "source_reservoir": "repo_history_v2_pr_issue_with_tests",
+      "status": "near_certified",
+      "subgate_label": "collect_failed",
+      "time_bucket": "2016_2019"
+    },
+    {
+      "artifact_ref": "experiments/phase1_compiler/results/phase1_two_repo_supply_expansion_certification_attempts.json",
+      "attempt_basis": "matched_committed_local_certification_artifact",
+      "candidate_id": "attrs__v2__129",
+      "first_failing_gate": "reference_pass",
+      "historical_environment_recovered_reference_pass": false,
+      "historical_environment_terminal_subgate": "",
+      "module_or_package": [
+        "_make"
+      ],
+      "oracle_source": "changed_tests_from_repo_history",
+      "repo_id": "attrs",
+      "source_arm": "repo_history_v2_real",
+      "source_context_quality": "non_leaky_issue_or_pr_context",
+      "source_reservoir": "repo_history_v2_pr_issue_with_tests",
+      "status": "near_certified",
+      "subgate_label": "unknown_failed",
+      "time_bucket": "2016_2019"
+    },
+    {
+      "artifact_ref": "experiments/phase1_compiler/results/phase1_two_repo_supply_expansion_certification_attempts.json",
+      "attempt_basis": "matched_committed_local_certification_artifact",
+      "candidate_id": "attrs__v2__130",
+      "first_failing_gate": "reference_pass",
+      "historical_environment_recovered_reference_pass": false,
+      "historical_environment_terminal_subgate": "",
+      "module_or_package": [
+        "_make"
+      ],
+      "oracle_source": "changed_tests_from_repo_history",
+      "repo_id": "attrs",
+      "source_arm": "repo_history_v2_real",
+      "source_context_quality": "non_leaky_issue_or_pr_context",
+      "source_reservoir": "repo_history_v2_pr_issue_with_tests",
+      "status": "near_certified",
+      "subgate_label": "unknown_failed",
+      "time_bucket": "2016_2019"
+    },
+    {
+      "artifact_ref": "experiments/phase1_compiler/results/phase1_two_repo_supply_expansion_certification_attempts.json",
+      "attempt_basis": "matched_committed_local_certification_artifact",
+      "candidate_id": "attrs__v2__133",
+      "first_failing_gate": "reference_pass",
+      "historical_environment_recovered_reference_pass": false,
+      "historical_environment_terminal_subgate": "",
+      "module_or_package": [
+        "_make"
+      ],
+      "oracle_source": "changed_tests_from_repo_history",
+      "repo_id": "attrs",
+      "source_arm": "repo_history_v2_real",
+      "source_context_quality": "non_leaky_issue_or_pr_context",
+      "source_reservoir": "repo_history_v2_pr_issue_with_tests",
+      "status": "near_certified",
+      "subgate_label": "unknown_failed",
+      "time_bucket": "2016_2019"
+    },
+    {
+      "artifact_ref": "experiments/phase1_compiler/results/phase1_two_repo_supply_expansion_certification_attempts.json",
+      "attempt_basis": "matched_committed_local_certification_artifact",
+      "candidate_id": "attrs__v2__134",
+      "first_failing_gate": "reference_pass",
+      "historical_environment_recovered_reference_pass": false,
+      "historical_environment_terminal_subgate": "",
+      "module_or_package": [
+        "_compat",
+        "_make"
+      ],
+      "oracle_source": "changed_tests_from_repo_history",
+      "repo_id": "attrs",
+      "source_arm": "repo_history_v2_real",
+      "source_context_quality": "non_leaky_issue_or_pr_context",
+      "source_reservoir": "repo_history_v2_pr_issue_with_tests",
+      "status": "near_certified",
+      "subgate_label": "unknown_failed",
+      "time_bucket": "2016_2019"
+    },
+    {
+      "artifact_ref": "experiments/phase1_compiler/results/phase1_two_repo_supply_expansion_certification_attempts.json",
+      "attempt_basis": "matched_committed_local_certification_artifact",
+      "candidate_id": "attrs__v2__135",
+      "first_failing_gate": "reference_pass",
+      "historical_environment_recovered_reference_pass": false,
+      "historical_environment_terminal_subgate": "",
+      "module_or_package": [
+        "__init__",
+        "_make"
+      ],
+      "oracle_source": "changed_tests_from_repo_history",
+      "repo_id": "attrs",
+      "source_arm": "repo_history_v2_real",
+      "source_context_quality": "non_leaky_issue_or_pr_context",
+      "source_reservoir": "repo_history_v2_pr_issue_with_tests",
+      "status": "near_certified",
+      "subgate_label": "unknown_failed",
+      "time_bucket": "2016_2019"
+    },
+    {
+      "artifact_ref": "experiments/phase1_compiler/results/phase1_two_repo_supply_expansion_certification_attempts.json",
+      "attempt_basis": "matched_committed_local_certification_artifact",
+      "candidate_id": "attrs__v2__136",
+      "first_failing_gate": "reference_pass",
+      "historical_environment_recovered_reference_pass": false,
+      "historical_environment_terminal_subgate": "",
+      "module_or_package": [
+        "_make"
+      ],
+      "oracle_source": "changed_tests_from_repo_history",
+      "repo_id": "attrs",
+      "source_arm": "repo_history_v2_real",
+      "source_context_quality": "non_leaky_issue_or_pr_context",
+      "source_reservoir": "repo_history_v2_pr_issue_with_tests",
+      "status": "near_certified",
+      "subgate_label": "unknown_failed",
+      "time_bucket": "2016_2019"
+    },
+    {
+      "artifact_ref": "experiments/phase1_compiler/results/phase1_two_repo_supply_expansion_certification_attempts.json",
+      "attempt_basis": "matched_committed_local_certification_artifact",
+      "candidate_id": "attrs__v2__137",
+      "first_failing_gate": "reference_pass",
+      "historical_environment_recovered_reference_pass": false,
+      "historical_environment_terminal_subgate": "",
+      "module_or_package": [
+        "_make"
+      ],
+      "oracle_source": "changed_tests_from_repo_history",
+      "repo_id": "attrs",
+      "source_arm": "repo_history_v2_real",
+      "source_context_quality": "non_leaky_issue_or_pr_context",
+      "source_reservoir": "repo_history_v2_commit_with_tests",
+      "status": "near_certified",
+      "subgate_label": "unknown_failed",
+      "time_bucket": "2016_2019"
+    },
+    {
+      "artifact_ref": "experiments/phase1_compiler/results/phase1_two_repo_supply_expansion_certification_attempts.json",
+      "attempt_basis": "matched_committed_local_certification_artifact",
+      "candidate_id": "attrs__v2__141",
+      "first_failing_gate": "reference_pass",
+      "historical_environment_recovered_reference_pass": false,
+      "historical_environment_terminal_subgate": "",
+      "module_or_package": [
+        "validators"
+      ],
+      "oracle_source": "changed_tests_from_repo_history",
+      "repo_id": "attrs",
+      "source_arm": "repo_history_v2_real",
+      "source_context_quality": "non_leaky_issue_or_pr_context",
+      "source_reservoir": "repo_history_v2_pr_issue_with_tests",
+      "status": "near_certified",
+      "subgate_label": "unknown_failed",
+      "time_bucket": "2016_2019"
+    },
+    {
+      "artifact_ref": "experiments/phase1_compiler/results/phase1_two_repo_supply_expansion_certification_attempts.json",
+      "attempt_basis": "matched_committed_local_certification_artifact",
+      "candidate_id": "attrs__v2__143",
+      "first_failing_gate": "ambiguity_review",
+      "historical_environment_recovered_reference_pass": false,
+      "historical_environment_terminal_subgate": "",
+      "module_or_package": [
+        "_make"
+      ],
+      "oracle_source": "changed_tests_from_repo_history",
+      "repo_id": "attrs",
+      "source_arm": "repo_history_v2_real",
+      "source_context_quality": "non_leaky_issue_or_pr_context",
+      "source_reservoir": "repo_history_v2_pr_issue_with_tests",
+      "status": "near_certified",
+      "subgate_label": "unknown_failed",
+      "time_bucket": "2016_2019"
+    },
+    {
+      "artifact_ref": "experiments/phase1_compiler/results/phase1_two_repo_supply_expansion_certification_attempts.json",
+      "attempt_basis": "matched_committed_local_certification_artifact",
+      "candidate_id": "attrs__v2__144",
+      "first_failing_gate": "reference_pass",
+      "historical_environment_recovered_reference_pass": false,
+      "historical_environment_terminal_subgate": "",
+      "module_or_package": [
+        "_funcs"
+      ],
+      "oracle_source": "changed_tests_from_repo_history",
+      "repo_id": "attrs",
+      "source_arm": "repo_history_v2_real",
+      "source_context_quality": "non_leaky_issue_or_pr_context",
+      "source_reservoir": "repo_history_v2_pr_issue_with_tests",
+      "status": "near_certified",
+      "subgate_label": "unknown_failed",
+      "time_bucket": "2016_2019"
+    },
+    {
+      "artifact_ref": "experiments/phase1_compiler/results/phase1_two_repo_supply_expansion_certification_attempts.json",
+      "attempt_basis": "matched_committed_local_certification_artifact",
+      "candidate_id": "attrs__v2__145",
+      "first_failing_gate": "",
+      "historical_environment_recovered_reference_pass": false,
+      "historical_environment_terminal_subgate": "",
+      "module_or_package": [
+        "_make"
+      ],
+      "oracle_source": "changed_tests_from_repo_history",
+      "repo_id": "attrs",
+      "source_arm": "repo_history_v2_real",
+      "source_context_quality": "non_leaky_issue_or_pr_context",
+      "source_reservoir": "repo_history_v2_pr_issue_with_tests",
+      "status": "certified",
+      "subgate_label": "reference_pass",
+      "time_bucket": "2016_2019"
+    },
+    {
+      "artifact_ref": "experiments/phase1_compiler/results/phase1_two_repo_supply_expansion_certification_attempts.json",
+      "attempt_basis": "matched_committed_local_certification_artifact",
+      "candidate_id": "attrs__v2__146",
+      "first_failing_gate": "ambiguity_review",
+      "historical_environment_recovered_reference_pass": false,
+      "historical_environment_terminal_subgate": "",
+      "module_or_package": [
+        "converters"
+      ],
+      "oracle_source": "changed_tests_from_repo_history",
+      "repo_id": "attrs",
+      "source_arm": "repo_history_v2_real",
+      "source_context_quality": "non_leaky_issue_or_pr_context",
+      "source_reservoir": "repo_history_v2_pr_issue_with_tests",
+      "status": "near_certified",
+      "subgate_label": "unknown_failed",
+      "time_bucket": "2016_2019"
+    },
+    {
+      "artifact_ref": "experiments/phase1_compiler/results/phase1_two_repo_supply_expansion_certification_attempts.json",
+      "attempt_basis": "matched_committed_local_certification_artifact",
+      "candidate_id": "attrs__v2__149",
+      "first_failing_gate": "reference_pass",
+      "historical_environment_recovered_reference_pass": false,
+      "historical_environment_terminal_subgate": "",
+      "module_or_package": [
+        "_make"
+      ],
+      "oracle_source": "changed_tests_from_repo_history",
+      "repo_id": "attrs",
+      "source_arm": "repo_history_v2_real",
+      "source_context_quality": "non_leaky_issue_or_pr_context",
+      "source_reservoir": "repo_history_v2_pr_issue_with_tests",
+      "status": "near_certified",
+      "subgate_label": "unknown_failed",
+      "time_bucket": "2016_2019"
+    },
+    {
+      "artifact_ref": "experiments/phase1_compiler/results/phase1_two_repo_supply_expansion_certification_attempts.json",
+      "attempt_basis": "matched_committed_local_certification_artifact",
+      "candidate_id": "attrs__v2__151",
+      "first_failing_gate": "reference_pass",
+      "historical_environment_recovered_reference_pass": false,
+      "historical_environment_terminal_subgate": "",
+      "module_or_package": [
+        "_make"
+      ],
+      "oracle_source": "changed_tests_from_repo_history",
+      "repo_id": "attrs",
+      "source_arm": "repo_history_v2_real",
+      "source_context_quality": "non_leaky_issue_or_pr_context",
+      "source_reservoir": "repo_history_v2_pr_issue_with_tests",
+      "status": "near_certified",
+      "subgate_label": "unknown_failed",
+      "time_bucket": "2016_2019"
+    },
+    {
+      "artifact_ref": "experiments/phase1_compiler/results/phase1_two_repo_supply_expansion_certification_attempts.json",
+      "attempt_basis": "matched_committed_local_certification_artifact",
+      "candidate_id": "attrs__v2__153",
+      "first_failing_gate": "reference_pass",
+      "historical_environment_recovered_reference_pass": false,
+      "historical_environment_terminal_subgate": "",
+      "module_or_package": [
+        "_make"
+      ],
+      "oracle_source": "changed_tests_from_repo_history",
+      "repo_id": "attrs",
+      "source_arm": "repo_history_v2_real",
+      "source_context_quality": "non_leaky_issue_or_pr_context",
+      "source_reservoir": "repo_history_v2_pr_issue_with_tests",
+      "status": "near_certified",
+      "subgate_label": "unknown_failed",
+      "time_bucket": "2016_2019"
+    },
+    {
+      "artifact_ref": "experiments/phase1_compiler/results/phase1_two_repo_supply_expansion_certification_attempts.json",
+      "attempt_basis": "matched_committed_local_certification_artifact",
+      "candidate_id": "attrs__v2__157",
+      "first_failing_gate": "",
+      "historical_environment_recovered_reference_pass": false,
+      "historical_environment_terminal_subgate": "",
+      "module_or_package": [
+        "_make"
+      ],
+      "oracle_source": "changed_tests_from_repo_history",
+      "repo_id": "attrs",
+      "source_arm": "repo_history_v2_real",
+      "source_context_quality": "non_leaky_issue_or_pr_context",
+      "source_reservoir": "repo_history_v2_pr_issue_with_tests",
+      "status": "certified",
+      "subgate_label": "reference_pass",
+      "time_bucket": "2016_2019"
+    },
+    {
+      "artifact_ref": "experiments/phase1_compiler/results/phase1_two_repo_supply_expansion_certification_attempts.json",
+      "attempt_basis": "matched_committed_local_certification_artifact",
+      "candidate_id": "attrs__v2__158",
+      "first_failing_gate": "reference_pass",
+      "historical_environment_recovered_reference_pass": false,
+      "historical_environment_terminal_subgate": "",
+      "module_or_package": [
+        "_make"
+      ],
+      "oracle_source": "changed_tests_from_repo_history",
+      "repo_id": "attrs",
+      "source_arm": "repo_history_v2_real",
+      "source_context_quality": "non_leaky_issue_or_pr_context",
+      "source_reservoir": "repo_history_v2_pr_issue_with_tests",
+      "status": "near_certified",
+      "subgate_label": "unknown_failed",
+      "time_bucket": "2016_2019"
+    },
+    {
+      "artifact_ref": "experiments/phase1_compiler/results/phase1_two_repo_supply_expansion_certification_attempts.json",
+      "attempt_basis": "matched_committed_local_certification_artifact",
+      "candidate_id": "attrs__v2__161",
+      "first_failing_gate": "reference_pass",
+      "historical_environment_recovered_reference_pass": false,
+      "historical_environment_terminal_subgate": "",
+      "module_or_package": [
+        "_make"
+      ],
+      "oracle_source": "changed_tests_from_repo_history",
+      "repo_id": "attrs",
+      "source_arm": "repo_history_v2_real",
+      "source_context_quality": "non_leaky_issue_or_pr_context",
+      "source_reservoir": "repo_history_v2_pr_issue_with_tests",
+      "status": "near_certified",
+      "subgate_label": "unknown_failed",
+      "time_bucket": "2016_2019"
+    },
+    {
+      "artifact_ref": "experiments/phase1_compiler/results/phase1_two_repo_supply_expansion_certification_attempts.json",
+      "attempt_basis": "matched_committed_local_certification_artifact",
+      "candidate_id": "attrs__v2__164",
+      "first_failing_gate": "reference_pass",
+      "historical_environment_recovered_reference_pass": false,
+      "historical_environment_terminal_subgate": "",
+      "module_or_package": [
+        "validators"
+      ],
+      "oracle_source": "changed_tests_from_repo_history",
+      "repo_id": "attrs",
+      "source_arm": "repo_history_v2_real",
+      "source_context_quality": "non_leaky_issue_or_pr_context",
+      "source_reservoir": "repo_history_v2_pr_issue_with_tests",
+      "status": "near_certified",
+      "subgate_label": "unknown_failed",
+      "time_bucket": "2016_2019"
+    },
+    {
+      "artifact_ref": "experiments/phase1_compiler/results/phase1_two_repo_supply_expansion_certification_attempts.json",
+      "attempt_basis": "matched_committed_local_certification_artifact",
+      "candidate_id": "attrs__v2__165",
+      "first_failing_gate": "reference_pass",
+      "historical_environment_recovered_reference_pass": false,
+      "historical_environment_terminal_subgate": "",
+      "module_or_package": [
+        "_compat"
+      ],
+      "oracle_source": "changed_tests_from_repo_history",
+      "repo_id": "attrs",
+      "source_arm": "repo_history_v2_real",
+      "source_context_quality": "non_leaky_issue_or_pr_context",
+      "source_reservoir": "repo_history_v2_pr_issue_with_tests",
+      "status": "near_certified",
+      "subgate_label": "unknown_failed",
+      "time_bucket": "2016_2019"
+    },
+    {
+      "artifact_ref": "experiments/phase1_compiler/results/phase1_two_repo_supply_expansion_certification_attempts.json",
+      "attempt_basis": "matched_committed_local_certification_artifact",
+      "candidate_id": "attrs__v2__166",
+      "first_failing_gate": "reference_pass",
+      "historical_environment_recovered_reference_pass": false,
+      "historical_environment_terminal_subgate": "",
+      "module_or_package": [
+        "_compat"
+      ],
+      "oracle_source": "changed_tests_from_repo_history",
+      "repo_id": "attrs",
+      "source_arm": "repo_history_v2_real",
+      "source_context_quality": "material_leakage_risk",
+      "source_reservoir": "repo_history_v2_pr_issue_with_tests",
+      "status": "near_certified",
+      "subgate_label": "unknown_failed",
+      "time_bucket": "2016_2019"
+    },
+    {
+      "artifact_ref": "experiments/phase1_compiler/results/phase1_two_repo_supply_expansion_certification_attempts.json",
+      "attempt_basis": "matched_committed_local_certification_artifact",
+      "candidate_id": "attrs__v2__168",
+      "first_failing_gate": "reference_pass",
+      "historical_environment_recovered_reference_pass": false,
+      "historical_environment_terminal_subgate": "",
+      "module_or_package": [
+        "exceptions",
+        "validators"
+      ],
+      "oracle_source": "changed_tests_from_repo_history",
+      "repo_id": "attrs",
+      "source_arm": "repo_history_v2_real",
+      "source_context_quality": "non_leaky_issue_or_pr_context",
+      "source_reservoir": "repo_history_v2_pr_issue_with_tests",
+      "status": "near_certified",
+      "subgate_label": "unknown_failed",
+      "time_bucket": "2016_2019"
+    },
+    {
+      "artifact_ref": "experiments/phase1_compiler/results/phase1_two_repo_supply_expansion_certification_attempts.json",
+      "attempt_basis": "matched_committed_local_certification_artifact",
+      "candidate_id": "attrs__v2__169",
+      "first_failing_gate": "ambiguity_review",
+      "historical_environment_recovered_reference_pass": false,
+      "historical_environment_terminal_subgate": "",
+      "module_or_package": [
+        "_make"
+      ],
+      "oracle_source": "changed_tests_from_repo_history",
+      "repo_id": "attrs",
+      "source_arm": "repo_history_v2_real",
+      "source_context_quality": "material_leakage_risk",
+      "source_reservoir": "repo_history_v2_pr_issue_with_tests",
+      "status": "near_certified",
+      "subgate_label": "unknown_failed",
+      "time_bucket": "2016_2019"
+    },
+    {
+      "artifact_ref": "experiments/phase1_compiler/results/phase1_two_repo_supply_expansion_certification_attempts.json",
+      "attempt_basis": "matched_committed_local_certification_artifact",
+      "candidate_id": "attrs__v2__170",
+      "first_failing_gate": "reference_pass",
+      "historical_environment_recovered_reference_pass": false,
+      "historical_environment_terminal_subgate": "",
+      "module_or_package": [
+        "_make"
+      ],
+      "oracle_source": "changed_tests_from_repo_history",
+      "repo_id": "attrs",
+      "source_arm": "repo_history_v2_real",
+      "source_context_quality": "non_leaky_issue_or_pr_context",
+      "source_reservoir": "repo_history_v2_pr_issue_with_tests",
+      "status": "near_certified",
+      "subgate_label": "unknown_failed",
+      "time_bucket": "2016_2019"
+    },
+    {
+      "artifact_ref": "experiments/phase1_compiler/results/phase1_two_repo_supply_expansion_certification_attempts.json",
+      "attempt_basis": "matched_committed_local_certification_artifact",
+      "candidate_id": "attrs__v2__171",
+      "first_failing_gate": "reference_pass",
+      "historical_environment_recovered_reference_pass": false,
+      "historical_environment_terminal_subgate": "",
+      "module_or_package": [
+        "_compat"
+      ],
+      "oracle_source": "changed_tests_from_repo_history",
+      "repo_id": "attrs",
+      "source_arm": "repo_history_v2_real",
+      "source_context_quality": "non_leaky_issue_or_pr_context",
+      "source_reservoir": "repo_history_v2_pr_issue_with_tests",
+      "status": "near_certified",
+      "subgate_label": "unknown_failed",
+      "time_bucket": "2016_2019"
+    },
+    {
+      "artifact_ref": "experiments/phase1_compiler/results/phase1_two_repo_supply_expansion_certification_attempts.json",
+      "attempt_basis": "matched_committed_local_certification_artifact",
+      "candidate_id": "attrs__v2__172",
+      "first_failing_gate": "reference_pass",
+      "historical_environment_recovered_reference_pass": false,
+      "historical_environment_terminal_subgate": "",
+      "module_or_package": [
+        "_make"
+      ],
+      "oracle_source": "changed_tests_from_repo_history",
+      "repo_id": "attrs",
+      "source_arm": "repo_history_v2_real",
+      "source_context_quality": "material_leakage_risk",
+      "source_reservoir": "repo_history_v2_pr_issue_with_tests",
+      "status": "near_certified",
+      "subgate_label": "unknown_failed",
+      "time_bucket": "2016_2019"
+    },
+    {
+      "artifact_ref": "experiments/phase1_compiler/results/phase1_two_repo_supply_expansion_certification_attempts.json",
+      "attempt_basis": "matched_committed_local_certification_artifact",
+      "candidate_id": "attrs__v2__173",
+      "first_failing_gate": "",
+      "historical_environment_recovered_reference_pass": false,
+      "historical_environment_terminal_subgate": "",
+      "module_or_package": [
+        "_make"
+      ],
+      "oracle_source": "changed_tests_from_repo_history",
+      "repo_id": "attrs",
+      "source_arm": "repo_history_v2_real",
+      "source_context_quality": "non_leaky_issue_or_pr_context",
+      "source_reservoir": "repo_history_v2_pr_issue_with_tests",
+      "status": "certified",
+      "subgate_label": "reference_pass",
+      "time_bucket": "2016_2019"
+    },
+    {
+      "artifact_ref": "experiments/phase1_compiler/results/phase1_two_repo_supply_expansion_certification_attempts.json",
+      "attempt_basis": "matched_committed_local_certification_artifact",
+      "candidate_id": "attrs__v2__175",
+      "first_failing_gate": "reference_pass",
+      "historical_environment_recovered_reference_pass": false,
+      "historical_environment_terminal_subgate": "",
+      "module_or_package": [
+        "_make"
+      ],
+      "oracle_source": "changed_tests_from_repo_history",
+      "repo_id": "attrs",
+      "source_arm": "repo_history_v2_real",
+      "source_context_quality": "non_leaky_issue_or_pr_context",
+      "source_reservoir": "repo_history_v2_pr_issue_with_tests",
+      "status": "near_certified",
+      "subgate_label": "unknown_failed",
+      "time_bucket": "2016_2019"
+    },
+    {
+      "artifact_ref": "experiments/phase1_compiler/results/phase1_two_repo_supply_expansion_certification_attempts.json",
+      "attempt_basis": "matched_committed_local_certification_artifact",
+      "candidate_id": "attrs__v2__176",
+      "first_failing_gate": "",
+      "historical_environment_recovered_reference_pass": false,
+      "historical_environment_terminal_subgate": "",
+      "module_or_package": [
+        "_make"
+      ],
+      "oracle_source": "changed_tests_from_repo_history",
+      "repo_id": "attrs",
+      "source_arm": "repo_history_v2_real",
+      "source_context_quality": "non_leaky_issue_or_pr_context",
+      "source_reservoir": "repo_history_v2_pr_issue_with_tests",
+      "status": "certified",
+      "subgate_label": "reference_pass",
+      "time_bucket": "2016_2019"
+    },
+    {
+      "artifact_ref": "experiments/phase1_compiler/results/phase1_two_repo_supply_expansion_certification_attempts.json",
+      "attempt_basis": "matched_committed_local_certification_artifact",
+      "candidate_id": "attrs__v2__177",
+      "first_failing_gate": "reference_pass",
+      "historical_environment_recovered_reference_pass": false,
+      "historical_environment_terminal_subgate": "",
+      "module_or_package": [
+        "validators"
+      ],
+      "oracle_source": "changed_tests_from_repo_history",
+      "repo_id": "attrs",
+      "source_arm": "repo_history_v2_real",
+      "source_context_quality": "non_leaky_issue_or_pr_context",
+      "source_reservoir": "repo_history_v2_pr_issue_with_tests",
+      "status": "near_certified",
+      "subgate_label": "unknown_failed",
+      "time_bucket": "2016_2019"
+    },
+    {
+      "artifact_ref": "experiments/phase1_compiler/results/phase1_two_repo_supply_expansion_certification_attempts.json",
+      "attempt_basis": "matched_committed_local_certification_artifact",
+      "candidate_id": "attrs__v2__183",
+      "first_failing_gate": "",
+      "historical_environment_recovered_reference_pass": false,
+      "historical_environment_terminal_subgate": "",
+      "module_or_package": [
+        "__init__",
+        "_version"
+      ],
+      "oracle_source": "changed_tests_from_repo_history",
+      "repo_id": "attrs",
+      "source_arm": "repo_history_v2_real",
+      "source_context_quality": "non_leaky_issue_or_pr_context",
+      "source_reservoir": "repo_history_v2_commit_with_tests",
+      "status": "certified",
+      "subgate_label": "reference_pass",
+      "time_bucket": "2016_2019"
+    },
+    {
+      "artifact_ref": "experiments/phase1_compiler/results/phase1_two_repo_supply_expansion_certification_attempts.json",
+      "attempt_basis": "matched_committed_local_certification_artifact",
+      "candidate_id": "attrs__v2__184",
+      "first_failing_gate": "",
+      "historical_environment_recovered_reference_pass": false,
+      "historical_environment_terminal_subgate": "",
+      "module_or_package": [
+        "__init__",
+        "_version"
+      ],
+      "oracle_source": "changed_tests_from_repo_history",
+      "repo_id": "attrs",
+      "source_arm": "repo_history_v2_real",
+      "source_context_quality": "non_leaky_issue_or_pr_context",
+      "source_reservoir": "repo_history_v2_pr_issue_with_tests",
+      "status": "certified",
+      "subgate_label": "reference_pass",
+      "time_bucket": "2016_2019"
+    },
+    {
+      "artifact_ref": "experiments/phase1_compiler/results/phase1_two_repo_supply_expansion_certification_attempts.json",
+      "attempt_basis": "matched_committed_local_certification_artifact",
+      "candidate_id": "attrs__v2__187",
+      "first_failing_gate": "ambiguity_review",
+      "historical_environment_recovered_reference_pass": false,
+      "historical_environment_terminal_subgate": "",
+      "module_or_package": [
+        "_make"
+      ],
+      "oracle_source": "changed_tests_from_repo_history",
+      "repo_id": "attrs",
+      "source_arm": "repo_history_v2_real",
+      "source_context_quality": "non_leaky_issue_or_pr_context",
+      "source_reservoir": "repo_history_v2_pr_issue_with_tests",
+      "status": "near_certified",
+      "subgate_label": "unknown_failed",
+      "time_bucket": "2016_2019"
+    },
+    {
+      "artifact_ref": "experiments/phase0_headroom/certified_tasks/attrs_clean_outcome_unseen_supply_review_records.jsonl",
+      "attempt_basis": "matched_committed_local_certification_artifact",
+      "candidate_id": "attrs__v2__191",
+      "first_failing_gate": "",
+      "historical_environment_recovered_reference_pass": false,
+      "historical_environment_terminal_subgate": "",
+      "module_or_package": [
+        "_make"
+      ],
+      "oracle_source": "changed_tests_from_repo_history",
+      "repo_id": "attrs",
+      "source_arm": "repo_history_v2_real",
+      "source_context_quality": "non_leaky_issue_or_pr_context",
+      "source_reservoir": "repo_history_v2_pr_issue_with_tests",
+      "status": "certified",
+      "subgate_label": "reference_pass",
+      "time_bucket": "2020_2023"
+    },
+    {
+      "artifact_ref": "experiments/phase0_headroom/certified_tasks/attrs_clean_outcome_unseen_supply_review_records.jsonl",
+      "attempt_basis": "matched_committed_local_certification_artifact",
+      "candidate_id": "attrs__v2__193",
+      "first_failing_gate": "",
+      "historical_environment_recovered_reference_pass": false,
+      "historical_environment_terminal_subgate": "",
+      "module_or_package": [
+        "_make",
+        "converters"
+      ],
+      "oracle_source": "changed_tests_from_repo_history",
+      "repo_id": "attrs",
+      "source_arm": "repo_history_v2_real",
+      "source_context_quality": "commit_message_only_context",
+      "source_reservoir": "repo_history_v2_pr_issue_with_tests",
+      "status": "unknown",
+      "subgate_label": "unknown_failed",
+      "time_bucket": "2020_2023"
+    },
+    {
+      "artifact_ref": "experiments/phase0_headroom/certified_tasks/attrs_clean_outcome_unseen_supply_review_records.jsonl",
+      "attempt_basis": "matched_committed_local_certification_artifact",
+      "candidate_id": "attrs__v2__194",
+      "first_failing_gate": "",
+      "historical_environment_recovered_reference_pass": false,
+      "historical_environment_terminal_subgate": "",
+      "module_or_package": [
+        "_make"
+      ],
+      "oracle_source": "changed_tests_from_repo_history",
+      "repo_id": "attrs",
+      "source_arm": "repo_history_v2_real",
+      "source_context_quality": "non_leaky_issue_or_pr_context",
+      "source_reservoir": "repo_history_v2_pr_issue_with_tests",
+      "status": "certified",
+      "subgate_label": "reference_pass",
+      "time_bucket": "2020_2023"
+    },
+    {
+      "artifact_ref": "experiments/phase0_headroom/certified_tasks/attrs_clean_outcome_unseen_supply_review_records.jsonl",
+      "attempt_basis": "matched_committed_local_certification_artifact",
+      "candidate_id": "attrs__v2__195",
+      "first_failing_gate": "",
+      "historical_environment_recovered_reference_pass": false,
+      "historical_environment_terminal_subgate": "",
+      "module_or_package": [
+        "_make"
+      ],
+      "oracle_source": "changed_tests_from_repo_history",
+      "repo_id": "attrs",
+      "source_arm": "repo_history_v2_real",
+      "source_context_quality": "non_leaky_issue_or_pr_context",
+      "source_reservoir": "repo_history_v2_pr_issue_with_tests",
+      "status": "certified",
+      "subgate_label": "reference_pass",
+      "time_bucket": "2020_2023"
+    },
+    {
+      "artifact_ref": "experiments/phase0_headroom/certified_tasks/attrs_clean_outcome_unseen_supply_review_records.jsonl",
+      "attempt_basis": "matched_committed_local_certification_artifact",
+      "candidate_id": "attrs__v2__196",
+      "first_failing_gate": "",
+      "historical_environment_recovered_reference_pass": false,
+      "historical_environment_terminal_subgate": "",
+      "module_or_package": [
+        "_make"
+      ],
+      "oracle_source": "changed_tests_from_repo_history",
+      "repo_id": "attrs",
+      "source_arm": "repo_history_v2_real",
+      "source_context_quality": "non_leaky_issue_or_pr_context",
+      "source_reservoir": "repo_history_v2_pr_issue_with_tests",
+      "status": "unknown",
+      "subgate_label": "unknown_failed",
+      "time_bucket": "2020_2023"
+    },
+    {
+      "artifact_ref": "experiments/phase0_headroom/certified_tasks/attrs_clean_outcome_unseen_supply_review_records.jsonl",
+      "attempt_basis": "matched_committed_local_certification_artifact",
+      "candidate_id": "attrs__v2__201",
+      "first_failing_gate": "",
+      "historical_environment_recovered_reference_pass": false,
+      "historical_environment_terminal_subgate": "",
+      "module_or_package": [
+        "_make",
+        "converters"
+      ],
+      "oracle_source": "changed_tests_from_repo_history",
+      "repo_id": "attrs",
+      "source_arm": "repo_history_v2_real",
+      "source_context_quality": "commit_message_only_context",
+      "source_reservoir": "repo_history_v2_commit_with_tests",
+      "status": "unknown",
+      "subgate_label": "unknown_failed",
+      "time_bucket": "2020_2023"
+    },
+    {
+      "artifact_ref": "experiments/phase0_headroom/certified_tasks/attrs_clean_outcome_unseen_supply_review_records.jsonl",
+      "attempt_basis": "matched_committed_local_certification_artifact",
+      "candidate_id": "attrs__v2__202",
+      "first_failing_gate": "",
+      "historical_environment_recovered_reference_pass": false,
+      "historical_environment_terminal_subgate": "",
+      "module_or_package": [
+        "__init__",
+        "_make"
+      ],
+      "oracle_source": "changed_tests_from_repo_history",
+      "repo_id": "attrs",
+      "source_arm": "repo_history_v2_real",
+      "source_context_quality": "non_leaky_issue_or_pr_context",
+      "source_reservoir": "repo_history_v2_pr_issue_with_tests",
+      "status": "unknown",
+      "subgate_label": "unknown_failed",
+      "time_bucket": "2020_2023"
+    },
+    {
+      "artifact_ref": "experiments/phase0_headroom/certified_tasks/attrs_clean_outcome_unseen_supply_review_records.jsonl",
+      "attempt_basis": "matched_committed_local_certification_artifact",
+      "candidate_id": "attrs__v2__205",
+      "first_failing_gate": "",
+      "historical_environment_recovered_reference_pass": false,
+      "historical_environment_terminal_subgate": "",
+      "module_or_package": [
+        "__init__",
+        "_next_gen"
+      ],
+      "oracle_source": "changed_tests_from_repo_history",
+      "repo_id": "attrs",
+      "source_arm": "repo_history_v2_real",
+      "source_context_quality": "non_leaky_issue_or_pr_context",
+      "source_reservoir": "repo_history_v2_pr_issue_with_tests",
+      "status": "certified",
+      "subgate_label": "reference_pass",
+      "time_bucket": "2020_2023"
+    },
+    {
+      "artifact_ref": "experiments/phase0_headroom/certified_tasks/attrs_clean_outcome_unseen_supply_review_records.jsonl",
+      "attempt_basis": "matched_committed_local_certification_artifact",
+      "candidate_id": "attrs__v2__206",
+      "first_failing_gate": "",
+      "historical_environment_recovered_reference_pass": false,
+      "historical_environment_terminal_subgate": "",
+      "module_or_package": [
+        "_next_gen"
+      ],
+      "oracle_source": "changed_tests_from_repo_history",
+      "repo_id": "attrs",
+      "source_arm": "repo_history_v2_real",
+      "source_context_quality": "non_leaky_issue_or_pr_context",
+      "source_reservoir": "repo_history_v2_pr_issue_with_tests",
+      "status": "certified",
+      "subgate_label": "reference_pass",
+      "time_bucket": "2020_2023"
+    },
+    {
+      "artifact_ref": "experiments/phase0_headroom/certified_tasks/attrs_clean_outcome_unseen_supply_review_records.jsonl",
+      "attempt_basis": "matched_committed_local_certification_artifact",
+      "candidate_id": "attrs__v2__207",
+      "first_failing_gate": "",
+      "historical_environment_recovered_reference_pass": false,
+      "historical_environment_terminal_subgate": "",
+      "module_or_package": [
+        "_next_gen"
+      ],
+      "oracle_source": "changed_tests_from_repo_history",
+      "repo_id": "attrs",
+      "source_arm": "repo_history_v2_real",
+      "source_context_quality": "non_leaky_issue_or_pr_context",
+      "source_reservoir": "repo_history_v2_pr_issue_with_tests",
+      "status": "certified",
+      "subgate_label": "reference_pass",
+      "time_bucket": "2020_2023"
+    },
+    {
+      "artifact_ref": "experiments/phase0_headroom/certified_tasks/attrs_clean_outcome_unseen_supply_review_records.jsonl",
+      "attempt_basis": "matched_committed_local_certification_artifact",
+      "candidate_id": "attrs__v2__209",
+      "first_failing_gate": "",
+      "historical_environment_recovered_reference_pass": false,
+      "historical_environment_terminal_subgate": "",
+      "module_or_package": [
+        "_make"
+      ],
+      "oracle_source": "changed_tests_from_repo_history",
+      "repo_id": "attrs",
+      "source_arm": "repo_history_v2_real",
+      "source_context_quality": "non_leaky_issue_or_pr_context",
+      "source_reservoir": "repo_history_v2_pr_issue_with_tests",
+      "status": "unknown",
+      "subgate_label": "unknown_failed",
+      "time_bucket": "2020_2023"
+    },
+    {
+      "artifact_ref": "experiments/phase0_headroom/certified_tasks/attrs_clean_outcome_unseen_supply_review_records.jsonl",
+      "attempt_basis": "matched_committed_local_certification_artifact",
+      "candidate_id": "attrs__v2__210",
+      "first_failing_gate": "",
+      "historical_environment_recovered_reference_pass": false,
+      "historical_environment_terminal_subgate": "",
+      "module_or_package": [
+        "_make"
+      ],
+      "oracle_source": "changed_tests_from_repo_history",
+      "repo_id": "attrs",
+      "source_arm": "repo_history_v2_real",
+      "source_context_quality": "non_leaky_issue_or_pr_context",
+      "source_reservoir": "repo_history_v2_pr_issue_with_tests",
+      "status": "certified",
+      "subgate_label": "reference_pass",
+      "time_bucket": "2020_2023"
+    },
+    {
+      "artifact_ref": "experiments/phase0_headroom/certified_tasks/attrs_clean_outcome_unseen_supply_review_records.jsonl",
+      "attempt_basis": "matched_committed_local_certification_artifact",
+      "candidate_id": "attrs__v2__211",
+      "first_failing_gate": "",
+      "historical_environment_recovered_reference_pass": false,
+      "historical_environment_terminal_subgate": "",
+      "module_or_package": [
+        "_next_gen"
+      ],
+      "oracle_source": "changed_tests_from_repo_history",
+      "repo_id": "attrs",
+      "source_arm": "repo_history_v2_real",
+      "source_context_quality": "non_leaky_issue_or_pr_context",
+      "source_reservoir": "repo_history_v2_pr_issue_with_tests",
+      "status": "certified",
+      "subgate_label": "reference_pass",
+      "time_bucket": "2020_2023"
+    },
+    {
+      "artifact_ref": "experiments/phase0_headroom/certified_tasks/attrs_clean_outcome_unseen_supply_review_records.jsonl",
+      "attempt_basis": "matched_committed_local_certification_artifact",
+      "candidate_id": "attrs__v2__215",
+      "first_failing_gate": "",
+      "historical_environment_recovered_reference_pass": false,
+      "historical_environment_terminal_subgate": "",
+      "module_or_package": [
+        "_funcs"
+      ],
+      "oracle_source": "changed_tests_from_repo_history",
+      "repo_id": "attrs",
+      "source_arm": "repo_history_v2_real",
+      "source_context_quality": "non_leaky_issue_or_pr_context",
+      "source_reservoir": "repo_history_v2_pr_issue_with_tests",
+      "status": "unknown",
+      "subgate_label": "unknown_failed",
+      "time_bucket": "2020_2023"
+    },
+    {
+      "artifact_ref": "experiments/phase0_headroom/certified_tasks/attrs_clean_outcome_unseen_supply_review_records.jsonl",
+      "attempt_basis": "matched_committed_local_certification_artifact",
+      "candidate_id": "attrs__v2__216",
+      "first_failing_gate": "",
+      "historical_environment_recovered_reference_pass": false,
+      "historical_environment_terminal_subgate": "",
+      "module_or_package": [
+        "_make"
+      ],
+      "oracle_source": "changed_tests_from_repo_history",
+      "repo_id": "attrs",
+      "source_arm": "repo_history_v2_real",
+      "source_context_quality": "non_leaky_issue_or_pr_context",
+      "source_reservoir": "repo_history_v2_pr_issue_with_tests",
+      "status": "unknown",
+      "subgate_label": "unknown_failed",
+      "time_bucket": "2020_2023"
+    },
+    {
+      "artifact_ref": "experiments/phase0_headroom/certified_tasks/attrs_clean_outcome_unseen_supply_review_records.jsonl",
+      "attempt_basis": "matched_committed_local_certification_artifact",
+      "candidate_id": "attrs__v2__217",
+      "first_failing_gate": "",
+      "historical_environment_recovered_reference_pass": false,
+      "historical_environment_terminal_subgate": "",
+      "module_or_package": [
+        "_compat",
+        "_make"
+      ],
+      "oracle_source": "changed_tests_from_repo_history",
+      "repo_id": "attrs",
+      "source_arm": "repo_history_v2_real",
+      "source_context_quality": "non_leaky_issue_or_pr_context",
+      "source_reservoir": "repo_history_v2_pr_issue_with_tests",
+      "status": "unknown",
+      "subgate_label": "unknown_failed",
+      "time_bucket": "2020_2023"
+    },
+    {
+      "artifact_ref": "experiments/phase0_headroom/certified_tasks/attrs_clean_outcome_unseen_supply_review_records.jsonl",
+      "attempt_basis": "matched_committed_local_certification_artifact",
+      "candidate_id": "attrs__v2__219",
+      "first_failing_gate": "",
+      "historical_environment_recovered_reference_pass": false,
+      "historical_environment_terminal_subgate": "",
+      "module_or_package": [
+        "_make"
+      ],
+      "oracle_source": "changed_tests_from_repo_history",
+      "repo_id": "attrs",
+      "source_arm": "repo_history_v2_real",
+      "source_context_quality": "non_leaky_issue_or_pr_context",
+      "source_reservoir": "repo_history_v2_pr_issue_with_tests",
+      "status": "unknown",
+      "subgate_label": "unknown_failed",
+      "time_bucket": "2020_2023"
+    },
+    {
+      "artifact_ref": "experiments/phase0_headroom/certified_tasks/attrs_clean_outcome_unseen_supply_review_records.jsonl",
+      "attempt_basis": "matched_committed_local_certification_artifact",
+      "candidate_id": "attrs__v2__220",
+      "first_failing_gate": "",
+      "historical_environment_recovered_reference_pass": false,
+      "historical_environment_terminal_subgate": "",
+      "module_or_package": [
+        "_make"
+      ],
+      "oracle_source": "changed_tests_from_repo_history",
+      "repo_id": "attrs",
+      "source_arm": "repo_history_v2_real",
+      "source_context_quality": "non_leaky_issue_or_pr_context",
+      "source_reservoir": "repo_history_v2_pr_issue_with_tests",
+      "status": "unknown",
+      "subgate_label": "unknown_failed",
+      "time_bucket": "2020_2023"
+    },
+    {
+      "artifact_ref": "experiments/phase0_headroom/certified_tasks/attrs_clean_outcome_unseen_supply_review_records.jsonl",
+      "attempt_basis": "matched_committed_local_certification_artifact",
+      "candidate_id": "attrs__v2__222",
+      "first_failing_gate": "",
+      "historical_environment_recovered_reference_pass": false,
+      "historical_environment_terminal_subgate": "",
+      "module_or_package": [
+        "_next_gen"
+      ],
+      "oracle_source": "changed_tests_from_repo_history",
+      "repo_id": "attrs",
+      "source_arm": "repo_history_v2_real",
+      "source_context_quality": "non_leaky_issue_or_pr_context",
+      "source_reservoir": "repo_history_v2_pr_issue_with_tests",
+      "status": "unknown",
+      "subgate_label": "unknown_failed",
+      "time_bucket": "2020_2023"
+    },
+    {
+      "artifact_ref": "experiments/phase0_headroom/certified_tasks/attrs_clean_outcome_unseen_supply_review_records.jsonl",
+      "attempt_basis": "matched_committed_local_certification_artifact",
+      "candidate_id": "attrs__v2__223",
+      "first_failing_gate": "",
+      "historical_environment_recovered_reference_pass": false,
+      "historical_environment_terminal_subgate": "",
+      "module_or_package": [
+        "_make"
+      ],
+      "oracle_source": "changed_tests_from_repo_history",
+      "repo_id": "attrs",
+      "source_arm": "repo_history_v2_real",
+      "source_context_quality": "non_leaky_issue_or_pr_context",
+      "source_reservoir": "repo_history_v2_pr_issue_with_tests",
+      "status": "unknown",
+      "subgate_label": "unknown_failed",
+      "time_bucket": "2020_2023"
+    },
+    {
+      "artifact_ref": "experiments/phase0_headroom/certified_tasks/attrs_clean_outcome_unseen_supply_review_records.jsonl",
+      "attempt_basis": "matched_committed_local_certification_artifact",
+      "candidate_id": "attrs__v2__224",
+      "first_failing_gate": "",
+      "historical_environment_recovered_reference_pass": false,
+      "historical_environment_terminal_subgate": "",
+      "module_or_package": [
+        "_make"
+      ],
+      "oracle_source": "changed_tests_from_repo_history",
+      "repo_id": "attrs",
+      "source_arm": "repo_history_v2_real",
+      "source_context_quality": "non_leaky_issue_or_pr_context",
+      "source_reservoir": "repo_history_v2_pr_issue_with_tests",
+      "status": "unknown",
+      "subgate_label": "unknown_failed",
+      "time_bucket": "2020_2023"
+    },
+    {
+      "artifact_ref": "experiments/phase0_headroom/certified_tasks/attrs_clean_outcome_unseen_supply_review_records.jsonl",
+      "attempt_basis": "matched_committed_local_certification_artifact",
+      "candidate_id": "attrs__v2__225",
+      "first_failing_gate": "",
+      "historical_environment_recovered_reference_pass": false,
+      "historical_environment_terminal_subgate": "",
+      "module_or_package": [
+        "_make"
+      ],
+      "oracle_source": "changed_tests_from_repo_history",
+      "repo_id": "attrs",
+      "source_arm": "repo_history_v2_real",
+      "source_context_quality": "non_leaky_issue_or_pr_context",
+      "source_reservoir": "repo_history_v2_pr_issue_with_tests",
+      "status": "unknown",
+      "subgate_label": "unknown_failed",
+      "time_bucket": "2020_2023"
+    },
+    {
+      "artifact_ref": "experiments/phase0_headroom/certified_tasks/attrs_clean_outcome_unseen_supply_review_records.jsonl",
+      "attempt_basis": "matched_committed_local_certification_artifact",
+      "candidate_id": "attrs__v2__227",
+      "first_failing_gate": "",
+      "historical_environment_recovered_reference_pass": false,
+      "historical_environment_terminal_subgate": "",
+      "module_or_package": [
+        "_make"
+      ],
+      "oracle_source": "changed_tests_from_repo_history",
+      "repo_id": "attrs",
+      "source_arm": "repo_history_v2_real",
+      "source_context_quality": "non_leaky_issue_or_pr_context",
+      "source_reservoir": "repo_history_v2_pr_issue_with_tests",
+      "status": "certified",
+      "subgate_label": "reference_pass",
+      "time_bucket": "2020_2023"
+    },
+    {
+      "artifact_ref": "experiments/phase0_headroom/certified_tasks/attrs_clean_outcome_unseen_supply_review_records.jsonl",
+      "attempt_basis": "matched_committed_local_certification_artifact",
+      "candidate_id": "attrs__v2__228",
+      "first_failing_gate": "",
+      "historical_environment_recovered_reference_pass": false,
+      "historical_environment_terminal_subgate": "",
+      "module_or_package": [
+        "_funcs"
+      ],
+      "oracle_source": "changed_tests_from_repo_history",
+      "repo_id": "attrs",
+      "source_arm": "repo_history_v2_real",
+      "source_context_quality": "non_leaky_issue_or_pr_context",
+      "source_reservoir": "repo_history_v2_pr_issue_with_tests",
+      "status": "unknown",
+      "subgate_label": "unknown_failed",
+      "time_bucket": "2020_2023"
+    },
+    {
+      "artifact_ref": "experiments/phase0_headroom/certified_tasks/attrs_clean_outcome_unseen_supply_review_records.jsonl",
+      "attempt_basis": "matched_committed_local_certification_artifact",
+      "candidate_id": "attrs__v2__230",
+      "first_failing_gate": "",
+      "historical_environment_recovered_reference_pass": false,
+      "historical_environment_terminal_subgate": "",
+      "module_or_package": [
+        "_make"
+      ],
+      "oracle_source": "changed_tests_from_repo_history",
+      "repo_id": "attrs",
+      "source_arm": "repo_history_v2_real",
+      "source_context_quality": "commit_message_only_context",
+      "source_reservoir": "repo_history_v2_pr_issue_with_tests",
+      "status": "unknown",
+      "subgate_label": "unknown_failed",
+      "time_bucket": "2020_2023"
+    },
+    {
+      "artifact_ref": "experiments/phase0_headroom/certified_tasks/attrs_clean_outcome_unseen_supply_review_records.jsonl",
+      "attempt_basis": "matched_committed_local_certification_artifact",
+      "candidate_id": "attrs__v2__232",
+      "first_failing_gate": "",
+      "historical_environment_recovered_reference_pass": false,
+      "historical_environment_terminal_subgate": "",
+      "module_or_package": [
+        "_compat",
+        "_make"
+      ],
+      "oracle_source": "changed_tests_from_repo_history",
+      "repo_id": "attrs",
+      "source_arm": "repo_history_v2_real",
+      "source_context_quality": "non_leaky_issue_or_pr_context",
+      "source_reservoir": "repo_history_v2_pr_issue_with_tests",
+      "status": "unknown",
+      "subgate_label": "unknown_failed",
+      "time_bucket": "2020_2023"
+    },
+    {
+      "artifact_ref": "experiments/phase0_headroom/certified_tasks/attrs_clean_outcome_unseen_supply_review_records.jsonl",
+      "attempt_basis": "matched_committed_local_certification_artifact",
+      "candidate_id": "attrs__v2__235",
+      "first_failing_gate": "",
+      "historical_environment_recovered_reference_pass": false,
+      "historical_environment_terminal_subgate": "",
+      "module_or_package": [
+        "_funcs"
+      ],
+      "oracle_source": "changed_tests_from_repo_history",
+      "repo_id": "attrs",
+      "source_arm": "repo_history_v2_real",
+      "source_context_quality": "non_leaky_issue_or_pr_context",
+      "source_reservoir": "repo_history_v2_pr_issue_with_tests",
+      "status": "certified",
+      "subgate_label": "reference_pass",
+      "time_bucket": "2020_2023"
+    },
+    {
+      "artifact_ref": "experiments/phase0_headroom/certified_tasks/attrs_clean_outcome_unseen_supply_review_records.jsonl",
+      "attempt_basis": "matched_committed_local_certification_artifact",
+      "candidate_id": "attrs__v2__243",
+      "first_failing_gate": "",
+      "historical_environment_recovered_reference_pass": false,
+      "historical_environment_terminal_subgate": "",
+      "module_or_package": [
+        "_make"
+      ],
+      "oracle_source": "changed_tests_from_repo_history",
+      "repo_id": "attrs",
+      "source_arm": "repo_history_v2_real",
+      "source_context_quality": "non_leaky_issue_or_pr_context",
+      "source_reservoir": "repo_history_v2_pr_issue_with_tests",
+      "status": "unknown",
+      "subgate_label": "unknown_failed",
+      "time_bucket": "2020_2023"
+    },
+    {
+      "artifact_ref": "experiments/phase0_headroom/certified_tasks/attrs_clean_outcome_unseen_supply_review_records.jsonl",
+      "attempt_basis": "matched_committed_local_certification_artifact",
+      "candidate_id": "attrs__v2__244",
+      "first_failing_gate": "",
+      "historical_environment_recovered_reference_pass": false,
+      "historical_environment_terminal_subgate": "",
+      "module_or_package": [
+        "_funcs"
+      ],
+      "oracle_source": "changed_tests_from_repo_history",
+      "repo_id": "attrs",
+      "source_arm": "repo_history_v2_real",
+      "source_context_quality": "non_leaky_issue_or_pr_context",
+      "source_reservoir": "repo_history_v2_pr_issue_with_tests",
+      "status": "unknown",
+      "subgate_label": "unknown_failed",
+      "time_bucket": "2020_2023"
+    },
+    {
+      "artifact_ref": "experiments/phase0_headroom/certified_tasks/attrs_clean_outcome_unseen_supply_review_records.jsonl",
+      "attempt_basis": "matched_committed_local_certification_artifact",
+      "candidate_id": "attrs__v2__245",
+      "first_failing_gate": "",
+      "historical_environment_recovered_reference_pass": false,
+      "historical_environment_terminal_subgate": "",
+      "module_or_package": [
+        "_make"
+      ],
+      "oracle_source": "changed_tests_from_repo_history",
+      "repo_id": "attrs",
+      "source_arm": "repo_history_v2_real",
+      "source_context_quality": "non_leaky_issue_or_pr_context",
+      "source_reservoir": "repo_history_v2_pr_issue_with_tests",
+      "status": "unknown",
+      "subgate_label": "unknown_failed",
+      "time_bucket": "2020_2023"
+    },
+    {
+      "artifact_ref": "experiments/phase0_headroom/certified_tasks/attrs_clean_outcome_unseen_supply_review_records.jsonl",
+      "attempt_basis": "matched_committed_local_certification_artifact",
+      "candidate_id": "attrs__v2__248",
+      "first_failing_gate": "",
+      "historical_environment_recovered_reference_pass": false,
+      "historical_environment_terminal_subgate": "",
+      "module_or_package": [
+        "_make"
+      ],
+      "oracle_source": "changed_tests_from_repo_history",
+      "repo_id": "attrs",
+      "source_arm": "repo_history_v2_real",
+      "source_context_quality": "commit_message_only_context",
+      "source_reservoir": "repo_history_v2_pr_issue_with_tests",
+      "status": "unknown",
+      "subgate_label": "unknown_failed",
+      "time_bucket": "2020_2023"
+    },
+    {
+      "artifact_ref": "experiments/phase0_headroom/certified_tasks/attrs_clean_outcome_unseen_supply_review_records.jsonl",
+      "attempt_basis": "matched_committed_local_certification_artifact",
+      "candidate_id": "attrs__v2__250",
+      "first_failing_gate": "",
+      "historical_environment_recovered_reference_pass": false,
+      "historical_environment_terminal_subgate": "",
+      "module_or_package": [
+        "_make"
+      ],
+      "oracle_source": "changed_tests_from_repo_history",
+      "repo_id": "attrs",
+      "source_arm": "repo_history_v2_real",
+      "source_context_quality": "non_leaky_issue_or_pr_context",
+      "source_reservoir": "repo_history_v2_pr_issue_with_tests",
+      "status": "certified",
+      "subgate_label": "reference_pass",
+      "time_bucket": "2020_2023"
+    },
+    {
+      "artifact_ref": "experiments/phase0_headroom/certified_tasks/attrs_clean_outcome_unseen_supply_review_records.jsonl",
+      "attempt_basis": "matched_committed_local_certification_artifact",
+      "candidate_id": "attrs__v2__251",
+      "first_failing_gate": "",
+      "historical_environment_recovered_reference_pass": false,
+      "historical_environment_terminal_subgate": "",
+      "module_or_package": [
+        "converters"
+      ],
+      "oracle_source": "changed_tests_from_repo_history",
+      "repo_id": "attrs",
+      "source_arm": "repo_history_v2_real",
+      "source_context_quality": "non_leaky_issue_or_pr_context",
+      "source_reservoir": "repo_history_v2_pr_issue_with_tests",
+      "status": "certified",
+      "subgate_label": "reference_pass",
+      "time_bucket": "2020_2023"
+    },
+    {
+      "artifact_ref": "experiments/phase0_headroom/certified_tasks/attrs_clean_outcome_unseen_supply_review_records.jsonl",
+      "attempt_basis": "matched_committed_local_certification_artifact",
+      "candidate_id": "attrs__v2__252",
+      "first_failing_gate": "",
+      "historical_environment_recovered_reference_pass": false,
+      "historical_environment_terminal_subgate": "",
+      "module_or_package": [
+        "_funcs"
+      ],
+      "oracle_source": "changed_tests_from_repo_history",
+      "repo_id": "attrs",
+      "source_arm": "repo_history_v2_real",
+      "source_context_quality": "non_leaky_issue_or_pr_context",
+      "source_reservoir": "repo_history_v2_pr_issue_with_tests",
+      "status": "unknown",
+      "subgate_label": "unknown_failed",
+      "time_bucket": "2020_2023"
+    },
+    {
+      "artifact_ref": "experiments/phase0_headroom/certified_tasks/attrs_clean_outcome_unseen_supply_review_records.jsonl",
+      "attempt_basis": "matched_committed_local_certification_artifact",
+      "candidate_id": "attrs__v2__253",
+      "first_failing_gate": "",
+      "historical_environment_recovered_reference_pass": false,
+      "historical_environment_terminal_subgate": "",
+      "module_or_package": [
+        "_make"
+      ],
+      "oracle_source": "changed_tests_from_repo_history",
+      "repo_id": "attrs",
+      "source_arm": "repo_history_v2_real",
+      "source_context_quality": "non_leaky_issue_or_pr_context",
+      "source_reservoir": "repo_history_v2_pr_issue_with_tests",
+      "status": "certified",
+      "subgate_label": "reference_pass",
+      "time_bucket": "2020_2023"
+    },
+    {
+      "artifact_ref": "experiments/phase0_headroom/certified_tasks/attrs_clean_outcome_unseen_supply_review_records.jsonl",
+      "attempt_basis": "matched_committed_local_certification_artifact",
+      "candidate_id": "attrs__v2__255",
+      "first_failing_gate": "",
+      "historical_environment_recovered_reference_pass": false,
+      "historical_environment_terminal_subgate": "",
+      "module_or_package": [
+        "__init__"
+      ],
+      "oracle_source": "changed_tests_from_repo_history",
+      "repo_id": "attrs",
+      "source_arm": "repo_history_v2_real",
+      "source_context_quality": "non_leaky_issue_or_pr_context",
+      "source_reservoir": "repo_history_v2_pr_issue_with_tests",
+      "status": "certified",
+      "subgate_label": "reference_pass",
+      "time_bucket": "2020_2023"
+    },
+    {
+      "artifact_ref": "experiments/phase0_headroom/certified_tasks/attrs_clean_outcome_unseen_supply_review_records.jsonl",
+      "attempt_basis": "matched_committed_local_certification_artifact",
+      "candidate_id": "attrs__v2__258",
+      "first_failing_gate": "",
+      "historical_environment_recovered_reference_pass": false,
+      "historical_environment_terminal_subgate": "",
+      "module_or_package": [
+        "_compat",
+        "_make"
+      ],
+      "oracle_source": "changed_tests_from_repo_history",
+      "repo_id": "attrs",
+      "source_arm": "repo_history_v2_real",
+      "source_context_quality": "non_leaky_issue_or_pr_context",
+      "source_reservoir": "repo_history_v2_pr_issue_with_tests",
+      "status": "unknown",
+      "subgate_label": "unknown_failed",
+      "time_bucket": "2020_2023"
+    },
+    {
+      "artifact_ref": "experiments/phase0_headroom/certified_tasks/attrs_clean_outcome_unseen_supply_review_records.jsonl",
+      "attempt_basis": "matched_committed_local_certification_artifact",
+      "candidate_id": "attrs__v2__259",
+      "first_failing_gate": "",
+      "historical_environment_recovered_reference_pass": false,
+      "historical_environment_terminal_subgate": "",
+      "module_or_package": [
+        "_config",
+        "validators"
+      ],
+      "oracle_source": "changed_tests_from_repo_history",
+      "repo_id": "attrs",
+      "source_arm": "repo_history_v2_real",
+      "source_context_quality": "non_leaky_issue_or_pr_context",
+      "source_reservoir": "repo_history_v2_pr_issue_with_tests",
+      "status": "unknown",
+      "subgate_label": "unknown_failed",
+      "time_bucket": "2020_2023"
+    },
+    {
+      "artifact_ref": "experiments/phase0_headroom/certified_tasks/attrs_clean_outcome_unseen_supply_review_records.jsonl",
+      "attempt_basis": "matched_committed_local_certification_artifact",
+      "candidate_id": "attrs__v2__261",
+      "first_failing_gate": "",
+      "historical_environment_recovered_reference_pass": false,
+      "historical_environment_terminal_subgate": "",
+      "module_or_package": [
+        "validators"
+      ],
+      "oracle_source": "changed_tests_from_repo_history",
+      "repo_id": "attrs",
+      "source_arm": "repo_history_v2_real",
+      "source_context_quality": "non_leaky_issue_or_pr_context",
+      "source_reservoir": "repo_history_v2_pr_issue_with_tests",
+      "status": "certified",
+      "subgate_label": "reference_pass",
+      "time_bucket": "2020_2023"
+    },
+    {
+      "artifact_ref": "experiments/phase0_headroom/certified_tasks/attrs_clean_outcome_unseen_supply_review_records.jsonl",
+      "attempt_basis": "matched_committed_local_certification_artifact",
+      "candidate_id": "attrs__v2__263",
+      "first_failing_gate": "",
+      "historical_environment_recovered_reference_pass": false,
+      "historical_environment_terminal_subgate": "",
+      "module_or_package": [
+        "_make",
+        "_next_gen"
+      ],
+      "oracle_source": "changed_tests_from_repo_history",
+      "repo_id": "attrs",
+      "source_arm": "repo_history_v2_real",
+      "source_context_quality": "non_leaky_issue_or_pr_context",
+      "source_reservoir": "repo_history_v2_pr_issue_with_tests",
+      "status": "unknown",
+      "subgate_label": "unknown_failed",
+      "time_bucket": "2020_2023"
+    },
+    {
+      "artifact_ref": "experiments/phase0_headroom/certified_tasks/attrs_clean_outcome_unseen_supply_review_records.jsonl",
+      "attempt_basis": "matched_committed_local_certification_artifact",
+      "candidate_id": "attrs__v2__264",
+      "first_failing_gate": "",
+      "historical_environment_recovered_reference_pass": false,
+      "historical_environment_terminal_subgate": "",
+      "module_or_package": [
+        "_funcs"
+      ],
+      "oracle_source": "changed_tests_from_repo_history",
+      "repo_id": "attrs",
+      "source_arm": "repo_history_v2_real",
+      "source_context_quality": "non_leaky_issue_or_pr_context",
+      "source_reservoir": "repo_history_v2_pr_issue_with_tests",
+      "status": "certified",
+      "subgate_label": "reference_pass",
+      "time_bucket": "2020_2023"
+    },
+    {
+      "artifact_ref": "experiments/phase0_headroom/certified_tasks/attrs_clean_outcome_unseen_supply_review_records.jsonl",
+      "attempt_basis": "matched_committed_local_certification_artifact",
+      "candidate_id": "attrs__v2__266",
+      "first_failing_gate": "",
+      "historical_environment_recovered_reference_pass": false,
+      "historical_environment_terminal_subgate": "",
+      "module_or_package": [
+        "__init__",
+        "_cmp",
+        "_compat",
+        "_config",
+        "_funcs",
+        "_make",
+        "_next_gen",
+        "_version_info",
+        "converters",
+        "exceptions",
+        "filters",
+        "setters",
+        "validators"
+      ],
+      "oracle_source": "changed_tests_from_repo_history",
+      "repo_id": "attrs",
+      "source_arm": "repo_history_v2_real",
+      "source_context_quality": "commit_message_only_context",
+      "source_reservoir": "repo_history_v2_commit_with_tests",
+      "status": "unknown",
+      "subgate_label": "unknown_failed",
+      "time_bucket": "2020_2023"
+    },
+    {
+      "artifact_ref": "experiments/phase0_headroom/certified_tasks/attrs_clean_outcome_unseen_supply_review_records.jsonl",
+      "attempt_basis": "matched_committed_local_certification_artifact",
+      "candidate_id": "attrs__v2__269",
+      "first_failing_gate": "",
+      "historical_environment_recovered_reference_pass": false,
+      "historical_environment_terminal_subgate": "",
+      "module_or_package": [
+        "_make"
+      ],
+      "oracle_source": "changed_tests_from_repo_history",
+      "repo_id": "attrs",
+      "source_arm": "repo_history_v2_real",
+      "source_context_quality": "non_leaky_issue_or_pr_context",
+      "source_reservoir": "repo_history_v2_pr_issue_with_tests",
+      "status": "unknown",
+      "subgate_label": "unknown_failed",
+      "time_bucket": "2020_2023"
+    },
+    {
+      "artifact_ref": "experiments/phase0_headroom/certified_tasks/attrs_clean_outcome_unseen_supply_review_records.jsonl",
+      "attempt_basis": "matched_committed_local_certification_artifact",
+      "candidate_id": "attrs__v2__271",
+      "first_failing_gate": "",
+      "historical_environment_recovered_reference_pass": false,
+      "historical_environment_terminal_subgate": "",
+      "module_or_package": [
+        "_make"
+      ],
+      "oracle_source": "changed_tests_from_repo_history",
+      "repo_id": "attrs",
+      "source_arm": "repo_history_v2_real",
+      "source_context_quality": "non_leaky_issue_or_pr_context",
+      "source_reservoir": "repo_history_v2_pr_issue_with_tests",
+      "status": "unknown",
+      "subgate_label": "unknown_failed",
+      "time_bucket": "2020_2023"
+    },
+    {
+      "artifact_ref": "experiments/phase0_headroom/certified_tasks/attrs_clean_outcome_unseen_supply_review_records.jsonl",
+      "attempt_basis": "matched_committed_local_certification_artifact",
+      "candidate_id": "attrs__v2__273",
+      "first_failing_gate": "",
+      "historical_environment_recovered_reference_pass": false,
+      "historical_environment_terminal_subgate": "",
+      "module_or_package": [
+        "validators"
+      ],
+      "oracle_source": "changed_tests_from_repo_history",
+      "repo_id": "attrs",
+      "source_arm": "repo_history_v2_real",
+      "source_context_quality": "non_leaky_issue_or_pr_context",
+      "source_reservoir": "repo_history_v2_pr_issue_with_tests",
+      "status": "certified",
+      "subgate_label": "reference_pass",
+      "time_bucket": "2020_2023"
+    },
+    {
+      "artifact_ref": "experiments/phase0_headroom/certified_tasks/attrs_clean_outcome_unseen_supply_review_records.jsonl",
+      "attempt_basis": "matched_committed_local_certification_artifact",
+      "candidate_id": "attrs__v2__274",
+      "first_failing_gate": "",
+      "historical_environment_recovered_reference_pass": false,
+      "historical_environment_terminal_subgate": "",
+      "module_or_package": [
+        "_compat",
+        "_make",
+        "converters"
+      ],
+      "oracle_source": "changed_tests_from_repo_history",
+      "repo_id": "attrs",
+      "source_arm": "repo_history_v2_real",
+      "source_context_quality": "non_leaky_issue_or_pr_context",
+      "source_reservoir": "repo_history_v2_pr_issue_with_tests",
+      "status": "unknown",
+      "subgate_label": "unknown_failed",
+      "time_bucket": "2020_2023"
+    },
+    {
+      "artifact_ref": "experiments/phase0_headroom/certified_tasks/attrs_clean_outcome_unseen_supply_review_records.jsonl",
+      "attempt_basis": "matched_committed_local_certification_artifact",
+      "candidate_id": "attrs__v2__275",
+      "first_failing_gate": "",
+      "historical_environment_recovered_reference_pass": false,
+      "historical_environment_terminal_subgate": "",
+      "module_or_package": [
+        "validators"
+      ],
+      "oracle_source": "changed_tests_from_repo_history",
+      "repo_id": "attrs",
+      "source_arm": "repo_history_v2_real",
+      "source_context_quality": "non_leaky_issue_or_pr_context",
+      "source_reservoir": "repo_history_v2_pr_issue_with_tests",
+      "status": "certified",
+      "subgate_label": "reference_pass",
+      "time_bucket": "2020_2023"
+    },
+    {
+      "artifact_ref": "experiments/phase0_headroom/certified_tasks/attrs_clean_outcome_unseen_supply_review_records.jsonl",
+      "attempt_basis": "matched_committed_local_certification_artifact",
+      "candidate_id": "attrs__v2__278",
+      "first_failing_gate": "",
+      "historical_environment_recovered_reference_pass": false,
+      "historical_environment_terminal_subgate": "",
+      "module_or_package": [
+        "_cmp",
+        "_compat",
+        "_funcs",
+        "_make",
+        "filters"
+      ],
+      "oracle_source": "changed_tests_from_repo_history",
+      "repo_id": "attrs",
+      "source_arm": "repo_history_v2_real",
+      "source_context_quality": "non_leaky_issue_or_pr_context",
+      "source_reservoir": "repo_history_v2_pr_issue_with_tests",
+      "status": "unknown",
+      "subgate_label": "unknown_failed",
+      "time_bucket": "2020_2023"
+    },
+    {
+      "artifact_ref": "experiments/phase1_compiler/results/phase1_two_repo_supply_expansion_certification_attempts.json",
+      "attempt_basis": "matched_committed_local_certification_artifact",
+      "candidate_id": "boltons__v2__006",
+      "first_failing_gate": "",
+      "historical_environment_recovered_reference_pass": false,
+      "historical_environment_terminal_subgate": "",
+      "module_or_package": [
+        "tbutils"
+      ],
+      "oracle_source": "changed_tests_from_repo_history",
+      "repo_id": "boltons",
+      "source_arm": "repo_history_v2_real",
+      "source_context_quality": "non_leaky_issue_or_pr_context",
+      "source_reservoir": "repo_history_v2_pr_issue_with_tests",
+      "status": "certified",
+      "subgate_label": "reference_pass",
+      "time_bucket": "pre_2016"
+    },
+    {
+      "artifact_ref": "experiments/phase1_compiler/results/phase1_two_repo_supply_expansion_certification_attempts.json",
+      "attempt_basis": "matched_committed_local_certification_artifact",
+      "candidate_id": "boltons__v2__007",
+      "first_failing_gate": "",
+      "historical_environment_recovered_reference_pass": false,
+      "historical_environment_terminal_subgate": "",
+      "module_or_package": [
+        "tbutils"
+      ],
+      "oracle_source": "changed_tests_from_repo_history",
+      "repo_id": "boltons",
+      "source_arm": "repo_history_v2_real",
+      "source_context_quality": "non_leaky_issue_or_pr_context",
+      "source_reservoir": "repo_history_v2_commit_with_tests",
+      "status": "certified",
+      "subgate_label": "reference_pass",
+      "time_bucket": "pre_2016"
+    },
+    {
+      "artifact_ref": "experiments/phase1_compiler/results/phase1_two_repo_supply_expansion_certification_attempts.json",
+      "attempt_basis": "matched_committed_local_certification_artifact",
+      "candidate_id": "boltons__v2__008",
+      "first_failing_gate": "",
+      "historical_environment_recovered_reference_pass": false,
+      "historical_environment_terminal_subgate": "",
+      "module_or_package": [
+        "tbutils"
+      ],
+      "oracle_source": "changed_tests_from_repo_history",
+      "repo_id": "boltons",
+      "source_arm": "repo_history_v2_real",
+      "source_context_quality": "non_leaky_issue_or_pr_context",
+      "source_reservoir": "repo_history_v2_commit_with_tests",
+      "status": "certified",
+      "subgate_label": "reference_pass",
+      "time_bucket": "pre_2016"
+    },
+    {
+      "artifact_ref": "experiments/phase1_compiler/results/phase1_two_repo_supply_expansion_certification_attempts.json",
+      "attempt_basis": "matched_committed_local_certification_artifact",
+      "candidate_id": "boltons__v2__009",
+      "first_failing_gate": "",
+      "historical_environment_recovered_reference_pass": false,
+      "historical_environment_terminal_subgate": "",
+      "module_or_package": [
+        "tbutils"
+      ],
+      "oracle_source": "changed_tests_from_repo_history",
+      "repo_id": "boltons",
+      "source_arm": "repo_history_v2_real",
+      "source_context_quality": "non_leaky_issue_or_pr_context",
+      "source_reservoir": "repo_history_v2_commit_with_tests",
+      "status": "certified",
+      "subgate_label": "reference_pass",
+      "time_bucket": "pre_2016"
+    },
+    {
+      "artifact_ref": "experiments/phase1_compiler/results/phase1_two_repo_supply_expansion_certification_attempts.json",
+      "attempt_basis": "matched_committed_local_certification_artifact",
+      "candidate_id": "boltons__v2__012",
+      "first_failing_gate": "",
+      "historical_environment_recovered_reference_pass": false,
+      "historical_environment_terminal_subgate": "",
+      "module_or_package": [
+        "cacheutils"
+      ],
+      "oracle_source": "changed_tests_from_repo_history",
+      "repo_id": "boltons",
+      "source_arm": "repo_history_v2_real",
+      "source_context_quality": "non_leaky_issue_or_pr_context",
+      "source_reservoir": "repo_history_v2_commit_with_tests",
+      "status": "certified",
+      "subgate_label": "reference_pass",
+      "time_bucket": "pre_2016"
+    },
+    {
+      "artifact_ref": "experiments/phase1_compiler/results/phase1_two_repo_supply_expansion_certification_attempts.json",
+      "attempt_basis": "matched_committed_local_certification_artifact",
+      "candidate_id": "boltons__v2__030",
+      "first_failing_gate": "",
+      "historical_environment_recovered_reference_pass": false,
+      "historical_environment_terminal_subgate": "",
+      "module_or_package": [
+        "iterutils"
+      ],
+      "oracle_source": "changed_tests_from_repo_history",
+      "repo_id": "boltons",
+      "source_arm": "repo_history_v2_real",
+      "source_context_quality": "non_leaky_issue_or_pr_context",
+      "source_reservoir": "repo_history_v2_commit_with_tests",
+      "status": "certified",
+      "subgate_label": "reference_pass",
+      "time_bucket": "pre_2016"
+    },
+    {
+      "artifact_ref": "experiments/phase1_compiler/results/phase1_two_repo_supply_expansion_certification_attempts.json",
+      "attempt_basis": "matched_committed_local_certification_artifact",
+      "candidate_id": "boltons__v2__076",
+      "first_failing_gate": "",
+      "historical_environment_recovered_reference_pass": false,
+      "historical_environment_terminal_subgate": "",
+      "module_or_package": [
+        "strutils"
+      ],
+      "oracle_source": "changed_tests_from_repo_history",
+      "repo_id": "boltons",
+      "source_arm": "repo_history_v2_real",
+      "source_context_quality": "non_leaky_issue_or_pr_context",
+      "source_reservoir": "repo_history_v2_commit_with_tests",
+      "status": "certified",
+      "subgate_label": "reference_pass",
+      "time_bucket": "2016_2019"
+    },
+    {
+      "artifact_ref": "experiments/phase1_compiler/results/phase1_two_repo_supply_expansion_certification_attempts.json",
+      "attempt_basis": "matched_committed_local_certification_artifact",
+      "candidate_id": "boltons__v2__091",
+      "first_failing_gate": "cost_boundedness",
+      "historical_environment_recovered_reference_pass": false,
+      "historical_environment_terminal_subgate": "",
+      "module_or_package": [
+        "ioutils"
+      ],
+      "oracle_source": "changed_tests_from_repo_history",
+      "repo_id": "boltons",
+      "source_arm": "repo_history_v2_real",
+      "source_context_quality": "non_leaky_issue_or_pr_context",
+      "source_reservoir": "repo_history_v2_commit_with_tests",
+      "status": "rejected",
+      "subgate_label": "unknown_failed",
+      "time_bucket": "2016_2019"
+    },
+    {
+      "artifact_ref": "experiments/phase1_compiler/results/phase1_two_repo_supply_expansion_certification_attempts.json",
+      "attempt_basis": "matched_committed_local_certification_artifact",
+      "candidate_id": "boltons__v2__092",
+      "first_failing_gate": "cost_boundedness",
+      "historical_environment_recovered_reference_pass": false,
+      "historical_environment_terminal_subgate": "",
+      "module_or_package": [
+        "ioutils"
+      ],
+      "oracle_source": "changed_tests_from_repo_history",
+      "repo_id": "boltons",
+      "source_arm": "repo_history_v2_real",
+      "source_context_quality": "non_leaky_issue_or_pr_context",
+      "source_reservoir": "repo_history_v2_commit_with_tests",
+      "status": "rejected",
+      "subgate_label": "unknown_failed",
+      "time_bucket": "2016_2019"
+    },
+    {
+      "artifact_ref": "experiments/phase1_compiler/results/phase1_two_repo_supply_expansion_certification_attempts.json",
+      "attempt_basis": "matched_committed_local_certification_artifact",
+      "candidate_id": "boltons__v2__093",
+      "first_failing_gate": "cost_boundedness",
+      "historical_environment_recovered_reference_pass": false,
+      "historical_environment_terminal_subgate": "",
+      "module_or_package": [
+        "ioutils"
+      ],
+      "oracle_source": "changed_tests_from_repo_history",
+      "repo_id": "boltons",
+      "source_arm": "repo_history_v2_real",
+      "source_context_quality": "non_leaky_issue_or_pr_context",
+      "source_reservoir": "repo_history_v2_commit_with_tests",
+      "status": "rejected",
+      "subgate_label": "unknown_failed",
+      "time_bucket": "2016_2019"
+    },
+    {
+      "artifact_ref": "experiments/phase1_compiler/results/phase1_two_repo_supply_expansion_certification_attempts.json",
+      "attempt_basis": "matched_committed_local_certification_artifact",
+      "candidate_id": "boltons__v2__094",
+      "first_failing_gate": "cost_boundedness",
+      "historical_environment_recovered_reference_pass": false,
+      "historical_environment_terminal_subgate": "",
+      "module_or_package": [
+        "ioutils"
+      ],
+      "oracle_source": "changed_tests_from_repo_history",
+      "repo_id": "boltons",
+      "source_arm": "repo_history_v2_real",
+      "source_context_quality": "non_leaky_issue_or_pr_context",
+      "source_reservoir": "repo_history_v2_commit_with_tests",
+      "status": "rejected",
+      "subgate_label": "unknown_failed",
+      "time_bucket": "2016_2019"
+    },
+    {
+      "artifact_ref": "experiments/phase1_compiler/results/phase1_two_repo_supply_expansion_certification_attempts.json",
+      "attempt_basis": "matched_committed_local_certification_artifact",
+      "candidate_id": "boltons__v2__095",
+      "first_failing_gate": "cost_boundedness",
+      "historical_environment_recovered_reference_pass": false,
+      "historical_environment_terminal_subgate": "",
+      "module_or_package": [
+        "ioutils"
+      ],
+      "oracle_source": "changed_tests_from_repo_history",
+      "repo_id": "boltons",
+      "source_arm": "repo_history_v2_real",
+      "source_context_quality": "non_leaky_issue_or_pr_context",
+      "source_reservoir": "repo_history_v2_commit_with_tests",
+      "status": "rejected",
+      "subgate_label": "unknown_failed",
+      "time_bucket": "2016_2019"
+    },
+    {
+      "artifact_ref": "experiments/phase1_compiler/results/phase1_two_repo_supply_expansion_certification_attempts.json",
+      "attempt_basis": "matched_committed_local_certification_artifact",
+      "candidate_id": "boltons__v2__096",
+      "first_failing_gate": "cost_boundedness",
+      "historical_environment_recovered_reference_pass": false,
+      "historical_environment_terminal_subgate": "",
+      "module_or_package": [
+        "ioutils"
+      ],
+      "oracle_source": "changed_tests_from_repo_history",
+      "repo_id": "boltons",
+      "source_arm": "repo_history_v2_real",
+      "source_context_quality": "non_leaky_issue_or_pr_context",
+      "source_reservoir": "repo_history_v2_commit_with_tests",
+      "status": "rejected",
+      "subgate_label": "unknown_failed",
+      "time_bucket": "2016_2019"
+    },
+    {
+      "artifact_ref": "experiments/phase1_compiler/results/phase1_two_repo_supply_expansion_certification_attempts.json",
+      "attempt_basis": "matched_committed_local_certification_artifact",
+      "candidate_id": "boltons__v2__097",
+      "first_failing_gate": "cost_boundedness",
+      "historical_environment_recovered_reference_pass": false,
+      "historical_environment_terminal_subgate": "",
+      "module_or_package": [
+        "ioutils"
+      ],
+      "oracle_source": "changed_tests_from_repo_history",
+      "repo_id": "boltons",
+      "source_arm": "repo_history_v2_real",
+      "source_context_quality": "non_leaky_issue_or_pr_context",
+      "source_reservoir": "repo_history_v2_commit_with_tests",
+      "status": "rejected",
+      "subgate_label": "unknown_failed",
+      "time_bucket": "2016_2019"
+    },
+    {
+      "artifact_ref": "experiments/phase1_compiler/results/phase1_two_repo_supply_expansion_certification_attempts.json",
+      "attempt_basis": "matched_committed_local_certification_artifact",
+      "candidate_id": "boltons__v2__098",
+      "first_failing_gate": "cost_boundedness",
+      "historical_environment_recovered_reference_pass": false,
+      "historical_environment_terminal_subgate": "",
+      "module_or_package": [
+        "ioutils"
+      ],
+      "oracle_source": "changed_tests_from_repo_history",
+      "repo_id": "boltons",
+      "source_arm": "repo_history_v2_real",
+      "source_context_quality": "non_leaky_issue_or_pr_context",
+      "source_reservoir": "repo_history_v2_commit_with_tests",
+      "status": "rejected",
+      "subgate_label": "unknown_failed",
+      "time_bucket": "2016_2019"
+    },
+    {
+      "artifact_ref": "experiments/phase1_compiler/results/phase1_two_repo_supply_expansion_certification_attempts.json",
+      "attempt_basis": "matched_committed_local_certification_artifact",
+      "candidate_id": "boltons__v2__100",
+      "first_failing_gate": "cost_boundedness",
+      "historical_environment_recovered_reference_pass": false,
+      "historical_environment_terminal_subgate": "",
+      "module_or_package": [
+        "ioutils"
+      ],
+      "oracle_source": "changed_tests_from_repo_history",
+      "repo_id": "boltons",
+      "source_arm": "repo_history_v2_real",
+      "source_context_quality": "non_leaky_issue_or_pr_context",
+      "source_reservoir": "repo_history_v2_commit_with_tests",
+      "status": "rejected",
+      "subgate_label": "unknown_failed",
+      "time_bucket": "2016_2019"
+    },
+    {
+      "artifact_ref": "experiments/phase1_compiler/results/phase1_two_repo_supply_expansion_certification_attempts.json",
+      "attempt_basis": "matched_committed_local_certification_artifact",
+      "candidate_id": "boltons__v2__102",
+      "first_failing_gate": "",
+      "historical_environment_recovered_reference_pass": false,
+      "historical_environment_terminal_subgate": "",
+      "module_or_package": [
+        "tbutils"
+      ],
+      "oracle_source": "changed_tests_from_repo_history",
+      "repo_id": "boltons",
+      "source_arm": "repo_history_v2_real",
+      "source_context_quality": "non_leaky_issue_or_pr_context",
+      "source_reservoir": "repo_history_v2_commit_with_tests",
+      "status": "certified",
+      "subgate_label": "reference_pass",
+      "time_bucket": "2016_2019"
+    },
+    {
+      "artifact_ref": "experiments/phase1_compiler/results/phase1_two_repo_supply_expansion_certification_attempts.json",
+      "attempt_basis": "matched_committed_local_certification_artifact",
+      "candidate_id": "boltons__v2__123",
+      "first_failing_gate": "cost_boundedness",
+      "historical_environment_recovered_reference_pass": false,
+      "historical_environment_terminal_subgate": "",
+      "module_or_package": [
+        "ioutils"
+      ],
+      "oracle_source": "changed_tests_from_repo_history",
+      "repo_id": "boltons",
+      "source_arm": "repo_history_v2_real",
+      "source_context_quality": "non_leaky_issue_or_pr_context",
+      "source_reservoir": "repo_history_v2_commit_with_tests",
+      "status": "rejected",
+      "subgate_label": "unknown_failed",
+      "time_bucket": "2016_2019"
+    },
+    {
+      "artifact_ref": "experiments/phase1_compiler/results/phase1_two_repo_supply_expansion_certification_attempts.json",
+      "attempt_basis": "matched_committed_local_certification_artifact",
+      "candidate_id": "boltons__v2__124",
+      "first_failing_gate": "cost_boundedness",
+      "historical_environment_recovered_reference_pass": false,
+      "historical_environment_terminal_subgate": "",
+      "module_or_package": [
+        "ioutils"
+      ],
+      "oracle_source": "changed_tests_from_repo_history",
+      "repo_id": "boltons",
+      "source_arm": "repo_history_v2_real",
+      "source_context_quality": "non_leaky_issue_or_pr_context",
+      "source_reservoir": "repo_history_v2_commit_with_tests",
+      "status": "rejected",
+      "subgate_label": "unknown_failed",
+      "time_bucket": "2016_2019"
+    },
+    {
+      "artifact_ref": "experiments/phase1_compiler/results/phase1_two_repo_supply_expansion_certification_attempts.json",
+      "attempt_basis": "matched_committed_local_certification_artifact",
+      "candidate_id": "boltons__v2__125",
+      "first_failing_gate": "cost_boundedness",
+      "historical_environment_recovered_reference_pass": false,
+      "historical_environment_terminal_subgate": "",
+      "module_or_package": [
+        "ioutils"
+      ],
+      "oracle_source": "changed_tests_from_repo_history",
+      "repo_id": "boltons",
+      "source_arm": "repo_history_v2_real",
+      "source_context_quality": "non_leaky_issue_or_pr_context",
+      "source_reservoir": "repo_history_v2_commit_with_tests",
+      "status": "rejected",
+      "subgate_label": "unknown_failed",
+      "time_bucket": "2016_2019"
+    },
+    {
+      "artifact_ref": "experiments/phase1_compiler/results/phase1_two_repo_supply_expansion_certification_attempts.json",
+      "attempt_basis": "matched_committed_local_certification_artifact",
+      "candidate_id": "boltons__v2__126",
+      "first_failing_gate": "cost_boundedness",
+      "historical_environment_recovered_reference_pass": false,
+      "historical_environment_terminal_subgate": "",
+      "module_or_package": [
+        "ioutils"
+      ],
+      "oracle_source": "changed_tests_from_repo_history",
+      "repo_id": "boltons",
+      "source_arm": "repo_history_v2_real",
+      "source_context_quality": "non_leaky_issue_or_pr_context",
+      "source_reservoir": "repo_history_v2_commit_with_tests",
+      "status": "rejected",
+      "subgate_label": "unknown_failed",
+      "time_bucket": "2016_2019"
+    },
+    {
+      "artifact_ref": "experiments/phase1_compiler/results/phase1_two_repo_supply_expansion_certification_attempts.json",
+      "attempt_basis": "matched_committed_local_certification_artifact",
+      "candidate_id": "boltons__v2__127",
+      "first_failing_gate": "reference_pass",
+      "historical_environment_recovered_reference_pass": false,
+      "historical_environment_terminal_subgate": "reference_install_failed",
+      "module_or_package": [
+        "dictutils"
+      ],
+      "oracle_source": "changed_tests_from_repo_history",
+      "repo_id": "boltons",
+      "source_arm": "repo_history_v2_real",
+      "source_context_quality": "non_leaky_issue_or_pr_context",
+      "source_reservoir": "repo_history_v2_commit_with_tests",
+      "status": "near_certified",
+      "subgate_label": "install_failed",
+      "time_bucket": "2016_2019"
+    },
+    {
+      "artifact_ref": "experiments/phase1_compiler/results/phase1_two_repo_supply_expansion_certification_attempts.json",
+      "attempt_basis": "matched_committed_local_certification_artifact",
+      "candidate_id": "boltons__v2__128",
+      "first_failing_gate": "cost_boundedness",
+      "historical_environment_recovered_reference_pass": false,
+      "historical_environment_terminal_subgate": "",
+      "module_or_package": [
+        "ioutils"
+      ],
+      "oracle_source": "changed_tests_from_repo_history",
+      "repo_id": "boltons",
+      "source_arm": "repo_history_v2_real",
+      "source_context_quality": "non_leaky_issue_or_pr_context",
+      "source_reservoir": "repo_history_v2_commit_with_tests",
+      "status": "rejected",
+      "subgate_label": "unknown_failed",
+      "time_bucket": "2016_2019"
+    },
+    {
+      "artifact_ref": "experiments/phase1_compiler/results/phase1_two_repo_supply_expansion_certification_attempts.json",
+      "attempt_basis": "matched_committed_local_certification_artifact",
+      "candidate_id": "boltons__v2__132",
+      "first_failing_gate": "reference_pass",
+      "historical_environment_recovered_reference_pass": true,
+      "historical_environment_terminal_subgate": "reference_pass",
+      "module_or_package": [
+        "strutils"
+      ],
+      "oracle_source": "changed_tests_from_repo_history",
+      "repo_id": "boltons",
+      "source_arm": "repo_history_v2_real",
+      "source_context_quality": "non_leaky_issue_or_pr_context",
+      "source_reservoir": "repo_history_v2_commit_with_tests",
+      "status": "near_certified",
+      "subgate_label": "reference_pass",
+      "time_bucket": "2016_2019"
+    },
+    {
+      "artifact_ref": "experiments/phase1_compiler/results/phase1_two_repo_supply_expansion_certification_attempts.json",
+      "attempt_basis": "matched_committed_local_certification_artifact",
+      "candidate_id": "boltons__v2__133",
+      "first_failing_gate": "reference_pass",
+      "historical_environment_recovered_reference_pass": true,
+      "historical_environment_terminal_subgate": "reference_pass",
+      "module_or_package": [
+        "strutils"
+      ],
+      "oracle_source": "changed_tests_from_repo_history",
+      "repo_id": "boltons",
+      "source_arm": "repo_history_v2_real",
+      "source_context_quality": "non_leaky_issue_or_pr_context",
+      "source_reservoir": "repo_history_v2_commit_with_tests",
+      "status": "near_certified",
+      "subgate_label": "reference_pass",
+      "time_bucket": "2016_2019"
+    },
+    {
+      "artifact_ref": "experiments/phase1_compiler/results/phase1_two_repo_supply_expansion_certification_attempts.json",
+      "attempt_basis": "matched_committed_local_certification_artifact",
+      "candidate_id": "boltons__v2__134",
+      "first_failing_gate": "cost_boundedness",
+      "historical_environment_recovered_reference_pass": false,
+      "historical_environment_terminal_subgate": "",
+      "module_or_package": [
+        "bench_omd",
+        "formatutils",
+        "ioutils",
+        "linkify_changelog",
+        "statsutils",
+        "table_html_app",
+        "tableutils",
+        "tbutils"
+      ],
+      "oracle_source": "changed_tests_from_repo_history",
+      "repo_id": "boltons",
+      "source_arm": "repo_history_v2_real",
+      "source_context_quality": "non_leaky_issue_or_pr_context",
+      "source_reservoir": "repo_history_v2_commit_with_tests",
+      "status": "rejected",
+      "subgate_label": "unknown_failed",
+      "time_bucket": "2016_2019"
+    },
+    {
+      "artifact_ref": "experiments/phase1_compiler/results/phase1_two_repo_supply_expansion_certification_attempts.json",
+      "attempt_basis": "matched_committed_local_certification_artifact",
+      "candidate_id": "boltons__v2__135",
+      "first_failing_gate": "",
+      "historical_environment_recovered_reference_pass": false,
+      "historical_environment_terminal_subgate": "",
+      "module_or_package": [
+        "timeutils"
+      ],
+      "oracle_source": "changed_tests_from_repo_history",
+      "repo_id": "boltons",
+      "source_arm": "repo_history_v2_real",
+      "source_context_quality": "non_leaky_issue_or_pr_context",
+      "source_reservoir": "repo_history_v2_commit_with_tests",
+      "status": "certified",
+      "subgate_label": "reference_pass",
+      "time_bucket": "2016_2019"
+    },
+    {
+      "artifact_ref": "experiments/phase1_compiler/results/phase1_two_repo_supply_expansion_certification_attempts.json",
+      "attempt_basis": "matched_committed_local_certification_artifact",
+      "candidate_id": "boltons__v2__136",
+      "first_failing_gate": "cost_boundedness",
+      "historical_environment_recovered_reference_pass": false,
+      "historical_environment_terminal_subgate": "",
+      "module_or_package": [
+        "debugutils",
+        "formatutils",
+        "iterutils",
+        "queueutils",
+        "strutils",
+        "tbutils"
+      ],
+      "oracle_source": "changed_tests_from_repo_history",
+      "repo_id": "boltons",
+      "source_arm": "repo_history_v2_real",
+      "source_context_quality": "non_leaky_issue_or_pr_context",
+      "source_reservoir": "repo_history_v2_commit_with_tests",
+      "status": "rejected",
+      "subgate_label": "unknown_failed",
+      "time_bucket": "2016_2019"
+    },
+    {
+      "artifact_ref": "experiments/phase1_compiler/results/phase1_two_repo_supply_expansion_certification_attempts.json",
+      "attempt_basis": "matched_committed_local_certification_artifact",
+      "candidate_id": "boltons__v2__140",
+      "first_failing_gate": "",
+      "historical_environment_recovered_reference_pass": false,
+      "historical_environment_terminal_subgate": "",
+      "module_or_package": [
+        "cacheutils"
+      ],
+      "oracle_source": "changed_tests_from_repo_history",
+      "repo_id": "boltons",
+      "source_arm": "repo_history_v2_real",
+      "source_context_quality": "non_leaky_issue_or_pr_context",
+      "source_reservoir": "repo_history_v2_commit_with_tests",
+      "status": "certified",
+      "subgate_label": "reference_pass",
+      "time_bucket": "2016_2019"
+    },
+    {
+      "artifact_ref": "experiments/phase1_compiler/results/phase1_two_repo_supply_expansion_certification_attempts.json",
+      "attempt_basis": "matched_committed_local_certification_artifact",
+      "candidate_id": "boltons__v2__141",
+      "first_failing_gate": "reference_pass",
+      "historical_environment_recovered_reference_pass": true,
+      "historical_environment_terminal_subgate": "reference_pass",
+      "module_or_package": [
+        "urlutils"
+      ],
+      "oracle_source": "changed_tests_from_repo_history",
+      "repo_id": "boltons",
+      "source_arm": "repo_history_v2_real",
+      "source_context_quality": "non_leaky_issue_or_pr_context",
+      "source_reservoir": "repo_history_v2_commit_with_tests",
+      "status": "near_certified",
+      "subgate_label": "reference_pass",
+      "time_bucket": "2016_2019"
+    },
+    {
+      "artifact_ref": "experiments/phase1_compiler/results/phase1_two_repo_supply_expansion_certification_attempts.json",
+      "attempt_basis": "matched_committed_local_certification_artifact",
+      "candidate_id": "boltons__v2__142",
+      "first_failing_gate": "reference_pass",
+      "historical_environment_recovered_reference_pass": true,
+      "historical_environment_terminal_subgate": "reference_pass",
+      "module_or_package": [
+        "setutils"
+      ],
+      "oracle_source": "changed_tests_from_repo_history",
+      "repo_id": "boltons",
+      "source_arm": "repo_history_v2_real",
+      "source_context_quality": "non_leaky_issue_or_pr_context",
+      "source_reservoir": "repo_history_v2_commit_with_tests",
+      "status": "near_certified",
+      "subgate_label": "reference_pass",
+      "time_bucket": "2016_2019"
+    },
+    {
+      "artifact_ref": "experiments/phase1_compiler/results/phase1_two_repo_supply_expansion_certification_attempts.json",
+      "attempt_basis": "matched_committed_local_certification_artifact",
+      "candidate_id": "boltons__v2__143",
+      "first_failing_gate": "reference_pass",
+      "historical_environment_recovered_reference_pass": true,
+      "historical_environment_terminal_subgate": "reference_pass",
+      "module_or_package": [
+        "setutils"
+      ],
+      "oracle_source": "changed_tests_from_repo_history",
+      "repo_id": "boltons",
+      "source_arm": "repo_history_v2_real",
+      "source_context_quality": "non_leaky_issue_or_pr_context",
+      "source_reservoir": "repo_history_v2_commit_with_tests",
+      "status": "near_certified",
+      "subgate_label": "reference_pass",
+      "time_bucket": "2016_2019"
+    },
+    {
+      "artifact_ref": "experiments/phase1_compiler/results/phase1_two_repo_supply_expansion_certification_attempts.json",
+      "attempt_basis": "matched_committed_local_certification_artifact",
+      "candidate_id": "boltons__v2__144",
+      "first_failing_gate": "reference_pass",
+      "historical_environment_recovered_reference_pass": false,
+      "historical_environment_terminal_subgate": "",
+      "module_or_package": [
+        "setutils"
+      ],
+      "oracle_source": "changed_tests_from_repo_history",
+      "repo_id": "boltons",
+      "source_arm": "repo_history_v2_real",
+      "source_context_quality": "non_leaky_issue_or_pr_context",
+      "source_reservoir": "repo_history_v2_commit_with_tests",
+      "status": "near_certified",
+      "subgate_label": "unknown_failed",
+      "time_bucket": "2016_2019"
+    },
+    {
+      "artifact_ref": "experiments/phase1_compiler/results/phase1_two_repo_supply_expansion_certification_attempts.json",
+      "attempt_basis": "matched_committed_local_certification_artifact",
+      "candidate_id": "boltons__v2__146",
+      "first_failing_gate": "reference_pass",
+      "historical_environment_recovered_reference_pass": false,
+      "historical_environment_terminal_subgate": "",
+      "module_or_package": [
+        "setutils"
+      ],
+      "oracle_source": "changed_tests_from_repo_history",
+      "repo_id": "boltons",
+      "source_arm": "repo_history_v2_real",
+      "source_context_quality": "non_leaky_issue_or_pr_context",
+      "source_reservoir": "repo_history_v2_commit_with_tests",
+      "status": "near_certified",
+      "subgate_label": "unknown_failed",
+      "time_bucket": "2016_2019"
+    },
+    {
+      "artifact_ref": "experiments/phase1_compiler/results/phase1_two_repo_supply_expansion_certification_attempts.json",
+      "attempt_basis": "matched_committed_local_certification_artifact",
+      "candidate_id": "boltons__v2__147",
+      "first_failing_gate": "reference_pass",
+      "historical_environment_recovered_reference_pass": false,
+      "historical_environment_terminal_subgate": "",
+      "module_or_package": [
+        "setutils"
+      ],
+      "oracle_source": "changed_tests_from_repo_history",
+      "repo_id": "boltons",
+      "source_arm": "repo_history_v2_real",
+      "source_context_quality": "non_leaky_issue_or_pr_context",
+      "source_reservoir": "repo_history_v2_commit_with_tests",
+      "status": "near_certified",
+      "subgate_label": "unknown_failed",
+      "time_bucket": "2016_2019"
+    },
+    {
+      "artifact_ref": "experiments/phase1_compiler/results/phase1_two_repo_supply_expansion_certification_attempts.json",
+      "attempt_basis": "matched_committed_local_certification_artifact",
+      "candidate_id": "boltons__v2__148",
+      "first_failing_gate": "reference_pass",
+      "historical_environment_recovered_reference_pass": false,
+      "historical_environment_terminal_subgate": "",
+      "module_or_package": [
+        "setutils"
+      ],
+      "oracle_source": "changed_tests_from_repo_history",
+      "repo_id": "boltons",
+      "source_arm": "repo_history_v2_real",
+      "source_context_quality": "non_leaky_issue_or_pr_context",
+      "source_reservoir": "repo_history_v2_commit_with_tests",
+      "status": "near_certified",
+      "subgate_label": "unknown_failed",
+      "time_bucket": "2016_2019"
+    },
+    {
+      "artifact_ref": "experiments/phase1_compiler/results/phase1_two_repo_supply_expansion_certification_attempts.json",
+      "attempt_basis": "matched_committed_local_certification_artifact",
+      "candidate_id": "boltons__v2__150",
+      "first_failing_gate": "reference_pass",
+      "historical_environment_recovered_reference_pass": false,
+      "historical_environment_terminal_subgate": "",
+      "module_or_package": [
+        "funcutils"
+      ],
+      "oracle_source": "changed_tests_from_repo_history",
+      "repo_id": "boltons",
+      "source_arm": "repo_history_v2_real",
+      "source_context_quality": "material_leakage_risk",
+      "source_reservoir": "repo_history_v2_commit_with_tests",
+      "status": "near_certified",
+      "subgate_label": "unknown_failed",
+      "time_bucket": "2016_2019"
+    },
+    {
+      "artifact_ref": "experiments/phase1_compiler/results/phase1_two_repo_supply_expansion_certification_attempts.json",
+      "attempt_basis": "matched_committed_local_certification_artifact",
+      "candidate_id": "boltons__v2__151",
+      "first_failing_gate": "reference_pass",
+      "historical_environment_recovered_reference_pass": false,
+      "historical_environment_terminal_subgate": "",
+      "module_or_package": [
+        "setutils"
+      ],
+      "oracle_source": "changed_tests_from_repo_history",
+      "repo_id": "boltons",
+      "source_arm": "repo_history_v2_real",
+      "source_context_quality": "non_leaky_issue_or_pr_context",
+      "source_reservoir": "repo_history_v2_commit_with_tests",
+      "status": "near_certified",
+      "subgate_label": "unknown_failed",
+      "time_bucket": "2016_2019"
+    },
+    {
+      "artifact_ref": "experiments/phase1_compiler/results/phase1_two_repo_supply_expansion_certification_attempts.json",
+      "attempt_basis": "matched_committed_local_certification_artifact",
+      "candidate_id": "boltons__v2__152",
+      "first_failing_gate": "reference_pass",
+      "historical_environment_recovered_reference_pass": false,
+      "historical_environment_terminal_subgate": "",
+      "module_or_package": [
+        "mathutils"
+      ],
+      "oracle_source": "changed_tests_from_repo_history",
+      "repo_id": "boltons",
+      "source_arm": "repo_history_v2_real",
+      "source_context_quality": "non_leaky_issue_or_pr_context",
+      "source_reservoir": "repo_history_v2_commit_with_tests",
+      "status": "near_certified",
+      "subgate_label": "unknown_failed",
+      "time_bucket": "2016_2019"
+    },
+    {
+      "artifact_ref": "experiments/phase1_compiler/results/phase1_two_repo_supply_expansion_certification_attempts.json",
+      "attempt_basis": "matched_committed_local_certification_artifact",
+      "candidate_id": "boltons__v2__153",
+      "first_failing_gate": "reference_pass",
+      "historical_environment_recovered_reference_pass": false,
+      "historical_environment_terminal_subgate": "",
+      "module_or_package": [
+        "dictutils"
+      ],
+      "oracle_source": "changed_tests_from_repo_history",
+      "repo_id": "boltons",
+      "source_arm": "repo_history_v2_real",
+      "source_context_quality": "non_leaky_issue_or_pr_context",
+      "source_reservoir": "repo_history_v2_commit_with_tests",
+      "status": "near_certified",
+      "subgate_label": "unknown_failed",
+      "time_bucket": "2016_2019"
+    },
+    {
+      "artifact_ref": "experiments/phase1_compiler/results/phase1_two_repo_supply_expansion_certification_attempts.json",
+      "attempt_basis": "matched_committed_local_certification_artifact",
+      "candidate_id": "boltons__v2__154",
+      "first_failing_gate": "",
+      "historical_environment_recovered_reference_pass": false,
+      "historical_environment_terminal_subgate": "",
+      "module_or_package": [
+        "mathutils"
+      ],
+      "oracle_source": "changed_tests_from_repo_history",
+      "repo_id": "boltons",
+      "source_arm": "repo_history_v2_real",
+      "source_context_quality": "non_leaky_issue_or_pr_context",
+      "source_reservoir": "repo_history_v2_commit_with_tests",
+      "status": "certified",
+      "subgate_label": "reference_pass",
+      "time_bucket": "2016_2019"
+    },
+    {
+      "artifact_ref": "experiments/phase1_compiler/results/phase1_two_repo_supply_expansion_certification_attempts.json",
+      "attempt_basis": "matched_committed_local_certification_artifact",
+      "candidate_id": "boltons__v2__155",
+      "first_failing_gate": "reference_pass",
+      "historical_environment_recovered_reference_pass": false,
+      "historical_environment_terminal_subgate": "",
+      "module_or_package": [
+        "dictutils"
+      ],
+      "oracle_source": "changed_tests_from_repo_history",
+      "repo_id": "boltons",
+      "source_arm": "repo_history_v2_real",
+      "source_context_quality": "non_leaky_issue_or_pr_context",
+      "source_reservoir": "repo_history_v2_commit_with_tests",
+      "status": "near_certified",
+      "subgate_label": "unknown_failed",
+      "time_bucket": "2016_2019"
+    },
+    {
+      "artifact_ref": "experiments/phase1_compiler/results/phase1_two_repo_supply_expansion_certification_attempts.json",
+      "attempt_basis": "matched_committed_local_certification_artifact",
+      "candidate_id": "boltons__v2__156",
+      "first_failing_gate": "reference_pass",
+      "historical_environment_recovered_reference_pass": false,
+      "historical_environment_terminal_subgate": "",
+      "module_or_package": [
+        "dictutils"
+      ],
+      "oracle_source": "changed_tests_from_repo_history",
+      "repo_id": "boltons",
+      "source_arm": "repo_history_v2_real",
+      "source_context_quality": "non_leaky_issue_or_pr_context",
+      "source_reservoir": "repo_history_v2_commit_with_tests",
+      "status": "near_certified",
+      "subgate_label": "unknown_failed",
+      "time_bucket": "2016_2019"
+    },
+    {
+      "artifact_ref": "experiments/phase1_compiler/results/phase1_two_repo_supply_expansion_certification_attempts.json",
+      "attempt_basis": "matched_committed_local_certification_artifact",
+      "candidate_id": "boltons__v2__157",
+      "first_failing_gate": "reference_pass",
+      "historical_environment_recovered_reference_pass": false,
+      "historical_environment_terminal_subgate": "",
+      "module_or_package": [
+        "dictutils"
+      ],
+      "oracle_source": "changed_tests_from_repo_history",
+      "repo_id": "boltons",
+      "source_arm": "repo_history_v2_real",
+      "source_context_quality": "non_leaky_issue_or_pr_context",
+      "source_reservoir": "repo_history_v2_commit_with_tests",
+      "status": "near_certified",
+      "subgate_label": "unknown_failed",
+      "time_bucket": "2016_2019"
+    },
+    {
+      "artifact_ref": "experiments/phase1_compiler/results/phase1_two_repo_supply_expansion_certification_attempts.json",
+      "attempt_basis": "matched_committed_local_certification_artifact",
+      "candidate_id": "boltons__v2__158",
+      "first_failing_gate": "reference_pass",
+      "historical_environment_recovered_reference_pass": false,
+      "historical_environment_terminal_subgate": "",
+      "module_or_package": [
+        "dictutils"
+      ],
+      "oracle_source": "changed_tests_from_repo_history",
+      "repo_id": "boltons",
+      "source_arm": "repo_history_v2_real",
+      "source_context_quality": "non_leaky_issue_or_pr_context",
+      "source_reservoir": "repo_history_v2_commit_with_tests",
+      "status": "near_certified",
+      "subgate_label": "unknown_failed",
+      "time_bucket": "2016_2019"
+    },
+    {
+      "artifact_ref": "experiments/phase1_compiler/results/phase1_two_repo_supply_expansion_certification_attempts.json",
+      "attempt_basis": "matched_committed_local_certification_artifact",
+      "candidate_id": "boltons__v2__159",
+      "first_failing_gate": "reference_pass",
+      "historical_environment_recovered_reference_pass": false,
+      "historical_environment_terminal_subgate": "",
+      "module_or_package": [
+        "dictutils"
+      ],
+      "oracle_source": "changed_tests_from_repo_history",
+      "repo_id": "boltons",
+      "source_arm": "repo_history_v2_real",
+      "source_context_quality": "non_leaky_issue_or_pr_context",
+      "source_reservoir": "repo_history_v2_commit_with_tests",
+      "status": "near_certified",
+      "subgate_label": "unknown_failed",
+      "time_bucket": "2016_2019"
+    },
+    {
+      "artifact_ref": "experiments/phase1_compiler/results/phase1_two_repo_supply_expansion_certification_attempts.json",
+      "attempt_basis": "matched_committed_local_certification_artifact",
+      "candidate_id": "boltons__v2__163",
+      "first_failing_gate": "reference_pass",
+      "historical_environment_recovered_reference_pass": false,
+      "historical_environment_terminal_subgate": "",
+      "module_or_package": [
+        "funcutils"
+      ],
+      "oracle_source": "changed_tests_from_repo_history",
+      "repo_id": "boltons",
+      "source_arm": "repo_history_v2_real",
+      "source_context_quality": "non_leaky_issue_or_pr_context",
+      "source_reservoir": "repo_history_v2_commit_with_tests",
+      "status": "near_certified",
+      "subgate_label": "unknown_failed",
+      "time_bucket": "2016_2019"
+    },
+    {
+      "artifact_ref": "experiments/phase1_compiler/results/phase1_two_repo_supply_expansion_certification_attempts.json",
+      "attempt_basis": "matched_committed_local_certification_artifact",
+      "candidate_id": "boltons__v2__164",
+      "first_failing_gate": "ambiguity_review",
+      "historical_environment_recovered_reference_pass": false,
+      "historical_environment_terminal_subgate": "",
+      "module_or_package": [
+        "queueutils"
+      ],
+      "oracle_source": "changed_tests_from_repo_history",
+      "repo_id": "boltons",
+      "source_arm": "repo_history_v2_real",
+      "source_context_quality": "non_leaky_issue_or_pr_context",
+      "source_reservoir": "repo_history_v2_commit_with_tests",
+      "status": "near_certified",
+      "subgate_label": "unknown_failed",
+      "time_bucket": "2016_2019"
+    },
+    {
+      "artifact_ref": "experiments/phase1_compiler/results/phase1_two_repo_supply_expansion_certification_attempts.json",
+      "attempt_basis": "matched_committed_local_certification_artifact",
+      "candidate_id": "boltons__v2__169",
+      "first_failing_gate": "reference_pass",
+      "historical_environment_recovered_reference_pass": false,
+      "historical_environment_terminal_subgate": "",
+      "module_or_package": [
+        "setutils"
+      ],
+      "oracle_source": "changed_tests_from_repo_history",
+      "repo_id": "boltons",
+      "source_arm": "repo_history_v2_real",
+      "source_context_quality": "non_leaky_issue_or_pr_context",
+      "source_reservoir": "repo_history_v2_commit_with_tests",
+      "status": "near_certified",
+      "subgate_label": "unknown_failed",
+      "time_bucket": "2016_2019"
+    },
+    {
+      "artifact_ref": "experiments/phase1_compiler/results/phase1_two_repo_supply_expansion_certification_attempts.json",
+      "attempt_basis": "matched_committed_local_certification_artifact",
+      "candidate_id": "boltons__v2__170",
+      "first_failing_gate": "reference_pass",
+      "historical_environment_recovered_reference_pass": false,
+      "historical_environment_terminal_subgate": "",
+      "module_or_package": [
+        "setutils"
+      ],
+      "oracle_source": "changed_tests_from_repo_history",
+      "repo_id": "boltons",
+      "source_arm": "repo_history_v2_real",
+      "source_context_quality": "non_leaky_issue_or_pr_context",
+      "source_reservoir": "repo_history_v2_commit_with_tests",
+      "status": "near_certified",
+      "subgate_label": "unknown_failed",
+      "time_bucket": "2016_2019"
+    },
+    {
+      "artifact_ref": "experiments/phase0_headroom/certified_tasks/boltons_near_certified_tasks.jsonl",
+      "attempt_basis": "matched_committed_local_certification_artifact",
+      "candidate_id": "boltons__v2__176",
+      "first_failing_gate": "ambiguity_review",
+      "historical_environment_recovered_reference_pass": false,
+      "historical_environment_terminal_subgate": "",
+      "module_or_package": [
+        "iterutils"
+      ],
+      "oracle_source": "changed_tests_from_repo_history",
+      "repo_id": "boltons",
+      "source_arm": "repo_history_v2_real",
+      "source_context_quality": "commit_message_only_context",
+      "source_reservoir": "repo_history_v2_pr_issue_with_tests",
+      "status": "near_certified",
+      "subgate_label": "unknown_failed",
+      "time_bucket": "2020_2023"
+    },
+    {
+      "artifact_ref": "experiments/phase0_headroom/certified_tasks/boltons_near_certified_tasks.jsonl",
+      "attempt_basis": "matched_committed_local_certification_artifact",
+      "candidate_id": "boltons__v2__177",
+      "first_failing_gate": "ambiguity_review",
+      "historical_environment_recovered_reference_pass": false,
+      "historical_environment_terminal_subgate": "",
+      "module_or_package": [
+        "cacheutils"
+      ],
+      "oracle_source": "changed_tests_from_repo_history",
+      "repo_id": "boltons",
+      "source_arm": "repo_history_v2_real",
+      "source_context_quality": "commit_message_only_context",
+      "source_reservoir": "repo_history_v2_commit_with_tests",
+      "status": "near_certified",
+      "subgate_label": "unknown_failed",
+      "time_bucket": "2020_2023"
+    },
+    {
+      "artifact_ref": "experiments/phase0_headroom/certified_tasks/boltons_near_certified_tasks.jsonl",
+      "attempt_basis": "matched_committed_local_certification_artifact",
+      "candidate_id": "boltons__v2__178",
+      "first_failing_gate": "reference_pass",
+      "historical_environment_recovered_reference_pass": false,
+      "historical_environment_terminal_subgate": "",
+      "module_or_package": [
+        "table_html_app"
+      ],
+      "oracle_source": "changed_tests_from_repo_history",
+      "repo_id": "boltons",
+      "source_arm": "repo_history_v2_real",
+      "source_context_quality": "commit_message_only_context",
+      "source_reservoir": "repo_history_v2_commit_with_tests",
+      "status": "near_certified",
+      "subgate_label": "unknown_failed",
+      "time_bucket": "2020_2023"
+    },
+    {
+      "artifact_ref": "experiments/phase0_headroom/certified_tasks/boltons_near_certified_tasks.jsonl",
+      "attempt_basis": "matched_committed_local_certification_artifact",
+      "candidate_id": "boltons__v2__179",
+      "first_failing_gate": "reference_pass",
+      "historical_environment_recovered_reference_pass": false,
+      "historical_environment_terminal_subgate": "",
+      "module_or_package": [
+        "ecoutils",
+        "formatutils",
+        "linkify_changelog",
+        "urlutils"
+      ],
+      "oracle_source": "changed_tests_from_repo_history",
+      "repo_id": "boltons",
+      "source_arm": "repo_history_v2_real",
+      "source_context_quality": "commit_message_only_context",
+      "source_reservoir": "repo_history_v2_commit_with_tests",
+      "status": "near_certified",
+      "subgate_label": "unknown_failed",
+      "time_bucket": "2020_2023"
+    },
+    {
+      "artifact_ref": "experiments/phase0_headroom/certified_tasks/boltons_near_certified_tasks.jsonl",
+      "attempt_basis": "matched_committed_local_certification_artifact",
+      "candidate_id": "boltons__v2__180",
+      "first_failing_gate": "no_op_fail",
+      "historical_environment_recovered_reference_pass": false,
+      "historical_environment_terminal_subgate": "",
+      "module_or_package": [
+        "funcutils"
+      ],
+      "oracle_source": "changed_tests_from_repo_history",
+      "repo_id": "boltons",
+      "source_arm": "repo_history_v2_real",
+      "source_context_quality": "commit_message_only_context",
+      "source_reservoir": "repo_history_v2_commit_with_tests",
+      "status": "near_certified",
+      "subgate_label": "noop_assert_failed",
+      "time_bucket": "2020_2023"
+    },
+    {
+      "artifact_ref": "experiments/phase0_headroom/certified_tasks/boltons_clean_outcome_unseen_supply_review_records.jsonl",
+      "attempt_basis": "matched_committed_local_certification_artifact",
+      "candidate_id": "boltons__v2__181",
+      "first_failing_gate": "",
+      "historical_environment_recovered_reference_pass": false,
+      "historical_environment_terminal_subgate": "",
+      "module_or_package": [
+        "funcutils"
+      ],
+      "oracle_source": "changed_tests_from_repo_history",
+      "repo_id": "boltons",
+      "source_arm": "repo_history_v2_real",
+      "source_context_quality": "commit_message_only_context",
+      "source_reservoir": "repo_history_v2_commit_with_tests",
+      "status": "certified",
+      "subgate_label": "reference_pass",
+      "time_bucket": "2020_2023"
+    },
+    {
+      "artifact_ref": "experiments/phase0_headroom/certified_tasks/boltons_clean_outcome_unseen_supply_review_records.jsonl",
+      "attempt_basis": "matched_committed_local_certification_artifact",
+      "candidate_id": "boltons__v2__182",
+      "first_failing_gate": "",
+      "historical_environment_recovered_reference_pass": false,
+      "historical_environment_terminal_subgate": "",
+      "module_or_package": [
+        "socketutils"
+      ],
+      "oracle_source": "changed_tests_from_repo_history",
+      "repo_id": "boltons",
+      "source_arm": "repo_history_v2_real",
+      "source_context_quality": "commit_message_only_context",
+      "source_reservoir": "repo_history_v2_commit_with_tests",
+      "status": "certified",
+      "subgate_label": "reference_pass",
+      "time_bucket": "2020_2023"
+    },
+    {
+      "artifact_ref": "experiments/phase0_headroom/certified_tasks/boltons_near_certified_tasks.jsonl",
+      "attempt_basis": "matched_committed_local_certification_artifact",
+      "candidate_id": "boltons__v2__183",
+      "first_failing_gate": "ambiguity_review",
+      "historical_environment_recovered_reference_pass": false,
+      "historical_environment_terminal_subgate": "",
+      "module_or_package": [
+        "setutils"
+      ],
+      "oracle_source": "changed_tests_from_repo_history",
+      "repo_id": "boltons",
+      "source_arm": "repo_history_v2_real",
+      "source_context_quality": "commit_message_only_context",
+      "source_reservoir": "repo_history_v2_pr_issue_with_tests",
+      "status": "near_certified",
+      "subgate_label": "unknown_failed",
+      "time_bucket": "2020_2023"
+    },
+    {
+      "artifact_ref": "experiments/phase0_headroom/certified_tasks/boltons_near_certified_tasks.jsonl",
+      "attempt_basis": "matched_committed_local_certification_artifact",
+      "candidate_id": "boltons__v2__185",
+      "first_failing_gate": "ambiguity_review",
+      "historical_environment_recovered_reference_pass": false,
+      "historical_environment_terminal_subgate": "",
+      "module_or_package": [
+        "setutils"
+      ],
+      "oracle_source": "changed_tests_from_repo_history",
+      "repo_id": "boltons",
+      "source_arm": "repo_history_v2_real",
+      "source_context_quality": "commit_message_only_context",
+      "source_reservoir": "repo_history_v2_commit_with_tests",
+      "status": "near_certified",
+      "subgate_label": "unknown_failed",
+      "time_bucket": "2020_2023"
+    },
+    {
+      "artifact_ref": "experiments/phase0_headroom/certified_tasks/boltons_near_certified_tasks.jsonl",
+      "attempt_basis": "matched_committed_local_certification_artifact",
+      "candidate_id": "boltons__v2__186",
+      "first_failing_gate": "ambiguity_review",
+      "historical_environment_recovered_reference_pass": false,
+      "historical_environment_terminal_subgate": "",
+      "module_or_package": [
+        "setutils"
+      ],
+      "oracle_source": "changed_tests_from_repo_history",
+      "repo_id": "boltons",
+      "source_arm": "repo_history_v2_real",
+      "source_context_quality": "commit_message_only_context",
+      "source_reservoir": "repo_history_v2_pr_issue_with_tests",
+      "status": "near_certified",
+      "subgate_label": "unknown_failed",
+      "time_bucket": "2020_2023"
+    },
+    {
+      "artifact_ref": "experiments/phase0_headroom/certified_tasks/boltons_certified_tasks.jsonl",
+      "attempt_basis": "matched_committed_local_certification_artifact",
+      "candidate_id": "boltons__v2__188",
+      "first_failing_gate": "",
+      "historical_environment_recovered_reference_pass": false,
+      "historical_environment_terminal_subgate": "",
+      "module_or_package": [
+        "iterutils"
+      ],
+      "oracle_source": "changed_tests_from_repo_history",
+      "repo_id": "boltons",
+      "source_arm": "repo_history_v2_real",
+      "source_context_quality": "commit_message_only_context",
+      "source_reservoir": "repo_history_v2_pr_issue_with_tests",
+      "status": "certified",
+      "subgate_label": "reference_pass",
+      "time_bucket": "2020_2023"
+    },
+    {
+      "artifact_ref": "experiments/phase0_headroom/certified_tasks/boltons_near_certified_tasks.jsonl",
+      "attempt_basis": "matched_committed_local_certification_artifact",
+      "candidate_id": "boltons__v2__191",
+      "first_failing_gate": "reference_pass",
+      "historical_environment_recovered_reference_pass": false,
+      "historical_environment_terminal_subgate": "",
+      "module_or_package": [
+        "dictutils"
+      ],
+      "oracle_source": "changed_tests_from_repo_history",
+      "repo_id": "boltons",
+      "source_arm": "repo_history_v2_real",
+      "source_context_quality": "commit_message_only_context",
+      "source_reservoir": "repo_history_v2_pr_issue_with_tests",
+      "status": "near_certified",
+      "subgate_label": "unknown_failed",
+      "time_bucket": "2020_2023"
+    },
+    {
+      "artifact_ref": "experiments/phase0_headroom/certified_tasks/boltons_clean_outcome_unseen_supply_review_records.jsonl",
+      "attempt_basis": "matched_committed_local_certification_artifact",
+      "candidate_id": "boltons__v2__193",
+      "first_failing_gate": "",
+      "historical_environment_recovered_reference_pass": false,
+      "historical_environment_terminal_subgate": "",
+      "module_or_package": [
+        "funcutils"
+      ],
+      "oracle_source": "changed_tests_from_repo_history",
+      "repo_id": "boltons",
+      "source_arm": "repo_history_v2_real",
+      "source_context_quality": "commit_message_only_context",
+      "source_reservoir": "repo_history_v2_pr_issue_with_tests",
+      "status": "certified",
+      "subgate_label": "reference_pass",
+      "time_bucket": "2020_2023"
+    },
+    {
+      "artifact_ref": "experiments/phase0_headroom/certified_tasks/boltons_clean_outcome_unseen_supply_review_records.jsonl",
+      "attempt_basis": "matched_committed_local_certification_artifact",
+      "candidate_id": "boltons__v2__196",
+      "first_failing_gate": "",
+      "historical_environment_recovered_reference_pass": false,
+      "historical_environment_terminal_subgate": "",
+      "module_or_package": [
+        "fileutils",
+        "jsonutils"
+      ],
+      "oracle_source": "changed_tests_from_repo_history",
+      "repo_id": "boltons",
+      "source_arm": "repo_history_v2_real",
+      "source_context_quality": "commit_message_only_context",
+      "source_reservoir": "repo_history_v2_pr_issue_with_tests",
+      "status": "certified",
+      "subgate_label": "reference_pass",
+      "time_bucket": "2020_2023"
+    },
+    {
+      "artifact_ref": "experiments/phase0_headroom/certified_tasks/boltons_near_certified_tasks.jsonl",
+      "attempt_basis": "matched_committed_local_certification_artifact",
+      "candidate_id": "boltons__v2__198",
+      "first_failing_gate": "reference_pass",
+      "historical_environment_recovered_reference_pass": false,
+      "historical_environment_terminal_subgate": "",
+      "module_or_package": [
+        "typeutils"
+      ],
+      "oracle_source": "changed_tests_from_repo_history",
+      "repo_id": "boltons",
+      "source_arm": "repo_history_v2_real",
+      "source_context_quality": "commit_message_only_context",
+      "source_reservoir": "repo_history_v2_pr_issue_with_tests",
+      "status": "near_certified",
+      "subgate_label": "unknown_failed",
+      "time_bucket": "2020_2023"
+    },
+    {
+      "artifact_ref": "experiments/phase0_headroom/certified_tasks/boltons_near_certified_tasks.jsonl",
+      "attempt_basis": "matched_committed_local_certification_artifact",
+      "candidate_id": "boltons__v2__199",
+      "first_failing_gate": "reference_pass",
+      "historical_environment_recovered_reference_pass": false,
+      "historical_environment_terminal_subgate": "",
+      "module_or_package": [
+        "dictutils"
+      ],
+      "oracle_source": "changed_tests_from_repo_history",
+      "repo_id": "boltons",
+      "source_arm": "repo_history_v2_real",
+      "source_context_quality": "commit_message_only_context",
+      "source_reservoir": "repo_history_v2_pr_issue_with_tests",
+      "status": "near_certified",
+      "subgate_label": "unknown_failed",
+      "time_bucket": "2020_2023"
+    },
+    {
+      "artifact_ref": "experiments/phase0_headroom/certified_tasks/boltons_clean_outcome_unseen_supply_review_records.jsonl",
+      "attempt_basis": "matched_committed_local_certification_artifact",
+      "candidate_id": "boltons__v2__202",
+      "first_failing_gate": "",
+      "historical_environment_recovered_reference_pass": false,
+      "historical_environment_terminal_subgate": "",
+      "module_or_package": [
+        "urlutils"
+      ],
+      "oracle_source": "changed_tests_from_repo_history",
+      "repo_id": "boltons",
+      "source_arm": "repo_history_v2_real",
+      "source_context_quality": "commit_message_only_context",
+      "source_reservoir": "repo_history_v2_pr_issue_with_tests",
+      "status": "certified",
+      "subgate_label": "reference_pass",
+      "time_bucket": "2020_2023"
+    },
+    {
+      "artifact_ref": "experiments/phase0_headroom/certified_tasks/boltons_near_certified_tasks.jsonl",
+      "attempt_basis": "matched_committed_local_certification_artifact",
+      "candidate_id": "boltons__v2__204",
+      "first_failing_gate": "ambiguity_review",
+      "historical_environment_recovered_reference_pass": false,
+      "historical_environment_terminal_subgate": "",
+      "module_or_package": [
+        "timeutils"
+      ],
+      "oracle_source": "changed_tests_from_repo_history",
+      "repo_id": "boltons",
+      "source_arm": "repo_history_v2_real",
+      "source_context_quality": "commit_message_only_context",
+      "source_reservoir": "repo_history_v2_pr_issue_with_tests",
+      "status": "near_certified",
+      "subgate_label": "unknown_failed",
+      "time_bucket": "2020_2023"
+    },
+    {
+      "artifact_ref": "experiments/phase0_headroom/certified_tasks/boltons_clean_outcome_unseen_supply_review_records.jsonl",
+      "attempt_basis": "matched_committed_local_certification_artifact",
+      "candidate_id": "boltons__v2__206",
+      "first_failing_gate": "",
+      "historical_environment_recovered_reference_pass": false,
+      "historical_environment_terminal_subgate": "",
+      "module_or_package": [
+        "ioutils"
+      ],
+      "oracle_source": "changed_tests_from_repo_history",
+      "repo_id": "boltons",
+      "source_arm": "repo_history_v2_real",
+      "source_context_quality": "commit_message_only_context",
+      "source_reservoir": "repo_history_v2_pr_issue_with_tests",
+      "status": "certified",
+      "subgate_label": "reference_pass",
+      "time_bucket": "2020_2023"
+    },
+    {
+      "artifact_ref": "experiments/phase0_headroom/certified_tasks/boltons_clean_outcome_unseen_supply_review_records.jsonl",
+      "attempt_basis": "matched_committed_local_certification_artifact",
+      "candidate_id": "boltons__v2__207",
+      "first_failing_gate": "",
+      "historical_environment_recovered_reference_pass": false,
+      "historical_environment_terminal_subgate": "",
+      "module_or_package": [
+        "timeutils"
+      ],
+      "oracle_source": "changed_tests_from_repo_history",
+      "repo_id": "boltons",
+      "source_arm": "repo_history_v2_real",
+      "source_context_quality": "commit_message_only_context",
+      "source_reservoir": "repo_history_v2_pr_issue_with_tests",
+      "status": "certified",
+      "subgate_label": "reference_pass",
+      "time_bucket": "2020_2023"
+    },
+    {
+      "artifact_ref": "experiments/phase0_headroom/certified_tasks/boltons_near_certified_tasks.jsonl",
+      "attempt_basis": "matched_committed_local_certification_artifact",
+      "candidate_id": "boltons__v2__210",
+      "first_failing_gate": "no_op_fail",
+      "historical_environment_recovered_reference_pass": false,
+      "historical_environment_terminal_subgate": "",
+      "module_or_package": [
+        "mathutils"
+      ],
+      "oracle_source": "changed_tests_from_repo_history",
+      "repo_id": "boltons",
+      "source_arm": "repo_history_v2_real",
+      "source_context_quality": "commit_message_only_context",
+      "source_reservoir": "repo_history_v2_pr_issue_with_tests",
+      "status": "near_certified",
+      "subgate_label": "noop_assert_failed",
+      "time_bucket": "2020_2023"
+    },
+    {
+      "artifact_ref": "experiments/phase0_headroom/certified_tasks/boltons_certified_tasks.jsonl",
+      "attempt_basis": "matched_committed_local_certification_artifact",
+      "candidate_id": "boltons__v2__211",
+      "first_failing_gate": "",
+      "historical_environment_recovered_reference_pass": false,
+      "historical_environment_terminal_subgate": "",
+      "module_or_package": [
+        "iterutils"
+      ],
+      "oracle_source": "changed_tests_from_repo_history",
+      "repo_id": "boltons",
+      "source_arm": "repo_history_v2_real",
+      "source_context_quality": "commit_message_only_context",
+      "source_reservoir": "repo_history_v2_pr_issue_with_tests",
+      "status": "certified",
+      "subgate_label": "reference_pass",
+      "time_bucket": "2020_2023"
+    },
+    {
+      "artifact_ref": "experiments/phase0_headroom/certified_tasks/boltons_certified_tasks.jsonl",
+      "attempt_basis": "matched_committed_local_certification_artifact",
+      "candidate_id": "boltons__v2__212",
+      "first_failing_gate": "",
+      "historical_environment_recovered_reference_pass": false,
+      "historical_environment_terminal_subgate": "",
+      "module_or_package": [
+        "tbutils"
+      ],
+      "oracle_source": "changed_tests_from_repo_history",
+      "repo_id": "boltons",
+      "source_arm": "repo_history_v2_real",
+      "source_context_quality": "commit_message_only_context",
+      "source_reservoir": "repo_history_v2_pr_issue_with_tests",
+      "status": "certified",
+      "subgate_label": "reference_pass",
+      "time_bucket": "2020_2023"
+    },
+    {
+      "artifact_ref": "experiments/phase0_headroom/certified_tasks/boltons_clean_outcome_unseen_supply_review_records.jsonl",
+      "attempt_basis": "matched_committed_local_certification_artifact",
+      "candidate_id": "boltons__v2__213",
+      "first_failing_gate": "",
+      "historical_environment_recovered_reference_pass": false,
+      "historical_environment_terminal_subgate": "",
+      "module_or_package": [
+        "dictutils"
+      ],
+      "oracle_source": "changed_tests_from_repo_history",
+      "repo_id": "boltons",
+      "source_arm": "repo_history_v2_real",
+      "source_context_quality": "commit_message_only_context",
+      "source_reservoir": "repo_history_v2_pr_issue_with_tests",
+      "status": "certified",
+      "subgate_label": "reference_pass",
+      "time_bucket": "2020_2023"
+    },
+    {
+      "artifact_ref": "experiments/phase0_headroom/certified_tasks/boltons_clean_outcome_unseen_supply_review_records.jsonl",
+      "attempt_basis": "matched_committed_local_certification_artifact",
+      "candidate_id": "boltons__v2__214",
+      "first_failing_gate": "",
+      "historical_environment_recovered_reference_pass": false,
+      "historical_environment_terminal_subgate": "",
+      "module_or_package": [
+        "funcutils"
+      ],
+      "oracle_source": "changed_tests_from_repo_history",
+      "repo_id": "boltons",
+      "source_arm": "repo_history_v2_real",
+      "source_context_quality": "commit_message_only_context",
+      "source_reservoir": "repo_history_v2_pr_issue_with_tests",
+      "status": "certified",
+      "subgate_label": "reference_pass",
+      "time_bucket": "2020_2023"
+    },
+    {
+      "artifact_ref": "experiments/phase0_headroom/certified_tasks/boltons_clean_outcome_unseen_supply_review_records.jsonl",
+      "attempt_basis": "matched_committed_local_certification_artifact",
+      "candidate_id": "boltons__v2__215",
+      "first_failing_gate": "",
+      "historical_environment_recovered_reference_pass": false,
+      "historical_environment_terminal_subgate": "",
+      "module_or_package": [
+        "dictutils"
+      ],
+      "oracle_source": "changed_tests_from_repo_history",
+      "repo_id": "boltons",
+      "source_arm": "repo_history_v2_real",
+      "source_context_quality": "commit_message_only_context",
+      "source_reservoir": "repo_history_v2_pr_issue_with_tests",
+      "status": "certified",
+      "subgate_label": "reference_pass",
+      "time_bucket": "2020_2023"
+    },
+    {
+      "artifact_ref": "experiments/phase0_headroom/certified_tasks/boltons_certified_tasks.jsonl",
+      "attempt_basis": "matched_committed_local_certification_artifact",
+      "candidate_id": "boltons__v2__216",
+      "first_failing_gate": "",
+      "historical_environment_recovered_reference_pass": false,
+      "historical_environment_terminal_subgate": "",
+      "module_or_package": [
+        "cacheutils"
+      ],
+      "oracle_source": "changed_tests_from_repo_history",
+      "repo_id": "boltons",
+      "source_arm": "repo_history_v2_real",
+      "source_context_quality": "commit_message_only_context",
+      "source_reservoir": "repo_history_v2_pr_issue_with_tests",
+      "status": "certified",
+      "subgate_label": "reference_pass",
+      "time_bucket": "2020_2023"
+    },
+    {
+      "artifact_ref": "experiments/phase0_headroom/certified_tasks/boltons_clean_outcome_unseen_supply_review_records.jsonl",
+      "attempt_basis": "matched_committed_local_certification_artifact",
+      "candidate_id": "boltons__v2__217",
+      "first_failing_gate": "",
+      "historical_environment_recovered_reference_pass": false,
+      "historical_environment_terminal_subgate": "",
+      "module_or_package": [
+        "iterutils"
+      ],
+      "oracle_source": "changed_tests_from_repo_history",
+      "repo_id": "boltons",
+      "source_arm": "repo_history_v2_real",
+      "source_context_quality": "commit_message_only_context",
+      "source_reservoir": "repo_history_v2_pr_issue_with_tests",
+      "status": "certified",
+      "subgate_label": "reference_pass",
+      "time_bucket": "2020_2023"
+    },
+    {
+      "artifact_ref": "experiments/phase0_headroom/certified_tasks/boltons_near_certified_tasks.jsonl",
+      "attempt_basis": "matched_committed_local_certification_artifact",
+      "candidate_id": "boltons__v2__218",
+      "first_failing_gate": "ambiguity_review",
+      "historical_environment_recovered_reference_pass": false,
+      "historical_environment_terminal_subgate": "",
+      "module_or_package": [
+        "dictutils"
+      ],
+      "oracle_source": "changed_tests_from_repo_history",
+      "repo_id": "boltons",
+      "source_arm": "repo_history_v2_real",
+      "source_context_quality": "commit_message_only_context",
+      "source_reservoir": "repo_history_v2_commit_with_tests",
+      "status": "near_certified",
+      "subgate_label": "unknown_failed",
+      "time_bucket": "2020_2023"
+    },
+    {
+      "artifact_ref": "experiments/phase0_headroom/certified_tasks/boltons_near_certified_tasks.jsonl",
+      "attempt_basis": "matched_committed_local_certification_artifact",
+      "candidate_id": "boltons__v2__224",
+      "first_failing_gate": "no_op_fail",
+      "historical_environment_recovered_reference_pass": false,
+      "historical_environment_terminal_subgate": "",
+      "module_or_package": [
+        "funcutils",
+        "iterutils",
+        "statsutils"
+      ],
+      "oracle_source": "changed_tests_from_repo_history",
+      "repo_id": "boltons",
+      "source_arm": "repo_history_v2_real",
+      "source_context_quality": "commit_message_only_context",
+      "source_reservoir": "repo_history_v2_commit_with_tests",
+      "status": "near_certified",
+      "subgate_label": "noop_assert_failed",
+      "time_bucket": "2024_plus"
+    },
+    {
+      "artifact_ref": "experiments/phase0_headroom/certified_tasks/boltons_clean_outcome_unseen_supply_review_records.jsonl",
+      "attempt_basis": "matched_committed_local_certification_artifact",
+      "candidate_id": "boltons__v2__226",
+      "first_failing_gate": "",
+      "historical_environment_recovered_reference_pass": false,
+      "historical_environment_terminal_subgate": "",
+      "module_or_package": [
+        "iterutils"
+      ],
+      "oracle_source": "changed_tests_from_repo_history",
+      "repo_id": "boltons",
+      "source_arm": "repo_history_v2_real",
+      "source_context_quality": "commit_message_only_context",
+      "source_reservoir": "repo_history_v2_commit_with_tests",
+      "status": "certified",
+      "subgate_label": "reference_pass",
+      "time_bucket": "2024_plus"
+    },
+    {
+      "artifact_ref": "experiments/phase0_headroom/certified_tasks/boltons_near_certified_tasks.jsonl",
+      "attempt_basis": "matched_committed_local_certification_artifact",
+      "candidate_id": "boltons__v2__227",
+      "first_failing_gate": "ambiguity_review",
+      "historical_environment_recovered_reference_pass": false,
+      "historical_environment_terminal_subgate": "",
+      "module_or_package": [
+        "fileutils"
+      ],
+      "oracle_source": "changed_tests_from_repo_history",
+      "repo_id": "boltons",
+      "source_arm": "repo_history_v2_real",
+      "source_context_quality": "commit_message_only_context",
+      "source_reservoir": "repo_history_v2_commit_with_tests",
+      "status": "near_certified",
+      "subgate_label": "unknown_failed",
+      "time_bucket": "2024_plus"
+    },
+    {
+      "artifact_ref": "experiments/phase1_compiler/results/phase1_two_repo_supply_expansion_certification_attempts.json",
+      "attempt_basis": "matched_committed_local_certification_artifact",
+      "candidate_id": "boltons__v2__228",
+      "first_failing_gate": "ambiguity_review",
+      "historical_environment_recovered_reference_pass": false,
+      "historical_environment_terminal_subgate": "",
+      "module_or_package": [
+        "strutils"
+      ],
+      "oracle_source": "changed_tests_from_repo_history",
+      "repo_id": "boltons",
+      "source_arm": "repo_history_v2_real",
+      "source_context_quality": "material_leakage_risk",
+      "source_reservoir": "repo_history_v2_commit_with_tests",
+      "status": "near_certified",
+      "subgate_label": "unknown_failed",
+      "time_bucket": "2024_plus"
+    },
+    {
+      "artifact_ref": "experiments/phase1_compiler/results/phase1_two_repo_supply_expansion_certification_attempts.json",
+      "attempt_basis": "matched_committed_local_certification_artifact",
+      "candidate_id": "boltons__v2__229",
+      "first_failing_gate": "",
+      "historical_environment_recovered_reference_pass": false,
+      "historical_environment_terminal_subgate": "",
+      "module_or_package": [
+        "listutils"
+      ],
+      "oracle_source": "changed_tests_from_repo_history",
+      "repo_id": "boltons",
+      "source_arm": "repo_history_v2_real",
+      "source_context_quality": "non_leaky_issue_or_pr_context",
+      "source_reservoir": "repo_history_v2_commit_with_tests",
+      "status": "certified",
+      "subgate_label": "reference_pass",
+      "time_bucket": "2024_plus"
+    },
+    {
+      "artifact_ref": "experiments/phase1_compiler/results/phase1_two_repo_supply_expansion_certification_attempts.json",
+      "attempt_basis": "matched_committed_local_certification_artifact",
+      "candidate_id": "boltons__v2__231",
+      "first_failing_gate": "",
+      "historical_environment_recovered_reference_pass": false,
+      "historical_environment_terminal_subgate": "",
+      "module_or_package": [
+        "iterutils"
+      ],
+      "oracle_source": "changed_tests_from_repo_history",
+      "repo_id": "boltons",
+      "source_arm": "repo_history_v2_real",
+      "source_context_quality": "non_leaky_issue_or_pr_context",
+      "source_reservoir": "repo_history_v2_commit_with_tests",
+      "status": "certified",
+      "subgate_label": "reference_pass",
+      "time_bucket": "2024_plus"
+    },
+    {
+      "artifact_ref": "experiments/phase1_compiler/results/phase1_two_repo_supply_expansion_certification_attempts.json",
+      "attempt_basis": "matched_committed_local_certification_artifact",
+      "candidate_id": "boltons__v2__232",
+      "first_failing_gate": "",
+      "historical_environment_recovered_reference_pass": false,
+      "historical_environment_terminal_subgate": "",
+      "module_or_package": [
+        "iterutils"
+      ],
+      "oracle_source": "changed_tests_from_repo_history",
+      "repo_id": "boltons",
+      "source_arm": "repo_history_v2_real",
+      "source_context_quality": "non_leaky_issue_or_pr_context",
+      "source_reservoir": "repo_history_v2_commit_with_tests",
+      "status": "certified",
+      "subgate_label": "reference_pass",
+      "time_bucket": "2024_plus"
+    },
+    {
+      "artifact_ref": "experiments/phase1_compiler/results/phase1_two_repo_supply_expansion_certification_attempts.json",
+      "attempt_basis": "matched_committed_local_certification_artifact",
+      "candidate_id": "boltons__v2__233",
+      "first_failing_gate": "",
+      "historical_environment_recovered_reference_pass": false,
+      "historical_environment_terminal_subgate": "",
+      "module_or_package": [
+        "funcutils"
+      ],
+      "oracle_source": "changed_tests_from_repo_history",
+      "repo_id": "boltons",
+      "source_arm": "repo_history_v2_real",
+      "source_context_quality": "non_leaky_issue_or_pr_context",
+      "source_reservoir": "repo_history_v2_commit_with_tests",
+      "status": "certified",
+      "subgate_label": "reference_pass",
+      "time_bucket": "2024_plus"
+    },
+    {
+      "artifact_ref": "experiments/phase0_headroom/certified_tasks/toolz_certified_tasks.jsonl",
+      "attempt_basis": "matched_committed_local_certification_artifact",
+      "candidate_id": "toolz__v2__179",
+      "first_failing_gate": "",
+      "historical_environment_recovered_reference_pass": false,
+      "historical_environment_terminal_subgate": "",
+      "module_or_package": [
+        "functoolz"
+      ],
+      "oracle_source": "changed_tests_from_repo_history",
+      "repo_id": "toolz",
+      "source_arm": "repo_history_v2_real",
+      "source_context_quality": "non_leaky_issue_or_pr_context",
+      "source_reservoir": "repo_history_v2_commit_with_tests",
+      "status": "certified",
+      "subgate_label": "reference_pass",
+      "time_bucket": "2016_2019"
+    },
+    {
+      "artifact_ref": "experiments/phase0_headroom/certified_tasks/toolz_certified_tasks.jsonl",
+      "attempt_basis": "matched_committed_local_certification_artifact",
+      "candidate_id": "toolz__v2__180",
+      "first_failing_gate": "",
+      "historical_environment_recovered_reference_pass": false,
+      "historical_environment_terminal_subgate": "",
+      "module_or_package": [
+        "functoolz"
+      ],
+      "oracle_source": "changed_tests_from_repo_history",
+      "repo_id": "toolz",
+      "source_arm": "repo_history_v2_real",
+      "source_context_quality": "non_leaky_issue_or_pr_context",
+      "source_reservoir": "repo_history_v2_commit_with_tests",
+      "status": "certified",
+      "subgate_label": "reference_pass",
+      "time_bucket": "2016_2019"
+    },
+    {
+      "artifact_ref": "experiments/phase0_headroom/certified_tasks/toolz_certified_tasks.jsonl",
+      "attempt_basis": "matched_committed_local_certification_artifact",
+      "candidate_id": "toolz__v2__182",
+      "first_failing_gate": "",
+      "historical_environment_recovered_reference_pass": false,
+      "historical_environment_terminal_subgate": "",
+      "module_or_package": [
+        "functoolz"
+      ],
+      "oracle_source": "changed_tests_from_repo_history",
+      "repo_id": "toolz",
+      "source_arm": "repo_history_v2_real",
+      "source_context_quality": "non_leaky_issue_or_pr_context",
+      "source_reservoir": "repo_history_v2_commit_with_tests",
+      "status": "certified",
+      "subgate_label": "reference_pass",
+      "time_bucket": "2016_2019"
+    },
+    {
+      "artifact_ref": "experiments/phase0_headroom/certified_tasks/toolz_certified_tasks.jsonl",
+      "attempt_basis": "matched_committed_local_certification_artifact",
+      "candidate_id": "toolz__v2__183",
+      "first_failing_gate": "",
+      "historical_environment_recovered_reference_pass": false,
+      "historical_environment_terminal_subgate": "",
+      "module_or_package": [
+        "functoolz"
+      ],
+      "oracle_source": "changed_tests_from_repo_history",
+      "repo_id": "toolz",
+      "source_arm": "repo_history_v2_real",
+      "source_context_quality": "non_leaky_issue_or_pr_context",
+      "source_reservoir": "repo_history_v2_commit_with_tests",
+      "status": "certified",
+      "subgate_label": "reference_pass",
+      "time_bucket": "2016_2019"
+    },
+    {
+      "artifact_ref": "experiments/phase0_headroom/certified_tasks/toolz_certified_tasks.jsonl",
+      "attempt_basis": "matched_committed_local_certification_artifact",
+      "candidate_id": "toolz__v2__193",
+      "first_failing_gate": "",
+      "historical_environment_recovered_reference_pass": false,
+      "historical_environment_terminal_subgate": "",
+      "module_or_package": [
+        "functoolz"
+      ],
+      "oracle_source": "changed_tests_from_repo_history",
+      "repo_id": "toolz",
+      "source_arm": "repo_history_v2_real",
+      "source_context_quality": "non_leaky_issue_or_pr_context",
+      "source_reservoir": "repo_history_v2_commit_with_tests",
+      "status": "certified",
+      "subgate_label": "reference_pass",
+      "time_bucket": "2016_2019"
+    },
+    {
+      "artifact_ref": "experiments/phase0_headroom/certified_tasks/toolz_certified_tasks.jsonl",
+      "attempt_basis": "matched_committed_local_certification_artifact",
+      "candidate_id": "toolz__v2__203",
+      "first_failing_gate": "",
+      "historical_environment_recovered_reference_pass": false,
+      "historical_environment_terminal_subgate": "",
+      "module_or_package": [
+        "itertoolz"
+      ],
+      "oracle_source": "changed_tests_from_repo_history",
+      "repo_id": "toolz",
+      "source_arm": "repo_history_v2_real",
+      "source_context_quality": "non_leaky_issue_or_pr_context",
+      "source_reservoir": "repo_history_v2_pr_issue_with_tests",
+      "status": "certified",
+      "subgate_label": "reference_pass",
+      "time_bucket": "2024_plus"
+    },
+    {
+      "artifact_ref": "experiments/phase0_headroom/certified_tasks/humanize_near_certified_tasks.jsonl",
+      "attempt_basis": "matched_committed_local_certification_artifact",
+      "candidate_id": "humanize__v2__020",
+      "first_failing_gate": "no_op_fail",
+      "historical_environment_recovered_reference_pass": false,
+      "historical_environment_terminal_subgate": "",
+      "module_or_package": [
+        "time"
+      ],
+      "oracle_source": "changed_tests_from_repo_history",
+      "repo_id": "humanize",
+      "source_arm": "repo_history_v2_real",
+      "source_context_quality": "commit_message_only_context",
+      "source_reservoir": "repo_history_v2_commit_with_tests",
+      "status": "near_certified",
+      "subgate_label": "noop_assert_failed",
+      "time_bucket": "2020_2023"
+    },
+    {
+      "artifact_ref": "experiments/phase0_headroom/certified_tasks/humanize_certified_tasks.jsonl",
+      "attempt_basis": "matched_committed_local_certification_artifact",
+      "candidate_id": "humanize__v2__021",
+      "first_failing_gate": "",
+      "historical_environment_recovered_reference_pass": false,
+      "historical_environment_terminal_subgate": "",
+      "module_or_package": [
+        "time"
+      ],
+      "oracle_source": "changed_tests_from_repo_history",
+      "repo_id": "humanize",
+      "source_arm": "repo_history_v2_real",
+      "source_context_quality": "commit_message_only_context",
+      "source_reservoir": "repo_history_v2_commit_with_tests",
+      "status": "certified",
+      "subgate_label": "reference_pass",
+      "time_bucket": "2020_2023"
+    },
+    {
+      "artifact_ref": "experiments/phase0_headroom/certified_tasks/humanize_certified_tasks.jsonl",
+      "attempt_basis": "matched_committed_local_certification_artifact",
+      "candidate_id": "humanize__v2__022",
+      "first_failing_gate": "",
+      "historical_environment_recovered_reference_pass": false,
+      "historical_environment_terminal_subgate": "",
+      "module_or_package": [
+        "time"
+      ],
+      "oracle_source": "changed_tests_from_repo_history",
+      "repo_id": "humanize",
+      "source_arm": "repo_history_v2_real",
+      "source_context_quality": "commit_message_only_context",
+      "source_reservoir": "repo_history_v2_commit_with_tests",
+      "status": "certified",
+      "subgate_label": "reference_pass",
+      "time_bucket": "2020_2023"
+    },
+    {
+      "artifact_ref": "experiments/phase0_headroom/certified_tasks/humanize_certified_tasks.jsonl",
+      "attempt_basis": "matched_committed_local_certification_artifact",
+      "candidate_id": "humanize__v2__023",
+      "first_failing_gate": "",
+      "historical_environment_recovered_reference_pass": false,
+      "historical_environment_terminal_subgate": "",
+      "module_or_package": [
+        "number"
+      ],
+      "oracle_source": "changed_tests_from_repo_history",
+      "repo_id": "humanize",
+      "source_arm": "repo_history_v2_real",
+      "source_context_quality": "commit_message_only_context",
+      "source_reservoir": "repo_history_v2_commit_with_tests",
+      "status": "certified",
+      "subgate_label": "reference_pass",
+      "time_bucket": "2020_2023"
+    },
+    {
+      "artifact_ref": "experiments/phase0_headroom/certified_tasks/humanize_certified_tasks.jsonl",
+      "attempt_basis": "matched_committed_local_certification_artifact",
+      "candidate_id": "humanize__v2__024",
+      "first_failing_gate": "",
+      "historical_environment_recovered_reference_pass": false,
+      "historical_environment_terminal_subgate": "",
+      "module_or_package": [
+        "number"
+      ],
+      "oracle_source": "changed_tests_from_repo_history",
+      "repo_id": "humanize",
+      "source_arm": "repo_history_v2_real",
+      "source_context_quality": "commit_message_only_context",
+      "source_reservoir": "repo_history_v2_commit_with_tests",
+      "status": "certified",
+      "subgate_label": "reference_pass",
+      "time_bucket": "2020_2023"
+    },
+    {
+      "artifact_ref": "experiments/phase0_headroom/certified_tasks/humanize_certified_tasks.jsonl",
+      "attempt_basis": "matched_committed_local_certification_artifact",
+      "candidate_id": "humanize__v2__025",
+      "first_failing_gate": "",
+      "historical_environment_recovered_reference_pass": false,
+      "historical_environment_terminal_subgate": "",
+      "module_or_package": [
+        "filesize"
+      ],
+      "oracle_source": "changed_tests_from_repo_history",
+      "repo_id": "humanize",
+      "source_arm": "repo_history_v2_real",
+      "source_context_quality": "commit_message_only_context",
+      "source_reservoir": "repo_history_v2_commit_with_tests",
+      "status": "certified",
+      "subgate_label": "reference_pass",
+      "time_bucket": "2020_2023"
+    },
+    {
+      "artifact_ref": "experiments/phase0_headroom/certified_tasks/humanize_certified_tasks.jsonl",
+      "attempt_basis": "matched_committed_local_certification_artifact",
+      "candidate_id": "humanize__v2__026",
+      "first_failing_gate": "",
+      "historical_environment_recovered_reference_pass": false,
+      "historical_environment_terminal_subgate": "",
+      "module_or_package": [
+        "number"
+      ],
+      "oracle_source": "changed_tests_from_repo_history",
+      "repo_id": "humanize",
+      "source_arm": "repo_history_v2_real",
+      "source_context_quality": "commit_message_only_context",
+      "source_reservoir": "repo_history_v2_commit_with_tests",
+      "status": "certified",
+      "subgate_label": "reference_pass",
+      "time_bucket": "2020_2023"
+    },
+    {
+      "artifact_ref": "experiments/phase0_headroom/certified_tasks/humanize_certified_tasks.jsonl",
+      "attempt_basis": "matched_committed_local_certification_artifact",
+      "candidate_id": "humanize__v2__028",
+      "first_failing_gate": "",
+      "historical_environment_recovered_reference_pass": false,
+      "historical_environment_terminal_subgate": "",
+      "module_or_package": [
+        "i18n"
+      ],
+      "oracle_source": "changed_tests_from_repo_history",
+      "repo_id": "humanize",
+      "source_arm": "repo_history_v2_real",
+      "source_context_quality": "commit_message_only_context",
+      "source_reservoir": "repo_history_v2_commit_with_tests",
+      "status": "certified",
+      "subgate_label": "reference_pass",
+      "time_bucket": "2020_2023"
+    },
+    {
+      "artifact_ref": "experiments/phase0_headroom/certified_tasks/humanize_near_certified_tasks.jsonl",
+      "attempt_basis": "matched_committed_local_certification_artifact",
+      "candidate_id": "humanize__v2__030",
+      "first_failing_gate": "no_op_fail",
+      "historical_environment_recovered_reference_pass": false,
+      "historical_environment_terminal_subgate": "",
+      "module_or_package": [
+        "number"
+      ],
+      "oracle_source": "changed_tests_from_repo_history",
+      "repo_id": "humanize",
+      "source_arm": "repo_history_v2_real",
+      "source_context_quality": "commit_message_only_context",
+      "source_reservoir": "repo_history_v2_commit_with_tests",
+      "status": "near_certified",
+      "subgate_label": "noop_assert_failed",
+      "time_bucket": "2020_2023"
+    },
+    {
+      "artifact_ref": "experiments/phase0_headroom/certified_tasks/humanize_certified_tasks.jsonl",
+      "attempt_basis": "matched_committed_local_certification_artifact",
+      "candidate_id": "humanize__v2__031",
+      "first_failing_gate": "",
+      "historical_environment_recovered_reference_pass": false,
+      "historical_environment_terminal_subgate": "",
+      "module_or_package": [
+        "time"
+      ],
+      "oracle_source": "changed_tests_from_repo_history",
+      "repo_id": "humanize",
+      "source_arm": "repo_history_v2_real",
+      "source_context_quality": "commit_message_only_context",
+      "source_reservoir": "repo_history_v2_commit_with_tests",
+      "status": "certified",
+      "subgate_label": "reference_pass",
+      "time_bucket": "2020_2023"
+    },
+    {
+      "artifact_ref": "experiments/phase0_headroom/certified_tasks/humanize_near_certified_tasks.jsonl",
+      "attempt_basis": "matched_committed_local_certification_artifact",
+      "candidate_id": "humanize__v2__032",
+      "first_failing_gate": "reference_pass",
+      "historical_environment_recovered_reference_pass": false,
+      "historical_environment_terminal_subgate": "",
+      "module_or_package": [
+        "i18n",
+        "time"
+      ],
+      "oracle_source": "changed_tests_from_repo_history",
+      "repo_id": "humanize",
+      "source_arm": "repo_history_v2_real",
+      "source_context_quality": "commit_message_only_context",
+      "source_reservoir": "repo_history_v2_commit_with_tests",
+      "status": "near_certified",
+      "subgate_label": "unknown_failed",
+      "time_bucket": "2020_2023"
+    },
+    {
+      "artifact_ref": "experiments/phase0_headroom/certified_tasks/humanize_certified_tasks.jsonl",
+      "attempt_basis": "matched_committed_local_certification_artifact",
+      "candidate_id": "humanize__v2__033",
+      "first_failing_gate": "",
+      "historical_environment_recovered_reference_pass": false,
+      "historical_environment_terminal_subgate": "",
+      "module_or_package": [
+        "time"
+      ],
+      "oracle_source": "changed_tests_from_repo_history",
+      "repo_id": "humanize",
+      "source_arm": "repo_history_v2_real",
+      "source_context_quality": "commit_message_only_context",
+      "source_reservoir": "repo_history_v2_commit_with_tests",
+      "status": "certified",
+      "subgate_label": "reference_pass",
+      "time_bucket": "2020_2023"
+    },
+    {
+      "artifact_ref": "experiments/phase0_headroom/certified_tasks/humanize_certified_tasks.jsonl",
+      "attempt_basis": "matched_committed_local_certification_artifact",
+      "candidate_id": "humanize__v2__034",
+      "first_failing_gate": "",
+      "historical_environment_recovered_reference_pass": false,
+      "historical_environment_terminal_subgate": "",
+      "module_or_package": [
+        "time"
+      ],
+      "oracle_source": "changed_tests_from_repo_history",
+      "repo_id": "humanize",
+      "source_arm": "repo_history_v2_real",
+      "source_context_quality": "commit_message_only_context",
+      "source_reservoir": "repo_history_v2_commit_with_tests",
+      "status": "certified",
+      "subgate_label": "reference_pass",
+      "time_bucket": "2020_2023"
+    },
+    {
+      "artifact_ref": "experiments/phase0_headroom/certified_tasks/humanize_certified_tasks.jsonl",
+      "attempt_basis": "matched_committed_local_certification_artifact",
+      "candidate_id": "humanize__v2__035",
+      "first_failing_gate": "",
+      "historical_environment_recovered_reference_pass": false,
+      "historical_environment_terminal_subgate": "",
+      "module_or_package": [
+        "__init__",
+        "i18n",
+        "number"
+      ],
+      "oracle_source": "changed_tests_from_repo_history",
+      "repo_id": "humanize",
+      "source_arm": "repo_history_v2_real",
+      "source_context_quality": "commit_message_only_context",
+      "source_reservoir": "repo_history_v2_commit_with_tests",
+      "status": "certified",
+      "subgate_label": "reference_pass",
+      "time_bucket": "2020_2023"
+    },
+    {
+      "artifact_ref": "experiments/phase0_headroom/certified_tasks/humanize_certified_tasks.jsonl",
+      "attempt_basis": "matched_committed_local_certification_artifact",
+      "candidate_id": "humanize__v2__037",
+      "first_failing_gate": "",
+      "historical_environment_recovered_reference_pass": false,
+      "historical_environment_terminal_subgate": "",
+      "module_or_package": [
+        "__init__",
+        "number"
+      ],
+      "oracle_source": "changed_tests_from_repo_history",
+      "repo_id": "humanize",
+      "source_arm": "repo_history_v2_real",
+      "source_context_quality": "commit_message_only_context",
+      "source_reservoir": "repo_history_v2_commit_with_tests",
+      "status": "certified",
+      "subgate_label": "reference_pass",
+      "time_bucket": "2020_2023"
+    },
+    {
+      "artifact_ref": "experiments/phase0_headroom/certified_tasks/humanize_near_certified_tasks.jsonl",
+      "attempt_basis": "matched_committed_local_certification_artifact",
+      "candidate_id": "humanize__v2__039",
+      "first_failing_gate": "no_op_fail",
+      "historical_environment_recovered_reference_pass": false,
+      "historical_environment_terminal_subgate": "",
+      "module_or_package": [
+        "number"
+      ],
+      "oracle_source": "changed_tests_from_repo_history",
+      "repo_id": "humanize",
+      "source_arm": "repo_history_v2_real",
+      "source_context_quality": "commit_message_only_context",
+      "source_reservoir": "repo_history_v2_commit_with_tests",
+      "status": "near_certified",
+      "subgate_label": "noop_assert_failed",
+      "time_bucket": "2020_2023"
+    }
+  ],
+  "run_id": "phase1_task_supply_v2_generator_bakeoff_20260527",
+  "schema_version": "barcarolle.phase1_task_supply_v2_generator_bakeoff.v1.certification_attempts.v1",
+  "status": "local_certification_bakeoff_completed",
+  "summary_by_repo": [
+    {
+      "attempt_count": 117,
+      "certified_count": 28,
+      "first_failing_gate_counts": {
+        "collect_failed": 10,
+        "import_failed": 8,
+        "install_failed": 9,
+        "noop_assert_failed": 1,
+        "reference_pass": 31,
+        "unknown_failed": 58
+      },
+      "median_seconds_per_attempt": 0.846,
+      "near_certified_count": 59,
+      "repo_id": "attrs",
+      "subgate_counts": {
+        "collect_failed": 10,
+        "import_failed": 8,
+        "install_failed": 9,
+        "noop_assert_failed": 1,
+        "reference_pass": 31,
+        "unknown_failed": 58
+      },
+      "wall_clock_per_certified": 6.918
+    },
+    {
+      "attempt_count": 87,
+      "certified_count": 31,
+      "first_failing_gate_counts": {
+        "install_failed": 1,
+        "noop_assert_failed": 3,
+        "reference_pass": 36,
+        "unknown_failed": 47
+      },
+      "median_seconds_per_attempt": 0.67,
+      "near_certified_count": 40,
+      "repo_id": "boltons",
+      "subgate_counts": {
+        "install_failed": 1,
+        "noop_assert_failed": 3,
+        "reference_pass": 36,
+        "unknown_failed": 47
+      },
+      "wall_clock_per_certified": 3.838
+    },
+    {
+      "attempt_count": 6,
+      "certified_count": 6,
+      "first_failing_gate_counts": {
+        "reference_pass": 6
+      },
+      "median_seconds_per_attempt": 0.173,
+      "near_certified_count": 0,
+      "repo_id": "toolz",
+      "subgate_counts": {
+        "reference_pass": 6
+      },
+      "wall_clock_per_certified": 0.472
+    },
+    {
+      "attempt_count": 16,
+      "certified_count": 12,
+      "first_failing_gate_counts": {
+        "noop_assert_failed": 3,
+        "reference_pass": 12,
+        "unknown_failed": 1
+      },
+      "median_seconds_per_attempt": 1.663,
+      "near_certified_count": 4,
+      "repo_id": "humanize",
+      "subgate_counts": {
+        "noop_assert_failed": 3,
+        "reference_pass": 12,
+        "unknown_failed": 1
+      },
+      "wall_clock_per_certified": 5.084
+    }
+  ]
+}

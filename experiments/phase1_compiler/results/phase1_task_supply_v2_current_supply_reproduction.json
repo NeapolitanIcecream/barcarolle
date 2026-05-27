@@ -1,0 +1,141 @@
+{
+  "basis": "committed local artifacts only; this is not new mining",
+  "claims": [
+    "repo_history_v1_reproduction_completed"
+  ],
+  "generated_at": "2026-05-27T03:54:48Z",
+  "paid_calls_made": false,
+  "rows": [
+    {
+      "candidate_artifacts": [
+        "experiments/phase0_headroom/candidate_sources/attrs_clean_outcome_unseen_supply_candidates.jsonl",
+        "experiments/phase0_headroom/candidate_sources/attrs_supply_expansion_20260526_candidates.jsonl"
+      ],
+      "certification_artifacts": [
+        "experiments/phase0_headroom/certified_tasks/attrs_clean_outcome_unseen_supply_certified_tasks.jsonl",
+        "experiments/phase0_headroom/certified_tasks/attrs_clean_outcome_unseen_supply_review_records.jsonl",
+        "experiments/phase0_headroom/certified_tasks/attrs_supply_expansion_20260526_certified_tasks.jsonl",
+        "experiments/phase0_headroom/certified_tasks/attrs_supply_expansion_20260526_review_records.jsonl",
+        "experiments/phase0_headroom/certified_tasks/attrs_supply_expansion_20260526_task_statements.jsonl"
+      ],
+      "certified_rows": 28,
+      "commit_message_only_count": 66,
+      "eligible_count_from_prior_decision": 20,
+      "first_failing_gate_counts": {
+        "ambiguity_review": 4,
+        "no_op_fail": 1,
+        "reference_pass": 54
+      },
+      "near_certified_rows": 0,
+      "public_pr_or_issue_context_count": 97,
+      "raw_candidate_rows": 208,
+      "reference_or_environment_failure_count": 54,
+      "repo_id": "attrs",
+      "review_rows": 117,
+      "source_context_artifacts": [
+        "experiments/phase0_headroom/candidate_sources/attrs_clean_outcome_unseen_supply_source_context.jsonl",
+        "experiments/phase0_headroom/candidate_sources/attrs_supply_expansion_20260526_source_context.jsonl"
+      ],
+      "source_context_rows": 178,
+      "unique_raw_candidates": 178
+    },
+    {
+      "candidate_artifacts": [
+        "experiments/phase0_headroom/candidate_sources/boltons_candidates.jsonl",
+        "experiments/phase0_headroom/candidate_sources/boltons_clean_outcome_unseen_supply_candidates.jsonl",
+        "experiments/phase0_headroom/candidate_sources/boltons_clean_supply_breal_extension_candidates.jsonl",
+        "experiments/phase0_headroom/candidate_sources/boltons_supply_expansion_20260526_candidates.jsonl"
+      ],
+      "certification_artifacts": [
+        "experiments/phase0_headroom/certified_tasks/boltons_certified_tasks.jsonl",
+        "experiments/phase0_headroom/certified_tasks/boltons_clean_outcome_unseen_supply_certified_tasks.jsonl",
+        "experiments/phase0_headroom/certified_tasks/boltons_clean_outcome_unseen_supply_review_records.jsonl",
+        "experiments/phase0_headroom/certified_tasks/boltons_clean_supply_breal_extension_reviews.jsonl",
+        "experiments/phase0_headroom/certified_tasks/boltons_near_certified_tasks.jsonl",
+        "experiments/phase0_headroom/certified_tasks/boltons_review_records.jsonl",
+        "experiments/phase0_headroom/certified_tasks/boltons_supply_expansion_20260526_certified_tasks.jsonl",
+        "experiments/phase0_headroom/certified_tasks/boltons_supply_expansion_20260526_review_records.jsonl",
+        "experiments/phase0_headroom/certified_tasks/boltons_supply_expansion_20260526_task_statements.jsonl",
+        "experiments/phase0_headroom/certified_tasks/boltons_task_statements.jsonl"
+      ],
+      "certified_rows": 35,
+      "commit_message_only_count": 83,
+      "eligible_count_from_prior_decision": 27,
+      "first_failing_gate_counts": {
+        "ambiguity_review": 2,
+        "cost_boundedness": 16,
+        "reference_pass": 22
+      },
+      "near_certified_rows": 16,
+      "public_pr_or_issue_context_count": 96,
+      "raw_candidate_rows": 222,
+      "reference_or_environment_failure_count": 22,
+      "repo_id": "boltons",
+      "review_rows": 115,
+      "source_context_artifacts": [
+        "experiments/phase0_headroom/candidate_sources/boltons_clean_outcome_unseen_supply_source_context.jsonl",
+        "experiments/phase0_headroom/candidate_sources/boltons_source_context.jsonl",
+        "experiments/phase0_headroom/candidate_sources/boltons_supply_expansion_20260526_source_context.jsonl"
+      ],
+      "source_context_rows": 188,
+      "unique_raw_candidates": 162
+    },
+    {
+      "candidate_artifacts": [
+        "experiments/phase0_headroom/candidate_sources/toolz_candidates.jsonl"
+      ],
+      "certification_artifacts": [
+        "experiments/phase0_headroom/certified_tasks/toolz_certified_tasks.jsonl",
+        "experiments/phase0_headroom/certified_tasks/toolz_near_certified_tasks.jsonl",
+        "experiments/phase0_headroom/certified_tasks/toolz_review_records.jsonl",
+        "experiments/phase0_headroom/certified_tasks/toolz_task_statements.jsonl"
+      ],
+      "certified_rows": 6,
+      "commit_message_only_count": 0,
+      "eligible_count_from_prior_decision": 6,
+      "first_failing_gate_counts": {},
+      "near_certified_rows": 0,
+      "public_pr_or_issue_context_count": 6,
+      "raw_candidate_rows": 16,
+      "reference_or_environment_failure_count": 0,
+      "repo_id": "toolz",
+      "review_rows": 6,
+      "source_context_artifacts": [
+        "experiments/phase0_headroom/candidate_sources/toolz_source_context.jsonl"
+      ],
+      "source_context_rows": 6,
+      "unique_raw_candidates": 16
+    },
+    {
+      "candidate_artifacts": [
+        "experiments/phase0_headroom/candidate_sources/humanize_candidates.jsonl"
+      ],
+      "certification_artifacts": [
+        "experiments/phase0_headroom/certified_tasks/humanize_certified_tasks.jsonl",
+        "experiments/phase0_headroom/certified_tasks/humanize_near_certified_tasks.jsonl",
+        "experiments/phase0_headroom/certified_tasks/humanize_review_records.jsonl",
+        "experiments/phase0_headroom/certified_tasks/humanize_task_statements.jsonl"
+      ],
+      "certified_rows": 12,
+      "commit_message_only_count": 11,
+      "eligible_count_from_prior_decision": 12,
+      "first_failing_gate_counts": {},
+      "near_certified_rows": 4,
+      "public_pr_or_issue_context_count": 17,
+      "raw_candidate_rows": 16,
+      "reference_or_environment_failure_count": 0,
+      "repo_id": "humanize",
+      "review_rows": 16,
+      "source_context_artifacts": [
+        "experiments/phase0_headroom/candidate_sources/humanize_hardened_source_context.jsonl",
+        "experiments/phase0_headroom/candidate_sources/humanize_source_context.jsonl"
+      ],
+      "source_context_rows": 28,
+      "unique_raw_candidates": 16
+    }
+  ],
+  "run_id": "phase1_task_supply_v2_generator_bakeoff_20260527",
+  "schema_version": "barcarolle.phase1_task_supply_v2_generator_bakeoff.v1.current_supply_reproduction.v1",
+  "status": "repo_history_v1_reproduction_completed",
+  "warning": "toolz and humanize old 16-candidate screens are narrow artifacts, not broad repo-supply conclusions"
+}
