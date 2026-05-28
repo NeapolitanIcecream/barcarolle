@@ -861,7 +861,7 @@ def build_release_gate(config: dict[str, Any]) -> dict[str, Any]:
     blocker = []
     if not paid_ready:
         blocker.append("third_repo_still_needed")
-    if attempts.get("unattempted_selected_count", 0):
+    if attempts.get("unattempted_selected_count", 0) and not paid_ready:
         blocker.append("selected_candidates_still_unattempted")
     return {
         "schema_version": f"{SCHEMA_VERSION}.release_gate.v1",

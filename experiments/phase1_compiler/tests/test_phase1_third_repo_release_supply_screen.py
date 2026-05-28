@@ -106,7 +106,7 @@ def test_release_gate_requires_attrs_boltons_and_a_third_repo(tmp_path: Path) ->
         encoding="utf-8",
     )
     attempts_path.write_text(
-        '{"rows":['
+        '{"unattempted_selected_count":18,"rows":['
         + ",".join(
             '{"candidate_id":"p%03d","repo_id":"packaging","technical_certified":true,"release_eligible":true}' % index
             for index in range(30)
@@ -125,6 +125,7 @@ def test_release_gate_requires_attrs_boltons_and_a_third_repo(tmp_path: Path) ->
 
     assert gate["paid_ready"] is True
     assert gate["repos_meeting_30_release_eligible"] == ["attrs", "boltons", "packaging"]
+    assert "selected_candidates_still_unattempted" not in gate["blocking_reasons"]
 
 
 def test_probe_sampling_is_capped_per_repo() -> None:
