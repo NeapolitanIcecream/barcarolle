@@ -1,6 +1,6 @@
 # Workspace Cost Usage Report
 
-Generated at `2026-05-28T04:12:52+00:00`.
+Generated at `2026-05-28T05:05:32+00:00`.
 
 Provider-billed dollars remain unavailable for these workspace ACUT runs. The canonical spend estimate is therefore the observed-token estimate priced through `experiments/phase0_headroom/configs/model_pricing.yaml`; missing usage, if any, is shown separately as the previous conservative fallback.
 
@@ -27,6 +27,8 @@ Provider-billed dollars remain unavailable for these workspace ACUT runs. The ca
 | phase1_statement_hardened_after_canonical_repair_boltons_h_future | 8 | 1.0000 | 4.00000000 | 1.81149420 | 1.81149420 | 0 | 44.552 |
 | phase1_three_repo_paid_validation_batch_1_smoke_codex_workspace | 3 | 1.0000 | 1.50000000 | 1.38578220 | 1.38578220 | 0 | 140.973 |
 | phase1_three_repo_paid_validation_batch_1_smoke_kilo_workspace | 3 | 1.0000 | 1.50000000 | 0.61068000 | 0.61068000 | 0 | 32.418 |
+| phase1_three_repo_paid_validation_batch_2_small_pilot_complete_codex_workspace | 15 | 1.0000 | 7.50000000 | 8.24846280 | 8.24846280 | 0 | 114.906 |
+| phase1_three_repo_paid_validation_batch_2_small_pilot_complete_kilo_workspace | 15 | 1.0000 | 7.50000000 | 4.33731060 | 4.33731060 | 0 | 43.07 |
 
 ## Per-Harness Observed Cost
 
@@ -112,6 +114,12 @@ Provider-billed dollars remain unavailable for these workspace ACUT runs. The ca
 
 ### phase1_three_repo_paid_validation_batch_1_smoke_kilo_workspace
 - `kilo_workspace`: `USD 0.61068000`.
+
+### phase1_three_repo_paid_validation_batch_2_small_pilot_complete_codex_workspace
+- `codex_workspace`: `USD 8.24846280`.
+
+### phase1_three_repo_paid_validation_batch_2_small_pilot_complete_kilo_workspace
+- `kilo_workspace`: `USD 4.33731060`.
 
 ## Notes
 
