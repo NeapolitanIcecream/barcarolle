@@ -1,0 +1,95 @@
+schema_version: barcarolle.phase1_adapter_stratified_reporting.v1
+run_id: phase1_adapter_stratified_reporting_20260528
+source_run_id: phase1_three_repo_paid_validation_20260528
+diagnostics_run_id: phase1_three_repo_paid_result_diagnostics_20260528
+runbook: docs/experiments/phase-1-adapter-stratified-reporting-runbook.md
+status: configured
+diagnostic_only: true
+paid_calls_allowed: false
+inputs:
+  validation_metrics: experiments/phase1_compiler/results/phase1_three_repo_paid_validation_metrics.json
+  validation_decision: experiments/phase1_compiler/results/phase1_three_repo_paid_validation_decision.json
+  score_tables_manifest: experiments/phase1_compiler/results/phase1_three_repo_paid_validation_score_tables_manifest.json
+  cost_reconciliation: experiments/phase1_compiler/results/phase1_three_repo_paid_validation_cost_reconciliation.json
+  diagnostics_result_cube: experiments/phase1_compiler/results/phase1_three_repo_paid_result_diagnostics_result_cube.json
+  diagnostics_adapter_effects: experiments/phase1_compiler/results/phase1_three_repo_paid_result_diagnostics_adapter_effects.json
+  diagnostics_uncertainty: experiments/phase1_compiler/results/phase1_three_repo_paid_result_diagnostics_uncertainty.json
+  diagnostics_split_balance: experiments/phase1_compiler/results/phase1_three_repo_paid_result_diagnostics_split_balance.json
+  diagnostics_action_matrix: experiments/phase1_compiler/results/phase1_three_repo_paid_result_diagnostics_action_matrix.json
+  diagnostics_decision: experiments/phase1_compiler/results/phase1_three_repo_paid_result_diagnostics_decision.json
+  codex_cost_summary: experiments/phase0_headroom/results/phase1_three_repo_paid_validation_codex_workspace_cost_summary.json
+  kilo_cost_summary: experiments/phase0_headroom/results/phase1_three_repo_paid_validation_kilo_workspace_cost_summary.json
+  workspace_usage_ledger: experiments/phase0_headroom/results/workspace_usage_ledger.jsonl
+  model_pricing: experiments/phase0_headroom/configs/model_pricing.yaml
+outputs:
+  preflight: experiments/phase1_compiler/results/phase1_adapter_stratified_reporting_preflight.json
+  policy: experiments/phase1_compiler/results/phase1_adapter_stratified_reporting_policy.json
+  three_repo_summary: experiments/phase1_compiler/results/phase1_adapter_stratified_reporting_three_repo_summary.json
+  three_repo_summary_csv: experiments/phase1_compiler/results/phase1_adapter_stratified_reporting_three_repo_summary.csv
+  pairwise_summary: experiments/phase1_compiler/results/phase1_adapter_stratified_reporting_pairwise_summary.json
+  cost_latency_summary: experiments/phase1_compiler/results/phase1_adapter_stratified_reporting_cost_latency_summary.json
+  future_gates: experiments/phase1_compiler/results/phase1_adapter_stratified_reporting_future_gates.json
+  decision: experiments/phase1_compiler/results/phase1_adapter_stratified_reporting_decision.json
+reports:
+  process: experiments/phase1_compiler/reports/phase1_adapter_stratified_reporting_process.md
+  preflight: experiments/phase1_compiler/reports/phase1_adapter_stratified_reporting_preflight.md
+  policy: experiments/phase1_compiler/reports/phase1_adapter_stratified_reporting_policy.md
+  three_repo_summary: experiments/phase1_compiler/reports/phase1_adapter_stratified_reporting_three_repo_summary.md
+  cost_latency_summary: experiments/phase1_compiler/reports/phase1_adapter_stratified_reporting_cost_latency_summary.md
+  future_gates: experiments/phase1_compiler/reports/phase1_adapter_stratified_reporting_future_gates.md
+  decision: experiments/phase1_compiler/reports/phase1_adapter_stratified_reporting_decision.md
+policy:
+  adapter_level_results_before_pooled: true
+  pooled_only_cross_harness_headline_allowed: false
+  pooled_result_allowed_when_preregistered_primary: true
+  pooled_result_allowed_when_marked_diagnostic: true
+  completed_paid_pilot_claim_boundary: pilot_evidence_only
+  completed_paid_pilot_decision_mutable: false
+  predictive_validity_claim_allowed: false
+  adapters_interchangeable_without_evidence: false
+  token_estimated_cost_is_provider_billed_cost: false
+  actual_provider_billed_cost_required_for_exact_bill_claim: true
+  if_actual_provider_billed_cost_null: report_provider_billed_cost_unavailable
+required_adapter_metrics:
+  - adapter_id
+  - cell_count
+  - scoreable_count
+  - non_scoreable_count
+  - pass_count
+  - pass_rate
+  - pass_rate_by_repo
+  - pass_rate_by_split
+  - pass_rate_by_repo_and_split
+  - b_eval_h_future_gap
+  - policy_violation_count
+  - observed_token_estimated_cost_usd
+  - conservative_token_estimated_cost_usd
+  - actual_provider_billed_cost_usd
+  - cost_per_cell_usd
+  - usage_observed_rate
+  - median_latency_seconds
+required_pairwise_metrics:
+  - paired_task_count
+  - both_pass
+  - both_fail
+  - adapter_a_only_pass
+  - adapter_b_only_pass
+  - disagreement_count
+  - disagreement_rate
+  - exact_count_summary
+required_cost_latency_fields:
+  - cost_basis
+  - observed_token_estimated_cost_usd
+  - conservative_token_estimated_cost_usd
+  - actual_provider_billed_cost_usd
+  - provider_billed_cost_status
+  - cost_per_cell_usd
+  - median_latency_seconds
+future_paid_gates:
+  - adapter_reporting_policy_loaded
+  - adapter_level_result_table_required
+  - paired_disagreement_table_required_for_shared_tasks
+  - cost_estimate_or_bill_status_required
+  - pooled_headline_primary_only_if_preregistered
+  - pooled_headline_secondary_or_diagnostic_otherwise
+  - single_acut_runs_must_name_scoreable_adapter_before_outcomes
