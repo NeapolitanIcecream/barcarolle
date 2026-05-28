@@ -1,6 +1,6 @@
 # Three-Repo Paid Validation Process
 
-Current step: `Batch 5 complete`.
+Current step: `Step 8 decision complete`.
 
 Completed artifacts:
 - Step 0 preflight
@@ -12,10 +12,12 @@ Completed artifacts:
 - Step 5 attrs batch
 - Step 5 boltons batch
 - Step 5 click batch
+- Step 6 cost reconciliation
+- Step 7 metrics
+- Step 8 decision
 
 
 Notes:
-- Continue decision: all_batches_complete.
-
+- No extra notes.
 
 Follow-up runbook drafted by this worker: `false`.

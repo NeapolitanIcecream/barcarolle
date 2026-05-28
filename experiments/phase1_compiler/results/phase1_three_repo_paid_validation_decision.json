@@ -1,0 +1,50 @@
+{
+  "artifact": "decision",
+  "completed_steps": [
+    "preflight",
+    "tooling_check",
+    "entry_gate",
+    "batch_plan",
+    "batch_1_smoke",
+    "batch_2_small_pilot_complete",
+    "batch_3_attrs_remainder",
+    "batch_4_boltons_remainder",
+    "batch_5_click_remainder",
+    "cost_reconciliation",
+    "score_tables_manifest",
+    "metrics",
+    "baseline_comparison"
+  ],
+  "decision_label": "three_repo_paid_pilot_threshold_met",
+  "followup_runbook_written_by_worker": false,
+  "generated_at": "2026-05-28T07:25:18Z",
+  "known_blockers": [],
+  "old_weighted_design_diagnostic_only": true,
+  "predictive_validity_established": false,
+  "raw_oracle_exposure_detected": false,
+  "rq_answers": {
+    "RQ1_all_planned_primary_pilot_cells_complete": true,
+    "RQ2_scoreability_rate": 1.0,
+    "RQ3_gates_clean": {
+      "cost_accounting": "complete",
+      "endpoint": "pass",
+      "policy_violation_count": 0,
+      "raw_oracle_exposure": false
+    },
+    "RQ4_primary_gaps": {
+      "per_repo": {
+        "attrs": 0.35,
+        "boltons": 0.25,
+        "click": 0.4
+      },
+      "pooled": 0.1
+    },
+    "RQ5_preregistered_pilot_threshold_passed": true,
+    "RQ6_baselines_and_diagnostics": "Frozen baselines recorded; old weighted design remains diagnostic only.",
+    "RQ7_cost": 51.267333,
+    "RQ8_validity_status": "pilot evidence only"
+  },
+  "run_id": "phase1_three_repo_paid_validation_20260528",
+  "schema_version": "barcarolle.phase1_three_repo_paid_validation_output.v1",
+  "tests_run": []
+}
