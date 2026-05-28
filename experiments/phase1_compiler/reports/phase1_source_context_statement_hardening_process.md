@@ -113,3 +113,17 @@ bucket without reading raw statements or high-cardinality public text.
 
 Action this suggests: test the policy invariants and bucket constraints before
 writing the readiness gate.
+
+## Step 6 Test Evidence
+
+What happened: focused tests were added for the source-context hardening policy.
+The focused test run passed with 6 tests, and the full Phase 1 compiler suite
+passed with 255 tests.
+
+Why it matters: the tests caught and fixed a readiness-gate polarity bug for the
+completed-paid-decision check. The gate now tests that the paid decision remains
+unchanged while still recording the factual `completed_paid_decision_changed:
+false` field.
+
+Action this suggests: rerun the readiness step with the corrected gate and write
+the final decision artifacts.

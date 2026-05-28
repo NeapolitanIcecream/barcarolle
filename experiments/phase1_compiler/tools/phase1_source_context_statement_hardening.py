@@ -997,7 +997,7 @@ def build_readiness_gate(config: dict[str, Any], inventory: dict[str, Any] | Non
         "feature_table_covers_three_repos": all(repo in eligible_by_repo for repo in REPO_ORDER),
         "each_repo_has_minimum_eligible_after_overlay": all(count >= min_per_repo for count in eligible_by_repo.values()),
         "paid_calls_made_by_this_run_zero": True,
-        "completed_paid_decision_changed": False,
+        "completed_paid_decision_unchanged": True,
     }
     ready = all(gates.values())
     minor_risk = any(row["release_eligible_for_split_design"] and row["source_quality_bucket"] == "minor_risk" for row in features["rows"])
