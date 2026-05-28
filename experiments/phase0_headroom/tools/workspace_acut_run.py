@@ -1307,6 +1307,184 @@ def load_statement_hardened_after_canonical_repair_packages(root: Path, matrix_c
     return packages
 
 
+def selected_three_repo_paid_validation_ids(config: dict[str, Any]) -> list[str]:
+    return matrix_task_ids(config)
+
+
+def three_repo_rows_by_id(path: Path) -> dict[str, dict[str, Any]]:
+    payload = read_json(path)
+    rows = payload.get("rows", []) if isinstance(payload, dict) else payload
+    return {str(row["candidate_id"]): row for row in rows if isinstance(row, dict) and row.get("candidate_id")}
+
+
+def three_repo_attrs_statement_packets_by_id(path: Path) -> dict[str, dict[str, Any]]:
+    if not path.exists():
+        return {}
+    payload = read_json(path)
+    packets = payload.get("statement_packets", []) if isinstance(payload, dict) else []
+    return {str(row["candidate_id"]): row for row in packets if isinstance(row, dict) and row.get("candidate_id")}
+
+
+def three_repo_split_by_id(path: Path) -> dict[str, str]:
+    payload = read_json(path)
+    return {
+        str(row["candidate_id"]): str(row["split"])
+        for row in payload.get("assignments", [])
+        if isinstance(row, dict) and row.get("candidate_id")
+    }
+
+
+def three_repo_command_from_attempt(row: dict[str, Any]) -> list[str]:
+    commands = [command for command in row.get("commands", []) if isinstance(command, dict)]
+    winning_profile = str(row.get("winning_profile_id") or "")
+    references = [
+        command
+        for command in commands
+        if str(command.get("role", "")).startswith("reference") and int(command.get("returncode") or 0) == 0
+    ]
+    preferred = [command for command in references if str(command.get("profile_id") or "") == winning_profile]
+    chosen = (preferred or references or commands)[:1]
+    if not chosen:
+        return []
+    shape = chosen[0].get("command_shape") or []
+    return [str(part).replace("<workspace>", ".") for part in shape]
+
+
+def three_repo_public_context_refs(raw: dict[str, Any], packet: dict[str, Any], target_commit: str = "") -> list[str]:
+    refs = [str(ref) for ref in raw.get("public_context_refs", []) if ref]
+    primary_ref = packet.get("primary_ref")
+    if primary_ref and str(primary_ref) not in refs:
+        refs.append(str(primary_ref))
+    for ref in packet.get("secondary_refs", []) or []:
+        if ref and str(ref) not in refs:
+            refs.append(str(ref))
+    target_ref = f"commit:{target_commit}" if target_commit else ""
+    return [ref for ref in refs if ref != target_ref]
+
+
+def three_repo_statement(row: dict[str, Any], raw: dict[str, Any], packet: dict[str, Any]) -> str:
+    repo_id = str(row.get("repo_id") or raw.get("repo_id") or "repository")
+    implementation_files = [str(path) for path in row.get("implementation_files", [])]
+    refs = three_repo_public_context_refs(raw, packet, str(row.get("target_commit") or ""))
+    summary = packet.get("statement_summary") if isinstance(packet.get("statement_summary"), dict) else {}
+    lines = [f"Repair the {repo_id} behavior described by the approved public context for this frozen validation task."]
+    if refs:
+        lines.append(f"Allowed public context refs: {', '.join(refs)}.")
+    if summary.get("problem_summary"):
+        lines.append(f"Problem summary: {summary['problem_summary']}")
+    if summary.get("expected_behavior"):
+        lines.append(f"Expected behavior: {summary['expected_behavior']}")
+    if not summary:
+        lines.append(
+            "The committed package records the source context class and public reference but not raw public-context text; use the local repository history and the listed public reference as the only problem context."
+        )
+    if row.get("source_context_class") or row.get("source_context_quality"):
+        lines.append(
+            "Source context classification: "
+            f"{row.get('source_context_class') or 'unknown'} / {row.get('source_context_quality') or 'unknown'}."
+        )
+    if implementation_files:
+        lines.append(f"Focus on implementation path(s): {', '.join(implementation_files)}.")
+    lines.append("Preserve existing public behavior. Do not edit tests, generated metadata, or benchmark artifacts.")
+    return "\n".join(lines)
+
+
+def load_phase1_three_repo_paid_validation_packages(root: Path, matrix_config_path: Path | str | None = None) -> list[TaskPackage]:
+    config = load_workspace_matrix_config(root, matrix_config_path)
+    if not config or not config.get("phase1_three_repo_paid_validation"):
+        return []
+
+    exp = phase0_root(root)
+    task_table_path = config_path(root, config["task_table"])
+    split_plan_path = config_path(root, config["split_plan"])
+    fresh_attempts_path = config_path(root, config["fresh_certification_attempts"])
+    third_attempts_path = config_path(root, config["third_repo_certification_attempts"])
+    raw_inventory_path = config_path(root, config["task_supply_raw_anchor_inventory"])
+    third_raw_inventory_path = config_path(root, config["third_repo_raw_anchor_inventory"])
+    attrs_statement_packets_path = config_path(root, config.get("attrs_source_repair_statement_packets", ""))
+
+    task_rows = three_repo_rows_by_id(task_table_path)
+    split_by_id = three_repo_split_by_id(split_plan_path)
+    attempt_rows = {
+        **three_repo_rows_by_id(fresh_attempts_path),
+        **three_repo_rows_by_id(third_attempts_path),
+    }
+    raw_rows = {
+        **three_repo_rows_by_id(raw_inventory_path),
+        **three_repo_rows_by_id(third_raw_inventory_path),
+    }
+    statement_packets = three_repo_attrs_statement_packets_by_id(attrs_statement_packets_path)
+    selected_ids = selected_three_repo_paid_validation_ids(config)
+    packages: list[TaskPackage] = []
+    for task_id in selected_ids:
+        row = task_rows.get(task_id)
+        attempt = attempt_rows.get(task_id)
+        if not (row and attempt):
+            continue
+        raw = raw_rows.get(task_id, {})
+        packet = statement_packets.get(task_id, {})
+        repo_id = str(row.get("repo_id") or attempt.get("repo_id") or task_id.split("__", 1)[0])
+        split = split_by_id.get(task_id, str(row.get("split") or ""))
+        implementation_files = [str(path) for path in row.get("implementation_files", [])]
+        test_files = [str(path) for path in row.get("test_files", [])]
+        statement = three_repo_statement(row, raw, packet)
+        verifier_command = three_repo_command_from_attempt(attempt)
+        source_repo = exp / "external_repos" / repo_id
+        metadata = {
+            "allowed_context_refs": three_repo_public_context_refs(raw, packet, str(row.get("target_commit") or "")),
+            "base_commit": row.get("base_commit"),
+            "canonical_repo_split": f"{repo_id}/{split}",
+            "canonical_split": split,
+            "changed_files": [*implementation_files, *test_files],
+            "evidence_level": "phase1_three_repo_paid_validation",
+            "metadata_sources": {
+                "task_table": display_path(root, task_table_path),
+                "split_plan": display_path(root, split_plan_path),
+                "certification_attempts": display_path(
+                    root,
+                    third_attempts_path if repo_id == "click" else fresh_attempts_path,
+                ),
+                "raw_anchor_inventory": display_path(
+                    root,
+                    third_raw_inventory_path if repo_id == "click" else raw_inventory_path,
+                ),
+                "workspace_matrix": display_path(root, config_path(root, config.get("_path", matrix_config_path or MATRIX_CONFIG_REL))),
+            },
+            "source_context_status": row.get("source_context_quality"),
+            "statement_digest": f"sha256:{sha256_text(statement)}",
+            "statement_quality": {
+                "status": row.get("source_context_quality"),
+                "source_context_class": row.get("source_context_class"),
+                "public_context_ref_count": row.get("public_context_ref_count"),
+            },
+            "statement_source": "phase1_three_repo_paid_validation_committed_metadata",
+            "task_time": row.get("task_time"),
+            "test_files": test_files,
+            "verifier_command_metadata": {
+                "winning_profile_id": attempt.get("winning_profile_id"),
+                "command_source": "certification_attempt_command_shape",
+            },
+        }
+        packages.append(
+            TaskPackage(
+                task_id=task_id,
+                repo_id=repo_id,
+                split=split,
+                source_repo=source_repo,
+                base_commit=str(row["base_commit"]),
+                target_commit=str(row.get("target_commit") or attempt.get("target_commit_optional") or ""),
+                solver_facing_statement=statement,
+                verifier_command=verifier_command,
+                allowed_code_paths=implementation_files,
+                test_paths=test_files,
+                timeout_seconds=240,
+                scope_boundaries="Modify only the listed implementation paths; do not edit tests, generated metadata, or benchmark artifacts.",
+                metadata=metadata,
+            )
+        )
+    return packages
+
+
 def load_toolz_packages(root: Path) -> list[TaskPackage]:
     exp = phase0_root(root)
     tasks = load_jsonl_map(exp / "certified_tasks" / "toolz_certified_tasks.jsonl")
@@ -1439,6 +1617,9 @@ def load_second_repo_packages(root: Path) -> list[TaskPackage]:
 
 
 def load_phase0_packages(root: Path, matrix_config_path: Path | str | None = None) -> list[TaskPackage]:
+    three_repo_paid_validation_packages = load_phase1_three_repo_paid_validation_packages(root, matrix_config_path)
+    if three_repo_paid_validation_packages:
+        return three_repo_paid_validation_packages
     paid_pilot_packages = load_phase1_weighted_design_paid_pilot_packages(root, matrix_config_path)
     if paid_pilot_packages:
         return paid_pilot_packages

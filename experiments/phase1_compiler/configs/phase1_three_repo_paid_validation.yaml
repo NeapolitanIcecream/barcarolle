@@ -1,0 +1,84 @@
+schema_version: barcarolle.phase1_three_repo_paid_validation.v1
+run_id: phase1_three_repo_paid_validation_20260528
+source_run_id: phase1_three_repo_paid_readiness_packaging_20260528
+runbook: docs/experiments/phase-1-three-repo-paid-validation-runbook.md
+status: configured
+primary_design: repo_stratified
+primary_score: unweighted_pass_rate_by_repo_split_then_pooled_summary
+approval:
+  approved_option: primary_pilot
+  approved_unique_tasks: 60
+  approved_cells: 120
+  approved_adapters:
+    - codex_workspace
+    - kilo_workspace
+  approved_cost_cap_usd: 75
+  approval_source: coordinating_user_requested_runbook_execution
+budget:
+  planned_unique_tasks: 60
+  planned_cells: 120
+  lower_cost_estimate_usd: 37.21
+  conservative_cost_estimate_usd: 60.0
+  conservative_cost_per_cell_usd: 0.5
+  hard_cost_cap_usd: 75
+  paid_acut_concurrency: 1
+  allow_cross_harness_paid_parallelism: false
+thresholds:
+  policy_violations_max: 0
+  minimum_scoreability_rate: 0.95
+  primary_gap_threshold: 0.15
+  paid_endpoint_required: LLM_BASE_URL + LLM_API_KEY
+  raw_oracle_exposure_allowed: false
+  precision_label: pilot_only
+source_artifacts:
+  task_table: experiments/phase1_compiler/results/phase1_three_repo_paid_readiness_packaging_task_table.json
+  supply_snapshot: experiments/phase1_compiler/results/phase1_three_repo_paid_readiness_packaging_supply_snapshot.json
+  source_quality_audit: experiments/phase1_compiler/results/phase1_three_repo_paid_readiness_packaging_source_quality_audit.json
+  split_plan: experiments/phase1_compiler/results/phase1_three_repo_paid_readiness_packaging_split_plan.json
+  baseline_plan: experiments/phase1_compiler/results/phase1_three_repo_paid_readiness_packaging_baseline_plan.json
+  threshold_preregistration: experiments/phase1_compiler/results/phase1_three_repo_paid_readiness_packaging_threshold_preregistration.json
+  power_cost_plan: experiments/phase1_compiler/results/phase1_three_repo_paid_readiness_packaging_power_cost_plan.json
+  packaging_entry_gate: experiments/phase1_compiler/results/phase1_three_repo_paid_readiness_packaging_entry_gate.json
+  packaging_decision: experiments/phase1_compiler/results/phase1_three_repo_paid_readiness_packaging_decision.json
+  fresh_certification_attempts: experiments/phase1_compiler/results/phase1_task_supply_v2_fresh_certification_attempts.json
+  attrs_source_repair_overlay: experiments/phase1_compiler/results/phase1_attrs_source_repair_release_eligibility_overlay.json
+  attrs_source_repair_statement_packets: experiments/phase1_compiler/results/phase1_attrs_source_repair_statement_packets.json
+  third_repo_certification_attempts: experiments/phase1_compiler/results/phase1_third_repo_release_supply_screen_certification_attempts.json
+  task_supply_raw_anchor_inventory: experiments/phase1_compiler/results/phase1_task_supply_v2_raw_anchor_inventory.json
+  third_repo_raw_anchor_inventory: experiments/phase1_compiler/results/phase1_third_repo_release_supply_screen_raw_anchor_inventory.json
+workspace_runner:
+  adapter_config: experiments/phase0_headroom/configs/acut_workspace_adapters.yaml
+  matrix_config: experiments/phase0_headroom/configs/phase1_three_repo_paid_validation_workspace_matrix.yaml
+  pricing_config: experiments/phase0_headroom/configs/model_pricing.yaml
+  result_prefix_root: phase1_three_repo_paid_validation
+outputs:
+  preflight: experiments/phase1_compiler/results/phase1_three_repo_paid_validation_preflight.json
+  tooling_check: experiments/phase1_compiler/results/phase1_three_repo_paid_validation_tooling_check.json
+  entry_gate: experiments/phase1_compiler/results/phase1_three_repo_paid_validation_entry_gate.json
+  batch_plan: experiments/phase1_compiler/results/phase1_three_repo_paid_validation_batch_plan.json
+  batch_1_smoke: experiments/phase1_compiler/results/phase1_three_repo_paid_validation_batch_1_smoke.json
+  batch_2_small_pilot_complete: experiments/phase1_compiler/results/phase1_three_repo_paid_validation_batch_2_small_pilot_complete.json
+  batch_3_attrs_remainder: experiments/phase1_compiler/results/phase1_three_repo_paid_validation_batch_3_attrs_remainder.json
+  batch_4_boltons_remainder: experiments/phase1_compiler/results/phase1_three_repo_paid_validation_batch_4_boltons_remainder.json
+  batch_5_click_remainder: experiments/phase1_compiler/results/phase1_three_repo_paid_validation_batch_5_click_remainder.json
+  cost_reconciliation: experiments/phase1_compiler/results/phase1_three_repo_paid_validation_cost_reconciliation.json
+  score_tables_manifest: experiments/phase1_compiler/results/phase1_three_repo_paid_validation_score_tables_manifest.json
+  metrics: experiments/phase1_compiler/results/phase1_three_repo_paid_validation_metrics.json
+  baseline_comparison: experiments/phase1_compiler/results/phase1_three_repo_paid_validation_baseline_comparison.json
+  decision: experiments/phase1_compiler/results/phase1_three_repo_paid_validation_decision.json
+reports:
+  process: experiments/phase1_compiler/reports/phase1_three_repo_paid_validation_process.md
+  preflight: experiments/phase1_compiler/reports/phase1_three_repo_paid_validation_preflight.md
+  tooling_check: experiments/phase1_compiler/reports/phase1_three_repo_paid_validation_tooling_check.md
+  entry_gate: experiments/phase1_compiler/reports/phase1_three_repo_paid_validation_entry_gate.md
+  batch_plan: experiments/phase1_compiler/reports/phase1_three_repo_paid_validation_batch_plan.md
+  batch_status: experiments/phase1_compiler/reports/phase1_three_repo_paid_validation_batch_status.md
+  cost_reconciliation: experiments/phase1_compiler/reports/phase1_three_repo_paid_validation_cost_reconciliation.md
+  metrics: experiments/phase1_compiler/reports/phase1_three_repo_paid_validation_metrics.md
+  baseline_comparison: experiments/phase1_compiler/reports/phase1_three_repo_paid_validation_baseline_comparison.md
+  decision: experiments/phase1_compiler/reports/phase1_three_repo_paid_validation_decision.md
+raw_paths:
+  raw_results: experiments/phase0_headroom/results/raw/
+  workspaces: experiments/phase0_headroom/workspaces/
+  external_repos: experiments/phase0_headroom/external_repos/
+  tmp: experiments/phase1_compiler/tmp/three_repo_paid_validation/
