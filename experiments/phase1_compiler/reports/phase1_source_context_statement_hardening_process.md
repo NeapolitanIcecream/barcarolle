@@ -68,3 +68,19 @@ or demote a task.
 
 Action this suggests: create sanitized statement packets for every queued row.
 Rows without public problem context should be blocked rather than guessed.
+
+## Step 3 Statement Packet Evidence
+
+What happened: 91 sanitized statement packets were generated. Thirty-four are
+ready for review: 31 title-context packets and 3 preexisting attrs public-context
+repairs. Fifty-seven commit-message-only packets are blocked for missing public
+problem context.
+
+Why it matters: every packet separates solver-visible problem summaries from
+non-solver-visible review notes, and none commits raw public API responses, raw
+prompts, raw completions, raw diffs, target commit hashes, or hidden oracle
+material.
+
+Action this suggests: review each ready or blocked packet for leakage,
+ambiguity, and scope, then write the overlay for future split-design
+eligibility.
