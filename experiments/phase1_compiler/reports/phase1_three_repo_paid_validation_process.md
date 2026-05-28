@@ -1,6 +1,6 @@
 # Three-Repo Paid Validation Process
 
-Current step: `Batch 3 complete`.
+Current step: `Batch 4 complete`.
 
 Completed artifacts:
 - Step 0 preflight
@@ -10,6 +10,7 @@ Completed artifacts:
 - Step 3 smoke batch
 - Step 4 small pilot batch
 - Step 5 attrs batch
+- Step 5 boltons batch
 
 
 Notes:
