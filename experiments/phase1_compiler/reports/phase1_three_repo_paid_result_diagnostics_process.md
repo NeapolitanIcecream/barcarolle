@@ -1,6 +1,6 @@
 # Three-Repo Paid Result Diagnostics Process
 
-Current step: `Step 3 split balance audit complete`.
+Current step: `Step 4 uncertainty and outlier analysis complete`.
 
 Completed artifacts:
 - Step 0 preflight
@@ -8,6 +8,7 @@ Completed artifacts:
 - Step 1 metric reproduction
 - Step 2 adapter diagnostics
 - Step 3 split balance
+- Step 4 uncertainty and outliers
 
 
 Boundary:
