@@ -1,6 +1,6 @@
 # Three-Repo Paid Result Diagnostics Process
 
-Current step: `Step 6 action matrix complete`.
+Current step: `Step 7 decision and closeout complete`.
 
 Completed artifacts:
 - Step 0 preflight
@@ -11,6 +11,7 @@ Completed artifacts:
 - Step 4 uncertainty and outliers
 - Step 5 bounded failure taxonomy
 - Step 6 action matrix
+- Step 7 decision
 
 
 Boundary:

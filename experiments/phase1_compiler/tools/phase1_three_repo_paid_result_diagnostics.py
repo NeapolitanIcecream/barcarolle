@@ -1632,10 +1632,11 @@ def main() -> int:
         "uncertainty",
         "failure-taxonomy",
         "action-matrix",
-        "decision",
         "all",
     ]:
         subcommands.add_parser(name)
+    decision_parser = subcommands.add_parser("decision")
+    decision_parser.add_argument("--test-run", action="append", default=[])
     args = parser.parse_args()
     config_path = Path(args.config)
     if args.command == "preflight":
@@ -1653,7 +1654,7 @@ def main() -> int:
     elif args.command == "action-matrix":
         build_action_matrix(config_path)
     elif args.command == "decision":
-        build_decision(config_path)
+        build_decision(config_path, tests_run=args.test_run)
     elif args.command == "all":
         run_all(config_path)
     return 0
