@@ -1,0 +1,53 @@
+{
+  "artifact": "preflight",
+  "schema_version": "barcarolle.phase1_adapter_stratified_reporting_output.v1",
+  "run_id": "phase1_adapter_stratified_reporting_20260528",
+  "generated_at": "2026-05-28T11:34:07Z",
+  "branch": "codex/restart-benchmark-compiler",
+  "head": "754691317e37ea73a0e8682fc162ee718b9558a7",
+  "local_date": "2026-05-28 19:34:07 CST",
+  "python_version": "Python 3.9.6",
+  "uv_version": "uv 0.11.16 (Homebrew 2026-05-21 aarch64-apple-darwin)",
+  "required_inputs_read": [
+    "AGENTS.md",
+    "docs/experiments/phase-1-adapter-stratified-reporting-runbook.md",
+    "experiments/phase1_compiler/results/phase1_three_repo_paid_result_diagnostics_decision.json"
+  ],
+  "diagnostics_primary_decision_label": "three_repo_paid_diagnostics_adapter_stratification_needed",
+  "diagnostics_recommended_next_action_category": "stratify_or_separate_adapter_reporting",
+  "new_paid_llm_or_acut_calls_allowed": false,
+  "new_paid_llm_or_acut_calls_planned": false,
+  "new_paid_llm_or_acut_calls_made": false,
+  "completed_paid_decision_will_change": false,
+  "completed_paid_decision_changed": false,
+  "predictive_validity_claimed": false,
+  "git_diff_check": {
+    "passed": true,
+    "returncode": 0
+  },
+  "git_status_short_branch": "## codex/restart-benchmark-compiler...origin/codex/restart-benchmark-compiler [ahead 58]\n?? experiments/phase1_compiler/external_review/phase1_task_generator_design_review_20260526/",
+  "dirty_path_classification": {
+    "relevant_to_this_run": [
+      "experiments/phase1_compiler/results/phase1_adapter_stratified_reporting_preflight.json",
+      "experiments/phase1_compiler/reports/phase1_adapter_stratified_reporting_preflight.md",
+      "experiments/phase1_compiler/reports/phase1_adapter_stratified_reporting_process.md"
+    ],
+    "ignored_raw_or_runtime": [],
+    "unrelated_untracked": [
+      {
+        "path": "experiments/phase1_compiler/external_review/phase1_task_generator_design_review_20260526/",
+        "classification": "unrelated external-review package",
+        "handling": "left unmodified and uncommitted"
+      }
+    ]
+  },
+  "checks": {
+    "diagnostic_decision_available": true,
+    "diagnostic_decision_points_to_adapter_stratification": true,
+    "no_paid_calls_planned_or_made": true,
+    "dirty_paths_classified": true,
+    "completed_paid_pilot_not_changed": true,
+    "raw_artifacts_committed": false
+  },
+  "blockers": []
+}
