@@ -1,0 +1,50 @@
+schema_version: barcarolle.phase1_attrs_source_repair.v1
+run_id: phase1_attrs_source_repair_20260528
+created_at: 2026-05-28T00:00:00Z
+runbook: docs/experiments/phase-1-attrs-source-repair-runbook.md
+status: configured
+local_only: true
+target_repo: attrs
+target_task_ids:
+  - attrs__v2__218
+  - attrs__v2__231
+  - attrs__v2__237
+inputs:
+  source_review_queue: experiments/phase1_compiler/results/phase1_task_supply_v2_fresh_certification_source_review_queue.json
+  attempts: experiments/phase1_compiler/results/phase1_task_supply_v2_fresh_certification_attempts.json
+  paid_readiness_gate: experiments/phase1_compiler/results/phase1_task_supply_v2_fresh_certification_paid_readiness_gate.json
+  raw_anchor_inventory: experiments/phase1_compiler/results/phase1_task_supply_v2_raw_anchor_inventory.json
+  source_context_inventory: experiments/phase1_compiler/results/phase1_task_supply_v2_source_context_inventory.json
+  oracle_extraction_matrix: experiments/phase1_compiler/results/phase1_task_supply_v2_oracle_extraction_matrix.json
+external_repos:
+  attrs: experiments/phase0_headroom/external_repos/attrs
+policy:
+  paid_acut_calls_enabled: false
+  paid_solver_cells_enabled: false
+  paid_llm_generation_review_enabled: false
+  endpoint_base_url_env: LLM_BASE_URL
+  endpoint_api_key_env: LLM_API_KEY
+  raw_prompts_completions_logs_committed: false
+  raw_target_diffs_committed: false
+  release_eligible_min_per_repo: 30
+  repos_required_at_min: 3
+outputs:
+  preflight: experiments/phase1_compiler/results/phase1_attrs_source_repair_preflight.json
+  candidate_packets: experiments/phase1_compiler/results/phase1_attrs_source_repair_candidate_packets.json
+  public_context_review: experiments/phase1_compiler/results/phase1_attrs_source_repair_public_context_review.json
+  statement_packets: experiments/phase1_compiler/results/phase1_attrs_source_repair_statement_packets.json
+  review_records: experiments/phase1_compiler/results/phase1_attrs_source_repair_review_records.json
+  release_eligibility_overlay: experiments/phase1_compiler/results/phase1_attrs_source_repair_release_eligibility_overlay.json
+  paid_readiness_gate: experiments/phase1_compiler/results/phase1_attrs_source_repair_paid_readiness_gate.json
+  decision: experiments/phase1_compiler/results/phase1_attrs_source_repair_decision.json
+reports:
+  process: experiments/phase1_compiler/reports/phase1_attrs_source_repair_process.md
+  candidate_packets: experiments/phase1_compiler/reports/phase1_attrs_source_repair_candidate_packets.md
+  public_context_review: experiments/phase1_compiler/reports/phase1_attrs_source_repair_public_context_review.md
+  statement_review: experiments/phase1_compiler/reports/phase1_attrs_source_repair_statement_review.md
+  paid_readiness_gate: experiments/phase1_compiler/reports/phase1_attrs_source_repair_paid_readiness_gate.md
+  decision: experiments/phase1_compiler/reports/phase1_attrs_source_repair_decision.md
+scratch_paths:
+  tmp: experiments/phase1_compiler/tmp/attrs_source_repair/
+  workspaces: experiments/phase0_headroom/workspaces/attrs_source_repair/
+  cache: experiments/phase0_headroom/cache/attrs_source_repair/
