@@ -1,6 +1,6 @@
 # Three-Repo Paid Result Diagnostics Process
 
-Current step: `Step 4 uncertainty and outlier analysis complete`.
+Current step: `Step 5 bounded failure taxonomy complete`.
 
 Completed artifacts:
 - Step 0 preflight
@@ -9,6 +9,7 @@ Completed artifacts:
 - Step 2 adapter diagnostics
 - Step 3 split balance
 - Step 4 uncertainty and outliers
+- Step 5 bounded failure taxonomy
 
 
 Boundary:
