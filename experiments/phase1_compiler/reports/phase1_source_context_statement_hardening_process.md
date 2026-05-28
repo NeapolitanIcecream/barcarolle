@@ -55,3 +55,16 @@ technical-certified rows in scope.
 Action this suggests: send the 31 title-only rows and 57 commit-message-only
 rows into the repair queue. Paid outcomes remain excluded from promotion and
 priority rules.
+
+## Step 2 Repair Queue Evidence
+
+What happened: the repair queue was generated with 91 rows: 31 title-only paid
+tasks, 57 commit-message-only source-review rows, and 3 preexisting attrs public
+context repairs kept in the review path for consistency.
+
+Why it matters: the queue is ordered deterministically and records that H_future
+outcomes, adapter pass/fail labels, and other paid outcome labels cannot promote
+or demote a task.
+
+Action this suggests: create sanitized statement packets for every queued row.
+Rows without public problem context should be blocked rather than guessed.
