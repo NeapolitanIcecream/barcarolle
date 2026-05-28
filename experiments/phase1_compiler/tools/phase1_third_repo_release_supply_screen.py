@@ -952,6 +952,8 @@ def screened_advanced_rejected(shortlist: dict[str, Any], raw_inventory: dict[st
 
 
 def smallest_blocker(label: str, attempts: dict[str, Any], source_context: dict[str, Any], environment: dict[str, Any]) -> str:
+    if label == "third_repo_ready_paid_gate_ready_for_packaging":
+        return "no remaining third-repo supply blocker; the unattempted certification tail was stopped after the gate was proven."
     if label == "third_repo_technical_ready_source_repair_needed":
         return "source context repair is the smallest blocker."
     if label == "third_repo_environment_repair_needed":
@@ -990,7 +992,10 @@ def completed_steps(config: dict[str, Any]) -> list[str]:
         ("6", "release_gate"),
         ("7", "decision"),
     ]
-    return [f"Step {step} {key}" for step, key in pairs if output_path(config, key).exists()]
+    steps = [f"Step {step} {key}" for step, key in pairs if output_path(config, key).exists()]
+    if "Step 7 decision" not in steps:
+        steps.append("Step 7 decision")
+    return steps
 
 
 def markdown_table(headers: list[str], rows: list[list[Any]]) -> str:
