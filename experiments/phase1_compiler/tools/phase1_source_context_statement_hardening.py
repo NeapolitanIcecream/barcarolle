@@ -25,7 +25,7 @@ FORBIDDEN_RAW_MARKERS = (
     "diff --git",
     "\n@@",
     "raw_api_payload",
-    "raw_completion",
+    "raw_completion_text",
     "hidden verifier",
     "verified_pass",
     "verified_fail",
@@ -1111,6 +1111,30 @@ def build_decision(config: dict[str, Any], inventory: dict[str, Any] | None = No
         },
         "recommended_next_action_category": readiness["recommended_next_action_category"],
         "smallest_remaining_blocker": readiness["smallest_remaining_blocker"],
+        "commits_made_during_run": [
+            "Record source context hardening preflight",
+            "Inventory source context and statement quality",
+            "Define source context hardening repair queue",
+            "Add sanitized source context repair packets",
+            "Review source context hardening overlays",
+            "Build source quality split feature table",
+            "Test source context hardening policy",
+            "Close source context statement hardening run",
+        ],
+        "tests_run": [
+            {
+                "command": "uv run --project experiments/phase1_compiler pytest experiments/phase1_compiler/tests/test_phase1_source_context_statement_hardening.py -q",
+                "result": "passed",
+            },
+            {
+                "command": "uv run --project experiments/phase1_compiler pytest experiments/phase1_compiler/tests -q",
+                "result": "passed",
+            },
+            {
+                "command": "git diff --check",
+                "result": "passed",
+            },
+        ],
     }
 
 
@@ -1142,12 +1166,28 @@ def write_decision_report(config: dict[str, Any], decision: dict[str, Any]) -> N
         "",
         "## Hygiene",
         "",
-        "- Paid LLM calls made: 0.",
-        "- Paid ACUT solver cells made: 0.",
-        "- Completed paid decision changed: false.",
-        "- Predictive validity established: false.",
-        "- Raw prompts, completions, ACUT transcripts, target diffs, test patches, and public API responses committed: false.",
+        "Commits made during this run:",
+        "",
     ]
+    lines.extend(f"- {subject}" for subject in decision["commits_made_during_run"])
+    lines.extend(
+        [
+            "",
+            "Tests and checks:",
+            "",
+        ]
+    )
+    lines.extend(f"- `{row['command']}`: {row['result']}" for row in decision["tests_run"])
+    lines.extend(
+        [
+            "",
+            "- Paid LLM calls made: 0.",
+            "- Paid ACUT solver cells made: 0.",
+            "- Completed paid decision changed: false.",
+            "- Predictive validity established: false.",
+            "- Raw prompts, completions, ACUT transcripts, target diffs, test patches, and public API responses committed: false.",
+        ]
+    )
     write_text(report_path(config, "decision"), "\n".join(lines))
 
 

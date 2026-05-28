@@ -127,3 +127,17 @@ false` field.
 
 Action this suggests: rerun the readiness step with the corrected gate and write
 the final decision artifacts.
+
+## Step 7 Readiness And Decision Evidence
+
+What happened: the readiness gate passed with decision label
+`source_context_ready_with_minor_risk`. After overlay, split-design-eligible
+counts are attrs 30, boltons 35, and click 30.
+
+Why it matters: the pool is ready for a no-paid blocked split redesign input,
+but not as a clean source-quality pool. The remaining minor risk is click's
+title-only public context.
+
+Action this suggests: the coordinator should consider the
+`blocked_split_redesign` action category. No follow-up runbook was drafted in
+this run.
