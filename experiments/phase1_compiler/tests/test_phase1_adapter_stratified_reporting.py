@@ -107,3 +107,15 @@ def test_cost_latency_summary_reproduces_observed_token_estimates() -> None:
     assert kilo["median_latency_seconds"] == 52.5495
     assert cost["actual_provider_billed_cost_usd"] is None
     assert cost["provider_billed_exact_cost_available"] is False
+
+
+def test_future_gates_prevent_pooled_only_cross_harness_headlines() -> None:
+    gates = reporting.build_future_gates_payload(reporting.load_config())
+
+    assert gates["status"] == "ready"
+    assert gates["cross_harness_reporting_rule"]["adapter_table_required"] is True
+    assert gates["cross_harness_reporting_rule"]["paired_disagreement_required_when_shared_tasks"] is True
+    assert gates["pooled_summary_rule"]["never_allowed"] == "only_headline_for_cross_harness_paid_results"
+    assert gates["pooled_summary_rule"]["primary_allowed"] == "only_if_preregistered_before_outcomes"
+    assert gates["single_acut_reporting_rule"]["scoreable_adapter_must_be_preregistered"] is True
+    assert gates["no_future_runbook_drafted"] is True

@@ -1,12 +1,13 @@
 # Adapter-Stratified Reporting Process
 
-Current step: `Step 3 three-repo reporting supplement complete`.
+Current step: `Step 4 future paid gates complete`.
 
 Completed artifacts:
 - Step 0 preflight.
 - Step 1 reporting policy and schema.
 - Step 2 adapter summary tooling.
 - Step 3 three-repo reporting supplement.
+- Step 4 future paid gates.
 
 Boundary:
 - No-paid adapter-stratified reporting run.
@@ -35,12 +36,17 @@ Step evidence:
 - Step 3 wrote the human-readable adapter-stratified three-repo supplement.
 - Step 3 wrote the human-readable adapter-stratified cost and latency supplement.
 - Step 3 states that the completed paid pilot decision is unchanged and predictive validity is not established.
+- Step 4 generated future adapter-reporting gates JSON and markdown.
+- Step 4 distinguishes single-ACUT paid validation from cross-harness paid comparison.
+- Step 4 records that no future runbook was drafted.
+- Step 4 tests passed: `uv run --project experiments/phase1_compiler pytest experiments/phase1_compiler/tests/test_phase1_adapter_stratified_reporting.py -q`.
 
 Commits made during this run:
 - Step 0: `Record adapter stratified reporting preflight`.
 - Step 1: `Define adapter stratified reporting policy`.
 - Step 2: `Add adapter stratified reporting summaries`.
 - Step 3: `Report adapter stratified three-repo pilot summary`.
+- Step 4: `Codify future adapter reporting gates`.
 
 Notes:
 - The run will use committed sanitized results only.

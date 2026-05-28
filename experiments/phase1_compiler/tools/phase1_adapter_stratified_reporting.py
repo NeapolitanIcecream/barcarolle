@@ -483,6 +483,133 @@ def write_summary_artifacts(config: dict[str, Any]) -> dict[str, dict[str, Any]]
     return payloads
 
 
+def build_future_gates_payload(config: dict[str, Any]) -> dict[str, Any]:
+    validation = validate_policy(config)
+    return {
+        "artifact": "future_gates",
+        "schema_version": OUTPUT_SCHEMA,
+        "run_id": config["run_id"],
+        "generated_at": now_utc(),
+        "policy_loaded": validation["valid"],
+        "status": "ready" if validation["valid"] else "blocked",
+        "gates": [
+            {
+                "gate_id": "adapter_reporting_policy_loaded",
+                "required_for": "all paid validation runbooks",
+                "acceptance": "The runbook names the adapter reporting policy artifact before paid outcomes are interpreted.",
+            },
+            {
+                "gate_id": "adapter_level_result_table_required",
+                "required_for": "all cross-harness paid reports",
+                "acceptance": "Each adapter has cell count, scoreable count, pass rate, repo/split breakouts, policy violations, cost basis, cost per cell, usage observed rate, and median latency.",
+            },
+            {
+                "gate_id": "paired_disagreement_table_required_for_shared_tasks",
+                "required_for": "cross-harness runs where adapters share tasks",
+                "acceptance": "The report shows both pass, both fail, adapter A only pass, adapter B only pass, and disagreement rate.",
+            },
+            {
+                "gate_id": "cost_estimate_or_bill_status_required",
+                "required_for": "all paid reports",
+                "acceptance": "The report states whether cost is token-estimated or provider-billed, and says provider-billed exact cost is unavailable when actual_provider_billed_cost_usd is null.",
+            },
+            {
+                "gate_id": "pooled_headline_primary_only_if_preregistered",
+                "required_for": "cross-harness paid reports with pooled summaries",
+                "acceptance": "A pooled adapter headline is primary only if the runbook preregistered that aggregate before outcomes.",
+            },
+            {
+                "gate_id": "pooled_headline_secondary_or_diagnostic_otherwise",
+                "required_for": "cross-harness paid reports with non-preregistered pooled summaries",
+                "acceptance": "A pooled adapter result is clearly marked secondary or retrospective diagnostic.",
+            },
+            {
+                "gate_id": "single_acut_runs_must_name_scoreable_adapter_before_outcomes",
+                "required_for": "single-ACUT paid validation",
+                "acceptance": "The runbook chooses one scoreable ACUT/adapter before outcomes and reports that adapter identity in the result table.",
+            },
+        ],
+        "single_acut_reporting_rule": {
+            "adapter_table_required": True,
+            "paired_disagreement_required": False,
+            "scoreable_adapter_must_be_preregistered": True,
+            "pooled_adapter_headline_allowed": False,
+        },
+        "cross_harness_reporting_rule": {
+            "adapter_table_required": True,
+            "paired_disagreement_required_when_shared_tasks": True,
+            "adapter_as_blocking_or_reporting_factor": True,
+            "pooled_only_headline_allowed": False,
+        },
+        "pooled_summary_rule": {
+            "primary_allowed": "only_if_preregistered_before_outcomes",
+            "otherwise": "secondary_or_retrospective_diagnostic",
+            "never_allowed": "only_headline_for_cross_harness_paid_results",
+        },
+        "existing_runbooks_or_templates_to_reference": [
+            "docs/experiments/phase-1-three-repo-paid-validation-runbook.md",
+            "docs/experiments/phase-1-future-holdout-validation-runbook.md",
+            "docs/experiments/phase-1-preregistered-clean-future-holdout-paid-validation-runbook.md",
+            "docs/experiments/phase-1-statement-hardened-paid-validation-runbook.md",
+            "docs/experiments/phase-1-autonomous-overnight-two-repo-research-runbook.md",
+            "docs/experiments/phase-1-boltons-paid-acut-smoke-runbook.md",
+        ],
+        "direct_runbook_updates_made": [],
+        "why_no_direct_template_update": "No single central future paid-validation template exists in this repository. This run records gates and reference targets without drafting a next runbook.",
+        "no_future_runbook_drafted": True,
+    }
+
+
+def render_future_gates_report(payload: dict[str, Any]) -> str:
+    gates = "\n".join(
+        f"- `{gate['gate_id']}`: {gate['acceptance']}" for gate in payload["gates"]
+    )
+    references = "\n".join(f"- `{path}`" for path in payload["existing_runbooks_or_templates_to_reference"])
+    return f"""# Adapter Reporting Future Gates
+
+Status: `{payload['status']}`.
+
+What happened: future paid validation now has explicit adapter-reporting gates.
+Why it matters: the next paid run should not repeat a pooled-only cross-harness headline.
+Action suggested next: reference these gates before authorizing or executing any future cross-harness paid validation.
+
+## Gates
+
+{gates}
+
+## Single-ACUT Rule
+
+What happened: a single-ACUT paid run must name the scoreable adapter before outcomes.
+Why it matters: a single adapter can be interpreted as one ACUT result, but the adapter identity is still part of the evidence.
+Action suggested next: record the selected ACUT/adapter in the entry gate and result table.
+
+## Cross-Harness Rule
+
+What happened: a cross-harness paid run must show adapter-level results first and paired disagreement when adapters share tasks.
+Why it matters: adapter effects can be large enough to change the apparent result.
+Action suggested next: report each adapter as a separate ACUT result unless a pooled aggregate was preregistered.
+
+## Pooled Summary Rule
+
+- Primary pooled headline allowed: `{payload['pooled_summary_rule']['primary_allowed']}`.
+- Otherwise: `{payload['pooled_summary_rule']['otherwise']}`.
+- Never allowed: `{payload['pooled_summary_rule']['never_allowed']}`.
+
+## Reference Targets
+
+{references}
+
+No direct runbook/template update was made in this step because there is no single central future paid-validation template. This run does not draft or create the next runbook.
+"""
+
+
+def write_future_gates_artifacts(config: dict[str, Any]) -> dict[str, Any]:
+    payload = build_future_gates_payload(config)
+    write_json(output_path(config, "future_gates"), payload)
+    write_text(report_path(config, "future_gates"), render_future_gates_report(payload))
+    return payload
+
+
 def validate_policy(config: dict[str, Any]) -> dict[str, Any]:
     policy = config["policy"]
     adapter_metrics = set(config["required_adapter_metrics"])
@@ -642,7 +769,7 @@ def write_policy_artifacts(config: dict[str, Any]) -> dict[str, Any]:
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description="Generate Phase 1 adapter-stratified reporting artifacts.")
     parser.add_argument("--config", type=Path, default=DEFAULT_CONFIG)
-    parser.add_argument("command", choices=["policy", "summaries", "all"])
+    parser.add_argument("command", choices=["policy", "summaries", "future-gates", "all"])
     args = parser.parse_args(argv)
 
     config = load_config(args.config)
@@ -652,6 +779,8 @@ def main(argv: list[str] | None = None) -> int:
             return 1
     if args.command in {"summaries", "all"}:
         write_summary_artifacts(config)
+    if args.command in {"future-gates", "all"}:
+        write_future_gates_artifacts(config)
     return 0
 
 
