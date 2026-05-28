@@ -1,0 +1,46 @@
+{
+  "attrs_reached_30_release_eligible": true,
+  "attrs_release_eligible_count_after_overlay": 31,
+  "attrs_release_eligible_count_before_overlay": 28,
+  "attrs_technical_certified_count": 31,
+  "generated_at": "2026-05-28T00:00:00Z",
+  "historical_fresh_certification_outputs_rewritten": false,
+  "overlay_is_additive": true,
+  "overlay_rows": [
+    {
+      "candidate_id": "attrs__v2__218",
+      "overlay_action": "mark_release_eligible",
+      "previous_release_eligible": false,
+      "repair_mode": "public_context_repaired",
+      "repo_id": "attrs",
+      "review_record_digest": "sha256:7a1b138e7b8bf23152678ba854d9a69c982f42ec86010738ee2a9212487dcd6c",
+      "statement_ready": true
+    },
+    {
+      "candidate_id": "attrs__v2__231",
+      "overlay_action": "mark_release_eligible",
+      "previous_release_eligible": false,
+      "repair_mode": "public_context_repaired",
+      "repo_id": "attrs",
+      "review_record_digest": "sha256:6010863ec9ad4d22484dcb823b025968740efd043efc1a015b1d2d53e526b612",
+      "statement_ready": true
+    },
+    {
+      "candidate_id": "attrs__v2__237",
+      "overlay_action": "mark_release_eligible",
+      "previous_release_eligible": false,
+      "repair_mode": "public_context_repaired",
+      "repo_id": "attrs",
+      "review_record_digest": "sha256:549e4302571ca4354d12165f398a4f9fda1170461790fb734242eb479c460ca9",
+      "statement_ready": true
+    }
+  ],
+  "promoted_task_count": 3,
+  "promoted_task_ids": [
+    "attrs__v2__218",
+    "attrs__v2__231",
+    "attrs__v2__237"
+  ],
+  "run_id": "phase1_attrs_source_repair_20260528",
+  "schema_version": "barcarolle.phase1_attrs_source_repair.v1.release_eligibility_overlay.v1"
+}
