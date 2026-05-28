@@ -1,6 +1,6 @@
 # Adapter-Stratified Reporting Process
 
-Current step: `Step 4 future paid gates complete`.
+Current step: `Step 5 decision and closeout complete`.
 
 Completed artifacts:
 - Step 0 preflight.
@@ -8,6 +8,7 @@ Completed artifacts:
 - Step 2 adapter summary tooling.
 - Step 3 three-repo reporting supplement.
 - Step 4 future paid gates.
+- Step 5 decision and closeout.
 
 Boundary:
 - No-paid adapter-stratified reporting run.
@@ -40,6 +41,9 @@ Step evidence:
 - Step 4 distinguishes single-ACUT paid validation from cross-harness paid comparison.
 - Step 4 records that no future runbook was drafted.
 - Step 4 tests passed: `uv run --project experiments/phase1_compiler pytest experiments/phase1_compiler/tests/test_phase1_adapter_stratified_reporting.py -q`.
+- Step 5 wrote final decision artifacts.
+- Step 5 verification passed: adapter reporting tests, diagnostics tests, full Phase 1 compiler tests, and `git diff --check`.
+- Step 5 records that the adapter-reporting blocker is cleared, while source-context hardening and split redesign still block precision-target paid replication.
 
 Commits made during this run:
 - Step 0: `Record adapter stratified reporting preflight`.
@@ -47,6 +51,7 @@ Commits made during this run:
 - Step 2: `Add adapter stratified reporting summaries`.
 - Step 3: `Report adapter stratified three-repo pilot summary`.
 - Step 4: `Codify future adapter reporting gates`.
+- Step 5: `Close adapter stratified reporting run`.
 
 Notes:
 - The run will use committed sanitized results only.

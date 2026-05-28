@@ -1,0 +1,128 @@
+{
+  "artifact": "decision",
+  "schema_version": "barcarolle.phase1_adapter_stratified_reporting_output.v1",
+  "run_id": "phase1_adapter_stratified_reporting_20260528",
+  "source_run_id": "phase1_three_repo_paid_validation_20260528",
+  "diagnostics_run_id": "phase1_three_repo_paid_result_diagnostics_20260528",
+  "generated_at": "2026-05-28T11:47:25Z",
+  "primary_decision_label": "adapter_reporting_policy_ready_but_source_context_next",
+  "secondary_labels": [
+    "adapter_reporting_policy_ready",
+    "split_redesign_still_needed_before_precision_paid_replication",
+    "provider_billed_exact_cost_unavailable"
+  ],
+  "adapter_reporting_policy_ready": true,
+  "new_paid_llm_or_acut_calls_made": false,
+  "paid_cells_run_by_this_reporting_run": 0,
+  "completed_paid_decision_changed": false,
+  "completed_paid_decision_label_remains": "three_repo_paid_pilot_threshold_met",
+  "predictive_validity_established": false,
+  "raw_artifacts_committed": false,
+  "provider_billed_exact_cost_available": false,
+  "reproduced_diagnostics_numbers": {
+    "codex_workspace": {
+      "passes": 22,
+      "cells": 60,
+      "pass_rate": 0.3667,
+      "observed_token_estimated_cost_usd": 32.22309,
+      "cost_per_cell_usd": 0.53705,
+      "median_latency_seconds": 115.059
+    },
+    "kilo_workspace": {
+      "passes": 32,
+      "cells": 60,
+      "pass_rate": 0.5333,
+      "observed_token_estimated_cost_usd": 19.044243,
+      "cost_per_cell_usd": 0.3174,
+      "median_latency_seconds": 52.5495
+    },
+    "paired_outcomes": {
+      "both_fail": 22,
+      "both_pass": 16,
+      "codex_only_pass": 6,
+      "kilo_only_pass": 16,
+      "disagreement_count": 22,
+      "disagreement_rate": 0.3667
+    }
+  },
+  "rq_answers": {
+    "RQ1_did_this_run_make_new_paid_calls": false,
+    "RQ2_adapter_summary_reproduces_diagnostics_numbers": true,
+    "RQ3_adapter_level_score_cost_latency_reportable_from_committed_artifacts": true,
+    "RQ4_reporting_policy_prevents_pooled_only_cross_harness_headline": true,
+    "RQ5_still_blocks_precision_target_paid_replication": [
+      "source context and task statement hardening still need bounded no-paid work before a precision-target paid replication",
+      "future split design still needs preregistered block randomization or equivalent balancing",
+      "predictive validity is not established by the completed pilot",
+      "provider-billed exact cost remains unavailable because actual_provider_billed_cost_usd is null"
+    ],
+    "RQ6_recommended_next_action_category": "source_context_hardening_then_split_redesign_before_precision_paid_replication"
+  },
+  "output_artifacts": {
+    "policy": "experiments/phase1_compiler/results/phase1_adapter_stratified_reporting_policy.json",
+    "three_repo_summary": "experiments/phase1_compiler/results/phase1_adapter_stratified_reporting_three_repo_summary.json",
+    "three_repo_summary_csv": "experiments/phase1_compiler/results/phase1_adapter_stratified_reporting_three_repo_summary.csv",
+    "pairwise_summary": "experiments/phase1_compiler/results/phase1_adapter_stratified_reporting_pairwise_summary.json",
+    "cost_latency_summary": "experiments/phase1_compiler/results/phase1_adapter_stratified_reporting_cost_latency_summary.json",
+    "future_gates": "experiments/phase1_compiler/results/phase1_adapter_stratified_reporting_future_gates.json",
+    "decision": "experiments/phase1_compiler/results/phase1_adapter_stratified_reporting_decision.json"
+  },
+  "completed_steps": [
+    "preflight",
+    "reporting_policy_and_schema",
+    "adapter_summary_tooling",
+    "three_repo_reporting_supplement",
+    "future_paid_gates",
+    "decision_and_closeout"
+  ],
+  "commits_made_during_run": [
+    "7464344d Record adapter stratified reporting preflight",
+    "78592827 Define adapter stratified reporting policy",
+    "137ca05a Add adapter stratified reporting summaries",
+    "087f3a21 Report adapter stratified three-repo pilot summary",
+    "c9ceac08 Codify future adapter reporting gates",
+    "Close adapter stratified reporting run (this commit)"
+  ],
+  "tests_run": [
+    {
+      "command": "uv run --project experiments/phase1_compiler pytest experiments/phase1_compiler/tests/test_phase1_adapter_stratified_reporting.py -q",
+      "result": "9 passed in 0.02s"
+    },
+    {
+      "command": "uv run --project experiments/phase1_compiler pytest experiments/phase1_compiler/tests/test_phase1_three_repo_paid_result_diagnostics.py -q",
+      "result": "5 passed in 0.02s"
+    },
+    {
+      "command": "uv run --project experiments/phase1_compiler pytest experiments/phase1_compiler/tests -q",
+      "result": "249 passed in 36.84s"
+    },
+    {
+      "command": "git diff --check",
+      "result": "passed"
+    },
+    {
+      "command": "git status --short --untracked-files=all",
+      "result": "only unrelated untracked external_review package remained before closeout artifacts were written"
+    }
+  ],
+  "dirty_path_classification": {
+    "relevant_to_this_run": [
+      "experiments/phase1_compiler/results/phase1_adapter_stratified_reporting_decision.json",
+      "experiments/phase1_compiler/reports/phase1_adapter_stratified_reporting_decision.md",
+      "experiments/phase1_compiler/reports/phase1_adapter_stratified_reporting_process.md"
+    ],
+    "ignored_raw_or_runtime": [],
+    "unrelated_untracked": [
+      {
+        "path": "experiments/phase1_compiler/external_review/phase1_task_generator_design_review_20260526/",
+        "classification": "unrelated external-review package",
+        "handling": "left unmodified and uncommitted"
+      }
+    ]
+  },
+  "known_blockers": [
+    "precision-target paid replication remains blocked by source-context/task-statement hardening and split redesign work",
+    "provider-billed exact cost is unavailable"
+  ],
+  "followup_runbook_written_by_worker": false
+}
