@@ -99,3 +99,17 @@ unless a future run finds non-leaky public problem context.
 
 Action this suggests: build the low-dimensional feature table from the overlay,
 with click title-only rows carried as explicit minor risk.
+
+## Step 5 Split Feature Evidence
+
+What happened: the split feature table was generated with 153 rows and 95 rows
+eligible for future split design after overlay. Eligible counts are attrs 30,
+boltons 35, and click 30.
+
+Why it matters: a later split redesign can consume coarse buckets for source
+context type, source quality, statement specificity, context length, editable
+scope, leakage risk, ambiguity risk, certification risk, task family, and time
+bucket without reading raw statements or high-cardinality public text.
+
+Action this suggests: test the policy invariants and bucket constraints before
+writing the readiness gate.
