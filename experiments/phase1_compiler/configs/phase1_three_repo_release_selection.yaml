@@ -1,0 +1,21 @@
+schema_version: barcarolle.phase1_three_repo_release_selection.v1
+run_id: phase1_three_repo_paid_readiness_packaging_20260528
+selection_version: phase1_three_repo_release_selection_20260528_v1
+selection_frozen_before_paid_validation: true
+primary_design: repo_stratified
+primary_score: unweighted_pass_rate_by_repo_split_then_pooled_summary
+split_seed: phase1_three_repo_paid_readiness_packaging_20260528_seed_v1
+historical_paid_outcomes_used_for_selection: false
+H_future_outcomes_used_for_selection_or_weighting: false
+old_weighted_design_primary: false
+paid_acut_calls_to_run_now: false
+selected_repos:
+  - attrs
+  - boltons
+  - click
+baseline_candidate_ids:
+  - repo_unweighted_same_budget
+  - repo_stratified_same_budget
+  - temporal_recent_baseline
+  - old_weighted_design_diagnostic_only
+  - block_randomized_stratified_candidate
