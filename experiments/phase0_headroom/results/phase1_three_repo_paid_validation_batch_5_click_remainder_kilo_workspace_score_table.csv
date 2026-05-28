@@ -1,0 +1,15 @@
+adapter_id,acut_id,harness_name,model_or_agent_name,task_id,split,attempt,submission_status,terminal_status,verifier_exit_code,scoreable_cell,agent_failure,harness_error
+kilo_workspace,kilo_workspace_gpt_5_4_mini,kilo,gpt-5.4-mini,click__third__278,B_eval,1,submitted,verified_pass,0,True,False,False
+kilo_workspace,kilo_workspace_gpt_5_4_mini,kilo,gpt-5.4-mini,click__third__201,B_eval,1,submitted,verified_pass,0,True,False,False
+kilo_workspace,kilo_workspace_gpt_5_4_mini,kilo,gpt-5.4-mini,click__third__274,B_eval,1,submitted,verified_fail,1,True,True,False
+kilo_workspace,kilo_workspace_gpt_5_4_mini,kilo,gpt-5.4-mini,click__third__200,B_eval,1,submitted,verified_fail,1,True,True,False
+kilo_workspace,kilo_workspace_gpt_5_4_mini,kilo,gpt-5.4-mini,click__third__208,H_future,1,submitted,verified_pass,0,True,False,False
+kilo_workspace,kilo_workspace_gpt_5_4_mini,kilo,gpt-5.4-mini,click__third__213,H_future,1,submitted,verified_fail,1,True,True,False
+kilo_workspace,kilo_workspace_gpt_5_4_mini,kilo,gpt-5.4-mini,click__third__216,H_future,1,submitted,verified_fail,1,True,True,False
+kilo_workspace,kilo_workspace_gpt_5_4_mini,kilo,gpt-5.4-mini,click__third__250,H_future,1,submitted,verified_pass,0,True,False,False
+kilo_workspace,kilo_workspace_gpt_5_4_mini,kilo,gpt-5.4-mini,click__third__206,H_future,1,submitted,verified_pass,0,True,False,False
+kilo_workspace,kilo_workspace_gpt_5_4_mini,kilo,gpt-5.4-mini,click__third__199,H_future,1,submitted,verified_pass,0,True,False,False
+kilo_workspace,kilo_workspace_gpt_5_4_mini,kilo,gpt-5.4-mini,click__third__166,H_future,1,submitted,verified_pass,0,True,False,False
+kilo_workspace,kilo_workspace_gpt_5_4_mini,kilo,gpt-5.4-mini,click__third__050,H_future,1,submitted,verified_pass,0,True,False,False
+kilo_workspace,kilo_workspace_gpt_5_4_mini,kilo,gpt-5.4-mini,click__third__205,H_future,1,submitted,verified_pass,0,True,False,False
+kilo_workspace,kilo_workspace_gpt_5_4_mini,kilo,gpt-5.4-mini,click__third__238,H_future,1,submitted,verified_pass,0,True,False,False

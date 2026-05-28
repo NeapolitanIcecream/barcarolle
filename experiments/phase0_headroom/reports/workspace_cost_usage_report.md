@@ -1,6 +1,6 @@
 # Workspace Cost Usage Report
 
-Generated at `2026-05-28T06:41:11+00:00`.
+Generated at `2026-05-28T07:23:57+00:00`.
 
 Provider-billed dollars remain unavailable for these workspace ACUT runs. The canonical spend estimate is therefore the observed-token estimate priced through `experiments/phase0_headroom/configs/model_pricing.yaml`; missing usage, if any, is shown separately as the previous conservative fallback.
 
@@ -33,6 +33,8 @@ Provider-billed dollars remain unavailable for these workspace ACUT runs. The ca
 | phase1_three_repo_paid_validation_batch_3_attrs_remainder_kilo_workspace | 14 | 1.0000 | 7.00000000 | 5.06814420 | 5.06814420 | 0 | 60.419 |
 | phase1_three_repo_paid_validation_batch_4_boltons_remainder_codex_workspace | 14 | 1.0000 | 7.00000000 | 6.89520720 | 6.89520720 | 0 | 94.404 |
 | phase1_three_repo_paid_validation_batch_4_boltons_remainder_kilo_workspace | 14 | 1.0000 | 7.00000000 | 4.36723500 | 4.36723500 | 0 | 56.899 |
+| phase1_three_repo_paid_validation_batch_5_click_remainder_codex_workspace | 14 | 1.0000 | 7.00000000 | 6.83599080 | 6.83599080 | 0 | 116.378 |
+| phase1_three_repo_paid_validation_batch_5_click_remainder_kilo_workspace | 14 | 1.0000 | 7.00000000 | 4.66087320 | 4.66087320 | 0 | 48.77 |
 
 ## Per-Harness Observed Cost
 
@@ -136,6 +138,12 @@ Provider-billed dollars remain unavailable for these workspace ACUT runs. The ca
 
 ### phase1_three_repo_paid_validation_batch_4_boltons_remainder_kilo_workspace
 - `kilo_workspace`: `USD 4.36723500`.
+
+### phase1_three_repo_paid_validation_batch_5_click_remainder_codex_workspace
+- `codex_workspace`: `USD 6.83599080`.
+
+### phase1_three_repo_paid_validation_batch_5_click_remainder_kilo_workspace
+- `kilo_workspace`: `USD 4.66087320`.
 
 ## Notes
 
