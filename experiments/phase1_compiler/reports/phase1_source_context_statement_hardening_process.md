@@ -40,3 +40,18 @@ and keep paid outcome labels out of promotion decisions.
 - `git log --oneline -5` showed `09501600` as the latest commit.
 - Paid calls made by this run: 0.
 - Completed paid result changed: false.
+
+## Step 1 Inventory Evidence
+
+What happened: a deterministic inventory tool was added and run for the frozen
+paid package plus directly relevant attrs, boltons, and click source-review
+queue rows. The inventory covers 96 paid-package tasks and 57 source-review
+queue tasks.
+
+Why it matters: the inventory keeps release eligibility separate from technical
+certification. It records 96 release-eligible rows before overlay and 153
+technical-certified rows in scope.
+
+Action this suggests: send the 31 title-only rows and 57 commit-message-only
+rows into the repair queue. Paid outcomes remain excluded from promotion and
+priority rules.
