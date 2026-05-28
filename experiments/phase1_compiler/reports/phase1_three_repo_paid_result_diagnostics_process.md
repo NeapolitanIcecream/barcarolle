@@ -1,9 +1,11 @@
 # Three-Repo Paid Result Diagnostics Process
 
-Current step: `Step 0 preflight complete`.
+Current step: `Step 1 result cube and metric reproduction complete`.
 
 Completed artifacts:
 - Step 0 preflight
+- Step 1 result cube
+- Step 1 metric reproduction
 
 
 Boundary:
@@ -13,4 +15,4 @@ Boundary:
 - Follow-up runbook drafted by this worker: `false`.
 
 Notes:
-- No new paid LLM or ACUT calls were made or planned.
+- No extra notes.
