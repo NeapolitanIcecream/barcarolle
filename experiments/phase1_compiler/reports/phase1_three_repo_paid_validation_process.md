@@ -1,16 +1,17 @@
 # Three-Repo Paid Validation Process
 
-Current step: `Step 2 entry gate and batch plan complete`.
+Current step: `Batch 1 complete`.
 
 Completed artifacts:
 - Step 0 preflight
 - Step 1 tooling check
 - Step 2 entry gate
 - Step 2 batch plan
+- Step 3 smoke batch
 
 
 Notes:
-- No paid ACUT cells were run in entry gate.
+- Continue decision: continue_to_next_batch.
 
 
 Follow-up runbook drafted by this worker: `false`.

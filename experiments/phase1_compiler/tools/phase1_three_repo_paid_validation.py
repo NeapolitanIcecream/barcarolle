@@ -822,13 +822,51 @@ def write_entry_gate_report(config: dict[str, Any], payload: dict[str, Any]) -> 
 def import_usage_for_prefixes(config: dict[str, Any], prefixes: list[str]) -> dict[str, Any]:
     if not prefixes:
         return {}
-    return workspace_usage_import.run_import(
+    exp = PHASE0_ROOT
+    ledger_path = exp / "results" / "workspace_usage_ledger.jsonl"
+    reconciliation_path = exp / "results" / "workspace_cost_reconciliation.json"
+    previous_ledger = workspace_usage_import.read_jsonl(ledger_path)
+    previous_reconciliation = read_phase0_json(reconciliation_path)
+    current = workspace_usage_import.run_import(
         REPO_ROOT,
         prefixes,
         pricing_config_path(config),
         endpoint_host_hash=None,
         allow_missing_price_estimate=False,
     )
+    prefix_set = set(prefixes)
+    current_ledger = workspace_usage_import.read_jsonl(ledger_path)
+    merged_ledger = [row for row in previous_ledger if row.get("result_prefix") not in prefix_set]
+    merged_ledger.extend(row for row in current_ledger if row.get("result_prefix") in prefix_set)
+    workspace_usage_import.write_jsonl(ledger_path, merged_ledger)
+
+    previous_summaries = [
+        summary
+        for summary in previous_reconciliation.get("summaries", [])
+        if summary.get("result_prefix") not in prefix_set
+    ]
+    summaries = [*previous_summaries, *current.get("summaries", [])]
+    merged = {
+        **current,
+        "result_prefixes": [str(summary.get("result_prefix")) for summary in summaries],
+        "summaries": summaries,
+        "totals": {
+            "call_count": sum(int(summary.get("call_count") or 0) for summary in summaries),
+            "usage_observed_count": sum(int(summary.get("usage_observed_count") or 0) for summary in summaries),
+            "conservative_estimated_cost_usd": round(sum(float(summary.get("conservative_estimated_cost_usd") or 0.0) for summary in summaries), 8),
+            "observed_token_estimated_cost_usd": round(sum(float(summary.get("observed_token_estimated_cost_usd") or 0.0) for summary in summaries), 8),
+            "observed_or_conservative_estimated_cost_usd": round(
+                sum(float(summary.get("observed_or_conservative_estimated_cost_usd") or 0.0) for summary in summaries),
+                8,
+            ),
+        },
+    }
+    total_calls = int(merged["totals"]["call_count"])
+    observed = int(merged["totals"]["usage_observed_count"])
+    merged["totals"]["usage_observed_rate"] = None if total_calls == 0 else round(observed / total_calls, 4)
+    write_json(reconciliation_path, merged)
+    workspace_usage_import.write_report(exp, summaries)
+    return current
 
 
 def write_batch_status(config: dict[str, Any], last_payload: dict[str, Any] | None = None) -> None:
