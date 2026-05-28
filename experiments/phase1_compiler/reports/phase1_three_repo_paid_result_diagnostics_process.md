@@ -1,11 +1,12 @@
 # Three-Repo Paid Result Diagnostics Process
 
-Current step: `Step 1 result cube and metric reproduction complete`.
+Current step: `Step 2 adapter diagnostics complete`.
 
 Completed artifacts:
 - Step 0 preflight
 - Step 1 result cube
 - Step 1 metric reproduction
+- Step 2 adapter diagnostics
 
 
 Boundary:
