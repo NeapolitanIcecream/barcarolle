@@ -1,6 +1,6 @@
 # Third Repo Release Supply Screen Process
 
-Status: Step 0 preflight, Step 1 repo_shortlist, Step 2 raw_anchor_inventory, Step 3a source_context_inventory, Step 3b oracle_matrix, Step 4 environment_probe, Step 5 certification_attempts.
+Status: Step 0 preflight, Step 1 repo_shortlist, Step 2 raw_anchor_inventory, Step 3a source_context_inventory, Step 3b oracle_matrix, Step 4 environment_probe, Step 5 certification_attempts, Step 6 release_gate.
 
 What happened: this run screens third-repo supply only. It does not run paid validation.
 
@@ -18,7 +18,7 @@ Current gate snapshot: attrs has `31` release-eligible tasks and boltons has `35
 | 3 | Source context and oracle screen | completed |
 | 4 | Environment probe | completed |
 | 5 | Bounded fresh certification wave | completed |
-| 6 | Third repo release gate | pending |
+| 6 | Third repo release gate | completed |
 | 7 | Decision and closeout | pending |
 
 Dirty tree classification: unrelated pre-existing files under `experiments/phase1_compiler/external_review/phase1_task_generator_design_review_20260526/` were left unstaged.

@@ -1,0 +1,36 @@
+{
+  "blocking_reasons": [],
+  "generated_at": "2026-05-28T03:03:14Z",
+  "minimum_requirements": {
+    "at_least_3_repos_with_30_release_eligible": true,
+    "no_paid_acut_calls_made": true,
+    "no_paid_llm_calls_made": true,
+    "raw_candidates_do_not_count": true,
+    "technical_certifications_alone_do_not_count": true
+  },
+  "paid_ready": true,
+  "release_eligible_count_by_repo": {
+    "attrs": 31,
+    "boltons": 35,
+    "click": 30,
+    "toolz": 5
+  },
+  "repos_meeting_30_release_eligible": [
+    "attrs",
+    "boltons",
+    "click"
+  ],
+  "run_id": "phase1_third_repo_release_supply_screen_20260528",
+  "schema_version": "barcarolle.phase1_third_repo_release_supply_screen.v1.release_gate.v1",
+  "source_review_queue_count_by_candidate_repo": {
+    "click": 45
+  },
+  "status": "paid_gate_recomputed",
+  "technical_certified_count_by_candidate_repo": {
+    "click": 75
+  },
+  "third_repo_candidates": [
+    "click",
+    "toolz"
+  ]
+}
