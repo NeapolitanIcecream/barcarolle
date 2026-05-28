@@ -1068,6 +1068,15 @@ def build_decision(config: dict[str, Any]) -> dict[str, Any]:
             "Step 7 entry gate",
             "Step 8 decision and closeout",
         ],
+        "commits_made_during_run": runbook_commit_lines(config),
+        "tests_run": [
+            {
+                "command": " ".join(result.get("command", [])),
+                "returncode": result.get("returncode"),
+                "passed": result.get("passed"),
+            }
+            for result in entry.get("verification_results", [])
+        ],
         "known_blockers": [] if entry.get("status") == "ready_for_paid_validation_runbook" else entry.get("failed_gates", []),
         "recommended_next_action_categories": [
             "coordinating session may choose whether to run a later paid validation runbook",
@@ -1081,6 +1090,18 @@ def build_decision(config: dict[str, Any]) -> dict[str, Any]:
     write_decision_report(config, payload)
     write_process_report(config, current_step="Step 8 decision and closeout complete")
     return payload
+
+
+def runbook_commit_lines(config: dict[str, Any]) -> list[str]:
+    preflight = read_json(output_path(config, "preflight"), {})
+    start_head = str(preflight.get("head") or "").strip()
+    if not start_head:
+        return []
+    parent = command_stdout(["git", "rev-parse", f"{start_head}^"])
+    revision_range = f"{parent}..HEAD" if parent else f"{start_head}..HEAD"
+    lines = [line for line in command_stdout(["git", "log", "--oneline", "--reverse", revision_range]).splitlines() if line]
+    lines.append("final closeout commit: records Step 8 decision artifacts")
+    return lines
 
 
 def recommended_cost_range(cost_payload: dict[str, Any]) -> dict[str, float] | None:
@@ -1325,6 +1346,23 @@ def write_decision_report(config: dict[str, Any], payload: dict[str, Any]) -> No
     ]
     for rq, answer in payload["research_questions"].items():
         lines.append(f"- {rq}: {answer}")
+    lines.extend(
+        [
+            "",
+            "Commits made during the run:",
+        ]
+    )
+    lines.extend(f"- {line}" for line in payload["commits_made_during_run"])
+    lines.extend(
+        [
+            "",
+            "Tests run:",
+        ]
+    )
+    if payload["tests_run"]:
+        lines.extend(f"- `{row['command']}` -> returncode `{row['returncode']}`" for row in payload["tests_run"])
+    else:
+        lines.append("- Not recorded in entry gate.")
     lines.extend(
         [
             "",

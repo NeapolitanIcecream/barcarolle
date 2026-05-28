@@ -1,7 +1,7 @@
 # Three-Repo Paid Readiness Packaging Process
 
 Run id: `phase1_three_repo_paid_readiness_packaging_20260528`.
-Current status: Step 7 entry gate complete.
+Current status: Step 8 decision and closeout complete.
 
 What happened: this runbook packages attrs, boltons, and click release-eligible task supply into a local-only paid-validation entry package.
 
@@ -23,4 +23,4 @@ Step status:
 - Step 5: complete
 - Step 6: complete
 - Step 7: complete
-- Step 8: pending
+- Step 8: complete
