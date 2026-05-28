@@ -1077,6 +1077,8 @@ What happened: every raw candidate received a source-context class.
 Why it matters: commit-message-only context is not counted as release eligible without separate review.
 
 {markdown_table(['Repo', 'Context Counts', 'Release-Ready Before Cert', 'Technical+Review Upper Bound'], rows)}
+
+Repos selected for environment probe: `{payload.get('repos_selected_for_environment_probe', [])}`.
 """
 
 
@@ -1210,6 +1212,7 @@ def run_raw(config: dict[str, Any]) -> dict[str, Any]:
 def run_source_oracle(config: dict[str, Any]) -> tuple[dict[str, Any], dict[str, Any]]:
     raw_inventory = read_json(output_path(config, "raw_anchor_inventory")) or mine_raw_inventory(config)
     source = build_source_context_inventory(config, raw_inventory)
+    source["repos_selected_for_environment_probe"] = selected_repos_for_environment(config, source)
     oracle = build_oracle_matrix(config, raw_inventory)
     write_json(output_path(config, "source_context_inventory"), source)
     write_json(output_path(config, "oracle_matrix"), oracle)

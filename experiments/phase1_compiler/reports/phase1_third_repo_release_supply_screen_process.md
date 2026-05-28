@@ -1,6 +1,6 @@
 # Third Repo Release Supply Screen Process
 
-Status: Step 0 preflight, Step 1 repo_shortlist, Step 2 raw_anchor_inventory.
+Status: Step 0 preflight, Step 1 repo_shortlist, Step 2 raw_anchor_inventory, Step 3a source_context_inventory, Step 3b oracle_matrix.
 
 What happened: this run screens third-repo supply only. It does not run paid validation.
 
@@ -15,7 +15,7 @@ Current gate snapshot: attrs has `31` release-eligible tasks and boltons has `35
 | 0 | Preflight and current gate snapshot | completed |
 | 1 | Cheap repository shortlist | completed |
 | 2 | Raw v2 mining | completed |
-| 3 | Source context and oracle screen | pending |
+| 3 | Source context and oracle screen | completed |
 | 4 | Environment probe | pending |
 | 5 | Bounded fresh certification wave | pending |
 | 6 | Third repo release gate | pending |
