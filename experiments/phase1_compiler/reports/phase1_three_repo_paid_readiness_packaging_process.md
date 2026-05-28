@@ -1,7 +1,7 @@
 # Three-Repo Paid Readiness Packaging Process
 
 Run id: `phase1_three_repo_paid_readiness_packaging_20260528`.
-Current status: Step 1 supply snapshot complete.
+Current status: Step 2 source quality audit complete.
 
 What happened: this runbook packages attrs, boltons, and click release-eligible task supply into a local-only paid-validation entry package.
 
@@ -17,7 +17,7 @@ Step status:
 
 - Step 0: complete
 - Step 1: complete
-- Step 2: pending
+- Step 2: complete
 - Step 3: pending
 - Step 4: pending
 - Step 5: pending
