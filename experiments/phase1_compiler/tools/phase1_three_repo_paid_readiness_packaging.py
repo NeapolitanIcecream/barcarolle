@@ -38,7 +38,7 @@ DISALLOWED_RAW_MARKERS = (
     "raw_logs_storage",
     "raw_api_payload",
     "prompt.txt",
-    "completion",
+    "raw_completion",
     "hidden verifier",
 )
 REPO_ORDER = ("attrs", "boltons", "click")
