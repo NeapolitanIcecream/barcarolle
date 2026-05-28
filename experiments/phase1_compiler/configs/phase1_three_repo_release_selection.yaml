@@ -13,6 +13,13 @@ selected_repos:
   - attrs
   - boltons
   - click
+split_count_by_repo:
+  attrs_B_eval: 16
+  attrs_H_future: 15
+  boltons_B_eval: 18
+  boltons_H_future: 17
+  click_B_eval: 15
+  click_H_future: 15
 baseline_candidate_ids:
   - repo_unweighted_same_budget
   - repo_stratified_same_budget
