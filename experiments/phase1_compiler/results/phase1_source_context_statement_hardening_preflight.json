@@ -1,0 +1,48 @@
+{
+  "branch": "codex/restart-benchmark-compiler",
+  "dirty_tree_classification": {
+    "ignored_local_artifacts_not_listed_by_git_status": [
+      "experiments/phase0_headroom/external_repos/",
+      "experiments/phase1_compiler/.venv/",
+      "experiments/phase1_compiler/.pytest_cache/"
+    ],
+    "related_runbook_outputs_before_step_0": [],
+    "unrelated_untracked_paths": [
+      {
+        "classification": "known_external_review_bundle_left_untracked",
+        "path_prefix": "experiments/phase1_compiler/external_review/phase1_task_generator_design_review_20260526/",
+        "status_line_count": 106,
+        "staged": false
+      }
+    ]
+  },
+  "generated_at": "2026-05-28T00:00:00Z",
+  "latest_commit": {
+    "abbrev": "09501600",
+    "full": "0950160012c614819dac8cdc4284db2e825fa8ec",
+    "subject": "Add source context statement hardening runbook"
+  },
+  "no_paid_boundary": {
+    "paid_acut_solver_cells_allowed": false,
+    "paid_acut_solver_cells_made": 0,
+    "paid_llm_calls_allowed": false,
+    "paid_llm_calls_made": 0,
+    "public_metadata_lookup_allowed": true
+  },
+  "required_input_availability": {
+    "explicit_required_inputs_present": 24,
+    "explicit_required_inputs_total": 24,
+    "jsonl_glob_inputs": {
+      "certified_tasks_files": 12,
+      "near_certified_tasks_files": 4,
+      "review_record_files": 8,
+      "source_context_files": 0,
+      "task_statement_files": 6
+    },
+    "source_context_glob_absence_is_blocking": false
+  },
+  "run_id": "phase1_source_context_statement_hardening_20260528",
+  "runbook": "docs/experiments/phase-1-source-context-statement-hardening-runbook.md",
+  "schema_version": "barcarolle.phase1_source_context_statement_hardening_preflight.v1",
+  "status": "preflight_complete"
+}
