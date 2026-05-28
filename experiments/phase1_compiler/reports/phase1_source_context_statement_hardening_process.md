@@ -84,3 +84,18 @@ material.
 Action this suggests: review each ready or blocked packet for leakage,
 ambiguity, and scope, then write the overlay for future split-design
 eligibility.
+
+## Step 4 Review And Overlay Evidence
+
+What happened: 91 review records were written. The verdicts were 33
+`keep_release_eligible`, 1 `reject_ambiguous_scope`, and 57
+`reject_missing_public_problem_context`. The overlay keeps click at 30
+release-eligible rows, boltons at 35, and attrs at 30 after excluding
+`attrs__v2__056` from future split-design eligibility.
+
+Why it matters: the overlay repairs the title-only weakness without changing the
+completed paid task list or paid decision. Commit-message-only rows stay blocked
+unless a future run finds non-leaky public problem context.
+
+Action this suggests: build the low-dimensional feature table from the overlay,
+with click title-only rows carried as explicit minor risk.
