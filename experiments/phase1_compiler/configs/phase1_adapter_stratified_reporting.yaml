@@ -17,8 +17,7 @@ inputs:
   diagnostics_split_balance: experiments/phase1_compiler/results/phase1_three_repo_paid_result_diagnostics_split_balance.json
   diagnostics_action_matrix: experiments/phase1_compiler/results/phase1_three_repo_paid_result_diagnostics_action_matrix.json
   diagnostics_decision: experiments/phase1_compiler/results/phase1_three_repo_paid_result_diagnostics_decision.json
-  codex_cost_summary: experiments/phase0_headroom/results/phase1_three_repo_paid_validation_codex_workspace_cost_summary.json
-  kilo_cost_summary: experiments/phase0_headroom/results/phase1_three_repo_paid_validation_kilo_workspace_cost_summary.json
+  cost_summaries_glob: experiments/phase0_headroom/results/phase1_three_repo_paid_validation_*_cost_summary.json
   workspace_usage_ledger: experiments/phase0_headroom/results/workspace_usage_ledger.jsonl
   model_pricing: experiments/phase0_headroom/configs/model_pricing.yaml
 outputs:

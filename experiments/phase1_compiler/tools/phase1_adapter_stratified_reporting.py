@@ -1,7 +1,12 @@
 from __future__ import annotations
 
 import argparse
+import csv
+import glob
 import json
+import math
+import statistics
+from collections import Counter, defaultdict
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
@@ -63,6 +68,419 @@ def write_text(path: str | Path, text: str) -> None:
     resolved = repo_path(path)
     resolved.parent.mkdir(parents=True, exist_ok=True)
     resolved.write_text(text.rstrip() + "\n", encoding="utf-8")
+
+
+def read_json(path: str | Path) -> Any:
+    return json.loads(repo_path(path).read_text(encoding="utf-8"))
+
+
+def read_jsonl(path: str | Path) -> list[dict[str, Any]]:
+    rows = []
+    for line in repo_path(path).read_text(encoding="utf-8").splitlines():
+        if line.strip():
+            rows.append(json.loads(line))
+    return rows
+
+
+def write_csv(path: str | Path, rows: list[dict[str, Any]], headers: list[str]) -> None:
+    resolved = repo_path(path)
+    resolved.parent.mkdir(parents=True, exist_ok=True)
+    with resolved.open("w", encoding="utf-8", newline="") as handle:
+        writer = csv.DictWriter(handle, fieldnames=headers)
+        writer.writeheader()
+        for row in rows:
+            writer.writerow({header: row.get(header, "") for header in headers})
+
+
+def round_or_none(value: float | None, digits: int = 4) -> float | None:
+    if value is None:
+        return None
+    return round(value, digits)
+
+
+def summarize_rows(rows: list[dict[str, Any]]) -> dict[str, Any]:
+    scoreable = [row for row in rows if row.get("scoreable_flag") is True]
+    pass_count = sum(1 for row in scoreable if row.get("pass_flag") is True)
+    fail_count = sum(1 for row in scoreable if row.get("pass_flag") is False)
+    return {
+        "cell_count": len(rows),
+        "scoreable_count": len(scoreable),
+        "non_scoreable_count": len(rows) - len(scoreable),
+        "pass_count": pass_count,
+        "fail_count": fail_count,
+        "pass_rate": None if not scoreable else round(pass_count / len(scoreable), 4),
+        "policy_violation_count": sum(1 for row in rows if row.get("terminal_status") == "policy_violation"),
+        "terminal_status_counts": dict(sorted(Counter(str(row.get("terminal_status") or "") for row in rows).items())),
+    }
+
+
+def group_rows(rows: list[dict[str, Any]], key: str) -> dict[str, list[dict[str, Any]]]:
+    grouped: dict[str, list[dict[str, Any]]] = defaultdict(list)
+    for row in rows:
+        grouped[str(row.get(key) or "")].append(row)
+    return dict(grouped)
+
+
+def rate_gap(b_eval_rows: list[dict[str, Any]], h_future_rows: list[dict[str, Any]]) -> dict[str, Any]:
+    b_eval = summarize_rows(b_eval_rows)["pass_rate"]
+    h_future = summarize_rows(h_future_rows)["pass_rate"]
+    signed = None if b_eval is None or h_future is None else round(h_future - b_eval, 4)
+    absolute = None if signed is None else round(abs(signed), 4)
+    return {
+        "B_eval_pass_rate": b_eval,
+        "H_future_pass_rate": h_future,
+        "H_future_minus_B_eval": signed,
+        "absolute_gap": absolute,
+    }
+
+
+def load_result_rows(config: dict[str, Any]) -> list[dict[str, Any]]:
+    payload = read_json(input_path(config, "diagnostics_result_cube"))
+    rows = payload.get("rows", [])
+    if not isinstance(rows, list):
+        raise ValueError("diagnostics result cube rows must be a list")
+    return rows
+
+
+def result_prefixes(rows: list[dict[str, Any]]) -> set[str]:
+    return {str(row["result_prefix"]) for row in rows if row.get("result_prefix")}
+
+
+def adapter_ids(rows: list[dict[str, Any]]) -> list[str]:
+    return sorted({str(row["adapter_id"]) for row in rows if row.get("adapter_id")})
+
+
+def cost_summary_paths(config: dict[str, Any], prefixes: set[str]) -> list[Path]:
+    pattern = str(input_path(config, "cost_summaries_glob"))
+    paths = [Path(path) for path in sorted(glob.glob(pattern)) if Path(path).is_file()]
+    if not paths:
+        paths = sorted(repo_path("experiments/phase0_headroom/results").glob("phase1_three_repo_paid_validation_*_cost_summary.json"))
+    selected = []
+    for path in paths:
+        payload = read_json(path)
+        if payload.get("result_prefix") in prefixes:
+            selected.append(path)
+    return selected
+
+
+def aggregate_cost_latency(config: dict[str, Any], rows: list[dict[str, Any]]) -> dict[str, Any]:
+    prefixes = result_prefixes(rows)
+    costs_by_adapter: dict[str, list[dict[str, Any]]] = defaultdict(list)
+    for path in cost_summary_paths(config, prefixes):
+        payload = read_json(path)
+        per_harness = payload.get("per_harness_observed_token_cost_usd") or {}
+        adapter_id = next(iter(per_harness), None)
+        if adapter_id is None:
+            suffix = str(payload.get("result_prefix") or "")
+            adapter_id = "kilo_workspace" if suffix.endswith("kilo_workspace") else "codex_workspace"
+        payload["_path"] = rel(path)
+        costs_by_adapter[str(adapter_id)].append(payload)
+
+    usage_rows = [
+        row
+        for row in read_jsonl(input_path(config, "workspace_usage_ledger"))
+        if str(row.get("result_prefix") or "") in prefixes
+    ]
+    latencies_by_adapter: dict[str, list[float]] = defaultdict(list)
+    for row in usage_rows:
+        latency = row.get("latency_seconds")
+        if latency is not None:
+            latencies_by_adapter[str(row.get("adapter_id"))].append(float(latency))
+
+    adapter_summaries: dict[str, dict[str, Any]] = {}
+    for adapter_id in adapter_ids(rows):
+        cost_rows = costs_by_adapter.get(adapter_id, [])
+        call_count = sum(int(row.get("call_count") or 0) for row in cost_rows)
+        usage_observed_count = sum(int(row.get("usage_observed_count") or 0) for row in cost_rows)
+        observed = sum(float(row.get("observed_token_estimated_cost_usd") or 0.0) for row in cost_rows)
+        conservative = sum(float(row.get("conservative_estimated_cost_usd") or 0.0) for row in cost_rows)
+        observed_or_conservative = sum(float(row.get("observed_or_conservative_estimated_cost_usd") or 0.0) for row in cost_rows)
+        actual_values = [row.get("actual_provider_billed_cost_usd") for row in cost_rows]
+        actual_provider_billed = next((value for value in actual_values if value is not None), None)
+        adapter_cell_count = sum(1 for row in rows if row.get("adapter_id") == adapter_id)
+        latencies = latencies_by_adapter.get(adapter_id, [])
+        adapter_summaries[adapter_id] = {
+            "adapter_id": adapter_id,
+            "cost_basis": "observed_token_estimate",
+            "cost_summary_count": len(cost_rows),
+            "call_count": call_count,
+            "usage_observed_count": usage_observed_count,
+            "usage_observed_rate": None if call_count == 0 else round(usage_observed_count / call_count, 4),
+            "missing_usage_cell_count": sum(int(row.get("missing_usage_cell_count") or 0) for row in cost_rows),
+            "observed_token_estimated_cost_usd": round(observed, 6),
+            "conservative_token_estimated_cost_usd": round(conservative, 6),
+            "observed_or_conservative_estimated_cost_usd": round(observed_or_conservative, 6),
+            "actual_provider_billed_cost_usd": actual_provider_billed,
+            "provider_billed_cost_status": "available" if actual_provider_billed is not None else "unavailable",
+            "cost_per_cell_usd": None if adapter_cell_count == 0 else round(observed / adapter_cell_count, 5),
+            "median_latency_seconds": None if not latencies else round(statistics.median(latencies), 4),
+            "latency_source": "workspace_usage_ledger",
+            "latency_observation_count": len(latencies),
+            "cost_summary_paths": [row["_path"] for row in cost_rows],
+        }
+
+    observed_total = sum(item["observed_token_estimated_cost_usd"] for item in adapter_summaries.values())
+    conservative_total = sum(item["conservative_token_estimated_cost_usd"] for item in adapter_summaries.values())
+    return {
+        "artifact": "cost_latency_summary",
+        "schema_version": OUTPUT_SCHEMA,
+        "run_id": config["run_id"],
+        "generated_at": now_utc(),
+        "cost_basis": "token_estimated_from_observed_usage",
+        "provider_billed_exact_cost_available": any(
+            item["actual_provider_billed_cost_usd"] is not None for item in adapter_summaries.values()
+        ),
+        "actual_provider_billed_cost_usd": None,
+        "observed_token_estimated_cost_usd": round(observed_total, 6),
+        "conservative_token_estimated_cost_usd": round(conservative_total, 6),
+        "by_adapter": adapter_summaries,
+        "notes": [
+            "Observed token estimated cost is not a provider bill.",
+            "Provider-billed exact cost is unavailable because actual_provider_billed_cost_usd is null.",
+            "Raw usage artifact references were read from the committed ledger but are not copied into this summary.",
+        ],
+    }
+
+
+def adapter_score_summary(config: dict[str, Any], rows: list[dict[str, Any]], cost_latency: dict[str, Any]) -> dict[str, Any]:
+    summaries: dict[str, dict[str, Any]] = {}
+    for adapter_id in adapter_ids(rows):
+        adapter_rows = [row for row in rows if row.get("adapter_id") == adapter_id]
+        by_repo = {
+            repo_id: summarize_rows(repo_rows)
+            for repo_id, repo_rows in sorted(group_rows(adapter_rows, "repo_id").items())
+        }
+        by_split = {
+            split: summarize_rows(split_rows)
+            for split, split_rows in sorted(group_rows(adapter_rows, "split").items())
+        }
+        by_repo_and_split: dict[str, dict[str, Any]] = {}
+        b_eval_gap_by_repo: dict[str, dict[str, Any]] = {}
+        for repo_id, repo_rows in sorted(group_rows(adapter_rows, "repo_id").items()):
+            split_rows = group_rows(repo_rows, "split")
+            by_repo_and_split[repo_id] = {
+                split: summarize_rows(split_rows[split]) for split in sorted(split_rows)
+            }
+            b_eval_gap_by_repo[repo_id] = rate_gap(split_rows.get("B_eval", []), split_rows.get("H_future", []))
+        split_rows = group_rows(adapter_rows, "split")
+        base = summarize_rows(adapter_rows)
+        cost_fields = cost_latency["by_adapter"].get(adapter_id, {})
+        summaries[adapter_id] = {
+            "adapter_id": adapter_id,
+            **base,
+            "pass_rate_by_repo": by_repo,
+            "pass_rate_by_split": by_split,
+            "pass_rate_by_repo_and_split": by_repo_and_split,
+            "b_eval_h_future_gap": {
+                "pooled": rate_gap(split_rows.get("B_eval", []), split_rows.get("H_future", [])),
+                "by_repo": b_eval_gap_by_repo,
+            },
+            "observed_token_estimated_cost_usd": cost_fields.get("observed_token_estimated_cost_usd"),
+            "conservative_token_estimated_cost_usd": cost_fields.get("conservative_token_estimated_cost_usd"),
+            "actual_provider_billed_cost_usd": cost_fields.get("actual_provider_billed_cost_usd"),
+            "provider_billed_cost_status": cost_fields.get("provider_billed_cost_status"),
+            "cost_per_cell_usd": cost_fields.get("cost_per_cell_usd"),
+            "usage_observed_rate": cost_fields.get("usage_observed_rate"),
+            "median_latency_seconds": cost_fields.get("median_latency_seconds"),
+        }
+    return {
+        "artifact": "three_repo_summary",
+        "schema_version": OUTPUT_SCHEMA,
+        "run_id": config["run_id"],
+        "generated_at": now_utc(),
+        "adapter_level_results_first": True,
+        "pooled_summary_status": "retrospective_diagnostic_only",
+        "by_adapter": summaries,
+    }
+
+def csv_rows_for_adapter_summary(summary: dict[str, Any]) -> list[dict[str, Any]]:
+    rows = []
+    for adapter_id, adapter in summary["by_adapter"].items():
+        rows.append(
+            {
+                "scope": "adapter_overall",
+                "adapter_id": adapter_id,
+                "repo_id": "",
+                "split": "",
+                "cell_count": adapter["cell_count"],
+                "scoreable_count": adapter["scoreable_count"],
+                "pass_count": adapter["pass_count"],
+                "pass_rate": adapter["pass_rate"],
+                "policy_violation_count": adapter["policy_violation_count"],
+                "B_eval_pass_rate": adapter["b_eval_h_future_gap"]["pooled"]["B_eval_pass_rate"],
+                "H_future_pass_rate": adapter["b_eval_h_future_gap"]["pooled"]["H_future_pass_rate"],
+                "absolute_gap": adapter["b_eval_h_future_gap"]["pooled"]["absolute_gap"],
+                "observed_token_estimated_cost_usd": adapter["observed_token_estimated_cost_usd"],
+                "cost_per_cell_usd": adapter["cost_per_cell_usd"],
+                "median_latency_seconds": adapter["median_latency_seconds"],
+            }
+        )
+        for repo_id, repo_summary in adapter["pass_rate_by_repo"].items():
+            gap = adapter["b_eval_h_future_gap"]["by_repo"][repo_id]
+            rows.append(
+                {
+                    "scope": "adapter_repo",
+                    "adapter_id": adapter_id,
+                    "repo_id": repo_id,
+                    "split": "",
+                    "cell_count": repo_summary["cell_count"],
+                    "scoreable_count": repo_summary["scoreable_count"],
+                    "pass_count": repo_summary["pass_count"],
+                    "pass_rate": repo_summary["pass_rate"],
+                    "policy_violation_count": repo_summary["policy_violation_count"],
+                    "B_eval_pass_rate": gap["B_eval_pass_rate"],
+                    "H_future_pass_rate": gap["H_future_pass_rate"],
+                    "absolute_gap": gap["absolute_gap"],
+                }
+            )
+        for split, split_summary in adapter["pass_rate_by_split"].items():
+            rows.append(
+                {
+                    "scope": "adapter_split",
+                    "adapter_id": adapter_id,
+                    "repo_id": "",
+                    "split": split,
+                    "cell_count": split_summary["cell_count"],
+                    "scoreable_count": split_summary["scoreable_count"],
+                    "pass_count": split_summary["pass_count"],
+                    "pass_rate": split_summary["pass_rate"],
+                    "policy_violation_count": split_summary["policy_violation_count"],
+                }
+            )
+        for repo_id, split_map in adapter["pass_rate_by_repo_and_split"].items():
+            for split, split_summary in split_map.items():
+                rows.append(
+                    {
+                        "scope": "adapter_repo_split",
+                        "adapter_id": adapter_id,
+                        "repo_id": repo_id,
+                        "split": split,
+                        "cell_count": split_summary["cell_count"],
+                        "scoreable_count": split_summary["scoreable_count"],
+                        "pass_count": split_summary["pass_count"],
+                        "pass_rate": split_summary["pass_rate"],
+                        "policy_violation_count": split_summary["policy_violation_count"],
+                    }
+                )
+    return rows
+
+
+def exact_two_sided_sign_test(adapter_b_only: int, adapter_a_only: int) -> dict[str, Any]:
+    n = adapter_a_only + adapter_b_only
+    if n == 0:
+        return {"n": 0, "adapter_b_only_pass": adapter_b_only, "adapter_a_only_pass": adapter_a_only, "p_value": None}
+    tail = min(adapter_a_only, adapter_b_only)
+    probability = 2 * sum(math.comb(n, k) * (0.5**n) for k in range(tail + 1))
+    return {
+        "n": n,
+        "adapter_b_only_pass": adapter_b_only,
+        "adapter_a_only_pass": adapter_a_only,
+        "p_value": round(min(1.0, probability), 6),
+    }
+
+
+def paired_task_summary(config: dict[str, Any], rows: list[dict[str, Any]]) -> dict[str, Any]:
+    adapters = adapter_ids(rows)
+    if len(adapters) != 2:
+        raise ValueError(f"expected exactly two adapters for paired summary, found {adapters}")
+    adapter_a, adapter_b = adapters
+    by_task: dict[str, dict[str, dict[str, Any]]] = defaultdict(dict)
+    for row in rows:
+        by_task[str(row["task_id"])][str(row["adapter_id"])] = row
+
+    outcome_counts: Counter[str] = Counter()
+    by_repo: dict[str, Counter[str]] = defaultdict(Counter)
+    by_split: dict[str, Counter[str]] = defaultdict(Counter)
+    complete_pairs = 0
+    for task_id, task_rows in by_task.items():
+        if adapter_a not in task_rows or adapter_b not in task_rows:
+            continue
+        complete_pairs += 1
+        a_pass = task_rows[adapter_a].get("pass_flag") is True
+        b_pass = task_rows[adapter_b].get("pass_flag") is True
+        if a_pass and b_pass:
+            outcome = "both_pass"
+        elif not a_pass and not b_pass:
+            outcome = "both_fail"
+        elif a_pass:
+            outcome = f"{adapter_a}_only_pass"
+        else:
+            outcome = f"{adapter_b}_only_pass"
+        outcome_counts[outcome] += 1
+        repo_id = str(task_rows[adapter_a].get("repo_id") or task_rows[adapter_b].get("repo_id") or "")
+        split = str(task_rows[adapter_a].get("split") or task_rows[adapter_b].get("split") or "")
+        by_repo[repo_id][outcome] += 1
+        by_split[split][outcome] += 1
+
+    adapter_a_only = outcome_counts[f"{adapter_a}_only_pass"]
+    adapter_b_only = outcome_counts[f"{adapter_b}_only_pass"]
+    disagreement_count = adapter_a_only + adapter_b_only
+    return {
+        "artifact": "pairwise_summary",
+        "schema_version": OUTPUT_SCHEMA,
+        "run_id": config["run_id"],
+        "generated_at": now_utc(),
+        "adapter_a_id": adapter_a,
+        "adapter_b_id": adapter_b,
+        "paired_task_count": complete_pairs,
+        "both_pass": outcome_counts["both_pass"],
+        "both_fail": outcome_counts["both_fail"],
+        "adapter_a_only_pass": adapter_a_only,
+        "adapter_b_only_pass": adapter_b_only,
+        f"{adapter_a}_only_pass": adapter_a_only,
+        f"{adapter_b}_only_pass": adapter_b_only,
+        "disagreement_count": disagreement_count,
+        "disagreement_rate": None if complete_pairs == 0 else round(disagreement_count / complete_pairs, 4),
+        "exact_count_summary": {
+            "adapter_b_minus_adapter_a_only_pass": adapter_b_only - adapter_a_only,
+            **exact_two_sided_sign_test(adapter_b_only, adapter_a_only),
+        },
+        "outcome_counts": dict(outcome_counts),
+        "by_repo": {repo_id: dict(counter) for repo_id, counter in sorted(by_repo.items())},
+        "by_split": {split: dict(counter) for split, counter in sorted(by_split.items())},
+    }
+
+
+def build_summary_payloads(config: dict[str, Any]) -> dict[str, dict[str, Any]]:
+    rows = load_result_rows(config)
+    cost_latency = aggregate_cost_latency(config, rows)
+    three_repo = adapter_score_summary(config, rows, cost_latency)
+    pairwise = paired_task_summary(config, rows)
+    return {
+        "three_repo_summary": three_repo,
+        "pairwise_summary": pairwise,
+        "cost_latency_summary": cost_latency,
+    }
+
+
+def write_summary_artifacts(config: dict[str, Any]) -> dict[str, dict[str, Any]]:
+    payloads = build_summary_payloads(config)
+    write_json(output_path(config, "three_repo_summary"), payloads["three_repo_summary"])
+    write_json(output_path(config, "pairwise_summary"), payloads["pairwise_summary"])
+    write_json(output_path(config, "cost_latency_summary"), payloads["cost_latency_summary"])
+    csv_rows = csv_rows_for_adapter_summary(payloads["three_repo_summary"])
+    write_csv(
+        output_path(config, "three_repo_summary_csv"),
+        csv_rows,
+        [
+            "scope",
+            "adapter_id",
+            "repo_id",
+            "split",
+            "cell_count",
+            "scoreable_count",
+            "pass_count",
+            "pass_rate",
+            "policy_violation_count",
+            "B_eval_pass_rate",
+            "H_future_pass_rate",
+            "absolute_gap",
+            "observed_token_estimated_cost_usd",
+            "cost_per_cell_usd",
+            "median_latency_seconds",
+        ],
+    )
+    return payloads
 
 
 def validate_policy(config: dict[str, Any]) -> dict[str, Any]:
@@ -224,14 +642,16 @@ def write_policy_artifacts(config: dict[str, Any]) -> dict[str, Any]:
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description="Generate Phase 1 adapter-stratified reporting artifacts.")
     parser.add_argument("--config", type=Path, default=DEFAULT_CONFIG)
-    parser.add_argument("command", choices=["policy"])
+    parser.add_argument("command", choices=["policy", "summaries", "all"])
     args = parser.parse_args(argv)
 
     config = load_config(args.config)
-    if args.command == "policy":
+    if args.command in {"policy", "all"}:
         payload = write_policy_artifacts(config)
         if not payload["policy_valid"]:
             return 1
+    if args.command in {"summaries", "all"}:
+        write_summary_artifacts(config)
     return 0
 
 

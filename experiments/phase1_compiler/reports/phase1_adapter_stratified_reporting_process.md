@@ -1,10 +1,11 @@
 # Adapter-Stratified Reporting Process
 
-Current step: `Step 1 reporting policy and schema complete`.
+Current step: `Step 2 adapter summary tooling complete`.
 
 Completed artifacts:
 - Step 0 preflight.
 - Step 1 reporting policy and schema.
+- Step 2 adapter summary tooling.
 
 Boundary:
 - No-paid adapter-stratified reporting run.
@@ -23,10 +24,18 @@ Step evidence:
 - Step 1 added policy loading and validation tooling.
 - Step 1 generated policy JSON and markdown outputs.
 - Step 1 tests passed: `uv run --project experiments/phase1_compiler pytest experiments/phase1_compiler/tests/test_phase1_adapter_stratified_reporting.py -q`.
+- Step 2 extended the tool to compute adapter-level pass rates, repo/split breakouts, B_eval/H_future gaps, paired disagreements, and cost/latency summaries.
+- Step 2 generated `phase1_adapter_stratified_reporting_three_repo_summary.json`.
+- Step 2 generated `phase1_adapter_stratified_reporting_three_repo_summary.csv`.
+- Step 2 generated `phase1_adapter_stratified_reporting_pairwise_summary.json`.
+- Step 2 generated `phase1_adapter_stratified_reporting_cost_latency_summary.json`.
+- Step 2 reproduced Codex `22/60`, Kilo `32/60`, both fail `22`, both pass `16`, Codex-only pass `6`, Kilo-only pass `16`, Codex token-estimated USD `32.22309`, and Kilo token-estimated USD `19.044243`.
+- Step 2 tests passed: `uv run --project experiments/phase1_compiler pytest experiments/phase1_compiler/tests/test_phase1_adapter_stratified_reporting.py -q`.
 
 Commits made during this run:
 - Step 0: `Record adapter stratified reporting preflight`.
 - Step 1: `Define adapter stratified reporting policy`.
+- Step 2: `Add adapter stratified reporting summaries`.
 
 Notes:
 - The run will use committed sanitized results only.
