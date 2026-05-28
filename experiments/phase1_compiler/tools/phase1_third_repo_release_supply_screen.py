@@ -114,6 +114,15 @@ def load_config(path: Path = DEFAULT_CONFIG) -> dict[str, Any]:
     config = simple_yaml_load(path)
     if config.get("schema_version") != SCHEMA_VERSION:
         raise ValueError("unexpected third repo release supply screen config schema_version")
+    caps = config.get("caps", {})
+    config.setdefault(
+        "certification_caps",
+        {
+            "single_command_timeout_seconds": caps.get("single_command_timeout_seconds", 120),
+            "single_candidate_total_timeout_seconds": caps.get("single_candidate_total_timeout_seconds", 600),
+            "environment_profiles_per_candidate": caps.get("environment_profiles_per_candidate", 5),
+        },
+    )
     config["_path"] = str(path)
     return config
 
