@@ -1,6 +1,6 @@
 # Blocked Split Missing-Cell Supplement Process
 
-Current step: `Step 2 reuse import, entry gate, and batch plan complete`.
+Current step: `Batch 1 complete`.
 
 Completed artifacts:
 - Step 0 preflight
@@ -8,10 +8,11 @@ Completed artifacts:
 - Step 2 reuse manifest
 - Step 2 entry gate
 - Step 2 batch plan
+- Step 3 smoke batch
 
 
 Notes:
-- No paid ACUT cells were run in entry gate.
+- Continue decision: continue_to_next_batch.
 
 
 Follow-up runbook drafted by this worker: `false`.
