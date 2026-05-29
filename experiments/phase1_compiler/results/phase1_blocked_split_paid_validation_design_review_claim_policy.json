@@ -1,0 +1,43 @@
+{
+  "artifact": "claim_policy",
+  "schema_version": "barcarolle.phase1_blocked_split_paid_validation_design_review_output.v1",
+  "run_id": "phase1_blocked_split_paid_validation_design_review_20260529",
+  "generated_at": "2026-05-29T02:52:55Z",
+  "policy_valid": true,
+  "phase_status": "exploratory",
+  "post_hoc_design_allowed_for_exploration": true,
+  "formal_preregistration_claim_allowed": false,
+  "predictive_validity_established": false,
+  "existing_outcomes_reusable_for_exploratory_accounting": true,
+  "existing_outcomes_reusable_for_formal_preregistration": false,
+  "click_minor_risk_must_be_reported": true,
+  "adapter_stratified_reporting_required": true,
+  "provider_billed_exact_cost_requires_actual_provider_billed_cost": true,
+  "use_paid_outcomes_to_alter_selected_split": false,
+  "completed_paid_decision_mutable": false,
+  "policy_checks": {
+    "exploratory_status_explicit": true,
+    "post_hoc_allowed_only_for_exploration": true,
+    "formal_preregistration_wording_forbidden": true,
+    "predictive_validity_not_claimed": true,
+    "click_minor_risk_visible": true,
+    "adapter_reporting_first": true,
+    "paid_outcomes_do_not_mutate_split": true,
+    "provider_bill_exact_cost_guard_present": true
+  },
+  "claim_boundaries": [
+    "The blocked split design is post-hoc relative to earlier paid outcomes and remains exploratory.",
+    "Existing paid outcomes may be reused for overlap accounting and cost reduction, not formal preregistered evidence.",
+    "A missing-cell supplement can produce useful exploratory evidence but cannot establish predictive validity alone.",
+    "A full rerun after this review is cleaner than supplementation but still inherits the post-hoc split-design caveat.",
+    "A future formal predictive-validity claim needs a clean pre-outcome protocol, future tasks, a new cutoff, or source repair/replacement."
+  ],
+  "reporting_requirements": {
+    "click_minor_risk_status": "visible_title_only_minor_risk",
+    "adapter_reporting_mode": "adapter_stratified_before_pooled",
+    "provider_bill_status_when_actual_provider_billed_cost_usd_absent": "provider_billed_exact_cost_unavailable"
+  },
+  "paid_calls_made_by_this_run": 0,
+  "completed_paid_decision_changed": false,
+  "selected_blocked_split_changed": false
+}

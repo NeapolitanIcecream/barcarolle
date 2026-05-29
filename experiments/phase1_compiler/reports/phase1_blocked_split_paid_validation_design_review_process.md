@@ -35,3 +35,11 @@ No paid calls are required or allowed for this run. Paid calls made by this run 
 - Blocked split paid calls made: `0`.
 - Completed paid decision changed: `false`.
 - Predictive validity established: `false`.
+
+## Step 1: Codify Claim Policy
+
+What happened: the claim policy was written in `experiments/phase1_compiler/configs/phase1_blocked_split_paid_validation_design_review.yaml`, `experiments/phase1_compiler/results/phase1_blocked_split_paid_validation_design_review_claim_policy.json`, and `experiments/phase1_compiler/reports/phase1_blocked_split_paid_validation_design_review_claim_policy.md`.
+
+Why it matters: this run now has a machine-readable guardrail that accepts post-hoc split design only for exploratory accounting and rejects formal preregistration or predictive-validity wording.
+
+What action it suggests next: compute exact task/adapter overlap with completed score tables without imputing missing outcomes and without changing the selected split.
