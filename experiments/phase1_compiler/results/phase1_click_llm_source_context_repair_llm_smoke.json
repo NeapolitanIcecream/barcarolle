@@ -1,0 +1,23 @@
+{
+  "artifact": "llm_smoke",
+  "endpoint_variables_present_without_values": {
+    "LLM_API_KEY_after_zshrc": "present",
+    "LLM_API_KEY_initial": "present",
+    "LLM_BASE_URL_after_zshrc": "present",
+    "LLM_BASE_URL_initial": "present",
+    "endpoint_compliant_if_llm_needed": true,
+    "source_zshrc_checked": false,
+    "values_recorded": false
+  },
+  "generated_at": "2026-05-29T11:04:05Z",
+  "paid_acut_solver_cells_made": 0,
+  "paid_llm_generation_calls_made": 0,
+  "paid_llm_review_calls_made": 0,
+  "raw_completions_committed": false,
+  "raw_prompts_committed": false,
+  "run_id": "phase1_click_llm_source_context_repair_20260529",
+  "schema_version": "barcarolle.phase1_click_llm_source_context_repair_output.v1.llm_smoke.v1",
+  "skip_reason": "all click tasks accepted public context; no LLM statement generation or review was needed",
+  "smoke_status": "skipped_public_context_sufficient",
+  "token_estimated_cost_usd": 0.0
+}
