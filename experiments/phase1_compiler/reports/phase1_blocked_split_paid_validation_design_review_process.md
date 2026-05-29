@@ -78,8 +78,16 @@ What action it suggests next: add focused tests and run the required consistency
 
 ## Step 6: Tests And Consistency Checks
 
-What happened: focused design-review tests passed (`8 passed in 0.03s`), the full Phase 1 compiler test suite passed (`270 passed in 38.75s`), and `git diff --check` passed.
+What happened: focused design-review tests passed (`8 passed in 0.02s`), the full Phase 1 compiler test suite passed (`270 passed in 36.65s`), and `git diff --check` passed.
 
 Why it matters: the generated policy, overlap, protocol, cost, and ready-package artifacts now have executable coverage for the runbook's key invariants.
 
 What action it suggests next: write the final decision with `tests_and_diff_check_passed` set to true.
+
+## Step 7: Decision And Closeout
+
+What happened: the final decision label is `recommend_missing_cell_supplement_exploratory`. The recommended protocol is Option `B`, `same_budget_missing_cell_supplement`, with `72` reusable cells and `48` missing new paid cells.
+
+Why it matters: this is the lowest-cost option that fills the same-budget selected blocked split while keeping the evidence boundary honest: exploratory, post-hoc, adapter-stratified, and not predictive-validity evidence.
+
+What action it suggests next: the coordinator can consider an exploratory missing-cell supplement paid execution using the ready package. No follow-up runbook was drafted or created by this run.

@@ -920,6 +920,7 @@ def build_decision(config: dict[str, Any], *, tests_passed: bool) -> dict[str, A
 
 
 def render_decision_report(payload: dict[str, Any]) -> str:
+    rq = payload["research_questions"]
     return "\n".join(
         [
             "# Blocked Split Paid Validation Design Review Decision",
@@ -954,6 +955,19 @@ def render_decision_report(payload: dict[str, Any]) -> str:
             "",
             f"- Ready for later paid execution runbook: `{payload['ready_for_later_paid_execution_runbook']}`.",
             f"- Failed readiness gates: `{payload['failed_readiness_gates']}`.",
+            "",
+            "## Research Questions",
+            "",
+            f"- RQ1: {rq['RQ1_paid_pass_fail_incomplete']}",
+            f"- RQ2: {rq['RQ2_post_hoc_design_acceptable']}",
+            f"- RQ3: `{rq['RQ3_claim_boundary']}`.",
+            f"- RQ4: `{rq['RQ4_recommended_protocol']}`.",
+            f"- RQ5: `{rq['RQ5_reuse_and_new_cells']}`.",
+            f"- RQ6: `{rq['RQ6_estimated_new_paid_cost']}`.",
+            f"- RQ7: {rq['RQ7_click_minor_risk']}",
+            f"- RQ8: `{rq['RQ8_paid_calls_made']}`.",
+            f"- RQ9: `{rq['RQ9_completed_decisions_or_split_labels_changed']}`.",
+            f"- RQ10: `{rq['RQ10_next_action_category']}`.",
         ]
     ) + "\n"
 
