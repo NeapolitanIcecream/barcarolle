@@ -1,7 +1,7 @@
 {
   "actual_provider_billed_cost_usd": null,
   "endpoint_host_hash": "9952174049b2",
-  "generated_at": "2026-05-29T03:56:17+00:00",
+  "generated_at": "2026-05-29T04:18:14+00:00",
   "pricing_config": "/Users/chenmohan/gits/barcarolle/experiments/phase0_headroom/configs/model_pricing.yaml",
   "result_prefixes": [
     "codex_kilo_workspace",
@@ -34,7 +34,9 @@
     "phase1_three_repo_paid_validation_batch_5_click_remainder_codex_workspace",
     "phase1_three_repo_paid_validation_batch_5_click_remainder_kilo_workspace",
     "phase1_blocked_split_missing_cell_supplement_paid_execution_batch_1_smoke_codex_workspace",
-    "phase1_blocked_split_missing_cell_supplement_paid_execution_batch_1_smoke_kilo_workspace"
+    "phase1_blocked_split_missing_cell_supplement_paid_execution_batch_1_smoke_kilo_workspace",
+    "phase1_blocked_split_missing_cell_supplement_paid_execution_batch_2_attrs_remainder_codex_workspace",
+    "phase1_blocked_split_missing_cell_supplement_paid_execution_batch_2_attrs_remainder_kilo_workspace"
   ],
   "schema_version": "barcarolle.workspace_cost_reconciliation.v1",
   "summaries": [
@@ -757,7 +759,7 @@
       "call_count": 3,
       "conservative_estimated_cost_usd": 1.5,
       "conservative_fallback_for_missing_usage_usd": 0,
-      "generated_at": "2026-05-29T03:56:17+00:00",
+      "generated_at": "2026-05-29T04:18:14+00:00",
       "median_latency_seconds": 206.233,
       "missing_usage_cell_count": 0,
       "missing_usage_run_ids": [],
@@ -780,7 +782,7 @@
       "call_count": 3,
       "conservative_estimated_cost_usd": 1.5,
       "conservative_fallback_for_missing_usage_usd": 0,
-      "generated_at": "2026-05-29T03:56:17+00:00",
+      "generated_at": "2026-05-29T04:18:14+00:00",
       "median_latency_seconds": 69.177,
       "missing_usage_cell_count": 0,
       "missing_usage_run_ids": [],
@@ -797,14 +799,62 @@
       "schema_version": "barcarolle.workspace_acut_cost_summary.v2",
       "usage_observed_count": 3,
       "usage_observed_rate": 1.0
+    },
+    {
+      "actual_provider_billed_cost_usd": null,
+      "call_count": 5,
+      "conservative_estimated_cost_usd": 2.5,
+      "conservative_fallback_for_missing_usage_usd": 0,
+      "generated_at": "2026-05-29T04:18:14+00:00",
+      "median_latency_seconds": 107.863,
+      "missing_usage_cell_count": 0,
+      "missing_usage_run_ids": [],
+      "observed_or_conservative_estimated_cost_usd": 3.4351038,
+      "observed_token_estimated_cost_usd": 3.4351038,
+      "per_harness_observed_token_cost_usd": {
+        "codex_workspace": 3.4351038
+      },
+      "per_split_observed_token_cost_usd": {
+        "B_eval": 1.838526,
+        "H_future": 1.5965778
+      },
+      "pricing_source": "user_estimate_required_conservative_default",
+      "result_prefix": "phase1_blocked_split_missing_cell_supplement_paid_execution_batch_2_attrs_remainder_codex_workspace",
+      "schema_version": "barcarolle.workspace_acut_cost_summary.v2",
+      "usage_observed_count": 5,
+      "usage_observed_rate": 1.0
+    },
+    {
+      "actual_provider_billed_cost_usd": null,
+      "call_count": 5,
+      "conservative_estimated_cost_usd": 2.5,
+      "conservative_fallback_for_missing_usage_usd": 0,
+      "generated_at": "2026-05-29T04:18:14+00:00",
+      "median_latency_seconds": 91.885,
+      "missing_usage_cell_count": 0,
+      "missing_usage_run_ids": [],
+      "observed_or_conservative_estimated_cost_usd": 2.4013932,
+      "observed_token_estimated_cost_usd": 2.4013932,
+      "per_harness_observed_token_cost_usd": {
+        "kilo_workspace": 2.4013932
+      },
+      "per_split_observed_token_cost_usd": {
+        "B_eval": 0.8818074,
+        "H_future": 1.5195858
+      },
+      "pricing_source": "user_estimate_required_conservative_default",
+      "result_prefix": "phase1_blocked_split_missing_cell_supplement_paid_execution_batch_2_attrs_remainder_kilo_workspace",
+      "schema_version": "barcarolle.workspace_acut_cost_summary.v2",
+      "usage_observed_count": 5,
+      "usage_observed_rate": 1.0
     }
   ],
   "totals": {
-    "call_count": 313,
-    "conservative_estimated_cost_usd": 156.5,
-    "observed_or_conservative_estimated_cost_usd": 127.0566068,
-    "observed_token_estimated_cost_usd": 123.5566068,
-    "usage_observed_count": 306,
-    "usage_observed_rate": 0.9776
+    "call_count": 323,
+    "conservative_estimated_cost_usd": 161.5,
+    "observed_or_conservative_estimated_cost_usd": 132.8931038,
+    "observed_token_estimated_cost_usd": 129.3931038,
+    "usage_observed_count": 316,
+    "usage_observed_rate": 0.9783
   }
 }

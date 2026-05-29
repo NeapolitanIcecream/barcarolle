@@ -1,6 +1,6 @@
 # Blocked Split Missing-Cell Supplement Process
 
-Current step: `Batch 1 complete`.
+Current step: `Batch 2 complete`.
 
 Completed artifacts:
 - Step 0 preflight
@@ -9,6 +9,7 @@ Completed artifacts:
 - Step 2 entry gate
 - Step 2 batch plan
 - Step 3 smoke batch
+- Step 4 attrs batch
 
 
 Notes:
