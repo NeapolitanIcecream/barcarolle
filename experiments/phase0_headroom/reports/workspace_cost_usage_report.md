@@ -1,6 +1,6 @@
 # Workspace Cost Usage Report
 
-Generated at `2026-05-29T04:54:03+00:00`.
+Generated at `2026-05-29T05:18:45+00:00`.
 
 Provider-billed dollars remain unavailable for these workspace ACUT runs. The canonical spend estimate is therefore the observed-token estimate priced through `experiments/phase0_headroom/configs/model_pricing.yaml`; missing usage, if any, is shown separately as the previous conservative fallback.
 
@@ -41,6 +41,8 @@ Provider-billed dollars remain unavailable for these workspace ACUT runs. The ca
 | phase1_blocked_split_missing_cell_supplement_paid_execution_batch_2_attrs_remainder_kilo_workspace | 5 | 1.0000 | 2.50000000 | 2.40139320 | 2.40139320 | 0 | 91.885 |
 | phase1_blocked_split_missing_cell_supplement_paid_execution_batch_3_boltons_remainder_codex_workspace | 9 | 1.0000 | 4.50000000 | 6.26530020 | 6.26530020 | 0 | 166.013 |
 | phase1_blocked_split_missing_cell_supplement_paid_execution_batch_3_boltons_remainder_kilo_workspace | 9 | 1.0000 | 4.50000000 | 3.06891600 | 3.06891600 | 0 | 63.361 |
+| phase1_blocked_split_missing_cell_supplement_paid_execution_batch_4_click_remainder_codex_workspace | 7 | 1.0000 | 3.50000000 | 5.29425300 | 5.29425300 | 0 | 152.901 |
+| phase1_blocked_split_missing_cell_supplement_paid_execution_batch_4_click_remainder_kilo_workspace | 7 | 1.0000 | 3.50000000 | 2.20031760 | 2.20031760 | 0 | 45.547 |
 
 ## Per-Harness Observed Cost
 
@@ -168,6 +170,12 @@ Provider-billed dollars remain unavailable for these workspace ACUT runs. The ca
 
 ### phase1_blocked_split_missing_cell_supplement_paid_execution_batch_3_boltons_remainder_kilo_workspace
 - `kilo_workspace`: `USD 3.06891600`.
+
+### phase1_blocked_split_missing_cell_supplement_paid_execution_batch_4_click_remainder_codex_workspace
+- `codex_workspace`: `USD 5.29425300`.
+
+### phase1_blocked_split_missing_cell_supplement_paid_execution_batch_4_click_remainder_kilo_workspace
+- `kilo_workspace`: `USD 2.20031760`.
 
 ## Notes
 
