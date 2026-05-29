@@ -1,0 +1,32 @@
+{
+  "artifact": "readiness_gate",
+  "click_minor_risk_status": "visible_title_only_minor_risk",
+  "completed_paid_decision_changed": false,
+  "completed_paid_decision_label": "three_repo_paid_pilot_threshold_met",
+  "decision_label": "blocked_split_ready_with_click_minor_risk",
+  "failed_gates": [],
+  "gates": {
+    "blocked_or_diagnostic_tasks_selected": true,
+    "candidate_universe_eligible_only": true,
+    "click_minor_risk_visible": true,
+    "completed_paid_decision_changed": false,
+    "feature_imbalance_gates_pass": true,
+    "paid_calls_made_by_this_run": 0,
+    "predictive_validity_established": false,
+    "primary_selected_split_exact_repo_and_split_counts": true,
+    "retrospective_outcomes_did_not_change_split": true,
+    "selection_audit_outcome_blind": true,
+    "tests_and_diff_check_passed": true
+  },
+  "generated_at": "2026-05-29T02:05:28Z",
+  "paid_calls_made_by_this_run": 0,
+  "predictive_validity_established": false,
+  "ready_for_preregistered_paid_validation_runbook": true,
+  "recommended_next_action_category": "preregistered_paid_validation_design_review",
+  "run_id": "phase1_blocked_split_redesign_20260529",
+  "schema_version": "barcarolle.phase1_blocked_split_redesign_output.v1",
+  "selected_primary_budget_id": "same_budget_20_per_repo",
+  "selected_primary_candidate_id": "phase1_blocked_split_redesign_20260529__same_budget_20_per_repo__seed_2026052902",
+  "selected_secondary_candidate_id": "phase1_blocked_split_redesign_20260529__expanded_30_per_repo__seed_2026052904",
+  "smallest_remaining_blocker": "click_title_only_minor_risk"
+}
