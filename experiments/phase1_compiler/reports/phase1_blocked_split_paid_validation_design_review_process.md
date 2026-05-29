@@ -51,3 +51,11 @@ What happened: the design-review tool computed exact overlap for both selected b
 Why it matters: the same-budget selected score table is incomplete by `24` tasks, with `24` missing cells for `codex_workspace` and `24` missing cells for `kilo_workspace`. Missing outcomes were not imputed, and reusable cells retain committed score-table provenance.
 
 What action it suggests next: compare the five protocol options using the exact overlap and missing-cell manifests.
+
+## Step 3: Compare Protocol Options
+
+What happened: five protocol options were compared. Option `B` (`same_budget_missing_cell_supplement`) is recommended, with `48` new paid cells and `72` reused cells. Option `C` and Option `D` are acceptable secondary full-rerun choices. Option `A` is not recommended because it remains incomplete, and Option `E` is not recommended because click risk is currently an accepted visible caveat rather than a stop condition.
+
+Why it matters: the recommended protocol fills the primary selected same-budget score table at lower cost than a full rerun, while preserving the post-hoc exploratory claim boundary.
+
+What action it suggests next: project adapter-stratified token-estimated cost for each option before packaging the later paid-execution inputs.
