@@ -225,6 +225,10 @@ def is_outcome_path(path: str | Path) -> bool:
     return any(marker in text for marker in OUTCOME_PATH_MARKERS)
 
 
+def selection_audit_passes_for_loaded_paths(paths: Iterable[str | Path]) -> bool:
+    return not any(is_outcome_path(path) for path in paths)
+
+
 def pair_distance(left: dict[str, Any], right: dict[str, Any]) -> tuple[int, list[str]]:
     mismatches: list[str] = []
     distance = 0
@@ -629,7 +633,7 @@ def freeze_selected_split(config: dict[str, Any] | None = None) -> tuple[dict[st
         "candidate_count_considered": len(candidates),
         "candidate_payload_digest": digest_payload(candidate_payload),
         "selected_split_digest": digest_payload(selected_payload),
-        "selection_audit_passed": not outcome_loaded_before_freeze,
+        "selection_audit_passed": selection_audit_passes_for_loaded_paths(loaded_before_freeze),
         "completed_paid_pilot_files_changed_by_this_step": False,
     }
     write_json(output_path(config, "selected_split"), selected_payload)
