@@ -1,9 +1,10 @@
 # Blocked Split Supplement Fairness Gap Diagnostics Process
 
-Current step: `Step 0 preflight complete`.
+Current step: `Step 1 adapter fairness audit complete`.
 
 Completed artifacts:
 - Step 0 preflight
+- Step 1 adapter fairness audit
 
 Boundary:
 - Diagnostic-only run.
@@ -13,5 +14,4 @@ Boundary:
 - Follow-up runbook drafted by this worker: `false`.
 
 Notes:
-- No paid calls were made.
-- Known external-review bundle is classified as unrelated and left uncommitted.
+- No extra notes.

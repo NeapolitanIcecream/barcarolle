@@ -326,14 +326,38 @@ def write_preflight(config_path: Path = DEFAULT_CONFIG) -> dict[str, Any]:
 
 
 def adapter_configs(config: dict[str, Any]) -> dict[str, Any]:
-    raw = simple_yaml_load(input_path(config, "adapter_config"))
+    adapter_config_path = input_path(config, "adapter_config")
+    top_level: dict[str, Any] = {}
+    for raw_line in adapter_config_path.read_text(encoding="utf-8").splitlines():
+        if not raw_line.strip() or raw_line.startswith(" "):
+            continue
+        if raw_line.strip() == "adapters:":
+            break
+        if ":" in raw_line:
+            key, value = raw_line.split(":", 1)
+            top_level[key.strip()] = supplement.workspace_acut.parse_scalar(value.strip())
+    loaded = supplement.workspace_acut.load_adapter_configs(adapter_config_path)
     return {
-        "schema_version": raw.get("schema_version"),
-        "preferred_model": raw.get("preferred_model"),
-        "comparison_design": raw.get("comparison_design"),
-        "local_subscription_fallback": raw.get("local_subscription_fallback"),
-        "openai_or_provider_fallback": raw.get("openai_or_provider_fallback"),
-        "adapters": {row["adapter_id"]: row for row in raw.get("adapters", [])},
+        "schema_version": top_level.get("schema_version"),
+        "preferred_model": top_level.get("preferred_model"),
+        "comparison_design": top_level.get("comparison_design"),
+        "local_subscription_fallback": top_level.get("local_subscription_fallback"),
+        "openai_or_provider_fallback": top_level.get("openai_or_provider_fallback"),
+        "adapters": {
+            adapter_id: {
+                "adapter_id": adapter.adapter_id,
+                "acut_id": adapter.acut_id,
+                "model_or_agent_name": adapter.model_or_agent_name,
+                "command_template": adapter.command_template,
+                "harness_name": adapter.harness_name,
+                "endpoint_proof_status": adapter.endpoint_proof_status,
+                "timeout_seconds": adapter.timeout_seconds,
+                "requires_env": adapter.requires_env,
+                "usage_mode": adapter.usage_mode,
+                "usage_report_path": adapter.usage_report_path,
+            }
+            for adapter_id, adapter in loaded.items()
+        },
     }
 
 
