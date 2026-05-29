@@ -67,3 +67,11 @@ What happened: adapter-stratified token-estimated cost was projected for every p
 Why it matters: the same-budget missing-cell supplement is materially cheaper than a same-budget full rerun (`$51.26736`) while still filling the primary selected score table. Provider-billed exact cost remains unavailable because no committed `actual_provider_billed_cost_usd` value is present.
 
 What action it suggests next: package the recommended exploratory supplement with exact reusable cells, missing cells, endpoint requirements, and stop conditions.
+
+## Step 5: Define Reuse Policy And Ready Package
+
+What happened: the reuse policy and ready package were written for Option `B`. The package freezes the same-budget selected split, `60` selected task IDs, `72` reusable cells, and `48` missing paid cells to run.
+
+Why it matters: a later paid execution can use exact protocol inputs without reselecting tasks or treating reused cells as formal preregistered evidence. The package requires `LLM_BASE_URL` and `LLM_API_KEY` and forbids fallback to other LLM auth.
+
+What action it suggests next: add focused tests and run the required consistency checks before writing the final decision.
