@@ -317,7 +317,13 @@ def compute_imbalance(candidate: dict[str, Any], row_by_id: dict[str, dict[str, 
     score = sum(weights.get(feature, 1.0) * summaries[feature]["total_abs_diff"] for feature in BALANCE_FEATURES)
     return {
         "feature_imbalance_score": round(score, 6),
-        "per_feature_imbalance_summary": summaries,
+        "per_feature_imbalance_summary": {
+            feature: {
+                "total_abs_diff": summary["total_abs_diff"],
+                "max_abs_diff": summary["max_abs_diff"],
+            }
+            for feature, summary in summaries.items()
+        },
     }
 
 
@@ -440,12 +446,10 @@ def build_repo_blocks(selected_rows: list[dict[str, Any]], budget_id: str, repo:
             {
                 "task_id": str(left["task_id"]),
                 "split": "B_eval" if left_goes_b else "H_future",
-                "visible_feature_signature": {feature: bucket_value(left, feature) for feature in BLOCKING_FEATURES},
             },
             {
                 "task_id": str(right["task_id"]),
                 "split": "H_future" if left_goes_b else "B_eval",
-                "visible_feature_signature": {feature: bucket_value(right, feature) for feature in BLOCKING_FEATURES},
             },
         ]
         blocks.append(

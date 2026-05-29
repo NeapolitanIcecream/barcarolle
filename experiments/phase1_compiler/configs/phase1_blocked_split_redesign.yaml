@@ -7,7 +7,7 @@ paid_calls_allowed: false
 candidate_universe_path: experiments/phase1_compiler/results/phase1_blocked_split_redesign_candidate_universe.json
 random_seed_family: phase1_blocked_split_redesign_20260529_visible_feature_seed_family
 candidate_seed_start: 2026052900
-candidate_seed_count: 200
+candidate_seed_count: 100
 selection_objective: feature_imbalance_visible_only
 outcome_blind_selection_required: true
 click_minor_risk_caveat_required: true
