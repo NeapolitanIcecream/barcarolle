@@ -1,0 +1,1158 @@
+{
+  "accepted_public_context_count": 30,
+  "artifact": "public_context_review",
+  "candidate_count": 30,
+  "generated_at": "2026-05-29T11:03:40Z",
+  "insufficient_public_context_count": 0,
+  "missing_public_context_evidence_count": 0,
+  "network_access_summary": {
+    "public_context_summaries_are_sanitized": true,
+    "public_github_pr_issue_pages_inspected": true,
+    "raw_public_api_payloads_committed": false
+  },
+  "outcome_fields_used_for_verdicts": false,
+  "paid_llm_calls_made": 0,
+  "rejected_leaky_public_context_count": 0,
+  "rows": [
+    {
+      "ambiguity_flags": [],
+      "expected_behavior_summary": "Completion output for supported shells includes --help when the command exposes the help option, without changing unrelated completion candidates.",
+      "implementation_instruction_flags": [],
+      "leakage_flags": [],
+      "public_anchor_type": "public_pull_request",
+      "public_context_repaired": true,
+      "public_refs": [
+        {
+          "kind": "pull_request",
+          "number": 1504,
+          "url": "https://github.com/pallets/click/pull/1504"
+        }
+      ],
+      "public_title": "Include --help option in completion",
+      "raw_public_api_response_committed": false,
+      "raw_public_body_committed": false,
+      "raw_target_diff_committed": false,
+      "raw_test_patch_committed": false,
+      "repo": "click",
+      "short_public_summary": "Public PR #1504 explains that shell completion omitted the enabled --help option even though users can invoke it normally.",
+      "solver_visible_source_context_summary": "Shell completion should offer the enabled --help option as a completion candidate.",
+      "source_context_after": "public_context_repaired",
+      "source_context_before": "title_only_minor_risk",
+      "source_evidence_digest": "sha256:b5005c8220c1a5a9a8684f01e159783304c008df96c1e8e4521a1c013f51df3a",
+      "source_kind": "public_pr_body",
+      "source_summary_digest": "sha256:39b59ea891c92289351211b6f5ac5255007e710639975ba3f15ea9b28394ff1b",
+      "statement_digest": "sha256:5c024eea9c7896acef5c6539b45b35cad677f49027b393f7a540f637c88048e5",
+      "sufficiency_reason": "The PR body states the missing completion candidate and the user-visible behavior.",
+      "sufficient_for_solver_visible_statement": true,
+      "target_commit_exposed": false,
+      "task_id": "click__third__045",
+      "verdict": "accepted_public_context"
+    },
+    {
+      "ambiguity_flags": [],
+      "expected_behavior_summary": "BOOL conversion accepts on/off along with existing true/false-style strings and preserves invalid-value error behavior.",
+      "implementation_instruction_flags": [],
+      "leakage_flags": [],
+      "public_anchor_type": "public_issue",
+      "public_context_repaired": true,
+      "public_refs": [
+        {
+          "kind": "issue",
+          "number": 1629,
+          "url": "https://github.com/pallets/click/issues/1629"
+        }
+      ],
+      "public_title": "BOOL should accept on and off",
+      "raw_public_api_response_committed": false,
+      "raw_public_body_committed": false,
+      "raw_target_diff_committed": false,
+      "raw_test_patch_committed": false,
+      "repo": "click",
+      "short_public_summary": "Public issue #1629 asks Click's BOOL parameter type to accept and convert the strings on and off, matching common configparser spellings.",
+      "solver_visible_source_context_summary": "The BOOL parameter type should recognize on and off as valid boolean spellings.",
+      "source_context_after": "public_context_repaired",
+      "source_context_before": "title_only_minor_risk",
+      "source_evidence_digest": "sha256:c0297081b4d32b89bcd5e644360fa307ed3f2bbcd24ff24f79bc6c503eef7d4f",
+      "source_kind": "public_issue_body",
+      "source_summary_digest": "sha256:8743db2dc6e644c43f4c5281a21c85c315f6857d3f00d6e0321a5ff233367393",
+      "statement_digest": "sha256:620ffbee8e0d743d55f10d469cca07b70320655a5f820979addb07a94e325316",
+      "sufficiency_reason": "The issue gives the exact accepted input family without exposing implementation or tests.",
+      "sufficient_for_solver_visible_statement": true,
+      "target_commit_exposed": false,
+      "task_id": "click__third__050",
+      "verdict": "accepted_public_context"
+    },
+    {
+      "ambiguity_flags": [],
+      "expected_behavior_summary": "A progress bar can limit expensive visual refreshes while still reporting progress correctly for normal iterations.",
+      "implementation_instruction_flags": [],
+      "leakage_flags": [],
+      "public_anchor_type": "public_issue_and_pull_request",
+      "public_context_repaired": true,
+      "public_refs": [
+        {
+          "kind": "pull_request",
+          "number": 1698,
+          "url": "https://github.com/pallets/click/pull/1698"
+        },
+        {
+          "kind": "issue",
+          "number": 676,
+          "url": "https://github.com/pallets/click/issues/676"
+        }
+      ],
+      "public_title": "Add update interval for progress bar",
+      "raw_public_api_response_committed": false,
+      "raw_public_body_committed": false,
+      "raw_target_diff_committed": false,
+      "raw_test_patch_committed": false,
+      "repo": "click",
+      "short_public_summary": "Public issue #676 and PR #1698 describe progress bars that render too often for short iterations and add an update interval to skip unnecessary renders.",
+      "solver_visible_source_context_summary": "Progress bars should avoid excessive rendering for frequently updated iterators.",
+      "source_context_after": "public_context_repaired",
+      "source_context_before": "title_only_minor_risk",
+      "source_evidence_digest": "sha256:76da8615d3ed75f6a31467c43781ad6ddde41b27e77b28e64924ec7b8d9aa5cf",
+      "source_kind": "public_issue_and_pr_body",
+      "source_summary_digest": "sha256:fcc5aa1e2ab19d4da10d263c64536c3133297a929051385818c4b929575f38be",
+      "statement_digest": "sha256:f0b59268522f205b52905f7c713d83970ddd8e2277e87e66130b633047c8eee2",
+      "sufficiency_reason": "The issue and PR identify the performance problem and behavior-level remedy.",
+      "sufficient_for_solver_visible_statement": true,
+      "target_commit_exposed": false,
+      "task_id": "click__third__091",
+      "verdict": "accepted_public_context"
+    },
+    {
+      "ambiguity_flags": [],
+      "expected_behavior_summary": "Click reports a useful TypeError for invalid defaults on multiple-value parameters without changing valid default handling.",
+      "implementation_instruction_flags": [],
+      "leakage_flags": [],
+      "public_anchor_type": "public_issue_and_pull_request",
+      "public_context_repaired": true,
+      "public_refs": [
+        {
+          "kind": "pull_request",
+          "number": 1805,
+          "url": "https://github.com/pallets/click/pull/1805"
+        },
+        {
+          "kind": "issue",
+          "number": 1749,
+          "url": "https://github.com/pallets/click/issues/1749"
+        }
+      ],
+      "public_title": "Better error message for bad parameter default",
+      "raw_public_api_response_committed": false,
+      "raw_public_body_committed": false,
+      "raw_target_diff_committed": false,
+      "raw_test_patch_committed": false,
+      "repo": "click",
+      "short_public_summary": "Public issue #1749 and PR #1805 describe a multi-value option whose single default produces an unclear failure, and request a clearer TypeError.",
+      "solver_visible_source_context_summary": "A multi-value parameter with an invalid single default should fail with a clear parameter-default error.",
+      "source_context_after": "public_context_repaired",
+      "source_context_before": "title_only_minor_risk",
+      "source_evidence_digest": "sha256:e3d0c479e73ba2e2a4280c8404d77a1bd17fc6b692d0dbc3d2f01e9963fcb001",
+      "source_kind": "public_issue_and_pr_body",
+      "source_summary_digest": "sha256:d008aa9a584c7e50bbe8e66ae04399a7f5198e67a5647f013679ca423de4c52a",
+      "statement_digest": "sha256:567668e276e23c9b538beed980db6d719b629b607f8005a264e5f9cf64c2dec6",
+      "sufficiency_reason": "The public issue provides a minimal behavior and the PR states the desired error class.",
+      "sufficient_for_solver_visible_statement": true,
+      "target_commit_exposed": false,
+      "task_id": "click__third__109",
+      "verdict": "accepted_public_context"
+    },
+    {
+      "ambiguity_flags": [],
+      "expected_behavior_summary": "The decorator-style helper returns the class object and has a type signature compatible with normal decorator use.",
+      "implementation_instruction_flags": [],
+      "leakage_flags": [],
+      "public_anchor_type": "public_pull_request",
+      "public_context_repaired": true,
+      "public_refs": [
+        {
+          "kind": "pull_request",
+          "number": 2421,
+          "url": "https://github.com/pallets/click/pull/2421"
+        }
+      ],
+      "public_title": "Fix return value and type signature of shell_completion.add_completion_class",
+      "raw_public_api_response_committed": false,
+      "raw_public_body_committed": false,
+      "raw_target_diff_committed": false,
+      "raw_test_patch_committed": false,
+      "repo": "click",
+      "short_public_summary": "Public PR #2421 explains that add_completion_class behaves like a decorator and should return the class it registers instead of None.",
+      "solver_visible_source_context_summary": "shell_completion.add_completion_class should return the registered completion class.",
+      "source_context_after": "public_context_repaired",
+      "source_context_before": "title_only_minor_risk",
+      "source_evidence_digest": "sha256:2eb0a48f460fa31463631a6ef500e89b83a29500378bfb08938a69cc35ae3ee4",
+      "source_kind": "public_pr_body",
+      "source_summary_digest": "sha256:97a93ec374d66c504396aea70c7ecdb5e55fbc7fda3ee0c742c1a78d01097c23",
+      "statement_digest": "sha256:ea6b22e14538401c654806738bb56071a2469d2193ecc1b6cbeef0dc9c4b5b4f",
+      "sufficiency_reason": "The PR body states the public API contract and why the old return value is wrong.",
+      "sufficient_for_solver_visible_statement": true,
+      "target_commit_exposed": false,
+      "task_id": "click__third__166",
+      "verdict": "accepted_public_context"
+    },
+    {
+      "ambiguity_flags": [],
+      "expected_behavior_summary": "Help and prompt-related metavar rendering omit inline choice lists when show_choices is false while preserving normal Choice validation.",
+      "implementation_instruction_flags": [],
+      "leakage_flags": [],
+      "public_anchor_type": "public_issue_and_pull_request",
+      "public_context_repaired": true,
+      "public_refs": [
+        {
+          "kind": "pull_request",
+          "number": 2365,
+          "url": "https://github.com/pallets/click/pull/2365"
+        },
+        {
+          "kind": "issue",
+          "number": 2356,
+          "url": "https://github.com/pallets/click/issues/2356"
+        }
+      ],
+      "public_title": "Fix metavar for Choice options when show_choices=False",
+      "raw_public_api_response_committed": false,
+      "raw_public_body_committed": false,
+      "raw_target_diff_committed": false,
+      "raw_test_patch_committed": false,
+      "repo": "click",
+      "short_public_summary": "Public issue #2356 and PR #2365 report that Choice values still appear in help output even when show_choices is disabled.",
+      "solver_visible_source_context_summary": "Choice option metavars should respect show_choices=False.",
+      "source_context_after": "public_context_repaired",
+      "source_context_before": "title_only_minor_risk",
+      "source_evidence_digest": "sha256:58762801ef611b133f1b4dd63abb4cce77555cedd9d8fb20c68071d11bbfdece",
+      "source_kind": "public_issue_and_pr_body",
+      "source_summary_digest": "sha256:02ba0ad016847492fa00493f17184ba25e6e01064d11605d28085143f17ccc9c",
+      "statement_digest": "sha256:878c582694045bfa91a6603944dee827e0aa4b517a6401f03eb85f942b4d4b6a",
+      "sufficiency_reason": "The public issue includes the visible help-output mismatch and the PR narrows it to Choice metavar rendering.",
+      "sufficient_for_solver_visible_statement": true,
+      "target_commit_exposed": false,
+      "task_id": "click__third__197",
+      "verdict": "accepted_public_context"
+    },
+    {
+      "ambiguity_flags": [],
+      "expected_behavior_summary": "Option display honors show_default=False consistently without exposing hidden defaults or regressing normal default handling.",
+      "implementation_instruction_flags": [],
+      "leakage_flags": [],
+      "public_anchor_type": "public_pull_request",
+      "public_context_repaired": true,
+      "public_refs": [
+        {
+          "kind": "pull_request",
+          "number": 2509,
+          "url": "https://github.com/pallets/click/pull/2509"
+        }
+      ],
+      "public_title": "Hide default value when show_default is False",
+      "raw_public_api_response_committed": false,
+      "raw_public_body_committed": false,
+      "raw_target_diff_committed": false,
+      "raw_test_patch_committed": false,
+      "repo": "click",
+      "short_public_summary": "Public PR #2509 says prompt output could still reveal an option default even when show_default is false, including sensitive defaults.",
+      "solver_visible_source_context_summary": "Default values should stay hidden from prompts and help when show_default is false.",
+      "source_context_after": "public_context_repaired",
+      "source_context_before": "title_only_minor_risk",
+      "source_evidence_digest": "sha256:4504891898f6db7b2b9a75555dc5b955a3f9e3d882e2727c14f22127401ec136",
+      "source_kind": "public_pr_body",
+      "source_summary_digest": "sha256:cd89113043b7abe3d6eb4d5c304b4cb6d2dd1343ad6f63dfd0d993a6258b3241",
+      "statement_digest": "sha256:b9a7f8f4e4fa68ceb8c73e9fd1b137fd1ad0840ab7e3c1b41b13194f4696f9c5",
+      "sufficiency_reason": "The PR body describes the user-visible leak and expected display behavior.",
+      "sufficient_for_solver_visible_statement": true,
+      "target_commit_exposed": false,
+      "task_id": "click__third__198",
+      "verdict": "accepted_public_context"
+    },
+    {
+      "ambiguity_flags": [],
+      "expected_behavior_summary": "Help records keep structured extra items available for rendering and extension without changing visible help semantics unexpectedly.",
+      "implementation_instruction_flags": [],
+      "leakage_flags": [],
+      "public_anchor_type": "public_issue_and_pull_request",
+      "public_context_repaired": true,
+      "public_refs": [
+        {
+          "kind": "pull_request",
+          "number": 2517,
+          "url": "https://github.com/pallets/click/pull/2517"
+        },
+        {
+          "kind": "issue",
+          "number": 2516,
+          "url": "https://github.com/pallets/click/issues/2516"
+        }
+      ],
+      "public_title": "Split generation of help extra items and rendering",
+      "raw_public_api_response_committed": false,
+      "raw_public_body_committed": false,
+      "raw_target_diff_committed": false,
+      "raw_test_patch_committed": false,
+      "repo": "click",
+      "short_public_summary": "Public issue #2516 and PR #2517 explain that extra help items such as defaults and env vars need a cleaner generation step before rendering.",
+      "solver_visible_source_context_summary": "Help metadata generation should be separated from rendering so extra help items can be handled consistently.",
+      "source_context_after": "public_context_repaired",
+      "source_context_before": "title_only_minor_risk",
+      "source_evidence_digest": "sha256:94ede81440839abf92a9decc07f282dd34f84a4f00a6be63fd25db52a743951c",
+      "source_kind": "public_issue_and_pr_body",
+      "source_summary_digest": "sha256:fc47292f9adb188776c1a199a30e0b80f89557a794bd5ec792bee6ea1bc62a7f",
+      "statement_digest": "sha256:471a7f4a276e8b9a5c7fe96d960ac74956ece34c1c13f744b57f38984f8dd781",
+      "sufficiency_reason": "The issue and PR explain the extension pain point and the behavior-level contract.",
+      "sufficient_for_solver_visible_statement": true,
+      "target_commit_exposed": false,
+      "task_id": "click__third__199",
+      "verdict": "accepted_public_context"
+    },
+    {
+      "ambiguity_flags": [],
+      "expected_behavior_summary": "Result.stdout and result.stderr expose pure streams, and mixed output represents the interleaved output without surprising errors.",
+      "implementation_instruction_flags": [],
+      "leakage_flags": [],
+      "public_anchor_type": "public_issue_and_pull_request",
+      "public_context_repaired": true,
+      "public_refs": [
+        {
+          "kind": "pull_request",
+          "number": 2523,
+          "url": "https://github.com/pallets/click/pull/2523"
+        },
+        {
+          "kind": "issue",
+          "number": 2522,
+          "url": "https://github.com/pallets/click/issues/2522"
+        }
+      ],
+      "public_title": "Keep track of stderr and stdout mix in CliRunner results",
+      "raw_public_api_response_committed": false,
+      "raw_public_body_committed": false,
+      "raw_target_diff_committed": false,
+      "raw_test_patch_committed": false,
+      "repo": "click",
+      "short_public_summary": "Public issue #2522 and PR #2523 describe CliRunner result streams: stdout and stderr should remain separately available while mixed output preserves observed order.",
+      "solver_visible_source_context_summary": "CliRunner results should preserve stdout, stderr, and their mixed ordering.",
+      "source_context_after": "public_context_repaired",
+      "source_context_before": "title_only_minor_risk",
+      "source_evidence_digest": "sha256:ce9f1090904caf889863393bcf7ff5a0ff05e90887b4eae7c638a1ec8b53adbb",
+      "source_kind": "public_issue_and_pr_body",
+      "source_summary_digest": "sha256:b6e17f6108dedf4b0fe6039403d12175f00f97f59f982309e162b25724bcd52e",
+      "statement_digest": "sha256:ff9e521fb3cc57f8277b3a336fa301d3dbd52ef64370140a719536d1f89bd55c",
+      "sufficiency_reason": "The issue and PR define the stream contract at the public testing API level.",
+      "sufficient_for_solver_visible_statement": true,
+      "target_commit_exposed": false,
+      "task_id": "click__third__200",
+      "verdict": "accepted_public_context"
+    },
+    {
+      "ambiguity_flags": [],
+      "expected_behavior_summary": "When an option can be supplied through an envvar, the missing-parameter hint names that envvar without changing parsing behavior.",
+      "implementation_instruction_flags": [],
+      "leakage_flags": [],
+      "public_anchor_type": "public_issue_and_pull_request",
+      "public_context_repaired": true,
+      "public_refs": [
+        {
+          "kind": "pull_request",
+          "number": 2696,
+          "url": "https://github.com/pallets/click/pull/2696"
+        },
+        {
+          "kind": "issue",
+          "number": 2695,
+          "url": "https://github.com/pallets/click/issues/2695"
+        }
+      ],
+      "public_title": "Show env var in error hint",
+      "raw_public_api_response_committed": false,
+      "raw_public_body_committed": false,
+      "raw_target_diff_committed": false,
+      "raw_test_patch_committed": false,
+      "repo": "click",
+      "short_public_summary": "Public issue #2695 and PR #2696 request that errors for required options mention the configured environment variable hint.",
+      "solver_visible_source_context_summary": "Relevant parameter errors should include environment-variable hints.",
+      "source_context_after": "public_context_repaired",
+      "source_context_before": "title_only_minor_risk",
+      "source_evidence_digest": "sha256:54e6b42c3c2889ebf76637feb6154aaf849b84d8d075a09c4c77aef3403f41b3",
+      "source_kind": "public_issue_and_pr_body",
+      "source_summary_digest": "sha256:7ad30e4a4fc81512d16996ea157eb51c6e817f167621954a06aed0442a37edc1",
+      "statement_digest": "sha256:eb39d4615fba9eacf620bc620e13f716c1a8e6934d47abfd0d57842c9cd5eaf8",
+      "sufficiency_reason": "The issue gives a minimal user-visible error-message expectation.",
+      "sufficient_for_solver_visible_statement": true,
+      "target_commit_exposed": false,
+      "task_id": "click__third__201",
+      "verdict": "accepted_public_context"
+    },
+    {
+      "ambiguity_flags": [],
+      "expected_behavior_summary": "ctx.exit paths close the active context and invoke registered cleanup callbacks without disrupting normal command exits.",
+      "implementation_instruction_flags": [],
+      "leakage_flags": [],
+      "public_anchor_type": "public_pull_request",
+      "public_context_repaired": true,
+      "public_refs": [
+        {
+          "kind": "pull_request",
+          "number": 2680,
+          "url": "https://github.com/pallets/click/pull/2680"
+        }
+      ],
+      "public_title": "Fix closing of callbacks on CLI exit",
+      "raw_public_api_response_committed": false,
+      "raw_public_body_committed": false,
+      "raw_target_diff_committed": false,
+      "raw_test_patch_committed": false,
+      "repo": "click",
+      "short_public_summary": "Public PR #2680 says contexts should close themselves on CLI exits so registered callbacks are called and stale resources are avoided.",
+      "solver_visible_source_context_summary": "Callbacks registered for CLI execution should be closed when the CLI exits.",
+      "source_context_after": "public_context_repaired",
+      "source_context_before": "title_only_minor_risk",
+      "source_evidence_digest": "sha256:5f86e2042d5d05a9a6f910ff5943bbe561d0eb0682fc19361cf71a4a15bf3e33",
+      "source_kind": "public_pr_body",
+      "source_summary_digest": "sha256:c9d0df74529674942b1a4484ca75f0634dc4ebe1216992b5fcb80944cf5e829c",
+      "statement_digest": "sha256:17372ed11bd713df379a0cc51edd124f69a5b8f588a1023b187d25b774bf80e0",
+      "sufficiency_reason": "The PR body states the lifecycle problem and observable cleanup behavior.",
+      "sufficient_for_solver_visible_statement": true,
+      "target_commit_exposed": false,
+      "task_id": "click__third__202",
+      "verdict": "accepted_public_context"
+    },
+    {
+      "ambiguity_flags": [],
+      "expected_behavior_summary": "A hidden progress bar suppresses progress output while preserving iteration and surrounding termui behavior.",
+      "implementation_instruction_flags": [],
+      "leakage_flags": [],
+      "public_anchor_type": "public_issue_and_pull_request",
+      "public_context_repaired": true,
+      "public_refs": [
+        {
+          "kind": "issue",
+          "number": 2609,
+          "url": "https://github.com/pallets/click/issues/2609"
+        },
+        {
+          "kind": "pull_request",
+          "number": 2727,
+          "url": "https://github.com/pallets/click/pull/2727"
+        }
+      ],
+      "public_title": "Add functionality to hide the progress bar",
+      "raw_public_api_response_committed": false,
+      "raw_public_body_committed": false,
+      "raw_target_diff_committed": false,
+      "raw_test_patch_committed": false,
+      "repo": "click",
+      "short_public_summary": "Public issue #2609 and PR #2727 describe a progressbar hide option for cases where callers conditionally suppress progress output.",
+      "solver_visible_source_context_summary": "Progress bars should support being hidden by caller configuration.",
+      "source_context_after": "public_context_repaired",
+      "source_context_before": "title_only_minor_risk",
+      "source_evidence_digest": "sha256:3facb3e8b90281ae613587165cb5d9e1965bf9e29698304d58e84d5c8ebd8a8e",
+      "source_kind": "public_issue_and_pr_body",
+      "source_summary_digest": "sha256:27da313815974e7f3f70b2b1631ca5383b828680c15c8457a30d6e6b250715cc",
+      "statement_digest": "sha256:67c479ef85e91cc899e128dffe312c6ae6789492b417da9edad0cff12ad3b785",
+      "sufficiency_reason": "The issue explains the user need and the PR names the public option behavior.",
+      "sufficient_for_solver_visible_statement": true,
+      "target_commit_exposed": false,
+      "task_id": "click__third__203",
+      "verdict": "accepted_public_context"
+    },
+    {
+      "ambiguity_flags": [],
+      "expected_behavior_summary": "Click emits a UserWarning for conflicting parameter names while preserving valid commands without such conflicts.",
+      "implementation_instruction_flags": [],
+      "leakage_flags": [],
+      "public_anchor_type": "public_issue_and_pull_request",
+      "public_context_repaired": true,
+      "public_refs": [
+        {
+          "kind": "pull_request",
+          "number": 2397,
+          "url": "https://github.com/pallets/click/pull/2397"
+        },
+        {
+          "kind": "issue",
+          "number": 2396,
+          "url": "https://github.com/pallets/click/issues/2396"
+        }
+      ],
+      "public_title": "Give a UserWarning when Parameter is overridden by name",
+      "raw_public_api_response_committed": false,
+      "raw_public_body_committed": false,
+      "raw_target_diff_committed": false,
+      "raw_test_patch_committed": false,
+      "repo": "click",
+      "short_public_summary": "Public issue #2396 and PR #2397 describe two command parameters using the same name and silently overriding each other.",
+      "solver_visible_source_context_summary": "Overriding a Parameter by name should warn instead of silently hiding a parameter.",
+      "source_context_after": "public_context_repaired",
+      "source_context_before": "title_only_minor_risk",
+      "source_evidence_digest": "sha256:cd2dc8d912b31239451e3136e0a9d5b783b34bffc8e866d5748a2101a8f811f7",
+      "source_kind": "public_issue_and_pr_body",
+      "source_summary_digest": "sha256:d338aed51b555af9eea8c3843b4d68d0833734e8c9deec6a5e34f640b37f25b0",
+      "statement_digest": "sha256:203e1e175320da1823d5ff14504e368c60fe14781e229b9e1659f351a412079f",
+      "sufficiency_reason": "The issue gives the conflict class and the PR states the warning behavior.",
+      "sufficient_for_solver_visible_statement": true,
+      "target_commit_exposed": false,
+      "task_id": "click__third__204",
+      "verdict": "accepted_public_context"
+    },
+    {
+      "ambiguity_flags": [],
+      "expected_behavior_summary": "Envvar-driven flag options set the same semantic value as the flag itself and preserve normal non-envvar behavior.",
+      "implementation_instruction_flags": [],
+      "leakage_flags": [],
+      "public_anchor_type": "public_issue_and_pull_request",
+      "public_context_repaired": true,
+      "public_refs": [
+        {
+          "kind": "pull_request",
+          "number": 2788,
+          "url": "https://github.com/pallets/click/pull/2788"
+        },
+        {
+          "kind": "issue",
+          "number": 2746,
+          "url": "https://github.com/pallets/click/issues/2746"
+        }
+      ],
+      "public_title": "Set flag_value correctly when using envvar",
+      "raw_public_api_response_committed": false,
+      "raw_public_body_committed": false,
+      "raw_target_diff_committed": false,
+      "raw_test_patch_committed": false,
+      "repo": "click",
+      "short_public_summary": "Public issue #2746 and PR #2788 report that a flag option supplied through an envvar can receive the raw environment value instead of its flag_value.",
+      "solver_visible_source_context_summary": "Flag values supplied through envvar handling should resolve to the configured flag_value.",
+      "source_context_after": "public_context_repaired",
+      "source_context_before": "title_only_minor_risk",
+      "source_evidence_digest": "sha256:1d7ebd1f6e0c172808f5096acca167a96c0c91024901478a4659b83e28290982",
+      "source_kind": "public_issue_and_pr_body",
+      "source_summary_digest": "sha256:f97d39c9f69676953e6964b2856c5c13f4acb7c123e23ae101ca097c59e974d6",
+      "statement_digest": "sha256:8d0858d3058bd37068d46ad794a2f29527f804b01f554e2dc14c7668755a97b2",
+      "sufficiency_reason": "The issue includes the public option pattern and expected value-level outcome.",
+      "sufficient_for_solver_visible_statement": true,
+      "target_commit_exposed": false,
+      "task_id": "click__third__205",
+      "verdict": "accepted_public_context"
+    },
+    {
+      "ambiguity_flags": [],
+      "expected_behavior_summary": "Choice conversion exposes a customizable invalid-choice message hook while keeping normal failure reporting intact.",
+      "implementation_instruction_flags": [],
+      "leakage_flags": [],
+      "public_anchor_type": "public_issue_and_pull_request",
+      "public_context_repaired": true,
+      "public_refs": [
+        {
+          "kind": "pull_request",
+          "number": 2622,
+          "url": "https://github.com/pallets/click/pull/2622"
+        },
+        {
+          "kind": "issue",
+          "number": 2621,
+          "url": "https://github.com/pallets/click/issues/2621"
+        }
+      ],
+      "public_title": "New method for Choice failure messages",
+      "raw_public_api_response_committed": false,
+      "raw_public_body_committed": false,
+      "raw_target_diff_committed": false,
+      "raw_test_patch_committed": false,
+      "repo": "click",
+      "short_public_summary": "Public issue #2621 and PR #2622 request a separate Choice failure-message path so subclasses can customize invalid-choice messages.",
+      "solver_visible_source_context_summary": "Choice failures should have a dedicated failure path that preserves useful error behavior.",
+      "source_context_after": "public_context_repaired",
+      "source_context_before": "title_only_minor_risk",
+      "source_evidence_digest": "sha256:048816c84c47f4762c19471f1e2f1641fe08a276f3177b03091cac60651b0a63",
+      "source_kind": "public_issue_and_pr_body",
+      "source_summary_digest": "sha256:0242e595b10841215676596da7b8a30d35c1e2a1bd91f877b79bdfb074109bd8",
+      "statement_digest": "sha256:97ebad8c24b93a2da5ebfd3e7bf118075be0a5d1d1b1bf6c786fb3abe1051fcd",
+      "sufficiency_reason": "The public issue describes the subclassing need and the PR states the public-method direction.",
+      "sufficient_for_solver_visible_statement": true,
+      "target_commit_exposed": false,
+      "task_id": "click__third__206",
+      "verdict": "accepted_public_context"
+    },
+    {
+      "ambiguity_flags": [],
+      "expected_behavior_summary": "Invoking a group without required arguments can display help but exits with status 2 rather than a successful status.",
+      "implementation_instruction_flags": [],
+      "leakage_flags": [],
+      "public_anchor_type": "public_issue_and_pull_request",
+      "public_context_repaired": true,
+      "public_refs": [
+        {
+          "kind": "pull_request",
+          "number": 1489,
+          "url": "https://github.com/pallets/click/pull/1489"
+        },
+        {
+          "kind": "issue",
+          "number": 1394,
+          "url": "https://github.com/pallets/click/issues/1394"
+        },
+        {
+          "kind": "issue",
+          "number": 1486,
+          "url": "https://github.com/pallets/click/issues/1486"
+        }
+      ],
+      "public_title": "Help shown via no_args_is_help results in exit code 2",
+      "raw_public_api_response_committed": false,
+      "raw_public_body_committed": false,
+      "raw_target_diff_committed": false,
+      "raw_test_patch_committed": false,
+      "repo": "click",
+      "short_public_summary": "Public issues #1394 and #1486 describe no-command invocation showing help as an error case, while PR #1489 changes no_args_is_help to exit with code 2.",
+      "solver_visible_source_context_summary": "Help shown because no_args_is_help is enabled should use an error exit status.",
+      "source_context_after": "public_context_repaired",
+      "source_context_before": "title_only_minor_risk",
+      "source_evidence_digest": "sha256:4e2def25f78004194c6ec5874fcf106e7c6e7e9955e67e57c5e80d231543132e",
+      "source_kind": "public_issue_and_pr_body",
+      "source_summary_digest": "sha256:c6fd665caee6e530b0b23b30317d1b0d994ce62e6f32b2ac0c5ec3c1e7709abb",
+      "statement_digest": "sha256:fae51b20f6d3426aa00399ffea89e8bba5edc6aef3cf849038526180d1cc1bda",
+      "sufficiency_reason": "The public issues and PR give the visible output condition and exit-code expectation.",
+      "sufficient_for_solver_visible_statement": true,
+      "target_commit_exposed": false,
+      "task_id": "click__third__207",
+      "verdict": "accepted_public_context"
+    },
+    {
+      "ambiguity_flags": [],
+      "expected_behavior_summary": "Shell completion closes temporary contexts and file options after producing completions, avoiding resource warnings.",
+      "implementation_instruction_flags": [],
+      "leakage_flags": [],
+      "public_anchor_type": "public_issue_and_pull_request",
+      "public_context_repaired": true,
+      "public_refs": [
+        {
+          "kind": "issue",
+          "number": 2644,
+          "url": "https://github.com/pallets/click/issues/2644"
+        },
+        {
+          "kind": "pull_request",
+          "number": 2800,
+          "url": "https://github.com/pallets/click/pull/2800"
+        }
+      ],
+      "public_title": "Close contexts created during shell completion",
+      "raw_public_api_response_committed": false,
+      "raw_public_body_committed": false,
+      "raw_target_diff_committed": false,
+      "raw_test_patch_committed": false,
+      "repo": "click",
+      "short_public_summary": "Public issue #2644 and PR #2800 describe shell completion leaving file-option contexts open, causing resource warnings.",
+      "solver_visible_source_context_summary": "Contexts created during shell completion should be closed after completion handling.",
+      "source_context_after": "public_context_repaired",
+      "source_context_before": "title_only_minor_risk",
+      "source_evidence_digest": "sha256:8bb8b5f4e85de7296ed6e5b648b78591ece7b6772efd0b2a1ea637fce34e7c3a",
+      "source_kind": "public_issue_and_pr_body",
+      "source_summary_digest": "sha256:79f60647145b74bae680d447d2a20b218ef2d0f1035a6e02c986acc9f1e93516",
+      "statement_digest": "sha256:39d8e260a19b6ba9fbf088d7467a651e45802ebfafa6398d9fad984a88ff0297",
+      "sufficiency_reason": "The issue gives a concrete resource-leak symptom and the PR states the completion lifecycle fix.",
+      "sufficient_for_solver_visible_statement": true,
+      "target_commit_exposed": false,
+      "task_id": "click__third__208",
+      "verdict": "accepted_public_context"
+    },
+    {
+      "ambiguity_flags": [],
+      "expected_behavior_summary": "Deprecation metadata appears in relevant help output and can carry custom text for renamed or discouraged CLI surfaces.",
+      "implementation_instruction_flags": [],
+      "leakage_flags": [],
+      "public_anchor_type": "public_issue_and_pull_request",
+      "public_context_repaired": true,
+      "public_refs": [
+        {
+          "kind": "pull_request",
+          "number": 2271,
+          "url": "https://github.com/pallets/click/pull/2271"
+        },
+        {
+          "kind": "issue",
+          "number": 2263,
+          "url": "https://github.com/pallets/click/issues/2263"
+        }
+      ],
+      "public_title": "Customize Parameter and Command deprecation messages",
+      "raw_public_api_response_committed": false,
+      "raw_public_body_committed": false,
+      "raw_target_diff_committed": false,
+      "raw_test_patch_committed": false,
+      "repo": "click",
+      "short_public_summary": "Public issue #2263 and PR #2271 discuss official support for deprecated parameters and commands, including customized help messages.",
+      "solver_visible_source_context_summary": "Deprecated Parameter and Command objects should support customizable deprecation messages.",
+      "source_context_after": "public_context_repaired",
+      "source_context_before": "title_only_minor_risk",
+      "source_evidence_digest": "sha256:3d7b3a8534c7151986ca54f39c22422475ea73d769014cd535a368e75ef95a45",
+      "source_kind": "public_issue_and_pr_body",
+      "source_summary_digest": "sha256:8b55f84d87a7dc3bda1753491d5267ca8122c1cadd363bdff905eaaa4ab8cdb1",
+      "statement_digest": "sha256:f74094fc1128b098a9cfcf9df566de16f68bfd4201d1c9d9f342d0451c6bd855",
+      "sufficiency_reason": "The issue gives the user-facing need and the PR names the Click APIs involved.",
+      "sufficient_for_solver_visible_statement": true,
+      "target_commit_exposed": false,
+      "task_id": "click__third__213",
+      "verdict": "accepted_public_context"
+    },
+    {
+      "ambiguity_flags": [],
+      "expected_behavior_summary": "Custom help-option names behave like the normal eager help option and avoid running unrelated callbacks before help is shown.",
+      "implementation_instruction_flags": [],
+      "leakage_flags": [],
+      "public_anchor_type": "public_pull_request",
+      "public_context_repaired": true,
+      "public_refs": [
+        {
+          "kind": "pull_request",
+          "number": 2811,
+          "url": "https://github.com/pallets/click/pull/2811"
+        }
+      ],
+      "public_title": "Fix eagerness of help option generated by help_option_names",
+      "raw_public_api_response_committed": false,
+      "raw_public_body_committed": false,
+      "raw_target_diff_committed": false,
+      "raw_test_patch_committed": false,
+      "repo": "click",
+      "short_public_summary": "Public PR #2811 explains that help options generated through help_option_names can lose eagerness, affecting callback processing order.",
+      "solver_visible_source_context_summary": "Generated help options configured through help_option_names should preserve eager behavior.",
+      "source_context_after": "public_context_repaired",
+      "source_context_before": "title_only_minor_risk",
+      "source_evidence_digest": "sha256:71e0031a36317e0ce5097fbfb0d65d5e3dcb67d96eab5c476a2573af3d08212f",
+      "source_kind": "public_pr_body",
+      "source_summary_digest": "sha256:fcd5ab9544022314143de8e9093ebf403c45e6f99af83138d7aec78ffa692b08",
+      "statement_digest": "sha256:3926ecbdfb8544dfbafef1a8dfef93934db25671b8268101c3996b095f7f0a64",
+      "sufficiency_reason": "The PR body states the public configuration and the observable callback-order problem.",
+      "sufficient_for_solver_visible_statement": true,
+      "target_commit_exposed": false,
+      "task_id": "click__third__214",
+      "verdict": "accepted_public_context"
+    },
+    {
+      "ambiguity_flags": [],
+      "expected_behavior_summary": "CliRunner.invoke uses the runner-level catch_exceptions default unless an invocation overrides it.",
+      "implementation_instruction_flags": [],
+      "leakage_flags": [],
+      "public_anchor_type": "public_issue_and_pull_request",
+      "public_context_repaired": true,
+      "public_refs": [
+        {
+          "kind": "pull_request",
+          "number": 2818,
+          "url": "https://github.com/pallets/click/pull/2818"
+        },
+        {
+          "kind": "issue",
+          "number": 2817,
+          "url": "https://github.com/pallets/click/issues/2817"
+        }
+      ],
+      "public_title": "Add CliRunner default catch_exceptions parameter",
+      "raw_public_api_response_committed": false,
+      "raw_public_body_committed": false,
+      "raw_target_diff_committed": false,
+      "raw_test_patch_committed": false,
+      "repo": "click",
+      "short_public_summary": "Public issue #2817 and PR #2818 request configuring CliRunner.catch_exceptions once and letting invoke inherit it when not explicitly set.",
+      "solver_visible_source_context_summary": "CliRunner should expose a default catch_exceptions parameter for invocation behavior.",
+      "source_context_after": "public_context_repaired",
+      "source_context_before": "title_only_minor_risk",
+      "source_evidence_digest": "sha256:758c9b44b5cb3da51217123a9aa6363161b0c3c67d278270e8430eca35191fa8",
+      "source_kind": "public_issue_and_pr_body",
+      "source_summary_digest": "sha256:f43b21bae20cf2c3355c2c1cde7e2187322617d8d02d7914a514ef70a6caabab",
+      "statement_digest": "sha256:df9f8534a815a6679af95374d33c3a4ef9967cb9d8688c4cda54b3d5def3e404",
+      "sufficiency_reason": "The issue and PR describe the public testing API behavior precisely.",
+      "sufficient_for_solver_visible_statement": true,
+      "target_commit_exposed": false,
+      "task_id": "click__third__216",
+      "verdict": "accepted_public_context"
+    },
+    {
+      "ambiguity_flags": [],
+      "expected_behavior_summary": "Non-flag options do not infer flag_value from their default, avoiding boolean conversion side effects while preserving flag behavior.",
+      "implementation_instruction_flags": [],
+      "leakage_flags": [],
+      "public_anchor_type": "public_pull_request",
+      "public_context_repaired": true,
+      "public_refs": [
+        {
+          "kind": "pull_request",
+          "number": 2829,
+          "url": "https://github.com/pallets/click/pull/2829"
+        }
+      ],
+      "public_title": "Only try to set flag_value if is_flag is true",
+      "raw_public_api_response_committed": false,
+      "raw_public_body_committed": false,
+      "raw_target_diff_committed": false,
+      "raw_test_patch_committed": false,
+      "repo": "click",
+      "short_public_summary": "Public PR #2829 explains that flag_value inference can call __bool__ on defaults for options that are not flags, which breaks classes with disabled truth testing.",
+      "solver_visible_source_context_summary": "flag_value should only be set for options that are actually flags.",
+      "source_context_after": "public_context_repaired",
+      "source_context_before": "title_only_minor_risk",
+      "source_evidence_digest": "sha256:4b918040c25e616b121265fc16d08ed2dfb809391e77c922e4746691ddf4ca53",
+      "source_kind": "public_pr_body",
+      "source_summary_digest": "sha256:b54649564398446aed8f5021cd84139df33529f4687850b6dbfb072304883020",
+      "statement_digest": "sha256:b2fd01db329660eb107bf8ffee0cf7ec2c7a403ab2491f923f168e7b538d0504",
+      "sufficiency_reason": "The PR body states the failure mode and the public option classification boundary.",
+      "sufficient_for_solver_visible_statement": true,
+      "target_commit_exposed": false,
+      "task_id": "click__third__217",
+      "verdict": "accepted_public_context"
+    },
+    {
+      "ambiguity_flags": [],
+      "expected_behavior_summary": "Choice handles normalized tokens for supported value types, including enum-like choices, without weakening invalid-choice errors.",
+      "implementation_instruction_flags": [],
+      "leakage_flags": [],
+      "public_anchor_type": "public_issue_and_pull_request",
+      "public_context_repaired": true,
+      "public_refs": [
+        {
+          "kind": "pull_request",
+          "number": 2796,
+          "url": "https://github.com/pallets/click/pull/2796"
+        },
+        {
+          "kind": "issue",
+          "number": 605,
+          "url": "https://github.com/pallets/click/issues/605"
+        }
+      ],
+      "public_title": "Expand Choice token normalization and make generic",
+      "raw_public_api_response_committed": false,
+      "raw_public_body_committed": false,
+      "raw_target_diff_committed": false,
+      "raw_test_patch_committed": false,
+      "repo": "click",
+      "short_public_summary": "Public issue #605 and PR #2796 discuss broader Choice support, including enum values and token normalization for user-facing choice matching.",
+      "solver_visible_source_context_summary": "Choice token normalization should cover more choice values and work with generic typing.",
+      "source_context_after": "public_context_repaired",
+      "source_context_before": "title_only_minor_risk",
+      "source_evidence_digest": "sha256:8ff0b0cf37a1ef20264d0d6347895fe5391edf113d69842de81126f2e7062725",
+      "source_kind": "public_issue_and_pr_body",
+      "source_summary_digest": "sha256:8d82369f7ee4be4768a2d2248ae1d1b727c3d3ffa1de1c693cc60d5fb3e2abad",
+      "statement_digest": "sha256:4fa6e6c06bfe7cfeb33cd6419a9c48e9d48a5429a163abbe760a86f625d8e290",
+      "sufficiency_reason": "The public issue and PR identify the Choice API capability and compatibility goal.",
+      "sufficient_for_solver_visible_statement": true,
+      "target_commit_exposed": false,
+      "task_id": "click__third__220",
+      "verdict": "accepted_public_context"
+    },
+    {
+      "ambiguity_flags": [],
+      "expected_behavior_summary": "Zsh completion output preserves values with colons and does not split or corrupt them as descriptions.",
+      "implementation_instruction_flags": [],
+      "leakage_flags": [],
+      "public_anchor_type": "public_issue_and_pull_request",
+      "public_context_repaired": true,
+      "public_refs": [
+        {
+          "kind": "pull_request",
+          "number": 2846,
+          "url": "https://github.com/pallets/click/pull/2846"
+        },
+        {
+          "kind": "issue",
+          "number": 2703,
+          "url": "https://github.com/pallets/click/issues/2703"
+        }
+      ],
+      "public_title": "Fix Zsh completions with colons",
+      "raw_public_api_response_committed": false,
+      "raw_public_body_committed": false,
+      "raw_target_diff_committed": false,
+      "raw_test_patch_committed": false,
+      "repo": "click",
+      "short_public_summary": "Public issue #2703 and PR #2846 explain that Zsh completion values containing colons are parsed as description separators unless handled carefully.",
+      "solver_visible_source_context_summary": "Zsh shell completion should handle completion values containing colons.",
+      "source_context_after": "public_context_repaired",
+      "source_context_before": "title_only_minor_risk",
+      "source_evidence_digest": "sha256:5f0bdcc9eee1f7f165629ab8fb94d999bea8795d609e3e1bd36426a03896ee6b",
+      "source_kind": "public_issue_and_pr_body",
+      "source_summary_digest": "sha256:b3f273b7af26422b94c321d7ec760741cd9ea09c3e0bc0dd507cacdb8ca86cd5",
+      "statement_digest": "sha256:89908c5ec53864f6a044ccf5305eda1aa0a2081cf53708cbb16a0202d94c2de5",
+      "sufficiency_reason": "The public issue and PR describe the shell-specific parsing problem and expected value preservation.",
+      "sufficient_for_solver_visible_statement": true,
+      "target_commit_exposed": false,
+      "task_id": "click__third__234",
+      "verdict": "accepted_public_context"
+    },
+    {
+      "ambiguity_flags": [],
+      "expected_behavior_summary": "Fish completion parses and matches incomplete quoted or escaped values consistently with shell-provided words.",
+      "implementation_instruction_flags": [],
+      "leakage_flags": [],
+      "public_anchor_type": "public_issue_and_pull_request",
+      "public_context_repaired": true,
+      "public_refs": [
+        {
+          "kind": "pull_request",
+          "number": 3013,
+          "url": "https://github.com/pallets/click/pull/3013"
+        },
+        {
+          "kind": "issue",
+          "number": 2995,
+          "url": "https://github.com/pallets/click/issues/2995"
+        }
+      ],
+      "public_title": "Fix completions for quoted or escaped parameters in Fish",
+      "raw_public_api_response_committed": false,
+      "raw_public_body_committed": false,
+      "raw_target_diff_committed": false,
+      "raw_test_patch_committed": false,
+      "repo": "click",
+      "short_public_summary": "Public issue #2995 and PR #3013 describe Fish completion mismatches when the incomplete parameter contains spaces, quotes, or escaped characters.",
+      "solver_visible_source_context_summary": "Fish shell completion should handle quoted or escaped parameter values.",
+      "source_context_after": "public_context_repaired",
+      "source_context_before": "title_only_minor_risk",
+      "source_evidence_digest": "sha256:ce9bc65a6217d50e9e7b6423754b1aa890ecc2e2b54a934bbdb77416d1d801dd",
+      "source_kind": "public_issue_and_pr_body",
+      "source_summary_digest": "sha256:4f473c1e02d826744d53d91e77cfde547c26d9023e7555948282719d1e308acd",
+      "statement_digest": "sha256:ac5e313b719393b8eef60a3577709672341a8345444e3aa5ababaa7634e24b18",
+      "sufficiency_reason": "The issue gives the shell parsing mismatch and the PR confirms the completion behavior.",
+      "sufficient_for_solver_visible_statement": true,
+      "target_commit_exposed": false,
+      "task_id": "click__third__238",
+      "verdict": "accepted_public_context"
+    },
+    {
+      "ambiguity_flags": [],
+      "expected_behavior_summary": "Options with optional flag values accept both the bare flag and an explicit value according to the documented Click option contract.",
+      "implementation_instruction_flags": [],
+      "leakage_flags": [],
+      "public_anchor_type": "public_issue",
+      "public_context_repaired": true,
+      "public_refs": [
+        {
+          "kind": "issue",
+          "number": 3084,
+          "url": "https://github.com/pallets/click/issues/3084"
+        }
+      ],
+      "public_title": "Optional value not optional anymore",
+      "raw_public_api_response_committed": false,
+      "raw_public_body_committed": false,
+      "raw_target_diff_committed": false,
+      "raw_test_patch_committed": false,
+      "repo": "click",
+      "short_public_summary": "Public issue #3084 reports that an option configured with is_flag=False and flag_value stops accepting the documented optional-value behavior.",
+      "solver_visible_source_context_summary": "Optional flag values should be interpreted correctly for option parsing.",
+      "source_context_after": "public_context_repaired",
+      "source_context_before": "title_only_minor_risk",
+      "source_evidence_digest": "sha256:e9846c8248cdec3a2cf12cec6629537f169134ed662f38195c3af91d92c6909c",
+      "source_kind": "public_issue_body",
+      "source_summary_digest": "sha256:84dddac0123fd1ed8ae44bdd2515a5a50bc033ebf640d88c50597d3e6f8f9ed2",
+      "statement_digest": "sha256:56eaec675eea18270509d80d8e079ad44fd3894ffe58da0bf0f0724d114f137b",
+      "sufficiency_reason": "The issue links the public documentation behavior to the observed parsing regression.",
+      "sufficient_for_solver_visible_statement": true,
+      "target_commit_exposed": false,
+      "task_id": "click__third__250",
+      "verdict": "accepted_public_context"
+    },
+    {
+      "ambiguity_flags": [],
+      "expected_behavior_summary": "Linux prompt input delegates to readline-compatible behavior so editing and wrapping match the returned input.",
+      "implementation_instruction_flags": [],
+      "leakage_flags": [],
+      "public_anchor_type": "public_issue_and_pull_request",
+      "public_context_repaired": true,
+      "public_refs": [
+        {
+          "kind": "pull_request",
+          "number": 2969,
+          "url": "https://github.com/pallets/click/pull/2969"
+        },
+        {
+          "kind": "issue",
+          "number": 2968,
+          "url": "https://github.com/pallets/click/issues/2968"
+        }
+      ],
+      "public_title": "Fix readline backspace and line-wrapping on Linux",
+      "raw_public_api_response_committed": false,
+      "raw_public_body_committed": false,
+      "raw_target_diff_committed": false,
+      "raw_test_patch_committed": false,
+      "repo": "click",
+      "short_public_summary": "Public issue #2968 and PR #2969 describe Linux readline prompts where backspace and line wrapping behave incorrectly because of prompt handling.",
+      "solver_visible_source_context_summary": "Readline prompts on Linux should handle backspace and line wrapping correctly.",
+      "source_context_after": "public_context_repaired",
+      "source_context_before": "title_only_minor_risk",
+      "source_evidence_digest": "sha256:4baf8394f096ac93e8c5084fd387d17900df31999ba332b0557a6ee0e6dcc994",
+      "source_kind": "public_issue_and_pr_body",
+      "source_summary_digest": "sha256:5d68f25cd6bac907af82b51d74c02cf3e0781cbeaacb4416f3a4456b2356502d",
+      "statement_digest": "sha256:672ad6b9cb994f9bb31f7902d515e31f263bc6647a6952c095309dbf2295fff6",
+      "sufficiency_reason": "The issue records the visible terminal behavior and the PR narrows it to platform prompt handling.",
+      "sufficient_for_solver_visible_statement": true,
+      "target_commit_exposed": false,
+      "task_id": "click__third__271",
+      "verdict": "accepted_public_context"
+    },
+    {
+      "ambiguity_flags": [],
+      "expected_behavior_summary": "Generated Fish completions remain valid when command or option help spans multiple lines.",
+      "implementation_instruction_flags": [],
+      "leakage_flags": [],
+      "public_anchor_type": "public_issue_and_pull_request",
+      "public_context_repaired": true,
+      "public_refs": [
+        {
+          "kind": "pull_request",
+          "number": 3126,
+          "url": "https://github.com/pallets/click/pull/3126"
+        },
+        {
+          "kind": "issue",
+          "number": 3043,
+          "url": "https://github.com/pallets/click/issues/3043"
+        }
+      ],
+      "public_title": "Ensure fish completion handles multiline help strings correctly",
+      "raw_public_api_response_committed": false,
+      "raw_public_body_committed": false,
+      "raw_target_diff_committed": false,
+      "raw_test_patch_committed": false,
+      "repo": "click",
+      "short_public_summary": "Public issue #3043 and PR #3126 report that multiline help text can break generated Fish shell completion scripts.",
+      "solver_visible_source_context_summary": "Fish completion output should handle multiline help strings correctly.",
+      "source_context_after": "public_context_repaired",
+      "source_context_before": "title_only_minor_risk",
+      "source_evidence_digest": "sha256:6d154b11ae750710c339d7de4fa7376a871da60d89fd7f76a95b9017849c6eb2",
+      "source_kind": "public_issue_and_pr_body",
+      "source_summary_digest": "sha256:c6ce9e72ee1459d8ac931bc79ad6c533bc94958d17ef42b6492d678f30bc6e61",
+      "statement_digest": "sha256:3b03113ecc3eda6a1611f6941dd5683c40412e15d87b7a3d139302ea34e64ffe",
+      "sufficiency_reason": "The public issue gives the malformed completion scenario and the PR states the shell output contract.",
+      "sufficient_for_solver_visible_statement": true,
+      "target_commit_exposed": false,
+      "task_id": "click__third__274",
+      "verdict": "accepted_public_context"
+    },
+    {
+      "ambiguity_flags": [],
+      "expected_behavior_summary": "Misspelled subcommands raise a command-specific error that can include close command-name suggestions.",
+      "implementation_instruction_flags": [],
+      "leakage_flags": [],
+      "public_anchor_type": "public_issue_and_pull_request",
+      "public_context_repaired": true,
+      "public_refs": [
+        {
+          "kind": "pull_request",
+          "number": 3228,
+          "url": "https://github.com/pallets/click/pull/3228"
+        },
+        {
+          "kind": "issue",
+          "number": 2764,
+          "url": "https://github.com/pallets/click/issues/2764"
+        },
+        {
+          "kind": "issue",
+          "number": 3107,
+          "url": "https://github.com/pallets/click/issues/3107"
+        }
+      ],
+      "public_title": "Add NoSuchCommand exception with suggestions for misspelled commands",
+      "raw_public_api_response_committed": false,
+      "raw_public_body_committed": false,
+      "raw_target_diff_committed": false,
+      "raw_test_patch_committed": false,
+      "repo": "click",
+      "short_public_summary": "Public issues #2764 and #3107 and PR #3228 request did-you-mean suggestions for misspelled commands, similar to option suggestions.",
+      "solver_visible_source_context_summary": "Unknown command handling should provide a NoSuchCommand error with suggestions for misspelled commands.",
+      "source_context_after": "public_context_repaired",
+      "source_context_before": "title_only_minor_risk",
+      "source_evidence_digest": "sha256:c0f469a6036fd34c127f26670889736b5ad815a5c454f4784465c830dd976bd6",
+      "source_kind": "public_issue_and_pr_body",
+      "source_summary_digest": "sha256:f689a6fcecca20d8cf0e3e5f9a816a672d209d75ba3fa0e57ec4273afac2d60b",
+      "statement_digest": "sha256:85442cd78a26b84f09b70a54275053cde838fee8f4e1aa7a74937791518758f9",
+      "sufficiency_reason": "The issues and PR define the public error class and suggestion behavior.",
+      "sufficient_for_solver_visible_statement": true,
+      "target_commit_exposed": false,
+      "task_id": "click__third__275",
+      "verdict": "accepted_public_context"
+    },
+    {
+      "ambiguity_flags": [],
+      "expected_behavior_summary": "When a FuncParamType converter raises ValueError, Click includes that message in the parameter failure report.",
+      "implementation_instruction_flags": [],
+      "leakage_flags": [],
+      "public_anchor_type": "public_issue_and_pull_request",
+      "public_context_repaired": true,
+      "public_refs": [
+        {
+          "kind": "pull_request",
+          "number": 3211,
+          "url": "https://github.com/pallets/click/pull/3211"
+        },
+        {
+          "kind": "issue",
+          "number": 3105,
+          "url": "https://github.com/pallets/click/issues/3105"
+        }
+      ],
+      "public_title": "FuncParamType should use ValueError message in self.fail",
+      "raw_public_api_response_committed": false,
+      "raw_public_body_committed": false,
+      "raw_target_diff_committed": false,
+      "raw_test_patch_committed": false,
+      "repo": "click",
+      "short_public_summary": "Public issue #3105 and PR #3211 explain that FuncParamType discards the ValueError message raised by the wrapped conversion function.",
+      "solver_visible_source_context_summary": "FuncParamType failures should preserve the ValueError message in Click's failure output.",
+      "source_context_after": "public_context_repaired",
+      "source_context_before": "title_only_minor_risk",
+      "source_evidence_digest": "sha256:ef6bb107a73f49befb0c79dbf40519b467e721d807a97f4ad8a983e5e5456fc4",
+      "source_kind": "public_issue_and_pr_body",
+      "source_summary_digest": "sha256:4714a7d5bae93dda7970d5f4b8dda35b67d461cc61c6debeb28ee9cad3653633",
+      "statement_digest": "sha256:6ed0e80dedbc738739c2024725b980d3fbca0bd348a4bc03fa7c584ba28fe66e",
+      "sufficiency_reason": "The issue states the lost message and the PR describes the user-visible error output.",
+      "sufficient_for_solver_visible_statement": true,
+      "target_commit_exposed": false,
+      "task_id": "click__third__278",
+      "verdict": "accepted_public_context"
+    },
+    {
+      "ambiguity_flags": [],
+      "expected_behavior_summary": "Generated shell completion text uses line endings that Zsh can parse across supported environments.",
+      "implementation_instruction_flags": [],
+      "leakage_flags": [],
+      "public_anchor_type": "public_issue",
+      "public_context_repaired": true,
+      "public_refs": [
+        {
+          "kind": "issue",
+          "number": 3277,
+          "url": "https://github.com/pallets/click/issues/3277"
+        }
+      ],
+      "public_title": "Zsh completion setup fails with parse error near elif",
+      "raw_public_api_response_committed": false,
+      "raw_public_body_committed": false,
+      "raw_target_diff_committed": false,
+      "raw_test_patch_committed": false,
+      "repo": "click",
+      "short_public_summary": "Public issue #3277 reports Zsh completion setup failing with a parse error in a Windows Git Bash environment, consistent with line-ending-sensitive shell output.",
+      "solver_visible_source_context_summary": "Shell completion output should use Unix line endings for compatibility with Windows consumers.",
+      "source_context_after": "public_context_repaired",
+      "source_context_before": "title_only_minor_risk",
+      "source_evidence_digest": "sha256:fd9e15926ad3ba995ef60b85ea1dbf0763c623e5419f4a6af5cda20afa545733",
+      "source_kind": "public_issue_body",
+      "source_summary_digest": "sha256:d21510b0eae96d651dfbe2014cf29eb5f2d3b1b829313435c75a5b1d8310b413",
+      "statement_digest": "sha256:08a875df341905b394fd9e53eba80fc6002a2fc8e4144bc9c7513a9306cfcbd6",
+      "sufficiency_reason": "The issue gives the shell setup failure and public environment symptom without exposing hidden tests.",
+      "sufficient_for_solver_visible_statement": true,
+      "target_commit_exposed": false,
+      "task_id": "click__third__288",
+      "verdict": "accepted_public_context"
+    }
+  ],
+  "run_id": "phase1_click_llm_source_context_repair_20260529",
+  "schema_version": "barcarolle.phase1_click_llm_source_context_repair_output.v1.public_context_review.v1",
+  "verdict_counts": {
+    "accepted_public_context": 30
+  }
+}
