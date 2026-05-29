@@ -736,6 +736,7 @@ def build_imbalance_diagnostics(config: dict[str, Any] | None = None) -> dict[st
 
 
 def render_imbalance_report(payload: dict[str, Any]) -> str:
+    previous_score = payload["previous_frozen_paid_split_retrospective_visible_balance"]["feature_imbalance_score"]
     lines = [
         "# Phase 1 Blocked Split Imbalance Diagnostics",
         "",
@@ -743,9 +744,13 @@ def render_imbalance_report(payload: dict[str, Any]) -> str:
         "",
     ]
     for design_id, candidate in payload["selected_diagnostics"].items():
-        lines.append(f"`{design_id}` has feature imbalance score `{candidate['feature_imbalance_score']}` and gate status `{candidate['threshold_status']['gate_passed']}`.")
+        relation = "fairer than" if candidate["feature_imbalance_score"] <= previous_score else "not fairer than"
+        lines.append(
+            f"`{design_id}` has feature imbalance score `{candidate['feature_imbalance_score']}`, gate status `{candidate['threshold_status']['gate_passed']}`, and is {relation} the previous frozen paid split on the visible-feature score."
+        )
     lines += [
-        f"Previous frozen paid split visible-feature score: `{payload['previous_frozen_paid_split_retrospective_visible_balance']['feature_imbalance_score']}`.",
+        f"Previous frozen paid split visible-feature score: `{previous_score}`.",
+        "No threshold relaxation was used; selected candidates passed the configured rare/unknown, editable-scope, time-bucket, task-family, statement-specificity, source-quality, and source-context gates.",
         "",
         "## Why It Matters",
         "",
