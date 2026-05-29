@@ -43,3 +43,11 @@ What happened: the claim policy was written in `experiments/phase1_compiler/conf
 Why it matters: this run now has a machine-readable guardrail that accepts post-hoc split design only for exploratory accounting and rejects formal preregistration or predictive-validity wording.
 
 What action it suggests next: compute exact task/adapter overlap with completed score tables without imputing missing outcomes and without changing the selected split.
+
+## Step 2: Compute Overlap And Missing Cells
+
+What happened: the design-review tool computed exact overlap for both selected blocked splits. The same-budget split has `36/60` known tasks and `48/120` missing task/adapter cells. The expanded split has `56/90` known tasks and `68/180` missing task/adapter cells.
+
+Why it matters: the same-budget selected score table is incomplete by `24` tasks, with `24` missing cells for `codex_workspace` and `24` missing cells for `kilo_workspace`. Missing outcomes were not imputed, and reusable cells retain committed score-table provenance.
+
+What action it suggests next: compare the five protocol options using the exact overlap and missing-cell manifests.
