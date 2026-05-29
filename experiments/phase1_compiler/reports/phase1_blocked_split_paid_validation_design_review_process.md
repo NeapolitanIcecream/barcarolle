@@ -75,3 +75,11 @@ What happened: the reuse policy and ready package were written for Option `B`. T
 Why it matters: a later paid execution can use exact protocol inputs without reselecting tasks or treating reused cells as formal preregistered evidence. The package requires `LLM_BASE_URL` and `LLM_API_KEY` and forbids fallback to other LLM auth.
 
 What action it suggests next: add focused tests and run the required consistency checks before writing the final decision.
+
+## Step 6: Tests And Consistency Checks
+
+What happened: focused design-review tests passed (`8 passed in 0.03s`), the full Phase 1 compiler test suite passed (`270 passed in 38.75s`), and `git diff --check` passed.
+
+Why it matters: the generated policy, overlap, protocol, cost, and ready-package artifacts now have executable coverage for the runbook's key invariants.
+
+What action it suggests next: write the final decision with `tests_and_diff_check_passed` set to true.
