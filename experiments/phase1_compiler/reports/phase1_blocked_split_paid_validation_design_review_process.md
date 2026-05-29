@@ -59,3 +59,11 @@ What happened: five protocol options were compared. Option `B` (`same_budget_mis
 Why it matters: the recommended protocol fills the primary selected same-budget score table at lower cost than a full rerun, while preserving the post-hoc exploratory claim boundary.
 
 What action it suggests next: project adapter-stratified token-estimated cost for each option before packaging the later paid-execution inputs.
+
+## Step 4: Project Cost And Latency
+
+What happened: adapter-stratified token-estimated cost was projected for every protocol option. Option `B` needs `48` new cells with estimated new cost `$20.506944`: `$12.889248` for `codex_workspace` and `$7.617696` for `kilo_workspace`.
+
+Why it matters: the same-budget missing-cell supplement is materially cheaper than a same-budget full rerun (`$51.26736`) while still filling the primary selected score table. Provider-billed exact cost remains unavailable because no committed `actual_provider_billed_cost_usd` value is present.
+
+What action it suggests next: package the recommended exploratory supplement with exact reusable cells, missing cells, endpoint requirements, and stop conditions.
