@@ -1,6 +1,6 @@
 # Blocked Split Supplement Fairness Gap Diagnostics Process
 
-Current step: `Step 5 previous split comparison complete`.
+Current step: `Step 6 action matrix and decision complete`.
 
 Completed artifacts:
 - Step 0 preflight
@@ -9,6 +9,7 @@ Completed artifacts:
 - Step 3 adapter disagreement by repo
 - Step 4 invalid output triage
 - Step 5 previous split comparison
+- Step 6 action matrix and decision
 
 Boundary:
 - Diagnostic-only run.
@@ -19,3 +20,9 @@ Boundary:
 
 Notes:
 - No extra notes.
+
+Verification:
+- `uv run --project experiments/phase1_compiler pytest experiments/phase1_compiler/tests/test_phase1_blocked_split_supplement_fairness_gap_diagnostics.py -q`: 5 passed in 0.06s.
+- `uv run --project experiments/phase1_compiler pytest experiments/phase1_compiler/tests -q`: 282 passed in 39.35s.
+- `git diff --check`: passed.
+- `git status --short --untracked-files=all`: only this diagnostics closeout work plus the unrelated untracked external_review bundle before the final commit.

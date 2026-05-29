@@ -1227,6 +1227,11 @@ def write_decision_report(config: dict[str, Any], decision: dict[str, Any]) -> N
         f"- Invalid output threatens supplement conclusion: `{decision['invalid_output_summary']['threatens_supplement_conclusion']}`.",
         f"- More paid cells recommended now: `{decision['more_paid_cells_recommended_now']}`.",
         f"- Predictive validity established: `{decision['predictive_validity_established']}`.",
+        f"- Adapter disagreement concentration: `{decision['adapter_disagreement_summary']['main_concentration']}`.",
+        "",
+        "## Repo Priorities",
+        "",
+        *[f"- {item}." for item in decision["repo_level_gap_priorities"]],
         "",
         "No follow-up runbook was drafted or created by this diagnostic run.",
     ]

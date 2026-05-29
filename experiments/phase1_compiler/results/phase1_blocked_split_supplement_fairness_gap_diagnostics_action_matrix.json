@@ -1,0 +1,65 @@
+{
+  "actions": [
+    {
+      "action": "accept_adapter_difference_as_acut_result",
+      "blocking": false,
+      "cost": "no_paid",
+      "evidence": "Fairness conclusion is fair_enough_to_interpret_as_acut_difference; endpoint/model/workspace/verifier/accounting checks are clean enough.",
+      "recommendation_status": "recommended"
+    },
+    {
+      "action": "fix_adapter_endpoint_or_model_config",
+      "blocking": false,
+      "cost": "no_paid_if_needed",
+      "evidence": "Committed endpoint and model evidence is clean for both adapters.",
+      "recommendation_status": "not_recommended_now"
+    },
+    {
+      "action": "improve_sanitized_invalid_output_logging",
+      "blocking": false,
+      "cost": "no_paid",
+      "evidence": "The invalid row proves invalid_output but does not preserve enough sanitized cause detail to distinguish no diff from unparseable diff.",
+      "recommendation_status": "recommended_minor"
+    },
+    {
+      "action": "investigate_codex_attrs_invalid_output_contract",
+      "blocking": false,
+      "cost": "no_paid",
+      "evidence": "Only Codex attrs__v2__157 is non-scoreable; Kilo completed the same task as verified_fail.",
+      "recommendation_status": "recommended_no_paid"
+    },
+    {
+      "action": "repo_level_gap_deep_dive_no_paid",
+      "blocking": false,
+      "cost": "no_paid",
+      "evidence": "Repo gaps are concentrated in Codex click, Kilo boltons, and Codex attrs non-scoreable sensitivity.",
+      "recommendation_status": "recommended"
+    },
+    {
+      "action": "proceed_to_next_repo_or_supply_expansion",
+      "blocking": false,
+      "cost": "depends_on_next_work",
+      "evidence": "Supplement is fair enough to interpret, but click caveat and repo gaps should inform next supply decisions.",
+      "recommendation_status": "allowed_after_no_paid_review"
+    },
+    {
+      "action": "do_not_run_more_paid_cells_yet",
+      "blocking": true,
+      "cost": "saves_paid_budget",
+      "evidence": "No benchmark bug was found that justifies paid reruns; repo-level gaps can be studied without paid cells.",
+      "recommendation_status": "recommended"
+    },
+    {
+      "action": "paid_rerun_only_if_benchmark_bug_confirmed",
+      "blocking": false,
+      "cost": "paid_only_if_later_justified",
+      "evidence": "The one invalid output is non-scoreable and logging-limited, not proof of a benchmark bug.",
+      "recommendation_status": "recommended_policy"
+    }
+  ],
+  "artifact": "action_matrix",
+  "generated_at": "2026-05-29T08:10:21Z",
+  "run_id": "phase1_blocked_split_supplement_fairness_gap_diagnostics_20260529",
+  "schema_version": "barcarolle.phase1_blocked_split_supplement_fairness_gap_diagnostics_output.v1",
+  "status": "complete"
+}
