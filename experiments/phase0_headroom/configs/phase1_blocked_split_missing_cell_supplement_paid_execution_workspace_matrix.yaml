@@ -1,0 +1,73 @@
+schema_version: barcarolle.workspace_acut_matrix_config.v1
+status: configured_for_blocked_split_missing_cell_supplement_paid_execution
+phase1_three_repo_paid_validation: true
+phase1_blocked_split_missing_cell_supplement: true
+adapter_config: experiments/phase0_headroom/configs/acut_workspace_adapters.yaml
+task_table: experiments/phase1_compiler/results/phase1_three_repo_paid_readiness_packaging_task_table.json
+split_plan: experiments/phase1_compiler/results/phase1_blocked_split_missing_cell_supplement_paid_execution_selected_split_plan.json
+fresh_certification_attempts: experiments/phase1_compiler/results/phase1_task_supply_v2_fresh_certification_attempts.json
+third_repo_certification_attempts: experiments/phase1_compiler/results/phase1_third_repo_release_supply_screen_certification_attempts.json
+task_supply_raw_anchor_inventory: experiments/phase1_compiler/results/phase1_task_supply_v2_raw_anchor_inventory.json
+third_repo_raw_anchor_inventory: experiments/phase1_compiler/results/phase1_third_repo_release_supply_screen_raw_anchor_inventory.json
+attrs_source_repair_statement_packets: experiments/phase1_compiler/results/phase1_attrs_source_repair_statement_packets.json
+task_ids:
+  - attrs__v2__044
+  - attrs__v2__157
+  - attrs__v2__187
+  - attrs__v2__202
+  - attrs__v2__207
+  - attrs__v2__215
+  - attrs__v2__231
+  - attrs__v2__235
+  - attrs__v2__250
+  - attrs__v2__271
+  - attrs__v2__052
+  - attrs__v2__158
+  - attrs__v2__210
+  - attrs__v2__218
+  - attrs__v2__220
+  - attrs__v2__223
+  - attrs__v2__244
+  - attrs__v2__253
+  - attrs__v2__261
+  - attrs__v2__264
+  - boltons__v2__007
+  - boltons__v2__008
+  - boltons__v2__009
+  - boltons__v2__068
+  - boltons__v2__076
+  - boltons__v2__103
+  - boltons__v2__128
+  - boltons__v2__147
+  - boltons__v2__154
+  - boltons__v2__231
+  - boltons__v2__006
+  - boltons__v2__091
+  - boltons__v2__093
+  - boltons__v2__122
+  - boltons__v2__132
+  - boltons__v2__135
+  - boltons__v2__140
+  - boltons__v2__144
+  - boltons__v2__163
+  - boltons__v2__232
+  - click__third__091
+  - click__third__166
+  - click__third__201
+  - click__third__202
+  - click__third__206
+  - click__third__217
+  - click__third__220
+  - click__third__238
+  - click__third__250
+  - click__third__274
+  - click__third__050
+  - click__third__109
+  - click__third__198
+  - click__third__203
+  - click__third__205
+  - click__third__208
+  - click__third__214
+  - click__third__234
+  - click__third__271
+  - click__third__288
