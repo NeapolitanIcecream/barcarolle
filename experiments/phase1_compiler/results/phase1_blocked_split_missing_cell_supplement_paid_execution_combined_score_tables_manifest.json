@@ -1,0 +1,216 @@
+{
+  "artifact": "combined_score_tables_manifest",
+  "completed_cells": 120,
+  "coverage_by_adapter_repo_split": {
+    "codex_workspace|attrs|B_eval": {
+      "completed": 10,
+      "planned": 10,
+      "scoreable": 9
+    },
+    "codex_workspace|attrs|H_future": {
+      "completed": 10,
+      "planned": 10,
+      "scoreable": 10
+    },
+    "codex_workspace|boltons|B_eval": {
+      "completed": 10,
+      "planned": 10,
+      "scoreable": 10
+    },
+    "codex_workspace|boltons|H_future": {
+      "completed": 10,
+      "planned": 10,
+      "scoreable": 10
+    },
+    "codex_workspace|click|B_eval": {
+      "completed": 10,
+      "planned": 10,
+      "scoreable": 10
+    },
+    "codex_workspace|click|H_future": {
+      "completed": 10,
+      "planned": 10,
+      "scoreable": 10
+    },
+    "kilo_workspace|attrs|B_eval": {
+      "completed": 10,
+      "planned": 10,
+      "scoreable": 10
+    },
+    "kilo_workspace|attrs|H_future": {
+      "completed": 10,
+      "planned": 10,
+      "scoreable": 10
+    },
+    "kilo_workspace|boltons|B_eval": {
+      "completed": 10,
+      "planned": 10,
+      "scoreable": 10
+    },
+    "kilo_workspace|boltons|H_future": {
+      "completed": 10,
+      "planned": 10,
+      "scoreable": 10
+    },
+    "kilo_workspace|click|B_eval": {
+      "completed": 10,
+      "planned": 10,
+      "scoreable": 10
+    },
+    "kilo_workspace|click|H_future": {
+      "completed": 10,
+      "planned": 10,
+      "scoreable": 10
+    }
+  },
+  "generated_at": "2026-05-29T05:19:41Z",
+  "new_entries": [
+    {
+      "cell_source": "new_missing_cell_paid_run",
+      "completed_cells": 3,
+      "cost_ledger": "experiments/phase0_headroom/results/phase1_blocked_split_missing_cell_supplement_paid_execution_batch_1_smoke_codex_workspace_cost_ledger.jsonl",
+      "matrix": "experiments/phase0_headroom/results/phase1_blocked_split_missing_cell_supplement_paid_execution_batch_1_smoke_codex_workspace_matrix.json",
+      "non_scoreable_by_status": {
+        "invalid_output": 1
+      },
+      "non_scoreable_cells": 1,
+      "planned_cells": 3,
+      "result_prefix": "phase1_blocked_split_missing_cell_supplement_paid_execution_batch_1_smoke_codex_workspace",
+      "score_table": "experiments/phase0_headroom/results/phase1_blocked_split_missing_cell_supplement_paid_execution_batch_1_smoke_codex_workspace_score_table.csv",
+      "scoreable_cells": 2,
+      "submissions": "experiments/phase0_headroom/results/phase1_blocked_split_missing_cell_supplement_paid_execution_batch_1_smoke_codex_workspace_submissions.jsonl",
+      "verifier_results": "experiments/phase0_headroom/results/phase1_blocked_split_missing_cell_supplement_paid_execution_batch_1_smoke_codex_workspace_verifier_results.jsonl"
+    },
+    {
+      "cell_source": "new_missing_cell_paid_run",
+      "completed_cells": 3,
+      "cost_ledger": "experiments/phase0_headroom/results/phase1_blocked_split_missing_cell_supplement_paid_execution_batch_1_smoke_kilo_workspace_cost_ledger.jsonl",
+      "matrix": "experiments/phase0_headroom/results/phase1_blocked_split_missing_cell_supplement_paid_execution_batch_1_smoke_kilo_workspace_matrix.json",
+      "non_scoreable_by_status": {},
+      "non_scoreable_cells": 0,
+      "planned_cells": 3,
+      "result_prefix": "phase1_blocked_split_missing_cell_supplement_paid_execution_batch_1_smoke_kilo_workspace",
+      "score_table": "experiments/phase0_headroom/results/phase1_blocked_split_missing_cell_supplement_paid_execution_batch_1_smoke_kilo_workspace_score_table.csv",
+      "scoreable_cells": 3,
+      "submissions": "experiments/phase0_headroom/results/phase1_blocked_split_missing_cell_supplement_paid_execution_batch_1_smoke_kilo_workspace_submissions.jsonl",
+      "verifier_results": "experiments/phase0_headroom/results/phase1_blocked_split_missing_cell_supplement_paid_execution_batch_1_smoke_kilo_workspace_verifier_results.jsonl"
+    },
+    {
+      "cell_source": "new_missing_cell_paid_run",
+      "completed_cells": 5,
+      "cost_ledger": "experiments/phase0_headroom/results/phase1_blocked_split_missing_cell_supplement_paid_execution_batch_2_attrs_remainder_codex_workspace_cost_ledger.jsonl",
+      "matrix": "experiments/phase0_headroom/results/phase1_blocked_split_missing_cell_supplement_paid_execution_batch_2_attrs_remainder_codex_workspace_matrix.json",
+      "non_scoreable_by_status": {},
+      "non_scoreable_cells": 0,
+      "planned_cells": 5,
+      "result_prefix": "phase1_blocked_split_missing_cell_supplement_paid_execution_batch_2_attrs_remainder_codex_workspace",
+      "score_table": "experiments/phase0_headroom/results/phase1_blocked_split_missing_cell_supplement_paid_execution_batch_2_attrs_remainder_codex_workspace_score_table.csv",
+      "scoreable_cells": 5,
+      "submissions": "experiments/phase0_headroom/results/phase1_blocked_split_missing_cell_supplement_paid_execution_batch_2_attrs_remainder_codex_workspace_submissions.jsonl",
+      "verifier_results": "experiments/phase0_headroom/results/phase1_blocked_split_missing_cell_supplement_paid_execution_batch_2_attrs_remainder_codex_workspace_verifier_results.jsonl"
+    },
+    {
+      "cell_source": "new_missing_cell_paid_run",
+      "completed_cells": 5,
+      "cost_ledger": "experiments/phase0_headroom/results/phase1_blocked_split_missing_cell_supplement_paid_execution_batch_2_attrs_remainder_kilo_workspace_cost_ledger.jsonl",
+      "matrix": "experiments/phase0_headroom/results/phase1_blocked_split_missing_cell_supplement_paid_execution_batch_2_attrs_remainder_kilo_workspace_matrix.json",
+      "non_scoreable_by_status": {},
+      "non_scoreable_cells": 0,
+      "planned_cells": 5,
+      "result_prefix": "phase1_blocked_split_missing_cell_supplement_paid_execution_batch_2_attrs_remainder_kilo_workspace",
+      "score_table": "experiments/phase0_headroom/results/phase1_blocked_split_missing_cell_supplement_paid_execution_batch_2_attrs_remainder_kilo_workspace_score_table.csv",
+      "scoreable_cells": 5,
+      "submissions": "experiments/phase0_headroom/results/phase1_blocked_split_missing_cell_supplement_paid_execution_batch_2_attrs_remainder_kilo_workspace_submissions.jsonl",
+      "verifier_results": "experiments/phase0_headroom/results/phase1_blocked_split_missing_cell_supplement_paid_execution_batch_2_attrs_remainder_kilo_workspace_verifier_results.jsonl"
+    },
+    {
+      "cell_source": "new_missing_cell_paid_run",
+      "completed_cells": 9,
+      "cost_ledger": "experiments/phase0_headroom/results/phase1_blocked_split_missing_cell_supplement_paid_execution_batch_3_boltons_remainder_codex_workspace_cost_ledger.jsonl",
+      "matrix": "experiments/phase0_headroom/results/phase1_blocked_split_missing_cell_supplement_paid_execution_batch_3_boltons_remainder_codex_workspace_matrix.json",
+      "non_scoreable_by_status": {},
+      "non_scoreable_cells": 0,
+      "planned_cells": 9,
+      "result_prefix": "phase1_blocked_split_missing_cell_supplement_paid_execution_batch_3_boltons_remainder_codex_workspace",
+      "score_table": "experiments/phase0_headroom/results/phase1_blocked_split_missing_cell_supplement_paid_execution_batch_3_boltons_remainder_codex_workspace_score_table.csv",
+      "scoreable_cells": 9,
+      "submissions": "experiments/phase0_headroom/results/phase1_blocked_split_missing_cell_supplement_paid_execution_batch_3_boltons_remainder_codex_workspace_submissions.jsonl",
+      "verifier_results": "experiments/phase0_headroom/results/phase1_blocked_split_missing_cell_supplement_paid_execution_batch_3_boltons_remainder_codex_workspace_verifier_results.jsonl"
+    },
+    {
+      "cell_source": "new_missing_cell_paid_run",
+      "completed_cells": 9,
+      "cost_ledger": "experiments/phase0_headroom/results/phase1_blocked_split_missing_cell_supplement_paid_execution_batch_3_boltons_remainder_kilo_workspace_cost_ledger.jsonl",
+      "matrix": "experiments/phase0_headroom/results/phase1_blocked_split_missing_cell_supplement_paid_execution_batch_3_boltons_remainder_kilo_workspace_matrix.json",
+      "non_scoreable_by_status": {},
+      "non_scoreable_cells": 0,
+      "planned_cells": 9,
+      "result_prefix": "phase1_blocked_split_missing_cell_supplement_paid_execution_batch_3_boltons_remainder_kilo_workspace",
+      "score_table": "experiments/phase0_headroom/results/phase1_blocked_split_missing_cell_supplement_paid_execution_batch_3_boltons_remainder_kilo_workspace_score_table.csv",
+      "scoreable_cells": 9,
+      "submissions": "experiments/phase0_headroom/results/phase1_blocked_split_missing_cell_supplement_paid_execution_batch_3_boltons_remainder_kilo_workspace_submissions.jsonl",
+      "verifier_results": "experiments/phase0_headroom/results/phase1_blocked_split_missing_cell_supplement_paid_execution_batch_3_boltons_remainder_kilo_workspace_verifier_results.jsonl"
+    },
+    {
+      "cell_source": "new_missing_cell_paid_run",
+      "completed_cells": 7,
+      "cost_ledger": "experiments/phase0_headroom/results/phase1_blocked_split_missing_cell_supplement_paid_execution_batch_4_click_remainder_codex_workspace_cost_ledger.jsonl",
+      "matrix": "experiments/phase0_headroom/results/phase1_blocked_split_missing_cell_supplement_paid_execution_batch_4_click_remainder_codex_workspace_matrix.json",
+      "non_scoreable_by_status": {},
+      "non_scoreable_cells": 0,
+      "planned_cells": 7,
+      "result_prefix": "phase1_blocked_split_missing_cell_supplement_paid_execution_batch_4_click_remainder_codex_workspace",
+      "score_table": "experiments/phase0_headroom/results/phase1_blocked_split_missing_cell_supplement_paid_execution_batch_4_click_remainder_codex_workspace_score_table.csv",
+      "scoreable_cells": 7,
+      "submissions": "experiments/phase0_headroom/results/phase1_blocked_split_missing_cell_supplement_paid_execution_batch_4_click_remainder_codex_workspace_submissions.jsonl",
+      "verifier_results": "experiments/phase0_headroom/results/phase1_blocked_split_missing_cell_supplement_paid_execution_batch_4_click_remainder_codex_workspace_verifier_results.jsonl"
+    },
+    {
+      "cell_source": "new_missing_cell_paid_run",
+      "completed_cells": 7,
+      "cost_ledger": "experiments/phase0_headroom/results/phase1_blocked_split_missing_cell_supplement_paid_execution_batch_4_click_remainder_kilo_workspace_cost_ledger.jsonl",
+      "matrix": "experiments/phase0_headroom/results/phase1_blocked_split_missing_cell_supplement_paid_execution_batch_4_click_remainder_kilo_workspace_matrix.json",
+      "non_scoreable_by_status": {},
+      "non_scoreable_cells": 0,
+      "planned_cells": 7,
+      "result_prefix": "phase1_blocked_split_missing_cell_supplement_paid_execution_batch_4_click_remainder_kilo_workspace",
+      "score_table": "experiments/phase0_headroom/results/phase1_blocked_split_missing_cell_supplement_paid_execution_batch_4_click_remainder_kilo_workspace_score_table.csv",
+      "scoreable_cells": 7,
+      "submissions": "experiments/phase0_headroom/results/phase1_blocked_split_missing_cell_supplement_paid_execution_batch_4_click_remainder_kilo_workspace_submissions.jsonl",
+      "verifier_results": "experiments/phase0_headroom/results/phase1_blocked_split_missing_cell_supplement_paid_execution_batch_4_click_remainder_kilo_workspace_verifier_results.jsonl"
+    }
+  ],
+  "new_result_prefixes": [
+    "phase1_blocked_split_missing_cell_supplement_paid_execution_batch_1_smoke_codex_workspace",
+    "phase1_blocked_split_missing_cell_supplement_paid_execution_batch_1_smoke_kilo_workspace",
+    "phase1_blocked_split_missing_cell_supplement_paid_execution_batch_2_attrs_remainder_codex_workspace",
+    "phase1_blocked_split_missing_cell_supplement_paid_execution_batch_2_attrs_remainder_kilo_workspace",
+    "phase1_blocked_split_missing_cell_supplement_paid_execution_batch_3_boltons_remainder_codex_workspace",
+    "phase1_blocked_split_missing_cell_supplement_paid_execution_batch_3_boltons_remainder_kilo_workspace",
+    "phase1_blocked_split_missing_cell_supplement_paid_execution_batch_4_click_remainder_codex_workspace",
+    "phase1_blocked_split_missing_cell_supplement_paid_execution_batch_4_click_remainder_kilo_workspace"
+  ],
+  "non_scoreable_by_status": {
+    "invalid_output": 1
+  },
+  "non_scoreable_cells": 1,
+  "planned_selected_cells": 120,
+  "provider_billed_exact_cost_available": false,
+  "reused_cell_count": 72,
+  "reused_result_sources": [
+    "experiments/phase0_headroom/results/phase1_three_repo_paid_validation_batch_1_smoke_codex_workspace_score_table.csv",
+    "experiments/phase0_headroom/results/phase1_three_repo_paid_validation_batch_1_smoke_kilo_workspace_score_table.csv",
+    "experiments/phase0_headroom/results/phase1_three_repo_paid_validation_batch_2_small_pilot_complete_codex_workspace_score_table.csv",
+    "experiments/phase0_headroom/results/phase1_three_repo_paid_validation_batch_2_small_pilot_complete_kilo_workspace_score_table.csv",
+    "experiments/phase0_headroom/results/phase1_three_repo_paid_validation_batch_3_attrs_remainder_codex_workspace_score_table.csv",
+    "experiments/phase0_headroom/results/phase1_three_repo_paid_validation_batch_3_attrs_remainder_kilo_workspace_score_table.csv",
+    "experiments/phase0_headroom/results/phase1_three_repo_paid_validation_batch_4_boltons_remainder_codex_workspace_score_table.csv",
+    "experiments/phase0_headroom/results/phase1_three_repo_paid_validation_batch_4_boltons_remainder_kilo_workspace_score_table.csv",
+    "experiments/phase0_headroom/results/phase1_three_repo_paid_validation_batch_5_click_remainder_codex_workspace_score_table.csv",
+    "experiments/phase0_headroom/results/phase1_three_repo_paid_validation_batch_5_click_remainder_kilo_workspace_score_table.csv"
+  ],
+  "run_id": "phase1_blocked_split_missing_cell_supplement_paid_execution_20260529",
+  "schema_version": "barcarolle.phase1_blocked_split_missing_cell_supplement_paid_execution_output.v1",
+  "scoreable_cells": 119,
+  "status": "complete"
+}

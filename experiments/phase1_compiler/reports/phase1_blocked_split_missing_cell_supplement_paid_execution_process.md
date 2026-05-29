@@ -1,6 +1,6 @@
 # Blocked Split Missing-Cell Supplement Process
 
-Current step: `Batch 4 complete`.
+Current step: `Step 7 cost reconciliation and score tables complete`.
 
 Completed artifacts:
 - Step 0 preflight
@@ -12,10 +12,11 @@ Completed artifacts:
 - Step 4 attrs batch
 - Step 5 boltons batch
 - Step 6 click batch
+- Step 7 cost reconciliation
+- Step 7 combined score-table manifest
 
 
 Notes:
-- Continue decision: all_batches_complete.
-
+- No extra notes.
 
 Follow-up runbook drafted by this worker: `false`.
