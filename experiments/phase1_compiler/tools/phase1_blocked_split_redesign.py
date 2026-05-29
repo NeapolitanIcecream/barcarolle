@@ -935,6 +935,30 @@ def load_cost_summaries(config: dict[str, Any]) -> list[dict[str, Any]]:
     return [{**read_json(path), "_path": rel(path)} for path in paths]
 
 
+def load_usage_ledger_summary(config: dict[str, Any]) -> dict[str, Any]:
+    path = input_path(config, "workspace_usage_ledger")
+    total_records = 0
+    relevant_rows: list[dict[str, Any]] = []
+    for line in path.read_text(encoding="utf-8").splitlines():
+        if not line.strip():
+            continue
+        total_records += 1
+        row = json.loads(line)
+        result_prefix = str(row.get("result_prefix") or "")
+        run_id = str(row.get("run_id") or "")
+        if result_prefix.startswith("phase1_three_repo_paid_validation") or "phase1_three_repo_paid_validation" in run_id:
+            relevant_rows.append(row)
+    by_adapter = Counter(str(row.get("adapter_id") or "unknown") for row in relevant_rows)
+    return {
+        "ledger_path": rel(path),
+        "total_ledger_records": total_records,
+        "matching_prior_paid_validation_records": len(relevant_rows),
+        "matching_records_by_adapter": dict(sorted(by_adapter.items())),
+        "matching_estimated_cost_usd": round(sum(float(row.get("estimated_cost_usd") or 0.0) for row in relevant_rows), 6),
+        "raw_artifact_refs_committed": False,
+    }
+
+
 def adapter_from_cost_summary(summary: dict[str, Any]) -> str:
     per_harness = summary.get("per_harness_observed_token_cost_usd") or {}
     if len(per_harness) == 1:
@@ -950,6 +974,7 @@ def adapter_from_cost_summary(summary: dict[str, Any]) -> str:
 def build_cost_power_projection(config: dict[str, Any] | None = None) -> dict[str, Any]:
     config = config or load_config()
     summaries = load_cost_summaries(config)
+    usage_ledger_summary = load_usage_ledger_summary(config)
     by_adapter: dict[str, list[dict[str, Any]]] = defaultdict(list)
     for summary in summaries:
         by_adapter[adapter_from_cost_summary(summary)].append(summary)
@@ -1005,6 +1030,7 @@ def build_cost_power_projection(config: dict[str, Any] | None = None) -> dict[st
         "input_paths_loaded": [rel(config["_path"]), *[summary["_path"] for summary in summaries], rel(input_path(config, "workspace_usage_ledger"))],
         "paid_calls_made": 0,
         "cost_basis": "token_estimated_unless_provider_billed_available",
+        "workspace_usage_ledger_summary": usage_ledger_summary,
         "adapter_baselines": adapter_baselines,
         "budget_projections": projections,
         "expanded_budget_recommendation": "secondary_candidate_worth_considering_if_preregistration_accepts_higher_cost_and_click_minor_risk_caveat",
@@ -1022,6 +1048,7 @@ def render_cost_report(payload: dict[str, Any]) -> str:
         "## What Happened",
         "",
         "Projected future paid validation cost from committed prior cost summaries. No paid calls were made.",
+        f"The workspace usage ledger had {payload['workspace_usage_ledger_summary']['matching_prior_paid_validation_records']} matching prior paid-validation records and estimated cost `${payload['workspace_usage_ledger_summary']['matching_estimated_cost_usd']}`.",
         "",
     ]
     for budget_id, projection in payload["budget_projections"].items():
