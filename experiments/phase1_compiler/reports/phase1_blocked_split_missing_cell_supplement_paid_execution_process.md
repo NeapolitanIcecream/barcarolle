@@ -1,6 +1,6 @@
 # Blocked Split Missing-Cell Supplement Process
 
-Current step: `Step 8 adapter-stratified metrics complete`.
+Current step: `Step 9 decision complete`.
 
 Completed artifacts:
 - Step 0 preflight
@@ -15,6 +15,7 @@ Completed artifacts:
 - Step 7 cost reconciliation
 - Step 7 combined score-table manifest
 - Step 8 adapter-stratified metrics
+- Step 9 decision
 
 
 Notes:
