@@ -1,0 +1,18 @@
+{
+  "artifact": "claim_boundary",
+  "claim_boundary_label": "click_clean_enough_for_three_repo_claim",
+  "click_can_support_clean_three_repo_source_quality_claim": true,
+  "click_cleaner_source_story": true,
+  "completed_paid_outcomes_changed": false,
+  "generated_at": "2026-05-29T11:04:20Z",
+  "paid_acut_cells_remain_blocked_by_default": true,
+  "predictive_validity_established": false,
+  "rationale": "All 30 frozen click tasks moved from title-only/minor-risk to reviewed public-context repaired status. This improves the source-quality story but does not establish predictive validity or justify paid ACUT reruns.",
+  "recommended_next_action_categories": [
+    "use click with the repaired source-quality overlay for cleaner narrative support",
+    "keep paid ACUT reruns blocked unless a future runbook identifies a concrete benchmark-side bug",
+    "preserve the historical exploratory supplement as exploratory evidence"
+  ],
+  "run_id": "phase1_click_llm_source_context_repair_20260529",
+  "schema_version": "barcarolle.phase1_click_llm_source_context_repair_output.v1.claim_boundary.v1"
+}
