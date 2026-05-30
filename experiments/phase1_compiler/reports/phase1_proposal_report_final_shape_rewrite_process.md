@@ -1,6 +1,6 @@
 # Phase 1 Proposal Report Final-Shape Rewrite Process
 
-Status: in progress.
+Status: complete.
 Runbook: `docs/experiments/phase-1-proposal-report-final-shape-rewrite-runbook.md`.
 Started: 2026-05-30T19:11:01+08:00.
 
@@ -305,3 +305,45 @@ Acceptance evidence:
 - No prohibited predictive-validity or paid-authorization phrasing was found.
 - `git diff --check` passed.
 - No paid calls were made.
+
+## Step 5: Closeout
+
+Closeout artifacts written:
+
+- `experiments/phase1_compiler/reports/phase1_proposal_report_final_shape_rewrite_process.md`
+- `experiments/phase1_compiler/reports/phase1_proposal_report_final_shape_rewrite_decision.md`
+- `experiments/phase1_compiler/results/phase1_proposal_report_final_shape_rewrite_decision.json`
+
+Stop label: `proposal_report_final_shape_rewrite_complete`.
+
+What happened:
+
+`docs/research/phase-1-proposal-report-v1.md` was created as a final-shape
+proposal document with explicit placeholders. V0 was superseded as the active
+proposal report and retained as source material. The argument map, evidence
+matrix, and claim boundary were aligned to v1 while keeping their internal
+support roles.
+
+Why it matters:
+
+Remaining experiments and writing work can now be pulled by report blanks
+rather than by process drift, chronology, or local curiosity. Predictive
+validity remains the north star, but the report does not claim it is
+established.
+
+What action it suggests next:
+
+Fill the highest-priority placeholders that block reviewer readiness: related
+work citations, validation figures, candidate-policy pseudocode, preliminary
+evidence table, many-seed random and baseline-envelope results, fallback
+thresholds, adapter estimand wording, joint success gates, and power/budget
+notes. Paid validation remains unauthorized until the protocol and evidence
+gates are hardened.
+
+Final boundary:
+
+- No paid ACUT cells were run.
+- No paid LLM calls were made.
+- GPT-5.5-Pro and external reviewer calls were not made.
+- Predictive validity was not claimed as established.
+- No new roadmap file or later runbook was created.

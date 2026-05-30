@@ -195,15 +195,20 @@ predictive validity as the long-term north star while limiting the short-term
 proposal claim to Phase 1 traction evidence and a credible validation path.
 Stop label: `proposal_report_skeleton_complete`.
 
-The M1 proposal report argument rewrite is complete. The rewritten
-`docs/research/phase-1-proposal-report-v0.md` now reads as a reader-facing
-research proposal argument rather than an internal roadmap; the roadmap remains
+The proposal report final-shape rewrite is complete. The active proposal
+report draft is now `docs/research/phase-1-proposal-report-v1.md`: a
+final-shape proposal-approval document with explicit `[NEEDS ...]`
+placeholders for missing citations, figures, pseudocode, tables, results,
+decisions, power/budget notes, and deliverable details.
+
+`docs/research/phase-1-proposal-report-v0.md` is superseded and should be used
+only as source material and an argument rewrite record. The roadmap remains
 owned by `docs/research/phase-1-proposal-roadmap-and-claim-planning.md`.
 Current evidence still does not establish predictive validity and does not
-authorize more paid ACUT cells. The next recommended no-paid milestone is
-external-review triage, with proposal-critical evidence consolidation and
-validation-protocol hardening as the follow-on work categories. Stop label:
-`proposal_report_argument_rewrite_complete`.
+authorize more paid ACUT cells. The recommended next action category is to fill
+the P0 placeholders that block reviewer readiness while keeping paid
+validation unauthorized until protocol and evidence gates are hardened. Stop
+label: `proposal_report_final_shape_rewrite_complete`.
 
 Canonical report and runbook:
 
@@ -218,16 +223,21 @@ Canonical report and runbook:
 - `docs/research/phase-1-proposal-roadmap-and-claim-planning.md`
 - `docs/experiments/phase-1-proposal-report-skeleton-runbook.md`
 - `docs/experiments/phase-1-proposal-report-argument-rewrite-runbook.md`
+- `docs/experiments/phase-1-proposal-report-final-shape-rewrite-runbook.md`
 - `docs/research/phase-1-proposal-report-v0.md`
 - `docs/research/phase-1-proposal-argument-map.md`
 - `docs/research/phase-1-proposal-evidence-todo-matrix.md`
 - `docs/research/phase-1-proposal-claim-boundary.md`
 - `experiments/phase1_compiler/reports/phase1_proposal_report_skeleton_decision.md`
 - `experiments/phase1_compiler/reports/phase1_proposal_report_argument_rewrite_decision.md`
+- `experiments/phase1_compiler/reports/phase1_proposal_report_final_shape_rewrite_process.md`
+- `experiments/phase1_compiler/reports/phase1_proposal_report_final_shape_rewrite_decision.md`
+- `experiments/phase1_compiler/results/phase1_proposal_report_final_shape_rewrite_decision.json`
 
 ### Workspace State Note
 
 As of 2026-05-30, the branch `codex/restart-benchmark-compiler` is ahead of
-`origin/codex/restart-benchmark-compiler` and the external review bundle under
-`experiments/phase1_compiler/external_review/phase1_task_generator_design_review_20260526/`
-is untracked. Do not stage, delete, or rewrite that bundle unless the user asks.
+`origin/codex/restart-benchmark-compiler`. Several handoff/setup files remain
+untracked, including the proposal runbooks, the roadmap planning document, and
+external review bundles under `experiments/phase1_compiler/external_review/`.
+Do not stage, delete, or rewrite those untracked files unless the user asks.
