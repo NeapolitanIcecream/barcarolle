@@ -85,3 +85,42 @@ Step 0 acceptance:
 - no paid calls made: yes;
 - report/roadmap role distinction written down: yes;
 - no new roadmap file created: yes.
+
+## Step 1 Report Rewrite
+
+Changed `docs/research/phase-1-proposal-report-v0.md` from an M1 skeleton
+with roadmap sections into a nine-section proposal argument:
+
+1. Executive Thesis
+2. The Research Problem
+3. Why Existing Benchmarks And Task Generators Do Not Solve It
+4. Barcarolle's Approach
+5. Phase 1 Evidence
+6. Interpretation: What This Evidence Shows And Does Not Show
+7. Research Agenda Toward Predictive Validity
+8. Risks, Objections, And Responses
+9. Proposal Ask / Next Phase
+
+The rewrite keeps predictive validity as the north star, states that Phase 1
+does not prove predictive validity, and frames the short-term claim as
+traction evidence plus a credible no-paid hardening path. The report now names
+the current candidate as
+`coverage_constrained_unweighted_v1_with_labeled_fallbacks` and keeps the
+`boltons` fallback limitation close to the candidate claim.
+
+Roadmap-management material was removed from the report body. A scan for
+`M2` through `M6` found no matches in the rewritten report; the only roadmap
+references point to
+`docs/research/phase-1-proposal-roadmap-and-claim-planning.md` as the internal
+planning owner.
+
+No paid ACUT cells, paid LLM calls, or external reviewer calls were made.
+
+Step 1 acceptance:
+
+- report no longer reads as a roadmap: yes;
+- report contains a clear thesis, reasons, evidence, objections, and response:
+  yes;
+- predictive validity remains the north star: yes;
+- current evidence is not overstated: yes;
+- no new roadmap file created: yes.
