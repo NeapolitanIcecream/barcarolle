@@ -1,13 +1,13 @@
 # Candidate Policy Validation Protocol Process
 
-Current step: `Step 2 - Implement Outcome-Blind Policy Tooling`.
+Current step: `Step 3 - Freeze Validation Protocol And Success Criteria`.
 
 Completed artifacts:
-- `experiments/phase1_compiler/results/phase1_candidate_policy_validation_protocol_input_freeze.json`
-- `experiments/phase1_compiler/results/phase1_candidate_policy_validation_protocol_selection_manifest.json`
-- `experiments/phase1_compiler/results/phase1_candidate_policy_validation_protocol_outcome_blindness_audit.json`
-- `experiments/phase1_compiler/reports/phase1_candidate_policy_validation_protocol_selection_manifest.md`
-- `experiments/phase1_compiler/reports/phase1_candidate_policy_validation_protocol_outcome_blindness_audit.md`
+- `experiments/phase1_compiler/results/phase1_candidate_policy_validation_protocol_validation_protocol.json`
+- `experiments/phase1_compiler/results/phase1_candidate_policy_validation_protocol_success_criteria.json`
+- `experiments/phase1_compiler/results/phase1_candidate_policy_validation_protocol_baseline_registry.json`
+- `experiments/phase1_compiler/reports/phase1_candidate_policy_validation_protocol_validation_protocol.md`
+- `experiments/phase1_compiler/reports/phase1_candidate_policy_validation_protocol_success_criteria.md`
 
 Boundary:
 - This runbook is no-paid.
@@ -17,5 +17,6 @@ Boundary:
 - Score tables are not read by the policy selection command.
 
 Notes:
-- The selection command loaded only configured policy inputs and read no score tables.
-- Selected and excluded task IDs, feature coverage, gaps, seed policy, and input digests were emitted.
+- The validation protocol is frozen before future paid calls.
+- Adapter-stratified MAE and catastrophic miss rate are primary; pooled summaries are secondary only.
+- No paid run is authorized by this runbook.
