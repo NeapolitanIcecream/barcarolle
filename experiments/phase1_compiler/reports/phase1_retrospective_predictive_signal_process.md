@@ -1,12 +1,11 @@
 # Retrospective Predictive-Signal Process
 
-Current step: `Step 6 - Baseline Comparison And Uncertainty`.
+Current step: `Step 7 - Claim Boundary And Decision`.
 
 Completed artifacts:
-- experiments/phase1_compiler/results/phase1_retrospective_predictive_signal_baseline_comparison.json
-- experiments/phase1_compiler/results/phase1_retrospective_predictive_signal_uncertainty.json
-- experiments/phase1_compiler/reports/phase1_retrospective_predictive_signal_baseline_comparison.md
-- experiments/phase1_compiler/reports/phase1_retrospective_predictive_signal_uncertainty.md
+- experiments/phase1_compiler/results/phase1_retrospective_predictive_signal_claim_boundary.json
+- experiments/phase1_compiler/results/phase1_retrospective_predictive_signal_decision.json
+- experiments/phase1_compiler/reports/phase1_retrospective_predictive_signal_decision.md
 
 Boundary:
 - This is a no-paid retrospective analysis.
@@ -16,4 +15,4 @@ Boundary:
 - Predictive validity is not established by this run.
 
 Notes:
-- Baseline comparisons are retrospective and directional, not formal predictive-validity evidence.
+- Closeout is complete; no follow-up runbook was drafted or created.

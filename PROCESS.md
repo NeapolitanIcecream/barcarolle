@@ -8,7 +8,7 @@ Detailed evidence stays in the relevant committed reports, results, runbooks,
 and manifests. This file keeps only the current decision state and durable
 operating constraints.
 
-Last updated: 2026-05-29.
+Last updated: 2026-05-30.
 
 ## Maintenance Rules
 
@@ -61,9 +61,10 @@ Barcarolle can build audited repo-specific benchmark pilot packages and expose
 where naive weighting, split construction, source quality, and claim boundaries
 are insufficient. Adapter differences are valid ACUT configuration evidence
 when the endpoint, task input, workspace, verifier, policy, and accounting
-checks are clean enough. Barcarolle has not yet shown that its compiled
-benchmark score predicts held-out future repo work better than simpler
-baselines.
+checks are clean enough. A no-paid retrospective pseudo-future analysis found
+directional, underpowered signal for a coverage-constrained unweighted
+candidate over simple baselines, but Barcarolle has not established formal
+predictive validity or a preregistered held-out future claim.
 ```
 
 Canonical reports:
@@ -71,6 +72,7 @@ Canonical reports:
 - `experiments/phase1_compiler/reports/phase1_local_algorithm_bakeoff_decision.md`
 - `experiments/phase1_compiler/reports/phase1_three_repo_paid_validation_decision.md`
 - `experiments/phase1_compiler/reports/phase1_blocked_split_supplement_fairness_gap_diagnostics_decision.md`
+- `experiments/phase1_compiler/reports/phase1_retrospective_predictive_signal_decision.md`
 
 ### Algorithm Mainline
 
@@ -87,11 +89,18 @@ openly when they are labeled as research candidates and evaluated against
 clear baselines. The near-term goal is useful traction data and narrative
 validation, not premature algorithm lock-in.
 
+The retrospective predictive-signal analysis gives coverage-constrained
+unweighted selection weak directional traction, but not enough to replace the
+conservative mainline or justify paid reruns by itself. The completed blocked
+split supplement remains diagnostic/post-hoc; do not promote it as a primary
+design claim.
+
 Canonical reports:
 
 - `experiments/phase1_compiler/reports/phase1_weighted_design_paid_pilot_decision.md`
 - `experiments/phase1_compiler/reports/phase1_local_algorithm_bakeoff_validation_results.md`
 - `experiments/phase1_compiler/reports/phase1_local_algorithm_bakeoff_paid_readiness_gate.md`
+- `experiments/phase1_compiler/reports/phase1_retrospective_predictive_signal_baseline_comparison.md`
 
 ### Paid-Run Boundary
 
@@ -175,26 +184,25 @@ Canonical reports and runbooks:
 ### Open Follow-Ups
 
 Current recommended action categories do not include more paid ACUT cells by
-default. Endpoint-compliant paid LLM calls may be used for source/statement
-repair when a runbook explicitly allows them and records cost/provenance:
-
-- characterize repo-level outcomes for Codex click, Kilo boltons, and Codex
-  attrs without treating adapter disagreement as a blocker by itself;
-- improve sanitized logging around invalid ACUT output;
-- inspect the Codex output contract for `attrs__v2__157` without rerunning paid
-  cells;
-- use the repaired click source-quality overlay for cleaner narrative support,
-  while preserving the no-paid-rerun boundary and predictive-validity caveat.
+default. The no-paid retrospective predictive-signal analysis is complete:
+coverage-constrained unweighted selection slightly beat the best simple
+baseline in a mixed, underpowered pseudo-future replay, while blocked and
+shrinkage candidates were worse. Next action categories are future
+preregistered true rolling-origin validation design, continued
+adapter-stratified reporting, and secondary no-paid invalid-output or Codex
+`attrs__v2__157` output-contract inspection.
 
 Canonical report and runbook:
 
 - `docs/experiments/phase-1-click-llm-assisted-source-context-repair-runbook.md`
+- `docs/experiments/phase-1-retrospective-predictive-signal-analysis-runbook.md`
 - `experiments/phase1_compiler/reports/phase1_click_llm_source_context_repair_decision.md`
 - `experiments/phase1_compiler/reports/phase1_blocked_split_supplement_fairness_gap_diagnostics_decision.md`
+- `experiments/phase1_compiler/reports/phase1_retrospective_predictive_signal_decision.md`
 
 ### Workspace State Note
 
-As of 2026-05-29, the branch `codex/restart-benchmark-compiler` is ahead of
+As of 2026-05-30, the branch `codex/restart-benchmark-compiler` is ahead of
 `origin/codex/restart-benchmark-compiler` and the external review bundle under
 `experiments/phase1_compiler/external_review/phase1_task_generator_design_review_20260526/`
 is untracked. Do not stage, delete, or rewrite that bundle unless the user asks.

@@ -1655,7 +1655,7 @@ def build_claim_boundary_and_decision(config_path: str | Path = DEFAULT_CONFIG) 
     config = load_config(config_path)
     comparison = load_baseline_comparison(config)
     metrics = load_adapter_metrics(config)
-    preflight = read_json(output_path(config, "preflight"))
+    preflight = read_json(output_path(config, "preflight")) if output_path(config, "preflight").exists() else build_preflight(config_path)
     if comparison["candidate_beats_best_simple_baseline"]:
         decision_label = "retrospective_signal_positive_directional"
         supports_traction = True
@@ -1728,7 +1728,7 @@ def build_claim_boundary_and_decision(config_path: str | Path = DEFAULT_CONFIG) 
         "paid_ACUT_cells": 0,
         "paid_LLM_calls": 0,
         "predictive_validity_established": False,
-        "process_md_updated": False,
+        "process_md_updated": True,
         "preflight_head": preflight["head"],
     }
     write_json(output_path(config, "claim_boundary"), claim_boundary)
