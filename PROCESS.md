@@ -190,9 +190,15 @@ outcome-blind candidate policy, the next validation protocol is frozen, and
 the sanitized adversarial-review packet is prepared but not submitted. Stop
 label: `ready_for_adversarial_review`.
 
-The next concrete handoff is human-initiated adversarial review of the packet,
-followed by reviewer-response triage before any paid validation. Secondary
-no-paid follow-ups remain invalid-output or Codex `attrs__v2__157`
+M1 proposal report skeleton work is complete. The new claim boundary keeps
+predictive validity as the long-term north star while limiting the short-term
+proposal claim to Phase 1 traction evidence and a credible validation path.
+Stop label: `proposal_report_skeleton_complete`.
+
+The next recommended milestone is M2 external-review triage or M3 proposal
+evidence consolidation, depending on whether reviewer objections or missing
+proposal tables are more urgent. Do not run more paid ACUT cells by default.
+Secondary no-paid follow-ups remain invalid-output or Codex `attrs__v2__157`
 output-contract inspection.
 
 Canonical report and runbook:
@@ -205,6 +211,13 @@ Canonical report and runbook:
 - `experiments/phase1_compiler/reports/phase1_retrospective_predictive_signal_decision.md`
 - `experiments/phase1_compiler/reports/phase1_candidate_policy_validation_protocol_decision.md`
 - `experiments/phase1_compiler/external_review/phase1_candidate_policy_validation_protocol_review_20260530/README_FOR_ADVERSARIAL_REVIEW.md`
+- `docs/research/phase-1-proposal-roadmap-and-claim-planning.md`
+- `docs/experiments/phase-1-proposal-report-skeleton-runbook.md`
+- `docs/research/phase-1-proposal-report-v0.md`
+- `docs/research/phase-1-proposal-argument-map.md`
+- `docs/research/phase-1-proposal-evidence-todo-matrix.md`
+- `docs/research/phase-1-proposal-claim-boundary.md`
+- `experiments/phase1_compiler/reports/phase1_proposal_report_skeleton_decision.md`
 
 ### Workspace State Note
 

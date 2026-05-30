@@ -234,3 +234,24 @@ Acceptance:
 - `PROCESS.md` update is deferred to Step 5 closeout so it can point to the
   final M1 decision artifact;
 - no paid calls made.
+
+### Step 5
+
+Completed:
+
+- wrote
+  `experiments/phase1_compiler/results/phase1_proposal_report_skeleton_decision.json`;
+- wrote
+  `experiments/phase1_compiler/reports/phase1_proposal_report_skeleton_decision.md`;
+- updated `PROCESS.md` to point at the M1 closeout and next recommended
+  milestone categories.
+
+Acceptance:
+
+- no paid calls made;
+- predictive validity is not established;
+- report skeleton is complete;
+- next recommended milestone is M2 review triage or M3 evidence consolidation;
+- `jq` validation passed for the JSON artifacts;
+- required output path check passed;
+- `git diff --check` passed.
