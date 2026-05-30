@@ -87,6 +87,22 @@ only small sanitized manifests, summaries, reports, and digests.
 Use `uv` for repo-local Python tooling. Before committing experiment changes,
 run the scoped tests named by the relevant runbook and `git diff --check`.
 
+## Global Process Notes
+
+`PROCESS.md` is the repository-wide process decision file. Read it after this
+file when working on experiments, runbooks, paid-validation planning, ACUT
+adapters, benchmark design, or research interpretation.
+
+Keep `PROCESS.md` at a handoff-friendly size. Update it when work changes the
+active research direction, paid/no-paid boundary, mainline algorithm, reporting
+policy, benchmark claim boundary, or cross-session handoff state. Prefer short
+entries with links to canonical committed reports over copied evidence.
+
+When `PROCESS.md` grows too large to scan, compress stale entries into a dated
+summary and preserve only current decisions, active blockers, claim boundaries,
+and links to canonical reports. Do not use `PROCESS.md` to draft the next
+runbook unless the user explicitly asks for that.
+
 ## Runbook Execution Boundary
 
 When executing a runbook, do not draft or create the next runbook unless the
