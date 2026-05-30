@@ -1,10 +1,13 @@
 # Candidate Policy Validation Protocol Process
 
-Current step: `Step 1 - Freeze Candidate Policy Spec`.
+Current step: `Step 2 - Implement Outcome-Blind Policy Tooling`.
 
 Completed artifacts:
-- `experiments/phase1_compiler/results/phase1_candidate_policy_validation_protocol_policy_spec.json`
-- `experiments/phase1_compiler/reports/phase1_candidate_policy_validation_protocol_policy_spec.md`
+- `experiments/phase1_compiler/results/phase1_candidate_policy_validation_protocol_input_freeze.json`
+- `experiments/phase1_compiler/results/phase1_candidate_policy_validation_protocol_selection_manifest.json`
+- `experiments/phase1_compiler/results/phase1_candidate_policy_validation_protocol_outcome_blindness_audit.json`
+- `experiments/phase1_compiler/reports/phase1_candidate_policy_validation_protocol_selection_manifest.md`
+- `experiments/phase1_compiler/reports/phase1_candidate_policy_validation_protocol_outcome_blindness_audit.md`
 
 Boundary:
 - This runbook is no-paid.
@@ -14,5 +17,5 @@ Boundary:
 - Score tables are not read by the policy selection command.
 
 Notes:
-- Policy spec can be read without consulting score tables.
-- Forbidden inputs include terminal outcomes, pass/fail labels, adapter outcomes, score-table rows, raw transcripts, and hidden verifier output.
+- The selection command loaded only configured policy inputs and read no score tables.
+- Selected and excluded task IDs, feature coverage, gaps, seed policy, and input digests were emitted.
