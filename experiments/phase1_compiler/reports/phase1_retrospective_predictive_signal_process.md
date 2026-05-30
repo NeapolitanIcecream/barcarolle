@@ -1,11 +1,9 @@
 # Retrospective Predictive-Signal Process
 
-Current step: `Step 3 - Design Registry And Selection Freeze`.
+Current step: `Step 4 - Score Join Manifest`.
 
 Completed artifacts:
-- experiments/phase1_compiler/results/phase1_retrospective_predictive_signal_design_registry.json
-- experiments/phase1_compiler/results/phase1_retrospective_predictive_signal_selection_freeze.json
-- experiments/phase1_compiler/reports/phase1_retrospective_predictive_signal_design_registry.md
+- experiments/phase1_compiler/results/phase1_retrospective_predictive_signal_score_join_manifest.json
 
 Boundary:
 - This is a no-paid retrospective analysis.
@@ -15,4 +13,4 @@ Boundary:
 - Predictive validity is not established by this run.
 
 Notes:
-- Designs, seeds, weights, windows, and selections are frozen before score-table outcomes are joined.
+- Committed score tables were joined only after the selection freeze artifact existed.
