@@ -1,15 +1,11 @@
 # Candidate Policy Validation Protocol Process
 
-Current step: `Step 4 - Prepare Adversarial Review Packet`.
+Current step: `Step 5 - Closeout Decision`.
 
 Completed artifacts:
-- `experiments/phase1_compiler/external_review/phase1_candidate_policy_validation_protocol_review_20260530/README_FOR_ADVERSARIAL_REVIEW.md`
-- `experiments/phase1_compiler/external_review/phase1_candidate_policy_validation_protocol_review_20260530/EVIDENCE_INDEX.md`
-- `experiments/phase1_compiler/external_review/phase1_candidate_policy_validation_protocol_review_20260530/REVIEW_QUESTIONS.md`
-- `experiments/phase1_compiler/external_review/phase1_candidate_policy_validation_protocol_review_20260530/CLAIM_BOUNDARY.md`
-- `experiments/phase1_compiler/external_review/phase1_candidate_policy_validation_protocol_review_20260530/MANIFEST.sha256`
-- `experiments/phase1_compiler/results/phase1_candidate_policy_validation_protocol_review_packet_manifest.json`
-- `experiments/phase1_compiler/reports/phase1_candidate_policy_validation_protocol_adversarial_review_packet.md`
+- `experiments/phase1_compiler/results/phase1_candidate_policy_validation_protocol_claim_boundary.json`
+- `experiments/phase1_compiler/results/phase1_candidate_policy_validation_protocol_decision.json`
+- `experiments/phase1_compiler/reports/phase1_candidate_policy_validation_protocol_decision.md`
 
 Boundary:
 - This runbook is no-paid.
@@ -19,5 +15,9 @@ Boundary:
 - Score tables are not read by the policy selection command.
 
 Notes:
-- The packet is sanitized and links to canonical reports rather than copying large evidence.
-- The packet explicitly says it has not been submitted.
+- Stop label: `ready_for_adversarial_review`.
+- No external review was submitted.
+- No paid ACUT or paid LLM calls were made.
+- Candidate policy tests return code: `0`.
+- Retrospective signal tests return code: `0`.
+- git diff --check return code: `0`.

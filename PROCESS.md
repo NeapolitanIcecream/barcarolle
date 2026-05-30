@@ -184,21 +184,27 @@ Canonical reports and runbooks:
 ### Open Follow-Ups
 
 Current recommended action categories do not include more paid ACUT cells by
-default. The no-paid retrospective predictive-signal analysis is complete:
-coverage-constrained unweighted selection slightly beat the best simple
-baseline in a mixed, underpowered pseudo-future replay, while blocked and
-shrinkage candidates were worse. Next action categories are future
-preregistered true rolling-origin validation design, continued
-adapter-stratified reporting, and secondary no-paid invalid-output or Codex
-`attrs__v2__157` output-contract inspection.
+default. The no-paid candidate-policy and validation-protocol prep is complete:
+`coverage_constrained_unweighted_v1` is now frozen as a deterministic,
+outcome-blind candidate policy, the next validation protocol is frozen, and
+the sanitized adversarial-review packet is prepared but not submitted. Stop
+label: `ready_for_adversarial_review`.
+
+The next concrete handoff is human-initiated adversarial review of the packet,
+followed by reviewer-response triage before any paid validation. Secondary
+no-paid follow-ups remain invalid-output or Codex `attrs__v2__157`
+output-contract inspection.
 
 Canonical report and runbook:
 
 - `docs/experiments/phase-1-click-llm-assisted-source-context-repair-runbook.md`
 - `docs/experiments/phase-1-retrospective-predictive-signal-analysis-runbook.md`
+- `docs/experiments/phase-1-candidate-policy-validation-protocol-pre-adversarial-review-runbook.md`
 - `experiments/phase1_compiler/reports/phase1_click_llm_source_context_repair_decision.md`
 - `experiments/phase1_compiler/reports/phase1_blocked_split_supplement_fairness_gap_diagnostics_decision.md`
 - `experiments/phase1_compiler/reports/phase1_retrospective_predictive_signal_decision.md`
+- `experiments/phase1_compiler/reports/phase1_candidate_policy_validation_protocol_decision.md`
+- `experiments/phase1_compiler/external_review/phase1_candidate_policy_validation_protocol_review_20260530/README_FOR_ADVERSARIAL_REVIEW.md`
 
 ### Workspace State Note
 
