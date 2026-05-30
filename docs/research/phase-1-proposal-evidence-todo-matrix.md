@@ -1,10 +1,11 @@
 # Phase 1 Proposal Evidence/TODO Matrix
 
-Status: Draft M1 artifact, 2026-05-30.
+Status: internal evidence tracker aligned with proposal argument rewrite,
+2026-05-30.
 
-This matrix maps proposal claims to current evidence, missing evidence, and
-recommended milestones. It is deliberately conservative: unsupported claims are
-either routed to later no-paid milestones or marked prohibited.
+This matrix maps proposal-report claims to current evidence, missing evidence,
+and recommended no-paid work. It is deliberately conservative: unsupported
+claims are either routed to later no-paid milestones or marked prohibited.
 
 Status values:
 
@@ -39,8 +40,8 @@ Status values:
 
 ## P0 Before Reviewer-Ready Proposal
 
-The proposal should not be shown as more than a skeleton until these P0 items
-are resolved or explicitly deferred in the text:
+The proposal report should not be treated as reviewer-ready until these P0
+items are resolved or explicitly deferred in the text:
 
 - final short-term proposal claim wording;
 - one-page Phase 1 evidence summary table;
@@ -53,7 +54,8 @@ are resolved or explicitly deferred in the text:
 
 ## Deferred Or Post-Proposal Items
 
-These are relevant to the long-term north star but should not block M1:
+These are relevant to the long-term north star but should not block the
+current proposal argument rewrite:
 
 - full Task Supply v2 expansion;
 - external generator adapter implementation;

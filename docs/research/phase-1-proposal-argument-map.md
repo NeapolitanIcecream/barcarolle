@@ -1,11 +1,13 @@
 # Phase 1 Proposal Argument Map
 
-Status: Draft M1 artifact, 2026-05-30.
+Status: internal argument map aligned with proposal argument rewrite,
+2026-05-30.
 
-This map is proposal scaffolding, not a final report and not a paid-validation
-authorization. It keeps predictive validity as the long-term north star while
-limiting the short-term proposal claim to Phase 1 traction evidence and a
-credible validation path.
+This map is internal proposal scaffolding, not a final report and not a
+paid-validation authorization. It supports the rewritten proposal report while
+keeping predictive validity as the long-term north star and limiting the
+short-term proposal claim to Phase 1 traction evidence plus a credible
+validation path.
 
 ## Reader Frame
 
@@ -267,7 +269,7 @@ with predictive validity.
 
 Possible objection: The edge over the best baseline is too small to matter.
 
-Response: Correct for validation. The skeleton should not use the edge as a
+Response: Correct for validation. The proposal report should not use the edge as a
 success claim. It should use it to prioritize evidence gaps: stronger baselines,
 adapter-specific support, fallback accounting, and true-future or strictly
 preregistered rolling-origin validation.
@@ -330,8 +332,8 @@ Weakest current links:
 ## GPT-5.5-Pro Recommendation Classification
 
 The 2026-05-30 GPT-5.5-Pro review is strategy input, not controlling scope.
-The proposal skeleton uses the review to classify future work without turning
-M1 into a paid-validation or scope-expansion runbook.
+The proposal report uses the review to classify future work without turning
+the argument rewrite into a paid-validation or scope-expansion runbook.
 
 ### Accept Now
 
@@ -370,18 +372,18 @@ M1 into a paid-validation or scope-expansion runbook.
 - Turning Barcarolle into a task generator project.
 - Treating external task systems as trusted default supply.
 - Requiring every long-term methodological improvement before the proposal
-  skeleton can be written.
+  report can be written.
 - Treating GPT-5.5-Pro recommendations as mandatory M1 scope.
 
 ## Proposal-Readiness Test
 
-The proposal skeleton is ready for the next milestone only if every major
+The proposal report is ready for reviewer-facing revision only if every major
 claim falls into one of three bins:
 
 - supported now by committed Phase 1 evidence;
 - explicitly draft with a named `[NEEDS ...]` placeholder or milestone route;
 - prohibited and excluded from proposal claims.
 
-No claim in the skeleton should imply that predictive validity is established,
+No claim in the report should imply that predictive validity is established,
 that paid validation is authorized, or that task-supply work is the core
 research contribution.

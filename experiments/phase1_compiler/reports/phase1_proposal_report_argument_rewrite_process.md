@@ -124,3 +124,31 @@ Step 1 acceptance:
 - predictive validity remains the north star: yes;
 - current evidence is not overstated: yes;
 - no new roadmap file created: yes.
+
+## Step 2 Supporting Document Alignment
+
+Updated the tracked supporting documents only where the report rewrite exposed
+stale skeleton-era language:
+
+- `docs/research/phase-1-proposal-argument-map.md`
+- `docs/research/phase-1-proposal-evidence-todo-matrix.md`
+- `docs/research/phase-1-proposal-claim-boundary.md`
+
+The argument map now identifies itself as internal scaffolding for the
+rewritten proposal report. The evidence matrix now identifies itself as an
+internal tracker for proposal-report claims and no-paid work. The claim
+boundary now identifies itself as the proposal-report guardrail and uses the
+argument-rewrite stop label.
+
+No new roadmap file was created. The existing
+`docs/research/phase-1-proposal-roadmap-and-claim-planning.md` remains the
+roadmap owner for internal milestone logic; the report body links to it rather
+than duplicating that logic.
+
+No paid ACUT cells, paid LLM calls, or external reviewer calls were made.
+
+Step 2 acceptance:
+
+- no duplicate roadmap document exists: yes;
+- supporting docs point to the rewritten report roles cleanly: yes;
+- roadmap and report are not merged back together: yes.

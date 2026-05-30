@@ -1,8 +1,9 @@
 # Phase 1 Proposal Claim Boundary
 
-Status: Draft M1 artifact, 2026-05-30.
+Status: internal claim guardrail aligned with proposal argument rewrite,
+2026-05-30.
 
-This document defines what the Phase 1 proposal skeleton may claim now, what it
+This document defines what the Phase 1 proposal report may claim now, what it
 may claim only with care, what remains draft pending evidence, and what is
 prohibited. It is a guardrail for proposal writing and review triage; it is not
 a validation protocol and not a paid-run authorization.
@@ -34,7 +35,7 @@ This is the strongest safe short-term claim. It should not be shortened into
 ## Allowed Now
 
 These claims are supported by current committed evidence and can appear in the
-proposal skeleton with ordinary caution.
+proposal report with ordinary caution.
 
 ### Project Boundary
 
@@ -167,8 +168,8 @@ These claims must not appear in the proposal as current findings.
 
 ## Reviewer-Ready Evidence Blockers
 
-Before the skeleton becomes a reviewer-ready proposal report, the following P0
-items should be filled or explicitly marked as deferred:
+Before the argument draft becomes a reviewer-ready proposal report, the
+following P0 items should be filled or explicitly marked as deferred:
 
 - final short-term proposal claim wording;
 - one-page Phase 1 evidence summary table;
@@ -193,7 +194,7 @@ M2-M6 remain draft milestones, not new runbooks.
   adapter/repo fragility, fallback share, and source-supply status.
 - M4 role: harden validation protocol boundaries and success gates before any
   paid-validation question.
-- M5 role: turn the skeleton into proposal report v1.
+- M5 role: turn the argument draft into proposal report v1.
 - M6 role: convert the report into the approval memo or presentation format.
 
 This document intentionally does not draft those runbooks.
@@ -206,5 +207,5 @@ If a future draft cannot keep these boundaries, it should stop with one of:
 - `blocked_evidence_matrix_incomplete`
 - `blocked_missing_core_inputs`
 
-For this M1 skeleton, the intended closeout label remains
-`proposal_report_skeleton_complete` if Step 5 verification passes.
+For the argument rewrite, the intended closeout label is
+`proposal_report_argument_rewrite_complete` if verification passes.
