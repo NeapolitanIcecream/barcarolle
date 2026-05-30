@@ -1,13 +1,15 @@
 # Candidate Policy Validation Protocol Process
 
-Current step: `Step 3 - Freeze Validation Protocol And Success Criteria`.
+Current step: `Step 4 - Prepare Adversarial Review Packet`.
 
 Completed artifacts:
-- `experiments/phase1_compiler/results/phase1_candidate_policy_validation_protocol_validation_protocol.json`
-- `experiments/phase1_compiler/results/phase1_candidate_policy_validation_protocol_success_criteria.json`
-- `experiments/phase1_compiler/results/phase1_candidate_policy_validation_protocol_baseline_registry.json`
-- `experiments/phase1_compiler/reports/phase1_candidate_policy_validation_protocol_validation_protocol.md`
-- `experiments/phase1_compiler/reports/phase1_candidate_policy_validation_protocol_success_criteria.md`
+- `experiments/phase1_compiler/external_review/phase1_candidate_policy_validation_protocol_review_20260530/README_FOR_ADVERSARIAL_REVIEW.md`
+- `experiments/phase1_compiler/external_review/phase1_candidate_policy_validation_protocol_review_20260530/EVIDENCE_INDEX.md`
+- `experiments/phase1_compiler/external_review/phase1_candidate_policy_validation_protocol_review_20260530/REVIEW_QUESTIONS.md`
+- `experiments/phase1_compiler/external_review/phase1_candidate_policy_validation_protocol_review_20260530/CLAIM_BOUNDARY.md`
+- `experiments/phase1_compiler/external_review/phase1_candidate_policy_validation_protocol_review_20260530/MANIFEST.sha256`
+- `experiments/phase1_compiler/results/phase1_candidate_policy_validation_protocol_review_packet_manifest.json`
+- `experiments/phase1_compiler/reports/phase1_candidate_policy_validation_protocol_adversarial_review_packet.md`
 
 Boundary:
 - This runbook is no-paid.
@@ -17,6 +19,5 @@ Boundary:
 - Score tables are not read by the policy selection command.
 
 Notes:
-- The validation protocol is frozen before future paid calls.
-- Adapter-stratified MAE and catastrophic miss rate are primary; pooled summaries are secondary only.
-- No paid run is authorized by this runbook.
+- The packet is sanitized and links to canonical reports rather than copying large evidence.
+- The packet explicitly says it has not been submitted.
