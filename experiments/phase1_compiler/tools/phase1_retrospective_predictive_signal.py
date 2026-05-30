@@ -69,6 +69,12 @@ BARCAROLLE_CANDIDATES = (
     "block_plus_shrinkage_weighted",
     "completed_blocked_split_supplement",
 )
+PROMOTABLE_BARCAROLLE_CANDIDATES = (
+    "coverage_constrained_unweighted",
+    "block_randomized_stratified",
+    "block_plus_shrinkage_weighted",
+)
+DIAGNOSTIC_CANDIDATES = ("completed_blocked_split_supplement",)
 TERMINAL_SCOREABLE = {"verified_pass", "verified_fail"}
 INVALID_TASK_ID = "attrs__v2__157"
 OUTCOME_COLUMNS = {
@@ -1503,7 +1509,14 @@ def build_baseline_comparison(config_path: str | Path = DEFAULT_CONFIG) -> tuple
         for design_id in BARCAROLLE_CANDIDATES
         if metrics["by_design_equal_mix_secondary"][design_id]["MAE"] is not None
     ]
-    best_candidate = min(candidate_scores, key=lambda row: (row["MAE"], row["catastrophic_miss_rate"], row["design_id"]))
+    promotable_candidate_scores = [row for row in candidate_scores if row["design_id"] in PROMOTABLE_BARCAROLLE_CANDIDATES]
+    diagnostic_candidate_scores = [row for row in candidate_scores if row["design_id"] in DIAGNOSTIC_CANDIDATES]
+    best_candidate = min(promotable_candidate_scores, key=lambda row: (row["MAE"], row["catastrophic_miss_rate"], row["design_id"]))
+    best_diagnostic = (
+        min(diagnostic_candidate_scores, key=lambda row: (row["MAE"], row["catastrophic_miss_rate"], row["design_id"]))
+        if diagnostic_candidate_scores
+        else None
+    )
     candidate_beats_best_simple = best_candidate["MAE"] < best_simple["MAE"] if best_candidate and best_simple else False
     payload = {
         "schema_version": OUTPUT_SCHEMA,
@@ -1513,8 +1526,11 @@ def build_baseline_comparison(config_path: str | Path = DEFAULT_CONFIG) -> tuple
         "comparison_policy": "compare by overlapping adapter/repo/window slices; adapter-stratified metrics remain primary.",
         "simple_baseline_scores": simple_baseline_scores,
         "candidate_scores": candidate_scores,
+        "promotable_candidate_scores": promotable_candidate_scores,
+        "diagnostic_candidate_scores": diagnostic_candidate_scores,
         "best_simple_baseline": best_simple,
         "best_barcarolle_candidate": best_candidate,
+        "best_diagnostic_candidate": best_diagnostic,
         "candidate_beats_best_simple_baseline": candidate_beats_best_simple,
         "comparisons": comparisons,
     }
@@ -1593,6 +1609,7 @@ def write_baseline_comparison_report(config: dict[str, Any], payload: dict[str, 
         "",
         f"Best simple baseline: `{payload['best_simple_baseline']['design_id']}` with MAE `{payload['best_simple_baseline']['MAE']}`.",
         f"Best Barcarolle candidate: `{payload['best_barcarolle_candidate']['design_id']}` with MAE `{payload['best_barcarolle_candidate']['MAE']}`.",
+        f"Best diagnostic candidate: `{payload['best_diagnostic_candidate']['design_id']}` with MAE `{payload['best_diagnostic_candidate']['MAE']}`." if payload.get("best_diagnostic_candidate") else "Best diagnostic candidate: `none`.",
         f"Candidate beats best simple baseline: `{payload['candidate_beats_best_simple_baseline']}`.",
         "",
         *markdown_table(rows, [("design", "Design"), ("MAE", "MAE"), ("miss", "Catastrophic miss rate"), ("slices", "Slices")]),

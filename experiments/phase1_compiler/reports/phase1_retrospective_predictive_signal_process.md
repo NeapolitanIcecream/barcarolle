@@ -1,9 +1,12 @@
 # Retrospective Predictive-Signal Process
 
-Current step: `Step 4 - Score Join Manifest`.
+Current step: `Step 6 - Baseline Comparison And Uncertainty`.
 
 Completed artifacts:
-- experiments/phase1_compiler/results/phase1_retrospective_predictive_signal_score_join_manifest.json
+- experiments/phase1_compiler/results/phase1_retrospective_predictive_signal_baseline_comparison.json
+- experiments/phase1_compiler/results/phase1_retrospective_predictive_signal_uncertainty.json
+- experiments/phase1_compiler/reports/phase1_retrospective_predictive_signal_baseline_comparison.md
+- experiments/phase1_compiler/reports/phase1_retrospective_predictive_signal_uncertainty.md
 
 Boundary:
 - This is a no-paid retrospective analysis.
@@ -13,4 +16,4 @@ Boundary:
 - Predictive validity is not established by this run.
 
 Notes:
-- Committed score tables were joined only after the selection freeze artifact existed.
+- Baseline comparisons are retrospective and directional, not formal predictive-validity evidence.

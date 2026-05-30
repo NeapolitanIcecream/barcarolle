@@ -1,0 +1,128 @@
+{
+  "artifact": "uncertainty",
+  "design_uncertainty_labels": {
+    "block_plus_shrinkage_weighted__vs__repo_stratified_by_target_profile": [
+      "candidate_worse_than_baseline"
+    ],
+    "block_plus_shrinkage_weighted__vs__repo_unweighted_same_budget": [
+      "candidate_worse_than_baseline"
+    ],
+    "block_plus_shrinkage_weighted__vs__seeded_random_same_budget": [
+      "candidate_worse_than_baseline"
+    ],
+    "block_plus_shrinkage_weighted__vs__temporal_recent_baseline": [
+      "candidate_worse_than_baseline"
+    ],
+    "block_randomized_stratified__vs__repo_stratified_by_target_profile": [
+      "candidate_worse_than_baseline"
+    ],
+    "block_randomized_stratified__vs__repo_unweighted_same_budget": [
+      "candidate_worse_than_baseline"
+    ],
+    "block_randomized_stratified__vs__seeded_random_same_budget": [
+      "candidate_worse_than_baseline"
+    ],
+    "block_randomized_stratified__vs__temporal_recent_baseline": [
+      "candidate_worse_than_baseline"
+    ],
+    "completed_blocked_split_supplement__vs__repo_stratified_by_target_profile": [
+      "directional_only",
+      "stable_across_repos",
+      "too_sparse"
+    ],
+    "completed_blocked_split_supplement__vs__repo_unweighted_same_budget": [
+      "directional_only",
+      "stable_across_repos",
+      "too_sparse"
+    ],
+    "completed_blocked_split_supplement__vs__seeded_random_same_budget": [
+      "directional_only",
+      "stable_across_repos",
+      "too_sparse"
+    ],
+    "completed_blocked_split_supplement__vs__temporal_recent_baseline": [
+      "candidate_worse_than_baseline",
+      "too_sparse"
+    ],
+    "coverage_constrained_unweighted__vs__repo_stratified_by_target_profile": [
+      "directional_only",
+      "stable_across_repos"
+    ],
+    "coverage_constrained_unweighted__vs__repo_unweighted_same_budget": [
+      "directional_only",
+      "stable_across_repos"
+    ],
+    "coverage_constrained_unweighted__vs__seeded_random_same_budget": [
+      "directional_only",
+      "stable_across_repos"
+    ],
+    "coverage_constrained_unweighted__vs__temporal_recent_baseline": [
+      "directional_only",
+      "stable_across_repos"
+    ],
+    "repo_stratified_by_target_profile__vs__repo_unweighted_same_budget": [
+      "candidate_worse_than_baseline"
+    ],
+    "repo_stratified_by_target_profile__vs__seeded_random_same_budget": [
+      "directional_only",
+      "stable_across_repos"
+    ],
+    "repo_stratified_by_target_profile__vs__temporal_recent_baseline": [
+      "candidate_worse_than_baseline"
+    ],
+    "repo_unweighted_same_budget__vs__repo_stratified_by_target_profile": [
+      "directional_only",
+      "stable_across_repos"
+    ],
+    "repo_unweighted_same_budget__vs__seeded_random_same_budget": [
+      "directional_only",
+      "stable_across_repos"
+    ],
+    "repo_unweighted_same_budget__vs__temporal_recent_baseline": [
+      "candidate_worse_than_baseline"
+    ],
+    "seeded_random_same_budget__vs__repo_stratified_by_target_profile": [
+      "candidate_worse_than_baseline"
+    ],
+    "seeded_random_same_budget__vs__repo_unweighted_same_budget": [
+      "candidate_worse_than_baseline"
+    ],
+    "seeded_random_same_budget__vs__temporal_recent_baseline": [
+      "candidate_worse_than_baseline"
+    ],
+    "temporal_recent_baseline__vs__repo_stratified_by_target_profile": [
+      "directional_only",
+      "stable_across_repos"
+    ],
+    "temporal_recent_baseline__vs__repo_unweighted_same_budget": [
+      "directional_only",
+      "stable_across_repos"
+    ],
+    "temporal_recent_baseline__vs__seeded_random_same_budget": [
+      "directional_only",
+      "stable_across_repos"
+    ]
+  },
+  "driver_checks": {
+    "best_baseline": "temporal_recent_baseline",
+    "best_candidate": "coverage_constrained_unweighted",
+    "delta_MAE_by_adapter": {
+      "codex_workspace": 0.0253,
+      "kilo_workspace": -0.037
+    },
+    "delta_MAE_by_repo": {
+      "attrs": -0.0871,
+      "boltons": 0.0139,
+      "click": 0.0556
+    }
+  },
+  "generated_at": "2026-05-30T02:46:13Z",
+  "interval_policy": "No formal interval estimated; support is too sparse and retrospective.",
+  "run_id": "phase1_retrospective_predictive_signal_20260530",
+  "schema_version": "barcarolle.phase1_retrospective_predictive_signal_output.v1",
+  "support_labels": {
+    "claim_strength": "traction_evidence_only",
+    "overall": "directional_only",
+    "sample_size": "too_sparse_for_formal_predictive_validity"
+  }
+}
