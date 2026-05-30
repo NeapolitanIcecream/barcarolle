@@ -1,10 +1,11 @@
 # Retrospective Predictive-Signal Process
 
-Current step: `Step 2 - Window And Cutoff Plan`.
+Current step: `Step 3 - Design Registry And Selection Freeze`.
 
 Completed artifacts:
-- experiments/phase1_compiler/results/phase1_retrospective_predictive_signal_window_plan.json
-- experiments/phase1_compiler/reports/phase1_retrospective_predictive_signal_window_plan.md
+- experiments/phase1_compiler/results/phase1_retrospective_predictive_signal_design_registry.json
+- experiments/phase1_compiler/results/phase1_retrospective_predictive_signal_selection_freeze.json
+- experiments/phase1_compiler/reports/phase1_retrospective_predictive_signal_design_registry.md
 
 Boundary:
 - This is a no-paid retrospective analysis.
@@ -14,4 +15,4 @@ Boundary:
 - Predictive validity is not established by this run.
 
 Notes:
-- Window and cutoff choices are frozen before score-table terminal outcomes are loaded.
+- Designs, seeds, weights, windows, and selections are frozen before score-table outcomes are joined.

@@ -859,9 +859,12 @@ def shrinkage_weights(selected: list[dict[str, Any]], target: list[dict[str, Any
     diagnostics = weight_diagnostics(weights, None)
     diagnostics["weight_mode"] = "capped_shrinkage"
     diagnostics["max_weight_allowed"] = cap
-    if diagnostics["ESS_ratio"] is not None and diagnostics["ESS_ratio"] < 0.5:
+    cap_overflow = max(weights.values()) > cap
+    low_ess = diagnostics["ESS_ratio"] is not None and diagnostics["ESS_ratio"] < 0.5
+    if cap_overflow or low_ess:
         weights = uniform_weights(task_ids)
-        diagnostics = weight_diagnostics(weights, "uniform_fallback_low_ess")
+        fallback = "uniform_fallback_cap_overflow" if cap_overflow else "uniform_fallback_low_ess"
+        diagnostics = weight_diagnostics(weights, fallback)
         diagnostics["weight_mode"] = "uniform_fallback"
         diagnostics["max_weight_allowed"] = cap
     return weights, diagnostics
