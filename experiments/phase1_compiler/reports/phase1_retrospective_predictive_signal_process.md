@@ -1,9 +1,10 @@
 # Retrospective Predictive-Signal Process
 
-Current step: `Step 0 - Preflight And Scope Check`.
+Current step: `Step 2 - Window And Cutoff Plan`.
 
 Completed artifacts:
-- experiments/phase1_compiler/results/phase1_retrospective_predictive_signal_preflight.json
+- experiments/phase1_compiler/results/phase1_retrospective_predictive_signal_window_plan.json
+- experiments/phase1_compiler/reports/phase1_retrospective_predictive_signal_window_plan.md
 
 Boundary:
 - This is a no-paid retrospective analysis.
@@ -13,5 +14,4 @@ Boundary:
 - Predictive validity is not established by this run.
 
 Notes:
-- The current runbook input is untracked in this worktree and is classified separately from generated outputs.
-- Existing score tables are treated as read-only inputs and terminal outcomes are deferred until after selection freeze.
+- Window and cutoff choices are frozen before score-table terminal outcomes are loaded.
