@@ -217,3 +217,20 @@ Acceptance:
 - matrix drives later milestones;
 - no prohibited claim is left as a draft claim;
 - no paid calls made.
+
+### Step 4
+
+Completed:
+
+- wrote `docs/research/phase-1-proposal-claim-boundary.md`;
+- made allowed, careful, draft/needs-evidence, and prohibited claims explicit;
+- confirmed M2-M6 remain draft milestones, not new runbooks;
+- identified P0 reviewer-ready evidence blockers.
+
+Acceptance:
+
+- allowed, draft, and prohibited claims are explicit;
+- M1 outputs point to next milestones without drafting M2;
+- `PROCESS.md` update is deferred to Step 5 closeout so it can point to the
+  final M1 decision artifact;
+- no paid calls made.
