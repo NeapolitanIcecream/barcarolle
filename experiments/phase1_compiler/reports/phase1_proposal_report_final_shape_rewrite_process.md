@@ -195,3 +195,48 @@ Acceptance evidence:
 - Each planned v1 section has a reader-facing job.
 - Phase 1 evidence has a limited argumentative role.
 - Internal roadmap details are excluded from the v1 main-body contract.
+
+## Step 2: Write Proposal Report V1 From The Contract
+
+Created `docs/research/phase-1-proposal-report-v1.md`.
+
+Draft structure:
+
+1. Executive Summary
+2. Problem And Stakes
+3. Research Question And North Star
+4. Barcarolle Thesis And Boundary
+5. Proposed Benchmark-Compiler Design
+6. Validation Strategy For Predictive Validity
+7. Preliminary Evidence And Feasibility
+8. Project Plan, Decision Gates, And Resource Ask
+9. Risks, Objections, And Mitigations
+10. Expected Deliverables
+11. Appendices And Evidence Index
+
+The draft was written from the Step 1 reader contract rather than by preserving
+v0's organization. The main body uses Phase 1 evidence only for the three
+reader questions named by the runbook: problem reality, technical tractability,
+and enough traction to justify the next phase. Detailed report links and
+placeholder registers are routed to the appendices.
+
+Initial diagnostic checks:
+
+```text
+rg -n "M[0-9]|runbook|roadmap|current state|completed cells|score table" docs/research/phase-1-proposal-report-v1.md
+  no matches
+
+rg -n "proves predictive validity|established predictive validity|authorizes paid" docs/research/phase-1-proposal-report-v1.md
+  no matches
+```
+
+Acceptance evidence:
+
+- V1 reads as a proposal-approval report with explicit placeholders.
+- V1 keeps predictive validity as the north star without claiming it is
+  established.
+- V1 does not authorize paid ACUT validation.
+- V1 does not include an experiment-by-experiment Phase 1 ledger in the main
+  body.
+- Missing figures, tables, pseudocode, citations, result-dependent numbers,
+  decisions, and analysis are marked with precise `[NEEDS ...]` placeholders.
