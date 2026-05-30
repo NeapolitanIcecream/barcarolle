@@ -1,13 +1,13 @@
 # Phase 1 Proposal Argument Map
 
-Status: internal argument map aligned with proposal argument rewrite,
+Status: internal argument map aligned with proposal report v1,
 2026-05-30.
 
 This map is internal proposal scaffolding, not a final report and not a
-paid-validation authorization. It supports the rewritten proposal report while
-keeping predictive validity as the long-term north star and limiting the
-short-term proposal claim to Phase 1 traction evidence plus a credible
-validation path.
+paid-validation authorization. It supports
+`docs/research/phase-1-proposal-report-v1.md` while keeping predictive
+validity as the long-term north star and limiting the short-term proposal
+claim to Phase 1 traction evidence plus a credible validation path.
 
 ## Reader Frame
 

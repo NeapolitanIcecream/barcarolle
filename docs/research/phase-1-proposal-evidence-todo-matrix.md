@@ -1,11 +1,14 @@
 # Phase 1 Proposal Evidence/TODO Matrix
 
-Status: internal evidence tracker aligned with proposal argument rewrite,
+Status: internal evidence tracker aligned with proposal report v1,
 2026-05-30.
 
 This matrix maps proposal-report claims to current evidence, missing evidence,
 and recommended no-paid work. It is deliberately conservative: unsupported
 claims are either routed to later no-paid milestones or marked prohibited.
+The final-shape proposal draft at
+`docs/research/phase-1-proposal-report-v1.md` should pull from this matrix but
+should not reproduce it as a main-body evidence ledger.
 
 Status values:
 

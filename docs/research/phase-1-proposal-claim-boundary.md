@@ -1,12 +1,15 @@
 # Phase 1 Proposal Claim Boundary
 
-Status: internal claim guardrail aligned with proposal argument rewrite,
+Status: internal claim guardrail aligned with proposal report v1,
 2026-05-30.
 
 This document defines what the Phase 1 proposal report may claim now, what it
 may claim only with care, what remains draft pending evidence, and what is
 prohibited. It is a guardrail for proposal writing and review triage; it is not
 a validation protocol and not a paid-run authorization.
+The final-shape report draft is
+`docs/research/phase-1-proposal-report-v1.md`; this document remains the
+claim-boundary guardrail rather than the report itself.
 
 ## Boundary Summary
 

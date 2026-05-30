@@ -240,3 +240,33 @@ Acceptance evidence:
   body.
 - Missing figures, tables, pseudocode, citations, result-dependent numbers,
   decisions, and analysis are marked with precise `[NEEDS ...]` placeholders.
+
+## Step 3: Align Supporting Documents
+
+Supporting-document changes:
+
+- Added a supersession note to
+  `docs/research/phase-1-proposal-report-v0.md` stating that v1 supersedes v0
+  as the final-shape proposal report while v0 remains source material.
+- Updated `docs/research/phase-1-proposal-argument-map.md` to identify v1 as
+  the supported proposal report.
+- Updated `docs/research/phase-1-proposal-evidence-todo-matrix.md` to state
+  that v1 should pull from the matrix without reproducing it as a main-body
+  evidence ledger.
+- Updated `docs/research/phase-1-proposal-claim-boundary.md` to identify v1
+  as the final-shape report draft while preserving the guardrail role.
+
+No change was made to the untracked
+`docs/research/phase-1-proposal-roadmap-and-claim-planning.md` input. Roadmap
+ownership remains there, and no new roadmap file or later milestone runbook was
+created. `PROCESS.md` handoff text will be updated during closeout so it can
+point to the final decision artifacts after they exist.
+
+Acceptance evidence:
+
+- V0 is clearly superseded by v1.
+- Argument, evidence, and claim-boundary support files point to v1 and keep
+  their internal scaffolding roles.
+- Roadmap ownership remains in the existing planning document.
+- No duplicate roadmap file was created.
+- No later runbook was drafted or created.

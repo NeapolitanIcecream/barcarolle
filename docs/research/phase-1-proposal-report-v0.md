@@ -2,6 +2,11 @@
 
 Status: proposal argument draft, 2026-05-30.
 
+Supersession note: `docs/research/phase-1-proposal-report-v1.md` supersedes
+this draft as the final-shape proposal report. This v0 remains useful source
+material and an argument rewrite record, but it should not be treated as the
+proposal-approval document.
+
 This report argues for continued Barcarolle research toward repo-specific
 predictive validity. It is not the internal milestone roadmap. Roadmap and
 claim-planning details live in
