@@ -198,3 +198,22 @@ Acceptance:
 - task-supply/generator work is framed as Layer 1 support, not the project
   core;
 - no paid calls made.
+
+### Step 3
+
+Completed:
+
+- wrote `docs/research/phase-1-proposal-evidence-todo-matrix.md`;
+- wrote
+  `experiments/phase1_compiler/results/phase1_proposal_report_skeleton_evidence_todo_matrix.json`;
+- included required rows for the north star, short-term claim, weighted failure,
+  retrospective signal, adapter reporting, source repair, candidate fallback,
+  `boltons` fallback, pseudo-future boundary, baseline strengthening, Task
+  Supply v2 relevance, and paid-validation readiness;
+- routed missing evidence to M2-M6 rather than running new experiments.
+
+Acceptance:
+
+- matrix drives later milestones;
+- no prohibited claim is left as a draft claim;
+- no paid calls made.
