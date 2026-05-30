@@ -1,0 +1,149 @@
+schema_version: barcarolle.phase1_candidate_policy_validation_protocol.v1
+run_id: phase1_candidate_policy_validation_protocol_20260530
+runbook: docs/experiments/phase-1-candidate-policy-validation-protocol-pre-adversarial-review-runbook.md
+status: configured
+paid_calls_allowed: false
+external_review_submission_allowed: false
+repos:
+  - attrs
+  - boltons
+  - click
+adapters:
+  - codex_workspace
+  - kilo_workspace
+policy:
+  policy_id: coverage_constrained_unweighted_v1
+  predecessor_design_id: coverage_constrained_unweighted
+  deterministic_seed: 2026053001
+  budget_per_repo: 6
+  minimum_tasks_per_repo: 6
+  minimum_supported_feature_dimensions: 3
+  score_model: unweighted_pass_rate_by_adapter_repo_or_window_slice
+  primary_objective: maximize_preregistered_coarse_feature_coverage
+  secondary_objective: minimize_feature_imbalance
+  tie_break_policy: sha256_seeded_task_id_order
+  fallback_insufficient_budget: repo_unweighted_same_budget
+  fallback_insufficient_feature_support: repo_stratified_by_target_profile
+coverage_features:
+  - coarse_task_family
+  - time_bucket
+  - editable_scope_bucket
+  - source_context_type_bucket
+  - source_quality_bucket
+  - statement_specificity_bucket
+  - context_length_bucket
+allowed_selection_fields:
+  - task_id
+  - repo
+  - task_time
+  - time_bucket
+  - coarse_task_family
+  - editable_scope_bucket
+  - source_context_type_bucket
+  - source_quality_bucket
+  - statement_specificity_bucket
+  - context_length_bucket
+  - ambiguity_risk_bucket
+  - leakage_risk_bucket
+  - certification_risk_bucket
+  - rare_or_unknown_feature_flag
+  - source_reservoir
+  - source_context_class
+  - implementation_file_count
+  - test_file_count
+  - public_context_ref_count
+  - release_eligibility_provenance
+  - repair_overlay_status
+  - statement_digest
+forbidden_fields:
+  - terminal_status
+  - terminal_outcome
+  - verified_pass
+  - verified_fail
+  - pass_rate
+  - adapter_outcome
+  - adapter_terminal_status
+  - b_eval_observed_outcome
+  - h_future_observed_outcome
+  - scoreable_cell
+  - submission_status
+  - agent_failure
+  - harness_error
+  - verifier_exit_code
+  - score_table_row
+  - raw_acut_transcript
+  - hidden_verifier_output
+validation:
+  preferred_study_mode: true_future_holdout
+  fallback_study_mode: preregistered_rolling_origin_or_pseudo_future_replay
+  primary_candidate: coverage_constrained_unweighted_v1
+  primary_metric: adapter_stratified_mae
+  catastrophic_miss_threshold: 0.15
+  minimum_mae_margin_vs_best_simple_baseline: 0.01
+  majority_of_slices_rule: candidate_improves_more_slices_than_it_worsens
+baselines:
+  - temporal_recent_baseline
+  - repo_unweighted_same_budget
+  - repo_stratified_by_target_profile
+  - seeded_random_same_budget
+research_branches:
+  - block_randomized_stratified
+  - block_plus_shrinkage_weighted
+  - old_weighted_target_profile_negative_control
+inputs:
+  agents: AGENTS.md
+  process: PROCESS.md
+  system_design: docs/architecture/system-design.md
+  runbook: docs/experiments/phase-1-candidate-policy-validation-protocol-pre-adversarial-review-runbook.md
+  retrospective_signal_runbook: docs/experiments/phase-1-retrospective-predictive-signal-analysis-runbook.md
+  click_source_context_repair_runbook: docs/experiments/phase-1-click-llm-assisted-source-context-repair-runbook.md
+  blocked_split_supplement_fairness_runbook: docs/experiments/phase-1-blocked-split-supplement-fairness-and-gap-diagnostics-runbook.md
+  policy_task_table: experiments/phase1_compiler/results/phase1_three_repo_paid_readiness_packaging_task_table.json
+  policy_candidate_universe: experiments/phase1_compiler/results/phase1_blocked_split_redesign_candidate_universe.json
+  policy_click_repair_quality_overlay: experiments/phase1_compiler/results/phase1_click_llm_source_context_repair_quality_overlay.json
+  retrospective_signal_decision: experiments/phase1_compiler/results/phase1_retrospective_predictive_signal_decision.json
+  retrospective_signal_baseline_comparison: experiments/phase1_compiler/results/phase1_retrospective_predictive_signal_baseline_comparison.json
+  retrospective_signal_adapter_metrics: experiments/phase1_compiler/results/phase1_retrospective_predictive_signal_adapter_metrics.json
+  retrospective_signal_uncertainty: experiments/phase1_compiler/results/phase1_retrospective_predictive_signal_uncertainty.json
+  retrospective_signal_design_registry: experiments/phase1_compiler/results/phase1_retrospective_predictive_signal_design_registry.json
+  retrospective_signal_selection_freeze: experiments/phase1_compiler/results/phase1_retrospective_predictive_signal_selection_freeze.json
+  retrospective_signal_window_plan: experiments/phase1_compiler/results/phase1_retrospective_predictive_signal_window_plan.json
+  click_repair_decision: experiments/phase1_compiler/results/phase1_click_llm_source_context_repair_decision.json
+  click_repair_quality_overlay: experiments/phase1_compiler/results/phase1_click_llm_source_context_repair_quality_overlay.json
+  blocked_split_supplement_fairness_decision: experiments/phase1_compiler/results/phase1_blocked_split_supplement_fairness_gap_diagnostics_decision.json
+  blocked_split_supplement_fairness_audit: experiments/phase1_compiler/results/phase1_blocked_split_supplement_fairness_gap_diagnostics_adapter_fairness_audit.json
+  local_algorithm_candidate_designs: experiments/phase1_compiler/results/phase1_local_algorithm_bakeoff_candidate_designs.json
+  local_algorithm_validation_results: experiments/phase1_compiler/results/phase1_local_algorithm_bakeoff_validation_results.json
+  local_algorithm_paid_readiness_gate: experiments/phase1_compiler/results/phase1_local_algorithm_bakeoff_paid_readiness_gate.json
+  three_repo_task_table: experiments/phase1_compiler/results/phase1_three_repo_paid_readiness_packaging_task_table.json
+  three_repo_split_plan: experiments/phase1_compiler/results/phase1_three_repo_paid_readiness_packaging_split_plan.json
+  three_repo_baseline_plan: experiments/phase1_compiler/results/phase1_three_repo_paid_readiness_packaging_baseline_plan.json
+  three_repo_paid_score_tables_manifest: experiments/phase1_compiler/results/phase1_three_repo_paid_validation_score_tables_manifest.json
+outputs:
+  preflight: experiments/phase1_compiler/results/phase1_candidate_policy_validation_protocol_preflight.json
+  policy_spec: experiments/phase1_compiler/results/phase1_candidate_policy_validation_protocol_policy_spec.json
+  input_freeze: experiments/phase1_compiler/results/phase1_candidate_policy_validation_protocol_input_freeze.json
+  selection_manifest: experiments/phase1_compiler/results/phase1_candidate_policy_validation_protocol_selection_manifest.json
+  outcome_blindness_audit: experiments/phase1_compiler/results/phase1_candidate_policy_validation_protocol_outcome_blindness_audit.json
+  validation_protocol: experiments/phase1_compiler/results/phase1_candidate_policy_validation_protocol_validation_protocol.json
+  success_criteria: experiments/phase1_compiler/results/phase1_candidate_policy_validation_protocol_success_criteria.json
+  baseline_registry: experiments/phase1_compiler/results/phase1_candidate_policy_validation_protocol_baseline_registry.json
+  review_packet_manifest: experiments/phase1_compiler/results/phase1_candidate_policy_validation_protocol_review_packet_manifest.json
+  claim_boundary: experiments/phase1_compiler/results/phase1_candidate_policy_validation_protocol_claim_boundary.json
+  decision: experiments/phase1_compiler/results/phase1_candidate_policy_validation_protocol_decision.json
+reports:
+  process: experiments/phase1_compiler/reports/phase1_candidate_policy_validation_protocol_process.md
+  policy_spec: experiments/phase1_compiler/reports/phase1_candidate_policy_validation_protocol_policy_spec.md
+  selection_manifest: experiments/phase1_compiler/reports/phase1_candidate_policy_validation_protocol_selection_manifest.md
+  outcome_blindness_audit: experiments/phase1_compiler/reports/phase1_candidate_policy_validation_protocol_outcome_blindness_audit.md
+  validation_protocol: experiments/phase1_compiler/reports/phase1_candidate_policy_validation_protocol_validation_protocol.md
+  success_criteria: experiments/phase1_compiler/reports/phase1_candidate_policy_validation_protocol_success_criteria.md
+  adversarial_review_packet: experiments/phase1_compiler/reports/phase1_candidate_policy_validation_protocol_adversarial_review_packet.md
+  decision: experiments/phase1_compiler/reports/phase1_candidate_policy_validation_protocol_decision.md
+external_review_packet:
+  directory: experiments/phase1_compiler/external_review/phase1_candidate_policy_validation_protocol_review_20260530
+  readme: experiments/phase1_compiler/external_review/phase1_candidate_policy_validation_protocol_review_20260530/README_FOR_ADVERSARIAL_REVIEW.md
+  evidence_index: experiments/phase1_compiler/external_review/phase1_candidate_policy_validation_protocol_review_20260530/EVIDENCE_INDEX.md
+  review_questions: experiments/phase1_compiler/external_review/phase1_candidate_policy_validation_protocol_review_20260530/REVIEW_QUESTIONS.md
+  claim_boundary: experiments/phase1_compiler/external_review/phase1_candidate_policy_validation_protocol_review_20260530/CLAIM_BOUNDARY.md
+  manifest: experiments/phase1_compiler/external_review/phase1_candidate_policy_validation_protocol_review_20260530/MANIFEST.sha256
