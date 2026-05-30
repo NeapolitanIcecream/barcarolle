@@ -98,3 +98,100 @@ Acceptance evidence:
 - V0 failure mode recorded.
 - V1 target contract recorded.
 - No new roadmap file created.
+
+## Step 1: Define The Final-Shape Report Contract
+
+### Reader Brief
+
+Target readers:
+
+- project or proposal reviewers deciding whether Barcarolle should continue;
+- coding-agent evaluation researchers who will reject benchmark overclaiming;
+- agent developers and repo owners who need repo-specific evaluation evidence,
+  not only public benchmark scores.
+
+What readers already know:
+
+- repository-level SWE evaluation exists and executable tasks can be generated
+  or mined from multiple sources;
+- public/general benchmark scores are useful but can be weak evidence for a
+  specific repository's future work;
+- small benchmark packages are vulnerable to sampling, source-quality, adapter,
+  and validation-design errors.
+
+What readers doubt:
+
+- whether Barcarolle is a distinct benchmark-compiler project rather than a
+  task generator, ACUT harness, or leaderboard variant;
+- whether a failed weighted design undermines the whole project;
+- whether weak retrospective signal and a simple coverage candidate justify
+  another research phase;
+- whether source repair, adapter handling, and artifact hygiene are research
+  evidence or mere process cleanup;
+- whether the proposal is quietly asking for paid validation before the
+  protocol is ready.
+
+What would justify approval:
+
+- a clear research question centered on repo-specific predictive validity;
+- a credible system object: versioned benchmark releases compiled from
+  candidate supply, not raw task piles;
+- honest preliminary evidence showing the problem is real and tractable,
+  including negative evidence;
+- a validation strategy that separates traction evidence from predictive
+  validity and freezes baselines, adapters, invalid-cell rules, and support
+  thresholds before future outcomes are joined;
+- explicit placeholders for missing numbers, figures, citations, and gates so
+  the remaining pre-proposal work is pulled by report blanks.
+
+What the report must not overclaim:
+
+- it must not say predictive validity is established;
+- it must not authorize paid ACUT validation;
+- it must not treat pseudo-future replay as formal predictive-validity
+  evidence;
+- it must not report Codex/Kilo differences as model-only superiority;
+- it must not make Task Supply v2 or an external generator the central
+  Barcarolle contribution.
+
+### Section Contract
+
+| V1 section | Reader-facing job |
+| --- | --- |
+| Executive Summary | State the decision problem, Barcarolle's contribution, current readiness, remaining blanks, and approval ask without ledger detail. |
+| Problem And Stakes | Explain the cost of target-repository shift for teams choosing or tuning ACUTs. |
+| Research Question And North Star | Define predictive validity, estimand, and allowed current claim. |
+| Barcarolle Thesis And Boundary | Separate benchmark compilation from ACUT harnessing, task generation, leaderboards, and product licensing. |
+| Proposed Benchmark-Compiler Design | Describe the final proposed system object: inputs, layers, release outputs, candidate policy family, and needed diagrams/pseudocode. |
+| Validation Strategy For Predictive Validity | Specify study modes, estimand, baselines, metrics, adapter reporting, fallback handling, support requirements, invalid-cell rules, and success gates. |
+| Preliminary Evidence And Feasibility | Compress Phase 1 into evidence that the problem is real, work is tractable, and the next phase is justified. |
+| Project Plan, Decision Gates, And Resource Ask | Present proposal-level work packages and stop/go gates, not internal runbook sequencing. |
+| Risks, Objections, And Mitigations | Put the strongest objections up front and answer them with bounded claims and concrete mitigations. |
+| Expected Deliverables | Name the artifacts the approved project should produce. |
+| Appendices And Evidence Index | Route detailed evidence, report links, claim boundaries, and technical details away from the main argument. |
+
+### Main Body Versus Appendix Routing
+
+Main-body material:
+
+- the problem of predicting future target-repo ACUT performance;
+- Barcarolle's benchmark-compiler boundary and proposed release object;
+- the validation logic needed to establish predictive validity later;
+- a compact preliminary-evidence synthesis tied to reader questions;
+- decision gates, risks, mitigations, and deliverables.
+
+Appendix or supporting-document material:
+
+- exact Phase 1 report links and decision labels;
+- full weighted-pilot, three-repo pilot, retrospective, adapter, and
+  source-repair evidence tables;
+- selected task IDs, detailed coverage gaps, fallback manifests, and
+  outcome-blindness audit details;
+- internal roadmap ownership, milestone labels, and later runbook candidates;
+- detailed external-review triage once that work exists.
+
+Acceptance evidence:
+
+- Each planned v1 section has a reader-facing job.
+- Phase 1 evidence has a limited argumentative role.
+- Internal roadmap details are excluded from the v1 main-body contract.
