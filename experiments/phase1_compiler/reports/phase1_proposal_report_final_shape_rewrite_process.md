@@ -270,3 +270,38 @@ Acceptance evidence:
 - Roadmap ownership remains in the existing planning document.
 - No duplicate roadmap file was created.
 - No later runbook was drafted or created.
+
+## Step 4: Self-Review Against The Final-Shape Standard
+
+Review questions:
+
+| Question | Result |
+| --- | --- |
+| If placeholders were filled, would v1 be close to the final proposal-approval report? | Yes. The draft has the required approval-report sections, explicit ask, validation strategy, risks, deliverables, and appendices. |
+| Can a proposal reader understand the project without reading internal runbooks? | Yes. The main text defines the problem, contribution, boundary, system object, validation design, and evidence limits without relying on runbook chronology. |
+| Does every Phase 1 evidence paragraph support a reader-facing claim? | Yes. Evidence is grouped under problem reality, technical tractability, and traction without a chronological ledger. |
+| Are algorithm, validation, and risk sections shaped as proposal content rather than process notes? | Yes. Internal milestone and runbook details are excluded from the main body. |
+| Are unsupported or result-dependent claims explicitly marked? | Yes. Missing citations, figures, pseudocode, numbers, results, decisions, and analyses are marked with precise `[NEEDS ...]` placeholders. |
+
+Text diagnostics:
+
+```text
+rg -n "M[0-9]|runbook|roadmap|current state|completed cells|score table" docs/research/phase-1-proposal-report-v1.md
+  no matches
+
+rg -n "proves predictive validity|established predictive validity|authorizes paid" docs/research/phase-1-proposal-report-v1.md
+  no matches
+
+rg -n "predictive validity is established|paid validation is authorized|validated predictive benchmark compiler|model-only superiority" docs/research/phase-1-proposal-report-v1.md
+  no matches
+
+git diff --check
+  passed
+```
+
+Acceptance evidence:
+
+- V1 passes the final-shape review.
+- No prohibited predictive-validity or paid-authorization phrasing was found.
+- `git diff --check` passed.
+- No paid calls were made.
