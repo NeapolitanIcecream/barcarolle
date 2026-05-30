@@ -195,11 +195,15 @@ predictive validity as the long-term north star while limiting the short-term
 proposal claim to Phase 1 traction evidence and a credible validation path.
 Stop label: `proposal_report_skeleton_complete`.
 
-The next recommended milestone is M2 external-review triage or M3 proposal
-evidence consolidation, depending on whether reviewer objections or missing
-proposal tables are more urgent. Do not run more paid ACUT cells by default.
-Secondary no-paid follow-ups remain invalid-output or Codex `attrs__v2__157`
-output-contract inspection.
+The M1 proposal report argument rewrite is complete. The rewritten
+`docs/research/phase-1-proposal-report-v0.md` now reads as a reader-facing
+research proposal argument rather than an internal roadmap; the roadmap remains
+owned by `docs/research/phase-1-proposal-roadmap-and-claim-planning.md`.
+Current evidence still does not establish predictive validity and does not
+authorize more paid ACUT cells. The next recommended no-paid milestone is
+external-review triage, with proposal-critical evidence consolidation and
+validation-protocol hardening as the follow-on work categories. Stop label:
+`proposal_report_argument_rewrite_complete`.
 
 Canonical report and runbook:
 
@@ -213,11 +217,13 @@ Canonical report and runbook:
 - `experiments/phase1_compiler/external_review/phase1_candidate_policy_validation_protocol_review_20260530/README_FOR_ADVERSARIAL_REVIEW.md`
 - `docs/research/phase-1-proposal-roadmap-and-claim-planning.md`
 - `docs/experiments/phase-1-proposal-report-skeleton-runbook.md`
+- `docs/experiments/phase-1-proposal-report-argument-rewrite-runbook.md`
 - `docs/research/phase-1-proposal-report-v0.md`
 - `docs/research/phase-1-proposal-argument-map.md`
 - `docs/research/phase-1-proposal-evidence-todo-matrix.md`
 - `docs/research/phase-1-proposal-claim-boundary.md`
 - `experiments/phase1_compiler/reports/phase1_proposal_report_skeleton_decision.md`
+- `experiments/phase1_compiler/reports/phase1_proposal_report_argument_rewrite_decision.md`
 
 ### Workspace State Note
 

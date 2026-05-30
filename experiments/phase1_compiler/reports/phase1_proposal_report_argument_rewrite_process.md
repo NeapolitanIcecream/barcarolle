@@ -152,3 +152,40 @@ Step 2 acceptance:
 - no duplicate roadmap document exists: yes;
 - supporting docs point to the rewritten report roles cleanly: yes;
 - roadmap and report are not merged back together: yes.
+
+## Step 3 Closeout
+
+Closeout artifacts written:
+
+- `experiments/phase1_compiler/reports/phase1_proposal_report_argument_rewrite_decision.md`
+- `experiments/phase1_compiler/results/phase1_proposal_report_argument_rewrite_decision.json`
+
+`PROCESS.md` was updated because the handoff state changed from "run the
+argument rewrite" to `proposal_report_argument_rewrite_complete`.
+
+Final decision label: `proposal_report_argument_rewrite_complete`.
+
+What happened: the proposal report was rewritten as an argument; roadmap logic
+remains in the existing planning document.
+
+Why it matters: the report now answers the reviewer-facing proposal question
+instead of exposing the internal execution plan.
+
+What action it suggests next: run no-paid external-review triage first, then
+use accepted findings for proposal-critical evidence consolidation and
+validation-protocol hardening. No follow-up runbook was drafted.
+
+Boundary:
+
+- no paid ACUT cells made: yes;
+- no paid LLM calls made: yes;
+- no external reviewer call made: yes;
+- no new roadmap file created: yes;
+- predictive validity established: no;
+- paid validation authorized: no.
+
+Final verification:
+
+- report scan for `M2` through `M6` roadmap labels: passed;
+- prohibited claim scan in rewritten report: passed;
+- `git diff --check`: passed.

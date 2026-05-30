@@ -1,0 +1,50 @@
+{
+  "decision_label": "proposal_report_argument_rewrite_complete",
+  "status": "complete",
+  "date": "2026-05-30",
+  "runbook": "docs/experiments/phase-1-proposal-report-argument-rewrite-runbook.md",
+  "head_before_closeout": "4db6a1ee899fb4e5bd258e60646f8bafd2e73f21",
+  "step_commits": [
+    {
+      "step": "preflight_and_diagnosis",
+      "commit": "071e484a",
+      "message": "Record proposal report rewrite diagnosis"
+    },
+    {
+      "step": "report_rewrite",
+      "commit": "509f9290",
+      "message": "Rewrite proposal report as research argument"
+    },
+    {
+      "step": "supporting_document_alignment",
+      "commit": "4db6a1ee",
+      "message": "Align proposal report supporting documents"
+    }
+  ],
+  "outputs": {
+    "proposal_report": "docs/research/phase-1-proposal-report-v0.md",
+    "process_report": "experiments/phase1_compiler/reports/phase1_proposal_report_argument_rewrite_process.md",
+    "decision_report": "experiments/phase1_compiler/reports/phase1_proposal_report_argument_rewrite_decision.md",
+    "decision_json": "experiments/phase1_compiler/results/phase1_proposal_report_argument_rewrite_decision.json"
+  },
+  "boundary": {
+    "paid_acut_solver_cells": 0,
+    "paid_llm_calls": 0,
+    "external_reviewer_calls": 0,
+    "new_roadmap_file_created": false,
+    "predictive_validity_established": false,
+    "paid_validation_authorized": false
+  },
+  "acceptance": {
+    "report_reads_as_proposal_argument": true,
+    "roadmap_remains_existing_planning_document": true,
+    "supporting_docs_aligned": true,
+    "current_evidence_not_overstated": true,
+    "next_recommended_milestone": "no_paid_external_review_triage"
+  },
+  "verification": {
+    "report_m2_m6_scan": "passed",
+    "prohibited_claim_scan": "passed",
+    "git_diff_check": "passed"
+  }
+}
