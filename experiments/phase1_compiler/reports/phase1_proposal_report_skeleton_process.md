@@ -177,3 +177,24 @@ Acceptance:
   predictive validity;
 - GPT-5.5-Pro recommendations inform scope without expanding M1 by default;
 - no paid calls made.
+
+### Step 2
+
+Completed:
+
+- wrote `docs/research/phase-1-proposal-report-v0.md`;
+- used the required report structure: problem, north star, thesis, Phase 1
+  evidence, lessons, candidate path, validation path, research plan, risks and
+  boundaries, and milestones;
+- marked unsupported or incomplete material with `Draft` labels and
+  `[NEEDS ...]` placeholders;
+- cited local reports and planning files by path.
+
+Acceptance:
+
+- report can be read end-to-end as a proposal skeleton;
+- every major claim has evidence, an evidence path, or an explicit placeholder;
+- Phase 1 evidence is not overstated;
+- task-supply/generator work is framed as Layer 1 support, not the project
+  core;
+- no paid calls made.
