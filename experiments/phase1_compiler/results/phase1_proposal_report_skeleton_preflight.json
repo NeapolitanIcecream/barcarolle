@@ -1,0 +1,132 @@
+{
+  "runbook": "docs/experiments/phase-1-proposal-report-skeleton-runbook.md",
+  "status": "step0_preflight_complete",
+  "timestamp_local": "2026-05-30 15:06:54 CST",
+  "branch": "codex/restart-benchmark-compiler",
+  "head": "da8d9977f823952932efb67ecab5c068f1bc5531",
+  "worktree_status_before_step0": [
+    " M PROCESS.md",
+    "?? docs/experiments/phase-1-proposal-report-skeleton-runbook.md",
+    "?? docs/research/",
+    "?? experiments/phase1_compiler/external_review/phase1_candidate_policy_validation_protocol_gpt55_bundle_20260530/",
+    "?? experiments/phase1_compiler/external_review/phase1_task_generator_design_review_20260526/"
+  ],
+  "no_paid_calls_made": true,
+  "paid_acut_cells_run": 0,
+  "paid_llm_calls_run": 0,
+  "external_reviewer_calls_run": 0,
+  "required_inputs": [
+    {
+      "path": "AGENTS.md",
+      "available": true,
+      "role": "repo instructions"
+    },
+    {
+      "path": "PROCESS.md",
+      "available": true,
+      "role": "process state"
+    },
+    {
+      "path": "docs/research/phase-1-proposal-roadmap-and-claim-planning.md",
+      "available": true,
+      "role": "proposal roadmap"
+    },
+    {
+      "path": "docs/architecture/system-design.md",
+      "available": true,
+      "role": "architecture boundary"
+    },
+    {
+      "path": "/Users/chenmohan/Downloads/barcarolle-research-0519.md",
+      "available": true,
+      "role": "research plan"
+    },
+    {
+      "path": "/Users/chenmohan/Downloads/barcarolle-research-0526.md",
+      "available": true,
+      "role": "weighted design critique"
+    },
+    {
+      "path": "/Users/chenmohan/Downloads/barcarolle-research-0526-1.md",
+      "available": true,
+      "role": "task supply v2 review"
+    },
+    {
+      "path": "/Users/chenmohan/Downloads/barcarolle-research-0530.md",
+      "available": true,
+      "role": "candidate policy adversarial review"
+    },
+    {
+      "path": "experiments/phase1_compiler/reports/phase1_weighted_design_paid_pilot_decision.md",
+      "available": true,
+      "role": "weighted pilot evidence"
+    },
+    {
+      "path": "experiments/phase1_compiler/reports/phase1_local_algorithm_bakeoff_decision.md",
+      "available": true,
+      "role": "local algorithm bakeoff evidence"
+    },
+    {
+      "path": "experiments/phase1_compiler/reports/phase1_three_repo_paid_validation_decision.md",
+      "available": true,
+      "role": "three-repo paid pilot evidence"
+    },
+    {
+      "path": "experiments/phase1_compiler/reports/phase1_blocked_split_supplement_fairness_gap_diagnostics_decision.md",
+      "available": true,
+      "role": "adapter fairness diagnostic"
+    },
+    {
+      "path": "experiments/phase1_compiler/reports/phase1_click_llm_source_context_repair_decision.md",
+      "available": true,
+      "role": "click source-quality repair"
+    },
+    {
+      "path": "experiments/phase1_compiler/reports/phase1_retrospective_predictive_signal_decision.md",
+      "available": true,
+      "role": "retrospective signal decision"
+    },
+    {
+      "path": "experiments/phase1_compiler/reports/phase1_retrospective_predictive_signal_baseline_comparison.md",
+      "available": true,
+      "role": "baseline comparison"
+    },
+    {
+      "path": "experiments/phase1_compiler/reports/phase1_retrospective_predictive_signal_adapter_metrics.md",
+      "available": true,
+      "role": "adapter metrics"
+    },
+    {
+      "path": "experiments/phase1_compiler/reports/phase1_retrospective_predictive_signal_uncertainty.md",
+      "available": true,
+      "role": "uncertainty labels"
+    },
+    {
+      "path": "experiments/phase1_compiler/reports/phase1_candidate_policy_validation_protocol_decision.md",
+      "available": true,
+      "role": "candidate policy decision"
+    },
+    {
+      "path": "experiments/phase1_compiler/reports/phase1_candidate_policy_validation_protocol_policy_spec.md",
+      "available": true,
+      "role": "candidate policy spec"
+    },
+    {
+      "path": "experiments/phase1_compiler/reports/phase1_candidate_policy_validation_protocol_selection_manifest.md",
+      "available": true,
+      "role": "candidate selection manifest"
+    },
+    {
+      "path": "experiments/phase1_compiler/reports/phase1_task_supply_v2_source_bakeoff_decision.md",
+      "available": true,
+      "role": "task supply v2 source bakeoff"
+    }
+  ],
+  "missing_required_inputs": [],
+  "reader_brief_location": "experiments/phase1_compiler/reports/phase1_proposal_report_skeleton_process.md#reader-role-brief",
+  "notes": [
+    "The runbook is no-paid and planning-only.",
+    "Initial worktree already contained modified PROCESS.md and untracked planning/review files; commits from this execution stage only M1 output files unless PROCESS.md is explicitly updated later.",
+    "Unsupported proposal content should be labeled Draft or [NEEDS ...] rather than strengthened."
+  ]
+}
