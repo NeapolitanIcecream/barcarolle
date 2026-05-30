@@ -158,3 +158,22 @@ Acceptance:
 - missing inputs recorded as none;
 - pre-existing dirty worktree state recorded;
 - reader-role brief written.
+
+### Step 1
+
+Completed:
+
+- wrote `docs/research/phase-1-proposal-argument-map.md`;
+- separated the north-star claim, short-term proposal claim, allowed Phase 1
+  claims, and prohibited claims;
+- mapped reasons, evidence, warrants, objections, and responses;
+- classified GPT-5.5-Pro recommendations as accept now, consider for no-paid
+  proposal evidence, defer, or reject as short-term scope expansion.
+
+Acceptance:
+
+- predictive validity remains the north star;
+- the short-term claim is stronger than artifact hygiene but does not claim
+  predictive validity;
+- GPT-5.5-Pro recommendations inform scope without expanding M1 by default;
+- no paid calls made.
