@@ -1,14 +1,19 @@
 # Phase 1 Proposal Evidence/TODO Matrix
 
-Status: internal evidence tracker aligned with proposal report v1, M2
-placeholder triage, and completed M3 evidence package, 2026-06-01.
+Status: internal evidence tracker aligned with proposal report v2 and M5
+reviewer-ready revision, 2026-06-01.
 
 This matrix maps proposal-report claims to current evidence, missing evidence,
 and recommended no-paid work. It is deliberately conservative: unsupported
 claims are either routed to later no-paid milestones or marked prohibited.
-The final-shape proposal draft at
-`docs/research/phase-1-proposal-report-v1.md` should pull from this matrix but
-should not reproduce it as a main-body evidence ledger.
+The reviewer-ready technical proposal report is now
+`docs/research/phase-1-proposal-report-v2.md`. Version 1 remains source
+material and a placeholder history, not the active reviewer-facing report.
+
+M5 resolved the proposal-report P0 integration items by producing v2, the
+reviewer-readiness checklist, citation matrix, risk register, and closeout
+decision. Remaining open items are future validation evidence or user-owned M6
+decisions, not unresolved v2 evidence placeholders.
 
 Status values:
 
@@ -41,22 +46,28 @@ Status values:
 | External review triage | `supported` | `/Users/chenmohan/Downloads/barcarolle-research-0530.md`; `/Users/chenmohan/Downloads/barcarolle-research-0526-1.md`; `docs/research/phase-1-proposal-p0-placeholder-triage.md` | None for M2; downstream items now route to M3, M4, M5, defer, reject, or user decision | P0 | M2 complete | GPT-5.5-Pro advice is input, not controlling scope. |
 | Broad predictive-validity claim | `prohibited` | `experiments/phase1_compiler/reports/phase1_retrospective_predictive_signal_uncertainty.md`; `experiments/phase1_compiler/reports/phase1_candidate_policy_validation_protocol_decision.md`; `/Users/chenmohan/Downloads/barcarolle-research-0530.md` | Future outcome-unseen validation result | deferred | Post-proposal validation phase | Do not include as current claim. |
 
-## P0 Before Reviewer-Ready Proposal
+## P0 Reviewer-Ready Proposal Status
 
-The proposal report should not be treated as reviewer-ready until these P0
-items are resolved or explicitly deferred in the text:
+The M5 reviewer-ready revision resolved the report-level P0 items:
 
-- final short-term proposal claim wording;
-- M3 evidence package integration or explicit deferral in report v1;
-- M4 validation protocol and candidate-policy decisions integrated into report v1;
-- paid-validation non-authorization statement;
-- reviewer-facing citations, figures, and final prose integration.
+- final short-term proposal claim wording appears in
+  `docs/research/phase-1-proposal-report-v2.md`;
+- M3 evidence is integrated in v2 as traction, including the `0.209` MAE,
+  `0.2149` best simple aggregate baseline, `0.0059` edge, `93.4%`
+  random-baseline beats/ties share, adapter caveats, and fallback caveats;
+- M4 validation protocol and candidate-policy decisions are integrated in v2
+  as future standards, not current proof;
+- paid validation remains explicitly unauthorized;
+- reviewer-facing public citations, figures, risk handling, evidence index,
+  and final prose are complete for technical proposal review.
 
-M2 completed the external-review triage route map. M3 has now filled the
-evidence-package items or marked their limitations. M4 has filled the
-validation/candidate hardening decisions and classified the current candidate
-as not paid-ready. The remaining P0 blockers are owned primarily by M5 report
-revision and explicit user decisions for M6 resource and format questions.
+The remaining blockers are not v2 evidence placeholders. They are:
+
+- future true-holdout or preregistered rolling-origin evidence before any
+  predictive-validity claim;
+- fallback repair or claim narrowing before a primary coverage-policy claim;
+- user decisions for M6 artifact format, staffing/duration, owner categories,
+  and any conditional paid budget ceiling.
 
 ## Deferred Or Post-Proposal Items
 

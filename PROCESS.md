@@ -222,9 +222,16 @@ no-paid readiness gate: the aggregate MAE edge is below the future margin,
 Codex fails adapter-level support, boltons violates fallback caps, repo
 diagnostics are concentrated, and the study mode remains retrospective. Paid
 validation remains unauthorized and predictive validity remains future work.
-M5 can proceed to proposal-report integration; user decisions are still needed
-before M6 approval artifact work or any budget-bearing discussion. Stop label:
-`validation_protocol_hardened_candidate_not_paid_ready`.
+M5 reviewer-ready proposal revision is complete. The active technical proposal
+report is now `docs/research/phase-1-proposal-report-v2.md`, with checklist,
+citation matrix, risk register, process report, and closeout decision under the
+M5 reviewer-ready revision artifact paths. V2 argues for project approval from
+bounded traction: MAE is a meaningful prediction-error metric, benchmark
+selection changes it, and the current candidate beats/ties `93.4%` of 1000
+same-budget random selections while still falling short of future validation
+standards. User decisions are still needed before M6 approval artifact work or
+any budget-bearing discussion. Stop label:
+`proposal_report_reviewer_ready_for_technical_review`.
 
 Canonical report and runbook:
 
@@ -243,11 +250,18 @@ Canonical report and runbook:
 - `docs/experiments/phase-1-p0-placeholder-and-external-review-triage-runbook.md`
 - `docs/experiments/phase-1-proposal-evidence-package-runbook.md`
 - `docs/experiments/phase-1-validation-protocol-and-candidate-policy-hardening-runbook.md`
+- `docs/experiments/phase-1-proposal-report-reviewer-ready-revision-runbook.md`
 - `docs/research/phase-1-proposal-evidence-package.md`
 - `docs/research/phase-1-validation-protocol-and-candidate-policy-hardening.md`
 - `docs/research/phase-1-proposal-p0-placeholder-triage.md`
+- `docs/research/phase-1-proposal-report-v2.md`
+- `docs/research/phase-1-proposal-report-reviewer-ready-checklist.md`
 - `docs/research/phase-1-proposal-report-v0.md`
 - `experiments/phase1_compiler/reports/phase1_validation_protocol_candidate_policy_hardening_decision.md`
+- `experiments/phase1_compiler/reports/phase1_proposal_report_reviewer_ready_revision_process.md`
+- `experiments/phase1_compiler/reports/phase1_proposal_report_reviewer_ready_revision_citation_matrix.md`
+- `experiments/phase1_compiler/reports/phase1_proposal_report_reviewer_ready_revision_risk_register.md`
+- `experiments/phase1_compiler/reports/phase1_proposal_report_reviewer_ready_revision_decision.md`
 - `docs/research/phase-1-proposal-argument-map.md`
 - `docs/research/phase-1-proposal-evidence-todo-matrix.md`
 - `docs/research/phase-1-proposal-claim-boundary.md`

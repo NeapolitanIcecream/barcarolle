@@ -187,3 +187,22 @@ Acceptance evidence:
   paid/no-paid boundary, and readability.
 - Remaining unresolved items are user-owned M6 or later paid-discussion
   decisions, not evidence placeholders.
+
+## Step 11: Handoff Synchronization
+
+Updated handoff files:
+
+- `docs/research/phase-1-proposal-roadmap-and-claim-planning.md`
+- `docs/research/phase-1-proposal-evidence-todo-matrix.md`
+- `PROCESS.md`
+
+Recorded handoff state:
+
+- M5 is complete.
+- Active report path: `docs/research/phase-1-proposal-report-v2.md`.
+- Technical review can proceed from v2.
+- M6 can proceed only after user decisions on artifact format, staffing and
+  duration, owner categories, and any conditional paid budget ceiling.
+- Paid validation remains unauthorized.
+- Predictive validity remains future work.
+- No M6 runbook was drafted during M5 execution.

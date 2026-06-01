@@ -375,7 +375,7 @@ not a validation result.
 
 ### M5: Proposal Report Reviewer-Ready Revision
 
-Status: Draft.
+Status: complete.
 
 Purpose:
 
@@ -384,24 +384,31 @@ Fill or explicitly defer the remaining P0 placeholders in v1 and revise it
 into a reviewer-ready proposal report.
 ```
 
-Possible runbook:
+Runbook:
 
 ```text
 docs/experiments/phase-1-proposal-report-reviewer-ready-revision-runbook.md
 ```
 
-Expected outputs:
+Completed outputs:
 
-- proposal report reviewer-ready revision;
-- technical appendix;
-- residual risk list;
-- recommended next-phase budget and experiment plan.
-- current-evidence caveat box showing that Phase 1 traction does not pass
-  future paid-success criteria.
+- `docs/research/phase-1-proposal-report-v2.md`
+- `docs/research/phase-1-proposal-report-reviewer-ready-checklist.md`
+- `experiments/phase1_compiler/reports/phase1_proposal_report_reviewer_ready_revision_process.md`
+- `experiments/phase1_compiler/reports/phase1_proposal_report_reviewer_ready_revision_citation_matrix.md`
+- `experiments/phase1_compiler/reports/phase1_proposal_report_reviewer_ready_revision_risk_register.md`
+- `experiments/phase1_compiler/reports/phase1_proposal_report_reviewer_ready_revision_decision.md`
+
+M5 reframed the M4 gates as project-stage optimization and validation
+standards, not pre-proposal proof requirements. The completed v2 report argues
+for project approval from bounded traction: MAE is a meaningful
+prediction-error metric, benchmark selection changes it, and the current
+candidate beats/ties `93.4%` of 1000 same-budget random selections while still
+falling short of future validation standards.
 
 ### M6: Proposal Presentation Or Memo
 
-Status: Draft.
+Status: waiting on user decisions.
 
 Purpose:
 
@@ -422,10 +429,10 @@ Open user decisions before M6:
 - conditional paid-validation budget ceiling;
 - reviewer-facing owner categories.
 
-Possible runbook:
+Runbook status:
 
 ```text
-docs/experiments/phase-1-proposal-deck-or-memo-runbook.md
+not drafted by M5
 ```
 
 ## 8. Work Not On The Short-Term Critical Path
@@ -443,11 +450,12 @@ drive the next few days unless the v1 P0 placeholders expose a direct need:
 
 ## 9. Immediate Next Step
 
-M4 is complete. The next action category should be M5 reviewer-ready proposal
-report integration unless the user first resolves the open M6 resource/format
-decisions or explicitly chooses to pause after the hardening package.
+M5 is complete. The next action category is a user/coordinator decision:
+review `docs/research/phase-1-proposal-report-v2.md` for technical proposal
+approval, then decide whether and how to create the M6 approval artifact.
 
-No later runbook is drafted here. Paid validation remains unauthorized; M4
-settled the protocol gates but the current candidate does not pass them, and
-user budget/resource decisions are still required before any budget-bearing
-discussion.
+M6 still needs user decisions on artifact format, no-paid staffing and
+duration, conditional paid-validation budget ceiling, and reviewer-facing owner
+categories. No later runbook is drafted here. Paid validation remains
+unauthorized, predictive validity remains future work, and v2 does not invent
+user-owned budget or staffing values.
