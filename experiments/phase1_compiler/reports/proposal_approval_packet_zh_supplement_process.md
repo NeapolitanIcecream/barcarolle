@@ -172,3 +172,60 @@ git diff --check
 
 Expected result: key-number search returns all required numbers; overclaim and
 local-path checks return no matches; `git diff --check` passes.
+
+## Step 3: Chinese PPTX
+
+Recorded: 2026-06-01.
+
+Created:
+
+```text
+docs/research/m6-approval-packet-zh/barcarolle-approval-deck-v1.zh.pptx
+```
+
+Presentation workflow:
+
+- Used the Presentations skill artifact-tool workflow.
+- Mode: template-following localization.
+- English source deck:
+  `docs/research/m6-approval-packet/barcarolle-approval-deck-v1.pptx`.
+- Built a 12-slide starter deck by duplicating the English source deck 1:1.
+- Imported `template-starter.pptx`, rewrote inherited text in place, rendered
+  final PNG previews and layout JSON, and exported with
+  `PresentationFile.exportPptx`.
+- Did not use `python-pptx`, direct OOXML mutation, LibreOffice round trips,
+  imagegen, generated raster assets, decorative imagery, logos, or identity
+  assets.
+
+Chosen font:
+
+```text
+PingFang SC
+```
+
+Slide count:
+
+```text
+12
+```
+
+Visual QA:
+
+- Final contact sheet reviewed:
+  `outputs/manual-20260601-2254-zh-supplement/presentations/m6-approval-packet-zh/preview/final/contact-sheet.png`.
+- Full-size checks reviewed for evidence, gate/budget, decision, work-package,
+  deliverables, and validation-path slides.
+- Chinese placeholders remain readable on slides 8, 9, 11, and 12.
+- Evidence table preserves key numbers including `0.3148`, `0.7481`, `0.25`,
+  `0.125`, `120/120`, `1.0`, `30/30`, `0.209`, `0.2149`, `0.0059`, `93.4%`,
+  `1000`, `6/18`, and `6/6`.
+
+Artifact-tool QA:
+
+```text
+check_template_fidelity: pass
+issueCount: 0
+```
+
+The committed PPTX is byte-identical to the artifact-tool exported deck in the
+scratch workspace.
