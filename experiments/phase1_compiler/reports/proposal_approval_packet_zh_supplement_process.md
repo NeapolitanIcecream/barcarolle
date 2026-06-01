@@ -274,3 +274,25 @@ git diff --check
 Expected result: all overclaim and local-path commands return no matches;
 `git diff --check` passes. Key-number and placeholder searches against the
 extracted PPTX text return the expected evidence.
+
+## Step 5: Handoff State
+
+Recorded: 2026-06-01.
+
+Updated:
+
+```text
+docs/research/phase-1-proposal-roadmap-and-claim-planning.md
+PROCESS.md
+```
+
+Handoff changes:
+
+- The roadmap marks the Chinese approval packet supplement complete.
+- `PROCESS.md` now points future reviewer-facing revisions to
+  `docs/research/m6-approval-packet-zh/`.
+- The English M6 packet remains the source/reference version.
+- V5 remains the long-form source of truth.
+- Predictive validity and tuning-loop improvement remain unproven.
+- User-owned staffing, duration, gated evaluation budget ceiling,
+  approval-path, and owner-category placeholders remain visible.

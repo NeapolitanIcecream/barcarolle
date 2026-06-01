@@ -533,7 +533,7 @@ User-owned values still left as placeholders:
 
 ### M6b: Chinese Approval Packet Supplement
 
-Status: ready to execute.
+Status: complete.
 
 Purpose:
 
@@ -548,9 +548,10 @@ Runbook:
 docs/experiments/proposal-approval-packet-zh-supplement-runbook.md
 ```
 
-Expected outputs:
+Completed outputs:
 
 - `docs/research/m6-approval-packet-zh/barcarolle-approval-deck-v1.zh.pptx`
+- `docs/research/m6-approval-packet-zh/README.md`
 - `docs/research/m6-approval-packet-zh/executive-summary-v1.zh.md`
 - `docs/research/m6-approval-packet-zh/approval-deck-outline-v1.zh.md`
 - `docs/research/m6-approval-packet-zh/appendix-evidence-index-v1.zh.md`
@@ -558,8 +559,8 @@ Expected outputs:
 - `docs/research/m6-approval-packet-zh/terminology-glossary-v1.zh.md`
 
 The English M6 packet remains the source/reference version. V5 remains the
-long-form source of truth. Future reviewer-facing edits should target the
-Chinese packet after M6b completes.
+long-form source of truth. Future reviewer-facing edits should target
+`docs/research/m6-approval-packet-zh/` first.
 
 ## 8. Work Not On The Short-Term Critical Path
 
@@ -576,13 +577,11 @@ drive the next few days unless the v1 P0 placeholders expose a direct need:
 
 ## 9. Immediate Next Step
 
-Execute `docs/experiments/proposal-approval-packet-zh-supplement-runbook.md`
-to deliver the Chinese approval packet. After the Chinese packet is complete,
-future reviewer-facing edits should target
-`docs/research/m6-approval-packet-zh/`, while the English packet remains the
-source/reference version and V5 remains the long-form source of truth. Fill or
+Use `docs/research/m6-approval-packet-zh/` as the active editing surface for
+subsequent reviewer-facing revisions. The English M6 packet remains the
+source/reference version, and V5 remains the long-form source of truth. Fill or
 explicitly leave visible the user-owned staffing, duration, gated evaluation
 budget ceiling, approval-path, and owner-category placeholders before sending
-the packet to reviewers. Predictive validity remains future work;
-project-scale paid ACUT evaluation should be budgeted and gated by frozen
-protocols rather than framed as prohibited in the proposal report.
+the packet to reviewers. Predictive validity remains future work; project-scale
+paid ACUT evaluation should be budgeted and gated by frozen protocols rather
+than framed as prohibited in the proposal report.

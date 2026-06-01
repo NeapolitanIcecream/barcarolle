@@ -183,18 +183,17 @@ Canonical reports and runbooks:
 
 ### Open Follow-Ups
 
-Current state: the combined English approval packet has been produced under
-`docs/research/m6-approval-packet/`. The primary artifact is
-`barcarolle-approval-deck-v1.pptx`, supported by a one-page executive summary,
-deck outline, evidence appendix, and packet checklist. V5 remains the
-long-form source of truth.
+Current state: the Chinese approval packet has been produced under
+`docs/research/m6-approval-packet-zh/`. The primary reviewer-facing artifact is
+`barcarolle-approval-deck-v1.zh.pptx`, supported by a Chinese one-page
+summary, deck outline, evidence appendix, checklist, README, and glossary.
 
-Current next action: execute
-`docs/experiments/proposal-approval-packet-zh-supplement-runbook.md` to deliver
-the Chinese approval packet and make the Chinese materials the active editing
-surface. After that, fill or explicitly leave visible the user-owned staffing,
-duration, gated evaluation budget ceiling, approval-path, and owner-category
-placeholders before reviewer circulation.
+Current next action: use the Chinese packet as the active editing surface for
+subsequent reviewer-facing revisions. The English M6 packet remains the
+source/reference version, and V5 remains the long-form source of truth. Fill or
+explicitly leave visible the user-owned staffing, duration, gated evaluation
+budget ceiling, approval-path, and owner-category placeholders before reviewer
+circulation.
 
 Do not run more paid ACUT cells by default. Future project-scale paid
 evaluation should be budgeted and gated by frozen releases, baselines,
@@ -209,6 +208,13 @@ Current canonical links:
 
 - `docs/research/barcarolle-proposal-report-v5.md`
 - `docs/experiments/proposal-approval-packet-zh-supplement-runbook.md`
+- `docs/research/m6-approval-packet-zh/barcarolle-approval-deck-v1.zh.pptx`
+- `docs/research/m6-approval-packet-zh/README.md`
+- `docs/research/m6-approval-packet-zh/executive-summary-v1.zh.md`
+- `docs/research/m6-approval-packet-zh/approval-deck-outline-v1.zh.md`
+- `docs/research/m6-approval-packet-zh/appendix-evidence-index-v1.zh.md`
+- `docs/research/m6-approval-packet-zh/approval-packet-checklist-v1.zh.md`
+- `docs/research/m6-approval-packet-zh/terminology-glossary-v1.zh.md`
 - `docs/research/m6-approval-packet/barcarolle-approval-deck-v1.pptx`
 - `docs/research/m6-approval-packet/executive-summary-v1.md`
 - `docs/research/m6-approval-packet/appendix-evidence-index-v1.md`
@@ -227,7 +233,7 @@ Current canonical links:
 ### Workspace State Note
 
 As of 2026-06-01, the branch `codex/restart-benchmark-compiler` is ahead of
-`origin/codex/restart-benchmark-compiler`. Several handoff/setup files remain
-untracked, including proposal runbooks and external review bundles under
-`experiments/phase1_compiler/external_review/`. Do not stage, delete, or
-rewrite those untracked files unless the user asks.
+`origin/codex/restart-benchmark-compiler`. The Chinese approval packet
+supplement runbook and packet artifacts are tracked in the current branch. Do
+not stage, delete, or rewrite unrelated external review bundles unless the user
+asks.
