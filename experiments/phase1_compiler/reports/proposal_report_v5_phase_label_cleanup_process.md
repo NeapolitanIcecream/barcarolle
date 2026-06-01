@@ -159,3 +159,37 @@ Step 2 acceptance:
 - Appendix B is readable to a proposal reviewer.
 - Raw internal paths are preserved in the internal evidence manifest.
 - No evidence claim was strengthened.
+
+## Step 3: Update Checklist And Handoff Documents
+
+Updated the reviewer-ready checklist to make V5 the checked report and record
+the phase-label cleanup, V4 preservation, tuning-proof boundary,
+predictive-validity boundary, path-level traceability, and paid-evaluation
+gates.
+
+Updated the roadmap so:
+
+- M5d is complete;
+- V5 supersedes V4 as the active proposal report for proposal use;
+- V4 remains the agent-tuning integration source draft;
+- M6 waits on V5 acceptance and user/coordinator decisions;
+- the immediate next step is V5 review, not another runbook.
+
+Updated `PROCESS.md` so the active process snapshot names V5 as the active
+proposal report and records stop label
+`proposal_report_v5_phase_label_cleanup_complete`.
+
+Handoff check:
+
+```bash
+rg -n "barcarolle-proposal-report-v5|phase_label_cleanup_complete|V5 supersedes V4|waiting on V5 acceptance|V4 remains" docs/research/phase-1-proposal-report-reviewer-ready-checklist.md docs/research/phase-1-proposal-roadmap-and-claim-planning.md PROCESS.md
+```
+
+Result: expected V5 and handoff references were present.
+
+Step 3 acceptance:
+
+- Handoff docs point to V5 where appropriate.
+- The roadmap keeps internal milestone terms because it is an internal
+  planning file.
+- M6 waits on V5 acceptance and user/coordinator decisions.

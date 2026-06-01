@@ -245,9 +245,18 @@ structure and claim boundary while making the product/application path clearer:
 agent tuning, configuration selection, and regression feedback. Predictive
 validity and tuning-loop improvement remain unproven; multi-ACUT residual
 predictive validity and formal tuning-loop validation remain later extensions.
-M6 approval artifact work should wait until V4 is accepted by the
-user/coordinator. Stop label:
+Stop label:
 `proposal_report_v4_agent_tuning_integration_complete`.
+
+Proposal report V5 reader-facing phase-label cleanup is complete. The active
+proposal report is now `docs/research/barcarolle-proposal-report-v5.md`. V5
+preserves V4's structure, evidence, claim boundary, paid-evaluation framing,
+and agent-tuning application path while removing internal phase framing from
+the proposal itself. Path-level evidence traceability moved to an internal
+manifest. Predictive validity and tuning-loop improvement remain unproven. M6
+approval artifact work should wait until V5 is accepted by the
+user/coordinator. Stop label:
+`proposal_report_v5_phase_label_cleanup_complete`.
 
 Canonical report and runbook:
 
@@ -269,6 +278,10 @@ Canonical report and runbook:
 - `docs/experiments/phase-1-proposal-report-reviewer-ready-revision-runbook.md`
 - `docs/experiments/phase-1-proposal-report-v3-genre-repair-runbook.md`
 - `docs/experiments/phase-1-proposal-report-v4-agent-tuning-integration-runbook.md`
+- `docs/experiments/proposal-report-v5-reader-facing-phase-label-cleanup-runbook.md`
+- `docs/research/barcarolle-proposal-report-v5.md`
+- `experiments/phase1_compiler/reports/proposal_report_v5_phase_label_cleanup_process.md`
+- `experiments/phase1_compiler/reports/proposal_report_v5_evidence_manifest.md`
 - `docs/research/phase-1-proposal-report-v4.md`
 - `experiments/phase1_compiler/reports/phase1_proposal_report_v4_agent_tuning_integration_decision.md`
 - `experiments/phase1_compiler/reports/phase1_proposal_report_v4_agent_tuning_integration_process.md`

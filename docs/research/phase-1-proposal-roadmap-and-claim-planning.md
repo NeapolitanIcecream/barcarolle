@@ -455,13 +455,42 @@ Completed outputs:
 - `experiments/phase1_compiler/reports/phase1_proposal_report_v4_agent_tuning_integration_decision.md`
 - `experiments/phase1_compiler/results/phase1_proposal_report_v4_agent_tuning_integration_decision.json`
 
-V4 supersedes V3 as the active proposal report for proposal use. V3 remains the
-genre-repaired baseline and source draft. M6 should wait until V4 is accepted
-by the user/coordinator.
+V4 superseded V3 as the active proposal report for proposal use. It remains
+the agent-tuning integration source draft and traceability artifact, but V5 now
+supersedes it for reader-facing proposal review.
+
+### M5d: Reader-Facing Phase-Label Cleanup
+
+Status: complete.
+
+Purpose:
+
+```text
+Create a reader-facing V5 proposal report that removes internal phase labels
+from the proposal itself. V4's structure, evidence, claim boundary, and
+agent-tuning application path should be preserved, but "Phase 1" framing should
+be replaced with preliminary/current/pre-proposal evidence language.
+```
+
+Runbook:
+
+```text
+docs/experiments/proposal-report-v5-reader-facing-phase-label-cleanup-runbook.md
+```
+
+Completed outputs:
+
+- `docs/research/barcarolle-proposal-report-v5.md`
+- `experiments/phase1_compiler/reports/proposal_report_v5_phase_label_cleanup_process.md`
+- `experiments/phase1_compiler/reports/proposal_report_v5_evidence_manifest.md`
+
+V5 supersedes V4 as the active proposal report for proposal use. V4 remains the
+agent-tuning integration source draft. M6 should wait until V5 is accepted by
+the user/coordinator.
 
 ### M6: Proposal Presentation Or Memo
 
-Status: waiting on V4 acceptance and user decisions.
+Status: waiting on V5 acceptance and user decisions.
 
 Purpose:
 
@@ -503,12 +532,12 @@ drive the next few days unless the v1 P0 placeholders expose a direct need:
 
 ## 9. Immediate Next Step
 
-Review `docs/research/phase-1-proposal-report-v4.md` as the active proposal
-report. V4 preserves V3's proposal structure and claim boundary while making
-the product landing path clearer: agent tuning, configuration selection, and
-regression feedback.
+Review `docs/research/barcarolle-proposal-report-v5.md` as the active proposal
+report before M6. V5 preserves V4's proposal structure, claim boundary, and
+agent-tuning application path while removing internal phase framing from the
+reader-facing proposal.
 
-After V4 is accepted, decide whether the approval artifact should be a slide
+After V5 is accepted, decide whether the approval artifact should be a slide
 deck, short decision memo, one-page executive summary, or combined packet.
 Predictive validity remains future work; project-scale paid ACUT evaluation
 should be budgeted and gated by frozen protocols rather than framed as
