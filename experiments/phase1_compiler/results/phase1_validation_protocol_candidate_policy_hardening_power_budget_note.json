@@ -1,0 +1,67 @@
+{
+  "artifact": "power_budget_note",
+  "boundary": {
+    "external_review_allowed_by_config": false,
+    "external_reviewer_calls_run": false,
+    "new_paid_acut_cells_run": false,
+    "new_paid_llm_calls_run": false,
+    "paid_calls_allowed_by_config": false,
+    "paid_validation_authorization": false,
+    "predictive_validity_state": "not_established",
+    "public_citation_browsing_allowed_by_config": false,
+    "public_citation_browsing_run": false,
+    "score_tables_changed": false,
+    "selected_task_ids_or_split_labels_changed": false
+  },
+  "future_effect_size_to_be_persuasive_mae_margin": 0.02,
+  "generated_at": "2026-06-01T05:54:58Z",
+  "historical_context": {
+    "can_imply": "rough order-of-magnitude context for scenario sizing",
+    "cannot_imply": "a budget ceiling, future model pricing, future task duration, staffing, or approval to spend",
+    "completed_cells": 120,
+    "cost_per_cell_usd": 0.4272,
+    "cost_usd": 51.267333
+  },
+  "m3_edge": {
+    "absolute_edge": 0.0059,
+    "candidate_delta_vs_best_baseline_mae": -0.0059,
+    "interpretation": "below the future margin and not enough by itself for paid-readiness",
+    "share_of_future_margin": 0.295
+  },
+  "paid_validation_authorization": false,
+  "rough_scenarios": [
+    {
+      "claim_scope": "narrow three-repo follow-up if all gates pass",
+      "historical_cost_proxy_usd": 51.27,
+      "rough_cells": 120,
+      "scenario": "three_repos_two_adapters_twenty_tasks"
+    },
+    {
+      "claim_scope": "rolling-origin stress test; overlapping task reuse could change real cost",
+      "historical_cost_proxy_usd": 102.53,
+      "rough_cells": 240,
+      "scenario": "three_repos_two_adapters_two_cutoffs_twenty_tasks"
+    },
+    {
+      "claim_scope": "broader method support if supply and gates pass",
+      "historical_cost_proxy_usd": 85.45,
+      "rough_cells": 200,
+      "scenario": "five_repos_two_adapters_twenty_tasks"
+    },
+    {
+      "claim_scope": "stronger rolling-origin support; not a current ask",
+      "historical_cost_proxy_usd": 170.89,
+      "rough_cells": 400,
+      "scenario": "five_repos_two_adapters_two_cutoffs_twenty_tasks"
+    }
+  ],
+  "run_id": "phase1_validation_protocol_candidate_policy_hardening_20260601",
+  "schema_version": "barcarolle.phase1_validation_protocol_candidate_policy_hardening_output.v1",
+  "user_owned_decisions": [
+    "staffing",
+    "duration",
+    "budget ceiling",
+    "whether a future run is exploratory or claim-bearing",
+    "approval artifact format"
+  ]
+}
