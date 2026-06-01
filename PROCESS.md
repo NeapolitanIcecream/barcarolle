@@ -183,15 +183,18 @@ Canonical reports and runbooks:
 
 ### Open Follow-Ups
 
-Current state: the combined approval packet has been produced under
+Current state: the combined English approval packet has been produced under
 `docs/research/m6-approval-packet/`. The primary artifact is
 `barcarolle-approval-deck-v1.pptx`, supported by a one-page executive summary,
 deck outline, evidence appendix, and packet checklist. V5 remains the
 long-form source of truth.
 
-Current next action: review the approval packet and fill or explicitly leave
-visible the user-owned staffing, duration, gated evaluation budget ceiling,
-approval-path, and owner-category placeholders before reviewer circulation.
+Current next action: execute
+`docs/experiments/proposal-approval-packet-zh-supplement-runbook.md` to deliver
+the Chinese approval packet and make the Chinese materials the active editing
+surface. After that, fill or explicitly leave visible the user-owned staffing,
+duration, gated evaluation budget ceiling, approval-path, and owner-category
+placeholders before reviewer circulation.
 
 Do not run more paid ACUT cells by default. Future project-scale paid
 evaluation should be budgeted and gated by frozen releases, baselines,
@@ -205,6 +208,7 @@ old proposal drafts unless V5 has a blocking factual or claim-boundary issue.
 Current canonical links:
 
 - `docs/research/barcarolle-proposal-report-v5.md`
+- `docs/experiments/proposal-approval-packet-zh-supplement-runbook.md`
 - `docs/research/m6-approval-packet/barcarolle-approval-deck-v1.pptx`
 - `docs/research/m6-approval-packet/executive-summary-v1.md`
 - `docs/research/m6-approval-packet/appendix-evidence-index-v1.md`

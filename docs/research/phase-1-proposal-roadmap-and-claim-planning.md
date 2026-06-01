@@ -531,6 +531,36 @@ User-owned values still left as placeholders:
 - conditional paid-validation budget ceiling and approval path;
 - reviewer-facing owner categories.
 
+### M6b: Chinese Approval Packet Supplement
+
+Status: ready to execute.
+
+Purpose:
+
+```text
+Deliver the Chinese approval packet and make Chinese materials the active
+editing surface for later reviewer-facing revisions.
+```
+
+Runbook:
+
+```text
+docs/experiments/proposal-approval-packet-zh-supplement-runbook.md
+```
+
+Expected outputs:
+
+- `docs/research/m6-approval-packet-zh/barcarolle-approval-deck-v1.zh.pptx`
+- `docs/research/m6-approval-packet-zh/executive-summary-v1.zh.md`
+- `docs/research/m6-approval-packet-zh/approval-deck-outline-v1.zh.md`
+- `docs/research/m6-approval-packet-zh/appendix-evidence-index-v1.zh.md`
+- `docs/research/m6-approval-packet-zh/approval-packet-checklist-v1.zh.md`
+- `docs/research/m6-approval-packet-zh/terminology-glossary-v1.zh.md`
+
+The English M6 packet remains the source/reference version. V5 remains the
+long-form source of truth. Future reviewer-facing edits should target the
+Chinese packet after M6b completes.
+
 ## 8. Work Not On The Short-Term Critical Path
 
 These can be valuable after the proposal direction is stable, but should not
@@ -546,9 +576,13 @@ drive the next few days unless the v1 P0 placeholders expose a direct need:
 
 ## 9. Immediate Next Step
 
-Review the M6 approval packet and fill or explicitly leave visible the
-user-owned staffing, duration, gated evaluation budget ceiling, approval-path,
-and owner-category placeholders before sending the packet to reviewers.
-Predictive validity remains future work; project-scale paid ACUT evaluation
-should be budgeted and gated by frozen protocols rather than framed as
-prohibited in the proposal report.
+Execute `docs/experiments/proposal-approval-packet-zh-supplement-runbook.md`
+to deliver the Chinese approval packet. After the Chinese packet is complete,
+future reviewer-facing edits should target
+`docs/research/m6-approval-packet-zh/`, while the English packet remains the
+source/reference version and V5 remains the long-form source of truth. Fill or
+explicitly leave visible the user-owned staffing, duration, gated evaluation
+budget ceiling, approval-path, and owner-category placeholders before sending
+the packet to reviewers. Predictive validity remains future work;
+project-scale paid ACUT evaluation should be budgeted and gated by frozen
+protocols rather than framed as prohibited in the proposal report.
