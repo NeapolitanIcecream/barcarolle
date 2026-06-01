@@ -429,7 +429,7 @@ is accepted by the user/coordinator.
 
 ### M5c: Proposal Report V4 Agent-Tuning Integration
 
-Status: runbook drafted.
+Status: complete.
 
 Purpose:
 
@@ -447,11 +447,17 @@ Runbook:
 docs/experiments/phase-1-proposal-report-v4-agent-tuning-integration-runbook.md
 ```
 
-Expected output:
+Completed outputs:
 
 - `docs/research/phase-1-proposal-report-v4.md`
+- `experiments/phase1_compiler/reports/phase1_proposal_report_v4_agent_tuning_integration_process.md`
+- `experiments/phase1_compiler/reports/phase1_proposal_report_v4_agent_tuning_section_map.md`
+- `experiments/phase1_compiler/reports/phase1_proposal_report_v4_agent_tuning_integration_decision.md`
+- `experiments/phase1_compiler/results/phase1_proposal_report_v4_agent_tuning_integration_decision.json`
 
-M6 should wait until V4 is produced and accepted as the active proposal report.
+V4 supersedes V3 as the active proposal report for proposal use. V3 remains the
+genre-repaired baseline and source draft. M6 should wait until V4 is accepted
+by the user/coordinator.
 
 ### M6: Proposal Presentation Or Memo
 
@@ -497,10 +503,10 @@ drive the next few days unless the v1 P0 placeholders expose a direct need:
 
 ## 9. Immediate Next Step
 
-Execute the V4 agent-tuning integration runbook before M6. V3 repairs the
-proposal genre regression, but the user wants the proposal to make the product
-landing path clearer: agent tuning, configuration selection, and regression
-feedback.
+Review `docs/research/phase-1-proposal-report-v4.md` as the active proposal
+report. V4 preserves V3's proposal structure and claim boundary while making
+the product landing path clearer: agent tuning, configuration selection, and
+regression feedback.
 
 After V4 is accepted, decide whether the approval artifact should be a slide
 deck, short decision memo, one-page executive summary, or combined packet.

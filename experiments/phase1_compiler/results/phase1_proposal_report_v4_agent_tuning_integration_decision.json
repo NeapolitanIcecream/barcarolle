@@ -1,0 +1,40 @@
+{
+  "stop_label": "proposal_report_v4_agent_tuning_integration_complete",
+  "active_proposal_report": "docs/research/phase-1-proposal-report-v4.md",
+  "supersedes_v3_for_proposal_use": true,
+  "v3_structure_preserved": true,
+  "predictive_validity_established": false,
+  "tuning_loop_improvement_established": false,
+  "agent_tuning_integrated_as_product_path": true,
+  "residual_predictive_validity_promoted_to_main_scope": false,
+  "formal_tuning_validation_promoted_to_main_scope": false,
+  "paid_acut_cells_run": 0,
+  "paid_llm_calls_run": 0,
+  "external_reviewer_calls_run": 0,
+  "public_browsing_used": false,
+  "score_tables_changed": false,
+  "selected_task_ids_or_split_labels_changed": false,
+  "source_eligibility_changed": false,
+  "task_statements_or_hidden_oracle_material_changed": false,
+  "audit": {
+    "prohibited_scope_and_claim_check": "pass_no_matches",
+    "local_planning_path_check": "pass_no_matches",
+    "git_diff_check": "pass",
+    "eleven_section_shape_check": "pass",
+    "evidence_number_spot_check": "pass",
+    "manual_review": {
+      "product_value_clearer_than_v3": true,
+      "avoids_tuning_validation_plan": true,
+      "predictive_validity_remains_north_star": true,
+      "tuning_outputs_keep_acut_boundary": true,
+      "no_new_evidence_burden_before_approval": true
+    }
+  },
+  "remaining_before_approval_artifact": [
+    "user_or_coordinator_accepts_or_revises_v4",
+    "approval_artifact_format_decision",
+    "project_staffing_and_duration_assumptions",
+    "budget_ceiling_and_approval_path_for_gated_acut_evaluation",
+    "reviewer_facing_deliverable_owner_categories"
+  ]
+}

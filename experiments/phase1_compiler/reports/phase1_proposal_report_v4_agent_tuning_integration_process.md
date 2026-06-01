@@ -1,6 +1,6 @@
 # Phase 1 Proposal Report V4 Agent-Tuning Integration Process
 
-Status: in progress, 2026-06-01.
+Status: complete, 2026-06-01.
 
 This process report records execution evidence for
 `docs/experiments/phase-1-proposal-report-v4-agent-tuning-integration-runbook.md`.
@@ -184,3 +184,89 @@ Barcarolle feedback improves tuning-loop outcomes.
 
 Acceptance evidence: these are explicitly later extensions and are not project
 approval requirements.
+
+## Step 7: Update Checklist And Handoff Documents
+
+Updated:
+
+- `docs/research/phase-1-proposal-report-reviewer-ready-checklist.md`
+- `docs/research/phase-1-proposal-roadmap-and-claim-planning.md`
+
+The checklist now checks V4-specific readiness:
+
+- V4 preserves V3 structure and claim boundary;
+- agent tuning is integrated as the product/application path;
+- tuning-loop improvement is not claimed as established;
+- later residual predictive-validity and formal tuning-loop validation
+  extensions are not promoted into the main project scope;
+- paid evaluation remains budgeted and gated;
+- artifact hygiene is unchanged.
+
+The roadmap now records V4 as complete and identifies
+`docs/research/phase-1-proposal-report-v4.md` as the active proposal report for
+proposal use. `PROCESS.md` will be updated in the closeout step so it can point
+at the final decision artifact.
+
+Acceptance evidence: handoff docs point to V4, and M6 remains gated on V4
+acceptance plus user/coordinator decisions.
+
+## Step 8: Audit
+
+Required checks:
+
+```text
+rg -n "Phase 3|Phase 2|multi-ACUT residual|tuning validation established|improves agent tuning|proves tuning|validated predictive benchmark compiler|established predictive validity" docs/research/phase-1-proposal-report-v4.md
+rg -n "/Users/chenmohan/Downloads" docs/research/phase-1-proposal-report-v4.md
+git diff --check
+```
+
+Recorded results:
+
+- Prohibited-scope and prohibited-claim check: `pass_no_matches`.
+- Local planning path check: `pass_no_matches`.
+- `git diff --check`: `pass`.
+- Eleven-section shape check: `pass`; V4 preserves sections 1 through 11 from
+  V3.
+- Evidence-number spot check: `pass`; V4 preserves the key values `0.3148`,
+  `0.7481`, `0.25`, `0.125`, `120/120`, `30/30`, `0.209`, `0.2149`, `0.0059`,
+  `93.4%`, `6/18`, and `6/6`.
+
+Manual review answers:
+
+- V4 makes the product value clearer than V3: `yes`.
+- V4 avoids turning the proposal into a tuning-validation plan: `yes`.
+- V4 preserves predictive validity as the north star: `yes`.
+- V4 makes tuning outputs useful while keeping the ACUT boundary intact: `yes`.
+- V4 avoids adding new evidence burdens before approval: `yes`.
+
+Acceptance evidence: Step 8 passed with no acceptable-match exceptions.
+
+## Step 9: Closeout
+
+Wrote:
+
+- `experiments/phase1_compiler/reports/phase1_proposal_report_v4_agent_tuning_integration_process.md`
+- `experiments/phase1_compiler/reports/phase1_proposal_report_v4_agent_tuning_integration_decision.md`
+- `experiments/phase1_compiler/results/phase1_proposal_report_v4_agent_tuning_integration_decision.json`
+
+Stop label:
+
+```text
+proposal_report_v4_agent_tuning_integration_complete
+```
+
+Closeout decision:
+
+- V4 supersedes V3 as the active proposal report for proposal use.
+- V3's structure and claim boundary were preserved.
+- Agent tuning was integrated as the product/application path through
+  configuration selection, regression feedback, dev/eval/canary splits,
+  optimizer-readable scorecards, failure taxonomy, and tuning/report templates.
+- Tuning-loop improvement remains unproven.
+- Later residual predictive-validity and formal tuning-loop validation work
+  remain future extensions.
+- M6 or another approval artifact should wait for user/coordinator acceptance
+  of V4 plus decisions on artifact format, staffing/duration, budget ceiling,
+  and reviewer-facing owner categories.
+
+Acceptance evidence: runbook closeout artifacts are complete.
