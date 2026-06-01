@@ -266,7 +266,8 @@ be used to reduce waste and prevent post-hoc validation.
 
 Phase 1 evidence matters because it answers three proposal questions: whether
 the problem is real, whether the work is technically feasible, and whether
-there is enough signal to justify project work.
+there is enough signal to justify project work. The section is not a history
+of the experiments; it is the evidence needed for an approval decision.
 
 ### 7.1 The Problem Is Real
 
@@ -304,9 +305,11 @@ baseline is `temporal_recent_baseline` at MAE `0.2149`, giving a candidate edge
 of `0.0059` MAE. A 1000-seed same-budget random comparison shows that the
 candidate beats or ties `93.4%` of random selections on MAE.
 
-Those results justify optimization work because selection is not pure noise.
-They do not justify a predictive-validity claim. The edge over the best simple
-aggregate baseline is small, and the slice diagnostics are fragile:
+MAE means average prediction error: lower MAE means the benchmark estimate is
+closer to observed future-work performance. The random comparison shows that
+selection is not pure noise. The best-simple-baseline comparison shows that the
+current selector is not yet strong enough for a validity claim. The edge is
+small, and the slice diagnostics are fragile:
 
 | Caveat | Evidence | Project interpretation |
 | --- | --- | --- |

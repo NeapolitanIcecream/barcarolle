@@ -176,3 +176,21 @@ positive and concrete:
 Acceptance evidence: the executive summary stands alone for a proposal reader,
 the project ask is expressed in project terms, and paid evaluation is framed as
 planned budgeted evaluation under frozen conditions.
+
+## Step 4: Evidence Narrative Repair
+
+Revised the preliminary-evidence section around approval questions instead of
+experiment chronology:
+
+- Is the target-repository prediction problem real?
+- Is benchmark-side execution feasible?
+- Is there enough signal to justify project work?
+
+The section now explains MAE as average prediction error, uses the 1000-seed
+random result as selection-signal evidence, keeps the small `0.0059` edge over
+the best simple aggregate baseline visible, and frames adapter/fallback caveats
+as project work rather than internal failure labels.
+
+Acceptance evidence: the evidence section preserves the numeric evidence from
+V2, avoids milestone-dependent headings, and keeps the current evidence
+traction-only.
