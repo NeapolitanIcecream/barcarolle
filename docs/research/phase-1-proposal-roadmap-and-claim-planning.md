@@ -327,7 +327,7 @@ has labeled fallback: `6/18` selected tasks overall and `6/6` boltons tasks.
 
 ### M4: Validation Protocol And Candidate Policy Hardening
 
-Status: Draft.
+Status: complete.
 
 Purpose:
 
@@ -335,7 +335,7 @@ Purpose:
 Harden the method-type P0 gaps before any paid validation discussion.
 ```
 
-Likely scope:
+Completed scope:
 
 - true-future versus pseudo-future claim split;
 - composite policy with labeled fallback;
@@ -347,11 +347,31 @@ Likely scope:
 - power/budget note;
 - candidate policy pseudocode and release artifact schema.
 
-Possible runbook:
+Runbook:
 
 ```text
 docs/experiments/phase-1-validation-protocol-and-candidate-policy-hardening-runbook.md
 ```
+
+Completed outputs:
+
+- `docs/research/phase-1-validation-protocol-and-candidate-policy-hardening.md`
+- `experiments/phase1_compiler/reports/phase1_validation_protocol_candidate_policy_hardening_claim_modes.md`
+- `experiments/phase1_compiler/reports/phase1_validation_protocol_candidate_policy_hardening_candidate_policy.md`
+- `experiments/phase1_compiler/reports/phase1_validation_protocol_candidate_policy_hardening_baseline_registry.md`
+- `experiments/phase1_compiler/reports/phase1_validation_protocol_candidate_policy_hardening_adapter_estimand.md`
+- `experiments/phase1_compiler/reports/phase1_validation_protocol_candidate_policy_hardening_success_gate.md`
+- `experiments/phase1_compiler/reports/phase1_validation_protocol_candidate_policy_hardening_support_thresholds.md`
+- `experiments/phase1_compiler/reports/phase1_validation_protocol_candidate_policy_hardening_release_schema.md`
+- `experiments/phase1_compiler/reports/phase1_validation_protocol_candidate_policy_hardening_power_budget_note.md`
+- `experiments/phase1_compiler/reports/phase1_validation_protocol_candidate_policy_hardening_decision.md`
+
+M4 filled the method-type P0 gaps but classified the current M3 candidate as
+not paid-ready under the hardened no-paid gate. The future primary margin is
+MAE `0.02`; the M3 aggregate edge is `0.0059`. Codex fails adapter-level
+support, boltons is `6/6` fallback, and the current study mode remains
+retrospective. This is useful proposal traction and a clear validation path,
+not a validation result.
 
 ### M5: Proposal Report Reviewer-Ready Revision
 
@@ -423,10 +443,11 @@ drive the next few days unless the v1 P0 placeholders expose a direct need:
 
 ## 9. Immediate Next Step
 
-M3 is complete. The next action category should be M4 validation
-protocol/candidate-policy hardening unless the user first resolves the open M6
-resource/format decisions or explicitly chooses to pause after the evidence
-package.
+M4 is complete. The next action category should be M5 reviewer-ready proposal
+report integration unless the user first resolves the open M6 resource/format
+decisions or explicitly chooses to pause after the hardening package.
 
-No later runbook is drafted here. Paid validation remains unauthorized until
-M4 protocol gates and user budget decisions are settled.
+No later runbook is drafted here. Paid validation remains unauthorized; M4
+settled the protocol gates but the current candidate does not pass them, and
+user budget/resource decisions are still required before any budget-bearing
+discussion.

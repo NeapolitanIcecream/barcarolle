@@ -1,10 +1,11 @@
 # Phase 1 Validation Protocol Candidate Policy Hardening Process
 
-Current step: `Step 0 - Preflight And Scope Lock`.
+Current step: `Step 12 - Verification And Closeout`.
 
 Completed artifacts:
-- `experiments/phase1_compiler/results/phase1_validation_protocol_candidate_policy_hardening_preflight.json`
-- `experiments/phase1_compiler/reports/phase1_validation_protocol_candidate_policy_hardening_process.md`
+- `experiments/phase1_compiler/results/phase1_validation_protocol_candidate_policy_hardening_decision.json`
+- `experiments/phase1_compiler/reports/phase1_validation_protocol_candidate_policy_hardening_decision.md`
+- `docs/research/phase-1-validation-protocol-and-candidate-policy-hardening.md`
 
 Boundary:
 
@@ -18,5 +19,5 @@ Boundary:
 - Later M5 or M6 runbook drafted: `false`.
 
 Notes:
-- M3 stop label is proposal_evidence_package_complete.
-- A narrow renderer will be used for auditability; it is limited to existing artifacts and explicit protocol decisions.
+- All M4-owned protocol placeholders are filled or explicitly narrowed.
+- The current M3 candidate is classified as not paid-ready under the hardened gate.

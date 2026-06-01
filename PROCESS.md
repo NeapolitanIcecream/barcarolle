@@ -211,11 +211,20 @@ baseline envelope, coverage ablation with explicit identifiability limits,
 fallback-share accounting, source-supply status, and report evidence index.
 The evidence remains traction-only and mixed: the aggregate MAE edge is small,
 adapter/repo/window diagnostics are fragile, and boltons fallback makes the
-candidate policy composite. The next action category is M4 validation
-protocol/candidate-policy hardening, unless the user first chooses to pause or
-resolve M6 resource/format decisions. User decisions are still needed before
-M6 approval artifact work or any budget-bearing paid-validation discussion.
-Stop label: `proposal_evidence_package_complete`.
+candidate policy composite.
+
+M4 validation protocol/candidate-policy hardening is complete. The hardened
+rules define study modes, fallback governance, adapter estimand, baseline
+registry, invalid/non-scoreable and catastrophic-miss handling, a joint success
+gate, support thresholds, release schema, validation-design figure spec, and a
+no-paid power/budget note. The current M3 candidate does not pass the hardened
+no-paid readiness gate: the aggregate MAE edge is below the future margin,
+Codex fails adapter-level support, boltons violates fallback caps, repo
+diagnostics are concentrated, and the study mode remains retrospective. Paid
+validation remains unauthorized and predictive validity remains future work.
+M5 can proceed to proposal-report integration; user decisions are still needed
+before M6 approval artifact work or any budget-bearing discussion. Stop label:
+`validation_protocol_hardened_candidate_not_paid_ready`.
 
 Canonical report and runbook:
 
@@ -233,9 +242,12 @@ Canonical report and runbook:
 - `docs/experiments/phase-1-proposal-report-final-shape-rewrite-runbook.md`
 - `docs/experiments/phase-1-p0-placeholder-and-external-review-triage-runbook.md`
 - `docs/experiments/phase-1-proposal-evidence-package-runbook.md`
+- `docs/experiments/phase-1-validation-protocol-and-candidate-policy-hardening-runbook.md`
 - `docs/research/phase-1-proposal-evidence-package.md`
+- `docs/research/phase-1-validation-protocol-and-candidate-policy-hardening.md`
 - `docs/research/phase-1-proposal-p0-placeholder-triage.md`
 - `docs/research/phase-1-proposal-report-v0.md`
+- `experiments/phase1_compiler/reports/phase1_validation_protocol_candidate_policy_hardening_decision.md`
 - `docs/research/phase-1-proposal-argument-map.md`
 - `docs/research/phase-1-proposal-evidence-todo-matrix.md`
 - `docs/research/phase-1-proposal-claim-boundary.md`
