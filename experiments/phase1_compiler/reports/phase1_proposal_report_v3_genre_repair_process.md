@@ -77,3 +77,53 @@ V3 execution decision:
 - Preserve the central claim boundary: predictive validity is the north star;
   Phase 1 does not establish it; Phase 1 supplies traction evidence and a
   concrete path for testing it.
+
+Acceptance evidence: Step 0 complete. No proposal report text changed. No paid
+or external calls made.
+
+## Step 1: V1-To-V3 Section Map
+
+V3 will preserve the V1 eleven-section structure. The repair changes emphasis
+and placement, not the basic proposal shape.
+
+| V3 section | Reader question answered | V2 material to keep | Material to remove, translate, or move | Evidence or citation source |
+| --- | --- | --- | --- | --- |
+| 1. Executive Summary | What decision is requested and why now? | V2's bounded claim, north-star question, four approval-relevant results, citation to benchmark-validity concerns. | Replace "no-paid research phase", repeated non-authorization wording, and M6 packaging language with a positive approval ask for the project and budgeted evaluation after freezes. | V2 sections 1 and 5; `Validity-Challenges-2022`; M3/M4 summary docs. |
+| 2. Problem And Stakes | Why does repo-specific prediction matter to reviewers? | V2's target-repo shift framing and related-work comparison table. | Remove paid/no-paid boundary language from stakes; keep public benchmark systems as context, not a chronology. | V2 section 2; citation matrix. |
+| 3. Research Question And North Star | What is the precise research question and claim standard? | V2's estimand and "traction, not validity" boundary. | Restore V1's separate research-question section; avoid dropping directly from related work into design. | V1 section 3; V2 section 3; claim-boundary doc. |
+| 4. Barcarolle Thesis And Boundary | What is Barcarolle and what is outside scope? | V2's ACUT boundary, source-as-input framing, and non-leaderboard/task-factory distinctions. | Move implementation or protocol detail that belongs in design or appendix; keep boundary reader-facing. | V1 section 4; V2 sections 1 and 3; `AGENTS.md`. |
+| 5. Proposed Benchmark-Compiler Design | What will the project build? | V2 architecture figure, compiler layers, release object, and policy sketch. | Translate "candidate policy object" into an example current selector; keep detailed pseudocode and fallback thresholds for appendix. | V1 section 5; V2 section 4; candidate-policy hardening report. |
+| 6. Validation Strategy For Predictive Validity | How will the project test the north star? | V2 validation figure, evidence-mode distinction, mandatory baselines, named-ACUT reporting, and joint-gate principle. | Remove the protocol-table dump from the main body; move detailed thresholds, fallback caps, release schema fields, and support values to appendices. | V2 section 6; validation hardening summary and reports. |
+| 7. Preliminary Evidence And Feasibility | Is there enough evidence to approve project work? | V2 problem/feasibility/signal evidence, MAE explanation, random percentile, adapter/fallback caveats. | Stop using M3/M4 labels as section logic; present evidence as proposal traction rather than experiment chronology. | V2 section 5; evidence package; baseline envelope; random baseline distribution; fallback share. |
+| 8. Project Plan, Decision Gates, And Resource Ask | What work happens after approval and what resources may be needed? | V2 workstreams and power/budget scenario context. | Replace "next no-paid phase" and user-owned decision table with approved-project work packages, bracketed resource decisions, and budgeted evaluation after freezes. | V1 section 8; V2 sections 8-9; power/budget note. |
+| 9. Risks, Objections, And Mitigations | What could make the project fail, and how will it be controlled? | V2 risk register content: failed weighting, small edge, fallback, adapter-specific support, source quality, post-hoc risk, budget risk. | Rewrite from internal readiness failures into mature proposal risks and mitigations. | V2 section 7; M5 risk register. |
+| 10. Expected Deliverables | What should reviewers expect to receive? | V2 technical deliverables: compiler spec, validation protocol, release schema, risk register, evidence index. | Remove "current v2 report", M6 artifact, user-owner tables, and runbook/process artifacts as deliverables. | V1 section 10; V2 section 9. |
+| 11. Appendices And Evidence Index | Where can reviewers audit the details? | V2 appendices, evidence index, citation bibliography, release-schema and protocol pointers. | Put internal artifact names here when needed for traceability; keep main body free of milestone/process vocabulary. | V2 section 10; citation matrix; support artifacts. |
+
+Back-half remapping from V2:
+
+- V2 section 6 becomes V3 section 6 plus Appendix B. The main body keeps the
+  validation logic: freeze before outcomes, compare against baselines, report by
+  named ACUT configuration, handle invalid cells with predefined rules, and
+  require meaningful improvement. Threshold tables, fallback caps, support
+  thresholds, and schema fields move to appendices.
+- V2 section 7 becomes V3 section 9. Risk rows are rewritten as proposal risks,
+  not as internal readiness failures.
+- V2 section 8 becomes V3 section 8. "Next phase" now means approved project
+  work: compiler optimization, source certification, release freezing,
+  validation execution, and publication of results.
+- V2 section 9 splits across V3 sections 8, 10, and 11. Resource decisions
+  become bracketed project inputs; technical deliverables become approved
+  project outputs; artifact pointers move to the evidence index.
+
+Paid evaluation mapping:
+
+- Main body: budgeted ACUT evaluation is a project resource that should be
+  spent only after benchmark releases, task-selection rules, baselines, success
+  criteria, and score-join procedures are frozen.
+- Appendices: execution guardrails and historical no-paid labels may appear
+  only as artifact context where needed for traceability.
+
+Acceptance evidence: every V3 section has a reader-facing job, the V1 structure
+is preserved, and paid evaluation is mapped to resource planning rather than to
+a repeated prohibition.
