@@ -36,11 +36,12 @@ Recorded result: V5 text checks returned no matches during cleanup audit, and
 
 ## Remaining Items
 
-Remaining items are reviewer/coordinator decisions after V5 review:
+Remaining items are reviewer/coordinator decisions before sending the approval
+packet:
 
 - accept or revise `docs/research/barcarolle-proposal-report-v5.md`;
-- choose whether the approval artifact should be a report, short memo,
-  presentation, executive summary, or combined packet;
+- execute `docs/experiments/proposal-approval-packet-m6-runbook.md` to produce
+  the combined approval packet;
 - set project duration and staffing assumptions;
 - set the budget ceiling and approval path for gated ACUT evaluation;
 - assign reviewer-facing deliverable owner categories.

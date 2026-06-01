@@ -490,9 +490,9 @@ V5 supersedes V4 as the active proposal report for proposal use. V4 remains the
 agent-tuning integration source draft. M6 should wait until V5 is accepted by
 the user/coordinator.
 
-### M6: Proposal Presentation Or Memo
+### M6: Proposal Approval Packet
 
-Status: waiting on V5 acceptance and user decisions.
+Status: ready to execute after V5 acceptance.
 
 Purpose:
 
@@ -500,24 +500,24 @@ Purpose:
 Convert the report into the format needed for project approval.
 ```
 
-Possible outputs:
+Selected output format:
 
-- 10-15 slide outline;
-- short decision memo;
-- one-page executive summary.
+- editable PPTX approval deck as the primary artifact;
+- one-page executive summary;
+- concise evidence appendix;
+- V5 report as the long-form source of truth.
 
-Open user decisions before M6:
-
-- approval artifact format;
-- staffing and duration;
-- conditional paid-validation budget ceiling;
-- reviewer-facing owner categories.
-
-Runbook status:
+Runbook:
 
 ```text
-not drafted by M5b
+docs/experiments/proposal-approval-packet-m6-runbook.md
 ```
+
+User-owned values to leave as placeholders unless provided before execution:
+
+- staffing and duration;
+- conditional paid-validation budget ceiling and approval path;
+- reviewer-facing owner categories.
 
 ## 8. Work Not On The Short-Term Critical Path
 
@@ -534,13 +534,10 @@ drive the next few days unless the v1 P0 placeholders expose a direct need:
 
 ## 9. Immediate Next Step
 
-Review `docs/research/barcarolle-proposal-report-v5.md` as the active proposal
-report before M6. V5 preserves V4's proposal structure, claim boundary, and
-agent-tuning application path while removing internal phase framing from the
-reader-facing proposal.
-
-After V5 is accepted, decide whether the approval artifact should be a slide
-deck, short decision memo, one-page executive summary, or combined packet.
-Predictive validity remains future work; project-scale paid ACUT evaluation
-should be budgeted and gated by frozen protocols rather than framed as
-prohibited in the proposal report.
+Execute `docs/experiments/proposal-approval-packet-m6-runbook.md` to convert
+`docs/research/barcarolle-proposal-report-v5.md` into the combined approval
+packet. The approval packet should be decision-facing: PPTX first, one-page
+summary second, evidence appendix third, and V5 as the long-form source of
+truth. Predictive validity remains future work; project-scale paid ACUT
+evaluation should be budgeted and gated by frozen protocols rather than framed
+as prohibited in the proposal report.

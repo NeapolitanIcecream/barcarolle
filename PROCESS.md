@@ -183,145 +183,35 @@ Canonical reports and runbooks:
 
 ### Open Follow-Ups
 
-Current recommended action categories do not include more paid ACUT cells by
-default. The no-paid candidate-policy and validation-protocol prep is complete:
-`coverage_constrained_unweighted_v1` is now frozen as a deterministic,
-outcome-blind candidate policy, the next validation protocol is frozen, and
-the sanitized adversarial-review packet is prepared but not submitted. Stop
-label: `ready_for_adversarial_review`.
+Current next action: execute
+`docs/experiments/proposal-approval-packet-m6-runbook.md` to convert
+`docs/research/barcarolle-proposal-report-v5.md` into a combined approval
+packet. The packet should use a PPTX deck as the primary artifact, with a
+one-page executive summary and concise evidence appendix. Leave staffing,
+duration, evaluation budget ceiling, and approval-path values as placeholders
+unless the user supplies them.
 
-M1 proposal report skeleton work is complete. The new claim boundary keeps
-predictive validity as the long-term north star while limiting the short-term
-proposal claim to Phase 1 traction evidence and a credible validation path.
-Stop label: `proposal_report_skeleton_complete`.
+Do not run more paid ACUT cells by default. Future project-scale paid
+evaluation should be budgeted and gated by frozen releases, baselines,
+score-join rules, and success criteria. Predictive validity and tuning-loop
+improvement remain unproven.
 
-The proposal report final-shape rewrite is complete. The active proposal
-report draft is now `docs/research/phase-1-proposal-report-v1.md`: a
-final-shape proposal-approval document with explicit `[NEEDS ...]`
-placeholders for missing citations, figures, pseudocode, tables, results,
-decisions, power/budget notes, and deliverable details.
+Historical proposal milestones M1 through M5d are complete and summarized in
+`docs/research/phase-1-proposal-roadmap-and-claim-planning.md`. Do not reopen
+old proposal drafts unless V5 has a blocking factual or claim-boundary issue.
 
-`docs/research/phase-1-proposal-report-v0.md` is superseded and should be used
-only as source material and an argument rewrite record. The roadmap remains
-owned by `docs/research/phase-1-proposal-roadmap-and-claim-planning.md`.
-Current evidence still does not establish predictive validity and does not
-authorize more paid ACUT cells. M3 proposal evidence package work is complete:
-the package filled the one-page evidence summary, many-seed random baseline,
-baseline envelope, coverage ablation with explicit identifiability limits,
-fallback-share accounting, source-supply status, and report evidence index.
-The evidence remains traction-only and mixed: the aggregate MAE edge is small,
-adapter/repo/window diagnostics are fragile, and boltons fallback makes the
-candidate policy composite.
+Current canonical links:
 
-M4 validation protocol/candidate-policy hardening is complete. The hardened
-rules define study modes, fallback governance, adapter estimand, baseline
-registry, invalid/non-scoreable and catastrophic-miss handling, a joint success
-gate, support thresholds, release schema, validation-design figure spec, and a
-no-paid power/budget note. The current M3 candidate does not pass the hardened
-no-paid readiness gate: the aggregate MAE edge is below the future margin,
-Codex fails adapter-level support, boltons violates fallback caps, repo
-diagnostics are concentrated, and the study mode remains retrospective. Paid
-validation remains unauthorized and predictive validity remains future work.
-M5 reviewer-ready proposal revision is complete. The active technical proposal
-report is now `docs/research/phase-1-proposal-report-v2.md`, with checklist,
-citation matrix, risk register, process report, and closeout decision under the
-M5 reviewer-ready revision artifact paths. V2 argues for project approval from
-bounded traction: MAE is a meaningful prediction-error metric, benchmark
-selection changes it, and the current candidate beats/ties `93.4%` of 1000
-same-budget random selections while still falling short of future validation
-standards.
-
-Proposal report V3 genre repair is complete. The active proposal report is now
-`docs/research/phase-1-proposal-report-v3.md`. V3 preserves the V1 proposal
-structure, uses V2 as evidence-safe source material, removes internal process
-vocabulary from the proposal argument, and frames project-scale paid ACUT
-evaluation as a budgeted activity after releases, protocols, baselines, score
-joins, and success criteria are frozen. Predictive validity remains future
-work. Stop label: `proposal_report_v3_genre_repair_complete`.
-
-Proposal report V4 agent-tuning integration is complete. The active proposal
-report is now `docs/research/phase-1-proposal-report-v4.md`. V4 preserves V3's
-structure and claim boundary while making the product/application path clearer:
-agent tuning, configuration selection, and regression feedback. Predictive
-validity and tuning-loop improvement remain unproven; multi-ACUT residual
-predictive validity and formal tuning-loop validation remain later extensions.
-Stop label:
-`proposal_report_v4_agent_tuning_integration_complete`.
-
-Proposal report V5 reader-facing phase-label cleanup is complete. The active
-proposal report is now `docs/research/barcarolle-proposal-report-v5.md`. V5
-preserves V4's structure, evidence, claim boundary, paid-evaluation framing,
-and agent-tuning application path while removing internal phase framing from
-the proposal itself. Path-level evidence traceability moved to an internal
-manifest. Predictive validity and tuning-loop improvement remain unproven. M6
-approval artifact work should wait until V5 is accepted by the
-user/coordinator. Stop label:
-`proposal_report_v5_phase_label_cleanup_complete`.
-
-Canonical report and runbook:
-
-- `docs/experiments/phase-1-click-llm-assisted-source-context-repair-runbook.md`
-- `docs/experiments/phase-1-retrospective-predictive-signal-analysis-runbook.md`
-- `docs/experiments/phase-1-candidate-policy-validation-protocol-pre-adversarial-review-runbook.md`
-- `experiments/phase1_compiler/reports/phase1_click_llm_source_context_repair_decision.md`
-- `experiments/phase1_compiler/reports/phase1_blocked_split_supplement_fairness_gap_diagnostics_decision.md`
-- `experiments/phase1_compiler/reports/phase1_retrospective_predictive_signal_decision.md`
-- `experiments/phase1_compiler/reports/phase1_candidate_policy_validation_protocol_decision.md`
-- `experiments/phase1_compiler/external_review/phase1_candidate_policy_validation_protocol_review_20260530/README_FOR_ADVERSARIAL_REVIEW.md`
-- `docs/research/phase-1-proposal-roadmap-and-claim-planning.md`
-- `docs/experiments/phase-1-proposal-report-skeleton-runbook.md`
-- `docs/experiments/phase-1-proposal-report-argument-rewrite-runbook.md`
-- `docs/experiments/phase-1-proposal-report-final-shape-rewrite-runbook.md`
-- `docs/experiments/phase-1-p0-placeholder-and-external-review-triage-runbook.md`
-- `docs/experiments/phase-1-proposal-evidence-package-runbook.md`
-- `docs/experiments/phase-1-validation-protocol-and-candidate-policy-hardening-runbook.md`
-- `docs/experiments/phase-1-proposal-report-reviewer-ready-revision-runbook.md`
-- `docs/experiments/phase-1-proposal-report-v3-genre-repair-runbook.md`
-- `docs/experiments/phase-1-proposal-report-v4-agent-tuning-integration-runbook.md`
-- `docs/experiments/proposal-report-v5-reader-facing-phase-label-cleanup-runbook.md`
 - `docs/research/barcarolle-proposal-report-v5.md`
-- `experiments/phase1_compiler/reports/proposal_report_v5_phase_label_cleanup_process.md`
+- `docs/experiments/proposal-approval-packet-m6-runbook.md`
+- `docs/research/phase-1-proposal-roadmap-and-claim-planning.md`
+- `docs/research/phase-1-proposal-report-reviewer-ready-checklist.md`
 - `experiments/phase1_compiler/reports/proposal_report_v5_phase_label_cleanup_decision.md`
 - `experiments/phase1_compiler/reports/proposal_report_v5_evidence_manifest.md`
-- `experiments/phase1_compiler/results/proposal_report_v5_phase_label_cleanup_decision.json`
-- `docs/research/phase-1-proposal-report-v4.md`
-- `experiments/phase1_compiler/reports/phase1_proposal_report_v4_agent_tuning_integration_decision.md`
-- `experiments/phase1_compiler/reports/phase1_proposal_report_v4_agent_tuning_integration_process.md`
-- `experiments/phase1_compiler/reports/phase1_proposal_report_v4_agent_tuning_section_map.md`
-- `experiments/phase1_compiler/results/phase1_proposal_report_v4_agent_tuning_integration_decision.json`
-- `docs/research/phase-1-proposal-report-v3.md`
 - `docs/research/phase-1-proposal-evidence-package.md`
 - `docs/research/phase-1-validation-protocol-and-candidate-policy-hardening.md`
-- `docs/research/phase-1-proposal-p0-placeholder-triage.md`
-- `docs/research/phase-1-proposal-report-v2.md`
-- `docs/research/phase-1-proposal-report-reviewer-ready-checklist.md`
-- `experiments/phase1_compiler/reports/phase1_proposal_report_v3_genre_repair_decision.md`
-- `docs/research/phase-1-proposal-report-v0.md`
 - `experiments/phase1_compiler/reports/phase1_validation_protocol_candidate_policy_hardening_decision.md`
-- `experiments/phase1_compiler/reports/phase1_proposal_report_reviewer_ready_revision_process.md`
-- `experiments/phase1_compiler/reports/phase1_proposal_report_reviewer_ready_revision_citation_matrix.md`
-- `experiments/phase1_compiler/reports/phase1_proposal_report_reviewer_ready_revision_risk_register.md`
-- `experiments/phase1_compiler/reports/phase1_proposal_report_reviewer_ready_revision_decision.md`
-- `docs/research/phase-1-proposal-argument-map.md`
-- `docs/research/phase-1-proposal-evidence-todo-matrix.md`
-- `docs/research/phase-1-proposal-claim-boundary.md`
-- `experiments/phase1_compiler/reports/phase1_proposal_report_skeleton_decision.md`
-- `experiments/phase1_compiler/reports/phase1_proposal_report_argument_rewrite_decision.md`
-- `experiments/phase1_compiler/reports/phase1_proposal_report_final_shape_rewrite_process.md`
-- `experiments/phase1_compiler/reports/phase1_proposal_report_final_shape_rewrite_decision.md`
-- `experiments/phase1_compiler/results/phase1_proposal_report_final_shape_rewrite_decision.json`
-- `experiments/phase1_compiler/reports/phase1_p0_placeholder_external_review_triage_process.md`
-- `experiments/phase1_compiler/reports/phase1_p0_placeholder_external_review_triage_decision.md`
-- `experiments/phase1_compiler/reports/phase1_proposal_evidence_package_random_baseline_distribution.md`
-- `experiments/phase1_compiler/reports/phase1_proposal_evidence_package_baseline_envelope.md`
-- `experiments/phase1_compiler/reports/phase1_proposal_evidence_package_coverage_ablation.md`
-- `experiments/phase1_compiler/reports/phase1_proposal_evidence_package_fallback_share.md`
-- `experiments/phase1_compiler/reports/phase1_proposal_evidence_package_source_supply_status.md`
-- `experiments/phase1_compiler/reports/phase1_proposal_evidence_package_report_evidence_index.md`
 - `experiments/phase1_compiler/reports/phase1_proposal_evidence_package_decision.md`
-- `experiments/phase1_compiler/results/phase1_p0_placeholder_external_review_triage_preflight.json`
-- `experiments/phase1_compiler/results/phase1_p0_placeholder_external_review_triage_decision.json`
-- `experiments/phase1_compiler/results/phase1_proposal_evidence_package_decision.json`
 
 ### Workspace State Note
 
