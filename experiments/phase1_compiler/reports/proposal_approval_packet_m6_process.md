@@ -169,3 +169,46 @@ Acceptance evidence:
 - the deck can be understood without V5 open beside it;
 - the deck preserves the predictive-validity and tuning-loop non-claims;
 - no paid or external calls were made.
+
+## Step 4: Review And Audit The Packet
+
+Created:
+
+```text
+docs/research/m6-approval-packet/approval-packet-checklist-v1.md
+```
+
+Audit actions:
+
+- extracted PPTX text from the final deck into the ignored scratch path:
+
+```text
+experiments/phase1_compiler/tmp/proposal_approval_packet_m6/pptx_text.txt
+```
+
+- ran the required reader-facing vocabulary, overclaim, and local-path checks
+  on packet Markdown artifacts;
+- ran the same checks on extracted PPTX text;
+- ran `git diff --check`;
+- reviewed artifact-tool contact sheet and selected full-size slide previews
+  during deck production.
+
+Recorded results:
+
+| Check | Result |
+| --- | --- |
+| Markdown reader-facing vocabulary check | pass, no matches |
+| Markdown overclaim check | pass, no matches |
+| Markdown local download path check | pass, no matches |
+| PPTX text reader-facing vocabulary check | pass, no matches |
+| PPTX text overclaim check | pass, no matches |
+| PPTX text local download path check | pass, no matches |
+| `git diff --check` | pass |
+
+Acceptance evidence:
+
+- checklist exists and passes;
+- Markdown checks passed with no intentional exceptions;
+- PPTX text checks passed with no intentional exceptions;
+- `git diff --check` passed;
+- deck was visually reviewed through artifact-tool rendered previews.
