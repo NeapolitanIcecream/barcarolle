@@ -127,3 +127,35 @@ Paid evaluation mapping:
 Acceptance evidence: every V3 section has a reader-facing job, the V1 structure
 is preserved, and paid evaluation is mapped to resource planning rather than to
 a repeated prohibition.
+
+## Step 2: Draft V3 From The V1 Structure
+
+Created `docs/research/phase-1-proposal-report-v3.md`.
+
+Drafting choices:
+
+- Preserved V1's eleven top-level sections.
+- Used V2's related-work citations, architecture figure, evidence numbers,
+  validation figure, claim boundary, and appendix evidence index as source
+  material.
+- Removed unresolved V1 evidence markers rather than carrying forward a
+  placeholder-register genre.
+- Replaced V2's current-state summary framing with a project-approval framing.
+- Kept detailed protocol artifacts in appendices so the main body is readable
+  without consulting process documents.
+
+Acceptance evidence:
+
+- V3 exists.
+- Headings are aligned with V1:
+  `Executive Summary`, `Problem And Stakes`,
+  `Research Question And North Star`, `Barcarolle Thesis And Boundary`,
+  `Proposed Benchmark-Compiler Design`,
+  `Validation Strategy For Predictive Validity`,
+  `Preliminary Evidence And Feasibility`,
+  `Project Plan, Decision Gates, And Resource Ask`,
+  `Risks, Objections, And Mitigations`, `Expected Deliverables`, and
+  `Appendices And Evidence Index`.
+- V3 does not claim predictive validity as established.
+- No paid ACUT solver cells, paid LLM calls, public browsing, or external
+  reviewer calls were made.
