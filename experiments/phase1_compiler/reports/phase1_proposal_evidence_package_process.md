@@ -1,10 +1,11 @@
 # Phase 1 Proposal Evidence Package Process
 
-Current step: `Step 3 - Report Evidence Index`.
+Current step: `Step 4 - Proposal-Facing Evidence Summary`.
 
 Completed artifacts:
-- `experiments/phase1_compiler/results/phase1_proposal_evidence_package_report_evidence_index.json`
-- `experiments/phase1_compiler/reports/phase1_proposal_evidence_package_report_evidence_index.md`
+- `experiments/phase1_compiler/results/phase1_proposal_evidence_package_preliminary_evidence_summary.json`
+- `experiments/phase1_compiler/reports/phase1_proposal_evidence_package_preliminary_evidence_summary.md`
+- `docs/research/phase-1-proposal-evidence-package.md`
 
 Boundary:
 
@@ -18,4 +19,4 @@ Boundary:
 - Later M4/M5/M6 runbook drafted: `false`.
 
 Notes:
-- Evidence index is compact and proposal-facing.
+- One-page summary answers reader questions and keeps every current result below predictive-validity strength.
