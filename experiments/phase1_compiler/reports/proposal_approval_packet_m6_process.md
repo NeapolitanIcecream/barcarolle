@@ -88,3 +88,33 @@ Acceptance evidence:
 - predictive validity remains unproven;
 - tuning-loop improvement remains unproven;
 - no paid or external calls were made.
+
+## Step 2: Draft Summary And Evidence Appendix
+
+Created:
+
+```text
+docs/research/m6-approval-packet/executive-summary-v1.md
+docs/research/m6-approval-packet/appendix-evidence-index-v1.md
+```
+
+Drafting choices:
+
+- executive summary follows the requested decision-facing shape: decision
+  requested, why this matters, what Barcarolle is, current evidence, remaining
+  non-claims, approved-project work, budget and validation gates, and expected
+  decision outcome;
+- evidence appendix maps readable evidence labels to key numbers, canonical
+  sources, and claim limits;
+- V5 remains the long-form source of truth;
+- path-level traceability points to the V5 evidence manifest instead of making
+  raw internal paths the main reader experience;
+- staffing, duration, budget ceiling, and approval path remain visible
+  placeholders.
+
+Acceptance evidence:
+
+- the executive summary is independent and decision-facing;
+- the evidence appendix is concise and traceable;
+- neither artifact claims predictive validity or tuning-loop improvement;
+- no paid or external calls were made.
