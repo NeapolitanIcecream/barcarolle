@@ -76,3 +76,32 @@ Revision intent:
 
 Acceptance evidence: Step 0 complete. No proposal report text changed. No paid
 or external calls made.
+
+## Step 1: Map Existing V3 Tuning Content
+
+Required search completed:
+
+```text
+rg -n "tuning|optimizer|scorecard|failure|regression|canary|dev/eval|configuration" docs/research/phase-1-proposal-report-v3.md
+```
+
+The compact section map is recorded in:
+`experiments/phase1_compiler/reports/phase1_proposal_report_v4_agent_tuning_section_map.md`.
+
+Mapping decision:
+
+- V4 can be a targeted revision because V3 already has the right eleven-section
+  proposal shape and contains hooks for configuration, tuning/evaluation
+  objective, scorecards, failure labels, cost summaries, named ACUT
+  configurations, and adapter-stratified reporting.
+- The main additions should appear in the executive summary, problem/stakes,
+  ACUT boundary, proposed design, validation guardrails, project plan, risks,
+  deliverables, and appendix future-extension note.
+- No V3 section requires a full rewrite.
+- No new evidence requirement is introduced.
+- Multi-ACUT residual predictive validity remains a later scientific extension.
+- Formal agent-tuning-loop validation remains later product validation, not a
+  current proof burden.
+
+Acceptance evidence: Step 1 complete. The section map shows V4 can be a local
+revision, preserves V3 structure, and introduces no new evidence claim.
