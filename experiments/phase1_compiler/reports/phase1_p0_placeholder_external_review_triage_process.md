@@ -151,3 +151,41 @@ Acceptance evidence:
 - New roadmap file created: `false`.
 - Later runbook drafted: `false`.
 - Paid validation authorized: `false`.
+
+## Step 4: Triage Quality Gate
+
+Checks run:
+
+```text
+rg -n "NEEDS " docs/research/phase-1-proposal-report-v1.md
+rg -n "P0_blocker|M3_evidence_package|M4_validation_or_candidate_hardening|M5_reviewer_ready_report_revision|defer_post_proposal|reject_short_term_scope_expansion|needs_user_decision" docs/research/phase-1-proposal-p0-placeholder-triage.md
+rg -n "proves predictive validity|established predictive validity|authorizes paid|validated predictive benchmark compiler|model-only superiority" docs/research/phase-1-proposal-p0-placeholder-triage.md docs/research/phase-1-proposal-claim-boundary.md docs/research/phase-1-proposal-evidence-todo-matrix.md docs/research/phase-1-proposal-roadmap-and-claim-planning.md
+python3 -m json.tool experiments/phase1_compiler/results/phase1_p0_placeholder_external_review_triage_preflight.json
+git diff --check
+```
+
+Additional exact-match check:
+
+```text
+P0 placeholders from preflight: 17
+Missing in triage table: []
+Duplicates in triage table: []
+```
+
+Results:
+
+- Proposal report v1 still contains `[NEEDS ...]` placeholders as expected;
+  M2 routed them but did not fill them.
+- Route and priority values are present in the triage document.
+- Prohibited-claim phrase matches occur only in prohibited-claim examples or
+  negating guardrails, such as "not model-only superiority evidence".
+- Preflight JSON validates with `python3 -m json.tool`.
+- `git diff --check` passes.
+
+Acceptance evidence:
+
+- All P0 placeholders are routed: `true`.
+- All relevant review recommendations are classified: `true`.
+- Paid validation authorized: `false`.
+- JSON preflight validates: `true`.
+- `git diff --check` passes: `true`.
