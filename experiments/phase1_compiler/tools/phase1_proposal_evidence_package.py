@@ -993,11 +993,17 @@ def build_source_supply_status(config_path: str | Path = DEFAULT_CONFIG) -> dict
     fallback = load_fallback_share(config)
     repo_rows = []
     for repo in ["attrs", "boltons", "click"]:
+        source_context_classes = source_audit["source_context_class_counts_by_repo"].get(repo, {})
+        if repo == "click":
+            source_context_classes = {
+                "public_context_repaired": click["public_context_repaired"],
+                "pre_repair_source_context_classes": source_context_classes,
+            }
         repo_rows.append(
             {
                 "repo": repo,
                 "current_source_quality_status": "accepted_for_paid_package" if source_audit["audit_status_counts"].get("accepted_for_paid_package") else "unknown",
-                "source_context_classes": source_audit["source_context_class_counts_by_repo"].get(repo, {}),
+                "source_context_classes": source_context_classes,
                 "statement_provenance": source_audit["statement_provenance_counts_by_repo"].get(repo, {}),
                 "candidate_policy_fallback_share": fallback["fallback_share_by_repo"].get(repo),
                 "proposal_use": "source-quality narrative support",

@@ -1,0 +1,111 @@
+{
+  "artifact": "report_evidence_index",
+  "claim_label": "supported_for_proposal_index",
+  "generated_at": "2026-06-01T04:42:18Z",
+  "main_text_no_count": 1,
+  "main_text_yes_count": 9,
+  "rows": [
+    {
+      "claim_function": "Shows naive weighting can fail materially.",
+      "digest": "sha256:0e3e234ef7861d60f48807488e661b066e0d36d501bff43b17d9d7f7d93b9175",
+      "evidence_type": "diagnostic_negative",
+      "exists": true,
+      "key_numeric_result_or_status": "Weighted gaps: attrs 0.3148, boltons 0.7481; simple same-budget baselines 0.25 and 0.125.",
+      "limitation": "Two-repo paid pilot; negative evidence for one design, not a validation result.",
+      "main_text": "yes",
+      "report": "experiments/phase1_compiler/reports/phase1_weighted_design_paid_pilot_decision.md"
+    },
+    {
+      "claim_function": "Diagnoses why the old weighted objective is underidentified.",
+      "digest": "sha256:9826626285d6ad449d57357da1c5a382508728ab1a22d43ddabd6e6f86ffe57e",
+      "evidence_type": "diagnostic_negative",
+      "exists": true,
+      "key_numeric_result_or_status": "Old weighted target-profile design not promoted; repo-stratified/simple baselines remain conservative.",
+      "limitation": "Local no-paid analysis only.",
+      "main_text": "yes",
+      "report": "experiments/phase1_compiler/reports/phase1_local_algorithm_bakeoff_decision.md"
+    },
+    {
+      "claim_function": "Shows workspace ACUT protocol, endpoint accounting, and policy checks can run end to end.",
+      "digest": "sha256:b2fa89b652c662cb29f676bd7d565152b5a5ebf73ddfdc195ddcfdeef958dbf5",
+      "evidence_type": "technical_tractability",
+      "exists": true,
+      "key_numeric_result_or_status": "120 planned cells, 120 completed, scoreability 1.0, endpoint compliance pass, cost $51.267333.",
+      "limitation": "Exploratory pilot evidence; predictive validity not established.",
+      "main_text": "yes",
+      "report": "experiments/phase1_compiler/reports/phase1_three_repo_paid_validation_decision.md"
+    },
+    {
+      "claim_function": "Repairs the click source-context caveat for source-quality narrative use.",
+      "digest": "sha256:dada50de900a0f3fec8b38e432cb9b2f2e3089d1d8491abab50a33c65966397b",
+      "evidence_type": "source_quality",
+      "exists": true,
+      "key_numeric_result_or_status": "30/30 click tasks repaired with public context; 0 paid LLM calls; 0 paid ACUT cells.",
+      "limitation": "Does not rewrite paid outcomes or prove predictive validity.",
+      "main_text": "yes",
+      "report": "experiments/phase1_compiler/reports/phase1_click_llm_source_context_repair_decision.md"
+    },
+    {
+      "claim_function": "Justifies adapter-stratified reporting as primary.",
+      "digest": "sha256:4090d3bb3c6640a9a5e1cc796b8d93c93bd2a354ba5074a02a081fd7abd99079",
+      "evidence_type": "adapter_reporting",
+      "exists": true,
+      "key_numeric_result_or_status": "Supplement fair enough to interpret as ACUT-configuration evidence; model-only claim disallowed.",
+      "limitation": "Post-hoc diagnostic supplement, not primary predictive-validity evidence.",
+      "main_text": "yes",
+      "report": "experiments/phase1_compiler/reports/phase1_blocked_split_supplement_fairness_gap_diagnostics_decision.md"
+    },
+    {
+      "claim_function": "Compares candidate against simple baselines before M3 strengthening.",
+      "digest": "sha256:0ea05b1e2a1b19e91ba1f878941bc15b928330ea784d0390f1ad6d2e86baef03",
+      "evidence_type": "retrospective_traction",
+      "exists": true,
+      "key_numeric_result_or_status": "Coverage candidate MAE 0.209 vs temporal baseline MAE 0.2149.",
+      "limitation": "Pseudo-future and underpowered; needs many-seed random and baseline envelope.",
+      "main_text": "yes",
+      "report": "experiments/phase1_compiler/reports/phase1_retrospective_predictive_signal_baseline_comparison.md"
+    },
+    {
+      "claim_function": "Shows the candidate signal is not uniform across ACUT adapters.",
+      "digest": "sha256:abe027a6900170717def30a81a8eed9372463c025295c84748ae11b8958d25d5",
+      "evidence_type": "adapter_fragility",
+      "exists": true,
+      "key_numeric_result_or_status": "Candidate worse than temporal baseline on Codex and better on Kilo in the proposal report summary.",
+      "limitation": "Retrospective slices are sparse.",
+      "main_text": "yes",
+      "report": "experiments/phase1_compiler/reports/phase1_retrospective_predictive_signal_adapter_metrics.md"
+    },
+    {
+      "claim_function": "Keeps retrospective signal in traction-only scope.",
+      "digest": "sha256:f09a9a18b475a2a23cfaca96c4ff49ec658116ba9ff66b3c0c7431477ea9ccdd",
+      "evidence_type": "uncertainty",
+      "exists": true,
+      "key_numeric_result_or_status": "Claim strength: traction_evidence_only; sample size too sparse for formal predictive validity.",
+      "limitation": "No formal interval estimated.",
+      "main_text": "yes",
+      "report": "experiments/phase1_compiler/reports/phase1_retrospective_predictive_signal_uncertainty.md"
+    },
+    {
+      "claim_function": "Freezes the outcome-blind candidate policy and exposes fallback behavior.",
+      "digest": "sha256:ba444f410325de3a2a87a136ed02578e6cd5c0ba2ecb70e7521b3ead97ce1b62",
+      "evidence_type": "candidate_policy",
+      "exists": true,
+      "key_numeric_result_or_status": "18 selected tasks; 6 per repo; boltons uses insufficient-feature-support fallback.",
+      "limitation": "M4 still owns fallback threshold and candidate-policy hardening.",
+      "main_text": "yes",
+      "report": "experiments/phase1_compiler/reports/phase1_candidate_policy_validation_protocol_selection_manifest.md"
+    },
+    {
+      "claim_function": "Keeps task supply work in Layer 1 infrastructure rather than core claim.",
+      "digest": "sha256:767f78156352ed7cdb479295aaba9a3d7145e102aeb0148204ee546c1f326d44",
+      "evidence_type": "source_supply",
+      "exists": true,
+      "key_numeric_result_or_status": "Paid-ready false; internal repo-history v2 should continue; external systems are future references/adapters only.",
+      "limitation": "Does not make broad generator expansion part of M3.",
+      "main_text": "no",
+      "report": "experiments/phase1_compiler/reports/phase1_task_supply_v2_source_bakeoff_decision.md"
+    }
+  ],
+  "run_id": "phase1_proposal_evidence_package_20260601",
+  "schema_version": "barcarolle.phase1_proposal_evidence_package_output.v1"
+}

@@ -1,10 +1,10 @@
 # Phase 1 Proposal Evidence Package Process
 
-Current step: `Step 2 - Coverage Objective Ablation`.
+Current step: `Step 3 - Report Evidence Index`.
 
 Completed artifacts:
-- `experiments/phase1_compiler/results/phase1_proposal_evidence_package_coverage_ablation.json`
-- `experiments/phase1_compiler/reports/phase1_proposal_evidence_package_coverage_ablation.md`
+- `experiments/phase1_compiler/results/phase1_proposal_evidence_package_report_evidence_index.json`
+- `experiments/phase1_compiler/reports/phase1_proposal_evidence_package_report_evidence_index.md`
 
 Boundary:
 
@@ -18,4 +18,4 @@ Boundary:
 - Later M4/M5/M6 runbook drafted: `false`.
 
 Notes:
-- Coverage contribution is reported as a limited design-level ablation; clean factorial decomposition is explicitly not claimed.
+- Evidence index is compact and proposal-facing.
