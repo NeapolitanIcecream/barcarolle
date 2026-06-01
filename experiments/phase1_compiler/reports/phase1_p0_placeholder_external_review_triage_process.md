@@ -44,3 +44,36 @@ Acceptance evidence:
 M2 will route placeholders and recommendations only. It will not fill
 citations, figures, result tables, power notes, validation thresholds, or
 release schemas, and it will not authorize paid validation.
+
+## Step 1: P0/P1 Placeholder Routing Table
+
+Output created:
+
+- `docs/research/phase-1-proposal-p0-placeholder-triage.md`.
+
+Routing evidence:
+
+- Every P0 placeholder from proposal report v1 Appendix D appears once in the
+  P0 routing table.
+- P1 placeholders are routed separately.
+- Items requiring user approval are marked `needs_user_decision`.
+- Evidence-producing items are routed to later milestones rather than filled
+  during M2.
+
+Route counts after Step 1:
+
+| Route | P0 count | P1 count |
+| --- | ---: | ---: |
+| M2_boundary_or_wording | 0 | 1 |
+| M3_evidence_package | 4 | 1 |
+| M4_validation_or_candidate_hardening | 8 | 0 |
+| M5_reviewer_ready_report_revision | 2 | 1 |
+| needs_user_decision | 3 | 1 |
+
+Acceptance evidence:
+
+- Paid ACUT solver calls made: `0`.
+- Paid LLM calls made: `0`.
+- External reviewer calls made: `0`.
+- Evidence-producing work performed: `false`.
+- Paid validation authorized: `false`.
