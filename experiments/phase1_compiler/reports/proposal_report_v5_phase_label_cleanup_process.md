@@ -1,6 +1,6 @@
 # Proposal Report V5 Phase-Label Cleanup Process
 
-Status: in progress, 2026-06-01.
+Status: complete, 2026-06-01.
 
 ## Step 0: Preflight And Reader Contract
 
@@ -229,3 +229,37 @@ Step 4 acceptance:
 - Text checks passed.
 - Manual review answers are yes.
 - `git diff --check` passed.
+
+## Step 5: Closeout
+
+Wrote closeout artifacts:
+
+- `experiments/phase1_compiler/reports/proposal_report_v5_phase_label_cleanup_decision.md`
+- `experiments/phase1_compiler/results/proposal_report_v5_phase_label_cleanup_decision.json`
+
+Stop label:
+
+```text
+proposal_report_v5_phase_label_cleanup_complete
+```
+
+Closeout summary:
+
+- V5 removes internal phase framing from the reader-facing proposal while
+  preserving V4's argument, evidence, and agent-tuning application path.
+- Reviewers now see a coherent project proposal instead of a report about an
+  internal phase.
+- After the user accepts V5, the next decisions are approval artifact format,
+  staffing and duration assumptions, evaluation budget path, and deliverable
+  owner categories.
+
+Step 5 acceptance:
+
+- Decision report states that V5 supersedes V4 as the active proposal report.
+- Decision report states that reader-facing phase labels were removed.
+- Decision report states that V4's agent-tuning integration was preserved.
+- Decision report states that raw path traceability moved to an internal
+  manifest.
+- Decision report states that predictive validity and tuning-loop improvement
+  remain unproven.
+- Decision report states what remains before the approval artifact can start.

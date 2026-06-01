@@ -482,7 +482,9 @@ Completed outputs:
 
 - `docs/research/barcarolle-proposal-report-v5.md`
 - `experiments/phase1_compiler/reports/proposal_report_v5_phase_label_cleanup_process.md`
+- `experiments/phase1_compiler/reports/proposal_report_v5_phase_label_cleanup_decision.md`
 - `experiments/phase1_compiler/reports/proposal_report_v5_evidence_manifest.md`
+- `experiments/phase1_compiler/results/proposal_report_v5_phase_label_cleanup_decision.json`
 
 V5 supersedes V4 as the active proposal report for proposal use. V4 remains the
 agent-tuning integration source draft. M6 should wait until V5 is accepted by

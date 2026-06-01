@@ -1,0 +1,36 @@
+{
+  "stop_label": "proposal_report_v5_phase_label_cleanup_complete",
+  "active_report": "docs/research/barcarolle-proposal-report-v5.md",
+  "source_draft": "docs/research/phase-1-proposal-report-v4.md",
+  "process_report": "experiments/phase1_compiler/reports/proposal_report_v5_phase_label_cleanup_process.md",
+  "decision_report": "experiments/phase1_compiler/reports/proposal_report_v5_phase_label_cleanup_decision.md",
+  "evidence_manifest": "experiments/phase1_compiler/reports/proposal_report_v5_evidence_manifest.md",
+  "v5_supersedes_v4_as_active_proposal_report": true,
+  "reader_facing_phase_labels_removed": true,
+  "v4_agent_tuning_integration_preserved": true,
+  "raw_path_traceability_moved_to_internal_manifest": true,
+  "predictive_validity_established": false,
+  "tuning_loop_improvement_established": false,
+  "multi_acut_residual_predictive_validity_established": false,
+  "paid_acut_cells": 0,
+  "paid_llm_calls": 0,
+  "external_reviewer_calls": 0,
+  "public_browsing": false,
+  "score_tables_changed": false,
+  "selected_task_ids_or_split_labels_changed": false,
+  "source_eligibility_changed": false,
+  "task_statements_or_hidden_oracle_material_changed": false,
+  "audit": {
+    "phase_label_search_matches": 0,
+    "prohibited_claim_search_matches": 0,
+    "local_planning_path_matches": 0,
+    "git_diff_check": "passed"
+  },
+  "remaining_before_approval_artifact": [
+    "user/coordinator accepts or revises V5",
+    "approval artifact format",
+    "project staffing and duration assumptions",
+    "budget ceiling and approval path for gated ACUT evaluation",
+    "reviewer-facing deliverable owner categories"
+  ]
+}

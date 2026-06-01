@@ -281,7 +281,9 @@ Canonical report and runbook:
 - `docs/experiments/proposal-report-v5-reader-facing-phase-label-cleanup-runbook.md`
 - `docs/research/barcarolle-proposal-report-v5.md`
 - `experiments/phase1_compiler/reports/proposal_report_v5_phase_label_cleanup_process.md`
+- `experiments/phase1_compiler/reports/proposal_report_v5_phase_label_cleanup_decision.md`
 - `experiments/phase1_compiler/reports/proposal_report_v5_evidence_manifest.md`
+- `experiments/phase1_compiler/results/proposal_report_v5_phase_label_cleanup_decision.json`
 - `docs/research/phase-1-proposal-report-v4.md`
 - `experiments/phase1_compiler/reports/phase1_proposal_report_v4_agent_tuning_integration_decision.md`
 - `experiments/phase1_compiler/reports/phase1_proposal_report_v4_agent_tuning_integration_process.md`
