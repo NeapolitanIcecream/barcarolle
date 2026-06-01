@@ -283,7 +283,7 @@ Completed M2 route summary:
 
 ### M3: Proposal Evidence Package
 
-Status: Draft.
+Status: complete.
 
 Purpose:
 
@@ -302,11 +302,28 @@ Likely scope:
 - concise source-supply status;
 - report evidence index.
 
-Possible runbook:
+Runbook:
 
 ```text
 docs/experiments/phase-1-proposal-evidence-package-runbook.md
 ```
+
+Completed outputs:
+
+- `docs/research/phase-1-proposal-evidence-package.md`
+- `experiments/phase1_compiler/reports/phase1_proposal_evidence_package_random_baseline_distribution.md`
+- `experiments/phase1_compiler/reports/phase1_proposal_evidence_package_baseline_envelope.md`
+- `experiments/phase1_compiler/reports/phase1_proposal_evidence_package_coverage_ablation.md`
+- `experiments/phase1_compiler/reports/phase1_proposal_evidence_package_fallback_share.md`
+- `experiments/phase1_compiler/reports/phase1_proposal_evidence_package_source_supply_status.md`
+- `experiments/phase1_compiler/reports/phase1_proposal_evidence_package_report_evidence_index.md`
+
+M3 filled the evidence-producing placeholders but did not claim predictive
+validity or authorize paid validation. The evidence is mixed: the candidate
+beats the best simple aggregate baseline by MAE `0.0059` and beats/ties the
+1000-seed random distribution on overall MAE in `93.4%` of seeds, but adapter,
+repo, and window diagnostics remain fragile. The frozen candidate policy also
+has labeled fallback: `6/18` selected tasks overall and `6/6` boltons tasks.
 
 ### M4: Validation Protocol And Candidate Policy Hardening
 
@@ -406,12 +423,10 @@ drive the next few days unless the v1 P0 placeholders expose a direct need:
 
 ## 9. Immediate Next Step
 
-M2 is complete. The next action category should be M3 proposal evidence
-package unless the user first resolves the open M6 resource/format decisions
-or explicitly chooses to harden M4 validation protocol before consolidating
-evidence.
+M3 is complete. The next action category should be M4 validation
+protocol/candidate-policy hardening unless the user first resolves the open M6
+resource/format decisions or explicitly chooses to pause after the evidence
+package.
 
-No later runbook is drafted here. The M3 scope should stay narrow: produce the
-proposal-critical no-paid evidence package identified by M2, and leave paid
-validation unauthorized until M4 protocol gates and user budget decisions are
-settled.
+No later runbook is drafted here. Paid validation remains unauthorized until
+M4 protocol gates and user budget decisions are settled.

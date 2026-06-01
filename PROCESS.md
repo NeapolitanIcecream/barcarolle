@@ -205,14 +205,17 @@ decisions, power/budget notes, and deliverable details.
 only as source material and an argument rewrite record. The roadmap remains
 owned by `docs/research/phase-1-proposal-roadmap-and-claim-planning.md`.
 Current evidence still does not establish predictive validity and does not
-authorize more paid ACUT cells. M2 P0 placeholder and external-review triage is
-complete: every proposal report v1 P0 placeholder has a route, GPT-5.5-Pro
-0530 findings are classified as strategy input, and 0526-1 task-supply guidance
-stays inside Layer 1 supply infrastructure. The next action category is M3
-proposal evidence package unless the user explicitly chooses to prioritize M4
-validation/candidate-policy hardening first. User decisions are still needed
-before M6 approval artifact work or any budget-bearing paid-validation
-discussion. Stop label: `p0_placeholder_external_review_triage_complete`.
+authorize more paid ACUT cells. M3 proposal evidence package work is complete:
+the package filled the one-page evidence summary, many-seed random baseline,
+baseline envelope, coverage ablation with explicit identifiability limits,
+fallback-share accounting, source-supply status, and report evidence index.
+The evidence remains traction-only and mixed: the aggregate MAE edge is small,
+adapter/repo/window diagnostics are fragile, and boltons fallback makes the
+candidate policy composite. The next action category is M4 validation
+protocol/candidate-policy hardening, unless the user first chooses to pause or
+resolve M6 resource/format decisions. User decisions are still needed before
+M6 approval artifact work or any budget-bearing paid-validation discussion.
+Stop label: `proposal_evidence_package_complete`.
 
 Canonical report and runbook:
 
@@ -229,6 +232,8 @@ Canonical report and runbook:
 - `docs/experiments/phase-1-proposal-report-argument-rewrite-runbook.md`
 - `docs/experiments/phase-1-proposal-report-final-shape-rewrite-runbook.md`
 - `docs/experiments/phase-1-p0-placeholder-and-external-review-triage-runbook.md`
+- `docs/experiments/phase-1-proposal-evidence-package-runbook.md`
+- `docs/research/phase-1-proposal-evidence-package.md`
 - `docs/research/phase-1-proposal-p0-placeholder-triage.md`
 - `docs/research/phase-1-proposal-report-v0.md`
 - `docs/research/phase-1-proposal-argument-map.md`
@@ -241,6 +246,12 @@ Canonical report and runbook:
 - `experiments/phase1_compiler/results/phase1_proposal_report_final_shape_rewrite_decision.json`
 - `experiments/phase1_compiler/reports/phase1_p0_placeholder_external_review_triage_process.md`
 - `experiments/phase1_compiler/reports/phase1_p0_placeholder_external_review_triage_decision.md`
+- `experiments/phase1_compiler/reports/phase1_proposal_evidence_package_random_baseline_distribution.md`
+- `experiments/phase1_compiler/reports/phase1_proposal_evidence_package_baseline_envelope.md`
+- `experiments/phase1_compiler/reports/phase1_proposal_evidence_package_coverage_ablation.md`
+- `experiments/phase1_compiler/reports/phase1_proposal_evidence_package_fallback_share.md`
+- `experiments/phase1_compiler/reports/phase1_proposal_evidence_package_source_supply_status.md`
+- `experiments/phase1_compiler/reports/phase1_proposal_evidence_package_report_evidence_index.md`
 - `experiments/phase1_compiler/results/phase1_p0_placeholder_external_review_triage_preflight.json`
 - `experiments/phase1_compiler/results/phase1_p0_placeholder_external_review_triage_decision.json`
 
