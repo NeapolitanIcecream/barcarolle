@@ -229,3 +229,48 @@ issueCount: 0
 
 The committed PPTX is byte-identical to the artifact-tool exported deck in the
 scratch workspace.
+
+## Step 4: Chinese Packet Audit
+
+Recorded: 2026-06-01.
+
+Created:
+
+```text
+docs/research/m6-approval-packet-zh/approval-packet-checklist-v1.zh.md
+```
+
+PPTX text extraction:
+
+```text
+outputs/manual-20260601-2254-zh-supplement/pptx-text-audit/barcarolle-approval-deck-v1.zh.txt
+```
+
+Audit coverage:
+
+- Chinese packet active-editing status.
+- English M6 source/reference preservation.
+- V5 long-form source-of-truth preservation.
+- Evidence number preservation.
+- Predictive-validity non-claim.
+- Tuning-loop non-claim.
+- Adapter interpretation boundary.
+- Placeholder visibility.
+- PPTX readability.
+- No generated-image usage.
+
+Commands run:
+
+```bash
+rg -n "validated predictive benchmark compiler|established predictive validity|tuning validation established|improves agent tuning|multi-ACUT residual validity established" docs/research/m6-approval-packet-zh/*.md
+rg -n "已证明预测效度|预测效度已(经)?建立|已经建立预测效度|已经证明.*调优|调优.*已经证明|已证明.*tuning|已验证.*调优闭环|模型能力更强" docs/research/m6-approval-packet-zh/*.md
+rg -n "/Users/chenmohan/Downloads" docs/research/m6-approval-packet-zh/*.md
+rg -n "validated predictive benchmark compiler|established predictive validity|tuning validation established|improves agent tuning|multi-ACUT residual validity established" outputs/manual-20260601-2254-zh-supplement/pptx-text-audit/barcarolle-approval-deck-v1.zh.txt
+rg -n "已证明预测效度|预测效度已(经)?建立|已经建立预测效度|已经证明.*调优|调优.*已经证明|已证明.*tuning|已验证.*调优闭环|模型能力更强" outputs/manual-20260601-2254-zh-supplement/pptx-text-audit/barcarolle-approval-deck-v1.zh.txt
+rg -n "/Users/chenmohan/Downloads" outputs/manual-20260601-2254-zh-supplement/pptx-text-audit/barcarolle-approval-deck-v1.zh.txt
+git diff --check
+```
+
+Expected result: all overclaim and local-path commands return no matches;
+`git diff --check` passes. Key-number and placeholder searches against the
+extracted PPTX text return the expected evidence.
