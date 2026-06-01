@@ -23,6 +23,13 @@ asks which tasks should be selected, certified, split, refreshed, weighted or
 left unweighted, and interpreted as evidence about future target-repository
 performance.
 
+That same release machinery is useful because teams do not only need a score.
+They need a way to compare agent configurations, tune prompts, retrieval,
+skills, tool policies, and runtime budgets, and monitor regressions against the
+work their own repository is likely to produce. The proposal therefore treats
+tuning and regression feedback as the main product path while keeping
+predictive validity as the research claim to be tested.
+
 The long-term north star is predictive validity:
 
 ```text
@@ -81,9 +88,13 @@ but they solve different parts of the evaluation problem:
 
 The practical stakes are evaluation, tuning, and governance. Evaluation needs
 future target-repo success estimates. Tuning needs diagnostics about which
-repository strata, task families, and source reservoirs matter. Governance
-needs uncertainty, leakage controls, source-quality limits, adapter boundaries,
-and clear rules for when evaluation budget should be spent.
+repository strata, task families, and source reservoirs matter, and it needs
+answers to concrete configuration questions: did a repo-docs retriever help
+this repository, did a test-running policy justify its cost, did a prompt,
+skill, or retrieval change improve future repo work rather than overfit the dev
+set, and did a model or harness upgrade regress on critical task families?
+Governance needs uncertainty, leakage controls, source-quality limits, adapter
+boundaries, and clear rules for when evaluation budget should be spent.
 
 ## 3. Research Question And North Star
 
@@ -134,6 +145,13 @@ context, builds clean solver workspaces, invokes the configured ACUT harness,
 captures the resulting workspace diff, replays that diff in a verifier
 workspace, injects private oracle material only in the verifier workspace, and
 records score, cost, latency, terminal status, and sanitized artifacts.
+
+That boundary still allows Barcarolle to emit tuning feedback. It can provide
+benchmark releases, dev/eval/canary splits, adapter-stratified scorecards,
+failure labels, regression signals, cost and latency summaries, and
+optimizer-readable result files. The ACUT harness or external optimizer owns
+how to change prompts, retrieval, skills, tools, public-test policy, model
+choice, and runtime budget in response.
 
 Barcarolle is also not a general task generator. It may use repository history,
 public issue and pull-request context, external task systems, synthetic tasks,
@@ -191,13 +209,20 @@ The proposed system has six layers:
 | Target-work profile modeling | Estimate future-work strata from pre-cutoff public or user-supplied signals, with support and uncertainty labels. |
 | Benchmark assembly and weighting | Select, split, and optionally weight certified tasks under budget and support constraints. |
 | Score calibration and uncertainty | Report prediction error, intervals or qualitative uncertainty, insufficient-support labels, and invalid-cell sensitivity. |
-| Tuning and evaluation interfaces | Emit scorecards, failure labels, cost summaries, and optimizer-readable outputs without taking over the ACUT harness. |
+| Tuning and evaluation interfaces | Emit dev/eval/canary split metadata, optimizer-readable scorecards, failure labels, regression signals, cost and latency summaries, and configuration-comparison templates without taking over the ACUT harness. |
 
 The output is a versioned benchmark release, not a raw task list. A release
 contains a certified task set, task strata, split definitions, source and oracle
 metadata, leakage and replay reports, selection and aggregation rules, ACUT
 boundary statement, uncertainty plan, refresh policy, and sanitized artifact
 manifest.
+
+For tuning workflows, the release should also expose the interface objects that
+optimizers and engineering teams can consume: scorecard schemas, failure
+taxonomy entries, source-quality and support limits, configuration-comparison
+templates, and regression labels for canary or holdout-sensitive task families.
+These are product-facing outputs of the benchmark compiler, not a claim that
+Barcarolle has already improved a tuning loop.
 
 The current research selector is best described as
 `coverage_constrained_unweighted_v1_with_labeled_fallbacks`. It is deterministic
@@ -235,6 +260,12 @@ Three evidence designs should be kept separate:
 | True future holdout | The strongest route to predictive-validity evidence for the named repos, ACUT configurations, task supply, and release boundary. | Claims outside the frozen scope. |
 | Preregistered rolling origin | Limited predictive-validity evidence if cutoffs, seeds, task-selection rules, baselines, invalid handling, and success criteria are frozen before outcomes are joined. | Cutoffs or rules chosen after seeing joined outcomes. |
 | Retrospective replay | Traction, debugging, baseline stress testing, and proposal motivation. | The north-star validity claim. |
+
+Tuning workflows need the same separation. A dev split can guide prompt,
+retrieval, skill, tool-policy, or budget changes, but eval and canary splits
+must remain protected so an optimizer does not simply overfit visible benchmark
+tasks. Tuning and regression reports should therefore distinguish feedback used
+for iteration from frozen evidence used for validation.
 
 Validation must compare Barcarolle against strong simple alternatives, not only
 against random selection. The mandatory baseline suite should include a temporal
@@ -334,6 +365,7 @@ a generic expansion of task supply. The work packages are:
 | Compiler algorithm development | Improved task-selection rules compared against temporal, unweighted, stratified, random, and feasible external baselines. | Shows whether benchmark selection can beat simple alternatives by a meaningful margin. |
 | Task supply and certification | Certified candidate pools with provenance, source sufficiency, oracle, leakage, license, environment, and ambiguity status. | Ensures candidate supply supports benchmark claims instead of silently limiting them. |
 | Release construction | Versioned benchmark releases with task IDs, split labels, feature values, fallback labels, ACUT boundary, and sanitized artifact manifests. | Makes each release reproducible and outcome-blind before score joins. |
+| Tuning and regression feedback interfaces | Optimizer-readable scorecard schemas, configuration comparison templates, tuning/regression report templates, failure-taxonomy schema, and dev/eval/canary rules. | Makes release outputs useful for agent configuration work without making tuning-loop improvement a current proof claim. |
 | Validation execution | True future holdout or preregistered rolling-origin evaluation, with retrospective replay limited to debugging and traction. | Tests the north-star claim under frozen conditions. |
 | Reporting and governance | Adapter-stratified scorecards, uncertainty summaries, source-quality reports, budget and latency accounting, and limitation statements. | Lets reviewers and engineering leaders decide what the result supports. |
 
@@ -452,6 +484,18 @@ Mitigation: freeze releases and validation protocols before score joins, commit
 digests for task and feature inputs, record invalid-cell rules in advance, and
 publish limitations when support is insufficient.
 
+### Objection: Agent tuning can overfit the benchmark.
+
+Response: Correct. A benchmark that is useful for tuning can become misleading
+if an optimizer repeatedly sees the same tasks and treats dev-set gains as
+evidence of future target-repository improvement.
+
+Mitigation: separate dev, eval, canary, and future holdout material; freeze
+evaluation releases before formal score joins; report source and task-family
+slices; keep private or canary tasks protected where needed; refresh releases
+under explicit governance; and distinguish tuning feedback from formal
+predictive-validity claims.
+
 ### Objection: Evaluation budget could be spent before evidence is ready.
 
 Response: The project should not treat spending as a substitute for design
@@ -481,6 +525,12 @@ The approved project should produce:
   designs;
 - adapter-stratified scorecards with MAE, signed error, catastrophic-miss
   diagnostics, invalid/non-scoreable sensitivity, cost, and latency;
+- optimizer-readable scorecard schemas and configuration-comparison templates
+  for prompts, retrieval, skills, tools, public-test policy, and runtime budget;
+- a dev/eval/canary split manager and tuning/regression report templates;
+- a failure taxonomy for prompts, retrieval, tool use, skills, public-test
+  policy, source quality, and runtime-budget failures;
+- canary and holdout rules for preventing benchmark overfitting during tuning;
 - source-quality and fallback accounting reports;
 - decision reports stating what each release can and cannot claim;
 - a reviewer-facing approval artifact in the format selected by the project
@@ -543,6 +593,12 @@ Future validation should freeze and publish, before outcome joins:
   reporting rules;
 - success criteria and support thresholds;
 - raw-artifact storage policy and sanitized artifact manifest.
+
+A later scientific extension can test whether Barcarolle adds predictive signal
+beyond general benchmark scores across multiple paired ACUT configurations. A
+later product-validation extension can test whether Barcarolle feedback improves
+tuning-loop outcomes. Neither extension is required for the current proposal
+approval claim.
 
 The current detailed protocol artifacts include:
 

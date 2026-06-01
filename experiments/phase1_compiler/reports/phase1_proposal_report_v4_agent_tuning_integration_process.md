@@ -120,3 +120,67 @@ Initial drafting baseline:
 
 Acceptance evidence: V4 exists as a targeted-revision baseline. No substantive
 agent-tuning edits have been applied yet.
+
+## Step 3: Strengthen Product Pull In The Opening And Stakes
+
+Revised the executive summary and problem/stakes section to make the practical
+application path clear:
+
+- teams need not only scores but configuration selection, prompt/retrieval/
+  skill/tool-policy tuning, runtime-budget decisions, and regression monitoring;
+- target-repository prediction remains the central problem;
+- concrete stakes now include repo-docs retrievers, test-running policy,
+  prompt/skill/retrieval changes, model or harness upgrades, and critical
+  task-family regressions.
+
+Acceptance evidence: the opening explains why Barcarolle matters beyond
+evaluation reporting, still asks for project approval, and does not claim that
+Barcarolle has already improved a tuning loop.
+
+## Step 4: Integrate Tuning Interfaces Into Design And Deliverables
+
+Revised the ACUT boundary, compiler design, project-plan work packages, and
+deliverables:
+
+- Barcarolle can emit benchmark releases, dev/eval/canary split metadata,
+  scorecards, failure labels, regression signals, cost and latency summaries,
+  and optimizer-readable result files.
+- The ACUT harness or external optimizer still owns prompt, retrieval, skill,
+  tool, public-test-policy, model, and runtime-budget changes.
+- The project plan now includes tuning and regression feedback interfaces as
+  schemas and templates, not as a current tuning-success claim.
+- Expected deliverables now include optimizer-readable scorecard schemas,
+  configuration-comparison templates, a split manager, tuning/regression report
+  templates, failure taxonomy, and canary/holdout rules.
+
+Acceptance evidence: the design section explains product-facing tuning
+artifacts while preserving the ACUT boundary.
+
+## Step 5: Add Tuning-Overfit Guardrails
+
+Added validation and risk language explaining that tuning workflows need
+dev/eval/canary or holdout separation because optimizer loops can overfit
+visible benchmark dev tasks.
+
+Mitigations now include:
+
+- separate dev, eval, canary, and future holdout material;
+- frozen evaluation releases before formal score joins;
+- source and task-family slice reporting;
+- private/canary protection where needed;
+- release refresh governance;
+- explicit separation between tuning feedback and formal predictive-validity
+  claims.
+
+Acceptance evidence: V4 makes tuning useful but guarded, and no tuning-loop
+result is invented.
+
+## Step 6: Keep Later Extensions Scoped
+
+Added a short Appendix C future-extension note. It says a later scientific
+extension can test residual predictive signal across multiple paired ACUT
+configurations, and a later product-validation extension can test whether
+Barcarolle feedback improves tuning-loop outcomes.
+
+Acceptance evidence: these are explicitly later extensions and are not project
+approval requirements.
