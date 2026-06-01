@@ -427,9 +427,35 @@ V3 supersedes V2 as the active proposal report for proposal use. V2 remains an
 evidence-safe source draft and traceability artifact. M6 should wait until V3
 is accepted by the user/coordinator.
 
+### M5c: Proposal Report V4 Agent-Tuning Integration
+
+Status: runbook drafted.
+
+Purpose:
+
+```text
+Make a targeted V4 revision that preserves V3's structure and claim boundary
+while integrating agent tuning, configuration selection, and regression
+feedback as the product/application path. Phase 2 multi-ACUT residual
+predictive validity remains a later scientific extension, not this proposal's
+main deliverable.
+```
+
+Runbook:
+
+```text
+docs/experiments/phase-1-proposal-report-v4-agent-tuning-integration-runbook.md
+```
+
+Expected output:
+
+- `docs/research/phase-1-proposal-report-v4.md`
+
+M6 should wait until V4 is produced and accepted as the active proposal report.
+
 ### M6: Proposal Presentation Or Memo
 
-Status: waiting on V3 acceptance and user decisions.
+Status: waiting on V4 acceptance and user decisions.
 
 Purpose:
 
@@ -471,11 +497,12 @@ drive the next few days unless the v1 P0 placeholders expose a direct need:
 
 ## 9. Immediate Next Step
 
-Review `docs/research/phase-1-proposal-report-v3.md` as the active proposal
-report. V3 repairs V2's genre regression while preserving the evidence and
-claim boundary.
+Execute the V4 agent-tuning integration runbook before M6. V3 repairs the
+proposal genre regression, but the user wants the proposal to make the product
+landing path clearer: agent tuning, configuration selection, and regression
+feedback.
 
-After V3 is accepted, decide whether the approval artifact should be a slide
+After V4 is accepted, decide whether the approval artifact should be a slide
 deck, short decision memo, one-page executive summary, or combined packet.
 Predictive validity remains future work; project-scale paid ACUT evaluation
 should be budgeted and gated by frozen protocols rather than framed as

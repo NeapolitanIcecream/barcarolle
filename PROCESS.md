@@ -239,7 +239,13 @@ evaluation as a budgeted activity after releases, protocols, baselines, score
 joins, and success criteria are frozen. Predictive validity remains future
 work. Stop label: `proposal_report_v3_genre_repair_complete`.
 
-M6 approval artifact work should wait until V3 is accepted by the
+The next planned proposal revision is V4 agent-tuning integration:
+`docs/experiments/phase-1-proposal-report-v4-agent-tuning-integration-runbook.md`.
+The purpose is to preserve V3's structure and claim boundary while making the
+product/application path clearer: agent tuning, configuration selection, and
+regression feedback. Phase 2 multi-ACUT residual predictive validity remains a
+later scientific extension, not this proposal's main deliverable. M6 approval
+artifact work should wait until V4 is produced and accepted by the
 user/coordinator.
 
 Canonical report and runbook:
@@ -261,6 +267,7 @@ Canonical report and runbook:
 - `docs/experiments/phase-1-validation-protocol-and-candidate-policy-hardening-runbook.md`
 - `docs/experiments/phase-1-proposal-report-reviewer-ready-revision-runbook.md`
 - `docs/experiments/phase-1-proposal-report-v3-genre-repair-runbook.md`
+- `docs/experiments/phase-1-proposal-report-v4-agent-tuning-integration-runbook.md`
 - `docs/research/phase-1-proposal-report-v3.md`
 - `docs/research/phase-1-proposal-evidence-package.md`
 - `docs/research/phase-1-validation-protocol-and-candidate-policy-hardening.md`
