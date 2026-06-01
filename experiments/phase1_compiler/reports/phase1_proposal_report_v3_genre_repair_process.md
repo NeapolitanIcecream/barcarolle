@@ -298,3 +298,25 @@ Manual review answers:
 
 Acceptance evidence: required text checks passed with no exceptions, manual
 review passed, and `git diff --check` passed.
+
+## Step 9: Closeout
+
+Created:
+
+- `experiments/phase1_compiler/reports/phase1_proposal_report_v3_genre_repair_decision.md`
+- `experiments/phase1_compiler/results/phase1_proposal_report_v3_genre_repair_decision.json`
+
+Stop label: `proposal_report_v3_genre_repair_complete`.
+
+Closeout summary:
+
+- V3 supersedes V2 as the active proposal report for proposal use.
+- V3 preserves the V1 eleven-section proposal structure.
+- Paid ACUT evaluation is framed as a budgeted project resource after releases,
+  protocols, baselines, score joins, and success criteria are frozen.
+- Required text checks found no flagged internal/process terms in V3.
+- Predictive validity remains unproven.
+- Before any approval artifact work starts, the user/coordinator should accept
+  or revise V3 and decide artifact format, staffing/duration assumptions,
+  budget ceiling and approval path for gated ACUT evaluation, and
+  reviewer-facing owner categories.

@@ -1,0 +1,29 @@
+{
+  "stop_label": "proposal_report_v3_genre_repair_complete",
+  "active_proposal_report": "docs/research/phase-1-proposal-report-v3.md",
+  "supersedes_v2_for_proposal_use": true,
+  "v1_structure_preserved": true,
+  "predictive_validity_established": false,
+  "paid_acut_cells_run": 0,
+  "paid_llm_calls_run": 0,
+  "external_reviewer_calls_run": 0,
+  "public_browsing_used": false,
+  "score_tables_changed": false,
+  "selected_task_ids_or_split_labels_changed": false,
+  "task_statements_or_hidden_oracle_material_changed": false,
+  "paid_evaluation_framing": "Budgeted ACUT evaluation may be needed after the benchmark release, task-selection rule, baseline suite, score-join procedure, and success criteria are frozen.",
+  "internal_process_terms_in_v3": [],
+  "audit": {
+    "internal_vocabulary_check": "pass_no_matches",
+    "prohibited_claim_check": "pass_no_matches",
+    "local_planning_path_check": "pass_no_matches",
+    "git_diff_check": "pass"
+  },
+  "remaining_before_approval_artifact": [
+    "user_or_coordinator_accepts_or_revises_v3",
+    "approval_artifact_format_decision",
+    "project_staffing_and_duration_assumptions",
+    "budget_ceiling_and_approval_path_for_gated_acut_evaluation",
+    "reviewer_facing_deliverable_owner_categories"
+  ]
+}
