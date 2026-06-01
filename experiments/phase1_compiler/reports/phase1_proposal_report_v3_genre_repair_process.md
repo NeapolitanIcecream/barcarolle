@@ -159,3 +159,20 @@ Acceptance evidence:
 - V3 does not claim predictive validity as established.
 - No paid ACUT solver cells, paid LLM calls, public browsing, or external
   reviewer calls were made.
+
+## Step 3: Opening And Ask Repair
+
+Revised the status note and executive summary opening to make the approval ask
+positive and concrete:
+
+- approve Barcarolle as a repo-specific benchmark-compiler project;
+- build benchmark-selection algorithms, task certification, versioned releases,
+  validation protocols, and reviewer-facing evidence reports;
+- allow budgeted ACUT evaluation only after the release, task-selection rule,
+  baselines, score-join procedure, and success criteria are fixed;
+- keep the current evidence boundary as traction and a credible path, not a
+  completed validity claim.
+
+Acceptance evidence: the executive summary stands alone for a proposal reader,
+the project ask is expressed in project terms, and paid evaluation is framed as
+planned budgeted evaluation under frozen conditions.

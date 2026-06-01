@@ -2,10 +2,10 @@
 
 Status: proposal report for project approval, 2026-06-01.
 
-This report asks for approval to continue Barcarolle as a repo-specific
+This report asks reviewers to approve Barcarolle as a repo-specific
 benchmark-compiler project. It presents Phase 1 as traction evidence and a
-validation plan, not as proof that predictive validity has already been
-established.
+validation plan, not as proof that the north-star validity claim has already
+been reached.
 
 ## 1. Executive Summary
 
@@ -32,11 +32,11 @@ scores, or other simple baselines?
 ```
 
 The approval request is to build and validate Barcarolle under that north star.
-The approved project should improve benchmark-selection algorithms, strengthen
-task certification and release artifacts, freeze validation protocols before
-future outcomes are joined, and run budgeted ACUT evaluation only when the
-benchmark release, task-selection rule, baselines, score-join procedure, and
-success criteria are fixed.
+Approving the project means approving work on benchmark-selection algorithms,
+task certification, versioned benchmark releases, validation protocols, and
+reviewer-facing evidence reports. It also means allowing budgeted ACUT
+evaluation when the benchmark release, task-selection rule, baselines,
+score-join procedure, and success criteria are fixed in advance.
 
 Phase 1 supports that request, but only as bounded traction:
 
@@ -47,10 +47,10 @@ Phase 1 supports that request, but only as bounded traction:
 | Is the prediction metric meaningful and optimizable? | Yes for traction. The current candidate's MAE is `0.209` versus `0.2149` for the best simple aggregate baseline, and it beats or ties `93.4%` of 1000 same-budget random selections. | The best-simple-baseline edge is only `0.0059` MAE, below the margin that would justify a validity claim. |
 | Is the path to stronger validation concrete? | Yes. The current protocol separates retrospective replay from true future or preregistered rolling-origin evidence, requires simple baselines, and reports by named ACUT configuration. | The current candidate still has fallback, adapter, and support weaknesses that the project must fix or narrow. |
 
-The decision requested now is project approval, not acceptance of a final
+The decision requested now is project approval, not acceptance of a completed
 validity claim. Predictive validity remains unproven. Phase 1 shows that the
 problem is real, measurable, and technically tractable enough to justify the
-next project stage.
+approved project stage.
 
 ## 2. Problem And Stakes
 
