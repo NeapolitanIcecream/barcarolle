@@ -265,3 +265,36 @@ Updated handoff documents:
 
 Acceptance evidence: support docs point to V3, roadmap duties remain in the
 roadmap document, and process notes stay concise.
+
+## Step 8: Audit
+
+Commands run:
+
+```text
+rg -n "\bM[0-9]\b|runbook|roadmap|P0|P1|placeholder|no-paid|paid remains unauthorized|does not authorize paid|M6|user-owned" docs/research/phase-1-proposal-report-v3.md
+rg -n "validated predictive benchmark compiler|proves predictive validity|established predictive validity|model-only superiority" docs/research/phase-1-proposal-report-v3.md
+rg -n "/Users/chenmohan/Downloads" docs/research/phase-1-proposal-report-v3.md
+git diff --check
+```
+
+Recorded results:
+
+- First text check: no matches.
+- Second text check: no matches.
+- Local planning path check: no matches.
+- `git diff --check`: passed.
+
+Manual review answers:
+
+- If a reviewer never reads `PROCESS.md` or any execution document, they can
+  still understand the project from V3.
+- The report asks for approval of the project, not remaining pre-proposal
+  packaging work.
+- The report presents budgeted evaluation as a normal project requirement after
+  frozen protocols and success criteria, not as a prohibited activity.
+- The back half reads as validation strategy, project plan, risks,
+  deliverables, and appendices rather than as a protocol dump.
+- The rewrite preserves numerical evidence without strengthening it.
+
+Acceptance evidence: required text checks passed with no exceptions, manual
+review passed, and `git diff --check` passed.
