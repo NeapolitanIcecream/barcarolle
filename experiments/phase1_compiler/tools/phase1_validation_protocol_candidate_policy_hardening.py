@@ -137,8 +137,14 @@ def markdown_table(rows: list[dict[str, Any]], columns: list[tuple[str, str]]) -
         "| " + " | ".join("---" for _ in columns) + " |",
     ]
     for row in rows:
-        lines.append("| " + " | ".join(str(row.get(key, "")) for key, _ in columns) + " |")
+        lines.append("| " + " | ".join(markdown_value(row.get(key, "")) for key, _ in columns) + " |")
     return lines
+
+
+def markdown_value(value: Any) -> str:
+    if isinstance(value, (dict, list)):
+        return "`" + json.dumps(value, sort_keys=True) + "`"
+    return str(value)
 
 
 def boundary_flags(config: dict[str, Any]) -> dict[str, Any]:

@@ -1,0 +1,185 @@
+{
+  "allowed_inputs": [
+    "task_id",
+    "repo",
+    "task_time",
+    "time_bucket",
+    "coarse_task_family",
+    "editable_scope_bucket",
+    "source_context_type_bucket",
+    "source_quality_bucket",
+    "statement_specificity_bucket",
+    "context_length_bucket",
+    "ambiguity_risk_bucket",
+    "leakage_risk_bucket",
+    "certification_risk_bucket",
+    "rare_or_unknown_feature_flag",
+    "source_reservoir",
+    "source_context_class",
+    "implementation_file_count",
+    "test_file_count",
+    "public_context_ref_count",
+    "release_eligibility_provenance",
+    "repair_overlay_status",
+    "statement_digest"
+  ],
+  "artifact": "candidate_policy",
+  "base_policy_id": "coverage_constrained_unweighted_v1",
+  "boundary": {
+    "external_review_allowed_by_config": false,
+    "external_reviewer_calls_run": false,
+    "new_paid_acut_cells_run": false,
+    "new_paid_llm_calls_run": false,
+    "paid_calls_allowed_by_config": false,
+    "paid_validation_authorization": false,
+    "predictive_validity_state": "not_established",
+    "public_citation_browsing_allowed_by_config": false,
+    "public_citation_browsing_run": false,
+    "score_tables_changed": false,
+    "selected_task_ids_or_split_labels_changed": false
+  },
+  "budget_per_repo": 6,
+  "coverage_features": [
+    "coarse_task_family",
+    "time_bucket",
+    "editable_scope_bucket",
+    "source_context_type_bucket",
+    "source_quality_bucket",
+    "statement_specificity_bucket",
+    "context_length_bucket"
+  ],
+  "current_m3_fallback": {
+    "overall_share": 0.3333,
+    "selected_count_by_repo": {
+      "attrs": 0,
+      "boltons": 6,
+      "click": 0
+    },
+    "share_by_repo": {
+      "attrs": 0.0,
+      "boltons": 1.0,
+      "click": 0.0
+    }
+  },
+  "fallback_governance": {
+    "boltons_treatment": "claim_changing_because_fallback_share_is_6_of_6",
+    "current_m3_candidate_passes_fallback_rule": false,
+    "current_m3_classification": "not_paid_ready_for_primary_coverage_policy_claim",
+    "fallback_repos_only_diagnostic": "boltons/fallback-repo diagnostic is worse than temporal by MAE 0.0139 in M3",
+    "fallback_threshold_rule": {
+      "overall_max_share": 0.1,
+      "per_feature_rule": "No primary coverage-policy claim may rely on a feature dimension where all selected slots for a repo came from fallback.",
+      "per_repo_max_share": 0.1667,
+      "threshold_basis": "A six-task per-repo budget can tolerate at most one fallback slot in a repo and at most about one to two slots overall; larger fallback share changes the candidate object."
+    },
+    "include_exclude_reporting_rule": "Always report all repos and a sensitivity excluding repos whose per-repo fallback share exceeds the cap. If any repo is excluded, the primary claim is narrowed to support-qualified repos.",
+    "repair_or_narrowing_rule": "Repair feature support and rerun the frozen policy before future outcomes are joined, or narrow the claim to the composite selector with fallback-repo sensitivity."
+  },
+  "fallback_routes": {
+    "fallbacks_must_be_labeled": true,
+    "insufficient_budget": "repo_unweighted_same_budget",
+    "insufficient_feature_support": "repo_stratified_by_target_profile"
+  },
+  "forbidden_outcome_inputs": [
+    "terminal_status",
+    "terminal_outcome",
+    "verified_pass",
+    "verified_fail",
+    "pass_rate",
+    "adapter_outcome",
+    "adapter_terminal_status",
+    "b_eval_observed_outcome",
+    "h_future_observed_outcome",
+    "scoreable_cell",
+    "submission_status",
+    "agent_failure",
+    "harness_error",
+    "verifier_exit_code",
+    "score_table_row",
+    "raw_acut_transcript",
+    "hidden_verifier_output"
+  ],
+  "generated_at": "2026-06-01T05:54:58Z",
+  "policy_id": "coverage_constrained_unweighted_v1_with_labeled_fallbacks",
+  "policy_violations": [
+    "using forbidden outcome, terminal-status, score, hidden-verifier, transcript, or pass-rate fields",
+    "changing selected task IDs, split labels, feature values, thresholds, seeds, or fallback labels after outcomes are visible",
+    "using an unlabeled fallback slot",
+    "omitting source-quality or leakage-risk overlays",
+    "claiming a coverage-policy result when fallback caps fail"
+  ],
+  "pseudocode": [
+    "Input: certified candidate task rows for each target repo plus allowed solver-visible feature fields.",
+    "Reject rows missing release eligibility, source-quality status, statement digest, or leakage-risk status.",
+    "For each repo, derive supported feature dimensions from the frozen policy feature list and source-quality overlays.",
+    "If repo has at least budget_per_repo eligible tasks and enough supported feature coverage, select budget_per_repo tasks that maximize unweighted coarse feature coverage.",
+    "Score candidate sets without task-level outcome weights; each selected task contributes equally within its repo budget.",
+    "Break ties by sha256(seed, repo, task_id, feature_vector) with the frozen deterministic seed.",
+    "If feature support is insufficient, route the repo to the labeled insufficient_feature_support fallback.",
+    "If eligible budget is insufficient, route the repo to the labeled insufficient_budget fallback.",
+    "Mark every selected fallback slot with fallback_selected, fallback_design, fallback_reason, and source-quality overlay status.",
+    "Write selected and excluded task IDs with reasons; do not change IDs after any score or future outcome is visible."
+  ],
+  "run_id": "phase1_validation_protocol_candidate_policy_hardening_20260601",
+  "schema_version": "barcarolle.phase1_validation_protocol_candidate_policy_hardening_output.v1",
+  "selected_task_ids_changed": false,
+  "source_quality_overlays": {
+    "rule": "source-quality failures block primary release inclusion; repaired overlays must carry provenance and digest fields",
+    "source_repo_rows": [
+      {
+        "candidate_policy_fallback_share": 0.0,
+        "current_source_quality_status": "accepted_for_paid_package",
+        "limitation": "No new source-supply expansion in M3; rely on existing certified pilot artifacts.",
+        "proposal_use": "source-quality narrative support",
+        "repo": "attrs",
+        "source_context_classes": {
+          "issue_or_pr_context": 27,
+          "pr_context_title_only": 1,
+          "public_issue_and_pr_context_repaired": 3
+        },
+        "statement_provenance": {
+          "attrs_source_repair_overlay": 3,
+          "fresh_or_third_repo_certification_release_eligible": 28
+        }
+      },
+      {
+        "candidate_policy_fallback_share": 1.0,
+        "current_source_quality_status": "accepted_for_paid_package",
+        "limitation": "Source package was accepted, but candidate policy falls back because feature support is insufficient.",
+        "proposal_use": "source-quality narrative support",
+        "repo": "boltons",
+        "source_context_classes": {
+          "issue_or_pr_context": 35
+        },
+        "statement_provenance": {
+          "fresh_or_third_repo_certification_release_eligible": 35
+        }
+      },
+      {
+        "candidate_policy_fallback_share": 0.0,
+        "current_source_quality_status": "accepted_for_paid_package",
+        "limitation": "Click source context is repaired for the 30 frozen tasks, but outcomes are not rerun or rewritten.",
+        "proposal_use": "source-quality narrative support",
+        "repo": "click",
+        "source_context_classes": {
+          "pre_repair_source_context_classes": {
+            "pr_context_title_only": 30
+          },
+          "public_context_repaired": 30
+        },
+        "statement_provenance": {
+          "fresh_or_third_repo_certification_release_eligible": 30
+        }
+      }
+    ],
+    "use_repaired_click_overlay": true
+  },
+  "supported_feature_check": {
+    "check": "feature dimensions with insufficient distinct eligible values or missing overlays are unsupported for the primary coverage objective",
+    "minimum_budget_multiple": 2
+  },
+  "tie_break_rule": {
+    "deterministic_seed": 2026053001,
+    "tie_break_policy": "sha256_seeded_task_id_order"
+  }
+}
