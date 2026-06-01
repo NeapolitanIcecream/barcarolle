@@ -252,8 +252,10 @@ Canonical report and runbook:
 - `experiments/phase1_compiler/reports/phase1_proposal_evidence_package_fallback_share.md`
 - `experiments/phase1_compiler/reports/phase1_proposal_evidence_package_source_supply_status.md`
 - `experiments/phase1_compiler/reports/phase1_proposal_evidence_package_report_evidence_index.md`
+- `experiments/phase1_compiler/reports/phase1_proposal_evidence_package_decision.md`
 - `experiments/phase1_compiler/results/phase1_p0_placeholder_external_review_triage_preflight.json`
 - `experiments/phase1_compiler/results/phase1_p0_placeholder_external_review_triage_decision.json`
+- `experiments/phase1_compiler/results/phase1_proposal_evidence_package_decision.json`
 
 ### Workspace State Note
 

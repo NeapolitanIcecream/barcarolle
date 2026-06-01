@@ -1,11 +1,10 @@
 # Phase 1 Proposal Evidence Package Process
 
-Current step: `Step 4 - Proposal-Facing Evidence Summary`.
+Current step: `Step 6 - Verification And Closeout`.
 
 Completed artifacts:
-- `experiments/phase1_compiler/results/phase1_proposal_evidence_package_preliminary_evidence_summary.json`
-- `experiments/phase1_compiler/reports/phase1_proposal_evidence_package_preliminary_evidence_summary.md`
-- `docs/research/phase-1-proposal-evidence-package.md`
+- `experiments/phase1_compiler/results/phase1_proposal_evidence_package_decision.json`
+- `experiments/phase1_compiler/reports/phase1_proposal_evidence_package_decision.md`
 
 Boundary:
 
@@ -19,4 +18,8 @@ Boundary:
 - Later M4/M5/M6 runbook drafted: `false`.
 
 Notes:
-- One-page summary answers reader questions and keeps every current result below predictive-validity strength.
+- Closeout label is proposal_evidence_package_complete; coverage ablation limitations are recorded but do not block M3 completion.
+- `uv run pytest tests/test_phase1_proposal_evidence_package.py -q` passed: 5 tests.
+- `python3 -m json.tool` passed for the preflight and decision outputs.
+- Prohibited-claim grep returned no matches.
+- `git diff --check` passed.
