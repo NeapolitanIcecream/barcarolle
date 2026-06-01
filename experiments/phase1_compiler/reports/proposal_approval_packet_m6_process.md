@@ -60,3 +60,31 @@ Acceptance evidence:
 - the packet contract is recorded above;
 - the output directory exists;
 - no reader-facing approval-packet artifact had been drafted at Step 0 close.
+
+## Step 1: Extract The Claim Spine
+
+Created:
+
+```text
+docs/research/m6-approval-packet/approval-deck-outline-v1.md
+```
+
+Outline choices:
+
+- kept the 12-slide default spine because V5's approval story maps cleanly to
+  decision ask, problem, boundary, tuning path, current evidence, non-claims,
+  validation path, work packages, gates, risks, deliverables, and decision;
+- gave every slide a one-sentence claim, proof object, source evidence, claim
+  limit, and placeholder note;
+- used V5 as the source of truth and earlier inputs only for traceability and
+  handoff context;
+- left staffing, duration, budget-ceiling, approval-owner, and owner-category
+  values as placeholders.
+
+Acceptance evidence:
+
+- the outline covers the full deck;
+- every slide has a claim and proof object;
+- predictive validity remains unproven;
+- tuning-loop improvement remains unproven;
+- no paid or external calls were made.
