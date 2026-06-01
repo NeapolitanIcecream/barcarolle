@@ -129,10 +129,18 @@ into a general task-generator project.
 
 ## 7. Claim Boundary Updates Needed
 
-Initial Step 1 conclusion: the existing claim boundary is directionally
-consistent with the placeholder routes. Later updates should only synchronize
-route ownership and the explicit user-decision blockers; they should not
-expand the short-term claim or authorize paid validation.
+M2 does not change the core claim boundary: predictive validity remains
+unestablished and paid validation remains unauthorized. Supporting documents
+only need route synchronization:
+
+- mark M2 triage complete;
+- route evidence-producing P0 gaps to M3;
+- route validation/candidate-policy paid-readiness gaps to M4;
+- route citation, figure, current-evidence caveat, and final prose work to M5;
+- mark staffing, budget ceiling, owners, and approval format as user decisions
+  before M6.
+
+No guardrail is relaxed.
 
 ## 8. Milestone Routing Summary
 

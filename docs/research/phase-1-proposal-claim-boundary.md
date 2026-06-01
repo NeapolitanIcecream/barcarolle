@@ -1,7 +1,7 @@
 # Phase 1 Proposal Claim Boundary
 
-Status: internal claim guardrail aligned with proposal report v1,
-2026-05-30.
+Status: internal claim guardrail aligned with proposal report v1 and M2
+placeholder triage, 2026-06-01.
 
 This document defines what the Phase 1 proposal report may claim now, what it
 may claim only with care, what remains draft pending evidence, and what is
@@ -184,21 +184,29 @@ following P0 items should be filled or explicitly marked as deferred:
 - external review triage of GPT-5.5-Pro recommendations.
 
 These blockers are routed in
-`docs/research/phase-1-proposal-evidence-todo-matrix.md`.
+`docs/research/phase-1-proposal-evidence-todo-matrix.md` and
+`docs/research/phase-1-proposal-p0-placeholder-triage.md`.
 
 ## Milestone Sync
 
 M2-M6 remain draft milestones, not new runbooks.
 
-- M2 role: triage external review recommendations into accepted fixes,
-  no-paid proposal evidence, deferred long-term work, and rejected short-term
-  scope expansion.
+- M2 role: complete. It routed proposal report v1 P0/P1 placeholders, 0530
+  review findings, and 0526-1 task-supply guidance into milestone ownership
+  without filling placeholders or authorizing paid validation.
 - M3 role: consolidate proposal-critical evidence such as baseline tables,
-  adapter/repo fragility, fallback share, and source-supply status.
+  adapter/repo fragility, fallback share, source-supply status, and the report
+  evidence index.
 - M4 role: harden validation protocol boundaries and success gates before any
-  paid-validation question.
-- M5 role: turn the argument draft into proposal report v1.
-- M6 role: convert the report into the approval memo or presentation format.
+  paid-validation question; this includes the candidate policy pseudocode,
+  release schema, fallback threshold, adapter estimand, invalid-cell rules,
+  joint gate, support thresholds, and power/budget note.
+- M5 role: turn the argument draft into a reviewer-ready proposal report with
+  citations, diagrams, current-evidence caveats, and placeholders resolved or
+  explicitly deferred.
+- M6 role: convert the report into the approval memo, report, deck, or
+  combined packet after user decisions on format, staffing, budget ceiling,
+  and owner categories.
 
 This document intentionally does not draft those runbooks.
 

@@ -125,3 +125,29 @@ Acceptance evidence:
 - Paid ACUT solver calls made: `0`.
 - Paid LLM calls made: `0`.
 - External reviewer calls made: `0`.
+
+## Step 3: Claim Boundary And Milestone Map Alignment
+
+Supporting documents updated:
+
+- `docs/research/phase-1-proposal-claim-boundary.md`.
+- `docs/research/phase-1-proposal-evidence-todo-matrix.md`.
+- `docs/research/phase-1-proposal-roadmap-and-claim-planning.md`.
+- `docs/research/phase-1-proposal-p0-placeholder-triage.md`.
+
+Alignment decisions:
+
+- M2 is marked complete in the roadmap and claim-boundary milestone sync.
+- M3 owns the next evidence-package work category.
+- M4 owns validation and candidate-policy paid-readiness hardening.
+- M5 owns reviewer-ready citations, figures, caveats, and final report prose.
+- M6 remains blocked on user decisions for format, no-paid staffing/duration,
+  conditional paid-validation budget ceiling, and owner categories.
+
+Acceptance evidence:
+
+- Roadmap ownership remains:
+  `docs/research/phase-1-proposal-roadmap-and-claim-planning.md`.
+- New roadmap file created: `false`.
+- Later runbook drafted: `false`.
+- Paid validation authorized: `false`.
