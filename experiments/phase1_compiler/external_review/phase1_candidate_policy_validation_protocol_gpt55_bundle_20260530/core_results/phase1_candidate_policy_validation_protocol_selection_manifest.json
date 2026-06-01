@@ -1,0 +1,1425 @@
+{
+  "artifact": "selection_manifest",
+  "coverage_gaps": [
+    {
+      "coverage_status": "gap",
+      "eligible_count": 3,
+      "feature": "coarse_task_family",
+      "repo": "boltons",
+      "selected_count": 0,
+      "value": "boltons:cacheutils"
+    },
+    {
+      "coverage_status": "gap",
+      "eligible_count": 1,
+      "feature": "coarse_task_family",
+      "repo": "boltons",
+      "selected_count": 0,
+      "value": "boltons:dictutils"
+    },
+    {
+      "coverage_status": "gap",
+      "eligible_count": 1,
+      "feature": "coarse_task_family",
+      "repo": "boltons",
+      "selected_count": 0,
+      "value": "boltons:listutils"
+    },
+    {
+      "coverage_status": "gap",
+      "eligible_count": 1,
+      "feature": "coarse_task_family",
+      "repo": "boltons",
+      "selected_count": 0,
+      "value": "boltons:mathutils"
+    },
+    {
+      "coverage_status": "gap",
+      "eligible_count": 1,
+      "feature": "coarse_task_family",
+      "repo": "boltons",
+      "selected_count": 0,
+      "value": "boltons:queueutils"
+    },
+    {
+      "coverage_status": "gap",
+      "eligible_count": 1,
+      "feature": "coarse_task_family",
+      "repo": "boltons",
+      "selected_count": 0,
+      "value": "boltons:timeutils"
+    },
+    {
+      "coverage_status": "gap",
+      "eligible_count": 1,
+      "feature": "coarse_task_family",
+      "repo": "boltons",
+      "selected_count": 0,
+      "value": "boltons:urlutils"
+    },
+    {
+      "coverage_status": "gap",
+      "eligible_count": 1,
+      "feature": "coarse_task_family",
+      "repo": "click",
+      "selected_count": 0,
+      "value": "click:_bashcomplete"
+    },
+    {
+      "coverage_status": "gap",
+      "eligible_count": 1,
+      "feature": "coarse_task_family",
+      "repo": "click",
+      "selected_count": 0,
+      "value": "click:termui"
+    }
+  ],
+  "excluded_task_ids_with_reasons": [
+    {
+      "reasons": [
+        "not_selected_under_fixed_budget_after_coverage_priority"
+      ],
+      "repo": "attrs",
+      "task_id": "attrs__v2__048"
+    },
+    {
+      "reasons": [
+        "not_selected_under_fixed_budget_after_coverage_priority"
+      ],
+      "repo": "attrs",
+      "task_id": "attrs__v2__052"
+    },
+    {
+      "reasons": [
+        "not_selected_under_fixed_budget_after_coverage_priority"
+      ],
+      "repo": "attrs",
+      "task_id": "attrs__v2__157"
+    },
+    {
+      "reasons": [
+        "not_selected_under_fixed_budget_after_coverage_priority"
+      ],
+      "repo": "attrs",
+      "task_id": "attrs__v2__158"
+    },
+    {
+      "reasons": [
+        "not_selected_under_fixed_budget_after_coverage_priority"
+      ],
+      "repo": "attrs",
+      "task_id": "attrs__v2__187"
+    },
+    {
+      "reasons": [
+        "not_selected_under_fixed_budget_after_coverage_priority"
+      ],
+      "repo": "attrs",
+      "task_id": "attrs__v2__202"
+    },
+    {
+      "reasons": [
+        "not_selected_under_fixed_budget_after_coverage_priority"
+      ],
+      "repo": "attrs",
+      "task_id": "attrs__v2__206"
+    },
+    {
+      "reasons": [
+        "not_selected_under_fixed_budget_after_coverage_priority"
+      ],
+      "repo": "attrs",
+      "task_id": "attrs__v2__207"
+    },
+    {
+      "reasons": [
+        "not_selected_under_fixed_budget_after_coverage_priority"
+      ],
+      "repo": "attrs",
+      "task_id": "attrs__v2__210"
+    },
+    {
+      "reasons": [
+        "not_selected_under_fixed_budget_after_coverage_priority"
+      ],
+      "repo": "attrs",
+      "task_id": "attrs__v2__215"
+    },
+    {
+      "reasons": [
+        "not_selected_under_fixed_budget_after_coverage_priority"
+      ],
+      "repo": "attrs",
+      "task_id": "attrs__v2__219"
+    },
+    {
+      "reasons": [
+        "not_selected_under_fixed_budget_after_coverage_priority"
+      ],
+      "repo": "attrs",
+      "task_id": "attrs__v2__220"
+    },
+    {
+      "reasons": [
+        "not_selected_under_fixed_budget_after_coverage_priority"
+      ],
+      "repo": "attrs",
+      "task_id": "attrs__v2__223"
+    },
+    {
+      "reasons": [
+        "not_selected_under_fixed_budget_after_coverage_priority"
+      ],
+      "repo": "attrs",
+      "task_id": "attrs__v2__227"
+    },
+    {
+      "reasons": [
+        "not_selected_under_fixed_budget_after_coverage_priority"
+      ],
+      "repo": "attrs",
+      "task_id": "attrs__v2__228"
+    },
+    {
+      "reasons": [
+        "not_selected_under_fixed_budget_after_coverage_priority"
+      ],
+      "repo": "attrs",
+      "task_id": "attrs__v2__231"
+    },
+    {
+      "reasons": [
+        "not_selected_under_fixed_budget_after_coverage_priority"
+      ],
+      "repo": "attrs",
+      "task_id": "attrs__v2__235"
+    },
+    {
+      "reasons": [
+        "not_selected_under_fixed_budget_after_coverage_priority"
+      ],
+      "repo": "attrs",
+      "task_id": "attrs__v2__237"
+    },
+    {
+      "reasons": [
+        "not_selected_under_fixed_budget_after_coverage_priority"
+      ],
+      "repo": "attrs",
+      "task_id": "attrs__v2__244"
+    },
+    {
+      "reasons": [
+        "not_selected_under_fixed_budget_after_coverage_priority"
+      ],
+      "repo": "attrs",
+      "task_id": "attrs__v2__250"
+    },
+    {
+      "reasons": [
+        "not_selected_under_fixed_budget_after_coverage_priority"
+      ],
+      "repo": "attrs",
+      "task_id": "attrs__v2__252"
+    },
+    {
+      "reasons": [
+        "not_selected_under_fixed_budget_after_coverage_priority"
+      ],
+      "repo": "attrs",
+      "task_id": "attrs__v2__253"
+    },
+    {
+      "reasons": [
+        "not_selected_under_fixed_budget_after_coverage_priority"
+      ],
+      "repo": "attrs",
+      "task_id": "attrs__v2__261"
+    },
+    {
+      "reasons": [
+        "not_selected_under_fixed_budget_after_coverage_priority"
+      ],
+      "repo": "attrs",
+      "task_id": "attrs__v2__271"
+    },
+    {
+      "reasons": [
+        "not_selected_under_fixed_budget_after_coverage_priority"
+      ],
+      "repo": "boltons",
+      "task_id": "boltons__v2__006"
+    },
+    {
+      "reasons": [
+        "not_selected_under_fixed_budget_after_coverage_priority"
+      ],
+      "repo": "boltons",
+      "task_id": "boltons__v2__007"
+    },
+    {
+      "reasons": [
+        "not_selected_under_fixed_budget_after_coverage_priority"
+      ],
+      "repo": "boltons",
+      "task_id": "boltons__v2__008"
+    },
+    {
+      "reasons": [
+        "not_selected_under_fixed_budget_after_coverage_priority"
+      ],
+      "repo": "boltons",
+      "task_id": "boltons__v2__012"
+    },
+    {
+      "reasons": [
+        "not_selected_under_fixed_budget_after_coverage_priority"
+      ],
+      "repo": "boltons",
+      "task_id": "boltons__v2__068"
+    },
+    {
+      "reasons": [
+        "not_selected_under_fixed_budget_after_coverage_priority"
+      ],
+      "repo": "boltons",
+      "task_id": "boltons__v2__076"
+    },
+    {
+      "reasons": [
+        "not_selected_under_fixed_budget_after_coverage_priority"
+      ],
+      "repo": "boltons",
+      "task_id": "boltons__v2__086"
+    },
+    {
+      "reasons": [
+        "not_selected_under_fixed_budget_after_coverage_priority"
+      ],
+      "repo": "boltons",
+      "task_id": "boltons__v2__087"
+    },
+    {
+      "reasons": [
+        "not_selected_under_fixed_budget_after_coverage_priority"
+      ],
+      "repo": "boltons",
+      "task_id": "boltons__v2__091"
+    },
+    {
+      "reasons": [
+        "not_selected_under_fixed_budget_after_coverage_priority"
+      ],
+      "repo": "boltons",
+      "task_id": "boltons__v2__092"
+    },
+    {
+      "reasons": [
+        "not_selected_under_fixed_budget_after_coverage_priority"
+      ],
+      "repo": "boltons",
+      "task_id": "boltons__v2__093"
+    },
+    {
+      "reasons": [
+        "not_selected_under_fixed_budget_after_coverage_priority"
+      ],
+      "repo": "boltons",
+      "task_id": "boltons__v2__102"
+    },
+    {
+      "reasons": [
+        "not_selected_under_fixed_budget_after_coverage_priority"
+      ],
+      "repo": "boltons",
+      "task_id": "boltons__v2__103"
+    },
+    {
+      "reasons": [
+        "not_selected_under_fixed_budget_after_coverage_priority"
+      ],
+      "repo": "boltons",
+      "task_id": "boltons__v2__122"
+    },
+    {
+      "reasons": [
+        "not_selected_under_fixed_budget_after_coverage_priority"
+      ],
+      "repo": "boltons",
+      "task_id": "boltons__v2__128"
+    },
+    {
+      "reasons": [
+        "not_selected_under_fixed_budget_after_coverage_priority"
+      ],
+      "repo": "boltons",
+      "task_id": "boltons__v2__132"
+    },
+    {
+      "reasons": [
+        "not_selected_under_fixed_budget_after_coverage_priority"
+      ],
+      "repo": "boltons",
+      "task_id": "boltons__v2__135"
+    },
+    {
+      "reasons": [
+        "not_selected_under_fixed_budget_after_coverage_priority"
+      ],
+      "repo": "boltons",
+      "task_id": "boltons__v2__140"
+    },
+    {
+      "reasons": [
+        "not_selected_under_fixed_budget_after_coverage_priority"
+      ],
+      "repo": "boltons",
+      "task_id": "boltons__v2__141"
+    },
+    {
+      "reasons": [
+        "not_selected_under_fixed_budget_after_coverage_priority"
+      ],
+      "repo": "boltons",
+      "task_id": "boltons__v2__144"
+    },
+    {
+      "reasons": [
+        "not_selected_under_fixed_budget_after_coverage_priority"
+      ],
+      "repo": "boltons",
+      "task_id": "boltons__v2__147"
+    },
+    {
+      "reasons": [
+        "not_selected_under_fixed_budget_after_coverage_priority"
+      ],
+      "repo": "boltons",
+      "task_id": "boltons__v2__148"
+    },
+    {
+      "reasons": [
+        "not_selected_under_fixed_budget_after_coverage_priority"
+      ],
+      "repo": "boltons",
+      "task_id": "boltons__v2__154"
+    },
+    {
+      "reasons": [
+        "not_selected_under_fixed_budget_after_coverage_priority"
+      ],
+      "repo": "boltons",
+      "task_id": "boltons__v2__155"
+    },
+    {
+      "reasons": [
+        "not_selected_under_fixed_budget_after_coverage_priority"
+      ],
+      "repo": "boltons",
+      "task_id": "boltons__v2__164"
+    },
+    {
+      "reasons": [
+        "not_selected_under_fixed_budget_after_coverage_priority"
+      ],
+      "repo": "boltons",
+      "task_id": "boltons__v2__169"
+    },
+    {
+      "reasons": [
+        "not_selected_under_fixed_budget_after_coverage_priority"
+      ],
+      "repo": "boltons",
+      "task_id": "boltons__v2__170"
+    },
+    {
+      "reasons": [
+        "not_selected_under_fixed_budget_after_coverage_priority"
+      ],
+      "repo": "boltons",
+      "task_id": "boltons__v2__229"
+    },
+    {
+      "reasons": [
+        "not_selected_under_fixed_budget_after_coverage_priority"
+      ],
+      "repo": "boltons",
+      "task_id": "boltons__v2__231"
+    },
+    {
+      "reasons": [
+        "not_selected_under_fixed_budget_after_coverage_priority"
+      ],
+      "repo": "click",
+      "task_id": "click__third__045"
+    },
+    {
+      "reasons": [
+        "not_selected_under_fixed_budget_after_coverage_priority"
+      ],
+      "repo": "click",
+      "task_id": "click__third__050"
+    },
+    {
+      "reasons": [
+        "not_selected_under_fixed_budget_after_coverage_priority"
+      ],
+      "repo": "click",
+      "task_id": "click__third__109"
+    },
+    {
+      "reasons": [
+        "not_selected_under_fixed_budget_after_coverage_priority"
+      ],
+      "repo": "click",
+      "task_id": "click__third__166"
+    },
+    {
+      "reasons": [
+        "not_selected_under_fixed_budget_after_coverage_priority"
+      ],
+      "repo": "click",
+      "task_id": "click__third__198"
+    },
+    {
+      "reasons": [
+        "not_selected_under_fixed_budget_after_coverage_priority"
+      ],
+      "repo": "click",
+      "task_id": "click__third__199"
+    },
+    {
+      "reasons": [
+        "not_selected_under_fixed_budget_after_coverage_priority"
+      ],
+      "repo": "click",
+      "task_id": "click__third__201"
+    },
+    {
+      "reasons": [
+        "not_selected_under_fixed_budget_after_coverage_priority"
+      ],
+      "repo": "click",
+      "task_id": "click__third__202"
+    },
+    {
+      "reasons": [
+        "not_selected_under_fixed_budget_after_coverage_priority"
+      ],
+      "repo": "click",
+      "task_id": "click__third__203"
+    },
+    {
+      "reasons": [
+        "not_selected_under_fixed_budget_after_coverage_priority"
+      ],
+      "repo": "click",
+      "task_id": "click__third__204"
+    },
+    {
+      "reasons": [
+        "not_selected_under_fixed_budget_after_coverage_priority"
+      ],
+      "repo": "click",
+      "task_id": "click__third__205"
+    },
+    {
+      "reasons": [
+        "not_selected_under_fixed_budget_after_coverage_priority"
+      ],
+      "repo": "click",
+      "task_id": "click__third__206"
+    },
+    {
+      "reasons": [
+        "not_selected_under_fixed_budget_after_coverage_priority"
+      ],
+      "repo": "click",
+      "task_id": "click__third__207"
+    },
+    {
+      "reasons": [
+        "not_selected_under_fixed_budget_after_coverage_priority"
+      ],
+      "repo": "click",
+      "task_id": "click__third__208"
+    },
+    {
+      "reasons": [
+        "not_selected_under_fixed_budget_after_coverage_priority"
+      ],
+      "repo": "click",
+      "task_id": "click__third__213"
+    },
+    {
+      "reasons": [
+        "not_selected_under_fixed_budget_after_coverage_priority"
+      ],
+      "repo": "click",
+      "task_id": "click__third__216"
+    },
+    {
+      "reasons": [
+        "not_selected_under_fixed_budget_after_coverage_priority"
+      ],
+      "repo": "click",
+      "task_id": "click__third__217"
+    },
+    {
+      "reasons": [
+        "not_selected_under_fixed_budget_after_coverage_priority"
+      ],
+      "repo": "click",
+      "task_id": "click__third__220"
+    },
+    {
+      "reasons": [
+        "not_selected_under_fixed_budget_after_coverage_priority"
+      ],
+      "repo": "click",
+      "task_id": "click__third__234"
+    },
+    {
+      "reasons": [
+        "not_selected_under_fixed_budget_after_coverage_priority"
+      ],
+      "repo": "click",
+      "task_id": "click__third__250"
+    },
+    {
+      "reasons": [
+        "not_selected_under_fixed_budget_after_coverage_priority"
+      ],
+      "repo": "click",
+      "task_id": "click__third__271"
+    },
+    {
+      "reasons": [
+        "not_selected_under_fixed_budget_after_coverage_priority"
+      ],
+      "repo": "click",
+      "task_id": "click__third__274"
+    },
+    {
+      "reasons": [
+        "not_selected_under_fixed_budget_after_coverage_priority"
+      ],
+      "repo": "click",
+      "task_id": "click__third__278"
+    },
+    {
+      "reasons": [
+        "not_selected_under_fixed_budget_after_coverage_priority"
+      ],
+      "repo": "click",
+      "task_id": "click__third__288"
+    }
+  ],
+  "fallback_by_repo": {
+    "attrs": {
+      "fallback_applied": false,
+      "fallback_design": null,
+      "fallback_reason": null,
+      "supported_feature_dimensions": [
+        "coarse_task_family",
+        "time_bucket",
+        "editable_scope_bucket",
+        "statement_specificity_bucket",
+        "context_length_bucket"
+      ]
+    },
+    "boltons": {
+      "fallback_applied": true,
+      "fallback_design": "repo_stratified_by_target_profile",
+      "fallback_reason": "insufficient_feature_support",
+      "supported_feature_dimensions": [
+        "coarse_task_family",
+        "time_bucket"
+      ]
+    },
+    "click": {
+      "fallback_applied": false,
+      "fallback_design": null,
+      "fallback_reason": null,
+      "supported_feature_dimensions": [
+        "coarse_task_family",
+        "time_bucket",
+        "editable_scope_bucket"
+      ]
+    }
+  },
+  "feature_coverage_table": [
+    {
+      "coverage_status": "covered",
+      "eligible_count": 6,
+      "feature": "coarse_task_family",
+      "repo": "attrs",
+      "selected_count": 1,
+      "value": "attrs:_funcs"
+    },
+    {
+      "coverage_status": "covered",
+      "eligible_count": 19,
+      "feature": "coarse_task_family",
+      "repo": "attrs",
+      "selected_count": 3,
+      "value": "attrs:_make"
+    },
+    {
+      "coverage_status": "covered",
+      "eligible_count": 3,
+      "feature": "coarse_task_family",
+      "repo": "attrs",
+      "selected_count": 1,
+      "value": "attrs:_next_gen"
+    },
+    {
+      "coverage_status": "covered",
+      "eligible_count": 2,
+      "feature": "coarse_task_family",
+      "repo": "attrs",
+      "selected_count": 1,
+      "value": "attrs:validators"
+    },
+    {
+      "coverage_status": "covered",
+      "eligible_count": 4,
+      "feature": "time_bucket",
+      "repo": "attrs",
+      "selected_count": 1,
+      "value": "legacy_2018_or_earlier"
+    },
+    {
+      "coverage_status": "covered",
+      "eligible_count": 26,
+      "feature": "time_bucket",
+      "repo": "attrs",
+      "selected_count": 5,
+      "value": "middle_2019_2022"
+    },
+    {
+      "coverage_status": "covered",
+      "eligible_count": 2,
+      "feature": "editable_scope_bucket",
+      "repo": "attrs",
+      "selected_count": 1,
+      "value": "multi_module"
+    },
+    {
+      "coverage_status": "covered",
+      "eligible_count": 28,
+      "feature": "editable_scope_bucket",
+      "repo": "attrs",
+      "selected_count": 5,
+      "value": "single_module"
+    },
+    {
+      "coverage_status": "covered",
+      "eligible_count": 30,
+      "feature": "source_context_type_bucket",
+      "repo": "attrs",
+      "selected_count": 6,
+      "value": "issue_or_pr"
+    },
+    {
+      "coverage_status": "covered",
+      "eligible_count": 30,
+      "feature": "source_quality_bucket",
+      "repo": "attrs",
+      "selected_count": 6,
+      "value": "clean"
+    },
+    {
+      "coverage_status": "covered",
+      "eligible_count": 27,
+      "feature": "statement_specificity_bucket",
+      "repo": "attrs",
+      "selected_count": 5,
+      "value": "acceptable"
+    },
+    {
+      "coverage_status": "covered",
+      "eligible_count": 3,
+      "feature": "statement_specificity_bucket",
+      "repo": "attrs",
+      "selected_count": 1,
+      "value": "specific"
+    },
+    {
+      "coverage_status": "covered",
+      "eligible_count": 3,
+      "feature": "context_length_bucket",
+      "repo": "attrs",
+      "selected_count": 1,
+      "value": "medium"
+    },
+    {
+      "coverage_status": "covered",
+      "eligible_count": 27,
+      "feature": "context_length_bucket",
+      "repo": "attrs",
+      "selected_count": 5,
+      "value": "unknown"
+    },
+    {
+      "coverage_status": "gap",
+      "eligible_count": 3,
+      "feature": "coarse_task_family",
+      "repo": "boltons",
+      "selected_count": 0,
+      "value": "boltons:cacheutils"
+    },
+    {
+      "coverage_status": "gap",
+      "eligible_count": 1,
+      "feature": "coarse_task_family",
+      "repo": "boltons",
+      "selected_count": 0,
+      "value": "boltons:dictutils"
+    },
+    {
+      "coverage_status": "covered",
+      "eligible_count": 4,
+      "feature": "coarse_task_family",
+      "repo": "boltons",
+      "selected_count": 1,
+      "value": "boltons:funcutils"
+    },
+    {
+      "coverage_status": "covered",
+      "eligible_count": 5,
+      "feature": "coarse_task_family",
+      "repo": "boltons",
+      "selected_count": 1,
+      "value": "boltons:ioutils"
+    },
+    {
+      "coverage_status": "covered",
+      "eligible_count": 3,
+      "feature": "coarse_task_family",
+      "repo": "boltons",
+      "selected_count": 1,
+      "value": "boltons:iterutils"
+    },
+    {
+      "coverage_status": "gap",
+      "eligible_count": 1,
+      "feature": "coarse_task_family",
+      "repo": "boltons",
+      "selected_count": 0,
+      "value": "boltons:listutils"
+    },
+    {
+      "coverage_status": "gap",
+      "eligible_count": 1,
+      "feature": "coarse_task_family",
+      "repo": "boltons",
+      "selected_count": 0,
+      "value": "boltons:mathutils"
+    },
+    {
+      "coverage_status": "gap",
+      "eligible_count": 1,
+      "feature": "coarse_task_family",
+      "repo": "boltons",
+      "selected_count": 0,
+      "value": "boltons:queueutils"
+    },
+    {
+      "coverage_status": "covered",
+      "eligible_count": 6,
+      "feature": "coarse_task_family",
+      "repo": "boltons",
+      "selected_count": 1,
+      "value": "boltons:setutils"
+    },
+    {
+      "coverage_status": "covered",
+      "eligible_count": 3,
+      "feature": "coarse_task_family",
+      "repo": "boltons",
+      "selected_count": 1,
+      "value": "boltons:strutils"
+    },
+    {
+      "coverage_status": "covered",
+      "eligible_count": 5,
+      "feature": "coarse_task_family",
+      "repo": "boltons",
+      "selected_count": 1,
+      "value": "boltons:tbutils"
+    },
+    {
+      "coverage_status": "gap",
+      "eligible_count": 1,
+      "feature": "coarse_task_family",
+      "repo": "boltons",
+      "selected_count": 0,
+      "value": "boltons:timeutils"
+    },
+    {
+      "coverage_status": "gap",
+      "eligible_count": 1,
+      "feature": "coarse_task_family",
+      "repo": "boltons",
+      "selected_count": 0,
+      "value": "boltons:urlutils"
+    },
+    {
+      "coverage_status": "covered",
+      "eligible_count": 24,
+      "feature": "time_bucket",
+      "repo": "boltons",
+      "selected_count": 4,
+      "value": "legacy_2018_or_earlier"
+    },
+    {
+      "coverage_status": "covered",
+      "eligible_count": 8,
+      "feature": "time_bucket",
+      "repo": "boltons",
+      "selected_count": 1,
+      "value": "middle_2019_2022"
+    },
+    {
+      "coverage_status": "covered",
+      "eligible_count": 3,
+      "feature": "time_bucket",
+      "repo": "boltons",
+      "selected_count": 1,
+      "value": "recent_2023_or_later"
+    },
+    {
+      "coverage_status": "covered",
+      "eligible_count": 35,
+      "feature": "editable_scope_bucket",
+      "repo": "boltons",
+      "selected_count": 6,
+      "value": "single_module"
+    },
+    {
+      "coverage_status": "covered",
+      "eligible_count": 35,
+      "feature": "source_context_type_bucket",
+      "repo": "boltons",
+      "selected_count": 6,
+      "value": "issue_or_pr"
+    },
+    {
+      "coverage_status": "covered",
+      "eligible_count": 35,
+      "feature": "source_quality_bucket",
+      "repo": "boltons",
+      "selected_count": 6,
+      "value": "clean"
+    },
+    {
+      "coverage_status": "covered",
+      "eligible_count": 35,
+      "feature": "statement_specificity_bucket",
+      "repo": "boltons",
+      "selected_count": 6,
+      "value": "acceptable"
+    },
+    {
+      "coverage_status": "covered",
+      "eligible_count": 35,
+      "feature": "context_length_bucket",
+      "repo": "boltons",
+      "selected_count": 6,
+      "value": "unknown"
+    },
+    {
+      "coverage_status": "gap",
+      "eligible_count": 1,
+      "feature": "coarse_task_family",
+      "repo": "click",
+      "selected_count": 0,
+      "value": "click:_bashcomplete"
+    },
+    {
+      "coverage_status": "covered",
+      "eligible_count": 2,
+      "feature": "coarse_task_family",
+      "repo": "click",
+      "selected_count": 1,
+      "value": "click:_termui_impl"
+    },
+    {
+      "coverage_status": "covered",
+      "eligible_count": 15,
+      "feature": "coarse_task_family",
+      "repo": "click",
+      "selected_count": 2,
+      "value": "click:core"
+    },
+    {
+      "coverage_status": "covered",
+      "eligible_count": 5,
+      "feature": "coarse_task_family",
+      "repo": "click",
+      "selected_count": 1,
+      "value": "click:shell_completion"
+    },
+    {
+      "coverage_status": "gap",
+      "eligible_count": 1,
+      "feature": "coarse_task_family",
+      "repo": "click",
+      "selected_count": 0,
+      "value": "click:termui"
+    },
+    {
+      "coverage_status": "covered",
+      "eligible_count": 2,
+      "feature": "coarse_task_family",
+      "repo": "click",
+      "selected_count": 1,
+      "value": "click:testing"
+    },
+    {
+      "coverage_status": "covered",
+      "eligible_count": 4,
+      "feature": "coarse_task_family",
+      "repo": "click",
+      "selected_count": 1,
+      "value": "click:types"
+    },
+    {
+      "coverage_status": "covered",
+      "eligible_count": 4,
+      "feature": "time_bucket",
+      "repo": "click",
+      "selected_count": 1,
+      "value": "middle_2019_2022"
+    },
+    {
+      "coverage_status": "covered",
+      "eligible_count": 26,
+      "feature": "time_bucket",
+      "repo": "click",
+      "selected_count": 5,
+      "value": "recent_2023_or_later"
+    },
+    {
+      "coverage_status": "covered",
+      "eligible_count": 6,
+      "feature": "editable_scope_bucket",
+      "repo": "click",
+      "selected_count": 1,
+      "value": "multi_module"
+    },
+    {
+      "coverage_status": "covered",
+      "eligible_count": 1,
+      "feature": "editable_scope_bucket",
+      "repo": "click",
+      "selected_count": 1,
+      "value": "project_wide"
+    },
+    {
+      "coverage_status": "covered",
+      "eligible_count": 23,
+      "feature": "editable_scope_bucket",
+      "repo": "click",
+      "selected_count": 4,
+      "value": "single_module"
+    },
+    {
+      "coverage_status": "covered",
+      "eligible_count": 30,
+      "feature": "source_context_type_bucket",
+      "repo": "click",
+      "selected_count": 6,
+      "value": "public_context_repaired"
+    },
+    {
+      "coverage_status": "covered",
+      "eligible_count": 30,
+      "feature": "source_quality_bucket",
+      "repo": "click",
+      "selected_count": 6,
+      "value": "clean"
+    },
+    {
+      "coverage_status": "covered",
+      "eligible_count": 30,
+      "feature": "statement_specificity_bucket",
+      "repo": "click",
+      "selected_count": 6,
+      "value": "acceptable"
+    },
+    {
+      "coverage_status": "covered",
+      "eligible_count": 30,
+      "feature": "context_length_bucket",
+      "repo": "click",
+      "selected_count": 6,
+      "value": "short"
+    }
+  ],
+  "generated_at": "2026-05-30T03:29:02Z",
+  "input_artifact_digests": {
+    "policy_candidate_universe": "sha256:54bf651759c5d7448b79939fff87191abd4eeaf5640eac8c0f0e7e665cc12c6c",
+    "policy_click_repair_quality_overlay": "sha256:334850f21f880da1d9326cfddbb9e5843daf6d2331f11622e67d548269deb471",
+    "policy_task_table": "sha256:cdc97f499b4a1582eed8f9022d7f4d70bb74325381b1f0d50704bdc3eb35ff42"
+  },
+  "input_freeze_digest": "sha256:5cd75b30982ad0f9a90e0c1c6633d25c276ed7f4b5218789c8b9a61d38cc2e94",
+  "policy_id": "coverage_constrained_unweighted_v1",
+  "run_id": "phase1_candidate_policy_validation_protocol_20260530",
+  "schema_version": "barcarolle.phase1_candidate_policy_validation_protocol_output.v1",
+  "score_tables_read_for_selection": [],
+  "seed_and_tie_break_policy": {
+    "seed": 2026053001,
+    "tie_break_function": "sha256(policy_id, seed, repo, task_id)",
+    "tie_break_policy": "sha256_seeded_task_id_order"
+  },
+  "selected_count": 18,
+  "selected_count_by_repo": {
+    "attrs": 6,
+    "boltons": 6,
+    "click": 6
+  },
+  "selected_task_ids": [
+    "attrs__v2__044",
+    "attrs__v2__196",
+    "attrs__v2__211",
+    "attrs__v2__218",
+    "attrs__v2__264",
+    "attrs__v2__275",
+    "boltons__v2__009",
+    "boltons__v2__095",
+    "boltons__v2__133",
+    "boltons__v2__142",
+    "boltons__v2__163",
+    "boltons__v2__232",
+    "click__third__091",
+    "click__third__197",
+    "click__third__200",
+    "click__third__214",
+    "click__third__238",
+    "click__third__275"
+  ],
+  "selection_rows": [
+    {
+      "feature_values": {
+        "coarse_task_family": "attrs:_make",
+        "context_length_bucket": "unknown",
+        "editable_scope_bucket": "single_module",
+        "source_context_type_bucket": "issue_or_pr",
+        "source_quality_bucket": "clean",
+        "statement_specificity_bucket": "acceptable",
+        "time_bucket": "middle_2019_2022"
+      },
+      "repo": "attrs",
+      "selection_order": 1,
+      "task_id": "attrs__v2__196",
+      "tie_break_value": 1718034409220816853
+    },
+    {
+      "feature_values": {
+        "coarse_task_family": "attrs:_make",
+        "context_length_bucket": "medium",
+        "editable_scope_bucket": "multi_module",
+        "source_context_type_bucket": "issue_or_pr",
+        "source_quality_bucket": "clean",
+        "statement_specificity_bucket": "specific",
+        "time_bucket": "middle_2019_2022"
+      },
+      "repo": "attrs",
+      "selection_order": 2,
+      "task_id": "attrs__v2__218",
+      "tie_break_value": 13469712319525918272
+    },
+    {
+      "feature_values": {
+        "coarse_task_family": "attrs:_funcs",
+        "context_length_bucket": "unknown",
+        "editable_scope_bucket": "single_module",
+        "source_context_type_bucket": "issue_or_pr",
+        "source_quality_bucket": "clean",
+        "statement_specificity_bucket": "acceptable",
+        "time_bucket": "middle_2019_2022"
+      },
+      "repo": "attrs",
+      "selection_order": 3,
+      "task_id": "attrs__v2__264",
+      "tie_break_value": 4269284278290090004
+    },
+    {
+      "feature_values": {
+        "coarse_task_family": "attrs:_make",
+        "context_length_bucket": "unknown",
+        "editable_scope_bucket": "single_module",
+        "source_context_type_bucket": "issue_or_pr",
+        "source_quality_bucket": "clean",
+        "statement_specificity_bucket": "acceptable",
+        "time_bucket": "legacy_2018_or_earlier"
+      },
+      "repo": "attrs",
+      "selection_order": 4,
+      "task_id": "attrs__v2__044",
+      "tie_break_value": 1674082006906908815
+    },
+    {
+      "feature_values": {
+        "coarse_task_family": "attrs:_next_gen",
+        "context_length_bucket": "unknown",
+        "editable_scope_bucket": "single_module",
+        "source_context_type_bucket": "issue_or_pr",
+        "source_quality_bucket": "clean",
+        "statement_specificity_bucket": "acceptable",
+        "time_bucket": "middle_2019_2022"
+      },
+      "repo": "attrs",
+      "selection_order": 5,
+      "task_id": "attrs__v2__211",
+      "tie_break_value": 12504149809841549686
+    },
+    {
+      "feature_values": {
+        "coarse_task_family": "attrs:validators",
+        "context_length_bucket": "unknown",
+        "editable_scope_bucket": "single_module",
+        "source_context_type_bucket": "issue_or_pr",
+        "source_quality_bucket": "clean",
+        "statement_specificity_bucket": "acceptable",
+        "time_bucket": "middle_2019_2022"
+      },
+      "repo": "attrs",
+      "selection_order": 6,
+      "task_id": "attrs__v2__275",
+      "tie_break_value": 7449445156733907117
+    },
+    {
+      "fallback_status": {
+        "fallback_applied": false,
+        "fallback_design": null,
+        "fallback_reason": null,
+        "supported_feature_dimensions": [
+          "coarse_task_family",
+          "time_bucket",
+          "editable_scope_bucket",
+          "statement_specificity_bucket",
+          "context_length_bucket"
+        ]
+      },
+      "feature_values": {},
+      "repo": "attrs",
+      "selection_order": "summary",
+      "task_id": ""
+    },
+    {
+      "feature_values": {
+        "coarse_task_family": "boltons:setutils",
+        "context_length_bucket": "unknown",
+        "editable_scope_bucket": "single_module",
+        "source_context_type_bucket": "issue_or_pr",
+        "source_quality_bucket": "clean",
+        "statement_specificity_bucket": "acceptable",
+        "time_bucket": "legacy_2018_or_earlier"
+      },
+      "repo": "boltons",
+      "selection_order": 1,
+      "task_id": "boltons__v2__142",
+      "tie_break_value": 6474988192546834933
+    },
+    {
+      "feature_values": {
+        "coarse_task_family": "boltons:funcutils",
+        "context_length_bucket": "unknown",
+        "editable_scope_bucket": "single_module",
+        "source_context_type_bucket": "issue_or_pr",
+        "source_quality_bucket": "clean",
+        "statement_specificity_bucket": "acceptable",
+        "time_bucket": "middle_2019_2022"
+      },
+      "repo": "boltons",
+      "selection_order": 2,
+      "task_id": "boltons__v2__163",
+      "tie_break_value": 15231129625398269432
+    },
+    {
+      "feature_values": {
+        "coarse_task_family": "boltons:ioutils",
+        "context_length_bucket": "unknown",
+        "editable_scope_bucket": "single_module",
+        "source_context_type_bucket": "issue_or_pr",
+        "source_quality_bucket": "clean",
+        "statement_specificity_bucket": "acceptable",
+        "time_bucket": "legacy_2018_or_earlier"
+      },
+      "repo": "boltons",
+      "selection_order": 3,
+      "task_id": "boltons__v2__095",
+      "tie_break_value": 1373018730261185063
+    },
+    {
+      "feature_values": {
+        "coarse_task_family": "boltons:tbutils",
+        "context_length_bucket": "unknown",
+        "editable_scope_bucket": "single_module",
+        "source_context_type_bucket": "issue_or_pr",
+        "source_quality_bucket": "clean",
+        "statement_specificity_bucket": "acceptable",
+        "time_bucket": "legacy_2018_or_earlier"
+      },
+      "repo": "boltons",
+      "selection_order": 4,
+      "task_id": "boltons__v2__009",
+      "tie_break_value": 3277613214551440045
+    },
+    {
+      "feature_values": {
+        "coarse_task_family": "boltons:strutils",
+        "context_length_bucket": "unknown",
+        "editable_scope_bucket": "single_module",
+        "source_context_type_bucket": "issue_or_pr",
+        "source_quality_bucket": "clean",
+        "statement_specificity_bucket": "acceptable",
+        "time_bucket": "legacy_2018_or_earlier"
+      },
+      "repo": "boltons",
+      "selection_order": 5,
+      "task_id": "boltons__v2__133",
+      "tie_break_value": 4250506562868867658
+    },
+    {
+      "feature_values": {
+        "coarse_task_family": "boltons:iterutils",
+        "context_length_bucket": "unknown",
+        "editable_scope_bucket": "single_module",
+        "source_context_type_bucket": "issue_or_pr",
+        "source_quality_bucket": "clean",
+        "statement_specificity_bucket": "acceptable",
+        "time_bucket": "recent_2023_or_later"
+      },
+      "repo": "boltons",
+      "selection_order": 6,
+      "task_id": "boltons__v2__232",
+      "tie_break_value": 13014206747396073773
+    },
+    {
+      "fallback_status": {
+        "fallback_applied": true,
+        "fallback_design": "repo_stratified_by_target_profile",
+        "fallback_reason": "insufficient_feature_support",
+        "supported_feature_dimensions": [
+          "coarse_task_family",
+          "time_bucket"
+        ]
+      },
+      "feature_values": {},
+      "repo": "boltons",
+      "selection_order": "summary",
+      "task_id": ""
+    },
+    {
+      "feature_values": {
+        "coarse_task_family": "click:core",
+        "context_length_bucket": "short",
+        "editable_scope_bucket": "single_module",
+        "source_context_type_bucket": "public_context_repaired",
+        "source_quality_bucket": "clean",
+        "statement_specificity_bucket": "acceptable",
+        "time_bucket": "recent_2023_or_later"
+      },
+      "repo": "click",
+      "selection_order": 1,
+      "task_id": "click__third__214",
+      "tie_break_value": 2420713690337926373
+    },
+    {
+      "feature_values": {
+        "coarse_task_family": "click:_termui_impl",
+        "context_length_bucket": "short",
+        "editable_scope_bucket": "multi_module",
+        "source_context_type_bucket": "public_context_repaired",
+        "source_quality_bucket": "clean",
+        "statement_specificity_bucket": "acceptable",
+        "time_bucket": "middle_2019_2022"
+      },
+      "repo": "click",
+      "selection_order": 2,
+      "task_id": "click__third__091",
+      "tie_break_value": 4808031229816100750
+    },
+    {
+      "feature_values": {
+        "coarse_task_family": "click:shell_completion",
+        "context_length_bucket": "short",
+        "editable_scope_bucket": "single_module",
+        "source_context_type_bucket": "public_context_repaired",
+        "source_quality_bucket": "clean",
+        "statement_specificity_bucket": "acceptable",
+        "time_bucket": "recent_2023_or_later"
+      },
+      "repo": "click",
+      "selection_order": 3,
+      "task_id": "click__third__238",
+      "tie_break_value": 404050519039354113
+    },
+    {
+      "feature_values": {
+        "coarse_task_family": "click:types",
+        "context_length_bucket": "short",
+        "editable_scope_bucket": "single_module",
+        "source_context_type_bucket": "public_context_repaired",
+        "source_quality_bucket": "clean",
+        "statement_specificity_bucket": "acceptable",
+        "time_bucket": "recent_2023_or_later"
+      },
+      "repo": "click",
+      "selection_order": 4,
+      "task_id": "click__third__197",
+      "tie_break_value": 378890973982908346
+    },
+    {
+      "feature_values": {
+        "coarse_task_family": "click:testing",
+        "context_length_bucket": "short",
+        "editable_scope_bucket": "single_module",
+        "source_context_type_bucket": "public_context_repaired",
+        "source_quality_bucket": "clean",
+        "statement_specificity_bucket": "acceptable",
+        "time_bucket": "recent_2023_or_later"
+      },
+      "repo": "click",
+      "selection_order": 5,
+      "task_id": "click__third__200",
+      "tie_break_value": 3782696497792500841
+    },
+    {
+      "feature_values": {
+        "coarse_task_family": "click:core",
+        "context_length_bucket": "short",
+        "editable_scope_bucket": "project_wide",
+        "source_context_type_bucket": "public_context_repaired",
+        "source_quality_bucket": "clean",
+        "statement_specificity_bucket": "acceptable",
+        "time_bucket": "recent_2023_or_later"
+      },
+      "repo": "click",
+      "selection_order": 6,
+      "task_id": "click__third__275",
+      "tie_break_value": 8634566065843094870
+    },
+    {
+      "fallback_status": {
+        "fallback_applied": false,
+        "fallback_design": null,
+        "fallback_reason": null,
+        "supported_feature_dimensions": [
+          "coarse_task_family",
+          "time_bucket",
+          "editable_scope_bucket"
+        ]
+      },
+      "feature_values": {},
+      "repo": "click",
+      "selection_order": "summary",
+      "task_id": ""
+    }
+  ],
+  "terminal_outcomes_loaded": false
+}

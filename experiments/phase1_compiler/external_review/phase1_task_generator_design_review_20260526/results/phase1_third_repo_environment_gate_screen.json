@@ -1,0 +1,43 @@
+{
+  "generated_at": "2026-05-26T09:07:46Z",
+  "recommendation": "no_third_repo_passed_local_gate",
+  "recommended_third_repo": "",
+  "repo_screens": [
+    {
+      "benchmark_grade": true,
+      "candidate_count": 16,
+      "certified_candidate_count": 6,
+      "external_service_risk": "low",
+      "fail_reasons": [
+        "fewer_than_30_locally_certified_candidates"
+      ],
+      "gate_status": "failed",
+      "near_certified_count": 0,
+      "reference_failure_count": 0,
+      "release_status": "benchmark_grade_candidate",
+      "repo_id": "toolz",
+      "screening_basis": "existing local repo-history artifacts plus same 30-certified-candidate gate"
+    },
+    {
+      "benchmark_grade": true,
+      "candidate_count": 16,
+      "certified_candidate_count": 12,
+      "external_service_risk": "low",
+      "fail_reasons": [
+        "fewer_than_30_locally_certified_candidates"
+      ],
+      "gate_status": "failed",
+      "near_certified_count": 4,
+      "reference_failure_count": 1,
+      "release_status": "pilot_grade",
+      "repo_id": "humanize",
+      "screening_basis": "existing local repo-history artifacts plus same 30-certified-candidate gate"
+    }
+  ],
+  "run_id": "phase1_historical_environment_synthesis_gate_20260526",
+  "schema_version": "barcarolle.phase1_historical_environment_synthesis_gate.v1.third_repo_environment_gate_screen.v1",
+  "screened_repos": [
+    "toolz",
+    "humanize"
+  ]
+}

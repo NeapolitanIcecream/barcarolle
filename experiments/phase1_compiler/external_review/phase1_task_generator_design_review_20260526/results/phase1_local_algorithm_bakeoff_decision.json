@@ -1,0 +1,69 @@
+{
+  "allowed_claims_made": [
+    "baseline_comparison_completed",
+    "block_randomized_stratified_candidate_evaluated",
+    "local_algorithm_bakeoff_completed",
+    "metadata_objective_underidentification_measured",
+    "paid_readiness_gate_not_met",
+    "rolling_origin_or_pseudo_future_validation_completed",
+    "shrinkage_weighted_candidate_evaluated",
+    "stratified_mainline_recommended",
+    "weighted_pilot_metrics_reproduced"
+  ],
+  "artifact_paths": {
+    "ablation": "experiments/phase1_compiler/results/phase1_local_algorithm_bakeoff_ablation.json",
+    "candidate_designs": "experiments/phase1_compiler/results/phase1_local_algorithm_bakeoff_candidate_designs.json",
+    "feature_schema": "experiments/phase1_compiler/results/phase1_local_algorithm_bakeoff_feature_schema.json",
+    "paid_readiness": "experiments/phase1_compiler/results/phase1_local_algorithm_bakeoff_paid_readiness_gate.json",
+    "preflight": "experiments/phase1_compiler/results/phase1_local_algorithm_bakeoff_preflight.json",
+    "reproduction": "experiments/phase1_compiler/results/phase1_local_algorithm_bakeoff_reproduction.json",
+    "shrinkage_weights": "experiments/phase1_compiler/results/phase1_local_algorithm_bakeoff_shrinkage_weights.json",
+    "target_profile": "experiments/phase1_compiler/results/phase1_local_algorithm_bakeoff_target_profile_prototype.json",
+    "task_audit": "experiments/phase1_compiler/results/phase1_local_algorithm_bakeoff_task_audit.json",
+    "underidentification": "experiments/phase1_compiler/results/phase1_local_algorithm_bakeoff_underidentification.json",
+    "validation_results": "experiments/phase1_compiler/results/phase1_local_algorithm_bakeoff_validation_results.json"
+  },
+  "best_local_candidate": "temporal_recent_baseline",
+  "best_local_candidate_validation_summary": {
+    "MAE_max": 0.0,
+    "MAE_mean": 0.0,
+    "MAE_min": 0.0,
+    "MAE_sample_variance": 0.0,
+    "catastrophic_miss_rate_mean": 0.0,
+    "max_absolute_gap_max": 0.0,
+    "threshold_pass_rate_mean": 1.0,
+    "variant_count": 1
+  },
+  "disallowed_claims_made": [],
+  "final_decision": "not_ready_keep_stratified_mainline",
+  "followup_runbook_written_by_worker": false,
+  "generated_at": "2026-05-26T06:18:25Z",
+  "mainline_recommendation": "keep_repo_stratified_as_mainline",
+  "modern_stack_changes": {
+    "decision": "standard_library_only",
+    "dependencies_added": []
+  },
+  "new_paid_acut_calls_made": false,
+  "new_paid_llm_calls_made": false,
+  "paid_readiness_status": "not_ready_keep_stratified_mainline",
+  "raw_artifacts_committed": false,
+  "research_questions": {
+    "RQ1": "Yes. The committed weighted pilot metrics reproduce exactly from the committed score table and release candidates.",
+    "RQ2": "Yes. The old metadata objective is `confirmed` underidentified; near-optimal metadata splits have materially different observed gaps.",
+    "RQ3": "No stable promotion signal. Block-randomized stratified candidates were evaluated locally, but seed/window evidence is too sparse to beat the simple stratified baseline conservatively.",
+    "RQ4": "Capped shrinkage weights did not add a reliable local signal after blocking; sparse support led to uniform fallback or reference-only weighting.",
+    "RQ5": "No. Local supply and retrospective evidence are insufficient for another paid replication; retain the simple stratified mainline for now."
+  },
+  "run_id": "phase1_local_algorithm_bakeoff_20260526",
+  "schema_version": "barcarolle.phase1_local_algorithm_bakeoff_output.v1",
+  "smallest_blocker": "eligible certified task supply below 20-30 per target repo and no stable 15%+ local MAE improvement over stratified baseline",
+  "status": "complete",
+  "supporting_counts": {
+    "candidate_design_count": 8,
+    "feature_row_count": 22,
+    "validation_variant_count": 16,
+    "weighted_candidate_count": 2
+  },
+  "underidentification_status": "confirmed",
+  "weighted_pilot_metrics_reproduced": true
+}

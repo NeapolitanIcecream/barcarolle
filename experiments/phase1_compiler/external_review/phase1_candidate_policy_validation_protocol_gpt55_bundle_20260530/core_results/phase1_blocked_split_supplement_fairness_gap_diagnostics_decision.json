@@ -1,0 +1,46 @@
+{
+  "action_matrix": "experiments/phase1_compiler/results/phase1_blocked_split_supplement_fairness_gap_diagnostics_action_matrix.json",
+  "adapter_difference_as_acut_difference": "yes",
+  "adapter_disagreement_summary": {
+    "main_concentration": "broad_across_repos_with_largest_rates_in_click_and_boltons",
+    "overall": {
+      "both_fail": 21,
+      "both_pass": 14,
+      "codex_only_pass": 3,
+      "codex_pass_rate_on_paired_tasks": 0.2881,
+      "disagreement_count": 24,
+      "disagreement_rate": 0.4068,
+      "kilo_minus_codex_pass_rate_delta": 0.3051,
+      "kilo_only_pass": 21,
+      "kilo_pass_rate_on_paired_tasks": 0.5932,
+      "paired_task_count": 59
+    }
+  },
+  "adapter_fairness": "fair_enough_to_interpret_as_acut_difference",
+  "artifact": "decision",
+  "decision_label": "supplement_fair_enough_with_minor_logging_action",
+  "endpoint_model_config_evidence": "clean",
+  "followup_runbook_written_by_worker": false,
+  "generated_at": "2026-05-29T08:10:21Z",
+  "invalid_output_summary": {
+    "classification": "adapter_output_contract_violation",
+    "recommended_action": "minor no-paid logging and Codex output-contract inspection",
+    "threatens_supplement_conclusion": false
+  },
+  "model_only_claim_allowed": false,
+  "more_paid_cells_recommended_now": false,
+  "new_paid_cells_run_by_this_diagnostic": 0,
+  "predictive_validity_established": false,
+  "previous_split_comparison": {
+    "diagnostic_label": "about_the_same_or_slightly_worse",
+    "predictive_validity_established": false
+  },
+  "raw_artifacts_committed": false,
+  "repo_level_gap_priorities": [
+    "codex_workspace click gap 0.3000 with click title-only caveat",
+    "kilo_workspace boltons gap 0.2000",
+    "codex_workspace attrs gap 0.1444 with one non-scoreable B_eval denominator caveat"
+  ],
+  "run_id": "phase1_blocked_split_supplement_fairness_gap_diagnostics_20260529",
+  "schema_version": "barcarolle.phase1_blocked_split_supplement_fairness_gap_diagnostics_output.v1"
+}

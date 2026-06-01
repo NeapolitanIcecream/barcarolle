@@ -1,0 +1,11 @@
+task_id,split,weight,certification_status,counts_toward_benchmark_grade,module_or_package,task_type_proxy
+toolz__hist__001,B_real,1.0,certified,True,['functoolz'],feature_or_api_extension
+toolz__hist__002,B_real,1.0,certified,True,['functoolz'],feature_or_api_extension
+toolz__hist__003,B_real,1.0,certified,True,['functoolz'],behavior_or_maintenance
+toolz__hist__004,W_real,1.0,certified,True,['functoolz'],feature_or_api_extension
+toolz__hist__010,W_real,1.0,certified,True,['functoolz'],feature_or_api_extension
+toolz__hist__016,W_real,1.0,certified,True,['itertoolz'],bug_or_behavior_fix
+click__rbench__001,G_mini,1.0,archived_click_release_metadata,False,['core'],behavior_or_maintenance
+click__rbench__002,G_mini,1.0,archived_click_release_metadata,False,['missing'],behavior_or_maintenance
+click__rbench__003,G_mini,1.0,archived_click_release_metadata,False,"['core', 'termui']",behavior_or_maintenance
+click__rbench__004,G_mini,1.0,archived_click_release_metadata,False,['missing'],behavior_or_maintenance
