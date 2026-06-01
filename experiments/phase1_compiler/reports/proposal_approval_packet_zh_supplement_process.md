@@ -69,3 +69,40 @@ Boundary status:
   statements, hidden-oracle material, and completed experiment decisions were
   not changed.
 - No Chinese reader-facing artifacts have been drafted yet.
+
+## Step 1: Chinese Glossary And Handoff
+
+Recorded: 2026-06-01.
+
+Created:
+
+```text
+docs/research/m6-approval-packet-zh/README.md
+docs/research/m6-approval-packet-zh/terminology-glossary-v1.zh.md
+```
+
+The README records that, after this supplement passes, the Chinese packet is
+the active editing surface for later reviewer-facing revisions. It also records
+that the English M6 packet remains the source/reference version and V5 remains
+the long-form source of truth.
+
+The glossary stabilizes concise Chinese terms for Barcarolle, repo-specific
+benchmark, benchmark compiler, ACUT, predictive validity, MAE, fallback, tuning
+and regression feedback, budgeted and gated evaluation, and claim boundary.
+
+User-owned placeholders remain visible in Chinese:
+
+```text
+[待用户决定：项目人员配置]
+[待用户决定：项目周期]
+[待用户决定：有闸门 ACUT 评测的预算上限]
+[待用户决定：审批路径或审批负责人]
+[待用户决定：对外材料中的交付负责人类别]
+```
+
+Boundary status:
+
+- Predictive validity remains unproven.
+- Tuning-loop improvement remains unproven.
+- No paid ACUT solver calls, paid LLM calls, external reviewer calls, public
+  browsing, generated images, or decorative raster assets were used.
