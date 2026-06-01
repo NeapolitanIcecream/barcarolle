@@ -106,3 +106,69 @@ Boundary status:
 - Tuning-loop improvement remains unproven.
 - No paid ACUT solver calls, paid LLM calls, external reviewer calls, public
   browsing, generated images, or decorative raster assets were used.
+
+## Step 2: Chinese Markdown Packet
+
+Recorded: 2026-06-01.
+
+Created:
+
+```text
+docs/research/m6-approval-packet-zh/executive-summary-v1.zh.md
+docs/research/m6-approval-packet-zh/approval-deck-outline-v1.zh.md
+docs/research/m6-approval-packet-zh/appendix-evidence-index-v1.zh.md
+```
+
+Source artifacts:
+
+- `docs/research/m6-approval-packet/executive-summary-v1.md`
+- `docs/research/m6-approval-packet/approval-deck-outline-v1.md`
+- `docs/research/m6-approval-packet/appendix-evidence-index-v1.md`
+- `docs/research/barcarolle-proposal-report-v5.md`
+
+Localization notes:
+
+- The Chinese text is a decision-facing rewrite, not a sentence-by-sentence
+  literal translation.
+- The English M6 packet remains the source/reference version.
+- V5 remains the long-form source of truth.
+- User-owned placeholders remain visible in Chinese.
+
+Key-number preservation:
+
+```text
+0.3148
+0.7481
+0.25
+0.125
+120/120
+1.0
+30/30
+0.209
+0.2149
+0.0059
+93.4%
+6/18
+6/6
+1000
+```
+
+Non-claim preservation:
+
+- Predictive validity remains unproven.
+- Tuning-loop improvement remains unproven.
+- Adapter differences are not reported as model-only superiority.
+- Paid evaluation remains budgeted and gated.
+
+Audit commands run after drafting:
+
+```bash
+rg -n "0\.3148|0\.7481|0\.25|0\.125|120/120|1\.0|30/30|0\.209|0\.2149|0\.0059|93\.4%|6/18|6/6|1000" docs/research/m6-approval-packet-zh/{executive-summary-v1.zh.md,approval-deck-outline-v1.zh.md,appendix-evidence-index-v1.zh.md}
+rg -n "validated predictive benchmark compiler|established predictive validity|tuning validation established|improves agent tuning|multi-ACUT residual validity established" docs/research/m6-approval-packet-zh/*.md
+rg -n "已证明预测效度|预测效度已(经)?建立|已经建立预测效度|已经证明.*调优|调优.*已经证明|已证明.*tuning|已验证.*调优闭环|模型能力更强" docs/research/m6-approval-packet-zh/*.md
+rg -n "/Users/chenmohan/Downloads" docs/research/m6-approval-packet-zh/*.md
+git diff --check
+```
+
+Expected result: key-number search returns all required numbers; overclaim and
+local-path checks return no matches; `git diff --check` passes.
