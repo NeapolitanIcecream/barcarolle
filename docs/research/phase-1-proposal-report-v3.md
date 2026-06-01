@@ -244,7 +244,8 @@ or general benchmark comparators can be added when candidate supply, licensing,
 and certification permit a clean comparison.
 
 Primary reporting should be by named ACUT configuration. A pooled summary can
-be reported as secondary context only when the estimand defines it in advance.
+be reported as secondary context only when the target quantity defines it in
+advance.
 This matters because the current evidence is stronger for Kilo than for Codex
 under the existing workspace adapters. That difference is an ACUT-configuration
 finding, not evidence that only the model changed.
@@ -373,7 +374,7 @@ Actual spending should wait for a frozen protocol and current endpoint pricing.
 Response: The failed design should not be defended. It shows that naive
 high-dimensional metadata matching and uncalibrated weights are unsafe under
 sparse support. The broader compiler question remains open because selection,
-support thresholds, fallback handling, and validation design can all change the
+support checks, fallback handling, and validation design can all change the
 benchmark estimate.
 
 Mitigation: keep the old weighted design as a negative control, require support

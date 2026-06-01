@@ -194,3 +194,31 @@ as project work rather than internal failure labels.
 Acceptance evidence: the evidence section preserves the numeric evidence from
 V2, avoids milestone-dependent headings, and keeps the current evidence
 traction-only.
+
+## Step 5: Validation And Project Plan Repair
+
+Reviewed and tightened the validation and project-plan sections.
+
+Main-body validation framing:
+
+- freeze the release and validation rules before future outcomes are joined;
+- separate true future holdout, preregistered rolling-origin evaluation, and
+  retrospective replay by claim strength;
+- compare against temporal, unweighted, stratified, and many-seed random
+  baselines;
+- report by named ACUT configuration, with pooled summaries only as secondary
+  context when predefined;
+- explain MAE in plain English and keep detailed thresholds in appendices.
+
+Project-plan framing:
+
+- "approved project" work now means compiler algorithm development, task
+  supply certification, release construction, validation execution, and
+  reporting/governance;
+- budgeted ACUT evaluation is handled as a gated project resource;
+- exact duration, staffing, evaluation budget, and approval-artifact format
+  remain bracketed decisions.
+
+Acceptance evidence: the validation section is understandable without a
+protocol dump, paid evaluation is an ordinary resource item under frozen
+conditions, and the project plan describes work after approval.
