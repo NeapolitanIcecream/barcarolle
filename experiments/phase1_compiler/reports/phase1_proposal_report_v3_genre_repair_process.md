@@ -222,3 +222,23 @@ Project-plan framing:
 Acceptance evidence: the validation section is understandable without a
 protocol dump, paid evaluation is an ordinary resource item under frozen
 conditions, and the project plan describes work after approval.
+
+## Step 6: Risks, Deliverables, And Appendices Repair
+
+Revised the risk section as proposal risks with project mitigations:
+
+- preliminary evidence may not generalize;
+- task supply may be thin or biased;
+- benchmark selection may fail to beat simple baselines;
+- fallback/composite selection may narrow the claim;
+- adapter-specific results may not generalize across ACUT configurations;
+- future validation could become post-hoc without freezing;
+- evaluation budget could be spent before evidence is ready.
+
+Deliverables now describe approved-project outputs rather than already-produced
+process artifacts. Appendices keep the claim boundary, evidence index, protocol
+details, and public citation bibliography as support for the main argument.
+
+Acceptance evidence: the risk section is intelligible to proposal readers,
+deliverables do not list internal execution artifacts as project deliverables,
+and appendices support the main argument without taking over the report.

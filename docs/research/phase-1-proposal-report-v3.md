@@ -369,6 +369,16 @@ Actual spending should wait for a frozen protocol and current endpoint pricing.
 
 ## 9. Risks, Objections, And Mitigations
 
+### Objection: Preliminary evidence may not generalize.
+
+Response: Correct. The current evidence comes from a small, retrospective,
+three-repo setting with adapter and repo fragility. It supports project
+approval, not a broad method claim.
+
+Mitigation: require future holdout or preregistered rolling-origin evidence,
+report by named ACUT configuration, expand only when source support permits it,
+and narrow claims when a repo, adapter, or time window lacks support.
+
 ### Objection: The failed weighted design shows the compiler idea failed.
 
 Response: The failed design should not be defended. It shows that naive
@@ -392,7 +402,18 @@ Mitigation: treat generated and external tasks as source adapters, require
 local certification before release inclusion, and keep predictive benchmark
 compilation as the contribution.
 
-### Objection: The retrospective edge is too small.
+### Objection: Task supply may be too thin or biased.
+
+Response: Sparse or biased supply can make a release look more precise than it
+is. The boltons fallback result is a concrete warning: a selector can become a
+composite because the supported feature space is too thin.
+
+Mitigation: require source-quality certification, candidate-pool support checks,
+source-reservoir accounting, and explicit insufficient-support labels. When
+support cannot be repaired, narrow the release claim instead of forcing a
+coverage-policy result.
+
+### Objection: Benchmark selection may fail to beat simple baselines.
 
 Response: Correct. The current edge is traction evidence only. It shows enough
 signal to justify optimization and validation design work, but not enough to
