@@ -19,6 +19,7 @@ Checked report:
 | Paid-evaluation framing | pass | V5 frames budgeted ACUT evaluation as a gated project resource after releases, baselines, score joins, and success criteria are frozen. |
 | Evidence accuracy | pass | V5 preserves the key numbers: weighted gaps `0.3148` and `0.7481`, simple baselines `0.25` and `0.125`, `120/120` cells, `30/30` click repairs, candidate MAE `0.209`, best simple aggregate baseline `0.2149`, edge `0.0059`, random beats/ties share `93.4%`, and fallback `6/18` overall with boltons `6/6`. |
 | Artifact hygiene | pass | V5 references committed sanitized evidence, does not include raw prompts, raw completions, ACUT transcripts, workspaces, raw diffs, local planning-file paths, hidden verifier material, or new source/task/split artifacts, and keeps raw evidence paths out of the reader-facing report. |
+| Approval packet status | pass | The combined approval packet now exists under `docs/research/m6-approval-packet/`, with PPTX deck, one-page summary, deck outline, evidence appendix, and packet checklist. |
 
 ## Audit Commands
 
@@ -40,8 +41,7 @@ Remaining items are reviewer/coordinator decisions before sending the approval
 packet:
 
 - accept or revise `docs/research/barcarolle-proposal-report-v5.md`;
-- execute `docs/experiments/proposal-approval-packet-m6-runbook.md` to produce
-  the combined approval packet;
+- review the completed approval packet under `docs/research/m6-approval-packet/`;
 - set project duration and staffing assumptions;
 - set the budget ceiling and approval path for gated ACUT evaluation;
 - assign reviewer-facing deliverable owner categories.

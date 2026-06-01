@@ -212,3 +212,30 @@ Acceptance evidence:
 - PPTX text checks passed with no intentional exceptions;
 - `git diff --check` passed;
 - deck was visually reviewed through artifact-tool rendered previews.
+
+## Step 5: Update Handoff State
+
+Updated:
+
+```text
+docs/research/phase-1-proposal-roadmap-and-claim-planning.md
+docs/research/phase-1-proposal-report-reviewer-ready-checklist.md
+PROCESS.md
+```
+
+Handoff changes:
+
+- roadmap now marks the approval packet work complete and points to the packet
+  artifacts;
+- reviewer-ready checklist now records the approval packet status;
+- `PROCESS.md` now treats the packet as produced, keeps V5 as the long-form
+  source of truth, and lists remaining user-owned placeholders;
+- stale waiting language for the approval packet was removed from the roadmap.
+
+Acceptance evidence:
+
+- handoff docs point to the packet under `docs/research/m6-approval-packet/`;
+- `PROCESS.md` remains concise;
+- predictive validity and tuning-loop improvement remain unproven;
+- user-owned staffing, duration, budget-ceiling, approval-path, and owner
+  category values are listed rather than invented.

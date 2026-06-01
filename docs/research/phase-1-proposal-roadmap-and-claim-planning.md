@@ -423,9 +423,8 @@ Completed outputs:
 - `experiments/phase1_compiler/reports/phase1_proposal_report_v3_genre_repair_decision.md`
 - `experiments/phase1_compiler/results/phase1_proposal_report_v3_genre_repair_decision.json`
 
-V3 supersedes V2 as the active proposal report for proposal use. V2 remains an
-evidence-safe source draft and traceability artifact. M6 should wait until V3
-is accepted by the user/coordinator.
+V3 superseded V2 for proposal use, then was superseded by later reader-facing
+drafts. V2 remains an evidence-safe source draft and traceability artifact.
 
 ### M5c: Proposal Report V4 Agent-Tuning Integration
 
@@ -486,13 +485,13 @@ Completed outputs:
 - `experiments/phase1_compiler/reports/proposal_report_v5_evidence_manifest.md`
 - `experiments/phase1_compiler/results/proposal_report_v5_phase_label_cleanup_decision.json`
 
-V5 supersedes V4 as the active proposal report for proposal use. V4 remains the
-agent-tuning integration source draft. M6 should wait until V5 is accepted by
-the user/coordinator.
+V5 supersedes V4 as the active proposal report for proposal use and remains
+the long-form source of truth for the approval packet. V4 remains the
+agent-tuning integration source draft.
 
 ### M6: Proposal Approval Packet
 
-Status: ready to execute after V5 acceptance.
+Status: complete.
 
 Purpose:
 
@@ -513,7 +512,20 @@ Runbook:
 docs/experiments/proposal-approval-packet-m6-runbook.md
 ```
 
-User-owned values to leave as placeholders unless provided before execution:
+Completed outputs:
+
+- `docs/research/m6-approval-packet/barcarolle-approval-deck-v1.pptx`
+- `docs/research/m6-approval-packet/executive-summary-v1.md`
+- `docs/research/m6-approval-packet/approval-deck-outline-v1.md`
+- `docs/research/m6-approval-packet/appendix-evidence-index-v1.md`
+- `docs/research/m6-approval-packet/approval-packet-checklist-v1.md`
+
+M6 converted V5 into a decision-facing approval packet while preserving the
+claim boundary: current evidence supports project approval and a credible
+validation path, but predictive validity and tuning-loop improvement remain
+unproven.
+
+User-owned values still left as placeholders:
 
 - staffing and duration;
 - conditional paid-validation budget ceiling and approval path;
@@ -534,10 +546,9 @@ drive the next few days unless the v1 P0 placeholders expose a direct need:
 
 ## 9. Immediate Next Step
 
-Execute `docs/experiments/proposal-approval-packet-m6-runbook.md` to convert
-`docs/research/barcarolle-proposal-report-v5.md` into the combined approval
-packet. The approval packet should be decision-facing: PPTX first, one-page
-summary second, evidence appendix third, and V5 as the long-form source of
-truth. Predictive validity remains future work; project-scale paid ACUT
-evaluation should be budgeted and gated by frozen protocols rather than framed
-as prohibited in the proposal report.
+Review the M6 approval packet and fill or explicitly leave visible the
+user-owned staffing, duration, gated evaluation budget ceiling, approval-path,
+and owner-category placeholders before sending the packet to reviewers.
+Predictive validity remains future work; project-scale paid ACUT evaluation
+should be budgeted and gated by frozen protocols rather than framed as
+prohibited in the proposal report.

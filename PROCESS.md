@@ -183,29 +183,35 @@ Canonical reports and runbooks:
 
 ### Open Follow-Ups
 
-Current next action: execute
-`docs/experiments/proposal-approval-packet-m6-runbook.md` to convert
-`docs/research/barcarolle-proposal-report-v5.md` into a combined approval
-packet. The packet should use a PPTX deck as the primary artifact, with a
-one-page executive summary and concise evidence appendix. Leave staffing,
-duration, evaluation budget ceiling, and approval-path values as placeholders
-unless the user supplies them.
+Current state: the combined approval packet has been produced under
+`docs/research/m6-approval-packet/`. The primary artifact is
+`barcarolle-approval-deck-v1.pptx`, supported by a one-page executive summary,
+deck outline, evidence appendix, and packet checklist. V5 remains the
+long-form source of truth.
+
+Current next action: review the approval packet and fill or explicitly leave
+visible the user-owned staffing, duration, gated evaluation budget ceiling,
+approval-path, and owner-category placeholders before reviewer circulation.
 
 Do not run more paid ACUT cells by default. Future project-scale paid
 evaluation should be budgeted and gated by frozen releases, baselines,
 score-join rules, and success criteria. Predictive validity and tuning-loop
 improvement remain unproven.
 
-Historical proposal milestones M1 through M5d are complete and summarized in
+Historical proposal milestones M1 through M6 are complete and summarized in
 `docs/research/phase-1-proposal-roadmap-and-claim-planning.md`. Do not reopen
 old proposal drafts unless V5 has a blocking factual or claim-boundary issue.
 
 Current canonical links:
 
 - `docs/research/barcarolle-proposal-report-v5.md`
-- `docs/experiments/proposal-approval-packet-m6-runbook.md`
+- `docs/research/m6-approval-packet/barcarolle-approval-deck-v1.pptx`
+- `docs/research/m6-approval-packet/executive-summary-v1.md`
+- `docs/research/m6-approval-packet/appendix-evidence-index-v1.md`
+- `docs/research/m6-approval-packet/approval-packet-checklist-v1.md`
 - `docs/research/phase-1-proposal-roadmap-and-claim-planning.md`
 - `docs/research/phase-1-proposal-report-reviewer-ready-checklist.md`
+- `docs/experiments/proposal-approval-packet-m6-runbook.md`
 - `experiments/phase1_compiler/reports/proposal_report_v5_phase_label_cleanup_decision.md`
 - `experiments/phase1_compiler/reports/proposal_report_v5_evidence_manifest.md`
 - `docs/research/phase-1-proposal-evidence-package.md`
