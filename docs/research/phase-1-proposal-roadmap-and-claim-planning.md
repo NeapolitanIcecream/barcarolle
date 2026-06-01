@@ -186,30 +186,14 @@ input to project strategy, not a replacement for the north-star framing.
 ## 6. Active Proposal Report Pull List
 
 The active proposal report is now
-`docs/research/phase-1-proposal-report-v1.md`. It is a final-shape
-proposal-approval draft with placeholders, not a current-state report.
+`docs/research/phase-1-proposal-report-v3.md`. V1 remains the structural
+reference, and V2 remains the evidence-safe source draft and traceability
+artifact.
 
-Remaining work should be pulled by the report's P0 placeholders and the M2
-triage route map in
-`docs/research/phase-1-proposal-p0-placeholder-triage.md`. The highest
-priority groups are:
-
-- related-work comparison and reviewer-facing citations;
-- north-star validation figure and compiler architecture figure;
-- candidate benchmark assembly pseudocode and release artifact schema;
-- preliminary evidence summary table;
-- many-seed random baseline distribution, baseline envelope, and coverage
-  objective ablation;
-- fallback-share threshold and `boltons` fallback treatment;
-- estimand and adapter-claim wording;
-- catastrophic-miss threshold, invalid-cell sensitivity rule, and joint
-  success gate;
-- power/budget note, no-paid staffing/duration, and conditional paid-validation
-  budget ceiling;
-- deliverable acceptance criteria and owners.
-
-The report should not be treated as reviewer-ready until each P0 placeholder is
-filled, explicitly deferred, or downgraded with a clear reason.
+The former V1 pull-list items have either been filled, translated into V3, or
+routed to later approval decisions. Remaining work is now reviewer/coordinator
+review of V3 plus decisions about approval artifact format, staffing/duration,
+budget ceiling for gated ACUT evaluation, and deliverable owner categories.
 
 ## 7. Milestone Roadmap
 
@@ -406,9 +390,46 @@ prediction-error metric, benchmark selection changes it, and the current
 candidate beats/ties `93.4%` of 1000 same-budget random selections while still
 falling short of future validation standards.
 
+Post-M5 user review found a report-genre regression. V2 is evidence-safe but
+not yet acceptable as the final proposal report because it leaks internal
+milestone vocabulary, treats paid-evaluation execution safeguards as proposal
+premises, and lets the back half read like a protocol/process packet rather
+than a reader-facing project proposal.
+
+### M5b: Proposal Report V3 Genre Repair
+
+Status: complete.
+
+Purpose:
+
+```text
+Repair v2 into a proposal report that preserves the M1/V1 final-shape
+structure unless a reader-facing reason requires a change. Use v2's evidence,
+citations, and claim boundary, but remove internal process vocabulary and
+reframe paid ACUT evaluation as a normal budgeted project activity after
+protocols and success criteria are frozen.
+```
+
+Runbook:
+
+```text
+docs/experiments/phase-1-proposal-report-v3-genre-repair-runbook.md
+```
+
+Completed outputs:
+
+- `docs/research/phase-1-proposal-report-v3.md`
+- `experiments/phase1_compiler/reports/phase1_proposal_report_v3_genre_repair_process.md`
+- `experiments/phase1_compiler/reports/phase1_proposal_report_v3_genre_repair_decision.md`
+- `experiments/phase1_compiler/results/phase1_proposal_report_v3_genre_repair_decision.json`
+
+V3 supersedes V2 as the active proposal report for proposal use. V2 remains an
+evidence-safe source draft and traceability artifact. M6 should wait until V3
+is accepted by the user/coordinator.
+
 ### M6: Proposal Presentation Or Memo
 
-Status: waiting on user decisions.
+Status: waiting on V3 acceptance and user decisions.
 
 Purpose:
 
@@ -425,14 +446,14 @@ Possible outputs:
 Open user decisions before M6:
 
 - approval artifact format;
-- no-paid staffing and duration;
+- staffing and duration;
 - conditional paid-validation budget ceiling;
 - reviewer-facing owner categories.
 
 Runbook status:
 
 ```text
-not drafted by M5
+not drafted by M5b
 ```
 
 ## 8. Work Not On The Short-Term Critical Path
@@ -450,12 +471,12 @@ drive the next few days unless the v1 P0 placeholders expose a direct need:
 
 ## 9. Immediate Next Step
 
-M5 is complete. The next action category is a user/coordinator decision:
-review `docs/research/phase-1-proposal-report-v2.md` for technical proposal
-approval, then decide whether and how to create the M6 approval artifact.
+Review `docs/research/phase-1-proposal-report-v3.md` as the active proposal
+report. V3 repairs V2's genre regression while preserving the evidence and
+claim boundary.
 
-M6 still needs user decisions on artifact format, no-paid staffing and
-duration, conditional paid-validation budget ceiling, and reviewer-facing owner
-categories. No later runbook is drafted here. Paid validation remains
-unauthorized, predictive validity remains future work, and v2 does not invent
-user-owned budget or staffing values.
+After V3 is accepted, decide whether the approval artifact should be a slide
+deck, short decision memo, one-page executive summary, or combined packet.
+Predictive validity remains future work; project-scale paid ACUT evaluation
+should be budgeted and gated by frozen protocols rather than framed as
+prohibited in the proposal report.

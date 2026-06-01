@@ -242,3 +242,26 @@ details, and public citation bibliography as support for the main argument.
 Acceptance evidence: the risk section is intelligible to proposal readers,
 deliverables do not list internal execution artifacts as project deliverables,
 and appendices support the main argument without taking over the report.
+
+## Step 7: Handoff Document Alignment
+
+Updated handoff documents:
+
+- `docs/research/phase-1-proposal-report-reviewer-ready-checklist.md` now
+  checks V3 reader fit, V1 structure preservation, internal vocabulary control,
+  paid-evaluation framing, evidence accuracy, claim boundary, back-half
+  readability, citations, and artifact hygiene.
+- `docs/research/phase-1-proposal-roadmap-and-claim-planning.md` now records
+  V3 as the active proposal report for proposal use, keeps V2 as source
+  material and traceability, and keeps approval artifact work waiting on V3
+  acceptance plus user/coordinator decisions.
+- `PROCESS.md` now records the active report as
+  `docs/research/phase-1-proposal-report-v3.md`, the stop label
+  `proposal_report_v3_genre_repair_complete`, and the budgeted-evaluation
+  framing.
+- The preexisting untracked V3 genre-repair runbook input is included as a
+  canonical handoff artifact so the roadmap and process references resolve in
+  the committed tree.
+
+Acceptance evidence: support docs point to V3, roadmap duties remain in the
+roadmap document, and process notes stay concise.

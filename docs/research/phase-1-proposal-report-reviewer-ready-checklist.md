@@ -1,45 +1,45 @@
 # Phase 1 Proposal Report Reviewer-Ready Checklist
 
-Status: M5 reviewer-readiness checklist, 2026-06-01.
+Status: V3 proposal-genre checklist, 2026-06-01.
 
 Checked report:
-`docs/research/phase-1-proposal-report-v2.md`.
+`docs/research/phase-1-proposal-report-v3.md`.
 
 ## Checklist
 
 | Area | Status | Evidence |
 | --- | --- | --- |
-| Claim boundary | pass | V2 states that predictive validity is the north star, current evidence is traction plus a credible validation path, and paid validation remains unauthorized. |
-| Evidence support | pass | M3 evidence is tied to canonical reports: candidate MAE `0.209`, best simple aggregate baseline MAE `0.2149`, `0.0059` edge, and `93.4%` random beats/ties share. |
-| Citation coverage | pass | Related-work and benchmark-validity claims use public citations recorded in `experiments/phase1_compiler/reports/phase1_proposal_report_reviewer_ready_revision_citation_matrix.md`. |
-| Related-work distinction | pass | SWE-bench, SWE-bench Verified, SWE-bench-Live, SWE-smith, and R2E-Gym are described as benchmark, quality, live-maintenance, task-generation, or agent-environment references rather than Barcarolle replacements. |
-| M3 integration | pass | V2 separates random-baseline traction from the small best-simple-baseline edge and includes fallback and adapter caveats. |
-| M4 validation-path integration | pass | V2 includes study modes, per-named-ACUT estimand, mandatory baselines, fallback caps, support thresholds, joint gate, release schema pointer, and no-paid power/budget boundary. |
-| Prohibited claims | pass | V2 does not use the prohibited current-claim phrases checked by the runbook grep command. |
-| Remaining user decisions | pass | Staffing, duration, owner categories, approval format, budget ceiling, and paid authorization are isolated as user-owned decision points. |
-| Artifact hygiene | pass | V2 and M5 artifacts reference sanitized report paths and do not introduce raw prompts, raw completions, ACUT transcripts, workspaces, raw diffs, or hidden verifier material. |
-| Paid/no-paid boundary | pass | M5 records zero paid ACUT cells, zero paid LLM calls, and zero external reviewer calls; public browsing was limited to citation verification. |
-| Readability and structure | pass | V2 uses the expected report shape, moves detailed evidence into appendices, and no longer reads as a placeholder register or process log. |
+| Reader-facing problem and ask | pass | V3 asks reviewers to approve Barcarolle as a repo-specific benchmark-compiler project and states why target-repo prediction matters. |
+| V1 structure preservation | pass | V3 preserves the eleven-section proposal shape from V1: executive summary, problem, north star, boundary, design, validation, evidence, plan/resources, risks, deliverables, and appendices. |
+| Internal vocabulary control | pass | The V3 main body avoids milestone/process vocabulary and does not require readers to know internal phase labels or execution artifacts. |
+| Paid-evaluation framing | pass | V3 frames budgeted ACUT evaluation as a gated project resource after releases, baselines, score joins, and success criteria are frozen. |
+| Evidence accuracy | pass | V3 preserves the key numbers: weighted gaps `0.3148` and `0.7481`, simple baselines `0.25` and `0.125`, `120/120` cells, `30/30` click repairs, candidate MAE `0.209`, best simple aggregate baseline `0.2149`, edge `0.0059`, random beats/ties share `93.4%`, and fallback `6/18` overall with boltons `6/6`. |
+| Claim boundary | pass | V3 states that predictive validity is the north star and remains unproven; Phase 1 supplies traction evidence and a concrete validation path. |
+| Back-half readability | pass | Validation, project plan, risks, deliverables, and appendices read as proposal sections rather than as a protocol packet. |
+| Citation coverage | pass | Related-work and benchmark-validity claims use the public citations recorded in `experiments/phase1_compiler/reports/phase1_proposal_report_reviewer_ready_revision_citation_matrix.md`. |
+| Artifact hygiene | pass | V3 references committed sanitized reports and does not introduce raw prompts, raw completions, ACUT transcripts, workspaces, raw diffs, local planning-file paths, or hidden verifier material. |
 
 ## Audit Commands
 
-Required M5 audit commands:
+Required V3 audit commands:
 
 ```text
-rg -n "\[NEEDS" docs/research/phase-1-proposal-report-v2.md
-rg -n "validated predictive benchmark compiler|proves predictive validity|established predictive validity|paid validation authorized|model-only superiority" docs/research/phase-1-proposal-report-v2.md
-rg -n "/Users/chenmohan/Downloads" docs/research/phase-1-proposal-report-v2.md
+rg -n "\bM[0-9]\b|runbook|roadmap|P0|P1|placeholder|no-paid|paid remains unauthorized|does not authorize paid|M6|user-owned" docs/research/phase-1-proposal-report-v3.md
+rg -n "validated predictive benchmark compiler|proves predictive validity|established predictive validity|model-only superiority" docs/research/phase-1-proposal-report-v3.md
+rg -n "/Users/chenmohan/Downloads" docs/research/phase-1-proposal-report-v3.md
+git diff --check
 ```
 
-Recorded result: all three commands returned no matches.
+Recorded result: all text checks returned no matches, and `git diff --check`
+passed.
 
 ## Remaining Items
 
-The remaining items are user decisions for M6 or later budget-bearing
-discussion, not unresolved evidence placeholders:
+Remaining items are reviewer/coordinator decisions after V3 review:
 
-- M6 approval artifact format.
-- No-paid staffing and duration.
-- Reviewer-facing deliverable owner categories.
-- Conditional paid-validation budget ceiling.
-- Any future paid-validation authorization.
+- accept or revise `docs/research/phase-1-proposal-report-v3.md`;
+- choose whether the approval artifact should be a report, short memo,
+  presentation, executive summary, or combined packet;
+- set project duration and staffing assumptions;
+- set the budget ceiling and approval path for gated ACUT evaluation;
+- assign reviewer-facing deliverable owner categories.

@@ -229,9 +229,18 @@ M5 reviewer-ready revision artifact paths. V2 argues for project approval from
 bounded traction: MAE is a meaningful prediction-error metric, benchmark
 selection changes it, and the current candidate beats/ties `93.4%` of 1000
 same-budget random selections while still falling short of future validation
-standards. User decisions are still needed before M6 approval artifact work or
-any budget-bearing discussion. Stop label:
-`proposal_report_reviewer_ready_for_technical_review`.
+standards.
+
+Proposal report V3 genre repair is complete. The active proposal report is now
+`docs/research/phase-1-proposal-report-v3.md`. V3 preserves the V1 proposal
+structure, uses V2 as evidence-safe source material, removes internal process
+vocabulary from the proposal argument, and frames project-scale paid ACUT
+evaluation as a budgeted activity after releases, protocols, baselines, score
+joins, and success criteria are frozen. Predictive validity remains future
+work. Stop label: `proposal_report_v3_genre_repair_complete`.
+
+M6 approval artifact work should wait until V3 is accepted by the
+user/coordinator.
 
 Canonical report and runbook:
 
@@ -251,11 +260,14 @@ Canonical report and runbook:
 - `docs/experiments/phase-1-proposal-evidence-package-runbook.md`
 - `docs/experiments/phase-1-validation-protocol-and-candidate-policy-hardening-runbook.md`
 - `docs/experiments/phase-1-proposal-report-reviewer-ready-revision-runbook.md`
+- `docs/experiments/phase-1-proposal-report-v3-genre-repair-runbook.md`
+- `docs/research/phase-1-proposal-report-v3.md`
 - `docs/research/phase-1-proposal-evidence-package.md`
 - `docs/research/phase-1-validation-protocol-and-candidate-policy-hardening.md`
 - `docs/research/phase-1-proposal-p0-placeholder-triage.md`
 - `docs/research/phase-1-proposal-report-v2.md`
 - `docs/research/phase-1-proposal-report-reviewer-ready-checklist.md`
+- `experiments/phase1_compiler/reports/phase1_proposal_report_v3_genre_repair_decision.md`
 - `docs/research/phase-1-proposal-report-v0.md`
 - `experiments/phase1_compiler/reports/phase1_validation_protocol_candidate_policy_hardening_decision.md`
 - `experiments/phase1_compiler/reports/phase1_proposal_report_reviewer_ready_revision_process.md`
