@@ -77,3 +77,51 @@ Acceptance evidence:
 - External reviewer calls made: `0`.
 - Evidence-producing work performed: `false`.
 - Paid validation authorized: `false`.
+
+## Step 2: External Review And Task-Supply Guidance Triage
+
+Inputs read:
+
+- `/Users/chenmohan/Downloads/barcarolle-research-0530.md`.
+- `/Users/chenmohan/Downloads/barcarolle-research-0526-1.md`.
+
+Output updated:
+
+- `docs/research/phase-1-proposal-p0-placeholder-triage.md` sections 5 and 6.
+
+External-review routing summary:
+
+- Accepted now as boundary or wording: candidate naming with labeled
+  fallbacks, pseudo-future claim boundary, adapter-stratified reporting, and
+  softened "best promoted research candidate" wording.
+- Routed to M3: coverage ablation, many-seed random baseline, baseline
+  envelope, and fallback-share accounting.
+- Routed to M4: paid-readiness gate, frozen validation inputs, baseline
+  registry hardening, joint success gate, adapter estimand, fallback
+  threshold, quantitative support thresholds, and immutable artifact-set
+  hygiene.
+- Routed to M5: reviewer-facing box showing current evidence would not pass
+  future paid criteria.
+- Deferred or rejected: independent outcome-blindness reproduction as optional
+  later review; broad modeling/product/task-generator expansion as short-term
+  non-scope.
+
+Task-supply routing summary:
+
+- Kept Layer 1 supply infrastructure subordinate to Barcarolle's compiler and
+  validation claim.
+- Routed source schema, local certification, source-reservoir caps,
+  environment subgates, oracle-source labels, and source-support gates to M4
+  only where they affect release schema or paid-readiness boundaries.
+- Deferred broad generator/source bakeoff implementation.
+- Rejected adopting external task systems as trusted default short-term supply.
+
+Acceptance evidence:
+
+- GPT-5.5-Pro advice classified as input, not controlling scope: `true`.
+- Task-supply guidance kept inside source-adapter/supply layer: `true`.
+- Broad task-generator expansion promoted to core proposal scope: `false`.
+- Paid validation authorized: `false`.
+- Paid ACUT solver calls made: `0`.
+- Paid LLM calls made: `0`.
+- External reviewer calls made: `0`.
