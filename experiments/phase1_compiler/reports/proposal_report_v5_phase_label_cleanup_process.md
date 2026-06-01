@@ -193,3 +193,39 @@ Step 3 acceptance:
 - The roadmap keeps internal milestone terms because it is an internal
   planning file.
 - M6 waits on V5 acceptance and user/coordinator decisions.
+
+## Step 4: Audit
+
+Required audit commands:
+
+```bash
+rg -n "Phase 1|Phase 2|Phase 3|phase 1|phase 2|phase 3|M[0-9]|phase1|phase-1" docs/research/barcarolle-proposal-report-v5.md
+rg -n "validated predictive benchmark compiler|established predictive validity|tuning validation established|improves agent tuning|multi-ACUT residual validity established" docs/research/barcarolle-proposal-report-v5.md
+rg -n "/Users/chenmohan/Downloads" docs/research/barcarolle-proposal-report-v5.md
+git diff --check
+```
+
+Audit results:
+
+| Check | Result |
+| --- | --- |
+| V5 phase-label search | no matches |
+| Prohibited-claim search | no matches |
+| Local planning path search | no matches |
+| `git diff --check` | passed |
+
+Manual review answers:
+
+| Question | Answer |
+| --- | --- |
+| Can a proposal reader understand the document without knowing our phase system? | yes |
+| Does V5 still preserve the predictive-validity north star? | yes |
+| Does V5 still preserve agent tuning as the product/application path? | yes |
+| Does the evidence remain preliminary rather than overclaimed? | yes |
+| Does the appendix support the argument instead of exposing internal process? | yes |
+
+Step 4 acceptance:
+
+- Text checks passed.
+- Manual review answers are yes.
+- `git diff --check` passed.
