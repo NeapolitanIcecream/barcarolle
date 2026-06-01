@@ -118,3 +118,54 @@ Acceptance evidence:
 - the evidence appendix is concise and traceable;
 - neither artifact claims predictive validity or tuning-loop improvement;
 - no paid or external calls were made.
+
+## Step 3: Build The PPTX
+
+Created:
+
+```text
+docs/research/m6-approval-packet/barcarolle-approval-deck-v1.pptx
+```
+
+Presentation workflow:
+
+- used the Codex Presentations artifact-tool workflow in create mode;
+- selected the `engineering-platform` profile because the packet is a
+  technical benchmark/evaluation-platform approval story;
+- created a thread-scoped presentation workspace under:
+
+```text
+outputs/manual-20260601-181938-m6/presentations/barcarolle-approval-packet/
+```
+
+- built 12 editable slides from artifact-tool slide modules;
+- used only editable text, shapes, tables, and diagram lanes;
+- used no imagegen, generated raster assets, logos, or identity assets;
+- rendered per-slide PNG previews, layout JSON, and a contact sheet before
+  copying only the final PPTX into the packet directory.
+
+Build evidence:
+
+- exported PPTX size: `62669` bytes;
+- package contains 12 slide XML parts;
+- artifact-tool render produced 12 preview slides and a contact sheet;
+- layout QA passed with `0` errors after iteration;
+- remaining layout warnings are tight-title/table-label warnings accepted after
+  full-size rendered review because no visible clipping or collision remains.
+
+Manual review notes:
+
+- the first contact sheet exposed a real slide 4 workflow-label collision and
+  slide 12 decision-box clipping;
+- both were repaired in the slide source and rerendered;
+- full-size spot checks reviewed slides 3, 4, 7, 9, and 12 after repair.
+
+Acceptance evidence:
+
+- PPTX exists at the expected path;
+- the deck is editable and uses native text/shapes where practical;
+- each slide has a clear claim and proof object;
+- no slide depends on decorative generated imagery;
+- the deck can be understood without V5 open beside it;
+- the deck preserves the predictive-validity and tuning-loop non-claims;
+- no paid or external calls were made.
