@@ -1,0 +1,71 @@
+{
+  "decision_label": "p0_placeholder_external_review_triage_complete",
+  "generated_at": "2026-06-01T11:45:32+08:00",
+  "runbook": "docs/experiments/phase-1-p0-placeholder-and-external-review-triage-runbook.md",
+  "triage_document": "docs/research/phase-1-proposal-p0-placeholder-triage.md",
+  "process_report": "experiments/phase1_compiler/reports/phase1_p0_placeholder_external_review_triage_process.md",
+  "boundary": {
+    "paid_acut_solver_calls_made": 0,
+    "paid_llm_calls_made": 0,
+    "external_reviewer_calls_made": 0,
+    "public_citation_browsing_made": false,
+    "predictive_validity_established": false,
+    "paid_validation_authorized": false,
+    "later_runbook_drafted": false
+  },
+  "placeholder_inventory": {
+    "p0_placeholders_total": 17,
+    "p0_placeholders_routed": 17,
+    "p0_missing_routes": 0,
+    "p0_duplicate_routes": 0,
+    "p1_placeholders_total": 4,
+    "p1_placeholders_routed": 4
+  },
+  "p0_route_counts": {
+    "M3_evidence_package": 4,
+    "M4_validation_or_candidate_hardening": 8,
+    "M5_reviewer_ready_report_revision": 2,
+    "needs_user_decision": 3
+  },
+  "p1_route_counts": {
+    "M2_boundary_or_wording": 1,
+    "M3_evidence_package": 1,
+    "M5_reviewer_ready_report_revision": 1,
+    "needs_user_decision": 1
+  },
+  "external_review_recommendation_counts": {
+    "total": 17,
+    "accept_now": 4,
+    "route_to_M3": 3,
+    "route_to_M4": 7,
+    "route_to_M5": 1,
+    "defer": 1,
+    "reject_scope_expansion": 1,
+    "needs_user_decision": 0
+  },
+  "task_supply_guidance_counts": {
+    "total": 12,
+    "needed_for_proposal_P0": 2,
+    "relevant_but_M3_M4_scoped": 6,
+    "deferred_infrastructure": 3,
+    "rejected_as_short_term_scope_expansion": 1
+  },
+  "next_work_category": "M3_evidence_package",
+  "user_decisions_needed_before_next_runbook": false,
+  "user_decisions_needed_before_M6_or_paid_budget_discussion": true,
+  "open_user_decisions": [
+    "no-paid staffing and duration",
+    "conditional paid-validation budget ceiling",
+    "reviewer-facing owner categories",
+    "approval artifact format"
+  ],
+  "acceptance": {
+    "all_p0_placeholders_have_route": true,
+    "all_relevant_review_recommendations_classified": true,
+    "task_supply_scope_kept_as_layer_1_supply": true,
+    "broad_task_generator_expansion_promoted_to_core_scope": false,
+    "paid_validation_remains_unauthorized": true,
+    "predictive_validity_remains_unestablished": true,
+    "stop_label": "p0_placeholder_external_review_triage_complete"
+  }
+}

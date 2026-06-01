@@ -8,7 +8,7 @@ Detailed evidence stays in the relevant committed reports, results, runbooks,
 and manifests. This file keeps only the current decision state and durable
 operating constraints.
 
-Last updated: 2026-05-30.
+Last updated: 2026-06-01.
 
 ## Maintenance Rules
 
@@ -205,10 +205,14 @@ decisions, power/budget notes, and deliverable details.
 only as source material and an argument rewrite record. The roadmap remains
 owned by `docs/research/phase-1-proposal-roadmap-and-claim-planning.md`.
 Current evidence still does not establish predictive validity and does not
-authorize more paid ACUT cells. The recommended next action category is to fill
-the P0 placeholders that block reviewer readiness while keeping paid
-validation unauthorized until protocol and evidence gates are hardened. Stop
-label: `proposal_report_final_shape_rewrite_complete`.
+authorize more paid ACUT cells. M2 P0 placeholder and external-review triage is
+complete: every proposal report v1 P0 placeholder has a route, GPT-5.5-Pro
+0530 findings are classified as strategy input, and 0526-1 task-supply guidance
+stays inside Layer 1 supply infrastructure. The next action category is M3
+proposal evidence package unless the user explicitly chooses to prioritize M4
+validation/candidate-policy hardening first. User decisions are still needed
+before M6 approval artifact work or any budget-bearing paid-validation
+discussion. Stop label: `p0_placeholder_external_review_triage_complete`.
 
 Canonical report and runbook:
 
@@ -224,6 +228,8 @@ Canonical report and runbook:
 - `docs/experiments/phase-1-proposal-report-skeleton-runbook.md`
 - `docs/experiments/phase-1-proposal-report-argument-rewrite-runbook.md`
 - `docs/experiments/phase-1-proposal-report-final-shape-rewrite-runbook.md`
+- `docs/experiments/phase-1-p0-placeholder-and-external-review-triage-runbook.md`
+- `docs/research/phase-1-proposal-p0-placeholder-triage.md`
 - `docs/research/phase-1-proposal-report-v0.md`
 - `docs/research/phase-1-proposal-argument-map.md`
 - `docs/research/phase-1-proposal-evidence-todo-matrix.md`
@@ -233,11 +239,15 @@ Canonical report and runbook:
 - `experiments/phase1_compiler/reports/phase1_proposal_report_final_shape_rewrite_process.md`
 - `experiments/phase1_compiler/reports/phase1_proposal_report_final_shape_rewrite_decision.md`
 - `experiments/phase1_compiler/results/phase1_proposal_report_final_shape_rewrite_decision.json`
+- `experiments/phase1_compiler/reports/phase1_p0_placeholder_external_review_triage_process.md`
+- `experiments/phase1_compiler/reports/phase1_p0_placeholder_external_review_triage_decision.md`
+- `experiments/phase1_compiler/results/phase1_p0_placeholder_external_review_triage_preflight.json`
+- `experiments/phase1_compiler/results/phase1_p0_placeholder_external_review_triage_decision.json`
 
 ### Workspace State Note
 
-As of 2026-05-30, the branch `codex/restart-benchmark-compiler` is ahead of
+As of 2026-06-01, the branch `codex/restart-benchmark-compiler` is ahead of
 `origin/codex/restart-benchmark-compiler`. Several handoff/setup files remain
-untracked, including the proposal runbooks, the roadmap planning document, and
-external review bundles under `experiments/phase1_compiler/external_review/`.
-Do not stage, delete, or rewrite those untracked files unless the user asks.
+untracked, including proposal runbooks and external review bundles under
+`experiments/phase1_compiler/external_review/`. Do not stage, delete, or
+rewrite those untracked files unless the user asks.

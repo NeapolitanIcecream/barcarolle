@@ -1,6 +1,6 @@
 # Phase 1 Proposal P0 Placeholder And External Review Triage
 
-Status: M2 triage draft, 2026-06-01.
+Status: M2 triage complete, 2026-06-01.
 
 This document routes proposal-report v1 placeholders and local external-review
 input into later milestone ownership. It does not fill the placeholders,

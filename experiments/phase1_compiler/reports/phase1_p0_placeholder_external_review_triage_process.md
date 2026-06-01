@@ -189,3 +189,27 @@ Acceptance evidence:
 - Paid validation authorized: `false`.
 - JSON preflight validates: `true`.
 - `git diff --check` passes: `true`.
+
+## Step 5: Closeout
+
+Closeout artifacts:
+
+- `experiments/phase1_compiler/reports/phase1_p0_placeholder_external_review_triage_decision.md`.
+- `experiments/phase1_compiler/results/phase1_p0_placeholder_external_review_triage_decision.json`.
+
+Stop label:
+
+```text
+p0_placeholder_external_review_triage_complete
+```
+
+Decision summary:
+
+- No paid calls were made.
+- No external reviewer calls were made.
+- Predictive validity remains unestablished.
+- Paid validation remains unauthorized.
+- Every P0 placeholder has a route.
+- The next work category is `M3_evidence_package`.
+- User decisions are not required before an M3 runbook, but are required before
+  M6 approval artifact work or any budget-bearing paid-validation discussion.
