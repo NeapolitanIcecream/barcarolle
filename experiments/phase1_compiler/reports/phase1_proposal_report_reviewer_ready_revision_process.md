@@ -206,3 +206,21 @@ Recorded handoff state:
 - Paid validation remains unauthorized.
 - Predictive validity remains future work.
 - No M6 runbook was drafted during M5 execution.
+
+## Step 12: Closeout
+
+Closeout outputs:
+
+- `experiments/phase1_compiler/reports/phase1_proposal_report_reviewer_ready_revision_decision.md`
+- `experiments/phase1_compiler/results/phase1_proposal_report_reviewer_ready_revision_decision.json`
+
+Closeout decision:
+
+- Stop label: `proposal_report_reviewer_ready_for_technical_review`.
+- V2 report path: `docs/research/phase-1-proposal-report-v2.md`.
+- V2 is reviewer-ready for technical proposal review.
+- Predictive validity is not established.
+- Paid validation is not authorized.
+- M6 can proceed only after user decisions.
+- Remaining placeholders in v2: `0`.
+- Remaining open items are user-owned M6 or later budget-bearing decisions.
