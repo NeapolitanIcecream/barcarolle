@@ -80,3 +80,110 @@ Argument boundary:
 - M4 gate failures are used to define next-phase work, not as a reason to reject the proposal.
 - Codex/Kilo differences are ACUT-configuration evidence, not model-only superiority.
 - The candidate is named `coverage_constrained_unweighted_v1_with_labeled_fallbacks` and remains composite because of boltons fallback behavior.
+
+## Step 2: Citation And Related-Work Matrix
+
+Output:
+`experiments/phase1_compiler/reports/phase1_proposal_report_reviewer_ready_revision_citation_matrix.md`.
+
+Public citation browsing was limited to related-work and benchmark-validity
+verification. Sources recorded:
+
+- SWE-bench ICLR 2024 paper.
+- OpenAI SWE-bench Verified launch page.
+- OpenAI 2026 SWE-bench Verified quality and contamination audit.
+- SWE-bench-Live project page.
+- SWE-smith project page.
+- R2E-Gym official repository.
+- UC Berkeley `Validity Challenges in Machine Learning Benchmarks`.
+
+Acceptance evidence:
+
+- The citation matrix records label, URL, date, supported claim, prohibited
+  overuse, and v2 location for each public source.
+- Public sources support external related-work framing only.
+- Local planning files are not used as reviewer-facing literature citations in
+  v2.
+
+## Steps 3-9: V2 Report Draft, Evidence, Validation Path, Figures, Risks, And Decisions
+
+Output:
+`docs/research/phase-1-proposal-report-v2.md`.
+
+Accepted structure:
+
+1. Executive Summary
+2. Problem And Stakes
+3. Barcarolle Thesis And Boundary
+4. Proposed Compiler Design
+5. Evidence For Project Approval
+6. Validation Path And Success Standards
+7. Risks, Limits, And Mitigations
+8. Proposed Next Phase
+9. Deliverables And Decision Points
+10. Appendices
+
+M3 integration evidence:
+
+- Current candidate MAE: `0.209`.
+- Best simple aggregate baseline: `temporal_recent_baseline`, MAE `0.2149`.
+- Best-simple-baseline edge: `0.0059` MAE.
+- 1000-seed same-budget random comparison: candidate beats/ties `93.4%`.
+- Fallback caveat: `6/18` selected slots use fallback; boltons is `6/6`
+  fallback.
+- Adapter caveat: Codex fails while Kilo passes under current diagnostics.
+
+M4 integration evidence:
+
+- Study-mode table included.
+- Primary adapter estimand recorded as per named ACUT configuration.
+- Mandatory baselines listed.
+- Fallback caps and current M3 failures included.
+- Joint success gate and support thresholds included.
+- Release schema summarized with pointer to the full M4 schema.
+- No-paid power/budget note included without setting a budget ceiling.
+
+Figures and tables included:
+
+- Compiler architecture Mermaid figure.
+- North-star validation design Mermaid figure.
+- One-page evidence summary.
+- Release artifact schema summary.
+- Report evidence index.
+- Risk summary and standalone risk-register pointer.
+- User-owned decision table.
+
+Risk-register output:
+`experiments/phase1_compiler/reports/phase1_proposal_report_reviewer_ready_revision_risk_register.md`.
+
+Acceptance evidence:
+
+- V2 no longer reads as a roadmap, lab notebook, or placeholder register.
+- M4 gates are framed as future project-stage standards, not pre-proposal proof
+  requirements.
+- V2 does not invent no-paid staffing, duration, owner categories, approval
+  format, or paid budget ceiling.
+
+## Step 10: Reviewer-Readiness Audit
+
+Output:
+`docs/research/phase-1-proposal-report-reviewer-ready-checklist.md`.
+
+Required audit commands:
+
+```text
+rg -n "\[NEEDS" docs/research/phase-1-proposal-report-v2.md
+rg -n "validated predictive benchmark compiler|proves predictive validity|established predictive validity|paid validation authorized|model-only superiority" docs/research/phase-1-proposal-report-v2.md
+rg -n "/Users/chenmohan/Downloads" docs/research/phase-1-proposal-report-v2.md
+```
+
+Recorded result: all three commands returned no matches.
+
+Acceptance evidence:
+
+- The checklist covers claim boundary, evidence support, citation coverage,
+  related-work distinction, M3 evidence integration, M4 validation-path
+  integration, prohibited claims, remaining user decisions, artifact hygiene,
+  paid/no-paid boundary, and readability.
+- Remaining unresolved items are user-owned M6 or later paid-discussion
+  decisions, not evidence placeholders.
