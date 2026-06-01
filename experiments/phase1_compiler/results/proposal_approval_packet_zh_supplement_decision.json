@@ -1,0 +1,64 @@
+{
+  "stop_label": "proposal_approval_packet_zh_supplement_complete",
+  "status": "complete",
+  "date": "2026-06-01",
+  "chinese_packet_complete": true,
+  "chinese_packet_active_editing_surface": true,
+  "english_m6_packet_source_reference": true,
+  "v5_long_form_source_of_truth": true,
+  "predictive_validity_established": false,
+  "tuning_loop_improvement_established": false,
+  "claim_boundary_preserved": true,
+  "key_numbers_preserved": true,
+  "slide_count": 12,
+  "pptx_font": "PingFang SC",
+  "artifacts": {
+    "pptx": "docs/research/m6-approval-packet-zh/barcarolle-approval-deck-v1.zh.pptx",
+    "readme": "docs/research/m6-approval-packet-zh/README.md",
+    "glossary": "docs/research/m6-approval-packet-zh/terminology-glossary-v1.zh.md",
+    "executive_summary": "docs/research/m6-approval-packet-zh/executive-summary-v1.zh.md",
+    "deck_outline": "docs/research/m6-approval-packet-zh/approval-deck-outline-v1.zh.md",
+    "evidence_appendix": "docs/research/m6-approval-packet-zh/appendix-evidence-index-v1.zh.md",
+    "checklist": "docs/research/m6-approval-packet-zh/approval-packet-checklist-v1.zh.md",
+    "process_report": "experiments/phase1_compiler/reports/proposal_approval_packet_zh_supplement_process.md",
+    "decision_report": "experiments/phase1_compiler/reports/proposal_approval_packet_zh_supplement_decision.md"
+  },
+  "audit": {
+    "markdown_overclaim_checks": "pass",
+    "pptx_text_overclaim_checks": "pass",
+    "markdown_local_path_checks": "pass",
+    "pptx_text_local_path_checks": "pass",
+    "key_number_checks": "pass",
+    "placeholder_visibility_checks": "pass",
+    "template_fidelity_check": "pass",
+    "template_fidelity_issue_count": 0,
+    "visual_qa": "pass",
+    "git_diff_check": "pass"
+  },
+  "calls": {
+    "paid_acut_cells": 0,
+    "paid_llm_calls": 0,
+    "external_reviewer_calls": 0,
+    "public_browsing": false
+  },
+  "asset_policy": {
+    "imagegen_used": false,
+    "generated_raster_assets_used": false,
+    "decorative_imagery_used": false,
+    "identity_assets_used": false
+  },
+  "unchanged_boundaries": {
+    "score_tables_changed": false,
+    "selected_task_ids_or_split_labels_changed": false,
+    "source_eligibility_changed": false,
+    "task_statements_or_hidden_oracle_material_changed": false,
+    "completed_experiment_decisions_changed": false
+  },
+  "remaining_user_owned_placeholders": [
+    "[待用户决定：项目人员配置]",
+    "[待用户决定：项目周期]",
+    "[待用户决定：有闸门 ACUT 评测的预算上限]",
+    "[待用户决定：审批路径或审批负责人]",
+    "[待用户决定：对外材料中的交付负责人类别]"
+  ]
+}

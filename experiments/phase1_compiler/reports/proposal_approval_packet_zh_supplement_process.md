@@ -296,3 +296,55 @@ Handoff changes:
 - Predictive validity and tuning-loop improvement remain unproven.
 - User-owned staffing, duration, gated evaluation budget ceiling,
   approval-path, and owner-category placeholders remain visible.
+
+## Step 6: Closeout
+
+Recorded: 2026-06-01.
+
+Created:
+
+```text
+experiments/phase1_compiler/reports/proposal_approval_packet_zh_supplement_decision.md
+experiments/phase1_compiler/results/proposal_approval_packet_zh_supplement_decision.json
+```
+
+Final stop label:
+
+```text
+proposal_approval_packet_zh_supplement_complete
+```
+
+Closeout status:
+
+- Chinese packet complete: `true`.
+- Chinese packet active editing surface: `true`.
+- English M6 packet remains source/reference: `true`.
+- V5 remains long-form source of truth: `true`.
+- Claims and key numbers preserved: `true`.
+- Generated images used: `false`.
+- Paid ACUT solver calls: `0`.
+- Paid LLM calls: `0`.
+- External reviewer calls: `0`.
+- Public browsing: `false`.
+
+What changed:
+
+```text
+The English M6 approval packet was localized into a Chinese approval packet
+with PPTX, one-page summary, deck outline, evidence appendix, checklist,
+README, and glossary.
+```
+
+Why it matters:
+
+```text
+Future reviewer-facing edits can now happen on the Chinese materials instead
+of repeatedly translating from the English packet.
+```
+
+What remains:
+
+```text
+Fill or explicitly leave visible the staffing, duration, gated-evaluation
+budget, approval-path, and owner-category placeholders before circulation.
+```
