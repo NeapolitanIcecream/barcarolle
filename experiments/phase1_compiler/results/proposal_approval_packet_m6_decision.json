@@ -1,0 +1,56 @@
+{
+  "stop_label": "proposal_approval_packet_m6_complete",
+  "approval_packet_complete": true,
+  "v5_source_of_truth": "docs/research/barcarolle-proposal-report-v5.md",
+  "artifacts": {
+    "pptx_deck": "docs/research/m6-approval-packet/barcarolle-approval-deck-v1.pptx",
+    "executive_summary": "docs/research/m6-approval-packet/executive-summary-v1.md",
+    "deck_outline": "docs/research/m6-approval-packet/approval-deck-outline-v1.md",
+    "evidence_appendix": "docs/research/m6-approval-packet/appendix-evidence-index-v1.md",
+    "packet_checklist": "docs/research/m6-approval-packet/approval-packet-checklist-v1.md",
+    "process_report": "experiments/phase1_compiler/reports/proposal_approval_packet_m6_process.md",
+    "decision_report": "experiments/phase1_compiler/reports/proposal_approval_packet_m6_decision.md"
+  },
+  "claim_boundary": {
+    "current_evidence_supplies_traction": true,
+    "credible_validation_path": true,
+    "predictive_validity_established": false,
+    "tuning_loop_improvement_established": false,
+    "multi_configuration_residual_predictive_validity_established": false
+  },
+  "asset_policy": {
+    "imagegen_used": false,
+    "generated_raster_assets_used": false,
+    "decorative_imagery_used": false
+  },
+  "calls": {
+    "paid_acut_cells": 0,
+    "paid_llm_calls": 0,
+    "external_reviewer_calls": 0,
+    "public_browsing": false
+  },
+  "protected_boundaries_changed": {
+    "score_tables": false,
+    "selected_task_ids": false,
+    "split_labels": false,
+    "source_eligibility": false,
+    "task_statements": false,
+    "hidden_oracle_material": false
+  },
+  "audit": {
+    "markdown_text_checks": "pass",
+    "pptx_text_checks": "pass",
+    "git_diff_check": "pass",
+    "pptx_slide_count": 12,
+    "artifact_tool_layout_errors": 0,
+    "visual_preview_review": "pass"
+  },
+  "remaining_user_owned_values": [
+    "project staffing",
+    "project duration",
+    "gated ACUT evaluation budget ceiling",
+    "approval path or approving owner",
+    "reviewer-facing owner categories"
+  ],
+  "next_action": "Review the approval packet and fill or explicitly leave visible user-owned placeholders before reviewer circulation."
+}

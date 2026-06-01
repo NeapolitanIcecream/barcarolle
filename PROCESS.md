@@ -209,6 +209,7 @@ Current canonical links:
 - `docs/research/m6-approval-packet/executive-summary-v1.md`
 - `docs/research/m6-approval-packet/appendix-evidence-index-v1.md`
 - `docs/research/m6-approval-packet/approval-packet-checklist-v1.md`
+- `experiments/phase1_compiler/reports/proposal_approval_packet_m6_decision.md`
 - `docs/research/phase-1-proposal-roadmap-and-claim-planning.md`
 - `docs/research/phase-1-proposal-report-reviewer-ready-checklist.md`
 - `docs/experiments/proposal-approval-packet-m6-runbook.md`

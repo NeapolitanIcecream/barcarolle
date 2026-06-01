@@ -239,3 +239,34 @@ Acceptance evidence:
 - predictive validity and tuning-loop improvement remain unproven;
 - user-owned staffing, duration, budget-ceiling, approval-path, and owner
   category values are listed rather than invented.
+
+## Step 6: Closeout
+
+Created:
+
+```text
+experiments/phase1_compiler/reports/proposal_approval_packet_m6_decision.md
+experiments/phase1_compiler/results/proposal_approval_packet_m6_decision.json
+```
+
+Final stop label:
+
+```text
+proposal_approval_packet_m6_complete
+```
+
+Closeout summary:
+
+- the accepted V5 proposal report was converted into a concise approval packet
+  with a PPTX deck, one-page summary, deck outline, evidence appendix, and
+  checklist;
+- V5 remains the source-of-truth long-form report;
+- current evidence remains traction and validation-path support, not formal
+  predictive validity;
+- tuning and regression interfaces remain planned outputs, not proven
+  tuning-loop improvement;
+- no imagegen, generated raster assets, paid ACUT calls, paid LLM calls,
+  external reviewer calls, or public browsing were used;
+- remaining user-owned values are staffing, duration, gated evaluation budget
+  ceiling, approval path or approving owner, and reviewer-facing owner
+  categories.
