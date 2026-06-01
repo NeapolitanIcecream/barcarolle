@@ -546,11 +546,11 @@ evidence and protocol material are indexed here for auditability.
 Supported current claim:
 
 ```text
-Phase 1 shows that repo-specific benchmark compilation is a real, measurable,
-and technically tractable research problem. The metric is meaningful, benchmark
-selection changes it, the current candidate beats or ties most same-budget
-random selections, and the validation path is concrete enough to justify
-project approval.
+Completed pilot work shows that repo-specific benchmark compilation is a real,
+measurable, and technically tractable research problem. The metric is
+meaningful, benchmark selection changes it, the current candidate beats or ties
+most same-budget random selections, and the validation path is concrete enough
+to justify project approval.
 ```
 
 Current non-claims:
@@ -565,17 +565,19 @@ Current non-claims:
 
 ### Appendix B: Evidence Index
 
-| Evidence report | Evidence type | Claim function | Key result/status | Limitation |
+Path-level audit references are maintained in the internal evidence manifest.
+
+| Evidence label | Evidence type | Claim function | Key result/status | Limitation |
 | --- | --- | --- | --- | --- |
-| `experiments/phase1_compiler/reports/phase1_weighted_design_paid_pilot_decision.md` | diagnostic negative | Shows naive weighting can fail materially. | Weighted gaps: attrs `0.3148`, boltons `0.7481`. | Two-repo pilot; not a validation result. |
-| `experiments/phase1_compiler/reports/phase1_local_algorithm_bakeoff_decision.md` | diagnostic negative | Explains underidentified weighted objective. | Old weighted design not promoted. | Local analysis, not future validation. |
-| `experiments/phase1_compiler/reports/phase1_three_repo_paid_validation_decision.md` | technical tractability | Shows workspace ACUT protocol can run end to end. | `120/120` cells, scoreability `1.0`. | Exploratory pilot evidence. |
-| `experiments/phase1_compiler/reports/phase1_click_llm_source_context_repair_decision.md` | source quality | Repairs click source-context caveat. | `30/30` click tasks repaired. | Does not rewrite completed outcomes. |
-| `experiments/phase1_compiler/reports/phase1_blocked_split_supplement_fairness_gap_diagnostics_decision.md` | adapter reporting | Supports named-configuration reporting. | Adapter differences treated as ACUT-configuration evidence. | Diagnostic supplement. |
-| `experiments/phase1_compiler/reports/phase1_proposal_evidence_package_random_baseline_distribution.md` | retrospective traction | Compares candidate against 1000 random selections. | Overall beats/ties share `93.4%`. | Retrospective replay. |
-| `experiments/phase1_compiler/reports/phase1_proposal_evidence_package_baseline_envelope.md` | retrospective traction | Compares candidate against best simple baselines. | Candidate `0.209` MAE vs best aggregate baseline `0.2149`. | Slice diagnostics are fragile. |
-| `experiments/phase1_compiler/reports/phase1_proposal_evidence_package_fallback_share.md` | fallback accounting | Quantifies composite selector behavior. | Overall fallback `0.3333`; boltons `1.0`. | Feature support must be repaired or claim narrowed. |
-| `experiments/phase1_compiler/reports/phase1_validation_protocol_candidate_policy_hardening_decision.md` | validation governance | Records current protocol interpretation. | Current candidate classified as traction-only and not sufficient for a future validity claim. | Future standards, not current proof. |
+| Weighted design pilot | diagnostic negative | Shows naive weighting can fail materially. | Weighted gaps: attrs `0.3148`, boltons `0.7481`. | Two-repo pilot; not a validation result. |
+| Local algorithm bakeoff | diagnostic negative | Explains underidentified weighted objective. | Old weighted design not promoted. | Local analysis, not future validation. |
+| Three-repo workspace execution pilot | technical tractability | Shows workspace ACUT protocol can run end to end. | `120/120` cells, scoreability `1.0`. | Exploratory pilot evidence. |
+| Click source-context repair | source quality | Repairs click source-context caveat. | `30/30` click tasks repaired. | Does not rewrite completed outcomes. |
+| Adapter fairness diagnostics | adapter reporting | Supports named-configuration reporting. | Adapter differences treated as ACUT-configuration evidence. | Diagnostic supplement. |
+| Random-baseline comparison | retrospective traction | Compares candidate against 1000 random selections. | Overall beats/ties share `93.4%`. | Retrospective replay. |
+| Baseline-envelope comparison | retrospective traction | Compares candidate against best simple baselines. | Candidate `0.209` MAE vs best aggregate baseline `0.2149`. | Slice diagnostics are fragile. |
+| Fallback-share accounting | fallback accounting | Quantifies composite selector behavior. | Overall fallback `0.3333`; boltons `1.0`. | Feature support must be repaired or claim narrowed. |
+| Validation-protocol hardening | validation governance | Records current protocol interpretation. | Current candidate classified as traction-only and not sufficient for a future validity claim. | Future standards, not current proof. |
 
 ### Appendix C: Protocol Details For Future Validation
 
@@ -600,20 +602,13 @@ later product-validation extension can test whether Barcarolle feedback improves
 tuning-loop outcomes. Neither extension is required for the current proposal
 approval claim.
 
-The current detailed protocol artifacts include:
-
-- `experiments/phase1_compiler/reports/phase1_validation_protocol_candidate_policy_hardening_claim_modes.md`
-- `experiments/phase1_compiler/reports/phase1_validation_protocol_candidate_policy_hardening_candidate_policy.md`
-- `experiments/phase1_compiler/reports/phase1_validation_protocol_candidate_policy_hardening_adapter_estimand.md`
-- `experiments/phase1_compiler/reports/phase1_validation_protocol_candidate_policy_hardening_success_gate.md`
-- `experiments/phase1_compiler/reports/phase1_validation_protocol_candidate_policy_hardening_support_thresholds.md`
-- `experiments/phase1_compiler/reports/phase1_validation_protocol_candidate_policy_hardening_release_schema.md`
-- `experiments/phase1_compiler/reports/phase1_validation_protocol_candidate_policy_hardening_power_budget_note.md`
+The current detailed protocol artifacts include claim-mode definitions,
+candidate-policy pseudocode, adapter-estimand notes, success-gate rules,
+support-threshold rules, release-schema requirements, and a power/budget note.
 
 ### Appendix D: Public Citation Bibliography
 
-The full citation matrix is
-`experiments/phase1_compiler/reports/phase1_proposal_report_reviewer_ready_revision_citation_matrix.md`.
+The full citation matrix is maintained with the internal audit artifacts.
 
 | Label | Source |
 | --- | --- |

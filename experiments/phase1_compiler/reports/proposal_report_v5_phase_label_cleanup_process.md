@@ -123,3 +123,39 @@ Step 1 acceptance:
   labels.
 - Current evidence remains traction-only.
 - Predictive validity remains unproven.
+
+## Step 2: Clean The Claim Boundary And Evidence Appendix
+
+Revised Appendix A so the supported current claim starts from completed pilot
+work rather than internal phase framing. Revised Appendix B so the proposal
+shows readable evidence labels instead of path-first internal artifact names.
+
+Created the internal evidence manifest:
+
+```text
+experiments/phase1_compiler/reports/proposal_report_v5_evidence_manifest.md
+```
+
+The manifest preserves path-level traceability for:
+
+- the V4 source draft and integration decision;
+- each reader-facing evidence label in Appendix B;
+- protocol-detail artifacts previously listed by raw path in Appendix C;
+- the reviewer-ready citation matrix previously linked by raw path in
+  Appendix D.
+
+Appendix and raw-path checks:
+
+```bash
+rg -n "Phase 1|Phase 2|Phase 3|phase 1|phase 2|phase 3|M[0-9]|phase1|phase-1" docs/research/barcarolle-proposal-report-v5.md
+rg -n "experiments/phase1_compiler|docs/research/phase-1|phase1_" docs/research/barcarolle-proposal-report-v5.md
+```
+
+Result: no matches in V5.
+
+Step 2 acceptance:
+
+- Appendix A has no phase labels.
+- Appendix B is readable to a proposal reviewer.
+- Raw internal paths are preserved in the internal evidence manifest.
+- No evidence claim was strengthened.
