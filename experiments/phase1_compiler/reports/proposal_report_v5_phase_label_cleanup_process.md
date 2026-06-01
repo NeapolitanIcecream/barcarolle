@@ -87,3 +87,39 @@ Step 0 acceptance:
 - No paid or external calls were made.
 - Process report lists V4 phase-label locations.
 - No proposal text was changed in this step.
+
+## Step 1: Create V5 And Remove Main-Body Phase Labels
+
+Created `docs/research/barcarolle-proposal-report-v5.md` from V4 and revised
+the title, status note, executive summary, claim boundary, and main evidence
+section to use reader-facing proposal language.
+
+Preserved from V4:
+
+- the eleven-section proposal structure;
+- the agent-tuning and regression-feedback application path;
+- the evidence numbers and limitations;
+- the project approval ask;
+- the boundary that predictive validity and tuning-loop improvement remain
+  unproven.
+
+Main-body phase-label check:
+
+```bash
+sed -n '1,538p' docs/research/barcarolle-proposal-report-v5.md | rg -n "Phase 1|Phase 2|Phase 3|phase 1|phase 2|phase 3|M[0-9]|phase1|phase-1"
+```
+
+Result: no matches.
+
+Whole-file phase-label check after Step 1 still showed appendix-only matches:
+Appendix A retained one claim-boundary sentence with `Phase 1`, and Appendix B
+through Appendix D still exposed raw `phase1_...` evidence paths. Those are
+reserved for the Step 2 appendix and evidence-index cleanup.
+
+Step 1 acceptance:
+
+- V5 exists at `docs/research/barcarolle-proposal-report-v5.md`.
+- The reader-facing title, status, headings, and main body contain no phase
+  labels.
+- Current evidence remains traction-only.
+- Predictive validity remains unproven.
