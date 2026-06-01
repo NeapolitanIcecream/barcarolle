@@ -105,3 +105,18 @@ Mapping decision:
 
 Acceptance evidence: Step 1 complete. The section map shows V4 can be a local
 revision, preserves V3 structure, and introduces no new evidence claim.
+
+## Step 2: Draft V4 From V3
+
+Created `docs/research/phase-1-proposal-report-v4.md` from
+`docs/research/phase-1-proposal-report-v3.md` and updated the title to V4.
+
+Initial drafting baseline:
+
+- V4 starts from V3 rather than from a new outline.
+- The eleven-section proposal order is preserved.
+- Numerical evidence and citation links are unchanged in the baseline copy.
+- Predictive validity remains unproven in the copied claim boundary.
+
+Acceptance evidence: V4 exists as a targeted-revision baseline. No substantive
+agent-tuning edits have been applied yet.
