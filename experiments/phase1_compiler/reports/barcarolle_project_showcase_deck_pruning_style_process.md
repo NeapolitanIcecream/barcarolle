@@ -188,3 +188,34 @@ Acceptance evidence:
 No paid ACUT calls, paid LLM calls, external reviewer calls, public browsing,
 image generation, test edits, score-table edits, task edits, split-label edits,
 or hidden-oracle changes were made in Step 2.
+
+## Step 3 - Draft V2 Outline
+
+Created:
+
+```text
+docs/research/barcarolle-project-showcase-deck-zh/showcase-deck-outline-v2.zh.md
+```
+
+Acceptance evidence:
+
+- The outline follows the Step 2 pruning plan and contains `14` slides.
+- Retained source slide title labels remain unchanged.
+- V1 Slide 5 content is accounted for:
+  - layer-positioning sentence merged into Slide 4 `相关工作`;
+  - candidate supply / certification / assembly / release relation merged into
+    Slide 6 `方法`.
+- Each retained slide specifies source page, title label, unique role, visible
+  copy draft, visual object, content moved in or out, and style treatment.
+- Required hard checks on the V2 outline returned `0` matches:
+  - binary reframe patterns;
+  - process-language residue patterns;
+  - overclaim patterns;
+  - `/Users/chenmohan/Downloads` local path pattern.
+- The `audit-ai-tropes` scanner reported structural-outline false positives and
+  repeated technical term `harness`; no claim or wording repair was required
+  before deck build.
+
+No paid ACUT calls, paid LLM calls, external reviewer calls, public browsing,
+image generation, test edits, score-table edits, task edits, split-label edits,
+or hidden-oracle changes were made in Step 3.
