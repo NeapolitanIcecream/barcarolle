@@ -202,3 +202,28 @@ Acceptance evidence:
 - README points future presentation edits to the new package.
 - Roadmap marks the Chinese project-showcase rewrite complete and lists the completed package files.
 - PROCESS now lists the new project-showcase package as the active Chinese presentation package and keeps the older approval-packet materials as references.
+
+## Step 8 - Closeout
+
+Created:
+
+```text
+experiments/phase1_compiler/reports/barcarolle_project_showcase_deck_rewrite_decision.md
+experiments/phase1_compiler/results/barcarolle_project_showcase_deck_rewrite_decision.json
+```
+
+Stop label:
+
+```text
+barcarolle_project_showcase_deck_rewrite_complete
+```
+
+Acceptance evidence:
+
+- The new showcase deck is complete and supersedes the older Chinese approval decks for reader-facing presentation use.
+- The package contains the PPTX, README, argument map, related-work note, outline, text-and-claim audit, and visual review report.
+- The deck presents problem, method, current effects, limitations, future validation, Agent License, and Agent Tuning.
+- Predictive validity and tuning-loop improvement remain unproven.
+- No paid ACUT calls, paid LLM calls, external reviewer calls, public browsing, imagegen, or generated raster assets were used.
+- No score tables, selected task IDs, split labels, source eligibility, task statements, or hidden-oracle material were changed.
+- Presentations cleanup helper ran after final verification and removed generated slide modules, previews, layout JSON, QA scratch, and generated scripts from the ignored presentation workspace.
