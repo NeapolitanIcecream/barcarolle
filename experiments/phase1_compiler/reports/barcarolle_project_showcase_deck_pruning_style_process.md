@@ -373,3 +373,48 @@ Acceptance evidence:
 No paid ACUT calls, paid LLM calls, external reviewer calls, public browsing,
 image generation, test edits, score-table edits, task edits, split-label edits,
 or hidden-oracle changes were made in Step 6.
+
+## Step 7 - Handoff Updates
+
+Updated:
+
+```text
+docs/research/barcarolle-project-showcase-deck-zh/README.md
+docs/research/phase-1-proposal-roadmap-and-claim-planning.md
+PROCESS.md
+```
+
+Acceptance evidence:
+
+- README now points to `barcarolle-project-showcase-deck-v2.zh.pptx` as the
+  active Chinese project-showcase deck.
+- README states that V1 remains reference material.
+- README lists V2 package files:
+  - page responsibility matrix;
+  - duplication audit;
+  - V2 outline;
+  - V2 PPTX;
+  - text style audit;
+  - visual QA report.
+- Roadmap marks M6d complete and records the completed V2 outputs.
+- Roadmap immediate next step now says to use V2 as the active Chinese
+  project-showcase deck and review it for audience-specific emphasis before
+  circulation.
+- PROCESS now records V2 as the active deck, with V1 as reference material and
+  V5 as long-form source of truth.
+- Handoff docs preserve boundaries:
+  - retained slide title labels were preserved;
+  - reader-facing binary-reframe patterns were removed from the revised outline
+    and PPTX text;
+  - predictive validity remains future work;
+  - tuning-loop improvement remains unproven;
+  - older approval-packet decks remain reference artifacts.
+- README reader-facing checks returned `0` matches for binary-reframe,
+  process-language, and overclaim patterns.
+- Roadmap / PROCESS handoff diff returned `0` matches for binary-reframe,
+  overclaim, and local-path patterns.
+- `git diff --check` passed.
+
+No paid ACUT calls, paid LLM calls, external reviewer calls, public browsing,
+image generation, test edits, score-table edits, task edits, split-label edits,
+or hidden-oracle changes were made in Step 7.

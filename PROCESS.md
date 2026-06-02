@@ -184,14 +184,15 @@ Canonical reports and runbooks:
 ### Open Follow-Ups
 
 Current state: the active Chinese presentation package is the project-showcase
-deck under `docs/research/barcarolle-project-showcase-deck-zh/`. It presents
-Barcarolle through problem, method, current effects, limitations, future
-validation, Agent License, and Agent Tuning.
+deck under `docs/research/barcarolle-project-showcase-deck-zh/`. V2 is the
+active deck. It has `14` slides, deletes the duplicate V1 `项目位置` page,
+preserves retained slide title labels, and removes reader-facing binary-reframe
+patterns from the revised outline and PPTX text. V1 remains reference material.
+V5 remains the long-form source of truth.
 
-Current next action: use the project-showcase package as the active editing
-surface for Chinese presentation revisions. The older Chinese approval packet
-under `docs/research/m6-approval-packet-zh/` remains fact/reference material,
-not the active deck structure. V5 remains the long-form source of truth.
+Current next action: review V2 for audience-specific emphasis before
+circulation. Do not restore duplicate page roles, approval-packet framing, or
+reader-facing binary-reframe phrasing.
 
 Do not run more paid ACUT cells by default. Future project-scale paid
 evaluation should be budgeted and gated by frozen releases, baselines,
@@ -205,11 +206,18 @@ old proposal drafts unless V5 has a blocking factual or claim-boundary issue.
 Current canonical links:
 
 - `docs/research/barcarolle-proposal-report-v5.md`
+- `docs/research/barcarolle-project-showcase-deck-zh/barcarolle-project-showcase-deck-v2.zh.pptx`
 - `docs/research/barcarolle-project-showcase-deck-zh/barcarolle-project-showcase-deck-v1.zh.pptx`
 - `docs/research/barcarolle-project-showcase-deck-zh/README.md`
+- `docs/research/barcarolle-project-showcase-deck-zh/page-responsibility-matrix-v2.zh.md`
+- `docs/research/barcarolle-project-showcase-deck-zh/duplication-audit-v2.zh.md`
+- `docs/research/barcarolle-project-showcase-deck-zh/showcase-deck-outline-v2.zh.md`
+- `docs/research/barcarolle-project-showcase-deck-zh/text-style-audit-v2.zh.md`
+- `docs/research/barcarolle-project-showcase-deck-zh/visual-qa-report-v2.zh.md`
 - `docs/research/barcarolle-project-showcase-deck-zh/showcase-deck-outline-v1.zh.md`
 - `docs/research/barcarolle-project-showcase-deck-zh/text-and-claim-audit-v1.zh.md`
 - `docs/research/barcarolle-project-showcase-deck-zh/visual-qa-report-v1.zh.md`
+- `docs/experiments/barcarolle-project-showcase-deck-pruning-style-polish-runbook.md`
 - `docs/experiments/barcarolle-project-showcase-deck-rewrite-runbook.md`
 - `docs/experiments/proposal-approval-packet-zh-supplement-runbook.md`
 - `docs/research/m6-approval-packet-zh/barcarolle-approval-deck-v1.zh.pptx`

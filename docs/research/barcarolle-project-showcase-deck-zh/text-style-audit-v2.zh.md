@@ -51,6 +51,20 @@ outputs/manual-20260602-114006-showcase-pruning/presentations/barcarolle-project
 
 Manual review found no remaining reader-facing drafting instructions, prompt-like comments, old-stage labels, or visible binary-reframe language in the target PPTX text.
 
+## Handoff Recheck
+
+After updating `README.md`, roadmap, and `PROCESS.md`, checks were repeated:
+
+| Check | Result |
+| --- | --- |
+| README binary-reframe patterns | `0` matches |
+| README process-language patterns | `0` matches |
+| README overclaim patterns | `0` matches |
+| Roadmap / PROCESS diff-scope binary-reframe, overclaim, and local-path patterns | `0` matches |
+| `git diff --check` | passed |
+
+The full roadmap remains an internal planning document with historical milestone and runbook language. For that file, the Step 7 audit is limited to the handoff diff introduced by this revision.
+
 ## Claim Boundary
 
 The V2 deck preserves these boundaries:

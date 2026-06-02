@@ -594,6 +594,39 @@ The M6/M6b approval-packet decks remain reference artifacts, but the active
 Chinese presentation surface is now
 `docs/research/barcarolle-project-showcase-deck-zh/`.
 
+### M6d: Project Showcase Deck Pruning And Style Polish
+
+Status: complete.
+
+Purpose:
+
+```text
+Revise the Chinese project-showcase deck by auditing each slide's unique role,
+merging or deleting duplicate pages, preserving retained slide title labels,
+and removing reader-facing binary-reframe language.
+```
+
+Runbook:
+
+```text
+docs/experiments/barcarolle-project-showcase-deck-pruning-style-polish-runbook.md
+```
+
+Completed outputs:
+
+- `docs/research/barcarolle-project-showcase-deck-zh/page-responsibility-matrix-v2.zh.md`
+- `docs/research/barcarolle-project-showcase-deck-zh/duplication-audit-v2.zh.md`
+- `docs/research/barcarolle-project-showcase-deck-zh/showcase-deck-outline-v2.zh.md`
+- `docs/research/barcarolle-project-showcase-deck-zh/barcarolle-project-showcase-deck-v2.zh.pptx`
+- `docs/research/barcarolle-project-showcase-deck-zh/text-style-audit-v2.zh.md`
+- `docs/research/barcarolle-project-showcase-deck-zh/visual-qa-report-v2.zh.md`
+
+V2 has `14` slides. V1 Slide 5 `项目位置` was deleted after the page
+responsibility audit; retained slide title labels were preserved. The V2 deck
+separates compiler workflow, prediction target, algorithm environment, future
+validation, governance evidence, and protected tuning feedback into distinct
+visual roles.
+
 ## 8. Work Not On The Short-Term Critical Path
 
 These can be valuable after the proposal direction is stable, but should not
@@ -609,10 +642,10 @@ drive the next few days unless the v1 P0 placeholders expose a direct need:
 
 ## 9. Immediate Next Step
 
-Use `docs/research/barcarolle-project-showcase-deck-zh/` as the active Chinese
-presentation package for project-showcase edits. Review the deck for
-audience-specific emphasis before circulation, but do not restore the
-approval-packet framing or internal process vocabulary. Predictive validity
-remains future work; project-scale paid ACUT evaluation should be budgeted and
-gated by frozen protocols rather than framed as prohibited in the proposal
-report.
+Use
+`docs/research/barcarolle-project-showcase-deck-zh/barcarolle-project-showcase-deck-v2.zh.pptx`
+as the active Chinese project-showcase deck. Review V2 for audience-specific
+emphasis before circulation, but do not restore duplicate page roles or
+reader-facing binary-reframe phrasing. Predictive validity remains future work;
+project-scale paid ACUT evaluation should be budgeted and gated by frozen
+protocols rather than framed as prohibited in the proposal report.
