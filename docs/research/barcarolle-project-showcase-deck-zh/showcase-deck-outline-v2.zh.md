@@ -2,7 +2,7 @@
 
 状态：pruned project-showcase deck outline，2026-06-02。
 
-用途：锁定 V2 PPTX 的 14 页结构、可见文案和视觉职责。大纲按最终读者阅读顺序组织。
+用途：锁定 PPTX 的 14 页结构、可见文案和视觉职责。大纲按最终读者阅读顺序组织。
 
 ## Slide 1
 
@@ -302,7 +302,7 @@
 
 ## Final Count
 
-V2 target count: `14` slides.
+Target count: `14` slides.
 
 Retained title labels remain unchanged for all retained source pages. The two
 `产品化方向` pages are retained because one answers governance evidence use and

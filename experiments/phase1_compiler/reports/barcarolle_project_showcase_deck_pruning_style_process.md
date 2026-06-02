@@ -219,3 +219,82 @@ Acceptance evidence:
 No paid ACUT calls, paid LLM calls, external reviewer calls, public browsing,
 image generation, test edits, score-table edits, task edits, split-label edits,
 or hidden-oracle changes were made in Step 3.
+
+## Step 4 - Build V2 PPTX
+
+Built:
+
+```text
+docs/research/barcarolle-project-showcase-deck-zh/barcarolle-project-showcase-deck-v2.zh.pptx
+```
+
+Presentation workspace:
+
+```text
+outputs/manual-20260602-114006-showcase-pruning/presentations/barcarolle-project-showcase-deck-pruning-style/
+```
+
+Acceptance evidence:
+
+- Used the Presentations artifact-tool workflow in `create` task mode with
+  primary deck profile `engineering-platform`.
+- Created thread-scoped presentation workspace files:
+  - `profile-plan.txt`;
+  - `source-notes.txt`;
+  - `design-system.txt`;
+  - `contact-sheet-plan.txt`;
+  - editable artifact-tool slide modules under `slides/`.
+- Built `14` editable artifact-tool slides using text and shape primitives.
+- Final build manifest reported:
+  - output bytes in workspace: `74559`;
+  - slide count: `14`;
+  - rendered PNG previews for all slides;
+  - generated layout JSON for all slides;
+  - generated contact sheet at `preview/contact-sheet.png`.
+- Copied only the final PPTX into the package directory.
+- Extracted the copied target PPTX text to:
+
+```text
+outputs/manual-20260602-114006-showcase-pruning/presentations/barcarolle-project-showcase-deck-pruning-style/qa/v2-pptx-text.txt
+```
+
+- Extracted target PPTX slide count: `14`.
+- Extracted target title labels:
+
+```text
+项目定位
+问题
+代价
+相关工作
+研究目标
+方法
+执行边界
+算法问题
+算法环境
+当前效果
+限制
+研究路线
+产品化方向
+产品化方向
+```
+
+- V1 Slide 5 `项目位置` is absent from the target deck.
+- Retained top-level title labels are unchanged.
+- Required text checks on the V2 outline and extracted V2 PPTX text returned
+  `0` matches for binary-reframe, process-language, overclaim, and local-path
+  patterns.
+- `unzip -t` reported no compressed-data errors for the target PPTX.
+- `check_layout_quality.mjs --warn-only` reported `0` errors and `11`
+  tight-text warnings. The warnings are short label boxes or compact
+  intentionally reviewed labels.
+- Contact sheet and selected full-size previews were inspected during build:
+  slides 1, 5, 6, 10, 12, and 14.
+- Visual repetition was reduced:
+  - Slide 6 is the only complete compiler workflow;
+  - Slide 5 is estimand/MAE, not a workflow strip;
+  - Slide 12 is future validation protocol with a different route layout;
+  - Slides 13 and 14 use governance matrix vs protected feedback loop.
+
+No paid ACUT calls, paid LLM calls, external reviewer calls, public browsing,
+image generation, test edits, score-table edits, task edits, split-label edits,
+or hidden-oracle changes were made in Step 4.
