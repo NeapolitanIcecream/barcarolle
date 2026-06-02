@@ -298,3 +298,43 @@ outputs/manual-20260602-114006-showcase-pruning/presentations/barcarolle-project
 No paid ACUT calls, paid LLM calls, external reviewer calls, public browsing,
 image generation, test edits, score-table edits, task edits, split-label edits,
 or hidden-oracle changes were made in Step 4.
+
+## Step 5 - Text Style Audit
+
+Created:
+
+```text
+docs/research/barcarolle-project-showcase-deck-zh/text-style-audit-v2.zh.md
+```
+
+Acceptance evidence:
+
+- V2 PPTX text was extracted from the copied target deck to:
+
+```text
+outputs/manual-20260602-114006-showcase-pruning/presentations/barcarolle-project-showcase-deck-pruning-style/qa/v2-pptx-text.txt
+```
+
+- Required hard checks on the V2 outline and extracted V2 PPTX text returned
+  `0` matches:
+  - binary reframe patterns;
+  - process-language patterns;
+  - predictive-validity / tuning-effect overclaim patterns;
+  - `/Users/chenmohan/Downloads` local path pattern.
+- `git diff --check` passed.
+- `audit-ai-tropes` scanner output was written to:
+
+```text
+outputs/manual-20260602-114006-showcase-pruning/presentations/barcarolle-project-showcase-deck-pruning-style/qa/outline-ai-tropes-v2.md
+outputs/manual-20260602-114006-showcase-pruning/presentations/barcarolle-project-showcase-deck-pruning-style/qa/pptx-ai-tropes-v2.md
+```
+
+- Scanner findings left unfixed are documented in the style audit:
+  - outline structural false positives from slide-by-slide metadata;
+  - technical term `harness`, required by ACUT boundary discussion.
+- The Step 7 handoff updates will repeat the text checks against updated
+  `README.md` and handoff materials after those files are edited.
+
+No paid ACUT calls, paid LLM calls, external reviewer calls, public browsing,
+image generation, test edits, score-table edits, task edits, split-label edits,
+or hidden-oracle changes were made in Step 5.
