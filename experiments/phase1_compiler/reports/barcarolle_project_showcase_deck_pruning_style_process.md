@@ -338,3 +338,38 @@ outputs/manual-20260602-114006-showcase-pruning/presentations/barcarolle-project
 No paid ACUT calls, paid LLM calls, external reviewer calls, public browsing,
 image generation, test edits, score-table edits, task edits, split-label edits,
 or hidden-oracle changes were made in Step 5.
+
+## Step 6 - Visual QA And Reader Repetition Review
+
+Created:
+
+```text
+docs/research/barcarolle-project-showcase-deck-zh/visual-qa-report-v2.zh.md
+```
+
+Supporting scorecard:
+
+```text
+outputs/manual-20260602-114006-showcase-pruning/presentations/barcarolle-project-showcase-deck-pruning-style/qa/comeback-scorecard.txt
+```
+
+Acceptance evidence:
+
+- Contact sheet was generated and inspected.
+- Selected full-size previews inspected: slides 1, 5, 6, 10, 12, and 14.
+- `check_layout_quality.mjs --warn-only` reported `0` errors and `11`
+  tight-text warnings.
+- All warnings were inspected in rendered previews and accepted as compact but
+  readable labels.
+- Visual QA report records that:
+  - no clipped text or incoherent overlap remains;
+  - V1 Slide 5 is absent;
+  - retained top-level title labels are unchanged;
+  - Slide 6 is the only complete compiler workflow;
+  - Slide 12 uses a distinct future-validation route;
+  - Slides 13 and 14 have distinct productization visual grammars;
+  - the deck can be read without V1 or old approval-packet materials.
+
+No paid ACUT calls, paid LLM calls, external reviewer calls, public browsing,
+image generation, test edits, score-table edits, task edits, split-label edits,
+or hidden-oracle changes were made in Step 6.
