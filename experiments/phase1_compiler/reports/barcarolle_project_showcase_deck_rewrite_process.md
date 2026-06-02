@@ -156,3 +156,26 @@ Acceptance evidence:
 - `git diff --check` passed.
 - Repaired one argument-map sentence that denied an overclaim but matched the overclaim regex.
 - Manual text review found no visible drafting instructions, process residue, prompt-like wording, or unsupported claims in the PPTX text.
+
+## Step 6 - Skeptical Visual Review
+
+Created:
+
+```text
+docs/research/barcarolle-project-showcase-deck-zh/visual-qa-report-v1.zh.md
+```
+
+Presentation scorecard:
+
+```text
+outputs/019e8612-2054-7261-838f-a9823b236589/presentations/barcarolle-project-showcase-deck-zh/qa/comeback-scorecard.txt
+```
+
+Acceptance evidence:
+
+- Contact sheet and selected full-size slide previews were inspected after visual iteration.
+- Presentations scorecard recorded `42/45`, with the engineering-platform profile gate passed.
+- Layout checker reported `0` errors and `7` tight-text warnings; all warning areas rendered cleanly.
+- Slide 2, slide 3, slide 8, and slide 15 were repaired during visual iteration.
+- Final review found no clipped text, label collision, unreadable chart, visible drafting instruction, or repeated generic card-grid sequence.
+- The deck is understandable without the previous Chinese packet open beside it.
