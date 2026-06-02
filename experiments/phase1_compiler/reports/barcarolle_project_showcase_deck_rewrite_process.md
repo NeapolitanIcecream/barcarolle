@@ -75,3 +75,18 @@ Acceptance evidence:
 - It positions related work as adjacent contributions rather than failed competitors.
 - It covers the benchmark-compiler method, algorithm evolution environment, current effects, unproven limits, Agent License, and Agent Tuning.
 - It preserves the current evidence boundary: predictive validity and tuning-loop improvement remain unproven.
+
+## Step 2 - Related-Work Positioning
+
+Created:
+
+```text
+docs/research/barcarolle-project-showcase-deck-zh/related-work-positioning-v1.zh.md
+```
+
+Acceptance evidence:
+
+- The note positions SWE-bench, SWE-bench Verified, SWE-bench-Live, SWE-smith, and R2E-Gym by contribution and remaining Barcarolle layer.
+- It describes related work as adjacent and useful rather than failed or replaceable.
+- It defines Barcarolle's distinct layer as repo-specific benchmark release compilation for a target repository and named ACUT boundary.
+- It uses only source-approved claims already present in the main proposal report; no public browsing or new citations were added.
