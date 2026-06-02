@@ -1,0 +1,57 @@
+{
+  "stop_label": "barcarolle_project_showcase_deck_pruning_style_complete",
+  "status": "complete",
+  "completed_at": "2026-06-02",
+  "package_dir": "docs/research/barcarolle-project-showcase-deck-zh/",
+  "outputs": {
+    "page_responsibility_matrix": "docs/research/barcarolle-project-showcase-deck-zh/page-responsibility-matrix-v2.zh.md",
+    "duplication_audit": "docs/research/barcarolle-project-showcase-deck-zh/duplication-audit-v2.zh.md",
+    "outline": "docs/research/barcarolle-project-showcase-deck-zh/showcase-deck-outline-v2.zh.md",
+    "pptx": "docs/research/barcarolle-project-showcase-deck-zh/barcarolle-project-showcase-deck-v2.zh.pptx",
+    "text_style_audit": "docs/research/barcarolle-project-showcase-deck-zh/text-style-audit-v2.zh.md",
+    "visual_qa_report": "docs/research/barcarolle-project-showcase-deck-zh/visual-qa-report-v2.zh.md",
+    "process_report": "experiments/phase1_compiler/reports/barcarolle_project_showcase_deck_pruning_style_process.md",
+    "decision_report": "experiments/phase1_compiler/reports/barcarolle_project_showcase_deck_pruning_style_decision.md"
+  },
+  "deck": {
+    "source_pptx": "docs/research/barcarolle-project-showcase-deck-zh/barcarolle-project-showcase-deck-v1.zh.pptx",
+    "target_pptx": "docs/research/barcarolle-project-showcase-deck-zh/barcarolle-project-showcase-deck-v2.zh.pptx",
+    "v1_slide_count": 15,
+    "v2_slide_count": 14,
+    "deleted_v1_slides": [
+      {
+        "slide": 5,
+        "title_label": "项目位置",
+        "merge_destinations": [
+          "V2 Slide 4 相关工作",
+          "V2 Slide 6 方法"
+        ]
+      }
+    ],
+    "retained_title_labels_preserved": true
+  },
+  "audits": {
+    "binary_reframe_passed": true,
+    "process_language_passed": true,
+    "overclaim_passed": true,
+    "local_path_passed": true,
+    "visual_qa_passed": true,
+    "layout_errors": 0,
+    "layout_warnings": 11,
+    "git_diff_check_passed": true,
+    "pptx_zip_integrity_passed": true
+  },
+  "boundaries": {
+    "predictive_validity_established": false,
+    "tuning_loop_improvement_established": false,
+    "paid_acut_calls_used": 0,
+    "paid_llm_calls_used": 0,
+    "external_reviewer_calls_used": 0,
+    "public_browsing_used": false,
+    "imagegen_or_generated_raster_assets_used": false,
+    "score_tables_changed": false,
+    "selected_task_ids_or_split_labels_changed": false,
+    "source_eligibility_changed": false,
+    "task_statements_or_hidden_oracle_material_changed": false
+  }
+}

@@ -418,3 +418,36 @@ Acceptance evidence:
 No paid ACUT calls, paid LLM calls, external reviewer calls, public browsing,
 image generation, test edits, score-table edits, task edits, split-label edits,
 or hidden-oracle changes were made in Step 7.
+
+## Step 8 - Closeout
+
+Created:
+
+```text
+experiments/phase1_compiler/reports/barcarolle_project_showcase_deck_pruning_style_decision.md
+experiments/phase1_compiler/results/barcarolle_project_showcase_deck_pruning_style_decision.json
+```
+
+Stop label:
+
+```text
+barcarolle_project_showcase_deck_pruning_style_complete
+```
+
+Closeout summary:
+
+- V2 is complete.
+- V2 slide count is `14`.
+- V1 Slide 5 `项目位置` was deleted and merged into V2 Slides 4 and 6.
+- Retained slide title labels were preserved.
+- Page responsibility matrix, duplication audit, V2 outline, V2 PPTX, style
+  audit, visual QA report, process report, decision report, and JSON result are
+  all present.
+- Binary-reframe and process-language audits passed.
+- Visual repetition was reduced.
+- Predictive validity and tuning-loop improvement remain unproven.
+- No paid/external calls or generated images were used.
+
+No paid ACUT calls, paid LLM calls, external reviewer calls, public browsing,
+image generation, test edits, score-table edits, task edits, split-label edits,
+or hidden-oracle changes were made in Step 8.
