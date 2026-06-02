@@ -46,7 +46,7 @@ Barcarolle 不接管 ACUT 的搜索、编辑、prompt、工具策略、模型、
 
 Barcarolle 是面向特定仓库的 benchmark 编译器项目：它研究如何把候选任务编译成可冻结、可验证、可解释的 benchmark release，使未来能够更可靠地估计某个 ACUT 在目标仓库未来工作中的表现。
 
-当前项目已经证明的问题不是“预测效度已经建立”，而是：目标仓库 benchmark 构造是一个真实、可度量、技术上可执行、并且有初步优化信号的研究问题。下一阶段应把重点放在 benchmark-selection algorithm 演进、source/task supply 强化、严格未来验证，以及 Agent License / Agent Tuning 的证据接口上。
+当前项目已经证明的问题不是“已完成未来预测证明”，而是：目标仓库 benchmark 构造是一个真实、可度量、技术上可执行、并且有初步优化信号的研究问题。下一阶段应把重点放在 benchmark-selection algorithm 演进、source/task supply 强化、严格未来验证，以及 Agent License / Agent Tuning 的证据接口上。
 
 ## Reasons
 
@@ -103,4 +103,3 @@ Barcarolle 是面向特定仓库的 benchmark 编译器项目：它研究如何�
 - multi-configuration extension：在需要比较 prompts、retrieval、skills、tool policy、model 和 runtime budget 时，按 named ACUT configuration 报告，避免 pooled rescue。
 - Agent License path：把 Barcarolle 作为 deployment governance 的 evidence layer，而不是授权产品本身。
 - Agent Tuning path：输出 dev/eval/canary release、failure taxonomy、scorecard 和 regression signal，帮助团队比较配置变化，同时保护正式验证材料不被过拟合。
-

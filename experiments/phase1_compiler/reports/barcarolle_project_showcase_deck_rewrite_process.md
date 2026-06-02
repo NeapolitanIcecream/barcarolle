@@ -131,3 +131,28 @@ Acceptance evidence:
 - Visual iteration fixed right-edge clipping on slides 2, 3, and 15 and an overfull boundary node on slide 8.
 - `check_layout_quality.mjs --warn-only` reported `0` errors and `7` tight-text warnings; rendered warning areas were manually checked and did not show clipping or label collision.
 - The final PPTX follows the project-showcase architecture and preserves the current non-proof boundaries for predictive validity and tuning-loop improvement.
+
+## Step 5 - Reader-Facing Text And Claim Audit
+
+Created:
+
+```text
+docs/research/barcarolle-project-showcase-deck-zh/text-and-claim-audit-v1.zh.md
+```
+
+PPTX text extraction:
+
+```text
+outputs/019e8612-2054-7261-838f-a9823b236589/presentations/barcarolle-project-showcase-deck-zh/qa/pptx-text.txt
+```
+
+Acceptance evidence:
+
+- Extracted PPTX slide and notes text to the ignored presentation workspace.
+- Required forbidden-language checks passed for current reader-facing Markdown.
+- Required overclaim checks passed for current reader-facing Markdown.
+- Required local-path checks passed for current reader-facing Markdown.
+- Combined forbidden-language, overclaim, and local-path checks passed for extracted PPTX text.
+- `git diff --check` passed.
+- Repaired one argument-map sentence that denied an overclaim but matched the overclaim regex.
+- Manual text review found no visible drafting instructions, process residue, prompt-like wording, or unsupported claims in the PPTX text.
