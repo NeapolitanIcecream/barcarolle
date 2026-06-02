@@ -562,6 +562,38 @@ The English M6 packet remains the source/reference version. V5 remains the
 long-form source of truth. Future reviewer-facing edits should target
 `docs/research/m6-approval-packet-zh/` first.
 
+### M6c: Chinese Project Showcase Deck Rewrite
+
+Status: complete.
+
+Purpose:
+
+```text
+Supersede the approval-packet deck for presentation use with a Chinese project
+showcase deck organized around problem, method, current effects, limitations,
+future validation, Agent License, and Agent Tuning.
+```
+
+Runbook:
+
+```text
+docs/experiments/barcarolle-project-showcase-deck-rewrite-runbook.md
+```
+
+Completed outputs:
+
+- `docs/research/barcarolle-project-showcase-deck-zh/barcarolle-project-showcase-deck-v1.zh.pptx`
+- `docs/research/barcarolle-project-showcase-deck-zh/README.md`
+- `docs/research/barcarolle-project-showcase-deck-zh/project-argument-map-v1.zh.md`
+- `docs/research/barcarolle-project-showcase-deck-zh/related-work-positioning-v1.zh.md`
+- `docs/research/barcarolle-project-showcase-deck-zh/showcase-deck-outline-v1.zh.md`
+- `docs/research/barcarolle-project-showcase-deck-zh/text-and-claim-audit-v1.zh.md`
+- `docs/research/barcarolle-project-showcase-deck-zh/visual-qa-report-v1.zh.md`
+
+The M6/M6b approval-packet decks remain reference artifacts, but the active
+Chinese presentation surface is now
+`docs/research/barcarolle-project-showcase-deck-zh/`.
+
 ## 8. Work Not On The Short-Term Critical Path
 
 These can be valuable after the proposal direction is stable, but should not
@@ -577,11 +609,10 @@ drive the next few days unless the v1 P0 placeholders expose a direct need:
 
 ## 9. Immediate Next Step
 
-Use `docs/research/m6-approval-packet-zh/` as the active editing surface for
-subsequent reviewer-facing revisions. The English M6 packet remains the
-source/reference version, and V5 remains the long-form source of truth. Fill or
-explicitly leave visible the user-owned staffing, duration, gated evaluation
-budget ceiling, approval-path, and owner-category placeholders before sending
-the packet to reviewers. Predictive validity remains future work; project-scale
-paid ACUT evaluation should be budgeted and gated by frozen protocols rather
-than framed as prohibited in the proposal report.
+Use `docs/research/barcarolle-project-showcase-deck-zh/` as the active Chinese
+presentation package for project-showcase edits. Review the deck for
+audience-specific emphasis before circulation, but do not restore the
+approval-packet framing or internal process vocabulary. Predictive validity
+remains future work; project-scale paid ACUT evaluation should be budgeted and
+gated by frozen protocols rather than framed as prohibited in the proposal
+report.

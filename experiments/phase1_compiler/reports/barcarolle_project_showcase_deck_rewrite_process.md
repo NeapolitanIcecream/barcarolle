@@ -179,3 +179,26 @@ Acceptance evidence:
 - Slide 2, slide 3, slide 8, and slide 15 were repaired during visual iteration.
 - Final review found no clipped text, label collision, unreadable chart, visible drafting instruction, or repeated generic card-grid sequence.
 - The deck is understandable without the previous Chinese packet open beside it.
+
+## Step 7 - Handoff Updates
+
+Created:
+
+```text
+docs/research/barcarolle-project-showcase-deck-zh/README.md
+```
+
+Updated:
+
+```text
+docs/research/phase-1-proposal-roadmap-and-claim-planning.md
+PROCESS.md
+```
+
+Acceptance evidence:
+
+- README identifies the new directory as the active Chinese project-showcase deck package.
+- README states that the previous Chinese approval-packet materials remain fact/reference material, not the current deck structure.
+- README points future presentation edits to the new package.
+- Roadmap marks the Chinese project-showcase rewrite complete and lists the completed package files.
+- PROCESS now lists the new project-showcase package as the active Chinese presentation package and keeps the older approval-packet materials as references.

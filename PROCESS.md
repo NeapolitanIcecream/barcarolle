@@ -8,7 +8,7 @@ Detailed evidence stays in the relevant committed reports, results, runbooks,
 and manifests. This file keeps only the current decision state and durable
 operating constraints.
 
-Last updated: 2026-06-01.
+Last updated: 2026-06-02.
 
 ## Maintenance Rules
 
@@ -183,17 +183,15 @@ Canonical reports and runbooks:
 
 ### Open Follow-Ups
 
-Current state: the Chinese approval packet has been produced under
-`docs/research/m6-approval-packet-zh/`. The primary reviewer-facing artifact is
-`barcarolle-approval-deck-v1.zh.pptx`, supported by a Chinese one-page
-summary, deck outline, evidence appendix, checklist, README, and glossary.
+Current state: the active Chinese presentation package is the project-showcase
+deck under `docs/research/barcarolle-project-showcase-deck-zh/`. It presents
+Barcarolle through problem, method, current effects, limitations, future
+validation, Agent License, and Agent Tuning.
 
-Current next action: use the Chinese packet as the active editing surface for
-subsequent reviewer-facing revisions. The English M6 packet remains the
-source/reference version, and V5 remains the long-form source of truth. Fill or
-explicitly leave visible the user-owned staffing, duration, gated evaluation
-budget ceiling, approval-path, and owner-category placeholders before reviewer
-circulation.
+Current next action: use the project-showcase package as the active editing
+surface for Chinese presentation revisions. The older Chinese approval packet
+under `docs/research/m6-approval-packet-zh/` remains fact/reference material,
+not the active deck structure. V5 remains the long-form source of truth.
 
 Do not run more paid ACUT cells by default. Future project-scale paid
 evaluation should be budgeted and gated by frozen releases, baselines,
@@ -207,6 +205,12 @@ old proposal drafts unless V5 has a blocking factual or claim-boundary issue.
 Current canonical links:
 
 - `docs/research/barcarolle-proposal-report-v5.md`
+- `docs/research/barcarolle-project-showcase-deck-zh/barcarolle-project-showcase-deck-v1.zh.pptx`
+- `docs/research/barcarolle-project-showcase-deck-zh/README.md`
+- `docs/research/barcarolle-project-showcase-deck-zh/showcase-deck-outline-v1.zh.md`
+- `docs/research/barcarolle-project-showcase-deck-zh/text-and-claim-audit-v1.zh.md`
+- `docs/research/barcarolle-project-showcase-deck-zh/visual-qa-report-v1.zh.md`
+- `docs/experiments/barcarolle-project-showcase-deck-rewrite-runbook.md`
 - `docs/experiments/proposal-approval-packet-zh-supplement-runbook.md`
 - `docs/research/m6-approval-packet-zh/barcarolle-approval-deck-v1.zh.pptx`
 - `docs/research/m6-approval-packet-zh/README.md`
