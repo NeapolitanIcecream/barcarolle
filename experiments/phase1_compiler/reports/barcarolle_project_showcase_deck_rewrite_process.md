@@ -90,3 +90,19 @@ Acceptance evidence:
 - It describes related work as adjacent and useful rather than failed or replaceable.
 - It defines Barcarolle's distinct layer as repo-specific benchmark release compilation for a target repository and named ACUT boundary.
 - It uses only source-approved claims already present in the main proposal report; no public browsing or new citations were added.
+
+## Step 3 - New Deck Outline
+
+Created:
+
+```text
+docs/research/barcarolle-project-showcase-deck-zh/showcase-deck-outline-v1.zh.md
+```
+
+Acceptance evidence:
+
+- The outline uses the 15-slide project-showcase architecture: problem, stakes, related work, Barcarolle's layer, north star, method, ACUT boundary, selection problem, algorithm environment, current effects, limits, future validation, Agent License, and Agent Tuning.
+- Each slide records visible title, main message, visual object, essential evidence or example, and content to omit.
+- Related work appears in the main story rather than in an appendix.
+- Agent License and Agent Tuning appear as future productization paths with current non-proof boundaries preserved.
+- Required forbidden-language, overclaim, local-path, and scoped whitespace checks passed for the outline.
