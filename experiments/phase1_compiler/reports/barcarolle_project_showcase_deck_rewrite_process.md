@@ -106,3 +106,28 @@ Acceptance evidence:
 - Related work appears in the main story rather than in an appendix.
 - Agent License and Agent Tuning appear as future productization paths with current non-proof boundaries preserved.
 - Required forbidden-language, overclaim, local-path, and scoped whitespace checks passed for the outline.
+
+## Step 4 - New Chinese PPTX
+
+Created:
+
+```text
+docs/research/barcarolle-project-showcase-deck-zh/barcarolle-project-showcase-deck-v1.zh.pptx
+```
+
+Presentation workspace:
+
+```text
+outputs/019e8612-2054-7261-838f-a9823b236589/presentations/barcarolle-project-showcase-deck-zh/
+```
+
+Acceptance evidence:
+
+- Used the Presentations artifact-tool workflow with `create` task mode and primary `engineering-platform` deck profile.
+- Created `profile-plan.txt` in the thread-scoped presentation workspace.
+- Generated 15 editable artifact-tool slides using text, shapes, lines, matrices, workflows, and evidence callouts; no decorative generated images or imagegen assets were used.
+- Rendered all slides to PNG, generated layout JSON, and generated a contact sheet through `build_artifact_deck.mjs`.
+- Final build manifest reported `slideCount: 15` and non-empty output (`73293` bytes in the workspace build).
+- Visual iteration fixed right-edge clipping on slides 2, 3, and 15 and an overfull boundary node on slide 8.
+- `check_layout_quality.mjs --warn-only` reported `0` errors and `7` tight-text warnings; rendered warning areas were manually checked and did not show clipping or label collision.
+- The final PPTX follows the project-showcase architecture and preserves the current non-proof boundaries for predictive validity and tuning-loop improvement.
