@@ -153,3 +153,38 @@ Acceptance evidence:
 No paid ACUT calls, paid LLM calls, external reviewer calls, public browsing,
 image generation, test edits, score-table edits, task edits, split-label edits,
 or hidden-oracle changes were made in Step 1.
+
+## Step 2 - Duplication Audit And Pruning Plan
+
+Created:
+
+```text
+docs/research/barcarolle-project-showcase-deck-zh/duplication-audit-v2.zh.md
+```
+
+Supporting scratch evidence:
+
+```text
+outputs/manual-20260602-114006-showcase-pruning/presentations/barcarolle-project-showcase-deck-pruning-style/qa/v1-term-overlap.txt
+```
+
+Acceptance evidence:
+
+- The audit covers duplicated page roles, visual objects, key vocabulary,
+  evidence numbers, release/freeze/validation elements, and productization
+  framing.
+- The pruning plan sets final V2 slide count to `14`.
+- Final V2 order is defined before outline drafting:
+  `1, 2, 3, 4, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15` from V1.
+- V1 Slide 5 is deleted, with useful content merged into V2 Slide 4
+  `相关工作` and V2 Slide 6 `方法`.
+- Compiler workflow, prediction target, algorithm environment, future
+  validation, governance evidence, and protected tuning feedback are assigned
+  to distinct slides and distinct visual grammars.
+- Evidence numbers are assigned to the slides where they serve the revised
+  argument; no score table, task ID, split label, source eligibility, task
+  statement, or hidden-oracle material changed.
+
+No paid ACUT calls, paid LLM calls, external reviewer calls, public browsing,
+image generation, test edits, score-table edits, task edits, split-label edits,
+or hidden-oracle changes were made in Step 2.
