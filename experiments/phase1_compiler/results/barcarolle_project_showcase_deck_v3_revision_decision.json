@@ -1,0 +1,50 @@
+{
+  "stop_label": "barcarolle_project_showcase_deck_v3_revision_complete",
+  "status": "complete",
+  "final_active_deck": "docs/research/barcarolle-project-showcase-deck-zh/barcarolle-project-showcase-deck-v3.zh.pptx",
+  "slide_count": 11,
+  "source_deck": "docs/research/barcarolle-project-showcase-deck-zh/barcarolle-project-showcase-deck-v2.zh.pptx",
+  "created_artifacts": [
+    "docs/research/barcarolle-project-showcase-deck-zh/deck-architecture-v3.zh.md",
+    "docs/research/barcarolle-project-showcase-deck-zh/related-work-source-sanity-v3.zh.md",
+    "docs/research/barcarolle-project-showcase-deck-zh/showcase-deck-outline-v3.zh.md",
+    "docs/research/barcarolle-project-showcase-deck-zh/barcarolle-project-showcase-deck-v3.zh.pptx",
+    "docs/research/barcarolle-project-showcase-deck-zh/reader-review-audit-v3.zh.md",
+    "docs/research/barcarolle-project-showcase-deck-zh/text-style-audit-v3.zh.md",
+    "docs/research/barcarolle-project-showcase-deck-zh/visual-qa-report-v3.zh.md",
+    "experiments/phase1_compiler/reports/barcarolle_project_showcase_deck_v3_revision_process.md",
+    "experiments/phase1_compiler/reports/barcarolle_project_showcase_deck_v3_revision_decision.md"
+  ],
+  "updated_artifacts": [
+    "docs/research/barcarolle-project-showcase-deck-zh/README.md",
+    "PROCESS.md"
+  ],
+  "qa": {
+    "artifact_tool_export": true,
+    "slide_png_render": true,
+    "layout_json_extraction": true,
+    "layout_errors": 0,
+    "layout_warnings": 15,
+    "full_size_slides_inspected": "1-11",
+    "pptx_zip_integrity": true,
+    "forbidden_residue_matches": 0,
+    "overclaim_matches": 0,
+    "local_downloads_path_matches": 0
+  },
+  "boundary": {
+    "paid_acut_calls": 0,
+    "paid_llm_calls": 0,
+    "external_reviewer_calls": 0,
+    "imagegen_used": false,
+    "generated_raster_assets_used": false,
+    "score_tables_changed": false,
+    "selected_task_ids_changed": false,
+    "split_labels_changed": false,
+    "source_eligibility_changed": false,
+    "task_statements_changed": false,
+    "hidden_oracle_material_changed": false,
+    "predictive_validity_established": false,
+    "tuning_loop_improvement_established": false
+  },
+  "recommended_next_action": "Use V3 for reader review or circulation within the current claim boundary."
+}

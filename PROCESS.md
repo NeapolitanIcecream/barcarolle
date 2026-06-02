@@ -184,19 +184,17 @@ Canonical reports and runbooks:
 ### Open Follow-Ups
 
 Current state: the active Chinese presentation package is the project-showcase
-deck under `docs/research/barcarolle-project-showcase-deck-zh/`. V2 is the
-active deck and V3 revision planning is queued. V2 has `14` slides, deletes the
-duplicate V1 `项目位置` page, preserves retained slide title labels, and removes
-reader-facing binary-reframe patterns from the revised outline and PPTX text.
-V1 remains reference material. V5 remains the long-form source of truth.
+deck under `docs/research/barcarolle-project-showcase-deck-zh/`. V3 is the
+active deck. It has `11` slides, defines ACUT on first use, merges V2 problem
+and cost pages, rewrites related work with full names and concrete gaps,
+centers the research route on benchmark-compiler task-selection algorithm
+evolution, and replaces the V2 productization/process visuals. V2 and V1 remain
+reference material. V5 remains the long-form source of truth.
 
-Current next action: execute the V3 reader-centered revision runbook. V3 should
-use the slide-by-slide reader-feedback handoff as an internal review source,
-merge or delete remaining process-heavy pages, explain ACUT on first use,
-rewrite related work with full names and concrete gaps, recenter the research
-route on benchmark-compiler task-selection algorithm evolution, and redraw
-malformed diagrams. Do not restore approval-packet framing or reader-facing
-binary-reframe phrasing.
+Current next action: use V3 as the active Chinese project-showcase deck for
+reader review or circulation. Do not restore approval-packet framing,
+reader-facing binary-reframe phrasing, product-boundary negative phrasing, or
+standalone process-diagnostics pages.
 
 Do not run more paid ACUT cells by default. Future project-scale paid
 evaluation should be budgeted and gated by frozen releases, baselines,
@@ -210,9 +208,16 @@ old proposal drafts unless V5 has a blocking factual or claim-boundary issue.
 Current canonical links:
 
 - `docs/research/barcarolle-proposal-report-v5.md`
+- `docs/research/barcarolle-project-showcase-deck-zh/barcarolle-project-showcase-deck-v3.zh.pptx`
 - `docs/research/barcarolle-project-showcase-deck-zh/barcarolle-project-showcase-deck-v2.zh.pptx`
 - `docs/research/barcarolle-project-showcase-deck-zh/barcarolle-project-showcase-deck-v1.zh.pptx`
 - `docs/research/barcarolle-project-showcase-deck-zh/README.md`
+- `docs/research/barcarolle-project-showcase-deck-zh/deck-architecture-v3.zh.md`
+- `docs/research/barcarolle-project-showcase-deck-zh/related-work-source-sanity-v3.zh.md`
+- `docs/research/barcarolle-project-showcase-deck-zh/showcase-deck-outline-v3.zh.md`
+- `docs/research/barcarolle-project-showcase-deck-zh/reader-review-audit-v3.zh.md`
+- `docs/research/barcarolle-project-showcase-deck-zh/text-style-audit-v3.zh.md`
+- `docs/research/barcarolle-project-showcase-deck-zh/visual-qa-report-v3.zh.md`
 - `docs/research/barcarolle-project-showcase-deck-zh/page-responsibility-matrix-v2.zh.md`
 - `docs/research/barcarolle-project-showcase-deck-zh/duplication-audit-v2.zh.md`
 - `docs/research/barcarolle-project-showcase-deck-zh/showcase-deck-outline-v2.zh.md`
