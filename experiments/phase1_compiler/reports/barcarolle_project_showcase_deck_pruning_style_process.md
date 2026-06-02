@@ -118,3 +118,38 @@ Initial repetition scan:
 No paid ACUT calls, paid LLM calls, external reviewer calls, public browsing,
 image generation, test edits, score-table edits, task edits, split-label edits,
 or hidden-oracle changes were made in Step 0.
+
+## Step 1 - Page Responsibility Matrix
+
+Created:
+
+```text
+docs/research/barcarolle-project-showcase-deck-zh/page-responsibility-matrix-v2.zh.md
+```
+
+Acceptance evidence:
+
+- The matrix covers all `15` V1 slides.
+- Target V2 length is set before deck editing: `14` slides.
+- V1 Slide 5 `项目位置` is marked `delete / merge` because its positioning role
+  overlaps with Slide 1, Slide 4, and Slide 7.
+- The useful Slide 5 layer-positioning content is assigned to Slide 4
+  `相关工作` and Slide 7 `方法`.
+- Retained slide title labels are listed and preserved.
+- The matrix explicitly evaluates the required overlap suspects:
+  - Slide 1 vs Slide 5;
+  - Slides 5/6/7/13 around release/freeze/validation workflow;
+  - Slide 10 vs Slide 13 around baselines and future validation;
+  - Slide 11 vs Slide 12 around MAE edge, fallback, and support;
+  - Slide 14 vs Slide 15 around productization direction.
+- Retained slides have distinct roles:
+  - Slide 6 defines the estimand and MAE;
+  - Slide 7 is the only complete compiler workflow;
+  - Slide 10 is the current algorithm-evaluation environment;
+  - Slide 13 is the future validation protocol;
+  - Slide 14 is deployment-governance evidence;
+  - Slide 15 is protected tuning feedback.
+
+No paid ACUT calls, paid LLM calls, external reviewer calls, public browsing,
+image generation, test edits, score-table edits, task edits, split-label edits,
+or hidden-oracle changes were made in Step 1.
