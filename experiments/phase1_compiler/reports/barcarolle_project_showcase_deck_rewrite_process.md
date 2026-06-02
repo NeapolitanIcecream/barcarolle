@@ -60,3 +60,18 @@ Execution boundary:
 - New package directory created at `docs/research/barcarolle-project-showcase-deck-zh/`.
 - No reader-facing deck content drafted in Step 0.
 
+## Step 1 - Reader Argument Map
+
+Created:
+
+```text
+docs/research/barcarolle-project-showcase-deck-zh/project-argument-map-v1.zh.md
+```
+
+Acceptance evidence:
+
+- The map is organized by audience, reader questions, condition, consequence, response, main claim, reasons, evidence, warrants, objections, responses, and future work.
+- It frames the core problem as target-repository prediction for a named ACUT, not as a deck or packet problem.
+- It positions related work as adjacent contributions rather than failed competitors.
+- It covers the benchmark-compiler method, algorithm evolution environment, current effects, unproven limits, Agent License, and Agent Tuning.
+- It preserves the current evidence boundary: predictive validity and tuning-loop improvement remain unproven.
