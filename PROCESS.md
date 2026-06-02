@@ -185,14 +185,18 @@ Canonical reports and runbooks:
 
 Current state: the active Chinese presentation package is the project-showcase
 deck under `docs/research/barcarolle-project-showcase-deck-zh/`. V2 is the
-active deck. It has `14` slides, deletes the duplicate V1 `项目位置` page,
-preserves retained slide title labels, and removes reader-facing binary-reframe
-patterns from the revised outline and PPTX text. V1 remains reference material.
-V5 remains the long-form source of truth.
+active deck and V3 revision planning is queued. V2 has `14` slides, deletes the
+duplicate V1 `项目位置` page, preserves retained slide title labels, and removes
+reader-facing binary-reframe patterns from the revised outline and PPTX text.
+V1 remains reference material. V5 remains the long-form source of truth.
 
-Current next action: review V2 for audience-specific emphasis before
-circulation. Do not restore duplicate page roles, approval-packet framing, or
-reader-facing binary-reframe phrasing.
+Current next action: execute the V3 reader-centered revision runbook. V3 should
+use the slide-by-slide reader-feedback handoff as an internal review source,
+merge or delete remaining process-heavy pages, explain ACUT on first use,
+rewrite related work with full names and concrete gaps, recenter the research
+route on benchmark-compiler task-selection algorithm evolution, and redraw
+malformed diagrams. Do not restore approval-packet framing or reader-facing
+binary-reframe phrasing.
 
 Do not run more paid ACUT cells by default. Future project-scale paid
 evaluation should be budgeted and gated by frozen releases, baselines,
@@ -214,6 +218,8 @@ Current canonical links:
 - `docs/research/barcarolle-project-showcase-deck-zh/showcase-deck-outline-v2.zh.md`
 - `docs/research/barcarolle-project-showcase-deck-zh/text-style-audit-v2.zh.md`
 - `docs/research/barcarolle-project-showcase-deck-zh/visual-qa-report-v2.zh.md`
+- `docs/research/barcarolle-project-showcase-deck-zh/slide-by-slide-reader-review-handoff-v3.zh.md`
+- `docs/experiments/barcarolle-project-showcase-deck-v3-reader-centered-revision-runbook.md`
 - `docs/research/barcarolle-project-showcase-deck-zh/showcase-deck-outline-v1.zh.md`
 - `docs/research/barcarolle-project-showcase-deck-zh/text-and-claim-audit-v1.zh.md`
 - `docs/research/barcarolle-project-showcase-deck-zh/visual-qa-report-v1.zh.md`
