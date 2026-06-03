@@ -1,18 +1,18 @@
 # Barcarolle 中文项目展示 Deck
 
-状态：active Chinese project-showcase deck package，2026-06-02。
+状态：active Chinese project-showcase deck package，2026-06-03。
 
 ## Active Deck
 
 本目录包含当前面向读者的中文项目展示 deck：
 
 ```text
-docs/research/barcarolle-project-showcase-deck-zh/barcarolle-project-showcase-deck-v3.zh.pptx
+docs/research/barcarolle-project-showcase-deck-zh/barcarolle-project-showcase-deck-v4.zh.pptx
 ```
 
 该 deck 按问题、方法、当前效果、限制、未来验证、Agent License 和 Agent Tuning 组织，用于展示 Barcarolle 的项目状态和研究/产品化轨迹。
 
-当前版本在 V2 基础上做了 reader-centered structural revision：合并问题与代价页，重写相关工作与研究路线，把算法演进放回中心，并重画执行边界、Agent License 和 Agent Tuning 图。
+当前版本在 V3 基础上做了 targeted repair：重画 Slides 1、2、5、7、9、10、11 的弱图形，重建 Slides 7-8 的有限预算任务选择器论证，并降低全 deck 术语负担。
 
 ## Supersession
 
@@ -30,7 +30,13 @@ V1 项目展示 deck 仍保留为参考：
 docs/research/barcarolle-project-showcase-deck-zh/barcarolle-project-showcase-deck-v1.zh.pptx
 ```
 
-V2 项目展示 deck 仍保留为 V3 的输入/reference：
+V3 项目展示 deck 仍保留为 V4 的输入/reference：
+
+```text
+docs/research/barcarolle-project-showcase-deck-zh/barcarolle-project-showcase-deck-v3.zh.pptx
+```
+
+V2 项目展示 deck 仍保留为历史 reference：
 
 ```text
 docs/research/barcarolle-project-showcase-deck-zh/barcarolle-project-showcase-deck-v2.zh.pptx
@@ -50,10 +56,19 @@ docs/research/barcarolle-proposal-report-v5.md
 
 | 文件 | 用途 |
 | --- | --- |
-| `barcarolle-project-showcase-deck-v3.zh.pptx` | 当前中文可编辑 PPTX。 |
+| `barcarolle-project-showcase-deck-v4.zh.pptx` | 当前中文可编辑 PPTX。 |
+| `argument-repair-v4.zh.md` | V4 Slides 7-8 论证修复说明。 |
+| `deck-architecture-v4.zh.md` | V4 页面架构、图形修复和术语减负决定。 |
+| `terminology-reduction-v4.zh.md` | V4 逐页术语减负审计。 |
+| `evidence-accuracy-audit-v4.zh.md` | V4 MAE、random-control、gate 等证据数字审计。 |
+| `showcase-deck-outline-v4.zh.md` | 当前逐页 deck 大纲。 |
+| `reader-review-audit-v4.zh.md` | V4 读者反馈修复审计。 |
+| `text-style-audit-v4.zh.md` | V4 文本风格与声明审计。 |
+| `visual-qa-report-v4.zh.md` | V4 视觉复核报告。 |
+| `barcarolle-project-showcase-deck-v3.zh.pptx` | V3 中文可编辑 PPTX，保留为 V4 输入/reference。 |
 | `deck-architecture-v3.zh.md` | V3 页面架构、合并/删除决定和视觉规则。 |
 | `related-work-source-sanity-v3.zh.md` | V3 相关工作来源核查。 |
-| `showcase-deck-outline-v3.zh.md` | 当前逐页 deck 大纲。 |
+| `showcase-deck-outline-v3.zh.md` | V3 逐页 deck 大纲。 |
 | `reader-review-audit-v3.zh.md` | V3 读者反馈审计。 |
 | `text-style-audit-v3.zh.md` | V3 文本风格与声明审计。 |
 | `visual-qa-report-v3.zh.md` | V3 视觉复核报告。 |
@@ -62,7 +77,7 @@ docs/research/barcarolle-proposal-report-v5.md
 | `duplication-audit-v2.zh.md` | 重复内容审计与 pruning plan。 |
 | `showcase-deck-outline-v2.zh.md` | V2 逐页 deck 大纲。 |
 | `text-style-audit-v2.zh.md` | V2 文本风格与声明审计。 |
-| `visual-qa-report-v2.zh.md` | 当前视觉复核报告。 |
+| `visual-qa-report-v2.zh.md` | V2 视觉复核报告。 |
 | `barcarolle-project-showcase-deck-v1.zh.pptx` | V1 中文可编辑 PPTX，保留为参考。 |
 | `project-argument-map-v1.zh.md` | 读者问题、主张、证据、反驳和未来工作的写作依据。 |
 | `related-work-positioning-v1.zh.md` | 相关工作定位说明。 |

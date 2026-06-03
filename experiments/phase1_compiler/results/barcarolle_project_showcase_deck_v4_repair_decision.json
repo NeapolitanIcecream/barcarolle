@@ -1,0 +1,55 @@
+{
+  "stop_label": "barcarolle_project_showcase_deck_v4_repair_complete",
+  "status": "complete",
+  "date": "2026-06-03",
+  "active_deck": "docs/research/barcarolle-project-showcase-deck-zh/barcarolle-project-showcase-deck-v4.zh.pptx",
+  "slide_count": 11,
+  "source_deck": "docs/research/barcarolle-project-showcase-deck-zh/barcarolle-project-showcase-deck-v3.zh.pptx",
+  "runbook": "docs/experiments/barcarolle-project-showcase-deck-v4-argument-visual-terminology-repair-runbook.md",
+  "outputs": {
+    "argument_repair": "docs/research/barcarolle-project-showcase-deck-zh/argument-repair-v4.zh.md",
+    "architecture": "docs/research/barcarolle-project-showcase-deck-zh/deck-architecture-v4.zh.md",
+    "terminology_audit": "docs/research/barcarolle-project-showcase-deck-zh/terminology-reduction-v4.zh.md",
+    "evidence_audit": "docs/research/barcarolle-project-showcase-deck-zh/evidence-accuracy-audit-v4.zh.md",
+    "outline": "docs/research/barcarolle-project-showcase-deck-zh/showcase-deck-outline-v4.zh.md",
+    "reader_review_audit": "docs/research/barcarolle-project-showcase-deck-zh/reader-review-audit-v4.zh.md",
+    "text_style_audit": "docs/research/barcarolle-project-showcase-deck-zh/text-style-audit-v4.zh.md",
+    "visual_qa": "docs/research/barcarolle-project-showcase-deck-zh/visual-qa-report-v4.zh.md",
+    "process_report": "experiments/phase1_compiler/reports/barcarolle_project_showcase_deck_v4_repair_process.md",
+    "decision_report": "experiments/phase1_compiler/reports/barcarolle_project_showcase_deck_v4_repair_decision.md"
+  },
+  "verified_evidence": {
+    "planned_cells": "120/120",
+    "scoreability": 1.0,
+    "click_source_repair": "30/30",
+    "candidate_mae": 0.209,
+    "best_simple_aggregate_baseline_mae": 0.2149,
+    "mae_edge": 0.0059,
+    "random_seed_count": 1000,
+    "random_beats_ties_share_percent": 93.4,
+    "future_random_gate_percent": 95.0,
+    "random_gate_passed": false
+  },
+  "qa": {
+    "artifact_tool_export": "passed",
+    "slide_png_render": "passed",
+    "layout_json_extraction": "passed",
+    "layout_errors": 0,
+    "layout_warnings": 5,
+    "forbidden_residue_matches": 0,
+    "overclaim_matches": 0,
+    "downloads_path_matches": 0,
+    "pptx_zip_integrity": "passed",
+    "contact_sheet": "outputs/manual-20260603-showcase-v4-repair/presentations/barcarolle-project-showcase-deck-v4/preview/contact-sheet.png"
+  },
+  "claim_boundary": {
+    "predictive_validity_established": false,
+    "agent_tuning_effect_validated": false,
+    "new_performance_claim_added": false,
+    "paid_acut_calls": 0,
+    "paid_llm_calls": 0,
+    "external_reviewer_calls": 0,
+    "imagegen_used": false
+  },
+  "recommended_next_action": "Use V4 for reader review or circulation; treat future edits as targeted presentation polish unless the evidence package changes."
+}

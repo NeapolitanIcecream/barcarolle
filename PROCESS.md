@@ -184,17 +184,17 @@ Canonical reports and runbooks:
 ### Open Follow-Ups
 
 Current state: the active Chinese presentation package is the project-showcase
-deck under `docs/research/barcarolle-project-showcase-deck-zh/`. V3 is the
-active deck. It has `11` slides, defines ACUT on first use, merges V2 problem
-and cost pages, rewrites related work with full names and concrete gaps,
-centers the research route on benchmark-compiler task-selection algorithm
-evolution, and replaces the V2 productization/process visuals. V2 and V1 remain
-reference material. V5 remains the long-form source of truth.
+deck under `docs/research/barcarolle-project-showcase-deck-zh/`. V4 is the
+active deck. It has `11` slides, defines ACUT on first use, keeps the V3
+reader-centered sequence, repairs malformed diagrams, reduces terminology load,
+and rebuilds Slides 7-8 around finite-budget task-selection estimator design
+instead of proving the algorithm problem from the old weighted failure. V3,
+V2, and V1 remain reference material. V5 remains the long-form source of truth.
 
-Current next action: use V3 as the active Chinese project-showcase deck for
-reader review or circulation. Do not restore approval-packet framing,
-reader-facing binary-reframe phrasing, product-boundary negative phrasing, or
-standalone process-diagnostics pages.
+Current next action: use V4 for reader review or circulation. Do not restore
+approval-packet framing, reader-facing binary-reframe phrasing,
+product-boundary negative phrasing, standalone process-diagnostics pages, or
+the old weighted design as the main proof of research necessity.
 
 Do not run more paid ACUT cells by default. Future project-scale paid
 evaluation should be budgeted and gated by frozen releases, baselines,
@@ -208,6 +208,15 @@ old proposal drafts unless V5 has a blocking factual or claim-boundary issue.
 Current canonical links:
 
 - `docs/research/barcarolle-proposal-report-v5.md`
+- `docs/research/barcarolle-project-showcase-deck-zh/barcarolle-project-showcase-deck-v4.zh.pptx`
+- `docs/research/barcarolle-project-showcase-deck-zh/argument-repair-v4.zh.md`
+- `docs/research/barcarolle-project-showcase-deck-zh/deck-architecture-v4.zh.md`
+- `docs/research/barcarolle-project-showcase-deck-zh/terminology-reduction-v4.zh.md`
+- `docs/research/barcarolle-project-showcase-deck-zh/evidence-accuracy-audit-v4.zh.md`
+- `docs/research/barcarolle-project-showcase-deck-zh/showcase-deck-outline-v4.zh.md`
+- `docs/research/barcarolle-project-showcase-deck-zh/reader-review-audit-v4.zh.md`
+- `docs/research/barcarolle-project-showcase-deck-zh/text-style-audit-v4.zh.md`
+- `docs/research/barcarolle-project-showcase-deck-zh/visual-qa-report-v4.zh.md`
 - `docs/research/barcarolle-project-showcase-deck-zh/barcarolle-project-showcase-deck-v3.zh.pptx`
 - `docs/research/barcarolle-project-showcase-deck-zh/barcarolle-project-showcase-deck-v2.zh.pptx`
 - `docs/research/barcarolle-project-showcase-deck-zh/barcarolle-project-showcase-deck-v1.zh.pptx`
@@ -218,6 +227,7 @@ Current canonical links:
 - `docs/research/barcarolle-project-showcase-deck-zh/reader-review-audit-v3.zh.md`
 - `docs/research/barcarolle-project-showcase-deck-zh/text-style-audit-v3.zh.md`
 - `docs/research/barcarolle-project-showcase-deck-zh/visual-qa-report-v3.zh.md`
+- `docs/experiments/barcarolle-project-showcase-deck-v4-argument-visual-terminology-repair-runbook.md`
 - `docs/research/barcarolle-project-showcase-deck-zh/page-responsibility-matrix-v2.zh.md`
 - `docs/research/barcarolle-project-showcase-deck-zh/duplication-audit-v2.zh.md`
 - `docs/research/barcarolle-project-showcase-deck-zh/showcase-deck-outline-v2.zh.md`
