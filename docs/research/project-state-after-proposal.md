@@ -4,7 +4,8 @@ Status: canonical handoff snapshot, 2026-06-04.
 
 This document records the state Barcarolle should have on main after the
 proposal-stage work is complete. It is the single starting point for future
-development and experiments.
+development and experiments. For the current reader-facing narrative, use
+`docs/research/current-project-story.md`.
 
 ## Project Position
 
@@ -86,7 +87,8 @@ Do not claim:
 
 | Evidence | Path | Supports |
 | --- | --- | --- |
-| Final proposal report | `docs/research/barcarolle-proposal-report-v5.md` | Reader-facing project claim and product route. |
+| Current project story | `docs/research/current-project-story.md` | Current post-deck narrative and reader-facing explanation. |
+| Proposal report v5 (frozen) | `docs/research/barcarolle-proposal-report-v5.md` | Frozen proposal-stage report and evidence context; not the live narrative source. |
 | Evidence manifest | `experiments/phase1_compiler/reports/proposal_report_v5_evidence_manifest.md` | Audit index for proposal evidence. |
 | Research inputs and related work reference | `docs/research/research-inputs-and-related-work-reference.md` | Condensed May research-input synthesis, related-work positioning, source-adapter policy, and external-review constraints. |
 | Weighted pilot | `experiments/phase1_compiler/reports/phase1_weighted_design_paid_pilot_decision.md` | Bad selection can mislead; old weighted design is not mainline. |
@@ -297,8 +299,11 @@ Active material:
 - `AGENTS.md`: agent-session rules and artifact hygiene.
 - `PROCESS.md`: durable process decisions.
 - `docs/architecture/system-design.md`: active architecture.
-- `docs/research/barcarolle-proposal-report-v5.md`: final proposal report.
 - `docs/research/project-state-after-proposal.md`: this canonical state doc.
+- `docs/research/current-project-story.md`: current reader-facing project
+  narrative.
+- `docs/research/barcarolle-proposal-report-v5.md`: frozen proposal-stage
+  report.
 - `docs/research/research-inputs-and-related-work-reference.md`: related-work
   and research-input reference for compiler-v1 planning.
 - `experiments/phase1_compiler/`: compiler prototype, schemas, tests, selected

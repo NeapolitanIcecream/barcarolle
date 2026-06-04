@@ -1,19 +1,19 @@
-# Proposal Report V5 Evidence Manifest
+# Frozen Proposal V5 Evidence Manifest
 
 Status: internal audit manifest, 2026-06-01.
 
-Purpose: preserve path-level traceability for the reader-facing V5 proposal
-without making raw internal artifact paths the proposal's dominant evidence
-presentation.
+Purpose: preserve path-level traceability for the frozen V5 proposal report
+without making raw internal artifact paths the dominant evidence presentation.
 
 This manifest is not a replacement for the proposal. It is an internal index
 for audit and handoff work.
 
-## Final Report
+## Frozen Proposal And Current Narrative
 
 | Label | Path |
 | --- | --- |
-| V5 final proposal report | `docs/research/barcarolle-proposal-report-v5.md` |
+| Proposal report v5 (frozen) | `docs/research/barcarolle-proposal-report-v5.md` |
+| Current project story | `docs/research/current-project-story.md` |
 | Post-proposal project state | `docs/research/project-state-after-proposal.md` |
 | Research inputs and related work reference | `docs/research/research-inputs-and-related-work-reference.md` |
 

@@ -32,6 +32,10 @@ Canonical state document:
 
 - `docs/research/project-state-after-proposal.md`
 
+Current reader-facing narrative:
+
+- `docs/research/current-project-story.md`
+
 ## Claim Boundary
 
 Predictive validity is the north star, not an established result. The current
@@ -47,10 +51,13 @@ evidence supports project traction and a concrete validation path:
 Do not claim that Barcarolle has proven predictive validity, a generally
 superior task selector, or a production leaderboard ranking.
 
-Canonical proposal and evidence:
+Frozen proposal and evidence:
 
 - `docs/research/barcarolle-proposal-report-v5.md`
 - `experiments/phase1_compiler/reports/proposal_report_v5_evidence_manifest.md`
+
+The V5 proposal report is a frozen proposal-stage artifact. Use it for audit
+and evidence context, not as the live source of the current project story.
 
 ## Algorithm Mainline
 

@@ -19,15 +19,17 @@ prototype, and the next validation path needed to keep working toward it.
 Start here:
 
 - [Project state after proposal](docs/research/project-state-after-proposal.md)
+- [Current project story](docs/research/current-project-story.md)
 - [System design](docs/architecture/system-design.md)
-- [Proposal report v5](docs/research/barcarolle-proposal-report-v5.md)
 - [Evidence manifest](experiments/phase1_compiler/reports/proposal_report_v5_evidence_manifest.md)
 - [Research inputs and related work reference](docs/research/research-inputs-and-related-work-reference.md)
+- [Proposal report v5](docs/research/barcarolle-proposal-report-v5.md)
 
-`project-state-after-proposal.md` is the canonical state snapshot. The other
-documents provide architecture, proposal, evidence, and related-work context.
-Historical Agent License and core-narrative materials are archived and are not
-active semantics.
+`project-state-after-proposal.md` is the canonical state snapshot.
+`current-project-story.md` is the current reader-facing narrative.
+`barcarolle-proposal-report-v5.md` is a frozen proposal-stage report, not the
+live source of truth. Historical Agent License and core-narrative materials are
+archived and are not active semantics.
 
 ## Active Work Areas
 
@@ -35,7 +37,8 @@ active semantics.
   reports, and small evidence tables for task selection and validation.
 - `experiments/phase0_headroom/`: historical task-supply, workspace-adapter, and
   score-table evidence used by the compiler prototype.
-- `docs/research/`: final proposal materials and the canonical project state.
+- `docs/research/`: canonical state, current narrative, related-work
+  references, and the frozen proposal-stage report.
 - `archive/2026-05-agent-license-reset/`: historical Agent License and
   core-narrative design notes retained for audit only.
 
