@@ -88,6 +88,7 @@ Do not claim:
 | --- | --- | --- |
 | Final proposal report | `docs/research/barcarolle-proposal-report-v5.md` | Reader-facing project claim and product route. |
 | Evidence manifest | `experiments/phase1_compiler/reports/proposal_report_v5_evidence_manifest.md` | Audit index for proposal evidence. |
+| Research inputs and related work reference | `docs/research/research-inputs-and-related-work-reference.md` | Condensed May research-input synthesis, related-work positioning, source-adapter policy, and external-review constraints. |
 | Weighted pilot | `experiments/phase1_compiler/reports/phase1_weighted_design_paid_pilot_decision.md` | Bad selection can mislead; old weighted design is not mainline. |
 | Local algorithm bakeoff | `experiments/phase1_compiler/reports/phase1_local_algorithm_bakeoff_decision.md` | Keep simple stratified reporting; local candidate not paid-ready. |
 | Three-repo paid validation | `experiments/phase1_compiler/reports/phase1_three_repo_paid_validation_decision.md` | Workspace protocol and conservative pilot feasibility. |
@@ -149,6 +150,16 @@ Usage and cost accounting:
   sanitized usage ledger used by follow-up analyses.
 - It is retained because several analysis tools and reports depend on it. It is
   not a raw Agent transcript.
+
+Statement generation references:
+
+- `experiments/phase1_compiler/results/phase1_diff_assisted_regenerated_statements.jsonl`
+- `experiments/phase1_compiler/results/phase1_diff_assisted_codex_loop_generated_statements.jsonl`
+- `experiments/phase1_compiler/results/phase1_canonical_regenerated_statements.jsonl`
+
+These JSONL files are retained as sanitized solver-facing statement examples
+for future task-statement generator and QA work. They are not raw prompts,
+completions, diffs, paid outcomes, or transcripts.
 
 ## Algorithm State
 
@@ -259,6 +270,22 @@ Schemas, configs, and tests:
 - `experiments/phase0_headroom/configs/`
 - `experiments/phase0_headroom/tools/test_*.py`
 
+External review inputs:
+
+- `archive/2026-05-external-review-inputs/`
+
+This archive keeps selected prompts and problem briefs for future external
+review packet design. It does not define active project state.
+
+Related-work and input synthesis:
+
+- `docs/research/research-inputs-and-related-work-reference.md`
+
+This reference condenses the still-current parts of the May research outline,
+weighted-pilot review, task-generator/source-adapter plan, and external review.
+It is a reference for compiler-v1 development, not a second canonical state
+document.
+
 ## Repository Layout
 
 Active material:
@@ -269,6 +296,8 @@ Active material:
 - `docs/architecture/system-design.md`: active architecture.
 - `docs/research/barcarolle-proposal-report-v5.md`: final proposal report.
 - `docs/research/project-state-after-proposal.md`: this canonical state doc.
+- `docs/research/research-inputs-and-related-work-reference.md`: related-work
+  and research-input reference for compiler-v1 planning.
 - `experiments/phase1_compiler/`: compiler prototype, schemas, tests, selected
   reports, and small evidence tables.
 - Retained `raw_*` task-supply files are mined candidate inventories, not raw
@@ -282,6 +311,8 @@ Archived material:
 - `archive/2026-05-agent-license-reset/`: historical Agent License and
   core-narrative notes retained only for audit or future productization
   reference.
+- `archive/2026-05-external-review-inputs/`: selected external-review prompts
+  and problem briefs retained as research-process references.
 
 Removed from active mainline:
 

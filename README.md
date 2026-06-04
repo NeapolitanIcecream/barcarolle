@@ -22,9 +22,12 @@ Start here:
 - [System design](docs/architecture/system-design.md)
 - [Proposal report v5](docs/research/barcarolle-proposal-report-v5.md)
 - [Evidence manifest](experiments/phase1_compiler/reports/proposal_report_v5_evidence_manifest.md)
+- [Research inputs and related work reference](docs/research/research-inputs-and-related-work-reference.md)
 
-These documents define the active project boundary. Historical Agent License
-and core-narrative materials are archived and are not active semantics.
+`project-state-after-proposal.md` is the canonical state snapshot. The other
+documents provide architecture, proposal, evidence, and related-work context.
+Historical Agent License and core-narrative materials are archived and are not
+active semantics.
 
 ## Active Work Areas
 
@@ -63,6 +66,10 @@ prototype assets rather than a packaged product library.
   `kilo_workspace_adapter.py`,
   `measured_endpoint_run.py`,
   `workspace_usage_import.py`.
+- Statement generation references:
+  `experiments/phase1_compiler/results/phase1_diff_assisted_regenerated_statements.jsonl`,
+  `phase1_diff_assisted_codex_loop_generated_statements.jsonl`,
+  and `phase1_canonical_regenerated_statements.jsonl`.
 - Contracts and regression coverage:
   `experiments/phase1_compiler/schemas/`,
   `experiments/phase1_compiler/tests/`,
@@ -100,6 +107,17 @@ workspaces, and cloned target repositories are intentionally not committed.
 - Usage/cost accounting support:
   `experiments/phase0_headroom/results/workspace_usage_ledger.jsonl` is a
   sanitized usage ledger used by later analyses, not a raw transcript.
+
+## Historical References
+
+- `docs/research/research-inputs-and-related-work-reference.md`: condensed
+  synthesis of the May research inputs and external review constraints,
+  especially related-work positioning and task-source adapter policy.
+- `archive/2026-05-external-review-inputs/`: selected external-review prompts
+  and problem briefs for future review-packet design and algorithm/source
+  adapter context.
+- `archive/2026-05-agent-license-reset/`: old Agent License and core-narrative
+  design material retained for audit only.
 
 ## Useful Commands
 

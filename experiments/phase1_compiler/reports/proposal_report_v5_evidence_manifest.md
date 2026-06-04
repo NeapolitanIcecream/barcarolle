@@ -20,6 +20,7 @@ for audit and handoff work.
 
 | Reader-facing label | Path |
 | --- | --- |
+| Research inputs and related work reference | `docs/research/research-inputs-and-related-work-reference.md` |
 | Weighted design pilot | `experiments/phase1_compiler/reports/phase1_weighted_design_paid_pilot_decision.md` |
 | Local algorithm bakeoff | `experiments/phase1_compiler/reports/phase1_local_algorithm_bakeoff_decision.md` |
 | Three-repo workspace execution pilot | `experiments/phase1_compiler/reports/phase1_three_repo_paid_validation_decision.md` |
@@ -46,6 +47,9 @@ for audit and handoff work.
 | Random baseline distribution | `experiments/phase1_compiler/results/phase1_proposal_evidence_package_random_baseline_distribution.json` |
 | Baseline envelope | `experiments/phase1_compiler/results/phase1_proposal_evidence_package_baseline_envelope.json` |
 | Workspace usage ledger | `experiments/phase0_headroom/results/workspace_usage_ledger.jsonl` |
+| Diff-assisted regenerated statements | `experiments/phase1_compiler/results/phase1_diff_assisted_regenerated_statements.jsonl` |
+| Codex-loop generated statements | `experiments/phase1_compiler/results/phase1_diff_assisted_codex_loop_generated_statements.jsonl` |
+| Canonical regenerated statements | `experiments/phase1_compiler/results/phase1_canonical_regenerated_statements.jsonl` |
 
 The three-repo manifest indexes `120` completed and scoreable paid cells. The
 score tables themselves live under
@@ -54,6 +58,15 @@ score tables themselves live under
 Raw Agent transcripts, raw prompts, raw completions, solver workspaces,
 verifier workspaces, cloned repositories, and hidden-oracle streams are not
 committed.
+
+## Historical Review Input References
+
+| Reference | Path |
+| --- | --- |
+| Weighted pilot direction review prompt | `archive/2026-05-external-review-inputs/weighted-pilot-direction-review-readme.md` |
+| Task generator problem brief | `archive/2026-05-external-review-inputs/task-generator-problem-brief.md` |
+| Candidate policy GPT-5.5-Pro prompt | `archive/2026-05-external-review-inputs/candidate-policy-validation-gpt55-prompt.md` |
+| Candidate policy adversarial review README | `archive/2026-05-external-review-inputs/candidate-policy-adversarial-review-readme.md` |
 
 ## Protocol Detail References
 
