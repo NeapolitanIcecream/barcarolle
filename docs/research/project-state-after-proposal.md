@@ -163,6 +163,49 @@ Agent License is a lighter future direction. A license can summarize evidence
 about whether an Agent is ready for a repository, but that product should depend
 on benchmark validity rather than replace it.
 
+## Research Asset Map
+
+The retained experiment code is an active asset. It is not just evidence, and it
+should be mined when implementing compiler v1.
+
+Task supply and generation:
+
+- `experiments/phase1_compiler/tools/phase1_task_supply_v2_generator_bakeoff.py`
+- `experiments/phase1_compiler/tools/phase1_two_repo_certified_supply_expansion.py`
+- `experiments/phase1_compiler/tools/phase1_third_repo_release_supply_screen.py`
+- `experiments/phase1_compiler/tools/phase1_clean_outcome_unseen_supply_mining.py`
+
+Task certification, statement hardening, and oracle checks:
+
+- `experiments/phase1_compiler/tools/phase1_task_supply_v2_fresh_certification.py`
+- `experiments/phase1_compiler/tools/phase1_source_certification_hardening.py`
+- `experiments/phase1_compiler/tools/phase1_source_context_statement_hardening.py`
+- `experiments/phase1_compiler/tools/phase1_reference_pass_failure_audit.py`
+
+Task selection, validation design, and predictive-signal analysis:
+
+- `experiments/phase1_compiler/tools/phase1_local_algorithm_bakeoff.py`
+- `experiments/phase1_compiler/tools/phase1_future_holdout.py`
+- `experiments/phase1_compiler/tools/phase1_retrospective_predictive_signal.py`
+- `experiments/phase1_compiler/tools/phase1_three_repo_paid_validation.py`
+- `experiments/phase1_compiler/tools/phase1_three_repo_paid_result_diagnostics.py`
+
+Workspace and Agent execution support:
+
+- `experiments/phase0_headroom/tools/workspace_acut_run.py`
+- `experiments/phase0_headroom/tools/codex_workspace_adapter.py`
+- `experiments/phase0_headroom/tools/kilo_workspace_adapter.py`
+- `experiments/phase0_headroom/tools/measured_endpoint_run.py`
+- `experiments/phase0_headroom/tools/workspace_usage_import.py`
+
+Schemas, configs, and tests:
+
+- `experiments/phase1_compiler/schemas/`
+- `experiments/phase1_compiler/configs/`
+- `experiments/phase1_compiler/tests/`
+- `experiments/phase0_headroom/configs/`
+- `experiments/phase0_headroom/tools/test_*.py`
+
 ## Repository Layout
 
 Active material:

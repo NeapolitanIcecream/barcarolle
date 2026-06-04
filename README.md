@@ -36,6 +36,38 @@ and core-narrative materials are archived and are not active semantics.
 - `archive/2026-05-agent-license-reset/`: historical Agent License and
   core-narrative design notes retained for audit only.
 
+## Research Asset Map
+
+The experiment code assets are retained in the repository, but they are still
+prototype assets rather than a packaged product library.
+
+- Task supply and generation:
+  `experiments/phase1_compiler/tools/phase1_task_supply_v2_generator_bakeoff.py`,
+  `phase1_two_repo_certified_supply_expansion.py`,
+  `phase1_third_repo_release_supply_screen.py`,
+  `phase1_clean_outcome_unseen_supply_mining.py`.
+- Task certification, statements, and oracle checks:
+  `phase1_task_supply_v2_fresh_certification.py`,
+  `phase1_source_certification_hardening.py`,
+  `phase1_source_context_statement_hardening.py`,
+  `phase1_reference_pass_failure_audit.py`.
+- Task selection and predictive-signal analysis:
+  `phase1_local_algorithm_bakeoff.py`,
+  `phase1_future_holdout.py`,
+  `phase1_retrospective_predictive_signal.py`,
+  `phase1_three_repo_paid_validation.py`,
+  `phase1_three_repo_paid_result_diagnostics.py`.
+- Workspace and Agent execution support:
+  `experiments/phase0_headroom/tools/workspace_acut_run.py`,
+  `codex_workspace_adapter.py`,
+  `kilo_workspace_adapter.py`,
+  `measured_endpoint_run.py`,
+  `workspace_usage_import.py`.
+- Contracts and regression coverage:
+  `experiments/phase1_compiler/schemas/`,
+  `experiments/phase1_compiler/tests/`,
+  `experiments/phase0_headroom/tools/test_*.py`.
+
 ## Useful Commands
 
 Run the current compiler tests:
