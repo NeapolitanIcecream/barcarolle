@@ -80,7 +80,10 @@ prototype assets rather than a packaged product library.
 Proposal-supporting experiment data is retained as sanitized score tables,
 matrices, metrics, manifests, cost summaries, and candidate inventories. Raw
 Agent transcripts, raw prompts/completions, solver workspaces, verifier
-workspaces, and cloned target repositories are intentionally not committed.
+workspaces, cloned target repositories, standalone process logs, and
+proposal/deck preflight traces are intentionally not committed. A small number
+of compact gate and package-inspection metadata files remain where retained
+tools or reports use them for reproducibility.
 
 - Primary three-repo paid validation:
   `experiments/phase1_compiler/results/phase1_three_repo_paid_validation_score_tables_manifest.json`

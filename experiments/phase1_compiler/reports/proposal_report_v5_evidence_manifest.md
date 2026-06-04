@@ -9,12 +9,13 @@ presentation.
 This manifest is not a replacement for the proposal. It is an internal index
 for audit and handoff work.
 
-## Source Draft
+## Final Report
 
 | Label | Path |
 | --- | --- |
-| V4 source draft | `docs/research/phase-1-proposal-report-v4.md` |
-| V4 integration decision | `experiments/phase1_compiler/reports/phase1_proposal_report_v4_agent_tuning_integration_decision.md` |
+| V5 final proposal report | `docs/research/barcarolle-proposal-report-v5.md` |
+| Post-proposal project state | `docs/research/project-state-after-proposal.md` |
+| Research inputs and related work reference | `docs/research/research-inputs-and-related-work-reference.md` |
 
 ## Proposal Evidence Index References
 
@@ -80,8 +81,8 @@ committed.
 | Release schema | `experiments/phase1_compiler/reports/phase1_validation_protocol_candidate_policy_hardening_release_schema.md` |
 | Power/budget note | `experiments/phase1_compiler/reports/phase1_validation_protocol_candidate_policy_hardening_power_budget_note.md` |
 
-## Citation Reference
+## Citation And Related-Work Reference
 
-| Label | Path |
-| --- | --- |
-| Reviewer-ready citation matrix | `experiments/phase1_compiler/reports/phase1_proposal_report_reviewer_ready_revision_citation_matrix.md` |
+The proposal-stage citation matrix is not retained as an active artifact. Use
+`docs/research/research-inputs-and-related-work-reference.md` for the retained
+related-work synthesis and public source anchors.

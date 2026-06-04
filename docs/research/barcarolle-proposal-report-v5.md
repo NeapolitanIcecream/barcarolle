@@ -533,8 +533,8 @@ The approved project should produce:
 - canary and holdout rules for preventing benchmark overfitting during tuning;
 - source-quality and fallback accounting reports;
 - decision reports stating what each release can and cannot claim;
-- a reviewer-facing approval artifact in the format selected by the project
-  coordinator.
+- a reviewer-facing technical-review packet with the final report, evidence
+  index, and compact supporting artifacts.
 
 ## 11. Appendices And Evidence Index
 

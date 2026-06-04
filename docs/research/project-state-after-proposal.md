@@ -103,7 +103,10 @@ Do not claim:
 The repository retains the data needed to audit the proposal at the score-table
 and metric level. It does not retain raw Agent transcripts, raw prompts, raw
 completions, solver workspaces, verifier workspaces, cloned target
-repositories, or raw hidden-oracle streams.
+repositories, raw hidden-oracle streams, standalone process closeout logs, or
+proposal/deck preflight traces. Some compact gate and package-inspection
+metadata files remain where retained tools or reports use them for
+reproducibility.
 
 Primary three-repo paid validation:
 
@@ -319,5 +322,6 @@ Removed from active mainline:
 - old Agent License architecture and decision docs;
 - old core-narrative experiment tree;
 - `.codex-workflows` process bundles;
-- proposal/deck runbooks, PPT outputs, raw transcripts, solver/verifier
-  workspaces, local virtual environments, caches, and large raw outputs.
+- proposal/deck runbooks, PPT outputs, standalone preflight/process artifacts,
+  raw transcripts, solver/verifier workspaces, local virtual environments,
+  caches, and large raw outputs.
