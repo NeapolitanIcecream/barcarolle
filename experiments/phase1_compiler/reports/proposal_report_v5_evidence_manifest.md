@@ -30,6 +30,31 @@ for audit and handoff work.
 | Fallback-share accounting | `experiments/phase1_compiler/reports/phase1_proposal_evidence_package_fallback_share.md` |
 | Validation-protocol hardening | `experiments/phase1_compiler/reports/phase1_validation_protocol_candidate_policy_hardening_decision.md` |
 
+## Data Layer References
+
+| Data layer | Path |
+| --- | --- |
+| Three-repo paid cells manifest | `experiments/phase1_compiler/results/phase1_three_repo_paid_validation_score_tables_manifest.json` |
+| Three-repo paid metrics | `experiments/phase1_compiler/results/phase1_three_repo_paid_validation_metrics.json` |
+| Three-repo cost reconciliation | `experiments/phase1_compiler/results/phase1_three_repo_paid_validation_cost_reconciliation.json` |
+| Three-repo diagnostics cube | `experiments/phase1_compiler/results/phase1_three_repo_paid_result_diagnostics_result_cube.json` |
+| Three-repo diagnostics CSV | `experiments/phase1_compiler/results/phase1_three_repo_paid_result_diagnostics_result_cube.csv` |
+| Adapter-stratified summary | `experiments/phase1_compiler/results/phase1_adapter_stratified_reporting_three_repo_summary.json` |
+| Weighted pilot score table | `experiments/phase0_headroom/results/phase1_weighted_design_paid_pilot_score_table.csv` |
+| Weighted pilot metrics | `experiments/phase0_headroom/results/phase1_weighted_design_paid_pilot_metrics.json` |
+| Supplement paid cells manifest | `experiments/phase1_compiler/results/phase1_blocked_split_missing_cell_supplement_paid_execution_combined_score_tables_manifest.json` |
+| Random baseline distribution | `experiments/phase1_compiler/results/phase1_proposal_evidence_package_random_baseline_distribution.json` |
+| Baseline envelope | `experiments/phase1_compiler/results/phase1_proposal_evidence_package_baseline_envelope.json` |
+| Workspace usage ledger | `experiments/phase0_headroom/results/workspace_usage_ledger.jsonl` |
+
+The three-repo manifest indexes `120` completed and scoreable paid cells. The
+score tables themselves live under
+`experiments/phase0_headroom/results/phase1_three_repo_paid_validation_*_score_table.csv`.
+
+Raw Agent transcripts, raw prompts, raw completions, solver workspaces,
+verifier workspaces, cloned repositories, and hidden-oracle streams are not
+committed.
+
 ## Protocol Detail References
 
 | Protocol artifact | Path |

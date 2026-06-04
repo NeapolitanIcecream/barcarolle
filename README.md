@@ -68,6 +68,39 @@ prototype assets rather than a packaged product library.
   `experiments/phase1_compiler/tests/`,
   `experiments/phase0_headroom/tools/test_*.py`.
 
+## Evidence Data Map
+
+Proposal-supporting experiment data is retained as sanitized score tables,
+matrices, metrics, manifests, cost summaries, and candidate inventories. Raw
+Agent transcripts, raw prompts/completions, solver workspaces, verifier
+workspaces, and cloned target repositories are intentionally not committed.
+
+- Primary three-repo paid validation:
+  `experiments/phase1_compiler/results/phase1_three_repo_paid_validation_score_tables_manifest.json`
+  indexes `120` completed and scoreable cells across `10` retained score
+  tables under `experiments/phase0_headroom/results/phase1_three_repo_paid_validation_*_score_table.csv`.
+- Three-repo summary and diagnostics:
+  `experiments/phase1_compiler/results/phase1_three_repo_paid_validation_metrics.json`,
+  `phase1_three_repo_paid_validation_cost_reconciliation.json`,
+  `phase1_three_repo_paid_result_diagnostics_result_cube.{json,csv}`,
+  and related diagnostics in `experiments/phase1_compiler/results/`.
+- Supplementary fairness/missing-cell paid run:
+  `experiments/phase1_compiler/results/phase1_blocked_split_missing_cell_supplement_paid_execution_combined_score_tables_manifest.json`
+  plus the retained `phase1_blocked_split_missing_cell_supplement_paid_execution_*`
+  score tables and metrics.
+- Weighted-design paid pilot:
+  `experiments/phase0_headroom/results/phase1_weighted_design_paid_pilot_score_table.csv`,
+  `phase1_weighted_design_paid_pilot_matrix.json`,
+  `phase1_weighted_design_paid_pilot_metrics.json`,
+  and `phase1_weighted_design_paid_pilot_cost_summary.json`.
+- Baseline and selection evidence:
+  `experiments/phase1_compiler/results/phase1_proposal_evidence_package_random_baseline_distribution.json`,
+  `phase1_proposal_evidence_package_baseline_envelope.json`,
+  and `phase1_local_algorithm_bakeoff_*`.
+- Usage/cost accounting support:
+  `experiments/phase0_headroom/results/workspace_usage_ledger.jsonl` is a
+  sanitized usage ledger used by later analyses, not a raw transcript.
+
 ## Useful Commands
 
 Run the current compiler tests:

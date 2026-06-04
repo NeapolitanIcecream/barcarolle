@@ -97,6 +97,59 @@ Do not claim:
 | Task supply bakeoff | `experiments/phase1_compiler/reports/phase1_task_supply_v2_source_bakeoff_decision.md` | Internal repo-history generator remains useful supply infrastructure. |
 | Source-context repair | `experiments/phase1_compiler/reports/phase1_click_llm_source_context_repair_decision.md` | LLM-assisted statement/source repair can be used under provenance and review controls. |
 
+## Evidence Data Map
+
+The repository retains the data needed to audit the proposal at the score-table
+and metric level. It does not retain raw Agent transcripts, raw prompts, raw
+completions, solver workspaces, verifier workspaces, cloned target
+repositories, or raw hidden-oracle streams.
+
+Primary three-repo paid validation:
+
+- `experiments/phase1_compiler/results/phase1_three_repo_paid_validation_score_tables_manifest.json`
+  records `120` completed cells and `120` scoreable cells.
+- The manifest points to `10` retained score tables in
+  `experiments/phase0_headroom/results/phase1_three_repo_paid_validation_*_score_table.csv`.
+- Companion matrix, metrics, and cost-summary files are retained under the same
+  `experiments/phase0_headroom/results/phase1_three_repo_paid_validation_*`
+  prefixes.
+- Aggregate metrics are retained in
+  `experiments/phase1_compiler/results/phase1_three_repo_paid_validation_metrics.json`.
+
+Three-repo diagnostics and adapter accounting:
+
+- `experiments/phase1_compiler/results/phase1_three_repo_paid_result_diagnostics_result_cube.{json,csv}`
+- `experiments/phase1_compiler/results/phase1_three_repo_paid_result_diagnostics_adapter_effects.json`
+- `experiments/phase1_compiler/results/phase1_adapter_stratified_reporting_three_repo_summary.{json,csv}`
+- `experiments/phase1_compiler/results/phase1_adapter_stratified_reporting_cost_latency_summary.json`
+
+Supplementary paid cells:
+
+- `experiments/phase1_compiler/results/phase1_blocked_split_missing_cell_supplement_paid_execution_combined_score_tables_manifest.json`
+- retained `phase1_blocked_split_missing_cell_supplement_paid_execution_*`
+  score tables, matrices, metrics, and cost summaries under
+  `experiments/phase0_headroom/results/`
+
+Weighted-design pilot:
+
+- `experiments/phase0_headroom/results/phase1_weighted_design_paid_pilot_score_table.csv`
+- `experiments/phase0_headroom/results/phase1_weighted_design_paid_pilot_matrix.json`
+- `experiments/phase0_headroom/results/phase1_weighted_design_paid_pilot_metrics.json`
+- `experiments/phase0_headroom/results/phase1_weighted_design_paid_pilot_cost_summary.json`
+
+Selection and baseline evidence:
+
+- `experiments/phase1_compiler/results/phase1_proposal_evidence_package_random_baseline_distribution.json`
+- `experiments/phase1_compiler/results/phase1_proposal_evidence_package_baseline_envelope.json`
+- `experiments/phase1_compiler/results/phase1_local_algorithm_bakeoff_*`
+
+Usage and cost accounting:
+
+- `experiments/phase0_headroom/results/workspace_usage_ledger.jsonl` is a
+  sanitized usage ledger used by follow-up analyses.
+- It is retained because several analysis tools and reports depend on it. It is
+  not a raw Agent transcript.
+
 ## Algorithm State
 
 The current conservative reporting mainline is repo-stratified or simple
