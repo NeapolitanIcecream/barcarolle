@@ -181,4 +181,3 @@ def statement_quality_for_context(context: dict[str, Any], row: dict[str, Any]) 
         implementation_files=impl_files,
         test_files=tests,
     )
-
