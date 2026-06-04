@@ -1,0 +1,27 @@
+{
+  "actual_provider_billed_cost_usd": null,
+  "call_count": 8,
+  "conservative_estimated_cost_usd": 4.0,
+  "conservative_fallback_for_missing_usage_usd": 0.5,
+  "generated_at": "2026-05-22T16:29:17+00:00",
+  "median_latency_seconds": 37.453,
+  "missing_usage_cell_count": 1,
+  "missing_usage_run_ids": [
+    "phase1_validation_boltons_paid_smoke_kilo_workspace__kilo_workspace_gpt_5_4_mini__boltons__hist__024__matrix1"
+  ],
+  "observed_or_conservative_estimated_cost_usd": 3.6762758,
+  "observed_token_estimated_cost_usd": 3.1762758,
+  "per_harness_observed_token_cost_usd": {
+    "codex_workspace": 2.3163444,
+    "kilo_workspace": 0.8599314
+  },
+  "per_split_observed_token_cost_usd": {
+    "B_real": 1.9806858,
+    "W_real": 1.19559
+  },
+  "pricing_source": "user_estimate_required_conservative_default",
+  "result_prefix": "phase1_validation_boltons_paid_smoke",
+  "schema_version": "barcarolle.workspace_acut_cost_summary.v2",
+  "usage_observed_count": 7,
+  "usage_observed_rate": 0.875
+}

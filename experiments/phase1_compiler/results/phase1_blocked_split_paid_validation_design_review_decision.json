@@ -1,0 +1,71 @@
+{
+  "artifact": "decision",
+  "click_minor_risk_status": "accepted_caveat_visible_title_only_minor_risk",
+  "completed_paid_decision_changed": false,
+  "decision_label": "recommend_missing_cell_supplement_exploratory",
+  "estimated_new_paid_cost_by_adapter_usd": {
+    "codex_workspace": 12.889248,
+    "kilo_workspace": 7.617696
+  },
+  "estimated_new_paid_cost_total_usd": 20.506944,
+  "failed_readiness_gates": [],
+  "followup_runbook_written_by_worker": false,
+  "generated_at": "2026-05-29T03:05:16Z",
+  "known_reusable_cells": 72,
+  "known_reusable_cells_by_adapter": {
+    "codex_workspace": 36,
+    "kilo_workspace": 36
+  },
+  "missing_new_paid_cells": 48,
+  "missing_new_paid_cells_by_adapter": {
+    "codex_workspace": 24,
+    "kilo_workspace": 24
+  },
+  "paid_calls_made_by_this_run": 0,
+  "predictive_validity_established": false,
+  "provider_billed_exact_cost_available": false,
+  "readiness_gates": {
+    "adapter_level_reporting_required": true,
+    "claim_policy_written_and_exploratory_status_explicit": true,
+    "click_minor_risk_caveat_explicit": true,
+    "completed_paid_decision_changed_false": true,
+    "cost_projection_adapter_stratified_and_token_estimated": true,
+    "overlap_and_missing_cell_manifests_exact": true,
+    "paid_calls_made_by_this_run_zero": true,
+    "predictive_validity_established_false": true,
+    "recommended_option_has_clear_reusable_missing_cell_handling": true,
+    "selected_blocked_split_unchanged": true,
+    "tests_and_diff_check_passed": true
+  },
+  "ready_for_later_paid_execution_runbook": true,
+  "recommended_next_action_category": "exploratory_missing_cell_supplement_paid_execution",
+  "recommended_protocol_name": "same_budget_missing_cell_supplement",
+  "recommended_protocol_option": "B",
+  "research_questions": {
+    "RQ10_next_action_category": "exploratory_missing_cell_supplement_paid_execution",
+    "RQ1_paid_pass_fail_incomplete": "The primary selected split has 36/60 tasks with at least one completed paid outcome and 24 tasks with none; that leaves 48 missing task/adapter cells.",
+    "RQ2_post_hoc_design_acceptable": "Yes, for Phase 1 exploration only.",
+    "RQ3_claim_boundary": "exploratory_supplemental_validation_for_post_hoc_blocked_split",
+    "RQ4_recommended_protocol": "same_budget_missing_cell_supplement",
+    "RQ5_reuse_and_new_cells": {
+      "new_cells_needed": 48,
+      "reusable_cells": 72
+    },
+    "RQ6_estimated_new_paid_cost": {
+      "by_adapter_usd": {
+        "codex_workspace": 12.889248,
+        "kilo_workspace": 7.617696
+      },
+      "total_usd": 20.506944
+    },
+    "RQ7_click_minor_risk": "Accepted caveat for exploratory supplement; not hidden.",
+    "RQ8_paid_calls_made": 0,
+    "RQ9_completed_decisions_or_split_labels_changed": {
+      "completed_paid_decision_changed": false,
+      "selected_blocked_split_changed": false
+    }
+  },
+  "run_id": "phase1_blocked_split_paid_validation_design_review_20260529",
+  "schema_version": "barcarolle.phase1_blocked_split_paid_validation_design_review_output.v1",
+  "selected_blocked_split_changed": false
+}

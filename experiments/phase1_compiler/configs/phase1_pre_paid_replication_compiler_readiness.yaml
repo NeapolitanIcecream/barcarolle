@@ -1,0 +1,80 @@
+schema_version: barcarolle.phase1_pre_paid_replication_compiler_readiness.v1
+run_id: phase1_pre_paid_replication_20260526
+runbook: docs/experiments/phase-1-pre-paid-replication-compiler-readiness-runbook.md
+runbook_status: implementation_runbook
+runbook_date: 2026-05-26
+previous_release_id: statement_hardened_after_canonical_split_repair_20260525
+target_repos:
+  - attrs
+  - boltons
+planned_adapters:
+  - codex_workspace
+  - kilo_workspace
+tasks_per_repo_split: 4
+no_paid_boundary:
+  paid_acut_replication_allowed_in_this_runbook: False
+  paid_llm_calls_expected: False
+  paid_acut_calls_expected: False
+  stop_before_paid_validation: True
+required_inputs:
+  - AGENTS.md
+  - docs/architecture/system-design.md
+  - docs/experiments/phase-1-overnight-statement-hardened-evidence-analysis-runbook.md
+  - docs/experiments/phase-1-pre-paid-replication-compiler-readiness-runbook.md
+  - experiments/phase1_compiler/reports/phase1_overnight_statement_hardened_evidence_process.md
+  - experiments/phase1_compiler/reports/phase1_overnight_statement_hardened_next_action_decision.md
+  - experiments/phase1_compiler/reports/phase1_overnight_statement_hardened_threshold_analysis.md
+  - experiments/phase1_compiler/reports/phase1_overnight_statement_hardened_power_analysis.md
+  - experiments/phase1_compiler/reports/phase1_overnight_statement_hardened_calibration_options.md
+  - experiments/phase1_compiler/reports/phase1_overnight_statement_hardened_local_supply_analysis.md
+  - experiments/phase1_compiler/results/phase1_overnight_statement_hardened_next_action_decision.json
+  - experiments/phase1_compiler/results/phase1_overnight_statement_hardened_threshold_analysis.json
+  - experiments/phase1_compiler/results/phase1_overnight_statement_hardened_power_analysis.json
+  - experiments/phase1_compiler/results/phase1_overnight_statement_hardened_calibration_options.json
+  - experiments/phase1_compiler/results/phase1_overnight_statement_hardened_local_supply_analysis.json
+  - experiments/phase1_compiler/results/phase1_overnight_statement_hardened_task_outcome_matrix.json
+  - experiments/phase1_compiler/results/phase1_statement_hardened_after_canonical_repair_release_manifest.json
+  - experiments/phase1_compiler/results/phase1_statement_hardened_after_canonical_repair_inventory.json
+  - experiments/phase1_compiler/results/phase1_statement_hardened_after_canonical_repair_preregistration.json
+  - experiments/phase0_headroom/certified_tasks/attrs_clean_outcome_unseen_supply_certified_tasks.jsonl
+  - experiments/phase0_headroom/certified_tasks/boltons_clean_outcome_unseen_supply_certified_tasks.jsonl
+  - experiments/phase0_headroom/certified_tasks/boltons_certified_tasks.jsonl
+  - experiments/phase0_headroom/certified_tasks/humanize_certified_tasks.jsonl
+  - experiments/phase0_headroom/certified_tasks/itsdangerous_certified_tasks.jsonl
+  - experiments/phase0_headroom/certified_tasks/toolz_certified_tasks.jsonl
+optional_inputs:
+  - barcarolle-research-0519.md
+  - experiments/phase1_compiler/reports/phase1_statement_hardened_after_canonical_repair_paid_process.md
+  - experiments/phase1_compiler/reports/phase1_statement_hardened_after_canonical_repair_preregistration.md
+  - experiments/phase1_compiler/reports/phase1_statement_hardened_after_canonical_repair_release_manifest.md
+reservoir_paths:
+  attrs_clean_outcome_unseen: experiments/phase0_headroom/certified_tasks/attrs_clean_outcome_unseen_supply_certified_tasks.jsonl
+  boltons_clean_outcome_unseen: experiments/phase0_headroom/certified_tasks/boltons_clean_outcome_unseen_supply_certified_tasks.jsonl
+  boltons_historical_certified: experiments/phase0_headroom/certified_tasks/boltons_certified_tasks.jsonl
+  humanize_certified: experiments/phase0_headroom/certified_tasks/humanize_certified_tasks.jsonl
+  itsdangerous_certified: experiments/phase0_headroom/certified_tasks/itsdangerous_certified_tasks.jsonl
+  toolz_certified: experiments/phase0_headroom/certified_tasks/toolz_certified_tasks.jsonl
+output_paths:
+  preflight: experiments/phase1_compiler/results/phase1_pre_paid_replication_preflight.json
+  threshold_preregistration: experiments/phase1_compiler/results/phase1_pre_paid_replication_threshold_preregistration.json
+  candidate_inventory: experiments/phase1_compiler/results/phase1_pre_paid_replication_candidate_inventory.json
+  target_profiles: experiments/phase1_compiler/results/phase1_pre_paid_replication_target_profiles.json
+  strata_matching: experiments/phase1_compiler/results/phase1_pre_paid_replication_strata_matching.json
+  statement_quality_gate: experiments/phase1_compiler/results/phase1_pre_paid_replication_statement_quality_gate.json
+  release_candidates: experiments/phase1_compiler/results/phase1_pre_paid_replication_release_candidates.json
+  baseline_plan: experiments/phase1_compiler/results/phase1_pre_paid_replication_baseline_plan.json
+  power_and_cost_plan: experiments/phase1_compiler/results/phase1_pre_paid_replication_power_and_cost_plan.json
+  entry_gate: experiments/phase1_compiler/results/phase1_pre_paid_replication_entry_gate.json
+  decision: experiments/phase1_compiler/results/phase1_pre_paid_replication_decision.json
+report_paths:
+  process: experiments/phase1_compiler/reports/phase1_pre_paid_replication_process.md
+  threshold_preregistration: experiments/phase1_compiler/reports/phase1_pre_paid_replication_threshold_preregistration.md
+  candidate_inventory: experiments/phase1_compiler/reports/phase1_pre_paid_replication_candidate_inventory.md
+  target_profiles: experiments/phase1_compiler/reports/phase1_pre_paid_replication_target_profiles.md
+  strata_matching: experiments/phase1_compiler/reports/phase1_pre_paid_replication_strata_matching.md
+  statement_quality_gate: experiments/phase1_compiler/reports/phase1_pre_paid_replication_statement_quality_gate.md
+  release_candidates: experiments/phase1_compiler/reports/phase1_pre_paid_replication_release_candidates.md
+  baseline_plan: experiments/phase1_compiler/reports/phase1_pre_paid_replication_baseline_plan.md
+  power_and_cost_plan: experiments/phase1_compiler/reports/phase1_pre_paid_replication_power_and_cost_plan.md
+  entry_gate: experiments/phase1_compiler/reports/phase1_pre_paid_replication_entry_gate.md
+  decision: experiments/phase1_compiler/reports/phase1_pre_paid_replication_decision.md

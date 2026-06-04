@@ -1,0 +1,124 @@
+{
+  "additional_cells_per_split_needed_for_precision_target": 62,
+  "additional_task_units_per_split_needed": 32,
+  "analysis_schema": "local_supply_analysis.v1",
+  "current_task_units_per_split": 8,
+  "expansion_preference": "First design a threshold, then prefer better B_eval/H_future matching and additional tasks per existing repo; add a third repo only after source provenance and statement hardening are locally clean.",
+  "generated_at": "2026-05-25T14:53:02Z",
+  "local_task_preparation_distinguished_from_paid_validation": true,
+  "most_promising_local_reservoir": "attrs_clean_outcome_unseen for existing-repo expansion; humanize_certified is the largest third-repo pool but needs validation-grade source/provenance hardening before paid use.",
+  "new_paid_calls_made": false,
+  "recommended_task_units_per_split_for_primary_threshold": 40,
+  "release_id": "statement_hardened_after_canonical_split_repair_20260525",
+  "reservoirs": [
+    {
+      "already_selected_count": 8,
+      "path": "experiments/phase0_headroom/certified_tasks/attrs_clean_outcome_unseen_supply_certified_tasks.jsonl",
+      "remaining_count": 10,
+      "remaining_task_ids": [
+        "attrs__hist__009",
+        "attrs__hist__010",
+        "attrs__hist__032",
+        "attrs__hist__033",
+        "attrs__hist__035",
+        "attrs__hist__036",
+        "attrs__hist__039",
+        "attrs__hist__041",
+        "attrs__hist__045",
+        "attrs__hist__047"
+      ],
+      "reservoir": "attrs_clean_outcome_unseen",
+      "task_count": 18
+    },
+    {
+      "already_selected_count": 4,
+      "path": "experiments/phase0_headroom/certified_tasks/boltons_clean_outcome_unseen_supply_certified_tasks.jsonl",
+      "remaining_count": 0,
+      "remaining_task_ids": [],
+      "reservoir": "boltons_clean_outcome_unseen",
+      "task_count": 4
+    },
+    {
+      "already_selected_count": 4,
+      "path": "experiments/phase0_headroom/certified_tasks/boltons_certified_tasks.jsonl",
+      "remaining_count": 12,
+      "remaining_task_ids": [
+        "boltons__hist__006",
+        "boltons__hist__007",
+        "boltons__hist__013",
+        "boltons__hist__014",
+        "boltons__hist__017",
+        "boltons__hist__019",
+        "boltons__hist__020",
+        "boltons__hist__024",
+        "boltons__hist__025",
+        "boltons__hist__026",
+        "boltons__hist__028",
+        "boltons__hist__031"
+      ],
+      "reservoir": "boltons_historical_certified",
+      "task_count": 16
+    },
+    {
+      "already_selected_count": 0,
+      "path": "experiments/phase0_headroom/certified_tasks/humanize_certified_tasks.jsonl",
+      "remaining_count": 12,
+      "remaining_task_ids": [
+        "humanize__hist__002",
+        "humanize__hist__003",
+        "humanize__hist__004",
+        "humanize__hist__005",
+        "humanize__hist__006",
+        "humanize__hist__007",
+        "humanize__hist__008",
+        "humanize__hist__010",
+        "humanize__hist__012",
+        "humanize__hist__013",
+        "humanize__hist__014",
+        "humanize__hist__015"
+      ],
+      "reservoir": "humanize_certified",
+      "task_count": 12
+    },
+    {
+      "already_selected_count": 0,
+      "path": "experiments/phase0_headroom/certified_tasks/itsdangerous_certified_tasks.jsonl",
+      "remaining_count": 4,
+      "remaining_task_ids": [
+        "itsdangerous__hist__002",
+        "itsdangerous__hist__003",
+        "itsdangerous__hist__004",
+        "itsdangerous__hist__006"
+      ],
+      "reservoir": "itsdangerous_certified",
+      "task_count": 4
+    },
+    {
+      "already_selected_count": 0,
+      "path": "experiments/phase0_headroom/certified_tasks/toolz_certified_tasks.jsonl",
+      "remaining_count": 6,
+      "remaining_task_ids": [
+        "toolz__hist__001",
+        "toolz__hist__002",
+        "toolz__hist__003",
+        "toolz__hist__004",
+        "toolz__hist__010",
+        "toolz__hist__016"
+      ],
+      "reservoir": "toolz_certified",
+      "task_count": 6
+    }
+  ],
+  "schema_version": "barcarolle.phase1_overnight_statement_hardened_evidence_analysis_output.v1",
+  "second_repo_context": {
+    "clean_supply_ready": true,
+    "promoted_task_count": 18,
+    "selected_repo_id": "attrs"
+  },
+  "status": "pass",
+  "third_repo_context": {
+    "ready_for_paid_smoke": true,
+    "release_status": "pilot_grade",
+    "selected_repo_id": "boltons"
+  }
+}

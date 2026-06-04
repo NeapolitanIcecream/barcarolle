@@ -1,0 +1,26 @@
+{
+  "actual_provider_billed_cost_usd": null,
+  "artifact": "cost_reconciliation",
+  "conservative_estimated_cost_usd": 60.0,
+  "cost_latency_accounting_complete": true,
+  "generated_at": "2026-05-28T07:25:04Z",
+  "observed_or_conservative_cost_usd": 51.267333,
+  "observed_token_estimated_cost_usd": 51.267333,
+  "result_prefixes": [
+    "phase1_three_repo_paid_validation_batch_1_smoke_codex_workspace",
+    "phase1_three_repo_paid_validation_batch_1_smoke_kilo_workspace",
+    "phase1_three_repo_paid_validation_batch_2_small_pilot_complete_codex_workspace",
+    "phase1_three_repo_paid_validation_batch_2_small_pilot_complete_kilo_workspace",
+    "phase1_three_repo_paid_validation_batch_3_attrs_remainder_codex_workspace",
+    "phase1_three_repo_paid_validation_batch_3_attrs_remainder_kilo_workspace",
+    "phase1_three_repo_paid_validation_batch_4_boltons_remainder_codex_workspace",
+    "phase1_three_repo_paid_validation_batch_4_boltons_remainder_kilo_workspace",
+    "phase1_three_repo_paid_validation_batch_5_click_remainder_codex_workspace",
+    "phase1_three_repo_paid_validation_batch_5_click_remainder_kilo_workspace"
+  ],
+  "run_id": "phase1_three_repo_paid_validation_20260528",
+  "schema_version": "barcarolle.phase1_three_repo_paid_validation_output.v1",
+  "status": "complete",
+  "usage_observed_rate": 1.0,
+  "workspace_cost_reconciliation": "experiments/phase0_headroom/results/workspace_cost_reconciliation.json"
+}

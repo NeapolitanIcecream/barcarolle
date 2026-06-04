@@ -1,0 +1,26 @@
+{
+  "baseline_checks": {
+    "git_diff_check": "passed",
+    "phase0_tools_pytest": "67 passed in 1.76s",
+    "phase1_compiler_pytest": "22 passed in 0.33s",
+    "phase1_mvp_validate_status": "valid"
+  },
+  "branch": "codex/restart-benchmark-compiler",
+  "candidate_order": [
+    "boltons",
+    "attrs"
+  ],
+  "current_git_status": "clean",
+  "generated_at": "2026-05-22T05:51:50Z",
+  "paid_acut_calls_allowed": false,
+  "paid_llm_calls_allowed": false,
+  "previous_decision": "replace_third_repo_before_paid_acut",
+  "previous_hardened_benchmark_candidate_count": 0,
+  "previous_recommended_next_runbook": "select_replacement_third_repo_and_locally_certify_without_paid_acut",
+  "predictive_validity_established": false,
+  "python_version": "Python 3.9.6",
+  "raw_workspace_external_cache_paths_tracked": false,
+  "schema_version": "barcarolle.phase1.third_repo_replacement_selection_preflight.v1",
+  "starting_head": "7e97c7264de7bd5c3703663da56af7fe17e78ebb",
+  "uv_version": "uv 0.11.1 (Homebrew 2026-03-24 aarch64-apple-darwin)"
+}

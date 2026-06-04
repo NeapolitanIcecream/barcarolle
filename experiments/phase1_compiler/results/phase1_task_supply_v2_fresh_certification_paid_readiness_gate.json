@@ -1,0 +1,51 @@
+{
+  "blocking_reasons": [
+    "at_least_3_repos_with_30_release_eligible"
+  ],
+  "generated_at": "2026-05-27T10:42:15Z",
+  "minimum_paid_ready_requirements": {
+    "at_least_3_repos_with_30_release_eligible": false,
+    "no_paid_acut_calls_made": true,
+    "no_paid_llm_statement_generation_made": true,
+    "no_unreviewed_material_leakage_risk": true,
+    "raw_logs_workspaces_not_committed": true,
+    "source_reservoir_mix_policy_checked": true,
+    "subgate_labels_present_for_failures": true
+  },
+  "not_attempted_cap_deferred_count_by_repo": {
+    "attrs": 87,
+    "boltons": 113,
+    "toolz": 34
+  },
+  "oracle_missing_inventory_only_count_by_repo": {
+    "attrs": 35,
+    "boltons": 32,
+    "humanize": 8,
+    "toolz": 10
+  },
+  "paid_acut_calls_made": false,
+  "paid_llm_calls_made": false,
+  "paid_ready": false,
+  "release_eligible_count_by_repo": {
+    "attrs": 28,
+    "boltons": 35,
+    "toolz": 5
+  },
+  "repos_meeting_30_release_eligible": [
+    "boltons"
+  ],
+  "run_id": "phase1_task_supply_v2_fresh_certification_20260527",
+  "schema_version": "barcarolle.phase1_task_supply_v2_fresh_certification.v1.paid_readiness_gate.v1",
+  "source_review_queue_count_by_repo": {
+    "attrs": 3,
+    "boltons": 12,
+    "humanize": 9,
+    "toolz": 1
+  },
+  "technical_certified_count_by_repo": {
+    "attrs": 31,
+    "boltons": 47,
+    "humanize": 9,
+    "toolz": 6
+  }
+}

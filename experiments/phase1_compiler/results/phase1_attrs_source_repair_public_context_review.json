@@ -1,0 +1,108 @@
+{
+  "accepted_public_context_count": 3,
+  "candidate_count": 3,
+  "diff_assisted_statement_repair_needed": false,
+  "generated_at": "2026-05-28T00:00:00Z",
+  "network_access_summary": {
+    "public_upstream_html_pages_inspected": true,
+    "raw_public_bodies_committed": false,
+    "unauthenticated_github_api_raw_responses_committed": false
+  },
+  "reviews": [
+    {
+      "ambiguity_flags": [],
+      "candidate_id": "attrs__v2__218",
+      "context_type": "public_issue_and_pr",
+      "implementation_instruction_flags": [],
+      "leakage_flags": [],
+      "primary_ref": "issue:694",
+      "public_context_repaired": true,
+      "repo_id": "attrs",
+      "review_basis": [
+        "local_git_commit_subject_and_body",
+        "public_github_pr_or_issue_html",
+        "sanitized_public_context_summary_only"
+      ],
+      "secondary_refs": [
+        "pr:710"
+      ],
+      "short_summary": "Public issue #694 reports that attrs-generated __init__ parameters lose useful typing information when a field uses a converter. Public PR #710 and the merge commit discuss inferring annotations from converter functions, including converter composition helpers such as pipe() and optional().",
+      "source_context_after": "non_leaky_issue_or_pr_context",
+      "source_context_before": "commit_message_only_context",
+      "source_urls": [
+        "https://github.com/python-attrs/attrs/issues/694",
+        "https://github.com/python-attrs/attrs/pull/710"
+      ],
+      "statement_ready": true,
+      "sufficiency_reason": "The public issue states the user-visible behavior and the PR discussion narrows the affected converter annotation scope.",
+      "sufficient_for_solver_visible_statement": true,
+      "title": "Converter functions should preserve generated __init__ type annotations",
+      "verdict": "accepted_public_context"
+    },
+    {
+      "ambiguity_flags": [],
+      "candidate_id": "attrs__v2__231",
+      "context_type": "public_issue_and_pr",
+      "implementation_instruction_flags": [],
+      "leakage_flags": [],
+      "primary_ref": "issue:716",
+      "public_context_repaired": true,
+      "repo_id": "attrs",
+      "review_basis": [
+        "local_git_commit_subject_and_body",
+        "public_github_pr_or_issue_html",
+        "sanitized_public_context_summary_only"
+      ],
+      "secondary_refs": [
+        "pr:763"
+      ],
+      "short_summary": "Public issue #716 reports Python 3.10 compatibility problems caused by annotations being stored as strings. Public PR #763 records Python 3.10 support work around string annotations, ClassVar handling, and generated method annotations.",
+      "source_context_after": "non_leaky_issue_or_pr_context",
+      "source_context_before": "commit_message_only_context",
+      "source_urls": [
+        "https://github.com/python-attrs/attrs/issues/716",
+        "https://github.com/python-attrs/attrs/pull/763"
+      ],
+      "statement_ready": true,
+      "sufficiency_reason": "The public issue and PR body describe the Python 3.10 annotation failure mode and the affected typing scope.",
+      "sufficient_for_solver_visible_statement": true,
+      "title": "Python 3.10 string annotations should resolve to usable attrs field types",
+      "verdict": "accepted_public_context"
+    },
+    {
+      "ambiguity_flags": [],
+      "candidate_id": "attrs__v2__237",
+      "context_type": "public_issue_and_pr",
+      "implementation_instruction_flags": [],
+      "leakage_flags": [],
+      "primary_ref": "issue:781",
+      "public_context_repaired": true,
+      "repo_id": "attrs",
+      "review_basis": [
+        "local_git_commit_subject_and_body",
+        "public_github_pr_or_issue_html",
+        "sanitized_public_context_summary_only"
+      ],
+      "secondary_refs": [
+        "pr:782"
+      ],
+      "short_summary": "Public issue #781 reports that typing_extensions.ClassVar can be treated as a normal attrs attribute under Python 3.10 annotation behavior, producing an ordering error. Public PR #782 records the corresponding ClassVar detection repair.",
+      "source_context_after": "non_leaky_issue_or_pr_context",
+      "source_context_before": "commit_message_only_context",
+      "source_urls": [
+        "https://github.com/python-attrs/attrs/issues/781",
+        "https://github.com/python-attrs/attrs/pull/782"
+      ],
+      "statement_ready": true,
+      "sufficiency_reason": "The public issue gives a clear user-visible failure and the public PR directly links the repair to typing_extensions.ClassVar detection.",
+      "sufficient_for_solver_visible_statement": true,
+      "title": "typing_extensions.ClassVar should be detected as a class variable",
+      "verdict": "accepted_public_context"
+    }
+  ],
+  "run_id": "phase1_attrs_source_repair_20260528",
+  "schema_version": "barcarolle.phase1_attrs_source_repair.v1.public_context_review.v1",
+  "verdict_counts": {
+    "accepted_public_context": 3
+  }
+}

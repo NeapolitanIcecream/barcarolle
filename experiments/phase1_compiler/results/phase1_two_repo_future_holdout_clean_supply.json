@@ -1,0 +1,63 @@
+{
+  "acceptance": {
+    "min_holdout_scoreable_cells": 12,
+    "min_target_repos": 2,
+    "non_scoreable_cells_max_per_split": 2,
+    "policy_violations_max": 0
+  },
+  "adapters": [
+    "codex_workspace",
+    "kilo_workspace"
+  ],
+  "blockers": [],
+  "clean_supply_ready": true,
+  "config": "experiments/phase1_compiler/configs/phase1_two_repo_future_holdout_validation.yaml",
+  "existing_paid_evidence": {
+    "boltons": {
+      "b_eval_prefix": "phase1_future_holdout_b_eval",
+      "b_eval_scoreable_cells": 8,
+      "decision": "experiments/phase1_compiler/results/phase1_future_holdout_decision.json",
+      "h_future_prefix": "phase1_future_holdout_h_future",
+      "h_future_scoreable_cells": 8,
+      "policy_violation_count": 0,
+      "predictive_validity_established": false,
+      "primary_decision_label": "boltons_clean_future_holdout_pilot_complete_insufficient_sample"
+    }
+  },
+  "generated_at": "2026-05-22T12:53:07+00:00",
+  "paid_acut_calls_made": false,
+  "paid_second_repo_acut_calls_made": false,
+  "planned_second_repo_b_eval_cells": 8,
+  "planned_second_repo_h_future_cells": 8,
+  "predictive_validity_established": false,
+  "schema_version": "barcarolle.phase1.two_repo_future_holdout_clean_supply.v1",
+  "second_repo_clean_supply": {
+    "T_compile_end": "2020-08-20T19:01:34+02:00",
+    "T_holdout_start": "2020-09-03T19:01:34+02:00",
+    "clean_supply_ready": true,
+    "overlay": "experiments/phase1_compiler/results/phase1_second_repo_clean_supply_overlay.json",
+    "repo_id": "attrs",
+    "selected_b_eval_task_ids": [
+      "attrs__hist__001",
+      "attrs__hist__003",
+      "attrs__hist__004",
+      "attrs__hist__008"
+    ],
+    "selected_h_future_task_ids": [
+      "attrs__hist__012",
+      "attrs__hist__013",
+      "attrs__hist__023",
+      "attrs__hist__027"
+    ],
+    "validation_size": "preferred"
+  },
+  "second_repo_planned_paid_prefixes": {
+    "b_eval": "phase1_two_repo_future_holdout_attrs_b_eval",
+    "h_future": "phase1_two_repo_future_holdout_attrs_h_future"
+  },
+  "selected_repos": [
+    "boltons",
+    "attrs"
+  ],
+  "total_h_future_scoreable_capacity_if_second_repo_scoreable": 16
+}

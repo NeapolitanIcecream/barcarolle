@@ -1,0 +1,50 @@
+{
+  "best_candidate_release_eligible": 30,
+  "best_candidate_repo": "click",
+  "best_candidate_technical_certified": 75,
+  "commits_made_during_run": [
+    "7b90810d Add third repo supply screen preflight",
+    "375110b8 Add third repo supply shortlist screen",
+    "b77527a7 Record third repo raw anchor inventory",
+    "6cd12633 Record third repo source and oracle screen",
+    "66835667 Record third repo environment probe",
+    "90e79e99 Record click third repo certification wave",
+    "5b726432 Recompute third repo release gate",
+    "final closeout commit: includes decision artifacts and verification updates"
+  ],
+  "completed_steps": [
+    "Step 0 preflight",
+    "Step 1 repo_shortlist",
+    "Step 2 raw_anchor_inventory",
+    "Step 3a source_context_inventory",
+    "Step 3b oracle_matrix",
+    "Step 4 environment_probe",
+    "Step 5 certification_attempts",
+    "Step 6 release_gate",
+    "Step 7 decision"
+  ],
+  "decision_label": "third_repo_ready_paid_gate_ready_for_packaging",
+  "generated_at": "2026-05-28T03:03:56Z",
+  "known_blockers": [],
+  "paid_call_statement": "No paid ACUT calls, paid task-solving calls, paid replication, paid LLM statement-generation calls, or paid LLM review calls were made.",
+  "paid_ready": true,
+  "raw_artifact_hygiene_statement": "Committed JSON and Markdown contain sanitized metadata, counts, hashes, source-context classes, subgates, and task ids only.",
+  "research_questions": {
+    "RQ1": "Screened=['packaging', 'pluggy', 'cachetools', 'sortedcontainers', 'click', 'jinja2', 'werkzeug']; advanced_to_raw=['cachetools', 'click', 'jinja2', 'packaging']; advanced_to_certification=['cachetools', 'click']; rejected=[].",
+    "RQ2": "click has the strongest observed path under this bounded run.",
+    "RQ3": "Third repo reached 30 release-eligible tasks: True.",
+    "RQ4": "no remaining third-repo supply blocker; the unattempted certification tail was stopped after the gate was proven.",
+    "RQ5": "Repos at 30 release eligible: ['attrs', 'boltons', 'click'].",
+    "RQ6": "No paid ACUT, paid task-solving, paid replication, paid LLM generation, or paid LLM review calls were made.",
+    "RQ7": "paid-readiness packaging."
+  },
+  "run_id": "phase1_third_repo_release_supply_screen_20260528",
+  "schema_version": "barcarolle.phase1_third_repo_release_supply_screen.v1.decision.v1",
+  "status": "third_repo_supply_screen_completed",
+  "tests_run": [
+    "uv run --project experiments/phase1_compiler pytest experiments/phase1_compiler/tests/test_phase1_third_repo_release_supply_screen.py -q (6 passed)",
+    "uv run --project experiments/phase1_compiler pytest experiments/phase1_compiler/tests -q (225 passed)",
+    "git diff --check (passed)",
+    "git status --short --untracked-files=all (run; unrelated pre-existing external_review files remain untracked)"
+  ]
+}

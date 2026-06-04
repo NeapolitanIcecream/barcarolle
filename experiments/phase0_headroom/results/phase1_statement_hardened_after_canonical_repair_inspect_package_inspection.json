@@ -1,0 +1,774 @@
+{
+  "configured_task_ids": [
+    "attrs__hist__001",
+    "attrs__hist__003",
+    "attrs__hist__004",
+    "attrs__hist__008",
+    "attrs__hist__012",
+    "attrs__hist__013",
+    "attrs__hist__023",
+    "attrs__hist__027",
+    "boltons__clean_ext__001",
+    "boltons__clean_ext__008",
+    "boltons__clean_ext__010",
+    "boltons__hist__011",
+    "boltons__clean_ext__017",
+    "boltons__hist__022",
+    "boltons__hist__023",
+    "boltons__hist__027"
+  ],
+  "generated_at": "2026-05-25T11:09:35+00:00",
+  "matrix_config": "experiments/phase0_headroom/configs/phase1_statement_hardened_after_canonical_repair_workspace_matrix.yaml",
+  "missing_task_ids": [],
+  "package_count": 16,
+  "packages": [
+    {
+      "allowed_code_paths": [
+        "src/attr/_make.py"
+      ],
+      "base_commit": "ac541fbe556eb8c085a9cea26616f0ebad6ef632",
+      "frozen_statement_digest": "sha256:72f3749b248f32afa7ab0639cb5918df46243c0727ffb5aca0e544fffca0a294",
+      "metadata": {
+        "allowed_context_refs": [
+          "issue:611"
+        ],
+        "canonical_repo_split": "attrs/B_eval",
+        "canonical_split": "B_eval",
+        "changed_files": [
+          "changelog.d/611.change.rst",
+          "src/attr/_make.py",
+          "tests/test_make.py"
+        ],
+        "evidence_level": "statement_hardened_after_canonical_repair",
+        "metadata_sources": {
+          "certified_tasks": "experiments/phase0_headroom/certified_tasks/attrs_clean_outcome_unseen_supply_certified_tasks.jsonl",
+          "inventory": "experiments/phase1_compiler/results/phase1_statement_hardened_after_canonical_repair_inventory.json",
+          "release_manifest": "experiments/phase1_compiler/results/phase1_statement_hardened_after_canonical_repair_release_manifest.json",
+          "release_preview": "experiments/phase1_compiler/results/phase1_statement_hardened_after_canonical_repair_release_preview.json"
+        },
+        "statement_digest": "sha256:72f3749b248f32afa7ab0639cb5918df46243c0727ffb5aca0e544fffca0a294",
+        "statement_source": "reused_codex_loop",
+        "task_time": "2020-01-13T02:46:11-05:00",
+        "test_files": [
+          "tests/test_make.py"
+        ],
+        "verifier_command_metadata": "uv run --project experiments/phase0_headroom --with \"pytest>=7,<8\" --with \"setuptools<81\" --with \"hypothesis<6\" python -m pytest -q tests/test_make.py"
+      },
+      "repo_id": "attrs",
+      "solver_facing_statement_digest": "sha256:72f3749b248f32afa7ab0639cb5918df46243c0727ffb5aca0e544fffca0a294",
+      "source_repo": "experiments/phase0_headroom/external_repos/attrs",
+      "split": "B_eval",
+      "statement_digest_matches_frozen": true,
+      "statement_sha256": "ab33f1a8b492d87e35ffcac4f5382f87225fc304a19c5558b8fd9afec7ce0a07",
+      "target_commit": "9b5e988ccc36d906b5c1ef6681ba7242f758fe2f",
+      "task_id": "attrs__hist__001",
+      "test_paths": [
+        "tests/test_make.py"
+      ]
+    },
+    {
+      "allowed_code_paths": [
+        "src/attr/_make.py"
+      ],
+      "base_commit": "9fcfe3479f3e98d4909208039b6b98cc70837b9d",
+      "frozen_statement_digest": "sha256:c8d04730b328ad028598eee282911e825fc6617f782ac07d74415a896f5a72f0",
+      "metadata": {
+        "allowed_context_refs": [
+          "pr:506"
+        ],
+        "canonical_repo_split": "attrs/B_eval",
+        "canonical_split": "B_eval",
+        "changed_files": [
+          "changelog.d/506.change.rst",
+          "src/attr/_make.py",
+          "tests/test_make.py"
+        ],
+        "evidence_level": "statement_hardened_after_canonical_repair",
+        "metadata_sources": {
+          "certified_tasks": "experiments/phase0_headroom/certified_tasks/attrs_clean_outcome_unseen_supply_certified_tasks.jsonl",
+          "inventory": "experiments/phase1_compiler/results/phase1_statement_hardened_after_canonical_repair_inventory.json",
+          "release_manifest": "experiments/phase1_compiler/results/phase1_statement_hardened_after_canonical_repair_release_manifest.json",
+          "release_preview": "experiments/phase1_compiler/results/phase1_statement_hardened_after_canonical_repair_release_preview.json"
+        },
+        "statement_digest": "sha256:c8d04730b328ad028598eee282911e825fc6617f782ac07d74415a896f5a72f0",
+        "statement_source": "reused_codex_loop",
+        "task_time": "2020-03-06T13:54:27+01:00",
+        "test_files": [
+          "tests/test_make.py"
+        ],
+        "verifier_command_metadata": "uv run --project experiments/phase0_headroom --with \"pytest>=7,<8\" --with \"setuptools<81\" --with \"hypothesis<6\" python -m pytest -q tests/test_make.py"
+      },
+      "repo_id": "attrs",
+      "solver_facing_statement_digest": "sha256:c8d04730b328ad028598eee282911e825fc6617f782ac07d74415a896f5a72f0",
+      "source_repo": "experiments/phase0_headroom/external_repos/attrs",
+      "split": "B_eval",
+      "statement_digest_matches_frozen": true,
+      "statement_sha256": "bcaae837d74189687a2312e86cd293eaab6360230a1f937fed85441f05078d0d",
+      "target_commit": "4dea97e633e888d78750b47976fb64d362603bb5",
+      "task_id": "attrs__hist__003",
+      "test_paths": [
+        "tests/test_make.py"
+      ]
+    },
+    {
+      "allowed_code_paths": [
+        "src/attr/_make.py"
+      ],
+      "base_commit": "609b10e84f5fb87d1f20300fb0368961da8f70d0",
+      "frozen_statement_digest": "sha256:6dc808c7d1efafc2397a84ca7321830cb67540128a34f91d1de9eb6d80e312dd",
+      "metadata": {
+        "allowed_context_refs": [
+          "issue:626"
+        ],
+        "canonical_repo_split": "attrs/B_eval",
+        "canonical_split": "B_eval",
+        "changed_files": [
+          "src/attr/_make.py",
+          "tests/test_make.py"
+        ],
+        "evidence_level": "statement_hardened_after_canonical_repair",
+        "metadata_sources": {
+          "certified_tasks": "experiments/phase0_headroom/certified_tasks/attrs_clean_outcome_unseen_supply_certified_tasks.jsonl",
+          "inventory": "experiments/phase1_compiler/results/phase1_statement_hardened_after_canonical_repair_inventory.json",
+          "release_manifest": "experiments/phase1_compiler/results/phase1_statement_hardened_after_canonical_repair_release_manifest.json",
+          "release_preview": "experiments/phase1_compiler/results/phase1_statement_hardened_after_canonical_repair_release_preview.json"
+        },
+        "statement_digest": "sha256:6dc808c7d1efafc2397a84ca7321830cb67540128a34f91d1de9eb6d80e312dd",
+        "statement_source": "reused_codex_loop",
+        "task_time": "2020-03-09T13:56:09Z",
+        "test_files": [
+          "tests/test_make.py"
+        ],
+        "verifier_command_metadata": "uv run --project experiments/phase0_headroom --with \"pytest>=7,<8\" --with \"setuptools<81\" --with \"hypothesis<6\" python -m pytest -q tests/test_make.py"
+      },
+      "repo_id": "attrs",
+      "solver_facing_statement_digest": "sha256:6dc808c7d1efafc2397a84ca7321830cb67540128a34f91d1de9eb6d80e312dd",
+      "source_repo": "experiments/phase0_headroom/external_repos/attrs",
+      "split": "B_eval",
+      "statement_digest_matches_frozen": true,
+      "statement_sha256": "0299a8d825b0389dd37430935fb2c3b8cbdd7083bdd1e5505106c29a8a6b3fd3",
+      "target_commit": "4bd682709134155ec79c5077a748a8bd3ade39d9",
+      "task_id": "attrs__hist__004",
+      "test_paths": [
+        "tests/test_make.py"
+      ]
+    },
+    {
+      "allowed_code_paths": [
+        "src/attr/__init__.py",
+        "src/attr/__init__.pyi",
+        "src/attr/_next_gen.py"
+      ],
+      "base_commit": "c67a649b3812891b23f9e6468c641808a9b2dfaa",
+      "frozen_statement_digest": "sha256:8c2d8b532d98e9be3c6b01e90eb16f8afd8bccddb322c0f2d45a9b43709ed652",
+      "metadata": {
+        "allowed_context_refs": [
+          "pr:669"
+        ],
+        "canonical_repo_split": "attrs/B_eval",
+        "canonical_split": "B_eval",
+        "changed_files": [
+          "changelog.d/669.change.rst",
+          "docs/api.rst",
+          "src/attr/__init__.py",
+          "src/attr/__init__.pyi",
+          "src/attr/_next_gen.py",
+          "tests/test_next_gen.py",
+          "tests/typing_example.py"
+        ],
+        "evidence_level": "statement_hardened_after_canonical_repair",
+        "metadata_sources": {
+          "certified_tasks": "experiments/phase0_headroom/certified_tasks/attrs_clean_outcome_unseen_supply_certified_tasks.jsonl",
+          "inventory": "experiments/phase1_compiler/results/phase1_statement_hardened_after_canonical_repair_inventory.json",
+          "release_manifest": "experiments/phase1_compiler/results/phase1_statement_hardened_after_canonical_repair_release_manifest.json",
+          "release_preview": "experiments/phase1_compiler/results/phase1_statement_hardened_after_canonical_repair_release_preview.json"
+        },
+        "statement_digest": "sha256:8c2d8b532d98e9be3c6b01e90eb16f8afd8bccddb322c0f2d45a9b43709ed652",
+        "statement_source": "reused_codex_loop",
+        "task_time": "2020-08-20T19:01:34+02:00",
+        "test_files": [
+          "tests/test_next_gen.py",
+          "tests/typing_example.py"
+        ],
+        "verifier_command_metadata": "uv run --project experiments/phase0_headroom --with \"pytest>=7,<8\" --with \"setuptools<81\" --with \"hypothesis<6\" python -m pytest -q tests/test_next_gen.py tests/typing_example.py"
+      },
+      "repo_id": "attrs",
+      "solver_facing_statement_digest": "sha256:8c2d8b532d98e9be3c6b01e90eb16f8afd8bccddb322c0f2d45a9b43709ed652",
+      "source_repo": "experiments/phase0_headroom/external_repos/attrs",
+      "split": "B_eval",
+      "statement_digest_matches_frozen": true,
+      "statement_sha256": "a890bf566a838e4151b9dee0b10c926b372ffe2bd3a59d14dbd47ff2955ba9f0",
+      "target_commit": "fda437c91f2a8c32d75fd27c5b50c12346d4ab48",
+      "task_id": "attrs__hist__008",
+      "test_paths": [
+        "tests/test_next_gen.py",
+        "tests/typing_example.py"
+      ]
+    },
+    {
+      "allowed_code_paths": [
+        "src/attr/_make.py"
+      ],
+      "base_commit": "bfd7bb49b467e7ab586deb475c23974a91df4dab",
+      "frozen_statement_digest": "sha256:eb3b31fd4bf8241f9088b47b989b307545e1a2ceae9b5782feacc02453246f16",
+      "metadata": {
+        "allowed_context_refs": [
+          "issue:680"
+        ],
+        "canonical_repo_split": "attrs/H_future",
+        "canonical_split": "H_future",
+        "changed_files": [
+          "changelog.d/681.change.rst",
+          "src/attr/_make.py",
+          "tests/test_setattr.py",
+          "tox.ini"
+        ],
+        "evidence_level": "statement_hardened_after_canonical_repair",
+        "metadata_sources": {
+          "certified_tasks": "experiments/phase0_headroom/certified_tasks/attrs_clean_outcome_unseen_supply_certified_tasks.jsonl",
+          "inventory": "experiments/phase1_compiler/results/phase1_statement_hardened_after_canonical_repair_inventory.json",
+          "release_manifest": "experiments/phase1_compiler/results/phase1_statement_hardened_after_canonical_repair_release_manifest.json",
+          "release_preview": "experiments/phase1_compiler/results/phase1_statement_hardened_after_canonical_repair_release_preview.json"
+        },
+        "statement_digest": "sha256:eb3b31fd4bf8241f9088b47b989b307545e1a2ceae9b5782feacc02453246f16",
+        "statement_source": "reused_codex_loop",
+        "task_time": "2020-09-05T09:46:06+02:00",
+        "test_files": [
+          "tests/test_setattr.py"
+        ],
+        "verifier_command_metadata": "uv run --project experiments/phase0_headroom --with \"pytest>=7,<8\" --with \"setuptools<81\" --with \"hypothesis<6\" python -m pytest -q tests/test_setattr.py"
+      },
+      "repo_id": "attrs",
+      "solver_facing_statement_digest": "sha256:eb3b31fd4bf8241f9088b47b989b307545e1a2ceae9b5782feacc02453246f16",
+      "source_repo": "experiments/phase0_headroom/external_repos/attrs",
+      "split": "H_future",
+      "statement_digest_matches_frozen": true,
+      "statement_sha256": "6aa193ebcf669fb28d99787102b4c8a895b38827528e8889a8169989954675cb",
+      "target_commit": "48755905ee8088da927a6dc583d4962f7ca16b9b",
+      "task_id": "attrs__hist__012",
+      "test_paths": [
+        "tests/test_setattr.py"
+      ]
+    },
+    {
+      "allowed_code_paths": [
+        "src/attr/_next_gen.py"
+      ],
+      "base_commit": "48755905ee8088da927a6dc583d4962f7ca16b9b",
+      "frozen_statement_digest": "sha256:702f3a1c5f7a6936944aa15727ab4c1fd973f0ed71f73b54386ee94cd75b4da3",
+      "metadata": {
+        "allowed_context_refs": [
+          "pr:687"
+        ],
+        "canonical_repo_split": "attrs/H_future",
+        "canonical_split": "H_future",
+        "changed_files": [
+          "changelog.d/687.change.rst",
+          "src/attr/_next_gen.py",
+          "tests/test_next_gen.py"
+        ],
+        "evidence_level": "statement_hardened_after_canonical_repair",
+        "metadata_sources": {
+          "certified_tasks": "experiments/phase0_headroom/certified_tasks/attrs_clean_outcome_unseen_supply_certified_tasks.jsonl",
+          "inventory": "experiments/phase1_compiler/results/phase1_statement_hardened_after_canonical_repair_inventory.json",
+          "release_manifest": "experiments/phase1_compiler/results/phase1_statement_hardened_after_canonical_repair_release_manifest.json",
+          "release_preview": "experiments/phase1_compiler/results/phase1_statement_hardened_after_canonical_repair_release_preview.json"
+        },
+        "statement_digest": "sha256:702f3a1c5f7a6936944aa15727ab4c1fd973f0ed71f73b54386ee94cd75b4da3",
+        "statement_source": "reused_codex_loop",
+        "task_time": "2020-09-05T11:14:54+02:00",
+        "test_files": [
+          "tests/test_next_gen.py"
+        ],
+        "verifier_command_metadata": "uv run --project experiments/phase0_headroom --with \"pytest>=7,<8\" --with \"setuptools<81\" --with \"hypothesis<6\" python -m pytest -q tests/test_next_gen.py"
+      },
+      "repo_id": "attrs",
+      "solver_facing_statement_digest": "sha256:702f3a1c5f7a6936944aa15727ab4c1fd973f0ed71f73b54386ee94cd75b4da3",
+      "source_repo": "experiments/phase0_headroom/external_repos/attrs",
+      "split": "H_future",
+      "statement_digest_matches_frozen": true,
+      "statement_sha256": "201a63087984a1087cf47cf1b1e5900d04ad5570fc639a26fc0c894629406542",
+      "target_commit": "504eefe91fc49c761572b0a855479775fb6498a8",
+      "task_id": "attrs__hist__013",
+      "test_paths": [
+        "tests/test_next_gen.py"
+      ]
+    },
+    {
+      "allowed_code_paths": [
+        "src/attr/_make.py"
+      ],
+      "base_commit": "78335e9b49eff2eaf2dc31d0bcc3caa0169cfc60",
+      "frozen_statement_digest": "sha256:3262b00021acd8bd07b3adcbe9de4e3fc297a763750ce60acfc831f9912d5390",
+      "metadata": {
+        "allowed_context_refs": [
+          "issue:593"
+        ],
+        "canonical_repo_split": "attrs/H_future",
+        "canonical_split": "H_future",
+        "changed_files": [
+          "src/attr/_make.py",
+          "tests/test_annotations.py"
+        ],
+        "evidence_level": "statement_hardened_after_canonical_repair",
+        "metadata_sources": {
+          "certified_tasks": "experiments/phase0_headroom/certified_tasks/attrs_clean_outcome_unseen_supply_certified_tasks.jsonl",
+          "inventory": "experiments/phase1_compiler/results/phase1_statement_hardened_after_canonical_repair_inventory.json",
+          "release_manifest": "experiments/phase1_compiler/results/phase1_statement_hardened_after_canonical_repair_release_manifest.json",
+          "release_preview": "experiments/phase1_compiler/results/phase1_statement_hardened_after_canonical_repair_release_preview.json"
+        },
+        "statement_digest": "sha256:3262b00021acd8bd07b3adcbe9de4e3fc297a763750ce60acfc831f9912d5390",
+        "statement_source": "reused_codex_loop",
+        "task_time": "2021-02-18T21:50:41-08:00",
+        "test_files": [
+          "tests/test_annotations.py"
+        ],
+        "verifier_command_metadata": "uv run --project experiments/phase0_headroom --with \"pytest>=7,<8\" --with \"setuptools<81\" --with \"hypothesis<6\" python -m pytest -q tests/test_annotations.py"
+      },
+      "repo_id": "attrs",
+      "solver_facing_statement_digest": "sha256:3262b00021acd8bd07b3adcbe9de4e3fc297a763750ce60acfc831f9912d5390",
+      "source_repo": "experiments/phase0_headroom/external_repos/attrs",
+      "split": "H_future",
+      "statement_digest_matches_frozen": true,
+      "statement_sha256": "05a9d3183b74a1689cbd0f34b550d8a93599201ec5721b9b2fb928adba7f62fa",
+      "target_commit": "1499c77e79315ef8c5c98c088dc3ef99bdba72b4",
+      "task_id": "attrs__hist__023",
+      "test_paths": [
+        "tests/test_annotations.py"
+      ]
+    },
+    {
+      "allowed_code_paths": [
+        "src/attr/__init__.pyi",
+        "src/attr/_funcs.py"
+      ],
+      "base_commit": "ad59a62cae7f1f5355fb121d77eda5d5d1aa0cbd",
+      "frozen_statement_digest": "sha256:f4bedc621b7cd8d458dcd08ff6134e823d21687ba30177122bde297e433486f6",
+      "metadata": {
+        "allowed_context_refs": [
+          "issue:766"
+        ],
+        "canonical_repo_split": "attrs/H_future",
+        "canonical_split": "H_future",
+        "changed_files": [
+          "changelog.d/774.change.rst",
+          "conftest.py",
+          "src/attr/__init__.pyi",
+          "src/attr/_funcs.py",
+          "tests/test_hooks.py"
+        ],
+        "evidence_level": "statement_hardened_after_canonical_repair",
+        "metadata_sources": {
+          "certified_tasks": "experiments/phase0_headroom/certified_tasks/attrs_clean_outcome_unseen_supply_certified_tasks.jsonl",
+          "inventory": "experiments/phase1_compiler/results/phase1_statement_hardened_after_canonical_repair_inventory.json",
+          "release_manifest": "experiments/phase1_compiler/results/phase1_statement_hardened_after_canonical_repair_release_manifest.json",
+          "release_preview": "experiments/phase1_compiler/results/phase1_statement_hardened_after_canonical_repair_release_preview.json"
+        },
+        "statement_digest": "sha256:f4bedc621b7cd8d458dcd08ff6134e823d21687ba30177122bde297e433486f6",
+        "statement_source": "reused_codex_loop",
+        "task_time": "2021-03-05T16:01:04-08:00",
+        "test_files": [
+          "tests/test_hooks.py"
+        ],
+        "verifier_command_metadata": "uv run --project experiments/phase0_headroom --with \"pytest>=7,<8\" --with \"setuptools<81\" --with \"hypothesis<6\" python -m pytest -q tests/test_hooks.py"
+      },
+      "repo_id": "attrs",
+      "solver_facing_statement_digest": "sha256:f4bedc621b7cd8d458dcd08ff6134e823d21687ba30177122bde297e433486f6",
+      "source_repo": "experiments/phase0_headroom/external_repos/attrs",
+      "split": "H_future",
+      "statement_digest_matches_frozen": true,
+      "statement_sha256": "c1594a3ff3b2dae56e5b360f1e95ea2d6d4fe384eb97fdaf34927fbbcc24c9e3",
+      "target_commit": "ce8bb4ffa9d4b4c3cc034e497be6809840c2a53a",
+      "task_id": "attrs__hist__027",
+      "test_paths": [
+        "tests/test_hooks.py"
+      ]
+    },
+    {
+      "allowed_code_paths": [
+        "boltons/iterutils.py"
+      ],
+      "base_commit": "1819f52f1ed655772c425057fc3e4a9899fba74d",
+      "frozen_statement_digest": "sha256:2f0f8f1b0cef43b0c1bf8c3445c7501353e461194389d8ee64a7f367304f189c",
+      "metadata": {
+        "allowed_context_refs": [
+          "issue:231"
+        ],
+        "canonical_repo_split": "boltons/B_eval",
+        "canonical_split": "B_eval",
+        "changed_files": [
+          "boltons/iterutils.py",
+          "tests/test_iterutils.py"
+        ],
+        "evidence_level": "statement_hardened_after_canonical_repair",
+        "metadata_sources": {
+          "certified_tasks": "experiments/phase0_headroom/certified_tasks/boltons_clean_outcome_unseen_supply_certified_tasks.jsonl",
+          "inventory": "experiments/phase1_compiler/results/phase1_statement_hardened_after_canonical_repair_inventory.json",
+          "release_manifest": "experiments/phase1_compiler/results/phase1_statement_hardened_after_canonical_repair_release_manifest.json",
+          "release_preview": "experiments/phase1_compiler/results/phase1_statement_hardened_after_canonical_repair_release_preview.json"
+        },
+        "statement_digest": "sha256:2f0f8f1b0cef43b0c1bf8c3445c7501353e461194389d8ee64a7f367304f189c",
+        "statement_source": "reused_codex_loop",
+        "task_time": "2020-01-06T22:29:17-08:00",
+        "test_files": [
+          "tests/test_iterutils.py"
+        ],
+        "verifier_command_metadata": "uv run --project experiments/phase0_headroom --with \"pytest>=7,<8\" python -m pytest -q tests/test_iterutils.py"
+      },
+      "repo_id": "boltons",
+      "solver_facing_statement_digest": "sha256:2f0f8f1b0cef43b0c1bf8c3445c7501353e461194389d8ee64a7f367304f189c",
+      "source_repo": "experiments/phase0_headroom/external_repos/boltons",
+      "split": "B_eval",
+      "statement_digest_matches_frozen": true,
+      "statement_sha256": "863f1a5154ae5377f0d4bb670e158a483516a8021a8338e288723f791a666ed4",
+      "target_commit": "9b3392a81398d5d12a9faed9102678244cb15d79",
+      "task_id": "boltons__clean_ext__001",
+      "test_paths": [
+        "tests/test_iterutils.py"
+      ]
+    },
+    {
+      "allowed_code_paths": [
+        "boltons/setutils.py"
+      ],
+      "base_commit": "913aef46f58b9869cd93684917f5c231fba42b4a",
+      "frozen_statement_digest": "sha256:5c41a33c6e235518e1e984ebb9f4b1865b9b93c53797096f5b398ed14a53613c",
+      "metadata": {
+        "allowed_context_refs": [
+          "issue:240"
+        ],
+        "canonical_repo_split": "boltons/B_eval",
+        "canonical_split": "B_eval",
+        "changed_files": [
+          "boltons/setutils.py",
+          "tests/test_setutils.py"
+        ],
+        "evidence_level": "statement_hardened_after_canonical_repair",
+        "metadata_sources": {
+          "certified_tasks": "experiments/phase0_headroom/certified_tasks/boltons_clean_outcome_unseen_supply_certified_tasks.jsonl",
+          "inventory": "experiments/phase1_compiler/results/phase1_statement_hardened_after_canonical_repair_inventory.json",
+          "release_manifest": "experiments/phase1_compiler/results/phase1_statement_hardened_after_canonical_repair_release_manifest.json",
+          "release_preview": "experiments/phase1_compiler/results/phase1_statement_hardened_after_canonical_repair_release_preview.json"
+        },
+        "statement_digest": "sha256:5c41a33c6e235518e1e984ebb9f4b1865b9b93c53797096f5b398ed14a53613c",
+        "statement_source": "reused_codex_loop",
+        "task_time": "2020-03-29T19:27:42-07:00",
+        "test_files": [
+          "tests/test_setutils.py"
+        ],
+        "verifier_command_metadata": "uv run --project experiments/phase0_headroom --with \"pytest>=7,<8\" python -m pytest -q tests/test_setutils.py"
+      },
+      "repo_id": "boltons",
+      "solver_facing_statement_digest": "sha256:5c41a33c6e235518e1e984ebb9f4b1865b9b93c53797096f5b398ed14a53613c",
+      "source_repo": "experiments/phase0_headroom/external_repos/boltons",
+      "split": "B_eval",
+      "statement_digest_matches_frozen": true,
+      "statement_sha256": "4d43c781decde4a04994288fed853965b2b15f4fa95dddc51bccd1501a568379",
+      "target_commit": "4457decc614ee795804f2bb9c44ae9be30831d53",
+      "task_id": "boltons__clean_ext__008",
+      "test_paths": [
+        "tests/test_setutils.py"
+      ]
+    },
+    {
+      "allowed_code_paths": [
+        "boltons/setutils.py"
+      ],
+      "base_commit": "47e0c3bfcbd3291a1366f34069f23e43659717cd",
+      "frozen_statement_digest": "sha256:1ffae607372921f374157f78e660822928ab076cf76906179213aee8cc9120c7",
+      "metadata": {
+        "allowed_context_refs": [
+          "issue:252"
+        ],
+        "canonical_repo_split": "boltons/B_eval",
+        "canonical_split": "B_eval",
+        "changed_files": [
+          "boltons/setutils.py",
+          "tests/test_setutils.py"
+        ],
+        "evidence_level": "statement_hardened_after_canonical_repair",
+        "metadata_sources": {
+          "certified_tasks": "experiments/phase0_headroom/certified_tasks/boltons_clean_outcome_unseen_supply_certified_tasks.jsonl",
+          "inventory": "experiments/phase1_compiler/results/phase1_statement_hardened_after_canonical_repair_inventory.json",
+          "release_manifest": "experiments/phase1_compiler/results/phase1_statement_hardened_after_canonical_repair_release_manifest.json",
+          "release_preview": "experiments/phase1_compiler/results/phase1_statement_hardened_after_canonical_repair_release_preview.json"
+        },
+        "statement_digest": "sha256:1ffae607372921f374157f78e660822928ab076cf76906179213aee8cc9120c7",
+        "statement_source": "reused_codex_loop",
+        "task_time": "2020-04-21T02:03:26-07:00",
+        "test_files": [
+          "tests/test_setutils.py"
+        ],
+        "verifier_command_metadata": "uv run --project experiments/phase0_headroom --with \"pytest>=7,<8\" python -m pytest -q tests/test_setutils.py"
+      },
+      "repo_id": "boltons",
+      "solver_facing_statement_digest": "sha256:1ffae607372921f374157f78e660822928ab076cf76906179213aee8cc9120c7",
+      "source_repo": "experiments/phase0_headroom/external_repos/boltons",
+      "split": "B_eval",
+      "statement_digest_matches_frozen": true,
+      "statement_sha256": "4e5a0643a13168696e5a4ee4245a815b96a290c793df947569c770b05e353b09",
+      "target_commit": "41a926e64ff69e152d14dff87a2766b27ae2b53b",
+      "task_id": "boltons__clean_ext__010",
+      "test_paths": [
+        "tests/test_setutils.py"
+      ]
+    },
+    {
+      "allowed_code_paths": [
+        "boltons/iterutils.py"
+      ],
+      "base_commit": "3d55169c278299854e9d083dfb9cb2a9a6faacd4",
+      "frozen_statement_digest": "sha256:6c415911ffde12152fd9ddc6911f88400fb276e133cd62d4518c89b48ed07877",
+      "metadata": {
+        "allowed_context_refs": [
+          "pr:253"
+        ],
+        "canonical_repo_split": "boltons/B_eval",
+        "canonical_split": "B_eval",
+        "changed_files": [
+          "boltons/iterutils.py",
+          "docs/iterutils.rst",
+          "tests/test_iterutils.py"
+        ],
+        "evidence_level": "statement_hardened_after_canonical_repair",
+        "metadata_sources": {
+          "certified_tasks": "experiments/phase0_headroom/certified_tasks/boltons_certified_tasks.jsonl",
+          "inventory": "experiments/phase1_compiler/results/phase1_statement_hardened_after_canonical_repair_inventory.json",
+          "release_manifest": "experiments/phase1_compiler/results/phase1_statement_hardened_after_canonical_repair_release_manifest.json",
+          "release_preview": "experiments/phase1_compiler/results/phase1_statement_hardened_after_canonical_repair_release_preview.json"
+        },
+        "statement_digest": "sha256:6c415911ffde12152fd9ddc6911f88400fb276e133cd62d4518c89b48ed07877",
+        "statement_source": "new_codex_loop",
+        "task_time": "2020-06-22T01:19:35-04:00",
+        "test_files": [
+          "tests/test_iterutils.py"
+        ],
+        "verifier_command_metadata": "uv run --project experiments/phase0_headroom --with \"pytest>=8,<9\" --with \"setuptools<81\" python -m pytest -q tests/test_iterutils.py"
+      },
+      "repo_id": "boltons",
+      "solver_facing_statement_digest": "sha256:6c415911ffde12152fd9ddc6911f88400fb276e133cd62d4518c89b48ed07877",
+      "source_repo": "experiments/phase0_headroom/external_repos/boltons",
+      "split": "B_eval",
+      "statement_digest_matches_frozen": true,
+      "statement_sha256": "0150e7ff8baa7146463a4b0e80ce677b31f3555d8ef1527e3e745653c861bb2a",
+      "target_commit": "e79511e6e7a8472b229dd60f1fa7934aec03ab1e",
+      "task_id": "boltons__hist__011",
+      "test_paths": [
+        "tests/test_iterutils.py"
+      ]
+    },
+    {
+      "allowed_code_paths": [
+        "boltons/timeutils.py"
+      ],
+      "base_commit": "6c7fa3e05659fac6515f661153c89d4ad02df168",
+      "frozen_statement_digest": "sha256:06e5da6b0d3af52a92b0d16be43b660f4b972bb3d7bbdd05445250d1b92f8d7a",
+      "metadata": {
+        "allowed_context_refs": [
+          "issue:319"
+        ],
+        "canonical_repo_split": "boltons/H_future",
+        "canonical_split": "H_future",
+        "changed_files": [
+          "boltons/timeutils.py",
+          "tests/test_timeutils.py"
+        ],
+        "evidence_level": "statement_hardened_after_canonical_repair",
+        "metadata_sources": {
+          "certified_tasks": "experiments/phase0_headroom/certified_tasks/boltons_clean_outcome_unseen_supply_certified_tasks.jsonl",
+          "inventory": "experiments/phase1_compiler/results/phase1_statement_hardened_after_canonical_repair_inventory.json",
+          "release_manifest": "experiments/phase1_compiler/results/phase1_statement_hardened_after_canonical_repair_release_manifest.json",
+          "release_preview": "experiments/phase1_compiler/results/phase1_statement_hardened_after_canonical_repair_release_preview.json"
+        },
+        "statement_digest": "sha256:06e5da6b0d3af52a92b0d16be43b660f4b972bb3d7bbdd05445250d1b92f8d7a",
+        "statement_source": "reused_codex_loop",
+        "task_time": "2022-12-07T18:22:36-08:00",
+        "test_files": [
+          "tests/test_timeutils.py"
+        ],
+        "verifier_command_metadata": "uv run --project experiments/phase0_headroom --with \"pytest>=7,<8\" python -m pytest -q tests/test_timeutils.py"
+      },
+      "repo_id": "boltons",
+      "solver_facing_statement_digest": "sha256:06e5da6b0d3af52a92b0d16be43b660f4b972bb3d7bbdd05445250d1b92f8d7a",
+      "source_repo": "experiments/phase0_headroom/external_repos/boltons",
+      "split": "H_future",
+      "statement_digest_matches_frozen": true,
+      "statement_sha256": "20d226ca818ecafd11b2bad14ba3f195cc7492c23c7708bffaba44fb0131ff5a",
+      "target_commit": "8ba3a7fa0d99b73f7f43c1aed82c571b941eecea",
+      "task_id": "boltons__clean_ext__017",
+      "test_paths": [
+        "tests/test_timeutils.py"
+      ]
+    },
+    {
+      "allowed_code_paths": [
+        "boltons/iterutils.py"
+      ],
+      "base_commit": "40a7b47c6e8235a1b2a4600d0ceec4f7ea0f9bb0",
+      "frozen_statement_digest": "sha256:df7b0201c0ef0ec9f236f2c53bb50a475d2cf0bbf688f6e9ef2a87fd231500c3",
+      "metadata": {
+        "allowed_context_refs": [
+          "pr:312"
+        ],
+        "canonical_repo_split": "boltons/H_future",
+        "canonical_split": "H_future",
+        "changed_files": [
+          "boltons/iterutils.py",
+          "docs/iterutils.rst",
+          "tests/test_iterutils.py"
+        ],
+        "evidence_level": "statement_hardened_after_canonical_repair",
+        "metadata_sources": {
+          "certified_tasks": "experiments/phase0_headroom/certified_tasks/boltons_certified_tasks.jsonl",
+          "inventory": "experiments/phase1_compiler/results/phase1_statement_hardened_after_canonical_repair_inventory.json",
+          "release_manifest": "experiments/phase1_compiler/results/phase1_statement_hardened_after_canonical_repair_release_manifest.json",
+          "release_preview": "experiments/phase1_compiler/results/phase1_statement_hardened_after_canonical_repair_release_preview.json"
+        },
+        "statement_digest": "sha256:df7b0201c0ef0ec9f236f2c53bb50a475d2cf0bbf688f6e9ef2a87fd231500c3",
+        "statement_source": "new_codex_loop",
+        "task_time": "2023-02-20T07:22:09+01:00",
+        "test_files": [
+          "tests/test_iterutils.py"
+        ],
+        "verifier_command_metadata": "uv run --project experiments/phase0_headroom --with \"pytest>=8,<9\" --with \"setuptools<81\" python -m pytest -q tests/test_iterutils.py"
+      },
+      "repo_id": "boltons",
+      "solver_facing_statement_digest": "sha256:df7b0201c0ef0ec9f236f2c53bb50a475d2cf0bbf688f6e9ef2a87fd231500c3",
+      "source_repo": "experiments/phase0_headroom/external_repos/boltons",
+      "split": "H_future",
+      "statement_digest_matches_frozen": true,
+      "statement_sha256": "de61efe4b6848caa4a461f69f639f0a830bc658856eaadde296311f468da49b3",
+      "target_commit": "243de3fb2c9c59c660800f786ddc875628b34027",
+      "task_id": "boltons__hist__022",
+      "test_paths": [
+        "tests/test_iterutils.py"
+      ]
+    },
+    {
+      "allowed_code_paths": [
+        "boltons/tbutils.py"
+      ],
+      "base_commit": "f892a2b46e7fd31c639723d1d9bf4d9ad63752d6",
+      "frozen_statement_digest": "sha256:a70aa84eb91022b28b2b418aa3fd34671a3ada779bc0e4c633e42faf7a055a7a",
+      "metadata": {
+        "allowed_context_refs": [
+          "pr:332"
+        ],
+        "canonical_repo_split": "boltons/H_future",
+        "canonical_split": "H_future",
+        "changed_files": [
+          "boltons/tbutils.py",
+          "tests/test_tbutils_parsed_exc.py"
+        ],
+        "evidence_level": "statement_hardened_after_canonical_repair",
+        "metadata_sources": {
+          "certified_tasks": "experiments/phase0_headroom/certified_tasks/boltons_certified_tasks.jsonl",
+          "inventory": "experiments/phase1_compiler/results/phase1_statement_hardened_after_canonical_repair_inventory.json",
+          "release_manifest": "experiments/phase1_compiler/results/phase1_statement_hardened_after_canonical_repair_release_manifest.json",
+          "release_preview": "experiments/phase1_compiler/results/phase1_statement_hardened_after_canonical_repair_release_preview.json"
+        },
+        "statement_digest": "sha256:a70aa84eb91022b28b2b418aa3fd34671a3ada779bc0e4c633e42faf7a055a7a",
+        "statement_source": "new_codex_loop",
+        "task_time": "2023-04-02T15:11:27-04:00",
+        "test_files": [
+          "tests/test_tbutils_parsed_exc.py"
+        ],
+        "verifier_command_metadata": "uv run --project experiments/phase0_headroom --with \"pytest>=8,<9\" --with \"setuptools<81\" python -m pytest -q tests/test_tbutils_parsed_exc.py"
+      },
+      "repo_id": "boltons",
+      "solver_facing_statement_digest": "sha256:a70aa84eb91022b28b2b418aa3fd34671a3ada779bc0e4c633e42faf7a055a7a",
+      "source_repo": "experiments/phase0_headroom/external_repos/boltons",
+      "split": "H_future",
+      "statement_digest_matches_frozen": true,
+      "statement_sha256": "694f41186fe09160cd8343d8c21942dd1e0aa01f6962a7335effbaee6c089ce7",
+      "target_commit": "475462811ea4f9dea23c8af4cc2b6ead2dc03845",
+      "task_id": "boltons__hist__023",
+      "test_paths": [
+        "tests/test_tbutils_parsed_exc.py"
+      ]
+    },
+    {
+      "allowed_code_paths": [
+        "boltons/cacheutils.py"
+      ],
+      "base_commit": "46599bc0d498dd8adc3aea833ce1445feed349dd",
+      "frozen_statement_digest": "sha256:aa6f2e0c3059224df7a4fdfec91446117128820f639b9a65793186756cea575a",
+      "metadata": {
+        "allowed_context_refs": [
+          "pr:349"
+        ],
+        "canonical_repo_split": "boltons/H_future",
+        "canonical_split": "H_future",
+        "changed_files": [
+          ".github/workflows/tests.yaml",
+          "boltons/cacheutils.py",
+          "tests/test_cacheutils.py"
+        ],
+        "evidence_level": "statement_hardened_after_canonical_repair",
+        "metadata_sources": {
+          "certified_tasks": "experiments/phase0_headroom/certified_tasks/boltons_certified_tasks.jsonl",
+          "inventory": "experiments/phase1_compiler/results/phase1_statement_hardened_after_canonical_repair_inventory.json",
+          "release_manifest": "experiments/phase1_compiler/results/phase1_statement_hardened_after_canonical_repair_release_manifest.json",
+          "release_preview": "experiments/phase1_compiler/results/phase1_statement_hardened_after_canonical_repair_release_preview.json"
+        },
+        "statement_digest": "sha256:aa6f2e0c3059224df7a4fdfec91446117128820f639b9a65793186756cea575a",
+        "statement_source": "new_codex_loop",
+        "task_time": "2023-10-29T21:31:16-07:00",
+        "test_files": [
+          "tests/test_cacheutils.py"
+        ],
+        "verifier_command_metadata": "uv run --project experiments/phase0_headroom --with \"pytest>=8,<9\" --with \"setuptools<81\" python -m pytest -q tests/test_cacheutils.py"
+      },
+      "repo_id": "boltons",
+      "solver_facing_statement_digest": "sha256:aa6f2e0c3059224df7a4fdfec91446117128820f639b9a65793186756cea575a",
+      "source_repo": "experiments/phase0_headroom/external_repos/boltons",
+      "split": "H_future",
+      "statement_digest_matches_frozen": true,
+      "statement_sha256": "b639029bee5e7b161d05daf2374d0fe5d582be8ec7d87760e93b1bc356f881a4",
+      "target_commit": "4815fc8dd1768da5f2d903846d2ab994aa57b0cf",
+      "task_id": "boltons__hist__027",
+      "test_paths": [
+        "tests/test_cacheutils.py"
+      ]
+    }
+  ],
+  "paid_acut_calls_made": false,
+  "requested_task_ids": [
+    "attrs__hist__001",
+    "attrs__hist__003",
+    "attrs__hist__004",
+    "attrs__hist__008",
+    "attrs__hist__012",
+    "attrs__hist__013",
+    "attrs__hist__023",
+    "attrs__hist__027",
+    "boltons__clean_ext__001",
+    "boltons__clean_ext__008",
+    "boltons__clean_ext__010",
+    "boltons__hist__011",
+    "boltons__clean_ext__017",
+    "boltons__hist__022",
+    "boltons__hist__023",
+    "boltons__hist__027"
+  ],
+  "schema_version": "barcarolle.workspace_acut_package_inspection.v1",
+  "selected_task_ids": [
+    "attrs__hist__001",
+    "attrs__hist__003",
+    "attrs__hist__004",
+    "attrs__hist__008",
+    "attrs__hist__012",
+    "attrs__hist__013",
+    "attrs__hist__023",
+    "attrs__hist__027",
+    "boltons__clean_ext__001",
+    "boltons__clean_ext__008",
+    "boltons__clean_ext__010",
+    "boltons__hist__011",
+    "boltons__clean_ext__017",
+    "boltons__hist__022",
+    "boltons__hist__023",
+    "boltons__hist__027"
+  ],
+  "status": "ready"
+}

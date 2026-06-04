@@ -1,0 +1,284 @@
+{
+  "allowed_claims": [
+    "phase1_mvp_compiler_infrastructure",
+    "insufficient_evidence_for_predictive_validation",
+    "same_endpoint_model_different_cli_harnesses",
+    "source_provenance_issue_derived",
+    "source_provenance_commit_message_fallback",
+    "generic_comparator_archived_click_r0"
+  ],
+  "attrs_generalization_next_research_sidecar_evidence": {
+    "decision": "experiments/phase1_compiler/results/phase1_next_research_decision.json",
+    "paid_acut_calls_made": false,
+    "paid_llm_calls_made": false,
+    "predictive_validity_established": false,
+    "primary_decision_label": "report_two_repo_negative_or_underpowered_pilot",
+    "recommended_next_runbook": "write_two_repo_negative_or_underpowered_pilot_report_then_plan_weighted_or_third_repo_followup_if_needed",
+    "selected_decision_count": 1,
+    "status": "available_as_attrs_generalization_next_research_decision",
+    "third_repo_local_screening_started": false
+  },
+  "certification_counts_by_repo": {
+    "humanize": {
+      "certified": 12,
+      "near_certified": 4
+    },
+    "toolz": {
+      "certified": 6,
+      "rejected": 10
+    }
+  },
+  "claim_scope": "phase1_mvp_compiler_infrastructure",
+  "clean_future_holdout_scale_up_decision": {
+    "h_future_scoreable_cells": 8,
+    "next_path": "mine_second_repo_clean_outcome_unseen_supply_for_two_repo_validation",
+    "predictive_validity_established": false,
+    "second_repo_paid_work_allowed": false,
+    "selected_repos": [
+      "boltons"
+    ],
+    "statement": "Boltons clean future-holdout pilot complete. Predictive validity remains unestablished because the acceptance threshold requires at least two target repos and at least 12 holdout scoreable cells.",
+    "status": "boltons_clean_future_holdout_pilot_complete"
+  },
+  "clean_outcome_unseen_supply_sidecar_evidence": {
+    "clean_supply_ready": true,
+    "decision": "experiments/phase1_compiler/results/phase1_clean_outcome_unseen_supply_decision.json",
+    "future_holdout_preregistration_status": "frozen",
+    "future_holdout_selected_repos": [
+      "boltons"
+    ],
+    "newly_promoted_task_ids": [
+      "boltons__clean_ext__001",
+      "boltons__clean_ext__008",
+      "boltons__clean_ext__010",
+      "boltons__clean_ext__017"
+    ],
+    "paid_acut_calls_made": false,
+    "predictive_validity_established": false,
+    "primary_decision_label": "boltons_clean_supply_ready_for_preregistered_validation",
+    "status": "available_as_clean_outcome_unseen_supply_sidecar_evidence"
+  },
+  "clean_supply_breal_extension_sidecar_evidence": {
+    "clean_supply_ready": false,
+    "decision": "experiments/phase1_compiler/results/phase1_clean_supply_breal_extension_decision.json",
+    "newly_promoted_task_ids": [],
+    "paid_acut_calls_made": false,
+    "predictive_validity_established": false,
+    "primary_decision_label": "clean_supply_breal_extension_still_blocked",
+    "repo_id": "boltons",
+    "status": "available_as_clean_supply_extension_sidecar_evidence"
+  },
+  "cost_summary": {
+    "call_count": 155,
+    "observed_or_conservative_estimated_cost_usd": 62.182946,
+    "provider_billed_cost_status": "unavailable",
+    "usage_observed_rate": 0.9548
+  },
+  "disallowed_claims": [
+    "predictive_validity_established",
+    "pure_harness_effect",
+    "production_benchmark_ranking"
+  ],
+  "evidence_status": "mvp_compiler_artifacts_built_insufficient_for_predictive_validation",
+  "future_holdout_sidecar_evidence": {
+    "b_eval_scoreable_cells": 8,
+    "decision": "experiments/phase1_compiler/results/phase1_future_holdout_decision.json",
+    "h_future_scoreable_cells": 8,
+    "paid_acut_calls_made": true,
+    "policy_violation_count": 0,
+    "predictive_validity_established": false,
+    "primary_decision_label": "boltons_clean_future_holdout_pilot_complete_insufficient_sample",
+    "selected_repos": [
+      "boltons"
+    ],
+    "status": "available_as_future_holdout_sidecar_evidence"
+  },
+  "generated_at": "2026-05-23T11:36:32+00:00",
+  "hardening_sidecar_evidence": {
+    "active_third_repo": "boltons",
+    "decision": "experiments/phase1_compiler/results/phase1_certification_hardening_decision.json",
+    "overlay": "experiments/phase1_compiler/results/phase1_hardened_certification_overlay.json",
+    "primary_decision_label": "ready_for_paid_third_repo_acut_smoke_runbook",
+    "repo_summary": {
+      "boltons": {
+        "benchmark_grade_candidate_count": 7,
+        "blocking_gates": {
+          "execution_gate_failed:ambiguity_review": 8,
+          "execution_gate_failed:no_op_fail": 3,
+          "execution_gate_failed:reference_pass": 5,
+          "oracle_alignment_reject": 6,
+          "solution_exposure_risk": 5,
+          "source_diagnostic_only": 10
+        },
+        "diagnostic_only_count": 10,
+        "manual_review_required_count": 5,
+        "rejected_count": 10,
+        "task_count": 32
+      },
+      "humanize": {
+        "benchmark_grade_candidate_count": 0,
+        "blocking_gates": {
+          "changed_lines_over:250": 1,
+          "execution_gate_failed:no_op_fail": 3,
+          "execution_gate_failed:reference_pass": 1,
+          "project_file_heavy": 1,
+          "solution_exposure_risk": 1,
+          "source_diagnostic_only": 16
+        },
+        "diagnostic_only_count": 16,
+        "manual_review_required_count": 0,
+        "rejected_count": 0,
+        "task_count": 16
+      },
+      "toolz": {
+        "benchmark_grade_candidate_count": 6,
+        "blocking_gates": {},
+        "diagnostic_only_count": 0,
+        "manual_review_required_count": 0,
+        "rejected_count": 0,
+        "task_count": 6
+      }
+    },
+    "status": "available_as_sidecar_evidence",
+    "third_repo_replacement": {
+      "active_repo_id": "boltons",
+      "replaced_repos": {
+        "itsdangerous": {
+          "replacement_status": "replaced_by_boltons"
+        }
+      }
+    }
+  },
+  "next_runbook_recommendation": "write_two_repo_negative_or_underpowered_pilot_report_then_plan_weighted_or_third_repo_followup_if_needed",
+  "paid_smoke_sidecar_evidence": {
+    "combined_scoreable_cells": 13,
+    "combined_total_cells": 14,
+    "decision": "experiments/phase1_compiler/results/phase1_boltons_paid_acut_smoke_decision.json",
+    "policy_violation_count": 0,
+    "predictive_validity_established": false,
+    "primary_decision_label": "boltons_paid_smoke_complete_ready_for_phase1_validation_design",
+    "result_prefixes": [
+      "phase1_validation_boltons_paid_smoke",
+      "phase1_validation_boltons_paid_extension"
+    ],
+    "status": "available_as_operational_smoke_evidence"
+  },
+  "policy_violation_repair_sidecar_evidence": {
+    "classification_label": "confirmed_acut_policy_violation_no_rerun",
+    "decision": "experiments/phase1_compiler/results/phase1_policy_violation_repair_decision.json",
+    "h_future_scoreable_cells": 15,
+    "paid_rerun_performed": false,
+    "policy_violation_count": 1,
+    "predictive_validity_established": false,
+    "recommended_next_runbook": "analyze_attrs_h_future_generalization_or_mine_third_repo_without_rerunning_confirmed_violation",
+    "status": "available_as_policy_violation_repair_decision",
+    "terminal_state": "confirmed_policy_violation_validation_remains_insufficient"
+  },
+  "predictive_validity_established": false,
+  "production_ranking_status": "not_produced",
+  "readiness_gate_consumed": "ready_for_phase1_mvp",
+  "release_id": "phase1_mvp_multi_repo_release",
+  "release_status": "pilot_grade",
+  "repos_imported": [
+    {
+      "certified_task_count": 6,
+      "legacy_benchmark_grade": true,
+      "repo_id": "toolz",
+      "role": "primary_target_repo",
+      "source_provenance": "source_provenance_issue_derived",
+      "source_release": "experiments/phase0_headroom/releases/toolz_phase0_mini_release.json",
+      "source_release_status": "benchmark_grade_candidate"
+    },
+    {
+      "certified_task_count": 12,
+      "legacy_benchmark_grade": true,
+      "legacy_pilot_grade": true,
+      "repo_id": "humanize",
+      "role": "second_target_repo",
+      "source_provenance": "source_provenance_commit_message_fallback",
+      "source_release": "experiments/phase0_headroom/releases/humanize_phase0_pilot_release.json",
+      "source_release_status": "pilot_grade"
+    }
+  ],
+  "retrospective_validation_sidecar_evidence": {
+    "clean_supply_extension_ready": false,
+    "decision": "experiments/phase1_compiler/results/phase1_retrospective_validation_decision.json",
+    "evidence_level": "outcome_seen_retrospective_locked",
+    "included_repos": [
+      "boltons",
+      "toolz"
+    ],
+    "included_task_count": 13,
+    "optional_paid_clean_validation_ran": false,
+    "predictive_validity_established": false,
+    "primary_decision_label": "retrospective_validation_complete_clean_supply_still_blocked",
+    "status": "available_as_retrospective_sidecar_evidence"
+  },
+  "schema_version": "barcarolle.phase1.mvp_closeout.v1",
+  "scorecard_cells_by_result_prefix": {
+    "codex_kilo_workspace_followup": 20,
+    "codex_kilo_workspace_stability": 20,
+    "humanize_pre_phase1_workspace": 8,
+    "phase1_validation_boltons_paid_extension": 6,
+    "phase1_validation_boltons_paid_smoke": 8
+  },
+  "second_repo_clean_supply_sidecar_evidence": {
+    "clean_supply_ready": true,
+    "decision": "experiments/phase1_compiler/results/phase1_second_repo_clean_supply_decision.json",
+    "paid_second_repo_acut_calls_made": false,
+    "predictive_validity_established": false,
+    "primary_decision_label": "two_repo_future_holdout_design_frozen_ready_for_paid_validation",
+    "selected_repo_id": "attrs",
+    "selected_repos": [
+      "boltons",
+      "attrs"
+    ],
+    "status": "available_as_second_repo_clean_supply_sidecar_evidence",
+    "two_repo_preregistration_status": "frozen"
+  },
+  "task_counts_by_repo": {
+    "humanize": 12,
+    "toolz": 6
+  },
+  "two_repo_future_holdout_paid_sidecar_evidence": {
+    "b_eval_scoreable_cells": 16,
+    "decision": "experiments/phase1_compiler/results/phase1_two_repo_future_holdout_decision.json",
+    "h_future_scoreable_cells": 15,
+    "paid_acut_calls_made": true,
+    "paid_second_repo_acut_calls_made": true,
+    "policy_violation_count": 1,
+    "predictive_validity_established": false,
+    "primary_decision_label": "two_repo_paid_validation_complete_insufficient_evidence",
+    "recommended_next_runbook": "repair_workspace_acut_scoreability_or_policy_violation_then_rerun_preregistered_two_repo_validation",
+    "selected_repo_id": "attrs",
+    "selected_repos": [
+      "boltons",
+      "attrs"
+    ],
+    "status": "available_as_two_repo_future_holdout_paid_sidecar_evidence"
+  },
+  "two_repo_future_holdout_preregistration_sidecar_evidence": {
+    "paid_second_repo_acut_calls_made": false,
+    "predictive_validity_established": false,
+    "preregistration": "experiments/phase1_compiler/results/phase1_two_repo_future_holdout_preregistration.json",
+    "preregistration_status": "frozen",
+    "selected_repos": [
+      "boltons",
+      "attrs"
+    ],
+    "status": "available_as_two_repo_future_holdout_preregistration_sidecar_evidence",
+    "total_h_future_scoreable_capacity_if_second_repo_scoreable": 16
+  },
+  "weighted_score_evidence": {
+    "diagnostic_score_type": "diagnostic_observed_pass_rate",
+    "insufficient_evidence": [
+      "future_holdout_unavailable_in_current_evidence",
+      "predictive_validity_not_established",
+      "humanize_source_provenance_commit_message_fallback",
+      "toolz_followup_and_stability_are_not_independent_future_validation_samples",
+      "generic_comparator_click_not_a_target_repo_validation_sample",
+      "policy_violations_present_in_imported_scorecards"
+    ],
+    "predictive_score": null
+  }
+}

@@ -1,0 +1,172 @@
+{
+  "attrs_b_eval_comparison": {
+    "attrs_b_eval_pass_rate": 0.875,
+    "attrs_b_eval_scoreable_cells": 8,
+    "attrs_b_eval_verified_fail": 1,
+    "attrs_b_eval_verified_pass": 7
+  },
+  "audited_tasks": [
+    "attrs__hist__012",
+    "attrs__hist__013",
+    "attrs__hist__023",
+    "attrs__hist__027"
+  ],
+  "config": "/Users/chenmohan/gits/barcarolle/experiments/phase1_compiler/configs/phase1_attrs_h_future_statement_quality_audit.yaml",
+  "generated_at": "2026-05-25T01:34:18Z",
+  "original_paid_result_preserved": true,
+  "paid_acut_calls_made": false,
+  "paid_llm_calls_made": false,
+  "predictive_validity_established": false,
+  "production_ranking_status": "not_produced",
+  "schema_version": "barcarolle.phase1.attrs_h_future_statement_sensitivity.v1",
+  "source_task_design_audit": "experiments/phase1_compiler/results/phase1_attrs_h_future_task_design_audit.json",
+  "status": "computed",
+  "summary": {
+    "material_statement_quality_risk_task_count": 4,
+    "original_attrs_h_future_pass_rate": 0.142857,
+    "original_attrs_h_future_scoreable_cells": 7,
+    "strict_clean_statement_view_status": "insufficient_clean_attrs_h_future_evidence"
+  },
+  "views": {
+    "all_statement_risk_excluded": {
+      "comparison_to_attrs_b_eval": {
+        "absolute_pass_rate_gap_vs_attrs_b_eval": null,
+        "attrs_b_eval_pass_rate": 0.875,
+        "attrs_b_eval_scoreable_cells": 8,
+        "attrs_b_eval_verified_fail": 1,
+        "attrs_b_eval_verified_pass": 7
+      },
+      "excluded_tasks": [
+        "attrs__hist__012",
+        "attrs__hist__013",
+        "attrs__hist__023",
+        "attrs__hist__027"
+      ],
+      "included_tasks": [],
+      "interpretation": "insufficient_clean_attrs_h_future_evidence",
+      "name": "all_statement_risk_excluded",
+      "pass_rate": null,
+      "policy_violations": 0,
+      "scoreable_cells": 0,
+      "verified_fail": 0,
+      "verified_pass": 0
+    },
+    "exclude_highest_risk_task_013": {
+      "comparison_to_attrs_b_eval": {
+        "absolute_pass_rate_gap_vs_attrs_b_eval": 0.675,
+        "attrs_b_eval_pass_rate": 0.875,
+        "attrs_b_eval_scoreable_cells": 8,
+        "attrs_b_eval_verified_fail": 1,
+        "attrs_b_eval_verified_pass": 7
+      },
+      "excluded_tasks": [
+        "attrs__hist__013"
+      ],
+      "included_tasks": [
+        "attrs__hist__012",
+        "attrs__hist__023",
+        "attrs__hist__027"
+      ],
+      "interpretation": "sensitivity_only_not_corrected_score; removing the highest PR-context risk task still leaves attrs H_future far below B_eval",
+      "name": "exclude_highest_risk_task_013",
+      "pass_rate": 0.2,
+      "policy_violations": 1,
+      "scoreable_cells": 5,
+      "verified_fail": 4,
+      "verified_pass": 1
+    },
+    "exclude_highest_risk_tasks_013_027": {
+      "comparison_to_attrs_b_eval": {
+        "absolute_pass_rate_gap_vs_attrs_b_eval": 0.625,
+        "attrs_b_eval_pass_rate": 0.875,
+        "attrs_b_eval_scoreable_cells": 8,
+        "attrs_b_eval_verified_fail": 1,
+        "attrs_b_eval_verified_pass": 7
+      },
+      "excluded_tasks": [
+        "attrs__hist__013",
+        "attrs__hist__027"
+      ],
+      "included_tasks": [
+        "attrs__hist__012",
+        "attrs__hist__023"
+      ],
+      "interpretation": "sensitivity_only_not_corrected_score; remaining evidence is smaller and still below B_eval",
+      "name": "exclude_highest_risk_tasks_013_027",
+      "pass_rate": 0.25,
+      "policy_violations": 0,
+      "scoreable_cells": 4,
+      "verified_fail": 3,
+      "verified_pass": 1
+    },
+    "exclude_policy_violation_only": {
+      "comparison_to_attrs_b_eval": {
+        "absolute_pass_rate_gap_vs_attrs_b_eval": 0.732143,
+        "attrs_b_eval_pass_rate": 0.875,
+        "attrs_b_eval_scoreable_cells": 8,
+        "attrs_b_eval_verified_fail": 1,
+        "attrs_b_eval_verified_pass": 7
+      },
+      "excluded_tasks": [],
+      "included_tasks": [
+        "attrs__hist__012",
+        "attrs__hist__013",
+        "attrs__hist__023",
+        "attrs__hist__027"
+      ],
+      "interpretation": "policy_violation_cell_remains_non_scoreable_so_scoreable_metric_matches_original",
+      "name": "exclude_policy_violation_only",
+      "pass_rate": 0.142857,
+      "policy_violations": 1,
+      "scoreable_cells": 7,
+      "verified_fail": 6,
+      "verified_pass": 1
+    },
+    "original_attrs_h_future": {
+      "comparison_to_attrs_b_eval": {
+        "absolute_pass_rate_gap_vs_attrs_b_eval": 0.732143,
+        "attrs_b_eval_pass_rate": 0.875,
+        "attrs_b_eval_scoreable_cells": 8,
+        "attrs_b_eval_verified_fail": 1,
+        "attrs_b_eval_verified_pass": 7
+      },
+      "excluded_tasks": [],
+      "included_tasks": [
+        "attrs__hist__012",
+        "attrs__hist__013",
+        "attrs__hist__023",
+        "attrs__hist__027"
+      ],
+      "interpretation": "original_paid_observation_preserved_as_1_of_7_scoreable_pass",
+      "name": "original_attrs_h_future",
+      "pass_rate": 0.142857,
+      "policy_violations": 1,
+      "scoreable_cells": 7,
+      "verified_fail": 6,
+      "verified_pass": 1
+    },
+    "strict_clean_statement_only": {
+      "comparison_to_attrs_b_eval": {
+        "absolute_pass_rate_gap_vs_attrs_b_eval": null,
+        "attrs_b_eval_pass_rate": 0.875,
+        "attrs_b_eval_scoreable_cells": 8,
+        "attrs_b_eval_verified_fail": 1,
+        "attrs_b_eval_verified_pass": 7
+      },
+      "excluded_tasks": [
+        "attrs__hist__012",
+        "attrs__hist__013",
+        "attrs__hist__023",
+        "attrs__hist__027"
+      ],
+      "included_tasks": [],
+      "interpretation": "insufficient_clean_attrs_h_future_evidence",
+      "name": "strict_clean_statement_only",
+      "pass_rate": null,
+      "policy_violations": 0,
+      "scoreable_cells": 0,
+      "verified_fail": 0,
+      "verified_pass": 0
+    }
+  }
+}

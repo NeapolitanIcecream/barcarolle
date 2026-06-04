@@ -1,0 +1,96 @@
+{
+  "allowed_inputs": [
+    "task_id",
+    "repo",
+    "task_time",
+    "time_bucket",
+    "coarse_task_family",
+    "editable_scope_bucket",
+    "source_context_type_bucket",
+    "source_quality_bucket",
+    "statement_specificity_bucket",
+    "context_length_bucket",
+    "ambiguity_risk_bucket",
+    "leakage_risk_bucket",
+    "certification_risk_bucket",
+    "rare_or_unknown_feature_flag",
+    "source_reservoir",
+    "source_context_class",
+    "implementation_file_count",
+    "test_file_count",
+    "public_context_ref_count",
+    "release_eligibility_provenance",
+    "repair_overlay_status",
+    "statement_digest"
+  ],
+  "artifact": "policy_spec",
+  "budget_policy": {
+    "budget_per_repo": 6,
+    "minimum_tasks_per_repo": 6
+  },
+  "claim_boundary": {
+    "block_plus_shrinkage_weighted": "optional_research_branch_not_primary",
+    "block_randomized_stratified": "optional_research_branch_not_primary",
+    "candidate_role": "near_term_mainline_candidate_ready_for_adversarial_review",
+    "completed_blocked_split_supplement": "post_hoc_diagnostic_not_primary_evidence",
+    "old_weighted_target_profile": "negative_control_or_reference_only"
+  },
+  "coverage_features": [
+    "coarse_task_family",
+    "time_bucket",
+    "editable_scope_bucket",
+    "source_context_type_bucket",
+    "source_quality_bucket",
+    "statement_specificity_bucket",
+    "context_length_bucket"
+  ],
+  "fallback_rules": {
+    "fallbacks_must_be_labeled": true,
+    "insufficient_budget": "repo_unweighted_same_budget",
+    "insufficient_feature_support": "repo_stratified_by_target_profile"
+  },
+  "forbidden_inputs": [
+    "terminal_status",
+    "terminal_outcome",
+    "verified_pass",
+    "verified_fail",
+    "pass_rate",
+    "adapter_outcome",
+    "adapter_terminal_status",
+    "b_eval_observed_outcome",
+    "h_future_observed_outcome",
+    "scoreable_cell",
+    "submission_status",
+    "agent_failure",
+    "harness_error",
+    "verifier_exit_code",
+    "score_table_row",
+    "raw_acut_transcript",
+    "hidden_verifier_output"
+  ],
+  "generated_at": "2026-05-30T03:28:02Z",
+  "output_schema": [
+    "selected_task_ids",
+    "excluded_task_ids_with_reasons",
+    "feature_coverage_table",
+    "coverage_gaps",
+    "fallback_status",
+    "seed_and_tie_break_policy",
+    "input_artifact_digests",
+    "outcome_blindness_audit"
+  ],
+  "policy_id": "coverage_constrained_unweighted_v1",
+  "primary_purpose": "choose a small repo-specific benchmark set that maximizes coarse solver-visible feature coverage under a fixed task budget without outcome data or task-level score weights",
+  "run_id": "phase1_candidate_policy_validation_protocol_20260530",
+  "schema_version": "barcarolle.phase1_candidate_policy_validation_protocol_output.v1",
+  "score_model": "unweighted_pass_rate_by_adapter_repo_or_window_slice",
+  "seed_policy": {
+    "deterministic_seed": 2026053001,
+    "tie_break_policy": "sha256_seeded_task_id_order"
+  },
+  "selection_objective": [
+    "maximize_preregistered_coarse_feature_coverage",
+    "minimize_feature_imbalance",
+    "deterministic_seeded_tie_breaks"
+  ]
+}

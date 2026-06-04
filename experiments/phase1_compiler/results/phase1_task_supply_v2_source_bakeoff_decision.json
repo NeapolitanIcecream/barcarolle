@@ -1,0 +1,90 @@
+{
+  "best_source_arm_by_repo": {
+    "attrs": "repo_history_v2_real_for_candidate_discovery",
+    "boltons": "repo_history_v2_real_for_candidate_discovery",
+    "humanize": "repo_history_v2_real_for_candidate_discovery",
+    "toolz": "repo_history_v2_real_for_candidate_discovery"
+  },
+  "certified_count_by_repo_and_arm": {
+    "attrs": 28,
+    "boltons": 31,
+    "humanize": 12,
+    "toolz": 6
+  },
+  "claims": [
+    "source_mixing_policy_drafted",
+    "task_supply_future_directions_recorded",
+    "paid_readiness_gate_completed",
+    "no_paid_acut_calls_made",
+    "no_paid_llm_statement_generation_made"
+  ],
+  "disallowed_claims_made": [],
+  "dominant_failure_modes": {
+    "environment": "historical subgates improve diagnosis but do not yet lift three repos over the paid gate",
+    "oracle": "issue/PR candidates without changed tests are missing-oracle inventory only",
+    "source_context": "commit-message-only remains common, especially where no linked issue/PR context was found"
+  },
+  "external_source_feasibility_summary": {
+    "R2E-Gym / R2E-style": "feasible_only_as_design_reference",
+    "SWE-Bench++": "blocked_by_missing_artifacts",
+    "SWE-bench-Live": "feasible_only_as_design_reference",
+    "SWE-smith": "blocked_by_runtime_cost"
+  },
+  "future_directions_summary": {
+    "docker_or_nix_environment_factory": "deferred",
+    "endpoint_statement_generator_reviewer": "deferred",
+    "external_swe_bench_live_adapter": "feasible_spike_completed",
+    "external_swe_bench_plus_plus_adapter": "blocked",
+    "external_swe_smith_adapter": "feasible_spike_completed",
+    "generated_oracle_pipeline": "deferred",
+    "manual_or_customer_regression_source": "deferred",
+    "multi_language_supply": "deferred"
+  },
+  "generated_at": "2026-05-27T03:54:49Z",
+  "paid_readiness_status": "paid_readiness_gate_completed",
+  "paid_ready": false,
+  "plain_language_summary": "Broad local mining found more candidate anchors, but certified supply is still not paid-ready. The next useful move is to certify the v2 pool and repair weak source-context/oracle paths.",
+  "primary_decision_label": "continue_internal_repo_history_v2",
+  "recommended_next_action_category": "continue_internal_generator_v2_on_selected_repos",
+  "repos_screened": [
+    "attrs",
+    "boltons",
+    "toolz",
+    "humanize"
+  ],
+  "research_questions": {
+    "RQ1": "Yes. Current v1 artifacts reproduce the bottleneck: attrs/toolz/humanize remain below 30, boltons reaches 31 only after adding confirmed historical-environment recoveries.",
+    "RQ2": "Yes for raw candidate yield and source-reservoir visibility; not yet proven for certified yield because broad v2 candidates still need bounded certification execution.",
+    "RQ3": "Dominant modes are source context quality, missing oracle for issue-only candidates, and environment/reference subgates.",
+    "RQ4": "Repos projected at >=30: ['boltons']. The three-repo paid gate is not met.",
+    "RQ5": "SWE-smith, SWE-bench-Live, and R2E-style systems are feasible design references or future adapters; none is adopted or counted as default certified supply.",
+    "RQ6": "Paid validation, paid statement generation, benchmark release freeze, generated-oracle promotion, broad multi-language implementation, and ACUT harness work were not implemented and are tracked in the future-direction ledger.",
+    "RQ7": "Continue internal repo-history v2 on selected repos, then run a bounded certification pass; use external-source adapters only as later spikes."
+  },
+  "run_id": "phase1_task_supply_v2_generator_bakeoff_20260527",
+  "schema_version": "barcarolle.phase1_task_supply_v2_generator_bakeoff.v1.source_bakeoff_decision.v1",
+  "source_arms_compared": [
+    "repo_history_v1_baseline",
+    "repo_history_v2_real",
+    "repo_history_v2_oracle_inventory",
+    "external_source_feasibility",
+    "hybrid_pool_diagnostic"
+  ],
+  "source_mixing_policy": {
+    "external_tasks_must_be_recertified_locally": true,
+    "max_commit_message_only_share_unless_manually_reviewed": 0.2,
+    "max_single_source_reservoir_share_unless_waived": 0.7,
+    "max_synthetic_or_generated_oracle_share_until_predictive_evidence": 0.25,
+    "minimum_source_reservoirs_per_repo_when_feasible": 2,
+    "per_repo_certified_candidates_min_before_paid_validation": 30,
+    "policy_status": "draft_for_future_release_candidates_not_release_freeze"
+  },
+  "status": "source_bakeoff_decision_completed",
+  "verification": {
+    "bakeoff_generation": "uv run --project experiments/phase1_compiler python experiments/phase1_compiler/tools/phase1_task_supply_v2_generator_bakeoff.py --run all (completed; primary_decision_label=continue_internal_repo_history_v2)",
+    "focused_tests": "uv run --project experiments/phase1_compiler pytest experiments/phase1_compiler/tests/test_phase1_task_supply_v2_generator_bakeoff.py -q (17 passed)",
+    "git_diff_check": "git diff --check (passed)",
+    "phase1_compiler_tests": "uv run --project experiments/phase1_compiler pytest experiments/phase1_compiler/tests -q (201 passed in 34.75s)",
+    "verified_at": "2026-05-27T03:55:00Z"
+  }
+}

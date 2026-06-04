@@ -1,0 +1,74 @@
+{
+  "best_pilot_design_by_max_gap": "repo_stratified_by_target_profile",
+  "best_pilot_design_ids_by_max_gap": [
+    "repo_stratified_by_target_profile",
+    "repo_unweighted_same_budget"
+  ],
+  "candidate_gap_summary": {
+    "barcarolle_weighted_time_family_matched": {
+      "max_abs_gap": 0.7481,
+      "per_repo_abs_gaps": {
+        "attrs": 0.3148,
+        "boltons": 0.7481
+      },
+      "threshold_met": false
+    },
+    "repo_stratified_by_target_profile": {
+      "max_abs_gap": 0.25,
+      "per_repo_abs_gaps": {
+        "attrs": 0.25,
+        "boltons": 0.125
+      },
+      "threshold_met": false
+    },
+    "repo_unweighted_same_budget": {
+      "max_abs_gap": 0.25,
+      "per_repo_abs_gaps": {
+        "attrs": 0.25,
+        "boltons": 0.125
+      },
+      "threshold_met": false
+    }
+  },
+  "failure_analysis": {
+    "adapter_id": {
+      "codex_workspace": 7,
+      "kilo_workspace": 8
+    },
+    "repo_id": {
+      "attrs": 8,
+      "boltons": 7
+    },
+    "source_kind": {
+      "issue": 8,
+      "pull_request": 7
+    },
+    "task_family_label": {
+      "attrs:_make": 2,
+      "attrs:converters": 2,
+      "attrs:validators": 4,
+      "boltons:fileutils:multi_file": 1,
+      "boltons:funcutils": 2,
+      "boltons:ioutils": 2,
+      "boltons:iterutils": 2
+    }
+  },
+  "failure_classification": {
+    "adapter_specific_behavior": "supported_when_failures_cluster_by_adapter",
+    "policy_or_harness_issue": "supported_only_if non-scoreable terminal statuses appear",
+    "remaining_split_mismatch": "supported_when_B_eval_H_future_gap_exceeds_threshold",
+    "small_n_noise": "material_risk_for_44_cell_pilot",
+    "statement_source_quality": "tracked_by_statement_quality_status_and_source_kind",
+    "task_difficulty": "supported_when_failures_cluster_by_task_family_or_repo"
+  },
+  "generated_at": "2026-05-26T04:22:44Z",
+  "hidden_oracle_or_raw_transcript_material_used": false,
+  "historical_reference_gap": {
+    "attrs": 0.25,
+    "boltons": 0.375
+  },
+  "recommended_next_action_category": "coordinating_session_decides_bounded_follow_up_without_worker_written_runbook",
+  "run_id": "phase1_weighted_design_paid_pilot_20260526",
+  "schema_version": "barcarolle.phase1_weighted_design_paid_pilot_output.v1",
+  "status": "complete"
+}

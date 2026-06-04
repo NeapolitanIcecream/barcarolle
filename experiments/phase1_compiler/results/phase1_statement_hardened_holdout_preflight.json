@@ -1,0 +1,40 @@
+{
+  "branch": "codex/restart-benchmark-compiler",
+  "config": "experiments/phase1_compiler/configs/phase1_statement_hardened_holdout_preregistration.yaml",
+  "generated_at": "2026-05-25T02:04:56Z",
+  "git_status_short": [
+    " M docs/experiments/phase-1-statement-hardened-holdout-preregistration-runbook.md",
+    "?? docs/experiments/phase-1-attrs-generalization-third-repo-decision-runbook.md",
+    "?? docs/experiments/phase-1-attrs-h-future-statement-quality-audit-runbook.md",
+    "?? docs/experiments/phase-1-autonomous-overnight-two-repo-research-runbook.md",
+    "?? docs/experiments/phase-1-policy-violation-triage-bounded-rerun-runbook.md"
+  ],
+  "head": "ea46ef60375edce0ec8a5840533b69753771c4a9",
+  "historical_paid_score_tables_immutable": true,
+  "input_artifact_digests": {
+    "/Users/chenmohan/Downloads/barcarolle-research-0519.md": "sha256:19bb010214ff464c905b9441d2bac347c233e46ff498c91cd0d9f1b287ac6f79",
+    "experiments/phase0_headroom/tools/statement_quality.py": "sha256:3c0f6443897a25c731abb83964e24087a12affcb47e52fa3a4657a52ab680694",
+    "experiments/phase1_compiler/results/phase1_attrs_h_future_evidence_status.json": "sha256:1089b20131f9e93f7c31ee85657dbf69eeb6dd7fe2ad9b3df6aedfae930b4a57",
+    "experiments/phase1_compiler/results/phase1_attrs_h_future_statement_preview.json": "sha256:d9fcafde5de7bac30fd14b3b6c646ee93287653856cdd2e7ba0ba40c43649344",
+    "experiments/phase1_compiler/results/phase1_attrs_h_future_statement_sensitivity.json": "sha256:93aa0f1e87025c5ad8a0e228a488e3f9af8e6f3c56fe0022304e586e2d5d5e03",
+    "experiments/phase1_compiler/results/phase1_attrs_h_future_task_design_audit.json": "sha256:6ba20e230146c325ee9e213266e06c8b3f05bbdab05ac86b962c0c94d83d4ca9",
+    "experiments/phase1_compiler/results/phase1_two_repo_task_outcome_matrix.json": "sha256:3b07105d919d97ecc24be3230a89a602fde1bae39393ee3fe4be41de2eb80bc7"
+  },
+  "paid_acut_calls_made": false,
+  "paid_llm_calls_made": false,
+  "predictive_validity_established": false,
+  "proposal_boundary_summary": "Barcarolle is a repo-specific benchmark compiler focused on selecting, weighting, splitting, calibrating, and quality-controlling target-repo benchmark releases, not raw task generation or ACUT internals.",
+  "python_version": "Python 3.11.13",
+  "python_version_command": "uv run --project experiments/phase1_compiler python --version",
+  "raw_artifacts_committed": false,
+  "schema_version": "barcarolle.phase1_statement_hardened_holdout_preflight.v1",
+  "status": "recorded",
+  "unrelated_or_preexisting_paths": [
+    "docs/experiments/phase-1-statement-hardened-holdout-preregistration-runbook.md",
+    "docs/experiments/phase-1-attrs-generalization-third-repo-decision-runbook.md",
+    "docs/experiments/phase-1-attrs-h-future-statement-quality-audit-runbook.md",
+    "docs/experiments/phase-1-autonomous-overnight-two-repo-research-runbook.md",
+    "docs/experiments/phase-1-policy-violation-triage-bounded-rerun-runbook.md"
+  ],
+  "uv_version": "uv 0.11.16 (Homebrew 2026-05-21 aarch64-apple-darwin)"
+}

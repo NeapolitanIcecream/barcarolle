@@ -1,0 +1,136 @@
+{
+  "certified_task_counts_by_repo": {
+    "humanize": 12,
+    "toolz": 6
+  },
+  "claim_scope": "phase1_mvp_compiler_infrastructure",
+  "cost_summary_present": true,
+  "generated_at": "2026-05-23T11:36:32+00:00",
+  "generic_comparators": [
+    {
+      "repo_id": "click",
+      "role": "generic_comparator",
+      "source_provenance": "generic_comparator_archived_click_r0"
+    }
+  ],
+  "known_limitations": [
+    "insufficient_evidence_for_predictive_validation",
+    "provider_billed_cost_unavailable",
+    "future_holdout_unavailable_in_current_evidence",
+    "humanize_source_context_uses_commit_message_fallback",
+    "click_is_generic_comparator_only"
+  ],
+  "predictive_validity_established": false,
+  "readiness_gate_predictive_validity_established": false,
+  "readiness_gate_status": "ready_for_phase1_mvp",
+  "repo_count": 2,
+  "schema_version": "barcarolle.phase1.input_inventory.v1",
+  "score_table_counts": {
+    "codex_kilo_workspace_followup": {
+      "repo_counts": {
+        "click": 8,
+        "toolz": 12
+      },
+      "role": "repaired_toolz_click_matrix",
+      "row_count": 20,
+      "scoreable_cell_count": 19,
+      "source_artifact_key": "toolz_score_table",
+      "terminal_status_counts": {
+        "policy_violation": 1,
+        "verified_fail": 12,
+        "verified_pass": 7
+      }
+    },
+    "codex_kilo_workspace_stability": {
+      "repo_counts": {
+        "click": 8,
+        "toolz": 12
+      },
+      "role": "repaired_toolz_click_stability_repeat",
+      "row_count": 20,
+      "scoreable_cell_count": 18,
+      "source_artifact_key": "toolz_stability_score_table",
+      "terminal_status_counts": {
+        "policy_violation": 2,
+        "verified_fail": 11,
+        "verified_pass": 7
+      }
+    },
+    "humanize_pre_phase1_workspace": {
+      "repo_counts": {
+        "humanize": 8
+      },
+      "role": "second_repo_humanize_pilot_matrix",
+      "row_count": 8,
+      "scoreable_cell_count": 8,
+      "source_artifact_key": "humanize_score_table",
+      "terminal_status_counts": {
+        "verified_fail": 5,
+        "verified_pass": 3
+      }
+    },
+    "phase1_validation_boltons_paid_extension": {
+      "repo_counts": {
+        "boltons": 6
+      },
+      "role": "third_repo_boltons_operational_extension",
+      "row_count": 6,
+      "scoreable_cell_count": 6,
+      "source_artifact_key": "boltons_paid_extension_score_table",
+      "terminal_status_counts": {
+        "verified_fail": 2,
+        "verified_pass": 4
+      }
+    },
+    "phase1_validation_boltons_paid_smoke": {
+      "repo_counts": {
+        "boltons": 8
+      },
+      "role": "third_repo_boltons_operational_smoke",
+      "row_count": 8,
+      "scoreable_cell_count": 7,
+      "source_artifact_key": "boltons_paid_smoke_score_table",
+      "terminal_status_counts": {
+        "invalid_output": 1,
+        "verified_pass": 7
+      }
+    }
+  },
+  "source_artifacts": {
+    "boltons_paid_extension_score_table": "experiments/phase0_headroom/results/phase1_validation_boltons_paid_extension_score_table.csv",
+    "boltons_paid_smoke_score_table": "experiments/phase0_headroom/results/phase1_validation_boltons_paid_smoke_score_table.csv",
+    "humanize_certification_funnel": "experiments/phase0_headroom/certified_tasks/humanize_certification_funnel.csv",
+    "humanize_certified_tasks": "experiments/phase0_headroom/certified_tasks/humanize_certified_tasks.jsonl",
+    "humanize_release": "experiments/phase0_headroom/releases/humanize_phase0_pilot_release.json",
+    "humanize_review_records": "experiments/phase0_headroom/certified_tasks/humanize_review_records.jsonl",
+    "humanize_score_table": "experiments/phase0_headroom/results/humanize_pre_phase1_workspace_score_table.csv",
+    "humanize_task_statements": "experiments/phase0_headroom/certified_tasks/humanize_task_statements.jsonl",
+    "readiness_gate": "experiments/phase0_headroom/results/pre_phase1_gate.json",
+    "toolz_certification_funnel": "experiments/phase0_headroom/certified_tasks/toolz_certification_funnel.csv",
+    "toolz_certified_tasks": "experiments/phase0_headroom/certified_tasks/toolz_certified_tasks.jsonl",
+    "toolz_release": "experiments/phase0_headroom/releases/toolz_phase0_mini_release.json",
+    "toolz_review_records": "experiments/phase0_headroom/certified_tasks/toolz_review_records.jsonl",
+    "toolz_score_table": "experiments/phase0_headroom/results/codex_kilo_workspace_followup_score_table.csv",
+    "toolz_stability_score_table": "experiments/phase0_headroom/results/codex_kilo_workspace_stability_score_table.csv",
+    "toolz_task_statements": "experiments/phase0_headroom/certified_tasks/toolz_task_statements.jsonl",
+    "workspace_cost_reconciliation": "experiments/phase0_headroom/results/workspace_cost_reconciliation.json",
+    "workspace_usage_ledger": "experiments/phase0_headroom/results/workspace_usage_ledger.jsonl"
+  },
+  "target_repos": [
+    {
+      "repo_id": "toolz",
+      "role": "primary_target_repo",
+      "source_provenance": "source_provenance_issue_derived"
+    },
+    {
+      "repo_id": "humanize",
+      "role": "second_target_repo",
+      "source_provenance": "source_provenance_commit_message_fallback"
+    }
+  ],
+  "task_counts_by_repo": {
+    "humanize": 12,
+    "toolz": 6
+  },
+  "usage_ledger_call_count": 155
+}

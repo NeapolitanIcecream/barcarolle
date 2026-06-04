@@ -1,0 +1,175 @@
+{
+  "rows": [
+    {
+      "change_size_bucket": "missing:numstat_not_in_archive",
+      "changed_file_count": 2,
+      "module_or_package": [
+        "core"
+      ],
+      "source_type": "pull_request",
+      "task_family": "option help/default rendering",
+      "task_id": "click__rbench__001",
+      "task_type_proxy": "behavior_or_maintenance",
+      "test_file_count": 1
+    },
+    {
+      "change_size_bucket": "missing:numstat_not_in_archive",
+      "changed_file_count": 2,
+      "module_or_package": [
+        "missing"
+      ],
+      "source_type": "pull_request",
+      "task_family": "CliRunner exception handling",
+      "task_id": "click__rbench__002",
+      "task_type_proxy": "behavior_or_maintenance",
+      "test_file_count": 2
+    },
+    {
+      "change_size_bucket": "missing:numstat_not_in_archive",
+      "changed_file_count": 3,
+      "module_or_package": [
+        "core",
+        "termui"
+      ],
+      "source_type": "commit",
+      "task_family": "prompt choice rendering",
+      "task_id": "click__rbench__003",
+      "task_type_proxy": "behavior_or_maintenance",
+      "test_file_count": 1
+    },
+    {
+      "change_size_bucket": "missing:numstat_not_in_archive",
+      "changed_file_count": 4,
+      "module_or_package": [
+        "missing"
+      ],
+      "source_type": "pull_request",
+      "task_family": "CliRunner stdout/stderr stream separation",
+      "task_id": "click__rbench__004",
+      "task_type_proxy": "behavior_or_maintenance",
+      "test_file_count": 4
+    },
+    {
+      "change_size_bucket": "missing:numstat_not_in_archive",
+      "changed_file_count": 2,
+      "module_or_package": [
+        "types"
+      ],
+      "source_type": "pull_request",
+      "task_family": "Choice type case sensitivity",
+      "task_id": "click__rbench__005",
+      "task_type_proxy": "behavior_or_maintenance",
+      "test_file_count": 1
+    },
+    {
+      "change_size_bucket": "missing:numstat_not_in_archive",
+      "changed_file_count": 2,
+      "module_or_package": [
+        "types"
+      ],
+      "source_type": "commit",
+      "task_family": "DateTime parameter parsing",
+      "task_id": "click__rbench__006",
+      "task_type_proxy": "behavior_or_maintenance",
+      "test_file_count": 1
+    },
+    {
+      "change_size_bucket": "missing:numstat_not_in_archive",
+      "changed_file_count": 2,
+      "module_or_package": [
+        "missing"
+      ],
+      "source_type": "pull_request",
+      "task_family": "CliRunner return value capture",
+      "task_id": "click__rbench__007",
+      "task_type_proxy": "behavior_or_maintenance",
+      "test_file_count": 2
+    },
+    {
+      "change_size_bucket": "missing:numstat_not_in_archive",
+      "changed_file_count": 4,
+      "module_or_package": [
+        "core",
+        "parser"
+      ],
+      "source_type": "pull_request",
+      "task_family": "optional value prompts",
+      "task_id": "click__rbench__008",
+      "task_type_proxy": "behavior_or_maintenance",
+      "test_file_count": 2
+    },
+    {
+      "change_size_bucket": "missing:numstat_not_in_archive",
+      "changed_file_count": 5,
+      "module_or_package": [
+        "core",
+        "types"
+      ],
+      "source_type": "pull_request",
+      "task_family": "flag envvar/default/type reconciliation",
+      "task_id": "click__rwork__001",
+      "task_type_proxy": "behavior_or_maintenance",
+      "test_file_count": 3
+    },
+    {
+      "change_size_bucket": "missing:numstat_not_in_archive",
+      "changed_file_count": 2,
+      "module_or_package": [
+        "missing"
+      ],
+      "source_type": "pull_request",
+      "task_family": "CliRunner EOF and stdin file handling",
+      "task_id": "click__rwork__002",
+      "task_type_proxy": "behavior_or_maintenance",
+      "test_file_count": 2
+    },
+    {
+      "change_size_bucket": "missing:numstat_not_in_archive",
+      "changed_file_count": 2,
+      "module_or_package": [
+        "core"
+      ],
+      "source_type": "commit",
+      "task_family": "default handling for shared flag parameters",
+      "task_id": "click__rwork__003",
+      "task_type_proxy": "behavior_or_maintenance",
+      "test_file_count": 1
+    },
+    {
+      "change_size_bucket": "missing:numstat_not_in_archive",
+      "changed_file_count": 3,
+      "module_or_package": [
+        "core"
+      ],
+      "source_type": "commit",
+      "task_family": "callable flag_value default handling",
+      "task_id": "click__rwork__004",
+      "task_type_proxy": "behavior_or_maintenance",
+      "test_file_count": 2
+    },
+    {
+      "change_size_bucket": "missing:numstat_not_in_archive",
+      "changed_file_count": 2,
+      "module_or_package": [
+        "missing"
+      ],
+      "source_type": "commit",
+      "task_family": "CliRunner debugger stream isolation",
+      "task_id": "click__rwork__005",
+      "task_type_proxy": "bug_or_behavior_fix",
+      "test_file_count": 2
+    },
+    {
+      "change_size_bucket": "missing:numstat_not_in_archive",
+      "changed_file_count": 3,
+      "module_or_package": [
+        "core"
+      ],
+      "source_type": "commit",
+      "task_family": "default value passing and flag activation",
+      "task_id": "click__rwork__006",
+      "task_type_proxy": "behavior_or_maintenance",
+      "test_file_count": 2
+    }
+  ]
+}

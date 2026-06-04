@@ -1,0 +1,75 @@
+{
+  "artifact": "decision",
+  "commits_made_during_run": [
+    "Record source context hardening preflight",
+    "Inventory source context and statement quality",
+    "Define source context hardening repair queue",
+    "Add sanitized source context repair packets",
+    "Review source context hardening overlays",
+    "Build source quality split feature table",
+    "Test source context hardening policy",
+    "Close source context statement hardening run"
+  ],
+  "completed_paid_pilot_decision_changed": false,
+  "completed_paid_task_list_changed": false,
+  "decision_label": "source_context_ready_with_minor_risk",
+  "generated_at": "2026-05-28T00:00:00Z",
+  "paid_acut_solver_cells_made": 0,
+  "paid_llm_calls_made": 0,
+  "predictive_validity_established": false,
+  "raw_artifact_hygiene": {
+    "raw_acut_transcripts_committed": false,
+    "raw_completions_committed": false,
+    "raw_prompts_committed": false,
+    "raw_public_api_responses_committed": false,
+    "raw_target_diffs_committed": false,
+    "raw_test_patches_committed": false
+  },
+  "ready_for_blocked_split_design": true,
+  "recommended_next_action_category": "blocked_split_redesign",
+  "research_questions": {
+    "RQ1_changed_source_quality_or_release_eligibility": {
+      "changed_task_ids": [
+        "attrs__v2__056"
+      ],
+      "release_eligibility_changed_count": 1,
+      "source_quality_changed_count": 1
+    },
+    "RQ2_repos_with_thin_source_context_or_statement_risk": {
+      "blocked_queue_rows_by_repo": {
+        "boltons": 12,
+        "click": 45
+      },
+      "eligible_minor_risk_by_repo": {
+        "click": 30
+      },
+      "thin_or_missing_specificity_by_repo": {
+        "attrs": 1,
+        "boltons": 12,
+        "click": 45
+      }
+    },
+    "RQ3_ready_as_input_to_no_paid_blocked_split_redesign": true,
+    "RQ4_paid_calls_made": 0,
+    "RQ5_completed_paid_result_changed": false,
+    "RQ6_smallest_remaining_blocker": "click_title_only_minor_risk",
+    "RQ7_next_action_category": "blocked_split_redesign"
+  },
+  "run_id": "phase1_source_context_statement_hardening_20260528",
+  "schema_version": "barcarolle.phase1_source_context_statement_hardening_output.v1",
+  "smallest_remaining_blocker": "click_title_only_minor_risk",
+  "tests_run": [
+    {
+      "command": "uv run --project experiments/phase1_compiler pytest experiments/phase1_compiler/tests/test_phase1_source_context_statement_hardening.py -q",
+      "result": "passed"
+    },
+    {
+      "command": "uv run --project experiments/phase1_compiler pytest experiments/phase1_compiler/tests -q",
+      "result": "passed"
+    },
+    {
+      "command": "git diff --check",
+      "result": "passed"
+    }
+  ]
+}

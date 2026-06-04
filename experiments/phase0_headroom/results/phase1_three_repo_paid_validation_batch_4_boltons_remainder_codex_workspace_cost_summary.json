@@ -1,0 +1,24 @@
+{
+  "actual_provider_billed_cost_usd": null,
+  "call_count": 14,
+  "conservative_estimated_cost_usd": 7.0,
+  "conservative_fallback_for_missing_usage_usd": 0,
+  "generated_at": "2026-05-28T07:25:04+00:00",
+  "median_latency_seconds": 94.404,
+  "missing_usage_cell_count": 0,
+  "missing_usage_run_ids": [],
+  "observed_or_conservative_estimated_cost_usd": 6.8952072,
+  "observed_token_estimated_cost_usd": 6.8952072,
+  "per_harness_observed_token_cost_usd": {
+    "codex_workspace": 6.8952072
+  },
+  "per_split_observed_token_cost_usd": {
+    "B_eval": 1.9402644,
+    "H_future": 4.9549428
+  },
+  "pricing_source": "user_estimate_required_conservative_default",
+  "result_prefix": "phase1_three_repo_paid_validation_batch_4_boltons_remainder_codex_workspace",
+  "schema_version": "barcarolle.workspace_acut_cost_summary.v2",
+  "usage_observed_count": 14,
+  "usage_observed_rate": 1.0
+}

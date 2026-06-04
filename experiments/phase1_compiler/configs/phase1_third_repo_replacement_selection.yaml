@@ -1,0 +1,20 @@
+schema_version: barcarolle.phase1_third_repo_replacement_selection.v1
+status: configured
+claim_scope: third_repo_replacement_local_screening
+predictive_validity_established: false
+paid_acut_calls: disabled
+paid_llm_calls: disabled
+candidate_order:
+  - boltons
+  - attrs
+active_selection:
+  repo_id: boltons
+  selection_status: selected_local_pilot
+  source_release: experiments/phase0_headroom/releases/boltons_phase0_pilot_release.json
+  replacement_for: itsdangerous
+readiness_gates:
+  min_hardened_benchmark_candidates_for_paid_smoke: 4
+  min_certified_for_pilot: 4
+  min_certified_for_benchmark_candidate: 6
+  min_b_real: 2
+  min_w_real: 2

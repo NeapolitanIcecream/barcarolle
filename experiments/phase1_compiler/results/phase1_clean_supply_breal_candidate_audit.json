@@ -1,0 +1,259 @@
+{
+  "candidate_count": 7,
+  "candidate_decision_counts": {
+    "keep_manual_review_required": 1,
+    "promote_to_clean_benchmark_candidate": 4,
+    "reject_for_clean_holdout": 2
+  },
+  "candidate_reviews": [
+    {
+      "allowed_context_refs": [
+        "pr:286"
+      ],
+      "candidate_filter_status": "manual_review_required",
+      "changed_files": [
+        ".github/workflows/tests.yaml",
+        ".travis.yml",
+        "appveyor.yml",
+        "boltons/fileutils.py",
+        "boltons/jsonutils.py",
+        "tests/newlines_test_data.txt",
+        "tests/test_jsonutils.py"
+      ],
+      "changed_line_total": 235,
+      "current_hardened_status": "manual_review_required",
+      "manual_review_reasons": [
+        "docs_or_config_change_present"
+      ],
+      "module_or_package": [
+        "fileutils",
+        "jsonutils"
+      ],
+      "oracle_alignment_status": "aligned",
+      "outcome_seen": false,
+      "project_or_config_heavy_risk": true,
+      "project_or_docs_only_risk": false,
+      "promotion_blockers": [
+        "scope_context_project_heavy_or_ambiguous"
+      ],
+      "promotion_decision": "keep_manual_review_required",
+      "scope_clarity_status": "ambiguous_project_heavy_context",
+      "solution_exposure_risk": "none_detected",
+      "source_context_status": "non_leaky_problem_context",
+      "split": "B_real",
+      "subject": "Tox GH Action (#286)",
+      "task_id": "boltons__hist__014",
+      "task_time": "2021-05-15T00:08:53-07:00"
+    },
+    {
+      "allowed_context_refs": [
+        "pr:244"
+      ],
+      "candidate_filter_status": "accepted",
+      "changed_files": [
+        "boltons/funcutils.py",
+        "tests/test_funcutils_fb_py3.py"
+      ],
+      "changed_line_total": 12,
+      "current_hardened_status": "rejected",
+      "manual_review_reasons": [],
+      "module_or_package": [
+        "funcutils"
+      ],
+      "oracle_alignment_status": "aligned",
+      "outcome_seen": false,
+      "project_or_config_heavy_risk": false,
+      "project_or_docs_only_risk": false,
+      "promotion_blockers": [
+        "solution_exposure_risk"
+      ],
+      "promotion_decision": "reject_for_clean_holdout",
+      "scope_clarity_status": "clear_behavior_scope",
+      "solution_exposure_risk": "solution_exposure_risk",
+      "source_context_status": "non_leaky_problem_context",
+      "split": "B_real",
+      "subject": "different build_from default with partials",
+      "task_id": "boltons__hist__006",
+      "task_time": "2020-03-25T10:22:48-04:00"
+    },
+    {
+      "allowed_context_refs": [
+        "pr:278"
+      ],
+      "candidate_filter_status": "accepted",
+      "changed_files": [
+        "boltons/funcutils.py",
+        "tests/test_funcutils.py"
+      ],
+      "changed_line_total": 30,
+      "current_hardened_status": "rejected",
+      "manual_review_reasons": [],
+      "module_or_package": [
+        "funcutils"
+      ],
+      "oracle_alignment_status": "aligned",
+      "outcome_seen": false,
+      "project_or_config_heavy_risk": false,
+      "project_or_docs_only_risk": false,
+      "promotion_blockers": [
+        "solution_exposure_risk"
+      ],
+      "promotion_decision": "reject_for_clean_holdout",
+      "scope_clarity_status": "clear_behavior_scope",
+      "solution_exposure_risk": "solution_exposure_risk",
+      "source_context_status": "non_leaky_problem_context",
+      "split": "B_real",
+      "subject": "Adds noop function satisfying PEP 559 (#278)",
+      "task_id": "boltons__hist__013",
+      "task_time": "2021-02-21T22:35:25-08:00"
+    },
+    {
+      "allowed_context_refs": [
+        "pr:253"
+      ],
+      "candidate_filter_status": "manual_review_required",
+      "changed_files": [
+        "boltons/iterutils.py",
+        "docs/iterutils.rst",
+        "tests/test_iterutils.py"
+      ],
+      "changed_line_total": 126,
+      "current_hardened_status": "manual_review_required",
+      "manual_review_reasons": [
+        "docs_or_config_change_present"
+      ],
+      "module_or_package": [
+        "iterutils"
+      ],
+      "oracle_alignment_status": "aligned",
+      "outcome_seen": false,
+      "project_or_config_heavy_risk": false,
+      "project_or_docs_only_risk": false,
+      "promotion_blockers": [],
+      "promotion_decision": "promote_to_clean_benchmark_candidate",
+      "scope_clarity_status": "clear_behavior_scope",
+      "solution_exposure_risk": "none_detected",
+      "source_context_status": "non_leaky_problem_context",
+      "split": "B_real",
+      "subject": "#122 - Adding lstrip, rstrip, and strip for iterables (#253)",
+      "task_id": "boltons__hist__011",
+      "task_time": "2020-06-22T01:19:35-04:00"
+    },
+    {
+      "allowed_context_refs": [
+        "pr:312"
+      ],
+      "candidate_filter_status": "manual_review_required",
+      "changed_files": [
+        "boltons/iterutils.py",
+        "docs/iterutils.rst",
+        "tests/test_iterutils.py"
+      ],
+      "changed_line_total": 78,
+      "current_hardened_status": "manual_review_required",
+      "manual_review_reasons": [
+        "docs_or_config_change_present"
+      ],
+      "module_or_package": [
+        "iterutils"
+      ],
+      "oracle_alignment_status": "aligned",
+      "outcome_seen": false,
+      "project_or_config_heavy_risk": false,
+      "project_or_docs_only_risk": false,
+      "promotion_blockers": [],
+      "promotion_decision": "promote_to_clean_benchmark_candidate",
+      "scope_clarity_status": "clear_behavior_scope",
+      "solution_exposure_risk": "none_detected",
+      "source_context_status": "non_leaky_problem_context",
+      "split": "W_real",
+      "subject": "add chunk_ranges function to iterutils (#312)",
+      "task_id": "boltons__hist__022",
+      "task_time": "2023-02-20T07:22:09+01:00"
+    },
+    {
+      "allowed_context_refs": [
+        "pr:332"
+      ],
+      "candidate_filter_status": "accepted",
+      "changed_files": [
+        "boltons/tbutils.py",
+        "tests/test_tbutils_parsed_exc.py"
+      ],
+      "changed_line_total": 35,
+      "current_hardened_status": "manual_review_required",
+      "manual_review_reasons": [],
+      "module_or_package": [
+        "tbutils"
+      ],
+      "oracle_alignment_status": "aligned",
+      "outcome_seen": false,
+      "project_or_config_heavy_risk": false,
+      "project_or_docs_only_risk": false,
+      "promotion_blockers": [],
+      "promotion_decision": "promote_to_clean_benchmark_candidate",
+      "scope_clarity_status": "clear_behavior_scope",
+      "solution_exposure_risk": "none_detected",
+      "source_context_status": "non_leaky_problem_context",
+      "split": "W_real",
+      "subject": "Update tbutils.py to parse tracebacks with anchor lines (#332)",
+      "task_id": "boltons__hist__023",
+      "task_time": "2023-04-02T15:11:27-04:00"
+    },
+    {
+      "allowed_context_refs": [
+        "pr:349"
+      ],
+      "candidate_filter_status": "manual_review_required",
+      "changed_files": [
+        ".github/workflows/tests.yaml",
+        "boltons/cacheutils.py",
+        "tests/test_cacheutils.py"
+      ],
+      "changed_line_total": 46,
+      "current_hardened_status": "manual_review_required",
+      "manual_review_reasons": [
+        "docs_or_config_change_present"
+      ],
+      "module_or_package": [
+        "cacheutils"
+      ],
+      "oracle_alignment_status": "aligned",
+      "outcome_seen": false,
+      "project_or_config_heavy_risk": false,
+      "project_or_docs_only_risk": false,
+      "promotion_blockers": [],
+      "promotion_decision": "promote_to_clean_benchmark_candidate",
+      "scope_clarity_status": "clear_behavior_scope",
+      "solution_exposure_risk": "none_detected",
+      "source_context_status": "non_leaky_problem_context",
+      "split": "W_real",
+      "subject": "Test and fix for #348 (#349)",
+      "task_id": "boltons__hist__027",
+      "task_time": "2023-10-29T21:31:16-07:00"
+    }
+  ],
+  "config": "experiments/phase1_compiler/configs/phase1_clean_supply_breal_extension.yaml",
+  "current_clean_supply_ready": false,
+  "current_promoted_by_split": {
+    "B_real": [
+      "boltons__hist__011"
+    ],
+    "W_real": [
+      "boltons__hist__022",
+      "boltons__hist__023",
+      "boltons__hist__027"
+    ]
+  },
+  "generated_at": "2026-05-22T08:48:25+00:00",
+  "minimum_clean_split": {
+    "B_real": 2,
+    "W_real": 2
+  },
+  "paid_acut_calls_made": false,
+  "paid_llm_calls_made": false,
+  "predictive_validity_established": false,
+  "recommended_action": "review_boltons_014_first",
+  "repo_id": "boltons",
+  "schema_version": "barcarolle.phase1.clean_supply_breal_candidate_audit.v1"
+}

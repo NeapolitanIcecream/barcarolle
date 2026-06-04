@@ -1,0 +1,15 @@
+{
+  "calibration_estimated_cost_usd": 0.329271,
+  "cost_per_scoreable_cell_usd": 0.1646355,
+  "cost_per_submitted_cell_usd": 0.0329271,
+  "decision": "matrix_a_complete_stay_diagnostic",
+  "generated_at": "2026-05-20T14:55:42+00:00",
+  "generic_comparator_status": "scoreable_same_protocol",
+  "projected_cumulative_spend_if_scaled_usd": null,
+  "rationale": "Matrix A repairs the G_mini protocol but remains too small for predictive-validity claims.",
+  "scale_up_approved": false,
+  "schema_version": "barcarolle.cost_realignment.v1",
+  "scoreable_g_mini_cells": 0,
+  "scoreable_same_repo_cells": 2,
+  "usage_observed_rate": 1.0
+}

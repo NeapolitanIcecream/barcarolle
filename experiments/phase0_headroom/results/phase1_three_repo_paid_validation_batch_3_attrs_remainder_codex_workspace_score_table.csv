@@ -1,0 +1,15 @@
+adapter_id,acut_id,harness_name,model_or_agent_name,task_id,split,attempt,submission_status,terminal_status,verifier_exit_code,scoreable_cell,agent_failure,harness_error
+codex_workspace,codex_workspace_gpt_5_4_mini,codex,gpt-5.4-mini,attrs__v2__250,B_eval,1,submitted,verified_fail,1,True,True,False
+codex_workspace,codex_workspace_gpt_5_4_mini,codex,gpt-5.4-mini,attrs__v2__227,B_eval,1,submitted,verified_pass,0,True,False,False
+codex_workspace,codex_workspace_gpt_5_4_mini,codex,gpt-5.4-mini,attrs__v2__048,B_eval,1,submitted,verified_fail,1,True,True,False
+codex_workspace,codex_workspace_gpt_5_4_mini,codex,gpt-5.4-mini,attrs__v2__223,B_eval,1,submitted,verified_pass,0,True,False,False
+codex_workspace,codex_workspace_gpt_5_4_mini,codex,gpt-5.4-mini,attrs__v2__261,H_future,1,submitted,verified_fail,1,True,True,False
+codex_workspace,codex_workspace_gpt_5_4_mini,codex,gpt-5.4-mini,attrs__v2__206,H_future,1,submitted,verified_pass,0,True,False,False
+codex_workspace,codex_workspace_gpt_5_4_mini,codex,gpt-5.4-mini,attrs__v2__196,H_future,1,submitted,verified_pass,0,True,False,False
+codex_workspace,codex_workspace_gpt_5_4_mini,codex,gpt-5.4-mini,attrs__v2__052,H_future,1,submitted,verified_fail,1,True,True,False
+codex_workspace,codex_workspace_gpt_5_4_mini,codex,gpt-5.4-mini,attrs__v2__056,H_future,1,submitted,verified_fail,1,True,True,False
+codex_workspace,codex_workspace_gpt_5_4_mini,codex,gpt-5.4-mini,attrs__v2__220,H_future,1,submitted,verified_fail,1,True,True,False
+codex_workspace,codex_workspace_gpt_5_4_mini,codex,gpt-5.4-mini,attrs__v2__215,H_future,1,submitted,verified_fail,1,True,True,False
+codex_workspace,codex_workspace_gpt_5_4_mini,codex,gpt-5.4-mini,attrs__v2__158,H_future,1,submitted,verified_fail,1,True,True,False
+codex_workspace,codex_workspace_gpt_5_4_mini,codex,gpt-5.4-mini,attrs__v2__202,H_future,1,submitted,verified_fail,1,True,True,False
+codex_workspace,codex_workspace_gpt_5_4_mini,codex,gpt-5.4-mini,attrs__v2__235,H_future,1,submitted,verified_pass,0,True,False,False

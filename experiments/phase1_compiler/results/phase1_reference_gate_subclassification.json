@@ -1,0 +1,1796 @@
+{
+  "attempt_rows": [
+    {
+      "old_gate_label": "reference_pass",
+      "profile_id": "py311_current_editable",
+      "repo_id": "attrs",
+      "returncode": 1,
+      "stderr_tail_hash": "bb2ba1e9794f",
+      "stdout_tail_hash": "e3b0c44298fc",
+      "subgate_label": "reference_install_failed",
+      "task_id": "attrs__supply_expansion_20260526__030"
+    },
+    {
+      "old_gate_label": "reference_pass",
+      "profile_id": "py38_pytest_lt4_pythonpath",
+      "repo_id": "attrs",
+      "returncode": 0,
+      "stderr_tail_hash": "e3b0c44298fc",
+      "stdout_tail_hash": "e9a3733f6f6b",
+      "subgate_label": "reference_pass",
+      "task_id": "attrs__supply_expansion_20260526__030"
+    },
+    {
+      "old_gate_label": "reference_pass",
+      "profile_id": "py311_current_editable",
+      "repo_id": "attrs",
+      "returncode": 1,
+      "stderr_tail_hash": "bb2ba1e9794f",
+      "stdout_tail_hash": "e3b0c44298fc",
+      "subgate_label": "reference_install_failed",
+      "task_id": "attrs__supply_expansion_20260526__037"
+    },
+    {
+      "old_gate_label": "reference_pass",
+      "profile_id": "py38_pytest_lt4_pythonpath",
+      "repo_id": "attrs",
+      "returncode": 0,
+      "stderr_tail_hash": "e3b0c44298fc",
+      "stdout_tail_hash": "4f653742a380",
+      "subgate_label": "reference_pass",
+      "task_id": "attrs__supply_expansion_20260526__037"
+    },
+    {
+      "old_gate_label": "reference_pass",
+      "profile_id": "py311_current_editable",
+      "repo_id": "attrs",
+      "returncode": 1,
+      "stderr_tail_hash": "bb2ba1e9794f",
+      "stdout_tail_hash": "e3b0c44298fc",
+      "subgate_label": "reference_install_failed",
+      "task_id": "attrs__supply_expansion_20260526__039"
+    },
+    {
+      "old_gate_label": "reference_pass",
+      "profile_id": "py38_pytest_lt4_pythonpath",
+      "repo_id": "attrs",
+      "returncode": 0,
+      "stderr_tail_hash": "7f1f601082bb",
+      "stdout_tail_hash": "36c72e3243a1",
+      "subgate_label": "reference_pass",
+      "task_id": "attrs__supply_expansion_20260526__039"
+    },
+    {
+      "old_gate_label": "reference_pass",
+      "profile_id": "py311_current_editable",
+      "repo_id": "attrs",
+      "returncode": 1,
+      "stderr_tail_hash": "bb2ba1e9794f",
+      "stdout_tail_hash": "e3b0c44298fc",
+      "subgate_label": "reference_install_failed",
+      "task_id": "attrs__supply_expansion_20260526__042"
+    },
+    {
+      "old_gate_label": "reference_pass",
+      "profile_id": "py38_pytest_lt4_pythonpath",
+      "repo_id": "attrs",
+      "returncode": 2,
+      "stderr_tail_hash": "9975f97ddf9a",
+      "stdout_tail_hash": "5e541dbeecf0",
+      "subgate_label": "reference_collect_failed",
+      "task_id": "attrs__supply_expansion_20260526__042"
+    },
+    {
+      "old_gate_label": "reference_pass",
+      "profile_id": "py39_pytest_lt5_pythonpath",
+      "repo_id": "attrs",
+      "returncode": 2,
+      "stderr_tail_hash": "7f1f601082bb",
+      "stdout_tail_hash": "5e541dbeecf0",
+      "subgate_label": "reference_collect_failed",
+      "task_id": "attrs__supply_expansion_20260526__042"
+    },
+    {
+      "old_gate_label": "reference_pass",
+      "profile_id": "py37_pytest4_pythonpath",
+      "repo_id": "attrs",
+      "returncode": 2,
+      "stderr_tail_hash": "e1eea0c2a4ef",
+      "stdout_tail_hash": "e3b0c44298fc",
+      "subgate_label": "reference_environment_unavailable",
+      "task_id": "attrs__supply_expansion_20260526__042"
+    },
+    {
+      "old_gate_label": "reference_pass",
+      "profile_id": "py310_pytest7_editable",
+      "repo_id": "attrs",
+      "returncode": 1,
+      "stderr_tail_hash": "bb2ba1e9794f",
+      "stdout_tail_hash": "e3b0c44298fc",
+      "subgate_label": "reference_install_failed",
+      "task_id": "attrs__supply_expansion_20260526__042"
+    },
+    {
+      "old_gate_label": "reference_pass",
+      "profile_id": "py311_current_editable",
+      "repo_id": "attrs",
+      "returncode": 1,
+      "stderr_tail_hash": "bb2ba1e9794f",
+      "stdout_tail_hash": "e3b0c44298fc",
+      "subgate_label": "reference_install_failed",
+      "task_id": "attrs__supply_expansion_20260526__043"
+    },
+    {
+      "old_gate_label": "reference_pass",
+      "profile_id": "py38_pytest_lt4_pythonpath",
+      "repo_id": "attrs",
+      "returncode": 2,
+      "stderr_tail_hash": "e3b0c44298fc",
+      "stdout_tail_hash": "713bd2532725",
+      "subgate_label": "reference_collect_failed",
+      "task_id": "attrs__supply_expansion_20260526__043"
+    },
+    {
+      "old_gate_label": "reference_pass",
+      "profile_id": "py39_pytest_lt5_pythonpath",
+      "repo_id": "attrs",
+      "returncode": 2,
+      "stderr_tail_hash": "e3b0c44298fc",
+      "stdout_tail_hash": "713bd2532725",
+      "subgate_label": "reference_collect_failed",
+      "task_id": "attrs__supply_expansion_20260526__043"
+    },
+    {
+      "old_gate_label": "reference_pass",
+      "profile_id": "py37_pytest4_pythonpath",
+      "repo_id": "attrs",
+      "returncode": 2,
+      "stderr_tail_hash": "e1eea0c2a4ef",
+      "stdout_tail_hash": "e3b0c44298fc",
+      "subgate_label": "reference_environment_unavailable",
+      "task_id": "attrs__supply_expansion_20260526__043"
+    },
+    {
+      "old_gate_label": "reference_pass",
+      "profile_id": "py310_pytest7_editable",
+      "repo_id": "attrs",
+      "returncode": 1,
+      "stderr_tail_hash": "bb2ba1e9794f",
+      "stdout_tail_hash": "e3b0c44298fc",
+      "subgate_label": "reference_install_failed",
+      "task_id": "attrs__supply_expansion_20260526__043"
+    },
+    {
+      "old_gate_label": "reference_pass",
+      "profile_id": "py311_current_editable",
+      "repo_id": "attrs",
+      "returncode": 1,
+      "stderr_tail_hash": "bb2ba1e9794f",
+      "stdout_tail_hash": "e3b0c44298fc",
+      "subgate_label": "reference_install_failed",
+      "task_id": "attrs__supply_expansion_20260526__044"
+    },
+    {
+      "old_gate_label": "reference_pass",
+      "profile_id": "py38_pytest_lt4_pythonpath",
+      "repo_id": "attrs",
+      "returncode": 2,
+      "stderr_tail_hash": "7f1f601082bb",
+      "stdout_tail_hash": "6a499da59bc4",
+      "subgate_label": "reference_collect_failed",
+      "task_id": "attrs__supply_expansion_20260526__044"
+    },
+    {
+      "old_gate_label": "reference_pass",
+      "profile_id": "py39_pytest_lt5_pythonpath",
+      "repo_id": "attrs",
+      "returncode": 2,
+      "stderr_tail_hash": "9675203eee00",
+      "stdout_tail_hash": "6a499da59bc4",
+      "subgate_label": "reference_collect_failed",
+      "task_id": "attrs__supply_expansion_20260526__044"
+    },
+    {
+      "old_gate_label": "reference_pass",
+      "profile_id": "py37_pytest4_pythonpath",
+      "repo_id": "attrs",
+      "returncode": 2,
+      "stderr_tail_hash": "e1eea0c2a4ef",
+      "stdout_tail_hash": "e3b0c44298fc",
+      "subgate_label": "reference_environment_unavailable",
+      "task_id": "attrs__supply_expansion_20260526__044"
+    },
+    {
+      "old_gate_label": "reference_pass",
+      "profile_id": "py310_pytest7_editable",
+      "repo_id": "attrs",
+      "returncode": 1,
+      "stderr_tail_hash": "bb2ba1e9794f",
+      "stdout_tail_hash": "e3b0c44298fc",
+      "subgate_label": "reference_install_failed",
+      "task_id": "attrs__supply_expansion_20260526__044"
+    },
+    {
+      "old_gate_label": "reference_pass",
+      "profile_id": "py311_current_editable",
+      "repo_id": "boltons",
+      "returncode": 1,
+      "stderr_tail_hash": "bb2ba1e9794f",
+      "stdout_tail_hash": "e3b0c44298fc",
+      "subgate_label": "reference_install_failed",
+      "task_id": "boltons__supply_expansion_20260526__086"
+    },
+    {
+      "old_gate_label": "reference_pass",
+      "profile_id": "py38_pytest_lt4_pythonpath",
+      "repo_id": "boltons",
+      "returncode": 1,
+      "stderr_tail_hash": "8fd1053c40ea",
+      "stdout_tail_hash": "e3b0c44298fc",
+      "subgate_label": "reference_environment_unavailable",
+      "task_id": "boltons__supply_expansion_20260526__086"
+    },
+    {
+      "old_gate_label": "reference_pass",
+      "profile_id": "py39_pytest_lt5_pythonpath",
+      "repo_id": "boltons",
+      "returncode": 1,
+      "stderr_tail_hash": "8fd1053c40ea",
+      "stdout_tail_hash": "e3b0c44298fc",
+      "subgate_label": "reference_environment_unavailable",
+      "task_id": "boltons__supply_expansion_20260526__086"
+    },
+    {
+      "old_gate_label": "reference_pass",
+      "profile_id": "py37_pytest4_pythonpath",
+      "repo_id": "boltons",
+      "returncode": 2,
+      "stderr_tail_hash": "e1eea0c2a4ef",
+      "stdout_tail_hash": "e3b0c44298fc",
+      "subgate_label": "reference_environment_unavailable",
+      "task_id": "boltons__supply_expansion_20260526__086"
+    },
+    {
+      "old_gate_label": "reference_pass",
+      "profile_id": "py310_pytest7_editable",
+      "repo_id": "boltons",
+      "returncode": 1,
+      "stderr_tail_hash": "bb2ba1e9794f",
+      "stdout_tail_hash": "e3b0c44298fc",
+      "subgate_label": "reference_install_failed",
+      "task_id": "boltons__supply_expansion_20260526__086"
+    },
+    {
+      "old_gate_label": "reference_pass",
+      "profile_id": "py311_current_editable",
+      "repo_id": "boltons",
+      "returncode": 1,
+      "stderr_tail_hash": "bb2ba1e9794f",
+      "stdout_tail_hash": "e3b0c44298fc",
+      "subgate_label": "reference_install_failed",
+      "task_id": "boltons__supply_expansion_20260526__090"
+    },
+    {
+      "old_gate_label": "reference_pass",
+      "profile_id": "py38_pytest_lt4_pythonpath",
+      "repo_id": "boltons",
+      "returncode": 0,
+      "stderr_tail_hash": "9e239b6ddfad",
+      "stdout_tail_hash": "03a3d98150de",
+      "subgate_label": "reference_pass",
+      "task_id": "boltons__supply_expansion_20260526__090"
+    },
+    {
+      "old_gate_label": "reference_pass",
+      "profile_id": "py311_current_editable",
+      "repo_id": "boltons",
+      "returncode": 1,
+      "stderr_tail_hash": "bb2ba1e9794f",
+      "stdout_tail_hash": "e3b0c44298fc",
+      "subgate_label": "reference_install_failed",
+      "task_id": "boltons__supply_expansion_20260526__091"
+    },
+    {
+      "old_gate_label": "reference_pass",
+      "profile_id": "py38_pytest_lt4_pythonpath",
+      "repo_id": "boltons",
+      "returncode": 0,
+      "stderr_tail_hash": "e3b0c44298fc",
+      "stdout_tail_hash": "44b5534e4cbd",
+      "subgate_label": "reference_pass",
+      "task_id": "boltons__supply_expansion_20260526__091"
+    },
+    {
+      "old_gate_label": "reference_pass",
+      "profile_id": "py311_current_editable",
+      "repo_id": "boltons",
+      "returncode": 1,
+      "stderr_tail_hash": "4e6f4cc2d568",
+      "stdout_tail_hash": "e3b0c44298fc",
+      "subgate_label": "reference_install_failed",
+      "task_id": "boltons__supply_expansion_20260526__096"
+    },
+    {
+      "old_gate_label": "reference_pass",
+      "profile_id": "py38_pytest_lt4_pythonpath",
+      "repo_id": "boltons",
+      "returncode": 0,
+      "stderr_tail_hash": "49e415de6304",
+      "stdout_tail_hash": "f8fecdaa7e3f",
+      "subgate_label": "reference_pass",
+      "task_id": "boltons__supply_expansion_20260526__096"
+    },
+    {
+      "old_gate_label": "reference_pass",
+      "profile_id": "py311_current_editable",
+      "repo_id": "boltons",
+      "returncode": 1,
+      "stderr_tail_hash": "4e6f4cc2d568",
+      "stdout_tail_hash": "e3b0c44298fc",
+      "subgate_label": "reference_install_failed",
+      "task_id": "boltons__supply_expansion_20260526__097"
+    },
+    {
+      "old_gate_label": "reference_pass",
+      "profile_id": "py38_pytest_lt4_pythonpath",
+      "repo_id": "boltons",
+      "returncode": 0,
+      "stderr_tail_hash": "5389ff2e3133",
+      "stdout_tail_hash": "e53cb943441a",
+      "subgate_label": "reference_pass",
+      "task_id": "boltons__supply_expansion_20260526__097"
+    },
+    {
+      "old_gate_label": "reference_pass",
+      "profile_id": "py311_current_editable",
+      "repo_id": "boltons",
+      "returncode": 1,
+      "stderr_tail_hash": "4e6f4cc2d568",
+      "stdout_tail_hash": "e3b0c44298fc",
+      "subgate_label": "reference_install_failed",
+      "task_id": "boltons__supply_expansion_20260526__098"
+    },
+    {
+      "old_gate_label": "reference_pass",
+      "profile_id": "py38_pytest_lt4_pythonpath",
+      "repo_id": "boltons",
+      "returncode": 0,
+      "stderr_tail_hash": "e3b0c44298fc",
+      "stdout_tail_hash": "e53cb943441a",
+      "subgate_label": "reference_pass",
+      "task_id": "boltons__supply_expansion_20260526__098"
+    },
+    {
+      "old_gate_label": "reference_pass",
+      "profile_id": "py311_current_editable",
+      "repo_id": "attrs",
+      "returncode": 1,
+      "stderr_tail_hash": "bb2ba1e9794f",
+      "stdout_tail_hash": "e3b0c44298fc",
+      "subgate_label": "reference_install_failed",
+      "task_id": "attrs__supply_expansion_20260526__045"
+    },
+    {
+      "old_gate_label": "reference_pass",
+      "profile_id": "py38_pytest_lt4_pythonpath",
+      "repo_id": "attrs",
+      "returncode": 4,
+      "stderr_tail_hash": "7f6c7e254e58",
+      "stdout_tail_hash": "e3b0c44298fc",
+      "subgate_label": "reference_import_failed",
+      "task_id": "attrs__supply_expansion_20260526__045"
+    },
+    {
+      "old_gate_label": "reference_pass",
+      "profile_id": "py39_pytest_lt5_pythonpath",
+      "repo_id": "attrs",
+      "returncode": 4,
+      "stderr_tail_hash": "0f18b7cf2853",
+      "stdout_tail_hash": "e3b0c44298fc",
+      "subgate_label": "reference_import_failed",
+      "task_id": "attrs__supply_expansion_20260526__045"
+    },
+    {
+      "old_gate_label": "reference_pass",
+      "profile_id": "py37_pytest4_pythonpath",
+      "repo_id": "attrs",
+      "returncode": 2,
+      "stderr_tail_hash": "e1eea0c2a4ef",
+      "stdout_tail_hash": "e3b0c44298fc",
+      "subgate_label": "reference_environment_unavailable",
+      "task_id": "attrs__supply_expansion_20260526__045"
+    },
+    {
+      "old_gate_label": "reference_pass",
+      "profile_id": "py310_pytest7_editable",
+      "repo_id": "attrs",
+      "returncode": 1,
+      "stderr_tail_hash": "bb2ba1e9794f",
+      "stdout_tail_hash": "e3b0c44298fc",
+      "subgate_label": "reference_install_failed",
+      "task_id": "attrs__supply_expansion_20260526__045"
+    },
+    {
+      "old_gate_label": "reference_pass",
+      "profile_id": "py311_current_editable",
+      "repo_id": "attrs",
+      "returncode": 1,
+      "stderr_tail_hash": "bb2ba1e9794f",
+      "stdout_tail_hash": "e3b0c44298fc",
+      "subgate_label": "reference_install_failed",
+      "task_id": "attrs__supply_expansion_20260526__058"
+    },
+    {
+      "old_gate_label": "reference_pass",
+      "profile_id": "py38_pytest_lt4_pythonpath",
+      "repo_id": "attrs",
+      "returncode": 4,
+      "stderr_tail_hash": "504148e869e7",
+      "stdout_tail_hash": "e3b0c44298fc",
+      "subgate_label": "reference_import_failed",
+      "task_id": "attrs__supply_expansion_20260526__058"
+    },
+    {
+      "old_gate_label": "reference_pass",
+      "profile_id": "py39_pytest_lt5_pythonpath",
+      "repo_id": "attrs",
+      "returncode": 4,
+      "stderr_tail_hash": "63c1beeee830",
+      "stdout_tail_hash": "e3b0c44298fc",
+      "subgate_label": "reference_import_failed",
+      "task_id": "attrs__supply_expansion_20260526__058"
+    },
+    {
+      "old_gate_label": "reference_pass",
+      "profile_id": "py37_pytest4_pythonpath",
+      "repo_id": "attrs",
+      "returncode": 2,
+      "stderr_tail_hash": "e1eea0c2a4ef",
+      "stdout_tail_hash": "e3b0c44298fc",
+      "subgate_label": "reference_environment_unavailable",
+      "task_id": "attrs__supply_expansion_20260526__058"
+    },
+    {
+      "old_gate_label": "reference_pass",
+      "profile_id": "py310_pytest7_editable",
+      "repo_id": "attrs",
+      "returncode": 1,
+      "stderr_tail_hash": "bb2ba1e9794f",
+      "stdout_tail_hash": "e3b0c44298fc",
+      "subgate_label": "reference_install_failed",
+      "task_id": "attrs__supply_expansion_20260526__058"
+    },
+    {
+      "old_gate_label": "reference_pass",
+      "profile_id": "py311_current_editable",
+      "repo_id": "attrs",
+      "returncode": 1,
+      "stderr_tail_hash": "bb2ba1e9794f",
+      "stdout_tail_hash": "e3b0c44298fc",
+      "subgate_label": "reference_install_failed",
+      "task_id": "attrs__supply_expansion_20260526__059"
+    },
+    {
+      "old_gate_label": "reference_pass",
+      "profile_id": "py38_pytest_lt4_pythonpath",
+      "repo_id": "attrs",
+      "returncode": 4,
+      "stderr_tail_hash": "83da8443bc59",
+      "stdout_tail_hash": "e3b0c44298fc",
+      "subgate_label": "reference_import_failed",
+      "task_id": "attrs__supply_expansion_20260526__059"
+    },
+    {
+      "old_gate_label": "reference_pass",
+      "profile_id": "py39_pytest_lt5_pythonpath",
+      "repo_id": "attrs",
+      "returncode": 4,
+      "stderr_tail_hash": "2517eb32a0cb",
+      "stdout_tail_hash": "e3b0c44298fc",
+      "subgate_label": "reference_import_failed",
+      "task_id": "attrs__supply_expansion_20260526__059"
+    },
+    {
+      "old_gate_label": "reference_pass",
+      "profile_id": "py37_pytest4_pythonpath",
+      "repo_id": "attrs",
+      "returncode": 2,
+      "stderr_tail_hash": "e1eea0c2a4ef",
+      "stdout_tail_hash": "e3b0c44298fc",
+      "subgate_label": "reference_environment_unavailable",
+      "task_id": "attrs__supply_expansion_20260526__059"
+    },
+    {
+      "old_gate_label": "reference_pass",
+      "profile_id": "py310_pytest7_editable",
+      "repo_id": "attrs",
+      "returncode": 1,
+      "stderr_tail_hash": "bb2ba1e9794f",
+      "stdout_tail_hash": "e3b0c44298fc",
+      "subgate_label": "reference_install_failed",
+      "task_id": "attrs__supply_expansion_20260526__059"
+    },
+    {
+      "old_gate_label": "reference_pass",
+      "profile_id": "py311_current_editable",
+      "repo_id": "attrs",
+      "returncode": 1,
+      "stderr_tail_hash": "bb2ba1e9794f",
+      "stdout_tail_hash": "e3b0c44298fc",
+      "subgate_label": "reference_install_failed",
+      "task_id": "attrs__supply_expansion_20260526__046"
+    },
+    {
+      "old_gate_label": "reference_pass",
+      "profile_id": "py38_pytest_lt4_pythonpath",
+      "repo_id": "attrs",
+      "returncode": 4,
+      "stderr_tail_hash": "eb51246ac15e",
+      "stdout_tail_hash": "e3b0c44298fc",
+      "subgate_label": "reference_import_failed",
+      "task_id": "attrs__supply_expansion_20260526__046"
+    },
+    {
+      "old_gate_label": "reference_pass",
+      "profile_id": "py39_pytest_lt5_pythonpath",
+      "repo_id": "attrs",
+      "returncode": 4,
+      "stderr_tail_hash": "d018279fc73a",
+      "stdout_tail_hash": "e3b0c44298fc",
+      "subgate_label": "reference_import_failed",
+      "task_id": "attrs__supply_expansion_20260526__046"
+    },
+    {
+      "old_gate_label": "reference_pass",
+      "profile_id": "py37_pytest4_pythonpath",
+      "repo_id": "attrs",
+      "returncode": 2,
+      "stderr_tail_hash": "e1eea0c2a4ef",
+      "stdout_tail_hash": "e3b0c44298fc",
+      "subgate_label": "reference_environment_unavailable",
+      "task_id": "attrs__supply_expansion_20260526__046"
+    },
+    {
+      "old_gate_label": "reference_pass",
+      "profile_id": "py310_pytest7_editable",
+      "repo_id": "attrs",
+      "returncode": 1,
+      "stderr_tail_hash": "bb2ba1e9794f",
+      "stdout_tail_hash": "e3b0c44298fc",
+      "subgate_label": "reference_install_failed",
+      "task_id": "attrs__supply_expansion_20260526__046"
+    },
+    {
+      "old_gate_label": "reference_pass",
+      "profile_id": "py311_current_editable",
+      "repo_id": "attrs",
+      "returncode": 1,
+      "stderr_tail_hash": "bb2ba1e9794f",
+      "stdout_tail_hash": "e3b0c44298fc",
+      "subgate_label": "reference_install_failed",
+      "task_id": "attrs__supply_expansion_20260526__049"
+    },
+    {
+      "old_gate_label": "reference_pass",
+      "profile_id": "py38_pytest_lt4_pythonpath",
+      "repo_id": "attrs",
+      "returncode": 4,
+      "stderr_tail_hash": "a067550f7a6a",
+      "stdout_tail_hash": "e3b0c44298fc",
+      "subgate_label": "reference_import_failed",
+      "task_id": "attrs__supply_expansion_20260526__049"
+    },
+    {
+      "old_gate_label": "reference_pass",
+      "profile_id": "py39_pytest_lt5_pythonpath",
+      "repo_id": "attrs",
+      "returncode": 4,
+      "stderr_tail_hash": "bcbb771c71ca",
+      "stdout_tail_hash": "e3b0c44298fc",
+      "subgate_label": "reference_import_failed",
+      "task_id": "attrs__supply_expansion_20260526__049"
+    },
+    {
+      "old_gate_label": "reference_pass",
+      "profile_id": "py37_pytest4_pythonpath",
+      "repo_id": "attrs",
+      "returncode": 2,
+      "stderr_tail_hash": "e1eea0c2a4ef",
+      "stdout_tail_hash": "e3b0c44298fc",
+      "subgate_label": "reference_environment_unavailable",
+      "task_id": "attrs__supply_expansion_20260526__049"
+    },
+    {
+      "old_gate_label": "reference_pass",
+      "profile_id": "py310_pytest7_editable",
+      "repo_id": "attrs",
+      "returncode": 1,
+      "stderr_tail_hash": "bb2ba1e9794f",
+      "stdout_tail_hash": "e3b0c44298fc",
+      "subgate_label": "reference_install_failed",
+      "task_id": "attrs__supply_expansion_20260526__049"
+    },
+    {
+      "old_gate_label": "reference_pass",
+      "profile_id": "py311_current_editable",
+      "repo_id": "attrs",
+      "returncode": 1,
+      "stderr_tail_hash": "bb2ba1e9794f",
+      "stdout_tail_hash": "e3b0c44298fc",
+      "subgate_label": "reference_install_failed",
+      "task_id": "attrs__supply_expansion_20260526__050"
+    },
+    {
+      "old_gate_label": "reference_pass",
+      "profile_id": "py38_pytest_lt4_pythonpath",
+      "repo_id": "attrs",
+      "returncode": 4,
+      "stderr_tail_hash": "d9d0755f78df",
+      "stdout_tail_hash": "e3b0c44298fc",
+      "subgate_label": "reference_import_failed",
+      "task_id": "attrs__supply_expansion_20260526__050"
+    },
+    {
+      "old_gate_label": "reference_pass",
+      "profile_id": "py39_pytest_lt5_pythonpath",
+      "repo_id": "attrs",
+      "returncode": 4,
+      "stderr_tail_hash": "b9f97a83e820",
+      "stdout_tail_hash": "e3b0c44298fc",
+      "subgate_label": "reference_import_failed",
+      "task_id": "attrs__supply_expansion_20260526__050"
+    },
+    {
+      "old_gate_label": "reference_pass",
+      "profile_id": "py37_pytest4_pythonpath",
+      "repo_id": "attrs",
+      "returncode": 2,
+      "stderr_tail_hash": "e1eea0c2a4ef",
+      "stdout_tail_hash": "e3b0c44298fc",
+      "subgate_label": "reference_environment_unavailable",
+      "task_id": "attrs__supply_expansion_20260526__050"
+    },
+    {
+      "old_gate_label": "reference_pass",
+      "profile_id": "py310_pytest7_editable",
+      "repo_id": "attrs",
+      "returncode": 1,
+      "stderr_tail_hash": "bb2ba1e9794f",
+      "stdout_tail_hash": "e3b0c44298fc",
+      "subgate_label": "reference_install_failed",
+      "task_id": "attrs__supply_expansion_20260526__050"
+    },
+    {
+      "old_gate_label": "reference_pass",
+      "profile_id": "py311_current_editable",
+      "repo_id": "attrs",
+      "returncode": 1,
+      "stderr_tail_hash": "bb2ba1e9794f",
+      "stdout_tail_hash": "e3b0c44298fc",
+      "subgate_label": "reference_install_failed",
+      "task_id": "attrs__supply_expansion_20260526__052"
+    },
+    {
+      "old_gate_label": "reference_pass",
+      "profile_id": "py38_pytest_lt4_pythonpath",
+      "repo_id": "attrs",
+      "returncode": 4,
+      "stderr_tail_hash": "3c66c51beccf",
+      "stdout_tail_hash": "e3b0c44298fc",
+      "subgate_label": "reference_import_failed",
+      "task_id": "attrs__supply_expansion_20260526__052"
+    },
+    {
+      "old_gate_label": "reference_pass",
+      "profile_id": "py39_pytest_lt5_pythonpath",
+      "repo_id": "attrs",
+      "returncode": 4,
+      "stderr_tail_hash": "ab9baa1950cc",
+      "stdout_tail_hash": "e3b0c44298fc",
+      "subgate_label": "reference_import_failed",
+      "task_id": "attrs__supply_expansion_20260526__052"
+    },
+    {
+      "old_gate_label": "reference_pass",
+      "profile_id": "py37_pytest4_pythonpath",
+      "repo_id": "attrs",
+      "returncode": 2,
+      "stderr_tail_hash": "e1eea0c2a4ef",
+      "stdout_tail_hash": "e3b0c44298fc",
+      "subgate_label": "reference_environment_unavailable",
+      "task_id": "attrs__supply_expansion_20260526__052"
+    },
+    {
+      "old_gate_label": "reference_pass",
+      "profile_id": "py310_pytest7_editable",
+      "repo_id": "attrs",
+      "returncode": 1,
+      "stderr_tail_hash": "bb2ba1e9794f",
+      "stdout_tail_hash": "e3b0c44298fc",
+      "subgate_label": "reference_install_failed",
+      "task_id": "attrs__supply_expansion_20260526__052"
+    },
+    {
+      "old_gate_label": "reference_pass",
+      "profile_id": "py311_current_editable",
+      "repo_id": "attrs",
+      "returncode": 1,
+      "stderr_tail_hash": "bb2ba1e9794f",
+      "stdout_tail_hash": "e3b0c44298fc",
+      "subgate_label": "reference_install_failed",
+      "task_id": "attrs__supply_expansion_20260526__065"
+    },
+    {
+      "old_gate_label": "reference_pass",
+      "profile_id": "py38_pytest_lt4_pythonpath",
+      "repo_id": "attrs",
+      "returncode": 4,
+      "stderr_tail_hash": "6a91755087c0",
+      "stdout_tail_hash": "e3b0c44298fc",
+      "subgate_label": "reference_import_failed",
+      "task_id": "attrs__supply_expansion_20260526__065"
+    },
+    {
+      "old_gate_label": "reference_pass",
+      "profile_id": "py39_pytest_lt5_pythonpath",
+      "repo_id": "attrs",
+      "returncode": 4,
+      "stderr_tail_hash": "7dbc06ca75ee",
+      "stdout_tail_hash": "e3b0c44298fc",
+      "subgate_label": "reference_import_failed",
+      "task_id": "attrs__supply_expansion_20260526__065"
+    },
+    {
+      "old_gate_label": "reference_pass",
+      "profile_id": "py37_pytest4_pythonpath",
+      "repo_id": "attrs",
+      "returncode": 2,
+      "stderr_tail_hash": "e1eea0c2a4ef",
+      "stdout_tail_hash": "e3b0c44298fc",
+      "subgate_label": "reference_environment_unavailable",
+      "task_id": "attrs__supply_expansion_20260526__065"
+    },
+    {
+      "old_gate_label": "reference_pass",
+      "profile_id": "py310_pytest7_editable",
+      "repo_id": "attrs",
+      "returncode": 1,
+      "stderr_tail_hash": "bb2ba1e9794f",
+      "stdout_tail_hash": "e3b0c44298fc",
+      "subgate_label": "reference_install_failed",
+      "task_id": "attrs__supply_expansion_20260526__065"
+    },
+    {
+      "old_gate_label": "reference_pass",
+      "profile_id": "py311_current_editable",
+      "repo_id": "attrs",
+      "returncode": 1,
+      "stderr_tail_hash": "bb2ba1e9794f",
+      "stdout_tail_hash": "e3b0c44298fc",
+      "subgate_label": "reference_install_failed",
+      "task_id": "attrs__supply_expansion_20260526__069"
+    },
+    {
+      "old_gate_label": "reference_pass",
+      "profile_id": "py38_pytest_lt4_pythonpath",
+      "repo_id": "attrs",
+      "returncode": 2,
+      "stderr_tail_hash": "7f1f601082bb",
+      "stdout_tail_hash": "1bcf4e026fdc",
+      "subgate_label": "reference_collect_failed",
+      "task_id": "attrs__supply_expansion_20260526__069"
+    },
+    {
+      "old_gate_label": "reference_pass",
+      "profile_id": "py39_pytest_lt5_pythonpath",
+      "repo_id": "attrs",
+      "returncode": 2,
+      "stderr_tail_hash": "9675203eee00",
+      "stdout_tail_hash": "1bcf4e026fdc",
+      "subgate_label": "reference_collect_failed",
+      "task_id": "attrs__supply_expansion_20260526__069"
+    },
+    {
+      "old_gate_label": "reference_pass",
+      "profile_id": "py37_pytest4_pythonpath",
+      "repo_id": "attrs",
+      "returncode": 2,
+      "stderr_tail_hash": "e1eea0c2a4ef",
+      "stdout_tail_hash": "e3b0c44298fc",
+      "subgate_label": "reference_environment_unavailable",
+      "task_id": "attrs__supply_expansion_20260526__069"
+    },
+    {
+      "old_gate_label": "reference_pass",
+      "profile_id": "py310_pytest7_editable",
+      "repo_id": "attrs",
+      "returncode": 1,
+      "stderr_tail_hash": "bb2ba1e9794f",
+      "stdout_tail_hash": "e3b0c44298fc",
+      "subgate_label": "reference_install_failed",
+      "task_id": "attrs__supply_expansion_20260526__069"
+    },
+    {
+      "old_gate_label": "reference_pass",
+      "profile_id": "py311_current_editable",
+      "repo_id": "attrs",
+      "returncode": 1,
+      "stderr_tail_hash": "bb2ba1e9794f",
+      "stdout_tail_hash": "e3b0c44298fc",
+      "subgate_label": "reference_install_failed",
+      "task_id": "attrs__supply_expansion_20260526__070"
+    },
+    {
+      "old_gate_label": "reference_pass",
+      "profile_id": "py38_pytest_lt4_pythonpath",
+      "repo_id": "attrs",
+      "returncode": 2,
+      "stderr_tail_hash": "ab8bc223f0ce",
+      "stdout_tail_hash": "581744d03046",
+      "subgate_label": "reference_collect_failed",
+      "task_id": "attrs__supply_expansion_20260526__070"
+    },
+    {
+      "old_gate_label": "reference_pass",
+      "profile_id": "py39_pytest_lt5_pythonpath",
+      "repo_id": "attrs",
+      "returncode": 2,
+      "stderr_tail_hash": "9675203eee00",
+      "stdout_tail_hash": "581744d03046",
+      "subgate_label": "reference_collect_failed",
+      "task_id": "attrs__supply_expansion_20260526__070"
+    },
+    {
+      "old_gate_label": "reference_pass",
+      "profile_id": "py37_pytest4_pythonpath",
+      "repo_id": "attrs",
+      "returncode": 2,
+      "stderr_tail_hash": "e1eea0c2a4ef",
+      "stdout_tail_hash": "e3b0c44298fc",
+      "subgate_label": "reference_environment_unavailable",
+      "task_id": "attrs__supply_expansion_20260526__070"
+    },
+    {
+      "old_gate_label": "reference_pass",
+      "profile_id": "py310_pytest7_editable",
+      "repo_id": "attrs",
+      "returncode": 1,
+      "stderr_tail_hash": "bb2ba1e9794f",
+      "stdout_tail_hash": "e3b0c44298fc",
+      "subgate_label": "reference_install_failed",
+      "task_id": "attrs__supply_expansion_20260526__070"
+    },
+    {
+      "old_gate_label": "reference_pass",
+      "profile_id": "py311_current_editable",
+      "repo_id": "attrs",
+      "returncode": 1,
+      "stderr_tail_hash": "bb2ba1e9794f",
+      "stdout_tail_hash": "e3b0c44298fc",
+      "subgate_label": "reference_install_failed",
+      "task_id": "attrs__supply_expansion_20260526__074"
+    },
+    {
+      "old_gate_label": "reference_pass",
+      "profile_id": "py38_pytest_lt4_pythonpath",
+      "repo_id": "attrs",
+      "returncode": 2,
+      "stderr_tail_hash": "3bc9c332ab86",
+      "stdout_tail_hash": "8e94869a7784",
+      "subgate_label": "reference_collect_failed",
+      "task_id": "attrs__supply_expansion_20260526__074"
+    },
+    {
+      "old_gate_label": "reference_pass",
+      "profile_id": "py39_pytest_lt5_pythonpath",
+      "repo_id": "attrs",
+      "returncode": 2,
+      "stderr_tail_hash": "c303b6f2d622",
+      "stdout_tail_hash": "8e94869a7784",
+      "subgate_label": "reference_collect_failed",
+      "task_id": "attrs__supply_expansion_20260526__074"
+    },
+    {
+      "old_gate_label": "reference_pass",
+      "profile_id": "py37_pytest4_pythonpath",
+      "repo_id": "attrs",
+      "returncode": 2,
+      "stderr_tail_hash": "e1eea0c2a4ef",
+      "stdout_tail_hash": "e3b0c44298fc",
+      "subgate_label": "reference_environment_unavailable",
+      "task_id": "attrs__supply_expansion_20260526__074"
+    },
+    {
+      "old_gate_label": "reference_pass",
+      "profile_id": "py310_pytest7_editable",
+      "repo_id": "attrs",
+      "returncode": 1,
+      "stderr_tail_hash": "bb2ba1e9794f",
+      "stdout_tail_hash": "e3b0c44298fc",
+      "subgate_label": "reference_install_failed",
+      "task_id": "attrs__supply_expansion_20260526__074"
+    },
+    {
+      "old_gate_label": "reference_pass",
+      "profile_id": "py311_current_editable",
+      "repo_id": "attrs",
+      "returncode": 1,
+      "stderr_tail_hash": "bb2ba1e9794f",
+      "stdout_tail_hash": "e3b0c44298fc",
+      "subgate_label": "reference_install_failed",
+      "task_id": "attrs__supply_expansion_20260526__076"
+    },
+    {
+      "old_gate_label": "reference_pass",
+      "profile_id": "py38_pytest_lt4_pythonpath",
+      "repo_id": "attrs",
+      "returncode": 1,
+      "stderr_tail_hash": "79d40ea2956a",
+      "stdout_tail_hash": "e3b0c44298fc",
+      "subgate_label": "reference_environment_unavailable",
+      "task_id": "attrs__supply_expansion_20260526__076"
+    },
+    {
+      "old_gate_label": "reference_pass",
+      "profile_id": "py39_pytest_lt5_pythonpath",
+      "repo_id": "attrs",
+      "returncode": 1,
+      "stderr_tail_hash": "79d40ea2956a",
+      "stdout_tail_hash": "e3b0c44298fc",
+      "subgate_label": "reference_environment_unavailable",
+      "task_id": "attrs__supply_expansion_20260526__076"
+    },
+    {
+      "old_gate_label": "reference_pass",
+      "profile_id": "py37_pytest4_pythonpath",
+      "repo_id": "attrs",
+      "returncode": 2,
+      "stderr_tail_hash": "e1eea0c2a4ef",
+      "stdout_tail_hash": "e3b0c44298fc",
+      "subgate_label": "reference_environment_unavailable",
+      "task_id": "attrs__supply_expansion_20260526__076"
+    },
+    {
+      "old_gate_label": "reference_pass",
+      "profile_id": "py310_pytest7_editable",
+      "repo_id": "attrs",
+      "returncode": 1,
+      "stderr_tail_hash": "bb2ba1e9794f",
+      "stdout_tail_hash": "e3b0c44298fc",
+      "subgate_label": "reference_install_failed",
+      "task_id": "attrs__supply_expansion_20260526__076"
+    },
+    {
+      "old_gate_label": "reference_pass",
+      "profile_id": "py311_current_editable",
+      "repo_id": "attrs",
+      "returncode": 1,
+      "stderr_tail_hash": "bb2ba1e9794f",
+      "stdout_tail_hash": "e3b0c44298fc",
+      "subgate_label": "reference_install_failed",
+      "task_id": "attrs__supply_expansion_20260526__077"
+    },
+    {
+      "old_gate_label": "reference_pass",
+      "profile_id": "py38_pytest_lt4_pythonpath",
+      "repo_id": "attrs",
+      "returncode": 1,
+      "stderr_tail_hash": "d3b8c65103fd",
+      "stdout_tail_hash": "e3b0c44298fc",
+      "subgate_label": "reference_environment_unavailable",
+      "task_id": "attrs__supply_expansion_20260526__077"
+    },
+    {
+      "old_gate_label": "reference_pass",
+      "profile_id": "py39_pytest_lt5_pythonpath",
+      "repo_id": "attrs",
+      "returncode": 1,
+      "stderr_tail_hash": "d3b8c65103fd",
+      "stdout_tail_hash": "e3b0c44298fc",
+      "subgate_label": "reference_environment_unavailable",
+      "task_id": "attrs__supply_expansion_20260526__077"
+    },
+    {
+      "old_gate_label": "reference_pass",
+      "profile_id": "py37_pytest4_pythonpath",
+      "repo_id": "attrs",
+      "returncode": 2,
+      "stderr_tail_hash": "e1eea0c2a4ef",
+      "stdout_tail_hash": "e3b0c44298fc",
+      "subgate_label": "reference_environment_unavailable",
+      "task_id": "attrs__supply_expansion_20260526__077"
+    },
+    {
+      "old_gate_label": "reference_pass",
+      "profile_id": "py310_pytest7_editable",
+      "repo_id": "attrs",
+      "returncode": 1,
+      "stderr_tail_hash": "bb2ba1e9794f",
+      "stdout_tail_hash": "e3b0c44298fc",
+      "subgate_label": "reference_install_failed",
+      "task_id": "attrs__supply_expansion_20260526__077"
+    },
+    {
+      "old_gate_label": "reference_pass",
+      "profile_id": "py311_current_editable",
+      "repo_id": "attrs",
+      "returncode": 1,
+      "stderr_tail_hash": "bb2ba1e9794f",
+      "stdout_tail_hash": "e3b0c44298fc",
+      "subgate_label": "reference_install_failed",
+      "task_id": "attrs__supply_expansion_20260526__078"
+    },
+    {
+      "old_gate_label": "reference_pass",
+      "profile_id": "py38_pytest_lt4_pythonpath",
+      "repo_id": "attrs",
+      "returncode": 1,
+      "stderr_tail_hash": "94918fc54882",
+      "stdout_tail_hash": "e3b0c44298fc",
+      "subgate_label": "reference_environment_unavailable",
+      "task_id": "attrs__supply_expansion_20260526__078"
+    },
+    {
+      "old_gate_label": "reference_pass",
+      "profile_id": "py39_pytest_lt5_pythonpath",
+      "repo_id": "attrs",
+      "returncode": 1,
+      "stderr_tail_hash": "94918fc54882",
+      "stdout_tail_hash": "e3b0c44298fc",
+      "subgate_label": "reference_environment_unavailable",
+      "task_id": "attrs__supply_expansion_20260526__078"
+    },
+    {
+      "old_gate_label": "reference_pass",
+      "profile_id": "py37_pytest4_pythonpath",
+      "repo_id": "attrs",
+      "returncode": 2,
+      "stderr_tail_hash": "e1eea0c2a4ef",
+      "stdout_tail_hash": "e3b0c44298fc",
+      "subgate_label": "reference_environment_unavailable",
+      "task_id": "attrs__supply_expansion_20260526__078"
+    },
+    {
+      "old_gate_label": "reference_pass",
+      "profile_id": "py310_pytest7_editable",
+      "repo_id": "attrs",
+      "returncode": 1,
+      "stderr_tail_hash": "bb2ba1e9794f",
+      "stdout_tail_hash": "e3b0c44298fc",
+      "subgate_label": "reference_install_failed",
+      "task_id": "attrs__supply_expansion_20260526__078"
+    },
+    {
+      "old_gate_label": "reference_pass",
+      "profile_id": "py311_current_editable",
+      "repo_id": "attrs",
+      "returncode": 1,
+      "stderr_tail_hash": "bb2ba1e9794f",
+      "stdout_tail_hash": "e3b0c44298fc",
+      "subgate_label": "reference_install_failed",
+      "task_id": "attrs__supply_expansion_20260526__080"
+    },
+    {
+      "old_gate_label": "reference_pass",
+      "profile_id": "py38_pytest_lt4_pythonpath",
+      "repo_id": "attrs",
+      "returncode": 1,
+      "stderr_tail_hash": "97807272908e",
+      "stdout_tail_hash": "e3b0c44298fc",
+      "subgate_label": "reference_environment_unavailable",
+      "task_id": "attrs__supply_expansion_20260526__080"
+    },
+    {
+      "old_gate_label": "reference_pass",
+      "profile_id": "py39_pytest_lt5_pythonpath",
+      "repo_id": "attrs",
+      "returncode": 1,
+      "stderr_tail_hash": "97807272908e",
+      "stdout_tail_hash": "e3b0c44298fc",
+      "subgate_label": "reference_environment_unavailable",
+      "task_id": "attrs__supply_expansion_20260526__080"
+    },
+    {
+      "old_gate_label": "reference_pass",
+      "profile_id": "py37_pytest4_pythonpath",
+      "repo_id": "attrs",
+      "returncode": 2,
+      "stderr_tail_hash": "e1eea0c2a4ef",
+      "stdout_tail_hash": "e3b0c44298fc",
+      "subgate_label": "reference_environment_unavailable",
+      "task_id": "attrs__supply_expansion_20260526__080"
+    },
+    {
+      "old_gate_label": "reference_pass",
+      "profile_id": "py310_pytest7_editable",
+      "repo_id": "attrs",
+      "returncode": 1,
+      "stderr_tail_hash": "bb2ba1e9794f",
+      "stdout_tail_hash": "e3b0c44298fc",
+      "subgate_label": "reference_install_failed",
+      "task_id": "attrs__supply_expansion_20260526__080"
+    },
+    {
+      "old_gate_label": "reference_pass",
+      "profile_id": "py311_current_editable",
+      "repo_id": "attrs",
+      "returncode": 1,
+      "stderr_tail_hash": "bb2ba1e9794f",
+      "stdout_tail_hash": "e3b0c44298fc",
+      "subgate_label": "reference_install_failed",
+      "task_id": "attrs__supply_expansion_20260526__085"
+    },
+    {
+      "old_gate_label": "reference_pass",
+      "profile_id": "py38_pytest_lt4_pythonpath",
+      "repo_id": "attrs",
+      "returncode": 1,
+      "stderr_tail_hash": "e9e7c97b690c",
+      "stdout_tail_hash": "e3b0c44298fc",
+      "subgate_label": "reference_unknown_failed",
+      "task_id": "attrs__supply_expansion_20260526__085"
+    },
+    {
+      "old_gate_label": "reference_pass",
+      "profile_id": "py39_pytest_lt5_pythonpath",
+      "repo_id": "attrs",
+      "returncode": 1,
+      "stderr_tail_hash": "37e9739f03a9",
+      "stdout_tail_hash": "e3b0c44298fc",
+      "subgate_label": "reference_unknown_failed",
+      "task_id": "attrs__supply_expansion_20260526__085"
+    },
+    {
+      "old_gate_label": "reference_pass",
+      "profile_id": "py37_pytest4_pythonpath",
+      "repo_id": "attrs",
+      "returncode": 2,
+      "stderr_tail_hash": "e1eea0c2a4ef",
+      "stdout_tail_hash": "e3b0c44298fc",
+      "subgate_label": "reference_environment_unavailable",
+      "task_id": "attrs__supply_expansion_20260526__085"
+    },
+    {
+      "old_gate_label": "reference_pass",
+      "profile_id": "py310_pytest7_editable",
+      "repo_id": "attrs",
+      "returncode": 1,
+      "stderr_tail_hash": "bb2ba1e9794f",
+      "stdout_tail_hash": "e3b0c44298fc",
+      "subgate_label": "reference_install_failed",
+      "task_id": "attrs__supply_expansion_20260526__085"
+    },
+    {
+      "old_gate_label": "reference_pass",
+      "profile_id": "py311_current_editable",
+      "repo_id": "attrs",
+      "returncode": 1,
+      "stderr_tail_hash": "bb2ba1e9794f",
+      "stdout_tail_hash": "e3b0c44298fc",
+      "subgate_label": "reference_install_failed",
+      "task_id": "attrs__supply_expansion_20260526__087"
+    },
+    {
+      "old_gate_label": "reference_pass",
+      "profile_id": "py38_pytest_lt4_pythonpath",
+      "repo_id": "attrs",
+      "returncode": 1,
+      "stderr_tail_hash": "5c5085474fe1",
+      "stdout_tail_hash": "e3b0c44298fc",
+      "subgate_label": "reference_unknown_failed",
+      "task_id": "attrs__supply_expansion_20260526__087"
+    },
+    {
+      "old_gate_label": "reference_pass",
+      "profile_id": "py39_pytest_lt5_pythonpath",
+      "repo_id": "attrs",
+      "returncode": 1,
+      "stderr_tail_hash": "984e768c3c60",
+      "stdout_tail_hash": "e3b0c44298fc",
+      "subgate_label": "reference_unknown_failed",
+      "task_id": "attrs__supply_expansion_20260526__087"
+    },
+    {
+      "old_gate_label": "reference_pass",
+      "profile_id": "py37_pytest4_pythonpath",
+      "repo_id": "attrs",
+      "returncode": 2,
+      "stderr_tail_hash": "e1eea0c2a4ef",
+      "stdout_tail_hash": "e3b0c44298fc",
+      "subgate_label": "reference_environment_unavailable",
+      "task_id": "attrs__supply_expansion_20260526__087"
+    },
+    {
+      "old_gate_label": "reference_pass",
+      "profile_id": "py310_pytest7_editable",
+      "repo_id": "attrs",
+      "returncode": 1,
+      "stderr_tail_hash": "bb2ba1e9794f",
+      "stdout_tail_hash": "e3b0c44298fc",
+      "subgate_label": "reference_install_failed",
+      "task_id": "attrs__supply_expansion_20260526__087"
+    },
+    {
+      "old_gate_label": "reference_pass",
+      "profile_id": "py311_current_editable",
+      "repo_id": "attrs",
+      "returncode": 1,
+      "stderr_tail_hash": "bb2ba1e9794f",
+      "stdout_tail_hash": "e3b0c44298fc",
+      "subgate_label": "reference_install_failed",
+      "task_id": "attrs__supply_expansion_20260526__088"
+    },
+    {
+      "old_gate_label": "reference_pass",
+      "profile_id": "py38_pytest_lt4_pythonpath",
+      "repo_id": "attrs",
+      "returncode": 1,
+      "stderr_tail_hash": "5c5085474fe1",
+      "stdout_tail_hash": "e3b0c44298fc",
+      "subgate_label": "reference_unknown_failed",
+      "task_id": "attrs__supply_expansion_20260526__088"
+    },
+    {
+      "old_gate_label": "reference_pass",
+      "profile_id": "py39_pytest_lt5_pythonpath",
+      "repo_id": "attrs",
+      "returncode": 1,
+      "stderr_tail_hash": "8f8614ba8320",
+      "stdout_tail_hash": "e3b0c44298fc",
+      "subgate_label": "reference_unknown_failed",
+      "task_id": "attrs__supply_expansion_20260526__088"
+    },
+    {
+      "old_gate_label": "reference_pass",
+      "profile_id": "py37_pytest4_pythonpath",
+      "repo_id": "attrs",
+      "returncode": 2,
+      "stderr_tail_hash": "e1eea0c2a4ef",
+      "stdout_tail_hash": "e3b0c44298fc",
+      "subgate_label": "reference_environment_unavailable",
+      "task_id": "attrs__supply_expansion_20260526__088"
+    },
+    {
+      "old_gate_label": "reference_pass",
+      "profile_id": "py310_pytest7_editable",
+      "repo_id": "attrs",
+      "returncode": 1,
+      "stderr_tail_hash": "bb2ba1e9794f",
+      "stdout_tail_hash": "e3b0c44298fc",
+      "subgate_label": "reference_install_failed",
+      "task_id": "attrs__supply_expansion_20260526__088"
+    },
+    {
+      "old_gate_label": "reference_pass",
+      "profile_id": "py311_current_editable",
+      "repo_id": "attrs",
+      "returncode": 1,
+      "stderr_tail_hash": "bb2ba1e9794f",
+      "stdout_tail_hash": "e3b0c44298fc",
+      "subgate_label": "reference_install_failed",
+      "task_id": "attrs__supply_expansion_20260526__090"
+    },
+    {
+      "old_gate_label": "reference_pass",
+      "profile_id": "py38_pytest_lt4_pythonpath",
+      "repo_id": "attrs",
+      "returncode": 2,
+      "stderr_tail_hash": "e3b0c44298fc",
+      "stdout_tail_hash": "adcdcb1884a5",
+      "subgate_label": "reference_collect_failed",
+      "task_id": "attrs__supply_expansion_20260526__090"
+    },
+    {
+      "old_gate_label": "reference_pass",
+      "profile_id": "py39_pytest_lt5_pythonpath",
+      "repo_id": "attrs",
+      "returncode": 2,
+      "stderr_tail_hash": "e3b0c44298fc",
+      "stdout_tail_hash": "adcdcb1884a5",
+      "subgate_label": "reference_collect_failed",
+      "task_id": "attrs__supply_expansion_20260526__090"
+    },
+    {
+      "old_gate_label": "reference_pass",
+      "profile_id": "py37_pytest4_pythonpath",
+      "repo_id": "attrs",
+      "returncode": 2,
+      "stderr_tail_hash": "e1eea0c2a4ef",
+      "stdout_tail_hash": "e3b0c44298fc",
+      "subgate_label": "reference_environment_unavailable",
+      "task_id": "attrs__supply_expansion_20260526__090"
+    },
+    {
+      "old_gate_label": "reference_pass",
+      "profile_id": "py310_pytest7_editable",
+      "repo_id": "attrs",
+      "returncode": 1,
+      "stderr_tail_hash": "bb2ba1e9794f",
+      "stdout_tail_hash": "e3b0c44298fc",
+      "subgate_label": "reference_install_failed",
+      "task_id": "attrs__supply_expansion_20260526__090"
+    },
+    {
+      "old_gate_label": "reference_pass",
+      "profile_id": "py311_current_editable",
+      "repo_id": "attrs",
+      "returncode": 1,
+      "stderr_tail_hash": "bb2ba1e9794f",
+      "stdout_tail_hash": "e3b0c44298fc",
+      "subgate_label": "reference_install_failed",
+      "task_id": "attrs__supply_expansion_20260526__072"
+    },
+    {
+      "old_gate_label": "reference_pass",
+      "profile_id": "py38_pytest_lt4_pythonpath",
+      "repo_id": "attrs",
+      "returncode": 2,
+      "stderr_tail_hash": "e3b0c44298fc",
+      "stdout_tail_hash": "fb4335007570",
+      "subgate_label": "reference_collect_failed",
+      "task_id": "attrs__supply_expansion_20260526__072"
+    },
+    {
+      "old_gate_label": "reference_pass",
+      "profile_id": "py39_pytest_lt5_pythonpath",
+      "repo_id": "attrs",
+      "returncode": 2,
+      "stderr_tail_hash": "e3b0c44298fc",
+      "stdout_tail_hash": "fb4335007570",
+      "subgate_label": "reference_collect_failed",
+      "task_id": "attrs__supply_expansion_20260526__072"
+    },
+    {
+      "old_gate_label": "reference_pass",
+      "profile_id": "py37_pytest4_pythonpath",
+      "repo_id": "attrs",
+      "returncode": 2,
+      "stderr_tail_hash": "e1eea0c2a4ef",
+      "stdout_tail_hash": "e3b0c44298fc",
+      "subgate_label": "reference_environment_unavailable",
+      "task_id": "attrs__supply_expansion_20260526__072"
+    },
+    {
+      "old_gate_label": "reference_pass",
+      "profile_id": "py310_pytest7_editable",
+      "repo_id": "attrs",
+      "returncode": 1,
+      "stderr_tail_hash": "bb2ba1e9794f",
+      "stdout_tail_hash": "e3b0c44298fc",
+      "subgate_label": "reference_install_failed",
+      "task_id": "attrs__supply_expansion_20260526__072"
+    },
+    {
+      "old_gate_label": "reference_pass",
+      "profile_id": "py311_current_editable",
+      "repo_id": "attrs",
+      "returncode": 1,
+      "stderr_tail_hash": "bb2ba1e9794f",
+      "stdout_tail_hash": "e3b0c44298fc",
+      "subgate_label": "reference_install_failed",
+      "task_id": "attrs__supply_expansion_20260526__073"
+    },
+    {
+      "old_gate_label": "reference_pass",
+      "profile_id": "py38_pytest_lt4_pythonpath",
+      "repo_id": "attrs",
+      "returncode": 2,
+      "stderr_tail_hash": "e3b0c44298fc",
+      "stdout_tail_hash": "f39e42e3c529",
+      "subgate_label": "reference_collect_failed",
+      "task_id": "attrs__supply_expansion_20260526__073"
+    },
+    {
+      "old_gate_label": "reference_pass",
+      "profile_id": "py39_pytest_lt5_pythonpath",
+      "repo_id": "attrs",
+      "returncode": 2,
+      "stderr_tail_hash": "e3b0c44298fc",
+      "stdout_tail_hash": "bc5e5bce4bb1",
+      "subgate_label": "reference_collect_failed",
+      "task_id": "attrs__supply_expansion_20260526__073"
+    },
+    {
+      "old_gate_label": "reference_pass",
+      "profile_id": "py37_pytest4_pythonpath",
+      "repo_id": "attrs",
+      "returncode": 2,
+      "stderr_tail_hash": "e1eea0c2a4ef",
+      "stdout_tail_hash": "e3b0c44298fc",
+      "subgate_label": "reference_environment_unavailable",
+      "task_id": "attrs__supply_expansion_20260526__073"
+    },
+    {
+      "old_gate_label": "reference_pass",
+      "profile_id": "py310_pytest7_editable",
+      "repo_id": "attrs",
+      "returncode": 1,
+      "stderr_tail_hash": "bb2ba1e9794f",
+      "stdout_tail_hash": "e3b0c44298fc",
+      "subgate_label": "reference_install_failed",
+      "task_id": "attrs__supply_expansion_20260526__073"
+    },
+    {
+      "old_gate_label": "reference_pass",
+      "profile_id": "py311_current_editable",
+      "repo_id": "attrs",
+      "returncode": 1,
+      "stderr_tail_hash": "bb2ba1e9794f",
+      "stdout_tail_hash": "e3b0c44298fc",
+      "subgate_label": "reference_install_failed",
+      "task_id": "attrs__supply_expansion_20260526__075"
+    },
+    {
+      "old_gate_label": "reference_pass",
+      "profile_id": "py38_pytest_lt4_pythonpath",
+      "repo_id": "attrs",
+      "returncode": 2,
+      "stderr_tail_hash": "3bc9c332ab86",
+      "stdout_tail_hash": "7b4fbd5b2dd1",
+      "subgate_label": "reference_collect_failed",
+      "task_id": "attrs__supply_expansion_20260526__075"
+    },
+    {
+      "old_gate_label": "reference_pass",
+      "profile_id": "py39_pytest_lt5_pythonpath",
+      "repo_id": "attrs",
+      "returncode": 2,
+      "stderr_tail_hash": "9675203eee00",
+      "stdout_tail_hash": "7b4fbd5b2dd1",
+      "subgate_label": "reference_collect_failed",
+      "task_id": "attrs__supply_expansion_20260526__075"
+    },
+    {
+      "old_gate_label": "reference_pass",
+      "profile_id": "py37_pytest4_pythonpath",
+      "repo_id": "attrs",
+      "returncode": 2,
+      "stderr_tail_hash": "e1eea0c2a4ef",
+      "stdout_tail_hash": "e3b0c44298fc",
+      "subgate_label": "reference_environment_unavailable",
+      "task_id": "attrs__supply_expansion_20260526__075"
+    },
+    {
+      "old_gate_label": "reference_pass",
+      "profile_id": "py310_pytest7_editable",
+      "repo_id": "attrs",
+      "returncode": 1,
+      "stderr_tail_hash": "bb2ba1e9794f",
+      "stdout_tail_hash": "e3b0c44298fc",
+      "subgate_label": "reference_install_failed",
+      "task_id": "attrs__supply_expansion_20260526__075"
+    },
+    {
+      "old_gate_label": "reference_pass",
+      "profile_id": "py311_current_editable",
+      "repo_id": "attrs",
+      "returncode": 1,
+      "stderr_tail_hash": "bb2ba1e9794f",
+      "stdout_tail_hash": "e3b0c44298fc",
+      "subgate_label": "reference_install_failed",
+      "task_id": "attrs__supply_expansion_20260526__081"
+    },
+    {
+      "old_gate_label": "reference_pass",
+      "profile_id": "py38_pytest_lt4_pythonpath",
+      "repo_id": "attrs",
+      "returncode": 1,
+      "stderr_tail_hash": "8116100e6817",
+      "stdout_tail_hash": "e3b0c44298fc",
+      "subgate_label": "reference_environment_unavailable",
+      "task_id": "attrs__supply_expansion_20260526__081"
+    },
+    {
+      "old_gate_label": "reference_pass",
+      "profile_id": "py39_pytest_lt5_pythonpath",
+      "repo_id": "attrs",
+      "returncode": 1,
+      "stderr_tail_hash": "8116100e6817",
+      "stdout_tail_hash": "e3b0c44298fc",
+      "subgate_label": "reference_environment_unavailable",
+      "task_id": "attrs__supply_expansion_20260526__081"
+    },
+    {
+      "old_gate_label": "reference_pass",
+      "profile_id": "py37_pytest4_pythonpath",
+      "repo_id": "attrs",
+      "returncode": 2,
+      "stderr_tail_hash": "e1eea0c2a4ef",
+      "stdout_tail_hash": "e3b0c44298fc",
+      "subgate_label": "reference_environment_unavailable",
+      "task_id": "attrs__supply_expansion_20260526__081"
+    },
+    {
+      "old_gate_label": "reference_pass",
+      "profile_id": "py310_pytest7_editable",
+      "repo_id": "attrs",
+      "returncode": 1,
+      "stderr_tail_hash": "bb2ba1e9794f",
+      "stdout_tail_hash": "e3b0c44298fc",
+      "subgate_label": "reference_install_failed",
+      "task_id": "attrs__supply_expansion_20260526__081"
+    },
+    {
+      "old_gate_label": "reference_pass",
+      "profile_id": "py311_current_editable",
+      "repo_id": "attrs",
+      "returncode": 1,
+      "stderr_tail_hash": "bb2ba1e9794f",
+      "stdout_tail_hash": "e3b0c44298fc",
+      "subgate_label": "reference_install_failed",
+      "task_id": "attrs__supply_expansion_20260526__082"
+    },
+    {
+      "old_gate_label": "reference_pass",
+      "profile_id": "py38_pytest_lt4_pythonpath",
+      "repo_id": "attrs",
+      "returncode": 1,
+      "stderr_tail_hash": "a308ef468aea",
+      "stdout_tail_hash": "e3b0c44298fc",
+      "subgate_label": "reference_unknown_failed",
+      "task_id": "attrs__supply_expansion_20260526__082"
+    },
+    {
+      "old_gate_label": "reference_pass",
+      "profile_id": "py39_pytest_lt5_pythonpath",
+      "repo_id": "attrs",
+      "returncode": 1,
+      "stderr_tail_hash": "2f8c88fa0d00",
+      "stdout_tail_hash": "e3b0c44298fc",
+      "subgate_label": "reference_unknown_failed",
+      "task_id": "attrs__supply_expansion_20260526__082"
+    },
+    {
+      "old_gate_label": "reference_pass",
+      "profile_id": "py37_pytest4_pythonpath",
+      "repo_id": "attrs",
+      "returncode": 2,
+      "stderr_tail_hash": "e1eea0c2a4ef",
+      "stdout_tail_hash": "e3b0c44298fc",
+      "subgate_label": "reference_environment_unavailable",
+      "task_id": "attrs__supply_expansion_20260526__082"
+    },
+    {
+      "old_gate_label": "reference_pass",
+      "profile_id": "py310_pytest7_editable",
+      "repo_id": "attrs",
+      "returncode": 1,
+      "stderr_tail_hash": "bb2ba1e9794f",
+      "stdout_tail_hash": "e3b0c44298fc",
+      "subgate_label": "reference_install_failed",
+      "task_id": "attrs__supply_expansion_20260526__082"
+    }
+  ],
+  "final_subgate_counts": {
+    "reference_collect_failed": 10,
+    "reference_import_failed": 8,
+    "reference_install_failed": 10,
+    "reference_pass": 8
+  },
+  "generated_at": "2026-05-26T09:06:13Z",
+  "install_import_collection_or_environment_failures": 28,
+  "old_gate_label": "reference_pass",
+  "production_classification_change_recommended": true,
+  "recommended_change": "store benchmark-side reference subgate labels alongside the coarse first_failing_gate",
+  "rows": [
+    {
+      "final_subgate_label": "reference_pass",
+      "repo_id": "attrs",
+      "task_id": "attrs__supply_expansion_20260526__030",
+      "winning_profile_id": "py38_pytest_lt4_pythonpath"
+    },
+    {
+      "final_subgate_label": "reference_pass",
+      "repo_id": "attrs",
+      "task_id": "attrs__supply_expansion_20260526__037",
+      "winning_profile_id": "py38_pytest_lt4_pythonpath"
+    },
+    {
+      "final_subgate_label": "reference_pass",
+      "repo_id": "attrs",
+      "task_id": "attrs__supply_expansion_20260526__039",
+      "winning_profile_id": "py38_pytest_lt4_pythonpath"
+    },
+    {
+      "final_subgate_label": "reference_collect_failed",
+      "repo_id": "attrs",
+      "task_id": "attrs__supply_expansion_20260526__042",
+      "winning_profile_id": ""
+    },
+    {
+      "final_subgate_label": "reference_collect_failed",
+      "repo_id": "attrs",
+      "task_id": "attrs__supply_expansion_20260526__043",
+      "winning_profile_id": ""
+    },
+    {
+      "final_subgate_label": "reference_collect_failed",
+      "repo_id": "attrs",
+      "task_id": "attrs__supply_expansion_20260526__044",
+      "winning_profile_id": ""
+    },
+    {
+      "final_subgate_label": "reference_install_failed",
+      "repo_id": "boltons",
+      "task_id": "boltons__supply_expansion_20260526__086",
+      "winning_profile_id": ""
+    },
+    {
+      "final_subgate_label": "reference_pass",
+      "repo_id": "boltons",
+      "task_id": "boltons__supply_expansion_20260526__090",
+      "winning_profile_id": "py38_pytest_lt4_pythonpath"
+    },
+    {
+      "final_subgate_label": "reference_pass",
+      "repo_id": "boltons",
+      "task_id": "boltons__supply_expansion_20260526__091",
+      "winning_profile_id": "py38_pytest_lt4_pythonpath"
+    },
+    {
+      "final_subgate_label": "reference_pass",
+      "repo_id": "boltons",
+      "task_id": "boltons__supply_expansion_20260526__096",
+      "winning_profile_id": "py38_pytest_lt4_pythonpath"
+    },
+    {
+      "final_subgate_label": "reference_pass",
+      "repo_id": "boltons",
+      "task_id": "boltons__supply_expansion_20260526__097",
+      "winning_profile_id": "py38_pytest_lt4_pythonpath"
+    },
+    {
+      "final_subgate_label": "reference_pass",
+      "repo_id": "boltons",
+      "task_id": "boltons__supply_expansion_20260526__098",
+      "winning_profile_id": "py38_pytest_lt4_pythonpath"
+    },
+    {
+      "final_subgate_label": "reference_import_failed",
+      "repo_id": "attrs",
+      "task_id": "attrs__supply_expansion_20260526__045",
+      "winning_profile_id": ""
+    },
+    {
+      "final_subgate_label": "reference_import_failed",
+      "repo_id": "attrs",
+      "task_id": "attrs__supply_expansion_20260526__058",
+      "winning_profile_id": ""
+    },
+    {
+      "final_subgate_label": "reference_import_failed",
+      "repo_id": "attrs",
+      "task_id": "attrs__supply_expansion_20260526__059",
+      "winning_profile_id": ""
+    },
+    {
+      "final_subgate_label": "reference_import_failed",
+      "repo_id": "attrs",
+      "task_id": "attrs__supply_expansion_20260526__046",
+      "winning_profile_id": ""
+    },
+    {
+      "final_subgate_label": "reference_import_failed",
+      "repo_id": "attrs",
+      "task_id": "attrs__supply_expansion_20260526__049",
+      "winning_profile_id": ""
+    },
+    {
+      "final_subgate_label": "reference_import_failed",
+      "repo_id": "attrs",
+      "task_id": "attrs__supply_expansion_20260526__050",
+      "winning_profile_id": ""
+    },
+    {
+      "final_subgate_label": "reference_import_failed",
+      "repo_id": "attrs",
+      "task_id": "attrs__supply_expansion_20260526__052",
+      "winning_profile_id": ""
+    },
+    {
+      "final_subgate_label": "reference_import_failed",
+      "repo_id": "attrs",
+      "task_id": "attrs__supply_expansion_20260526__065",
+      "winning_profile_id": ""
+    },
+    {
+      "final_subgate_label": "reference_collect_failed",
+      "repo_id": "attrs",
+      "task_id": "attrs__supply_expansion_20260526__069",
+      "winning_profile_id": ""
+    },
+    {
+      "final_subgate_label": "reference_collect_failed",
+      "repo_id": "attrs",
+      "task_id": "attrs__supply_expansion_20260526__070",
+      "winning_profile_id": ""
+    },
+    {
+      "final_subgate_label": "reference_collect_failed",
+      "repo_id": "attrs",
+      "task_id": "attrs__supply_expansion_20260526__074",
+      "winning_profile_id": ""
+    },
+    {
+      "final_subgate_label": "reference_install_failed",
+      "repo_id": "attrs",
+      "task_id": "attrs__supply_expansion_20260526__076",
+      "winning_profile_id": ""
+    },
+    {
+      "final_subgate_label": "reference_install_failed",
+      "repo_id": "attrs",
+      "task_id": "attrs__supply_expansion_20260526__077",
+      "winning_profile_id": ""
+    },
+    {
+      "final_subgate_label": "reference_install_failed",
+      "repo_id": "attrs",
+      "task_id": "attrs__supply_expansion_20260526__078",
+      "winning_profile_id": ""
+    },
+    {
+      "final_subgate_label": "reference_install_failed",
+      "repo_id": "attrs",
+      "task_id": "attrs__supply_expansion_20260526__080",
+      "winning_profile_id": ""
+    },
+    {
+      "final_subgate_label": "reference_install_failed",
+      "repo_id": "attrs",
+      "task_id": "attrs__supply_expansion_20260526__085",
+      "winning_profile_id": ""
+    },
+    {
+      "final_subgate_label": "reference_install_failed",
+      "repo_id": "attrs",
+      "task_id": "attrs__supply_expansion_20260526__087",
+      "winning_profile_id": ""
+    },
+    {
+      "final_subgate_label": "reference_install_failed",
+      "repo_id": "attrs",
+      "task_id": "attrs__supply_expansion_20260526__088",
+      "winning_profile_id": ""
+    },
+    {
+      "final_subgate_label": "reference_collect_failed",
+      "repo_id": "attrs",
+      "task_id": "attrs__supply_expansion_20260526__090",
+      "winning_profile_id": ""
+    },
+    {
+      "final_subgate_label": "reference_collect_failed",
+      "repo_id": "attrs",
+      "task_id": "attrs__supply_expansion_20260526__072",
+      "winning_profile_id": ""
+    },
+    {
+      "final_subgate_label": "reference_collect_failed",
+      "repo_id": "attrs",
+      "task_id": "attrs__supply_expansion_20260526__073",
+      "winning_profile_id": ""
+    },
+    {
+      "final_subgate_label": "reference_collect_failed",
+      "repo_id": "attrs",
+      "task_id": "attrs__supply_expansion_20260526__075",
+      "winning_profile_id": ""
+    },
+    {
+      "final_subgate_label": "reference_install_failed",
+      "repo_id": "attrs",
+      "task_id": "attrs__supply_expansion_20260526__081",
+      "winning_profile_id": ""
+    },
+    {
+      "final_subgate_label": "reference_install_failed",
+      "repo_id": "attrs",
+      "task_id": "attrs__supply_expansion_20260526__082",
+      "winning_profile_id": ""
+    }
+  ],
+  "run_id": "phase1_historical_environment_synthesis_gate_20260526",
+  "sampled_task_count": 36,
+  "schema_version": "barcarolle.phase1_historical_environment_synthesis_gate.v1.reference_gate_subclassification.v1"
+}

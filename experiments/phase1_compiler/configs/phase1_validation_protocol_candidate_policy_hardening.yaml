@@ -1,0 +1,78 @@
+schema_version: barcarolle.phase1_validation_protocol_candidate_policy_hardening.v1
+run_id: phase1_validation_protocol_candidate_policy_hardening_20260601
+status: configured
+paid_calls_allowed: false
+external_review_allowed: false
+public_citation_browsing_allowed: false
+settings:
+  candidate_design_id: coverage_constrained_unweighted
+  candidate_policy_id: coverage_constrained_unweighted_v1_with_labeled_fallbacks
+  candidate_policy_manifest_id: coverage_constrained_unweighted_v1
+  budget_per_repo: 6
+  future_primary_mae_margin: 0.02
+  adapter_non_inferiority_tolerance_mae: 0.005
+  random_baseline_min_beats_share_percent: 95
+  fallback_share_max_overall: 0.10
+  fallback_share_max_per_repo: 0.1667
+  catastrophic_gap_threshold: 0.15
+  catastrophic_miss_max_worsening: 0.02
+  invalid_cell_max_share_overall: 0.02
+  non_scoreable_max_share_overall: 0.10
+  non_scoreable_max_share_slice: 0.15
+  future_min_repos_narrow_claim: 3
+  future_min_repos_broad_claim: 5
+  future_min_tasks_per_repo: 20
+  future_min_candidate_pool_multiple: 2
+  future_min_named_acut_configs_cross_adapter: 2
+  future_min_rolling_cutoffs: 2
+  future_min_source_reservoirs_per_repo: 2
+  historical_pilot_completed_cells: 120
+  historical_pilot_cost_usd: 51.267333
+inputs:
+  agents: AGENTS.md
+  process: PROCESS.md
+  state_doc: docs/research/project-state-after-proposal.md
+  system_design: docs/architecture/system-design.md
+  proposal_report_v5: docs/research/barcarolle-proposal-report-v5.md
+  evidence_manifest: experiments/phase1_compiler/reports/proposal_report_v5_evidence_manifest.md
+  m3_decision: experiments/phase1_compiler/results/phase1_proposal_evidence_package_decision.json
+  m3_random_baseline_distribution: experiments/phase1_compiler/results/phase1_proposal_evidence_package_random_baseline_distribution.json
+  m3_baseline_envelope: experiments/phase1_compiler/results/phase1_proposal_evidence_package_baseline_envelope.json
+  m3_coverage_ablation: experiments/phase1_compiler/results/phase1_proposal_evidence_package_coverage_ablation.json
+  m3_fallback_share: experiments/phase1_compiler/results/phase1_proposal_evidence_package_fallback_share.json
+  m3_source_supply_status: experiments/phase1_compiler/results/phase1_proposal_evidence_package_source_supply_status.json
+  m3_report_evidence_index: experiments/phase1_compiler/results/phase1_proposal_evidence_package_report_evidence_index.json
+  policy_spec: experiments/phase1_compiler/results/phase1_candidate_policy_validation_protocol_policy_spec.json
+  validation_protocol: experiments/phase1_compiler/results/phase1_candidate_policy_validation_protocol_validation_protocol.json
+  success_criteria: experiments/phase1_compiler/results/phase1_candidate_policy_validation_protocol_success_criteria.json
+  selection_manifest: experiments/phase1_compiler/results/phase1_candidate_policy_validation_protocol_selection_manifest.json
+  outcome_blindness_audit: experiments/phase1_compiler/results/phase1_candidate_policy_validation_protocol_outcome_blindness_audit.json
+optional_inputs:
+  local_plan_0519: /Users/chenmohan/Downloads/barcarolle-research-0519.md
+  local_plan_0526: /Users/chenmohan/Downloads/barcarolle-research-0526.md
+  local_plan_0526_1: /Users/chenmohan/Downloads/barcarolle-research-0526-1.md
+  local_plan_0530: /Users/chenmohan/Downloads/barcarolle-research-0530.md
+outputs:
+  preflight: experiments/phase1_compiler/results/phase1_validation_protocol_candidate_policy_hardening_preflight.json
+  claim_modes: experiments/phase1_compiler/results/phase1_validation_protocol_candidate_policy_hardening_claim_modes.json
+  candidate_policy: experiments/phase1_compiler/results/phase1_validation_protocol_candidate_policy_hardening_candidate_policy.json
+  baseline_registry: experiments/phase1_compiler/results/phase1_validation_protocol_candidate_policy_hardening_baseline_registry.json
+  adapter_estimand: experiments/phase1_compiler/results/phase1_validation_protocol_candidate_policy_hardening_adapter_estimand.json
+  success_gate: experiments/phase1_compiler/results/phase1_validation_protocol_candidate_policy_hardening_success_gate.json
+  support_thresholds: experiments/phase1_compiler/results/phase1_validation_protocol_candidate_policy_hardening_support_thresholds.json
+  release_schema: experiments/phase1_compiler/results/phase1_validation_protocol_candidate_policy_hardening_release_schema.json
+  power_budget_note: experiments/phase1_compiler/results/phase1_validation_protocol_candidate_policy_hardening_power_budget_note.json
+  decision: experiments/phase1_compiler/results/phase1_validation_protocol_candidate_policy_hardening_decision.json
+reports:
+  process: experiments/phase1_compiler/reports/phase1_validation_protocol_candidate_policy_hardening_process.md
+  claim_modes: experiments/phase1_compiler/reports/phase1_validation_protocol_candidate_policy_hardening_claim_modes.md
+  candidate_policy: experiments/phase1_compiler/reports/phase1_validation_protocol_candidate_policy_hardening_candidate_policy.md
+  baseline_registry: experiments/phase1_compiler/reports/phase1_validation_protocol_candidate_policy_hardening_baseline_registry.md
+  adapter_estimand: experiments/phase1_compiler/reports/phase1_validation_protocol_candidate_policy_hardening_adapter_estimand.md
+  success_gate: experiments/phase1_compiler/reports/phase1_validation_protocol_candidate_policy_hardening_success_gate.md
+  support_thresholds: experiments/phase1_compiler/reports/phase1_validation_protocol_candidate_policy_hardening_support_thresholds.md
+  release_schema: experiments/phase1_compiler/reports/phase1_validation_protocol_candidate_policy_hardening_release_schema.md
+  power_budget_note: experiments/phase1_compiler/reports/phase1_validation_protocol_candidate_policy_hardening_power_budget_note.md
+  decision: experiments/phase1_compiler/reports/phase1_validation_protocol_candidate_policy_hardening_decision.md
+docs:
+  summary: experiments/phase1_compiler/reports/phase1_validation_protocol_candidate_policy_hardening_summary.md

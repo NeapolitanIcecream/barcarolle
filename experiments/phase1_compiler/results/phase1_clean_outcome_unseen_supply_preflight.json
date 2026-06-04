@@ -1,0 +1,50 @@
+{
+  "baseline_checks": {
+    "git_diff_check": "passed",
+    "phase0_headroom_tools_pytest": "69 passed in 1.82s",
+    "phase1_compiler_pytest": "47 passed in 0.33s",
+    "phase1_mvp_validate_status": "valid"
+  },
+  "branch": "codex/restart-benchmark-compiler",
+  "generated_at": "2026-05-22T10:11:10Z",
+  "git_status_short_branch": "## codex/restart-benchmark-compiler...origin/codex/restart-benchmark-compiler [ahead 143]",
+  "paid_acut_calls_made": false,
+  "paid_acut_calls_allowed": false,
+  "paid_llm_calls_made": false,
+  "paid_llm_calls_allowed": false,
+  "previous_breal_extension_decision": {
+    "clean_supply_ready": false,
+    "predictive_validity_established": false,
+    "primary_decision_label": "clean_supply_breal_extension_still_blocked",
+    "recommended_next_runbook": "continue_mining_clean_outcome_unseen_supply"
+  },
+  "previous_breal_extension_overlay": {
+    "clean_supply_ready": false,
+    "minimum_clean_split": {
+      "B_real": 2,
+      "W_real": 2
+    },
+    "predictive_validity_established": false,
+    "promoted_by_split": {
+      "B_real": [
+        "boltons__hist__011"
+      ],
+      "W_real": [
+        "boltons__hist__022",
+        "boltons__hist__023",
+        "boltons__hist__027"
+      ]
+    }
+  },
+  "python": "Python 3.9.6",
+  "schema_version": "barcarolle.phase1.clean_outcome_unseen_supply_preflight.v1",
+  "starting_head": "5a78deec99e1276507f8a3e2655319affedda1c4",
+  "stale_future_holdout_supply": {
+    "blockers": [
+      "no_repo_has_minimum_clean_outcome_unseen_supply"
+    ],
+    "clean_supply_ready": false,
+    "selected_repos": []
+  },
+  "uv": "uv 0.11.1 (Homebrew 2026-03-24 aarch64-apple-darwin)"
+}

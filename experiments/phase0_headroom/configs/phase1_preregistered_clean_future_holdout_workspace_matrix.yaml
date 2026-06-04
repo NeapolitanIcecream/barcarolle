@@ -1,0 +1,37 @@
+schema_version: barcarolle.phase1_preregistered_clean_future_holdout_workspace_matrix.v1
+status: configured
+claim_scope: preregistered_clean_future_holdout_paid_validation_run
+predictive_validity_established: false
+
+clean_supply_overlay: experiments/phase1_compiler/results/phase1_clean_outcome_unseen_supply_overlay.json
+clean_ext_certified_tasks: experiments/phase0_headroom/certified_tasks/boltons_clean_outcome_unseen_supply_certified_tasks.jsonl
+canonical_boltons_certified_tasks: experiments/phase0_headroom/certified_tasks/boltons_certified_tasks.jsonl
+canonical_boltons_release: experiments/phase0_headroom/releases/boltons_phase0_pilot_release.json
+boltons_target_profile: experiments/phase0_headroom/target_profiles/boltons_target_profile.json
+
+adapter_config: experiments/phase0_headroom/configs/acut_workspace_adapters.yaml
+
+result_prefixes:
+  b_eval: phase1_future_holdout_b_eval
+  h_future: phase1_future_holdout_h_future
+
+splits:
+  b_eval:
+    - boltons__clean_ext__001
+    - boltons__clean_ext__008
+    - boltons__clean_ext__010
+    - boltons__hist__011
+  h_future:
+    - boltons__clean_ext__017
+    - boltons__hist__022
+    - boltons__hist__023
+    - boltons__hist__027
+
+paid_parallelism:
+  paid_acut_concurrency: 1
+  allow_cross_harness_paid_parallelism: false
+
+result_policy:
+  raw_outputs_ignored_only: true
+  canonical_release_mutation_allowed: false
+  evidence_level: clean_supply_overlay_sidecar

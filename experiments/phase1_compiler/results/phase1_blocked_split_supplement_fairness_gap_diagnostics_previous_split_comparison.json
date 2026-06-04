@@ -1,0 +1,304 @@
+{
+  "artifact": "previous_split_comparison",
+  "claim_boundary": {
+    "diagnostic_not_formal_validation": true,
+    "new_paid_cells_run_by_this_diagnostic": 0,
+    "predictive_validity_established": false
+  },
+  "comparison": {
+    "adapter_disagreement": {
+      "previous": {
+        "codex_only_pass": 6,
+        "disagreement_rate": 0.3667,
+        "kilo_only_pass": 16,
+        "paired_task_count": 60
+      },
+      "supplement": {
+        "both_fail": 21,
+        "both_pass": 14,
+        "codex_only_pass": 3,
+        "disagreement_count": 24,
+        "disagreement_rate": 0.4068,
+        "kilo_only_pass": 21,
+        "paired_task_count": 59
+      }
+    },
+    "adapter_gaps": {
+      "previous": {
+        "codex_workspace": 0.2,
+        "kilo_workspace": 0.0
+      },
+      "supplement": {
+        "codex_workspace": 0.1115,
+        "kilo_workspace": 0.1
+      }
+    },
+    "adapter_pass_rates": {
+      "previous": {
+        "codex_workspace": 0.3667,
+        "kilo_workspace": 0.5333
+      },
+      "supplement": {
+        "codex_workspace": 0.2881,
+        "kilo_workspace": 0.5833
+      }
+    },
+    "policy_violations": {
+      "interpretation": "same_clean_policy_result",
+      "previous": 0,
+      "supplement": 0
+    },
+    "pooled_gap": {
+      "interpretation": "about_the_same_or_slightly_worse_not_healthier",
+      "known_comparison_required_by_runbook": "old 0.1000 vs supplement 0.1079",
+      "previous_three_repo_primary_pooled_gap": 0.1,
+      "supplement_pooled_gap": 0.1079
+    },
+    "repo_level_gaps": {
+      "previous": {
+        "codex_workspace": {
+          "attrs": {
+            "B_eval_pass_rate": 0.7,
+            "H_future_minus_B_eval": -0.4,
+            "H_future_pass_rate": 0.3,
+            "absolute_gap": 0.4
+          },
+          "boltons": {
+            "B_eval_pass_rate": 0.0,
+            "H_future_minus_B_eval": 0.4,
+            "H_future_pass_rate": 0.4,
+            "absolute_gap": 0.4
+          },
+          "click": {
+            "B_eval_pass_rate": 0.1,
+            "H_future_minus_B_eval": 0.6,
+            "H_future_pass_rate": 0.7,
+            "absolute_gap": 0.6
+          }
+        },
+        "kilo_workspace": {
+          "attrs": {
+            "B_eval_pass_rate": 0.7,
+            "H_future_minus_B_eval": -0.3,
+            "H_future_pass_rate": 0.4,
+            "absolute_gap": 0.3
+          },
+          "boltons": {
+            "B_eval_pass_rate": 0.3,
+            "H_future_minus_B_eval": 0.1,
+            "H_future_pass_rate": 0.4,
+            "absolute_gap": 0.1
+          },
+          "click": {
+            "B_eval_pass_rate": 0.6,
+            "H_future_minus_B_eval": 0.2,
+            "H_future_pass_rate": 0.8,
+            "absolute_gap": 0.2
+          }
+        }
+      },
+      "supplement": {
+        "codex_workspace": {
+          "attrs": {
+            "B_eval": {
+              "cell_count": 10,
+              "non_scoreable_cell_count": 1,
+              "pass_rate": 0.4444,
+              "policy_violation_count": 0,
+              "scoreability_rate": 0.9,
+              "scoreable_cell_count": 9,
+              "terminal_status_counts": {
+                "invalid_output": 1,
+                "verified_fail": 5,
+                "verified_pass": 4
+              },
+              "verified_fail_count": 5,
+              "verified_pass_count": 4
+            },
+            "H_future": {
+              "cell_count": 10,
+              "non_scoreable_cell_count": 0,
+              "pass_rate": 0.3,
+              "policy_violation_count": 0,
+              "scoreability_rate": 1.0,
+              "scoreable_cell_count": 10,
+              "terminal_status_counts": {
+                "verified_fail": 7,
+                "verified_pass": 3
+              },
+              "verified_fail_count": 7,
+              "verified_pass_count": 3
+            },
+            "absolute_gap": 0.1444
+          },
+          "boltons": {
+            "B_eval": {
+              "cell_count": 10,
+              "non_scoreable_cell_count": 0,
+              "pass_rate": 0.0,
+              "policy_violation_count": 0,
+              "scoreability_rate": 1.0,
+              "scoreable_cell_count": 10,
+              "terminal_status_counts": {
+                "verified_fail": 10
+              },
+              "verified_fail_count": 10,
+              "verified_pass_count": 0
+            },
+            "H_future": {
+              "cell_count": 10,
+              "non_scoreable_cell_count": 0,
+              "pass_rate": 0.1,
+              "policy_violation_count": 0,
+              "scoreability_rate": 1.0,
+              "scoreable_cell_count": 10,
+              "terminal_status_counts": {
+                "verified_fail": 9,
+                "verified_pass": 1
+              },
+              "verified_fail_count": 9,
+              "verified_pass_count": 1
+            },
+            "absolute_gap": 0.1
+          },
+          "click": {
+            "B_eval": {
+              "cell_count": 10,
+              "non_scoreable_cell_count": 0,
+              "pass_rate": 0.6,
+              "policy_violation_count": 0,
+              "scoreability_rate": 1.0,
+              "scoreable_cell_count": 10,
+              "terminal_status_counts": {
+                "verified_fail": 4,
+                "verified_pass": 6
+              },
+              "verified_fail_count": 4,
+              "verified_pass_count": 6
+            },
+            "H_future": {
+              "cell_count": 10,
+              "non_scoreable_cell_count": 0,
+              "pass_rate": 0.3,
+              "policy_violation_count": 0,
+              "scoreability_rate": 1.0,
+              "scoreable_cell_count": 10,
+              "terminal_status_counts": {
+                "verified_fail": 7,
+                "verified_pass": 3
+              },
+              "verified_fail_count": 7,
+              "verified_pass_count": 3
+            },
+            "absolute_gap": 0.3
+          }
+        },
+        "kilo_workspace": {
+          "attrs": {
+            "B_eval": {
+              "cell_count": 10,
+              "non_scoreable_cell_count": 0,
+              "pass_rate": 0.5,
+              "policy_violation_count": 0,
+              "scoreability_rate": 1.0,
+              "scoreable_cell_count": 10,
+              "terminal_status_counts": {
+                "verified_fail": 5,
+                "verified_pass": 5
+              },
+              "verified_fail_count": 5,
+              "verified_pass_count": 5
+            },
+            "H_future": {
+              "cell_count": 10,
+              "non_scoreable_cell_count": 0,
+              "pass_rate": 0.5,
+              "policy_violation_count": 0,
+              "scoreability_rate": 1.0,
+              "scoreable_cell_count": 10,
+              "terminal_status_counts": {
+                "verified_fail": 5,
+                "verified_pass": 5
+              },
+              "verified_fail_count": 5,
+              "verified_pass_count": 5
+            },
+            "absolute_gap": 0.0
+          },
+          "boltons": {
+            "B_eval": {
+              "cell_count": 10,
+              "non_scoreable_cell_count": 0,
+              "pass_rate": 0.5,
+              "policy_violation_count": 0,
+              "scoreability_rate": 1.0,
+              "scoreable_cell_count": 10,
+              "terminal_status_counts": {
+                "verified_fail": 5,
+                "verified_pass": 5
+              },
+              "verified_fail_count": 5,
+              "verified_pass_count": 5
+            },
+            "H_future": {
+              "cell_count": 10,
+              "non_scoreable_cell_count": 0,
+              "pass_rate": 0.3,
+              "policy_violation_count": 0,
+              "scoreability_rate": 1.0,
+              "scoreable_cell_count": 10,
+              "terminal_status_counts": {
+                "verified_fail": 7,
+                "verified_pass": 3
+              },
+              "verified_fail_count": 7,
+              "verified_pass_count": 3
+            },
+            "absolute_gap": 0.2
+          },
+          "click": {
+            "B_eval": {
+              "cell_count": 10,
+              "non_scoreable_cell_count": 0,
+              "pass_rate": 0.9,
+              "policy_violation_count": 0,
+              "scoreability_rate": 1.0,
+              "scoreable_cell_count": 10,
+              "terminal_status_counts": {
+                "verified_fail": 1,
+                "verified_pass": 9
+              },
+              "verified_fail_count": 1,
+              "verified_pass_count": 9
+            },
+            "H_future": {
+              "cell_count": 10,
+              "non_scoreable_cell_count": 0,
+              "pass_rate": 0.8,
+              "policy_violation_count": 0,
+              "scoreability_rate": 1.0,
+              "scoreable_cell_count": 10,
+              "terminal_status_counts": {
+                "verified_fail": 2,
+                "verified_pass": 8
+              },
+              "verified_fail_count": 2,
+              "verified_pass_count": 8
+            },
+            "absolute_gap": 0.1
+          }
+        }
+      }
+    },
+    "scoreability": {
+      "interpretation": "supplement_slightly_worse_due_to_one_invalid_output",
+      "previous": 1.0,
+      "supplement": 0.9917
+    }
+  },
+  "generated_at": "2026-05-29T08:08:26Z",
+  "overall_diagnostic_label": "about_the_same_or_slightly_worse",
+  "run_id": "phase1_blocked_split_supplement_fairness_gap_diagnostics_20260529",
+  "schema_version": "barcarolle.phase1_blocked_split_supplement_fairness_gap_diagnostics_output.v1",
+  "status": "complete"
+}

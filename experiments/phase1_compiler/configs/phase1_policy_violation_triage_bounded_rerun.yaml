@@ -1,0 +1,16 @@
+schema_version: barcarolle.phase1_policy_violation_triage_bounded_rerun.v1
+status: local_only_triage
+generated_for_runbook: docs/experiments/phase-1-policy-violation-triage-bounded-rerun-runbook.md
+original_result_prefix: phase1_two_repo_future_holdout_attrs_h_future
+repair_prefix: phase1_two_repo_future_holdout_attrs_h_future_policy_repair
+repo_id: attrs
+split: H_future
+task_id: attrs__hist__027
+adapter_id: kilo_workspace
+acut_id: kilo_workspace_gpt_5_4_mini
+paid_rerun_default: false
+maximum_repair_paid_cells: 1
+incremental_hard_cap_usd: 3
+cumulative_unattended_stop_cap_usd: 70
+classification_required_before_replay_or_rerun: true
+do_not_overwrite_original_prefix: true

@@ -1,0 +1,99 @@
+{
+  "acceptance": {
+    "endpoint_vars_present": true,
+    "no_second_repo_paid_cells_already_run": true,
+    "selected_repos_are_boltons_and_attrs": true,
+    "tests_and_validation_passed": true,
+    "two_repo_preregistration_frozen": true
+  },
+  "baseline_checks": {
+    "git_diff_check": {
+      "command": "git diff --check",
+      "exit_code": 0
+    },
+    "phase0_workspace_tooling_tests": {
+      "command": "uv run --project experiments/phase0_headroom pytest -q experiments/phase0_headroom/tools",
+      "exit_code": 0,
+      "summary": "74 passed in 2.14s"
+    },
+    "phase1_compiler_tests": {
+      "command": "uv run --project experiments/phase1_compiler pytest -q",
+      "exit_code": 0,
+      "summary": "65 passed in 0.36s"
+    },
+    "phase1_mvp_validation": {
+      "command": "uv run --project experiments/phase1_compiler python experiments/phase1_compiler/tools/phase1_compiler.py validate --config experiments/phase1_compiler/configs/phase1_mvp.yaml",
+      "exit_code": 0,
+      "status": "valid"
+    }
+  },
+  "claim_scope": "two_repo_preregistered_paid_validation_run",
+  "decision": {
+    "initial_branch": "branch_b_paid_gates_pass_candidate",
+    "next_step": "check_local_metadata_consistency_then_run_attrs_paid_entry_gate",
+    "paid_calls_made_in_step_0": false,
+    "predictive_validity_established": false
+  },
+  "endpoint": {
+    "checked_after_sourcing_zshrc": true,
+    "llm_api_key_present": true,
+    "llm_base_url_present": true,
+    "values_printed": false
+  },
+  "environment": {
+    "branch": "codex/restart-benchmark-compiler",
+    "codex_version": "codex-cli 0.133.0",
+    "generated_at": "2026-05-22T15:44:16Z",
+    "head": "99bfab15f5507d5a75803a8830cfa2f4a290a7f8",
+    "kilo_version": "7.3.1",
+    "python_command": "not_available",
+    "python3_version": "Python 3.9.6",
+    "uv_version": "uv 0.11.1 (Homebrew 2026-03-24 aarch64-apple-darwin)"
+  },
+  "frozen_design": {
+    "existing_paid_evidence": {
+      "boltons": {
+        "b_eval_prefix": "phase1_future_holdout_b_eval",
+        "b_eval_scoreable_cells": 8,
+        "h_future_prefix": "phase1_future_holdout_h_future",
+        "h_future_scoreable_cells": 8,
+        "policy_violation_count": 0,
+        "predictive_validity_established": false,
+        "primary_decision_label": "boltons_clean_future_holdout_pilot_complete_insufficient_sample"
+      }
+    },
+    "paid_second_repo_acut_calls_made": false,
+    "planned_second_repo_cells": {
+      "b_eval": 8,
+      "h_future": 8
+    },
+    "planned_second_repo_tasks": {
+      "b_eval": [
+        "attrs__hist__001",
+        "attrs__hist__003",
+        "attrs__hist__004",
+        "attrs__hist__008"
+      ],
+      "h_future": [
+        "attrs__hist__012",
+        "attrs__hist__013",
+        "attrs__hist__023",
+        "attrs__hist__027"
+      ]
+    },
+    "recommended_next_runbook": "run_two_repo_preregistered_clean_future_holdout_paid_validation",
+    "selected_repo_id": "attrs",
+    "selected_repos": [
+      "boltons",
+      "attrs"
+    ],
+    "two_repo_preregistration_status": "frozen"
+  },
+  "schema_version": "barcarolle.phase1_autonomous_overnight_two_repo_preflight.v1",
+  "worktree": {
+    "existing_untracked_paths": [
+      "docs/experiments/phase-1-autonomous-overnight-two-repo-research-runbook.md"
+    ],
+    "note": "The runbook was already untracked at preflight start and was treated as user-provided input."
+  }
+}

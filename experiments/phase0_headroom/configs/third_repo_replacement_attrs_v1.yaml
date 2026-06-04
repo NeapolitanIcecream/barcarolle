@@ -1,0 +1,42 @@
+schema_version: barcarolle.third_repo_replacement.v1
+selected_repo_id: attrs
+status: fallback_selected_for_local_replacement_screen
+repo_url: https://github.com/python-attrs/attrs.git
+local_repo: experiments/phase0_headroom/external_repos/attrs
+claim_scope: third_repo_replacement_local_screen_not_predictive_validation
+paid_acut_calls: disabled
+paid_llm_calls: disabled
+source_policy:
+  commit_message_fallback: diagnostic_only
+  issue_or_pr_problem_context_required_for_benchmark_grade: true
+candidate_filter_policy:
+  reject_if_changed_lines_over: 250
+  reject_if_project_file_heavy: true
+  reject_if_no_behavior_code_file: true
+  reject_subject_terms:
+    - update dev dependencies
+    - update project files
+    - drop support
+    - remove deprecated
+    - deprecate
+    - typing
+    - lint
+    - format
+    - pre-commit
+    - docs
+    - documentation
+    - release
+    - bump
+    - dependabot
+test_environment:
+  pythonpath_mode: src_if_present_else_repo_root
+  command_template: uv run --project experiments/phase0_headroom --with "pytest>=8,<9" --with "setuptools<81" python -m pytest -q {test_files}
+preferred_task_count:
+  certification_attempts: 32
+  pilot_certified_min: 4
+  benchmark_grade_min: 6
+acut:
+  adapters: []
+  result_prefix: phase1_validation_third_repo_attrs_replacement_v1
+budget:
+  expected_provider_cost_change_usd: 0

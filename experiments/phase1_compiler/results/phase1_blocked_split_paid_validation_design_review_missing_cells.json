@@ -1,0 +1,856 @@
+{
+  "artifact": "missing_cells",
+  "generated_at": "2026-05-29T02:59:26Z",
+  "missing_outcomes_imputed": false,
+  "paid_calls_made_by_this_run": 0,
+  "run_id": "phase1_blocked_split_paid_validation_design_review_20260529",
+  "schema_version": "barcarolle.phase1_blocked_split_paid_validation_design_review_output.v1",
+  "split_missing_cells": {
+    "expanded_30_per_repo": {
+      "budget_id": "expanded_30_per_repo",
+      "design_id": "phase1_blocked_split_redesign_20260529__expanded_30_per_repo__seed_2026052904",
+      "missing_cell_manifest": [
+        {
+          "adapter_id": "codex_workspace",
+          "repo": "attrs",
+          "split": "B_eval",
+          "task_id": "attrs__v2__157"
+        },
+        {
+          "adapter_id": "kilo_workspace",
+          "repo": "attrs",
+          "split": "B_eval",
+          "task_id": "attrs__v2__157"
+        },
+        {
+          "adapter_id": "codex_workspace",
+          "repo": "attrs",
+          "split": "B_eval",
+          "task_id": "attrs__v2__210"
+        },
+        {
+          "adapter_id": "kilo_workspace",
+          "repo": "attrs",
+          "split": "B_eval",
+          "task_id": "attrs__v2__210"
+        },
+        {
+          "adapter_id": "codex_workspace",
+          "repo": "attrs",
+          "split": "B_eval",
+          "task_id": "attrs__v2__219"
+        },
+        {
+          "adapter_id": "kilo_workspace",
+          "repo": "attrs",
+          "split": "B_eval",
+          "task_id": "attrs__v2__219"
+        },
+        {
+          "adapter_id": "codex_workspace",
+          "repo": "attrs",
+          "split": "B_eval",
+          "task_id": "attrs__v2__231"
+        },
+        {
+          "adapter_id": "kilo_workspace",
+          "repo": "attrs",
+          "split": "B_eval",
+          "task_id": "attrs__v2__231"
+        },
+        {
+          "adapter_id": "codex_workspace",
+          "repo": "attrs",
+          "split": "B_eval",
+          "task_id": "attrs__v2__244"
+        },
+        {
+          "adapter_id": "kilo_workspace",
+          "repo": "attrs",
+          "split": "B_eval",
+          "task_id": "attrs__v2__244"
+        },
+        {
+          "adapter_id": "codex_workspace",
+          "repo": "attrs",
+          "split": "B_eval",
+          "task_id": "attrs__v2__252"
+        },
+        {
+          "adapter_id": "kilo_workspace",
+          "repo": "attrs",
+          "split": "B_eval",
+          "task_id": "attrs__v2__252"
+        },
+        {
+          "adapter_id": "codex_workspace",
+          "repo": "attrs",
+          "split": "B_eval",
+          "task_id": "attrs__v2__275"
+        },
+        {
+          "adapter_id": "kilo_workspace",
+          "repo": "attrs",
+          "split": "B_eval",
+          "task_id": "attrs__v2__275"
+        },
+        {
+          "adapter_id": "codex_workspace",
+          "repo": "attrs",
+          "split": "H_future",
+          "task_id": "attrs__v2__211"
+        },
+        {
+          "adapter_id": "kilo_workspace",
+          "repo": "attrs",
+          "split": "H_future",
+          "task_id": "attrs__v2__211"
+        },
+        {
+          "adapter_id": "codex_workspace",
+          "repo": "attrs",
+          "split": "H_future",
+          "task_id": "attrs__v2__218"
+        },
+        {
+          "adapter_id": "kilo_workspace",
+          "repo": "attrs",
+          "split": "H_future",
+          "task_id": "attrs__v2__218"
+        },
+        {
+          "adapter_id": "codex_workspace",
+          "repo": "attrs",
+          "split": "H_future",
+          "task_id": "attrs__v2__228"
+        },
+        {
+          "adapter_id": "kilo_workspace",
+          "repo": "attrs",
+          "split": "H_future",
+          "task_id": "attrs__v2__228"
+        },
+        {
+          "adapter_id": "codex_workspace",
+          "repo": "attrs",
+          "split": "H_future",
+          "task_id": "attrs__v2__271"
+        },
+        {
+          "adapter_id": "kilo_workspace",
+          "repo": "attrs",
+          "split": "H_future",
+          "task_id": "attrs__v2__271"
+        },
+        {
+          "adapter_id": "codex_workspace",
+          "repo": "boltons",
+          "split": "B_eval",
+          "task_id": "boltons__v2__009"
+        },
+        {
+          "adapter_id": "kilo_workspace",
+          "repo": "boltons",
+          "split": "B_eval",
+          "task_id": "boltons__v2__009"
+        },
+        {
+          "adapter_id": "codex_workspace",
+          "repo": "boltons",
+          "split": "B_eval",
+          "task_id": "boltons__v2__012"
+        },
+        {
+          "adapter_id": "kilo_workspace",
+          "repo": "boltons",
+          "split": "B_eval",
+          "task_id": "boltons__v2__012"
+        },
+        {
+          "adapter_id": "codex_workspace",
+          "repo": "boltons",
+          "split": "B_eval",
+          "task_id": "boltons__v2__092"
+        },
+        {
+          "adapter_id": "kilo_workspace",
+          "repo": "boltons",
+          "split": "B_eval",
+          "task_id": "boltons__v2__092"
+        },
+        {
+          "adapter_id": "codex_workspace",
+          "repo": "boltons",
+          "split": "B_eval",
+          "task_id": "boltons__v2__095"
+        },
+        {
+          "adapter_id": "kilo_workspace",
+          "repo": "boltons",
+          "split": "B_eval",
+          "task_id": "boltons__v2__095"
+        },
+        {
+          "adapter_id": "codex_workspace",
+          "repo": "boltons",
+          "split": "B_eval",
+          "task_id": "boltons__v2__102"
+        },
+        {
+          "adapter_id": "kilo_workspace",
+          "repo": "boltons",
+          "split": "B_eval",
+          "task_id": "boltons__v2__102"
+        },
+        {
+          "adapter_id": "codex_workspace",
+          "repo": "boltons",
+          "split": "B_eval",
+          "task_id": "boltons__v2__122"
+        },
+        {
+          "adapter_id": "kilo_workspace",
+          "repo": "boltons",
+          "split": "B_eval",
+          "task_id": "boltons__v2__122"
+        },
+        {
+          "adapter_id": "codex_workspace",
+          "repo": "boltons",
+          "split": "B_eval",
+          "task_id": "boltons__v2__128"
+        },
+        {
+          "adapter_id": "kilo_workspace",
+          "repo": "boltons",
+          "split": "B_eval",
+          "task_id": "boltons__v2__128"
+        },
+        {
+          "adapter_id": "codex_workspace",
+          "repo": "boltons",
+          "split": "B_eval",
+          "task_id": "boltons__v2__132"
+        },
+        {
+          "adapter_id": "kilo_workspace",
+          "repo": "boltons",
+          "split": "B_eval",
+          "task_id": "boltons__v2__132"
+        },
+        {
+          "adapter_id": "codex_workspace",
+          "repo": "boltons",
+          "split": "B_eval",
+          "task_id": "boltons__v2__169"
+        },
+        {
+          "adapter_id": "kilo_workspace",
+          "repo": "boltons",
+          "split": "B_eval",
+          "task_id": "boltons__v2__169"
+        },
+        {
+          "adapter_id": "codex_workspace",
+          "repo": "boltons",
+          "split": "B_eval",
+          "task_id": "boltons__v2__231"
+        },
+        {
+          "adapter_id": "kilo_workspace",
+          "repo": "boltons",
+          "split": "B_eval",
+          "task_id": "boltons__v2__231"
+        },
+        {
+          "adapter_id": "codex_workspace",
+          "repo": "boltons",
+          "split": "H_future",
+          "task_id": "boltons__v2__008"
+        },
+        {
+          "adapter_id": "kilo_workspace",
+          "repo": "boltons",
+          "split": "H_future",
+          "task_id": "boltons__v2__008"
+        },
+        {
+          "adapter_id": "codex_workspace",
+          "repo": "boltons",
+          "split": "H_future",
+          "task_id": "boltons__v2__103"
+        },
+        {
+          "adapter_id": "kilo_workspace",
+          "repo": "boltons",
+          "split": "H_future",
+          "task_id": "boltons__v2__103"
+        },
+        {
+          "adapter_id": "codex_workspace",
+          "repo": "boltons",
+          "split": "H_future",
+          "task_id": "boltons__v2__154"
+        },
+        {
+          "adapter_id": "kilo_workspace",
+          "repo": "boltons",
+          "split": "H_future",
+          "task_id": "boltons__v2__154"
+        },
+        {
+          "adapter_id": "codex_workspace",
+          "repo": "click",
+          "split": "B_eval",
+          "task_id": "click__third__197"
+        },
+        {
+          "adapter_id": "kilo_workspace",
+          "repo": "click",
+          "split": "B_eval",
+          "task_id": "click__third__197"
+        },
+        {
+          "adapter_id": "codex_workspace",
+          "repo": "click",
+          "split": "B_eval",
+          "task_id": "click__third__198"
+        },
+        {
+          "adapter_id": "kilo_workspace",
+          "repo": "click",
+          "split": "B_eval",
+          "task_id": "click__third__198"
+        },
+        {
+          "adapter_id": "codex_workspace",
+          "repo": "click",
+          "split": "B_eval",
+          "task_id": "click__third__207"
+        },
+        {
+          "adapter_id": "kilo_workspace",
+          "repo": "click",
+          "split": "B_eval",
+          "task_id": "click__third__207"
+        },
+        {
+          "adapter_id": "codex_workspace",
+          "repo": "click",
+          "split": "B_eval",
+          "task_id": "click__third__234"
+        },
+        {
+          "adapter_id": "kilo_workspace",
+          "repo": "click",
+          "split": "B_eval",
+          "task_id": "click__third__234"
+        },
+        {
+          "adapter_id": "codex_workspace",
+          "repo": "click",
+          "split": "H_future",
+          "task_id": "click__third__091"
+        },
+        {
+          "adapter_id": "kilo_workspace",
+          "repo": "click",
+          "split": "H_future",
+          "task_id": "click__third__091"
+        },
+        {
+          "adapter_id": "codex_workspace",
+          "repo": "click",
+          "split": "H_future",
+          "task_id": "click__third__109"
+        },
+        {
+          "adapter_id": "kilo_workspace",
+          "repo": "click",
+          "split": "H_future",
+          "task_id": "click__third__109"
+        },
+        {
+          "adapter_id": "codex_workspace",
+          "repo": "click",
+          "split": "H_future",
+          "task_id": "click__third__202"
+        },
+        {
+          "adapter_id": "kilo_workspace",
+          "repo": "click",
+          "split": "H_future",
+          "task_id": "click__third__202"
+        },
+        {
+          "adapter_id": "codex_workspace",
+          "repo": "click",
+          "split": "H_future",
+          "task_id": "click__third__214"
+        },
+        {
+          "adapter_id": "kilo_workspace",
+          "repo": "click",
+          "split": "H_future",
+          "task_id": "click__third__214"
+        },
+        {
+          "adapter_id": "codex_workspace",
+          "repo": "click",
+          "split": "H_future",
+          "task_id": "click__third__220"
+        },
+        {
+          "adapter_id": "kilo_workspace",
+          "repo": "click",
+          "split": "H_future",
+          "task_id": "click__third__220"
+        },
+        {
+          "adapter_id": "codex_workspace",
+          "repo": "click",
+          "split": "H_future",
+          "task_id": "click__third__288"
+        },
+        {
+          "adapter_id": "kilo_workspace",
+          "repo": "click",
+          "split": "H_future",
+          "task_id": "click__third__288"
+        }
+      ],
+      "missing_cells": 68,
+      "missing_cells_by_adapter": {
+        "codex_workspace": 34,
+        "kilo_workspace": 34
+      },
+      "missing_cells_by_repo_split_adapter": {
+        "attrs": {
+          "B_eval": {
+            "codex_workspace": 7,
+            "kilo_workspace": 7
+          },
+          "H_future": {
+            "codex_workspace": 4,
+            "kilo_workspace": 4
+          }
+        },
+        "boltons": {
+          "B_eval": {
+            "codex_workspace": 10,
+            "kilo_workspace": 10
+          },
+          "H_future": {
+            "codex_workspace": 3,
+            "kilo_workspace": 3
+          }
+        },
+        "click": {
+          "B_eval": {
+            "codex_workspace": 4,
+            "kilo_workspace": 4
+          },
+          "H_future": {
+            "codex_workspace": 6,
+            "kilo_workspace": 6
+          }
+        }
+      },
+      "missing_task_ids": [
+        "attrs__v2__157",
+        "attrs__v2__210",
+        "attrs__v2__219",
+        "attrs__v2__231",
+        "attrs__v2__244",
+        "attrs__v2__252",
+        "attrs__v2__275",
+        "attrs__v2__211",
+        "attrs__v2__218",
+        "attrs__v2__228",
+        "attrs__v2__271",
+        "boltons__v2__009",
+        "boltons__v2__012",
+        "boltons__v2__092",
+        "boltons__v2__095",
+        "boltons__v2__102",
+        "boltons__v2__122",
+        "boltons__v2__128",
+        "boltons__v2__132",
+        "boltons__v2__169",
+        "boltons__v2__231",
+        "boltons__v2__008",
+        "boltons__v2__103",
+        "boltons__v2__154",
+        "click__third__197",
+        "click__third__198",
+        "click__third__207",
+        "click__third__234",
+        "click__third__091",
+        "click__third__109",
+        "click__third__202",
+        "click__third__214",
+        "click__third__220",
+        "click__third__288"
+      ],
+      "missing_tasks": 34
+    },
+    "same_budget_20_per_repo": {
+      "budget_id": "same_budget_20_per_repo",
+      "design_id": "phase1_blocked_split_redesign_20260529__same_budget_20_per_repo__seed_2026052902",
+      "missing_cell_manifest": [
+        {
+          "adapter_id": "codex_workspace",
+          "repo": "attrs",
+          "split": "B_eval",
+          "task_id": "attrs__v2__157"
+        },
+        {
+          "adapter_id": "kilo_workspace",
+          "repo": "attrs",
+          "split": "B_eval",
+          "task_id": "attrs__v2__157"
+        },
+        {
+          "adapter_id": "codex_workspace",
+          "repo": "attrs",
+          "split": "B_eval",
+          "task_id": "attrs__v2__231"
+        },
+        {
+          "adapter_id": "kilo_workspace",
+          "repo": "attrs",
+          "split": "B_eval",
+          "task_id": "attrs__v2__231"
+        },
+        {
+          "adapter_id": "codex_workspace",
+          "repo": "attrs",
+          "split": "B_eval",
+          "task_id": "attrs__v2__271"
+        },
+        {
+          "adapter_id": "kilo_workspace",
+          "repo": "attrs",
+          "split": "B_eval",
+          "task_id": "attrs__v2__271"
+        },
+        {
+          "adapter_id": "codex_workspace",
+          "repo": "attrs",
+          "split": "H_future",
+          "task_id": "attrs__v2__210"
+        },
+        {
+          "adapter_id": "kilo_workspace",
+          "repo": "attrs",
+          "split": "H_future",
+          "task_id": "attrs__v2__210"
+        },
+        {
+          "adapter_id": "codex_workspace",
+          "repo": "attrs",
+          "split": "H_future",
+          "task_id": "attrs__v2__218"
+        },
+        {
+          "adapter_id": "kilo_workspace",
+          "repo": "attrs",
+          "split": "H_future",
+          "task_id": "attrs__v2__218"
+        },
+        {
+          "adapter_id": "codex_workspace",
+          "repo": "attrs",
+          "split": "H_future",
+          "task_id": "attrs__v2__244"
+        },
+        {
+          "adapter_id": "kilo_workspace",
+          "repo": "attrs",
+          "split": "H_future",
+          "task_id": "attrs__v2__244"
+        },
+        {
+          "adapter_id": "codex_workspace",
+          "repo": "boltons",
+          "split": "B_eval",
+          "task_id": "boltons__v2__008"
+        },
+        {
+          "adapter_id": "kilo_workspace",
+          "repo": "boltons",
+          "split": "B_eval",
+          "task_id": "boltons__v2__008"
+        },
+        {
+          "adapter_id": "codex_workspace",
+          "repo": "boltons",
+          "split": "B_eval",
+          "task_id": "boltons__v2__009"
+        },
+        {
+          "adapter_id": "kilo_workspace",
+          "repo": "boltons",
+          "split": "B_eval",
+          "task_id": "boltons__v2__009"
+        },
+        {
+          "adapter_id": "codex_workspace",
+          "repo": "boltons",
+          "split": "B_eval",
+          "task_id": "boltons__v2__076"
+        },
+        {
+          "adapter_id": "kilo_workspace",
+          "repo": "boltons",
+          "split": "B_eval",
+          "task_id": "boltons__v2__076"
+        },
+        {
+          "adapter_id": "codex_workspace",
+          "repo": "boltons",
+          "split": "B_eval",
+          "task_id": "boltons__v2__103"
+        },
+        {
+          "adapter_id": "kilo_workspace",
+          "repo": "boltons",
+          "split": "B_eval",
+          "task_id": "boltons__v2__103"
+        },
+        {
+          "adapter_id": "codex_workspace",
+          "repo": "boltons",
+          "split": "B_eval",
+          "task_id": "boltons__v2__128"
+        },
+        {
+          "adapter_id": "kilo_workspace",
+          "repo": "boltons",
+          "split": "B_eval",
+          "task_id": "boltons__v2__128"
+        },
+        {
+          "adapter_id": "codex_workspace",
+          "repo": "boltons",
+          "split": "B_eval",
+          "task_id": "boltons__v2__154"
+        },
+        {
+          "adapter_id": "kilo_workspace",
+          "repo": "boltons",
+          "split": "B_eval",
+          "task_id": "boltons__v2__154"
+        },
+        {
+          "adapter_id": "codex_workspace",
+          "repo": "boltons",
+          "split": "B_eval",
+          "task_id": "boltons__v2__231"
+        },
+        {
+          "adapter_id": "kilo_workspace",
+          "repo": "boltons",
+          "split": "B_eval",
+          "task_id": "boltons__v2__231"
+        },
+        {
+          "adapter_id": "codex_workspace",
+          "repo": "boltons",
+          "split": "H_future",
+          "task_id": "boltons__v2__122"
+        },
+        {
+          "adapter_id": "kilo_workspace",
+          "repo": "boltons",
+          "split": "H_future",
+          "task_id": "boltons__v2__122"
+        },
+        {
+          "adapter_id": "codex_workspace",
+          "repo": "boltons",
+          "split": "H_future",
+          "task_id": "boltons__v2__132"
+        },
+        {
+          "adapter_id": "kilo_workspace",
+          "repo": "boltons",
+          "split": "H_future",
+          "task_id": "boltons__v2__132"
+        },
+        {
+          "adapter_id": "codex_workspace",
+          "repo": "boltons",
+          "split": "H_future",
+          "task_id": "boltons__v2__232"
+        },
+        {
+          "adapter_id": "kilo_workspace",
+          "repo": "boltons",
+          "split": "H_future",
+          "task_id": "boltons__v2__232"
+        },
+        {
+          "adapter_id": "codex_workspace",
+          "repo": "click",
+          "split": "B_eval",
+          "task_id": "click__third__091"
+        },
+        {
+          "adapter_id": "kilo_workspace",
+          "repo": "click",
+          "split": "B_eval",
+          "task_id": "click__third__091"
+        },
+        {
+          "adapter_id": "codex_workspace",
+          "repo": "click",
+          "split": "B_eval",
+          "task_id": "click__third__202"
+        },
+        {
+          "adapter_id": "kilo_workspace",
+          "repo": "click",
+          "split": "B_eval",
+          "task_id": "click__third__202"
+        },
+        {
+          "adapter_id": "codex_workspace",
+          "repo": "click",
+          "split": "B_eval",
+          "task_id": "click__third__220"
+        },
+        {
+          "adapter_id": "kilo_workspace",
+          "repo": "click",
+          "split": "B_eval",
+          "task_id": "click__third__220"
+        },
+        {
+          "adapter_id": "codex_workspace",
+          "repo": "click",
+          "split": "H_future",
+          "task_id": "click__third__109"
+        },
+        {
+          "adapter_id": "kilo_workspace",
+          "repo": "click",
+          "split": "H_future",
+          "task_id": "click__third__109"
+        },
+        {
+          "adapter_id": "codex_workspace",
+          "repo": "click",
+          "split": "H_future",
+          "task_id": "click__third__198"
+        },
+        {
+          "adapter_id": "kilo_workspace",
+          "repo": "click",
+          "split": "H_future",
+          "task_id": "click__third__198"
+        },
+        {
+          "adapter_id": "codex_workspace",
+          "repo": "click",
+          "split": "H_future",
+          "task_id": "click__third__214"
+        },
+        {
+          "adapter_id": "kilo_workspace",
+          "repo": "click",
+          "split": "H_future",
+          "task_id": "click__third__214"
+        },
+        {
+          "adapter_id": "codex_workspace",
+          "repo": "click",
+          "split": "H_future",
+          "task_id": "click__third__234"
+        },
+        {
+          "adapter_id": "kilo_workspace",
+          "repo": "click",
+          "split": "H_future",
+          "task_id": "click__third__234"
+        },
+        {
+          "adapter_id": "codex_workspace",
+          "repo": "click",
+          "split": "H_future",
+          "task_id": "click__third__288"
+        },
+        {
+          "adapter_id": "kilo_workspace",
+          "repo": "click",
+          "split": "H_future",
+          "task_id": "click__third__288"
+        }
+      ],
+      "missing_cells": 48,
+      "missing_cells_by_adapter": {
+        "codex_workspace": 24,
+        "kilo_workspace": 24
+      },
+      "missing_cells_by_repo_split_adapter": {
+        "attrs": {
+          "B_eval": {
+            "codex_workspace": 3,
+            "kilo_workspace": 3
+          },
+          "H_future": {
+            "codex_workspace": 3,
+            "kilo_workspace": 3
+          }
+        },
+        "boltons": {
+          "B_eval": {
+            "codex_workspace": 7,
+            "kilo_workspace": 7
+          },
+          "H_future": {
+            "codex_workspace": 3,
+            "kilo_workspace": 3
+          }
+        },
+        "click": {
+          "B_eval": {
+            "codex_workspace": 3,
+            "kilo_workspace": 3
+          },
+          "H_future": {
+            "codex_workspace": 5,
+            "kilo_workspace": 5
+          }
+        }
+      },
+      "missing_task_ids": [
+        "attrs__v2__157",
+        "attrs__v2__231",
+        "attrs__v2__271",
+        "attrs__v2__210",
+        "attrs__v2__218",
+        "attrs__v2__244",
+        "boltons__v2__008",
+        "boltons__v2__009",
+        "boltons__v2__076",
+        "boltons__v2__103",
+        "boltons__v2__128",
+        "boltons__v2__154",
+        "boltons__v2__231",
+        "boltons__v2__122",
+        "boltons__v2__132",
+        "boltons__v2__232",
+        "click__third__091",
+        "click__third__202",
+        "click__third__220",
+        "click__third__109",
+        "click__third__198",
+        "click__third__214",
+        "click__third__234",
+        "click__third__288"
+      ],
+      "missing_tasks": 24
+    }
+  }
+}

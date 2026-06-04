@@ -1,0 +1,73 @@
+{
+  "artifact": "future_gates",
+  "cross_harness_reporting_rule": {
+    "adapter_as_blocking_or_reporting_factor": true,
+    "adapter_table_required": true,
+    "paired_disagreement_required_when_shared_tasks": true,
+    "pooled_only_headline_allowed": false
+  },
+  "direct_runbook_updates_made": [],
+  "existing_runbooks_or_templates_to_reference": [
+    "docs/experiments/phase-1-three-repo-paid-validation-runbook.md",
+    "docs/experiments/phase-1-future-holdout-validation-runbook.md",
+    "docs/experiments/phase-1-preregistered-clean-future-holdout-paid-validation-runbook.md",
+    "docs/experiments/phase-1-statement-hardened-paid-validation-runbook.md",
+    "docs/experiments/phase-1-autonomous-overnight-two-repo-research-runbook.md",
+    "docs/experiments/phase-1-boltons-paid-acut-smoke-runbook.md"
+  ],
+  "gates": [
+    {
+      "acceptance": "The runbook names the adapter reporting policy artifact before paid outcomes are interpreted.",
+      "gate_id": "adapter_reporting_policy_loaded",
+      "required_for": "all paid validation runbooks"
+    },
+    {
+      "acceptance": "Each adapter has cell count, scoreable count, pass rate, repo/split breakouts, policy violations, cost basis, cost per cell, usage observed rate, and median latency.",
+      "gate_id": "adapter_level_result_table_required",
+      "required_for": "all cross-harness paid reports"
+    },
+    {
+      "acceptance": "The report shows both pass, both fail, adapter A only pass, adapter B only pass, and disagreement rate.",
+      "gate_id": "paired_disagreement_table_required_for_shared_tasks",
+      "required_for": "cross-harness runs where adapters share tasks"
+    },
+    {
+      "acceptance": "The report states whether cost is token-estimated or provider-billed, and says provider-billed exact cost is unavailable when actual_provider_billed_cost_usd is null.",
+      "gate_id": "cost_estimate_or_bill_status_required",
+      "required_for": "all paid reports"
+    },
+    {
+      "acceptance": "A pooled adapter headline is primary only if the runbook preregistered that aggregate before outcomes.",
+      "gate_id": "pooled_headline_primary_only_if_preregistered",
+      "required_for": "cross-harness paid reports with pooled summaries"
+    },
+    {
+      "acceptance": "A pooled adapter result is clearly marked secondary or retrospective diagnostic.",
+      "gate_id": "pooled_headline_secondary_or_diagnostic_otherwise",
+      "required_for": "cross-harness paid reports with non-preregistered pooled summaries"
+    },
+    {
+      "acceptance": "The runbook chooses one scoreable ACUT/adapter before outcomes and reports that adapter identity in the result table.",
+      "gate_id": "single_acut_runs_must_name_scoreable_adapter_before_outcomes",
+      "required_for": "single-ACUT paid validation"
+    }
+  ],
+  "generated_at": "2026-05-28T11:44:44Z",
+  "no_future_runbook_drafted": true,
+  "policy_loaded": true,
+  "pooled_summary_rule": {
+    "never_allowed": "only_headline_for_cross_harness_paid_results",
+    "otherwise": "secondary_or_retrospective_diagnostic",
+    "primary_allowed": "only_if_preregistered_before_outcomes"
+  },
+  "run_id": "phase1_adapter_stratified_reporting_20260528",
+  "schema_version": "barcarolle.phase1_adapter_stratified_reporting_output.v1",
+  "single_acut_reporting_rule": {
+    "adapter_table_required": true,
+    "paired_disagreement_required": false,
+    "pooled_adapter_headline_allowed": false,
+    "scoreable_adapter_must_be_preregistered": true
+  },
+  "status": "ready",
+  "why_no_direct_template_update": "No single central future paid-validation template exists in this repository. This run records gates and reference targets without drafting a next runbook."
+}

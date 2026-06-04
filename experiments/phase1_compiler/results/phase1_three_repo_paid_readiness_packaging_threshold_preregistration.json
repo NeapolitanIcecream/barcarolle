@@ -1,0 +1,33 @@
+{
+  "artifact": "threshold_preregistration",
+  "failure_rule": "Failure is any policy violation, raw oracle exposure, endpoint noncompliance, scoreability below 0.95, incomplete accounting, or primary gap above 0.15.",
+  "generated_at": "2026-05-28T03:39:08Z",
+  "paid_validation_run": false,
+  "precision_label_rules": {
+    "pilot_only": "Use for small_pilot and primary_pilot unless a later runbook expands to a precision-target design.",
+    "precision_target_claim_allowed": "Not allowed by this packaging runbook; requires a later paid validation run and analysis.",
+    "predictive_validity_claim_before_paid_validation": false
+  },
+  "primary_metrics": [
+    "per_repo_B_eval_to_H_future_absolute_gap",
+    "pooled_absolute_gap",
+    "scoreability_rate",
+    "policy_violation_count",
+    "endpoint_compliance",
+    "cost_latency_accounting_completeness"
+  ],
+  "run_id": "phase1_three_repo_paid_readiness_packaging_20260528",
+  "schema_version": "barcarolle.phase1_three_repo_paid_readiness_packaging_output.v1",
+  "status": "thresholds_preregistered",
+  "success_rule": "Success requires zero policy violations, endpoint compliance, scoreability >= 0.95, complete cost/latency accounting, and primary absolute gap <= 0.15.",
+  "thresholds": {
+    "cost_latency_accounting_required": true,
+    "minimum_scoreability_rate": 0.95,
+    "non_scoreable_cell_handling": "preregistered_taxonomy_and_excluded_from_pass_denominator",
+    "paid_endpoint_required": "LLM_BASE_URL + LLM_API_KEY",
+    "policy_violations_max": 0,
+    "primary_gap_threshold": 0.15,
+    "raw_oracle_exposure_allowed": false
+  },
+  "underpowered_evidence_rule": "If the recommended paid batch is run without the full release candidate, label the result pilot-only even when gates pass."
+}

@@ -1,0 +1,459 @@
+{
+  "allowed_scope": [
+    "multi_repo_compiler_mvp",
+    "source_adapter_and_certification_infrastructure",
+    "workspace_acut_import_and_score_tables",
+    "readiness_and_artifact_hygiene_reports"
+  ],
+  "certification_summary": {
+    "generic_comparator_task_count": 4,
+    "release_status_notes": [
+      "humanize legacy benchmark_grade=true is retained only as source metadata",
+      "phase1 release status remains pilot_grade and is not validation_grade"
+    ],
+    "target_task_count": 18,
+    "target_task_counts_by_repo": {
+      "humanize": 12,
+      "toolz": 6
+    }
+  },
+  "claim_scope": "phase1_mvp_compiler_infrastructure",
+  "claims": [
+    "phase1_mvp_compiler_infrastructure",
+    "insufficient_evidence_for_predictive_validation"
+  ],
+  "disallowed_claims": [
+    "predictive_validity_established",
+    "pure_harness_effect",
+    "production_benchmark_ranking"
+  ],
+  "generated_at": "2026-05-23T11:36:32+00:00",
+  "generic_comparators": [
+    {
+      "repo_id": "click",
+      "role": "generic_comparator",
+      "source_provenance": "generic_comparator_archived_click_r0",
+      "source_release": "experiments/phase0_headroom/releases/toolz_phase0_mini_release.json",
+      "task_count": 4,
+      "tasks": [
+        {
+          "certification_status": "archived_click_release_metadata",
+          "evidence_status": "comparator_metadata_only",
+          "module_or_package": [
+            "core"
+          ],
+          "repo_id": "click",
+          "role": "generic_comparator",
+          "source_provenance": "generic_comparator_archived_click_r0",
+          "source_release": "experiments/phase0_headroom/releases/toolz_phase0_mini_release.json",
+          "split": "G_mini",
+          "task_id": "click__rbench__001",
+          "task_type_proxy": "behavior_or_maintenance",
+          "weight": 1.0
+        },
+        {
+          "certification_status": "archived_click_release_metadata",
+          "evidence_status": "comparator_metadata_only",
+          "module_or_package": [
+            "missing"
+          ],
+          "repo_id": "click",
+          "role": "generic_comparator",
+          "source_provenance": "generic_comparator_archived_click_r0",
+          "source_release": "experiments/phase0_headroom/releases/toolz_phase0_mini_release.json",
+          "split": "G_mini",
+          "task_id": "click__rbench__002",
+          "task_type_proxy": "behavior_or_maintenance",
+          "weight": 1.0
+        },
+        {
+          "certification_status": "archived_click_release_metadata",
+          "evidence_status": "comparator_metadata_only",
+          "module_or_package": [
+            "core",
+            "termui"
+          ],
+          "repo_id": "click",
+          "role": "generic_comparator",
+          "source_provenance": "generic_comparator_archived_click_r0",
+          "source_release": "experiments/phase0_headroom/releases/toolz_phase0_mini_release.json",
+          "split": "G_mini",
+          "task_id": "click__rbench__003",
+          "task_type_proxy": "behavior_or_maintenance",
+          "weight": 1.0
+        },
+        {
+          "certification_status": "archived_click_release_metadata",
+          "evidence_status": "comparator_metadata_only",
+          "module_or_package": [
+            "missing"
+          ],
+          "repo_id": "click",
+          "role": "generic_comparator",
+          "source_provenance": "generic_comparator_archived_click_r0",
+          "source_release": "experiments/phase0_headroom/releases/toolz_phase0_mini_release.json",
+          "split": "G_mini",
+          "task_id": "click__rbench__004",
+          "task_type_proxy": "behavior_or_maintenance",
+          "weight": 1.0
+        }
+      ]
+    }
+  ],
+  "known_limitations": [
+    "insufficient_evidence_for_predictive_validation",
+    "humanize_source_context_uses_commit_message_fallback",
+    "future_holdout_unavailable_in_current_evidence",
+    "click_is_generic_comparator_only"
+  ],
+  "predictive_validity_established": false,
+  "readiness_gate_status": "ready_for_phase1_mvp",
+  "release_id": "phase1_mvp_multi_repo_release",
+  "repos": [
+    {
+      "certified_task_count": 6,
+      "legacy_benchmark_grade": true,
+      "repo_id": "toolz",
+      "role": "primary_target_repo",
+      "source_provenance": "source_provenance_issue_derived",
+      "source_release": "experiments/phase0_headroom/releases/toolz_phase0_mini_release.json",
+      "source_release_status": "benchmark_grade_candidate"
+    },
+    {
+      "certified_task_count": 12,
+      "legacy_benchmark_grade": true,
+      "legacy_pilot_grade": true,
+      "repo_id": "humanize",
+      "role": "second_target_repo",
+      "source_provenance": "source_provenance_commit_message_fallback",
+      "source_release": "experiments/phase0_headroom/releases/humanize_phase0_pilot_release.json",
+      "source_release_status": "pilot_grade"
+    }
+  ],
+  "schema_version": "barcarolle.phase1.release.v1",
+  "source_provenance": {
+    "click": "generic_comparator_archived_click_r0",
+    "humanize": "source_provenance_commit_message_fallback",
+    "toolz": "source_provenance_issue_derived"
+  },
+  "splits": {
+    "generic_comparators": {
+      "click": {
+        "G_mini": [
+          "click__rbench__001",
+          "click__rbench__002",
+          "click__rbench__003",
+          "click__rbench__004"
+        ]
+      }
+    },
+    "target_repos": {
+      "humanize": {
+        "B_real": [
+          "humanize__hist__002",
+          "humanize__hist__003",
+          "humanize__hist__004",
+          "humanize__hist__005",
+          "humanize__hist__006",
+          "humanize__hist__007"
+        ],
+        "W_real": [
+          "humanize__hist__008",
+          "humanize__hist__010",
+          "humanize__hist__012",
+          "humanize__hist__013",
+          "humanize__hist__014",
+          "humanize__hist__015"
+        ]
+      },
+      "toolz": {
+        "B_real": [
+          "toolz__hist__001",
+          "toolz__hist__002",
+          "toolz__hist__003"
+        ],
+        "W_real": [
+          "toolz__hist__004",
+          "toolz__hist__010",
+          "toolz__hist__016"
+        ]
+      }
+    }
+  },
+  "status": "pilot_grade",
+  "tasks": [
+    {
+      "certification_status": "certified",
+      "evidence_status": "certified",
+      "module_or_package": [
+        "functoolz"
+      ],
+      "repo_id": "toolz",
+      "role": "primary_target_repo",
+      "source_provenance": "source_provenance_issue_derived",
+      "source_release": "experiments/phase0_headroom/releases/toolz_phase0_mini_release.json",
+      "split": "B_real",
+      "task_id": "toolz__hist__001",
+      "task_type_proxy": "feature_or_api_extension",
+      "weight": 1.0
+    },
+    {
+      "certification_status": "certified",
+      "evidence_status": "certified",
+      "module_or_package": [
+        "functoolz"
+      ],
+      "repo_id": "toolz",
+      "role": "primary_target_repo",
+      "source_provenance": "source_provenance_issue_derived",
+      "source_release": "experiments/phase0_headroom/releases/toolz_phase0_mini_release.json",
+      "split": "B_real",
+      "task_id": "toolz__hist__002",
+      "task_type_proxy": "feature_or_api_extension",
+      "weight": 1.0
+    },
+    {
+      "certification_status": "certified",
+      "evidence_status": "certified",
+      "module_or_package": [
+        "functoolz"
+      ],
+      "repo_id": "toolz",
+      "role": "primary_target_repo",
+      "source_provenance": "source_provenance_issue_derived",
+      "source_release": "experiments/phase0_headroom/releases/toolz_phase0_mini_release.json",
+      "split": "B_real",
+      "task_id": "toolz__hist__003",
+      "task_type_proxy": "behavior_or_maintenance",
+      "weight": 1.0
+    },
+    {
+      "certification_status": "certified",
+      "evidence_status": "certified",
+      "module_or_package": [
+        "functoolz"
+      ],
+      "repo_id": "toolz",
+      "role": "primary_target_repo",
+      "source_provenance": "source_provenance_issue_derived",
+      "source_release": "experiments/phase0_headroom/releases/toolz_phase0_mini_release.json",
+      "split": "W_real",
+      "task_id": "toolz__hist__004",
+      "task_type_proxy": "feature_or_api_extension",
+      "weight": 1.0
+    },
+    {
+      "certification_status": "certified",
+      "evidence_status": "certified",
+      "module_or_package": [
+        "functoolz"
+      ],
+      "repo_id": "toolz",
+      "role": "primary_target_repo",
+      "source_provenance": "source_provenance_issue_derived",
+      "source_release": "experiments/phase0_headroom/releases/toolz_phase0_mini_release.json",
+      "split": "W_real",
+      "task_id": "toolz__hist__010",
+      "task_type_proxy": "feature_or_api_extension",
+      "weight": 1.0
+    },
+    {
+      "certification_status": "certified",
+      "evidence_status": "certified",
+      "module_or_package": [
+        "itertoolz"
+      ],
+      "repo_id": "toolz",
+      "role": "primary_target_repo",
+      "source_provenance": "source_provenance_issue_derived",
+      "source_release": "experiments/phase0_headroom/releases/toolz_phase0_mini_release.json",
+      "split": "W_real",
+      "task_id": "toolz__hist__016",
+      "task_type_proxy": "bug_or_behavior_fix",
+      "weight": 1.0
+    },
+    {
+      "certification_status": "certified",
+      "evidence_status": "certified",
+      "module_or_package": [
+        "time"
+      ],
+      "repo_id": "humanize",
+      "role": "second_target_repo",
+      "source_provenance": "source_provenance_commit_message_fallback",
+      "source_release": "experiments/phase0_headroom/releases/humanize_phase0_pilot_release.json",
+      "split": "B_real",
+      "task_id": "humanize__hist__002",
+      "task_type_proxy": "behavior_or_feature_or_bugfix",
+      "weight": 1.0
+    },
+    {
+      "certification_status": "certified",
+      "evidence_status": "certified",
+      "module_or_package": [
+        "time"
+      ],
+      "repo_id": "humanize",
+      "role": "second_target_repo",
+      "source_provenance": "source_provenance_commit_message_fallback",
+      "source_release": "experiments/phase0_headroom/releases/humanize_phase0_pilot_release.json",
+      "split": "B_real",
+      "task_id": "humanize__hist__003",
+      "task_type_proxy": "behavior_or_feature_or_bugfix",
+      "weight": 1.0
+    },
+    {
+      "certification_status": "certified",
+      "evidence_status": "certified",
+      "module_or_package": [
+        "number"
+      ],
+      "repo_id": "humanize",
+      "role": "second_target_repo",
+      "source_provenance": "source_provenance_commit_message_fallback",
+      "source_release": "experiments/phase0_headroom/releases/humanize_phase0_pilot_release.json",
+      "split": "B_real",
+      "task_id": "humanize__hist__004",
+      "task_type_proxy": "behavior_or_feature_or_bugfix",
+      "weight": 1.0
+    },
+    {
+      "certification_status": "certified",
+      "evidence_status": "certified",
+      "module_or_package": [
+        "number"
+      ],
+      "repo_id": "humanize",
+      "role": "second_target_repo",
+      "source_provenance": "source_provenance_commit_message_fallback",
+      "source_release": "experiments/phase0_headroom/releases/humanize_phase0_pilot_release.json",
+      "split": "B_real",
+      "task_id": "humanize__hist__005",
+      "task_type_proxy": "behavior_or_feature_or_bugfix",
+      "weight": 1.0
+    },
+    {
+      "certification_status": "certified",
+      "evidence_status": "certified",
+      "module_or_package": [
+        "filesize"
+      ],
+      "repo_id": "humanize",
+      "role": "second_target_repo",
+      "source_provenance": "source_provenance_commit_message_fallback",
+      "source_release": "experiments/phase0_headroom/releases/humanize_phase0_pilot_release.json",
+      "split": "B_real",
+      "task_id": "humanize__hist__006",
+      "task_type_proxy": "behavior_or_feature_or_bugfix",
+      "weight": 1.0
+    },
+    {
+      "certification_status": "certified",
+      "evidence_status": "certified",
+      "module_or_package": [
+        "number"
+      ],
+      "repo_id": "humanize",
+      "role": "second_target_repo",
+      "source_provenance": "source_provenance_commit_message_fallback",
+      "source_release": "experiments/phase0_headroom/releases/humanize_phase0_pilot_release.json",
+      "split": "B_real",
+      "task_id": "humanize__hist__007",
+      "task_type_proxy": "behavior_or_feature_or_bugfix",
+      "weight": 1.0
+    },
+    {
+      "certification_status": "certified",
+      "evidence_status": "certified",
+      "module_or_package": [
+        "i18n"
+      ],
+      "repo_id": "humanize",
+      "role": "second_target_repo",
+      "source_provenance": "source_provenance_commit_message_fallback",
+      "source_release": "experiments/phase0_headroom/releases/humanize_phase0_pilot_release.json",
+      "split": "W_real",
+      "task_id": "humanize__hist__008",
+      "task_type_proxy": "behavior_or_feature_or_bugfix",
+      "weight": 1.0
+    },
+    {
+      "certification_status": "certified",
+      "evidence_status": "certified",
+      "module_or_package": [
+        "time"
+      ],
+      "repo_id": "humanize",
+      "role": "second_target_repo",
+      "source_provenance": "source_provenance_commit_message_fallback",
+      "source_release": "experiments/phase0_headroom/releases/humanize_phase0_pilot_release.json",
+      "split": "W_real",
+      "task_id": "humanize__hist__010",
+      "task_type_proxy": "behavior_or_feature_or_bugfix",
+      "weight": 1.0
+    },
+    {
+      "certification_status": "certified",
+      "evidence_status": "certified",
+      "module_or_package": [
+        "time"
+      ],
+      "repo_id": "humanize",
+      "role": "second_target_repo",
+      "source_provenance": "source_provenance_commit_message_fallback",
+      "source_release": "experiments/phase0_headroom/releases/humanize_phase0_pilot_release.json",
+      "split": "W_real",
+      "task_id": "humanize__hist__012",
+      "task_type_proxy": "behavior_or_feature_or_bugfix",
+      "weight": 1.0
+    },
+    {
+      "certification_status": "certified",
+      "evidence_status": "certified",
+      "module_or_package": [
+        "time"
+      ],
+      "repo_id": "humanize",
+      "role": "second_target_repo",
+      "source_provenance": "source_provenance_commit_message_fallback",
+      "source_release": "experiments/phase0_headroom/releases/humanize_phase0_pilot_release.json",
+      "split": "W_real",
+      "task_id": "humanize__hist__013",
+      "task_type_proxy": "behavior_or_feature_or_bugfix",
+      "weight": 1.0
+    },
+    {
+      "certification_status": "certified",
+      "evidence_status": "certified",
+      "module_or_package": [
+        "__init__",
+        "i18n",
+        "number"
+      ],
+      "repo_id": "humanize",
+      "role": "second_target_repo",
+      "source_provenance": "source_provenance_commit_message_fallback",
+      "source_release": "experiments/phase0_headroom/releases/humanize_phase0_pilot_release.json",
+      "split": "W_real",
+      "task_id": "humanize__hist__014",
+      "task_type_proxy": "behavior_or_feature_or_bugfix",
+      "weight": 1.0
+    },
+    {
+      "certification_status": "certified",
+      "evidence_status": "certified",
+      "module_or_package": [
+        "__init__",
+        "number"
+      ],
+      "repo_id": "humanize",
+      "role": "second_target_repo",
+      "source_provenance": "source_provenance_commit_message_fallback",
+      "source_release": "experiments/phase0_headroom/releases/humanize_phase0_pilot_release.json",
+      "split": "W_real",
+      "task_id": "humanize__hist__015",
+      "task_type_proxy": "behavior_or_feature_or_bugfix",
+      "weight": 1.0
+    }
+  ]
+}

@@ -1,0 +1,17 @@
+{
+  "approval_present": true,
+  "artifact": "entry_gate",
+  "blockers": [],
+  "cost_cap_recorded_usd": 75.0,
+  "endpoint_variables_present": true,
+  "generated_at": "2026-05-28T04:03:31Z",
+  "no_raw_logs_workspaces_staged": true,
+  "package_integrity_passes": true,
+  "paid_acut_calls_made": false,
+  "planned_cells": 120,
+  "run_id": "phase1_three_repo_paid_validation_20260528",
+  "schema_version": "barcarolle.phase1_three_repo_paid_validation_output.v1",
+  "source_quality_audit_passes": true,
+  "status": "ready_for_paid_batches",
+  "thresholds_frozen": true
+}

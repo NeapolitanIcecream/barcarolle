@@ -1,0 +1,10 @@
+schema_version: barcarolle.measured_budget.v1
+hard_cap_usd: 200
+soft_stop_usd: 160
+stop_and_ask_usd: 180
+pricing_source: user_estimate_required_conservative_default
+input_rate_per_1m_usd: 3.0
+cached_input_rate_per_1m_usd: 0.3
+output_rate_per_1m_usd: 15.0
+scale_requires_usage_observed: true
+scale_requires_generic_comparator: true

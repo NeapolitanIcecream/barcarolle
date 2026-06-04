@@ -1,0 +1,53 @@
+{
+  "schema_version": "barcarolle.phase0_generic_comparator_task.v1",
+  "task_id": "click__rbench__001",
+  "repo_id": "click",
+  "source_type": "pull_request",
+  "base_commit": "4a7fe69f942bd02b811548ff8f02a08fff7429c1",
+  "task_time": "2015-01-29T14:45:43+01:00",
+  "solver_facing_statement": "Fix option help generation so an option declared with multiple=True, show_default=True, and a list or tuple default renders help instead of raising while formatting the default.",
+  "base_checkout_or_workspace_recipe": "Archive the base commit from archive/2026-05-agent-license-reset/experiments/core_narrative/external_repos/click into a base-tree-only synthetic git workspace.",
+  "prompt_code_files": [
+    "click/core.py"
+  ],
+  "oracle_command": "verifier/run.sh",
+  "archive_task_manifest": "audit/archive_task.yaml",
+  "reference_patch_or_reference_behavior": "A reference implementation passes tests/test_options.py::test_multiple_default_help under the hidden verifier.",
+  "known_bad_patch_or_failure_mode": "The no-op base tree and archived known-bad probe both fail the hidden verifier.",
+  "leakage_review": {
+    "status": "pass",
+    "acut_visible_statement": "public/acut_statement.md",
+    "review_basis": "Click R0 release hygiene and archived admission leakage scan",
+    "excludes_source_urls_shas_and_reference_patch": true
+  },
+  "ambiguity_review": {
+    "status": "pass",
+    "basis": "Focused user-visible option help behavior with deterministic expected output fragments."
+  },
+  "scope_review": {
+    "status": "pass",
+    "expected_touched_area": [
+      "click/core.py option default rendering",
+      "tests/test_options.py regression coverage"
+    ]
+  },
+  "cost_bound": {
+    "status": "pass",
+    "expected_files": 2,
+    "expected_timeout_seconds": 60
+  },
+  "feature_taxonomy": {
+    "task_family": "option help/default rendering",
+    "module_or_package": [
+      "core"
+    ],
+    "task_type_proxy": "behavior_or_maintenance"
+  },
+  "scoreability_status": {
+    "status": "scoreable_same_protocol",
+    "base_commit_available": true,
+    "solver_statement_available": true,
+    "hidden_verifier_available": true,
+    "archived_admission_gates_passed": true
+  }
+}

@@ -1,0 +1,57 @@
+schema_version: barcarolle.phase1_attrs_h_future_statement_quality_audit.v1
+status: configured
+runbook: docs/experiments/phase-1-attrs-h-future-statement-quality-audit-runbook.md
+claim_scope: attrs_h_future_statement_quality_audit
+predictive_validity_established: false
+production_ranking_status: not_produced
+local_only: true
+paid_acut_calls_enabled: false
+paid_llm_calls_enabled: false
+
+audited_repo: attrs
+audited_split: H_future
+audited_tasks:
+  - attrs__hist__012
+  - attrs__hist__013
+  - attrs__hist__023
+  - attrs__hist__027
+
+source_artifacts:
+  proposal: /Users/chenmohan/Downloads/barcarolle-research-0519.md
+  certified_tasks: experiments/phase0_headroom/certified_tasks/attrs_clean_outcome_unseen_supply_certified_tasks.jsonl
+  source_context: experiments/phase0_headroom/candidate_sources/attrs_clean_outcome_unseen_supply_source_context.jsonl
+  task_outcome_matrix: experiments/phase1_compiler/results/phase1_two_repo_task_outcome_matrix.json
+  failure_taxonomy: experiments/phase1_compiler/results/phase1_attrs_h_future_failure_taxonomy.json
+  negative_or_underpowered_pilot: experiments/phase1_compiler/results/phase1_two_repo_negative_or_underpowered_pilot.json
+  next_research_decision: experiments/phase1_compiler/results/phase1_next_research_decision.json
+
+output_paths:
+  preflight: experiments/phase1_compiler/results/phase1_attrs_h_future_statement_audit_preflight.json
+  task_design_audit: experiments/phase1_compiler/results/phase1_attrs_h_future_task_design_audit.json
+  statement_sensitivity: experiments/phase1_compiler/results/phase1_attrs_h_future_statement_sensitivity.json
+  statement_preview: experiments/phase1_compiler/results/phase1_attrs_h_future_statement_preview.json
+  evidence_status: experiments/phase1_compiler/results/phase1_attrs_h_future_evidence_status.json
+  process_report: experiments/phase1_compiler/reports/phase1_attrs_h_future_statement_audit_process.md
+  task_design_audit_report: experiments/phase1_compiler/reports/phase1_attrs_h_future_task_design_audit.md
+  statement_sensitivity_report: experiments/phase1_compiler/reports/phase1_attrs_h_future_statement_sensitivity.md
+  statement_preview_report: experiments/phase1_compiler/reports/phase1_attrs_h_future_statement_preview.md
+  evidence_status_report: experiments/phase1_compiler/reports/phase1_attrs_h_future_evidence_status.md
+  future_runbook: docs/experiments/phase-1-statement-hardened-holdout-preregistration-runbook.md
+
+manual_audit_labels:
+  attrs__hist__012: valid_but_statement_quality_risk
+  attrs__hist__013: questionable_pr_context_and_statement_quality_risk
+  attrs__hist__023: mostly_valid_but_statement_quality_risk
+  attrs__hist__027: valid_scope_but_under_specified_statement_risk
+
+guardrails:
+  run_paid_acut_cells: false
+  run_paid_llm_calls: false
+  rerun_existing_scoreable_cells: false
+  rerun_attrs_hist_027_policy_violation: false
+  modify_acut_internals: false
+  rewrite_paid_score_tables: false
+  tune_on_hidden_oracle: false
+  commit_raw_public_bodies: false
+  commit_raw_prompts_or_transcripts: false
+

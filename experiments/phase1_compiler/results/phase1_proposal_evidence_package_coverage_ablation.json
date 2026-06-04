@@ -1,0 +1,79 @@
+{
+  "ablation_rows": [
+    {
+      "MAE": 0.209,
+      "catastrophic_miss_rate": 0.5556,
+      "component": "coverage_constrained_unweighted",
+      "delta_vs_candidate_MAE": 0.0,
+      "interpretation": "reference candidate in the retrospective score-join artifacts",
+      "role": "candidate_score_comparison"
+    },
+    {
+      "MAE": 0.2242,
+      "catastrophic_miss_rate": 0.6667,
+      "component": "repo_unweighted_same_budget",
+      "delta_vs_candidate_MAE": -0.0152,
+      "interpretation": "candidate_better",
+      "role": "deterministic_simple"
+    },
+    {
+      "MAE": 0.2343,
+      "catastrophic_miss_rate": 0.5556,
+      "component": "repo_stratified_by_target_profile",
+      "delta_vs_candidate_MAE": -0.0253,
+      "interpretation": "candidate_better",
+      "role": "deterministic_simple"
+    },
+    {
+      "MAE": 0.2149,
+      "catastrophic_miss_rate": 0.5556,
+      "component": "temporal_recent_baseline",
+      "delta_vs_candidate_MAE": -0.0059,
+      "interpretation": "candidate_better",
+      "role": "deterministic_simple"
+    },
+    {
+      "MAE": 0.2464,
+      "catastrophic_miss_rate": 0.6667,
+      "component": "many_seed_random_same_budget",
+      "delta_vs_candidate_MAE": -0.0374,
+      "interpretation": "candidate_better",
+      "role": "many_seed_random_distribution_median"
+    }
+  ],
+  "adapter_diagnostics": [
+    {
+      "adapter": "codex_workspace",
+      "best_baseline": "temporal_recent_baseline",
+      "best_baseline_MAE": 0.2417,
+      "candidate_MAE": 0.267,
+      "delta": 0.0253,
+      "relation": "candidate_worse"
+    },
+    {
+      "adapter": "kilo_workspace",
+      "best_baseline": "repo_unweighted_same_budget",
+      "best_baseline_MAE": 0.1807,
+      "candidate_MAE": 0.151,
+      "delta": -0.0297,
+      "relation": "candidate_better"
+    }
+  ],
+  "artifact": "coverage_ablation",
+  "candidate_design_id": "coverage_constrained_unweighted",
+  "candidate_policy_object": "coverage_constrained_unweighted_v1_with_labeled_fallbacks",
+  "claim_label": "traction_only",
+  "clean_decomposition_possible": false,
+  "generated_at": "2026-06-01T04:40:48Z",
+  "identifiability": {
+    "coverage_objective_contribution": "partially_identified_by_candidate_delta_against_simple_baselines",
+    "fallback_composite_policy_contribution": "not outcome-identifiable from current artifacts; factual fallback share is reported separately",
+    "temporal_recency_contribution": "temporal_recent_baseline remains a serious simple comparator and is the best deterministic simple baseline overall",
+    "unweighted_same_budget_contribution": "not_cleanly_identifiable_without a factorial selector family using the same outcome windows"
+  },
+  "limitation": "Current artifacts compare whole selector designs. They do not isolate coverage, unweighted budgeting, fallback, and temporal recency as orthogonal randomized factors.",
+  "paid_validation_authorized": false,
+  "predictive_validity_established": false,
+  "run_id": "phase1_proposal_evidence_package_20260601",
+  "schema_version": "barcarolle.phase1_proposal_evidence_package_output.v1"
+}

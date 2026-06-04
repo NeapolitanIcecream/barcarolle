@@ -1,0 +1,59 @@
+schema_version: barcarolle.phase1_clean_outcome_unseen_supply_mining.v1
+status: configured
+claim_scope: clean_supply_mining_not_predictive_validation
+predictive_validity_established: false
+paid_acut_calls: disabled
+paid_llm_calls: disabled
+
+target:
+  primary_repo: boltons
+  backup_repos:
+    - attrs
+  minimum_clean_split:
+    B_real: 2
+    W_real: 2
+  required_future_holdout_minimum:
+    b_eval_tasks_per_repo: 2
+    h_future_tasks_per_repo: 2
+  prior_clean_supply_overlay: experiments/phase1_compiler/results/phase1_clean_supply_breal_extension_overlay.json
+  first_choice_missing_supply:
+    repo_id: boltons
+    split: B_real
+    count: 1
+
+mining:
+  extension_namespace: clean_outcome_unseen_supply
+  boltons_max_history_anchors: 1000
+  boltons_max_certification_attempts: 48
+  backup_max_history_anchors: 1000
+  backup_max_certification_attempts: 48
+  prefer_candidates_before_task_time: "2023-04-02T15:11:27-04:00"
+  require_cutoff_feasibility: true
+
+source_artifacts:
+  current_breal_extension_decision: experiments/phase1_compiler/results/phase1_clean_supply_breal_extension_decision.json
+  current_breal_extension_overlay: experiments/phase1_compiler/results/phase1_clean_supply_breal_extension_overlay.json
+  current_breal_candidate_audit: experiments/phase1_compiler/results/phase1_clean_supply_breal_candidate_audit.json
+  future_holdout_config: experiments/phase1_compiler/configs/phase1_future_holdout_validation.yaml
+  future_holdout_clean_supply: experiments/phase1_compiler/results/phase1_future_holdout_clean_supply.json
+  hardening_overlay: experiments/phase1_compiler/results/phase1_hardened_certification_overlay.json
+  workspace_scorecard: experiments/phase1_compiler/results/phase1_workspace_scorecard.json
+  boltons_local_repo: experiments/phase0_headroom/external_repos/boltons
+  attrs_local_repo: experiments/phase0_headroom/external_repos/attrs
+
+promotion_policy:
+  require_outcome_unseen: true
+  require_target_commit_unseen: true
+  require_non_leaky_problem_context: true
+  reject_commit_message_only_source: true
+  reject_solution_exposure_risk: true
+  reject_project_heavy_ambiguous_context: true
+  reject_project_or_docs_only: true
+  require_oracle_alignment: true
+  require_local_certification_gates: true
+  require_future_holdout_cutoff_feasibility: true
+
+future_holdout_overlay_integration:
+  enabled: true
+  evidence_level: clean_supply_overlay_sidecar
+  mutate_hardening_overlay: false

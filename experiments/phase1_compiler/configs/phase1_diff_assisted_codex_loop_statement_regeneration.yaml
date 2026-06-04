@@ -1,0 +1,87 @@
+schema_version: barcarolle.phase1_diff_assisted_codex_loop_statement_regeneration.v1
+runbook: docs/experiments/phase-1-diff-assisted-statement-regeneration-runbook.md
+created_at: 2026-05-25T03:29:09Z
+
+policy:
+  paid_acut_calls_enabled: false
+  paid_solver_cells_enabled: false
+  llm_api_generation_review_enabled: false
+  codex_subscription_generation_review_conditionally_enabled: true
+  generator_reviewer_llm_api_endpoint_enabled: false
+  endpoint_env_vars_unset_for_generator_reviewer:
+    - LLM_BASE_URL
+    - LLM_API_KEY
+    - OPENAI_API_KEY
+    - OPENROUTER_API_KEY
+  required_codex_model: gpt-5.5
+  required_reasoning_effort: xhigh
+  historical_paid_outcomes_available_to_generator_reviewer: false
+  historical_paid_score_tables_immutable: true
+  deterministic_generation_review_fallback_allowed: false
+  raw_prompts_completions_logs_committed: false
+  raw_target_diffs_committed: false
+  old_240_character_truncation_is_task_invalidity_evidence: false
+
+generation_review:
+  execution_mode: external_codex_cli_generator_reviewer_loop
+  max_iterations_per_batch: 3
+  generator_tmux_session: phase1-diffstmt-generator
+  reviewer_tmux_session: phase1-diffstmt-reviewer
+  workflow_dir: .codex-workflows/phase1-diff-assisted-statement-regeneration-codex-loop
+  target_statement_length_chars:
+    min: 1500
+    max: 2500
+    soft_max: 4000
+  default_candidate_batch: all_current_boltons_attrs_statement_hardened_inventory
+  soft_incremental_cost_cap_usd: 10
+  hard_incremental_cost_cap_usd: 20
+
+source_artifacts:
+  proposal: /Users/chenmohan/Downloads/barcarolle-research-0519.md
+  prior_deterministic_process: experiments/phase1_compiler/reports/phase1_diff_assisted_statement_regeneration_process.md
+  prior_deterministic_reviews: experiments/phase1_compiler/reports/phase1_diff_assisted_statement_reviews.md
+  prior_deterministic_screen: experiments/phase1_compiler/reports/phase1_diff_assisted_statement_screen.md
+  prior_deterministic_decision: experiments/phase1_compiler/reports/phase1_diff_assisted_recovery_decision.md
+  prior_deterministic_candidate_packets: experiments/phase1_compiler/results/phase1_diff_assisted_candidate_packets.json
+  statement_hardened_inventory: experiments/phase1_compiler/results/phase1_statement_hardened_candidate_inventory.json
+  statement_hardened_screen: experiments/phase1_compiler/results/phase1_statement_hardened_candidate_screen.json
+  statement_hardened_validation_decision: experiments/phase1_compiler/results/phase1_statement_hardened_validation_decision.json
+  statement_hardened_blocker: experiments/phase1_compiler/results/phase1_statement_hardened_blocker.json
+  attrs_h_future_evidence_status: experiments/phase1_compiler/results/phase1_attrs_h_future_evidence_status.json
+  boltons_certified_tasks: experiments/phase0_headroom/certified_tasks/boltons_clean_outcome_unseen_supply_certified_tasks.jsonl
+  attrs_certified_tasks: experiments/phase0_headroom/certified_tasks/attrs_clean_outcome_unseen_supply_certified_tasks.jsonl
+  boltons_source_context: experiments/phase0_headroom/candidate_sources/boltons_clean_outcome_unseen_supply_source_context.jsonl
+  attrs_source_context: experiments/phase0_headroom/candidate_sources/attrs_clean_outcome_unseen_supply_source_context.jsonl
+
+external_repos:
+  boltons: experiments/phase0_headroom/external_repos/boltons
+  attrs: experiments/phase0_headroom/external_repos/attrs
+
+selection:
+  preferred_repos:
+    - boltons
+    - attrs
+  preferred_splits:
+    - B_eval
+    - H_future
+  tasks_per_repo_split: 4
+  required_review_status: pass
+  required_qa_status: pass
+  exclude_paid_outcome_from_selection: true
+  implementation_scope_only: true
+
+output_paths:
+  preflight: experiments/phase1_compiler/results/phase1_diff_assisted_codex_loop_preflight.json
+  candidate_packets: experiments/phase1_compiler/results/phase1_diff_assisted_codex_loop_candidate_packets.json
+  generation_plan: experiments/phase1_compiler/results/phase1_diff_assisted_codex_loop_generation_plan.json
+  session_proof: experiments/phase1_compiler/results/phase1_diff_assisted_codex_loop_session_proof.json
+  generated_statements: experiments/phase1_compiler/results/phase1_diff_assisted_codex_loop_generated_statements.jsonl
+  statement_reviews: experiments/phase1_compiler/results/phase1_diff_assisted_codex_loop_statement_reviews.json
+  deterministic_qa: experiments/phase1_compiler/results/phase1_diff_assisted_codex_loop_deterministic_qa.json
+  statement_screen: experiments/phase1_compiler/results/phase1_diff_assisted_codex_loop_statement_screen.json
+  recovery_decision: experiments/phase1_compiler/results/phase1_diff_assisted_codex_loop_recovery_decision.json
+  process_report: experiments/phase1_compiler/reports/phase1_diff_assisted_codex_loop_process.md
+  session_proof_report: experiments/phase1_compiler/reports/phase1_diff_assisted_codex_loop_session_proof.md
+  statement_reviews_report: experiments/phase1_compiler/reports/phase1_diff_assisted_codex_loop_statement_reviews.md
+  statement_screen_report: experiments/phase1_compiler/reports/phase1_diff_assisted_codex_loop_statement_screen.md
+  recovery_decision_report: experiments/phase1_compiler/reports/phase1_diff_assisted_codex_loop_recovery_decision.md

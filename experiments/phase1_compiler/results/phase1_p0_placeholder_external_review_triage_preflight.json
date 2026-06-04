@@ -1,0 +1,75 @@
+{
+  "runbook": "docs/experiments/phase-1-p0-placeholder-and-external-review-triage-runbook.md",
+  "generated_at": "2026-06-01T11:39:22+08:00",
+  "branch": "codex/restart-benchmark-compiler",
+  "head": "c86d1f51f9f610a65eee0065fd0a7a593889c93d",
+  "active_report": "docs/research/phase-1-proposal-report-v1.md",
+  "worktree_status_before_step0": [
+    "M PROCESS.md",
+    "?? docs/experiments/phase-1-p0-placeholder-and-external-review-triage-runbook.md",
+    "?? docs/experiments/phase-1-proposal-report-argument-rewrite-runbook.md",
+    "?? docs/experiments/phase-1-proposal-report-final-shape-rewrite-runbook.md",
+    "?? docs/experiments/phase-1-proposal-report-skeleton-runbook.md",
+    "?? docs/research/phase-1-proposal-roadmap-and-claim-planning.md",
+    "?? experiments/phase1_compiler/external_review/phase1_candidate_policy_validation_protocol_gpt55_bundle_20260530/",
+    "?? experiments/phase1_compiler/external_review/phase1_task_generator_design_review_20260526/"
+  ],
+  "required_inputs": [
+    {"path": "AGENTS.md", "available": true},
+    {"path": "PROCESS.md", "available": true},
+    {"path": "docs/research/phase-1-proposal-roadmap-and-claim-planning.md", "available": true},
+    {"path": "docs/research/phase-1-proposal-report-v1.md", "available": true},
+    {"path": "docs/research/phase-1-proposal-claim-boundary.md", "available": true},
+    {"path": "docs/research/phase-1-proposal-evidence-todo-matrix.md", "available": true},
+    {"path": "docs/research/phase-1-proposal-argument-map.md", "available": true},
+    {"path": "experiments/phase1_compiler/reports/phase1_proposal_report_final_shape_rewrite_decision.md", "available": true},
+    {"path": "/Users/chenmohan/Downloads/barcarolle-research-0519.md", "available": true},
+    {"path": "/Users/chenmohan/Downloads/barcarolle-research-0526.md", "available": true},
+    {"path": "/Users/chenmohan/Downloads/barcarolle-research-0526-1.md", "available": true},
+    {"path": "/Users/chenmohan/Downloads/barcarolle-research-0530.md", "available": true}
+  ],
+  "missing_inputs": [],
+  "p0_placeholder_count": 17,
+  "p0_placeholders": [
+    "NEEDS CITATION: related-work comparison for benchmark families and task generation systems",
+    "NEEDS FIGURE: north-star validation design",
+    "NEEDS FIGURE: compiler architecture",
+    "NEEDS PSEUDOCODE: candidate benchmark assembly policy",
+    "NEEDS TABLE: release artifact schema",
+    "NEEDS TABLE: one-page preliminary evidence summary",
+    "NEEDS RESULT: many-seed random baseline distribution and candidate percentile",
+    "NEEDS RESULT: baseline-envelope comparison",
+    "NEEDS RESULT: coverage objective ablation",
+    "NEEDS DECISION: fallback-share threshold",
+    "NEEDS DECISION: estimand and adapter claim",
+    "NEEDS DECISION: catastrophic-miss and invalid-cell rules",
+    "NEEDS DECISION: joint success gate",
+    "NEEDS ANALYSIS: power and budget note",
+    "NEEDS NUMBER: no-paid staffing and duration",
+    "NEEDS NUMBER: conditional paid-validation budget ceiling",
+    "NEEDS DELIVERABLE DETAIL: acceptance criteria and owners"
+  ],
+  "p1_placeholder_count": 4,
+  "p1_placeholders": [
+    "NEEDS APPENDIX TABLE: report evidence index",
+    "NEEDS DECISION: approval artifact format",
+    "NEEDS DECISION: external-review triage categories",
+    "NEEDS CITATION: public-literature replacements for local research-plan references"
+  ],
+  "boundary_checks": {
+    "paid_acut_solver_calls_made": 0,
+    "paid_llm_calls_made": 0,
+    "external_reviewer_calls_made": 0,
+    "browsing_for_citations_made": false,
+    "later_runbook_drafted": false,
+    "paid_validation_authorized": false,
+    "predictive_validity_established": false
+  },
+  "step0_acceptance": {
+    "no_paid_calls_made": true,
+    "no_external_reviewer_calls_made": true,
+    "all_p0_placeholders_from_v1_appendix_d_inventoried": true,
+    "missing_inputs_recorded": true,
+    "no_later_runbook_drafted": true
+  }
+}

@@ -1,0 +1,672 @@
+{
+  "adapter_cli_available": {
+    "codex": true,
+    "kilo": true
+  },
+  "adapter_endpoint_requirements": {
+    "codex_workspace": [
+      "LLM_BASE_URL",
+      "LLM_API_KEY"
+    ],
+    "kilo_workspace": [
+      "LLM_BASE_URL",
+      "LLM_API_KEY"
+    ]
+  },
+  "artifact": "ready_package_integrity",
+  "blockers": [],
+  "claim_boundary": {
+    "existing_outcomes_reused_only_for_exploratory_evidence": true,
+    "formal_preregistration_claim_allowed": false,
+    "phase_status": "exploratory",
+    "predictive_validity_established": false
+  },
+  "click_minor_risk_caveat": {
+    "accepted_as_caveat_for_recommended_option": true,
+    "status": "visible_title_only_minor_risk"
+  },
+  "endpoint_requirement": {
+    "fallback_to_other_llm_auth_allowed": false,
+    "required_env_vars": [
+      "LLM_BASE_URL",
+      "LLM_API_KEY"
+    ]
+  },
+  "generated_at": "2026-05-29T03:40:57Z",
+  "known_reusable_cells": 72,
+  "manifest_validation": {
+    "actual_count": 48,
+    "expected_count": 48,
+    "matches": true,
+    "missing_cells": [],
+    "unexpected_cells": []
+  },
+  "matrix_config": "experiments/phase0_headroom/configs/phase1_blocked_split_missing_cell_supplement_paid_execution_workspace_matrix.yaml",
+  "missing_paid_cells": 48,
+  "no_paid_dry_inspection_passed": true,
+  "package_rows": [
+    {
+      "allowed_code_paths": [
+        "src/attr/_make.py"
+      ],
+      "base_commit": "7bfd0e4061daee413a0cd1a3c78f1f3a98e0f32b",
+      "base_commit_resolvable": true,
+      "click_title_only_minor_risk_visible": true,
+      "hidden_oracle_material_solver_visible": false,
+      "loaded": true,
+      "paid_acut_calls_made": false,
+      "raw_diff_marker_in_statement": false,
+      "rendered_statement_sha256": "d1ba3aacfd5d55db06ec073a7e2a34fdfd0680ae2a793f352d2099813c97cce0",
+      "repo_id": "attrs",
+      "solver_visible_statement_exists": true,
+      "source_repo_exists": true,
+      "split": "B_eval",
+      "split_matches_selected": true,
+      "target_commit_exposed_in_statement": false,
+      "task_id": "attrs__v2__157",
+      "test_paths": [
+        "tests/test_make.py"
+      ],
+      "tests_non_editable": true,
+      "verifier_command_configured": true
+    },
+    {
+      "allowed_code_paths": [
+        "src/attr/_make.py"
+      ],
+      "base_commit": "44ac46114603f8fa7c1142dd338da16c5373d8df",
+      "base_commit_resolvable": true,
+      "click_title_only_minor_risk_visible": true,
+      "hidden_oracle_material_solver_visible": false,
+      "loaded": true,
+      "paid_acut_calls_made": false,
+      "raw_diff_marker_in_statement": false,
+      "rendered_statement_sha256": "8cb8fa6efee44fc0a3d84d491dd7106a628cc6add7f79c68c1fcc292a4617122",
+      "repo_id": "attrs",
+      "solver_visible_statement_exists": true,
+      "source_repo_exists": true,
+      "split": "B_eval",
+      "split_matches_selected": true,
+      "target_commit_exposed_in_statement": false,
+      "task_id": "attrs__v2__231",
+      "test_paths": [
+        "tests/test_annotations.py",
+        "tests/test_dunders.py",
+        "tests/test_funcs.py"
+      ],
+      "tests_non_editable": true,
+      "verifier_command_configured": true
+    },
+    {
+      "allowed_code_paths": [
+        "src/attr/_make.py"
+      ],
+      "base_commit": "976b8287703d781590d457dffc8b581a244b09d5",
+      "base_commit_resolvable": true,
+      "click_title_only_minor_risk_visible": true,
+      "hidden_oracle_material_solver_visible": false,
+      "loaded": true,
+      "paid_acut_calls_made": false,
+      "raw_diff_marker_in_statement": false,
+      "rendered_statement_sha256": "98fd0e075df028170cb86476d968b9c26a6fa42c1945368d5866a0f984f486c3",
+      "repo_id": "attrs",
+      "solver_visible_statement_exists": true,
+      "source_repo_exists": true,
+      "split": "B_eval",
+      "split_matches_selected": true,
+      "target_commit_exposed_in_statement": false,
+      "task_id": "attrs__v2__271",
+      "test_paths": [
+        "tests/test_make.py"
+      ],
+      "tests_non_editable": true,
+      "verifier_command_configured": true
+    },
+    {
+      "allowed_code_paths": [
+        "src/attr/_make.py"
+      ],
+      "base_commit": "bfd7bb49b467e7ab586deb475c23974a91df4dab",
+      "base_commit_resolvable": true,
+      "click_title_only_minor_risk_visible": true,
+      "hidden_oracle_material_solver_visible": false,
+      "loaded": true,
+      "paid_acut_calls_made": false,
+      "raw_diff_marker_in_statement": false,
+      "rendered_statement_sha256": "bc46a2895bb29b5aaa64f963b0e90f12ce44769f7d8bf0d6087115cdb9e86f75",
+      "repo_id": "attrs",
+      "solver_visible_statement_exists": true,
+      "source_repo_exists": true,
+      "split": "H_future",
+      "split_matches_selected": true,
+      "target_commit_exposed_in_statement": false,
+      "task_id": "attrs__v2__210",
+      "test_paths": [
+        "tests/test_setattr.py"
+      ],
+      "tests_non_editable": true,
+      "verifier_command_configured": true
+    },
+    {
+      "allowed_code_paths": [
+        "src/attr/_make.py",
+        "src/attr/converters.py"
+      ],
+      "base_commit": "612700c3eac7d51eebdf73b99a3a9c2facef91af",
+      "base_commit_resolvable": true,
+      "click_title_only_minor_risk_visible": true,
+      "hidden_oracle_material_solver_visible": false,
+      "loaded": true,
+      "paid_acut_calls_made": false,
+      "raw_diff_marker_in_statement": false,
+      "rendered_statement_sha256": "405586f10141893172f4c0b3999c95a6787d202e2015f94dc1bbfef483e86997",
+      "repo_id": "attrs",
+      "solver_visible_statement_exists": true,
+      "source_repo_exists": true,
+      "split": "H_future",
+      "split_matches_selected": true,
+      "target_commit_exposed_in_statement": false,
+      "task_id": "attrs__v2__218",
+      "test_paths": [
+        "tests/test_annotations.py"
+      ],
+      "tests_non_editable": true,
+      "verifier_command_configured": true
+    },
+    {
+      "allowed_code_paths": [
+        "src/attr/_funcs.py"
+      ],
+      "base_commit": "24a2c1e7a5b1b1b979a647de2ef36a35ff4c39a1",
+      "base_commit_resolvable": true,
+      "click_title_only_minor_risk_visible": true,
+      "hidden_oracle_material_solver_visible": false,
+      "loaded": true,
+      "paid_acut_calls_made": false,
+      "raw_diff_marker_in_statement": false,
+      "rendered_statement_sha256": "4501ff17e5458f8fa5eb98f305ccdd20deea7de14e5ccc7110da43c8689d79df",
+      "repo_id": "attrs",
+      "solver_visible_statement_exists": true,
+      "source_repo_exists": true,
+      "split": "H_future",
+      "split_matches_selected": true,
+      "target_commit_exposed_in_statement": false,
+      "task_id": "attrs__v2__244",
+      "test_paths": [
+        "tests/test_funcs.py"
+      ],
+      "tests_non_editable": true,
+      "verifier_command_configured": true
+    },
+    {
+      "allowed_code_paths": [
+        "boltons/tbutils.py"
+      ],
+      "base_commit": "51ddb6c9115260417a4178a7fa8212c5bcbb5e14",
+      "base_commit_resolvable": true,
+      "click_title_only_minor_risk_visible": true,
+      "hidden_oracle_material_solver_visible": false,
+      "loaded": true,
+      "paid_acut_calls_made": false,
+      "raw_diff_marker_in_statement": false,
+      "rendered_statement_sha256": "195fc68dde90e848b4da400034ef075db4fdee9d464018a08ee55666f0937a77",
+      "repo_id": "boltons",
+      "solver_visible_statement_exists": true,
+      "source_repo_exists": true,
+      "split": "B_eval",
+      "split_matches_selected": true,
+      "target_commit_exposed_in_statement": false,
+      "task_id": "boltons__v2__008",
+      "test_paths": [
+        "tests/tbutils_test.py"
+      ],
+      "tests_non_editable": true,
+      "verifier_command_configured": true
+    },
+    {
+      "allowed_code_paths": [
+        "boltons/tbutils.py"
+      ],
+      "base_commit": "c4a489d853b9130744ce2794be4a1cb79331b4b3",
+      "base_commit_resolvable": true,
+      "click_title_only_minor_risk_visible": true,
+      "hidden_oracle_material_solver_visible": false,
+      "loaded": true,
+      "paid_acut_calls_made": false,
+      "raw_diff_marker_in_statement": false,
+      "rendered_statement_sha256": "77ae28d30473153693a33c4d777664510943d38710a992d68585df47b614c29b",
+      "repo_id": "boltons",
+      "solver_visible_statement_exists": true,
+      "source_repo_exists": true,
+      "split": "B_eval",
+      "split_matches_selected": true,
+      "target_commit_exposed_in_statement": false,
+      "task_id": "boltons__v2__009",
+      "test_paths": [
+        "tests/tbutils_test.py"
+      ],
+      "tests_non_editable": true,
+      "verifier_command_configured": true
+    },
+    {
+      "allowed_code_paths": [
+        "boltons/strutils.py"
+      ],
+      "base_commit": "a29179e6f37fdf1887e83270677a326110ecb480",
+      "base_commit_resolvable": true,
+      "click_title_only_minor_risk_visible": true,
+      "hidden_oracle_material_solver_visible": false,
+      "loaded": true,
+      "paid_acut_calls_made": false,
+      "raw_diff_marker_in_statement": false,
+      "rendered_statement_sha256": "d950b80ee4ac6ab146e51f469489811b32354bde5f59718d70edb11f52645f40",
+      "repo_id": "boltons",
+      "solver_visible_statement_exists": true,
+      "source_repo_exists": true,
+      "split": "B_eval",
+      "split_matches_selected": true,
+      "target_commit_exposed_in_statement": false,
+      "task_id": "boltons__v2__076",
+      "test_paths": [
+        "tests/test_strutils.py"
+      ],
+      "tests_non_editable": true,
+      "verifier_command_configured": true
+    },
+    {
+      "allowed_code_paths": [
+        "boltons/funcutils.py"
+      ],
+      "base_commit": "453960281221310937867c1293080c8b55809a11",
+      "base_commit_resolvable": true,
+      "click_title_only_minor_risk_visible": true,
+      "hidden_oracle_material_solver_visible": false,
+      "loaded": true,
+      "paid_acut_calls_made": false,
+      "raw_diff_marker_in_statement": false,
+      "rendered_statement_sha256": "30240aea3bdd0a87a4a2efa059a29b3e646459ce29b8c7949e3c4d00b2a007f1",
+      "repo_id": "boltons",
+      "solver_visible_statement_exists": true,
+      "source_repo_exists": true,
+      "split": "B_eval",
+      "split_matches_selected": true,
+      "target_commit_exposed_in_statement": false,
+      "task_id": "boltons__v2__103",
+      "test_paths": [
+        "tests/test_funcutils_fb.py"
+      ],
+      "tests_non_editable": true,
+      "verifier_command_configured": true
+    },
+    {
+      "allowed_code_paths": [
+        "boltons/ioutils.py"
+      ],
+      "base_commit": "115cded54814ee5ff0b32d9bf976fd554b0a74dd",
+      "base_commit_resolvable": true,
+      "click_title_only_minor_risk_visible": true,
+      "hidden_oracle_material_solver_visible": false,
+      "loaded": true,
+      "paid_acut_calls_made": false,
+      "raw_diff_marker_in_statement": false,
+      "rendered_statement_sha256": "5f62d18761ef034e8b75977f553a1616ef908d49ed540b2fc186d5224f242601",
+      "repo_id": "boltons",
+      "solver_visible_statement_exists": true,
+      "source_repo_exists": true,
+      "split": "B_eval",
+      "split_matches_selected": true,
+      "target_commit_exposed_in_statement": false,
+      "task_id": "boltons__v2__128",
+      "test_paths": [
+        "tests/test_ioutils.py"
+      ],
+      "tests_non_editable": true,
+      "verifier_command_configured": true
+    },
+    {
+      "allowed_code_paths": [
+        "boltons/mathutils.py"
+      ],
+      "base_commit": "fa5452c383b4f766fe44c677d9be5b082ce3635a",
+      "base_commit_resolvable": true,
+      "click_title_only_minor_risk_visible": true,
+      "hidden_oracle_material_solver_visible": false,
+      "loaded": true,
+      "paid_acut_calls_made": false,
+      "raw_diff_marker_in_statement": false,
+      "rendered_statement_sha256": "cbdc785ff5509aa6b09512e0d211431f0a7134a921407a60f5002b03071406c0",
+      "repo_id": "boltons",
+      "solver_visible_statement_exists": true,
+      "source_repo_exists": true,
+      "split": "B_eval",
+      "split_matches_selected": true,
+      "target_commit_exposed_in_statement": false,
+      "task_id": "boltons__v2__154",
+      "test_paths": [
+        "tests/test_mathutils.py"
+      ],
+      "tests_non_editable": true,
+      "verifier_command_configured": true
+    },
+    {
+      "allowed_code_paths": [
+        "boltons/iterutils.py"
+      ],
+      "base_commit": "ce7c7d2b15ea189c1284a48d742a7862bfae8606",
+      "base_commit_resolvable": true,
+      "click_title_only_minor_risk_visible": true,
+      "hidden_oracle_material_solver_visible": false,
+      "loaded": true,
+      "paid_acut_calls_made": false,
+      "raw_diff_marker_in_statement": false,
+      "rendered_statement_sha256": "0fa7ae51fa8a4095de691418913f95f7e82562581f3f2125b671871117d76cd2",
+      "repo_id": "boltons",
+      "solver_visible_statement_exists": true,
+      "source_repo_exists": true,
+      "split": "B_eval",
+      "split_matches_selected": true,
+      "target_commit_exposed_in_statement": false,
+      "task_id": "boltons__v2__231",
+      "test_paths": [
+        "tests/test_iterutils.py"
+      ],
+      "tests_non_editable": true,
+      "verifier_command_configured": true
+    },
+    {
+      "allowed_code_paths": [
+        "boltons/funcutils.py"
+      ],
+      "base_commit": "b58ef52a3a0da7dbaf38c366a4b350907ad1e16b",
+      "base_commit_resolvable": true,
+      "click_title_only_minor_risk_visible": true,
+      "hidden_oracle_material_solver_visible": false,
+      "loaded": true,
+      "paid_acut_calls_made": false,
+      "raw_diff_marker_in_statement": false,
+      "rendered_statement_sha256": "d599ca89add52e948f92aca42dae084d2c8fb269d9d46d26318ac465366efc3c",
+      "repo_id": "boltons",
+      "solver_visible_statement_exists": true,
+      "source_repo_exists": true,
+      "split": "H_future",
+      "split_matches_selected": true,
+      "target_commit_exposed_in_statement": false,
+      "task_id": "boltons__v2__122",
+      "test_paths": [
+        "tests/test_funcutils_fb_py3.py"
+      ],
+      "tests_non_editable": true,
+      "verifier_command_configured": true
+    },
+    {
+      "allowed_code_paths": [
+        "boltons/strutils.py"
+      ],
+      "base_commit": "c15f502de0234a0563fdb5c368e5a3ba268d19cd",
+      "base_commit_resolvable": true,
+      "click_title_only_minor_risk_visible": true,
+      "hidden_oracle_material_solver_visible": false,
+      "loaded": true,
+      "paid_acut_calls_made": false,
+      "raw_diff_marker_in_statement": false,
+      "rendered_statement_sha256": "38e9f2fcaef14f7c733c8fe29195c8636071433568da0dc70acfc3e319476e16",
+      "repo_id": "boltons",
+      "solver_visible_statement_exists": true,
+      "source_repo_exists": true,
+      "split": "H_future",
+      "split_matches_selected": true,
+      "target_commit_exposed_in_statement": false,
+      "task_id": "boltons__v2__132",
+      "test_paths": [
+        "tests/test_strutils.py"
+      ],
+      "tests_non_editable": true,
+      "verifier_command_configured": true
+    },
+    {
+      "allowed_code_paths": [
+        "boltons/iterutils.py"
+      ],
+      "base_commit": "17374731bcc404908726a65734f941d789f23a78",
+      "base_commit_resolvable": true,
+      "click_title_only_minor_risk_visible": true,
+      "hidden_oracle_material_solver_visible": false,
+      "loaded": true,
+      "paid_acut_calls_made": false,
+      "raw_diff_marker_in_statement": false,
+      "rendered_statement_sha256": "09e18887ca644975cd3cc0221d99b85d80382c9e6ed652afb01f7b4c8c4ccd4a",
+      "repo_id": "boltons",
+      "solver_visible_statement_exists": true,
+      "source_repo_exists": true,
+      "split": "H_future",
+      "split_matches_selected": true,
+      "target_commit_exposed_in_statement": false,
+      "task_id": "boltons__v2__232",
+      "test_paths": [
+        "tests/test_iterutils.py"
+      ],
+      "tests_non_editable": true,
+      "verifier_command_configured": true
+    },
+    {
+      "allowed_code_paths": [
+        "src/click/_termui_impl.py",
+        "src/click/termui.py"
+      ],
+      "base_commit": "a4763ef93734ccfea497ea10bf0870d588132432",
+      "base_commit_resolvable": true,
+      "click_title_only_minor_risk_visible": true,
+      "hidden_oracle_material_solver_visible": false,
+      "loaded": true,
+      "paid_acut_calls_made": false,
+      "raw_diff_marker_in_statement": false,
+      "rendered_statement_sha256": "6795c45ed46ef7d127ba6d16c7b4be5154b278fa9e5d3fabfe9596d579115c0e",
+      "repo_id": "click",
+      "solver_visible_statement_exists": true,
+      "source_repo_exists": true,
+      "split": "B_eval",
+      "split_matches_selected": true,
+      "target_commit_exposed_in_statement": false,
+      "task_id": "click__third__091",
+      "test_paths": [
+        "tests/test_termui.py"
+      ],
+      "tests_non_editable": true,
+      "verifier_command_configured": true
+    },
+    {
+      "allowed_code_paths": [
+        "src/click/core.py"
+      ],
+      "base_commit": "a8c05427602d12842c53ce48b03b5d6b5c0c6693",
+      "base_commit_resolvable": true,
+      "click_title_only_minor_risk_visible": true,
+      "hidden_oracle_material_solver_visible": false,
+      "loaded": true,
+      "paid_acut_calls_made": false,
+      "raw_diff_marker_in_statement": false,
+      "rendered_statement_sha256": "512fb334fe0e308cff91b999403630e1d6bb9288d0062c39cc9797e6c88706ff",
+      "repo_id": "click",
+      "solver_visible_statement_exists": true,
+      "source_repo_exists": true,
+      "split": "B_eval",
+      "split_matches_selected": true,
+      "target_commit_exposed_in_statement": false,
+      "task_id": "click__third__202",
+      "test_paths": [
+        "tests/test_context.py"
+      ],
+      "tests_non_editable": true,
+      "verifier_command_configured": true
+    },
+    {
+      "allowed_code_paths": [
+        "src/click/core.py",
+        "src/click/exceptions.py",
+        "src/click/types.py"
+      ],
+      "base_commit": "8a47580a00f3404e7071b9ecfec3692a1e18309f",
+      "base_commit_resolvable": true,
+      "click_title_only_minor_risk_visible": true,
+      "hidden_oracle_material_solver_visible": false,
+      "loaded": true,
+      "paid_acut_calls_made": false,
+      "raw_diff_marker_in_statement": false,
+      "rendered_statement_sha256": "c74127ce70588846e2efb701784d0e14de313766a6a479fcd4442b9f3acc85a5",
+      "repo_id": "click",
+      "solver_visible_statement_exists": true,
+      "source_repo_exists": true,
+      "split": "B_eval",
+      "split_matches_selected": true,
+      "target_commit_exposed_in_statement": false,
+      "task_id": "click__third__220",
+      "test_paths": [
+        "tests/test_basic.py",
+        "tests/test_formatting.py",
+        "tests/test_info_dict.py",
+        "tests/test_normalization.py",
+        "tests/test_types.py"
+      ],
+      "tests_non_editable": true,
+      "verifier_command_configured": true
+    },
+    {
+      "allowed_code_paths": [
+        "src/click/core.py"
+      ],
+      "base_commit": "4c7399eaeb77fae762a96e6aaa714ac591d6661a",
+      "base_commit_resolvable": true,
+      "click_title_only_minor_risk_visible": true,
+      "hidden_oracle_material_solver_visible": false,
+      "loaded": true,
+      "paid_acut_calls_made": false,
+      "raw_diff_marker_in_statement": false,
+      "rendered_statement_sha256": "1d1903a7428e969f8fac257cea16a9429e4c70e469563897515a9deb544ac919",
+      "repo_id": "click",
+      "solver_visible_statement_exists": true,
+      "source_repo_exists": true,
+      "split": "H_future",
+      "split_matches_selected": true,
+      "target_commit_exposed_in_statement": false,
+      "task_id": "click__third__109",
+      "test_paths": [
+        "tests/test_options.py"
+      ],
+      "tests_non_editable": true,
+      "verifier_command_configured": true
+    },
+    {
+      "allowed_code_paths": [
+        "src/click/core.py"
+      ],
+      "base_commit": "1a4d8c1bb1e8f8e214ede7223bd2c05dc2ce006a",
+      "base_commit_resolvable": true,
+      "click_title_only_minor_risk_visible": true,
+      "hidden_oracle_material_solver_visible": false,
+      "loaded": true,
+      "paid_acut_calls_made": false,
+      "raw_diff_marker_in_statement": false,
+      "rendered_statement_sha256": "86e48461475747b42ba85611c9d52db1f3ca3cd7fbd811f7ee8a739e221f1325",
+      "repo_id": "click",
+      "solver_visible_statement_exists": true,
+      "source_repo_exists": true,
+      "split": "H_future",
+      "split_matches_selected": true,
+      "target_commit_exposed_in_statement": false,
+      "task_id": "click__third__198",
+      "test_paths": [
+        "tests/test_termui.py"
+      ],
+      "tests_non_editable": true,
+      "verifier_command_configured": true
+    },
+    {
+      "allowed_code_paths": [
+        "src/click/core.py"
+      ],
+      "base_commit": "273fb90106726daa16e1033eca0d677de76345eb",
+      "base_commit_resolvable": true,
+      "click_title_only_minor_risk_visible": true,
+      "hidden_oracle_material_solver_visible": false,
+      "loaded": true,
+      "paid_acut_calls_made": false,
+      "raw_diff_marker_in_statement": false,
+      "rendered_statement_sha256": "e798fa5e9a8b00319de15020182bb065979112f02c7af5fd144321f19154eb79",
+      "repo_id": "click",
+      "solver_visible_statement_exists": true,
+      "source_repo_exists": true,
+      "split": "H_future",
+      "split_matches_selected": true,
+      "target_commit_exposed_in_statement": false,
+      "task_id": "click__third__214",
+      "test_paths": [
+        "tests/test_commands.py"
+      ],
+      "tests_non_editable": true,
+      "verifier_command_configured": true
+    },
+    {
+      "allowed_code_paths": [
+        "src/click/shell_completion.py"
+      ],
+      "base_commit": "565f36d5bc4a15d304337b749e113fb4477b1843",
+      "base_commit_resolvable": true,
+      "click_title_only_minor_risk_visible": true,
+      "hidden_oracle_material_solver_visible": false,
+      "loaded": true,
+      "paid_acut_calls_made": false,
+      "raw_diff_marker_in_statement": false,
+      "rendered_statement_sha256": "6a51bf542b08f02d574b576f814abe690f89925d7a746b7d80f4fff0047502d2",
+      "repo_id": "click",
+      "solver_visible_statement_exists": true,
+      "source_repo_exists": true,
+      "split": "H_future",
+      "split_matches_selected": true,
+      "target_commit_exposed_in_statement": false,
+      "task_id": "click__third__234",
+      "test_paths": [
+        "tests/test_shell_completion.py"
+      ],
+      "tests_non_editable": true,
+      "verifier_command_configured": true
+    },
+    {
+      "allowed_code_paths": [
+        "src/click/shell_completion.py"
+      ],
+      "base_commit": "b8b9ffeb5d012f5d041685c81152636bf596cf72",
+      "base_commit_resolvable": true,
+      "click_title_only_minor_risk_visible": true,
+      "hidden_oracle_material_solver_visible": false,
+      "loaded": true,
+      "paid_acut_calls_made": false,
+      "raw_diff_marker_in_statement": false,
+      "rendered_statement_sha256": "4d3078be4ff6bc5750ab16bb851a91c80d7350efadcf136ad3d15fd910b898da",
+      "repo_id": "click",
+      "solver_visible_statement_exists": true,
+      "source_repo_exists": true,
+      "split": "H_future",
+      "split_matches_selected": true,
+      "target_commit_exposed_in_statement": false,
+      "task_id": "click__third__288",
+      "test_paths": [
+        "tests/test_shell_completion.py"
+      ],
+      "tests_non_editable": true,
+      "verifier_command_configured": true
+    }
+  ],
+  "paid_acut_calls_made": false,
+  "planned_adapters": [
+    "codex_workspace",
+    "kilo_workspace"
+  ],
+  "ready_package": "experiments/phase1_compiler/results/phase1_blocked_split_paid_validation_design_review_ready_package.json",
+  "run_id": "phase1_blocked_split_missing_cell_supplement_paid_execution_20260529",
+  "schema_version": "barcarolle.phase1_blocked_split_missing_cell_supplement_paid_execution_output.v1",
+  "selected_budget_id": "same_budget_20_per_repo",
+  "selected_split_id": "phase1_blocked_split_redesign_20260529__same_budget_20_per_repo__seed_2026052902",
+  "selected_split_plan": "experiments/phase1_compiler/results/phase1_blocked_split_missing_cell_supplement_paid_execution_selected_split_plan.json",
+  "selected_task_count": 60,
+  "status": "ready"
+}

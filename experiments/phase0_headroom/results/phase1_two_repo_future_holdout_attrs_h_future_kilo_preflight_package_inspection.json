@@ -1,0 +1,380 @@
+{
+  "configured_task_ids": [
+    "attrs__hist__001",
+    "attrs__hist__003",
+    "attrs__hist__004",
+    "attrs__hist__008",
+    "attrs__hist__012",
+    "attrs__hist__013",
+    "attrs__hist__023",
+    "attrs__hist__027"
+  ],
+  "generated_at": "2026-05-22T15:59:21+00:00",
+  "matrix_config": "experiments/phase1_compiler/configs/phase1_two_repo_future_holdout_validation.yaml",
+  "missing_task_ids": [],
+  "package_count": 8,
+  "packages": [
+    {
+      "allowed_code_paths": [
+        "changelog.d/611.change.rst",
+        "src/attr/_make.py"
+      ],
+      "base_commit": "ac541fbe556eb8c085a9cea26616f0ebad6ef632",
+      "metadata": {
+        "allowed_context_refs": [
+          "issue:611"
+        ],
+        "changed_files": [
+          "changelog.d/611.change.rst",
+          "src/attr/_make.py",
+          "tests/test_make.py"
+        ],
+        "clean_overlay_promotion_decision": "promote_to_clean_benchmark_candidate",
+        "evidence_level": "clean_supply_overlay_sidecar",
+        "metadata_sources": {
+          "canonical_boltons_certified_tasks": "experiments/phase0_headroom/certified_tasks/attrs_clean_outcome_unseen_supply_certified_tasks.jsonl",
+          "canonical_boltons_release": "experiments/phase1_compiler/configs/phase1_second_repo_clean_outcome_unseen_supply.yaml",
+          "clean_ext_certified_tasks": "experiments/phase0_headroom/certified_tasks/attrs_clean_outcome_unseen_supply_certified_tasks.jsonl",
+          "clean_supply_overlay": "experiments/phase1_compiler/results/phase1_second_repo_clean_supply_overlay.json"
+        },
+        "original_hardening_status": null,
+        "promotion_rationale": "local_certification_and_non_leaky_public_context",
+        "source_context_status": "non_leaky_problem_context",
+        "task_time": "2020-01-13T02:46:11-05:00",
+        "test_files": [
+          "tests/test_make.py"
+        ]
+      },
+      "repo_id": "attrs",
+      "source_repo": "experiments/phase0_headroom/external_repos/attrs",
+      "split": "B_eval",
+      "statement_sha256": "f47c81b7398e276e5a5209b115af782a34615405099c687df497b99b02f149d6",
+      "target_commit": "9b5e988ccc36d906b5c1ef6681ba7242f758fe2f",
+      "task_id": "attrs__hist__001",
+      "test_paths": [
+        "tests/test_make.py"
+      ]
+    },
+    {
+      "allowed_code_paths": [
+        "changelog.d/506.change.rst",
+        "src/attr/_make.py"
+      ],
+      "base_commit": "9fcfe3479f3e98d4909208039b6b98cc70837b9d",
+      "metadata": {
+        "allowed_context_refs": [
+          "pr:506"
+        ],
+        "changed_files": [
+          "changelog.d/506.change.rst",
+          "src/attr/_make.py",
+          "tests/test_make.py"
+        ],
+        "clean_overlay_promotion_decision": "promote_to_clean_benchmark_candidate",
+        "evidence_level": "clean_supply_overlay_sidecar",
+        "metadata_sources": {
+          "canonical_boltons_certified_tasks": "experiments/phase0_headroom/certified_tasks/attrs_clean_outcome_unseen_supply_certified_tasks.jsonl",
+          "canonical_boltons_release": "experiments/phase1_compiler/configs/phase1_second_repo_clean_outcome_unseen_supply.yaml",
+          "clean_ext_certified_tasks": "experiments/phase0_headroom/certified_tasks/attrs_clean_outcome_unseen_supply_certified_tasks.jsonl",
+          "clean_supply_overlay": "experiments/phase1_compiler/results/phase1_second_repo_clean_supply_overlay.json"
+        },
+        "original_hardening_status": null,
+        "promotion_rationale": "local_certification_and_non_leaky_public_context",
+        "source_context_status": "non_leaky_problem_context",
+        "task_time": "2020-03-06T13:54:27+01:00",
+        "test_files": [
+          "tests/test_make.py"
+        ]
+      },
+      "repo_id": "attrs",
+      "source_repo": "experiments/phase0_headroom/external_repos/attrs",
+      "split": "B_eval",
+      "statement_sha256": "5690f4e18c09274ee02b9104825540170370b8b6712d82a6f0e07b1d0057e134",
+      "target_commit": "4dea97e633e888d78750b47976fb64d362603bb5",
+      "task_id": "attrs__hist__003",
+      "test_paths": [
+        "tests/test_make.py"
+      ]
+    },
+    {
+      "allowed_code_paths": [
+        "src/attr/_make.py"
+      ],
+      "base_commit": "609b10e84f5fb87d1f20300fb0368961da8f70d0",
+      "metadata": {
+        "allowed_context_refs": [
+          "issue:626"
+        ],
+        "changed_files": [
+          "src/attr/_make.py",
+          "tests/test_make.py"
+        ],
+        "clean_overlay_promotion_decision": "promote_to_clean_benchmark_candidate",
+        "evidence_level": "clean_supply_overlay_sidecar",
+        "metadata_sources": {
+          "canonical_boltons_certified_tasks": "experiments/phase0_headroom/certified_tasks/attrs_clean_outcome_unseen_supply_certified_tasks.jsonl",
+          "canonical_boltons_release": "experiments/phase1_compiler/configs/phase1_second_repo_clean_outcome_unseen_supply.yaml",
+          "clean_ext_certified_tasks": "experiments/phase0_headroom/certified_tasks/attrs_clean_outcome_unseen_supply_certified_tasks.jsonl",
+          "clean_supply_overlay": "experiments/phase1_compiler/results/phase1_second_repo_clean_supply_overlay.json"
+        },
+        "original_hardening_status": null,
+        "promotion_rationale": "local_certification_and_non_leaky_public_context",
+        "source_context_status": "non_leaky_problem_context",
+        "task_time": "2020-03-09T13:56:09Z",
+        "test_files": [
+          "tests/test_make.py"
+        ]
+      },
+      "repo_id": "attrs",
+      "source_repo": "experiments/phase0_headroom/external_repos/attrs",
+      "split": "B_eval",
+      "statement_sha256": "cdabe3fc8246172bfbf5c36685fb0b37699465861bb5e2678c9831d16cc19e3b",
+      "target_commit": "4bd682709134155ec79c5077a748a8bd3ade39d9",
+      "task_id": "attrs__hist__004",
+      "test_paths": [
+        "tests/test_make.py"
+      ]
+    },
+    {
+      "allowed_code_paths": [
+        "changelog.d/669.change.rst",
+        "docs/api.rst",
+        "src/attr/__init__.py",
+        "src/attr/__init__.pyi",
+        "src/attr/_next_gen.py"
+      ],
+      "base_commit": "c67a649b3812891b23f9e6468c641808a9b2dfaa",
+      "metadata": {
+        "allowed_context_refs": [
+          "pr:669"
+        ],
+        "changed_files": [
+          "changelog.d/669.change.rst",
+          "docs/api.rst",
+          "src/attr/__init__.py",
+          "src/attr/__init__.pyi",
+          "src/attr/_next_gen.py",
+          "tests/test_next_gen.py",
+          "tests/typing_example.py"
+        ],
+        "clean_overlay_promotion_decision": "promote_to_clean_benchmark_candidate",
+        "evidence_level": "clean_supply_overlay_sidecar",
+        "metadata_sources": {
+          "canonical_boltons_certified_tasks": "experiments/phase0_headroom/certified_tasks/attrs_clean_outcome_unseen_supply_certified_tasks.jsonl",
+          "canonical_boltons_release": "experiments/phase1_compiler/configs/phase1_second_repo_clean_outcome_unseen_supply.yaml",
+          "clean_ext_certified_tasks": "experiments/phase0_headroom/certified_tasks/attrs_clean_outcome_unseen_supply_certified_tasks.jsonl",
+          "clean_supply_overlay": "experiments/phase1_compiler/results/phase1_second_repo_clean_supply_overlay.json"
+        },
+        "original_hardening_status": null,
+        "promotion_rationale": "local_certification_and_non_leaky_public_context",
+        "source_context_status": "non_leaky_problem_context",
+        "task_time": "2020-08-20T19:01:34+02:00",
+        "test_files": [
+          "tests/test_next_gen.py",
+          "tests/typing_example.py"
+        ]
+      },
+      "repo_id": "attrs",
+      "source_repo": "experiments/phase0_headroom/external_repos/attrs",
+      "split": "B_eval",
+      "statement_sha256": "bd7b0e24e5f2f08ee0165628a93d30c9000708c211cf337c8658554772062fc2",
+      "target_commit": "fda437c91f2a8c32d75fd27c5b50c12346d4ab48",
+      "task_id": "attrs__hist__008",
+      "test_paths": [
+        "tests/test_next_gen.py",
+        "tests/typing_example.py"
+      ]
+    },
+    {
+      "allowed_code_paths": [
+        "changelog.d/681.change.rst",
+        "src/attr/_make.py",
+        "tox.ini"
+      ],
+      "base_commit": "bfd7bb49b467e7ab586deb475c23974a91df4dab",
+      "metadata": {
+        "allowed_context_refs": [
+          "issue:680"
+        ],
+        "changed_files": [
+          "changelog.d/681.change.rst",
+          "src/attr/_make.py",
+          "tests/test_setattr.py",
+          "tox.ini"
+        ],
+        "clean_overlay_promotion_decision": "promote_to_clean_benchmark_candidate",
+        "evidence_level": "clean_supply_overlay_sidecar",
+        "metadata_sources": {
+          "canonical_boltons_certified_tasks": "experiments/phase0_headroom/certified_tasks/attrs_clean_outcome_unseen_supply_certified_tasks.jsonl",
+          "canonical_boltons_release": "experiments/phase1_compiler/configs/phase1_second_repo_clean_outcome_unseen_supply.yaml",
+          "clean_ext_certified_tasks": "experiments/phase0_headroom/certified_tasks/attrs_clean_outcome_unseen_supply_certified_tasks.jsonl",
+          "clean_supply_overlay": "experiments/phase1_compiler/results/phase1_second_repo_clean_supply_overlay.json"
+        },
+        "original_hardening_status": null,
+        "promotion_rationale": "local_certification_and_non_leaky_public_context",
+        "source_context_status": "non_leaky_problem_context",
+        "task_time": "2020-09-05T09:46:06+02:00",
+        "test_files": [
+          "tests/test_setattr.py"
+        ]
+      },
+      "repo_id": "attrs",
+      "source_repo": "experiments/phase0_headroom/external_repos/attrs",
+      "split": "H_future",
+      "statement_sha256": "499739853e183728795fcdc734441fb7c82b30570d7c97625368abbfb1560cf4",
+      "target_commit": "48755905ee8088da927a6dc583d4962f7ca16b9b",
+      "task_id": "attrs__hist__012",
+      "test_paths": [
+        "tests/test_setattr.py"
+      ]
+    },
+    {
+      "allowed_code_paths": [
+        "changelog.d/687.change.rst",
+        "src/attr/_next_gen.py"
+      ],
+      "base_commit": "48755905ee8088da927a6dc583d4962f7ca16b9b",
+      "metadata": {
+        "allowed_context_refs": [
+          "pr:687"
+        ],
+        "changed_files": [
+          "changelog.d/687.change.rst",
+          "src/attr/_next_gen.py",
+          "tests/test_next_gen.py"
+        ],
+        "clean_overlay_promotion_decision": "promote_to_clean_benchmark_candidate",
+        "evidence_level": "clean_supply_overlay_sidecar",
+        "metadata_sources": {
+          "canonical_boltons_certified_tasks": "experiments/phase0_headroom/certified_tasks/attrs_clean_outcome_unseen_supply_certified_tasks.jsonl",
+          "canonical_boltons_release": "experiments/phase1_compiler/configs/phase1_second_repo_clean_outcome_unseen_supply.yaml",
+          "clean_ext_certified_tasks": "experiments/phase0_headroom/certified_tasks/attrs_clean_outcome_unseen_supply_certified_tasks.jsonl",
+          "clean_supply_overlay": "experiments/phase1_compiler/results/phase1_second_repo_clean_supply_overlay.json"
+        },
+        "original_hardening_status": null,
+        "promotion_rationale": "local_certification_and_non_leaky_public_context",
+        "source_context_status": "non_leaky_problem_context",
+        "task_time": "2020-09-05T11:14:54+02:00",
+        "test_files": [
+          "tests/test_next_gen.py"
+        ]
+      },
+      "repo_id": "attrs",
+      "source_repo": "experiments/phase0_headroom/external_repos/attrs",
+      "split": "H_future",
+      "statement_sha256": "ad6de1cce6120937f1997e19812d30e92818526886b70fadb2e9a27a131bef66",
+      "target_commit": "504eefe91fc49c761572b0a855479775fb6498a8",
+      "task_id": "attrs__hist__013",
+      "test_paths": [
+        "tests/test_next_gen.py"
+      ]
+    },
+    {
+      "allowed_code_paths": [
+        "src/attr/_make.py"
+      ],
+      "base_commit": "78335e9b49eff2eaf2dc31d0bcc3caa0169cfc60",
+      "metadata": {
+        "allowed_context_refs": [
+          "issue:593"
+        ],
+        "changed_files": [
+          "src/attr/_make.py",
+          "tests/test_annotations.py"
+        ],
+        "clean_overlay_promotion_decision": "promote_to_clean_benchmark_candidate",
+        "evidence_level": "clean_supply_overlay_sidecar",
+        "metadata_sources": {
+          "canonical_boltons_certified_tasks": "experiments/phase0_headroom/certified_tasks/attrs_clean_outcome_unseen_supply_certified_tasks.jsonl",
+          "canonical_boltons_release": "experiments/phase1_compiler/configs/phase1_second_repo_clean_outcome_unseen_supply.yaml",
+          "clean_ext_certified_tasks": "experiments/phase0_headroom/certified_tasks/attrs_clean_outcome_unseen_supply_certified_tasks.jsonl",
+          "clean_supply_overlay": "experiments/phase1_compiler/results/phase1_second_repo_clean_supply_overlay.json"
+        },
+        "original_hardening_status": null,
+        "promotion_rationale": "local_certification_and_non_leaky_public_context",
+        "source_context_status": "non_leaky_problem_context",
+        "task_time": "2021-02-18T21:50:41-08:00",
+        "test_files": [
+          "tests/test_annotations.py"
+        ]
+      },
+      "repo_id": "attrs",
+      "source_repo": "experiments/phase0_headroom/external_repos/attrs",
+      "split": "H_future",
+      "statement_sha256": "0594455d3d40e9be14a82f10513384ed0e2f98d3a573a703c341286fed524b02",
+      "target_commit": "1499c77e79315ef8c5c98c088dc3ef99bdba72b4",
+      "task_id": "attrs__hist__023",
+      "test_paths": [
+        "tests/test_annotations.py"
+      ]
+    },
+    {
+      "allowed_code_paths": [
+        "changelog.d/774.change.rst",
+        "conftest.py",
+        "src/attr/__init__.pyi",
+        "src/attr/_funcs.py"
+      ],
+      "base_commit": "ad59a62cae7f1f5355fb121d77eda5d5d1aa0cbd",
+      "metadata": {
+        "allowed_context_refs": [
+          "issue:766"
+        ],
+        "changed_files": [
+          "changelog.d/774.change.rst",
+          "conftest.py",
+          "src/attr/__init__.pyi",
+          "src/attr/_funcs.py",
+          "tests/test_hooks.py"
+        ],
+        "clean_overlay_promotion_decision": "promote_to_clean_benchmark_candidate",
+        "evidence_level": "clean_supply_overlay_sidecar",
+        "metadata_sources": {
+          "canonical_boltons_certified_tasks": "experiments/phase0_headroom/certified_tasks/attrs_clean_outcome_unseen_supply_certified_tasks.jsonl",
+          "canonical_boltons_release": "experiments/phase1_compiler/configs/phase1_second_repo_clean_outcome_unseen_supply.yaml",
+          "clean_ext_certified_tasks": "experiments/phase0_headroom/certified_tasks/attrs_clean_outcome_unseen_supply_certified_tasks.jsonl",
+          "clean_supply_overlay": "experiments/phase1_compiler/results/phase1_second_repo_clean_supply_overlay.json"
+        },
+        "original_hardening_status": null,
+        "promotion_rationale": "local_certification_and_non_leaky_public_context",
+        "source_context_status": "non_leaky_problem_context",
+        "task_time": "2021-03-05T16:01:04-08:00",
+        "test_files": [
+          "tests/test_hooks.py"
+        ]
+      },
+      "repo_id": "attrs",
+      "source_repo": "experiments/phase0_headroom/external_repos/attrs",
+      "split": "H_future",
+      "statement_sha256": "a7eee04c7950a21ba696a4e1460f25f7a3a828a8a17709121fe3d0620a6d9234",
+      "target_commit": "ce8bb4ffa9d4b4c3cc034e497be6809840c2a53a",
+      "task_id": "attrs__hist__027",
+      "test_paths": [
+        "tests/test_hooks.py"
+      ]
+    }
+  ],
+  "paid_acut_calls_made": false,
+  "requested_task_ids": [
+    "attrs__hist__001",
+    "attrs__hist__003",
+    "attrs__hist__004",
+    "attrs__hist__008",
+    "attrs__hist__012",
+    "attrs__hist__013",
+    "attrs__hist__023",
+    "attrs__hist__027"
+  ],
+  "schema_version": "barcarolle.workspace_acut_package_inspection.v1",
+  "selected_task_ids": [
+    "attrs__hist__001",
+    "attrs__hist__003",
+    "attrs__hist__004",
+    "attrs__hist__008",
+    "attrs__hist__012",
+    "attrs__hist__013",
+    "attrs__hist__023",
+    "attrs__hist__027"
+  ],
+  "status": "ready"
+}

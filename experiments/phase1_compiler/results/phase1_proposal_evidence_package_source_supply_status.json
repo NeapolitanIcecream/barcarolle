@@ -1,0 +1,71 @@
+{
+  "artifact": "source_supply_status",
+  "claim_label": "supported_for_proposal_with_caveats",
+  "click_repair": {
+    "claim_boundary": "click_clean_enough_for_three_repo_claim",
+    "click_tasks_in_scope": 30,
+    "paid_acut_solver_cells": 0,
+    "paid_llm_calls": 0,
+    "public_context_repaired": 30,
+    "still_title_only_minor_risk": 0
+  },
+  "generated_at": "2026-06-01T04:42:01Z",
+  "paid_validation_authorized": false,
+  "predictive_validity_established": false,
+  "repo_rows": [
+    {
+      "candidate_policy_fallback_share": 0.0,
+      "current_source_quality_status": "accepted_for_paid_package",
+      "limitation": "No new source-supply expansion in M3; rely on existing certified pilot artifacts.",
+      "proposal_use": "source-quality narrative support",
+      "repo": "attrs",
+      "source_context_classes": {
+        "issue_or_pr_context": 27,
+        "pr_context_title_only": 1,
+        "public_issue_and_pr_context_repaired": 3
+      },
+      "statement_provenance": {
+        "attrs_source_repair_overlay": 3,
+        "fresh_or_third_repo_certification_release_eligible": 28
+      }
+    },
+    {
+      "candidate_policy_fallback_share": 1.0,
+      "current_source_quality_status": "accepted_for_paid_package",
+      "limitation": "Source package was accepted, but candidate policy falls back because feature support is insufficient.",
+      "proposal_use": "source-quality narrative support",
+      "repo": "boltons",
+      "source_context_classes": {
+        "issue_or_pr_context": 35
+      },
+      "statement_provenance": {
+        "fresh_or_third_repo_certification_release_eligible": 35
+      }
+    },
+    {
+      "candidate_policy_fallback_share": 0.0,
+      "current_source_quality_status": "accepted_for_paid_package",
+      "limitation": "Click source context is repaired for the 30 frozen tasks, but outcomes are not rerun or rewritten.",
+      "proposal_use": "source-quality narrative support",
+      "repo": "click",
+      "source_context_classes": {
+        "pre_repair_source_context_classes": {
+          "pr_context_title_only": 30
+        },
+        "public_context_repaired": 30
+      },
+      "statement_provenance": {
+        "fresh_or_third_repo_certification_release_eligible": 30
+      }
+    }
+  ],
+  "run_id": "phase1_proposal_evidence_package_20260601",
+  "schema_version": "barcarolle.phase1_proposal_evidence_package_output.v1",
+  "task_supply_v2": {
+    "paid_ready": false,
+    "primary_decision_label": "continue_internal_repo_history_v2",
+    "recommended_next_action_category": "continue_internal_generator_v2_on_selected_repos",
+    "short_term_scope": "Layer 1 supply infrastructure only; no broad task-generator expansion in M3 proposal scope.",
+    "source_mixing_policy_status": "draft_for_future_release_candidates_not_release_freeze"
+  }
+}

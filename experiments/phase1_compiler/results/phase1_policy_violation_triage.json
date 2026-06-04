@@ -1,0 +1,114 @@
+{
+  "acut_id": "kilo_workspace_gpt_5_4_mini",
+  "adapter_id": "kilo_workspace",
+  "allowed_context_refs": [
+    "issue:766"
+  ],
+  "allowed_code_paths": [
+    "changelog.d/774.change.rst",
+    "conftest.py",
+    "src/attr/__init__.pyi",
+    "src/attr/_funcs.py"
+  ],
+  "base_commit": "ad59a62cae7f1f5355fb121d77eda5d5d1aa0cbd",
+  "certified_changed_files": [
+    "changelog.d/774.change.rst",
+    "conftest.py",
+    "src/attr/__init__.pyi",
+    "src/attr/_funcs.py",
+    "tests/test_hooks.py"
+  ],
+  "certified_changed_non_test_files": [
+    "changelog.d/774.change.rst",
+    "conftest.py",
+    "src/attr/__init__.pyi",
+    "src/attr/_funcs.py"
+  ],
+  "certified_test_files": [
+    "tests/test_hooks.py"
+  ],
+  "classification_deferred": true,
+  "evidence_level": "clean_supply_overlay_sidecar",
+  "facts": {
+    "current_package_metadata_marks_verifier_violating_path_out_of_scope": true,
+    "solver_edited_certified_test_files": false,
+    "solver_edited_paths_outside_allowed_code_paths": [
+      "src/attr/_make.py"
+    ],
+    "solver_edited_paths_outside_certified_changed_non_test_files": [
+      "src/attr/_make.py"
+    ],
+    "target_commit_evidence_supports_every_solver_edited_path": false
+  },
+  "generated_at": "2026-05-23T10:00:58Z",
+  "harness_name": "kilo",
+  "metrics_reporting_detail_after_repair": {
+    "changed_paths": [
+      "src/attr/_make.py"
+    ],
+    "harness_error": "submission_edited_out_of_scope_paths"
+  },
+  "model_or_agent_name": "gpt-5.4-mini",
+  "original_result_prefix": "phase1_two_repo_future_holdout_attrs_h_future",
+  "paid_calls_made_by_this_triage": false,
+  "raw_patch": {
+    "diffstat": [
+      "conftest.py       |    1 -",
+      "src/attr/_make.py |    6 +++++-",
+      "2 files changed, 5 insertions(+), 2 deletions(-)"
+    ],
+    "sha256": "fa4d16b4cde49b507aced1ca7a65177a3d3fe96a56698a2f87ee63a12b7a3dab"
+  },
+  "repo_id": "attrs",
+  "sanitization": {
+    "contains_raw_acut_transcript": false,
+    "contains_raw_completion": false,
+    "contains_raw_patch_body": false,
+    "contains_raw_prompt": false,
+    "hidden_verifier_outcome_used_for_scope_classification": false
+  },
+  "schema_version": "barcarolle.phase1.policy_violation_triage.v1",
+  "score_row": {
+    "scoreable_cell": false,
+    "split": "H_future",
+    "submission_status": "submitted",
+    "terminal_status": "policy_violation"
+  },
+  "source_context_status": "non_leaky_problem_context",
+  "split": "H_future",
+  "submission_changed_paths": [
+    "conftest.py",
+    "src/attr/_make.py"
+  ],
+  "target_commit": "ce8bb4ffa9d4b4c3cc034e497be6809840c2a53a",
+  "target_commit_changed_files": [
+    "changelog.d/774.change.rst",
+    "conftest.py",
+    "src/attr/__init__.pyi",
+    "src/attr/_funcs.py",
+    "tests/test_hooks.py"
+  ],
+  "target_commit_path_support": {
+    "conftest.py": {
+      "in_allowed_code_paths": true,
+      "in_certified_changed_files": true,
+      "in_target_commit_changed_files": true,
+      "supported": true
+    },
+    "src/attr/_make.py": {
+      "in_allowed_code_paths": false,
+      "in_certified_changed_files": false,
+      "in_target_commit_changed_files": false,
+      "supported": false
+    }
+  },
+  "task_id": "attrs__hist__027",
+  "task_time": "2021-03-05T16:01:04-08:00",
+  "verifier_policy_detail": {
+    "changed_paths": [
+      "src/attr/_make.py"
+    ],
+    "harness_error": "submission_edited_out_of_scope_paths",
+    "status": "policy_violation"
+  }
+}

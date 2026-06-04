@@ -1,0 +1,285 @@
+{
+  "status": "draft_m1_matrix",
+  "timestamp_local": "2026-05-30",
+  "runbook": "docs/experiments/phase-1-proposal-report-skeleton-runbook.md",
+  "no_paid_calls_made": true,
+  "rows": [
+    {
+      "claim_or_section": "predictive validity north star",
+      "status": "draft",
+      "current_evidence": [
+        "docs/research/phase-1-proposal-roadmap-and-claim-planning.md",
+        "docs/architecture/system-design.md",
+        "/Users/chenmohan/Downloads/barcarolle-research-0519.md"
+      ],
+      "missing_evidence": [
+        "true-future or strict preregistered rolling-origin result",
+        "final north-star validation figure and wording"
+      ],
+      "priority": "P0",
+      "recommended_milestone": "M4, M5",
+      "notes": "Use as research target only; do not claim established validity."
+    },
+    {
+      "claim_or_section": "short-term proposal claim",
+      "status": "traction",
+      "current_evidence": [
+        "experiments/phase1_compiler/reports/phase1_weighted_design_paid_pilot_decision.md",
+        "experiments/phase1_compiler/reports/phase1_retrospective_predictive_signal_decision.md",
+        "experiments/phase1_compiler/reports/phase1_candidate_policy_validation_protocol_decision.md"
+      ],
+      "missing_evidence": [
+        "one-page evidence summary",
+        "final reviewer-facing wording",
+        "explicit limitations"
+      ],
+      "priority": "P0",
+      "recommended_milestone": "M3, M5",
+      "notes": "Claim should be problem real, measurable, tractable rather than validated compiler."
+    },
+    {
+      "claim_or_section": "naive weighted failure",
+      "status": "diagnostic",
+      "current_evidence": [
+        "experiments/phase1_compiler/reports/phase1_weighted_design_paid_pilot_decision.md",
+        "experiments/phase1_compiler/reports/phase1_local_algorithm_bakeoff_decision.md",
+        "/Users/chenmohan/Downloads/barcarolle-research-0526.md"
+      ],
+      "missing_evidence": [
+        "proposal-ready explanatory table or figure of failure mode"
+      ],
+      "priority": "P0",
+      "recommended_milestone": "M3",
+      "notes": "Strong negative evidence; useful only when described as design diagnosis."
+    },
+    {
+      "claim_or_section": "retrospective signal",
+      "status": "traction",
+      "current_evidence": [
+        "experiments/phase1_compiler/reports/phase1_retrospective_predictive_signal_baseline_comparison.md",
+        "experiments/phase1_compiler/reports/phase1_retrospective_predictive_signal_uncertainty.md"
+      ],
+      "missing_evidence": [
+        "baseline envelope",
+        "many-seed random percentile",
+        "adapter/repo fragility summary"
+      ],
+      "priority": "P0",
+      "recommended_milestone": "M3, M4",
+      "notes": "Current MAE edge 0.209 vs 0.2149 is route-finding evidence only."
+    },
+    {
+      "claim_or_section": "adapter-stratified reporting",
+      "status": "supported",
+      "current_evidence": [
+        "experiments/phase1_compiler/reports/phase1_blocked_split_supplement_fairness_gap_diagnostics_decision.md",
+        "experiments/phase1_compiler/reports/phase1_retrospective_predictive_signal_adapter_metrics.md",
+        "PROCESS.md"
+      ],
+      "missing_evidence": [
+        "final proposal wording for per-adapter support versus specified ACUT mixture"
+      ],
+      "priority": "P0",
+      "recommended_milestone": "M4, M5",
+      "notes": "Pooled summaries stay secondary unless preregistered."
+    },
+    {
+      "claim_or_section": "source-quality repair",
+      "status": "supported",
+      "current_evidence": [
+        "experiments/phase1_compiler/reports/phase1_click_llm_source_context_repair_decision.md"
+      ],
+      "missing_evidence": [
+        "short source-supply status paragraph covering attrs, boltons, click, and remaining caveats"
+      ],
+      "priority": "P1",
+      "recommended_milestone": "M3",
+      "notes": "Click is clean enough for source-quality narrative support; not predictive-validity evidence."
+    },
+    {
+      "claim_or_section": "candidate policy with labeled fallback",
+      "status": "draft",
+      "current_evidence": [
+        "experiments/phase1_compiler/reports/phase1_candidate_policy_validation_protocol_policy_spec.md",
+        "experiments/phase1_compiler/reports/phase1_candidate_policy_validation_protocol_selection_manifest.md",
+        "experiments/phase1_compiler/reports/phase1_candidate_policy_validation_protocol_outcome_blindness_audit.md"
+      ],
+      "missing_evidence": [
+        "final name and wording",
+        "fallback thresholds",
+        "including/excluding fallback-repo reporting plan"
+      ],
+      "priority": "P0",
+      "recommended_milestone": "M2, M4",
+      "notes": "Prefer coverage_constrained_unweighted_v1_with_labeled_fallbacks until fallback is repaired."
+    },
+    {
+      "claim_or_section": "boltons fallback issue",
+      "status": "diagnostic",
+      "current_evidence": [
+        "experiments/phase1_compiler/reports/phase1_candidate_policy_validation_protocol_selection_manifest.md",
+        "/Users/chenmohan/Downloads/barcarolle-research-0530.md"
+      ],
+      "missing_evidence": [
+        "fallback share by repo/task slot",
+        "repair decision or exclusion sensitivity"
+      ],
+      "priority": "P0",
+      "recommended_milestone": "M3, M4",
+      "notes": "One repo and six task slots use fallback due to insufficient feature support."
+    },
+    {
+      "claim_or_section": "pseudo-future versus predictive validity boundary",
+      "status": "needs_evidence",
+      "current_evidence": [
+        "experiments/phase1_compiler/reports/phase1_candidate_policy_validation_protocol_validation_protocol.md",
+        "experiments/phase1_compiler/reports/phase1_retrospective_predictive_signal_uncertainty.md",
+        "/Users/chenmohan/Downloads/barcarolle-research-0530.md"
+      ],
+      "missing_evidence": [
+        "final protocol wording that prevents pseudo-future replay from supporting predictive-validity claims"
+      ],
+      "priority": "P0",
+      "recommended_milestone": "M4",
+      "notes": "pseudo_future_replay can support traction and debugging only."
+    },
+    {
+      "claim_or_section": "baseline strengthening",
+      "status": "needs_evidence",
+      "current_evidence": [
+        "experiments/phase1_compiler/reports/phase1_retrospective_predictive_signal_baseline_comparison.md",
+        "/Users/chenmohan/Downloads/barcarolle-research-0526.md",
+        "/Users/chenmohan/Downloads/barcarolle-research-0530.md"
+      ],
+      "missing_evidence": [
+        "many-seed random distribution",
+        "baseline envelope",
+        "stricter temporal baseline",
+        "simple coverage ablation if needed"
+      ],
+      "priority": "P0",
+      "recommended_milestone": "M3, M4",
+      "notes": "Needed before paid-validation readiness or stronger proposal claims."
+    },
+    {
+      "claim_or_section": "Task Supply v2 relevance",
+      "status": "diagnostic",
+      "current_evidence": [
+        "experiments/phase1_compiler/reports/phase1_task_supply_v2_source_bakeoff_decision.md",
+        "/Users/chenmohan/Downloads/barcarolle-research-0526-1.md"
+      ],
+      "missing_evidence": [
+        "concise Layer 1 status",
+        "certified-yield and source-quality summary",
+        "no broad generator scope expansion"
+      ],
+      "priority": "P1",
+      "recommended_milestone": "M3",
+      "notes": "Supports supply infrastructure; not the project core."
+    },
+    {
+      "claim_or_section": "paid-validation readiness",
+      "status": "prohibited",
+      "current_evidence": [
+        "experiments/phase1_compiler/reports/phase1_candidate_policy_validation_protocol_decision.md",
+        "/Users/chenmohan/Downloads/barcarolle-research-0530.md",
+        "PROCESS.md"
+      ],
+      "missing_evidence": [
+        "external review triage",
+        "baseline hardening",
+        "support thresholds",
+        "fallback decision",
+        "power/budget note"
+      ],
+      "priority": "P0",
+      "recommended_milestone": "M2, M3, M4",
+      "notes": "Current proposal must say paid validation is not authorized."
+    },
+    {
+      "claim_or_section": "three-repo exploratory paid pilot",
+      "status": "supported",
+      "current_evidence": [
+        "experiments/phase1_compiler/reports/phase1_three_repo_paid_validation_decision.md"
+      ],
+      "missing_evidence": [
+        "proposal-ready paragraph separating pilot evidence from predictive validity"
+      ],
+      "priority": "P1",
+      "recommended_milestone": "M3, M5",
+      "notes": "Endpoint/policy clean exploratory evidence; not final validity."
+    },
+    {
+      "claim_or_section": "candidate outcome-blindness",
+      "status": "supported",
+      "current_evidence": [
+        "experiments/phase1_compiler/reports/phase1_candidate_policy_validation_protocol_outcome_blindness_audit.md",
+        "experiments/phase1_compiler/reports/phase1_candidate_policy_validation_protocol_policy_spec.md"
+      ],
+      "missing_evidence": [
+        "independent reproduction or reviewer challenge if needed"
+      ],
+      "priority": "P1",
+      "recommended_milestone": "M2, M4",
+      "notes": "Supports review readiness, not predictive validity."
+    },
+    {
+      "claim_or_section": "success criteria hardening",
+      "status": "needs_evidence",
+      "current_evidence": [
+        "experiments/phase1_compiler/reports/phase1_candidate_policy_validation_protocol_success_criteria.md",
+        "/Users/chenmohan/Downloads/barcarolle-research-0530.md"
+      ],
+      "missing_evidence": [
+        "joint gate with meaningful MAE margin",
+        "slice stability",
+        "adapter non-inferiority",
+        "repo/window non-concentration",
+        "invalid-cell sensitivity"
+      ],
+      "priority": "P0",
+      "recommended_milestone": "M4",
+      "notes": "Current 0.01 margin and majority rule are not enough for paid validation."
+    },
+    {
+      "claim_or_section": "external review triage",
+      "status": "needs_evidence",
+      "current_evidence": [
+        "/Users/chenmohan/Downloads/barcarolle-research-0530.md",
+        "/Users/chenmohan/Downloads/barcarolle-research-0526-1.md"
+      ],
+      "missing_evidence": [
+        "formal triage: accept now, consider for no-paid proposal evidence, defer, reject scope expansion"
+      ],
+      "priority": "P0",
+      "recommended_milestone": "M2",
+      "notes": "GPT-5.5-Pro advice is input, not controlling scope."
+    },
+    {
+      "claim_or_section": "broad predictive-validity claim",
+      "status": "prohibited",
+      "current_evidence": [
+        "experiments/phase1_compiler/reports/phase1_retrospective_predictive_signal_uncertainty.md",
+        "experiments/phase1_compiler/reports/phase1_candidate_policy_validation_protocol_decision.md",
+        "/Users/chenmohan/Downloads/barcarolle-research-0530.md"
+      ],
+      "missing_evidence": [
+        "future outcome-unseen validation result"
+      ],
+      "priority": "deferred",
+      "recommended_milestone": "post-proposal validation phase",
+      "notes": "Do not include as current claim."
+    }
+  ],
+  "p0_before_reviewer_ready_proposal": [
+    "final short-term proposal claim wording",
+    "one-page Phase 1 evidence summary table",
+    "retrospective baseline table with adapter/repo fragility labels",
+    "fallback-share accounting and boltons fallback wording",
+    "pseudo-future versus predictive-validity boundary",
+    "baseline strengthening plan",
+    "paid-validation non-authorization statement",
+    "external review triage of GPT-5.5-Pro recommendations"
+  ],
+  "stop_label_if_unresolved": "blocked_evidence_matrix_incomplete"
+}

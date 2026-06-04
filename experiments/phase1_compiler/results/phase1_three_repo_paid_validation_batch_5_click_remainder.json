@@ -1,0 +1,75 @@
+{
+  "artifact": "batch_5_click_remainder",
+  "batch_id": 5,
+  "batch_name": "batch_5_click_remainder",
+  "batch_summary": {
+    "cell_count": 28,
+    "non_scoreable_cell_count": 0,
+    "pass_rate": 0.6429,
+    "policy_violation_count": 0,
+    "scoreability_rate": 1.0,
+    "scoreable_cell_count": 28,
+    "terminal_status_counts": {
+      "verified_fail": 10,
+      "verified_pass": 18
+    },
+    "verified_fail_count": 10,
+    "verified_pass_count": 18
+  },
+  "continue_decision": "all_batches_complete",
+  "cumulative_summary": {
+    "attempted_result_prefixes": [
+      "phase1_three_repo_paid_validation_batch_1_smoke_codex_workspace",
+      "phase1_three_repo_paid_validation_batch_1_smoke_kilo_workspace",
+      "phase1_three_repo_paid_validation_batch_2_small_pilot_complete_codex_workspace",
+      "phase1_three_repo_paid_validation_batch_2_small_pilot_complete_kilo_workspace",
+      "phase1_three_repo_paid_validation_batch_3_attrs_remainder_codex_workspace",
+      "phase1_three_repo_paid_validation_batch_3_attrs_remainder_kilo_workspace",
+      "phase1_three_repo_paid_validation_batch_4_boltons_remainder_codex_workspace",
+      "phase1_three_repo_paid_validation_batch_4_boltons_remainder_kilo_workspace",
+      "phase1_three_repo_paid_validation_batch_5_click_remainder_codex_workspace",
+      "phase1_three_repo_paid_validation_batch_5_click_remainder_kilo_workspace"
+    ],
+    "cell_count": 120,
+    "hard_cost_cap_usd": 75.0,
+    "non_scoreable_cell_count": 0,
+    "observed_or_conservative_cost_usd": 51.267333,
+    "pass_rate": 0.45,
+    "policy_violation_count": 0,
+    "projected_full_run_conservative_cost_usd": 60.0,
+    "projected_total_cost_with_full_conservative_plan_usd": 60.0,
+    "scoreability_rate": 1.0,
+    "scoreable_cell_count": 120,
+    "terminal_status_counts": {
+      "verified_fail": 66,
+      "verified_pass": 54
+    },
+    "verified_fail_count": 66,
+    "verified_pass_count": 54
+  },
+  "generated_at": "2026-05-28T07:23:57Z",
+  "result_prefixes": [
+    "phase1_three_repo_paid_validation_batch_5_click_remainder_codex_workspace",
+    "phase1_three_repo_paid_validation_batch_5_click_remainder_kilo_workspace"
+  ],
+  "run_id": "phase1_three_repo_paid_validation_20260528",
+  "schema_version": "barcarolle.phase1_three_repo_paid_validation_output.v1",
+  "status": "batch_complete_continue",
+  "stop_conditions": [],
+  "task_ids": [
+    "click__third__278",
+    "click__third__201",
+    "click__third__274",
+    "click__third__200",
+    "click__third__208",
+    "click__third__213",
+    "click__third__216",
+    "click__third__250",
+    "click__third__206",
+    "click__third__199",
+    "click__third__166",
+    "click__third__050",
+    "click__third__205",
+    "click__third__238"
+  ]
+}

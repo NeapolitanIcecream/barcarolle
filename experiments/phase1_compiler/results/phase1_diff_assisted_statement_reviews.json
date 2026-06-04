@@ -1,0 +1,900 @@
+{
+  "candidate_count": 22,
+  "deterministic_qa_counts": {
+    "pass": 19,
+    "reject": 3
+  },
+  "estimated_incremental_cost_usd": 0.0,
+  "generated_at": "2026-05-25T02:52:58Z",
+  "paid_acut_calls_made": false,
+  "paid_llm_calls_made": false,
+  "raw_prompts_or_completions_committed": false,
+  "review_counts": {
+    "pass": 19,
+    "reject": 3
+  },
+  "reviews": [
+    {
+      "checks": {
+        "faithfulness_pass": true,
+        "formatting_pass": true,
+        "leakage_pass": true,
+        "scope_pass": true,
+        "sufficiency_pass": true
+      },
+      "deterministic_qa": {
+        "checks": {
+          "closed_code_fences": true,
+          "editable_paths_are_implementation_only": true,
+          "expected_behavior_present": true,
+          "length_status": "target_range",
+          "no_hidden_verifier_markers": true,
+          "no_paid_outcome_status_text": true,
+          "no_raw_diff_markers": true,
+          "no_target_commit_hash": true,
+          "non_editable_tests_listed_separately": true,
+          "old_cap_disposition": "recoverable_after_regeneration",
+          "problem_summary_present": true,
+          "statement_digest_stable": true
+        },
+        "reasons": [
+          "deterministic_qa_passed"
+        ],
+        "status": "pass"
+      },
+      "final_status": "pass",
+      "iteration_count": 1,
+      "reasons": [
+        "non_leaky_sufficient_faithful_scope_and_format_checks_passed"
+      ],
+      "repo_id": "attrs",
+      "schema_version": "barcarolle.phase1.diff_assisted_statement_review.v1",
+      "source_ref": "issue:611",
+      "statement_digest": "sha256:9f6ea334e32f02541f2cfb63def42618ff9a4c6b05032e105afbfc18f86f4288",
+      "statement_length": 2150,
+      "task_id": "attrs__hist__001"
+    },
+    {
+      "checks": {
+        "faithfulness_pass": true,
+        "formatting_pass": true,
+        "leakage_pass": true,
+        "scope_pass": true,
+        "sufficiency_pass": true
+      },
+      "deterministic_qa": {
+        "checks": {
+          "closed_code_fences": true,
+          "editable_paths_are_implementation_only": true,
+          "expected_behavior_present": true,
+          "length_status": "target_range",
+          "no_hidden_verifier_markers": true,
+          "no_paid_outcome_status_text": true,
+          "no_raw_diff_markers": true,
+          "no_target_commit_hash": true,
+          "non_editable_tests_listed_separately": true,
+          "old_cap_disposition": "recoverable_after_regeneration",
+          "problem_summary_present": true,
+          "statement_digest_stable": true
+        },
+        "reasons": [
+          "deterministic_qa_passed"
+        ],
+        "status": "pass"
+      },
+      "final_status": "pass",
+      "iteration_count": 1,
+      "reasons": [
+        "non_leaky_sufficient_faithful_scope_and_format_checks_passed"
+      ],
+      "repo_id": "attrs",
+      "schema_version": "barcarolle.phase1.diff_assisted_statement_review.v1",
+      "source_ref": "issue:626",
+      "statement_digest": "sha256:8b7364728644842b5f92696390ee7cc2a65bedbea6ebc7fd457d6fd64f1ef97e",
+      "statement_length": 2116,
+      "task_id": "attrs__hist__004"
+    },
+    {
+      "checks": {
+        "faithfulness_pass": true,
+        "formatting_pass": true,
+        "leakage_pass": true,
+        "scope_pass": true,
+        "sufficiency_pass": true
+      },
+      "deterministic_qa": {
+        "checks": {
+          "closed_code_fences": true,
+          "editable_paths_are_implementation_only": true,
+          "expected_behavior_present": true,
+          "length_status": "target_range",
+          "no_hidden_verifier_markers": true,
+          "no_paid_outcome_status_text": true,
+          "no_raw_diff_markers": true,
+          "no_target_commit_hash": true,
+          "non_editable_tests_listed_separately": true,
+          "old_cap_disposition": "recoverable_after_regeneration",
+          "problem_summary_present": true,
+          "statement_digest_stable": true
+        },
+        "reasons": [
+          "deterministic_qa_passed"
+        ],
+        "status": "pass"
+      },
+      "final_status": "pass",
+      "iteration_count": 1,
+      "reasons": [
+        "non_leaky_sufficient_faithful_scope_and_format_checks_passed"
+      ],
+      "repo_id": "attrs",
+      "schema_version": "barcarolle.phase1.diff_assisted_statement_review.v1",
+      "source_ref": "issue:670",
+      "statement_digest": "sha256:96eeb58e6d94e01b2d65b6d720d0c9c1bb897dd33874dce3878375ff58ffca4e",
+      "statement_length": 2207,
+      "task_id": "attrs__hist__009"
+    },
+    {
+      "checks": {
+        "faithfulness_pass": true,
+        "formatting_pass": true,
+        "leakage_pass": true,
+        "scope_pass": true,
+        "sufficiency_pass": true
+      },
+      "deterministic_qa": {
+        "checks": {
+          "closed_code_fences": true,
+          "editable_paths_are_implementation_only": true,
+          "expected_behavior_present": true,
+          "length_status": "target_range",
+          "no_hidden_verifier_markers": true,
+          "no_paid_outcome_status_text": true,
+          "no_raw_diff_markers": true,
+          "no_target_commit_hash": true,
+          "non_editable_tests_listed_separately": true,
+          "old_cap_disposition": "recoverable_after_regeneration",
+          "problem_summary_present": true,
+          "statement_digest_stable": true
+        },
+        "reasons": [
+          "deterministic_qa_passed"
+        ],
+        "status": "pass"
+      },
+      "final_status": "pass",
+      "iteration_count": 1,
+      "reasons": [
+        "non_leaky_sufficient_faithful_scope_and_format_checks_passed"
+      ],
+      "repo_id": "attrs",
+      "schema_version": "barcarolle.phase1.diff_assisted_statement_review.v1",
+      "source_ref": "issue:673",
+      "statement_digest": "sha256:0b307a9ab3a94d32b27ca2f2ce5cd5feafb94080a36004e3f90a871c37e488d1",
+      "statement_length": 2154,
+      "task_id": "attrs__hist__010"
+    },
+    {
+      "checks": {
+        "faithfulness_pass": true,
+        "formatting_pass": true,
+        "leakage_pass": true,
+        "scope_pass": true,
+        "sufficiency_pass": true
+      },
+      "deterministic_qa": {
+        "checks": {
+          "closed_code_fences": true,
+          "editable_paths_are_implementation_only": true,
+          "expected_behavior_present": true,
+          "length_status": "target_range",
+          "no_hidden_verifier_markers": true,
+          "no_paid_outcome_status_text": true,
+          "no_raw_diff_markers": true,
+          "no_target_commit_hash": true,
+          "non_editable_tests_listed_separately": true,
+          "old_cap_disposition": "recoverable_after_regeneration",
+          "problem_summary_present": true,
+          "statement_digest_stable": true
+        },
+        "reasons": [
+          "deterministic_qa_passed"
+        ],
+        "status": "pass"
+      },
+      "final_status": "pass",
+      "iteration_count": 1,
+      "reasons": [
+        "non_leaky_sufficient_faithful_scope_and_format_checks_passed"
+      ],
+      "repo_id": "attrs",
+      "schema_version": "barcarolle.phase1.diff_assisted_statement_review.v1",
+      "source_ref": "issue:680",
+      "statement_digest": "sha256:b029036c8179bea4b55f140c5453f9acd17c15b516b4ae9cd52d0c7974c9b61f",
+      "statement_length": 2102,
+      "task_id": "attrs__hist__012"
+    },
+    {
+      "checks": {
+        "faithfulness_pass": true,
+        "formatting_pass": true,
+        "leakage_pass": true,
+        "scope_pass": true,
+        "sufficiency_pass": true
+      },
+      "deterministic_qa": {
+        "checks": {
+          "closed_code_fences": true,
+          "editable_paths_are_implementation_only": true,
+          "expected_behavior_present": true,
+          "length_status": "target_range",
+          "no_hidden_verifier_markers": true,
+          "no_paid_outcome_status_text": true,
+          "no_raw_diff_markers": true,
+          "no_target_commit_hash": true,
+          "non_editable_tests_listed_separately": true,
+          "old_cap_disposition": "recoverable_after_regeneration",
+          "problem_summary_present": true,
+          "statement_digest_stable": true
+        },
+        "reasons": [
+          "deterministic_qa_passed"
+        ],
+        "status": "pass"
+      },
+      "final_status": "pass",
+      "iteration_count": 1,
+      "reasons": [
+        "non_leaky_sufficient_faithful_scope_and_format_checks_passed"
+      ],
+      "repo_id": "attrs",
+      "schema_version": "barcarolle.phase1.diff_assisted_statement_review.v1",
+      "source_ref": "pr:687",
+      "statement_digest": "sha256:c6c6e765bbfd1a2d5ee7a0f70563dc49059c3d5ac958cf0fa985b2888d0c7aa7",
+      "statement_length": 2174,
+      "task_id": "attrs__hist__013"
+    },
+    {
+      "checks": {
+        "faithfulness_pass": true,
+        "formatting_pass": true,
+        "leakage_pass": true,
+        "scope_pass": true,
+        "sufficiency_pass": true
+      },
+      "deterministic_qa": {
+        "checks": {
+          "closed_code_fences": true,
+          "editable_paths_are_implementation_only": true,
+          "expected_behavior_present": true,
+          "length_status": "target_range",
+          "no_hidden_verifier_markers": true,
+          "no_paid_outcome_status_text": true,
+          "no_raw_diff_markers": true,
+          "no_target_commit_hash": true,
+          "non_editable_tests_listed_separately": true,
+          "old_cap_disposition": "recoverable_after_regeneration",
+          "problem_summary_present": true,
+          "statement_digest_stable": true
+        },
+        "reasons": [
+          "deterministic_qa_passed"
+        ],
+        "status": "pass"
+      },
+      "final_status": "pass",
+      "iteration_count": 1,
+      "reasons": [
+        "non_leaky_sufficient_faithful_scope_and_format_checks_passed"
+      ],
+      "repo_id": "attrs",
+      "schema_version": "barcarolle.phase1.diff_assisted_statement_review.v1",
+      "source_ref": "issue:593",
+      "statement_digest": "sha256:d0a2fd3d3bd31138a9c54ab732633f42f36acdc6aa2b8c4f6bbd29cc46752835",
+      "statement_length": 2134,
+      "task_id": "attrs__hist__023"
+    },
+    {
+      "checks": {
+        "faithfulness_pass": false,
+        "formatting_pass": true,
+        "leakage_pass": true,
+        "scope_pass": true,
+        "sufficiency_pass": false
+      },
+      "deterministic_qa": {
+        "checks": {
+          "closed_code_fences": true,
+          "editable_paths_are_implementation_only": true,
+          "expected_behavior_present": true,
+          "length_status": "target_range",
+          "no_hidden_verifier_markers": true,
+          "no_paid_outcome_status_text": true,
+          "no_raw_diff_markers": true,
+          "no_target_commit_hash": true,
+          "non_editable_tests_listed_separately": true,
+          "old_cap_disposition": "not_recovered_by_regeneration",
+          "problem_summary_present": true,
+          "statement_digest_stable": true
+        },
+        "reasons": [
+          "review_status:reject"
+        ],
+        "status": "reject"
+      },
+      "final_status": "reject",
+      "iteration_count": 1,
+      "reasons": [
+        "runbook_explicit_exclusion_not_recovered"
+      ],
+      "repo_id": "attrs",
+      "schema_version": "barcarolle.phase1.diff_assisted_statement_review.v1",
+      "source_ref": "issue:766",
+      "statement_digest": "sha256:dad66a02613effc5e3cdba6ea1e5b0105fa1d9a0f873902222524f65e8235f30",
+      "statement_length": 2154,
+      "task_id": "attrs__hist__027"
+    },
+    {
+      "checks": {
+        "faithfulness_pass": true,
+        "formatting_pass": true,
+        "leakage_pass": true,
+        "scope_pass": true,
+        "sufficiency_pass": true
+      },
+      "deterministic_qa": {
+        "checks": {
+          "closed_code_fences": true,
+          "editable_paths_are_implementation_only": true,
+          "expected_behavior_present": true,
+          "length_status": "target_range",
+          "no_hidden_verifier_markers": true,
+          "no_paid_outcome_status_text": true,
+          "no_raw_diff_markers": true,
+          "no_target_commit_hash": true,
+          "non_editable_tests_listed_separately": true,
+          "old_cap_disposition": "recoverable_after_regeneration",
+          "problem_summary_present": true,
+          "statement_digest_stable": true
+        },
+        "reasons": [
+          "deterministic_qa_passed"
+        ],
+        "status": "pass"
+      },
+      "final_status": "pass",
+      "iteration_count": 1,
+      "reasons": [
+        "non_leaky_sufficient_faithful_scope_and_format_checks_passed"
+      ],
+      "repo_id": "attrs",
+      "schema_version": "barcarolle.phase1.diff_assisted_statement_review.v1",
+      "source_ref": "issue:826",
+      "statement_digest": "sha256:dabc37de93cedcfce7ff1bba5f50f75cab58cb886e2a1545b4b5e8a96252ad6b",
+      "statement_length": 2124,
+      "task_id": "attrs__hist__032"
+    },
+    {
+      "checks": {
+        "faithfulness_pass": true,
+        "formatting_pass": true,
+        "leakage_pass": true,
+        "scope_pass": true,
+        "sufficiency_pass": true
+      },
+      "deterministic_qa": {
+        "checks": {
+          "closed_code_fences": true,
+          "editable_paths_are_implementation_only": true,
+          "expected_behavior_present": true,
+          "length_status": "target_range",
+          "no_hidden_verifier_markers": true,
+          "no_paid_outcome_status_text": true,
+          "no_raw_diff_markers": true,
+          "no_target_commit_hash": true,
+          "non_editable_tests_listed_separately": true,
+          "old_cap_disposition": "recoverable_after_regeneration",
+          "problem_summary_present": true,
+          "statement_digest_stable": true
+        },
+        "reasons": [
+          "deterministic_qa_passed"
+        ],
+        "status": "pass"
+      },
+      "final_status": "pass",
+      "iteration_count": 1,
+      "reasons": [
+        "non_leaky_sufficient_faithful_scope_and_format_checks_passed"
+      ],
+      "repo_id": "attrs",
+      "schema_version": "barcarolle.phase1.diff_assisted_statement_review.v1",
+      "source_ref": "issue:813",
+      "statement_digest": "sha256:dcddf9e4ae5d3ccd97bc6daf64c93634b5aafb534e385b696fdf72043cb6bce4",
+      "statement_length": 2206,
+      "task_id": "attrs__hist__033"
+    },
+    {
+      "checks": {
+        "faithfulness_pass": true,
+        "formatting_pass": true,
+        "leakage_pass": true,
+        "scope_pass": true,
+        "sufficiency_pass": true
+      },
+      "deterministic_qa": {
+        "checks": {
+          "closed_code_fences": true,
+          "editable_paths_are_implementation_only": true,
+          "expected_behavior_present": true,
+          "length_status": "target_range",
+          "no_hidden_verifier_markers": true,
+          "no_paid_outcome_status_text": true,
+          "no_raw_diff_markers": true,
+          "no_target_commit_hash": true,
+          "non_editable_tests_listed_separately": true,
+          "old_cap_disposition": "recoverable_after_regeneration",
+          "problem_summary_present": true,
+          "statement_digest_stable": true
+        },
+        "reasons": [
+          "deterministic_qa_passed"
+        ],
+        "status": "pass"
+      },
+      "final_status": "pass",
+      "iteration_count": 1,
+      "reasons": [
+        "non_leaky_sufficient_faithful_scope_and_format_checks_passed"
+      ],
+      "repo_id": "attrs",
+      "schema_version": "barcarolle.phase1.diff_assisted_statement_review.v1",
+      "source_ref": "issue:821",
+      "statement_digest": "sha256:84e109b5be77bb741672998e9d29260551e096a0204a7ef3a71962e0b5949ce5",
+      "statement_length": 2111,
+      "task_id": "attrs__hist__035"
+    },
+    {
+      "checks": {
+        "faithfulness_pass": true,
+        "formatting_pass": true,
+        "leakage_pass": true,
+        "scope_pass": true,
+        "sufficiency_pass": true
+      },
+      "deterministic_qa": {
+        "checks": {
+          "closed_code_fences": true,
+          "editable_paths_are_implementation_only": true,
+          "expected_behavior_present": true,
+          "length_status": "target_range",
+          "no_hidden_verifier_markers": true,
+          "no_paid_outcome_status_text": true,
+          "no_raw_diff_markers": true,
+          "no_target_commit_hash": true,
+          "non_editable_tests_listed_separately": true,
+          "old_cap_disposition": "recoverable_after_regeneration",
+          "problem_summary_present": true,
+          "statement_digest_stable": true
+        },
+        "reasons": [
+          "deterministic_qa_passed"
+        ],
+        "status": "pass"
+      },
+      "final_status": "pass",
+      "iteration_count": 1,
+      "reasons": [
+        "non_leaky_sufficient_faithful_scope_and_format_checks_passed"
+      ],
+      "repo_id": "attrs",
+      "schema_version": "barcarolle.phase1.diff_assisted_statement_review.v1",
+      "source_ref": "pr:848",
+      "statement_digest": "sha256:3a6928d171165b3501d8d056f43632902835a046b44d53968f191b4ac409b7c6",
+      "statement_length": 2109,
+      "task_id": "attrs__hist__036"
+    },
+    {
+      "checks": {
+        "faithfulness_pass": true,
+        "formatting_pass": true,
+        "leakage_pass": true,
+        "scope_pass": true,
+        "sufficiency_pass": true
+      },
+      "deterministic_qa": {
+        "checks": {
+          "closed_code_fences": true,
+          "editable_paths_are_implementation_only": true,
+          "expected_behavior_present": true,
+          "length_status": "target_range",
+          "no_hidden_verifier_markers": true,
+          "no_paid_outcome_status_text": true,
+          "no_raw_diff_markers": true,
+          "no_target_commit_hash": true,
+          "non_editable_tests_listed_separately": true,
+          "old_cap_disposition": "recoverable_after_regeneration",
+          "problem_summary_present": true,
+          "statement_digest_stable": true
+        },
+        "reasons": [
+          "deterministic_qa_passed"
+        ],
+        "status": "pass"
+      },
+      "final_status": "pass",
+      "iteration_count": 1,
+      "reasons": [
+        "non_leaky_sufficient_faithful_scope_and_format_checks_passed"
+      ],
+      "repo_id": "attrs",
+      "schema_version": "barcarolle.phase1.diff_assisted_statement_review.v1",
+      "source_ref": "issue:875",
+      "statement_digest": "sha256:07a45af933b498be155f3c994f6e43ec03f5248cbf8de3bd2140512cafc4d861",
+      "statement_length": 2225,
+      "task_id": "attrs__hist__039"
+    },
+    {
+      "checks": {
+        "faithfulness_pass": true,
+        "formatting_pass": true,
+        "leakage_pass": true,
+        "scope_pass": true,
+        "sufficiency_pass": true
+      },
+      "deterministic_qa": {
+        "checks": {
+          "closed_code_fences": true,
+          "editable_paths_are_implementation_only": true,
+          "expected_behavior_present": true,
+          "length_status": "target_range",
+          "no_hidden_verifier_markers": true,
+          "no_paid_outcome_status_text": true,
+          "no_raw_diff_markers": true,
+          "no_target_commit_hash": true,
+          "non_editable_tests_listed_separately": true,
+          "old_cap_disposition": "recoverable_after_regeneration",
+          "problem_summary_present": true,
+          "statement_digest_stable": true
+        },
+        "reasons": [
+          "deterministic_qa_passed"
+        ],
+        "status": "pass"
+      },
+      "final_status": "pass",
+      "iteration_count": 1,
+      "reasons": [
+        "non_leaky_sufficient_faithful_scope_and_format_checks_passed"
+      ],
+      "repo_id": "attrs",
+      "schema_version": "barcarolle.phase1.diff_assisted_statement_review.v1",
+      "source_ref": "issue:646",
+      "statement_digest": "sha256:f798c0c833703dd6392bc78789f7ea9d3183efabc30db912f369628d15fba22d",
+      "statement_length": 2197,
+      "task_id": "attrs__hist__041"
+    },
+    {
+      "checks": {
+        "faithfulness_pass": true,
+        "formatting_pass": true,
+        "leakage_pass": true,
+        "scope_pass": true,
+        "sufficiency_pass": true
+      },
+      "deterministic_qa": {
+        "checks": {
+          "closed_code_fences": true,
+          "editable_paths_are_implementation_only": true,
+          "expected_behavior_present": true,
+          "length_status": "target_range",
+          "no_hidden_verifier_markers": true,
+          "no_paid_outcome_status_text": true,
+          "no_raw_diff_markers": true,
+          "no_target_commit_hash": true,
+          "non_editable_tests_listed_separately": true,
+          "old_cap_disposition": "recoverable_after_regeneration",
+          "problem_summary_present": true,
+          "statement_digest_stable": true
+        },
+        "reasons": [
+          "deterministic_qa_passed"
+        ],
+        "status": "pass"
+      },
+      "final_status": "pass",
+      "iteration_count": 1,
+      "reasons": [
+        "non_leaky_sufficient_faithful_scope_and_format_checks_passed"
+      ],
+      "repo_id": "attrs",
+      "schema_version": "barcarolle.phase1.diff_assisted_statement_review.v1",
+      "source_ref": "pr:916",
+      "statement_digest": "sha256:35a080f8c14b1774d6432392c83efe2f740bfbdc4219d9652436ddac46490739",
+      "statement_length": 2138,
+      "task_id": "attrs__hist__045"
+    },
+    {
+      "checks": {
+        "faithfulness_pass": true,
+        "formatting_pass": true,
+        "leakage_pass": true,
+        "scope_pass": true,
+        "sufficiency_pass": true
+      },
+      "deterministic_qa": {
+        "checks": {
+          "closed_code_fences": true,
+          "editable_paths_are_implementation_only": true,
+          "expected_behavior_present": true,
+          "length_status": "target_range",
+          "no_hidden_verifier_markers": true,
+          "no_paid_outcome_status_text": true,
+          "no_raw_diff_markers": true,
+          "no_target_commit_hash": true,
+          "non_editable_tests_listed_separately": true,
+          "old_cap_disposition": "recoverable_after_regeneration",
+          "problem_summary_present": true,
+          "statement_digest_stable": true
+        },
+        "reasons": [
+          "deterministic_qa_passed"
+        ],
+        "status": "pass"
+      },
+      "final_status": "pass",
+      "iteration_count": 1,
+      "reasons": [
+        "non_leaky_sufficient_faithful_scope_and_format_checks_passed"
+      ],
+      "repo_id": "attrs",
+      "schema_version": "barcarolle.phase1.diff_assisted_statement_review.v1",
+      "source_ref": "issue:924",
+      "statement_digest": "sha256:31a0bd025ff46df4ef55e9651caf7efebe77529be930972f1db66f34cf6c0bd9",
+      "statement_length": 2211,
+      "task_id": "attrs__hist__047"
+    },
+    {
+      "checks": {
+        "faithfulness_pass": true,
+        "formatting_pass": true,
+        "leakage_pass": true,
+        "scope_pass": true,
+        "sufficiency_pass": true
+      },
+      "deterministic_qa": {
+        "checks": {
+          "closed_code_fences": true,
+          "editable_paths_are_implementation_only": true,
+          "expected_behavior_present": true,
+          "length_status": "target_range",
+          "no_hidden_verifier_markers": true,
+          "no_paid_outcome_status_text": true,
+          "no_raw_diff_markers": true,
+          "no_target_commit_hash": true,
+          "non_editable_tests_listed_separately": true,
+          "old_cap_disposition": "recoverable_after_regeneration",
+          "problem_summary_present": true,
+          "statement_digest_stable": true
+        },
+        "reasons": [
+          "deterministic_qa_passed"
+        ],
+        "status": "pass"
+      },
+      "final_status": "pass",
+      "iteration_count": 1,
+      "reasons": [
+        "non_leaky_sufficient_faithful_scope_and_format_checks_passed"
+      ],
+      "repo_id": "boltons",
+      "schema_version": "barcarolle.phase1.diff_assisted_statement_review.v1",
+      "source_ref": "issue:231",
+      "statement_digest": "sha256:16f303cb6cfe356a39f74ba45cd4642a9339a79130857b9ce7c859e46294cb12",
+      "statement_length": 2155,
+      "task_id": "boltons__clean_ext__001"
+    },
+    {
+      "checks": {
+        "faithfulness_pass": true,
+        "formatting_pass": true,
+        "leakage_pass": true,
+        "scope_pass": true,
+        "sufficiency_pass": true
+      },
+      "deterministic_qa": {
+        "checks": {
+          "closed_code_fences": true,
+          "editable_paths_are_implementation_only": true,
+          "expected_behavior_present": true,
+          "length_status": "target_range",
+          "no_hidden_verifier_markers": true,
+          "no_paid_outcome_status_text": true,
+          "no_raw_diff_markers": true,
+          "no_target_commit_hash": true,
+          "non_editable_tests_listed_separately": true,
+          "old_cap_disposition": "recoverable_after_regeneration",
+          "problem_summary_present": true,
+          "statement_digest_stable": true
+        },
+        "reasons": [
+          "deterministic_qa_passed"
+        ],
+        "status": "pass"
+      },
+      "final_status": "pass",
+      "iteration_count": 1,
+      "reasons": [
+        "non_leaky_sufficient_faithful_scope_and_format_checks_passed"
+      ],
+      "repo_id": "boltons",
+      "schema_version": "barcarolle.phase1.diff_assisted_statement_review.v1",
+      "source_ref": "issue:240",
+      "statement_digest": "sha256:767576ea14ea64d7d0919eee08ec976493ab2cbd7556406ea176f825d8c19a79",
+      "statement_length": 2144,
+      "task_id": "boltons__clean_ext__008"
+    },
+    {
+      "checks": {
+        "faithfulness_pass": true,
+        "formatting_pass": true,
+        "leakage_pass": true,
+        "scope_pass": true,
+        "sufficiency_pass": true
+      },
+      "deterministic_qa": {
+        "checks": {
+          "closed_code_fences": true,
+          "editable_paths_are_implementation_only": true,
+          "expected_behavior_present": true,
+          "length_status": "target_range",
+          "no_hidden_verifier_markers": true,
+          "no_paid_outcome_status_text": true,
+          "no_raw_diff_markers": true,
+          "no_target_commit_hash": true,
+          "non_editable_tests_listed_separately": true,
+          "old_cap_disposition": "recoverable_after_regeneration",
+          "problem_summary_present": true,
+          "statement_digest_stable": true
+        },
+        "reasons": [
+          "deterministic_qa_passed"
+        ],
+        "status": "pass"
+      },
+      "final_status": "pass",
+      "iteration_count": 1,
+      "reasons": [
+        "non_leaky_sufficient_faithful_scope_and_format_checks_passed"
+      ],
+      "repo_id": "boltons",
+      "schema_version": "barcarolle.phase1.diff_assisted_statement_review.v1",
+      "source_ref": "issue:252",
+      "statement_digest": "sha256:0dbad5b502c46939f3c9c7a21fc9e996d25904df24c96ef9c03f0baba1edeac5",
+      "statement_length": 2184,
+      "task_id": "boltons__clean_ext__010"
+    },
+    {
+      "checks": {
+        "faithfulness_pass": false,
+        "formatting_pass": true,
+        "leakage_pass": true,
+        "scope_pass": true,
+        "sufficiency_pass": false
+      },
+      "deterministic_qa": {
+        "checks": {
+          "closed_code_fences": true,
+          "editable_paths_are_implementation_only": true,
+          "expected_behavior_present": true,
+          "length_status": "target_range",
+          "no_hidden_verifier_markers": true,
+          "no_paid_outcome_status_text": true,
+          "no_raw_diff_markers": true,
+          "no_target_commit_hash": true,
+          "non_editable_tests_listed_separately": true,
+          "old_cap_disposition": "not_applicable",
+          "problem_summary_present": true,
+          "statement_digest_stable": true
+        },
+        "reasons": [
+          "review_status:reject"
+        ],
+        "status": "reject"
+      },
+      "final_status": "reject",
+      "iteration_count": 1,
+      "reasons": [
+        "public_context_empty_pr_stub",
+        "pull_request_context_without_sufficient_problem_body"
+      ],
+      "repo_id": "attrs",
+      "schema_version": "barcarolle.phase1.diff_assisted_statement_review.v1",
+      "source_ref": "pr:506",
+      "statement_digest": "sha256:cb5f92a661b6d70cd03fb45f1fa359e5bfa89c93bd1519f8878a47c32a2a0b50",
+      "statement_length": 2039,
+      "task_id": "attrs__hist__003"
+    },
+    {
+      "checks": {
+        "faithfulness_pass": false,
+        "formatting_pass": true,
+        "leakage_pass": true,
+        "scope_pass": true,
+        "sufficiency_pass": false
+      },
+      "deterministic_qa": {
+        "checks": {
+          "closed_code_fences": true,
+          "editable_paths_are_implementation_only": true,
+          "expected_behavior_present": true,
+          "length_status": "target_range",
+          "no_hidden_verifier_markers": true,
+          "no_paid_outcome_status_text": true,
+          "no_raw_diff_markers": true,
+          "no_target_commit_hash": true,
+          "non_editable_tests_listed_separately": true,
+          "old_cap_disposition": "not_applicable",
+          "problem_summary_present": true,
+          "statement_digest_stable": true
+        },
+        "reasons": [
+          "review_status:reject"
+        ],
+        "status": "reject"
+      },
+      "final_status": "reject",
+      "iteration_count": 1,
+      "reasons": [
+        "public_pr_context_too_vague_for_solver_statement"
+      ],
+      "repo_id": "attrs",
+      "schema_version": "barcarolle.phase1.diff_assisted_statement_review.v1",
+      "source_ref": "pr:669",
+      "statement_digest": "sha256:41239bd44c38ecf2b63358f7844a27f0990b0074acbe0378bd67996599a1a1e7",
+      "statement_length": 2225,
+      "task_id": "attrs__hist__008"
+    },
+    {
+      "checks": {
+        "faithfulness_pass": true,
+        "formatting_pass": true,
+        "leakage_pass": true,
+        "scope_pass": true,
+        "sufficiency_pass": true
+      },
+      "deterministic_qa": {
+        "checks": {
+          "closed_code_fences": true,
+          "editable_paths_are_implementation_only": true,
+          "expected_behavior_present": true,
+          "length_status": "target_range",
+          "no_hidden_verifier_markers": true,
+          "no_paid_outcome_status_text": true,
+          "no_raw_diff_markers": true,
+          "no_target_commit_hash": true,
+          "non_editable_tests_listed_separately": true,
+          "old_cap_disposition": "not_applicable",
+          "problem_summary_present": true,
+          "statement_digest_stable": true
+        },
+        "reasons": [
+          "deterministic_qa_passed"
+        ],
+        "status": "pass"
+      },
+      "final_status": "pass",
+      "iteration_count": 1,
+      "reasons": [
+        "non_leaky_sufficient_faithful_scope_and_format_checks_passed"
+      ],
+      "repo_id": "boltons",
+      "schema_version": "barcarolle.phase1.diff_assisted_statement_review.v1",
+      "source_ref": "issue:319",
+      "statement_digest": "sha256:047fb100b07b8b95225f9f37177601f2f3b3953bd4266225da535aa660120b5a",
+      "statement_length": 2208,
+      "task_id": "boltons__clean_ext__017"
+    }
+  ],
+  "schema_version": "barcarolle.phase1.diff_assisted_statement_reviews.v1"
+}

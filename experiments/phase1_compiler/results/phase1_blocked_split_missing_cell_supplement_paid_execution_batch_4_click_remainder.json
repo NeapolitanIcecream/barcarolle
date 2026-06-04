@@ -1,0 +1,85 @@
+{
+  "artifact": "batch_4_click_remainder",
+  "batch_id": 4,
+  "batch_name": "batch_4_click_remainder",
+  "batch_summary": {
+    "cell_count": 14,
+    "non_scoreable_cell_count": 0,
+    "pass_rate": 0.5714,
+    "policy_violation_count": 0,
+    "scoreability_rate": 1.0,
+    "scoreable_cell_count": 14,
+    "terminal_status_counts": {
+      "verified_fail": 6,
+      "verified_pass": 8
+    },
+    "verified_fail_count": 6,
+    "verified_pass_count": 8
+  },
+  "click_minor_risk_caveat": "visible_title_only_minor_risk",
+  "continue_decision": "all_batches_complete",
+  "cumulative_summary": {
+    "attempted_result_prefixes": [
+      "phase1_blocked_split_missing_cell_supplement_paid_execution_batch_1_smoke_codex_workspace",
+      "phase1_blocked_split_missing_cell_supplement_paid_execution_batch_1_smoke_kilo_workspace",
+      "phase1_blocked_split_missing_cell_supplement_paid_execution_batch_2_attrs_remainder_codex_workspace",
+      "phase1_blocked_split_missing_cell_supplement_paid_execution_batch_2_attrs_remainder_kilo_workspace",
+      "phase1_blocked_split_missing_cell_supplement_paid_execution_batch_3_boltons_remainder_codex_workspace",
+      "phase1_blocked_split_missing_cell_supplement_paid_execution_batch_3_boltons_remainder_kilo_workspace",
+      "phase1_blocked_split_missing_cell_supplement_paid_execution_batch_4_click_remainder_codex_workspace",
+      "phase1_blocked_split_missing_cell_supplement_paid_execution_batch_4_click_remainder_kilo_workspace"
+    ],
+    "cell_count": 120,
+    "combined_planned_cells": 120,
+    "hard_cost_cap_usd": 30.0,
+    "max_recoverable_scoreability_rate": 0.9917,
+    "new_completed_cells": 48,
+    "new_non_scoreable_cells": 1,
+    "new_observed_or_conservative_cost_usd": 26.3480964,
+    "new_planned_cells": 48,
+    "new_remaining_cells": 0,
+    "new_scoreable_cells": 47,
+    "non_scoreable_cell_count": 1,
+    "pass_rate": 0.437,
+    "policy_violation_count": 0,
+    "projected_remaining_new_cost_usd": 0.0,
+    "projected_total_new_cost_usd": 26.3480964,
+    "reused_cells": 72,
+    "scoreability_rate": 0.9917,
+    "scoreable_cell_count": 119,
+    "terminal_status_counts": {
+      "invalid_output": 1,
+      "verified_fail": 67,
+      "verified_pass": 52
+    },
+    "verified_fail_count": 67,
+    "verified_pass_count": 52
+  },
+  "endpoint_compliance": {
+    "LLM_API_KEY_present": true,
+    "LLM_BASE_URL_present": true,
+    "both_required_endpoint_variables_present": true,
+    "endpoint_host_hash": "9952174049b2",
+    "sourced_zshrc_before_check": true,
+    "values_recorded": false
+  },
+  "generated_at": "2026-05-29T05:18:46Z",
+  "raw_oracle_exposure_detected": false,
+  "result_prefixes": [
+    "phase1_blocked_split_missing_cell_supplement_paid_execution_batch_4_click_remainder_codex_workspace",
+    "phase1_blocked_split_missing_cell_supplement_paid_execution_batch_4_click_remainder_kilo_workspace"
+  ],
+  "run_id": "phase1_blocked_split_missing_cell_supplement_paid_execution_20260529",
+  "schema_version": "barcarolle.phase1_blocked_split_missing_cell_supplement_paid_execution_output.v1",
+  "status": "all_batches_complete",
+  "stop_conditions": [],
+  "task_ids": [
+    "click__third__109",
+    "click__third__198",
+    "click__third__202",
+    "click__third__214",
+    "click__third__220",
+    "click__third__234",
+    "click__third__288"
+  ]
+}

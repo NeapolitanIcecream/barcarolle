@@ -1,0 +1,162 @@
+{
+  "adapter_difference_interpretation": {
+    "adapter_difference_is_problem_by_itself": false,
+    "can_report_as_acut_configuration_difference": true,
+    "model_only_claim_allowed": false
+  },
+  "artifact": "adapter_fairness_audit",
+  "dimension_counts": {
+    "clean": 9,
+    "documented_acut_difference": 1
+  },
+  "dimensions": {
+    "allowed_edit_paths_and_prohibited_tests_or_oracle": {
+      "action_suggested": "Continue treating policy violations as hard gates.",
+      "classification": "clean",
+      "evidence": {
+        "all_tests_non_editable": true,
+        "policy_violation_count": 0,
+        "raw_oracle_exposure_detected": false
+      },
+      "what_happened": "Allowed code paths and test paths were recorded, tests were non-editable, policy violations were zero, and raw oracle exposure was false.",
+      "why_it_matters": "Adapter pass-rate differences are not explained by committed evidence of path-policy or oracle leakage."
+    },
+    "base_commit_and_workspace_construction": {
+      "action_suggested": "No paid rerun is suggested by workspace construction evidence.",
+      "classification": "clean",
+      "evidence": {
+        "all_base_commits_resolvable": true,
+        "package_rows_checked": 24,
+        "workspace_matrix": "experiments/phase0_headroom/configs/phase1_blocked_split_missing_cell_supplement_paid_execution_workspace_matrix.yaml"
+      },
+      "what_happened": "Ready-package rows record resolvable base commits and source repos for the supplement missing-cell package.",
+      "why_it_matters": "Both adapters should have worked from comparable clean task workspaces."
+    },
+    "model_identifier_or_family": {
+      "action_suggested": "Report the difference as a same-model cross-harness ACUT configuration difference.",
+      "classification": "clean",
+      "evidence": {
+        "comparison_design": "same_model_cross_harness",
+        "configured_models": {
+          "codex_workspace": "gpt-5.4-mini",
+          "kilo_workspace": "gpt-5.4-mini"
+        },
+        "preferred_model": "gpt-5.4-mini",
+        "score_table_models": [
+          "gpt-5.4-mini"
+        ]
+      },
+      "what_happened": "Adapter config and score tables record gpt-5.4-mini for both ACUT configurations.",
+      "why_it_matters": "The observed gap should not be reported as a model-only result, but the model identifier is aligned across adapters."
+    },
+    "pricing_and_accounting": {
+      "action_suggested": "Keep cost claims token-estimated unless provider billing becomes available.",
+      "classification": "clean",
+      "evidence": {
+        "observed_or_conservative_new_cost_usd": 26.3480964,
+        "pricing_config": "experiments/phase0_headroom/configs/model_pricing.yaml",
+        "provider_billed_exact_cost_available": false,
+        "usage_observed_rate": 1.0
+      },
+      "what_happened": "Cost reconciliation is complete with usage observed for all new cells; exact provider billing is explicitly unavailable.",
+      "why_it_matters": "Cost/latency interpretation can use token-estimated accounting but must not claim exact provider spend."
+    },
+    "required_endpoint_variables": {
+      "action_suggested": "Keep this endpoint rule for paid work.",
+      "classification": "clean",
+      "evidence": {
+        "adapter_requires_env": {
+          "codex_workspace": [
+            "LLM_BASE_URL",
+            "LLM_API_KEY"
+          ],
+          "kilo_workspace": [
+            "LLM_BASE_URL",
+            "LLM_API_KEY"
+          ]
+        },
+        "batch_endpoint_host_hashes": [
+          "9952174049b2"
+        ],
+        "decision_endpoint_compliance_status": "pass"
+      },
+      "what_happened": "Both adapters require LLM_BASE_URL and LLM_API_KEY, all supplement batch summaries record endpoint variables present, and the final decision records endpoint compliance pass.",
+      "why_it_matters": "The adapter comparison is not explained by one harness using a different auth path in the committed evidence."
+    },
+    "score_table_import_rules": {
+      "action_suggested": "Keep the invalid cell non-scoreable in analysis.",
+      "classification": "clean",
+      "evidence": {
+        "combined_manifest": "experiments/phase1_compiler/results/phase1_blocked_split_missing_cell_supplement_paid_execution_combined_score_tables_manifest.json",
+        "completed_cells": 120,
+        "non_scoreable_by_status": {
+          "invalid_output": 1
+        },
+        "scoreable_cells": 119
+      },
+      "what_happened": "The combined manifest covers all 120 selected cells, preserves the one non-scoreable cell, and the completed paid decision was not changed.",
+      "why_it_matters": "Denominators are explicit and the invalid output was not silently converted into a pass or fail."
+    },
+    "solver_visible_task_statement_source": {
+      "action_suggested": "Use sanitized statement digests when auditing future packages.",
+      "classification": "clean",
+      "evidence": {
+        "all_solver_visible_statement_exists": true,
+        "all_target_commit_hidden": true,
+        "package_rows_checked": 24,
+        "reused_cells_trace_to_prior_score_tables": true
+      },
+      "what_happened": "Ready-package integrity records solver-visible statements, statement digests, no raw diff marker, and no target commit exposure for the new supplement package.",
+      "why_it_matters": "The paid supplement was driven by task statements rather than hidden oracle material."
+    },
+    "timeout_concurrency_retry_policy": {
+      "action_suggested": "Report adapter results separately and avoid model-only superiority claims.",
+      "classification": "documented_acut_difference",
+      "evidence": {
+        "command_templates": {
+          "codex_workspace": "uv run --project /Users/chenmohan/gits/barcarolle/experiments/phase0_headroom python /Users/chenmohan/gits/barcarolle/experiments/phase0_headroom/tools/codex_workspace_adapter.py --workspace {workspace} --statement-file {statement_file} --raw-dir {raw_dir} --timeout {timeout_seconds}",
+          "kilo_workspace": "uv run --project /Users/chenmohan/gits/barcarolle/experiments/phase0_headroom python /Users/chenmohan/gits/barcarolle/experiments/phase0_headroom/tools/kilo_workspace_adapter.py --workspace {workspace} --statement-file {statement_file} --raw-dir {raw_dir} --timeout {timeout_seconds} --completion-mode strict-final"
+        },
+        "paid_acut_concurrency": 1,
+        "timeouts": {
+          "codex_workspace": 900,
+          "kilo_workspace": 900
+        }
+      },
+      "what_happened": "Both adapters use the same recorded timeout and paid concurrency is one; Kilo uses strict-final completion mode as a documented harness setting.",
+      "why_it_matters": "Harness/tooling differences are part of the ACUT configuration unless they break benchmark rules."
+    },
+    "usage_and_cost_record_completeness": {
+      "action_suggested": "Do not claim exact billed dollars.",
+      "classification": "clean",
+      "evidence": {
+        "cost_latency_accounting_complete": true,
+        "metrics_cost_latency_accounting_status": "complete",
+        "workspace_cost_reconciliation": "experiments/phase0_headroom/results/workspace_cost_reconciliation.json"
+      },
+      "what_happened": "Cost reconciliation and adapter metrics mark cost/latency accounting complete for the supplement.",
+      "why_it_matters": "Cost and latency comparisons are usable as token-estimated diagnostics."
+    },
+    "verifier_replay_policy": {
+      "action_suggested": "No verifier-policy blocker found.",
+      "classification": "clean",
+      "evidence": {
+        "all_verifier_commands_configured": true,
+        "system_design": "docs/architecture/system-design.md"
+      },
+      "what_happened": "System design and supplement runbook require diff replay in fresh verifier workspaces, and ready-package rows record verifier commands.",
+      "why_it_matters": "The score table is benchmark-side verification evidence, not self-reported ACUT success."
+    }
+  },
+  "fairness_conclusion": "fair_enough_to_interpret_as_acut_difference",
+  "generated_at": "2026-05-29T08:07:10Z",
+  "limitations": [
+    {
+      "effect": "Exact invalid-output text cannot be reconstructed; committed sanitized score tables are sufficient for scoreability and fairness denominators.",
+      "limitation": "Raw solver transcripts and raw ACUT logs were intentionally not read."
+    }
+  ],
+  "run_id": "phase1_blocked_split_supplement_fairness_gap_diagnostics_20260529",
+  "schema_version": "barcarolle.phase1_blocked_split_supplement_fairness_gap_diagnostics_output.v1",
+  "status": "complete"
+}

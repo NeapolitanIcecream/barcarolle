@@ -1,0 +1,104 @@
+{
+  "audited_functions": {
+    "certify_candidate": {
+      "file": "experiments/phase0_headroom/tools/repo_history_pilot.py",
+      "line_count": 39,
+      "start_line": 490
+    },
+    "command_test_files": {
+      "file": "experiments/phase0_headroom/tools/repo_history_pilot.py",
+      "line_count": 3,
+      "start_line": 440
+    },
+    "pythonpath_for": {
+      "file": "experiments/phase0_headroom/tools/repo_history_pilot.py",
+      "line_count": 3,
+      "start_line": 451
+    },
+    "run_candidate_tests": {
+      "file": "experiments/phase0_headroom/tools/repo_history_pilot.py",
+      "line_count": 7,
+      "start_line": 481
+    },
+    "with_editable_workspace": {
+      "file": "experiments/phase0_headroom/tools/repo_history_pilot.py",
+      "line_count": 4,
+      "start_line": 445
+    }
+  },
+  "findings": [
+    {
+      "finding": "reference replay uses the target workspace and editable install",
+      "points_to": "local_validation_bug_not_found"
+    },
+    {
+      "finding": "reference replay records every nonzero target command as reference_pass failure without separating install or collection failures",
+      "points_to": "historical_environment_model_gap"
+    },
+    {
+      "finding": "command_template contains a repo-root-relative --project path, so cwd variants must absolutize --project before they are meaningful",
+      "points_to": "command_contract_cwd_coupling"
+    }
+  ],
+  "generated_at": "2026-05-26T08:19:36Z",
+  "rows": [
+    {
+      "classification_gap": "install, collection, import, and assertion failures are all nonzero command results under reference_pass",
+      "command_argv_shape": [
+        "uv",
+        "run",
+        "--with-editable",
+        "/tmp/barcarolle-audit-workspace",
+        "--project",
+        "experiments/phase0_headroom",
+        "--with",
+        "pytest>=7,<8",
+        "--with",
+        "setuptools<81",
+        "--with",
+        "hypothesis<6",
+        "python",
+        "-m",
+        "pytest",
+        "-q",
+        "/tmp/barcarolle-audit-workspace/tests/test_example.py"
+      ],
+      "cwd_used_by_certify_candidate": "repo_root",
+      "editable_install_rule": "uv_run_gets_with_editable_workspace",
+      "pytest_config_discovery_risk": "absolute test paths should usually point pytest at target files, but cwd remains repo root and --project is repo-local",
+      "pythonpath_rule": "workspace/src if present else workspace",
+      "repo_id": "attrs",
+      "setuptools_scm_pretend_version_env": "SETUPTOOLS_SCM_PRETEND_VERSION_FOR_ATTRS",
+      "test_paths_passed_to_pytest": "absolute_workspace_paths"
+    },
+    {
+      "classification_gap": "install, collection, import, and assertion failures are all nonzero command results under reference_pass",
+      "command_argv_shape": [
+        "uv",
+        "run",
+        "--with-editable",
+        "/tmp/barcarolle-audit-workspace",
+        "--project",
+        "experiments/phase0_headroom",
+        "--with",
+        "pytest>=8,<9",
+        "--with",
+        "setuptools<81",
+        "python",
+        "-m",
+        "pytest",
+        "-q",
+        "/tmp/barcarolle-audit-workspace/tests/test_example.py"
+      ],
+      "cwd_used_by_certify_candidate": "repo_root",
+      "editable_install_rule": "uv_run_gets_with_editable_workspace",
+      "pytest_config_discovery_risk": "absolute test paths should usually point pytest at target files, but cwd remains repo root and --project is repo-local",
+      "pythonpath_rule": "workspace/src if present else workspace",
+      "repo_id": "boltons",
+      "setuptools_scm_pretend_version_env": "SETUPTOOLS_SCM_PRETEND_VERSION_FOR_BOLTONS",
+      "test_paths_passed_to_pytest": "absolute_workspace_paths"
+    }
+  ],
+  "run_id": "phase1_reference_pass_failure_audit_20260526",
+  "schema_version": "barcarolle.phase1_reference_pass_failure_audit.v1.command_contract_audit.v1"
+}

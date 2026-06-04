@@ -1,0 +1,76 @@
+{
+  "artifact": "batch_1_smoke",
+  "batch_id": 1,
+  "batch_name": "batch_1_smoke",
+  "batch_summary": {
+    "cell_count": 6,
+    "non_scoreable_cell_count": 1,
+    "pass_rate": 0.2,
+    "policy_violation_count": 0,
+    "scoreability_rate": 0.8333,
+    "scoreable_cell_count": 5,
+    "terminal_status_counts": {
+      "invalid_output": 1,
+      "verified_fail": 4,
+      "verified_pass": 1
+    },
+    "verified_fail_count": 4,
+    "verified_pass_count": 1
+  },
+  "click_minor_risk_caveat": "visible_title_only_minor_risk",
+  "continue_decision": "continue_to_next_batch",
+  "cumulative_summary": {
+    "attempted_result_prefixes": [
+      "phase1_blocked_split_missing_cell_supplement_paid_execution_batch_1_smoke_codex_workspace",
+      "phase1_blocked_split_missing_cell_supplement_paid_execution_batch_1_smoke_kilo_workspace"
+    ],
+    "cell_count": 78,
+    "combined_planned_cells": 120,
+    "hard_cost_cap_usd": 30.0,
+    "max_recoverable_scoreability_rate": 0.9917,
+    "new_completed_cells": 6,
+    "new_non_scoreable_cells": 1,
+    "new_observed_or_conservative_cost_usd": 3.6828126,
+    "new_planned_cells": 48,
+    "new_remaining_cells": 42,
+    "new_scoreable_cells": 5,
+    "non_scoreable_cell_count": 1,
+    "pass_rate": 0.4675,
+    "policy_violation_count": 0,
+    "projected_remaining_new_cost_usd": 17.943576,
+    "projected_total_new_cost_usd": 21.6263886,
+    "reused_cells": 72,
+    "scoreability_rate": 0.9872,
+    "scoreable_cell_count": 77,
+    "terminal_status_counts": {
+      "invalid_output": 1,
+      "verified_fail": 41,
+      "verified_pass": 36
+    },
+    "verified_fail_count": 41,
+    "verified_pass_count": 36
+  },
+  "endpoint_compliance": {
+    "LLM_API_KEY_present": true,
+    "LLM_BASE_URL_present": true,
+    "both_required_endpoint_variables_present": true,
+    "endpoint_host_hash": "9952174049b2",
+    "sourced_zshrc_before_check": true,
+    "values_recorded": false
+  },
+  "generated_at": "2026-05-29T03:56:17Z",
+  "raw_oracle_exposure_detected": false,
+  "result_prefixes": [
+    "phase1_blocked_split_missing_cell_supplement_paid_execution_batch_1_smoke_codex_workspace",
+    "phase1_blocked_split_missing_cell_supplement_paid_execution_batch_1_smoke_kilo_workspace"
+  ],
+  "run_id": "phase1_blocked_split_missing_cell_supplement_paid_execution_20260529",
+  "schema_version": "barcarolle.phase1_blocked_split_missing_cell_supplement_paid_execution_output.v1",
+  "status": "batch_complete_continue",
+  "stop_conditions": [],
+  "task_ids": [
+    "attrs__v2__157",
+    "boltons__v2__008",
+    "click__third__091"
+  ]
+}

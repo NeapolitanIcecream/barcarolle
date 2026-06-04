@@ -1,0 +1,349 @@
+{
+  "analysis_schema": "strata_analysis.v1",
+  "canonical_split_repair_check": {
+    "inventory_current_split_used_for_selection": false,
+    "manifest_selected_counts": {
+      "attrs/B_eval": 4,
+      "attrs/H_future": 4,
+      "boltons/B_eval": 4,
+      "boltons/H_future": 4
+    },
+    "manifest_status": "frozen",
+    "old_mapping_bug_reintroduced": false
+  },
+  "generated_at": "2026-05-25T14:51:51Z",
+  "h_future_drop_same_direction": true,
+  "main_uncertainty": "Only 4 tasks per repo/split and 2 adapters per task; statement source and time/task-family strata are confounded in boltons H_future.",
+  "new_paid_calls_made": false,
+  "pooled_b_eval_to_h_future_gap": 0.3125,
+  "release_id": "statement_hardened_after_canonical_split_repair_20260525",
+  "repo_b_eval_to_h_future_gaps": {
+    "attrs": 0.25,
+    "boltons": 0.375
+  },
+  "schema_version": "barcarolle.phase1_overnight_statement_hardened_evidence_analysis_output.v1",
+  "split_time_ranges": {
+    "attrs/B_eval": {
+      "max_task_time": "2020-08-20T19:01:34+02:00",
+      "min_task_time": "2020-01-13T02:46:11-05:00"
+    },
+    "attrs/H_future": {
+      "max_task_time": "2021-03-05T16:01:04-08:00",
+      "min_task_time": "2020-09-05T09:46:06+02:00"
+    },
+    "boltons/B_eval": {
+      "max_task_time": "2020-06-22T01:19:35-04:00",
+      "min_task_time": "2020-01-06T22:29:17-08:00"
+    },
+    "boltons/H_future": {
+      "max_task_time": "2023-10-29T21:31:16-07:00",
+      "min_task_time": "2022-12-07T18:22:36-08:00"
+    }
+  },
+  "statement_source_rates": {
+    "new_codex_loop": {
+      "cell_count": 8,
+      "pass_rate": 0.375,
+      "stratum": "new_codex_loop",
+      "task_count": 4,
+      "verified_fail_count": 5,
+      "verified_pass_count": 3
+    },
+    "reused_codex_loop": {
+      "cell_count": 24,
+      "pass_rate": 0.75,
+      "stratum": "reused_codex_loop",
+      "task_count": 12,
+      "verified_fail_count": 6,
+      "verified_pass_count": 18
+    }
+  },
+  "status": "pass",
+  "strata": {
+    "adapter_id": [
+      {
+        "cell_count": 16,
+        "pass_rate": 0.6875,
+        "stratum": "codex_workspace",
+        "task_count": 16,
+        "verified_fail_count": 5,
+        "verified_pass_count": 11
+      },
+      {
+        "cell_count": 16,
+        "pass_rate": 0.625,
+        "stratum": "kilo_workspace",
+        "task_count": 16,
+        "verified_fail_count": 6,
+        "verified_pass_count": 10
+      }
+    ],
+    "canonical_split": [
+      {
+        "cell_count": 16,
+        "pass_rate": 0.8125,
+        "stratum": "B_eval",
+        "task_count": 8,
+        "verified_fail_count": 3,
+        "verified_pass_count": 13
+      },
+      {
+        "cell_count": 16,
+        "pass_rate": 0.5,
+        "stratum": "H_future",
+        "task_count": 8,
+        "verified_fail_count": 8,
+        "verified_pass_count": 8
+      }
+    ],
+    "implementation_file_count": [
+      {
+        "cell_count": 28,
+        "pass_rate": 0.6071,
+        "stratum": "1",
+        "task_count": 14,
+        "verified_fail_count": 11,
+        "verified_pass_count": 17
+      },
+      {
+        "cell_count": 2,
+        "pass_rate": 1.0,
+        "stratum": "2",
+        "task_count": 1,
+        "verified_fail_count": 0,
+        "verified_pass_count": 2
+      },
+      {
+        "cell_count": 2,
+        "pass_rate": 1.0,
+        "stratum": "3",
+        "task_count": 1,
+        "verified_fail_count": 0,
+        "verified_pass_count": 2
+      }
+    ],
+    "repo_id": [
+      {
+        "cell_count": 16,
+        "pass_rate": 0.625,
+        "stratum": "attrs",
+        "task_count": 8,
+        "verified_fail_count": 6,
+        "verified_pass_count": 10
+      },
+      {
+        "cell_count": 16,
+        "pass_rate": 0.6875,
+        "stratum": "boltons",
+        "task_count": 8,
+        "verified_fail_count": 5,
+        "verified_pass_count": 11
+      }
+    ],
+    "repo_split": [
+      {
+        "cell_count": 8,
+        "pass_rate": 0.75,
+        "stratum": "attrs/B_eval",
+        "task_count": 4,
+        "verified_fail_count": 2,
+        "verified_pass_count": 6
+      },
+      {
+        "cell_count": 8,
+        "pass_rate": 0.5,
+        "stratum": "attrs/H_future",
+        "task_count": 4,
+        "verified_fail_count": 4,
+        "verified_pass_count": 4
+      },
+      {
+        "cell_count": 8,
+        "pass_rate": 0.875,
+        "stratum": "boltons/B_eval",
+        "task_count": 4,
+        "verified_fail_count": 1,
+        "verified_pass_count": 7
+      },
+      {
+        "cell_count": 8,
+        "pass_rate": 0.5,
+        "stratum": "boltons/H_future",
+        "task_count": 4,
+        "verified_fail_count": 4,
+        "verified_pass_count": 4
+      }
+    ],
+    "source_kind": [
+      {
+        "cell_count": 18,
+        "pass_rate": 0.8889,
+        "stratum": "issue",
+        "task_count": 9,
+        "verified_fail_count": 2,
+        "verified_pass_count": 16
+      },
+      {
+        "cell_count": 14,
+        "pass_rate": 0.3571,
+        "stratum": "pull_request",
+        "task_count": 7,
+        "verified_fail_count": 9,
+        "verified_pass_count": 5
+      }
+    ],
+    "statement_source": [
+      {
+        "cell_count": 8,
+        "pass_rate": 0.375,
+        "stratum": "new_codex_loop",
+        "task_count": 4,
+        "verified_fail_count": 5,
+        "verified_pass_count": 3
+      },
+      {
+        "cell_count": 24,
+        "pass_rate": 0.75,
+        "stratum": "reused_codex_loop",
+        "task_count": 12,
+        "verified_fail_count": 6,
+        "verified_pass_count": 18
+      }
+    ],
+    "task_family_label": [
+      {
+        "cell_count": 10,
+        "pass_rate": 0.6,
+        "stratum": "attrs:attr._make",
+        "task_count": 5,
+        "verified_fail_count": 4,
+        "verified_pass_count": 6
+      },
+      {
+        "cell_count": 2,
+        "pass_rate": 0.0,
+        "stratum": "attrs:attr._next_gen",
+        "task_count": 1,
+        "verified_fail_count": 2,
+        "verified_pass_count": 0
+      },
+      {
+        "cell_count": 4,
+        "pass_rate": 1.0,
+        "stratum": "attrs:attr:multi_file",
+        "task_count": 2,
+        "verified_fail_count": 0,
+        "verified_pass_count": 4
+      },
+      {
+        "cell_count": 2,
+        "pass_rate": 0.0,
+        "stratum": "boltons:boltons.cacheutils",
+        "task_count": 1,
+        "verified_fail_count": 2,
+        "verified_pass_count": 0
+      },
+      {
+        "cell_count": 6,
+        "pass_rate": 0.5,
+        "stratum": "boltons:boltons.iterutils",
+        "task_count": 3,
+        "verified_fail_count": 3,
+        "verified_pass_count": 3
+      },
+      {
+        "cell_count": 4,
+        "pass_rate": 1.0,
+        "stratum": "boltons:boltons.setutils",
+        "task_count": 2,
+        "verified_fail_count": 0,
+        "verified_pass_count": 4
+      },
+      {
+        "cell_count": 2,
+        "pass_rate": 1.0,
+        "stratum": "boltons:boltons.tbutils",
+        "task_count": 1,
+        "verified_fail_count": 0,
+        "verified_pass_count": 2
+      },
+      {
+        "cell_count": 2,
+        "pass_rate": 1.0,
+        "stratum": "boltons:boltons.timeutils",
+        "task_count": 1,
+        "verified_fail_count": 0,
+        "verified_pass_count": 2
+      }
+    ],
+    "task_time_bucket": [
+      {
+        "cell_count": 14,
+        "pass_rate": 0.7857,
+        "stratum": "2020H1",
+        "task_count": 7,
+        "verified_fail_count": 3,
+        "verified_pass_count": 11
+      },
+      {
+        "cell_count": 6,
+        "pass_rate": 0.3333,
+        "stratum": "2020H2",
+        "task_count": 3,
+        "verified_fail_count": 4,
+        "verified_pass_count": 2
+      },
+      {
+        "cell_count": 4,
+        "pass_rate": 1.0,
+        "stratum": "2021H1",
+        "task_count": 2,
+        "verified_fail_count": 0,
+        "verified_pass_count": 4
+      },
+      {
+        "cell_count": 2,
+        "pass_rate": 1.0,
+        "stratum": "2022H2",
+        "task_count": 1,
+        "verified_fail_count": 0,
+        "verified_pass_count": 2
+      },
+      {
+        "cell_count": 4,
+        "pass_rate": 0.5,
+        "stratum": "2023H1",
+        "task_count": 2,
+        "verified_fail_count": 2,
+        "verified_pass_count": 2
+      },
+      {
+        "cell_count": 2,
+        "pass_rate": 0.0,
+        "stratum": "2023H2",
+        "task_count": 1,
+        "verified_fail_count": 2,
+        "verified_pass_count": 0
+      }
+    ],
+    "test_file_count": [
+      {
+        "cell_count": 30,
+        "pass_rate": 0.6333,
+        "stratum": "1",
+        "task_count": 15,
+        "verified_fail_count": 11,
+        "verified_pass_count": 19
+      },
+      {
+        "cell_count": 2,
+        "pass_rate": 1.0,
+        "stratum": "2",
+        "task_count": 1,
+        "verified_fail_count": 0,
+        "verified_pass_count": 2
+      }
+    ]
+  },
+  "strongest_plausible_explanation": "future_holdout_hardness_with_time_window_and_task_family_shift_under_small_n"
+}

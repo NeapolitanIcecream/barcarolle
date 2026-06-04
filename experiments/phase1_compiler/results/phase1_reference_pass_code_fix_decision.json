@@ -1,0 +1,11 @@
+{
+  "decision": "no_production_validation_code_fix_applied",
+  "generated_at": "2026-05-26T08:20:53Z",
+  "local_validation_bug_count": 0,
+  "run_id": "phase1_reference_pass_failure_audit_20260526",
+  "schema_version": "barcarolle.phase1_reference_pass_failure_audit.v1.code_fix_decision.v1",
+  "status": "local_validation_bug_not_found",
+  "tests_added": [
+    "experiments/phase1_compiler/tests/test_phase1_reference_pass_failure_audit.py"
+  ]
+}

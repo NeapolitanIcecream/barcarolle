@@ -1,0 +1,143 @@
+{
+  "claim_scope": "phase1_mvp_compiler_infrastructure",
+  "disallowed_claims": [
+    "predictive_validity_established",
+    "pure_harness_effect",
+    "production_benchmark_ranking"
+  ],
+  "gate_order": [
+    "checkout",
+    "oracle_extractable",
+    "no_op_fail",
+    "reference_pass",
+    "known_bad_fail",
+    "flakiness_check",
+    "ambiguity_review",
+    "solution_leakage_review",
+    "scope_clarity_review",
+    "cost_boundedness",
+    "taxonomy_labelability"
+  ],
+  "generated_at": "2026-05-23T11:36:32+00:00",
+  "predictive_validity_established": false,
+  "repos": [
+    {
+      "certified_count": 6,
+      "certified_jsonl_count": 6,
+      "first_failing_gate_counts": {
+        "no_op_fail": 4,
+        "none": 6,
+        "reference_pass": 6
+      },
+      "funnel_task_count": 16,
+      "gate_counts": {
+        "ambiguity_review": {
+          "pass": 6
+        },
+        "checkout": {
+          "pass": 6
+        },
+        "cost_boundedness": {
+          "pass": 6
+        },
+        "flakiness_check": {
+          "pass": 6
+        },
+        "known_bad_fail": {
+          "pass": 6
+        },
+        "no_op_fail": {
+          "pass": 6
+        },
+        "oracle_extractable": {
+          "pass": 6
+        },
+        "reference_pass": {
+          "pass": 6
+        },
+        "scope_clarity_review": {
+          "pass": 6
+        },
+        "solution_leakage_review": {
+          "pass": 6
+        },
+        "taxonomy_labelability": {
+          "pass": 6
+        }
+      },
+      "near_certified_count": 0,
+      "rejected_count": 10,
+      "repo_id": "toolz",
+      "review_record_count": 6,
+      "source_certified_tasks": "experiments/phase0_headroom/certified_tasks/toolz_certified_tasks.jsonl",
+      "source_funnel": "experiments/phase0_headroom/certified_tasks/toolz_certification_funnel.csv",
+      "status_counts": {
+        "certified": 6,
+        "rejected": 10
+      },
+      "task_statement_count": 6
+    },
+    {
+      "certified_count": 12,
+      "certified_jsonl_count": 12,
+      "first_failing_gate_counts": {
+        "no_op_fail": 3,
+        "none": 12,
+        "reference_pass": 1
+      },
+      "funnel_task_count": 16,
+      "gate_counts": {
+        "ambiguity_review": {
+          "pass": 12
+        },
+        "checkout": {
+          "pass": 12
+        },
+        "cost_boundedness": {
+          "pass": 12
+        },
+        "flakiness_check": {
+          "pass": 12
+        },
+        "known_bad_fail": {
+          "pass": 12
+        },
+        "no_op_fail": {
+          "pass": 12
+        },
+        "oracle_extractable": {
+          "pass": 12
+        },
+        "reference_pass": {
+          "pass": 12
+        },
+        "scope_clarity_review": {
+          "pass": 12
+        },
+        "solution_leakage_review": {
+          "pass": 12
+        },
+        "taxonomy_labelability": {
+          "pass": 12
+        }
+      },
+      "near_certified_count": 4,
+      "rejected_count": 0,
+      "repo_id": "humanize",
+      "review_record_count": 16,
+      "source_certified_tasks": "experiments/phase0_headroom/certified_tasks/humanize_certified_tasks.jsonl",
+      "source_funnel": "experiments/phase0_headroom/certified_tasks/humanize_certification_funnel.csv",
+      "status_counts": {
+        "certified": 12,
+        "near_certified": 4
+      },
+      "task_statement_count": 16
+    }
+  ],
+  "schema_version": "barcarolle.phase1.certification_rollup.v1",
+  "source_weaknesses": [
+    "humanize source context is source_provenance_commit_message_fallback",
+    "provider-billed cost remains unavailable",
+    "no Phase 1 future held-out validation has been run"
+  ]
+}

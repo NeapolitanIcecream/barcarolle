@@ -1,0 +1,296 @@
+{
+  "absolute_error_per_repo_adapter": {
+    "attrs": {
+      "codex_workspace": 0.75,
+      "kilo_workspace": 0.666667
+    },
+    "boltons": {
+      "codex_workspace": 0.25,
+      "kilo_workspace": 0.25
+    }
+  },
+  "b_eval": {
+    "by_adapter": {
+      "codex_workspace": {
+        "cell_count": 8,
+        "pass_count": 7,
+        "pass_rate": 0.875,
+        "scoreable_cell_count": 8
+      },
+      "kilo_workspace": {
+        "cell_count": 8,
+        "pass_count": 7,
+        "pass_rate": 0.875,
+        "scoreable_cell_count": 8
+      }
+    },
+    "cell_count": 16,
+    "non_scoreable_count": 0,
+    "pass_count": 14,
+    "pass_rate": 0.875,
+    "policy_violation_count": 0,
+    "scoreable_cell_count": 16
+  },
+  "config": "experiments/phase1_compiler/configs/phase1_two_repo_future_holdout_validation.yaml",
+  "cost_by_prefix": {
+    "phase1_future_holdout_b_eval": 4.4760882,
+    "phase1_future_holdout_h_future": 4.8642324,
+    "phase1_two_repo_future_holdout_attrs_b_eval": 6.4833018,
+    "phase1_two_repo_future_holdout_attrs_h_future": 8.7120804
+  },
+  "cost_summary": {
+    "call_count": 155,
+    "conservative_estimated_cost_usd": 77.5,
+    "observed_or_conservative_estimated_cost_usd": 62.182946,
+    "observed_token_estimated_cost_usd": 58.682946,
+    "usage_observed_count": 148,
+    "usage_observed_rate": 0.9548
+  },
+  "frozen_design": {
+    "actual_task_ids": {
+      "attrs": {
+        "b_eval": [
+          "attrs__hist__001",
+          "attrs__hist__003",
+          "attrs__hist__004",
+          "attrs__hist__008"
+        ],
+        "h_future": [
+          "attrs__hist__012",
+          "attrs__hist__013",
+          "attrs__hist__023",
+          "attrs__hist__027"
+        ]
+      },
+      "boltons": {
+        "b_eval": [
+          "boltons__clean_ext__001",
+          "boltons__clean_ext__008",
+          "boltons__clean_ext__010",
+          "boltons__hist__011"
+        ],
+        "h_future": [
+          "boltons__clean_ext__017",
+          "boltons__hist__022",
+          "boltons__hist__023",
+          "boltons__hist__027"
+        ]
+      }
+    },
+    "expected_task_ids": {
+      "attrs": {
+        "b_eval": [
+          "attrs__hist__001",
+          "attrs__hist__003",
+          "attrs__hist__004",
+          "attrs__hist__008"
+        ],
+        "h_future": [
+          "attrs__hist__012",
+          "attrs__hist__013",
+          "attrs__hist__023",
+          "attrs__hist__027"
+        ]
+      },
+      "boltons": {
+        "b_eval": [
+          "boltons__clean_ext__001",
+          "boltons__clean_ext__008",
+          "boltons__clean_ext__010",
+          "boltons__hist__011"
+        ],
+        "h_future": [
+          "boltons__clean_ext__017",
+          "boltons__hist__022",
+          "boltons__hist__023",
+          "boltons__hist__027"
+        ]
+      }
+    },
+    "mismatches": [],
+    "status": "matched"
+  },
+  "generated_at": "2026-05-23T10:03:42+00:00",
+  "h_future": {
+    "by_adapter": {
+      "codex_workspace": {
+        "cell_count": 8,
+        "pass_count": 3,
+        "pass_rate": 0.375,
+        "scoreable_cell_count": 8
+      },
+      "kilo_workspace": {
+        "cell_count": 8,
+        "pass_count": 5,
+        "pass_rate": 0.714286,
+        "scoreable_cell_count": 7
+      }
+    },
+    "cell_count": 16,
+    "non_scoreable_count": 1,
+    "pass_count": 8,
+    "pass_rate": 0.533333,
+    "policy_violation_count": 1,
+    "scoreable_cell_count": 15
+  },
+  "incremental_observed_or_conservative_estimated_cost_usd": 24.5357028,
+  "missing_score_tables": [],
+  "non_scoreable_count": 1,
+  "policy_violation_count": 1,
+  "policy_violations": [
+    {
+      "adapter_id": "kilo_workspace",
+      "changed_paths": [
+        "src/attr/_make.py"
+      ],
+      "harness_error": "submission_edited_out_of_scope_paths",
+      "prefix": "phase1_two_repo_future_holdout_attrs_h_future",
+      "repo_id": "attrs",
+      "split": "h_future",
+      "task_id": "attrs__hist__027",
+      "terminal_status": "policy_violation"
+    }
+  ],
+  "pooled_mae": 0.479167,
+  "predictive_validity_established": false,
+  "preregistration": "experiments/phase1_compiler/results/phase1_two_repo_future_holdout_preregistration.json",
+  "repo_metrics": {
+    "attrs": {
+      "b_eval": {
+        "by_adapter": {
+          "codex_workspace": {
+            "cell_count": 4,
+            "pass_count": 3,
+            "pass_rate": 0.75,
+            "scoreable_cell_count": 4
+          },
+          "kilo_workspace": {
+            "cell_count": 4,
+            "pass_count": 4,
+            "pass_rate": 1.0,
+            "scoreable_cell_count": 4
+          }
+        },
+        "cell_count": 8,
+        "non_scoreable_count": 0,
+        "pass_count": 7,
+        "pass_rate": 0.875,
+        "policy_violation_count": 0,
+        "prefix": "phase1_two_repo_future_holdout_attrs_b_eval",
+        "scoreable_cell_count": 8,
+        "task_ids": [
+          "attrs__hist__001",
+          "attrs__hist__003",
+          "attrs__hist__004",
+          "attrs__hist__008"
+        ]
+      },
+      "h_future": {
+        "by_adapter": {
+          "codex_workspace": {
+            "cell_count": 4,
+            "pass_count": 0,
+            "pass_rate": 0.0,
+            "scoreable_cell_count": 4
+          },
+          "kilo_workspace": {
+            "cell_count": 4,
+            "pass_count": 1,
+            "pass_rate": 0.333333,
+            "scoreable_cell_count": 3
+          }
+        },
+        "cell_count": 8,
+        "non_scoreable_count": 1,
+        "pass_count": 1,
+        "pass_rate": 0.142857,
+        "policy_violation_count": 1,
+        "prefix": "phase1_two_repo_future_holdout_attrs_h_future",
+        "scoreable_cell_count": 7,
+        "task_ids": [
+          "attrs__hist__012",
+          "attrs__hist__013",
+          "attrs__hist__023",
+          "attrs__hist__027"
+        ]
+      }
+    },
+    "boltons": {
+      "b_eval": {
+        "by_adapter": {
+          "codex_workspace": {
+            "cell_count": 4,
+            "pass_count": 4,
+            "pass_rate": 1.0,
+            "scoreable_cell_count": 4
+          },
+          "kilo_workspace": {
+            "cell_count": 4,
+            "pass_count": 3,
+            "pass_rate": 0.75,
+            "scoreable_cell_count": 4
+          }
+        },
+        "cell_count": 8,
+        "non_scoreable_count": 0,
+        "pass_count": 7,
+        "pass_rate": 0.875,
+        "policy_violation_count": 0,
+        "prefix": "phase1_future_holdout_b_eval",
+        "scoreable_cell_count": 8,
+        "task_ids": [
+          "boltons__clean_ext__001",
+          "boltons__clean_ext__008",
+          "boltons__clean_ext__010",
+          "boltons__hist__011"
+        ]
+      },
+      "h_future": {
+        "by_adapter": {
+          "codex_workspace": {
+            "cell_count": 4,
+            "pass_count": 3,
+            "pass_rate": 0.75,
+            "scoreable_cell_count": 4
+          },
+          "kilo_workspace": {
+            "cell_count": 4,
+            "pass_count": 4,
+            "pass_rate": 1.0,
+            "scoreable_cell_count": 4
+          }
+        },
+        "cell_count": 8,
+        "non_scoreable_count": 0,
+        "pass_count": 7,
+        "pass_rate": 0.875,
+        "policy_violation_count": 0,
+        "prefix": "phase1_future_holdout_h_future",
+        "scoreable_cell_count": 8,
+        "task_ids": [
+          "boltons__clean_ext__017",
+          "boltons__hist__022",
+          "boltons__hist__023",
+          "boltons__hist__027"
+        ]
+      }
+    }
+  },
+  "repo_prefixes": {
+    "attrs": {
+      "b_eval": "phase1_two_repo_future_holdout_attrs_b_eval",
+      "h_future": "phase1_two_repo_future_holdout_attrs_h_future"
+    },
+    "boltons": {
+      "b_eval": "phase1_future_holdout_b_eval",
+      "h_future": "phase1_future_holdout_h_future"
+    }
+  },
+  "schema_version": "barcarolle.phase1.two_repo_future_holdout_prediction_metrics.v1",
+  "selected_repos": [
+    "boltons",
+    "attrs"
+  ],
+  "status": "computed",
+  "total_h_future_scoreable_cells": 15
+}

@@ -1,0 +1,234 @@
+{
+  "generated_at": "2026-05-21T07:50:40+00:00",
+  "kilo_acut_harness_error_classification_counts": {
+    "adapter_timeout_nonempty_diff_nonexit": 6
+  },
+  "kilo_acut_harness_error_count": 6,
+  "kilo_acut_harness_errors": [
+    {
+      "acut_exit_code": 124,
+      "adapter_timeout": true,
+      "changed_paths_from_solver_workspace": [
+        "toolz/functoolz.py"
+      ],
+      "classification": "adapter_timeout_nonempty_diff_nonexit",
+      "elapsed_seconds": 900.011,
+      "kilo_log_has_session_idle": false,
+      "kilo_log_has_suggestion_shown": false,
+      "kilo_stdout_has_step_finish_stop": false,
+      "kilo_stdout_last_10_event_types": [],
+      "run_id": "codex_kilo_workspace_kilo_workspace__kilo_workspace_gpt_5_4_mini__toolz__hist__002__smoke1",
+      "split": "B_real",
+      "submission_patch_bytes": 719,
+      "submission_patch_non_empty": true,
+      "task_id": "toolz__hist__002"
+    },
+    {
+      "acut_exit_code": 124,
+      "adapter_timeout": true,
+      "changed_paths_from_solver_workspace": [
+        "toolz/functoolz.py"
+      ],
+      "classification": "adapter_timeout_nonempty_diff_nonexit",
+      "elapsed_seconds": 900.008,
+      "kilo_log_has_session_idle": false,
+      "kilo_log_has_suggestion_shown": false,
+      "kilo_stdout_has_step_finish_stop": false,
+      "kilo_stdout_last_10_event_types": [],
+      "run_id": "codex_kilo_workspace_kilo_workspace__kilo_workspace_gpt_5_4_mini__toolz__hist__001__matrix1",
+      "split": "B_real",
+      "submission_patch_bytes": 460,
+      "submission_patch_non_empty": true,
+      "task_id": "toolz__hist__001"
+    },
+    {
+      "acut_exit_code": 124,
+      "adapter_timeout": true,
+      "changed_paths_from_solver_workspace": [
+        "toolz/functoolz.py"
+      ],
+      "classification": "adapter_timeout_nonempty_diff_nonexit",
+      "elapsed_seconds": 900.008,
+      "kilo_log_has_session_idle": false,
+      "kilo_log_has_suggestion_shown": false,
+      "kilo_stdout_has_step_finish_stop": false,
+      "kilo_stdout_last_10_event_types": [],
+      "run_id": "codex_kilo_workspace_kilo_workspace__kilo_workspace_gpt_5_4_mini__toolz__hist__004__matrix1",
+      "split": "W_real",
+      "submission_patch_bytes": 473,
+      "submission_patch_non_empty": true,
+      "task_id": "toolz__hist__004"
+    },
+    {
+      "acut_exit_code": 124,
+      "adapter_timeout": true,
+      "changed_paths_from_solver_workspace": [
+        "tlz/_build_tlz.py",
+        "toolz/curried/__init__.py",
+        "toolz/functoolz.py"
+      ],
+      "classification": "adapter_timeout_nonempty_diff_nonexit",
+      "elapsed_seconds": 900.018,
+      "kilo_log_has_session_idle": false,
+      "kilo_log_has_suggestion_shown": false,
+      "kilo_stdout_has_step_finish_stop": false,
+      "kilo_stdout_last_10_event_types": [],
+      "run_id": "codex_kilo_workspace_kilo_workspace__kilo_workspace_gpt_5_4_mini__toolz__hist__010__matrix1",
+      "split": "W_real",
+      "submission_patch_bytes": 4026,
+      "submission_patch_non_empty": true,
+      "task_id": "toolz__hist__010"
+    },
+    {
+      "acut_exit_code": 124,
+      "adapter_timeout": true,
+      "changed_paths_from_solver_workspace": [
+        "toolz/itertoolz.py"
+      ],
+      "classification": "adapter_timeout_nonempty_diff_nonexit",
+      "elapsed_seconds": 900.011,
+      "kilo_log_has_session_idle": false,
+      "kilo_log_has_suggestion_shown": false,
+      "kilo_stdout_has_step_finish_stop": false,
+      "kilo_stdout_last_10_event_types": [],
+      "run_id": "codex_kilo_workspace_kilo_workspace__kilo_workspace_gpt_5_4_mini__toolz__hist__016__matrix1",
+      "split": "W_real",
+      "submission_patch_bytes": 1069,
+      "submission_patch_non_empty": true,
+      "task_id": "toolz__hist__016"
+    },
+    {
+      "acut_exit_code": 124,
+      "adapter_timeout": true,
+      "changed_paths_from_solver_workspace": [
+        "click/testing.py"
+      ],
+      "classification": "adapter_timeout_nonempty_diff_nonexit",
+      "elapsed_seconds": 900.009,
+      "kilo_log_has_session_idle": true,
+      "kilo_log_has_suggestion_shown": true,
+      "kilo_stdout_has_step_finish_stop": false,
+      "kilo_stdout_last_10_event_types": [],
+      "run_id": "codex_kilo_workspace_kilo_workspace__kilo_workspace_gpt_5_4_mini__click__rbench__004__matrix1",
+      "split": "G_mini",
+      "submission_patch_bytes": 5394,
+      "submission_patch_non_empty": true,
+      "task_id": "click__rbench__004"
+    }
+  ],
+  "policy_violation_count": 5,
+  "policy_violation_harness_error_counts": {
+    "submission_edited_out_of_scope_paths": 2,
+    "submission_edited_tests": 3
+  },
+  "policy_violations": [
+    {
+      "adapter_id": "codex_workspace",
+      "harness_error": "submission_edited_out_of_scope_paths",
+      "harness_name": "codex",
+      "rejected_path_classes": [
+        "out_of_scope"
+      ],
+      "rejected_paths": [
+        "toolz/curried/__init__.py"
+      ],
+      "run_id": "codex_kilo_workspace_codex_workspace__codex_workspace_gpt_5_4_mini__toolz__hist__010__matrix1",
+      "split": "W_real",
+      "statement_found": true,
+      "statement_has_editable_paths_section": false,
+      "statement_has_noneditable_paths_section": false,
+      "statement_mentions_rejected_paths": [],
+      "statement_mentions_tests_path": false,
+      "task_id": "toolz__hist__010"
+    },
+    {
+      "adapter_id": "codex_workspace",
+      "harness_error": "submission_edited_tests",
+      "harness_name": "codex",
+      "rejected_path_classes": [
+        "test"
+      ],
+      "rejected_paths": [
+        "tests/test_testing.py"
+      ],
+      "run_id": "codex_kilo_workspace_codex_workspace__codex_workspace_gpt_5_4_mini__click__rbench__002__matrix1",
+      "split": "G_mini",
+      "statement_found": true,
+      "statement_has_editable_paths_section": false,
+      "statement_has_noneditable_paths_section": false,
+      "statement_mentions_rejected_paths": [
+        "tests/test_testing.py"
+      ],
+      "statement_mentions_tests_path": true,
+      "task_id": "click__rbench__002"
+    },
+    {
+      "adapter_id": "codex_workspace",
+      "harness_error": "submission_edited_tests",
+      "harness_name": "codex",
+      "rejected_path_classes": [
+        "test"
+      ],
+      "rejected_paths": [
+        "tests/test_termui.py"
+      ],
+      "run_id": "codex_kilo_workspace_codex_workspace__codex_workspace_gpt_5_4_mini__click__rbench__003__matrix1",
+      "split": "G_mini",
+      "statement_found": true,
+      "statement_has_editable_paths_section": false,
+      "statement_has_noneditable_paths_section": false,
+      "statement_mentions_rejected_paths": [
+        "tests/test_termui.py"
+      ],
+      "statement_mentions_tests_path": true,
+      "task_id": "click__rbench__003"
+    },
+    {
+      "adapter_id": "codex_workspace",
+      "harness_error": "submission_edited_tests",
+      "harness_name": "codex",
+      "rejected_path_classes": [
+        "test"
+      ],
+      "rejected_paths": [
+        "tests/test_testing.py"
+      ],
+      "run_id": "codex_kilo_workspace_codex_workspace__codex_workspace_gpt_5_4_mini__click__rbench__004__matrix1",
+      "split": "G_mini",
+      "statement_found": true,
+      "statement_has_editable_paths_section": false,
+      "statement_has_noneditable_paths_section": false,
+      "statement_mentions_rejected_paths": [
+        "tests/test_testing.py"
+      ],
+      "statement_mentions_tests_path": true,
+      "task_id": "click__rbench__004"
+    },
+    {
+      "adapter_id": "kilo_workspace",
+      "harness_error": "submission_edited_out_of_scope_paths",
+      "harness_name": "kilo",
+      "rejected_path_classes": [
+        "out_of_scope"
+      ],
+      "rejected_paths": [
+        "click/types.py"
+      ],
+      "run_id": "codex_kilo_workspace_kilo_workspace__kilo_workspace_gpt_5_4_mini__click__rbench__003__matrix1",
+      "split": "G_mini",
+      "statement_found": true,
+      "statement_has_editable_paths_section": false,
+      "statement_has_noneditable_paths_section": false,
+      "statement_mentions_rejected_paths": [],
+      "statement_mentions_tests_path": true,
+      "task_id": "click__rbench__003"
+    }
+  ],
+  "schema_version": "barcarolle.kilo_completion_policy_diagnosis.v1",
+  "source_result_prefix": "codex_kilo_workspace",
+  "statement_policy_findings": {
+    "current_statements_have_explicit_editable_paths_section": false,
+    "policy_rejects_test_edits": true,
+    "policy_violations_with_test_path_mentions": 4
+  }
+}

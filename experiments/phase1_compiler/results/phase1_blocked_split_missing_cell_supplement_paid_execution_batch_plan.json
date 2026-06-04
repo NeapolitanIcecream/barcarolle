@@ -1,0 +1,532 @@
+{
+  "artifact": "batch_plan",
+  "batches": [
+    {
+      "batch_id": 1,
+      "cell_count": 6,
+      "description": "paid smoke, first 6 cells from the frozen missing-cell manifest",
+      "name": "batch_1_smoke",
+      "output_key": "batch_1_smoke",
+      "result_prefixes": [
+        "phase1_blocked_split_missing_cell_supplement_paid_execution_batch_1_smoke_codex_workspace",
+        "phase1_blocked_split_missing_cell_supplement_paid_execution_batch_1_smoke_kilo_workspace"
+      ],
+      "task_count": 3,
+      "task_ids": [
+        "attrs__v2__157",
+        "boltons__v2__008",
+        "click__third__091"
+      ]
+    },
+    {
+      "batch_id": 2,
+      "cell_count": 10,
+      "description": "attrs missing-cell remainder",
+      "name": "batch_2_attrs_remainder",
+      "output_key": "batch_2_attrs_remainder",
+      "result_prefixes": [
+        "phase1_blocked_split_missing_cell_supplement_paid_execution_batch_2_attrs_remainder_codex_workspace",
+        "phase1_blocked_split_missing_cell_supplement_paid_execution_batch_2_attrs_remainder_kilo_workspace"
+      ],
+      "task_count": 5,
+      "task_ids": [
+        "attrs__v2__210",
+        "attrs__v2__218",
+        "attrs__v2__231",
+        "attrs__v2__244",
+        "attrs__v2__271"
+      ]
+    },
+    {
+      "batch_id": 3,
+      "cell_count": 18,
+      "description": "boltons missing-cell remainder",
+      "name": "batch_3_boltons_remainder",
+      "output_key": "batch_3_boltons_remainder",
+      "result_prefixes": [
+        "phase1_blocked_split_missing_cell_supplement_paid_execution_batch_3_boltons_remainder_codex_workspace",
+        "phase1_blocked_split_missing_cell_supplement_paid_execution_batch_3_boltons_remainder_kilo_workspace"
+      ],
+      "task_count": 9,
+      "task_ids": [
+        "boltons__v2__009",
+        "boltons__v2__076",
+        "boltons__v2__103",
+        "boltons__v2__122",
+        "boltons__v2__128",
+        "boltons__v2__132",
+        "boltons__v2__154",
+        "boltons__v2__231",
+        "boltons__v2__232"
+      ]
+    },
+    {
+      "batch_id": 4,
+      "cell_count": 14,
+      "description": "click missing-cell remainder",
+      "name": "batch_4_click_remainder",
+      "output_key": "batch_4_click_remainder",
+      "result_prefixes": [
+        "phase1_blocked_split_missing_cell_supplement_paid_execution_batch_4_click_remainder_codex_workspace",
+        "phase1_blocked_split_missing_cell_supplement_paid_execution_batch_4_click_remainder_kilo_workspace"
+      ],
+      "task_count": 7,
+      "task_ids": [
+        "click__third__109",
+        "click__third__198",
+        "click__third__202",
+        "click__third__214",
+        "click__third__220",
+        "click__third__234",
+        "click__third__288"
+      ]
+    }
+  ],
+  "blockers": [],
+  "generated_at": "2026-05-29T03:41:31Z",
+  "matrix_rows": [
+    {
+      "adapter_id": "codex_workspace",
+      "batch_id": 1,
+      "batch_name": "batch_1_smoke",
+      "repo": "attrs",
+      "result_prefix": "phase1_blocked_split_missing_cell_supplement_paid_execution_batch_1_smoke_codex_workspace",
+      "split": "B_eval",
+      "task_id": "attrs__v2__157"
+    },
+    {
+      "adapter_id": "kilo_workspace",
+      "batch_id": 1,
+      "batch_name": "batch_1_smoke",
+      "repo": "attrs",
+      "result_prefix": "phase1_blocked_split_missing_cell_supplement_paid_execution_batch_1_smoke_kilo_workspace",
+      "split": "B_eval",
+      "task_id": "attrs__v2__157"
+    },
+    {
+      "adapter_id": "codex_workspace",
+      "batch_id": 1,
+      "batch_name": "batch_1_smoke",
+      "repo": "boltons",
+      "result_prefix": "phase1_blocked_split_missing_cell_supplement_paid_execution_batch_1_smoke_codex_workspace",
+      "split": "B_eval",
+      "task_id": "boltons__v2__008"
+    },
+    {
+      "adapter_id": "kilo_workspace",
+      "batch_id": 1,
+      "batch_name": "batch_1_smoke",
+      "repo": "boltons",
+      "result_prefix": "phase1_blocked_split_missing_cell_supplement_paid_execution_batch_1_smoke_kilo_workspace",
+      "split": "B_eval",
+      "task_id": "boltons__v2__008"
+    },
+    {
+      "adapter_id": "codex_workspace",
+      "batch_id": 1,
+      "batch_name": "batch_1_smoke",
+      "repo": "click",
+      "result_prefix": "phase1_blocked_split_missing_cell_supplement_paid_execution_batch_1_smoke_codex_workspace",
+      "split": "B_eval",
+      "task_id": "click__third__091"
+    },
+    {
+      "adapter_id": "kilo_workspace",
+      "batch_id": 1,
+      "batch_name": "batch_1_smoke",
+      "repo": "click",
+      "result_prefix": "phase1_blocked_split_missing_cell_supplement_paid_execution_batch_1_smoke_kilo_workspace",
+      "split": "B_eval",
+      "task_id": "click__third__091"
+    },
+    {
+      "adapter_id": "codex_workspace",
+      "batch_id": 2,
+      "batch_name": "batch_2_attrs_remainder",
+      "repo": "attrs",
+      "result_prefix": "phase1_blocked_split_missing_cell_supplement_paid_execution_batch_2_attrs_remainder_codex_workspace",
+      "split": "H_future",
+      "task_id": "attrs__v2__210"
+    },
+    {
+      "adapter_id": "kilo_workspace",
+      "batch_id": 2,
+      "batch_name": "batch_2_attrs_remainder",
+      "repo": "attrs",
+      "result_prefix": "phase1_blocked_split_missing_cell_supplement_paid_execution_batch_2_attrs_remainder_kilo_workspace",
+      "split": "H_future",
+      "task_id": "attrs__v2__210"
+    },
+    {
+      "adapter_id": "codex_workspace",
+      "batch_id": 2,
+      "batch_name": "batch_2_attrs_remainder",
+      "repo": "attrs",
+      "result_prefix": "phase1_blocked_split_missing_cell_supplement_paid_execution_batch_2_attrs_remainder_codex_workspace",
+      "split": "H_future",
+      "task_id": "attrs__v2__218"
+    },
+    {
+      "adapter_id": "kilo_workspace",
+      "batch_id": 2,
+      "batch_name": "batch_2_attrs_remainder",
+      "repo": "attrs",
+      "result_prefix": "phase1_blocked_split_missing_cell_supplement_paid_execution_batch_2_attrs_remainder_kilo_workspace",
+      "split": "H_future",
+      "task_id": "attrs__v2__218"
+    },
+    {
+      "adapter_id": "codex_workspace",
+      "batch_id": 2,
+      "batch_name": "batch_2_attrs_remainder",
+      "repo": "attrs",
+      "result_prefix": "phase1_blocked_split_missing_cell_supplement_paid_execution_batch_2_attrs_remainder_codex_workspace",
+      "split": "B_eval",
+      "task_id": "attrs__v2__231"
+    },
+    {
+      "adapter_id": "kilo_workspace",
+      "batch_id": 2,
+      "batch_name": "batch_2_attrs_remainder",
+      "repo": "attrs",
+      "result_prefix": "phase1_blocked_split_missing_cell_supplement_paid_execution_batch_2_attrs_remainder_kilo_workspace",
+      "split": "B_eval",
+      "task_id": "attrs__v2__231"
+    },
+    {
+      "adapter_id": "codex_workspace",
+      "batch_id": 2,
+      "batch_name": "batch_2_attrs_remainder",
+      "repo": "attrs",
+      "result_prefix": "phase1_blocked_split_missing_cell_supplement_paid_execution_batch_2_attrs_remainder_codex_workspace",
+      "split": "H_future",
+      "task_id": "attrs__v2__244"
+    },
+    {
+      "adapter_id": "kilo_workspace",
+      "batch_id": 2,
+      "batch_name": "batch_2_attrs_remainder",
+      "repo": "attrs",
+      "result_prefix": "phase1_blocked_split_missing_cell_supplement_paid_execution_batch_2_attrs_remainder_kilo_workspace",
+      "split": "H_future",
+      "task_id": "attrs__v2__244"
+    },
+    {
+      "adapter_id": "codex_workspace",
+      "batch_id": 2,
+      "batch_name": "batch_2_attrs_remainder",
+      "repo": "attrs",
+      "result_prefix": "phase1_blocked_split_missing_cell_supplement_paid_execution_batch_2_attrs_remainder_codex_workspace",
+      "split": "B_eval",
+      "task_id": "attrs__v2__271"
+    },
+    {
+      "adapter_id": "kilo_workspace",
+      "batch_id": 2,
+      "batch_name": "batch_2_attrs_remainder",
+      "repo": "attrs",
+      "result_prefix": "phase1_blocked_split_missing_cell_supplement_paid_execution_batch_2_attrs_remainder_kilo_workspace",
+      "split": "B_eval",
+      "task_id": "attrs__v2__271"
+    },
+    {
+      "adapter_id": "codex_workspace",
+      "batch_id": 3,
+      "batch_name": "batch_3_boltons_remainder",
+      "repo": "boltons",
+      "result_prefix": "phase1_blocked_split_missing_cell_supplement_paid_execution_batch_3_boltons_remainder_codex_workspace",
+      "split": "B_eval",
+      "task_id": "boltons__v2__009"
+    },
+    {
+      "adapter_id": "kilo_workspace",
+      "batch_id": 3,
+      "batch_name": "batch_3_boltons_remainder",
+      "repo": "boltons",
+      "result_prefix": "phase1_blocked_split_missing_cell_supplement_paid_execution_batch_3_boltons_remainder_kilo_workspace",
+      "split": "B_eval",
+      "task_id": "boltons__v2__009"
+    },
+    {
+      "adapter_id": "codex_workspace",
+      "batch_id": 3,
+      "batch_name": "batch_3_boltons_remainder",
+      "repo": "boltons",
+      "result_prefix": "phase1_blocked_split_missing_cell_supplement_paid_execution_batch_3_boltons_remainder_codex_workspace",
+      "split": "B_eval",
+      "task_id": "boltons__v2__076"
+    },
+    {
+      "adapter_id": "kilo_workspace",
+      "batch_id": 3,
+      "batch_name": "batch_3_boltons_remainder",
+      "repo": "boltons",
+      "result_prefix": "phase1_blocked_split_missing_cell_supplement_paid_execution_batch_3_boltons_remainder_kilo_workspace",
+      "split": "B_eval",
+      "task_id": "boltons__v2__076"
+    },
+    {
+      "adapter_id": "codex_workspace",
+      "batch_id": 3,
+      "batch_name": "batch_3_boltons_remainder",
+      "repo": "boltons",
+      "result_prefix": "phase1_blocked_split_missing_cell_supplement_paid_execution_batch_3_boltons_remainder_codex_workspace",
+      "split": "B_eval",
+      "task_id": "boltons__v2__103"
+    },
+    {
+      "adapter_id": "kilo_workspace",
+      "batch_id": 3,
+      "batch_name": "batch_3_boltons_remainder",
+      "repo": "boltons",
+      "result_prefix": "phase1_blocked_split_missing_cell_supplement_paid_execution_batch_3_boltons_remainder_kilo_workspace",
+      "split": "B_eval",
+      "task_id": "boltons__v2__103"
+    },
+    {
+      "adapter_id": "codex_workspace",
+      "batch_id": 3,
+      "batch_name": "batch_3_boltons_remainder",
+      "repo": "boltons",
+      "result_prefix": "phase1_blocked_split_missing_cell_supplement_paid_execution_batch_3_boltons_remainder_codex_workspace",
+      "split": "H_future",
+      "task_id": "boltons__v2__122"
+    },
+    {
+      "adapter_id": "kilo_workspace",
+      "batch_id": 3,
+      "batch_name": "batch_3_boltons_remainder",
+      "repo": "boltons",
+      "result_prefix": "phase1_blocked_split_missing_cell_supplement_paid_execution_batch_3_boltons_remainder_kilo_workspace",
+      "split": "H_future",
+      "task_id": "boltons__v2__122"
+    },
+    {
+      "adapter_id": "codex_workspace",
+      "batch_id": 3,
+      "batch_name": "batch_3_boltons_remainder",
+      "repo": "boltons",
+      "result_prefix": "phase1_blocked_split_missing_cell_supplement_paid_execution_batch_3_boltons_remainder_codex_workspace",
+      "split": "B_eval",
+      "task_id": "boltons__v2__128"
+    },
+    {
+      "adapter_id": "kilo_workspace",
+      "batch_id": 3,
+      "batch_name": "batch_3_boltons_remainder",
+      "repo": "boltons",
+      "result_prefix": "phase1_blocked_split_missing_cell_supplement_paid_execution_batch_3_boltons_remainder_kilo_workspace",
+      "split": "B_eval",
+      "task_id": "boltons__v2__128"
+    },
+    {
+      "adapter_id": "codex_workspace",
+      "batch_id": 3,
+      "batch_name": "batch_3_boltons_remainder",
+      "repo": "boltons",
+      "result_prefix": "phase1_blocked_split_missing_cell_supplement_paid_execution_batch_3_boltons_remainder_codex_workspace",
+      "split": "H_future",
+      "task_id": "boltons__v2__132"
+    },
+    {
+      "adapter_id": "kilo_workspace",
+      "batch_id": 3,
+      "batch_name": "batch_3_boltons_remainder",
+      "repo": "boltons",
+      "result_prefix": "phase1_blocked_split_missing_cell_supplement_paid_execution_batch_3_boltons_remainder_kilo_workspace",
+      "split": "H_future",
+      "task_id": "boltons__v2__132"
+    },
+    {
+      "adapter_id": "codex_workspace",
+      "batch_id": 3,
+      "batch_name": "batch_3_boltons_remainder",
+      "repo": "boltons",
+      "result_prefix": "phase1_blocked_split_missing_cell_supplement_paid_execution_batch_3_boltons_remainder_codex_workspace",
+      "split": "B_eval",
+      "task_id": "boltons__v2__154"
+    },
+    {
+      "adapter_id": "kilo_workspace",
+      "batch_id": 3,
+      "batch_name": "batch_3_boltons_remainder",
+      "repo": "boltons",
+      "result_prefix": "phase1_blocked_split_missing_cell_supplement_paid_execution_batch_3_boltons_remainder_kilo_workspace",
+      "split": "B_eval",
+      "task_id": "boltons__v2__154"
+    },
+    {
+      "adapter_id": "codex_workspace",
+      "batch_id": 3,
+      "batch_name": "batch_3_boltons_remainder",
+      "repo": "boltons",
+      "result_prefix": "phase1_blocked_split_missing_cell_supplement_paid_execution_batch_3_boltons_remainder_codex_workspace",
+      "split": "B_eval",
+      "task_id": "boltons__v2__231"
+    },
+    {
+      "adapter_id": "kilo_workspace",
+      "batch_id": 3,
+      "batch_name": "batch_3_boltons_remainder",
+      "repo": "boltons",
+      "result_prefix": "phase1_blocked_split_missing_cell_supplement_paid_execution_batch_3_boltons_remainder_kilo_workspace",
+      "split": "B_eval",
+      "task_id": "boltons__v2__231"
+    },
+    {
+      "adapter_id": "codex_workspace",
+      "batch_id": 3,
+      "batch_name": "batch_3_boltons_remainder",
+      "repo": "boltons",
+      "result_prefix": "phase1_blocked_split_missing_cell_supplement_paid_execution_batch_3_boltons_remainder_codex_workspace",
+      "split": "H_future",
+      "task_id": "boltons__v2__232"
+    },
+    {
+      "adapter_id": "kilo_workspace",
+      "batch_id": 3,
+      "batch_name": "batch_3_boltons_remainder",
+      "repo": "boltons",
+      "result_prefix": "phase1_blocked_split_missing_cell_supplement_paid_execution_batch_3_boltons_remainder_kilo_workspace",
+      "split": "H_future",
+      "task_id": "boltons__v2__232"
+    },
+    {
+      "adapter_id": "codex_workspace",
+      "batch_id": 4,
+      "batch_name": "batch_4_click_remainder",
+      "repo": "click",
+      "result_prefix": "phase1_blocked_split_missing_cell_supplement_paid_execution_batch_4_click_remainder_codex_workspace",
+      "split": "H_future",
+      "task_id": "click__third__109"
+    },
+    {
+      "adapter_id": "kilo_workspace",
+      "batch_id": 4,
+      "batch_name": "batch_4_click_remainder",
+      "repo": "click",
+      "result_prefix": "phase1_blocked_split_missing_cell_supplement_paid_execution_batch_4_click_remainder_kilo_workspace",
+      "split": "H_future",
+      "task_id": "click__third__109"
+    },
+    {
+      "adapter_id": "codex_workspace",
+      "batch_id": 4,
+      "batch_name": "batch_4_click_remainder",
+      "repo": "click",
+      "result_prefix": "phase1_blocked_split_missing_cell_supplement_paid_execution_batch_4_click_remainder_codex_workspace",
+      "split": "H_future",
+      "task_id": "click__third__198"
+    },
+    {
+      "adapter_id": "kilo_workspace",
+      "batch_id": 4,
+      "batch_name": "batch_4_click_remainder",
+      "repo": "click",
+      "result_prefix": "phase1_blocked_split_missing_cell_supplement_paid_execution_batch_4_click_remainder_kilo_workspace",
+      "split": "H_future",
+      "task_id": "click__third__198"
+    },
+    {
+      "adapter_id": "codex_workspace",
+      "batch_id": 4,
+      "batch_name": "batch_4_click_remainder",
+      "repo": "click",
+      "result_prefix": "phase1_blocked_split_missing_cell_supplement_paid_execution_batch_4_click_remainder_codex_workspace",
+      "split": "B_eval",
+      "task_id": "click__third__202"
+    },
+    {
+      "adapter_id": "kilo_workspace",
+      "batch_id": 4,
+      "batch_name": "batch_4_click_remainder",
+      "repo": "click",
+      "result_prefix": "phase1_blocked_split_missing_cell_supplement_paid_execution_batch_4_click_remainder_kilo_workspace",
+      "split": "B_eval",
+      "task_id": "click__third__202"
+    },
+    {
+      "adapter_id": "codex_workspace",
+      "batch_id": 4,
+      "batch_name": "batch_4_click_remainder",
+      "repo": "click",
+      "result_prefix": "phase1_blocked_split_missing_cell_supplement_paid_execution_batch_4_click_remainder_codex_workspace",
+      "split": "H_future",
+      "task_id": "click__third__214"
+    },
+    {
+      "adapter_id": "kilo_workspace",
+      "batch_id": 4,
+      "batch_name": "batch_4_click_remainder",
+      "repo": "click",
+      "result_prefix": "phase1_blocked_split_missing_cell_supplement_paid_execution_batch_4_click_remainder_kilo_workspace",
+      "split": "H_future",
+      "task_id": "click__third__214"
+    },
+    {
+      "adapter_id": "codex_workspace",
+      "batch_id": 4,
+      "batch_name": "batch_4_click_remainder",
+      "repo": "click",
+      "result_prefix": "phase1_blocked_split_missing_cell_supplement_paid_execution_batch_4_click_remainder_codex_workspace",
+      "split": "B_eval",
+      "task_id": "click__third__220"
+    },
+    {
+      "adapter_id": "kilo_workspace",
+      "batch_id": 4,
+      "batch_name": "batch_4_click_remainder",
+      "repo": "click",
+      "result_prefix": "phase1_blocked_split_missing_cell_supplement_paid_execution_batch_4_click_remainder_kilo_workspace",
+      "split": "B_eval",
+      "task_id": "click__third__220"
+    },
+    {
+      "adapter_id": "codex_workspace",
+      "batch_id": 4,
+      "batch_name": "batch_4_click_remainder",
+      "repo": "click",
+      "result_prefix": "phase1_blocked_split_missing_cell_supplement_paid_execution_batch_4_click_remainder_codex_workspace",
+      "split": "H_future",
+      "task_id": "click__third__234"
+    },
+    {
+      "adapter_id": "kilo_workspace",
+      "batch_id": 4,
+      "batch_name": "batch_4_click_remainder",
+      "repo": "click",
+      "result_prefix": "phase1_blocked_split_missing_cell_supplement_paid_execution_batch_4_click_remainder_kilo_workspace",
+      "split": "H_future",
+      "task_id": "click__third__234"
+    },
+    {
+      "adapter_id": "codex_workspace",
+      "batch_id": 4,
+      "batch_name": "batch_4_click_remainder",
+      "repo": "click",
+      "result_prefix": "phase1_blocked_split_missing_cell_supplement_paid_execution_batch_4_click_remainder_codex_workspace",
+      "split": "H_future",
+      "task_id": "click__third__288"
+    },
+    {
+      "adapter_id": "kilo_workspace",
+      "batch_id": 4,
+      "batch_name": "batch_4_click_remainder",
+      "repo": "click",
+      "result_prefix": "phase1_blocked_split_missing_cell_supplement_paid_execution_batch_4_click_remainder_kilo_workspace",
+      "split": "H_future",
+      "task_id": "click__third__288"
+    }
+  ],
+  "new_paid_outcomes_from_this_run_known_when_generated": false,
+  "planned_adapters": [
+    "codex_workspace",
+    "kilo_workspace"
+  ],
+  "planned_cells": 48,
+  "planned_unique_tasks": 24,
+  "reused_prior_outcomes_known_when_generated": true,
+  "run_id": "phase1_blocked_split_missing_cell_supplement_paid_execution_20260529",
+  "schema_version": "barcarolle.phase1_blocked_split_missing_cell_supplement_paid_execution_output.v1",
+  "status": "frozen"
+}

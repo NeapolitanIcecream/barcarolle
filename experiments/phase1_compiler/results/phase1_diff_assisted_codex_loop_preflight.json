@@ -1,0 +1,61 @@
+{
+  "ambient_endpoint_env_vars_present_but_ignored": {
+    "LLM_API_KEY": true,
+    "LLM_BASE_URL": true,
+    "OPENAI_API_KEY": false,
+    "OPENROUTER_API_KEY": false
+  },
+  "branch": "codex/restart-benchmark-compiler",
+  "codex_cli_available": true,
+  "codex_cli_path": "/opt/homebrew/bin/codex",
+  "codex_cli_version": "codex-cli 0.133.0",
+  "codex_subscription_generation_review_conditionally_enabled": true,
+  "corrected_result_prefix": "phase1_diff_assisted_codex_loop_",
+  "deterministic_generation_review_fallback_allowed": false,
+  "generated_at": "2026-05-25T04:55:14Z",
+  "generator_reviewer_did_not_use_llm_api_endpoint": true,
+  "generator_reviewer_used_local_codex_subscription": true,
+  "git_head": "448b25a56b2eac1e62a6004bf599428cf10b95b4",
+  "historical_paid_outcomes_available_to_generator_reviewer": false,
+  "llm_api_calls_made_for_generator_reviewer": false,
+  "llm_api_endpoint_env_vars_unset_by_wrappers": [
+    "LLM_BASE_URL",
+    "LLM_API_KEY",
+    "OPENAI_API_KEY",
+    "OPENROUTER_API_KEY"
+  ],
+  "local_codex_subscription_execution_proof": "deferred_to_real_generator_and_reviewer_sessions",
+  "paid_acut_calls_enabled": false,
+  "paid_solver_cells_enabled": false,
+  "prior_deterministic_outputs_classification": {
+    "not_valid_as": [
+      "independent Codex CLI generated statement evidence",
+      "independent Codex CLI leakage or sufficiency review evidence",
+      "basis for freezing a statement-hardened release",
+      "basis for paid validation"
+    ],
+    "valid_as": [
+      "deterministic dry-run and tooling prototype",
+      "evidence that old 240-character truncation over-penalized candidates",
+      "evidence that current old inventory lacks boltons H_future supply"
+    ]
+  },
+  "python_version": "Python 3.11.13",
+  "raw_cli_logs_committed": false,
+  "raw_prompts_or_completions_committed": false,
+  "raw_target_diffs_committed": false,
+  "real_codex_cli_generation_review_can_start": true,
+  "schema_version": "barcarolle.phase1.diff_assisted_codex_loop_preflight.v1",
+  "tmux_available": true,
+  "tmux_path": "/opt/homebrew/bin/tmux",
+  "tmux_version": "tmux 3.6b",
+  "unrelated_existing_worktree_paths": [
+    "docs/experiments/phase-1-statement-hardened-holdout-preregistration-runbook.md",
+    "docs/experiments/phase-1-attrs-generalization-third-repo-decision-runbook.md",
+    "docs/experiments/phase-1-attrs-h-future-statement-quality-audit-runbook.md",
+    "docs/experiments/phase-1-autonomous-overnight-two-repo-research-runbook.md",
+    "docs/experiments/phase-1-diff-assisted-statement-regeneration-runbook.md",
+    "docs/experiments/phase-1-policy-violation-triage-bounded-rerun-runbook.md"
+  ],
+  "uv_version": "uv 0.11.16 (Homebrew 2026-05-21 aarch64-apple-darwin)"
+}

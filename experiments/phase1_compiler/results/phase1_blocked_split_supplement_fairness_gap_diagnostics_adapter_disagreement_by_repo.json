@@ -1,0 +1,109 @@
+{
+  "artifact": "adapter_disagreement_by_repo",
+  "broad_or_concentrated": "broad_across_repos_with_largest_rates_in_click_and_boltons",
+  "by_repo": {
+    "attrs": {
+      "both_fail": 8,
+      "both_pass": 6,
+      "codex_only_pass": 1,
+      "codex_pass_rate_on_paired_tasks": 0.3684,
+      "disagreement_count": 5,
+      "disagreement_rate": 0.2632,
+      "kilo_minus_codex_pass_rate_delta": 0.1579,
+      "kilo_only_pass": 4,
+      "kilo_pass_rate_on_paired_tasks": 0.5263,
+      "paired_task_count": 19
+    },
+    "boltons": {
+      "both_fail": 11,
+      "both_pass": 0,
+      "codex_only_pass": 1,
+      "codex_pass_rate_on_paired_tasks": 0.05,
+      "disagreement_count": 9,
+      "disagreement_rate": 0.45,
+      "kilo_minus_codex_pass_rate_delta": 0.35,
+      "kilo_only_pass": 8,
+      "kilo_pass_rate_on_paired_tasks": 0.4,
+      "paired_task_count": 20
+    },
+    "click": {
+      "both_fail": 2,
+      "both_pass": 8,
+      "codex_only_pass": 1,
+      "codex_pass_rate_on_paired_tasks": 0.45,
+      "disagreement_count": 10,
+      "disagreement_rate": 0.5,
+      "kilo_minus_codex_pass_rate_delta": 0.4,
+      "kilo_only_pass": 9,
+      "kilo_pass_rate_on_paired_tasks": 0.85,
+      "paired_task_count": 20
+    }
+  },
+  "by_split": {
+    "B_eval": {
+      "both_fail": 9,
+      "both_pass": 9,
+      "codex_only_pass": 1,
+      "codex_pass_rate_on_paired_tasks": 0.3448,
+      "disagreement_count": 11,
+      "disagreement_rate": 0.3793,
+      "kilo_minus_codex_pass_rate_delta": 0.3103,
+      "kilo_only_pass": 10,
+      "kilo_pass_rate_on_paired_tasks": 0.6552,
+      "paired_task_count": 29
+    },
+    "H_future": {
+      "both_fail": 12,
+      "both_pass": 5,
+      "codex_only_pass": 2,
+      "codex_pass_rate_on_paired_tasks": 0.2333,
+      "disagreement_count": 13,
+      "disagreement_rate": 0.4333,
+      "kilo_minus_codex_pass_rate_delta": 0.3,
+      "kilo_only_pass": 11,
+      "kilo_pass_rate_on_paired_tasks": 0.5333,
+      "paired_task_count": 30
+    }
+  },
+  "generated_at": "2026-05-29T08:07:45Z",
+  "interpretation_boundary": {
+    "higher_kilo_pass_rate_is_valid_acut_result_if_fairness_clean": true,
+    "model_only_claim_allowed": false
+  },
+  "overall": {
+    "both_fail": 21,
+    "both_pass": 14,
+    "codex_only_pass": 3,
+    "codex_pass_rate_on_paired_tasks": 0.2881,
+    "disagreement_count": 24,
+    "disagreement_rate": 0.4068,
+    "kilo_minus_codex_pass_rate_delta": 0.3051,
+    "kilo_only_pass": 21,
+    "kilo_pass_rate_on_paired_tasks": 0.5932,
+    "paired_task_count": 59
+  },
+  "run_id": "phase1_blocked_split_supplement_fairness_gap_diagnostics_20260529",
+  "schema_version": "barcarolle.phase1_blocked_split_supplement_fairness_gap_diagnostics_output.v1",
+  "status": "complete",
+  "unpaired_or_non_scoreable_tasks": [
+    {
+      "cells": [
+        {
+          "adapter_id": "codex_workspace",
+          "score_table": "experiments/phase0_headroom/results/phase1_blocked_split_missing_cell_supplement_paid_execution_batch_1_smoke_codex_workspace_score_table.csv",
+          "scoreable_cell": false,
+          "terminal_status": "invalid_output"
+        },
+        {
+          "adapter_id": "kilo_workspace",
+          "score_table": "experiments/phase0_headroom/results/phase1_blocked_split_missing_cell_supplement_paid_execution_batch_1_smoke_kilo_workspace_score_table.csv",
+          "scoreable_cell": true,
+          "terminal_status": "verified_fail"
+        }
+      ],
+      "reason": "one_or_more_adapter_cells_non_scoreable_or_missing",
+      "repo": "attrs",
+      "task_id": "attrs__v2__157"
+    }
+  ]
+}

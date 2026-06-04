@@ -1,0 +1,33 @@
+{
+  "branch": "codex/restart-benchmark-compiler",
+  "current_git_status": "clean",
+  "generated_at": "2026-05-22T03:42:45Z",
+  "paid_acut_calls_allowed": false,
+  "paid_llm_calls_allowed": false,
+  "phase0_tool_tests": {
+    "command": "uv run --project experiments/phase0_headroom pytest -q experiments/phase0_headroom/tools",
+    "passed": true,
+    "summary": "63 passed in 1.77s"
+  },
+  "phase1_compiler_tests": {
+    "command": "uv run --project experiments/phase1_compiler pytest -q",
+    "passed": true,
+    "summary": "20 passed in 0.29s"
+  },
+  "phase1_validate": {
+    "command": "uv run --project experiments/phase1_compiler python experiments/phase1_compiler/tools/phase1_compiler.py validate --config experiments/phase1_compiler/configs/phase1_mvp.yaml",
+    "passed": true,
+    "status": "valid"
+  },
+  "previous_itsdangerous_benchmark_grade_candidate_count": 0,
+  "previous_itsdangerous_certified_count": 1,
+  "previous_itsdangerous_release_status": "diagnostic_only",
+  "previous_primary_decision": "certification_implementation_bug_found",
+  "previous_recommended_next_runbook": "fix_itsdangerous_statement_template_environment_and_candidate_filter_then_remine_certify_without_paid_acut",
+  "previous_statement_template_bug_observed": true,
+  "python_version": "Python 3.9.6",
+  "raw_workspace_external_cache_paths_tracked": false,
+  "schema_version": "barcarolle.phase1.third_repo_repair_remine_preflight.v1",
+  "starting_head": "b5e396bd52dcfb2441f1018c393b4a0566edc356",
+  "uv_version": "uv 0.11.1 (Homebrew 2026-03-24 aarch64-apple-darwin)"
+}

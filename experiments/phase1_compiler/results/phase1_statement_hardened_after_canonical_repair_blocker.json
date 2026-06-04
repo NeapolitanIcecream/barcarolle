@@ -1,0 +1,12 @@
+{
+  "blocked": false,
+  "blocked_task_ids": [],
+  "blocker_reasons": [],
+  "followup_runbook_written_by_worker": false,
+  "generated_at": "2026-05-25T08:11:58Z",
+  "paid_acut_calls_made": false,
+  "paid_llm_calls_made": false,
+  "primary_decision": "ready_for_user_approved_paid_validation",
+  "schema_version": "barcarolle.phase1.statement_hardened_after_canonical_repair_blocker.v1",
+  "status": "not_blocked"
+}

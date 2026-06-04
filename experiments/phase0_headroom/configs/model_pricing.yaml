@@ -1,0 +1,14 @@
+schema_version: barcarolle.model_pricing.v1
+default_currency: USD
+prices:
+  - endpoint_host_hash: "9952174049b2"
+    model: gpt-5.4-mini
+    pricing_source: user_estimate_required_conservative_default
+    input_rate_per_1m_usd: 3.0
+    cached_input_rate_per_1m_usd: 0.3
+    output_rate_per_1m_usd: 15.0
+    reasoning_output_policy: included_in_output_tokens
+    notes: >
+      Local estimate used for budgeting and reconciliation when provider-billed
+      dollars are unavailable. Does not model volume discounts or tiered
+      pricing.

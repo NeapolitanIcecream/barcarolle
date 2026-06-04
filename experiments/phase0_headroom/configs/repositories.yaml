@@ -1,0 +1,81 @@
+repositories:
+  - repo_id: click_archive_smoke
+    url: "archive/2026-05-agent-license-reset/experiments/core_narrative/tasks/click"
+    language: "Python"
+    package_manager: "archived manifests"
+    default_test_command: "verifier/run.sh per archived task"
+    install_command: "not applicable for active primary selection"
+    median_test_runtime_estimate_seconds: 60
+    external_service_risk: "low"
+    candidate_anchor_estimate: 14
+    why_selected_or_rejected: "selected as smoke and generic comparator only; not used as primary target because runbook keeps archived Click material out of active target selection."
+  - repo_id: toolz
+    url: "https://github.com/pytoolz/toolz.git"
+    language: "Python"
+    package_manager: "setuptools/pyproject"
+    default_test_command: "PYTHONPATH=. /opt/homebrew/bin/uv run --project experiments/phase0_headroom python -m pytest <changed test files> -q"
+    install_command: "phase0 tooling dependencies are resolved by uv; target repo editable install is not required for changed-test certification probe"
+    median_test_runtime_estimate_seconds: 1
+    external_service_risk: "low"
+    candidate_anchor_estimate: 50
+    why_selected_or_rejected: "selected primary: supports local Python 3.11.13, has 50 code-plus-test history anchors since 2016-01-01, and smoke command exited 0."
+  - repo_id: humanize
+    url: "https://github.com/python-humanize/humanize.git"
+    language: "Python"
+    package_manager: "hatch/pyproject"
+    default_test_command: "python -m pytest"
+    install_command: "uv-managed Python >=3.10 plus test extras"
+    median_test_runtime_estimate_seconds: 5
+    external_service_risk: "low"
+    candidate_anchor_estimate: "117 path-touching commits observed; code-plus-test count not fully certified"
+    why_selected_or_rejected: "backup only: observed supply is promising, but switching primary after toolz passed the local buildability and supply gates would expand Phase 0 scope."
+  - repo_id: itsdangerous
+    url: "https://github.com/pallets/itsdangerous.git"
+    language: "Python"
+    package_manager: "pyproject"
+    default_test_command: "python -m pytest"
+    install_command: "python -m pip install -e .[test]"
+    median_test_runtime_estimate_seconds: 5
+    external_service_risk: "low"
+    candidate_anchor_estimate: "medium"
+    why_selected_or_rejected: "rejected for Phase 0 primary because task surface is smaller than toolz and overlaps Pallets/Click archive style."
+  - repo_id: boltons
+    url: "https://github.com/mahmoud/boltons.git"
+    language: "Python"
+    package_manager: "setuptools"
+    default_test_command: "python -m pytest"
+    install_command: "python -m pip install -e ."
+    median_test_runtime_estimate_seconds: 20
+    external_service_risk: "low"
+    candidate_anchor_estimate: "medium"
+    why_selected_or_rejected: "backup candidate; broader utility surface but less immediately probed in this run."
+  - repo_id: attrs
+    url: "https://github.com/python-attrs/attrs.git"
+    language: "Python"
+    package_manager: "hatch/pyproject"
+    default_test_command: "python -m pytest"
+    install_command: "python -m pip install -e .[tests]"
+    median_test_runtime_estimate_seconds: 60
+    external_service_risk: "low"
+    candidate_anchor_estimate: "high"
+    why_selected_or_rejected: "rejected for Phase 0 primary because the test/dependency matrix is broader than needed for the smallest evidence chain."
+  - repo_id: rich
+    url: "https://github.com/Textualize/rich.git"
+    language: "Python"
+    package_manager: "poetry/uv style pyproject"
+    default_test_command: "python -m pytest"
+    install_command: "project-specific dependency install"
+    median_test_runtime_estimate_seconds: 120
+    external_service_risk: "medium"
+    candidate_anchor_estimate: "high"
+    why_selected_or_rejected: "rejected for Phase 0 primary because terminal rendering snapshots and dependency breadth increase oracle flakiness risk."
+  - repo_id: requests
+    url: "https://github.com/psf/requests.git"
+    language: "Python"
+    package_manager: "setuptools/pyproject"
+    default_test_command: "python -m pytest"
+    install_command: "python -m pip install -e .[socks]"
+    median_test_runtime_estimate_seconds: 120
+    external_service_risk: "medium"
+    candidate_anchor_estimate: "high"
+    why_selected_or_rejected: "rejected for Phase 0 primary because HTTP integration history risks external-service assumptions."

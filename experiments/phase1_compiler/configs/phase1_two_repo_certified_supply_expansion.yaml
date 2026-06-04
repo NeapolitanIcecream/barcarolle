@@ -1,0 +1,69 @@
+schema_version: barcarolle.phase1_two_repo_certified_supply_expansion.v1
+run_id: phase1_two_repo_supply_expansion_20260526
+runbook: docs/experiments/phase-1-two-repo-certified-supply-expansion-runbook.md
+runbook_date: 2026-05-26
+status: configured
+target_repos:
+  - attrs
+  - boltons
+namespace: supply_expansion_20260526
+minimum_target_per_repo: 30
+stretch_target_per_repo: 50
+starting_supply_counts:
+  attrs: 10
+  boltons: 12
+mining:
+  raw_candidate_floor_per_repo: 50
+  raw_candidate_soft_cap_per_repo: 160
+  local_certification_attempt_soft_cap_per_repo: 96
+  scan_since: 2010-01-01
+  prefer_broad_chronological_coverage: true
+repos:
+  attrs:
+    repo_url: "https://github.com/python-attrs/attrs.git"
+    local_repo: experiments/phase0_headroom/external_repos/attrs
+    command_template: "uv run --project experiments/phase0_headroom --with \"pytest>=7,<8\" --with \"setuptools<81\" --with \"hypothesis<6\" python -m pytest -q {test_files}"
+  boltons:
+    repo_url: "https://github.com/mahmoud/boltons.git"
+    local_repo: experiments/phase0_headroom/external_repos/boltons
+    command_template: "uv run --project experiments/phase0_headroom --with \"pytest>=8,<9\" --with \"setuptools<81\" python -m pytest -q {test_files}"
+guardrails:
+  paid_acut_calls: disabled
+  paid_task_solving_calls: disabled
+  paid_replication: disabled
+  paid_llm_statement_generation: later_gated_by_LLM_BASE_URL_and_LLM_API_KEY
+  hidden_oracle_material_used_for_selection: false
+  raw_acut_transcripts_used_for_selection: false
+  mutate_canonical_historical_files: false
+  write_followup_runbook: false
+outputs:
+  config: experiments/phase1_compiler/configs/phase1_two_repo_certified_supply_expansion.yaml
+  preflight: experiments/phase1_compiler/results/phase1_two_repo_supply_expansion_preflight.json
+  existing_inventory: experiments/phase1_compiler/results/phase1_two_repo_supply_expansion_existing_inventory.json
+  duplicate_and_leakage_index: experiments/phase1_compiler/results/phase1_two_repo_supply_expansion_duplicate_and_leakage_index.json
+  mining_plan: experiments/phase1_compiler/results/phase1_two_repo_supply_expansion_mining_plan.json
+  raw_candidates: experiments/phase1_compiler/results/phase1_two_repo_supply_expansion_raw_candidates.json
+  source_contexts: experiments/phase1_compiler/results/phase1_two_repo_supply_expansion_source_contexts.json
+  certification_attempts: experiments/phase1_compiler/results/phase1_two_repo_supply_expansion_certification_attempts.json
+  statement_packets: experiments/phase1_compiler/results/phase1_two_repo_supply_expansion_statement_packets.json
+  statement_generation_review: experiments/phase1_compiler/results/phase1_two_repo_supply_expansion_statement_generation_review.json
+  eligibility_audit: experiments/phase1_compiler/results/phase1_two_repo_supply_expansion_eligibility_audit.json
+  expanded_supply: experiments/phase1_compiler/results/phase1_two_repo_supply_expansion_expanded_supply.json
+  split_support: experiments/phase1_compiler/results/phase1_two_repo_supply_expansion_split_support.json
+  local_bakeoff_rerun: experiments/phase1_compiler/results/phase1_two_repo_supply_expansion_local_bakeoff_rerun.json
+  contingency_screen: experiments/phase1_compiler/results/phase1_two_repo_supply_expansion_contingency_screen.json
+  decision: experiments/phase1_compiler/results/phase1_two_repo_supply_expansion_decision.json
+reports:
+  process: experiments/phase1_compiler/reports/phase1_two_repo_supply_expansion_process.md
+  existing_inventory: experiments/phase1_compiler/reports/phase1_two_repo_supply_expansion_existing_inventory.md
+  mining_plan: experiments/phase1_compiler/reports/phase1_two_repo_supply_expansion_mining_plan.md
+  raw_candidates: experiments/phase1_compiler/reports/phase1_two_repo_supply_expansion_raw_candidates.md
+  source_contexts: experiments/phase1_compiler/reports/phase1_two_repo_supply_expansion_source_contexts.md
+  certification_attempts: experiments/phase1_compiler/reports/phase1_two_repo_supply_expansion_certification_attempts.md
+  statement_packets: experiments/phase1_compiler/reports/phase1_two_repo_supply_expansion_statement_generation_review.md
+  eligibility_audit: experiments/phase1_compiler/reports/phase1_two_repo_supply_expansion_eligibility_audit.md
+  expanded_supply: experiments/phase1_compiler/reports/phase1_two_repo_supply_expansion_expanded_supply.md
+  split_support: experiments/phase1_compiler/reports/phase1_two_repo_supply_expansion_split_support.md
+  local_bakeoff_rerun: experiments/phase1_compiler/reports/phase1_two_repo_supply_expansion_local_bakeoff_rerun.md
+  contingency_screen: experiments/phase1_compiler/reports/phase1_two_repo_supply_expansion_contingency_screen.md
+  decision: experiments/phase1_compiler/reports/phase1_two_repo_supply_expansion_decision.md

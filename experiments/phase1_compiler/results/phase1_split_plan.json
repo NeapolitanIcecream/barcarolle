@@ -1,0 +1,80 @@
+{
+  "claim_scope": "phase1_mvp_compiler_infrastructure",
+  "constraints": [
+    "target repo tasks must not appear in more than one target evaluation split unless labeled historical_diagnostic_reuse",
+    "generic comparators cannot be canary or target-repo holdout tasks",
+    "humanize commit-message fallback provenance is MVP infrastructure evidence, not validation-grade evidence"
+  ],
+  "disallowed_claims": [
+    "predictive_validity_established",
+    "pure_harness_effect",
+    "production_benchmark_ranking"
+  ],
+  "future_holdout_status": "unavailable_in_current_evidence",
+  "generated_at": "2026-05-23T11:36:32+00:00",
+  "historical_splits": {
+    "generic_comparators": {
+      "click": {
+        "G_mini": [
+          "click__rbench__001",
+          "click__rbench__002",
+          "click__rbench__003",
+          "click__rbench__004"
+        ]
+      }
+    },
+    "target_repos": {
+      "humanize": {
+        "B_real": [
+          "humanize__hist__002",
+          "humanize__hist__003",
+          "humanize__hist__004",
+          "humanize__hist__005",
+          "humanize__hist__006",
+          "humanize__hist__007"
+        ],
+        "W_real": [
+          "humanize__hist__008",
+          "humanize__hist__010",
+          "humanize__hist__012",
+          "humanize__hist__013",
+          "humanize__hist__014",
+          "humanize__hist__015"
+        ]
+      },
+      "toolz": {
+        "B_real": [
+          "toolz__hist__001",
+          "toolz__hist__002",
+          "toolz__hist__003"
+        ],
+        "W_real": [
+          "toolz__hist__004",
+          "toolz__hist__010",
+          "toolz__hist__016"
+        ]
+      }
+    }
+  },
+  "phase1_placeholders": {
+    "canary": {
+      "status": "unassigned_mvp_placeholder",
+      "tasks": []
+    },
+    "dev": {
+      "status": "unassigned_mvp_placeholder",
+      "tasks": []
+    },
+    "eval": {
+      "status": "unassigned_mvp_placeholder",
+      "tasks": []
+    },
+    "future_holdout": {
+      "status": "unavailable_in_current_evidence",
+      "tasks": []
+    }
+  },
+  "predictive_validity_established": false,
+  "release_id": "phase1_mvp_multi_repo_release",
+  "schema_version": "barcarolle.phase1.split_plan.v1"
+}

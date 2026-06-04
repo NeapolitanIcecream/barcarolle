@@ -1,0 +1,159 @@
+{
+  "MAE_summary": {
+    "block_plus_shrinkage_weighted": {
+      "B_eval_scoreable_count": 84,
+      "H_future_scoreable_count": 249,
+      "MAE": 0.2894,
+      "RMSE": 0.3244,
+      "catastrophic_miss_rate": 0.8333,
+      "mean_signed_error": -0.0266,
+      "non_scoreable_count": 41,
+      "slice_count": 18
+    },
+    "block_randomized_stratified": {
+      "B_eval_scoreable_count": 84,
+      "H_future_scoreable_count": 249,
+      "MAE": 0.2857,
+      "RMSE": 0.3253,
+      "catastrophic_miss_rate": 0.7778,
+      "mean_signed_error": -0.0303,
+      "non_scoreable_count": 41,
+      "slice_count": 18
+    },
+    "completed_blocked_split_supplement": {
+      "B_eval_scoreable_count": 59,
+      "H_future_scoreable_count": 60,
+      "MAE": 0.1407,
+      "RMSE": 0.1688,
+      "catastrophic_miss_rate": 0.3333,
+      "mean_signed_error": 0.1074,
+      "non_scoreable_count": 1,
+      "slice_count": 6
+    },
+    "coverage_constrained_unweighted": {
+      "B_eval_scoreable_count": 94,
+      "H_future_scoreable_count": 249,
+      "MAE": 0.209,
+      "RMSE": 0.2589,
+      "catastrophic_miss_rate": 0.5556,
+      "mean_signed_error": -0.0433,
+      "non_scoreable_count": 31,
+      "slice_count": 18
+    },
+    "old_weighted_target_profile": {
+      "B_eval_scoreable_count": 0,
+      "H_future_scoreable_count": 0,
+      "MAE": null,
+      "RMSE": null,
+      "catastrophic_miss_rate": null,
+      "mean_signed_error": null,
+      "non_scoreable_count": 0,
+      "slice_count": 0
+    },
+    "repo_stratified_by_target_profile": {
+      "B_eval_scoreable_count": 91,
+      "H_future_scoreable_count": 249,
+      "MAE": 0.2343,
+      "RMSE": 0.2835,
+      "catastrophic_miss_rate": 0.5556,
+      "mean_signed_error": -0.0423,
+      "non_scoreable_count": 34,
+      "slice_count": 18
+    },
+    "repo_unweighted_same_budget": {
+      "B_eval_scoreable_count": 86,
+      "H_future_scoreable_count": 249,
+      "MAE": 0.2242,
+      "RMSE": 0.2682,
+      "catastrophic_miss_rate": 0.6667,
+      "mean_signed_error": -0.0247,
+      "non_scoreable_count": 39,
+      "slice_count": 18
+    },
+    "seeded_random_same_budget": {
+      "B_eval_scoreable_count": 445,
+      "H_future_scoreable_count": 1245,
+      "MAE": 0.2525,
+      "RMSE": 0.2995,
+      "catastrophic_miss_rate": 0.7333,
+      "mean_signed_error": -0.0353,
+      "non_scoreable_count": 180,
+      "slice_count": 90
+    },
+    "temporal_recent_baseline": {
+      "B_eval_scoreable_count": 90,
+      "H_future_scoreable_count": 249,
+      "MAE": 0.2149,
+      "RMSE": 0.2579,
+      "catastrophic_miss_rate": 0.5556,
+      "mean_signed_error": -0.0618,
+      "non_scoreable_count": 35,
+      "slice_count": 18
+    }
+  },
+  "adapters_included": [
+    "codex_workspace",
+    "kilo_workspace"
+  ],
+  "analysis_mode": "mixed",
+  "artifact": "decision",
+  "best_barcarolle_candidate": {
+    "MAE": 0.209,
+    "catastrophic_miss_rate": 0.5556,
+    "design_id": "coverage_constrained_unweighted",
+    "slice_count": 18
+  },
+  "best_simple_baseline": {
+    "MAE": 0.2149,
+    "catastrophic_miss_rate": 0.5556,
+    "design_id": "temporal_recent_baseline",
+    "slice_count": 18
+  },
+  "candidate_beats_best_simple_baseline": true,
+  "candidate_designs_evaluated": [
+    "repo_unweighted_same_budget",
+    "repo_stratified_by_target_profile",
+    "temporal_recent_baseline",
+    "seeded_random_same_budget",
+    "coverage_constrained_unweighted",
+    "block_randomized_stratified",
+    "block_plus_shrinkage_weighted",
+    "completed_blocked_split_supplement"
+  ],
+  "catastrophic_miss_summary": {
+    "block_plus_shrinkage_weighted": 0.8333,
+    "block_randomized_stratified": 0.7778,
+    "completed_blocked_split_supplement": 0.3333,
+    "coverage_constrained_unweighted": 0.5556,
+    "old_weighted_target_profile": null,
+    "repo_stratified_by_target_profile": 0.5556,
+    "repo_unweighted_same_budget": 0.6667,
+    "seeded_random_same_budget": 0.7333,
+    "temporal_recent_baseline": 0.5556
+  },
+  "decision_label": "retrospective_signal_positive_directional",
+  "future_paid_acut_remains_blocked_by_default": true,
+  "generated_at": "2026-05-30T02:47:30Z",
+  "paid_ACUT_cells": 0,
+  "paid_LLM_calls": 0,
+  "predictive_validity_established": false,
+  "preflight_head": "95c76d465987ca2a718282933785025670b04be1",
+  "primary_mode": "retrospective_pseudo_future",
+  "process_md_updated": true,
+  "recommended_next_action_categories": [
+    "use the result as retrospective traction or negative evidence only",
+    "keep paid ACUT reruns blocked by default",
+    "future validation should preregister true rolling-origin windows before outcomes are inspected",
+    "keep adapter-stratified reporting as the primary reporting surface"
+  ],
+  "repos_included": [
+    "attrs",
+    "boltons",
+    "click"
+  ],
+  "run_id": "phase1_retrospective_predictive_signal_20260530",
+  "schema_version": "barcarolle.phase1_retrospective_predictive_signal_output.v1",
+  "support_level": "directional_retrospective_underpowered",
+  "supports_traction_narrative": true,
+  "window_count": 3
+}

@@ -1,0 +1,159 @@
+{
+  "claim_scope": "phase1_mvp_compiler_infrastructure",
+  "diagnostic_scores": {
+    "combined_target_observed_pass_rate": {
+      "compatible_cell_count": 29,
+      "fail_count": 12,
+      "non_scoreable_count": 3,
+      "observed_pass_rate": 0.586207,
+      "pass_count": 17,
+      "policy_violation_count": 3
+    },
+    "predictive_score": null,
+    "score_type": "diagnostic_observed_pass_rate"
+  },
+  "disallowed_claims": [
+    "predictive_validity_established",
+    "pure_harness_effect",
+    "production_benchmark_ranking"
+  ],
+  "generated_at": "2026-05-23T11:36:32+00:00",
+  "insufficient_evidence": [
+    "future_holdout_unavailable_in_current_evidence",
+    "predictive_validity_not_established",
+    "humanize_source_provenance_commit_message_fallback",
+    "toolz_followup_and_stability_are_not_independent_future_validation_samples",
+    "generic_comparator_click_not_a_target_repo_validation_sample",
+    "policy_violations_present_in_imported_scorecards"
+  ],
+  "predictive_metrics": {
+    "brier": "not_applicable_underpowered",
+    "mae": "not_applicable_underpowered",
+    "negative_log_likelihood": "not_applicable_underpowered",
+    "residual_improvement": "not_applicable_underpowered",
+    "rmse": "not_applicable_underpowered"
+  },
+  "predictive_validity_established": false,
+  "repo_scores": {
+    "humanize": {
+      "compatible_cell_count": 8,
+      "fail_count": 5,
+      "non_scoreable_count": 0,
+      "observed_pass_rate": 0.375,
+      "pass_count": 3,
+      "policy_violation_count": 0
+    },
+    "toolz": {
+      "compatible_cell_count": 21,
+      "fail_count": 7,
+      "non_scoreable_count": 3,
+      "observed_pass_rate": 0.666667,
+      "pass_count": 14,
+      "policy_violation_count": 3
+    }
+  },
+  "schema_version": "barcarolle.phase1.weighted_score.v1",
+  "source_scorecard_cell_count": 62,
+  "stratum_scores": {
+    "by_module": {
+      "humanize": {
+        "__init__": {
+          "compatible_cell_count": 2,
+          "fail_count": 2,
+          "non_scoreable_count": 0,
+          "observed_pass_rate": 0.0,
+          "pass_count": 0,
+          "policy_violation_count": 0
+        },
+        "filesize": {
+          "compatible_cell_count": 2,
+          "fail_count": 1,
+          "non_scoreable_count": 0,
+          "observed_pass_rate": 0.5,
+          "pass_count": 1,
+          "policy_violation_count": 0
+        },
+        "i18n": {
+          "compatible_cell_count": 2,
+          "fail_count": 2,
+          "non_scoreable_count": 0,
+          "observed_pass_rate": 0.0,
+          "pass_count": 0,
+          "policy_violation_count": 0
+        },
+        "number": {
+          "compatible_cell_count": 4,
+          "fail_count": 2,
+          "non_scoreable_count": 0,
+          "observed_pass_rate": 0.5,
+          "pass_count": 2,
+          "policy_violation_count": 0
+        },
+        "time": {
+          "compatible_cell_count": 2,
+          "fail_count": 2,
+          "non_scoreable_count": 0,
+          "observed_pass_rate": 0.0,
+          "pass_count": 0,
+          "policy_violation_count": 0
+        }
+      },
+      "toolz": {
+        "functoolz": {
+          "compatible_cell_count": 17,
+          "fail_count": 3,
+          "non_scoreable_count": 3,
+          "observed_pass_rate": 0.823529,
+          "pass_count": 14,
+          "policy_violation_count": 3
+        },
+        "itertoolz": {
+          "compatible_cell_count": 4,
+          "fail_count": 4,
+          "non_scoreable_count": 0,
+          "observed_pass_rate": 0.0,
+          "pass_count": 0,
+          "policy_violation_count": 0
+        }
+      }
+    },
+    "by_split": {
+      "humanize": {
+        "B_real": {
+          "compatible_cell_count": 4,
+          "fail_count": 1,
+          "non_scoreable_count": 0,
+          "observed_pass_rate": 0.75,
+          "pass_count": 3,
+          "policy_violation_count": 0
+        },
+        "W_real": {
+          "compatible_cell_count": 4,
+          "fail_count": 4,
+          "non_scoreable_count": 0,
+          "observed_pass_rate": 0.0,
+          "pass_count": 0,
+          "policy_violation_count": 0
+        }
+      },
+      "toolz": {
+        "B_real": {
+          "compatible_cell_count": 12,
+          "fail_count": 1,
+          "non_scoreable_count": 0,
+          "observed_pass_rate": 0.916667,
+          "pass_count": 11,
+          "policy_violation_count": 0
+        },
+        "W_real": {
+          "compatible_cell_count": 9,
+          "fail_count": 6,
+          "non_scoreable_count": 3,
+          "observed_pass_rate": 0.333333,
+          "pass_count": 3,
+          "policy_violation_count": 3
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,417 @@
+{
+  "adapter_level_results_first": true,
+  "artifact": "three_repo_summary",
+  "by_adapter": {
+    "codex_workspace": {
+      "actual_provider_billed_cost_usd": null,
+      "adapter_id": "codex_workspace",
+      "b_eval_h_future_gap": {
+        "by_repo": {
+          "attrs": {
+            "B_eval_pass_rate": 0.7,
+            "H_future_minus_B_eval": -0.4,
+            "H_future_pass_rate": 0.3,
+            "absolute_gap": 0.4
+          },
+          "boltons": {
+            "B_eval_pass_rate": 0.0,
+            "H_future_minus_B_eval": 0.4,
+            "H_future_pass_rate": 0.4,
+            "absolute_gap": 0.4
+          },
+          "click": {
+            "B_eval_pass_rate": 0.1,
+            "H_future_minus_B_eval": 0.6,
+            "H_future_pass_rate": 0.7,
+            "absolute_gap": 0.6
+          }
+        },
+        "pooled": {
+          "B_eval_pass_rate": 0.2667,
+          "H_future_minus_B_eval": 0.2,
+          "H_future_pass_rate": 0.4667,
+          "absolute_gap": 0.2
+        }
+      },
+      "cell_count": 60,
+      "conservative_token_estimated_cost_usd": 30.0,
+      "cost_per_cell_usd": 0.53705,
+      "fail_count": 38,
+      "median_latency_seconds": 115.059,
+      "non_scoreable_count": 0,
+      "observed_token_estimated_cost_usd": 32.22309,
+      "pass_count": 22,
+      "pass_rate": 0.3667,
+      "pass_rate_by_repo": {
+        "attrs": {
+          "cell_count": 20,
+          "fail_count": 10,
+          "non_scoreable_count": 0,
+          "pass_count": 10,
+          "pass_rate": 0.5,
+          "policy_violation_count": 0,
+          "scoreable_count": 20,
+          "terminal_status_counts": {
+            "verified_fail": 10,
+            "verified_pass": 10
+          }
+        },
+        "boltons": {
+          "cell_count": 20,
+          "fail_count": 16,
+          "non_scoreable_count": 0,
+          "pass_count": 4,
+          "pass_rate": 0.2,
+          "policy_violation_count": 0,
+          "scoreable_count": 20,
+          "terminal_status_counts": {
+            "verified_fail": 16,
+            "verified_pass": 4
+          }
+        },
+        "click": {
+          "cell_count": 20,
+          "fail_count": 12,
+          "non_scoreable_count": 0,
+          "pass_count": 8,
+          "pass_rate": 0.4,
+          "policy_violation_count": 0,
+          "scoreable_count": 20,
+          "terminal_status_counts": {
+            "verified_fail": 12,
+            "verified_pass": 8
+          }
+        }
+      },
+      "pass_rate_by_repo_and_split": {
+        "attrs": {
+          "B_eval": {
+            "cell_count": 10,
+            "fail_count": 3,
+            "non_scoreable_count": 0,
+            "pass_count": 7,
+            "pass_rate": 0.7,
+            "policy_violation_count": 0,
+            "scoreable_count": 10,
+            "terminal_status_counts": {
+              "verified_fail": 3,
+              "verified_pass": 7
+            }
+          },
+          "H_future": {
+            "cell_count": 10,
+            "fail_count": 7,
+            "non_scoreable_count": 0,
+            "pass_count": 3,
+            "pass_rate": 0.3,
+            "policy_violation_count": 0,
+            "scoreable_count": 10,
+            "terminal_status_counts": {
+              "verified_fail": 7,
+              "verified_pass": 3
+            }
+          }
+        },
+        "boltons": {
+          "B_eval": {
+            "cell_count": 10,
+            "fail_count": 10,
+            "non_scoreable_count": 0,
+            "pass_count": 0,
+            "pass_rate": 0.0,
+            "policy_violation_count": 0,
+            "scoreable_count": 10,
+            "terminal_status_counts": {
+              "verified_fail": 10
+            }
+          },
+          "H_future": {
+            "cell_count": 10,
+            "fail_count": 6,
+            "non_scoreable_count": 0,
+            "pass_count": 4,
+            "pass_rate": 0.4,
+            "policy_violation_count": 0,
+            "scoreable_count": 10,
+            "terminal_status_counts": {
+              "verified_fail": 6,
+              "verified_pass": 4
+            }
+          }
+        },
+        "click": {
+          "B_eval": {
+            "cell_count": 10,
+            "fail_count": 9,
+            "non_scoreable_count": 0,
+            "pass_count": 1,
+            "pass_rate": 0.1,
+            "policy_violation_count": 0,
+            "scoreable_count": 10,
+            "terminal_status_counts": {
+              "verified_fail": 9,
+              "verified_pass": 1
+            }
+          },
+          "H_future": {
+            "cell_count": 10,
+            "fail_count": 3,
+            "non_scoreable_count": 0,
+            "pass_count": 7,
+            "pass_rate": 0.7,
+            "policy_violation_count": 0,
+            "scoreable_count": 10,
+            "terminal_status_counts": {
+              "verified_fail": 3,
+              "verified_pass": 7
+            }
+          }
+        }
+      },
+      "pass_rate_by_split": {
+        "B_eval": {
+          "cell_count": 30,
+          "fail_count": 22,
+          "non_scoreable_count": 0,
+          "pass_count": 8,
+          "pass_rate": 0.2667,
+          "policy_violation_count": 0,
+          "scoreable_count": 30,
+          "terminal_status_counts": {
+            "verified_fail": 22,
+            "verified_pass": 8
+          }
+        },
+        "H_future": {
+          "cell_count": 30,
+          "fail_count": 16,
+          "non_scoreable_count": 0,
+          "pass_count": 14,
+          "pass_rate": 0.4667,
+          "policy_violation_count": 0,
+          "scoreable_count": 30,
+          "terminal_status_counts": {
+            "verified_fail": 16,
+            "verified_pass": 14
+          }
+        }
+      },
+      "policy_violation_count": 0,
+      "provider_billed_cost_status": "unavailable",
+      "scoreable_count": 60,
+      "terminal_status_counts": {
+        "verified_fail": 38,
+        "verified_pass": 22
+      },
+      "usage_observed_rate": 1.0
+    },
+    "kilo_workspace": {
+      "actual_provider_billed_cost_usd": null,
+      "adapter_id": "kilo_workspace",
+      "b_eval_h_future_gap": {
+        "by_repo": {
+          "attrs": {
+            "B_eval_pass_rate": 0.7,
+            "H_future_minus_B_eval": -0.3,
+            "H_future_pass_rate": 0.4,
+            "absolute_gap": 0.3
+          },
+          "boltons": {
+            "B_eval_pass_rate": 0.3,
+            "H_future_minus_B_eval": 0.1,
+            "H_future_pass_rate": 0.4,
+            "absolute_gap": 0.1
+          },
+          "click": {
+            "B_eval_pass_rate": 0.6,
+            "H_future_minus_B_eval": 0.2,
+            "H_future_pass_rate": 0.8,
+            "absolute_gap": 0.2
+          }
+        },
+        "pooled": {
+          "B_eval_pass_rate": 0.5333,
+          "H_future_minus_B_eval": 0.0,
+          "H_future_pass_rate": 0.5333,
+          "absolute_gap": 0.0
+        }
+      },
+      "cell_count": 60,
+      "conservative_token_estimated_cost_usd": 30.0,
+      "cost_per_cell_usd": 0.3174,
+      "fail_count": 28,
+      "median_latency_seconds": 52.5495,
+      "non_scoreable_count": 0,
+      "observed_token_estimated_cost_usd": 19.044243,
+      "pass_count": 32,
+      "pass_rate": 0.5333,
+      "pass_rate_by_repo": {
+        "attrs": {
+          "cell_count": 20,
+          "fail_count": 9,
+          "non_scoreable_count": 0,
+          "pass_count": 11,
+          "pass_rate": 0.55,
+          "policy_violation_count": 0,
+          "scoreable_count": 20,
+          "terminal_status_counts": {
+            "verified_fail": 9,
+            "verified_pass": 11
+          }
+        },
+        "boltons": {
+          "cell_count": 20,
+          "fail_count": 13,
+          "non_scoreable_count": 0,
+          "pass_count": 7,
+          "pass_rate": 0.35,
+          "policy_violation_count": 0,
+          "scoreable_count": 20,
+          "terminal_status_counts": {
+            "verified_fail": 13,
+            "verified_pass": 7
+          }
+        },
+        "click": {
+          "cell_count": 20,
+          "fail_count": 6,
+          "non_scoreable_count": 0,
+          "pass_count": 14,
+          "pass_rate": 0.7,
+          "policy_violation_count": 0,
+          "scoreable_count": 20,
+          "terminal_status_counts": {
+            "verified_fail": 6,
+            "verified_pass": 14
+          }
+        }
+      },
+      "pass_rate_by_repo_and_split": {
+        "attrs": {
+          "B_eval": {
+            "cell_count": 10,
+            "fail_count": 3,
+            "non_scoreable_count": 0,
+            "pass_count": 7,
+            "pass_rate": 0.7,
+            "policy_violation_count": 0,
+            "scoreable_count": 10,
+            "terminal_status_counts": {
+              "verified_fail": 3,
+              "verified_pass": 7
+            }
+          },
+          "H_future": {
+            "cell_count": 10,
+            "fail_count": 6,
+            "non_scoreable_count": 0,
+            "pass_count": 4,
+            "pass_rate": 0.4,
+            "policy_violation_count": 0,
+            "scoreable_count": 10,
+            "terminal_status_counts": {
+              "verified_fail": 6,
+              "verified_pass": 4
+            }
+          }
+        },
+        "boltons": {
+          "B_eval": {
+            "cell_count": 10,
+            "fail_count": 7,
+            "non_scoreable_count": 0,
+            "pass_count": 3,
+            "pass_rate": 0.3,
+            "policy_violation_count": 0,
+            "scoreable_count": 10,
+            "terminal_status_counts": {
+              "verified_fail": 7,
+              "verified_pass": 3
+            }
+          },
+          "H_future": {
+            "cell_count": 10,
+            "fail_count": 6,
+            "non_scoreable_count": 0,
+            "pass_count": 4,
+            "pass_rate": 0.4,
+            "policy_violation_count": 0,
+            "scoreable_count": 10,
+            "terminal_status_counts": {
+              "verified_fail": 6,
+              "verified_pass": 4
+            }
+          }
+        },
+        "click": {
+          "B_eval": {
+            "cell_count": 10,
+            "fail_count": 4,
+            "non_scoreable_count": 0,
+            "pass_count": 6,
+            "pass_rate": 0.6,
+            "policy_violation_count": 0,
+            "scoreable_count": 10,
+            "terminal_status_counts": {
+              "verified_fail": 4,
+              "verified_pass": 6
+            }
+          },
+          "H_future": {
+            "cell_count": 10,
+            "fail_count": 2,
+            "non_scoreable_count": 0,
+            "pass_count": 8,
+            "pass_rate": 0.8,
+            "policy_violation_count": 0,
+            "scoreable_count": 10,
+            "terminal_status_counts": {
+              "verified_fail": 2,
+              "verified_pass": 8
+            }
+          }
+        }
+      },
+      "pass_rate_by_split": {
+        "B_eval": {
+          "cell_count": 30,
+          "fail_count": 14,
+          "non_scoreable_count": 0,
+          "pass_count": 16,
+          "pass_rate": 0.5333,
+          "policy_violation_count": 0,
+          "scoreable_count": 30,
+          "terminal_status_counts": {
+            "verified_fail": 14,
+            "verified_pass": 16
+          }
+        },
+        "H_future": {
+          "cell_count": 30,
+          "fail_count": 14,
+          "non_scoreable_count": 0,
+          "pass_count": 16,
+          "pass_rate": 0.5333,
+          "policy_violation_count": 0,
+          "scoreable_count": 30,
+          "terminal_status_counts": {
+            "verified_fail": 14,
+            "verified_pass": 16
+          }
+        }
+      },
+      "policy_violation_count": 0,
+      "provider_billed_cost_status": "unavailable",
+      "scoreable_count": 60,
+      "terminal_status_counts": {
+        "verified_fail": 28,
+        "verified_pass": 32
+      },
+      "usage_observed_rate": 1.0
+    }
+  },
+  "generated_at": "2026-05-28T11:41:29Z",
+  "pooled_summary_status": "retrospective_diagnostic_only",
+  "run_id": "phase1_adapter_stratified_reporting_20260528",
+  "schema_version": "barcarolle.phase1_adapter_stratified_reporting_output.v1"
+}

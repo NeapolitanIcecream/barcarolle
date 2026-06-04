@@ -1,0 +1,353 @@
+{
+  "allowed_feature_buckets": {
+    "ambiguity_risk_bucket": {
+      "low": 65,
+      "minor_risk": 30
+    },
+    "certification_risk_bucket": {
+      "technical_certified_release_eligible": 95
+    },
+    "coarse_task_family": {
+      "attrs:_funcs": 6,
+      "attrs:_make": 19,
+      "attrs:_next_gen": 3,
+      "attrs:validators": 2,
+      "boltons:cacheutils": 3,
+      "boltons:dictutils": 1,
+      "boltons:funcutils": 4,
+      "boltons:ioutils": 5,
+      "boltons:iterutils": 3,
+      "boltons:listutils": 1,
+      "boltons:mathutils": 1,
+      "boltons:queueutils": 1,
+      "boltons:setutils": 6,
+      "boltons:strutils": 3,
+      "boltons:tbutils": 5,
+      "boltons:timeutils": 1,
+      "boltons:urlutils": 1,
+      "click:_bashcomplete": 1,
+      "click:_termui_impl": 2,
+      "click:core": 15,
+      "click:shell_completion": 5,
+      "click:termui": 1,
+      "click:testing": 2,
+      "click:types": 4
+    },
+    "context_length_bucket": {
+      "medium": 3,
+      "short": 30,
+      "unknown": 62
+    },
+    "editable_scope_bucket": {
+      "multi_module": 8,
+      "project_wide": 1,
+      "single_module": 86
+    },
+    "leakage_risk_bucket": {
+      "low": 65,
+      "minor_risk": 30
+    },
+    "rare_or_unknown_feature_flag": {
+      "false": 94,
+      "true": 1
+    },
+    "source_context_type_bucket": {
+      "issue_or_pr": 65,
+      "title_only": 30
+    },
+    "source_quality_bucket": {
+      "clean": 65,
+      "minor_risk": 30
+    },
+    "statement_specificity_bucket": {
+      "acceptable": 92,
+      "specific": 3
+    },
+    "time_bucket": {
+      "legacy_2018_or_earlier": 28,
+      "middle_2019_2022": 38,
+      "recent_2023_or_later": 29
+    }
+  },
+  "allowed_feature_buckets_by_repo": {
+    "ambiguity_risk_bucket": {
+      "attrs": {
+        "low": 30
+      },
+      "boltons": {
+        "low": 35
+      },
+      "click": {
+        "minor_risk": 30
+      }
+    },
+    "certification_risk_bucket": {
+      "attrs": {
+        "technical_certified_release_eligible": 30
+      },
+      "boltons": {
+        "technical_certified_release_eligible": 35
+      },
+      "click": {
+        "technical_certified_release_eligible": 30
+      }
+    },
+    "coarse_task_family": {
+      "attrs": {
+        "attrs:_funcs": 6,
+        "attrs:_make": 19,
+        "attrs:_next_gen": 3,
+        "attrs:validators": 2
+      },
+      "boltons": {
+        "boltons:cacheutils": 3,
+        "boltons:dictutils": 1,
+        "boltons:funcutils": 4,
+        "boltons:ioutils": 5,
+        "boltons:iterutils": 3,
+        "boltons:listutils": 1,
+        "boltons:mathutils": 1,
+        "boltons:queueutils": 1,
+        "boltons:setutils": 6,
+        "boltons:strutils": 3,
+        "boltons:tbutils": 5,
+        "boltons:timeutils": 1,
+        "boltons:urlutils": 1
+      },
+      "click": {
+        "click:_bashcomplete": 1,
+        "click:_termui_impl": 2,
+        "click:core": 15,
+        "click:shell_completion": 5,
+        "click:termui": 1,
+        "click:testing": 2,
+        "click:types": 4
+      }
+    },
+    "context_length_bucket": {
+      "attrs": {
+        "medium": 3,
+        "unknown": 27
+      },
+      "boltons": {
+        "unknown": 35
+      },
+      "click": {
+        "short": 30
+      }
+    },
+    "editable_scope_bucket": {
+      "attrs": {
+        "multi_module": 2,
+        "single_module": 28
+      },
+      "boltons": {
+        "single_module": 35
+      },
+      "click": {
+        "multi_module": 6,
+        "project_wide": 1,
+        "single_module": 23
+      }
+    },
+    "leakage_risk_bucket": {
+      "attrs": {
+        "low": 30
+      },
+      "boltons": {
+        "low": 35
+      },
+      "click": {
+        "minor_risk": 30
+      }
+    },
+    "rare_or_unknown_feature_flag": {
+      "attrs": {
+        "false": 30
+      },
+      "boltons": {
+        "false": 35
+      },
+      "click": {
+        "false": 29,
+        "true": 1
+      }
+    },
+    "source_context_type_bucket": {
+      "attrs": {
+        "issue_or_pr": 30
+      },
+      "boltons": {
+        "issue_or_pr": 35
+      },
+      "click": {
+        "title_only": 30
+      }
+    },
+    "source_quality_bucket": {
+      "attrs": {
+        "clean": 30
+      },
+      "boltons": {
+        "clean": 35
+      },
+      "click": {
+        "minor_risk": 30
+      }
+    },
+    "statement_specificity_bucket": {
+      "attrs": {
+        "acceptable": 27,
+        "specific": 3
+      },
+      "boltons": {
+        "acceptable": 35
+      },
+      "click": {
+        "acceptable": 30
+      }
+    },
+    "time_bucket": {
+      "attrs": {
+        "legacy_2018_or_earlier": 4,
+        "middle_2019_2022": 26
+      },
+      "boltons": {
+        "legacy_2018_or_earlier": 24,
+        "middle_2019_2022": 8,
+        "recent_2023_or_later": 3
+      },
+      "click": {
+        "middle_2019_2022": 4,
+        "recent_2023_or_later": 26
+      }
+    }
+  },
+  "artifact": "block_schema",
+  "blocking_features_in_priority_order": [
+    "source_quality_bucket",
+    "source_context_type_bucket",
+    "coarse_task_family",
+    "time_bucket",
+    "editable_scope_bucket"
+  ],
+  "blocking_scope": "within_repo_first",
+  "budget_feasibility": {
+    "expanded_30_per_repo": {
+      "B_eval_tasks_per_repo": 15,
+      "H_future_tasks_per_repo": 15,
+      "feasible": true,
+      "infeasible_repos": {},
+      "tasks_per_repo": 30,
+      "total_tasks": 90
+    },
+    "same_budget_20_per_repo": {
+      "B_eval_tasks_per_repo": 10,
+      "H_future_tasks_per_repo": 10,
+      "feasible": true,
+      "infeasible_repos": {},
+      "tasks_per_repo": 20,
+      "total_tasks": 60
+    }
+  },
+  "click_minor_risk_caveat": {
+    "all_click_source_context_title_only": true,
+    "all_click_source_quality_minor_risk": true,
+    "claim_boundary": "click tasks are eligible for split design but retain title-only minor-risk source context",
+    "click_candidate_count": 30
+  },
+  "click_minor_risk_caveat_required": true,
+  "default_block_size": 2,
+  "deterministic_order": {
+    "candidate_seed_count": 100,
+    "seed_material": [
+      "phase1_blocked_split_redesign_20260529_visible_feature_seed_family",
+      2026052900
+    ],
+    "task_order": "repo_order_then_task_id"
+  },
+  "forbidden_selection_inputs": [
+    "score_table",
+    "paid_validation_metrics",
+    "paid_validation_decision",
+    "result_diagnostics",
+    "adapter_stratified",
+    "cost_summary",
+    "cost_reconciliation",
+    "workspace_usage_ledger"
+  ],
+  "gate_thresholds": {
+    "blocked_source_quality_selected": 0,
+    "coarse_family_abs_diff_per_repo": 2,
+    "editable_scope_abs_diff_per_repo": 2,
+    "rare_or_unknown_abs_diff_per_repo": 1,
+    "statement_specificity_abs_diff_per_repo": 2,
+    "time_bucket_abs_diff_per_repo": 2
+  },
+  "generated_at": "2026-05-29T02:00:22Z",
+  "hard_constraints": {
+    "blocked_source_quality_selected": "prohibited",
+    "diagnostic_only_source_quality_selected": "prohibited",
+    "duplicate_task_ids": "prohibited",
+    "missing_selected_seed": "prohibited",
+    "non_eligible_task_selected": "prohibited",
+    "outcome_fields_loaded_before_freeze": "prohibited",
+    "repo_count_balance": "exact",
+    "split_count_per_repo": "exact",
+    "unstable_deterministic_order": "prohibited"
+  },
+  "input_paths_loaded": [
+    "experiments/phase1_compiler/configs/phase1_blocked_split_redesign.yaml",
+    "experiments/phase1_compiler/results/phase1_blocked_split_redesign_candidate_universe.json"
+  ],
+  "outcome_fields_loaded": false,
+  "outcome_input_paths_loaded": [],
+  "repo_strata": [
+    "attrs",
+    "boltons",
+    "click"
+  ],
+  "retrospective_policy": {
+    "adapter_level_diagnostics_remain_separate": true,
+    "diagnostics_do_not_choose_split": true,
+    "missing_outcomes_are_not_imputed": true,
+    "pooled_diagnostics_are_secondary": true,
+    "predictive_validity_remains_false": true
+  },
+  "run_id": "phase1_blocked_split_redesign_20260529",
+  "schema_version": "barcarolle.phase1_blocked_split_redesign_output.v1",
+  "selection_policy": {
+    "use_adapter_outcomes": false,
+    "use_hidden_verifier_labels": false,
+    "use_pass_fail_outcomes": false,
+    "use_post_hoc_manual_preference_after_outcomes": false,
+    "use_raw_prompts_or_completions": false,
+    "use_raw_solver_traces": false,
+    "use_target_reference_diffs": false
+  },
+  "soft_penalty_weights": {
+    "coarse_task_family": 5,
+    "context_length_bucket": 1,
+    "editable_scope_bucket": 3,
+    "rare_or_unknown_feature_flag": 5,
+    "statement_specificity_bucket": 2,
+    "time_bucket": 4
+  },
+  "split_labels": [
+    "B_eval",
+    "H_future"
+  ],
+  "visible_features_allowed_for_selection": [
+    "source_context_type_bucket",
+    "source_quality_bucket",
+    "statement_specificity_bucket",
+    "context_length_bucket",
+    "editable_scope_bucket",
+    "ambiguity_risk_bucket",
+    "leakage_risk_bucket",
+    "certification_risk_bucket",
+    "coarse_task_family",
+    "time_bucket",
+    "rare_or_unknown_feature_flag"
+  ]
+}

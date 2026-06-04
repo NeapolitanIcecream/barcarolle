@@ -1,0 +1,13 @@
+feature_family,feature_value,target_fraction,generic_fraction,absolute_gap,interpretation
+module_or_package,core,0.000,0.412,0.412,material_at_phase0_scope
+module_or_package,functoolz,0.346,0.000,0.346,material_at_phase0_scope
+module_or_package,missing,0.000,0.294,0.294,material_at_phase0_scope
+module_or_package,types,0.000,0.176,0.176,material_at_phase0_scope
+task_type_proxy,behavior_or_maintenance,0.360,0.929,0.569,material_at_phase0_scope
+task_type_proxy,feature_or_api_extension,0.280,0.000,0.280,material_at_phase0_scope
+test_file_count,1,0.720,0.357,0.363,material_at_phase0_scope
+test_file_count,2,0.160,0.500,0.340,material_at_phase0_scope
+change_size_bucket,m_81_200,0.180,0.000,0.180,material_at_phase0_scope
+change_size_bucket,missing:numstat_not_in_archive,0.000,1.000,1.000,material_at_phase0_scope
+change_size_bucket,s_21_80,0.400,0.000,0.400,material_at_phase0_scope
+change_size_bucket,xs_0_20,0.320,0.000,0.320,material_at_phase0_scope

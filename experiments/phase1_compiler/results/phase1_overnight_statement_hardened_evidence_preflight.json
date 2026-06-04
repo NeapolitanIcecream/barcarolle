@@ -1,0 +1,275 @@
+{
+  "analysis_schema": "preflight.v1",
+  "checks": {
+    "followup_runbook_written_by_worker": true,
+    "generated_statement_is_scoreable_result": true,
+    "old_paid_result_repaired": true,
+    "paid_decision": true,
+    "planned_cells": true,
+    "policy_violation_count": true,
+    "release_paid_acut_calls_made": true,
+    "release_paid_llm_calls_made": true,
+    "required_inputs_exist": true,
+    "scoreable_cells": true
+  },
+  "closeout": {
+    "followup_runbook_written_by_worker": false,
+    "integrity_audit_status": "pass",
+    "new_paid_acut_calls_made": false,
+    "new_paid_llm_calls_made": false,
+    "primary_decision": "design_new_predictive_threshold_before_more_paid_validation",
+    "raw_artifacts_committed": false,
+    "steps_completed": [
+      "0",
+      "1",
+      "2",
+      "3",
+      "4",
+      "5",
+      "6",
+      "7",
+      "8",
+      "9",
+      "10"
+    ]
+  },
+  "commit_history": [
+    "7ced9b34 Record overnight statement-hardened analysis preflight",
+    "ef472860 Audit statement-hardened paid result integrity",
+    "8bb65216 Build statement-hardened task outcome matrix",
+    "4bc4f3ea Classify statement-hardened paid failures",
+    "bab9bdcd Analyze statement-hardened result strata",
+    "866d238a Analyze predictive threshold and power",
+    "cd2d5c29 Rank compiler calibration options",
+    "8a1be614 Assess local supply for statement-hardened expansion",
+    "06f4a398 Write proposal alignment memo for paid evidence",
+    "b9cf6e2d Decide next action from statement-hardened evidence"
+  ],
+  "environment": {
+    "branch": "codex/restart-benchmark-compiler",
+    "date_utc": "2026-05-25T14:49:38Z",
+    "git_status_short_branch": "## codex/restart-benchmark-compiler...origin/codex/restart-benchmark-compiler [ahead 255]\n?? docs/experiments/phase-1-overnight-statement-hardened-evidence-analysis-runbook.md\n?? experiments/phase1_compiler/configs/phase1_overnight_statement_hardened_evidence_analysis.yaml\n?? experiments/phase1_compiler/tests/test_phase1_overnight_statement_hardened_evidence_analysis.py\n?? experiments/phase1_compiler/tools/phase1_overnight_statement_hardened_evidence_analysis.py",
+    "head": "f74fcc423db4e0be7973fbd2808b2a3c4b44f74d",
+    "python_version": "Python 3.11.13",
+    "uv_project_python_version": "Python 3.11.13",
+    "uv_version": "uv 0.11.16 (Homebrew 2026-05-21 aarch64-apple-darwin)"
+  },
+  "generated_at": "2026-05-25T14:49:38Z",
+  "input_artifact_digests": {
+    "experiments/phase0_headroom/results/phase1_statement_hardened_after_canonical_repair_attrs_b_eval_metrics.json": "sha256:8d66b047a71c9dc69ec13b90372dc44e68db195e853f86602efdc34c8714dcd1",
+    "experiments/phase0_headroom/results/phase1_statement_hardened_after_canonical_repair_attrs_b_eval_score_table.csv": "sha256:8209283f93bb8c1433e049ca173055c9e5964e3feddbbf26b42b5b02e4030102",
+    "experiments/phase0_headroom/results/phase1_statement_hardened_after_canonical_repair_attrs_h_future_metrics.json": "sha256:9590ba5c20dbe227d8cbbd3e3ebba225bdd518d052287d549e1ec8481e52e5bc",
+    "experiments/phase0_headroom/results/phase1_statement_hardened_after_canonical_repair_attrs_h_future_score_table.csv": "sha256:87eca29a3f7481a2cb31554d8c3867c6a76a1ae79e5a3edb5f42cfa885076baa",
+    "experiments/phase0_headroom/results/phase1_statement_hardened_after_canonical_repair_boltons_b_eval_metrics.json": "sha256:f09f62b7c2b55790ec9b3a15d581ffeec3ccd5b8b264122c2dfbe4790265fdde",
+    "experiments/phase0_headroom/results/phase1_statement_hardened_after_canonical_repair_boltons_b_eval_score_table.csv": "sha256:d0f9712a781a67f5c3a28b06783075703a84c56be30a8d89c0006ead74a5da6c",
+    "experiments/phase0_headroom/results/phase1_statement_hardened_after_canonical_repair_boltons_h_future_metrics.json": "sha256:bd5c92c12a476b687e6df9079d32b1b294553e59e9a601136178e59f99b85400",
+    "experiments/phase0_headroom/results/phase1_statement_hardened_after_canonical_repair_boltons_h_future_score_table.csv": "sha256:dbecd60984ee8c4ecab7c61618dfb1d98c0e5cee0647ad104ce06f5fcd8b73f3",
+    "experiments/phase0_headroom/results/workspace_cost_reconciliation.json": "sha256:1a8b60799e4c45d892a733776461f6bb03b924e27c21756c74e25cca2aff714a",
+    "experiments/phase0_headroom/results/workspace_usage_ledger.jsonl": "sha256:86a9d68f3a7cbdf4bc5f1b2eba6325da9510a69d5434fdad4611fb7d238d19a0",
+    "experiments/phase1_compiler/reports/phase1_statement_hardened_after_canonical_repair_paid_process.md": "sha256:1deb5dd798e9ece7a09d4cf48fc2e294351ffb16c454827c2c687bbcee9de344",
+    "experiments/phase1_compiler/results/phase1_statement_hardened_after_canonical_repair_inventory.json": "sha256:c02a5643f12e464b076fc4a9f1a47e2f72478b0c3cdcbc3e991e9e3f206a60f3",
+    "experiments/phase1_compiler/results/phase1_statement_hardened_after_canonical_repair_paid_decision.json": "sha256:3dd44feae2955c41ef820ae7dfb247564b90d1b253e19f28b340f7ac4b719893",
+    "experiments/phase1_compiler/results/phase1_statement_hardened_after_canonical_repair_paid_metrics.json": "sha256:edc87929175b3f247b06d3eddcdd80f9b3d873b9b3fef4030b4c72a7249c72af",
+    "experiments/phase1_compiler/results/phase1_statement_hardened_after_canonical_repair_paid_tooling_check.json": "sha256:f156260ec56011ff5f071dcc019330ad4ee446ca3f31b20aaa64547f246b2200",
+    "experiments/phase1_compiler/results/phase1_statement_hardened_after_canonical_repair_preregistration.json": "sha256:413270868eb6ea0f13f0ffa9f32a85c9870d71c30d20650e6a9e5847e8fb185e",
+    "experiments/phase1_compiler/results/phase1_statement_hardened_after_canonical_repair_release_manifest.json": "sha256:ce38a3cac154feffaa5137871999f9ff2ebaea0198e92b5ef00f2a1482dae8d0",
+    "experiments/phase1_compiler/results/phase1_statement_hardened_after_canonical_repair_release_preview.json": "sha256:9f7b7d9eba5f9a87257d604f7aa5844ae01b89af01927b89806e42f9dae1391d",
+    "experiments/phase1_compiler/results/phase1_statement_hardened_after_canonical_repair_screen.json": "sha256:9e84ff93f42fa48b226e6fd211f38ee137a1e5bb4af8cd0c9aaad9b78b0965ed"
+  },
+  "missing_required_inputs": [],
+  "new_paid_acut_calls_allowed": false,
+  "new_paid_llm_calls_allowed": false,
+  "predictive_validity_established": false,
+  "release_id": "statement_hardened_after_canonical_split_repair_20260525",
+  "runbook_path": "docs/experiments/phase-1-overnight-statement-hardened-evidence-analysis-runbook.md",
+  "schema_version": "barcarolle.phase1_overnight_statement_hardened_evidence_analysis_output.v1",
+  "status": "completed",
+  "verification_commands": [
+    {
+      "args": [
+        "git",
+        "diff",
+        "--check"
+      ],
+      "duration_seconds": 0.021,
+      "name": "git diff --check",
+      "returncode": 0,
+      "status": "pass",
+      "stderr_tail": "",
+      "stdout_tail": ""
+    },
+    {
+      "args": [
+        "uv",
+        "run",
+        "--project",
+        "experiments/phase1_compiler",
+        "pytest",
+        "-q",
+        "experiments/phase1_compiler/tests/test_phase1_overnight_statement_hardened_evidence_analysis.py"
+      ],
+      "duration_seconds": 0.12,
+      "name": "overnight evidence tests",
+      "returncode": 0,
+      "status": "pass",
+      "stderr_tail": "",
+      "stdout_tail": ".....                                                                    [100%]\n5 passed in 0.03s"
+    },
+    {
+      "args": [
+        "uv",
+        "run",
+        "--project",
+        "experiments/phase1_compiler",
+        "pytest",
+        "-q",
+        "experiments/phase1_compiler/tests/test_phase1_statement_hardened_after_canonical_repair_paid_validation.py",
+        "experiments/phase1_compiler/tests/test_phase1_statement_hardened_after_canonical_repair_preregistration.py",
+        "experiments/phase1_compiler/tests/test_phase1_canonical_split_statement_repair.py"
+      ],
+      "duration_seconds": 0.195,
+      "name": "paid validation regression tests",
+      "returncode": 0,
+      "status": "pass",
+      "stderr_tail": "",
+      "stdout_tail": ".......................                                                  [100%]\n23 passed in 0.03s"
+    },
+    {
+      "args": [
+        "uv",
+        "run",
+        "--project",
+        "experiments/phase1_compiler",
+        "pytest",
+        "-q",
+        "experiments/phase1_compiler/tests/test_phase1_diff_assisted_codex_loop_statement_regeneration.py"
+      ],
+      "duration_seconds": 0.512,
+      "name": "diff assisted codex loop regression tests",
+      "returncode": 0,
+      "status": "pass",
+      "stderr_tail": "",
+      "stdout_tail": ".........                                                                [100%]\n9 passed in 0.42s"
+    }
+  ],
+  "work_queue": [
+    {
+      "blockers": [],
+      "commit_target": "Record overnight statement-hardened analysis preflight",
+      "outputs": [],
+      "status": "completed",
+      "step": "0",
+      "updated_at": "2026-05-25T14:49:38Z"
+    },
+    {
+      "blockers": [],
+      "commit_target": "Audit statement-hardened paid result integrity",
+      "outputs": [
+        "experiments/phase1_compiler/results/phase1_overnight_statement_hardened_integrity_audit.json",
+        "experiments/phase1_compiler/reports/phase1_overnight_statement_hardened_integrity_audit.md"
+      ],
+      "status": "completed",
+      "step": "1",
+      "updated_at": "2026-05-25T14:50:28Z"
+    },
+    {
+      "blockers": [],
+      "commit_target": "Build statement-hardened task outcome matrix",
+      "outputs": [
+        "experiments/phase1_compiler/results/phase1_overnight_statement_hardened_task_outcome_matrix.json",
+        "experiments/phase1_compiler/reports/phase1_overnight_statement_hardened_task_outcome_matrix.md"
+      ],
+      "status": "completed",
+      "step": "2",
+      "updated_at": "2026-05-25T14:50:50Z"
+    },
+    {
+      "blockers": [],
+      "commit_target": "Classify statement-hardened paid failures",
+      "outputs": [
+        "experiments/phase1_compiler/results/phase1_overnight_statement_hardened_failure_taxonomy.json",
+        "experiments/phase1_compiler/reports/phase1_overnight_statement_hardened_failure_taxonomy.md"
+      ],
+      "status": "completed",
+      "step": "3",
+      "updated_at": "2026-05-25T14:51:09Z"
+    },
+    {
+      "blockers": [],
+      "commit_target": "Analyze statement-hardened result strata",
+      "outputs": [
+        "experiments/phase1_compiler/results/phase1_overnight_statement_hardened_strata_analysis.json",
+        "experiments/phase1_compiler/reports/phase1_overnight_statement_hardened_strata_analysis.md"
+      ],
+      "status": "completed",
+      "step": "4",
+      "updated_at": "2026-05-25T14:51:51Z"
+    },
+    {
+      "blockers": [],
+      "commit_target": "Analyze predictive threshold and power",
+      "outputs": [
+        "experiments/phase1_compiler/results/phase1_overnight_statement_hardened_threshold_analysis.json",
+        "experiments/phase1_compiler/reports/phase1_overnight_statement_hardened_threshold_analysis.md",
+        "experiments/phase1_compiler/results/phase1_overnight_statement_hardened_power_analysis.json",
+        "experiments/phase1_compiler/reports/phase1_overnight_statement_hardened_power_analysis.md"
+      ],
+      "status": "completed",
+      "step": "5",
+      "updated_at": "2026-05-25T14:52:13Z"
+    },
+    {
+      "blockers": [],
+      "commit_target": "Rank compiler calibration options",
+      "outputs": [
+        "experiments/phase1_compiler/results/phase1_overnight_statement_hardened_calibration_options.json",
+        "experiments/phase1_compiler/reports/phase1_overnight_statement_hardened_calibration_options.md"
+      ],
+      "status": "completed",
+      "step": "6",
+      "updated_at": "2026-05-25T14:52:39Z"
+    },
+    {
+      "blockers": [],
+      "commit_target": "Assess local supply for statement-hardened expansion",
+      "outputs": [
+        "experiments/phase1_compiler/results/phase1_overnight_statement_hardened_local_supply_analysis.json",
+        "experiments/phase1_compiler/reports/phase1_overnight_statement_hardened_local_supply_analysis.md"
+      ],
+      "status": "completed",
+      "step": "7",
+      "updated_at": "2026-05-25T14:53:02Z"
+    },
+    {
+      "blockers": [],
+      "commit_target": "Write proposal alignment memo for paid evidence",
+      "outputs": [
+        "experiments/phase1_compiler/reports/phase1_overnight_statement_hardened_proposal_alignment.md"
+      ],
+      "status": "completed",
+      "step": "8",
+      "updated_at": "2026-05-25T14:53:24Z"
+    },
+    {
+      "blockers": [],
+      "commit_target": "Decide next action from statement-hardened evidence",
+      "outputs": [
+        "experiments/phase1_compiler/results/phase1_overnight_statement_hardened_next_action_decision.json",
+        "experiments/phase1_compiler/reports/phase1_overnight_statement_hardened_next_action_decision.md"
+      ],
+      "status": "completed",
+      "step": "9",
+      "updated_at": "2026-05-25T14:53:47Z"
+    },
+    {
+      "blockers": [],
+      "commit_target": "Record overnight statement-hardened analysis closeout",
+      "outputs": [
+        "experiments/phase1_compiler/reports/phase1_overnight_statement_hardened_evidence_process.md"
+      ],
+      "status": "completed",
+      "step": "10",
+      "updated_at": "2026-05-25T14:54:50Z"
+    }
+  ]
+}

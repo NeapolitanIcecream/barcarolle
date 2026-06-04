@@ -1,0 +1,296 @@
+{
+  "artifact": "fallback_share",
+  "boundary": {
+    "external_review_allowed_by_config": false,
+    "external_reviewer_calls_run": false,
+    "new_paid_acut_cells_run": false,
+    "new_paid_llm_calls_run": false,
+    "paid_calls_allowed_by_config": false,
+    "paid_validation_authorized": false,
+    "predictive_validity_established": false,
+    "public_citation_browsing_allowed_by_config": false,
+    "public_citation_browsing_run": false,
+    "score_tables_changed": false,
+    "task_ids_or_split_labels_changed": false
+  },
+  "candidate_policy_object": "coverage_constrained_unweighted_v1_with_labeled_fallbacks",
+  "claim_label": "needs_M4_protocol_decision",
+  "coverage_gap_counts_by_repo_feature": [
+    {
+      "feature": "coarse_task_family",
+      "gap_value_count": 7,
+      "repo": "boltons"
+    },
+    {
+      "feature": "coarse_task_family",
+      "gap_value_count": 2,
+      "repo": "click"
+    }
+  ],
+  "fallback_by_repo": {
+    "attrs": {
+      "fallback_applied": false,
+      "fallback_design": null,
+      "fallback_reason": null,
+      "supported_feature_dimensions": [
+        "coarse_task_family",
+        "time_bucket",
+        "editable_scope_bucket",
+        "statement_specificity_bucket",
+        "context_length_bucket"
+      ]
+    },
+    "boltons": {
+      "fallback_applied": true,
+      "fallback_design": "repo_stratified_by_target_profile",
+      "fallback_reason": "insufficient_feature_support",
+      "supported_feature_dimensions": [
+        "coarse_task_family",
+        "time_bucket"
+      ]
+    },
+    "click": {
+      "fallback_applied": false,
+      "fallback_design": null,
+      "fallback_reason": null,
+      "supported_feature_dimensions": [
+        "coarse_task_family",
+        "time_bucket",
+        "editable_scope_bucket"
+      ]
+    }
+  },
+  "fallback_selected_count_by_repo": {
+    "attrs": 0,
+    "boltons": 6,
+    "click": 0
+  },
+  "fallback_share_by_repo": {
+    "attrs": 0.0,
+    "boltons": 1.0,
+    "click": 0.0
+  },
+  "fallback_share_overall": 0.3333,
+  "fallback_task_slots": [
+    {
+      "fallback_design": null,
+      "fallback_reason": null,
+      "fallback_selected": false,
+      "repo": "attrs",
+      "selection_order": 1,
+      "task_id": "attrs__v2__196"
+    },
+    {
+      "fallback_design": null,
+      "fallback_reason": null,
+      "fallback_selected": false,
+      "repo": "attrs",
+      "selection_order": 2,
+      "task_id": "attrs__v2__218"
+    },
+    {
+      "fallback_design": null,
+      "fallback_reason": null,
+      "fallback_selected": false,
+      "repo": "attrs",
+      "selection_order": 3,
+      "task_id": "attrs__v2__264"
+    },
+    {
+      "fallback_design": null,
+      "fallback_reason": null,
+      "fallback_selected": false,
+      "repo": "attrs",
+      "selection_order": 4,
+      "task_id": "attrs__v2__044"
+    },
+    {
+      "fallback_design": null,
+      "fallback_reason": null,
+      "fallback_selected": false,
+      "repo": "attrs",
+      "selection_order": 5,
+      "task_id": "attrs__v2__211"
+    },
+    {
+      "fallback_design": null,
+      "fallback_reason": null,
+      "fallback_selected": false,
+      "repo": "attrs",
+      "selection_order": 6,
+      "task_id": "attrs__v2__275"
+    },
+    {
+      "fallback_design": "repo_stratified_by_target_profile",
+      "fallback_reason": "insufficient_feature_support",
+      "fallback_selected": true,
+      "repo": "boltons",
+      "selection_order": 1,
+      "task_id": "boltons__v2__142"
+    },
+    {
+      "fallback_design": "repo_stratified_by_target_profile",
+      "fallback_reason": "insufficient_feature_support",
+      "fallback_selected": true,
+      "repo": "boltons",
+      "selection_order": 2,
+      "task_id": "boltons__v2__163"
+    },
+    {
+      "fallback_design": "repo_stratified_by_target_profile",
+      "fallback_reason": "insufficient_feature_support",
+      "fallback_selected": true,
+      "repo": "boltons",
+      "selection_order": 3,
+      "task_id": "boltons__v2__095"
+    },
+    {
+      "fallback_design": "repo_stratified_by_target_profile",
+      "fallback_reason": "insufficient_feature_support",
+      "fallback_selected": true,
+      "repo": "boltons",
+      "selection_order": 4,
+      "task_id": "boltons__v2__009"
+    },
+    {
+      "fallback_design": "repo_stratified_by_target_profile",
+      "fallback_reason": "insufficient_feature_support",
+      "fallback_selected": true,
+      "repo": "boltons",
+      "selection_order": 5,
+      "task_id": "boltons__v2__133"
+    },
+    {
+      "fallback_design": "repo_stratified_by_target_profile",
+      "fallback_reason": "insufficient_feature_support",
+      "fallback_selected": true,
+      "repo": "boltons",
+      "selection_order": 6,
+      "task_id": "boltons__v2__232"
+    },
+    {
+      "fallback_design": null,
+      "fallback_reason": null,
+      "fallback_selected": false,
+      "repo": "click",
+      "selection_order": 1,
+      "task_id": "click__third__214"
+    },
+    {
+      "fallback_design": null,
+      "fallback_reason": null,
+      "fallback_selected": false,
+      "repo": "click",
+      "selection_order": 2,
+      "task_id": "click__third__091"
+    },
+    {
+      "fallback_design": null,
+      "fallback_reason": null,
+      "fallback_selected": false,
+      "repo": "click",
+      "selection_order": 3,
+      "task_id": "click__third__238"
+    },
+    {
+      "fallback_design": null,
+      "fallback_reason": null,
+      "fallback_selected": false,
+      "repo": "click",
+      "selection_order": 4,
+      "task_id": "click__third__197"
+    },
+    {
+      "fallback_design": null,
+      "fallback_reason": null,
+      "fallback_selected": false,
+      "repo": "click",
+      "selection_order": 5,
+      "task_id": "click__third__200"
+    },
+    {
+      "fallback_design": null,
+      "fallback_reason": null,
+      "fallback_selected": false,
+      "repo": "click",
+      "selection_order": 6,
+      "task_id": "click__third__275"
+    }
+  ],
+  "fallback_threshold_set_by_M3": false,
+  "generated_at": "2026-06-01T04:41:33Z",
+  "including_excluding_fallback_repo_sensitivity": {
+    "excluding_fallback_repos": {
+      "best_deterministic_baseline": {
+        "MAE": 0.2362,
+        "RMSE": 0.2942,
+        "baseline_id": "repo_stratified_by_target_profile",
+        "catastrophic_miss_rate": 0.5833,
+        "mean_signed_error": -0.051,
+        "non_scoreable_count": 24,
+        "slice_count": 12
+      },
+      "candidate": {
+        "MAE": 0.233,
+        "RMSE": 0.293,
+        "catastrophic_miss_rate": 0.5833,
+        "mean_signed_error": -0.0593,
+        "non_scoreable_count": 25,
+        "slice_count": 12
+      },
+      "candidate_delta_vs_best_deterministic_MAE": -0.0032,
+      "relation": "candidate_better"
+    },
+    "fallback_repos_only": {
+      "best_deterministic_baseline": {
+        "MAE": 0.1472,
+        "RMSE": 0.1623,
+        "baseline_id": "temporal_recent_baseline",
+        "catastrophic_miss_rate": 0.3333,
+        "mean_signed_error": 0.0028,
+        "non_scoreable_count": 6,
+        "slice_count": 6
+      },
+      "candidate": {
+        "MAE": 0.1611,
+        "RMSE": 0.1713,
+        "catastrophic_miss_rate": 0.5,
+        "mean_signed_error": -0.0111,
+        "non_scoreable_count": 6,
+        "slice_count": 6
+      },
+      "candidate_delta_vs_best_deterministic_MAE": 0.0139,
+      "relation": "candidate_worse"
+    },
+    "including_all_repos": {
+      "best_deterministic_baseline": {
+        "MAE": 0.2149,
+        "RMSE": 0.2579,
+        "baseline_id": "temporal_recent_baseline",
+        "catastrophic_miss_rate": 0.5556,
+        "mean_signed_error": -0.0618,
+        "non_scoreable_count": 35,
+        "slice_count": 18
+      },
+      "candidate": {
+        "MAE": 0.209,
+        "RMSE": 0.2589,
+        "catastrophic_miss_rate": 0.5556,
+        "mean_signed_error": -0.0433,
+        "non_scoreable_count": 31,
+        "slice_count": 18
+      },
+      "candidate_delta_vs_best_deterministic_MAE": -0.0059,
+      "relation": "candidate_better"
+    },
+    "scope_note": "Diagnostic only: retrospective score comparison uses the comparable coverage_constrained_unweighted design, while fallback facts come from the frozen v1 policy manifest."
+  },
+  "policy_manifest_id": "coverage_constrained_unweighted_v1",
+  "run_id": "phase1_proposal_evidence_package_20260601",
+  "schema_version": "barcarolle.phase1_proposal_evidence_package_output.v1",
+  "selected_count_by_repo": {
+    "attrs": 6,
+    "boltons": 6,
+    "click": 6
+  }
+}

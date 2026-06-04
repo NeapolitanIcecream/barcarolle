@@ -1,0 +1,51 @@
+{
+  "artifact": "invalid_output_triage",
+  "classification": "adapter_output_contract_violation",
+  "exact_cause_limitation": "Raw solver output was not read, so the sanitized row cannot distinguish no-diff from unparseable-diff details.",
+  "generated_at": "2026-05-29T08:08:23Z",
+  "invalid_cell": {
+    "adapter_id": "codex_workspace",
+    "repo": "attrs",
+    "sanitized_row": {
+      "adapter_id": "codex_workspace",
+      "agent_failure": "False",
+      "cell_source": "new_missing_cell_paid_run",
+      "harness_error": "True",
+      "harness_name": "codex",
+      "model_or_agent_name": "gpt-5.4-mini",
+      "scoreable_cell": false,
+      "split": "B_eval",
+      "submission_status": "invalid_output",
+      "task_id": "attrs__v2__157",
+      "terminal_status": "invalid_output",
+      "verifier_exit_code": ""
+    },
+    "score_table": "experiments/phase0_headroom/results/phase1_blocked_split_missing_cell_supplement_paid_execution_batch_1_smoke_codex_workspace_score_table.csv",
+    "split": "B_eval",
+    "task_id": "attrs__v2__157"
+  },
+  "other_invalid_or_non_scoreable_patterns": [],
+  "recommended_actions": [
+    "improve_sanitized_invalid_output_logging",
+    "investigate_codex_attrs_invalid_output_contract_no_paid",
+    "paid_rerun_only_if_benchmark_bug_confirmed"
+  ],
+  "run_id": "phase1_blocked_split_supplement_fairness_gap_diagnostics_20260529",
+  "same_task_other_adapter": [
+    {
+      "adapter_id": "kilo_workspace",
+      "score_table": "experiments/phase0_headroom/results/phase1_blocked_split_missing_cell_supplement_paid_execution_batch_1_smoke_kilo_workspace_score_table.csv",
+      "scoreable_cell": true,
+      "submission_status": "submitted",
+      "terminal_status": "verified_fail"
+    }
+  ],
+  "schema_version": "barcarolle.phase1_blocked_split_supplement_fairness_gap_diagnostics_output.v1",
+  "status": "complete",
+  "threat_assessment": {
+    "policy_violation_count": 0,
+    "scoreability_rate": 0.9917,
+    "threatens_adapter_comparison": "limited_denominator_effect_for_one_codex_attrs_B_eval_cell",
+    "threatens_supplement_conclusion": false
+  }
+}

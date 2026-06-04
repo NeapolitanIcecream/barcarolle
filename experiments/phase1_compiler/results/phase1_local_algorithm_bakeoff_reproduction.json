@@ -1,0 +1,120 @@
+{
+  "committed_metrics_digest": "sha256:2fd64287ea719c445cc2cdf061b3a74a332f51b323014dd8b13caffbfb7aac10",
+  "generated_at": "2026-06-04T06:40:20Z",
+  "mismatches": [],
+  "new_paid_acut_calls_made": false,
+  "new_paid_llm_calls_made": false,
+  "recomputed_summary": {
+    "candidate_metrics": {
+      "barcarolle_weighted_time_family_matched": {
+        "adapter_disagreement_rate": 0.0,
+        "cell_count": 32,
+        "max_abs_gap": 0.7481,
+        "per_repo_abs_gaps": {
+          "attrs": 0.3148,
+          "boltons": 0.7481
+        },
+        "planned_cells": 32,
+        "scoreable_cell_count": 32,
+        "terminal_status_counts": {
+          "verified_fail": 12,
+          "verified_pass": 20
+        },
+        "threshold_met": false
+      },
+      "repo_stratified_by_target_profile": {
+        "adapter_disagreement_rate": 0.0625,
+        "cell_count": 32,
+        "max_abs_gap": 0.25,
+        "per_repo_abs_gaps": {
+          "attrs": 0.25,
+          "boltons": 0.125
+        },
+        "planned_cells": 32,
+        "scoreable_cell_count": 32,
+        "terminal_status_counts": {
+          "verified_fail": 13,
+          "verified_pass": 19
+        },
+        "threshold_met": false
+      },
+      "repo_unweighted_same_budget": {
+        "adapter_disagreement_rate": 0.0625,
+        "cell_count": 32,
+        "max_abs_gap": 0.25,
+        "per_repo_abs_gaps": {
+          "attrs": 0.25,
+          "boltons": 0.125
+        },
+        "planned_cells": 32,
+        "scoreable_cell_count": 32,
+        "terminal_status_counts": {
+          "verified_fail": 11,
+          "verified_pass": 21
+        },
+        "threshold_met": false
+      }
+    },
+    "completed_cells": 44,
+    "observed_or_conservative_cost_usd": 22.0,
+    "planned_cells": 44,
+    "policy_gate_pass": true,
+    "policy_violation_count": 0,
+    "primary_threshold": {
+      "gap_threshold": 0.15,
+      "max_abs_gap": 0.7481,
+      "met": false,
+      "per_repo_abs_gaps": {
+        "attrs": 0.3148,
+        "boltons": 0.7481
+      },
+      "primary_candidate_id": "barcarolle_weighted_time_family_matched"
+    },
+    "scoreability_gate_pass": true,
+    "scoreable_cells": 44,
+    "status": "complete",
+    "terminal_status_counts": {
+      "verified_fail": 15,
+      "verified_pass": 29
+    }
+  },
+  "run_id": "phase1_local_algorithm_bakeoff_20260526",
+  "schema_version": "barcarolle.phase1_local_algorithm_bakeoff_output.v1",
+  "score_table_digest": "sha256:b8b11686e1ed6e566369fde993e0422580b10b430b436c80049028cb458e10fc",
+  "status": "pass",
+  "task_level_adapter_averaged_outcomes": {
+    "attrs__hist__009": 1.0,
+    "attrs__hist__010": 1.0,
+    "attrs__hist__032": 0.0,
+    "attrs__hist__033": 0.0,
+    "attrs__hist__035": 1.0,
+    "attrs__hist__036": 1.0,
+    "attrs__hist__039": 0.0,
+    "attrs__hist__041": 1.0,
+    "attrs__hist__045": 1.0,
+    "attrs__hist__047": 0.0,
+    "boltons__hist__006": 0.0,
+    "boltons__hist__007": 1.0,
+    "boltons__hist__013": 1.0,
+    "boltons__hist__014": 0.5,
+    "boltons__hist__017": 1.0,
+    "boltons__hist__019": 0.0,
+    "boltons__hist__020": 1.0,
+    "boltons__hist__024": 1.0,
+    "boltons__hist__025": 1.0,
+    "boltons__hist__026": 1.0,
+    "boltons__hist__028": 0.0,
+    "boltons__hist__031": 1.0
+  },
+  "task_level_summary": {
+    "adapter_disagreement_rate": 0.0455,
+    "adapter_disagreement_task_count": 1,
+    "scoreable_cell_count": 44,
+    "task_count": 22,
+    "terminal_status_counts": {
+      "verified_fail": 15,
+      "verified_pass": 29
+    }
+  },
+  "weighted_pilot_metrics_reproduced": true
+}

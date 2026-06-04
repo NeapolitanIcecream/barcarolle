@@ -1,0 +1,33 @@
+{
+  "actual_provider_billed_cost_usd": null,
+  "call_count": 20,
+  "conservative_estimated_cost_usd": 10.0,
+  "conservative_fallback_for_missing_usage_usd": 3.0,
+  "generated_at": "2026-05-22T16:29:17+00:00",
+  "median_latency_seconds": 85.562,
+  "missing_usage_cell_count": 6,
+  "missing_usage_run_ids": [
+    "codex_kilo_workspace_kilo_workspace__kilo_workspace_gpt_5_4_mini__toolz__hist__002__smoke1",
+    "codex_kilo_workspace_kilo_workspace__kilo_workspace_gpt_5_4_mini__toolz__hist__001__matrix1",
+    "codex_kilo_workspace_kilo_workspace__kilo_workspace_gpt_5_4_mini__toolz__hist__004__matrix1",
+    "codex_kilo_workspace_kilo_workspace__kilo_workspace_gpt_5_4_mini__toolz__hist__010__matrix1",
+    "codex_kilo_workspace_kilo_workspace__kilo_workspace_gpt_5_4_mini__toolz__hist__016__matrix1",
+    "codex_kilo_workspace_kilo_workspace__kilo_workspace_gpt_5_4_mini__click__rbench__004__matrix1"
+  ],
+  "observed_or_conservative_estimated_cost_usd": 7.6842078,
+  "observed_token_estimated_cost_usd": 4.6842078,
+  "per_harness_observed_token_cost_usd": {
+    "codex_workspace": 3.6759078,
+    "kilo_workspace": 1.0083
+  },
+  "per_split_observed_token_cost_usd": {
+    "B_real": 0.7277436,
+    "G_mini": 3.2292774,
+    "W_real": 0.7271868
+  },
+  "pricing_source": "user_estimate_required_conservative_default",
+  "result_prefix": "codex_kilo_workspace",
+  "schema_version": "barcarolle.workspace_acut_cost_summary.v2",
+  "usage_observed_count": 14,
+  "usage_observed_rate": 0.7
+}

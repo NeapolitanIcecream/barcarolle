@@ -1,0 +1,57 @@
+schema_version: barcarolle.phase1_clean_supply_breal_extension.v1
+status: configured
+claim_scope: clean_supply_extension_not_predictive_validation
+predictive_validity_established: false
+paid_acut_calls: disabled
+paid_llm_calls: disabled
+
+target:
+  repo_id: boltons
+  missing_split: B_real
+  minimum_clean_split:
+    B_real: 2
+    W_real: 2
+  existing_promoted_clean_supply:
+    B_real:
+      - boltons__hist__011
+    W_real:
+      - boltons__hist__022
+      - boltons__hist__023
+      - boltons__hist__027
+
+primary_candidate:
+  task_id: boltons__hist__014
+  current_status: manual_review_required
+  current_blocker: scope_context_project_heavy_or_ambiguous
+
+candidate_priority:
+  deep_review_first:
+    - boltons__hist__014
+  repair_only_if_non_leaky:
+    - boltons__hist__006
+    - boltons__hist__013
+  mine_extension_if_needed: true
+
+source_artifacts:
+  retrospective_decision: experiments/phase1_compiler/results/phase1_retrospective_validation_decision.json
+  clean_supply_review: experiments/phase1_compiler/results/phase1_clean_supply_extension_review.json
+  hardening_overlay: experiments/phase1_compiler/results/phase1_hardened_certification_overlay.json
+  workspace_scorecard: experiments/phase1_compiler/results/phase1_workspace_scorecard.json
+  boltons_certified_tasks: experiments/phase0_headroom/certified_tasks/boltons_certified_tasks.jsonl
+  boltons_task_statements: experiments/phase0_headroom/certified_tasks/boltons_task_statements.jsonl
+  boltons_review_records: experiments/phase0_headroom/certified_tasks/boltons_review_records.jsonl
+  boltons_release: experiments/phase0_headroom/releases/boltons_phase0_pilot_release.json
+  boltons_local_repo: experiments/phase0_headroom/external_repos/boltons
+
+promotion_policy:
+  require_outcome_unseen: true
+  require_non_leaky_problem_context: true
+  require_oracle_alignment: true
+  require_scope_clarity: true
+  reject_project_or_docs_only: true
+  reject_solution_exposure_risk: true
+  reject_commit_message_only_source: true
+
+overlay:
+  output: experiments/phase1_compiler/results/phase1_clean_supply_breal_extension_overlay.json
+  evidence_level: clean_supply_candidate_overlay

@@ -1,0 +1,77 @@
+{
+  "artifact": "entry_gate",
+  "endpoint_presence": {
+    "LLM_API_KEY_present": true,
+    "LLM_BASE_URL_present": true,
+    "both_required_endpoint_variables_present": true,
+    "sourced_zshrc_when_needed": false,
+    "values_recorded": false
+  },
+  "failed_gates": [],
+  "gates": {
+    "baseline_plan_frozen": true,
+    "endpoint_variables_present": true,
+    "no_paid_cells_run": true,
+    "no_raw_logs_workspaces_committed_by_this_run": true,
+    "power_cost_plan_frozen": true,
+    "release_candidate_frozen": true,
+    "source_quality_audit_passed": true,
+    "split_plan_frozen": true,
+    "tests_pass": true,
+    "three_repos_at_30_release_eligible": true,
+    "thresholds_frozen": true
+  },
+  "generated_at": "2026-05-28T03:39:08Z",
+  "paid_acut_cells_run": false,
+  "paid_ready": true,
+  "paid_validation_run": false,
+  "run_id": "phase1_three_repo_paid_readiness_packaging_20260528",
+  "schema_version": "barcarolle.phase1_three_repo_paid_readiness_packaging_output.v1",
+  "status": "ready_for_paid_validation_runbook",
+  "verification_results": [
+    {
+      "command": [
+        "uv",
+        "run",
+        "--project",
+        "experiments/phase1_compiler",
+        "pytest",
+        "experiments/phase1_compiler/tests/test_phase1_three_repo_paid_readiness_packaging.py",
+        "-q"
+      ],
+      "duration_seconds": 0.247,
+      "passed": true,
+      "returncode": 0,
+      "stderr_tail_digest": "e3b0c44298fc",
+      "stdout_tail_digest": "dd16cbdbb2cf"
+    },
+    {
+      "command": [
+        "uv",
+        "run",
+        "--project",
+        "experiments/phase1_compiler",
+        "pytest",
+        "experiments/phase1_compiler/tests",
+        "-q"
+      ],
+      "duration_seconds": 39.469,
+      "passed": true,
+      "returncode": 0,
+      "stderr_tail_digest": "e3b0c44298fc",
+      "stdout_tail_digest": "83445e0e4c12"
+    },
+    {
+      "command": [
+        "git",
+        "diff",
+        "--check"
+      ],
+      "duration_seconds": 0.022,
+      "passed": true,
+      "returncode": 0,
+      "stderr_tail_digest": "e3b0c44298fc",
+      "stdout_tail_digest": "e3b0c44298fc"
+    }
+  ]
+}

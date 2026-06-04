@@ -1,0 +1,481 @@
+{
+  "candidate_metrics": {
+    "barcarolle_weighted_time_family_matched": {
+      "adapter_disagreement_rate": 0.0,
+      "candidate_id": "barcarolle_weighted_time_family_matched",
+      "cell_count": 32,
+      "max_abs_gap": 0.7481,
+      "per_repo_abs_gaps": {
+        "attrs": 0.3148,
+        "boltons": 0.7481
+      },
+      "per_repo_split": {
+        "attrs/B_eval": {
+          "cell_count": 8,
+          "repo_split": "attrs/B_eval",
+          "scoreable_cell_count": 8,
+          "task_outcomes": {
+            "attrs__hist__009": 1.0,
+            "attrs__hist__032": 0.0,
+            "attrs__hist__036": 1.0,
+            "attrs__hist__047": 0.0
+          },
+          "task_weights": {
+            "attrs__hist__009": 0.16949147,
+            "attrs__hist__032": 0.31355932,
+            "attrs__hist__036": 0.22881366,
+            "attrs__hist__047": 0.28813555
+          },
+          "terminal_status_counts": {
+            "verified_fail": 4,
+            "verified_pass": 4
+          },
+          "unweighted_diagnostic_pass_rate": 0.5,
+          "weighted_pass_rate": 0.3983,
+          "wilson_95_by_cell": {
+            "high": 0.7848,
+            "low": 0.2152
+          }
+        },
+        "attrs/H_future": {
+          "cell_count": 8,
+          "repo_split": "attrs/H_future",
+          "scoreable_cell_count": 8,
+          "task_outcomes": {
+            "attrs__hist__010": 1.0,
+            "attrs__hist__033": 0.0,
+            "attrs__hist__035": 1.0,
+            "attrs__hist__045": 1.0
+          },
+          "task_weights": {
+            "attrs__hist__010": 0.27868849,
+            "attrs__hist__033": 0.28688528,
+            "attrs__hist__035": 0.33606555,
+            "attrs__hist__045": 0.09836069
+          },
+          "terminal_status_counts": {
+            "verified_fail": 2,
+            "verified_pass": 6
+          },
+          "unweighted_diagnostic_pass_rate": 0.75,
+          "weighted_pass_rate": 0.7131,
+          "wilson_95_by_cell": {
+            "high": 0.9285,
+            "low": 0.4093
+          }
+        },
+        "boltons/B_eval": {
+          "cell_count": 8,
+          "repo_split": "boltons/B_eval",
+          "scoreable_cell_count": 8,
+          "task_outcomes": {
+            "boltons__hist__006": 0.0,
+            "boltons__hist__019": 0.0,
+            "boltons__hist__024": 1.0,
+            "boltons__hist__028": 0.0
+          },
+          "task_weights": {
+            "boltons__hist__006": 0.2519084,
+            "boltons__hist__019": 0.23664122,
+            "boltons__hist__024": 0.2519084,
+            "boltons__hist__028": 0.25954198
+          },
+          "terminal_status_counts": {
+            "verified_fail": 6,
+            "verified_pass": 2
+          },
+          "unweighted_diagnostic_pass_rate": 0.25,
+          "weighted_pass_rate": 0.2519,
+          "wilson_95_by_cell": {
+            "high": 0.5907,
+            "low": 0.0715
+          }
+        },
+        "boltons/H_future": {
+          "cell_count": 8,
+          "repo_split": "boltons/H_future",
+          "scoreable_cell_count": 8,
+          "task_outcomes": {
+            "boltons__hist__007": 1.0,
+            "boltons__hist__013": 1.0,
+            "boltons__hist__026": 1.0,
+            "boltons__hist__031": 1.0
+          },
+          "task_weights": {
+            "boltons__hist__007": 0.23664122,
+            "boltons__hist__013": 0.2519084,
+            "boltons__hist__026": 0.2519084,
+            "boltons__hist__031": 0.25954198
+          },
+          "terminal_status_counts": {
+            "verified_pass": 8
+          },
+          "unweighted_diagnostic_pass_rate": 1.0,
+          "weighted_pass_rate": 1.0,
+          "wilson_95_by_cell": {
+            "high": 1.0,
+            "low": 0.6756
+          }
+        }
+      },
+      "planned_cells": 32,
+      "scoreable_cell_count": 32,
+      "task_ids": [
+        "attrs__hist__009",
+        "attrs__hist__010",
+        "attrs__hist__032",
+        "attrs__hist__033",
+        "attrs__hist__035",
+        "attrs__hist__036",
+        "attrs__hist__045",
+        "attrs__hist__047",
+        "boltons__hist__006",
+        "boltons__hist__007",
+        "boltons__hist__013",
+        "boltons__hist__019",
+        "boltons__hist__024",
+        "boltons__hist__026",
+        "boltons__hist__028",
+        "boltons__hist__031"
+      ],
+      "terminal_status_counts": {
+        "verified_fail": 12,
+        "verified_pass": 20
+      },
+      "threshold_met": false
+    },
+    "repo_stratified_by_target_profile": {
+      "adapter_disagreement_rate": 0.0625,
+      "candidate_id": "repo_stratified_by_target_profile",
+      "cell_count": 32,
+      "max_abs_gap": 0.25,
+      "per_repo_abs_gaps": {
+        "attrs": 0.25,
+        "boltons": 0.125
+      },
+      "per_repo_split": {
+        "attrs/B_eval": {
+          "cell_count": 8,
+          "repo_split": "attrs/B_eval",
+          "scoreable_cell_count": 8,
+          "task_outcomes": {
+            "attrs__hist__009": 1.0,
+            "attrs__hist__032": 0.0,
+            "attrs__hist__033": 0.0,
+            "attrs__hist__036": 1.0
+          },
+          "task_weights": {
+            "attrs__hist__009": 0.25,
+            "attrs__hist__032": 0.25,
+            "attrs__hist__033": 0.25,
+            "attrs__hist__036": 0.25
+          },
+          "terminal_status_counts": {
+            "verified_fail": 4,
+            "verified_pass": 4
+          },
+          "unweighted_diagnostic_pass_rate": 0.5,
+          "weighted_pass_rate": 0.5,
+          "wilson_95_by_cell": {
+            "high": 0.7848,
+            "low": 0.2152
+          }
+        },
+        "attrs/H_future": {
+          "cell_count": 8,
+          "repo_split": "attrs/H_future",
+          "scoreable_cell_count": 8,
+          "task_outcomes": {
+            "attrs__hist__010": 1.0,
+            "attrs__hist__035": 1.0,
+            "attrs__hist__039": 0.0,
+            "attrs__hist__041": 1.0
+          },
+          "task_weights": {
+            "attrs__hist__010": 0.25,
+            "attrs__hist__035": 0.25,
+            "attrs__hist__039": 0.25,
+            "attrs__hist__041": 0.25
+          },
+          "terminal_status_counts": {
+            "verified_fail": 2,
+            "verified_pass": 6
+          },
+          "unweighted_diagnostic_pass_rate": 0.75,
+          "weighted_pass_rate": 0.75,
+          "wilson_95_by_cell": {
+            "high": 0.9285,
+            "low": 0.4093
+          }
+        },
+        "boltons/B_eval": {
+          "cell_count": 8,
+          "repo_split": "boltons/B_eval",
+          "scoreable_cell_count": 8,
+          "task_outcomes": {
+            "boltons__hist__013": 1.0,
+            "boltons__hist__014": 0.5,
+            "boltons__hist__019": 0.0,
+            "boltons__hist__024": 1.0
+          },
+          "task_weights": {
+            "boltons__hist__013": 0.25,
+            "boltons__hist__014": 0.25,
+            "boltons__hist__019": 0.25,
+            "boltons__hist__024": 0.25
+          },
+          "terminal_status_counts": {
+            "verified_fail": 3,
+            "verified_pass": 5
+          },
+          "unweighted_diagnostic_pass_rate": 0.625,
+          "weighted_pass_rate": 0.625,
+          "wilson_95_by_cell": {
+            "high": 0.8632,
+            "low": 0.3057
+          }
+        },
+        "boltons/H_future": {
+          "cell_count": 8,
+          "repo_split": "boltons/H_future",
+          "scoreable_cell_count": 8,
+          "task_outcomes": {
+            "boltons__hist__006": 0.0,
+            "boltons__hist__025": 1.0,
+            "boltons__hist__026": 1.0,
+            "boltons__hist__028": 0.0
+          },
+          "task_weights": {
+            "boltons__hist__006": 0.25,
+            "boltons__hist__025": 0.25,
+            "boltons__hist__026": 0.25,
+            "boltons__hist__028": 0.25
+          },
+          "terminal_status_counts": {
+            "verified_fail": 4,
+            "verified_pass": 4
+          },
+          "unweighted_diagnostic_pass_rate": 0.5,
+          "weighted_pass_rate": 0.5,
+          "wilson_95_by_cell": {
+            "high": 0.7848,
+            "low": 0.2152
+          }
+        }
+      },
+      "planned_cells": 32,
+      "scoreable_cell_count": 32,
+      "task_ids": [
+        "attrs__hist__009",
+        "attrs__hist__010",
+        "attrs__hist__032",
+        "attrs__hist__033",
+        "attrs__hist__035",
+        "attrs__hist__036",
+        "attrs__hist__039",
+        "attrs__hist__041",
+        "boltons__hist__006",
+        "boltons__hist__013",
+        "boltons__hist__014",
+        "boltons__hist__019",
+        "boltons__hist__024",
+        "boltons__hist__025",
+        "boltons__hist__026",
+        "boltons__hist__028"
+      ],
+      "terminal_status_counts": {
+        "verified_fail": 13,
+        "verified_pass": 19
+      },
+      "threshold_met": false
+    },
+    "repo_unweighted_same_budget": {
+      "adapter_disagreement_rate": 0.0625,
+      "candidate_id": "repo_unweighted_same_budget",
+      "cell_count": 32,
+      "max_abs_gap": 0.25,
+      "per_repo_abs_gaps": {
+        "attrs": 0.25,
+        "boltons": 0.125
+      },
+      "per_repo_split": {
+        "attrs/B_eval": {
+          "cell_count": 8,
+          "repo_split": "attrs/B_eval",
+          "scoreable_cell_count": 8,
+          "task_outcomes": {
+            "attrs__hist__009": 1.0,
+            "attrs__hist__010": 1.0,
+            "attrs__hist__032": 0.0,
+            "attrs__hist__033": 0.0
+          },
+          "task_weights": {
+            "attrs__hist__009": 0.25,
+            "attrs__hist__010": 0.25,
+            "attrs__hist__032": 0.25,
+            "attrs__hist__033": 0.25
+          },
+          "terminal_status_counts": {
+            "verified_fail": 4,
+            "verified_pass": 4
+          },
+          "unweighted_diagnostic_pass_rate": 0.5,
+          "weighted_pass_rate": 0.5,
+          "wilson_95_by_cell": {
+            "high": 0.7848,
+            "low": 0.2152
+          }
+        },
+        "attrs/H_future": {
+          "cell_count": 8,
+          "repo_split": "attrs/H_future",
+          "scoreable_cell_count": 8,
+          "task_outcomes": {
+            "attrs__hist__035": 1.0,
+            "attrs__hist__036": 1.0,
+            "attrs__hist__039": 0.0,
+            "attrs__hist__041": 1.0
+          },
+          "task_weights": {
+            "attrs__hist__035": 0.25,
+            "attrs__hist__036": 0.25,
+            "attrs__hist__039": 0.25,
+            "attrs__hist__041": 0.25
+          },
+          "terminal_status_counts": {
+            "verified_fail": 2,
+            "verified_pass": 6
+          },
+          "unweighted_diagnostic_pass_rate": 0.75,
+          "weighted_pass_rate": 0.75,
+          "wilson_95_by_cell": {
+            "high": 0.9285,
+            "low": 0.4093
+          }
+        },
+        "boltons/B_eval": {
+          "cell_count": 8,
+          "repo_split": "boltons/B_eval",
+          "scoreable_cell_count": 8,
+          "task_outcomes": {
+            "boltons__hist__006": 0.0,
+            "boltons__hist__007": 1.0,
+            "boltons__hist__013": 1.0,
+            "boltons__hist__014": 0.5
+          },
+          "task_weights": {
+            "boltons__hist__006": 0.25,
+            "boltons__hist__007": 0.25,
+            "boltons__hist__013": 0.25,
+            "boltons__hist__014": 0.25
+          },
+          "terminal_status_counts": {
+            "verified_fail": 3,
+            "verified_pass": 5
+          },
+          "unweighted_diagnostic_pass_rate": 0.625,
+          "weighted_pass_rate": 0.625,
+          "wilson_95_by_cell": {
+            "high": 0.8632,
+            "low": 0.3057
+          }
+        },
+        "boltons/H_future": {
+          "cell_count": 8,
+          "repo_split": "boltons/H_future",
+          "scoreable_cell_count": 8,
+          "task_outcomes": {
+            "boltons__hist__017": 1.0,
+            "boltons__hist__019": 0.0,
+            "boltons__hist__020": 1.0,
+            "boltons__hist__024": 1.0
+          },
+          "task_weights": {
+            "boltons__hist__017": 0.25,
+            "boltons__hist__019": 0.25,
+            "boltons__hist__020": 0.25,
+            "boltons__hist__024": 0.25
+          },
+          "terminal_status_counts": {
+            "verified_fail": 2,
+            "verified_pass": 6
+          },
+          "unweighted_diagnostic_pass_rate": 0.75,
+          "weighted_pass_rate": 0.75,
+          "wilson_95_by_cell": {
+            "high": 0.9285,
+            "low": 0.4093
+          }
+        }
+      },
+      "planned_cells": 32,
+      "scoreable_cell_count": 32,
+      "task_ids": [
+        "attrs__hist__009",
+        "attrs__hist__010",
+        "attrs__hist__032",
+        "attrs__hist__033",
+        "attrs__hist__035",
+        "attrs__hist__036",
+        "attrs__hist__039",
+        "attrs__hist__041",
+        "boltons__hist__006",
+        "boltons__hist__007",
+        "boltons__hist__013",
+        "boltons__hist__014",
+        "boltons__hist__017",
+        "boltons__hist__019",
+        "boltons__hist__020",
+        "boltons__hist__024"
+      ],
+      "terminal_status_counts": {
+        "verified_fail": 11,
+        "verified_pass": 21
+      },
+      "threshold_met": false
+    }
+  },
+  "completed_cells": 44,
+  "formula_notes": {
+    "gap": "abs(weighted_B_eval_pass_rate - weighted_H_future_pass_rate) per repo",
+    "unweighted_diagnostic_pass_rate": "verified_pass_cells / scoreable_cells within candidate repo split",
+    "weighted_pass_rate": "sum(candidate_task_weight * mean_scoreable_adapter_pass_for_task)"
+  },
+  "generated_at": "2026-05-26T04:21:47Z",
+  "historical_reference": {
+    "b_eval_to_h_future_gap": {
+      "attrs": 0.25,
+      "boltons": 0.375
+    },
+    "candidate_id": "prior_statement_hardened_release_as_historical_reference",
+    "observed_or_conservative_cost_usd": 9.9235152,
+    "planned_cells": 32,
+    "rerun": false,
+    "scoreable_cell_count": 32
+  },
+  "observed_or_conservative_cost_usd": 22.0,
+  "planned_cells": 44,
+  "policy_gate_pass": true,
+  "policy_violation_count": 0,
+  "precision_status": "pilot_result_insufficient_precision",
+  "precision_target_cells": 156,
+  "primary_threshold": {
+    "gap_threshold": 0.15,
+    "max_abs_gap": 0.7481,
+    "met": false,
+    "per_repo_abs_gaps": {
+      "attrs": 0.3148,
+      "boltons": 0.7481
+    },
+    "primary_candidate_id": "barcarolle_weighted_time_family_matched"
+  },
+  "run_id": "phase1_weighted_design_paid_pilot_20260526",
+  "schema_version": "barcarolle.phase1_weighted_design_paid_pilot_output.v1",
+  "scoreability_gate_pass": true,
+  "scoreable_cells": 44,
+  "status": "complete",
+  "terminal_status_counts": {
+    "verified_fail": 15,
+    "verified_pass": 29
+  }
+}

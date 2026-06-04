@@ -1,0 +1,89 @@
+{
+  "commits_made_during_run": [
+    "e0d3a34a Add task supply v2 fresh certification preflight",
+    "c7d2bc3b Configure task supply v2 fresh certification",
+    "8465099d Add task supply v2 fresh certification funnel",
+    "5053b280 Refine fresh certification environment subgates",
+    "0d0b2266 Record attrs fresh certification wave",
+    "69e7159c Record humanize fresh certification wave",
+    "6ab6dd1f Record toolz fresh certification wave",
+    "0c25a722 Handle timeout byte output in fresh certification",
+    "7fb7352d Kill timed-out certification process groups",
+    "8cbeec44 Record boltons fresh certification wave",
+    "final closeout commit: includes Step 6/7/8 summaries and decision artifacts"
+  ],
+  "completed_steps": [
+    "Step 0 preflight and dirty-tree audit completed.",
+    "Step 1 deterministic local-only config completed.",
+    "Step 2 candidate funnel classified all 829 raw candidates.",
+    "Step 3 focused accounting tests added and passed.",
+    "Step 4 fresh local certification runner implemented and exercised.",
+    "Step 5 attrs, humanize, toolz, and boltons waves completed for all 484 selected candidates.",
+    "Step 6 source review queue built for 25 technical-but-not-release-eligible tasks.",
+    "Step 7 paid readiness recomputed from release-eligible counts.",
+    "Step 8 decision and closeout written without drafting a follow-up runbook."
+  ],
+  "files_changed": [
+    "experiments/phase1_compiler/configs/phase1_task_supply_v2_fresh_certification.yaml",
+    "experiments/phase1_compiler/reports/phase1_task_supply_v2_fresh_certification_attempts.md",
+    "experiments/phase1_compiler/reports/phase1_task_supply_v2_fresh_certification_candidate_funnel.md",
+    "experiments/phase1_compiler/reports/phase1_task_supply_v2_fresh_certification_decision.md",
+    "experiments/phase1_compiler/reports/phase1_task_supply_v2_fresh_certification_paid_readiness_gate.md",
+    "experiments/phase1_compiler/reports/phase1_task_supply_v2_fresh_certification_process.md",
+    "experiments/phase1_compiler/reports/phase1_task_supply_v2_fresh_certification_subgate_summary.md",
+    "experiments/phase1_compiler/results/phase1_task_supply_v2_fresh_certification_attempts.json",
+    "experiments/phase1_compiler/results/phase1_task_supply_v2_fresh_certification_candidate_funnel.json",
+    "experiments/phase1_compiler/results/phase1_task_supply_v2_fresh_certification_decision.json",
+    "experiments/phase1_compiler/results/phase1_task_supply_v2_fresh_certification_paid_readiness_gate.json",
+    "experiments/phase1_compiler/results/phase1_task_supply_v2_fresh_certification_preflight.json",
+    "experiments/phase1_compiler/results/phase1_task_supply_v2_fresh_certification_source_review_queue.json",
+    "experiments/phase1_compiler/results/phase1_task_supply_v2_fresh_certification_subgate_summary.json",
+    "experiments/phase1_compiler/tests/test_phase1_task_supply_v2_fresh_certification.py",
+    "experiments/phase1_compiler/tools/phase1_task_supply_v2_fresh_certification.py"
+  ],
+  "generated_at": "2026-05-27T10:44:41Z",
+  "known_blockers": [
+    "Only boltons reached 30 release-eligible tasks; paid readiness requires at least three repos.",
+    "attrs has 31 technical certifications but only 28 release-eligible until source-context review repairs at least 2-3 rows.",
+    "humanize and toolz remain far below 30 technical certifications in this fresh wave.",
+    "Install and collection failures dominate failed executions: install_failed=197 and collect_failed=125."
+  ],
+  "paid_call_statement": "No paid ACUT calls, paid task-solving calls, paid replication, or paid LLM statement-generation calls were made.",
+  "paid_ready": false,
+  "primary_decision_label": "continue_source_context_repair",
+  "raw_artifact_hygiene_statement": "Committed JSON and Markdown contain sanitized metadata, hashes, counts, and subgate labels only. Raw stdout/stderr logs and workspaces remained under ignored tmp/workspace paths and were not staged.",
+  "recommended_next_actions": [
+    "Repair/review source context for attrs and other technical-but-not-release-eligible rows before release counting.",
+    "Investigate install/collection failures before treating toolz or humanize as exhausted.",
+    "Screen or certify another repo if a third >=30 release-eligible source is needed sooner than deep toolz/humanize repair."
+  ],
+  "release_eligible_after_full_source_review_upper_bound_by_repo": {
+    "attrs": 31,
+    "boltons": 47,
+    "humanize": 9,
+    "toolz": 6
+  },
+  "research_questions": {
+    "RQ1": "Terminal funnel states: {'material_leakage_risk': 26, 'not_attempted_cap_deferred': 234, 'oracle_missing_inventory_only': 85, 'selected_for_certification': 484}",
+    "RQ2": "Technical certification by repo: {'attrs': 31, 'boltons': 47, 'humanize': 9, 'toolz': 6}",
+    "RQ3": "Release eligible by repo: {'attrs': 28, 'boltons': 35, 'toolz': 5}",
+    "RQ4": "Repos at 30 release eligible: ['boltons']",
+    "RQ5": "Dominant blockers: ['at_least_3_repos_with_30_release_eligible']",
+    "RQ6": "Fresh certification distinguishes technical supply from release-ready supply. toolz release_eligible=5 technical=6; humanize release_eligible=0 technical=9.",
+    "RQ7": "Repair or review source context for technically certified rows before paid validation."
+  },
+  "run_id": "phase1_task_supply_v2_fresh_certification_20260527",
+  "schema_version": "barcarolle.phase1_task_supply_v2_fresh_certification.v1.decision.v1",
+  "source_review_queue_count_by_repo": {
+    "attrs": 3,
+    "boltons": 12,
+    "humanize": 9,
+    "toolz": 1
+  },
+  "tests_run": [
+    "uv run --project experiments/phase1_compiler pytest experiments/phase1_compiler/tests/test_phase1_task_supply_v2_fresh_certification.py -q (13 passed)",
+    "uv run --project experiments/phase1_compiler pytest experiments/phase1_compiler/tests -q (214 passed)",
+    "git diff --check (passed)",
+    "git status --short --untracked-files=all (run; unrelated pre-existing external_review files remain untracked)"
+  ]
+}

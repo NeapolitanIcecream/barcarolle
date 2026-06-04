@@ -1,0 +1,87 @@
+schema_version: barcarolle.phase1_blocked_split_redesign.v1
+run_id: phase1_blocked_split_redesign_20260529
+source_run_id: phase1_source_context_statement_hardening_20260528
+runbook: docs/experiments/phase-1-blocked-split-redesign-runbook.md
+status: configured
+paid_calls_allowed: false
+candidate_universe_path: experiments/phase1_compiler/results/phase1_blocked_split_redesign_candidate_universe.json
+random_seed_family: phase1_blocked_split_redesign_20260529_visible_feature_seed_family
+candidate_seed_start: 2026052900
+candidate_seed_count: 100
+selection_objective: feature_imbalance_visible_only
+outcome_blind_selection_required: true
+click_minor_risk_caveat_required: true
+allowed_feature_buckets: derived_from_candidate_universe
+budgets_to_evaluate:
+  - same_budget_20_per_repo
+  - expanded_30_per_repo
+budget_tasks_per_repo:
+  same_budget_20_per_repo: 20
+  expanded_30_per_repo: 30
+budget_split_tasks_per_repo:
+  same_budget_20_per_repo: 10
+  expanded_30_per_repo: 15
+inputs:
+  source_feature_table: experiments/phase1_compiler/results/phase1_source_context_statement_hardening_split_feature_table.json
+  paid_readiness_split_plan: experiments/phase1_compiler/results/phase1_three_repo_paid_readiness_packaging_split_plan.json
+  validation_metrics: experiments/phase1_compiler/results/phase1_three_repo_paid_validation_metrics.json
+  validation_decision: experiments/phase1_compiler/results/phase1_three_repo_paid_validation_decision.json
+  score_tables_manifest: experiments/phase1_compiler/results/phase1_three_repo_paid_validation_score_tables_manifest.json
+  cost_summaries_glob: experiments/phase0_headroom/results/phase1_three_repo_paid_validation_*_cost_summary.json
+  workspace_usage_ledger: experiments/phase0_headroom/results/workspace_usage_ledger.jsonl
+outputs:
+  block_schema: experiments/phase1_compiler/results/phase1_blocked_split_redesign_block_schema.json
+  candidate_splits: experiments/phase1_compiler/results/phase1_blocked_split_redesign_candidate_splits.json
+  selected_split: experiments/phase1_compiler/results/phase1_blocked_split_redesign_selected_split.json
+  selection_audit: experiments/phase1_compiler/results/phase1_blocked_split_redesign_selection_audit.json
+  imbalance_diagnostics: experiments/phase1_compiler/results/phase1_blocked_split_redesign_imbalance_diagnostics.json
+  retrospective_outcome_diagnostics: experiments/phase1_compiler/results/phase1_blocked_split_redesign_retrospective_outcome_diagnostics.json
+  cost_power_projection: experiments/phase1_compiler/results/phase1_blocked_split_redesign_cost_power_projection.json
+  readiness_gate: experiments/phase1_compiler/results/phase1_blocked_split_redesign_readiness_gate.json
+  decision: experiments/phase1_compiler/results/phase1_blocked_split_redesign_decision.json
+reports:
+  block_schema: experiments/phase1_compiler/reports/phase1_blocked_split_redesign_block_schema.md
+  candidate_splits: experiments/phase1_compiler/reports/phase1_blocked_split_redesign_candidate_splits.md
+  imbalance_diagnostics: experiments/phase1_compiler/reports/phase1_blocked_split_redesign_imbalance_diagnostics.md
+  retrospective_outcome_diagnostics: experiments/phase1_compiler/reports/phase1_blocked_split_redesign_retrospective_outcome_diagnostics.md
+  cost_power_projection: experiments/phase1_compiler/reports/phase1_blocked_split_redesign_cost_power_projection.md
+  readiness_gate: experiments/phase1_compiler/reports/phase1_blocked_split_redesign_readiness_gate.md
+  decision: experiments/phase1_compiler/reports/phase1_blocked_split_redesign_decision.md
+hard_constraints:
+  repo_count_balance: exact
+  split_count_per_repo: exact
+  duplicate_task_ids: prohibited
+  non_eligible_task_selected: prohibited
+  blocked_source_quality_selected: prohibited
+  diagnostic_only_source_quality_selected: prohibited
+  missing_selected_seed: prohibited
+  unstable_deterministic_order: prohibited
+  outcome_fields_loaded_before_freeze: prohibited
+soft_penalty_weights:
+  coarse_task_family: 5
+  time_bucket: 4
+  editable_scope_bucket: 3
+  statement_specificity_bucket: 2
+  rare_or_unknown_feature_flag: 5
+  context_length_bucket: 1
+gate_thresholds:
+  rare_or_unknown_abs_diff_per_repo: 1
+  editable_scope_abs_diff_per_repo: 2
+  time_bucket_abs_diff_per_repo: 2
+  coarse_family_abs_diff_per_repo: 2
+  statement_specificity_abs_diff_per_repo: 2
+  blocked_source_quality_selected: 0
+selection_policy:
+  use_pass_fail_outcomes: false
+  use_adapter_outcomes: false
+  use_hidden_verifier_labels: false
+  use_raw_solver_traces: false
+  use_raw_prompts_or_completions: false
+  use_target_reference_diffs: false
+  use_post_hoc_manual_preference_after_outcomes: false
+retrospective_policy:
+  diagnostics_do_not_choose_split: true
+  missing_outcomes_are_not_imputed: true
+  adapter_level_diagnostics_remain_separate: true
+  pooled_diagnostics_are_secondary: true
+  predictive_validity_remains_false: true

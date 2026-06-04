@@ -1,0 +1,28 @@
+{
+  "adapter_reporting_mode": "adapter_stratified_before_pooled",
+  "artifact": "reuse_policy",
+  "claim_boundary": "exploratory_supplemental_validation_for_post_hoc_blocked_split",
+  "existing_outcomes_reusable_for_exploratory_accounting": true,
+  "existing_outcomes_reusable_for_formal_preregistration": false,
+  "full_rerun_is_cleaner_but_more_expensive": true,
+  "full_rerun_token_estimated_new_cost_usd": 51.26736,
+  "generated_at": "2026-05-29T03:01:54Z",
+  "known_reusable_cell_count": 72,
+  "known_reusable_cell_count_by_adapter": {
+    "codex_workspace": 36,
+    "kilo_workspace": 36
+  },
+  "missing_outcomes_imputed": false,
+  "missing_paid_cell_count": 48,
+  "missing_paid_cell_count_by_adapter": {
+    "codex_workspace": 24,
+    "kilo_workspace": 24
+  },
+  "paid_calls_made_by_this_run": 0,
+  "reuse_requires_score_table_provenance": true,
+  "run_id": "phase1_blocked_split_paid_validation_design_review_20260529",
+  "schema_version": "barcarolle.phase1_blocked_split_paid_validation_design_review_output.v1",
+  "selected_protocol_name": "same_budget_missing_cell_supplement",
+  "selected_protocol_option": "B",
+  "supplement_token_estimated_new_cost_usd": 20.506944
+}

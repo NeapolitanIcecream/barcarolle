@@ -1,0 +1,48 @@
+schema_version: barcarolle.acut_workspace_adapters_config.v1
+preferred_model: gpt-5.4-mini
+comparison_design: same_model_cross_harness
+local_subscription_fallback: disabled
+openai_or_provider_fallback: disabled
+adapters:
+  - adapter_id: codex_workspace
+    harness_name: codex
+    acut_id: codex_workspace_gpt_5_4_mini
+    model_or_agent_name: gpt-5.4-mini
+    command_template: uv run --project /Users/chenmohan/gits/barcarolle/experiments/phase0_headroom python /Users/chenmohan/gits/barcarolle/experiments/phase0_headroom/tools/codex_workspace_adapter.py --workspace {workspace} --statement-file {statement_file} --raw-dir {raw_dir} --timeout {timeout_seconds}
+    timeout_seconds: 900
+    requires_env:
+      - LLM_BASE_URL
+      - LLM_API_KEY
+    endpoint_proof:
+      status: codex_eligible
+      evidence: experiments/phase0_headroom/reports/codex_endpoint_failure_diagnosis.md
+      blocker: null
+      lesson: use_custom_model_provider_with_env_key_and_disable_websockets
+    workspace_arg_style: template
+    statement_delivery: file
+    usage_observation:
+      mode: harness_report_optional
+      report_path: null
+    allowed_network: acut_harness_defined
+    raw_log_policy: ignored_path_only
+  - adapter_id: kilo_workspace
+    harness_name: kilo
+    acut_id: kilo_workspace_gpt_5_4_mini
+    model_or_agent_name: gpt-5.4-mini
+    command_template: uv run --project /Users/chenmohan/gits/barcarolle/experiments/phase0_headroom python /Users/chenmohan/gits/barcarolle/experiments/phase0_headroom/tools/kilo_workspace_adapter.py --workspace {workspace} --statement-file {statement_file} --raw-dir {raw_dir} --timeout {timeout_seconds} --completion-mode strict-final
+    timeout_seconds: 900
+    requires_env:
+      - LLM_BASE_URL
+      - LLM_API_KEY
+    endpoint_proof:
+      status: kilo_eligible
+      evidence: experiments/phase0_headroom/reports/kilo_endpoint_diagnosis.md
+      blocker: null
+      lesson: use_openai_compatible_provider_with_env_api_key_and_v1_base_url
+    workspace_arg_style: template
+    statement_delivery: file
+    usage_observation:
+      mode: harness_report_optional
+      report_path: null
+    allowed_network: acut_harness_defined
+    raw_log_policy: ignored_path_only

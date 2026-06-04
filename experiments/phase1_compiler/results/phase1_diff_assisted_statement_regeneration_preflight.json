@@ -1,0 +1,44 @@
+{
+  "branch": "codex/restart-benchmark-compiler",
+  "design_correction": "240-character truncation is a statement-renderer defect, not task invalidity. The next question is whether diff-assisted regenerated statements can recover the old candidates safely.",
+  "endpoint_proof": {
+    "base_url_env_present_after_zshrc": true,
+    "base_url_host": "apirx.boyuerichdata.com",
+    "base_url_recorded_sanitized_host_only": true,
+    "key_env_present_after_zshrc": true
+  },
+  "existing_unrelated_paths": [
+    "docs/experiments/phase-1-statement-hardened-holdout-preregistration-runbook.md",
+    "docs/experiments/phase-1-attrs-generalization-third-repo-decision-runbook.md",
+    "docs/experiments/phase-1-attrs-h-future-statement-quality-audit-runbook.md",
+    "docs/experiments/phase-1-autonomous-overnight-two-repo-research-runbook.md",
+    "docs/experiments/phase-1-diff-assisted-statement-regeneration-runbook.md",
+    "docs/experiments/phase-1-policy-violation-triage-bounded-rerun-runbook.md"
+  ],
+  "generated_at": "2026-05-25T02:52:58Z",
+  "git_status_short_at_start": [
+    " M docs/experiments/phase-1-statement-hardened-holdout-preregistration-runbook.md",
+    "?? docs/experiments/phase-1-attrs-generalization-third-repo-decision-runbook.md",
+    "?? docs/experiments/phase-1-attrs-h-future-statement-quality-audit-runbook.md",
+    "?? docs/experiments/phase-1-autonomous-overnight-two-repo-research-runbook.md",
+    "?? docs/experiments/phase-1-diff-assisted-statement-regeneration-runbook.md",
+    "?? docs/experiments/phase-1-policy-violation-triage-bounded-rerun-runbook.md"
+  ],
+  "head": "a3f0834cd8a7550f1267d38b4c9cbe0311b057fa",
+  "historical_paid_outcomes_available_to_generator_reviewer": false,
+  "input_report_digests": {
+    "/Users/chenmohan/Downloads/barcarolle-research-0519.md": "sha256:19bb010214ff464c905b9441d2bac347c233e46ff498c91cd0d9f1b287ac6f79",
+    "experiments/phase1_compiler/reports/phase1_attrs_h_future_evidence_status.md": "sha256:4226b7c26c9cb7ec262ee32363fb0e255410c698d19bd23b04b891f503d7460e",
+    "experiments/phase1_compiler/reports/phase1_statement_hardened_blocker.md": "sha256:78edfe0bc905212d97dd1f7c7856fce36416085d8e93274c60335d1b75cb0eab",
+    "experiments/phase1_compiler/reports/phase1_statement_hardened_candidate_screen.md": "sha256:2f752167fb2b2dcc551a517d3d3392b2658b9c7e41245fe0ad8dc47cb3a2a15a",
+    "experiments/phase1_compiler/reports/phase1_statement_hardened_validation_decision.md": "sha256:ee4d604cbed35cb270a7e01ecd28ceb6505afe2139dcf71dc7026c6cffc95469"
+  },
+  "paid_acut_calls_enabled": false,
+  "paid_acut_calls_made": false,
+  "paid_llm_generation_review_enabled": true,
+  "paid_solver_cells_enabled": false,
+  "python_version": "Python 3.9.6",
+  "raw_artifacts_committed": false,
+  "status": "ready_for_candidate_packet_build",
+  "uv_version": "uv 0.11.16 (Homebrew 2026-05-21 aarch64-apple-darwin)"
+}

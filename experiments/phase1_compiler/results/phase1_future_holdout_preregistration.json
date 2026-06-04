@@ -1,0 +1,101 @@
+{
+  "adapters": [
+    "codex_workspace",
+    "kilo_workspace"
+  ],
+  "baselines": [
+    "Repo_unweighted",
+    "Repo_stratified",
+    "Historical_sidecar"
+  ],
+  "budget": {
+    "conservative_cell_estimate_usd": 0.5,
+    "incremental_hard_cap_usd": 20.0,
+    "minimum_clean_validation_cells": 8,
+    "preferred_clean_validation_cells": 16,
+    "total_observed_or_conservative_stop_cap_usd": 80.0
+  },
+  "claim_thresholds": {
+    "min_holdout_scoreable_cells": 12,
+    "min_target_repos": 2,
+    "must_beat_unweighted_baseline": true,
+    "policy_violations_max": 0
+  },
+  "config": "experiments/phase1_compiler/configs/phase1_future_holdout_validation.yaml",
+  "endpoint_rule": {
+    "local_subscription_fallback": "disabled",
+    "openai_api_key_fallback": "disabled",
+    "provider_specific_fallback": "disabled",
+    "required_env": [
+      "LLM_BASE_URL",
+      "LLM_API_KEY"
+    ]
+  },
+  "generated_at": "2026-05-22T10:21:31+00:00",
+  "holdout_tuning_forbidden": true,
+  "metrics": [
+    "MAE",
+    "absolute_error_per_adapter",
+    "scoreable_cell_counts",
+    "policy_violation_counts",
+    "non_scoreable_cell_counts",
+    "cost_summary"
+  ],
+  "model_name": "gpt-5.4-mini",
+  "predictive_validity_established": false,
+  "predictor": {
+    "primary": "adapter_level_unweighted_b_eval_pass_rate",
+    "weighted_predictor": "diagnostic_only_when_strata_underpowered"
+  },
+  "repo_cutoffs": {
+    "boltons": {
+      "T_compile_end": "2020-06-22T01:19:35-04:00",
+      "T_holdout_start": "2020-07-06T01:19:35-04:00",
+      "b_eval_task_ids": [
+        "boltons__clean_ext__001",
+        "boltons__clean_ext__008",
+        "boltons__clean_ext__010",
+        "boltons__hist__011"
+      ],
+      "blockers": [],
+      "clean_task_count": 8,
+      "clean_validation_ready": true,
+      "h_future_task_ids": [
+        "boltons__clean_ext__017",
+        "boltons__hist__022",
+        "boltons__hist__023",
+        "boltons__hist__027"
+      ],
+      "repo_id": "boltons",
+      "validation_size": "preferred"
+    }
+  },
+  "retry_policy": "single_attempt_per_adapter_per_task",
+  "schema_version": "barcarolle.phase1.future_holdout_preregistration.v1",
+  "scoreability_policy": {
+    "non_scoreable_cells_max_per_split": 2,
+    "policy_violations_max": 0,
+    "scoreable_terminal_statuses": [
+      "verified_pass",
+      "verified_fail"
+    ]
+  },
+  "selected_repos": [
+    "boltons"
+  ],
+  "splits": {
+    "b_eval": [
+      "boltons__clean_ext__001",
+      "boltons__clean_ext__008",
+      "boltons__clean_ext__010",
+      "boltons__hist__011"
+    ],
+    "h_future": [
+      "boltons__clean_ext__017",
+      "boltons__hist__022",
+      "boltons__hist__023",
+      "boltons__hist__027"
+    ]
+  },
+  "status": "frozen"
+}

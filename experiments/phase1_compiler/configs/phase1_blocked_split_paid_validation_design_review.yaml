@@ -1,0 +1,119 @@
+schema_version: barcarolle.phase1_blocked_split_paid_validation_design_review.v1
+run_id: phase1_blocked_split_paid_validation_design_review_20260529
+source_run_id: phase1_blocked_split_redesign_20260529
+paid_validation_run_id: phase1_three_repo_paid_validation_20260528
+adapter_reporting_run_id: phase1_adapter_stratified_reporting_20260528
+runbook: docs/experiments/phase-1-blocked-split-paid-validation-design-review-runbook.md
+status: configured
+diagnostic_only: true
+paid_calls_allowed: false
+paid_acut_solver_calls_allowed: false
+phase_status: exploratory
+primary_budget_id: same_budget_20_per_repo
+secondary_budget_id: expanded_30_per_repo
+primary_split_id: phase1_blocked_split_redesign_20260529__same_budget_20_per_repo__seed_2026052902
+secondary_split_id: phase1_blocked_split_redesign_20260529__expanded_30_per_repo__seed_2026052904
+inputs:
+  system_design: docs/architecture/system-design.md
+  blocked_split_runbook: docs/experiments/phase-1-blocked-split-redesign-runbook.md
+  paid_validation_runbook: docs/experiments/phase-1-three-repo-paid-validation-runbook.md
+  adapter_reporting_runbook: docs/experiments/phase-1-adapter-stratified-reporting-runbook.md
+  blocked_split_decision: experiments/phase1_compiler/results/phase1_blocked_split_redesign_decision.json
+  blocked_split_readiness_gate: experiments/phase1_compiler/results/phase1_blocked_split_redesign_readiness_gate.json
+  blocked_split_selected_split: experiments/phase1_compiler/results/phase1_blocked_split_redesign_selected_split.json
+  blocked_split_selection_audit: experiments/phase1_compiler/results/phase1_blocked_split_redesign_selection_audit.json
+  blocked_split_candidate_universe: experiments/phase1_compiler/results/phase1_blocked_split_redesign_candidate_universe.json
+  blocked_split_imbalance_diagnostics: experiments/phase1_compiler/results/phase1_blocked_split_redesign_imbalance_diagnostics.json
+  blocked_split_retrospective_outcome_diagnostics: experiments/phase1_compiler/results/phase1_blocked_split_redesign_retrospective_outcome_diagnostics.json
+  blocked_split_cost_power_projection: experiments/phase1_compiler/results/phase1_blocked_split_redesign_cost_power_projection.json
+  source_hardening_decision: experiments/phase1_compiler/results/phase1_source_context_statement_hardening_decision.json
+  source_hardening_split_feature_table: experiments/phase1_compiler/results/phase1_source_context_statement_hardening_split_feature_table.json
+  paid_validation_decision: experiments/phase1_compiler/results/phase1_three_repo_paid_validation_decision.json
+  paid_validation_metrics: experiments/phase1_compiler/results/phase1_three_repo_paid_validation_metrics.json
+  score_tables_manifest: experiments/phase1_compiler/results/phase1_three_repo_paid_validation_score_tables_manifest.json
+  paid_validation_cost_reconciliation: experiments/phase1_compiler/results/phase1_three_repo_paid_validation_cost_reconciliation.json
+  adapter_reporting_decision: experiments/phase1_compiler/results/phase1_adapter_stratified_reporting_decision.json
+  adapter_reporting_three_repo_summary: experiments/phase1_compiler/results/phase1_adapter_stratified_reporting_three_repo_summary.json
+  adapter_reporting_cost_latency_summary: experiments/phase1_compiler/results/phase1_adapter_stratified_reporting_cost_latency_summary.json
+  adapter_reporting_future_gates: experiments/phase1_compiler/results/phase1_adapter_stratified_reporting_future_gates.json
+  score_tables_glob: experiments/phase0_headroom/results/phase1_three_repo_paid_validation_*_score_table.csv
+  cost_summaries_glob: experiments/phase0_headroom/results/phase1_three_repo_paid_validation_*_cost_summary.json
+  workspace_usage_ledger: experiments/phase0_headroom/results/workspace_usage_ledger.jsonl
+  acut_workspace_adapters: experiments/phase0_headroom/configs/acut_workspace_adapters.yaml
+  model_pricing: experiments/phase0_headroom/configs/model_pricing.yaml
+outputs:
+  preflight: experiments/phase1_compiler/results/phase1_blocked_split_paid_validation_design_review_preflight.json
+  claim_policy: experiments/phase1_compiler/results/phase1_blocked_split_paid_validation_design_review_claim_policy.json
+  overlap_matrix: experiments/phase1_compiler/results/phase1_blocked_split_paid_validation_design_review_overlap_matrix.json
+  missing_cells: experiments/phase1_compiler/results/phase1_blocked_split_paid_validation_design_review_missing_cells.json
+  protocol_options: experiments/phase1_compiler/results/phase1_blocked_split_paid_validation_design_review_protocol_options.json
+  cost_projection: experiments/phase1_compiler/results/phase1_blocked_split_paid_validation_design_review_cost_projection.json
+  reuse_policy: experiments/phase1_compiler/results/phase1_blocked_split_paid_validation_design_review_reuse_policy.json
+  ready_package: experiments/phase1_compiler/results/phase1_blocked_split_paid_validation_design_review_ready_package.json
+  decision: experiments/phase1_compiler/results/phase1_blocked_split_paid_validation_design_review_decision.json
+reports:
+  process: experiments/phase1_compiler/reports/phase1_blocked_split_paid_validation_design_review_process.md
+  claim_policy: experiments/phase1_compiler/reports/phase1_blocked_split_paid_validation_design_review_claim_policy.md
+  overlap_matrix: experiments/phase1_compiler/reports/phase1_blocked_split_paid_validation_design_review_overlap_matrix.md
+  protocol_options: experiments/phase1_compiler/reports/phase1_blocked_split_paid_validation_design_review_protocol_options.md
+  cost_projection: experiments/phase1_compiler/reports/phase1_blocked_split_paid_validation_design_review_cost_projection.md
+  decision: experiments/phase1_compiler/reports/phase1_blocked_split_paid_validation_design_review_decision.md
+claim_policy:
+  phase_status: exploratory
+  post_hoc_design_allowed_for_exploration: true
+  formal_preregistration_claim_allowed: false
+  predictive_validity_established: false
+  existing_outcomes_reusable_for_exploratory_accounting: true
+  existing_outcomes_reusable_for_formal_preregistration: false
+  click_minor_risk_must_be_reported: true
+  adapter_stratified_reporting_required: true
+  provider_billed_exact_cost_requires_actual_provider_billed_cost: true
+  use_paid_outcomes_to_alter_selected_split: false
+  completed_paid_decision_mutable: false
+protocol_options_to_compare:
+  - A_retrospective_only
+  - B_same_budget_missing_cell_supplement
+  - C_same_budget_full_rerun
+  - D_expanded_full_rerun
+  - E_stop_for_source_repair_or_third_repo_replacement
+allowed_recommendation_statuses:
+  - recommended
+  - acceptable_secondary
+  - not_recommended
+  - blocked
+adapters:
+  - codex_workspace
+  - kilo_workspace
+repos:
+  - attrs
+  - boltons
+  - click
+splits:
+  - B_eval
+  - H_future
+required_ready_package_fields:
+  - selected_protocol_option
+  - selected_split_id
+  - selected_budget_id
+  - selected_task_ids
+  - split_labels
+  - adapters
+  - known_reusable_cells
+  - missing_paid_cells_to_run
+  - endpoint_requirement
+  - adapter_reporting_policy
+  - claim_boundary
+  - click_minor_risk_caveat
+  - stop_conditions
+decision_readiness_requirements:
+  - claim_policy_written_and_exploratory_status_explicit
+  - selected_blocked_split_unchanged
+  - overlap_and_missing_cell_manifests_exact
+  - recommended_option_has_clear_reusable_missing_cell_handling
+  - adapter_level_reporting_required
+  - click_minor_risk_caveat_explicit
+  - cost_projection_adapter_stratified_and_token_estimated
+  - paid_calls_made_by_this_run_zero
+  - completed_paid_decision_changed_false
+  - predictive_validity_established_false
+  - tests_and_diff_check_passed

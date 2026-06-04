@@ -1,0 +1,62 @@
+schema_version: barcarolle.phase1_reference_pass_failure_audit.v1
+run_id: phase1_reference_pass_failure_audit_20260526
+runbook: docs/experiments/phase-1-reference-pass-failure-audit-runbook.md
+runbook_date: 2026-05-26
+status: configured
+target_repos:
+  - attrs
+  - boltons
+namespace: supply_expansion_20260526
+sample:
+  min_per_repo: 6
+  default_size_per_repo: 6
+  max_replay_seconds_per_command: 90
+source_artifacts:
+  certification_attempts: experiments/phase1_compiler/results/phase1_two_repo_supply_expansion_certification_attempts.json
+  raw_candidates: experiments/phase1_compiler/results/phase1_two_repo_supply_expansion_raw_candidates.json
+  source_contexts: experiments/phase1_compiler/results/phase1_two_repo_supply_expansion_source_contexts.json
+  eligibility_audit: experiments/phase1_compiler/results/phase1_two_repo_supply_expansion_eligibility_audit.json
+  expansion_decision: experiments/phase1_compiler/results/phase1_two_repo_supply_expansion_decision.json
+repos:
+  attrs:
+    repo_url: "https://github.com/python-attrs/attrs.git"
+    local_repo: experiments/phase0_headroom/external_repos/attrs
+    command_template: "uv run --project experiments/phase0_headroom --with \"pytest>=7,<8\" --with \"setuptools<81\" --with \"hypothesis<6\" python -m pytest -q {test_files}"
+  boltons:
+    repo_url: "https://github.com/mahmoud/boltons.git"
+    local_repo: experiments/phase0_headroom/external_repos/boltons
+    command_template: "uv run --project experiments/phase0_headroom --with \"pytest>=8,<9\" --with \"setuptools<81\" python -m pytest -q {test_files}"
+guardrails:
+  paid_acut_calls: disabled
+  paid_task_solving_calls: disabled
+  paid_replication: disabled
+  paid_llm_statement_generation: disabled
+  hidden_oracle_material_used: false
+  raw_acut_transcripts_used: false
+  raw_prompts_or_completions_used: false
+  solver_workspaces_used: false
+  verifier_workspaces_used: false
+  write_followup_runbook: false
+scratch_paths:
+  raw_replay_logs: experiments/phase1_compiler/tmp/reference_pass_failure_audit
+  replay_workspaces: experiments/phase0_headroom/workspaces/reference_pass_failure_audit
+outputs:
+  preflight: experiments/phase1_compiler/results/phase1_reference_pass_failure_audit_preflight.json
+  inventory: experiments/phase1_compiler/results/phase1_reference_pass_failure_inventory.json
+  replay_matrix: experiments/phase1_compiler/results/phase1_reference_pass_replay_matrix.json
+  command_contract_audit: experiments/phase1_compiler/results/phase1_reference_pass_command_contract_audit.json
+  patch_application_audit: experiments/phase1_compiler/results/phase1_reference_pass_patch_application_audit.json
+  environment_drift_audit: experiments/phase1_compiler/results/phase1_reference_pass_environment_drift_audit.json
+  root_cause_taxonomy: experiments/phase1_compiler/results/phase1_reference_pass_root_cause_taxonomy.json
+  code_fix_decision: experiments/phase1_compiler/results/phase1_reference_pass_code_fix_decision.json
+  decision: experiments/phase1_compiler/results/phase1_reference_pass_failure_audit_decision.json
+reports:
+  process: experiments/phase1_compiler/reports/phase1_reference_pass_failure_audit_process.md
+  inventory: experiments/phase1_compiler/reports/phase1_reference_pass_failure_inventory.md
+  replay_matrix: experiments/phase1_compiler/reports/phase1_reference_pass_replay_matrix.md
+  command_contract_audit: experiments/phase1_compiler/reports/phase1_reference_pass_command_contract_audit.md
+  patch_application_audit: experiments/phase1_compiler/reports/phase1_reference_pass_patch_application_audit.md
+  environment_drift_audit: experiments/phase1_compiler/reports/phase1_reference_pass_environment_drift_audit.md
+  root_cause_taxonomy: experiments/phase1_compiler/reports/phase1_reference_pass_root_cause_taxonomy.md
+  code_fix_decision: experiments/phase1_compiler/reports/phase1_reference_pass_code_fix_decision.md
+  decision: experiments/phase1_compiler/reports/phase1_reference_pass_failure_audit_decision.md

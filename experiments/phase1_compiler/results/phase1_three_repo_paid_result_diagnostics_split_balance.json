@@ -1,0 +1,640 @@
+{
+  "artifact": "split_balance",
+  "by_repo": {
+    "attrs": {
+      "categorical": {
+        "source_context_class": {
+          "B_eval_count": 10,
+          "H_future_count": 10,
+          "categories": [
+            {
+              "B_eval_count": 9,
+              "B_eval_share": 0.9,
+              "H_future_count": 9,
+              "H_future_share": 0.9,
+              "category": "issue_or_pr_context",
+              "count_delta_B_minus_H": 0
+            },
+            {
+              "B_eval_count": 0,
+              "B_eval_share": 0.0,
+              "H_future_count": 1,
+              "H_future_share": 0.1,
+              "category": "pr_context_title_only",
+              "count_delta_B_minus_H": -1
+            },
+            {
+              "B_eval_count": 1,
+              "B_eval_share": 0.1,
+              "H_future_count": 0,
+              "H_future_share": 0.0,
+              "category": "public_issue_and_pr_context_repaired",
+              "count_delta_B_minus_H": 1
+            }
+          ],
+          "field": "source_context_class",
+          "max_abs_count_delta": 1,
+          "total_variation_distance": 0.1
+        },
+        "source_context_quality": {
+          "B_eval_count": 10,
+          "H_future_count": 10,
+          "categories": [
+            {
+              "B_eval_count": 9,
+              "B_eval_share": 0.9,
+              "H_future_count": 9,
+              "H_future_share": 0.9,
+              "category": "non_leaky_issue_or_pr_context",
+              "count_delta_B_minus_H": 0
+            },
+            {
+              "B_eval_count": 0,
+              "B_eval_share": 0.0,
+              "H_future_count": 1,
+              "H_future_share": 0.1,
+              "category": "pr_title_only_context",
+              "count_delta_B_minus_H": -1
+            },
+            {
+              "B_eval_count": 1,
+              "B_eval_share": 0.1,
+              "H_future_count": 0,
+              "H_future_share": 0.0,
+              "category": "public_context_repaired",
+              "count_delta_B_minus_H": 1
+            }
+          ],
+          "field": "source_context_quality",
+          "max_abs_count_delta": 1,
+          "total_variation_distance": 0.1
+        },
+        "task_family": {
+          "B_eval_count": 10,
+          "H_future_count": 10,
+          "categories": [
+            {
+              "B_eval_count": 1,
+              "B_eval_share": 0.1,
+              "H_future_count": 2,
+              "H_future_share": 0.2,
+              "category": "attrs:_funcs",
+              "count_delta_B_minus_H": -1
+            },
+            {
+              "B_eval_count": 8,
+              "B_eval_share": 0.8,
+              "H_future_count": 6,
+              "H_future_share": 0.6,
+              "category": "attrs:_make",
+              "count_delta_B_minus_H": 2
+            },
+            {
+              "B_eval_count": 1,
+              "B_eval_share": 0.1,
+              "H_future_count": 1,
+              "H_future_share": 0.1,
+              "category": "attrs:_next_gen",
+              "count_delta_B_minus_H": 0
+            },
+            {
+              "B_eval_count": 0,
+              "B_eval_share": 0.0,
+              "H_future_count": 1,
+              "H_future_share": 0.1,
+              "category": "attrs:validators",
+              "count_delta_B_minus_H": -1
+            }
+          ],
+          "field": "task_family",
+          "max_abs_count_delta": 2,
+          "total_variation_distance": 0.2
+        },
+        "task_time_bucket": {
+          "B_eval_count": 10,
+          "H_future_count": 10,
+          "categories": [
+            {
+              "B_eval_count": 2,
+              "B_eval_share": 0.2,
+              "H_future_count": 2,
+              "H_future_share": 0.2,
+              "category": "legacy_2018_or_earlier",
+              "count_delta_B_minus_H": 0
+            },
+            {
+              "B_eval_count": 8,
+              "B_eval_share": 0.8,
+              "H_future_count": 8,
+              "H_future_share": 0.8,
+              "category": "middle_2019_2022",
+              "count_delta_B_minus_H": 0
+            }
+          ],
+          "field": "task_time_bucket",
+          "max_abs_count_delta": 0,
+          "total_variation_distance": 0.0
+        }
+      },
+      "largest_categorical_imbalances": [
+        {
+          "field": "task_family",
+          "max_abs_count_delta": 2,
+          "total_variation_distance": 0.2
+        },
+        {
+          "field": "source_context_class",
+          "max_abs_count_delta": 1,
+          "total_variation_distance": 0.1
+        },
+        {
+          "field": "source_context_quality",
+          "max_abs_count_delta": 1,
+          "total_variation_distance": 0.1
+        }
+      ],
+      "numeric": {
+        "implementation_file_count": {
+          "B_eval_count": 10,
+          "B_eval_mean": 1.0,
+          "H_future_count": 10,
+          "H_future_mean": 1.1,
+          "absolute_standardized_difference": 0.4714,
+          "available": true,
+          "field": "implementation_file_count",
+          "mean_delta_B_minus_H": -0.1
+        },
+        "public_context_ref_count": {
+          "B_eval_count": 10,
+          "B_eval_mean": 1.2,
+          "H_future_count": 10,
+          "H_future_mean": 1.1,
+          "absolute_standardized_difference": 0.2828,
+          "available": true,
+          "field": "public_context_ref_count",
+          "mean_delta_B_minus_H": 0.1
+        },
+        "test_file_count": {
+          "B_eval_count": 10,
+          "B_eval_mean": 1.1,
+          "H_future_count": 10,
+          "H_future_mean": 1.2,
+          "absolute_standardized_difference": 0.2828,
+          "available": true,
+          "field": "test_file_count",
+          "mean_delta_B_minus_H": -0.1
+        }
+      },
+      "split_counts": {
+        "B_eval": 10,
+        "H_future": 10
+      }
+    },
+    "boltons": {
+      "categorical": {
+        "source_context_class": {
+          "B_eval_count": 10,
+          "H_future_count": 10,
+          "categories": [
+            {
+              "B_eval_count": 10,
+              "B_eval_share": 1.0,
+              "H_future_count": 10,
+              "H_future_share": 1.0,
+              "category": "issue_or_pr_context",
+              "count_delta_B_minus_H": 0
+            }
+          ],
+          "field": "source_context_class",
+          "max_abs_count_delta": 0,
+          "total_variation_distance": 0.0
+        },
+        "source_context_quality": {
+          "B_eval_count": 10,
+          "H_future_count": 10,
+          "categories": [
+            {
+              "B_eval_count": 10,
+              "B_eval_share": 1.0,
+              "H_future_count": 10,
+              "H_future_share": 1.0,
+              "category": "non_leaky_issue_or_pr_context",
+              "count_delta_B_minus_H": 0
+            }
+          ],
+          "field": "source_context_quality",
+          "max_abs_count_delta": 0,
+          "total_variation_distance": 0.0
+        },
+        "task_family": {
+          "B_eval_count": 10,
+          "H_future_count": 10,
+          "categories": [
+            {
+              "B_eval_count": 1,
+              "B_eval_share": 0.1,
+              "H_future_count": 1,
+              "H_future_share": 0.1,
+              "category": "boltons:cacheutils",
+              "count_delta_B_minus_H": 0
+            },
+            {
+              "B_eval_count": 1,
+              "B_eval_share": 0.1,
+              "H_future_count": 0,
+              "H_future_share": 0.0,
+              "category": "boltons:dictutils",
+              "count_delta_B_minus_H": 1
+            },
+            {
+              "B_eval_count": 0,
+              "B_eval_share": 0.0,
+              "H_future_count": 2,
+              "H_future_share": 0.2,
+              "category": "boltons:funcutils",
+              "count_delta_B_minus_H": -2
+            },
+            {
+              "B_eval_count": 1,
+              "B_eval_share": 0.1,
+              "H_future_count": 1,
+              "H_future_share": 0.1,
+              "category": "boltons:ioutils",
+              "count_delta_B_minus_H": 0
+            },
+            {
+              "B_eval_count": 0,
+              "B_eval_share": 0.0,
+              "H_future_count": 1,
+              "H_future_share": 0.1,
+              "category": "boltons:iterutils",
+              "count_delta_B_minus_H": -1
+            },
+            {
+              "B_eval_count": 1,
+              "B_eval_share": 0.1,
+              "H_future_count": 0,
+              "H_future_share": 0.0,
+              "category": "boltons:listutils",
+              "count_delta_B_minus_H": 1
+            },
+            {
+              "B_eval_count": 0,
+              "B_eval_share": 0.0,
+              "H_future_count": 1,
+              "H_future_share": 0.1,
+              "category": "boltons:queueutils",
+              "count_delta_B_minus_H": -1
+            },
+            {
+              "B_eval_count": 3,
+              "B_eval_share": 0.3,
+              "H_future_count": 2,
+              "H_future_share": 0.2,
+              "category": "boltons:setutils",
+              "count_delta_B_minus_H": 1
+            },
+            {
+              "B_eval_count": 1,
+              "B_eval_share": 0.1,
+              "H_future_count": 0,
+              "H_future_share": 0.0,
+              "category": "boltons:strutils",
+              "count_delta_B_minus_H": 1
+            },
+            {
+              "B_eval_count": 1,
+              "B_eval_share": 0.1,
+              "H_future_count": 1,
+              "H_future_share": 0.1,
+              "category": "boltons:tbutils",
+              "count_delta_B_minus_H": 0
+            },
+            {
+              "B_eval_count": 1,
+              "B_eval_share": 0.1,
+              "H_future_count": 0,
+              "H_future_share": 0.0,
+              "category": "boltons:timeutils",
+              "count_delta_B_minus_H": 1
+            },
+            {
+              "B_eval_count": 0,
+              "B_eval_share": 0.0,
+              "H_future_count": 1,
+              "H_future_share": 0.1,
+              "category": "boltons:urlutils",
+              "count_delta_B_minus_H": -1
+            }
+          ],
+          "field": "task_family",
+          "max_abs_count_delta": 2,
+          "total_variation_distance": 0.5
+        },
+        "task_time_bucket": {
+          "B_eval_count": 10,
+          "H_future_count": 10,
+          "categories": [
+            {
+              "B_eval_count": 6,
+              "B_eval_share": 0.6,
+              "H_future_count": 7,
+              "H_future_share": 0.7,
+              "category": "legacy_2018_or_earlier",
+              "count_delta_B_minus_H": -1
+            },
+            {
+              "B_eval_count": 3,
+              "B_eval_share": 0.3,
+              "H_future_count": 3,
+              "H_future_share": 0.3,
+              "category": "middle_2019_2022",
+              "count_delta_B_minus_H": 0
+            },
+            {
+              "B_eval_count": 1,
+              "B_eval_share": 0.1,
+              "H_future_count": 0,
+              "H_future_share": 0.0,
+              "category": "recent_2023_or_later",
+              "count_delta_B_minus_H": 1
+            }
+          ],
+          "field": "task_time_bucket",
+          "max_abs_count_delta": 1,
+          "total_variation_distance": 0.1
+        }
+      },
+      "largest_categorical_imbalances": [
+        {
+          "field": "task_family",
+          "max_abs_count_delta": 2,
+          "total_variation_distance": 0.5
+        },
+        {
+          "field": "task_time_bucket",
+          "max_abs_count_delta": 1,
+          "total_variation_distance": 0.1
+        },
+        {
+          "field": "source_context_class",
+          "max_abs_count_delta": 0,
+          "total_variation_distance": 0.0
+        }
+      ],
+      "numeric": {
+        "implementation_file_count": {
+          "B_eval_count": 10,
+          "B_eval_mean": 1.0,
+          "H_future_count": 10,
+          "H_future_mean": 1.0,
+          "absolute_standardized_difference": null,
+          "available": true,
+          "field": "implementation_file_count",
+          "mean_delta_B_minus_H": 0.0
+        },
+        "public_context_ref_count": {
+          "B_eval_count": 10,
+          "B_eval_mean": 1.1,
+          "H_future_count": 10,
+          "H_future_mean": 1.2,
+          "absolute_standardized_difference": 0.2828,
+          "available": true,
+          "field": "public_context_ref_count",
+          "mean_delta_B_minus_H": -0.1
+        },
+        "test_file_count": {
+          "B_eval_count": 10,
+          "B_eval_mean": 1.0,
+          "H_future_count": 10,
+          "H_future_mean": 1.1,
+          "absolute_standardized_difference": 0.4714,
+          "available": true,
+          "field": "test_file_count",
+          "mean_delta_B_minus_H": -0.1
+        }
+      },
+      "split_counts": {
+        "B_eval": 10,
+        "H_future": 10
+      }
+    },
+    "click": {
+      "categorical": {
+        "source_context_class": {
+          "B_eval_count": 10,
+          "H_future_count": 10,
+          "categories": [
+            {
+              "B_eval_count": 10,
+              "B_eval_share": 1.0,
+              "H_future_count": 10,
+              "H_future_share": 1.0,
+              "category": "pr_context_title_only",
+              "count_delta_B_minus_H": 0
+            }
+          ],
+          "field": "source_context_class",
+          "max_abs_count_delta": 0,
+          "total_variation_distance": 0.0
+        },
+        "source_context_quality": {
+          "B_eval_count": 10,
+          "H_future_count": 10,
+          "categories": [
+            {
+              "B_eval_count": 10,
+              "B_eval_share": 1.0,
+              "H_future_count": 10,
+              "H_future_share": 1.0,
+              "category": "pr_title_only_context",
+              "count_delta_B_minus_H": 0
+            }
+          ],
+          "field": "source_context_quality",
+          "max_abs_count_delta": 0,
+          "total_variation_distance": 0.0
+        },
+        "task_family": {
+          "B_eval_count": 10,
+          "H_future_count": 10,
+          "categories": [
+            {
+              "B_eval_count": 1,
+              "B_eval_share": 0.1,
+              "H_future_count": 0,
+              "H_future_share": 0.0,
+              "category": "click:_bashcomplete",
+              "count_delta_B_minus_H": 1
+            },
+            {
+              "B_eval_count": 1,
+              "B_eval_share": 0.1,
+              "H_future_count": 0,
+              "H_future_share": 0.0,
+              "category": "click:_termui_impl",
+              "count_delta_B_minus_H": 1
+            },
+            {
+              "B_eval_count": 4,
+              "B_eval_share": 0.4,
+              "H_future_count": 5,
+              "H_future_share": 0.5,
+              "category": "click:core",
+              "count_delta_B_minus_H": -1
+            },
+            {
+              "B_eval_count": 1,
+              "B_eval_share": 0.1,
+              "H_future_count": 2,
+              "H_future_share": 0.2,
+              "category": "click:shell_completion",
+              "count_delta_B_minus_H": -1
+            },
+            {
+              "B_eval_count": 1,
+              "B_eval_share": 0.1,
+              "H_future_count": 0,
+              "H_future_share": 0.0,
+              "category": "click:termui",
+              "count_delta_B_minus_H": 1
+            },
+            {
+              "B_eval_count": 1,
+              "B_eval_share": 0.1,
+              "H_future_count": 1,
+              "H_future_share": 0.1,
+              "category": "click:testing",
+              "count_delta_B_minus_H": 0
+            },
+            {
+              "B_eval_count": 1,
+              "B_eval_share": 0.1,
+              "H_future_count": 2,
+              "H_future_share": 0.2,
+              "category": "click:types",
+              "count_delta_B_minus_H": -1
+            }
+          ],
+          "field": "task_family",
+          "max_abs_count_delta": 1,
+          "total_variation_distance": 0.3
+        },
+        "task_time_bucket": {
+          "B_eval_count": 10,
+          "H_future_count": 10,
+          "categories": [
+            {
+              "B_eval_count": 1,
+              "B_eval_share": 0.1,
+              "H_future_count": 1,
+              "H_future_share": 0.1,
+              "category": "middle_2019_2022",
+              "count_delta_B_minus_H": 0
+            },
+            {
+              "B_eval_count": 9,
+              "B_eval_share": 0.9,
+              "H_future_count": 9,
+              "H_future_share": 0.9,
+              "category": "recent_2023_or_later",
+              "count_delta_B_minus_H": 0
+            }
+          ],
+          "field": "task_time_bucket",
+          "max_abs_count_delta": 0,
+          "total_variation_distance": 0.0
+        }
+      },
+      "largest_categorical_imbalances": [
+        {
+          "field": "task_family",
+          "max_abs_count_delta": 1,
+          "total_variation_distance": 0.3
+        },
+        {
+          "field": "task_time_bucket",
+          "max_abs_count_delta": 0,
+          "total_variation_distance": 0.0
+        },
+        {
+          "field": "source_context_class",
+          "max_abs_count_delta": 0,
+          "total_variation_distance": 0.0
+        }
+      ],
+      "numeric": {
+        "implementation_file_count": {
+          "B_eval_count": 10,
+          "B_eval_mean": 1.4,
+          "H_future_count": 10,
+          "H_future_mean": 1.2,
+          "absolute_standardized_difference": 0.2828,
+          "available": true,
+          "field": "implementation_file_count",
+          "mean_delta_B_minus_H": 0.2
+        },
+        "public_context_ref_count": {
+          "B_eval_count": 10,
+          "B_eval_mean": 1.1,
+          "H_future_count": 10,
+          "H_future_mean": 1.1,
+          "absolute_standardized_difference": 0.0,
+          "available": true,
+          "field": "public_context_ref_count",
+          "mean_delta_B_minus_H": 0.0
+        },
+        "test_file_count": {
+          "B_eval_count": 10,
+          "B_eval_mean": 1.3,
+          "H_future_count": 10,
+          "H_future_mean": 1.2,
+          "absolute_standardized_difference": 0.1873,
+          "available": true,
+          "field": "test_file_count",
+          "mean_delta_B_minus_H": 0.1
+        }
+      },
+      "split_counts": {
+        "B_eval": 10,
+        "H_future": 10
+      }
+    }
+  },
+  "click_title_only_check": {
+    "click_paid_task_count": 20,
+    "split_counts_for_title_only_tasks": {
+      "B_eval": 10,
+      "H_future": 10
+    },
+    "title_only_failed_cell_count": 18,
+    "title_only_failed_cell_share_within_click": 0.45,
+    "title_only_paid_task_count": 20,
+    "title_only_task_share": 1.0
+  },
+  "explanation_status": {
+    "source_context_thinness": "partially_supported",
+    "split_imbalance": "partially_supported"
+  },
+  "future_split_note": "Any split redesign applies only to future preregistration, not to this completed paid split.",
+  "generated_at": "2026-05-28T08:03:25Z",
+  "measured_factors": [
+    "task_family",
+    "task_time_bucket",
+    "source_context_class",
+    "source_context_quality",
+    "public_context_ref_count",
+    "implementation_file_count",
+    "test_file_count"
+  ],
+  "run_id": "phase1_three_repo_paid_result_diagnostics_20260528",
+  "schema_version": "barcarolle.phase1_three_repo_paid_result_diagnostics_output.v1",
+  "status": "complete",
+  "unavailable_factors": [
+    "statement_length_chars",
+    "context_length_chars",
+    "patch_size_proxy",
+    "changed_path_count_proxy",
+    "hidden_test_count_proxy"
+  ]
+}

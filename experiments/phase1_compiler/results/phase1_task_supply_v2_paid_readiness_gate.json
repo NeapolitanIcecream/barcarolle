@@ -1,0 +1,36 @@
+{
+  "claims": [
+    "paid_readiness_gate_completed",
+    "no_paid_acut_calls_made",
+    "no_paid_llm_statement_generation_made"
+  ],
+  "generated_at": "2026-05-27T03:54:49Z",
+  "minimum_gate": {
+    "at_least_3_repos_with_30_certified": false,
+    "no_unreviewed_material_leakage_risk": false,
+    "raw_logs_workspaces_not_committed": true,
+    "source_reservoir_mix_policy_drafted": true,
+    "subgate_labels_present_for_failures": true
+  },
+  "missing": [
+    "at least three repos with >=30 locally certified candidates",
+    "fresh repo_history_v2 certification attempts for the broad mined pool",
+    "manual or endpoint-compliant review of weak/commit-message-only statements"
+  ],
+  "paid_acut_calls_made": false,
+  "paid_llm_calls_made": false,
+  "paid_ready": false,
+  "projected_certified_or_confirmed_eligible_by_repo": {
+    "attrs": 22,
+    "boltons": 31,
+    "humanize": 12,
+    "toolz": 6
+  },
+  "reason": "requires at least 3 repos with >=30 certified candidates; local evidence currently meets this for fewer than 3 repos",
+  "repos_meeting_30": [
+    "boltons"
+  ],
+  "run_id": "phase1_task_supply_v2_generator_bakeoff_20260527",
+  "schema_version": "barcarolle.phase1_task_supply_v2_generator_bakeoff.v1.paid_readiness_gate.v1",
+  "status": "paid_readiness_gate_completed"
+}

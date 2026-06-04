@@ -1,0 +1,228 @@
+{
+  "boltons_clean_ext_017_canonical_repo_split": "boltons/H_future",
+  "canonical_task_count": 16,
+  "cross_check_sources": {
+    "entry_gate_fields_used": [
+      "b_eval.selected_task_ids",
+      "h_future.selected_task_ids"
+    ],
+    "matrix_fields_used": [
+      "task_id",
+      "repo_id",
+      "selected_split_from_frozen_design",
+      "split"
+    ],
+    "matrix_status_and_adapter_fields_dropped": true
+  },
+  "cross_checks": [
+    {
+      "canonical_repo_split": "attrs/B_eval",
+      "entry_gate_membership": "not_present",
+      "matrix_membership": "attrs/B_eval",
+      "task_id": "attrs__hist__001"
+    },
+    {
+      "canonical_repo_split": "attrs/B_eval",
+      "entry_gate_membership": "not_present",
+      "matrix_membership": "attrs/B_eval",
+      "task_id": "attrs__hist__003"
+    },
+    {
+      "canonical_repo_split": "attrs/B_eval",
+      "entry_gate_membership": "not_present",
+      "matrix_membership": "attrs/B_eval",
+      "task_id": "attrs__hist__004"
+    },
+    {
+      "canonical_repo_split": "attrs/B_eval",
+      "entry_gate_membership": "not_present",
+      "matrix_membership": "attrs/B_eval",
+      "task_id": "attrs__hist__008"
+    },
+    {
+      "canonical_repo_split": "attrs/H_future",
+      "entry_gate_membership": "not_present",
+      "matrix_membership": "attrs/H_future",
+      "task_id": "attrs__hist__012"
+    },
+    {
+      "canonical_repo_split": "attrs/H_future",
+      "entry_gate_membership": "not_present",
+      "matrix_membership": "attrs/H_future",
+      "task_id": "attrs__hist__013"
+    },
+    {
+      "canonical_repo_split": "attrs/H_future",
+      "entry_gate_membership": "not_present",
+      "matrix_membership": "attrs/H_future",
+      "task_id": "attrs__hist__023"
+    },
+    {
+      "canonical_repo_split": "attrs/H_future",
+      "entry_gate_membership": "not_present",
+      "matrix_membership": "attrs/H_future",
+      "task_id": "attrs__hist__027"
+    },
+    {
+      "canonical_repo_split": "boltons/B_eval",
+      "entry_gate_membership": "boltons/B_eval",
+      "matrix_membership": "boltons/B_eval",
+      "task_id": "boltons__clean_ext__001"
+    },
+    {
+      "canonical_repo_split": "boltons/B_eval",
+      "entry_gate_membership": "boltons/B_eval",
+      "matrix_membership": "boltons/B_eval",
+      "task_id": "boltons__clean_ext__008"
+    },
+    {
+      "canonical_repo_split": "boltons/B_eval",
+      "entry_gate_membership": "boltons/B_eval",
+      "matrix_membership": "boltons/B_eval",
+      "task_id": "boltons__clean_ext__010"
+    },
+    {
+      "canonical_repo_split": "boltons/H_future",
+      "entry_gate_membership": "boltons/H_future",
+      "matrix_membership": "boltons/H_future",
+      "task_id": "boltons__clean_ext__017"
+    },
+    {
+      "canonical_repo_split": "boltons/B_eval",
+      "entry_gate_membership": "boltons/B_eval",
+      "matrix_membership": "boltons/B_eval",
+      "task_id": "boltons__hist__011"
+    },
+    {
+      "canonical_repo_split": "boltons/H_future",
+      "entry_gate_membership": "boltons/H_future",
+      "matrix_membership": "boltons/H_future",
+      "task_id": "boltons__hist__022"
+    },
+    {
+      "canonical_repo_split": "boltons/H_future",
+      "entry_gate_membership": "boltons/H_future",
+      "matrix_membership": "boltons/H_future",
+      "task_id": "boltons__hist__023"
+    },
+    {
+      "canonical_repo_split": "boltons/H_future",
+      "entry_gate_membership": "boltons/H_future",
+      "matrix_membership": "boltons/H_future",
+      "task_id": "boltons__hist__027"
+    }
+  ],
+  "generated_at": "2026-05-25T07:28:37Z",
+  "groups": {
+    "attrs/B_eval": [
+      "attrs__hist__001",
+      "attrs__hist__003",
+      "attrs__hist__004",
+      "attrs__hist__008"
+    ],
+    "attrs/H_future": [
+      "attrs__hist__012",
+      "attrs__hist__013",
+      "attrs__hist__023",
+      "attrs__hist__027"
+    ],
+    "boltons/B_eval": [
+      "boltons__clean_ext__001",
+      "boltons__clean_ext__008",
+      "boltons__clean_ext__010",
+      "boltons__hist__011"
+    ],
+    "boltons/H_future": [
+      "boltons__clean_ext__017",
+      "boltons__hist__022",
+      "boltons__hist__023",
+      "boltons__hist__027"
+    ]
+  },
+  "historical_pass_fail_outcomes_used_for_selection": false,
+  "paid_acut_calls_made": false,
+  "paid_outcome_used_for_selection": false,
+  "schema_version": "barcarolle.phase1.canonical_split_map.v1",
+  "task_to_split": {
+    "attrs__hist__001": {
+      "canonical_split": "B_eval",
+      "repo_id": "attrs",
+      "repo_split": "attrs/B_eval"
+    },
+    "attrs__hist__003": {
+      "canonical_split": "B_eval",
+      "repo_id": "attrs",
+      "repo_split": "attrs/B_eval"
+    },
+    "attrs__hist__004": {
+      "canonical_split": "B_eval",
+      "repo_id": "attrs",
+      "repo_split": "attrs/B_eval"
+    },
+    "attrs__hist__008": {
+      "canonical_split": "B_eval",
+      "repo_id": "attrs",
+      "repo_split": "attrs/B_eval"
+    },
+    "attrs__hist__012": {
+      "canonical_split": "H_future",
+      "repo_id": "attrs",
+      "repo_split": "attrs/H_future"
+    },
+    "attrs__hist__013": {
+      "canonical_split": "H_future",
+      "repo_id": "attrs",
+      "repo_split": "attrs/H_future"
+    },
+    "attrs__hist__023": {
+      "canonical_split": "H_future",
+      "repo_id": "attrs",
+      "repo_split": "attrs/H_future"
+    },
+    "attrs__hist__027": {
+      "canonical_split": "H_future",
+      "repo_id": "attrs",
+      "repo_split": "attrs/H_future"
+    },
+    "boltons__clean_ext__001": {
+      "canonical_split": "B_eval",
+      "repo_id": "boltons",
+      "repo_split": "boltons/B_eval"
+    },
+    "boltons__clean_ext__008": {
+      "canonical_split": "B_eval",
+      "repo_id": "boltons",
+      "repo_split": "boltons/B_eval"
+    },
+    "boltons__clean_ext__010": {
+      "canonical_split": "B_eval",
+      "repo_id": "boltons",
+      "repo_split": "boltons/B_eval"
+    },
+    "boltons__clean_ext__017": {
+      "canonical_split": "H_future",
+      "repo_id": "boltons",
+      "repo_split": "boltons/H_future"
+    },
+    "boltons__hist__011": {
+      "canonical_split": "B_eval",
+      "repo_id": "boltons",
+      "repo_split": "boltons/B_eval"
+    },
+    "boltons__hist__022": {
+      "canonical_split": "H_future",
+      "repo_id": "boltons",
+      "repo_split": "boltons/H_future"
+    },
+    "boltons__hist__023": {
+      "canonical_split": "H_future",
+      "repo_id": "boltons",
+      "repo_split": "boltons/H_future"
+    },
+    "boltons__hist__027": {
+      "canonical_split": "H_future",
+      "repo_id": "boltons",
+      "repo_split": "boltons/H_future"
+    }
+  }
+}

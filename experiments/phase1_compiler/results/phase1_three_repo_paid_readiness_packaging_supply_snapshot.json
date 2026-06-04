@@ -1,0 +1,69 @@
+{
+  "artifact": "supply_snapshot",
+  "generated_at": "2026-05-28T03:39:08Z",
+  "input_run_ids": {
+    "attrs_source_repair": "phase1_attrs_source_repair_20260528",
+    "fresh_certification": "phase1_task_supply_v2_fresh_certification_20260527",
+    "third_repo_supply_screen": "phase1_third_repo_release_supply_screen_20260528"
+  },
+  "minimum_release_eligible_per_repo": 30,
+  "paid_validation_run": false,
+  "raw_candidates_counted_as_release_eligible": false,
+  "release_eligibility_provenance_counts_by_repo": {
+    "attrs": {
+      "attrs_source_repair_overlay": 3,
+      "fresh_or_third_repo_certification_release_eligible": 28
+    },
+    "boltons": {
+      "fresh_or_third_repo_certification_release_eligible": 35
+    },
+    "click": {
+      "fresh_or_third_repo_certification_release_eligible": 30
+    }
+  },
+  "release_eligible_count_by_repo": {
+    "attrs": 31,
+    "boltons": 35,
+    "click": 30
+  },
+  "repos_meeting_30_release_eligible": [
+    "attrs",
+    "boltons",
+    "click"
+  ],
+  "run_id": "phase1_three_repo_paid_readiness_packaging_20260528",
+  "schema_version": "barcarolle.phase1_three_repo_paid_readiness_packaging_output.v1",
+  "source_context_class_counts_by_repo": {
+    "attrs": {
+      "issue_or_pr_context": 27,
+      "pr_context_title_only": 1,
+      "public_issue_and_pr_context_repaired": 3
+    },
+    "boltons": {
+      "issue_or_pr_context": 35
+    },
+    "click": {
+      "pr_context_title_only": 30
+    }
+  },
+  "source_context_quality_counts_by_repo": {
+    "attrs": {
+      "non_leaky_issue_or_pr_context": 27,
+      "pr_title_only_context": 1,
+      "public_context_repaired": 3
+    },
+    "boltons": {
+      "non_leaky_issue_or_pr_context": 35
+    },
+    "click": {
+      "pr_title_only_context": 30
+    }
+  },
+  "status": "three_repo_supply_snapshot_frozen",
+  "technical_certified_count_by_repo": {
+    "attrs": 31,
+    "boltons": 47,
+    "click": 75
+  },
+  "technical_only_tasks_counted_as_release_eligible": false
+}

@@ -1,0 +1,127 @@
+{
+  "analysis_schema": "threshold_analysis.v1",
+  "candidate_thresholds": [
+    {
+      "compatible_with_proposal": true,
+      "current_result": "fails_observed_gap_and_was_not_preregistered",
+      "name": "stratified_absolute_gap_ci",
+      "rationale": "This directly tests whether benchmark selection predicts future target-repo outcomes without changing the ACUT harness.",
+      "rule": "For each preregistered repo/split stratum, abs(B_eval pass rate - H_future pass rate) <= 0.15, with a preregistered confidence interval or precision rule and minimum scoreable cells.",
+      "too_weak_or_gameable": false
+    },
+    {
+      "compatible_with_proposal": true,
+      "current_result": "not_applicable_two_repos",
+      "name": "repo_or_task_family_rank_correlation",
+      "rationale": "Useful as a secondary diagnostic, but too easy to satisfy with only two repos or unstable strata.",
+      "rule": "Across at least four repos or six task-family strata, rank correlation between B_eval and H_future pass rates >= 0.60.",
+      "too_weak_or_gameable": true
+    },
+    {
+      "compatible_with_proposal": true,
+      "current_result": "fails_observed_error",
+      "name": "calibration_error_threshold",
+      "rationale": "Matches the benchmark-compiler claim, but needs enough strata to avoid fitting noise.",
+      "rule": "Mean absolute calibration error between B_eval-predicted and H_future pass rates <= 0.10, with a preregistered uncertainty rule.",
+      "too_weak_or_gameable": false
+    },
+    {
+      "compatible_with_proposal": true,
+      "current_result": "fails_attrs_and_boltons",
+      "name": "conditional_holdout_lower_bound",
+      "rationale": "Simple to audit, but should be paired with scoreable-cell minimums and no post-hoc resplitting.",
+      "rule": "H_future pass rate must be at least max(0.55, B_eval pass rate - 0.15) in every preregistered repo.",
+      "too_weak_or_gameable": false
+    }
+  ],
+  "current_evidence_failure_reasons": [
+    "threshold_not_preregistered_before_paid_run",
+    "attrs_observed_gap_0.25_exceeds_0.15",
+    "boltons_observed_gap_0.375_exceeds_0.15",
+    "confidence_intervals_are_wide_under_8_cells_per_repo_split"
+  ],
+  "current_evidence_meets_primary_threshold": false,
+  "gap_intervals": {
+    "attrs": {
+      "conservative_wilson_gap_interval": {
+        "high": 0.7133,
+        "low": -0.3755
+      },
+      "observed_gap": 0.25
+    },
+    "boltons": {
+      "conservative_wilson_gap_interval": {
+        "high": 0.7624,
+        "low": -0.2557
+      },
+      "observed_gap": 0.375
+    }
+  },
+  "generated_at": "2026-05-25T14:52:13Z",
+  "new_paid_calls_made": false,
+  "pooled_split_intervals": {
+    "B_eval": {
+      "pass_rate": 0.8125,
+      "scoreable_cell_count": 16,
+      "verified_pass_count": 13,
+      "wilson_95": {
+        "high": 0.9341,
+        "low": 0.5699
+      }
+    },
+    "H_future": {
+      "pass_rate": 0.5,
+      "scoreable_cell_count": 16,
+      "verified_pass_count": 8,
+      "wilson_95": {
+        "high": 0.72,
+        "low": 0.28
+      }
+    }
+  },
+  "predictive_validity_established": false,
+  "primary_gap_threshold": 0.15,
+  "primary_threshold_recommendation": "stratified_absolute_gap_ci",
+  "reason_predictive_validity_not_established": "No preregistered quantitative predictive-validity success threshold beyond scoreability, policy, and cost gates is recorded for this runbook.",
+  "release_id": "statement_hardened_after_canonical_split_repair_20260525",
+  "repo_split_intervals": {
+    "attrs/B_eval": {
+      "pass_rate": 0.75,
+      "scoreable_cell_count": 8,
+      "verified_pass_count": 6,
+      "wilson_95": {
+        "high": 0.9285,
+        "low": 0.4093
+      }
+    },
+    "attrs/H_future": {
+      "pass_rate": 0.5,
+      "scoreable_cell_count": 8,
+      "verified_pass_count": 4,
+      "wilson_95": {
+        "high": 0.7848,
+        "low": 0.2152
+      }
+    },
+    "boltons/B_eval": {
+      "pass_rate": 0.875,
+      "scoreable_cell_count": 8,
+      "verified_pass_count": 7,
+      "wilson_95": {
+        "high": 0.9776,
+        "low": 0.5291
+      }
+    },
+    "boltons/H_future": {
+      "pass_rate": 0.5,
+      "scoreable_cell_count": 8,
+      "verified_pass_count": 4,
+      "wilson_95": {
+        "high": 0.7848,
+        "low": 0.2152
+      }
+    }
+  },
+  "schema_version": "barcarolle.phase1_overnight_statement_hardened_evidence_analysis_output.v1",
+  "status": "pass"
+}

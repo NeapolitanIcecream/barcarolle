@@ -1,0 +1,106 @@
+{
+  "acceptance": {
+    "clean_supply_decision_ready": true,
+    "endpoint_variables_present_before_paid_work": true,
+    "paid_future_holdout_calls_not_started": true,
+    "phase1_compiler_validation_status": "valid",
+    "phase1_tests_passed": true,
+    "predictive_validity_established": false,
+    "preregistration_frozen": true,
+    "selected_repo_exactly_boltons": true
+  },
+  "baseline_checks": {
+    "git_diff_check": "passed",
+    "phase1_compiler_pytest": "56 passed in 0.31s",
+    "phase1_mvp_validate_status": "valid"
+  },
+  "branch": "codex/restart-benchmark-compiler",
+  "clean_supply_decision": {
+    "clean_supply_ready": true,
+    "predictive_validity_established": false,
+    "primary_decision_label": "boltons_clean_supply_ready_for_preregistered_validation",
+    "recommended_next_runbook": "run_preregistered_clean_future_holdout_paid_validation"
+  },
+  "cli_versions": {
+    "codex": "codex-cli 0.133.0",
+    "kilo": "7.3.1",
+    "python": "Python 3.9.6",
+    "uv": "uv 0.11.1 (Homebrew 2026-03-24 aarch64-apple-darwin)"
+  },
+  "endpoint_env": {
+    "llm_api_key_present_after_zshrc": true,
+    "llm_base_url_present_after_zshrc": true,
+    "required_variables": [
+      "LLM_BASE_URL",
+      "LLM_API_KEY"
+    ],
+    "secret_values_printed": false
+  },
+  "future_holdout_decision_before_run": {
+    "b_eval_scoreable_cells": 0,
+    "h_future_scoreable_cells": 0,
+    "paid_acut_calls_made": false,
+    "predictive_validity_established": false,
+    "primary_decision_label": "future_holdout_design_frozen_ready_for_paid_validation"
+  },
+  "generated_at": "2026-05-22T10:56:23Z",
+  "git_log_oneline_last_8": [
+    "276980a1 Refresh Phase 1 boundary after clean supply mining",
+    "baa95965 Decide Phase 1 clean outcome-unseen supply mining",
+    "e688df62 Integrate clean supply overlay with future holdout design",
+    "64ff119f Build Phase 1 clean outcome-unseen supply overlay",
+    "996619ff Mine Boltons clean outcome-unseen supply",
+    "7035ea48 Add Phase 1 clean outcome-unseen supply mining tooling",
+    "366c6207 Configure Phase 1 clean outcome-unseen supply mining",
+    "40101fe6 Record Phase 1 clean outcome-unseen supply preflight"
+  ],
+  "git_status_short_branch": [
+    "## codex/restart-benchmark-compiler...origin/codex/restart-benchmark-compiler [ahead 151]",
+    "?? docs/experiments/phase-1-preregistered-clean-future-holdout-paid-validation-runbook.md"
+  ],
+  "paid_acut_calls_made_in_step": false,
+  "preregistration": {
+    "budget": {
+      "conservative_cell_estimate_usd": 0.5,
+      "incremental_hard_cap_usd": 20.0,
+      "minimum_clean_validation_cells": 8,
+      "preferred_clean_validation_cells": 16,
+      "total_observed_or_conservative_stop_cap_usd": 80.0
+    },
+    "claim_thresholds": {
+      "min_holdout_scoreable_cells": 12,
+      "min_target_repos": 2,
+      "must_beat_unweighted_baseline": true,
+      "policy_violations_max": 0
+    },
+    "predictive_validity_established": false,
+    "selected_repos": [
+      "boltons"
+    ],
+    "splits": {
+      "b_eval": [
+        "boltons__clean_ext__001",
+        "boltons__clean_ext__008",
+        "boltons__clean_ext__010",
+        "boltons__hist__011"
+      ],
+      "h_future": [
+        "boltons__clean_ext__017",
+        "boltons__hist__022",
+        "boltons__hist__023",
+        "boltons__hist__027"
+      ]
+    },
+    "status": "frozen"
+  },
+  "schema_version": "barcarolle.phase1.preregistered_clean_future_holdout_preflight.v1",
+  "starting_head": "276980a1048b46c878b2ccb31bdd94ec34b16b88",
+  "timezone": "Asia/Shanghai",
+  "worktree_start_state": {
+    "conflicting_existing_changes": false,
+    "existing_untracked_files_recorded": [
+      "docs/experiments/phase-1-preregistered-clean-future-holdout-paid-validation-runbook.md"
+    ],
+    "worktree_clean": false
+  }
+}

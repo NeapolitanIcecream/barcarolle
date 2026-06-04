@@ -1,0 +1,56 @@
+schema_version: barcarolle.phase1_boltons_paid_acut_smoke.v1
+status: configured
+claim_scope: workspace_acut_scoreability_smoke_not_predictive_validation
+predictive_validity_established: false
+paid_acut_calls: enabled_small_smoke
+paid_llm_calls: disabled_except_acut_harness_internal_calls
+endpoint_rule:
+  required_env:
+    - LLM_BASE_URL
+    - LLM_API_KEY
+  local_subscription_fallback: disabled
+  openai_api_key_fallback: disabled
+selected_repo:
+  repo_id: boltons
+  source_release: experiments/phase0_headroom/releases/boltons_phase0_pilot_release.json
+  hardening_overlay: experiments/phase1_compiler/results/phase1_hardened_certification_overlay.json
+adapters:
+  config: experiments/phase0_headroom/configs/acut_workspace_adapters.yaml
+  ids:
+    - codex_workspace
+    - kilo_workspace
+model_design:
+  comparison_design: same_model_cross_harness
+  preferred_model: gpt-5.4-mini
+parallelism:
+  paid_acut_concurrency: 1
+  allow_cross_harness_paid_parallelism: false
+budget:
+  conservative_cell_estimate_usd: 0.50
+  canary_cells: 2
+  smoke_cells: 8
+  optional_extension_cells: 6
+  planned_conservative_increment_usd: 7.00
+  incremental_hard_cap_usd: 20.00
+  total_observed_or_conservative_stop_cap_usd: 60.00
+result_prefixes:
+  smoke: phase1_validation_boltons_paid_smoke
+  extension: phase1_validation_boltons_paid_extension
+tasks:
+  canary:
+    - boltons__hist__007
+  smoke:
+    - boltons__hist__007
+    - boltons__hist__017
+    - boltons__hist__024
+    - boltons__hist__026
+  optional_extension:
+    - boltons__hist__019
+    - boltons__hist__020
+    - boltons__hist__031
+acceptance:
+  smoke_scoreable_cells_min: 6
+  smoke_policy_violations_max: 0
+  smoke_harness_error_cells_max: 2
+  usage_observed_rate_min: 0.85
+  extension_requires_smoke_acceptance: true

@@ -1,0 +1,678 @@
+{
+  "aggregate_by_design": {
+    "block_plus_shrinkage_weighted": {
+      "MAE_max": 0.354167,
+      "MAE_mean": 0.354167,
+      "MAE_min": 0.354167,
+      "MAE_sample_variance": 0.0,
+      "catastrophic_miss_rate_mean": 0.5,
+      "max_absolute_gap_max": 0.458334,
+      "threshold_pass_rate_mean": 0.0,
+      "variant_count": 1
+    },
+    "block_randomized_stratified": {
+      "MAE_max": 0.4375,
+      "MAE_mean": 0.2875,
+      "MAE_min": 0.1875,
+      "MAE_sample_variance": 0.0109375,
+      "catastrophic_miss_rate_mean": 0.4,
+      "max_absolute_gap_max": 0.625,
+      "threshold_pass_rate_mean": 0.2,
+      "variant_count": 5
+    },
+    "coverage_constrained_unweighted": {
+      "MAE_max": 0.3125,
+      "MAE_mean": 0.3125,
+      "MAE_min": 0.3125,
+      "MAE_sample_variance": 0.0,
+      "catastrophic_miss_rate_mean": 0.5,
+      "max_absolute_gap_max": 0.375,
+      "threshold_pass_rate_mean": 0.0,
+      "variant_count": 1
+    },
+    "old_weighted_target_profile": {
+      "MAE_max": 0.531451,
+      "MAE_mean": 0.531451,
+      "MAE_min": 0.531451,
+      "MAE_sample_variance": 0.0,
+      "catastrophic_miss_rate_mean": 0.5,
+      "max_absolute_gap_max": 0.748092,
+      "threshold_pass_rate_mean": 0.0,
+      "variant_count": 1
+    },
+    "repo_stratified_by_target_profile": {
+      "MAE_max": 0.1875,
+      "MAE_mean": 0.1875,
+      "MAE_min": 0.1875,
+      "MAE_sample_variance": 0.0,
+      "catastrophic_miss_rate_mean": 0.0,
+      "max_absolute_gap_max": 0.25,
+      "threshold_pass_rate_mean": 0.5,
+      "variant_count": 1
+    },
+    "repo_unweighted_same_budget": {
+      "MAE_max": 0.1875,
+      "MAE_mean": 0.1875,
+      "MAE_min": 0.1875,
+      "MAE_sample_variance": 0.0,
+      "catastrophic_miss_rate_mean": 0.0,
+      "max_absolute_gap_max": 0.25,
+      "threshold_pass_rate_mean": 0.5,
+      "variant_count": 1
+    },
+    "seeded_random_same_budget": {
+      "MAE_max": 0.625,
+      "MAE_mean": 0.2375,
+      "MAE_min": 0.0625,
+      "MAE_sample_variance": 0.04960937,
+      "catastrophic_miss_rate_mean": 0.3,
+      "max_absolute_gap_max": 0.75,
+      "threshold_pass_rate_mean": 0.5,
+      "variant_count": 5
+    },
+    "temporal_recent_baseline": {
+      "MAE_max": 0.0,
+      "MAE_mean": 0.0,
+      "MAE_min": 0.0,
+      "MAE_sample_variance": 0.0,
+      "catastrophic_miss_rate_mean": 0.0,
+      "max_absolute_gap_max": 0.0,
+      "threshold_pass_rate_mean": 1.0,
+      "variant_count": 1
+    }
+  },
+  "analysis_schema": "validation_results.v1",
+  "baseline_design_id": "repo_stratified_by_target_profile",
+  "baseline_repo_gaps": {
+    "attrs": 0.25,
+    "boltons": 0.125
+  },
+  "generated_at": "2026-06-04T06:40:22Z",
+  "new_paid_acut_calls_made": false,
+  "new_paid_llm_calls_made": false,
+  "observed_outcome_source": "sanitized weighted paid pilot score table",
+  "per_variant_results": [
+    {
+      "MAE": 0.1875,
+      "RMSE": 0.197642,
+      "catastrophic_miss_rate": 0.0,
+      "design_id": "repo_unweighted_same_budget",
+      "effective_sample_size": 2.0,
+      "max_absolute_gap": 0.25,
+      "per_repo": [
+        {
+          "B_eval_rate": 0.5,
+          "H_future_rate": 0.75,
+          "abs_gap": 0.25,
+          "catastrophic_miss": false,
+          "effective_sample_size": 2.0,
+          "repo_id": "attrs",
+          "task_count": 8,
+          "threshold_pass": false
+        },
+        {
+          "B_eval_rate": 0.625,
+          "H_future_rate": 0.75,
+          "abs_gap": 0.125,
+          "catastrophic_miss": false,
+          "effective_sample_size": 2.0,
+          "repo_id": "boltons",
+          "task_count": 8,
+          "threshold_pass": true
+        }
+      ],
+      "seed": null,
+      "threshold_pass_rate_under_0_15": 0.5,
+      "uncertainty_status": "insufficient_support_for_bootstrap_interval",
+      "validation_type": "pseudo_future_seeded_block_resampling",
+      "variant_id": "repo_unweighted_same_budget",
+      "window_id": "paid_pilot_union_all_observed"
+    },
+    {
+      "MAE": 0.1875,
+      "RMSE": 0.197642,
+      "catastrophic_miss_rate": 0.0,
+      "design_id": "repo_stratified_by_target_profile",
+      "effective_sample_size": 2.0,
+      "max_absolute_gap": 0.25,
+      "per_repo": [
+        {
+          "B_eval_rate": 0.5,
+          "H_future_rate": 0.75,
+          "abs_gap": 0.25,
+          "catastrophic_miss": false,
+          "effective_sample_size": 2.0,
+          "repo_id": "attrs",
+          "task_count": 8,
+          "threshold_pass": false
+        },
+        {
+          "B_eval_rate": 0.625,
+          "H_future_rate": 0.5,
+          "abs_gap": 0.125,
+          "catastrophic_miss": false,
+          "effective_sample_size": 2.0,
+          "repo_id": "boltons",
+          "task_count": 8,
+          "threshold_pass": true
+        }
+      ],
+      "seed": null,
+      "threshold_pass_rate_under_0_15": 0.5,
+      "uncertainty_status": "insufficient_support_for_bootstrap_interval",
+      "validation_type": "pseudo_future_seeded_block_resampling",
+      "variant_id": "repo_stratified_by_target_profile",
+      "window_id": "paid_pilot_union_all_observed"
+    },
+    {
+      "MAE": 0.125,
+      "RMSE": 0.176777,
+      "catastrophic_miss_rate": 0.0,
+      "design_id": "seeded_random_same_budget",
+      "effective_sample_size": 2.0,
+      "max_absolute_gap": 0.25,
+      "per_repo": [
+        {
+          "B_eval_rate": 0.75,
+          "H_future_rate": 0.5,
+          "abs_gap": 0.25,
+          "catastrophic_miss": false,
+          "effective_sample_size": 2.0,
+          "repo_id": "attrs",
+          "task_count": 8,
+          "threshold_pass": false
+        },
+        {
+          "B_eval_rate": 0.75,
+          "H_future_rate": 0.75,
+          "abs_gap": 0.0,
+          "catastrophic_miss": false,
+          "effective_sample_size": 2.0,
+          "repo_id": "boltons",
+          "task_count": 8,
+          "threshold_pass": true
+        }
+      ],
+      "seed": 2026052601,
+      "threshold_pass_rate_under_0_15": 0.5,
+      "uncertainty_status": "insufficient_support_for_bootstrap_interval",
+      "validation_type": "pseudo_future_seeded_block_resampling",
+      "variant_id": "seeded_random_same_budget",
+      "window_id": "paid_pilot_union_all_observed"
+    },
+    {
+      "MAE": 0.0,
+      "RMSE": 0.0,
+      "catastrophic_miss_rate": 0.0,
+      "design_id": "temporal_recent_baseline",
+      "effective_sample_size": 2.0,
+      "max_absolute_gap": 0.0,
+      "per_repo": [
+        {
+          "B_eval_rate": 0.5,
+          "H_future_rate": 0.5,
+          "abs_gap": 0.0,
+          "catastrophic_miss": false,
+          "effective_sample_size": 2.0,
+          "repo_id": "attrs",
+          "task_count": 8,
+          "threshold_pass": true
+        },
+        {
+          "B_eval_rate": 0.75,
+          "H_future_rate": 0.75,
+          "abs_gap": 0.0,
+          "catastrophic_miss": false,
+          "effective_sample_size": 2.0,
+          "repo_id": "boltons",
+          "task_count": 8,
+          "threshold_pass": true
+        }
+      ],
+      "seed": null,
+      "threshold_pass_rate_under_0_15": 1.0,
+      "uncertainty_status": "insufficient_support_for_bootstrap_interval",
+      "validation_type": "pseudo_future_seeded_block_resampling",
+      "variant_id": "temporal_recent_baseline",
+      "window_id": "paid_pilot_union_all_observed"
+    },
+    {
+      "MAE": 0.3125,
+      "RMSE": 0.318689,
+      "catastrophic_miss_rate": 0.5,
+      "design_id": "coverage_constrained_unweighted",
+      "effective_sample_size": 2.0,
+      "max_absolute_gap": 0.375,
+      "per_repo": [
+        {
+          "B_eval_rate": 0.5,
+          "H_future_rate": 0.75,
+          "abs_gap": 0.25,
+          "catastrophic_miss": false,
+          "effective_sample_size": 2.0,
+          "repo_id": "attrs",
+          "task_count": 8,
+          "threshold_pass": false
+        },
+        {
+          "B_eval_rate": 0.5,
+          "H_future_rate": 0.875,
+          "abs_gap": 0.375,
+          "catastrophic_miss": true,
+          "effective_sample_size": 2.0,
+          "repo_id": "boltons",
+          "task_count": 8,
+          "threshold_pass": false
+        }
+      ],
+      "seed": null,
+      "threshold_pass_rate_under_0_15": 0.0,
+      "uncertainty_status": "insufficient_support_for_bootstrap_interval",
+      "validation_type": "pseudo_future_seeded_block_resampling",
+      "variant_id": "coverage_constrained_unweighted",
+      "window_id": "paid_pilot_union_all_observed"
+    },
+    {
+      "MAE": 0.3125,
+      "RMSE": 0.318689,
+      "catastrophic_miss_rate": 0.5,
+      "design_id": "block_randomized_stratified",
+      "effective_sample_size": 2.0,
+      "max_absolute_gap": 0.375,
+      "per_repo": [
+        {
+          "B_eval_rate": 0.75,
+          "H_future_rate": 0.5,
+          "abs_gap": 0.25,
+          "catastrophic_miss": false,
+          "effective_sample_size": 2.0,
+          "repo_id": "attrs",
+          "task_count": 8,
+          "threshold_pass": false
+        },
+        {
+          "B_eval_rate": 0.5,
+          "H_future_rate": 0.875,
+          "abs_gap": 0.375,
+          "catastrophic_miss": true,
+          "effective_sample_size": 2.0,
+          "repo_id": "boltons",
+          "task_count": 8,
+          "threshold_pass": false
+        }
+      ],
+      "seed": 2026052601,
+      "threshold_pass_rate_under_0_15": 0.0,
+      "uncertainty_status": "insufficient_support_for_bootstrap_interval",
+      "validation_type": "pseudo_future_seeded_block_resampling",
+      "variant_id": "block_randomized_stratified",
+      "window_id": "paid_pilot_union_all_observed"
+    },
+    {
+      "MAE": 0.531451,
+      "RMSE": 0.573911,
+      "catastrophic_miss_rate": 0.5,
+      "design_id": "old_weighted_target_profile",
+      "effective_sample_size": 1.916308,
+      "max_absolute_gap": 0.748092,
+      "per_repo": [
+        {
+          "B_eval_rate": 0.398305,
+          "H_future_rate": 0.713115,
+          "abs_gap": 0.31481,
+          "catastrophic_miss": false,
+          "effective_sample_size": 1.834829,
+          "repo_id": "attrs",
+          "task_count": 8,
+          "threshold_pass": false
+        },
+        {
+          "B_eval_rate": 0.251908,
+          "H_future_rate": 1.0,
+          "abs_gap": 0.748092,
+          "catastrophic_miss": true,
+          "effective_sample_size": 1.997788,
+          "repo_id": "boltons",
+          "task_count": 8,
+          "threshold_pass": false
+        }
+      ],
+      "seed": null,
+      "threshold_pass_rate_under_0_15": 0.0,
+      "uncertainty_status": "insufficient_support_for_bootstrap_interval",
+      "validation_type": "pseudo_future_seeded_block_resampling",
+      "variant_id": "old_weighted_target_profile",
+      "window_id": "paid_pilot_union_all_observed"
+    },
+    {
+      "MAE": 0.354167,
+      "RMSE": 0.369168,
+      "catastrophic_miss_rate": 0.5,
+      "design_id": "block_plus_shrinkage_weighted",
+      "effective_sample_size": 1.757894,
+      "max_absolute_gap": 0.458334,
+      "per_repo": [
+        {
+          "B_eval_rate": 0.75,
+          "H_future_rate": 0.5,
+          "abs_gap": 0.25,
+          "catastrophic_miss": false,
+          "effective_sample_size": 2.0,
+          "repo_id": "attrs",
+          "task_count": 8,
+          "threshold_pass": false
+        },
+        {
+          "B_eval_rate": 0.5,
+          "H_future_rate": 0.958334,
+          "abs_gap": 0.458334,
+          "catastrophic_miss": true,
+          "effective_sample_size": 1.515789,
+          "repo_id": "boltons",
+          "task_count": 8,
+          "threshold_pass": false
+        }
+      ],
+      "seed": 2026052601,
+      "threshold_pass_rate_under_0_15": 0.0,
+      "uncertainty_status": "insufficient_support_for_bootstrap_interval",
+      "validation_type": "pseudo_future_seeded_block_resampling",
+      "variant_id": "block_plus_shrinkage_weighted",
+      "window_id": "paid_pilot_union_all_observed"
+    },
+    {
+      "MAE": 0.1875,
+      "RMSE": 0.197642,
+      "catastrophic_miss_rate": 0.0,
+      "design_id": "seeded_random_same_budget",
+      "effective_sample_size": 2.0,
+      "max_absolute_gap": 0.25,
+      "per_repo": [
+        {
+          "B_eval_rate": 0.5,
+          "H_future_rate": 0.75,
+          "abs_gap": 0.25,
+          "catastrophic_miss": false,
+          "effective_sample_size": 2.0,
+          "repo_id": "attrs",
+          "task_count": 8,
+          "threshold_pass": false
+        },
+        {
+          "B_eval_rate": 0.75,
+          "H_future_rate": 0.875,
+          "abs_gap": 0.125,
+          "catastrophic_miss": false,
+          "effective_sample_size": 2.0,
+          "repo_id": "boltons",
+          "task_count": 8,
+          "threshold_pass": true
+        }
+      ],
+      "seed": 2026052602,
+      "threshold_pass_rate_under_0_15": 0.5,
+      "uncertainty_status": "insufficient_support_for_bootstrap_interval",
+      "validation_type": "pseudo_future_seeded_block_resampling",
+      "variant_id": "seeded_random_same_budget:seed_2026052602",
+      "window_id": "paid_pilot_union_all_observed"
+    },
+    {
+      "MAE": 0.625,
+      "RMSE": 0.637377,
+      "catastrophic_miss_rate": 1.0,
+      "design_id": "seeded_random_same_budget",
+      "effective_sample_size": 2.0,
+      "max_absolute_gap": 0.75,
+      "per_repo": [
+        {
+          "B_eval_rate": 1.0,
+          "H_future_rate": 0.25,
+          "abs_gap": 0.75,
+          "catastrophic_miss": true,
+          "effective_sample_size": 2.0,
+          "repo_id": "attrs",
+          "task_count": 8,
+          "threshold_pass": false
+        },
+        {
+          "B_eval_rate": 1.0,
+          "H_future_rate": 0.5,
+          "abs_gap": 0.5,
+          "catastrophic_miss": true,
+          "effective_sample_size": 2.0,
+          "repo_id": "boltons",
+          "task_count": 8,
+          "threshold_pass": false
+        }
+      ],
+      "seed": 2026052603,
+      "threshold_pass_rate_under_0_15": 0.0,
+      "uncertainty_status": "insufficient_support_for_bootstrap_interval",
+      "validation_type": "pseudo_future_seeded_block_resampling",
+      "variant_id": "seeded_random_same_budget:seed_2026052603",
+      "window_id": "paid_pilot_union_all_observed"
+    },
+    {
+      "MAE": 0.0625,
+      "RMSE": 0.088388,
+      "catastrophic_miss_rate": 0.0,
+      "design_id": "seeded_random_same_budget",
+      "effective_sample_size": 2.0,
+      "max_absolute_gap": 0.125,
+      "per_repo": [
+        {
+          "B_eval_rate": 0.5,
+          "H_future_rate": 0.5,
+          "abs_gap": 0.0,
+          "catastrophic_miss": false,
+          "effective_sample_size": 2.0,
+          "repo_id": "attrs",
+          "task_count": 8,
+          "threshold_pass": true
+        },
+        {
+          "B_eval_rate": 0.75,
+          "H_future_rate": 0.625,
+          "abs_gap": 0.125,
+          "catastrophic_miss": false,
+          "effective_sample_size": 2.0,
+          "repo_id": "boltons",
+          "task_count": 8,
+          "threshold_pass": true
+        }
+      ],
+      "seed": 2026052604,
+      "threshold_pass_rate_under_0_15": 1.0,
+      "uncertainty_status": "insufficient_support_for_bootstrap_interval",
+      "validation_type": "pseudo_future_seeded_block_resampling",
+      "variant_id": "seeded_random_same_budget:seed_2026052604",
+      "window_id": "paid_pilot_union_all_observed"
+    },
+    {
+      "MAE": 0.1875,
+      "RMSE": 0.265165,
+      "catastrophic_miss_rate": 0.5,
+      "design_id": "seeded_random_same_budget",
+      "effective_sample_size": 2.0,
+      "max_absolute_gap": 0.375,
+      "per_repo": [
+        {
+          "B_eval_rate": 0.75,
+          "H_future_rate": 0.75,
+          "abs_gap": 0.0,
+          "catastrophic_miss": false,
+          "effective_sample_size": 2.0,
+          "repo_id": "attrs",
+          "task_count": 8,
+          "threshold_pass": true
+        },
+        {
+          "B_eval_rate": 1.0,
+          "H_future_rate": 0.625,
+          "abs_gap": 0.375,
+          "catastrophic_miss": true,
+          "effective_sample_size": 2.0,
+          "repo_id": "boltons",
+          "task_count": 8,
+          "threshold_pass": false
+        }
+      ],
+      "seed": 2026052605,
+      "threshold_pass_rate_under_0_15": 0.5,
+      "uncertainty_status": "insufficient_support_for_bootstrap_interval",
+      "validation_type": "pseudo_future_seeded_block_resampling",
+      "variant_id": "seeded_random_same_budget:seed_2026052605",
+      "window_id": "paid_pilot_union_all_observed"
+    },
+    {
+      "MAE": 0.1875,
+      "RMSE": 0.265165,
+      "catastrophic_miss_rate": 0.5,
+      "design_id": "block_randomized_stratified",
+      "effective_sample_size": 2.0,
+      "max_absolute_gap": 0.375,
+      "per_repo": [
+        {
+          "B_eval_rate": 0.5,
+          "H_future_rate": 0.5,
+          "abs_gap": 0.0,
+          "catastrophic_miss": false,
+          "effective_sample_size": 2.0,
+          "repo_id": "attrs",
+          "task_count": 8,
+          "threshold_pass": true
+        },
+        {
+          "B_eval_rate": 0.75,
+          "H_future_rate": 0.375,
+          "abs_gap": 0.375,
+          "catastrophic_miss": true,
+          "effective_sample_size": 2.0,
+          "repo_id": "boltons",
+          "task_count": 8,
+          "threshold_pass": false
+        }
+      ],
+      "seed": 2026052602,
+      "threshold_pass_rate_under_0_15": 0.5,
+      "uncertainty_status": "insufficient_support_for_bootstrap_interval",
+      "validation_type": "pseudo_future_seeded_block_resampling",
+      "variant_id": "block_randomized_stratified:seed_2026052602",
+      "window_id": "paid_pilot_union_all_observed"
+    },
+    {
+      "MAE": 0.3125,
+      "RMSE": 0.318689,
+      "catastrophic_miss_rate": 0.5,
+      "design_id": "block_randomized_stratified",
+      "effective_sample_size": 2.0,
+      "max_absolute_gap": 0.375,
+      "per_repo": [
+        {
+          "B_eval_rate": 0.5,
+          "H_future_rate": 0.75,
+          "abs_gap": 0.25,
+          "catastrophic_miss": false,
+          "effective_sample_size": 2.0,
+          "repo_id": "attrs",
+          "task_count": 8,
+          "threshold_pass": false
+        },
+        {
+          "B_eval_rate": 0.5,
+          "H_future_rate": 0.875,
+          "abs_gap": 0.375,
+          "catastrophic_miss": true,
+          "effective_sample_size": 2.0,
+          "repo_id": "boltons",
+          "task_count": 8,
+          "threshold_pass": false
+        }
+      ],
+      "seed": 2026052603,
+      "threshold_pass_rate_under_0_15": 0.0,
+      "uncertainty_status": "insufficient_support_for_bootstrap_interval",
+      "validation_type": "pseudo_future_seeded_block_resampling",
+      "variant_id": "block_randomized_stratified:seed_2026052603",
+      "window_id": "paid_pilot_union_all_observed"
+    },
+    {
+      "MAE": 0.1875,
+      "RMSE": 0.197642,
+      "catastrophic_miss_rate": 0.0,
+      "design_id": "block_randomized_stratified",
+      "effective_sample_size": 2.0,
+      "max_absolute_gap": 0.25,
+      "per_repo": [
+        {
+          "B_eval_rate": 0.75,
+          "H_future_rate": 0.5,
+          "abs_gap": 0.25,
+          "catastrophic_miss": false,
+          "effective_sample_size": 2.0,
+          "repo_id": "attrs",
+          "task_count": 8,
+          "threshold_pass": false
+        },
+        {
+          "B_eval_rate": 0.75,
+          "H_future_rate": 0.875,
+          "abs_gap": 0.125,
+          "catastrophic_miss": false,
+          "effective_sample_size": 2.0,
+          "repo_id": "boltons",
+          "task_count": 8,
+          "threshold_pass": true
+        }
+      ],
+      "seed": 2026052604,
+      "threshold_pass_rate_under_0_15": 0.5,
+      "uncertainty_status": "insufficient_support_for_bootstrap_interval",
+      "validation_type": "pseudo_future_seeded_block_resampling",
+      "variant_id": "block_randomized_stratified:seed_2026052604",
+      "window_id": "paid_pilot_union_all_observed"
+    },
+    {
+      "MAE": 0.4375,
+      "RMSE": 0.475986,
+      "catastrophic_miss_rate": 0.5,
+      "design_id": "block_randomized_stratified",
+      "effective_sample_size": 2.0,
+      "max_absolute_gap": 0.625,
+      "per_repo": [
+        {
+          "B_eval_rate": 0.75,
+          "H_future_rate": 0.5,
+          "abs_gap": 0.25,
+          "catastrophic_miss": false,
+          "effective_sample_size": 2.0,
+          "repo_id": "attrs",
+          "task_count": 8,
+          "threshold_pass": false
+        },
+        {
+          "B_eval_rate": 1.0,
+          "H_future_rate": 0.375,
+          "abs_gap": 0.625,
+          "catastrophic_miss": true,
+          "effective_sample_size": 2.0,
+          "repo_id": "boltons",
+          "task_count": 8,
+          "threshold_pass": false
+        }
+      ],
+      "seed": 2026052605,
+      "threshold_pass_rate_under_0_15": 0.0,
+      "uncertainty_status": "insufficient_support_for_bootstrap_interval",
+      "validation_type": "pseudo_future_seeded_block_resampling",
+      "variant_id": "block_randomized_stratified:seed_2026052605",
+      "window_id": "paid_pilot_union_all_observed"
+    }
+  ],
+  "promotion_policy": "No design is promoted from a single favorable seed or one repo only.",
+  "run_id": "phase1_local_algorithm_bakeoff_20260526",
+  "schema_version": "barcarolle.phase1_local_algorithm_bakeoff_output.v1",
+  "status": "pass",
+  "true_rolling_origin_support": "too_small_for_stable_true_rolling_origin",
+  "validation_mode": "pseudo_future_validation"
+}

@@ -1,0 +1,88 @@
+{
+  "baseline_checks": {
+    "git_diff_check": {
+      "command": "git diff --check",
+      "status": "passed"
+    },
+    "phase0_headroom_tools_tests": {
+      "command": "uv run --project experiments/phase0_headroom pytest -q experiments/phase0_headroom/tools",
+      "result": "75 passed in 1.79s",
+      "status": "passed"
+    },
+    "phase1_compiler_tests": {
+      "command": "uv run --project experiments/phase1_compiler pytest -q",
+      "result": "71 passed in 0.31s",
+      "status": "passed"
+    },
+    "phase1_mvp_validate": {
+      "command": "uv run --project experiments/phase1_compiler python experiments/phase1_compiler/tools/phase1_compiler.py validate --config experiments/phase1_compiler/configs/phase1_mvp.yaml",
+      "result_status": "valid",
+      "status": "passed"
+    }
+  },
+  "current_decisions": {
+    "mvp_closeout": {
+      "next_runbook_recommendation": "analyze_attrs_h_future_generalization_or_mine_third_repo_without_rerunning_confirmed_violation",
+      "predictive_validity_established": false,
+      "production_ranking_status": "not_produced"
+    },
+    "policy_violation_repair": {
+      "classification_label": "confirmed_acut_policy_violation_no_rerun",
+      "h_future_scoreable_cells": 15,
+      "paid_rerun_performed": false,
+      "paid_rerun_permitted": false,
+      "policy_violation_count": 1,
+      "predictive_validity_established": false,
+      "recommended_next_runbook": "analyze_attrs_h_future_generalization_or_mine_third_repo_without_rerunning_confirmed_violation",
+      "terminal_state": "confirmed_policy_violation_validation_remains_insufficient"
+    },
+    "two_repo_future_holdout": {
+      "b_eval_scoreable_cells": 16,
+      "blockers": [
+        "policy_violation_count_exceeds_acceptance_gate"
+      ],
+      "h_future_scoreable_cells": 15,
+      "non_scoreable_count": 1,
+      "policy_violation_count": 1,
+      "pooled_mae": 0.479167,
+      "predictive_validity_established": false,
+      "primary_decision_label": "two_repo_paid_validation_complete_insufficient_evidence",
+      "production_ranking_status": "not_produced",
+      "recommended_next_runbook": "repair_workspace_acut_scoreability_or_policy_violation_then_rerun_preregistered_two_repo_validation",
+      "selected_repo_id": "attrs",
+      "selected_repos": [
+        "boltons",
+        "attrs"
+      ]
+    }
+  },
+  "environment": {
+    "branch": "codex/restart-benchmark-compiler",
+    "generated_at_utc": "2026-05-23T11:19:25Z",
+    "head": "aef2dfa69c20f776267327df3caf123be88bb7ff",
+    "llm_api_key_present": true,
+    "llm_base_url_present": true,
+    "paid_acut_calls_made": false,
+    "paid_llm_calls_made": false,
+    "python_on_path": "missing",
+    "python_version_via_uv": "Python 3.11.13",
+    "repository": "/Users/chenmohan/gits/barcarolle",
+    "uv_version": "uv 0.11.16 (Homebrew 2026-05-21 aarch64-apple-darwin)"
+  },
+  "git_status_short": [
+    "?? docs/experiments/phase-1-attrs-generalization-third-repo-decision-runbook.md",
+    "?? docs/experiments/phase-1-autonomous-overnight-two-repo-research-runbook.md",
+    "?? docs/experiments/phase-1-policy-violation-triage-bounded-rerun-runbook.md"
+  ],
+  "guardrails": {
+    "local_only_runbook": true,
+    "paid_acut_calls_enabled": false,
+    "paid_llm_calls_enabled": false,
+    "rerun_attrs_hist_027": false,
+    "rerun_existing_scoreable_cells": false,
+    "treat_policy_violation_as_scoreable_fail": false
+  },
+  "proposal_alignment": "The next work must support benchmark compiler predictive validity, uncertainty, or clean evidence boundaries. It must not optimize for task-count yield, leaderboard ranking, or ACUT harness behavior.",
+  "schema_version": "barcarolle.phase1.attrs_generalization_preflight.v1",
+  "status": "recorded"
+}

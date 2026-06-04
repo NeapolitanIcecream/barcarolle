@@ -1,0 +1,85 @@
+{
+  "artifact": "batch_3_boltons_remainder",
+  "batch_id": 3,
+  "batch_name": "batch_3_boltons_remainder",
+  "batch_summary": {
+    "cell_count": 18,
+    "non_scoreable_cell_count": 0,
+    "pass_rate": 0.2222,
+    "policy_violation_count": 0,
+    "scoreability_rate": 1.0,
+    "scoreable_cell_count": 18,
+    "terminal_status_counts": {
+      "verified_fail": 14,
+      "verified_pass": 4
+    },
+    "verified_fail_count": 14,
+    "verified_pass_count": 4
+  },
+  "click_minor_risk_caveat": "visible_title_only_minor_risk",
+  "continue_decision": "continue_to_next_batch",
+  "cumulative_summary": {
+    "attempted_result_prefixes": [
+      "phase1_blocked_split_missing_cell_supplement_paid_execution_batch_1_smoke_codex_workspace",
+      "phase1_blocked_split_missing_cell_supplement_paid_execution_batch_1_smoke_kilo_workspace",
+      "phase1_blocked_split_missing_cell_supplement_paid_execution_batch_2_attrs_remainder_codex_workspace",
+      "phase1_blocked_split_missing_cell_supplement_paid_execution_batch_2_attrs_remainder_kilo_workspace",
+      "phase1_blocked_split_missing_cell_supplement_paid_execution_batch_3_boltons_remainder_codex_workspace",
+      "phase1_blocked_split_missing_cell_supplement_paid_execution_batch_3_boltons_remainder_kilo_workspace"
+    ],
+    "cell_count": 106,
+    "combined_planned_cells": 120,
+    "hard_cost_cap_usd": 30.0,
+    "max_recoverable_scoreability_rate": 0.9917,
+    "new_completed_cells": 34,
+    "new_non_scoreable_cells": 1,
+    "new_observed_or_conservative_cost_usd": 18.8535258,
+    "new_planned_cells": 48,
+    "new_remaining_cells": 14,
+    "new_scoreable_cells": 33,
+    "non_scoreable_cell_count": 1,
+    "pass_rate": 0.419,
+    "policy_violation_count": 0,
+    "projected_remaining_new_cost_usd": 5.981192,
+    "projected_total_new_cost_usd": 24.8347178,
+    "reused_cells": 72,
+    "scoreability_rate": 0.9906,
+    "scoreable_cell_count": 105,
+    "terminal_status_counts": {
+      "invalid_output": 1,
+      "verified_fail": 61,
+      "verified_pass": 44
+    },
+    "verified_fail_count": 61,
+    "verified_pass_count": 44
+  },
+  "endpoint_compliance": {
+    "LLM_API_KEY_present": true,
+    "LLM_BASE_URL_present": true,
+    "both_required_endpoint_variables_present": true,
+    "endpoint_host_hash": "9952174049b2",
+    "sourced_zshrc_before_check": true,
+    "values_recorded": false
+  },
+  "generated_at": "2026-05-29T04:54:03Z",
+  "raw_oracle_exposure_detected": false,
+  "result_prefixes": [
+    "phase1_blocked_split_missing_cell_supplement_paid_execution_batch_3_boltons_remainder_codex_workspace",
+    "phase1_blocked_split_missing_cell_supplement_paid_execution_batch_3_boltons_remainder_kilo_workspace"
+  ],
+  "run_id": "phase1_blocked_split_missing_cell_supplement_paid_execution_20260529",
+  "schema_version": "barcarolle.phase1_blocked_split_missing_cell_supplement_paid_execution_output.v1",
+  "status": "batch_complete_continue",
+  "stop_conditions": [],
+  "task_ids": [
+    "boltons__v2__009",
+    "boltons__v2__076",
+    "boltons__v2__103",
+    "boltons__v2__122",
+    "boltons__v2__128",
+    "boltons__v2__132",
+    "boltons__v2__154",
+    "boltons__v2__231",
+    "boltons__v2__232"
+  ]
+}

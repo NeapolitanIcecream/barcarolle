@@ -1,0 +1,61 @@
+{
+  "acceptance": {
+    "min_holdout_scoreable_cells": 12,
+    "min_target_repos": 2,
+    "non_scoreable_cells_max_per_split": 2,
+    "policy_violations_max": 0
+  },
+  "adapters": [
+    "codex_workspace",
+    "kilo_workspace"
+  ],
+  "blockers": [],
+  "config": "experiments/phase1_compiler/configs/phase1_two_repo_future_holdout_validation.yaml",
+  "existing_paid_evidence": {
+    "boltons": {
+      "b_eval_prefix": "phase1_future_holdout_b_eval",
+      "b_eval_scoreable_cells": 8,
+      "decision": "experiments/phase1_compiler/results/phase1_future_holdout_decision.json",
+      "h_future_prefix": "phase1_future_holdout_h_future",
+      "h_future_scoreable_cells": 8,
+      "policy_violation_count": 0,
+      "predictive_validity_established": false,
+      "primary_decision_label": "boltons_clean_future_holdout_pilot_complete_insufficient_sample"
+    }
+  },
+  "generated_at": "2026-05-22T12:53:07+00:00",
+  "holdout_tuning_forbidden": true,
+  "paid_acut_calls_made": false,
+  "paid_second_repo_acut_calls_made": false,
+  "planned_second_repo_cells": {
+    "b_eval": 8,
+    "h_future": 8
+  },
+  "planned_second_repo_tasks": {
+    "b_eval": [
+      "attrs__hist__001",
+      "attrs__hist__003",
+      "attrs__hist__004",
+      "attrs__hist__008"
+    ],
+    "h_future": [
+      "attrs__hist__012",
+      "attrs__hist__013",
+      "attrs__hist__023",
+      "attrs__hist__027"
+    ]
+  },
+  "predictive_validity_established": false,
+  "recommended_next_runbook": "run_two_repo_preregistered_clean_future_holdout_paid_validation",
+  "schema_version": "barcarolle.phase1.two_repo_future_holdout_preregistration.v1",
+  "second_repo_planned_paid_prefixes": {
+    "b_eval": "phase1_two_repo_future_holdout_attrs_b_eval",
+    "h_future": "phase1_two_repo_future_holdout_attrs_h_future"
+  },
+  "selected_repos": [
+    "boltons",
+    "attrs"
+  ],
+  "status": "frozen",
+  "total_h_future_scoreable_capacity_if_second_repo_scoreable": 16
+}

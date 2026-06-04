@@ -1,0 +1,246 @@
+{
+  "allowed_public_context_refs": {
+    "attrs__hist__001": [
+      "issue:611"
+    ],
+    "attrs__hist__003": [
+      "pr:506"
+    ],
+    "attrs__hist__004": [
+      "issue:626"
+    ],
+    "attrs__hist__008": [
+      "pr:669"
+    ],
+    "attrs__hist__012": [
+      "issue:680"
+    ],
+    "attrs__hist__013": [
+      "pr:687"
+    ],
+    "attrs__hist__023": [
+      "issue:593"
+    ],
+    "attrs__hist__027": [
+      "issue:766"
+    ],
+    "boltons__clean_ext__001": [
+      "issue:231"
+    ],
+    "boltons__clean_ext__008": [
+      "issue:240"
+    ],
+    "boltons__clean_ext__010": [
+      "issue:252"
+    ],
+    "boltons__clean_ext__017": [
+      "issue:319"
+    ],
+    "boltons__hist__011": [
+      "pr:253"
+    ],
+    "boltons__hist__022": [
+      "pr:312"
+    ],
+    "boltons__hist__023": [
+      "pr:332"
+    ],
+    "boltons__hist__027": [
+      "pr:349"
+    ]
+  },
+  "canonical_selected_task_ids_by_repo_split": {
+    "attrs/B_eval": [
+      "attrs__hist__001",
+      "attrs__hist__003",
+      "attrs__hist__004",
+      "attrs__hist__008"
+    ],
+    "attrs/H_future": [
+      "attrs__hist__012",
+      "attrs__hist__013",
+      "attrs__hist__023",
+      "attrs__hist__027"
+    ],
+    "boltons/B_eval": [
+      "boltons__clean_ext__001",
+      "boltons__clean_ext__008",
+      "boltons__clean_ext__010",
+      "boltons__hist__011"
+    ],
+    "boltons/H_future": [
+      "boltons__clean_ext__017",
+      "boltons__hist__022",
+      "boltons__hist__023",
+      "boltons__hist__027"
+    ]
+  },
+  "created_at": "2026-05-25T08:11:58Z",
+  "editable_implementation_paths": {
+    "attrs__hist__001": [
+      "src/attr/_make.py"
+    ],
+    "attrs__hist__003": [
+      "src/attr/_make.py"
+    ],
+    "attrs__hist__004": [
+      "src/attr/_make.py"
+    ],
+    "attrs__hist__008": [
+      "src/attr/__init__.py",
+      "src/attr/__init__.pyi",
+      "src/attr/_next_gen.py"
+    ],
+    "attrs__hist__012": [
+      "src/attr/_make.py"
+    ],
+    "attrs__hist__013": [
+      "src/attr/_next_gen.py"
+    ],
+    "attrs__hist__023": [
+      "src/attr/_make.py"
+    ],
+    "attrs__hist__027": [
+      "src/attr/__init__.pyi",
+      "src/attr/_funcs.py"
+    ],
+    "boltons__clean_ext__001": [
+      "boltons/iterutils.py"
+    ],
+    "boltons__clean_ext__008": [
+      "boltons/setutils.py"
+    ],
+    "boltons__clean_ext__010": [
+      "boltons/setutils.py"
+    ],
+    "boltons__clean_ext__017": [
+      "boltons/timeutils.py"
+    ],
+    "boltons__hist__011": [
+      "boltons/iterutils.py"
+    ],
+    "boltons__hist__022": [
+      "boltons/iterutils.py"
+    ],
+    "boltons__hist__023": [
+      "boltons/tbutils.py"
+    ],
+    "boltons__hist__027": [
+      "boltons/cacheutils.py"
+    ]
+  },
+  "historical_result_policy": {
+    "old_paid_results_are_not_corrected_or_repaired": true,
+    "old_paid_results_not_merged_into_new_release_score": true,
+    "old_two_repo_paid_results_preserved_as_historical_observations": true,
+    "paid_outcomes_used_for_selection": false
+  },
+  "input_artifact_digests": {
+    "experiments/phase1_compiler/configs/phase1_statement_hardened_after_canonical_repair_preregistration.yaml": "sha256:312d2523baf5cca82a4da142d90321f2d8b9d1757cf75375ae2cff33be764f20",
+    "experiments/phase1_compiler/reports/phase1_canonical_split_repair_decision.md": "sha256:cbaba21a8413cbb0369ba7fb9a7cde81981e933bc3b1b80899d7d6a9a53ccc4d",
+    "experiments/phase1_compiler/reports/phase1_canonical_split_repair_process.md": "sha256:b7033fd31f07eaf858cef8712017dd731525daa373d52316c8ff13f78cf044f6",
+    "experiments/phase1_compiler/results/phase1_canonical_regenerated_statements.jsonl": "sha256:efd9177b19f84d992993eb3a16d4975f6c31a078914ffe13fc5f78eea91ae352",
+    "experiments/phase1_compiler/results/phase1_canonical_selected_inventory.json": "sha256:0f98c1454d7b7db49edbc670d894792353a0b44d1a9110ce12d5d28596f34b84",
+    "experiments/phase1_compiler/results/phase1_canonical_split_map.json": "sha256:caadbf80637e6b36781a82e1ff83c04258cd14759ead58ef835d248cb2f7eb0f",
+    "experiments/phase1_compiler/results/phase1_canonical_split_repair_decision.json": "sha256:063c7cab7dae58a86f6f771fafa67de35112fdd07ef04f1c4b7ad0015862ee29",
+    "experiments/phase1_compiler/results/phase1_canonical_statement_qa.json": "sha256:18e6be237a9cab210abf57ac0c06f4169119acf2f67311527140f64008fb511c",
+    "experiments/phase1_compiler/results/phase1_canonical_statement_reviews.json": "sha256:df7a4beba837c0506d9f58aa8ac7ac2f0da931450a2c144e14ffa09690ce52fe",
+    "experiments/phase1_compiler/results/phase1_canonical_statement_screen.json": "sha256:d42ceb4d6efa4ad2d7129be4c5a4f30cb33b126e4a9c4219560e40227d351cc2",
+    "experiments/phase1_compiler/results/phase1_diff_assisted_codex_loop_generated_statements.jsonl": "sha256:cc45c86e7cdffe6553c1f779079566ad8ea7d25018c9ac018e01c419d82a9a3c",
+    "experiments/phase1_compiler/results/phase1_diff_assisted_codex_loop_statement_reviews.json": "sha256:5d214899d794e2b52f2c5b7c8dc41fc93ae6acb4b70f0c93329800d120ba7bb0",
+    "experiments/phase1_compiler/results/phase1_statement_hardened_candidate_inventory.json": "sha256:87bbcc24d90965be2426908f8c4e1d69fd2f434ba6b39add8b0129cb388749d4",
+    "experiments/phase1_compiler/tools/phase1_statement_hardened_after_canonical_repair_preregistration.py": "sha256:db9b429ea4f322646985718072f108e4ced7c2a22a556787a47fa3fdad914914"
+  },
+  "non_editable_test_paths": {
+    "attrs__hist__001": [
+      "tests/test_make.py"
+    ],
+    "attrs__hist__003": [
+      "tests/test_make.py"
+    ],
+    "attrs__hist__004": [
+      "tests/test_make.py"
+    ],
+    "attrs__hist__008": [
+      "tests/test_next_gen.py",
+      "tests/typing_example.py"
+    ],
+    "attrs__hist__012": [
+      "tests/test_setattr.py"
+    ],
+    "attrs__hist__013": [
+      "tests/test_next_gen.py"
+    ],
+    "attrs__hist__023": [
+      "tests/test_annotations.py"
+    ],
+    "attrs__hist__027": [
+      "tests/test_hooks.py"
+    ],
+    "boltons__clean_ext__001": [
+      "tests/test_iterutils.py"
+    ],
+    "boltons__clean_ext__008": [
+      "tests/test_setutils.py"
+    ],
+    "boltons__clean_ext__010": [
+      "tests/test_setutils.py"
+    ],
+    "boltons__clean_ext__017": [
+      "tests/test_timeutils.py"
+    ],
+    "boltons__hist__011": [
+      "tests/test_iterutils.py"
+    ],
+    "boltons__hist__022": [
+      "tests/test_iterutils.py"
+    ],
+    "boltons__hist__023": [
+      "tests/test_tbutils_parsed_exc.py"
+    ],
+    "boltons__hist__027": [
+      "tests/test_cacheutils.py"
+    ]
+  },
+  "paid_acut_calls_made": false,
+  "paid_llm_calls_made": false,
+  "paid_validation_prefix_reserved": "phase1_statement_hardened_after_canonical_repair_paid_validation_20260525",
+  "paid_validation_prefix_reserved_for_future_run_only": true,
+  "planned_adapters": [
+    "codex_workspace",
+    "kilo_workspace"
+  ],
+  "planned_cells": 32,
+  "planned_cells_policy": {
+    "derived_from_selected_task_count_times_planned_adapters": true,
+    "selected_task_count": 16
+  },
+  "predictive_validity_established": false,
+  "release_id": "statement_hardened_after_canonical_split_repair_20260525",
+  "schema_version": "barcarolle.phase1.statement_hardened_after_canonical_repair_release_manifest.v1",
+  "scoreability_policy": {
+    "generated_statement_is_scoreable_result": false,
+    "hidden_oracle_material_only_in_verifier_workspace": true,
+    "scoreable_acut_runs_must_use_workspace_adapter": true,
+    "tests_are_non_editable": true
+  },
+  "statement_digests": {
+    "attrs__hist__001": "sha256:72f3749b248f32afa7ab0639cb5918df46243c0727ffb5aca0e544fffca0a294",
+    "attrs__hist__003": "sha256:c8d04730b328ad028598eee282911e825fc6617f782ac07d74415a896f5a72f0",
+    "attrs__hist__004": "sha256:6dc808c7d1efafc2397a84ca7321830cb67540128a34f91d1de9eb6d80e312dd",
+    "attrs__hist__008": "sha256:8c2d8b532d98e9be3c6b01e90eb16f8afd8bccddb322c0f2d45a9b43709ed652",
+    "attrs__hist__012": "sha256:eb3b31fd4bf8241f9088b47b989b307545e1a2ceae9b5782feacc02453246f16",
+    "attrs__hist__013": "sha256:702f3a1c5f7a6936944aa15727ab4c1fd973f0ed71f73b54386ee94cd75b4da3",
+    "attrs__hist__023": "sha256:3262b00021acd8bd07b3adcbe9de4e3fc297a763750ce60acfc831f9912d5390",
+    "attrs__hist__027": "sha256:f4bedc621b7cd8d458dcd08ff6134e823d21687ba30177122bde297e433486f6",
+    "boltons__clean_ext__001": "sha256:2f0f8f1b0cef43b0c1bf8c3445c7501353e461194389d8ee64a7f367304f189c",
+    "boltons__clean_ext__008": "sha256:5c41a33c6e235518e1e984ebb9f4b1865b9b93c53797096f5b398ed14a53613c",
+    "boltons__clean_ext__010": "sha256:1ffae607372921f374157f78e660822928ab076cf76906179213aee8cc9120c7",
+    "boltons__clean_ext__017": "sha256:06e5da6b0d3af52a92b0d16be43b660f4b972bb3d7bbdd05445250d1b92f8d7a",
+    "boltons__hist__011": "sha256:6c415911ffde12152fd9ddc6911f88400fb276e133cd62d4518c89b48ed07877",
+    "boltons__hist__022": "sha256:df7b0201c0ef0ec9f236f2c53bb50a475d2cf0bbf688f6e9ef2a87fd231500c3",
+    "boltons__hist__023": "sha256:a70aa84eb91022b28b2b418aa3fd34671a3ada779bc0e4c633e42faf7a055a7a",
+    "boltons__hist__027": "sha256:aa6f2e0c3059224df7a4fdfec91446117128820f639b9a65793186756cea575a"
+  },
+  "status": "frozen"
+}

@@ -1,0 +1,177 @@
+{
+  "artifact": "protocol_options",
+  "claim_policy_valid": true,
+  "generated_at": "2026-05-29T03:00:19Z",
+  "options": [
+    {
+      "adapter_reporting_mode": "adapter_stratified_before_pooled",
+      "claim_boundary": "retrospective_sanity_check_only",
+      "click_minor_risk_status": "visible_title_only_minor_risk",
+      "cons": [
+        "incomplete outcome coverage",
+        "not new validation evidence"
+      ],
+      "new_paid_cell_count": 0,
+      "new_paid_cell_count_by_adapter": {
+        "codex_workspace": 0,
+        "kilo_workspace": 0
+      },
+      "option_id": "A",
+      "predictive_validity_claim_allowed": false,
+      "pros": [
+        "free",
+        "fast",
+        "uses only completed committed outcomes"
+      ],
+      "protocol_name": "retrospective_only_no_new_paid_cells",
+      "provider_bill_status": "provider_billed_exact_cost_unavailable_without_actual_provider_billed_cost_usd",
+      "recommendation_status": "not_recommended",
+      "reused_cell_count": 72,
+      "reused_cell_count_by_adapter": {
+        "codex_workspace": 36,
+        "kilo_workspace": 36
+      },
+      "target_budget_id": "same_budget_20_per_repo",
+      "target_split_id": "phase1_blocked_split_redesign_20260529__same_budget_20_per_repo__seed_2026052902",
+      "total_scoreable_cell_count_after_protocol": 72
+    },
+    {
+      "adapter_reporting_mode": "adapter_stratified_before_pooled",
+      "claim_boundary": "exploratory_supplemental_validation_for_post_hoc_blocked_split",
+      "click_minor_risk_status": "visible_title_only_minor_risk",
+      "cons": [
+        "mixes old and new outcomes",
+        "still post-hoc and exploratory"
+      ],
+      "new_paid_cell_count": 48,
+      "new_paid_cell_count_by_adapter": {
+        "codex_workspace": 24,
+        "kilo_workspace": 24
+      },
+      "option_id": "B",
+      "predictive_validity_claim_allowed": false,
+      "pros": [
+        "cheaper than full rerun",
+        "fills the selected same-budget score table"
+      ],
+      "protocol_name": "same_budget_missing_cell_supplement",
+      "provider_bill_status": "provider_billed_exact_cost_unavailable_without_actual_provider_billed_cost_usd",
+      "recommendation_status": "recommended",
+      "reused_cell_count": 72,
+      "reused_cell_count_by_adapter": {
+        "codex_workspace": 36,
+        "kilo_workspace": 36
+      },
+      "target_budget_id": "same_budget_20_per_repo",
+      "target_split_id": "phase1_blocked_split_redesign_20260529__same_budget_20_per_repo__seed_2026052902",
+      "total_scoreable_cell_count_after_protocol": 120
+    },
+    {
+      "adapter_reporting_mode": "adapter_stratified_before_pooled",
+      "claim_boundary": "cleaner_exploratory_validation_after_blocked_split_freeze",
+      "click_minor_risk_status": "visible_title_only_minor_risk",
+      "cons": [
+        "higher cost than supplement",
+        "still not formal pre-outcome design"
+      ],
+      "new_paid_cell_count": 120,
+      "new_paid_cell_count_by_adapter": {
+        "codex_workspace": 60,
+        "kilo_workspace": 60
+      },
+      "option_id": "C",
+      "predictive_validity_claim_allowed": false,
+      "pros": [
+        "one uniform run after design review"
+      ],
+      "protocol_name": "same_budget_full_rerun",
+      "provider_bill_status": "provider_billed_exact_cost_unavailable_without_actual_provider_billed_cost_usd",
+      "recommendation_status": "acceptable_secondary",
+      "reused_cell_count": 0,
+      "reused_cell_count_by_adapter": {
+        "codex_workspace": 0,
+        "kilo_workspace": 0
+      },
+      "target_budget_id": "same_budget_20_per_repo",
+      "target_split_id": "phase1_blocked_split_redesign_20260529__same_budget_20_per_repo__seed_2026052902",
+      "total_scoreable_cell_count_after_protocol": 120
+    },
+    {
+      "adapter_reporting_mode": "adapter_stratified_before_pooled",
+      "claim_boundary": "higher_coverage_exploratory_validation_after_blocked_split_freeze",
+      "click_minor_risk_status": "visible_title_only_minor_risk",
+      "cons": [
+        "highest projected spend",
+        "click risk remains",
+        "still post-hoc"
+      ],
+      "new_paid_cell_count": 180,
+      "new_paid_cell_count_by_adapter": {
+        "codex_workspace": 90,
+        "kilo_workspace": 90
+      },
+      "option_id": "D",
+      "predictive_validity_claim_allowed": false,
+      "pros": [
+        "more tasks",
+        "better mechanical precision"
+      ],
+      "protocol_name": "expanded_full_rerun",
+      "provider_bill_status": "provider_billed_exact_cost_unavailable_without_actual_provider_billed_cost_usd",
+      "recommendation_status": "acceptable_secondary",
+      "reused_cell_count": 0,
+      "reused_cell_count_by_adapter": {
+        "codex_workspace": 0,
+        "kilo_workspace": 0
+      },
+      "target_budget_id": "expanded_30_per_repo",
+      "target_split_id": "phase1_blocked_split_redesign_20260529__expanded_30_per_repo__seed_2026052904",
+      "total_scoreable_cell_count_after_protocol": 180
+    },
+    {
+      "adapter_reporting_mode": "not_applicable_until_paid_validation_resumes",
+      "claim_boundary": "no_paid_validation_until_click_risk_or_repo_mix_changes",
+      "click_minor_risk_status": "treated_as_blocker_for_this_option",
+      "cons": [
+        "delays validation",
+        "requires more local source repair or replacement work"
+      ],
+      "new_paid_cell_count": 0,
+      "new_paid_cell_count_by_adapter": {
+        "codex_workspace": 0,
+        "kilo_workspace": 0
+      },
+      "option_id": "E",
+      "predictive_validity_claim_allowed": false,
+      "pros": [
+        "cleaner source-quality basis"
+      ],
+      "protocol_name": "stop_for_source_repair_or_third_repo_replacement",
+      "provider_bill_status": "not_applicable",
+      "recommendation_status": "not_recommended",
+      "reused_cell_count": 0,
+      "reused_cell_count_by_adapter": {
+        "codex_workspace": 0,
+        "kilo_workspace": 0
+      },
+      "target_budget_id": null,
+      "target_split_id": null,
+      "total_scoreable_cell_count_after_protocol": 0
+    }
+  ],
+  "paid_calls_made_by_this_run": 0,
+  "policy_checks": {
+    "adapter_reporting_first": true,
+    "click_minor_risk_visible": true,
+    "existing_outcomes_not_formal_preregistration": true,
+    "exploratory_status_explicit": true,
+    "paid_outcomes_do_not_mutate_split": true,
+    "post_hoc_allowed_only_for_exploration": true,
+    "predictive_validity_not_claimed": true,
+    "provider_bill_exact_cost_guard_present": true
+  },
+  "predictive_validity_established": false,
+  "run_id": "phase1_blocked_split_paid_validation_design_review_20260529",
+  "schema_version": "barcarolle.phase1_blocked_split_paid_validation_design_review_output.v1",
+  "selected_recommended_option_id": "B"
+}

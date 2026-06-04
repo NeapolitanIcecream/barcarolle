@@ -1,0 +1,32 @@
+{
+  "artifact": "success_criteria",
+  "future_predictive_validity_claim": {
+    "candidate_must_beat_best_simple_baseline_primary_mae_by_at_least": 0.01,
+    "cannot_be_driven_only_by_one_repo_or_one_adapter": true,
+    "catastrophic_miss_rate_must_not_materially_worsen": true,
+    "or_majority_of_slices_rule": "candidate_improves_more_slices_than_it_worsens",
+    "policy_violations_allowed": 0,
+    "pooled_improvement_alone_is_insufficient": true,
+    "requires_future_outcome_unseen_validation": true,
+    "source_quality_endpoint_and_accounting_checks_must_pass": true
+  },
+  "generated_at": "2026-05-30T03:29:31Z",
+  "paid_readiness_gate": {
+    "adversarial_review_packet_ready": true,
+    "external_review_submission_required_before_paid_run": true,
+    "future_paid_cells_authorized_now": false
+  },
+  "run_id": "phase1_candidate_policy_validation_protocol_20260530",
+  "schema_version": "barcarolle.phase1_candidate_policy_validation_protocol_output.v1",
+  "stop_or_blocker_conditions": [
+    "policy cannot be implemented outcome-blind",
+    "policy inputs have forbidden outcome fields",
+    "future validation lacks enough repo or adapter support for the intended claim",
+    "endpoint or cost accounting cannot be proven before future paid calls",
+    "review packet cannot be sanitized"
+  ],
+  "traction_evidence": {
+    "allowed_when": "retrospective or underpowered validation shows directional improvement with visible limitations",
+    "required_reporting": "what happened, why it matters, and next action"
+  }
+}

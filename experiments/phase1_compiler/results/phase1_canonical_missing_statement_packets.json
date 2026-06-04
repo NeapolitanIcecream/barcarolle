@@ -1,0 +1,428 @@
+{
+  "candidate_count": 4,
+  "deterministic_generation_review_fallback_allowed": false,
+  "generated_at": "2026-05-25T07:28:37Z",
+  "hidden_verifier_material_included": false,
+  "historical_paid_outcomes_included": false,
+  "packets": [
+    {
+      "canonical_repo_split": "boltons/B_eval",
+      "canonical_split": "B_eval",
+      "canonical_split_source": "frozen_preregistration_entry_gate_and_two_repo_matrix_membership",
+      "certification_gate_summary": {
+        "all_pass": true,
+        "failed_gates": [],
+        "gate_count": 11,
+        "gate_counts": {
+          "pass": 11
+        }
+      },
+      "changed_files": [
+        "boltons/iterutils.py",
+        "docs/iterutils.rst",
+        "tests/test_iterutils.py"
+      ],
+      "current_inventory_split_used_for_selection": false,
+      "deterministic_generation_allowed": false,
+      "deterministic_review_allowed": false,
+      "diff_summary": {
+        "available": true,
+        "changed_file_count": 3,
+        "changed_files": [
+          "boltons/iterutils.py",
+          "docs/iterutils.rst",
+          "tests/test_iterutils.py"
+        ],
+        "implementation_files_changed": [
+          "boltons/iterutils.py"
+        ],
+        "line_counts_by_file": [
+          {
+            "added_lines": 94,
+            "path": "boltons/iterutils.py",
+            "removed_lines": 0
+          },
+          {
+            "added_lines": 6,
+            "path": "docs/iterutils.rst",
+            "removed_lines": 0
+          },
+          {
+            "added_lines": 26,
+            "path": "tests/test_iterutils.py",
+            "removed_lines": 0
+          }
+        ],
+        "name_status_counts": {
+          "M": 3
+        },
+        "summary": "1 implementation file(s) and 1 test file(s) changed; 126 added line(s), 0 removed line(s).",
+        "test_files_touched": [
+          "tests/test_iterutils.py"
+        ]
+      },
+      "historical_paid_outcomes_included": false,
+      "implementation_files": [
+        "boltons/iterutils.py"
+      ],
+      "module_or_package": [
+        "iterutils"
+      ],
+      "old_statement_quality": {
+        "body_summary_hit_old_cap": false,
+        "gate": "manual_review_required",
+        "old_truncation_treated_as_recoverable_renderer_defect": true,
+        "risk_reasons": [],
+        "statement_probably_truncated": false
+      },
+      "public_context": {
+        "body_digest": "sha256:3c9cbb39186ed443737620f654b8681d749ac47c3f27fbcd4873e5fe6b19835e",
+        "body_excerpt": "Adding lstrip, rstrip, and strip for iterables",
+        "body_length": 46,
+        "classification": "problem_context",
+        "source_kind": "pull_request",
+        "source_ref": "pr:253",
+        "state": "",
+        "title": "#122 - Adding lstrip, rstrip, and strip for iterables"
+      },
+      "raw_target_diff_included": false,
+      "real_codex_loop_required": true,
+      "repo_id": "boltons",
+      "schema_version": "barcarolle.phase1.canonical_missing_statement_packet.v1",
+      "scope_metadata": {
+        "editable_paths": [
+          "boltons/iterutils.py"
+        ],
+        "implementation_scope_only": true,
+        "non_editable_test_paths": [
+          "tests/test_iterutils.py"
+        ],
+        "verifier_command_metadata": "uv run --project experiments/phase0_headroom --with \"pytest>=8,<9\" --with \"setuptools<81\" python -m pytest -q tests/test_iterutils.py"
+      },
+      "source_kind": "pull_request",
+      "source_ref": "pr:253",
+      "target_diff_digest": "sha256:4e860fbd156044b81e18ee77fd6ada1a3b8fa22d574e9923f6abc2cc0bf771ba",
+      "task_id": "boltons__hist__011",
+      "task_time": "2020-06-22T01:19:35-04:00",
+      "test_diff_digest": "sha256:1aef866d9447ac9135714d698e40fc4007cbc7ad749c96b812cee61733e71c9a",
+      "test_files": [
+        "tests/test_iterutils.py"
+      ]
+    },
+    {
+      "canonical_repo_split": "boltons/H_future",
+      "canonical_split": "H_future",
+      "canonical_split_source": "frozen_preregistration_entry_gate_and_two_repo_matrix_membership",
+      "certification_gate_summary": {
+        "all_pass": true,
+        "failed_gates": [],
+        "gate_count": 11,
+        "gate_counts": {
+          "pass": 11
+        }
+      },
+      "changed_files": [
+        "boltons/iterutils.py",
+        "docs/iterutils.rst",
+        "tests/test_iterutils.py"
+      ],
+      "current_inventory_split_used_for_selection": false,
+      "deterministic_generation_allowed": false,
+      "deterministic_review_allowed": false,
+      "diff_summary": {
+        "available": true,
+        "changed_file_count": 3,
+        "changed_files": [
+          "boltons/iterutils.py",
+          "docs/iterutils.rst",
+          "tests/test_iterutils.py"
+        ],
+        "implementation_files_changed": [
+          "boltons/iterutils.py"
+        ],
+        "line_counts_by_file": [
+          {
+            "added_lines": 58,
+            "path": "boltons/iterutils.py",
+            "removed_lines": 3
+          },
+          {
+            "added_lines": 1,
+            "path": "docs/iterutils.rst",
+            "removed_lines": 0
+          },
+          {
+            "added_lines": 16,
+            "path": "tests/test_iterutils.py",
+            "removed_lines": 0
+          }
+        ],
+        "name_status_counts": {
+          "M": 3
+        },
+        "summary": "1 implementation file(s) and 1 test file(s) changed; 75 added line(s), 3 removed line(s).",
+        "test_files_touched": [
+          "tests/test_iterutils.py"
+        ]
+      },
+      "historical_paid_outcomes_included": false,
+      "implementation_files": [
+        "boltons/iterutils.py"
+      ],
+      "module_or_package": [
+        "iterutils"
+      ],
+      "old_statement_quality": {
+        "body_summary_hit_old_cap": false,
+        "gate": "manual_review_required",
+        "old_truncation_treated_as_recoverable_renderer_defect": true,
+        "risk_reasons": [],
+        "statement_probably_truncated": false
+      },
+      "public_context": {
+        "body_digest": "sha256:c9c4c36315c9ecd9ba6d6972579a089c0cd2f35b7d4f32cd2b5231fed85072da",
+        "body_excerpt": "This PR adds a `chunk_ranges` function to iterutils, which doesn't chunk an iterable or list directly, but produces the relevant indices to chunk it. It contains functionality for windowing/overlap (see also issue https://github.com/mahmoud",
+        "body_length": 240,
+        "classification": "problem_context",
+        "source_kind": "pull_request",
+        "source_ref": "pr:312",
+        "state": "",
+        "title": "add chunk_ranges function to iterutils"
+      },
+      "raw_target_diff_included": false,
+      "real_codex_loop_required": true,
+      "repo_id": "boltons",
+      "schema_version": "barcarolle.phase1.canonical_missing_statement_packet.v1",
+      "scope_metadata": {
+        "editable_paths": [
+          "boltons/iterutils.py"
+        ],
+        "implementation_scope_only": true,
+        "non_editable_test_paths": [
+          "tests/test_iterutils.py"
+        ],
+        "verifier_command_metadata": "uv run --project experiments/phase0_headroom --with \"pytest>=8,<9\" --with \"setuptools<81\" python -m pytest -q tests/test_iterutils.py"
+      },
+      "source_kind": "pull_request",
+      "source_ref": "pr:312",
+      "target_diff_digest": "sha256:7f40ada197955158306f1e5d0705dd1ec267bc621af17aa93a9f950fd6a47b92",
+      "task_id": "boltons__hist__022",
+      "task_time": "2023-02-20T07:22:09+01:00",
+      "test_diff_digest": "sha256:6033cb2c508202e37f191866c9dd03ea2006416b412b0dce097e8a9055c3eb8c",
+      "test_files": [
+        "tests/test_iterutils.py"
+      ]
+    },
+    {
+      "canonical_repo_split": "boltons/H_future",
+      "canonical_split": "H_future",
+      "canonical_split_source": "frozen_preregistration_entry_gate_and_two_repo_matrix_membership",
+      "certification_gate_summary": {
+        "all_pass": true,
+        "failed_gates": [],
+        "gate_count": 11,
+        "gate_counts": {
+          "pass": 11
+        }
+      },
+      "changed_files": [
+        "boltons/tbutils.py",
+        "tests/test_tbutils_parsed_exc.py"
+      ],
+      "current_inventory_split_used_for_selection": false,
+      "deterministic_generation_allowed": false,
+      "deterministic_review_allowed": false,
+      "diff_summary": {
+        "available": true,
+        "changed_file_count": 2,
+        "changed_files": [
+          "boltons/tbutils.py",
+          "tests/test_tbutils_parsed_exc.py"
+        ],
+        "implementation_files_changed": [
+          "boltons/tbutils.py"
+        ],
+        "line_counts_by_file": [
+          {
+            "added_lines": 4,
+            "path": "boltons/tbutils.py",
+            "removed_lines": 1
+          },
+          {
+            "added_lines": 30,
+            "path": "tests/test_tbutils_parsed_exc.py",
+            "removed_lines": 0
+          }
+        ],
+        "name_status_counts": {
+          "M": 2
+        },
+        "summary": "1 implementation file(s) and 1 test file(s) changed; 34 added line(s), 1 removed line(s).",
+        "test_files_touched": [
+          "tests/test_tbutils_parsed_exc.py"
+        ]
+      },
+      "historical_paid_outcomes_included": false,
+      "implementation_files": [
+        "boltons/tbutils.py"
+      ],
+      "module_or_package": [
+        "tbutils"
+      ],
+      "old_statement_quality": {
+        "body_summary_hit_old_cap": false,
+        "gate": "manual_review_required",
+        "old_truncation_treated_as_recoverable_renderer_defect": true,
+        "risk_reasons": [],
+        "statement_probably_truncated": false
+      },
+      "public_context": {
+        "body_digest": "sha256:a3172c9cfd014eab917cca2938a7db0e7f0cf237fe67cccdef68dfc86a87e662",
+        "body_excerpt": "Anchors are sometimes added below the source line, (see https://github.com/python/cpython/blob/[redacted-hex-hash]/Lib/traceback.py#L479-L510). This fix will allow parsing to continue as normal in their presence",
+        "body_length": 232,
+        "classification": "problem_context",
+        "source_kind": "pull_request",
+        "source_ref": "pr:332",
+        "state": "",
+        "title": "Update tbutils.py to parse tracebacks with anchor lines"
+      },
+      "raw_target_diff_included": false,
+      "real_codex_loop_required": true,
+      "repo_id": "boltons",
+      "schema_version": "barcarolle.phase1.canonical_missing_statement_packet.v1",
+      "scope_metadata": {
+        "editable_paths": [
+          "boltons/tbutils.py"
+        ],
+        "implementation_scope_only": true,
+        "non_editable_test_paths": [
+          "tests/test_tbutils_parsed_exc.py"
+        ],
+        "verifier_command_metadata": "uv run --project experiments/phase0_headroom --with \"pytest>=8,<9\" --with \"setuptools<81\" python -m pytest -q tests/test_tbutils_parsed_exc.py"
+      },
+      "source_kind": "pull_request",
+      "source_ref": "pr:332",
+      "target_diff_digest": "sha256:ab855ebb21b34ac91683dabac03dc1ba3b3f424ca39864566fcbd01ce360651f",
+      "task_id": "boltons__hist__023",
+      "task_time": "2023-04-02T15:11:27-04:00",
+      "test_diff_digest": "sha256:0e18b510dd1bfb85f144052fae6ee5676e87438b02faf6bb620adf3845c0ddf4",
+      "test_files": [
+        "tests/test_tbutils_parsed_exc.py"
+      ]
+    },
+    {
+      "canonical_repo_split": "boltons/H_future",
+      "canonical_split": "H_future",
+      "canonical_split_source": "frozen_preregistration_entry_gate_and_two_repo_matrix_membership",
+      "certification_gate_summary": {
+        "all_pass": true,
+        "failed_gates": [],
+        "gate_count": 11,
+        "gate_counts": {
+          "pass": 11
+        }
+      },
+      "changed_files": [
+        ".github/workflows/tests.yaml",
+        "boltons/cacheutils.py",
+        "tests/test_cacheutils.py"
+      ],
+      "current_inventory_split_used_for_selection": false,
+      "deterministic_generation_allowed": false,
+      "deterministic_review_allowed": false,
+      "diff_summary": {
+        "available": true,
+        "changed_file_count": 3,
+        "changed_files": [
+          ".github/workflows/tests.yaml",
+          "boltons/cacheutils.py",
+          "tests/test_cacheutils.py"
+        ],
+        "implementation_files_changed": [
+          "boltons/cacheutils.py"
+        ],
+        "line_counts_by_file": [
+          {
+            "added_lines": 16,
+            "path": ".github/workflows/tests.yaml",
+            "removed_lines": 1
+          },
+          {
+            "added_lines": 2,
+            "path": "boltons/cacheutils.py",
+            "removed_lines": 1
+          },
+          {
+            "added_lines": 26,
+            "path": "tests/test_cacheutils.py",
+            "removed_lines": 0
+          }
+        ],
+        "name_status_counts": {
+          "M": 3
+        },
+        "summary": "1 implementation file(s) and 1 test file(s) changed; 44 added line(s), 2 removed line(s).",
+        "test_files_touched": [
+          "tests/test_cacheutils.py"
+        ]
+      },
+      "historical_paid_outcomes_included": false,
+      "implementation_files": [
+        "boltons/cacheutils.py"
+      ],
+      "module_or_package": [
+        "cacheutils"
+      ],
+      "old_statement_quality": {
+        "body_summary_hit_old_cap": false,
+        "gate": "manual_review_required",
+        "old_truncation_treated_as_recoverable_renderer_defect": true,
+        "risk_reasons": [],
+        "statement_probably_truncated": false
+      },
+      "public_context": {
+        "body_digest": "sha256:41c7e19ebae3cdf477b65810c845959b31e649c9763436dc117d395a4a05aac1",
+        "body_excerpt": "The test repro'd #348, plus I checked `.values()` for good measure. It wasn't really a supported use case before, but ideally it should be; cacheutil are dict subtypes (for better or worse). Before merging, I should probably add LRI tests f",
+        "body_length": 240,
+        "classification": "problem_context",
+        "source_kind": "pull_request",
+        "source_ref": "pr:349",
+        "state": "",
+        "title": "Test and fix for #348"
+      },
+      "raw_target_diff_included": false,
+      "real_codex_loop_required": true,
+      "repo_id": "boltons",
+      "schema_version": "barcarolle.phase1.canonical_missing_statement_packet.v1",
+      "scope_metadata": {
+        "editable_paths": [
+          "boltons/cacheutils.py"
+        ],
+        "implementation_scope_only": true,
+        "non_editable_test_paths": [
+          "tests/test_cacheutils.py"
+        ],
+        "verifier_command_metadata": "uv run --project experiments/phase0_headroom --with \"pytest>=8,<9\" --with \"setuptools<81\" python -m pytest -q tests/test_cacheutils.py"
+      },
+      "source_kind": "pull_request",
+      "source_ref": "pr:349",
+      "target_diff_digest": "sha256:599a0a96c332b9939ce6beb9fc7de909a20b09d27b8ef4392115310e7846db25",
+      "task_id": "boltons__hist__027",
+      "task_time": "2023-10-29T21:31:16-07:00",
+      "test_diff_digest": "sha256:d3dd14eff6b14b9a26790338fcf62b3e9b409c343224496992e617f6a5f503bb",
+      "test_files": [
+        "tests/test_cacheutils.py"
+      ]
+    }
+  ],
+  "paid_acut_calls_made": false,
+  "raw_target_diffs_committed": false,
+  "real_codex_loop_required": true,
+  "schema_version": "barcarolle.phase1.canonical_missing_statement_packets.v1",
+  "task_ids": [
+    "boltons__hist__011",
+    "boltons__hist__022",
+    "boltons__hist__023",
+    "boltons__hist__027"
+  ]
+}

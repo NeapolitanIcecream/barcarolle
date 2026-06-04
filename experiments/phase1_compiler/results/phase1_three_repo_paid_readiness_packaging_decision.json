@@ -1,0 +1,111 @@
+{
+  "artifact": "decision",
+  "baselines_and_diagnostics": [
+    {
+      "design_id": "repo_unweighted_same_budget",
+      "role": "baseline"
+    },
+    {
+      "design_id": "repo_stratified_same_budget",
+      "role": "baseline"
+    },
+    {
+      "design_id": "temporal_recent_baseline",
+      "role": "baseline"
+    },
+    {
+      "design_id": "block_randomized_stratified_candidate",
+      "role": "secondary"
+    },
+    {
+      "design_id": "old_weighted_design",
+      "role": "diagnostic_only"
+    }
+  ],
+  "commits_made_during_run": [
+    "e36e982d Add three-repo paid readiness packaging scaffold",
+    "1837d7c7 Record three-repo packaging preflight",
+    "b910487e Freeze three-repo packaging supply snapshot",
+    "21f27543 Record three-repo packaging source audit",
+    "95c47168 Preregister three-repo packaging split plan",
+    "1ce78485 Preregister three-repo packaging baselines",
+    "2968d96e Preregister three-repo packaging thresholds",
+    "34da2a5a Plan three-repo packaging paid batches",
+    "f3febf8a Record three-repo packaging entry gate",
+    "final closeout commit: records Step 8 decision artifacts"
+  ],
+  "completed_steps": [
+    "Step 0 preflight and boundary check",
+    "Step 1 three-repo supply snapshot",
+    "Step 2 source quality audit",
+    "Step 3 release candidate and split plan",
+    "Step 4 baseline and diagnostic plan",
+    "Step 5 threshold preregistration",
+    "Step 6 power, cost, and paid batch plan",
+    "Step 7 entry gate",
+    "Step 8 decision and closeout"
+  ],
+  "entry_gate_status": "ready_for_paid_validation_runbook",
+  "final_decision": "pilot_package_ready_but_precision_target_not_claimable",
+  "generated_at": "2026-05-28T03:39:08Z",
+  "known_blockers": [],
+  "paid_acut_or_paid_llm_calls_made": false,
+  "paid_ready": true,
+  "paid_validation_run": false,
+  "predictive_validity_established": false,
+  "primary_design": "repo_stratified",
+  "recommended_next_action_categories": [
+    "coordinating session may choose whether to run a later paid validation runbook",
+    "if run, keep repo_stratified as primary and old weighted as diagnostic only",
+    "treat the recommended batch as pilot-grade unless a later preregistration expands precision"
+  ],
+  "recommended_paid_batch": "primary_pilot",
+  "recommended_paid_batch_cost_range_usd": {
+    "conservative": 60.0,
+    "lower": 37.21
+  },
+  "release_eligible_count_by_repo": {
+    "attrs": 31,
+    "boltons": 35,
+    "click": 30
+  },
+  "research_questions": {
+    "RQ1": "attrs, boltons, and click are frozen into the paid entry package.",
+    "RQ2": "Source-quality audit passed: True.",
+    "RQ3": "Primary design is repo_stratified.",
+    "RQ4": "Repo-unweighted, repo-stratified, temporal-recent, old weighted diagnostic, and block-randomized stratified candidate are frozen.",
+    "RQ5": "Thresholds preregister zero policy violations, endpoint compliance, no raw oracle exposure, scoreability >= 0.95, and primary gap <= 0.15.",
+    "RQ6": "Recommended paid batch is primary_pilot with cost range {'conservative': 60.0, 'lower': 37.21}.",
+    "RQ7": "Package ready for paid validation runbook: True.",
+    "RQ8": "No paid ACUT or paid LLM calls were made by this packaging runbook."
+  },
+  "run_id": "phase1_three_repo_paid_readiness_packaging_20260528",
+  "schema_version": "barcarolle.phase1_three_repo_paid_readiness_packaging_output.v1",
+  "source_quality_audit_passed": true,
+  "tests_run": [
+    {
+      "command": "uv run --project experiments/phase1_compiler pytest experiments/phase1_compiler/tests/test_phase1_three_repo_paid_readiness_packaging.py -q",
+      "passed": true,
+      "returncode": 0
+    },
+    {
+      "command": "uv run --project experiments/phase1_compiler pytest experiments/phase1_compiler/tests -q",
+      "passed": true,
+      "returncode": 0
+    },
+    {
+      "command": "git diff --check",
+      "passed": true,
+      "returncode": 0
+    }
+  ],
+  "thresholds": {
+    "cost_latency_accounting_required": true,
+    "minimum_scoreability_rate": 0.95,
+    "non_scoreable_cell_handling": "preregistered_taxonomy_and_excluded_from_pass_denominator",
+    "paid_endpoint_required": "LLM_BASE_URL + LLM_API_KEY",
+    "policy_violations_max": 0,
+    "primary_gap_threshold": 0.15,
+    "raw_oracle_exposure_allowed": false
+  }
+}

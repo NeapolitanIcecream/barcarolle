@@ -1,0 +1,514 @@
+{
+  "candidate_count": 22,
+  "candidate_screens": [
+    {
+      "deterministic_qa_status": "pass",
+      "eligible_after_regeneration": true,
+      "eligible_before_regeneration": false,
+      "old_statement_quality_gate": "fail",
+      "old_statement_quality_risk_reasons": [
+        "body_summary_hit_old_240_char_cap",
+        "statement_ends_mid_code_fence",
+        "statement_probably_truncated"
+      ],
+      "rejection_reasons_after_regeneration": [],
+      "release_split_eligibility": [
+        "B_eval"
+      ],
+      "repo_id": "boltons",
+      "review_status": "pass",
+      "statement_digest": "sha256:16f303cb6cfe356a39f74ba45cd4642a9339a79130857b9ce7c859e46294cb12",
+      "task_id": "boltons__clean_ext__001",
+      "task_time": "2020-01-06T22:29:17-08:00"
+    },
+    {
+      "deterministic_qa_status": "pass",
+      "eligible_after_regeneration": true,
+      "eligible_before_regeneration": false,
+      "old_statement_quality_gate": "fail",
+      "old_statement_quality_risk_reasons": [
+        "body_summary_hit_old_240_char_cap",
+        "statement_probably_truncated"
+      ],
+      "rejection_reasons_after_regeneration": [],
+      "release_split_eligibility": [
+        "B_eval"
+      ],
+      "repo_id": "boltons",
+      "review_status": "pass",
+      "statement_digest": "sha256:767576ea14ea64d7d0919eee08ec976493ab2cbd7556406ea176f825d8c19a79",
+      "task_id": "boltons__clean_ext__008",
+      "task_time": "2020-03-29T19:27:42-07:00"
+    },
+    {
+      "deterministic_qa_status": "pass",
+      "eligible_after_regeneration": true,
+      "eligible_before_regeneration": true,
+      "old_statement_quality_gate": "pass",
+      "old_statement_quality_risk_reasons": [
+        "body_summary_hit_old_240_char_cap"
+      ],
+      "rejection_reasons_after_regeneration": [],
+      "release_split_eligibility": [
+        "B_eval"
+      ],
+      "repo_id": "boltons",
+      "review_status": "pass",
+      "statement_digest": "sha256:0dbad5b502c46939f3c9c7a21fc9e996d25904df24c96ef9c03f0baba1edeac5",
+      "task_id": "boltons__clean_ext__010",
+      "task_time": "2020-04-21T02:03:26-07:00"
+    },
+    {
+      "deterministic_qa_status": "pass",
+      "eligible_after_regeneration": true,
+      "eligible_before_regeneration": true,
+      "old_statement_quality_gate": "pass",
+      "old_statement_quality_risk_reasons": [],
+      "rejection_reasons_after_regeneration": [],
+      "release_split_eligibility": [
+        "B_eval"
+      ],
+      "repo_id": "boltons",
+      "review_status": "pass",
+      "statement_digest": "sha256:047fb100b07b8b95225f9f37177601f2f3b3953bd4266225da535aa660120b5a",
+      "task_id": "boltons__clean_ext__017",
+      "task_time": "2022-12-07T18:22:36-08:00"
+    },
+    {
+      "deterministic_qa_status": "pass",
+      "eligible_after_regeneration": true,
+      "eligible_before_regeneration": false,
+      "old_statement_quality_gate": "fail",
+      "old_statement_quality_risk_reasons": [
+        "body_summary_hit_old_240_char_cap",
+        "statement_probably_truncated"
+      ],
+      "rejection_reasons_after_regeneration": [],
+      "release_split_eligibility": [
+        "B_eval",
+        "H_future"
+      ],
+      "repo_id": "attrs",
+      "review_status": "pass",
+      "statement_digest": "sha256:9f6ea334e32f02541f2cfb63def42618ff9a4c6b05032e105afbfc18f86f4288",
+      "task_id": "attrs__hist__001",
+      "task_time": "2020-01-13T02:46:11-05:00"
+    },
+    {
+      "deterministic_qa_status": "reject",
+      "eligible_after_regeneration": false,
+      "eligible_before_regeneration": false,
+      "old_statement_quality_gate": "fail",
+      "old_statement_quality_risk_reasons": [
+        "empty_or_nearly_empty_body_summary",
+        "pr_context_source",
+        "pr_context_without_linked_issue",
+        "statement_missing_public_problem_summary"
+      ],
+      "rejection_reasons_after_regeneration": [
+        "review_status:reject",
+        "deterministic_qa_status:reject"
+      ],
+      "release_split_eligibility": [
+        "B_eval",
+        "H_future"
+      ],
+      "repo_id": "attrs",
+      "review_status": "reject",
+      "statement_digest": "sha256:cb5f92a661b6d70cd03fb45f1fa359e5bfa89c93bd1519f8878a47c32a2a0b50",
+      "task_id": "attrs__hist__003",
+      "task_time": "2020-03-06T13:54:27+01:00"
+    },
+    {
+      "deterministic_qa_status": "pass",
+      "eligible_after_regeneration": true,
+      "eligible_before_regeneration": false,
+      "old_statement_quality_gate": "fail",
+      "old_statement_quality_risk_reasons": [
+        "body_summary_hit_old_240_char_cap",
+        "statement_ends_mid_code_fence",
+        "statement_probably_truncated"
+      ],
+      "rejection_reasons_after_regeneration": [],
+      "release_split_eligibility": [
+        "B_eval",
+        "H_future"
+      ],
+      "repo_id": "attrs",
+      "review_status": "pass",
+      "statement_digest": "sha256:8b7364728644842b5f92696390ee7cc2a65bedbea6ebc7fd457d6fd64f1ef97e",
+      "task_id": "attrs__hist__004",
+      "task_time": "2020-03-09T13:56:09Z"
+    },
+    {
+      "deterministic_qa_status": "reject",
+      "eligible_after_regeneration": false,
+      "eligible_before_regeneration": true,
+      "old_statement_quality_gate": "manual_review_required",
+      "old_statement_quality_risk_reasons": [
+        "pr_context_source",
+        "pr_context_without_linked_issue"
+      ],
+      "rejection_reasons_after_regeneration": [
+        "review_status:reject",
+        "deterministic_qa_status:reject"
+      ],
+      "release_split_eligibility": [
+        "B_eval",
+        "H_future"
+      ],
+      "repo_id": "attrs",
+      "review_status": "reject",
+      "statement_digest": "sha256:41239bd44c38ecf2b63358f7844a27f0990b0074acbe0378bd67996599a1a1e7",
+      "task_id": "attrs__hist__008",
+      "task_time": "2020-08-20T19:01:34+02:00"
+    },
+    {
+      "deterministic_qa_status": "pass",
+      "eligible_after_regeneration": true,
+      "eligible_before_regeneration": false,
+      "old_statement_quality_gate": "fail",
+      "old_statement_quality_risk_reasons": [
+        "body_summary_hit_old_240_char_cap",
+        "statement_ends_mid_code_fence",
+        "statement_probably_truncated"
+      ],
+      "rejection_reasons_after_regeneration": [],
+      "release_split_eligibility": [
+        "B_eval",
+        "H_future"
+      ],
+      "repo_id": "attrs",
+      "review_status": "pass",
+      "statement_digest": "sha256:96eeb58e6d94e01b2d65b6d720d0c9c1bb897dd33874dce3878375ff58ffca4e",
+      "task_id": "attrs__hist__009",
+      "task_time": "2020-08-21T05:19:15+02:00"
+    },
+    {
+      "deterministic_qa_status": "pass",
+      "eligible_after_regeneration": true,
+      "eligible_before_regeneration": false,
+      "old_statement_quality_gate": "fail",
+      "old_statement_quality_risk_reasons": [
+        "body_summary_hit_old_240_char_cap",
+        "statement_ends_mid_code_fence",
+        "statement_probably_truncated"
+      ],
+      "rejection_reasons_after_regeneration": [],
+      "release_split_eligibility": [
+        "B_eval",
+        "H_future"
+      ],
+      "repo_id": "attrs",
+      "review_status": "pass",
+      "statement_digest": "sha256:0b307a9ab3a94d32b27ca2f2ce5cd5feafb94080a36004e3f90a871c37e488d1",
+      "task_id": "attrs__hist__010",
+      "task_time": "2020-08-22T22:58:04-07:00"
+    },
+    {
+      "deterministic_qa_status": "pass",
+      "eligible_after_regeneration": true,
+      "eligible_before_regeneration": false,
+      "old_statement_quality_gate": "fail",
+      "old_statement_quality_risk_reasons": [
+        "body_summary_hit_old_240_char_cap",
+        "statement_ends_mid_code_fence",
+        "statement_probably_truncated"
+      ],
+      "rejection_reasons_after_regeneration": [],
+      "release_split_eligibility": [
+        "B_eval",
+        "H_future"
+      ],
+      "repo_id": "attrs",
+      "review_status": "pass",
+      "statement_digest": "sha256:b029036c8179bea4b55f140c5453f9acd17c15b516b4ae9cd52d0c7974c9b61f",
+      "task_id": "attrs__hist__012",
+      "task_time": "2020-09-05T09:46:06+02:00"
+    },
+    {
+      "deterministic_qa_status": "pass",
+      "eligible_after_regeneration": true,
+      "eligible_before_regeneration": false,
+      "old_statement_quality_gate": "fail",
+      "old_statement_quality_risk_reasons": [
+        "body_summary_hit_old_240_char_cap",
+        "pr_context_source",
+        "statement_probably_truncated"
+      ],
+      "rejection_reasons_after_regeneration": [],
+      "release_split_eligibility": [
+        "B_eval",
+        "H_future"
+      ],
+      "repo_id": "attrs",
+      "review_status": "pass",
+      "statement_digest": "sha256:c6c6e765bbfd1a2d5ee7a0f70563dc49059c3d5ac958cf0fa985b2888d0c7aa7",
+      "task_id": "attrs__hist__013",
+      "task_time": "2020-09-05T11:14:54+02:00"
+    },
+    {
+      "deterministic_qa_status": "pass",
+      "eligible_after_regeneration": true,
+      "eligible_before_regeneration": false,
+      "old_statement_quality_gate": "fail",
+      "old_statement_quality_risk_reasons": [
+        "body_summary_hit_old_240_char_cap",
+        "statement_ends_mid_code_fence",
+        "statement_probably_truncated"
+      ],
+      "rejection_reasons_after_regeneration": [],
+      "release_split_eligibility": [
+        "B_eval",
+        "H_future"
+      ],
+      "repo_id": "attrs",
+      "review_status": "pass",
+      "statement_digest": "sha256:d0a2fd3d3bd31138a9c54ab732633f42f36acdc6aa2b8c4f6bbd29cc46752835",
+      "task_id": "attrs__hist__023",
+      "task_time": "2021-02-18T21:50:41-08:00"
+    },
+    {
+      "deterministic_qa_status": "reject",
+      "eligible_after_regeneration": false,
+      "eligible_before_regeneration": false,
+      "old_statement_quality_gate": "fail",
+      "old_statement_quality_risk_reasons": [
+        "body_summary_hit_old_240_char_cap",
+        "resolve_types_attribs_api_behavior_under_specified",
+        "statement_probably_truncated"
+      ],
+      "rejection_reasons_after_regeneration": [
+        "review_status:reject",
+        "deterministic_qa_status:reject"
+      ],
+      "release_split_eligibility": [
+        "B_eval",
+        "H_future"
+      ],
+      "repo_id": "attrs",
+      "review_status": "reject",
+      "statement_digest": "sha256:dad66a02613effc5e3cdba6ea1e5b0105fa1d9a0f873902222524f65e8235f30",
+      "task_id": "attrs__hist__027",
+      "task_time": "2021-03-05T16:01:04-08:00"
+    },
+    {
+      "deterministic_qa_status": "pass",
+      "eligible_after_regeneration": true,
+      "eligible_before_regeneration": false,
+      "old_statement_quality_gate": "fail",
+      "old_statement_quality_risk_reasons": [
+        "body_summary_hit_old_240_char_cap",
+        "statement_probably_truncated"
+      ],
+      "rejection_reasons_after_regeneration": [],
+      "release_split_eligibility": [
+        "B_eval",
+        "H_future"
+      ],
+      "repo_id": "attrs",
+      "review_status": "pass",
+      "statement_digest": "sha256:dabc37de93cedcfce7ff1bba5f50f75cab58cb886e2a1545b4b5e8a96252ad6b",
+      "task_id": "attrs__hist__032",
+      "task_time": "2021-06-30T08:28:56+02:00"
+    },
+    {
+      "deterministic_qa_status": "pass",
+      "eligible_after_regeneration": true,
+      "eligible_before_regeneration": false,
+      "old_statement_quality_gate": "fail",
+      "old_statement_quality_risk_reasons": [
+        "body_summary_hit_old_240_char_cap",
+        "statement_ends_mid_code_fence",
+        "statement_probably_truncated"
+      ],
+      "rejection_reasons_after_regeneration": [],
+      "release_split_eligibility": [
+        "B_eval",
+        "H_future"
+      ],
+      "repo_id": "attrs",
+      "review_status": "pass",
+      "statement_digest": "sha256:dcddf9e4ae5d3ccd97bc6daf64c93634b5aafb534e385b696fdf72043cb6bce4",
+      "task_id": "attrs__hist__033",
+      "task_time": "2021-08-10T01:45:28-04:00"
+    },
+    {
+      "deterministic_qa_status": "pass",
+      "eligible_after_regeneration": true,
+      "eligible_before_regeneration": false,
+      "old_statement_quality_gate": "fail",
+      "old_statement_quality_risk_reasons": [
+        "body_summary_hit_old_240_char_cap",
+        "statement_probably_truncated"
+      ],
+      "rejection_reasons_after_regeneration": [],
+      "release_split_eligibility": [
+        "B_eval",
+        "H_future"
+      ],
+      "repo_id": "attrs",
+      "review_status": "pass",
+      "statement_digest": "sha256:84e109b5be77bb741672998e9d29260551e096a0204a7ef3a71962e0b5949ce5",
+      "task_id": "attrs__hist__035",
+      "task_time": "2021-09-22T21:58:32+02:00"
+    },
+    {
+      "deterministic_qa_status": "pass",
+      "eligible_after_regeneration": true,
+      "eligible_before_regeneration": false,
+      "old_statement_quality_gate": "fail",
+      "old_statement_quality_risk_reasons": [
+        "body_summary_hit_old_240_char_cap",
+        "pr_context_source",
+        "pr_context_without_linked_issue",
+        "statement_probably_truncated"
+      ],
+      "rejection_reasons_after_regeneration": [],
+      "release_split_eligibility": [
+        "B_eval",
+        "H_future"
+      ],
+      "repo_id": "attrs",
+      "review_status": "pass",
+      "statement_digest": "sha256:3a6928d171165b3501d8d056f43632902835a046b44d53968f191b4ac409b7c6",
+      "task_id": "attrs__hist__036",
+      "task_time": "2021-10-04T16:23:50+02:00"
+    },
+    {
+      "deterministic_qa_status": "pass",
+      "eligible_after_regeneration": true,
+      "eligible_before_regeneration": true,
+      "old_statement_quality_gate": "pass",
+      "old_statement_quality_risk_reasons": [
+        "body_summary_hit_old_240_char_cap"
+      ],
+      "rejection_reasons_after_regeneration": [],
+      "release_split_eligibility": [
+        "B_eval",
+        "H_future"
+      ],
+      "repo_id": "attrs",
+      "review_status": "pass",
+      "statement_digest": "sha256:07a45af933b498be155f3c994f6e43ec03f5248cbf8de3bd2140512cafc4d861",
+      "task_id": "attrs__hist__039",
+      "task_time": "2021-11-30T05:32:24Z"
+    },
+    {
+      "deterministic_qa_status": "pass",
+      "eligible_after_regeneration": true,
+      "eligible_before_regeneration": false,
+      "old_statement_quality_gate": "fail",
+      "old_statement_quality_risk_reasons": [
+        "body_summary_hit_old_240_char_cap",
+        "statement_probably_truncated"
+      ],
+      "rejection_reasons_after_regeneration": [],
+      "release_split_eligibility": [
+        "B_eval",
+        "H_future"
+      ],
+      "repo_id": "attrs",
+      "review_status": "pass",
+      "statement_digest": "sha256:f798c0c833703dd6392bc78789f7ea9d3183efabc30db912f369628d15fba22d",
+      "task_id": "attrs__hist__041",
+      "task_time": "2021-12-16T09:01:51+01:00"
+    },
+    {
+      "deterministic_qa_status": "pass",
+      "eligible_after_regeneration": true,
+      "eligible_before_regeneration": false,
+      "old_statement_quality_gate": "fail",
+      "old_statement_quality_risk_reasons": [
+        "body_summary_hit_old_240_char_cap",
+        "pr_context_source",
+        "pr_context_without_linked_issue",
+        "statement_probably_truncated"
+      ],
+      "rejection_reasons_after_regeneration": [],
+      "release_split_eligibility": [
+        "B_eval",
+        "H_future"
+      ],
+      "repo_id": "attrs",
+      "review_status": "pass",
+      "statement_digest": "sha256:35a080f8c14b1774d6432392c83efe2f740bfbdc4219d9652436ddac46490739",
+      "task_id": "attrs__hist__045",
+      "task_time": "2022-02-02T11:10:33+02:00"
+    },
+    {
+      "deterministic_qa_status": "pass",
+      "eligible_after_regeneration": true,
+      "eligible_before_regeneration": false,
+      "old_statement_quality_gate": "fail",
+      "old_statement_quality_risk_reasons": [
+        "body_summary_hit_old_240_char_cap",
+        "statement_probably_truncated"
+      ],
+      "rejection_reasons_after_regeneration": [],
+      "release_split_eligibility": [
+        "B_eval",
+        "H_future"
+      ],
+      "repo_id": "attrs",
+      "review_status": "pass",
+      "statement_digest": "sha256:31a0bd025ff46df4ef55e9651caf7efebe77529be930972f1db66f34cf6c0bd9",
+      "task_id": "attrs__hist__047",
+      "task_time": "2022-03-20T04:48:55-04:00"
+    }
+  ],
+  "eligible_count_after_regeneration": 19,
+  "eligible_count_before_regeneration": 4,
+  "full_statement_hardened_release_recovered": false,
+  "generated_at": "2026-05-25T02:52:58Z",
+  "old_candidates_recovered": true,
+  "paid_acut_calls_made": false,
+  "paid_llm_calls_made": false,
+  "paid_outcome_used_for_selection": false,
+  "predictive_validity_established": false,
+  "qa_pass_count": 19,
+  "qa_reject_count": 3,
+  "regenerated_statement_count": 22,
+  "remaining_missing_supply": {
+    "boltons/H_future": [
+      "needed 4, found 0 eligible regenerated statements without using paid outcomes"
+    ]
+  },
+  "replacement_supply_still_needed": true,
+  "review_pass_count": 19,
+  "review_reject_count": 3,
+  "schema_version": "barcarolle.phase1.diff_assisted_statement_screen.v1",
+  "selected_counts_by_repo_split": {
+    "attrs/B_eval": 4,
+    "attrs/H_future": 4,
+    "boltons/B_eval": 4,
+    "boltons/H_future": 0
+  },
+  "selected_task_ids_by_repo_split": {
+    "attrs/B_eval": [
+      "attrs__hist__001",
+      "attrs__hist__004",
+      "attrs__hist__009",
+      "attrs__hist__010"
+    ],
+    "attrs/H_future": [
+      "attrs__hist__001",
+      "attrs__hist__004",
+      "attrs__hist__009",
+      "attrs__hist__010"
+    ],
+    "boltons/B_eval": [
+      "boltons__clean_ext__001",
+      "boltons__clean_ext__008",
+      "boltons__clean_ext__010",
+      "boltons__clean_ext__017"
+    ],
+    "boltons/H_future": []
+  },
+  "summary": {
+    "generation_review_failures_are_separate_from_true_task_invalidity": true,
+    "old_pool_recovery": "partial",
+    "paid_validation_recommended": false,
+    "paid_validation_requires_subsequent_preregistration": true
+  }
+}

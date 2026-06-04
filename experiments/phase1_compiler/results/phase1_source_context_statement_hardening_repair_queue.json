@@ -1,0 +1,1846 @@
+{
+  "artifact": "repair_queue",
+  "generated_at": "2026-05-28T00:00:00Z",
+  "policy": {
+    "H_future_outcomes_can_promote_or_demote": false,
+    "adapter_pass_fail_labels_can_promote_or_demote": false,
+    "commit_message_only_requires_promoted_review": true,
+    "diff_assisted_repair_requires_review": true,
+    "outcome_labels_can_promote_or_demote": false,
+    "release_eligible_separate_from_technical_certified": true,
+    "title_only_requires_review": true
+  },
+  "primary_queue_label_counts": {
+    "needs_public_context_repair": 88,
+    "no_repair_needed": 3
+  },
+  "queue_count": 91,
+  "queue_count_by_repo": {
+    "attrs": 4,
+    "boltons": 12,
+    "click": 75
+  },
+  "rows": [
+    {
+      "inventory_role": "paid_package",
+      "paid_outcome_used_for_priority": false,
+      "primary_queue_label": "needs_public_context_repair",
+      "queue_labels": [
+        "needs_public_context_repair",
+        "needs_statement_specificity_review",
+        "needs_leakage_review",
+        "needs_scope_review"
+      ],
+      "release_eligible_before": true,
+      "repair_blocker_if_not_repaired": "",
+      "repair_priority_reason": "paid_package_title_only",
+      "repo": "attrs",
+      "source_context_quality": "pr_title_only_context",
+      "source_context_type": "pr_context_title_only",
+      "stable_order": 1,
+      "task_id": "attrs__v2__056",
+      "technical_certified": true
+    },
+    {
+      "inventory_role": "paid_package",
+      "paid_outcome_used_for_priority": false,
+      "primary_queue_label": "needs_public_context_repair",
+      "queue_labels": [
+        "needs_public_context_repair",
+        "needs_statement_specificity_review",
+        "needs_leakage_review",
+        "needs_scope_review"
+      ],
+      "release_eligible_before": true,
+      "repair_blocker_if_not_repaired": "",
+      "repair_priority_reason": "paid_package_title_only",
+      "repo": "click",
+      "source_context_quality": "pr_title_only_context",
+      "source_context_type": "pr_context_title_only",
+      "stable_order": 2,
+      "task_id": "click__third__045",
+      "technical_certified": true
+    },
+    {
+      "inventory_role": "paid_package",
+      "paid_outcome_used_for_priority": false,
+      "primary_queue_label": "needs_public_context_repair",
+      "queue_labels": [
+        "needs_public_context_repair",
+        "needs_statement_specificity_review",
+        "needs_leakage_review",
+        "needs_scope_review"
+      ],
+      "release_eligible_before": true,
+      "repair_blocker_if_not_repaired": "",
+      "repair_priority_reason": "paid_package_title_only",
+      "repo": "click",
+      "source_context_quality": "pr_title_only_context",
+      "source_context_type": "pr_context_title_only",
+      "stable_order": 3,
+      "task_id": "click__third__050",
+      "technical_certified": true
+    },
+    {
+      "inventory_role": "paid_package",
+      "paid_outcome_used_for_priority": false,
+      "primary_queue_label": "needs_public_context_repair",
+      "queue_labels": [
+        "needs_public_context_repair",
+        "needs_statement_specificity_review",
+        "needs_leakage_review",
+        "needs_scope_review"
+      ],
+      "release_eligible_before": true,
+      "repair_blocker_if_not_repaired": "",
+      "repair_priority_reason": "paid_package_title_only",
+      "repo": "click",
+      "source_context_quality": "pr_title_only_context",
+      "source_context_type": "pr_context_title_only",
+      "stable_order": 4,
+      "task_id": "click__third__091",
+      "technical_certified": true
+    },
+    {
+      "inventory_role": "paid_package",
+      "paid_outcome_used_for_priority": false,
+      "primary_queue_label": "needs_public_context_repair",
+      "queue_labels": [
+        "needs_public_context_repair",
+        "needs_statement_specificity_review",
+        "needs_leakage_review",
+        "needs_scope_review"
+      ],
+      "release_eligible_before": true,
+      "repair_blocker_if_not_repaired": "",
+      "repair_priority_reason": "paid_package_title_only",
+      "repo": "click",
+      "source_context_quality": "pr_title_only_context",
+      "source_context_type": "pr_context_title_only",
+      "stable_order": 5,
+      "task_id": "click__third__109",
+      "technical_certified": true
+    },
+    {
+      "inventory_role": "paid_package",
+      "paid_outcome_used_for_priority": false,
+      "primary_queue_label": "needs_public_context_repair",
+      "queue_labels": [
+        "needs_public_context_repair",
+        "needs_statement_specificity_review",
+        "needs_leakage_review",
+        "needs_scope_review"
+      ],
+      "release_eligible_before": true,
+      "repair_blocker_if_not_repaired": "",
+      "repair_priority_reason": "paid_package_title_only",
+      "repo": "click",
+      "source_context_quality": "pr_title_only_context",
+      "source_context_type": "pr_context_title_only",
+      "stable_order": 6,
+      "task_id": "click__third__166",
+      "technical_certified": true
+    },
+    {
+      "inventory_role": "paid_package",
+      "paid_outcome_used_for_priority": false,
+      "primary_queue_label": "needs_public_context_repair",
+      "queue_labels": [
+        "needs_public_context_repair",
+        "needs_statement_specificity_review",
+        "needs_leakage_review",
+        "needs_scope_review"
+      ],
+      "release_eligible_before": true,
+      "repair_blocker_if_not_repaired": "",
+      "repair_priority_reason": "paid_package_title_only",
+      "repo": "click",
+      "source_context_quality": "pr_title_only_context",
+      "source_context_type": "pr_context_title_only",
+      "stable_order": 7,
+      "task_id": "click__third__197",
+      "technical_certified": true
+    },
+    {
+      "inventory_role": "paid_package",
+      "paid_outcome_used_for_priority": false,
+      "primary_queue_label": "needs_public_context_repair",
+      "queue_labels": [
+        "needs_public_context_repair",
+        "needs_statement_specificity_review",
+        "needs_leakage_review",
+        "needs_scope_review"
+      ],
+      "release_eligible_before": true,
+      "repair_blocker_if_not_repaired": "",
+      "repair_priority_reason": "paid_package_title_only",
+      "repo": "click",
+      "source_context_quality": "pr_title_only_context",
+      "source_context_type": "pr_context_title_only",
+      "stable_order": 8,
+      "task_id": "click__third__198",
+      "technical_certified": true
+    },
+    {
+      "inventory_role": "paid_package",
+      "paid_outcome_used_for_priority": false,
+      "primary_queue_label": "needs_public_context_repair",
+      "queue_labels": [
+        "needs_public_context_repair",
+        "needs_statement_specificity_review",
+        "needs_leakage_review",
+        "needs_scope_review"
+      ],
+      "release_eligible_before": true,
+      "repair_blocker_if_not_repaired": "",
+      "repair_priority_reason": "paid_package_title_only",
+      "repo": "click",
+      "source_context_quality": "pr_title_only_context",
+      "source_context_type": "pr_context_title_only",
+      "stable_order": 9,
+      "task_id": "click__third__199",
+      "technical_certified": true
+    },
+    {
+      "inventory_role": "paid_package",
+      "paid_outcome_used_for_priority": false,
+      "primary_queue_label": "needs_public_context_repair",
+      "queue_labels": [
+        "needs_public_context_repair",
+        "needs_statement_specificity_review",
+        "needs_leakage_review",
+        "needs_scope_review"
+      ],
+      "release_eligible_before": true,
+      "repair_blocker_if_not_repaired": "",
+      "repair_priority_reason": "paid_package_title_only",
+      "repo": "click",
+      "source_context_quality": "pr_title_only_context",
+      "source_context_type": "pr_context_title_only",
+      "stable_order": 10,
+      "task_id": "click__third__200",
+      "technical_certified": true
+    },
+    {
+      "inventory_role": "paid_package",
+      "paid_outcome_used_for_priority": false,
+      "primary_queue_label": "needs_public_context_repair",
+      "queue_labels": [
+        "needs_public_context_repair",
+        "needs_statement_specificity_review",
+        "needs_leakage_review",
+        "needs_scope_review"
+      ],
+      "release_eligible_before": true,
+      "repair_blocker_if_not_repaired": "",
+      "repair_priority_reason": "paid_package_title_only",
+      "repo": "click",
+      "source_context_quality": "pr_title_only_context",
+      "source_context_type": "pr_context_title_only",
+      "stable_order": 11,
+      "task_id": "click__third__201",
+      "technical_certified": true
+    },
+    {
+      "inventory_role": "paid_package",
+      "paid_outcome_used_for_priority": false,
+      "primary_queue_label": "needs_public_context_repair",
+      "queue_labels": [
+        "needs_public_context_repair",
+        "needs_statement_specificity_review",
+        "needs_leakage_review",
+        "needs_scope_review"
+      ],
+      "release_eligible_before": true,
+      "repair_blocker_if_not_repaired": "",
+      "repair_priority_reason": "paid_package_title_only",
+      "repo": "click",
+      "source_context_quality": "pr_title_only_context",
+      "source_context_type": "pr_context_title_only",
+      "stable_order": 12,
+      "task_id": "click__third__202",
+      "technical_certified": true
+    },
+    {
+      "inventory_role": "paid_package",
+      "paid_outcome_used_for_priority": false,
+      "primary_queue_label": "needs_public_context_repair",
+      "queue_labels": [
+        "needs_public_context_repair",
+        "needs_statement_specificity_review",
+        "needs_leakage_review",
+        "needs_scope_review"
+      ],
+      "release_eligible_before": true,
+      "repair_blocker_if_not_repaired": "",
+      "repair_priority_reason": "paid_package_title_only",
+      "repo": "click",
+      "source_context_quality": "pr_title_only_context",
+      "source_context_type": "pr_context_title_only",
+      "stable_order": 13,
+      "task_id": "click__third__203",
+      "technical_certified": true
+    },
+    {
+      "inventory_role": "paid_package",
+      "paid_outcome_used_for_priority": false,
+      "primary_queue_label": "needs_public_context_repair",
+      "queue_labels": [
+        "needs_public_context_repair",
+        "needs_statement_specificity_review",
+        "needs_leakage_review",
+        "needs_scope_review"
+      ],
+      "release_eligible_before": true,
+      "repair_blocker_if_not_repaired": "",
+      "repair_priority_reason": "paid_package_title_only",
+      "repo": "click",
+      "source_context_quality": "pr_title_only_context",
+      "source_context_type": "pr_context_title_only",
+      "stable_order": 14,
+      "task_id": "click__third__204",
+      "technical_certified": true
+    },
+    {
+      "inventory_role": "paid_package",
+      "paid_outcome_used_for_priority": false,
+      "primary_queue_label": "needs_public_context_repair",
+      "queue_labels": [
+        "needs_public_context_repair",
+        "needs_statement_specificity_review",
+        "needs_leakage_review",
+        "needs_scope_review"
+      ],
+      "release_eligible_before": true,
+      "repair_blocker_if_not_repaired": "",
+      "repair_priority_reason": "paid_package_title_only",
+      "repo": "click",
+      "source_context_quality": "pr_title_only_context",
+      "source_context_type": "pr_context_title_only",
+      "stable_order": 15,
+      "task_id": "click__third__205",
+      "technical_certified": true
+    },
+    {
+      "inventory_role": "paid_package",
+      "paid_outcome_used_for_priority": false,
+      "primary_queue_label": "needs_public_context_repair",
+      "queue_labels": [
+        "needs_public_context_repair",
+        "needs_statement_specificity_review",
+        "needs_leakage_review",
+        "needs_scope_review"
+      ],
+      "release_eligible_before": true,
+      "repair_blocker_if_not_repaired": "",
+      "repair_priority_reason": "paid_package_title_only",
+      "repo": "click",
+      "source_context_quality": "pr_title_only_context",
+      "source_context_type": "pr_context_title_only",
+      "stable_order": 16,
+      "task_id": "click__third__206",
+      "technical_certified": true
+    },
+    {
+      "inventory_role": "paid_package",
+      "paid_outcome_used_for_priority": false,
+      "primary_queue_label": "needs_public_context_repair",
+      "queue_labels": [
+        "needs_public_context_repair",
+        "needs_statement_specificity_review",
+        "needs_leakage_review",
+        "needs_scope_review"
+      ],
+      "release_eligible_before": true,
+      "repair_blocker_if_not_repaired": "",
+      "repair_priority_reason": "paid_package_title_only",
+      "repo": "click",
+      "source_context_quality": "pr_title_only_context",
+      "source_context_type": "pr_context_title_only",
+      "stable_order": 17,
+      "task_id": "click__third__207",
+      "technical_certified": true
+    },
+    {
+      "inventory_role": "paid_package",
+      "paid_outcome_used_for_priority": false,
+      "primary_queue_label": "needs_public_context_repair",
+      "queue_labels": [
+        "needs_public_context_repair",
+        "needs_statement_specificity_review",
+        "needs_leakage_review",
+        "needs_scope_review"
+      ],
+      "release_eligible_before": true,
+      "repair_blocker_if_not_repaired": "",
+      "repair_priority_reason": "paid_package_title_only",
+      "repo": "click",
+      "source_context_quality": "pr_title_only_context",
+      "source_context_type": "pr_context_title_only",
+      "stable_order": 18,
+      "task_id": "click__third__208",
+      "technical_certified": true
+    },
+    {
+      "inventory_role": "paid_package",
+      "paid_outcome_used_for_priority": false,
+      "primary_queue_label": "needs_public_context_repair",
+      "queue_labels": [
+        "needs_public_context_repair",
+        "needs_statement_specificity_review",
+        "needs_leakage_review",
+        "needs_scope_review"
+      ],
+      "release_eligible_before": true,
+      "repair_blocker_if_not_repaired": "",
+      "repair_priority_reason": "paid_package_title_only",
+      "repo": "click",
+      "source_context_quality": "pr_title_only_context",
+      "source_context_type": "pr_context_title_only",
+      "stable_order": 19,
+      "task_id": "click__third__213",
+      "technical_certified": true
+    },
+    {
+      "inventory_role": "paid_package",
+      "paid_outcome_used_for_priority": false,
+      "primary_queue_label": "needs_public_context_repair",
+      "queue_labels": [
+        "needs_public_context_repair",
+        "needs_statement_specificity_review",
+        "needs_leakage_review",
+        "needs_scope_review"
+      ],
+      "release_eligible_before": true,
+      "repair_blocker_if_not_repaired": "",
+      "repair_priority_reason": "paid_package_title_only",
+      "repo": "click",
+      "source_context_quality": "pr_title_only_context",
+      "source_context_type": "pr_context_title_only",
+      "stable_order": 20,
+      "task_id": "click__third__214",
+      "technical_certified": true
+    },
+    {
+      "inventory_role": "paid_package",
+      "paid_outcome_used_for_priority": false,
+      "primary_queue_label": "needs_public_context_repair",
+      "queue_labels": [
+        "needs_public_context_repair",
+        "needs_statement_specificity_review",
+        "needs_leakage_review",
+        "needs_scope_review"
+      ],
+      "release_eligible_before": true,
+      "repair_blocker_if_not_repaired": "",
+      "repair_priority_reason": "paid_package_title_only",
+      "repo": "click",
+      "source_context_quality": "pr_title_only_context",
+      "source_context_type": "pr_context_title_only",
+      "stable_order": 21,
+      "task_id": "click__third__216",
+      "technical_certified": true
+    },
+    {
+      "inventory_role": "paid_package",
+      "paid_outcome_used_for_priority": false,
+      "primary_queue_label": "needs_public_context_repair",
+      "queue_labels": [
+        "needs_public_context_repair",
+        "needs_statement_specificity_review",
+        "needs_leakage_review",
+        "needs_scope_review"
+      ],
+      "release_eligible_before": true,
+      "repair_blocker_if_not_repaired": "",
+      "repair_priority_reason": "paid_package_title_only",
+      "repo": "click",
+      "source_context_quality": "pr_title_only_context",
+      "source_context_type": "pr_context_title_only",
+      "stable_order": 22,
+      "task_id": "click__third__217",
+      "technical_certified": true
+    },
+    {
+      "inventory_role": "paid_package",
+      "paid_outcome_used_for_priority": false,
+      "primary_queue_label": "needs_public_context_repair",
+      "queue_labels": [
+        "needs_public_context_repair",
+        "needs_statement_specificity_review",
+        "needs_leakage_review",
+        "needs_scope_review"
+      ],
+      "release_eligible_before": true,
+      "repair_blocker_if_not_repaired": "",
+      "repair_priority_reason": "paid_package_title_only",
+      "repo": "click",
+      "source_context_quality": "pr_title_only_context",
+      "source_context_type": "pr_context_title_only",
+      "stable_order": 23,
+      "task_id": "click__third__220",
+      "technical_certified": true
+    },
+    {
+      "inventory_role": "paid_package",
+      "paid_outcome_used_for_priority": false,
+      "primary_queue_label": "needs_public_context_repair",
+      "queue_labels": [
+        "needs_public_context_repair",
+        "needs_statement_specificity_review",
+        "needs_leakage_review",
+        "needs_scope_review"
+      ],
+      "release_eligible_before": true,
+      "repair_blocker_if_not_repaired": "",
+      "repair_priority_reason": "paid_package_title_only",
+      "repo": "click",
+      "source_context_quality": "pr_title_only_context",
+      "source_context_type": "pr_context_title_only",
+      "stable_order": 24,
+      "task_id": "click__third__234",
+      "technical_certified": true
+    },
+    {
+      "inventory_role": "paid_package",
+      "paid_outcome_used_for_priority": false,
+      "primary_queue_label": "needs_public_context_repair",
+      "queue_labels": [
+        "needs_public_context_repair",
+        "needs_statement_specificity_review",
+        "needs_leakage_review",
+        "needs_scope_review"
+      ],
+      "release_eligible_before": true,
+      "repair_blocker_if_not_repaired": "",
+      "repair_priority_reason": "paid_package_title_only",
+      "repo": "click",
+      "source_context_quality": "pr_title_only_context",
+      "source_context_type": "pr_context_title_only",
+      "stable_order": 25,
+      "task_id": "click__third__238",
+      "technical_certified": true
+    },
+    {
+      "inventory_role": "paid_package",
+      "paid_outcome_used_for_priority": false,
+      "primary_queue_label": "needs_public_context_repair",
+      "queue_labels": [
+        "needs_public_context_repair",
+        "needs_statement_specificity_review",
+        "needs_leakage_review",
+        "needs_scope_review"
+      ],
+      "release_eligible_before": true,
+      "repair_blocker_if_not_repaired": "",
+      "repair_priority_reason": "paid_package_title_only",
+      "repo": "click",
+      "source_context_quality": "pr_title_only_context",
+      "source_context_type": "pr_context_title_only",
+      "stable_order": 26,
+      "task_id": "click__third__250",
+      "technical_certified": true
+    },
+    {
+      "inventory_role": "paid_package",
+      "paid_outcome_used_for_priority": false,
+      "primary_queue_label": "needs_public_context_repair",
+      "queue_labels": [
+        "needs_public_context_repair",
+        "needs_statement_specificity_review",
+        "needs_leakage_review",
+        "needs_scope_review"
+      ],
+      "release_eligible_before": true,
+      "repair_blocker_if_not_repaired": "",
+      "repair_priority_reason": "paid_package_title_only",
+      "repo": "click",
+      "source_context_quality": "pr_title_only_context",
+      "source_context_type": "pr_context_title_only",
+      "stable_order": 27,
+      "task_id": "click__third__271",
+      "technical_certified": true
+    },
+    {
+      "inventory_role": "paid_package",
+      "paid_outcome_used_for_priority": false,
+      "primary_queue_label": "needs_public_context_repair",
+      "queue_labels": [
+        "needs_public_context_repair",
+        "needs_statement_specificity_review",
+        "needs_leakage_review",
+        "needs_scope_review"
+      ],
+      "release_eligible_before": true,
+      "repair_blocker_if_not_repaired": "",
+      "repair_priority_reason": "paid_package_title_only",
+      "repo": "click",
+      "source_context_quality": "pr_title_only_context",
+      "source_context_type": "pr_context_title_only",
+      "stable_order": 28,
+      "task_id": "click__third__274",
+      "technical_certified": true
+    },
+    {
+      "inventory_role": "paid_package",
+      "paid_outcome_used_for_priority": false,
+      "primary_queue_label": "needs_public_context_repair",
+      "queue_labels": [
+        "needs_public_context_repair",
+        "needs_statement_specificity_review",
+        "needs_leakage_review",
+        "needs_scope_review"
+      ],
+      "release_eligible_before": true,
+      "repair_blocker_if_not_repaired": "",
+      "repair_priority_reason": "paid_package_title_only",
+      "repo": "click",
+      "source_context_quality": "pr_title_only_context",
+      "source_context_type": "pr_context_title_only",
+      "stable_order": 29,
+      "task_id": "click__third__275",
+      "technical_certified": true
+    },
+    {
+      "inventory_role": "paid_package",
+      "paid_outcome_used_for_priority": false,
+      "primary_queue_label": "needs_public_context_repair",
+      "queue_labels": [
+        "needs_public_context_repair",
+        "needs_statement_specificity_review",
+        "needs_leakage_review",
+        "needs_scope_review"
+      ],
+      "release_eligible_before": true,
+      "repair_blocker_if_not_repaired": "",
+      "repair_priority_reason": "paid_package_title_only",
+      "repo": "click",
+      "source_context_quality": "pr_title_only_context",
+      "source_context_type": "pr_context_title_only",
+      "stable_order": 30,
+      "task_id": "click__third__278",
+      "technical_certified": true
+    },
+    {
+      "inventory_role": "paid_package",
+      "paid_outcome_used_for_priority": false,
+      "primary_queue_label": "needs_public_context_repair",
+      "queue_labels": [
+        "needs_public_context_repair",
+        "needs_statement_specificity_review",
+        "needs_leakage_review",
+        "needs_scope_review"
+      ],
+      "release_eligible_before": true,
+      "repair_blocker_if_not_repaired": "",
+      "repair_priority_reason": "paid_package_title_only",
+      "repo": "click",
+      "source_context_quality": "pr_title_only_context",
+      "source_context_type": "pr_context_title_only",
+      "stable_order": 31,
+      "task_id": "click__third__288",
+      "technical_certified": true
+    },
+    {
+      "inventory_role": "paid_package",
+      "paid_outcome_used_for_priority": false,
+      "primary_queue_label": "no_repair_needed",
+      "queue_labels": [
+        "no_repair_needed"
+      ],
+      "release_eligible_before": true,
+      "repair_blocker_if_not_repaired": "",
+      "repair_priority_reason": "preexisting_public_context_repair",
+      "repo": "attrs",
+      "source_context_quality": "public_context_repaired",
+      "source_context_type": "public_issue_and_pr_context_repaired",
+      "stable_order": 32,
+      "task_id": "attrs__v2__218",
+      "technical_certified": true
+    },
+    {
+      "inventory_role": "paid_package",
+      "paid_outcome_used_for_priority": false,
+      "primary_queue_label": "no_repair_needed",
+      "queue_labels": [
+        "no_repair_needed"
+      ],
+      "release_eligible_before": true,
+      "repair_blocker_if_not_repaired": "",
+      "repair_priority_reason": "preexisting_public_context_repair",
+      "repo": "attrs",
+      "source_context_quality": "public_context_repaired",
+      "source_context_type": "public_issue_and_pr_context_repaired",
+      "stable_order": 33,
+      "task_id": "attrs__v2__231",
+      "technical_certified": true
+    },
+    {
+      "inventory_role": "paid_package",
+      "paid_outcome_used_for_priority": false,
+      "primary_queue_label": "no_repair_needed",
+      "queue_labels": [
+        "no_repair_needed"
+      ],
+      "release_eligible_before": true,
+      "repair_blocker_if_not_repaired": "",
+      "repair_priority_reason": "preexisting_public_context_repair",
+      "repo": "attrs",
+      "source_context_quality": "public_context_repaired",
+      "source_context_type": "public_issue_and_pr_context_repaired",
+      "stable_order": 34,
+      "task_id": "attrs__v2__237",
+      "technical_certified": true
+    },
+    {
+      "inventory_role": "source_review_queue",
+      "paid_outcome_used_for_priority": false,
+      "primary_queue_label": "needs_public_context_repair",
+      "queue_labels": [
+        "needs_public_context_repair",
+        "needs_diff_assisted_statement_review",
+        "needs_leakage_review",
+        "needs_scope_review"
+      ],
+      "release_eligible_before": false,
+      "repair_blocker_if_not_repaired": "missing_public_problem_context",
+      "repair_priority_reason": "technical_certified_commit_message_only",
+      "repo": "boltons",
+      "source_context_quality": "commit_message_only_context",
+      "source_context_type": "commit_message_only_context",
+      "stable_order": 35,
+      "task_id": "boltons__v2__073",
+      "technical_certified": true
+    },
+    {
+      "inventory_role": "source_review_queue",
+      "paid_outcome_used_for_priority": false,
+      "primary_queue_label": "needs_public_context_repair",
+      "queue_labels": [
+        "needs_public_context_repair",
+        "needs_diff_assisted_statement_review",
+        "needs_leakage_review",
+        "needs_scope_review"
+      ],
+      "release_eligible_before": false,
+      "repair_blocker_if_not_repaired": "missing_public_problem_context",
+      "repair_priority_reason": "technical_certified_commit_message_only",
+      "repo": "boltons",
+      "source_context_quality": "commit_message_only_context",
+      "source_context_type": "commit_message_only_context",
+      "stable_order": 36,
+      "task_id": "boltons__v2__085",
+      "technical_certified": true
+    },
+    {
+      "inventory_role": "source_review_queue",
+      "paid_outcome_used_for_priority": false,
+      "primary_queue_label": "needs_public_context_repair",
+      "queue_labels": [
+        "needs_public_context_repair",
+        "needs_diff_assisted_statement_review",
+        "needs_leakage_review",
+        "needs_scope_review"
+      ],
+      "release_eligible_before": false,
+      "repair_blocker_if_not_repaired": "missing_public_problem_context",
+      "repair_priority_reason": "technical_certified_commit_message_only",
+      "repo": "boltons",
+      "source_context_quality": "commit_message_only_context",
+      "source_context_type": "commit_message_only_context",
+      "stable_order": 37,
+      "task_id": "boltons__v2__138",
+      "technical_certified": true
+    },
+    {
+      "inventory_role": "source_review_queue",
+      "paid_outcome_used_for_priority": false,
+      "primary_queue_label": "needs_public_context_repair",
+      "queue_labels": [
+        "needs_public_context_repair",
+        "needs_diff_assisted_statement_review",
+        "needs_leakage_review",
+        "needs_scope_review"
+      ],
+      "release_eligible_before": false,
+      "repair_blocker_if_not_repaired": "missing_public_problem_context",
+      "repair_priority_reason": "technical_certified_commit_message_only",
+      "repo": "boltons",
+      "source_context_quality": "commit_message_only_context",
+      "source_context_type": "commit_message_only_context",
+      "stable_order": 38,
+      "task_id": "boltons__v2__149",
+      "technical_certified": true
+    },
+    {
+      "inventory_role": "source_review_queue",
+      "paid_outcome_used_for_priority": false,
+      "primary_queue_label": "needs_public_context_repair",
+      "queue_labels": [
+        "needs_public_context_repair",
+        "needs_diff_assisted_statement_review",
+        "needs_leakage_review",
+        "needs_scope_review"
+      ],
+      "release_eligible_before": false,
+      "repair_blocker_if_not_repaired": "missing_public_problem_context",
+      "repair_priority_reason": "technical_certified_commit_message_only",
+      "repo": "boltons",
+      "source_context_quality": "commit_message_only_context",
+      "source_context_type": "commit_message_only_context",
+      "stable_order": 39,
+      "task_id": "boltons__v2__176",
+      "technical_certified": true
+    },
+    {
+      "inventory_role": "source_review_queue",
+      "paid_outcome_used_for_priority": false,
+      "primary_queue_label": "needs_public_context_repair",
+      "queue_labels": [
+        "needs_public_context_repair",
+        "needs_diff_assisted_statement_review",
+        "needs_leakage_review",
+        "needs_scope_review"
+      ],
+      "release_eligible_before": false,
+      "repair_blocker_if_not_repaired": "missing_public_problem_context",
+      "repair_priority_reason": "technical_certified_commit_message_only",
+      "repo": "boltons",
+      "source_context_quality": "commit_message_only_context",
+      "source_context_type": "commit_message_only_context",
+      "stable_order": 40,
+      "task_id": "boltons__v2__183",
+      "technical_certified": true
+    },
+    {
+      "inventory_role": "source_review_queue",
+      "paid_outcome_used_for_priority": false,
+      "primary_queue_label": "needs_public_context_repair",
+      "queue_labels": [
+        "needs_public_context_repair",
+        "needs_diff_assisted_statement_review",
+        "needs_leakage_review",
+        "needs_scope_review"
+      ],
+      "release_eligible_before": false,
+      "repair_blocker_if_not_repaired": "missing_public_problem_context",
+      "repair_priority_reason": "technical_certified_commit_message_only",
+      "repo": "boltons",
+      "source_context_quality": "commit_message_only_context",
+      "source_context_type": "commit_message_only_context",
+      "stable_order": 41,
+      "task_id": "boltons__v2__184",
+      "technical_certified": true
+    },
+    {
+      "inventory_role": "source_review_queue",
+      "paid_outcome_used_for_priority": false,
+      "primary_queue_label": "needs_public_context_repair",
+      "queue_labels": [
+        "needs_public_context_repair",
+        "needs_diff_assisted_statement_review",
+        "needs_leakage_review",
+        "needs_scope_review"
+      ],
+      "release_eligible_before": false,
+      "repair_blocker_if_not_repaired": "missing_public_problem_context",
+      "repair_priority_reason": "technical_certified_commit_message_only",
+      "repo": "boltons",
+      "source_context_quality": "commit_message_only_context",
+      "source_context_type": "commit_message_only_context",
+      "stable_order": 42,
+      "task_id": "boltons__v2__186",
+      "technical_certified": true
+    },
+    {
+      "inventory_role": "source_review_queue",
+      "paid_outcome_used_for_priority": false,
+      "primary_queue_label": "needs_public_context_repair",
+      "queue_labels": [
+        "needs_public_context_repair",
+        "needs_diff_assisted_statement_review",
+        "needs_leakage_review",
+        "needs_scope_review"
+      ],
+      "release_eligible_before": false,
+      "repair_blocker_if_not_repaired": "missing_public_problem_context",
+      "repair_priority_reason": "technical_certified_commit_message_only",
+      "repo": "boltons",
+      "source_context_quality": "commit_message_only_context",
+      "source_context_type": "commit_message_only_context",
+      "stable_order": 43,
+      "task_id": "boltons__v2__187",
+      "technical_certified": true
+    },
+    {
+      "inventory_role": "source_review_queue",
+      "paid_outcome_used_for_priority": false,
+      "primary_queue_label": "needs_public_context_repair",
+      "queue_labels": [
+        "needs_public_context_repair",
+        "needs_diff_assisted_statement_review",
+        "needs_leakage_review",
+        "needs_scope_review"
+      ],
+      "release_eligible_before": false,
+      "repair_blocker_if_not_repaired": "missing_public_problem_context",
+      "repair_priority_reason": "technical_certified_commit_message_only",
+      "repo": "boltons",
+      "source_context_quality": "commit_message_only_context",
+      "source_context_type": "commit_message_only_context",
+      "stable_order": 44,
+      "task_id": "boltons__v2__196",
+      "technical_certified": true
+    },
+    {
+      "inventory_role": "source_review_queue",
+      "paid_outcome_used_for_priority": false,
+      "primary_queue_label": "needs_public_context_repair",
+      "queue_labels": [
+        "needs_public_context_repair",
+        "needs_diff_assisted_statement_review",
+        "needs_leakage_review",
+        "needs_scope_review"
+      ],
+      "release_eligible_before": false,
+      "repair_blocker_if_not_repaired": "missing_public_problem_context",
+      "repair_priority_reason": "technical_certified_commit_message_only",
+      "repo": "boltons",
+      "source_context_quality": "commit_message_only_context",
+      "source_context_type": "commit_message_only_context",
+      "stable_order": 45,
+      "task_id": "boltons__v2__199",
+      "technical_certified": true
+    },
+    {
+      "inventory_role": "source_review_queue",
+      "paid_outcome_used_for_priority": false,
+      "primary_queue_label": "needs_public_context_repair",
+      "queue_labels": [
+        "needs_public_context_repair",
+        "needs_diff_assisted_statement_review",
+        "needs_leakage_review",
+        "needs_scope_review"
+      ],
+      "release_eligible_before": false,
+      "repair_blocker_if_not_repaired": "missing_public_problem_context",
+      "repair_priority_reason": "technical_certified_commit_message_only",
+      "repo": "boltons",
+      "source_context_quality": "commit_message_only_context",
+      "source_context_type": "commit_message_only_context",
+      "stable_order": 46,
+      "task_id": "boltons__v2__202",
+      "technical_certified": true
+    },
+    {
+      "inventory_role": "source_review_queue",
+      "paid_outcome_used_for_priority": false,
+      "primary_queue_label": "needs_public_context_repair",
+      "queue_labels": [
+        "needs_public_context_repair",
+        "needs_diff_assisted_statement_review",
+        "needs_leakage_review",
+        "needs_scope_review"
+      ],
+      "release_eligible_before": false,
+      "repair_blocker_if_not_repaired": "missing_public_problem_context",
+      "repair_priority_reason": "technical_certified_commit_message_only",
+      "repo": "click",
+      "source_context_quality": "commit_message_only_context",
+      "source_context_type": "commit_message_only_context",
+      "stable_order": 47,
+      "task_id": "click__third__001",
+      "technical_certified": true
+    },
+    {
+      "inventory_role": "source_review_queue",
+      "paid_outcome_used_for_priority": false,
+      "primary_queue_label": "needs_public_context_repair",
+      "queue_labels": [
+        "needs_public_context_repair",
+        "needs_diff_assisted_statement_review",
+        "needs_leakage_review",
+        "needs_scope_review"
+      ],
+      "release_eligible_before": false,
+      "repair_blocker_if_not_repaired": "missing_public_problem_context",
+      "repair_priority_reason": "technical_certified_commit_message_only",
+      "repo": "click",
+      "source_context_quality": "commit_message_only_context",
+      "source_context_type": "commit_message_only_context",
+      "stable_order": 48,
+      "task_id": "click__third__002",
+      "technical_certified": true
+    },
+    {
+      "inventory_role": "source_review_queue",
+      "paid_outcome_used_for_priority": false,
+      "primary_queue_label": "needs_public_context_repair",
+      "queue_labels": [
+        "needs_public_context_repair",
+        "needs_diff_assisted_statement_review",
+        "needs_leakage_review",
+        "needs_scope_review"
+      ],
+      "release_eligible_before": false,
+      "repair_blocker_if_not_repaired": "missing_public_problem_context",
+      "repair_priority_reason": "technical_certified_commit_message_only",
+      "repo": "click",
+      "source_context_quality": "commit_message_only_context",
+      "source_context_type": "commit_message_only_context",
+      "stable_order": 49,
+      "task_id": "click__third__003",
+      "technical_certified": true
+    },
+    {
+      "inventory_role": "source_review_queue",
+      "paid_outcome_used_for_priority": false,
+      "primary_queue_label": "needs_public_context_repair",
+      "queue_labels": [
+        "needs_public_context_repair",
+        "needs_diff_assisted_statement_review",
+        "needs_leakage_review",
+        "needs_scope_review"
+      ],
+      "release_eligible_before": false,
+      "repair_blocker_if_not_repaired": "missing_public_problem_context",
+      "repair_priority_reason": "technical_certified_commit_message_only",
+      "repo": "click",
+      "source_context_quality": "commit_message_only_context",
+      "source_context_type": "commit_message_only_context",
+      "stable_order": 50,
+      "task_id": "click__third__004",
+      "technical_certified": true
+    },
+    {
+      "inventory_role": "source_review_queue",
+      "paid_outcome_used_for_priority": false,
+      "primary_queue_label": "needs_public_context_repair",
+      "queue_labels": [
+        "needs_public_context_repair",
+        "needs_diff_assisted_statement_review",
+        "needs_leakage_review",
+        "needs_scope_review"
+      ],
+      "release_eligible_before": false,
+      "repair_blocker_if_not_repaired": "missing_public_problem_context",
+      "repair_priority_reason": "technical_certified_commit_message_only",
+      "repo": "click",
+      "source_context_quality": "commit_message_only_context",
+      "source_context_type": "commit_message_only_context",
+      "stable_order": 51,
+      "task_id": "click__third__005",
+      "technical_certified": true
+    },
+    {
+      "inventory_role": "source_review_queue",
+      "paid_outcome_used_for_priority": false,
+      "primary_queue_label": "needs_public_context_repair",
+      "queue_labels": [
+        "needs_public_context_repair",
+        "needs_diff_assisted_statement_review",
+        "needs_leakage_review",
+        "needs_scope_review"
+      ],
+      "release_eligible_before": false,
+      "repair_blocker_if_not_repaired": "missing_public_problem_context",
+      "repair_priority_reason": "technical_certified_commit_message_only",
+      "repo": "click",
+      "source_context_quality": "commit_message_only_context",
+      "source_context_type": "commit_message_only_context",
+      "stable_order": 52,
+      "task_id": "click__third__006",
+      "technical_certified": true
+    },
+    {
+      "inventory_role": "source_review_queue",
+      "paid_outcome_used_for_priority": false,
+      "primary_queue_label": "needs_public_context_repair",
+      "queue_labels": [
+        "needs_public_context_repair",
+        "needs_diff_assisted_statement_review",
+        "needs_leakage_review",
+        "needs_scope_review"
+      ],
+      "release_eligible_before": false,
+      "repair_blocker_if_not_repaired": "missing_public_problem_context",
+      "repair_priority_reason": "technical_certified_commit_message_only",
+      "repo": "click",
+      "source_context_quality": "commit_message_only_context",
+      "source_context_type": "commit_message_only_context",
+      "stable_order": 53,
+      "task_id": "click__third__007",
+      "technical_certified": true
+    },
+    {
+      "inventory_role": "source_review_queue",
+      "paid_outcome_used_for_priority": false,
+      "primary_queue_label": "needs_public_context_repair",
+      "queue_labels": [
+        "needs_public_context_repair",
+        "needs_diff_assisted_statement_review",
+        "needs_leakage_review",
+        "needs_scope_review"
+      ],
+      "release_eligible_before": false,
+      "repair_blocker_if_not_repaired": "missing_public_problem_context",
+      "repair_priority_reason": "technical_certified_commit_message_only",
+      "repo": "click",
+      "source_context_quality": "commit_message_only_context",
+      "source_context_type": "commit_message_only_context",
+      "stable_order": 54,
+      "task_id": "click__third__009",
+      "technical_certified": true
+    },
+    {
+      "inventory_role": "source_review_queue",
+      "paid_outcome_used_for_priority": false,
+      "primary_queue_label": "needs_public_context_repair",
+      "queue_labels": [
+        "needs_public_context_repair",
+        "needs_diff_assisted_statement_review",
+        "needs_leakage_review",
+        "needs_scope_review"
+      ],
+      "release_eligible_before": false,
+      "repair_blocker_if_not_repaired": "missing_public_problem_context",
+      "repair_priority_reason": "technical_certified_commit_message_only",
+      "repo": "click",
+      "source_context_quality": "commit_message_only_context",
+      "source_context_type": "commit_message_only_context",
+      "stable_order": 55,
+      "task_id": "click__third__010",
+      "technical_certified": true
+    },
+    {
+      "inventory_role": "source_review_queue",
+      "paid_outcome_used_for_priority": false,
+      "primary_queue_label": "needs_public_context_repair",
+      "queue_labels": [
+        "needs_public_context_repair",
+        "needs_diff_assisted_statement_review",
+        "needs_leakage_review",
+        "needs_scope_review"
+      ],
+      "release_eligible_before": false,
+      "repair_blocker_if_not_repaired": "missing_public_problem_context",
+      "repair_priority_reason": "technical_certified_commit_message_only",
+      "repo": "click",
+      "source_context_quality": "commit_message_only_context",
+      "source_context_type": "commit_message_only_context",
+      "stable_order": 56,
+      "task_id": "click__third__011",
+      "technical_certified": true
+    },
+    {
+      "inventory_role": "source_review_queue",
+      "paid_outcome_used_for_priority": false,
+      "primary_queue_label": "needs_public_context_repair",
+      "queue_labels": [
+        "needs_public_context_repair",
+        "needs_diff_assisted_statement_review",
+        "needs_leakage_review",
+        "needs_scope_review"
+      ],
+      "release_eligible_before": false,
+      "repair_blocker_if_not_repaired": "missing_public_problem_context",
+      "repair_priority_reason": "technical_certified_commit_message_only",
+      "repo": "click",
+      "source_context_quality": "commit_message_only_context",
+      "source_context_type": "commit_message_only_context",
+      "stable_order": 57,
+      "task_id": "click__third__013",
+      "technical_certified": true
+    },
+    {
+      "inventory_role": "source_review_queue",
+      "paid_outcome_used_for_priority": false,
+      "primary_queue_label": "needs_public_context_repair",
+      "queue_labels": [
+        "needs_public_context_repair",
+        "needs_diff_assisted_statement_review",
+        "needs_leakage_review",
+        "needs_scope_review"
+      ],
+      "release_eligible_before": false,
+      "repair_blocker_if_not_repaired": "missing_public_problem_context",
+      "repair_priority_reason": "technical_certified_commit_message_only",
+      "repo": "click",
+      "source_context_quality": "commit_message_only_context",
+      "source_context_type": "commit_message_only_context",
+      "stable_order": 58,
+      "task_id": "click__third__014",
+      "technical_certified": true
+    },
+    {
+      "inventory_role": "source_review_queue",
+      "paid_outcome_used_for_priority": false,
+      "primary_queue_label": "needs_public_context_repair",
+      "queue_labels": [
+        "needs_public_context_repair",
+        "needs_diff_assisted_statement_review",
+        "needs_leakage_review",
+        "needs_scope_review"
+      ],
+      "release_eligible_before": false,
+      "repair_blocker_if_not_repaired": "missing_public_problem_context",
+      "repair_priority_reason": "technical_certified_commit_message_only",
+      "repo": "click",
+      "source_context_quality": "commit_message_only_context",
+      "source_context_type": "commit_message_only_context",
+      "stable_order": 59,
+      "task_id": "click__third__015",
+      "technical_certified": true
+    },
+    {
+      "inventory_role": "source_review_queue",
+      "paid_outcome_used_for_priority": false,
+      "primary_queue_label": "needs_public_context_repair",
+      "queue_labels": [
+        "needs_public_context_repair",
+        "needs_diff_assisted_statement_review",
+        "needs_leakage_review",
+        "needs_scope_review"
+      ],
+      "release_eligible_before": false,
+      "repair_blocker_if_not_repaired": "missing_public_problem_context",
+      "repair_priority_reason": "technical_certified_commit_message_only",
+      "repo": "click",
+      "source_context_quality": "commit_message_only_context",
+      "source_context_type": "commit_message_only_context",
+      "stable_order": 60,
+      "task_id": "click__third__016",
+      "technical_certified": true
+    },
+    {
+      "inventory_role": "source_review_queue",
+      "paid_outcome_used_for_priority": false,
+      "primary_queue_label": "needs_public_context_repair",
+      "queue_labels": [
+        "needs_public_context_repair",
+        "needs_diff_assisted_statement_review",
+        "needs_leakage_review",
+        "needs_scope_review"
+      ],
+      "release_eligible_before": false,
+      "repair_blocker_if_not_repaired": "missing_public_problem_context",
+      "repair_priority_reason": "technical_certified_commit_message_only",
+      "repo": "click",
+      "source_context_quality": "commit_message_only_context",
+      "source_context_type": "commit_message_only_context",
+      "stable_order": 61,
+      "task_id": "click__third__017",
+      "technical_certified": true
+    },
+    {
+      "inventory_role": "source_review_queue",
+      "paid_outcome_used_for_priority": false,
+      "primary_queue_label": "needs_public_context_repair",
+      "queue_labels": [
+        "needs_public_context_repair",
+        "needs_diff_assisted_statement_review",
+        "needs_leakage_review",
+        "needs_scope_review"
+      ],
+      "release_eligible_before": false,
+      "repair_blocker_if_not_repaired": "missing_public_problem_context",
+      "repair_priority_reason": "technical_certified_commit_message_only",
+      "repo": "click",
+      "source_context_quality": "commit_message_only_context",
+      "source_context_type": "commit_message_only_context",
+      "stable_order": 62,
+      "task_id": "click__third__018",
+      "technical_certified": true
+    },
+    {
+      "inventory_role": "source_review_queue",
+      "paid_outcome_used_for_priority": false,
+      "primary_queue_label": "needs_public_context_repair",
+      "queue_labels": [
+        "needs_public_context_repair",
+        "needs_diff_assisted_statement_review",
+        "needs_leakage_review",
+        "needs_scope_review"
+      ],
+      "release_eligible_before": false,
+      "repair_blocker_if_not_repaired": "missing_public_problem_context",
+      "repair_priority_reason": "technical_certified_commit_message_only",
+      "repo": "click",
+      "source_context_quality": "commit_message_only_context",
+      "source_context_type": "commit_message_only_context",
+      "stable_order": 63,
+      "task_id": "click__third__020",
+      "technical_certified": true
+    },
+    {
+      "inventory_role": "source_review_queue",
+      "paid_outcome_used_for_priority": false,
+      "primary_queue_label": "needs_public_context_repair",
+      "queue_labels": [
+        "needs_public_context_repair",
+        "needs_diff_assisted_statement_review",
+        "needs_leakage_review",
+        "needs_scope_review"
+      ],
+      "release_eligible_before": false,
+      "repair_blocker_if_not_repaired": "missing_public_problem_context",
+      "repair_priority_reason": "technical_certified_commit_message_only",
+      "repo": "click",
+      "source_context_quality": "commit_message_only_context",
+      "source_context_type": "commit_message_only_context",
+      "stable_order": 64,
+      "task_id": "click__third__021",
+      "technical_certified": true
+    },
+    {
+      "inventory_role": "source_review_queue",
+      "paid_outcome_used_for_priority": false,
+      "primary_queue_label": "needs_public_context_repair",
+      "queue_labels": [
+        "needs_public_context_repair",
+        "needs_diff_assisted_statement_review",
+        "needs_leakage_review",
+        "needs_scope_review"
+      ],
+      "release_eligible_before": false,
+      "repair_blocker_if_not_repaired": "missing_public_problem_context",
+      "repair_priority_reason": "technical_certified_commit_message_only",
+      "repo": "click",
+      "source_context_quality": "commit_message_only_context",
+      "source_context_type": "commit_message_only_context",
+      "stable_order": 65,
+      "task_id": "click__third__022",
+      "technical_certified": true
+    },
+    {
+      "inventory_role": "source_review_queue",
+      "paid_outcome_used_for_priority": false,
+      "primary_queue_label": "needs_public_context_repair",
+      "queue_labels": [
+        "needs_public_context_repair",
+        "needs_diff_assisted_statement_review",
+        "needs_leakage_review",
+        "needs_scope_review"
+      ],
+      "release_eligible_before": false,
+      "repair_blocker_if_not_repaired": "missing_public_problem_context",
+      "repair_priority_reason": "technical_certified_commit_message_only",
+      "repo": "click",
+      "source_context_quality": "commit_message_only_context",
+      "source_context_type": "commit_message_only_context",
+      "stable_order": 66,
+      "task_id": "click__third__023",
+      "technical_certified": true
+    },
+    {
+      "inventory_role": "source_review_queue",
+      "paid_outcome_used_for_priority": false,
+      "primary_queue_label": "needs_public_context_repair",
+      "queue_labels": [
+        "needs_public_context_repair",
+        "needs_diff_assisted_statement_review",
+        "needs_leakage_review",
+        "needs_scope_review"
+      ],
+      "release_eligible_before": false,
+      "repair_blocker_if_not_repaired": "missing_public_problem_context",
+      "repair_priority_reason": "technical_certified_commit_message_only",
+      "repo": "click",
+      "source_context_quality": "commit_message_only_context",
+      "source_context_type": "commit_message_only_context",
+      "stable_order": 67,
+      "task_id": "click__third__024",
+      "technical_certified": true
+    },
+    {
+      "inventory_role": "source_review_queue",
+      "paid_outcome_used_for_priority": false,
+      "primary_queue_label": "needs_public_context_repair",
+      "queue_labels": [
+        "needs_public_context_repair",
+        "needs_diff_assisted_statement_review",
+        "needs_leakage_review",
+        "needs_scope_review"
+      ],
+      "release_eligible_before": false,
+      "repair_blocker_if_not_repaired": "missing_public_problem_context",
+      "repair_priority_reason": "technical_certified_commit_message_only",
+      "repo": "click",
+      "source_context_quality": "commit_message_only_context",
+      "source_context_type": "commit_message_only_context",
+      "stable_order": 68,
+      "task_id": "click__third__025",
+      "technical_certified": true
+    },
+    {
+      "inventory_role": "source_review_queue",
+      "paid_outcome_used_for_priority": false,
+      "primary_queue_label": "needs_public_context_repair",
+      "queue_labels": [
+        "needs_public_context_repair",
+        "needs_diff_assisted_statement_review",
+        "needs_leakage_review",
+        "needs_scope_review"
+      ],
+      "release_eligible_before": false,
+      "repair_blocker_if_not_repaired": "missing_public_problem_context",
+      "repair_priority_reason": "technical_certified_commit_message_only",
+      "repo": "click",
+      "source_context_quality": "commit_message_only_context",
+      "source_context_type": "commit_message_only_context",
+      "stable_order": 69,
+      "task_id": "click__third__027",
+      "technical_certified": true
+    },
+    {
+      "inventory_role": "source_review_queue",
+      "paid_outcome_used_for_priority": false,
+      "primary_queue_label": "needs_public_context_repair",
+      "queue_labels": [
+        "needs_public_context_repair",
+        "needs_diff_assisted_statement_review",
+        "needs_leakage_review",
+        "needs_scope_review"
+      ],
+      "release_eligible_before": false,
+      "repair_blocker_if_not_repaired": "missing_public_problem_context",
+      "repair_priority_reason": "technical_certified_commit_message_only",
+      "repo": "click",
+      "source_context_quality": "commit_message_only_context",
+      "source_context_type": "commit_message_only_context",
+      "stable_order": 70,
+      "task_id": "click__third__028",
+      "technical_certified": true
+    },
+    {
+      "inventory_role": "source_review_queue",
+      "paid_outcome_used_for_priority": false,
+      "primary_queue_label": "needs_public_context_repair",
+      "queue_labels": [
+        "needs_public_context_repair",
+        "needs_diff_assisted_statement_review",
+        "needs_leakage_review",
+        "needs_scope_review"
+      ],
+      "release_eligible_before": false,
+      "repair_blocker_if_not_repaired": "missing_public_problem_context",
+      "repair_priority_reason": "technical_certified_commit_message_only",
+      "repo": "click",
+      "source_context_quality": "commit_message_only_context",
+      "source_context_type": "commit_message_only_context",
+      "stable_order": 71,
+      "task_id": "click__third__035",
+      "technical_certified": true
+    },
+    {
+      "inventory_role": "source_review_queue",
+      "paid_outcome_used_for_priority": false,
+      "primary_queue_label": "needs_public_context_repair",
+      "queue_labels": [
+        "needs_public_context_repair",
+        "needs_diff_assisted_statement_review",
+        "needs_leakage_review",
+        "needs_scope_review"
+      ],
+      "release_eligible_before": false,
+      "repair_blocker_if_not_repaired": "missing_public_problem_context",
+      "repair_priority_reason": "technical_certified_commit_message_only",
+      "repo": "click",
+      "source_context_quality": "commit_message_only_context",
+      "source_context_type": "commit_message_only_context",
+      "stable_order": 72,
+      "task_id": "click__third__036",
+      "technical_certified": true
+    },
+    {
+      "inventory_role": "source_review_queue",
+      "paid_outcome_used_for_priority": false,
+      "primary_queue_label": "needs_public_context_repair",
+      "queue_labels": [
+        "needs_public_context_repair",
+        "needs_diff_assisted_statement_review",
+        "needs_leakage_review",
+        "needs_scope_review"
+      ],
+      "release_eligible_before": false,
+      "repair_blocker_if_not_repaired": "missing_public_problem_context",
+      "repair_priority_reason": "technical_certified_commit_message_only",
+      "repo": "click",
+      "source_context_quality": "commit_message_only_context",
+      "source_context_type": "commit_message_only_context",
+      "stable_order": 73,
+      "task_id": "click__third__037",
+      "technical_certified": true
+    },
+    {
+      "inventory_role": "source_review_queue",
+      "paid_outcome_used_for_priority": false,
+      "primary_queue_label": "needs_public_context_repair",
+      "queue_labels": [
+        "needs_public_context_repair",
+        "needs_diff_assisted_statement_review",
+        "needs_leakage_review",
+        "needs_scope_review"
+      ],
+      "release_eligible_before": false,
+      "repair_blocker_if_not_repaired": "missing_public_problem_context",
+      "repair_priority_reason": "technical_certified_commit_message_only",
+      "repo": "click",
+      "source_context_quality": "commit_message_only_context",
+      "source_context_type": "commit_message_only_context",
+      "stable_order": 74,
+      "task_id": "click__third__044",
+      "technical_certified": true
+    },
+    {
+      "inventory_role": "source_review_queue",
+      "paid_outcome_used_for_priority": false,
+      "primary_queue_label": "needs_public_context_repair",
+      "queue_labels": [
+        "needs_public_context_repair",
+        "needs_diff_assisted_statement_review",
+        "needs_leakage_review",
+        "needs_scope_review"
+      ],
+      "release_eligible_before": false,
+      "repair_blocker_if_not_repaired": "missing_public_problem_context",
+      "repair_priority_reason": "technical_certified_commit_message_only",
+      "repo": "click",
+      "source_context_quality": "commit_message_only_context",
+      "source_context_type": "commit_message_only_context",
+      "stable_order": 75,
+      "task_id": "click__third__046",
+      "technical_certified": true
+    },
+    {
+      "inventory_role": "source_review_queue",
+      "paid_outcome_used_for_priority": false,
+      "primary_queue_label": "needs_public_context_repair",
+      "queue_labels": [
+        "needs_public_context_repair",
+        "needs_diff_assisted_statement_review",
+        "needs_leakage_review",
+        "needs_scope_review"
+      ],
+      "release_eligible_before": false,
+      "repair_blocker_if_not_repaired": "missing_public_problem_context",
+      "repair_priority_reason": "technical_certified_commit_message_only",
+      "repo": "click",
+      "source_context_quality": "commit_message_only_context",
+      "source_context_type": "commit_message_only_context",
+      "stable_order": 76,
+      "task_id": "click__third__057",
+      "technical_certified": true
+    },
+    {
+      "inventory_role": "source_review_queue",
+      "paid_outcome_used_for_priority": false,
+      "primary_queue_label": "needs_public_context_repair",
+      "queue_labels": [
+        "needs_public_context_repair",
+        "needs_diff_assisted_statement_review",
+        "needs_leakage_review",
+        "needs_scope_review"
+      ],
+      "release_eligible_before": false,
+      "repair_blocker_if_not_repaired": "missing_public_problem_context",
+      "repair_priority_reason": "technical_certified_commit_message_only",
+      "repo": "click",
+      "source_context_quality": "commit_message_only_context",
+      "source_context_type": "commit_message_only_context",
+      "stable_order": 77,
+      "task_id": "click__third__061",
+      "technical_certified": true
+    },
+    {
+      "inventory_role": "source_review_queue",
+      "paid_outcome_used_for_priority": false,
+      "primary_queue_label": "needs_public_context_repair",
+      "queue_labels": [
+        "needs_public_context_repair",
+        "needs_diff_assisted_statement_review",
+        "needs_leakage_review",
+        "needs_scope_review"
+      ],
+      "release_eligible_before": false,
+      "repair_blocker_if_not_repaired": "missing_public_problem_context",
+      "repair_priority_reason": "technical_certified_commit_message_only",
+      "repo": "click",
+      "source_context_quality": "commit_message_only_context",
+      "source_context_type": "commit_message_only_context",
+      "stable_order": 78,
+      "task_id": "click__third__062",
+      "technical_certified": true
+    },
+    {
+      "inventory_role": "source_review_queue",
+      "paid_outcome_used_for_priority": false,
+      "primary_queue_label": "needs_public_context_repair",
+      "queue_labels": [
+        "needs_public_context_repair",
+        "needs_diff_assisted_statement_review",
+        "needs_leakage_review",
+        "needs_scope_review"
+      ],
+      "release_eligible_before": false,
+      "repair_blocker_if_not_repaired": "missing_public_problem_context",
+      "repair_priority_reason": "technical_certified_commit_message_only",
+      "repo": "click",
+      "source_context_quality": "commit_message_only_context",
+      "source_context_type": "commit_message_only_context",
+      "stable_order": 79,
+      "task_id": "click__third__063",
+      "technical_certified": true
+    },
+    {
+      "inventory_role": "source_review_queue",
+      "paid_outcome_used_for_priority": false,
+      "primary_queue_label": "needs_public_context_repair",
+      "queue_labels": [
+        "needs_public_context_repair",
+        "needs_diff_assisted_statement_review",
+        "needs_leakage_review",
+        "needs_scope_review"
+      ],
+      "release_eligible_before": false,
+      "repair_blocker_if_not_repaired": "missing_public_problem_context",
+      "repair_priority_reason": "technical_certified_commit_message_only",
+      "repo": "click",
+      "source_context_quality": "commit_message_only_context",
+      "source_context_type": "commit_message_only_context",
+      "stable_order": 80,
+      "task_id": "click__third__066",
+      "technical_certified": true
+    },
+    {
+      "inventory_role": "source_review_queue",
+      "paid_outcome_used_for_priority": false,
+      "primary_queue_label": "needs_public_context_repair",
+      "queue_labels": [
+        "needs_public_context_repair",
+        "needs_diff_assisted_statement_review",
+        "needs_leakage_review",
+        "needs_scope_review"
+      ],
+      "release_eligible_before": false,
+      "repair_blocker_if_not_repaired": "missing_public_problem_context",
+      "repair_priority_reason": "technical_certified_commit_message_only",
+      "repo": "click",
+      "source_context_quality": "commit_message_only_context",
+      "source_context_type": "commit_message_only_context",
+      "stable_order": 81,
+      "task_id": "click__third__067",
+      "technical_certified": true
+    },
+    {
+      "inventory_role": "source_review_queue",
+      "paid_outcome_used_for_priority": false,
+      "primary_queue_label": "needs_public_context_repair",
+      "queue_labels": [
+        "needs_public_context_repair",
+        "needs_diff_assisted_statement_review",
+        "needs_leakage_review",
+        "needs_scope_review"
+      ],
+      "release_eligible_before": false,
+      "repair_blocker_if_not_repaired": "missing_public_problem_context",
+      "repair_priority_reason": "technical_certified_commit_message_only",
+      "repo": "click",
+      "source_context_quality": "commit_message_only_context",
+      "source_context_type": "commit_message_only_context",
+      "stable_order": 82,
+      "task_id": "click__third__068",
+      "technical_certified": true
+    },
+    {
+      "inventory_role": "source_review_queue",
+      "paid_outcome_used_for_priority": false,
+      "primary_queue_label": "needs_public_context_repair",
+      "queue_labels": [
+        "needs_public_context_repair",
+        "needs_diff_assisted_statement_review",
+        "needs_leakage_review",
+        "needs_scope_review"
+      ],
+      "release_eligible_before": false,
+      "repair_blocker_if_not_repaired": "missing_public_problem_context",
+      "repair_priority_reason": "technical_certified_commit_message_only",
+      "repo": "click",
+      "source_context_quality": "commit_message_only_context",
+      "source_context_type": "commit_message_only_context",
+      "stable_order": 83,
+      "task_id": "click__third__069",
+      "technical_certified": true
+    },
+    {
+      "inventory_role": "source_review_queue",
+      "paid_outcome_used_for_priority": false,
+      "primary_queue_label": "needs_public_context_repair",
+      "queue_labels": [
+        "needs_public_context_repair",
+        "needs_diff_assisted_statement_review",
+        "needs_leakage_review",
+        "needs_scope_review"
+      ],
+      "release_eligible_before": false,
+      "repair_blocker_if_not_repaired": "missing_public_problem_context",
+      "repair_priority_reason": "technical_certified_commit_message_only",
+      "repo": "click",
+      "source_context_quality": "commit_message_only_context",
+      "source_context_type": "commit_message_only_context",
+      "stable_order": 84,
+      "task_id": "click__third__070",
+      "technical_certified": true
+    },
+    {
+      "inventory_role": "source_review_queue",
+      "paid_outcome_used_for_priority": false,
+      "primary_queue_label": "needs_public_context_repair",
+      "queue_labels": [
+        "needs_public_context_repair",
+        "needs_diff_assisted_statement_review",
+        "needs_leakage_review",
+        "needs_scope_review"
+      ],
+      "release_eligible_before": false,
+      "repair_blocker_if_not_repaired": "missing_public_problem_context",
+      "repair_priority_reason": "technical_certified_commit_message_only",
+      "repo": "click",
+      "source_context_quality": "commit_message_only_context",
+      "source_context_type": "commit_message_only_context",
+      "stable_order": 85,
+      "task_id": "click__third__071",
+      "technical_certified": true
+    },
+    {
+      "inventory_role": "source_review_queue",
+      "paid_outcome_used_for_priority": false,
+      "primary_queue_label": "needs_public_context_repair",
+      "queue_labels": [
+        "needs_public_context_repair",
+        "needs_diff_assisted_statement_review",
+        "needs_leakage_review",
+        "needs_scope_review"
+      ],
+      "release_eligible_before": false,
+      "repair_blocker_if_not_repaired": "missing_public_problem_context",
+      "repair_priority_reason": "technical_certified_commit_message_only",
+      "repo": "click",
+      "source_context_quality": "commit_message_only_context",
+      "source_context_type": "commit_message_only_context",
+      "stable_order": 86,
+      "task_id": "click__third__086",
+      "technical_certified": true
+    },
+    {
+      "inventory_role": "source_review_queue",
+      "paid_outcome_used_for_priority": false,
+      "primary_queue_label": "needs_public_context_repair",
+      "queue_labels": [
+        "needs_public_context_repair",
+        "needs_diff_assisted_statement_review",
+        "needs_leakage_review",
+        "needs_scope_review"
+      ],
+      "release_eligible_before": false,
+      "repair_blocker_if_not_repaired": "missing_public_problem_context",
+      "repair_priority_reason": "technical_certified_commit_message_only",
+      "repo": "click",
+      "source_context_quality": "commit_message_only_context",
+      "source_context_type": "commit_message_only_context",
+      "stable_order": 87,
+      "task_id": "click__third__088",
+      "technical_certified": true
+    },
+    {
+      "inventory_role": "source_review_queue",
+      "paid_outcome_used_for_priority": false,
+      "primary_queue_label": "needs_public_context_repair",
+      "queue_labels": [
+        "needs_public_context_repair",
+        "needs_diff_assisted_statement_review",
+        "needs_leakage_review",
+        "needs_scope_review"
+      ],
+      "release_eligible_before": false,
+      "repair_blocker_if_not_repaired": "missing_public_problem_context",
+      "repair_priority_reason": "technical_certified_commit_message_only",
+      "repo": "click",
+      "source_context_quality": "commit_message_only_context",
+      "source_context_type": "commit_message_only_context",
+      "stable_order": 88,
+      "task_id": "click__third__089",
+      "technical_certified": true
+    },
+    {
+      "inventory_role": "source_review_queue",
+      "paid_outcome_used_for_priority": false,
+      "primary_queue_label": "needs_public_context_repair",
+      "queue_labels": [
+        "needs_public_context_repair",
+        "needs_diff_assisted_statement_review",
+        "needs_leakage_review",
+        "needs_scope_review"
+      ],
+      "release_eligible_before": false,
+      "repair_blocker_if_not_repaired": "missing_public_problem_context",
+      "repair_priority_reason": "technical_certified_commit_message_only",
+      "repo": "click",
+      "source_context_quality": "commit_message_only_context",
+      "source_context_type": "commit_message_only_context",
+      "stable_order": 89,
+      "task_id": "click__third__099",
+      "technical_certified": true
+    },
+    {
+      "inventory_role": "source_review_queue",
+      "paid_outcome_used_for_priority": false,
+      "primary_queue_label": "needs_public_context_repair",
+      "queue_labels": [
+        "needs_public_context_repair",
+        "needs_diff_assisted_statement_review",
+        "needs_leakage_review",
+        "needs_scope_review"
+      ],
+      "release_eligible_before": false,
+      "repair_blocker_if_not_repaired": "missing_public_problem_context",
+      "repair_priority_reason": "technical_certified_commit_message_only",
+      "repo": "click",
+      "source_context_quality": "commit_message_only_context",
+      "source_context_type": "commit_message_only_context",
+      "stable_order": 90,
+      "task_id": "click__third__105",
+      "technical_certified": true
+    },
+    {
+      "inventory_role": "source_review_queue",
+      "paid_outcome_used_for_priority": false,
+      "primary_queue_label": "needs_public_context_repair",
+      "queue_labels": [
+        "needs_public_context_repair",
+        "needs_diff_assisted_statement_review",
+        "needs_leakage_review",
+        "needs_scope_review"
+      ],
+      "release_eligible_before": false,
+      "repair_blocker_if_not_repaired": "missing_public_problem_context",
+      "repair_priority_reason": "technical_certified_commit_message_only",
+      "repo": "click",
+      "source_context_quality": "commit_message_only_context",
+      "source_context_type": "commit_message_only_context",
+      "stable_order": 91,
+      "task_id": "click__third__107",
+      "technical_certified": true
+    }
+  ],
+  "run_id": "phase1_source_context_statement_hardening_20260528",
+  "schema_version": "barcarolle.phase1_source_context_statement_hardening_output.v1",
+  "thresholds": {
+    "commit_message_only_requires_promoted_review": true,
+    "high_ambiguity_max_words": 3,
+    "min_complete_title_word_count": 4,
+    "project_wide_scope_file_count": 8,
+    "thin_context_max_chars": 80,
+    "title_only_requires_review": true
+  }
+}

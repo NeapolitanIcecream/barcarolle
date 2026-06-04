@@ -1,0 +1,14 @@
+tooling_manager: uv
+phase0_project: experiments/phase0_headroom/pyproject.toml
+python_command: "/opt/homebrew/bin/uv run --project experiments/phase0_headroom python"
+workspace_root: experiments/phase0_headroom/workspaces
+external_repos_root: experiments/phase0_headroom/external_repos
+raw_artifacts_root: experiments/phase0_headroom/results/raw
+cache_root: experiments/phase0_headroom/cache
+large_artifacts_root: experiments/phase0_headroom/large_artifacts
+default_timeout_seconds: 120
+certification_timeout_seconds: 60
+allow_paid_model_calls_by_default: false
+require_budget_projection_before_paid_batch: true
+primary_python: /Users/chenmohan/gits/barcarolle/experiments/phase0_headroom/.venv/bin/python3
+primary_shell: /bin/zsh

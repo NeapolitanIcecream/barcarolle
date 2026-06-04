@@ -1,0 +1,145 @@
+{
+  "artifact": "decision",
+  "claim_boundary": {
+    "blocked_split_missing_cell_supplement_executed": true,
+    "clean_pre_outcome_validation": false,
+    "exploratory_evidence_only": true,
+    "formal_preregistration_completed": false,
+    "predictive_validity_established": false,
+    "selected_same_budget_blocked_split_completed": true
+  },
+  "click_minor_risk_caveat": "visible_title_only_minor_risk",
+  "combined_score_tables_manifest": "experiments/phase1_compiler/results/phase1_blocked_split_missing_cell_supplement_paid_execution_combined_score_tables_manifest.json",
+  "combined_selected_cells_completed": 120,
+  "commits_made_during_run": [
+    "5b68fe97 Compute blocked split supplement metrics",
+    "06150053 Reconcile blocked split supplement cost and score tables",
+    "d445915b Record blocked split supplement click batch",
+    "8d39f843 Record blocked split supplement boltons batch",
+    "b1abc051 Record blocked split supplement attrs batch",
+    "c130f64d Record blocked split supplement smoke batch",
+    "872976a5 Freeze blocked split supplement batch plan",
+    "6a59d374 Check blocked split supplement ready package",
+    "4f4b1694 Record blocked split missing-cell supplement preflight",
+    "5a45279e Add blocked split missing-cell supplement runbook",
+    "Close blocked split missing-cell supplement run (this commit)"
+  ],
+  "completed_new_paid_cells": 48,
+  "completed_paid_decision_changed": false,
+  "completed_steps": [
+    "preflight",
+    "ready_package_integrity",
+    "selected_split_plan",
+    "reuse_manifest",
+    "entry_gate",
+    "batch_plan",
+    "batch_1_smoke",
+    "batch_2_attrs_remainder",
+    "batch_3_boltons_remainder",
+    "batch_4_click_remainder",
+    "cost_reconciliation",
+    "combined_score_tables_manifest",
+    "adapter_stratified_metrics"
+  ],
+  "decision_label": "blocked_split_missing_cell_supplement_completed_with_non_scoreable_cells",
+  "endpoint_compliance_status": "pass",
+  "exact_provider_bill_available": false,
+  "followup_runbook_written_by_worker": false,
+  "generated_at": "2026-05-29T05:21:28Z",
+  "known_blockers": [],
+  "new_token_estimated_cost_usd": 26.3480964,
+  "paid_cells_ran": true,
+  "planned_new_token_estimated_cost_usd": 20.506944,
+  "policy_violation_count": 0,
+  "provider_billed_exact_cost_available": false,
+  "raw_artifacts_committed": false,
+  "raw_oracle_exposure_detected": false,
+  "reused_cells": 72,
+  "rq_answers": {
+    "RQ1_did_all_48_missing_cells_run": true,
+    "RQ2_were_72_reusable_cells_traceable": true,
+    "RQ3_combined_selected_cell_scoreability_rate": 0.9917,
+    "RQ4_gates_clean": {
+      "cost_accounting": "complete",
+      "endpoint": "pass",
+      "policy_violation_count": 0,
+      "raw_oracle_exposure": false
+    },
+    "RQ5_new_token_estimated_cost": 26.3480964,
+    "RQ6_adapter_stratified_B_eval_H_future_results": {
+      "codex_workspace": {
+        "B_eval_pass_rate": 0.3448,
+        "H_future_pass_rate": 0.2333,
+        "absolute_gap": 0.1115
+      },
+      "kilo_workspace": {
+        "B_eval_pass_rate": 0.6333,
+        "H_future_pass_rate": 0.5333,
+        "absolute_gap": 0.1
+      }
+    },
+    "RQ7_codex_kilo_disagreement": {
+      "both_fail": 21,
+      "both_pass": 14,
+      "codex_only_pass": 3,
+      "disagreement_count": 24,
+      "disagreement_rate": 0.4068,
+      "kilo_only_pass": 21,
+      "paired_task_count": 59
+    },
+    "RQ8_exploratory_diagnostic_vs_previous_split": {
+      "comparison_claim_boundary": "exploratory_diagnostic_only",
+      "looks_healthier_than_previous_pooled_gap": false,
+      "previous_three_repo_primary_pooled_gap": 0.1,
+      "supplement_pooled_gap": 0.1079
+    },
+    "RQ9_allowed_and_disallowed_claims": {
+      "allowed": [
+        "blocked_split_missing_cell_supplement_executed",
+        "selected_same_budget_blocked_split_completed",
+        "adapter_stratified_exploratory_metrics_recorded"
+      ],
+      "not_allowed": [
+        "formal_preregistration_completed",
+        "predictive_validity_established",
+        "clean_pre_outcome_validation",
+        "production_benchmark_ranking"
+      ]
+    }
+  },
+  "run_id": "phase1_blocked_split_missing_cell_supplement_paid_execution_20260529",
+  "schema_version": "barcarolle.phase1_blocked_split_missing_cell_supplement_paid_execution_output.v1",
+  "scoreability_rate": 0.9917,
+  "scoreable_cells": 119,
+  "selected_blocked_split_changed": false,
+  "tests_run": [
+    {
+      "command": "uv run --project experiments/phase1_compiler pytest experiments/phase1_compiler/tests/test_phase1_blocked_split_missing_cell_supplement_paid_execution.py -q",
+      "result": "7 passed in 0.25s",
+      "returncode": 0,
+      "stderr_tail": "",
+      "stdout_tail": ".......                                                                  [100%]\n7 passed in 0.25s\n"
+    },
+    {
+      "command": "uv run --project experiments/phase1_compiler pytest experiments/phase1_compiler/tests -q",
+      "result": "277 passed in 38.16s",
+      "returncode": 0,
+      "stderr_tail": "",
+      "stdout_tail": "........................................................................ [ 25%]\n........................................................................ [ 51%]\n........................................................................ [ 77%]\n.............................................................            [100%]\n277 passed in 38.16s\n"
+    },
+    {
+      "command": "git diff --check",
+      "result": "passed",
+      "returncode": 0,
+      "stderr_tail": "",
+      "stdout_tail": ""
+    },
+    {
+      "command": "git status --short --untracked-files=all",
+      "result": "?? experiments/phase1_compiler/external_review/phase1_task_generator_design_review_20260526/runbooks/phase-1-two-repo-certified-supply-expansion-runbook.md",
+      "returncode": 0,
+      "stderr_tail": "",
+      "stdout_tail": "s/phase1_two_repo_supply_expansion_statement_generation_review.json\n?? experiments/phase1_compiler/external_review/phase1_task_generator_design_review_20260526/results/phase1_two_repo_supply_expansion_statement_packets.json\n?? experiments/phase1_compiler/external_review/phase1_task_generator_design_review_20260526/runbooks/phase-1-historical-environment-synthesis-and-third-repo-gate-runbook.md\n?? experiments/phase1_compiler/external_review/phase1_task_generator_design_review_20260526/runbooks/phase-1-reference-pass-failure-audit-runbook.md\n?? experiments/phase1_compiler/external_review/phase1_task_generator_design_review_20260526/runbooks/phase-1-third-repo-repair-remine-runbook.md\n?? experiments/phase1_compiler/external_review/phase1_task_generator_design_review_20260526/runbooks/phase-1-third-repo-replacement-selection-runbook.md\n?? experiments/phase1_compiler/external_review/phase1_task_generator_design_review_20260526/runbooks/phase-1-two-repo-certified-supply-expansion-runbook.md\n"
+    }
+  ]
+}

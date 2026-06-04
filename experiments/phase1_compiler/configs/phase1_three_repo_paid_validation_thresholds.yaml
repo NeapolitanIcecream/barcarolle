@@ -1,0 +1,11 @@
+schema_version: barcarolle.phase1_three_repo_paid_validation_thresholds.v1
+run_id: phase1_three_repo_paid_readiness_packaging_20260528
+threshold_version: phase1_three_repo_paid_validation_thresholds_20260528_v1
+policy_violations_max: 0
+minimum_scoreability_rate: 0.95
+primary_gap_threshold: 0.15
+paid_endpoint_required: LLM_BASE_URL + LLM_API_KEY
+raw_oracle_exposure_allowed: false
+non_scoreable_cell_handling: preregistered_taxonomy_and_excluded_from_pass_denominator
+precision_label: pilot_only_until_paid_validation_analyzed
+predictive_validity_claim_allowed_before_paid_validation: false
