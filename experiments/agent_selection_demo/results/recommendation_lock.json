@@ -1,0 +1,141 @@
+{
+  "generated_at": "2026-06-12T13:46:48+00:00",
+  "nearest_competitor_agent_id": "kilo_gpt_5_4",
+  "primary_quality_recommendation": {
+    "agent_id": "codex_gpt_5_4",
+    "completed_cells": 20,
+    "cost_per_solved_task_usd": 0.34261597,
+    "cost_per_task_usd": 0.25696198,
+    "failure_counts": {
+      "hidden verifier failure": 5,
+      "verified pass": 15
+    },
+    "harness": "codex",
+    "median_latency_seconds": 101.048,
+    "model": "gpt-5.4",
+    "p90_latency_seconds": 366.753,
+    "reviewer_name": "Codex + GPT mainline",
+    "scheduled_cells": 20,
+    "scoreable_cell_rate": 1.0,
+    "scoreable_cells": 20,
+    "verified_pass_count": 15,
+    "verified_solve_rate": 0.75,
+    "verifier_replay_success_rate": 1.0
+  },
+  "production_value_recommendation": {
+    "agent_id": "codex_gpt_5_4",
+    "completed_cells": 20,
+    "cost_per_solved_task_usd": 0.34261597,
+    "cost_per_task_usd": 0.25696198,
+    "failure_counts": {
+      "hidden verifier failure": 5,
+      "verified pass": 15
+    },
+    "harness": "codex",
+    "median_latency_seconds": 101.048,
+    "model": "gpt-5.4",
+    "p90_latency_seconds": 366.753,
+    "reviewer_name": "Codex + GPT mainline",
+    "scheduled_cells": 20,
+    "scoreable_cell_rate": 1.0,
+    "scoreable_cells": 20,
+    "verified_pass_count": 15,
+    "verified_solve_rate": 0.75,
+    "verifier_replay_success_rate": 1.0
+  },
+  "recommended_agent_id_for_holdout": "codex_gpt_5_4",
+  "rule": {
+    "primary_quality": "highest verified solve rate; ties by fewer policy/replay failures, lower cost per solved task, lower median latency",
+    "production_value": "cheapest agent within five percentage points of the top verified solve rate; otherwise top quality agent"
+  },
+  "schema_version": "barcarolle.agent_selection_demo.recommendation_lock.v1",
+  "selection_rank": [
+    {
+      "agent_id": "codex_gpt_5_4",
+      "completed_cells": 20,
+      "cost_per_solved_task_usd": 0.34261597,
+      "cost_per_task_usd": 0.25696198,
+      "failure_counts": {
+        "hidden verifier failure": 5,
+        "verified pass": 15
+      },
+      "harness": "codex",
+      "median_latency_seconds": 101.048,
+      "model": "gpt-5.4",
+      "p90_latency_seconds": 366.753,
+      "reviewer_name": "Codex + GPT mainline",
+      "scheduled_cells": 20,
+      "scoreable_cell_rate": 1.0,
+      "scoreable_cells": 20,
+      "verified_pass_count": 15,
+      "verified_solve_rate": 0.75,
+      "verifier_replay_success_rate": 1.0
+    },
+    {
+      "agent_id": "kilo_gpt_5_4",
+      "completed_cells": 20,
+      "cost_per_solved_task_usd": 0.66666667,
+      "cost_per_task_usd": 0.5,
+      "failure_counts": {
+        "hidden verifier failure": 5,
+        "verified pass": 15
+      },
+      "harness": "kilo",
+      "median_latency_seconds": 48.297,
+      "model": "gpt-5.4",
+      "p90_latency_seconds": 129.524,
+      "reviewer_name": "Kilo + GPT mainline",
+      "scheduled_cells": 20,
+      "scoreable_cell_rate": 1.0,
+      "scoreable_cells": 20,
+      "verified_pass_count": 15,
+      "verified_solve_rate": 0.75,
+      "verifier_replay_success_rate": 1.0
+    },
+    {
+      "agent_id": "kilo_claude_sonnet_4_6",
+      "completed_cells": 20,
+      "cost_per_solved_task_usd": 0.71428571,
+      "cost_per_task_usd": 0.5,
+      "failure_counts": {
+        "hidden verifier failure": 4,
+        "no meaningful change": 2,
+        "verified pass": 14
+      },
+      "harness": "kilo",
+      "median_latency_seconds": 79.561,
+      "model": "claude-sonnet-4-6",
+      "p90_latency_seconds": 187.779,
+      "reviewer_name": "Kilo + Claude Sonnet",
+      "scheduled_cells": 20,
+      "scoreable_cell_rate": 0.9,
+      "scoreable_cells": 18,
+      "verified_pass_count": 14,
+      "verified_solve_rate": 0.7,
+      "verifier_replay_success_rate": 0.9
+    },
+    {
+      "agent_id": "kilo_gpt_5_4_mini",
+      "completed_cells": 20,
+      "cost_per_solved_task_usd": 0.76923077,
+      "cost_per_task_usd": 0.5,
+      "failure_counts": {
+        "exceeded budget or timeout": 2,
+        "hidden verifier failure": 5,
+        "verified pass": 13
+      },
+      "harness": "kilo",
+      "median_latency_seconds": 50.696,
+      "model": "gpt-5.4-mini",
+      "p90_latency_seconds": 293.126,
+      "reviewer_name": "Kilo + GPT low-cost",
+      "scheduled_cells": 20,
+      "scoreable_cell_rate": 0.9,
+      "scoreable_cells": 18,
+      "verified_pass_count": 13,
+      "verified_solve_rate": 0.65,
+      "verifier_replay_success_rate": 0.9
+    }
+  ],
+  "status": "locked"
+}
