@@ -1,0 +1,105 @@
+{
+  "schema_version": "barcarolle.agent_selection_demo.config.v1",
+  "target_repo": {
+    "repo_id": "boltons",
+    "repo_name": "mahmoud/boltons",
+    "repo_url": "https://github.com/mahmoud/boltons.git",
+    "local_repo": "experiments/phase0_headroom/external_repos/boltons",
+    "profile": "experiments/phase0_headroom/target_profiles/boltons_target_profile.json"
+  },
+  "task_sources": [
+    {
+      "name": "canonical_history",
+      "path": "experiments/phase0_headroom/certified_tasks/boltons_certified_tasks.jsonl"
+    },
+    {
+      "name": "supply_expansion_20260526",
+      "path": "experiments/phase0_headroom/certified_tasks/boltons_supply_expansion_20260526_certified_tasks.jsonl"
+    },
+    {
+      "name": "clean_outcome_unseen",
+      "path": "experiments/phase0_headroom/certified_tasks/boltons_clean_outcome_unseen_supply_certified_tasks.jsonl"
+    }
+  ],
+  "split_policy": {
+    "minimum_pool_size": 30,
+    "minimum_selection_count": 20,
+    "minimum_holdout_count": 10,
+    "preferred_pool_size": 45,
+    "preferred_selection_count": 30,
+    "preferred_holdout_count": 15,
+    "stronger_pool_size": 60,
+    "stronger_selection_count": 40,
+    "stronger_holdout_count": 20,
+    "smoke_task_count": 1
+  },
+  "agent_candidates": [
+    {
+      "agent_id": "codex_gpt_5_4",
+      "reviewer_name": "Codex + GPT mainline",
+      "harness": "codex",
+      "model": "gpt-5.4",
+      "adapter_script": "experiments/phase0_headroom/tools/codex_workspace_adapter.py",
+      "timeout_seconds": 900
+    },
+    {
+      "agent_id": "kilo_gpt_5_4",
+      "reviewer_name": "Kilo + GPT mainline",
+      "harness": "kilo",
+      "model": "gpt-5.4",
+      "adapter_script": "experiments/phase0_headroom/tools/kilo_workspace_adapter.py",
+      "timeout_seconds": 900,
+      "completion_mode": "strict-final"
+    },
+    {
+      "agent_id": "kilo_gpt_5_4_mini",
+      "reviewer_name": "Kilo + GPT low-cost",
+      "harness": "kilo",
+      "model": "gpt-5.4-mini",
+      "adapter_script": "experiments/phase0_headroom/tools/kilo_workspace_adapter.py",
+      "timeout_seconds": 900,
+      "completion_mode": "strict-final"
+    },
+    {
+      "agent_id": "kilo_claude_sonnet_4_6",
+      "reviewer_name": "Kilo + Claude Sonnet",
+      "harness": "kilo",
+      "model": "claude-sonnet-4-6",
+      "adapter_script": "experiments/phase0_headroom/tools/kilo_workspace_adapter.py",
+      "timeout_seconds": 900,
+      "completion_mode": "strict-final"
+    }
+  ],
+  "fallback_candidate": {
+    "agent_id": "codex_gpt_5_4_mini",
+    "reviewer_name": "Codex + GPT low-cost",
+    "harness": "codex",
+    "model": "gpt-5.4-mini",
+    "adapter_script": "experiments/phase0_headroom/tools/codex_workspace_adapter.py",
+    "timeout_seconds": 900
+  },
+  "pricing_per_1m_tokens_usd": {
+    "gpt-5.4": {
+      "input": 2.5,
+      "cached_input": 0.25,
+      "output": 15.0
+    },
+    "gpt-5.4-mini": {
+      "input": 0.75,
+      "cached_input": 0.075,
+      "output": 4.5
+    },
+    "claude-sonnet-4-6": {
+      "input": 3.0,
+      "cached_input": 0.3,
+      "output": 15.0
+    }
+  },
+  "run_policy": {
+    "outer_retries": 0,
+    "main_scoreable_cell_rate_min": 0.95,
+    "smoke_scoreable_cell_rate_min": 0.9,
+    "conservative_cell_estimate_usd": 0.5,
+    "result_prefix": "agent_selection_demo_2026_06_12"
+  }
+}
