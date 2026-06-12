@@ -3,7 +3,7 @@
 This file records repository-wide process decisions that future coding-agent
 sessions should know before planning or executing Barcarolle work.
 
-Last updated: 2026-06-04.
+Last updated: 2026-06-12.
 
 ## Maintenance Rules
 
@@ -85,6 +85,13 @@ rules, cost accounting, uncertainty reporting, and explicit success criteria.
 
 All paid LLM or Agent calls must use `LLM_BASE_URL` plus `LLM_API_KEY`; no
 fallback endpoint is allowed unless the user updates `AGENTS.md`.
+
+Exception: the Agent selection demo proposal dated 2026-06-12 is an approved
+execution plan if its repository gate, candidate smoke tests, frozen conditions,
+stop conditions, and artifact-hygiene rules are satisfied. Treat
+`docs/research/agent-selection-demo-execution-proposal-2026-06-12.md` as the
+source of truth for that demo. Do not let older phase/proposal wording in this
+file block the demo when the proposal explicitly authorizes the run.
 
 Canonical reports:
 

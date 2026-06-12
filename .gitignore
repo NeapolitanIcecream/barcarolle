@@ -198,6 +198,9 @@ outputs/
 # Local packaged review bundles
 experiments/phase1_compiler/external_review/*.zip
 
+# Local-only research notes and raw meeting artifacts
+docs/research/local-artifacts/
+
 # Local Codex workflow artifacts
 .codex-calibration/
 .codex-workflows/
