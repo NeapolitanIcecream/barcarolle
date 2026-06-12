@@ -1,0 +1,99 @@
+{
+  "agent_metrics": {
+    "codex_gpt_5_4": {
+      "completed_cells": 10,
+      "cost_per_solved_task_usd": 0.6575673,
+      "cost_per_task_usd": 0.32878365,
+      "failure_counts": {
+        "hidden verifier failure": 5,
+        "verified pass": 5
+      },
+      "harness": "codex",
+      "median_latency_seconds": 110.617,
+      "model": "gpt-5.4",
+      "p90_latency_seconds": 157.808,
+      "reviewer_name": "Codex + GPT mainline",
+      "scheduled_cells": 10,
+      "scoreable_cell_rate": 1.0,
+      "scoreable_cells": 10,
+      "verified_pass_count": 5,
+      "verified_solve_rate": 0.5,
+      "verifier_replay_success_rate": 1.0
+    },
+    "kilo_claude_sonnet_4_6": {
+      "completed_cells": 10,
+      "cost_per_solved_task_usd": 0.625,
+      "cost_per_task_usd": 0.5,
+      "failure_counts": {
+        "hidden verifier failure": 2,
+        "verified pass": 8
+      },
+      "harness": "kilo",
+      "median_latency_seconds": 275.456,
+      "model": "claude-sonnet-4-6",
+      "p90_latency_seconds": 499.439,
+      "reviewer_name": "Kilo + Claude Sonnet",
+      "scheduled_cells": 10,
+      "scoreable_cell_rate": 1.0,
+      "scoreable_cells": 10,
+      "verified_pass_count": 8,
+      "verified_solve_rate": 0.8,
+      "verifier_replay_success_rate": 1.0
+    },
+    "kilo_gpt_5_4": {
+      "completed_cells": 10,
+      "cost_per_solved_task_usd": 0.55555556,
+      "cost_per_task_usd": 0.5,
+      "failure_counts": {
+        "hidden verifier failure": 1,
+        "verified pass": 9
+      },
+      "harness": "kilo",
+      "median_latency_seconds": 47.921,
+      "model": "gpt-5.4",
+      "p90_latency_seconds": 60.696,
+      "reviewer_name": "Kilo + GPT mainline",
+      "scheduled_cells": 10,
+      "scoreable_cell_rate": 1.0,
+      "scoreable_cells": 10,
+      "verified_pass_count": 9,
+      "verified_solve_rate": 0.9,
+      "verifier_replay_success_rate": 1.0
+    },
+    "kilo_gpt_5_4_mini": {
+      "completed_cells": 10,
+      "cost_per_solved_task_usd": 0.83333333,
+      "cost_per_task_usd": 0.5,
+      "failure_counts": {
+        "hidden verifier failure": 4,
+        "verified pass": 6
+      },
+      "harness": "kilo",
+      "median_latency_seconds": 52.4,
+      "model": "gpt-5.4-mini",
+      "p90_latency_seconds": 96.981,
+      "reviewer_name": "Kilo + GPT low-cost",
+      "scheduled_cells": 10,
+      "scoreable_cell_rate": 1.0,
+      "scoreable_cells": 10,
+      "verified_pass_count": 6,
+      "verified_solve_rate": 0.6,
+      "verifier_replay_success_rate": 1.0
+    }
+  },
+  "completed_cells": 40,
+  "estimated_cost_usd": 18.2878365,
+  "failure_category_counts": {
+    "hidden verifier failure": 12,
+    "verified pass": 28
+  },
+  "generated_at": "2026-06-12T15:20:23+00:00",
+  "scheduled_cells": 40,
+  "schema_version": "barcarolle.agent_selection_demo.stage_metrics.v1",
+  "scoreable_cell_rate": 1.0,
+  "scoreable_cells": 40,
+  "stage": "holdout",
+  "usage_observed_count": 10,
+  "verified_pass_count": 28,
+  "verified_solve_rate": 0.7
+}

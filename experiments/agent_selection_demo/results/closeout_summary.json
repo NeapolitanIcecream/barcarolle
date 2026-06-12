@@ -1,0 +1,62 @@
+{
+  "actual_agent_matrix": [
+    {
+      "Agent": "Codex + GPT mainline",
+      "Harness": "codex",
+      "Model": "gpt-5.4"
+    },
+    {
+      "Agent": "Kilo + GPT mainline",
+      "Harness": "kilo",
+      "Model": "gpt-5.4"
+    },
+    {
+      "Agent": "Kilo + GPT low-cost",
+      "Harness": "kilo",
+      "Model": "gpt-5.4-mini"
+    },
+    {
+      "Agent": "Kilo + Claude Sonnet",
+      "Harness": "kilo",
+      "Model": "claude-sonnet-4-6"
+    }
+  ],
+  "cost_latency": {
+    "holdout_estimated_cost_usd": 18.2878365,
+    "selection_estimated_cost_usd": 35.1392395,
+    "smoke_estimated_cost_usd": 1.7173265,
+    "total_estimated_cost_usd": 55.1444025,
+    "usage_observed_count": 31
+  },
+  "holdout_task_count": 10,
+  "holdout_verdict": "contradicts",
+  "recommendation": {
+    "agent_id": "codex_gpt_5_4",
+    "completed_cells": 20,
+    "cost_per_solved_task_usd": 0.34261597,
+    "cost_per_task_usd": 0.25696198,
+    "failure_counts": {
+      "hidden verifier failure": 5,
+      "verified pass": 15
+    },
+    "harness": "codex",
+    "median_latency_seconds": 101.048,
+    "model": "gpt-5.4",
+    "p90_latency_seconds": 366.753,
+    "reviewer_name": "Codex + GPT mainline",
+    "scheduled_cells": 20,
+    "scoreable_cell_rate": 1.0,
+    "scoreable_cells": 20,
+    "verified_pass_count": 15,
+    "verified_solve_rate": 0.75,
+    "verifier_replay_success_rate": 1.0
+  },
+  "scoreable_rates": {
+    "holdout": 1.0,
+    "selection": 0.95,
+    "smoke": 1.0
+  },
+  "selection_task_count": 20,
+  "target_repo": "mahmoud/boltons",
+  "task_source": "\u76ee\u6807\u4ed3\u5e93\u5386\u53f2\u6539\u52a8\uff1b\u4ece\u6d4b\u8bd5\u53d8\u5316\u6784\u9020\u9690\u85cf\u9a8c\u8bc1\uff0c\u5e76\u901a\u8fc7\u672c\u5730\u5e72\u51c0\u91cd\u653e\u8ba4\u8bc1"
+}
