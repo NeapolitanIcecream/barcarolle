@@ -110,6 +110,13 @@ def phase0_root(root: Path) -> Path:
 
 
 def run_command(command: list[str], cwd: Path, timeout: int = 120, env: dict[str, str] | None = None) -> CommandResult:
+    def output_text(value: str | bytes | None) -> str:
+        if value is None:
+            return ""
+        if isinstance(value, bytes):
+            return value.decode("utf-8", errors="replace")
+        return value
+
     start = time.monotonic()
     try:
         completed = subprocess.run(
@@ -128,8 +135,8 @@ def run_command(command: list[str], cwd: Path, timeout: int = 120, env: dict[str
             command,
             str(cwd),
             124,
-            exc.stdout or "",
-            exc.stderr or "",
+            output_text(exc.stdout),
+            output_text(exc.stderr),
             time.monotonic() - start,
             timed_out=True,
         )

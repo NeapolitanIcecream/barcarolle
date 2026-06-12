@@ -6,6 +6,7 @@ import hashlib
 import json
 import math
 import os
+import re
 import shlex
 import statistics
 import subprocess
@@ -539,6 +540,43 @@ def stage_paths(stage: str) -> dict[str, Path]:
     }
 
 
+STAGE_SCORE_FIELDNAMES = [
+    "stage",
+    "agent_id",
+    "reviewer_name",
+    "harness",
+    "model",
+    "task_id",
+    "terminal_status",
+    "scoreable_cell",
+    "verified_pass",
+    "failure_category",
+    "latency_seconds",
+    "estimated_cost_usd",
+    "usage_observed",
+    "patch_sha256",
+]
+
+
+def persist_stage_outputs(
+    stage: str,
+    submissions: list[dict[str, Any]],
+    verifiers: list[dict[str, Any]],
+    cost_rows: list[dict[str, Any]],
+    expected_cells: int,
+) -> dict[str, Any]:
+    paths = stage_paths(stage)
+    rows = score_rows(stage, submissions, verifiers, cost_rows)
+    metrics = summarize_stage(stage, rows, expected_cells)
+    write_jsonl(paths["submissions"], submissions)
+    write_jsonl(paths["verifiers"], verifiers)
+    write_jsonl(paths["cost"], cost_rows)
+    write_csv(paths["score"], rows, STAGE_SCORE_FIELDNAMES)
+    write_json(paths["metrics"], metrics)
+    write_stage_report(stage, metrics)
+    return metrics
+
+
 def existing_run_ids(path: Path) -> set[str]:
     return {str(row.get("run_id")) for row in read_jsonl(path) if row.get("run_id")}
 
@@ -751,9 +789,8 @@ def run_stage(config: dict[str, Any], stage: str, agent_ids: list[str] | None = 
     verifiers = [] if rerun else read_jsonl(paths["verifiers"])
     cost_rows = [] if rerun else read_jsonl(paths["cost"])
     seen = set() if rerun else existing_run_ids(paths["submissions"])
-    new_submissions: list[dict[str, Any]] = []
-    new_verifiers: list[dict[str, Any]] = []
-    new_costs: list[dict[str, Any]] = []
+    expected = len(task_ids) * len(selected_agents)
+    metrics = persist_stage_outputs(stage, submissions, verifiers, cost_rows, expected)
     for agent_id in selected_agents:
         candidate = candidates[agent_id]
         adapter = adapter_config_for(config, candidate)
@@ -773,9 +810,7 @@ def run_stage(config: dict[str, Any], stage: str, agent_ids: list[str] | None = 
             )
             usage = usage_from_submission(result.submission)
             usage_observed, estimated_cost, token_counts = estimate_cost(usage, candidate["model"], config)
-            new_submissions.append(result.submission)
-            new_verifiers.append(result.verifier)
-            new_costs.append(
+            cost_row = (
                 {
                     "schema_version": "barcarolle.agent_selection_demo.cost.v1",
                     "run_id": run_id,
@@ -794,37 +829,253 @@ def run_stage(config: dict[str, Any], stage: str, agent_ids: list[str] | None = 
                     **token_counts,
                 }
             )
-    submissions = workspace.merge_rows_by_run_id(submissions, new_submissions)
-    verifiers = workspace.merge_rows_by_run_id(verifiers, new_verifiers)
-    cost_rows = workspace.merge_rows_by_run_id(cost_rows, new_costs)
-    rows = score_rows(stage, submissions, verifiers, cost_rows)
+            submissions = workspace.merge_rows_by_run_id(submissions, [result.submission])
+            verifiers = workspace.merge_rows_by_run_id(verifiers, [result.verifier])
+            cost_rows = workspace.merge_rows_by_run_id(cost_rows, [cost_row])
+            seen.add(run_id)
+            metrics = persist_stage_outputs(stage, submissions, verifiers, cost_rows, expected)
+    return metrics
+
+
+def phase0_exp() -> Path:
+    return ROOT / "experiments" / "phase0_headroom"
+
+
+def stage_namespace(config: dict[str, Any], stage: str, agent_id: str) -> Path:
+    return workspace.artifact_namespace(f"{config['run_policy']['result_prefix']}_{stage}", agent_id)
+
+
+def relative_to_phase0(path: Path) -> str:
+    return str(path.relative_to(phase0_exp()))
+
+
+def read_optional_text(path: Path) -> str:
+    return path.read_text(encoding="utf-8", errors="replace") if path.exists() else ""
+
+
+def infer_adapter_latency(raw_dir: Path, stderr_text: str, candidate: dict[str, Any]) -> float:
+    match = re.search(r"duration_seconds=([0-9]+(?:\.[0-9]+)?)", stderr_text)
+    if match:
+        return round(float(match.group(1)), 3)
+    files = [path for path in raw_dir.iterdir() if path.is_file()] if raw_dir.exists() else []
+    if len(files) >= 2:
+        mtimes = [path.stat().st_mtime for path in files]
+        span = max(mtimes) - min(mtimes)
+        if span > 0:
+            return round(span, 3)
+    return float(candidate.get("timeout_seconds") or 0)
+
+
+def recover_replay_verifier(
+    run_id: str,
+    package: workspace.TaskPackage,
+    patch_path: Path,
+    raw_dir: Path,
+) -> dict[str, Any]:
+    with tempfile.TemporaryDirectory(prefix=f"barcarolle-demo-recover-{run_id}-") as tmp:
+        verifier_workspace = Path(tmp) / "verifier"
+        workspace.archive_tree(package.source_repo, package.base_commit, verifier_workspace)
+        workspace.initialize_workspace_git(verifier_workspace)
+        applied, apply_error = workspace.apply_patch(verifier_workspace, patch_path)
+        if not applied:
+            return {
+                "status": "harness_error",
+                "verifier_exit_code": None,
+                "fresh_workspace": True,
+                "harness_error": "captured_patch_did_not_apply",
+                "patch_apply_error_tail": apply_error,
+            }
+        injected, inject_error = workspace.inject_hidden_oracle(ROOT, package, verifier_workspace, raw_dir)
+        if not injected:
+            return {
+                "status": "harness_error",
+                "verifier_exit_code": None,
+                "fresh_workspace": True,
+                "harness_error": inject_error,
+            }
+        verify_stdout = raw_dir / "recovery_verifier_stdout.txt"
+        verify_stderr = raw_dir / "recovery_verifier_stderr.txt"
+        verify = workspace.run_command(
+            package.verifier_command,
+            verifier_workspace,
+            timeout=package.timeout_seconds,
+            env=workspace.verifier_env_for(package, verifier_workspace),
+        )
+        verify_stdout.write_text(verify.stdout, encoding="utf-8")
+        verify_stderr.write_text(verify.stderr, encoding="utf-8")
+        return {
+            "status": "timeout" if verify.timed_out else "verified_pass" if verify.returncode == 0 else "verified_fail",
+            "verifier_exit_code": verify.returncode,
+            "fresh_workspace": True,
+            "duration_seconds": round(verify.duration_seconds, 3),
+            "raw_artifacts": {
+                "stdout": relative_to_phase0(verify_stdout),
+                "stderr": relative_to_phase0(verify_stderr),
+            },
+            "harness_error": None,
+        }
+
+
+def recover_cell_from_raw(
+    config: dict[str, Any],
+    stage: str,
+    agent_id: str,
+    task_id: str,
+    package: workspace.TaskPackage,
+    candidate: dict[str, Any],
+) -> tuple[dict[str, Any], dict[str, Any], dict[str, Any]] | None:
+    run_id = f"{stage}__{agent_id}__{task_id}"
+    namespace = stage_namespace(config, stage, agent_id)
+    raw_dir = phase0_exp() / workspace.RAW_REL / namespace / run_id
+    workspace_root = phase0_exp() / workspace.WORKSPACE_REL / namespace / run_id
+    solver_workspace = workspace_root / "solver"
+    if not raw_dir.exists():
+        return None
+
+    stdout_path = raw_dir / "acut_stdout.txt"
+    stderr_path = raw_dir / "acut_stderr.txt"
+    patch_path = raw_dir / "submission.patch"
+    stderr_text = read_optional_text(stderr_path)
+    patch_existed = patch_path.exists()
+    if not patch_existed and solver_workspace.exists():
+        patch_path.write_text(workspace.capture_diff(solver_workspace), encoding="utf-8")
+    patch_text = read_optional_text(patch_path)
+    changed = workspace.changed_paths(solver_workspace) if solver_workspace.exists() else []
+    raw_artifacts: dict[str, str] = {}
+    for key, path in [("stdout", stdout_path), ("stderr", stderr_path), ("patch", patch_path)]:
+        if path.exists():
+            raw_artifacts[key] = relative_to_phase0(path)
+
+    latency = infer_adapter_latency(raw_dir, stderr_text, candidate)
+    base_submission = {
+        "schema_version": "barcarolle.workspace_acut_submission.v1",
+        "run_id": run_id,
+        "generated_at": iso_now(),
+        "adapter_id": agent_id,
+        "acut_id": agent_id,
+        "harness_name": candidate["harness"],
+        "model_or_agent_name": candidate["model"],
+        "command_template_source": "agent_selection_demo_config",
+        "endpoint_proof_status": "llm_endpoint_proxy_secret_isolated",
+        "task_id": package.task_id,
+        "repo_id": package.repo_id,
+        "split": stage,
+        "patch_source": "recovered_from_ignored_workspace_diff" if not patch_existed else "git_diff_after_workspace_run",
+        "patch_sha256": workspace.sha256_file(patch_path) if patch_path.exists() else sha256_text(""),
+        "latency_seconds": latency,
+        "raw_artifacts": raw_artifacts,
+        "task_package_metadata": workspace.package_submission_metadata(package),
+    }
+    base_verifier = {
+        "schema_version": "barcarolle.workspace_acut_verifier.v1",
+        "run_id": run_id,
+        "generated_at": iso_now(),
+        "adapter_id": agent_id,
+        "acut_id": agent_id,
+        "harness_name": candidate["harness"],
+        "model_or_agent_name": candidate["model"],
+        "command_template_source": "agent_selection_demo_config",
+        "endpoint_proof_status": "llm_endpoint_proxy_secret_isolated",
+        "task_id": package.task_id,
+        "repo_id": package.repo_id,
+        "split": stage,
+        "fresh_workspace": False,
+        "status": "invalid_output",
+        "verifier_exit_code": None,
+        "harness_error": None,
+    }
+
+    acut_timed_out_before_capture = not patch_existed and not stderr_path.exists()
+    if acut_timed_out_before_capture:
+        submission = {
+            **base_submission,
+            "status": "acut_harness_error",
+            "acut_exit_code": 124,
+            "changed_paths": changed,
+            "recovery_note": "adapter_timed_out_before_result_persistence",
+        }
+        verifier = {
+            **base_verifier,
+            "status": "acut_harness_error",
+            "harness_error": "acut_command_failed",
+            "acut_exit_code": 124,
+        }
+    elif not patch_text.strip():
+        submission = {**base_submission, "status": "invalid_output", "acut_exit_code": 0}
+        verifier = {**base_verifier, "status": "invalid_output", "harness_error": "empty_workspace_diff"}
+    else:
+        submission = {**base_submission, "status": "submitted", "acut_exit_code": 0, "changed_paths": changed}
+        violation, violating_paths = workspace.policy_violation(changed, package)
+        if violation:
+            verifier = {
+                **base_verifier,
+                "status": "policy_violation",
+                "harness_error": violation,
+                "changed_paths": violating_paths,
+            }
+        else:
+            verifier = {**base_verifier, **recover_replay_verifier(run_id, package, patch_path, raw_dir)}
+
+    usage = usage_from_submission(submission)
+    usage_observed, estimated_cost, token_counts = estimate_cost(usage, candidate["model"], config)
+    cost = {
+        "schema_version": "barcarolle.agent_selection_demo.cost.v1",
+        "run_id": run_id,
+        "timestamp": iso_now(),
+        "stage": stage,
+        "agent_id": agent_id,
+        "reviewer_name": candidate["reviewer_name"],
+        "harness": candidate["harness"],
+        "model": candidate["model"],
+        "task_id": task_id,
+        "status": verifier["status"],
+        "usage_observed": usage_observed,
+        "estimated_cost_usd": estimated_cost,
+        "cost_method": "observed_token_estimate" if usage_observed else "conservative_per_cell_estimate",
+        "latency_seconds": latency,
+        **token_counts,
+    }
+    return submission, verifier, cost
+
+
+def recover_stage(config: dict[str, Any], stage: str, agent_ids: list[str] | None = None) -> dict[str, Any]:
+    split = load_split()
+    packages = package_map(config)
+    task_ids = stage_task_ids(split, stage)
+    candidates = candidate_by_id(config)
+    selected_agents = agent_ids or [candidate["agent_id"] for candidate in config["agent_candidates"]]
+    paths = stage_paths(stage)
+    submissions = read_jsonl(paths["submissions"])
+    verifiers = read_jsonl(paths["verifiers"])
+    cost_rows = read_jsonl(paths["cost"])
+    recovered_run_ids: list[str] = []
+    for agent_id in selected_agents:
+        candidate = candidates[agent_id]
+        for task_id in task_ids:
+            package = replace(packages[task_id], split=stage)
+            recovered = recover_cell_from_raw(config, stage, agent_id, task_id, package, candidate)
+            if recovered is None:
+                continue
+            submission, verifier, cost = recovered
+            submissions = workspace.merge_rows_by_run_id(submissions, [submission])
+            verifiers = workspace.merge_rows_by_run_id(verifiers, [verifier])
+            cost_rows = workspace.merge_rows_by_run_id(cost_rows, [cost])
+            recovered_run_ids.append(submission["run_id"])
     expected = len(task_ids) * len(selected_agents)
-    metrics = summarize_stage(stage, rows, expected)
-    write_jsonl(paths["submissions"], submissions)
-    write_jsonl(paths["verifiers"], verifiers)
-    write_jsonl(paths["cost"], cost_rows)
-    write_csv(
-        paths["score"],
-        rows,
-        [
-            "stage",
-            "agent_id",
-            "reviewer_name",
-            "harness",
-            "model",
-            "task_id",
-            "terminal_status",
-            "scoreable_cell",
-            "verified_pass",
-            "failure_category",
-            "latency_seconds",
-            "estimated_cost_usd",
-            "usage_observed",
-            "patch_sha256",
-        ],
+    metrics = persist_stage_outputs(stage, submissions, verifiers, cost_rows, expected)
+    write_json(
+        result_path(f"{stage}_recovery_manifest.json"),
+        {
+            "schema_version": "barcarolle.agent_selection_demo.recovery_manifest.v1",
+            "generated_at": iso_now(),
+            "stage": stage,
+            "agent_ids": selected_agents,
+            "recovered_cells": len(recovered_run_ids),
+            "paid_agent_calls_made": False,
+            "run_ids_sha256": sha256_text("\n".join(sorted(recovered_run_ids))),
+            "metrics": metrics,
+        },
     )
-    write_json(paths["metrics"], metrics)
-    write_stage_report(stage, metrics)
     return metrics
 
 
@@ -1096,6 +1347,9 @@ def main() -> int:
         run_parser = subcommands.add_parser(name)
         run_parser.add_argument("--agent", action="append", default=None)
         run_parser.add_argument("--rerun", action="store_true")
+    recover_parser = subcommands.add_parser("recover-stage")
+    recover_parser.add_argument("stage", choices=["smoke", "selection", "holdout"])
+    recover_parser.add_argument("--agent", action="append", default=None)
     subcommands.add_parser("recommend")
     subcommands.add_parser("report")
     args = parser.parse_args()
@@ -1112,6 +1366,9 @@ def main() -> int:
         )
         rate = metrics["scoreable_cell_rate"] or 0.0
         return 0 if rate >= min_rate else 2
+    if args.command == "recover-stage":
+        recover_stage(config, args.stage, agent_ids=args.agent)
+        return 0
     if args.command == "recommend":
         recommend(config)
         return 0
