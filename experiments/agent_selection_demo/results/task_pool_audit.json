@@ -1,0 +1,567 @@
+{
+  "generated_at": "2026-06-12T10:36:28+00:00",
+  "rows": [
+    {
+      "base_commit_present": true,
+      "code_files": [
+        "boltons/iterutils.py"
+      ],
+      "gates_pass": true,
+      "has_required_fields": true,
+      "source": "clean_outcome_unseen",
+      "statement_sha256": "3cb07a99133b21bcc2173356db08dea4820a001f8e91e61dab56627654acc046",
+      "target_commit_present": true,
+      "task_id": "boltons__clean_ext__001",
+      "task_time": "2020-01-06T22:29:17-08:00",
+      "test_files": [
+        "tests/test_iterutils.py"
+      ]
+    },
+    {
+      "base_commit_present": true,
+      "code_files": [
+        "boltons/setutils.py"
+      ],
+      "gates_pass": true,
+      "has_required_fields": true,
+      "source": "clean_outcome_unseen",
+      "statement_sha256": "7895b92e8ba7c0e330c9f66573bb34e7ca5f582776aadd9967ac11e10d40ea6a",
+      "target_commit_present": true,
+      "task_id": "boltons__clean_ext__008",
+      "task_time": "2020-03-29T19:27:42-07:00",
+      "test_files": [
+        "tests/test_setutils.py"
+      ]
+    },
+    {
+      "base_commit_present": true,
+      "code_files": [
+        "boltons/setutils.py"
+      ],
+      "gates_pass": true,
+      "has_required_fields": true,
+      "source": "clean_outcome_unseen",
+      "statement_sha256": "503449f17cceff707094997ced49f33f18ddfa3f45acba70ef81a1b3ec74d2e2",
+      "target_commit_present": true,
+      "task_id": "boltons__clean_ext__010",
+      "task_time": "2020-04-21T02:03:26-07:00",
+      "test_files": [
+        "tests/test_setutils.py"
+      ]
+    },
+    {
+      "base_commit_present": true,
+      "code_files": [
+        "boltons/timeutils.py"
+      ],
+      "gates_pass": true,
+      "has_required_fields": true,
+      "source": "clean_outcome_unseen",
+      "statement_sha256": "0ef8d976ce20fdc9dcbe4962d3d6ff56b39b4d148caa64d95b9ce736ebda0a83",
+      "target_commit_present": true,
+      "task_id": "boltons__clean_ext__017",
+      "task_time": "2022-12-07T18:22:36-08:00",
+      "test_files": [
+        "tests/test_timeutils.py"
+      ]
+    },
+    {
+      "base_commit_present": true,
+      "code_files": [
+        "boltons/funcutils.py"
+      ],
+      "gates_pass": true,
+      "has_required_fields": true,
+      "source": "canonical_history",
+      "statement_sha256": "d8fd47dd734a9376fd8bfb6e43317e704077a4a9b6233c6647b045d1c878e99b",
+      "target_commit_present": true,
+      "task_id": "boltons__hist__006",
+      "task_time": "2020-03-25T10:22:48-04:00",
+      "test_files": [
+        "tests/test_funcutils_fb_py3.py"
+      ]
+    },
+    {
+      "base_commit_present": true,
+      "code_files": [
+        "boltons/socketutils.py"
+      ],
+      "gates_pass": true,
+      "has_required_fields": true,
+      "source": "canonical_history",
+      "statement_sha256": "a05d07b30ffe7ea8ca4bf6df120e327ec51337f3b2634f239a4f625d39a0a54d",
+      "target_commit_present": true,
+      "task_id": "boltons__hist__007",
+      "task_time": "2020-03-28T09:38:32+01:00",
+      "test_files": [
+        "tests/test_socketutils.py"
+      ]
+    },
+    {
+      "base_commit_present": true,
+      "code_files": [
+        "boltons/iterutils.py"
+      ],
+      "gates_pass": true,
+      "has_required_fields": true,
+      "source": "canonical_history",
+      "statement_sha256": "b4a33b3e3950c16119d40f2551814faf8ba489a03442209a71003d19f844c34f",
+      "target_commit_present": true,
+      "task_id": "boltons__hist__011",
+      "task_time": "2020-06-22T01:19:35-04:00",
+      "test_files": [
+        "tests/test_iterutils.py"
+      ]
+    },
+    {
+      "base_commit_present": true,
+      "code_files": [
+        "boltons/funcutils.py"
+      ],
+      "gates_pass": true,
+      "has_required_fields": true,
+      "source": "canonical_history",
+      "statement_sha256": "d711420b7d102cbadfdee296919edaa4656fbf9981a0b086599c4b358abbfefc",
+      "target_commit_present": true,
+      "task_id": "boltons__hist__013",
+      "task_time": "2021-02-21T22:35:25-08:00",
+      "test_files": [
+        "tests/test_funcutils.py"
+      ]
+    },
+    {
+      "base_commit_present": true,
+      "code_files": [
+        "boltons/fileutils.py",
+        "boltons/jsonutils.py"
+      ],
+      "gates_pass": true,
+      "has_required_fields": true,
+      "source": "canonical_history",
+      "statement_sha256": "0a4fb3da6431f95a271d4252ad7f586acff1ec8560b0b48937c11fd4cfc2553a",
+      "target_commit_present": true,
+      "task_id": "boltons__hist__014",
+      "task_time": "2021-05-15T00:08:53-07:00",
+      "test_files": [
+        "tests/test_jsonutils.py"
+      ]
+    },
+    {
+      "base_commit_present": true,
+      "code_files": [
+        "boltons/urlutils.py"
+      ],
+      "gates_pass": true,
+      "has_required_fields": true,
+      "source": "canonical_history",
+      "statement_sha256": "5d6479f12fbc86d967be3f319635f1fe9eb02ce349ca6daf84bb89c6692e45ff",
+      "target_commit_present": true,
+      "task_id": "boltons__hist__017",
+      "task_time": "2022-01-16T07:08:40+08:00",
+      "test_files": [
+        "tests/test_urlutils.py"
+      ]
+    },
+    {
+      "base_commit_present": true,
+      "code_files": [
+        "boltons/ioutils.py"
+      ],
+      "gates_pass": true,
+      "has_required_fields": true,
+      "source": "canonical_history",
+      "statement_sha256": "57abbee954c3864a6b61fcd3a9be0ff6194bb03206f2947b48745eea4a311049",
+      "target_commit_present": true,
+      "task_id": "boltons__hist__019",
+      "task_time": "2022-12-08T03:45:47-06:00",
+      "test_files": [
+        "tests/test_ioutils.py"
+      ]
+    },
+    {
+      "base_commit_present": true,
+      "code_files": [
+        "boltons/timeutils.py"
+      ],
+      "gates_pass": true,
+      "has_required_fields": true,
+      "source": "canonical_history",
+      "statement_sha256": "efb5d9590741f61a440383a64f2bec331a0f279ef10313a0dfb72f89850ad750",
+      "target_commit_present": true,
+      "task_id": "boltons__hist__020",
+      "task_time": "2022-12-08T15:51:37+06:00",
+      "test_files": [
+        "tests/test_timeutils.py"
+      ]
+    },
+    {
+      "base_commit_present": true,
+      "code_files": [
+        "boltons/iterutils.py"
+      ],
+      "gates_pass": true,
+      "has_required_fields": true,
+      "source": "canonical_history",
+      "statement_sha256": "666adb6c42cefaa096753956dd7b95a0c2eaea7aaf5c664032b9d7aa7ac3f650",
+      "target_commit_present": true,
+      "task_id": "boltons__hist__022",
+      "task_time": "2023-02-20T07:22:09+01:00",
+      "test_files": [
+        "tests/test_iterutils.py"
+      ]
+    },
+    {
+      "base_commit_present": true,
+      "code_files": [
+        "boltons/tbutils.py"
+      ],
+      "gates_pass": true,
+      "has_required_fields": true,
+      "source": "canonical_history",
+      "statement_sha256": "b64e99edd8551799ca32036fbd39f57105bd5e7c4789ed640b72f9466e21aba0",
+      "target_commit_present": true,
+      "task_id": "boltons__hist__023",
+      "task_time": "2023-04-02T15:11:27-04:00",
+      "test_files": [
+        "tests/test_tbutils_parsed_exc.py"
+      ]
+    },
+    {
+      "base_commit_present": true,
+      "code_files": [
+        "boltons/dictutils.py"
+      ],
+      "gates_pass": true,
+      "has_required_fields": true,
+      "source": "canonical_history",
+      "statement_sha256": "599c863a3401e4ff35c796f94d66bb8f9a2fe708cfa5e2e8e68f13757f3e2a59",
+      "target_commit_present": true,
+      "task_id": "boltons__hist__024",
+      "task_time": "2023-04-20T18:29:33-07:00",
+      "test_files": [
+        "tests/test_dictutils.py"
+      ]
+    },
+    {
+      "base_commit_present": true,
+      "code_files": [
+        "boltons/funcutils.py"
+      ],
+      "gates_pass": true,
+      "has_required_fields": true,
+      "source": "canonical_history",
+      "statement_sha256": "7812241e79c95ec3284aa914caad77a41e265668d2f1fc718f54c3250fe193c2",
+      "target_commit_present": true,
+      "task_id": "boltons__hist__025",
+      "task_time": "2023-04-21T13:05:37+05:30",
+      "test_files": [
+        "tests/test_funcutils_fb_py3.py"
+      ]
+    },
+    {
+      "base_commit_present": true,
+      "code_files": [
+        "boltons/dictutils.py"
+      ],
+      "gates_pass": true,
+      "has_required_fields": true,
+      "source": "canonical_history",
+      "statement_sha256": "094594c4f1ca18b622cced9bd8c353f7dc6db9ce0ae38a3e0b76d3448cedfa17",
+      "target_commit_present": true,
+      "task_id": "boltons__hist__026",
+      "task_time": "2023-05-07T01:25:38+08:00",
+      "test_files": [
+        "tests/test_dictutils.py"
+      ]
+    },
+    {
+      "base_commit_present": true,
+      "code_files": [
+        "boltons/cacheutils.py"
+      ],
+      "gates_pass": true,
+      "has_required_fields": true,
+      "source": "canonical_history",
+      "statement_sha256": "9d5cb3b1c83830635278fbb2a246697168ab6f262aae4e639af4e11ecd61cac5",
+      "target_commit_present": true,
+      "task_id": "boltons__hist__027",
+      "task_time": "2023-10-29T21:31:16-07:00",
+      "test_files": [
+        "tests/test_cacheutils.py"
+      ]
+    },
+    {
+      "base_commit_present": true,
+      "code_files": [
+        "boltons/iterutils.py"
+      ],
+      "gates_pass": true,
+      "has_required_fields": true,
+      "source": "canonical_history",
+      "statement_sha256": "3eb7d836009967f8bda7b9ecbcd0d3ecccf2c5bd025feb468a2a6b405f67b94c",
+      "target_commit_present": true,
+      "task_id": "boltons__hist__028",
+      "task_time": "2023-10-31T11:31:12-07:00",
+      "test_files": [
+        "tests/test_iterutils.py"
+      ]
+    },
+    {
+      "base_commit_present": true,
+      "code_files": [
+        "boltons/iterutils.py"
+      ],
+      "gates_pass": true,
+      "has_required_fields": true,
+      "source": "canonical_history",
+      "statement_sha256": "3f15ae17b059d79e1b7d33e92f88f71e6aa964f8ec4cc38d55e7d5588acbeb0f",
+      "target_commit_present": true,
+      "task_id": "boltons__hist__031",
+      "task_time": "2024-06-30T00:24:35-07:00",
+      "test_files": [
+        "tests/test_iterutils.py"
+      ]
+    },
+    {
+      "base_commit_present": true,
+      "code_files": [
+        "boltons/tbutils.py"
+      ],
+      "gates_pass": true,
+      "has_required_fields": true,
+      "source": "supply_expansion_20260526",
+      "statement_sha256": "e501000ea78f8ce55c2d3ca720d1e9766373efc55c286a7de967b690d157f20c",
+      "target_commit_present": true,
+      "task_id": "boltons__supply_expansion_20260526__001",
+      "task_time": "2015-04-19T00:13:33-07:00",
+      "test_files": [
+        "tests/__init__.py",
+        "tests/tbutils_test.py"
+      ]
+    },
+    {
+      "base_commit_present": true,
+      "code_files": [
+        "boltons/tbutils.py"
+      ],
+      "gates_pass": true,
+      "has_required_fields": true,
+      "source": "supply_expansion_20260526",
+      "statement_sha256": "9495f75c7f42283ddb65522dfb8489ccb2727b84562f37cace7ecb36581c7408",
+      "target_commit_present": true,
+      "task_id": "boltons__supply_expansion_20260526__002",
+      "task_time": "2015-04-19T00:30:30-07:00",
+      "test_files": [
+        "tests/tbutils_test.py"
+      ]
+    },
+    {
+      "base_commit_present": true,
+      "code_files": [
+        "boltons/tbutils.py"
+      ],
+      "gates_pass": true,
+      "has_required_fields": true,
+      "source": "supply_expansion_20260526",
+      "statement_sha256": "aca2ff90f6820aad6e24fb4461e734b085e916ac01ebb3b4865322fca35f26e5",
+      "target_commit_present": true,
+      "task_id": "boltons__supply_expansion_20260526__003",
+      "task_time": "2015-04-20T13:52:04-07:00",
+      "test_files": [
+        "tests/tbutils_test.py"
+      ]
+    },
+    {
+      "base_commit_present": true,
+      "code_files": [
+        "boltons/tbutils.py"
+      ],
+      "gates_pass": true,
+      "has_required_fields": true,
+      "source": "supply_expansion_20260526",
+      "statement_sha256": "aca2ff90f6820aad6e24fb4461e734b085e916ac01ebb3b4865322fca35f26e5",
+      "target_commit_present": true,
+      "task_id": "boltons__supply_expansion_20260526__004",
+      "task_time": "2015-04-20T13:52:53-07:00",
+      "test_files": [
+        "tests/tbutils_test.py"
+      ]
+    },
+    {
+      "base_commit_present": true,
+      "code_files": [
+        "boltons/cacheutils.py"
+      ],
+      "gates_pass": true,
+      "has_required_fields": true,
+      "source": "supply_expansion_20260526",
+      "statement_sha256": "fcee84fabac5e27f22e8dcc65a32183f5d6c83f42386964b3511879a49363511",
+      "target_commit_present": true,
+      "task_id": "boltons__supply_expansion_20260526__006",
+      "task_time": "2015-05-01T09:16:13+08:00",
+      "test_files": [
+        "tests/cacheutils_test.py"
+      ]
+    },
+    {
+      "base_commit_present": true,
+      "code_files": [
+        "boltons/iterutils.py"
+      ],
+      "gates_pass": true,
+      "has_required_fields": true,
+      "source": "supply_expansion_20260526",
+      "statement_sha256": "13d515d24c171a5e28ccae0cd7dfa183d840c0f23dc0a0881130a590c024f6e2",
+      "target_commit_present": true,
+      "task_id": "boltons__supply_expansion_20260526__019",
+      "task_time": "2015-07-30T11:07:00+02:00",
+      "test_files": [
+        "tests/test_iterutils.py"
+      ]
+    },
+    {
+      "base_commit_present": true,
+      "code_files": [
+        "boltons/strutils.py"
+      ],
+      "gates_pass": true,
+      "has_required_fields": true,
+      "source": "supply_expansion_20260526",
+      "statement_sha256": "fbed1f1ef2c253bfcc2a919faccfeb27894a60411a77085fac831893bf2510ef",
+      "target_commit_present": true,
+      "task_id": "boltons__supply_expansion_20260526__048",
+      "task_time": "2016-05-23T13:39:22+08:00",
+      "test_files": [
+        "tests/test_strutils.py"
+      ]
+    },
+    {
+      "base_commit_present": true,
+      "code_files": [
+        "boltons/tbutils.py"
+      ],
+      "gates_pass": true,
+      "has_required_fields": true,
+      "source": "supply_expansion_20260526",
+      "statement_sha256": "501c4c4fa78120689ca0e393ab2d2329708c16d49c27fbc97870019ceae56a0f",
+      "target_commit_present": true,
+      "task_id": "boltons__supply_expansion_20260526__066",
+      "task_time": "2017-01-16T11:01:53-06:00",
+      "test_files": [
+        "tests/test_tbutils.py"
+      ]
+    },
+    {
+      "base_commit_present": true,
+      "code_files": [
+        "boltons/timeutils.py"
+      ],
+      "gates_pass": true,
+      "has_required_fields": true,
+      "source": "supply_expansion_20260526",
+      "statement_sha256": "d66af05c47fbc68415a666fce3c17c4e07cff1dfafea704082bc5512a1923c5b",
+      "target_commit_present": true,
+      "task_id": "boltons__supply_expansion_20260526__093",
+      "task_time": "2018-10-11T12:54:38+05:30",
+      "test_files": [
+        "tests/test_timeutils.py"
+      ]
+    },
+    {
+      "base_commit_present": true,
+      "code_files": [
+        "boltons/cacheutils.py"
+      ],
+      "gates_pass": true,
+      "has_required_fields": true,
+      "source": "supply_expansion_20260526",
+      "statement_sha256": "45beac209f2ec43688579a1f1559053b9bbcb6a20cc5a9b53412a75f8c6194d9",
+      "target_commit_present": true,
+      "task_id": "boltons__supply_expansion_20260526__095",
+      "task_time": "2018-10-17T00:38:58Z",
+      "test_files": [
+        "tests/test_cacheutils.py"
+      ]
+    },
+    {
+      "base_commit_present": true,
+      "code_files": [
+        "boltons/mathutils.py"
+      ],
+      "gates_pass": true,
+      "has_required_fields": true,
+      "source": "supply_expansion_20260526",
+      "statement_sha256": "2da98a9640873aaf41945038206d50140cd2592a4d5927e3b9a4d26b6a2ab123",
+      "target_commit_present": true,
+      "task_id": "boltons__supply_expansion_20260526__107",
+      "task_time": "2019-02-09T00:09:14-08:00",
+      "test_files": [
+        "tests/test_mathutils.py"
+      ]
+    },
+    {
+      "base_commit_present": true,
+      "code_files": [
+        "boltons/listutils.py"
+      ],
+      "gates_pass": true,
+      "has_required_fields": true,
+      "source": "supply_expansion_20260526",
+      "statement_sha256": "a3448deab1c22d47011899d733b2e1c7ec3c3943d7d0455d08dbf448bb4b3add",
+      "target_commit_present": true,
+      "task_id": "boltons__supply_expansion_20260526__157",
+      "task_time": "2025-10-04T13:09:43-04:00",
+      "test_files": [
+        "tests/test_listutils.py"
+      ]
+    },
+    {
+      "base_commit_present": true,
+      "code_files": [
+        "boltons/iterutils.py"
+      ],
+      "gates_pass": true,
+      "has_required_fields": true,
+      "source": "supply_expansion_20260526",
+      "statement_sha256": "b804879d492e430921b111c330da833104cc2151a47ac46c6b11d6da006c4261",
+      "target_commit_present": true,
+      "task_id": "boltons__supply_expansion_20260526__158",
+      "task_time": "2026-01-27T23:38:52-05:00",
+      "test_files": [
+        "tests/test_iterutils.py"
+      ]
+    },
+    {
+      "base_commit_present": true,
+      "code_files": [
+        "boltons/iterutils.py"
+      ],
+      "gates_pass": true,
+      "has_required_fields": true,
+      "source": "supply_expansion_20260526",
+      "statement_sha256": "68465b76999c5ebaa00d3ef663fb8f303a08b86e8767eb2ba1c5791785d38ce1",
+      "target_commit_present": true,
+      "task_id": "boltons__supply_expansion_20260526__159",
+      "task_time": "2025-07-22T13:47:31+02:00",
+      "test_files": [
+        "tests/test_iterutils.py"
+      ]
+    },
+    {
+      "base_commit_present": true,
+      "code_files": [
+        "boltons/funcutils.py"
+      ],
+      "gates_pass": true,
+      "has_required_fields": true,
+      "source": "supply_expansion_20260526",
+      "statement_sha256": "e46bb45b759b2d21402d12d3a4fba1b329f40db6d66d104b047fbac9341b2fc4",
+      "target_commit_present": true,
+      "task_id": "boltons__supply_expansion_20260526__160",
+      "task_time": "2026-02-11T19:21:47-06:00",
+      "test_files": [
+        "tests/test_funcutils.py"
+      ]
+    }
+  ]
+}
