@@ -10,6 +10,7 @@ import time
 from pathlib import Path
 from typing import Any
 
+from llm_endpoint_proxy import DUMMY_API_KEY_ENV, LLMEndpointProxy, sanitized_child_env
 
 MODEL = "gpt-5.4-mini"
 PROVIDER = "openai-compatible"
@@ -20,25 +21,25 @@ def base_url_with_v1(raw: str) -> str:
     return base if base.endswith("/v1") else f"{base}/v1"
 
 
-def write_kilo_config(config_root: Path, base_url: str) -> Path:
+def write_kilo_config(config_root: Path, base_url: str, model: str = MODEL) -> Path:
     kilo_dir = config_root / "kilo"
     kilo_dir.mkdir(parents=True, exist_ok=True)
     payload: dict[str, Any] = {
         "$schema": "https://app.kilo.ai/config.json",
-        "model": f"{PROVIDER}/{MODEL}",
+        "model": f"{PROVIDER}/{model}",
         "enabled_providers": [PROVIDER],
         "permission": {"*": "allow"},
         "provider": {
             PROVIDER: {
                 "options": {
-                    "apiKey": "{env:LLM_API_KEY}",
+                    "apiKey": f"{{env:{DUMMY_API_KEY_ENV}}}",
                     "baseURL": base_url,
                     "timeout": 60000,
                 },
                 "models": {
-                    MODEL: {
-                        "name": "GPT 5.4 Mini Workspace ACUT",
-                        "id": MODEL,
+                    model: {
+                        "name": f"{model} Workspace Agent",
+                        "id": model,
                         "tool_call": True,
                         "reasoning": True,
                         "temperature": False,
@@ -76,7 +77,7 @@ def build_prompt(completion_mode: str = "current") -> str:
     return "\n".join(lines)
 
 
-def build_kilo_command(workspace: Path, statement_file: Path, timeout_seconds: int, completion_mode: str = "current") -> list[str]:
+def build_kilo_command(workspace: Path, statement_file: Path, timeout_seconds: int, completion_mode: str = "current", model: str = MODEL) -> list[str]:
     del timeout_seconds
     return [
         "kilo",
@@ -86,12 +87,12 @@ def build_kilo_command(workspace: Path, statement_file: Path, timeout_seconds: i
         "--auto",
         "--format",
         "json",
-        "--model",
-        f"{PROVIDER}/{MODEL}",
         "--dir",
         str(workspace),
         "--file",
         str(statement_file),
+        "--model",
+        f"{PROVIDER}/{model}",
     ]
 
 
@@ -126,6 +127,7 @@ def main() -> int:
     parser.add_argument("--raw-dir", default=None)
     parser.add_argument("--timeout", type=int, default=900)
     parser.add_argument("--completion-mode", choices=["current", "strict-final"], default="current")
+    parser.add_argument("--model", default=MODEL)
     args = parser.parse_args()
 
     base = os.environ.get("LLM_BASE_URL")
@@ -143,20 +145,19 @@ def main() -> int:
     with tempfile.TemporaryDirectory(prefix="kilo-home-", dir=temp_parent) as temp_root_name:
         temp_root = Path(temp_root_name)
         config_root = temp_root / "config"
-        write_kilo_config(config_root, base_url_with_v1(base))
-        env = os.environ.copy()
-        env.update(
-            {
-                "HOME": str(temp_root / "home"),
-                "XDG_CONFIG_HOME": str(config_root),
-                "XDG_DATA_HOME": str(temp_root / "data"),
-                "XDG_CACHE_HOME": str(temp_root / "cache"),
-                "XDG_STATE_HOME": str(temp_root / "state"),
-                "LLM_API_KEY": key,
-            }
-        )
-        command = build_kilo_command(workspace, statement_file, args.timeout, completion_mode=args.completion_mode)
-        return run_child(command, workspace, env, args.timeout)
+        with LLMEndpointProxy(base, key) as proxy:
+            write_kilo_config(config_root, proxy.base_url, model=args.model)
+            env = sanitized_child_env(
+                {
+                    "HOME": str(temp_root / "home"),
+                    "XDG_CONFIG_HOME": str(config_root),
+                    "XDG_DATA_HOME": str(temp_root / "data"),
+                    "XDG_CACHE_HOME": str(temp_root / "cache"),
+                    "XDG_STATE_HOME": str(temp_root / "state"),
+                }
+            )
+            command = build_kilo_command(workspace, statement_file, args.timeout, completion_mode=args.completion_mode, model=args.model)
+            return run_child(command, workspace, env, args.timeout)
 
 
 if __name__ == "__main__":

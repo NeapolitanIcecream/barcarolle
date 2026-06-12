@@ -8,6 +8,7 @@ import tempfile
 import time
 from pathlib import Path
 
+from llm_endpoint_proxy import DUMMY_API_KEY_ENV, LLMEndpointProxy, sanitized_child_env
 
 MODEL = "gpt-5.4-mini"
 PROVIDER = "llm_endpoint"
@@ -30,7 +31,7 @@ def build_prompt(statement_file: Path) -> str:
     )
 
 
-def build_codex_command(workspace: Path, statement_file: Path, base_url: str, timeout_seconds: int) -> list[str]:
+def build_codex_command(workspace: Path, statement_file: Path, base_url: str, timeout_seconds: int, model: str = MODEL) -> list[str]:
     del timeout_seconds
     return [
         "codex",
@@ -43,7 +44,7 @@ def build_codex_command(workspace: Path, statement_file: Path, base_url: str, ti
         "--sandbox",
         "workspace-write",
         "--model",
-        MODEL,
+        model,
         "-c",
         f'model_provider="{PROVIDER}"',
         "-c",
@@ -51,7 +52,7 @@ def build_codex_command(workspace: Path, statement_file: Path, base_url: str, ti
         "-c",
         f'model_providers.{PROVIDER}.base_url="{base_url}"',
         "-c",
-        f'model_providers.{PROVIDER}.env_key="LLM_API_KEY"',
+        f'model_providers.{PROVIDER}.env_key="{DUMMY_API_KEY_ENV}"',
         "-c",
         f'model_providers.{PROVIDER}.wire_api="responses"',
         "-c",
@@ -92,6 +93,7 @@ def main() -> int:
     parser.add_argument("--statement-file", required=True)
     parser.add_argument("--raw-dir", default=None)
     parser.add_argument("--timeout", type=int, default=900)
+    parser.add_argument("--model", default=MODEL)
     args = parser.parse_args()
 
     base = os.environ.get("LLM_BASE_URL")
@@ -107,11 +109,10 @@ def main() -> int:
         temp_parent.mkdir(parents=True, exist_ok=True)
 
     with tempfile.TemporaryDirectory(prefix="codex-home-", dir=temp_parent) as codex_home:
-        env = os.environ.copy()
-        env["CODEX_HOME"] = codex_home
-        env["LLM_API_KEY"] = key
-        command = build_codex_command(workspace, statement_file, base_url_with_v1(base), args.timeout)
-        return run_child(command, workspace, env, args.timeout)
+        with LLMEndpointProxy(base, key) as proxy:
+            env = sanitized_child_env({"CODEX_HOME": codex_home})
+            command = build_codex_command(workspace, statement_file, proxy.base_url, args.timeout, model=args.model)
+            return run_child(command, workspace, env, args.timeout)
 
 
 if __name__ == "__main__":

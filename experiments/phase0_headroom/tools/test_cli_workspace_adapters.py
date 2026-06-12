@@ -2,8 +2,11 @@ from __future__ import annotations
 
 from pathlib import Path
 
+import pytest
+
 import codex_workspace_adapter
 import kilo_workspace_adapter
+import llm_endpoint_proxy
 import workspace_acut_run
 
 
@@ -13,6 +16,7 @@ def test_codex_command_uses_custom_responses_provider_without_secret() -> None:
         statement_file=Path("/tmp/workspace/.barcarolle/statement.md"),
         base_url="https://endpoint.example/v1",
         timeout_seconds=900,
+        model="gpt-5.4",
     )
 
     rendered = " ".join(command)
@@ -24,20 +28,23 @@ def test_codex_command_uses_custom_responses_provider_without_secret() -> None:
     assert "--cd" in command
     assert "/tmp/workspace" in command
     assert 'model_provider="llm_endpoint"' in command
-    assert 'model_providers.llm_endpoint.env_key="LLM_API_KEY"' in command
+    assert "--model" in command
+    assert "gpt-5.4" in command
+    assert f'model_providers.llm_endpoint.env_key="{llm_endpoint_proxy.DUMMY_API_KEY_ENV}"' in command
     assert "supports_websockets=false" in rendered
     assert "LLM_API_KEY=" not in rendered
 
 
 def test_kilo_config_uses_env_key_and_openai_compatible_model(tmp_path: Path) -> None:
-    config_path = kilo_workspace_adapter.write_kilo_config(tmp_path, "https://endpoint.example/v1")
+    config_path = kilo_workspace_adapter.write_kilo_config(tmp_path, "https://endpoint.example/v1", model="claude-sonnet-4-6")
     text = config_path.read_text(encoding="utf-8")
 
     assert config_path == tmp_path / "kilo" / "kilo.jsonc"
-    assert '"model": "openai-compatible/gpt-5.4-mini"' in text
-    assert '"apiKey": "{env:LLM_API_KEY}"' in text
+    assert '"model": "openai-compatible/claude-sonnet-4-6"' in text
+    assert f'"apiKey": "{{env:{llm_endpoint_proxy.DUMMY_API_KEY_ENV}}}"' in text
     assert '"baseURL": "https://endpoint.example/v1"' in text
     assert "SECRET" not in text
+    assert "LLM_API_KEY" not in text
 
 
 def test_kilo_command_delivers_statement_file_and_workspace() -> None:
@@ -45,6 +52,7 @@ def test_kilo_command_delivers_statement_file_and_workspace() -> None:
         workspace=Path("/tmp/workspace"),
         statement_file=Path("/tmp/workspace/.barcarolle/statement.md"),
         timeout_seconds=900,
+        model="gpt-5.4",
     )
 
     rendered = " ".join(command)
@@ -61,7 +69,8 @@ def test_kilo_command_delivers_statement_file_and_workspace() -> None:
     assert "/tmp/workspace" in command
     assert "--file" in command
     assert "/tmp/workspace/.barcarolle/statement.md" in command
-    assert "openai-compatible/gpt-5.4-mini" in command
+    assert command.count("--model") == 1
+    assert "openai-compatible/gpt-5.4" in command
     assert "LLM_API_KEY=" not in rendered
 
 
@@ -71,6 +80,7 @@ def test_kilo_strict_final_mode_tells_cli_to_finalize_and_exit() -> None:
         statement_file=Path("/tmp/workspace/.barcarolle/statement.md"),
         timeout_seconds=300,
         completion_mode="strict-final",
+        model="gpt-5.4-mini",
     )
 
     prompt = command[2]
@@ -80,6 +90,39 @@ def test_kilo_strict_final_mode_tells_cli_to_finalize_and_exit() -> None:
     assert "Do not show suggestions after editing" in prompt
     assert "--auto" in command
     assert "LLM_API_KEY=" not in " ".join(command)
+
+
+def test_sanitized_child_env_removes_endpoint_secrets(monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.setenv("LLM_API_KEY", "real-secret")
+    monkeypatch.setenv("LLM_BASE_URL", "https://endpoint.example")
+    monkeypatch.setenv("OPENAI_API_KEY", "openai-secret")
+    monkeypatch.setenv("PATH", "/usr/bin")
+
+    env = llm_endpoint_proxy.sanitized_child_env()
+
+    assert env["PATH"] == "/usr/bin"
+    assert env[llm_endpoint_proxy.DUMMY_API_KEY_ENV] == llm_endpoint_proxy.DUMMY_API_KEY_VALUE
+    assert "LLM_API_KEY" not in env
+    assert "LLM_BASE_URL" not in env
+    assert "OPENAI_API_KEY" not in env
+
+
+def test_proxy_rewrites_v1_paths_without_leaking_dummy_key() -> None:
+    assert llm_endpoint_proxy._upstream_url("https://endpoint.example/v1", "/v1/models") == "https://endpoint.example/v1/models"
+    assert llm_endpoint_proxy._upstream_url("https://endpoint.example/v1", "/v1/responses?x=1") == "https://endpoint.example/v1/responses?x=1"
+
+    headers = llm_endpoint_proxy._forward_headers(
+        [
+            ("Authorization", "Bearer dummy"),
+            ("Content-Type", "application/json"),
+            ("Accept-Encoding", "gzip"),
+        ],
+        "real-secret",
+    )
+
+    assert headers["Authorization"] == "Bearer real-secret"
+    assert headers["Content-Type"] == "application/json"
+    assert "Accept-Encoding" not in headers
 
 
 def test_merge_rows_by_run_id_replaces_existing_rows() -> None:
