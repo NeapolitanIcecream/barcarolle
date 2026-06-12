@@ -93,6 +93,19 @@ stop conditions, and artifact-hygiene rules are satisfied. Treat
 source of truth for that demo. Do not let older phase/proposal wording in this
 file block the demo when the proposal explicitly authorizes the run.
 
+Agent selection demo execution completed on 2026-06-12 for `mahmoud/boltons`.
+The selection set recommended Codex + GPT mainline, but the holdout check
+contradicted that recommendation: Kilo + GPT mainline led the holdout. The
+demo supports the end-to-end selection workflow and this target-repo/candidate
+observation only; do not present it as a cross-repository or model-family
+ranking.
+
+Canonical demo artifacts:
+
+- `experiments/agent_selection_demo/reports/target_repo_coding_agent_selection_demo_report_zh.md`
+- `experiments/agent_selection_demo/results/closeout_summary.json`
+- `experiments/agent_selection_demo/results/holdout_check.json`
+
 Canonical reports:
 
 - `experiments/phase1_compiler/reports/phase1_three_repo_paid_validation_decision.md`
