@@ -1,0 +1,5 @@
+stage,agent_id,reviewer_name,harness,model,task_id,terminal_status,scoreable_cell,verified_pass,failure_category,latency_seconds,estimated_cost_usd,usage_observed,patch_sha256
+smoke,codex_gpt_5_4,Codex + GPT mainline,codex,gpt-5.4,boltons__hist__031,verified_pass,True,True,verified pass,119.728,0.2173265,True,eabf04b81d0d1c8d224f61feebb6bbfaa0f6bb3147f449674b99c24c79a18a2b
+smoke,kilo_gpt_5_4,Kilo + GPT mainline,kilo,gpt-5.4,boltons__hist__031,verified_pass,True,True,verified pass,42.204,0.5,False,f548534ffbc30538828c0b96dc2087b0650546809beb9e22060ac96208b7d65a
+smoke,kilo_gpt_5_4_mini,Kilo + GPT low-cost,kilo,gpt-5.4-mini,boltons__hist__031,verified_pass,True,True,verified pass,35.66,0.5,False,0c71d9907e30ce027a68674e22b99709b0fc286811b809bc20d6ee47a29a684a
+smoke,kilo_claude_sonnet_4_6,Kilo + Claude Sonnet,kilo,claude-sonnet-4-6,boltons__hist__031,verified_pass,True,True,verified pass,59.16,0.5,False,dfe02f07220931335baffa00bea3077e41b02b6c73b33a3003843e6fa435e3d6
