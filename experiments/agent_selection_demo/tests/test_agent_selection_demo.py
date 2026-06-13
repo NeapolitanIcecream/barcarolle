@@ -135,6 +135,16 @@ def test_freeze_split_uses_unused_task_for_smoke(tmp_path: Path) -> None:
     assert split["smoke_tasks"] == ["task_30"]
 
 
+def test_top2_repeat_stage_uses_frozen_holdout_tasks() -> None:
+    split = {
+        "selection_tasks": ["selection_1"],
+        "holdout_tasks": ["holdout_1", "holdout_2"],
+        "smoke_tasks": ["smoke_1"],
+    }
+
+    assert demo.stage_task_ids(split, demo.TOP2_REPEAT_STAGE) == ["holdout_1", "holdout_2"]
+
+
 def test_recommend_skips_cost_when_usage_coverage_is_inconclusive(tmp_path: Path, monkeypatch) -> None:
     monkeypatch.setattr(demo, "RESULTS_REL", tmp_path / "results")
     monkeypatch.setattr(demo, "REPORTS_REL", tmp_path / "reports")

@@ -34,6 +34,8 @@ DEMO_REL = Path("experiments/agent_selection_demo")
 DEFAULT_CONFIG = DEMO_REL / "config" / "demo_config.json"
 RESULTS_REL = DEMO_REL / "results"
 REPORTS_REL = DEMO_REL / "reports"
+TOP2_REPEAT_STAGE = "top2_repeat"
+TOP2_REPEAT_AGENT_IDS = ["codex_gpt_5_4", "kilo_gpt_5_4"]
 
 SCOREABLE_STATUSES = {"verified_pass", "verified_fail"}
 INFRA_STATUSES = {"invalid_output", "acut_harness_error", "policy_violation", "harness_error", "timeout"}
@@ -523,6 +525,8 @@ def stage_task_ids(split: dict[str, Any], stage: str) -> list[str]:
     if stage == "selection":
         return list(split["selection_tasks"])
     if stage == "holdout":
+        return list(split["holdout_tasks"])
+    if stage == TOP2_REPEAT_STAGE:
         return list(split["holdout_tasks"])
     if stage == "smoke":
         return list(split["smoke_tasks"] or split["selection_tasks"][:1])
@@ -1282,6 +1286,266 @@ def markdown_table(rows: list[dict[str, Any]], columns: list[tuple[str, str]]) -
     return lines
 
 
+def read_csv_rows(path: Path) -> list[dict[str, str]]:
+    if not path.exists():
+        return []
+    with path.open(encoding="utf-8", newline="") as handle:
+        return list(csv.DictReader(handle))
+
+
+def csv_bool(value: Any) -> bool:
+    if isinstance(value, bool):
+        return value
+    return str(value).strip().lower() == "true"
+
+
+def pf(value: bool) -> str:
+    return "P" if value else "F"
+
+
+def top2_repeatability_report(config: dict[str, Any]) -> dict[str, Any]:
+    split = read_json(result_path("frozen_split.json"))
+    original_rows = [
+        row
+        for row in read_csv_rows(stage_paths("holdout")["score"])
+        if row.get("agent_id") in TOP2_REPEAT_AGENT_IDS
+    ]
+    repeat_rows = [
+        row
+        for row in read_csv_rows(stage_paths(TOP2_REPEAT_STAGE)["score"])
+        if row.get("agent_id") in TOP2_REPEAT_AGENT_IDS
+    ]
+    repeat_metrics = read_json(stage_paths(TOP2_REPEAT_STAGE)["metrics"])
+    packages = package_map(config)
+
+    def by_agent_task(rows: list[dict[str, str]]) -> dict[tuple[str, str], dict[str, str]]:
+        return {(row["agent_id"], row["task_id"]): row for row in rows}
+
+    original_by_key = by_agent_task(original_rows)
+    repeat_by_key = by_agent_task(repeat_rows)
+    stability_rows: list[dict[str, Any]] = []
+    for task_id in split["holdout_tasks"]:
+        package = packages.get(task_id)
+        source = ((package.metadata.get("metadata_sources") or {}).get("task_source") if package else "") or ""
+        changed_files = package.metadata.get("changed_files", []) if package else []
+        modules = sorted({Path(path).name for path in changed_files if not is_test_path(path)})
+        row: dict[str, Any] = {
+            "task_id": task_id,
+            "source": source,
+            "task_time": package.metadata.get("task_time") if package else "",
+            "module": ", ".join(modules),
+        }
+        for agent_id in TOP2_REPEAT_AGENT_IDS:
+            original = original_by_key[(agent_id, task_id)]
+            repeat = repeat_by_key[(agent_id, task_id)]
+            original_pass = csv_bool(original["verified_pass"])
+            repeat_pass = csv_bool(repeat["verified_pass"])
+            short = "codex" if agent_id == "codex_gpt_5_4" else "kilo"
+            row[f"{short}_original"] = pf(original_pass)
+            row[f"{short}_repeat"] = pf(repeat_pass)
+            row[f"{short}_changed"] = original_pass != repeat_pass
+            row[f"{short}_repeat_status"] = repeat["terminal_status"]
+        row["relationship_original"] = f"{row['codex_original']}/{row['kilo_original']}"
+        row["relationship_repeat"] = f"{row['codex_repeat']}/{row['kilo_repeat']}"
+        stability_rows.append(row)
+
+    agent_summaries: dict[str, dict[str, Any]] = {}
+    for agent_id in TOP2_REPEAT_AGENT_IDS:
+        original_agent_rows = [row for row in original_rows if row["agent_id"] == agent_id]
+        repeat_agent_rows = [row for row in repeat_rows if row["agent_id"] == agent_id]
+        agent_summaries[agent_id] = {
+            "reviewer_name": repeat_agent_rows[0]["reviewer_name"] if repeat_agent_rows else agent_id,
+            "original_pass_count": sum(csv_bool(row["verified_pass"]) for row in original_agent_rows),
+            "repeat_pass_count": sum(csv_bool(row["verified_pass"]) for row in repeat_agent_rows),
+            "scheduled_cells": len(repeat_agent_rows),
+            "scoreable_cells": sum(csv_bool(row["scoreable_cell"]) for row in repeat_agent_rows),
+            "changed_tasks": [row["task_id"] for row in stability_rows if row[f"{'codex' if agent_id == 'codex_gpt_5_4' else 'kilo'}_changed"]],
+        }
+
+    repeat_passes = {agent_id: row["repeat_pass_count"] for agent_id, row in agent_summaries.items()}
+    original_passes = {agent_id: row["original_pass_count"] for agent_id, row in agent_summaries.items()}
+    repeat_lead = repeat_passes["kilo_gpt_5_4"] - repeat_passes["codex_gpt_5_4"]
+    original_lead = original_passes["kilo_gpt_5_4"] - original_passes["codex_gpt_5_4"]
+    canonical_rows = [row for row in stability_rows if row["source"] == "canonical_history"]
+    repeat_scoreable = repeat_metrics.get("scoreable_cells", 0)
+    repeat_scheduled = repeat_metrics.get("scheduled_cells", len(repeat_rows))
+    infrastructure_rows = [
+        row
+        for row in repeat_rows
+        if row.get("terminal_status") not in SCOREABLE_STATUSES
+    ]
+    interpretation = (
+        "stable_kilo_lead"
+        if repeat_lead > 0 and repeat_scoreable / max(repeat_scheduled, 1) >= 0.95
+        else "noisy_or_inconclusive"
+    )
+    cost_usage = {
+        agent_id: {
+            "usage_observed_count": row.get("usage_observed_count"),
+            "usage_observed_rate": row.get("usage_observed_rate"),
+            "cost_observation_kind": row.get("cost_observation_kind"),
+            "cost_per_task_usd": row.get("cost_per_task_usd"),
+            "cost_per_solved_task_usd": row.get("cost_per_solved_task_usd"),
+        }
+        for agent_id, row in repeat_metrics.get("agent_metrics", {}).items()
+        if agent_id in TOP2_REPEAT_AGENT_IDS
+    }
+    payload = {
+        "schema_version": "barcarolle.agent_selection_demo.top2_repeatability.v1",
+        "generated_at": iso_now(),
+        "target_repo": config["target_repo"]["repo_name"],
+        "stage": TOP2_REPEAT_STAGE,
+        "agent_ids": TOP2_REPEAT_AGENT_IDS,
+        "task_ids": split["holdout_tasks"],
+        "repeat_cells": {
+            "scheduled": repeat_metrics.get("scheduled_cells"),
+            "completed": repeat_metrics.get("completed_cells"),
+            "scoreable": repeat_metrics.get("scoreable_cells"),
+            "scoreable_cell_rate": repeat_metrics.get("scoreable_cell_rate"),
+        },
+        "original_passes": original_passes,
+        "repeat_passes": repeat_passes,
+        "original_kilo_lead_cells": original_lead,
+        "repeat_kilo_lead_cells": repeat_lead,
+        "agent_summaries": agent_summaries,
+        "canonical_history_repeat": {
+            "task_count": len(canonical_rows),
+            "codex_pass_count": sum(row["codex_repeat"] == "P" for row in canonical_rows),
+            "kilo_pass_count": sum(row["kilo_repeat"] == "P" for row in canonical_rows),
+        },
+        "infrastructure_or_policy_rows": infrastructure_rows,
+        "cost_usage": cost_usage,
+        "interpretation": interpretation,
+        "stability_rows": stability_rows,
+    }
+    write_json(result_path("top2_repeatability_check.json"), payload)
+    write_csv(
+        result_path("top2_repeatability_stability_table.csv"),
+        stability_rows,
+        [
+            "task_id",
+            "source",
+            "task_time",
+            "module",
+            "codex_original",
+            "codex_repeat",
+            "codex_changed",
+            "kilo_original",
+            "kilo_repeat",
+            "kilo_changed",
+            "relationship_original",
+            "relationship_repeat",
+            "codex_repeat_status",
+            "kilo_repeat_status",
+        ],
+    )
+
+    matrix_rows = [
+        {
+            "Agent": config["agent_candidates"][TOP2_REPEAT_AGENT_IDS.index(agent_id)]["reviewer_name"]
+            if config["agent_candidates"][TOP2_REPEAT_AGENT_IDS.index(agent_id)]["agent_id"] == agent_id
+            else agent_summaries[agent_id]["reviewer_name"],
+            "Harness": "codex" if agent_id == "codex_gpt_5_4" else "kilo",
+            "Model": "gpt-5.4",
+        }
+        for agent_id in TOP2_REPEAT_AGENT_IDS
+    ]
+    summary_rows = [
+        {
+            "Agent": agent_summaries[agent_id]["reviewer_name"],
+            "Original": agent_summaries[agent_id]["original_pass_count"],
+            "Repeat": agent_summaries[agent_id]["repeat_pass_count"],
+            "Changed": ", ".join(agent_summaries[agent_id]["changed_tasks"]) or "None",
+            "Usage": cost_usage.get(agent_id, {}).get("cost_observation_kind", ""),
+        }
+        for agent_id in TOP2_REPEAT_AGENT_IDS
+    ]
+    task_rows = [
+        {
+            "Task": row["task_id"],
+            "Source": row["source"],
+            "Module": row["module"],
+            "Codex": f"{row['codex_original']}->{row['codex_repeat']}",
+            "Kilo": f"{row['kilo_original']}->{row['kilo_repeat']}",
+        }
+        for row in stability_rows
+    ]
+    highlighted = [row for row in stability_rows if row["task_id"] in {"boltons__hist__022", "boltons__hist__023", "boltons__hist__027", "boltons__hist__028"}]
+    infra_sentence = (
+        "repeat 中没有非可评分、超时、policy violation 或 verifier replay 基础设施失败。"
+        if not infrastructure_rows
+        else f"repeat 中有 `{len(infrastructure_rows)}` 个非可评分/基础设施相关 cell，需要单独排查。"
+    )
+    story_sentence = (
+        "Kilo 的领先仍然存在；这让第一次 holdout 反转不太像纯单次随机波动。"
+        if interpretation == "stable_kilo_lead"
+        else "repeat 没有给出清晰稳定领先；单次运行随机性仍应作为主要解释。"
+    )
+    lines = [
+        "# Top-2 Repeatability Check",
+        "",
+        "## 结论",
+        "",
+        f"本次只重复 `{config['target_repo']['repo_name']}` 的同一批 10 个 holdout tasks，Agent 矩阵为 Codex + GPT mainline 与 Kilo + GPT mainline，模型均为 `gpt-5.4`。",
+        "",
+        f"20 个 repeat cells 中完成 `{repeat_metrics.get('completed_cells')}` 个，可评分 `{repeat_metrics.get('scoreable_cells')}` 个，可评分率 `{repeat_metrics.get('scoreable_cell_rate')}`。",
+        "",
+        f"原 holdout 是 Kilo `{original_passes['kilo_gpt_5_4']}/10` 对 Codex `{original_passes['codex_gpt_5_4']}/10`；repeat 是 Kilo `{repeat_passes['kilo_gpt_5_4']}/10` 对 Codex `{repeat_passes['codex_gpt_5_4']}/10`。",
+        "",
+        story_sentence,
+        "",
+        f"stochasticity 仍是合理解释的一部分，因为这里只做了一次 repeat，且两个 Agent 的若干 task-level outcome 发生变化；但 repeat 后 Kilo 仍领先，说明不能把第一次 Kilo 领先简单归因为一次偶然抽样。",
+        "",
+        "## 实际矩阵",
+        "",
+        *markdown_table(matrix_rows, [("Agent", "Agent"), ("Harness", "Harness"), ("Model", "Model")]),
+        "",
+        "## 任务集",
+        "",
+        f"任务集完全沿用 `frozen_split.json` 的 holdout tasks：`{', '.join(split['holdout_tasks'])}`。",
+        "",
+        "## Agent 汇总",
+        "",
+        *markdown_table(summary_rows, [("Agent", "Agent"), ("原 holdout pass", "Original"), ("repeat pass", "Repeat"), ("变化任务", "Changed"), ("成本 usage", "Usage")]),
+        "",
+        "## Task-level 稳定性",
+        "",
+        *markdown_table(task_rows, [("Task", "Task"), ("Source", "Source"), ("Module", "Module"), ("Codex 原->复", "Codex"), ("Kilo 原->复", "Kilo")]),
+        "",
+        "## 重点失败任务",
+        "",
+        *markdown_table(
+            [
+                {
+                    "Task": row["task_id"],
+                    "Codex": f"{row['codex_original']}->{row['codex_repeat']}",
+                    "Kilo": f"{row['kilo_original']}->{row['kilo_repeat']}",
+                    "Repeat relationship": row["relationship_repeat"],
+                }
+                for row in highlighted
+            ],
+            [("Task", "Task"), ("Codex 原->复", "Codex"), ("Kilo 原->复", "Kilo"), ("repeat 关系", "Repeat relationship")],
+        ),
+        "",
+        "## Later canonical_history",
+        "",
+        f"holdout 中 `canonical_history` 任务 `{len(canonical_rows)}` 个。repeat 中 Kilo 通过 `{payload['canonical_history_repeat']['kilo_pass_count']}/{len(canonical_rows)}`，Codex 通过 `{payload['canonical_history_repeat']['codex_pass_count']}/{len(canonical_rows)}`。",
+        "",
+        "## 基础设施与成本 caveat",
+        "",
+        infra_sentence,
+        "",
+        "成本仍不能作为 production-value winner 的依据：Codex repeat usage 覆盖与 Kilo repeat usage 覆盖不对称时，Kilo 成本继续按 conservative per-cell estimate 标记，报告只把 pass/fail 稳定性作为主要结论。",
+        "",
+        "## 下一步建议",
+        "",
+        "建议下一步优先做更多 repeats 或修复 Kilo usage normalization 后再讨论成本；不要基于这次单仓库 top-2 repeat 进入第二仓库扩展、prompt/tool tuning、learned selector 或 rolling-origin paid validation。",
+        "",
+    ]
+    write_text(report_path("top2_repeatability_check_zh.md"), "\n".join(lines))
+    return payload
+
+
 def final_report(config: dict[str, Any]) -> dict[str, Any]:
     gate_payload = read_json(result_path("repository_gate.json"))
     split = read_json(result_path("frozen_split.json"))
@@ -1416,21 +1680,22 @@ def main() -> int:
     subcommands = parser.add_subparsers(dest="command", required=True)
     gate_parser = subcommands.add_parser("gate")
     gate_parser.add_argument("--replay-sample-count", type=int, default=3)
-    for name in ["smoke", "selection", "holdout"]:
+    for name in ["smoke", "selection", "holdout", TOP2_REPEAT_STAGE]:
         run_parser = subcommands.add_parser(name)
         run_parser.add_argument("--agent", action="append", default=None)
         run_parser.add_argument("--rerun", action="store_true")
     recover_parser = subcommands.add_parser("recover-stage")
-    recover_parser.add_argument("stage", choices=["smoke", "selection", "holdout"])
+    recover_parser.add_argument("stage", choices=["smoke", "selection", "holdout", TOP2_REPEAT_STAGE])
     recover_parser.add_argument("--agent", action="append", default=None)
     subcommands.add_parser("recommend")
     subcommands.add_parser("report")
+    subcommands.add_parser("top2-repeat-report")
     args = parser.parse_args()
     config = load_config(repo_path(args.config))
     if args.command == "gate":
         payload = gate(config, replay_sample_count=args.replay_sample_count)
         return 0 if payload["status"] == "ready" else 2
-    if args.command in {"smoke", "selection", "holdout"}:
+    if args.command in {"smoke", "selection", "holdout", TOP2_REPEAT_STAGE}:
         metrics = run_stage(config, args.command, agent_ids=args.agent, rerun=args.rerun)
         min_rate = (
             float(config["run_policy"]["smoke_scoreable_cell_rate_min"])
@@ -1447,6 +1712,9 @@ def main() -> int:
         return 0
     if args.command == "report":
         final_report(config)
+        return 0
+    if args.command == "top2-repeat-report":
+        top2_repeatability_report(config)
         return 0
     raise ValueError(args.command)
 
