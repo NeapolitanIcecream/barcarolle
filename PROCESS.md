@@ -106,6 +106,10 @@ Canonical demo artifacts:
 - `experiments/agent_selection_demo/results/closeout_summary.json`
 - `experiments/agent_selection_demo/results/holdout_check.json`
 
+Current follow-up plan:
+
+- `docs/research/agent-selection-demo-followup-plan-2026-06-13.md`
+
 Canonical reports:
 
 - `experiments/phase1_compiler/reports/phase1_three_repo_paid_validation_decision.md`
