@@ -1,0 +1,114 @@
+{
+  "schema_version": "barcarolle.agent_selection_demo.predictive_validity_paid_pilot_plan.v1",
+  "generated_at": "2026-06-13",
+  "decision_label": "no_paid_pilot_needed_for_demo_story",
+  "execution_status": "not_executed",
+  "paid_cells_run_in_this_package": 0,
+  "reason_not_run": "Package 5 no-paid retrospective metrics are sufficient for the demo story; new paid cells would not establish predictive validity without a future-preregistered design.",
+  "boundary": {
+    "max_new_paid_agent_cells": 40,
+    "raw_artifacts_committed": false,
+    "requires_endpoint_env_before_execution": [
+      "LLM_BASE_URL",
+      "LLM_API_KEY"
+    ],
+    "kilo_cells_allowed_only_if_timeout_gate_passes": true
+  },
+  "future_preregistered_pilot": {
+    "status": "planned_for_later_only",
+    "purpose": "Fill one strict rolling-origin pilot gap after gates pass; not needed for the current demo completion.",
+    "repos": [
+      "boltons",
+      "click"
+    ],
+    "origins_or_cutoffs": [
+      {
+        "repo": "boltons",
+        "origin_id": "repo_specific_earliest_time_bucket_cutoff",
+        "cutoff_rule": "after legacy_2018_or_earlier bucket",
+        "source_inventory": "experiments/agent_selection_demo/results/predictive_validity_window_inventory.json"
+      },
+      {
+        "repo": "click",
+        "origin_id": "repo_specific_earliest_time_bucket_cutoff",
+        "cutoff_rule": "after middle_2019_2022 bucket",
+        "source_inventory": "experiments/agent_selection_demo/results/predictive_validity_window_inventory.json"
+      }
+    ],
+    "task_ids": {
+      "boltons": [
+        "boltons__v2__147",
+        "boltons__v2__148",
+        "boltons__v2__154",
+        "boltons__v2__155",
+        "boltons__v2__163",
+        "boltons__v2__164",
+        "boltons__v2__169",
+        "boltons__v2__170",
+        "boltons__v2__232",
+        "boltons__v2__229"
+      ],
+      "click": [
+        "click__third__166",
+        "click__third__198",
+        "click__third__197",
+        "click__third__199",
+        "click__third__200",
+        "click__third__204",
+        "click__third__203",
+        "click__third__206",
+        "click__third__207",
+        "click__third__202"
+      ]
+    },
+    "agent_configurations": [
+      {
+        "agent_id": "codex_workspace_stable_path",
+        "status": "requires_future_gate",
+        "model": "to_be_frozen_before_execution",
+        "harness": "codex_workspace"
+      },
+      {
+        "agent_id": "second_stable_agent_path",
+        "status": "requires_future_gate",
+        "model": "to_be_frozen_before_execution",
+        "harness": "non_kilo_or_kilo_only_after_timeout_gate"
+      }
+    ],
+    "visible_context": "solver-visible task statements and allowed context only; no hidden oracle material in solver workspace",
+    "hidden_verifier": "private oracle material injected only in verifier workspace",
+    "scoreability_gate": {
+      "minimum_scoreable_cell_rate": 0.95,
+      "policy_violation_count_max": 0
+    },
+    "baseline_comparison": {
+      "primary_metric": "pass_rate_mae",
+      "simple_baseline_envelope": [
+        "temporal_recent_baseline",
+        "seeded_random_same_budget",
+        "repo_unweighted_same_budget",
+        "repo_stratified_by_target_profile"
+      ],
+      "candidate_selector": "coverage_constrained_unweighted"
+    },
+    "success_threshold": {
+      "directional_pilot_success": "candidate MAE < best simple baseline MAE with no contradictory rank/regret signal",
+      "predictive_validity_proof": "not claimable from this bounded pilot alone"
+    },
+    "stop_conditions": [
+      "LLM_BASE_URL or LLM_API_KEY missing",
+      "endpoint/model proof fails",
+      "secret isolation fails",
+      "Kilo included while timeout gate fails",
+      "projected cells exceed 40",
+      "scoreable-cell rate cannot reach 0.95",
+      "raw artifacts would need to be committed"
+    ],
+    "projected_paid_cells": 40
+  },
+  "current_demo_claim": {
+    "predictive_validity_established": false,
+    "paid_pilot_completed": false,
+    "supported_now": "directional retrospective traction plus demo holdout contradiction"
+  }
+}
