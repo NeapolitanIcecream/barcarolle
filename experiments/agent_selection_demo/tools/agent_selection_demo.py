@@ -50,6 +50,9 @@ PV_CANDIDATE_SELECTORS = [
 ]
 PV_DIAGNOSTIC_ONLY = ["completed_blocked_split_supplement"]
 PV_CATASTROPHIC_THRESHOLD = 0.15
+DEFAULT_AGENT_TIMEOUT_SECONDS = 1800
+DEFAULT_ADAPTER_CLEANUP_GRACE_SECONDS = 60
+DEFAULT_VERIFIER_TIMEOUT_SECONDS = 360
 
 SCOREABLE_STATUSES = {"verified_pass", "verified_fail"}
 INFRA_STATUSES = {"invalid_output", "acut_harness_error", "policy_violation", "harness_error", "timeout"}
@@ -113,6 +116,10 @@ def load_config(path: Path) -> dict[str, Any]:
     if config.get("schema_version") != "barcarolle.agent_selection_demo.config.v1":
         raise ValueError(f"unsupported config schema: {path}")
     return config
+
+
+def run_policy_int(config: dict[str, Any], key: str, default: int) -> int:
+    return int(config.get("run_policy", {}).get(key, default))
 
 
 def result_path(name: str) -> Path:
@@ -215,6 +222,7 @@ def load_task_pool(config: dict[str, Any]) -> tuple[list[workspace.TaskPackage],
     target = config["target_repo"]
     source_repo = repo_path(target["local_repo"])
     profile = read_json(repo_path(target["profile"]))
+    verifier_timeout = run_policy_int(config, "verifier_timeout_seconds", DEFAULT_VERIFIER_TIMEOUT_SECONDS)
     by_task: dict[str, tuple[dict[str, Any], str]] = {}
     for source in config["task_sources"]:
         source_path = repo_path(source["path"])
@@ -277,7 +285,7 @@ def load_task_pool(config: dict[str, Any]) -> tuple[list[workspace.TaskPackage],
                 verifier_command=verifier_command,
                 allowed_code_paths=code_files,
                 test_paths=test_files,
-                timeout_seconds=180,
+                timeout_seconds=verifier_timeout,
                 scope_boundaries=str(row.get("scope_boundaries") or "Modify only listed implementation files; do not edit tests."),
                 metadata=metadata,
             )
@@ -511,8 +519,8 @@ def candidate_by_id(config: dict[str, Any]) -> dict[str, dict[str, Any]]:
 
 def adapter_config_for(config: dict[str, Any], candidate: dict[str, Any]) -> workspace.AdapterConfig:
     script = repo_path(candidate["adapter_script"])
-    timeout = int(candidate.get("timeout_seconds") or 900)
-    cleanup_grace = int(config.get("run_policy", {}).get("adapter_cleanup_grace_seconds", 30))
+    timeout = int(candidate.get("timeout_seconds") or DEFAULT_AGENT_TIMEOUT_SECONDS)
+    cleanup_grace = run_policy_int(config, "adapter_cleanup_grace_seconds", DEFAULT_ADAPTER_CLEANUP_GRACE_SECONDS)
     outer_timeout = timeout + max(cleanup_grace, 0)
     command = (
         f"uv run --project {shlex.quote(str(ROOT / 'experiments' / 'phase0_headroom'))} "

@@ -40,7 +40,7 @@
       "harness": "codex",
       "model": "gpt-5.4",
       "adapter_script": "experiments/phase0_headroom/tools/codex_workspace_adapter.py",
-      "timeout_seconds": 900
+      "timeout_seconds": 1800
     },
     {
       "agent_id": "kilo_gpt_5_4",
@@ -48,7 +48,7 @@
       "harness": "kilo",
       "model": "gpt-5.4",
       "adapter_script": "experiments/phase0_headroom/tools/kilo_workspace_adapter.py",
-      "timeout_seconds": 900,
+      "timeout_seconds": 1800,
       "completion_mode": "strict-final"
     },
     {
@@ -57,7 +57,7 @@
       "harness": "kilo",
       "model": "gpt-5.4-mini",
       "adapter_script": "experiments/phase0_headroom/tools/kilo_workspace_adapter.py",
-      "timeout_seconds": 900,
+      "timeout_seconds": 1800,
       "completion_mode": "strict-final"
     },
     {
@@ -66,7 +66,7 @@
       "harness": "kilo",
       "model": "claude-sonnet-4-6",
       "adapter_script": "experiments/phase0_headroom/tools/kilo_workspace_adapter.py",
-      "timeout_seconds": 900,
+      "timeout_seconds": 1800,
       "completion_mode": "strict-final"
     }
   ],
@@ -76,7 +76,7 @@
     "harness": "codex",
     "model": "gpt-5.4-mini",
     "adapter_script": "experiments/phase0_headroom/tools/codex_workspace_adapter.py",
-    "timeout_seconds": 900
+    "timeout_seconds": 1800
   },
   "pricing_per_1m_tokens_usd": {
     "gpt-5.4": {
@@ -97,6 +97,9 @@
   },
   "run_policy": {
     "outer_retries": 0,
+    "adapter_cleanup_grace_seconds": 60,
+    "verifier_timeout_seconds": 360,
+    "endpoint_proxy_upstream_timeout_seconds": 3600,
     "main_scoreable_cell_rate_min": 0.95,
     "smoke_scoreable_cell_rate_min": 0.9,
     "cost_usage_observed_rate_min": 0.95,

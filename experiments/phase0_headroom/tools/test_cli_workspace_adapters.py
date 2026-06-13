@@ -43,8 +43,16 @@ def test_kilo_config_uses_env_key_and_openai_compatible_model(tmp_path: Path) ->
     assert '"model": "openai-compatible/claude-sonnet-4-6"' in text
     assert f'"apiKey": "{{env:{llm_endpoint_proxy.DUMMY_API_KEY_ENV}}}"' in text
     assert '"baseURL": "https://endpoint.example/v1"' in text
+    assert '"timeout": 3600000' in text
     assert "SECRET" not in text
     assert "LLM_API_KEY" not in text
+
+
+def test_workspace_adapter_defaults_match_doubled_timeout_policy() -> None:
+    assert codex_workspace_adapter.DEFAULT_TIMEOUT_SECONDS == 1800
+    assert kilo_workspace_adapter.DEFAULT_TIMEOUT_SECONDS == 1800
+    assert kilo_workspace_adapter.DEFAULT_UPSTREAM_TIMEOUT_SECONDS == 3600
+    assert llm_endpoint_proxy.DEFAULT_UPSTREAM_TIMEOUT_SECONDS == 3600
 
 
 def test_kilo_command_delivers_statement_file_and_workspace() -> None:

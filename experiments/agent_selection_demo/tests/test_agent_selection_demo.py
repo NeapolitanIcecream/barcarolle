@@ -32,7 +32,7 @@ def test_split_counts_uses_minimum_when_pool_below_preferred() -> None:
 
 def test_adapter_config_uses_candidate_model_and_proxy_proof() -> None:
     config = {
-        "run_policy": {"result_prefix": "test"},
+        "run_policy": {"result_prefix": "test", "adapter_cleanup_grace_seconds": 30},
     }
     candidate = {
         "agent_id": "kilo_claude_sonnet_4_6",
@@ -52,6 +52,21 @@ def test_adapter_config_uses_candidate_model_and_proxy_proof() -> None:
     assert "--completion-mode strict-final" in adapter.command_template
     assert adapter.timeout_seconds == 153
     assert adapter.endpoint_proof_status == "llm_endpoint_proxy_secret_isolated"
+
+
+def test_demo_config_generates_doubled_timeout_adapter_commands() -> None:
+    config = demo.load_config(demo.ROOT / demo.DEFAULT_CONFIG)
+    candidates = [*config["agent_candidates"], config["fallback_candidate"]]
+
+    for candidate in candidates:
+        adapter = demo.adapter_config_for(config, candidate)
+        assert candidate["timeout_seconds"] == 1800
+        assert "--timeout 1800" in adapter.command_template
+        assert adapter.timeout_seconds == 1860
+
+    assert config["run_policy"]["adapter_cleanup_grace_seconds"] == 60
+    assert config["run_policy"]["endpoint_proxy_upstream_timeout_seconds"] == 3600
+    assert demo.run_policy_int(config, "verifier_timeout_seconds", demo.DEFAULT_VERIFIER_TIMEOUT_SECONDS) == 360
 
 
 def test_summarize_stage_computes_cost_latency_and_failures() -> None:

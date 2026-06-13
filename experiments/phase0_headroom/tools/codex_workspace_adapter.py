@@ -13,6 +13,7 @@ from llm_endpoint_proxy import DUMMY_API_KEY_ENV, LLMEndpointProxy, sanitized_ch
 
 MODEL = "gpt-5.4-mini"
 PROVIDER = "llm_endpoint"
+DEFAULT_TIMEOUT_SECONDS = 1800
 
 
 def base_url_with_v1(raw: str) -> str:
@@ -104,7 +105,7 @@ def main() -> int:
     parser.add_argument("--workspace", required=True)
     parser.add_argument("--statement-file", required=True)
     parser.add_argument("--raw-dir", default=None)
-    parser.add_argument("--timeout", type=int, default=900)
+    parser.add_argument("--timeout", type=int, default=DEFAULT_TIMEOUT_SECONDS)
     parser.add_argument("--model", default=MODEL)
     args = parser.parse_args()
 

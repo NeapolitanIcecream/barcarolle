@@ -15,6 +15,8 @@ from llm_endpoint_proxy import DUMMY_API_KEY_ENV, LLMEndpointProxy, sanitized_ch
 
 MODEL = "gpt-5.4-mini"
 PROVIDER = "openai-compatible"
+DEFAULT_TIMEOUT_SECONDS = 1800
+DEFAULT_UPSTREAM_TIMEOUT_SECONDS = 3600
 
 
 def base_url_with_v1(raw: str) -> str:
@@ -22,7 +24,12 @@ def base_url_with_v1(raw: str) -> str:
     return base if base.endswith("/v1") else f"{base}/v1"
 
 
-def write_kilo_config(config_root: Path, base_url: str, model: str = MODEL) -> Path:
+def write_kilo_config(
+    config_root: Path,
+    base_url: str,
+    model: str = MODEL,
+    upstream_timeout_seconds: int = DEFAULT_UPSTREAM_TIMEOUT_SECONDS,
+) -> Path:
     kilo_dir = config_root / "kilo"
     kilo_dir.mkdir(parents=True, exist_ok=True)
     payload: dict[str, Any] = {
@@ -35,7 +42,7 @@ def write_kilo_config(config_root: Path, base_url: str, model: str = MODEL) -> P
                 "options": {
                     "apiKey": f"{{env:{DUMMY_API_KEY_ENV}}}",
                     "baseURL": base_url,
-                    "timeout": 60000,
+                    "timeout": upstream_timeout_seconds * 1000,
                 },
                 "models": {
                     model: {
@@ -137,7 +144,7 @@ def main() -> int:
     parser.add_argument("--workspace", required=True)
     parser.add_argument("--statement-file", required=True)
     parser.add_argument("--raw-dir", default=None)
-    parser.add_argument("--timeout", type=int, default=900)
+    parser.add_argument("--timeout", type=int, default=DEFAULT_TIMEOUT_SECONDS)
     parser.add_argument("--completion-mode", choices=["current", "strict-final"], default="current")
     parser.add_argument("--model", default=MODEL)
     args = parser.parse_args()

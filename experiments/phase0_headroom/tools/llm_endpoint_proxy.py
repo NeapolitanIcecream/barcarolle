@@ -11,6 +11,7 @@ from typing import Iterable
 
 DUMMY_API_KEY_ENV = "BARCAROLLE_LLM_PROXY_API_KEY"
 DUMMY_API_KEY_VALUE = "barcarolle-local-proxy-key"
+DEFAULT_UPSTREAM_TIMEOUT_SECONDS = 3600
 
 HOP_BY_HOP_HEADERS = {
     "connection",
@@ -149,7 +150,7 @@ class LLMEndpointProxyServer(ThreadingHTTPServer):
 
 
 class LLMEndpointProxy:
-    def __init__(self, upstream_base_url: str, api_key: str, upstream_timeout_seconds: int = 1800):
+    def __init__(self, upstream_base_url: str, api_key: str, upstream_timeout_seconds: int = DEFAULT_UPSTREAM_TIMEOUT_SECONDS):
         self._server = LLMEndpointProxyServer(("127.0.0.1", 0), upstream_base_url, api_key, upstream_timeout_seconds)
         self._thread: threading.Thread | None = None
 
