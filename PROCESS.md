@@ -109,7 +109,7 @@ Canonical demo artifacts:
 
 Current follow-up plan:
 
-- `docs/research/agent-selection-demo-strict-completion-runbook-2026-06-13.md`
+- `docs/research/agent-selection-demo-strict-completion-runbook-2026-06-13.md` (completed by the strict completion pass)
 - `docs/research/agent-selection-demo-completion-plan-2026-06-13.md`
 - `docs/research/agent-selection-demo-alignment-note-2026-06-13.md`
 - `docs/research/agent-selection-demo-followup-plan-2026-06-13.md`
@@ -118,29 +118,33 @@ Current follow-up plan:
 Completion package:
 
 - `experiments/agent_selection_demo/reports/demo_completion_closeout_zh.md`
-- `experiments/agent_selection_demo/reports/agent_tuning_feedback_prototype_zh.md`
+- `experiments/agent_selection_demo/reports/kilo_timeout_usage_root_cause_zh.md`
+- `experiments/agent_selection_demo/reports/top2_repeat_completion_zh.md`
+- `experiments/agent_selection_demo/reports/second_repo_gate_zh.md`
+- `experiments/agent_selection_demo/reports/agent_tuning_feedback_summary_zh.md`
 
 Recommended next work: if the next claim is that Kilo's holdout lead is stable,
-repair Kilo adapter timeout handling and usage normalization, then rerun only
-the frozen top-2 holdout repeat within the approved paid-call boundary. If the
-next claim is broader generality, do a no-paid second-repo gate before any new
-paid matrix.
+continue Kilo adapter/provider timeout diagnosis before any broader repeat. If
+the next claim is cross-repo readiness, first repair attrs packaging automation:
+add an attrs target profile, remove boltons-specific `repo_id` and fallback
+statement assumptions from demo packaging, materialize or reference the 31-task
+attrs release manifest, and pin the attrs verifier environment. Do not start a
+second-repo paid matrix until that no-paid gate passes.
 
-For a long-running autonomous completion session, use the strict completion
-runbook rather than the looser completion plan. The strict runbook requires Kilo
-root-cause work, a top-2 repeat attempt if gates pass, a no-paid second-repo
-gate, a runnable tuning-feedback summary generator, and final package updates;
-it should not stop after document-only packaging.
+The strict completion runbook has been executed. Do not rerun it as the default
+next step; use the completed reports above as the handoff state.
 
 Top-2 repeatability execution attempted on 2026-06-13. Gates passed for
 `LLM_BASE_URL`/`LLM_API_KEY`, `gpt-5.4`, adapter unit checks, secret isolation,
 reference replay, and ignored raw/workspace paths. Codex + GPT mainline
 completed the 10 frozen boltons holdout repeats at `7/10`, but Kilo + GPT
-mainline hit two consecutive 900-second adapter timeouts (`0/0` scoreable from
-2 completed Kilo cells). The run was stopped at 12/20 completed cells because
-the 95% scoreable-cell acceptance criterion was no longer reachable. Treat this
-as a Kilo adapter/CLI infrastructure blocker, not as evidence that the Kilo
-holdout lead is stable or unstable.
+mainline hit three 900-second adapter/CLI timeouts (`0/0` scoreable from 3
+completed Kilo cells). The strict completion pass added one fresh Kilo repeat
+attempt after smoke/gates passed; it timed out and the `--stop-on-unscoreable`
+guard prevented further paid repeat cells. Current repeat accounting is 13/20
+completed cells and 10/20 scoreable cells. Treat this as a Kilo adapter/CLI
+infrastructure blocker, not as evidence that the Kilo holdout lead is stable or
+unstable.
 
 Do not let this blocker reframe the whole demo as a Kilo repair project. The
 completed first `boltons` demo remains valid as an end-to-end target-repo Agent
@@ -151,6 +155,7 @@ Canonical repeatability artifacts:
 
 - `experiments/agent_selection_demo/reports/top2_repeatability_gate.md`
 - `experiments/agent_selection_demo/reports/top2_repeatability_check_zh.md`
+- `experiments/agent_selection_demo/reports/top2_repeat_completion_zh.md`
 - `experiments/agent_selection_demo/results/top2_repeatability_check.json`
 - `experiments/agent_selection_demo/results/top2_repeatability_stability_table.csv`
 

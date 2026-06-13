@@ -1,4 +1,4 @@
-# Agent 选型 Demo 完成 Closeout
+# Agent 选型 Demo Strict Completion Closeout
 
 生成日期：2026-06-13
 
@@ -6,93 +6,176 @@
 
 执行分支：`codex/agent-selection-demo-2026-06-12`。
 
-本次完成的是 demo 收口与报告/工具卫生整理，没有启动新的付费 Agent cell。
+本 closeout 覆盖 strict runbook：
 
-## 已完成
+```text
+docs/research/agent-selection-demo-strict-completion-runbook-2026-06-13.md
+```
 
-- 新增最终中文包：`experiments/agent_selection_demo/reports/final_agent_selection_demo_package_zh.md`。
-- 新增 Agent tuning feedback 原型：`experiments/agent_selection_demo/reports/agent_tuning_feedback_prototype_zh.md`。
-- 保留第一轮 `mahmoud/boltons` demo 的历史事实：selection lock 推荐 `Codex + GPT mainline`，fresh holdout contradicted 该推荐。
-- 在最终解释中修正成本口径：top-2 selection 质量打平，Kilo usage 缺失，所以 production-value 不能用不可比估算成本给单一成本赢家。
-- 将 top-2 repeatability check 定位为 Kilo adapter/CLI timeout blocker，而不是新的 ranking result。
-- 更新 demo tooling：未来生成的 cost ledger 和 score table 会包含 `cost_observation_kind`、`usage_source`、`billed_cost_usd` 字段。
-- 在 demo config 中显式记录 `cost_usage_observed_rate_min: 0.95`。
-- 更新 `PROCESS.md`，把最终中文包列为 canonical demo artifact，并记录推荐下一步。
+结论：mandatory packages 已完成；Kilo frozen top-2 repeat 仍是 infrastructure blocker；second repo `python-attrs/attrs` 是 supply-ready 但不是 immediate-paid-matrix-ready；Agent tuning feedback summary 已有 runnable generator。
 
-## 最终 demo-level claim
+## Mandatory package status
 
-可以 claim：
+| Package | Status | Canonical output |
+| --- | --- | --- |
+| 1. state audit and gap list | completed | `demo_remaining_gap_audit_zh.md` |
+| 2. tooling/artifact hygiene audit | completed | `demo_tooling_artifact_hygiene_audit_zh.md` |
+| 3. Kilo timeout and usage root-cause work | completed | `kilo_timeout_usage_root_cause_zh.md` |
+| 4. Kilo smoke/gate and frozen top-2 repeat attempt | completed with blocker | `top2_repeat_completion_zh.md` |
+| 5. no-paid second-repo gate | completed | `second_repo_gate_zh.md` |
+| 6. runnable Agent tuning feedback summary generator | completed | `agent_tuning_feedback_summary_zh.md` |
+| 7. final package and process update | completed by this package | `final_agent_selection_demo_package_zh.md` and `PROCESS.md` |
 
-- Barcarolle 在 `mahmoud/boltons` 上完成了一次真实 Coding Agent 选型 demo；
-- 系统能运行多个完整 Agent 配置、捕获 diff、在干净验证工作区重放，并记录质量、成本口径、延迟和失败类型；
-- 原 selection 推荐在 fresh holdout 上被 contradicted；
-- 这个结果说明目标仓库 Agent 选型需要 holdout check、成本口径审计、repeatability 报告和 adapter reliability gate。
+Focused commits were made after packages 1-6; this closeout package records the final package and process update.
 
-不能 claim：
+## Demo-level claim
 
-- predictive validity 已经被证明；
-- Kilo、Codex、GPT 或 Claude 在一般意义上更强；
-- Kilo 的 holdout 领先稳定；
-- top-2 repeatability check 得到了有效 ranking；
-- 第二仓库 paid scoring 已经通过 gate；
-- Agent tuning 已经改进了某个 Agent。
+Can claim:
 
-## 付费 cell 使用
+- Barcarolle completed a real `mahmoud/boltons` target-repo Agent selection demo.
+- It ran full Agent harnesses, captured workspace diffs, replayed scoreable diffs in clean verifier workspaces, and recorded quality, latency, cost-observation kind, usage coverage, and failure labels.
+- The original selection recommendation was contradicted by fresh holdout.
+- The demo shows why target-repo Agent selection needs holdout checks, repeatability/uncertainty reporting, cost-usage audit, and adapter reliability gates.
 
-本次完成工作没有运行新的付费 Agent cell。
+Cannot claim:
 
-没有做 Kilo smoke/debug paid cell，也没有重跑 top-2 repeat batch。
+- predictive validity is proven;
+- a global Codex/Kilo/GPT/Claude ranking exists;
+- Kilo's holdout lead is stable;
+- top-2 repeat produced a valid ranking;
+- second-repo paid scoring is ready today;
+- tuning has already improved any Agent.
 
-## 未推进的事项
+## Kilo/repeat status
 
-- 没有扩展 Agent 矩阵。
-- 没有调 prompt、工具、模型设置或任务。
-- 没有启动第二仓库 paid scoring。
-- 没有引入 learned selector。
-- 没有把 Kilo timeout 修复作为本 demo 完成的前置条件。
+Kilo timeout/usage work improved the infrastructure around the blocker:
 
-## 剩余 blocker
+- adapter and workspace subprocess paths now clean process groups on timeout;
+- the outer workspace runner gives adapter cleanup grace instead of racing the adapter timeout;
+- sanitized rows now record whether the outer adapter command timed out;
+- Kilo successful `step_finish` token events are parsable, and recovered smoke rows now have observed usage.
 
-- Kilo repeat 路径存在连续 900 秒 adapter/CLI timeout，尚未定位到可修复根因。
-- Kilo usage coverage 仍为 0，成本字段只能继续标为 conservative estimate，不能用于 production-value 成本赢家。
-- 当前 `boltons` 结果是单仓库 demo，不支持跨仓库泛化结论。
+But the frozen repeat blocker remains:
 
-## 验证
+- previous Kilo top-2 repeat rows: `boltons__clean_ext__017` and `boltons__hist__019`, both `acut_harness_error`, exit `124`, empty stdout/patch, no usage.
+- strict completion attempt added one new Kilo row: `boltons__hist__020`, also `acut_harness_error`, exit `124`, latency `900.692s`, empty stdout/patch, no usage.
+- `--stop-on-unscoreable` stopped the remaining Kilo paid repeat cells after that fresh timeout.
 
-已运行：
+Current top-2 repeat accounting:
+
+- scheduled cells: `20`
+- completed cells: `13`
+- scoreable cells: `10`
+- Codex repeat: `7/10`
+- Kilo repeat: `0/0` scoreable from `3` completed timeout rows
+- conclusion: `infrastructure blocker still unresolved`
+
+## Second-repo readiness
+
+Second repo candidate: `python-attrs/attrs`.
+
+No paid second-repo cells were run.
+
+Gate result: `conditional_no_go_for_immediate_paid_matrix`.
+
+Evidence:
+
+- local checkout/setup works under ignored path;
+- visible subset passed: `216 passed in 2.18s`;
+- committed phase0 attrs JSONLs expose `28` certified rows;
+- committed source-repair overlay promotes `3` more rows, bringing attrs to `31` release-eligible;
+- one manual hidden verifier replay probe passed for `attrs__hist__008`;
+- several older `test_make.py` replay probes exposed current dependency/Python drift, so verifier pinning is required.
+
+Minimum repair before paid second-repo matrix:
+
+- add `attrs_target_profile.json`;
+- remove boltons-specific `repo_id` and fallback statement assumptions from demo package building;
+- materialize or formally reference the 31-task attrs release manifest;
+- pin the attrs verifier environment for historical tasks;
+- rerun a no-paid attrs repository gate with reference replay samples and split/freeze dry run.
+
+## Feedback generator
+
+Runnable command:
+
+```text
+PYTHONPATH=experiments/agent_selection_demo/tools:experiments/phase1_compiler/tools uv run --project experiments/phase1_compiler python experiments/agent_selection_demo/tools/agent_selection_demo.py tuning-feedback-summary --output experiments/agent_selection_demo/reports/agent_tuning_feedback_summary_zh.md
+```
+
+Outputs:
+
+- `experiments/agent_selection_demo/reports/agent_tuning_feedback_summary_zh.md`
+- `experiments/agent_selection_demo/results/agent_tuning_feedback_summary.json`
+
+The generator reads only committed sanitized score tables, metrics, cost fields, and repeatability summary. It does not read raw prompts, raw completions, transcripts, solver workspaces, verifier workspaces, or provider logs. It explicitly frames the output as feedback input, not as tuning-result evidence.
+
+## Paid cells used
+
+Paid cells run inside the strict completion pass: `1`.
+
+Breakdown:
+
+- Kilo smoke/debug cells: `0` fresh paid cells. Existing smoke was recovered no-paid from ignored raw artifacts after the parser fix.
+- Frozen top-2 repeat cells: `1` fresh Kilo cell, `top2_repeat__kilo_gpt_5_4__boltons__hist__020`, which timed out.
+- Second-repo cells: `0`.
+
+Pre-existing demo and repeat cells from earlier runs are preserved as historical artifacts, but they were not newly run in this strict completion pass.
+
+## Tests and hygiene
+
+Final validation run:
 
 ```text
 PYTHONPATH=experiments/agent_selection_demo/tools:experiments/phase1_compiler/tools uv run --project experiments/phase1_compiler pytest experiments/agent_selection_demo/tests -q
 ```
 
-结果：`8 passed in 0.04s`。
+Result: `13 passed in 0.02s`.
 
-已运行：
+```text
+PYTHONPATH=experiments/agent_selection_demo/tools:experiments/phase1_compiler/tools uv run --project experiments/phase1_compiler pytest experiments/phase0_headroom/tools/test_workspace_acut_run.py experiments/phase0_headroom/tools/test_cli_workspace_adapters.py experiments/phase0_headroom/tools/test_workspace_usage_import.py -q
+```
+
+Result: `38 passed in 4.48s`.
+
+```text
+uv run --project experiments/phase1_compiler pytest experiments/phase1_compiler/tests/test_phase1_attrs_source_repair.py -q
+```
+
+Result: `5 passed in 0.76s`.
 
 ```text
 git diff --check
 ```
 
-结果：通过。
+Result: passed.
 
-已运行：
-
-```text
-git ls-files | rg '(__pycache__|\.pyc$|raw|transcript|workspace|\.DS_Store|\.pytest_cache|\.venv)'
-```
-
-结果：命中了 repo 中既有的 `workspace`/`raw` 命名文件，包括历史 workspace runner/tooling、workspace summary artifacts 和 raw candidate inventory 文件名。它们不是本次新增的缓存、完整运行会话、solver/verifier 工作区或 secret 文件。
-
-已运行更窄的 demo 目录检查：
+Narrow artifact scan:
 
 ```text
-git ls-files experiments/agent_selection_demo | rg '(__pycache__|\.pyc$|raw|transcript|workspace|\.DS_Store|\.pytest_cache|\.venv)'
+git ls-files experiments/agent_selection_demo | rg '(__pycache__|\.pyc$|raw|transcript|workspace|\.DS_Store|\.pytest_cache|\.venv)' || true
 ```
 
-结果：无命中。
+Result: no hits.
 
-## 推荐下一步
+Broader scan over demo, phase0 tools, and phase1 tools only hit committed phase0 tooling paths with `workspace` in their filenames. These are source/test files, not raw paid-call transcripts or solver/verifier workspaces.
 
-如果下一步要强化“Kilo holdout lead 是否稳定”这个窄 claim，先做无付费的 Kilo timeout/usage root-cause patch 和 adapter tests；只有 gate 重新通过后，才在已批准边界内重跑 frozen top-2 holdout repeat。
+## Canonical entry points
 
-如果下一步要强化“系统能跨仓库工作”这个 claim，先做 no-paid 第二仓库 gate，只输出 go/no-go 和预算估计，不直接启动 paid matrix。
+- Final narrative: `experiments/agent_selection_demo/reports/final_agent_selection_demo_package_zh.md`
+- Closeout: `experiments/agent_selection_demo/reports/demo_completion_closeout_zh.md`
+- Kilo root cause: `experiments/agent_selection_demo/reports/kilo_timeout_usage_root_cause_zh.md`
+- Repeat completion/blocker: `experiments/agent_selection_demo/reports/top2_repeat_completion_zh.md`
+- Second-repo gate: `experiments/agent_selection_demo/reports/second_repo_gate_zh.md`
+- Feedback summary: `experiments/agent_selection_demo/reports/agent_tuning_feedback_summary_zh.md`
+- Machine-readable repeat summary: `experiments/agent_selection_demo/results/top2_repeatability_check.json`
+- Machine-readable feedback summary: `experiments/agent_selection_demo/results/agent_tuning_feedback_summary.json`
+- Process handoff: `PROCESS.md`
+
+## Recommended next work
+
+For Kilo stability: continue adapter/provider timeout diagnosis before any broader repeat.
+
+For second repo: repair attrs packaging and verifier pinning, then rerun a no-paid attrs repository gate. Do not start paid second-repo cells until that gate passes.
+
+For Agent tuning: use the runnable feedback summary as backlog input only; run a controlled before/after tuning experiment before claiming improvement.

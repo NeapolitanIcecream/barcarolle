@@ -10,7 +10,7 @@
 
 留出检查给出了 demo 的关键结果：原推荐在新任务上被反转。`Kilo + GPT mainline` 在 10 个留出任务上是 `9/10`，`Codex + GPT mainline` 是 `5/10`。因此，本 demo 支持的结论不是“谁全局更强”，而是：目标仓库 Agent 选型必须有冻结推荐后的新任务检查、成本口径审计和适配器可靠性门禁。
 
-后续 top-2 repeatability check 没有变成新的排名结果。Codex 在同一批留出任务 repeat 为 `7/10`；Kilo 连续两个 cell 触发 900 秒 adapter/CLI timeout，run 在 `12/20` completed cells 处停止，可评分率只有 `0.5`。这说明 Kilo repeat 路径需要工程修复，不能说明 Kilo 的 holdout 领先稳定，也不能推翻第一轮 demo 的端到端价值。
+后续 top-2 repeatability check 没有变成新的排名结果。Codex 在同一批留出任务 repeat 为 `7/10`；Kilo 的 repeat 路径累计 3 个 900 秒 timeout。strict completion pass 在修补 timeout hygiene 和 usage parser 后尝试了 1 个新的 Kilo repeat cell，仍然 timeout，并按 stop-on-unscoreable guard 停止。当前 repeat 是 `13/20` completed cells、`10/20` scoreable cells。这说明 Kilo repeat 路径仍是 infrastructure blocker，不能说明 Kilo 的 holdout 领先稳定，也不能推翻第一轮 demo 的端到端价值。
 
 ## Demo 问题
 
@@ -121,11 +121,18 @@ top-2 repeatability check 的结果：
 | 项目 | 结果 |
 | --- | --- |
 | frozen repeat 计划 | Codex GPT mainline 与 Kilo GPT mainline 各跑同一批 10 个 holdout tasks |
-| 已完成 cells | 12/20 |
+| 已完成 cells | 13/20 |
 | 可评分 cells | 10/20 |
 | Codex repeat | 7/10 scoreable |
-| Kilo repeat | 0/0 scoreable，2 个 adapter/CLI timeout |
+| Kilo repeat | 0/0 scoreable，3 个 adapter/CLI timeout |
 | 解释 | infrastructure blocker，不是 ranking result |
+
+Strict completion pass 进一步完成了这些 mandatory outputs：
+
+- `kilo_timeout_usage_root_cause_zh.md`：旧 Kilo timeout rows 由 endpoint/proxy 500 retry path 与 timeout hygiene 缺口共同暴露；新修补让 adapter timeout 能更干净地记录。
+- `top2_repeat_completion_zh.md`：preflight 和 smoke gate 通过后，1 个新增 Kilo repeat cell 仍 timeout，repeat 仍 blocked。
+- `second_repo_gate_zh.md`：`python-attrs/attrs` supply 在 overlay 后达到 31 release-eligible，但当前 demo CLI 仍需 attrs target profile、repo_id/statement 泛化和 verifier pinning，不能立即启动 paid second-repo matrix。
+- `agent_tuning_feedback_summary_zh.md`：现在可由 CLI 从 sanitized artifacts 生成 tuning feedback summary；它是反馈输入，不是 tuning 效果证明。
 
 ## 可以直接放进 slide 的表
 
@@ -169,8 +176,8 @@ top-2 repeatability check 的结果：
 | --- | --- |
 | presentation-ready demo story | 使用本最终包作为主材料，top-2 timeout 放在 caveat/appendix |
 | Kilo holdout lead 是否稳定 | 修复 Kilo adapter timeout 和 usage normalization 后，重复同一 frozen top-2 holdout batch |
-| 系统是否能跨仓库工作 | 先做 no-paid 第二仓库 gate，只给 go/no-go 和预算估计 |
-| Agent tuning 产品故事 | 用现有 verified failures 做反馈原型，不声称 tuning 已完成 |
+| 系统是否能跨仓库工作 | no-paid attrs gate 已完成；先修 attrs target profile、repo_id 泛化和 verifier pinning，再讨论 paid second-repo matrix |
+| Agent tuning 产品故事 | 使用 runnable feedback generator 输出 per-Agent failures、unstable tasks、infra blockers 和 usage coverage；不声称 tuning 已完成 |
 
 ## Claim 到 artifact 的映射
 
@@ -183,4 +190,8 @@ top-2 repeatability check 的结果：
 | holdout contradiction | `experiments/agent_selection_demo/results/holdout_check.json`；`experiments/agent_selection_demo/results/holdout_metrics.json` |
 | 成本/usage 口径诊断 | `experiments/agent_selection_demo/reports/post_demo_diagnostics_zh.md` |
 | top-2 repeat blocker | `experiments/agent_selection_demo/reports/top2_repeatability_check_zh.md`；`experiments/agent_selection_demo/results/top2_repeatability_check.json` |
+| Kilo timeout root cause | `experiments/agent_selection_demo/reports/kilo_timeout_usage_root_cause_zh.md` |
+| strict repeat completion/blocker | `experiments/agent_selection_demo/reports/top2_repeat_completion_zh.md` |
+| second-repo no-paid gate | `experiments/agent_selection_demo/reports/second_repo_gate_zh.md` |
+| runnable tuning feedback | `experiments/agent_selection_demo/reports/agent_tuning_feedback_summary_zh.md`；`experiments/agent_selection_demo/results/agent_tuning_feedback_summary.json` |
 | 当前最终解释 | `experiments/agent_selection_demo/reports/final_agent_selection_demo_package_zh.md` |

@@ -24,9 +24,9 @@
   "cost_latency": {
     "holdout_estimated_cost_usd": 18.2878365,
     "selection_estimated_cost_usd": 35.1392395,
-    "smoke_estimated_cost_usd": 1.7173265,
-    "total_estimated_cost_usd": 55.1444025,
-    "usage_observed_count": 31
+    "smoke_estimated_cost_usd": 0.90167305,
+    "total_estimated_cost_usd": 54.32874905,
+    "usage_observed_count": 34
   },
   "holdout_task_count": 10,
   "holdout_verdict": "contradicts",
@@ -57,6 +57,14 @@
     "smoke": 1.0
   },
   "selection_task_count": 20,
+  "strict_completion": {
+    "feedback_generator": "experiments/agent_selection_demo/reports/agent_tuning_feedback_summary_zh.md",
+    "kilo_repeat_status": "infrastructure_blocker_still_unresolved",
+    "paid_cells_used_in_strict_completion": 1,
+    "second_repo_gate": "conditional_no_go_for_immediate_paid_matrix",
+    "top2_repeat_completed_cells": 13,
+    "top2_repeat_scoreable_cells": 10
+  },
   "target_repo": "mahmoud/boltons",
   "task_source": "\u76ee\u6807\u4ed3\u5e93\u5386\u53f2\u6539\u52a8\uff1b\u4ece\u6d4b\u8bd5\u53d8\u5316\u6784\u9020\u9690\u85cf\u9a8c\u8bc1\uff0c\u5e76\u901a\u8fc7\u672c\u5730\u5e72\u51c0\u91cd\u653e\u8ba4\u8bc1"
 }
