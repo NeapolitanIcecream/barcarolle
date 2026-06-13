@@ -109,6 +109,7 @@ Canonical demo artifacts:
 
 Current follow-up plan:
 
+- `docs/research/agent-selection-demo-predictive-validity-completion-runbook-2026-06-13.md`
 - `docs/research/agent-selection-demo-strict-completion-runbook-2026-06-13.md` (completed by the strict completion pass)
 - `docs/research/agent-selection-demo-completion-plan-2026-06-13.md`
 - `docs/research/agent-selection-demo-alignment-note-2026-06-13.md`
@@ -133,6 +134,13 @@ second-repo paid matrix until that no-paid gate passes.
 
 The strict completion runbook has been executed. Do not rerun it as the default
 next step; use the completed reports above as the handoff state.
+
+The strict Agent-selection runbook still leaves predictive validity as future
+work. When finishing the whole demo, use the predictive-validity completion
+runbook. It requires a frozen estimand, rolling-origin infrastructure,
+retrospective/no-paid predictive metrics, baseline comparison, a bounded paid
+pilot decision if needed, and an updated reader-facing story. Do not treat
+fresh holdout contradiction alone as a predictive-validity result.
 
 Top-2 repeatability execution attempted on 2026-06-13. Gates passed for
 `LLM_BASE_URL`/`LLM_API_KEY`, `gpt-5.4`, adapter unit checks, secret isolation,
