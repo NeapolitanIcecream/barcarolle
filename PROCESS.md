@@ -108,6 +108,7 @@ Canonical demo artifacts:
 
 Current follow-up plan:
 
+- `docs/research/agent-selection-demo-alignment-note-2026-06-13.md`
 - `docs/research/agent-selection-demo-followup-plan-2026-06-13.md`
 - `docs/research/agent-selection-top2-repeatability-plan-2026-06-13.md`
 
@@ -120,6 +121,11 @@ mainline hit two consecutive 900-second adapter timeouts (`0/0` scoreable from
 the 95% scoreable-cell acceptance criterion was no longer reachable. Treat this
 as a Kilo adapter/CLI infrastructure blocker, not as evidence that the Kilo
 holdout lead is stable or unstable.
+
+Do not let this blocker reframe the whole demo as a Kilo repair project. The
+completed first `boltons` demo remains valid as an end-to-end target-repo Agent
+selection demo that exposed an unstable selection recommendation. Kilo repair is
+needed only for the narrower follow-up claim that its holdout lead is stable.
 
 Canonical repeatability artifacts:
 
