@@ -12,6 +12,8 @@
 
 后续 top-2 repeatability check 没有变成新的排名结果。Codex 在同一批留出任务 repeat 为 `7/10`；Kilo 的 repeat 路径累计 3 个 900 秒 timeout。strict completion pass 在修补 timeout hygiene 和 usage parser 后尝试了 1 个新的 Kilo repeat cell，仍然 timeout，并按 stop-on-unscoreable guard 停止。当前 repeat 是 `13/20` completed cells、`10/20` scoreable cells。这说明 Kilo repeat 路径仍是 infrastructure blocker，不能说明 Kilo 的 holdout 领先稳定，也不能推翻第一轮 demo 的端到端价值。
 
+Predictive-validity completion pass 补上了原来缺失的 north-star layer。现在 demo 有冻结 estimand、rolling-origin/pseudo-future window inventory、evaluation CLI、no-paid retrospective metrics、bounded paid-pilot decision 和 reader-facing story。核心 no-paid 结果是：best Barcarolle candidate `coverage_constrained_unweighted` MAE `0.209011`，best simple baseline `temporal_recent_baseline` MAE `0.214900`，candidate 小幅领先 `0.005889` MAE；两者 catastrophic miss rate 都是 `0.555556`。这只能 claim directional retrospective traction，不能 claim predictive validity 已经证明。
+
 ## Demo 问题
 
 本 demo 回答一个很窄的问题：
@@ -150,6 +152,36 @@ Strict completion pass 进一步完成了这些 mandatory outputs：
 
 这个 demo 对 Agent tuning 的价值在于：它产生了可验证失败标签和 per-task pass/fail delta。例如，Codex 在若干后期 `canonical_history` holdout 任务上失败，而 Kilo GPT mainline 在第一轮通过；Kilo repeat 又暴露 adapter timeout。这些信号可以进入配置改进 backlog，但不能被表述为 tuning 已经改善了 Agent。
 
+## Predictive-validity layer
+
+本次 completion 新增的测量目标是：
+
+> benchmark selection 在历史 origin 处对完整 Agent 未来目标仓库 verified pass rate 的预测准确度。
+
+可运行命令：
+
+```text
+PYTHONPATH=experiments/agent_selection_demo/tools:experiments/phase1_compiler/tools uv run --project experiments/phase1_compiler python experiments/agent_selection_demo/tools/agent_selection_demo.py predictive-validity-feasibility --output experiments/agent_selection_demo/reports/predictive_validity_feasibility_zh.md
+```
+
+```text
+PYTHONPATH=experiments/agent_selection_demo/tools:experiments/phase1_compiler/tools uv run --project experiments/phase1_compiler python experiments/agent_selection_demo/tools/agent_selection_demo.py rolling-origin-eval --protocol experiments/agent_selection_demo/results/predictive_validity_protocol.json --window-inventory experiments/agent_selection_demo/results/predictive_validity_window_inventory.json --output experiments/agent_selection_demo/reports/rolling_origin_eval_zh.md
+```
+
+No-paid retrospective summary:
+
+| Metric | Value |
+| --- | ---: |
+| metric slices | `208` |
+| best simple baseline MAE | `0.214900` |
+| best Barcarolle candidate MAE | `0.209011` |
+| candidate minus best simple MAE | `-0.005889` |
+| rank top-agreement rate | `0.8125` |
+| mean recommendation regret | `0.041552` |
+| new paid cells for predictive completion | `0` |
+
+Paid pilot decision: no new paid cells were needed for the demo story. A future pilot plan is capped at `40` cells, but it was not executed.
+
 ## 最终 claim boundary
 
 可以 claim：
@@ -157,7 +189,9 @@ Strict completion pass 进一步完成了这些 mandatory outputs：
 - 在 `mahmoud/boltons` 上，Barcarolle 完成了一次真实 Coding Agent 选型 demo；
 - 系统能运行候选 Agent、捕获 diff、在干净工作区验证、记录质量/成本/延迟/失败类型；
 - 原 selection 推荐被 fresh holdout contradicted；
-- 这说明目标仓库 Agent 选型需要 holdout check、成本口径审计、uncertainty/repeatability 报告和 adapter 可靠性门禁。
+- rolling-origin/pseudo-future tooling 现在能计算 MAE、RMSE、rank agreement 和 recommendation regret，并与 simple baselines 比较；
+- no-paid retrospective result 对 `coverage_constrained_unweighted` 给出小幅 directional traction；
+- 这说明目标仓库 Agent 选型需要 holdout check、成本口径审计、uncertainty/repeatability 报告、adapter 可靠性门禁和 predictive-validity validation。
 
 不能 claim：
 
@@ -166,6 +200,8 @@ Strict completion pass 进一步完成了这些 mandatory outputs：
 - Kilo 的 holdout 领先稳定；
 - top-2 repeatability check 得到了有效排名；
 - 第二仓库 paid scoring 已经通过 gate；
+- no-paid retrospective result 等同于 future proof；
+- bounded paid predictive-validity pilot 已经执行；
 - learned selector 或 Agent tuning 已经产生效果。
 
 ## 推荐下一步
@@ -178,6 +214,7 @@ Strict completion pass 进一步完成了这些 mandatory outputs：
 | Kilo holdout lead 是否稳定 | 修复 Kilo adapter timeout 和 usage normalization 后，重复同一 frozen top-2 holdout batch |
 | 系统是否能跨仓库工作 | no-paid attrs gate 已完成；先修 attrs target profile、repo_id 泛化和 verifier pinning，再讨论 paid second-repo matrix |
 | Agent tuning 产品故事 | 使用 runnable feedback generator 输出 per-Agent failures、unstable tasks、infra blockers 和 usage coverage；不声称 tuning 已完成 |
+| predictive validity proof | 执行真正 future 或 strict preregistered rolling-origin validation，冻结任务、Agent、baselines、score-join 规则和 success threshold 后再看 outcomes |
 
 ## Claim 到 artifact 的映射
 
@@ -194,4 +231,11 @@ Strict completion pass 进一步完成了这些 mandatory outputs：
 | strict repeat completion/blocker | `experiments/agent_selection_demo/reports/top2_repeat_completion_zh.md` |
 | second-repo no-paid gate | `experiments/agent_selection_demo/reports/second_repo_gate_zh.md` |
 | runnable tuning feedback | `experiments/agent_selection_demo/reports/agent_tuning_feedback_summary_zh.md`；`experiments/agent_selection_demo/results/agent_tuning_feedback_summary.json` |
+| predictive-validity state audit | `experiments/agent_selection_demo/reports/predictive_validity_state_audit_zh.md`；`experiments/agent_selection_demo/results/predictive_validity_evidence_ledger.json` |
+| frozen predictive-validity protocol | `experiments/agent_selection_demo/reports/predictive_validity_protocol_zh.md`；`experiments/agent_selection_demo/results/predictive_validity_protocol.json` |
+| rolling-origin feasibility | `experiments/agent_selection_demo/reports/predictive_validity_feasibility_zh.md`；`experiments/agent_selection_demo/results/predictive_validity_window_inventory.json` |
+| rolling-origin evaluation | `experiments/agent_selection_demo/reports/rolling_origin_eval_zh.md`；`experiments/agent_selection_demo/results/rolling_origin_eval.json`；`experiments/agent_selection_demo/results/rolling_origin_eval_slices.csv` |
+| no-paid retrospective result | `experiments/agent_selection_demo/reports/predictive_validity_retrospective_result_zh.md` |
+| paid-pilot decision | `experiments/agent_selection_demo/reports/predictive_validity_paid_pilot_decision_zh.md`；`experiments/agent_selection_demo/results/predictive_validity_paid_pilot_plan.json` |
+| predictive-validity reader story | `experiments/agent_selection_demo/reports/predictive_validity_demo_story_zh.md` |
 | 当前最终解释 | `experiments/agent_selection_demo/reports/final_agent_selection_demo_package_zh.md` |

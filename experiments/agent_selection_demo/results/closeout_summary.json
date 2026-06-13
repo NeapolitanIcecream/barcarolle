@@ -65,6 +65,55 @@
     "top2_repeat_completed_cells": 13,
     "top2_repeat_scoreable_cells": 10
   },
+  "predictive_validity_completion": {
+    "agent_unit": "complete Agent = model + harness + prompt/tools/runtime policy",
+    "cannot_claim": [
+      "predictive_validity_established",
+      "general_selector_superiority",
+      "global_agent_or_model_ranking",
+      "kilo_holdout_lead_stable",
+      "paid_predictive_validity_pilot_completed"
+    ],
+    "commands": {
+      "evaluation": "PYTHONPATH=experiments/agent_selection_demo/tools:experiments/phase1_compiler/tools uv run --project experiments/phase1_compiler python experiments/agent_selection_demo/tools/agent_selection_demo.py rolling-origin-eval --protocol experiments/agent_selection_demo/results/predictive_validity_protocol.json --window-inventory experiments/agent_selection_demo/results/predictive_validity_window_inventory.json --output experiments/agent_selection_demo/reports/rolling_origin_eval_zh.md",
+      "feasibility": "PYTHONPATH=experiments/agent_selection_demo/tools:experiments/phase1_compiler/tools uv run --project experiments/phase1_compiler python experiments/agent_selection_demo/tools/agent_selection_demo.py predictive-validity-feasibility --output experiments/agent_selection_demo/reports/predictive_validity_feasibility_zh.md"
+    },
+    "demo_claim_now": "rolling-origin infrastructure plus no-paid directional retrospective traction; predictive validity remains unproven",
+    "estimand": "benchmark selection frozen at origin T predicts a complete Agent's later same-repo verified pass rate",
+    "future_paid_pilot_cell_cap": 40,
+    "next_experiment_required": "true future or strict preregistered rolling-origin validation against best simple baseline envelope",
+    "no_paid_retrospective_result": {
+      "baseline_result": "candidate_beats_best_simple_baseline_directional_retrospective",
+      "best_barcarolle_candidate": "coverage_constrained_unweighted",
+      "best_barcarolle_candidate_mae": 0.209011,
+      "best_simple_baseline": "temporal_recent_baseline",
+      "best_simple_baseline_mae": 0.2149,
+      "candidate_minus_best_simple_mae": -0.005889,
+      "catastrophic_miss_rate_best_simple": 0.555556,
+      "catastrophic_miss_rate_candidate": 0.555556,
+      "mean_recommendation_regret": 0.041552,
+      "rank_top_agreement_rate": 0.8125
+    },
+    "paid_cells_used": 0,
+    "paid_pilot_decision": "no_paid_pilot_needed_for_demo_story",
+    "primary_metric": "pass-rate MAE over scoreable repo/origin/Agent slices",
+    "validation": {
+      "artifact_hygiene_scan": "no hits; rg exit code 1 because no tracked prohibited paths matched",
+      "demo_tests": "17 passed in 0.04s",
+      "diff_check": "passed",
+      "phase1_retrospective_predictive_signal_tests": "6 passed in 0.68s"
+    },
+    "window_inventory": {
+      "baseline_comparison_windows": 3,
+      "candidate_repos": [
+        "attrs",
+        "boltons",
+        "click"
+      ],
+      "metric_slice_count": 208,
+      "window_count": 5
+    }
+  },
   "target_repo": "mahmoud/boltons",
   "task_source": "\u76ee\u6807\u4ed3\u5e93\u5386\u53f2\u6539\u52a8\uff1b\u4ece\u6d4b\u8bd5\u53d8\u5316\u6784\u9020\u9690\u85cf\u9a8c\u8bc1\uff0c\u5e76\u901a\u8fc7\u672c\u5730\u5e72\u51c0\u91cd\u653e\u8ba4\u8bc1"
 }

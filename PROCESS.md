@@ -107,7 +107,40 @@ Canonical demo artifacts:
 - `experiments/agent_selection_demo/results/closeout_summary.json`
 - `experiments/agent_selection_demo/results/holdout_check.json`
 
-Current follow-up plan:
+Completed predictive-validity completion pass:
+
+- `docs/research/agent-selection-demo-predictive-validity-completion-runbook-2026-06-13.md`
+
+Predictive-validity demo artifacts:
+
+- `experiments/agent_selection_demo/reports/predictive_validity_state_audit_zh.md`
+- `experiments/agent_selection_demo/reports/predictive_validity_protocol_zh.md`
+- `experiments/agent_selection_demo/reports/predictive_validity_feasibility_zh.md`
+- `experiments/agent_selection_demo/reports/rolling_origin_eval_zh.md`
+- `experiments/agent_selection_demo/reports/predictive_validity_retrospective_result_zh.md`
+- `experiments/agent_selection_demo/reports/predictive_validity_paid_pilot_decision_zh.md`
+- `experiments/agent_selection_demo/reports/predictive_validity_demo_story_zh.md`
+- `experiments/agent_selection_demo/results/predictive_validity_evidence_ledger.json`
+- `experiments/agent_selection_demo/results/predictive_validity_protocol.json`
+- `experiments/agent_selection_demo/results/predictive_validity_window_inventory.json`
+- `experiments/agent_selection_demo/results/rolling_origin_eval.json`
+- `experiments/agent_selection_demo/results/rolling_origin_eval_slices.csv`
+- `experiments/agent_selection_demo/results/predictive_validity_paid_pilot_plan.json`
+
+The predictive-validity completion pass froze the estimand as complete-Agent
+future target-repo verified pass-rate prediction accuracy and added no-paid
+rolling-origin/pseudo-future tooling. The no-paid retrospective result gives
+small directional traction: `coverage_constrained_unweighted` MAE `0.209011`
+versus best simple baseline `temporal_recent_baseline` MAE `0.214900`, with
+both catastrophic miss rates at `0.555556`. Treat this as directional
+retrospective evidence only. Predictive validity is still not established.
+
+No new paid cells were run for predictive-validity completion. A future bounded
+pilot plan is preregistered at 40 cells maximum, but it was not executed because
+the current demo story already has no-paid numeric support and a paid add-on
+would not by itself prove predictive validity.
+
+Historical follow-up plans:
 
 - `docs/research/agent-selection-demo-predictive-validity-completion-runbook-2026-06-13.md`
 - `docs/research/agent-selection-demo-strict-completion-runbook-2026-06-13.md` (completed by the strict completion pass)
@@ -135,12 +168,12 @@ second-repo paid matrix until that no-paid gate passes.
 The strict completion runbook has been executed. Do not rerun it as the default
 next step; use the completed reports above as the handoff state.
 
-The strict Agent-selection runbook still leaves predictive validity as future
-work. When finishing the whole demo, use the predictive-validity completion
-runbook. It requires a frozen estimand, rolling-origin infrastructure,
-retrospective/no-paid predictive metrics, baseline comparison, a bounded paid
-pilot decision if needed, and an updated reader-facing story. Do not treat
-fresh holdout contradiction alone as a predictive-validity result.
+The strict Agent-selection runbook left predictive validity as future work; the
+predictive-validity completion pass has now filled that demo layer. Do not rerun
+the predictive-validity completion runbook by default. Use the completed
+artifacts above as the handoff state. Fresh holdout contradiction alone is still
+not a predictive-validity result; the current predictive-validity evidence is
+no-paid retrospective and directional.
 
 Top-2 repeatability execution attempted on 2026-06-13. Gates passed for
 `LLM_BASE_URL`/`LLM_API_KEY`, `gpt-5.4`, adapter unit checks, secret isolation,

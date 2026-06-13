@@ -179,3 +179,137 @@ For Kilo stability: continue adapter/provider timeout diagnosis before any broad
 For second repo: repair attrs packaging and verifier pinning, then rerun a no-paid attrs repository gate. Do not start paid second-repo cells until that gate passes.
 
 For Agent tuning: use the runnable feedback summary as backlog input only; run a controlled before/after tuning experiment before claiming improvement.
+
+## Predictive-validity completion addendum
+
+本 addendum 覆盖 predictive-validity completion pass。它补上 strict completion pass 当时仍标为 future work 的部分。
+
+### 1. Frozen estimand
+
+Frozen estimand:
+
+```text
+How accurately a benchmark selection frozen at origin T predicts a complete Agent's later verified pass rate on the same target repository.
+```
+
+Agent unit 是完整 Agent：`model + harness + prompt/tools/runtime policy`。
+
+Primary metric 是 pass-rate MAE，平均单位是 `(repo, origin/window, Agent)` slices。
+
+### 2. Rolling-origin infrastructure
+
+Feasibility command:
+
+```text
+PYTHONPATH=experiments/agent_selection_demo/tools:experiments/phase1_compiler/tools uv run --project experiments/phase1_compiler python experiments/agent_selection_demo/tools/agent_selection_demo.py predictive-validity-feasibility --output experiments/agent_selection_demo/reports/predictive_validity_feasibility_zh.md
+```
+
+Evaluation command:
+
+```text
+PYTHONPATH=experiments/agent_selection_demo/tools:experiments/phase1_compiler/tools uv run --project experiments/phase1_compiler python experiments/agent_selection_demo/tools/agent_selection_demo.py rolling-origin-eval --protocol experiments/agent_selection_demo/results/predictive_validity_protocol.json --window-inventory experiments/agent_selection_demo/results/predictive_validity_window_inventory.json --output experiments/agent_selection_demo/reports/rolling_origin_eval_zh.md
+```
+
+Outputs:
+
+- `predictive_validity_window_inventory.json`
+- `rolling_origin_eval.json`
+- `rolling_origin_eval_slices.csv`
+
+### 3. No-paid retrospective data
+
+Inventory result:
+
+- candidate repos: `attrs`, `boltons`, `click`
+- windows: `5`
+- metric slices: `208`
+- baseline-comparison windows: `3`
+
+Primary no-paid result:
+
+- best simple baseline: `temporal_recent_baseline`, MAE `0.214900`
+- best Barcarolle candidate: `coverage_constrained_unweighted`, MAE `0.209011`
+- candidate minus best simple MAE: `-0.005889`
+- catastrophic miss rate: `0.555556` for both
+- rank top-agreement rate: `0.8125`
+- mean recommendation regret: `0.041552`
+
+### 4. Paid cells
+
+Paid cells run for predictive-validity completion: `0`.
+
+Decision: no paid pilot was needed for the demo story because the no-paid retrospective result already supplies numeric directional evidence. A future plan is capped at `40` cells in `predictive_validity_paid_pilot_plan.json`, but it was not executed.
+
+### 5. Baseline result
+
+The best promotable Barcarolle candidate beat the best simple baseline by a small MAE margin. This is `directional retrospective traction`, not predictive-validity proof. The result is still underpowered for a strong claim because it is retrospective/pseudo-future and the catastrophic miss rate did not improve.
+
+### 6. Demo claim now
+
+Can claim:
+
+- target-repo Agent selection demo completed on `boltons`;
+- selection recommendation was contradicted by fresh holdout;
+- rolling-origin/pseudo-future infrastructure exists;
+- no-paid retrospective metrics show small directional traction against simple baselines;
+- paid-pilot boundary is defined and no new paid cells were spent.
+
+### 7. Cannot claim
+
+Cannot claim:
+
+- predictive validity is established;
+- current selector is generally superior;
+- Kilo holdout lead is stable;
+- any global Agent/model ranking;
+- a bounded paid predictive-validity pilot completed.
+
+### 8. Next experiment required
+
+To move from directional evidence to proof, run a true future or strict preregistered rolling-origin validation: freeze repos, origins/cutoffs, task IDs, Agent configs, selectors, baselines, seeds, invalid-cell policy, score joins, and success thresholds before outcome join, then compare against the best simple baseline envelope with uncertainty reporting.
+
+### 9. Tests and hygiene
+
+Predictive-validity completion added focused demo tests for score-join deduplication, MAE/missing-cell policy, baseline envelope comparison, and recommendation regret.
+
+Final validation:
+
+```text
+PYTHONPATH=experiments/agent_selection_demo/tools:experiments/phase1_compiler/tools uv run --project experiments/phase1_compiler pytest experiments/agent_selection_demo/tests -q
+```
+
+Result: `17 passed in 0.04s`.
+
+```text
+PYTHONPATH=experiments/phase1_compiler/tools uv run --project experiments/phase1_compiler pytest experiments/phase1_compiler/tests/test_phase1_retrospective_predictive_signal.py -q
+```
+
+Result: `6 passed in 0.68s`.
+
+```text
+git diff --check
+```
+
+Result: passed.
+
+```text
+git ls-files experiments/agent_selection_demo | rg '(__pycache__|\.pyc$|raw|transcript|workspace|\.DS_Store|\.pytest_cache|\.venv)'
+```
+
+Result: no hits. `rg` returned exit code `1`, which is expected when no prohibited tracked paths match.
+
+### Predictive-validity canonical artifacts
+
+- `experiments/agent_selection_demo/reports/predictive_validity_state_audit_zh.md`
+- `experiments/agent_selection_demo/reports/predictive_validity_protocol_zh.md`
+- `experiments/agent_selection_demo/reports/predictive_validity_feasibility_zh.md`
+- `experiments/agent_selection_demo/reports/rolling_origin_eval_zh.md`
+- `experiments/agent_selection_demo/reports/predictive_validity_retrospective_result_zh.md`
+- `experiments/agent_selection_demo/reports/predictive_validity_paid_pilot_decision_zh.md`
+- `experiments/agent_selection_demo/reports/predictive_validity_demo_story_zh.md`
+- `experiments/agent_selection_demo/results/predictive_validity_evidence_ledger.json`
+- `experiments/agent_selection_demo/results/predictive_validity_protocol.json`
+- `experiments/agent_selection_demo/results/predictive_validity_window_inventory.json`
+- `experiments/agent_selection_demo/results/rolling_origin_eval.json`
+- `experiments/agent_selection_demo/results/rolling_origin_eval_slices.csv`
+- `experiments/agent_selection_demo/results/predictive_validity_paid_pilot_plan.json`
