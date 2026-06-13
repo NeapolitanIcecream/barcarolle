@@ -1,0 +1,83 @@
+{
+  "schema_version": "barcarolle.agent_selection_demo.random_baseline_predictive_signal.v1",
+  "generated_at": "2026-06-14",
+  "paid_calls_made": false,
+  "source_artifacts": [
+    {
+      "path": "experiments/agent_selection_demo/results/rolling_origin_eval.json",
+      "sha256": "1dfc33c3e9b21717bd12dbc273e3ef00d23b39449f433c5164001e92056d98ad",
+      "role": "current rolling-origin summary with candidate, random, and simple baseline metrics"
+    },
+    {
+      "path": "experiments/agent_selection_demo/results/rolling_origin_eval_slices.csv",
+      "sha256": "c39c1f1cca5aaba02d2bea490557f5c9f08c3e9282f2ee17c6d3e8039a562e1b",
+      "role": "slice-level audit table"
+    },
+    {
+      "path": "experiments/phase1_compiler/results/phase1_proposal_evidence_package_random_baseline_distribution.json",
+      "sha256": "ded7433d2662bfc608abc56b63ca609fd731900917d3ebbafe76d51ed98353c7",
+      "role": "1000-seed same-budget random baseline distribution"
+    }
+  ],
+  "main_comparison": {
+    "candidate_design_id": "coverage_constrained_unweighted",
+    "candidate_mae": 0.209011,
+    "candidate_rmse": 0.258881,
+    "candidate_signed_error": -0.043267,
+    "candidate_catastrophic_miss_rate": 0.555556,
+    "candidate_slice_count": 18,
+    "candidate_selection_scoreable_cells": 94,
+    "candidate_future_scoreable_cells": 249,
+    "random_baseline_design_id": "seeded_random_same_budget",
+    "random_same_budget_mae": 0.252499,
+    "random_same_budget_rmse": 0.299514,
+    "random_same_budget_signed_error": -0.035303,
+    "random_same_budget_catastrophic_miss_rate": 0.733333,
+    "random_same_budget_slice_count": 90,
+    "random_same_budget_selection_scoreable_cells": 445,
+    "random_same_budget_future_scoreable_cells": 1245,
+    "absolute_mae_improvement": 0.043488,
+    "relative_mae_improvement": 0.17223,
+    "relative_mae_improvement_percent": 17.22
+  },
+  "random_distribution_context": {
+    "available": true,
+    "seed_count": 1000,
+    "candidate_mae_in_distribution_artifact": 0.209,
+    "random_mae_mean": 0.2469,
+    "random_mae_median": 0.2464,
+    "random_mae_p05": 0.2056,
+    "random_mae_p25": 0.2291,
+    "random_mae_p75": 0.264,
+    "random_mae_p95": 0.2899,
+    "candidate_beats_random_share_percent": 93.4,
+    "candidate_lower_is_better_percentile": 6.6,
+    "candidate_catastrophic_miss_beats_random_share_percent": 96.7,
+    "note": "The current rolling-origin artifact reports an aggregated seeded random baseline over 90 slices. This 1000-seed distribution is available from the phase1 proposal evidence package and is used for percentile context."
+  },
+  "best_simple_baseline_robustness_note": {
+    "design_id": "temporal_recent_baseline",
+    "mae": 0.2149,
+    "rmse": 0.257954,
+    "signed_error": -0.061789,
+    "catastrophic_miss_rate": 0.555556,
+    "slice_count": 18,
+    "candidate_minus_best_simple_mae": -0.005889,
+    "role": "secondary robustness note, not the main demo success gate"
+  },
+  "demo_success_gate": {
+    "absolute_mae_improvement_threshold": 0.02,
+    "relative_mae_improvement_threshold": 0.1,
+    "passes_absolute_threshold": true,
+    "passes_relative_threshold": true,
+    "passes_demo_success_gate": true,
+    "interpretation": "candidate beats same-budget random baseline by enough for the demo-level predictive-signal claim"
+  },
+  "claim_boundary": {
+    "main_result": "candidate_beats_same_budget_random_baseline",
+    "predictive_validity_established": false,
+    "retrospective_only": true,
+    "full_seed_distribution_in_current_agent_selection_artifact": false,
+    "best_simple_baseline_is_secondary": true
+  }
+}
