@@ -558,8 +558,25 @@ STAGE_SCORE_FIELDNAMES = [
     "latency_seconds",
     "estimated_cost_usd",
     "usage_observed",
+    "cost_observation_kind",
+    "usage_source",
+    "billed_cost_usd",
     "patch_sha256",
 ]
+
+
+def cost_observation_metadata(usage_observed: bool) -> dict[str, Any]:
+    if usage_observed:
+        return {
+            "cost_observation_kind": "observed_tokens",
+            "usage_source": "adapter_output_usage_json",
+            "billed_cost_usd": None,
+        }
+    return {
+        "cost_observation_kind": "conservative_estimate",
+        "usage_source": "static_conservative_cell_estimate",
+        "billed_cost_usd": None,
+    }
 
 
 def persist_stage_outputs(
@@ -714,6 +731,9 @@ def score_rows(stage: str, submissions: list[dict[str, Any]], verifiers: list[di
                 "latency_seconds": submission.get("latency_seconds", ""),
                 "estimated_cost_usd": cost.get("estimated_cost_usd", ""),
                 "usage_observed": cost.get("usage_observed", False),
+                "cost_observation_kind": cost.get("cost_observation_kind", cost.get("cost_method", "")),
+                "usage_source": cost.get("usage_source", ""),
+                "billed_cost_usd": cost.get("billed_cost_usd", ""),
                 "patch_sha256": submission.get("patch_sha256", ""),
             }
         )
@@ -844,6 +864,7 @@ def run_stage(config: dict[str, Any], stage: str, agent_ids: list[str] | None = 
                     "usage_observed": usage_observed,
                     "estimated_cost_usd": estimated_cost,
                     "cost_method": "observed_token_estimate" if usage_observed else "conservative_per_cell_estimate",
+                    **cost_observation_metadata(usage_observed),
                     "latency_seconds": result.submission.get("latency_seconds", round(time.monotonic() - start, 3)),
                     **token_counts,
                 }
@@ -1051,6 +1072,7 @@ def recover_cell_from_raw(
         "usage_observed": usage_observed,
         "estimated_cost_usd": estimated_cost,
         "cost_method": "observed_token_estimate" if usage_observed else "conservative_per_cell_estimate",
+        **cost_observation_metadata(usage_observed),
         "latency_seconds": latency,
         **token_counts,
     }

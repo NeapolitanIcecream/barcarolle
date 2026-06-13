@@ -92,6 +92,39 @@ def test_summarize_stage_computes_cost_latency_and_failures() -> None:
     assert summary["failure_category_counts"]["hidden verifier failure"] == 1
 
 
+def test_score_rows_preserve_cost_observation_fields() -> None:
+    submissions = [
+        {
+            "run_id": "run_1",
+            "adapter_id": "codex",
+            "harness_name": "codex",
+            "model_or_agent_name": "gpt-5.4",
+            "task_id": "task_1",
+            "status": "submitted",
+            "latency_seconds": 12.0,
+            "patch_sha256": "abc123",
+        }
+    ]
+    verifiers = [{"run_id": "run_1", "status": "verified_pass"}]
+    cost_rows = [
+        {
+            "run_id": "run_1",
+            "reviewer_name": "Codex",
+            "estimated_cost_usd": 0.25,
+            "usage_observed": True,
+            "cost_observation_kind": "observed_tokens",
+            "usage_source": "adapter_output_usage_json",
+            "billed_cost_usd": None,
+        }
+    ]
+
+    rows = demo.score_rows("selection", submissions, verifiers, cost_rows)
+
+    assert rows[0]["cost_observation_kind"] == "observed_tokens"
+    assert rows[0]["usage_source"] == "adapter_output_usage_json"
+    assert rows[0]["billed_cost_usd"] is None
+
+
 def test_failure_category_maps_policy_and_empty_diff() -> None:
     assert demo.failure_category({"status": "invalid_output"}, {}) == "no meaningful change"
     assert demo.failure_category({"status": "policy_violation", "harness_error": "submission_edited_tests"}, {}) == "edited tests when prohibited"

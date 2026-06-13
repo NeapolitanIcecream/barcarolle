@@ -99,6 +99,7 @@
     "outer_retries": 0,
     "main_scoreable_cell_rate_min": 0.95,
     "smoke_scoreable_cell_rate_min": 0.9,
+    "cost_usage_observed_rate_min": 0.95,
     "conservative_cell_estimate_usd": 0.5,
     "result_prefix": "agent_selection_demo_2026_06_12"
   }
