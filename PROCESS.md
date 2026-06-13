@@ -3,7 +3,7 @@
 This file records repository-wide process decisions that future coding-agent
 sessions should know before planning or executing Barcarolle work.
 
-Last updated: 2026-06-13.
+Last updated: 2026-06-14.
 
 ## Maintenance Rules
 
@@ -111,16 +111,45 @@ Completed predictive-validity completion pass:
 
 - `docs/research/agent-selection-demo-predictive-validity-completion-runbook-2026-06-13.md`
 
-Current demo-evidence runbook:
+Completed demo-evidence runbook:
 
 - `docs/research/agent-selection-demo-random-baseline-evidence-runbook-2026-06-14.md`
 
-Use this runbook when the goal is the simpler demo claim: a target-repo
-predictive Agent evaluation facility whose main quantitative warrant is MAE
-substantially better than same-budget random sampling, plus an Agent-selection
-matrix over real Agents. This runbook doubles Agent-side timeout policy from
-900s to 1800s and treats Kilo timeout under the new policy as a reliability
-gate, not as the whole demo blocker.
+This runbook completed the simpler demo claim: Barcarolle is a practical
+target-repo predictive Agent evaluation facility whose main quantitative
+warrant is lower future-pass-rate MAE than same-budget random task sampling,
+plus an Agent-selection matrix over real Agents. It doubled Agent-side timeout
+policy from 900s to 1800s, with 60s adapter cleanup grace, 1860s outer
+workspace timeout, 360s verifier timeout, and 3600s endpoint/proxy upstream
+timeout.
+
+Main demo-evidence results:
+
+- random-baseline predictive signal passed the demo gate:
+  `coverage_constrained_unweighted` MAE `0.209011` versus same-budget random
+  MAE `0.252499`, absolute improvement `0.043488`, relative improvement
+  `17.22%`; 1000-seed context shows the candidate beating/tying `93.4%` of
+  random samples;
+- Kilo + GPT mainline passed the doubled-timeout reliability gate with one
+  new smoke/debug paid cell;
+- doubled-timeout top-2 repeat completed `20/20` scoreable cells: Codex + GPT
+  mainline `6/10`, Kilo + GPT mainline `9/10`;
+- total new paid cells for the runbook were `21`, under the `42` cell cap;
+- old best-simple-baseline and catastrophic-miss results are limitations, not
+  the main demo gate.
+
+Canonical random-baseline demo artifacts:
+
+- `experiments/agent_selection_demo/reports/demo_predictive_facility_story_zh.md`
+- `experiments/agent_selection_demo/reports/random_baseline_predictive_signal_zh.md`
+- `experiments/agent_selection_demo/results/random_baseline_predictive_signal.json`
+- `experiments/agent_selection_demo/reports/demo_agent_selection_evidence_zh.md`
+- `experiments/agent_selection_demo/results/demo_agent_selection_evidence.json`
+- `experiments/agent_selection_demo/reports/doubled_timeout_policy_zh.md`
+- `experiments/agent_selection_demo/reports/doubled_timeout_agent_reliability_gate_zh.md`
+- `experiments/agent_selection_demo/results/doubled_timeout_agent_reliability_gate.json`
+- `experiments/agent_selection_demo/results/doubled_timeout_top2_repeat_metrics.json`
+- `experiments/agent_selection_demo/results/closeout_summary.json`
 
 Predictive-validity demo artifacts:
 
@@ -137,6 +166,10 @@ Predictive-validity demo artifacts:
 - `experiments/agent_selection_demo/results/rolling_origin_eval.json`
 - `experiments/agent_selection_demo/results/rolling_origin_eval_slices.csv`
 - `experiments/agent_selection_demo/results/predictive_validity_paid_pilot_plan.json`
+
+The random-baseline demo run is now the preferred reader-facing story for this
+demo. It supports a practical facility claim and target-repo Agent-selection
+evidence, not full predictive-validity proof.
 
 The predictive-validity completion pass froze the estimand as complete-Agent
 future target-repo verified pass-rate prediction accuracy and added no-paid
@@ -168,13 +201,14 @@ Completion package:
 - `experiments/agent_selection_demo/reports/second_repo_gate_zh.md`
 - `experiments/agent_selection_demo/reports/agent_tuning_feedback_summary_zh.md`
 
-Recommended next work: if the next claim is that Kilo's holdout lead is stable,
-continue Kilo adapter/provider timeout diagnosis before any broader repeat. If
-the next claim is cross-repo readiness, first repair attrs packaging automation:
-add an attrs target profile, remove boltons-specific `repo_id` and fallback
-statement assumptions from demo packaging, materialize or reference the 31-task
-attrs release manifest, and pin the attrs verifier environment. Do not start a
-second-repo paid matrix until that no-paid gate passes.
+Recommended next work: if the next claim is predictive validity, run a
+preregistered future or strict rolling-origin validation with frozen tasks,
+Agents, baselines, seeds, score-join rules, and success thresholds. If the next
+claim is cross-repo readiness, first repair attrs packaging automation: add an
+attrs target profile, remove boltons-specific `repo_id` and fallback statement
+assumptions from demo packaging, materialize or reference the 31-task attrs
+manifest, and pin the attrs verifier environment. Do not start a second-repo
+paid matrix until that no-paid gate passes.
 
 The strict completion runbook has been executed. Do not rerun it as the default
 next step; use the completed reports above as the handoff state.
@@ -202,6 +236,12 @@ Do not let this blocker reframe the whole demo as a Kilo repair project. The
 completed first `boltons` demo remains valid as an end-to-end target-repo Agent
 selection demo that exposed an unstable selection recommendation. Kilo repair is
 needed only for the narrower follow-up claim that its holdout lead is stable.
+
+The 2026-06-14 doubled-timeout run superseded that blocker for the demo story's
+top-2 path: Kilo + GPT mainline completed `10/10` scoreable doubled-timeout
+repeat cells at `9/10`, while Codex + GPT mainline completed `10/10` scoreable
+cells at `6/10`. Keep the old `900s` timeout rows as historical caveat, not as
+the active demo blocker.
 
 Canonical repeatability artifacts:
 

@@ -313,3 +313,147 @@ Result: no hits. `rg` returned exit code `1`, which is expected when no prohibit
 - `experiments/agent_selection_demo/results/rolling_origin_eval.json`
 - `experiments/agent_selection_demo/results/rolling_origin_eval_slices.csv`
 - `experiments/agent_selection_demo/results/predictive_validity_paid_pilot_plan.json`
+
+## Random-baseline demo-evidence closeout addendum 2026-06-14
+
+本 addendum 覆盖 mandatory runbook：
+
+```text
+docs/research/agent-selection-demo-random-baseline-evidence-runbook-2026-06-14.md
+```
+
+执行结论：all mandatory packages completed；无 blocked package；未运行 second-repo paid cells；未扩展 model matrix；未在结果后调 candidate。
+
+### Package status
+
+| Package | Status | Canonical output |
+| --- | --- | --- |
+| 1. Story reset and inventory | completed | `demo_random_baseline_story_reset_zh.md`; `demo_random_baseline_evidence_inventory.json` |
+| 2. Double-timeout policy patch | completed | `doubled_timeout_policy_zh.md` |
+| 3. Random-baseline evidence refresh | completed | `random_baseline_predictive_signal_zh.md`; `random_baseline_predictive_signal.json` |
+| 4. Doubled-timeout reliability gate | completed | `doubled_timeout_agent_reliability_gate_zh.md`; `doubled_timeout_agent_reliability_gate.json` |
+| 5. Agent-selection evidence packet | completed | `demo_agent_selection_evidence_zh.md`; `demo_agent_selection_evidence.json` |
+| 6. Final demo story rewrite | completed | `demo_predictive_facility_story_zh.md` |
+| 7. Closeout and process update | completed | this addendum; `PROCESS.md`; `closeout_summary.json` |
+
+### 1. Active timeout settings
+
+| Layer | Active setting |
+| --- | ---: |
+| Agent/adapter timeout | `1800s` |
+| Adapter cleanup grace | `60s` |
+| Outer workspace timeout | `1860s` |
+| Verifier timeout | `360s` |
+| Endpoint/proxy upstream timeout | `3600s` |
+
+Generated demo adapter commands now include `--timeout 1800` for all configured candidates and fallback. Old `900s` result rows remain historical `900s` rows and were not reinterpreted.
+
+### 2. New paid cells
+
+New paid cells in this runbook: `21`.
+
+Breakdown:
+
+- Package 4 Kilo reliability gate: `1` cell.
+- Package 5 doubled-timeout top-2 repeat: `20` cells.
+- Second repo paid cells: `0`.
+
+Runbook hard cap: `42` cells.
+
+### 3. Kilo doubled-timeout reliability gate
+
+Kilo + GPT mainline passed.
+
+Gate cell:
+
+| Run | Status | Scoreable | Timeout | Latency | Usage |
+| --- | --- | --- | --- | ---: | --- |
+| `doubled_timeout_gate__kilo_gpt_5_4__boltons__hist__031__attempt1` | `verified_pass` | `true` | none | `46.861s` | observed |
+
+Interpretation: this is a reliability-gate pass, not a global model-quality proof.
+
+### 4. Random-baseline MAE comparison
+
+| Item | Value |
+| --- | ---: |
+| Candidate design | `coverage_constrained_unweighted` |
+| Candidate MAE | `0.209011` |
+| Same-budget random MAE | `0.252499` |
+| Absolute MAE improvement | `0.043488` |
+| Relative MAE improvement | `17.22%` |
+| 1000-seed candidate beats/random-ties share | `93.4%` |
+| Lower-is-better percentile | `6.6` |
+
+MAE 是 `abs(benchmark pass rate - later task pass rate)` 的平均值，越低越好。
+
+### 5. Demo success gate
+
+Success gate passed.
+
+The candidate beats same-budget random by more than `0.02` absolute MAE and more than `10%` relative MAE. Best-simple-baseline remains a robustness/limitation note: candidate beats `temporal_recent_baseline` by only `0.005889` MAE and does not improve catastrophic miss rate.
+
+### 6. Usable Agent-selection evidence today
+
+| Evidence slice | Codex + GPT mainline | Kilo + GPT mainline |
+| --- | ---: | ---: |
+| Original selection | `15/20` | `15/20` |
+| Original holdout | `5/10` | `9/10` |
+| Old `900s` repeat | `7/10` | `0/0` scoreable from 3 timeout rows |
+| New `1800s` repeat | `6/10` | `9/10` |
+
+Selection-to-holdout MAE over the four original agents is `0.136111` using scoreable pass rates. Current target-repo top-2 evidence leader is Kilo + GPT mainline after reliability gating.
+
+### 7. What cannot be claimed
+
+Cannot claim:
+
+- predictive validity is established;
+- Kilo, Codex, GPT, or Claude has a global ranking;
+- the result generalizes across repositories;
+- all Kilo paths are stable;
+- old selection cost tie-break was reliable;
+- Agent tuning improved any configuration.
+
+### 8. Next experiment
+
+Next experiment: preregistered future or strict rolling-origin validation with frozen task IDs, Agent configs, baselines, random seeds, invalid-cell policy, score-join rules, and success thresholds. Do not start a second-repo paid matrix until the separate no-paid attrs packaging/verifier gate is repaired.
+
+### 9. Tests and hygiene
+
+Validation run:
+
+```text
+PYTHONPATH=experiments/agent_selection_demo/tools:experiments/phase1_compiler/tools uv run --project experiments/phase1_compiler pytest experiments/agent_selection_demo/tests -q
+```
+
+Result: `18 passed in 0.03s`.
+
+```text
+PYTHONPATH=experiments/phase1_compiler/tools uv run --project experiments/phase1_compiler pytest experiments/phase1_compiler/tests/test_phase1_retrospective_predictive_signal.py -q
+```
+
+Result: `6 passed in 0.53s`.
+
+```text
+PYTHONPATH=experiments/phase0_headroom/tools uv run --project experiments/phase1_compiler pytest experiments/phase0_headroom/tools/test_cli_workspace_adapters.py experiments/phase0_headroom/tools/test_workspace_acut_run.py experiments/phase0_headroom/tools/test_workspace_usage_import.py -q
+```
+
+Result: `39 passed in 4.33s`.
+
+```text
+git diff --check
+```
+
+Result: passed.
+
+```text
+git ls-files experiments/agent_selection_demo | rg '(__pycache__|\.pyc$|raw|transcript|workspace|\.DS_Store|\.pytest_cache|\.venv)'
+```
+
+Result: no hits; `rg` exit code `1` is expected when no prohibited tracked path matches.
+
+```text
+git ls-files experiments/phase0_headroom/results/raw experiments/phase0_headroom/workspaces
+```
+
+Result: `0` tracked raw/workspace paths.

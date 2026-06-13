@@ -4,6 +4,26 @@
 
 ## 一页摘要
 
+2026-06-14 random-baseline evidence run 更新了本最终包的 reader-facing 主线：demo 的核心 claim 现在是“Barcarolle 已经是一个实用的目标仓库预测式 Agent 评估设施”，主量化依据是 candidate benchmark selection 明显低于同预算随机抽样的未来 pass-rate MAE，并配合真实 Agent-selection matrix。
+
+新主结果：
+
+- timeout policy 已加倍：adapter `1800s`，cleanup grace `60s`，outer workspace `1860s`，verifier `360s`，endpoint/proxy upstream `3600s`。
+- random same-budget baseline：candidate `coverage_constrained_unweighted` MAE `0.209011`，random baseline MAE `0.252499`，absolute improvement `0.043488`，relative improvement `17.22%`；1000-seed distribution 中 candidate 优于或打平 `93.4%` 随机样本。
+- Kilo doubled-timeout reliability gate：`1` 个新 smoke/debug paid cell，`verified_pass`，无 timeout。
+- doubled-timeout top-2 repeat：`20/20` scoreable；Codex + GPT mainline `6/10`，Kilo + GPT mainline `9/10`。
+- 新 paid cells：`21`，未超过 runbook `42` cell cap。
+
+因此，旧 `900s` Kilo repeat timeout 不再阻断 demo story。它仍是历史 caveat，但当前 `boltons` top-2 reliability-gated evidence leader 是 `Kilo + GPT mainline`。这不是全局 Agent 排名，也不是 predictive validity proof。
+
+新的 reader-facing 入口：
+
+- `experiments/agent_selection_demo/reports/demo_predictive_facility_story_zh.md`
+- `experiments/agent_selection_demo/reports/random_baseline_predictive_signal_zh.md`
+- `experiments/agent_selection_demo/reports/demo_agent_selection_evidence_zh.md`
+- `experiments/agent_selection_demo/reports/doubled_timeout_policy_zh.md`
+- `experiments/agent_selection_demo/reports/doubled_timeout_agent_reliability_gate_zh.md`
+
 这个 demo 在 `mahmoud/boltons` 上完成了一次端到端的目标仓库 Agent 选型流程：同一批仓库历史任务交给 4 个真实 Coding Agent 配置，系统捕获每次运行产生的代码 diff，再在干净验证工作区重放并运行隐藏验证。
 
 选择集的冻结推荐是 `Codex + GPT mainline`。但这个推荐不是质量单独领先：`Codex + GPT mainline` 和 `Kilo + GPT mainline` 在 20 个选择集任务上同为 `15/20` verified pass。推荐锁定到 Codex，主要来自成本破平；后续诊断发现 Codex 有 observed token usage，Kilo 只有保守单次估算，所以这不是可比的真实成本证据。
