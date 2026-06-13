@@ -498,10 +498,12 @@ def candidate_by_id(config: dict[str, Any]) -> dict[str, dict[str, Any]]:
 def adapter_config_for(config: dict[str, Any], candidate: dict[str, Any]) -> workspace.AdapterConfig:
     script = repo_path(candidate["adapter_script"])
     timeout = int(candidate.get("timeout_seconds") or 900)
+    cleanup_grace = int(config.get("run_policy", {}).get("adapter_cleanup_grace_seconds", 30))
+    outer_timeout = timeout + max(cleanup_grace, 0)
     command = (
         f"uv run --project {shlex.quote(str(ROOT / 'experiments' / 'phase0_headroom'))} "
         f"python {shlex.quote(str(script))} "
-        "--workspace {workspace} --statement-file {statement_file} --raw-dir {raw_dir} --timeout {timeout_seconds} "
+        f"--workspace {{workspace}} --statement-file {{statement_file}} --raw-dir {{raw_dir}} --timeout {timeout} "
         f"--model {shlex.quote(str(candidate['model']))}"
     )
     if candidate["harness"] == "kilo":
@@ -514,7 +516,7 @@ def adapter_config_for(config: dict[str, Any], candidate: dict[str, Any]) -> wor
         command_template=command,
         command_template_source="agent_selection_demo_config",
         endpoint_proof_status="llm_endpoint_proxy_secret_isolated",
-        timeout_seconds=timeout,
+        timeout_seconds=outer_timeout,
         requires_env=["LLM_BASE_URL", "LLM_API_KEY"],
         usage_mode="raw_stdout_usage_best_effort",
         usage_report_path=None,
@@ -647,6 +649,42 @@ def find_usage_object(value: Any) -> dict[str, Any] | None:
     return None
 
 
+def usage_from_kilo_step_events(text: str) -> dict[str, Any] | None:
+    input_tokens = 0
+    cached_input_tokens = 0
+    output_tokens = 0
+    found = False
+    for line in text.splitlines():
+        line = line.strip()
+        if not line or not (line.startswith("{") and line.endswith("}")):
+            continue
+        try:
+            parsed = json.loads(line)
+        except json.JSONDecodeError:
+            continue
+        if parsed.get("type") != "step_finish":
+            continue
+        tokens = ((parsed.get("part") or {}).get("tokens") if isinstance(parsed.get("part"), dict) else None) or {}
+        if not isinstance(tokens, dict):
+            continue
+        cache = tokens.get("cache") if isinstance(tokens.get("cache"), dict) else {}
+        input_count = int(tokens.get("input") or 0)
+        cache_read = int(cache.get("read") or 0)
+        output_count = int(tokens.get("output") or 0) + int(tokens.get("reasoning") or 0)
+        input_tokens += input_count + cache_read
+        cached_input_tokens += cache_read
+        output_tokens += output_count
+        found = True
+    if not found:
+        return None
+    return {
+        "input_tokens": input_tokens,
+        "cached_input_tokens": cached_input_tokens,
+        "output_tokens": output_tokens,
+        "usage_source_schema": "kilo_step_finish_tokens",
+    }
+
+
 def extract_usage_from_text(text: str) -> dict[str, Any] | None:
     for line in reversed(text.splitlines()):
         line = line.strip()
@@ -659,7 +697,7 @@ def extract_usage_from_text(text: str) -> dict[str, Any] | None:
         found = find_usage_object(parsed)
         if found:
             return found
-    return None
+    return usage_from_kilo_step_events(text)
 
 
 def usage_from_submission(submission: dict[str, Any]) -> dict[str, Any] | None:

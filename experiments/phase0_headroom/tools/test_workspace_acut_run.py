@@ -661,3 +661,25 @@ def test_workspace_adapter_classifies_nonzero_acut_exit(tmp_path: Path) -> None:
     assert result.submission["status"] == "acut_harness_error"
     assert result.verifier["status"] == "acut_harness_error"
     assert result.verifier["harness_error"] == "acut_command_failed"
+
+
+def test_workspace_adapter_records_adapter_timeout(tmp_path: Path) -> None:
+    repo, base_commit = make_repo(tmp_path)
+    fake_acut = write_fake_acut(
+        tmp_path,
+        "import time\ntime.sleep(5)\n",
+    )
+    config = workspace_acut.AdapterConfig(
+        adapter_id="fake",
+        acut_id="fake_acut",
+        model_or_agent_name="fake-model",
+        command_template=f"{sys.executable} {fake_acut} --workspace {{workspace}} --statement-file {{statement_file}}",
+        timeout_seconds=1,
+    )
+
+    result = workspace_acut.run_workspace_cell(tmp_path, package_for(repo, base_commit, tmp_path), config, "run-timeout")
+
+    assert result.submission["status"] == "acut_harness_error"
+    assert result.submission["acut_exit_code"] == 124
+    assert result.submission["adapter_timed_out"] is True
+    assert result.verifier["adapter_timed_out"] is True

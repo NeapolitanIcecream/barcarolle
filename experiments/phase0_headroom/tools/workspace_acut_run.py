@@ -511,6 +511,7 @@ def run_workspace_cell(root: Path, package: TaskPackage, config: AdapterConfig, 
         "patch_source": "git_diff_after_workspace_run",
         "patch_sha256": patch_sha,
         "latency_seconds": latency,
+        "adapter_timed_out": acut.timed_out,
         "raw_artifacts": {
             "stdout": str(stdout_path.relative_to(exp)),
             "stderr": str(stderr_path.relative_to(exp)),
@@ -538,7 +539,7 @@ def run_workspace_cell(root: Path, package: TaskPackage, config: AdapterConfig, 
     }
     if acut.returncode != 0:
         submission = {**base_submission, "status": "acut_harness_error", "acut_exit_code": acut.returncode}
-        verifier.update({"status": "acut_harness_error", "harness_error": "acut_command_failed", "acut_exit_code": acut.returncode})
+        verifier.update({"status": "acut_harness_error", "harness_error": "acut_command_failed", "acut_exit_code": acut.returncode, "adapter_timed_out": acut.timed_out})
         return CellResult(submission, verifier, solver_workspace, verifier_workspace)
     if not patch_text.strip():
         submission = {**base_submission, "status": "invalid_output", "acut_exit_code": acut.returncode}

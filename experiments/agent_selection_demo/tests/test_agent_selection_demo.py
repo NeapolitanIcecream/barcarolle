@@ -48,7 +48,9 @@ def test_adapter_config_uses_candidate_model_and_proxy_proof() -> None:
     assert adapter.adapter_id == "kilo_claude_sonnet_4_6"
     assert adapter.model_or_agent_name == "claude-sonnet-4-6"
     assert "--model claude-sonnet-4-6" in adapter.command_template
+    assert "--timeout 123" in adapter.command_template
     assert "--completion-mode strict-final" in adapter.command_template
+    assert adapter.timeout_seconds == 153
     assert adapter.endpoint_proof_status == "llm_endpoint_proxy_secret_isolated"
 
 
@@ -135,6 +137,24 @@ def test_normalize_cost_row_backfills_missing_usage_and_billing_metadata() -> No
     assert billed["cost_observation_kind"] == "billed_cost"
     assert billed["usage_source"] == "provider_billing_export"
     assert billed["billed_cost_usd"] == 0.19
+
+
+def test_extract_usage_from_kilo_step_finish_events() -> None:
+    text = "\n".join(
+        [
+            '{"type":"step_finish","part":{"tokens":{"input":100,"output":20,"reasoning":5,"cache":{"read":30,"write":0}}}}',
+            '{"type":"step_finish","part":{"tokens":{"input":40,"output":10,"reasoning":0,"cache":{"read":60}}}}',
+        ]
+    )
+
+    usage = demo.extract_usage_from_text(text)
+
+    assert usage == {
+        "input_tokens": 230,
+        "cached_input_tokens": 90,
+        "output_tokens": 35,
+        "usage_source_schema": "kilo_step_finish_tokens",
+    }
 
 
 def test_failure_category_maps_policy_and_empty_diff() -> None:
