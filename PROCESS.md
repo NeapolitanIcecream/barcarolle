@@ -111,6 +111,17 @@ Completed predictive-validity completion pass:
 
 - `docs/research/agent-selection-demo-predictive-validity-completion-runbook-2026-06-13.md`
 
+Current demo-evidence runbook:
+
+- `docs/research/agent-selection-demo-random-baseline-evidence-runbook-2026-06-14.md`
+
+Use this runbook when the goal is the simpler demo claim: a target-repo
+predictive Agent evaluation facility whose main quantitative warrant is MAE
+substantially better than same-budget random sampling, plus an Agent-selection
+matrix over real Agents. This runbook doubles Agent-side timeout policy from
+900s to 1800s and treats Kilo timeout under the new policy as a reliability
+gate, not as the whole demo blocker.
+
 Predictive-validity demo artifacts:
 
 - `experiments/agent_selection_demo/reports/predictive_validity_state_audit_zh.md`
