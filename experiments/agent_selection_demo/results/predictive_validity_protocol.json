@@ -1,0 +1,119 @@
+{
+  "schema_version": "barcarolle.agent_selection_demo.predictive_validity_protocol.v1",
+  "generated_at": "2026-06-13",
+  "status": "frozen_before_analysis",
+  "agent_unit": {
+    "definition": "complete Agent = model + harness + prompt/tools/runtime policy",
+    "pooling_policy": "Agent/adapters are reported as complete configurations; adapter instability is not pooled away as model-only behavior."
+  },
+  "primary_estimand": {
+    "name": "future_target_repo_verified_pass_rate_prediction_accuracy",
+    "definition": "How accurately a benchmark selection frozen at origin T predicts a complete Agent's later verified pass rate on the same target repository.",
+    "slice_unit": [
+      "repo",
+      "origin_or_window",
+      "agent"
+    ],
+    "future_outcome": "verified pass rate on post-origin or held-out target-repo tasks",
+    "selection_outcome": "verified pass rate on selected benchmark tasks available at origin T"
+  },
+  "metrics": {
+    "primary": {
+      "metric_id": "pass_rate_mae",
+      "formula": "mean(abs(selection_pass_rate - future_pass_rate)) over scoreable preregistered slices",
+      "missing_cell_policy": "Include a slice only when both selection and future sides have at least one scoreable cell; report non-scoreable counts separately."
+    },
+    "secondary": [
+      {
+        "metric_id": "signed_error",
+        "formula": "selection_pass_rate - future_pass_rate"
+      },
+      {
+        "metric_id": "rmse",
+        "formula": "sqrt(mean(square(selection_pass_rate - future_pass_rate)))"
+      },
+      {
+        "metric_id": "rank_agreement",
+        "formula": "selection ranking agrees with future ranking when at least two Agents are scoreable in the same repo/window"
+      },
+      {
+        "metric_id": "recommendation_regret",
+        "formula": "future_best_pass_rate - future_pass_rate_of_selection_recommended_agent"
+      },
+      {
+        "metric_id": "catastrophic_miss_rate",
+        "threshold": 0.15,
+        "formula": "share of slices where abs(selection_pass_rate - future_pass_rate) > 0.15"
+      }
+    ]
+  },
+  "baselines": {
+    "simple": [
+      "temporal_recent_baseline",
+      "seeded_random_same_budget",
+      "repo_unweighted_same_budget",
+      "repo_stratified_by_target_profile"
+    ],
+    "envelope": "best_simple_baseline_envelope",
+    "candidate_selectors": [
+      "coverage_constrained_unweighted",
+      "block_randomized_stratified",
+      "block_plus_shrinkage_weighted"
+    ],
+    "diagnostic_only": [
+      "completed_blocked_split_supplement"
+    ],
+    "minimum_reporting": [
+      "compare every candidate against simple baselines",
+      "report uncertainty or seed distribution where available",
+      "report Agent-stratified results",
+      "do not promote diagnostic-only designs"
+    ]
+  },
+  "directional_traction_rule": {
+    "label": "directional_retrospective_traction",
+    "required_conditions": [
+      "best promotable Barcarolle candidate has lower pass-rate MAE than the best simple baseline envelope",
+      "at least 12 scoreable repo/window/Agent slices",
+      "comparison uses frozen protocol and committed sanitized outcomes",
+      "diagnostic-only candidate is not treated as promotable",
+      "claim remains retrospective or underpowered unless future-preregistered gates pass"
+    ]
+  },
+  "no_signal_rule": {
+    "labels": [
+      "candidate_worse_than_or_tied_with_simple_baseline",
+      "underpowered",
+      "blocked_by_scoreability_policy_or_adapter_infrastructure"
+    ],
+    "conditions": [
+      "candidate MAE >= best simple baseline MAE",
+      "fewer than 12 scoreable slices",
+      "policy violation, non-scoreable rate, or timeout blocker prevents interpretation",
+      "only post-hoc diagnostic candidate beats baselines"
+    ]
+  },
+  "future_predictive_validity_claim_gate": {
+    "required": [
+      "true future holdout or strict preregistered rolling-origin design",
+      "repos, origins, task IDs, Agent configs, selectors, baselines, seeds, invalid-cell policy, score joins, and success thresholds frozen before outcome join",
+      "simple-baseline envelope beaten on primary MAE",
+      "rank agreement and recommendation regret do not contradict the primary result",
+      "scoreability, policy, endpoint, artifact-hygiene, and cost-accounting gates pass",
+      "uncertainty or seed distribution reported"
+    ],
+    "current_demo_predictive_validity_established": false
+  },
+  "frozen_commands": {
+    "feasibility": "PYTHONPATH=experiments/agent_selection_demo/tools:experiments/phase1_compiler/tools uv run --project experiments/phase1_compiler python experiments/agent_selection_demo/tools/agent_selection_demo.py predictive-validity-feasibility --output experiments/agent_selection_demo/reports/predictive_validity_feasibility_zh.md",
+    "evaluation": "PYTHONPATH=experiments/agent_selection_demo/tools:experiments/phase1_compiler/tools uv run --project experiments/phase1_compiler python experiments/agent_selection_demo/tools/agent_selection_demo.py rolling-origin-eval --protocol experiments/agent_selection_demo/results/predictive_validity_protocol.json --window-inventory experiments/agent_selection_demo/results/predictive_validity_window_inventory.json --output experiments/agent_selection_demo/reports/rolling_origin_eval_zh.md"
+  },
+  "paid_call_boundary": {
+    "default": "no_paid_calls",
+    "max_new_paid_agent_cells_if_later_needed": 40,
+    "endpoint_required": [
+      "LLM_BASE_URL",
+      "LLM_API_KEY"
+    ]
+  }
+}
