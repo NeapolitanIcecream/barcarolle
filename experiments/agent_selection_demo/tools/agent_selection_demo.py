@@ -874,7 +874,29 @@ def summarize_stage(stage: str, rows: list[dict[str, Any]], expected_cells: int)
     }
 
 
-def run_stage(config: dict[str, Any], stage: str, agent_ids: list[str] | None = None, rerun: bool = False) -> dict[str, Any]:
+def selected_agent_ids_for_stage(config: dict[str, Any], stage: str, agent_ids: list[str] | None = None) -> list[str]:
+    if agent_ids:
+        return agent_ids
+    if stage == TOP2_REPEAT_STAGE:
+        configured = {candidate["agent_id"] for candidate in config["agent_candidates"]}
+        missing = [agent_id for agent_id in TOP2_REPEAT_AGENT_IDS if agent_id not in configured]
+        if missing:
+            raise RuntimeError(f"top-2 repeat candidates missing from config: {', '.join(missing)}")
+        return list(TOP2_REPEAT_AGENT_IDS)
+    return [candidate["agent_id"] for candidate in config["agent_candidates"]]
+
+
+def should_stop_after_cell(status: str | None, stop_on_unscoreable: bool) -> bool:
+    return bool(stop_on_unscoreable and status not in SCOREABLE_STATUSES)
+
+
+def run_stage(
+    config: dict[str, Any],
+    stage: str,
+    agent_ids: list[str] | None = None,
+    rerun: bool = False,
+    stop_on_unscoreable: bool = False,
+) -> dict[str, Any]:
     missing_env = [name for name in ["LLM_BASE_URL", "LLM_API_KEY"] if not os.environ.get(name)]
     if missing_env:
         raise RuntimeError(f"missing endpoint env: {', '.join(missing_env)}")
@@ -882,7 +904,7 @@ def run_stage(config: dict[str, Any], stage: str, agent_ids: list[str] | None = 
     packages = package_map(config)
     task_ids = stage_task_ids(split, stage)
     candidates = candidate_by_id(config)
-    selected_agents = agent_ids or [candidate["agent_id"] for candidate in config["agent_candidates"]]
+    selected_agents = selected_agent_ids_for_stage(config, stage, agent_ids)
     paths = stage_paths(stage)
     submissions = [] if rerun else read_jsonl(paths["submissions"])
     verifiers = [] if rerun else read_jsonl(paths["verifiers"])
@@ -934,6 +956,8 @@ def run_stage(config: dict[str, Any], stage: str, agent_ids: list[str] | None = 
             cost_rows = workspace.merge_rows_by_run_id(cost_rows, [cost_row])
             seen.add(run_id)
             metrics = persist_stage_outputs(stage, submissions, verifiers, cost_rows, expected)
+            if should_stop_after_cell(result.verifier.get("status"), stop_on_unscoreable):
+                return metrics
     return metrics
 
 
@@ -1798,6 +1822,7 @@ def main() -> int:
         run_parser = subcommands.add_parser(name)
         run_parser.add_argument("--agent", action="append", default=None)
         run_parser.add_argument("--rerun", action="store_true")
+        run_parser.add_argument("--stop-on-unscoreable", action="store_true")
     recover_parser = subcommands.add_parser("recover-stage")
     recover_parser.add_argument("stage", choices=["smoke", "selection", "holdout", TOP2_REPEAT_STAGE])
     recover_parser.add_argument("--agent", action="append", default=None)
@@ -1811,7 +1836,13 @@ def main() -> int:
         payload = gate(config, replay_sample_count=args.replay_sample_count)
         return 0 if payload["status"] == "ready" else 2
     if args.command in {"smoke", "selection", "holdout", TOP2_REPEAT_STAGE}:
-        metrics = run_stage(config, args.command, agent_ids=args.agent, rerun=args.rerun)
+        metrics = run_stage(
+            config,
+            args.command,
+            agent_ids=args.agent,
+            rerun=args.rerun,
+            stop_on_unscoreable=args.stop_on_unscoreable,
+        )
         min_rate = (
             float(config["run_policy"]["smoke_scoreable_cell_rate_min"])
             if args.command == "smoke"

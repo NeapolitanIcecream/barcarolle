@@ -1,10 +1,10 @@
 # Agent Selection Demo Top2_Repeat Run
 
 - Scheduled cells: `20`.
-- Completed cells: `12`.
+- Completed cells: `13`.
 - Scoreable-cell rate: `0.5`.
 - Verified solve rate: `0.35`.
-- Estimated cost: `$3.9595105`.
+- Estimated cost: `$4.4595105`.
 
 | Agent | Solve rate | Scoreable rate | Cost/solved | Median latency |
 | --- | ---: | ---: | ---: | ---: |

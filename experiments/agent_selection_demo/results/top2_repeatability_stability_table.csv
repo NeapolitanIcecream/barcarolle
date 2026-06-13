@@ -1,7 +1,7 @@
 task_id,source,task_time,module,codex_original,codex_repeat,codex_changed,kilo_original,kilo_repeat,kilo_changed,relationship_original,relationship_repeat,codex_repeat_status,kilo_repeat_status
 boltons__clean_ext__017,clean_outcome_unseen,2022-12-07T18:22:36-08:00,timeutils.py,P,P,False,P,I,,P/P,P/I,verified_pass,acut_harness_error
 boltons__hist__019,canonical_history,2022-12-08T03:45:47-06:00,ioutils.py,F,P,True,F,I,,F/F,P/I,verified_pass,acut_harness_error
-boltons__hist__020,canonical_history,2022-12-08T15:51:37+06:00,timeutils.py,P,P,False,P,M,,P/P,P/M,verified_pass,not_run
+boltons__hist__020,canonical_history,2022-12-08T15:51:37+06:00,timeutils.py,P,P,False,P,I,,P/P,P/I,verified_pass,acut_harness_error
 boltons__hist__022,canonical_history,2023-02-20T07:22:09+01:00,"iterutils.py, iterutils.rst",F,F,False,P,M,,F/P,F/M,verified_fail,not_run
 boltons__hist__023,canonical_history,2023-04-02T15:11:27-04:00,tbutils.py,F,F,False,P,M,,F/P,F/M,verified_fail,not_run
 boltons__hist__024,canonical_history,2023-04-20T18:29:33-07:00,dictutils.py,P,P,False,P,M,,P/P,P/M,verified_pass,not_run

@@ -210,6 +210,32 @@ def test_top2_repeat_stage_uses_frozen_holdout_tasks() -> None:
     assert demo.stage_task_ids(split, demo.TOP2_REPEAT_STAGE) == ["holdout_1", "holdout_2"]
 
 
+def test_top2_repeat_default_agents_are_frozen_pair() -> None:
+    config = {
+        "agent_candidates": [
+            {"agent_id": "codex_gpt_5_4"},
+            {"agent_id": "kilo_gpt_5_4"},
+            {"agent_id": "kilo_gpt_5_4_mini"},
+            {"agent_id": "kilo_claude_sonnet_4_6"},
+        ]
+    }
+
+    assert demo.selected_agent_ids_for_stage(config, demo.TOP2_REPEAT_STAGE) == demo.TOP2_REPEAT_AGENT_IDS
+    assert demo.selected_agent_ids_for_stage(config, "selection") == [
+        "codex_gpt_5_4",
+        "kilo_gpt_5_4",
+        "kilo_gpt_5_4_mini",
+        "kilo_claude_sonnet_4_6",
+    ]
+    assert demo.selected_agent_ids_for_stage(config, demo.TOP2_REPEAT_STAGE, ["kilo_gpt_5_4"]) == ["kilo_gpt_5_4"]
+
+
+def test_stop_on_unscoreable_guard_only_stops_for_infra_status() -> None:
+    assert demo.should_stop_after_cell("acut_harness_error", stop_on_unscoreable=True) is True
+    assert demo.should_stop_after_cell("verified_fail", stop_on_unscoreable=True) is False
+    assert demo.should_stop_after_cell("acut_harness_error", stop_on_unscoreable=False) is False
+
+
 def test_recommend_skips_cost_when_usage_coverage_is_inconclusive(tmp_path: Path, monkeypatch) -> None:
     monkeypatch.setattr(demo, "RESULTS_REL", tmp_path / "results")
     monkeypatch.setattr(demo, "REPORTS_REL", tmp_path / "reports")
