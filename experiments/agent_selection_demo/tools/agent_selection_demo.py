@@ -15,6 +15,7 @@ import tempfile
 import time
 import urllib.parse
 import urllib.request
+from collections import Counter
 from dataclasses import replace
 from datetime import datetime, timezone
 from pathlib import Path
@@ -1684,6 +1685,221 @@ def top2_repeatability_report(config: dict[str, Any]) -> dict[str, Any]:
     return payload
 
 
+def feedback_score_rows(stages: list[str] | None = None) -> list[dict[str, str]]:
+    rows: list[dict[str, str]] = []
+    for stage in stages or ["smoke", "selection", "holdout", TOP2_REPEAT_STAGE]:
+        for row in read_csv_rows(stage_paths(stage)["score"]):
+            rows.append({**row, "stage": row.get("stage") or stage})
+    return rows
+
+
+def float_value(value: Any) -> float | None:
+    if value in {None, ""}:
+        return None
+    try:
+        return float(value)
+    except (TypeError, ValueError):
+        return None
+
+
+def build_tuning_feedback_summary(stages: list[str] | None = None) -> dict[str, Any]:
+    rows = feedback_score_rows(stages)
+    by_agent: dict[str, list[dict[str, str]]] = {}
+    for row in rows:
+        by_agent.setdefault(str(row.get("agent_id") or ""), []).append(row)
+
+    agent_rows: list[dict[str, Any]] = []
+    for agent_id, agent_score_rows in sorted(by_agent.items()):
+        failure_counts = Counter(str(row.get("failure_category") or "unknown") for row in agent_score_rows)
+        failure_counts.pop("verified pass", None)
+        scoreable_count = sum(1 for row in agent_score_rows if csv_bool(row.get("scoreable_cell")))
+        pass_count = sum(1 for row in agent_score_rows if csv_bool(row.get("verified_pass")))
+        usage_count = sum(1 for row in agent_score_rows if csv_bool(row.get("usage_observed")))
+        latencies = [value for value in (float_value(row.get("latency_seconds")) for row in agent_score_rows) if value is not None]
+        examples = [
+            {
+                "stage": row.get("stage", ""),
+                "task_id": row.get("task_id", ""),
+                "failure_category": row.get("failure_category", ""),
+                "terminal_status": row.get("terminal_status", ""),
+            }
+            for row in agent_score_rows
+            if row.get("failure_category") != "verified pass"
+        ][:5]
+        cost_kinds = Counter(str(row.get("cost_observation_kind") or "unknown") for row in agent_score_rows)
+        agent_rows.append(
+            {
+                "agent_id": agent_id,
+                "reviewer_name": agent_score_rows[0].get("reviewer_name") or agent_id,
+                "harness": agent_score_rows[0].get("harness") or "",
+                "model": agent_score_rows[0].get("model") or "",
+                "completed_cells": len(agent_score_rows),
+                "scoreable_cells": scoreable_count,
+                "verified_pass_count": pass_count,
+                "failure_counts": dict(sorted(failure_counts.items())),
+                "infra_or_unscoreable_count": len(agent_score_rows) - scoreable_count,
+                "usage_observed_count": usage_count,
+                "usage_observed_rate": None if not agent_score_rows else round(usage_count / len(agent_score_rows), 4),
+                "median_latency_seconds": None if not latencies else round(statistics.median(latencies), 3),
+                "cost_observation_kinds": dict(sorted(cost_kinds.items())),
+                "examples": examples,
+            }
+        )
+
+    shared_failures: list[dict[str, Any]] = []
+    grouped: dict[tuple[str, str], list[dict[str, str]]] = {}
+    for row in rows:
+        grouped.setdefault((str(row.get("stage") or ""), str(row.get("task_id") or "")), []).append(row)
+    for (stage, task_id), task_rows in sorted(grouped.items()):
+        failures = [row for row in task_rows if row.get("failure_category") not in {"verified pass", ""}]
+        if len(failures) < 2:
+            continue
+        shared_failures.append(
+            {
+                "stage": stage,
+                "task_id": task_id,
+                "failing_agents": len(failures),
+                "failure_categories": dict(sorted(Counter(row.get("failure_category") or "unknown" for row in failures).items())),
+            }
+        )
+
+    repeatability = read_json(result_path("top2_repeatability_check.json")) if result_path("top2_repeatability_check.json").exists() else {}
+    unstable_tasks = [
+        {
+            "task_id": row.get("task_id"),
+            "codex": f"{row.get('codex_original')}->{row.get('codex_repeat')}",
+            "kilo": f"{row.get('kilo_original')}->{row.get('kilo_repeat')}",
+            "relationship_repeat": row.get("relationship_repeat"),
+        }
+        for row in repeatability.get("stability_rows", [])
+        if row.get("codex_changed") is True or row.get("kilo_changed") is True
+    ]
+    infra_blockers = [
+        {
+            "agent_id": row.get("agent_id"),
+            "task_id": row.get("task_id"),
+            "terminal_status": row.get("terminal_status"),
+            "failure_category": row.get("failure_category"),
+            "latency_seconds": row.get("latency_seconds"),
+        }
+        for row in repeatability.get("infrastructure_or_policy_rows", [])
+    ]
+
+    return {
+        "schema_version": "barcarolle.agent_selection_demo.tuning_feedback_summary.v1",
+        "generated_at": iso_now(),
+        "source_stages": stages or ["smoke", "selection", "holdout", TOP2_REPEAT_STAGE],
+        "agent_rows": agent_rows,
+        "shared_failures": shared_failures[:10],
+        "unstable_tasks": unstable_tasks[:10],
+        "infra_blockers": infra_blockers,
+        "repeat_interpretation": repeatability.get("interpretation"),
+    }
+
+
+def render_tuning_feedback_summary(payload: dict[str, Any]) -> str:
+    agent_table = [
+        {
+            "Agent": row["reviewer_name"],
+            "Cells": row["completed_cells"],
+            "Scoreable": row["scoreable_cells"],
+            "Pass": row["verified_pass_count"],
+            "Infra": row["infra_or_unscoreable_count"],
+            "Usage": row["usage_observed_rate"],
+            "Failures": ", ".join(f"{key}: {value}" for key, value in row["failure_counts"].items()) or "none",
+        }
+        for row in payload["agent_rows"]
+    ]
+    example_rows = []
+    for row in payload["agent_rows"]:
+        for example in row["examples"][:3]:
+            example_rows.append(
+                {
+                    "Agent": row["reviewer_name"],
+                    "Stage": example["stage"],
+                    "Task": example["task_id"],
+                    "Failure": example["failure_category"],
+                    "Status": example["terminal_status"],
+                }
+            )
+    shared_rows = [
+        {
+            "Stage": row["stage"],
+            "Task": row["task_id"],
+            "Agents": row["failing_agents"],
+            "Categories": ", ".join(f"{key}: {value}" for key, value in row["failure_categories"].items()),
+        }
+        for row in payload["shared_failures"][:8]
+    ]
+    unstable_rows = [
+        {"Task": row["task_id"], "Codex": row["codex"], "Kilo": row["kilo"], "Repeat": row["relationship_repeat"]}
+        for row in payload["unstable_tasks"][:8]
+    ]
+    infra_rows = [
+        {
+            "Agent": row["agent_id"],
+            "Task": row["task_id"],
+            "Status": row["terminal_status"],
+            "Failure": row["failure_category"],
+            "Latency": row["latency_seconds"],
+        }
+        for row in payload["infra_blockers"][:8]
+    ]
+    lines = [
+        "# Agent Tuning Feedback Summary",
+        "",
+        f"生成日期：{payload['generated_at']}",
+        "",
+        "本报告由 CLI 从 committed sanitized results 生成，不读取 raw prompts、raw completions、transcripts、solver workspaces 或 verifier workspaces。",
+        "",
+        "生成命令：",
+        "",
+        "```text",
+        "PYTHONPATH=experiments/agent_selection_demo/tools:experiments/phase1_compiler/tools uv run --project experiments/phase1_compiler python experiments/agent_selection_demo/tools/agent_selection_demo.py tuning-feedback-summary --output experiments/agent_selection_demo/reports/agent_tuning_feedback_summary_zh.md",
+        "```",
+        "",
+        "## Boundary",
+        "",
+        "这是 feedback input，不是 tuning result。它不声称任何 Agent 已经经过 tuning，也不声称任何配置修改已经提升效果。",
+        "",
+        "## Per-Agent Failure Taxonomy",
+        "",
+        *markdown_table(agent_table, [("Agent", "Agent"), ("Cells", "Cells"), ("Scoreable", "Scoreable"), ("Pass", "Pass"), ("Infra", "Infra"), ("Usage", "Usage"), ("Failures", "Failures")]),
+        "",
+        "## Example Follow-Up Tasks",
+        "",
+        *markdown_table(example_rows[:12], [("Agent", "Agent"), ("Stage", "Stage"), ("Task", "Task"), ("Failure", "Failure"), ("Status", "Status")]),
+        "",
+        "## Shared Failure Tasks",
+        "",
+        *markdown_table(shared_rows, [("Stage", "Stage"), ("Task", "Task"), ("Failing agents", "Agents"), ("Categories", "Categories")]),
+        "",
+        "## Unstable Repeat Tasks",
+        "",
+        *markdown_table(unstable_rows, [("Task", "Task"), ("Codex", "Codex"), ("Kilo", "Kilo"), ("Repeat relation", "Repeat")]),
+        "",
+        "## Infrastructure Blockers",
+        "",
+        *markdown_table(infra_rows, [("Agent", "Agent"), ("Task", "Task"), ("Status", "Status"), ("Failure", "Failure"), ("Latency", "Latency")]),
+        "",
+        "## Cost And Usage Coverage",
+        "",
+        "Usage coverage is included per Agent above. Cost comparisons remain feedback-only when usage coverage differs by harness or when rows use conservative missing-usage estimates.",
+        "",
+        "Recommended tuning backlog interpretation: first fix infrastructure and usage observability blockers; then use stable verifier-backed hidden failures as exemplars for prompt/tool/config changes. Do not use this report as proof that a learned selector or tuned Agent is valid.",
+        "",
+    ]
+    return "\n".join(lines)
+
+
+def tuning_feedback_summary(output: Path | None = None) -> dict[str, Any]:
+    payload = build_tuning_feedback_summary()
+    output_path = output or report_path("agent_tuning_feedback_summary_zh.md")
+    write_text(output_path, render_tuning_feedback_summary(payload))
+    write_json(result_path("agent_tuning_feedback_summary.json"), payload)
+    return payload
+
+
 def final_report(config: dict[str, Any]) -> dict[str, Any]:
     gate_payload = read_json(result_path("repository_gate.json"))
     split = read_json(result_path("frozen_split.json"))
@@ -1830,6 +2046,8 @@ def main() -> int:
     subcommands.add_parser("report")
     subcommands.add_parser("top2-repeat-report")
     subcommands.add_parser("refresh-sanitized-stage-metadata")
+    feedback_parser = subcommands.add_parser("tuning-feedback-summary")
+    feedback_parser.add_argument("--output", default=str(report_path("agent_tuning_feedback_summary_zh.md")))
     args = parser.parse_args()
     config = load_config(repo_path(args.config))
     if args.command == "gate":
@@ -1870,6 +2088,9 @@ def main() -> int:
             metrics_path = paths["metrics"]
             expected = read_json(metrics_path).get("scheduled_cells", 0) if metrics_path.exists() else len(read_jsonl(paths["submissions"]))
             persist_stage_outputs(stage, read_jsonl(paths["submissions"]), read_jsonl(paths["verifiers"]), read_jsonl(paths["cost"]), int(expected))
+        return 0
+    if args.command == "tuning-feedback-summary":
+        tuning_feedback_summary(repo_path(args.output))
         return 0
     raise ValueError(args.command)
 

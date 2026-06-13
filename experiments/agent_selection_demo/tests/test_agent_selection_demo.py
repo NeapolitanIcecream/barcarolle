@@ -269,3 +269,87 @@ def test_recommend_skips_cost_when_usage_coverage_is_inconclusive(tmp_path: Path
     assert payload["primary_quality_recommendation"]["agent_id"] == "kilo"
     assert payload["production_value_status"] == "cost_inconclusive_fallback_to_primary_quality"
     assert payload["recommended_agent_id_for_holdout"] == "kilo"
+
+
+def test_tuning_feedback_summary_aggregates_sanitized_rows(tmp_path: Path, monkeypatch) -> None:
+    monkeypatch.setattr(demo, "RESULTS_REL", tmp_path / "results")
+    monkeypatch.setattr(demo, "REPORTS_REL", tmp_path / "reports")
+    rows = [
+        {
+            "stage": "selection",
+            "agent_id": "codex",
+            "reviewer_name": "Codex",
+            "harness": "codex",
+            "model": "gpt-5.4",
+            "task_id": "task_shared",
+            "terminal_status": "verified_fail",
+            "scoreable_cell": True,
+            "verified_pass": False,
+            "failure_category": "hidden verifier failure",
+            "latency_seconds": 12.0,
+            "estimated_cost_usd": 0.2,
+            "usage_observed": True,
+            "cost_observation_kind": "observed_tokens_estimated_cost",
+            "usage_source": "adapter_output_usage_json",
+            "billed_cost_usd": None,
+            "patch_sha256": "abc",
+        },
+        {
+            "stage": "selection",
+            "agent_id": "kilo",
+            "reviewer_name": "Kilo",
+            "harness": "kilo",
+            "model": "gpt-5.4",
+            "task_id": "task_shared",
+            "terminal_status": "acut_harness_error",
+            "scoreable_cell": False,
+            "verified_pass": False,
+            "failure_category": "exceeded budget or timeout",
+            "latency_seconds": 900.0,
+            "estimated_cost_usd": 0.5,
+            "usage_observed": False,
+            "cost_observation_kind": "missing_usage_conservative_estimate",
+            "usage_source": "missing_adapter_usage",
+            "billed_cost_usd": None,
+            "patch_sha256": "def",
+        },
+    ]
+    demo.write_csv(demo.stage_paths("selection")["score"], rows, demo.STAGE_SCORE_FIELDNAMES)
+    demo.write_json(
+        demo.result_path("top2_repeatability_check.json"),
+        {
+            "interpretation": "blocked_infrastructure",
+            "stability_rows": [
+                {
+                    "task_id": "task_unstable",
+                    "codex_original": "F",
+                    "codex_repeat": "P",
+                    "codex_changed": True,
+                    "kilo_original": "P",
+                    "kilo_repeat": "M",
+                    "kilo_changed": "",
+                    "relationship_repeat": "P/M",
+                }
+            ],
+            "infrastructure_or_policy_rows": [
+                {
+                    "agent_id": "kilo",
+                    "task_id": "task_shared",
+                    "terminal_status": "acut_harness_error",
+                    "failure_category": "exceeded budget or timeout",
+                    "latency_seconds": "900.0",
+                }
+            ],
+        },
+    )
+
+    payload = demo.build_tuning_feedback_summary(["selection"])
+    rendered = demo.render_tuning_feedback_summary(payload)
+
+    kilo = next(row for row in payload["agent_rows"] if row["agent_id"] == "kilo")
+    assert kilo["infra_or_unscoreable_count"] == 1
+    assert kilo["usage_observed_rate"] == 0.0
+    assert payload["shared_failures"][0]["task_id"] == "task_shared"
+    assert payload["unstable_tasks"][0]["task_id"] == "task_unstable"
+    assert "不声称任何 Agent 已经经过 tuning" in rendered
+    assert "raw prompts" in rendered
