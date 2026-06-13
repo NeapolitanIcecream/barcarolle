@@ -724,12 +724,23 @@ def percentile(values: list[float], p: float) -> float | None:
     return values[max(0, min(index, len(values) - 1))]
 
 
+def cost_observation_kind(observed_count: int, total_count: int) -> str:
+    if total_count == 0:
+        return "none"
+    if observed_count == total_count:
+        return "observed_token_estimate"
+    if observed_count == 0:
+        return "conservative_per_cell_estimate"
+    return "mixed_observed_and_estimated"
+
+
 def summarize_stage(stage: str, rows: list[dict[str, Any]], expected_cells: int) -> dict[str, Any]:
     by_agent: dict[str, dict[str, Any]] = {}
     for agent_id in sorted({str(row["agent_id"]) for row in rows}):
         agent_rows = [row for row in rows if row["agent_id"] == agent_id]
         scoreable = [row for row in agent_rows if row["scoreable_cell"] is True]
         pass_count = sum(1 for row in agent_rows if row["verified_pass"] is True)
+        usage_observed_count = sum(1 for row in agent_rows if row.get("usage_observed") is True)
         costs = [float(row["estimated_cost_usd"] or 0.0) for row in agent_rows]
         latencies = [float(row["latency_seconds"] or 0.0) for row in agent_rows if row.get("latency_seconds") != ""]
         failure_counts = {
@@ -744,6 +755,9 @@ def summarize_stage(stage: str, rows: list[dict[str, Any]], expected_cells: int)
             "completed_cells": len(agent_rows),
             "scoreable_cells": len(scoreable),
             "scoreable_cell_rate": None if not agent_rows else round(len(scoreable) / len(agent_rows), 4),
+            "usage_observed_count": usage_observed_count,
+            "usage_observed_rate": None if not agent_rows else round(usage_observed_count / len(agent_rows), 4),
+            "cost_observation_kind": cost_observation_kind(usage_observed_count, len(agent_rows)),
             "verified_pass_count": pass_count,
             "verified_solve_rate": None if not agent_rows else round(pass_count / len(agent_rows), 4),
             "cost_per_task_usd": None if not agent_rows else round(sum(costs) / len(agent_rows), 8),
@@ -771,6 +785,7 @@ def summarize_stage(stage: str, rows: list[dict[str, Any]], expected_cells: int)
             for category in sorted({str(row["failure_category"]) for row in rows})
         },
         "usage_observed_count": sum(1 for row in rows if row.get("usage_observed") is True),
+        "usage_observed_rate": None if expected_cells == 0 else round(sum(1 for row in rows if row.get("usage_observed") is True) / expected_cells, 4),
         "estimated_cost_usd": round(sum(float(row["estimated_cost_usd"] or 0.0) for row in rows), 8),
     }
 
@@ -1109,17 +1124,43 @@ def policy_failure_count(row: dict[str, Any]) -> int:
     return sum(count for category, count in row.get("failure_counts", {}).items() if category != "verified pass" and category not in {"hidden verifier failure"})
 
 
+def cost_usage_observed_threshold(config: dict[str, Any]) -> float:
+    return float(config.get("run_policy", {}).get("cost_usage_observed_rate_min", 0.95))
+
+
+def cost_comparison_summary(agent_metrics: dict[str, dict[str, Any]], threshold: float) -> dict[str, Any]:
+    observed_rates = {
+        agent_id: row.get("usage_observed_rate")
+        for agent_id, row in sorted(agent_metrics.items())
+    }
+    comparable = bool(agent_metrics) and all((row.get("usage_observed_rate") or 0.0) >= threshold for row in agent_metrics.values())
+    return {
+        "status": "observed_cost_comparable" if comparable else "cost_inconclusive_usage_coverage",
+        "usage_observed_rate_min": threshold,
+        "agent_usage_observed_rates": observed_rates,
+    }
+
+
 def recommend(config: dict[str, Any]) -> dict[str, Any]:
     metrics = read_json(stage_paths("selection")["metrics"])
     agent_metrics = metrics["agent_metrics"]
     if not agent_metrics:
         raise RuntimeError("selection metrics are empty")
+    cost_comparison = cost_comparison_summary(agent_metrics, cost_usage_observed_threshold(config))
+    use_cost = cost_comparison["status"] == "observed_cost_comparable"
+
+    def cost_sort_value(row: dict[str, Any]) -> float:
+        if not use_cost:
+            return 0.0
+        value = row.get("cost_per_solved_task_usd")
+        return value if value is not None else float("inf")
+
     ranked = sorted(
         agent_metrics.items(),
         key=lambda item: (
             -(item[1].get("verified_solve_rate") or 0.0),
             policy_failure_count(item[1]),
-            item[1].get("cost_per_solved_task_usd") if item[1].get("cost_per_solved_task_usd") is not None else float("inf"),
+            cost_sort_value(item[1]),
             item[1].get("median_latency_seconds") if item[1].get("median_latency_seconds") is not None else float("inf"),
             item[0],
         ),
@@ -1130,22 +1171,35 @@ def recommend(config: dict[str, Any]) -> dict[str, Any]:
         for agent_id, row in ranked
         if top_rate - (row.get("verified_solve_rate") or 0.0) <= 0.05
     ]
-    production = sorted(
-        within,
-        key=lambda item: (
-            item[1].get("cost_per_solved_task_usd") if item[1].get("cost_per_solved_task_usd") is not None else float("inf"),
-            item[1].get("median_latency_seconds") if item[1].get("median_latency_seconds") is not None else float("inf"),
-            item[0],
-        ),
-    )[0]
+    if use_cost:
+        production = sorted(
+            within,
+            key=lambda item: (
+                item[1].get("cost_per_solved_task_usd") if item[1].get("cost_per_solved_task_usd") is not None else float("inf"),
+                item[1].get("median_latency_seconds") if item[1].get("median_latency_seconds") is not None else float("inf"),
+                item[0],
+            ),
+        )[0]
+        production_status = "cost_comparable"
+    else:
+        production = ranked[0]
+        production_status = "cost_inconclusive_fallback_to_primary_quality"
     payload = {
         "schema_version": "barcarolle.agent_selection_demo.recommendation_lock.v1",
         "generated_at": iso_now(),
         "status": "locked",
         "rule": {
-            "primary_quality": "highest verified solve rate; ties by fewer policy/replay failures, lower cost per solved task, lower median latency",
-            "production_value": "cheapest agent within five percentage points of the top verified solve rate; otherwise top quality agent",
+            "primary_quality": (
+                "highest verified solve rate; ties by fewer policy/replay failures, "
+                + ("lower cost per solved task, " if use_cost else "cost skipped when usage coverage is inconclusive, ")
+                + "lower median latency"
+            ),
+            "production_value": (
+                "cheapest agent within five percentage points of the top verified solve rate when cost usage coverage is comparable; "
+                "otherwise cost-inconclusive fallback to primary quality"
+            ),
         },
+        "cost_comparison": cost_comparison,
         "primary_quality_recommendation": {
             "agent_id": ranked[0][0],
             **ranked[0][1],
@@ -1154,6 +1208,7 @@ def recommend(config: dict[str, Any]) -> dict[str, Any]:
             "agent_id": production[0],
             **production[1],
         },
+        "production_value_status": production_status,
         "selection_rank": [{"agent_id": agent_id, **row} for agent_id, row in ranked],
         "recommended_agent_id_for_holdout": production[0],
         "nearest_competitor_agent_id": ranked[1][0] if len(ranked) > 1 else None,
@@ -1164,11 +1219,13 @@ def recommend(config: dict[str, Any]) -> dict[str, Any]:
 
 
 def write_recommendation_report(payload: dict[str, Any]) -> None:
+    production_status = payload.get("production_value_status", "cost_comparable")
     lines = [
         "# Agent Selection Demo Recommendation Lock",
         "",
         f"- Primary quality recommendation: `{payload['primary_quality_recommendation']['reviewer_name']}`.",
         f"- Production value recommendation: `{payload['production_value_recommendation']['reviewer_name']}`.",
+        f"- Production value status: `{production_status}`.",
         f"- Recommended Agent for holdout: `{payload['recommended_agent_id_for_holdout']}`.",
         f"- Nearest competitor: `{payload['nearest_competitor_agent_id']}`.",
         "",
@@ -1262,6 +1319,15 @@ def final_report(config: dict[str, Any]) -> dict[str, Any]:
         "total_estimated_cost_usd": round(smoke["estimated_cost_usd"] + selection["estimated_cost_usd"] + holdout["estimated_cost_usd"], 8),
         "usage_observed_count": smoke["usage_observed_count"] + selection["usage_observed_count"] + holdout["usage_observed_count"],
     }
+    production_value_status = lock.get("production_value_status", "cost_comparable")
+    production_value_sentence = (
+        f"生产价值视图推荐：`{lock['production_value_recommendation']['reviewer_name']}`。"
+        if production_value_status == "cost_comparable"
+        else (
+            "生产价值视图成本口径不足以给出单一成本赢家；"
+            f"本次按质量视图 fallback 为：`{lock['production_value_recommendation']['reviewer_name']}`。"
+        )
+    )
     closeout = {
         "actual_agent_matrix": matrix_rows,
         "target_repo": config["target_repo"]["repo_name"],
@@ -1271,6 +1337,7 @@ def final_report(config: dict[str, Any]) -> dict[str, Any]:
         "recommendation": lock["production_value_recommendation"],
         "holdout_verdict": holdout_check["holdout_verdict"],
         "cost_latency": cost_latency,
+        "production_value_status": production_value_status,
         "scoreable_rates": {
             "smoke": smoke["scoreable_cell_rate"],
             "selection": selection["scoreable_cell_rate"],
@@ -1301,7 +1368,7 @@ def final_report(config: dict[str, Any]) -> dict[str, Any]:
         "",
         "## 4. 推荐规则同时看质量、成本、延迟和失败类型",
         "",
-        f"质量视图推荐：`{lock['primary_quality_recommendation']['reviewer_name']}`。生产价值视图推荐：`{lock['production_value_recommendation']['reviewer_name']}`。",
+        f"质量视图推荐：`{lock['primary_quality_recommendation']['reviewer_name']}`。{production_value_sentence}",
         "",
         f"本报告锁定的推荐 Agent 是：`{lock['production_value_recommendation']['reviewer_name']}`。",
         "",

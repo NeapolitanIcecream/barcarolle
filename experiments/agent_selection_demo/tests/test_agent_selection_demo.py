@@ -64,6 +64,7 @@ def test_summarize_stage_computes_cost_latency_and_failures() -> None:
             "estimated_cost_usd": 0.2,
             "latency_seconds": 10.0,
             "failure_category": "verified pass",
+            "usage_observed": True,
         },
         {
             "agent_id": "a",
@@ -75,14 +76,18 @@ def test_summarize_stage_computes_cost_latency_and_failures() -> None:
             "estimated_cost_usd": 0.2,
             "latency_seconds": 20.0,
             "failure_category": "hidden verifier failure",
+            "usage_observed": False,
         },
     ]
 
     summary = demo.summarize_stage("selection", rows, expected_cells=2)
 
     assert summary["scoreable_cell_rate"] == 1.0
+    assert summary["usage_observed_rate"] == 0.5
     assert summary["verified_solve_rate"] == 0.5
     assert summary["agent_metrics"]["a"]["cost_per_solved_task_usd"] == 0.4
+    assert summary["agent_metrics"]["a"]["usage_observed_rate"] == 0.5
+    assert summary["agent_metrics"]["a"]["cost_observation_kind"] == "mixed_observed_and_estimated"
     assert summary["agent_metrics"]["a"]["median_latency_seconds"] == 15.0
     assert summary["failure_category_counts"]["hidden verifier failure"] == 1
 
@@ -128,3 +133,38 @@ def test_freeze_split_uses_unused_task_for_smoke(tmp_path: Path) -> None:
     assert len(split["selection_tasks"]) == 20
     assert len(split["holdout_tasks"]) == 10
     assert split["smoke_tasks"] == ["task_30"]
+
+
+def test_recommend_skips_cost_when_usage_coverage_is_inconclusive(tmp_path: Path, monkeypatch) -> None:
+    monkeypatch.setattr(demo, "RESULTS_REL", tmp_path / "results")
+    monkeypatch.setattr(demo, "REPORTS_REL", tmp_path / "reports")
+    demo.write_json(
+        demo.stage_paths("selection")["metrics"],
+        {
+            "agent_metrics": {
+                "codex": {
+                    "reviewer_name": "Codex",
+                    "verified_solve_rate": 0.75,
+                    "failure_counts": {"hidden verifier failure": 5, "verified pass": 15},
+                    "cost_per_solved_task_usd": 0.34,
+                    "median_latency_seconds": 100.0,
+                    "usage_observed_rate": 1.0,
+                },
+                "kilo": {
+                    "reviewer_name": "Kilo",
+                    "verified_solve_rate": 0.75,
+                    "failure_counts": {"hidden verifier failure": 5, "verified pass": 15},
+                    "cost_per_solved_task_usd": 0.67,
+                    "median_latency_seconds": 50.0,
+                    "usage_observed_rate": 0.0,
+                },
+            }
+        },
+    )
+
+    payload = demo.recommend({"run_policy": {"cost_usage_observed_rate_min": 0.95}})
+
+    assert payload["cost_comparison"]["status"] == "cost_inconclusive_usage_coverage"
+    assert payload["primary_quality_recommendation"]["agent_id"] == "kilo"
+    assert payload["production_value_status"] == "cost_inconclusive_fallback_to_primary_quality"
+    assert payload["recommended_agent_id_for_holdout"] == "kilo"
