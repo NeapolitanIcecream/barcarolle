@@ -1,0 +1,89 @@
+{
+  "schema_version": "barcarolle.agent_selection_demo.doubled_timeout_agent_reliability_gate.v1",
+  "generated_at": "2026-06-14",
+  "paid_calls_made": true,
+  "paid_cells_used": 1,
+  "paid_cell_cap_for_runbook": 42,
+  "preflight": {
+    "endpoint_env": "present",
+    "model_gate": {
+      "status": "ready",
+      "endpoint_host_hash": "9952174049b2",
+      "planned_models": [
+        "claude-sonnet-4-6",
+        "gpt-5.4",
+        "gpt-5.4-mini"
+      ],
+      "present_models": [
+        "claude-sonnet-4-6",
+        "gpt-5.4",
+        "gpt-5.4-mini"
+      ],
+      "missing_models": [],
+      "available_model_count": 70
+    },
+    "secret_isolation_gate": {
+      "status": "ready",
+      "real_endpoint_env_visible_to_agent_child": false,
+      "visible_secret_env_names": [],
+      "dummy_key_env_present": true
+    },
+    "repository_gate": {
+      "status": "ready",
+      "task_pool_size": 35,
+      "reference_replay_count": 3,
+      "reference_replay_passed": true,
+      "paid_agent_calls_made": false
+    },
+    "raw_paths_ignored": true,
+    "generated_kilo_command_contains_timeout_1800": true,
+    "generated_kilo_outer_timeout_seconds": 1860,
+    "adapter_test_command": "PYTHONPATH=experiments/phase0_headroom/tools uv run --project experiments/phase1_compiler pytest experiments/phase0_headroom/tools/test_cli_workspace_adapters.py experiments/phase0_headroom/tools/test_workspace_acut_run.py experiments/phase0_headroom/tools/test_workspace_usage_import.py -q",
+    "adapter_test_result": "39 passed in 4.47s"
+  },
+  "kilo_smoke_debug_cells": [
+    {
+      "run_id": "doubled_timeout_gate__kilo_gpt_5_4__boltons__hist__031__attempt1",
+      "stage": "doubled_timeout_reliability_gate",
+      "agent_id": "kilo_gpt_5_4",
+      "reviewer_name": "Kilo + GPT mainline",
+      "model": "gpt-5.4",
+      "task_id": "boltons__hist__031",
+      "adapter_timeout_seconds": 1800,
+      "outer_timeout_seconds": 1860,
+      "verifier_timeout_seconds": 360,
+      "status": "verified_pass",
+      "scoreable_cell": true,
+      "verified_pass": true,
+      "acut_exit_code": 0,
+      "adapter_timed_out": false,
+      "verifier_exit_code": 0,
+      "harness_error": null,
+      "latency_seconds": 46.861,
+      "estimated_cost_usd": 0.1560355,
+      "usage_observed": true,
+      "input_tokens": 179113,
+      "cached_input_tokens": 145792,
+      "output_tokens": 2419,
+      "patch_sha256": "d9d997f5a4c322c851dc110813cf6a0eddbf58eec5204ac2bbf28cc32d9b9f78",
+      "raw_artifacts": {
+        "patch": "results/raw/workspace_acut/agent_selection_demo_2026_06_14_doubled_timeout_gate/kilo_gpt_5_4/doubled_timeout_gate__kilo_gpt_5_4__boltons__hist__031__attempt1/submission.patch",
+        "stderr": "results/raw/workspace_acut/agent_selection_demo_2026_06_14_doubled_timeout_gate/kilo_gpt_5_4/doubled_timeout_gate__kilo_gpt_5_4__boltons__hist__031__attempt1/acut_stderr.txt",
+        "stdout": "results/raw/workspace_acut/agent_selection_demo_2026_06_14_doubled_timeout_gate/kilo_gpt_5_4/doubled_timeout_gate__kilo_gpt_5_4__boltons__hist__031__attempt1/acut_stdout.txt"
+      },
+      "wall_seconds": 47.993
+    }
+  ],
+  "result": {
+    "kilo_scoreable_under_doubled_timeout": true,
+    "kilo_reliability_gate_status": "passed",
+    "provider_or_adapter_timeout_observed": false,
+    "hidden_verifier_failure_observed": false,
+    "stop_reason": "first doubled-timeout Kilo smoke/debug cell was scoreable and verified_pass; no second smoke/debug cell was spent"
+  },
+  "claim_boundary": {
+    "this_is_not_model_quality_proof": true,
+    "this_does_not_rerank_agents": true,
+    "next_step": "Package 5 may run doubled-timeout top-2 repeat evidence within the remaining paid-cell cap."
+  }
+}

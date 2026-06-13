@@ -2,7 +2,7 @@
   "blockers": [],
   "dependency_probe_returncode": 0,
   "dependency_probe_stdout_tail": "pytest 8.4.2\n",
-  "generated_at": "2026-06-13T12:41:19+00:00",
+  "generated_at": "2026-06-13T16:28:29+00:00",
   "minimum_pool_size": 30,
   "model_gate": {
     "available_model_count": 70,
@@ -24,7 +24,7 @@
   "reference_replay_sample": [
     {
       "apply_error_tail": "",
-      "duration_seconds": 0.635,
+      "duration_seconds": 0.679,
       "hidden_oracle_injected": true,
       "inject_error": null,
       "reference_code_patch_applied": true,
@@ -34,7 +34,7 @@
     },
     {
       "apply_error_tail": "",
-      "duration_seconds": 0.62,
+      "duration_seconds": 0.556,
       "hidden_oracle_injected": true,
       "inject_error": null,
       "reference_code_patch_applied": true,
@@ -44,7 +44,7 @@
     },
     {
       "apply_error_tail": "",
-      "duration_seconds": 0.584,
+      "duration_seconds": 0.555,
       "hidden_oracle_injected": true,
       "inject_error": null,
       "reference_code_patch_applied": true,
@@ -61,7 +61,7 @@
     "visible_secret_env_names": []
   },
   "split": {
-    "generated_at": "2026-06-13T12:41:16+00:00",
+    "generated_at": "2026-06-13T16:28:26+00:00",
     "holdout_count": 10,
     "holdout_tasks": [
       "boltons__clean_ext__017",
