@@ -102,6 +102,7 @@ ranking.
 
 Canonical demo artifacts:
 
+- `experiments/agent_selection_demo/reports/final_agent_selection_demo_package_zh.md`
 - `experiments/agent_selection_demo/reports/target_repo_coding_agent_selection_demo_report_zh.md`
 - `experiments/agent_selection_demo/results/closeout_summary.json`
 - `experiments/agent_selection_demo/results/holdout_check.json`
@@ -112,6 +113,17 @@ Current follow-up plan:
 - `docs/research/agent-selection-demo-alignment-note-2026-06-13.md`
 - `docs/research/agent-selection-demo-followup-plan-2026-06-13.md`
 - `docs/research/agent-selection-top2-repeatability-plan-2026-06-13.md`
+
+Completion package:
+
+- `experiments/agent_selection_demo/reports/demo_completion_closeout_zh.md`
+- `experiments/agent_selection_demo/reports/agent_tuning_feedback_prototype_zh.md`
+
+Recommended next work: if the next claim is that Kilo's holdout lead is stable,
+repair Kilo adapter timeout handling and usage normalization, then rerun only
+the frozen top-2 holdout repeat within the approved paid-call boundary. If the
+next claim is broader generality, do a no-paid second-repo gate before any new
+paid matrix.
 
 Top-2 repeatability execution attempted on 2026-06-13. Gates passed for
 `LLM_BASE_URL`/`LLM_API_KEY`, `gpt-5.4`, adapter unit checks, secret isolation,
