@@ -87,7 +87,7 @@ def test_summarize_stage_computes_cost_latency_and_failures() -> None:
     assert summary["verified_solve_rate"] == 0.5
     assert summary["agent_metrics"]["a"]["cost_per_solved_task_usd"] == 0.4
     assert summary["agent_metrics"]["a"]["usage_observed_rate"] == 0.5
-    assert summary["agent_metrics"]["a"]["cost_observation_kind"] == "mixed_observed_and_estimated"
+    assert summary["agent_metrics"]["a"]["cost_observation_kind"] == "mixed_observed_and_missing_usage_estimate"
     assert summary["agent_metrics"]["a"]["median_latency_seconds"] == 15.0
     assert summary["failure_category_counts"]["hidden verifier failure"] == 1
 
@@ -123,6 +123,18 @@ def test_score_rows_preserve_cost_observation_fields() -> None:
     assert rows[0]["cost_observation_kind"] == "observed_tokens"
     assert rows[0]["usage_source"] == "adapter_output_usage_json"
     assert rows[0]["billed_cost_usd"] is None
+
+
+def test_normalize_cost_row_backfills_missing_usage_and_billing_metadata() -> None:
+    missing_usage = demo.normalize_cost_row({"run_id": "a", "usage_observed": False, "estimated_cost_usd": 0.5})
+    billed = demo.normalize_cost_row({"run_id": "b", "usage_observed": True, "estimated_cost_usd": 0.2, "billed_cost_usd": 0.19})
+
+    assert missing_usage["cost_observation_kind"] == "missing_usage_conservative_estimate"
+    assert missing_usage["usage_source"] == "missing_adapter_usage"
+    assert missing_usage["billed_cost_usd"] is None
+    assert billed["cost_observation_kind"] == "billed_cost"
+    assert billed["usage_source"] == "provider_billing_export"
+    assert billed["billed_cost_usd"] == 0.19
 
 
 def test_failure_category_maps_policy_and_empty_diff() -> None:

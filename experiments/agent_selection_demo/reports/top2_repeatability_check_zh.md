@@ -27,8 +27,8 @@ repeat 被 Kilo adapter timeout 阻断，不能作为 scoreable ranking 结果�
 
 | Agent | 原 holdout pass | repeat pass | 变化任务 | 成本 usage |
 | --- | --- | --- | --- | --- |
-| Codex + GPT mainline | 5 | 7/10 scoreable; 10 completed, 0 infra | boltons__hist__019, boltons__hist__027 | observed_token_estimate |
-| Kilo + GPT mainline | 9 | 0/0 scoreable; 2 completed, 2 infra | None | conservative_per_cell_estimate |
+| Codex + GPT mainline | 5 | 7/10 scoreable; 10 completed, 0 infra | boltons__hist__019, boltons__hist__027 | observed_tokens_estimated_cost |
+| Kilo + GPT mainline | 9 | 0/0 scoreable; 2 completed, 2 infra | None | missing_usage_conservative_estimate |
 
 ## Task-level 稳定性
 

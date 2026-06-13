@@ -3,6 +3,7 @@ from __future__ import annotations
 import argparse
 import json
 import os
+import signal
 import subprocess
 import sys
 import tempfile
@@ -97,27 +98,38 @@ def build_kilo_command(workspace: Path, statement_file: Path, timeout_seconds: i
 
 
 def run_child(command: list[str], workspace: Path, env: dict[str, str], timeout_seconds: int) -> int:
+    def kill_process_tree(process: subprocess.Popen[str]) -> None:
+        try:
+            if os.name == "nt":
+                process.kill()
+            else:
+                os.killpg(process.pid, signal.SIGKILL)
+        except ProcessLookupError:
+            return
+
     start = time.monotonic()
     try:
-        completed = subprocess.run(
+        process = subprocess.Popen(
             command,
             cwd=workspace,
             env=env,
             text=True,
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE,
-            timeout=timeout_seconds,
-            check=False,
+            start_new_session=os.name != "nt",
         )
-    except subprocess.TimeoutExpired as exc:
-        sys.stdout.write(exc.stdout or "")
-        sys.stderr.write(exc.stderr or "")
+        stdout, stderr = process.communicate(timeout=timeout_seconds)
+    except subprocess.TimeoutExpired:
+        kill_process_tree(process)
+        stdout, stderr = process.communicate()
+        sys.stdout.write(stdout or "")
+        sys.stderr.write(stderr or "")
         sys.stderr.write(f"\nKilo workspace adapter timed out after {timeout_seconds}s\n")
         return 124
-    sys.stdout.write(completed.stdout)
-    sys.stderr.write(completed.stderr)
+    sys.stdout.write(stdout or "")
+    sys.stderr.write(stderr or "")
     sys.stderr.write(f"\nKilo workspace adapter duration_seconds={time.monotonic() - start:.3f}\n")
-    return completed.returncode
+    return process.returncode or 0
 
 
 def main() -> int:

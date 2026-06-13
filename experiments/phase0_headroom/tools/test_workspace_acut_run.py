@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import subprocess
 import sys
+import time
 from pathlib import Path
 
 import pytest
@@ -300,6 +301,28 @@ def test_multi_adapter_config_selects_adapter_metadata(tmp_path: Path) -> None:
     assert config.acut_id == "fake_kilo_acut"
     assert config.command_template_source == "config"
     assert config.endpoint_proof_status == "kilo_eligible"
+
+
+@pytest.mark.skipif(sys.platform == "win32", reason="process-group cleanup contract is POSIX-specific")
+def test_run_command_timeout_kills_child_process_group(tmp_path: Path) -> None:
+    marker = tmp_path / "child_survived.txt"
+    child = (
+        "import pathlib, time; "
+        "time.sleep(1.0); "
+        f"pathlib.Path({str(marker)!r}).write_text('survived', encoding='utf-8')"
+    )
+    parent = (
+        "import subprocess, sys, time; "
+        f"subprocess.Popen([sys.executable, '-c', {child!r}]); "
+        "time.sleep(5.0)"
+    )
+
+    result = workspace_acut.run_command([sys.executable, "-c", parent], tmp_path, timeout=0.2)
+    time.sleep(1.2)
+
+    assert result.timed_out is True
+    assert result.returncode == 124
+    assert not marker.exists()
 
 
 def test_two_fake_adapters_isolate_raw_artifacts_with_result_prefix(tmp_path: Path) -> None:

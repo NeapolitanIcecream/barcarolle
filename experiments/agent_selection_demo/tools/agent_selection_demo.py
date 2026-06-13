@@ -565,18 +565,39 @@ STAGE_SCORE_FIELDNAMES = [
 ]
 
 
-def cost_observation_metadata(usage_observed: bool) -> dict[str, Any]:
+def cost_observation_metadata(usage_observed: bool, billed_cost_usd: float | None = None) -> dict[str, Any]:
+    if billed_cost_usd is not None:
+        return {
+            "cost_observation_kind": "billed_cost",
+            "usage_source": "provider_billing_export",
+            "billed_cost_usd": billed_cost_usd,
+        }
     if usage_observed:
         return {
-            "cost_observation_kind": "observed_tokens",
+            "cost_observation_kind": "observed_tokens_estimated_cost",
             "usage_source": "adapter_output_usage_json",
             "billed_cost_usd": None,
         }
     return {
-        "cost_observation_kind": "conservative_estimate",
-        "usage_source": "static_conservative_cell_estimate",
+        "cost_observation_kind": "missing_usage_conservative_estimate",
+        "usage_source": "missing_adapter_usage",
         "billed_cost_usd": None,
     }
+
+
+def normalize_cost_row(row: dict[str, Any]) -> dict[str, Any]:
+    normalized = dict(row)
+    usage_observed = normalized.get("usage_observed") is True or str(normalized.get("usage_observed")).lower() == "true"
+    billed_raw = normalized.get("billed_cost_usd")
+    billed_cost = None if billed_raw in {None, ""} else float(billed_raw)
+    metadata = cost_observation_metadata(usage_observed, billed_cost_usd=billed_cost)
+    if not normalized.get("cost_observation_kind"):
+        normalized["cost_observation_kind"] = metadata["cost_observation_kind"]
+    if not normalized.get("usage_source"):
+        normalized["usage_source"] = metadata["usage_source"]
+    if normalized.get("billed_cost_usd") in {None, ""}:
+        normalized["billed_cost_usd"] = metadata["billed_cost_usd"]
+    return normalized
 
 
 def persist_stage_outputs(
@@ -587,6 +608,7 @@ def persist_stage_outputs(
     expected_cells: int,
 ) -> dict[str, Any]:
     paths = stage_paths(stage)
+    cost_rows = [normalize_cost_row(row) for row in cost_rows]
     rows = score_rows(stage, submissions, verifiers, cost_rows)
     metrics = summarize_stage(stage, rows, expected_cells)
     write_jsonl(paths["submissions"], submissions)
@@ -752,10 +774,10 @@ def cost_observation_kind(observed_count: int, total_count: int) -> str:
     if total_count == 0:
         return "none"
     if observed_count == total_count:
-        return "observed_token_estimate"
+        return "observed_tokens_estimated_cost"
     if observed_count == 0:
-        return "conservative_per_cell_estimate"
-    return "mixed_observed_and_estimated"
+        return "missing_usage_conservative_estimate"
+    return "mixed_observed_and_missing_usage_estimate"
 
 
 def summarize_stage(stage: str, rows: list[dict[str, Any]], expected_cells: int) -> dict[str, Any]:
@@ -1744,6 +1766,7 @@ def main() -> int:
     subcommands.add_parser("recommend")
     subcommands.add_parser("report")
     subcommands.add_parser("top2-repeat-report")
+    subcommands.add_parser("refresh-sanitized-stage-metadata")
     args = parser.parse_args()
     config = load_config(repo_path(args.config))
     if args.command == "gate":
@@ -1769,6 +1792,15 @@ def main() -> int:
         return 0
     if args.command == "top2-repeat-report":
         top2_repeatability_report(config)
+        return 0
+    if args.command == "refresh-sanitized-stage-metadata":
+        for stage in ["smoke", "selection", "holdout", TOP2_REPEAT_STAGE]:
+            paths = stage_paths(stage)
+            if not paths["submissions"].exists():
+                continue
+            metrics_path = paths["metrics"]
+            expected = read_json(metrics_path).get("scheduled_cells", 0) if metrics_path.exists() else len(read_jsonl(paths["submissions"]))
+            persist_stage_outputs(stage, read_jsonl(paths["submissions"]), read_jsonl(paths["verifiers"]), read_jsonl(paths["cost"]), int(expected))
         return 0
     raise ValueError(args.command)
 

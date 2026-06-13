@@ -6,6 +6,7 @@ import hashlib
 import io
 import json
 import os
+import signal
 import shlex
 import shutil
 import subprocess
@@ -117,26 +118,37 @@ def run_command(command: list[str], cwd: Path, timeout: int = 120, env: dict[str
             return value.decode("utf-8", errors="replace")
         return value
 
+    def kill_process_tree(process: subprocess.Popen[str]) -> None:
+        try:
+            if os.name == "nt":
+                process.kill()
+            else:
+                os.killpg(process.pid, signal.SIGKILL)
+        except ProcessLookupError:
+            return
+
     start = time.monotonic()
     try:
-        completed = subprocess.run(
+        process = subprocess.Popen(
             command,
             cwd=cwd,
             env=env,
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE,
             text=True,
-            timeout=timeout,
-            check=False,
+            start_new_session=os.name != "nt",
         )
-        return CommandResult(command, str(cwd), completed.returncode, completed.stdout, completed.stderr, time.monotonic() - start)
-    except subprocess.TimeoutExpired as exc:
+        stdout, stderr = process.communicate(timeout=timeout)
+        return CommandResult(command, str(cwd), process.returncode or 0, stdout, stderr, time.monotonic() - start)
+    except subprocess.TimeoutExpired:
+        kill_process_tree(process)
+        stdout, stderr = process.communicate()
         return CommandResult(
             command,
             str(cwd),
             124,
-            output_text(exc.stdout),
-            output_text(exc.stderr),
+            output_text(stdout),
+            output_text(stderr),
             time.monotonic() - start,
             timed_out=True,
         )
