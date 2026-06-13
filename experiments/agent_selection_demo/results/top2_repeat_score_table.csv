@@ -1,0 +1,13 @@
+stage,agent_id,reviewer_name,harness,model,task_id,terminal_status,scoreable_cell,verified_pass,failure_category,latency_seconds,estimated_cost_usd,usage_observed,patch_sha256
+top2_repeat,codex_gpt_5_4,Codex + GPT mainline,codex,gpt-5.4,boltons__clean_ext__017,verified_pass,True,True,verified pass,327.158,0.193344,True,ee97ac39bb49a06e8bf0eeba386c88de5da64b8ac95aea19d5ac6bdc9595958a
+top2_repeat,codex_gpt_5_4,Codex + GPT mainline,codex,gpt-5.4,boltons__hist__019,verified_pass,True,True,verified pass,283.476,0.632751,True,5144b36c657622b2ecf26d44dc4b679e79d23fb18ac1782053d60018367e838a
+top2_repeat,codex_gpt_5_4,Codex + GPT mainline,codex,gpt-5.4,boltons__hist__020,verified_pass,True,True,verified pass,66.099,0.160988,True,9658e89017b82f613f96fc9fef13ba056608abf7d461e4b49413f2acea0f08bc
+top2_repeat,codex_gpt_5_4,Codex + GPT mainline,codex,gpt-5.4,boltons__hist__022,verified_fail,True,False,hidden verifier failure,215.848,0.4407535,True,6e98a374a8ce9cb69c3c90a152f4d194c97722e2c214eec1c182199cb8a914b5
+top2_repeat,codex_gpt_5_4,Codex + GPT mainline,codex,gpt-5.4,boltons__hist__023,verified_fail,True,False,hidden verifier failure,522.838,0.3644415,True,0c943c8c30fa2cf083cf19804af895149d06406ccc87cba3d3ad3aec42fa91f1
+top2_repeat,codex_gpt_5_4,Codex + GPT mainline,codex,gpt-5.4,boltons__hist__024,verified_pass,True,True,verified pass,64.008,0.1485335,True,db3e8df35f1823e8dca3dee84208738d2cdb3dd9e05ecf64159316c81e7178d8
+top2_repeat,codex_gpt_5_4,Codex + GPT mainline,codex,gpt-5.4,boltons__hist__025,verified_pass,True,True,verified pass,68.676,0.1752845,True,d0a1b1c80712316ab167014ba97fa30bfdc8152765a85202c8953f8ca93d6a18
+top2_repeat,codex_gpt_5_4,Codex + GPT mainline,codex,gpt-5.4,boltons__hist__026,verified_pass,True,True,verified pass,127.434,0.2955775,True,b5fe5e63b6115e7b9f9ff644f1374da6f0e320453262eb1b4b26a3d214b8ef7a
+top2_repeat,codex_gpt_5_4,Codex + GPT mainline,codex,gpt-5.4,boltons__hist__027,verified_pass,True,True,verified pass,78.537,0.2291,True,3ea9b29f02af69831770d119041de2deea0a271be15dfd951fa6f347499ed55a
+top2_repeat,codex_gpt_5_4,Codex + GPT mainline,codex,gpt-5.4,boltons__hist__028,verified_fail,True,False,hidden verifier failure,864.884,0.318737,True,210a2924ac5595749ce6934412c4d2eb616466ecc8abcbc30d50e2044292335b
+top2_repeat,kilo_gpt_5_4,Kilo + GPT mainline,kilo,gpt-5.4,boltons__clean_ext__017,acut_harness_error,False,False,exceeded budget or timeout,900.009,0.5,False,e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+top2_repeat,kilo_gpt_5_4,Kilo + GPT mainline,kilo,gpt-5.4,boltons__hist__019,acut_harness_error,False,False,exceeded budget or timeout,900.009,0.5,False,e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855

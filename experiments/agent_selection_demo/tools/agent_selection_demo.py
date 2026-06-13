@@ -1303,6 +1303,17 @@ def pf(value: bool) -> str:
     return "P" if value else "F"
 
 
+def outcome_mark(row: dict[str, str] | None) -> str:
+    if row is None:
+        return "M"
+    status = row.get("terminal_status")
+    if status == "verified_pass":
+        return "P"
+    if status == "verified_fail":
+        return "F"
+    return "I"
+
+
 def top2_repeatability_report(config: dict[str, Any]) -> dict[str, Any]:
     split = read_json(result_path("frozen_split.json"))
     original_rows = [
@@ -1336,15 +1347,15 @@ def top2_repeatability_report(config: dict[str, Any]) -> dict[str, Any]:
             "module": ", ".join(modules),
         }
         for agent_id in TOP2_REPEAT_AGENT_IDS:
-            original = original_by_key[(agent_id, task_id)]
-            repeat = repeat_by_key[(agent_id, task_id)]
-            original_pass = csv_bool(original["verified_pass"])
-            repeat_pass = csv_bool(repeat["verified_pass"])
+            original = original_by_key.get((agent_id, task_id))
+            repeat = repeat_by_key.get((agent_id, task_id))
+            original_pass = csv_bool(original["verified_pass"]) if original else False
+            repeat_pass = csv_bool(repeat["verified_pass"]) if repeat else False
             short = "codex" if agent_id == "codex_gpt_5_4" else "kilo"
             row[f"{short}_original"] = pf(original_pass)
-            row[f"{short}_repeat"] = pf(repeat_pass)
-            row[f"{short}_changed"] = original_pass != repeat_pass
-            row[f"{short}_repeat_status"] = repeat["terminal_status"]
+            row[f"{short}_repeat"] = outcome_mark(repeat)
+            row[f"{short}_changed"] = original_pass != repeat_pass if repeat and repeat.get("terminal_status") in SCOREABLE_STATUSES else ""
+            row[f"{short}_repeat_status"] = repeat["terminal_status"] if repeat else "not_run"
         row["relationship_original"] = f"{row['codex_original']}/{row['kilo_original']}"
         row["relationship_repeat"] = f"{row['codex_repeat']}/{row['kilo_repeat']}"
         stability_rows.append(row)
@@ -1357,7 +1368,8 @@ def top2_repeatability_report(config: dict[str, Any]) -> dict[str, Any]:
             "reviewer_name": repeat_agent_rows[0]["reviewer_name"] if repeat_agent_rows else agent_id,
             "original_pass_count": sum(csv_bool(row["verified_pass"]) for row in original_agent_rows),
             "repeat_pass_count": sum(csv_bool(row["verified_pass"]) for row in repeat_agent_rows),
-            "scheduled_cells": len(repeat_agent_rows),
+            "completed_cells": len(repeat_agent_rows),
+            "timeout_or_infra_cells": sum(row["terminal_status"] not in SCOREABLE_STATUSES for row in repeat_agent_rows),
             "scoreable_cells": sum(csv_bool(row["scoreable_cell"]) for row in repeat_agent_rows),
             "changed_tasks": [row["task_id"] for row in stability_rows if row[f"{'codex' if agent_id == 'codex_gpt_5_4' else 'kilo'}_changed"]],
         }
@@ -1369,12 +1381,17 @@ def top2_repeatability_report(config: dict[str, Any]) -> dict[str, Any]:
     canonical_rows = [row for row in stability_rows if row["source"] == "canonical_history"]
     repeat_scoreable = repeat_metrics.get("scoreable_cells", 0)
     repeat_scheduled = repeat_metrics.get("scheduled_cells", len(repeat_rows))
+    repeat_completed = repeat_metrics.get("completed_cells", len(repeat_rows))
+    acceptance_reachable = repeat_completed == repeat_scheduled and repeat_scoreable / max(repeat_scheduled, 1) >= 0.95
     infrastructure_rows = [
         row
         for row in repeat_rows
         if row.get("terminal_status") not in SCOREABLE_STATUSES
     ]
     interpretation = (
+        "blocked_infrastructure"
+        if not acceptance_reachable
+        else
         "stable_kilo_lead"
         if repeat_lead > 0 and repeat_scoreable / max(repeat_scheduled, 1) >= 0.95
         else "noisy_or_inconclusive"
@@ -1402,6 +1419,7 @@ def top2_repeatability_report(config: dict[str, Any]) -> dict[str, Any]:
             "completed": repeat_metrics.get("completed_cells"),
             "scoreable": repeat_metrics.get("scoreable_cells"),
             "scoreable_cell_rate": repeat_metrics.get("scoreable_cell_rate"),
+            "acceptance_reachable": acceptance_reachable,
         },
         "original_passes": original_passes,
         "repeat_passes": repeat_passes,
@@ -1411,7 +1429,11 @@ def top2_repeatability_report(config: dict[str, Any]) -> dict[str, Any]:
         "canonical_history_repeat": {
             "task_count": len(canonical_rows),
             "codex_pass_count": sum(row["codex_repeat"] == "P" for row in canonical_rows),
+            "codex_scoreable_count": sum(row["codex_repeat"] in {"P", "F"} for row in canonical_rows),
             "kilo_pass_count": sum(row["kilo_repeat"] == "P" for row in canonical_rows),
+            "kilo_scoreable_count": sum(row["kilo_repeat"] in {"P", "F"} for row in canonical_rows),
+            "kilo_infra_count": sum(row["kilo_repeat"] == "I" for row in canonical_rows),
+            "kilo_not_run_count": sum(row["kilo_repeat"] == "M" for row in canonical_rows),
         },
         "infrastructure_or_policy_rows": infrastructure_rows,
         "cost_usage": cost_usage,
@@ -1440,13 +1462,12 @@ def top2_repeatability_report(config: dict[str, Any]) -> dict[str, Any]:
         ],
     )
 
+    candidates = candidate_by_id(config)
     matrix_rows = [
         {
-            "Agent": config["agent_candidates"][TOP2_REPEAT_AGENT_IDS.index(agent_id)]["reviewer_name"]
-            if config["agent_candidates"][TOP2_REPEAT_AGENT_IDS.index(agent_id)]["agent_id"] == agent_id
-            else agent_summaries[agent_id]["reviewer_name"],
-            "Harness": "codex" if agent_id == "codex_gpt_5_4" else "kilo",
-            "Model": "gpt-5.4",
+            "Agent": candidates[agent_id]["reviewer_name"],
+            "Harness": candidates[agent_id]["harness"],
+            "Model": candidates[agent_id]["model"],
         }
         for agent_id in TOP2_REPEAT_AGENT_IDS
     ]
@@ -1454,7 +1475,10 @@ def top2_repeatability_report(config: dict[str, Any]) -> dict[str, Any]:
         {
             "Agent": agent_summaries[agent_id]["reviewer_name"],
             "Original": agent_summaries[agent_id]["original_pass_count"],
-            "Repeat": agent_summaries[agent_id]["repeat_pass_count"],
+            "Repeat": (
+                f"{agent_summaries[agent_id]['repeat_pass_count']}/{agent_summaries[agent_id]['scoreable_cells']} scoreable; "
+                f"{agent_summaries[agent_id]['completed_cells']} completed, {agent_summaries[agent_id]['timeout_or_infra_cells']} infra"
+            ),
             "Changed": ", ".join(agent_summaries[agent_id]["changed_tasks"]) or "None",
             "Usage": cost_usage.get(agent_id, {}).get("cost_observation_kind", ""),
         }
@@ -1477,9 +1501,17 @@ def top2_repeatability_report(config: dict[str, Any]) -> dict[str, Any]:
         else f"repeat 中有 `{len(infrastructure_rows)}` 个非可评分/基础设施相关 cell，需要单独排查。"
     )
     story_sentence = (
+        "repeat 被 Kilo adapter timeout 阻断，不能作为 scoreable ranking 结果；Codex repeat 完成但 Kilo repeat 不完整。"
+        if interpretation == "blocked_infrastructure"
+        else
         "Kilo 的领先仍然存在；这让第一次 holdout 反转不太像纯单次随机波动。"
         if interpretation == "stable_kilo_lead"
         else "repeat 没有给出清晰稳定领先；单次运行随机性仍应作为主要解释。"
+    )
+    stochasticity_sentence = (
+        "由于 Kilo repeat 没有达到可评分完整性，本次不能判断 Kilo holdout 领先是否稳定，也不能把变化归因于模型随机性；当前主要解释是 Kilo adapter/CLI timeout 基础设施问题。"
+        if interpretation == "blocked_infrastructure"
+        else "stochasticity 仍是合理解释的一部分，因为这里只做了一次 repeat，且两个 Agent 的若干 task-level outcome 发生变化；但 repeat 后 Kilo 仍领先，说明不能把第一次 Kilo 领先简单归因为一次偶然抽样。"
     )
     lines = [
         "# Top-2 Repeatability Check",
@@ -1488,13 +1520,13 @@ def top2_repeatability_report(config: dict[str, Any]) -> dict[str, Any]:
         "",
         f"本次只重复 `{config['target_repo']['repo_name']}` 的同一批 10 个 holdout tasks，Agent 矩阵为 Codex + GPT mainline 与 Kilo + GPT mainline，模型均为 `gpt-5.4`。",
         "",
-        f"20 个 repeat cells 中完成 `{repeat_metrics.get('completed_cells')}` 个，可评分 `{repeat_metrics.get('scoreable_cells')}` 个，可评分率 `{repeat_metrics.get('scoreable_cell_rate')}`。",
+        f"20 个 repeat cells 中完成 `{repeat_metrics.get('completed_cells')}` 个，可评分 `{repeat_metrics.get('scoreable_cells')}` 个，可评分率 `{repeat_metrics.get('scoreable_cell_rate')}`，acceptance reachable 为 `{acceptance_reachable}`。",
         "",
-        f"原 holdout 是 Kilo `{original_passes['kilo_gpt_5_4']}/10` 对 Codex `{original_passes['codex_gpt_5_4']}/10`；repeat 是 Kilo `{repeat_passes['kilo_gpt_5_4']}/10` 对 Codex `{repeat_passes['codex_gpt_5_4']}/10`。",
+        f"原 holdout 是 Kilo `{original_passes['kilo_gpt_5_4']}/10` 对 Codex `{original_passes['codex_gpt_5_4']}/10`；当前 persisted repeat 是 Kilo `{repeat_passes['kilo_gpt_5_4']}/{agent_summaries['kilo_gpt_5_4']['scoreable_cells']}` scoreable（`{agent_summaries['kilo_gpt_5_4']['completed_cells']}` completed, `{agent_summaries['kilo_gpt_5_4']['timeout_or_infra_cells']}` infra）对 Codex `{repeat_passes['codex_gpt_5_4']}/10`。",
         "",
         story_sentence,
         "",
-        f"stochasticity 仍是合理解释的一部分，因为这里只做了一次 repeat，且两个 Agent 的若干 task-level outcome 发生变化；但 repeat 后 Kilo 仍领先，说明不能把第一次 Kilo 领先简单归因为一次偶然抽样。",
+        stochasticity_sentence,
         "",
         "## 实际矩阵",
         "",
@@ -1529,7 +1561,7 @@ def top2_repeatability_report(config: dict[str, Any]) -> dict[str, Any]:
         "",
         "## Later canonical_history",
         "",
-        f"holdout 中 `canonical_history` 任务 `{len(canonical_rows)}` 个。repeat 中 Kilo 通过 `{payload['canonical_history_repeat']['kilo_pass_count']}/{len(canonical_rows)}`，Codex 通过 `{payload['canonical_history_repeat']['codex_pass_count']}/{len(canonical_rows)}`。",
+        f"holdout 中 `canonical_history` 任务 `{len(canonical_rows)}` 个。repeat 中 Codex 通过 `{payload['canonical_history_repeat']['codex_pass_count']}/{payload['canonical_history_repeat']['codex_scoreable_count']}` scoreable；Kilo 为 `{payload['canonical_history_repeat']['kilo_pass_count']}/{payload['canonical_history_repeat']['kilo_scoreable_count']}` scoreable，另有 `{payload['canonical_history_repeat']['kilo_infra_count']}` 个 infra、`{payload['canonical_history_repeat']['kilo_not_run_count']}` 个 not run，因此不能判断 Kilo 是否仍强于 later canonical_history。",
         "",
         "## 基础设施与成本 caveat",
         "",
