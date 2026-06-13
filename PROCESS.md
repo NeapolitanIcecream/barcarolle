@@ -109,6 +109,7 @@ Canonical demo artifacts:
 
 Current follow-up plan:
 
+- `docs/research/agent-selection-demo-strict-completion-runbook-2026-06-13.md`
 - `docs/research/agent-selection-demo-completion-plan-2026-06-13.md`
 - `docs/research/agent-selection-demo-alignment-note-2026-06-13.md`
 - `docs/research/agent-selection-demo-followup-plan-2026-06-13.md`
@@ -124,6 +125,12 @@ repair Kilo adapter timeout handling and usage normalization, then rerun only
 the frozen top-2 holdout repeat within the approved paid-call boundary. If the
 next claim is broader generality, do a no-paid second-repo gate before any new
 paid matrix.
+
+For a long-running autonomous completion session, use the strict completion
+runbook rather than the looser completion plan. The strict runbook requires Kilo
+root-cause work, a top-2 repeat attempt if gates pass, a no-paid second-repo
+gate, a runnable tuning-feedback summary generator, and final package updates;
+it should not stop after document-only packaging.
 
 Top-2 repeatability execution attempted on 2026-06-13. Gates passed for
 `LLM_BASE_URL`/`LLM_API_KEY`, `gpt-5.4`, adapter unit checks, secret isolation,
