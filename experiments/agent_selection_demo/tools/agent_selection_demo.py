@@ -2297,7 +2297,7 @@ def render_rolling_origin_eval(payload: dict[str, Any]) -> str:
         "",
         "## Primary metrics",
         "",
-        *markdown_table(design_rows, [("Design", "Design"), ("MAE", "MAE"), ("RMSE", "RMSE"), ("Signed", "Signed error"), ("Miss", "Catastrophic miss"), ("Slices", "Slices")]),
+        *markdown_table(design_rows, [("Design", "Design"), ("MAE", "MAE"), ("RMSE", "RMSE"), ("Signed error", "Signed"), ("Catastrophic miss", "Miss"), ("Slices", "Slices")]),
         "",
         "## Baseline comparison",
         "",
