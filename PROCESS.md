@@ -109,6 +109,7 @@ Canonical demo artifacts:
 Current follow-up plan:
 
 - `docs/research/agent-selection-demo-followup-plan-2026-06-13.md`
+- `docs/research/agent-selection-top2-repeatability-plan-2026-06-13.md`
 
 Canonical reports:
 
