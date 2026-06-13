@@ -1,0 +1,66 @@
+{
+  "agent_metrics": {
+    "codex_gpt_5_4": {
+      "completed_cells": 10,
+      "cost_observation_kind": "observed_tokens_estimated_cost",
+      "cost_per_solved_task_usd": 0.47508567,
+      "cost_per_task_usd": 0.2850514,
+      "failure_counts": {
+        "hidden verifier failure": 4,
+        "verified pass": 6
+      },
+      "harness": "codex",
+      "median_latency_seconds": 145.059,
+      "model": "gpt-5.4",
+      "p90_latency_seconds": 429.747,
+      "reviewer_name": "Codex + GPT mainline",
+      "scheduled_cells": 10,
+      "scoreable_cell_rate": 1.0,
+      "scoreable_cells": 10,
+      "usage_observed_count": 10,
+      "usage_observed_rate": 1.0,
+      "verified_pass_count": 6,
+      "verified_solve_rate": 0.6,
+      "verifier_replay_success_rate": 1.0
+    },
+    "kilo_gpt_5_4": {
+      "completed_cells": 10,
+      "cost_observation_kind": "observed_tokens_estimated_cost",
+      "cost_per_solved_task_usd": 0.18364094,
+      "cost_per_task_usd": 0.16527685,
+      "failure_counts": {
+        "hidden verifier failure": 1,
+        "verified pass": 9
+      },
+      "harness": "kilo",
+      "median_latency_seconds": 50.418,
+      "model": "gpt-5.4",
+      "p90_latency_seconds": 69.513,
+      "reviewer_name": "Kilo + GPT mainline",
+      "scheduled_cells": 10,
+      "scoreable_cell_rate": 1.0,
+      "scoreable_cells": 10,
+      "usage_observed_count": 10,
+      "usage_observed_rate": 1.0,
+      "verified_pass_count": 9,
+      "verified_solve_rate": 0.9,
+      "verifier_replay_success_rate": 1.0
+    }
+  },
+  "completed_cells": 20,
+  "estimated_cost_usd": 4.5032825,
+  "failure_category_counts": {
+    "hidden verifier failure": 5,
+    "verified pass": 15
+  },
+  "generated_at": "2026-06-13T17:25:31+00:00",
+  "scheduled_cells": 20,
+  "schema_version": "barcarolle.agent_selection_demo.stage_metrics.v1",
+  "scoreable_cell_rate": 1.0,
+  "scoreable_cells": 20,
+  "stage": "doubled_timeout_top2_repeat",
+  "usage_observed_count": 20,
+  "usage_observed_rate": 1.0,
+  "verified_pass_count": 15,
+  "verified_solve_rate": 0.75
+}
