@@ -353,3 +353,132 @@ def test_tuning_feedback_summary_aggregates_sanitized_rows(tmp_path: Path, monke
     assert payload["unstable_tasks"][0]["task_id"] == "task_unstable"
     assert "不声称任何 Agent 已经经过 tuning" in rendered
     assert "raw prompts" in rendered
+
+
+def test_predictive_validity_score_join_support_deduplicates_selection_rows() -> None:
+    joined = [
+        {
+            "window_id": "w1",
+            "repo": "boltons",
+            "adapter_id": "codex_workspace",
+            "split": "B_eval",
+            "task_id": "task_1",
+            "scoreable_cell": True,
+            "pass_flag": True,
+        },
+        {
+            "window_id": "w1",
+            "repo": "boltons",
+            "adapter_id": "codex_workspace",
+            "split": "B_eval",
+            "task_id": "task_1",
+            "scoreable_cell": True,
+            "pass_flag": True,
+        },
+        {
+            "window_id": "w1",
+            "repo": "boltons",
+            "adapter_id": "codex_workspace",
+            "split": "H_future",
+            "task_id": "task_2",
+            "scoreable_cell": False,
+            "pass_flag": False,
+        },
+    ]
+
+    support = demo.deduplicated_scoreable_support(joined)
+
+    b_eval = next(row for row in support if row["stage"] == "B_eval")
+    h_future = next(row for row in support if row["stage"] == "H_future")
+    assert b_eval["task_count"] == 1
+    assert b_eval["scoreable_cells"] == 1
+    assert b_eval["pass_count"] == 1
+    assert h_future["non_scoreable_cells"] == 1
+
+
+def test_predictive_validity_metrics_handle_missing_cells_and_mae() -> None:
+    rows = [
+        {
+            "selection_pass_rate": 0.75,
+            "future_pass_rate": 0.5,
+            "selection_scoreable_count": 4,
+            "future_scoreable_count": 4,
+            "missing_or_non_scoreable_count": 0,
+        },
+        {
+            "selection_pass_rate": 0.25,
+            "future_pass_rate": 0.5,
+            "selection_scoreable_count": 4,
+            "future_scoreable_count": 4,
+            "missing_or_non_scoreable_count": 0,
+        },
+        {
+            "selection_pass_rate": None,
+            "future_pass_rate": 0.5,
+            "selection_scoreable_count": 0,
+            "future_scoreable_count": 4,
+            "missing_or_non_scoreable_count": 2,
+        },
+    ]
+
+    summary = demo.summarize_prediction_rows(rows, threshold=0.2)
+
+    assert summary["slice_count"] == 2
+    assert summary["MAE"] == 0.25
+    assert summary["RMSE"] == 0.25
+    assert summary["mean_signed_error"] == 0.0
+    assert summary["catastrophic_miss_rate"] == 1.0
+    assert summary["missing_or_non_scoreable_count"] == 2
+
+
+def test_predictive_validity_baseline_comparison_uses_best_simple_envelope() -> None:
+    protocol = {
+        "baselines": {
+            "simple": ["temporal_recent_baseline", "repo_unweighted_same_budget"],
+            "candidate_selectors": ["coverage_constrained_unweighted"],
+        }
+    }
+    summaries = {
+        "temporal_recent_baseline": {"MAE": 0.2, "catastrophic_miss_rate": 0.5, "slice_count": 4},
+        "repo_unweighted_same_budget": {"MAE": 0.15, "catastrophic_miss_rate": 0.25, "slice_count": 4},
+        "coverage_constrained_unweighted": {"MAE": 0.1, "catastrophic_miss_rate": 0.25, "slice_count": 4},
+        "completed_blocked_split_supplement": {"MAE": 0.05, "catastrophic_miss_rate": 0.0, "slice_count": 2},
+    }
+
+    comparison = demo.baseline_comparison_from_summaries(summaries, protocol)
+
+    assert comparison["best_simple_baseline"]["design_id"] == "repo_unweighted_same_budget"
+    assert comparison["best_barcarolle_candidate"]["design_id"] == "coverage_constrained_unweighted"
+    assert comparison["candidate_beats_best_simple_baseline"] is True
+    assert comparison["candidate_minus_best_simple_MAE"] == -0.05
+    assert comparison["best_diagnostic_candidate"]["design_id"] == "completed_blocked_split_supplement"
+
+
+def test_predictive_validity_recommendation_regret_uses_frozen_recommendation() -> None:
+    rows = [
+        {
+            "window_id": "demo",
+            "repo": "boltons",
+            "design_id": "demo_selection_set",
+            "agent_id": "codex",
+            "selection_pass_rate": 0.8,
+            "future_pass_rate": 0.2,
+            "recommended_agent_id": "codex",
+        },
+        {
+            "window_id": "demo",
+            "repo": "boltons",
+            "design_id": "demo_selection_set",
+            "agent_id": "kilo",
+            "selection_pass_rate": 0.7,
+            "future_pass_rate": 0.9,
+            "recommended_agent_id": "codex",
+        },
+    ]
+
+    summary = demo.summarize_rank_and_regret(rows)
+
+    assert summary["rank_agreement"]["groups_evaluated"] == 1
+    assert summary["rank_agreement"]["top_rank_agreement_rate"] == 0.0
+    assert summary["recommendation_regret"]["mean_regret"] == 0.7
+    assert summary["recommendation_regret"]["rows"][0]["selection_rule"] == "frozen_recommendation"

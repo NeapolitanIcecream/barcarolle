@@ -15,7 +15,7 @@ import tempfile
 import time
 import urllib.parse
 import urllib.request
-from collections import Counter
+from collections import Counter, defaultdict
 from dataclasses import replace
 from datetime import datetime, timezone
 from pathlib import Path
@@ -37,6 +37,19 @@ RESULTS_REL = DEMO_REL / "results"
 REPORTS_REL = DEMO_REL / "reports"
 TOP2_REPEAT_STAGE = "top2_repeat"
 TOP2_REPEAT_AGENT_IDS = ["codex_gpt_5_4", "kilo_gpt_5_4"]
+PV_SIMPLE_BASELINES = [
+    "temporal_recent_baseline",
+    "seeded_random_same_budget",
+    "repo_unweighted_same_budget",
+    "repo_stratified_by_target_profile",
+]
+PV_CANDIDATE_SELECTORS = [
+    "coverage_constrained_unweighted",
+    "block_randomized_stratified",
+    "block_plus_shrinkage_weighted",
+]
+PV_DIAGNOSTIC_ONLY = ["completed_blocked_split_supplement"]
+PV_CATASTROPHIC_THRESHOLD = 0.15
 
 SCOREABLE_STATUSES = {"verified_pass", "verified_fail"}
 INFRA_STATUSES = {"invalid_output", "acut_harness_error", "policy_violation", "harness_error", "timeout"}
@@ -1685,6 +1698,659 @@ def top2_repeatability_report(config: dict[str, Any]) -> dict[str, Any]:
     return payload
 
 
+def pv_result_path(name: str) -> Path:
+    return result_path(name)
+
+
+def phase1_result_path(name: str) -> Path:
+    return ROOT / "experiments" / "phase1_compiler" / "results" / name
+
+
+def phase1_report_path(name: str) -> Path:
+    return ROOT / "experiments" / "phase1_compiler" / "reports" / name
+
+
+def safe_float(value: Any) -> float | None:
+    if value in {None, ""}:
+        return None
+    try:
+        return float(value)
+    except (TypeError, ValueError):
+        return None
+
+
+def safe_int(value: Any) -> int:
+    try:
+        return int(value or 0)
+    except (TypeError, ValueError):
+        return 0
+
+
+def scoreable_pass_rate(metric: dict[str, Any]) -> float | None:
+    scoreable = safe_int(metric.get("scoreable_cells"))
+    if scoreable <= 0:
+        return None
+    return safe_int(metric.get("verified_pass_count")) / scoreable
+
+
+def pv_round(value: float | None, digits: int = 6) -> float | None:
+    return None if value is None else round(float(value), digits)
+
+
+def prediction_slice_error(row: dict[str, Any], threshold: float) -> dict[str, Any]:
+    selection = safe_float(row.get("selection_pass_rate"))
+    future = safe_float(row.get("future_pass_rate"))
+    if selection is None or future is None:
+        return {
+            **row,
+            "signed_error": None,
+            "absolute_error": None,
+            "squared_error": None,
+            "catastrophic_miss": False,
+        }
+    signed = selection - future
+    absolute = abs(signed)
+    return {
+        **row,
+        "signed_error": pv_round(signed),
+        "absolute_error": pv_round(absolute),
+        "squared_error": pv_round(signed * signed),
+        "catastrophic_miss": absolute > threshold,
+    }
+
+
+def summarize_prediction_rows(rows: list[dict[str, Any]], threshold: float = PV_CATASTROPHIC_THRESHOLD) -> dict[str, Any]:
+    evaluated = [prediction_slice_error(row, threshold) for row in rows]
+    valid = [row for row in evaluated if row["absolute_error"] is not None]
+    if not valid:
+        return {
+            "slice_count": 0,
+            "MAE": None,
+            "RMSE": None,
+            "mean_signed_error": None,
+            "catastrophic_miss_rate": None,
+            "selection_scoreable_cells": 0,
+            "future_scoreable_cells": 0,
+            "missing_or_non_scoreable_count": sum(safe_int(row.get("missing_or_non_scoreable_count")) for row in evaluated),
+        }
+    return {
+        "slice_count": len(valid),
+        "MAE": pv_round(statistics.mean(float(row["absolute_error"]) for row in valid)),
+        "RMSE": pv_round(math.sqrt(statistics.mean(float(row["squared_error"]) for row in valid))),
+        "mean_signed_error": pv_round(statistics.mean(float(row["signed_error"]) for row in valid)),
+        "catastrophic_miss_rate": pv_round(sum(1 for row in valid if row["catastrophic_miss"]) / len(valid)),
+        "selection_scoreable_cells": sum(safe_int(row.get("selection_scoreable_count")) for row in valid),
+        "future_scoreable_cells": sum(safe_int(row.get("future_scoreable_count")) for row in valid),
+        "missing_or_non_scoreable_count": sum(safe_int(row.get("missing_or_non_scoreable_count")) for row in evaluated),
+    }
+
+
+def rank_and_regret_rows(rows: list[dict[str, Any]]) -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:
+    grouped: dict[tuple[str, str, str], list[dict[str, Any]]] = defaultdict(list)
+    for row in rows:
+        if row.get("role") == "diagnostic":
+            continue
+        key = (str(row.get("window_id")), str(row.get("repo")), str(row.get("design_id")))
+        grouped[key].append(row)
+    rank_rows: list[dict[str, Any]] = []
+    regret_rows: list[dict[str, Any]] = []
+    for (window_id, repo, design_id), group in sorted(grouped.items()):
+        valid = [
+            row
+            for row in group
+            if safe_float(row.get("selection_pass_rate")) is not None and safe_float(row.get("future_pass_rate")) is not None
+        ]
+        if len(valid) < 2:
+            continue
+        selection_rank = sorted(valid, key=lambda row: (-float(row["selection_pass_rate"]), str(row["agent_id"])))
+        future_rank = sorted(valid, key=lambda row: (-float(row["future_pass_rate"]), str(row["agent_id"])))
+        recommended_agent = next((str(row.get("recommended_agent_id")) for row in valid if row.get("recommended_agent_id")), "")
+        selected = next((row for row in valid if row["agent_id"] == recommended_agent), None) if recommended_agent else selection_rank[0]
+        if selected is None:
+            selected = selection_rank[0]
+        best_future = future_rank[0]
+        rank_rows.append(
+            {
+                "window_id": window_id,
+                "repo": repo,
+                "design_id": design_id,
+                "agent_count": len(valid),
+                "selection_top_agent": selection_rank[0]["agent_id"],
+                "future_top_agent": best_future["agent_id"],
+                "top_rank_agrees": selection_rank[0]["agent_id"] == best_future["agent_id"],
+            }
+        )
+        regret_rows.append(
+            {
+                "window_id": window_id,
+                "repo": repo,
+                "design_id": design_id,
+                "selected_agent_id": selected["agent_id"],
+                "selection_rule": "frozen_recommendation" if recommended_agent else "max_selection_pass_rate",
+                "future_best_agent_id": best_future["agent_id"],
+                "selected_future_pass_rate": pv_round(safe_float(selected.get("future_pass_rate"))),
+                "future_best_pass_rate": pv_round(safe_float(best_future.get("future_pass_rate"))),
+                "recommendation_regret": pv_round(float(best_future["future_pass_rate"]) - float(selected["future_pass_rate"])),
+            }
+        )
+    return rank_rows, regret_rows
+
+
+def summarize_rank_and_regret(rows: list[dict[str, Any]]) -> dict[str, Any]:
+    rank_rows, regret_rows = rank_and_regret_rows(rows)
+    regrets = [float(row["recommendation_regret"]) for row in regret_rows if row["recommendation_regret"] is not None]
+    return {
+        "rank_agreement": {
+            "groups_evaluated": len(rank_rows),
+            "top_rank_agreement_rate": None
+            if not rank_rows
+            else pv_round(sum(1 for row in rank_rows if row["top_rank_agrees"]) / len(rank_rows)),
+            "rows": rank_rows,
+        },
+        "recommendation_regret": {
+            "groups_evaluated": len(regret_rows),
+            "mean_regret": None if not regrets else pv_round(statistics.mean(regrets)),
+            "max_regret": None if not regrets else pv_round(max(regrets)),
+            "rows": regret_rows,
+        },
+    }
+
+
+def phase1_prediction_slices() -> list[dict[str, Any]]:
+    path = phase1_result_path("phase1_retrospective_predictive_signal_adapter_metrics.json")
+    if not path.exists():
+        return []
+    payload = read_json(path)
+    slices: list[dict[str, Any]] = []
+    for row in payload.get("metric_rows", []):
+        slices.append(
+            {
+                "source": "phase1_retrospective_predictive_signal",
+                "source_path": display_path(path),
+                "window_id": row.get("window_id"),
+                "mode": row.get("mode"),
+                "repo": row.get("repo"),
+                "origin_or_window": row.get("window_id"),
+                "agent_id": row.get("adapter_id"),
+                "design_id": row.get("design_id"),
+                "design_instance_id": row.get("design_instance_id"),
+                "role": row.get("role"),
+                "claim_boundary": row.get("claim_boundary"),
+                "selection_stage": "B_eval",
+                "future_stage": "H_future",
+                "selection_pass_rate": row.get("B_eval_pass_rate"),
+                "future_pass_rate": row.get("H_future_pass_rate"),
+                "selection_scoreable_count": row.get("B_eval_scoreable_count"),
+                "future_scoreable_count": row.get("H_future_scoreable_count"),
+                "selection_pass_count": row.get("B_eval_pass_count"),
+                "future_pass_count": row.get("H_future_pass_count"),
+                "missing_or_non_scoreable_count": row.get("missing_or_non_scoreable_count", 0),
+            }
+        )
+    return slices
+
+
+def demo_prediction_slices() -> list[dict[str, Any]]:
+    selection_path = stage_paths("selection")["metrics"]
+    holdout_path = stage_paths("holdout")["metrics"]
+    lock_path = result_path("recommendation_lock.json")
+    if not (selection_path.exists() and holdout_path.exists()):
+        return []
+    selection = read_json(selection_path)
+    holdout = read_json(holdout_path)
+    recommended = read_json(lock_path).get("recommended_agent_id_for_holdout") if lock_path.exists() else None
+    rows: list[dict[str, Any]] = []
+    for agent_id, selection_metric in sorted(selection.get("agent_metrics", {}).items()):
+        future_metric = holdout.get("agent_metrics", {}).get(agent_id)
+        if not future_metric:
+            continue
+        rows.append(
+            {
+                "source": "agent_selection_demo",
+                "source_path": display_path(holdout_path),
+                "window_id": "demo_boltons_selection_to_holdout",
+                "mode": "demo_fresh_holdout",
+                "repo": "boltons",
+                "origin_or_window": "demo_selection_lock",
+                "agent_id": agent_id,
+                "design_id": "demo_selection_set",
+                "design_instance_id": "demo_selection_set",
+                "role": "demo_selection",
+                "claim_boundary": "demo_evidence_only_not_baseline_comparable",
+                "selection_stage": "selection",
+                "future_stage": "holdout",
+                "selection_pass_rate": pv_round(scoreable_pass_rate(selection_metric)),
+                "future_pass_rate": pv_round(scoreable_pass_rate(future_metric)),
+                "selection_scoreable_count": selection_metric.get("scoreable_cells"),
+                "future_scoreable_count": future_metric.get("scoreable_cells"),
+                "selection_pass_count": selection_metric.get("verified_pass_count"),
+                "future_pass_count": future_metric.get("verified_pass_count"),
+                "missing_or_non_scoreable_count": safe_int(selection_metric.get("scheduled_cells")) - safe_int(selection_metric.get("scoreable_cells"))
+                + safe_int(future_metric.get("scheduled_cells")) - safe_int(future_metric.get("scoreable_cells")),
+                "recommended_agent_id": recommended,
+            }
+        )
+    return rows
+
+
+def deduplicated_scoreable_support(joined_rows: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    by_key: dict[tuple[str, str, str, str, str], dict[str, Any]] = {}
+    for row in joined_rows:
+        key = (
+            str(row.get("window_id")),
+            str(row.get("repo")),
+            str(row.get("adapter_id")),
+            str(row.get("split")),
+            str(row.get("task_id")),
+        )
+        by_key.setdefault(key, row)
+    grouped: dict[tuple[str, str, str, str], list[dict[str, Any]]] = defaultdict(list)
+    for (window_id, repo, agent_id, split, _task_id), row in by_key.items():
+        grouped[(window_id, repo, agent_id, split)].append(row)
+    support: list[dict[str, Any]] = []
+    for (window_id, repo, agent_id, split), rows in sorted(grouped.items()):
+        support.append(
+            {
+                "window_id": window_id,
+                "repo": repo,
+                "agent_id": agent_id,
+                "stage": split,
+                "task_count": len(rows),
+                "scoreable_cells": sum(1 for row in rows if row.get("scoreable_cell") is True),
+                "pass_count": sum(1 for row in rows if row.get("pass_flag") is True),
+                "non_scoreable_cells": sum(1 for row in rows if row.get("scoreable_cell") is not True),
+            }
+        )
+    return support
+
+
+def demo_scoreable_support() -> list[dict[str, Any]]:
+    support: list[dict[str, Any]] = []
+    for stage in ["selection", "holdout", TOP2_REPEAT_STAGE]:
+        for row in read_csv_rows(stage_paths(stage)["score"]):
+            if stage == TOP2_REPEAT_STAGE:
+                window_id = "demo_boltons_top2_repeat"
+            else:
+                window_id = "demo_boltons_selection_to_holdout"
+            support.append(
+                {
+                    "window_id": window_id,
+                    "repo": "boltons",
+                    "agent_id": row.get("agent_id", ""),
+                    "stage": stage,
+                    "task_count": 1,
+                    "scoreable_cells": 1 if csv_bool(row.get("scoreable_cell")) else 0,
+                    "pass_count": 1 if csv_bool(row.get("verified_pass")) else 0,
+                    "non_scoreable_cells": 0 if csv_bool(row.get("scoreable_cell")) else 1,
+                }
+            )
+    grouped: dict[tuple[str, str, str, str], list[dict[str, Any]]] = defaultdict(list)
+    for row in support:
+        grouped[(row["window_id"], row["repo"], row["agent_id"], row["stage"])].append(row)
+    return [
+        {
+            "window_id": window_id,
+            "repo": repo,
+            "agent_id": agent_id,
+            "stage": stage,
+            "task_count": len(rows),
+            "scoreable_cells": sum(row["scoreable_cells"] for row in rows),
+            "pass_count": sum(row["pass_count"] for row in rows),
+            "non_scoreable_cells": sum(row["non_scoreable_cells"] for row in rows),
+        }
+        for (window_id, repo, agent_id, stage), rows in sorted(grouped.items())
+    ]
+
+
+def window_capabilities(slices: list[dict[str, Any]], support_rows: list[dict[str, Any]]) -> dict[str, Any]:
+    valid = [
+        row
+        for row in slices
+        if safe_float(row.get("selection_pass_rate")) is not None and safe_float(row.get("future_pass_rate")) is not None
+    ]
+    by_group: dict[tuple[str, str, str], set[str]] = defaultdict(set)
+    for row in valid:
+        by_group[(str(row.get("window_id")), str(row.get("repo")), str(row.get("design_id")))].add(str(row.get("agent_id")))
+    designs = sorted({str(row.get("design_id")) for row in valid if row.get("design_id")})
+    has_simple = bool(set(designs) & set(PV_SIMPLE_BASELINES))
+    has_candidate = bool(set(designs) & set(PV_CANDIDATE_SELECTORS))
+    return {
+        "pass_rate_prediction": bool(valid),
+        "agent_ranking_agreement": any(len(agents) >= 2 for agents in by_group.values()),
+        "recommendation_regret": any(len(agents) >= 2 for agents in by_group.values()),
+        "baseline_comparison": has_simple and has_candidate,
+        "scoreable_support_rows": len(support_rows),
+        "designs_available": designs,
+    }
+
+
+def build_predictive_validity_inventory() -> dict[str, Any]:
+    universe_path = phase1_result_path("phase1_retrospective_predictive_signal_universe.json")
+    window_plan_path = phase1_result_path("phase1_retrospective_predictive_signal_window_plan.json")
+    join_path = phase1_result_path("phase1_retrospective_predictive_signal_score_join_manifest.json")
+    phase1_slices = phase1_prediction_slices()
+    demo_slices = demo_prediction_slices()
+    support_rows: list[dict[str, Any]] = []
+    source_paths = [
+        display_path(path)
+        for path in [
+            universe_path,
+            window_plan_path,
+            join_path,
+            phase1_result_path("phase1_retrospective_predictive_signal_adapter_metrics.json"),
+            result_path("selection_metrics.json"),
+            result_path("holdout_metrics.json"),
+            result_path("top2_repeat_metrics.json"),
+        ]
+        if path.exists()
+    ]
+    repos: dict[str, Any] = {}
+    windows: list[dict[str, Any]] = []
+    if universe_path.exists():
+        universe = read_json(universe_path)
+        for repo, summary in sorted((universe.get("counts_by_repo") or {}).items()):
+            repos[repo] = {
+                "eligible_task_count": summary.get("eligible"),
+                "with_any_committed_outcome_row": summary.get("with_any_committed_outcome_row"),
+                "with_both_adapter_rows": summary.get("with_both_adapter_rows"),
+                "time_bucket_counts": summary.get("time_bucket_counts", {}),
+            }
+    if join_path.exists():
+        join = read_json(join_path)
+        support_rows.extend(deduplicated_scoreable_support(join.get("joined_rows", [])))
+    support_rows.extend(demo_scoreable_support())
+    all_slices = phase1_slices + demo_slices
+    support_by_window: dict[str, list[dict[str, Any]]] = defaultdict(list)
+    for row in support_rows:
+        support_by_window[str(row["window_id"])].append(row)
+    slices_by_window: dict[str, list[dict[str, Any]]] = defaultdict(list)
+    for row in all_slices:
+        slices_by_window[str(row["window_id"])].append(row)
+    if window_plan_path.exists():
+        window_plan = read_json(window_plan_path)
+        for window in window_plan.get("windows", []):
+            window_id = str(window.get("window_id"))
+            window_slices = slices_by_window.get(window_id, [])
+            support = support_by_window.get(window_id, [])
+            windows.append(
+                {
+                    "window_id": window_id,
+                    "source": "phase1_retrospective_predictive_signal",
+                    "mode": window.get("mode"),
+                    "support_status": window.get("support_status"),
+                    "cutoff_rule": window.get("cutoff_rule"),
+                    "repos": sorted((window.get("support_by_repo") or {}).keys()),
+                    "agents": sorted({row["agent_id"] for row in support}),
+                    "support_by_repo_agent_stage": support,
+                    "capabilities": window_capabilities(window_slices, support),
+                }
+            )
+    for window_id in ["demo_boltons_selection_to_holdout", "demo_boltons_top2_repeat"]:
+        support = support_by_window.get(window_id, [])
+        window_slices = slices_by_window.get(window_id, [])
+        if not support and not window_slices:
+            continue
+        windows.append(
+            {
+                "window_id": window_id,
+                "source": "agent_selection_demo",
+                "mode": "demo_fresh_holdout" if window_id.endswith("holdout") else "demo_repeatability_blocker",
+                "support_status": "accepted_for_demo_metric" if window_slices else "blocked_infrastructure",
+                "cutoff_rule": "frozen demo split; not a formal rolling-origin baseline window",
+                "repos": ["boltons"],
+                "agents": sorted({row["agent_id"] for row in support}),
+                "support_by_repo_agent_stage": support,
+                "capabilities": window_capabilities(window_slices, support),
+            }
+        )
+    inventory = {
+        "schema_version": "barcarolle.agent_selection_demo.predictive_validity_window_inventory.v1",
+        "generated_at": iso_now(),
+        "paid_calls_made": false_bool(),
+        "source_artifacts": source_paths,
+        "candidate_repos": repos,
+        "windows": windows,
+        "metric_slices": all_slices,
+        "inventory_summary": {
+            "repo_count": len(repos),
+            "window_count": len(windows),
+            "metric_slice_count": len(all_slices),
+            "viable_pass_rate_windows": sum(1 for window in windows if window["capabilities"]["pass_rate_prediction"]),
+            "baseline_comparison_windows": sum(1 for window in windows if window["capabilities"]["baseline_comparison"]),
+            "raw_artifacts_needed": False,
+        },
+    }
+    return inventory
+
+
+def false_bool() -> bool:
+    return False
+
+
+def render_predictive_validity_feasibility(inventory: dict[str, Any]) -> str:
+    repo_rows = [
+        {
+            "Repo": repo,
+            "Eligible": row.get("eligible_task_count"),
+            "Any outcome": row.get("with_any_committed_outcome_row"),
+            "Both Agents": row.get("with_both_adapter_rows"),
+            "Time buckets": ", ".join(f"{key}:{value}" for key, value in (row.get("time_bucket_counts") or {}).items()),
+        }
+        for repo, row in sorted(inventory.get("candidate_repos", {}).items())
+    ]
+    window_rows = [
+        {
+            "Window": row["window_id"],
+            "Mode": row["mode"],
+            "Repos": ", ".join(row["repos"]),
+            "Agents": ", ".join(row["agents"]),
+            "Pass-rate": row["capabilities"]["pass_rate_prediction"],
+            "Rank/regret": row["capabilities"]["agent_ranking_agreement"],
+            "Baselines": row["capabilities"]["baseline_comparison"],
+            "Status": row["support_status"],
+        }
+        for row in inventory["windows"]
+    ]
+    summary = inventory["inventory_summary"]
+    lines = [
+        "# Predictive-validity Feasibility",
+        "",
+        f"生成日期：{inventory['generated_at']}",
+        "",
+        "本报告只读取 committed sanitized outcomes、score tables 和 metadata summaries；没有读取 raw prompts、raw completions、transcripts、solver workspaces、verifier workspaces 或 provider logs，也没有运行 paid calls。",
+        "",
+        "## Summary",
+        "",
+        f"- Candidate repos: `{summary['repo_count']}`.",
+        f"- Windows inventoried: `{summary['window_count']}`.",
+        f"- Metric slices available: `{summary['metric_slice_count']}`.",
+        f"- Pass-rate prediction windows: `{summary['viable_pass_rate_windows']}`.",
+        f"- Baseline-comparison windows: `{summary['baseline_comparison_windows']}`.",
+        f"- Raw artifacts needed: `{summary['raw_artifacts_needed']}`.",
+        "",
+        "## Repos",
+        "",
+        *markdown_table(repo_rows, [("Repo", "Repo"), ("Eligible", "Eligible"), ("Any outcome", "Any outcome"), ("Both Agents", "Both Agents"), ("Time buckets", "Time buckets")]),
+        "",
+        "## Windows",
+        "",
+        *markdown_table(window_rows, [("Window", "Window"), ("Mode", "Mode"), ("Repos", "Repos"), ("Agents", "Agents"), ("Pass-rate", "Pass-rate"), ("Rank/regret", "Rank/regret"), ("Baselines", "Baselines"), ("Status", "Status")]),
+        "",
+        "## Interpretation",
+        "",
+        "至少一个 no-paid retrospective window 可以支持 pass-rate prediction 和 simple-baseline comparison。`attrs`、`boltons`、`click` 都有 committed sanitized outcomes；demo 自身的 `boltons` selection-to-holdout window 可以支持推荐反转和 regret 解释，但缺少同预算 simple baselines，因此不能单独作为 predictive-validity proof。",
+        "",
+        "True rolling-origin support 仍偏 sparse；phase1 window plan 把 repo-specific earliest bucket cutoff 标为 diagnostic_sparse。Package 5 的分析必须把结果写成 retrospective/directional 或 negative/underpowered evidence。",
+    ]
+    return "\n".join(lines) + "\n"
+
+
+def predictive_validity_feasibility(output: Path | None = None) -> dict[str, Any]:
+    inventory = build_predictive_validity_inventory()
+    write_json(result_path("predictive_validity_window_inventory.json"), inventory)
+    write_text(output or report_path("predictive_validity_feasibility_zh.md"), render_predictive_validity_feasibility(inventory))
+    return inventory
+
+
+def summarize_by_design(rows: list[dict[str, Any]], threshold: float) -> dict[str, dict[str, Any]]:
+    by_design: dict[str, list[dict[str, Any]]] = defaultdict(list)
+    for row in rows:
+        by_design[str(row.get("design_id"))].append(row)
+    return {design_id: summarize_prediction_rows(design_rows, threshold) for design_id, design_rows in sorted(by_design.items())}
+
+
+def baseline_comparison_from_summaries(summaries: dict[str, dict[str, Any]], protocol: dict[str, Any]) -> dict[str, Any]:
+    simple_ids = list((protocol.get("baselines") or {}).get("simple") or PV_SIMPLE_BASELINES)
+    candidate_ids = list((protocol.get("baselines") or {}).get("candidate_selectors") or PV_CANDIDATE_SELECTORS)
+    simple = [
+        {"design_id": design_id, **summaries[design_id]}
+        for design_id in simple_ids
+        if design_id in summaries and summaries[design_id]["MAE"] is not None
+    ]
+    candidates = [
+        {"design_id": design_id, **summaries[design_id]}
+        for design_id in candidate_ids
+        if design_id in summaries and summaries[design_id]["MAE"] is not None
+    ]
+    diagnostics = [
+        {"design_id": design_id, **summaries[design_id]}
+        for design_id in PV_DIAGNOSTIC_ONLY
+        if design_id in summaries and summaries[design_id]["MAE"] is not None
+    ]
+    best_simple = min(simple, key=lambda row: (row["MAE"], row["catastrophic_miss_rate"], row["design_id"])) if simple else None
+    best_candidate = min(candidates, key=lambda row: (row["MAE"], row["catastrophic_miss_rate"], row["design_id"])) if candidates else None
+    best_diagnostic = min(diagnostics, key=lambda row: (row["MAE"], row["catastrophic_miss_rate"], row["design_id"])) if diagnostics else None
+    delta = None
+    if best_simple and best_candidate:
+        delta = pv_round(float(best_candidate["MAE"]) - float(best_simple["MAE"]))
+    if best_candidate is None or best_simple is None:
+        result_label = "underpowered_or_missing_baselines"
+    elif float(best_candidate["MAE"]) < float(best_simple["MAE"]):
+        result_label = "candidate_beats_best_simple_baseline"
+    elif float(best_candidate["MAE"]) == float(best_simple["MAE"]):
+        result_label = "candidate_ties_best_simple_baseline"
+    else:
+        result_label = "candidate_loses_to_best_simple_baseline"
+    return {
+        "simple_baseline_scores": simple,
+        "candidate_scores": candidates,
+        "diagnostic_scores": diagnostics,
+        "best_simple_baseline": best_simple,
+        "best_barcarolle_candidate": best_candidate,
+        "best_diagnostic_candidate": best_diagnostic,
+        "candidate_minus_best_simple_MAE": delta,
+        "result_label": result_label,
+        "candidate_beats_best_simple_baseline": result_label == "candidate_beats_best_simple_baseline",
+    }
+
+
+def write_eval_slices_csv(path: Path, rows: list[dict[str, Any]], threshold: float) -> None:
+    evaluated = [prediction_slice_error(row, threshold) for row in rows]
+    write_csv(
+        path,
+        evaluated,
+        [
+            "source",
+            "window_id",
+            "mode",
+            "repo",
+            "agent_id",
+            "design_id",
+            "role",
+            "selection_stage",
+            "future_stage",
+            "selection_pass_rate",
+            "future_pass_rate",
+            "signed_error",
+            "absolute_error",
+            "squared_error",
+            "catastrophic_miss",
+            "selection_scoreable_count",
+            "future_scoreable_count",
+            "missing_or_non_scoreable_count",
+        ],
+    )
+
+
+def render_rolling_origin_eval(payload: dict[str, Any]) -> str:
+    design_rows = [
+        {
+            "Design": design_id,
+            "MAE": row["MAE"],
+            "RMSE": row["RMSE"],
+            "Signed": row["mean_signed_error"],
+            "Miss": row["catastrophic_miss_rate"],
+            "Slices": row["slice_count"],
+        }
+        for design_id, row in payload["by_design"].items()
+        if row["slice_count"]
+    ]
+    comparison = payload["baseline_comparison"]
+    rank = payload["rank_and_regret"]["rank_agreement"]
+    regret = payload["rank_and_regret"]["recommendation_regret"]
+    lines = [
+        "# Rolling-origin Evaluation",
+        "",
+        f"生成日期：{payload['generated_at']}",
+        "",
+        "本评估从 frozen protocol 和 window inventory 读取 committed sanitized metric slices。没有运行 paid calls，也没有读取 raw prompts、raw completions、transcripts 或 workspaces。",
+        "",
+        "## Primary metrics",
+        "",
+        *markdown_table(design_rows, [("Design", "Design"), ("MAE", "MAE"), ("RMSE", "RMSE"), ("Signed", "Signed error"), ("Miss", "Catastrophic miss"), ("Slices", "Slices")]),
+        "",
+        "## Baseline comparison",
+        "",
+        f"Best simple baseline: `{(comparison.get('best_simple_baseline') or {}).get('design_id')}` MAE `{(comparison.get('best_simple_baseline') or {}).get('MAE')}`.",
+        f"Best Barcarolle candidate: `{(comparison.get('best_barcarolle_candidate') or {}).get('design_id')}` MAE `{(comparison.get('best_barcarolle_candidate') or {}).get('MAE')}`.",
+        f"Candidate minus best simple MAE: `{comparison.get('candidate_minus_best_simple_MAE')}`.",
+        f"Result label: `{comparison.get('result_label')}`.",
+        "",
+        "## Rank and regret",
+        "",
+        f"Rank groups evaluated: `{rank['groups_evaluated']}`; top-rank agreement rate: `{rank['top_rank_agreement_rate']}`.",
+        f"Regret groups evaluated: `{regret['groups_evaluated']}`; mean regret: `{regret['mean_regret']}`; max regret: `{regret['max_regret']}`.",
+        "",
+        "## Claim boundary",
+        "",
+        "该结果最多支持 no-paid retrospective/directional evidence。即使 candidate beats best simple baseline，也不能从 retrospective artifacts 单独 claim predictive validity。",
+    ]
+    return "\n".join(lines) + "\n"
+
+
+def rolling_origin_eval(protocol_path: Path, window_inventory_path: Path, output: Path | None = None) -> dict[str, Any]:
+    protocol = read_json(protocol_path)
+    inventory = read_json(window_inventory_path)
+    threshold = safe_float(((protocol.get("metrics") or {}).get("secondary") or [{}])[-1].get("threshold")) or PV_CATASTROPHIC_THRESHOLD
+    rows = list(inventory.get("metric_slices", []))
+    evaluated_rows = [prediction_slice_error(row, float(threshold)) for row in rows]
+    by_design = summarize_by_design(rows, float(threshold))
+    comparison = baseline_comparison_from_summaries(by_design, protocol)
+    rank_regret = summarize_rank_and_regret(evaluated_rows)
+    payload = {
+        "schema_version": "barcarolle.agent_selection_demo.rolling_origin_eval.v1",
+        "generated_at": iso_now(),
+        "protocol": display_path(protocol_path),
+        "window_inventory": display_path(window_inventory_path),
+        "paid_calls_made": False,
+        "metric_slice_count": len(rows),
+        "catastrophic_miss_threshold": threshold,
+        "overall": summarize_prediction_rows(rows, float(threshold)),
+        "by_design": by_design,
+        "baseline_comparison": comparison,
+        "rank_and_regret": rank_regret,
+        "claim_boundary": {
+            "predictive_validity_established": False,
+            "retrospective_only": True,
+            "future_preregistered_validation_required": True,
+        },
+    }
+    write_json(result_path("rolling_origin_eval.json"), payload)
+    write_eval_slices_csv(result_path("rolling_origin_eval_slices.csv"), rows, float(threshold))
+    write_text(output or report_path("rolling_origin_eval_zh.md"), render_rolling_origin_eval(payload))
+    return payload
+
+
 def feedback_score_rows(stages: list[str] | None = None) -> list[dict[str, str]]:
     rows: list[dict[str, str]] = []
     for stage in stages or ["smoke", "selection", "holdout", TOP2_REPEAT_STAGE]:
@@ -2048,6 +2714,12 @@ def main() -> int:
     subcommands.add_parser("refresh-sanitized-stage-metadata")
     feedback_parser = subcommands.add_parser("tuning-feedback-summary")
     feedback_parser.add_argument("--output", default=str(report_path("agent_tuning_feedback_summary_zh.md")))
+    feasibility_parser = subcommands.add_parser("predictive-validity-feasibility")
+    feasibility_parser.add_argument("--output", default=str(report_path("predictive_validity_feasibility_zh.md")))
+    eval_parser = subcommands.add_parser("rolling-origin-eval")
+    eval_parser.add_argument("--protocol", default=str(result_path("predictive_validity_protocol.json")))
+    eval_parser.add_argument("--window-inventory", default=str(result_path("predictive_validity_window_inventory.json")))
+    eval_parser.add_argument("--output", default=str(report_path("rolling_origin_eval_zh.md")))
     args = parser.parse_args()
     config = load_config(repo_path(args.config))
     if args.command == "gate":
@@ -2091,6 +2763,12 @@ def main() -> int:
         return 0
     if args.command == "tuning-feedback-summary":
         tuning_feedback_summary(repo_path(args.output))
+        return 0
+    if args.command == "predictive-validity-feasibility":
+        predictive_validity_feasibility(repo_path(args.output))
+        return 0
+    if args.command == "rolling-origin-eval":
+        rolling_origin_eval(repo_path(args.protocol), repo_path(args.window_inventory), repo_path(args.output))
         return 0
     raise ValueError(args.command)
 
