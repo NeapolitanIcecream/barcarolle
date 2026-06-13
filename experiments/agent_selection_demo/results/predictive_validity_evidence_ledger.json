@@ -1,0 +1,304 @@
+{
+  "schema_version": "barcarolle.agent_selection_demo.predictive_validity_evidence_ledger.v1",
+  "generated_at": "2026-06-13",
+  "paid_calls_made_by_this_package": false,
+  "raw_artifacts_needed": false,
+  "entries": [
+    {
+      "evidence_source_path": "experiments/agent_selection_demo/results/selection_metrics.json",
+      "companion_paths": [
+        "experiments/agent_selection_demo/results/selection_score_table.csv",
+        "experiments/agent_selection_demo/reports/selection_run_report.md"
+      ],
+      "repos_covered": [
+        "boltons"
+      ],
+      "agents_or_adapters_covered": [
+        "codex_gpt_5_4",
+        "kilo_gpt_5_4",
+        "kilo_gpt_5_4_mini",
+        "kilo_claude_sonnet_4_6"
+      ],
+      "task_windows_or_cutoffs": {
+        "stage": "selection",
+        "split_source": "experiments/agent_selection_demo/results/frozen_split.json",
+        "task_count": 20
+      },
+      "task_counts_and_scoreable_cell_counts": {
+        "scheduled_cells": 80,
+        "completed_cells": 80,
+        "scoreable_cells": 76
+      },
+      "outcome_kind": [
+        "paid",
+        "demo_selection"
+      ],
+      "raw_artifacts_needed": false,
+      "can_support": [
+        "complete-Agent selection-set scoring on boltons",
+        "selection top-2 quality tie diagnosis",
+        "sanitized pass/fail, cost-observation, latency, and failure-label reporting"
+      ],
+      "cannot_support": [
+        "future target-repo predictive validity",
+        "cross-repository ranking",
+        "production cost winner when usage coverage differs by harness"
+      ]
+    },
+    {
+      "evidence_source_path": "experiments/agent_selection_demo/results/holdout_check.json",
+      "companion_paths": [
+        "experiments/agent_selection_demo/results/holdout_metrics.json",
+        "experiments/agent_selection_demo/results/holdout_score_table.csv",
+        "experiments/agent_selection_demo/reports/holdout_run_report.md"
+      ],
+      "repos_covered": [
+        "boltons"
+      ],
+      "agents_or_adapters_covered": [
+        "codex_gpt_5_4",
+        "kilo_gpt_5_4",
+        "kilo_gpt_5_4_mini",
+        "kilo_claude_sonnet_4_6"
+      ],
+      "task_windows_or_cutoffs": {
+        "stage": "holdout",
+        "split_source": "experiments/agent_selection_demo/results/frozen_split.json",
+        "task_count": 10,
+        "holdout_verdict": "contradicts"
+      },
+      "task_counts_and_scoreable_cell_counts": {
+        "scheduled_cells": 40,
+        "completed_cells": 40,
+        "scoreable_cells": 40
+      },
+      "outcome_kind": [
+        "paid",
+        "demo_holdout",
+        "fresh_holdout_after_recommendation_lock"
+      ],
+      "raw_artifacts_needed": false,
+      "can_support": [
+        "the frozen boltons selection recommendation was contradicted by fresh holdout",
+        "holdout pass-rate ranking for this repo, split, and candidate matrix"
+      ],
+      "cannot_support": [
+        "stable Kilo lead",
+        "general Agent ranking",
+        "predictive validity of the selector"
+      ]
+    },
+    {
+      "evidence_source_path": "experiments/agent_selection_demo/results/top2_repeatability_check.json",
+      "companion_paths": [
+        "experiments/agent_selection_demo/results/top2_repeat_metrics.json",
+        "experiments/agent_selection_demo/results/top2_repeat_score_table.csv",
+        "experiments/agent_selection_demo/reports/top2_repeat_completion_zh.md"
+      ],
+      "repos_covered": [
+        "boltons"
+      ],
+      "agents_or_adapters_covered": [
+        "codex_gpt_5_4",
+        "kilo_gpt_5_4"
+      ],
+      "task_windows_or_cutoffs": {
+        "stage": "top2_repeat",
+        "split_source": "experiments/agent_selection_demo/results/frozen_split.json",
+        "task_count": 10,
+        "interpretation": "blocked_infrastructure"
+      },
+      "task_counts_and_scoreable_cell_counts": {
+        "scheduled_cells": 20,
+        "completed_cells": 13,
+        "scoreable_cells": 10
+      },
+      "outcome_kind": [
+        "paid",
+        "demo_repeatability"
+      ],
+      "raw_artifacts_needed": false,
+      "can_support": [
+        "Codex repeat completed at 7/10",
+        "Kilo repeat path is blocked by adapter/CLI timeout"
+      ],
+      "cannot_support": [
+        "Kilo holdout lead stability",
+        "repeatability ranking",
+        "predictive validity"
+      ]
+    },
+    {
+      "evidence_source_path": "experiments/phase1_compiler/results/phase1_future_holdout_prediction_metrics.json",
+      "companion_paths": [
+        "experiments/phase1_compiler/reports/phase1_future_holdout_decision.md",
+        "experiments/phase1_compiler/reports/phase1_future_holdout_prediction_metrics.md"
+      ],
+      "repos_covered": [
+        "boltons"
+      ],
+      "agents_or_adapters_covered": [
+        "codex_workspace",
+        "kilo_workspace"
+      ],
+      "task_windows_or_cutoffs": {
+        "stage_pair": "B_eval_to_H_future",
+        "B_eval_tasks": 4,
+        "H_future_tasks": 4
+      },
+      "task_counts_and_scoreable_cell_counts": {
+        "B_eval_scoreable_cells": 8,
+        "H_future_scoreable_cells": 8,
+        "MAE": 0.25
+      },
+      "outcome_kind": [
+        "paid",
+        "future_holdout"
+      ],
+      "raw_artifacts_needed": false,
+      "can_support": [
+        "small boltons future-holdout prediction metric",
+        "adapter-level future pass-rate contrast"
+      ],
+      "cannot_support": [
+        "predictive validity established",
+        "multi-repo claim",
+        "production ranking"
+      ]
+    },
+    {
+      "evidence_source_path": "experiments/phase1_compiler/results/phase1_two_repo_future_holdout_prediction_metrics.json",
+      "companion_paths": [
+        "experiments/phase1_compiler/reports/phase1_two_repo_future_holdout_decision.md",
+        "experiments/phase1_compiler/reports/phase1_two_repo_future_holdout_prediction_metrics.md"
+      ],
+      "repos_covered": [
+        "boltons",
+        "attrs"
+      ],
+      "agents_or_adapters_covered": [
+        "codex_workspace",
+        "kilo_workspace"
+      ],
+      "task_windows_or_cutoffs": {
+        "stage_pair": "B_eval_to_H_future",
+        "B_eval_tasks_per_repo": 4,
+        "H_future_tasks_per_repo": 4,
+        "frozen_design_status": "matched"
+      },
+      "task_counts_and_scoreable_cell_counts": {
+        "B_eval_scoreable_cells": 16,
+        "H_future_scoreable_cells": 15,
+        "policy_violation_count": 1,
+        "pooled_MAE": 0.479167
+      },
+      "outcome_kind": [
+        "paid",
+        "future_holdout",
+        "two_repo_pilot"
+      ],
+      "raw_artifacts_needed": false,
+      "can_support": [
+        "two-repo future-holdout pilot execution",
+        "insufficient-evidence and policy-violation diagnosis"
+      ],
+      "cannot_support": [
+        "predictive validity established",
+        "clean two-repo acceptance",
+        "production ranking"
+      ]
+    },
+    {
+      "evidence_source_path": "experiments/phase1_compiler/results/phase1_retrospective_predictive_signal_baseline_comparison.json",
+      "companion_paths": [
+        "experiments/phase1_compiler/results/phase1_retrospective_predictive_signal_window_plan.json",
+        "experiments/phase1_compiler/results/phase1_retrospective_predictive_signal_adapter_metrics.json",
+        "experiments/phase1_compiler/results/phase1_retrospective_predictive_signal_score_join_manifest.json",
+        "experiments/phase1_compiler/reports/phase1_retrospective_predictive_signal_decision.md",
+        "experiments/phase1_compiler/reports/phase1_retrospective_predictive_signal_baseline_comparison.md"
+      ],
+      "repos_covered": [
+        "attrs",
+        "boltons",
+        "click"
+      ],
+      "agents_or_adapters_covered": [
+        "codex_workspace",
+        "kilo_workspace"
+      ],
+      "task_windows_or_cutoffs": {
+        "window_count": 3,
+        "primary_mode": "retrospective_pseudo_future",
+        "true_rolling_origin_support": "too_sparse_for_primary_claim"
+      },
+      "task_counts_and_scoreable_cell_counts": {
+        "eligible_tasks": 95,
+        "joined_rows": 4234,
+        "scoreable_joined_rows": 3832,
+        "best_simple_baseline_MAE": 0.2149,
+        "best_barcarolle_candidate_MAE": 0.209
+      },
+      "outcome_kind": [
+        "no_paid_by_this_analysis",
+        "retrospective",
+        "pseudo_future"
+      ],
+      "raw_artifacts_needed": false,
+      "can_support": [
+        "directional retrospective traction against the best simple baseline",
+        "baseline comparison over committed sanitized outcomes",
+        "rolling-origin feasibility gaps"
+      ],
+      "cannot_support": [
+        "formal predictive validity",
+        "future preregistered proof",
+        "selector promotion without future validation"
+      ]
+    },
+    {
+      "evidence_source_path": "experiments/phase1_compiler/results/phase1_three_repo_paid_validation_metrics.json",
+      "companion_paths": [
+        "experiments/phase1_compiler/reports/phase1_three_repo_paid_validation_decision.md",
+        "experiments/phase1_compiler/results/phase1_three_repo_paid_validation_score_tables_manifest.json"
+      ],
+      "repos_covered": [
+        "attrs",
+        "boltons",
+        "click"
+      ],
+      "agents_or_adapters_covered": [
+        "codex_workspace",
+        "kilo_workspace"
+      ],
+      "task_windows_or_cutoffs": {
+        "validation_design": "three_repo_paid_validation",
+        "primary_design": "repo_stratified"
+      },
+      "task_counts_and_scoreable_cell_counts": {
+        "planned_cells": 120,
+        "completed_cells": 120,
+        "scoreable_cells": 120
+      },
+      "outcome_kind": [
+        "paid",
+        "validation_protocol_feasibility"
+      ],
+      "raw_artifacts_needed": false,
+      "can_support": [
+        "workspace Agent protocol feasibility",
+        "scoreable paid-cell execution under endpoint and policy checks"
+      ],
+      "cannot_support": [
+        "future predictive validity",
+        "rolling-origin result",
+        "new demo-layer Agent selection claim"
+      ]
+    }
+  ],
+  "audit_conclusion": {
+    "supports_importance_of_predictive_validity": true,
+    "predictive_validity_established": false,
+    "usable_before_new_paid_calls": true,
+    "next_required_step": "freeze demo-layer protocol and run no-paid rolling-origin evaluation over committed sanitized outcomes before any paid pilot decision"
+  }
+}
