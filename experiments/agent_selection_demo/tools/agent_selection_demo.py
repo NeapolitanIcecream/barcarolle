@@ -2955,6 +2955,639 @@ def render_selector_final_eval(payload: dict[str, Any]) -> str:
     return "\n".join(lines) + "\n"
 
 
+CORRECTED_FINAL_WINDOW_ID = "blocked_split_heldout"
+CORRECTED_FINAL_REPOS = ["attrs", "boltons", "click"]
+CORRECTED_AGENT_IDS = ["codex_workspace", "kilo_workspace"]
+CORRECTED_SELECTOR_ID = "hrd_v2_70_30"
+CORRECTED_K_PER_REPO = 6
+CORRECTED_RANDOM_SEEDS = list(range(1000))
+CORRECTED_DECISION_THRESHOLDS = {
+    "action_margin": 0.05,
+    "min_common_valid_selected_tasks": 12,
+    "tie_epsilon": 0.05,
+    "bootstrap_iterations": 1000,
+    "confidence_level": 0.8,
+}
+
+
+def corrected_task_key(repo: str, task_id: str) -> str:
+    return f"{repo}::{task_id}"
+
+
+def corrected_change_size_proxy(implementation_file_count: Any, test_file_count: Any) -> str:
+    touched = safe_int(implementation_file_count) + safe_int(test_file_count)
+    if touched <= 2:
+        return "small"
+    if touched <= 4:
+        return "medium"
+    return "large"
+
+
+def corrected_phase1_universe_rows() -> dict[str, dict[str, Any]]:
+    payload = read_json(phase1_result_path("phase1_retrospective_predictive_signal_universe.json"))
+    return {corrected_task_key(str(row["repo"]), str(row["task_id"])): row for row in payload.get("rows", [])}
+
+
+def corrected_phase1_window() -> dict[str, Any]:
+    payload = read_json(phase1_result_path("phase1_retrospective_predictive_signal_window_plan.json"))
+    for window in payload.get("windows", []):
+        if window.get("window_id") == CORRECTED_FINAL_WINDOW_ID:
+            return window
+    raise ValueError(f"missing Phase 1 window: {CORRECTED_FINAL_WINDOW_ID}")
+
+
+def corrected_phase1_task_row(repo: str, task_id: str, stage_role: str, universe_row: dict[str, Any]) -> dict[str, Any]:
+    family = str(universe_row.get("coarse_task_family") or "unknown_family")
+    module_bucket = family.split(":", 1)[-1] if ":" in family else family
+    risk_flag = (
+        universe_row.get("eligible_for_analysis") is not True
+        or str(universe_row.get("leakage_risk_bucket") or "") != "low"
+        or str(universe_row.get("ambiguity_risk_bucket") or "") != "low"
+    )
+    quality_score = 1.0 if not risk_flag and str(universe_row.get("statement_specificity_bucket") or "") == "acceptable" else 0.0
+    task_key = corrected_task_key(repo, task_id)
+    return {
+        "task_id": task_key,
+        "source_task_id": task_id,
+        "target_repo": repo,
+        "task_time": str(universe_row.get("task_time") or ""),
+        "stage_role": stage_role,
+        "source": str(universe_row.get("source_reservoir") or "unknown_source"),
+        "source_cluster": f"{repo}:{family}",
+        "module_bucket": module_bucket,
+        "path_bucket": str(universe_row.get("editable_scope_bucket") or "unknown_scope"),
+        "test_bucket": str(universe_row.get("source_context_type_bucket") or "unknown_context"),
+        "task_type": str(universe_row.get("source_context_class") or "unknown_type"),
+        "change_size_proxy": corrected_change_size_proxy(
+            universe_row.get("implementation_file_count"),
+            universe_row.get("test_file_count"),
+        ),
+        "difficulty_bucket": str(universe_row.get("context_length_bucket") or "unknown_difficulty"),
+        "recency_bucket": str(universe_row.get("time_bucket") or selector_recency_bucket(str(universe_row.get("task_time") or ""))),
+        "quality_score": quality_score,
+        "risk_flag": risk_flag,
+        "flaky_flag": "flaky" in str(universe_row.get("certification_risk_bucket") or ""),
+        "gates_pass": universe_row.get("eligible_for_analysis") is True,
+        "has_required_fields": bool(universe_row.get("base_commit") and universe_row.get("target_commit")),
+        "base_commit_present": True,
+        "target_commit_present": True,
+        "is_final_selection_candidate": stage_role == "selection",
+        "is_final_later_task": stage_role == "holdout",
+        "metadata_fallbacks": "module_bucket,path_bucket,test_bucket,change_size_proxy,difficulty_bucket",
+    }
+
+
+def corrected_phase1_task_rows_from_window(
+    window: dict[str, Any],
+    universe_by_key: dict[str, dict[str, Any]],
+    repos: list[str],
+) -> list[dict[str, Any]]:
+    rows: list[dict[str, Any]] = []
+    support_by_repo = window.get("support_by_repo") or {}
+    for repo in repos:
+        support = support_by_repo.get(repo) or {}
+        for split_name, stage_role in [("B_eval", "selection"), ("H_future", "holdout")]:
+            for task_id in support.get(f"{split_name}_task_ids", []):
+                key = corrected_task_key(repo, str(task_id))
+                if key not in universe_by_key:
+                    raise ValueError(f"missing universe metadata for {key}")
+                rows.append(corrected_phase1_task_row(repo, str(task_id), stage_role, universe_by_key[key]))
+    return sorted(rows, key=lambda row: (str(row["target_repo"]), str(row["stage_role"]), str(row["task_time"]), str(row["task_id"])))
+
+
+def corrected_candidate_tasks_by_repo(task_rows: list[dict[str, Any]], repos: list[str]) -> dict[str, list[dict[str, Any]]]:
+    by_repo: dict[str, list[dict[str, Any]]] = {}
+    for repo in repos:
+        rows = [
+            row
+            for row in task_rows
+            if row.get("target_repo") == repo
+            and row.get("stage_role") == "selection"
+            and float(row.get("quality_score") or 0.0) >= 1.0
+            and not selector_bool(row.get("risk_flag"))
+            and not selector_bool(row.get("flaky_flag"))
+        ]
+        by_repo[repo] = sorted(rows, key=lambda row: (str(row.get("task_time") or ""), str(row.get("task_id") or "")))
+    return by_repo
+
+
+def corrected_select_hrd_by_repo(
+    task_rows: list[dict[str, Any]],
+    repos: list[str],
+    k_per_repo: int,
+    representative_fraction: float = 0.7,
+) -> dict[str, Any]:
+    selected_task_ids: list[str] = []
+    representative_task_ids: list[str] = []
+    discriminative_task_ids: list[str] = []
+    per_repo: dict[str, Any] = {}
+    candidates_by_repo = corrected_candidate_tasks_by_repo(task_rows, repos)
+    for repo in repos:
+        selection = select_hrd_hybrid(candidates_by_repo[repo], k_per_repo, representative_fraction)
+        selected_task_ids.extend(selection["selected_task_ids"])
+        representative_task_ids.extend(selection["representative_task_ids"])
+        discriminative_task_ids.extend(selection["discriminative_task_ids"])
+        per_repo[repo] = {
+            "eligible_selection_tasks": len(candidates_by_repo[repo]),
+            "selected_task_ids": selection["selected_task_ids"],
+            "representative_task_ids": selection["representative_task_ids"],
+            "discriminative_task_ids": selection["discriminative_task_ids"],
+        }
+    return {
+        "selected_task_ids": sorted(selected_task_ids),
+        "representative_task_ids": sorted(representative_task_ids),
+        "discriminative_task_ids": sorted(discriminative_task_ids),
+        "representative_fraction": representative_fraction,
+        "k_per_repo": k_per_repo,
+        "k_total": len(selected_task_ids),
+        "disagreement_source": "metadata_informativeness",
+        "per_repo": per_repo,
+    }
+
+
+def corrected_later_task_ids(task_rows: list[dict[str, Any]]) -> list[str]:
+    return [
+        str(row["task_id"])
+        for row in sorted(task_rows, key=lambda row: (str(row.get("target_repo") or ""), str(row.get("task_time") or ""), str(row["task_id"])))
+        if row.get("stage_role") == "holdout"
+    ]
+
+
+def corrected_protocol_payload() -> dict[str, Any]:
+    window = corrected_phase1_window()
+    task_rows = corrected_phase1_task_rows_from_window(window, corrected_phase1_universe_rows(), CORRECTED_FINAL_REPOS)
+    final_selection = corrected_select_hrd_by_repo(task_rows, CORRECTED_FINAL_REPOS, CORRECTED_K_PER_REPO, 0.7)
+    later_task_ids = corrected_later_task_ids(task_rows)
+    candidates_by_repo = corrected_candidate_tasks_by_repo(task_rows, CORRECTED_FINAL_REPOS)
+    return {
+        "schema_version": "barcarolle.agent_selection_demo.selector_corrected_protocol.v1",
+        "generated_at": "2026-06-14",
+        "status": "frozen_before_final_outcome_join",
+        "paid_agent_calls_made": False,
+        "previous_result_label": "hypothesis_generating_selector_development_result",
+        "final_validation_source": "no_paid_independent_rolling_origin",
+        "source_mode": "retrospective_pseudo_future_blocked_split_heldout",
+        "source_independence": {
+            "independent_of_previous_boltons_selector_development_slice": True,
+            "phase1_selection_freeze_status": "frozen_before_score_join",
+            "caveat": "Phase 1 blocked split is pseudo-future held-out evidence, not full chronological rolling-origin proof."
+        },
+        "input_artifacts_allowed_for_selector_scoring": [
+            "experiments/agent_selection_demo/results/selector_independent_validation_inventory.json",
+            "experiments/phase1_compiler/results/phase1_retrospective_predictive_signal_window_plan.json",
+            "experiments/phase1_compiler/results/phase1_retrospective_predictive_signal_universe.json"
+        ],
+        "outcome_artifacts_withheld_until_package4": [
+            "experiments/phase1_compiler/results/phase1_retrospective_predictive_signal_score_join_manifest.json"
+        ],
+        "selector_score_input_fields": [
+            "repo",
+            "task_id",
+            "task_time",
+            "source_reservoir",
+            "source_quality_bucket",
+            "source_context_type_bucket",
+            "coarse_task_family",
+            "implementation_file_count",
+            "test_file_count",
+            "time_bucket",
+            "editable_scope_bucket",
+            "statement_specificity_bucket",
+            "leakage_risk_bucket",
+            "ambiguity_risk_bucket",
+            "certification_risk_bucket",
+            "eligible_for_analysis"
+        ],
+        "forbidden_selector_score_fields": [
+            "pass_flag",
+            "fail_flag",
+            "terminal_status",
+            "scoreable_cell",
+            "verified_pass",
+            "selection_pass_rate",
+            "future_pass_rate",
+            "policy_outcome_value"
+        ],
+        "candidate_selector_families": [
+            {
+                "selector_id": "rsq_recency_stratified_quota",
+                "role": "strong_metadata_baseline"
+            },
+            {
+                "selector_id": CORRECTED_SELECTOR_ID,
+                "role": "primary_final_selector",
+                "representative_fraction": 0.7,
+                "discriminative_fraction": 0.3,
+                "disagreement_arm_name": "metadata_informativeness"
+            },
+            {
+                "selector_id": "hrd_v2_60_40",
+                "role": "development_comparison_only_not_post_final_fallback"
+            }
+        ],
+        "final_selector_config": {
+            "selector_id": CORRECTED_SELECTOR_ID,
+            "k_per_repo": CORRECTED_K_PER_REPO,
+            "k_total": final_selection["k_total"],
+            "representative_fraction": 0.7,
+            "metadata_informativeness_fraction": 0.3,
+            "repo_count": len(CORRECTED_FINAL_REPOS),
+            "reason_for_k_per_repo": "The primary no-paid source has exactly ten B_eval tasks per repo; k=6 preserves same-budget random baseline variation while keeping at least twelve common-valid paired cells in aggregate.",
+            "quality_gate": "quality_score >= 1.0 and risk_flag == false and flaky_flag == false",
+            "module_cap": "ceil(k * 0.3) within each repo selector run"
+        },
+        "repos": CORRECTED_FINAL_REPOS,
+        "agent_set": CORRECTED_AGENT_IDS,
+        "selection_candidate_counts_by_repo": {repo: len(rows) for repo, rows in candidates_by_repo.items()},
+        "selected_task_ids_before_outcome_join": final_selection["selected_task_ids"],
+        "representative_task_ids": final_selection["representative_task_ids"],
+        "metadata_informativeness_task_ids": final_selection["discriminative_task_ids"],
+        "selection_by_repo": final_selection["per_repo"],
+        "later_holdout_task_ids_before_outcome_join": later_task_ids,
+        "random_baselines": {
+            "families": sorted(BASELINE_SELECTOR_FUNCS),
+            "same_budget_rule": "sample k_per_repo tasks inside each repo, then aggregate across repos",
+            "seed_count": len(CORRECTED_RANDOM_SEEDS),
+            "seeds": CORRECTED_RANDOM_SEEDS
+        },
+        "invalid_cell_policy": {
+            "count_as_fail": sorted(POLICY_VALID_TERMINAL_STATUSES),
+            "count_as_na": ["missing_committed_score_row", "verifier_outage", "invalid_task", "oracle_flake"],
+            "pairwise_metrics": "common policy-valid cells only"
+        },
+        "decision_thresholds": CORRECTED_DECISION_THRESHOLDS,
+        "success_criteria": {
+            "recommendation_required": True,
+            "recommended_agent_is_later_top_or_regret_lte": 0.05,
+            "top_pair_direction_agreement_required": True,
+            "mae_beats_strong_random_abs_min": 0.02,
+            "mae_beats_strong_random_relative_min": 0.10,
+            "decision_quality_beats_random_on_regret_or_false_recommendation_rate": True
+        },
+        "paid_boundary": {
+            "new_paid_cells_preregistered": 0,
+            "hard_cap_if_needed_later": 80,
+            "endpoint_env_required_if_paid": ["LLM_BASE_URL", "LLM_API_KEY"]
+        },
+        "outcome_blind_audit": {
+            "score_join_manifest_read_by_protocol_command": False,
+            "selector_scoring_uses_final_selection_outcomes": False,
+            "selector_scoring_uses_final_later_outcomes": False,
+            "metadata_proxy_used_instead_of_historical_agent_disagreement": True
+        }
+    }
+
+
+def render_corrected_protocol_report(payload: dict[str, Any]) -> str:
+    selector = payload["final_selector_config"]
+    counts = payload["selection_candidate_counts_by_repo"]
+    lines = [
+        "# Selector Corrected Protocol",
+        "",
+        "生成日期：2026-06-14",
+        "",
+        "## Protocol status",
+        "",
+        f"- Status: `{payload['status']}`。",
+        f"- Final validation source: `{payload['final_validation_source']}`。",
+        f"- Source mode: `{payload['source_mode']}`。",
+        f"- Previous boltons HRD result label: `{payload['previous_result_label']}`。",
+        "- No paid calls are planned for this package.",
+        "",
+        "## Selector",
+        "",
+        f"- Primary selector: `{selector['selector_id']}`。",
+        f"- Budget: `{selector['k_per_repo']}` per repo, `{selector['k_total']}` total。",
+        f"- Representative / metadata-informativeness split: `70/30`。",
+        f"- Reason for k: {selector['reason_for_k_per_repo']}",
+        "- The HRD arm is called `metadata_informativeness`; no leakage-safe historical Agent-disagreement matrix is available for this final block.",
+        "",
+        "## Candidate support",
+        "",
+        *markdown_table(
+            [{"Repo": repo, "B_eval candidates": counts[repo], "Selected": len(payload["selection_by_repo"][repo]["selected_task_ids"])} for repo in payload["repos"]],
+            [("Repo", "Repo"), ("B_eval candidates", "B_eval candidates"), ("Selected", "Selected")],
+        ),
+        "",
+        "## Frozen task IDs",
+        "",
+        f"- Selected before outcome join: `{', '.join(payload['selected_task_ids_before_outcome_join'])}`。",
+        f"- Later/Holdout before outcome join: `{', '.join(payload['later_holdout_task_ids_before_outcome_join'])}`。",
+        "",
+        "## Random baselines and decision rule",
+        "",
+        f"- Baselines: `{', '.join(payload['random_baselines']['families'])}`。",
+        f"- Random seeds: `0..{payload['random_baselines']['seed_count'] - 1}`。",
+        f"- Agents: `{', '.join(payload['agent_set'])}`。",
+        f"- Action margin: `{payload['decision_thresholds']['action_margin']}`。",
+        f"- Minimum common-valid selected cells: `{payload['decision_thresholds']['min_common_valid_selected_tasks']}`。",
+        "",
+        "## Leakage audit",
+        "",
+        "- Selector scoring inputs are metadata fields only.",
+        "- `phase1_retrospective_predictive_signal_score_join_manifest.json` is explicitly withheld until Package 4.",
+        "- Forbidden fields include pass/fail flags, terminal status, scoreable flags, and pass-rate fields.",
+        "",
+        "## Claim boundary",
+        "",
+        "If Package 4 succeeds, the claim is demo-level independent decision validation on a Phase 1 pseudo-future held-out block. It still does not prove full predictive validity, global Agent ranking, or cross-domain superiority.",
+    ]
+    return "\n".join(lines) + "\n"
+
+
+def selector_corrected_protocol() -> dict[str, Any]:
+    payload = corrected_protocol_payload()
+    write_json(result_path("selector_corrected_protocol.json"), payload)
+    write_text(report_path("selector_corrected_protocol_zh.md"), render_corrected_protocol_report(payload))
+    return payload
+
+
+def corrected_phase1_policy_valid(row: dict[str, Any]) -> bool:
+    status = str(row.get("terminal_status") or "")
+    if status == "missing_committed_score_row":
+        return False
+    return status in POLICY_VALID_TERMINAL_STATUSES
+
+
+def corrected_phase1_outcome_rows(protocol: dict[str, Any]) -> list[dict[str, Any]]:
+    join = read_json(phase1_result_path("phase1_retrospective_predictive_signal_score_join_manifest.json"))
+    selected = set(protocol["selected_task_ids_before_outcome_join"])
+    later = set(protocol["later_holdout_task_ids_before_outcome_join"])
+    wanted = selected | later
+    by_key: dict[tuple[str, str, str], dict[str, Any]] = {}
+    for row in join.get("joined_rows", []):
+        if row.get("window_id") != CORRECTED_FINAL_WINDOW_ID:
+            continue
+        repo = str(row.get("repo") or "")
+        if repo not in set(protocol["repos"]):
+            continue
+        agent_id = str(row.get("adapter_id") or "")
+        if agent_id not in set(protocol["agent_set"]):
+            continue
+        stage = "selection" if row.get("split") == "B_eval" else "holdout" if row.get("split") == "H_future" else ""
+        if not stage:
+            continue
+        task_key = corrected_task_key(repo, str(row.get("task_id") or ""))
+        if task_key not in wanted:
+            continue
+        key = (stage, task_key, agent_id)
+        by_key.setdefault(key, row)
+    outcome_rows: list[dict[str, Any]] = []
+    for stage, task_ids in [("selection", sorted(selected)), ("holdout", sorted(later))]:
+        for task_id in task_ids:
+            for agent_id in protocol["agent_set"]:
+                source = by_key.get((stage, task_id, agent_id))
+                if source:
+                    valid = corrected_phase1_policy_valid(source)
+                    passed = source.get("pass_flag") is True and valid
+                    status = str(source.get("terminal_status") or "")
+                    scoreable = source.get("scoreable_cell") is True
+                    source_path = str(source.get("score_table") or "")
+                    non_scoreable_reason = source.get("non_scoreable_reason")
+                else:
+                    valid = False
+                    passed = False
+                    status = "missing_committed_score_row"
+                    scoreable = False
+                    source_path = ""
+                    non_scoreable_reason = "missing_committed_score_row"
+                outcome_rows.append(
+                    {
+                        "task_id": task_id,
+                        "agent_id": agent_id,
+                        "stage": stage,
+                        "window_id": CORRECTED_FINAL_WINDOW_ID,
+                        "source_artifact_path": source_path,
+                        "terminal_status": status,
+                        "scoreable_cell": scoreable,
+                        "verified_pass": passed,
+                        "policy_valid_cell": valid,
+                        "policy_pass": passed if valid else "",
+                        "policy_outcome_value": 1 if valid and passed else 0 if valid else "",
+                        "failure_category": non_scoreable_reason or status,
+                        "latency_seconds": "",
+                        "estimated_cost_usd": "",
+                        "cost_observation_kind": "phase1_committed_sanitized_score_join",
+                    }
+                )
+    return outcome_rows
+
+
+def corrected_random_selected_ids(
+    task_rows: list[dict[str, Any]],
+    protocol: dict[str, Any],
+    baseline_id: str,
+    seed: int,
+) -> list[str]:
+    func = BASELINE_SELECTOR_FUNCS[baseline_id]
+    selected: list[str] = []
+    candidates_by_repo = corrected_candidate_tasks_by_repo(task_rows, list(protocol["repos"]))
+    for index, repo in enumerate(protocol["repos"]):
+        selected.extend(func(candidates_by_repo[repo], int(protocol["final_selector_config"]["k_per_repo"]), seed + index * 100_000))
+    return sorted(selected)
+
+
+def corrected_random_decision_summaries(
+    task_rows: list[dict[str, Any]],
+    protocol: dict[str, Any],
+    outcome_rows: list[dict[str, Any]],
+) -> dict[str, dict[str, Any]]:
+    later_ids = list(protocol["later_holdout_task_ids_before_outcome_join"])
+    agent_ids = list(protocol["agent_set"])
+    thresholds = dict(protocol["decision_thresholds"])
+    summaries: dict[str, dict[str, Any]] = {}
+    for baseline_id in BASELINE_SELECTOR_FUNCS:
+        rows: list[dict[str, Any]] = []
+        unique_samples: set[tuple[str, ...]] = set()
+        for seed in protocol["random_baselines"]["seeds"]:
+            selected = corrected_random_selected_ids(task_rows, protocol, baseline_id, int(seed))
+            unique_samples.add(tuple(selected))
+            decision = decision_wrapper_for_selection(selected, agent_ids, outcome_rows, thresholds)
+            metrics = apply_later_decision_metrics(decision, selected, later_ids, agent_ids, outcome_rows, thresholds)
+            rows.append({"selector_id": baseline_id, "seed": int(seed), **metrics})
+        summaries[baseline_id] = {
+            "selector_id": baseline_id,
+            "seed_count": len(rows),
+            "unique_sample_count": len(unique_samples),
+            "metric_summary": summarize_selector_metric_rows(rows),
+            "decision_summary": summarize_decision_rows(rows),
+            "rows": [compact_selector_metric_row(row) | {"decision_state": row["decision"]["state"]} for row in rows],
+        }
+    return summaries
+
+
+def corrected_baseline_percentiles(candidate: dict[str, Any], random_rows: list[dict[str, Any]]) -> dict[str, Any]:
+    return selector_random_percentiles(candidate, random_rows)
+
+
+def corrected_preferred_terminal_state(payload: dict[str, Any]) -> tuple[bool, str | None]:
+    decision = payload["decision"]
+    metrics = payload["metrics"]
+    strongest = payload["strongest_random_baseline"]
+    mae = payload["mae_comparison"]
+    decision_comparison = payload["decision_comparison"]
+    if decision["state"] != "recommend":
+        return False, "selector_does_not_recommend"
+    regret = metrics.get("recommendation_regret")
+    if regret is None or float(regret) > 0.05:
+        return False, "selector_recommends_wrong_agent"
+    if metrics.get("top_pair_direction_agreement") is not True:
+        return False, "selector_recommends_wrong_agent"
+    if not (mae["absolute_improvement"] >= 0.02 or mae["relative_improvement"] >= 0.10):
+        return False, "strong_random_not_beaten"
+    if not decision_comparison["selector_beats_random_on_regret_or_false_recommendation"]:
+        return False, "strong_random_not_beaten"
+    if strongest.get("metric_summary", {}).get("MAE_mean") is None:
+        return False, "missing_final_outcome_grid"
+    return True, None
+
+
+def selector_no_paid_independent_eval() -> dict[str, Any]:
+    protocol = read_json(result_path("selector_corrected_protocol.json"))
+    window = corrected_phase1_window()
+    task_rows = corrected_phase1_task_rows_from_window(window, corrected_phase1_universe_rows(), list(protocol["repos"]))
+    outcome_rows = corrected_phase1_outcome_rows(protocol)
+    selected_ids = list(protocol["selected_task_ids_before_outcome_join"])
+    later_ids = list(protocol["later_holdout_task_ids_before_outcome_join"])
+    agent_ids = list(protocol["agent_set"])
+    thresholds = dict(protocol["decision_thresholds"])
+    decision = decision_wrapper_for_selection(selected_ids, agent_ids, outcome_rows, thresholds)
+    metrics = apply_later_decision_metrics(decision, selected_ids, later_ids, agent_ids, outcome_rows, thresholds)
+    random_summaries = corrected_random_decision_summaries(task_rows, protocol, outcome_rows)
+    strongest_id = min(
+        random_summaries,
+        key=lambda baseline_id: (
+            float(random_summaries[baseline_id]["metric_summary"].get("MAE_mean") or 999.0),
+            str(baseline_id),
+        ),
+    )
+    strongest = random_summaries[strongest_id]
+    random_mae = float(strongest["metric_summary"]["MAE_mean"])
+    selector_mae = float(metrics["MAE"])
+    abs_improvement = random_mae - selector_mae
+    rel_improvement = abs_improvement / random_mae if random_mae else 0.0
+    decision_summary = strongest["decision_summary"]
+    selector_false = 1.0 if metrics.get("false_recommendation") is True else 0.0
+    selector_regret = metrics.get("recommendation_regret")
+    random_regret = decision_summary.get("mean_recommendation_regret")
+    random_false = decision_summary.get("false_recommendation_rate")
+    decision_comparison = {
+        "selector_recommendation_regret": selector_regret,
+        "strongest_random_mean_regret_when_recommending": random_regret,
+        "selector_false_recommendation_rate": selector_false,
+        "strongest_random_false_recommendation_rate": random_false,
+        "selector_top_pair_direction_agreement": metrics.get("top_pair_direction_agreement"),
+        "strongest_random_top_pair_direction_agreement_rate": decision_summary.get("top_pair_direction_agreement_rate"),
+        "selector_beats_random_on_regret_or_false_recommendation": (
+            (selector_regret is not None and random_regret is not None and float(selector_regret) <= float(random_regret))
+            or (random_false is not None and selector_false <= float(random_false))
+        ),
+    }
+    mae_comparison = {
+        "selector_MAE": selector_round(selector_mae),
+        "strongest_random_baseline": strongest_id,
+        "strongest_random_MAE_mean": strongest["metric_summary"]["MAE_mean"],
+        "absolute_improvement": selector_round(abs_improvement),
+        "relative_improvement": selector_round(rel_improvement),
+        "random_percentiles": corrected_baseline_percentiles(metrics, strongest["rows"]),
+    }
+    preliminary = {
+        "decision": decision,
+        "metrics": metrics,
+        "strongest_random_baseline": strongest,
+        "mae_comparison": mae_comparison,
+        "decision_comparison": decision_comparison,
+    }
+    preferred, blocker = corrected_preferred_terminal_state(preliminary)
+    payload = {
+        "schema_version": "barcarolle.agent_selection_demo.selector_no_paid_independent_eval.v1",
+        "generated_at": "2026-06-14",
+        "paid_agent_calls_made": False,
+        "new_paid_cells": 0,
+        "new_paid_cost_usd": 0.0,
+        "protocol": "experiments/agent_selection_demo/results/selector_corrected_protocol.json",
+        "final_validation_source": protocol["final_validation_source"],
+        "source_mode": protocol["source_mode"],
+        "selector_id": protocol["final_selector_config"]["selector_id"],
+        "k_per_repo": protocol["final_selector_config"]["k_per_repo"],
+        "k_total": protocol["final_selector_config"]["k_total"],
+        "selected_task_ids": selected_ids,
+        "later_holdout_task_ids": later_ids,
+        "agent_set": agent_ids,
+        "outcome_cell_counts": {
+            "rows": len(outcome_rows),
+            "policy_valid_rows": sum(1 for row in outcome_rows if row["policy_valid_cell"] is True),
+            "missing_or_na_rows": sum(1 for row in outcome_rows if row["policy_valid_cell"] is not True),
+            "scoreable_rows": sum(1 for row in outcome_rows if row["scoreable_cell"] is True),
+        },
+        "decision": decision,
+        "metrics": metrics,
+        "random_baselines": random_summaries,
+        "strongest_random_baseline_id": strongest_id,
+        "mae_comparison": mae_comparison,
+        "decision_comparison": decision_comparison,
+        "preferred_terminal_state_achieved": preferred,
+        "negative_terminal_blocker": blocker,
+        "paid_package_needed": blocker == "missing_final_outcome_grid",
+        "claim_boundary": "demo_level_independent_decision_validation_on_phase1_pseudo_future_heldout_block"
+        if preferred
+        else "corrected_no_paid_negative_or_incomplete_evidence",
+    }
+    write_json(result_path("selector_no_paid_independent_eval.json"), payload)
+    write_text(report_path("selector_no_paid_independent_eval_zh.md"), render_no_paid_independent_eval_report(payload))
+    return payload
+
+
+def render_no_paid_independent_eval_report(payload: dict[str, Any]) -> str:
+    metrics = payload["metrics"]
+    decision = payload["decision"]
+    mae = payload["mae_comparison"]
+    decision_comparison = payload["decision_comparison"]
+    lines = [
+        "# Selector No-paid Independent Eval",
+        "",
+        "生成日期：2026-06-14",
+        "",
+        "## Result",
+        "",
+        f"- Preferred terminal state achieved: `{payload['preferred_terminal_state_achieved']}`。",
+        f"- Negative blocker: `{payload['negative_terminal_blocker']}`。",
+        f"- Decision state: `{decision['state']}`。",
+        f"- Recommended Agent: `{decision.get('recommended_agent_id')}`。",
+        f"- Later top Agent: `{metrics['later_top_agent_id']}`。",
+        f"- Recommendation regret: `{metrics['recommendation_regret']}`。",
+        f"- Top-pair direction agreement: `{metrics['top_pair_direction_agreement']}`。",
+        "",
+        "## Pass rates",
+        "",
+        f"- Selection: `{rate_summary(metrics['selection_rates'])}`。",
+        f"- Later/Holdout: `{rate_summary(metrics['later_rates'])}`。",
+        "",
+        "## Strong random comparison",
+        "",
+        f"- Selector MAE: `{mae['selector_MAE']}`。",
+        f"- Strongest random baseline: `{mae['strongest_random_baseline']}`。",
+        f"- Strongest random MAE mean: `{mae['strongest_random_MAE_mean']}`。",
+        f"- Absolute improvement: `{mae['absolute_improvement']}`。",
+        f"- Relative improvement: `{mae['relative_improvement']}`。",
+        f"- MAE beats/ties random share: `{mae['random_percentiles']['MAE_beats_or_ties_random_share']}`。",
+        f"- Regret beats/ties random share: `{mae['random_percentiles']['regret_beats_or_ties_random_share']}`。",
+        "",
+        "## Decision comparison",
+        "",
+        f"- Selector regret: `{decision_comparison['selector_recommendation_regret']}`。",
+        f"- Strongest random mean regret when recommending: `{decision_comparison['strongest_random_mean_regret_when_recommending']}`。",
+        f"- Selector false-recommendation rate: `{decision_comparison['selector_false_recommendation_rate']}`。",
+        f"- Strongest random false-recommendation rate: `{decision_comparison['strongest_random_false_recommendation_rate']}`。",
+        f"- Selector beats random on regret or false recommendation: `{decision_comparison['selector_beats_random_on_regret_or_false_recommendation']}`。",
+        "",
+        "## Boundary",
+        "",
+        "This is no-paid replay from committed sanitized Phase 1 artifacts. It is independent of the prior boltons selector-development slice, but remains pseudo-future held-out demo evidence rather than full predictive-validity proof.",
+    ]
+    return "\n".join(lines) + "\n"
+
+
 def render_selector_baseline_eval(payload: dict[str, Any]) -> str:
     lines = [
         "# Selector Baseline Eval",
@@ -4321,6 +4954,8 @@ def main() -> int:
     subcommands.add_parser("selector-hrd-eval")
     subcommands.add_parser("selector-decision-eval")
     subcommands.add_parser("selector-final-eval")
+    subcommands.add_parser("selector-corrected-protocol")
+    subcommands.add_parser("selector-no-paid-independent-eval")
     args = parser.parse_args()
     config = load_config(repo_path(args.config))
     if args.command == "gate":
@@ -4385,6 +5020,12 @@ def main() -> int:
         return 0
     if args.command == "selector-final-eval":
         selector_final_eval(config)
+        return 0
+    if args.command == "selector-corrected-protocol":
+        selector_corrected_protocol()
+        return 0
+    if args.command == "selector-no-paid-independent-eval":
+        selector_no_paid_independent_eval()
         return 0
     raise ValueError(args.command)
 

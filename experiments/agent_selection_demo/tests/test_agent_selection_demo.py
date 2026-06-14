@@ -498,6 +498,44 @@ def test_hrd_metadata_scores_ignore_outcome_like_future_fields() -> None:
     assert demo.select_hrd_disagreement_only(rows, k=1)["selected_task_ids"] == demo.select_hrd_disagreement_only(changed_future, k=1)["selected_task_ids"]
 
 
+def test_corrected_protocol_freezes_phase1_selection_without_score_join() -> None:
+    payload = demo.corrected_protocol_payload()
+
+    assert payload["status"] == "frozen_before_final_outcome_join"
+    assert payload["final_selector_config"]["selector_id"] == "hrd_v2_70_30"
+    assert payload["final_selector_config"]["k_per_repo"] == 6
+    assert payload["final_selector_config"]["k_total"] == 18
+    assert "phase1_retrospective_predictive_signal_score_join_manifest.json" not in " ".join(
+        payload["input_artifacts_allowed_for_selector_scoring"]
+    )
+    assert any("score_join_manifest" in path for path in payload["outcome_artifacts_withheld_until_package4"])
+    assert set(payload["forbidden_selector_score_fields"]).isdisjoint(payload["selector_score_input_fields"])
+    assert payload["outcome_blind_audit"]["score_join_manifest_read_by_protocol_command"] is False
+
+
+def test_corrected_phase1_hrd_selection_ignores_outcome_like_fields() -> None:
+    window = demo.corrected_phase1_window()
+    rows = demo.corrected_phase1_task_rows_from_window(
+        window,
+        demo.corrected_phase1_universe_rows(),
+        demo.CORRECTED_FINAL_REPOS,
+    )
+    changed = [
+        {
+            **row,
+            "pass_flag": index % 2 == 0,
+            "future_pass_rate": 1.0 if index % 2 == 0 else 0.0,
+            "terminal_status": "verified_pass" if index % 2 == 0 else "verified_fail",
+        }
+        for index, row in enumerate(rows)
+    ]
+
+    original = demo.corrected_select_hrd_by_repo(rows, demo.CORRECTED_FINAL_REPOS, 6, 0.7)
+    mutated = demo.corrected_select_hrd_by_repo(changed, demo.CORRECTED_FINAL_REPOS, 6, 0.7)
+
+    assert original["selected_task_ids"] == mutated["selected_task_ids"]
+
+
 def selector_test_outcome_rows(agent_values: dict[str, list[int]]) -> list[dict[str, str]]:
     rows: list[dict[str, str]] = []
     for agent_id, values in agent_values.items():
