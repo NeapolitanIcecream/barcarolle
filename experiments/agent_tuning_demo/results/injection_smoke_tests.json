@@ -1,0 +1,268 @@
+{
+  "generated_at": "2026-06-14",
+  "paid_calls_used": 0,
+  "rows": [
+    {
+      "adapter_returned_timeout_status": true,
+      "agent_id": "codex_workspace",
+      "artifact_hash": "sha256:dda1c2f87d2b8ff00e0dff9bd71a2d3020964247bb6ea2714d27ad53cf6818b6",
+      "artifact_path": "AGENTS.md",
+      "command_exit_code": 124,
+      "expected_phrase_observed": {
+        "BARCAROLLE_INJECTION_ACTIVE": true
+      },
+      "injection_record": {
+        "artifact_hash": "sha256:dda1c2f87d2b8ff00e0dff9bd71a2d3020964247bb6ea2714d27ad53cf6818b6",
+        "artifact_id": "codex_agents_md-artifact",
+        "cleanup_policy": "workspace_discarded_after_run",
+        "injected_at": "2026-06-14T14:13:12+00:00",
+        "run_id": "phase1_smoke__codex_agents_md",
+        "schema_version": "barcarolle.agent_tuning_demo.artifact_injection_record.v1",
+        "surface": "repo_AGENTS_md",
+        "target_agent": "codex_workspace",
+        "workspace_relative_paths": [
+          "AGENTS.md"
+        ]
+      },
+      "latency_seconds": 10.191,
+      "loaded_observed": true,
+      "notes": "Pass means the injected AGENTS.md phrase reached the real Codex CLI request/output path.",
+      "observation_method": "real_cli_adapter_sent_request_or_output_containing_fixed_phrase_to_local_fake_endpoint",
+      "paid_call_used": false,
+      "request_count": 1,
+      "request_paths": [
+        "/v1/responses"
+      ],
+      "run_mode": "no_paid_local_endpoint_request_capture",
+      "stderr_line_count": 5,
+      "stdout_line_count": 3,
+      "surface": "repo_AGENTS_md",
+      "timed_out": false
+    },
+    {
+      "adapter_returned_timeout_status": true,
+      "agent_id": "codex_workspace",
+      "artifact_hash": "sha256:185afb324f36deae86bfe7e939a6ab568a2e47234a9e0e46cb51a22cf1b40796",
+      "artifact_path": ".agents/skills/barcarolle-smoke/SKILL.md",
+      "command_exit_code": 124,
+      "expected_phrase_observed": {
+        "BARC_CODEX_SKILL_METADATA": true
+      },
+      "injection_record": {
+        "artifact_hash": "sha256:185afb324f36deae86bfe7e939a6ab568a2e47234a9e0e46cb51a22cf1b40796",
+        "artifact_id": "codex_skill_explicit-artifact",
+        "cleanup_policy": "workspace_discarded_after_run",
+        "injected_at": "2026-06-14T14:13:22+00:00",
+        "run_id": "phase1_smoke__codex_skill_explicit",
+        "schema_version": "barcarolle.agent_tuning_demo.artifact_injection_record.v1",
+        "surface": "codex_skill_explicit",
+        "target_agent": "codex_workspace",
+        "workspace_relative_paths": [
+          ".agents/skills/barcarolle-smoke/SKILL.md"
+        ]
+      },
+      "latency_seconds": 10.514,
+      "loaded_observed": true,
+      "notes": "Pass means the repository skill metadata reached Codex. Full SKILL.md loading remains model/tool-call dependent.",
+      "observation_method": "real_cli_adapter_sent_request_or_output_containing_fixed_phrase_to_local_fake_endpoint",
+      "paid_call_used": false,
+      "request_count": 1,
+      "request_paths": [
+        "/v1/responses"
+      ],
+      "run_mode": "no_paid_local_endpoint_request_capture",
+      "stderr_line_count": 5,
+      "stdout_line_count": 3,
+      "surface": "codex_skill_explicit",
+      "timed_out": false
+    },
+    {
+      "adapter_returned_timeout_status": true,
+      "agent_id": "codex_workspace",
+      "artifact_hash": "sha256:4caeb70711c8f027ffaf35269dca3282a0999fb71e22d5900136bc089683280d",
+      "artifact_path": ".agents/skills/barcarolle-implicit-smoke/SKILL.md",
+      "command_exit_code": 124,
+      "expected_phrase_observed": {
+        "BARC_CODEX_IMPLICIT_SKILL_METADATA": true
+      },
+      "injection_record": {
+        "artifact_hash": "sha256:4caeb70711c8f027ffaf35269dca3282a0999fb71e22d5900136bc089683280d",
+        "artifact_id": "codex_skill_implicit-artifact",
+        "cleanup_policy": "workspace_discarded_after_run",
+        "injected_at": "2026-06-14T14:13:33+00:00",
+        "run_id": "phase1_smoke__codex_skill_implicit",
+        "schema_version": "barcarolle.agent_tuning_demo.artifact_injection_record.v1",
+        "surface": "codex_skill_implicit",
+        "target_agent": "codex_workspace",
+        "workspace_relative_paths": [
+          ".agents/skills/barcarolle-implicit-smoke/SKILL.md"
+        ]
+      },
+      "latency_seconds": 10.184,
+      "loaded_observed": true,
+      "notes": "Pass means implicit-match skill metadata reached Codex. It does not prove full instruction loading.",
+      "observation_method": "real_cli_adapter_sent_request_or_output_containing_fixed_phrase_to_local_fake_endpoint",
+      "paid_call_used": false,
+      "request_count": 1,
+      "request_paths": [
+        "/v1/responses"
+      ],
+      "run_mode": "no_paid_local_endpoint_request_capture",
+      "stderr_line_count": 5,
+      "stdout_line_count": 3,
+      "surface": "codex_skill_implicit",
+      "timed_out": false
+    },
+    {
+      "adapter_returned_timeout_status": false,
+      "agent_id": "kilo_workspace",
+      "artifact_hash": "sha256:185ee7d54ec71029ba296e98c4a5b1e31130c630fadcb5323a0b13ec63943f4a",
+      "artifact_path": "AGENTS.md",
+      "command_exit_code": 0,
+      "expected_phrase_observed": {
+        "BARCAROLLE_KILO_AGENTS_ACTIVE": true
+      },
+      "injection_record": {
+        "artifact_hash": "sha256:185ee7d54ec71029ba296e98c4a5b1e31130c630fadcb5323a0b13ec63943f4a",
+        "artifact_id": "kilo_agents_md-artifact",
+        "cleanup_policy": "workspace_discarded_after_run",
+        "injected_at": "2026-06-14T14:13:44+00:00",
+        "run_id": "phase1_smoke__kilo_agents_md",
+        "schema_version": "barcarolle.agent_tuning_demo.artifact_injection_record.v1",
+        "surface": "repo_AGENTS_md",
+        "target_agent": "kilo_workspace",
+        "workspace_relative_paths": [
+          "AGENTS.md"
+        ]
+      },
+      "latency_seconds": 2.816,
+      "loaded_observed": true,
+      "notes": "Pass means the injected AGENTS.md phrase reached the real Kilo CLI request/output path.",
+      "observation_method": "real_cli_adapter_sent_request_or_output_containing_fixed_phrase_to_local_fake_endpoint",
+      "paid_call_used": false,
+      "request_count": 2,
+      "request_paths": [
+        "/v1/chat/completions"
+      ],
+      "run_mode": "no_paid_local_endpoint_request_capture",
+      "stderr_line_count": 6,
+      "stdout_line_count": 3,
+      "surface": "repo_AGENTS_md",
+      "timed_out": false
+    },
+    {
+      "adapter_returned_timeout_status": false,
+      "agent_id": "kilo_workspace",
+      "artifact_hash": "sha256:00c172cf6f3bfa343771ec9e8a568fb61a4d93c468e1a9cfc03cc72d1a812398",
+      "artifact_path": ".kilo/rules/barcarolle-smoke.md,kilo.jsonc",
+      "command_exit_code": 0,
+      "expected_phrase_observed": {
+        "BARCAROLLE_KILO_RULE_ACTIVE": true
+      },
+      "injection_record": {
+        "artifact_hash": "sha256:00c172cf6f3bfa343771ec9e8a568fb61a4d93c468e1a9cfc03cc72d1a812398",
+        "artifact_id": "kilo_rule-artifact",
+        "cleanup_policy": "workspace_discarded_after_run",
+        "injected_at": "2026-06-14T14:13:47+00:00",
+        "run_id": "phase1_smoke__kilo_rule",
+        "schema_version": "barcarolle.agent_tuning_demo.artifact_injection_record.v1",
+        "surface": "kilo_rules",
+        "target_agent": "kilo_workspace",
+        "workspace_relative_paths": [
+          ".kilo/rules/barcarolle-smoke.md",
+          "kilo.jsonc"
+        ]
+      },
+      "latency_seconds": 8.408,
+      "loaded_observed": true,
+      "notes": "Pass means Kilo project rule content reached the request/output path with project kilo.jsonc instructions.",
+      "observation_method": "real_cli_adapter_sent_request_or_output_containing_fixed_phrase_to_local_fake_endpoint",
+      "paid_call_used": false,
+      "request_count": 2,
+      "request_paths": [
+        "/v1/chat/completions"
+      ],
+      "run_mode": "no_paid_local_endpoint_request_capture",
+      "stderr_line_count": 6,
+      "stdout_line_count": 3,
+      "surface": "kilo_rules",
+      "timed_out": false
+    },
+    {
+      "adapter_returned_timeout_status": false,
+      "agent_id": "kilo_workspace",
+      "artifact_hash": "sha256:474fb86f4da10a7928a60c53d0a172af151d0a4eeb01bddb12cb940dd6e25032",
+      "artifact_path": ".kilo/skills/barcarolle-smoke/SKILL.md",
+      "command_exit_code": 0,
+      "expected_phrase_observed": {
+        "BARC_KILO_SKILL_METADATA": true
+      },
+      "injection_record": {
+        "artifact_hash": "sha256:474fb86f4da10a7928a60c53d0a172af151d0a4eeb01bddb12cb940dd6e25032",
+        "artifact_id": "kilo_skill_explicit-artifact",
+        "cleanup_policy": "workspace_discarded_after_run",
+        "injected_at": "2026-06-14T14:13:56+00:00",
+        "run_id": "phase1_smoke__kilo_skill_explicit",
+        "schema_version": "barcarolle.agent_tuning_demo.artifact_injection_record.v1",
+        "surface": "kilo_skill_explicit",
+        "target_agent": "kilo_workspace",
+        "workspace_relative_paths": [
+          ".kilo/skills/barcarolle-smoke/SKILL.md"
+        ]
+      },
+      "latency_seconds": 8.471,
+      "loaded_observed": true,
+      "notes": "Pass means Kilo loaded project skill metadata. Full SKILL.md loading requires a model skill tool call.",
+      "observation_method": "real_cli_adapter_sent_request_or_output_containing_fixed_phrase_to_local_fake_endpoint",
+      "paid_call_used": false,
+      "request_count": 2,
+      "request_paths": [
+        "/v1/chat/completions"
+      ],
+      "run_mode": "no_paid_local_endpoint_request_capture",
+      "stderr_line_count": 6,
+      "stdout_line_count": 3,
+      "surface": "kilo_skill_explicit",
+      "timed_out": false
+    },
+    {
+      "adapter_returned_timeout_status": false,
+      "agent_id": "kilo_workspace",
+      "artifact_hash": "sha256:6ef3a2b4893817077c24e0dff0b435a40a6f1ec4edb0f6031919757380bfa9fc",
+      "artifact_path": ".kilo/skills/barcarolle-implicit-smoke/SKILL.md",
+      "command_exit_code": 0,
+      "expected_phrase_observed": {
+        "BARC_KILO_IMPLICIT_SKILL_METADATA": true
+      },
+      "injection_record": {
+        "artifact_hash": "sha256:6ef3a2b4893817077c24e0dff0b435a40a6f1ec4edb0f6031919757380bfa9fc",
+        "artifact_id": "kilo_skill_implicit-artifact",
+        "cleanup_policy": "workspace_discarded_after_run",
+        "injected_at": "2026-06-14T14:14:05+00:00",
+        "run_id": "phase1_smoke__kilo_skill_implicit",
+        "schema_version": "barcarolle.agent_tuning_demo.artifact_injection_record.v1",
+        "surface": "kilo_skill_implicit",
+        "target_agent": "kilo_workspace",
+        "workspace_relative_paths": [
+          ".kilo/skills/barcarolle-implicit-smoke/SKILL.md"
+        ]
+      },
+      "latency_seconds": 8.356,
+      "loaded_observed": true,
+      "notes": "Pass means Kilo loaded implicit-match skill metadata. It does not prove full instruction loading.",
+      "observation_method": "real_cli_adapter_sent_request_or_output_containing_fixed_phrase_to_local_fake_endpoint",
+      "paid_call_used": false,
+      "request_count": 2,
+      "request_paths": [
+        "/v1/chat/completions"
+      ],
+      "run_mode": "no_paid_local_endpoint_request_capture",
+      "stderr_line_count": 6,
+      "stdout_line_count": 3,
+      "surface": "kilo_skill_implicit",
+      "timed_out": false
+    }
+  ],
+  "run_mode": "no_paid_local_endpoint_request_capture",
+  "schema_version": "barcarolle.agent_tuning_demo.injection_smoke.v1"
+}
