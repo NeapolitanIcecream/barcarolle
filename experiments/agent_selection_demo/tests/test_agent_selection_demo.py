@@ -738,7 +738,7 @@ def selector_test_outcome_rows(agent_values: dict[str, list[int]]) -> list[dict[
     return rows
 
 
-def test_decision_wrapper_recommends_with_margin_and_no_discordant_losses() -> None:
+def test_decision_wrapper_recommends_when_top_agent_has_pass_rate_advantage() -> None:
     outcomes = selector_test_outcome_rows(
         {
             "agent_a": [1] * 10,
@@ -755,13 +755,15 @@ def test_decision_wrapper_recommends_with_margin_and_no_discordant_losses() -> N
 
     assert decision["state"] == "recommend"
     assert decision["recommended_agent_id"] == "agent_a"
+    assert decision["selection_recommendation"]["type"] == "recommend"
+    assert decision["agent_rankings"][0]["agent_id"] == "agent_a"
 
 
-def test_decision_wrapper_abstains_on_selection_tie() -> None:
+def test_decision_wrapper_returns_top_tier_for_close_agents() -> None:
     outcomes = selector_test_outcome_rows(
         {
-            "agent_a": [1, 0] * 5,
-            "agent_b": [1, 0] * 5,
+            "agent_a": [1] * 8 + [0, 0],
+            "agent_b": [1] * 8 + [0, 0],
         }
     )
 
@@ -772,11 +774,13 @@ def test_decision_wrapper_abstains_on_selection_tie() -> None:
         {"action_margin": 0.05, "min_common_valid_selected_tasks": 8, "bootstrap_iterations": 100, "confidence_level": 0.8},
     )
 
-    assert decision["state"] == "abstain_indistinguishable"
+    assert decision["state"] == "top_tier"
     assert decision["recommended_agent_id"] is None
+    assert decision["top_tier_agent_ids"] == ["agent_a", "agent_b"]
+    assert "成本、速度、稳定性" in decision["selection_recommendation"]["guidance"]
 
 
-def test_decision_wrapper_needs_more_evidence_when_common_valid_is_low() -> None:
+def test_decision_wrapper_returns_insufficient_data_when_common_valid_is_low() -> None:
     outcomes = selector_test_outcome_rows(
         {
             "agent_a": [1, 1, 1, 1],
@@ -791,8 +795,60 @@ def test_decision_wrapper_needs_more_evidence_when_common_valid_is_low() -> None
         {"action_margin": 0.05, "min_common_valid_selected_tasks": 8, "bootstrap_iterations": 100, "confidence_level": 0.8},
     )
 
-    assert decision["state"] == "need_more_evidence"
+    assert decision["state"] == "insufficient_data"
     assert decision["reason"] == "insufficient_common_valid_selected_tasks"
+
+
+def test_decision_wrapper_returns_insufficient_data_for_infrastructure_failure() -> None:
+    outcomes = selector_test_outcome_rows(
+        {
+            "agent_a": [1] * 10,
+            "agent_b": [1] * 8 + [0, 0],
+        }
+    )
+    outcomes[0] = {
+        **outcomes[0],
+        "terminal_status": "harness_error",
+        "policy_valid_cell": "False",
+        "policy_outcome_value": "",
+    }
+
+    decision = demo.decision_wrapper_for_selection(
+        [f"task_{index}" for index in range(10)],
+        ["agent_a", "agent_b"],
+        outcomes,
+        {"action_margin": 0.05, "min_common_valid_selected_tasks": 8, "bootstrap_iterations": 100, "confidence_level": 0.8},
+    )
+
+    assert decision["state"] == "insufficient_data"
+    assert decision["reason"] == "infrastructure_failure_in_selection_cells"
+
+
+def test_decision_wrapper_v2_recommends_nine_of_ten_over_eight_of_ten_at_margin_boundary() -> None:
+    outcomes = selector_test_outcome_rows(
+        {
+            "agent_a": [1] * 9 + [0],
+            "agent_b": [1] * 8 + [0, 0],
+        }
+    )
+
+    decision = demo.decision_wrapper_v2_for_selection(
+        [f"task_{index}" for index in range(10)],
+        ["agent_a", "agent_b"],
+        outcomes,
+        {
+            "action_margin": 0.1,
+            "min_common_valid": 8,
+            "lcb_tolerance": 0.1,
+            "tie_epsilon": 0.05,
+            "bootstrap_iterations": 100,
+            "confidence_level": 0.8,
+        },
+    )
+
+    assert decision["state"] == "recommend"
+    assert decision["recommended_agent_id"] == "agent_a"
+    assert decision["selected_top_margin"] == 0.1
 
 
 def test_decision_wrapper_v2_recommends_with_one_discordant_loss_but_overall_win() -> None:
