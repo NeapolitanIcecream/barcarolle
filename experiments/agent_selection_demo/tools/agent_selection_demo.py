@@ -5565,6 +5565,140 @@ def render_selector_algorithm_bakeoff_eval(payload: dict[str, Any]) -> str:
     return "\n".join(lines) + "\n"
 
 
+def bakeoff_config_spec_by_id(config_id: str) -> dict[str, Any]:
+    for spec in bakeoff_selector_config_specs():
+        if spec["config_id"] == config_id:
+            return spec
+    raise ValueError(f"unknown bakeoff selector config: {config_id}")
+
+
+def selector_bakeoff_final_preregistration() -> dict[str, Any]:
+    if not result_path("selector_algorithm_bakeoff_eval.json").exists():
+        selector_algorithm_bakeoff_eval()
+    bakeoff = read_json(result_path("selector_algorithm_bakeoff_eval.json"))
+    wrapper = read_json(result_path("selector_decision_wrapper_v2_eval.json"))
+    manifest = read_json(result_path("selector_bakeoff_feature_manifest.json"))
+    feature_rows = load_bakeoff_feature_rows()
+    final_features = bakeoff_source_rows(feature_rows, BAKEOFF_FINAL_SOURCE_ID)
+    final_source_outcome_columns_blank = manifest.get("final_source_outcome_derived_columns_blank") is True
+    final_config_id = str(bakeoff["top_candidate_config_ids"][0])
+    backup_config_id = "hrd_v3_70_30" if final_config_id != "hrd_v3_70_30" else str(bakeoff["top_candidate_config_ids"][1])
+    final_spec = bakeoff_config_spec_by_id(final_config_id)
+    backup_spec = bakeoff_config_spec_by_id(backup_config_id)
+    k_per_repo = 10
+    agent_ids = BAKEOFF_AGENT_IDS
+    final_selection = select_bakeoff_config_by_repo(final_features, final_spec, k_per_repo, [], agent_ids)
+    backup_selection = select_bakeoff_config_by_repo(final_features, backup_spec, k_per_repo, [], agent_ids)
+    later_task_ids = bakeoff_later_task_ids_for_source(feature_rows, BAKEOFF_FINAL_SOURCE_ID)
+    payload = {
+        "schema_version": "barcarolle.agent_selection_demo.selector_bakeoff_final_preregistration.v1",
+        "generated_at": "2026-06-14",
+        "status": "frozen_before_final_outcome_join",
+        "paid_agent_calls_made": False,
+        "new_paid_cells_preregistered": 0,
+        "final_validation_source": {
+            "source_id": BAKEOFF_FINAL_SOURCE_ID,
+            "window_id": "original_three_repo_split_heldout",
+            "source_kind": "no_paid_committed_sanitized_outcomes",
+            "independence_level": "locked_no_paid_final_replay_not_used_for_threshold_or_variant_selection",
+            "caveat": "Original split has more missing/non-scoreable cells than the primary blocked split, so final reporting must be limited."
+        },
+        "final_selector_config": {
+            "config_id": final_config_id,
+            "family": final_spec["family"],
+            "algorithm_id": final_spec["algorithm_id"],
+            "k_per_repo": k_per_repo,
+            "k_total": len(final_selection["selected_task_ids"]),
+            "reason": "Development bakeoff winner by validated recommendation rate, recommendation coverage, false recommendation rate, and regret; MAE used only as auxiliary tie-breaker."
+        },
+        "backup_selector_config": {
+            "config_id": backup_config_id,
+            "family": backup_spec["family"],
+            "algorithm_id": backup_spec["algorithm_id"],
+            "k_per_repo": k_per_repo,
+            "k_total": len(backup_selection["selected_task_ids"]),
+            "reason": "Best high-MAE-improvement HRD-family backup from development bakeoff."
+        },
+        "decision_wrapper": {
+            "version": "v2",
+            "thresholds": wrapper["selected_thresholds"],
+            "zero_loss_requirement": False
+        },
+        "agent_set": agent_ids,
+        "selected_task_ids_before_final_outcome_join": final_selection["selected_task_ids"],
+        "backup_selected_task_ids_before_final_outcome_join": backup_selection["selected_task_ids"],
+        "later_holdout_task_ids_before_final_outcome_join": later_task_ids,
+        "random_baselines": {
+            "families": ["uniform_random_same_budget", "quality_filtered_random", "source_recency_stratified_random", "module_stratified_random"],
+            "same_budget_rule": "sample k_per_repo tasks inside each repo, then aggregate across repos",
+            "seed_count": 1000,
+            "seeds": list(range(1000)),
+        },
+        "success_criteria": {
+            "decision_state": "recommend",
+            "recommended_agent_later_top_or_regret_lte": 0.05,
+            "top_pair_direction_agreement_required": True,
+            "decision_quality_better_than_same_budget_random": True,
+            "mae_reported_as_auxiliary_not_hard_veto": True,
+        },
+        "leakage_audit": {
+            "final_source_outcome_derived_columns_blank": final_source_outcome_columns_blank,
+            "allowed_final_scoring_fields": manifest["final_allowed_feature_fields"],
+            "forbidden_final_feature_fields": manifest["forbidden_final_feature_fields"],
+            "selector_uses_final_outcomes_for_scoring": False,
+        },
+        "paid_boundary": {
+            "new_paid_cells_planned": 0,
+            "hard_cap_if_paid_fallback_needed": 70,
+            "endpoint_env_required_if_paid": ["LLM_BASE_URL", "LLM_API_KEY"]
+        },
+    }
+    write_json(result_path("selector_bakeoff_final_preregistration.json"), payload)
+    write_text(report_path("selector_bakeoff_final_preregistration_zh.md"), render_selector_bakeoff_final_preregistration(payload))
+    return payload
+
+
+def render_selector_bakeoff_final_preregistration(payload: dict[str, Any]) -> str:
+    selector = payload["final_selector_config"]
+    backup = payload["backup_selector_config"]
+    source = payload["final_validation_source"]
+    lines = [
+        "# Selector Bakeoff Final Preregistration",
+        "",
+        "生成日期：2026-06-14",
+        "",
+        "## Status",
+        "",
+        f"- Status: `{payload['status']}`。",
+        f"- Final source: `{source['source_id']}` (`{source['window_id']}`)。",
+        f"- Independence: `{source['independence_level']}`。",
+        f"- Caveat: {source['caveat']}",
+        "",
+        "## Frozen selector",
+        "",
+        f"- Final config: `{selector['config_id']}`；family `{selector['family']}`；k per repo `{selector['k_per_repo']}`；k total `{selector['k_total']}`。",
+        f"- Backup config: `{backup['config_id']}`；family `{backup['family']}`；k total `{backup['k_total']}`。",
+        f"- Decision wrapper: v2 thresholds `{payload['decision_wrapper']['thresholds']}`；zero-loss requirement `{payload['decision_wrapper']['zero_loss_requirement']}`。",
+        "",
+        "## Frozen task IDs",
+        "",
+        f"- Selected before final outcome join: `{', '.join(payload['selected_task_ids_before_final_outcome_join'])}`。",
+        f"- Later/Holdout before final outcome join: `{', '.join(payload['later_holdout_task_ids_before_final_outcome_join'])}`。",
+        "",
+        "## Random baselines",
+        "",
+        f"- Families: `{', '.join(payload['random_baselines']['families'])}`。",
+        f"- Seeds: `0..{payload['random_baselines']['seed_count'] - 1}`。",
+        "",
+        "## Leakage and paid boundary",
+        "",
+        f"- Final outcome-derived feature columns blank: `{payload['leakage_audit']['final_source_outcome_derived_columns_blank']}`。",
+        "- New paid cells planned: `0`.",
+        "- If a paid fallback becomes necessary, hard cap is `70` cells and endpoint env must be `LLM_BASE_URL` plus `LLM_API_KEY`.",
+    ]
+    return "\n".join(lines) + "\n"
+
+
 def render_selector_baseline_eval(payload: dict[str, Any]) -> str:
     lines = [
         "# Selector Baseline Eval",
@@ -6937,6 +7071,7 @@ def main() -> int:
     subcommands.add_parser("selector-algorithm-registry")
     subcommands.add_parser("selector-decision-wrapper-v2-eval")
     subcommands.add_parser("selector-algorithm-bakeoff-eval")
+    subcommands.add_parser("selector-bakeoff-final-preregistration")
     args = parser.parse_args()
     config = load_config(repo_path(args.config))
     if args.command == "gate":
@@ -7019,6 +7154,9 @@ def main() -> int:
         return 0
     if args.command == "selector-algorithm-bakeoff-eval":
         selector_algorithm_bakeoff_eval()
+        return 0
+    if args.command == "selector-bakeoff-final-preregistration":
+        selector_bakeoff_final_preregistration()
         return 0
     raise ValueError(args.command)
 
