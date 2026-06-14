@@ -498,6 +498,80 @@ def test_hrd_metadata_scores_ignore_outcome_like_future_fields() -> None:
     assert demo.select_hrd_disagreement_only(rows, k=1)["selected_task_ids"] == demo.select_hrd_disagreement_only(changed_future, k=1)["selected_task_ids"]
 
 
+def selector_test_outcome_rows(agent_values: dict[str, list[int]]) -> list[dict[str, str]]:
+    rows: list[dict[str, str]] = []
+    for agent_id, values in agent_values.items():
+        for index, value in enumerate(values):
+            rows.append(
+                {
+                    "stage": "selection",
+                    "task_id": f"task_{index}",
+                    "agent_id": agent_id,
+                    "terminal_status": "verified_pass" if value else "verified_fail",
+                    "policy_valid_cell": "True",
+                    "policy_outcome_value": str(value),
+                }
+            )
+    return rows
+
+
+def test_decision_wrapper_recommends_with_margin_and_no_discordant_losses() -> None:
+    outcomes = selector_test_outcome_rows(
+        {
+            "agent_a": [1] * 10,
+            "agent_b": [1] * 8 + [0, 0],
+        }
+    )
+
+    decision = demo.decision_wrapper_for_selection(
+        [f"task_{index}" for index in range(10)],
+        ["agent_a", "agent_b"],
+        outcomes,
+        {"action_margin": 0.05, "min_common_valid_selected_tasks": 8, "bootstrap_iterations": 100, "confidence_level": 0.8},
+    )
+
+    assert decision["state"] == "recommend"
+    assert decision["recommended_agent_id"] == "agent_a"
+
+
+def test_decision_wrapper_abstains_on_selection_tie() -> None:
+    outcomes = selector_test_outcome_rows(
+        {
+            "agent_a": [1, 0] * 5,
+            "agent_b": [1, 0] * 5,
+        }
+    )
+
+    decision = demo.decision_wrapper_for_selection(
+        [f"task_{index}" for index in range(10)],
+        ["agent_a", "agent_b"],
+        outcomes,
+        {"action_margin": 0.05, "min_common_valid_selected_tasks": 8, "bootstrap_iterations": 100, "confidence_level": 0.8},
+    )
+
+    assert decision["state"] == "abstain_indistinguishable"
+    assert decision["recommended_agent_id"] is None
+
+
+def test_decision_wrapper_needs_more_evidence_when_common_valid_is_low() -> None:
+    outcomes = selector_test_outcome_rows(
+        {
+            "agent_a": [1, 1, 1, 1],
+            "agent_b": [1, 0, 0, 0],
+        }
+    )
+
+    decision = demo.decision_wrapper_for_selection(
+        [f"task_{index}" for index in range(4)],
+        ["agent_a", "agent_b"],
+        outcomes,
+        {"action_margin": 0.05, "min_common_valid_selected_tasks": 8, "bootstrap_iterations": 100, "confidence_level": 0.8},
+    )
+
+    assert decision["state"] == "need_more_evidence"
+    assert decision["reason"] == "insufficient_common_valid_selected_tasks"
+
+
 def test_recommend_skips_cost_when_usage_coverage_is_inconclusive(tmp_path: Path, monkeypatch) -> None:
     monkeypatch.setattr(demo, "RESULTS_REL", tmp_path / "results")
     monkeypatch.setattr(demo, "REPORTS_REL", tmp_path / "reports")

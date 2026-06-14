@@ -2417,6 +2417,329 @@ def render_selector_hrd_eval(payload: dict[str, Any]) -> str:
     return "\n".join(lines) + "\n"
 
 
+def paired_agent_differences(
+    selected_task_ids: list[str],
+    agent_a: str,
+    agent_b: str,
+    outcomes: dict[tuple[str, str, str], dict[str, str]],
+    stage: str = "selection",
+) -> list[int]:
+    differences: list[int] = []
+    for task_id in selected_task_ids:
+        row_a = outcomes.get((stage, task_id, agent_a))
+        row_b = outcomes.get((stage, task_id, agent_b))
+        if not row_a or not row_b or not selector_bool(row_a.get("policy_valid_cell")) or not selector_bool(row_b.get("policy_valid_cell")):
+            continue
+        differences.append(int(row_a.get("policy_outcome_value") or 0) - int(row_b.get("policy_outcome_value") or 0))
+    return differences
+
+
+def bootstrap_margin_lcb(differences: list[int], iterations: int = 1000, confidence_level: float = 0.8, seed: int = 17) -> float | None:
+    if not differences:
+        return None
+    rng = random.Random(seed)
+    means: list[float] = []
+    n = len(differences)
+    for _ in range(iterations):
+        sample = [differences[rng.randrange(n)] for _i in range(n)]
+        means.append(sum(sample) / n)
+    lower_percentile = max(0.0, (1.0 - confidence_level) / 2.0 * 100.0)
+    return selector_round(percentile(means, lower_percentile))
+
+
+def decision_top_agents(rates: dict[str, dict[str, Any]]) -> tuple[str | None, str | None, float | None, bool]:
+    usable = [(agent_id, float(row["pass_rate"])) for agent_id, row in rates.items() if row.get("pass_rate") is not None]
+    if not usable:
+        return None, None, None, False
+    usable.sort(key=lambda item: (-item[1], item[0]))
+    top_agent, top_rate = usable[0]
+    second_agent = usable[1][0] if len(usable) > 1 else None
+    second_rate = usable[1][1] if len(usable) > 1 else None
+    margin = None if second_rate is None else top_rate - second_rate
+    tied = second_rate is not None and top_rate == second_rate
+    return top_agent, second_agent, margin, tied
+
+
+def decision_wrapper_for_selection(
+    selected_task_ids: list[str],
+    agent_ids: list[str],
+    outcome_rows: list[dict[str, str]],
+    thresholds: dict[str, Any],
+) -> dict[str, Any]:
+    outcomes = outcome_lookup(outcome_rows)
+    rates = selector_pass_rates(selected_task_ids, agent_ids, "selection", outcomes)
+    top_agent, nearest, margin, tied = decision_top_agents(rates)
+    min_common = int(thresholds.get("min_common_valid_selected_tasks", 8))
+    action_margin = float(thresholds.get("action_margin", 0.05))
+    iterations = int(thresholds.get("bootstrap_iterations", 1000))
+    confidence = float(thresholds.get("confidence_level", 0.8))
+    if top_agent is None or nearest is None or margin is None:
+        return {
+            "state": "need_more_evidence",
+            "recommended_agent_id": None,
+            "reason": "fewer_than_two_agents_with_valid_selection_rates",
+            "selection_rates": rates,
+        }
+
+    pair_stats: list[dict[str, Any]] = []
+    enough_common = True
+    all_pairs_support_top = True
+    for competitor in sorted(agent_id for agent_id in agent_ids if agent_id != top_agent):
+        differences = paired_agent_differences(selected_task_ids, top_agent, competitor, outcomes)
+        wins = sum(1 for value in differences if value > 0)
+        losses = sum(1 for value in differences if value < 0)
+        pair_margin = None if not differences else sum(differences) / len(differences)
+        lcb = bootstrap_margin_lcb(differences, iterations=iterations, confidence_level=confidence)
+        common_valid = len(differences)
+        if common_valid < min_common:
+            enough_common = False
+        supports = (
+            common_valid >= min_common
+            and pair_margin is not None
+            and pair_margin >= action_margin
+            and wins > losses
+            and (lcb is None or lcb >= 0.0)
+            and (wins >= 2 or pair_margin >= action_margin * 2)
+            and losses == 0
+        )
+        if not supports:
+            all_pairs_support_top = False
+        pair_stats.append(
+            {
+                "competitor_agent_id": competitor,
+                "common_valid": common_valid,
+                "wins": wins,
+                "losses": losses,
+                "ties": sum(1 for value in differences if value == 0),
+                "selected_margin": selector_round(pair_margin),
+                "bootstrap_lcb": lcb,
+                "supports_recommendation": supports,
+            }
+        )
+
+    if not enough_common:
+        state = "need_more_evidence"
+        reason = "insufficient_common_valid_selected_tasks"
+        recommended = None
+    elif tied or margin < action_margin:
+        state = "abstain_indistinguishable"
+        reason = "selected_top_margin_below_action_threshold_or_tied"
+        recommended = None
+    elif all_pairs_support_top:
+        state = "recommend"
+        reason = "top_agent_margin_and_paired_small_sample_fallback_passed"
+        recommended = top_agent
+    else:
+        state = "need_more_evidence"
+        reason = "paired_uncertainty_or_discordant_tasks_too_weak"
+        recommended = None
+    return {
+        "state": state,
+        "recommended_agent_id": recommended,
+        "reason": reason,
+        "top_agent_id": top_agent,
+        "nearest_competitor_agent_id": nearest,
+        "selected_top_margin": selector_round(margin),
+        "selection_rates": rates,
+        "pair_stats": pair_stats,
+    }
+
+
+def apply_later_decision_metrics(
+    decision: dict[str, Any],
+    selected_task_ids: list[str],
+    later_task_ids: list[str],
+    agent_ids: list[str],
+    outcome_rows: list[dict[str, str]],
+    thresholds: dict[str, Any],
+    later_stage: str = "holdout",
+) -> dict[str, Any]:
+    base = evaluate_selected_task_ids(selected_task_ids, later_task_ids, agent_ids, outcome_rows, later_stage=later_stage)
+    later_rates = base["later_rates"]
+    later_top, later_second, later_margin, later_tied = decision_top_agents(later_rates)
+    recommended = decision.get("recommended_agent_id")
+    later_best = max((float(row["pass_rate"]) for row in later_rates.values() if row["pass_rate"] is not None), default=0.0)
+    regret = None
+    false_recommendation = None
+    if decision.get("state") == "recommend" and recommended:
+        regret = later_best - float(later_rates[recommended]["pass_rate"])
+        false_recommendation = regret > float(thresholds.get("action_margin", 0.05))
+    missed = None
+    correct_abstain = None
+    if decision.get("state") in {"abstain_indistinguishable", "need_more_evidence"}:
+        large_later_gap = later_margin is not None and later_margin > float(thresholds.get("action_margin", 0.05))
+        missed = large_later_gap
+        correct_abstain = not large_later_gap if decision.get("state") == "abstain_indistinguishable" else None
+    top_pair_agrees = None
+    if recommended and decision.get("nearest_competitor_agent_id"):
+        competitor = str(decision["nearest_competitor_agent_id"])
+        selected_margin = float(decision.get("selected_top_margin") or 0.0)
+        later_margin_for_pair = float(later_rates[recommended]["pass_rate"]) - float(later_rates[competitor]["pass_rate"])
+        top_pair_agrees = selector_sign(selected_margin) == selector_sign(later_margin_for_pair)
+    return {
+        **base,
+        "decision": decision,
+        "later_top_agent_id": later_top,
+        "later_second_agent_id": later_second,
+        "later_top_margin": selector_round(later_margin),
+        "later_top_tied": later_tied,
+        "recommendation_regret": selector_round(regret),
+        "false_recommendation": false_recommendation,
+        "missed_opportunity": missed,
+        "correct_abstain": correct_abstain,
+        "top_pair_direction_agreement": top_pair_agrees,
+    }
+
+
+def summarize_decision_rows(rows: list[dict[str, Any]]) -> dict[str, Any]:
+    total = len(rows)
+    recommendations = [row for row in rows if row["decision"]["state"] == "recommend"]
+    abstentions = [row for row in rows if row["decision"]["state"] == "abstain_indistinguishable"]
+    need_more = [row for row in rows if row["decision"]["state"] == "need_more_evidence"]
+    regrets = [float(row["recommendation_regret"]) for row in recommendations if row.get("recommendation_regret") is not None]
+    false_rows = [row for row in recommendations if row.get("false_recommendation") is True]
+    missed_rows = [row for row in rows if row.get("missed_opportunity") is True]
+    correct_abstains = [row for row in abstentions if row.get("correct_abstain") is True]
+    top_pair = [row for row in recommendations if row.get("top_pair_direction_agreement") is not None]
+    return {
+        "evaluated_count": total,
+        "recommendation_coverage": selector_round(len(recommendations) / total if total else None),
+        "abstain_rate": selector_round(len(abstentions) / total if total else None),
+        "need_more_evidence_rate": selector_round(len(need_more) / total if total else None),
+        "false_recommendation_rate": selector_round(len(false_rows) / len(recommendations) if recommendations else 0.0),
+        "mean_recommendation_regret": selector_round(statistics.mean(regrets) if regrets else None),
+        "worst_recommendation_regret": selector_round(max(regrets) if regrets else None),
+        "missed_opportunity_rate": selector_round(len(missed_rows) / total if total else None),
+        "correct_abstain_rate": selector_round(len(correct_abstains) / len(abstentions) if abstentions else None),
+        "top_pair_direction_agreement_rate": selector_round(sum(1 for row in top_pair if row.get("top_pair_direction_agreement")) / len(top_pair) if top_pair else None),
+    }
+
+
+def compact_decision_row(row: dict[str, Any]) -> dict[str, Any]:
+    return {
+        "selector_id": row.get("selector_id"),
+        "k": row.get("k"),
+        "decision_state": row["decision"]["state"],
+        "recommended_agent_id": row["decision"].get("recommended_agent_id"),
+        "reason": row["decision"].get("reason"),
+        "selected_top_margin": row["decision"].get("selected_top_margin"),
+        "later_top_agent_id": row.get("later_top_agent_id"),
+        "later_top_margin": row.get("later_top_margin"),
+        "MAE": row.get("MAE"),
+        "pairwise_direction_agreement": row.get("pairwise_direction_agreement"),
+        "recommendation_regret": row.get("recommendation_regret"),
+        "false_recommendation": row.get("false_recommendation"),
+        "missed_opportunity": row.get("missed_opportunity"),
+        "top_pair_direction_agreement": row.get("top_pair_direction_agreement"),
+        "selected_task_ids": row.get("selected_task_ids", []),
+    }
+
+
+def selector_decision_eval(config: dict[str, Any]) -> dict[str, Any]:
+    protocol = read_json(result_path("selector_protocol.json"))
+    thresholds = protocol["decision_thresholds"]
+    task_rows = load_selector_task_rows()
+    outcome_rows = load_selector_outcome_rows()
+    candidates = selector_candidate_tasks(task_rows)
+    later_ids = selector_later_task_ids(task_rows)
+    agent_ids = selector_agent_ids(config)
+    hrd = read_json(result_path("selector_hrd_eval.json"))
+    baseline = read_json(result_path("selector_baseline_eval.json"))
+    selector_rows: list[dict[str, Any]] = []
+    source_rows: list[tuple[str, int, list[str]]] = []
+    for row in baseline["selector_results"].values():
+        source_rows.append((row["selector_id"], int(row["k"]), list(row["selected_task_ids"])))
+    for row in hrd["variants"].values():
+        source_rows.append((row["selector_id"], int(row["k"]), list(row["selected_task_ids"])))
+    for selector_id, k, selected_ids in source_rows:
+        decision = decision_wrapper_for_selection(selected_ids, agent_ids, outcome_rows, thresholds)
+        metrics = apply_later_decision_metrics(decision, selected_ids, later_ids, agent_ids, outcome_rows, thresholds)
+        selector_rows.append({"selector_id": selector_id, "k": k, **metrics})
+
+    random_summaries: dict[str, dict[str, Any]] = {}
+    seeds = [int(seed) for seed in protocol["random_seeds"]]
+    for k in [10, 20]:
+        for baseline_id, func in BASELINE_SELECTOR_FUNCS.items():
+            rows: list[dict[str, Any]] = []
+            for seed in seeds:
+                selected_ids = func(candidates, k, seed)
+                decision = decision_wrapper_for_selection(selected_ids, agent_ids, outcome_rows, thresholds)
+                metrics = apply_later_decision_metrics(decision, selected_ids, later_ids, agent_ids, outcome_rows, thresholds)
+                rows.append({"selector_id": baseline_id, "k": k, "seed": seed, **metrics})
+            random_summaries[f"{baseline_id}__k{k}"] = {
+                "selector_id": baseline_id,
+                "k": k,
+                "seed_count": len(seeds),
+                "summary": summarize_decision_rows(rows),
+            }
+
+    payload = {
+        "schema_version": "barcarolle.agent_selection_demo.selector_decision_eval.v1",
+        "generated_at": "2026-06-14",
+        "paid_agent_calls_made": False,
+        "thresholds": thresholds,
+        "selector_decisions": [compact_decision_row(row) for row in selector_rows],
+        "selector_decision_summary": summarize_decision_rows(selector_rows),
+        "random_decision_summaries": random_summaries,
+        "interpretation": {
+            "recommendation_rule": "recommend only with non-tie top, minimum common valid support, action margin, and small-sample paired fallback with no discordant losses for the top Agent",
+            "hard_recommend_on_tie": False,
+        },
+    }
+    write_json(result_path("selector_decision_eval.json"), payload)
+    write_text(report_path("selector_decision_eval_zh.md"), render_selector_decision_eval(payload))
+    return payload
+
+
+def render_selector_decision_eval(payload: dict[str, Any]) -> str:
+    lines = [
+        "# Selector Decision Eval",
+        "",
+        "生成日期：2026-06-14",
+        "",
+        "## Decision rule",
+        "",
+        "决策层输出三种状态：`recommend`、`abstain_indistinguishable`、`need_more_evidence`。它不会在 Selection tie 上硬推荐；k=10 小样本下要求 top Agent 对每个 competitor 的 common-valid paired comparison 没有 discordant loss。",
+        "",
+        "## Selector decisions",
+        "",
+        "| Selector | k | State | Recommended | Selection margin | Later top | Later margin | MAE | Regret | Top-pair agree | Reason |",
+        "| --- | ---: | --- | --- | ---: | --- | ---: | ---: | ---: | --- | --- |",
+    ]
+    for row in payload["selector_decisions"]:
+        lines.append(
+            f"| `{row['selector_id']}` | `{row['k']}` | `{row['decision_state']}` | `{row['recommended_agent_id']}` | "
+            f"`{row['selected_top_margin']}` | `{row['later_top_agent_id']}` | `{row['later_top_margin']}` | "
+            f"`{row['MAE']}` | `{row['recommendation_regret']}` | `{row['top_pair_direction_agreement']}` | `{row['reason']}` |"
+        )
+    summary = payload["selector_decision_summary"]
+    lines.extend(
+        [
+            "",
+            "## Summary",
+            "",
+            f"- Recommendation coverage: `{summary['recommendation_coverage']}`。",
+            f"- False-recommendation rate: `{summary['false_recommendation_rate']}`。",
+            f"- Mean recommendation regret: `{summary['mean_recommendation_regret']}`；worst regret: `{summary['worst_recommendation_regret']}`。",
+            f"- Missed-opportunity rate: `{summary['missed_opportunity_rate']}`。",
+            f"- Top-pair direction agreement among recommendations: `{summary['top_pair_direction_agreement_rate']}`。",
+            "",
+            "## Random decision baselines",
+            "",
+            "| Baseline | k | Recommendation coverage | False recommend | Mean regret | Worst regret | Missed opportunity | Top-pair agree |",
+            "| --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: |",
+        ]
+    )
+    for row in payload["random_decision_summaries"].values():
+        s = row["summary"]
+        lines.append(
+            f"| `{row['selector_id']}` | `{row['k']}` | `{s['recommendation_coverage']}` | `{s['false_recommendation_rate']}` | "
+            f"`{s['mean_recommendation_regret']}` | `{s['worst_recommendation_regret']}` | `{s['missed_opportunity_rate']}` | "
+            f"`{s['top_pair_direction_agreement_rate']}` |"
+        )
+    return "\n".join(lines) + "\n"
+
+
 def render_selector_baseline_eval(payload: dict[str, Any]) -> str:
     lines = [
         "# Selector Baseline Eval",
@@ -3781,6 +4104,7 @@ def main() -> int:
     subcommands.add_parser("selector-build-dataset")
     subcommands.add_parser("selector-baseline-eval")
     subcommands.add_parser("selector-hrd-eval")
+    subcommands.add_parser("selector-decision-eval")
     args = parser.parse_args()
     config = load_config(repo_path(args.config))
     if args.command == "gate":
@@ -3839,6 +4163,9 @@ def main() -> int:
         return 0
     if args.command == "selector-hrd-eval":
         selector_hrd_eval(config)
+        return 0
+    if args.command == "selector-decision-eval":
+        selector_decision_eval(config)
         return 0
     raise ValueError(args.command)
 
