@@ -4575,6 +4575,25 @@ def select_bakeoff_cod_lite(rows: list[dict[str, Any]], k: int, *, use_caps: boo
     return bakeoff_selection_payload("cod_lite", selected, rationale, use_caps=use_caps)
 
 
+def select_bakeoff_informativeness_only(rows: list[dict[str, Any]], k: int, *, use_caps: bool = True) -> dict[str, Any]:
+    eligible = bakeoff_eligible_selection_rows(rows)
+    ranked = sorted(
+        eligible,
+        key=lambda row: (bakeoff_metadata_informativeness(row), str(row["task_id"])),
+        reverse=True,
+    )
+    selected = bakeoff_take_with_caps(ranked, k, use_caps=use_caps)
+    rationale = {
+        str(row["task_id"]): {
+            "task_id": row["task_id"],
+            "reason": "metadata informativeness only ablation",
+            "score": selector_round(bakeoff_metadata_informativeness(row)),
+        }
+        for row in selected
+    }
+    return bakeoff_selection_payload("informativeness_only", selected, rationale, use_caps=use_caps)
+
+
 RO_LSP_DEFAULT_WEIGHTS = {
     "metadata_informativeness": 0.3,
     "middle_difficulty": 0.25,
@@ -5047,7 +5066,7 @@ def wrapper_v2_score_summary(rows: list[dict[str, Any]]) -> dict[str, Any]:
 def compact_wrapper_case(row: dict[str, Any]) -> dict[str, Any]:
     return {
         "source_id": row["source_id"],
-        "algorithm_id": row["algorithm_id"],
+        "algorithm_id": row.get("algorithm_id", row.get("config_id")),
         "decision_state": row["decision"]["state"],
         "recommended_agent_id": row["decision"].get("recommended_agent_id"),
         "later_top_agent_id": row.get("later_top_agent_id"),
@@ -5182,6 +5201,366 @@ def render_selector_decision_wrapper_v2_eval(payload: dict[str, Any]) -> str:
         "## Boundary",
         "",
         f"Threshold search excluded final source `{payload['final_source_excluded_from_threshold_search']}`. MAE remains auxiliary; this search optimizes demo decision quality first.",
+    ]
+    return "\n".join(lines) + "\n"
+
+
+def bakeoff_selector_config_specs() -> list[dict[str, Any]]:
+    return [
+        {"config_id": "rsq_v2", "family": "rsq_v2", "algorithm_id": "rsq_v2"},
+        {"config_id": "rsq_v2_no_recency", "family": "rsq_v2", "algorithm_id": "rsq_v2", "use_recency": False},
+        {"config_id": "rsq_v2_no_caps", "family": "rsq_v2", "algorithm_id": "rsq_v2", "use_caps": False},
+        {"config_id": "flc", "family": "flc", "algorithm_id": "flc"},
+        {"config_id": "representative_only", "family": "ablation", "algorithm_id": "representative_only"},
+        {"config_id": "informativeness_only", "family": "ablation", "algorithm_id": "informativeness_only"},
+        {"config_id": "hrd_v3_70_30", "family": "hrd_v3", "algorithm_id": "hrd_v3_70_30"},
+        {"config_id": "hrd_v3_60_40", "family": "hrd_v3", "algorithm_id": "hrd_v3_60_40"},
+        {"config_id": "hrd_v3_50_50", "family": "hrd_v3", "algorithm_id": "hrd_v3_50_50"},
+        {"config_id": "hrd_v3_70_30_no_recency", "family": "hrd_v3", "algorithm_id": "hrd_v3_70_30", "use_recency": False},
+        {"config_id": "hrd_v3_70_30_no_caps", "family": "hrd_v3", "algorithm_id": "hrd_v3_70_30", "use_caps": False},
+        {"config_id": "hrd_v3_70_30_flc_rep", "family": "hrd_v3", "algorithm_id": "hrd_v3_70_30", "representative_selector": "flc"},
+        {"config_id": "cod_lite", "family": "cod_lite", "algorithm_id": "cod_lite"},
+        {"config_id": "ro_lsp", "family": "ro_lsp", "algorithm_id": "ro_lsp"},
+        {"config_id": "saes_lite", "family": "saes_lite", "algorithm_id": "saes_lite"},
+    ]
+
+
+def select_bakeoff_config_by_repo(
+    source_features: list[dict[str, Any]],
+    spec: dict[str, Any],
+    k_per_repo: int,
+    source_outcomes: list[dict[str, Any]],
+    agent_ids: list[str],
+) -> dict[str, Any]:
+    algorithm_id = str(spec["algorithm_id"])
+    if algorithm_id == "representative_only":
+        selected_task_ids: list[str] = []
+        per_repo: dict[str, Any] = {}
+        rationale: list[dict[str, Any]] = []
+        for repo in bakeoff_repo_order(source_features):
+            repo_rows = [row for row in source_features if row.get("repo") == repo]
+            selection = select_bakeoff_rsq_v2(repo_rows, k_per_repo, use_recency=spec.get("use_recency", True), use_caps=spec.get("use_caps", True))
+            selected_task_ids.extend(selection["selected_task_ids"])
+            rationale.extend(selection.get("rationale", []))
+            per_repo[repo] = {"selected_task_ids": selection["selected_task_ids"], "selected_count": selection["selected_count"]}
+        return {"selector_id": spec["config_id"], "selected_task_ids": sorted(selected_task_ids), "per_repo": per_repo, "rationale": rationale}
+    if algorithm_id == "informativeness_only":
+        selected_task_ids = []
+        per_repo = {}
+        rationale = []
+        for repo in bakeoff_repo_order(source_features):
+            repo_rows = [row for row in source_features if row.get("repo") == repo]
+            selection = select_bakeoff_informativeness_only(repo_rows, k_per_repo, use_caps=spec.get("use_caps", True))
+            selected_task_ids.extend(selection["selected_task_ids"])
+            rationale.extend(selection.get("rationale", []))
+            per_repo[repo] = {"selected_task_ids": selection["selected_task_ids"], "selected_count": selection["selected_count"]}
+        return {"selector_id": spec["config_id"], "selected_task_ids": sorted(selected_task_ids), "per_repo": per_repo, "rationale": rationale}
+    kwargs = {
+        "use_recency": spec.get("use_recency", True),
+        "use_caps": spec.get("use_caps", True),
+        "representative_selector": spec.get("representative_selector", "rsq_v2"),
+    }
+    if algorithm_id == "saes_lite":
+        kwargs.update({"outcome_rows": source_outcomes, "agent_ids": agent_ids})
+    if algorithm_id == "ro_lsp" and spec.get("weights"):
+        kwargs["weights"] = spec["weights"]
+    return select_bakeoff_algorithm_by_repo(source_features, algorithm_id, k_per_repo, **kwargs)
+
+
+def random_bakeoff_selected_by_repo(
+    source_features: list[dict[str, Any]],
+    baseline_id: str,
+    k_per_repo: int,
+    seed: int,
+) -> list[str]:
+    selected: list[str] = []
+    for index, repo in enumerate(bakeoff_repo_order(source_features)):
+        repo_rows = [row for row in source_features if row.get("repo") == repo]
+        selection = select_bakeoff_strong_random(repo_rows, k_per_repo, seed + index * 100_000, baseline_id=baseline_id)
+        selected.extend(selection["selected_task_ids"])
+    return sorted(selected)
+
+
+def bakeoff_validated_recommendation(row: dict[str, Any]) -> bool:
+    return (
+        row["decision"]["state"] == "recommend"
+        and row.get("recommendation_regret") is not None
+        and float(row["recommendation_regret"]) <= 0.05
+        and row.get("top_pair_direction_agreement") is True
+    )
+
+
+def bakeoff_summarize_eval_rows(rows: list[dict[str, Any]]) -> dict[str, Any]:
+    decision = summarize_decision_rows(rows)
+    mae_values = [float(row["MAE"]) for row in rows if row.get("MAE") is not None]
+    pairwise_values = [float(row["pairwise_direction_agreement"]) for row in rows if row.get("pairwise_direction_agreement") is not None]
+    top1_values = [row for row in rows if row.get("top1_agreement_forced") is not None]
+    validated = [row for row in rows if bakeoff_validated_recommendation(row)]
+    return {
+        **decision,
+        "validated_recommendation_rate": selector_round(len(validated) / len(rows) if rows else None),
+        "MAE_mean": selector_round(statistics.mean(mae_values) if mae_values else None),
+        "MAE_max": selector_round(max(mae_values) if mae_values else None),
+        "top_pair_direction_agreement_rate_forced": selector_round(statistics.mean(pairwise_values) if pairwise_values else None),
+        "top1_agreement_rate_forced": selector_round(sum(1 for row in top1_values if row.get("top1_agreement_forced")) / len(top1_values) if top1_values else None),
+    }
+
+
+def bakeoff_random_summaries(
+    feature_rows: list[dict[str, Any]],
+    outcome_rows: list[dict[str, Any]],
+    thresholds: dict[str, Any],
+    seeds: list[int],
+) -> dict[str, Any]:
+    baseline_ids = ["uniform_random_same_budget", "quality_filtered_random", "source_recency_stratified_random", "module_stratified_random"]
+    summaries: dict[str, Any] = {}
+    for baseline_id in baseline_ids:
+        rows: list[dict[str, Any]] = []
+        unique_samples: set[tuple[str, ...]] = set()
+        for source_id in sorted(BAKEOFF_DEVELOPMENT_SOURCE_IDS):
+            source_features = bakeoff_source_rows(feature_rows, source_id)
+            source_outcomes = bakeoff_source_outcomes(outcome_rows, source_id)
+            if not source_features or not source_outcomes:
+                continue
+            agent_ids = bakeoff_agent_ids_for_source(outcome_rows, source_id)
+            later_ids = bakeoff_later_task_ids_for_source(feature_rows, source_id)
+            k_per_repo = bakeoff_k_per_repo_for_source(feature_rows, source_id)
+            for seed in seeds:
+                selected = random_bakeoff_selected_by_repo(source_features, baseline_id, k_per_repo, seed)
+                unique_samples.add(tuple(selected))
+                decision = decision_wrapper_v2_for_selection(selected, agent_ids, source_outcomes, thresholds)
+                metrics = apply_later_decision_metrics(decision, selected, later_ids, agent_ids, source_outcomes, thresholds)
+                rows.append({"source_id": source_id, "baseline_id": baseline_id, "seed": seed, **metrics})
+        summaries[baseline_id] = {
+            "baseline_id": baseline_id,
+            "seed_count": len(seeds),
+            "unique_sample_count": len(unique_samples),
+            "summary": bakeoff_summarize_eval_rows(rows),
+            "_rows": rows,
+        }
+    return summaries
+
+
+def bakeoff_random_percentiles_for_summary(summary: dict[str, Any], random_rows: list[dict[str, Any]]) -> dict[str, Any]:
+    mae_values = [float(row["MAE"]) for row in random_rows if row.get("MAE") is not None]
+    regret_values = [float(row["recommendation_regret"]) for row in random_rows if row.get("recommendation_regret") is not None]
+    candidate_mae = summary.get("MAE_mean")
+    candidate_regret = summary.get("mean_recommendation_regret")
+    return {
+        "MAE_beats_or_ties_random_share": selector_round(
+            None if candidate_mae is None or not mae_values else sum(value >= float(candidate_mae) for value in mae_values) / len(mae_values)
+        ),
+        "regret_beats_or_ties_random_share": selector_round(
+            None
+            if candidate_regret is None or not regret_values
+            else sum(value >= float(candidate_regret) for value in regret_values) / len(regret_values)
+        ),
+    }
+
+
+def bakeoff_leave_one_source_sensitivity(rows: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    sources = sorted({str(row["source_id"]) for row in rows})
+    sensitivity: list[dict[str, Any]] = []
+    for source in sources:
+        kept = [row for row in rows if row["source_id"] != source]
+        summary = bakeoff_summarize_eval_rows(kept)
+        sensitivity.append(
+            {
+                "left_out_source_id": source,
+                "validated_recommendation_rate": summary["validated_recommendation_rate"],
+                "recommendation_coverage": summary["recommendation_coverage"],
+                "false_recommendation_rate": summary["false_recommendation_rate"],
+                "MAE_mean": summary["MAE_mean"],
+            }
+        )
+    return sensitivity
+
+
+def selector_algorithm_bakeoff_eval() -> dict[str, Any]:
+    if not result_path("selector_decision_wrapper_v2_eval.json").exists():
+        selector_decision_wrapper_v2_eval()
+    feature_rows = load_bakeoff_feature_rows()
+    outcome_rows = load_bakeoff_outcome_rows()
+    wrapper = read_json(result_path("selector_decision_wrapper_v2_eval.json"))
+    thresholds_v2 = dict(wrapper["selected_thresholds"])
+    thresholds_v1 = {
+        "action_margin": thresholds_v2["action_margin"],
+        "min_common_valid_selected_tasks": thresholds_v2["min_common_valid"],
+        "tie_epsilon": thresholds_v2["tie_epsilon"],
+        "bootstrap_iterations": thresholds_v2["bootstrap_iterations"],
+        "confidence_level": thresholds_v2["confidence_level"],
+    }
+    seeds = list(range(1000))
+    random_summaries = bakeoff_random_summaries(feature_rows, outcome_rows, thresholds_v2, seeds)
+    strongest_random_id = min(
+        random_summaries,
+        key=lambda baseline_id: (
+            float(random_summaries[baseline_id]["summary"].get("MAE_mean") or 999.0),
+            str(baseline_id),
+        ),
+    )
+    strongest_random = random_summaries[strongest_random_id]
+    strongest_random_rows = strongest_random["_rows"]
+    selector_results: list[dict[str, Any]] = []
+    for spec in bakeoff_selector_config_specs():
+        wrapper_rows: dict[str, list[dict[str, Any]]] = {"v1": [], "v2": []}
+        for source_id in sorted(BAKEOFF_DEVELOPMENT_SOURCE_IDS):
+            source_features = bakeoff_source_rows(feature_rows, source_id)
+            source_outcomes = bakeoff_source_outcomes(outcome_rows, source_id)
+            if not source_features or not source_outcomes:
+                continue
+            agent_ids = bakeoff_agent_ids_for_source(outcome_rows, source_id)
+            later_ids = bakeoff_later_task_ids_for_source(feature_rows, source_id)
+            k_per_repo = bakeoff_k_per_repo_for_source(feature_rows, source_id)
+            selection = select_bakeoff_config_by_repo(source_features, spec, k_per_repo, source_outcomes, agent_ids)
+            selected = selection["selected_task_ids"]
+            for wrapper_id, thresholds, decision_func in [
+                ("v1", thresholds_v1, decision_wrapper_for_selection),
+                ("v2", thresholds_v2, decision_wrapper_v2_for_selection),
+            ]:
+                decision = decision_func(selected, agent_ids, source_outcomes, thresholds)
+                metrics = apply_later_decision_metrics(decision, selected, later_ids, agent_ids, source_outcomes, thresholds)
+                wrapper_rows[wrapper_id].append(
+                    {
+                        "config_id": spec["config_id"],
+                        "family": spec["family"],
+                        "source_id": source_id,
+                        "k_per_repo": k_per_repo,
+                        "selected_task_ids": selected,
+                        **metrics,
+                    }
+                )
+        v2_summary = bakeoff_summarize_eval_rows(wrapper_rows["v2"])
+        random_mae = float(strongest_random["summary"].get("MAE_mean") or 0.0)
+        selector_mae = float(v2_summary.get("MAE_mean") or 0.0)
+        abs_improvement = random_mae - selector_mae
+        rel_improvement = abs_improvement / random_mae if random_mae else None
+        selector_results.append(
+            {
+                "config_id": spec["config_id"],
+                "family": spec["family"],
+                "spec": spec,
+                "wrapper_v2_summary": {
+                    **v2_summary,
+                    "MAE_vs_strongest_random": {
+                        "strongest_random_baseline": strongest_random_id,
+                        "strongest_random_MAE_mean": strongest_random["summary"]["MAE_mean"],
+                        "absolute_improvement": selector_round(abs_improvement),
+                        "relative_improvement": selector_round(rel_improvement),
+                        **bakeoff_random_percentiles_for_summary(v2_summary, strongest_random_rows),
+                    },
+                },
+                "wrapper_v1_summary": bakeoff_summarize_eval_rows(wrapper_rows["v1"]),
+                "wrapper_v2_case_rows": [compact_wrapper_case(row) for row in wrapper_rows["v2"]],
+                "leave_one_source_sensitivity": bakeoff_leave_one_source_sensitivity(wrapper_rows["v2"]),
+            }
+        )
+    selector_results.sort(
+        key=lambda row: (
+            float(row["wrapper_v2_summary"].get("validated_recommendation_rate") or 0.0),
+            float(row["wrapper_v2_summary"].get("recommendation_coverage") or 0.0),
+            -float(row["wrapper_v2_summary"].get("false_recommendation_rate") or 0.0),
+            -float(row["wrapper_v2_summary"].get("mean_recommendation_regret") or 0.0),
+            -float(row["wrapper_v2_summary"].get("MAE_mean") or 999.0),
+        ),
+        reverse=True,
+    )
+    random_payload = {
+        baseline_id: {key: value for key, value in row.items() if key != "_rows"}
+        for baseline_id, row in random_summaries.items()
+    }
+    payload = {
+        "schema_version": "barcarolle.agent_selection_demo.selector_algorithm_bakeoff_eval.v1",
+        "generated_at": "2026-06-14",
+        "paid_agent_calls_made": False,
+        "development_source_ids": sorted(BAKEOFF_DEVELOPMENT_SOURCE_IDS),
+        "final_source_excluded": BAKEOFF_FINAL_SOURCE_ID,
+        "decision_wrapper_v2_thresholds": thresholds_v2,
+        "decision_wrapper_v1_thresholds": thresholds_v1,
+        "strong_random_baselines": random_payload,
+        "strongest_random_baseline_id": strongest_random_id,
+        "ablation_notes": {
+            "representative_only": "implemented via RSQ v2 representative arm",
+            "informativeness_only": "implemented via metadata_informativeness fallback",
+            "historical_outcome_features": "not run as a final-eligible ablation because no leakage-safe historical Agent-disagreement feature is available",
+            "with_without_recency": "rsq_v2_no_recency and hrd_v3_70_30_no_recency",
+            "with_without_caps": "rsq_v2_no_caps and hrd_v3_70_30_no_caps",
+            "wrapper_v1_vs_v2": "both wrappers evaluated on each selector config",
+        },
+        "selector_results": selector_results,
+        "top_candidate_config_ids": [row["config_id"] for row in selector_results[:3]],
+        "selection_rule": "rank by wrapper-v2 validated recommendation rate, coverage, false recommendation rate, regret, then MAE as auxiliary tie-breaker",
+    }
+    write_json(result_path("selector_algorithm_bakeoff_eval.json"), payload)
+    write_text(report_path("selector_algorithm_bakeoff_eval_zh.md"), render_selector_algorithm_bakeoff_eval(payload))
+    return payload
+
+
+def render_selector_algorithm_bakeoff_eval(payload: dict[str, Any]) -> str:
+    rows = []
+    for row in payload["selector_results"]:
+        summary = row["wrapper_v2_summary"]
+        mae = summary["MAE_vs_strongest_random"]
+        rows.append(
+            {
+                "Config": row["config_id"],
+                "Validated": summary["validated_recommendation_rate"],
+                "Coverage": summary["recommendation_coverage"],
+                "False": summary["false_recommendation_rate"],
+                "Regret": summary["mean_recommendation_regret"],
+                "TopPair": summary["top_pair_direction_agreement_rate"],
+                "MAE": summary["MAE_mean"],
+                "Rel MAE": mae["relative_improvement"],
+            }
+        )
+    top = payload["selector_results"][0]
+    lines = [
+        "# Selector Algorithm Bakeoff Eval",
+        "",
+        "生成日期：2026-06-14",
+        "",
+        "## Scope",
+        "",
+        f"Development sources: `{', '.join(payload['development_source_ids'])}`。",
+        f"Final source excluded from tuning: `{payload['final_source_excluded']}`。",
+        f"Decision wrapper v2 thresholds: `{payload['decision_wrapper_v2_thresholds']}`。",
+        "",
+        "## Results",
+        "",
+        *markdown_table(
+            rows,
+            [
+                ("Config", "Config"),
+                ("Validated", "Validated"),
+                ("Coverage", "Coverage"),
+                ("False", "False"),
+                ("Regret", "Regret"),
+                ("TopPair", "TopPair"),
+                ("MAE", "MAE"),
+                ("Rel MAE", "Rel MAE"),
+            ],
+        ),
+        "",
+        "## Top candidates",
+        "",
+        f"Top 3 by decision quality: `{', '.join(payload['top_candidate_config_ids'])}`。",
+        f"Development winner: `{top['config_id']}`，validated recommendation rate `{top['wrapper_v2_summary']['validated_recommendation_rate']}`，coverage `{top['wrapper_v2_summary']['recommendation_coverage']}`，false recommendation rate `{top['wrapper_v2_summary']['false_recommendation_rate']}`。",
+        "",
+        "## Random comparison",
+        "",
+        f"Strongest random by MAE: `{payload['strongest_random_baseline_id']}`。",
+        f"Winner MAE: `{top['wrapper_v2_summary']['MAE_mean']}`；strong random MAE mean: `{top['wrapper_v2_summary']['MAE_vs_strongest_random']['strongest_random_MAE_mean']}`；relative improvement: `{top['wrapper_v2_summary']['MAE_vs_strongest_random']['relative_improvement']}`。",
+        "",
+        "## Ablations",
+        "",
+        f"- Representative-only: {payload['ablation_notes']['representative_only']}.",
+        f"- Informativeness-only: {payload['ablation_notes']['informativeness_only']}.",
+        f"- Historical outcome features: {payload['ablation_notes']['historical_outcome_features']}.",
+        f"- Recency: {payload['ablation_notes']['with_without_recency']}.",
+        f"- Caps: {payload['ablation_notes']['with_without_caps']}.",
+        f"- Wrapper comparison: {payload['ablation_notes']['wrapper_v1_vs_v2']}.",
+        "",
+        "MAE 是辅助 tie-breaker；本表按 Agent-selection decision quality 排序。",
     ]
     return "\n".join(lines) + "\n"
 
@@ -6557,6 +6936,7 @@ def main() -> int:
     subcommands.add_parser("selector-bakeoff-build-features")
     subcommands.add_parser("selector-algorithm-registry")
     subcommands.add_parser("selector-decision-wrapper-v2-eval")
+    subcommands.add_parser("selector-algorithm-bakeoff-eval")
     args = parser.parse_args()
     config = load_config(repo_path(args.config))
     if args.command == "gate":
@@ -6636,6 +7016,9 @@ def main() -> int:
         return 0
     if args.command == "selector-decision-wrapper-v2-eval":
         selector_decision_wrapper_v2_eval()
+        return 0
+    if args.command == "selector-algorithm-bakeoff-eval":
+        selector_algorithm_bakeoff_eval()
         return 0
     raise ValueError(args.command)
 

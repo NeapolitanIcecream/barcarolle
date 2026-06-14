@@ -1,0 +1,3393 @@
+{
+  "ablation_notes": {
+    "historical_outcome_features": "not run as a final-eligible ablation because no leakage-safe historical Agent-disagreement feature is available",
+    "informativeness_only": "implemented via metadata_informativeness fallback",
+    "representative_only": "implemented via RSQ v2 representative arm",
+    "with_without_caps": "rsq_v2_no_caps and hrd_v3_70_30_no_caps",
+    "with_without_recency": "rsq_v2_no_recency and hrd_v3_70_30_no_recency",
+    "wrapper_v1_vs_v2": "both wrappers evaluated on each selector config"
+  },
+  "decision_wrapper_v1_thresholds": {
+    "action_margin": 0.1,
+    "bootstrap_iterations": 1000,
+    "confidence_level": 0.8,
+    "min_common_valid_selected_tasks": 8,
+    "tie_epsilon": 0.05
+  },
+  "decision_wrapper_v2_thresholds": {
+    "action_margin": 0.1,
+    "bootstrap_iterations": 1000,
+    "confidence_level": 0.8,
+    "lcb_tolerance": 0.1,
+    "min_common_valid": 8,
+    "tie_epsilon": 0.05
+  },
+  "development_source_ids": [
+    "boltons_demo_development",
+    "phase1_blocked_split_heldout_development",
+    "phase1_repo_specific_earliest_time_bucket_cutoff_development"
+  ],
+  "final_source_excluded": "phase1_original_three_repo_split_heldout_final_candidate",
+  "generated_at": "2026-06-14",
+  "paid_agent_calls_made": false,
+  "schema_version": "barcarolle.agent_selection_demo.selector_algorithm_bakeoff_eval.v1",
+  "selection_rule": "rank by wrapper-v2 validated recommendation rate, coverage, false recommendation rate, regret, then MAE as auxiliary tie-breaker",
+  "selector_results": [
+    {
+      "config_id": "cod_lite",
+      "family": "cod_lite",
+      "leave_one_source_sensitivity": [
+        {
+          "MAE_mean": 0.163131,
+          "false_recommendation_rate": 0.0,
+          "left_out_source_id": "boltons_demo_development",
+          "recommendation_coverage": 1.0,
+          "validated_recommendation_rate": 1.0
+        },
+        {
+          "MAE_mean": 0.140909,
+          "false_recommendation_rate": 0.0,
+          "left_out_source_id": "phase1_blocked_split_heldout_development",
+          "recommendation_coverage": 1.0,
+          "validated_recommendation_rate": 1.0
+        },
+        {
+          "MAE_mean": 0.122222,
+          "false_recommendation_rate": 0.0,
+          "left_out_source_id": "phase1_repo_specific_earliest_time_bucket_cutoff_development",
+          "recommendation_coverage": 1.0,
+          "validated_recommendation_rate": 1.0
+        }
+      ],
+      "spec": {
+        "algorithm_id": "cod_lite",
+        "config_id": "cod_lite",
+        "family": "cod_lite"
+      },
+      "wrapper_v1_summary": {
+        "MAE_max": 0.181818,
+        "MAE_mean": 0.142087,
+        "abstain_rate": 0.0,
+        "correct_abstain_rate": null,
+        "evaluated_count": 3,
+        "false_recommendation_rate": 0.0,
+        "mean_recommendation_regret": 0.0,
+        "missed_opportunity_rate": 0.333333,
+        "need_more_evidence_rate": 0.666667,
+        "recommendation_coverage": 0.333333,
+        "top1_agreement_rate_forced": 1.0,
+        "top_pair_direction_agreement_rate": 1.0,
+        "top_pair_direction_agreement_rate_forced": 0.888889,
+        "validated_recommendation_rate": 0.333333,
+        "worst_recommendation_regret": 0.0
+      },
+      "wrapper_v2_case_rows": [
+        {
+          "MAE": 0.1,
+          "algorithm_id": "cod_lite",
+          "decision_state": "recommend",
+          "false_recommendation": false,
+          "later_rates": {
+            "codex_gpt_5_4": {
+              "missing_or_na_count": 0,
+              "pass_count": 5,
+              "pass_rate": 0.5,
+              "valid_count": 10
+            },
+            "kilo_claude_sonnet_4_6": {
+              "missing_or_na_count": 0,
+              "pass_count": 8,
+              "pass_rate": 0.8,
+              "valid_count": 10
+            },
+            "kilo_gpt_5_4": {
+              "missing_or_na_count": 0,
+              "pass_count": 9,
+              "pass_rate": 0.9,
+              "valid_count": 10
+            },
+            "kilo_gpt_5_4_mini": {
+              "missing_or_na_count": 0,
+              "pass_count": 6,
+              "pass_rate": 0.6,
+              "valid_count": 10
+            }
+          },
+          "later_top_agent_id": "kilo_gpt_5_4",
+          "recommendation_regret": 0.0,
+          "recommended_agent_id": "kilo_gpt_5_4",
+          "selection_rates": {
+            "codex_gpt_5_4": {
+              "missing_or_na_count": 0,
+              "pass_count": 7,
+              "pass_rate": 0.7,
+              "valid_count": 10
+            },
+            "kilo_claude_sonnet_4_6": {
+              "missing_or_na_count": 0,
+              "pass_count": 7,
+              "pass_rate": 0.7,
+              "valid_count": 10
+            },
+            "kilo_gpt_5_4": {
+              "missing_or_na_count": 0,
+              "pass_count": 8,
+              "pass_rate": 0.8,
+              "valid_count": 10
+            },
+            "kilo_gpt_5_4_mini": {
+              "missing_or_na_count": 0,
+              "pass_count": 6,
+              "pass_rate": 0.6,
+              "valid_count": 10
+            }
+          },
+          "source_id": "boltons_demo_development",
+          "top_pair_direction_agreement": true
+        },
+        {
+          "MAE": 0.144444,
+          "algorithm_id": "cod_lite",
+          "decision_state": "recommend",
+          "false_recommendation": false,
+          "later_rates": {
+            "codex_workspace": {
+              "missing_or_na_count": 0,
+              "pass_count": 7,
+              "pass_rate": 0.23333333333333334,
+              "valid_count": 30
+            },
+            "kilo_workspace": {
+              "missing_or_na_count": 0,
+              "pass_count": 16,
+              "pass_rate": 0.5333333333333333,
+              "valid_count": 30
+            }
+          },
+          "later_top_agent_id": "kilo_workspace",
+          "recommendation_regret": 0.0,
+          "recommended_agent_id": "kilo_workspace",
+          "selection_rates": {
+            "codex_workspace": {
+              "missing_or_na_count": 0,
+              "pass_count": 6,
+              "pass_rate": 0.3333333333333333,
+              "valid_count": 18
+            },
+            "kilo_workspace": {
+              "missing_or_na_count": 0,
+              "pass_count": 13,
+              "pass_rate": 0.7222222222222222,
+              "valid_count": 18
+            }
+          },
+          "source_id": "phase1_blocked_split_heldout_development",
+          "top_pair_direction_agreement": true
+        },
+        {
+          "MAE": 0.181818,
+          "algorithm_id": "cod_lite",
+          "decision_state": "recommend",
+          "false_recommendation": false,
+          "later_rates": {
+            "codex_workspace": {
+              "missing_or_na_count": 8,
+              "pass_count": 22,
+              "pass_rate": 0.4,
+              "valid_count": 55
+            },
+            "kilo_workspace": {
+              "missing_or_na_count": 8,
+              "pass_count": 33,
+              "pass_rate": 0.6,
+              "valid_count": 55
+            }
+          },
+          "later_top_agent_id": "kilo_workspace",
+          "recommendation_regret": 0.0,
+          "recommended_agent_id": "kilo_workspace",
+          "selection_rates": {
+            "codex_workspace": {
+              "missing_or_na_count": 1,
+              "pass_count": 2,
+              "pass_rate": 0.18181818181818182,
+              "valid_count": 11
+            },
+            "kilo_workspace": {
+              "missing_or_na_count": 1,
+              "pass_count": 5,
+              "pass_rate": 0.45454545454545453,
+              "valid_count": 11
+            }
+          },
+          "source_id": "phase1_repo_specific_earliest_time_bucket_cutoff_development",
+          "top_pair_direction_agreement": true
+        }
+      ],
+      "wrapper_v2_summary": {
+        "MAE_max": 0.181818,
+        "MAE_mean": 0.142087,
+        "MAE_vs_strongest_random": {
+          "MAE_beats_or_ties_random_share": 0.676667,
+          "absolute_improvement": 0.008678,
+          "regret_beats_or_ties_random_share": 1.0,
+          "relative_improvement": 0.05756,
+          "strongest_random_MAE_mean": 0.150765,
+          "strongest_random_baseline": "module_stratified_random"
+        },
+        "abstain_rate": 0.0,
+        "correct_abstain_rate": null,
+        "evaluated_count": 3,
+        "false_recommendation_rate": 0.0,
+        "mean_recommendation_regret": 0.0,
+        "missed_opportunity_rate": 0.0,
+        "need_more_evidence_rate": 0.0,
+        "recommendation_coverage": 1.0,
+        "top1_agreement_rate_forced": 1.0,
+        "top_pair_direction_agreement_rate": 1.0,
+        "top_pair_direction_agreement_rate_forced": 0.888889,
+        "validated_recommendation_rate": 1.0,
+        "worst_recommendation_regret": 0.0
+      }
+    },
+    {
+      "config_id": "hrd_v3_70_30",
+      "family": "hrd_v3",
+      "leave_one_source_sensitivity": [
+        {
+          "MAE_mean": 0.121465,
+          "false_recommendation_rate": 0.0,
+          "left_out_source_id": "boltons_demo_development",
+          "recommendation_coverage": 1.0,
+          "validated_recommendation_rate": 1.0
+        },
+        {
+          "MAE_mean": 0.153409,
+          "false_recommendation_rate": 0.0,
+          "left_out_source_id": "phase1_blocked_split_heldout_development",
+          "recommendation_coverage": 0.5,
+          "validated_recommendation_rate": 0.5
+        },
+        {
+          "MAE_mean": 0.093055,
+          "false_recommendation_rate": 0.0,
+          "left_out_source_id": "phase1_repo_specific_earliest_time_bucket_cutoff_development",
+          "recommendation_coverage": 0.5,
+          "validated_recommendation_rate": 0.5
+        }
+      ],
+      "spec": {
+        "algorithm_id": "hrd_v3_70_30",
+        "config_id": "hrd_v3_70_30",
+        "family": "hrd_v3"
+      },
+      "wrapper_v1_summary": {
+        "MAE_max": 0.181818,
+        "MAE_mean": 0.122643,
+        "abstain_rate": 0.333333,
+        "correct_abstain_rate": 1.0,
+        "evaluated_count": 3,
+        "false_recommendation_rate": 0.0,
+        "mean_recommendation_regret": null,
+        "missed_opportunity_rate": 0.666667,
+        "need_more_evidence_rate": 0.666667,
+        "recommendation_coverage": 0.0,
+        "top1_agreement_rate_forced": 1.0,
+        "top_pair_direction_agreement_rate": null,
+        "top_pair_direction_agreement_rate_forced": 0.888889,
+        "validated_recommendation_rate": 0.0,
+        "worst_recommendation_regret": null
+      },
+      "wrapper_v2_case_rows": [
+        {
+          "MAE": 0.125,
+          "algorithm_id": "hrd_v3_70_30",
+          "decision_state": "need_more_evidence",
+          "false_recommendation": null,
+          "later_rates": {
+            "codex_gpt_5_4": {
+              "missing_or_na_count": 0,
+              "pass_count": 5,
+              "pass_rate": 0.5,
+              "valid_count": 10
+            },
+            "kilo_claude_sonnet_4_6": {
+              "missing_or_na_count": 0,
+              "pass_count": 8,
+              "pass_rate": 0.8,
+              "valid_count": 10
+            },
+            "kilo_gpt_5_4": {
+              "missing_or_na_count": 0,
+              "pass_count": 9,
+              "pass_rate": 0.9,
+              "valid_count": 10
+            },
+            "kilo_gpt_5_4_mini": {
+              "missing_or_na_count": 0,
+              "pass_count": 6,
+              "pass_rate": 0.6,
+              "valid_count": 10
+            }
+          },
+          "later_top_agent_id": "kilo_gpt_5_4",
+          "recommendation_regret": null,
+          "recommended_agent_id": null,
+          "selection_rates": {
+            "codex_gpt_5_4": {
+              "missing_or_na_count": 0,
+              "pass_count": 7,
+              "pass_rate": 0.7,
+              "valid_count": 10
+            },
+            "kilo_claude_sonnet_4_6": {
+              "missing_or_na_count": 0,
+              "pass_count": 7,
+              "pass_rate": 0.7,
+              "valid_count": 10
+            },
+            "kilo_gpt_5_4": {
+              "missing_or_na_count": 0,
+              "pass_count": 9,
+              "pass_rate": 0.9,
+              "valid_count": 10
+            },
+            "kilo_gpt_5_4_mini": {
+              "missing_or_na_count": 0,
+              "pass_count": 8,
+              "pass_rate": 0.8,
+              "valid_count": 10
+            }
+          },
+          "source_id": "boltons_demo_development",
+          "top_pair_direction_agreement": null
+        },
+        {
+          "MAE": 0.061111,
+          "algorithm_id": "hrd_v3_70_30",
+          "decision_state": "recommend",
+          "false_recommendation": false,
+          "later_rates": {
+            "codex_workspace": {
+              "missing_or_na_count": 0,
+              "pass_count": 7,
+              "pass_rate": 0.23333333333333334,
+              "valid_count": 30
+            },
+            "kilo_workspace": {
+              "missing_or_na_count": 0,
+              "pass_count": 16,
+              "pass_rate": 0.5333333333333333,
+              "valid_count": 30
+            }
+          },
+          "later_top_agent_id": "kilo_workspace",
+          "recommendation_regret": 0.0,
+          "recommended_agent_id": "kilo_workspace",
+          "selection_rates": {
+            "codex_workspace": {
+              "missing_or_na_count": 0,
+              "pass_count": 5,
+              "pass_rate": 0.2777777777777778,
+              "valid_count": 18
+            },
+            "kilo_workspace": {
+              "missing_or_na_count": 0,
+              "pass_count": 11,
+              "pass_rate": 0.6111111111111112,
+              "valid_count": 18
+            }
+          },
+          "source_id": "phase1_blocked_split_heldout_development",
+          "top_pair_direction_agreement": true
+        },
+        {
+          "MAE": 0.181818,
+          "algorithm_id": "hrd_v3_70_30",
+          "decision_state": "recommend",
+          "false_recommendation": false,
+          "later_rates": {
+            "codex_workspace": {
+              "missing_or_na_count": 8,
+              "pass_count": 22,
+              "pass_rate": 0.4,
+              "valid_count": 55
+            },
+            "kilo_workspace": {
+              "missing_or_na_count": 8,
+              "pass_count": 33,
+              "pass_rate": 0.6,
+              "valid_count": 55
+            }
+          },
+          "later_top_agent_id": "kilo_workspace",
+          "recommendation_regret": 0.0,
+          "recommended_agent_id": "kilo_workspace",
+          "selection_rates": {
+            "codex_workspace": {
+              "missing_or_na_count": 1,
+              "pass_count": 1,
+              "pass_rate": 0.09090909090909091,
+              "valid_count": 11
+            },
+            "kilo_workspace": {
+              "missing_or_na_count": 1,
+              "pass_count": 6,
+              "pass_rate": 0.5454545454545454,
+              "valid_count": 11
+            }
+          },
+          "source_id": "phase1_repo_specific_earliest_time_bucket_cutoff_development",
+          "top_pair_direction_agreement": true
+        }
+      ],
+      "wrapper_v2_summary": {
+        "MAE_max": 0.181818,
+        "MAE_mean": 0.122643,
+        "MAE_vs_strongest_random": {
+          "MAE_beats_or_ties_random_share": 0.792333,
+          "absolute_improvement": 0.028122,
+          "regret_beats_or_ties_random_share": 1.0,
+          "relative_improvement": 0.186529,
+          "strongest_random_MAE_mean": 0.150765,
+          "strongest_random_baseline": "module_stratified_random"
+        },
+        "abstain_rate": 0.0,
+        "correct_abstain_rate": null,
+        "evaluated_count": 3,
+        "false_recommendation_rate": 0.0,
+        "mean_recommendation_regret": 0.0,
+        "missed_opportunity_rate": 0.0,
+        "need_more_evidence_rate": 0.333333,
+        "recommendation_coverage": 0.666667,
+        "top1_agreement_rate_forced": 1.0,
+        "top_pair_direction_agreement_rate": 1.0,
+        "top_pair_direction_agreement_rate_forced": 0.888889,
+        "validated_recommendation_rate": 0.666667,
+        "worst_recommendation_regret": 0.0
+      }
+    },
+    {
+      "config_id": "hrd_v3_70_30_no_recency",
+      "family": "hrd_v3",
+      "leave_one_source_sensitivity": [
+        {
+          "MAE_mean": 0.130555,
+          "false_recommendation_rate": 0.0,
+          "left_out_source_id": "boltons_demo_development",
+          "recommendation_coverage": 1.0,
+          "validated_recommendation_rate": 1.0
+        },
+        {
+          "MAE_mean": 0.1625,
+          "false_recommendation_rate": 0.0,
+          "left_out_source_id": "phase1_blocked_split_heldout_development",
+          "recommendation_coverage": 0.5,
+          "validated_recommendation_rate": 0.5
+        },
+        {
+          "MAE_mean": 0.093055,
+          "false_recommendation_rate": 0.0,
+          "left_out_source_id": "phase1_repo_specific_earliest_time_bucket_cutoff_development",
+          "recommendation_coverage": 0.5,
+          "validated_recommendation_rate": 0.5
+        }
+      ],
+      "spec": {
+        "algorithm_id": "hrd_v3_70_30",
+        "config_id": "hrd_v3_70_30_no_recency",
+        "family": "hrd_v3",
+        "use_recency": false
+      },
+      "wrapper_v1_summary": {
+        "MAE_max": 0.2,
+        "MAE_mean": 0.128704,
+        "abstain_rate": 0.333333,
+        "correct_abstain_rate": 1.0,
+        "evaluated_count": 3,
+        "false_recommendation_rate": 0.0,
+        "mean_recommendation_regret": null,
+        "missed_opportunity_rate": 0.666667,
+        "need_more_evidence_rate": 0.666667,
+        "recommendation_coverage": 0.0,
+        "top1_agreement_rate_forced": 0.666667,
+        "top_pair_direction_agreement_rate": null,
+        "top_pair_direction_agreement_rate_forced": 0.833333,
+        "validated_recommendation_rate": 0.0,
+        "worst_recommendation_regret": null
+      },
+      "wrapper_v2_case_rows": [
+        {
+          "MAE": 0.125,
+          "algorithm_id": "hrd_v3_70_30_no_recency",
+          "decision_state": "abstain_indistinguishable",
+          "false_recommendation": null,
+          "later_rates": {
+            "codex_gpt_5_4": {
+              "missing_or_na_count": 0,
+              "pass_count": 5,
+              "pass_rate": 0.5,
+              "valid_count": 10
+            },
+            "kilo_claude_sonnet_4_6": {
+              "missing_or_na_count": 0,
+              "pass_count": 8,
+              "pass_rate": 0.8,
+              "valid_count": 10
+            },
+            "kilo_gpt_5_4": {
+              "missing_or_na_count": 0,
+              "pass_count": 9,
+              "pass_rate": 0.9,
+              "valid_count": 10
+            },
+            "kilo_gpt_5_4_mini": {
+              "missing_or_na_count": 0,
+              "pass_count": 6,
+              "pass_rate": 0.6,
+              "valid_count": 10
+            }
+          },
+          "later_top_agent_id": "kilo_gpt_5_4",
+          "recommendation_regret": null,
+          "recommended_agent_id": null,
+          "selection_rates": {
+            "codex_gpt_5_4": {
+              "missing_or_na_count": 0,
+              "pass_count": 8,
+              "pass_rate": 0.8,
+              "valid_count": 10
+            },
+            "kilo_claude_sonnet_4_6": {
+              "missing_or_na_count": 0,
+              "pass_count": 7,
+              "pass_rate": 0.7,
+              "valid_count": 10
+            },
+            "kilo_gpt_5_4": {
+              "missing_or_na_count": 0,
+              "pass_count": 8,
+              "pass_rate": 0.8,
+              "valid_count": 10
+            },
+            "kilo_gpt_5_4_mini": {
+              "missing_or_na_count": 0,
+              "pass_count": 6,
+              "pass_rate": 0.6,
+              "valid_count": 10
+            }
+          },
+          "source_id": "boltons_demo_development",
+          "top_pair_direction_agreement": null
+        },
+        {
+          "MAE": 0.061111,
+          "algorithm_id": "hrd_v3_70_30_no_recency",
+          "decision_state": "recommend",
+          "false_recommendation": false,
+          "later_rates": {
+            "codex_workspace": {
+              "missing_or_na_count": 0,
+              "pass_count": 7,
+              "pass_rate": 0.23333333333333334,
+              "valid_count": 30
+            },
+            "kilo_workspace": {
+              "missing_or_na_count": 0,
+              "pass_count": 16,
+              "pass_rate": 0.5333333333333333,
+              "valid_count": 30
+            }
+          },
+          "later_top_agent_id": "kilo_workspace",
+          "recommendation_regret": 0.0,
+          "recommended_agent_id": "kilo_workspace",
+          "selection_rates": {
+            "codex_workspace": {
+              "missing_or_na_count": 0,
+              "pass_count": 5,
+              "pass_rate": 0.2777777777777778,
+              "valid_count": 18
+            },
+            "kilo_workspace": {
+              "missing_or_na_count": 0,
+              "pass_count": 11,
+              "pass_rate": 0.6111111111111112,
+              "valid_count": 18
+            }
+          },
+          "source_id": "phase1_blocked_split_heldout_development",
+          "top_pair_direction_agreement": true
+        },
+        {
+          "MAE": 0.2,
+          "algorithm_id": "hrd_v3_70_30_no_recency",
+          "decision_state": "recommend",
+          "false_recommendation": false,
+          "later_rates": {
+            "codex_workspace": {
+              "missing_or_na_count": 8,
+              "pass_count": 22,
+              "pass_rate": 0.4,
+              "valid_count": 55
+            },
+            "kilo_workspace": {
+              "missing_or_na_count": 8,
+              "pass_count": 33,
+              "pass_rate": 0.6,
+              "valid_count": 55
+            }
+          },
+          "later_top_agent_id": "kilo_workspace",
+          "recommendation_regret": 0.0,
+          "recommended_agent_id": "kilo_workspace",
+          "selection_rates": {
+            "codex_workspace": {
+              "missing_or_na_count": 2,
+              "pass_count": 1,
+              "pass_rate": 0.1,
+              "valid_count": 10
+            },
+            "kilo_workspace": {
+              "missing_or_na_count": 2,
+              "pass_count": 5,
+              "pass_rate": 0.5,
+              "valid_count": 10
+            }
+          },
+          "source_id": "phase1_repo_specific_earliest_time_bucket_cutoff_development",
+          "top_pair_direction_agreement": true
+        }
+      ],
+      "wrapper_v2_summary": {
+        "MAE_max": 0.2,
+        "MAE_mean": 0.128704,
+        "MAE_vs_strongest_random": {
+          "MAE_beats_or_ties_random_share": 0.676667,
+          "absolute_improvement": 0.022061,
+          "regret_beats_or_ties_random_share": 1.0,
+          "relative_improvement": 0.146327,
+          "strongest_random_MAE_mean": 0.150765,
+          "strongest_random_baseline": "module_stratified_random"
+        },
+        "abstain_rate": 0.333333,
+        "correct_abstain_rate": 1.0,
+        "evaluated_count": 3,
+        "false_recommendation_rate": 0.0,
+        "mean_recommendation_regret": 0.0,
+        "missed_opportunity_rate": 0.0,
+        "need_more_evidence_rate": 0.0,
+        "recommendation_coverage": 0.666667,
+        "top1_agreement_rate_forced": 0.666667,
+        "top_pair_direction_agreement_rate": 1.0,
+        "top_pair_direction_agreement_rate_forced": 0.833333,
+        "validated_recommendation_rate": 0.666667,
+        "worst_recommendation_regret": 0.0
+      }
+    },
+    {
+      "config_id": "hrd_v3_60_40",
+      "family": "hrd_v3",
+      "leave_one_source_sensitivity": [
+        {
+          "MAE_mean": 0.135354,
+          "false_recommendation_rate": 0.0,
+          "left_out_source_id": "boltons_demo_development",
+          "recommendation_coverage": 1.0,
+          "validated_recommendation_rate": 1.0
+        },
+        {
+          "MAE_mean": 0.153409,
+          "false_recommendation_rate": 0.0,
+          "left_out_source_id": "phase1_blocked_split_heldout_development",
+          "recommendation_coverage": 0.5,
+          "validated_recommendation_rate": 0.5
+        },
+        {
+          "MAE_mean": 0.106944,
+          "false_recommendation_rate": 0.0,
+          "left_out_source_id": "phase1_repo_specific_earliest_time_bucket_cutoff_development",
+          "recommendation_coverage": 0.5,
+          "validated_recommendation_rate": 0.5
+        }
+      ],
+      "spec": {
+        "algorithm_id": "hrd_v3_60_40",
+        "config_id": "hrd_v3_60_40",
+        "family": "hrd_v3"
+      },
+      "wrapper_v1_summary": {
+        "MAE_max": 0.181818,
+        "MAE_mean": 0.131902,
+        "abstain_rate": 0.333333,
+        "correct_abstain_rate": 1.0,
+        "evaluated_count": 3,
+        "false_recommendation_rate": 0.0,
+        "mean_recommendation_regret": null,
+        "missed_opportunity_rate": 0.666667,
+        "need_more_evidence_rate": 0.666667,
+        "recommendation_coverage": 0.0,
+        "top1_agreement_rate_forced": 1.0,
+        "top_pair_direction_agreement_rate": null,
+        "top_pair_direction_agreement_rate_forced": 0.833333,
+        "validated_recommendation_rate": 0.0,
+        "worst_recommendation_regret": null
+      },
+      "wrapper_v2_case_rows": [
+        {
+          "MAE": 0.125,
+          "algorithm_id": "hrd_v3_60_40",
+          "decision_state": "need_more_evidence",
+          "false_recommendation": null,
+          "later_rates": {
+            "codex_gpt_5_4": {
+              "missing_or_na_count": 0,
+              "pass_count": 5,
+              "pass_rate": 0.5,
+              "valid_count": 10
+            },
+            "kilo_claude_sonnet_4_6": {
+              "missing_or_na_count": 0,
+              "pass_count": 8,
+              "pass_rate": 0.8,
+              "valid_count": 10
+            },
+            "kilo_gpt_5_4": {
+              "missing_or_na_count": 0,
+              "pass_count": 9,
+              "pass_rate": 0.9,
+              "valid_count": 10
+            },
+            "kilo_gpt_5_4_mini": {
+              "missing_or_na_count": 0,
+              "pass_count": 6,
+              "pass_rate": 0.6,
+              "valid_count": 10
+            }
+          },
+          "later_top_agent_id": "kilo_gpt_5_4",
+          "recommendation_regret": null,
+          "recommended_agent_id": null,
+          "selection_rates": {
+            "codex_gpt_5_4": {
+              "missing_or_na_count": 0,
+              "pass_count": 8,
+              "pass_rate": 0.8,
+              "valid_count": 10
+            },
+            "kilo_claude_sonnet_4_6": {
+              "missing_or_na_count": 0,
+              "pass_count": 8,
+              "pass_rate": 0.8,
+              "valid_count": 10
+            },
+            "kilo_gpt_5_4": {
+              "missing_or_na_count": 0,
+              "pass_count": 9,
+              "pass_rate": 0.9,
+              "valid_count": 10
+            },
+            "kilo_gpt_5_4_mini": {
+              "missing_or_na_count": 0,
+              "pass_count": 8,
+              "pass_rate": 0.8,
+              "valid_count": 10
+            }
+          },
+          "source_id": "boltons_demo_development",
+          "top_pair_direction_agreement": null
+        },
+        {
+          "MAE": 0.088889,
+          "algorithm_id": "hrd_v3_60_40",
+          "decision_state": "recommend",
+          "false_recommendation": false,
+          "later_rates": {
+            "codex_workspace": {
+              "missing_or_na_count": 0,
+              "pass_count": 7,
+              "pass_rate": 0.23333333333333334,
+              "valid_count": 30
+            },
+            "kilo_workspace": {
+              "missing_or_na_count": 0,
+              "pass_count": 16,
+              "pass_rate": 0.5333333333333333,
+              "valid_count": 30
+            }
+          },
+          "later_top_agent_id": "kilo_workspace",
+          "recommendation_regret": 0.0,
+          "recommended_agent_id": "kilo_workspace",
+          "selection_rates": {
+            "codex_workspace": {
+              "missing_or_na_count": 0,
+              "pass_count": 6,
+              "pass_rate": 0.3333333333333333,
+              "valid_count": 18
+            },
+            "kilo_workspace": {
+              "missing_or_na_count": 0,
+              "pass_count": 11,
+              "pass_rate": 0.6111111111111112,
+              "valid_count": 18
+            }
+          },
+          "source_id": "phase1_blocked_split_heldout_development",
+          "top_pair_direction_agreement": true
+        },
+        {
+          "MAE": 0.181818,
+          "algorithm_id": "hrd_v3_60_40",
+          "decision_state": "recommend",
+          "false_recommendation": false,
+          "later_rates": {
+            "codex_workspace": {
+              "missing_or_na_count": 8,
+              "pass_count": 22,
+              "pass_rate": 0.4,
+              "valid_count": 55
+            },
+            "kilo_workspace": {
+              "missing_or_na_count": 8,
+              "pass_count": 33,
+              "pass_rate": 0.6,
+              "valid_count": 55
+            }
+          },
+          "later_top_agent_id": "kilo_workspace",
+          "recommendation_regret": 0.0,
+          "recommended_agent_id": "kilo_workspace",
+          "selection_rates": {
+            "codex_workspace": {
+              "missing_or_na_count": 1,
+              "pass_count": 1,
+              "pass_rate": 0.09090909090909091,
+              "valid_count": 11
+            },
+            "kilo_workspace": {
+              "missing_or_na_count": 1,
+              "pass_count": 6,
+              "pass_rate": 0.5454545454545454,
+              "valid_count": 11
+            }
+          },
+          "source_id": "phase1_repo_specific_earliest_time_bucket_cutoff_development",
+          "top_pair_direction_agreement": true
+        }
+      ],
+      "wrapper_v2_summary": {
+        "MAE_max": 0.181818,
+        "MAE_mean": 0.131902,
+        "MAE_vs_strongest_random": {
+          "MAE_beats_or_ties_random_share": 0.676667,
+          "absolute_improvement": 0.018863,
+          "regret_beats_or_ties_random_share": 1.0,
+          "relative_improvement": 0.125115,
+          "strongest_random_MAE_mean": 0.150765,
+          "strongest_random_baseline": "module_stratified_random"
+        },
+        "abstain_rate": 0.0,
+        "correct_abstain_rate": null,
+        "evaluated_count": 3,
+        "false_recommendation_rate": 0.0,
+        "mean_recommendation_regret": 0.0,
+        "missed_opportunity_rate": 0.0,
+        "need_more_evidence_rate": 0.333333,
+        "recommendation_coverage": 0.666667,
+        "top1_agreement_rate_forced": 1.0,
+        "top_pair_direction_agreement_rate": 1.0,
+        "top_pair_direction_agreement_rate_forced": 0.833333,
+        "validated_recommendation_rate": 0.666667,
+        "worst_recommendation_regret": 0.0
+      }
+    },
+    {
+      "config_id": "hrd_v3_50_50",
+      "family": "hrd_v3",
+      "leave_one_source_sensitivity": [
+        {
+          "MAE_mean": 0.135354,
+          "false_recommendation_rate": 0.0,
+          "left_out_source_id": "boltons_demo_development",
+          "recommendation_coverage": 1.0,
+          "validated_recommendation_rate": 1.0
+        },
+        {
+          "MAE_mean": 0.153409,
+          "false_recommendation_rate": 0.0,
+          "left_out_source_id": "phase1_blocked_split_heldout_development",
+          "recommendation_coverage": 0.5,
+          "validated_recommendation_rate": 0.5
+        },
+        {
+          "MAE_mean": 0.106944,
+          "false_recommendation_rate": 0.0,
+          "left_out_source_id": "phase1_repo_specific_earliest_time_bucket_cutoff_development",
+          "recommendation_coverage": 0.5,
+          "validated_recommendation_rate": 0.5
+        }
+      ],
+      "spec": {
+        "algorithm_id": "hrd_v3_50_50",
+        "config_id": "hrd_v3_50_50",
+        "family": "hrd_v3"
+      },
+      "wrapper_v1_summary": {
+        "MAE_max": 0.181818,
+        "MAE_mean": 0.131902,
+        "abstain_rate": 0.333333,
+        "correct_abstain_rate": 1.0,
+        "evaluated_count": 3,
+        "false_recommendation_rate": 0.0,
+        "mean_recommendation_regret": null,
+        "missed_opportunity_rate": 0.666667,
+        "need_more_evidence_rate": 0.666667,
+        "recommendation_coverage": 0.0,
+        "top1_agreement_rate_forced": 1.0,
+        "top_pair_direction_agreement_rate": null,
+        "top_pair_direction_agreement_rate_forced": 0.833333,
+        "validated_recommendation_rate": 0.0,
+        "worst_recommendation_regret": null
+      },
+      "wrapper_v2_case_rows": [
+        {
+          "MAE": 0.125,
+          "algorithm_id": "hrd_v3_50_50",
+          "decision_state": "need_more_evidence",
+          "false_recommendation": null,
+          "later_rates": {
+            "codex_gpt_5_4": {
+              "missing_or_na_count": 0,
+              "pass_count": 5,
+              "pass_rate": 0.5,
+              "valid_count": 10
+            },
+            "kilo_claude_sonnet_4_6": {
+              "missing_or_na_count": 0,
+              "pass_count": 8,
+              "pass_rate": 0.8,
+              "valid_count": 10
+            },
+            "kilo_gpt_5_4": {
+              "missing_or_na_count": 0,
+              "pass_count": 9,
+              "pass_rate": 0.9,
+              "valid_count": 10
+            },
+            "kilo_gpt_5_4_mini": {
+              "missing_or_na_count": 0,
+              "pass_count": 6,
+              "pass_rate": 0.6,
+              "valid_count": 10
+            }
+          },
+          "later_top_agent_id": "kilo_gpt_5_4",
+          "recommendation_regret": null,
+          "recommended_agent_id": null,
+          "selection_rates": {
+            "codex_gpt_5_4": {
+              "missing_or_na_count": 0,
+              "pass_count": 8,
+              "pass_rate": 0.8,
+              "valid_count": 10
+            },
+            "kilo_claude_sonnet_4_6": {
+              "missing_or_na_count": 0,
+              "pass_count": 8,
+              "pass_rate": 0.8,
+              "valid_count": 10
+            },
+            "kilo_gpt_5_4": {
+              "missing_or_na_count": 0,
+              "pass_count": 9,
+              "pass_rate": 0.9,
+              "valid_count": 10
+            },
+            "kilo_gpt_5_4_mini": {
+              "missing_or_na_count": 0,
+              "pass_count": 8,
+              "pass_rate": 0.8,
+              "valid_count": 10
+            }
+          },
+          "source_id": "boltons_demo_development",
+          "top_pair_direction_agreement": null
+        },
+        {
+          "MAE": 0.088889,
+          "algorithm_id": "hrd_v3_50_50",
+          "decision_state": "recommend",
+          "false_recommendation": false,
+          "later_rates": {
+            "codex_workspace": {
+              "missing_or_na_count": 0,
+              "pass_count": 7,
+              "pass_rate": 0.23333333333333334,
+              "valid_count": 30
+            },
+            "kilo_workspace": {
+              "missing_or_na_count": 0,
+              "pass_count": 16,
+              "pass_rate": 0.5333333333333333,
+              "valid_count": 30
+            }
+          },
+          "later_top_agent_id": "kilo_workspace",
+          "recommendation_regret": 0.0,
+          "recommended_agent_id": "kilo_workspace",
+          "selection_rates": {
+            "codex_workspace": {
+              "missing_or_na_count": 0,
+              "pass_count": 6,
+              "pass_rate": 0.3333333333333333,
+              "valid_count": 18
+            },
+            "kilo_workspace": {
+              "missing_or_na_count": 0,
+              "pass_count": 11,
+              "pass_rate": 0.6111111111111112,
+              "valid_count": 18
+            }
+          },
+          "source_id": "phase1_blocked_split_heldout_development",
+          "top_pair_direction_agreement": true
+        },
+        {
+          "MAE": 0.181818,
+          "algorithm_id": "hrd_v3_50_50",
+          "decision_state": "recommend",
+          "false_recommendation": false,
+          "later_rates": {
+            "codex_workspace": {
+              "missing_or_na_count": 8,
+              "pass_count": 22,
+              "pass_rate": 0.4,
+              "valid_count": 55
+            },
+            "kilo_workspace": {
+              "missing_or_na_count": 8,
+              "pass_count": 33,
+              "pass_rate": 0.6,
+              "valid_count": 55
+            }
+          },
+          "later_top_agent_id": "kilo_workspace",
+          "recommendation_regret": 0.0,
+          "recommended_agent_id": "kilo_workspace",
+          "selection_rates": {
+            "codex_workspace": {
+              "missing_or_na_count": 1,
+              "pass_count": 1,
+              "pass_rate": 0.09090909090909091,
+              "valid_count": 11
+            },
+            "kilo_workspace": {
+              "missing_or_na_count": 1,
+              "pass_count": 6,
+              "pass_rate": 0.5454545454545454,
+              "valid_count": 11
+            }
+          },
+          "source_id": "phase1_repo_specific_earliest_time_bucket_cutoff_development",
+          "top_pair_direction_agreement": true
+        }
+      ],
+      "wrapper_v2_summary": {
+        "MAE_max": 0.181818,
+        "MAE_mean": 0.131902,
+        "MAE_vs_strongest_random": {
+          "MAE_beats_or_ties_random_share": 0.676667,
+          "absolute_improvement": 0.018863,
+          "regret_beats_or_ties_random_share": 1.0,
+          "relative_improvement": 0.125115,
+          "strongest_random_MAE_mean": 0.150765,
+          "strongest_random_baseline": "module_stratified_random"
+        },
+        "abstain_rate": 0.0,
+        "correct_abstain_rate": null,
+        "evaluated_count": 3,
+        "false_recommendation_rate": 0.0,
+        "mean_recommendation_regret": 0.0,
+        "missed_opportunity_rate": 0.0,
+        "need_more_evidence_rate": 0.333333,
+        "recommendation_coverage": 0.666667,
+        "top1_agreement_rate_forced": 1.0,
+        "top_pair_direction_agreement_rate": 1.0,
+        "top_pair_direction_agreement_rate_forced": 0.833333,
+        "validated_recommendation_rate": 0.666667,
+        "worst_recommendation_regret": 0.0
+      }
+    },
+    {
+      "config_id": "rsq_v2_no_recency",
+      "family": "rsq_v2",
+      "leave_one_source_sensitivity": [
+        {
+          "MAE_mean": 0.130303,
+          "false_recommendation_rate": 0.0,
+          "left_out_source_id": "boltons_demo_development",
+          "recommendation_coverage": 1.0,
+          "validated_recommendation_rate": 1.0
+        },
+        {
+          "MAE_mean": 0.188636,
+          "false_recommendation_rate": 0.0,
+          "left_out_source_id": "phase1_blocked_split_heldout_development",
+          "recommendation_coverage": 0.5,
+          "validated_recommendation_rate": 0.5
+        },
+        {
+          "MAE_mean": 0.091666,
+          "false_recommendation_rate": 0.0,
+          "left_out_source_id": "phase1_repo_specific_earliest_time_bucket_cutoff_development",
+          "recommendation_coverage": 0.5,
+          "validated_recommendation_rate": 0.5
+        }
+      ],
+      "spec": {
+        "algorithm_id": "rsq_v2",
+        "config_id": "rsq_v2_no_recency",
+        "family": "rsq_v2",
+        "use_recency": false
+      },
+      "wrapper_v1_summary": {
+        "MAE_max": 0.227273,
+        "MAE_mean": 0.136869,
+        "abstain_rate": 0.333333,
+        "correct_abstain_rate": 1.0,
+        "evaluated_count": 3,
+        "false_recommendation_rate": 0.0,
+        "mean_recommendation_regret": null,
+        "missed_opportunity_rate": 0.666667,
+        "need_more_evidence_rate": 0.666667,
+        "recommendation_coverage": 0.0,
+        "top1_agreement_rate_forced": 0.666667,
+        "top_pair_direction_agreement_rate": null,
+        "top_pair_direction_agreement_rate_forced": 0.777778,
+        "validated_recommendation_rate": 0.0,
+        "worst_recommendation_regret": null
+      },
+      "wrapper_v2_case_rows": [
+        {
+          "MAE": 0.15,
+          "algorithm_id": "rsq_v2_no_recency",
+          "decision_state": "abstain_indistinguishable",
+          "false_recommendation": null,
+          "later_rates": {
+            "codex_gpt_5_4": {
+              "missing_or_na_count": 0,
+              "pass_count": 5,
+              "pass_rate": 0.5,
+              "valid_count": 10
+            },
+            "kilo_claude_sonnet_4_6": {
+              "missing_or_na_count": 0,
+              "pass_count": 8,
+              "pass_rate": 0.8,
+              "valid_count": 10
+            },
+            "kilo_gpt_5_4": {
+              "missing_or_na_count": 0,
+              "pass_count": 9,
+              "pass_rate": 0.9,
+              "valid_count": 10
+            },
+            "kilo_gpt_5_4_mini": {
+              "missing_or_na_count": 0,
+              "pass_count": 6,
+              "pass_rate": 0.6,
+              "valid_count": 10
+            }
+          },
+          "later_top_agent_id": "kilo_gpt_5_4",
+          "recommendation_regret": null,
+          "recommended_agent_id": null,
+          "selection_rates": {
+            "codex_gpt_5_4": {
+              "missing_or_na_count": 0,
+              "pass_count": 8,
+              "pass_rate": 0.8,
+              "valid_count": 10
+            },
+            "kilo_claude_sonnet_4_6": {
+              "missing_or_na_count": 0,
+              "pass_count": 7,
+              "pass_rate": 0.7,
+              "valid_count": 10
+            },
+            "kilo_gpt_5_4": {
+              "missing_or_na_count": 0,
+              "pass_count": 8,
+              "pass_rate": 0.8,
+              "valid_count": 10
+            },
+            "kilo_gpt_5_4_mini": {
+              "missing_or_na_count": 0,
+              "pass_count": 7,
+              "pass_rate": 0.7,
+              "valid_count": 10
+            }
+          },
+          "source_id": "boltons_demo_development",
+          "top_pair_direction_agreement": null
+        },
+        {
+          "MAE": 0.033333,
+          "algorithm_id": "rsq_v2_no_recency",
+          "decision_state": "recommend",
+          "false_recommendation": false,
+          "later_rates": {
+            "codex_workspace": {
+              "missing_or_na_count": 0,
+              "pass_count": 7,
+              "pass_rate": 0.23333333333333334,
+              "valid_count": 30
+            },
+            "kilo_workspace": {
+              "missing_or_na_count": 0,
+              "pass_count": 16,
+              "pass_rate": 0.5333333333333333,
+              "valid_count": 30
+            }
+          },
+          "later_top_agent_id": "kilo_workspace",
+          "recommendation_regret": 0.0,
+          "recommended_agent_id": "kilo_workspace",
+          "selection_rates": {
+            "codex_workspace": {
+              "missing_or_na_count": 0,
+              "pass_count": 5,
+              "pass_rate": 0.2777777777777778,
+              "valid_count": 18
+            },
+            "kilo_workspace": {
+              "missing_or_na_count": 0,
+              "pass_count": 10,
+              "pass_rate": 0.5555555555555556,
+              "valid_count": 18
+            }
+          },
+          "source_id": "phase1_blocked_split_heldout_development",
+          "top_pair_direction_agreement": true
+        },
+        {
+          "MAE": 0.227273,
+          "algorithm_id": "rsq_v2_no_recency",
+          "decision_state": "recommend",
+          "false_recommendation": false,
+          "later_rates": {
+            "codex_workspace": {
+              "missing_or_na_count": 8,
+              "pass_count": 22,
+              "pass_rate": 0.4,
+              "valid_count": 55
+            },
+            "kilo_workspace": {
+              "missing_or_na_count": 8,
+              "pass_count": 33,
+              "pass_rate": 0.6,
+              "valid_count": 55
+            }
+          },
+          "later_top_agent_id": "kilo_workspace",
+          "recommendation_regret": 0.0,
+          "recommended_agent_id": "kilo_workspace",
+          "selection_rates": {
+            "codex_workspace": {
+              "missing_or_na_count": 1,
+              "pass_count": 1,
+              "pass_rate": 0.09090909090909091,
+              "valid_count": 11
+            },
+            "kilo_workspace": {
+              "missing_or_na_count": 1,
+              "pass_count": 5,
+              "pass_rate": 0.45454545454545453,
+              "valid_count": 11
+            }
+          },
+          "source_id": "phase1_repo_specific_earliest_time_bucket_cutoff_development",
+          "top_pair_direction_agreement": true
+        }
+      ],
+      "wrapper_v2_summary": {
+        "MAE_max": 0.227273,
+        "MAE_mean": 0.136869,
+        "MAE_vs_strongest_random": {
+          "MAE_beats_or_ties_random_share": 0.676667,
+          "absolute_improvement": 0.013896,
+          "regret_beats_or_ties_random_share": 1.0,
+          "relative_improvement": 0.09217,
+          "strongest_random_MAE_mean": 0.150765,
+          "strongest_random_baseline": "module_stratified_random"
+        },
+        "abstain_rate": 0.333333,
+        "correct_abstain_rate": 1.0,
+        "evaluated_count": 3,
+        "false_recommendation_rate": 0.0,
+        "mean_recommendation_regret": 0.0,
+        "missed_opportunity_rate": 0.0,
+        "need_more_evidence_rate": 0.0,
+        "recommendation_coverage": 0.666667,
+        "top1_agreement_rate_forced": 0.666667,
+        "top_pair_direction_agreement_rate": 1.0,
+        "top_pair_direction_agreement_rate_forced": 0.777778,
+        "validated_recommendation_rate": 0.666667,
+        "worst_recommendation_regret": 0.0
+      }
+    },
+    {
+      "config_id": "hrd_v3_70_30_no_caps",
+      "family": "hrd_v3",
+      "leave_one_source_sensitivity": [
+        {
+          "MAE_mean": 0.144192,
+          "false_recommendation_rate": 0.0,
+          "left_out_source_id": "boltons_demo_development",
+          "recommendation_coverage": 1.0,
+          "validated_recommendation_rate": 1.0
+        },
+        {
+          "MAE_mean": 0.176137,
+          "false_recommendation_rate": 0.0,
+          "left_out_source_id": "phase1_blocked_split_heldout_development",
+          "recommendation_coverage": 0.5,
+          "validated_recommendation_rate": 0.5
+        },
+        {
+          "MAE_mean": 0.093055,
+          "false_recommendation_rate": 0.0,
+          "left_out_source_id": "phase1_repo_specific_earliest_time_bucket_cutoff_development",
+          "recommendation_coverage": 0.5,
+          "validated_recommendation_rate": 0.5
+        }
+      ],
+      "spec": {
+        "algorithm_id": "hrd_v3_70_30",
+        "config_id": "hrd_v3_70_30_no_caps",
+        "family": "hrd_v3",
+        "use_caps": false
+      },
+      "wrapper_v1_summary": {
+        "MAE_max": 0.227273,
+        "MAE_mean": 0.137795,
+        "abstain_rate": 0.333333,
+        "correct_abstain_rate": 1.0,
+        "evaluated_count": 3,
+        "false_recommendation_rate": 0.0,
+        "mean_recommendation_regret": null,
+        "missed_opportunity_rate": 0.666667,
+        "need_more_evidence_rate": 0.666667,
+        "recommendation_coverage": 0.0,
+        "top1_agreement_rate_forced": 1.0,
+        "top_pair_direction_agreement_rate": null,
+        "top_pair_direction_agreement_rate_forced": 0.888889,
+        "validated_recommendation_rate": 0.0,
+        "worst_recommendation_regret": null
+      },
+      "wrapper_v2_case_rows": [
+        {
+          "MAE": 0.125,
+          "algorithm_id": "hrd_v3_70_30_no_caps",
+          "decision_state": "need_more_evidence",
+          "false_recommendation": null,
+          "later_rates": {
+            "codex_gpt_5_4": {
+              "missing_or_na_count": 0,
+              "pass_count": 5,
+              "pass_rate": 0.5,
+              "valid_count": 10
+            },
+            "kilo_claude_sonnet_4_6": {
+              "missing_or_na_count": 0,
+              "pass_count": 8,
+              "pass_rate": 0.8,
+              "valid_count": 10
+            },
+            "kilo_gpt_5_4": {
+              "missing_or_na_count": 0,
+              "pass_count": 9,
+              "pass_rate": 0.9,
+              "valid_count": 10
+            },
+            "kilo_gpt_5_4_mini": {
+              "missing_or_na_count": 0,
+              "pass_count": 6,
+              "pass_rate": 0.6,
+              "valid_count": 10
+            }
+          },
+          "later_top_agent_id": "kilo_gpt_5_4",
+          "recommendation_regret": null,
+          "recommended_agent_id": null,
+          "selection_rates": {
+            "codex_gpt_5_4": {
+              "missing_or_na_count": 0,
+              "pass_count": 7,
+              "pass_rate": 0.7,
+              "valid_count": 10
+            },
+            "kilo_claude_sonnet_4_6": {
+              "missing_or_na_count": 0,
+              "pass_count": 7,
+              "pass_rate": 0.7,
+              "valid_count": 10
+            },
+            "kilo_gpt_5_4": {
+              "missing_or_na_count": 0,
+              "pass_count": 9,
+              "pass_rate": 0.9,
+              "valid_count": 10
+            },
+            "kilo_gpt_5_4_mini": {
+              "missing_or_na_count": 0,
+              "pass_count": 8,
+              "pass_rate": 0.8,
+              "valid_count": 10
+            }
+          },
+          "source_id": "boltons_demo_development",
+          "top_pair_direction_agreement": null
+        },
+        {
+          "MAE": 0.061111,
+          "algorithm_id": "hrd_v3_70_30_no_caps",
+          "decision_state": "recommend",
+          "false_recommendation": false,
+          "later_rates": {
+            "codex_workspace": {
+              "missing_or_na_count": 0,
+              "pass_count": 7,
+              "pass_rate": 0.23333333333333334,
+              "valid_count": 30
+            },
+            "kilo_workspace": {
+              "missing_or_na_count": 0,
+              "pass_count": 16,
+              "pass_rate": 0.5333333333333333,
+              "valid_count": 30
+            }
+          },
+          "later_top_agent_id": "kilo_workspace",
+          "recommendation_regret": 0.0,
+          "recommended_agent_id": "kilo_workspace",
+          "selection_rates": {
+            "codex_workspace": {
+              "missing_or_na_count": 0,
+              "pass_count": 5,
+              "pass_rate": 0.2777777777777778,
+              "valid_count": 18
+            },
+            "kilo_workspace": {
+              "missing_or_na_count": 0,
+              "pass_count": 11,
+              "pass_rate": 0.6111111111111112,
+              "valid_count": 18
+            }
+          },
+          "source_id": "phase1_blocked_split_heldout_development",
+          "top_pair_direction_agreement": true
+        },
+        {
+          "MAE": 0.227273,
+          "algorithm_id": "hrd_v3_70_30_no_caps",
+          "decision_state": "recommend",
+          "false_recommendation": false,
+          "later_rates": {
+            "codex_workspace": {
+              "missing_or_na_count": 8,
+              "pass_count": 22,
+              "pass_rate": 0.4,
+              "valid_count": 55
+            },
+            "kilo_workspace": {
+              "missing_or_na_count": 8,
+              "pass_count": 33,
+              "pass_rate": 0.6,
+              "valid_count": 55
+            }
+          },
+          "later_top_agent_id": "kilo_workspace",
+          "recommendation_regret": 0.0,
+          "recommended_agent_id": "kilo_workspace",
+          "selection_rates": {
+            "codex_workspace": {
+              "missing_or_na_count": 1,
+              "pass_count": 1,
+              "pass_rate": 0.09090909090909091,
+              "valid_count": 11
+            },
+            "kilo_workspace": {
+              "missing_or_na_count": 1,
+              "pass_count": 5,
+              "pass_rate": 0.45454545454545453,
+              "valid_count": 11
+            }
+          },
+          "source_id": "phase1_repo_specific_earliest_time_bucket_cutoff_development",
+          "top_pair_direction_agreement": true
+        }
+      ],
+      "wrapper_v2_summary": {
+        "MAE_max": 0.227273,
+        "MAE_mean": 0.137795,
+        "MAE_vs_strongest_random": {
+          "MAE_beats_or_ties_random_share": 0.676667,
+          "absolute_improvement": 0.01297,
+          "regret_beats_or_ties_random_share": 1.0,
+          "relative_improvement": 0.086028,
+          "strongest_random_MAE_mean": 0.150765,
+          "strongest_random_baseline": "module_stratified_random"
+        },
+        "abstain_rate": 0.0,
+        "correct_abstain_rate": null,
+        "evaluated_count": 3,
+        "false_recommendation_rate": 0.0,
+        "mean_recommendation_regret": 0.0,
+        "missed_opportunity_rate": 0.0,
+        "need_more_evidence_rate": 0.333333,
+        "recommendation_coverage": 0.666667,
+        "top1_agreement_rate_forced": 1.0,
+        "top_pair_direction_agreement_rate": 1.0,
+        "top_pair_direction_agreement_rate_forced": 0.888889,
+        "validated_recommendation_rate": 0.666667,
+        "worst_recommendation_regret": 0.0
+      }
+    },
+    {
+      "config_id": "saes_lite",
+      "family": "saes_lite",
+      "leave_one_source_sensitivity": [
+        {
+          "MAE_mean": 0.148611,
+          "false_recommendation_rate": 0.0,
+          "left_out_source_id": "boltons_demo_development",
+          "recommendation_coverage": 1.0,
+          "validated_recommendation_rate": 1.0
+        },
+        {
+          "MAE_mean": 0.166666,
+          "false_recommendation_rate": 0.0,
+          "left_out_source_id": "phase1_blocked_split_heldout_development",
+          "recommendation_coverage": 0.5,
+          "validated_recommendation_rate": 0.5
+        },
+        {
+          "MAE_mean": 0.106944,
+          "false_recommendation_rate": 0.0,
+          "left_out_source_id": "phase1_repo_specific_earliest_time_bucket_cutoff_development",
+          "recommendation_coverage": 0.5,
+          "validated_recommendation_rate": 0.5
+        }
+      ],
+      "spec": {
+        "algorithm_id": "saes_lite",
+        "config_id": "saes_lite",
+        "family": "saes_lite"
+      },
+      "wrapper_v1_summary": {
+        "MAE_max": 0.208333,
+        "MAE_mean": 0.140741,
+        "abstain_rate": 0.333333,
+        "correct_abstain_rate": 1.0,
+        "evaluated_count": 3,
+        "false_recommendation_rate": 0.0,
+        "mean_recommendation_regret": 0.0,
+        "missed_opportunity_rate": 0.333333,
+        "need_more_evidence_rate": 0.333333,
+        "recommendation_coverage": 0.333333,
+        "top1_agreement_rate_forced": 0.666667,
+        "top_pair_direction_agreement_rate": 1.0,
+        "top_pair_direction_agreement_rate_forced": 0.777778,
+        "validated_recommendation_rate": 0.333333,
+        "worst_recommendation_regret": 0.0
+      },
+      "wrapper_v2_case_rows": [
+        {
+          "MAE": 0.125,
+          "algorithm_id": "saes_lite",
+          "decision_state": "abstain_indistinguishable",
+          "false_recommendation": null,
+          "later_rates": {
+            "codex_gpt_5_4": {
+              "missing_or_na_count": 0,
+              "pass_count": 5,
+              "pass_rate": 0.5,
+              "valid_count": 10
+            },
+            "kilo_claude_sonnet_4_6": {
+              "missing_or_na_count": 0,
+              "pass_count": 8,
+              "pass_rate": 0.8,
+              "valid_count": 10
+            },
+            "kilo_gpt_5_4": {
+              "missing_or_na_count": 0,
+              "pass_count": 9,
+              "pass_rate": 0.9,
+              "valid_count": 10
+            },
+            "kilo_gpt_5_4_mini": {
+              "missing_or_na_count": 0,
+              "pass_count": 6,
+              "pass_rate": 0.6,
+              "valid_count": 10
+            }
+          },
+          "later_top_agent_id": "kilo_gpt_5_4",
+          "recommendation_regret": null,
+          "recommended_agent_id": null,
+          "selection_rates": {
+            "codex_gpt_5_4": {
+              "missing_or_na_count": 0,
+              "pass_count": 7,
+              "pass_rate": 0.7,
+              "valid_count": 10
+            },
+            "kilo_claude_sonnet_4_6": {
+              "missing_or_na_count": 0,
+              "pass_count": 7,
+              "pass_rate": 0.7,
+              "valid_count": 10
+            },
+            "kilo_gpt_5_4": {
+              "missing_or_na_count": 0,
+              "pass_count": 7,
+              "pass_rate": 0.7,
+              "valid_count": 10
+            },
+            "kilo_gpt_5_4_mini": {
+              "missing_or_na_count": 0,
+              "pass_count": 6,
+              "pass_rate": 0.6,
+              "valid_count": 10
+            }
+          },
+          "source_id": "boltons_demo_development",
+          "top_pair_direction_agreement": null
+        },
+        {
+          "MAE": 0.088889,
+          "algorithm_id": "saes_lite",
+          "decision_state": "recommend",
+          "false_recommendation": false,
+          "later_rates": {
+            "codex_workspace": {
+              "missing_or_na_count": 0,
+              "pass_count": 7,
+              "pass_rate": 0.23333333333333334,
+              "valid_count": 30
+            },
+            "kilo_workspace": {
+              "missing_or_na_count": 0,
+              "pass_count": 16,
+              "pass_rate": 0.5333333333333333,
+              "valid_count": 30
+            }
+          },
+          "later_top_agent_id": "kilo_workspace",
+          "recommendation_regret": 0.0,
+          "recommended_agent_id": "kilo_workspace",
+          "selection_rates": {
+            "codex_workspace": {
+              "missing_or_na_count": 0,
+              "pass_count": 5,
+              "pass_rate": 0.2777777777777778,
+              "valid_count": 18
+            },
+            "kilo_workspace": {
+              "missing_or_na_count": 0,
+              "pass_count": 12,
+              "pass_rate": 0.6666666666666666,
+              "valid_count": 18
+            }
+          },
+          "source_id": "phase1_blocked_split_heldout_development",
+          "top_pair_direction_agreement": true
+        },
+        {
+          "MAE": 0.208333,
+          "algorithm_id": "saes_lite",
+          "decision_state": "recommend",
+          "false_recommendation": false,
+          "later_rates": {
+            "codex_workspace": {
+              "missing_or_na_count": 8,
+              "pass_count": 22,
+              "pass_rate": 0.4,
+              "valid_count": 55
+            },
+            "kilo_workspace": {
+              "missing_or_na_count": 8,
+              "pass_count": 33,
+              "pass_rate": 0.6,
+              "valid_count": 55
+            }
+          },
+          "later_top_agent_id": "kilo_workspace",
+          "recommendation_regret": 0.0,
+          "recommended_agent_id": "kilo_workspace",
+          "selection_rates": {
+            "codex_workspace": {
+              "missing_or_na_count": 0,
+              "pass_count": 1,
+              "pass_rate": 0.08333333333333333,
+              "valid_count": 12
+            },
+            "kilo_workspace": {
+              "missing_or_na_count": 0,
+              "pass_count": 6,
+              "pass_rate": 0.5,
+              "valid_count": 12
+            }
+          },
+          "source_id": "phase1_repo_specific_earliest_time_bucket_cutoff_development",
+          "top_pair_direction_agreement": true
+        }
+      ],
+      "wrapper_v2_summary": {
+        "MAE_max": 0.208333,
+        "MAE_mean": 0.140741,
+        "MAE_vs_strongest_random": {
+          "MAE_beats_or_ties_random_share": 0.676667,
+          "absolute_improvement": 0.010024,
+          "regret_beats_or_ties_random_share": 1.0,
+          "relative_improvement": 0.066488,
+          "strongest_random_MAE_mean": 0.150765,
+          "strongest_random_baseline": "module_stratified_random"
+        },
+        "abstain_rate": 0.333333,
+        "correct_abstain_rate": 1.0,
+        "evaluated_count": 3,
+        "false_recommendation_rate": 0.0,
+        "mean_recommendation_regret": 0.0,
+        "missed_opportunity_rate": 0.0,
+        "need_more_evidence_rate": 0.0,
+        "recommendation_coverage": 0.666667,
+        "top1_agreement_rate_forced": 0.666667,
+        "top_pair_direction_agreement_rate": 1.0,
+        "top_pair_direction_agreement_rate_forced": 0.777778,
+        "validated_recommendation_rate": 0.666667,
+        "worst_recommendation_regret": 0.0
+      }
+    },
+    {
+      "config_id": "informativeness_only",
+      "family": "ablation",
+      "leave_one_source_sensitivity": [
+        {
+          "MAE_mean": 0.158334,
+          "false_recommendation_rate": 0.0,
+          "left_out_source_id": "boltons_demo_development",
+          "recommendation_coverage": 1.0,
+          "validated_recommendation_rate": 1.0
+        },
+        {
+          "MAE_mean": 0.1875,
+          "false_recommendation_rate": 0.0,
+          "left_out_source_id": "phase1_blocked_split_heldout_development",
+          "recommendation_coverage": 0.5,
+          "validated_recommendation_rate": 0.5
+        },
+        {
+          "MAE_mean": 0.145834,
+          "false_recommendation_rate": 0.0,
+          "left_out_source_id": "phase1_repo_specific_earliest_time_bucket_cutoff_development",
+          "recommendation_coverage": 0.5,
+          "validated_recommendation_rate": 0.5
+        }
+      ],
+      "spec": {
+        "algorithm_id": "informativeness_only",
+        "config_id": "informativeness_only",
+        "family": "ablation"
+      },
+      "wrapper_v1_summary": {
+        "MAE_max": 0.2,
+        "MAE_mean": 0.163889,
+        "abstain_rate": 0.333333,
+        "correct_abstain_rate": 1.0,
+        "evaluated_count": 3,
+        "false_recommendation_rate": 0.0,
+        "mean_recommendation_regret": null,
+        "missed_opportunity_rate": 0.666667,
+        "need_more_evidence_rate": 0.666667,
+        "recommendation_coverage": 0.0,
+        "top1_agreement_rate_forced": 0.666667,
+        "top_pair_direction_agreement_rate": null,
+        "top_pair_direction_agreement_rate_forced": 0.833333,
+        "validated_recommendation_rate": 0.0,
+        "worst_recommendation_regret": null
+      },
+      "wrapper_v2_case_rows": [
+        {
+          "MAE": 0.175,
+          "algorithm_id": "informativeness_only",
+          "decision_state": "abstain_indistinguishable",
+          "false_recommendation": null,
+          "later_rates": {
+            "codex_gpt_5_4": {
+              "missing_or_na_count": 0,
+              "pass_count": 5,
+              "pass_rate": 0.5,
+              "valid_count": 10
+            },
+            "kilo_claude_sonnet_4_6": {
+              "missing_or_na_count": 0,
+              "pass_count": 8,
+              "pass_rate": 0.8,
+              "valid_count": 10
+            },
+            "kilo_gpt_5_4": {
+              "missing_or_na_count": 0,
+              "pass_count": 9,
+              "pass_rate": 0.9,
+              "valid_count": 10
+            },
+            "kilo_gpt_5_4_mini": {
+              "missing_or_na_count": 0,
+              "pass_count": 6,
+              "pass_rate": 0.6,
+              "valid_count": 10
+            }
+          },
+          "later_top_agent_id": "kilo_gpt_5_4",
+          "recommendation_regret": null,
+          "recommended_agent_id": null,
+          "selection_rates": {
+            "codex_gpt_5_4": {
+              "missing_or_na_count": 0,
+              "pass_count": 7,
+              "pass_rate": 0.7,
+              "valid_count": 10
+            },
+            "kilo_claude_sonnet_4_6": {
+              "missing_or_na_count": 0,
+              "pass_count": 6,
+              "pass_rate": 0.6,
+              "valid_count": 10
+            },
+            "kilo_gpt_5_4": {
+              "missing_or_na_count": 0,
+              "pass_count": 7,
+              "pass_rate": 0.7,
+              "valid_count": 10
+            },
+            "kilo_gpt_5_4_mini": {
+              "missing_or_na_count": 0,
+              "pass_count": 5,
+              "pass_rate": 0.5,
+              "valid_count": 10
+            }
+          },
+          "source_id": "boltons_demo_development",
+          "top_pair_direction_agreement": null
+        },
+        {
+          "MAE": 0.116667,
+          "algorithm_id": "informativeness_only",
+          "decision_state": "recommend",
+          "false_recommendation": false,
+          "later_rates": {
+            "codex_workspace": {
+              "missing_or_na_count": 0,
+              "pass_count": 7,
+              "pass_rate": 0.23333333333333334,
+              "valid_count": 30
+            },
+            "kilo_workspace": {
+              "missing_or_na_count": 0,
+              "pass_count": 16,
+              "pass_rate": 0.5333333333333333,
+              "valid_count": 30
+            }
+          },
+          "later_top_agent_id": "kilo_workspace",
+          "recommendation_regret": 0.0,
+          "recommended_agent_id": "kilo_workspace",
+          "selection_rates": {
+            "codex_workspace": {
+              "missing_or_na_count": 0,
+              "pass_count": 6,
+              "pass_rate": 0.3333333333333333,
+              "valid_count": 18
+            },
+            "kilo_workspace": {
+              "missing_or_na_count": 0,
+              "pass_count": 12,
+              "pass_rate": 0.6666666666666666,
+              "valid_count": 18
+            }
+          },
+          "source_id": "phase1_blocked_split_heldout_development",
+          "top_pair_direction_agreement": true
+        },
+        {
+          "MAE": 0.2,
+          "algorithm_id": "informativeness_only",
+          "decision_state": "recommend",
+          "false_recommendation": false,
+          "later_rates": {
+            "codex_workspace": {
+              "missing_or_na_count": 8,
+              "pass_count": 22,
+              "pass_rate": 0.4,
+              "valid_count": 55
+            },
+            "kilo_workspace": {
+              "missing_or_na_count": 8,
+              "pass_count": 33,
+              "pass_rate": 0.6,
+              "valid_count": 55
+            }
+          },
+          "later_top_agent_id": "kilo_workspace",
+          "recommendation_regret": 0.0,
+          "recommended_agent_id": "kilo_workspace",
+          "selection_rates": {
+            "codex_workspace": {
+              "missing_or_na_count": 2,
+              "pass_count": 1,
+              "pass_rate": 0.1,
+              "valid_count": 10
+            },
+            "kilo_workspace": {
+              "missing_or_na_count": 2,
+              "pass_count": 5,
+              "pass_rate": 0.5,
+              "valid_count": 10
+            }
+          },
+          "source_id": "phase1_repo_specific_earliest_time_bucket_cutoff_development",
+          "top_pair_direction_agreement": true
+        }
+      ],
+      "wrapper_v2_summary": {
+        "MAE_max": 0.2,
+        "MAE_mean": 0.163889,
+        "MAE_vs_strongest_random": {
+          "MAE_beats_or_ties_random_share": 0.425667,
+          "absolute_improvement": -0.013124,
+          "regret_beats_or_ties_random_share": 1.0,
+          "relative_improvement": -0.087049,
+          "strongest_random_MAE_mean": 0.150765,
+          "strongest_random_baseline": "module_stratified_random"
+        },
+        "abstain_rate": 0.333333,
+        "correct_abstain_rate": 1.0,
+        "evaluated_count": 3,
+        "false_recommendation_rate": 0.0,
+        "mean_recommendation_regret": 0.0,
+        "missed_opportunity_rate": 0.0,
+        "need_more_evidence_rate": 0.0,
+        "recommendation_coverage": 0.666667,
+        "top1_agreement_rate_forced": 0.666667,
+        "top_pair_direction_agreement_rate": 1.0,
+        "top_pair_direction_agreement_rate_forced": 0.833333,
+        "validated_recommendation_rate": 0.666667,
+        "worst_recommendation_regret": 0.0
+      }
+    },
+    {
+      "config_id": "ro_lsp",
+      "family": "ro_lsp",
+      "leave_one_source_sensitivity": [
+        {
+          "MAE_mean": 0.17197,
+          "false_recommendation_rate": 0.0,
+          "left_out_source_id": "boltons_demo_development",
+          "recommendation_coverage": 1.0,
+          "validated_recommendation_rate": 1.0
+        },
+        {
+          "MAE_mean": 0.188636,
+          "false_recommendation_rate": 0.0,
+          "left_out_source_id": "phase1_blocked_split_heldout_development",
+          "recommendation_coverage": 0.5,
+          "validated_recommendation_rate": 0.5
+        },
+        {
+          "MAE_mean": 0.133333,
+          "false_recommendation_rate": 0.0,
+          "left_out_source_id": "phase1_repo_specific_earliest_time_bucket_cutoff_development",
+          "recommendation_coverage": 0.5,
+          "validated_recommendation_rate": 0.5
+        }
+      ],
+      "spec": {
+        "algorithm_id": "ro_lsp",
+        "config_id": "ro_lsp",
+        "family": "ro_lsp"
+      },
+      "wrapper_v1_summary": {
+        "MAE_max": 0.227273,
+        "MAE_mean": 0.164647,
+        "abstain_rate": 0.333333,
+        "correct_abstain_rate": 1.0,
+        "evaluated_count": 3,
+        "false_recommendation_rate": 0.0,
+        "mean_recommendation_regret": null,
+        "missed_opportunity_rate": 0.666667,
+        "need_more_evidence_rate": 0.666667,
+        "recommendation_coverage": 0.0,
+        "top1_agreement_rate_forced": 1.0,
+        "top_pair_direction_agreement_rate": null,
+        "top_pair_direction_agreement_rate_forced": 0.833333,
+        "validated_recommendation_rate": 0.0,
+        "worst_recommendation_regret": null
+      },
+      "wrapper_v2_case_rows": [
+        {
+          "MAE": 0.15,
+          "algorithm_id": "ro_lsp",
+          "decision_state": "abstain_indistinguishable",
+          "false_recommendation": null,
+          "later_rates": {
+            "codex_gpt_5_4": {
+              "missing_or_na_count": 0,
+              "pass_count": 5,
+              "pass_rate": 0.5,
+              "valid_count": 10
+            },
+            "kilo_claude_sonnet_4_6": {
+              "missing_or_na_count": 0,
+              "pass_count": 8,
+              "pass_rate": 0.8,
+              "valid_count": 10
+            },
+            "kilo_gpt_5_4": {
+              "missing_or_na_count": 0,
+              "pass_count": 9,
+              "pass_rate": 0.9,
+              "valid_count": 10
+            },
+            "kilo_gpt_5_4_mini": {
+              "missing_or_na_count": 0,
+              "pass_count": 6,
+              "pass_rate": 0.6,
+              "valid_count": 10
+            }
+          },
+          "later_top_agent_id": "kilo_gpt_5_4",
+          "recommendation_regret": null,
+          "recommended_agent_id": null,
+          "selection_rates": {
+            "codex_gpt_5_4": {
+              "missing_or_na_count": 0,
+              "pass_count": 7,
+              "pass_rate": 0.7,
+              "valid_count": 10
+            },
+            "kilo_claude_sonnet_4_6": {
+              "missing_or_na_count": 0,
+              "pass_count": 7,
+              "pass_rate": 0.7,
+              "valid_count": 10
+            },
+            "kilo_gpt_5_4": {
+              "missing_or_na_count": 0,
+              "pass_count": 8,
+              "pass_rate": 0.8,
+              "valid_count": 10
+            },
+            "kilo_gpt_5_4_mini": {
+              "missing_or_na_count": 0,
+              "pass_count": 8,
+              "pass_rate": 0.8,
+              "valid_count": 10
+            }
+          },
+          "source_id": "boltons_demo_development",
+          "top_pair_direction_agreement": null
+        },
+        {
+          "MAE": 0.116667,
+          "algorithm_id": "ro_lsp",
+          "decision_state": "recommend",
+          "false_recommendation": false,
+          "later_rates": {
+            "codex_workspace": {
+              "missing_or_na_count": 0,
+              "pass_count": 7,
+              "pass_rate": 0.23333333333333334,
+              "valid_count": 30
+            },
+            "kilo_workspace": {
+              "missing_or_na_count": 0,
+              "pass_count": 16,
+              "pass_rate": 0.5333333333333333,
+              "valid_count": 30
+            }
+          },
+          "later_top_agent_id": "kilo_workspace",
+          "recommendation_regret": 0.0,
+          "recommended_agent_id": "kilo_workspace",
+          "selection_rates": {
+            "codex_workspace": {
+              "missing_or_na_count": 0,
+              "pass_count": 6,
+              "pass_rate": 0.3333333333333333,
+              "valid_count": 18
+            },
+            "kilo_workspace": {
+              "missing_or_na_count": 0,
+              "pass_count": 12,
+              "pass_rate": 0.6666666666666666,
+              "valid_count": 18
+            }
+          },
+          "source_id": "phase1_blocked_split_heldout_development",
+          "top_pair_direction_agreement": true
+        },
+        {
+          "MAE": 0.227273,
+          "algorithm_id": "ro_lsp",
+          "decision_state": "recommend",
+          "false_recommendation": false,
+          "later_rates": {
+            "codex_workspace": {
+              "missing_or_na_count": 8,
+              "pass_count": 22,
+              "pass_rate": 0.4,
+              "valid_count": 55
+            },
+            "kilo_workspace": {
+              "missing_or_na_count": 8,
+              "pass_count": 33,
+              "pass_rate": 0.6,
+              "valid_count": 55
+            }
+          },
+          "later_top_agent_id": "kilo_workspace",
+          "recommendation_regret": 0.0,
+          "recommended_agent_id": "kilo_workspace",
+          "selection_rates": {
+            "codex_workspace": {
+              "missing_or_na_count": 1,
+              "pass_count": 1,
+              "pass_rate": 0.09090909090909091,
+              "valid_count": 11
+            },
+            "kilo_workspace": {
+              "missing_or_na_count": 1,
+              "pass_count": 5,
+              "pass_rate": 0.45454545454545453,
+              "valid_count": 11
+            }
+          },
+          "source_id": "phase1_repo_specific_earliest_time_bucket_cutoff_development",
+          "top_pair_direction_agreement": true
+        }
+      ],
+      "wrapper_v2_summary": {
+        "MAE_max": 0.227273,
+        "MAE_mean": 0.164647,
+        "MAE_vs_strongest_random": {
+          "MAE_beats_or_ties_random_share": 0.425667,
+          "absolute_improvement": -0.013882,
+          "regret_beats_or_ties_random_share": 1.0,
+          "relative_improvement": -0.092077,
+          "strongest_random_MAE_mean": 0.150765,
+          "strongest_random_baseline": "module_stratified_random"
+        },
+        "abstain_rate": 0.333333,
+        "correct_abstain_rate": 1.0,
+        "evaluated_count": 3,
+        "false_recommendation_rate": 0.0,
+        "mean_recommendation_regret": 0.0,
+        "missed_opportunity_rate": 0.0,
+        "need_more_evidence_rate": 0.0,
+        "recommendation_coverage": 0.666667,
+        "top1_agreement_rate_forced": 1.0,
+        "top_pair_direction_agreement_rate": 1.0,
+        "top_pair_direction_agreement_rate_forced": 0.833333,
+        "validated_recommendation_rate": 0.666667,
+        "worst_recommendation_regret": 0.0
+      }
+    },
+    {
+      "config_id": "rsq_v2",
+      "family": "rsq_v2",
+      "leave_one_source_sensitivity": [
+        {
+          "MAE_mean": 0.130303,
+          "false_recommendation_rate": 0.0,
+          "left_out_source_id": "boltons_demo_development",
+          "recommendation_coverage": 1.0,
+          "validated_recommendation_rate": 1.0
+        },
+        {
+          "MAE_mean": 0.238637,
+          "false_recommendation_rate": 0.0,
+          "left_out_source_id": "phase1_blocked_split_heldout_development",
+          "recommendation_coverage": 0.5,
+          "validated_recommendation_rate": 0.5
+        },
+        {
+          "MAE_mean": 0.141667,
+          "false_recommendation_rate": 0.0,
+          "left_out_source_id": "phase1_repo_specific_earliest_time_bucket_cutoff_development",
+          "recommendation_coverage": 0.5,
+          "validated_recommendation_rate": 0.5
+        }
+      ],
+      "spec": {
+        "algorithm_id": "rsq_v2",
+        "config_id": "rsq_v2",
+        "family": "rsq_v2"
+      },
+      "wrapper_v1_summary": {
+        "MAE_max": 0.25,
+        "MAE_mean": 0.170202,
+        "abstain_rate": 0.333333,
+        "correct_abstain_rate": 1.0,
+        "evaluated_count": 3,
+        "false_recommendation_rate": 0.0,
+        "mean_recommendation_regret": 0.0,
+        "missed_opportunity_rate": 0.333333,
+        "need_more_evidence_rate": 0.333333,
+        "recommendation_coverage": 0.333333,
+        "top1_agreement_rate_forced": 1.0,
+        "top_pair_direction_agreement_rate": 1.0,
+        "top_pair_direction_agreement_rate_forced": 0.833333,
+        "validated_recommendation_rate": 0.333333,
+        "worst_recommendation_regret": 0.0
+      },
+      "wrapper_v2_case_rows": [
+        {
+          "MAE": 0.25,
+          "algorithm_id": "rsq_v2",
+          "decision_state": "abstain_indistinguishable",
+          "false_recommendation": null,
+          "later_rates": {
+            "codex_gpt_5_4": {
+              "missing_or_na_count": 0,
+              "pass_count": 5,
+              "pass_rate": 0.5,
+              "valid_count": 10
+            },
+            "kilo_claude_sonnet_4_6": {
+              "missing_or_na_count": 0,
+              "pass_count": 8,
+              "pass_rate": 0.8,
+              "valid_count": 10
+            },
+            "kilo_gpt_5_4": {
+              "missing_or_na_count": 0,
+              "pass_count": 9,
+              "pass_rate": 0.9,
+              "valid_count": 10
+            },
+            "kilo_gpt_5_4_mini": {
+              "missing_or_na_count": 0,
+              "pass_count": 6,
+              "pass_rate": 0.6,
+              "valid_count": 10
+            }
+          },
+          "later_top_agent_id": "kilo_gpt_5_4",
+          "recommendation_regret": null,
+          "recommended_agent_id": null,
+          "selection_rates": {
+            "codex_gpt_5_4": {
+              "missing_or_na_count": 0,
+              "pass_count": 9,
+              "pass_rate": 0.9,
+              "valid_count": 10
+            },
+            "kilo_claude_sonnet_4_6": {
+              "missing_or_na_count": 0,
+              "pass_count": 9,
+              "pass_rate": 0.9,
+              "valid_count": 10
+            },
+            "kilo_gpt_5_4": {
+              "missing_or_na_count": 0,
+              "pass_count": 10,
+              "pass_rate": 1.0,
+              "valid_count": 10
+            },
+            "kilo_gpt_5_4_mini": {
+              "missing_or_na_count": 0,
+              "pass_count": 10,
+              "pass_rate": 1.0,
+              "valid_count": 10
+            }
+          },
+          "source_id": "boltons_demo_development",
+          "top_pair_direction_agreement": null
+        },
+        {
+          "MAE": 0.033333,
+          "algorithm_id": "rsq_v2",
+          "decision_state": "recommend",
+          "false_recommendation": false,
+          "later_rates": {
+            "codex_workspace": {
+              "missing_or_na_count": 0,
+              "pass_count": 7,
+              "pass_rate": 0.23333333333333334,
+              "valid_count": 30
+            },
+            "kilo_workspace": {
+              "missing_or_na_count": 0,
+              "pass_count": 16,
+              "pass_rate": 0.5333333333333333,
+              "valid_count": 30
+            }
+          },
+          "later_top_agent_id": "kilo_workspace",
+          "recommendation_regret": 0.0,
+          "recommended_agent_id": "kilo_workspace",
+          "selection_rates": {
+            "codex_workspace": {
+              "missing_or_na_count": 0,
+              "pass_count": 5,
+              "pass_rate": 0.2777777777777778,
+              "valid_count": 18
+            },
+            "kilo_workspace": {
+              "missing_or_na_count": 0,
+              "pass_count": 10,
+              "pass_rate": 0.5555555555555556,
+              "valid_count": 18
+            }
+          },
+          "source_id": "phase1_blocked_split_heldout_development",
+          "top_pair_direction_agreement": true
+        },
+        {
+          "MAE": 0.227273,
+          "algorithm_id": "rsq_v2",
+          "decision_state": "recommend",
+          "false_recommendation": false,
+          "later_rates": {
+            "codex_workspace": {
+              "missing_or_na_count": 8,
+              "pass_count": 22,
+              "pass_rate": 0.4,
+              "valid_count": 55
+            },
+            "kilo_workspace": {
+              "missing_or_na_count": 8,
+              "pass_count": 33,
+              "pass_rate": 0.6,
+              "valid_count": 55
+            }
+          },
+          "later_top_agent_id": "kilo_workspace",
+          "recommendation_regret": 0.0,
+          "recommended_agent_id": "kilo_workspace",
+          "selection_rates": {
+            "codex_workspace": {
+              "missing_or_na_count": 1,
+              "pass_count": 0,
+              "pass_rate": 0.0,
+              "valid_count": 11
+            },
+            "kilo_workspace": {
+              "missing_or_na_count": 1,
+              "pass_count": 6,
+              "pass_rate": 0.5454545454545454,
+              "valid_count": 11
+            }
+          },
+          "source_id": "phase1_repo_specific_earliest_time_bucket_cutoff_development",
+          "top_pair_direction_agreement": true
+        }
+      ],
+      "wrapper_v2_summary": {
+        "MAE_max": 0.25,
+        "MAE_mean": 0.170202,
+        "MAE_vs_strongest_random": {
+          "MAE_beats_or_ties_random_share": 0.356333,
+          "absolute_improvement": -0.019437,
+          "regret_beats_or_ties_random_share": 1.0,
+          "relative_improvement": -0.128922,
+          "strongest_random_MAE_mean": 0.150765,
+          "strongest_random_baseline": "module_stratified_random"
+        },
+        "abstain_rate": 0.333333,
+        "correct_abstain_rate": 1.0,
+        "evaluated_count": 3,
+        "false_recommendation_rate": 0.0,
+        "mean_recommendation_regret": 0.0,
+        "missed_opportunity_rate": 0.0,
+        "need_more_evidence_rate": 0.0,
+        "recommendation_coverage": 0.666667,
+        "top1_agreement_rate_forced": 1.0,
+        "top_pair_direction_agreement_rate": 1.0,
+        "top_pair_direction_agreement_rate_forced": 0.833333,
+        "validated_recommendation_rate": 0.666667,
+        "worst_recommendation_regret": 0.0
+      }
+    },
+    {
+      "config_id": "rsq_v2_no_caps",
+      "family": "rsq_v2",
+      "leave_one_source_sensitivity": [
+        {
+          "MAE_mean": 0.130303,
+          "false_recommendation_rate": 0.0,
+          "left_out_source_id": "boltons_demo_development",
+          "recommendation_coverage": 1.0,
+          "validated_recommendation_rate": 1.0
+        },
+        {
+          "MAE_mean": 0.238637,
+          "false_recommendation_rate": 0.0,
+          "left_out_source_id": "phase1_blocked_split_heldout_development",
+          "recommendation_coverage": 0.5,
+          "validated_recommendation_rate": 0.5
+        },
+        {
+          "MAE_mean": 0.141667,
+          "false_recommendation_rate": 0.0,
+          "left_out_source_id": "phase1_repo_specific_earliest_time_bucket_cutoff_development",
+          "recommendation_coverage": 0.5,
+          "validated_recommendation_rate": 0.5
+        }
+      ],
+      "spec": {
+        "algorithm_id": "rsq_v2",
+        "config_id": "rsq_v2_no_caps",
+        "family": "rsq_v2",
+        "use_caps": false
+      },
+      "wrapper_v1_summary": {
+        "MAE_max": 0.25,
+        "MAE_mean": 0.170202,
+        "abstain_rate": 0.333333,
+        "correct_abstain_rate": 1.0,
+        "evaluated_count": 3,
+        "false_recommendation_rate": 0.0,
+        "mean_recommendation_regret": 0.0,
+        "missed_opportunity_rate": 0.333333,
+        "need_more_evidence_rate": 0.333333,
+        "recommendation_coverage": 0.333333,
+        "top1_agreement_rate_forced": 1.0,
+        "top_pair_direction_agreement_rate": 1.0,
+        "top_pair_direction_agreement_rate_forced": 0.833333,
+        "validated_recommendation_rate": 0.333333,
+        "worst_recommendation_regret": 0.0
+      },
+      "wrapper_v2_case_rows": [
+        {
+          "MAE": 0.25,
+          "algorithm_id": "rsq_v2_no_caps",
+          "decision_state": "abstain_indistinguishable",
+          "false_recommendation": null,
+          "later_rates": {
+            "codex_gpt_5_4": {
+              "missing_or_na_count": 0,
+              "pass_count": 5,
+              "pass_rate": 0.5,
+              "valid_count": 10
+            },
+            "kilo_claude_sonnet_4_6": {
+              "missing_or_na_count": 0,
+              "pass_count": 8,
+              "pass_rate": 0.8,
+              "valid_count": 10
+            },
+            "kilo_gpt_5_4": {
+              "missing_or_na_count": 0,
+              "pass_count": 9,
+              "pass_rate": 0.9,
+              "valid_count": 10
+            },
+            "kilo_gpt_5_4_mini": {
+              "missing_or_na_count": 0,
+              "pass_count": 6,
+              "pass_rate": 0.6,
+              "valid_count": 10
+            }
+          },
+          "later_top_agent_id": "kilo_gpt_5_4",
+          "recommendation_regret": null,
+          "recommended_agent_id": null,
+          "selection_rates": {
+            "codex_gpt_5_4": {
+              "missing_or_na_count": 0,
+              "pass_count": 9,
+              "pass_rate": 0.9,
+              "valid_count": 10
+            },
+            "kilo_claude_sonnet_4_6": {
+              "missing_or_na_count": 0,
+              "pass_count": 9,
+              "pass_rate": 0.9,
+              "valid_count": 10
+            },
+            "kilo_gpt_5_4": {
+              "missing_or_na_count": 0,
+              "pass_count": 10,
+              "pass_rate": 1.0,
+              "valid_count": 10
+            },
+            "kilo_gpt_5_4_mini": {
+              "missing_or_na_count": 0,
+              "pass_count": 10,
+              "pass_rate": 1.0,
+              "valid_count": 10
+            }
+          },
+          "source_id": "boltons_demo_development",
+          "top_pair_direction_agreement": null
+        },
+        {
+          "MAE": 0.033333,
+          "algorithm_id": "rsq_v2_no_caps",
+          "decision_state": "recommend",
+          "false_recommendation": false,
+          "later_rates": {
+            "codex_workspace": {
+              "missing_or_na_count": 0,
+              "pass_count": 7,
+              "pass_rate": 0.23333333333333334,
+              "valid_count": 30
+            },
+            "kilo_workspace": {
+              "missing_or_na_count": 0,
+              "pass_count": 16,
+              "pass_rate": 0.5333333333333333,
+              "valid_count": 30
+            }
+          },
+          "later_top_agent_id": "kilo_workspace",
+          "recommendation_regret": 0.0,
+          "recommended_agent_id": "kilo_workspace",
+          "selection_rates": {
+            "codex_workspace": {
+              "missing_or_na_count": 0,
+              "pass_count": 5,
+              "pass_rate": 0.2777777777777778,
+              "valid_count": 18
+            },
+            "kilo_workspace": {
+              "missing_or_na_count": 0,
+              "pass_count": 10,
+              "pass_rate": 0.5555555555555556,
+              "valid_count": 18
+            }
+          },
+          "source_id": "phase1_blocked_split_heldout_development",
+          "top_pair_direction_agreement": true
+        },
+        {
+          "MAE": 0.227273,
+          "algorithm_id": "rsq_v2_no_caps",
+          "decision_state": "recommend",
+          "false_recommendation": false,
+          "later_rates": {
+            "codex_workspace": {
+              "missing_or_na_count": 8,
+              "pass_count": 22,
+              "pass_rate": 0.4,
+              "valid_count": 55
+            },
+            "kilo_workspace": {
+              "missing_or_na_count": 8,
+              "pass_count": 33,
+              "pass_rate": 0.6,
+              "valid_count": 55
+            }
+          },
+          "later_top_agent_id": "kilo_workspace",
+          "recommendation_regret": 0.0,
+          "recommended_agent_id": "kilo_workspace",
+          "selection_rates": {
+            "codex_workspace": {
+              "missing_or_na_count": 1,
+              "pass_count": 0,
+              "pass_rate": 0.0,
+              "valid_count": 11
+            },
+            "kilo_workspace": {
+              "missing_or_na_count": 1,
+              "pass_count": 6,
+              "pass_rate": 0.5454545454545454,
+              "valid_count": 11
+            }
+          },
+          "source_id": "phase1_repo_specific_earliest_time_bucket_cutoff_development",
+          "top_pair_direction_agreement": true
+        }
+      ],
+      "wrapper_v2_summary": {
+        "MAE_max": 0.25,
+        "MAE_mean": 0.170202,
+        "MAE_vs_strongest_random": {
+          "MAE_beats_or_ties_random_share": 0.356333,
+          "absolute_improvement": -0.019437,
+          "regret_beats_or_ties_random_share": 1.0,
+          "relative_improvement": -0.128922,
+          "strongest_random_MAE_mean": 0.150765,
+          "strongest_random_baseline": "module_stratified_random"
+        },
+        "abstain_rate": 0.333333,
+        "correct_abstain_rate": 1.0,
+        "evaluated_count": 3,
+        "false_recommendation_rate": 0.0,
+        "mean_recommendation_regret": 0.0,
+        "missed_opportunity_rate": 0.0,
+        "need_more_evidence_rate": 0.0,
+        "recommendation_coverage": 0.666667,
+        "top1_agreement_rate_forced": 1.0,
+        "top_pair_direction_agreement_rate": 1.0,
+        "top_pair_direction_agreement_rate_forced": 0.833333,
+        "validated_recommendation_rate": 0.666667,
+        "worst_recommendation_regret": 0.0
+      }
+    },
+    {
+      "config_id": "representative_only",
+      "family": "ablation",
+      "leave_one_source_sensitivity": [
+        {
+          "MAE_mean": 0.130303,
+          "false_recommendation_rate": 0.0,
+          "left_out_source_id": "boltons_demo_development",
+          "recommendation_coverage": 1.0,
+          "validated_recommendation_rate": 1.0
+        },
+        {
+          "MAE_mean": 0.238637,
+          "false_recommendation_rate": 0.0,
+          "left_out_source_id": "phase1_blocked_split_heldout_development",
+          "recommendation_coverage": 0.5,
+          "validated_recommendation_rate": 0.5
+        },
+        {
+          "MAE_mean": 0.141667,
+          "false_recommendation_rate": 0.0,
+          "left_out_source_id": "phase1_repo_specific_earliest_time_bucket_cutoff_development",
+          "recommendation_coverage": 0.5,
+          "validated_recommendation_rate": 0.5
+        }
+      ],
+      "spec": {
+        "algorithm_id": "representative_only",
+        "config_id": "representative_only",
+        "family": "ablation"
+      },
+      "wrapper_v1_summary": {
+        "MAE_max": 0.25,
+        "MAE_mean": 0.170202,
+        "abstain_rate": 0.333333,
+        "correct_abstain_rate": 1.0,
+        "evaluated_count": 3,
+        "false_recommendation_rate": 0.0,
+        "mean_recommendation_regret": 0.0,
+        "missed_opportunity_rate": 0.333333,
+        "need_more_evidence_rate": 0.333333,
+        "recommendation_coverage": 0.333333,
+        "top1_agreement_rate_forced": 1.0,
+        "top_pair_direction_agreement_rate": 1.0,
+        "top_pair_direction_agreement_rate_forced": 0.833333,
+        "validated_recommendation_rate": 0.333333,
+        "worst_recommendation_regret": 0.0
+      },
+      "wrapper_v2_case_rows": [
+        {
+          "MAE": 0.25,
+          "algorithm_id": "representative_only",
+          "decision_state": "abstain_indistinguishable",
+          "false_recommendation": null,
+          "later_rates": {
+            "codex_gpt_5_4": {
+              "missing_or_na_count": 0,
+              "pass_count": 5,
+              "pass_rate": 0.5,
+              "valid_count": 10
+            },
+            "kilo_claude_sonnet_4_6": {
+              "missing_or_na_count": 0,
+              "pass_count": 8,
+              "pass_rate": 0.8,
+              "valid_count": 10
+            },
+            "kilo_gpt_5_4": {
+              "missing_or_na_count": 0,
+              "pass_count": 9,
+              "pass_rate": 0.9,
+              "valid_count": 10
+            },
+            "kilo_gpt_5_4_mini": {
+              "missing_or_na_count": 0,
+              "pass_count": 6,
+              "pass_rate": 0.6,
+              "valid_count": 10
+            }
+          },
+          "later_top_agent_id": "kilo_gpt_5_4",
+          "recommendation_regret": null,
+          "recommended_agent_id": null,
+          "selection_rates": {
+            "codex_gpt_5_4": {
+              "missing_or_na_count": 0,
+              "pass_count": 9,
+              "pass_rate": 0.9,
+              "valid_count": 10
+            },
+            "kilo_claude_sonnet_4_6": {
+              "missing_or_na_count": 0,
+              "pass_count": 9,
+              "pass_rate": 0.9,
+              "valid_count": 10
+            },
+            "kilo_gpt_5_4": {
+              "missing_or_na_count": 0,
+              "pass_count": 10,
+              "pass_rate": 1.0,
+              "valid_count": 10
+            },
+            "kilo_gpt_5_4_mini": {
+              "missing_or_na_count": 0,
+              "pass_count": 10,
+              "pass_rate": 1.0,
+              "valid_count": 10
+            }
+          },
+          "source_id": "boltons_demo_development",
+          "top_pair_direction_agreement": null
+        },
+        {
+          "MAE": 0.033333,
+          "algorithm_id": "representative_only",
+          "decision_state": "recommend",
+          "false_recommendation": false,
+          "later_rates": {
+            "codex_workspace": {
+              "missing_or_na_count": 0,
+              "pass_count": 7,
+              "pass_rate": 0.23333333333333334,
+              "valid_count": 30
+            },
+            "kilo_workspace": {
+              "missing_or_na_count": 0,
+              "pass_count": 16,
+              "pass_rate": 0.5333333333333333,
+              "valid_count": 30
+            }
+          },
+          "later_top_agent_id": "kilo_workspace",
+          "recommendation_regret": 0.0,
+          "recommended_agent_id": "kilo_workspace",
+          "selection_rates": {
+            "codex_workspace": {
+              "missing_or_na_count": 0,
+              "pass_count": 5,
+              "pass_rate": 0.2777777777777778,
+              "valid_count": 18
+            },
+            "kilo_workspace": {
+              "missing_or_na_count": 0,
+              "pass_count": 10,
+              "pass_rate": 0.5555555555555556,
+              "valid_count": 18
+            }
+          },
+          "source_id": "phase1_blocked_split_heldout_development",
+          "top_pair_direction_agreement": true
+        },
+        {
+          "MAE": 0.227273,
+          "algorithm_id": "representative_only",
+          "decision_state": "recommend",
+          "false_recommendation": false,
+          "later_rates": {
+            "codex_workspace": {
+              "missing_or_na_count": 8,
+              "pass_count": 22,
+              "pass_rate": 0.4,
+              "valid_count": 55
+            },
+            "kilo_workspace": {
+              "missing_or_na_count": 8,
+              "pass_count": 33,
+              "pass_rate": 0.6,
+              "valid_count": 55
+            }
+          },
+          "later_top_agent_id": "kilo_workspace",
+          "recommendation_regret": 0.0,
+          "recommended_agent_id": "kilo_workspace",
+          "selection_rates": {
+            "codex_workspace": {
+              "missing_or_na_count": 1,
+              "pass_count": 0,
+              "pass_rate": 0.0,
+              "valid_count": 11
+            },
+            "kilo_workspace": {
+              "missing_or_na_count": 1,
+              "pass_count": 6,
+              "pass_rate": 0.5454545454545454,
+              "valid_count": 11
+            }
+          },
+          "source_id": "phase1_repo_specific_earliest_time_bucket_cutoff_development",
+          "top_pair_direction_agreement": true
+        }
+      ],
+      "wrapper_v2_summary": {
+        "MAE_max": 0.25,
+        "MAE_mean": 0.170202,
+        "MAE_vs_strongest_random": {
+          "MAE_beats_or_ties_random_share": 0.356333,
+          "absolute_improvement": -0.019437,
+          "regret_beats_or_ties_random_share": 1.0,
+          "relative_improvement": -0.128922,
+          "strongest_random_MAE_mean": 0.150765,
+          "strongest_random_baseline": "module_stratified_random"
+        },
+        "abstain_rate": 0.333333,
+        "correct_abstain_rate": 1.0,
+        "evaluated_count": 3,
+        "false_recommendation_rate": 0.0,
+        "mean_recommendation_regret": 0.0,
+        "missed_opportunity_rate": 0.0,
+        "need_more_evidence_rate": 0.0,
+        "recommendation_coverage": 0.666667,
+        "top1_agreement_rate_forced": 1.0,
+        "top_pair_direction_agreement_rate": 1.0,
+        "top_pair_direction_agreement_rate_forced": 0.833333,
+        "validated_recommendation_rate": 0.666667,
+        "worst_recommendation_regret": 0.0
+      }
+    },
+    {
+      "config_id": "hrd_v3_70_30_flc_rep",
+      "family": "hrd_v3",
+      "leave_one_source_sensitivity": [
+        {
+          "MAE_mean": 0.176389,
+          "false_recommendation_rate": 0.0,
+          "left_out_source_id": "boltons_demo_development",
+          "recommendation_coverage": 1.0,
+          "validated_recommendation_rate": 1.0
+        },
+        {
+          "MAE_mean": 0.204167,
+          "false_recommendation_rate": 0.0,
+          "left_out_source_id": "phase1_blocked_split_heldout_development",
+          "recommendation_coverage": 0.5,
+          "validated_recommendation_rate": 0.5
+        },
+        {
+          "MAE_mean": 0.172222,
+          "false_recommendation_rate": 0.0,
+          "left_out_source_id": "phase1_repo_specific_earliest_time_bucket_cutoff_development",
+          "recommendation_coverage": 0.5,
+          "validated_recommendation_rate": 0.5
+        }
+      ],
+      "spec": {
+        "algorithm_id": "hrd_v3_70_30",
+        "config_id": "hrd_v3_70_30_flc_rep",
+        "family": "hrd_v3",
+        "representative_selector": "flc"
+      },
+      "wrapper_v1_summary": {
+        "MAE_max": 0.208333,
+        "MAE_mean": 0.184259,
+        "abstain_rate": 0.333333,
+        "correct_abstain_rate": 1.0,
+        "evaluated_count": 3,
+        "false_recommendation_rate": 0.0,
+        "mean_recommendation_regret": 0.0,
+        "missed_opportunity_rate": 0.333333,
+        "need_more_evidence_rate": 0.333333,
+        "recommendation_coverage": 0.333333,
+        "top1_agreement_rate_forced": 0.666667,
+        "top_pair_direction_agreement_rate": 1.0,
+        "top_pair_direction_agreement_rate_forced": 0.777778,
+        "validated_recommendation_rate": 0.333333,
+        "worst_recommendation_regret": 0.0
+      },
+      "wrapper_v2_case_rows": [
+        {
+          "MAE": 0.2,
+          "algorithm_id": "hrd_v3_70_30_flc_rep",
+          "decision_state": "abstain_indistinguishable",
+          "false_recommendation": null,
+          "later_rates": {
+            "codex_gpt_5_4": {
+              "missing_or_na_count": 0,
+              "pass_count": 5,
+              "pass_rate": 0.5,
+              "valid_count": 10
+            },
+            "kilo_claude_sonnet_4_6": {
+              "missing_or_na_count": 0,
+              "pass_count": 8,
+              "pass_rate": 0.8,
+              "valid_count": 10
+            },
+            "kilo_gpt_5_4": {
+              "missing_or_na_count": 0,
+              "pass_count": 9,
+              "pass_rate": 0.9,
+              "valid_count": 10
+            },
+            "kilo_gpt_5_4_mini": {
+              "missing_or_na_count": 0,
+              "pass_count": 6,
+              "pass_rate": 0.6,
+              "valid_count": 10
+            }
+          },
+          "later_top_agent_id": "kilo_gpt_5_4",
+          "recommendation_regret": null,
+          "recommended_agent_id": null,
+          "selection_rates": {
+            "codex_gpt_5_4": {
+              "missing_or_na_count": 0,
+              "pass_count": 6,
+              "pass_rate": 0.6,
+              "valid_count": 10
+            },
+            "kilo_claude_sonnet_4_6": {
+              "missing_or_na_count": 0,
+              "pass_count": 6,
+              "pass_rate": 0.6,
+              "valid_count": 10
+            },
+            "kilo_gpt_5_4": {
+              "missing_or_na_count": 0,
+              "pass_count": 6,
+              "pass_rate": 0.6,
+              "valid_count": 10
+            },
+            "kilo_gpt_5_4_mini": {
+              "missing_or_na_count": 0,
+              "pass_count": 4,
+              "pass_rate": 0.4,
+              "valid_count": 10
+            }
+          },
+          "source_id": "boltons_demo_development",
+          "top_pair_direction_agreement": null
+        },
+        {
+          "MAE": 0.144444,
+          "algorithm_id": "hrd_v3_70_30_flc_rep",
+          "decision_state": "recommend",
+          "false_recommendation": false,
+          "later_rates": {
+            "codex_workspace": {
+              "missing_or_na_count": 0,
+              "pass_count": 7,
+              "pass_rate": 0.23333333333333334,
+              "valid_count": 30
+            },
+            "kilo_workspace": {
+              "missing_or_na_count": 0,
+              "pass_count": 16,
+              "pass_rate": 0.5333333333333333,
+              "valid_count": 30
+            }
+          },
+          "later_top_agent_id": "kilo_workspace",
+          "recommendation_regret": 0.0,
+          "recommended_agent_id": "kilo_workspace",
+          "selection_rates": {
+            "codex_workspace": {
+              "missing_or_na_count": 0,
+              "pass_count": 6,
+              "pass_rate": 0.3333333333333333,
+              "valid_count": 18
+            },
+            "kilo_workspace": {
+              "missing_or_na_count": 0,
+              "pass_count": 13,
+              "pass_rate": 0.7222222222222222,
+              "valid_count": 18
+            }
+          },
+          "source_id": "phase1_blocked_split_heldout_development",
+          "top_pair_direction_agreement": true
+        },
+        {
+          "MAE": 0.208333,
+          "algorithm_id": "hrd_v3_70_30_flc_rep",
+          "decision_state": "recommend",
+          "false_recommendation": false,
+          "later_rates": {
+            "codex_workspace": {
+              "missing_or_na_count": 8,
+              "pass_count": 22,
+              "pass_rate": 0.4,
+              "valid_count": 55
+            },
+            "kilo_workspace": {
+              "missing_or_na_count": 8,
+              "pass_count": 33,
+              "pass_rate": 0.6,
+              "valid_count": 55
+            }
+          },
+          "later_top_agent_id": "kilo_workspace",
+          "recommendation_regret": 0.0,
+          "recommended_agent_id": "kilo_workspace",
+          "selection_rates": {
+            "codex_workspace": {
+              "missing_or_na_count": 0,
+              "pass_count": 1,
+              "pass_rate": 0.08333333333333333,
+              "valid_count": 12
+            },
+            "kilo_workspace": {
+              "missing_or_na_count": 0,
+              "pass_count": 6,
+              "pass_rate": 0.5,
+              "valid_count": 12
+            }
+          },
+          "source_id": "phase1_repo_specific_earliest_time_bucket_cutoff_development",
+          "top_pair_direction_agreement": true
+        }
+      ],
+      "wrapper_v2_summary": {
+        "MAE_max": 0.208333,
+        "MAE_mean": 0.184259,
+        "MAE_vs_strongest_random": {
+          "MAE_beats_or_ties_random_share": 0.177667,
+          "absolute_improvement": -0.033494,
+          "regret_beats_or_ties_random_share": 1.0,
+          "relative_improvement": -0.22216,
+          "strongest_random_MAE_mean": 0.150765,
+          "strongest_random_baseline": "module_stratified_random"
+        },
+        "abstain_rate": 0.333333,
+        "correct_abstain_rate": 1.0,
+        "evaluated_count": 3,
+        "false_recommendation_rate": 0.0,
+        "mean_recommendation_regret": 0.0,
+        "missed_opportunity_rate": 0.0,
+        "need_more_evidence_rate": 0.0,
+        "recommendation_coverage": 0.666667,
+        "top1_agreement_rate_forced": 0.666667,
+        "top_pair_direction_agreement_rate": 1.0,
+        "top_pair_direction_agreement_rate_forced": 0.777778,
+        "validated_recommendation_rate": 0.666667,
+        "worst_recommendation_regret": 0.0
+      }
+    },
+    {
+      "config_id": "flc",
+      "family": "flc",
+      "leave_one_source_sensitivity": [
+        {
+          "MAE_mean": 0.197222,
+          "false_recommendation_rate": 0.0,
+          "left_out_source_id": "boltons_demo_development",
+          "recommendation_coverage": 1.0,
+          "validated_recommendation_rate": 1.0
+        },
+        {
+          "MAE_mean": 0.25,
+          "false_recommendation_rate": 0.0,
+          "left_out_source_id": "phase1_blocked_split_heldout_development",
+          "recommendation_coverage": 0.5,
+          "validated_recommendation_rate": 0.5
+        },
+        {
+          "MAE_mean": 0.197222,
+          "false_recommendation_rate": 0.0,
+          "left_out_source_id": "phase1_repo_specific_earliest_time_bucket_cutoff_development",
+          "recommendation_coverage": 0.5,
+          "validated_recommendation_rate": 0.5
+        }
+      ],
+      "spec": {
+        "algorithm_id": "flc",
+        "config_id": "flc",
+        "family": "flc"
+      },
+      "wrapper_v1_summary": {
+        "MAE_max": 0.25,
+        "MAE_mean": 0.214815,
+        "abstain_rate": 0.333333,
+        "correct_abstain_rate": 1.0,
+        "evaluated_count": 3,
+        "false_recommendation_rate": 0.0,
+        "mean_recommendation_regret": 0.0,
+        "missed_opportunity_rate": 0.0,
+        "need_more_evidence_rate": 0.0,
+        "recommendation_coverage": 0.666667,
+        "top1_agreement_rate_forced": 0.666667,
+        "top_pair_direction_agreement_rate": 1.0,
+        "top_pair_direction_agreement_rate_forced": 0.777778,
+        "validated_recommendation_rate": 0.666667,
+        "worst_recommendation_regret": 0.0
+      },
+      "wrapper_v2_case_rows": [
+        {
+          "MAE": 0.25,
+          "algorithm_id": "flc",
+          "decision_state": "need_more_evidence",
+          "false_recommendation": null,
+          "later_rates": {
+            "codex_gpt_5_4": {
+              "missing_or_na_count": 0,
+              "pass_count": 5,
+              "pass_rate": 0.5,
+              "valid_count": 10
+            },
+            "kilo_claude_sonnet_4_6": {
+              "missing_or_na_count": 0,
+              "pass_count": 8,
+              "pass_rate": 0.8,
+              "valid_count": 10
+            },
+            "kilo_gpt_5_4": {
+              "missing_or_na_count": 0,
+              "pass_count": 9,
+              "pass_rate": 0.9,
+              "valid_count": 10
+            },
+            "kilo_gpt_5_4_mini": {
+              "missing_or_na_count": 0,
+              "pass_count": 6,
+              "pass_rate": 0.6,
+              "valid_count": 10
+            }
+          },
+          "later_top_agent_id": "kilo_gpt_5_4",
+          "recommendation_regret": null,
+          "recommended_agent_id": null,
+          "selection_rates": {
+            "codex_gpt_5_4": {
+              "missing_or_na_count": 0,
+              "pass_count": 7,
+              "pass_rate": 0.7,
+              "valid_count": 10
+            },
+            "kilo_claude_sonnet_4_6": {
+              "missing_or_na_count": 0,
+              "pass_count": 6,
+              "pass_rate": 0.6,
+              "valid_count": 10
+            },
+            "kilo_gpt_5_4": {
+              "missing_or_na_count": 0,
+              "pass_count": 5,
+              "pass_rate": 0.5,
+              "valid_count": 10
+            },
+            "kilo_gpt_5_4_mini": {
+              "missing_or_na_count": 0,
+              "pass_count": 4,
+              "pass_rate": 0.4,
+              "valid_count": 10
+            }
+          },
+          "source_id": "boltons_demo_development",
+          "top_pair_direction_agreement": null
+        },
+        {
+          "MAE": 0.144444,
+          "algorithm_id": "flc",
+          "decision_state": "recommend",
+          "false_recommendation": false,
+          "later_rates": {
+            "codex_workspace": {
+              "missing_or_na_count": 0,
+              "pass_count": 7,
+              "pass_rate": 0.23333333333333334,
+              "valid_count": 30
+            },
+            "kilo_workspace": {
+              "missing_or_na_count": 0,
+              "pass_count": 16,
+              "pass_rate": 0.5333333333333333,
+              "valid_count": 30
+            }
+          },
+          "later_top_agent_id": "kilo_workspace",
+          "recommendation_regret": 0.0,
+          "recommended_agent_id": "kilo_workspace",
+          "selection_rates": {
+            "codex_workspace": {
+              "missing_or_na_count": 0,
+              "pass_count": 6,
+              "pass_rate": 0.3333333333333333,
+              "valid_count": 18
+            },
+            "kilo_workspace": {
+              "missing_or_na_count": 0,
+              "pass_count": 13,
+              "pass_rate": 0.7222222222222222,
+              "valid_count": 18
+            }
+          },
+          "source_id": "phase1_blocked_split_heldout_development",
+          "top_pair_direction_agreement": true
+        },
+        {
+          "MAE": 0.25,
+          "algorithm_id": "flc",
+          "decision_state": "recommend",
+          "false_recommendation": false,
+          "later_rates": {
+            "codex_workspace": {
+              "missing_or_na_count": 8,
+              "pass_count": 22,
+              "pass_rate": 0.4,
+              "valid_count": 55
+            },
+            "kilo_workspace": {
+              "missing_or_na_count": 8,
+              "pass_count": 33,
+              "pass_rate": 0.6,
+              "valid_count": 55
+            }
+          },
+          "later_top_agent_id": "kilo_workspace",
+          "recommendation_regret": 0.0,
+          "recommended_agent_id": "kilo_workspace",
+          "selection_rates": {
+            "codex_workspace": {
+              "missing_or_na_count": 0,
+              "pass_count": 0,
+              "pass_rate": 0.0,
+              "valid_count": 12
+            },
+            "kilo_workspace": {
+              "missing_or_na_count": 0,
+              "pass_count": 6,
+              "pass_rate": 0.5,
+              "valid_count": 12
+            }
+          },
+          "source_id": "phase1_repo_specific_earliest_time_bucket_cutoff_development",
+          "top_pair_direction_agreement": true
+        }
+      ],
+      "wrapper_v2_summary": {
+        "MAE_max": 0.25,
+        "MAE_mean": 0.214815,
+        "MAE_vs_strongest_random": {
+          "MAE_beats_or_ties_random_share": 0.035667,
+          "absolute_improvement": -0.06405,
+          "regret_beats_or_ties_random_share": 1.0,
+          "relative_improvement": -0.424833,
+          "strongest_random_MAE_mean": 0.150765,
+          "strongest_random_baseline": "module_stratified_random"
+        },
+        "abstain_rate": 0.0,
+        "correct_abstain_rate": null,
+        "evaluated_count": 3,
+        "false_recommendation_rate": 0.0,
+        "mean_recommendation_regret": 0.0,
+        "missed_opportunity_rate": 0.0,
+        "need_more_evidence_rate": 0.333333,
+        "recommendation_coverage": 0.666667,
+        "top1_agreement_rate_forced": 0.666667,
+        "top_pair_direction_agreement_rate": 1.0,
+        "top_pair_direction_agreement_rate_forced": 0.777778,
+        "validated_recommendation_rate": 0.666667,
+        "worst_recommendation_regret": 0.0
+      }
+    }
+  ],
+  "strong_random_baselines": {
+    "module_stratified_random": {
+      "baseline_id": "module_stratified_random",
+      "seed_count": 1000,
+      "summary": {
+        "MAE_max": 0.255556,
+        "MAE_mean": 0.150765,
+        "abstain_rate": 0.183,
+        "correct_abstain_rate": 1.0,
+        "evaluated_count": 3000,
+        "false_recommendation_rate": 0.012872,
+        "mean_recommendation_regret": 0.005149,
+        "missed_opportunity_rate": 0.0,
+        "need_more_evidence_rate": 0.066,
+        "recommendation_coverage": 0.751,
+        "top1_agreement_rate_forced": 0.868333,
+        "top_pair_direction_agreement_rate": 0.987128,
+        "top_pair_direction_agreement_rate_forced": 0.799111,
+        "validated_recommendation_rate": 0.741333,
+        "worst_recommendation_regret": 0.4
+      },
+      "unique_sample_count": 644
+    },
+    "quality_filtered_random": {
+      "baseline_id": "quality_filtered_random",
+      "seed_count": 1000,
+      "summary": {
+        "MAE_max": 0.3,
+        "MAE_mean": 0.155608,
+        "abstain_rate": 0.151667,
+        "correct_abstain_rate": 0.997802,
+        "evaluated_count": 3000,
+        "false_recommendation_rate": 0.047683,
+        "mean_recommendation_regret": 0.019073,
+        "missed_opportunity_rate": 0.002,
+        "need_more_evidence_rate": 0.100333,
+        "recommendation_coverage": 0.748,
+        "top1_agreement_rate_forced": 0.776333,
+        "top_pair_direction_agreement_rate": 0.952317,
+        "top_pair_direction_agreement_rate_forced": 0.788222,
+        "validated_recommendation_rate": 0.712333,
+        "worst_recommendation_regret": 0.4
+      },
+      "unique_sample_count": 2943
+    },
+    "source_recency_stratified_random": {
+      "baseline_id": "source_recency_stratified_random",
+      "seed_count": 1000,
+      "summary": {
+        "MAE_max": 0.291667,
+        "MAE_mean": 0.157154,
+        "abstain_rate": 0.160667,
+        "correct_abstain_rate": 1.0,
+        "evaluated_count": 3000,
+        "false_recommendation_rate": 0.040341,
+        "mean_recommendation_regret": 0.016136,
+        "missed_opportunity_rate": 0.0,
+        "need_more_evidence_rate": 0.095667,
+        "recommendation_coverage": 0.743667,
+        "top1_agreement_rate_forced": 0.771667,
+        "top_pair_direction_agreement_rate": 0.959659,
+        "top_pair_direction_agreement_rate_forced": 0.787222,
+        "validated_recommendation_rate": 0.713667,
+        "worst_recommendation_regret": 0.4
+      },
+      "unique_sample_count": 2869
+    },
+    "uniform_random_same_budget": {
+      "baseline_id": "uniform_random_same_budget",
+      "seed_count": 1000,
+      "summary": {
+        "MAE_max": 0.3,
+        "MAE_mean": 0.155608,
+        "abstain_rate": 0.151667,
+        "correct_abstain_rate": 0.997802,
+        "evaluated_count": 3000,
+        "false_recommendation_rate": 0.047683,
+        "mean_recommendation_regret": 0.019073,
+        "missed_opportunity_rate": 0.002,
+        "need_more_evidence_rate": 0.100333,
+        "recommendation_coverage": 0.748,
+        "top1_agreement_rate_forced": 0.776333,
+        "top_pair_direction_agreement_rate": 0.952317,
+        "top_pair_direction_agreement_rate_forced": 0.788222,
+        "validated_recommendation_rate": 0.712333,
+        "worst_recommendation_regret": 0.4
+      },
+      "unique_sample_count": 2943
+    }
+  },
+  "strongest_random_baseline_id": "module_stratified_random",
+  "top_candidate_config_ids": [
+    "cod_lite",
+    "hrd_v3_70_30",
+    "hrd_v3_70_30_no_recency"
+  ]
+}
