@@ -171,6 +171,34 @@ The random-baseline demo run is now the preferred reader-facing story for this
 demo. It supports a practical facility claim and target-repo Agent-selection
 evidence, not full predictive-validity proof.
 
+Completed selector-evolution runbook:
+
+- `docs/research/agent-selection-selector-evolution-runbook-2026-06-14.md`
+
+This runbook completed the stricter Agent-selection story on the frozen
+`mahmoud/boltons` demo slice. The final locked selector is `hrd_70_30` with
+`k=10` and a shared recommend/abstain/need-more-evidence decision wrapper.
+Selection recommends `Kilo + GPT mainline`: Kilo `9/10`, Codex `7/10`, Kilo
+low-cost `7/10`, and Kilo Claude `7/10`. Later Holdout also favors Kilo:
+Kilo `9/10`, Codex `5/10`, Kilo low-cost `6/10`, and Kilo Claude `8/10`;
+the doubled-timeout top-2 repeat is Kilo `9/10` versus Codex `6/10`.
+Recommendation regret is `0.0`. Final selector MAE is `0.100000` versus
+strong stratified-random k=10 mean MAE `0.151700`, an absolute improvement of
+`0.051700` and relative improvement of `34.0804%`. No new paid cells were
+run.
+
+Canonical selector-evolution artifacts:
+
+- `experiments/agent_selection_demo/reports/selector_agent_selection_demo_story_zh.md`
+- `experiments/agent_selection_demo/reports/selector_evolution_closeout_zh.md`
+- `experiments/agent_selection_demo/results/selector_evolution_closeout.json`
+- `experiments/agent_selection_demo/results/selector_final_eval.json`
+- `experiments/agent_selection_demo/results/selector_decision_eval.json`
+
+Claim boundary: this supports a frozen boltons demo-level Agent-selection
+story, not full predictive validity, cross-repository selector superiority,
+future unseen validation, or a global Agent/model ranking.
+
 The predictive-validity completion pass froze the estimand as complete-Agent
 future target-repo verified pass-rate prediction accuracy and added no-paid
 rolling-origin/pseudo-future tooling. The no-paid retrospective result gives
