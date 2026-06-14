@@ -251,6 +251,93 @@ def test_stop_on_unscoreable_guard_only_stops_for_infra_status() -> None:
     assert demo.should_stop_after_cell("acut_harness_error", stop_on_unscoreable=False) is False
 
 
+def test_selector_task_rows_create_deterministic_metadata_fallbacks() -> None:
+    split = {
+        "selection_tasks": ["task_old"],
+        "holdout_tasks": ["task_future"],
+        "smoke_tasks": [],
+    }
+    audit_rows = [
+        {
+            "task_id": "task_future",
+            "source": "canonical_history",
+            "task_time": "2023-01-01T00:00:00Z",
+            "code_files": ["boltons/timeutils.py"],
+            "test_files": ["tests/test_timeutils.py"],
+            "gates_pass": True,
+            "has_required_fields": True,
+            "base_commit_present": True,
+            "target_commit_present": True,
+        },
+        {
+            "task_id": "task_old",
+            "source": "supply",
+            "task_time": "2020-01-01T00:00:00Z",
+            "code_files": ["boltons/iterutils.py"],
+            "test_files": ["tests/test_iterutils.py"],
+            "gates_pass": True,
+            "has_required_fields": True,
+            "base_commit_present": True,
+            "target_commit_present": True,
+        },
+    ]
+
+    rows = demo.selector_task_rows_from_audit(audit_rows, split, "example/repo")
+
+    old = rows[0]
+    future = rows[1]
+    assert old["task_id"] == "task_old"
+    assert old["stage_role"] == "selection"
+    assert old["module_bucket"] == "iterutils"
+    assert old["test_bucket"] == "pytest_unit"
+    assert old["change_size_proxy"] == "small"
+    assert old["quality_score"] == 1.0
+    assert "difficulty_bucket" in old["metadata_fallbacks"]
+    assert future["stage_role"] == "holdout"
+    assert future["is_final_later_task"] is True
+
+
+def test_selector_visible_task_ids_masks_future_and_holdout_rows() -> None:
+    rows = [
+        {"task_id": "old_selection", "task_time": "2020-01-01T00:00:00Z", "stage_role": "selection"},
+        {"task_id": "future_selection", "task_time": "2021-01-01T00:00:00Z", "stage_role": "selection"},
+        {"task_id": "holdout", "task_time": "2020-01-02T00:00:00Z", "stage_role": "holdout"},
+    ]
+
+    visible = demo.selector_visible_task_ids(rows, "2020-06-01T00:00:00Z", {"selection"})
+
+    assert visible == ["old_selection"]
+
+
+def test_selector_outcome_policy_counts_solver_invalid_cells_as_fail() -> None:
+    rows = demo.selector_outcome_rows_from_score_tables(
+        {
+            "selection": [
+                {
+                    "task_id": "task_1",
+                    "agent_id": "agent_a",
+                    "terminal_status": "acut_harness_error",
+                    "scoreable_cell": "False",
+                    "verified_pass": "False",
+                    "failure_category": "exceeded budget or timeout",
+                },
+                {
+                    "task_id": "task_2",
+                    "agent_id": "agent_a",
+                    "terminal_status": "invalid_output",
+                    "scoreable_cell": "False",
+                    "verified_pass": "False",
+                    "failure_category": "no meaningful change",
+                },
+            ]
+        }
+    )
+
+    assert [row["policy_valid_cell"] for row in rows] == [True, True]
+    assert [row["policy_pass"] for row in rows] == [False, False]
+    assert [row["policy_outcome_value"] for row in rows] == [0, 0]
+
+
 def test_recommend_skips_cost_when_usage_coverage_is_inconclusive(tmp_path: Path, monkeypatch) -> None:
     monkeypatch.setattr(demo, "RESULTS_REL", tmp_path / "results")
     monkeypatch.setattr(demo, "REPORTS_REL", tmp_path / "reports")

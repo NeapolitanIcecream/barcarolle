@@ -1421,6 +1421,363 @@ def read_csv_rows(path: Path) -> list[dict[str, str]]:
         return list(csv.DictReader(handle))
 
 
+SELECTOR_TASK_FIELDNAMES = [
+    "task_id",
+    "target_repo",
+    "task_time",
+    "stage_role",
+    "source",
+    "source_cluster",
+    "module_bucket",
+    "path_bucket",
+    "test_bucket",
+    "task_type",
+    "change_size_proxy",
+    "difficulty_bucket",
+    "recency_bucket",
+    "quality_score",
+    "risk_flag",
+    "flaky_flag",
+    "gates_pass",
+    "has_required_fields",
+    "base_commit_present",
+    "target_commit_present",
+    "is_final_selection_candidate",
+    "is_final_later_task",
+    "metadata_fallbacks",
+]
+
+SELECTOR_OUTCOME_FIELDNAMES = [
+    "task_id",
+    "agent_id",
+    "stage",
+    "window_id",
+    "source_artifact_path",
+    "terminal_status",
+    "scoreable_cell",
+    "verified_pass",
+    "policy_valid_cell",
+    "policy_pass",
+    "policy_outcome_value",
+    "failure_category",
+    "latency_seconds",
+    "estimated_cost_usd",
+    "cost_observation_kind",
+]
+
+SELECTOR_STAGE_ARTIFACTS = {
+    "selection": "selection_score_table.csv",
+    "holdout": "holdout_score_table.csv",
+    "doubled_timeout_top2_repeat": "doubled_timeout_top2_repeat_score_table.csv",
+    "top2_repeat_old_900s": "top2_repeat_score_table.csv",
+    "smoke": "smoke_score_table.csv",
+}
+
+POLICY_VALID_TERMINAL_STATUSES = SCOREABLE_STATUSES | INFRA_STATUSES
+
+
+def parse_task_datetime(raw: Any) -> datetime:
+    text = str(raw or "").strip()
+    if not text:
+        return datetime.min.replace(tzinfo=timezone.utc)
+    if text.endswith("Z"):
+        text = f"{text[:-1]}+00:00"
+    try:
+        parsed = datetime.fromisoformat(text)
+    except ValueError:
+        return datetime.min.replace(tzinfo=timezone.utc)
+    if parsed.tzinfo is None:
+        return parsed.replace(tzinfo=timezone.utc)
+    return parsed.astimezone(timezone.utc)
+
+
+def selector_module_bucket(code_files: list[str]) -> str:
+    if not code_files:
+        return "unknown_module"
+    modules = sorted({Path(path).stem or Path(path).name for path in code_files})
+    return "+".join(modules[:3])
+
+
+def selector_path_bucket(code_files: list[str]) -> str:
+    if not code_files:
+        return "unknown_path"
+    parents = sorted({str(Path(path).parent) or "." for path in code_files})
+    return "+".join(parents[:3])
+
+
+def selector_test_bucket(test_files: list[str]) -> str:
+    if not test_files:
+        return "unknown_test"
+    stems = sorted({Path(path).stem for path in test_files})
+    if any("cli" in stem for stem in stems):
+        return "cli"
+    if any("snapshot" in stem for stem in stems):
+        return "snapshot"
+    return "pytest_unit"
+
+
+def selector_change_size_proxy(code_files: list[str], test_files: list[str]) -> str:
+    touched = len(set(code_files)) + len(set(test_files))
+    if touched <= 2:
+        return "small"
+    if touched <= 4:
+        return "medium"
+    return "large"
+
+
+def selector_recency_bucket(task_time: str) -> str:
+    year = parse_task_datetime(task_time).year
+    if year <= 2018:
+        return "legacy_2018_or_earlier"
+    if year <= 2022:
+        return "middle_2019_2022"
+    return "recent_2023_or_later"
+
+
+def selector_stage_role(split: dict[str, Any], task_id: str) -> str:
+    if task_id in set(split.get("selection_tasks", [])):
+        return "selection"
+    if task_id in set(split.get("holdout_tasks", [])):
+        return "holdout"
+    if task_id in set(split.get("smoke_tasks", [])):
+        return "smoke"
+    return "unused"
+
+
+def selector_task_rows_from_audit(audit_rows: list[dict[str, Any]], split: dict[str, Any], target_repo: str) -> list[dict[str, Any]]:
+    rows: list[dict[str, Any]] = []
+    for audit in sorted(audit_rows, key=lambda row: (str(row.get("task_time") or ""), str(row.get("task_id") or ""))):
+        task_id = str(audit.get("task_id") or "")
+        code_files = [str(path) for path in audit.get("code_files", [])]
+        test_files = [str(path) for path in audit.get("test_files", [])]
+        source = str(audit.get("source") or "unknown_source")
+        module_bucket = selector_module_bucket(code_files)
+        change_size = selector_change_size_proxy(code_files, test_files)
+        gates_pass = bool(audit.get("gates_pass"))
+        has_required = bool(audit.get("has_required_fields"))
+        base_present = bool(audit.get("base_commit_present"))
+        target_present = bool(audit.get("target_commit_present"))
+        quality_score = 1.0 if all([gates_pass, has_required, base_present, target_present]) else 0.0
+        fallback_fields = ["task_type", "risk_flag", "flaky_flag", "difficulty_bucket"]
+        stage_role = selector_stage_role(split, task_id)
+        rows.append(
+            {
+                "task_id": task_id,
+                "target_repo": target_repo,
+                "task_time": str(audit.get("task_time") or ""),
+                "stage_role": stage_role,
+                "source": source,
+                "source_cluster": f"{source}:{module_bucket}",
+                "module_bucket": module_bucket,
+                "path_bucket": selector_path_bucket(code_files),
+                "test_bucket": selector_test_bucket(test_files),
+                "task_type": "unknown",
+                "change_size_proxy": change_size,
+                "difficulty_bucket": change_size,
+                "recency_bucket": selector_recency_bucket(str(audit.get("task_time") or "")),
+                "quality_score": quality_score,
+                "risk_flag": False,
+                "flaky_flag": False,
+                "gates_pass": gates_pass,
+                "has_required_fields": has_required,
+                "base_commit_present": base_present,
+                "target_commit_present": target_present,
+                "is_final_selection_candidate": stage_role == "selection",
+                "is_final_later_task": stage_role == "holdout",
+                "metadata_fallbacks": ",".join(fallback_fields),
+            }
+        )
+    return rows
+
+
+def selector_visible_task_ids(task_rows: list[dict[str, Any]], origin_time: str, allowed_stage_roles: set[str]) -> list[str]:
+    origin = parse_task_datetime(origin_time)
+    visible = [
+        row
+        for row in task_rows
+        if str(row.get("stage_role")) in allowed_stage_roles and parse_task_datetime(row.get("task_time")) <= origin
+    ]
+    return [str(row["task_id"]) for row in sorted(visible, key=lambda row: (str(row.get("task_time") or ""), str(row["task_id"])))]
+
+
+def selector_policy_valid_cell(row: dict[str, str]) -> bool:
+    return str(row.get("terminal_status") or "") in POLICY_VALID_TERMINAL_STATUSES
+
+
+def selector_outcome_rows_from_score_tables(score_tables: dict[str, list[dict[str, str]]]) -> list[dict[str, Any]]:
+    rows: list[dict[str, Any]] = []
+    for stage, table_rows in score_tables.items():
+        source_artifact = f"experiments/agent_selection_demo/results/{SELECTOR_STAGE_ARTIFACTS[stage]}"
+        for row in table_rows:
+            valid = selector_policy_valid_cell(row)
+            passed = str(row.get("terminal_status") or "") == "verified_pass"
+            rows.append(
+                {
+                    "task_id": row.get("task_id", ""),
+                    "agent_id": row.get("agent_id", ""),
+                    "stage": stage,
+                    "window_id": "final_selection" if stage == "selection" else "final_later" if stage == "holdout" else stage,
+                    "source_artifact_path": source_artifact,
+                    "terminal_status": row.get("terminal_status", ""),
+                    "scoreable_cell": csv_bool(row.get("scoreable_cell")),
+                    "verified_pass": csv_bool(row.get("verified_pass")),
+                    "policy_valid_cell": valid,
+                    "policy_pass": passed if valid else "",
+                    "policy_outcome_value": 1 if valid and passed else 0 if valid else "",
+                    "failure_category": row.get("failure_category", ""),
+                    "latency_seconds": row.get("latency_seconds", ""),
+                    "estimated_cost_usd": row.get("estimated_cost_usd", ""),
+                    "cost_observation_kind": row.get("cost_observation_kind", ""),
+                }
+            )
+    rows.sort(key=lambda row: (str(row["stage"]), str(row["task_id"]), str(row["agent_id"])))
+    return rows
+
+
+def build_selector_task_table(config: dict[str, Any]) -> list[dict[str, Any]]:
+    audit = read_json(result_path("task_pool_audit.json"))
+    split = read_json(result_path("frozen_split.json"))
+    return selector_task_rows_from_audit(audit.get("rows", []), split, config["target_repo"]["repo_name"])
+
+
+def build_selector_outcome_matrix() -> list[dict[str, Any]]:
+    score_tables = {
+        stage: read_csv_rows(result_path(filename))
+        for stage, filename in SELECTOR_STAGE_ARTIFACTS.items()
+        if result_path(filename).exists()
+    }
+    return selector_outcome_rows_from_score_tables(score_tables)
+
+
+def selector_protocol_payload(config: dict[str, Any], task_rows: list[dict[str, Any]], outcome_rows: list[dict[str, Any]]) -> dict[str, Any]:
+    split = read_json(result_path("frozen_split.json"))
+    selection_rows = [row for row in task_rows if row["stage_role"] == "selection"]
+    final_origin_time = max((str(row["task_time"]) for row in selection_rows), default="")
+    random_seeds = list(range(1000))
+    visible_ids = selector_visible_task_ids(task_rows, final_origin_time, {"selection"})
+    return {
+        "schema_version": "barcarolle.agent_selection_demo.selector_protocol.v1",
+        "generated_at": "2026-06-14",
+        "status": "frozen_before_selector_evaluation",
+        "target_repo": config["target_repo"]["repo_name"],
+        "dataset_artifacts": {
+            "task_table": "experiments/agent_selection_demo/results/selector_task_table.csv",
+            "outcome_matrix": "experiments/agent_selection_demo/results/selector_outcome_matrix.csv",
+        },
+        "agent_sets": {
+            "primary": [candidate["agent_id"] for candidate in config["agent_candidates"]],
+            "top2_repeat_validation": TOP2_REPEAT_AGENT_IDS,
+        },
+        "budgets": [10, 20],
+        "random_seeds": random_seeds,
+        "random_seed_count": len(random_seeds),
+        "invalid_cell_policy": {
+            "count_as_fail": sorted(POLICY_VALID_TERMINAL_STATUSES),
+            "count_as_na": ["verifier_outage", "invalid_task", "oracle_flake"],
+            "pairwise_metrics": "common policy-valid cells only",
+        },
+        "leakage_masks": {
+            "selector_visible_task_ids": visible_ids,
+            "selector_visible_stage_roles": ["selection"],
+            "masked_until_task_ids_frozen": [
+                "selection outcomes",
+                "holdout outcomes",
+                "doubled_timeout_top2_repeat outcomes"
+            ],
+            "final_origin_time": final_origin_time,
+        },
+        "split_plan": {
+            "type": "frozen_pseudo_future_with_sparse_rolling_origin_notes",
+            "reason": "The committed boltons demo has one complete Selection-to-Holdout grid. Earlier rolling origins are sparse for current complete-Agent outcomes, so train/dev tuning is limited to deterministic defaults and sensitivity checks; the final demo slice is evaluated once after config freeze.",
+            "train_development": {
+                "use": "selector sanity checks and threshold defaults only",
+                "final_holdout_outcomes_visible": False,
+            },
+            "final_demo_slice": {
+                "origin_id": "boltons_selection_to_holdout_2026_06_14",
+                "origin_time": final_origin_time,
+                "candidate_task_ids": split.get("selection_tasks", []),
+                "later_task_ids": split.get("holdout_tasks", []),
+                "repeat_validation_stage": "doubled_timeout_top2_repeat"
+            }
+        },
+        "decision_thresholds": {
+            "action_margin": 0.05,
+            "min_common_valid_selected_tasks": 8,
+            "tie_epsilon": 0.05,
+            "bootstrap_iterations": 1000,
+            "confidence_level": 0.8
+        },
+        "outcome_inventory": {
+            "task_rows": len(task_rows),
+            "outcome_rows": len(outcome_rows),
+            "policy_valid_outcome_rows": sum(1 for row in outcome_rows if row["policy_valid_cell"] is True),
+            "final_selection_candidate_count": sum(1 for row in task_rows if row["is_final_selection_candidate"] is True),
+            "final_later_task_count": sum(1 for row in task_rows if row["is_final_later_task"] is True),
+        },
+    }
+
+
+def render_selector_protocol_report(protocol: dict[str, Any]) -> str:
+    final_slice = protocol["split_plan"]["final_demo_slice"]
+    inventory = protocol["outcome_inventory"]
+    thresholds = protocol["decision_thresholds"]
+    lines = [
+        "# Selector Protocol",
+        "",
+        "生成日期：2026-06-14",
+        "",
+        "## 数据集",
+        "",
+        f"- Task table: `{protocol['dataset_artifacts']['task_table']}`。",
+        f"- Outcome matrix: `{protocol['dataset_artifacts']['outcome_matrix']}`。",
+        f"- Task rows: `{inventory['task_rows']}`；outcome rows: `{inventory['outcome_rows']}`；policy-valid outcome rows: `{inventory['policy_valid_outcome_rows']}`。",
+        f"- Final Selection candidate tasks: `{inventory['final_selection_candidate_count']}`；later/Holdout tasks: `{inventory['final_later_task_count']}`。",
+        "",
+        "## Frozen pseudo-future slice",
+        "",
+        f"- Origin ID: `{final_slice['origin_id']}`。",
+        f"- Origin time: `{final_slice['origin_time']}`。",
+        f"- Candidate pool: original frozen Selection tasks (`{len(final_slice['candidate_task_ids'])}` tasks)。",
+        f"- Later validation: original Holdout tasks (`{len(final_slice['later_task_ids'])}` tasks)。",
+        f"- Top-2 repeat validation stage: `{final_slice['repeat_validation_stage']}`。",
+        "",
+        "## Leakage mask",
+        "",
+        "selector 只能看到 Selection task metadata 和 frozen config；Selection outcomes、Holdout outcomes、doubled-timeout repeat outcomes 都在 task IDs 固定后才 join。",
+        "",
+        "## Invalid-cell policy",
+        "",
+        "solver timeout、invalid diff、normal verifier failure、policy violation 等 terminal statuses 计为 fail；只有 verifier outage、invalid task、oracle flake 计为 NA。pairwise metrics 只使用 common policy-valid cells。",
+        "",
+        "## Fixed budgets and seeds",
+        "",
+        f"- Budgets: `{protocol['budgets']}`。",
+        f"- Random seeds: `0..{protocol['random_seed_count'] - 1}`。",
+        "",
+        "## Decision defaults",
+        "",
+        f"- Action margin: `{thresholds['action_margin']}`。",
+        f"- Minimum common valid selected tasks: `{thresholds['min_common_valid_selected_tasks']}`。",
+        f"- Tie epsilon: `{thresholds['tie_epsilon']}`。",
+        f"- Bootstrap iterations: `{thresholds['bootstrap_iterations']}`。",
+        "",
+        "这些阈值在 final evaluation 前冻结；如果后续 package 需要调整，只能在 preregistration 中明确记录，并且不能根据 final later/Holdout 结果回调。",
+    ]
+    return "\n".join(lines) + "\n"
+
+
+def selector_build_dataset(config: dict[str, Any]) -> dict[str, Any]:
+    task_rows = build_selector_task_table(config)
+    outcome_rows = build_selector_outcome_matrix()
+    protocol = selector_protocol_payload(config, task_rows, outcome_rows)
+    write_csv(result_path("selector_task_table.csv"), task_rows, SELECTOR_TASK_FIELDNAMES)
+    write_csv(result_path("selector_outcome_matrix.csv"), outcome_rows, SELECTOR_OUTCOME_FIELDNAMES)
+    write_json(result_path("selector_protocol.json"), protocol)
+    write_text(report_path("selector_protocol_zh.md"), render_selector_protocol_report(protocol))
+    return protocol
+
+
 def csv_bool(value: Any) -> bool:
     if isinstance(value, bool):
         return value
@@ -2728,6 +3085,7 @@ def main() -> int:
     eval_parser.add_argument("--protocol", default=str(result_path("predictive_validity_protocol.json")))
     eval_parser.add_argument("--window-inventory", default=str(result_path("predictive_validity_window_inventory.json")))
     eval_parser.add_argument("--output", default=str(report_path("rolling_origin_eval_zh.md")))
+    subcommands.add_parser("selector-build-dataset")
     args = parser.parse_args()
     config = load_config(repo_path(args.config))
     if args.command == "gate":
@@ -2777,6 +3135,9 @@ def main() -> int:
         return 0
     if args.command == "rolling-origin-eval":
         rolling_origin_eval(repo_path(args.protocol), repo_path(args.window_inventory), repo_path(args.output))
+        return 0
+    if args.command == "selector-build-dataset":
+        selector_build_dataset(config)
         return 0
     raise ValueError(args.command)
 
