@@ -2,6 +2,10 @@
 
 生成日期：2026-06-14
 
+Correction label: `hypothesis_generating_selector_development_result`
+
+本报告保留 selector-evolution pass 的开发证据和数值，但不再把它表述为独立验证结果。`hrd_70_30` 的 variant choice、final task subset、decision story 都是在同一批 boltons Selection/Holdout 证据上形成的；因此它只能说明这个 selector 方向值得进入 corrected validation，不能单独证明 selector 会泛化。
+
 ## 旧 demo 的缺口
 
 旧 demo 已经证明 Barcarolle 能运行完整 Agent、捕获 diff、干净重放 verifier，也证明当前任务选择在 pass-rate MAE 上好于同预算随机抽样。
@@ -66,11 +70,13 @@ Doubled-timeout top-2 repeat：
 | Codex + GPT mainline | `6/10` |
 | Kilo + GPT mainline | `9/10` |
 
-所以这次 frozen story 是干净的：
+所以这次 development slice 的表面故事是：
 
 > Selection 推荐 Kilo + GPT mainline；后来 Holdout 和 doubled-timeout top-2 repeat 也都支持 Kilo。
 
 Recommendation regret 是 `0.0`。
+
+但这不是独立 final validation。该 Holdout 已经参与了 selector/variant 解释和最终故事构造，不能再作为“没见过的”证明。
 
 ## Strong random comparison
 
@@ -93,12 +99,13 @@ Decision metrics 也更好：
 
 ## Claim boundary
 
-现在可以 claim：
+现在只能 claim：
 
-> 在 frozen `mahmoud/boltons` demo slice 上，HRD 70/30 selector 加 shared decision wrapper 能给出 Kilo + GPT mainline 推荐；later/Holdout 和 doubled-timeout top-2 repeat 验证了这个推荐，且 recommendation regret 为 `0`。该 selector 在本 slice 的 MAE 也明显优于 strong stratified-random baseline。
+> 在 frozen `mahmoud/boltons` development slice 上，HRD 70/30 selector 加 shared decision wrapper 可以构造一个推荐 Kilo + GPT mainline 的候选故事；同一批已用过的 later/Holdout 和 doubled-timeout top-2 repeat 与该候选故事一致，且 recommendation regret 为 `0`。这为 corrected validation 提供开发证据，但不是独立证明。
 
 不能 claim：
 
+- 该 `hrd_70_30` result 已经独立验证；
 - full predictive validity；
 - 跨仓库 selector superiority；
 - 全局 Agent 或模型排名；

@@ -171,21 +171,23 @@ The random-baseline demo run is now the preferred reader-facing story for this
 demo. It supports a practical facility claim and target-repo Agent-selection
 evidence, not full predictive-validity proof.
 
-Completed selector-evolution runbook:
+Completed selector-evolution runbook, corrected interpretation:
 
 - `docs/research/agent-selection-selector-evolution-runbook-2026-06-14.md`
 
-This runbook completed the stricter Agent-selection story on the frozen
-`mahmoud/boltons` demo slice. The final locked selector is `hrd_70_30` with
-`k=10` and a shared recommend/abstain/need-more-evidence decision wrapper.
-Selection recommends `Kilo + GPT mainline`: Kilo `9/10`, Codex `7/10`, Kilo
-low-cost `7/10`, and Kilo Claude `7/10`. Later Holdout also favors Kilo:
-Kilo `9/10`, Codex `5/10`, Kilo low-cost `6/10`, and Kilo Claude `8/10`;
-the doubled-timeout top-2 repeat is Kilo `9/10` versus Codex `6/10`.
-Recommendation regret is `0.0`. Final selector MAE is `0.100000` versus
-strong stratified-random k=10 mean MAE `0.151700`, an absolute improvement of
-`0.051700` and relative improvement of `34.0804%`. No new paid cells were
-run.
+The selector-evolution run produced useful assets and a plausible
+hypothesis-generating boltons slice, but it should not be treated as independent
+selector validation. The final `hrd_70_30`, `k=10` slice recommends
+`Kilo + GPT mainline`: Selection Kilo `9/10` versus Codex `7/10`, later Holdout
+Kilo `9/10` versus Codex `5/10`, and doubled-timeout top-2 repeat Kilo `9/10`
+versus Codex `6/10`. Recommendation regret is `0.0`, and MAE is `0.100000`
+versus strong stratified-random k=10 mean MAE `0.151700`.
+
+However, the same boltons Selection/Holdout evidence was used during selector
+variant selection and final story construction, and the HRD "disagreement" arm
+used metadata fallback rather than leakage-safe historical Agent-disagreement
+signals. Treat this result as development evidence and an illustrative slice,
+not proof that the selector generalizes.
 
 Canonical selector-evolution artifacts:
 
@@ -195,9 +197,19 @@ Canonical selector-evolution artifacts:
 - `experiments/agent_selection_demo/results/selector_final_eval.json`
 - `experiments/agent_selection_demo/results/selector_decision_eval.json`
 
-Claim boundary: this supports a frozen boltons demo-level Agent-selection
-story, not full predictive validity, cross-repository selector superiority,
-future unseen validation, or a global Agent/model ranking.
+Claim boundary: this supports an illustrative boltons demo-level
+Agent-selection slice and reusable selector/decision tooling, not independent
+selector validation, full predictive validity, cross-repository selector
+superiority, future unseen validation, or a global Agent/model ranking.
+
+Active selector-validation correction runbook:
+
+- `docs/research/agent-selection-selector-validation-correction-runbook-2026-06-14.md`
+
+This is the next step for the stricter Agent-selection claim. It must relabel
+the previous selector result as hypothesis-generating, freeze a corrected
+selector protocol, and validate on an independent rolling-origin/fresh final
+slice or report a hard negative result.
 
 The predictive-validity completion pass froze the estimand as complete-Agent
 future target-repo verified pass-rate prediction accuracy and added no-paid

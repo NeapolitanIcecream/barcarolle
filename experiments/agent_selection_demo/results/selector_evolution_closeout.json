@@ -1,8 +1,9 @@
 {
   "schema_version": "barcarolle.agent_selection_demo.selector_evolution_closeout.v1",
   "generated_at": "2026-06-14",
-  "preferred_terminal_state_achieved": true,
-  "terminal_state": "decision_ready_demo_evidence",
+  "preferred_terminal_state_achieved": false,
+  "terminal_state": "hypothesis_generating_selector_development_result",
+  "correction_note": "Relabeled by selector-validation correction runbook: the hrd_70_30 result used the same boltons Selection/Holdout evidence for selector/variant choice and story validation, and the HRD arm used metadata fallback rather than leakage-safe historical Agent-disagreement data.",
   "paid_agent_calls_made": false,
   "new_paid_cells": 0,
   "new_paid_cost_usd": 0.0,
@@ -115,8 +116,9 @@
     "git_diff_check": "pass",
     "tracked_artifact_hygiene_scan": "pass_no_matches"
   },
-  "claim_supported": "On the frozen mahmoud/boltons demo slice, the HRD 70/30 selector plus shared decision wrapper recommends Kilo + GPT mainline; original Holdout and doubled-timeout top-2 repeat both favor Kilo, with zero recommendation regret. The selector MAE is 0.100000 versus stratified-random k=10 mean MAE 0.151700.",
+  "claim_supported": "Development evidence only: on the frozen mahmoud/boltons development slice, HRD 70/30 plus the decision wrapper can produce a Kilo + GPT mainline recommendation that is consistent with the already-used Holdout and doubled-timeout top-2 repeat. This motivates corrected validation but is not independent proof.",
   "remains_unproved": [
+    "independent selector validation",
     "full predictive validity",
     "cross-repository selector superiority",
     "global Agent/model ranking",

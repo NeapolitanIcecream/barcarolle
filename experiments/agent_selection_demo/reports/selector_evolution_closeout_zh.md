@@ -2,11 +2,13 @@
 
 生成日期：2026-06-14
 
-## Terminal state
+## Corrected terminal-state label
 
-Preferred terminal state achieved：`true`。
+Corrected label：`hypothesis_generating_selector_development_result`。
 
-本轮没有停在 diagnostic summary。已实现并评估 RSQ、HRD、强随机基线和 shared decision wrapper，并完成 frozen final no-paid evaluation。没有新 paid Agent cells。
+本轮没有停在 diagnostic summary。已实现并评估 RSQ、HRD、强随机基线和 shared decision wrapper，并完成 frozen no-paid replay。没有新 paid Agent cells。
+
+Correction note：该结果不再表述为 independent validation。`hrd_70_30` 的 variant choice、final task subset 和 validation story 都来自同一批 boltons Selection/Holdout evidence；HRD arm 也使用 metadata fallback，而不是 leakage-safe historical Agent-disagreement signal。因此这些数字是 selector-development evidence，不是最终证明。
 
 ## Closeout checklist
 
@@ -73,13 +75,13 @@ Passed:
 - `git diff --check` -> pass
 - `git ls-files experiments/agent_selection_demo | rg '(__pycache__|\.pyc$|raw|transcript|workspace|\.DS_Store|\.pytest_cache|\.venv)'` -> no matches; `rg` exit `1` recorded as pass
 
-11. Exact claim now supported
+11. Exact development claim now supported
 
-On the frozen `mahmoud/boltons` demo slice, the HRD 70/30 selector plus shared decision wrapper recommends `Kilo + GPT mainline`; original Holdout and doubled-timeout top-2 repeat both favor Kilo, with zero recommendation regret. The selector MAE is `0.100000` versus `0.151700` for the strong stratified-random k=10 baseline.
+On the frozen `mahmoud/boltons` development slice, the HRD 70/30 selector plus shared decision wrapper can produce a Kilo + GPT mainline recommendation; the already-used original Holdout and doubled-timeout top-2 repeat are consistent with that recommendation, with zero recommendation regret. This motivates corrected validation but does not prove independent selector validity.
 
 12. What remains unproved
 
-This still does not prove full predictive validity, cross-repository selector superiority, global Agent/model ranking, or future unseen generalization. It also does not establish a cost winner because old Selection cost usage coverage is not comparable across Agents.
+This still does not prove independent selector validation, full predictive validity, cross-repository selector superiority, global Agent/model ranking, or future unseen generalization. It also does not establish a cost winner because old Selection cost usage coverage is not comparable across Agents.
 
 ## Canonical artifacts
 
