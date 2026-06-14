@@ -17,12 +17,12 @@
 
 ## Pass rates
 
-- Selection: `codex_workspace: 6/27, kilo_workspace: 17/27`。
+- Selection: `codex_workspace: 5/26, kilo_workspace: 14/26`。
 - Later/Holdout: `codex_workspace: 16/40, kilo_workspace: 22/40`。
 
 ## Random comparison
 
-- Strongest random decision baseline: `source_recency_stratified_random`。
+- Strongest random decision baseline: `uniform_random_same_budget`。
 - Selector validated recommendation: `True`。
 - Strongest random validated recommendation rate: `1.0`。
 - Selector false-recommendation rate: `0.0`；random false-recommendation rate: `0.0`。
@@ -31,11 +31,11 @@
 
 ## MAE auxiliary
 
-- Selector MAE: `0.128704`。
+- Selector MAE: `0.109615`。
 - Strongest random MAE baseline: `source_recency_stratified_random`。
 - Strongest random MAE mean: `0.106711`。
-- Relative MAE improvement: `-0.206099`。
-- MAE beats/ties random share: `0.209`。
+- Relative MAE improvement: `-0.027214`。
+- MAE beats/ties random share: `0.454`。
 
 ## Boundary
 

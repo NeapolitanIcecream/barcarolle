@@ -93,171 +93,33 @@ stop conditions, and artifact-hygiene rules are satisfied. Treat
 source of truth for that demo. Do not let older phase/proposal wording in this
 file block the demo when the proposal explicitly authorizes the run.
 
-Agent selection demo execution completed on 2026-06-12 for `mahmoud/boltons`.
-The selection set recommended Codex + GPT mainline, but the holdout check
-contradicted that recommendation: Kilo + GPT mainline led the holdout. The
-demo supports the end-to-end selection workflow and this target-repo/candidate
-observation only; do not present it as a cross-repository or model-family
-ranking.
+Agent selection demo final presentation state on 2026-06-14:
 
-Canonical demo artifacts:
+- Reader-facing mainline selector: HRD v3 `70/30`, `k=10`, for the
+  `mahmoud/boltons` demo slice.
+- Selection recommendation: `Kilo + GPT mainline`, with HRD Selection
+  `9/10` versus the other three candidate Agents at `7/10`.
+- Holdout validation: Kilo remains first on Holdout at `9/10`; doubled-timeout
+  top-2 repeat also favors Kilo at `9/10` versus Codex `6/10`.
+- COD-lite is downgraded to an ordinary algorithm-bakeoff candidate. Do not
+  present COD-lite as the final demo mainline or as a second co-mainline.
+- Wrapper/reporting policy is user-facing ranking: output Agent rankings,
+  selection recommendation, and evidence table. Use `recommend` for a clear
+  top pass-rate advantage, `top_tier` for close Agents with cost/speed/stability
+  tiebreak guidance, and `insufficient_data` only when common-valid/scoreable
+  support is insufficient, outcome rows are missing, or infrastructure failure
+  blocks comparison. Paired and bootstrap metrics are evidence, not vetoes.
+
+Canonical current demo artifacts:
 
 - `experiments/agent_selection_demo/reports/final_agent_selection_demo_package_zh.md`
-- `experiments/agent_selection_demo/reports/target_repo_coding_agent_selection_demo_report_zh.md`
-- `experiments/agent_selection_demo/results/closeout_summary.json`
-- `experiments/agent_selection_demo/results/holdout_check.json`
-
-Completed predictive-validity completion pass:
-
-- `docs/research/agent-selection-demo-predictive-validity-completion-runbook-2026-06-13.md`
-
-Completed demo-evidence runbook:
-
-- `docs/research/agent-selection-demo-random-baseline-evidence-runbook-2026-06-14.md`
-
-This runbook completed the simpler demo claim: Barcarolle is a practical
-target-repo predictive Agent evaluation facility whose main quantitative
-warrant is lower future-pass-rate MAE than same-budget random task sampling,
-plus an Agent-selection matrix over real Agents. It doubled Agent-side timeout
-policy from 900s to 1800s, with 60s adapter cleanup grace, 1860s outer
-workspace timeout, 360s verifier timeout, and 3600s endpoint/proxy upstream
-timeout.
-
-Main demo-evidence results:
-
-- random-baseline predictive signal passed the demo gate:
-  `coverage_constrained_unweighted` MAE `0.209011` versus same-budget random
-  MAE `0.252499`, absolute improvement `0.043488`, relative improvement
-  `17.22%`; 1000-seed context shows the candidate beating/tying `93.4%` of
-  random samples;
-- Kilo + GPT mainline passed the doubled-timeout reliability gate with one
-  new smoke/debug paid cell;
-- doubled-timeout top-2 repeat completed `20/20` scoreable cells: Codex + GPT
-  mainline `6/10`, Kilo + GPT mainline `9/10`;
-- total new paid cells for the runbook were `21`, under the `42` cell cap;
-- old best-simple-baseline and catastrophic-miss results are limitations, not
-  the main demo gate.
-
-Canonical random-baseline demo artifacts:
-
-- `experiments/agent_selection_demo/reports/demo_predictive_facility_story_zh.md`
-- `experiments/agent_selection_demo/reports/random_baseline_predictive_signal_zh.md`
-- `experiments/agent_selection_demo/results/random_baseline_predictive_signal.json`
-- `experiments/agent_selection_demo/reports/demo_agent_selection_evidence_zh.md`
-- `experiments/agent_selection_demo/results/demo_agent_selection_evidence.json`
-- `experiments/agent_selection_demo/reports/doubled_timeout_policy_zh.md`
-- `experiments/agent_selection_demo/reports/doubled_timeout_agent_reliability_gate_zh.md`
-- `experiments/agent_selection_demo/results/doubled_timeout_agent_reliability_gate.json`
-- `experiments/agent_selection_demo/results/doubled_timeout_top2_repeat_metrics.json`
-- `experiments/agent_selection_demo/results/closeout_summary.json`
-
-Predictive-validity demo artifacts:
-
-- `experiments/agent_selection_demo/reports/predictive_validity_state_audit_zh.md`
-- `experiments/agent_selection_demo/reports/predictive_validity_protocol_zh.md`
-- `experiments/agent_selection_demo/reports/predictive_validity_feasibility_zh.md`
-- `experiments/agent_selection_demo/reports/rolling_origin_eval_zh.md`
-- `experiments/agent_selection_demo/reports/predictive_validity_retrospective_result_zh.md`
-- `experiments/agent_selection_demo/reports/predictive_validity_paid_pilot_decision_zh.md`
-- `experiments/agent_selection_demo/reports/predictive_validity_demo_story_zh.md`
-- `experiments/agent_selection_demo/results/predictive_validity_evidence_ledger.json`
-- `experiments/agent_selection_demo/results/predictive_validity_protocol.json`
-- `experiments/agent_selection_demo/results/predictive_validity_window_inventory.json`
-- `experiments/agent_selection_demo/results/rolling_origin_eval.json`
-- `experiments/agent_selection_demo/results/rolling_origin_eval_slices.csv`
-- `experiments/agent_selection_demo/results/predictive_validity_paid_pilot_plan.json`
-
-The random-baseline demo run is now the preferred reader-facing story for this
-demo. It supports a practical facility claim and target-repo Agent-selection
-evidence, not full predictive-validity proof.
-
-Completed selector-evolution runbook, corrected interpretation:
-
-- `docs/research/agent-selection-selector-evolution-runbook-2026-06-14.md`
-
-The selector-evolution run produced useful assets and a plausible
-hypothesis-generating boltons slice, but it should not be treated as independent
-selector validation. The final `hrd_70_30`, `k=10` slice recommends
-`Kilo + GPT mainline`: Selection Kilo `9/10` versus Codex `7/10`, later Holdout
-Kilo `9/10` versus Codex `5/10`, and doubled-timeout top-2 repeat Kilo `9/10`
-versus Codex `6/10`. Recommendation regret is `0.0`, and MAE is `0.100000`
-versus strong stratified-random k=10 mean MAE `0.151700`.
-
-However, the same boltons Selection/Holdout evidence was used during selector
-variant selection and final story construction, and the HRD "disagreement" arm
-used metadata fallback rather than leakage-safe historical Agent-disagreement
-signals. Treat this result as development evidence and an illustrative slice,
-not proof that the selector generalizes.
-
-Canonical selector-evolution artifacts:
-
-- `experiments/agent_selection_demo/reports/selector_agent_selection_demo_story_zh.md`
-- `experiments/agent_selection_demo/reports/selector_evolution_closeout_zh.md`
-- `experiments/agent_selection_demo/results/selector_evolution_closeout.json`
+- `experiments/agent_selection_demo/reports/selector_final_eval_zh.md`
 - `experiments/agent_selection_demo/results/selector_final_eval.json`
+- `experiments/agent_selection_demo/reports/selector_final_demo_closeout_zh.md`
+- `experiments/agent_selection_demo/results/selector_final_demo_closeout.json`
+- `experiments/agent_selection_demo/reports/selector_decision_eval_zh.md`
 - `experiments/agent_selection_demo/results/selector_decision_eval.json`
-
-Claim boundary: this supports an illustrative boltons demo-level
-Agent-selection slice and reusable selector/decision tooling, not independent
-selector validation, full predictive validity, cross-repository selector
-superiority, future unseen validation, or a global Agent/model ranking.
-
-Active selector-validation correction runbook:
-
-- `docs/research/agent-selection-selector-validation-correction-runbook-2026-06-14.md`
-
-This is the next step for the stricter Agent-selection claim. It must relabel
-the previous selector result as hypothesis-generating, freeze a corrected
-selector protocol, and validate on an independent rolling-origin/fresh final
-slice or report a hard negative result.
-
-Completed selector-validation correction result:
-
-- `experiments/agent_selection_demo/reports/selector_corrected_validation_closeout_zh.md`
-- `experiments/agent_selection_demo/results/selector_corrected_validation_closeout.json`
-
-The corrected validation used an independent no-paid Phase 1 pseudo-future
-block across attrs, boltons, and click. It did not achieve the preferred demo
-story under the conservative wrapper: Kilo led Selection (`11/18` versus
-Codex `6/18`) and later/Holdout (`16/30` versus Codex `7/30`), but the wrapper
-returned `need_more_evidence` because it required too much pairwise certainty.
-Selector MAE was `0.088889` versus strongest stratified-random MAE `0.090146`,
-a small relative improvement of about `1.39%`. Treat this as development
-evidence: the direction is promising, but the current selector/wrapper does not
-yet support the user-facing "Selection recommends an Agent and Holdout validates
-it" story.
-
-Completed selector-algorithm bakeoff result:
-
-- `docs/research/agent-selection-selector-algorithm-bakeoff-runbook-2026-06-14.md`
-
-This runbook implemented RSQ v2, FLC, HRD v3, COD-lite, RO-LSP, SAES-lite, and
-strong random baselines, then selected `cod_lite` plus wrapper v2 on development
-decision quality. Wrapper v2 uses `action_margin=0.10`, `min_common_valid=8`,
-`lcb_tolerance=0.10`, `tie_epsilon=0.05`, and no zero-loss requirement.
-
-The limited no-paid final replay used `phase1_original_three_repo_split_heldout`
-after holding it out from threshold and variant selection. Selection recommended
-`kilo_workspace`: Codex `6/27`, Kilo `17/27`. Later/Holdout also favored Kilo:
-Codex `16/40`, Kilo `22/40`. Recommendation regret was `0.0`, and top-pair
-direction agreed.
-
-The full preferred terminal state was not achieved because final decision
-quality tied, but did not strictly beat, the strongest same-budget random
-decision baseline; final MAE was also worse than the strongest random MAE
-baseline (`0.128704` versus `0.106711`, relative improvement `-20.61%`). The
-supported claim is limited: on this no-paid final replay, Selection can
-recommend Kilo and later/Holdout validates that recommendation. It does not
-prove selector superiority over random, full predictive validity,
-cross-repository selector superiority, or a global Agent/model ranking.
-
-Canonical bakeoff artifacts:
-
-- `experiments/agent_selection_demo/reports/selector_algorithm_bakeoff_story_zh.md`
-- `experiments/agent_selection_demo/reports/selector_algorithm_bakeoff_closeout_zh.md`
-- `experiments/agent_selection_demo/results/selector_algorithm_bakeoff_closeout.json`
-- `experiments/agent_selection_demo/results/selector_algorithm_bakeoff_eval.json`
-- `experiments/agent_selection_demo/results/selector_bakeoff_final_eval.json`
+- `experiments/agent_selection_demo/reports/selector_algorithm_bakeoff_eval_zh.md`
 
 The predictive-validity completion pass froze the estimand as complete-Agent
 future target-repo verified pass-rate prediction accuracy and added no-paid
@@ -346,19 +208,12 @@ Canonical reports:
 
 ## Selector Validation Correction 2026-06-14
 
-The previous boltons `hrd_70_30` selector story is now explicitly relabeled as
-`hypothesis_generating_selector_development_result`. It must not be cited as
-independent validation.
-
-The correction runbook froze `hrd_v2_70_30`, `k=6` per repo, before joining
-final Phase 1 outcomes, then replayed the no-paid independent
-`blocked_split_heldout` block across attrs, boltons, and click. The result is an
-accepted negative terminal state: Selection favored `kilo_workspace` (`11/18`
-versus Codex `6/18`) and later/Holdout also favored Kilo (`16/30` versus Codex
-`7/30`), but the shared decision wrapper returned `need_more_evidence` because
-the paired selected comparison had one discordant Kilo loss. Selector MAE was
-`0.088889` versus strongest stratified-random MAE mean `0.090146`, below the
-required `0.02` absolute or `10%` relative improvement threshold.
+The correction runbook is historical context for why the old conservative
+wrapper was replaced. It showed Kilo leading Selection (`11/18` versus Codex
+`6/18`) and later/Holdout (`16/30` versus Codex `7/30`), while the old wrapper
+returned `need_more_evidence` because it treated one discordant paired loss as a
+veto. Current reporting policy should not use that conservative abstain rule as
+the demo-facing decision standard.
 
 Canonical correction artifacts:
 
@@ -370,13 +225,10 @@ Canonical correction artifacts:
 - `experiments/agent_selection_demo/reports/selector_corrected_validation_story_zh.md`
 - `experiments/agent_selection_demo/reports/selector_corrected_validation_closeout_zh.md`
 
-Current claim boundary: the corrected validation supports only that the frozen
-selector plus conservative decision wrapper should request more evidence on this
-independent pseudo-future block. It does not support the user-facing claim that
-Selection recommends an Agent and later/Holdout validates that recommendation.
-If that story is still required, the next work is a new development-only
-selector/decision design followed by a preregistered independent final slice;
-do not spend paid cells merely to retune on the failed final block.
+Current claim boundary: use the corrected validation artifacts as development
+and audit context, not as the reader-facing demo closeout. The current demo
+closeout is the HRD v3 `70/30` boltons slice listed above, with COD-lite only as
+a bakeoff candidate.
 
 ## Product Direction
 

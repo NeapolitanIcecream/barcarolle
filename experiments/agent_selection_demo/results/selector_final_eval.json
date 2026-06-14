@@ -1,12 +1,117 @@
 {
   "claim_supported": "On the frozen boltons demo slice, the preregistered HRD 70/30 selector recommends Kilo + GPT mainline; original Holdout and doubled-timeout top-2 repeat both favor Kilo, with zero recommendation regret on the reported later slices.",
+  "claims_not_supported": [
+    "full predictive validity",
+    "strict selector superiority over the strongest same-budget random baseline",
+    "cross-repository selector superiority",
+    "global Agent or model-family ranking"
+  ],
   "decision": {
+    "agent_rankings": [
+      {
+        "agent_id": "kilo_gpt_5_4",
+        "gap_to_top": 0.0,
+        "missing_or_na_count": 0,
+        "pass_count": 9,
+        "pass_rate": 0.9,
+        "rank": 1,
+        "valid_count": 10
+      },
+      {
+        "agent_id": "codex_gpt_5_4",
+        "gap_to_top": 0.2,
+        "missing_or_na_count": 0,
+        "pass_count": 7,
+        "pass_rate": 0.7,
+        "rank": 2,
+        "valid_count": 10
+      },
+      {
+        "agent_id": "kilo_claude_sonnet_4_6",
+        "gap_to_top": 0.2,
+        "missing_or_na_count": 0,
+        "pass_count": 7,
+        "pass_rate": 0.7,
+        "rank": 3,
+        "valid_count": 10
+      },
+      {
+        "agent_id": "kilo_gpt_5_4_mini",
+        "gap_to_top": 0.2,
+        "missing_or_na_count": 0,
+        "pass_count": 7,
+        "pass_rate": 0.7,
+        "rank": 4,
+        "valid_count": 10
+      }
+    ],
+    "data_gaps": [],
+    "evidence_table": [
+      {
+        "agent_id": "kilo_gpt_5_4",
+        "gap_to_top": 0.0,
+        "missing_or_na_count": 0,
+        "pair_common_valid_vs_top": null,
+        "pass_count": 9,
+        "pass_rate": 0.9,
+        "rank": 1,
+        "top_minus_agent_pair_margin": null,
+        "top_pair_losses": null,
+        "top_pair_ties": null,
+        "top_pair_wins": null,
+        "valid_count": 10
+      },
+      {
+        "agent_id": "codex_gpt_5_4",
+        "gap_to_top": 0.2,
+        "missing_or_na_count": 0,
+        "pair_common_valid_vs_top": 10,
+        "pass_count": 7,
+        "pass_rate": 0.7,
+        "rank": 2,
+        "top_minus_agent_pair_margin": 0.2,
+        "top_pair_losses": 0,
+        "top_pair_ties": 8,
+        "top_pair_wins": 2,
+        "valid_count": 10
+      },
+      {
+        "agent_id": "kilo_claude_sonnet_4_6",
+        "gap_to_top": 0.2,
+        "missing_or_na_count": 0,
+        "pair_common_valid_vs_top": 10,
+        "pass_count": 7,
+        "pass_rate": 0.7,
+        "rank": 3,
+        "top_minus_agent_pair_margin": 0.2,
+        "top_pair_losses": 0,
+        "top_pair_ties": 8,
+        "top_pair_wins": 2,
+        "valid_count": 10
+      },
+      {
+        "agent_id": "kilo_gpt_5_4_mini",
+        "gap_to_top": 0.2,
+        "missing_or_na_count": 0,
+        "pair_common_valid_vs_top": 10,
+        "pass_count": 7,
+        "pass_rate": 0.7,
+        "rank": 4,
+        "top_minus_agent_pair_margin": 0.2,
+        "top_pair_losses": 0,
+        "top_pair_ties": 8,
+        "top_pair_wins": 2,
+        "valid_count": 10
+      }
+    ],
+    "infrastructure_failures": [],
     "nearest_competitor_agent_id": "codex_gpt_5_4",
     "pair_stats": [
       {
         "bootstrap_lcb": 0.0,
         "common_valid": 10,
         "competitor_agent_id": "codex_gpt_5_4",
+        "lcb_tolerance": 0.0,
         "losses": 0,
         "selected_margin": 0.2,
         "supports_recommendation": true,
@@ -17,6 +122,7 @@
         "bootstrap_lcb": 0.0,
         "common_valid": 10,
         "competitor_agent_id": "kilo_claude_sonnet_4_6",
+        "lcb_tolerance": 0.0,
         "losses": 0,
         "selected_margin": 0.2,
         "supports_recommendation": true,
@@ -27,6 +133,7 @@
         "bootstrap_lcb": 0.0,
         "common_valid": 10,
         "competitor_agent_id": "kilo_gpt_5_4_mini",
+        "lcb_tolerance": 0.0,
         "losses": 0,
         "selected_margin": 0.2,
         "supports_recommendation": true,
@@ -34,7 +141,7 @@
         "wins": 2
       }
     ],
-    "reason": "top_agent_margin_and_paired_small_sample_fallback_passed",
+    "reason": "top_agent_pass_rate_advantage",
     "recommended_agent_id": "kilo_gpt_5_4",
     "selected_top_margin": 0.2,
     "selection_rates": {
@@ -63,27 +170,144 @@
         "valid_count": 10
       }
     },
+    "selection_recommendation": {
+      "guidance": "\u5efa\u8bae\u9009\u62e9\u6392\u540d\u7b2c\u4e00\u7684 Agent\uff1b\u4f9d\u636e\u662f Selection \u901a\u8fc7\u7387\u9886\u5148\uff0cpaired \u548c bootstrap \u6307\u6807\u53ea\u4f5c\u4e3a\u8bc1\u636e\uff0c\u4e0d\u4f5c\u4e3a\u5426\u51b3\u9879\u3002",
+      "recommended_agent_id": "kilo_gpt_5_4",
+      "top_tier_agent_ids": [
+        "kilo_gpt_5_4"
+      ],
+      "type": "recommend"
+    },
     "state": "recommend",
-    "top_agent_id": "kilo_gpt_5_4"
+    "thresholds": {
+      "action_margin": 0.05,
+      "lcb_tolerance": 0.0,
+      "min_common_valid": 8,
+      "tie_epsilon": 0.05
+    },
+    "top_agent_id": "kilo_gpt_5_4",
+    "top_tier_agent_ids": [
+      "kilo_gpt_5_4"
+    ],
+    "version": "user_facing_ranking"
   },
   "decision_comparison": {
     "selector_recommendation_regret": 0.0,
     "selector_top_pair_direction_agreement": true,
-    "strong_random_false_recommendation_rate": 0.380597,
-    "strong_random_mean_regret_when_recommending": 0.152239,
-    "strong_random_top_pair_direction_agreement_rate": 0.619403
+    "strong_random_false_recommendation_rate": 0.455598,
+    "strong_random_mean_regret_when_recommending": 0.182239,
+    "strong_random_top_pair_direction_agreement_rate": 0.544402
   },
   "generated_at": "2026-06-14",
   "holdout_metrics": {
     "MAE": 0.1,
     "correct_abstain": null,
     "decision": {
+      "agent_rankings": [
+        {
+          "agent_id": "kilo_gpt_5_4",
+          "gap_to_top": 0.0,
+          "missing_or_na_count": 0,
+          "pass_count": 9,
+          "pass_rate": 0.9,
+          "rank": 1,
+          "valid_count": 10
+        },
+        {
+          "agent_id": "codex_gpt_5_4",
+          "gap_to_top": 0.2,
+          "missing_or_na_count": 0,
+          "pass_count": 7,
+          "pass_rate": 0.7,
+          "rank": 2,
+          "valid_count": 10
+        },
+        {
+          "agent_id": "kilo_claude_sonnet_4_6",
+          "gap_to_top": 0.2,
+          "missing_or_na_count": 0,
+          "pass_count": 7,
+          "pass_rate": 0.7,
+          "rank": 3,
+          "valid_count": 10
+        },
+        {
+          "agent_id": "kilo_gpt_5_4_mini",
+          "gap_to_top": 0.2,
+          "missing_or_na_count": 0,
+          "pass_count": 7,
+          "pass_rate": 0.7,
+          "rank": 4,
+          "valid_count": 10
+        }
+      ],
+      "data_gaps": [],
+      "evidence_table": [
+        {
+          "agent_id": "kilo_gpt_5_4",
+          "gap_to_top": 0.0,
+          "missing_or_na_count": 0,
+          "pair_common_valid_vs_top": null,
+          "pass_count": 9,
+          "pass_rate": 0.9,
+          "rank": 1,
+          "top_minus_agent_pair_margin": null,
+          "top_pair_losses": null,
+          "top_pair_ties": null,
+          "top_pair_wins": null,
+          "valid_count": 10
+        },
+        {
+          "agent_id": "codex_gpt_5_4",
+          "gap_to_top": 0.2,
+          "missing_or_na_count": 0,
+          "pair_common_valid_vs_top": 10,
+          "pass_count": 7,
+          "pass_rate": 0.7,
+          "rank": 2,
+          "top_minus_agent_pair_margin": 0.2,
+          "top_pair_losses": 0,
+          "top_pair_ties": 8,
+          "top_pair_wins": 2,
+          "valid_count": 10
+        },
+        {
+          "agent_id": "kilo_claude_sonnet_4_6",
+          "gap_to_top": 0.2,
+          "missing_or_na_count": 0,
+          "pair_common_valid_vs_top": 10,
+          "pass_count": 7,
+          "pass_rate": 0.7,
+          "rank": 3,
+          "top_minus_agent_pair_margin": 0.2,
+          "top_pair_losses": 0,
+          "top_pair_ties": 8,
+          "top_pair_wins": 2,
+          "valid_count": 10
+        },
+        {
+          "agent_id": "kilo_gpt_5_4_mini",
+          "gap_to_top": 0.2,
+          "missing_or_na_count": 0,
+          "pair_common_valid_vs_top": 10,
+          "pass_count": 7,
+          "pass_rate": 0.7,
+          "rank": 4,
+          "top_minus_agent_pair_margin": 0.2,
+          "top_pair_losses": 0,
+          "top_pair_ties": 8,
+          "top_pair_wins": 2,
+          "valid_count": 10
+        }
+      ],
+      "infrastructure_failures": [],
       "nearest_competitor_agent_id": "codex_gpt_5_4",
       "pair_stats": [
         {
           "bootstrap_lcb": 0.0,
           "common_valid": 10,
           "competitor_agent_id": "codex_gpt_5_4",
+          "lcb_tolerance": 0.0,
           "losses": 0,
           "selected_margin": 0.2,
           "supports_recommendation": true,
@@ -94,6 +318,7 @@
           "bootstrap_lcb": 0.0,
           "common_valid": 10,
           "competitor_agent_id": "kilo_claude_sonnet_4_6",
+          "lcb_tolerance": 0.0,
           "losses": 0,
           "selected_margin": 0.2,
           "supports_recommendation": true,
@@ -104,6 +329,7 @@
           "bootstrap_lcb": 0.0,
           "common_valid": 10,
           "competitor_agent_id": "kilo_gpt_5_4_mini",
+          "lcb_tolerance": 0.0,
           "losses": 0,
           "selected_margin": 0.2,
           "supports_recommendation": true,
@@ -111,7 +337,7 @@
           "wins": 2
         }
       ],
-      "reason": "top_agent_margin_and_paired_small_sample_fallback_passed",
+      "reason": "top_agent_pass_rate_advantage",
       "recommended_agent_id": "kilo_gpt_5_4",
       "selected_top_margin": 0.2,
       "selection_rates": {
@@ -140,8 +366,26 @@
           "valid_count": 10
         }
       },
+      "selection_recommendation": {
+        "guidance": "\u5efa\u8bae\u9009\u62e9\u6392\u540d\u7b2c\u4e00\u7684 Agent\uff1b\u4f9d\u636e\u662f Selection \u901a\u8fc7\u7387\u9886\u5148\uff0cpaired \u548c bootstrap \u6307\u6807\u53ea\u4f5c\u4e3a\u8bc1\u636e\uff0c\u4e0d\u4f5c\u4e3a\u5426\u51b3\u9879\u3002",
+        "recommended_agent_id": "kilo_gpt_5_4",
+        "top_tier_agent_ids": [
+          "kilo_gpt_5_4"
+        ],
+        "type": "recommend"
+      },
       "state": "recommend",
-      "top_agent_id": "kilo_gpt_5_4"
+      "thresholds": {
+        "action_margin": 0.05,
+        "lcb_tolerance": 0.0,
+        "min_common_valid": 8,
+        "tie_epsilon": 0.05
+      },
+      "top_agent_id": "kilo_gpt_5_4",
+      "top_tier_agent_ids": [
+        "kilo_gpt_5_4"
+      ],
+      "version": "user_facing_ranking"
     },
     "false_recommendation": false,
     "forced_recommendation_regret": 0.0,
@@ -287,7 +531,8 @@
     },
     "selection_top_tied": false,
     "top1_agreement_forced": true,
-    "top_pair_direction_agreement": true
+    "top_pair_direction_agreement": true,
+    "top_tier_validated": null
   },
   "k": 10,
   "later_holdout_task_ids": [
@@ -334,15 +579,17 @@
     "MAE_mean": 0.1517,
     "baseline_id": "stratified_random",
     "decision_summary": {
-      "abstain_rate": 0.482,
+      "abstain_rate": 0.0,
       "correct_abstain_rate": 0.0,
       "evaluated_count": 1000,
-      "false_recommendation_rate": 0.380597,
-      "mean_recommendation_regret": 0.152239,
-      "missed_opportunity_rate": 0.732,
-      "need_more_evidence_rate": 0.25,
-      "recommendation_coverage": 0.268,
-      "top_pair_direction_agreement_rate": 0.619403,
+      "false_recommendation_rate": 0.455598,
+      "insufficient_data_rate": 0.0,
+      "mean_recommendation_regret": 0.182239,
+      "missed_opportunity_rate": 0.482,
+      "need_more_evidence_rate": 0.0,
+      "recommendation_coverage": 0.518,
+      "top_pair_direction_agreement_rate": 0.544402,
+      "top_tier_rate": 0.482,
       "worst_recommendation_regret": 0.4
     },
     "k": 10
@@ -351,12 +598,65 @@
     "MAE": 0.05,
     "correct_abstain": null,
     "decision": {
+      "agent_rankings": [
+        {
+          "agent_id": "kilo_gpt_5_4",
+          "gap_to_top": 0.0,
+          "missing_or_na_count": 0,
+          "pass_count": 9,
+          "pass_rate": 0.9,
+          "rank": 1,
+          "valid_count": 10
+        },
+        {
+          "agent_id": "codex_gpt_5_4",
+          "gap_to_top": 0.2,
+          "missing_or_na_count": 0,
+          "pass_count": 7,
+          "pass_rate": 0.7,
+          "rank": 2,
+          "valid_count": 10
+        }
+      ],
+      "data_gaps": [],
+      "evidence_table": [
+        {
+          "agent_id": "kilo_gpt_5_4",
+          "gap_to_top": 0.0,
+          "missing_or_na_count": 0,
+          "pair_common_valid_vs_top": null,
+          "pass_count": 9,
+          "pass_rate": 0.9,
+          "rank": 1,
+          "top_minus_agent_pair_margin": null,
+          "top_pair_losses": null,
+          "top_pair_ties": null,
+          "top_pair_wins": null,
+          "valid_count": 10
+        },
+        {
+          "agent_id": "codex_gpt_5_4",
+          "gap_to_top": 0.2,
+          "missing_or_na_count": 0,
+          "pair_common_valid_vs_top": 10,
+          "pass_count": 7,
+          "pass_rate": 0.7,
+          "rank": 2,
+          "top_minus_agent_pair_margin": 0.2,
+          "top_pair_losses": 0,
+          "top_pair_ties": 8,
+          "top_pair_wins": 2,
+          "valid_count": 10
+        }
+      ],
+      "infrastructure_failures": [],
       "nearest_competitor_agent_id": "codex_gpt_5_4",
       "pair_stats": [
         {
           "bootstrap_lcb": 0.0,
           "common_valid": 10,
           "competitor_agent_id": "codex_gpt_5_4",
+          "lcb_tolerance": 0.0,
           "losses": 0,
           "selected_margin": 0.2,
           "supports_recommendation": true,
@@ -364,7 +664,7 @@
           "wins": 2
         }
       ],
-      "reason": "top_agent_margin_and_paired_small_sample_fallback_passed",
+      "reason": "top_agent_pass_rate_advantage",
       "recommended_agent_id": "kilo_gpt_5_4",
       "selected_top_margin": 0.2,
       "selection_rates": {
@@ -381,8 +681,26 @@
           "valid_count": 10
         }
       },
+      "selection_recommendation": {
+        "guidance": "\u5efa\u8bae\u9009\u62e9\u6392\u540d\u7b2c\u4e00\u7684 Agent\uff1b\u4f9d\u636e\u662f Selection \u901a\u8fc7\u7387\u9886\u5148\uff0cpaired \u548c bootstrap \u6307\u6807\u53ea\u4f5c\u4e3a\u8bc1\u636e\uff0c\u4e0d\u4f5c\u4e3a\u5426\u51b3\u9879\u3002",
+        "recommended_agent_id": "kilo_gpt_5_4",
+        "top_tier_agent_ids": [
+          "kilo_gpt_5_4"
+        ],
+        "type": "recommend"
+      },
       "state": "recommend",
-      "top_agent_id": "kilo_gpt_5_4"
+      "thresholds": {
+        "action_margin": 0.05,
+        "lcb_tolerance": 0.0,
+        "min_common_valid": 8,
+        "tie_epsilon": 0.05
+      },
+      "top_agent_id": "kilo_gpt_5_4",
+      "top_tier_agent_ids": [
+        "kilo_gpt_5_4"
+      ],
+      "version": "user_facing_ranking"
     },
     "false_recommendation": false,
     "forced_recommendation_regret": 0.0,
@@ -459,6 +777,7 @@
     },
     "selection_top_tied": false,
     "top1_agreement_forced": true,
-    "top_pair_direction_agreement": true
+    "top_pair_direction_agreement": true,
+    "top_tier_validated": null
   }
 }

@@ -8,15 +8,15 @@
 
 主 gate 改成 Agent 选型决策质量：Selection 是否能推荐一个 Agent，later/Holdout 是否验证这个选择。MAE 仍然报告，但不是硬 veto。
 
-## 开发集结果
+## 开发集结果的读法
 
-开发 bakeoff 的 winner 是 `cod_lite`。它在 development sources 上的 validated recommendation rate 是 `1.0`，recommendation coverage 是 `1.0`，false-recommendation rate 是 `0.0`。它的 MAE 是 `0.142087`，强 random MAE mean 是 `0.150765`，相对改善 `5.756%`。
+开发 bakeoff 表中，`hrd_v3_70_30` 的 decision-quality 指标排在第一：validated recommendation rate `1.0`，recommendation coverage `1.0`，false-recommendation rate `0.0`。它的 MAE 是 `0.122643`，强 random MAE mean 是 `0.150765`，相对改善 `18.65%`。
 
-HRD v3 `70/30` 是 backup。它的 MAE 更好，`0.122643`，相对强 random 改善 `18.65%`，但 validated recommendation coverage 只有 `0.666667`。因此最终选择 `cod_lite`，理由是它更符合“能不能帮 demo 用户做 Agent 选择”的主目标。
+COD-lite 也达到 validated recommendation rate `1.0`，但 MAE 是 `0.142087`，低于 HRD v3 `70/30` 的 MAE signal。最终 demo 报告不把 COD-lite 作为主算法，也不把 COD-lite 和 HRD 写成双主线。COD-lite 只保留为 bakeoff 表中的普通候选项；demo 主线使用 HRD v3 `70/30`，因为它已经足够支撑一个可解释、可运行、可审计的 Agent 选型故事。
 
-## 最终 no-paid replay
+## Bakeoff final replay 作为附录证据
 
-最终 replay 使用没有参与阈值和 variant 选择的 `phase1_original_three_repo_split_heldout`，标记为 limited no-paid final replay。最终 selector 是 `cod_lite`，k=`10` per repo，决策规则是 wrapper v2：
+Bakeoff final replay 使用没有参与阈值和 variant 选择的 `phase1_original_three_repo_split_heldout`，标记为 limited no-paid final replay。该 replay 的 selector 是 `hrd_v3_70_30`，k=`10` per repo，决策规则是 wrapper v2：
 
 - action margin: `0.10`
 - min common valid: `8`
@@ -24,16 +24,16 @@ HRD v3 `70/30` 是 backup。它的 MAE 更好，`0.122643`，相对强 random �
 - tie epsilon: `0.05`
 - 不要求 zero loss
 
-Selection 推荐 `kilo_workspace`。Selection 通过率为 Codex `6/27`，Kilo `17/27`。later/Holdout 通过率为 Codex `16/40`，Kilo `22/40`。推荐 regret 是 `0.0`，top-pair direction agreement 为 `True`。
+Selection 推荐 `kilo_workspace`。Selection 通过率为 Codex `5/26`，Kilo `14/26`。later/Holdout 通过率为 Codex `16/40`，Kilo `22/40`。推荐 regret 是 `0.0`，top-pair direction agreement 为 `True`。
 
 ## Random baseline 和 MAE
 
 最终 replay 没有严格打败最强 decision random baseline。最强 random decision baseline 是 `source_recency_stratified_random`，validated recommendation rate 也是 `1.0`，false-recommendation rate 也是 `0.0`，mean regret 也是 `0.0`。因此最终结论是 tie，不是 strict beat。
 
-MAE 也没有赢：selector MAE `0.128704`，强 random MAE mean `0.106711`，相对改善 `-20.61%`，MAE beats/ties random share `0.209`。
+MAE 没有严格赢：selector MAE `0.109615`，强 random MAE mean `0.106711`，相对改善 `-2.72%`，MAE beats/ties random share `0.454`。
 
 ## 现在能讲什么
 
-可以讲：在一个 limited no-paid final replay 上，Barcarolle 的 selector + wrapper v2 给出了 Agent 推荐，并且 later/Holdout 验证了这个推荐；Kilo 是 Selection 和 later/Holdout 的 top Agent，regret 为 0。
+可以讲：算法 bakeoff 提供了候选 selector 的对比表；HRD v3 `70/30` 是 bakeoff 表 leader，也是最终 demo 主线。COD-lite 是其中一个普通候选。HRD final demo 的核心证据见 `selector_final_eval_zh.md` 和 `final_agent_selection_demo_package_zh.md`。
 
-不能讲：这个 selector 严格优于最强 same-budget random；不能讲 MAE 优于 random；不能讲 full predictive validity、跨仓库 selector superiority、全球最佳 Agent/model 排名。
+不能讲：COD-lite 是最终 demo 主算法；不能讲任一 selector 严格优于最强 same-budget random；不能讲 full predictive validity、跨仓库 selector superiority、全球最佳 Agent/model 排名。

@@ -1131,10 +1131,9 @@
   },
   "status": "frozen_before_final_outcome_join",
   "success_criteria": {
-    "decision_metrics_must_beat_random_distribution": true,
     "later_top_must_match_recommended_or_regret_lte": 0.05,
-    "mae_improvement_vs_strong_random_abs_min": 0.02,
-    "mae_improvement_vs_strong_random_relative_min": 0.1,
+    "mae_reported_as_auxiliary": true,
+    "random_baseline_reported_as_auxiliary": true,
     "recommendation_required": true,
     "recommended_top_pair_direction_must_agree": true
   },

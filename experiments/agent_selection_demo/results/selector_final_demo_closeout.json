@@ -1,0 +1,106 @@
+{
+  "schema_version": "barcarolle.agent_selection_demo.selector_final_demo_closeout.v1",
+  "generated_at": "2026-06-14",
+  "paid_agent_calls_made": false,
+  "new_paid_cells": 0,
+  "mainline_selector": {
+    "selector_id": "hrd_v3_70_30",
+    "presentation_role": "demo_mainline",
+    "interpretation": "explainable runnable auditable selector sufficient for the current demo story, not a final general algorithm"
+  },
+  "cod_lite": {
+    "presentation_role": "ordinary_bakeoff_candidate",
+    "not_demo_mainline": true
+  },
+  "wrapper_reporting_policy": {
+    "states": [
+      "recommend",
+      "top_tier",
+      "insufficient_data"
+    ],
+    "core_output": [
+      "agent_rankings",
+      "selection_recommendation",
+      "evidence_table"
+    ],
+    "insufficient_data_only_when": [
+      "scoreable_or_common_valid_cells_are_insufficient",
+      "selection_outcome_rows_are_missing",
+      "infrastructure_failure_blocks_comparison"
+    ],
+    "paired_and_lcb_metrics": "evidence_not_veto"
+  },
+  "hrd_selection_matrix": {
+    "kilo_gpt_5_4": "9/10",
+    "codex_gpt_5_4": "7/10",
+    "kilo_claude_sonnet_4_6": "7/10",
+    "kilo_gpt_5_4_mini": "7/10"
+  },
+  "hrd_holdout_matrix": {
+    "kilo_gpt_5_4": "9/10",
+    "kilo_claude_sonnet_4_6": "8/10",
+    "kilo_gpt_5_4_mini": "6/10",
+    "codex_gpt_5_4": "5/10"
+  },
+  "top2_repeat_matrix": {
+    "kilo_gpt_5_4": "9/10",
+    "codex_gpt_5_4": "6/10"
+  },
+  "selection_recommendation": {
+    "decision_state": "recommend",
+    "recommended_agent_id": "kilo_gpt_5_4",
+    "recommendation_regret_on_holdout": 0.0,
+    "holdout_validates_recommendation": true
+  },
+  "auxiliary_evidence": {
+    "hrd_selector_MAE": 0.1,
+    "stratified_random_k10_MAE_mean": 0.1517,
+    "random_baseline_role": "auxiliary_not_primary_success_gate"
+  },
+  "claims_supported": [
+    "On the frozen boltons demo slice, HRD v3 70/30 recommends Kilo + GPT mainline from Selection results.",
+    "Holdout and doubled-timeout top-2 repeat both place Kilo + GPT mainline in the lead.",
+    "The reporting wrapper now presents Agent rankings, recommendation guidance, and evidence tables for user-facing selection decisions."
+  ],
+  "claims_not_supported": [
+    "full predictive validity",
+    "strict selector superiority over strong random baselines",
+    "cross-repository or cross-model-family global ranking",
+    "COD-lite as the final demo mainline algorithm"
+  ],
+  "artifacts": [
+    "experiments/agent_selection_demo/reports/final_agent_selection_demo_package_zh.md",
+    "experiments/agent_selection_demo/reports/selector_final_eval_zh.md",
+    "experiments/agent_selection_demo/results/selector_final_eval.json",
+    "experiments/agent_selection_demo/reports/selector_decision_eval_zh.md",
+    "experiments/agent_selection_demo/results/selector_decision_eval.json",
+    "experiments/agent_selection_demo/reports/selector_algorithm_bakeoff_eval_zh.md"
+  ],
+  "validation_commands": [
+    {
+      "command": "PYTHONPATH=experiments/agent_selection_demo/tools:experiments/phase1_compiler/tools uv run --project experiments/phase1_compiler pytest experiments/agent_selection_demo/tests -q",
+      "status": "passed",
+      "summary": "43 passed in 0.03s"
+    },
+    {
+      "command": "PYTHONPATH=experiments/phase1_compiler/tools uv run --project experiments/phase1_compiler pytest experiments/phase1_compiler/tests/test_phase1_retrospective_predictive_signal.py -q",
+      "status": "passed",
+      "summary": "6 passed in 0.65s"
+    },
+    {
+      "command": "git diff --check",
+      "status": "passed",
+      "summary": "exit 0"
+    },
+    {
+      "command": "git ls-files experiments/agent_selection_demo | rg '(__pycache__|\\.pyc$|raw|transcript|workspace|\\.DS_Store|\\.pytest_cache|\\.venv)'",
+      "status": "passed",
+      "summary": "exit 1 with no matches"
+    },
+    {
+      "command": "git diff -- PROCESS.md experiments/agent_selection_demo | rg -n '(sk-[A-Za-z0-9]|BEGIN (RSA|OPENSSH|PRIVATE) KEY|raw prompt|raw completion|raw transcript|full transcript|provider transcript|LLM_API_KEY=|OPENAI_API_KEY=|ANTHROPIC_API_KEY=|OPENROUTER_API_KEY=)'",
+      "status": "passed",
+      "summary": "exit 1 with no matches"
+    }
+  ]
+}

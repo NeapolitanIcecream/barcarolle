@@ -1,77 +1,48 @@
 # 目标仓库 Coding Agent 选型 Demo 报告
 
-## 1. 我们比较了一个目标仓库上的真实 Coding Agent
+生成日期：2026-06-14
 
-本次目标仓库是 `mahmoud/boltons`。任务来自仓库历史中的真实改动：实现文件和测试文件一起变化，系统从测试变化中构造隐藏验证，并在干净工作区重放 Agent 的代码改动。
+本报告是 `mahmoud/boltons` Agent 选型 demo 的读者版摘要。当前 demo 主线使用 `HRD v3 70/30` selector，而不是初版 selection-lock 成本破平规则，也不是 COD-lite。
 
-| Agent | 运行方式 | 模型 |
-| --- | --- | --- |
-| Codex + GPT mainline | codex | gpt-5.4 |
-| Kilo + GPT mainline | kilo | gpt-5.4 |
-| Kilo + GPT low-cost | kilo | gpt-5.4-mini |
-| Kilo + Claude Sonnet | kilo | claude-sonnet-4-6 |
+## Demo 设置
 
-## 2. 每个 Agent 在同一批选择集任务上按同一规则求解
+| 项目 | 设置 |
+| --- | --- |
+| 目标仓库 | `mahmoud/boltons` |
+| 候选 Agent | Codex + GPT mainline；Kilo + GPT mainline；Kilo + GPT low-cost；Kilo + Claude Sonnet |
+| Selection pool | 20 个冻结 Selection tasks |
+| HRD decision subset | 10 个 selected Selection tasks |
+| Holdout | 10 个后续任务 |
+| Top-2 repeat | Codex GPT mainline 与 Kilo GPT mainline 各 10 个 doubled-timeout repeat cells |
 
-前置检查得到 `35` 个本地认证任务。本次冻结 `20` 个选择集任务、`10` 个留出检查任务，另留 `1` 个冒烟任务。
+所有 scoreable Agent diff 都在干净验证工作区重放。hidden verifier material 只进入 verifier workspace。
 
-冒烟可评分运行率：`1.0`。选择集可评分运行率：`0.95`。
+## HRD 给出的选择
 
-| Agent | 选择集通过率 | 每解出一题成本 | 中位延迟秒 |
-| --- | --- | --- | --- |
-| Codex + GPT mainline | 0.75 | 0.34261597 | 101.048 |
-| Kilo + GPT mainline | 0.75 | 0.66666667 | 48.297 |
-| Kilo + Claude Sonnet | 0.7 | 0.71428571 | 79.561 |
-| Kilo + GPT low-cost | 0.65 | 0.76923077 | 50.696 |
+| Rank | Agent | Selection pass | Pass rate |
+| ---: | --- | ---: | ---: |
+| 1 | Kilo + GPT mainline | `9/10` | `0.90` |
+| 2 | Codex + GPT mainline | `7/10` | `0.70` |
+| 3 | Kilo + Claude Sonnet | `7/10` | `0.70` |
+| 4 | Kilo + GPT low-cost | `7/10` | `0.70` |
 
-## 3. 每个代码改动都在干净验证目录里重放
+选择建议：推荐 `Kilo + GPT mainline`。
 
-选择集共调度 `80` 次运行，完成 `80` 次，可评分 `76` 次。留出检查共调度 `40` 次运行，完成 `40` 次，可评分 `40` 次。
+## Holdout 验证
 
-## 4. 推荐规则同时看质量、成本、延迟和失败类型
+| Agent | Holdout pass | Pass rate |
+| --- | ---: | ---: |
+| Kilo + GPT mainline | `9/10` | `0.90` |
+| Kilo + Claude Sonnet | `8/10` | `0.80` |
+| Kilo + GPT low-cost | `6/10` | `0.60` |
+| Codex + GPT mainline | `5/10` | `0.50` |
 
-质量视图推荐：`Codex + GPT mainline`。生产价值视图推荐：`Codex + GPT mainline`。
+Top-2 doubled-timeout repeat 也支持同一方向：Kilo + GPT mainline `9/10`，Codex + GPT mainline `6/10`。
 
-本报告锁定的推荐 Agent 是：`Codex + GPT mainline`。
+## 怎么读这个结果
 
-## 5. 我们用未参与选择的留出检查任务检查推荐是否仍合理
+这个 demo 支持：Barcarolle 可以把目标仓库任务、真实 Agent 运行、干净验证、Selection 推荐和 Holdout 检查连成一个可审计的 Agent 选型流程。在这批任务上，HRD v3 70/30 推荐 Kilo + GPT mainline，后续 Holdout 也验证了这个选择。
 
-留出检查结论：不支持选择集推荐（`contradicts`）。
+这个 demo 不支持：full predictive validity、跨仓库或跨模型家族排名、HRD 严格击败所有强 random baselines，或 COD-lite 是最终 demo 主算法。
 
-| Agent | 留出检查通过率 | 每解出一题成本 | 中位延迟秒 |
-| --- | --- | --- | --- |
-| Kilo + GPT mainline | 0.9 | 0.55555556 | 47.921 |
-| Kilo + Claude Sonnet | 0.8 | 0.625 | 275.456 |
-| Kilo + GPT low-cost | 0.6 | 0.83333333 | 52.4 |
-| Codex + GPT mainline | 0.5 | 0.6575673 | 110.617 |
-
-## 6. 成本、延迟和失败类型
-
-估算总成本：`$55.1444025`。其中冒烟 `$1.7173265`，选择集 `$35.1392395`，留出检查 `$18.2878365`。
-
-可解析 token usage 的运行数：`31`。没有 usage 的运行使用预先声明的保守单次估算，报告中不把它说成真实账单。
-
-选择集失败类型：
-
-- `exceeded budget or timeout`: `2`
-- `hidden verifier failure`: `19`
-- `no meaningful change`: `2`
-- `verified pass`: `57`
-
-留出检查失败类型：
-
-- `hidden verifier failure`: `12`
-- `verified pass`: `28`
-
-## 7. 这个结果能说明什么，不能说明什么
-
-可以讲：在这个目标仓库、这批任务和这些候选 Agent 中，系统能端到端比较完整 Coding Agent，捕获代码改动，在干净目录验证，并把质量、成本、延迟和失败原因放在一张决策表里。
-
-不能讲：这不是跨仓库结论，不证明某个模型家族普遍更好，也不证明任务选择方法已经具备长期预测有效性。这个 demo 只支持一次目标仓库选型决策的可执行流程和本次候选集内的观察结果。
-
-## 8. 下一步建议
-
-- 扩大到第二个目标仓库，验证推荐规则是否仍稳定。
-- 对推荐 Agent 和最接近竞争者做重复运行，估计随机性和失败可复现性。
-- 接入真实账单成本，替代保守单次运行估算。
-- 把失败类型反馈给候选 Agent 配置，用下一轮任务检查是否能降低失败率。
+完整报告见 `experiments/agent_selection_demo/reports/final_agent_selection_demo_package_zh.md`。
