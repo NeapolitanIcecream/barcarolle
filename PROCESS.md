@@ -235,6 +235,19 @@ a bakeoff candidate.
 Agent Tuning is the nearer product direction: Barcarolle can provide benchmark
 releases, feedback labels, cost summaries, and before/after tuning reports.
 
+Agent Tuning Phase 1 feasibility completed on 2026-06-14 with state
+`ready_for_phase2_with_restrictions`. Real-Agent artifact injection is proven
+for Codex/Kilo request paths, with Kilo `AGENTS.md` and Kilo project rules the
+most reliable first surfaces. Behavior-change evidence is limited to
+artifact-driven request-context differences; action-level command/test behavior
+must pass a minimal preflight before any GEPA/Phoenix optimization. Recommended
+Phase 2 route: GEPA standalone as a text-artifact proposer for one Kilo
+`AGENTS.md` appendix, with Phoenix as backup proposer and a DSPy-native coding
+workflow as fallback if real-Agent action behavior cannot be proven. Canonical
+closeout:
+`experiments/agent_tuning_demo/reports/phase1_feasibility_closeout_zh.md` and
+`experiments/agent_tuning_demo/results/phase1_feasibility_closeout.json`.
+
 Agent License remains a possible downstream product, but it is not the current
 research proof or active architecture. Historical license/admission material is
 archived under `archive/2026-05-agent-license-reset/`.
