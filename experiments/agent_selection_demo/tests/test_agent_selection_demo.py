@@ -599,6 +599,128 @@ def test_bakeoff_attach_scores_keeps_final_outcome_features_blank() -> None:
     assert development["development_outcome_disagreement"] == 1.0
 
 
+def bakeoff_selector_rows() -> list[dict[str, object]]:
+    rows: list[dict[str, object]] = []
+    for repo in ["attrs", "boltons"]:
+        for index in range(6):
+            rows.append(
+                {
+                    "task_id": f"{repo}_task_{index}",
+                    "repo": repo,
+                    "stage_role": "selection",
+                    "quality_score": 1.0,
+                    "risk_flag": False,
+                    "flaky_flag": False,
+                    "source": "source_a" if index < 3 else "source_b",
+                    "source_cluster": f"{repo}:m{index % 3}",
+                    "module_bucket": f"m{index % 3}",
+                    "path_bucket": repo,
+                    "test_bucket": "pytest_unit",
+                    "change_size_proxy": "medium" if index % 2 == 0 else "small",
+                    "difficulty_bucket": "medium" if index % 2 == 0 else "small",
+                    "recency_bucket": "recent_2023_or_later" if index >= 3 else "middle_2019_2022",
+                    "task_time": f"2024-01-{index + 1:02d}T00:00:00Z",
+                    "historical_difficulty": 0.5 if index % 2 == 0 else 0.25,
+                    "metadata_informativeness": float(index) / 10.0,
+                }
+            )
+    return rows
+
+
+def bakeoff_selector_outcome_rows(rows: list[dict[str, object]]) -> list[dict[str, object]]:
+    outcome_rows: list[dict[str, object]] = []
+    for row in rows:
+        index = int(str(row["task_id"]).rsplit("_", 1)[1])
+        for agent_id, passed in {
+            "codex_workspace": index % 3 == 0,
+            "kilo_workspace": index % 2 == 0,
+        }.items():
+            outcome_rows.append(
+                {
+                    "stage": "selection",
+                    "task_id": row["task_id"],
+                    "agent_id": agent_id,
+                    "terminal_status": "verified_pass" if passed else "verified_fail",
+                    "policy_valid_cell": True,
+                    "policy_outcome_value": 1 if passed else 0,
+                }
+            )
+    return outcome_rows
+
+
+def test_bakeoff_rsq_v2_is_deterministic() -> None:
+    rows = bakeoff_selector_rows()
+
+    first = demo.select_bakeoff_rsq_v2(rows, k=4)
+    second = demo.select_bakeoff_rsq_v2(rows, k=4)
+
+    assert first["selected_task_ids"] == second["selected_task_ids"]
+    assert len(first["selected_task_ids"]) == 4
+    assert all(item["reason"] for item in first["rationale"])
+
+
+def test_bakeoff_flc_is_deterministic() -> None:
+    rows = bakeoff_selector_rows()
+
+    first = demo.select_bakeoff_flc(rows, k=4)
+    second = demo.select_bakeoff_flc(rows, k=4)
+
+    assert first["selected_task_ids"] == second["selected_task_ids"]
+    assert len(first["rationale"]) == 4
+
+
+def test_bakeoff_hrd_v3_uses_metadata_informativeness_name() -> None:
+    rows = bakeoff_selector_rows()
+
+    selection = demo.select_bakeoff_hrd_v3(rows, k=5, representative_fraction=0.6)
+
+    assert selection["selected_count"] == 5
+    assert selection["informativeness_source"] == "metadata_informativeness"
+    assert selection["leakage_safe_historical_agent_disagreement_used"] is False
+
+
+def test_bakeoff_cod_lite_reports_contrast_gain() -> None:
+    rows = bakeoff_selector_rows()
+
+    selection = demo.select_bakeoff_cod_lite(rows, k=4)
+
+    assert selection["selected_count"] == 4
+    assert all("contrast_gain" in item for item in selection["rationale"])
+
+
+def test_bakeoff_ro_lsp_is_deterministic_for_fixed_weights() -> None:
+    rows = bakeoff_selector_rows()
+
+    first = demo.select_bakeoff_ro_lsp(rows, k=4)
+    second = demo.select_bakeoff_ro_lsp(rows, k=4)
+
+    assert first["selected_task_ids"] == second["selected_task_ids"]
+    assert first["weights"] == demo.RO_LSP_DEFAULT_WEIGHTS
+
+
+def test_bakeoff_saes_lite_records_sequential_trace() -> None:
+    rows = bakeoff_selector_rows()
+    outcomes = bakeoff_selector_outcome_rows(rows)
+
+    selection = demo.select_bakeoff_saes_lite(rows, k=5, outcome_rows=outcomes, agent_ids=demo.BAKEOFF_AGENT_IDS)
+
+    assert selection["selected_count"] == 5
+    assert [step["step"] for step in selection["sequential_trace"]] == [
+        "representative_seed_batch",
+        "observe_seed_outcomes",
+        "informative_second_batch",
+    ]
+
+
+def test_bakeoff_strong_random_is_deterministic_for_fixed_seed() -> None:
+    rows = bakeoff_selector_rows()
+
+    first = demo.select_bakeoff_strong_random(rows, k=5, seed=19, baseline_id="module_stratified_random")
+    second = demo.select_bakeoff_strong_random(rows, k=5, seed=19, baseline_id="module_stratified_random")
+
+    assert first["selected_task_ids"] == second["selected_task_ids"]
+
+
 def selector_test_outcome_rows(agent_values: dict[str, list[int]]) -> list[dict[str, str]]:
     rows: list[dict[str, str]] = []
     for agent_id, values in agent_values.items():

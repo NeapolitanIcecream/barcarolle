@@ -1,0 +1,1944 @@
+{
+  "algorithm_families": {
+    "cod_lite": {
+      "approximation": "greedy metadata contrast gain because no leakage-safe historical Agent contrast matrix is available",
+      "role": "contrast_optimal_selector",
+      "status": "implemented"
+    },
+    "flc": {
+      "role": "representative_core_set",
+      "signals": [
+        "categorical metadata vector",
+        "greedy facility-location coverage",
+        "quality gate",
+        "redundancy cap"
+      ],
+      "status": "implemented"
+    },
+    "hrd_v3": {
+      "informativeness_arm": "metadata_informativeness",
+      "leakage_safe_historical_agent_disagreement_used": false,
+      "role": "decision_aware_hybrid",
+      "status": "implemented",
+      "variants": [
+        "70/30",
+        "60/40",
+        "50/50"
+      ]
+    },
+    "ro_lsp": {
+      "default_weights": {
+        "metadata_informativeness": 0.3,
+        "middle_difficulty": 0.25,
+        "module_rarity": 0.15,
+        "quality": 0.05,
+        "recency": 0.15,
+        "source_rarity": 0.1
+      },
+      "role": "low_capacity_learned_scoring_policy",
+      "status": "implemented",
+      "training_rule": "Package 5 may grid-search these interpretable weights on development sources only; defaults are deterministic until then."
+    },
+    "rsq_v2": {
+      "role": "strong_metadata_baseline",
+      "signals": [
+        "repo",
+        "source/window",
+        "recency_bucket",
+        "module_bucket",
+        "change_size_proxy",
+        "quality/risk/flakiness filters",
+        "source/module caps"
+      ],
+      "status": "implemented"
+    },
+    "saes_lite": {
+      "mode": "offline replay over committed sanitized outcome matrices",
+      "role": "sequential_adaptive_evidence_selector",
+      "status": "implemented"
+    },
+    "strong_random_baselines": {
+      "families": [
+        "uniform_random_same_budget",
+        "quality_filtered_random",
+        "source_recency_stratified_random",
+        "module_stratified_random"
+      ],
+      "status": "implemented"
+    }
+  },
+  "example_k_per_repo": 6,
+  "example_selections": {
+    "cod_lite": {
+      "k_per_repo": 6,
+      "k_total": 18,
+      "per_repo": {
+        "attrs": {
+          "selected_count": 6,
+          "selected_task_ids": [
+            "attrs::attrs__v2__044",
+            "attrs::attrs__v2__157",
+            "attrs::attrs__v2__187",
+            "attrs::attrs__v2__202",
+            "attrs::attrs__v2__250",
+            "attrs::attrs__v2__271"
+          ]
+        },
+        "boltons": {
+          "selected_count": 6,
+          "selected_task_ids": [
+            "boltons::boltons__v2__007",
+            "boltons::boltons__v2__068",
+            "boltons::boltons__v2__076",
+            "boltons::boltons__v2__103",
+            "boltons::boltons__v2__128",
+            "boltons::boltons__v2__147"
+          ]
+        },
+        "click": {
+          "selected_count": 6,
+          "selected_task_ids": [
+            "click::click__third__166",
+            "click::click__third__201",
+            "click::click__third__202",
+            "click::click__third__217",
+            "click::click__third__220",
+            "click::click__third__250"
+          ]
+        }
+      },
+      "rationale": [
+        {
+          "contrast_gain": 5.891072,
+          "contrast_signal": "metadata_informativeness_plus_middle_difficulty",
+          "reason": "greedy contrast-information gain",
+          "task_id": "attrs::attrs__v2__044"
+        },
+        {
+          "contrast_gain": 6.275,
+          "contrast_signal": "metadata_informativeness_plus_middle_difficulty",
+          "reason": "greedy contrast-information gain",
+          "task_id": "attrs::attrs__v2__157"
+        },
+        {
+          "contrast_gain": 6.05,
+          "contrast_signal": "metadata_informativeness_plus_middle_difficulty",
+          "reason": "greedy contrast-information gain",
+          "task_id": "attrs::attrs__v2__187"
+        },
+        {
+          "contrast_gain": 6.825,
+          "contrast_signal": "metadata_informativeness_plus_middle_difficulty",
+          "reason": "greedy contrast-information gain",
+          "task_id": "attrs::attrs__v2__202"
+        },
+        {
+          "contrast_gain": 6.05,
+          "contrast_signal": "metadata_informativeness_plus_middle_difficulty",
+          "reason": "greedy contrast-information gain",
+          "task_id": "attrs::attrs__v2__250"
+        },
+        {
+          "contrast_gain": 6.05,
+          "contrast_signal": "metadata_informativeness_plus_middle_difficulty",
+          "reason": "greedy contrast-information gain",
+          "task_id": "attrs::attrs__v2__271"
+        },
+        {
+          "contrast_gain": 4.098764,
+          "contrast_signal": "metadata_informativeness_plus_middle_difficulty",
+          "reason": "greedy contrast-information gain",
+          "task_id": "boltons::boltons__v2__007"
+        },
+        {
+          "contrast_gain": 4.136538,
+          "contrast_signal": "metadata_informativeness_plus_middle_difficulty",
+          "reason": "greedy contrast-information gain",
+          "task_id": "boltons::boltons__v2__068"
+        },
+        {
+          "contrast_gain": 3.75261,
+          "contrast_signal": "metadata_informativeness_plus_middle_difficulty",
+          "reason": "greedy contrast-information gain",
+          "task_id": "boltons::boltons__v2__076"
+        },
+        {
+          "contrast_gain": 4.309616,
+          "contrast_signal": "metadata_informativeness_plus_middle_difficulty",
+          "reason": "greedy contrast-information gain",
+          "task_id": "boltons::boltons__v2__103"
+        },
+        {
+          "contrast_gain": 4.041072,
+          "contrast_signal": "metadata_informativeness_plus_middle_difficulty",
+          "reason": "greedy contrast-information gain",
+          "task_id": "boltons::boltons__v2__128"
+        },
+        {
+          "contrast_gain": 3.873764,
+          "contrast_signal": "metadata_informativeness_plus_middle_difficulty",
+          "reason": "greedy contrast-information gain",
+          "task_id": "boltons::boltons__v2__147"
+        },
+        {
+          "contrast_gain": 3.740385,
+          "contrast_signal": "metadata_informativeness_plus_middle_difficulty",
+          "reason": "greedy contrast-information gain",
+          "task_id": "click::click__third__166"
+        },
+        {
+          "contrast_gain": 5.182693,
+          "contrast_signal": "metadata_informativeness_plus_middle_difficulty",
+          "reason": "greedy contrast-information gain",
+          "task_id": "click::click__third__201"
+        },
+        {
+          "contrast_gain": 4.782693,
+          "contrast_signal": "metadata_informativeness_plus_middle_difficulty",
+          "reason": "greedy contrast-information gain",
+          "task_id": "click::click__third__202"
+        },
+        {
+          "contrast_gain": 4.782693,
+          "contrast_signal": "metadata_informativeness_plus_middle_difficulty",
+          "reason": "greedy contrast-information gain",
+          "task_id": "click::click__third__217"
+        },
+        {
+          "contrast_gain": 4.782693,
+          "contrast_signal": "metadata_informativeness_plus_middle_difficulty",
+          "reason": "greedy contrast-information gain",
+          "task_id": "click::click__third__220"
+        },
+        {
+          "contrast_gain": 4.782693,
+          "contrast_signal": "metadata_informativeness_plus_middle_difficulty",
+          "reason": "greedy contrast-information gain",
+          "task_id": "click::click__third__250"
+        }
+      ],
+      "selected_task_ids": [
+        "attrs::attrs__v2__044",
+        "attrs::attrs__v2__157",
+        "attrs::attrs__v2__187",
+        "attrs::attrs__v2__202",
+        "attrs::attrs__v2__250",
+        "attrs::attrs__v2__271",
+        "boltons::boltons__v2__007",
+        "boltons::boltons__v2__068",
+        "boltons::boltons__v2__076",
+        "boltons::boltons__v2__103",
+        "boltons::boltons__v2__128",
+        "boltons::boltons__v2__147",
+        "click::click__third__166",
+        "click::click__third__201",
+        "click::click__third__202",
+        "click::click__third__217",
+        "click::click__third__220",
+        "click::click__third__250"
+      ],
+      "selector_id": "cod_lite"
+    },
+    "flc": {
+      "k_per_repo": 6,
+      "k_total": 18,
+      "per_repo": {
+        "attrs": {
+          "selected_count": 6,
+          "selected_task_ids": [
+            "attrs::attrs__v2__044",
+            "attrs::attrs__v2__157",
+            "attrs::attrs__v2__187",
+            "attrs::attrs__v2__202",
+            "attrs::attrs__v2__207",
+            "attrs::attrs__v2__215"
+          ]
+        },
+        "boltons": {
+          "selected_count": 6,
+          "selected_task_ids": [
+            "boltons::boltons__v2__007",
+            "boltons::boltons__v2__068",
+            "boltons::boltons__v2__076",
+            "boltons::boltons__v2__103",
+            "boltons::boltons__v2__147",
+            "boltons::boltons__v2__231"
+          ]
+        },
+        "click": {
+          "selected_count": 6,
+          "selected_task_ids": [
+            "click::click__third__091",
+            "click::click__third__166",
+            "click::click__third__201",
+            "click::click__third__202",
+            "click::click__third__206",
+            "click::click__third__220"
+          ]
+        }
+      },
+      "rationale": [
+        {
+          "coverage_gain": 2.05,
+          "reason": "greedy facility-location coverage gain",
+          "task_id": "attrs::attrs__v2__044"
+        },
+        {
+          "coverage_gain": 1.464214,
+          "reason": "greedy facility-location coverage gain",
+          "task_id": "attrs::attrs__v2__157"
+        },
+        {
+          "coverage_gain": -9.021068,
+          "reason": "greedy facility-location coverage gain",
+          "task_id": "attrs::attrs__v2__187"
+        },
+        {
+          "coverage_gain": 1.464214,
+          "reason": "greedy facility-location coverage gain",
+          "task_id": "attrs::attrs__v2__202"
+        },
+        {
+          "coverage_gain": 1.464214,
+          "reason": "greedy facility-location coverage gain",
+          "task_id": "attrs::attrs__v2__207"
+        },
+        {
+          "coverage_gain": 2.878427,
+          "reason": "greedy facility-location coverage gain",
+          "task_id": "attrs::attrs__v2__215"
+        },
+        {
+          "coverage_gain": -12.778427,
+          "reason": "greedy facility-location coverage gain",
+          "task_id": "boltons::boltons__v2__007"
+        },
+        {
+          "coverage_gain": 2.635786,
+          "reason": "greedy facility-location coverage gain",
+          "task_id": "boltons::boltons__v2__068"
+        },
+        {
+          "coverage_gain": 1.464214,
+          "reason": "greedy facility-location coverage gain",
+          "task_id": "boltons::boltons__v2__076"
+        },
+        {
+          "coverage_gain": 1.464214,
+          "reason": "greedy facility-location coverage gain",
+          "task_id": "boltons::boltons__v2__103"
+        },
+        {
+          "coverage_gain": 2.635786,
+          "reason": "greedy facility-location coverage gain",
+          "task_id": "boltons::boltons__v2__147"
+        },
+        {
+          "coverage_gain": 2.05,
+          "reason": "greedy facility-location coverage gain",
+          "task_id": "boltons::boltons__v2__231"
+        },
+        {
+          "coverage_gain": 2.49949,
+          "reason": "greedy facility-location coverage gain",
+          "task_id": "click::click__third__091"
+        },
+        {
+          "coverage_gain": 4.292641,
+          "reason": "greedy facility-location coverage gain",
+          "task_id": "click::click__third__166"
+        },
+        {
+          "coverage_gain": -9.470558,
+          "reason": "greedy facility-location coverage gain",
+          "task_id": "click::click__third__201"
+        },
+        {
+          "coverage_gain": 0.05,
+          "reason": "greedy facility-location coverage gain",
+          "task_id": "click::click__third__202"
+        },
+        {
+          "coverage_gain": 1.464214,
+          "reason": "greedy facility-location coverage gain",
+          "task_id": "click::click__third__206"
+        },
+        {
+          "coverage_gain": 1.464214,
+          "reason": "greedy facility-location coverage gain",
+          "task_id": "click::click__third__220"
+        }
+      ],
+      "selected_task_ids": [
+        "attrs::attrs__v2__044",
+        "attrs::attrs__v2__157",
+        "attrs::attrs__v2__187",
+        "attrs::attrs__v2__202",
+        "attrs::attrs__v2__207",
+        "attrs::attrs__v2__215",
+        "boltons::boltons__v2__007",
+        "boltons::boltons__v2__068",
+        "boltons::boltons__v2__076",
+        "boltons::boltons__v2__103",
+        "boltons::boltons__v2__147",
+        "boltons::boltons__v2__231",
+        "click::click__third__091",
+        "click::click__third__166",
+        "click::click__third__201",
+        "click::click__third__202",
+        "click::click__third__206",
+        "click::click__third__220"
+      ],
+      "selector_id": "flc"
+    },
+    "hrd_v3_50_50": {
+      "k_per_repo": 6,
+      "k_total": 18,
+      "per_repo": {
+        "attrs": {
+          "selected_count": 6,
+          "selected_task_ids": [
+            "attrs::attrs__v2__157",
+            "attrs::attrs__v2__187",
+            "attrs::attrs__v2__202",
+            "attrs::attrs__v2__235",
+            "attrs::attrs__v2__250",
+            "attrs::attrs__v2__271"
+          ]
+        },
+        "boltons": {
+          "selected_count": 6,
+          "selected_task_ids": [
+            "boltons::boltons__v2__008",
+            "boltons::boltons__v2__009",
+            "boltons::boltons__v2__068",
+            "boltons::boltons__v2__103",
+            "boltons::boltons__v2__128",
+            "boltons::boltons__v2__154"
+          ]
+        },
+        "click": {
+          "selected_count": 6,
+          "selected_task_ids": [
+            "click::click__third__202",
+            "click::click__third__217",
+            "click::click__third__220",
+            "click::click__third__238",
+            "click::click__third__250",
+            "click::click__third__274"
+          ]
+        }
+      },
+      "rationale": [
+        {
+          "arm": "metadata_informativeness",
+          "reason": "metadata informativeness fallback; no leakage-safe historical Agent disagreement available",
+          "score": 3.65,
+          "task_id": "attrs::attrs__v2__157"
+        },
+        {
+          "arm": "metadata_informativeness",
+          "reason": "metadata informativeness fallback; no leakage-safe historical Agent disagreement available",
+          "score": 3.5,
+          "task_id": "attrs::attrs__v2__187"
+        },
+        {
+          "arm": "metadata_informativeness",
+          "reason": "metadata informativeness fallback; no leakage-safe historical Agent disagreement available",
+          "score": 3.75,
+          "task_id": "attrs::attrs__v2__202"
+        },
+        {
+          "arm": "representative",
+          "reason": "representative arm",
+          "task_id": "attrs::attrs__v2__235"
+        },
+        {
+          "arm": "representative",
+          "reason": "representative arm",
+          "task_id": "attrs::attrs__v2__250"
+        },
+        {
+          "arm": "representative",
+          "reason": "representative arm",
+          "task_id": "attrs::attrs__v2__271"
+        },
+        {
+          "arm": "metadata_informativeness",
+          "reason": "metadata informativeness fallback; no leakage-safe historical Agent disagreement available",
+          "score": 1.932509,
+          "task_id": "boltons::boltons__v2__008"
+        },
+        {
+          "arm": "metadata_informativeness",
+          "reason": "metadata informativeness fallback; no leakage-safe historical Agent disagreement available",
+          "score": 1.932509,
+          "task_id": "boltons::boltons__v2__009"
+        },
+        {
+          "arm": "metadata_informativeness",
+          "reason": "metadata informativeness fallback; no leakage-safe historical Agent disagreement available",
+          "score": 1.957692,
+          "task_id": "boltons::boltons__v2__068"
+        },
+        {
+          "arm": "representative",
+          "reason": "representative arm",
+          "task_id": "boltons::boltons__v2__103"
+        },
+        {
+          "arm": "representative",
+          "reason": "representative arm",
+          "task_id": "boltons::boltons__v2__128"
+        },
+        {
+          "arm": "representative",
+          "reason": "representative arm",
+          "task_id": "boltons::boltons__v2__154"
+        },
+        {
+          "arm": "metadata_informativeness",
+          "reason": "metadata informativeness fallback; no leakage-safe historical Agent disagreement available",
+          "score": 2.788462,
+          "task_id": "click::click__third__202"
+        },
+        {
+          "arm": "metadata_informativeness",
+          "reason": "metadata informativeness fallback; no leakage-safe historical Agent disagreement available",
+          "score": 2.788462,
+          "task_id": "click::click__third__217"
+        },
+        {
+          "arm": "metadata_informativeness",
+          "reason": "metadata informativeness fallback; no leakage-safe historical Agent disagreement available",
+          "score": 2.788462,
+          "task_id": "click::click__third__220"
+        },
+        {
+          "arm": "representative",
+          "reason": "representative arm",
+          "task_id": "click::click__third__238"
+        },
+        {
+          "arm": "representative",
+          "reason": "representative arm",
+          "task_id": "click::click__third__250"
+        },
+        {
+          "arm": "representative",
+          "reason": "representative arm",
+          "task_id": "click::click__third__274"
+        }
+      ],
+      "selected_task_ids": [
+        "attrs::attrs__v2__157",
+        "attrs::attrs__v2__187",
+        "attrs::attrs__v2__202",
+        "attrs::attrs__v2__235",
+        "attrs::attrs__v2__250",
+        "attrs::attrs__v2__271",
+        "boltons::boltons__v2__008",
+        "boltons::boltons__v2__009",
+        "boltons::boltons__v2__068",
+        "boltons::boltons__v2__103",
+        "boltons::boltons__v2__128",
+        "boltons::boltons__v2__154",
+        "click::click__third__202",
+        "click::click__third__217",
+        "click::click__third__220",
+        "click::click__third__238",
+        "click::click__third__250",
+        "click::click__third__274"
+      ],
+      "selector_id": "hrd_v3_50_50"
+    },
+    "hrd_v3_60_40": {
+      "k_per_repo": 6,
+      "k_total": 18,
+      "per_repo": {
+        "attrs": {
+          "selected_count": 6,
+          "selected_task_ids": [
+            "attrs::attrs__v2__157",
+            "attrs::attrs__v2__187",
+            "attrs::attrs__v2__202",
+            "attrs::attrs__v2__235",
+            "attrs::attrs__v2__250",
+            "attrs::attrs__v2__271"
+          ]
+        },
+        "boltons": {
+          "selected_count": 6,
+          "selected_task_ids": [
+            "boltons::boltons__v2__009",
+            "boltons::boltons__v2__068",
+            "boltons::boltons__v2__076",
+            "boltons::boltons__v2__103",
+            "boltons::boltons__v2__128",
+            "boltons::boltons__v2__154"
+          ]
+        },
+        "click": {
+          "selected_count": 6,
+          "selected_task_ids": [
+            "click::click__third__202",
+            "click::click__third__217",
+            "click::click__third__220",
+            "click::click__third__238",
+            "click::click__third__250",
+            "click::click__third__274"
+          ]
+        }
+      },
+      "rationale": [
+        {
+          "arm": "representative",
+          "reason": "representative arm",
+          "task_id": "attrs::attrs__v2__157"
+        },
+        {
+          "arm": "metadata_informativeness",
+          "reason": "metadata informativeness fallback; no leakage-safe historical Agent disagreement available",
+          "score": 3.5,
+          "task_id": "attrs::attrs__v2__187"
+        },
+        {
+          "arm": "metadata_informativeness",
+          "reason": "metadata informativeness fallback; no leakage-safe historical Agent disagreement available",
+          "score": 3.75,
+          "task_id": "attrs::attrs__v2__202"
+        },
+        {
+          "arm": "representative",
+          "reason": "representative arm",
+          "task_id": "attrs::attrs__v2__235"
+        },
+        {
+          "arm": "representative",
+          "reason": "representative arm",
+          "task_id": "attrs::attrs__v2__250"
+        },
+        {
+          "arm": "representative",
+          "reason": "representative arm",
+          "task_id": "attrs::attrs__v2__271"
+        },
+        {
+          "arm": "metadata_informativeness",
+          "reason": "metadata informativeness fallback; no leakage-safe historical Agent disagreement available",
+          "score": 1.932509,
+          "task_id": "boltons::boltons__v2__009"
+        },
+        {
+          "arm": "metadata_informativeness",
+          "reason": "metadata informativeness fallback; no leakage-safe historical Agent disagreement available",
+          "score": 1.957692,
+          "task_id": "boltons::boltons__v2__068"
+        },
+        {
+          "arm": "representative",
+          "reason": "representative arm",
+          "task_id": "boltons::boltons__v2__076"
+        },
+        {
+          "arm": "representative",
+          "reason": "representative arm",
+          "task_id": "boltons::boltons__v2__103"
+        },
+        {
+          "arm": "representative",
+          "reason": "representative arm",
+          "task_id": "boltons::boltons__v2__128"
+        },
+        {
+          "arm": "representative",
+          "reason": "representative arm",
+          "task_id": "boltons::boltons__v2__154"
+        },
+        {
+          "arm": "metadata_informativeness",
+          "reason": "metadata informativeness fallback; no leakage-safe historical Agent disagreement available",
+          "score": 2.788462,
+          "task_id": "click::click__third__202"
+        },
+        {
+          "arm": "metadata_informativeness",
+          "reason": "metadata informativeness fallback; no leakage-safe historical Agent disagreement available",
+          "score": 2.788462,
+          "task_id": "click::click__third__217"
+        },
+        {
+          "arm": "representative",
+          "reason": "representative arm",
+          "task_id": "click::click__third__220"
+        },
+        {
+          "arm": "representative",
+          "reason": "representative arm",
+          "task_id": "click::click__third__238"
+        },
+        {
+          "arm": "representative",
+          "reason": "representative arm",
+          "task_id": "click::click__third__250"
+        },
+        {
+          "arm": "representative",
+          "reason": "representative arm",
+          "task_id": "click::click__third__274"
+        }
+      ],
+      "selected_task_ids": [
+        "attrs::attrs__v2__157",
+        "attrs::attrs__v2__187",
+        "attrs::attrs__v2__202",
+        "attrs::attrs__v2__235",
+        "attrs::attrs__v2__250",
+        "attrs::attrs__v2__271",
+        "boltons::boltons__v2__009",
+        "boltons::boltons__v2__068",
+        "boltons::boltons__v2__076",
+        "boltons::boltons__v2__103",
+        "boltons::boltons__v2__128",
+        "boltons::boltons__v2__154",
+        "click::click__third__202",
+        "click::click__third__217",
+        "click::click__third__220",
+        "click::click__third__238",
+        "click::click__third__250",
+        "click::click__third__274"
+      ],
+      "selector_id": "hrd_v3_60_40"
+    },
+    "hrd_v3_70_30": {
+      "k_per_repo": 6,
+      "k_total": 18,
+      "per_repo": {
+        "attrs": {
+          "selected_count": 6,
+          "selected_task_ids": [
+            "attrs::attrs__v2__157",
+            "attrs::attrs__v2__202",
+            "attrs::attrs__v2__215",
+            "attrs::attrs__v2__235",
+            "attrs::attrs__v2__250",
+            "attrs::attrs__v2__271"
+          ]
+        },
+        "boltons": {
+          "selected_count": 6,
+          "selected_task_ids": [
+            "boltons::boltons__v2__068",
+            "boltons::boltons__v2__076",
+            "boltons::boltons__v2__103",
+            "boltons::boltons__v2__128",
+            "boltons::boltons__v2__154",
+            "boltons::boltons__v2__231"
+          ]
+        },
+        "click": {
+          "selected_count": 6,
+          "selected_task_ids": [
+            "click::click__third__202",
+            "click::click__third__217",
+            "click::click__third__220",
+            "click::click__third__238",
+            "click::click__third__250",
+            "click::click__third__274"
+          ]
+        }
+      },
+      "rationale": [
+        {
+          "arm": "representative",
+          "reason": "representative arm",
+          "task_id": "attrs::attrs__v2__157"
+        },
+        {
+          "arm": "metadata_informativeness",
+          "reason": "metadata informativeness fallback; no leakage-safe historical Agent disagreement available",
+          "score": 3.75,
+          "task_id": "attrs::attrs__v2__202"
+        },
+        {
+          "arm": "representative",
+          "reason": "representative arm",
+          "task_id": "attrs::attrs__v2__215"
+        },
+        {
+          "arm": "representative",
+          "reason": "representative arm",
+          "task_id": "attrs::attrs__v2__235"
+        },
+        {
+          "arm": "representative",
+          "reason": "representative arm",
+          "task_id": "attrs::attrs__v2__250"
+        },
+        {
+          "arm": "representative",
+          "reason": "representative arm",
+          "task_id": "attrs::attrs__v2__271"
+        },
+        {
+          "arm": "metadata_informativeness",
+          "reason": "metadata informativeness fallback; no leakage-safe historical Agent disagreement available",
+          "score": 1.957692,
+          "task_id": "boltons::boltons__v2__068"
+        },
+        {
+          "arm": "representative",
+          "reason": "representative arm",
+          "task_id": "boltons::boltons__v2__076"
+        },
+        {
+          "arm": "representative",
+          "reason": "representative arm",
+          "task_id": "boltons::boltons__v2__103"
+        },
+        {
+          "arm": "representative",
+          "reason": "representative arm",
+          "task_id": "boltons::boltons__v2__128"
+        },
+        {
+          "arm": "representative",
+          "reason": "representative arm",
+          "task_id": "boltons::boltons__v2__154"
+        },
+        {
+          "arm": "representative",
+          "reason": "representative arm",
+          "task_id": "boltons::boltons__v2__231"
+        },
+        {
+          "arm": "metadata_informativeness",
+          "reason": "metadata informativeness fallback; no leakage-safe historical Agent disagreement available",
+          "score": 2.788462,
+          "task_id": "click::click__third__202"
+        },
+        {
+          "arm": "representative",
+          "reason": "representative arm",
+          "task_id": "click::click__third__217"
+        },
+        {
+          "arm": "representative",
+          "reason": "representative arm",
+          "task_id": "click::click__third__220"
+        },
+        {
+          "arm": "representative",
+          "reason": "representative arm",
+          "task_id": "click::click__third__238"
+        },
+        {
+          "arm": "representative",
+          "reason": "representative arm",
+          "task_id": "click::click__third__250"
+        },
+        {
+          "arm": "representative",
+          "reason": "representative arm",
+          "task_id": "click::click__third__274"
+        }
+      ],
+      "selected_task_ids": [
+        "attrs::attrs__v2__157",
+        "attrs::attrs__v2__202",
+        "attrs::attrs__v2__215",
+        "attrs::attrs__v2__235",
+        "attrs::attrs__v2__250",
+        "attrs::attrs__v2__271",
+        "boltons::boltons__v2__068",
+        "boltons::boltons__v2__076",
+        "boltons::boltons__v2__103",
+        "boltons::boltons__v2__128",
+        "boltons::boltons__v2__154",
+        "boltons::boltons__v2__231",
+        "click::click__third__202",
+        "click::click__third__217",
+        "click::click__third__220",
+        "click::click__third__238",
+        "click::click__third__250",
+        "click::click__third__274"
+      ],
+      "selector_id": "hrd_v3_70_30"
+    },
+    "ro_lsp": {
+      "k_per_repo": 6,
+      "k_total": 18,
+      "per_repo": {
+        "attrs": {
+          "selected_count": 6,
+          "selected_task_ids": [
+            "attrs::attrs__v2__157",
+            "attrs::attrs__v2__187",
+            "attrs::attrs__v2__202",
+            "attrs::attrs__v2__235",
+            "attrs::attrs__v2__250",
+            "attrs::attrs__v2__271"
+          ]
+        },
+        "boltons": {
+          "selected_count": 6,
+          "selected_task_ids": [
+            "boltons::boltons__v2__068",
+            "boltons::boltons__v2__076",
+            "boltons::boltons__v2__103",
+            "boltons::boltons__v2__128",
+            "boltons::boltons__v2__147",
+            "boltons::boltons__v2__231"
+          ]
+        },
+        "click": {
+          "selected_count": 6,
+          "selected_task_ids": [
+            "click::click__third__201",
+            "click::click__third__202",
+            "click::click__third__217",
+            "click::click__third__220",
+            "click::click__third__250",
+            "click::click__third__274"
+          ]
+        }
+      },
+      "rationale": [
+        {
+          "reason": "low-capacity learned scoring policy",
+          "score": 0.661672,
+          "task_id": "attrs::attrs__v2__157",
+          "top_features": {
+            "metadata_informativeness": 0.9495145572249969,
+            "middle_difficulty": 1.0,
+            "module_rarity": 0.0,
+            "quality": 1.0,
+            "recency": 0.5121208701746145,
+            "source_rarity": 0.0
+          }
+        },
+        {
+          "reason": "low-capacity learned scoring policy",
+          "score": 0.659374,
+          "task_id": "attrs::attrs__v2__187",
+          "top_features": {
+            "metadata_informativeness": 0.8737863930624924,
+            "middle_difficulty": 1.0,
+            "module_rarity": 0.0,
+            "quality": 1.0,
+            "recency": 0.6482516479633237,
+            "source_rarity": 0.0
+          }
+        },
+        {
+          "reason": "low-capacity learned scoring policy",
+          "score": 0.714922,
+          "task_id": "attrs::attrs__v2__202",
+          "top_features": {
+            "metadata_informativeness": 1.0,
+            "middle_difficulty": 1.0,
+            "module_rarity": 0.0,
+            "quality": 1.0,
+            "recency": 0.7661434971213791,
+            "source_rarity": 0.0
+          }
+        },
+        {
+          "reason": "low-capacity learned scoring policy",
+          "score": 0.601599,
+          "task_id": "attrs::attrs__v2__235",
+          "top_features": {
+            "metadata_informativeness": 0.17475737958338405,
+            "middle_difficulty": 1.0,
+            "module_rarity": 0.8,
+            "quality": 1.0,
+            "recency": 0.861143031898291,
+            "source_rarity": 0.0
+          }
+        },
+        {
+          "reason": "low-capacity learned scoring policy",
+          "score": 0.698619,
+          "task_id": "attrs::attrs__v2__250",
+          "top_features": {
+            "metadata_informativeness": 0.8737863930624924,
+            "middle_difficulty": 1.0,
+            "module_rarity": 0.0,
+            "quality": 1.0,
+            "recency": 0.9098885708819842,
+            "source_rarity": 0.0
+          }
+        },
+        {
+          "reason": "low-capacity learned scoring policy",
+          "score": 0.712136,
+          "task_id": "attrs::attrs__v2__271",
+          "top_features": {
+            "metadata_informativeness": 0.8737863930624924,
+            "middle_difficulty": 1.0,
+            "module_rarity": 0.0,
+            "quality": 1.0,
+            "recency": 1.0,
+            "source_rarity": 0.0
+          }
+        },
+        {
+          "reason": "low-capacity learned scoring policy",
+          "score": 0.802219,
+          "task_id": "boltons::boltons__v2__068",
+          "top_features": {
+            "metadata_informativeness": 0.8383159694245738,
+            "middle_difficulty": 1.0,
+            "module_rarity": 1.0,
+            "quality": 1.0,
+            "recency": 0.10006555645837568,
+            "source_rarity": 0.8571428571428572
+          }
+        },
+        {
+          "reason": "low-capacity learned scoring policy",
+          "score": 0.609136,
+          "task_id": "boltons::boltons__v2__076",
+          "top_features": {
+            "metadata_informativeness": 0.47966145632632473,
+            "middle_difficulty": 1.0,
+            "module_rarity": 1.0,
+            "quality": 1.0,
+            "recency": 0.1015836758480027,
+            "source_rarity": 0.0
+          }
+        },
+        {
+          "reason": "low-capacity learned scoring policy",
+          "score": 0.860282,
+          "task_id": "boltons::boltons__v2__103",
+          "top_features": {
+            "metadata_informativeness": 1.0,
+            "middle_difficulty": 1.0,
+            "module_rarity": 1.0,
+            "quality": 1.0,
+            "recency": 0.16378506517759223,
+            "source_rarity": 0.8571428571428572
+          }
+        },
+        {
+          "reason": "low-capacity learned scoring policy",
+          "score": 0.710349,
+          "task_id": "boltons::boltons__v2__128",
+          "top_features": {
+            "metadata_informativeness": 0.749134373533059,
+            "middle_difficulty": 1.0,
+            "module_rarity": 1.0,
+            "quality": 1.0,
+            "recency": 0.2373930954021688,
+            "source_rarity": 0.0
+          }
+        },
+        {
+          "reason": "low-capacity learned scoring policy",
+          "score": 0.679948,
+          "task_id": "boltons::boltons__v2__147",
+          "top_features": {
+            "metadata_informativeness": 0.5928395771006593,
+            "middle_difficulty": 1.0,
+            "module_rarity": 1.0,
+            "quality": 1.0,
+            "recency": 0.3473085047336456,
+            "source_rarity": 0.0
+          }
+        },
+        {
+          "reason": "low-capacity learned scoring policy",
+          "score": 0.680842,
+          "task_id": "boltons::boltons__v2__231",
+          "top_features": {
+            "metadata_informativeness": 0.26947291720673444,
+            "middle_difficulty": 1.0,
+            "module_rarity": 1.0,
+            "quality": 1.0,
+            "recency": 1.0,
+            "source_rarity": 0.0
+          }
+        },
+        {
+          "reason": "low-capacity learned scoring policy",
+          "score": 0.646934,
+          "task_id": "click::click__third__201",
+          "top_features": {
+            "metadata_informativeness": 1.0,
+            "middle_difficulty": 0.75,
+            "module_rarity": 0.0,
+            "quality": 1.0,
+            "recency": 0.7295599336145485,
+            "source_rarity": 0.0
+          }
+        },
+        {
+          "reason": "low-capacity learned scoring policy",
+          "score": 0.646935,
+          "task_id": "click::click__third__202",
+          "top_features": {
+            "metadata_informativeness": 1.0,
+            "middle_difficulty": 0.75,
+            "module_rarity": 0.0,
+            "quality": 1.0,
+            "recency": 0.7295648439517904,
+            "source_rarity": 0.0
+          }
+        },
+        {
+          "reason": "low-capacity learned scoring policy",
+          "score": 0.650623,
+          "task_id": "click::click__third__217",
+          "top_features": {
+            "metadata_informativeness": 1.0,
+            "middle_difficulty": 0.75,
+            "module_rarity": 0.0,
+            "quality": 1.0,
+            "recency": 0.7541560090422216,
+            "source_rarity": 0.0
+          }
+        },
+        {
+          "reason": "low-capacity learned scoring policy",
+          "score": 0.652177,
+          "task_id": "click::click__third__220",
+          "top_features": {
+            "metadata_informativeness": 1.0,
+            "middle_difficulty": 0.75,
+            "module_rarity": 0.0,
+            "quality": 1.0,
+            "recency": 0.7645123834319982,
+            "source_rarity": 0.0
+          }
+        },
+        {
+          "reason": "low-capacity learned scoring policy",
+          "score": 0.672219,
+          "task_id": "click::click__third__250",
+          "top_features": {
+            "metadata_informativeness": 1.0,
+            "middle_difficulty": 0.75,
+            "module_rarity": 0.0,
+            "quality": 1.0,
+            "recency": 0.8981273970206497,
+            "source_rarity": 0.0
+          }
+        },
+        {
+          "reason": "low-capacity learned scoring policy",
+          "score": 0.5125,
+          "task_id": "click::click__third__274",
+          "top_features": {
+            "metadata_informativeness": 0.16666681111100523,
+            "middle_difficulty": 0.75,
+            "module_rarity": 0.5,
+            "quality": 1.0,
+            "recency": 1.0,
+            "source_rarity": 0.0
+          }
+        }
+      ],
+      "selected_task_ids": [
+        "attrs::attrs__v2__157",
+        "attrs::attrs__v2__187",
+        "attrs::attrs__v2__202",
+        "attrs::attrs__v2__235",
+        "attrs::attrs__v2__250",
+        "attrs::attrs__v2__271",
+        "boltons::boltons__v2__068",
+        "boltons::boltons__v2__076",
+        "boltons::boltons__v2__103",
+        "boltons::boltons__v2__128",
+        "boltons::boltons__v2__147",
+        "boltons::boltons__v2__231",
+        "click::click__third__201",
+        "click::click__third__202",
+        "click::click__third__217",
+        "click::click__third__220",
+        "click::click__third__250",
+        "click::click__third__274"
+      ],
+      "selector_id": "ro_lsp"
+    },
+    "rsq_v2": {
+      "k_per_repo": 6,
+      "k_total": 18,
+      "per_repo": {
+        "attrs": {
+          "selected_count": 6,
+          "selected_task_ids": [
+            "attrs::attrs__v2__157",
+            "attrs::attrs__v2__207",
+            "attrs::attrs__v2__215",
+            "attrs::attrs__v2__235",
+            "attrs::attrs__v2__250",
+            "attrs::attrs__v2__271"
+          ]
+        },
+        "boltons": {
+          "selected_count": 6,
+          "selected_task_ids": [
+            "boltons::boltons__v2__009",
+            "boltons::boltons__v2__076",
+            "boltons::boltons__v2__103",
+            "boltons::boltons__v2__128",
+            "boltons::boltons__v2__154",
+            "boltons::boltons__v2__231"
+          ]
+        },
+        "click": {
+          "selected_count": 6,
+          "selected_task_ids": [
+            "click::click__third__091",
+            "click::click__third__217",
+            "click::click__third__220",
+            "click::click__third__238",
+            "click::click__third__250",
+            "click::click__third__274"
+          ]
+        }
+      },
+      "rationale": [
+        {
+          "quota_key": "attrs|repo_history_v2_pr_issue_with_tests|legacy_2018_or_earlier",
+          "reason": "repo/source/recency quota with quality gate and caps",
+          "task_id": "attrs::attrs__v2__157"
+        },
+        {
+          "quota_key": "attrs|repo_history_v2_pr_issue_with_tests|middle_2019_2022",
+          "reason": "repo/source/recency quota with quality gate and caps",
+          "task_id": "attrs::attrs__v2__207"
+        },
+        {
+          "quota_key": "attrs|repo_history_v2_pr_issue_with_tests|middle_2019_2022",
+          "reason": "repo/source/recency quota with quality gate and caps",
+          "task_id": "attrs::attrs__v2__215"
+        },
+        {
+          "quota_key": "attrs|repo_history_v2_pr_issue_with_tests|middle_2019_2022",
+          "reason": "repo/source/recency quota with quality gate and caps",
+          "task_id": "attrs::attrs__v2__235"
+        },
+        {
+          "quota_key": "attrs|repo_history_v2_pr_issue_with_tests|middle_2019_2022",
+          "reason": "repo/source/recency quota with quality gate and caps",
+          "task_id": "attrs::attrs__v2__250"
+        },
+        {
+          "quota_key": "attrs|repo_history_v2_pr_issue_with_tests|middle_2019_2022",
+          "reason": "repo/source/recency quota with quality gate and caps",
+          "task_id": "attrs::attrs__v2__271"
+        },
+        {
+          "quota_key": "boltons|repo_history_v2_commit_with_tests|legacy_2018_or_earlier",
+          "reason": "repo/source/recency quota with quality gate and caps",
+          "task_id": "boltons::boltons__v2__009"
+        },
+        {
+          "quota_key": "boltons|repo_history_v2_commit_with_tests|legacy_2018_or_earlier",
+          "reason": "repo/source/recency quota with quality gate and caps",
+          "task_id": "boltons::boltons__v2__076"
+        },
+        {
+          "quota_key": "boltons|repo_history_v2_pr_issue_with_tests|legacy_2018_or_earlier",
+          "reason": "repo/source/recency quota with quality gate and caps",
+          "task_id": "boltons::boltons__v2__103"
+        },
+        {
+          "quota_key": "boltons|repo_history_v2_commit_with_tests|legacy_2018_or_earlier",
+          "reason": "repo/source/recency quota with quality gate and caps",
+          "task_id": "boltons::boltons__v2__128"
+        },
+        {
+          "quota_key": "boltons|repo_history_v2_commit_with_tests|middle_2019_2022",
+          "reason": "repo/source/recency quota with quality gate and caps",
+          "task_id": "boltons::boltons__v2__154"
+        },
+        {
+          "quota_key": "boltons|repo_history_v2_commit_with_tests|recent_2023_or_later",
+          "reason": "repo/source/recency quota with quality gate and caps",
+          "task_id": "boltons::boltons__v2__231"
+        },
+        {
+          "quota_key": "click|repo_history_v2_pr_issue_with_tests|middle_2019_2022",
+          "reason": "repo/source/recency quota with quality gate and caps",
+          "task_id": "click::click__third__091"
+        },
+        {
+          "quota_key": "click|repo_history_v2_pr_issue_with_tests|recent_2023_or_later",
+          "reason": "repo/source/recency quota with quality gate and caps",
+          "task_id": "click::click__third__217"
+        },
+        {
+          "quota_key": "click|repo_history_v2_pr_issue_with_tests|recent_2023_or_later",
+          "reason": "repo/source/recency quota with quality gate and caps",
+          "task_id": "click::click__third__220"
+        },
+        {
+          "quota_key": "click|repo_history_v2_pr_issue_with_tests|recent_2023_or_later",
+          "reason": "repo/source/recency quota with quality gate and caps",
+          "task_id": "click::click__third__238"
+        },
+        {
+          "quota_key": "click|repo_history_v2_pr_issue_with_tests|recent_2023_or_later",
+          "reason": "repo/source/recency quota with quality gate and caps",
+          "task_id": "click::click__third__250"
+        },
+        {
+          "quota_key": "click|repo_history_v2_pr_issue_with_tests|recent_2023_or_later",
+          "reason": "repo/source/recency quota with quality gate and caps",
+          "task_id": "click::click__third__274"
+        }
+      ],
+      "selected_task_ids": [
+        "attrs::attrs__v2__157",
+        "attrs::attrs__v2__207",
+        "attrs::attrs__v2__215",
+        "attrs::attrs__v2__235",
+        "attrs::attrs__v2__250",
+        "attrs::attrs__v2__271",
+        "boltons::boltons__v2__009",
+        "boltons::boltons__v2__076",
+        "boltons::boltons__v2__103",
+        "boltons::boltons__v2__128",
+        "boltons::boltons__v2__154",
+        "boltons::boltons__v2__231",
+        "click::click__third__091",
+        "click::click__third__217",
+        "click::click__third__220",
+        "click::click__third__238",
+        "click::click__third__250",
+        "click::click__third__274"
+      ],
+      "selector_id": "rsq_v2"
+    },
+    "saes_lite": {
+      "k_per_repo": 6,
+      "k_total": 18,
+      "per_repo": {
+        "attrs": {
+          "selected_count": 6,
+          "selected_task_ids": [
+            "attrs::attrs__v2__044",
+            "attrs::attrs__v2__157",
+            "attrs::attrs__v2__187",
+            "attrs::attrs__v2__202",
+            "attrs::attrs__v2__215",
+            "attrs::attrs__v2__250"
+          ]
+        },
+        "boltons": {
+          "selected_count": 6,
+          "selected_task_ids": [
+            "boltons::boltons__v2__007",
+            "boltons::boltons__v2__008",
+            "boltons::boltons__v2__068",
+            "boltons::boltons__v2__103",
+            "boltons::boltons__v2__147",
+            "boltons::boltons__v2__231"
+          ]
+        },
+        "click": {
+          "selected_count": 6,
+          "selected_task_ids": [
+            "click::click__third__091",
+            "click::click__third__166",
+            "click::click__third__201",
+            "click::click__third__202",
+            "click::click__third__206",
+            "click::click__third__217"
+          ]
+        }
+      },
+      "rationale": [
+        {
+          "batch": "seed",
+          "reason": "SAES representative seed batch",
+          "task_id": "attrs::attrs__v2__044"
+        },
+        {
+          "batch": "seed",
+          "reason": "SAES representative seed batch",
+          "task_id": "attrs::attrs__v2__157"
+        },
+        {
+          "batch": "seed",
+          "reason": "SAES representative seed batch",
+          "task_id": "attrs::attrs__v2__187"
+        },
+        {
+          "batch": "second",
+          "reason": "SAES adaptive informative second batch",
+          "task_id": "attrs::attrs__v2__202"
+        },
+        {
+          "batch": "seed",
+          "reason": "SAES representative seed batch",
+          "task_id": "attrs::attrs__v2__215"
+        },
+        {
+          "batch": "second",
+          "reason": "SAES adaptive informative second batch",
+          "task_id": "attrs::attrs__v2__250"
+        },
+        {
+          "batch": "seed",
+          "reason": "SAES representative seed batch",
+          "task_id": "boltons::boltons__v2__007"
+        },
+        {
+          "batch": "second",
+          "reason": "SAES adaptive informative second batch",
+          "task_id": "boltons::boltons__v2__008"
+        },
+        {
+          "batch": "seed",
+          "reason": "SAES representative seed batch",
+          "task_id": "boltons::boltons__v2__068"
+        },
+        {
+          "batch": "second",
+          "reason": "SAES adaptive informative second batch",
+          "task_id": "boltons::boltons__v2__103"
+        },
+        {
+          "batch": "seed",
+          "reason": "SAES representative seed batch",
+          "task_id": "boltons::boltons__v2__147"
+        },
+        {
+          "batch": "seed",
+          "reason": "SAES representative seed batch",
+          "task_id": "boltons::boltons__v2__231"
+        },
+        {
+          "batch": "seed",
+          "reason": "SAES representative seed batch",
+          "task_id": "click::click__third__091"
+        },
+        {
+          "batch": "seed",
+          "reason": "SAES representative seed batch",
+          "task_id": "click::click__third__166"
+        },
+        {
+          "batch": "seed",
+          "reason": "SAES representative seed batch",
+          "task_id": "click::click__third__201"
+        },
+        {
+          "batch": "second",
+          "reason": "SAES adaptive informative second batch",
+          "task_id": "click::click__third__202"
+        },
+        {
+          "batch": "seed",
+          "reason": "SAES representative seed batch",
+          "task_id": "click::click__third__206"
+        },
+        {
+          "batch": "second",
+          "reason": "SAES adaptive informative second batch",
+          "task_id": "click::click__third__217"
+        }
+      ],
+      "selected_task_ids": [
+        "attrs::attrs__v2__044",
+        "attrs::attrs__v2__157",
+        "attrs::attrs__v2__187",
+        "attrs::attrs__v2__202",
+        "attrs::attrs__v2__215",
+        "attrs::attrs__v2__250",
+        "boltons::boltons__v2__007",
+        "boltons::boltons__v2__008",
+        "boltons::boltons__v2__068",
+        "boltons::boltons__v2__103",
+        "boltons::boltons__v2__147",
+        "boltons::boltons__v2__231",
+        "click::click__third__091",
+        "click::click__third__166",
+        "click::click__third__201",
+        "click::click__third__202",
+        "click::click__third__206",
+        "click::click__third__217"
+      ],
+      "selector_id": "saes_lite"
+    }
+  },
+  "example_source_id": "phase1_blocked_split_heldout_development",
+  "feature_manifest": "experiments/agent_selection_demo/results/selector_bakeoff_feature_manifest.json",
+  "generated_at": "2026-06-14",
+  "paid_agent_calls_made": false,
+  "random_baseline_examples": {
+    "module_stratified_random": {
+      "rationale": [
+        {
+          "reason": "module_stratified_random",
+          "seed": 17,
+          "task_id": "attrs::attrs__v2__157"
+        },
+        {
+          "reason": "module_stratified_random",
+          "seed": 17,
+          "task_id": "attrs::attrs__v2__187"
+        },
+        {
+          "reason": "module_stratified_random",
+          "seed": 17,
+          "task_id": "attrs::attrs__v2__207"
+        },
+        {
+          "reason": "module_stratified_random",
+          "seed": 17,
+          "task_id": "attrs::attrs__v2__215"
+        },
+        {
+          "reason": "module_stratified_random",
+          "seed": 17,
+          "task_id": "attrs::attrs__v2__235"
+        },
+        {
+          "reason": "module_stratified_random",
+          "seed": 17,
+          "task_id": "boltons::boltons__v2__008"
+        },
+        {
+          "reason": "module_stratified_random",
+          "seed": 17,
+          "task_id": "boltons::boltons__v2__068"
+        },
+        {
+          "reason": "module_stratified_random",
+          "seed": 17,
+          "task_id": "boltons::boltons__v2__076"
+        },
+        {
+          "reason": "module_stratified_random",
+          "seed": 17,
+          "task_id": "boltons::boltons__v2__103"
+        },
+        {
+          "reason": "module_stratified_random",
+          "seed": 17,
+          "task_id": "boltons::boltons__v2__128"
+        },
+        {
+          "reason": "module_stratified_random",
+          "seed": 17,
+          "task_id": "boltons::boltons__v2__147"
+        },
+        {
+          "reason": "module_stratified_random",
+          "seed": 17,
+          "task_id": "boltons::boltons__v2__154"
+        },
+        {
+          "reason": "module_stratified_random",
+          "seed": 17,
+          "task_id": "boltons::boltons__v2__231"
+        },
+        {
+          "reason": "module_stratified_random",
+          "seed": 17,
+          "task_id": "click::click__third__091"
+        },
+        {
+          "reason": "module_stratified_random",
+          "seed": 17,
+          "task_id": "click::click__third__202"
+        },
+        {
+          "reason": "module_stratified_random",
+          "seed": 17,
+          "task_id": "click::click__third__206"
+        },
+        {
+          "reason": "module_stratified_random",
+          "seed": 17,
+          "task_id": "click::click__third__250"
+        },
+        {
+          "reason": "module_stratified_random",
+          "seed": 17,
+          "task_id": "click::click__third__274"
+        }
+      ],
+      "seed": 17,
+      "selected_count": 18,
+      "selected_task_ids": [
+        "attrs::attrs__v2__157",
+        "attrs::attrs__v2__187",
+        "attrs::attrs__v2__207",
+        "attrs::attrs__v2__215",
+        "attrs::attrs__v2__235",
+        "boltons::boltons__v2__008",
+        "boltons::boltons__v2__068",
+        "boltons::boltons__v2__076",
+        "boltons::boltons__v2__103",
+        "boltons::boltons__v2__128",
+        "boltons::boltons__v2__147",
+        "boltons::boltons__v2__154",
+        "boltons::boltons__v2__231",
+        "click::click__third__091",
+        "click::click__third__202",
+        "click::click__third__206",
+        "click::click__third__250",
+        "click::click__third__274"
+      ],
+      "selector_id": "module_stratified_random"
+    },
+    "quality_filtered_random": {
+      "rationale": [
+        {
+          "reason": "quality_filtered_random",
+          "seed": 17,
+          "task_id": "attrs::attrs__v2__044"
+        },
+        {
+          "reason": "quality_filtered_random",
+          "seed": 17,
+          "task_id": "attrs::attrs__v2__202"
+        },
+        {
+          "reason": "quality_filtered_random",
+          "seed": 17,
+          "task_id": "attrs::attrs__v2__207"
+        },
+        {
+          "reason": "quality_filtered_random",
+          "seed": 17,
+          "task_id": "attrs::attrs__v2__215"
+        },
+        {
+          "reason": "quality_filtered_random",
+          "seed": 17,
+          "task_id": "attrs::attrs__v2__250"
+        },
+        {
+          "reason": "quality_filtered_random",
+          "seed": 17,
+          "task_id": "attrs::attrs__v2__271"
+        },
+        {
+          "reason": "quality_filtered_random",
+          "seed": 17,
+          "task_id": "boltons::boltons__v2__007"
+        },
+        {
+          "reason": "quality_filtered_random",
+          "seed": 17,
+          "task_id": "boltons::boltons__v2__009"
+        },
+        {
+          "reason": "quality_filtered_random",
+          "seed": 17,
+          "task_id": "boltons::boltons__v2__068"
+        },
+        {
+          "reason": "quality_filtered_random",
+          "seed": 17,
+          "task_id": "boltons::boltons__v2__076"
+        },
+        {
+          "reason": "quality_filtered_random",
+          "seed": 17,
+          "task_id": "boltons::boltons__v2__128"
+        },
+        {
+          "reason": "quality_filtered_random",
+          "seed": 17,
+          "task_id": "boltons::boltons__v2__147"
+        },
+        {
+          "reason": "quality_filtered_random",
+          "seed": 17,
+          "task_id": "boltons::boltons__v2__154"
+        },
+        {
+          "reason": "quality_filtered_random",
+          "seed": 17,
+          "task_id": "click::click__third__166"
+        },
+        {
+          "reason": "quality_filtered_random",
+          "seed": 17,
+          "task_id": "click::click__third__202"
+        },
+        {
+          "reason": "quality_filtered_random",
+          "seed": 17,
+          "task_id": "click::click__third__220"
+        },
+        {
+          "reason": "quality_filtered_random",
+          "seed": 17,
+          "task_id": "click::click__third__238"
+        },
+        {
+          "reason": "quality_filtered_random",
+          "seed": 17,
+          "task_id": "click::click__third__250"
+        }
+      ],
+      "seed": 17,
+      "selected_count": 18,
+      "selected_task_ids": [
+        "attrs::attrs__v2__044",
+        "attrs::attrs__v2__202",
+        "attrs::attrs__v2__207",
+        "attrs::attrs__v2__215",
+        "attrs::attrs__v2__250",
+        "attrs::attrs__v2__271",
+        "boltons::boltons__v2__007",
+        "boltons::boltons__v2__009",
+        "boltons::boltons__v2__068",
+        "boltons::boltons__v2__076",
+        "boltons::boltons__v2__128",
+        "boltons::boltons__v2__147",
+        "boltons::boltons__v2__154",
+        "click::click__third__166",
+        "click::click__third__202",
+        "click::click__third__220",
+        "click::click__third__238",
+        "click::click__third__250"
+      ],
+      "selector_id": "quality_filtered_random"
+    },
+    "source_recency_stratified_random": {
+      "rationale": [
+        {
+          "reason": "source_recency_stratified_random",
+          "seed": 17,
+          "task_id": "attrs::attrs__v2__187"
+        },
+        {
+          "reason": "source_recency_stratified_random",
+          "seed": 17,
+          "task_id": "attrs::attrs__v2__202"
+        },
+        {
+          "reason": "source_recency_stratified_random",
+          "seed": 17,
+          "task_id": "attrs::attrs__v2__215"
+        },
+        {
+          "reason": "source_recency_stratified_random",
+          "seed": 17,
+          "task_id": "attrs::attrs__v2__235"
+        },
+        {
+          "reason": "source_recency_stratified_random",
+          "seed": 17,
+          "task_id": "boltons::boltons__v2__007"
+        },
+        {
+          "reason": "source_recency_stratified_random",
+          "seed": 17,
+          "task_id": "boltons::boltons__v2__008"
+        },
+        {
+          "reason": "source_recency_stratified_random",
+          "seed": 17,
+          "task_id": "boltons::boltons__v2__009"
+        },
+        {
+          "reason": "source_recency_stratified_random",
+          "seed": 17,
+          "task_id": "boltons::boltons__v2__068"
+        },
+        {
+          "reason": "source_recency_stratified_random",
+          "seed": 17,
+          "task_id": "boltons::boltons__v2__076"
+        },
+        {
+          "reason": "source_recency_stratified_random",
+          "seed": 17,
+          "task_id": "boltons::boltons__v2__103"
+        },
+        {
+          "reason": "source_recency_stratified_random",
+          "seed": 17,
+          "task_id": "boltons::boltons__v2__154"
+        },
+        {
+          "reason": "source_recency_stratified_random",
+          "seed": 17,
+          "task_id": "boltons::boltons__v2__231"
+        },
+        {
+          "reason": "source_recency_stratified_random",
+          "seed": 17,
+          "task_id": "click::click__third__091"
+        },
+        {
+          "reason": "source_recency_stratified_random",
+          "seed": 17,
+          "task_id": "click::click__third__206"
+        },
+        {
+          "reason": "source_recency_stratified_random",
+          "seed": 17,
+          "task_id": "click::click__third__217"
+        },
+        {
+          "reason": "source_recency_stratified_random",
+          "seed": 17,
+          "task_id": "click::click__third__220"
+        },
+        {
+          "reason": "source_recency_stratified_random",
+          "seed": 17,
+          "task_id": "click::click__third__238"
+        },
+        {
+          "reason": "source_recency_stratified_random",
+          "seed": 17,
+          "task_id": "click::click__third__250"
+        }
+      ],
+      "seed": 17,
+      "selected_count": 18,
+      "selected_task_ids": [
+        "attrs::attrs__v2__187",
+        "attrs::attrs__v2__202",
+        "attrs::attrs__v2__215",
+        "attrs::attrs__v2__235",
+        "boltons::boltons__v2__007",
+        "boltons::boltons__v2__008",
+        "boltons::boltons__v2__009",
+        "boltons::boltons__v2__068",
+        "boltons::boltons__v2__076",
+        "boltons::boltons__v2__103",
+        "boltons::boltons__v2__154",
+        "boltons::boltons__v2__231",
+        "click::click__third__091",
+        "click::click__third__206",
+        "click::click__third__217",
+        "click::click__third__220",
+        "click::click__third__238",
+        "click::click__third__250"
+      ],
+      "selector_id": "source_recency_stratified_random"
+    },
+    "uniform_random_same_budget": {
+      "rationale": [
+        {
+          "reason": "uniform_random_same_budget",
+          "seed": 17,
+          "task_id": "attrs::attrs__v2__044"
+        },
+        {
+          "reason": "uniform_random_same_budget",
+          "seed": 17,
+          "task_id": "attrs::attrs__v2__202"
+        },
+        {
+          "reason": "uniform_random_same_budget",
+          "seed": 17,
+          "task_id": "attrs::attrs__v2__207"
+        },
+        {
+          "reason": "uniform_random_same_budget",
+          "seed": 17,
+          "task_id": "attrs::attrs__v2__215"
+        },
+        {
+          "reason": "uniform_random_same_budget",
+          "seed": 17,
+          "task_id": "attrs::attrs__v2__250"
+        },
+        {
+          "reason": "uniform_random_same_budget",
+          "seed": 17,
+          "task_id": "attrs::attrs__v2__271"
+        },
+        {
+          "reason": "uniform_random_same_budget",
+          "seed": 17,
+          "task_id": "boltons::boltons__v2__007"
+        },
+        {
+          "reason": "uniform_random_same_budget",
+          "seed": 17,
+          "task_id": "boltons::boltons__v2__009"
+        },
+        {
+          "reason": "uniform_random_same_budget",
+          "seed": 17,
+          "task_id": "boltons::boltons__v2__068"
+        },
+        {
+          "reason": "uniform_random_same_budget",
+          "seed": 17,
+          "task_id": "boltons::boltons__v2__076"
+        },
+        {
+          "reason": "uniform_random_same_budget",
+          "seed": 17,
+          "task_id": "boltons::boltons__v2__128"
+        },
+        {
+          "reason": "uniform_random_same_budget",
+          "seed": 17,
+          "task_id": "boltons::boltons__v2__147"
+        },
+        {
+          "reason": "uniform_random_same_budget",
+          "seed": 17,
+          "task_id": "boltons::boltons__v2__154"
+        },
+        {
+          "reason": "uniform_random_same_budget",
+          "seed": 17,
+          "task_id": "click::click__third__166"
+        },
+        {
+          "reason": "uniform_random_same_budget",
+          "seed": 17,
+          "task_id": "click::click__third__202"
+        },
+        {
+          "reason": "uniform_random_same_budget",
+          "seed": 17,
+          "task_id": "click::click__third__220"
+        },
+        {
+          "reason": "uniform_random_same_budget",
+          "seed": 17,
+          "task_id": "click::click__third__238"
+        },
+        {
+          "reason": "uniform_random_same_budget",
+          "seed": 17,
+          "task_id": "click::click__third__250"
+        }
+      ],
+      "seed": 17,
+      "selected_count": 18,
+      "selected_task_ids": [
+        "attrs::attrs__v2__044",
+        "attrs::attrs__v2__202",
+        "attrs::attrs__v2__207",
+        "attrs::attrs__v2__215",
+        "attrs::attrs__v2__250",
+        "attrs::attrs__v2__271",
+        "boltons::boltons__v2__007",
+        "boltons::boltons__v2__009",
+        "boltons::boltons__v2__068",
+        "boltons::boltons__v2__076",
+        "boltons::boltons__v2__128",
+        "boltons::boltons__v2__147",
+        "boltons::boltons__v2__154",
+        "click::click__third__166",
+        "click::click__third__202",
+        "click::click__third__220",
+        "click::click__third__238",
+        "click::click__third__250"
+      ],
+      "selector_id": "uniform_random_same_budget"
+    }
+  },
+  "schema_version": "barcarolle.agent_selection_demo.selector_algorithm_registry.v1"
+}

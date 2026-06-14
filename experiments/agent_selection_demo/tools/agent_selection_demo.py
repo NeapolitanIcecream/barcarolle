@@ -4121,6 +4121,710 @@ def render_selector_bakeoff_feature_manifest(payload: dict[str, Any]) -> str:
     return "\n".join(lines) + "\n"
 
 
+def load_bakeoff_feature_rows() -> list[dict[str, str]]:
+    return read_csv_rows(result_path("selector_bakeoff_task_features.csv"))
+
+
+def load_bakeoff_outcome_rows() -> list[dict[str, str]]:
+    return read_csv_rows(result_path("selector_bakeoff_outcome_matrix.csv"))
+
+
+def bakeoff_float(value: Any, default: float = 0.0) -> float:
+    try:
+        if value == "":
+            return default
+        return float(value)
+    except (TypeError, ValueError):
+        return default
+
+
+def bakeoff_eligible_selection_rows(rows: list[dict[str, Any]], source_id: str | None = None) -> list[dict[str, Any]]:
+    return [
+        row
+        for row in rows
+        if row.get("stage_role") == "selection"
+        and (source_id is None or row.get("source_id") == source_id)
+        and bakeoff_float(row.get("quality_score")) >= 1.0
+        and not selector_bool(row.get("risk_flag"))
+        and not selector_bool(row.get("flaky_flag"))
+    ]
+
+
+def bakeoff_repo_order(rows: list[dict[str, Any]]) -> list[str]:
+    return sorted({str(row.get("repo") or "") for row in rows if row.get("repo")})
+
+
+def bakeoff_group_key(row: dict[str, Any], use_recency: bool = True) -> tuple[str, ...]:
+    key = [
+        str(row.get("repo") or ""),
+        str(row.get("source") or "unknown_source"),
+    ]
+    if use_recency:
+        key.append(str(row.get("recency_bucket") or "unknown_recency"))
+    return tuple(key)
+
+
+def bakeoff_allocated_quotas(rows: list[dict[str, Any]], k: int, use_recency: bool = True) -> dict[tuple[str, ...], int]:
+    grouped: dict[tuple[str, ...], list[dict[str, Any]]] = defaultdict(list)
+    for row in rows:
+        grouped[bakeoff_group_key(row, use_recency)].append(row)
+    raw = {key: k * len(items) / max(len(rows), 1) for key, items in grouped.items()}
+    quotas = {key: min(len(grouped[key]), int(math.floor(value))) for key, value in raw.items()}
+    remaining = k - sum(quotas.values())
+    ordered = sorted(
+        grouped,
+        key=lambda key: (
+            raw[key] - math.floor(raw[key]),
+            max(selector_recency_score(row) for row in grouped[key]),
+            str(key),
+        ),
+        reverse=True,
+    )
+    while remaining > 0 and ordered:
+        progressed = False
+        for key in ordered:
+            if quotas[key] >= len(grouped[key]):
+                continue
+            quotas[key] += 1
+            remaining -= 1
+            progressed = True
+            if remaining == 0:
+                break
+        if not progressed:
+            break
+    return quotas
+
+
+def bakeoff_take_with_caps(
+    ranked_rows: list[dict[str, Any]],
+    k: int,
+    *,
+    use_caps: bool = True,
+    already_selected: list[dict[str, Any]] | None = None,
+) -> list[dict[str, Any]]:
+    selected = list(already_selected or [])
+    seen = {str(row["task_id"]) for row in selected}
+    module_counts = Counter(str(row.get("module_bucket") or "") for row in selected)
+    source_counts = Counter(str(row.get("source") or "") for row in selected)
+    module_cap = max(1, math.ceil(k * 0.4))
+    source_cap = max(1, math.ceil(k * 0.6))
+    for row in ranked_rows:
+        if len(selected) >= k:
+            break
+        task_id = str(row["task_id"])
+        if task_id in seen:
+            continue
+        module = str(row.get("module_bucket") or "")
+        source = str(row.get("source") or "")
+        if use_caps and module_counts[module] >= module_cap and len(ranked_rows) - len(seen) > k - len(selected):
+            continue
+        if use_caps and source_counts[source] >= source_cap and len(ranked_rows) - len(seen) > k - len(selected):
+            continue
+        selected.append(row)
+        seen.add(task_id)
+        module_counts[module] += 1
+        source_counts[source] += 1
+    if len(selected) < k:
+        for row in ranked_rows:
+            if len(selected) >= k:
+                break
+            task_id = str(row["task_id"])
+            if task_id not in seen:
+                selected.append(row)
+                seen.add(task_id)
+    return selected[:k]
+
+
+def bakeoff_selection_payload(
+    selector_id: str,
+    selected_rows: list[dict[str, Any]],
+    rationale_by_task: dict[str, dict[str, Any]],
+    **extra: Any,
+) -> dict[str, Any]:
+    selected_ids = sorted(str(row["task_id"]) for row in selected_rows)
+    return {
+        "selector_id": selector_id,
+        "selected_task_ids": selected_ids,
+        "selected_count": len(selected_ids),
+        "rationale": [rationale_by_task.get(task_id, {"task_id": task_id}) for task_id in selected_ids],
+        **extra,
+    }
+
+
+def select_bakeoff_rsq_v2(
+    rows: list[dict[str, Any]],
+    k: int,
+    *,
+    use_recency: bool = True,
+    use_caps: bool = True,
+) -> dict[str, Any]:
+    eligible = bakeoff_eligible_selection_rows(rows)
+    quotas = bakeoff_allocated_quotas(eligible, k, use_recency=use_recency)
+    grouped: dict[tuple[str, ...], list[dict[str, Any]]] = defaultdict(list)
+    for row in eligible:
+        grouped[bakeoff_group_key(row, use_recency)].append(row)
+    selected: list[dict[str, Any]] = []
+    rationale: dict[str, dict[str, Any]] = {}
+    for key, quota in sorted(quotas.items(), key=lambda item: str(item[0])):
+        ranked = sorted(
+            grouped[key],
+            key=lambda row: (
+                bakeoff_float(row.get("quality_score")),
+                selector_recency_score(row) if use_recency else 0.0,
+                bakeoff_float(row.get("metadata_informativeness")),
+                str(row["task_id"]),
+            ),
+            reverse=True,
+        )
+        before = len(selected)
+        selected = bakeoff_take_with_caps(ranked, min(k, before + quota), use_caps=use_caps, already_selected=selected)
+        for row in selected[before:]:
+            rationale[str(row["task_id"])] = {
+                "task_id": row["task_id"],
+                "reason": "repo/source/recency quota with quality gate and caps",
+                "quota_key": "|".join(key),
+            }
+    if len(selected) < k:
+        ranked_all = sorted(
+            eligible,
+            key=lambda row: (
+                bakeoff_float(row.get("quality_score")),
+                selector_recency_score(row) if use_recency else 0.0,
+                bakeoff_float(row.get("metadata_informativeness")),
+                str(row["task_id"]),
+            ),
+            reverse=True,
+        )
+        selected = bakeoff_take_with_caps(ranked_all, k, use_caps=use_caps, already_selected=selected)
+        for row in selected:
+            rationale.setdefault(
+                str(row["task_id"]),
+                {
+                    "task_id": row["task_id"],
+                    "reason": "quota fill after caps",
+                    "quota_key": "fill",
+                },
+            )
+    return bakeoff_selection_payload(
+        "rsq_v2",
+        selected,
+        rationale,
+        use_recency=use_recency,
+        use_caps=use_caps,
+    )
+
+
+def bakeoff_categorical_vector(rows: list[dict[str, Any]], fields: list[str]) -> dict[str, list[float]]:
+    vocab: dict[tuple[str, str], int] = {}
+    for field in fields:
+        for value in sorted({str(row.get(field) or "") for row in rows}):
+            vocab[(field, value)] = len(vocab)
+    vectors: dict[str, list[float]] = {}
+    for row in rows:
+        vector = [0.0] * len(vocab)
+        for field in fields:
+            vector[vocab[(field, str(row.get(field) or ""))]] = 1.0
+        vectors[str(row["task_id"])] = vector
+    return vectors
+
+
+def vector_distance(a: list[float], b: list[float]) -> float:
+    return math.sqrt(sum((left - right) ** 2 for left, right in zip(a, b)))
+
+
+def select_bakeoff_flc(rows: list[dict[str, Any]], k: int, *, use_caps: bool = True) -> dict[str, Any]:
+    eligible = bakeoff_eligible_selection_rows(rows)
+    fields = ["repo", "source", "module_bucket", "change_size_proxy", "recency_bucket", "difficulty_bucket", "test_bucket"]
+    vectors = bakeoff_categorical_vector(eligible, fields)
+    selected: list[dict[str, Any]] = []
+    rationale: dict[str, dict[str, Any]] = {}
+    current_distances = {str(row["task_id"]): float("inf") for row in eligible}
+    while len(selected) < min(k, len(eligible)):
+        best_row: dict[str, Any] | None = None
+        best_gain = -float("inf")
+        for candidate in eligible:
+            task_id = str(candidate["task_id"])
+            if task_id in {str(row["task_id"]) for row in selected}:
+                continue
+            trial_rows = bakeoff_take_with_caps([candidate], len(selected) + 1, use_caps=use_caps, already_selected=selected)
+            if len(trial_rows) == len(selected):
+                continue
+            if not selected:
+                gain = -sum(vector_distance(vectors[task_id], vectors[str(row["task_id"])]) for row in eligible)
+            else:
+                gain = 0.0
+                for row in eligible:
+                    other_id = str(row["task_id"])
+                    dist = vector_distance(vectors[task_id], vectors[other_id])
+                    gain += max(0.0, current_distances[other_id] - min(current_distances[other_id], dist))
+            gain += 0.05 * bakeoff_float(candidate.get("quality_score"))
+            if gain > best_gain or (gain == best_gain and task_id < str((best_row or {}).get("task_id", "~"))):
+                best_gain = gain
+                best_row = candidate
+        if best_row is None:
+            break
+        selected.append(best_row)
+        selected_id = str(best_row["task_id"])
+        for row in eligible:
+            other_id = str(row["task_id"])
+            current_distances[other_id] = min(current_distances[other_id], vector_distance(vectors[selected_id], vectors[other_id]))
+        rationale[selected_id] = {
+            "task_id": selected_id,
+            "reason": "greedy facility-location coverage gain",
+            "coverage_gain": selector_round(best_gain),
+        }
+    if len(selected) < k:
+        selected = bakeoff_take_with_caps(sorted(eligible, key=lambda row: str(row["task_id"])), k, use_caps=use_caps, already_selected=selected)
+    return bakeoff_selection_payload("flc", selected, rationale, use_caps=use_caps)
+
+
+def bakeoff_metadata_informativeness(row: dict[str, Any]) -> float:
+    return bakeoff_float(row.get("metadata_informativeness")) + (1.0 - abs(bakeoff_float(row.get("historical_difficulty"), 0.5) - 0.5))
+
+
+def select_bakeoff_hrd_v3(
+    rows: list[dict[str, Any]],
+    k: int,
+    *,
+    representative_fraction: float = 0.7,
+    representative_selector: str = "rsq_v2",
+    use_recency: bool = True,
+    use_caps: bool = True,
+) -> dict[str, Any]:
+    eligible = bakeoff_eligible_selection_rows(rows)
+    rep_count = min(k, int(math.ceil(k * representative_fraction)))
+    if representative_selector == "flc":
+        representative = select_bakeoff_flc(eligible, rep_count, use_caps=use_caps)
+    else:
+        representative = select_bakeoff_rsq_v2(eligible, rep_count, use_recency=use_recency, use_caps=use_caps)
+    representative_ids = set(representative["selected_task_ids"])
+    representative_rows = [row for row in eligible if str(row["task_id"]) in representative_ids]
+    ranked_info = sorted(
+        [row for row in eligible if str(row["task_id"]) not in representative_ids],
+        key=lambda row: (bakeoff_metadata_informativeness(row), str(row["task_id"])),
+        reverse=True,
+    )
+    selected = bakeoff_take_with_caps(ranked_info, k, use_caps=use_caps, already_selected=representative_rows)
+    selected_ids = {str(row["task_id"]) for row in selected}
+    rationale = {
+        str(row["task_id"]): {
+            "task_id": row["task_id"],
+            "reason": "representative arm",
+            "arm": "representative",
+        }
+        for row in representative_rows
+        if str(row["task_id"]) in selected_ids
+    }
+    for row in selected:
+        rationale.setdefault(
+            str(row["task_id"]),
+            {
+                "task_id": row["task_id"],
+                "reason": "metadata informativeness fallback; no leakage-safe historical Agent disagreement available",
+                "arm": "metadata_informativeness",
+                "score": selector_round(bakeoff_metadata_informativeness(row)),
+            },
+        )
+    return bakeoff_selection_payload(
+        f"hrd_v3_{int(representative_fraction * 100)}_{int((1.0 - representative_fraction) * 100)}",
+        selected,
+        rationale,
+        representative_fraction=representative_fraction,
+        representative_selector=representative_selector,
+        representative_task_ids=sorted(representative_ids & selected_ids),
+        metadata_informativeness_task_ids=sorted(selected_ids - representative_ids),
+        informativeness_source="metadata_informativeness",
+        leakage_safe_historical_agent_disagreement_used=False,
+        use_recency=use_recency,
+        use_caps=use_caps,
+    )
+
+
+def select_bakeoff_cod_lite(rows: list[dict[str, Any]], k: int, *, use_caps: bool = True) -> dict[str, Any]:
+    eligible = bakeoff_eligible_selection_rows(rows)
+    selected: list[dict[str, Any]] = []
+    rationale: dict[str, dict[str, Any]] = {}
+    seen_modules: set[str] = set()
+    while len(selected) < min(k, len(eligible)):
+        best_row: dict[str, Any] | None = None
+        best_gain = -float("inf")
+        selected_ids = {str(row["task_id"]) for row in selected}
+        for row in eligible:
+            task_id = str(row["task_id"])
+            if task_id in selected_ids:
+                continue
+            info = bakeoff_metadata_informativeness(row)
+            middle = 1.0 - abs(bakeoff_float(row.get("historical_difficulty"), 0.5) - 0.5)
+            novelty = 0.4 if str(row.get("module_bucket") or "") not in seen_modules else 0.0
+            gain = 1.5 * info + 0.8 * middle + novelty
+            if gain > best_gain or (gain == best_gain and task_id < str((best_row or {}).get("task_id", "~"))):
+                best_gain = gain
+                best_row = row
+        if best_row is None:
+            break
+        trial = bakeoff_take_with_caps([best_row], len(selected) + 1, use_caps=use_caps, already_selected=selected)
+        if len(trial) == len(selected):
+            eligible = [row for row in eligible if row["task_id"] != best_row["task_id"]]
+            continue
+        selected = trial
+        seen_modules.add(str(best_row.get("module_bucket") or ""))
+        rationale[str(best_row["task_id"])] = {
+            "task_id": best_row["task_id"],
+            "reason": "greedy contrast-information gain",
+            "contrast_gain": selector_round(best_gain),
+            "contrast_signal": "metadata_informativeness_plus_middle_difficulty",
+        }
+    return bakeoff_selection_payload("cod_lite", selected, rationale, use_caps=use_caps)
+
+
+RO_LSP_DEFAULT_WEIGHTS = {
+    "metadata_informativeness": 0.3,
+    "middle_difficulty": 0.25,
+    "recency": 0.15,
+    "module_rarity": 0.15,
+    "source_rarity": 0.1,
+    "quality": 0.05,
+}
+
+
+def normalized_scores(values: dict[str, float]) -> dict[str, float]:
+    if not values:
+        return {}
+    lo = min(values.values())
+    hi = max(values.values())
+    if hi == lo:
+        return {key: 0.5 for key in values}
+    return {key: (value - lo) / (hi - lo) for key, value in values.items()}
+
+
+def ro_lsp_feature_scores(rows: list[dict[str, Any]]) -> dict[str, dict[str, float]]:
+    eligible = bakeoff_eligible_selection_rows(rows)
+    recency = normalized_scores({str(row["task_id"]): selector_recency_score(row) for row in eligible})
+    metadata = normalized_scores({str(row["task_id"]): bakeoff_float(row.get("metadata_informativeness")) for row in eligible})
+    module_counts = Counter(str(row.get("module_bucket") or "") for row in eligible)
+    source_counts = Counter(str(row.get("source") or "") for row in eligible)
+    max_module = max(module_counts.values(), default=1)
+    max_source = max(source_counts.values(), default=1)
+    scores: dict[str, dict[str, float]] = {}
+    for row in eligible:
+        task_id = str(row["task_id"])
+        scores[task_id] = {
+            "metadata_informativeness": metadata.get(task_id, 0.5),
+            "middle_difficulty": 1.0 - abs(bakeoff_float(row.get("historical_difficulty"), 0.5) - 0.5),
+            "recency": recency.get(task_id, 0.5),
+            "module_rarity": 1.0 - (module_counts[str(row.get("module_bucket") or "")] - 1) / max(max_module - 1, 1),
+            "source_rarity": 1.0 - (source_counts[str(row.get("source") or "")] - 1) / max(max_source - 1, 1),
+            "quality": bakeoff_float(row.get("quality_score")),
+        }
+    return scores
+
+
+def select_bakeoff_ro_lsp(
+    rows: list[dict[str, Any]],
+    k: int,
+    *,
+    weights: dict[str, float] | None = None,
+    use_caps: bool = True,
+) -> dict[str, Any]:
+    eligible = bakeoff_eligible_selection_rows(rows)
+    weights = dict(weights or RO_LSP_DEFAULT_WEIGHTS)
+    feature_scores = ro_lsp_feature_scores(eligible)
+    def score(row: dict[str, Any]) -> float:
+        task_scores = feature_scores[str(row["task_id"])]
+        return sum(weights.get(name, 0.0) * task_scores.get(name, 0.0) for name in weights)
+
+    ranked = sorted(eligible, key=lambda row: (score(row), str(row["task_id"])), reverse=True)
+    selected = bakeoff_take_with_caps(ranked, k, use_caps=use_caps)
+    rationale = {
+        str(row["task_id"]): {
+            "task_id": row["task_id"],
+            "reason": "low-capacity learned scoring policy",
+            "score": selector_round(score(row)),
+            "top_features": feature_scores[str(row["task_id"])],
+        }
+        for row in selected
+    }
+    return bakeoff_selection_payload("ro_lsp", selected, rationale, weights=weights, use_caps=use_caps)
+
+
+def select_bakeoff_strong_random(rows: list[dict[str, Any]], k: int, seed: int, *, baseline_id: str) -> dict[str, Any]:
+    eligible = bakeoff_eligible_selection_rows(rows)
+    if baseline_id == "uniform_random_same_budget":
+        selected_ids = select_uniform_random_same_budget(eligible, k, seed)
+    elif baseline_id == "quality_filtered_random":
+        selected_ids = select_quality_filtered_random(eligible, k, seed)
+    elif baseline_id == "source_recency_stratified_random":
+        selected_ids = select_stratified_random(eligible, k, seed)
+    elif baseline_id == "module_stratified_random":
+        rng = random.Random(seed)
+        grouped: dict[str, list[dict[str, Any]]] = defaultdict(list)
+        for row in eligible:
+            grouped[str(row.get("module_bucket") or "")].append(row)
+        ordered_modules = sorted(grouped)
+        selected: list[dict[str, Any]] = []
+        while len(selected) < min(k, len(eligible)) and ordered_modules:
+            progressed = False
+            for module in ordered_modules:
+                remaining = [row for row in grouped[module] if str(row["task_id"]) not in {str(item["task_id"]) for item in selected}]
+                if not remaining:
+                    continue
+                selected.append(rng.choice(remaining))
+                progressed = True
+                if len(selected) >= k:
+                    break
+            if not progressed:
+                break
+        selected_ids = sorted(str(row["task_id"]) for row in selected)
+    else:
+        raise ValueError(f"unknown strong random baseline: {baseline_id}")
+    selected_rows = [row for row in eligible if str(row["task_id"]) in set(selected_ids)]
+    rationale = {
+        str(row["task_id"]): {"task_id": row["task_id"], "reason": baseline_id, "seed": seed}
+        for row in selected_rows
+    }
+    return bakeoff_selection_payload(baseline_id, selected_rows, rationale, seed=seed)
+
+
+def select_bakeoff_saes_lite(
+    rows: list[dict[str, Any]],
+    k: int,
+    *,
+    outcome_rows: list[dict[str, Any]] | None = None,
+    agent_ids: list[str] | None = None,
+    use_caps: bool = True,
+) -> dict[str, Any]:
+    seed_count = min(k, max(1, int(math.ceil(k * 0.6))))
+    seed_selection = select_bakeoff_flc(rows, seed_count, use_caps=use_caps)
+    eligible = bakeoff_eligible_selection_rows(rows)
+    seed_ids = set(seed_selection["selected_task_ids"])
+    seed_rows = [row for row in eligible if str(row["task_id"]) in seed_ids]
+    remaining_rows = [row for row in eligible if str(row["task_id"]) not in seed_ids]
+    agent_ids = list(agent_ids or BAKEOFF_AGENT_IDS)
+    trace: list[dict[str, Any]] = [
+        {
+            "step": "representative_seed_batch",
+            "selected_task_ids": sorted(seed_ids),
+            "selector": "flc",
+        }
+    ]
+    top_agent = None
+    second_agent = None
+    if outcome_rows:
+        rates = selector_pass_rates(sorted(seed_ids), agent_ids, "selection", outcome_lookup(outcome_rows))
+        top_agent, second_agent, margin, tied = decision_top_agents(rates)
+        trace.append(
+            {
+                "step": "observe_seed_outcomes",
+                "selection_rates": rates,
+                "top_agent": top_agent,
+                "second_agent": second_agent,
+                "margin": selector_round(margin),
+                "tied": tied,
+            }
+        )
+    second_count = max(0, k - len(seed_rows))
+    second_selection = select_bakeoff_cod_lite(remaining_rows, second_count, use_caps=use_caps)
+    second_ids = set(second_selection["selected_task_ids"])
+    trace.append(
+        {
+            "step": "informative_second_batch",
+            "selected_task_ids": sorted(second_ids),
+            "focus": "top_pair_uncertainty" if top_agent and second_agent else "metadata_informativeness",
+        }
+    )
+    selected_rows = seed_rows + [row for row in remaining_rows if str(row["task_id"]) in second_ids]
+    rationale = {
+        str(row["task_id"]): {
+            "task_id": row["task_id"],
+            "reason": "SAES representative seed batch" if str(row["task_id"]) in seed_ids else "SAES adaptive informative second batch",
+            "batch": "seed" if str(row["task_id"]) in seed_ids else "second",
+        }
+        for row in selected_rows
+    }
+    return bakeoff_selection_payload(
+        "saes_lite",
+        selected_rows,
+        rationale,
+        seed_batch_task_ids=sorted(seed_ids),
+        second_batch_task_ids=sorted(second_ids),
+        sequential_trace=trace,
+    )
+
+
+def select_bakeoff_algorithm(rows: list[dict[str, Any]], algorithm_id: str, k: int, **kwargs: Any) -> dict[str, Any]:
+    if algorithm_id == "rsq_v2":
+        return select_bakeoff_rsq_v2(rows, k, use_recency=kwargs.get("use_recency", True), use_caps=kwargs.get("use_caps", True))
+    if algorithm_id == "flc":
+        return select_bakeoff_flc(rows, k, use_caps=kwargs.get("use_caps", True))
+    if algorithm_id == "hrd_v3_70_30":
+        return select_bakeoff_hrd_v3(rows, k, representative_fraction=0.7, representative_selector=kwargs.get("representative_selector", "rsq_v2"), use_recency=kwargs.get("use_recency", True), use_caps=kwargs.get("use_caps", True))
+    if algorithm_id == "hrd_v3_60_40":
+        return select_bakeoff_hrd_v3(rows, k, representative_fraction=0.6, representative_selector=kwargs.get("representative_selector", "rsq_v2"), use_recency=kwargs.get("use_recency", True), use_caps=kwargs.get("use_caps", True))
+    if algorithm_id == "hrd_v3_50_50":
+        return select_bakeoff_hrd_v3(rows, k, representative_fraction=0.5, representative_selector=kwargs.get("representative_selector", "rsq_v2"), use_recency=kwargs.get("use_recency", True), use_caps=kwargs.get("use_caps", True))
+    if algorithm_id == "cod_lite":
+        return select_bakeoff_cod_lite(rows, k, use_caps=kwargs.get("use_caps", True))
+    if algorithm_id == "ro_lsp":
+        return select_bakeoff_ro_lsp(rows, k, weights=kwargs.get("weights"), use_caps=kwargs.get("use_caps", True))
+    if algorithm_id == "saes_lite":
+        return select_bakeoff_saes_lite(rows, k, outcome_rows=kwargs.get("outcome_rows"), agent_ids=kwargs.get("agent_ids"), use_caps=kwargs.get("use_caps", True))
+    raise ValueError(f"unknown bakeoff algorithm: {algorithm_id}")
+
+
+def select_bakeoff_algorithm_by_repo(
+    rows: list[dict[str, Any]],
+    algorithm_id: str,
+    k_per_repo: int,
+    **kwargs: Any,
+) -> dict[str, Any]:
+    selected_task_ids: list[str] = []
+    rationales: list[dict[str, Any]] = []
+    per_repo: dict[str, Any] = {}
+    for repo in bakeoff_repo_order(rows):
+        repo_rows = [row for row in rows if row.get("repo") == repo]
+        selection = select_bakeoff_algorithm(repo_rows, algorithm_id, k_per_repo, **kwargs)
+        selected_task_ids.extend(selection["selected_task_ids"])
+        rationales.extend(selection.get("rationale", []))
+        per_repo[repo] = {
+            "selected_task_ids": selection["selected_task_ids"],
+            "selected_count": selection["selected_count"],
+        }
+    return {
+        "selector_id": algorithm_id,
+        "k_per_repo": k_per_repo,
+        "k_total": len(selected_task_ids),
+        "selected_task_ids": sorted(selected_task_ids),
+        "rationale": sorted(rationales, key=lambda row: str(row.get("task_id") or "")),
+        "per_repo": per_repo,
+        **{key: value for key, value in kwargs.items() if key in {"use_recency", "use_caps", "representative_selector", "weights"}},
+    }
+
+
+def selector_algorithm_registry_payload() -> dict[str, Any]:
+    if not result_path("selector_bakeoff_task_features.csv").exists():
+        selector_bakeoff_build_features()
+    feature_rows = load_bakeoff_feature_rows()
+    outcome_rows = load_bakeoff_outcome_rows()
+    example_rows = bakeoff_eligible_selection_rows(feature_rows, "phase1_blocked_split_heldout_development")
+    algorithm_ids = [
+        "rsq_v2",
+        "flc",
+        "hrd_v3_70_30",
+        "hrd_v3_60_40",
+        "hrd_v3_50_50",
+        "cod_lite",
+        "ro_lsp",
+        "saes_lite",
+    ]
+    example_selections: dict[str, Any] = {}
+    for algorithm_id in algorithm_ids:
+        kwargs = {"outcome_rows": outcome_rows, "agent_ids": BAKEOFF_AGENT_IDS} if algorithm_id == "saes_lite" else {}
+        example_selections[algorithm_id] = select_bakeoff_algorithm_by_repo(example_rows, algorithm_id, 6, **kwargs)
+    random_examples = {
+        baseline_id: select_bakeoff_strong_random(example_rows, 18, 17, baseline_id=baseline_id)
+        for baseline_id in [
+            "uniform_random_same_budget",
+            "quality_filtered_random",
+            "source_recency_stratified_random",
+            "module_stratified_random",
+        ]
+    }
+    registry = {
+        "schema_version": "barcarolle.agent_selection_demo.selector_algorithm_registry.v1",
+        "generated_at": "2026-06-14",
+        "paid_agent_calls_made": False,
+        "feature_manifest": "experiments/agent_selection_demo/results/selector_bakeoff_feature_manifest.json",
+        "algorithm_families": {
+            "rsq_v2": {
+                "role": "strong_metadata_baseline",
+                "status": "implemented",
+                "signals": ["repo", "source/window", "recency_bucket", "module_bucket", "change_size_proxy", "quality/risk/flakiness filters", "source/module caps"],
+            },
+            "flc": {
+                "role": "representative_core_set",
+                "status": "implemented",
+                "signals": ["categorical metadata vector", "greedy facility-location coverage", "quality gate", "redundancy cap"],
+            },
+            "hrd_v3": {
+                "role": "decision_aware_hybrid",
+                "status": "implemented",
+                "variants": ["70/30", "60/40", "50/50"],
+                "informativeness_arm": "metadata_informativeness",
+                "leakage_safe_historical_agent_disagreement_used": False,
+            },
+            "cod_lite": {
+                "role": "contrast_optimal_selector",
+                "status": "implemented",
+                "approximation": "greedy metadata contrast gain because no leakage-safe historical Agent contrast matrix is available",
+            },
+            "ro_lsp": {
+                "role": "low_capacity_learned_scoring_policy",
+                "status": "implemented",
+                "default_weights": RO_LSP_DEFAULT_WEIGHTS,
+                "training_rule": "Package 5 may grid-search these interpretable weights on development sources only; defaults are deterministic until then.",
+            },
+            "saes_lite": {
+                "role": "sequential_adaptive_evidence_selector",
+                "status": "implemented",
+                "mode": "offline replay over committed sanitized outcome matrices",
+            },
+            "strong_random_baselines": {
+                "status": "implemented",
+                "families": ["uniform_random_same_budget", "quality_filtered_random", "source_recency_stratified_random", "module_stratified_random"],
+            },
+        },
+        "example_source_id": "phase1_blocked_split_heldout_development",
+        "example_k_per_repo": 6,
+        "example_selections": example_selections,
+        "random_baseline_examples": random_examples,
+    }
+    return registry
+
+
+def selector_algorithm_registry() -> dict[str, Any]:
+    payload = selector_algorithm_registry_payload()
+    write_json(result_path("selector_algorithm_registry.json"), payload)
+    write_text(report_path("selector_algorithm_registry_zh.md"), render_selector_algorithm_registry(payload))
+    return payload
+
+
+def render_selector_algorithm_registry(payload: dict[str, Any]) -> str:
+    family_rows = [
+        {"Algorithm": family, "Role": data.get("role", "baseline"), "Status": data.get("status", "")}
+        for family, data in payload["algorithm_families"].items()
+    ]
+    selection_rows = [
+        {
+            "Algorithm": algorithm_id,
+            "Selected": row["k_total"],
+            "First tasks": ", ".join(row["selected_task_ids"][:4]),
+        }
+        for algorithm_id, row in payload["example_selections"].items()
+    ]
+    lines = [
+        "# Selector Algorithm Registry",
+        "",
+        "生成日期：2026-06-14",
+        "",
+        "## Implemented families",
+        "",
+        *markdown_table(family_rows, [("Algorithm", "Algorithm"), ("Role", "Role"), ("Status", "Status")]),
+        "",
+        "## Example deterministic selections",
+        "",
+        f"Example source: `{payload['example_source_id']}`；budget: `{payload['example_k_per_repo']}` per repo。",
+        "",
+        *markdown_table(selection_rows, [("Algorithm", "Algorithm"), ("Selected", "Selected"), ("First tasks", "First tasks")]),
+        "",
+        "## Leakage note",
+        "",
+        "HRD v3、COD-lite 和 SAES-lite 都没有使用 leakage-safe historical Agent-disagreement signal；informativeness arm 在 registry 和后续报告中称为 `metadata_informativeness`。",
+        "",
+        "RO-LSP 当前有固定 interpretable default weights；Package 5 只允许在 development sources 上做低容量 grid search，然后在 final replay 前冻结。",
+    ]
+    return "\n".join(lines) + "\n"
+
+
 def render_selector_baseline_eval(payload: dict[str, Any]) -> str:
     lines = [
         "# Selector Baseline Eval",
@@ -5490,6 +6194,7 @@ def main() -> int:
     subcommands.add_parser("selector-corrected-protocol")
     subcommands.add_parser("selector-no-paid-independent-eval")
     subcommands.add_parser("selector-bakeoff-build-features")
+    subcommands.add_parser("selector-algorithm-registry")
     args = parser.parse_args()
     config = load_config(repo_path(args.config))
     if args.command == "gate":
@@ -5563,6 +6268,9 @@ def main() -> int:
         return 0
     if args.command == "selector-bakeoff-build-features":
         selector_bakeoff_build_features()
+        return 0
+    if args.command == "selector-algorithm-registry":
+        selector_algorithm_registry()
         return 0
     raise ValueError(args.command)
 
