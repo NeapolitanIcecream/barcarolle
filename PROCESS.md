@@ -296,6 +296,40 @@ Canonical reports:
 - `experiments/phase1_compiler/reports/phase1_three_repo_paid_validation_decision.md`
 - `experiments/phase1_compiler/reports/phase1_validation_protocol_candidate_policy_hardening_decision.md`
 
+## Selector Validation Correction 2026-06-14
+
+The previous boltons `hrd_70_30` selector story is now explicitly relabeled as
+`hypothesis_generating_selector_development_result`. It must not be cited as
+independent validation.
+
+The correction runbook froze `hrd_v2_70_30`, `k=6` per repo, before joining
+final Phase 1 outcomes, then replayed the no-paid independent
+`blocked_split_heldout` block across attrs, boltons, and click. The result is an
+accepted negative terminal state: Selection favored `kilo_workspace` (`11/18`
+versus Codex `6/18`) and later/Holdout also favored Kilo (`16/30` versus Codex
+`7/30`), but the shared decision wrapper returned `need_more_evidence` because
+the paired selected comparison had one discordant Kilo loss. Selector MAE was
+`0.088889` versus strongest stratified-random MAE mean `0.090146`, below the
+required `0.02` absolute or `10%` relative improvement threshold.
+
+Canonical correction artifacts:
+
+- `experiments/agent_selection_demo/results/selector_validation_correction_audit.json`
+- `experiments/agent_selection_demo/results/selector_independent_validation_inventory.json`
+- `experiments/agent_selection_demo/results/selector_corrected_protocol.json`
+- `experiments/agent_selection_demo/results/selector_no_paid_independent_eval.json`
+- `experiments/agent_selection_demo/results/selector_corrected_validation_closeout.json`
+- `experiments/agent_selection_demo/reports/selector_corrected_validation_story_zh.md`
+- `experiments/agent_selection_demo/reports/selector_corrected_validation_closeout_zh.md`
+
+Current claim boundary: the corrected validation supports only that the frozen
+selector plus conservative decision wrapper should request more evidence on this
+independent pseudo-future block. It does not support the user-facing claim that
+Selection recommends an Agent and later/Holdout validates that recommendation.
+If that story is still required, the next work is a new development-only
+selector/decision design followed by a preregistered independent final slice;
+do not spend paid cells merely to retune on the failed final block.
+
 ## Product Direction
 
 Agent Tuning is the nearer product direction: Barcarolle can provide benchmark
