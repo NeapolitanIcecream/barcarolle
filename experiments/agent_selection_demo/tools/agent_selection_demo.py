@@ -3411,7 +3411,7 @@ def corrected_random_decision_summaries(
             "unique_sample_count": len(unique_samples),
             "metric_summary": summarize_selector_metric_rows(rows),
             "decision_summary": summarize_decision_rows(rows),
-            "rows": [compact_selector_metric_row(row) | {"decision_state": row["decision"]["state"]} for row in rows],
+            "_rows_for_percentiles": rows,
         }
     return summaries
 
@@ -3489,7 +3489,7 @@ def selector_no_paid_independent_eval() -> dict[str, Any]:
         "strongest_random_MAE_mean": strongest["metric_summary"]["MAE_mean"],
         "absolute_improvement": selector_round(abs_improvement),
         "relative_improvement": selector_round(rel_improvement),
-        "random_percentiles": corrected_baseline_percentiles(metrics, strongest["rows"]),
+        "random_percentiles": corrected_baseline_percentiles(metrics, strongest["_rows_for_percentiles"]),
     }
     preliminary = {
         "decision": decision,
@@ -3499,6 +3499,10 @@ def selector_no_paid_independent_eval() -> dict[str, Any]:
         "decision_comparison": decision_comparison,
     }
     preferred, blocker = corrected_preferred_terminal_state(preliminary)
+    random_summary_payload = {
+        baseline_id: {key: value for key, value in row.items() if key != "_rows_for_percentiles"}
+        for baseline_id, row in random_summaries.items()
+    }
     payload = {
         "schema_version": "barcarolle.agent_selection_demo.selector_no_paid_independent_eval.v1",
         "generated_at": "2026-06-14",
@@ -3522,7 +3526,7 @@ def selector_no_paid_independent_eval() -> dict[str, Any]:
         },
         "decision": decision,
         "metrics": metrics,
-        "random_baselines": random_summaries,
+        "random_baselines": random_summary_payload,
         "strongest_random_baseline_id": strongest_id,
         "mae_comparison": mae_comparison,
         "decision_comparison": decision_comparison,

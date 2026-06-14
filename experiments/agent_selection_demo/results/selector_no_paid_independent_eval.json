@@ -1,0 +1,363 @@
+{
+  "agent_set": [
+    "codex_workspace",
+    "kilo_workspace"
+  ],
+  "claim_boundary": "corrected_no_paid_negative_or_incomplete_evidence",
+  "decision": {
+    "nearest_competitor_agent_id": "codex_workspace",
+    "pair_stats": [
+      {
+        "bootstrap_lcb": 0.111111,
+        "common_valid": 18,
+        "competitor_agent_id": "codex_workspace",
+        "losses": 1,
+        "selected_margin": 0.277778,
+        "supports_recommendation": false,
+        "ties": 11,
+        "wins": 6
+      }
+    ],
+    "reason": "paired_uncertainty_or_discordant_tasks_too_weak",
+    "recommended_agent_id": null,
+    "selected_top_margin": 0.277778,
+    "selection_rates": {
+      "codex_workspace": {
+        "missing_or_na_count": 0,
+        "pass_count": 6,
+        "pass_rate": 0.3333333333333333,
+        "valid_count": 18
+      },
+      "kilo_workspace": {
+        "missing_or_na_count": 0,
+        "pass_count": 11,
+        "pass_rate": 0.6111111111111112,
+        "valid_count": 18
+      }
+    },
+    "state": "need_more_evidence",
+    "top_agent_id": "kilo_workspace"
+  },
+  "decision_comparison": {
+    "selector_beats_random_on_regret_or_false_recommendation": true,
+    "selector_false_recommendation_rate": 0.0,
+    "selector_recommendation_regret": null,
+    "selector_top_pair_direction_agreement": null,
+    "strongest_random_false_recommendation_rate": 0.0,
+    "strongest_random_mean_regret_when_recommending": 0.0,
+    "strongest_random_top_pair_direction_agreement_rate": 1.0
+  },
+  "final_validation_source": "no_paid_independent_rolling_origin",
+  "generated_at": "2026-06-14",
+  "k_per_repo": 6,
+  "k_total": 18,
+  "later_holdout_task_ids": [
+    "attrs::attrs__v2__052",
+    "attrs::attrs__v2__158",
+    "attrs::attrs__v2__210",
+    "attrs::attrs__v2__218",
+    "attrs::attrs__v2__220",
+    "attrs::attrs__v2__223",
+    "attrs::attrs__v2__244",
+    "attrs::attrs__v2__253",
+    "attrs::attrs__v2__261",
+    "attrs::attrs__v2__264",
+    "boltons::boltons__v2__006",
+    "boltons::boltons__v2__091",
+    "boltons::boltons__v2__093",
+    "boltons::boltons__v2__122",
+    "boltons::boltons__v2__132",
+    "boltons::boltons__v2__135",
+    "boltons::boltons__v2__140",
+    "boltons::boltons__v2__144",
+    "boltons::boltons__v2__163",
+    "boltons::boltons__v2__232",
+    "click::click__third__050",
+    "click::click__third__109",
+    "click::click__third__198",
+    "click::click__third__203",
+    "click::click__third__205",
+    "click::click__third__208",
+    "click::click__third__214",
+    "click::click__third__234",
+    "click::click__third__271",
+    "click::click__third__288"
+  ],
+  "mae_comparison": {
+    "absolute_improvement": 0.001257,
+    "random_percentiles": {
+      "MAE_beats_or_ties_random_share": 0.402,
+      "pairwise_agreement_beats_or_ties_random_share": 1.0,
+      "regret_beats_or_ties_random_share": 1.0
+    },
+    "relative_improvement": 0.013944,
+    "selector_MAE": 0.088889,
+    "strongest_random_MAE_mean": 0.090146,
+    "strongest_random_baseline": "stratified_random"
+  },
+  "metrics": {
+    "MAE": 0.088889,
+    "correct_abstain": null,
+    "decision": {
+      "nearest_competitor_agent_id": "codex_workspace",
+      "pair_stats": [
+        {
+          "bootstrap_lcb": 0.111111,
+          "common_valid": 18,
+          "competitor_agent_id": "codex_workspace",
+          "losses": 1,
+          "selected_margin": 0.277778,
+          "supports_recommendation": false,
+          "ties": 11,
+          "wins": 6
+        }
+      ],
+      "reason": "paired_uncertainty_or_discordant_tasks_too_weak",
+      "recommended_agent_id": null,
+      "selected_top_margin": 0.277778,
+      "selection_rates": {
+        "codex_workspace": {
+          "missing_or_na_count": 0,
+          "pass_count": 6,
+          "pass_rate": 0.3333333333333333,
+          "valid_count": 18
+        },
+        "kilo_workspace": {
+          "missing_or_na_count": 0,
+          "pass_count": 11,
+          "pass_rate": 0.6111111111111112,
+          "valid_count": 18
+        }
+      },
+      "state": "need_more_evidence",
+      "top_agent_id": "kilo_workspace"
+    },
+    "false_recommendation": null,
+    "forced_recommendation_regret": 0.0,
+    "later_rates": {
+      "codex_workspace": {
+        "missing_or_na_count": 0,
+        "pass_count": 7,
+        "pass_rate": 0.23333333333333334,
+        "valid_count": 30
+      },
+      "kilo_workspace": {
+        "missing_or_na_count": 0,
+        "pass_count": 16,
+        "pass_rate": 0.5333333333333333,
+        "valid_count": 30
+      }
+    },
+    "later_second_agent_id": "codex_workspace",
+    "later_task_ids": [
+      "attrs::attrs__v2__052",
+      "attrs::attrs__v2__158",
+      "attrs::attrs__v2__210",
+      "attrs::attrs__v2__218",
+      "attrs::attrs__v2__220",
+      "attrs::attrs__v2__223",
+      "attrs::attrs__v2__244",
+      "attrs::attrs__v2__253",
+      "attrs::attrs__v2__261",
+      "attrs::attrs__v2__264",
+      "boltons::boltons__v2__006",
+      "boltons::boltons__v2__091",
+      "boltons::boltons__v2__093",
+      "boltons::boltons__v2__122",
+      "boltons::boltons__v2__132",
+      "boltons::boltons__v2__135",
+      "boltons::boltons__v2__140",
+      "boltons::boltons__v2__144",
+      "boltons::boltons__v2__163",
+      "boltons::boltons__v2__232",
+      "click::click__third__050",
+      "click::click__third__109",
+      "click::click__third__198",
+      "click::click__third__203",
+      "click::click__third__205",
+      "click::click__third__208",
+      "click::click__third__214",
+      "click::click__third__234",
+      "click::click__third__271",
+      "click::click__third__288"
+    ],
+    "later_top_agent_id": "kilo_workspace",
+    "later_top_margin": 0.3,
+    "later_top_tied": false,
+    "missed_opportunity": true,
+    "pairwise_direction_agreement": 1.0,
+    "pairwise_rows": [
+      {
+        "agent_a": "codex_workspace",
+        "agent_b": "kilo_workspace",
+        "agrees": true,
+        "later_margin": -0.3,
+        "later_sign": -1,
+        "selected_margin": -0.277778,
+        "selected_sign": -1
+      }
+    ],
+    "recommendation_regret": null,
+    "selected_task_ids": [
+      "attrs::attrs__v2__157",
+      "attrs::attrs__v2__202",
+      "attrs::attrs__v2__207",
+      "attrs::attrs__v2__215",
+      "attrs::attrs__v2__235",
+      "attrs::attrs__v2__271",
+      "boltons::boltons__v2__009",
+      "boltons::boltons__v2__076",
+      "boltons::boltons__v2__103",
+      "boltons::boltons__v2__128",
+      "boltons::boltons__v2__154",
+      "boltons::boltons__v2__231",
+      "click::click__third__091",
+      "click::click__third__206",
+      "click::click__third__220",
+      "click::click__third__238",
+      "click::click__third__250",
+      "click::click__third__274"
+    ],
+    "selection_forced_top_agent_id": "kilo_workspace",
+    "selection_rates": {
+      "codex_workspace": {
+        "missing_or_na_count": 0,
+        "pass_count": 6,
+        "pass_rate": 0.3333333333333333,
+        "valid_count": 18
+      },
+      "kilo_workspace": {
+        "missing_or_na_count": 0,
+        "pass_count": 11,
+        "pass_rate": 0.6111111111111112,
+        "valid_count": 18
+      }
+    },
+    "selection_top_tied": false,
+    "top1_agreement_forced": true,
+    "top_pair_direction_agreement": null
+  },
+  "negative_terminal_blocker": "selector_does_not_recommend",
+  "new_paid_cells": 0,
+  "new_paid_cost_usd": 0.0,
+  "outcome_cell_counts": {
+    "missing_or_na_rows": 0,
+    "policy_valid_rows": 96,
+    "rows": 96,
+    "scoreable_rows": 95
+  },
+  "paid_agent_calls_made": false,
+  "paid_package_needed": false,
+  "preferred_terminal_state_achieved": false,
+  "protocol": "experiments/agent_selection_demo/results/selector_corrected_protocol.json",
+  "random_baselines": {
+    "quality_filtered_random": {
+      "decision_summary": {
+        "abstain_rate": 0.0,
+        "correct_abstain_rate": null,
+        "evaluated_count": 1000,
+        "false_recommendation_rate": 0.0,
+        "mean_recommendation_regret": 0.0,
+        "missed_opportunity_rate": 0.878,
+        "need_more_evidence_rate": 0.878,
+        "recommendation_coverage": 0.122,
+        "top_pair_direction_agreement_rate": 1.0,
+        "worst_recommendation_regret": 0.0
+      },
+      "metric_summary": {
+        "MAE_mean": 0.108588,
+        "MAE_median": 0.116667,
+        "MAE_p05": 0.031818,
+        "MAE_p95": 0.207576,
+        "forced_recommendation_regret_max": 0.3,
+        "forced_recommendation_regret_mean": 0.0069,
+        "pairwise_direction_agreement_mean": 0.977,
+        "sample_count": 1000,
+        "top1_agreement_rate_forced": 0.977
+      },
+      "seed_count": 1000,
+      "selector_id": "quality_filtered_random",
+      "unique_sample_count": 1000
+    },
+    "stratified_random": {
+      "decision_summary": {
+        "abstain_rate": 0.0,
+        "correct_abstain_rate": null,
+        "evaluated_count": 1000,
+        "false_recommendation_rate": 0.0,
+        "mean_recommendation_regret": 0.0,
+        "missed_opportunity_rate": 0.822,
+        "need_more_evidence_rate": 0.822,
+        "recommendation_coverage": 0.178,
+        "top_pair_direction_agreement_rate": 1.0,
+        "worst_recommendation_regret": 0.0
+      },
+      "metric_summary": {
+        "MAE_mean": 0.090146,
+        "MAE_median": 0.078205,
+        "MAE_p05": 0.025,
+        "MAE_p95": 0.19359,
+        "forced_recommendation_regret_max": 0.0,
+        "forced_recommendation_regret_mean": 0.0,
+        "pairwise_direction_agreement_mean": 1.0,
+        "sample_count": 1000,
+        "top1_agreement_rate_forced": 1.0
+      },
+      "seed_count": 1000,
+      "selector_id": "stratified_random",
+      "unique_sample_count": 993
+    },
+    "uniform_random_same_budget": {
+      "decision_summary": {
+        "abstain_rate": 0.0,
+        "correct_abstain_rate": null,
+        "evaluated_count": 1000,
+        "false_recommendation_rate": 0.0,
+        "mean_recommendation_regret": 0.0,
+        "missed_opportunity_rate": 0.878,
+        "need_more_evidence_rate": 0.878,
+        "recommendation_coverage": 0.122,
+        "top_pair_direction_agreement_rate": 1.0,
+        "worst_recommendation_regret": 0.0
+      },
+      "metric_summary": {
+        "MAE_mean": 0.108588,
+        "MAE_median": 0.116667,
+        "MAE_p05": 0.031818,
+        "MAE_p95": 0.207576,
+        "forced_recommendation_regret_max": 0.3,
+        "forced_recommendation_regret_mean": 0.0069,
+        "pairwise_direction_agreement_mean": 0.977,
+        "sample_count": 1000,
+        "top1_agreement_rate_forced": 0.977
+      },
+      "seed_count": 1000,
+      "selector_id": "uniform_random_same_budget",
+      "unique_sample_count": 1000
+    }
+  },
+  "schema_version": "barcarolle.agent_selection_demo.selector_no_paid_independent_eval.v1",
+  "selected_task_ids": [
+    "attrs::attrs__v2__157",
+    "attrs::attrs__v2__202",
+    "attrs::attrs__v2__207",
+    "attrs::attrs__v2__215",
+    "attrs::attrs__v2__235",
+    "attrs::attrs__v2__271",
+    "boltons::boltons__v2__009",
+    "boltons::boltons__v2__076",
+    "boltons::boltons__v2__103",
+    "boltons::boltons__v2__128",
+    "boltons::boltons__v2__154",
+    "boltons::boltons__v2__231",
+    "click::click__third__091",
+    "click::click__third__206",
+    "click::click__third__220",
+    "click::click__third__238",
+    "click::click__third__250",
+    "click::click__third__274"
+  ],
+  "selector_id": "hrd_v2_70_30",
+  "source_mode": "retrospective_pseudo_future_blocked_split_heldout",
+  "strongest_random_baseline_id": "stratified_random"
+}
