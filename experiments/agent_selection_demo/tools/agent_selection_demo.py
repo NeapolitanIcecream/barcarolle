@@ -2545,6 +2545,104 @@ def decision_wrapper_for_selection(
     }
 
 
+def decision_wrapper_v2_for_selection(
+    selected_task_ids: list[str],
+    agent_ids: list[str],
+    outcome_rows: list[dict[str, str]],
+    thresholds: dict[str, Any],
+) -> dict[str, Any]:
+    outcomes = outcome_lookup(outcome_rows)
+    rates = selector_pass_rates(selected_task_ids, agent_ids, "selection", outcomes)
+    top_agent, nearest, margin, tied = decision_top_agents(rates)
+    min_common = int(thresholds.get("min_common_valid", thresholds.get("min_common_valid_selected_tasks", 8)))
+    action_margin = float(thresholds.get("action_margin", 0.05))
+    lcb_tolerance = float(thresholds.get("lcb_tolerance", 0.05))
+    tie_epsilon = float(thresholds.get("tie_epsilon", SELECTOR_TIE_EPSILON))
+    iterations = int(thresholds.get("bootstrap_iterations", 1000))
+    confidence = float(thresholds.get("confidence_level", 0.8))
+    if top_agent is None or nearest is None or margin is None:
+        return {
+            "version": "v2",
+            "state": "need_more_evidence",
+            "recommended_agent_id": None,
+            "reason": "fewer_than_two_agents_with_valid_selection_rates",
+            "selection_rates": rates,
+        }
+
+    pair_stats: list[dict[str, Any]] = []
+    enough_common = True
+    all_pairs_support_top = True
+    for competitor in sorted(agent_id for agent_id in agent_ids if agent_id != top_agent):
+        differences = paired_agent_differences(selected_task_ids, top_agent, competitor, outcomes)
+        wins = sum(1 for value in differences if value > 0)
+        losses = sum(1 for value in differences if value < 0)
+        pair_margin = None if not differences else sum(differences) / len(differences)
+        lcb = bootstrap_margin_lcb(differences, iterations=iterations, confidence_level=confidence)
+        common_valid = len(differences)
+        if common_valid < min_common:
+            enough_common = False
+        supports = (
+            common_valid >= min_common
+            and pair_margin is not None
+            and pair_margin >= action_margin
+            and wins > losses
+            and (lcb is None or lcb >= -lcb_tolerance)
+        )
+        if not supports:
+            all_pairs_support_top = False
+        pair_stats.append(
+            {
+                "competitor_agent_id": competitor,
+                "common_valid": common_valid,
+                "wins": wins,
+                "losses": losses,
+                "ties": sum(1 for value in differences if value == 0),
+                "selected_margin": selector_round(pair_margin),
+                "bootstrap_lcb": lcb,
+                "lcb_tolerance": lcb_tolerance,
+                "supports_recommendation": supports,
+            }
+        )
+
+    if not enough_common:
+        state = "need_more_evidence"
+        reason = "insufficient_common_valid_selected_tasks"
+        recommended = None
+    elif tied or margin < tie_epsilon:
+        state = "abstain_indistinguishable"
+        reason = "selected_top_margin_within_tie_epsilon"
+        recommended = None
+    elif margin < action_margin:
+        state = "need_more_evidence"
+        reason = "selected_top_margin_below_action_margin"
+        recommended = None
+    elif all_pairs_support_top:
+        state = "recommend"
+        reason = "wrapper_v2_margin_wins_and_lcb_tolerance_passed"
+        recommended = top_agent
+    else:
+        state = "need_more_evidence"
+        reason = "paired_evidence_does_not_clear_v2_thresholds"
+        recommended = None
+    return {
+        "version": "v2",
+        "state": state,
+        "recommended_agent_id": recommended,
+        "reason": reason,
+        "top_agent_id": top_agent,
+        "nearest_competitor_agent_id": nearest,
+        "selected_top_margin": selector_round(margin),
+        "selection_rates": rates,
+        "pair_stats": pair_stats,
+        "thresholds": {
+            "action_margin": action_margin,
+            "min_common_valid": min_common,
+            "lcb_tolerance": lcb_tolerance,
+            "tie_epsilon": tie_epsilon,
+        },
+    }
+
+
 def apply_later_decision_metrics(
     decision: dict[str, Any],
     selected_task_ids: list[str],
@@ -4825,6 +4923,269 @@ def render_selector_algorithm_registry(payload: dict[str, Any]) -> str:
     return "\n".join(lines) + "\n"
 
 
+WRAPPER_V2_THRESHOLD_GRID = {
+    "action_margin": [0.05, 0.10, 0.15],
+    "min_common_valid": [8, 12],
+    "lcb_tolerance": [0.0, 0.05, 0.10],
+    "tie_epsilon": [0.05, 0.10],
+}
+
+
+def wrapper_v2_threshold_grid_rows() -> list[dict[str, Any]]:
+    rows: list[dict[str, Any]] = []
+    for action_margin in WRAPPER_V2_THRESHOLD_GRID["action_margin"]:
+        for min_common in WRAPPER_V2_THRESHOLD_GRID["min_common_valid"]:
+            for lcb_tolerance in WRAPPER_V2_THRESHOLD_GRID["lcb_tolerance"]:
+                for tie_epsilon in WRAPPER_V2_THRESHOLD_GRID["tie_epsilon"]:
+                    rows.append(
+                        {
+                            "action_margin": action_margin,
+                            "min_common_valid": min_common,
+                            "lcb_tolerance": lcb_tolerance,
+                            "tie_epsilon": tie_epsilon,
+                            "bootstrap_iterations": 1000,
+                            "confidence_level": 0.8,
+                        }
+                    )
+    return rows
+
+
+def bakeoff_source_rows(feature_rows: list[dict[str, Any]], source_id: str) -> list[dict[str, Any]]:
+    return [row for row in feature_rows if row.get("source_id") == source_id]
+
+
+def bakeoff_source_outcomes(outcome_rows: list[dict[str, Any]], source_id: str) -> list[dict[str, Any]]:
+    return [row for row in outcome_rows if row.get("source_id") == source_id]
+
+
+def bakeoff_later_task_ids_for_source(feature_rows: list[dict[str, Any]], source_id: str) -> list[str]:
+    return [
+        str(row["task_id"])
+        for row in sorted(bakeoff_source_rows(feature_rows, source_id), key=lambda row: (str(row.get("repo") or ""), str(row.get("task_time") or ""), str(row["task_id"])))
+        if row.get("stage_role") == "holdout"
+    ]
+
+
+def bakeoff_agent_ids_for_source(outcome_rows: list[dict[str, Any]], source_id: str) -> list[str]:
+    return sorted({str(row["agent_id"]) for row in outcome_rows if row.get("source_id") == source_id and row.get("stage") == "selection"})
+
+
+def bakeoff_k_per_repo_for_source(feature_rows: list[dict[str, Any]], source_id: str) -> int:
+    source_rows = bakeoff_eligible_selection_rows(feature_rows, source_id)
+    counts = Counter(str(row.get("repo") or "") for row in source_rows)
+    if source_id == "boltons_demo_development":
+        return min(10, min(counts.values(), default=10))
+    if source_id == "phase1_repo_specific_earliest_time_bucket_cutoff_development":
+        return min(4, min(counts.values(), default=4))
+    return min(6, min(counts.values(), default=6))
+
+
+def bakeoff_development_selector_cases() -> list[dict[str, Any]]:
+    if not result_path("selector_bakeoff_task_features.csv").exists():
+        selector_bakeoff_build_features()
+    feature_rows = load_bakeoff_feature_rows()
+    outcome_rows = load_bakeoff_outcome_rows()
+    algorithm_ids = ["rsq_v2", "flc", "hrd_v3_70_30", "hrd_v3_60_40", "hrd_v3_50_50", "cod_lite", "ro_lsp", "saes_lite"]
+    cases: list[dict[str, Any]] = []
+    for source_id in sorted(BAKEOFF_DEVELOPMENT_SOURCE_IDS):
+        source_features = bakeoff_source_rows(feature_rows, source_id)
+        source_outcomes = bakeoff_source_outcomes(outcome_rows, source_id)
+        if not source_features or not source_outcomes:
+            continue
+        agent_ids = bakeoff_agent_ids_for_source(outcome_rows, source_id)
+        later_ids = bakeoff_later_task_ids_for_source(feature_rows, source_id)
+        k_per_repo = bakeoff_k_per_repo_for_source(feature_rows, source_id)
+        for algorithm_id in algorithm_ids:
+            kwargs = {"outcome_rows": source_outcomes, "agent_ids": agent_ids} if algorithm_id == "saes_lite" else {}
+            selection = select_bakeoff_algorithm_by_repo(source_features, algorithm_id, k_per_repo, **kwargs)
+            cases.append(
+                {
+                    "source_id": source_id,
+                    "algorithm_id": algorithm_id,
+                    "k_per_repo": k_per_repo,
+                    "selected_task_ids": selection["selected_task_ids"],
+                    "later_task_ids": later_ids,
+                    "agent_ids": agent_ids,
+                }
+            )
+    return cases
+
+
+def wrapper_v2_score_summary(rows: list[dict[str, Any]]) -> dict[str, Any]:
+    total = len(rows)
+    recommendations = [row for row in rows if row["decision"]["state"] == "recommend"]
+    validated = [
+        row
+        for row in recommendations
+        if row.get("recommendation_regret") is not None
+        and float(row["recommendation_regret"]) <= 0.05
+        and row.get("top_pair_direction_agreement") is True
+    ]
+    false_rows = [row for row in recommendations if row.get("false_recommendation") is True]
+    regrets = [float(row["recommendation_regret"]) for row in recommendations if row.get("recommendation_regret") is not None]
+    abstains = [row for row in rows if row["decision"]["state"] == "abstain_indistinguishable"]
+    correct_abstains = [row for row in abstains if row.get("correct_abstain") is True]
+    validated_rate = len(validated) / total if total else 0.0
+    false_rate = len(false_rows) / len(recommendations) if recommendations else 0.0
+    regret_penalty = statistics.mean(regrets) if regrets else 0.0
+    abstention_sanity_bonus = 0.05 * (len(correct_abstains) / len(abstains)) if abstains else 0.0
+    score = validated_rate - 2.0 * false_rate - regret_penalty + abstention_sanity_bonus
+    summary = summarize_decision_rows(rows)
+    return {
+        **summary,
+        "validated_recommendation_rate": selector_round(validated_rate),
+        "validated_recommendation_count": len(validated),
+        "recommendation_count": len(recommendations),
+        "false_recommendation_count": len(false_rows),
+        "regret_penalty": selector_round(regret_penalty),
+        "abstention_sanity_bonus": selector_round(abstention_sanity_bonus),
+        "wrapper_score": selector_round(score),
+        "scoring_formula": "validated_recommendation_rate - 2.0*false_recommendation_rate - mean_recommendation_regret + 0.05*correct_abstain_rate",
+    }
+
+
+def compact_wrapper_case(row: dict[str, Any]) -> dict[str, Any]:
+    return {
+        "source_id": row["source_id"],
+        "algorithm_id": row["algorithm_id"],
+        "decision_state": row["decision"]["state"],
+        "recommended_agent_id": row["decision"].get("recommended_agent_id"),
+        "later_top_agent_id": row.get("later_top_agent_id"),
+        "recommendation_regret": row.get("recommendation_regret"),
+        "false_recommendation": row.get("false_recommendation"),
+        "top_pair_direction_agreement": row.get("top_pair_direction_agreement"),
+        "MAE": row.get("MAE"),
+        "selection_rates": row.get("selection_rates"),
+        "later_rates": row.get("later_rates"),
+    }
+
+
+def selector_decision_wrapper_v2_eval() -> dict[str, Any]:
+    cases = bakeoff_development_selector_cases()
+    outcome_rows = load_bakeoff_outcome_rows()
+    outcome_by_source = {source_id: bakeoff_source_outcomes(outcome_rows, source_id) for source_id in BAKEOFF_DEVELOPMENT_SOURCE_IDS}
+    threshold_results: list[dict[str, Any]] = []
+    for thresholds in wrapper_v2_threshold_grid_rows():
+        rows: list[dict[str, Any]] = []
+        for case in cases:
+            source_outcomes = outcome_by_source[case["source_id"]]
+            decision = decision_wrapper_v2_for_selection(case["selected_task_ids"], case["agent_ids"], source_outcomes, thresholds)
+            metrics = apply_later_decision_metrics(
+                decision,
+                case["selected_task_ids"],
+                case["later_task_ids"],
+                case["agent_ids"],
+                source_outcomes,
+                thresholds,
+            )
+            rows.append({**case, **metrics})
+        threshold_results.append(
+            {
+                "thresholds": thresholds,
+                "summary": wrapper_v2_score_summary(rows),
+                "case_rows": [compact_wrapper_case(row) for row in rows],
+            }
+        )
+    threshold_results.sort(
+        key=lambda row: (
+            float(row["summary"]["wrapper_score"] or -999.0),
+            float(row["summary"]["validated_recommendation_rate"] or 0.0),
+            float(row["summary"]["recommendation_coverage"] or 0.0),
+            -float(row["summary"]["false_recommendation_rate"] or 0.0),
+            -float(row["thresholds"]["action_margin"]),
+            -float(row["thresholds"]["min_common_valid"]),
+        ),
+        reverse=True,
+    )
+    selected = threshold_results[0]
+    payload = {
+        "schema_version": "barcarolle.agent_selection_demo.selector_decision_wrapper_v2_eval.v1",
+        "generated_at": "2026-06-14",
+        "paid_agent_calls_made": False,
+        "development_source_ids": sorted(BAKEOFF_DEVELOPMENT_SOURCE_IDS),
+        "final_source_excluded_from_threshold_search": BAKEOFF_FINAL_SOURCE_ID,
+        "threshold_grid": WRAPPER_V2_THRESHOLD_GRID,
+        "scoring_formula": selected["summary"]["scoring_formula"],
+        "selected_thresholds": selected["thresholds"],
+        "selected_threshold_summary": selected["summary"],
+        "top_threshold_results": threshold_results[:10],
+        "all_threshold_result_count": len(threshold_results),
+        "zero_loss_requirement": False,
+        "interpretation": "Wrapper v2 is calibrated on development evidence only and is less conservative than the previous no-discordant-loss rule.",
+    }
+    write_json(result_path("selector_decision_wrapper_v2_eval.json"), payload)
+    write_text(report_path("selector_decision_wrapper_v2_eval_zh.md"), render_selector_decision_wrapper_v2_eval(payload))
+    return payload
+
+
+def render_selector_decision_wrapper_v2_eval(payload: dict[str, Any]) -> str:
+    selected = payload["selected_thresholds"]
+    summary = payload["selected_threshold_summary"]
+    rows = [
+        {
+            "Rank": index + 1,
+            "Margin": row["thresholds"]["action_margin"],
+            "Min common": row["thresholds"]["min_common_valid"],
+            "LCB tol": row["thresholds"]["lcb_tolerance"],
+            "Tie eps": row["thresholds"]["tie_epsilon"],
+            "Score": row["summary"]["wrapper_score"],
+            "Validated": row["summary"]["validated_recommendation_rate"],
+            "Coverage": row["summary"]["recommendation_coverage"],
+            "False": row["summary"]["false_recommendation_rate"],
+            "Regret": row["summary"]["mean_recommendation_regret"],
+        }
+        for index, row in enumerate(payload["top_threshold_results"][:5])
+    ]
+    lines = [
+        "# Selector Decision Wrapper v2 Eval",
+        "",
+        "生成日期：2026-06-14",
+        "",
+        "## Rule",
+        "",
+        "v2 推荐规则：Selection top margin 达到 action margin；common valid tasks 达到下限；paired wins 大于 paired losses；bootstrap LCB 不低于 `-lcb_tolerance`。它不再要求 `losses == 0`。",
+        "",
+        "## Selected thresholds",
+        "",
+        f"- Action margin: `{selected['action_margin']}`。",
+        f"- Min common valid: `{selected['min_common_valid']}`。",
+        f"- LCB tolerance: `{selected['lcb_tolerance']}`。",
+        f"- Tie epsilon: `{selected['tie_epsilon']}`。",
+        "",
+        "## Development score",
+        "",
+        f"- Formula: `{payload['scoring_formula']}`。",
+        f"- Wrapper score: `{summary['wrapper_score']}`。",
+        f"- Recommendation coverage: `{summary['recommendation_coverage']}`。",
+        f"- Validated recommendation rate: `{summary['validated_recommendation_rate']}`。",
+        f"- False-recommendation rate: `{summary['false_recommendation_rate']}`。",
+        f"- Mean recommendation regret: `{summary['mean_recommendation_regret']}`。",
+        "",
+        "## Top threshold rows",
+        "",
+        *markdown_table(
+            rows,
+            [
+                ("Rank", "Rank"),
+                ("Margin", "Margin"),
+                ("Min common", "Min common"),
+                ("LCB tol", "LCB tol"),
+                ("Tie eps", "Tie eps"),
+                ("Score", "Score"),
+                ("Validated", "Validated"),
+                ("Coverage", "Coverage"),
+                ("False", "False"),
+                ("Regret", "Regret"),
+            ],
+        ),
+        "",
+        "## Boundary",
+        "",
+        f"Threshold search excluded final source `{payload['final_source_excluded_from_threshold_search']}`. MAE remains auxiliary; this search optimizes demo decision quality first.",
+    ]
+    return "\n".join(lines) + "\n"
+
+
 def render_selector_baseline_eval(payload: dict[str, Any]) -> str:
     lines = [
         "# Selector Baseline Eval",
@@ -6195,6 +6556,7 @@ def main() -> int:
     subcommands.add_parser("selector-no-paid-independent-eval")
     subcommands.add_parser("selector-bakeoff-build-features")
     subcommands.add_parser("selector-algorithm-registry")
+    subcommands.add_parser("selector-decision-wrapper-v2-eval")
     args = parser.parse_args()
     config = load_config(repo_path(args.config))
     if args.command == "gate":
@@ -6271,6 +6633,9 @@ def main() -> int:
         return 0
     if args.command == "selector-algorithm-registry":
         selector_algorithm_registry()
+        return 0
+    if args.command == "selector-decision-wrapper-v2-eval":
+        selector_decision_wrapper_v2_eval()
         return 0
     raise ValueError(args.command)
 

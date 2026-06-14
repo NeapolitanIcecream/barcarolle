@@ -795,6 +795,33 @@ def test_decision_wrapper_needs_more_evidence_when_common_valid_is_low() -> None
     assert decision["reason"] == "insufficient_common_valid_selected_tasks"
 
 
+def test_decision_wrapper_v2_recommends_with_one_discordant_loss_but_overall_win() -> None:
+    outcomes = selector_test_outcome_rows(
+        {
+            "agent_a": [1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 1, 1],
+            "agent_b": [0, 0, 0, 0, 1, 1, 1, 1, 1, 0, 1, 1],
+        }
+    )
+
+    decision = demo.decision_wrapper_v2_for_selection(
+        [f"task_{index}" for index in range(12)],
+        ["agent_a", "agent_b"],
+        outcomes,
+        {
+            "action_margin": 0.05,
+            "min_common_valid": 8,
+            "lcb_tolerance": 0.1,
+            "tie_epsilon": 0.05,
+            "bootstrap_iterations": 100,
+            "confidence_level": 0.8,
+        },
+    )
+
+    assert decision["state"] == "recommend"
+    assert decision["recommended_agent_id"] == "agent_a"
+    assert decision["pair_stats"][0]["losses"] == 1
+
+
 def test_recommend_skips_cost_when_usage_coverage_is_inconclusive(tmp_path: Path, monkeypatch) -> None:
     monkeypatch.setattr(demo, "RESULTS_REL", tmp_path / "results")
     monkeypatch.setattr(demo, "REPORTS_REL", tmp_path / "reports")
