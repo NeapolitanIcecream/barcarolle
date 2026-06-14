@@ -438,6 +438,66 @@ def test_rsq_selects_newest_task_within_each_source_recency_quota() -> None:
     assert selected == ["new_a", "new_b"]
 
 
+def test_hrd_hybrid_reports_representative_and_discriminative_split() -> None:
+    rows = [
+        {
+            "task_id": f"task_{index}",
+            "source": "source_a" if index < 6 else "source_b",
+            "source_cluster": "source_a:cluster" if index < 6 else "source_b:cluster",
+            "recency_bucket": "legacy" if index < 6 else "middle",
+            "module_bucket": f"m{index}",
+            "change_size_proxy": "medium" if index % 3 == 0 else "small",
+            "quality_score": 1.0,
+            "risk_flag": False,
+            "flaky_flag": False,
+            "task_time": f"2020-01-{index + 1:02d}T00:00:00Z",
+        }
+        for index in range(10)
+    ]
+
+    selection = demo.select_hrd_hybrid(rows, k=10, representative_fraction=0.7)
+
+    assert len(selection["selected_task_ids"]) == 10
+    assert selection["representative_count"] == 7
+    assert selection["discriminative_count"] == 3
+    assert selection["disagreement_source"] == "metadata_cluster_density_difficulty_proxy"
+
+
+def test_hrd_metadata_scores_ignore_outcome_like_future_fields() -> None:
+    rows = [
+        {
+            "task_id": "task_a",
+            "source": "source_a",
+            "source_cluster": "source_a:cluster",
+            "recency_bucket": "legacy",
+            "module_bucket": "m1",
+            "change_size_proxy": "medium",
+            "quality_score": 1.0,
+            "risk_flag": False,
+            "flaky_flag": False,
+            "task_time": "2020-01-01T00:00:00Z",
+            "future_pass_rate": 0.0,
+        },
+        {
+            "task_id": "task_b",
+            "source": "source_b",
+            "source_cluster": "source_b:cluster",
+            "recency_bucket": "middle",
+            "module_bucket": "m2",
+            "change_size_proxy": "small",
+            "quality_score": 1.0,
+            "risk_flag": False,
+            "flaky_flag": False,
+            "task_time": "2020-02-01T00:00:00Z",
+            "future_pass_rate": 1.0,
+        },
+    ]
+    changed_future = [{**row, "future_pass_rate": 1.0 - row["future_pass_rate"]} for row in rows]
+
+    assert demo.metadata_disagreement_scores(rows) == demo.metadata_disagreement_scores(changed_future)
+    assert demo.select_hrd_disagreement_only(rows, k=1)["selected_task_ids"] == demo.select_hrd_disagreement_only(changed_future, k=1)["selected_task_ids"]
+
+
 def test_recommend_skips_cost_when_usage_coverage_is_inconclusive(tmp_path: Path, monkeypatch) -> None:
     monkeypatch.setattr(demo, "RESULTS_REL", tmp_path / "results")
     monkeypatch.setattr(demo, "REPORTS_REL", tmp_path / "reports")

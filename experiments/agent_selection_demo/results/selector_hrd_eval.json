@@ -1,0 +1,2016 @@
+{
+  "baseline_context": {
+    "quality_filtered_random__k10": {
+      "k": 10,
+      "selector_id": "quality_filtered_random",
+      "summary": {
+        "MAE_mean": 0.152775,
+        "MAE_median": 0.15,
+        "MAE_p05": 0.1,
+        "MAE_p95": 0.2,
+        "forced_recommendation_regret_max": 0.4,
+        "forced_recommendation_regret_mean": 0.268,
+        "pairwise_direction_agreement_mean": 0.365667,
+        "sample_count": 1000,
+        "top1_agreement_rate_forced": 0.33
+      }
+    },
+    "quality_filtered_random__k20": {
+      "k": 20,
+      "selector_id": "quality_filtered_random",
+      "summary": {
+        "MAE_mean": 0.1375,
+        "MAE_median": 0.1375,
+        "MAE_p05": 0.1375,
+        "MAE_p95": 0.1375,
+        "forced_recommendation_regret_max": 0.4,
+        "forced_recommendation_regret_mean": 0.4,
+        "pairwise_direction_agreement_mean": 0.333333,
+        "sample_count": 1000,
+        "top1_agreement_rate_forced": 0.0
+      }
+    },
+    "stratified_random__k10": {
+      "k": 10,
+      "selector_id": "stratified_random",
+      "summary": {
+        "MAE_mean": 0.1517,
+        "MAE_median": 0.15,
+        "MAE_p05": 0.1,
+        "MAE_p95": 0.2,
+        "forced_recommendation_regret_max": 0.4,
+        "forced_recommendation_regret_mean": 0.274,
+        "pairwise_direction_agreement_mean": 0.361667,
+        "sample_count": 1000,
+        "top1_agreement_rate_forced": 0.315
+      }
+    },
+    "stratified_random__k20": {
+      "k": 20,
+      "selector_id": "stratified_random",
+      "summary": {
+        "MAE_mean": 0.1375,
+        "MAE_median": 0.1375,
+        "MAE_p05": 0.1375,
+        "MAE_p95": 0.1375,
+        "forced_recommendation_regret_max": 0.4,
+        "forced_recommendation_regret_mean": 0.4,
+        "pairwise_direction_agreement_mean": 0.333333,
+        "sample_count": 1000,
+        "top1_agreement_rate_forced": 0.0
+      }
+    },
+    "uniform_random_same_budget__k10": {
+      "k": 10,
+      "selector_id": "uniform_random_same_budget",
+      "summary": {
+        "MAE_mean": 0.152775,
+        "MAE_median": 0.15,
+        "MAE_p05": 0.1,
+        "MAE_p95": 0.2,
+        "forced_recommendation_regret_max": 0.4,
+        "forced_recommendation_regret_mean": 0.268,
+        "pairwise_direction_agreement_mean": 0.365667,
+        "sample_count": 1000,
+        "top1_agreement_rate_forced": 0.33
+      }
+    },
+    "uniform_random_same_budget__k20": {
+      "k": 20,
+      "selector_id": "uniform_random_same_budget",
+      "summary": {
+        "MAE_mean": 0.1375,
+        "MAE_median": 0.1375,
+        "MAE_p05": 0.1375,
+        "MAE_p95": 0.1375,
+        "forced_recommendation_regret_max": 0.4,
+        "forced_recommendation_regret_mean": 0.4,
+        "pairwise_direction_agreement_mean": 0.333333,
+        "sample_count": 1000,
+        "top1_agreement_rate_forced": 0.0
+      }
+    }
+  },
+  "best_variant_key": "hrd_70_30__k10",
+  "disagreement_fallback": {
+    "reason": "No leakage-safe historical current-Agent disagreement matrix exists for the frozen Selection candidate tasks. HRD therefore uses metadata source-cluster density, change-size proxy, and diversity penalties.",
+    "used": true
+  },
+  "generated_at": "2026-06-14",
+  "interpretation": {
+    "best_variant_forced_top": "kilo_gpt_5_4",
+    "best_variant_key": "hrd_70_30__k10",
+    "best_variant_mae": 0.1,
+    "decision_quality_note": "HRD improves the Agent-selection story when it creates a Kilo top-pair lead with low forced regret; Package 5 applies the shared decision wrapper before any final recommendation claim."
+  },
+  "paid_agent_calls_made": false,
+  "rsq_context": {
+    "rsq_recency_stratified_quota__k10": {
+      "MAE": 0.25,
+      "forced_recommendation_regret": 0.0,
+      "k": 10,
+      "later_top_agent_id": "kilo_gpt_5_4",
+      "pairwise_direction_agreement": 0.5,
+      "selection_forced_top_agent_id": "kilo_gpt_5_4",
+      "selector_id": "rsq_recency_stratified_quota"
+    },
+    "rsq_recency_stratified_quota__k20": {
+      "MAE": 0.1375,
+      "forced_recommendation_regret": 0.4,
+      "k": 20,
+      "later_top_agent_id": "kilo_gpt_5_4",
+      "pairwise_direction_agreement": 0.333333,
+      "selection_forced_top_agent_id": "codex_gpt_5_4",
+      "selector_id": "rsq_recency_stratified_quota"
+    }
+  },
+  "schema_version": "barcarolle.agent_selection_demo.selector_hrd_eval.v1",
+  "variants": {
+    "hrd_50_50__k10": {
+      "MAE": 0.1,
+      "disagreement_source": "metadata_cluster_density_difficulty_proxy",
+      "discriminative_count": 5,
+      "discriminative_task_ids": [
+        "boltons__supply_expansion_20260526__001",
+        "boltons__supply_expansion_20260526__004",
+        "boltons__supply_expansion_20260526__006",
+        "boltons__supply_expansion_20260526__048",
+        "boltons__supply_expansion_20260526__066"
+      ],
+      "forced_recommendation_regret": 0.0,
+      "k": 10,
+      "later_rates": {
+        "codex_gpt_5_4": {
+          "missing_or_na_count": 0,
+          "pass_count": 5,
+          "pass_rate": 0.5,
+          "valid_count": 10
+        },
+        "kilo_claude_sonnet_4_6": {
+          "missing_or_na_count": 0,
+          "pass_count": 8,
+          "pass_rate": 0.8,
+          "valid_count": 10
+        },
+        "kilo_gpt_5_4": {
+          "missing_or_na_count": 0,
+          "pass_count": 9,
+          "pass_rate": 0.9,
+          "valid_count": 10
+        },
+        "kilo_gpt_5_4_mini": {
+          "missing_or_na_count": 0,
+          "pass_count": 6,
+          "pass_rate": 0.6,
+          "valid_count": 10
+        }
+      },
+      "later_task_ids": [
+        "boltons__clean_ext__017",
+        "boltons__hist__019",
+        "boltons__hist__020",
+        "boltons__hist__022",
+        "boltons__hist__023",
+        "boltons__hist__024",
+        "boltons__hist__025",
+        "boltons__hist__026",
+        "boltons__hist__027",
+        "boltons__hist__028"
+      ],
+      "later_top_agent_id": "kilo_gpt_5_4",
+      "later_top_tied": false,
+      "pairwise_direction_agreement": 0.5,
+      "pairwise_rows": [
+        {
+          "agent_a": "codex_gpt_5_4",
+          "agent_b": "kilo_gpt_5_4",
+          "agrees": true,
+          "later_margin": -0.4,
+          "later_sign": -1,
+          "selected_margin": -0.2,
+          "selected_sign": -1
+        },
+        {
+          "agent_a": "codex_gpt_5_4",
+          "agent_b": "kilo_gpt_5_4_mini",
+          "agrees": false,
+          "later_margin": -0.1,
+          "later_sign": -1,
+          "selected_margin": 0.0,
+          "selected_sign": 0
+        },
+        {
+          "agent_a": "codex_gpt_5_4",
+          "agent_b": "kilo_claude_sonnet_4_6",
+          "agrees": false,
+          "later_margin": -0.3,
+          "later_sign": -1,
+          "selected_margin": 0.0,
+          "selected_sign": 0
+        },
+        {
+          "agent_a": "kilo_gpt_5_4",
+          "agent_b": "kilo_gpt_5_4_mini",
+          "agrees": true,
+          "later_margin": 0.3,
+          "later_sign": 1,
+          "selected_margin": 0.2,
+          "selected_sign": 1
+        },
+        {
+          "agent_a": "kilo_gpt_5_4",
+          "agent_b": "kilo_claude_sonnet_4_6",
+          "agrees": true,
+          "later_margin": 0.1,
+          "later_sign": 1,
+          "selected_margin": 0.2,
+          "selected_sign": 1
+        },
+        {
+          "agent_a": "kilo_gpt_5_4_mini",
+          "agent_b": "kilo_claude_sonnet_4_6",
+          "agrees": false,
+          "later_margin": -0.2,
+          "later_sign": -1,
+          "selected_margin": 0.0,
+          "selected_sign": 0
+        }
+      ],
+      "random_percentiles": {
+        "quality_filtered_random": {
+          "MAE_beats_or_ties_random_share": 1.0,
+          "pairwise_agreement_beats_or_ties_random_share": 0.895,
+          "regret_beats_or_ties_random_share": 1.0
+        },
+        "stratified_random": {
+          "MAE_beats_or_ties_random_share": 1.0,
+          "pairwise_agreement_beats_or_ties_random_share": 0.922,
+          "regret_beats_or_ties_random_share": 1.0
+        },
+        "uniform_random_same_budget": {
+          "MAE_beats_or_ties_random_share": 1.0,
+          "pairwise_agreement_beats_or_ties_random_share": 0.895,
+          "regret_beats_or_ties_random_share": 1.0
+        }
+      },
+      "representative_count": 5,
+      "representative_fraction": 0.5,
+      "representative_task_ids": [
+        "boltons__clean_ext__010",
+        "boltons__hist__014",
+        "boltons__hist__017",
+        "boltons__supply_expansion_20260526__093",
+        "boltons__supply_expansion_20260526__095"
+      ],
+      "selected_task_ids": [
+        "boltons__clean_ext__010",
+        "boltons__hist__014",
+        "boltons__hist__017",
+        "boltons__supply_expansion_20260526__001",
+        "boltons__supply_expansion_20260526__004",
+        "boltons__supply_expansion_20260526__006",
+        "boltons__supply_expansion_20260526__048",
+        "boltons__supply_expansion_20260526__066",
+        "boltons__supply_expansion_20260526__093",
+        "boltons__supply_expansion_20260526__095"
+      ],
+      "selection_forced_top_agent_id": "kilo_gpt_5_4",
+      "selection_rates": {
+        "codex_gpt_5_4": {
+          "missing_or_na_count": 0,
+          "pass_count": 7,
+          "pass_rate": 0.7,
+          "valid_count": 10
+        },
+        "kilo_claude_sonnet_4_6": {
+          "missing_or_na_count": 0,
+          "pass_count": 7,
+          "pass_rate": 0.7,
+          "valid_count": 10
+        },
+        "kilo_gpt_5_4": {
+          "missing_or_na_count": 0,
+          "pass_count": 9,
+          "pass_rate": 0.9,
+          "valid_count": 10
+        },
+        "kilo_gpt_5_4_mini": {
+          "missing_or_na_count": 0,
+          "pass_count": 7,
+          "pass_rate": 0.7,
+          "valid_count": 10
+        }
+      },
+      "selection_top_tied": false,
+      "selector_id": "hrd_50_50",
+      "top1_agreement_forced": true
+    },
+    "hrd_50_50__k20": {
+      "MAE": 0.1375,
+      "disagreement_source": "metadata_cluster_density_difficulty_proxy",
+      "discriminative_count": 10,
+      "discriminative_task_ids": [
+        "boltons__clean_ext__001",
+        "boltons__hist__006",
+        "boltons__hist__007",
+        "boltons__hist__011",
+        "boltons__supply_expansion_20260526__001",
+        "boltons__supply_expansion_20260526__002",
+        "boltons__supply_expansion_20260526__003",
+        "boltons__supply_expansion_20260526__004",
+        "boltons__supply_expansion_20260526__006",
+        "boltons__supply_expansion_20260526__107"
+      ],
+      "forced_recommendation_regret": 0.4,
+      "k": 20,
+      "later_rates": {
+        "codex_gpt_5_4": {
+          "missing_or_na_count": 0,
+          "pass_count": 5,
+          "pass_rate": 0.5,
+          "valid_count": 10
+        },
+        "kilo_claude_sonnet_4_6": {
+          "missing_or_na_count": 0,
+          "pass_count": 8,
+          "pass_rate": 0.8,
+          "valid_count": 10
+        },
+        "kilo_gpt_5_4": {
+          "missing_or_na_count": 0,
+          "pass_count": 9,
+          "pass_rate": 0.9,
+          "valid_count": 10
+        },
+        "kilo_gpt_5_4_mini": {
+          "missing_or_na_count": 0,
+          "pass_count": 6,
+          "pass_rate": 0.6,
+          "valid_count": 10
+        }
+      },
+      "later_task_ids": [
+        "boltons__clean_ext__017",
+        "boltons__hist__019",
+        "boltons__hist__020",
+        "boltons__hist__022",
+        "boltons__hist__023",
+        "boltons__hist__024",
+        "boltons__hist__025",
+        "boltons__hist__026",
+        "boltons__hist__027",
+        "boltons__hist__028"
+      ],
+      "later_top_agent_id": "kilo_gpt_5_4",
+      "later_top_tied": false,
+      "pairwise_direction_agreement": 0.333333,
+      "pairwise_rows": [
+        {
+          "agent_a": "codex_gpt_5_4",
+          "agent_b": "kilo_gpt_5_4",
+          "agrees": false,
+          "later_margin": -0.4,
+          "later_sign": -1,
+          "selected_margin": 0.0,
+          "selected_sign": 0
+        },
+        {
+          "agent_a": "codex_gpt_5_4",
+          "agent_b": "kilo_gpt_5_4_mini",
+          "agrees": false,
+          "later_margin": -0.1,
+          "later_sign": -1,
+          "selected_margin": 0.1,
+          "selected_sign": 1
+        },
+        {
+          "agent_a": "codex_gpt_5_4",
+          "agent_b": "kilo_claude_sonnet_4_6",
+          "agrees": false,
+          "later_margin": -0.3,
+          "later_sign": -1,
+          "selected_margin": 0.05,
+          "selected_sign": 1
+        },
+        {
+          "agent_a": "kilo_gpt_5_4",
+          "agent_b": "kilo_gpt_5_4_mini",
+          "agrees": true,
+          "later_margin": 0.3,
+          "later_sign": 1,
+          "selected_margin": 0.1,
+          "selected_sign": 1
+        },
+        {
+          "agent_a": "kilo_gpt_5_4",
+          "agent_b": "kilo_claude_sonnet_4_6",
+          "agrees": true,
+          "later_margin": 0.1,
+          "later_sign": 1,
+          "selected_margin": 0.05,
+          "selected_sign": 1
+        },
+        {
+          "agent_a": "kilo_gpt_5_4_mini",
+          "agent_b": "kilo_claude_sonnet_4_6",
+          "agrees": false,
+          "later_margin": -0.2,
+          "later_sign": -1,
+          "selected_margin": -0.05,
+          "selected_sign": 0
+        }
+      ],
+      "random_percentiles": {
+        "quality_filtered_random": {
+          "MAE_beats_or_ties_random_share": 1.0,
+          "pairwise_agreement_beats_or_ties_random_share": 1.0,
+          "regret_beats_or_ties_random_share": 1.0
+        },
+        "stratified_random": {
+          "MAE_beats_or_ties_random_share": 1.0,
+          "pairwise_agreement_beats_or_ties_random_share": 1.0,
+          "regret_beats_or_ties_random_share": 1.0
+        },
+        "uniform_random_same_budget": {
+          "MAE_beats_or_ties_random_share": 1.0,
+          "pairwise_agreement_beats_or_ties_random_share": 1.0,
+          "regret_beats_or_ties_random_share": 1.0
+        }
+      },
+      "representative_count": 10,
+      "representative_fraction": 0.5,
+      "representative_task_ids": [
+        "boltons__clean_ext__008",
+        "boltons__clean_ext__010",
+        "boltons__hist__013",
+        "boltons__hist__014",
+        "boltons__hist__017",
+        "boltons__supply_expansion_20260526__019",
+        "boltons__supply_expansion_20260526__048",
+        "boltons__supply_expansion_20260526__066",
+        "boltons__supply_expansion_20260526__093",
+        "boltons__supply_expansion_20260526__095"
+      ],
+      "selected_task_ids": [
+        "boltons__clean_ext__001",
+        "boltons__clean_ext__008",
+        "boltons__clean_ext__010",
+        "boltons__hist__006",
+        "boltons__hist__007",
+        "boltons__hist__011",
+        "boltons__hist__013",
+        "boltons__hist__014",
+        "boltons__hist__017",
+        "boltons__supply_expansion_20260526__001",
+        "boltons__supply_expansion_20260526__002",
+        "boltons__supply_expansion_20260526__003",
+        "boltons__supply_expansion_20260526__004",
+        "boltons__supply_expansion_20260526__006",
+        "boltons__supply_expansion_20260526__019",
+        "boltons__supply_expansion_20260526__048",
+        "boltons__supply_expansion_20260526__066",
+        "boltons__supply_expansion_20260526__093",
+        "boltons__supply_expansion_20260526__095",
+        "boltons__supply_expansion_20260526__107"
+      ],
+      "selection_forced_top_agent_id": "codex_gpt_5_4",
+      "selection_rates": {
+        "codex_gpt_5_4": {
+          "missing_or_na_count": 0,
+          "pass_count": 15,
+          "pass_rate": 0.75,
+          "valid_count": 20
+        },
+        "kilo_claude_sonnet_4_6": {
+          "missing_or_na_count": 0,
+          "pass_count": 14,
+          "pass_rate": 0.7,
+          "valid_count": 20
+        },
+        "kilo_gpt_5_4": {
+          "missing_or_na_count": 0,
+          "pass_count": 15,
+          "pass_rate": 0.75,
+          "valid_count": 20
+        },
+        "kilo_gpt_5_4_mini": {
+          "missing_or_na_count": 0,
+          "pass_count": 13,
+          "pass_rate": 0.65,
+          "valid_count": 20
+        }
+      },
+      "selection_top_tied": true,
+      "selector_id": "hrd_50_50",
+      "top1_agreement_forced": false
+    },
+    "hrd_60_40__k10": {
+      "MAE": 0.1,
+      "disagreement_source": "metadata_cluster_density_difficulty_proxy",
+      "discriminative_count": 4,
+      "discriminative_task_ids": [
+        "boltons__supply_expansion_20260526__001",
+        "boltons__supply_expansion_20260526__004",
+        "boltons__supply_expansion_20260526__006",
+        "boltons__supply_expansion_20260526__048"
+      ],
+      "forced_recommendation_regret": 0.0,
+      "k": 10,
+      "later_rates": {
+        "codex_gpt_5_4": {
+          "missing_or_na_count": 0,
+          "pass_count": 5,
+          "pass_rate": 0.5,
+          "valid_count": 10
+        },
+        "kilo_claude_sonnet_4_6": {
+          "missing_or_na_count": 0,
+          "pass_count": 8,
+          "pass_rate": 0.8,
+          "valid_count": 10
+        },
+        "kilo_gpt_5_4": {
+          "missing_or_na_count": 0,
+          "pass_count": 9,
+          "pass_rate": 0.9,
+          "valid_count": 10
+        },
+        "kilo_gpt_5_4_mini": {
+          "missing_or_na_count": 0,
+          "pass_count": 6,
+          "pass_rate": 0.6,
+          "valid_count": 10
+        }
+      },
+      "later_task_ids": [
+        "boltons__clean_ext__017",
+        "boltons__hist__019",
+        "boltons__hist__020",
+        "boltons__hist__022",
+        "boltons__hist__023",
+        "boltons__hist__024",
+        "boltons__hist__025",
+        "boltons__hist__026",
+        "boltons__hist__027",
+        "boltons__hist__028"
+      ],
+      "later_top_agent_id": "kilo_gpt_5_4",
+      "later_top_tied": false,
+      "pairwise_direction_agreement": 0.5,
+      "pairwise_rows": [
+        {
+          "agent_a": "codex_gpt_5_4",
+          "agent_b": "kilo_gpt_5_4",
+          "agrees": true,
+          "later_margin": -0.4,
+          "later_sign": -1,
+          "selected_margin": -0.2,
+          "selected_sign": -1
+        },
+        {
+          "agent_a": "codex_gpt_5_4",
+          "agent_b": "kilo_gpt_5_4_mini",
+          "agrees": false,
+          "later_margin": -0.1,
+          "later_sign": -1,
+          "selected_margin": 0.0,
+          "selected_sign": 0
+        },
+        {
+          "agent_a": "codex_gpt_5_4",
+          "agent_b": "kilo_claude_sonnet_4_6",
+          "agrees": false,
+          "later_margin": -0.3,
+          "later_sign": -1,
+          "selected_margin": 0.0,
+          "selected_sign": 0
+        },
+        {
+          "agent_a": "kilo_gpt_5_4",
+          "agent_b": "kilo_gpt_5_4_mini",
+          "agrees": true,
+          "later_margin": 0.3,
+          "later_sign": 1,
+          "selected_margin": 0.2,
+          "selected_sign": 1
+        },
+        {
+          "agent_a": "kilo_gpt_5_4",
+          "agent_b": "kilo_claude_sonnet_4_6",
+          "agrees": true,
+          "later_margin": 0.1,
+          "later_sign": 1,
+          "selected_margin": 0.2,
+          "selected_sign": 1
+        },
+        {
+          "agent_a": "kilo_gpt_5_4_mini",
+          "agent_b": "kilo_claude_sonnet_4_6",
+          "agrees": false,
+          "later_margin": -0.2,
+          "later_sign": -1,
+          "selected_margin": 0.0,
+          "selected_sign": 0
+        }
+      ],
+      "random_percentiles": {
+        "quality_filtered_random": {
+          "MAE_beats_or_ties_random_share": 1.0,
+          "pairwise_agreement_beats_or_ties_random_share": 0.895,
+          "regret_beats_or_ties_random_share": 1.0
+        },
+        "stratified_random": {
+          "MAE_beats_or_ties_random_share": 1.0,
+          "pairwise_agreement_beats_or_ties_random_share": 0.922,
+          "regret_beats_or_ties_random_share": 1.0
+        },
+        "uniform_random_same_budget": {
+          "MAE_beats_or_ties_random_share": 1.0,
+          "pairwise_agreement_beats_or_ties_random_share": 0.895,
+          "regret_beats_or_ties_random_share": 1.0
+        }
+      },
+      "representative_count": 6,
+      "representative_fraction": 0.6,
+      "representative_task_ids": [
+        "boltons__clean_ext__010",
+        "boltons__hist__014",
+        "boltons__hist__017",
+        "boltons__supply_expansion_20260526__066",
+        "boltons__supply_expansion_20260526__093",
+        "boltons__supply_expansion_20260526__095"
+      ],
+      "selected_task_ids": [
+        "boltons__clean_ext__010",
+        "boltons__hist__014",
+        "boltons__hist__017",
+        "boltons__supply_expansion_20260526__001",
+        "boltons__supply_expansion_20260526__004",
+        "boltons__supply_expansion_20260526__006",
+        "boltons__supply_expansion_20260526__048",
+        "boltons__supply_expansion_20260526__066",
+        "boltons__supply_expansion_20260526__093",
+        "boltons__supply_expansion_20260526__095"
+      ],
+      "selection_forced_top_agent_id": "kilo_gpt_5_4",
+      "selection_rates": {
+        "codex_gpt_5_4": {
+          "missing_or_na_count": 0,
+          "pass_count": 7,
+          "pass_rate": 0.7,
+          "valid_count": 10
+        },
+        "kilo_claude_sonnet_4_6": {
+          "missing_or_na_count": 0,
+          "pass_count": 7,
+          "pass_rate": 0.7,
+          "valid_count": 10
+        },
+        "kilo_gpt_5_4": {
+          "missing_or_na_count": 0,
+          "pass_count": 9,
+          "pass_rate": 0.9,
+          "valid_count": 10
+        },
+        "kilo_gpt_5_4_mini": {
+          "missing_or_na_count": 0,
+          "pass_count": 7,
+          "pass_rate": 0.7,
+          "valid_count": 10
+        }
+      },
+      "selection_top_tied": false,
+      "selector_id": "hrd_60_40",
+      "top1_agreement_forced": true
+    },
+    "hrd_60_40__k20": {
+      "MAE": 0.1375,
+      "disagreement_source": "metadata_cluster_density_difficulty_proxy",
+      "discriminative_count": 8,
+      "discriminative_task_ids": [
+        "boltons__clean_ext__001",
+        "boltons__hist__006",
+        "boltons__hist__007",
+        "boltons__hist__011",
+        "boltons__supply_expansion_20260526__001",
+        "boltons__supply_expansion_20260526__002",
+        "boltons__supply_expansion_20260526__003",
+        "boltons__supply_expansion_20260526__004"
+      ],
+      "forced_recommendation_regret": 0.4,
+      "k": 20,
+      "later_rates": {
+        "codex_gpt_5_4": {
+          "missing_or_na_count": 0,
+          "pass_count": 5,
+          "pass_rate": 0.5,
+          "valid_count": 10
+        },
+        "kilo_claude_sonnet_4_6": {
+          "missing_or_na_count": 0,
+          "pass_count": 8,
+          "pass_rate": 0.8,
+          "valid_count": 10
+        },
+        "kilo_gpt_5_4": {
+          "missing_or_na_count": 0,
+          "pass_count": 9,
+          "pass_rate": 0.9,
+          "valid_count": 10
+        },
+        "kilo_gpt_5_4_mini": {
+          "missing_or_na_count": 0,
+          "pass_count": 6,
+          "pass_rate": 0.6,
+          "valid_count": 10
+        }
+      },
+      "later_task_ids": [
+        "boltons__clean_ext__017",
+        "boltons__hist__019",
+        "boltons__hist__020",
+        "boltons__hist__022",
+        "boltons__hist__023",
+        "boltons__hist__024",
+        "boltons__hist__025",
+        "boltons__hist__026",
+        "boltons__hist__027",
+        "boltons__hist__028"
+      ],
+      "later_top_agent_id": "kilo_gpt_5_4",
+      "later_top_tied": false,
+      "pairwise_direction_agreement": 0.333333,
+      "pairwise_rows": [
+        {
+          "agent_a": "codex_gpt_5_4",
+          "agent_b": "kilo_gpt_5_4",
+          "agrees": false,
+          "later_margin": -0.4,
+          "later_sign": -1,
+          "selected_margin": 0.0,
+          "selected_sign": 0
+        },
+        {
+          "agent_a": "codex_gpt_5_4",
+          "agent_b": "kilo_gpt_5_4_mini",
+          "agrees": false,
+          "later_margin": -0.1,
+          "later_sign": -1,
+          "selected_margin": 0.1,
+          "selected_sign": 1
+        },
+        {
+          "agent_a": "codex_gpt_5_4",
+          "agent_b": "kilo_claude_sonnet_4_6",
+          "agrees": false,
+          "later_margin": -0.3,
+          "later_sign": -1,
+          "selected_margin": 0.05,
+          "selected_sign": 1
+        },
+        {
+          "agent_a": "kilo_gpt_5_4",
+          "agent_b": "kilo_gpt_5_4_mini",
+          "agrees": true,
+          "later_margin": 0.3,
+          "later_sign": 1,
+          "selected_margin": 0.1,
+          "selected_sign": 1
+        },
+        {
+          "agent_a": "kilo_gpt_5_4",
+          "agent_b": "kilo_claude_sonnet_4_6",
+          "agrees": true,
+          "later_margin": 0.1,
+          "later_sign": 1,
+          "selected_margin": 0.05,
+          "selected_sign": 1
+        },
+        {
+          "agent_a": "kilo_gpt_5_4_mini",
+          "agent_b": "kilo_claude_sonnet_4_6",
+          "agrees": false,
+          "later_margin": -0.2,
+          "later_sign": -1,
+          "selected_margin": -0.05,
+          "selected_sign": 0
+        }
+      ],
+      "random_percentiles": {
+        "quality_filtered_random": {
+          "MAE_beats_or_ties_random_share": 1.0,
+          "pairwise_agreement_beats_or_ties_random_share": 1.0,
+          "regret_beats_or_ties_random_share": 1.0
+        },
+        "stratified_random": {
+          "MAE_beats_or_ties_random_share": 1.0,
+          "pairwise_agreement_beats_or_ties_random_share": 1.0,
+          "regret_beats_or_ties_random_share": 1.0
+        },
+        "uniform_random_same_budget": {
+          "MAE_beats_or_ties_random_share": 1.0,
+          "pairwise_agreement_beats_or_ties_random_share": 1.0,
+          "regret_beats_or_ties_random_share": 1.0
+        }
+      },
+      "representative_count": 12,
+      "representative_fraction": 0.6,
+      "representative_task_ids": [
+        "boltons__clean_ext__008",
+        "boltons__clean_ext__010",
+        "boltons__hist__013",
+        "boltons__hist__014",
+        "boltons__hist__017",
+        "boltons__supply_expansion_20260526__006",
+        "boltons__supply_expansion_20260526__019",
+        "boltons__supply_expansion_20260526__048",
+        "boltons__supply_expansion_20260526__066",
+        "boltons__supply_expansion_20260526__093",
+        "boltons__supply_expansion_20260526__095",
+        "boltons__supply_expansion_20260526__107"
+      ],
+      "selected_task_ids": [
+        "boltons__clean_ext__001",
+        "boltons__clean_ext__008",
+        "boltons__clean_ext__010",
+        "boltons__hist__006",
+        "boltons__hist__007",
+        "boltons__hist__011",
+        "boltons__hist__013",
+        "boltons__hist__014",
+        "boltons__hist__017",
+        "boltons__supply_expansion_20260526__001",
+        "boltons__supply_expansion_20260526__002",
+        "boltons__supply_expansion_20260526__003",
+        "boltons__supply_expansion_20260526__004",
+        "boltons__supply_expansion_20260526__006",
+        "boltons__supply_expansion_20260526__019",
+        "boltons__supply_expansion_20260526__048",
+        "boltons__supply_expansion_20260526__066",
+        "boltons__supply_expansion_20260526__093",
+        "boltons__supply_expansion_20260526__095",
+        "boltons__supply_expansion_20260526__107"
+      ],
+      "selection_forced_top_agent_id": "codex_gpt_5_4",
+      "selection_rates": {
+        "codex_gpt_5_4": {
+          "missing_or_na_count": 0,
+          "pass_count": 15,
+          "pass_rate": 0.75,
+          "valid_count": 20
+        },
+        "kilo_claude_sonnet_4_6": {
+          "missing_or_na_count": 0,
+          "pass_count": 14,
+          "pass_rate": 0.7,
+          "valid_count": 20
+        },
+        "kilo_gpt_5_4": {
+          "missing_or_na_count": 0,
+          "pass_count": 15,
+          "pass_rate": 0.75,
+          "valid_count": 20
+        },
+        "kilo_gpt_5_4_mini": {
+          "missing_or_na_count": 0,
+          "pass_count": 13,
+          "pass_rate": 0.65,
+          "valid_count": 20
+        }
+      },
+      "selection_top_tied": true,
+      "selector_id": "hrd_60_40",
+      "top1_agreement_forced": false
+    },
+    "hrd_70_30__k10": {
+      "MAE": 0.1,
+      "disagreement_source": "metadata_cluster_density_difficulty_proxy",
+      "discriminative_count": 3,
+      "discriminative_task_ids": [
+        "boltons__supply_expansion_20260526__001",
+        "boltons__supply_expansion_20260526__004",
+        "boltons__supply_expansion_20260526__006"
+      ],
+      "forced_recommendation_regret": 0.0,
+      "k": 10,
+      "later_rates": {
+        "codex_gpt_5_4": {
+          "missing_or_na_count": 0,
+          "pass_count": 5,
+          "pass_rate": 0.5,
+          "valid_count": 10
+        },
+        "kilo_claude_sonnet_4_6": {
+          "missing_or_na_count": 0,
+          "pass_count": 8,
+          "pass_rate": 0.8,
+          "valid_count": 10
+        },
+        "kilo_gpt_5_4": {
+          "missing_or_na_count": 0,
+          "pass_count": 9,
+          "pass_rate": 0.9,
+          "valid_count": 10
+        },
+        "kilo_gpt_5_4_mini": {
+          "missing_or_na_count": 0,
+          "pass_count": 6,
+          "pass_rate": 0.6,
+          "valid_count": 10
+        }
+      },
+      "later_task_ids": [
+        "boltons__clean_ext__017",
+        "boltons__hist__019",
+        "boltons__hist__020",
+        "boltons__hist__022",
+        "boltons__hist__023",
+        "boltons__hist__024",
+        "boltons__hist__025",
+        "boltons__hist__026",
+        "boltons__hist__027",
+        "boltons__hist__028"
+      ],
+      "later_top_agent_id": "kilo_gpt_5_4",
+      "later_top_tied": false,
+      "pairwise_direction_agreement": 0.5,
+      "pairwise_rows": [
+        {
+          "agent_a": "codex_gpt_5_4",
+          "agent_b": "kilo_gpt_5_4",
+          "agrees": true,
+          "later_margin": -0.4,
+          "later_sign": -1,
+          "selected_margin": -0.2,
+          "selected_sign": -1
+        },
+        {
+          "agent_a": "codex_gpt_5_4",
+          "agent_b": "kilo_gpt_5_4_mini",
+          "agrees": false,
+          "later_margin": -0.1,
+          "later_sign": -1,
+          "selected_margin": 0.0,
+          "selected_sign": 0
+        },
+        {
+          "agent_a": "codex_gpt_5_4",
+          "agent_b": "kilo_claude_sonnet_4_6",
+          "agrees": false,
+          "later_margin": -0.3,
+          "later_sign": -1,
+          "selected_margin": 0.0,
+          "selected_sign": 0
+        },
+        {
+          "agent_a": "kilo_gpt_5_4",
+          "agent_b": "kilo_gpt_5_4_mini",
+          "agrees": true,
+          "later_margin": 0.3,
+          "later_sign": 1,
+          "selected_margin": 0.2,
+          "selected_sign": 1
+        },
+        {
+          "agent_a": "kilo_gpt_5_4",
+          "agent_b": "kilo_claude_sonnet_4_6",
+          "agrees": true,
+          "later_margin": 0.1,
+          "later_sign": 1,
+          "selected_margin": 0.2,
+          "selected_sign": 1
+        },
+        {
+          "agent_a": "kilo_gpt_5_4_mini",
+          "agent_b": "kilo_claude_sonnet_4_6",
+          "agrees": false,
+          "later_margin": -0.2,
+          "later_sign": -1,
+          "selected_margin": 0.0,
+          "selected_sign": 0
+        }
+      ],
+      "random_percentiles": {
+        "quality_filtered_random": {
+          "MAE_beats_or_ties_random_share": 1.0,
+          "pairwise_agreement_beats_or_ties_random_share": 0.895,
+          "regret_beats_or_ties_random_share": 1.0
+        },
+        "stratified_random": {
+          "MAE_beats_or_ties_random_share": 1.0,
+          "pairwise_agreement_beats_or_ties_random_share": 0.922,
+          "regret_beats_or_ties_random_share": 1.0
+        },
+        "uniform_random_same_budget": {
+          "MAE_beats_or_ties_random_share": 1.0,
+          "pairwise_agreement_beats_or_ties_random_share": 0.895,
+          "regret_beats_or_ties_random_share": 1.0
+        }
+      },
+      "representative_count": 7,
+      "representative_fraction": 0.7,
+      "representative_task_ids": [
+        "boltons__clean_ext__010",
+        "boltons__hist__014",
+        "boltons__hist__017",
+        "boltons__supply_expansion_20260526__048",
+        "boltons__supply_expansion_20260526__066",
+        "boltons__supply_expansion_20260526__093",
+        "boltons__supply_expansion_20260526__095"
+      ],
+      "selected_task_ids": [
+        "boltons__clean_ext__010",
+        "boltons__hist__014",
+        "boltons__hist__017",
+        "boltons__supply_expansion_20260526__001",
+        "boltons__supply_expansion_20260526__004",
+        "boltons__supply_expansion_20260526__006",
+        "boltons__supply_expansion_20260526__048",
+        "boltons__supply_expansion_20260526__066",
+        "boltons__supply_expansion_20260526__093",
+        "boltons__supply_expansion_20260526__095"
+      ],
+      "selection_forced_top_agent_id": "kilo_gpt_5_4",
+      "selection_rates": {
+        "codex_gpt_5_4": {
+          "missing_or_na_count": 0,
+          "pass_count": 7,
+          "pass_rate": 0.7,
+          "valid_count": 10
+        },
+        "kilo_claude_sonnet_4_6": {
+          "missing_or_na_count": 0,
+          "pass_count": 7,
+          "pass_rate": 0.7,
+          "valid_count": 10
+        },
+        "kilo_gpt_5_4": {
+          "missing_or_na_count": 0,
+          "pass_count": 9,
+          "pass_rate": 0.9,
+          "valid_count": 10
+        },
+        "kilo_gpt_5_4_mini": {
+          "missing_or_na_count": 0,
+          "pass_count": 7,
+          "pass_rate": 0.7,
+          "valid_count": 10
+        }
+      },
+      "selection_top_tied": false,
+      "selector_id": "hrd_70_30",
+      "top1_agreement_forced": true
+    },
+    "hrd_70_30__k20": {
+      "MAE": 0.1375,
+      "disagreement_source": "metadata_cluster_density_difficulty_proxy",
+      "discriminative_count": 6,
+      "discriminative_task_ids": [
+        "boltons__clean_ext__001",
+        "boltons__hist__006",
+        "boltons__hist__007",
+        "boltons__supply_expansion_20260526__001",
+        "boltons__supply_expansion_20260526__002",
+        "boltons__supply_expansion_20260526__003"
+      ],
+      "forced_recommendation_regret": 0.4,
+      "k": 20,
+      "later_rates": {
+        "codex_gpt_5_4": {
+          "missing_or_na_count": 0,
+          "pass_count": 5,
+          "pass_rate": 0.5,
+          "valid_count": 10
+        },
+        "kilo_claude_sonnet_4_6": {
+          "missing_or_na_count": 0,
+          "pass_count": 8,
+          "pass_rate": 0.8,
+          "valid_count": 10
+        },
+        "kilo_gpt_5_4": {
+          "missing_or_na_count": 0,
+          "pass_count": 9,
+          "pass_rate": 0.9,
+          "valid_count": 10
+        },
+        "kilo_gpt_5_4_mini": {
+          "missing_or_na_count": 0,
+          "pass_count": 6,
+          "pass_rate": 0.6,
+          "valid_count": 10
+        }
+      },
+      "later_task_ids": [
+        "boltons__clean_ext__017",
+        "boltons__hist__019",
+        "boltons__hist__020",
+        "boltons__hist__022",
+        "boltons__hist__023",
+        "boltons__hist__024",
+        "boltons__hist__025",
+        "boltons__hist__026",
+        "boltons__hist__027",
+        "boltons__hist__028"
+      ],
+      "later_top_agent_id": "kilo_gpt_5_4",
+      "later_top_tied": false,
+      "pairwise_direction_agreement": 0.333333,
+      "pairwise_rows": [
+        {
+          "agent_a": "codex_gpt_5_4",
+          "agent_b": "kilo_gpt_5_4",
+          "agrees": false,
+          "later_margin": -0.4,
+          "later_sign": -1,
+          "selected_margin": 0.0,
+          "selected_sign": 0
+        },
+        {
+          "agent_a": "codex_gpt_5_4",
+          "agent_b": "kilo_gpt_5_4_mini",
+          "agrees": false,
+          "later_margin": -0.1,
+          "later_sign": -1,
+          "selected_margin": 0.1,
+          "selected_sign": 1
+        },
+        {
+          "agent_a": "codex_gpt_5_4",
+          "agent_b": "kilo_claude_sonnet_4_6",
+          "agrees": false,
+          "later_margin": -0.3,
+          "later_sign": -1,
+          "selected_margin": 0.05,
+          "selected_sign": 1
+        },
+        {
+          "agent_a": "kilo_gpt_5_4",
+          "agent_b": "kilo_gpt_5_4_mini",
+          "agrees": true,
+          "later_margin": 0.3,
+          "later_sign": 1,
+          "selected_margin": 0.1,
+          "selected_sign": 1
+        },
+        {
+          "agent_a": "kilo_gpt_5_4",
+          "agent_b": "kilo_claude_sonnet_4_6",
+          "agrees": true,
+          "later_margin": 0.1,
+          "later_sign": 1,
+          "selected_margin": 0.05,
+          "selected_sign": 1
+        },
+        {
+          "agent_a": "kilo_gpt_5_4_mini",
+          "agent_b": "kilo_claude_sonnet_4_6",
+          "agrees": false,
+          "later_margin": -0.2,
+          "later_sign": -1,
+          "selected_margin": -0.05,
+          "selected_sign": 0
+        }
+      ],
+      "random_percentiles": {
+        "quality_filtered_random": {
+          "MAE_beats_or_ties_random_share": 1.0,
+          "pairwise_agreement_beats_or_ties_random_share": 1.0,
+          "regret_beats_or_ties_random_share": 1.0
+        },
+        "stratified_random": {
+          "MAE_beats_or_ties_random_share": 1.0,
+          "pairwise_agreement_beats_or_ties_random_share": 1.0,
+          "regret_beats_or_ties_random_share": 1.0
+        },
+        "uniform_random_same_budget": {
+          "MAE_beats_or_ties_random_share": 1.0,
+          "pairwise_agreement_beats_or_ties_random_share": 1.0,
+          "regret_beats_or_ties_random_share": 1.0
+        }
+      },
+      "representative_count": 14,
+      "representative_fraction": 0.7,
+      "representative_task_ids": [
+        "boltons__clean_ext__008",
+        "boltons__clean_ext__010",
+        "boltons__hist__011",
+        "boltons__hist__013",
+        "boltons__hist__014",
+        "boltons__hist__017",
+        "boltons__supply_expansion_20260526__004",
+        "boltons__supply_expansion_20260526__006",
+        "boltons__supply_expansion_20260526__019",
+        "boltons__supply_expansion_20260526__048",
+        "boltons__supply_expansion_20260526__066",
+        "boltons__supply_expansion_20260526__093",
+        "boltons__supply_expansion_20260526__095",
+        "boltons__supply_expansion_20260526__107"
+      ],
+      "selected_task_ids": [
+        "boltons__clean_ext__001",
+        "boltons__clean_ext__008",
+        "boltons__clean_ext__010",
+        "boltons__hist__006",
+        "boltons__hist__007",
+        "boltons__hist__011",
+        "boltons__hist__013",
+        "boltons__hist__014",
+        "boltons__hist__017",
+        "boltons__supply_expansion_20260526__001",
+        "boltons__supply_expansion_20260526__002",
+        "boltons__supply_expansion_20260526__003",
+        "boltons__supply_expansion_20260526__004",
+        "boltons__supply_expansion_20260526__006",
+        "boltons__supply_expansion_20260526__019",
+        "boltons__supply_expansion_20260526__048",
+        "boltons__supply_expansion_20260526__066",
+        "boltons__supply_expansion_20260526__093",
+        "boltons__supply_expansion_20260526__095",
+        "boltons__supply_expansion_20260526__107"
+      ],
+      "selection_forced_top_agent_id": "codex_gpt_5_4",
+      "selection_rates": {
+        "codex_gpt_5_4": {
+          "missing_or_na_count": 0,
+          "pass_count": 15,
+          "pass_rate": 0.75,
+          "valid_count": 20
+        },
+        "kilo_claude_sonnet_4_6": {
+          "missing_or_na_count": 0,
+          "pass_count": 14,
+          "pass_rate": 0.7,
+          "valid_count": 20
+        },
+        "kilo_gpt_5_4": {
+          "missing_or_na_count": 0,
+          "pass_count": 15,
+          "pass_rate": 0.75,
+          "valid_count": 20
+        },
+        "kilo_gpt_5_4_mini": {
+          "missing_or_na_count": 0,
+          "pass_count": 13,
+          "pass_rate": 0.65,
+          "valid_count": 20
+        }
+      },
+      "selection_top_tied": true,
+      "selector_id": "hrd_70_30",
+      "top1_agreement_forced": false
+    },
+    "hrd_disagreement_only__k10": {
+      "MAE": 0.1,
+      "disagreement_source": "metadata_cluster_density_difficulty_proxy",
+      "discriminative_count": 10,
+      "discriminative_task_ids": [
+        "boltons__hist__013",
+        "boltons__supply_expansion_20260526__001",
+        "boltons__supply_expansion_20260526__004",
+        "boltons__supply_expansion_20260526__006",
+        "boltons__supply_expansion_20260526__019",
+        "boltons__supply_expansion_20260526__048",
+        "boltons__supply_expansion_20260526__066",
+        "boltons__supply_expansion_20260526__093",
+        "boltons__supply_expansion_20260526__095",
+        "boltons__supply_expansion_20260526__107"
+      ],
+      "forced_recommendation_regret": 0.0,
+      "k": 10,
+      "later_rates": {
+        "codex_gpt_5_4": {
+          "missing_or_na_count": 0,
+          "pass_count": 5,
+          "pass_rate": 0.5,
+          "valid_count": 10
+        },
+        "kilo_claude_sonnet_4_6": {
+          "missing_or_na_count": 0,
+          "pass_count": 8,
+          "pass_rate": 0.8,
+          "valid_count": 10
+        },
+        "kilo_gpt_5_4": {
+          "missing_or_na_count": 0,
+          "pass_count": 9,
+          "pass_rate": 0.9,
+          "valid_count": 10
+        },
+        "kilo_gpt_5_4_mini": {
+          "missing_or_na_count": 0,
+          "pass_count": 6,
+          "pass_rate": 0.6,
+          "valid_count": 10
+        }
+      },
+      "later_task_ids": [
+        "boltons__clean_ext__017",
+        "boltons__hist__019",
+        "boltons__hist__020",
+        "boltons__hist__022",
+        "boltons__hist__023",
+        "boltons__hist__024",
+        "boltons__hist__025",
+        "boltons__hist__026",
+        "boltons__hist__027",
+        "boltons__hist__028"
+      ],
+      "later_top_agent_id": "kilo_gpt_5_4",
+      "later_top_tied": false,
+      "pairwise_direction_agreement": 0.5,
+      "pairwise_rows": [
+        {
+          "agent_a": "codex_gpt_5_4",
+          "agent_b": "kilo_gpt_5_4",
+          "agrees": true,
+          "later_margin": -0.4,
+          "later_sign": -1,
+          "selected_margin": -0.2,
+          "selected_sign": -1
+        },
+        {
+          "agent_a": "codex_gpt_5_4",
+          "agent_b": "kilo_gpt_5_4_mini",
+          "agrees": false,
+          "later_margin": -0.1,
+          "later_sign": -1,
+          "selected_margin": 0.0,
+          "selected_sign": 0
+        },
+        {
+          "agent_a": "codex_gpt_5_4",
+          "agent_b": "kilo_claude_sonnet_4_6",
+          "agrees": false,
+          "later_margin": -0.3,
+          "later_sign": -1,
+          "selected_margin": 0.0,
+          "selected_sign": 0
+        },
+        {
+          "agent_a": "kilo_gpt_5_4",
+          "agent_b": "kilo_gpt_5_4_mini",
+          "agrees": true,
+          "later_margin": 0.3,
+          "later_sign": 1,
+          "selected_margin": 0.2,
+          "selected_sign": 1
+        },
+        {
+          "agent_a": "kilo_gpt_5_4",
+          "agent_b": "kilo_claude_sonnet_4_6",
+          "agrees": true,
+          "later_margin": 0.1,
+          "later_sign": 1,
+          "selected_margin": 0.2,
+          "selected_sign": 1
+        },
+        {
+          "agent_a": "kilo_gpt_5_4_mini",
+          "agent_b": "kilo_claude_sonnet_4_6",
+          "agrees": false,
+          "later_margin": -0.2,
+          "later_sign": -1,
+          "selected_margin": 0.0,
+          "selected_sign": 0
+        }
+      ],
+      "random_percentiles": {
+        "quality_filtered_random": {
+          "MAE_beats_or_ties_random_share": 1.0,
+          "pairwise_agreement_beats_or_ties_random_share": 0.895,
+          "regret_beats_or_ties_random_share": 1.0
+        },
+        "stratified_random": {
+          "MAE_beats_or_ties_random_share": 1.0,
+          "pairwise_agreement_beats_or_ties_random_share": 0.922,
+          "regret_beats_or_ties_random_share": 1.0
+        },
+        "uniform_random_same_budget": {
+          "MAE_beats_or_ties_random_share": 1.0,
+          "pairwise_agreement_beats_or_ties_random_share": 0.895,
+          "regret_beats_or_ties_random_share": 1.0
+        }
+      },
+      "representative_count": 0,
+      "representative_fraction": 0.0,
+      "representative_task_ids": [],
+      "selected_task_ids": [
+        "boltons__hist__013",
+        "boltons__supply_expansion_20260526__001",
+        "boltons__supply_expansion_20260526__004",
+        "boltons__supply_expansion_20260526__006",
+        "boltons__supply_expansion_20260526__019",
+        "boltons__supply_expansion_20260526__048",
+        "boltons__supply_expansion_20260526__066",
+        "boltons__supply_expansion_20260526__093",
+        "boltons__supply_expansion_20260526__095",
+        "boltons__supply_expansion_20260526__107"
+      ],
+      "selection_forced_top_agent_id": "kilo_gpt_5_4",
+      "selection_rates": {
+        "codex_gpt_5_4": {
+          "missing_or_na_count": 0,
+          "pass_count": 6,
+          "pass_rate": 0.6,
+          "valid_count": 10
+        },
+        "kilo_claude_sonnet_4_6": {
+          "missing_or_na_count": 0,
+          "pass_count": 6,
+          "pass_rate": 0.6,
+          "valid_count": 10
+        },
+        "kilo_gpt_5_4": {
+          "missing_or_na_count": 0,
+          "pass_count": 8,
+          "pass_rate": 0.8,
+          "valid_count": 10
+        },
+        "kilo_gpt_5_4_mini": {
+          "missing_or_na_count": 0,
+          "pass_count": 6,
+          "pass_rate": 0.6,
+          "valid_count": 10
+        }
+      },
+      "selection_top_tied": false,
+      "selector_id": "hrd_disagreement_only",
+      "top1_agreement_forced": true
+    },
+    "hrd_disagreement_only__k20": {
+      "MAE": 0.1375,
+      "disagreement_source": "metadata_cluster_density_difficulty_proxy",
+      "discriminative_count": 20,
+      "discriminative_task_ids": [
+        "boltons__clean_ext__001",
+        "boltons__clean_ext__008",
+        "boltons__clean_ext__010",
+        "boltons__hist__006",
+        "boltons__hist__007",
+        "boltons__hist__011",
+        "boltons__hist__013",
+        "boltons__hist__014",
+        "boltons__hist__017",
+        "boltons__supply_expansion_20260526__001",
+        "boltons__supply_expansion_20260526__002",
+        "boltons__supply_expansion_20260526__003",
+        "boltons__supply_expansion_20260526__004",
+        "boltons__supply_expansion_20260526__006",
+        "boltons__supply_expansion_20260526__019",
+        "boltons__supply_expansion_20260526__048",
+        "boltons__supply_expansion_20260526__066",
+        "boltons__supply_expansion_20260526__093",
+        "boltons__supply_expansion_20260526__095",
+        "boltons__supply_expansion_20260526__107"
+      ],
+      "forced_recommendation_regret": 0.4,
+      "k": 20,
+      "later_rates": {
+        "codex_gpt_5_4": {
+          "missing_or_na_count": 0,
+          "pass_count": 5,
+          "pass_rate": 0.5,
+          "valid_count": 10
+        },
+        "kilo_claude_sonnet_4_6": {
+          "missing_or_na_count": 0,
+          "pass_count": 8,
+          "pass_rate": 0.8,
+          "valid_count": 10
+        },
+        "kilo_gpt_5_4": {
+          "missing_or_na_count": 0,
+          "pass_count": 9,
+          "pass_rate": 0.9,
+          "valid_count": 10
+        },
+        "kilo_gpt_5_4_mini": {
+          "missing_or_na_count": 0,
+          "pass_count": 6,
+          "pass_rate": 0.6,
+          "valid_count": 10
+        }
+      },
+      "later_task_ids": [
+        "boltons__clean_ext__017",
+        "boltons__hist__019",
+        "boltons__hist__020",
+        "boltons__hist__022",
+        "boltons__hist__023",
+        "boltons__hist__024",
+        "boltons__hist__025",
+        "boltons__hist__026",
+        "boltons__hist__027",
+        "boltons__hist__028"
+      ],
+      "later_top_agent_id": "kilo_gpt_5_4",
+      "later_top_tied": false,
+      "pairwise_direction_agreement": 0.333333,
+      "pairwise_rows": [
+        {
+          "agent_a": "codex_gpt_5_4",
+          "agent_b": "kilo_gpt_5_4",
+          "agrees": false,
+          "later_margin": -0.4,
+          "later_sign": -1,
+          "selected_margin": 0.0,
+          "selected_sign": 0
+        },
+        {
+          "agent_a": "codex_gpt_5_4",
+          "agent_b": "kilo_gpt_5_4_mini",
+          "agrees": false,
+          "later_margin": -0.1,
+          "later_sign": -1,
+          "selected_margin": 0.1,
+          "selected_sign": 1
+        },
+        {
+          "agent_a": "codex_gpt_5_4",
+          "agent_b": "kilo_claude_sonnet_4_6",
+          "agrees": false,
+          "later_margin": -0.3,
+          "later_sign": -1,
+          "selected_margin": 0.05,
+          "selected_sign": 1
+        },
+        {
+          "agent_a": "kilo_gpt_5_4",
+          "agent_b": "kilo_gpt_5_4_mini",
+          "agrees": true,
+          "later_margin": 0.3,
+          "later_sign": 1,
+          "selected_margin": 0.1,
+          "selected_sign": 1
+        },
+        {
+          "agent_a": "kilo_gpt_5_4",
+          "agent_b": "kilo_claude_sonnet_4_6",
+          "agrees": true,
+          "later_margin": 0.1,
+          "later_sign": 1,
+          "selected_margin": 0.05,
+          "selected_sign": 1
+        },
+        {
+          "agent_a": "kilo_gpt_5_4_mini",
+          "agent_b": "kilo_claude_sonnet_4_6",
+          "agrees": false,
+          "later_margin": -0.2,
+          "later_sign": -1,
+          "selected_margin": -0.05,
+          "selected_sign": 0
+        }
+      ],
+      "random_percentiles": {
+        "quality_filtered_random": {
+          "MAE_beats_or_ties_random_share": 1.0,
+          "pairwise_agreement_beats_or_ties_random_share": 1.0,
+          "regret_beats_or_ties_random_share": 1.0
+        },
+        "stratified_random": {
+          "MAE_beats_or_ties_random_share": 1.0,
+          "pairwise_agreement_beats_or_ties_random_share": 1.0,
+          "regret_beats_or_ties_random_share": 1.0
+        },
+        "uniform_random_same_budget": {
+          "MAE_beats_or_ties_random_share": 1.0,
+          "pairwise_agreement_beats_or_ties_random_share": 1.0,
+          "regret_beats_or_ties_random_share": 1.0
+        }
+      },
+      "representative_count": 0,
+      "representative_fraction": 0.0,
+      "representative_task_ids": [],
+      "selected_task_ids": [
+        "boltons__clean_ext__001",
+        "boltons__clean_ext__008",
+        "boltons__clean_ext__010",
+        "boltons__hist__006",
+        "boltons__hist__007",
+        "boltons__hist__011",
+        "boltons__hist__013",
+        "boltons__hist__014",
+        "boltons__hist__017",
+        "boltons__supply_expansion_20260526__001",
+        "boltons__supply_expansion_20260526__002",
+        "boltons__supply_expansion_20260526__003",
+        "boltons__supply_expansion_20260526__004",
+        "boltons__supply_expansion_20260526__006",
+        "boltons__supply_expansion_20260526__019",
+        "boltons__supply_expansion_20260526__048",
+        "boltons__supply_expansion_20260526__066",
+        "boltons__supply_expansion_20260526__093",
+        "boltons__supply_expansion_20260526__095",
+        "boltons__supply_expansion_20260526__107"
+      ],
+      "selection_forced_top_agent_id": "codex_gpt_5_4",
+      "selection_rates": {
+        "codex_gpt_5_4": {
+          "missing_or_na_count": 0,
+          "pass_count": 15,
+          "pass_rate": 0.75,
+          "valid_count": 20
+        },
+        "kilo_claude_sonnet_4_6": {
+          "missing_or_na_count": 0,
+          "pass_count": 14,
+          "pass_rate": 0.7,
+          "valid_count": 20
+        },
+        "kilo_gpt_5_4": {
+          "missing_or_na_count": 0,
+          "pass_count": 15,
+          "pass_rate": 0.75,
+          "valid_count": 20
+        },
+        "kilo_gpt_5_4_mini": {
+          "missing_or_na_count": 0,
+          "pass_count": 13,
+          "pass_rate": 0.65,
+          "valid_count": 20
+        }
+      },
+      "selection_top_tied": true,
+      "selector_id": "hrd_disagreement_only",
+      "top1_agreement_forced": false
+    },
+    "hrd_representative_only__k10": {
+      "MAE": 0.25,
+      "disagreement_source": "none",
+      "discriminative_count": 0,
+      "discriminative_task_ids": [],
+      "forced_recommendation_regret": 0.0,
+      "k": 10,
+      "later_rates": {
+        "codex_gpt_5_4": {
+          "missing_or_na_count": 0,
+          "pass_count": 5,
+          "pass_rate": 0.5,
+          "valid_count": 10
+        },
+        "kilo_claude_sonnet_4_6": {
+          "missing_or_na_count": 0,
+          "pass_count": 8,
+          "pass_rate": 0.8,
+          "valid_count": 10
+        },
+        "kilo_gpt_5_4": {
+          "missing_or_na_count": 0,
+          "pass_count": 9,
+          "pass_rate": 0.9,
+          "valid_count": 10
+        },
+        "kilo_gpt_5_4_mini": {
+          "missing_or_na_count": 0,
+          "pass_count": 6,
+          "pass_rate": 0.6,
+          "valid_count": 10
+        }
+      },
+      "later_task_ids": [
+        "boltons__clean_ext__017",
+        "boltons__hist__019",
+        "boltons__hist__020",
+        "boltons__hist__022",
+        "boltons__hist__023",
+        "boltons__hist__024",
+        "boltons__hist__025",
+        "boltons__hist__026",
+        "boltons__hist__027",
+        "boltons__hist__028"
+      ],
+      "later_top_agent_id": "kilo_gpt_5_4",
+      "later_top_tied": false,
+      "pairwise_direction_agreement": 0.5,
+      "pairwise_rows": [
+        {
+          "agent_a": "codex_gpt_5_4",
+          "agent_b": "kilo_gpt_5_4",
+          "agrees": true,
+          "later_margin": -0.4,
+          "later_sign": -1,
+          "selected_margin": -0.1,
+          "selected_sign": -1
+        },
+        {
+          "agent_a": "codex_gpt_5_4",
+          "agent_b": "kilo_gpt_5_4_mini",
+          "agrees": true,
+          "later_margin": -0.1,
+          "later_sign": -1,
+          "selected_margin": -0.1,
+          "selected_sign": -1
+        },
+        {
+          "agent_a": "codex_gpt_5_4",
+          "agent_b": "kilo_claude_sonnet_4_6",
+          "agrees": false,
+          "later_margin": -0.3,
+          "later_sign": -1,
+          "selected_margin": 0.0,
+          "selected_sign": 0
+        },
+        {
+          "agent_a": "kilo_gpt_5_4",
+          "agent_b": "kilo_gpt_5_4_mini",
+          "agrees": false,
+          "later_margin": 0.3,
+          "later_sign": 1,
+          "selected_margin": 0.0,
+          "selected_sign": 0
+        },
+        {
+          "agent_a": "kilo_gpt_5_4",
+          "agent_b": "kilo_claude_sonnet_4_6",
+          "agrees": true,
+          "later_margin": 0.1,
+          "later_sign": 1,
+          "selected_margin": 0.1,
+          "selected_sign": 1
+        },
+        {
+          "agent_a": "kilo_gpt_5_4_mini",
+          "agent_b": "kilo_claude_sonnet_4_6",
+          "agrees": false,
+          "later_margin": -0.2,
+          "later_sign": -1,
+          "selected_margin": 0.1,
+          "selected_sign": 1
+        }
+      ],
+      "random_percentiles": {
+        "quality_filtered_random": {
+          "MAE_beats_or_ties_random_share": 0.012,
+          "pairwise_agreement_beats_or_ties_random_share": 0.895,
+          "regret_beats_or_ties_random_share": 1.0
+        },
+        "stratified_random": {
+          "MAE_beats_or_ties_random_share": 0.012,
+          "pairwise_agreement_beats_or_ties_random_share": 0.922,
+          "regret_beats_or_ties_random_share": 1.0
+        },
+        "uniform_random_same_budget": {
+          "MAE_beats_or_ties_random_share": 0.012,
+          "pairwise_agreement_beats_or_ties_random_share": 0.895,
+          "regret_beats_or_ties_random_share": 1.0
+        }
+      },
+      "representative_count": 10,
+      "representative_fraction": 1.0,
+      "representative_task_ids": [
+        "boltons__clean_ext__008",
+        "boltons__clean_ext__010",
+        "boltons__hist__013",
+        "boltons__hist__014",
+        "boltons__hist__017",
+        "boltons__supply_expansion_20260526__019",
+        "boltons__supply_expansion_20260526__048",
+        "boltons__supply_expansion_20260526__066",
+        "boltons__supply_expansion_20260526__093",
+        "boltons__supply_expansion_20260526__095"
+      ],
+      "selected_task_ids": [
+        "boltons__clean_ext__008",
+        "boltons__clean_ext__010",
+        "boltons__hist__013",
+        "boltons__hist__014",
+        "boltons__hist__017",
+        "boltons__supply_expansion_20260526__019",
+        "boltons__supply_expansion_20260526__048",
+        "boltons__supply_expansion_20260526__066",
+        "boltons__supply_expansion_20260526__093",
+        "boltons__supply_expansion_20260526__095"
+      ],
+      "selection_forced_top_agent_id": "kilo_gpt_5_4",
+      "selection_rates": {
+        "codex_gpt_5_4": {
+          "missing_or_na_count": 0,
+          "pass_count": 9,
+          "pass_rate": 0.9,
+          "valid_count": 10
+        },
+        "kilo_claude_sonnet_4_6": {
+          "missing_or_na_count": 0,
+          "pass_count": 9,
+          "pass_rate": 0.9,
+          "valid_count": 10
+        },
+        "kilo_gpt_5_4": {
+          "missing_or_na_count": 0,
+          "pass_count": 10,
+          "pass_rate": 1.0,
+          "valid_count": 10
+        },
+        "kilo_gpt_5_4_mini": {
+          "missing_or_na_count": 0,
+          "pass_count": 10,
+          "pass_rate": 1.0,
+          "valid_count": 10
+        }
+      },
+      "selection_top_tied": true,
+      "selector_id": "hrd_representative_only",
+      "top1_agreement_forced": true
+    },
+    "hrd_representative_only__k20": {
+      "MAE": 0.1375,
+      "disagreement_source": "none",
+      "discriminative_count": 0,
+      "discriminative_task_ids": [],
+      "forced_recommendation_regret": 0.4,
+      "k": 20,
+      "later_rates": {
+        "codex_gpt_5_4": {
+          "missing_or_na_count": 0,
+          "pass_count": 5,
+          "pass_rate": 0.5,
+          "valid_count": 10
+        },
+        "kilo_claude_sonnet_4_6": {
+          "missing_or_na_count": 0,
+          "pass_count": 8,
+          "pass_rate": 0.8,
+          "valid_count": 10
+        },
+        "kilo_gpt_5_4": {
+          "missing_or_na_count": 0,
+          "pass_count": 9,
+          "pass_rate": 0.9,
+          "valid_count": 10
+        },
+        "kilo_gpt_5_4_mini": {
+          "missing_or_na_count": 0,
+          "pass_count": 6,
+          "pass_rate": 0.6,
+          "valid_count": 10
+        }
+      },
+      "later_task_ids": [
+        "boltons__clean_ext__017",
+        "boltons__hist__019",
+        "boltons__hist__020",
+        "boltons__hist__022",
+        "boltons__hist__023",
+        "boltons__hist__024",
+        "boltons__hist__025",
+        "boltons__hist__026",
+        "boltons__hist__027",
+        "boltons__hist__028"
+      ],
+      "later_top_agent_id": "kilo_gpt_5_4",
+      "later_top_tied": false,
+      "pairwise_direction_agreement": 0.333333,
+      "pairwise_rows": [
+        {
+          "agent_a": "codex_gpt_5_4",
+          "agent_b": "kilo_gpt_5_4",
+          "agrees": false,
+          "later_margin": -0.4,
+          "later_sign": -1,
+          "selected_margin": 0.0,
+          "selected_sign": 0
+        },
+        {
+          "agent_a": "codex_gpt_5_4",
+          "agent_b": "kilo_gpt_5_4_mini",
+          "agrees": false,
+          "later_margin": -0.1,
+          "later_sign": -1,
+          "selected_margin": 0.1,
+          "selected_sign": 1
+        },
+        {
+          "agent_a": "codex_gpt_5_4",
+          "agent_b": "kilo_claude_sonnet_4_6",
+          "agrees": false,
+          "later_margin": -0.3,
+          "later_sign": -1,
+          "selected_margin": 0.05,
+          "selected_sign": 1
+        },
+        {
+          "agent_a": "kilo_gpt_5_4",
+          "agent_b": "kilo_gpt_5_4_mini",
+          "agrees": true,
+          "later_margin": 0.3,
+          "later_sign": 1,
+          "selected_margin": 0.1,
+          "selected_sign": 1
+        },
+        {
+          "agent_a": "kilo_gpt_5_4",
+          "agent_b": "kilo_claude_sonnet_4_6",
+          "agrees": true,
+          "later_margin": 0.1,
+          "later_sign": 1,
+          "selected_margin": 0.05,
+          "selected_sign": 1
+        },
+        {
+          "agent_a": "kilo_gpt_5_4_mini",
+          "agent_b": "kilo_claude_sonnet_4_6",
+          "agrees": false,
+          "later_margin": -0.2,
+          "later_sign": -1,
+          "selected_margin": -0.05,
+          "selected_sign": 0
+        }
+      ],
+      "random_percentiles": {
+        "quality_filtered_random": {
+          "MAE_beats_or_ties_random_share": 1.0,
+          "pairwise_agreement_beats_or_ties_random_share": 1.0,
+          "regret_beats_or_ties_random_share": 1.0
+        },
+        "stratified_random": {
+          "MAE_beats_or_ties_random_share": 1.0,
+          "pairwise_agreement_beats_or_ties_random_share": 1.0,
+          "regret_beats_or_ties_random_share": 1.0
+        },
+        "uniform_random_same_budget": {
+          "MAE_beats_or_ties_random_share": 1.0,
+          "pairwise_agreement_beats_or_ties_random_share": 1.0,
+          "regret_beats_or_ties_random_share": 1.0
+        }
+      },
+      "representative_count": 20,
+      "representative_fraction": 1.0,
+      "representative_task_ids": [
+        "boltons__clean_ext__001",
+        "boltons__clean_ext__008",
+        "boltons__clean_ext__010",
+        "boltons__hist__006",
+        "boltons__hist__007",
+        "boltons__hist__011",
+        "boltons__hist__013",
+        "boltons__hist__014",
+        "boltons__hist__017",
+        "boltons__supply_expansion_20260526__001",
+        "boltons__supply_expansion_20260526__002",
+        "boltons__supply_expansion_20260526__003",
+        "boltons__supply_expansion_20260526__004",
+        "boltons__supply_expansion_20260526__006",
+        "boltons__supply_expansion_20260526__019",
+        "boltons__supply_expansion_20260526__048",
+        "boltons__supply_expansion_20260526__066",
+        "boltons__supply_expansion_20260526__093",
+        "boltons__supply_expansion_20260526__095",
+        "boltons__supply_expansion_20260526__107"
+      ],
+      "selected_task_ids": [
+        "boltons__clean_ext__001",
+        "boltons__clean_ext__008",
+        "boltons__clean_ext__010",
+        "boltons__hist__006",
+        "boltons__hist__007",
+        "boltons__hist__011",
+        "boltons__hist__013",
+        "boltons__hist__014",
+        "boltons__hist__017",
+        "boltons__supply_expansion_20260526__001",
+        "boltons__supply_expansion_20260526__002",
+        "boltons__supply_expansion_20260526__003",
+        "boltons__supply_expansion_20260526__004",
+        "boltons__supply_expansion_20260526__006",
+        "boltons__supply_expansion_20260526__019",
+        "boltons__supply_expansion_20260526__048",
+        "boltons__supply_expansion_20260526__066",
+        "boltons__supply_expansion_20260526__093",
+        "boltons__supply_expansion_20260526__095",
+        "boltons__supply_expansion_20260526__107"
+      ],
+      "selection_forced_top_agent_id": "codex_gpt_5_4",
+      "selection_rates": {
+        "codex_gpt_5_4": {
+          "missing_or_na_count": 0,
+          "pass_count": 15,
+          "pass_rate": 0.75,
+          "valid_count": 20
+        },
+        "kilo_claude_sonnet_4_6": {
+          "missing_or_na_count": 0,
+          "pass_count": 14,
+          "pass_rate": 0.7,
+          "valid_count": 20
+        },
+        "kilo_gpt_5_4": {
+          "missing_or_na_count": 0,
+          "pass_count": 15,
+          "pass_rate": 0.75,
+          "valid_count": 20
+        },
+        "kilo_gpt_5_4_mini": {
+          "missing_or_na_count": 0,
+          "pass_count": 13,
+          "pass_rate": 0.65,
+          "valid_count": 20
+        }
+      },
+      "selection_top_tied": true,
+      "selector_id": "hrd_representative_only",
+      "top1_agreement_forced": false
+    }
+  }
+}

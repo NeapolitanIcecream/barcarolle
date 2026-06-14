@@ -2183,6 +2183,240 @@ def selector_baseline_eval(config: dict[str, Any]) -> dict[str, Any]:
     return payload
 
 
+def metadata_disagreement_scores(rows: list[dict[str, Any]]) -> dict[str, float]:
+    cluster_counts = Counter(str(row.get("source_cluster") or "") for row in rows)
+    source_counts = Counter(str(row.get("source") or "") for row in rows)
+    max_cluster = max(cluster_counts.values(), default=1)
+    max_source = max(source_counts.values(), default=1)
+    scores: dict[str, float] = {}
+    for row in rows:
+        cluster_density = cluster_counts[str(row.get("source_cluster") or "")] / max_cluster
+        source_density = source_counts[str(row.get("source") or "")] / max_source
+        medium_bonus = 0.25 if str(row.get("change_size_proxy")) == "medium" else 0.0
+        legacy_bonus = 0.15 if str(row.get("recency_bucket")) == "legacy_2018_or_earlier" else 0.0
+        synthetic_supply_bonus = 0.2 if str(row.get("source")) == "supply_expansion_20260526" else 0.0
+        scores[str(row["task_id"])] = round(2.0 * cluster_density + 0.5 * source_density + medium_bonus + legacy_bonus + synthetic_supply_bonus, 6)
+    return scores
+
+
+def select_disagreement_proxy_tasks(
+    rows: list[dict[str, Any]],
+    k: int,
+    already_selected: list[dict[str, Any]] | None = None,
+) -> list[dict[str, Any]]:
+    selected = list(already_selected or [])
+    seen = {str(row["task_id"]) for row in selected}
+    module_counts = Counter(str(row.get("module_bucket") or "") for row in selected)
+    module_cap = max(1, math.ceil(max(k + len(selected), 1) * 0.3))
+    scores = metadata_disagreement_scores(rows)
+    picked: list[dict[str, Any]] = []
+    for row in sorted(rows, key=lambda item: (scores[str(item["task_id"])], str(item.get("task_id") or "")), reverse=True):
+        if len(picked) >= k:
+            break
+        task_id = str(row["task_id"])
+        if task_id in seen:
+            continue
+        module = str(row.get("module_bucket") or "")
+        if module_counts[module] >= module_cap and len(rows) - len(seen) > k - len(picked):
+            continue
+        picked.append(row)
+        seen.add(task_id)
+        module_counts[module] += 1
+    if len(picked) < k:
+        for row in sorted(rows, key=lambda item: (scores[str(item["task_id"])], str(item.get("task_id") or "")), reverse=True):
+            if len(picked) >= k:
+                break
+            task_id = str(row["task_id"])
+            if task_id not in seen:
+                picked.append(row)
+                seen.add(task_id)
+    return picked
+
+
+def select_hrd_hybrid(rows: list[dict[str, Any]], k: int, representative_fraction: float = 0.7) -> dict[str, Any]:
+    eligible = [
+        row
+        for row in rows
+        if float(row.get("quality_score") or 0.0) >= 1.0
+        and not selector_bool(row.get("risk_flag"))
+        and not selector_bool(row.get("flaky_flag"))
+    ]
+    representative_count = min(k, int(math.ceil(k * representative_fraction)))
+    representative_ids = select_rsq_recency_stratified_quota(eligible, representative_count)
+    representative_rows = [row for row in eligible if str(row["task_id"]) in set(representative_ids)]
+    discriminative_count = max(0, k - len(representative_rows))
+    discriminative_rows = select_disagreement_proxy_tasks(eligible, discriminative_count, already_selected=representative_rows)
+    selected_rows = [*representative_rows, *discriminative_rows]
+    if len(selected_rows) < k:
+        selected_rows = selector_fill_to_k(selected_rows, eligible, k)
+    selected_ids = sorted(str(row["task_id"]) for row in selected_rows[:k])
+    return {
+        "selected_task_ids": selected_ids,
+        "representative_task_ids": sorted(str(row["task_id"]) for row in representative_rows),
+        "discriminative_task_ids": sorted(str(row["task_id"]) for row in discriminative_rows),
+        "representative_count": len(representative_rows),
+        "discriminative_count": len(discriminative_rows),
+        "representative_fraction": representative_fraction,
+        "disagreement_source": "metadata_cluster_density_difficulty_proxy",
+    }
+
+
+def select_hrd_representative_only(rows: list[dict[str, Any]], k: int) -> dict[str, Any]:
+    selected = select_rsq_recency_stratified_quota(rows, k)
+    return {
+        "selected_task_ids": selected,
+        "representative_task_ids": selected,
+        "discriminative_task_ids": [],
+        "representative_count": len(selected),
+        "discriminative_count": 0,
+        "representative_fraction": 1.0,
+        "disagreement_source": "none",
+    }
+
+
+def select_hrd_disagreement_only(rows: list[dict[str, Any]], k: int) -> dict[str, Any]:
+    picked = select_disagreement_proxy_tasks(rows, k)
+    selected = sorted(str(row["task_id"]) for row in picked)
+    return {
+        "selected_task_ids": selected,
+        "representative_task_ids": [],
+        "discriminative_task_ids": selected,
+        "representative_count": 0,
+        "discriminative_count": len(selected),
+        "representative_fraction": 0.0,
+        "disagreement_source": "metadata_cluster_density_difficulty_proxy",
+    }
+
+
+def selector_hrd_eval(config: dict[str, Any]) -> dict[str, Any]:
+    task_rows = load_selector_task_rows()
+    outcome_rows = load_selector_outcome_rows()
+    candidates = selector_candidate_tasks(task_rows)
+    later_ids = selector_later_task_ids(task_rows)
+    agent_ids = selector_agent_ids(config)
+    baseline = read_json(result_path("selector_baseline_eval.json"))
+    variants: dict[str, Any] = {}
+    for k in [10, 20]:
+        variant_specs = [
+            ("hrd_representative_only", select_hrd_representative_only(candidates, k)),
+            ("hrd_disagreement_only", select_hrd_disagreement_only(candidates, k)),
+            ("hrd_70_30", select_hrd_hybrid(candidates, k, 0.7)),
+            ("hrd_60_40", select_hrd_hybrid(candidates, k, 0.6)),
+            ("hrd_50_50", select_hrd_hybrid(candidates, k, 0.5)),
+        ]
+        for variant_id, selection in variant_specs:
+            metrics = evaluate_selected_task_ids(selection["selected_task_ids"], later_ids, agent_ids, outcome_rows)
+            random_percentiles = {
+                baseline_id: selector_random_percentiles(metrics, baseline["random_baselines"][f"{baseline_id}__k{k}"]["rows"])
+                for baseline_id in BASELINE_SELECTOR_FUNCS
+            }
+            variants[f"{variant_id}__k{k}"] = {
+                "selector_id": variant_id,
+                "k": k,
+                **selection,
+                **metrics,
+                "random_percentiles": random_percentiles,
+            }
+    variant_preference = {
+        "hrd_70_30": 0,
+        "hrd_60_40": 1,
+        "hrd_50_50": 2,
+        "hrd_disagreement_only": 3,
+        "hrd_representative_only": 4,
+    }
+
+    def hrd_variant_rank(key: str) -> tuple[float, float, int, int]:
+        row = variants[key]
+        selector_id = str(row["selector_id"])
+        return (
+            float(row.get("MAE") if row.get("MAE") is not None else 999.0),
+            float(row.get("forced_recommendation_regret") if row.get("forced_recommendation_regret") is not None else 999.0),
+            variant_preference.get(selector_id, 99),
+            int(row["k"]),
+        )
+
+    best_key = min(variants, key=hrd_variant_rank)
+    payload = {
+        "schema_version": "barcarolle.agent_selection_demo.selector_hrd_eval.v1",
+        "generated_at": "2026-06-14",
+        "paid_agent_calls_made": False,
+        "disagreement_fallback": {
+            "used": True,
+            "reason": "No leakage-safe historical current-Agent disagreement matrix exists for the frozen Selection candidate tasks. HRD therefore uses metadata source-cluster density, change-size proxy, and diversity penalties.",
+        },
+        "baseline_context": {
+            key: {
+                "selector_id": row["selector_id"],
+                "k": row["k"],
+                "summary": row["summary"],
+            }
+            for key, row in baseline["random_baselines"].items()
+        },
+        "rsq_context": {
+            key: {
+                "selector_id": row["selector_id"],
+                "k": row["k"],
+                "MAE": row["MAE"],
+                "pairwise_direction_agreement": row["pairwise_direction_agreement"],
+                "forced_recommendation_regret": row["forced_recommendation_regret"],
+                "selection_forced_top_agent_id": row["selection_forced_top_agent_id"],
+                "later_top_agent_id": row["later_top_agent_id"],
+            }
+            for key, row in baseline["selector_results"].items()
+        },
+        "variants": variants,
+        "best_variant_key": best_key,
+        "interpretation": {
+            "best_variant_key": best_key,
+            "best_variant_mae": variants[best_key]["MAE"],
+            "best_variant_forced_top": variants[best_key]["selection_forced_top_agent_id"],
+            "decision_quality_note": "HRD improves the Agent-selection story when it creates a Kilo top-pair lead with low forced regret; Package 5 applies the shared decision wrapper before any final recommendation claim.",
+        },
+    }
+    write_json(result_path("selector_hrd_eval.json"), payload)
+    write_text(report_path("selector_hrd_eval_zh.md"), render_selector_hrd_eval(payload))
+    return payload
+
+
+def render_selector_hrd_eval(payload: dict[str, Any]) -> str:
+    lines = [
+        "# HRD Decision-aware Selector Eval",
+        "",
+        "生成日期：2026-06-14",
+        "",
+        "## Disagreement source",
+        "",
+        "当前 frozen Selection candidate tasks 没有 leakage-safe 的历史 current-Agent disagreement matrix。因此 HRD 使用 fallback：source-cluster density、change-size proxy、legacy/source diversity 和 module redundancy penalty。",
+        "",
+        "## Variant comparison",
+        "",
+        "| Variant | k | Rep/Disc | MAE | Pairwise | Forced top | Later top | Forced regret | MAE beats stratified random | Regret beats stratified random |",
+        "| --- | ---: | --- | ---: | ---: | --- | --- | ---: | ---: | ---: |",
+    ]
+    for key, row in payload["variants"].items():
+        stratified = row["random_percentiles"]["stratified_random"]
+        lines.append(
+            f"| `{key}` | `{row['k']}` | `{row['representative_count']}/{row['discriminative_count']}` | "
+            f"`{row['MAE']}` | `{row['pairwise_direction_agreement']}` | `{row['selection_forced_top_agent_id']}` | "
+            f"`{row['later_top_agent_id']}` | `{row['forced_recommendation_regret']}` | "
+            f"`{stratified['MAE_beats_or_ties_random_share']}` | `{stratified['regret_beats_or_ties_random_share']}` |"
+        )
+    best = payload["variants"][payload["best_variant_key"]]
+    lines.extend(
+        [
+            "",
+            "## Best no-paid HRD slice",
+            "",
+            f"最佳 HRD variant 是 `{payload['best_variant_key']}`，k=`{best['k']}`，MAE `{best['MAE']}`，forced top `{best['selection_forced_top_agent_id']}`，later top `{best['later_top_agent_id']}`，forced regret `{best['forced_recommendation_regret']}`。",
+            "",
+            f"Selected tasks: `{', '.join(best['selected_task_ids'])}`。",
+            "",
+            "这不是最终 recommend 规则；它说明 HRD 的 metadata disagreement arm 能把 selector 从原始 Selection tie 推向可由 Package 5 进一步检查的决策候选。",
+        ]
+    )
+    return "\n".join(lines) + "\n"
+
+
 def render_selector_baseline_eval(payload: dict[str, Any]) -> str:
     lines = [
         "# Selector Baseline Eval",
@@ -3546,6 +3780,7 @@ def main() -> int:
     eval_parser.add_argument("--output", default=str(report_path("rolling_origin_eval_zh.md")))
     subcommands.add_parser("selector-build-dataset")
     subcommands.add_parser("selector-baseline-eval")
+    subcommands.add_parser("selector-hrd-eval")
     args = parser.parse_args()
     config = load_config(repo_path(args.config))
     if args.command == "gate":
@@ -3601,6 +3836,9 @@ def main() -> int:
         return 0
     if args.command == "selector-baseline-eval":
         selector_baseline_eval(config)
+        return 0
+    if args.command == "selector-hrd-eval":
+        selector_hrd_eval(config)
         return 0
     raise ValueError(args.command)
 
