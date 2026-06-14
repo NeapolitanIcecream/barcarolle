@@ -1,0 +1,96 @@
+{
+  "comparison": {
+    "adapter_timeout_status_changed": false,
+    "agent_id": "codex_workspace",
+    "behavior_change_level": "request_context_and_mocked_final_output",
+    "latency_seconds_delta": -0.004,
+    "limitations": "No autonomous command trace, file read, file edit, or public-test execution was proven because the no-paid endpoint returned final text only.",
+    "observable_behavior_change": true,
+    "public_test_instruction_observed_only_in_variant_b": true,
+    "surface": "repo_AGENTS_md",
+    "terminal_status_changed": false,
+    "variant_a_loaded": true,
+    "variant_b_loaded": true
+  },
+  "generated_at": "2026-06-14",
+  "paid_calls_used": 0,
+  "rows": [
+    {
+      "adapter_returned_timeout_status": false,
+      "agent_id": "codex_workspace",
+      "artifact_hash": "sha256:fe461cba91d03cf08042e2e41e79974d7924a1c5e801ba775841c56276c72994",
+      "artifact_path": "AGENTS.md",
+      "command_exit_code": 0,
+      "expected_phrase_observed": {
+        "BARCAROLLE_BEHAVIOR_VARIANT_A": true
+      },
+      "injection_record": {
+        "artifact_hash": "sha256:fe461cba91d03cf08042e2e41e79974d7924a1c5e801ba775841c56276c72994",
+        "artifact_id": "codex_behavior_variant_a-artifact",
+        "cleanup_policy": "workspace_discarded_after_run",
+        "injected_at": "2026-06-14T14:16:11+00:00",
+        "run_id": "phase1_smoke__codex_behavior_variant_a",
+        "schema_version": "barcarolle.agent_tuning_demo.artifact_injection_record.v1",
+        "surface": "repo_AGENTS_md",
+        "target_agent": "codex_workspace",
+        "workspace_relative_paths": [
+          "AGENTS.md"
+        ]
+      },
+      "latency_seconds": 1.155,
+      "loaded_observed": true,
+      "notes": "Variant A no-paid request-context smoke: injected artifact says not to run tests.",
+      "observation_method": "real_cli_adapter_sent_request_or_output_containing_fixed_phrase_to_local_fake_endpoint",
+      "paid_call_used": false,
+      "request_count": 1,
+      "request_paths": [
+        "/v1/responses"
+      ],
+      "run_mode": "no_paid_local_endpoint_request_capture",
+      "stderr_line_count": 5,
+      "stdout_line_count": 3,
+      "surface": "repo_AGENTS_md",
+      "timed_out": false
+    },
+    {
+      "adapter_returned_timeout_status": false,
+      "agent_id": "codex_workspace",
+      "artifact_hash": "sha256:e220d60b78ce94a66aff6a2a0407efe1f8d1b4fe5cc6e0ac736a9244b28890e9",
+      "artifact_path": "AGENTS.md",
+      "command_exit_code": 0,
+      "expected_phrase_observed": {
+        "BARCAROLLE_BEHAVIOR_VARIANT_B": true,
+        "python -m pytest tests/test_public_smoke.py -q": true
+      },
+      "injection_record": {
+        "artifact_hash": "sha256:e220d60b78ce94a66aff6a2a0407efe1f8d1b4fe5cc6e0ac736a9244b28890e9",
+        "artifact_id": "codex_behavior_variant_b-artifact",
+        "cleanup_policy": "workspace_discarded_after_run",
+        "injected_at": "2026-06-14T14:16:13+00:00",
+        "run_id": "phase1_smoke__codex_behavior_variant_b",
+        "schema_version": "barcarolle.agent_tuning_demo.artifact_injection_record.v1",
+        "surface": "repo_AGENTS_md",
+        "target_agent": "codex_workspace",
+        "workspace_relative_paths": [
+          "AGENTS.md"
+        ]
+      },
+      "latency_seconds": 1.151,
+      "loaded_observed": true,
+      "notes": "Variant B no-paid request-context smoke: injected artifact says to run a specific public test.",
+      "observation_method": "real_cli_adapter_sent_request_or_output_containing_fixed_phrase_to_local_fake_endpoint",
+      "paid_call_used": false,
+      "request_count": 1,
+      "request_paths": [
+        "/v1/responses"
+      ],
+      "run_mode": "no_paid_local_endpoint_request_capture",
+      "stderr_line_count": 5,
+      "stdout_line_count": 3,
+      "surface": "repo_AGENTS_md",
+      "timed_out": false
+    }
+  ],
+  "run_mode": "no_paid_local_endpoint_request_capture",
+  "schema_version": "barcarolle.agent_tuning_demo.behavior_smoke.v1"
+}
