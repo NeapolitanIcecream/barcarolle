@@ -1,0 +1,263 @@
+{
+  "schema_version": "barcarolle.agent_selection_demo.selector_independent_validation_inventory.v1",
+  "generated_at": "2026-06-14",
+  "paid_agent_calls_made": false,
+  "previous_selector_development_slice": {
+    "label": "hypothesis_generating_selector_development_result",
+    "repo": "boltons",
+    "artifacts": [
+      "experiments/agent_selection_demo/results/selector_final_eval.json",
+      "experiments/agent_selection_demo/results/selector_hrd_eval.json",
+      "experiments/agent_selection_demo/results/selector_decision_eval.json"
+    ],
+    "valid_for_final_proof": false,
+    "reason": "Selector family, variant, and story interpretation used the same boltons Selection/Holdout evidence."
+  },
+  "primary_no_paid_final_path": "phase1_blocked_split_heldout_three_repo",
+  "candidate_sources": [
+    {
+      "source_id": "phase1_blocked_split_heldout_three_repo",
+      "source_type": "no_paid_committed_sanitized_outcomes",
+      "final_validation_source": "no_paid_independent_rolling_origin",
+      "mode": "retrospective_pseudo_future",
+      "window_id": "blocked_split_heldout",
+      "phase1_artifacts": [
+        "experiments/phase1_compiler/results/phase1_retrospective_predictive_signal_window_plan.json",
+        "experiments/phase1_compiler/results/phase1_retrospective_predictive_signal_selection_freeze.json",
+        "experiments/phase1_compiler/results/phase1_retrospective_predictive_signal_score_join_manifest.json"
+      ],
+      "repos": {
+        "attrs": {
+          "eligible_selection_tasks": 10,
+          "eligible_later_tasks": 10,
+          "available_agents": [
+            "codex_workspace",
+            "kilo_workspace"
+          ],
+          "selection_outcome_rows_present": 20,
+          "selection_scoreable_cells": 19,
+          "selection_non_scoreable_cells": 1,
+          "later_outcome_rows_present": 20,
+          "later_scoreable_cells": 20,
+          "later_non_scoreable_cells": 0
+        },
+        "boltons": {
+          "eligible_selection_tasks": 10,
+          "eligible_later_tasks": 10,
+          "available_agents": [
+            "codex_workspace",
+            "kilo_workspace"
+          ],
+          "selection_outcome_rows_present": 20,
+          "selection_scoreable_cells": 20,
+          "selection_non_scoreable_cells": 0,
+          "later_outcome_rows_present": 20,
+          "later_scoreable_cells": 20,
+          "later_non_scoreable_cells": 0
+        },
+        "click": {
+          "eligible_selection_tasks": 10,
+          "eligible_later_tasks": 10,
+          "available_agents": [
+            "codex_workspace",
+            "kilo_workspace"
+          ],
+          "selection_outcome_rows_present": 20,
+          "selection_scoreable_cells": 20,
+          "selection_non_scoreable_cells": 0,
+          "later_outcome_rows_present": 20,
+          "later_scoreable_cells": 20,
+          "later_non_scoreable_cells": 0
+        }
+      },
+      "aggregate": {
+        "eligible_selection_tasks": 30,
+        "eligible_later_tasks": 30,
+        "available_agents": [
+          "codex_workspace",
+          "kilo_workspace"
+        ],
+        "selection_outcome_rows_present": 60,
+        "selection_scoreable_cells": 59,
+        "selection_non_scoreable_cells": 1,
+        "later_outcome_rows_present": 60,
+        "later_scoreable_cells": 60,
+        "later_non_scoreable_cells": 0
+      },
+      "outcomes_seen_during_previous_selector_development": false,
+      "valid_for_corrected_final_replay": true,
+      "independence_notes": [
+        "The source is outside the previous boltons demo selector-development slice.",
+        "The Phase 1 selection freeze artifact reports frozen_before_score_join.",
+        "This is pseudo-future held-out evidence, not a true chronological rolling-origin primary claim."
+      ],
+      "planned_use": "Primary no-paid corrected final replay if the protocol freezes task IDs and decision thresholds before joining these final outcomes."
+    },
+    {
+      "source_id": "phase1_original_three_repo_split_heldout",
+      "source_type": "no_paid_committed_sanitized_outcomes",
+      "final_validation_source": "no_paid_independent_rolling_origin",
+      "mode": "retrospective_pseudo_future",
+      "window_id": "original_three_repo_split_heldout",
+      "repos": {
+        "attrs": {
+          "eligible_selection_tasks": 16,
+          "eligible_later_tasks": 15,
+          "available_agents": [
+            "codex_workspace",
+            "kilo_workspace"
+          ],
+          "selection_outcome_rows_present": 32,
+          "selection_scoreable_cells": 26,
+          "selection_non_scoreable_cells": 6,
+          "later_outcome_rows_present": 28,
+          "later_scoreable_cells": 23,
+          "later_non_scoreable_cells": 5
+        },
+        "boltons": {
+          "eligible_selection_tasks": 18,
+          "eligible_later_tasks": 17,
+          "available_agents": [
+            "codex_workspace",
+            "kilo_workspace"
+          ],
+          "selection_outcome_rows_present": 34,
+          "selection_scoreable_cells": 28,
+          "selection_non_scoreable_cells": 6,
+          "later_outcome_rows_present": 34,
+          "later_scoreable_cells": 30,
+          "later_non_scoreable_cells": 4
+        },
+        "click": {
+          "eligible_selection_tasks": 15,
+          "eligible_later_tasks": 15,
+          "available_agents": [
+            "codex_workspace",
+            "kilo_workspace"
+          ],
+          "selection_outcome_rows_present": 28,
+          "selection_scoreable_cells": 28,
+          "selection_non_scoreable_cells": 0,
+          "later_outcome_rows_present": 30,
+          "later_scoreable_cells": 26,
+          "later_non_scoreable_cells": 4
+        }
+      },
+      "outcomes_seen_during_previous_selector_development": false,
+      "valid_for_corrected_final_replay": false,
+      "valid_for_sensitivity_or_development": true,
+      "reason_not_primary": "Accepted Phase 1 held-out split, but missing/non-scoreable cells are materially higher and it overlaps Phase 1 diagnostic reporting; use only as sensitivity after the primary path."
+    },
+    {
+      "source_id": "phase1_repo_specific_earliest_time_bucket_cutoff",
+      "source_type": "no_paid_committed_sanitized_outcomes",
+      "final_validation_source": "no_paid_independent_rolling_origin",
+      "mode": "true_rolling_origin_diagnostic",
+      "window_id": "repo_specific_earliest_time_bucket_cutoff",
+      "repos": {
+        "attrs": {
+          "eligible_selection_tasks": 4,
+          "eligible_later_tasks": 26,
+          "available_agents": [
+            "codex_workspace",
+            "kilo_workspace"
+          ],
+          "selection_outcome_rows_present": 8,
+          "selection_scoreable_cells": 7,
+          "selection_non_scoreable_cells": 1,
+          "later_outcome_rows_present": 52,
+          "later_scoreable_cells": 42,
+          "later_non_scoreable_cells": 10
+        },
+        "boltons": {
+          "eligible_selection_tasks": 24,
+          "eligible_later_tasks": 11,
+          "available_agents": [
+            "codex_workspace",
+            "kilo_workspace"
+          ],
+          "selection_outcome_rows_present": 38,
+          "selection_scoreable_cells": 32,
+          "selection_non_scoreable_cells": 6,
+          "later_outcome_rows_present": 22,
+          "later_scoreable_cells": 20,
+          "later_non_scoreable_cells": 2
+        },
+        "click": {
+          "eligible_selection_tasks": 4,
+          "eligible_later_tasks": 26,
+          "available_agents": [
+            "codex_workspace",
+            "kilo_workspace"
+          ],
+          "selection_outcome_rows_present": 8,
+          "selection_scoreable_cells": 8,
+          "selection_non_scoreable_cells": 0,
+          "later_outcome_rows_present": 52,
+          "later_scoreable_cells": 48,
+          "later_non_scoreable_cells": 4
+        }
+      },
+      "outcomes_seen_during_previous_selector_development": false,
+      "valid_for_corrected_final_replay": false,
+      "valid_for_sensitivity_or_development": true,
+      "reason_not_primary": "This is the closest true rolling-origin source, but attrs and click have only four B_eval tasks, so the decision wrapper would mostly test sparsity rather than selection quality."
+    },
+    {
+      "source_id": "fresh_paid_boltons_unused_demo_tasks",
+      "source_type": "fresh_paid_candidate_pool",
+      "repo": "boltons",
+      "eligible_selection_tasks": 4,
+      "eligible_later_tasks": 0,
+      "available_current_agent_outcomes": 0,
+      "unused_task_ids": [
+        "boltons__supply_expansion_20260526__159",
+        "boltons__supply_expansion_20260526__157",
+        "boltons__supply_expansion_20260526__158",
+        "boltons__supply_expansion_20260526__160"
+      ],
+      "valid_for_corrected_final_replay": false,
+      "valid_for_supplemental_paid_smoke": true,
+      "reason_not_primary": "Only four unused certified tasks remain in the current demo split, below the runbook's recommended 10+10 paid final design."
+    },
+    {
+      "source_id": "fresh_paid_attrs_second_repo_slice",
+      "source_type": "fresh_paid_candidate_pool",
+      "repo": "attrs",
+      "eligible_task_pool_size": 28,
+      "sources": [
+        {
+          "path": "experiments/phase0_headroom/certified_tasks/attrs_clean_outcome_unseen_supply_certified_tasks.jsonl",
+          "task_count": 18
+        },
+        {
+          "path": "experiments/phase0_headroom/certified_tasks/attrs_supply_expansion_20260526_certified_tasks.jsonl",
+          "task_count": 10
+        }
+      ],
+      "local_repo_present": true,
+      "target_profile_present": false,
+      "available_current_agent_outcomes": 0,
+      "valid_for_corrected_final_replay": false,
+      "valid_after_readiness_gate": true,
+      "reason_not_primary": "A plausible second-repo paid fallback exists, but it needs a target-profile/package readiness gate. It is unnecessary if the no-paid Phase 1 replay is conclusive."
+    },
+    {
+      "source_id": "fresh_paid_click_second_repo_slice",
+      "source_type": "fresh_paid_candidate_pool",
+      "repo": "click",
+      "eligible_task_pool_size": 0,
+      "local_repo_present": false,
+      "target_profile_present": true,
+      "available_current_agent_outcomes": 0,
+      "valid_for_corrected_final_replay": false,
+      "reason_not_primary": "The repo currently has a target profile but no local checkout or current phase0 certified task package in the demo workspace."
+    }
+  ],
+  "inventory_decision": {
+    "status": "valid_no_paid_final_path_found",
+    "chosen_path": "phase1_blocked_split_heldout_three_repo",
+    "fallback_if_no_paid_fails_due_to_missing_cells": "fresh_paid_attrs_second_repo_slice_after_readiness_gate",
+    "paid_cells_needed_now": 0
+  }
+}
