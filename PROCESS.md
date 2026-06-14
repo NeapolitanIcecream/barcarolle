@@ -211,6 +211,54 @@ the previous selector result as hypothesis-generating, freeze a corrected
 selector protocol, and validate on an independent rolling-origin/fresh final
 slice or report a hard negative result.
 
+Completed selector-validation correction result:
+
+- `experiments/agent_selection_demo/reports/selector_corrected_validation_closeout_zh.md`
+- `experiments/agent_selection_demo/results/selector_corrected_validation_closeout.json`
+
+The corrected validation used an independent no-paid Phase 1 pseudo-future
+block across attrs, boltons, and click. It did not achieve the preferred demo
+story under the conservative wrapper: Kilo led Selection (`11/18` versus
+Codex `6/18`) and later/Holdout (`16/30` versus Codex `7/30`), but the wrapper
+returned `need_more_evidence` because it required too much pairwise certainty.
+Selector MAE was `0.088889` versus strongest stratified-random MAE `0.090146`,
+a small relative improvement of about `1.39%`. Treat this as development
+evidence: the direction is promising, but the current selector/wrapper does not
+yet support the user-facing "Selection recommends an Agent and Holdout validates
+it" story.
+
+Completed selector-algorithm bakeoff result:
+
+- `docs/research/agent-selection-selector-algorithm-bakeoff-runbook-2026-06-14.md`
+
+This runbook implemented RSQ v2, FLC, HRD v3, COD-lite, RO-LSP, SAES-lite, and
+strong random baselines, then selected `cod_lite` plus wrapper v2 on development
+decision quality. Wrapper v2 uses `action_margin=0.10`, `min_common_valid=8`,
+`lcb_tolerance=0.10`, `tie_epsilon=0.05`, and no zero-loss requirement.
+
+The limited no-paid final replay used `phase1_original_three_repo_split_heldout`
+after holding it out from threshold and variant selection. Selection recommended
+`kilo_workspace`: Codex `6/27`, Kilo `17/27`. Later/Holdout also favored Kilo:
+Codex `16/40`, Kilo `22/40`. Recommendation regret was `0.0`, and top-pair
+direction agreed.
+
+The full preferred terminal state was not achieved because final decision
+quality tied, but did not strictly beat, the strongest same-budget random
+decision baseline; final MAE was also worse than the strongest random MAE
+baseline (`0.128704` versus `0.106711`, relative improvement `-20.61%`). The
+supported claim is limited: on this no-paid final replay, Selection can
+recommend Kilo and later/Holdout validates that recommendation. It does not
+prove selector superiority over random, full predictive validity,
+cross-repository selector superiority, or a global Agent/model ranking.
+
+Canonical bakeoff artifacts:
+
+- `experiments/agent_selection_demo/reports/selector_algorithm_bakeoff_story_zh.md`
+- `experiments/agent_selection_demo/reports/selector_algorithm_bakeoff_closeout_zh.md`
+- `experiments/agent_selection_demo/results/selector_algorithm_bakeoff_closeout.json`
+- `experiments/agent_selection_demo/results/selector_algorithm_bakeoff_eval.json`
+- `experiments/agent_selection_demo/results/selector_bakeoff_final_eval.json`
+
 The predictive-validity completion pass froze the estimand as complete-Agent
 future target-repo verified pass-rate prediction accuracy and added no-paid
 rolling-origin/pseudo-future tooling. The no-paid retrospective result gives
