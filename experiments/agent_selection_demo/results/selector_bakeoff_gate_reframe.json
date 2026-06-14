@@ -1,0 +1,119 @@
+{
+  "schema_version": "barcarolle.agent_selection_demo.selector_bakeoff_gate_reframe.v1",
+  "generated_at": "2026-06-14",
+  "paid_agent_calls_made": false,
+  "gate_reframe": {
+    "primary_objective": "Selection recommends an Agent, and later/Holdout validates that choice.",
+    "primary_success_metrics": [
+      "decision_state_is_recommend",
+      "recommended_agent_is_later_holdout_top_or_regret_lte_5pp",
+      "top_pair_direction_agrees_between_selection_and_later_holdout",
+      "decision_quality_beats_same_budget_strong_random"
+    ],
+    "auxiliary_metrics": [
+      "selection_to_later_MAE",
+      "relative_MAE_improvement=(random_MAE-selector_MAE)/random_MAE",
+      "random_percentile_or_beats_ties_share"
+    ],
+    "mae_policy": "MAE is reported as auxiliary evidence and is not a hard veto for demo-level Agent-selection decision quality."
+  },
+  "current_corrected_validation_numbers": {
+    "source": "experiments/agent_selection_demo/results/selector_corrected_validation_closeout.json",
+    "validation_source": "phase1_blocked_split_heldout_three_repo",
+    "decision_state": "need_more_evidence",
+    "recommended_agent_id": null,
+    "selection_pass_rates": {
+      "codex_workspace": "6/18",
+      "kilo_workspace": "11/18"
+    },
+    "later_holdout_pass_rates": {
+      "codex_workspace": "7/30",
+      "kilo_workspace": "16/30"
+    },
+    "forced_top_agent_id": "kilo_workspace",
+    "forced_top_regret": 0.0,
+    "pairwise_direction_agreement_forced": 1.0,
+    "selector_MAE": 0.088889,
+    "strongest_random_baseline": "stratified_random",
+    "strongest_random_MAE_mean": 0.090146,
+    "relative_MAE_improvement": 0.013944,
+    "interpretation": "Promising direction but not the preferred demo story under the conservative wrapper."
+  },
+  "development_evidence_artifacts": [
+    {
+      "artifact": "experiments/agent_selection_demo/results/selector_final_eval.json",
+      "label": "previous_boltons_hrd_development_slice",
+      "use": "development evidence and algorithm sanity check only"
+    },
+    {
+      "artifact": "experiments/agent_selection_demo/results/selector_hrd_eval.json",
+      "label": "previous_boltons_hrd_variant_search",
+      "use": "development evidence only"
+    },
+    {
+      "artifact": "experiments/agent_selection_demo/results/selector_corrected_validation_closeout.json",
+      "label": "corrected_phase1_blocked_split_heldout",
+      "use": "development bakeoff source for this runbook after the corrected negative result"
+    },
+    {
+      "artifact": "experiments/agent_selection_demo/results/selector_independent_validation_inventory.json",
+      "label": "source_inventory",
+      "use": "source availability and final-source choice"
+    }
+  ],
+  "potential_final_validation_sources": [
+    {
+      "source_id": "phase1_original_three_repo_split_heldout",
+      "source_kind": "no_paid_committed_sanitized_outcomes",
+      "planned_role": "locked_no_paid_final_replay_if_not_used_for_threshold_or_variant_selection",
+      "caveat": "Higher missing/non-scoreable rate than the primary blocked split; final label must be limited."
+    },
+    {
+      "source_id": "phase1_repo_specific_earliest_time_bucket_cutoff",
+      "source_kind": "no_paid_committed_sanitized_outcomes",
+      "planned_role": "development sensitivity because attrs/click have only four B_eval tasks",
+      "caveat": "Too sparse for a primary final decision source."
+    },
+    {
+      "source_id": "fresh_paid_attrs_second_repo_slice",
+      "source_kind": "fresh_paid_candidate_pool",
+      "planned_role": "fallback only if no no-paid final source can support the demo decision check",
+      "paid_cell_cap": 70,
+      "endpoint_env_required": [
+        "LLM_BASE_URL",
+        "LLM_API_KEY"
+      ]
+    }
+  ],
+  "decision_wrapper_v2_initial_threshold_grid": {
+    "action_margin": [
+      0.05,
+      0.1,
+      0.15
+    ],
+    "min_common_valid": [
+      8,
+      12
+    ],
+    "lcb_tolerance": [
+      0.0,
+      0.05,
+      0.1
+    ],
+    "tie_epsilon": [
+      0.05,
+      0.1
+    ],
+    "zero_loss_requirement": false
+  },
+  "claim_boundary": {
+    "previous_overclaim_status": "downgraded",
+    "supported_now": "development evidence for selector exploration, not independent proof of predictive validity or global Agent superiority",
+    "not_supported": [
+      "full predictive validity",
+      "cross-repository selector superiority",
+      "globally best Agent or model",
+      "independent validation of the prior boltons HRD slice"
+    ]
+  }
+}
