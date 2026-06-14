@@ -338,6 +338,106 @@ def test_selector_outcome_policy_counts_solver_invalid_cells_as_fail() -> None:
     assert [row["policy_outcome_value"] for row in rows] == [0, 0]
 
 
+def test_selector_random_selection_is_deterministic_for_fixed_seed() -> None:
+    rows = [
+        {
+            "task_id": f"task_{index}",
+            "quality_score": 1.0,
+            "risk_flag": False,
+            "flaky_flag": False,
+        }
+        for index in range(6)
+    ]
+
+    first = demo.select_uniform_random_same_budget(rows, k=3, seed=7)
+    second = demo.select_uniform_random_same_budget(rows, k=3, seed=7)
+
+    assert first == second
+    assert len(first) == 3
+
+
+def test_selector_stratified_random_preserves_source_recency_quota() -> None:
+    rows = [
+        {
+            "task_id": f"a_{index}",
+            "source": "a",
+            "recency_bucket": "old",
+            "module_bucket": f"m{index}",
+            "quality_score": 1.0,
+            "risk_flag": False,
+            "flaky_flag": False,
+            "task_time": f"2020-01-{index + 1:02d}T00:00:00Z",
+        }
+        for index in range(6)
+    ] + [
+        {
+            "task_id": f"b_{index}",
+            "source": "b",
+            "recency_bucket": "new",
+            "module_bucket": f"n{index}",
+            "quality_score": 1.0,
+            "risk_flag": False,
+            "flaky_flag": False,
+            "task_time": f"2021-01-{index + 1:02d}T00:00:00Z",
+        }
+        for index in range(4)
+    ]
+
+    selected = demo.select_stratified_random(rows, k=5, seed=11)
+
+    assert sum(task_id.startswith("a_") for task_id in selected) == 3
+    assert sum(task_id.startswith("b_") for task_id in selected) == 2
+
+
+def test_rsq_selects_newest_task_within_each_source_recency_quota() -> None:
+    rows = [
+        {
+            "task_id": "old_a",
+            "source": "a",
+            "recency_bucket": "legacy",
+            "module_bucket": "m1",
+            "quality_score": 1.0,
+            "risk_flag": False,
+            "flaky_flag": False,
+            "task_time": "2020-01-01T00:00:00Z",
+        },
+        {
+            "task_id": "new_a",
+            "source": "a",
+            "recency_bucket": "legacy",
+            "module_bucket": "m2",
+            "quality_score": 1.0,
+            "risk_flag": False,
+            "flaky_flag": False,
+            "task_time": "2020-02-01T00:00:00Z",
+        },
+        {
+            "task_id": "old_b",
+            "source": "b",
+            "recency_bucket": "middle",
+            "module_bucket": "m3",
+            "quality_score": 1.0,
+            "risk_flag": False,
+            "flaky_flag": False,
+            "task_time": "2021-01-01T00:00:00Z",
+        },
+        {
+            "task_id": "new_b",
+            "source": "b",
+            "recency_bucket": "middle",
+            "module_bucket": "m4",
+            "quality_score": 1.0,
+            "risk_flag": False,
+            "flaky_flag": False,
+            "task_time": "2021-02-01T00:00:00Z",
+        },
+    ]
+
+    selected = demo.select_rsq_recency_stratified_quota(rows, k=2)
+
+    assert selected == ["new_a", "new_b"]
+
+
 def test_recommend_skips_cost_when_usage_coverage_is_inconclusive(tmp_path: Path, monkeypatch) -> None:
     monkeypatch.setattr(demo, "RESULTS_REL", tmp_path / "results")
     monkeypatch.setattr(demo, "REPORTS_REL", tmp_path / "reports")

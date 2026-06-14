@@ -6,6 +6,7 @@ import hashlib
 import json
 import math
 import os
+import random
 import re
 import shlex
 import statistics
@@ -1474,6 +1475,11 @@ SELECTOR_STAGE_ARTIFACTS = {
 }
 
 POLICY_VALID_TERMINAL_STATUSES = SCOREABLE_STATUSES | INFRA_STATUSES
+SELECTOR_TIE_EPSILON = 0.05
+
+
+def selector_round(value: float | None, digits: int = 6) -> float | None:
+    return None if value is None else round(float(value), digits)
 
 
 def parse_task_datetime(raw: Any) -> datetime:
@@ -1776,6 +1782,459 @@ def selector_build_dataset(config: dict[str, Any]) -> dict[str, Any]:
     write_json(result_path("selector_protocol.json"), protocol)
     write_text(report_path("selector_protocol_zh.md"), render_selector_protocol_report(protocol))
     return protocol
+
+
+def selector_bool(value: Any) -> bool:
+    return str(value).strip().lower() == "true"
+
+
+def load_selector_task_rows() -> list[dict[str, str]]:
+    return read_csv_rows(result_path("selector_task_table.csv"))
+
+
+def load_selector_outcome_rows() -> list[dict[str, str]]:
+    return read_csv_rows(result_path("selector_outcome_matrix.csv"))
+
+
+def selector_agent_ids(config: dict[str, Any]) -> list[str]:
+    return [str(candidate["agent_id"]) for candidate in config["agent_candidates"]]
+
+
+def selector_candidate_tasks(task_rows: list[dict[str, str]]) -> list[dict[str, str]]:
+    return [
+        row
+        for row in task_rows
+        if selector_bool(row.get("is_final_selection_candidate"))
+        and float(row.get("quality_score") or 0.0) >= 1.0
+        and not selector_bool(row.get("risk_flag"))
+        and not selector_bool(row.get("flaky_flag"))
+    ]
+
+
+def selector_later_task_ids(task_rows: list[dict[str, str]]) -> list[str]:
+    return [
+        str(row["task_id"])
+        for row in sorted(task_rows, key=lambda row: (str(row.get("task_time") or ""), str(row.get("task_id") or "")))
+        if selector_bool(row.get("is_final_later_task"))
+    ]
+
+
+def selector_stratum_key(row: dict[str, Any]) -> tuple[str, str, str, str]:
+    return (
+        str(row.get("source") or "unknown_source"),
+        str(row.get("module_bucket") or "unknown_module"),
+        str(row.get("change_size_proxy") or "unknown_size"),
+        str(row.get("recency_bucket") or "unknown_recency"),
+    )
+
+
+def selector_source_quota_key(row: dict[str, Any]) -> tuple[str, str]:
+    return (str(row.get("source") or "unknown_source"), str(row.get("recency_bucket") or "unknown_recency"))
+
+
+def selector_recency_score(row: dict[str, Any]) -> float:
+    parsed = parse_task_datetime(row.get("task_time"))
+    return parsed.timestamp() if parsed.year > 1 else 0.0
+
+
+def selector_allocated_quotas(rows: list[dict[str, Any]], k: int, key_name: str = "source_recency") -> dict[tuple[Any, ...], int]:
+    key_fn = selector_source_quota_key if key_name == "source_recency" else selector_stratum_key
+    grouped: dict[tuple[Any, ...], list[dict[str, Any]]] = defaultdict(list)
+    for row in rows:
+        grouped[key_fn(row)].append(row)
+    raw = {key: k * (len(items) / max(len(rows), 1)) for key, items in grouped.items()}
+    quotas = {key: min(len(grouped[key]), int(math.floor(value))) for key, value in raw.items()}
+    remaining = k - sum(quotas.values())
+    fractional = sorted(
+        grouped,
+        key=lambda key: (
+            raw[key] - math.floor(raw[key]),
+            max(selector_recency_score(row) for row in grouped[key]),
+            str(key),
+        ),
+        reverse=True,
+    )
+    while remaining > 0 and fractional:
+        progressed = False
+        for key in fractional:
+            if quotas[key] >= len(grouped[key]):
+                continue
+            quotas[key] += 1
+            remaining -= 1
+            progressed = True
+            if remaining == 0:
+                break
+        if not progressed:
+            break
+    return quotas
+
+
+def selector_fill_to_k(selected: list[dict[str, Any]], rows: list[dict[str, Any]], k: int) -> list[dict[str, Any]]:
+    seen = {str(row["task_id"]) for row in selected}
+    module_counts = Counter(str(row.get("module_bucket") or "") for row in selected)
+    module_cap = max(1, math.ceil(k * 0.3))
+    for row in sorted(rows, key=lambda item: (selector_recency_score(item), str(item.get("task_id") or "")), reverse=True):
+        if len(selected) >= k:
+            break
+        task_id = str(row["task_id"])
+        if task_id in seen:
+            continue
+        module = str(row.get("module_bucket") or "")
+        if module_counts[module] >= module_cap and len(rows) - len(seen) > k - len(selected):
+            continue
+        selected.append(row)
+        seen.add(task_id)
+        module_counts[module] += 1
+    return selected
+
+
+def select_uniform_random_same_budget(rows: list[dict[str, Any]], k: int, seed: int) -> list[str]:
+    candidates = sorted(rows, key=lambda row: str(row["task_id"]))
+    if k >= len(candidates):
+        return [str(row["task_id"]) for row in candidates]
+    rng = random.Random(seed)
+    return sorted(str(row["task_id"]) for row in rng.sample(candidates, k))
+
+
+def select_quality_filtered_random(rows: list[dict[str, Any]], k: int, seed: int) -> list[str]:
+    eligible = [
+        row
+        for row in rows
+        if float(row.get("quality_score") or 0.0) >= 1.0
+        and not selector_bool(row.get("risk_flag"))
+        and not selector_bool(row.get("flaky_flag"))
+    ]
+    return select_uniform_random_same_budget(eligible, k, seed)
+
+
+def select_stratified_random(rows: list[dict[str, Any]], k: int, seed: int) -> list[str]:
+    rng = random.Random(seed)
+    eligible = sorted(rows, key=lambda row: str(row["task_id"]))
+    quotas = selector_allocated_quotas(eligible, k, key_name="source_recency")
+    grouped: dict[tuple[Any, ...], list[dict[str, Any]]] = defaultdict(list)
+    for row in eligible:
+        grouped[selector_source_quota_key(row)].append(row)
+    selected: list[dict[str, Any]] = []
+    for key, quota in sorted(quotas.items(), key=lambda item: str(item[0])):
+        pool = grouped[key]
+        selected.extend(rng.sample(pool, min(quota, len(pool))))
+    selector_fill_to_k(selected, eligible, k)
+    return sorted(str(row["task_id"]) for row in selected[:k])
+
+
+def select_rsq_recency_stratified_quota(rows: list[dict[str, Any]], k: int, seed: int | None = None) -> list[str]:
+    del seed
+    eligible = [
+        row
+        for row in rows
+        if float(row.get("quality_score") or 0.0) >= 1.0
+        and not selector_bool(row.get("risk_flag"))
+        and not selector_bool(row.get("flaky_flag"))
+    ]
+    quotas = selector_allocated_quotas(eligible, k, key_name="source_recency")
+    grouped: dict[tuple[Any, ...], list[dict[str, Any]]] = defaultdict(list)
+    for row in eligible:
+        grouped[selector_source_quota_key(row)].append(row)
+    selected: list[dict[str, Any]] = []
+    module_counts: Counter[str] = Counter()
+    module_cap = max(1, math.ceil(k * 0.3))
+    for key, quota in sorted(quotas.items(), key=lambda item: str(item[0])):
+        group_rows = sorted(grouped[key], key=lambda row: (selector_recency_score(row), str(row["task_id"])), reverse=True)
+        picked = 0
+        for row in group_rows:
+            if picked >= quota:
+                break
+            module = str(row.get("module_bucket") or "")
+            if module_counts[module] >= module_cap and len(group_rows) - picked > quota - picked:
+                continue
+            selected.append(row)
+            module_counts[module] += 1
+            picked += 1
+    selector_fill_to_k(selected, eligible, k)
+    return sorted(str(row["task_id"]) for row in selected[:k])
+
+
+BASELINE_SELECTOR_FUNCS = {
+    "uniform_random_same_budget": select_uniform_random_same_budget,
+    "quality_filtered_random": select_quality_filtered_random,
+    "stratified_random": select_stratified_random,
+}
+
+
+def outcome_lookup(outcome_rows: list[dict[str, str]]) -> dict[tuple[str, str, str], dict[str, str]]:
+    return {(str(row["stage"]), str(row["task_id"]), str(row["agent_id"])): row for row in outcome_rows}
+
+
+def selector_pass_rates(
+    task_ids: list[str],
+    agent_ids: list[str],
+    stage: str,
+    outcomes: dict[tuple[str, str, str], dict[str, str]],
+) -> dict[str, dict[str, Any]]:
+    rates: dict[str, dict[str, Any]] = {}
+    for agent_id in agent_ids:
+        values: list[int] = []
+        missing = 0
+        for task_id in task_ids:
+            row = outcomes.get((stage, task_id, agent_id))
+            if not row or not selector_bool(row.get("policy_valid_cell")):
+                missing += 1
+                continue
+            values.append(int(row.get("policy_outcome_value") or 0))
+        rates[agent_id] = {
+            "pass_rate": None if not values else sum(values) / len(values),
+            "pass_count": sum(values),
+            "valid_count": len(values),
+            "missing_or_na_count": missing,
+        }
+    return rates
+
+
+def selector_sign(value: float, epsilon: float = SELECTOR_TIE_EPSILON) -> int:
+    if value > epsilon:
+        return 1
+    if value < -epsilon:
+        return -1
+    return 0
+
+
+def selector_forced_top(rates: dict[str, dict[str, Any]]) -> tuple[str | None, bool]:
+    usable = {agent_id: row["pass_rate"] for agent_id, row in rates.items() if row["pass_rate"] is not None}
+    if not usable:
+        return None, False
+    best = max(float(value) for value in usable.values())
+    top = sorted(agent_id for agent_id, value in usable.items() if float(value) == best)
+    return top[0], len(top) > 1
+
+
+def evaluate_selected_task_ids(
+    selected_task_ids: list[str],
+    later_task_ids: list[str],
+    agent_ids: list[str],
+    outcome_rows: list[dict[str, str]],
+    later_stage: str = "holdout",
+) -> dict[str, Any]:
+    outcomes = outcome_lookup(outcome_rows)
+    selection_rates = selector_pass_rates(selected_task_ids, agent_ids, "selection", outcomes)
+    later_rates = selector_pass_rates(later_task_ids, agent_ids, later_stage, outcomes)
+    common_agents = [
+        agent_id
+        for agent_id in agent_ids
+        if selection_rates[agent_id]["pass_rate"] is not None and later_rates[agent_id]["pass_rate"] is not None
+    ]
+    errors = [abs(float(selection_rates[agent_id]["pass_rate"]) - float(later_rates[agent_id]["pass_rate"])) for agent_id in common_agents]
+    pair_rows: list[dict[str, Any]] = []
+    for index, agent_a in enumerate(common_agents):
+        for agent_b in common_agents[index + 1 :]:
+            selected_margin = float(selection_rates[agent_a]["pass_rate"]) - float(selection_rates[agent_b]["pass_rate"])
+            later_margin = float(later_rates[agent_a]["pass_rate"]) - float(later_rates[agent_b]["pass_rate"])
+            later_sign = selector_sign(later_margin)
+            selected_sign = selector_sign(selected_margin)
+            if later_sign == 0:
+                continue
+            pair_rows.append(
+                {
+                    "agent_a": agent_a,
+                    "agent_b": agent_b,
+                    "selected_margin": selector_round(selected_margin),
+                    "later_margin": selector_round(later_margin),
+                    "selected_sign": selected_sign,
+                    "later_sign": later_sign,
+                    "agrees": selected_sign == later_sign,
+                }
+            )
+    forced_top, selection_tied = selector_forced_top(selection_rates)
+    later_top, later_tied = selector_forced_top(later_rates)
+    later_best = max((float(row["pass_rate"]) for row in later_rates.values() if row["pass_rate"] is not None), default=0.0)
+    forced_regret = None if forced_top is None else later_best - float(later_rates[forced_top]["pass_rate"])
+    return {
+        "selected_task_ids": selected_task_ids,
+        "later_task_ids": later_task_ids,
+        "selection_rates": selection_rates,
+        "later_rates": later_rates,
+        "MAE": selector_round(None if not errors else sum(errors) / len(errors)),
+        "pairwise_direction_agreement": selector_round(None if not pair_rows else sum(1 for row in pair_rows if row["agrees"]) / len(pair_rows)),
+        "pairwise_rows": pair_rows,
+        "selection_forced_top_agent_id": forced_top,
+        "selection_top_tied": selection_tied,
+        "later_top_agent_id": later_top,
+        "later_top_tied": later_tied,
+        "top1_agreement_forced": forced_top == later_top and forced_top is not None,
+        "forced_recommendation_regret": selector_round(forced_regret),
+    }
+
+
+def summarize_selector_metric_rows(rows: list[dict[str, Any]]) -> dict[str, Any]:
+    def values(key: str) -> list[float]:
+        return [float(row[key]) for row in rows if row.get(key) is not None]
+
+    mae_values = values("MAE")
+    regret_values = values("forced_recommendation_regret")
+    pairwise_values = values("pairwise_direction_agreement")
+    return {
+        "sample_count": len(rows),
+        "MAE_mean": selector_round(statistics.mean(mae_values) if mae_values else None),
+        "MAE_median": selector_round(statistics.median(mae_values) if mae_values else None),
+        "MAE_p05": selector_round(percentile(mae_values, 5) if mae_values else None),
+        "MAE_p95": selector_round(percentile(mae_values, 95) if mae_values else None),
+        "pairwise_direction_agreement_mean": selector_round(statistics.mean(pairwise_values) if pairwise_values else None),
+        "top1_agreement_rate_forced": selector_round(sum(1 for row in rows if row.get("top1_agreement_forced")) / len(rows) if rows else None),
+        "forced_recommendation_regret_mean": selector_round(statistics.mean(regret_values) if regret_values else None),
+        "forced_recommendation_regret_max": selector_round(max(regret_values) if regret_values else None),
+    }
+
+
+def compact_selector_metric_row(row: dict[str, Any]) -> dict[str, Any]:
+    selected_task_ids = [str(task_id) for task_id in row.get("selected_task_ids", [])]
+    return {
+        "selected_task_ids_sha256": sha256_text("\n".join(selected_task_ids)),
+        "MAE": row.get("MAE"),
+        "pairwise_direction_agreement": row.get("pairwise_direction_agreement"),
+        "selection_forced_top_agent_id": row.get("selection_forced_top_agent_id"),
+        "selection_top_tied": row.get("selection_top_tied"),
+        "later_top_agent_id": row.get("later_top_agent_id"),
+        "top1_agreement_forced": row.get("top1_agreement_forced"),
+        "forced_recommendation_regret": row.get("forced_recommendation_regret"),
+    }
+
+
+def selector_random_percentiles(candidate: dict[str, Any], random_rows: list[dict[str, Any]]) -> dict[str, Any]:
+    mae_values = [float(row["MAE"]) for row in random_rows if row.get("MAE") is not None]
+    regret_values = [float(row["forced_recommendation_regret"]) for row in random_rows if row.get("forced_recommendation_regret") is not None]
+    pair_values = [float(row["pairwise_direction_agreement"]) for row in random_rows if row.get("pairwise_direction_agreement") is not None]
+    candidate_mae = candidate.get("MAE")
+    candidate_regret = candidate.get("forced_recommendation_regret")
+    candidate_pair = candidate.get("pairwise_direction_agreement")
+    return {
+        "MAE_beats_or_ties_random_share": selector_round(
+            None if candidate_mae is None or not mae_values else sum(float(value) >= float(candidate_mae) for value in mae_values) / len(mae_values)
+        ),
+        "regret_beats_or_ties_random_share": selector_round(
+            None
+            if candidate_regret is None or not regret_values
+            else sum(float(value) >= float(candidate_regret) for value in regret_values) / len(regret_values)
+        ),
+        "pairwise_agreement_beats_or_ties_random_share": selector_round(
+            None
+            if candidate_pair is None or not pair_values
+            else sum(float(value) <= float(candidate_pair) for value in pair_values) / len(pair_values)
+        ),
+    }
+
+
+def selector_baseline_eval(config: dict[str, Any]) -> dict[str, Any]:
+    protocol = read_json(result_path("selector_protocol.json"))
+    task_rows = load_selector_task_rows()
+    outcome_rows = load_selector_outcome_rows()
+    candidates = selector_candidate_tasks(task_rows)
+    later_ids = selector_later_task_ids(task_rows)
+    agent_ids = selector_agent_ids(config)
+    seeds = [int(seed) for seed in protocol["random_seeds"]]
+    budgets = [int(k) for k in protocol["budgets"]]
+    selectors: dict[str, Any] = {
+        "rsq_recency_stratified_quota": {},
+    }
+    random_results: dict[str, dict[str, Any]] = {}
+    selector_results: dict[str, dict[str, Any]] = {}
+    for k in budgets:
+        for baseline_id, func in BASELINE_SELECTOR_FUNCS.items():
+            rows: list[dict[str, Any]] = []
+            unique_samples: set[tuple[str, ...]] = set()
+            for seed in seeds:
+                selected = func(candidates, k, seed)
+                unique_samples.add(tuple(selected))
+                metrics = evaluate_selected_task_ids(selected, later_ids, agent_ids, outcome_rows)
+                rows.append({"seed": seed, "k": k, "selector_id": baseline_id, **compact_selector_metric_row(metrics)})
+            random_results[f"{baseline_id}__k{k}"] = {
+                "selector_id": baseline_id,
+                "k": k,
+                "seed_count": len(seeds),
+                "unique_sample_count": len(unique_samples),
+                "summary": summarize_selector_metric_rows(rows),
+                "rows": rows,
+            }
+        selected = select_rsq_recency_stratified_quota(candidates, k)
+        rsq_metrics = evaluate_selected_task_ids(selected, later_ids, agent_ids, outcome_rows)
+        selector_results[f"rsq_recency_stratified_quota__k{k}"] = {
+            "selector_id": "rsq_recency_stratified_quota",
+            "k": k,
+            **rsq_metrics,
+            "random_percentiles": {
+                baseline_id: selector_random_percentiles(rsq_metrics, random_results[f"{baseline_id}__k{k}"]["rows"])
+                for baseline_id in BASELINE_SELECTOR_FUNCS
+            },
+        }
+    payload = {
+        "schema_version": "barcarolle.agent_selection_demo.selector_baseline_eval.v1",
+        "generated_at": "2026-06-14",
+        "paid_agent_calls_made": False,
+        "protocol": "experiments/agent_selection_demo/results/selector_protocol.json",
+        "selectors": selectors,
+        "random_baselines": random_results,
+        "selector_results": selector_results,
+        "interpretation": {
+            "best_rsq_key": min(selector_results, key=lambda key: selector_results[key].get("MAE") or 999),
+            "strong_random_baseline_rule": "For each k, compare RSQ against uniform, quality-filtered, and source/recency-stratified random distributions over the same candidate pool and seed list.",
+            "tie_caveat": "Forced top-1 regret is diagnostic only; the shared decision wrapper in Package 5 forbids hard recommendations on ties.",
+        },
+    }
+    write_json(result_path("selector_baseline_eval.json"), payload)
+    write_text(report_path("selector_baseline_eval_zh.md"), render_selector_baseline_eval(payload))
+    return payload
+
+
+def render_selector_baseline_eval(payload: dict[str, Any]) -> str:
+    lines = [
+        "# Selector Baseline Eval",
+        "",
+        "生成日期：2026-06-14",
+        "",
+        "## Scope",
+        "",
+        "本 package 只使用 committed sanitized score tables，没有新 paid cells。所有 selector 在固定 task IDs 后才 join Selection 和 Holdout outcomes。",
+        "",
+        "## Random baselines",
+        "",
+        "| Baseline | k | Seeds | Unique samples | MAE mean | Pairwise mean | Top-1 forced | Regret mean |",
+        "| --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: |",
+    ]
+    for row in payload["random_baselines"].values():
+        summary = row["summary"]
+        lines.append(
+            f"| `{row['selector_id']}` | `{row['k']}` | `{row['seed_count']}` | `{row['unique_sample_count']}` | "
+            f"`{summary['MAE_mean']}` | `{summary['pairwise_direction_agreement_mean']}` | "
+            f"`{summary['top1_agreement_rate_forced']}` | `{summary['forced_recommendation_regret_mean']}` |"
+        )
+    lines.extend(
+        [
+            "",
+            "## RSQ",
+            "",
+            "| Selector | k | Selected tasks | MAE | Pairwise agreement | Forced top | Later top | Forced regret | MAE percentile vs stratified random |",
+            "| --- | ---: | ---: | ---: | ---: | --- | --- | ---: | ---: |",
+        ]
+    )
+    for row in payload["selector_results"].values():
+        stratified = row["random_percentiles"]["stratified_random"]
+        lines.append(
+            f"| `{row['selector_id']}` | `{row['k']}` | `{len(row['selected_task_ids'])}` | `{row['MAE']}` | "
+            f"`{row['pairwise_direction_agreement']}` | `{row['selection_forced_top_agent_id']}` | "
+            f"`{row['later_top_agent_id']}` | `{row['forced_recommendation_regret']}` | "
+            f"`{stratified['MAE_beats_or_ties_random_share']}` |"
+        )
+    best_key = payload["interpretation"]["best_rsq_key"]
+    best = payload["selector_results"][best_key]
+    lines.extend(
+        [
+            "",
+            "## Interpretation",
+            "",
+            f"最佳 RSQ slice 是 `{best_key}`，MAE `{best['MAE']}`。它把 source/recency quota 固定在 metadata 层，并在每个 quota 内偏好较新的任务和 module cap。",
+            "",
+            "Package 3 的 forced top/regret 只是诊断口径；真正的 recommend/abstain/need-more-evidence 由 Package 5 的 shared decision wrapper 统一处理，避免在 selection tie 上硬推荐。",
+        ]
+    )
+    return "\n".join(lines) + "\n"
 
 
 def csv_bool(value: Any) -> bool:
@@ -3086,6 +3545,7 @@ def main() -> int:
     eval_parser.add_argument("--window-inventory", default=str(result_path("predictive_validity_window_inventory.json")))
     eval_parser.add_argument("--output", default=str(report_path("rolling_origin_eval_zh.md")))
     subcommands.add_parser("selector-build-dataset")
+    subcommands.add_parser("selector-baseline-eval")
     args = parser.parse_args()
     config = load_config(repo_path(args.config))
     if args.command == "gate":
@@ -3138,6 +3598,9 @@ def main() -> int:
         return 0
     if args.command == "selector-build-dataset":
         selector_build_dataset(config)
+        return 0
+    if args.command == "selector-baseline-eval":
+        selector_baseline_eval(config)
         return 0
     raise ValueError(args.command)
 
