@@ -2969,6 +2969,128 @@ CORRECTED_DECISION_THRESHOLDS = {
     "confidence_level": 0.8,
 }
 
+BAKEOFF_AGENT_IDS = ["codex_workspace", "kilo_workspace"]
+BAKEOFF_DEVELOPMENT_SOURCE_IDS = {
+    "boltons_demo_development",
+    "phase1_blocked_split_heldout_development",
+    "phase1_repo_specific_earliest_time_bucket_cutoff_development",
+}
+BAKEOFF_FINAL_SOURCE_ID = "phase1_original_three_repo_split_heldout_final_candidate"
+BAKEOFF_WINDOW_SOURCE_SPECS = [
+    {
+        "source_id": "phase1_blocked_split_heldout_development",
+        "window_id": "blocked_split_heldout",
+        "evaluation_layer": "development",
+        "source_kind": "no_paid_committed_sanitized_outcomes",
+        "source_role": "development_bakeoff",
+    },
+    {
+        "source_id": "phase1_repo_specific_earliest_time_bucket_cutoff_development",
+        "window_id": "repo_specific_earliest_time_bucket_cutoff",
+        "evaluation_layer": "development_sensitivity",
+        "source_kind": "no_paid_committed_sanitized_outcomes",
+        "source_role": "development_sensitivity",
+    },
+    {
+        "source_id": BAKEOFF_FINAL_SOURCE_ID,
+        "window_id": "original_three_repo_split_heldout",
+        "evaluation_layer": "locked_no_paid_final_replay",
+        "source_kind": "no_paid_committed_sanitized_outcomes",
+        "source_role": "final_replay_candidate",
+    },
+]
+
+SELECTOR_BAKEOFF_TASK_FEATURE_FIELDNAMES = [
+    "row_id",
+    "source_id",
+    "source_kind",
+    "source_role",
+    "evaluation_layer",
+    "window_id",
+    "origin_id",
+    "origin_time",
+    "repo",
+    "target_repo",
+    "task_id",
+    "stable_cluster_id",
+    "stage_role",
+    "task_time",
+    "source",
+    "source_cluster",
+    "module_bucket",
+    "path_bucket",
+    "test_bucket",
+    "task_type",
+    "change_size_proxy",
+    "difficulty_bucket",
+    "recency_bucket",
+    "quality_score",
+    "risk_flag",
+    "flaky_flag",
+    "oracle_status",
+    "historical_difficulty",
+    "historical_disagreement",
+    "pairwise_informativeness",
+    "metadata_informativeness",
+    "development_outcome_difficulty",
+    "development_outcome_disagreement",
+    "feature_leakage_status",
+    "allowed_for_final_scoring",
+    "feature_leakage_notes",
+]
+
+SELECTOR_BAKEOFF_OUTCOME_FIELDNAMES = [
+    "source_id",
+    "window_id",
+    "repo",
+    "task_id",
+    "agent_id",
+    "stage",
+    "terminal_status",
+    "scoreable_cell",
+    "verified_pass",
+    "policy_valid_cell",
+    "policy_pass",
+    "policy_outcome_value",
+    "failure_category",
+    "source_artifact_path",
+    "cost_observation_kind",
+]
+
+BAKEOFF_FEATURE_LEAKAGE_STATUS_BY_FIELD = {
+    "repo": "metadata_only",
+    "source_id": "metadata_only",
+    "window_id": "metadata_only",
+    "source_role": "metadata_only",
+    "task_id": "metadata_only",
+    "stable_cluster_id": "metadata_only",
+    "stage_role": "metadata_only",
+    "task_time": "metadata_only",
+    "source": "metadata_only",
+    "source_cluster": "metadata_only",
+    "module_bucket": "metadata_only",
+    "path_bucket": "metadata_only",
+    "test_bucket": "metadata_only",
+    "task_type": "metadata_only",
+    "change_size_proxy": "metadata_only",
+    "difficulty_bucket": "metadata_only",
+    "recency_bucket": "metadata_only",
+    "quality_score": "metadata_only",
+    "risk_flag": "metadata_only",
+    "flaky_flag": "metadata_only",
+    "oracle_status": "metadata_only",
+    "historical_difficulty": "metadata_only",
+    "historical_disagreement": "leakage_safe_historical_outcome",
+    "pairwise_informativeness": "leakage_safe_historical_outcome",
+    "metadata_informativeness": "metadata_only",
+    "development_outcome_difficulty": "development_outcome_only",
+    "development_outcome_disagreement": "development_outcome_only",
+    "policy_outcome_value": "not_allowed_for_final",
+    "verified_pass": "not_allowed_for_final",
+    "terminal_status": "not_allowed_for_final",
+    "scoreable_cell": "not_allowed_for_final",
+}
+
 
 def corrected_task_key(repo: str, task_id: str) -> str:
     return f"{repo}::{task_id}"
@@ -3588,6 +3710,413 @@ def render_no_paid_independent_eval_report(payload: dict[str, Any]) -> str:
         "## Boundary",
         "",
         "This is no-paid replay from committed sanitized Phase 1 artifacts. It is independent of the prior boltons selector-development slice, but remains pseudo-future held-out demo evidence rather than full predictive-validity proof.",
+    ]
+    return "\n".join(lines) + "\n"
+
+
+def bakeoff_feature_leakage_status_by_field() -> dict[str, str]:
+    return dict(BAKEOFF_FEATURE_LEAKAGE_STATUS_BY_FIELD)
+
+
+def bakeoff_final_allowed_feature_fields() -> list[str]:
+    allowed_statuses = {"metadata_only", "leakage_safe_historical_outcome"}
+    return sorted(
+        field
+        for field, status in BAKEOFF_FEATURE_LEAKAGE_STATUS_BY_FIELD.items()
+        if status in allowed_statuses and status != "leakage_safe_historical_outcome"
+    )
+
+
+def bakeoff_forbidden_final_feature_fields() -> list[str]:
+    return sorted(
+        field
+        for field, status in BAKEOFF_FEATURE_LEAKAGE_STATUS_BY_FIELD.items()
+        if status in {"development_outcome_only", "not_allowed_for_final"}
+    )
+
+
+def bakeoff_window_by_id(window_id: str) -> dict[str, Any]:
+    payload = read_json(phase1_result_path("phase1_retrospective_predictive_signal_window_plan.json"))
+    for window in payload.get("windows", []):
+        if window.get("window_id") == window_id:
+            return window
+    raise ValueError(f"missing bakeoff window: {window_id}")
+
+
+def bakeoff_origin_time(rows: list[dict[str, Any]]) -> str:
+    selection_times = [str(row.get("task_time") or "") for row in rows if row.get("stage_role") == "selection"]
+    return max(selection_times, default="")
+
+
+def bakeoff_historical_difficulty(row: dict[str, Any]) -> float:
+    difficulty = str(row.get("difficulty_bucket") or row.get("change_size_proxy") or "")
+    mapping = {
+        "small": 0.25,
+        "medium": 0.5,
+        "large": 0.75,
+        "short": 0.25,
+        "medium_context": 0.5,
+        "long": 0.75,
+        "unknown_difficulty": 0.5,
+    }
+    return mapping.get(difficulty, 0.5)
+
+
+def bakeoff_base_feature_row(
+    row: dict[str, Any],
+    source_id: str,
+    source_kind: str,
+    source_role: str,
+    evaluation_layer: str,
+    window_id: str,
+    origin_id: str,
+    origin_time: str,
+) -> dict[str, Any]:
+    repo = str(row.get("target_repo") or row.get("repo") or "")
+    task_id = str(row["task_id"])
+    return {
+        "row_id": f"{source_id}|{row.get('stage_role')}|{task_id}",
+        "source_id": source_id,
+        "source_kind": source_kind,
+        "source_role": source_role,
+        "evaluation_layer": evaluation_layer,
+        "window_id": window_id,
+        "origin_id": origin_id,
+        "origin_time": origin_time,
+        "repo": repo,
+        "target_repo": repo,
+        "task_id": task_id,
+        "stable_cluster_id": str(row.get("source_cluster") or f"{repo}:unknown_cluster"),
+        "stage_role": str(row.get("stage_role") or ""),
+        "task_time": str(row.get("task_time") or ""),
+        "source": str(row.get("source") or "unknown_source"),
+        "source_cluster": str(row.get("source_cluster") or "unknown_source:unknown_module"),
+        "module_bucket": str(row.get("module_bucket") or "unknown_module"),
+        "path_bucket": str(row.get("path_bucket") or "unknown_path"),
+        "test_bucket": str(row.get("test_bucket") or "unknown_test"),
+        "task_type": str(row.get("task_type") or "unknown"),
+        "change_size_proxy": str(row.get("change_size_proxy") or "unknown_size"),
+        "difficulty_bucket": str(row.get("difficulty_bucket") or "unknown_difficulty"),
+        "recency_bucket": str(row.get("recency_bucket") or "unknown_recency"),
+        "quality_score": row.get("quality_score", 0.0),
+        "risk_flag": selector_bool(row.get("risk_flag")),
+        "flaky_flag": selector_bool(row.get("flaky_flag")),
+        "oracle_status": "usable" if selector_bool(row.get("gates_pass", True)) else "not_usable",
+        "historical_difficulty": bakeoff_historical_difficulty(row),
+        "historical_disagreement": "",
+        "pairwise_informativeness": "",
+        "metadata_informativeness": "",
+        "development_outcome_difficulty": "",
+        "development_outcome_disagreement": "",
+        "feature_leakage_status": "metadata_only",
+        "allowed_for_final_scoring": True,
+        "feature_leakage_notes": "No leakage-safe historical Agent-disagreement matrix is available; final scoring uses metadata-only fields.",
+    }
+
+
+def bakeoff_boltons_feature_rows() -> list[dict[str, Any]]:
+    if not result_path("selector_task_table.csv").exists():
+        config = load_config(ROOT / DEFAULT_CONFIG)
+        selector_build_dataset(config)
+    rows = load_selector_task_rows()
+    origin_time = bakeoff_origin_time([row for row in rows if row.get("stage_role") == "selection"])
+    feature_rows = [
+        bakeoff_base_feature_row(
+            row,
+            "boltons_demo_development",
+            "no_paid_committed_sanitized_outcomes",
+            "development_bakeoff",
+            "development",
+            "boltons_selection_holdout_2026_06_14",
+            "boltons_selection_holdout_2026_06_14",
+            origin_time,
+        )
+        for row in rows
+        if row.get("stage_role") in {"selection", "holdout"}
+    ]
+    for row in feature_rows:
+        row["repo"] = "boltons"
+        row["target_repo"] = "mahmoud/boltons"
+    return feature_rows
+
+
+def bakeoff_phase1_feature_rows(spec: dict[str, Any], universe: dict[str, dict[str, Any]]) -> list[dict[str, Any]]:
+    window = bakeoff_window_by_id(str(spec["window_id"]))
+    raw_rows: list[dict[str, Any]] = []
+    support_by_repo = window.get("support_by_repo") or {}
+    for repo in CORRECTED_FINAL_REPOS:
+        support = support_by_repo.get(repo) or {}
+        for split_name, stage_role in [("B_eval", "selection"), ("H_future", "holdout")]:
+            for task_id in support.get(f"{split_name}_task_ids", []):
+                key = corrected_task_key(repo, str(task_id))
+                if key in universe:
+                    raw_rows.append(corrected_phase1_task_row(repo, str(task_id), stage_role, universe[key]))
+                else:
+                    raw_rows.append(
+                        {
+                            "task_id": key,
+                            "target_repo": repo,
+                            "repo": repo,
+                            "task_time": "",
+                            "stage_role": stage_role,
+                            "source": "missing_universe_metadata",
+                            "source_cluster": f"missing_universe_metadata:{repo}",
+                            "module_bucket": "unknown_module",
+                            "path_bucket": "unknown_path",
+                            "test_bucket": "unknown_test",
+                            "task_type": "unknown_type",
+                            "change_size_proxy": "medium",
+                            "difficulty_bucket": "unknown_difficulty",
+                            "recency_bucket": "unknown_recency",
+                            "quality_score": 1.0,
+                            "risk_flag": False,
+                            "flaky_flag": False,
+                            "gates_pass": True,
+                            "has_required_fields": False,
+                            "base_commit_present": False,
+                            "target_commit_present": False,
+                            "is_final_selection_candidate": stage_role == "selection",
+                            "is_final_later_task": stage_role == "holdout",
+                            "metadata_fallbacks": "missing_universe_metadata",
+                        }
+                    )
+    origin_time = bakeoff_origin_time(raw_rows)
+    return [
+        bakeoff_base_feature_row(
+            row,
+            str(spec["source_id"]),
+            str(spec["source_kind"]),
+            str(spec["source_role"]),
+            str(spec["evaluation_layer"]),
+            str(spec["window_id"]),
+            str(spec["window_id"]),
+            origin_time,
+        )
+        for row in raw_rows
+    ]
+
+
+def bakeoff_policy_valid(row: dict[str, Any] | None) -> bool:
+    if not row:
+        return False
+    status = str(row.get("terminal_status") or "")
+    if status == "missing_committed_score_row":
+        return False
+    return status in POLICY_VALID_TERMINAL_STATUSES
+
+
+def bakeoff_phase1_outcome_rows(spec: dict[str, Any]) -> list[dict[str, Any]]:
+    window = bakeoff_window_by_id(str(spec["window_id"]))
+    join = read_json(phase1_result_path("phase1_retrospective_predictive_signal_score_join_manifest.json"))
+    by_key: dict[tuple[str, str, str, str], dict[str, Any]] = {}
+    for row in join.get("joined_rows", []):
+        if row.get("window_id") != spec["window_id"]:
+            continue
+        repo = str(row.get("repo") or "")
+        if repo not in CORRECTED_FINAL_REPOS:
+            continue
+        agent_id = str(row.get("adapter_id") or "")
+        if agent_id not in BAKEOFF_AGENT_IDS:
+            continue
+        split = str(row.get("split") or "")
+        if split not in {"B_eval", "H_future"}:
+            continue
+        task_id = corrected_task_key(repo, str(row.get("task_id") or ""))
+        by_key.setdefault((repo, split, task_id, agent_id), row)
+
+    outcome_rows: list[dict[str, Any]] = []
+    support_by_repo = window.get("support_by_repo") or {}
+    for repo in CORRECTED_FINAL_REPOS:
+        support = support_by_repo.get(repo) or {}
+        for split, stage in [("B_eval", "selection"), ("H_future", "holdout")]:
+            for raw_task_id in support.get(f"{split}_task_ids", []):
+                task_id = corrected_task_key(repo, str(raw_task_id))
+                for agent_id in BAKEOFF_AGENT_IDS:
+                    source = by_key.get((repo, split, task_id, agent_id))
+                    valid = bakeoff_policy_valid(source)
+                    passed = bool(source and source.get("pass_flag") is True and valid)
+                    status = str(source.get("terminal_status") if source else "missing_committed_score_row")
+                    outcome_rows.append(
+                        {
+                            "source_id": spec["source_id"],
+                            "window_id": spec["window_id"],
+                            "repo": repo,
+                            "task_id": task_id,
+                            "agent_id": agent_id,
+                            "stage": stage,
+                            "terminal_status": status,
+                            "scoreable_cell": bool(source and source.get("scoreable_cell") is True),
+                            "verified_pass": passed,
+                            "policy_valid_cell": valid,
+                            "policy_pass": passed if valid else "",
+                            "policy_outcome_value": 1 if valid and passed else 0 if valid else "",
+                            "failure_category": str((source or {}).get("non_scoreable_reason") or status),
+                            "source_artifact_path": str((source or {}).get("score_table") or ""),
+                            "cost_observation_kind": "phase1_committed_sanitized_score_join",
+                        }
+                    )
+    return outcome_rows
+
+
+def bakeoff_boltons_outcome_rows() -> list[dict[str, Any]]:
+    outcome_rows = load_selector_outcome_rows()
+    feature_rows = {row["task_id"]: row for row in bakeoff_boltons_feature_rows()}
+    rows: list[dict[str, Any]] = []
+    for row in outcome_rows:
+        if row.get("stage") not in {"selection", "holdout"}:
+            continue
+        task_id = str(row["task_id"])
+        feature = feature_rows.get(task_id, {})
+        rows.append(
+            {
+                "source_id": "boltons_demo_development",
+                "window_id": "boltons_selection_holdout_2026_06_14",
+                "repo": "boltons",
+                "task_id": task_id,
+                "agent_id": row.get("agent_id", ""),
+                "stage": row.get("stage", ""),
+                "terminal_status": row.get("terminal_status", ""),
+                "scoreable_cell": selector_bool(row.get("scoreable_cell")),
+                "verified_pass": selector_bool(row.get("verified_pass")),
+                "policy_valid_cell": selector_bool(row.get("policy_valid_cell")),
+                "policy_pass": selector_bool(row.get("policy_pass")),
+                "policy_outcome_value": row.get("policy_outcome_value", ""),
+                "failure_category": row.get("failure_category", ""),
+                "source_artifact_path": row.get("source_artifact_path", ""),
+                "cost_observation_kind": feature.get("source_kind") or row.get("cost_observation_kind", ""),
+            }
+        )
+    return rows
+
+
+def bakeoff_development_outcome_scores(outcome_rows: list[dict[str, Any]]) -> dict[tuple[str, str], dict[str, float]]:
+    grouped: dict[tuple[str, str], list[int]] = defaultdict(list)
+    for row in outcome_rows:
+        if row.get("source_id") not in BAKEOFF_DEVELOPMENT_SOURCE_IDS:
+            continue
+        if row.get("stage") != "selection" or row.get("policy_valid_cell") is not True:
+            continue
+        grouped[(str(row["source_id"]), str(row["task_id"]))].append(int(row.get("policy_outcome_value") or 0))
+    scores: dict[tuple[str, str], dict[str, float]] = {}
+    for key, values in grouped.items():
+        if not values:
+            continue
+        mean = sum(values) / len(values)
+        scores[key] = {
+            "development_outcome_difficulty": selector_round(1.0 - mean),
+            "development_outcome_disagreement": selector_round(max(values) - min(values)),
+        }
+    return scores
+
+
+def bakeoff_attach_scores(feature_rows: list[dict[str, Any]], outcome_rows: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    metadata_scores = metadata_disagreement_scores(feature_rows)
+    development_scores = bakeoff_development_outcome_scores(outcome_rows)
+    for row in feature_rows:
+        row["metadata_informativeness"] = metadata_scores.get(str(row["task_id"]), 0.0)
+        dev = development_scores.get((str(row["source_id"]), str(row["task_id"])))
+        if dev and row["source_id"] in BAKEOFF_DEVELOPMENT_SOURCE_IDS:
+            row["development_outcome_difficulty"] = dev["development_outcome_difficulty"]
+            row["development_outcome_disagreement"] = dev["development_outcome_disagreement"]
+            row["feature_leakage_notes"] = (
+                "Metadata fields are final-allowed; development_outcome_* fields are development-only and never allowed for final selector scoring."
+            )
+        if row["source_id"] == BAKEOFF_FINAL_SOURCE_ID:
+            row["development_outcome_difficulty"] = ""
+            row["development_outcome_disagreement"] = ""
+            row["feature_leakage_notes"] = "Final candidate source keeps outcome-derived feature columns blank before final replay."
+    return feature_rows
+
+
+def selector_bakeoff_build_features() -> dict[str, Any]:
+    universe = corrected_phase1_universe_rows()
+    feature_rows = bakeoff_boltons_feature_rows()
+    outcome_rows = bakeoff_boltons_outcome_rows()
+    for spec in BAKEOFF_WINDOW_SOURCE_SPECS:
+        feature_rows.extend(bakeoff_phase1_feature_rows(spec, universe))
+        outcome_rows.extend(bakeoff_phase1_outcome_rows(spec))
+    feature_rows = bakeoff_attach_scores(feature_rows, outcome_rows)
+    feature_rows.sort(key=lambda row: (str(row["source_id"]), str(row["stage_role"]), str(row["repo"]), str(row["task_time"]), str(row["task_id"])))
+    outcome_rows.sort(key=lambda row: (str(row["source_id"]), str(row["stage"]), str(row["repo"]), str(row["task_id"]), str(row["agent_id"])))
+
+    source_counts = Counter(str(row["source_id"]) for row in feature_rows)
+    final_rows = [row for row in feature_rows if row["source_id"] == BAKEOFF_FINAL_SOURCE_ID]
+    manifest = {
+        "schema_version": "barcarolle.agent_selection_demo.selector_bakeoff_feature_manifest.v1",
+        "generated_at": "2026-06-14",
+        "paid_agent_calls_made": False,
+        "task_features": "experiments/agent_selection_demo/results/selector_bakeoff_task_features.csv",
+        "outcome_matrix": "experiments/agent_selection_demo/results/selector_bakeoff_outcome_matrix.csv",
+        "feature_row_count": len(feature_rows),
+        "outcome_row_count": len(outcome_rows),
+        "source_counts": dict(sorted(source_counts.items())),
+        "development_source_ids": sorted(BAKEOFF_DEVELOPMENT_SOURCE_IDS),
+        "locked_final_source_id": BAKEOFF_FINAL_SOURCE_ID,
+        "feature_leakage_status_by_field": bakeoff_feature_leakage_status_by_field(),
+        "final_allowed_feature_fields": bakeoff_final_allowed_feature_fields(),
+        "forbidden_final_feature_fields": bakeoff_forbidden_final_feature_fields(),
+        "final_source_outcome_derived_columns_blank": all(
+            row["development_outcome_difficulty"] == "" and row["development_outcome_disagreement"] == "" for row in final_rows
+        ),
+        "final_selector_scoring_rule": "Final selector scoring may use only fields with metadata_only status in this bakeoff; leakage-safe historical outcome fields are listed but unavailable.",
+        "leakage_audit": {
+            "historical_current_agent_disagreement_available": False,
+            "historical_generic_agent_disagreement_available": False,
+            "metadata_informativeness_fallback_required": True,
+            "final_outcomes_joined_for_feature_scoring": False,
+        },
+    }
+    write_csv(result_path("selector_bakeoff_task_features.csv"), feature_rows, SELECTOR_BAKEOFF_TASK_FEATURE_FIELDNAMES)
+    write_csv(result_path("selector_bakeoff_outcome_matrix.csv"), outcome_rows, SELECTOR_BAKEOFF_OUTCOME_FIELDNAMES)
+    write_json(result_path("selector_bakeoff_feature_manifest.json"), manifest)
+    write_text(report_path("selector_bakeoff_feature_manifest_zh.md"), render_selector_bakeoff_feature_manifest(manifest))
+    return manifest
+
+
+def render_selector_bakeoff_feature_manifest(payload: dict[str, Any]) -> str:
+    rows = [
+        {"Source": source, "Rows": count}
+        for source, count in payload["source_counts"].items()
+    ]
+    leakage_rows = [
+        {"Field": field, "Status": status}
+        for field, status in sorted(payload["feature_leakage_status_by_field"].items())
+        if field in {
+            "historical_difficulty",
+            "historical_disagreement",
+            "pairwise_informativeness",
+            "metadata_informativeness",
+            "development_outcome_difficulty",
+            "development_outcome_disagreement",
+            "policy_outcome_value",
+        }
+    ]
+    lines = [
+        "# Selector Bakeoff Feature Manifest",
+        "",
+        "生成日期：2026-06-14",
+        "",
+        "## Artifacts",
+        "",
+        f"- Task features: `{payload['task_features']}`。",
+        f"- Outcome matrix: `{payload['outcome_matrix']}`。",
+        f"- Feature rows: `{payload['feature_row_count']}`；outcome rows: `{payload['outcome_row_count']}`。",
+        "",
+        "## Sources",
+        "",
+        *markdown_table(rows, [("Source", "Source"), ("Rows", "Rows")]),
+        "",
+        "## Leakage mask",
+        "",
+        *markdown_table(leakage_rows, [("Field", "Field"), ("Status", "Status")]),
+        "",
+        "final selector scoring 只允许使用 `metadata_only` 字段。本次没有 leakage-safe historical current-Agent disagreement，也没有 leakage-safe historical generic-Agent disagreement；因此 informative arm 必须称为 `metadata_informativeness`。",
+        "",
+        f"Final source `{payload['locked_final_source_id']}` 的 development outcome feature columns 保持空值：`{payload['final_source_outcome_derived_columns_blank']}`。",
+        "",
+        "## Audit conclusion",
+        "",
+        payload["final_selector_scoring_rule"],
     ]
     return "\n".join(lines) + "\n"
 
@@ -4960,6 +5489,7 @@ def main() -> int:
     subcommands.add_parser("selector-final-eval")
     subcommands.add_parser("selector-corrected-protocol")
     subcommands.add_parser("selector-no-paid-independent-eval")
+    subcommands.add_parser("selector-bakeoff-build-features")
     args = parser.parse_args()
     config = load_config(repo_path(args.config))
     if args.command == "gate":
@@ -5030,6 +5560,9 @@ def main() -> int:
         return 0
     if args.command == "selector-no-paid-independent-eval":
         selector_no_paid_independent_eval()
+        return 0
+    if args.command == "selector-bakeoff-build-features":
+        selector_bakeoff_build_features()
         return 0
     raise ValueError(args.command)
 

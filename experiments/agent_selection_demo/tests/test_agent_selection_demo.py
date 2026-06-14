@@ -536,6 +536,69 @@ def test_corrected_phase1_hrd_selection_ignores_outcome_like_fields() -> None:
     assert original["selected_task_ids"] == mutated["selected_task_ids"]
 
 
+def test_bakeoff_feature_leakage_mask_forbids_outcome_fields_for_final() -> None:
+    statuses = demo.bakeoff_feature_leakage_status_by_field()
+
+    assert statuses["metadata_informativeness"] == "metadata_only"
+    assert statuses["development_outcome_difficulty"] == "development_outcome_only"
+    assert statuses["policy_outcome_value"] == "not_allowed_for_final"
+    assert "development_outcome_difficulty" in demo.bakeoff_forbidden_final_feature_fields()
+    assert "policy_outcome_value" not in demo.bakeoff_final_allowed_feature_fields()
+    assert "metadata_informativeness" in demo.bakeoff_final_allowed_feature_fields()
+
+
+def test_bakeoff_attach_scores_keeps_final_outcome_features_blank() -> None:
+    feature_rows = [
+        {
+            "task_id": "task_1",
+            "source_id": demo.BAKEOFF_FINAL_SOURCE_ID,
+            "source_cluster": "repo:module",
+            "source": "source",
+            "change_size_proxy": "medium",
+            "recency_bucket": "recent_2023_or_later",
+            "development_outcome_difficulty": "",
+            "development_outcome_disagreement": "",
+            "feature_leakage_notes": "",
+        },
+        {
+            "task_id": "task_2",
+            "source_id": "phase1_blocked_split_heldout_development",
+            "source_cluster": "repo:module",
+            "source": "source",
+            "change_size_proxy": "small",
+            "recency_bucket": "recent_2023_or_later",
+            "development_outcome_difficulty": "",
+            "development_outcome_disagreement": "",
+            "feature_leakage_notes": "",
+        },
+    ]
+    outcome_rows = [
+        {
+            "source_id": "phase1_blocked_split_heldout_development",
+            "task_id": "task_2",
+            "stage": "selection",
+            "policy_valid_cell": True,
+            "policy_outcome_value": 1,
+        },
+        {
+            "source_id": "phase1_blocked_split_heldout_development",
+            "task_id": "task_2",
+            "stage": "selection",
+            "policy_valid_cell": True,
+            "policy_outcome_value": 0,
+        },
+    ]
+
+    rows = demo.bakeoff_attach_scores(feature_rows, outcome_rows)
+    final = next(row for row in rows if row["source_id"] == demo.BAKEOFF_FINAL_SOURCE_ID)
+    development = next(row for row in rows if row["source_id"] != demo.BAKEOFF_FINAL_SOURCE_ID)
+
+    assert final["development_outcome_difficulty"] == ""
+    assert final["development_outcome_disagreement"] == ""
+    assert development["development_outcome_difficulty"] == 0.5
+    assert development["development_outcome_disagreement"] == 1.0
+
+
 def selector_test_outcome_rows(agent_values: dict[str, list[int]]) -> list[dict[str, str]]:
     rows: list[dict[str, str]] = []
     for agent_id, values in agent_values.items():
