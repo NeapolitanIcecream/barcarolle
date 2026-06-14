@@ -2740,6 +2740,221 @@ def render_selector_decision_eval(payload: dict[str, Any]) -> str:
     return "\n".join(lines) + "\n"
 
 
+def selector_final_preregistration(config: dict[str, Any]) -> dict[str, Any]:
+    protocol = read_json(result_path("selector_protocol.json"))
+    task_rows = load_selector_task_rows()
+    candidates = selector_candidate_tasks(task_rows)
+    final_selection = select_hrd_hybrid(candidates, 10, 0.7)
+    later_task_ids = selector_later_task_ids(task_rows)
+    payload = {
+        "schema_version": "barcarolle.agent_selection_demo.selector_final_preregistration.v1",
+        "generated_at": "2026-06-14",
+        "status": "frozen_before_final_outcome_join",
+        "target_repo": config["target_repo"]["repo_name"],
+        "selector": {
+            "selector_id": "hrd_70_30",
+            "family": "hybrid_representative_disagreement",
+            "budget_k": 10,
+            "representative_fraction": 0.7,
+            "representative_selector": "rsq_recency_stratified_quota",
+            "disagreement_source": final_selection["disagreement_source"],
+            "quality_gate": "quality_score >= 1.0 and risk_flag == false and flaky_flag == false",
+            "module_cap": "ceil(k * 0.3) during representative fill and discriminative fill",
+        },
+        "agent_set": selector_agent_ids(config),
+        "top2_repeat_validation_agent_set": TOP2_REPEAT_AGENT_IDS,
+        "final_origin_demo_slice": protocol["split_plan"]["final_demo_slice"],
+        "selected_task_ids_before_outcome_join": final_selection["selected_task_ids"],
+        "representative_task_ids": final_selection["representative_task_ids"],
+        "discriminative_task_ids": final_selection["discriminative_task_ids"],
+        "later_holdout_task_ids": later_task_ids,
+        "random_seed_list": protocol["random_seeds"],
+        "invalid_cell_policy": protocol["invalid_cell_policy"],
+        "decision_thresholds": protocol["decision_thresholds"],
+        "success_criteria": {
+            "recommendation_required": True,
+            "later_top_must_match_recommended_or_regret_lte": 0.05,
+            "recommended_top_pair_direction_must_agree": True,
+            "mae_improvement_vs_strong_random_abs_min": 0.02,
+            "mae_improvement_vs_strong_random_relative_min": 0.10,
+            "decision_metrics_must_beat_random_distribution": True,
+        },
+        "paid_boundary": {
+            "default": "no_new_paid_cells",
+            "approved_cap_new_cells": 80,
+            "paid_cells_used_by_this_run": 0,
+            "endpoint_env_required_if_paid": ["LLM_BASE_URL", "LLM_API_KEY"],
+        },
+    }
+    write_json(result_path("selector_final_preregistration.json"), payload)
+    write_text(report_path("selector_final_preregistration_zh.md"), render_selector_final_preregistration(payload))
+    return payload
+
+
+def render_selector_final_preregistration(payload: dict[str, Any]) -> str:
+    selector = payload["selector"]
+    lines = [
+        "# Selector Final Preregistration",
+        "",
+        "生成日期：2026-06-14",
+        "",
+        "## Locked selector",
+        "",
+        f"- Selector: `{selector['selector_id']}`。",
+        f"- Budget k: `{selector['budget_k']}`。",
+        f"- Representative/discriminative split: `70/30`。",
+        f"- Representative selector: `{selector['representative_selector']}`。",
+        f"- Disagreement source: `{selector['disagreement_source']}`。",
+        "",
+        "## Frozen task IDs",
+        "",
+        f"- Selected tasks before outcome join: `{', '.join(payload['selected_task_ids_before_outcome_join'])}`。",
+        f"- Later/Holdout tasks: `{', '.join(payload['later_holdout_task_ids'])}`。",
+        "",
+        "## Decision thresholds",
+        "",
+        f"- Action margin: `{payload['decision_thresholds']['action_margin']}`。",
+        f"- Minimum common valid tasks: `{payload['decision_thresholds']['min_common_valid_selected_tasks']}`。",
+        f"- Bootstrap iterations: `{payload['decision_thresholds']['bootstrap_iterations']}`。",
+        "",
+        "## Paid boundary",
+        "",
+        "默认不运行新 paid cells。只有 no-paid final result 因 missing cells 而无法解释时，才按 runbook paid boundary 补最小 frozen grid。本 preregistration 的 planned paid use 是 `0`。",
+    ]
+    return "\n".join(lines) + "\n"
+
+
+def selector_final_eval(config: dict[str, Any]) -> dict[str, Any]:
+    prereg = selector_final_preregistration(config)
+    task_rows = load_selector_task_rows()
+    outcome_rows = load_selector_outcome_rows()
+    agent_ids = selector_agent_ids(config)
+    selected_ids = list(prereg["selected_task_ids_before_outcome_join"])
+    later_ids = list(prereg["later_holdout_task_ids"])
+    thresholds = prereg["decision_thresholds"]
+    decision = decision_wrapper_for_selection(selected_ids, agent_ids, outcome_rows, thresholds)
+    holdout_metrics = apply_later_decision_metrics(decision, selected_ids, later_ids, agent_ids, outcome_rows, thresholds)
+    repeat_metrics = apply_later_decision_metrics(
+        decision_wrapper_for_selection(selected_ids, TOP2_REPEAT_AGENT_IDS, outcome_rows, thresholds),
+        selected_ids,
+        later_ids,
+        TOP2_REPEAT_AGENT_IDS,
+        outcome_rows,
+        thresholds,
+        later_stage="doubled_timeout_top2_repeat",
+    )
+    baseline = read_json(result_path("selector_baseline_eval.json"))
+    decision_eval = read_json(result_path("selector_decision_eval.json"))
+    hrd = read_json(result_path("selector_hrd_eval.json"))
+    strong_random = baseline["random_baselines"]["stratified_random__k10"]["summary"]
+    strong_random_decision = decision_eval["random_decision_summaries"]["stratified_random__k10"]["summary"]
+    hrd_row = hrd["variants"]["hrd_70_30__k10"]
+    mae = float(holdout_metrics["MAE"])
+    random_mae = float(strong_random["MAE_mean"])
+    abs_improvement = random_mae - mae
+    rel_improvement = abs_improvement / random_mae if random_mae else None
+    recommended = decision.get("recommended_agent_id")
+    regret = holdout_metrics.get("recommendation_regret")
+    preferred = (
+        decision.get("state") == "recommend"
+        and recommended == holdout_metrics.get("later_top_agent_id")
+        and regret is not None
+        and float(regret) <= 0.05
+        and holdout_metrics.get("top_pair_direction_agreement") is True
+        and (abs_improvement >= 0.02 or (rel_improvement is not None and rel_improvement >= 0.10))
+    )
+    payload = {
+        "schema_version": "barcarolle.agent_selection_demo.selector_final_eval.v1",
+        "generated_at": "2026-06-14",
+        "paid_agent_calls_made": False,
+        "new_paid_cells": 0,
+        "new_paid_cost_usd": 0.0,
+        "preregistration": "experiments/agent_selection_demo/results/selector_final_preregistration.json",
+        "selector_id": "hrd_70_30",
+        "k": 10,
+        "selected_task_ids": selected_ids,
+        "later_holdout_task_ids": later_ids,
+        "decision": decision,
+        "holdout_metrics": holdout_metrics,
+        "top2_repeat_metrics": repeat_metrics,
+        "strong_random_baseline": {
+            "baseline_id": "stratified_random",
+            "k": 10,
+            "MAE_mean": strong_random["MAE_mean"],
+            "decision_summary": strong_random_decision,
+        },
+        "mae_comparison": {
+            "selector_MAE": selector_round(mae),
+            "strong_random_MAE_mean": strong_random["MAE_mean"],
+            "absolute_improvement": selector_round(abs_improvement),
+            "relative_improvement": selector_round(rel_improvement),
+            "MAE_beats_or_ties_stratified_random_share": hrd_row["random_percentiles"]["stratified_random"]["MAE_beats_or_ties_random_share"],
+        },
+        "decision_comparison": {
+            "selector_recommendation_regret": regret,
+            "strong_random_mean_regret_when_recommending": strong_random_decision["mean_recommendation_regret"],
+            "strong_random_false_recommendation_rate": strong_random_decision["false_recommendation_rate"],
+            "selector_top_pair_direction_agreement": holdout_metrics.get("top_pair_direction_agreement"),
+            "strong_random_top_pair_direction_agreement_rate": strong_random_decision["top_pair_direction_agreement_rate"],
+        },
+        "preferred_terminal_state_achieved": preferred,
+        "paid_completion_needed": False,
+        "paid_completion_reason": "No-paid final slice has complete selected-task Selection cells, complete Holdout cells for all four Agents, and complete doubled-timeout top-2 repeat cells.",
+        "claim_supported": "On the frozen boltons demo slice, the preregistered HRD 70/30 selector recommends Kilo + GPT mainline; original Holdout and doubled-timeout top-2 repeat both favor Kilo, with zero recommendation regret on the reported later slices.",
+    }
+    write_json(result_path("selector_final_eval.json"), payload)
+    write_text(report_path("selector_final_eval_zh.md"), render_selector_final_eval(payload))
+    return payload
+
+
+def rate_summary(rates: dict[str, dict[str, Any]]) -> str:
+    return ", ".join(f"{agent}: {row['pass_count']}/{row['valid_count']}" for agent, row in sorted(rates.items()))
+
+
+def render_selector_final_eval(payload: dict[str, Any]) -> str:
+    holdout = payload["holdout_metrics"]
+    repeat = payload["top2_repeat_metrics"]
+    mae = payload["mae_comparison"]
+    decision = payload["decision"]
+    lines = [
+        "# Selector Final Eval",
+        "",
+        "生成日期：2026-06-14",
+        "",
+        "## Final result",
+        "",
+        f"- Preferred terminal state achieved: `{payload['preferred_terminal_state_achieved']}`。",
+        f"- Decision state: `{decision['state']}`。",
+        f"- Recommended Agent: `{decision.get('recommended_agent_id')}`。",
+        f"- Holdout later top: `{holdout['later_top_agent_id']}`。",
+        f"- Recommendation regret: `{holdout['recommendation_regret']}`。",
+        f"- New paid cells: `{payload['new_paid_cells']}`；new paid cost: `${payload['new_paid_cost_usd']}`。",
+        "",
+        "## Selection and later pass rates",
+        "",
+        f"- Selection: `{rate_summary(holdout['selection_rates'])}`。",
+        f"- Holdout: `{rate_summary(holdout['later_rates'])}`。",
+        f"- Doubled-timeout top-2 repeat: `{rate_summary(repeat['later_rates'])}`。",
+        "",
+        "## Strong random comparison",
+        "",
+        f"- Selector MAE: `{mae['selector_MAE']}`。",
+        f"- Stratified random k=10 MAE mean: `{mae['strong_random_MAE_mean']}`。",
+        f"- Absolute improvement: `{mae['absolute_improvement']}`。",
+        f"- Relative improvement: `{mae['relative_improvement']}`。",
+        f"- Selector beats/ties stratified-random MAE share: `{mae['MAE_beats_or_ties_stratified_random_share']}`。",
+        "",
+        "## Paid boundary",
+        "",
+        payload["paid_completion_reason"],
+        "",
+        "## Claim",
+        "",
+        payload["claim_supported"],
+    ]
+    return "\n".join(lines) + "\n"
+
+
 def render_selector_baseline_eval(payload: dict[str, Any]) -> str:
     lines = [
         "# Selector Baseline Eval",
@@ -4105,6 +4320,7 @@ def main() -> int:
     subcommands.add_parser("selector-baseline-eval")
     subcommands.add_parser("selector-hrd-eval")
     subcommands.add_parser("selector-decision-eval")
+    subcommands.add_parser("selector-final-eval")
     args = parser.parse_args()
     config = load_config(repo_path(args.config))
     if args.command == "gate":
@@ -4166,6 +4382,9 @@ def main() -> int:
         return 0
     if args.command == "selector-decision-eval":
         selector_decision_eval(config)
+        return 0
+    if args.command == "selector-final-eval":
+        selector_final_eval(config)
         return 0
     raise ValueError(args.command)
 

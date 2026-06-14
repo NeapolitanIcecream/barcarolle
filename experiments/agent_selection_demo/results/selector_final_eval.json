@@ -1,0 +1,464 @@
+{
+  "claim_supported": "On the frozen boltons demo slice, the preregistered HRD 70/30 selector recommends Kilo + GPT mainline; original Holdout and doubled-timeout top-2 repeat both favor Kilo, with zero recommendation regret on the reported later slices.",
+  "decision": {
+    "nearest_competitor_agent_id": "codex_gpt_5_4",
+    "pair_stats": [
+      {
+        "bootstrap_lcb": 0.0,
+        "common_valid": 10,
+        "competitor_agent_id": "codex_gpt_5_4",
+        "losses": 0,
+        "selected_margin": 0.2,
+        "supports_recommendation": true,
+        "ties": 8,
+        "wins": 2
+      },
+      {
+        "bootstrap_lcb": 0.0,
+        "common_valid": 10,
+        "competitor_agent_id": "kilo_claude_sonnet_4_6",
+        "losses": 0,
+        "selected_margin": 0.2,
+        "supports_recommendation": true,
+        "ties": 8,
+        "wins": 2
+      },
+      {
+        "bootstrap_lcb": 0.0,
+        "common_valid": 10,
+        "competitor_agent_id": "kilo_gpt_5_4_mini",
+        "losses": 0,
+        "selected_margin": 0.2,
+        "supports_recommendation": true,
+        "ties": 8,
+        "wins": 2
+      }
+    ],
+    "reason": "top_agent_margin_and_paired_small_sample_fallback_passed",
+    "recommended_agent_id": "kilo_gpt_5_4",
+    "selected_top_margin": 0.2,
+    "selection_rates": {
+      "codex_gpt_5_4": {
+        "missing_or_na_count": 0,
+        "pass_count": 7,
+        "pass_rate": 0.7,
+        "valid_count": 10
+      },
+      "kilo_claude_sonnet_4_6": {
+        "missing_or_na_count": 0,
+        "pass_count": 7,
+        "pass_rate": 0.7,
+        "valid_count": 10
+      },
+      "kilo_gpt_5_4": {
+        "missing_or_na_count": 0,
+        "pass_count": 9,
+        "pass_rate": 0.9,
+        "valid_count": 10
+      },
+      "kilo_gpt_5_4_mini": {
+        "missing_or_na_count": 0,
+        "pass_count": 7,
+        "pass_rate": 0.7,
+        "valid_count": 10
+      }
+    },
+    "state": "recommend",
+    "top_agent_id": "kilo_gpt_5_4"
+  },
+  "decision_comparison": {
+    "selector_recommendation_regret": 0.0,
+    "selector_top_pair_direction_agreement": true,
+    "strong_random_false_recommendation_rate": 0.380597,
+    "strong_random_mean_regret_when_recommending": 0.152239,
+    "strong_random_top_pair_direction_agreement_rate": 0.619403
+  },
+  "generated_at": "2026-06-14",
+  "holdout_metrics": {
+    "MAE": 0.1,
+    "correct_abstain": null,
+    "decision": {
+      "nearest_competitor_agent_id": "codex_gpt_5_4",
+      "pair_stats": [
+        {
+          "bootstrap_lcb": 0.0,
+          "common_valid": 10,
+          "competitor_agent_id": "codex_gpt_5_4",
+          "losses": 0,
+          "selected_margin": 0.2,
+          "supports_recommendation": true,
+          "ties": 8,
+          "wins": 2
+        },
+        {
+          "bootstrap_lcb": 0.0,
+          "common_valid": 10,
+          "competitor_agent_id": "kilo_claude_sonnet_4_6",
+          "losses": 0,
+          "selected_margin": 0.2,
+          "supports_recommendation": true,
+          "ties": 8,
+          "wins": 2
+        },
+        {
+          "bootstrap_lcb": 0.0,
+          "common_valid": 10,
+          "competitor_agent_id": "kilo_gpt_5_4_mini",
+          "losses": 0,
+          "selected_margin": 0.2,
+          "supports_recommendation": true,
+          "ties": 8,
+          "wins": 2
+        }
+      ],
+      "reason": "top_agent_margin_and_paired_small_sample_fallback_passed",
+      "recommended_agent_id": "kilo_gpt_5_4",
+      "selected_top_margin": 0.2,
+      "selection_rates": {
+        "codex_gpt_5_4": {
+          "missing_or_na_count": 0,
+          "pass_count": 7,
+          "pass_rate": 0.7,
+          "valid_count": 10
+        },
+        "kilo_claude_sonnet_4_6": {
+          "missing_or_na_count": 0,
+          "pass_count": 7,
+          "pass_rate": 0.7,
+          "valid_count": 10
+        },
+        "kilo_gpt_5_4": {
+          "missing_or_na_count": 0,
+          "pass_count": 9,
+          "pass_rate": 0.9,
+          "valid_count": 10
+        },
+        "kilo_gpt_5_4_mini": {
+          "missing_or_na_count": 0,
+          "pass_count": 7,
+          "pass_rate": 0.7,
+          "valid_count": 10
+        }
+      },
+      "state": "recommend",
+      "top_agent_id": "kilo_gpt_5_4"
+    },
+    "false_recommendation": false,
+    "forced_recommendation_regret": 0.0,
+    "later_rates": {
+      "codex_gpt_5_4": {
+        "missing_or_na_count": 0,
+        "pass_count": 5,
+        "pass_rate": 0.5,
+        "valid_count": 10
+      },
+      "kilo_claude_sonnet_4_6": {
+        "missing_or_na_count": 0,
+        "pass_count": 8,
+        "pass_rate": 0.8,
+        "valid_count": 10
+      },
+      "kilo_gpt_5_4": {
+        "missing_or_na_count": 0,
+        "pass_count": 9,
+        "pass_rate": 0.9,
+        "valid_count": 10
+      },
+      "kilo_gpt_5_4_mini": {
+        "missing_or_na_count": 0,
+        "pass_count": 6,
+        "pass_rate": 0.6,
+        "valid_count": 10
+      }
+    },
+    "later_second_agent_id": "kilo_claude_sonnet_4_6",
+    "later_task_ids": [
+      "boltons__clean_ext__017",
+      "boltons__hist__019",
+      "boltons__hist__020",
+      "boltons__hist__022",
+      "boltons__hist__023",
+      "boltons__hist__024",
+      "boltons__hist__025",
+      "boltons__hist__026",
+      "boltons__hist__027",
+      "boltons__hist__028"
+    ],
+    "later_top_agent_id": "kilo_gpt_5_4",
+    "later_top_margin": 0.1,
+    "later_top_tied": false,
+    "missed_opportunity": null,
+    "pairwise_direction_agreement": 0.5,
+    "pairwise_rows": [
+      {
+        "agent_a": "codex_gpt_5_4",
+        "agent_b": "kilo_gpt_5_4",
+        "agrees": true,
+        "later_margin": -0.4,
+        "later_sign": -1,
+        "selected_margin": -0.2,
+        "selected_sign": -1
+      },
+      {
+        "agent_a": "codex_gpt_5_4",
+        "agent_b": "kilo_gpt_5_4_mini",
+        "agrees": false,
+        "later_margin": -0.1,
+        "later_sign": -1,
+        "selected_margin": 0.0,
+        "selected_sign": 0
+      },
+      {
+        "agent_a": "codex_gpt_5_4",
+        "agent_b": "kilo_claude_sonnet_4_6",
+        "agrees": false,
+        "later_margin": -0.3,
+        "later_sign": -1,
+        "selected_margin": 0.0,
+        "selected_sign": 0
+      },
+      {
+        "agent_a": "kilo_gpt_5_4",
+        "agent_b": "kilo_gpt_5_4_mini",
+        "agrees": true,
+        "later_margin": 0.3,
+        "later_sign": 1,
+        "selected_margin": 0.2,
+        "selected_sign": 1
+      },
+      {
+        "agent_a": "kilo_gpt_5_4",
+        "agent_b": "kilo_claude_sonnet_4_6",
+        "agrees": true,
+        "later_margin": 0.1,
+        "later_sign": 1,
+        "selected_margin": 0.2,
+        "selected_sign": 1
+      },
+      {
+        "agent_a": "kilo_gpt_5_4_mini",
+        "agent_b": "kilo_claude_sonnet_4_6",
+        "agrees": false,
+        "later_margin": -0.2,
+        "later_sign": -1,
+        "selected_margin": 0.0,
+        "selected_sign": 0
+      }
+    ],
+    "recommendation_regret": 0.0,
+    "selected_task_ids": [
+      "boltons__clean_ext__010",
+      "boltons__hist__014",
+      "boltons__hist__017",
+      "boltons__supply_expansion_20260526__001",
+      "boltons__supply_expansion_20260526__004",
+      "boltons__supply_expansion_20260526__006",
+      "boltons__supply_expansion_20260526__048",
+      "boltons__supply_expansion_20260526__066",
+      "boltons__supply_expansion_20260526__093",
+      "boltons__supply_expansion_20260526__095"
+    ],
+    "selection_forced_top_agent_id": "kilo_gpt_5_4",
+    "selection_rates": {
+      "codex_gpt_5_4": {
+        "missing_or_na_count": 0,
+        "pass_count": 7,
+        "pass_rate": 0.7,
+        "valid_count": 10
+      },
+      "kilo_claude_sonnet_4_6": {
+        "missing_or_na_count": 0,
+        "pass_count": 7,
+        "pass_rate": 0.7,
+        "valid_count": 10
+      },
+      "kilo_gpt_5_4": {
+        "missing_or_na_count": 0,
+        "pass_count": 9,
+        "pass_rate": 0.9,
+        "valid_count": 10
+      },
+      "kilo_gpt_5_4_mini": {
+        "missing_or_na_count": 0,
+        "pass_count": 7,
+        "pass_rate": 0.7,
+        "valid_count": 10
+      }
+    },
+    "selection_top_tied": false,
+    "top1_agreement_forced": true,
+    "top_pair_direction_agreement": true
+  },
+  "k": 10,
+  "later_holdout_task_ids": [
+    "boltons__clean_ext__017",
+    "boltons__hist__019",
+    "boltons__hist__020",
+    "boltons__hist__022",
+    "boltons__hist__023",
+    "boltons__hist__024",
+    "boltons__hist__025",
+    "boltons__hist__026",
+    "boltons__hist__027",
+    "boltons__hist__028"
+  ],
+  "mae_comparison": {
+    "MAE_beats_or_ties_stratified_random_share": 1.0,
+    "absolute_improvement": 0.0517,
+    "relative_improvement": 0.340804,
+    "selector_MAE": 0.1,
+    "strong_random_MAE_mean": 0.1517
+  },
+  "new_paid_cells": 0,
+  "new_paid_cost_usd": 0.0,
+  "paid_agent_calls_made": false,
+  "paid_completion_needed": false,
+  "paid_completion_reason": "No-paid final slice has complete selected-task Selection cells, complete Holdout cells for all four Agents, and complete doubled-timeout top-2 repeat cells.",
+  "preferred_terminal_state_achieved": true,
+  "preregistration": "experiments/agent_selection_demo/results/selector_final_preregistration.json",
+  "schema_version": "barcarolle.agent_selection_demo.selector_final_eval.v1",
+  "selected_task_ids": [
+    "boltons__clean_ext__010",
+    "boltons__hist__014",
+    "boltons__hist__017",
+    "boltons__supply_expansion_20260526__001",
+    "boltons__supply_expansion_20260526__004",
+    "boltons__supply_expansion_20260526__006",
+    "boltons__supply_expansion_20260526__048",
+    "boltons__supply_expansion_20260526__066",
+    "boltons__supply_expansion_20260526__093",
+    "boltons__supply_expansion_20260526__095"
+  ],
+  "selector_id": "hrd_70_30",
+  "strong_random_baseline": {
+    "MAE_mean": 0.1517,
+    "baseline_id": "stratified_random",
+    "decision_summary": {
+      "abstain_rate": 0.482,
+      "correct_abstain_rate": 0.0,
+      "evaluated_count": 1000,
+      "false_recommendation_rate": 0.380597,
+      "mean_recommendation_regret": 0.152239,
+      "missed_opportunity_rate": 0.732,
+      "need_more_evidence_rate": 0.25,
+      "recommendation_coverage": 0.268,
+      "top_pair_direction_agreement_rate": 0.619403,
+      "worst_recommendation_regret": 0.4
+    },
+    "k": 10
+  },
+  "top2_repeat_metrics": {
+    "MAE": 0.05,
+    "correct_abstain": null,
+    "decision": {
+      "nearest_competitor_agent_id": "codex_gpt_5_4",
+      "pair_stats": [
+        {
+          "bootstrap_lcb": 0.0,
+          "common_valid": 10,
+          "competitor_agent_id": "codex_gpt_5_4",
+          "losses": 0,
+          "selected_margin": 0.2,
+          "supports_recommendation": true,
+          "ties": 8,
+          "wins": 2
+        }
+      ],
+      "reason": "top_agent_margin_and_paired_small_sample_fallback_passed",
+      "recommended_agent_id": "kilo_gpt_5_4",
+      "selected_top_margin": 0.2,
+      "selection_rates": {
+        "codex_gpt_5_4": {
+          "missing_or_na_count": 0,
+          "pass_count": 7,
+          "pass_rate": 0.7,
+          "valid_count": 10
+        },
+        "kilo_gpt_5_4": {
+          "missing_or_na_count": 0,
+          "pass_count": 9,
+          "pass_rate": 0.9,
+          "valid_count": 10
+        }
+      },
+      "state": "recommend",
+      "top_agent_id": "kilo_gpt_5_4"
+    },
+    "false_recommendation": false,
+    "forced_recommendation_regret": 0.0,
+    "later_rates": {
+      "codex_gpt_5_4": {
+        "missing_or_na_count": 0,
+        "pass_count": 6,
+        "pass_rate": 0.6,
+        "valid_count": 10
+      },
+      "kilo_gpt_5_4": {
+        "missing_or_na_count": 0,
+        "pass_count": 9,
+        "pass_rate": 0.9,
+        "valid_count": 10
+      }
+    },
+    "later_second_agent_id": "codex_gpt_5_4",
+    "later_task_ids": [
+      "boltons__clean_ext__017",
+      "boltons__hist__019",
+      "boltons__hist__020",
+      "boltons__hist__022",
+      "boltons__hist__023",
+      "boltons__hist__024",
+      "boltons__hist__025",
+      "boltons__hist__026",
+      "boltons__hist__027",
+      "boltons__hist__028"
+    ],
+    "later_top_agent_id": "kilo_gpt_5_4",
+    "later_top_margin": 0.3,
+    "later_top_tied": false,
+    "missed_opportunity": null,
+    "pairwise_direction_agreement": 1.0,
+    "pairwise_rows": [
+      {
+        "agent_a": "codex_gpt_5_4",
+        "agent_b": "kilo_gpt_5_4",
+        "agrees": true,
+        "later_margin": -0.3,
+        "later_sign": -1,
+        "selected_margin": -0.2,
+        "selected_sign": -1
+      }
+    ],
+    "recommendation_regret": 0.0,
+    "selected_task_ids": [
+      "boltons__clean_ext__010",
+      "boltons__hist__014",
+      "boltons__hist__017",
+      "boltons__supply_expansion_20260526__001",
+      "boltons__supply_expansion_20260526__004",
+      "boltons__supply_expansion_20260526__006",
+      "boltons__supply_expansion_20260526__048",
+      "boltons__supply_expansion_20260526__066",
+      "boltons__supply_expansion_20260526__093",
+      "boltons__supply_expansion_20260526__095"
+    ],
+    "selection_forced_top_agent_id": "kilo_gpt_5_4",
+    "selection_rates": {
+      "codex_gpt_5_4": {
+        "missing_or_na_count": 0,
+        "pass_count": 7,
+        "pass_rate": 0.7,
+        "valid_count": 10
+      },
+      "kilo_gpt_5_4": {
+        "missing_or_na_count": 0,
+        "pass_count": 9,
+        "pass_rate": 0.9,
+        "valid_count": 10
+      }
+    },
+    "selection_top_tied": false,
+    "top1_agreement_forced": true,
+    "top_pair_direction_agreement": true
+  }
+}
