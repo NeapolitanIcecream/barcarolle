@@ -1,0 +1,695 @@
+{
+  "agent_set": [
+    "codex_workspace",
+    "kilo_workspace"
+  ],
+  "backup_decision": {
+    "nearest_competitor_agent_id": "codex_workspace",
+    "pair_stats": [
+      {
+        "bootstrap_lcb": 0.192308,
+        "common_valid": 26,
+        "competitor_agent_id": "codex_workspace",
+        "lcb_tolerance": 0.1,
+        "losses": 2,
+        "selected_margin": 0.346154,
+        "supports_recommendation": true,
+        "ties": 13,
+        "wins": 11
+      }
+    ],
+    "reason": "wrapper_v2_margin_wins_and_lcb_tolerance_passed",
+    "recommended_agent_id": "kilo_workspace",
+    "selected_top_margin": 0.346154,
+    "selection_rates": {
+      "codex_workspace": {
+        "missing_or_na_count": 4,
+        "pass_count": 5,
+        "pass_rate": 0.19230769230769232,
+        "valid_count": 26
+      },
+      "kilo_workspace": {
+        "missing_or_na_count": 4,
+        "pass_count": 14,
+        "pass_rate": 0.5384615384615384,
+        "valid_count": 26
+      }
+    },
+    "state": "recommend",
+    "thresholds": {
+      "action_margin": 0.1,
+      "lcb_tolerance": 0.1,
+      "min_common_valid": 8,
+      "tie_epsilon": 0.05
+    },
+    "top_agent_id": "kilo_workspace",
+    "version": "v2"
+  },
+  "backup_metrics": {
+    "MAE": 0.109615,
+    "correct_abstain": null,
+    "decision": {
+      "nearest_competitor_agent_id": "codex_workspace",
+      "pair_stats": [
+        {
+          "bootstrap_lcb": 0.192308,
+          "common_valid": 26,
+          "competitor_agent_id": "codex_workspace",
+          "lcb_tolerance": 0.1,
+          "losses": 2,
+          "selected_margin": 0.346154,
+          "supports_recommendation": true,
+          "ties": 13,
+          "wins": 11
+        }
+      ],
+      "reason": "wrapper_v2_margin_wins_and_lcb_tolerance_passed",
+      "recommended_agent_id": "kilo_workspace",
+      "selected_top_margin": 0.346154,
+      "selection_rates": {
+        "codex_workspace": {
+          "missing_or_na_count": 4,
+          "pass_count": 5,
+          "pass_rate": 0.19230769230769232,
+          "valid_count": 26
+        },
+        "kilo_workspace": {
+          "missing_or_na_count": 4,
+          "pass_count": 14,
+          "pass_rate": 0.5384615384615384,
+          "valid_count": 26
+        }
+      },
+      "state": "recommend",
+      "thresholds": {
+        "action_margin": 0.1,
+        "lcb_tolerance": 0.1,
+        "min_common_valid": 8,
+        "tie_epsilon": 0.05
+      },
+      "top_agent_id": "kilo_workspace",
+      "version": "v2"
+    },
+    "false_recommendation": false,
+    "forced_recommendation_regret": 0.0,
+    "later_rates": {
+      "codex_workspace": {
+        "missing_or_na_count": 7,
+        "pass_count": 16,
+        "pass_rate": 0.4,
+        "valid_count": 40
+      },
+      "kilo_workspace": {
+        "missing_or_na_count": 7,
+        "pass_count": 22,
+        "pass_rate": 0.55,
+        "valid_count": 40
+      }
+    },
+    "later_second_agent_id": "codex_workspace",
+    "later_task_ids": [
+      "attrs::attrs__v2__056",
+      "attrs::attrs__v2__052",
+      "attrs::attrs__v2__157",
+      "attrs::attrs__v2__158",
+      "attrs::attrs__v2__196",
+      "attrs::attrs__v2__202",
+      "attrs::attrs__v2__206",
+      "attrs::attrs__v2__215",
+      "attrs::attrs__v2__219",
+      "attrs::attrs__v2__220",
+      "attrs::attrs__v2__228",
+      "attrs::attrs__v2__231",
+      "attrs::attrs__v2__235",
+      "attrs::attrs__v2__261",
+      "attrs::attrs__v2__271",
+      "boltons::boltons__v2__006",
+      "boltons::boltons__v2__008",
+      "boltons::boltons__v2__009",
+      "boltons::boltons__v2__076",
+      "boltons::boltons__v2__086",
+      "boltons::boltons__v2__087",
+      "boltons::boltons__v2__091",
+      "boltons::boltons__v2__095",
+      "boltons::boltons__v2__103",
+      "boltons::boltons__v2__141",
+      "boltons::boltons__v2__140",
+      "boltons::boltons__v2__144",
+      "boltons::boltons__v2__163",
+      "boltons::boltons__v2__164",
+      "boltons::boltons__v2__169",
+      "boltons::boltons__v2__170",
+      "boltons::boltons__v2__232",
+      "click::click__third__050",
+      "click::click__third__091",
+      "click::click__third__166",
+      "click::click__third__197",
+      "click::click__third__199",
+      "click::click__third__206",
+      "click::click__third__207",
+      "click::click__third__202",
+      "click::click__third__205",
+      "click::click__third__208",
+      "click::click__third__213",
+      "click::click__third__216",
+      "click::click__third__234",
+      "click::click__third__238",
+      "click::click__third__250"
+    ],
+    "later_top_agent_id": "kilo_workspace",
+    "later_top_margin": 0.15,
+    "later_top_tied": false,
+    "missed_opportunity": null,
+    "pairwise_direction_agreement": 1.0,
+    "pairwise_rows": [
+      {
+        "agent_a": "codex_workspace",
+        "agent_b": "kilo_workspace",
+        "agrees": true,
+        "later_margin": -0.15,
+        "later_sign": -1,
+        "selected_margin": -0.346154,
+        "selected_sign": -1
+      }
+    ],
+    "recommendation_regret": 0.0,
+    "selected_task_ids": [
+      "attrs::attrs__v2__048",
+      "attrs::attrs__v2__210",
+      "attrs::attrs__v2__223",
+      "attrs::attrs__v2__227",
+      "attrs::attrs__v2__244",
+      "attrs::attrs__v2__250",
+      "attrs::attrs__v2__252",
+      "attrs::attrs__v2__253",
+      "attrs::attrs__v2__264",
+      "attrs::attrs__v2__275",
+      "boltons::boltons__v2__007",
+      "boltons::boltons__v2__068",
+      "boltons::boltons__v2__102",
+      "boltons::boltons__v2__122",
+      "boltons::boltons__v2__132",
+      "boltons::boltons__v2__133",
+      "boltons::boltons__v2__135",
+      "boltons::boltons__v2__142",
+      "boltons::boltons__v2__155",
+      "boltons::boltons__v2__231",
+      "click::click__third__109",
+      "click::click__third__204",
+      "click::click__third__214",
+      "click::click__third__217",
+      "click::click__third__220",
+      "click::click__third__271",
+      "click::click__third__274",
+      "click::click__third__275",
+      "click::click__third__278",
+      "click::click__third__288"
+    ],
+    "selection_forced_top_agent_id": "kilo_workspace",
+    "selection_rates": {
+      "codex_workspace": {
+        "missing_or_na_count": 4,
+        "pass_count": 5,
+        "pass_rate": 0.19230769230769232,
+        "valid_count": 26
+      },
+      "kilo_workspace": {
+        "missing_or_na_count": 4,
+        "pass_count": 14,
+        "pass_rate": 0.5384615384615384,
+        "valid_count": 26
+      }
+    },
+    "selection_top_tied": false,
+    "top1_agreement_forced": true,
+    "top_pair_direction_agreement": true
+  },
+  "backup_selector_config": {
+    "algorithm_id": "hrd_v3_70_30",
+    "config_id": "hrd_v3_70_30",
+    "family": "hrd_v3",
+    "k_per_repo": 10,
+    "k_total": 30,
+    "reason": "Best high-MAE-improvement HRD-family backup from development bakeoff."
+  },
+  "claim_boundary": "limited_no_paid_final_replay_validated_recommendation_without_random_superiority",
+  "decision": {
+    "nearest_competitor_agent_id": "codex_workspace",
+    "pair_stats": [
+      {
+        "bootstrap_lcb": 0.259259,
+        "common_valid": 27,
+        "competitor_agent_id": "codex_workspace",
+        "lcb_tolerance": 0.1,
+        "losses": 1,
+        "selected_margin": 0.407407,
+        "supports_recommendation": true,
+        "ties": 14,
+        "wins": 12
+      }
+    ],
+    "reason": "wrapper_v2_margin_wins_and_lcb_tolerance_passed",
+    "recommended_agent_id": "kilo_workspace",
+    "selected_top_margin": 0.407407,
+    "selection_rates": {
+      "codex_workspace": {
+        "missing_or_na_count": 3,
+        "pass_count": 6,
+        "pass_rate": 0.2222222222222222,
+        "valid_count": 27
+      },
+      "kilo_workspace": {
+        "missing_or_na_count": 3,
+        "pass_count": 17,
+        "pass_rate": 0.6296296296296297,
+        "valid_count": 27
+      }
+    },
+    "state": "recommend",
+    "thresholds": {
+      "action_margin": 0.1,
+      "lcb_tolerance": 0.1,
+      "min_common_valid": 8,
+      "tie_epsilon": 0.05
+    },
+    "top_agent_id": "kilo_workspace",
+    "version": "v2"
+  },
+  "decision_comparison": {
+    "decision_quality_beats_or_ties_random": true,
+    "decision_quality_strictly_beats_random": false,
+    "decision_quality_ties_strong_random": true,
+    "selector_false_recommendation_rate": 0.0,
+    "selector_recommendation_regret": 0.0,
+    "selector_validated_recommendation": true,
+    "strongest_random_decision_baseline": "source_recency_stratified_random",
+    "strongest_random_false_recommendation_rate": 0.0,
+    "strongest_random_mean_recommendation_regret": 0.0,
+    "strongest_random_validated_recommendation_rate": 1.0
+  },
+  "decision_wrapper": {
+    "thresholds": {
+      "action_margin": 0.1,
+      "bootstrap_iterations": 1000,
+      "confidence_level": 0.8,
+      "lcb_tolerance": 0.1,
+      "min_common_valid": 8,
+      "tie_epsilon": 0.05
+    },
+    "version": "v2",
+    "zero_loss_requirement": false
+  },
+  "final_validation_source": {
+    "caveat": "Original split has more missing/non-scoreable cells than the primary blocked split, so final reporting must be limited.",
+    "independence_level": "locked_no_paid_final_replay_not_used_for_threshold_or_variant_selection",
+    "source_id": "phase1_original_three_repo_split_heldout_final_candidate",
+    "source_kind": "no_paid_committed_sanitized_outcomes",
+    "window_id": "original_three_repo_split_heldout"
+  },
+  "generated_at": "2026-06-14",
+  "independence_label": "limited_no_paid_final_replay_after_development_on_sparse_sources",
+  "later_holdout_task_ids": [
+    "attrs::attrs__v2__056",
+    "attrs::attrs__v2__052",
+    "attrs::attrs__v2__157",
+    "attrs::attrs__v2__158",
+    "attrs::attrs__v2__196",
+    "attrs::attrs__v2__202",
+    "attrs::attrs__v2__206",
+    "attrs::attrs__v2__215",
+    "attrs::attrs__v2__219",
+    "attrs::attrs__v2__220",
+    "attrs::attrs__v2__228",
+    "attrs::attrs__v2__231",
+    "attrs::attrs__v2__235",
+    "attrs::attrs__v2__261",
+    "attrs::attrs__v2__271",
+    "boltons::boltons__v2__006",
+    "boltons::boltons__v2__008",
+    "boltons::boltons__v2__009",
+    "boltons::boltons__v2__076",
+    "boltons::boltons__v2__086",
+    "boltons::boltons__v2__087",
+    "boltons::boltons__v2__091",
+    "boltons::boltons__v2__095",
+    "boltons::boltons__v2__103",
+    "boltons::boltons__v2__141",
+    "boltons::boltons__v2__140",
+    "boltons::boltons__v2__144",
+    "boltons::boltons__v2__163",
+    "boltons::boltons__v2__164",
+    "boltons::boltons__v2__169",
+    "boltons::boltons__v2__170",
+    "boltons::boltons__v2__232",
+    "click::click__third__050",
+    "click::click__third__091",
+    "click::click__third__166",
+    "click::click__third__197",
+    "click::click__third__199",
+    "click::click__third__206",
+    "click::click__third__207",
+    "click::click__third__202",
+    "click::click__third__205",
+    "click::click__third__208",
+    "click::click__third__213",
+    "click::click__third__216",
+    "click::click__third__234",
+    "click::click__third__238",
+    "click::click__third__250"
+  ],
+  "mae_comparison": {
+    "MAE_beats_or_ties_random_share": 0.209,
+    "absolute_improvement": -0.021993,
+    "regret_beats_or_ties_random_share": 1.0,
+    "relative_improvement": -0.206099,
+    "selector_MAE": 0.128704,
+    "strongest_random_MAE_mean": 0.106711,
+    "strongest_random_baseline": "source_recency_stratified_random"
+  },
+  "metrics": {
+    "MAE": 0.128704,
+    "correct_abstain": null,
+    "decision": {
+      "nearest_competitor_agent_id": "codex_workspace",
+      "pair_stats": [
+        {
+          "bootstrap_lcb": 0.259259,
+          "common_valid": 27,
+          "competitor_agent_id": "codex_workspace",
+          "lcb_tolerance": 0.1,
+          "losses": 1,
+          "selected_margin": 0.407407,
+          "supports_recommendation": true,
+          "ties": 14,
+          "wins": 12
+        }
+      ],
+      "reason": "wrapper_v2_margin_wins_and_lcb_tolerance_passed",
+      "recommended_agent_id": "kilo_workspace",
+      "selected_top_margin": 0.407407,
+      "selection_rates": {
+        "codex_workspace": {
+          "missing_or_na_count": 3,
+          "pass_count": 6,
+          "pass_rate": 0.2222222222222222,
+          "valid_count": 27
+        },
+        "kilo_workspace": {
+          "missing_or_na_count": 3,
+          "pass_count": 17,
+          "pass_rate": 0.6296296296296297,
+          "valid_count": 27
+        }
+      },
+      "state": "recommend",
+      "thresholds": {
+        "action_margin": 0.1,
+        "lcb_tolerance": 0.1,
+        "min_common_valid": 8,
+        "tie_epsilon": 0.05
+      },
+      "top_agent_id": "kilo_workspace",
+      "version": "v2"
+    },
+    "false_recommendation": false,
+    "forced_recommendation_regret": 0.0,
+    "later_rates": {
+      "codex_workspace": {
+        "missing_or_na_count": 7,
+        "pass_count": 16,
+        "pass_rate": 0.4,
+        "valid_count": 40
+      },
+      "kilo_workspace": {
+        "missing_or_na_count": 7,
+        "pass_count": 22,
+        "pass_rate": 0.55,
+        "valid_count": 40
+      }
+    },
+    "later_second_agent_id": "codex_workspace",
+    "later_task_ids": [
+      "attrs::attrs__v2__056",
+      "attrs::attrs__v2__052",
+      "attrs::attrs__v2__157",
+      "attrs::attrs__v2__158",
+      "attrs::attrs__v2__196",
+      "attrs::attrs__v2__202",
+      "attrs::attrs__v2__206",
+      "attrs::attrs__v2__215",
+      "attrs::attrs__v2__219",
+      "attrs::attrs__v2__220",
+      "attrs::attrs__v2__228",
+      "attrs::attrs__v2__231",
+      "attrs::attrs__v2__235",
+      "attrs::attrs__v2__261",
+      "attrs::attrs__v2__271",
+      "boltons::boltons__v2__006",
+      "boltons::boltons__v2__008",
+      "boltons::boltons__v2__009",
+      "boltons::boltons__v2__076",
+      "boltons::boltons__v2__086",
+      "boltons::boltons__v2__087",
+      "boltons::boltons__v2__091",
+      "boltons::boltons__v2__095",
+      "boltons::boltons__v2__103",
+      "boltons::boltons__v2__141",
+      "boltons::boltons__v2__140",
+      "boltons::boltons__v2__144",
+      "boltons::boltons__v2__163",
+      "boltons::boltons__v2__164",
+      "boltons::boltons__v2__169",
+      "boltons::boltons__v2__170",
+      "boltons::boltons__v2__232",
+      "click::click__third__050",
+      "click::click__third__091",
+      "click::click__third__166",
+      "click::click__third__197",
+      "click::click__third__199",
+      "click::click__third__206",
+      "click::click__third__207",
+      "click::click__third__202",
+      "click::click__third__205",
+      "click::click__third__208",
+      "click::click__third__213",
+      "click::click__third__216",
+      "click::click__third__234",
+      "click::click__third__238",
+      "click::click__third__250"
+    ],
+    "later_top_agent_id": "kilo_workspace",
+    "later_top_margin": 0.15,
+    "later_top_tied": false,
+    "missed_opportunity": null,
+    "pairwise_direction_agreement": 1.0,
+    "pairwise_rows": [
+      {
+        "agent_a": "codex_workspace",
+        "agent_b": "kilo_workspace",
+        "agrees": true,
+        "later_margin": -0.15,
+        "later_sign": -1,
+        "selected_margin": -0.407407,
+        "selected_sign": -1
+      }
+    ],
+    "recommendation_regret": 0.0,
+    "selected_task_ids": [
+      "attrs::attrs__v2__044",
+      "attrs::attrs__v2__048",
+      "attrs::attrs__v2__187",
+      "attrs::attrs__v2__210",
+      "attrs::attrs__v2__223",
+      "attrs::attrs__v2__227",
+      "attrs::attrs__v2__244",
+      "attrs::attrs__v2__250",
+      "attrs::attrs__v2__253",
+      "attrs::attrs__v2__264",
+      "boltons::boltons__v2__007",
+      "boltons::boltons__v2__068",
+      "boltons::boltons__v2__092",
+      "boltons::boltons__v2__093",
+      "boltons::boltons__v2__102",
+      "boltons::boltons__v2__122",
+      "boltons::boltons__v2__128",
+      "boltons::boltons__v2__132",
+      "boltons::boltons__v2__142",
+      "boltons::boltons__v2__231",
+      "click::click__third__109",
+      "click::click__third__198",
+      "click::click__third__201",
+      "click::click__third__203",
+      "click::click__third__204",
+      "click::click__third__214",
+      "click::click__third__217",
+      "click::click__third__220",
+      "click::click__third__274",
+      "click::click__third__275"
+    ],
+    "selection_forced_top_agent_id": "kilo_workspace",
+    "selection_rates": {
+      "codex_workspace": {
+        "missing_or_na_count": 3,
+        "pass_count": 6,
+        "pass_rate": 0.2222222222222222,
+        "valid_count": 27
+      },
+      "kilo_workspace": {
+        "missing_or_na_count": 3,
+        "pass_count": 17,
+        "pass_rate": 0.6296296296296297,
+        "valid_count": 27
+      }
+    },
+    "selection_top_tied": false,
+    "top1_agreement_forced": true,
+    "top_pair_direction_agreement": true
+  },
+  "negative_terminal_blocker": "random_decision_quality_not_strictly_beaten",
+  "new_paid_cells": 0,
+  "new_paid_cost_usd": 0.0,
+  "outcome_cell_counts": {
+    "missing_or_na_rows": 30,
+    "policy_valid_rows": 162,
+    "rows": 192,
+    "scoreable_rows": 161
+  },
+  "paid_agent_calls_made": false,
+  "paid_completion_needed": false,
+  "preferred_terminal_state_achieved": false,
+  "preregistration": "experiments/agent_selection_demo/results/selector_bakeoff_final_preregistration.json",
+  "random_baselines": {
+    "module_stratified_random": {
+      "baseline_id": "module_stratified_random",
+      "seed_count": 1000,
+      "summary": {
+        "MAE_max": 0.195,
+        "MAE_mean": 0.10925,
+        "abstain_rate": 0.0,
+        "correct_abstain_rate": null,
+        "evaluated_count": 1000,
+        "false_recommendation_rate": 0.0,
+        "mean_recommendation_regret": 0.0,
+        "missed_opportunity_rate": 0.0,
+        "need_more_evidence_rate": 0.0,
+        "recommendation_coverage": 1.0,
+        "top1_agreement_rate_forced": 1.0,
+        "top_pair_direction_agreement_rate": 1.0,
+        "top_pair_direction_agreement_rate_forced": 1.0,
+        "validated_recommendation_rate": 1.0,
+        "worst_recommendation_regret": 0.0
+      },
+      "unique_sample_count": 996
+    },
+    "quality_filtered_random": {
+      "baseline_id": "quality_filtered_random",
+      "seed_count": 1000,
+      "summary": {
+        "MAE_max": 0.207609,
+        "MAE_mean": 0.11079,
+        "abstain_rate": 0.0,
+        "correct_abstain_rate": null,
+        "evaluated_count": 1000,
+        "false_recommendation_rate": 0.0,
+        "mean_recommendation_regret": 0.0,
+        "missed_opportunity_rate": 0.001,
+        "need_more_evidence_rate": 0.001,
+        "recommendation_coverage": 0.999,
+        "top1_agreement_rate_forced": 1.0,
+        "top_pair_direction_agreement_rate": 1.0,
+        "top_pair_direction_agreement_rate_forced": 1.0,
+        "validated_recommendation_rate": 0.999,
+        "worst_recommendation_regret": 0.0
+      },
+      "unique_sample_count": 1000
+    },
+    "source_recency_stratified_random": {
+      "baseline_id": "source_recency_stratified_random",
+      "seed_count": 1000,
+      "summary": {
+        "MAE_max": 0.21413,
+        "MAE_mean": 0.106711,
+        "abstain_rate": 0.0,
+        "correct_abstain_rate": null,
+        "evaluated_count": 1000,
+        "false_recommendation_rate": 0.0,
+        "mean_recommendation_regret": 0.0,
+        "missed_opportunity_rate": 0.0,
+        "need_more_evidence_rate": 0.0,
+        "recommendation_coverage": 1.0,
+        "top1_agreement_rate_forced": 1.0,
+        "top_pair_direction_agreement_rate": 1.0,
+        "top_pair_direction_agreement_rate_forced": 1.0,
+        "validated_recommendation_rate": 1.0,
+        "worst_recommendation_regret": 0.0
+      },
+      "unique_sample_count": 1000
+    },
+    "uniform_random_same_budget": {
+      "baseline_id": "uniform_random_same_budget",
+      "seed_count": 1000,
+      "summary": {
+        "MAE_max": 0.207609,
+        "MAE_mean": 0.11079,
+        "abstain_rate": 0.0,
+        "correct_abstain_rate": null,
+        "evaluated_count": 1000,
+        "false_recommendation_rate": 0.0,
+        "mean_recommendation_regret": 0.0,
+        "missed_opportunity_rate": 0.001,
+        "need_more_evidence_rate": 0.001,
+        "recommendation_coverage": 0.999,
+        "top1_agreement_rate_forced": 1.0,
+        "top_pair_direction_agreement_rate": 1.0,
+        "top_pair_direction_agreement_rate_forced": 1.0,
+        "validated_recommendation_rate": 0.999,
+        "worst_recommendation_regret": 0.0
+      },
+      "unique_sample_count": 1000
+    }
+  },
+  "schema_version": "barcarolle.agent_selection_demo.selector_bakeoff_final_eval.v1",
+  "selected_task_ids": [
+    "attrs::attrs__v2__044",
+    "attrs::attrs__v2__048",
+    "attrs::attrs__v2__187",
+    "attrs::attrs__v2__210",
+    "attrs::attrs__v2__223",
+    "attrs::attrs__v2__227",
+    "attrs::attrs__v2__244",
+    "attrs::attrs__v2__250",
+    "attrs::attrs__v2__253",
+    "attrs::attrs__v2__264",
+    "boltons::boltons__v2__007",
+    "boltons::boltons__v2__068",
+    "boltons::boltons__v2__092",
+    "boltons::boltons__v2__093",
+    "boltons::boltons__v2__102",
+    "boltons::boltons__v2__122",
+    "boltons::boltons__v2__128",
+    "boltons::boltons__v2__132",
+    "boltons::boltons__v2__142",
+    "boltons::boltons__v2__231",
+    "click::click__third__109",
+    "click::click__third__198",
+    "click::click__third__201",
+    "click::click__third__203",
+    "click::click__third__204",
+    "click::click__third__214",
+    "click::click__third__217",
+    "click::click__third__220",
+    "click::click__third__274",
+    "click::click__third__275"
+  ],
+  "selector_config": {
+    "algorithm_id": "cod_lite",
+    "config_id": "cod_lite",
+    "family": "cod_lite",
+    "k_per_repo": 10,
+    "k_total": 30,
+    "reason": "Development bakeoff winner by validated recommendation rate, recommendation coverage, false recommendation rate, and regret; MAE used only as auxiliary tie-breaker."
+  },
+  "strongest_random_decision_baseline_id": "source_recency_stratified_random",
+  "strongest_random_mae_baseline_id": "source_recency_stratified_random",
+  "validated_recommendation_terminal_state_achieved": true
+}

@@ -5699,6 +5699,231 @@ def render_selector_bakeoff_final_preregistration(payload: dict[str, Any]) -> st
     return "\n".join(lines) + "\n"
 
 
+def final_random_baseline_summaries(
+    feature_rows: list[dict[str, Any]],
+    outcome_rows: list[dict[str, Any]],
+    prereg: dict[str, Any],
+) -> dict[str, Any]:
+    source_id = prereg["final_validation_source"]["source_id"]
+    source_features = bakeoff_source_rows(feature_rows, source_id)
+    source_outcomes = bakeoff_source_outcomes(outcome_rows, source_id)
+    later_ids = list(prereg["later_holdout_task_ids_before_final_outcome_join"])
+    agent_ids = list(prereg["agent_set"])
+    thresholds = dict(prereg["decision_wrapper"]["thresholds"])
+    k_per_repo = int(prereg["final_selector_config"]["k_per_repo"])
+    summaries: dict[str, Any] = {}
+    for baseline_id in prereg["random_baselines"]["families"]:
+        rows: list[dict[str, Any]] = []
+        unique_samples: set[tuple[str, ...]] = set()
+        for seed in prereg["random_baselines"]["seeds"]:
+            selected = random_bakeoff_selected_by_repo(source_features, baseline_id, k_per_repo, int(seed))
+            unique_samples.add(tuple(selected))
+            decision = decision_wrapper_v2_for_selection(selected, agent_ids, source_outcomes, thresholds)
+            metrics = apply_later_decision_metrics(decision, selected, later_ids, agent_ids, source_outcomes, thresholds)
+            rows.append({"baseline_id": baseline_id, "seed": int(seed), **metrics})
+        summaries[baseline_id] = {
+            "baseline_id": baseline_id,
+            "seed_count": len(rows),
+            "unique_sample_count": len(unique_samples),
+            "summary": bakeoff_summarize_eval_rows(rows),
+            "_rows": rows,
+        }
+    return summaries
+
+
+def random_decision_quality_rank(row: dict[str, Any]) -> tuple[float, float, float, float]:
+    summary = row["summary"]
+    return (
+        float(summary.get("validated_recommendation_rate") or 0.0),
+        -float(summary.get("false_recommendation_rate") or 0.0),
+        -float(summary.get("mean_recommendation_regret") or 999.0),
+        float(summary.get("recommendation_coverage") or 0.0),
+    )
+
+
+def selector_bakeoff_final_eval() -> dict[str, Any]:
+    if not result_path("selector_bakeoff_final_preregistration.json").exists():
+        selector_bakeoff_final_preregistration()
+    prereg = read_json(result_path("selector_bakeoff_final_preregistration.json"))
+    feature_rows = load_bakeoff_feature_rows()
+    outcome_rows = load_bakeoff_outcome_rows()
+    source_id = prereg["final_validation_source"]["source_id"]
+    source_outcomes = bakeoff_source_outcomes(outcome_rows, source_id)
+    selected = list(prereg["selected_task_ids_before_final_outcome_join"])
+    backup_selected = list(prereg["backup_selected_task_ids_before_final_outcome_join"])
+    later_ids = list(prereg["later_holdout_task_ids_before_final_outcome_join"])
+    agent_ids = list(prereg["agent_set"])
+    thresholds = dict(prereg["decision_wrapper"]["thresholds"])
+    decision = decision_wrapper_v2_for_selection(selected, agent_ids, source_outcomes, thresholds)
+    metrics = apply_later_decision_metrics(decision, selected, later_ids, agent_ids, source_outcomes, thresholds)
+    backup_decision = decision_wrapper_v2_for_selection(backup_selected, agent_ids, source_outcomes, thresholds)
+    backup_metrics = apply_later_decision_metrics(backup_decision, backup_selected, later_ids, agent_ids, source_outcomes, thresholds)
+    random_summaries = final_random_baseline_summaries(feature_rows, outcome_rows, prereg)
+    random_payload = {
+        baseline_id: {key: value for key, value in row.items() if key != "_rows"}
+        for baseline_id, row in random_summaries.items()
+    }
+    strongest_random_mae_id = min(
+        random_summaries,
+        key=lambda baseline_id: (
+            float(random_summaries[baseline_id]["summary"].get("MAE_mean") or 999.0),
+            str(baseline_id),
+        ),
+    )
+    strongest_random_decision_id = max(random_summaries, key=lambda baseline_id: random_decision_quality_rank(random_summaries[baseline_id]))
+    random_mae = float(random_summaries[strongest_random_mae_id]["summary"].get("MAE_mean") or 0.0)
+    selector_mae = float(metrics.get("MAE") or 0.0)
+    abs_improvement = random_mae - selector_mae
+    rel_improvement = abs_improvement / random_mae if random_mae else None
+    selector_validated = bakeoff_validated_recommendation({"decision": decision, **metrics})
+    selector_false = 1.0 if metrics.get("false_recommendation") is True else 0.0
+    selector_regret = metrics.get("recommendation_regret")
+    decision_random_summary = random_summaries[strongest_random_decision_id]["summary"]
+    random_validated_rate = float(decision_random_summary.get("validated_recommendation_rate") or 0.0)
+    random_false_rate = float(decision_random_summary.get("false_recommendation_rate") or 0.0)
+    random_regret = decision_random_summary.get("mean_recommendation_regret")
+    selector_validated_rate = 1.0 if selector_validated else 0.0
+    decision_quality_strictly_beats_random = (
+        selector_validated
+        and (
+            selector_validated_rate > random_validated_rate
+            or selector_false < random_false_rate
+            or (
+                selector_regret is not None
+                and random_regret is not None
+                and float(selector_regret) < float(random_regret)
+            )
+        )
+    )
+    decision_quality_ties_random = (
+        selector_validated
+        and selector_validated_rate == random_validated_rate
+        and selector_false == random_false_rate
+        and selector_regret is not None
+        and random_regret is not None
+        and float(selector_regret) == float(random_regret)
+    )
+    preferred = (
+        decision.get("state") == "recommend"
+        and selector_regret is not None
+        and float(selector_regret) <= 0.05
+        and metrics.get("top_pair_direction_agreement") is True
+        and decision_quality_strictly_beats_random
+    )
+    outcome_counts = {
+        "rows": len(source_outcomes),
+        "policy_valid_rows": sum(1 for row in source_outcomes if selector_bool(row.get("policy_valid_cell"))),
+        "missing_or_na_rows": sum(1 for row in source_outcomes if not selector_bool(row.get("policy_valid_cell"))),
+        "scoreable_rows": sum(1 for row in source_outcomes if selector_bool(row.get("scoreable_cell"))),
+    }
+    payload = {
+        "schema_version": "barcarolle.agent_selection_demo.selector_bakeoff_final_eval.v1",
+        "generated_at": "2026-06-14",
+        "paid_agent_calls_made": False,
+        "new_paid_cells": 0,
+        "new_paid_cost_usd": 0.0,
+        "preregistration": "experiments/agent_selection_demo/results/selector_bakeoff_final_preregistration.json",
+        "final_validation_source": prereg["final_validation_source"],
+        "independence_label": "limited_no_paid_final_replay_after_development_on_sparse_sources",
+        "selector_config": prereg["final_selector_config"],
+        "backup_selector_config": prereg["backup_selector_config"],
+        "decision_wrapper": prereg["decision_wrapper"],
+        "agent_set": agent_ids,
+        "selected_task_ids": selected,
+        "later_holdout_task_ids": later_ids,
+        "outcome_cell_counts": outcome_counts,
+        "decision": decision,
+        "metrics": metrics,
+        "backup_decision": backup_decision,
+        "backup_metrics": backup_metrics,
+        "random_baselines": random_payload,
+        "strongest_random_mae_baseline_id": strongest_random_mae_id,
+        "strongest_random_decision_baseline_id": strongest_random_decision_id,
+        "mae_comparison": {
+            "selector_MAE": selector_round(selector_mae),
+            "strongest_random_baseline": strongest_random_mae_id,
+            "strongest_random_MAE_mean": random_summaries[strongest_random_mae_id]["summary"]["MAE_mean"],
+            "absolute_improvement": selector_round(abs_improvement),
+            "relative_improvement": selector_round(rel_improvement),
+            **bakeoff_random_percentiles_for_summary({"MAE_mean": selector_mae, "mean_recommendation_regret": selector_regret}, random_summaries[strongest_random_mae_id]["_rows"]),
+        },
+        "decision_comparison": {
+            "selector_validated_recommendation": selector_validated,
+            "selector_false_recommendation_rate": selector_false,
+            "selector_recommendation_regret": selector_regret,
+            "strongest_random_decision_baseline": strongest_random_decision_id,
+            "strongest_random_validated_recommendation_rate": decision_random_summary["validated_recommendation_rate"],
+            "strongest_random_false_recommendation_rate": decision_random_summary["false_recommendation_rate"],
+            "strongest_random_mean_recommendation_regret": decision_random_summary["mean_recommendation_regret"],
+            "decision_quality_strictly_beats_random": decision_quality_strictly_beats_random,
+            "decision_quality_ties_strong_random": decision_quality_ties_random,
+            "decision_quality_beats_or_ties_random": decision_quality_strictly_beats_random or decision_quality_ties_random,
+        },
+        "preferred_terminal_state_achieved": preferred,
+        "validated_recommendation_terminal_state_achieved": selector_validated,
+        "negative_terminal_blocker": None if preferred else "random_decision_quality_not_strictly_beaten",
+        "paid_completion_needed": False,
+        "claim_boundary": "demo_level_limited_no_paid_final_replay"
+        if preferred
+        else "limited_no_paid_final_replay_validated_recommendation_without_random_superiority",
+    }
+    write_json(result_path("selector_bakeoff_final_eval.json"), payload)
+    write_text(report_path("selector_bakeoff_final_eval_zh.md"), render_selector_bakeoff_final_eval(payload))
+    return payload
+
+
+def render_selector_bakeoff_final_eval(payload: dict[str, Any]) -> str:
+    decision = payload["decision"]
+    metrics = payload["metrics"]
+    mae = payload["mae_comparison"]
+    comparison = payload["decision_comparison"]
+    lines = [
+        "# Selector Bakeoff Final Eval",
+        "",
+        "生成日期：2026-06-14",
+        "",
+        "## Result",
+        "",
+        f"- Preferred terminal state achieved: `{payload['preferred_terminal_state_achieved']}`。",
+        f"- Validated recommendation achieved: `{payload['validated_recommendation_terminal_state_achieved']}`。",
+        f"- Negative terminal blocker: `{payload['negative_terminal_blocker']}`。",
+        f"- Independence label: `{payload['independence_label']}`。",
+        f"- Decision state: `{decision['state']}`。",
+        f"- Recommended Agent: `{decision.get('recommended_agent_id')}`。",
+        f"- Later top Agent: `{metrics['later_top_agent_id']}`。",
+        f"- Recommendation regret: `{metrics['recommendation_regret']}`。",
+        f"- Top-pair direction agreement: `{metrics['top_pair_direction_agreement']}`。",
+        f"- New paid cells: `{payload['new_paid_cells']}`；new paid cost: `${payload['new_paid_cost_usd']}`。",
+        "",
+        "## Pass rates",
+        "",
+        f"- Selection: `{rate_summary(metrics['selection_rates'])}`。",
+        f"- Later/Holdout: `{rate_summary(metrics['later_rates'])}`。",
+        "",
+        "## Random comparison",
+        "",
+        f"- Strongest random decision baseline: `{comparison['strongest_random_decision_baseline']}`。",
+        f"- Selector validated recommendation: `{comparison['selector_validated_recommendation']}`。",
+        f"- Strongest random validated recommendation rate: `{comparison['strongest_random_validated_recommendation_rate']}`。",
+        f"- Selector false-recommendation rate: `{comparison['selector_false_recommendation_rate']}`；random false-recommendation rate: `{comparison['strongest_random_false_recommendation_rate']}`。",
+        f"- Decision quality strictly beats random: `{comparison['decision_quality_strictly_beats_random']}`。",
+        f"- Decision quality ties strong random: `{comparison['decision_quality_ties_strong_random']}`。",
+        "",
+        "## MAE auxiliary",
+        "",
+        f"- Selector MAE: `{mae['selector_MAE']}`。",
+        f"- Strongest random MAE baseline: `{mae['strongest_random_baseline']}`。",
+        f"- Strongest random MAE mean: `{mae['strongest_random_MAE_mean']}`。",
+        f"- Relative MAE improvement: `{mae['relative_improvement']}`。",
+        f"- MAE beats/ties random share: `{mae['MAE_beats_or_ties_random_share']}`。",
+        "",
+        "## Boundary",
+        "",
+        "This is a no-paid replay on committed sanitized outcomes. The source was held out from threshold and variant selection, but it is still a sparse retrospective pseudo-future source, not full predictive-validity proof.",
+    ]
+    return "\n".join(lines) + "\n"
+
+
 def render_selector_baseline_eval(payload: dict[str, Any]) -> str:
     lines = [
         "# Selector Baseline Eval",
@@ -7072,6 +7297,7 @@ def main() -> int:
     subcommands.add_parser("selector-decision-wrapper-v2-eval")
     subcommands.add_parser("selector-algorithm-bakeoff-eval")
     subcommands.add_parser("selector-bakeoff-final-preregistration")
+    subcommands.add_parser("selector-bakeoff-final-eval")
     args = parser.parse_args()
     config = load_config(repo_path(args.config))
     if args.command == "gate":
@@ -7157,6 +7383,9 @@ def main() -> int:
         return 0
     if args.command == "selector-bakeoff-final-preregistration":
         selector_bakeoff_final_preregistration()
+        return 0
+    if args.command == "selector-bakeoff-final-eval":
+        selector_bakeoff_final_eval()
         return 0
     raise ValueError(args.command)
 
