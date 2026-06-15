@@ -1,0 +1,429 @@
+{
+  "candidate_windows": [
+    {
+      "baseline_headroom": {
+        "dev": {
+          "baseline_rows_present": 6,
+          "invalid_or_unscoreable_count": 0,
+          "label_counts": {
+            "verified_pass": 4,
+            "wrong_api_semantics": 2
+          },
+          "missing_task_ids": [],
+          "pass_rate": 0.6667,
+          "scoreable_count": 6,
+          "task_count": 6,
+          "verified_pass_count": 4
+        },
+        "future": {
+          "baseline_rows_present": 10,
+          "invalid_or_unscoreable_count": 0,
+          "label_counts": {
+            "verified_pass": 6,
+            "wrong_api_semantics": 4
+          },
+          "missing_task_ids": [],
+          "pass_rate": 0.6,
+          "scoreable_count": 10,
+          "task_count": 10,
+          "verified_pass_count": 6
+        },
+        "headroom_pass": true,
+        "target_range": [
+          0.2,
+          0.7
+        ],
+        "train": {
+          "baseline_rows_present": 10,
+          "invalid_or_unscoreable_count": 1,
+          "label_counts": {
+            "timeout_or_context_exhaustion": 1,
+            "verified_pass": 6,
+            "wrong_api_semantics": 3
+          },
+          "missing_task_ids": [],
+          "pass_rate": 0.6667,
+          "scoreable_count": 9,
+          "task_count": 10,
+          "verified_pass_count": 6
+        }
+      },
+      "bridge_excluded_task_ids": [
+        "boltons__hist__011",
+        "boltons__hist__013",
+        "boltons__hist__014",
+        "boltons__hist__017"
+      ],
+      "dev_task_ids": [
+        "boltons__supply_expansion_20260526__107",
+        "boltons__clean_ext__001",
+        "boltons__hist__006",
+        "boltons__hist__007",
+        "boltons__clean_ext__008",
+        "boltons__clean_ext__010"
+      ],
+      "estimated_paid_cells": {
+        "dev_tuned_candidates": 12,
+        "fresh_dev_baseline": 6,
+        "fresh_future_baseline_if_dev_gate_passes": 10,
+        "future_tuned_if_dev_gate_passes": 10,
+        "total_if_future_runs": 38
+      },
+      "future_task_ids_revealed": false,
+      "future_task_ids_sha256": "sha256:f259ea525144f291fe4a52edc5d3108121d917c6d4b8357257092690d49986fe",
+      "hidden_oracle_leakage_risk": "controlled: proposer input is train-only; future IDs are hashed until artifact freeze.",
+      "infrastructure_risk": "moderate: Kilo low-cost had 2 unscoreable Selection cells, but Holdout coverage was 10/10 scoreable.",
+      "mode": "single_time_ordered_future_validation",
+      "recurring_failure_count": 4,
+      "recurring_failure_labels": {
+        "timeout_or_context_exhaustion": 1,
+        "verified_pass": 6,
+        "wrong_api_semantics": 3
+      },
+      "selected_for_protocol": true,
+      "selection_reason": "best single-window default path: dev pass rate is inside target range and future Holdout pass rate is 6/10",
+      "target_agent_id": "kilo_gpt_5_4_mini",
+      "target_repo": "mahmoud/boltons",
+      "task_counts": {
+        "bridge_excluded": 4,
+        "dev": 6,
+        "future": 10,
+        "train": 10
+      },
+      "time_ranges": {
+        "dev": {
+          "end": "2020-04-21T02:03:26-07:00",
+          "start": "2019-02-09T00:09:14-08:00"
+        },
+        "future": {
+          "end": "2023-10-31T11:31:12-07:00",
+          "start": "2022-12-07T18:22:36-08:00"
+        },
+        "train": {
+          "end": "2018-10-17T00:38:58Z",
+          "start": "2015-04-19T00:13:33-07:00"
+        }
+      },
+      "train_task_ids": [
+        "boltons__supply_expansion_20260526__001",
+        "boltons__supply_expansion_20260526__002",
+        "boltons__supply_expansion_20260526__003",
+        "boltons__supply_expansion_20260526__004",
+        "boltons__supply_expansion_20260526__006",
+        "boltons__supply_expansion_20260526__019",
+        "boltons__supply_expansion_20260526__048",
+        "boltons__supply_expansion_20260526__066",
+        "boltons__supply_expansion_20260526__093",
+        "boltons__supply_expansion_20260526__095"
+      ],
+      "window_id": "boltons_time_ordered_w1_train2015_2018_dev2019_2020_future2022_2023"
+    },
+    {
+      "baseline_headroom": {
+        "dev": {
+          "baseline_rows_present": 4,
+          "invalid_or_unscoreable_count": 0,
+          "label_counts": {
+            "verified_pass": 3,
+            "wrong_api_semantics": 1
+          },
+          "missing_task_ids": [],
+          "pass_rate": 0.75,
+          "scoreable_count": 4,
+          "task_count": 4,
+          "verified_pass_count": 3
+        },
+        "future": {
+          "baseline_rows_present": 10,
+          "invalid_or_unscoreable_count": 0,
+          "label_counts": {
+            "verified_pass": 6,
+            "wrong_api_semantics": 4
+          },
+          "missing_task_ids": [],
+          "pass_rate": 0.6,
+          "scoreable_count": 10,
+          "task_count": 10,
+          "verified_pass_count": 6
+        },
+        "headroom_pass": false,
+        "target_range": [
+          0.2,
+          0.7
+        ],
+        "train": {
+          "baseline_rows_present": 12,
+          "invalid_or_unscoreable_count": 1,
+          "label_counts": {
+            "timeout_or_context_exhaustion": 1,
+            "verified_pass": 7,
+            "wrong_api_semantics": 4
+          },
+          "missing_task_ids": [],
+          "pass_rate": 0.6364,
+          "scoreable_count": 11,
+          "task_count": 12,
+          "verified_pass_count": 7
+        }
+      },
+      "bridge_excluded_task_ids": [
+        "boltons__hist__011",
+        "boltons__hist__013",
+        "boltons__hist__014",
+        "boltons__hist__017"
+      ],
+      "dev_task_ids": [
+        "boltons__hist__006",
+        "boltons__hist__007",
+        "boltons__clean_ext__008",
+        "boltons__clean_ext__010"
+      ],
+      "estimated_paid_cells": {
+        "dev_tuned_candidates": 8,
+        "fresh_dev_baseline": 4,
+        "fresh_future_baseline_if_dev_gate_passes": 10,
+        "future_tuned_if_dev_gate_passes": 10,
+        "total_if_future_runs": 32
+      },
+      "future_task_ids_revealed": false,
+      "future_task_ids_sha256": "sha256:f259ea525144f291fe4a52edc5d3108121d917c6d4b8357257092690d49986fe",
+      "hidden_oracle_leakage_risk": "controlled: proposer input is train-only; future IDs are hashed until artifact freeze.",
+      "infrastructure_risk": "moderate: Kilo low-cost had 2 unscoreable Selection cells, but Holdout coverage was 10/10 scoreable.",
+      "mode": "single_time_ordered_future_validation",
+      "recurring_failure_count": 5,
+      "recurring_failure_labels": {
+        "timeout_or_context_exhaustion": 1,
+        "verified_pass": 7,
+        "wrong_api_semantics": 4
+      },
+      "selected_for_protocol": false,
+      "selection_reason": "rejected: dev baseline is above the preferred headroom range",
+      "target_agent_id": "kilo_gpt_5_4_mini",
+      "target_repo": "mahmoud/boltons",
+      "task_counts": {
+        "bridge_excluded": 4,
+        "dev": 4,
+        "future": 10,
+        "train": 12
+      },
+      "time_ranges": {
+        "dev": {
+          "end": "2020-04-21T02:03:26-07:00",
+          "start": "2020-03-25T10:22:48-04:00"
+        },
+        "future": {
+          "end": "2023-10-31T11:31:12-07:00",
+          "start": "2022-12-07T18:22:36-08:00"
+        },
+        "train": {
+          "end": "2020-01-06T22:29:17-08:00",
+          "start": "2015-04-19T00:13:33-07:00"
+        }
+      },
+      "train_task_ids": [
+        "boltons__supply_expansion_20260526__001",
+        "boltons__supply_expansion_20260526__002",
+        "boltons__supply_expansion_20260526__003",
+        "boltons__supply_expansion_20260526__004",
+        "boltons__supply_expansion_20260526__006",
+        "boltons__supply_expansion_20260526__019",
+        "boltons__supply_expansion_20260526__048",
+        "boltons__supply_expansion_20260526__066",
+        "boltons__supply_expansion_20260526__093",
+        "boltons__supply_expansion_20260526__095",
+        "boltons__supply_expansion_20260526__107",
+        "boltons__clean_ext__001"
+      ],
+      "window_id": "boltons_time_ordered_train12_dev4_future_holdout"
+    },
+    {
+      "baseline_headroom": {
+        "dev": {
+          "baseline_rows_present": 4,
+          "invalid_or_unscoreable_count": 1,
+          "label_counts": {
+            "timeout_or_context_exhaustion": 1,
+            "verified_pass": 3
+          },
+          "missing_task_ids": [],
+          "pass_rate": 1.0,
+          "scoreable_count": 3,
+          "task_count": 4,
+          "verified_pass_count": 3
+        },
+        "future": {
+          "baseline_rows_present": 10,
+          "invalid_or_unscoreable_count": 0,
+          "label_counts": {
+            "verified_pass": 6,
+            "wrong_api_semantics": 4
+          },
+          "missing_task_ids": [],
+          "pass_rate": 0.6,
+          "scoreable_count": 10,
+          "task_count": 10,
+          "verified_pass_count": 6
+        },
+        "headroom_pass": false,
+        "target_range": [
+          0.2,
+          0.7
+        ],
+        "train": {
+          "baseline_rows_present": 16,
+          "invalid_or_unscoreable_count": 1,
+          "label_counts": {
+            "timeout_or_context_exhaustion": 1,
+            "verified_pass": 10,
+            "wrong_api_semantics": 5
+          },
+          "missing_task_ids": [],
+          "pass_rate": 0.6667,
+          "scoreable_count": 15,
+          "task_count": 16,
+          "verified_pass_count": 10
+        }
+      },
+      "bridge_excluded_task_ids": [],
+      "dev_task_ids": [
+        "boltons__hist__011",
+        "boltons__hist__013",
+        "boltons__hist__014",
+        "boltons__hist__017"
+      ],
+      "estimated_paid_cells": {
+        "dev_tuned_candidates": 8,
+        "fresh_dev_baseline": 4,
+        "fresh_future_baseline_if_dev_gate_passes": 10,
+        "future_tuned_if_dev_gate_passes": 10,
+        "total_if_future_runs": 32
+      },
+      "future_task_ids_revealed": false,
+      "future_task_ids_sha256": "sha256:f259ea525144f291fe4a52edc5d3108121d917c6d4b8357257092690d49986fe",
+      "hidden_oracle_leakage_risk": "controlled: proposer input is train-only; future IDs are hashed until artifact freeze.",
+      "infrastructure_risk": "moderate: Kilo low-cost had 2 unscoreable Selection cells, but Holdout coverage was 10/10 scoreable.",
+      "mode": "single_time_ordered_future_validation",
+      "recurring_failure_count": 6,
+      "recurring_failure_labels": {
+        "timeout_or_context_exhaustion": 1,
+        "verified_pass": 10,
+        "wrong_api_semantics": 5
+      },
+      "selected_for_protocol": false,
+      "selection_reason": "rejected: dev baseline is saturated after excluding an unscoreable row",
+      "target_agent_id": "kilo_gpt_5_4_mini",
+      "target_repo": "mahmoud/boltons",
+      "task_counts": {
+        "bridge_excluded": 0,
+        "dev": 4,
+        "future": 10,
+        "train": 16
+      },
+      "time_ranges": {
+        "dev": {
+          "end": "2022-01-16T07:08:40+08:00",
+          "start": "2020-06-22T01:19:35-04:00"
+        },
+        "future": {
+          "end": "2023-10-31T11:31:12-07:00",
+          "start": "2022-12-07T18:22:36-08:00"
+        },
+        "train": {
+          "end": "2020-04-21T02:03:26-07:00",
+          "start": "2015-04-19T00:13:33-07:00"
+        }
+      },
+      "train_task_ids": [
+        "boltons__supply_expansion_20260526__001",
+        "boltons__supply_expansion_20260526__002",
+        "boltons__supply_expansion_20260526__003",
+        "boltons__supply_expansion_20260526__004",
+        "boltons__supply_expansion_20260526__006",
+        "boltons__supply_expansion_20260526__019",
+        "boltons__supply_expansion_20260526__048",
+        "boltons__supply_expansion_20260526__066",
+        "boltons__supply_expansion_20260526__093",
+        "boltons__supply_expansion_20260526__095",
+        "boltons__supply_expansion_20260526__107",
+        "boltons__clean_ext__001",
+        "boltons__hist__006",
+        "boltons__hist__007",
+        "boltons__clean_ext__008",
+        "boltons__clean_ext__010"
+      ],
+      "window_id": "boltons_time_ordered_train16_dev4_future_holdout"
+    }
+  ],
+  "generated_at": "2026-06-15T03:20:26+00:00",
+  "inventory": {
+    "agent_selection_demo_boltons_kilo_low_cost": {
+      "holdout_baseline_pass_rate": 0.6,
+      "holdout_scoreable_count": 10,
+      "holdout_task_count": 10,
+      "selection_baseline_pass_rate": 0.7222,
+      "selection_scoreable_count": 18,
+      "selection_task_count": 20,
+      "usable_for_phase2b_default_path": true
+    },
+    "attrs_click_selection_decision": "Do not select attrs/click for the default Phase 2b paid path: current Agent Tuning tooling and Kilo AGENTS.md action preflight are prepared for the boltons agent_selection_demo package map, while attrs/click need packaging and injection-runner repair before paid artifact tuning.",
+    "phase1_candidate_repos": {
+      "attrs": {
+        "eligible_task_count": 30,
+        "time_bucket_counts": {
+          "legacy_2018_or_earlier": 4,
+          "middle_2019_2022": 26
+        },
+        "with_any_committed_outcome_row": 25,
+        "with_both_adapter_rows": 25
+      },
+      "boltons": {
+        "eligible_task_count": 35,
+        "time_bucket_counts": {
+          "legacy_2018_or_earlier": 24,
+          "middle_2019_2022": 8,
+          "recent_2023_or_later": 3
+        },
+        "with_any_committed_outcome_row": 30,
+        "with_both_adapter_rows": 30
+      },
+      "click": {
+        "eligible_task_count": 30,
+        "time_bucket_counts": {
+          "middle_2019_2022": 4,
+          "recent_2023_or_later": 26
+        },
+        "with_any_committed_outcome_row": 28,
+        "with_both_adapter_rows": 28
+      }
+    },
+    "phase1_three_repo_paid_metrics": {
+      "attrs": {
+        "B_eval_pass_rate": 0.7,
+        "H_future_pass_rate": 0.35,
+        "scoreability_rate": 1.0
+      },
+      "boltons": {
+        "B_eval_pass_rate": 0.15,
+        "H_future_pass_rate": 0.4,
+        "scoreability_rate": 1.0
+      },
+      "click": {
+        "B_eval_pass_rate": 0.35,
+        "H_future_pass_rate": 0.75,
+        "scoreability_rate": 1.0
+      }
+    }
+  },
+  "paid_cells_run": 0,
+  "readiness_decision": {
+    "limitation": "Current Kilo low-cost boltons supply supports one strong time-ordered future-validation window, not a two-window rolling-origin claim. Later middle slices are saturated or too sparse.",
+    "paid_tuning_allowed_after_protocol_freeze": true,
+    "recommended_agent": "kilo_gpt_5_4_mini",
+    "recommended_surface": "repo_AGENTS_md",
+    "recommended_window_id": "boltons_time_ordered_w1_train2015_2018_dev2019_2020_future2022_2023",
+    "rolling_origin_multi_window_claim_feasible": false,
+    "status": "pass_time_ordered_single_window",
+    "time_ordered_future_validation_feasible": true
+  },
+  "schema_version": "barcarolle.agent_tuning_demo.phase2b_task_supply_headroom_audit.v1"
+}
