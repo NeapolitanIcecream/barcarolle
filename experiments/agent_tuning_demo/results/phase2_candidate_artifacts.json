@@ -1,0 +1,75 @@
+{
+  "candidate_artifacts": [
+    {
+      "artifact_id": "phase2-gepa-candidate-0",
+      "artifact_type": "agents_md_appendix",
+      "changed_files": [
+        "AGENTS.md"
+      ],
+      "files": [
+        {
+          "content": "# Barcarolle target-repo repair discipline\n\n- First localize the failing behavior to the listed editable implementation paths.\n- Preserve public behavior and do not edit tests, generated metadata, or benchmark artifacts.\n- Keep the patch minimal and compatible with existing boltons style.\n- Before final answer, run the most targeted public pytest command named in the task statement when feasible.\n- If the targeted command is too broad or unavailable, run the narrowest relevant public check and state that choice briefly.\n",
+          "workspace_relative_path": "AGENTS.md",
+          "write_mode": "append"
+        }
+      ],
+      "hash": "sha256:64eff8b3f94fa73f34493aa612e077729bde2842fd977dfa38f45f94719d0780",
+      "holdout_derived": false,
+      "intended_effect": "Improve Kilo low-cost target-repo repair discipline from Selection-train failure labels.",
+      "optimizer_source": "gepa_optimize_anything_custom_local_proposer",
+      "rollback_plan": "Remove the AGENTS.md appendix or discard the solver workspace.",
+      "schema_version": "barcarolle.agent_tuning_demo.tuning_artifact.v1",
+      "target_agent": "kilo_workspace",
+      "visible_to_optimizer": true
+    },
+    {
+      "artifact_id": "phase2-gepa-candidate-1",
+      "artifact_type": "agents_md_appendix",
+      "changed_files": [
+        "AGENTS.md"
+      ],
+      "files": [
+        {
+          "content": "# Barcarolle target-repo repair discipline\n\n- First localize the failing behavior to the listed editable implementation paths.\n- Preserve public behavior and do not edit tests, generated metadata, or benchmark artifacts.\n- Keep the patch minimal and compatible with existing boltons style.\n- Before final answer, run the most targeted public pytest command named in the task statement when feasible.\n- If the targeted command is too broad or unavailable, run the narrowest relevant public check and state that choice briefly.\n\n## Failure-driven additions\n- For API behavior changes, inspect adjacent tests and existing docstrings to preserve edge-case semantics before changing code.\n- Prefer one direct implementation path and one focused verification loop; stop exploring once the relevant function is found.\n- Do not include task-specific file names in this appendix; apply these rules generally across boltons tasks.\n",
+          "workspace_relative_path": "AGENTS.md",
+          "write_mode": "append"
+        }
+      ],
+      "hash": "sha256:59f72edee9f4ff321c190c4f80443132b12f6c295486e315308697643d9ded3a",
+      "holdout_derived": false,
+      "intended_effect": "Improve Kilo low-cost target-repo repair discipline from Selection-train failure labels.",
+      "optimizer_source": "gepa_optimize_anything_custom_local_proposer",
+      "rollback_plan": "Remove the AGENTS.md appendix or discard the solver workspace.",
+      "schema_version": "barcarolle.agent_tuning_demo.tuning_artifact.v1",
+      "target_agent": "kilo_workspace",
+      "visible_to_optimizer": true
+    }
+  ],
+  "candidate_count": 2,
+  "generated_at": "2026-06-15T02:22:42+00:00",
+  "gepa_result": {
+    "best_idx": 1,
+    "failure_example_count": 3,
+    "num_candidates": 2,
+    "total_metric_calls": 12,
+    "val_aggregate_scores": [
+      0.0,
+      3.0
+    ]
+  },
+  "holdout_derived_candidates_rejected": true,
+  "label_counts": {
+    "timeout_or_context_exhaustion": 2,
+    "verified_pass": 13,
+    "wrong_api_semantics": 1
+  },
+  "max_candidates_total": 3,
+  "max_iterations": 2,
+  "max_metric_calls": 24,
+  "optimizer": "gepa_optimize_anything_custom_local_proposer",
+  "optimizer_error": null,
+  "schema_version": "barcarolle.agent_tuning_demo.phase2_candidate_artifacts.v1",
+  "status": "gepa_optimize_anything_custom_local_proposer",
+  "surface": "repo_AGENTS_md",
+  "target_agent_id": "kilo_gpt_5_4_mini"
+}

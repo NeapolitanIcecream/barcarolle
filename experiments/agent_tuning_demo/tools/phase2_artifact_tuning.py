@@ -923,14 +923,15 @@ def run_gepa_candidate_generation() -> dict[str, Any]:
         del reflective_dataset, components_to_update
         return {"artifact": propose_candidate_text(candidate["artifact"], label_counts)}
 
+    failure_examples = [row for row in optimizer_rows if row["failure_label"] != "verified_pass"] or optimizer_rows
     config = oa.GEPAConfig(
-        engine=oa.EngineConfig(max_metric_calls=4, max_candidate_proposals=1, display_progress_bar=False, parallel=False),
+        engine=oa.EngineConfig(max_metric_calls=24, max_candidate_proposals=1, display_progress_bar=False, parallel=False),
         reflection=oa.ReflectionConfig(custom_candidate_proposer=proposer, reflection_lm=None),
     )
     result = oa.optimize_anything(
         seed_candidate={"artifact": seed_artifact_text()},
         evaluator=evaluator,
-        dataset=[{"id": row["task_id"], "label": row["failure_label"]} for row in optimizer_rows],
+        dataset=[{"id": row["task_id"], "label": row["failure_label"]} for row in failure_examples],
         objective="Improve a general Kilo AGENTS.md appendix for boltons repair tasks without using Holdout evidence.",
         config=config,
     )
@@ -950,6 +951,7 @@ def run_gepa_candidate_generation() -> dict[str, Any]:
             "num_candidates": result.num_candidates,
             "best_idx": result.best_idx,
             "val_aggregate_scores": list(result.val_aggregate_scores),
+            "failure_example_count": len(failure_examples),
         },
         "label_counts": label_counts,
     }
@@ -969,7 +971,7 @@ def candidate_payload() -> dict[str, Any]:
         "surface": TARGET_SURFACE,
         "max_iterations": 2,
         "max_candidates_total": 3,
-        "max_metric_calls": 4,
+        "max_metric_calls": 24,
         "candidate_count": len(generation["candidate_artifacts"]),
         "candidate_artifacts": generation["candidate_artifacts"],
         "gepa_result": generation["gepa_result"],
