@@ -12,6 +12,7 @@ for path in [TOOLS, PHASE0_TOOLS]:
         sys.path.insert(0, str(path))
 
 import agent_selection_demo as demo  # noqa: E402
+import boltons_small_expansion as boltons_expansion  # noqa: E402
 import workspace_acut_run as workspace  # noqa: E402
 
 
@@ -496,6 +497,66 @@ def test_hrd_metadata_scores_ignore_outcome_like_future_fields() -> None:
 
     assert demo.metadata_disagreement_scores(rows) == demo.metadata_disagreement_scores(changed_future)
     assert demo.select_hrd_disagreement_only(rows, k=1)["selected_task_ids"] == demo.select_hrd_disagreement_only(changed_future, k=1)["selected_task_ids"]
+
+
+def test_boltons_small_expansion_pool_dedupes_current_and_v2_by_target_commit() -> None:
+    config = demo.load_config(demo.ROOT / demo.DEFAULT_CONFIG)
+
+    packages, stats = boltons_expansion.load_expanded_pool(config)
+
+    assert stats["current_certified_count"] == 35
+    assert stats["phase1_v2_release_eligible_count"] == 35
+    assert stats["incremental_v2_by_target_commit_count"] == 22
+    assert stats["combined_unique_target_commit_count"] == 57
+    assert len({package.target_commit for package in packages}) == 57
+
+
+def test_boltons_small_expansion_manifest_is_strictly_chronological_30_20() -> None:
+    config = demo.load_config(demo.ROOT / demo.DEFAULT_CONFIG)
+
+    manifest = boltons_expansion.build_manifest(config)
+
+    assert manifest["selection_count"] == 30
+    assert manifest["later_check_count"] == 20
+    assert manifest["displayed_task_count"] == 50
+    selection_end = boltons_expansion.parse_time(manifest["time_ranges"]["selection_end"])
+    later_start = boltons_expansion.parse_time(manifest["time_ranges"]["later_check_start"])
+    assert selection_end < later_start
+    assert manifest["selection_tasks"][-1] != manifest["later_check_tasks"][0]
+
+
+def test_boltons_strict_rolling_origin_uses_task_time_order_not_split_labels() -> None:
+    manifest = {
+        "agent_ids": ["agent_a", "agent_b"],
+        "task_rows": [
+            {
+                "task_id": f"task_{index:02d}",
+                "task_time": f"2020-01-{index + 1:02d}T00:00:00Z",
+                "final_role": "later_check" if index < 12 else "selection",
+            }
+            for index in range(22)
+        ],
+    }
+    rows = []
+    for index in range(22):
+        for agent_id in ["agent_a", "agent_b"]:
+            rows.append(
+                {
+                    "task_id": f"task_{index:02d}",
+                    "agent_id": agent_id,
+                    "reviewer_name": agent_id,
+                    "scoreable_cell": True,
+                    "verified_pass": agent_id == "agent_a" or index % 2 == 0,
+                }
+            )
+
+    summary = boltons_expansion.strict_rolling_origin(manifest, rows, window_size=10, write_outputs=False)
+
+    assert summary["uses_actual_task_time"] is True
+    assert summary["does_not_use_heldout_split_labels_as_origins"] is True
+    assert summary["origin_count"] == 1
+    assert summary["origins"][0]["origin_index"] == 10
+    assert summary["origins"][0]["selection_task_ids"] == [f"task_{index:02d}" for index in range(10)]
 
 
 def test_corrected_protocol_freezes_phase1_selection_without_score_join() -> None:
