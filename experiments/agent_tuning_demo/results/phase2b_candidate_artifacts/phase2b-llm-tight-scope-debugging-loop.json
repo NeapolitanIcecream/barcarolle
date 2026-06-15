@@ -1,0 +1,32 @@
+{
+  "artifact_id": "phase2b-llm-tight-scope-debugging-loop",
+  "artifact_type": "agents_md_appendix",
+  "changed_files": [
+    "AGENTS.md"
+  ],
+  "evidence_task_ids": [
+    "boltons__supply_expansion_20260526__002",
+    "boltons__supply_expansion_20260526__001",
+    "boltons__supply_expansion_20260526__006"
+  ],
+  "expected_behavior_change": "Repairs will stay focused on the observed failure and converge faster on a correct, minimal change.",
+  "files": [
+    {
+      "content": "## When a repair is unstable\n- Work from the smallest reproducible input and verify each transformation step in isolation before broadening the fix.\n- If progress stalls, reduce the change surface instead of widening it; prefer a local correction over a redesign.\n- Re-run the targeted checks after each meaningful adjustment so regressions are caught while the context is still fresh.\n- Keep the fix aligned with the observed failure mode, not with incidental implementation details that may vary across similar cases.\n",
+      "workspace_relative_path": "AGENTS.md",
+      "write_mode": "append"
+    }
+  ],
+  "hash": "sha256:b81595bdc5a9837e017af295ff66b62f515b881ec0e03b87f01ffcf8f4d3884e",
+  "holdout_derived": false,
+  "intended_effect": "Repairs will stay focused on the observed failure and converge faster on a correct, minimal change.",
+  "optimizer_source": "phase2b_llm_gepa_shaped_reflective_proposer",
+  "rollback_plan": "If the narrowed approach still fails, undo the latest incremental edits and restart from the smallest verified input path.",
+  "schema_version": "barcarolle.agent_tuning_demo.tuning_artifact.v1",
+  "target_agent": "kilo_workspace",
+  "targeted_failure_labels": [
+    "timeout_or_context_exhaustion",
+    "wrong_api_semantics"
+  ],
+  "visible_to_optimizer": true
+}

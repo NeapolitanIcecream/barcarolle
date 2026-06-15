@@ -832,6 +832,43 @@ def run_llm_proposer() -> dict[str, Any]:
         completion = post_chat_completion(messages + [{"role": "assistant", "content": completion}, {"role": "user", "content": repair}], raw_dir, 2)
         calls += 1
         parsed = extract_json_payload(completion)
+    initial_candidates = parsed.get("candidates") if isinstance(parsed.get("candidates"), list) else []
+    reflection_prompt = json.dumps(
+        {
+            "task": "Reflect on the initial candidates and return revised JSON candidates.",
+            "reflection_criteria": [
+                "Keep evidence_task_ids train-only.",
+                "Prefer guidance that generalizes across recurring wrong_api_semantics and timeout_or_context_exhaustion labels.",
+                "Avoid overfitting to one module name if a broader repair discipline would be safer.",
+                "Keep the appendix concise and deployable as AGENTS.md text.",
+                "Return JSON only with the same candidates schema.",
+            ],
+            "label_counts": outcome_metrics(protocol["selected_windows"][0]["train_task_ids"])["label_counts"],
+            "initial_candidates": initial_candidates,
+        },
+        indent=2,
+        ensure_ascii=False,
+    )
+    try:
+        reflection_completion = post_chat_completion(
+            messages
+            + [
+                {"role": "assistant", "content": completion},
+                {"role": "user", "content": reflection_prompt},
+            ],
+            raw_dir,
+            calls + 1,
+        )
+        calls += 1
+        reflected = extract_json_payload(reflection_completion)
+        if reflected.get("candidates"):
+            parsed = reflected
+            reflection_used = True
+        else:
+            reflection_used = False
+    except Exception as exc:
+        (raw_dir / "reflection_error.txt").write_text(f"{type(exc).__name__}: {exc}\n", encoding="utf-8")
+        reflection_used = False
     candidates = parsed.get("candidates")
     if not isinstance(candidates, list) or not candidates:
         raise RuntimeError("LLM proposer returned no candidates")
@@ -848,6 +885,7 @@ def run_llm_proposer() -> dict[str, Any]:
         "train_evidence_count": len(evidence),
         "label_counts": outcome_metrics(protocol["selected_windows"][0]["train_task_ids"])["label_counts"],
         "candidate_artifacts": artifacts[:MAX_CANDIDATES],
+        "reflection_used": reflection_used,
     }
 
 
@@ -861,6 +899,7 @@ def write_proposer_integration() -> None:
         proposer_calls = result["proposer_calls"]
         label_counts = result["label_counts"]
         train_evidence_count = result["train_evidence_count"]
+        reflection_used = result["reflection_used"]
     except Exception as exc:
         status = "llm_proposer_blocked"
         error = f"{type(exc).__name__}: {exc}"
@@ -869,6 +908,7 @@ def write_proposer_integration() -> None:
         proposer_calls = 0
         label_counts = {}
         train_evidence_count = 0
+        reflection_used = False
     CANDIDATE_DIR.mkdir(parents=True, exist_ok=True)
     for artifact in artifacts:
         write_json(CANDIDATE_DIR / f"{artifact['artifact_id']}.json", artifact)
@@ -889,6 +929,7 @@ def write_proposer_integration() -> None:
         "error": error,
         "llm_proposer_used": status == "llm_proposer_complete",
         "proposer_calls": proposer_calls,
+        "reflection_iterations_used": 1 if reflection_used else 0,
         "proposer_calls_cap": MAX_PROPOSER_CALLS,
         "raw_prompt_completion_path_ignored": None if raw_dir is None else display_path(raw_dir),
         "raw_prompt_completion_committed": False,
@@ -918,6 +959,7 @@ def write_proposer_integration() -> None:
         f"Status: `{status}`.",
         f"LLM proposer used: `{integration_payload['llm_proposer_used']}`.",
         f"Proposer calls: `{proposer_calls}` / `{MAX_PROPOSER_CALLS}`.",
+        f"Reflection iterations used: `{integration_payload['reflection_iterations_used']}`.",
         "- Raw prompt/completion content is stored only under ignored `experiments/phase0_headroom/results/raw/...` paths.",
         "",
         "## Candidates",
