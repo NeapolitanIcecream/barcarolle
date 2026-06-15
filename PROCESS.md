@@ -3,7 +3,7 @@
 This file records repository-wide process decisions that future coding-agent
 sessions should know before planning or executing Barcarolle work.
 
-Last updated: 2026-06-14.
+Last updated: 2026-06-15.
 
 ## Maintenance Rules
 
@@ -280,6 +280,20 @@ LLM-driven train-only artifact proposal; no tuned improvement or rolling-origin
 claim is supported. Canonical closeout:
 `experiments/agent_tuning_demo/reports/phase2b_closeout_zh.md` and
 `experiments/agent_tuning_demo/results/phase2b_closeout.json`.
+
+The boltons task-generator capacity audit completed on 2026-06-15 with
+terminal state `return_to_target_repo_selection`. Conservative boltons supply
+is 35 current release tasks plus 22 incremental no-paid dry-run release tasks,
+for 57 projected release tasks; an optimistic 64-task count depends on source
+context repair. Count-only partitioning can make two windows, but current
+Kilo-low-cost headroom evidence still supports only one Phase 2b-style window.
+Do not run another boltons paid tuning pilot for a stronger rolling-origin
+claim. Next no-paid target-prep fallback is `python-attrs/attrs`; keep `click`
+as a supply-ready backup if attrs packaging or verifier repair stalls.
+Canonical audit:
+`experiments/agent_tuning_demo/reports/boltons_capacity_final_recommendation_zh.md`
+and
+`experiments/agent_tuning_demo/results/boltons_capacity_final_recommendation.json`.
 
 Agent License remains a possible downstream product, but it is not the current
 research proof or active architecture. Historical license/admission material is

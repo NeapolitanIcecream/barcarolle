@@ -1,0 +1,76 @@
+{
+  "best_fallback_repository": "python-attrs/attrs",
+  "certification_dry_run_conversion_estimate": {
+    "gross_attempt_release_rate": 0.4375,
+    "new_attempt_release_rate": 0.3793,
+    "use_conservative_incremental_release_count": 22
+  },
+  "confidence": "medium_high",
+  "current_boltons_supply_counts": {
+    "certified_task_files_deduped": 35,
+    "certified_task_files_release_rows": 35,
+    "deduped_candidate_tasks_across_candidate_like_sources": 433,
+    "phase1_current_raw_candidate_rows": 222,
+    "phase1_current_unique_raw_candidates": 162,
+    "phase1_v2_raw_candidates": 233,
+    "phase2b_selected_window_train_dev_future_tasks": 26,
+    "release_eligible_tasks_in_selector_table": 35,
+    "tasks_all_scoreable_across_four_agents": 26,
+    "tasks_with_complete_four_agent_outcome_rows": 30,
+    "tasks_with_current_kilo_low_cost_rows": 30,
+    "tasks_with_current_kilo_low_cost_scoreable_rows": 28
+  },
+  "decision": "Return to target-repository selection / target-prep instead of expanding boltons for the next stronger rolling-origin Agent Tuning Demo.",
+  "decision_gates": {
+    "at_least_two_evidence_backed_windows": false,
+    "at_least_two_windows_meet_min_counts_count_only": true,
+    "dev_or_future_headroom_not_saturated": true,
+    "dominant_failure_labels_actionable": false,
+    "estimated_paid_cost_reasonable": true,
+    "optimistic_small_repair_projection_ge_60": true,
+    "projected_certified_tasks_after_bounded_expansion_ge_60": false
+  },
+  "do_next": "Prepare attrs as the next no-paid target-repository readiness pass, with click as backup if attrs environment repair stalls.",
+  "do_not_do_next": "Do not run another boltons paid tuning pilot or future-validation cell until there are at least two evidence-backed windows or the user explicitly accepts a weaker single-window story.",
+  "fallback_minimal_no_paid_work": [
+    "Add attrs target profile and derive repo/fallback statement text from config instead of boltons constants.",
+    "Materialize or formally reference the 31-task attrs release manifest.",
+    "Pin/repair attrs verifier environment and run at least three no-paid replay samples plus a split/freeze dry run."
+  ],
+  "generated_at": "2026-06-15T05:08:30+00:00",
+  "key_uncertainties": [
+    "Whether small source-context repair can safely promote the seven technical-certified commit-message-only rows.",
+    "Whether newly certified boltons tasks have useful Kilo baseline headroom; current outcomes do not cover them.",
+    "Whether click should supersede attrs if the coordinator values supply readiness over current Process handoff alignment."
+  ],
+  "next_paid_pilot_cost_estimate_if_continuing": {
+    "basis": "Phase 2b dev observed cost divided by paid Agent cells; proposer costs excluded because this audit runs no paid LLM calls.",
+    "estimated_cost_per_agent_cell_usd": 0.049859,
+    "observed_phase2b_dev_cells": 18,
+    "observed_phase2b_dev_cost_usd": 0.8974602,
+    "phase2b_style_single_window_6_dev_10_future_cells": 38,
+    "phase2b_style_single_window_6_dev_10_future_cost_usd": 1.8946,
+    "single_min_window_dev_only_cells": 18,
+    "single_min_window_dev_only_cost_usd": 0.8975,
+    "single_min_window_if_future_runs_cells": 34,
+    "single_min_window_if_future_runs_cost_usd": 1.6952,
+    "two_min_windows_dev_only_cells": 36,
+    "two_min_windows_dev_only_cost_usd": 1.7949,
+    "two_min_windows_if_both_future_run_cells": 68,
+    "two_min_windows_if_both_future_run_cost_usd": 3.3904
+  },
+  "paid_cells_run": 0,
+  "projected_boltons_supply_counts": {
+    "conservative_release_after_bounded_expansion": 57,
+    "incremental_release_eligible": 22,
+    "optimistic_release_after_small_source_repair": 64,
+    "technical_certified_needing_source_repair": 7
+  },
+  "rolling_origin_window_capacity": {
+    "count_only_two_windows_possible": true,
+    "evidence_backed_phase2b_style_windows": 1,
+    "result": "count_capacity_after_expansion_but_evidence_underpowered"
+  },
+  "schema_version": "barcarolle.agent_tuning_demo.boltons_capacity_final_recommendation.v1",
+  "terminal_state": "return_to_target_repo_selection"
+}
