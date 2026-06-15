@@ -1374,7 +1374,7 @@ def write_dev_report(payload: dict[str, Any]) -> None:
 
 
 def write_future_report(payload: dict[str, Any]) -> None:
-    paired = payload.get("paired", {})
+    paired = payload.get("paired") or {}
     rows = [
         {
             "Condition": condition,
