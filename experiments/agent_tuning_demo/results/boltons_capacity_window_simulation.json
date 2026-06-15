@@ -1,0 +1,211 @@
+{
+  "combined_projected_pool": {
+    "current_release_tasks": 35,
+    "incremental_release_tasks": 22,
+    "module_counts": {
+      "cacheutils": 4,
+      "dictutils": 3,
+      "fileutils+jsonutils": 1,
+      "funcutils": 8,
+      "ioutils": 6,
+      "iterutils": 9,
+      "listutils": 1,
+      "mathutils": 1,
+      "queueutils": 1,
+      "setutils": 8,
+      "socketutils": 1,
+      "strutils": 3,
+      "tbutils": 6,
+      "timeutils": 3,
+      "urlutils": 2
+    },
+    "projected_release_tasks_conservative": 57,
+    "source_counts": {
+      "current_release_selector_table": 35,
+      "incremental_v2_release_eligible": 22
+    },
+    "time_bucket_counts": {
+      "legacy_2018_or_earlier": 25,
+      "middle_2019_2022": 20,
+      "recent_2023_or_later": 12
+    }
+  },
+  "count_only_two_windows_meet_min_counts": true,
+  "credible_phase2b_style_windows_with_current_outcome_headroom": 1,
+  "current_phase2b_evidence_window": {
+    "decision": "best single-window default path: dev pass rate is inside target range and future Holdout pass rate is 6/10",
+    "dev_pass_rate": 0.6667,
+    "dev_result": "phase2b_dev_negative; both tuned candidates matched baseline 4/6 -> 4/6",
+    "future_pass_rate": 0.6,
+    "train_dev_future_counts": {
+      "bridge_excluded": 4,
+      "dev": 6,
+      "future": 10,
+      "train": 10
+    },
+    "window_id": "boltons_time_ordered_w1_train2015_2018_dev2019_2020_future2022_2023"
+  },
+  "generated_at": "2026-06-15T05:08:30+00:00",
+  "interpretation": "The projected 57-task pool can be partitioned into count-only time-ordered windows, but only one window has current Kilo low-cost outcome/headroom evidence. The incremental release rows do not add recent future coverage, so a stronger multi-window demo would still depend on paid baseline discovery and source repair.",
+  "paid_cells_run": 0,
+  "paid_cost_estimate": {
+    "basis": "Phase 2b dev observed cost divided by paid Agent cells; proposer costs excluded because this audit runs no paid LLM calls.",
+    "estimated_cost_per_agent_cell_usd": 0.049859,
+    "observed_phase2b_dev_cells": 18,
+    "observed_phase2b_dev_cost_usd": 0.8974602,
+    "phase2b_style_single_window_6_dev_10_future_cells": 38,
+    "phase2b_style_single_window_6_dev_10_future_cost_usd": 1.8946,
+    "single_min_window_dev_only_cells": 18,
+    "single_min_window_dev_only_cost_usd": 0.8975,
+    "single_min_window_if_future_runs_cells": 34,
+    "single_min_window_if_future_runs_cost_usd": 1.6952,
+    "two_min_windows_dev_only_cells": 36,
+    "two_min_windows_dev_only_cost_usd": 1.7949,
+    "two_min_windows_if_both_future_run_cells": 68,
+    "two_min_windows_if_both_future_run_cost_usd": 3.3904
+  },
+  "projected_windows": [
+    {
+      "baseline_headroom_status": "known_for_current_outcome_rows_only",
+      "credibility": "count_only_requires_fresh_baseline_and_headroom_check",
+      "dev": {
+        "count": 6,
+        "current_kilo_outcome_count": 1,
+        "end": "2017-01-22T18:45:47-08:00",
+        "module_counts": {
+          "funcutils": 1,
+          "ioutils": 4,
+          "tbutils": 1
+        },
+        "source_counts": {
+          "current_release_selector_table": 1,
+          "incremental_v2_release_eligible": 5
+        },
+        "start": "2016-10-24T07:19:32-05:00",
+        "time_bucket_counts": {
+          "legacy_2018_or_earlier": 6
+        }
+      },
+      "future": {
+        "count": 8,
+        "current_kilo_outcome_count": 2,
+        "end": "2018-12-23T23:04:54-08:00",
+        "module_counts": {
+          "cacheutils": 1,
+          "funcutils": 1,
+          "ioutils": 1,
+          "setutils": 1,
+          "strutils": 2,
+          "timeutils": 1,
+          "urlutils": 1
+        },
+        "source_counts": {
+          "current_release_selector_table": 2,
+          "incremental_v2_release_eligible": 6
+        },
+        "start": "2017-04-13T23:58:21-07:00",
+        "time_bucket_counts": {
+          "legacy_2018_or_earlier": 8
+        }
+      },
+      "meets_min_counts": true,
+      "time_ordered": true,
+      "train": {
+        "count": 10,
+        "current_kilo_outcome_count": 7,
+        "end": "2016-08-03T02:11:02-07:00",
+        "module_counts": {
+          "cacheutils": 2,
+          "funcutils": 1,
+          "iterutils": 2,
+          "strutils": 1,
+          "tbutils": 4
+        },
+        "source_counts": {
+          "current_release_selector_table": 7,
+          "incremental_v2_release_eligible": 3
+        },
+        "start": "2015-04-19T00:13:33-07:00",
+        "time_bucket_counts": {
+          "legacy_2018_or_earlier": 10
+        }
+      },
+      "window_id": "boltons_projected_count_w1_train10_dev6_future8",
+      "window_kind": "projected_count_only"
+    },
+    {
+      "baseline_headroom_status": "known_for_current_outcome_rows_only",
+      "credibility": "count_only_requires_fresh_baseline_and_headroom_check",
+      "dev": {
+        "count": 6,
+        "current_kilo_outcome_count": 1,
+        "end": "2019-02-12T15:15:17-05:00",
+        "module_counts": {
+          "dictutils": 1,
+          "funcutils": 1,
+          "mathutils": 1,
+          "setutils": 3
+        },
+        "source_counts": {
+          "current_release_selector_table": 1,
+          "incremental_v2_release_eligible": 5
+        },
+        "start": "2018-12-24T11:37:08-08:00",
+        "time_bucket_counts": {
+          "legacy_2018_or_earlier": 1,
+          "middle_2019_2022": 5
+        }
+      },
+      "future": {
+        "count": 8,
+        "current_kilo_outcome_count": 5,
+        "end": "2020-04-21T02:03:26-07:00",
+        "module_counts": {
+          "funcutils": 1,
+          "iterutils": 1,
+          "queueutils": 1,
+          "setutils": 4,
+          "socketutils": 1
+        },
+        "source_counts": {
+          "current_release_selector_table": 5,
+          "incremental_v2_release_eligible": 3
+        },
+        "start": "2019-02-13T12:18:00+01:00",
+        "time_bucket_counts": {
+          "middle_2019_2022": 8
+        }
+      },
+      "meets_min_counts": true,
+      "time_ordered": true,
+      "train": {
+        "count": 24,
+        "current_kilo_outcome_count": 10,
+        "end": "2018-12-23T23:04:54-08:00",
+        "module_counts": {
+          "cacheutils": 3,
+          "funcutils": 3,
+          "ioutils": 5,
+          "iterutils": 2,
+          "setutils": 1,
+          "strutils": 3,
+          "tbutils": 5,
+          "timeutils": 1,
+          "urlutils": 1
+        },
+        "source_counts": {
+          "current_release_selector_table": 10,
+          "incremental_v2_release_eligible": 14
+        },
+        "start": "2015-04-19T00:13:33-07:00",
+        "time_bucket_counts": {
+          "legacy_2018_or_earlier": 24
+        }
+      },
+      "window_id": "boltons_projected_count_w2_train24_dev6_future8",
+      "window_kind": "projected_count_only_nonoverlap_future"
+    }
+  ],
+  "rolling_origin_capacity_result": "count_capacity_after_expansion_but_evidence_underpowered",
+  "schema_version": "barcarolle.agent_tuning_demo.boltons_capacity_window_simulation.v1"
+}
