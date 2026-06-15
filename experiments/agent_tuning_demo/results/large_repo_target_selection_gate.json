@@ -1,0 +1,3960 @@
+{
+  "backup_recommendation": {
+    "classification": "capacity_promising_but_speed_unproven",
+    "count_feasible_rolling_origin_windows": 3,
+    "environment_risk": "low_to_medium_network_mocking",
+    "estimated_release_eligible_volume": 60,
+    "expected_evaluation_speed_class": "ideal",
+    "expected_paid_baseline_discovery_cells": 240,
+    "historical_reference_probe": {
+      "dominant_failure_labels": {},
+      "mode": "not_run",
+      "pass_count": 0,
+      "sample_size": 0
+    },
+    "likely_verifier_command": "python -m pytest <httpx mocked client test> -q",
+    "projected_certified_task_count_after_bounded_repair": 60,
+    "projected_evidence_backed_rolling_origin_windows": 2,
+    "reason": "run targeted verifier smoke before any recommendation",
+    "repo_id": "httpx",
+    "repo_url": "https://github.com/encode/httpx.git",
+    "rough_paid_baseline_cost_usd_range": {
+      "high": 108.0,
+      "low": 48.0
+    },
+    "targeted_verifier_timing": {
+      "median_seconds": null,
+      "p95_seconds": null,
+      "pass_count": 0,
+      "sample_count": 0,
+      "speed_class": "not_measured"
+    },
+    "track": "medium_large_fast"
+  },
+  "candidate_metrics": [
+    {
+      "bounded_certification_sample": {
+        "dominant_failure_labels": {},
+        "mode": "bounded_task_shape_certification_not_paid_agent_replay",
+        "pass_count": 24,
+        "sample_size": 24
+      },
+      "changed_test_oracle_availability": "changed_tests_available",
+      "changed_test_oracle_availability_count": 42,
+      "checkout_status": "clean",
+      "classification": "screened_out",
+      "clone_status": {
+        "local_path": "experiments/phase0_headroom/external_repos/boltons",
+        "status": "already_present"
+      },
+      "count_feasible_rolling_origin_windows": 2,
+      "deep_probe": true,
+      "environment_risk": "low",
+      "estimated_candidate_volume": 202,
+      "estimated_release_eligible_volume": 57,
+      "expected_evaluation_speed_class": "ideal",
+      "expected_paid_baseline_discovery_cells": 228,
+      "head_short": "207651e",
+      "historical_reference_probe": {
+        "mode": "not_run",
+        "pass_count": 0,
+        "results": [],
+        "sample_size": 0
+      },
+      "history_date_span": {
+        "first_commit": "2013-02-19T18:04:47-08:00",
+        "latest_commit": "2026-03-06T14:18:37-08:00"
+      },
+      "history_scan_cap": 5000,
+      "history_scan_capped": false,
+      "history_scan_since": "2010-01-01",
+      "implementation_change_count": 1142,
+      "implementation_plus_test_change_count": 202,
+      "likely_verifier_command": "python -m pytest <changed_tests> -q",
+      "local_path": "experiments/phase0_headroom/external_repos/boltons",
+      "prior_evidence": {
+        "evidence_backed_windows": 1,
+        "known_certification_attempts": 80,
+        "known_current_release_eligible": 35,
+        "known_release_conversion": 0.3793103448275862,
+        "known_release_eligible": 57,
+        "known_technical_certified": 0,
+        "prior_note": "57 projected release tasks; only one evidence-backed tuning window.",
+        "prior_probe_attempts": 0,
+        "prior_probe_release_eligible": 0,
+        "prior_probe_technical_certified": 0,
+        "prior_release_ready_before_certification": 0,
+        "prior_source": "phase1_third_repo_release_supply_screen",
+        "prior_technical_plus_review_upper_bound": 0
+      },
+      "projected_certified_task_count_after_bounded_repair": 57,
+      "projected_evidence_backed_rolling_origin_windows": 0,
+      "reason_to_deep_probe_or_reject": "screened out by capacity, checkout, or source/oracle availability",
+      "repo_id": "boltons",
+      "repo_url": "https://github.com/mahmoud/boltons.git",
+      "rolling_origin_windows_raw": [
+        {
+          "dev_count": 72,
+          "future_count": 88,
+          "train_count": 42,
+          "window_id": "train_lt_2016_dev_2016_2017_future_gte_2018"
+        },
+        {
+          "dev_count": 43,
+          "future_count": 73,
+          "train_count": 86,
+          "window_id": "train_lt_2017_dev_2017_2018_future_gte_2019"
+        },
+        {
+          "dev_count": 42,
+          "future_count": 46,
+          "train_count": 114,
+          "window_id": "train_lt_2018_dev_2018_2019_future_gte_2020"
+        },
+        {
+          "dev_count": 41,
+          "future_count": 32,
+          "train_count": 129,
+          "window_id": "train_lt_2019_dev_2019_2020_future_gte_2021"
+        },
+        {
+          "dev_count": 18,
+          "future_count": 28,
+          "train_count": 156,
+          "window_id": "train_lt_2020_dev_2020_2021_future_gte_2022"
+        },
+        {
+          "dev_count": 9,
+          "future_count": 23,
+          "train_count": 170,
+          "window_id": "train_lt_2021_dev_2021_2022_future_gte_2023"
+        },
+        {
+          "dev_count": 15,
+          "future_count": 13,
+          "train_count": 174,
+          "window_id": "train_lt_2022_dev_2022_2023_future_gte_2024"
+        }
+      ],
+      "rolling_origin_windows_release_ready": [
+        {
+          "dev_count": 10,
+          "future_count": 18,
+          "train_count": 14,
+          "window_id": "train_lt_2019_dev_2019_2020_future_gte_2021"
+        },
+        {
+          "dev_count": 11,
+          "future_count": 14,
+          "train_count": 17,
+          "window_id": "train_lt_2020_dev_2020_2021_future_gte_2022"
+        }
+      ],
+      "rough_paid_baseline_cost_usd_range": {
+        "high": 102.6,
+        "low": 45.6
+      },
+      "setup_test_smoke": [],
+      "source_context_availability": "thin_but_usable_pr_or_issue_title_context",
+      "targeted_verifier_timing": {
+        "median_seconds": null,
+        "p95_seconds": null,
+        "pass_count": 0,
+        "sample_count": 0,
+        "speed_class": "not_measured"
+      },
+      "test_change_count": 289,
+      "time_bucket_distribution": {
+        "2016_2019": 114,
+        "2020_2023": 33,
+        "2024_plus": 13,
+        "pre_2016": 42
+      },
+      "total_commits": 1611,
+      "total_commits_scanned": 1611,
+      "track": "baseline",
+      "visible_setup_smoke_status": "not_run"
+    },
+    {
+      "bounded_certification_sample": {
+        "dominant_failure_labels": {},
+        "mode": "bounded_task_shape_certification_not_paid_agent_replay",
+        "pass_count": 24,
+        "sample_size": 24
+      },
+      "changed_test_oracle_availability": "changed_tests_available",
+      "changed_test_oracle_availability_count": 249,
+      "checkout_status": "clean",
+      "classification": "screened_out",
+      "clone_status": {
+        "local_path": "experiments/phase0_headroom/external_repos/attrs",
+        "status": "already_present"
+      },
+      "count_feasible_rolling_origin_windows": 7,
+      "deep_probe": true,
+      "environment_risk": "low",
+      "estimated_candidate_volume": 361,
+      "estimated_release_eligible_volume": 31,
+      "expected_evaluation_speed_class": "ideal",
+      "expected_paid_baseline_discovery_cells": 124,
+      "head_short": "89fae83",
+      "historical_reference_probe": {
+        "mode": "not_run",
+        "pass_count": 0,
+        "results": [],
+        "sample_size": 0
+      },
+      "history_date_span": {
+        "first_commit": "2015-01-27T17:53:17+01:00",
+        "latest_commit": "2026-06-06T09:07:31+02:00"
+      },
+      "history_scan_cap": 5000,
+      "history_scan_capped": false,
+      "history_scan_since": "2010-01-01",
+      "implementation_change_count": 674,
+      "implementation_plus_test_change_count": 361,
+      "likely_verifier_command": "python -m pytest <changed_tests> -q",
+      "local_path": "experiments/phase0_headroom/external_repos/attrs",
+      "prior_evidence": {
+        "evidence_backed_windows": 0,
+        "known_release_eligible": 31,
+        "known_replay_attempts": 4,
+        "known_replay_passes": 1,
+        "known_technical_certified": 28,
+        "prior_note": "31 release-eligible after overlay; packaging and verifier pinning repairs remain.",
+        "prior_probe_attempts": 0,
+        "prior_probe_release_eligible": 0,
+        "prior_probe_technical_certified": 0,
+        "prior_release_ready_before_certification": 0,
+        "prior_source": "phase1_third_repo_release_supply_screen",
+        "prior_technical_plus_review_upper_bound": 0
+      },
+      "projected_certified_task_count_after_bounded_repair": 31,
+      "projected_evidence_backed_rolling_origin_windows": 0,
+      "reason_to_deep_probe_or_reject": "screened out by capacity, checkout, or source/oracle availability",
+      "repo_id": "attrs",
+      "repo_url": "https://github.com/python-attrs/attrs.git",
+      "rolling_origin_windows_raw": [
+        {
+          "dev_count": 70,
+          "future_count": 237,
+          "train_count": 54,
+          "window_id": "train_lt_2016_dev_2016_2017_future_gte_2018"
+        },
+        {
+          "dev_count": 63,
+          "future_count": 210,
+          "train_count": 88,
+          "window_id": "train_lt_2017_dev_2017_2018_future_gte_2019"
+        },
+        {
+          "dev_count": 58,
+          "future_count": 179,
+          "train_count": 124,
+          "window_id": "train_lt_2018_dev_2018_2019_future_gte_2020"
+        },
+        {
+          "dev_count": 63,
+          "future_count": 147,
+          "train_count": 151,
+          "window_id": "train_lt_2019_dev_2019_2020_future_gte_2021"
+        },
+        {
+          "dev_count": 69,
+          "future_count": 110,
+          "train_count": 182,
+          "window_id": "train_lt_2020_dev_2020_2021_future_gte_2022"
+        },
+        {
+          "dev_count": 66,
+          "future_count": 81,
+          "train_count": 214,
+          "window_id": "train_lt_2021_dev_2021_2022_future_gte_2023"
+        },
+        {
+          "dev_count": 53,
+          "future_count": 57,
+          "train_count": 251,
+          "window_id": "train_lt_2022_dev_2022_2023_future_gte_2024"
+        },
+        {
+          "dev_count": 57,
+          "future_count": 24,
+          "train_count": 280,
+          "window_id": "train_lt_2023_dev_2023_2024_future_gte_2025"
+        }
+      ],
+      "rolling_origin_windows_release_ready": [
+        {
+          "dev_count": 56,
+          "future_count": 181,
+          "train_count": 12,
+          "window_id": "train_lt_2017_dev_2017_2018_future_gte_2019"
+        },
+        {
+          "dev_count": 46,
+          "future_count": 159,
+          "train_count": 44,
+          "window_id": "train_lt_2018_dev_2018_2019_future_gte_2020"
+        },
+        {
+          "dev_count": 50,
+          "future_count": 131,
+          "train_count": 68,
+          "window_id": "train_lt_2019_dev_2019_2020_future_gte_2021"
+        },
+        {
+          "dev_count": 63,
+          "future_count": 96,
+          "train_count": 90,
+          "window_id": "train_lt_2020_dev_2020_2021_future_gte_2022"
+        },
+        {
+          "dev_count": 62,
+          "future_count": 69,
+          "train_count": 118,
+          "window_id": "train_lt_2021_dev_2021_2022_future_gte_2023"
+        },
+        {
+          "dev_count": 49,
+          "future_count": 47,
+          "train_count": 153,
+          "window_id": "train_lt_2022_dev_2022_2023_future_gte_2024"
+        },
+        {
+          "dev_count": 49,
+          "future_count": 20,
+          "train_count": 180,
+          "window_id": "train_lt_2023_dev_2023_2024_future_gte_2025"
+        }
+      ],
+      "rough_paid_baseline_cost_usd_range": {
+        "high": 55.8,
+        "low": 24.8
+      },
+      "setup_test_smoke": [],
+      "source_context_availability": "strong_pr_or_issue_title_context",
+      "targeted_verifier_timing": {
+        "median_seconds": null,
+        "p95_seconds": null,
+        "pass_count": 0,
+        "sample_count": 0,
+        "speed_class": "not_measured"
+      },
+      "test_change_count": 438,
+      "time_bucket_distribution": {
+        "2016_2019": 128,
+        "2020_2023": 122,
+        "2024_plus": 57,
+        "pre_2016": 54
+      },
+      "total_commits": 1786,
+      "total_commits_scanned": 1786,
+      "track": "baseline",
+      "visible_setup_smoke_status": "not_run"
+    },
+    {
+      "bounded_certification_sample": {
+        "dominant_failure_labels": {},
+        "mode": "bounded_task_shape_certification_not_paid_agent_replay",
+        "pass_count": 24,
+        "sample_size": 24
+      },
+      "changed_test_oracle_availability": "changed_tests_available",
+      "changed_test_oracle_availability_count": 63,
+      "checkout_status": "clean",
+      "classification": "screened_out",
+      "clone_status": {
+        "local_path": "experiments/phase0_headroom/external_repos/click",
+        "status": "already_present"
+      },
+      "count_feasible_rolling_origin_windows": 3,
+      "deep_probe": true,
+      "environment_risk": "low",
+      "estimated_candidate_volume": 420,
+      "estimated_release_eligible_volume": 30,
+      "expected_evaluation_speed_class": "ideal",
+      "expected_paid_baseline_discovery_cells": 120,
+      "head_short": "8a1b1a3",
+      "historical_reference_probe": {
+        "mode": "not_run",
+        "pass_count": 0,
+        "results": [],
+        "sample_size": 0
+      },
+      "history_date_span": {
+        "first_commit": "2014-04-24T11:51:55+02:00",
+        "latest_commit": "2026-06-07T08:59:46+05:00"
+      },
+      "history_scan_cap": 5000,
+      "history_scan_capped": false,
+      "history_scan_since": "2010-01-01",
+      "implementation_change_count": 1096,
+      "implementation_plus_test_change_count": 420,
+      "likely_verifier_command": "python -m pytest <changed_tests> -q",
+      "local_path": "experiments/phase0_headroom/external_repos/click",
+      "prior_evidence": {
+        "evidence_backed_windows": 0,
+        "known_certification_attempts": 102,
+        "known_release_conversion": 0.29411764705882354,
+        "known_release_eligible": 30,
+        "known_technical_certified": 75,
+        "prior_note": "30 release-eligible and source context repaired; target-profile packaging still needed.",
+        "prior_probe_attempts": 102,
+        "prior_probe_release_eligible": 30,
+        "prior_probe_technical_certified": 75,
+        "prior_release_ready_before_certification": 38,
+        "prior_source": "phase1_third_repo_release_supply_screen",
+        "prior_technical_plus_review_upper_bound": 273
+      },
+      "projected_certified_task_count_after_bounded_repair": 30,
+      "projected_evidence_backed_rolling_origin_windows": 0,
+      "reason_to_deep_probe_or_reject": "screened out by capacity, checkout, or source/oracle availability",
+      "repo_id": "click",
+      "repo_url": "https://github.com/pallets/click.git",
+      "rolling_origin_windows_raw": [
+        {
+          "dev_count": 50,
+          "future_count": 308,
+          "train_count": 62,
+          "window_id": "train_lt_2015_dev_2015_2016_future_gte_2017"
+        },
+        {
+          "dev_count": 31,
+          "future_count": 294,
+          "train_count": 95,
+          "window_id": "train_lt_2016_dev_2016_2017_future_gte_2018"
+        },
+        {
+          "dev_count": 37,
+          "future_count": 271,
+          "train_count": 112,
+          "window_id": "train_lt_2017_dev_2017_2018_future_gte_2019"
+        },
+        {
+          "dev_count": 50,
+          "future_count": 244,
+          "train_count": 126,
+          "window_id": "train_lt_2018_dev_2018_2019_future_gte_2020"
+        },
+        {
+          "dev_count": 87,
+          "future_count": 184,
+          "train_count": 149,
+          "window_id": "train_lt_2019_dev_2019_2020_future_gte_2021"
+        },
+        {
+          "dev_count": 116,
+          "future_count": 128,
+          "train_count": 176,
+          "window_id": "train_lt_2020_dev_2020_2021_future_gte_2022"
+        },
+        {
+          "dev_count": 67,
+          "future_count": 117,
+          "train_count": 236,
+          "window_id": "train_lt_2021_dev_2021_2022_future_gte_2023"
+        },
+        {
+          "dev_count": 25,
+          "future_count": 103,
+          "train_count": 292,
+          "window_id": "train_lt_2022_dev_2022_2023_future_gte_2024"
+        },
+        {
+          "dev_count": 42,
+          "future_count": 75,
+          "train_count": 303,
+          "window_id": "train_lt_2023_dev_2023_2024_future_gte_2025"
+        },
+        {
+          "dev_count": 59,
+          "future_count": 44,
+          "train_count": 317,
+          "window_id": "train_lt_2024_dev_2024_2025_future_gte_2026"
+        }
+      ],
+      "rolling_origin_windows_release_ready": [
+        {
+          "dev_count": 8,
+          "future_count": 41,
+          "train_count": 14,
+          "window_id": "train_lt_2016_dev_2016_2017_future_gte_2018"
+        },
+        {
+          "dev_count": 6,
+          "future_count": 38,
+          "train_count": 19,
+          "window_id": "train_lt_2017_dev_2017_2018_future_gte_2019"
+        },
+        {
+          "dev_count": 24,
+          "future_count": 10,
+          "train_count": 29,
+          "window_id": "train_lt_2023_dev_2023_2024_future_gte_2025"
+        }
+      ],
+      "rough_paid_baseline_cost_usd_range": {
+        "high": 54.0,
+        "low": 24.0
+      },
+      "setup_test_smoke": [],
+      "source_context_availability": "adequate_pr_or_issue_title_context",
+      "targeted_verifier_timing": {
+        "median_seconds": null,
+        "p95_seconds": null,
+        "pass_count": 0,
+        "sample_count": 0,
+        "speed_class": "not_measured"
+      },
+      "test_change_count": 531,
+      "time_bucket_distribution": {
+        "2016_2019": 81,
+        "2020_2023": 141,
+        "2024_plus": 103,
+        "pre_2016": 95
+      },
+      "total_commits": 3242,
+      "total_commits_scanned": 3242,
+      "track": "baseline",
+      "visible_setup_smoke_status": "not_run"
+    },
+    {
+      "bounded_certification_sample": {
+        "dominant_failure_labels": {},
+        "mode": "bounded_task_shape_certification_not_paid_agent_replay",
+        "pass_count": 24,
+        "sample_size": 24
+      },
+      "changed_test_oracle_availability": "changed_tests_available",
+      "changed_test_oracle_availability_count": 179,
+      "checkout_status": "clean",
+      "classification": "screened_out",
+      "clone_status": {
+        "local_path": "experiments/phase0_headroom/external_repos/packaging",
+        "status": "already_present"
+      },
+      "count_feasible_rolling_origin_windows": 4,
+      "deep_probe": true,
+      "environment_risk": "low",
+      "estimated_candidate_volume": 248,
+      "estimated_release_eligible_volume": 27,
+      "expected_evaluation_speed_class": "ideal",
+      "expected_paid_baseline_discovery_cells": 0,
+      "head_short": "664f049",
+      "historical_reference_probe": {
+        "mode": "not_run",
+        "pass_count": 0,
+        "results": [],
+        "sample_size": 0
+      },
+      "history_date_span": {
+        "first_commit": "2014-05-15T18:57:57-04:00",
+        "latest_commit": "2026-06-14T22:17:04-04:00"
+      },
+      "history_scan_cap": 5000,
+      "history_scan_capped": false,
+      "history_scan_since": "2010-01-01",
+      "implementation_change_count": 633,
+      "implementation_plus_test_change_count": 248,
+      "likely_verifier_command": "python -m pytest <changed_tests> -q",
+      "local_path": "experiments/phase0_headroom/external_repos/packaging",
+      "prior_evidence": {
+        "known_release_eligible": 0,
+        "known_technical_certified": 0,
+        "prior_probe_attempts": 12,
+        "prior_probe_release_eligible": 0,
+        "prior_probe_technical_certified": 0,
+        "prior_release_ready_before_certification": 113,
+        "prior_source": "phase1_third_repo_release_supply_screen",
+        "prior_technical_plus_review_upper_bound": 181
+      },
+      "projected_certified_task_count_after_bounded_repair": 27,
+      "projected_evidence_backed_rolling_origin_windows": 0,
+      "reason_to_deep_probe_or_reject": "screened out by capacity, checkout, or source/oracle availability",
+      "repo_id": "packaging",
+      "repo_url": "https://github.com/pypa/packaging.git",
+      "rolling_origin_windows_raw": [
+        {
+          "dev_count": 21,
+          "future_count": 204,
+          "train_count": 23,
+          "window_id": "train_lt_2015_dev_2015_2016_future_gte_2017"
+        },
+        {
+          "dev_count": 10,
+          "future_count": 203,
+          "train_count": 35,
+          "window_id": "train_lt_2016_dev_2016_2017_future_gte_2018"
+        },
+        {
+          "dev_count": 9,
+          "future_count": 195,
+          "train_count": 44,
+          "window_id": "train_lt_2017_dev_2017_2018_future_gte_2019"
+        },
+        {
+          "dev_count": 20,
+          "future_count": 183,
+          "train_count": 45,
+          "window_id": "train_lt_2018_dev_2018_2019_future_gte_2020"
+        },
+        {
+          "dev_count": 27,
+          "future_count": 168,
+          "train_count": 53,
+          "window_id": "train_lt_2019_dev_2019_2020_future_gte_2021"
+        },
+        {
+          "dev_count": 29,
+          "future_count": 154,
+          "train_count": 65,
+          "window_id": "train_lt_2020_dev_2020_2021_future_gte_2022"
+        },
+        {
+          "dev_count": 43,
+          "future_count": 125,
+          "train_count": 80,
+          "window_id": "train_lt_2021_dev_2021_2022_future_gte_2023"
+        },
+        {
+          "dev_count": 49,
+          "future_count": 105,
+          "train_count": 94,
+          "window_id": "train_lt_2022_dev_2022_2023_future_gte_2024"
+        },
+        {
+          "dev_count": 32,
+          "future_count": 93,
+          "train_count": 123,
+          "window_id": "train_lt_2023_dev_2023_2024_future_gte_2025"
+        },
+        {
+          "dev_count": 39,
+          "future_count": 66,
+          "train_count": 143,
+          "window_id": "train_lt_2024_dev_2024_2025_future_gte_2026"
+        }
+      ],
+      "rolling_origin_windows_release_ready": [
+        {
+          "dev_count": 34,
+          "future_count": 123,
+          "train_count": 22,
+          "window_id": "train_lt_2021_dev_2021_2022_future_gte_2023"
+        },
+        {
+          "dev_count": 38,
+          "future_count": 105,
+          "train_count": 36,
+          "window_id": "train_lt_2022_dev_2022_2023_future_gte_2024"
+        },
+        {
+          "dev_count": 30,
+          "future_count": 93,
+          "train_count": 56,
+          "window_id": "train_lt_2023_dev_2023_2024_future_gte_2025"
+        },
+        {
+          "dev_count": 39,
+          "future_count": 66,
+          "train_count": 74,
+          "window_id": "train_lt_2024_dev_2024_2025_future_gte_2026"
+        }
+      ],
+      "rough_paid_baseline_cost_usd_range": {
+        "high": 0.0,
+        "low": 0.0
+      },
+      "setup_test_smoke": [],
+      "source_context_availability": "strong_pr_or_issue_title_context",
+      "targeted_verifier_timing": {
+        "median_seconds": null,
+        "p95_seconds": null,
+        "pass_count": 0,
+        "sample_count": 0,
+        "speed_class": "not_measured"
+      },
+      "test_change_count": 283,
+      "time_bucket_distribution": {
+        "2016_2019": 30,
+        "2020_2023": 78,
+        "2024_plus": 105,
+        "pre_2016": 35
+      },
+      "total_commits": 1032,
+      "total_commits_scanned": 1032,
+      "track": "baseline",
+      "visible_setup_smoke_status": "not_run"
+    },
+    {
+      "bounded_certification_sample": {
+        "dominant_failure_labels": {},
+        "mode": "bounded_task_shape_certification_not_paid_agent_replay",
+        "pass_count": 0,
+        "sample_size": 0
+      },
+      "changed_test_oracle_availability": "changed_tests_available",
+      "changed_test_oracle_availability_count": 319,
+      "checkout_status": "clean",
+      "classification": "screened_out",
+      "clone_status": {
+        "local_path": "experiments/phase0_headroom/external_repos/pytest",
+        "status": "already_present"
+      },
+      "count_feasible_rolling_origin_windows": 4,
+      "deep_probe": false,
+      "environment_risk": "high_self_hosting_test_harness",
+      "estimated_candidate_volume": 841,
+      "estimated_release_eligible_volume": 48,
+      "expected_evaluation_speed_class": "risky",
+      "expected_paid_baseline_discovery_cells": 192,
+      "head_short": "0a600a1fc",
+      "historical_reference_probe": {
+        "mode": "not_run",
+        "pass_count": 0,
+        "results": [],
+        "sample_size": 0
+      },
+      "history_date_span": {
+        "first_commit": "2016-06-22T12:21:51+02:00",
+        "latest_commit": "2026-06-15T05:55:12+02:00"
+      },
+      "history_scan_cap": 5000,
+      "history_scan_capped": true,
+      "history_scan_since": "2010-01-01",
+      "implementation_change_count": 1655,
+      "implementation_plus_test_change_count": 841,
+      "likely_verifier_command": "python -m pytest <pytest self-test shard> -q",
+      "local_path": "experiments/phase0_headroom/external_repos/pytest",
+      "prior_evidence": {},
+      "projected_certified_task_count_after_bounded_repair": 48,
+      "projected_evidence_backed_rolling_origin_windows": 0,
+      "reason_to_deep_probe_or_reject": "screened out by capacity, checkout, or source/oracle availability",
+      "repo_id": "pytest",
+      "repo_url": "https://github.com/pytest-dev/pytest.git",
+      "rolling_origin_windows_raw": [
+        {
+          "dev_count": 186,
+          "future_count": 482,
+          "train_count": 173,
+          "window_id": "train_lt_2021_dev_2021_2022_future_gte_2023"
+        },
+        {
+          "dev_count": 171,
+          "future_count": 374,
+          "train_count": 296,
+          "window_id": "train_lt_2022_dev_2022_2023_future_gte_2024"
+        },
+        {
+          "dev_count": 283,
+          "future_count": 199,
+          "train_count": 359,
+          "window_id": "train_lt_2023_dev_2023_2024_future_gte_2025"
+        },
+        {
+          "dev_count": 307,
+          "future_count": 67,
+          "train_count": 467,
+          "window_id": "train_lt_2024_dev_2024_2025_future_gte_2026"
+        }
+      ],
+      "rolling_origin_windows_release_ready": [
+        {
+          "dev_count": 68,
+          "future_count": 215,
+          "train_count": 36,
+          "window_id": "train_lt_2021_dev_2021_2022_future_gte_2023"
+        },
+        {
+          "dev_count": 83,
+          "future_count": 164,
+          "train_count": 72,
+          "window_id": "train_lt_2022_dev_2022_2023_future_gte_2024"
+        },
+        {
+          "dev_count": 123,
+          "future_count": 92,
+          "train_count": 104,
+          "window_id": "train_lt_2023_dev_2023_2024_future_gte_2025"
+        },
+        {
+          "dev_count": 128,
+          "future_count": 36,
+          "train_count": 155,
+          "window_id": "train_lt_2024_dev_2024_2025_future_gte_2026"
+        }
+      ],
+      "rough_paid_baseline_cost_usd_range": {
+        "high": 86.4,
+        "low": 38.4
+      },
+      "setup_test_smoke": [],
+      "source_context_availability": "strong_pr_or_issue_title_context",
+      "targeted_verifier_timing": {
+        "median_seconds": null,
+        "p95_seconds": null,
+        "pass_count": 0,
+        "sample_count": 0,
+        "speed_class": "not_measured"
+      },
+      "test_change_count": 1114,
+      "time_bucket_distribution": {
+        "2020_2023": 467,
+        "2024_plus": 374
+      },
+      "total_commits": 17441,
+      "total_commits_scanned": 5000,
+      "track": "baseline",
+      "visible_setup_smoke_status": "not_run"
+    },
+    {
+      "bounded_certification_sample": {
+        "dominant_failure_labels": {},
+        "mode": "bounded_task_shape_certification_not_paid_agent_replay",
+        "pass_count": 24,
+        "sample_size": 24
+      },
+      "changed_test_oracle_availability": "changed_tests_available",
+      "changed_test_oracle_availability_count": 1717,
+      "checkout_status": "clean",
+      "classification": "capacity_promising_but_speed_unproven",
+      "clone_status": {
+        "duration_seconds": 16.98,
+        "local_path": "experiments/phase0_headroom/external_repos/django",
+        "returncode": 0,
+        "status": "cloned",
+        "stderr_line_count": 104,
+        "stderr_tail_hash": "sha256:932d2b0bbd43bc56c96d3b74eb584526e14aedc41579bce7c15062ee3a79ec43",
+        "stdout_tail_hash": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "timed_out": false
+      },
+      "count_feasible_rolling_origin_windows": 4,
+      "deep_probe": true,
+      "environment_risk": "medium_database_and_settings_matrix",
+      "estimated_candidate_volume": 1888,
+      "estimated_release_eligible_volume": 258,
+      "expected_evaluation_speed_class": "acceptable",
+      "expected_paid_baseline_discovery_cells": 360,
+      "head_short": "f1440a752e",
+      "historical_reference_probe": {
+        "mode": "not_run",
+        "pass_count": 0,
+        "results": [],
+        "sample_size": 0
+      },
+      "history_date_span": {
+        "first_commit": "2005-07-13T16:56:05Z",
+        "latest_commit": "2026-06-11T16:26:32-04:00"
+      },
+      "history_scan_cap": 5000,
+      "history_scan_capped": true,
+      "history_scan_since": "2010-01-01",
+      "implementation_change_count": 2524,
+      "implementation_plus_test_change_count": 1888,
+      "likely_verifier_command": "python -m pytest <django test module> -q",
+      "local_path": "experiments/phase0_headroom/external_repos/django",
+      "prior_evidence": {},
+      "projected_certified_task_count_after_bounded_repair": 258,
+      "projected_evidence_backed_rolling_origin_windows": 3,
+      "reason_to_deep_probe_or_reject": "run targeted verifier smoke before any recommendation",
+      "repo_id": "django",
+      "repo_url": "https://github.com/django/django.git",
+      "rolling_origin_windows_raw": [
+        {
+          "dev_count": 627,
+          "future_count": 1240,
+          "train_count": 21,
+          "window_id": "train_lt_2021_dev_2021_2022_future_gte_2023"
+        },
+        {
+          "dev_count": 756,
+          "future_count": 864,
+          "train_count": 268,
+          "window_id": "train_lt_2022_dev_2022_2023_future_gte_2024"
+        },
+        {
+          "dev_count": 709,
+          "future_count": 531,
+          "train_count": 648,
+          "window_id": "train_lt_2023_dev_2023_2024_future_gte_2025"
+        },
+        {
+          "dev_count": 707,
+          "future_count": 157,
+          "train_count": 1024,
+          "window_id": "train_lt_2024_dev_2024_2025_future_gte_2026"
+        }
+      ],
+      "rolling_origin_windows_release_ready": [
+        {
+          "dev_count": 570,
+          "future_count": 1128,
+          "train_count": 19,
+          "window_id": "train_lt_2021_dev_2021_2022_future_gte_2023"
+        },
+        {
+          "dev_count": 690,
+          "future_count": 778,
+          "train_count": 249,
+          "window_id": "train_lt_2022_dev_2022_2023_future_gte_2024"
+        },
+        {
+          "dev_count": 653,
+          "future_count": 475,
+          "train_count": 589,
+          "window_id": "train_lt_2023_dev_2023_2024_future_gte_2025"
+        },
+        {
+          "dev_count": 649,
+          "future_count": 129,
+          "train_count": 939,
+          "window_id": "train_lt_2024_dev_2024_2025_future_gte_2026"
+        }
+      ],
+      "rough_paid_baseline_cost_usd_range": {
+        "high": 162.0,
+        "low": 72.0
+      },
+      "setup_test_smoke": [],
+      "source_context_availability": "strong_pr_or_issue_title_context",
+      "targeted_verifier_timing": {
+        "median_seconds": null,
+        "p95_seconds": null,
+        "pass_count": 0,
+        "sample_count": 0,
+        "speed_class": "not_measured"
+      },
+      "test_change_count": 2736,
+      "time_bucket_distribution": {
+        "2016_2019": 8,
+        "2020_2023": 1016,
+        "2024_plus": 864
+      },
+      "total_commits": 34691,
+      "total_commits_scanned": 5000,
+      "track": "large_heavy",
+      "visible_setup_smoke_status": "not_run"
+    },
+    {
+      "bounded_certification_sample": {
+        "dominant_failure_labels": {
+          "large_implementation_surface": 4,
+          "wide_changed_test_oracle": 3
+        },
+        "mode": "bounded_task_shape_certification_not_paid_agent_replay",
+        "pass_count": 20,
+        "sample_size": 24
+      },
+      "changed_test_oracle_availability": "changed_tests_available",
+      "changed_test_oracle_availability_count": 25,
+      "checkout_status": "clean",
+      "classification": "screened_out",
+      "clone_status": {
+        "local_path": "experiments/phase0_headroom/external_repos/sqlalchemy",
+        "status": "already_present"
+      },
+      "count_feasible_rolling_origin_windows": 0,
+      "deep_probe": true,
+      "environment_risk": "medium_database_backend_matrix",
+      "estimated_candidate_volume": 1604,
+      "estimated_release_eligible_volume": 4,
+      "expected_evaluation_speed_class": "acceptable",
+      "expected_paid_baseline_discovery_cells": 0,
+      "head_short": "bfe559a7e",
+      "historical_reference_probe": {
+        "mode": "not_run",
+        "pass_count": 0,
+        "results": [],
+        "sample_size": 0
+      },
+      "history_date_span": {
+        "first_commit": "2005-07-01T02:25:16Z",
+        "latest_commit": "2026-06-12T18:14:54Z"
+      },
+      "history_scan_cap": 5000,
+      "history_scan_capped": true,
+      "history_scan_since": "2010-01-01",
+      "implementation_change_count": 2291,
+      "implementation_plus_test_change_count": 1604,
+      "likely_verifier_command": "python -m pytest <sqlalchemy non-db or sqlite shard> -q",
+      "local_path": "experiments/phase0_headroom/external_repos/sqlalchemy",
+      "prior_evidence": {},
+      "projected_certified_task_count_after_bounded_repair": 4,
+      "projected_evidence_backed_rolling_origin_windows": 0,
+      "reason_to_deep_probe_or_reject": "screened out by capacity, checkout, or source/oracle availability",
+      "repo_id": "sqlalchemy",
+      "repo_url": "https://github.com/sqlalchemy/sqlalchemy.git",
+      "rolling_origin_windows_raw": [
+        {
+          "dev_count": 757,
+          "future_count": 717,
+          "train_count": 130,
+          "window_id": "train_lt_2021_dev_2021_2022_future_gte_2023"
+        },
+        {
+          "dev_count": 634,
+          "future_count": 423,
+          "train_count": 547,
+          "window_id": "train_lt_2022_dev_2022_2023_future_gte_2024"
+        },
+        {
+          "dev_count": 455,
+          "future_count": 262,
+          "train_count": 887,
+          "window_id": "train_lt_2023_dev_2023_2024_future_gte_2025"
+        },
+        {
+          "dev_count": 348,
+          "future_count": 75,
+          "train_count": 1181,
+          "window_id": "train_lt_2024_dev_2024_2025_future_gte_2026"
+        }
+      ],
+      "rolling_origin_windows_release_ready": [],
+      "rough_paid_baseline_cost_usd_range": {
+        "high": 0.0,
+        "low": 0.0
+      },
+      "setup_test_smoke": [],
+      "source_context_availability": "thin_but_usable_pr_or_issue_title_context",
+      "targeted_verifier_timing": {
+        "median_seconds": null,
+        "p95_seconds": null,
+        "pass_count": 0,
+        "sample_count": 0,
+        "speed_class": "not_measured"
+      },
+      "test_change_count": 1868,
+      "time_bucket_distribution": {
+        "2016_2019": 1,
+        "2020_2023": 1180,
+        "2024_plus": 423
+      },
+      "total_commits": 18107,
+      "total_commits_scanned": 5000,
+      "track": "large_heavy",
+      "visible_setup_smoke_status": "not_run"
+    },
+    {
+      "bounded_certification_sample": {
+        "dominant_failure_labels": {},
+        "mode": "bounded_task_shape_certification_not_paid_agent_replay",
+        "pass_count": 24,
+        "sample_size": 24
+      },
+      "changed_test_oracle_availability": "changed_tests_available",
+      "changed_test_oracle_availability_count": 37,
+      "checkout_status": "clean",
+      "classification": "screened_out",
+      "clone_status": {
+        "local_path": "experiments/phase0_headroom/external_repos/sympy",
+        "status": "already_present"
+      },
+      "count_feasible_rolling_origin_windows": 0,
+      "deep_probe": true,
+      "environment_risk": "low_pure_python_but_large_suite",
+      "estimated_candidate_volume": 911,
+      "estimated_release_eligible_volume": 6,
+      "expected_evaluation_speed_class": "acceptable",
+      "expected_paid_baseline_discovery_cells": 0,
+      "head_short": "e1cce7d2fd",
+      "historical_reference_probe": {
+        "mode": "not_run",
+        "pass_count": 0,
+        "results": [],
+        "sample_size": 0
+      },
+      "history_date_span": {
+        "first_commit": "2020-01-28T00:26:39+05:30",
+        "latest_commit": "2026-06-14T16:56:45+01:00"
+      },
+      "history_scan_cap": 5000,
+      "history_scan_capped": true,
+      "history_scan_since": "2010-01-01",
+      "implementation_change_count": 2530,
+      "implementation_plus_test_change_count": 911,
+      "likely_verifier_command": "python -m pytest <sympy test file> -q",
+      "local_path": "experiments/phase0_headroom/external_repos/sympy",
+      "prior_evidence": {},
+      "projected_certified_task_count_after_bounded_repair": 6,
+      "projected_evidence_backed_rolling_origin_windows": 0,
+      "reason_to_deep_probe_or_reject": "screened out by capacity, checkout, or source/oracle availability",
+      "repo_id": "sympy",
+      "repo_url": "https://github.com/sympy/sympy.git",
+      "rolling_origin_windows_raw": [],
+      "rolling_origin_windows_release_ready": [],
+      "rough_paid_baseline_cost_usd_range": {
+        "high": 0.0,
+        "low": 0.0
+      },
+      "setup_test_smoke": [],
+      "source_context_availability": "thin_but_usable_pr_or_issue_title_context",
+      "targeted_verifier_timing": {
+        "median_seconds": null,
+        "p95_seconds": null,
+        "pass_count": 0,
+        "sample_count": 0,
+        "speed_class": "not_measured"
+      },
+      "test_change_count": 1464,
+      "time_bucket_distribution": {
+        "2016_2019": 1,
+        "2020_2023": 5,
+        "2024_plus": 905
+      },
+      "total_commits": 62216,
+      "total_commits_scanned": 5000,
+      "track": "large_heavy",
+      "visible_setup_smoke_status": "not_run"
+    },
+    {
+      "bounded_certification_sample": {
+        "dominant_failure_labels": {
+          "large_implementation_surface": 1,
+          "wide_changed_test_oracle": 5
+        },
+        "mode": "bounded_task_shape_certification_not_paid_agent_replay",
+        "pass_count": 19,
+        "sample_size": 24
+      },
+      "changed_test_oracle_availability": "changed_tests_available",
+      "changed_test_oracle_availability_count": 1671,
+      "checkout_status": "clean",
+      "classification": "large_but_heavy",
+      "clone_status": {
+        "local_path": "experiments/phase0_headroom/external_repos/pandas",
+        "status": "already_present"
+      },
+      "count_feasible_rolling_origin_windows": 1,
+      "deep_probe": true,
+      "environment_risk": "high_compiled_extension_build",
+      "estimated_candidate_volume": 1672,
+      "estimated_release_eligible_volume": 84,
+      "expected_evaluation_speed_class": "risky",
+      "expected_paid_baseline_discovery_cells": 336,
+      "head_short": "aee9241b41",
+      "historical_reference_probe": {
+        "mode": "not_run",
+        "pass_count": 0,
+        "results": [],
+        "sample_size": 0
+      },
+      "history_date_span": {
+        "first_commit": "2009-07-31T15:07:16Z",
+        "latest_commit": "2026-06-11T15:16:14-07:00"
+      },
+      "history_scan_cap": 5000,
+      "history_scan_capped": true,
+      "history_scan_since": "2010-01-01",
+      "implementation_change_count": 3185,
+      "implementation_plus_test_change_count": 1672,
+      "likely_verifier_command": "python -m pytest <pandas test file> -q after compiled build",
+      "local_path": "experiments/phase0_headroom/external_repos/pandas",
+      "prior_evidence": {},
+      "projected_certified_task_count_after_bounded_repair": 251,
+      "projected_evidence_backed_rolling_origin_windows": 1,
+      "reason_to_deep_probe_or_reject": "reject for mainline today unless environment repair can make targeted verification fast and stable",
+      "repo_id": "pandas",
+      "repo_url": "https://github.com/pandas-dev/pandas.git",
+      "rolling_origin_windows_raw": [
+        {
+          "dev_count": 911,
+          "future_count": 344,
+          "train_count": 417,
+          "window_id": "train_lt_2024_dev_2024_2025_future_gte_2026"
+        }
+      ],
+      "rolling_origin_windows_release_ready": [
+        {
+          "dev_count": 910,
+          "future_count": 344,
+          "train_count": 417,
+          "window_id": "train_lt_2024_dev_2024_2025_future_gte_2026"
+        }
+      ],
+      "rough_paid_baseline_cost_usd_range": {
+        "high": 151.2,
+        "low": 67.2
+      },
+      "setup_test_smoke": [],
+      "source_context_availability": "strong_pr_or_issue_title_context",
+      "targeted_verifier_timing": {
+        "median_seconds": null,
+        "p95_seconds": null,
+        "pass_count": 0,
+        "sample_count": 0,
+        "speed_class": "not_measured"
+      },
+      "test_change_count": 2365,
+      "time_bucket_distribution": {
+        "2020_2023": 417,
+        "2024_plus": 1255
+      },
+      "total_commits": 38107,
+      "total_commits_scanned": 5000,
+      "track": "large_heavy",
+      "visible_setup_smoke_status": "not_run"
+    },
+    {
+      "bounded_certification_sample": {
+        "dominant_failure_labels": {},
+        "mode": "bounded_task_shape_certification_not_paid_agent_replay",
+        "pass_count": 24,
+        "sample_size": 24
+      },
+      "changed_test_oracle_availability": "changed_tests_available",
+      "changed_test_oracle_availability_count": 1520,
+      "checkout_status": "clean",
+      "classification": "large_but_heavy",
+      "clone_status": {
+        "local_path": "experiments/phase0_headroom/external_repos/scikit-learn",
+        "status": "already_present"
+      },
+      "count_feasible_rolling_origin_windows": 2,
+      "deep_probe": true,
+      "environment_risk": "high_compiled_extension_build",
+      "estimated_candidate_volume": 1520,
+      "estimated_release_eligible_volume": 76,
+      "expected_evaluation_speed_class": "risky",
+      "expected_paid_baseline_discovery_cells": 304,
+      "head_short": "d6a36523d",
+      "historical_reference_probe": {
+        "mode": "not_run",
+        "pass_count": 0,
+        "results": [],
+        "sample_size": 0
+      },
+      "history_date_span": {
+        "first_commit": "2011-03-06T14:46:50+01:00",
+        "latest_commit": "2026-06-13T13:13:42+02:00"
+      },
+      "history_scan_cap": 5000,
+      "history_scan_capped": true,
+      "history_scan_since": "2010-01-01",
+      "implementation_change_count": 2654,
+      "implementation_plus_test_change_count": 1520,
+      "likely_verifier_command": "python -m pytest <sklearn test file> -q after compiled build",
+      "local_path": "experiments/phase0_headroom/external_repos/scikit-learn",
+      "prior_evidence": {},
+      "projected_certified_task_count_after_bounded_repair": 228,
+      "projected_evidence_backed_rolling_origin_windows": 2,
+      "reason_to_deep_probe_or_reject": "reject for mainline today unless environment repair can make targeted verification fast and stable",
+      "repo_id": "scikit-learn",
+      "repo_url": "https://github.com/scikit-learn/scikit-learn.git",
+      "rolling_origin_windows_raw": [
+        {
+          "dev_count": 849,
+          "future_count": 402,
+          "train_count": 269,
+          "window_id": "train_lt_2023_dev_2023_2024_future_gte_2025"
+        },
+        {
+          "dev_count": 572,
+          "future_count": 155,
+          "train_count": 793,
+          "window_id": "train_lt_2024_dev_2024_2025_future_gte_2026"
+        }
+      ],
+      "rolling_origin_windows_release_ready": [
+        {
+          "dev_count": 849,
+          "future_count": 402,
+          "train_count": 269,
+          "window_id": "train_lt_2023_dev_2023_2024_future_gte_2025"
+        },
+        {
+          "dev_count": 572,
+          "future_count": 155,
+          "train_count": 793,
+          "window_id": "train_lt_2024_dev_2024_2025_future_gte_2026"
+        }
+      ],
+      "rough_paid_baseline_cost_usd_range": {
+        "high": 136.8,
+        "low": 60.8
+      },
+      "setup_test_smoke": [],
+      "source_context_availability": "strong_pr_or_issue_title_context",
+      "targeted_verifier_timing": {
+        "median_seconds": null,
+        "p95_seconds": null,
+        "pass_count": 0,
+        "sample_count": 0,
+        "speed_class": "not_measured"
+      },
+      "test_change_count": 1902,
+      "time_bucket_distribution": {
+        "2020_2023": 793,
+        "2024_plus": 727
+      },
+      "total_commits": 33756,
+      "total_commits_scanned": 5000,
+      "track": "large_heavy",
+      "visible_setup_smoke_status": "not_run"
+    },
+    {
+      "bounded_certification_sample": {
+        "dominant_failure_labels": {},
+        "mode": "bounded_task_shape_certification_not_paid_agent_replay",
+        "pass_count": 0,
+        "sample_size": 0
+      },
+      "changed_test_oracle_availability": "changed_tests_available",
+      "changed_test_oracle_availability_count": 218,
+      "checkout_status": "clean",
+      "classification": "screened_out",
+      "clone_status": {
+        "local_path": "experiments/phase0_headroom/external_repos/matplotlib",
+        "status": "already_present"
+      },
+      "count_feasible_rolling_origin_windows": 0,
+      "deep_probe": false,
+      "environment_risk": "high_compiled_extension_and_image_test_stack",
+      "estimated_candidate_volume": 552,
+      "estimated_release_eligible_volume": 11,
+      "expected_evaluation_speed_class": "risky",
+      "expected_paid_baseline_discovery_cells": 0,
+      "head_short": "fe7830972",
+      "historical_reference_probe": {
+        "mode": "not_run",
+        "pass_count": 0,
+        "results": [],
+        "sample_size": 0
+      },
+      "history_date_span": {
+        "first_commit": "2003-05-12T15:20:38Z",
+        "latest_commit": "2026-06-15T06:29:24+02:00"
+      },
+      "history_scan_cap": 5000,
+      "history_scan_capped": true,
+      "history_scan_since": "2010-01-01",
+      "implementation_change_count": 1870,
+      "implementation_plus_test_change_count": 552,
+      "likely_verifier_command": "python -m pytest <matplotlib non-image shard> -q after build",
+      "local_path": "experiments/phase0_headroom/external_repos/matplotlib",
+      "prior_evidence": {},
+      "projected_certified_task_count_after_bounded_repair": 11,
+      "projected_evidence_backed_rolling_origin_windows": 0,
+      "reason_to_deep_probe_or_reject": "screened out by capacity, checkout, or source/oracle availability",
+      "repo_id": "matplotlib",
+      "repo_url": "https://github.com/matplotlib/matplotlib.git",
+      "rolling_origin_windows_raw": [
+        {
+          "dev_count": 409,
+          "future_count": 127,
+          "train_count": 16,
+          "window_id": "train_lt_2024_dev_2024_2025_future_gte_2026"
+        }
+      ],
+      "rolling_origin_windows_release_ready": [],
+      "rough_paid_baseline_cost_usd_range": {
+        "high": 0.0,
+        "low": 0.0
+      },
+      "setup_test_smoke": [],
+      "source_context_availability": "strong_pr_or_issue_title_context",
+      "targeted_verifier_timing": {
+        "median_seconds": null,
+        "p95_seconds": null,
+        "pass_count": 0,
+        "sample_count": 0,
+        "speed_class": "not_measured"
+      },
+      "test_change_count": 853,
+      "time_bucket_distribution": {
+        "2016_2019": 1,
+        "2020_2023": 15,
+        "2024_plus": 536
+      },
+      "total_commits": 54824,
+      "total_commits_scanned": 5000,
+      "track": "large_heavy",
+      "visible_setup_smoke_status": "not_run"
+    },
+    {
+      "bounded_certification_sample": {
+        "dominant_failure_labels": {},
+        "mode": "bounded_task_shape_certification_not_paid_agent_replay",
+        "pass_count": 0,
+        "sample_size": 0
+      },
+      "changed_test_oracle_availability": "changed_tests_available",
+      "changed_test_oracle_availability_count": 570,
+      "checkout_status": "clean",
+      "classification": "capacity_promising_but_speed_unproven",
+      "clone_status": {
+        "local_path": "experiments/phase0_headroom/external_repos/mypy",
+        "status": "already_present"
+      },
+      "count_feasible_rolling_origin_windows": 5,
+      "deep_probe": false,
+      "environment_risk": "medium_large_custom_test_harness",
+      "estimated_candidate_volume": 571,
+      "estimated_release_eligible_volume": 86,
+      "expected_evaluation_speed_class": "acceptable",
+      "expected_paid_baseline_discovery_cells": 344,
+      "head_short": "f8bf7ab57",
+      "historical_reference_probe": {
+        "mode": "not_run",
+        "pass_count": 0,
+        "results": [],
+        "sample_size": 0
+      },
+      "history_date_span": {
+        "first_commit": "2017-07-24T13:41:19+03:00",
+        "latest_commit": "2026-06-12T17:52:37+01:00"
+      },
+      "history_scan_cap": 5000,
+      "history_scan_capped": true,
+      "history_scan_since": "2010-01-01",
+      "implementation_change_count": 3906,
+      "implementation_plus_test_change_count": 571,
+      "likely_verifier_command": "python -m pytest <mypy test shard> -q",
+      "local_path": "experiments/phase0_headroom/external_repos/mypy",
+      "prior_evidence": {},
+      "projected_certified_task_count_after_bounded_repair": 86,
+      "projected_evidence_backed_rolling_origin_windows": 2,
+      "reason_to_deep_probe_or_reject": "run targeted verifier smoke before any recommendation",
+      "repo_id": "mypy",
+      "repo_url": "https://github.com/python/mypy.git",
+      "rolling_origin_windows_raw": [
+        {
+          "dev_count": 170,
+          "future_count": 389,
+          "train_count": 12,
+          "window_id": "train_lt_2020_dev_2020_2021_future_gte_2022"
+        },
+        {
+          "dev_count": 193,
+          "future_count": 265,
+          "train_count": 113,
+          "window_id": "train_lt_2021_dev_2021_2022_future_gte_2023"
+        },
+        {
+          "dev_count": 205,
+          "future_count": 184,
+          "train_count": 182,
+          "window_id": "train_lt_2022_dev_2022_2023_future_gte_2024"
+        },
+        {
+          "dev_count": 134,
+          "future_count": 131,
+          "train_count": 306,
+          "window_id": "train_lt_2023_dev_2023_2024_future_gte_2025"
+        },
+        {
+          "dev_count": 124,
+          "future_count": 60,
+          "train_count": 387,
+          "window_id": "train_lt_2024_dev_2024_2025_future_gte_2026"
+        }
+      ],
+      "rolling_origin_windows_release_ready": [
+        {
+          "dev_count": 170,
+          "future_count": 388,
+          "train_count": 12,
+          "window_id": "train_lt_2020_dev_2020_2021_future_gte_2022"
+        },
+        {
+          "dev_count": 192,
+          "future_count": 265,
+          "train_count": 113,
+          "window_id": "train_lt_2021_dev_2021_2022_future_gte_2023"
+        },
+        {
+          "dev_count": 204,
+          "future_count": 184,
+          "train_count": 182,
+          "window_id": "train_lt_2022_dev_2022_2023_future_gte_2024"
+        },
+        {
+          "dev_count": 134,
+          "future_count": 131,
+          "train_count": 305,
+          "window_id": "train_lt_2023_dev_2023_2024_future_gte_2025"
+        },
+        {
+          "dev_count": 124,
+          "future_count": 60,
+          "train_count": 386,
+          "window_id": "train_lt_2024_dev_2024_2025_future_gte_2026"
+        }
+      ],
+      "rough_paid_baseline_cost_usd_range": {
+        "high": 154.8,
+        "low": 68.8
+      },
+      "setup_test_smoke": [],
+      "source_context_availability": "strong_pr_or_issue_title_context",
+      "targeted_verifier_timing": {
+        "median_seconds": null,
+        "p95_seconds": null,
+        "pass_count": 0,
+        "sample_count": 0,
+        "speed_class": "not_measured"
+      },
+      "test_change_count": 693,
+      "time_bucket_distribution": {
+        "2016_2019": 12,
+        "2020_2023": 375,
+        "2024_plus": 184
+      },
+      "total_commits": 13665,
+      "total_commits_scanned": 5000,
+      "track": "large_heavy",
+      "visible_setup_smoke_status": "not_run"
+    },
+    {
+      "bounded_certification_sample": {
+        "dominant_failure_labels": {
+          "large_implementation_surface": 1
+        },
+        "mode": "bounded_task_shape_certification_not_paid_agent_replay",
+        "pass_count": 23,
+        "sample_size": 24
+      },
+      "changed_test_oracle_availability": "changed_tests_available",
+      "changed_test_oracle_availability_count": 488,
+      "checkout_status": "clean",
+      "classification": "capacity_promising_but_speed_unproven",
+      "clone_status": {
+        "local_path": "experiments/phase0_headroom/external_repos/black",
+        "status": "already_present"
+      },
+      "count_feasible_rolling_origin_windows": 6,
+      "deep_probe": true,
+      "environment_risk": "low",
+      "estimated_candidate_volume": 602,
+      "estimated_release_eligible_volume": 73,
+      "expected_evaluation_speed_class": "ideal",
+      "expected_paid_baseline_discovery_cells": 292,
+      "head_short": "6325332",
+      "historical_reference_probe": {
+        "mode": "not_run",
+        "pass_count": 0,
+        "results": [],
+        "sample_size": 0
+      },
+      "history_date_span": {
+        "first_commit": "2018-03-14T12:55:32-07:00",
+        "latest_commit": "2026-06-11T11:35:01-05:00"
+      },
+      "history_scan_cap": 5000,
+      "history_scan_capped": false,
+      "history_scan_since": "2010-01-01",
+      "implementation_change_count": 1017,
+      "implementation_plus_test_change_count": 602,
+      "likely_verifier_command": "python -m pytest <changed_tests> -q",
+      "local_path": "experiments/phase0_headroom/external_repos/black",
+      "prior_evidence": {},
+      "projected_certified_task_count_after_bounded_repair": 73,
+      "projected_evidence_backed_rolling_origin_windows": 2,
+      "reason_to_deep_probe_or_reject": "run targeted verifier smoke before any recommendation",
+      "repo_id": "black",
+      "repo_url": "https://github.com/psf/black.git",
+      "rolling_origin_windows_raw": [
+        {
+          "dev_count": 93,
+          "future_count": 369,
+          "train_count": 140,
+          "window_id": "train_lt_2019_dev_2019_2020_future_gte_2021"
+        },
+        {
+          "dev_count": 119,
+          "future_count": 292,
+          "train_count": 191,
+          "window_id": "train_lt_2020_dev_2020_2021_future_gte_2022"
+        },
+        {
+          "dev_count": 155,
+          "future_count": 214,
+          "train_count": 233,
+          "window_id": "train_lt_2021_dev_2021_2022_future_gte_2023"
+        },
+        {
+          "dev_count": 159,
+          "future_count": 133,
+          "train_count": 310,
+          "window_id": "train_lt_2022_dev_2022_2023_future_gte_2024"
+        },
+        {
+          "dev_count": 138,
+          "future_count": 76,
+          "train_count": 388,
+          "window_id": "train_lt_2023_dev_2023_2024_future_gte_2025"
+        },
+        {
+          "dev_count": 99,
+          "future_count": 34,
+          "train_count": 469,
+          "window_id": "train_lt_2024_dev_2024_2025_future_gte_2026"
+        }
+      ],
+      "rolling_origin_windows_release_ready": [
+        {
+          "dev_count": 85,
+          "future_count": 362,
+          "train_count": 41,
+          "window_id": "train_lt_2019_dev_2019_2020_future_gte_2021"
+        },
+        {
+          "dev_count": 111,
+          "future_count": 290,
+          "train_count": 87,
+          "window_id": "train_lt_2020_dev_2020_2021_future_gte_2022"
+        },
+        {
+          "dev_count": 148,
+          "future_count": 214,
+          "train_count": 126,
+          "window_id": "train_lt_2021_dev_2021_2022_future_gte_2023"
+        },
+        {
+          "dev_count": 157,
+          "future_count": 133,
+          "train_count": 198,
+          "window_id": "train_lt_2022_dev_2022_2023_future_gte_2024"
+        },
+        {
+          "dev_count": 138,
+          "future_count": 76,
+          "train_count": 274,
+          "window_id": "train_lt_2023_dev_2023_2024_future_gte_2025"
+        },
+        {
+          "dev_count": 99,
+          "future_count": 34,
+          "train_count": 355,
+          "window_id": "train_lt_2024_dev_2024_2025_future_gte_2026"
+        }
+      ],
+      "rough_paid_baseline_cost_usd_range": {
+        "high": 131.4,
+        "low": 58.4
+      },
+      "setup_test_smoke": [],
+      "source_context_availability": "strong_pr_or_issue_title_context",
+      "targeted_verifier_timing": {
+        "median_seconds": null,
+        "p95_seconds": null,
+        "pass_count": 0,
+        "sample_count": 0,
+        "speed_class": "not_measured"
+      },
+      "test_change_count": 719,
+      "time_bucket_distribution": {
+        "2016_2019": 191,
+        "2020_2023": 278,
+        "2024_plus": 133
+      },
+      "total_commits": 2241,
+      "total_commits_scanned": 2241,
+      "track": "medium_large_fast",
+      "visible_setup_smoke_status": "not_run"
+    },
+    {
+      "bounded_certification_sample": {
+        "dominant_failure_labels": {},
+        "mode": "bounded_task_shape_certification_not_paid_agent_replay",
+        "pass_count": 24,
+        "sample_size": 24
+      },
+      "changed_test_oracle_availability": "changed_tests_available",
+      "changed_test_oracle_availability_count": 398,
+      "checkout_status": "clean",
+      "classification": "capacity_promising_but_speed_unproven",
+      "clone_status": {
+        "local_path": "experiments/phase0_headroom/external_repos/httpx",
+        "status": "already_present"
+      },
+      "count_feasible_rolling_origin_windows": 3,
+      "deep_probe": true,
+      "environment_risk": "low_to_medium_network_mocking",
+      "estimated_candidate_volume": 474,
+      "estimated_release_eligible_volume": 60,
+      "expected_evaluation_speed_class": "ideal",
+      "expected_paid_baseline_discovery_cells": 240,
+      "head_short": "b5addb6",
+      "historical_reference_probe": {
+        "mode": "not_run",
+        "pass_count": 0,
+        "results": [],
+        "sample_size": 0
+      },
+      "history_date_span": {
+        "first_commit": "2019-04-04T13:27:55+01:00",
+        "latest_commit": "2026-02-23T10:40:42Z"
+      },
+      "history_scan_cap": 5000,
+      "history_scan_capped": false,
+      "history_scan_since": "2010-01-01",
+      "implementation_change_count": 877,
+      "implementation_plus_test_change_count": 474,
+      "likely_verifier_command": "python -m pytest <httpx mocked client test> -q",
+      "local_path": "experiments/phase0_headroom/external_repos/httpx",
+      "prior_evidence": {},
+      "projected_certified_task_count_after_bounded_repair": 60,
+      "projected_evidence_backed_rolling_origin_windows": 2,
+      "reason_to_deep_probe_or_reject": "run targeted verifier smoke before any recommendation",
+      "repo_id": "httpx",
+      "repo_url": "https://github.com/encode/httpx.git",
+      "rolling_origin_windows_raw": [
+        {
+          "dev_count": 176,
+          "future_count": 83,
+          "train_count": 215,
+          "window_id": "train_lt_2020_dev_2020_2021_future_gte_2022"
+        },
+        {
+          "dev_count": 72,
+          "future_count": 55,
+          "train_count": 347,
+          "window_id": "train_lt_2021_dev_2021_2022_future_gte_2023"
+        },
+        {
+          "dev_count": 60,
+          "future_count": 23,
+          "train_count": 391,
+          "window_id": "train_lt_2022_dev_2022_2023_future_gte_2024"
+        }
+      ],
+      "rolling_origin_windows_release_ready": [
+        {
+          "dev_count": 176,
+          "future_count": 83,
+          "train_count": 139,
+          "window_id": "train_lt_2020_dev_2020_2021_future_gte_2022"
+        },
+        {
+          "dev_count": 72,
+          "future_count": 55,
+          "train_count": 271,
+          "window_id": "train_lt_2021_dev_2021_2022_future_gte_2023"
+        },
+        {
+          "dev_count": 60,
+          "future_count": 23,
+          "train_count": 315,
+          "window_id": "train_lt_2022_dev_2022_2023_future_gte_2024"
+        }
+      ],
+      "rough_paid_baseline_cost_usd_range": {
+        "high": 108.0,
+        "low": 48.0
+      },
+      "setup_test_smoke": [],
+      "source_context_availability": "strong_pr_or_issue_title_context",
+      "targeted_verifier_timing": {
+        "median_seconds": null,
+        "p95_seconds": null,
+        "pass_count": 0,
+        "sample_count": 0,
+        "speed_class": "not_measured"
+      },
+      "test_change_count": 576,
+      "time_bucket_distribution": {
+        "2016_2019": 215,
+        "2020_2023": 236,
+        "2024_plus": 23
+      },
+      "total_commits": 1523,
+      "total_commits_scanned": 1523,
+      "track": "medium_large_fast",
+      "visible_setup_smoke_status": "not_run"
+    },
+    {
+      "bounded_certification_sample": {
+        "dominant_failure_labels": {},
+        "mode": "bounded_task_shape_certification_not_paid_agent_replay",
+        "pass_count": 24,
+        "sample_size": 24
+      },
+      "changed_test_oracle_availability": "changed_tests_available",
+      "changed_test_oracle_availability_count": 381,
+      "checkout_status": "clean",
+      "classification": "screened_out",
+      "clone_status": {
+        "local_path": "experiments/phase0_headroom/external_repos/starlette",
+        "status": "already_present"
+      },
+      "count_feasible_rolling_origin_windows": 6,
+      "deep_probe": true,
+      "environment_risk": "low_to_medium_async_http_stack",
+      "estimated_candidate_volume": 435,
+      "estimated_release_eligible_volume": 57,
+      "expected_evaluation_speed_class": "ideal",
+      "expected_paid_baseline_discovery_cells": 228,
+      "head_short": "8ebffd0",
+      "historical_reference_probe": {
+        "mode": "not_run",
+        "pass_count": 0,
+        "results": [],
+        "sample_size": 0
+      },
+      "history_date_span": {
+        "first_commit": "2018-06-25T14:15:32+01:00",
+        "latest_commit": "2026-06-12T09:18:43Z"
+      },
+      "history_scan_cap": 5000,
+      "history_scan_capped": false,
+      "history_scan_since": "2010-01-01",
+      "implementation_change_count": 886,
+      "implementation_plus_test_change_count": 435,
+      "likely_verifier_command": "python -m pytest <starlette test file> -q",
+      "local_path": "experiments/phase0_headroom/external_repos/starlette",
+      "prior_evidence": {},
+      "projected_certified_task_count_after_bounded_repair": 57,
+      "projected_evidence_backed_rolling_origin_windows": 0,
+      "reason_to_deep_probe_or_reject": "screened out by capacity, checkout, or source/oracle availability",
+      "repo_id": "starlette",
+      "repo_url": "https://github.com/encode/starlette.git",
+      "rolling_origin_windows_raw": [
+        {
+          "dev_count": 90,
+          "future_count": 229,
+          "train_count": 116,
+          "window_id": "train_lt_2019_dev_2019_2020_future_gte_2021"
+        },
+        {
+          "dev_count": 50,
+          "future_count": 204,
+          "train_count": 181,
+          "window_id": "train_lt_2020_dev_2020_2021_future_gte_2022"
+        },
+        {
+          "dev_count": 82,
+          "future_count": 147,
+          "train_count": 206,
+          "window_id": "train_lt_2021_dev_2021_2022_future_gte_2023"
+        },
+        {
+          "dev_count": 102,
+          "future_count": 102,
+          "train_count": 231,
+          "window_id": "train_lt_2022_dev_2022_2023_future_gte_2024"
+        },
+        {
+          "dev_count": 92,
+          "future_count": 55,
+          "train_count": 288,
+          "window_id": "train_lt_2023_dev_2023_2024_future_gte_2025"
+        },
+        {
+          "dev_count": 72,
+          "future_count": 30,
+          "train_count": 333,
+          "window_id": "train_lt_2024_dev_2024_2025_future_gte_2026"
+        }
+      ],
+      "rolling_origin_windows_release_ready": [
+        {
+          "dev_count": 73,
+          "future_count": 224,
+          "train_count": 84,
+          "window_id": "train_lt_2019_dev_2019_2020_future_gte_2021"
+        },
+        {
+          "dev_count": 48,
+          "future_count": 199,
+          "train_count": 134,
+          "window_id": "train_lt_2020_dev_2020_2021_future_gte_2022"
+        },
+        {
+          "dev_count": 82,
+          "future_count": 142,
+          "train_count": 157,
+          "window_id": "train_lt_2021_dev_2021_2022_future_gte_2023"
+        },
+        {
+          "dev_count": 100,
+          "future_count": 99,
+          "train_count": 182,
+          "window_id": "train_lt_2022_dev_2022_2023_future_gte_2024"
+        },
+        {
+          "dev_count": 89,
+          "future_count": 53,
+          "train_count": 239,
+          "window_id": "train_lt_2023_dev_2023_2024_future_gte_2025"
+        },
+        {
+          "dev_count": 70,
+          "future_count": 29,
+          "train_count": 282,
+          "window_id": "train_lt_2024_dev_2024_2025_future_gte_2026"
+        }
+      ],
+      "rough_paid_baseline_cost_usd_range": {
+        "high": 102.6,
+        "low": 45.6
+      },
+      "setup_test_smoke": [],
+      "source_context_availability": "strong_pr_or_issue_title_context",
+      "targeted_verifier_timing": {
+        "median_seconds": null,
+        "p95_seconds": null,
+        "pass_count": 0,
+        "sample_count": 0,
+        "speed_class": "not_measured"
+      },
+      "test_change_count": 531,
+      "time_bucket_distribution": {
+        "2016_2019": 181,
+        "2020_2023": 152,
+        "2024_plus": 102
+      },
+      "total_commits": 1653,
+      "total_commits_scanned": 1653,
+      "track": "medium_large_fast",
+      "visible_setup_smoke_status": "not_run"
+    },
+    {
+      "changed_test_oracle_availability": "unknown",
+      "checkout_status": "history_read_failed",
+      "classification": "screened_out",
+      "clone_status": {
+        "local_path": "experiments/phase0_headroom/external_repos/anyio",
+        "status": "already_present"
+      },
+      "deep_probe": true,
+      "environment_risk": "low_to_medium_async_backend_matrix",
+      "history_error": "RuntimeError: fatal: unable to access 'https://github.com/agronholm/anyio.git/': LibreSSL SSL_connect: SSL_ERROR_SYSCALL in connection to github.com:443 \nfatal: could not fetch f5d45f048e1c078f0519a98eed593bdd6b48dfcd from promisor remote",
+      "likely_verifier_command": "python -m pytest <anyio pytest shard> -q",
+      "local_path": "experiments/phase0_headroom/external_repos/anyio",
+      "prior_evidence": {},
+      "reason_to_deep_probe_or_reject": "history_read_failed",
+      "repo_id": "anyio",
+      "repo_url": "https://github.com/agronholm/anyio.git",
+      "source_context_availability": "unknown",
+      "track": "medium_large_fast"
+    },
+    {
+      "bounded_certification_sample": {
+        "dominant_failure_labels": {},
+        "mode": "bounded_task_shape_certification_not_paid_agent_replay",
+        "pass_count": 0,
+        "sample_size": 0
+      },
+      "changed_test_oracle_availability": "changed_tests_available",
+      "changed_test_oracle_availability_count": 36,
+      "checkout_status": "clean",
+      "classification": "screened_out",
+      "clone_status": {
+        "local_path": "experiments/phase0_headroom/external_repos/tornado",
+        "status": "already_present"
+      },
+      "count_feasible_rolling_origin_windows": 1,
+      "deep_probe": false,
+      "environment_risk": "low_to_medium_async_network_tests",
+      "estimated_candidate_volume": 1022,
+      "estimated_release_eligible_volume": 5,
+      "expected_evaluation_speed_class": "ideal",
+      "expected_paid_baseline_discovery_cells": 0,
+      "head_short": "f491e4c1",
+      "historical_reference_probe": {
+        "mode": "not_run",
+        "pass_count": 0,
+        "results": [],
+        "sample_size": 0
+      },
+      "history_date_span": {
+        "first_commit": "2009-09-08T22:01:24-07:00",
+        "latest_commit": "2026-06-08T14:22:37-04:00"
+      },
+      "history_scan_cap": 5000,
+      "history_scan_capped": false,
+      "history_scan_since": "2010-01-01",
+      "implementation_change_count": 2847,
+      "implementation_plus_test_change_count": 1022,
+      "likely_verifier_command": "python -m pytest <tornado unit shard> -q",
+      "local_path": "experiments/phase0_headroom/external_repos/tornado",
+      "prior_evidence": {},
+      "projected_certified_task_count_after_bounded_repair": 5,
+      "projected_evidence_backed_rolling_origin_windows": 0,
+      "reason_to_deep_probe_or_reject": "screened out by capacity, checkout, or source/oracle availability",
+      "repo_id": "tornado",
+      "repo_url": "https://github.com/tornadoweb/tornado.git",
+      "rolling_origin_windows_raw": [
+        {
+          "dev_count": 238,
+          "future_count": 762,
+          "train_count": 22,
+          "window_id": "train_lt_2011_dev_2011_2012_future_gte_2013"
+        },
+        {
+          "dev_count": 277,
+          "future_count": 611,
+          "train_count": 134,
+          "window_id": "train_lt_2012_dev_2012_2013_future_gte_2014"
+        },
+        {
+          "dev_count": 258,
+          "future_count": 504,
+          "train_count": 260,
+          "window_id": "train_lt_2013_dev_2013_2014_future_gte_2015"
+        },
+        {
+          "dev_count": 239,
+          "future_count": 372,
+          "train_count": 411,
+          "window_id": "train_lt_2014_dev_2014_2015_future_gte_2016"
+        },
+        {
+          "dev_count": 174,
+          "future_count": 330,
+          "train_count": 518,
+          "window_id": "train_lt_2015_dev_2015_2016_future_gte_2017"
+        },
+        {
+          "dev_count": 114,
+          "future_count": 258,
+          "train_count": 650,
+          "window_id": "train_lt_2016_dev_2016_2017_future_gte_2018"
+        },
+        {
+          "dev_count": 189,
+          "future_count": 141,
+          "train_count": 692,
+          "window_id": "train_lt_2017_dev_2017_2018_future_gte_2019"
+        },
+        {
+          "dev_count": 130,
+          "future_count": 128,
+          "train_count": 764,
+          "window_id": "train_lt_2018_dev_2018_2019_future_gte_2020"
+        },
+        {
+          "dev_count": 23,
+          "future_count": 118,
+          "train_count": 881,
+          "window_id": "train_lt_2019_dev_2019_2020_future_gte_2021"
+        },
+        {
+          "dev_count": 23,
+          "future_count": 105,
+          "train_count": 894,
+          "window_id": "train_lt_2020_dev_2020_2021_future_gte_2022"
+        },
+        {
+          "dev_count": 28,
+          "future_count": 90,
+          "train_count": 904,
+          "window_id": "train_lt_2021_dev_2021_2022_future_gte_2023"
+        },
+        {
+          "dev_count": 41,
+          "future_count": 64,
+          "train_count": 917,
+          "window_id": "train_lt_2022_dev_2022_2023_future_gte_2024"
+        },
+        {
+          "dev_count": 47,
+          "future_count": 43,
+          "train_count": 932,
+          "window_id": "train_lt_2023_dev_2023_2024_future_gte_2025"
+        },
+        {
+          "dev_count": 43,
+          "future_count": 21,
+          "train_count": 958,
+          "window_id": "train_lt_2024_dev_2024_2025_future_gte_2026"
+        }
+      ],
+      "rolling_origin_windows_release_ready": [
+        {
+          "dev_count": 7,
+          "future_count": 13,
+          "train_count": 16,
+          "window_id": "train_lt_2018_dev_2018_2019_future_gte_2020"
+        }
+      ],
+      "rough_paid_baseline_cost_usd_range": {
+        "high": 0.0,
+        "low": 0.0
+      },
+      "setup_test_smoke": [],
+      "source_context_availability": "thin_but_usable_pr_or_issue_title_context",
+      "targeted_verifier_timing": {
+        "median_seconds": null,
+        "p95_seconds": null,
+        "pass_count": 0,
+        "sample_count": 0,
+        "speed_class": "not_measured"
+      },
+      "test_change_count": 1438,
+      "time_bucket_distribution": {
+        "2016_2019": 244,
+        "2020_2023": 64,
+        "2024_plus": 64,
+        "pre_2016": 650
+      },
+      "total_commits": 5040,
+      "total_commits_scanned": 4971,
+      "track": "medium_large_fast",
+      "visible_setup_smoke_status": "not_run"
+    },
+    {
+      "bounded_certification_sample": {
+        "dominant_failure_labels": {},
+        "mode": "bounded_task_shape_certification_not_paid_agent_replay",
+        "pass_count": 0,
+        "sample_size": 0
+      },
+      "changed_test_oracle_availability": "changed_tests_available",
+      "changed_test_oracle_availability_count": 121,
+      "checkout_status": "clean",
+      "classification": "screened_out",
+      "clone_status": {
+        "local_path": "experiments/phase0_headroom/external_repos/trio",
+        "status": "already_present"
+      },
+      "count_feasible_rolling_origin_windows": 2,
+      "deep_probe": false,
+      "environment_risk": "low_to_medium_async_backend_matrix",
+      "estimated_candidate_volume": 457,
+      "estimated_release_eligible_volume": 18,
+      "expected_evaluation_speed_class": "ideal",
+      "expected_paid_baseline_discovery_cells": 0,
+      "head_short": "78dfbc2b",
+      "historical_reference_probe": {
+        "mode": "not_run",
+        "pass_count": 0,
+        "results": [],
+        "sample_size": 0
+      },
+      "history_date_span": {
+        "first_commit": "2017-01-10T22:02:52-08:00",
+        "latest_commit": "2026-06-09T02:57:15-04:00"
+      },
+      "history_scan_cap": 5000,
+      "history_scan_capped": true,
+      "history_scan_since": "2010-01-01",
+      "implementation_change_count": 1136,
+      "implementation_plus_test_change_count": 457,
+      "likely_verifier_command": "python -m pytest <trio unit shard> -q",
+      "local_path": "experiments/phase0_headroom/external_repos/trio",
+      "prior_evidence": {},
+      "projected_certified_task_count_after_bounded_repair": 18,
+      "projected_evidence_backed_rolling_origin_windows": 0,
+      "reason_to_deep_probe_or_reject": "screened out by capacity, checkout, or source/oracle availability",
+      "repo_id": "trio",
+      "repo_url": "https://github.com/python-trio/trio.git",
+      "rolling_origin_windows_raw": [
+        {
+          "dev_count": 160,
+          "future_count": 270,
+          "train_count": 27,
+          "window_id": "train_lt_2019_dev_2019_2020_future_gte_2021"
+        },
+        {
+          "dev_count": 105,
+          "future_count": 239,
+          "train_count": 113,
+          "window_id": "train_lt_2020_dev_2020_2021_future_gte_2022"
+        },
+        {
+          "dev_count": 60,
+          "future_count": 210,
+          "train_count": 187,
+          "window_id": "train_lt_2021_dev_2021_2022_future_gte_2023"
+        },
+        {
+          "dev_count": 104,
+          "future_count": 135,
+          "train_count": 218,
+          "window_id": "train_lt_2022_dev_2022_2023_future_gte_2024"
+        },
+        {
+          "dev_count": 157,
+          "future_count": 53,
+          "train_count": 247,
+          "window_id": "train_lt_2023_dev_2023_2024_future_gte_2025"
+        }
+      ],
+      "rolling_origin_windows_release_ready": [
+        {
+          "dev_count": 56,
+          "future_count": 55,
+          "train_count": 10,
+          "window_id": "train_lt_2022_dev_2022_2023_future_gte_2024"
+        },
+        {
+          "dev_count": 85,
+          "future_count": 23,
+          "train_count": 13,
+          "window_id": "train_lt_2023_dev_2023_2024_future_gte_2025"
+        }
+      ],
+      "rough_paid_baseline_cost_usd_range": {
+        "high": 0.0,
+        "low": 0.0
+      },
+      "setup_test_smoke": [],
+      "source_context_availability": "strong_pr_or_issue_title_context",
+      "targeted_verifier_timing": {
+        "median_seconds": null,
+        "p95_seconds": null,
+        "pass_count": 0,
+        "sample_count": 0,
+        "speed_class": "not_measured"
+      },
+      "test_change_count": 909,
+      "time_bucket_distribution": {
+        "2016_2019": 113,
+        "2020_2023": 209,
+        "2024_plus": 135
+      },
+      "total_commits": 6604,
+      "total_commits_scanned": 5000,
+      "track": "medium_large_fast",
+      "visible_setup_smoke_status": "not_run"
+    },
+    {
+      "changed_test_oracle_availability": "unknown",
+      "checkout_status": "dirty_or_partial_checkout",
+      "classification": "screened_out",
+      "clone_status": {
+        "local_path": "experiments/phase0_headroom/external_repos/pydantic",
+        "status": "already_present"
+      },
+      "deep_probe": false,
+      "environment_risk": "medium_rust_core_dependency_but_wheel_available",
+      "likely_verifier_command": "python -m pytest <pydantic test file> -q",
+      "local_path": "experiments/phase0_headroom/external_repos/pydantic",
+      "prior_evidence": {},
+      "reason_to_deep_probe_or_reject": "repair or reclone ignored external checkout",
+      "repo_id": "pydantic",
+      "repo_url": "https://github.com/pydantic/pydantic.git",
+      "source_context_availability": "unknown",
+      "track": "medium_large_fast"
+    },
+    {
+      "bounded_certification_sample": {
+        "dominant_failure_labels": {},
+        "mode": "bounded_task_shape_certification_not_paid_agent_replay",
+        "pass_count": 0,
+        "sample_size": 0
+      },
+      "changed_test_oracle_availability": "changed_tests_available",
+      "changed_test_oracle_availability_count": 514,
+      "checkout_status": "clean",
+      "classification": "capacity_promising_but_speed_unproven",
+      "clone_status": {
+        "duration_seconds": 7.177,
+        "local_path": "experiments/phase0_headroom/external_repos/sphinx",
+        "returncode": 0,
+        "status": "cloned",
+        "stderr_line_count": 106,
+        "stderr_tail_hash": "sha256:58d8ab5b6495fc3d618a154a6ea9aa350af1a67c3b2e096c780a8d2f5a90f57e",
+        "stdout_tail_hash": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "timed_out": false
+      },
+      "count_feasible_rolling_origin_windows": 2,
+      "deep_probe": false,
+      "environment_risk": "medium_doc_build_fixture_matrix",
+      "estimated_candidate_volume": 804,
+      "estimated_release_eligible_volume": 77,
+      "expected_evaluation_speed_class": "acceptable",
+      "expected_paid_baseline_discovery_cells": 308,
+      "head_short": "581c0860d",
+      "historical_reference_probe": {
+        "mode": "not_run",
+        "pass_count": 0,
+        "results": [],
+        "sample_size": 0
+      },
+      "history_date_span": {
+        "first_commit": "2007-07-23T08:56:48Z",
+        "latest_commit": "2026-06-15T08:51:10+02:00"
+      },
+      "history_scan_cap": 5000,
+      "history_scan_capped": true,
+      "history_scan_since": "2010-01-01",
+      "implementation_change_count": 2217,
+      "implementation_plus_test_change_count": 804,
+      "likely_verifier_command": "python -m pytest <sphinx unit shard> -q",
+      "local_path": "experiments/phase0_headroom/external_repos/sphinx",
+      "prior_evidence": {},
+      "projected_certified_task_count_after_bounded_repair": 77,
+      "projected_evidence_backed_rolling_origin_windows": 2,
+      "reason_to_deep_probe_or_reject": "run targeted verifier smoke before any recommendation",
+      "repo_id": "sphinx",
+      "repo_url": "https://github.com/sphinx-doc/sphinx.git",
+      "rolling_origin_windows_raw": [
+        {
+          "dev_count": 266,
+          "future_count": 381,
+          "train_count": 157,
+          "window_id": "train_lt_2022_dev_2022_2023_future_gte_2024"
+        },
+        {
+          "dev_count": 323,
+          "future_count": 184,
+          "train_count": 297,
+          "window_id": "train_lt_2023_dev_2023_2024_future_gte_2025"
+        }
+      ],
+      "rolling_origin_windows_release_ready": [
+        {
+          "dev_count": 147,
+          "future_count": 302,
+          "train_count": 65,
+          "window_id": "train_lt_2022_dev_2022_2023_future_gte_2024"
+        },
+        {
+          "dev_count": 230,
+          "future_count": 154,
+          "train_count": 130,
+          "window_id": "train_lt_2023_dev_2023_2024_future_gte_2025"
+        }
+      ],
+      "rough_paid_baseline_cost_usd_range": {
+        "high": 138.6,
+        "low": 61.6
+      },
+      "setup_test_smoke": [],
+      "source_context_availability": "strong_pr_or_issue_title_context",
+      "targeted_verifier_timing": {
+        "median_seconds": null,
+        "p95_seconds": null,
+        "pass_count": 0,
+        "sample_count": 0,
+        "speed_class": "not_measured"
+      },
+      "test_change_count": 1213,
+      "time_bucket_distribution": {
+        "2016_2019": 1,
+        "2020_2023": 422,
+        "2024_plus": 381
+      },
+      "total_commits": 22409,
+      "total_commits_scanned": 5000,
+      "track": "medium_large_fast",
+      "visible_setup_smoke_status": "not_run"
+    }
+  ],
+  "deep_probe_metrics": [
+    {
+      "bounded_certification_sample": {
+        "dominant_failure_labels": {},
+        "mode": "bounded_task_shape_certification_not_paid_agent_replay",
+        "pass_count": 24,
+        "sample_size": 24
+      },
+      "changed_test_oracle_availability": "changed_tests_available",
+      "changed_test_oracle_availability_count": 42,
+      "checkout_status": "clean",
+      "classification": "screened_out",
+      "clone_status": {
+        "local_path": "experiments/phase0_headroom/external_repos/boltons",
+        "status": "already_present"
+      },
+      "count_feasible_rolling_origin_windows": 2,
+      "deep_probe": true,
+      "environment_risk": "low",
+      "estimated_candidate_volume": 202,
+      "estimated_release_eligible_volume": 57,
+      "expected_evaluation_speed_class": "ideal",
+      "expected_paid_baseline_discovery_cells": 228,
+      "head_short": "207651e",
+      "historical_reference_probe": {
+        "mode": "not_run",
+        "pass_count": 0,
+        "results": [],
+        "sample_size": 0
+      },
+      "history_date_span": {
+        "first_commit": "2013-02-19T18:04:47-08:00",
+        "latest_commit": "2026-03-06T14:18:37-08:00"
+      },
+      "history_scan_cap": 5000,
+      "history_scan_capped": false,
+      "history_scan_since": "2010-01-01",
+      "implementation_change_count": 1142,
+      "implementation_plus_test_change_count": 202,
+      "likely_verifier_command": "python -m pytest <changed_tests> -q",
+      "local_path": "experiments/phase0_headroom/external_repos/boltons",
+      "prior_evidence": {
+        "evidence_backed_windows": 1,
+        "known_certification_attempts": 80,
+        "known_current_release_eligible": 35,
+        "known_release_conversion": 0.3793103448275862,
+        "known_release_eligible": 57,
+        "known_technical_certified": 0,
+        "prior_note": "57 projected release tasks; only one evidence-backed tuning window.",
+        "prior_probe_attempts": 0,
+        "prior_probe_release_eligible": 0,
+        "prior_probe_technical_certified": 0,
+        "prior_release_ready_before_certification": 0,
+        "prior_source": "phase1_third_repo_release_supply_screen",
+        "prior_technical_plus_review_upper_bound": 0
+      },
+      "projected_certified_task_count_after_bounded_repair": 57,
+      "projected_evidence_backed_rolling_origin_windows": 0,
+      "reason_to_deep_probe_or_reject": "screened out by capacity, checkout, or source/oracle availability",
+      "repo_id": "boltons",
+      "repo_url": "https://github.com/mahmoud/boltons.git",
+      "rolling_origin_windows_raw": [
+        {
+          "dev_count": 72,
+          "future_count": 88,
+          "train_count": 42,
+          "window_id": "train_lt_2016_dev_2016_2017_future_gte_2018"
+        },
+        {
+          "dev_count": 43,
+          "future_count": 73,
+          "train_count": 86,
+          "window_id": "train_lt_2017_dev_2017_2018_future_gte_2019"
+        },
+        {
+          "dev_count": 42,
+          "future_count": 46,
+          "train_count": 114,
+          "window_id": "train_lt_2018_dev_2018_2019_future_gte_2020"
+        },
+        {
+          "dev_count": 41,
+          "future_count": 32,
+          "train_count": 129,
+          "window_id": "train_lt_2019_dev_2019_2020_future_gte_2021"
+        },
+        {
+          "dev_count": 18,
+          "future_count": 28,
+          "train_count": 156,
+          "window_id": "train_lt_2020_dev_2020_2021_future_gte_2022"
+        },
+        {
+          "dev_count": 9,
+          "future_count": 23,
+          "train_count": 170,
+          "window_id": "train_lt_2021_dev_2021_2022_future_gte_2023"
+        },
+        {
+          "dev_count": 15,
+          "future_count": 13,
+          "train_count": 174,
+          "window_id": "train_lt_2022_dev_2022_2023_future_gte_2024"
+        }
+      ],
+      "rolling_origin_windows_release_ready": [
+        {
+          "dev_count": 10,
+          "future_count": 18,
+          "train_count": 14,
+          "window_id": "train_lt_2019_dev_2019_2020_future_gte_2021"
+        },
+        {
+          "dev_count": 11,
+          "future_count": 14,
+          "train_count": 17,
+          "window_id": "train_lt_2020_dev_2020_2021_future_gte_2022"
+        }
+      ],
+      "rough_paid_baseline_cost_usd_range": {
+        "high": 102.6,
+        "low": 45.6
+      },
+      "setup_test_smoke": [],
+      "source_context_availability": "thin_but_usable_pr_or_issue_title_context",
+      "targeted_verifier_timing": {
+        "median_seconds": null,
+        "p95_seconds": null,
+        "pass_count": 0,
+        "sample_count": 0,
+        "speed_class": "not_measured"
+      },
+      "test_change_count": 289,
+      "time_bucket_distribution": {
+        "2016_2019": 114,
+        "2020_2023": 33,
+        "2024_plus": 13,
+        "pre_2016": 42
+      },
+      "total_commits": 1611,
+      "total_commits_scanned": 1611,
+      "track": "baseline",
+      "visible_setup_smoke_status": "not_run"
+    },
+    {
+      "bounded_certification_sample": {
+        "dominant_failure_labels": {},
+        "mode": "bounded_task_shape_certification_not_paid_agent_replay",
+        "pass_count": 24,
+        "sample_size": 24
+      },
+      "changed_test_oracle_availability": "changed_tests_available",
+      "changed_test_oracle_availability_count": 249,
+      "checkout_status": "clean",
+      "classification": "screened_out",
+      "clone_status": {
+        "local_path": "experiments/phase0_headroom/external_repos/attrs",
+        "status": "already_present"
+      },
+      "count_feasible_rolling_origin_windows": 7,
+      "deep_probe": true,
+      "environment_risk": "low",
+      "estimated_candidate_volume": 361,
+      "estimated_release_eligible_volume": 31,
+      "expected_evaluation_speed_class": "ideal",
+      "expected_paid_baseline_discovery_cells": 124,
+      "head_short": "89fae83",
+      "historical_reference_probe": {
+        "mode": "not_run",
+        "pass_count": 0,
+        "results": [],
+        "sample_size": 0
+      },
+      "history_date_span": {
+        "first_commit": "2015-01-27T17:53:17+01:00",
+        "latest_commit": "2026-06-06T09:07:31+02:00"
+      },
+      "history_scan_cap": 5000,
+      "history_scan_capped": false,
+      "history_scan_since": "2010-01-01",
+      "implementation_change_count": 674,
+      "implementation_plus_test_change_count": 361,
+      "likely_verifier_command": "python -m pytest <changed_tests> -q",
+      "local_path": "experiments/phase0_headroom/external_repos/attrs",
+      "prior_evidence": {
+        "evidence_backed_windows": 0,
+        "known_release_eligible": 31,
+        "known_replay_attempts": 4,
+        "known_replay_passes": 1,
+        "known_technical_certified": 28,
+        "prior_note": "31 release-eligible after overlay; packaging and verifier pinning repairs remain.",
+        "prior_probe_attempts": 0,
+        "prior_probe_release_eligible": 0,
+        "prior_probe_technical_certified": 0,
+        "prior_release_ready_before_certification": 0,
+        "prior_source": "phase1_third_repo_release_supply_screen",
+        "prior_technical_plus_review_upper_bound": 0
+      },
+      "projected_certified_task_count_after_bounded_repair": 31,
+      "projected_evidence_backed_rolling_origin_windows": 0,
+      "reason_to_deep_probe_or_reject": "screened out by capacity, checkout, or source/oracle availability",
+      "repo_id": "attrs",
+      "repo_url": "https://github.com/python-attrs/attrs.git",
+      "rolling_origin_windows_raw": [
+        {
+          "dev_count": 70,
+          "future_count": 237,
+          "train_count": 54,
+          "window_id": "train_lt_2016_dev_2016_2017_future_gte_2018"
+        },
+        {
+          "dev_count": 63,
+          "future_count": 210,
+          "train_count": 88,
+          "window_id": "train_lt_2017_dev_2017_2018_future_gte_2019"
+        },
+        {
+          "dev_count": 58,
+          "future_count": 179,
+          "train_count": 124,
+          "window_id": "train_lt_2018_dev_2018_2019_future_gte_2020"
+        },
+        {
+          "dev_count": 63,
+          "future_count": 147,
+          "train_count": 151,
+          "window_id": "train_lt_2019_dev_2019_2020_future_gte_2021"
+        },
+        {
+          "dev_count": 69,
+          "future_count": 110,
+          "train_count": 182,
+          "window_id": "train_lt_2020_dev_2020_2021_future_gte_2022"
+        },
+        {
+          "dev_count": 66,
+          "future_count": 81,
+          "train_count": 214,
+          "window_id": "train_lt_2021_dev_2021_2022_future_gte_2023"
+        },
+        {
+          "dev_count": 53,
+          "future_count": 57,
+          "train_count": 251,
+          "window_id": "train_lt_2022_dev_2022_2023_future_gte_2024"
+        },
+        {
+          "dev_count": 57,
+          "future_count": 24,
+          "train_count": 280,
+          "window_id": "train_lt_2023_dev_2023_2024_future_gte_2025"
+        }
+      ],
+      "rolling_origin_windows_release_ready": [
+        {
+          "dev_count": 56,
+          "future_count": 181,
+          "train_count": 12,
+          "window_id": "train_lt_2017_dev_2017_2018_future_gte_2019"
+        },
+        {
+          "dev_count": 46,
+          "future_count": 159,
+          "train_count": 44,
+          "window_id": "train_lt_2018_dev_2018_2019_future_gte_2020"
+        },
+        {
+          "dev_count": 50,
+          "future_count": 131,
+          "train_count": 68,
+          "window_id": "train_lt_2019_dev_2019_2020_future_gte_2021"
+        },
+        {
+          "dev_count": 63,
+          "future_count": 96,
+          "train_count": 90,
+          "window_id": "train_lt_2020_dev_2020_2021_future_gte_2022"
+        },
+        {
+          "dev_count": 62,
+          "future_count": 69,
+          "train_count": 118,
+          "window_id": "train_lt_2021_dev_2021_2022_future_gte_2023"
+        },
+        {
+          "dev_count": 49,
+          "future_count": 47,
+          "train_count": 153,
+          "window_id": "train_lt_2022_dev_2022_2023_future_gte_2024"
+        },
+        {
+          "dev_count": 49,
+          "future_count": 20,
+          "train_count": 180,
+          "window_id": "train_lt_2023_dev_2023_2024_future_gte_2025"
+        }
+      ],
+      "rough_paid_baseline_cost_usd_range": {
+        "high": 55.8,
+        "low": 24.8
+      },
+      "setup_test_smoke": [],
+      "source_context_availability": "strong_pr_or_issue_title_context",
+      "targeted_verifier_timing": {
+        "median_seconds": null,
+        "p95_seconds": null,
+        "pass_count": 0,
+        "sample_count": 0,
+        "speed_class": "not_measured"
+      },
+      "test_change_count": 438,
+      "time_bucket_distribution": {
+        "2016_2019": 128,
+        "2020_2023": 122,
+        "2024_plus": 57,
+        "pre_2016": 54
+      },
+      "total_commits": 1786,
+      "total_commits_scanned": 1786,
+      "track": "baseline",
+      "visible_setup_smoke_status": "not_run"
+    },
+    {
+      "bounded_certification_sample": {
+        "dominant_failure_labels": {},
+        "mode": "bounded_task_shape_certification_not_paid_agent_replay",
+        "pass_count": 24,
+        "sample_size": 24
+      },
+      "changed_test_oracle_availability": "changed_tests_available",
+      "changed_test_oracle_availability_count": 63,
+      "checkout_status": "clean",
+      "classification": "screened_out",
+      "clone_status": {
+        "local_path": "experiments/phase0_headroom/external_repos/click",
+        "status": "already_present"
+      },
+      "count_feasible_rolling_origin_windows": 3,
+      "deep_probe": true,
+      "environment_risk": "low",
+      "estimated_candidate_volume": 420,
+      "estimated_release_eligible_volume": 30,
+      "expected_evaluation_speed_class": "ideal",
+      "expected_paid_baseline_discovery_cells": 120,
+      "head_short": "8a1b1a3",
+      "historical_reference_probe": {
+        "mode": "not_run",
+        "pass_count": 0,
+        "results": [],
+        "sample_size": 0
+      },
+      "history_date_span": {
+        "first_commit": "2014-04-24T11:51:55+02:00",
+        "latest_commit": "2026-06-07T08:59:46+05:00"
+      },
+      "history_scan_cap": 5000,
+      "history_scan_capped": false,
+      "history_scan_since": "2010-01-01",
+      "implementation_change_count": 1096,
+      "implementation_plus_test_change_count": 420,
+      "likely_verifier_command": "python -m pytest <changed_tests> -q",
+      "local_path": "experiments/phase0_headroom/external_repos/click",
+      "prior_evidence": {
+        "evidence_backed_windows": 0,
+        "known_certification_attempts": 102,
+        "known_release_conversion": 0.29411764705882354,
+        "known_release_eligible": 30,
+        "known_technical_certified": 75,
+        "prior_note": "30 release-eligible and source context repaired; target-profile packaging still needed.",
+        "prior_probe_attempts": 102,
+        "prior_probe_release_eligible": 30,
+        "prior_probe_technical_certified": 75,
+        "prior_release_ready_before_certification": 38,
+        "prior_source": "phase1_third_repo_release_supply_screen",
+        "prior_technical_plus_review_upper_bound": 273
+      },
+      "projected_certified_task_count_after_bounded_repair": 30,
+      "projected_evidence_backed_rolling_origin_windows": 0,
+      "reason_to_deep_probe_or_reject": "screened out by capacity, checkout, or source/oracle availability",
+      "repo_id": "click",
+      "repo_url": "https://github.com/pallets/click.git",
+      "rolling_origin_windows_raw": [
+        {
+          "dev_count": 50,
+          "future_count": 308,
+          "train_count": 62,
+          "window_id": "train_lt_2015_dev_2015_2016_future_gte_2017"
+        },
+        {
+          "dev_count": 31,
+          "future_count": 294,
+          "train_count": 95,
+          "window_id": "train_lt_2016_dev_2016_2017_future_gte_2018"
+        },
+        {
+          "dev_count": 37,
+          "future_count": 271,
+          "train_count": 112,
+          "window_id": "train_lt_2017_dev_2017_2018_future_gte_2019"
+        },
+        {
+          "dev_count": 50,
+          "future_count": 244,
+          "train_count": 126,
+          "window_id": "train_lt_2018_dev_2018_2019_future_gte_2020"
+        },
+        {
+          "dev_count": 87,
+          "future_count": 184,
+          "train_count": 149,
+          "window_id": "train_lt_2019_dev_2019_2020_future_gte_2021"
+        },
+        {
+          "dev_count": 116,
+          "future_count": 128,
+          "train_count": 176,
+          "window_id": "train_lt_2020_dev_2020_2021_future_gte_2022"
+        },
+        {
+          "dev_count": 67,
+          "future_count": 117,
+          "train_count": 236,
+          "window_id": "train_lt_2021_dev_2021_2022_future_gte_2023"
+        },
+        {
+          "dev_count": 25,
+          "future_count": 103,
+          "train_count": 292,
+          "window_id": "train_lt_2022_dev_2022_2023_future_gte_2024"
+        },
+        {
+          "dev_count": 42,
+          "future_count": 75,
+          "train_count": 303,
+          "window_id": "train_lt_2023_dev_2023_2024_future_gte_2025"
+        },
+        {
+          "dev_count": 59,
+          "future_count": 44,
+          "train_count": 317,
+          "window_id": "train_lt_2024_dev_2024_2025_future_gte_2026"
+        }
+      ],
+      "rolling_origin_windows_release_ready": [
+        {
+          "dev_count": 8,
+          "future_count": 41,
+          "train_count": 14,
+          "window_id": "train_lt_2016_dev_2016_2017_future_gte_2018"
+        },
+        {
+          "dev_count": 6,
+          "future_count": 38,
+          "train_count": 19,
+          "window_id": "train_lt_2017_dev_2017_2018_future_gte_2019"
+        },
+        {
+          "dev_count": 24,
+          "future_count": 10,
+          "train_count": 29,
+          "window_id": "train_lt_2023_dev_2023_2024_future_gte_2025"
+        }
+      ],
+      "rough_paid_baseline_cost_usd_range": {
+        "high": 54.0,
+        "low": 24.0
+      },
+      "setup_test_smoke": [],
+      "source_context_availability": "adequate_pr_or_issue_title_context",
+      "targeted_verifier_timing": {
+        "median_seconds": null,
+        "p95_seconds": null,
+        "pass_count": 0,
+        "sample_count": 0,
+        "speed_class": "not_measured"
+      },
+      "test_change_count": 531,
+      "time_bucket_distribution": {
+        "2016_2019": 81,
+        "2020_2023": 141,
+        "2024_plus": 103,
+        "pre_2016": 95
+      },
+      "total_commits": 3242,
+      "total_commits_scanned": 3242,
+      "track": "baseline",
+      "visible_setup_smoke_status": "not_run"
+    },
+    {
+      "bounded_certification_sample": {
+        "dominant_failure_labels": {},
+        "mode": "bounded_task_shape_certification_not_paid_agent_replay",
+        "pass_count": 24,
+        "sample_size": 24
+      },
+      "changed_test_oracle_availability": "changed_tests_available",
+      "changed_test_oracle_availability_count": 179,
+      "checkout_status": "clean",
+      "classification": "screened_out",
+      "clone_status": {
+        "local_path": "experiments/phase0_headroom/external_repos/packaging",
+        "status": "already_present"
+      },
+      "count_feasible_rolling_origin_windows": 4,
+      "deep_probe": true,
+      "environment_risk": "low",
+      "estimated_candidate_volume": 248,
+      "estimated_release_eligible_volume": 27,
+      "expected_evaluation_speed_class": "ideal",
+      "expected_paid_baseline_discovery_cells": 0,
+      "head_short": "664f049",
+      "historical_reference_probe": {
+        "mode": "not_run",
+        "pass_count": 0,
+        "results": [],
+        "sample_size": 0
+      },
+      "history_date_span": {
+        "first_commit": "2014-05-15T18:57:57-04:00",
+        "latest_commit": "2026-06-14T22:17:04-04:00"
+      },
+      "history_scan_cap": 5000,
+      "history_scan_capped": false,
+      "history_scan_since": "2010-01-01",
+      "implementation_change_count": 633,
+      "implementation_plus_test_change_count": 248,
+      "likely_verifier_command": "python -m pytest <changed_tests> -q",
+      "local_path": "experiments/phase0_headroom/external_repos/packaging",
+      "prior_evidence": {
+        "known_release_eligible": 0,
+        "known_technical_certified": 0,
+        "prior_probe_attempts": 12,
+        "prior_probe_release_eligible": 0,
+        "prior_probe_technical_certified": 0,
+        "prior_release_ready_before_certification": 113,
+        "prior_source": "phase1_third_repo_release_supply_screen",
+        "prior_technical_plus_review_upper_bound": 181
+      },
+      "projected_certified_task_count_after_bounded_repair": 27,
+      "projected_evidence_backed_rolling_origin_windows": 0,
+      "reason_to_deep_probe_or_reject": "screened out by capacity, checkout, or source/oracle availability",
+      "repo_id": "packaging",
+      "repo_url": "https://github.com/pypa/packaging.git",
+      "rolling_origin_windows_raw": [
+        {
+          "dev_count": 21,
+          "future_count": 204,
+          "train_count": 23,
+          "window_id": "train_lt_2015_dev_2015_2016_future_gte_2017"
+        },
+        {
+          "dev_count": 10,
+          "future_count": 203,
+          "train_count": 35,
+          "window_id": "train_lt_2016_dev_2016_2017_future_gte_2018"
+        },
+        {
+          "dev_count": 9,
+          "future_count": 195,
+          "train_count": 44,
+          "window_id": "train_lt_2017_dev_2017_2018_future_gte_2019"
+        },
+        {
+          "dev_count": 20,
+          "future_count": 183,
+          "train_count": 45,
+          "window_id": "train_lt_2018_dev_2018_2019_future_gte_2020"
+        },
+        {
+          "dev_count": 27,
+          "future_count": 168,
+          "train_count": 53,
+          "window_id": "train_lt_2019_dev_2019_2020_future_gte_2021"
+        },
+        {
+          "dev_count": 29,
+          "future_count": 154,
+          "train_count": 65,
+          "window_id": "train_lt_2020_dev_2020_2021_future_gte_2022"
+        },
+        {
+          "dev_count": 43,
+          "future_count": 125,
+          "train_count": 80,
+          "window_id": "train_lt_2021_dev_2021_2022_future_gte_2023"
+        },
+        {
+          "dev_count": 49,
+          "future_count": 105,
+          "train_count": 94,
+          "window_id": "train_lt_2022_dev_2022_2023_future_gte_2024"
+        },
+        {
+          "dev_count": 32,
+          "future_count": 93,
+          "train_count": 123,
+          "window_id": "train_lt_2023_dev_2023_2024_future_gte_2025"
+        },
+        {
+          "dev_count": 39,
+          "future_count": 66,
+          "train_count": 143,
+          "window_id": "train_lt_2024_dev_2024_2025_future_gte_2026"
+        }
+      ],
+      "rolling_origin_windows_release_ready": [
+        {
+          "dev_count": 34,
+          "future_count": 123,
+          "train_count": 22,
+          "window_id": "train_lt_2021_dev_2021_2022_future_gte_2023"
+        },
+        {
+          "dev_count": 38,
+          "future_count": 105,
+          "train_count": 36,
+          "window_id": "train_lt_2022_dev_2022_2023_future_gte_2024"
+        },
+        {
+          "dev_count": 30,
+          "future_count": 93,
+          "train_count": 56,
+          "window_id": "train_lt_2023_dev_2023_2024_future_gte_2025"
+        },
+        {
+          "dev_count": 39,
+          "future_count": 66,
+          "train_count": 74,
+          "window_id": "train_lt_2024_dev_2024_2025_future_gte_2026"
+        }
+      ],
+      "rough_paid_baseline_cost_usd_range": {
+        "high": 0.0,
+        "low": 0.0
+      },
+      "setup_test_smoke": [],
+      "source_context_availability": "strong_pr_or_issue_title_context",
+      "targeted_verifier_timing": {
+        "median_seconds": null,
+        "p95_seconds": null,
+        "pass_count": 0,
+        "sample_count": 0,
+        "speed_class": "not_measured"
+      },
+      "test_change_count": 283,
+      "time_bucket_distribution": {
+        "2016_2019": 30,
+        "2020_2023": 78,
+        "2024_plus": 105,
+        "pre_2016": 35
+      },
+      "total_commits": 1032,
+      "total_commits_scanned": 1032,
+      "track": "baseline",
+      "visible_setup_smoke_status": "not_run"
+    },
+    {
+      "bounded_certification_sample": {
+        "dominant_failure_labels": {},
+        "mode": "bounded_task_shape_certification_not_paid_agent_replay",
+        "pass_count": 24,
+        "sample_size": 24
+      },
+      "changed_test_oracle_availability": "changed_tests_available",
+      "changed_test_oracle_availability_count": 1717,
+      "checkout_status": "clean",
+      "classification": "capacity_promising_but_speed_unproven",
+      "clone_status": {
+        "duration_seconds": 16.98,
+        "local_path": "experiments/phase0_headroom/external_repos/django",
+        "returncode": 0,
+        "status": "cloned",
+        "stderr_line_count": 104,
+        "stderr_tail_hash": "sha256:932d2b0bbd43bc56c96d3b74eb584526e14aedc41579bce7c15062ee3a79ec43",
+        "stdout_tail_hash": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "timed_out": false
+      },
+      "count_feasible_rolling_origin_windows": 4,
+      "deep_probe": true,
+      "environment_risk": "medium_database_and_settings_matrix",
+      "estimated_candidate_volume": 1888,
+      "estimated_release_eligible_volume": 258,
+      "expected_evaluation_speed_class": "acceptable",
+      "expected_paid_baseline_discovery_cells": 360,
+      "head_short": "f1440a752e",
+      "historical_reference_probe": {
+        "mode": "not_run",
+        "pass_count": 0,
+        "results": [],
+        "sample_size": 0
+      },
+      "history_date_span": {
+        "first_commit": "2005-07-13T16:56:05Z",
+        "latest_commit": "2026-06-11T16:26:32-04:00"
+      },
+      "history_scan_cap": 5000,
+      "history_scan_capped": true,
+      "history_scan_since": "2010-01-01",
+      "implementation_change_count": 2524,
+      "implementation_plus_test_change_count": 1888,
+      "likely_verifier_command": "python -m pytest <django test module> -q",
+      "local_path": "experiments/phase0_headroom/external_repos/django",
+      "prior_evidence": {},
+      "projected_certified_task_count_after_bounded_repair": 258,
+      "projected_evidence_backed_rolling_origin_windows": 3,
+      "reason_to_deep_probe_or_reject": "run targeted verifier smoke before any recommendation",
+      "repo_id": "django",
+      "repo_url": "https://github.com/django/django.git",
+      "rolling_origin_windows_raw": [
+        {
+          "dev_count": 627,
+          "future_count": 1240,
+          "train_count": 21,
+          "window_id": "train_lt_2021_dev_2021_2022_future_gte_2023"
+        },
+        {
+          "dev_count": 756,
+          "future_count": 864,
+          "train_count": 268,
+          "window_id": "train_lt_2022_dev_2022_2023_future_gte_2024"
+        },
+        {
+          "dev_count": 709,
+          "future_count": 531,
+          "train_count": 648,
+          "window_id": "train_lt_2023_dev_2023_2024_future_gte_2025"
+        },
+        {
+          "dev_count": 707,
+          "future_count": 157,
+          "train_count": 1024,
+          "window_id": "train_lt_2024_dev_2024_2025_future_gte_2026"
+        }
+      ],
+      "rolling_origin_windows_release_ready": [
+        {
+          "dev_count": 570,
+          "future_count": 1128,
+          "train_count": 19,
+          "window_id": "train_lt_2021_dev_2021_2022_future_gte_2023"
+        },
+        {
+          "dev_count": 690,
+          "future_count": 778,
+          "train_count": 249,
+          "window_id": "train_lt_2022_dev_2022_2023_future_gte_2024"
+        },
+        {
+          "dev_count": 653,
+          "future_count": 475,
+          "train_count": 589,
+          "window_id": "train_lt_2023_dev_2023_2024_future_gte_2025"
+        },
+        {
+          "dev_count": 649,
+          "future_count": 129,
+          "train_count": 939,
+          "window_id": "train_lt_2024_dev_2024_2025_future_gte_2026"
+        }
+      ],
+      "rough_paid_baseline_cost_usd_range": {
+        "high": 162.0,
+        "low": 72.0
+      },
+      "setup_test_smoke": [],
+      "source_context_availability": "strong_pr_or_issue_title_context",
+      "targeted_verifier_timing": {
+        "median_seconds": null,
+        "p95_seconds": null,
+        "pass_count": 0,
+        "sample_count": 0,
+        "speed_class": "not_measured"
+      },
+      "test_change_count": 2736,
+      "time_bucket_distribution": {
+        "2016_2019": 8,
+        "2020_2023": 1016,
+        "2024_plus": 864
+      },
+      "total_commits": 34691,
+      "total_commits_scanned": 5000,
+      "track": "large_heavy",
+      "visible_setup_smoke_status": "not_run"
+    },
+    {
+      "bounded_certification_sample": {
+        "dominant_failure_labels": {
+          "large_implementation_surface": 4,
+          "wide_changed_test_oracle": 3
+        },
+        "mode": "bounded_task_shape_certification_not_paid_agent_replay",
+        "pass_count": 20,
+        "sample_size": 24
+      },
+      "changed_test_oracle_availability": "changed_tests_available",
+      "changed_test_oracle_availability_count": 25,
+      "checkout_status": "clean",
+      "classification": "screened_out",
+      "clone_status": {
+        "local_path": "experiments/phase0_headroom/external_repos/sqlalchemy",
+        "status": "already_present"
+      },
+      "count_feasible_rolling_origin_windows": 0,
+      "deep_probe": true,
+      "environment_risk": "medium_database_backend_matrix",
+      "estimated_candidate_volume": 1604,
+      "estimated_release_eligible_volume": 4,
+      "expected_evaluation_speed_class": "acceptable",
+      "expected_paid_baseline_discovery_cells": 0,
+      "head_short": "bfe559a7e",
+      "historical_reference_probe": {
+        "mode": "not_run",
+        "pass_count": 0,
+        "results": [],
+        "sample_size": 0
+      },
+      "history_date_span": {
+        "first_commit": "2005-07-01T02:25:16Z",
+        "latest_commit": "2026-06-12T18:14:54Z"
+      },
+      "history_scan_cap": 5000,
+      "history_scan_capped": true,
+      "history_scan_since": "2010-01-01",
+      "implementation_change_count": 2291,
+      "implementation_plus_test_change_count": 1604,
+      "likely_verifier_command": "python -m pytest <sqlalchemy non-db or sqlite shard> -q",
+      "local_path": "experiments/phase0_headroom/external_repos/sqlalchemy",
+      "prior_evidence": {},
+      "projected_certified_task_count_after_bounded_repair": 4,
+      "projected_evidence_backed_rolling_origin_windows": 0,
+      "reason_to_deep_probe_or_reject": "screened out by capacity, checkout, or source/oracle availability",
+      "repo_id": "sqlalchemy",
+      "repo_url": "https://github.com/sqlalchemy/sqlalchemy.git",
+      "rolling_origin_windows_raw": [
+        {
+          "dev_count": 757,
+          "future_count": 717,
+          "train_count": 130,
+          "window_id": "train_lt_2021_dev_2021_2022_future_gte_2023"
+        },
+        {
+          "dev_count": 634,
+          "future_count": 423,
+          "train_count": 547,
+          "window_id": "train_lt_2022_dev_2022_2023_future_gte_2024"
+        },
+        {
+          "dev_count": 455,
+          "future_count": 262,
+          "train_count": 887,
+          "window_id": "train_lt_2023_dev_2023_2024_future_gte_2025"
+        },
+        {
+          "dev_count": 348,
+          "future_count": 75,
+          "train_count": 1181,
+          "window_id": "train_lt_2024_dev_2024_2025_future_gte_2026"
+        }
+      ],
+      "rolling_origin_windows_release_ready": [],
+      "rough_paid_baseline_cost_usd_range": {
+        "high": 0.0,
+        "low": 0.0
+      },
+      "setup_test_smoke": [],
+      "source_context_availability": "thin_but_usable_pr_or_issue_title_context",
+      "targeted_verifier_timing": {
+        "median_seconds": null,
+        "p95_seconds": null,
+        "pass_count": 0,
+        "sample_count": 0,
+        "speed_class": "not_measured"
+      },
+      "test_change_count": 1868,
+      "time_bucket_distribution": {
+        "2016_2019": 1,
+        "2020_2023": 1180,
+        "2024_plus": 423
+      },
+      "total_commits": 18107,
+      "total_commits_scanned": 5000,
+      "track": "large_heavy",
+      "visible_setup_smoke_status": "not_run"
+    },
+    {
+      "bounded_certification_sample": {
+        "dominant_failure_labels": {},
+        "mode": "bounded_task_shape_certification_not_paid_agent_replay",
+        "pass_count": 24,
+        "sample_size": 24
+      },
+      "changed_test_oracle_availability": "changed_tests_available",
+      "changed_test_oracle_availability_count": 37,
+      "checkout_status": "clean",
+      "classification": "screened_out",
+      "clone_status": {
+        "local_path": "experiments/phase0_headroom/external_repos/sympy",
+        "status": "already_present"
+      },
+      "count_feasible_rolling_origin_windows": 0,
+      "deep_probe": true,
+      "environment_risk": "low_pure_python_but_large_suite",
+      "estimated_candidate_volume": 911,
+      "estimated_release_eligible_volume": 6,
+      "expected_evaluation_speed_class": "acceptable",
+      "expected_paid_baseline_discovery_cells": 0,
+      "head_short": "e1cce7d2fd",
+      "historical_reference_probe": {
+        "mode": "not_run",
+        "pass_count": 0,
+        "results": [],
+        "sample_size": 0
+      },
+      "history_date_span": {
+        "first_commit": "2020-01-28T00:26:39+05:30",
+        "latest_commit": "2026-06-14T16:56:45+01:00"
+      },
+      "history_scan_cap": 5000,
+      "history_scan_capped": true,
+      "history_scan_since": "2010-01-01",
+      "implementation_change_count": 2530,
+      "implementation_plus_test_change_count": 911,
+      "likely_verifier_command": "python -m pytest <sympy test file> -q",
+      "local_path": "experiments/phase0_headroom/external_repos/sympy",
+      "prior_evidence": {},
+      "projected_certified_task_count_after_bounded_repair": 6,
+      "projected_evidence_backed_rolling_origin_windows": 0,
+      "reason_to_deep_probe_or_reject": "screened out by capacity, checkout, or source/oracle availability",
+      "repo_id": "sympy",
+      "repo_url": "https://github.com/sympy/sympy.git",
+      "rolling_origin_windows_raw": [],
+      "rolling_origin_windows_release_ready": [],
+      "rough_paid_baseline_cost_usd_range": {
+        "high": 0.0,
+        "low": 0.0
+      },
+      "setup_test_smoke": [],
+      "source_context_availability": "thin_but_usable_pr_or_issue_title_context",
+      "targeted_verifier_timing": {
+        "median_seconds": null,
+        "p95_seconds": null,
+        "pass_count": 0,
+        "sample_count": 0,
+        "speed_class": "not_measured"
+      },
+      "test_change_count": 1464,
+      "time_bucket_distribution": {
+        "2016_2019": 1,
+        "2020_2023": 5,
+        "2024_plus": 905
+      },
+      "total_commits": 62216,
+      "total_commits_scanned": 5000,
+      "track": "large_heavy",
+      "visible_setup_smoke_status": "not_run"
+    },
+    {
+      "bounded_certification_sample": {
+        "dominant_failure_labels": {
+          "large_implementation_surface": 1,
+          "wide_changed_test_oracle": 5
+        },
+        "mode": "bounded_task_shape_certification_not_paid_agent_replay",
+        "pass_count": 19,
+        "sample_size": 24
+      },
+      "changed_test_oracle_availability": "changed_tests_available",
+      "changed_test_oracle_availability_count": 1671,
+      "checkout_status": "clean",
+      "classification": "large_but_heavy",
+      "clone_status": {
+        "local_path": "experiments/phase0_headroom/external_repos/pandas",
+        "status": "already_present"
+      },
+      "count_feasible_rolling_origin_windows": 1,
+      "deep_probe": true,
+      "environment_risk": "high_compiled_extension_build",
+      "estimated_candidate_volume": 1672,
+      "estimated_release_eligible_volume": 84,
+      "expected_evaluation_speed_class": "risky",
+      "expected_paid_baseline_discovery_cells": 336,
+      "head_short": "aee9241b41",
+      "historical_reference_probe": {
+        "mode": "not_run",
+        "pass_count": 0,
+        "results": [],
+        "sample_size": 0
+      },
+      "history_date_span": {
+        "first_commit": "2009-07-31T15:07:16Z",
+        "latest_commit": "2026-06-11T15:16:14-07:00"
+      },
+      "history_scan_cap": 5000,
+      "history_scan_capped": true,
+      "history_scan_since": "2010-01-01",
+      "implementation_change_count": 3185,
+      "implementation_plus_test_change_count": 1672,
+      "likely_verifier_command": "python -m pytest <pandas test file> -q after compiled build",
+      "local_path": "experiments/phase0_headroom/external_repos/pandas",
+      "prior_evidence": {},
+      "projected_certified_task_count_after_bounded_repair": 251,
+      "projected_evidence_backed_rolling_origin_windows": 1,
+      "reason_to_deep_probe_or_reject": "reject for mainline today unless environment repair can make targeted verification fast and stable",
+      "repo_id": "pandas",
+      "repo_url": "https://github.com/pandas-dev/pandas.git",
+      "rolling_origin_windows_raw": [
+        {
+          "dev_count": 911,
+          "future_count": 344,
+          "train_count": 417,
+          "window_id": "train_lt_2024_dev_2024_2025_future_gte_2026"
+        }
+      ],
+      "rolling_origin_windows_release_ready": [
+        {
+          "dev_count": 910,
+          "future_count": 344,
+          "train_count": 417,
+          "window_id": "train_lt_2024_dev_2024_2025_future_gte_2026"
+        }
+      ],
+      "rough_paid_baseline_cost_usd_range": {
+        "high": 151.2,
+        "low": 67.2
+      },
+      "setup_test_smoke": [],
+      "source_context_availability": "strong_pr_or_issue_title_context",
+      "targeted_verifier_timing": {
+        "median_seconds": null,
+        "p95_seconds": null,
+        "pass_count": 0,
+        "sample_count": 0,
+        "speed_class": "not_measured"
+      },
+      "test_change_count": 2365,
+      "time_bucket_distribution": {
+        "2020_2023": 417,
+        "2024_plus": 1255
+      },
+      "total_commits": 38107,
+      "total_commits_scanned": 5000,
+      "track": "large_heavy",
+      "visible_setup_smoke_status": "not_run"
+    },
+    {
+      "bounded_certification_sample": {
+        "dominant_failure_labels": {},
+        "mode": "bounded_task_shape_certification_not_paid_agent_replay",
+        "pass_count": 24,
+        "sample_size": 24
+      },
+      "changed_test_oracle_availability": "changed_tests_available",
+      "changed_test_oracle_availability_count": 1520,
+      "checkout_status": "clean",
+      "classification": "large_but_heavy",
+      "clone_status": {
+        "local_path": "experiments/phase0_headroom/external_repos/scikit-learn",
+        "status": "already_present"
+      },
+      "count_feasible_rolling_origin_windows": 2,
+      "deep_probe": true,
+      "environment_risk": "high_compiled_extension_build",
+      "estimated_candidate_volume": 1520,
+      "estimated_release_eligible_volume": 76,
+      "expected_evaluation_speed_class": "risky",
+      "expected_paid_baseline_discovery_cells": 304,
+      "head_short": "d6a36523d",
+      "historical_reference_probe": {
+        "mode": "not_run",
+        "pass_count": 0,
+        "results": [],
+        "sample_size": 0
+      },
+      "history_date_span": {
+        "first_commit": "2011-03-06T14:46:50+01:00",
+        "latest_commit": "2026-06-13T13:13:42+02:00"
+      },
+      "history_scan_cap": 5000,
+      "history_scan_capped": true,
+      "history_scan_since": "2010-01-01",
+      "implementation_change_count": 2654,
+      "implementation_plus_test_change_count": 1520,
+      "likely_verifier_command": "python -m pytest <sklearn test file> -q after compiled build",
+      "local_path": "experiments/phase0_headroom/external_repos/scikit-learn",
+      "prior_evidence": {},
+      "projected_certified_task_count_after_bounded_repair": 228,
+      "projected_evidence_backed_rolling_origin_windows": 2,
+      "reason_to_deep_probe_or_reject": "reject for mainline today unless environment repair can make targeted verification fast and stable",
+      "repo_id": "scikit-learn",
+      "repo_url": "https://github.com/scikit-learn/scikit-learn.git",
+      "rolling_origin_windows_raw": [
+        {
+          "dev_count": 849,
+          "future_count": 402,
+          "train_count": 269,
+          "window_id": "train_lt_2023_dev_2023_2024_future_gte_2025"
+        },
+        {
+          "dev_count": 572,
+          "future_count": 155,
+          "train_count": 793,
+          "window_id": "train_lt_2024_dev_2024_2025_future_gte_2026"
+        }
+      ],
+      "rolling_origin_windows_release_ready": [
+        {
+          "dev_count": 849,
+          "future_count": 402,
+          "train_count": 269,
+          "window_id": "train_lt_2023_dev_2023_2024_future_gte_2025"
+        },
+        {
+          "dev_count": 572,
+          "future_count": 155,
+          "train_count": 793,
+          "window_id": "train_lt_2024_dev_2024_2025_future_gte_2026"
+        }
+      ],
+      "rough_paid_baseline_cost_usd_range": {
+        "high": 136.8,
+        "low": 60.8
+      },
+      "setup_test_smoke": [],
+      "source_context_availability": "strong_pr_or_issue_title_context",
+      "targeted_verifier_timing": {
+        "median_seconds": null,
+        "p95_seconds": null,
+        "pass_count": 0,
+        "sample_count": 0,
+        "speed_class": "not_measured"
+      },
+      "test_change_count": 1902,
+      "time_bucket_distribution": {
+        "2020_2023": 793,
+        "2024_plus": 727
+      },
+      "total_commits": 33756,
+      "total_commits_scanned": 5000,
+      "track": "large_heavy",
+      "visible_setup_smoke_status": "not_run"
+    },
+    {
+      "bounded_certification_sample": {
+        "dominant_failure_labels": {
+          "large_implementation_surface": 1
+        },
+        "mode": "bounded_task_shape_certification_not_paid_agent_replay",
+        "pass_count": 23,
+        "sample_size": 24
+      },
+      "changed_test_oracle_availability": "changed_tests_available",
+      "changed_test_oracle_availability_count": 488,
+      "checkout_status": "clean",
+      "classification": "capacity_promising_but_speed_unproven",
+      "clone_status": {
+        "local_path": "experiments/phase0_headroom/external_repos/black",
+        "status": "already_present"
+      },
+      "count_feasible_rolling_origin_windows": 6,
+      "deep_probe": true,
+      "environment_risk": "low",
+      "estimated_candidate_volume": 602,
+      "estimated_release_eligible_volume": 73,
+      "expected_evaluation_speed_class": "ideal",
+      "expected_paid_baseline_discovery_cells": 292,
+      "head_short": "6325332",
+      "historical_reference_probe": {
+        "mode": "not_run",
+        "pass_count": 0,
+        "results": [],
+        "sample_size": 0
+      },
+      "history_date_span": {
+        "first_commit": "2018-03-14T12:55:32-07:00",
+        "latest_commit": "2026-06-11T11:35:01-05:00"
+      },
+      "history_scan_cap": 5000,
+      "history_scan_capped": false,
+      "history_scan_since": "2010-01-01",
+      "implementation_change_count": 1017,
+      "implementation_plus_test_change_count": 602,
+      "likely_verifier_command": "python -m pytest <changed_tests> -q",
+      "local_path": "experiments/phase0_headroom/external_repos/black",
+      "prior_evidence": {},
+      "projected_certified_task_count_after_bounded_repair": 73,
+      "projected_evidence_backed_rolling_origin_windows": 2,
+      "reason_to_deep_probe_or_reject": "run targeted verifier smoke before any recommendation",
+      "repo_id": "black",
+      "repo_url": "https://github.com/psf/black.git",
+      "rolling_origin_windows_raw": [
+        {
+          "dev_count": 93,
+          "future_count": 369,
+          "train_count": 140,
+          "window_id": "train_lt_2019_dev_2019_2020_future_gte_2021"
+        },
+        {
+          "dev_count": 119,
+          "future_count": 292,
+          "train_count": 191,
+          "window_id": "train_lt_2020_dev_2020_2021_future_gte_2022"
+        },
+        {
+          "dev_count": 155,
+          "future_count": 214,
+          "train_count": 233,
+          "window_id": "train_lt_2021_dev_2021_2022_future_gte_2023"
+        },
+        {
+          "dev_count": 159,
+          "future_count": 133,
+          "train_count": 310,
+          "window_id": "train_lt_2022_dev_2022_2023_future_gte_2024"
+        },
+        {
+          "dev_count": 138,
+          "future_count": 76,
+          "train_count": 388,
+          "window_id": "train_lt_2023_dev_2023_2024_future_gte_2025"
+        },
+        {
+          "dev_count": 99,
+          "future_count": 34,
+          "train_count": 469,
+          "window_id": "train_lt_2024_dev_2024_2025_future_gte_2026"
+        }
+      ],
+      "rolling_origin_windows_release_ready": [
+        {
+          "dev_count": 85,
+          "future_count": 362,
+          "train_count": 41,
+          "window_id": "train_lt_2019_dev_2019_2020_future_gte_2021"
+        },
+        {
+          "dev_count": 111,
+          "future_count": 290,
+          "train_count": 87,
+          "window_id": "train_lt_2020_dev_2020_2021_future_gte_2022"
+        },
+        {
+          "dev_count": 148,
+          "future_count": 214,
+          "train_count": 126,
+          "window_id": "train_lt_2021_dev_2021_2022_future_gte_2023"
+        },
+        {
+          "dev_count": 157,
+          "future_count": 133,
+          "train_count": 198,
+          "window_id": "train_lt_2022_dev_2022_2023_future_gte_2024"
+        },
+        {
+          "dev_count": 138,
+          "future_count": 76,
+          "train_count": 274,
+          "window_id": "train_lt_2023_dev_2023_2024_future_gte_2025"
+        },
+        {
+          "dev_count": 99,
+          "future_count": 34,
+          "train_count": 355,
+          "window_id": "train_lt_2024_dev_2024_2025_future_gte_2026"
+        }
+      ],
+      "rough_paid_baseline_cost_usd_range": {
+        "high": 131.4,
+        "low": 58.4
+      },
+      "setup_test_smoke": [],
+      "source_context_availability": "strong_pr_or_issue_title_context",
+      "targeted_verifier_timing": {
+        "median_seconds": null,
+        "p95_seconds": null,
+        "pass_count": 0,
+        "sample_count": 0,
+        "speed_class": "not_measured"
+      },
+      "test_change_count": 719,
+      "time_bucket_distribution": {
+        "2016_2019": 191,
+        "2020_2023": 278,
+        "2024_plus": 133
+      },
+      "total_commits": 2241,
+      "total_commits_scanned": 2241,
+      "track": "medium_large_fast",
+      "visible_setup_smoke_status": "not_run"
+    },
+    {
+      "bounded_certification_sample": {
+        "dominant_failure_labels": {},
+        "mode": "bounded_task_shape_certification_not_paid_agent_replay",
+        "pass_count": 24,
+        "sample_size": 24
+      },
+      "changed_test_oracle_availability": "changed_tests_available",
+      "changed_test_oracle_availability_count": 398,
+      "checkout_status": "clean",
+      "classification": "capacity_promising_but_speed_unproven",
+      "clone_status": {
+        "local_path": "experiments/phase0_headroom/external_repos/httpx",
+        "status": "already_present"
+      },
+      "count_feasible_rolling_origin_windows": 3,
+      "deep_probe": true,
+      "environment_risk": "low_to_medium_network_mocking",
+      "estimated_candidate_volume": 474,
+      "estimated_release_eligible_volume": 60,
+      "expected_evaluation_speed_class": "ideal",
+      "expected_paid_baseline_discovery_cells": 240,
+      "head_short": "b5addb6",
+      "historical_reference_probe": {
+        "mode": "not_run",
+        "pass_count": 0,
+        "results": [],
+        "sample_size": 0
+      },
+      "history_date_span": {
+        "first_commit": "2019-04-04T13:27:55+01:00",
+        "latest_commit": "2026-02-23T10:40:42Z"
+      },
+      "history_scan_cap": 5000,
+      "history_scan_capped": false,
+      "history_scan_since": "2010-01-01",
+      "implementation_change_count": 877,
+      "implementation_plus_test_change_count": 474,
+      "likely_verifier_command": "python -m pytest <httpx mocked client test> -q",
+      "local_path": "experiments/phase0_headroom/external_repos/httpx",
+      "prior_evidence": {},
+      "projected_certified_task_count_after_bounded_repair": 60,
+      "projected_evidence_backed_rolling_origin_windows": 2,
+      "reason_to_deep_probe_or_reject": "run targeted verifier smoke before any recommendation",
+      "repo_id": "httpx",
+      "repo_url": "https://github.com/encode/httpx.git",
+      "rolling_origin_windows_raw": [
+        {
+          "dev_count": 176,
+          "future_count": 83,
+          "train_count": 215,
+          "window_id": "train_lt_2020_dev_2020_2021_future_gte_2022"
+        },
+        {
+          "dev_count": 72,
+          "future_count": 55,
+          "train_count": 347,
+          "window_id": "train_lt_2021_dev_2021_2022_future_gte_2023"
+        },
+        {
+          "dev_count": 60,
+          "future_count": 23,
+          "train_count": 391,
+          "window_id": "train_lt_2022_dev_2022_2023_future_gte_2024"
+        }
+      ],
+      "rolling_origin_windows_release_ready": [
+        {
+          "dev_count": 176,
+          "future_count": 83,
+          "train_count": 139,
+          "window_id": "train_lt_2020_dev_2020_2021_future_gte_2022"
+        },
+        {
+          "dev_count": 72,
+          "future_count": 55,
+          "train_count": 271,
+          "window_id": "train_lt_2021_dev_2021_2022_future_gte_2023"
+        },
+        {
+          "dev_count": 60,
+          "future_count": 23,
+          "train_count": 315,
+          "window_id": "train_lt_2022_dev_2022_2023_future_gte_2024"
+        }
+      ],
+      "rough_paid_baseline_cost_usd_range": {
+        "high": 108.0,
+        "low": 48.0
+      },
+      "setup_test_smoke": [],
+      "source_context_availability": "strong_pr_or_issue_title_context",
+      "targeted_verifier_timing": {
+        "median_seconds": null,
+        "p95_seconds": null,
+        "pass_count": 0,
+        "sample_count": 0,
+        "speed_class": "not_measured"
+      },
+      "test_change_count": 576,
+      "time_bucket_distribution": {
+        "2016_2019": 215,
+        "2020_2023": 236,
+        "2024_plus": 23
+      },
+      "total_commits": 1523,
+      "total_commits_scanned": 1523,
+      "track": "medium_large_fast",
+      "visible_setup_smoke_status": "not_run"
+    },
+    {
+      "bounded_certification_sample": {
+        "dominant_failure_labels": {},
+        "mode": "bounded_task_shape_certification_not_paid_agent_replay",
+        "pass_count": 24,
+        "sample_size": 24
+      },
+      "changed_test_oracle_availability": "changed_tests_available",
+      "changed_test_oracle_availability_count": 381,
+      "checkout_status": "clean",
+      "classification": "screened_out",
+      "clone_status": {
+        "local_path": "experiments/phase0_headroom/external_repos/starlette",
+        "status": "already_present"
+      },
+      "count_feasible_rolling_origin_windows": 6,
+      "deep_probe": true,
+      "environment_risk": "low_to_medium_async_http_stack",
+      "estimated_candidate_volume": 435,
+      "estimated_release_eligible_volume": 57,
+      "expected_evaluation_speed_class": "ideal",
+      "expected_paid_baseline_discovery_cells": 228,
+      "head_short": "8ebffd0",
+      "historical_reference_probe": {
+        "mode": "not_run",
+        "pass_count": 0,
+        "results": [],
+        "sample_size": 0
+      },
+      "history_date_span": {
+        "first_commit": "2018-06-25T14:15:32+01:00",
+        "latest_commit": "2026-06-12T09:18:43Z"
+      },
+      "history_scan_cap": 5000,
+      "history_scan_capped": false,
+      "history_scan_since": "2010-01-01",
+      "implementation_change_count": 886,
+      "implementation_plus_test_change_count": 435,
+      "likely_verifier_command": "python -m pytest <starlette test file> -q",
+      "local_path": "experiments/phase0_headroom/external_repos/starlette",
+      "prior_evidence": {},
+      "projected_certified_task_count_after_bounded_repair": 57,
+      "projected_evidence_backed_rolling_origin_windows": 0,
+      "reason_to_deep_probe_or_reject": "screened out by capacity, checkout, or source/oracle availability",
+      "repo_id": "starlette",
+      "repo_url": "https://github.com/encode/starlette.git",
+      "rolling_origin_windows_raw": [
+        {
+          "dev_count": 90,
+          "future_count": 229,
+          "train_count": 116,
+          "window_id": "train_lt_2019_dev_2019_2020_future_gte_2021"
+        },
+        {
+          "dev_count": 50,
+          "future_count": 204,
+          "train_count": 181,
+          "window_id": "train_lt_2020_dev_2020_2021_future_gte_2022"
+        },
+        {
+          "dev_count": 82,
+          "future_count": 147,
+          "train_count": 206,
+          "window_id": "train_lt_2021_dev_2021_2022_future_gte_2023"
+        },
+        {
+          "dev_count": 102,
+          "future_count": 102,
+          "train_count": 231,
+          "window_id": "train_lt_2022_dev_2022_2023_future_gte_2024"
+        },
+        {
+          "dev_count": 92,
+          "future_count": 55,
+          "train_count": 288,
+          "window_id": "train_lt_2023_dev_2023_2024_future_gte_2025"
+        },
+        {
+          "dev_count": 72,
+          "future_count": 30,
+          "train_count": 333,
+          "window_id": "train_lt_2024_dev_2024_2025_future_gte_2026"
+        }
+      ],
+      "rolling_origin_windows_release_ready": [
+        {
+          "dev_count": 73,
+          "future_count": 224,
+          "train_count": 84,
+          "window_id": "train_lt_2019_dev_2019_2020_future_gte_2021"
+        },
+        {
+          "dev_count": 48,
+          "future_count": 199,
+          "train_count": 134,
+          "window_id": "train_lt_2020_dev_2020_2021_future_gte_2022"
+        },
+        {
+          "dev_count": 82,
+          "future_count": 142,
+          "train_count": 157,
+          "window_id": "train_lt_2021_dev_2021_2022_future_gte_2023"
+        },
+        {
+          "dev_count": 100,
+          "future_count": 99,
+          "train_count": 182,
+          "window_id": "train_lt_2022_dev_2022_2023_future_gte_2024"
+        },
+        {
+          "dev_count": 89,
+          "future_count": 53,
+          "train_count": 239,
+          "window_id": "train_lt_2023_dev_2023_2024_future_gte_2025"
+        },
+        {
+          "dev_count": 70,
+          "future_count": 29,
+          "train_count": 282,
+          "window_id": "train_lt_2024_dev_2024_2025_future_gte_2026"
+        }
+      ],
+      "rough_paid_baseline_cost_usd_range": {
+        "high": 102.6,
+        "low": 45.6
+      },
+      "setup_test_smoke": [],
+      "source_context_availability": "strong_pr_or_issue_title_context",
+      "targeted_verifier_timing": {
+        "median_seconds": null,
+        "p95_seconds": null,
+        "pass_count": 0,
+        "sample_count": 0,
+        "speed_class": "not_measured"
+      },
+      "test_change_count": 531,
+      "time_bucket_distribution": {
+        "2016_2019": 181,
+        "2020_2023": 152,
+        "2024_plus": 102
+      },
+      "total_commits": 1653,
+      "total_commits_scanned": 1653,
+      "track": "medium_large_fast",
+      "visible_setup_smoke_status": "not_run"
+    },
+    {
+      "changed_test_oracle_availability": "unknown",
+      "checkout_status": "history_read_failed",
+      "classification": "screened_out",
+      "clone_status": {
+        "local_path": "experiments/phase0_headroom/external_repos/anyio",
+        "status": "already_present"
+      },
+      "deep_probe": true,
+      "environment_risk": "low_to_medium_async_backend_matrix",
+      "history_error": "RuntimeError: fatal: unable to access 'https://github.com/agronholm/anyio.git/': LibreSSL SSL_connect: SSL_ERROR_SYSCALL in connection to github.com:443 \nfatal: could not fetch f5d45f048e1c078f0519a98eed593bdd6b48dfcd from promisor remote",
+      "likely_verifier_command": "python -m pytest <anyio pytest shard> -q",
+      "local_path": "experiments/phase0_headroom/external_repos/anyio",
+      "prior_evidence": {},
+      "reason_to_deep_probe_or_reject": "history_read_failed",
+      "repo_id": "anyio",
+      "repo_url": "https://github.com/agronholm/anyio.git",
+      "source_context_availability": "unknown",
+      "track": "medium_large_fast"
+    }
+  ],
+  "deep_probe_track_counts": {
+    "large_heavy": 5,
+    "medium_large_fast": 4
+  },
+  "generated_at": "2026-06-15T07:31:17+00:00",
+  "history_scan_cap": 5000,
+  "history_scan_since": "2010-01-01",
+  "new_repository_deep_probe_count": 9,
+  "new_repository_screen_count": 15,
+  "next_action": "prepare black target profile, package map, verifier pinning, and a 20-30 task no-paid certification wave; do not start paid baseline discovery or tuning until that gate passes",
+  "paid_cells_run": 0,
+  "paid_llm_calls_run": 0,
+  "paid_tuner_calls_run": 0,
+  "recommendation": {
+    "classification": "capacity_promising_but_speed_unproven",
+    "count_feasible_rolling_origin_windows": 6,
+    "environment_risk": "low",
+    "estimated_release_eligible_volume": 73,
+    "expected_evaluation_speed_class": "ideal",
+    "expected_paid_baseline_discovery_cells": 292,
+    "historical_reference_probe": {
+      "dominant_failure_labels": {},
+      "mode": "not_run",
+      "pass_count": 0,
+      "sample_size": 0
+    },
+    "likely_verifier_command": "python -m pytest <changed_tests> -q",
+    "projected_certified_task_count_after_bounded_repair": 73,
+    "projected_evidence_backed_rolling_origin_windows": 2,
+    "reason": "run targeted verifier smoke before any recommendation",
+    "repo_id": "black",
+    "repo_url": "https://github.com/psf/black.git",
+    "rough_paid_baseline_cost_usd_range": {
+      "high": 131.4,
+      "low": 58.4
+    },
+    "targeted_verifier_timing": {
+      "median_seconds": null,
+      "p95_seconds": null,
+      "pass_count": 0,
+      "sample_count": 0,
+      "speed_class": "not_measured"
+    },
+    "track": "medium_large_fast"
+  },
+  "runbook": "docs/research/large-repo-target-selection-gate-runbook-2026-06-15.md",
+  "schema_version": "barcarolle.large_repo_target_selection_gate.v1",
+  "terminal_state": "negative_no_balanced_large_fast_target_no_paid",
+  "tuning_experiment_started": false,
+  "unsupported_claims": [
+    "No paid Agent cell, paid LLM call, or paid tuner call was run.",
+    "No Agent tuning improvement is supported.",
+    "No predictive-validity or cross-repo generalization claim is supported.",
+    "black is a no-paid target-prep recommendation, not an immediate paid-run authorization.",
+    "Projected certified counts are capacity estimates until a bounded release-certification wave proves conversion."
+  ]
+}
