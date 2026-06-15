@@ -1,0 +1,133 @@
+{
+  "raw_log_storage": "experiments/phase1_compiler/tmp/target_repo_selection_gate/raw_logs/",
+  "raw_logs_committed": false,
+  "release_eligible_count": 0,
+  "repo_id": "urllib3",
+  "rows": [
+    {
+      "base_commit": "e8a81de5e1fe6b52dbcbdd93345560097c1e58fb",
+      "candidate_id": "urllib3__gate_sample__001",
+      "commands": [
+        {
+          "command_shape": [
+            "uv",
+            "run",
+            "--no-project",
+            "--isolated",
+            "--managed-python",
+            "--python",
+            "3.11",
+            "--exclude-newer",
+            "2026-05-26",
+            "--with",
+            "pytest>=8,<10",
+            "--with",
+            "setuptools<81",
+            "--with-editable",
+            "<workspace>",
+            "python",
+            "-m",
+            "pytest",
+            "-q",
+            "test/with_dummyserver/test_proxy_poolmanager.py"
+          ],
+          "duration_seconds": 0.761,
+          "profile_id": "py311_current_editable",
+          "returncode": 1,
+          "role": "noop",
+          "stderr_tail_hash": "a439c2ddd687",
+          "stdout_tail_hash": "e3b0c44298fc",
+          "subgate_label": "unknown_failed",
+          "timed_out": false
+        }
+      ],
+      "duration_seconds": 1.818,
+      "execution_status": "failed",
+      "failure_digest": "",
+      "implementation_files": [
+        "src/urllib3/connection.py",
+        "src/urllib3/poolmanager.py"
+      ],
+      "raw_logs_storage": "experiments/phase1_compiler/tmp/target_repo_selection_gate/raw_logs/urllib3__gate_sample__001",
+      "release_eligible": false,
+      "repo_id": "urllib3",
+      "selected_for_execution": true,
+      "source_context_class": "pr_context_title_only",
+      "source_context_quality": "pr_title_only_context",
+      "source_reservoir": "repo_history_v2_pr_issue_with_tests",
+      "target_commit_optional": "b6447295fff7b38fdffc67e0df9712d60cef3cc3",
+      "technical_certified": false,
+      "terminal_execution_subgate": "unknown_failed",
+      "test_files": [
+        "test/with_dummyserver/test_proxy_poolmanager.py"
+      ],
+      "winning_profile_id": ""
+    },
+    {
+      "base_commit": "e9f3f0530e91312994f30778053e09b9e616e7c7",
+      "candidate_id": "urllib3__gate_sample__002",
+      "commands": [
+        {
+          "command_shape": [
+            "uv",
+            "run",
+            "--no-project",
+            "--isolated",
+            "--managed-python",
+            "--python",
+            "3.11",
+            "--exclude-newer",
+            "2022-03-23",
+            "--with",
+            "pytest>=8,<10",
+            "--with",
+            "setuptools<81",
+            "--with-editable",
+            "<workspace>",
+            "python",
+            "-m",
+            "pytest",
+            "-q",
+            "test/test_ssltransport.py"
+          ],
+          "duration_seconds": 1.047,
+          "profile_id": "py311_current_editable",
+          "returncode": 1,
+          "role": "noop",
+          "stderr_tail_hash": "e2aafe819fe0",
+          "stdout_tail_hash": "e3b0c44298fc",
+          "subgate_label": "install_failed",
+          "timed_out": false
+        }
+      ],
+      "duration_seconds": 3.061,
+      "execution_status": "failed",
+      "failure_digest": "",
+      "implementation_files": [
+        "src/urllib3/connection.py"
+      ],
+      "raw_logs_storage": "experiments/phase1_compiler/tmp/target_repo_selection_gate/raw_logs/urllib3__gate_sample__002",
+      "release_eligible": false,
+      "repo_id": "urllib3",
+      "selected_for_execution": true,
+      "source_context_class": "pr_context_title_only",
+      "source_context_quality": "pr_title_only_context",
+      "source_reservoir": "repo_history_v2_pr_issue_with_tests",
+      "target_commit_optional": "556470d2d0087a54caa0b3e4df2a90af7773cf5b",
+      "technical_certified": false,
+      "terminal_execution_subgate": "install_failed",
+      "test_files": [
+        "test/test_ssltransport.py"
+      ],
+      "winning_profile_id": ""
+    }
+  ],
+  "sample_count": 2,
+  "schema_version": "barcarolle.target_repo_selection_gate.cert_sample.v1",
+  "technical_certified_count": 0,
+  "terminal_execution_subgate_counts": {
+    "install_failed": 1,
+    "unknown_failed": 1
+  },
+  "workspace_storage": "experiments/phase0_headroom/workspaces/target_repo_selection_gate/"
+}
