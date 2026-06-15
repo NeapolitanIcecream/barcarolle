@@ -20,12 +20,13 @@ from tuning_artifacts import ARTIFACT_SCHEMA_VERSION, materialize_artifact, vali
 
 ROOT = Path(__file__).resolve().parents[3]
 PHASE0_TOOLS = ROOT / "experiments" / "phase0_headroom" / "tools"
-SELECTION_TOOLS = ROOT / "experiments" / "agent_selection_demo" / "tools"
-for path in [PHASE0_TOOLS, SELECTION_TOOLS]:
+for path in [ROOT, PHASE0_TOOLS]:
     if str(path) not in sys.path:
         sys.path.insert(0, str(path))
 
-import agent_selection_demo as selection_demo  # noqa: E402
+from experiments.demo_common import costs as demo_costs  # noqa: E402
+from experiments.demo_common import workspace_inputs  # noqa: E402
+import selection_snapshot  # noqa: E402
 import workspace_acut_run as workspace  # noqa: E402
 
 
@@ -140,7 +141,7 @@ def bool_from_cell(value: Any) -> bool:
 
 
 def load_task_table() -> list[dict[str, str]]:
-    rows = read_csv_rows(ROOT / "experiments" / "agent_selection_demo" / "results" / "selector_task_table.csv")
+    rows = selection_snapshot.selector_task_table_rows()
     return [row for row in rows if row["target_repo"] == TARGET_REPO]
 
 
@@ -161,12 +162,7 @@ def selected_window_task_ids() -> dict[str, list[str]]:
 
 
 def score_rows_for_target() -> list[dict[str, str]]:
-    rows = []
-    for path in [
-        ROOT / "experiments" / "agent_selection_demo" / "results" / "selection_score_table.csv",
-        ROOT / "experiments" / "agent_selection_demo" / "results" / "holdout_score_table.csv",
-    ]:
-        rows.extend(read_csv_rows(path))
+    rows = selection_snapshot.selection_score_rows() + selection_snapshot.holdout_score_rows()
     return [row for row in rows if row["agent_id"] == TARGET_AGENT_ID]
 
 
@@ -287,12 +283,12 @@ def build_window(train_count: int, dev_count: int, *, selected: bool, reason: st
 
 
 def inventory_summary() -> dict[str, Any]:
-    selection_inventory = read_json(ROOT / "experiments" / "agent_selection_demo" / "results" / "predictive_validity_window_inventory.json")
+    selection_inventory = selection_snapshot.predictive_validity_window_inventory()
     phase1_metrics = read_json(ROOT / "experiments" / "phase1_compiler" / "results" / "phase1_three_repo_paid_validation_metrics.json")
     boltons_selection = outcome_metrics(ordered_tasks_by_role("selection"))
     boltons_holdout = outcome_metrics(ordered_tasks_by_role("holdout"))
     return {
-        "agent_selection_demo_boltons_kilo_low_cost": {
+        "selection_snapshot_boltons_kilo_low_cost": {
             "selection_task_count": boltons_selection["task_count"],
             "selection_baseline_pass_rate": boltons_selection["pass_rate"],
             "selection_scoreable_count": boltons_selection["scoreable_count"],
@@ -312,7 +308,7 @@ def inventory_summary() -> dict[str, Any]:
         },
         "attrs_click_selection_decision": (
             "Do not select attrs/click for the default Phase 2b paid path: current Agent Tuning tooling "
-            "and Kilo AGENTS.md action preflight are prepared for the boltons agent_selection_demo package map, "
+            "and Kilo AGENTS.md action preflight are prepared for the frozen boltons package map, "
             "while attrs/click need packaging and injection-runner repair before paid artifact tuning."
         ),
     }
@@ -639,7 +635,7 @@ def train_evidence_rows() -> list[dict[str, Any]]:
     train_ids = set(protocol["selected_windows"][0]["train_task_ids"])
     forbidden = set(protocol["selected_windows"][0]["dev_task_ids"]) | set(selected_window_task_ids()["future"])
     score_lookup = score_by_task()
-    packages = selection_demo.package_map(selection_demo.load_config(ROOT / "experiments" / "agent_selection_demo" / "config" / "demo_config.json"))
+    packages = workspace_inputs.package_map(selection_snapshot.selection_config())
     rows = []
     for task_id in protocol["selected_windows"][0]["train_task_ids"]:
         if task_id in forbidden:
@@ -1125,9 +1121,9 @@ def score_row_for_result(
     candidate_id: str,
     artifact_hash: str | None,
 ) -> dict[str, Any]:
-    usage = selection_demo.usage_from_submission(result.submission)
-    usage_observed, estimated_cost, _token_counts = selection_demo.estimate_cost(usage, candidate_config["model"], config)
-    cost_meta = selection_demo.cost_observation_metadata(usage_observed)
+    usage = demo_costs.usage_from_submission(result.submission)
+    usage_observed, estimated_cost, _token_counts = demo_costs.estimate_cost(usage, candidate_config["model"], config)
+    cost_meta = demo_costs.cost_observation_metadata(usage_observed)
     terminal = result.verifier.get("status") or result.submission.get("status")
     return {
         "window_id": SELECTED_WINDOW_ID,
@@ -1142,7 +1138,7 @@ def score_row_for_result(
         "terminal_status": terminal,
         "scoreable_cell": terminal in SCOREABLE_STATUSES,
         "verified_pass": terminal == "verified_pass",
-        "failure_category": selection_demo.failure_category(result.verifier, result.submission),
+        "failure_category": demo_costs.failure_category(result.verifier, result.submission),
         "latency_seconds": result.submission.get("latency_seconds", ""),
         "estimated_cost_usd": estimated_cost,
         "usage_observed": usage_observed,
@@ -1213,10 +1209,10 @@ def paired_summary(rows: list[dict[str, Any]], tuned_condition: str) -> dict[str
 def run_eval_stage(stage: str) -> dict[str, Any]:
     require_endpoint_env()
     protocol = protocol_or_raise()
-    config = selection_demo.load_config(ROOT / "experiments" / "agent_selection_demo" / "config" / "demo_config.json")
-    candidate_config = selection_demo.candidate_by_id(config)[TARGET_AGENT_ID]
-    adapter = selection_demo.adapter_config_for(config, candidate_config)
-    packages = selection_demo.package_map(config)
+    config = selection_snapshot.selection_config()
+    candidate_config = workspace_inputs.candidate_by_id(config)[TARGET_AGENT_ID]
+    adapter = workspace_inputs.adapter_config_for(config, candidate_config, command_template_source="agent_tuning_demo_selection_snapshot")
+    packages = workspace_inputs.package_map(config)
     artifacts = load_candidate_artifacts()
     if not artifacts:
         raise RuntimeError("no candidate artifacts available")

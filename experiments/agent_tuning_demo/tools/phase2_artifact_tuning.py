@@ -22,12 +22,13 @@ from tuning_artifacts import ARTIFACT_SCHEMA_VERSION, materialize_artifact, vali
 
 ROOT = Path(__file__).resolve().parents[3]
 PHASE0_TOOLS = ROOT / "experiments" / "phase0_headroom" / "tools"
-SELECTION_TOOLS = ROOT / "experiments" / "agent_selection_demo" / "tools"
-for path in [PHASE0_TOOLS, SELECTION_TOOLS]:
+for path in [ROOT, PHASE0_TOOLS]:
     if str(path) not in sys.path:
         sys.path.insert(0, str(path))
 
-import agent_selection_demo as selection_demo  # noqa: E402
+from experiments.demo_common import costs as demo_costs  # noqa: E402
+from experiments.demo_common import workspace_inputs  # noqa: E402
+import selection_snapshot  # noqa: E402
 import workspace_acut_run as workspace  # noqa: E402
 
 
@@ -158,7 +159,7 @@ def protocol_paths() -> dict[str, Path]:
 
 
 def load_selection_split() -> dict[str, Any]:
-    return read_json(ROOT / "experiments" / "agent_selection_demo" / "results" / "frozen_split.json")
+    return selection_snapshot.frozen_split()
 
 
 def protocol_payload() -> dict[str, Any]:
@@ -629,68 +630,6 @@ def action_preflight_or_raise() -> dict[str, Any]:
     return payload
 
 
-def raw_stdout_path_for_selection(task_id: str, agent_id: str = TARGET_AGENT_ID) -> Path:
-    return (
-        ROOT
-        / "experiments"
-        / "phase0_headroom"
-        / "results"
-        / "raw"
-        / "workspace_acut"
-        / "agent_selection_demo_2026_06_12_selection"
-        / agent_id
-        / f"selection__{agent_id}__{task_id}"
-        / "acut_stdout.txt"
-    )
-
-
-def sanitized_tool_summary(stdout_path: Path) -> dict[str, Any]:
-    tools: list[str] = []
-    bash_commands: list[str] = []
-    read_count = 0
-    write_count = 0
-    if not stdout_path.exists():
-        return {
-            "raw_available": False,
-            "tools_used": [],
-            "bash_command_count": 0,
-            "targeted_pytest_command_count": 0,
-            "read_tool_count": 0,
-            "write_tool_count": 0,
-        }
-    for line in stdout_path.read_text(encoding="utf-8", errors="replace").splitlines():
-        line = line.strip()
-        if not line.startswith("{"):
-            continue
-        try:
-            parsed = json.loads(line)
-        except json.JSONDecodeError:
-            continue
-        part = parsed.get("part") if isinstance(parsed.get("part"), dict) else {}
-        if part.get("type") != "tool":
-            continue
-        tool = str(part.get("tool") or "")
-        if tool:
-            tools.append(tool)
-        state = part.get("state") if isinstance(part.get("state"), dict) else {}
-        input_payload = state.get("input") if isinstance(state.get("input"), dict) else {}
-        if tool == "bash" and input_payload.get("command"):
-            bash_commands.append(str(input_payload["command"]))
-        if tool in {"read", "grep", "glob"}:
-            read_count += 1
-        if tool in {"write", "apply_patch"}:
-            write_count += 1
-    return {
-        "raw_available": True,
-        "tools_used": sorted(set(tools)),
-        "bash_command_count": len(bash_commands),
-        "targeted_pytest_command_count": sum(1 for command in bash_commands if "pytest" in command),
-        "read_tool_count": read_count,
-        "write_tool_count": write_count,
-        "bash_command_digests": ["sha256:" + sha256_text(command) for command in bash_commands],
-    }
-
-
 def label_for_row(row: dict[str, str], tool_summary: dict[str, Any]) -> str:
     status = row.get("terminal_status") or ""
     failure = row.get("failure_category") or ""
@@ -719,15 +658,15 @@ def feedback_rows() -> tuple[list[dict[str, Any]], list[dict[str, Any]], dict[st
         raise RuntimeError("feedback train split overlaps dev or holdout")
     score_rows = [
         row
-        for row in read_csv_rows(ROOT / "experiments" / "agent_selection_demo" / "results" / "selection_score_table.csv")
+        for row in selection_snapshot.selection_score_rows()
         if row["agent_id"] == TARGET_AGENT_ID and row["task_id"] in train_tasks
     ]
-    packages = selection_demo.package_map(selection_demo.load_config(ROOT / "experiments" / "agent_selection_demo" / "config" / "demo_config.json"))
+    packages = workspace_inputs.package_map(selection_snapshot.selection_config())
     optimizer_rows: list[dict[str, Any]] = []
     label_rows: list[dict[str, Any]] = []
     for row in score_rows:
         package = packages[row["task_id"]]
-        tool_summary = sanitized_tool_summary(raw_stdout_path_for_selection(row["task_id"]))
+        tool_summary = selection_snapshot.selection_tool_summary(row["task_id"])
         label = label_for_row(row, tool_summary)
         evidence = {
             "source": "committed_selection_score_table_and_sanitized_tool_summary",
@@ -1154,7 +1093,7 @@ def run_workspace_cell_with_artifact(
 
 
 def normalize_cost_row(row: dict[str, Any]) -> dict[str, Any]:
-    return selection_demo.normalize_cost_row(row)
+    return demo_costs.normalize_cost_row(row)
 
 
 def cost_row_for_result(
@@ -1165,8 +1104,8 @@ def cost_row_for_result(
     condition: str,
     artifact_hash: str | None,
 ) -> dict[str, Any]:
-    usage = selection_demo.usage_from_submission(result.submission)
-    usage_observed, estimated_cost, token_counts = selection_demo.estimate_cost(usage, candidate["model"], config)
+    usage = demo_costs.usage_from_submission(result.submission)
+    usage_observed, estimated_cost, token_counts = demo_costs.estimate_cost(usage, candidate["model"], config)
     return normalize_cost_row(
         {
             "schema_version": "barcarolle.agent_tuning_demo.phase2_cost.v1",
@@ -1183,7 +1122,7 @@ def cost_row_for_result(
             "usage_observed": usage_observed,
             "estimated_cost_usd": estimated_cost,
             "cost_method": "observed_token_estimate" if usage_observed else "conservative_per_cell_estimate",
-            **selection_demo.cost_observation_metadata(usage_observed),
+            **demo_costs.cost_observation_metadata(usage_observed),
             "latency_seconds": result.submission.get("latency_seconds"),
             "artifact_hash": artifact_hash,
             **token_counts,
@@ -1211,7 +1150,7 @@ def phase2_score_rows(stage: str, submissions: list[dict[str, Any]], verifiers: 
                 "terminal_status": terminal,
                 "scoreable_cell": terminal in SCOREABLE_STATUSES,
                 "verified_pass": terminal == "verified_pass",
-                "failure_category": selection_demo.failure_category(verifier, submission),
+                "failure_category": demo_costs.failure_category(verifier, submission),
                 "latency_seconds": submission.get("latency_seconds", ""),
                 "estimated_cost_usd": cost.get("estimated_cost_usd", ""),
                 "usage_observed": cost.get("usage_observed", False),
@@ -1328,10 +1267,10 @@ def require_endpoint_env() -> None:
 def run_phase2_stage(stage: str) -> dict[str, Any]:
     require_endpoint_env()
     action_preflight_or_raise()
-    config = selection_demo.load_config(ROOT / "experiments" / "agent_selection_demo" / "config" / "demo_config.json")
-    candidate = selection_demo.candidate_by_id(config)[TARGET_AGENT_ID]
-    adapter = selection_demo.adapter_config_for(config, candidate)
-    packages = selection_demo.package_map(config)
+    config = selection_snapshot.selection_config()
+    candidate = workspace_inputs.candidate_by_id(config)[TARGET_AGENT_ID]
+    adapter = workspace_inputs.adapter_config_for(config, candidate, command_template_source="agent_tuning_demo_selection_snapshot")
+    packages = workspace_inputs.package_map(config)
     artifact = load_best_candidate_artifact() if stage == "selection_dev" else read_json(CHOSEN_DIR / "artifact.json")
     validate_artifact(artifact)
     paths = phase2_run_paths(stage)
