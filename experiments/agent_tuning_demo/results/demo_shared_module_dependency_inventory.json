@@ -1,0 +1,77 @@
+{
+  "generated_at": "2026-06-15T08:32:32Z",
+  "inventory_scope": [
+    "experiments/agent_tuning_demo/tools/phase2_artifact_tuning.py",
+    "experiments/agent_tuning_demo/tools/phase2b_rolling_origin_tuning.py"
+  ],
+  "old_tuning_to_selection_dependencies_found": [
+    {
+      "dependency_type": "tool_import",
+      "consumer": "experiments/agent_tuning_demo/tools/phase2_artifact_tuning.py",
+      "selection_path": "experiments/agent_selection_demo/tools/agent_selection_demo.py",
+      "reason": "Phase 2 reused Selection Demo config, package-map, adapter, cost, and failure-label helpers."
+    },
+    {
+      "dependency_type": "tool_import",
+      "consumer": "experiments/agent_tuning_demo/tools/phase2b_rolling_origin_tuning.py",
+      "selection_path": "experiments/agent_selection_demo/tools/agent_selection_demo.py",
+      "reason": "Phase 2b reused Selection Demo config, package-map, adapter, cost, and failure-label helpers."
+    },
+    {
+      "dependency_type": "live_result_read",
+      "consumer": "phase2_artifact_tuning.load_selection_split",
+      "selection_path": "experiments/agent_selection_demo/results/frozen_split.json",
+      "reason": "Phase 2 protocol needed the historical Selection train/dev/holdout split."
+    },
+    {
+      "dependency_type": "live_result_read",
+      "consumer": "phase2_artifact_tuning.feedback_rows",
+      "selection_path": "experiments/agent_selection_demo/results/selection_score_table.csv",
+      "reason": "Phase 2 feedback export needed historical Kilo low-cost Selection-train outcomes."
+    },
+    {
+      "dependency_type": "live_config_read",
+      "consumer": "phase2_artifact_tuning.feedback_rows and run_phase2_stage",
+      "selection_path": "experiments/agent_selection_demo/config/demo_config.json",
+      "reason": "Phase 2 needed task-package metadata and the target Agent adapter configuration."
+    },
+    {
+      "dependency_type": "live_result_read",
+      "consumer": "phase2b_rolling_origin_tuning.load_task_table",
+      "selection_path": "experiments/agent_selection_demo/results/selector_task_table.csv",
+      "reason": "Phase 2b rolling-window construction needed historical task ordering and stage roles."
+    },
+    {
+      "dependency_type": "live_result_read",
+      "consumer": "phase2b_rolling_origin_tuning.score_rows_for_target",
+      "selection_path": "experiments/agent_selection_demo/results/selection_score_table.csv",
+      "reason": "Phase 2b headroom and train evidence needed historical Selection outcomes."
+    },
+    {
+      "dependency_type": "live_result_read",
+      "consumer": "phase2b_rolling_origin_tuning.score_rows_for_target",
+      "selection_path": "experiments/agent_selection_demo/results/holdout_score_table.csv",
+      "reason": "Phase 2b headroom and future-window summaries needed historical Holdout outcomes."
+    },
+    {
+      "dependency_type": "live_result_read",
+      "consumer": "phase2b_rolling_origin_tuning.inventory_summary",
+      "selection_path": "experiments/agent_selection_demo/results/predictive_validity_window_inventory.json",
+      "reason": "Phase 2b task-supply audit summarized prior Selection predictive-validity inventory."
+    },
+    {
+      "dependency_type": "live_config_read",
+      "consumer": "phase2b_rolling_origin_tuning.train_evidence_rows and run_eval_stage",
+      "selection_path": "experiments/agent_selection_demo/config/demo_config.json",
+      "reason": "Phase 2b needed task-package metadata and the target Agent adapter configuration."
+    }
+  ],
+  "shared_helper_scaffold": [
+    "experiments/demo_common/files.py",
+    "experiments/demo_common/costs.py",
+    "experiments/demo_common/workspace_inputs.py"
+  ],
+  "selection_demo_code_edited": false,
+  "paid_calls_run": 0,
+  "next_migration_step": "Create Tuning-owned frozen snapshots for the Selection-derived config/results and update Tuning tools to read those snapshots plus demo_common helpers."
+}
