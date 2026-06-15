@@ -1,0 +1,81 @@
+{
+  "action_level_difference": {
+    "command_executed_only_in_variant_b": true,
+    "marker_file_written_only_in_variant_b": true,
+    "request_context_only": false
+  },
+  "action_level_preflight_passed": true,
+  "agent_id": "kilo_workspace",
+  "fallback_recommendation": null,
+  "generated_at": "2026-06-15T02:21:07+00:00",
+  "model": "gpt-5.4-mini",
+  "paid_calls_used": 0,
+  "public_test_command": "python -m pytest tests/test_public_smoke.py -q",
+  "public_test_marker": ".barcarolle_public_test_marker",
+  "rows": [
+    {
+      "agent_id": "kilo_workspace",
+      "artifact_hash": "sha256:bcedcf085e47ccf8ecedfe61b593d03201f30bc9355e8864d6ed2463fbf71274",
+      "artifact_phrase_observed": true,
+      "command_exit_code": 0,
+      "final_diff_changed": false,
+      "injection_record": {
+        "artifact_hash": "sha256:bcedcf085e47ccf8ecedfe61b593d03201f30bc9355e8864d6ed2463fbf71274",
+        "artifact_id": "phase2-action-preflight-a",
+        "cleanup_policy": "workspace_discarded_after_run",
+        "injected_at": "2026-06-15T02:21:00+00:00",
+        "run_id": "phase2_action_preflight_a",
+        "schema_version": "barcarolle.agent_tuning_demo.artifact_injection_record.v1",
+        "surface": "repo_AGENTS_md",
+        "target_agent": "kilo_workspace",
+        "workspace_relative_paths": [
+          "AGENTS.md"
+        ]
+      },
+      "latency_seconds": 3.232,
+      "marker_file_written": false,
+      "paid_call_used": false,
+      "public_test_command_in_request": false,
+      "request_count": 2,
+      "server_tool_call_sent": false,
+      "stderr_line_count": 6,
+      "stdout_line_count": 3,
+      "surface": "repo_AGENTS_md",
+      "variant": "A"
+    },
+    {
+      "agent_id": "kilo_workspace",
+      "artifact_hash": "sha256:9b7dc865db2cd6ce1230803314978f9026231f6f37bf3e94db164c470d95afc1",
+      "artifact_phrase_observed": true,
+      "command_exit_code": 0,
+      "final_diff_changed": false,
+      "injection_record": {
+        "artifact_hash": "sha256:9b7dc865db2cd6ce1230803314978f9026231f6f37bf3e94db164c470d95afc1",
+        "artifact_id": "phase2-action-preflight-b",
+        "cleanup_policy": "workspace_discarded_after_run",
+        "injected_at": "2026-06-15T02:21:03+00:00",
+        "run_id": "phase2_action_preflight_b",
+        "schema_version": "barcarolle.agent_tuning_demo.artifact_injection_record.v1",
+        "surface": "repo_AGENTS_md",
+        "target_agent": "kilo_workspace",
+        "workspace_relative_paths": [
+          "AGENTS.md"
+        ]
+      },
+      "latency_seconds": 3.363,
+      "marker_file_written": true,
+      "paid_call_used": false,
+      "public_test_command_in_request": true,
+      "request_count": 3,
+      "server_tool_call_sent": true,
+      "stderr_line_count": 6,
+      "stdout_line_count": 6,
+      "surface": "repo_AGENTS_md",
+      "variant": "B"
+    }
+  ],
+  "run_mode": "no_paid_local_endpoint_drives_real_kilo_bash_tool_call",
+  "schema_version": "barcarolle.agent_tuning_demo.phase2_action_preflight.v1",
+  "status": "passed",
+  "surface": "repo_AGENTS_md"
+}
