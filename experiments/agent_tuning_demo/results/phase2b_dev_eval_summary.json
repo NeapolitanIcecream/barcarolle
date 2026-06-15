@@ -1,0 +1,163 @@
+{
+  "candidate_summaries": [
+    {
+      "artifact_hash": "sha256:cf73f60a026439281b077d8d088353265e1aabcbedfca807bad11633f9646fa2",
+      "artifact_id": "phase2b-llm-api-contract-and-edge-cases",
+      "candidate_condition": "tuned_candidate_1",
+      "conditions": {
+        "baseline": {
+          "cells": 6,
+          "estimated_cost_usd": 0.29861655,
+          "invalid_or_unscoreable_cells": 0,
+          "median_latency_seconds": 49.363,
+          "pass_rate": 0.6667,
+          "scoreable_cells": 6,
+          "verified_pass_count": 4
+        },
+        "tuned": {
+          "cells": 6,
+          "estimated_cost_usd": 0.32377995,
+          "invalid_or_unscoreable_cells": 0,
+          "median_latency_seconds": 49.333,
+          "pass_rate": 0.6667,
+          "scoreable_cells": 6,
+          "verified_pass_count": 4
+        }
+      },
+      "cost_ratio_vs_baseline_per_task": 1.0843,
+      "dev_gate_pass": false,
+      "improved_task_ids": [],
+      "matrix": [
+        {
+          "baseline_pass": true,
+          "baseline_status": "verified_pass",
+          "task_id": "boltons__clean_ext__001",
+          "tuned_pass": true,
+          "tuned_status": "verified_pass"
+        },
+        {
+          "baseline_pass": true,
+          "baseline_status": "verified_pass",
+          "task_id": "boltons__clean_ext__008",
+          "tuned_pass": true,
+          "tuned_status": "verified_pass"
+        },
+        {
+          "baseline_pass": true,
+          "baseline_status": "verified_pass",
+          "task_id": "boltons__clean_ext__010",
+          "tuned_pass": true,
+          "tuned_status": "verified_pass"
+        },
+        {
+          "baseline_pass": false,
+          "baseline_status": "verified_fail",
+          "task_id": "boltons__hist__006",
+          "tuned_pass": false,
+          "tuned_status": "verified_fail"
+        },
+        {
+          "baseline_pass": true,
+          "baseline_status": "verified_pass",
+          "task_id": "boltons__hist__007",
+          "tuned_pass": true,
+          "tuned_status": "verified_pass"
+        },
+        {
+          "baseline_pass": false,
+          "baseline_status": "verified_fail",
+          "task_id": "boltons__supply_expansion_20260526__107",
+          "tuned_pass": false,
+          "tuned_status": "verified_fail"
+        }
+      ],
+      "paired_net_wins": 0,
+      "paired_task_count": 6,
+      "regressed_task_ids": []
+    },
+    {
+      "artifact_hash": "sha256:b81595bdc5a9837e017af295ff66b62f515b881ec0e03b87f01ffcf8f4d3884e",
+      "artifact_id": "phase2b-llm-tight-scope-debugging-loop",
+      "candidate_condition": "tuned_candidate_2",
+      "conditions": {
+        "baseline": {
+          "cells": 6,
+          "estimated_cost_usd": 0.29861655,
+          "invalid_or_unscoreable_cells": 0,
+          "median_latency_seconds": 49.363,
+          "pass_rate": 0.6667,
+          "scoreable_cells": 6,
+          "verified_pass_count": 4
+        },
+        "tuned": {
+          "cells": 6,
+          "estimated_cost_usd": 0.2750637,
+          "invalid_or_unscoreable_cells": 0,
+          "median_latency_seconds": 44.99,
+          "pass_rate": 0.6667,
+          "scoreable_cells": 6,
+          "verified_pass_count": 4
+        }
+      },
+      "cost_ratio_vs_baseline_per_task": 0.9211,
+      "dev_gate_pass": false,
+      "improved_task_ids": [],
+      "matrix": [
+        {
+          "baseline_pass": true,
+          "baseline_status": "verified_pass",
+          "task_id": "boltons__clean_ext__001",
+          "tuned_pass": true,
+          "tuned_status": "verified_pass"
+        },
+        {
+          "baseline_pass": true,
+          "baseline_status": "verified_pass",
+          "task_id": "boltons__clean_ext__008",
+          "tuned_pass": true,
+          "tuned_status": "verified_pass"
+        },
+        {
+          "baseline_pass": true,
+          "baseline_status": "verified_pass",
+          "task_id": "boltons__clean_ext__010",
+          "tuned_pass": true,
+          "tuned_status": "verified_pass"
+        },
+        {
+          "baseline_pass": false,
+          "baseline_status": "verified_fail",
+          "task_id": "boltons__hist__006",
+          "tuned_pass": false,
+          "tuned_status": "verified_fail"
+        },
+        {
+          "baseline_pass": true,
+          "baseline_status": "verified_pass",
+          "task_id": "boltons__hist__007",
+          "tuned_pass": true,
+          "tuned_status": "verified_pass"
+        },
+        {
+          "baseline_pass": false,
+          "baseline_status": "verified_fail",
+          "task_id": "boltons__supply_expansion_20260526__107",
+          "tuned_pass": false,
+          "tuned_status": "verified_fail"
+        }
+      ],
+      "paired_net_wins": 0,
+      "paired_task_count": 6,
+      "regressed_task_ids": []
+    }
+  ],
+  "chosen_artifact_hash": null,
+  "chosen_candidate_condition": null,
+  "estimated_cost_usd": 0.8974602,
+  "future_gate_decision": "stop_dev_gate_not_positive",
+  "generated_at": "2026-06-15T03:37:45+00:00",
+  "paid_cells": 18,
+  "schema_version": "barcarolle.agent_tuning_demo.phase2b_dev_eval_summary.v1",
+  "stage": "dev_eval",
+  "window_id": "boltons_time_ordered_w1_train2015_2018_dev2019_2020_future2022_2023"
+}
