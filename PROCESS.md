@@ -295,6 +295,21 @@ Canonical audit:
 and
 `experiments/agent_tuning_demo/results/boltons_capacity_final_recommendation.json`.
 
+The target repository selection gate completed on 2026-06-15 with terminal
+state `target_repo_selected_no_paid`. It screened 13 new Python repositories
+plus the required baselines and deep-probed 6 new repositories where feasible.
+No new repository beat the practical attrs/click/boltons baseline after
+setup/replay risk was included: packaging and marshmallow had strong source
+supply but failed prior/fresh no-paid replay samples, urllib3 had strong source
+supply but failed visible smoke and replay samples, and pytest was rejected as
+too infrastructure-heavy for this gate. Primary fallback remains
+`python-attrs/attrs`; `pallets/click` is the backup. Do not start paid tuning
+or baseline discovery from this gate; next work is attrs target-profile,
+packaging, verifier pinning, bounded no-paid certification, and split/freeze
+rehearsal. Canonical gate:
+`experiments/agent_tuning_demo/reports/target_repo_selection_gate_zh.md` and
+`experiments/agent_tuning_demo/results/target_repo_selection_gate.json`.
+
 Agent License remains a possible downstream product, but it is not the current
 research proof or active architecture. Historical license/admission material is
 archived under `archive/2026-05-agent-license-reset/`.
