@@ -310,6 +310,22 @@ rehearsal. Canonical gate:
 `experiments/agent_tuning_demo/reports/target_repo_selection_gate_zh.md` and
 `experiments/agent_tuning_demo/results/target_repo_selection_gate.json`.
 
+The large-repo target selection gate completed on 2026-06-15 with terminal
+state `large_repo_target_selected_no_paid`. It screened 15 new repositories
+across large/heavy and medium-large fast-evaluation tracks, deep-probed 10 new
+repositories where feasible, and ran no paid Agent, LLM, or tuner calls. The
+recommended no-paid target-prep repository is `sphinx`; backup is `mypy`, but
+`mypy` is speed-unproven and must not be treated as paid-ready. `sphinx` has
+fast current targeted shards and projected multi-window capacity, but its
+one-sample historical changed-test replay did not pass under the generic
+dependency profile, so the next step is target profile, package map,
+version-aware verifier pinning, and a 20-30 task no-paid certification wave.
+Do not start paid baseline discovery or tuning from this gate alone. Canonical
+gate:
+`experiments/agent_tuning_demo/reports/large_repo_target_selection_gate_zh.md`
+and
+`experiments/agent_tuning_demo/results/large_repo_target_selection_gate.json`.
+
 Agent License remains a possible downstream product, but it is not the current
 research proof or active architecture. Historical license/admission material is
 archived under `archive/2026-05-agent-license-reset/`.
