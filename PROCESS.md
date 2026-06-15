@@ -121,6 +121,24 @@ Canonical current demo artifacts:
 - `experiments/agent_selection_demo/results/selector_decision_eval.json`
 - `experiments/agent_selection_demo/reports/selector_algorithm_bakeoff_eval_zh.md`
 
+Boltons small expansion demo update on 2026-06-15:
+
+- Expanded only `mahmoud/boltons` to a strict `task_time`-ordered presentation
+  matrix with `30` Selection tasks and `20` later-check tasks.
+- Paid expansion added `88/140` allowed fresh cells, reusing `112` committed
+  cells for a complete `200`-cell matrix. Selection recommends Kilo + GPT
+  mainline (`20/30`, `0.666667`), while later-check top is Kilo + Claude
+  Sonnet (`17/19`, `0.894737`); Selection-regret on later-check is `0.094737`.
+- Strict rolling-origin diagnostics use real `task_time` only, not ordinary
+  split labels: `4` origins, MAE mean `0.213418`, top-rank agreement `0.5`,
+  mean/max regret `0.033742` / `0.094737`. Treat this as directional
+  historical pseudo-future evidence, not predictive-validity proof.
+- Canonical outputs:
+  `experiments/agent_selection_demo/reports/boltons_small_expansion_demo_report_zh.md`,
+  `experiments/agent_selection_demo/results/boltons_small_expansion_summary.json`,
+  `experiments/agent_selection_demo/results/boltons_strict_rolling_origin_summary.json`,
+  `experiments/agent_selection_demo/results/boltons_small_expansion_task_manifest.json`.
+
 The predictive-validity completion pass froze the estimand as complete-Agent
 future target-repo verified pass-rate prediction accuracy and added no-paid
 rolling-origin/pseudo-future tooling. The no-paid retrospective result gives
