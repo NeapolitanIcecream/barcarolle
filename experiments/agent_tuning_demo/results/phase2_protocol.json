@@ -1,0 +1,93 @@
+{
+  "generated_at": "2026-06-15T02:20:27+00:00",
+  "headroom_rationale": {
+    "holdout_historical_pass_rate": "6/10",
+    "reason": "Kilo GPT low-cost is a Kilo workspace Agent, has lower historical pass rate than Kilo GPT mainline, and reduces paid-cell cost while retaining measurable headroom.",
+    "selected_agent": "kilo_gpt_5_4_mini",
+    "selection_historical_pass_rate": "13/20"
+  },
+  "leakage_controls": {
+    "candidate_records_require_holdout_derived_false": true,
+    "candidate_records_require_visible_to_optimizer": true,
+    "chosen_artifact_hash_frozen_before_holdout": true,
+    "holdout_ids_excluded_from_candidate_generation": true,
+    "holdout_ids_excluded_from_optimizer_input": true,
+    "optimizer_visible_splits": [
+      "selection_train"
+    ],
+    "reject_holdout_derived_by_default": true,
+    "selection_dev_used_only_for_candidate_evaluation": true
+  },
+  "metrics": [
+    "action_level_preflight_success",
+    "selection_dev_paired_net_wins",
+    "holdout_paired_net_wins",
+    "pass_rate",
+    "invalid_patch_timeout_verifier_replay_success",
+    "cost_latency",
+    "behavior_change_markers"
+  ],
+  "paid_caps": {
+    "action_preflight_paid_cells_max": 4,
+    "holdout_paid_cells_max": 20,
+    "optimization_paid_cells_max": 32,
+    "planned_paid_cells": {
+      "action_preflight": 0,
+      "holdout_baseline_plus_tuned_if_gated": 12,
+      "selection_dev_baseline_plus_tuned": 8
+    },
+    "total_paid_cells_max": 56
+  },
+  "route": {
+    "artifact_type": "agents_md_appendix",
+    "artifact_workspace_path": "AGENTS.md",
+    "harness": "kilo",
+    "model": "gpt-5.4-mini",
+    "optimizer": "GEPA_standalone_optimize_anything",
+    "optimizer_mode": "custom_local_candidate_proposer_no_reflection_lm",
+    "surface": "repo_AGENTS_md",
+    "target_agent_id": "kilo_gpt_5_4_mini",
+    "target_agent_name": "Kilo + GPT low-cost",
+    "target_repo": "mahmoud/boltons"
+  },
+  "schema_version": "barcarolle.agent_tuning_demo.phase2_protocol.v1",
+  "splits": {
+    "holdout": {
+      "task_count": 6,
+      "task_ids_sha256": "sha256:260dec2ceae441b5e783fc5bb30de6c7483375557e6d8a5d73d30f531b5d1d33",
+      "task_ids_withheld_until_artifact_freeze": true
+    },
+    "selection_dev": [
+      "boltons__supply_expansion_20260526__001",
+      "boltons__supply_expansion_20260526__004",
+      "boltons__supply_expansion_20260526__006",
+      "boltons__supply_expansion_20260526__107"
+    ],
+    "selection_train": [
+      "boltons__supply_expansion_20260526__002",
+      "boltons__supply_expansion_20260526__003",
+      "boltons__supply_expansion_20260526__019",
+      "boltons__supply_expansion_20260526__048",
+      "boltons__supply_expansion_20260526__066",
+      "boltons__supply_expansion_20260526__093",
+      "boltons__supply_expansion_20260526__095",
+      "boltons__clean_ext__001",
+      "boltons__hist__006",
+      "boltons__hist__007",
+      "boltons__clean_ext__008",
+      "boltons__clean_ext__010",
+      "boltons__hist__011",
+      "boltons__hist__013",
+      "boltons__hist__014",
+      "boltons__hist__017"
+    ]
+  },
+  "status": "frozen_before_action_preflight",
+  "stop_conditions": [
+    "Stop before optimizer rollout if action-level preflight does not pass.",
+    "Stop before Holdout if Selection-dev paired net wins are negative or tuned invalid runs exceed baseline invalid runs.",
+    "Stop if paid-cell caps would be exceeded.",
+    "Stop on missing LLM_BASE_URL or LLM_API_KEY before any paid Agent cell.",
+    "Stop if artifact hash is not frozen before Holdout."
+  ]
+}
