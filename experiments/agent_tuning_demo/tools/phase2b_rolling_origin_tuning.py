@@ -1535,6 +1535,7 @@ def write_final_reports() -> None:
     payload = final_closeout_payload()
     write_json(RESULTS / "phase2b_closeout.json", payload)
     dev_rows = []
+    dev_cost_rows = []
     if payload["dev"]:
         dev_rows = [
             {
@@ -1546,11 +1547,27 @@ def write_final_reports() -> None:
             }
             for summary in payload["dev"].get("candidate_summaries", [])
         ]
+        dev_cost_rows = [
+            {
+                "Candidate": summary["candidate_condition"],
+                "Baseline cost": summary["conditions"]["baseline"]["estimated_cost_usd"],
+                "Tuned cost": summary["conditions"]["tuned"]["estimated_cost_usd"],
+                "Cost ratio": summary["cost_ratio_vs_baseline_per_task"],
+                "Baseline latency": summary["conditions"]["baseline"]["median_latency_seconds"],
+                "Tuned latency": summary["conditions"]["tuned"]["median_latency_seconds"],
+                "Invalid baseline/tuned": f"{summary['conditions']['baseline']['invalid_or_unscoreable_cells']}/{summary['conditions']['tuned']['invalid_or_unscoreable_cells']}",
+            }
+            for summary in payload["dev"].get("candidate_summaries", [])
+        ]
     future_pair = payload["future"].get("paired") if payload.get("future") else None
     report_lines = [
         "# Agent Tuning Demo Phase 2b report",
         "",
         f"Generated at: `{payload['generated_at']}`.",
+        "",
+        "## Why Phase 2a was not enough",
+        "",
+        "Phase 2a proved action-level artifact injection and an end-to-end before/after validation loop, but it did not prove tuning improvement. Selection-dev stayed `1/4 -> 1/4`, Holdout stayed `5/6 -> 5/6`, paired net wins were `0` on both splits, and the proposer was a deterministic local GEPA-shaped proposer with no reflection LM.",
         "",
         "## Result",
         "",
@@ -1561,13 +1578,25 @@ def write_final_reports() -> None:
         f"- Paid Agent cells: `{payload['paid_agent_cells']}`",
         f"- Estimated cost: `${payload['estimated_cost_usd']}`",
         "",
-        "## Window",
+        "## Rolling-origin design and task supply",
         "",
         *markdown_table(payload["rolling_origin_windows"], [("Window", "window_id"), ("Mode", "mode"), ("Train", "train_count"), ("Dev", "dev_count"), ("Future", "future_count"), ("Dev baseline", "dev_baseline_headroom"), ("Future baseline", "future_baseline_headroom")]),
+        "",
+        "Current supply supports one strong time-ordered future-validation window, not a two-window rolling-origin claim. Future task IDs stayed hidden because no artifact passed the dev gate.",
+        "",
+        "## Target Agent and artifact surface",
+        "",
+        f"The frozen target was `{TARGET_AGENT_ID}` through Kilo with one repo-local `{TARGET_ARTIFACT_PATH}` appendix. The surface was chosen because Kilo `AGENTS.md` action-level preflight passed in Phase 2.",
+        "",
+        "## LLM proposer and artifacts",
+        "",
+        f"The proposer used `{payload['llm_proposer']}` LLM calls, including one reflection/revision iteration. It produced two candidate `AGENTS.md` appendices from train-only evidence; raw prompt and completion content stayed under ignored raw paths.",
         "",
         "## Dev matrix",
         "",
         *markdown_table(dev_rows, [("Candidate", "Candidate"), ("Pass", "Pass"), ("Scoreable", "Scoreable"), ("Net wins", "Net wins"), ("Gate", "Gate")]),
+        "",
+        "Both candidates were non-regressing on dev but failed the preregistered improvement gate because paired net wins were `0` rather than positive.",
         "",
         "## Future matrix",
         "",
@@ -1578,6 +1607,23 @@ def write_final_reports() -> None:
         report_lines.append("_Future validation was not run._")
     report_lines.extend(
         [
+            "",
+            "## Cost, latency, and invalid runs",
+            "",
+            *markdown_table(dev_cost_rows, [("Candidate", "Candidate"), ("Baseline cost", "Baseline cost"), ("Tuned cost", "Tuned cost"), ("Cost ratio", "Cost ratio"), ("Baseline latency", "Baseline latency"), ("Tuned latency", "Tuned latency"), ("Invalid baseline/tuned", "Invalid baseline/tuned")]),
+            "",
+            "No tuned candidate increased invalid or unscoreable dev cells. Candidate 1 cost was `1.0843x` baseline per task; candidate 2 cost was `0.9211x` baseline per task.",
+            "",
+            "## Case studies",
+            "",
+            "- Improved task: none observed on dev.",
+            "- Unchanged task: `boltons__clean_ext__001` passed under baseline and both tuned candidates.",
+            "- Remaining failure: `boltons__hist__006` and `boltons__supply_expansion_20260526__107` failed under baseline and both tuned candidates.",
+            "- Regression: none observed on dev.",
+            "",
+            "## Behavior and failure-label changes",
+            "",
+            "No terminal-status or failure-label shift was observed on dev: both candidates reproduced the baseline pass/fail matrix exactly.",
             "",
             "## Supported claims",
             "",

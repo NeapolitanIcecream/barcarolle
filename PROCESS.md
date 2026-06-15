@@ -264,6 +264,23 @@ fine-tuning, or full opaque-Agent tuning. Canonical closeout:
 `experiments/agent_tuning_demo/reports/phase2_closeout_zh.md` and
 `experiments/agent_tuning_demo/results/phase2_closeout.json`.
 
+Agent Tuning Phase 2b completed on 2026-06-15 with terminal state
+`phase2b_dev_negative`. Phase 2a was relabeled as a no-improvement pilot, and
+the no-paid audit found one usable `mahmoud/boltons` Kilo low-cost
+time-ordered window, not enough for a multi-window rolling-origin claim. A real
+LLM-driven GEPA-shaped proposer used two `LLM_BASE_URL`/`LLM_API_KEY` calls
+including one reflection iteration and produced two train-only Kilo
+`AGENTS.md` appendices. Fresh dev evaluation spent 18 Agent cells, estimated
+`$0.8974602`, and both candidates were non-regressing but unchanged:
+baseline/tuned `4/6 -> 4/6`, paired net wins `0`, invalid cells `0/0`. The
+preregistered positive-dev gate failed, so future validation was skipped with
+zero future cells and future task IDs remained unrevealed. Supported claims are
+limited to Phase 2a reframe, single-window task-supply readiness, and real
+LLM-driven train-only artifact proposal; no tuned improvement or rolling-origin
+claim is supported. Canonical closeout:
+`experiments/agent_tuning_demo/reports/phase2b_closeout_zh.md` and
+`experiments/agent_tuning_demo/results/phase2b_closeout.json`.
+
 Agent License remains a possible downstream product, but it is not the current
 research proof or active architecture. Historical license/admission material is
 archived under `archive/2026-05-agent-license-reset/`.
