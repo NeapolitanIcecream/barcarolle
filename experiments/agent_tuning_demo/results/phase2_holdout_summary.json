@@ -1,0 +1,80 @@
+{
+  "estimated_cost_usd": 0.6142311,
+  "generated_at": "2026-06-15T02:42:19+00:00",
+  "paid_cells": 12,
+  "paired": {
+    "conditions": {
+      "baseline": {
+        "cells": 6,
+        "estimated_cost_usd": 0.3224709,
+        "invalid_or_unscoreable_cells": 0,
+        "median_latency_seconds": 32.081,
+        "pass_rate": 0.8333,
+        "scoreable_cells": 6,
+        "usage_observed_count": 6,
+        "verified_pass_count": 5
+      },
+      "tuned": {
+        "cells": 6,
+        "estimated_cost_usd": 0.2917602,
+        "invalid_or_unscoreable_cells": 0,
+        "median_latency_seconds": 34.701,
+        "pass_rate": 0.8333,
+        "scoreable_cells": 6,
+        "usage_observed_count": 6,
+        "verified_pass_count": 5
+      }
+    },
+    "improved_task_ids": [],
+    "matrix": [
+      {
+        "baseline_pass": true,
+        "baseline_status": "verified_pass",
+        "task_id": "boltons__clean_ext__017",
+        "tuned_pass": true,
+        "tuned_status": "verified_pass"
+      },
+      {
+        "baseline_pass": false,
+        "baseline_status": "verified_fail",
+        "task_id": "boltons__hist__019",
+        "tuned_pass": false,
+        "tuned_status": "verified_fail"
+      },
+      {
+        "baseline_pass": true,
+        "baseline_status": "verified_pass",
+        "task_id": "boltons__hist__020",
+        "tuned_pass": true,
+        "tuned_status": "verified_pass"
+      },
+      {
+        "baseline_pass": true,
+        "baseline_status": "verified_pass",
+        "task_id": "boltons__hist__022",
+        "tuned_pass": true,
+        "tuned_status": "verified_pass"
+      },
+      {
+        "baseline_pass": true,
+        "baseline_status": "verified_pass",
+        "task_id": "boltons__hist__023",
+        "tuned_pass": true,
+        "tuned_status": "verified_pass"
+      },
+      {
+        "baseline_pass": true,
+        "baseline_status": "verified_pass",
+        "task_id": "boltons__hist__024",
+        "tuned_pass": true,
+        "tuned_status": "verified_pass"
+      }
+    ],
+    "non_regressing_gate": true,
+    "paired_net_wins": 0,
+    "paired_task_count": 6,
+    "regressed_task_ids": []
+  },
+  "schema_version": "barcarolle.agent_tuning_demo.phase2_holdout_summary.v1",
+  "stage": "holdout"
+}
