@@ -1,0 +1,247 @@
+{
+  "deferred_or_intentionally_duplicated": [
+    "Agent Selection Demo keeps its existing helper implementations for now to avoid conflicting with parallel Selection work.",
+    "The neutral helper module copies stable helper behavior rather than forcing Selection Demo adoption in this run.",
+    "Future snapshot refresh is deliberately out of scope and must be explicit."
+  ],
+  "dependencies_removed": [
+    {
+      "dependency_type": "tool_import",
+      "removed_from": "experiments/agent_tuning_demo/tools/phase2_artifact_tuning.py",
+      "replacement": "experiments.demo_common plus experiments/agent_tuning_demo/tools/selection_snapshot.py"
+    },
+    {
+      "dependency_type": "tool_import",
+      "removed_from": "experiments/agent_tuning_demo/tools/phase2b_rolling_origin_tuning.py",
+      "replacement": "experiments.demo_common plus experiments/agent_tuning_demo/tools/selection_snapshot.py"
+    },
+    {
+      "dependency_type": "live_config_read",
+      "removed_paths": [
+        "experiments/agent_selection_demo/config/demo_config.json"
+      ],
+      "replacement": "experiments/agent_tuning_demo/config/selection_input_snapshot.json::selection_config"
+    },
+    {
+      "dependency_type": "live_result_read",
+      "removed_paths": [
+        "experiments/agent_selection_demo/results/frozen_split.json",
+        "experiments/agent_selection_demo/results/selector_task_table.csv",
+        "experiments/agent_selection_demo/results/selection_score_table.csv",
+        "experiments/agent_selection_demo/results/holdout_score_table.csv",
+        "experiments/agent_selection_demo/results/predictive_validity_window_inventory.json"
+      ],
+      "replacement": "experiments/agent_tuning_demo/config/selection_input_snapshot.json embedded frozen fields"
+    },
+    {
+      "dependency_type": "ignored_raw_runtime_read",
+      "removed_paths": [
+        "experiments/phase0_headroom/results/raw/workspace_acut/agent_selection_demo_2026_06_12_selection/.../acut_stdout.txt"
+      ],
+      "replacement": "embedded sanitized tool summaries and command digests in the Tuning snapshot; raw transcript text not committed"
+    }
+  ],
+  "generated_at": "2026-06-15T08:41:01+00:00",
+  "guard_test_status": {
+    "contracts": [
+      "Tuning tools do not import agent_selection_demo.py.",
+      "Tuning tools do not contain live Selection config/results path reads.",
+      "Tuning tools consume the frozen Tuning-owned snapshot for Selection-derived inputs."
+    ],
+    "status": "passed",
+    "test_file": "experiments/agent_tuning_demo/tests/test_demo_shared_module_extraction_guards.py"
+  },
+  "new_selection_or_tuning_experiments_run": false,
+  "old_tuning_to_selection_dependencies_found": [
+    {
+      "consumer": "experiments/agent_tuning_demo/tools/phase2_artifact_tuning.py",
+      "dependency_type": "tool_import",
+      "reason": "Phase 2 reused Selection Demo config, package-map, adapter, cost, and failure-label helpers.",
+      "selection_path": "experiments/agent_selection_demo/tools/agent_selection_demo.py"
+    },
+    {
+      "consumer": "experiments/agent_tuning_demo/tools/phase2b_rolling_origin_tuning.py",
+      "dependency_type": "tool_import",
+      "reason": "Phase 2b reused Selection Demo config, package-map, adapter, cost, and failure-label helpers.",
+      "selection_path": "experiments/agent_selection_demo/tools/agent_selection_demo.py"
+    },
+    {
+      "consumer": "phase2_artifact_tuning.load_selection_split",
+      "dependency_type": "live_result_read",
+      "reason": "Phase 2 protocol needed the historical Selection train/dev/holdout split.",
+      "selection_path": "experiments/agent_selection_demo/results/frozen_split.json"
+    },
+    {
+      "consumer": "phase2_artifact_tuning.feedback_rows",
+      "dependency_type": "live_result_read",
+      "reason": "Phase 2 feedback export needed historical Kilo low-cost Selection-train outcomes.",
+      "selection_path": "experiments/agent_selection_demo/results/selection_score_table.csv"
+    },
+    {
+      "consumer": "phase2_artifact_tuning.feedback_rows and run_phase2_stage",
+      "dependency_type": "live_config_read",
+      "reason": "Phase 2 needed task-package metadata and the target Agent adapter configuration.",
+      "selection_path": "experiments/agent_selection_demo/config/demo_config.json"
+    },
+    {
+      "consumer": "phase2b_rolling_origin_tuning.load_task_table",
+      "dependency_type": "live_result_read",
+      "reason": "Phase 2b rolling-window construction needed historical task ordering and stage roles.",
+      "selection_path": "experiments/agent_selection_demo/results/selector_task_table.csv"
+    },
+    {
+      "consumer": "phase2b_rolling_origin_tuning.score_rows_for_target",
+      "dependency_type": "live_result_read",
+      "reason": "Phase 2b headroom and train evidence needed historical Selection outcomes.",
+      "selection_path": "experiments/agent_selection_demo/results/selection_score_table.csv"
+    },
+    {
+      "consumer": "phase2b_rolling_origin_tuning.score_rows_for_target",
+      "dependency_type": "live_result_read",
+      "reason": "Phase 2b headroom and future-window summaries needed historical Holdout outcomes.",
+      "selection_path": "experiments/agent_selection_demo/results/holdout_score_table.csv"
+    },
+    {
+      "consumer": "phase2b_rolling_origin_tuning.inventory_summary",
+      "dependency_type": "live_result_read",
+      "reason": "Phase 2b task-supply audit summarized prior Selection predictive-validity inventory.",
+      "selection_path": "experiments/agent_selection_demo/results/predictive_validity_window_inventory.json"
+    },
+    {
+      "consumer": "phase2b_rolling_origin_tuning.train_evidence_rows and run_eval_stage",
+      "dependency_type": "live_config_read",
+      "reason": "Phase 2b needed task-package metadata and the target Agent adapter configuration.",
+      "selection_path": "experiments/agent_selection_demo/config/demo_config.json"
+    }
+  ],
+  "paid_calls_run": 0,
+  "schema_version": "barcarolle.agent_tuning_demo.demo_shared_module_extraction.v1",
+  "selection_demo_code_touched": false,
+  "selection_results_or_reports_touched": false,
+  "shared_modules_added": [
+    "experiments/demo_common/files.py",
+    "experiments/demo_common/costs.py",
+    "experiments/demo_common/workspace_inputs.py"
+  ],
+  "terminal_state": "demo_shared_module_extraction_complete_no_paid",
+  "tuning_owned_snapshot": {
+    "frozen_inputs": [
+      {
+        "destination": "experiments/agent_tuning_demo/config/selection_input_snapshot.json",
+        "phase_consumers": [
+          "phase2",
+          "phase2b"
+        ],
+        "reason": "Build historical task packages and Agent adapter config from a Tuning-owned config copy.",
+        "source_path": "experiments/agent_selection_demo/config/demo_config.json",
+        "source_sha256": "sha256:9a731e6581bda14907bc615c0606c25966932159e232085046d570c0df2743dd",
+        "storage": "embedded_full_json"
+      },
+      {
+        "destination": "experiments/agent_tuning_demo/config/selection_input_snapshot.json",
+        "phase_consumers": [
+          "phase2"
+        ],
+        "reason": "Reproduce Phase 2 train/dev/holdout split decisions without reading live Selection results.",
+        "source_path": "experiments/agent_selection_demo/results/frozen_split.json",
+        "source_sha256": "sha256:856a11ebf23402a06b3b7421883666cc76e4af3089a56930b0d1c13779b4200c",
+        "storage": "embedded_full_json"
+      },
+      {
+        "destination": "experiments/agent_tuning_demo/config/selection_input_snapshot.json",
+        "phase_consumers": [
+          "phase2b"
+        ],
+        "reason": "Reproduce Phase 2b time-ordered window construction for the boltons target repo.",
+        "row_count": 35,
+        "source_path": "experiments/agent_selection_demo/results/selector_task_table.csv",
+        "source_sha256": "sha256:c2b2c9869f177a86ac1eabc9c01239a7fceb538481ffc875cc5d364e23a6a311",
+        "storage": "embedded_rows_filtered_to_target_repo"
+      },
+      {
+        "destination": "experiments/agent_tuning_demo/config/selection_input_snapshot.json",
+        "phase_consumers": [
+          "phase2",
+          "phase2b"
+        ],
+        "reason": "Reproduce historical Kilo low-cost Selection-train labels and Phase 2b train/dev headroom.",
+        "row_count": 20,
+        "source_path": "experiments/agent_selection_demo/results/selection_score_table.csv",
+        "source_sha256": "sha256:e8346a3bafa190015b1a899e4ca8325e4dc4a3f9b83169d99ea10f7cb6fd14d6",
+        "storage": "embedded_rows_filtered_to_target_agent"
+      },
+      {
+        "destination": "experiments/agent_tuning_demo/config/selection_input_snapshot.json",
+        "phase_consumers": [
+          "phase2b"
+        ],
+        "reason": "Reproduce Phase 2b future-window headroom summaries without reading live Holdout scores.",
+        "row_count": 10,
+        "source_path": "experiments/agent_selection_demo/results/holdout_score_table.csv",
+        "source_sha256": "sha256:7e8b766bf430dce5e356e2444418d09e6b0976f30cdbf748c2ec40691e858e21",
+        "storage": "embedded_rows_filtered_to_target_agent"
+      },
+      {
+        "destination": "experiments/agent_tuning_demo/config/selection_input_snapshot.json",
+        "phase_consumers": [
+          "phase2b"
+        ],
+        "reason": "Retain the candidate-repo inventory summary used by Phase 2b task-supply audit.",
+        "source_path": "experiments/agent_selection_demo/results/predictive_validity_window_inventory.json",
+        "source_sha256": "sha256:f7540b44ba5dc771bb6d016a60c426285088f8e604a8d42d24ac472b9cdd1842",
+        "storage": "embedded_minimal_candidate_repos_field"
+      },
+      {
+        "destination": "experiments/agent_tuning_demo/config/selection_input_snapshot.json",
+        "phase_consumers": [
+          "phase2"
+        ],
+        "raw_content_committed": false,
+        "reason": "Freeze Phase 2 sanitized command/test-behavior summaries without depending on ignored raw stdout at runtime.",
+        "row_count": 20,
+        "source_path_pattern": "experiments/phase0_headroom/results/raw/workspace_acut/agent_selection_demo_2026_06_12_selection/{target_agent_id}/selection__{target_agent_id}__{task_id}/acut_stdout.txt",
+        "storage": "embedded_sanitized_tool_summary_by_task"
+      }
+    ],
+    "manifest_path": "experiments/agent_tuning_demo/results/selection_input_snapshot_manifest.json",
+    "refresh_policy": "Frozen Tuning-owned snapshot. Later Agent Selection Demo config/result changes do not refresh this file automatically; refresh requires an explicit runbook or deliberate snapshot regeneration.",
+    "snapshot_path": "experiments/agent_tuning_demo/config/selection_input_snapshot.json",
+    "snapshot_sha256": "sha256:27fd4db587df89804b61a51814ae66491e3acac4cad648192ea79529c2e13851"
+  },
+  "unsupported_claims": [
+    "No new paid Agent, LLM, tuner, proposer, Selection, or Tuning experiment results were produced.",
+    "This refactor does not prove tuned improvement, predictive validity, or cross-repo generalization.",
+    "This refactor does not claim Agent Selection Demo has adopted the shared helpers."
+  ],
+  "verification": {
+    "acceptance_import_scan": {
+      "command": "rg \"import agent_selection_demo|from agent_selection_demo\" experiments/agent_tuning_demo/tools",
+      "status": "passed_no_matches"
+    },
+    "acceptance_live_path_scan": {
+      "command": "rg \"experiments/agent_selection_demo/results|experiments/agent_selection_demo/config\" experiments/agent_tuning_demo/tools",
+      "status": "passed_no_matches"
+    },
+    "agent_tuning_tests": {
+      "command": "uv run --project experiments/phase1_compiler pytest experiments/agent_tuning_demo/tests -q",
+      "status": "passed",
+      "summary": "34 passed"
+    },
+    "git_diff_check": {
+      "command": "git diff --check",
+      "status": "passed"
+    },
+    "hygiene_scan": {
+      "command": "git ls-files experiments/demo_common experiments/agent_tuning_demo PROCESS.md | rg '(\\.venv|\\.pytest_cache|\\.DS_Store|raw|transcript|workspace|secret|prompt|completion)' || true",
+      "explanation": "The hit is a tracked source helper filename containing 'workspace'; it is not a solver workspace, verifier workspace, raw artifact, prompt, completion, transcript, cache, or secret.",
+      "hits": [
+        "experiments/demo_common/workspace_inputs.py"
+      ],
+      "status": "explained_non_artifact_hit"
+    },
+    "selection_tests": {
+      "reason": "Agent Selection Demo code was not touched.",
+      "status": "not_run"
+    }
+  }
+}

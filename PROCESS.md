@@ -281,6 +281,22 @@ claim is supported. Canonical closeout:
 `experiments/agent_tuning_demo/reports/phase2b_closeout_zh.md` and
 `experiments/agent_tuning_demo/results/phase2b_closeout.json`.
 
+Agent Tuning Demo shared-module extraction completed on 2026-06-15 with terminal
+state `demo_shared_module_extraction_complete_no_paid`. The active Phase 2 and
+Phase 2b Tuning tools no longer import `agent_selection_demo.py` and no longer
+read live Selection Demo config/result files. Selection-derived inputs are now
+frozen in `experiments/agent_tuning_demo/config/selection_input_snapshot.json`
+with provenance in
+`experiments/agent_tuning_demo/results/selection_input_snapshot_manifest.json`;
+later Selection result changes do not affect current Tuning behavior unless a
+future run deliberately refreshes that snapshot. Shared neutral helper code now
+lives under `experiments/demo_common/`. Selection Demo adoption of those helpers
+is deferred to avoid conflicting with parallel Selection work. No paid calls,
+new Selection experiments, or new Tuning experiments were run. Canonical
+closeout:
+`experiments/agent_tuning_demo/reports/demo_shared_module_extraction_zh.md` and
+`experiments/agent_tuning_demo/results/demo_shared_module_extraction.json`.
+
 The boltons task-generator capacity audit completed on 2026-06-15 with
 terminal state `return_to_target_repo_selection`. Conservative boltons supply
 is 35 current release tasks plus 22 incremental no-paid dry-run release tasks,
