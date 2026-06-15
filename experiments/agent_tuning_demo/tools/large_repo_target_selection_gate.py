@@ -43,6 +43,7 @@ class ProbeSpec:
     with_package: bool = True
     timeout_seconds: int = 240
     extra_with: tuple[str, ...] = ()
+    python: str | None = None
 
 
 @dataclass(frozen=True)
@@ -320,8 +321,8 @@ def candidate_configs() -> list[CandidateConfig]:
             "low_to_medium_async_http_stack",
             "python -m pytest <starlette test file> -q",
             (
-                ProbeSpec("starlette_responses", ("tests/test_responses.py",), True, 240),
-                ProbeSpec("starlette_routing", ("tests/test_routing.py",), True, 240),
+                ProbeSpec("starlette_responses", ("tests/test_responses.py",), True, 240, ("httpx2",)),
+                ProbeSpec("starlette_routing", ("tests/test_routing.py",), True, 240, ("httpx2",)),
             ),
         ),
         CandidateConfig(
@@ -378,10 +379,14 @@ def candidate_configs() -> list[CandidateConfig]:
             "sphinx",
             "sphinx",
             "medium_large_fast",
-            False,
+            True,
             "acceptable",
             "medium_doc_build_fixture_matrix",
             "python -m pytest <sphinx unit shard> -q",
+            (
+                ProbeSpec("sphinx_util", ("tests/test_util/test_util.py",), True, 240, (), "3.14"),
+                ProbeSpec("sphinx_config", ("tests/test_config/test_config.py",), True, 240, (), "3.14"),
+            ),
         ),
     ]
 
@@ -488,7 +493,10 @@ def time_bucket(year: int | None) -> str:
 
 
 def probe_command(spec: ProbeSpec, paths: tuple[str, ...]) -> list[str]:
-    command = ["uv", "run", "--with", "pytest>=8,<10"]
+    command = ["uv", "run", "--no-project"]
+    if spec.python:
+        command.extend(["--python", spec.python])
+    command.extend(["--with", "pytest>=8,<10"])
     for dep in spec.extra_with:
         command.extend(["--with", dep])
     if spec.with_package:
@@ -517,7 +525,10 @@ def run_probe(repo: Path, spec: ProbeSpec) -> dict[str, Any]:
 
 
 def pytest_command_shape(spec: ProbeSpec) -> list[str]:
-    command = ["uv", "run", "--with", "pytest>=8,<10"]
+    command = ["uv", "run", "--no-project"]
+    if spec.python:
+        command.extend(["--python", spec.python])
+    command.extend(["--with", "pytest>=8,<10"])
     for dep in spec.extra_with:
         command.extend(["--with", dep])
     if spec.with_package:
@@ -537,12 +548,16 @@ def summarize_probe_timings(probes: list[dict[str, Any]]) -> dict[str, Any]:
             "p95_seconds": None,
             "speed_class": "not_measured",
         }
+    if 0 < len(passed) < len(completed):
+        measured_speed_class = "partial_probe_failure"
+    else:
+        measured_speed_class = speed_class(max(completed), passed=bool(passed))
     return {
         "sample_count": len(completed),
         "pass_count": len(passed),
         "median_seconds": round(statistics.median(completed), 3),
         "p95_seconds": round(percentile(completed, 0.95), 3),
-        "speed_class": speed_class(max(completed), passed=bool(passed)),
+        "speed_class": measured_speed_class,
     }
 
 
@@ -607,6 +622,8 @@ def spread_sample(rows: list[dict[str, Any]], limit: int) -> list[dict[str, Any]
     ordered = sorted(rows, key=lambda row: row.get("task_time") or "")
     if len(ordered) <= limit:
         return ordered
+    if limit == 1:
+        return [ordered[len(ordered) // 2]]
     step = (len(ordered) - 1) / (limit - 1)
     return [ordered[round(index * step)] for index in range(limit)]
 
@@ -716,13 +733,18 @@ def projected_release_count(metrics: dict[str, Any], prior: dict[str, Any]) -> i
     if known:
         return known
     release_ready = int(metrics.get("changed_test_oracle_availability_count") or 0)
+    prior_attempts = int(prior.get("prior_probe_attempts") or 0)
+    if prior_attempts:
+        prior_successes = int(prior.get("prior_probe_release_eligible") or 0)
+        return min(release_ready, round(release_ready * (prior_successes / prior_attempts)))
     shape = metrics.get("bounded_certification_sample", {})
     shape_rate = None
     if shape.get("sample_size"):
         shape_rate = int(shape.get("pass_count") or 0) / int(shape["sample_size"])
     timing = metrics.get("targeted_verifier_timing", {})
     speed = str(timing.get("speed_class") or "")
-    smoke_passed = int(timing.get("pass_count") or 0) > 0
+    timing_sample_count = int(timing.get("sample_count") or 0)
+    smoke_passed = timing_sample_count > 0 and int(timing.get("pass_count") or 0) == timing_sample_count
     if speed == "environment_failed_or_unusable" or str(metrics.get("environment_risk", "")).startswith("high_compiled"):
         rate = 0.05
     elif smoke_passed and shape_rate is not None:
@@ -882,8 +904,10 @@ def candidate_metrics(
 def smoke_status(probe_results: list[dict[str, Any]]) -> str:
     if not probe_results:
         return "not_run"
-    if any(row.get("status") == "passed" for row in probe_results):
+    if all(row.get("status") == "passed" for row in probe_results):
         return "passed"
+    if any(row.get("status") == "passed" for row in probe_results):
+        return "partial_failed"
     if all(row.get("status") == "not_run_missing_paths" for row in probe_results):
         return "not_run_missing_paths"
     return "failed"
@@ -1120,11 +1144,11 @@ This is a no-paid target-prep recommendation, not permission to start paid basel
 
 ## Large/heavy Findings
 
-The large/heavy track confirms that size alone is not enough. `pandas`, `scikit-learn`, and `matplotlib` have strong raw capacity signals but carry compiled-extension or image-test stack risk. They are useful negative controls for capacity-versus-speed, not the practical next target. Large pure-Python or mostly-Python candidates are more interesting: `sympy`, `django`, and `sqlalchemy` have enough source/oracle volume to justify deeper no-paid target prep when their targeted verifier remains under the practical threshold.
+The large/heavy track confirms that size alone is not enough. `pandas` and `scikit-learn` have strong raw capacity signals, but compiled-extension setup and generic-probe failures make them `large_but_heavy` rather than practical mainline targets. `django` has very high source-linked capacity, but the bounded pytest shards failed under the generic verifier command, so it is an environment/profile repair candidate. `sqlalchemy` timed well on current targeted shards, but this simple public-ref screen found too little source-linked changed-test oracle volume. `sympy` also screened low under the public-ref heuristic despite being large, so it needs a different source-context miner before it can be considered.
 
 ## Medium-large Fast-evaluation Findings
 
-The medium-large fast track is the right comparison class against old attrs/click. `black`, `httpx`, `starlette`, and `anyio` are easier to evaluate locally than scientific compiled stacks, but several are either under the conservative capacity threshold or still need more release-certification proof before they can carry a multi-window demo.
+The medium-large fast track is the right comparison class against old attrs/click. `{primary.get('repo_id')}` is the strongest measured result in the final run: its current targeted shards passed quickly and projected source-linked changed-test capacity clears the conservative threshold. `black` and `starlette` have attractive raw history, but their configured current probes were only partial or failed after dependency profile tightening, so they are bounded repair opportunities rather than recommendations. `httpx` and `anyio` also need verifier-profile repair before they can compete on practical iteration speed.
 
 ## Top Deep-probe Summaries
 
@@ -1136,9 +1160,9 @@ The preferred target is not the largest repository. A repository needs enough so
 
 ## Recommended Target And Backup
 
-Recommended target: `{primary.get('repo_id')}`. It should receive a target profile, package map, verifier pinning, and a 20-30 task no-paid certification wave before any paid work.
+Recommended target: `{primary.get('repo_id')}`. It should receive a target profile, package map, verifier pinning, and a 20-30 task no-paid certification wave before any paid work. Its current targeted verifier timing is strong, but the one-sample historical changed-test replay did not pass under the generic dependency profile, so version-aware verifier pinning is a required next gate.
 
-Backup: `{backup.get('repo_id')}`. Use it if `{primary.get('repo_id')}` fails the next verifier/certification wave.
+Backup: `{backup.get('repo_id')}`. Use it only as a follow-up no-paid prep candidate if `{primary.get('repo_id')}` fails; it still needs its own targeted smoke and certification wave before any paid baseline discovery.
 
 ## Repositories Rejected Despite High Capacity
 

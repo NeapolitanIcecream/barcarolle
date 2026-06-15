@@ -1,26 +1,26 @@
 {
   "backup_recommendation": {
     "classification": "capacity_promising_but_speed_unproven",
-    "count_feasible_rolling_origin_windows": 3,
-    "environment_risk": "low_to_medium_network_mocking",
-    "estimated_release_eligible_volume": 60,
-    "expected_evaluation_speed_class": "ideal",
-    "expected_paid_baseline_discovery_cells": 240,
+    "count_feasible_rolling_origin_windows": 5,
+    "environment_risk": "medium_large_custom_test_harness",
+    "estimated_release_eligible_volume": 86,
+    "expected_evaluation_speed_class": "acceptable",
+    "expected_paid_baseline_discovery_cells": 344,
     "historical_reference_probe": {
       "dominant_failure_labels": {},
       "mode": "not_run",
       "pass_count": 0,
       "sample_size": 0
     },
-    "likely_verifier_command": "python -m pytest <httpx mocked client test> -q",
-    "projected_certified_task_count_after_bounded_repair": 60,
+    "likely_verifier_command": "python -m pytest <mypy test shard> -q",
+    "projected_certified_task_count_after_bounded_repair": 86,
     "projected_evidence_backed_rolling_origin_windows": 2,
     "reason": "run targeted verifier smoke before any recommendation",
-    "repo_id": "httpx",
-    "repo_url": "https://github.com/encode/httpx.git",
+    "repo_id": "mypy",
+    "repo_url": "https://github.com/python/mypy.git",
     "rough_paid_baseline_cost_usd_range": {
-      "high": 108.0,
-      "low": 48.0
+      "high": 154.8,
+      "low": 68.8
     },
     "targeted_verifier_timing": {
       "median_seconds": null,
@@ -29,7 +29,7 @@
       "sample_count": 0,
       "speed_class": "not_measured"
     },
-    "track": "medium_large_fast"
+    "track": "large_heavy"
   },
   "candidate_metrics": [
     {
@@ -42,24 +42,56 @@
       "changed_test_oracle_availability": "changed_tests_available",
       "changed_test_oracle_availability_count": 42,
       "checkout_status": "clean",
-      "classification": "screened_out",
+      "classification": "fast_but_underpowered",
       "clone_status": {
         "local_path": "experiments/phase0_headroom/external_repos/boltons",
-        "status": "already_present"
+        "status": "not_requested"
       },
       "count_feasible_rolling_origin_windows": 2,
       "deep_probe": true,
       "environment_risk": "low",
       "estimated_candidate_volume": 202,
       "estimated_release_eligible_volume": 57,
-      "expected_evaluation_speed_class": "ideal",
+      "expected_evaluation_speed_class": "ideal_under_60s",
       "expected_paid_baseline_discovery_cells": 228,
       "head_short": "207651e",
       "historical_reference_probe": {
-        "mode": "not_run",
+        "dominant_failure_labels": {
+          "test_failure_or_environment_mismatch": 1
+        },
+        "mode": "target_commit_changed_tests_reference_probe",
         "pass_count": 0,
-        "results": [],
-        "sample_size": 0
+        "results": [
+          {
+            "command_shape": [
+              "uv",
+              "run",
+              "--no-project",
+              "--with",
+              "pytest>=8,<10",
+              "--with",
+              ".",
+              "--",
+              "python",
+              "-m",
+              "pytest",
+              "<targeted_test_paths>",
+              "-q"
+            ],
+            "commit": "e79511e6e7a8",
+            "duration_seconds": 0.677,
+            "label": "historical_reference_e79511e6e7a8",
+            "returncode": 1,
+            "status": "failed",
+            "stderr_line_count": 82,
+            "stderr_tail_hash": "sha256:b4cebbba6e69720ede1ca01c61131562f426db84ede2e5059dc7b7c486502c20",
+            "stdout_line_count": 0,
+            "stdout_tail_hash": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "test_path_count": 1,
+            "timed_out": false
+          }
+        ],
+        "sample_size": 1
       },
       "history_date_span": {
         "first_commit": "2013-02-19T18:04:47-08:00",
@@ -89,7 +121,7 @@
       },
       "projected_certified_task_count_after_bounded_repair": 57,
       "projected_evidence_backed_rolling_origin_windows": 0,
-      "reason_to_deep_probe_or_reject": "screened out by capacity, checkout, or source/oracle availability",
+      "reason_to_deep_probe_or_reject": "keep only as backup or small pilot; capacity below rolling-origin threshold",
       "repo_id": "boltons",
       "repo_url": "https://github.com/mahmoud/boltons.git",
       "rolling_origin_windows_raw": [
@@ -154,14 +186,41 @@
         "high": 102.6,
         "low": 45.6
       },
-      "setup_test_smoke": [],
+      "setup_test_smoke": [
+        {
+          "command_shape": [
+            "uv",
+            "run",
+            "--no-project",
+            "--with",
+            "pytest>=8,<10",
+            "--with",
+            ".",
+            "--",
+            "python",
+            "-m",
+            "pytest",
+            "<targeted_test_paths>",
+            "-q"
+          ],
+          "duration_seconds": 0.174,
+          "label": "boltons_iterutils_cacheutils",
+          "returncode": 0,
+          "status": "passed",
+          "stderr_line_count": 0,
+          "stderr_tail_hash": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "stdout_line_count": 2,
+          "stdout_tail_hash": "sha256:2f852c478b4571715b6d9b61335282376069ea8f8716a4b49cc42b5e9a0d504b",
+          "timed_out": false
+        }
+      ],
       "source_context_availability": "thin_but_usable_pr_or_issue_title_context",
       "targeted_verifier_timing": {
-        "median_seconds": null,
-        "p95_seconds": null,
-        "pass_count": 0,
-        "sample_count": 0,
-        "speed_class": "not_measured"
+        "median_seconds": 0.174,
+        "p95_seconds": 0.174,
+        "pass_count": 1,
+        "sample_count": 1,
+        "speed_class": "ideal_under_60s"
       },
       "test_change_count": 289,
       "time_bucket_distribution": {
@@ -173,7 +232,7 @@
       "total_commits": 1611,
       "total_commits_scanned": 1611,
       "track": "baseline",
-      "visible_setup_smoke_status": "not_run"
+      "visible_setup_smoke_status": "passed"
     },
     {
       "bounded_certification_sample": {
@@ -188,21 +247,53 @@
       "classification": "screened_out",
       "clone_status": {
         "local_path": "experiments/phase0_headroom/external_repos/attrs",
-        "status": "already_present"
+        "status": "not_requested"
       },
       "count_feasible_rolling_origin_windows": 7,
       "deep_probe": true,
       "environment_risk": "low",
       "estimated_candidate_volume": 361,
       "estimated_release_eligible_volume": 31,
-      "expected_evaluation_speed_class": "ideal",
+      "expected_evaluation_speed_class": "environment_failed_or_unusable",
       "expected_paid_baseline_discovery_cells": 124,
       "head_short": "89fae83",
       "historical_reference_probe": {
-        "mode": "not_run",
+        "dominant_failure_labels": {
+          "pytest_usage_or_no_tests": 1
+        },
+        "mode": "target_commit_changed_tests_reference_probe",
         "pass_count": 0,
-        "results": [],
-        "sample_size": 0
+        "results": [
+          {
+            "command_shape": [
+              "uv",
+              "run",
+              "--no-project",
+              "--with",
+              "pytest>=8,<10",
+              "--with",
+              ".",
+              "--",
+              "python",
+              "-m",
+              "pytest",
+              "<targeted_test_paths>",
+              "-q"
+            ],
+            "commit": "44ac46114603",
+            "duration_seconds": 0.638,
+            "label": "historical_reference_44ac46114603",
+            "returncode": 4,
+            "status": "failed",
+            "stderr_line_count": 7,
+            "stderr_tail_hash": "sha256:0a1962f18e275740024954c2040df65a4219554199d676fcb90ba30b35091827",
+            "stdout_line_count": 0,
+            "stdout_tail_hash": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "test_path_count": 1,
+            "timed_out": false
+          }
+        ],
+        "sample_size": 1
       },
       "history_date_span": {
         "first_commit": "2015-01-27T17:53:17+01:00",
@@ -332,14 +423,41 @@
         "high": 55.8,
         "low": 24.8
       },
-      "setup_test_smoke": [],
+      "setup_test_smoke": [
+        {
+          "command_shape": [
+            "uv",
+            "run",
+            "--no-project",
+            "--with",
+            "pytest>=8,<10",
+            "--with",
+            ".",
+            "--",
+            "python",
+            "-m",
+            "pytest",
+            "<targeted_test_paths>",
+            "-q"
+          ],
+          "duration_seconds": 0.114,
+          "label": "attrs_funcs_validators",
+          "returncode": 4,
+          "status": "failed",
+          "stderr_line_count": 4,
+          "stderr_tail_hash": "sha256:5e41ac219da4aa83e31a4fe2599144ca1efd5394739f73a82621324a35ab40a5",
+          "stdout_line_count": 0,
+          "stdout_tail_hash": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "timed_out": false
+        }
+      ],
       "source_context_availability": "strong_pr_or_issue_title_context",
       "targeted_verifier_timing": {
-        "median_seconds": null,
-        "p95_seconds": null,
+        "median_seconds": 0.114,
+        "p95_seconds": 0.114,
         "pass_count": 0,
-        "sample_count": 0,
-        "speed_class": "not_measured"
+        "sample_count": 1,
+        "speed_class": "environment_failed_or_unusable"
       },
       "test_change_count": 438,
       "time_bucket_distribution": {
@@ -351,7 +469,7 @@
       "total_commits": 1786,
       "total_commits_scanned": 1786,
       "track": "baseline",
-      "visible_setup_smoke_status": "not_run"
+      "visible_setup_smoke_status": "failed"
     },
     {
       "bounded_certification_sample": {
@@ -363,24 +481,54 @@
       "changed_test_oracle_availability": "changed_tests_available",
       "changed_test_oracle_availability_count": 63,
       "checkout_status": "clean",
-      "classification": "screened_out",
+      "classification": "fast_but_underpowered",
       "clone_status": {
         "local_path": "experiments/phase0_headroom/external_repos/click",
-        "status": "already_present"
+        "status": "not_requested"
       },
       "count_feasible_rolling_origin_windows": 3,
       "deep_probe": true,
       "environment_risk": "low",
       "estimated_candidate_volume": 420,
       "estimated_release_eligible_volume": 30,
-      "expected_evaluation_speed_class": "ideal",
+      "expected_evaluation_speed_class": "ideal_under_60s",
       "expected_paid_baseline_discovery_cells": 120,
       "head_short": "8a1b1a3",
       "historical_reference_probe": {
-        "mode": "not_run",
-        "pass_count": 0,
-        "results": [],
-        "sample_size": 0
+        "dominant_failure_labels": {},
+        "mode": "target_commit_changed_tests_reference_probe",
+        "pass_count": 1,
+        "results": [
+          {
+            "command_shape": [
+              "uv",
+              "run",
+              "--no-project",
+              "--with",
+              "pytest>=8,<10",
+              "--with",
+              ".",
+              "--",
+              "python",
+              "-m",
+              "pytest",
+              "<targeted_test_paths>",
+              "-q"
+            ],
+            "commit": "8c842a43e884",
+            "duration_seconds": 0.463,
+            "label": "historical_reference_8c842a43e884",
+            "returncode": 0,
+            "status": "passed",
+            "stderr_line_count": 3,
+            "stderr_tail_hash": "sha256:7d17810dd20cb3457425a8dce29cf4f2dc7f0752884075c45ef588ae786a34aa",
+            "stdout_line_count": 2,
+            "stdout_tail_hash": "sha256:316dff144480d3c5409a169f48f63aa01e669b719f39ad1359bc50fef2f9b4e8",
+            "test_path_count": 1,
+            "timed_out": false
+          }
+        ],
+        "sample_size": 1
       },
       "history_date_span": {
         "first_commit": "2014-04-24T11:51:55+02:00",
@@ -409,7 +557,7 @@
       },
       "projected_certified_task_count_after_bounded_repair": 30,
       "projected_evidence_backed_rolling_origin_windows": 0,
-      "reason_to_deep_probe_or_reject": "screened out by capacity, checkout, or source/oracle availability",
+      "reason_to_deep_probe_or_reject": "keep only as backup or small pilot; capacity below rolling-origin threshold",
       "repo_id": "click",
       "repo_url": "https://github.com/pallets/click.git",
       "rolling_origin_windows_raw": [
@@ -498,14 +646,41 @@
         "high": 54.0,
         "low": 24.0
       },
-      "setup_test_smoke": [],
+      "setup_test_smoke": [
+        {
+          "command_shape": [
+            "uv",
+            "run",
+            "--no-project",
+            "--with",
+            "pytest>=8,<10",
+            "--with",
+            ".",
+            "--",
+            "python",
+            "-m",
+            "pytest",
+            "<targeted_test_paths>",
+            "-q"
+          ],
+          "duration_seconds": 0.426,
+          "label": "click_basic_options",
+          "returncode": 0,
+          "status": "passed",
+          "stderr_line_count": 0,
+          "stderr_tail_hash": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "stdout_line_count": 12,
+          "stdout_tail_hash": "sha256:15ae6d73b26b541be55ca1edf591f258a3286afd667903308427be7bb4f22c1c",
+          "timed_out": false
+        }
+      ],
       "source_context_availability": "adequate_pr_or_issue_title_context",
       "targeted_verifier_timing": {
-        "median_seconds": null,
-        "p95_seconds": null,
-        "pass_count": 0,
-        "sample_count": 0,
-        "speed_class": "not_measured"
+        "median_seconds": 0.426,
+        "p95_seconds": 0.426,
+        "pass_count": 1,
+        "sample_count": 1,
+        "speed_class": "ideal_under_60s"
       },
       "test_change_count": 531,
       "time_bucket_distribution": {
@@ -517,7 +692,7 @@
       "total_commits": 3242,
       "total_commits_scanned": 3242,
       "track": "baseline",
-      "visible_setup_smoke_status": "not_run"
+      "visible_setup_smoke_status": "passed"
     },
     {
       "bounded_certification_sample": {
@@ -532,21 +707,53 @@
       "classification": "screened_out",
       "clone_status": {
         "local_path": "experiments/phase0_headroom/external_repos/packaging",
-        "status": "already_present"
+        "status": "not_requested"
       },
       "count_feasible_rolling_origin_windows": 4,
       "deep_probe": true,
       "environment_risk": "low",
       "estimated_candidate_volume": 248,
-      "estimated_release_eligible_volume": 27,
-      "expected_evaluation_speed_class": "ideal",
+      "estimated_release_eligible_volume": 0,
+      "expected_evaluation_speed_class": "environment_failed_or_unusable",
       "expected_paid_baseline_discovery_cells": 0,
       "head_short": "664f049",
       "historical_reference_probe": {
-        "mode": "not_run",
+        "dominant_failure_labels": {
+          "pytest_collect_or_usage_failure": 1
+        },
+        "mode": "target_commit_changed_tests_reference_probe",
         "pass_count": 0,
-        "results": [],
-        "sample_size": 0
+        "results": [
+          {
+            "command_shape": [
+              "uv",
+              "run",
+              "--no-project",
+              "--with",
+              "pytest>=8,<10",
+              "--with",
+              ".",
+              "--",
+              "python",
+              "-m",
+              "pytest",
+              "<targeted_test_paths>",
+              "-q"
+            ],
+            "commit": "2f8fe4c5f2c5",
+            "duration_seconds": 0.488,
+            "label": "historical_reference_2f8fe4c5f2c5",
+            "returncode": 2,
+            "status": "failed",
+            "stderr_line_count": 3,
+            "stderr_tail_hash": "sha256:dab3b82b445d394fd0a970091014219f98ba36095aba347d86586b972b3ec020",
+            "stdout_line_count": 16,
+            "stdout_tail_hash": "sha256:7dbf3e4d239dbd6df354a8db2593c5c513546cdc848be70f14addc5431d5c134",
+            "test_path_count": 2,
+            "timed_out": false
+          }
+        ],
+        "sample_size": 1
       },
       "history_date_span": {
         "first_commit": "2014-05-15T18:57:57-04:00",
@@ -569,7 +776,7 @@
         "prior_source": "phase1_third_repo_release_supply_screen",
         "prior_technical_plus_review_upper_bound": 181
       },
-      "projected_certified_task_count_after_bounded_repair": 27,
+      "projected_certified_task_count_after_bounded_repair": 0,
       "projected_evidence_backed_rolling_origin_windows": 0,
       "reason_to_deep_probe_or_reject": "screened out by capacity, checkout, or source/oracle availability",
       "repo_id": "packaging",
@@ -666,14 +873,41 @@
         "high": 0.0,
         "low": 0.0
       },
-      "setup_test_smoke": [],
+      "setup_test_smoke": [
+        {
+          "command_shape": [
+            "uv",
+            "run",
+            "--no-project",
+            "--with",
+            "pytest>=8,<10",
+            "--with",
+            ".",
+            "--",
+            "python",
+            "-m",
+            "pytest",
+            "<targeted_test_paths>",
+            "-q"
+          ],
+          "duration_seconds": 0.275,
+          "label": "packaging_version_markers",
+          "returncode": 2,
+          "status": "failed",
+          "stderr_line_count": 0,
+          "stderr_tail_hash": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "stdout_line_count": 16,
+          "stdout_tail_hash": "sha256:9bad19cb0a627768847ffd0bb295c637c7964ccf4a56806338cc8f2e3ca446db",
+          "timed_out": false
+        }
+      ],
       "source_context_availability": "strong_pr_or_issue_title_context",
       "targeted_verifier_timing": {
-        "median_seconds": null,
-        "p95_seconds": null,
+        "median_seconds": 0.275,
+        "p95_seconds": 0.275,
         "pass_count": 0,
-        "sample_count": 0,
-        "speed_class": "not_measured"
+        "sample_count": 1,
+        "speed_class": "environment_failed_or_unusable"
       },
       "test_change_count": 283,
       "time_bucket_distribution": {
@@ -685,7 +919,7 @@
       "total_commits": 1032,
       "total_commits_scanned": 1032,
       "track": "baseline",
-      "visible_setup_smoke_status": "not_run"
+      "visible_setup_smoke_status": "failed"
     },
     {
       "bounded_certification_sample": {
@@ -700,7 +934,7 @@
       "classification": "screened_out",
       "clone_status": {
         "local_path": "experiments/phase0_headroom/external_repos/pytest",
-        "status": "already_present"
+        "status": "not_requested"
       },
       "count_feasible_rolling_origin_windows": 4,
       "deep_probe": false,
@@ -818,30 +1052,56 @@
       "changed_test_oracle_availability": "changed_tests_available",
       "changed_test_oracle_availability_count": 1717,
       "checkout_status": "clean",
-      "classification": "capacity_promising_but_speed_unproven",
+      "classification": "large_but_heavy",
       "clone_status": {
-        "duration_seconds": 16.98,
         "local_path": "experiments/phase0_headroom/external_repos/django",
-        "returncode": 0,
-        "status": "cloned",
-        "stderr_line_count": 104,
-        "stderr_tail_hash": "sha256:932d2b0bbd43bc56c96d3b74eb584526e14aedc41579bce7c15062ee3a79ec43",
-        "stdout_tail_hash": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
-        "timed_out": false
+        "status": "not_requested"
       },
       "count_feasible_rolling_origin_windows": 4,
       "deep_probe": true,
       "environment_risk": "medium_database_and_settings_matrix",
       "estimated_candidate_volume": 1888,
-      "estimated_release_eligible_volume": 258,
-      "expected_evaluation_speed_class": "acceptable",
-      "expected_paid_baseline_discovery_cells": 360,
+      "estimated_release_eligible_volume": 86,
+      "expected_evaluation_speed_class": "environment_failed_or_unusable",
+      "expected_paid_baseline_discovery_cells": 344,
       "head_short": "f1440a752e",
       "historical_reference_probe": {
-        "mode": "not_run",
+        "dominant_failure_labels": {
+          "pytest_collect_or_usage_failure": 1
+        },
+        "mode": "target_commit_changed_tests_reference_probe",
         "pass_count": 0,
-        "results": [],
-        "sample_size": 0
+        "results": [
+          {
+            "command_shape": [
+              "uv",
+              "run",
+              "--no-project",
+              "--with",
+              "pytest>=8,<10",
+              "--with",
+              ".",
+              "--",
+              "python",
+              "-m",
+              "pytest",
+              "<targeted_test_paths>",
+              "-q"
+            ],
+            "commit": "4f2ae0644de3",
+            "duration_seconds": 4.408,
+            "label": "historical_reference_4f2ae0644de3",
+            "returncode": 2,
+            "status": "failed",
+            "stderr_line_count": 3,
+            "stderr_tail_hash": "sha256:88caefc616b2db54841cb6b99edaa70baec296bc356c81e3f544e8d2de0a2639",
+            "stdout_line_count": 89,
+            "stdout_tail_hash": "sha256:16be5902aec2a749187cbbcc7f41bf9069b023fef3009def178551d33b86ea21",
+            "test_path_count": 2,
+            "timed_out": false
+          }
+        ],
+        "sample_size": 1
       },
       "history_date_span": {
         "first_commit": "2005-07-13T16:56:05Z",
@@ -857,7 +1117,7 @@
       "prior_evidence": {},
       "projected_certified_task_count_after_bounded_repair": 258,
       "projected_evidence_backed_rolling_origin_windows": 3,
-      "reason_to_deep_probe_or_reject": "run targeted verifier smoke before any recommendation",
+      "reason_to_deep_probe_or_reject": "reject for mainline today unless environment repair can make targeted verification fast and stable",
       "repo_id": "django",
       "repo_url": "https://github.com/django/django.git",
       "rolling_origin_windows_raw": [
@@ -913,17 +1173,70 @@
         }
       ],
       "rough_paid_baseline_cost_usd_range": {
-        "high": 162.0,
-        "low": 72.0
+        "high": 154.8,
+        "low": 68.8
       },
-      "setup_test_smoke": [],
+      "setup_test_smoke": [
+        {
+          "command_shape": [
+            "uv",
+            "run",
+            "--no-project",
+            "--with",
+            "pytest>=8,<10",
+            "--with",
+            ".",
+            "--",
+            "python",
+            "-m",
+            "pytest",
+            "<targeted_test_paths>",
+            "-q"
+          ],
+          "duration_seconds": 0.015,
+          "label": "django_utils_datastructures",
+          "returncode": 1,
+          "status": "failed",
+          "stderr_line_count": 7,
+          "stderr_tail_hash": "sha256:375cb0cba53138400e36b17aba71eb68a15a539f8771c9fb244f9d52a085d028",
+          "stdout_line_count": 0,
+          "stdout_tail_hash": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "timed_out": false
+        },
+        {
+          "command_shape": [
+            "uv",
+            "run",
+            "--no-project",
+            "--with",
+            "pytest>=8,<10",
+            "--with",
+            ".",
+            "--",
+            "python",
+            "-m",
+            "pytest",
+            "<targeted_test_paths>",
+            "-q"
+          ],
+          "duration_seconds": 0.013,
+          "label": "django_forms_fields",
+          "returncode": 1,
+          "status": "failed",
+          "stderr_line_count": 7,
+          "stderr_tail_hash": "sha256:375cb0cba53138400e36b17aba71eb68a15a539f8771c9fb244f9d52a085d028",
+          "stdout_line_count": 0,
+          "stdout_tail_hash": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "timed_out": false
+        }
+      ],
       "source_context_availability": "strong_pr_or_issue_title_context",
       "targeted_verifier_timing": {
-        "median_seconds": null,
-        "p95_seconds": null,
+        "median_seconds": 0.014,
+        "p95_seconds": 0.015,
         "pass_count": 0,
-        "sample_count": 0,
-        "speed_class": "not_measured"
+        "sample_count": 2,
+        "speed_class": "environment_failed_or_unusable"
       },
       "test_change_count": 2736,
       "time_bucket_distribution": {
@@ -934,7 +1247,7 @@
       "total_commits": 34691,
       "total_commits_scanned": 5000,
       "track": "large_heavy",
-      "visible_setup_smoke_status": "not_run"
+      "visible_setup_smoke_status": "failed"
     },
     {
       "bounded_certification_sample": {
@@ -949,24 +1262,56 @@
       "changed_test_oracle_availability": "changed_tests_available",
       "changed_test_oracle_availability_count": 25,
       "checkout_status": "clean",
-      "classification": "screened_out",
+      "classification": "fast_but_underpowered",
       "clone_status": {
         "local_path": "experiments/phase0_headroom/external_repos/sqlalchemy",
-        "status": "already_present"
+        "status": "not_requested"
       },
       "count_feasible_rolling_origin_windows": 0,
       "deep_probe": true,
       "environment_risk": "medium_database_backend_matrix",
       "estimated_candidate_volume": 1604,
-      "estimated_release_eligible_volume": 4,
-      "expected_evaluation_speed_class": "acceptable",
+      "estimated_release_eligible_volume": 7,
+      "expected_evaluation_speed_class": "ideal_under_60s",
       "expected_paid_baseline_discovery_cells": 0,
       "head_short": "bfe559a7e",
       "historical_reference_probe": {
-        "mode": "not_run",
+        "dominant_failure_labels": {
+          "pytest_collect_or_usage_failure": 1
+        },
+        "mode": "target_commit_changed_tests_reference_probe",
         "pass_count": 0,
-        "results": [],
-        "sample_size": 0
+        "results": [
+          {
+            "command_shape": [
+              "uv",
+              "run",
+              "--no-project",
+              "--with",
+              "pytest>=8,<10",
+              "--with",
+              ".",
+              "--",
+              "python",
+              "-m",
+              "pytest",
+              "<targeted_test_paths>",
+              "-q"
+            ],
+            "commit": "e4fa1745839c",
+            "duration_seconds": 50.832,
+            "label": "historical_reference_e4fa1745839c",
+            "returncode": 2,
+            "status": "failed",
+            "stderr_line_count": 8,
+            "stderr_tail_hash": "sha256:386eede86ce4c543a1ef5abb98dee9fa52d2a5d68636a6aa05f88fa5ee0c77d2",
+            "stdout_line_count": 0,
+            "stdout_tail_hash": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "test_path_count": 1,
+            "timed_out": false
+          }
+        ],
+        "sample_size": 1
       },
       "history_date_span": {
         "first_commit": "2005-07-01T02:25:16Z",
@@ -980,9 +1325,9 @@
       "likely_verifier_command": "python -m pytest <sqlalchemy non-db or sqlite shard> -q",
       "local_path": "experiments/phase0_headroom/external_repos/sqlalchemy",
       "prior_evidence": {},
-      "projected_certified_task_count_after_bounded_repair": 4,
+      "projected_certified_task_count_after_bounded_repair": 7,
       "projected_evidence_backed_rolling_origin_windows": 0,
-      "reason_to_deep_probe_or_reject": "screened out by capacity, checkout, or source/oracle availability",
+      "reason_to_deep_probe_or_reject": "keep only as backup or small pilot; capacity below rolling-origin threshold",
       "repo_id": "sqlalchemy",
       "repo_url": "https://github.com/sqlalchemy/sqlalchemy.git",
       "rolling_origin_windows_raw": [
@@ -1016,14 +1361,67 @@
         "high": 0.0,
         "low": 0.0
       },
-      "setup_test_smoke": [],
+      "setup_test_smoke": [
+        {
+          "command_shape": [
+            "uv",
+            "run",
+            "--no-project",
+            "--with",
+            "pytest>=8,<10",
+            "--with",
+            ".",
+            "--",
+            "python",
+            "-m",
+            "pytest",
+            "<targeted_test_paths>",
+            "-q"
+          ],
+          "duration_seconds": 0.73,
+          "label": "sqlalchemy_sql_selectable",
+          "returncode": 0,
+          "status": "passed",
+          "stderr_line_count": 0,
+          "stderr_tail_hash": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "stdout_line_count": 17,
+          "stdout_tail_hash": "sha256:6d3626da7276c53ffc7973b6d95b11455ee321c2f48c3ac84d365589f6fb929d",
+          "timed_out": false
+        },
+        {
+          "command_shape": [
+            "uv",
+            "run",
+            "--no-project",
+            "--with",
+            "pytest>=8,<10",
+            "--with",
+            ".",
+            "--",
+            "python",
+            "-m",
+            "pytest",
+            "<targeted_test_paths>",
+            "-q"
+          ],
+          "duration_seconds": 1.195,
+          "label": "sqlalchemy_orm_session",
+          "returncode": 0,
+          "status": "passed",
+          "stderr_line_count": 0,
+          "stderr_tail_hash": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "stdout_line_count": 24,
+          "stdout_tail_hash": "sha256:2d604e845ca5d1ecd7877dccd37ef7fd9f4fde25019a3def2c71a875d4ef4446",
+          "timed_out": false
+        }
+      ],
       "source_context_availability": "thin_but_usable_pr_or_issue_title_context",
       "targeted_verifier_timing": {
-        "median_seconds": null,
-        "p95_seconds": null,
-        "pass_count": 0,
-        "sample_count": 0,
-        "speed_class": "not_measured"
+        "median_seconds": 0.963,
+        "p95_seconds": 1.172,
+        "pass_count": 2,
+        "sample_count": 2,
+        "speed_class": "ideal_under_60s"
       },
       "test_change_count": 1868,
       "time_bucket_distribution": {
@@ -1034,7 +1432,7 @@
       "total_commits": 18107,
       "total_commits_scanned": 5000,
       "track": "large_heavy",
-      "visible_setup_smoke_status": "not_run"
+      "visible_setup_smoke_status": "passed"
     },
     {
       "bounded_certification_sample": {
@@ -1049,21 +1447,53 @@
       "classification": "screened_out",
       "clone_status": {
         "local_path": "experiments/phase0_headroom/external_repos/sympy",
-        "status": "already_present"
+        "status": "not_requested"
       },
       "count_feasible_rolling_origin_windows": 0,
       "deep_probe": true,
       "environment_risk": "low_pure_python_but_large_suite",
       "estimated_candidate_volume": 911,
-      "estimated_release_eligible_volume": 6,
-      "expected_evaluation_speed_class": "acceptable",
+      "estimated_release_eligible_volume": 2,
+      "expected_evaluation_speed_class": "environment_failed_or_unusable",
       "expected_paid_baseline_discovery_cells": 0,
       "head_short": "e1cce7d2fd",
       "historical_reference_probe": {
-        "mode": "not_run",
+        "dominant_failure_labels": {
+          "pytest_usage_or_no_tests": 1
+        },
+        "mode": "target_commit_changed_tests_reference_probe",
         "pass_count": 0,
-        "results": [],
-        "sample_size": 0
+        "results": [
+          {
+            "command_shape": [
+              "uv",
+              "run",
+              "--no-project",
+              "--with",
+              "pytest>=8,<10",
+              "--with",
+              ".",
+              "--",
+              "python",
+              "-m",
+              "pytest",
+              "<targeted_test_paths>",
+              "-q"
+            ],
+            "commit": "5f8bf9bae0df",
+            "duration_seconds": 2.949,
+            "label": "historical_reference_5f8bf9bae0df",
+            "returncode": 4,
+            "status": "failed",
+            "stderr_line_count": 7,
+            "stderr_tail_hash": "sha256:0ac0be6acf958ac0266390e464d522b74d296e33aae6913b3cddc10afa764e31",
+            "stdout_line_count": 0,
+            "stdout_tail_hash": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "test_path_count": 1,
+            "timed_out": false
+          }
+        ],
+        "sample_size": 1
       },
       "history_date_span": {
         "first_commit": "2020-01-28T00:26:39+05:30",
@@ -1077,7 +1507,7 @@
       "likely_verifier_command": "python -m pytest <sympy test file> -q",
       "local_path": "experiments/phase0_headroom/external_repos/sympy",
       "prior_evidence": {},
-      "projected_certified_task_count_after_bounded_repair": 6,
+      "projected_certified_task_count_after_bounded_repair": 2,
       "projected_evidence_backed_rolling_origin_windows": 0,
       "reason_to_deep_probe_or_reject": "screened out by capacity, checkout, or source/oracle availability",
       "repo_id": "sympy",
@@ -1088,14 +1518,67 @@
         "high": 0.0,
         "low": 0.0
       },
-      "setup_test_smoke": [],
+      "setup_test_smoke": [
+        {
+          "command_shape": [
+            "uv",
+            "run",
+            "--no-project",
+            "--with",
+            "pytest>=8,<10",
+            "--with",
+            ".",
+            "--",
+            "python",
+            "-m",
+            "pytest",
+            "<targeted_test_paths>",
+            "-q"
+          ],
+          "duration_seconds": 10.463,
+          "label": "sympy_core_numbers",
+          "returncode": 4,
+          "status": "failed",
+          "stderr_line_count": 4,
+          "stderr_tail_hash": "sha256:e88bdd92f44d7cf1df5f8fe55b4fb9704439648a0162ce0cd0fa538a51b1fa10",
+          "stdout_line_count": 0,
+          "stdout_tail_hash": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "timed_out": false
+        },
+        {
+          "command_shape": [
+            "uv",
+            "run",
+            "--no-project",
+            "--with",
+            "pytest>=8,<10",
+            "--with",
+            ".",
+            "--",
+            "python",
+            "-m",
+            "pytest",
+            "<targeted_test_paths>",
+            "-q"
+          ],
+          "duration_seconds": 0.22,
+          "label": "sympy_matrices",
+          "returncode": 4,
+          "status": "failed",
+          "stderr_line_count": 4,
+          "stderr_tail_hash": "sha256:e88bdd92f44d7cf1df5f8fe55b4fb9704439648a0162ce0cd0fa538a51b1fa10",
+          "stdout_line_count": 0,
+          "stdout_tail_hash": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "timed_out": false
+        }
+      ],
       "source_context_availability": "thin_but_usable_pr_or_issue_title_context",
       "targeted_verifier_timing": {
-        "median_seconds": null,
-        "p95_seconds": null,
+        "median_seconds": 5.341,
+        "p95_seconds": 9.951,
         "pass_count": 0,
-        "sample_count": 0,
-        "speed_class": "not_measured"
+        "sample_count": 2,
+        "speed_class": "environment_failed_or_unusable"
       },
       "test_change_count": 1464,
       "time_bucket_distribution": {
@@ -1106,7 +1589,7 @@
       "total_commits": 62216,
       "total_commits_scanned": 5000,
       "track": "large_heavy",
-      "visible_setup_smoke_status": "not_run"
+      "visible_setup_smoke_status": "failed"
     },
     {
       "bounded_certification_sample": {
@@ -1124,21 +1607,51 @@
       "classification": "large_but_heavy",
       "clone_status": {
         "local_path": "experiments/phase0_headroom/external_repos/pandas",
-        "status": "already_present"
+        "status": "not_requested"
       },
       "count_feasible_rolling_origin_windows": 1,
       "deep_probe": true,
       "environment_risk": "high_compiled_extension_build",
       "estimated_candidate_volume": 1672,
       "estimated_release_eligible_volume": 84,
-      "expected_evaluation_speed_class": "risky",
+      "expected_evaluation_speed_class": "environment_failed_or_unusable",
       "expected_paid_baseline_discovery_cells": 336,
       "head_short": "aee9241b41",
       "historical_reference_probe": {
-        "mode": "not_run",
+        "dominant_failure_labels": {
+          "pytest_usage_or_no_tests": 1
+        },
+        "mode": "target_commit_changed_tests_reference_probe",
         "pass_count": 0,
-        "results": [],
-        "sample_size": 0
+        "results": [
+          {
+            "command_shape": [
+              "uv",
+              "run",
+              "--no-project",
+              "--with",
+              "pytest>=8,<10",
+              "--",
+              "python",
+              "-m",
+              "pytest",
+              "<targeted_test_paths>",
+              "-q"
+            ],
+            "commit": "c345ffd02e79",
+            "duration_seconds": 0.085,
+            "label": "historical_reference_c345ffd02e79",
+            "returncode": 4,
+            "status": "failed",
+            "stderr_line_count": 6,
+            "stderr_tail_hash": "sha256:3498b92eccf84bbaf3ed91527aa735e3c0061afd541c4bf77cafbf8c8317009b",
+            "stdout_line_count": 0,
+            "stdout_tail_hash": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "test_path_count": 1,
+            "timed_out": false
+          }
+        ],
+        "sample_size": 1
       },
       "history_date_span": {
         "first_commit": "2009-07-31T15:07:16Z",
@@ -1177,14 +1690,63 @@
         "high": 151.2,
         "low": 67.2
       },
-      "setup_test_smoke": [],
+      "setup_test_smoke": [
+        {
+          "command_shape": [
+            "uv",
+            "run",
+            "--no-project",
+            "--with",
+            "pytest>=8,<10",
+            "--",
+            "python",
+            "-m",
+            "pytest",
+            "<targeted_test_paths>",
+            "-q"
+          ],
+          "duration_seconds": 0.093,
+          "label": "pandas_series_constructors",
+          "returncode": 1,
+          "status": "failed",
+          "stderr_line_count": 79,
+          "stderr_tail_hash": "sha256:56392d8c6c7e6f05cead570815b7aa73ba606cb37f72c1ddd7c4fb6d87b2cfbc",
+          "stdout_line_count": 0,
+          "stdout_tail_hash": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "timed_out": false
+        },
+        {
+          "command_shape": [
+            "uv",
+            "run",
+            "--no-project",
+            "--with",
+            "pytest>=8,<10",
+            "--",
+            "python",
+            "-m",
+            "pytest",
+            "<targeted_test_paths>",
+            "-q"
+          ],
+          "duration_seconds": 0.077,
+          "label": "pandas_indexing",
+          "returncode": 1,
+          "status": "failed",
+          "stderr_line_count": 79,
+          "stderr_tail_hash": "sha256:56392d8c6c7e6f05cead570815b7aa73ba606cb37f72c1ddd7c4fb6d87b2cfbc",
+          "stdout_line_count": 0,
+          "stdout_tail_hash": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "timed_out": false
+        }
+      ],
       "source_context_availability": "strong_pr_or_issue_title_context",
       "targeted_verifier_timing": {
-        "median_seconds": null,
-        "p95_seconds": null,
+        "median_seconds": 0.085,
+        "p95_seconds": 0.092,
         "pass_count": 0,
-        "sample_count": 0,
-        "speed_class": "not_measured"
+        "sample_count": 2,
+        "speed_class": "environment_failed_or_unusable"
       },
       "test_change_count": 2365,
       "time_bucket_distribution": {
@@ -1194,7 +1756,7 @@
       "total_commits": 38107,
       "total_commits_scanned": 5000,
       "track": "large_heavy",
-      "visible_setup_smoke_status": "not_run"
+      "visible_setup_smoke_status": "failed"
     },
     {
       "bounded_certification_sample": {
@@ -1209,21 +1771,51 @@
       "classification": "large_but_heavy",
       "clone_status": {
         "local_path": "experiments/phase0_headroom/external_repos/scikit-learn",
-        "status": "already_present"
+        "status": "not_requested"
       },
       "count_feasible_rolling_origin_windows": 2,
       "deep_probe": true,
       "environment_risk": "high_compiled_extension_build",
       "estimated_candidate_volume": 1520,
       "estimated_release_eligible_volume": 76,
-      "expected_evaluation_speed_class": "risky",
+      "expected_evaluation_speed_class": "environment_failed_or_unusable",
       "expected_paid_baseline_discovery_cells": 304,
       "head_short": "d6a36523d",
       "historical_reference_probe": {
-        "mode": "not_run",
+        "dominant_failure_labels": {
+          "test_failure_or_environment_mismatch": 1
+        },
+        "mode": "target_commit_changed_tests_reference_probe",
         "pass_count": 0,
-        "results": [],
-        "sample_size": 0
+        "results": [
+          {
+            "command_shape": [
+              "uv",
+              "run",
+              "--no-project",
+              "--with",
+              "pytest>=8,<10",
+              "--",
+              "python",
+              "-m",
+              "pytest",
+              "<targeted_test_paths>",
+              "-q"
+            ],
+            "commit": "7f107e7efebd",
+            "duration_seconds": 0.08,
+            "label": "historical_reference_7f107e7efebd",
+            "returncode": 1,
+            "status": "failed",
+            "stderr_line_count": 95,
+            "stderr_tail_hash": "sha256:43fea7f9a77e0b9a1e30bb9c55386063c7cf87b56f5aa161fd410a0f7be52861",
+            "stdout_line_count": 0,
+            "stdout_tail_hash": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "test_path_count": 1,
+            "timed_out": false
+          }
+        ],
+        "sample_size": 1
       },
       "history_date_span": {
         "first_commit": "2011-03-06T14:46:50+01:00",
@@ -1274,14 +1866,39 @@
         "high": 136.8,
         "low": 60.8
       },
-      "setup_test_smoke": [],
+      "setup_test_smoke": [
+        {
+          "command_shape": [
+            "uv",
+            "run",
+            "--no-project",
+            "--with",
+            "pytest>=8,<10",
+            "--",
+            "python",
+            "-m",
+            "pytest",
+            "<targeted_test_paths>",
+            "-q"
+          ],
+          "duration_seconds": 0.084,
+          "label": "sklearn_validation",
+          "returncode": 4,
+          "status": "failed",
+          "stderr_line_count": 22,
+          "stderr_tail_hash": "sha256:a4f9020faa98530616e62c80a8ce17d42c1b125f2be6341964af8e36f46b3b62",
+          "stdout_line_count": 0,
+          "stdout_tail_hash": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "timed_out": false
+        }
+      ],
       "source_context_availability": "strong_pr_or_issue_title_context",
       "targeted_verifier_timing": {
-        "median_seconds": null,
-        "p95_seconds": null,
+        "median_seconds": 0.084,
+        "p95_seconds": 0.084,
         "pass_count": 0,
-        "sample_count": 0,
-        "speed_class": "not_measured"
+        "sample_count": 1,
+        "speed_class": "environment_failed_or_unusable"
       },
       "test_change_count": 1902,
       "time_bucket_distribution": {
@@ -1291,7 +1908,7 @@
       "total_commits": 33756,
       "total_commits_scanned": 5000,
       "track": "large_heavy",
-      "visible_setup_smoke_status": "not_run"
+      "visible_setup_smoke_status": "failed"
     },
     {
       "bounded_certification_sample": {
@@ -1306,7 +1923,7 @@
       "classification": "screened_out",
       "clone_status": {
         "local_path": "experiments/phase0_headroom/external_repos/matplotlib",
-        "status": "already_present"
+        "status": "not_requested"
       },
       "count_feasible_rolling_origin_windows": 0,
       "deep_probe": false,
@@ -1385,7 +2002,7 @@
       "classification": "capacity_promising_but_speed_unproven",
       "clone_status": {
         "local_path": "experiments/phase0_headroom/external_repos/mypy",
-        "status": "already_present"
+        "status": "not_requested"
       },
       "count_feasible_rolling_origin_windows": 5,
       "deep_probe": false,
@@ -1521,21 +2138,53 @@
       "classification": "capacity_promising_but_speed_unproven",
       "clone_status": {
         "local_path": "experiments/phase0_headroom/external_repos/black",
-        "status": "already_present"
+        "status": "not_requested"
       },
       "count_feasible_rolling_origin_windows": 6,
       "deep_probe": true,
       "environment_risk": "low",
       "estimated_candidate_volume": 602,
       "estimated_release_eligible_volume": 73,
-      "expected_evaluation_speed_class": "ideal",
+      "expected_evaluation_speed_class": "partial_probe_failure",
       "expected_paid_baseline_discovery_cells": 292,
       "head_short": "6325332",
       "historical_reference_probe": {
-        "mode": "not_run",
+        "dominant_failure_labels": {
+          "failed": 1
+        },
+        "mode": "target_commit_changed_tests_reference_probe",
         "pass_count": 0,
-        "results": [],
-        "sample_size": 0
+        "results": [
+          {
+            "command_shape": [
+              "uv",
+              "run",
+              "--no-project",
+              "--with",
+              "pytest>=8,<10",
+              "--with",
+              ".",
+              "--",
+              "python",
+              "-m",
+              "pytest",
+              "<targeted_test_paths>",
+              "-q"
+            ],
+            "commit": "59acf8af38a7",
+            "duration_seconds": 5.345,
+            "label": "historical_reference_59acf8af38a7",
+            "returncode": 5,
+            "status": "failed",
+            "stderr_line_count": 3,
+            "stderr_tail_hash": "sha256:906fd618303e8b549838c760b7682aca24455af1463026b175debbe2e0c6aa94",
+            "stdout_line_count": 2,
+            "stdout_tail_hash": "sha256:fd637db4c244dc02ad65049d9f339eab9c30f1c02a401a04f6f729d811eaf002",
+            "test_path_count": 1,
+            "timed_out": false
+          }
+        ],
+        "sample_size": 1
       },
       "history_date_span": {
         "first_commit": "2018-03-14T12:55:32-07:00",
@@ -1634,14 +2283,67 @@
         "high": 131.4,
         "low": 58.4
       },
-      "setup_test_smoke": [],
+      "setup_test_smoke": [
+        {
+          "command_shape": [
+            "uv",
+            "run",
+            "--no-project",
+            "--with",
+            "pytest>=8,<10",
+            "--with",
+            ".",
+            "--",
+            "python",
+            "-m",
+            "pytest",
+            "<targeted_test_paths>",
+            "-q"
+          ],
+          "duration_seconds": 16.768,
+          "label": "black_format",
+          "returncode": 0,
+          "status": "passed",
+          "stderr_line_count": 0,
+          "stderr_tail_hash": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "stdout_line_count": 5,
+          "stdout_tail_hash": "sha256:32485b32bf5a135a73fe765e3b39204da3850fbfe417bdeb19c874413e51e964",
+          "timed_out": false
+        },
+        {
+          "command_shape": [
+            "uv",
+            "run",
+            "--no-project",
+            "--with",
+            "pytest>=8,<10",
+            "--with",
+            ".",
+            "--",
+            "python",
+            "-m",
+            "pytest",
+            "<targeted_test_paths>",
+            "-q"
+          ],
+          "duration_seconds": 2.676,
+          "label": "black_black",
+          "returncode": 1,
+          "status": "failed",
+          "stderr_line_count": 0,
+          "stderr_tail_hash": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "stdout_line_count": 53,
+          "stdout_tail_hash": "sha256:ab5ac758ce773f7df41501479d109d783153cfd32c7cc686f9ee82fbbd1742ca",
+          "timed_out": false
+        }
+      ],
       "source_context_availability": "strong_pr_or_issue_title_context",
       "targeted_verifier_timing": {
-        "median_seconds": null,
-        "p95_seconds": null,
-        "pass_count": 0,
-        "sample_count": 0,
-        "speed_class": "not_measured"
+        "median_seconds": 9.722,
+        "p95_seconds": 16.063,
+        "pass_count": 1,
+        "sample_count": 2,
+        "speed_class": "partial_probe_failure"
       },
       "test_change_count": 719,
       "time_bucket_distribution": {
@@ -1652,7 +2354,7 @@
       "total_commits": 2241,
       "total_commits_scanned": 2241,
       "track": "medium_large_fast",
-      "visible_setup_smoke_status": "not_run"
+      "visible_setup_smoke_status": "partial_failed"
     },
     {
       "bounded_certification_sample": {
@@ -1664,24 +2366,56 @@
       "changed_test_oracle_availability": "changed_tests_available",
       "changed_test_oracle_availability_count": 398,
       "checkout_status": "clean",
-      "classification": "capacity_promising_but_speed_unproven",
+      "classification": "screened_out",
       "clone_status": {
         "local_path": "experiments/phase0_headroom/external_repos/httpx",
-        "status": "already_present"
+        "status": "not_requested"
       },
       "count_feasible_rolling_origin_windows": 3,
       "deep_probe": true,
       "environment_risk": "low_to_medium_network_mocking",
       "estimated_candidate_volume": 474,
-      "estimated_release_eligible_volume": 60,
-      "expected_evaluation_speed_class": "ideal",
-      "expected_paid_baseline_discovery_cells": 240,
+      "estimated_release_eligible_volume": 20,
+      "expected_evaluation_speed_class": "environment_failed_or_unusable",
+      "expected_paid_baseline_discovery_cells": 0,
       "head_short": "b5addb6",
       "historical_reference_probe": {
-        "mode": "not_run",
+        "dominant_failure_labels": {
+          "pytest_usage_or_no_tests": 1
+        },
+        "mode": "target_commit_changed_tests_reference_probe",
         "pass_count": 0,
-        "results": [],
-        "sample_size": 0
+        "results": [
+          {
+            "command_shape": [
+              "uv",
+              "run",
+              "--no-project",
+              "--with",
+              "pytest>=8,<10",
+              "--with",
+              ".",
+              "--",
+              "python",
+              "-m",
+              "pytest",
+              "<targeted_test_paths>",
+              "-q"
+            ],
+            "commit": "926a55a84f0a",
+            "duration_seconds": 0.639,
+            "label": "historical_reference_926a55a84f0a",
+            "returncode": 4,
+            "status": "failed",
+            "stderr_line_count": 7,
+            "stderr_tail_hash": "sha256:097a8c0b6a0f35e82efbc5b47c9301cc2544314b6aaf9284ed82ddf5168d9caf",
+            "stdout_line_count": 0,
+            "stdout_tail_hash": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "test_path_count": 1,
+            "timed_out": false
+          }
+        ],
+        "sample_size": 1
       },
       "history_date_span": {
         "first_commit": "2019-04-04T13:27:55+01:00",
@@ -1695,9 +2429,9 @@
       "likely_verifier_command": "python -m pytest <httpx mocked client test> -q",
       "local_path": "experiments/phase0_headroom/external_repos/httpx",
       "prior_evidence": {},
-      "projected_certified_task_count_after_bounded_repair": 60,
-      "projected_evidence_backed_rolling_origin_windows": 2,
-      "reason_to_deep_probe_or_reject": "run targeted verifier smoke before any recommendation",
+      "projected_certified_task_count_after_bounded_repair": 20,
+      "projected_evidence_backed_rolling_origin_windows": 0,
+      "reason_to_deep_probe_or_reject": "screened out by capacity, checkout, or source/oracle availability",
       "repo_id": "httpx",
       "repo_url": "https://github.com/encode/httpx.git",
       "rolling_origin_windows_raw": [
@@ -1741,17 +2475,70 @@
         }
       ],
       "rough_paid_baseline_cost_usd_range": {
-        "high": 108.0,
-        "low": 48.0
+        "high": 0.0,
+        "low": 0.0
       },
-      "setup_test_smoke": [],
+      "setup_test_smoke": [
+        {
+          "command_shape": [
+            "uv",
+            "run",
+            "--no-project",
+            "--with",
+            "pytest>=8,<10",
+            "--with",
+            ".",
+            "--",
+            "python",
+            "-m",
+            "pytest",
+            "<targeted_test_paths>",
+            "-q"
+          ],
+          "duration_seconds": 4.197,
+          "label": "httpx_client",
+          "returncode": 1,
+          "status": "failed",
+          "stderr_line_count": 70,
+          "stderr_tail_hash": "sha256:d113c4942f6921c7b0530f223f48c771052cfb0f6145612241d7e606b959f3d0",
+          "stdout_line_count": 0,
+          "stdout_tail_hash": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "timed_out": false
+        },
+        {
+          "command_shape": [
+            "uv",
+            "run",
+            "--no-project",
+            "--with",
+            "pytest>=8,<10",
+            "--with",
+            ".",
+            "--",
+            "python",
+            "-m",
+            "pytest",
+            "<targeted_test_paths>",
+            "-q"
+          ],
+          "duration_seconds": 0.113,
+          "label": "httpx_models",
+          "returncode": 1,
+          "status": "failed",
+          "stderr_line_count": 70,
+          "stderr_tail_hash": "sha256:d113c4942f6921c7b0530f223f48c771052cfb0f6145612241d7e606b959f3d0",
+          "stdout_line_count": 0,
+          "stdout_tail_hash": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "timed_out": false
+        }
+      ],
       "source_context_availability": "strong_pr_or_issue_title_context",
       "targeted_verifier_timing": {
-        "median_seconds": null,
-        "p95_seconds": null,
+        "median_seconds": 2.155,
+        "p95_seconds": 3.993,
         "pass_count": 0,
-        "sample_count": 0,
-        "speed_class": "not_measured"
+        "sample_count": 2,
+        "speed_class": "environment_failed_or_unusable"
       },
       "test_change_count": 576,
       "time_bucket_distribution": {
@@ -1762,7 +2549,7 @@
       "total_commits": 1523,
       "total_commits_scanned": 1523,
       "track": "medium_large_fast",
-      "visible_setup_smoke_status": "not_run"
+      "visible_setup_smoke_status": "failed"
     },
     {
       "bounded_certification_sample": {
@@ -1777,21 +2564,55 @@
       "classification": "screened_out",
       "clone_status": {
         "local_path": "experiments/phase0_headroom/external_repos/starlette",
-        "status": "already_present"
+        "status": "not_requested"
       },
       "count_feasible_rolling_origin_windows": 6,
       "deep_probe": true,
       "environment_risk": "low_to_medium_async_http_stack",
       "estimated_candidate_volume": 435,
       "estimated_release_eligible_volume": 57,
-      "expected_evaluation_speed_class": "ideal",
+      "expected_evaluation_speed_class": "partial_probe_failure",
       "expected_paid_baseline_discovery_cells": 228,
       "head_short": "8ebffd0",
       "historical_reference_probe": {
-        "mode": "not_run",
+        "dominant_failure_labels": {
+          "pytest_usage_or_no_tests": 1
+        },
+        "mode": "target_commit_changed_tests_reference_probe",
         "pass_count": 0,
-        "results": [],
-        "sample_size": 0
+        "results": [
+          {
+            "command_shape": [
+              "uv",
+              "run",
+              "--no-project",
+              "--with",
+              "pytest>=8,<10",
+              "--with",
+              "httpx2",
+              "--with",
+              ".",
+              "--",
+              "python",
+              "-m",
+              "pytest",
+              "<targeted_test_paths>",
+              "-q"
+            ],
+            "commit": "79812bb22058",
+            "duration_seconds": 5.751,
+            "label": "historical_reference_79812bb22058",
+            "returncode": 4,
+            "status": "failed",
+            "stderr_line_count": 9,
+            "stderr_tail_hash": "sha256:4fc1dac0a6e6ef4214c5f2b825efab25bec7671bab5330aed5adaefbfade2703",
+            "stdout_line_count": 0,
+            "stdout_tail_hash": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "test_path_count": 2,
+            "timed_out": false
+          }
+        ],
+        "sample_size": 1
       },
       "history_date_span": {
         "first_commit": "2018-06-25T14:15:32+01:00",
@@ -1890,14 +2711,71 @@
         "high": 102.6,
         "low": 45.6
       },
-      "setup_test_smoke": [],
+      "setup_test_smoke": [
+        {
+          "command_shape": [
+            "uv",
+            "run",
+            "--no-project",
+            "--with",
+            "pytest>=8,<10",
+            "--with",
+            "httpx2",
+            "--with",
+            ".",
+            "--",
+            "python",
+            "-m",
+            "pytest",
+            "<targeted_test_paths>",
+            "-q"
+          ],
+          "duration_seconds": 1.769,
+          "label": "starlette_responses",
+          "returncode": 2,
+          "status": "failed",
+          "stderr_line_count": 1,
+          "stderr_tail_hash": "sha256:556d0398950a19292721dbdcb3dae60f3fd005f591c859ff80b0e6ccea18e469",
+          "stdout_line_count": 14,
+          "stdout_tail_hash": "sha256:f1fe5ea0b8d38565c6f9764804f0e5a05ab9a376b57e2f1a0d9356efbb8f36f6",
+          "timed_out": false
+        },
+        {
+          "command_shape": [
+            "uv",
+            "run",
+            "--no-project",
+            "--with",
+            "pytest>=8,<10",
+            "--with",
+            "httpx2",
+            "--with",
+            ".",
+            "--",
+            "python",
+            "-m",
+            "pytest",
+            "<targeted_test_paths>",
+            "-q"
+          ],
+          "duration_seconds": 0.256,
+          "label": "starlette_routing",
+          "returncode": 0,
+          "status": "passed",
+          "stderr_line_count": 0,
+          "stderr_tail_hash": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "stdout_line_count": 2,
+          "stdout_tail_hash": "sha256:da6b6af1ea78199e4ecec2b6e75675a2d8e9efb8d8cc9079b869d8118f645ca6",
+          "timed_out": false
+        }
+      ],
       "source_context_availability": "strong_pr_or_issue_title_context",
       "targeted_verifier_timing": {
-        "median_seconds": null,
-        "p95_seconds": null,
-        "pass_count": 0,
-        "sample_count": 0,
-        "speed_class": "not_measured"
+        "median_seconds": 1.012,
+        "p95_seconds": 1.693,
+        "pass_count": 1,
+        "sample_count": 2,
+        "speed_class": "partial_probe_failure"
       },
       "test_change_count": 531,
       "time_bucket_distribution": {
@@ -1908,27 +2786,228 @@
       "total_commits": 1653,
       "total_commits_scanned": 1653,
       "track": "medium_large_fast",
-      "visible_setup_smoke_status": "not_run"
+      "visible_setup_smoke_status": "partial_failed"
     },
     {
-      "changed_test_oracle_availability": "unknown",
-      "checkout_status": "history_read_failed",
+      "bounded_certification_sample": {
+        "dominant_failure_labels": {
+          "large_implementation_surface": 1
+        },
+        "mode": "bounded_task_shape_certification_not_paid_agent_replay",
+        "pass_count": 23,
+        "sample_size": 24
+      },
+      "changed_test_oracle_availability": "changed_tests_available",
+      "changed_test_oracle_availability_count": 220,
+      "checkout_status": "clean",
       "classification": "screened_out",
       "clone_status": {
         "local_path": "experiments/phase0_headroom/external_repos/anyio",
-        "status": "already_present"
+        "status": "not_requested"
       },
+      "count_feasible_rolling_origin_windows": 4,
       "deep_probe": true,
       "environment_risk": "low_to_medium_async_backend_matrix",
-      "history_error": "RuntimeError: fatal: unable to access 'https://github.com/agronholm/anyio.git/': LibreSSL SSL_connect: SSL_ERROR_SYSCALL in connection to github.com:443 \nfatal: could not fetch f5d45f048e1c078f0519a98eed593bdd6b48dfcd from promisor remote",
+      "estimated_candidate_volume": 394,
+      "estimated_release_eligible_volume": 11,
+      "expected_evaluation_speed_class": "environment_failed_or_unusable",
+      "expected_paid_baseline_discovery_cells": 0,
+      "head_short": "550b68e",
+      "historical_reference_probe": {
+        "dominant_failure_labels": {
+          "pytest_usage_or_no_tests": 1
+        },
+        "mode": "target_commit_changed_tests_reference_probe",
+        "pass_count": 0,
+        "results": [
+          {
+            "command_shape": [
+              "uv",
+              "run",
+              "--no-project",
+              "--with",
+              "pytest>=8,<10",
+              "--with",
+              ".",
+              "--",
+              "python",
+              "-m",
+              "pytest",
+              "<targeted_test_paths>",
+              "-q"
+            ],
+            "commit": "f1d077042e40",
+            "duration_seconds": 1.068,
+            "label": "historical_reference_f1d077042e40",
+            "returncode": 4,
+            "status": "failed",
+            "stderr_line_count": 7,
+            "stderr_tail_hash": "sha256:33c0e4f3f35724d117b32af042eddc689967c404de30ff5d193fa4392bab1ab3",
+            "stdout_line_count": 0,
+            "stdout_tail_hash": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "test_path_count": 1,
+            "timed_out": false
+          }
+        ],
+        "sample_size": 1
+      },
+      "history_date_span": {
+        "first_commit": "2018-09-08T16:52:44+03:00",
+        "latest_commit": "2026-06-15T09:14:08+03:00"
+      },
+      "history_scan_cap": 5000,
+      "history_scan_capped": false,
+      "history_scan_since": "2010-01-01",
+      "implementation_change_count": 680,
+      "implementation_plus_test_change_count": 394,
       "likely_verifier_command": "python -m pytest <anyio pytest shard> -q",
       "local_path": "experiments/phase0_headroom/external_repos/anyio",
       "prior_evidence": {},
-      "reason_to_deep_probe_or_reject": "history_read_failed",
+      "projected_certified_task_count_after_bounded_repair": 11,
+      "projected_evidence_backed_rolling_origin_windows": 0,
+      "reason_to_deep_probe_or_reject": "screened out by capacity, checkout, or source/oracle availability",
       "repo_id": "anyio",
       "repo_url": "https://github.com/agronholm/anyio.git",
-      "source_context_availability": "unknown",
-      "track": "medium_large_fast"
+      "rolling_origin_windows_raw": [
+        {
+          "dev_count": 95,
+          "future_count": 260,
+          "train_count": 39,
+          "window_id": "train_lt_2019_dev_2019_2020_future_gte_2021"
+        },
+        {
+          "dev_count": 138,
+          "future_count": 180,
+          "train_count": 76,
+          "window_id": "train_lt_2020_dev_2020_2021_future_gte_2022"
+        },
+        {
+          "dev_count": 110,
+          "future_count": 150,
+          "train_count": 134,
+          "window_id": "train_lt_2021_dev_2021_2022_future_gte_2023"
+        },
+        {
+          "dev_count": 65,
+          "future_count": 115,
+          "train_count": 214,
+          "window_id": "train_lt_2022_dev_2022_2023_future_gte_2024"
+        },
+        {
+          "dev_count": 76,
+          "future_count": 74,
+          "train_count": 244,
+          "window_id": "train_lt_2023_dev_2023_2024_future_gte_2025"
+        },
+        {
+          "dev_count": 86,
+          "future_count": 29,
+          "train_count": 279,
+          "window_id": "train_lt_2024_dev_2024_2025_future_gte_2026"
+        }
+      ],
+      "rolling_origin_windows_release_ready": [
+        {
+          "dev_count": 69,
+          "future_count": 133,
+          "train_count": 18,
+          "window_id": "train_lt_2021_dev_2021_2022_future_gte_2023"
+        },
+        {
+          "dev_count": 42,
+          "future_count": 105,
+          "train_count": 73,
+          "window_id": "train_lt_2022_dev_2022_2023_future_gte_2024"
+        },
+        {
+          "dev_count": 64,
+          "future_count": 69,
+          "train_count": 87,
+          "window_id": "train_lt_2023_dev_2023_2024_future_gte_2025"
+        },
+        {
+          "dev_count": 78,
+          "future_count": 27,
+          "train_count": 115,
+          "window_id": "train_lt_2024_dev_2024_2025_future_gte_2026"
+        }
+      ],
+      "rough_paid_baseline_cost_usd_range": {
+        "high": 0.0,
+        "low": 0.0
+      },
+      "setup_test_smoke": [
+        {
+          "command_shape": [
+            "uv",
+            "run",
+            "--no-project",
+            "--with",
+            "pytest>=8,<10",
+            "--with",
+            ".",
+            "--",
+            "python",
+            "-m",
+            "pytest",
+            "<targeted_test_paths>",
+            "-q"
+          ],
+          "duration_seconds": 0.137,
+          "label": "anyio_streams",
+          "returncode": 1,
+          "status": "failed",
+          "stderr_line_count": 51,
+          "stderr_tail_hash": "sha256:6195624a6785cdf0454746ed9774b15f034fefcde4dc529ca5b7fe846357b61e",
+          "stdout_line_count": 0,
+          "stdout_tail_hash": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "timed_out": false
+        },
+        {
+          "command_shape": [
+            "uv",
+            "run",
+            "--no-project",
+            "--with",
+            "pytest>=8,<10",
+            "--with",
+            ".",
+            "--",
+            "python",
+            "-m",
+            "pytest",
+            "<targeted_test_paths>",
+            "-q"
+          ],
+          "duration_seconds": 0.12,
+          "label": "anyio_tasks",
+          "returncode": 1,
+          "status": "failed",
+          "stderr_line_count": 51,
+          "stderr_tail_hash": "sha256:6195624a6785cdf0454746ed9774b15f034fefcde4dc529ca5b7fe846357b61e",
+          "stdout_line_count": 0,
+          "stdout_tail_hash": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "timed_out": false
+        }
+      ],
+      "source_context_availability": "strong_pr_or_issue_title_context",
+      "targeted_verifier_timing": {
+        "median_seconds": 0.129,
+        "p95_seconds": 0.136,
+        "pass_count": 0,
+        "sample_count": 2,
+        "speed_class": "environment_failed_or_unusable"
+      },
+      "test_change_count": 507,
+      "time_bucket_distribution": {
+        "2016_2019": 76,
+        "2020_2023": 203,
+        "2024_plus": 115
+      },
+      "total_commits": 1319,
+      "total_commits_scanned": 1319,
+      "track": "medium_large_fast",
+      "visible_setup_smoke_status": "failed"
     },
     {
       "bounded_certification_sample": {
@@ -1943,7 +3022,7 @@
       "classification": "screened_out",
       "clone_status": {
         "local_path": "experiments/phase0_headroom/external_repos/tornado",
-        "status": "already_present"
+        "status": "not_requested"
       },
       "count_feasible_rolling_origin_windows": 1,
       "deep_probe": false,
@@ -2108,7 +3187,7 @@
       "classification": "screened_out",
       "clone_status": {
         "local_path": "experiments/phase0_headroom/external_repos/trio",
-        "status": "already_present"
+        "status": "not_requested"
       },
       "count_feasible_rolling_origin_windows": 2,
       "deep_probe": false,
@@ -2217,7 +3296,7 @@
       "classification": "screened_out",
       "clone_status": {
         "local_path": "experiments/phase0_headroom/external_repos/pydantic",
-        "status": "already_present"
+        "status": "not_requested"
       },
       "deep_probe": false,
       "environment_risk": "medium_rust_core_dependency_but_wheel_available",
@@ -2232,38 +3311,66 @@
     },
     {
       "bounded_certification_sample": {
-        "dominant_failure_labels": {},
+        "dominant_failure_labels": {
+          "large_implementation_surface": 3
+        },
         "mode": "bounded_task_shape_certification_not_paid_agent_replay",
-        "pass_count": 0,
-        "sample_size": 0
+        "pass_count": 21,
+        "sample_size": 24
       },
       "changed_test_oracle_availability": "changed_tests_available",
       "changed_test_oracle_availability_count": 514,
       "checkout_status": "clean",
-      "classification": "capacity_promising_but_speed_unproven",
+      "classification": "balanced_target_prep_candidate",
       "clone_status": {
-        "duration_seconds": 7.177,
         "local_path": "experiments/phase0_headroom/external_repos/sphinx",
-        "returncode": 0,
-        "status": "cloned",
-        "stderr_line_count": 106,
-        "stderr_tail_hash": "sha256:58d8ab5b6495fc3d618a154a6ea9aa350af1a67c3b2e096c780a8d2f5a90f57e",
-        "stdout_tail_hash": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
-        "timed_out": false
+        "status": "not_requested"
       },
       "count_feasible_rolling_origin_windows": 2,
-      "deep_probe": false,
+      "deep_probe": true,
       "environment_risk": "medium_doc_build_fixture_matrix",
       "estimated_candidate_volume": 804,
-      "estimated_release_eligible_volume": 77,
-      "expected_evaluation_speed_class": "acceptable",
-      "expected_paid_baseline_discovery_cells": 308,
+      "estimated_release_eligible_volume": 157,
+      "expected_evaluation_speed_class": "ideal_under_60s",
+      "expected_paid_baseline_discovery_cells": 360,
       "head_short": "581c0860d",
       "historical_reference_probe": {
-        "mode": "not_run",
+        "dominant_failure_labels": {
+          "pytest_usage_or_no_tests": 1
+        },
+        "mode": "target_commit_changed_tests_reference_probe",
         "pass_count": 0,
-        "results": [],
-        "sample_size": 0
+        "results": [
+          {
+            "command_shape": [
+              "uv",
+              "run",
+              "--no-project",
+              "--with",
+              "pytest>=8,<10",
+              "--with",
+              ".",
+              "--",
+              "python",
+              "-m",
+              "pytest",
+              "<targeted_test_paths>",
+              "-q"
+            ],
+            "commit": "a66546895ed1",
+            "duration_seconds": 0.699,
+            "label": "historical_reference_a66546895ed1",
+            "returncode": 4,
+            "status": "failed",
+            "stderr_line_count": 9,
+            "stderr_tail_hash": "sha256:9e8399df7a4816c0f5335028e49ad3e7b06a775ddd9f23da3d046a72ca603f02",
+            "stdout_line_count": 0,
+            "stdout_tail_hash": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "test_path_count": 1,
+            "timed_out": false
+          }
+        ],
+        "sample_size": 1
       },
       "history_date_span": {
         "first_commit": "2007-07-23T08:56:48Z",
@@ -2277,9 +3384,9 @@
       "likely_verifier_command": "python -m pytest <sphinx unit shard> -q",
       "local_path": "experiments/phase0_headroom/external_repos/sphinx",
       "prior_evidence": {},
-      "projected_certified_task_count_after_bounded_repair": 77,
+      "projected_certified_task_count_after_bounded_repair": 231,
       "projected_evidence_backed_rolling_origin_windows": 2,
-      "reason_to_deep_probe_or_reject": "run targeted verifier smoke before any recommendation",
+      "reason_to_deep_probe_or_reject": "advance to no-paid target prep if stronger candidate does not beat it",
       "repo_id": "sphinx",
       "repo_url": "https://github.com/sphinx-doc/sphinx.git",
       "rolling_origin_windows_raw": [
@@ -2311,17 +3418,74 @@
         }
       ],
       "rough_paid_baseline_cost_usd_range": {
-        "high": 138.6,
-        "low": 61.6
+        "high": 162.0,
+        "low": 72.0
       },
-      "setup_test_smoke": [],
+      "setup_test_smoke": [
+        {
+          "command_shape": [
+            "uv",
+            "run",
+            "--no-project",
+            "--python",
+            "3.14",
+            "--with",
+            "pytest>=8,<10",
+            "--with",
+            ".",
+            "--",
+            "python",
+            "-m",
+            "pytest",
+            "<targeted_test_paths>",
+            "-q"
+          ],
+          "duration_seconds": 0.336,
+          "label": "sphinx_util",
+          "returncode": 0,
+          "status": "passed",
+          "stderr_line_count": 0,
+          "stderr_tail_hash": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "stdout_line_count": 2,
+          "stdout_tail_hash": "sha256:fcd476841e8af121ff907e81a92a59579b64c007b70cb79f9d096806f703fc7e",
+          "timed_out": false
+        },
+        {
+          "command_shape": [
+            "uv",
+            "run",
+            "--no-project",
+            "--python",
+            "3.14",
+            "--with",
+            "pytest>=8,<10",
+            "--with",
+            ".",
+            "--",
+            "python",
+            "-m",
+            "pytest",
+            "<targeted_test_paths>",
+            "-q"
+          ],
+          "duration_seconds": 0.68,
+          "label": "sphinx_config",
+          "returncode": 0,
+          "status": "passed",
+          "stderr_line_count": 0,
+          "stderr_tail_hash": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "stdout_line_count": 2,
+          "stdout_tail_hash": "sha256:2c14dcca9e5ab41e97c2b28168186084f5cb5e7ca1eb414ea42325ef7a0e07eb",
+          "timed_out": false
+        }
+      ],
       "source_context_availability": "strong_pr_or_issue_title_context",
       "targeted_verifier_timing": {
-        "median_seconds": null,
-        "p95_seconds": null,
-        "pass_count": 0,
-        "sample_count": 0,
-        "speed_class": "not_measured"
+        "median_seconds": 0.508,
+        "p95_seconds": 0.663,
+        "pass_count": 2,
+        "sample_count": 2,
+        "speed_class": "ideal_under_60s"
       },
       "test_change_count": 1213,
       "time_bucket_distribution": {
@@ -2332,7 +3496,7 @@
       "total_commits": 22409,
       "total_commits_scanned": 5000,
       "track": "medium_large_fast",
-      "visible_setup_smoke_status": "not_run"
+      "visible_setup_smoke_status": "passed"
     }
   ],
   "deep_probe_metrics": [
@@ -2346,24 +3510,56 @@
       "changed_test_oracle_availability": "changed_tests_available",
       "changed_test_oracle_availability_count": 42,
       "checkout_status": "clean",
-      "classification": "screened_out",
+      "classification": "fast_but_underpowered",
       "clone_status": {
         "local_path": "experiments/phase0_headroom/external_repos/boltons",
-        "status": "already_present"
+        "status": "not_requested"
       },
       "count_feasible_rolling_origin_windows": 2,
       "deep_probe": true,
       "environment_risk": "low",
       "estimated_candidate_volume": 202,
       "estimated_release_eligible_volume": 57,
-      "expected_evaluation_speed_class": "ideal",
+      "expected_evaluation_speed_class": "ideal_under_60s",
       "expected_paid_baseline_discovery_cells": 228,
       "head_short": "207651e",
       "historical_reference_probe": {
-        "mode": "not_run",
+        "dominant_failure_labels": {
+          "test_failure_or_environment_mismatch": 1
+        },
+        "mode": "target_commit_changed_tests_reference_probe",
         "pass_count": 0,
-        "results": [],
-        "sample_size": 0
+        "results": [
+          {
+            "command_shape": [
+              "uv",
+              "run",
+              "--no-project",
+              "--with",
+              "pytest>=8,<10",
+              "--with",
+              ".",
+              "--",
+              "python",
+              "-m",
+              "pytest",
+              "<targeted_test_paths>",
+              "-q"
+            ],
+            "commit": "e79511e6e7a8",
+            "duration_seconds": 0.677,
+            "label": "historical_reference_e79511e6e7a8",
+            "returncode": 1,
+            "status": "failed",
+            "stderr_line_count": 82,
+            "stderr_tail_hash": "sha256:b4cebbba6e69720ede1ca01c61131562f426db84ede2e5059dc7b7c486502c20",
+            "stdout_line_count": 0,
+            "stdout_tail_hash": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "test_path_count": 1,
+            "timed_out": false
+          }
+        ],
+        "sample_size": 1
       },
       "history_date_span": {
         "first_commit": "2013-02-19T18:04:47-08:00",
@@ -2393,7 +3589,7 @@
       },
       "projected_certified_task_count_after_bounded_repair": 57,
       "projected_evidence_backed_rolling_origin_windows": 0,
-      "reason_to_deep_probe_or_reject": "screened out by capacity, checkout, or source/oracle availability",
+      "reason_to_deep_probe_or_reject": "keep only as backup or small pilot; capacity below rolling-origin threshold",
       "repo_id": "boltons",
       "repo_url": "https://github.com/mahmoud/boltons.git",
       "rolling_origin_windows_raw": [
@@ -2458,14 +3654,41 @@
         "high": 102.6,
         "low": 45.6
       },
-      "setup_test_smoke": [],
+      "setup_test_smoke": [
+        {
+          "command_shape": [
+            "uv",
+            "run",
+            "--no-project",
+            "--with",
+            "pytest>=8,<10",
+            "--with",
+            ".",
+            "--",
+            "python",
+            "-m",
+            "pytest",
+            "<targeted_test_paths>",
+            "-q"
+          ],
+          "duration_seconds": 0.174,
+          "label": "boltons_iterutils_cacheutils",
+          "returncode": 0,
+          "status": "passed",
+          "stderr_line_count": 0,
+          "stderr_tail_hash": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "stdout_line_count": 2,
+          "stdout_tail_hash": "sha256:2f852c478b4571715b6d9b61335282376069ea8f8716a4b49cc42b5e9a0d504b",
+          "timed_out": false
+        }
+      ],
       "source_context_availability": "thin_but_usable_pr_or_issue_title_context",
       "targeted_verifier_timing": {
-        "median_seconds": null,
-        "p95_seconds": null,
-        "pass_count": 0,
-        "sample_count": 0,
-        "speed_class": "not_measured"
+        "median_seconds": 0.174,
+        "p95_seconds": 0.174,
+        "pass_count": 1,
+        "sample_count": 1,
+        "speed_class": "ideal_under_60s"
       },
       "test_change_count": 289,
       "time_bucket_distribution": {
@@ -2477,7 +3700,7 @@
       "total_commits": 1611,
       "total_commits_scanned": 1611,
       "track": "baseline",
-      "visible_setup_smoke_status": "not_run"
+      "visible_setup_smoke_status": "passed"
     },
     {
       "bounded_certification_sample": {
@@ -2492,21 +3715,53 @@
       "classification": "screened_out",
       "clone_status": {
         "local_path": "experiments/phase0_headroom/external_repos/attrs",
-        "status": "already_present"
+        "status": "not_requested"
       },
       "count_feasible_rolling_origin_windows": 7,
       "deep_probe": true,
       "environment_risk": "low",
       "estimated_candidate_volume": 361,
       "estimated_release_eligible_volume": 31,
-      "expected_evaluation_speed_class": "ideal",
+      "expected_evaluation_speed_class": "environment_failed_or_unusable",
       "expected_paid_baseline_discovery_cells": 124,
       "head_short": "89fae83",
       "historical_reference_probe": {
-        "mode": "not_run",
+        "dominant_failure_labels": {
+          "pytest_usage_or_no_tests": 1
+        },
+        "mode": "target_commit_changed_tests_reference_probe",
         "pass_count": 0,
-        "results": [],
-        "sample_size": 0
+        "results": [
+          {
+            "command_shape": [
+              "uv",
+              "run",
+              "--no-project",
+              "--with",
+              "pytest>=8,<10",
+              "--with",
+              ".",
+              "--",
+              "python",
+              "-m",
+              "pytest",
+              "<targeted_test_paths>",
+              "-q"
+            ],
+            "commit": "44ac46114603",
+            "duration_seconds": 0.638,
+            "label": "historical_reference_44ac46114603",
+            "returncode": 4,
+            "status": "failed",
+            "stderr_line_count": 7,
+            "stderr_tail_hash": "sha256:0a1962f18e275740024954c2040df65a4219554199d676fcb90ba30b35091827",
+            "stdout_line_count": 0,
+            "stdout_tail_hash": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "test_path_count": 1,
+            "timed_out": false
+          }
+        ],
+        "sample_size": 1
       },
       "history_date_span": {
         "first_commit": "2015-01-27T17:53:17+01:00",
@@ -2636,14 +3891,41 @@
         "high": 55.8,
         "low": 24.8
       },
-      "setup_test_smoke": [],
+      "setup_test_smoke": [
+        {
+          "command_shape": [
+            "uv",
+            "run",
+            "--no-project",
+            "--with",
+            "pytest>=8,<10",
+            "--with",
+            ".",
+            "--",
+            "python",
+            "-m",
+            "pytest",
+            "<targeted_test_paths>",
+            "-q"
+          ],
+          "duration_seconds": 0.114,
+          "label": "attrs_funcs_validators",
+          "returncode": 4,
+          "status": "failed",
+          "stderr_line_count": 4,
+          "stderr_tail_hash": "sha256:5e41ac219da4aa83e31a4fe2599144ca1efd5394739f73a82621324a35ab40a5",
+          "stdout_line_count": 0,
+          "stdout_tail_hash": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "timed_out": false
+        }
+      ],
       "source_context_availability": "strong_pr_or_issue_title_context",
       "targeted_verifier_timing": {
-        "median_seconds": null,
-        "p95_seconds": null,
+        "median_seconds": 0.114,
+        "p95_seconds": 0.114,
         "pass_count": 0,
-        "sample_count": 0,
-        "speed_class": "not_measured"
+        "sample_count": 1,
+        "speed_class": "environment_failed_or_unusable"
       },
       "test_change_count": 438,
       "time_bucket_distribution": {
@@ -2655,7 +3937,7 @@
       "total_commits": 1786,
       "total_commits_scanned": 1786,
       "track": "baseline",
-      "visible_setup_smoke_status": "not_run"
+      "visible_setup_smoke_status": "failed"
     },
     {
       "bounded_certification_sample": {
@@ -2667,24 +3949,54 @@
       "changed_test_oracle_availability": "changed_tests_available",
       "changed_test_oracle_availability_count": 63,
       "checkout_status": "clean",
-      "classification": "screened_out",
+      "classification": "fast_but_underpowered",
       "clone_status": {
         "local_path": "experiments/phase0_headroom/external_repos/click",
-        "status": "already_present"
+        "status": "not_requested"
       },
       "count_feasible_rolling_origin_windows": 3,
       "deep_probe": true,
       "environment_risk": "low",
       "estimated_candidate_volume": 420,
       "estimated_release_eligible_volume": 30,
-      "expected_evaluation_speed_class": "ideal",
+      "expected_evaluation_speed_class": "ideal_under_60s",
       "expected_paid_baseline_discovery_cells": 120,
       "head_short": "8a1b1a3",
       "historical_reference_probe": {
-        "mode": "not_run",
-        "pass_count": 0,
-        "results": [],
-        "sample_size": 0
+        "dominant_failure_labels": {},
+        "mode": "target_commit_changed_tests_reference_probe",
+        "pass_count": 1,
+        "results": [
+          {
+            "command_shape": [
+              "uv",
+              "run",
+              "--no-project",
+              "--with",
+              "pytest>=8,<10",
+              "--with",
+              ".",
+              "--",
+              "python",
+              "-m",
+              "pytest",
+              "<targeted_test_paths>",
+              "-q"
+            ],
+            "commit": "8c842a43e884",
+            "duration_seconds": 0.463,
+            "label": "historical_reference_8c842a43e884",
+            "returncode": 0,
+            "status": "passed",
+            "stderr_line_count": 3,
+            "stderr_tail_hash": "sha256:7d17810dd20cb3457425a8dce29cf4f2dc7f0752884075c45ef588ae786a34aa",
+            "stdout_line_count": 2,
+            "stdout_tail_hash": "sha256:316dff144480d3c5409a169f48f63aa01e669b719f39ad1359bc50fef2f9b4e8",
+            "test_path_count": 1,
+            "timed_out": false
+          }
+        ],
+        "sample_size": 1
       },
       "history_date_span": {
         "first_commit": "2014-04-24T11:51:55+02:00",
@@ -2713,7 +4025,7 @@
       },
       "projected_certified_task_count_after_bounded_repair": 30,
       "projected_evidence_backed_rolling_origin_windows": 0,
-      "reason_to_deep_probe_or_reject": "screened out by capacity, checkout, or source/oracle availability",
+      "reason_to_deep_probe_or_reject": "keep only as backup or small pilot; capacity below rolling-origin threshold",
       "repo_id": "click",
       "repo_url": "https://github.com/pallets/click.git",
       "rolling_origin_windows_raw": [
@@ -2802,14 +4114,41 @@
         "high": 54.0,
         "low": 24.0
       },
-      "setup_test_smoke": [],
+      "setup_test_smoke": [
+        {
+          "command_shape": [
+            "uv",
+            "run",
+            "--no-project",
+            "--with",
+            "pytest>=8,<10",
+            "--with",
+            ".",
+            "--",
+            "python",
+            "-m",
+            "pytest",
+            "<targeted_test_paths>",
+            "-q"
+          ],
+          "duration_seconds": 0.426,
+          "label": "click_basic_options",
+          "returncode": 0,
+          "status": "passed",
+          "stderr_line_count": 0,
+          "stderr_tail_hash": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "stdout_line_count": 12,
+          "stdout_tail_hash": "sha256:15ae6d73b26b541be55ca1edf591f258a3286afd667903308427be7bb4f22c1c",
+          "timed_out": false
+        }
+      ],
       "source_context_availability": "adequate_pr_or_issue_title_context",
       "targeted_verifier_timing": {
-        "median_seconds": null,
-        "p95_seconds": null,
-        "pass_count": 0,
-        "sample_count": 0,
-        "speed_class": "not_measured"
+        "median_seconds": 0.426,
+        "p95_seconds": 0.426,
+        "pass_count": 1,
+        "sample_count": 1,
+        "speed_class": "ideal_under_60s"
       },
       "test_change_count": 531,
       "time_bucket_distribution": {
@@ -2821,7 +4160,7 @@
       "total_commits": 3242,
       "total_commits_scanned": 3242,
       "track": "baseline",
-      "visible_setup_smoke_status": "not_run"
+      "visible_setup_smoke_status": "passed"
     },
     {
       "bounded_certification_sample": {
@@ -2836,21 +4175,53 @@
       "classification": "screened_out",
       "clone_status": {
         "local_path": "experiments/phase0_headroom/external_repos/packaging",
-        "status": "already_present"
+        "status": "not_requested"
       },
       "count_feasible_rolling_origin_windows": 4,
       "deep_probe": true,
       "environment_risk": "low",
       "estimated_candidate_volume": 248,
-      "estimated_release_eligible_volume": 27,
-      "expected_evaluation_speed_class": "ideal",
+      "estimated_release_eligible_volume": 0,
+      "expected_evaluation_speed_class": "environment_failed_or_unusable",
       "expected_paid_baseline_discovery_cells": 0,
       "head_short": "664f049",
       "historical_reference_probe": {
-        "mode": "not_run",
+        "dominant_failure_labels": {
+          "pytest_collect_or_usage_failure": 1
+        },
+        "mode": "target_commit_changed_tests_reference_probe",
         "pass_count": 0,
-        "results": [],
-        "sample_size": 0
+        "results": [
+          {
+            "command_shape": [
+              "uv",
+              "run",
+              "--no-project",
+              "--with",
+              "pytest>=8,<10",
+              "--with",
+              ".",
+              "--",
+              "python",
+              "-m",
+              "pytest",
+              "<targeted_test_paths>",
+              "-q"
+            ],
+            "commit": "2f8fe4c5f2c5",
+            "duration_seconds": 0.488,
+            "label": "historical_reference_2f8fe4c5f2c5",
+            "returncode": 2,
+            "status": "failed",
+            "stderr_line_count": 3,
+            "stderr_tail_hash": "sha256:dab3b82b445d394fd0a970091014219f98ba36095aba347d86586b972b3ec020",
+            "stdout_line_count": 16,
+            "stdout_tail_hash": "sha256:7dbf3e4d239dbd6df354a8db2593c5c513546cdc848be70f14addc5431d5c134",
+            "test_path_count": 2,
+            "timed_out": false
+          }
+        ],
+        "sample_size": 1
       },
       "history_date_span": {
         "first_commit": "2014-05-15T18:57:57-04:00",
@@ -2873,7 +4244,7 @@
         "prior_source": "phase1_third_repo_release_supply_screen",
         "prior_technical_plus_review_upper_bound": 181
       },
-      "projected_certified_task_count_after_bounded_repair": 27,
+      "projected_certified_task_count_after_bounded_repair": 0,
       "projected_evidence_backed_rolling_origin_windows": 0,
       "reason_to_deep_probe_or_reject": "screened out by capacity, checkout, or source/oracle availability",
       "repo_id": "packaging",
@@ -2970,14 +4341,41 @@
         "high": 0.0,
         "low": 0.0
       },
-      "setup_test_smoke": [],
+      "setup_test_smoke": [
+        {
+          "command_shape": [
+            "uv",
+            "run",
+            "--no-project",
+            "--with",
+            "pytest>=8,<10",
+            "--with",
+            ".",
+            "--",
+            "python",
+            "-m",
+            "pytest",
+            "<targeted_test_paths>",
+            "-q"
+          ],
+          "duration_seconds": 0.275,
+          "label": "packaging_version_markers",
+          "returncode": 2,
+          "status": "failed",
+          "stderr_line_count": 0,
+          "stderr_tail_hash": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "stdout_line_count": 16,
+          "stdout_tail_hash": "sha256:9bad19cb0a627768847ffd0bb295c637c7964ccf4a56806338cc8f2e3ca446db",
+          "timed_out": false
+        }
+      ],
       "source_context_availability": "strong_pr_or_issue_title_context",
       "targeted_verifier_timing": {
-        "median_seconds": null,
-        "p95_seconds": null,
+        "median_seconds": 0.275,
+        "p95_seconds": 0.275,
         "pass_count": 0,
-        "sample_count": 0,
-        "speed_class": "not_measured"
+        "sample_count": 1,
+        "speed_class": "environment_failed_or_unusable"
       },
       "test_change_count": 283,
       "time_bucket_distribution": {
@@ -2989,7 +4387,7 @@
       "total_commits": 1032,
       "total_commits_scanned": 1032,
       "track": "baseline",
-      "visible_setup_smoke_status": "not_run"
+      "visible_setup_smoke_status": "failed"
     },
     {
       "bounded_certification_sample": {
@@ -3001,30 +4399,56 @@
       "changed_test_oracle_availability": "changed_tests_available",
       "changed_test_oracle_availability_count": 1717,
       "checkout_status": "clean",
-      "classification": "capacity_promising_but_speed_unproven",
+      "classification": "large_but_heavy",
       "clone_status": {
-        "duration_seconds": 16.98,
         "local_path": "experiments/phase0_headroom/external_repos/django",
-        "returncode": 0,
-        "status": "cloned",
-        "stderr_line_count": 104,
-        "stderr_tail_hash": "sha256:932d2b0bbd43bc56c96d3b74eb584526e14aedc41579bce7c15062ee3a79ec43",
-        "stdout_tail_hash": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
-        "timed_out": false
+        "status": "not_requested"
       },
       "count_feasible_rolling_origin_windows": 4,
       "deep_probe": true,
       "environment_risk": "medium_database_and_settings_matrix",
       "estimated_candidate_volume": 1888,
-      "estimated_release_eligible_volume": 258,
-      "expected_evaluation_speed_class": "acceptable",
-      "expected_paid_baseline_discovery_cells": 360,
+      "estimated_release_eligible_volume": 86,
+      "expected_evaluation_speed_class": "environment_failed_or_unusable",
+      "expected_paid_baseline_discovery_cells": 344,
       "head_short": "f1440a752e",
       "historical_reference_probe": {
-        "mode": "not_run",
+        "dominant_failure_labels": {
+          "pytest_collect_or_usage_failure": 1
+        },
+        "mode": "target_commit_changed_tests_reference_probe",
         "pass_count": 0,
-        "results": [],
-        "sample_size": 0
+        "results": [
+          {
+            "command_shape": [
+              "uv",
+              "run",
+              "--no-project",
+              "--with",
+              "pytest>=8,<10",
+              "--with",
+              ".",
+              "--",
+              "python",
+              "-m",
+              "pytest",
+              "<targeted_test_paths>",
+              "-q"
+            ],
+            "commit": "4f2ae0644de3",
+            "duration_seconds": 4.408,
+            "label": "historical_reference_4f2ae0644de3",
+            "returncode": 2,
+            "status": "failed",
+            "stderr_line_count": 3,
+            "stderr_tail_hash": "sha256:88caefc616b2db54841cb6b99edaa70baec296bc356c81e3f544e8d2de0a2639",
+            "stdout_line_count": 89,
+            "stdout_tail_hash": "sha256:16be5902aec2a749187cbbcc7f41bf9069b023fef3009def178551d33b86ea21",
+            "test_path_count": 2,
+            "timed_out": false
+          }
+        ],
+        "sample_size": 1
       },
       "history_date_span": {
         "first_commit": "2005-07-13T16:56:05Z",
@@ -3040,7 +4464,7 @@
       "prior_evidence": {},
       "projected_certified_task_count_after_bounded_repair": 258,
       "projected_evidence_backed_rolling_origin_windows": 3,
-      "reason_to_deep_probe_or_reject": "run targeted verifier smoke before any recommendation",
+      "reason_to_deep_probe_or_reject": "reject for mainline today unless environment repair can make targeted verification fast and stable",
       "repo_id": "django",
       "repo_url": "https://github.com/django/django.git",
       "rolling_origin_windows_raw": [
@@ -3096,17 +4520,70 @@
         }
       ],
       "rough_paid_baseline_cost_usd_range": {
-        "high": 162.0,
-        "low": 72.0
+        "high": 154.8,
+        "low": 68.8
       },
-      "setup_test_smoke": [],
+      "setup_test_smoke": [
+        {
+          "command_shape": [
+            "uv",
+            "run",
+            "--no-project",
+            "--with",
+            "pytest>=8,<10",
+            "--with",
+            ".",
+            "--",
+            "python",
+            "-m",
+            "pytest",
+            "<targeted_test_paths>",
+            "-q"
+          ],
+          "duration_seconds": 0.015,
+          "label": "django_utils_datastructures",
+          "returncode": 1,
+          "status": "failed",
+          "stderr_line_count": 7,
+          "stderr_tail_hash": "sha256:375cb0cba53138400e36b17aba71eb68a15a539f8771c9fb244f9d52a085d028",
+          "stdout_line_count": 0,
+          "stdout_tail_hash": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "timed_out": false
+        },
+        {
+          "command_shape": [
+            "uv",
+            "run",
+            "--no-project",
+            "--with",
+            "pytest>=8,<10",
+            "--with",
+            ".",
+            "--",
+            "python",
+            "-m",
+            "pytest",
+            "<targeted_test_paths>",
+            "-q"
+          ],
+          "duration_seconds": 0.013,
+          "label": "django_forms_fields",
+          "returncode": 1,
+          "status": "failed",
+          "stderr_line_count": 7,
+          "stderr_tail_hash": "sha256:375cb0cba53138400e36b17aba71eb68a15a539f8771c9fb244f9d52a085d028",
+          "stdout_line_count": 0,
+          "stdout_tail_hash": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "timed_out": false
+        }
+      ],
       "source_context_availability": "strong_pr_or_issue_title_context",
       "targeted_verifier_timing": {
-        "median_seconds": null,
-        "p95_seconds": null,
+        "median_seconds": 0.014,
+        "p95_seconds": 0.015,
         "pass_count": 0,
-        "sample_count": 0,
-        "speed_class": "not_measured"
+        "sample_count": 2,
+        "speed_class": "environment_failed_or_unusable"
       },
       "test_change_count": 2736,
       "time_bucket_distribution": {
@@ -3117,7 +4594,7 @@
       "total_commits": 34691,
       "total_commits_scanned": 5000,
       "track": "large_heavy",
-      "visible_setup_smoke_status": "not_run"
+      "visible_setup_smoke_status": "failed"
     },
     {
       "bounded_certification_sample": {
@@ -3132,24 +4609,56 @@
       "changed_test_oracle_availability": "changed_tests_available",
       "changed_test_oracle_availability_count": 25,
       "checkout_status": "clean",
-      "classification": "screened_out",
+      "classification": "fast_but_underpowered",
       "clone_status": {
         "local_path": "experiments/phase0_headroom/external_repos/sqlalchemy",
-        "status": "already_present"
+        "status": "not_requested"
       },
       "count_feasible_rolling_origin_windows": 0,
       "deep_probe": true,
       "environment_risk": "medium_database_backend_matrix",
       "estimated_candidate_volume": 1604,
-      "estimated_release_eligible_volume": 4,
-      "expected_evaluation_speed_class": "acceptable",
+      "estimated_release_eligible_volume": 7,
+      "expected_evaluation_speed_class": "ideal_under_60s",
       "expected_paid_baseline_discovery_cells": 0,
       "head_short": "bfe559a7e",
       "historical_reference_probe": {
-        "mode": "not_run",
+        "dominant_failure_labels": {
+          "pytest_collect_or_usage_failure": 1
+        },
+        "mode": "target_commit_changed_tests_reference_probe",
         "pass_count": 0,
-        "results": [],
-        "sample_size": 0
+        "results": [
+          {
+            "command_shape": [
+              "uv",
+              "run",
+              "--no-project",
+              "--with",
+              "pytest>=8,<10",
+              "--with",
+              ".",
+              "--",
+              "python",
+              "-m",
+              "pytest",
+              "<targeted_test_paths>",
+              "-q"
+            ],
+            "commit": "e4fa1745839c",
+            "duration_seconds": 50.832,
+            "label": "historical_reference_e4fa1745839c",
+            "returncode": 2,
+            "status": "failed",
+            "stderr_line_count": 8,
+            "stderr_tail_hash": "sha256:386eede86ce4c543a1ef5abb98dee9fa52d2a5d68636a6aa05f88fa5ee0c77d2",
+            "stdout_line_count": 0,
+            "stdout_tail_hash": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "test_path_count": 1,
+            "timed_out": false
+          }
+        ],
+        "sample_size": 1
       },
       "history_date_span": {
         "first_commit": "2005-07-01T02:25:16Z",
@@ -3163,9 +4672,9 @@
       "likely_verifier_command": "python -m pytest <sqlalchemy non-db or sqlite shard> -q",
       "local_path": "experiments/phase0_headroom/external_repos/sqlalchemy",
       "prior_evidence": {},
-      "projected_certified_task_count_after_bounded_repair": 4,
+      "projected_certified_task_count_after_bounded_repair": 7,
       "projected_evidence_backed_rolling_origin_windows": 0,
-      "reason_to_deep_probe_or_reject": "screened out by capacity, checkout, or source/oracle availability",
+      "reason_to_deep_probe_or_reject": "keep only as backup or small pilot; capacity below rolling-origin threshold",
       "repo_id": "sqlalchemy",
       "repo_url": "https://github.com/sqlalchemy/sqlalchemy.git",
       "rolling_origin_windows_raw": [
@@ -3199,14 +4708,67 @@
         "high": 0.0,
         "low": 0.0
       },
-      "setup_test_smoke": [],
+      "setup_test_smoke": [
+        {
+          "command_shape": [
+            "uv",
+            "run",
+            "--no-project",
+            "--with",
+            "pytest>=8,<10",
+            "--with",
+            ".",
+            "--",
+            "python",
+            "-m",
+            "pytest",
+            "<targeted_test_paths>",
+            "-q"
+          ],
+          "duration_seconds": 0.73,
+          "label": "sqlalchemy_sql_selectable",
+          "returncode": 0,
+          "status": "passed",
+          "stderr_line_count": 0,
+          "stderr_tail_hash": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "stdout_line_count": 17,
+          "stdout_tail_hash": "sha256:6d3626da7276c53ffc7973b6d95b11455ee321c2f48c3ac84d365589f6fb929d",
+          "timed_out": false
+        },
+        {
+          "command_shape": [
+            "uv",
+            "run",
+            "--no-project",
+            "--with",
+            "pytest>=8,<10",
+            "--with",
+            ".",
+            "--",
+            "python",
+            "-m",
+            "pytest",
+            "<targeted_test_paths>",
+            "-q"
+          ],
+          "duration_seconds": 1.195,
+          "label": "sqlalchemy_orm_session",
+          "returncode": 0,
+          "status": "passed",
+          "stderr_line_count": 0,
+          "stderr_tail_hash": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "stdout_line_count": 24,
+          "stdout_tail_hash": "sha256:2d604e845ca5d1ecd7877dccd37ef7fd9f4fde25019a3def2c71a875d4ef4446",
+          "timed_out": false
+        }
+      ],
       "source_context_availability": "thin_but_usable_pr_or_issue_title_context",
       "targeted_verifier_timing": {
-        "median_seconds": null,
-        "p95_seconds": null,
-        "pass_count": 0,
-        "sample_count": 0,
-        "speed_class": "not_measured"
+        "median_seconds": 0.963,
+        "p95_seconds": 1.172,
+        "pass_count": 2,
+        "sample_count": 2,
+        "speed_class": "ideal_under_60s"
       },
       "test_change_count": 1868,
       "time_bucket_distribution": {
@@ -3217,7 +4779,7 @@
       "total_commits": 18107,
       "total_commits_scanned": 5000,
       "track": "large_heavy",
-      "visible_setup_smoke_status": "not_run"
+      "visible_setup_smoke_status": "passed"
     },
     {
       "bounded_certification_sample": {
@@ -3232,21 +4794,53 @@
       "classification": "screened_out",
       "clone_status": {
         "local_path": "experiments/phase0_headroom/external_repos/sympy",
-        "status": "already_present"
+        "status": "not_requested"
       },
       "count_feasible_rolling_origin_windows": 0,
       "deep_probe": true,
       "environment_risk": "low_pure_python_but_large_suite",
       "estimated_candidate_volume": 911,
-      "estimated_release_eligible_volume": 6,
-      "expected_evaluation_speed_class": "acceptable",
+      "estimated_release_eligible_volume": 2,
+      "expected_evaluation_speed_class": "environment_failed_or_unusable",
       "expected_paid_baseline_discovery_cells": 0,
       "head_short": "e1cce7d2fd",
       "historical_reference_probe": {
-        "mode": "not_run",
+        "dominant_failure_labels": {
+          "pytest_usage_or_no_tests": 1
+        },
+        "mode": "target_commit_changed_tests_reference_probe",
         "pass_count": 0,
-        "results": [],
-        "sample_size": 0
+        "results": [
+          {
+            "command_shape": [
+              "uv",
+              "run",
+              "--no-project",
+              "--with",
+              "pytest>=8,<10",
+              "--with",
+              ".",
+              "--",
+              "python",
+              "-m",
+              "pytest",
+              "<targeted_test_paths>",
+              "-q"
+            ],
+            "commit": "5f8bf9bae0df",
+            "duration_seconds": 2.949,
+            "label": "historical_reference_5f8bf9bae0df",
+            "returncode": 4,
+            "status": "failed",
+            "stderr_line_count": 7,
+            "stderr_tail_hash": "sha256:0ac0be6acf958ac0266390e464d522b74d296e33aae6913b3cddc10afa764e31",
+            "stdout_line_count": 0,
+            "stdout_tail_hash": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "test_path_count": 1,
+            "timed_out": false
+          }
+        ],
+        "sample_size": 1
       },
       "history_date_span": {
         "first_commit": "2020-01-28T00:26:39+05:30",
@@ -3260,7 +4854,7 @@
       "likely_verifier_command": "python -m pytest <sympy test file> -q",
       "local_path": "experiments/phase0_headroom/external_repos/sympy",
       "prior_evidence": {},
-      "projected_certified_task_count_after_bounded_repair": 6,
+      "projected_certified_task_count_after_bounded_repair": 2,
       "projected_evidence_backed_rolling_origin_windows": 0,
       "reason_to_deep_probe_or_reject": "screened out by capacity, checkout, or source/oracle availability",
       "repo_id": "sympy",
@@ -3271,14 +4865,67 @@
         "high": 0.0,
         "low": 0.0
       },
-      "setup_test_smoke": [],
+      "setup_test_smoke": [
+        {
+          "command_shape": [
+            "uv",
+            "run",
+            "--no-project",
+            "--with",
+            "pytest>=8,<10",
+            "--with",
+            ".",
+            "--",
+            "python",
+            "-m",
+            "pytest",
+            "<targeted_test_paths>",
+            "-q"
+          ],
+          "duration_seconds": 10.463,
+          "label": "sympy_core_numbers",
+          "returncode": 4,
+          "status": "failed",
+          "stderr_line_count": 4,
+          "stderr_tail_hash": "sha256:e88bdd92f44d7cf1df5f8fe55b4fb9704439648a0162ce0cd0fa538a51b1fa10",
+          "stdout_line_count": 0,
+          "stdout_tail_hash": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "timed_out": false
+        },
+        {
+          "command_shape": [
+            "uv",
+            "run",
+            "--no-project",
+            "--with",
+            "pytest>=8,<10",
+            "--with",
+            ".",
+            "--",
+            "python",
+            "-m",
+            "pytest",
+            "<targeted_test_paths>",
+            "-q"
+          ],
+          "duration_seconds": 0.22,
+          "label": "sympy_matrices",
+          "returncode": 4,
+          "status": "failed",
+          "stderr_line_count": 4,
+          "stderr_tail_hash": "sha256:e88bdd92f44d7cf1df5f8fe55b4fb9704439648a0162ce0cd0fa538a51b1fa10",
+          "stdout_line_count": 0,
+          "stdout_tail_hash": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "timed_out": false
+        }
+      ],
       "source_context_availability": "thin_but_usable_pr_or_issue_title_context",
       "targeted_verifier_timing": {
-        "median_seconds": null,
-        "p95_seconds": null,
+        "median_seconds": 5.341,
+        "p95_seconds": 9.951,
         "pass_count": 0,
-        "sample_count": 0,
-        "speed_class": "not_measured"
+        "sample_count": 2,
+        "speed_class": "environment_failed_or_unusable"
       },
       "test_change_count": 1464,
       "time_bucket_distribution": {
@@ -3289,7 +4936,7 @@
       "total_commits": 62216,
       "total_commits_scanned": 5000,
       "track": "large_heavy",
-      "visible_setup_smoke_status": "not_run"
+      "visible_setup_smoke_status": "failed"
     },
     {
       "bounded_certification_sample": {
@@ -3307,21 +4954,51 @@
       "classification": "large_but_heavy",
       "clone_status": {
         "local_path": "experiments/phase0_headroom/external_repos/pandas",
-        "status": "already_present"
+        "status": "not_requested"
       },
       "count_feasible_rolling_origin_windows": 1,
       "deep_probe": true,
       "environment_risk": "high_compiled_extension_build",
       "estimated_candidate_volume": 1672,
       "estimated_release_eligible_volume": 84,
-      "expected_evaluation_speed_class": "risky",
+      "expected_evaluation_speed_class": "environment_failed_or_unusable",
       "expected_paid_baseline_discovery_cells": 336,
       "head_short": "aee9241b41",
       "historical_reference_probe": {
-        "mode": "not_run",
+        "dominant_failure_labels": {
+          "pytest_usage_or_no_tests": 1
+        },
+        "mode": "target_commit_changed_tests_reference_probe",
         "pass_count": 0,
-        "results": [],
-        "sample_size": 0
+        "results": [
+          {
+            "command_shape": [
+              "uv",
+              "run",
+              "--no-project",
+              "--with",
+              "pytest>=8,<10",
+              "--",
+              "python",
+              "-m",
+              "pytest",
+              "<targeted_test_paths>",
+              "-q"
+            ],
+            "commit": "c345ffd02e79",
+            "duration_seconds": 0.085,
+            "label": "historical_reference_c345ffd02e79",
+            "returncode": 4,
+            "status": "failed",
+            "stderr_line_count": 6,
+            "stderr_tail_hash": "sha256:3498b92eccf84bbaf3ed91527aa735e3c0061afd541c4bf77cafbf8c8317009b",
+            "stdout_line_count": 0,
+            "stdout_tail_hash": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "test_path_count": 1,
+            "timed_out": false
+          }
+        ],
+        "sample_size": 1
       },
       "history_date_span": {
         "first_commit": "2009-07-31T15:07:16Z",
@@ -3360,14 +5037,63 @@
         "high": 151.2,
         "low": 67.2
       },
-      "setup_test_smoke": [],
+      "setup_test_smoke": [
+        {
+          "command_shape": [
+            "uv",
+            "run",
+            "--no-project",
+            "--with",
+            "pytest>=8,<10",
+            "--",
+            "python",
+            "-m",
+            "pytest",
+            "<targeted_test_paths>",
+            "-q"
+          ],
+          "duration_seconds": 0.093,
+          "label": "pandas_series_constructors",
+          "returncode": 1,
+          "status": "failed",
+          "stderr_line_count": 79,
+          "stderr_tail_hash": "sha256:56392d8c6c7e6f05cead570815b7aa73ba606cb37f72c1ddd7c4fb6d87b2cfbc",
+          "stdout_line_count": 0,
+          "stdout_tail_hash": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "timed_out": false
+        },
+        {
+          "command_shape": [
+            "uv",
+            "run",
+            "--no-project",
+            "--with",
+            "pytest>=8,<10",
+            "--",
+            "python",
+            "-m",
+            "pytest",
+            "<targeted_test_paths>",
+            "-q"
+          ],
+          "duration_seconds": 0.077,
+          "label": "pandas_indexing",
+          "returncode": 1,
+          "status": "failed",
+          "stderr_line_count": 79,
+          "stderr_tail_hash": "sha256:56392d8c6c7e6f05cead570815b7aa73ba606cb37f72c1ddd7c4fb6d87b2cfbc",
+          "stdout_line_count": 0,
+          "stdout_tail_hash": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "timed_out": false
+        }
+      ],
       "source_context_availability": "strong_pr_or_issue_title_context",
       "targeted_verifier_timing": {
-        "median_seconds": null,
-        "p95_seconds": null,
+        "median_seconds": 0.085,
+        "p95_seconds": 0.092,
         "pass_count": 0,
-        "sample_count": 0,
-        "speed_class": "not_measured"
+        "sample_count": 2,
+        "speed_class": "environment_failed_or_unusable"
       },
       "test_change_count": 2365,
       "time_bucket_distribution": {
@@ -3377,7 +5103,7 @@
       "total_commits": 38107,
       "total_commits_scanned": 5000,
       "track": "large_heavy",
-      "visible_setup_smoke_status": "not_run"
+      "visible_setup_smoke_status": "failed"
     },
     {
       "bounded_certification_sample": {
@@ -3392,21 +5118,51 @@
       "classification": "large_but_heavy",
       "clone_status": {
         "local_path": "experiments/phase0_headroom/external_repos/scikit-learn",
-        "status": "already_present"
+        "status": "not_requested"
       },
       "count_feasible_rolling_origin_windows": 2,
       "deep_probe": true,
       "environment_risk": "high_compiled_extension_build",
       "estimated_candidate_volume": 1520,
       "estimated_release_eligible_volume": 76,
-      "expected_evaluation_speed_class": "risky",
+      "expected_evaluation_speed_class": "environment_failed_or_unusable",
       "expected_paid_baseline_discovery_cells": 304,
       "head_short": "d6a36523d",
       "historical_reference_probe": {
-        "mode": "not_run",
+        "dominant_failure_labels": {
+          "test_failure_or_environment_mismatch": 1
+        },
+        "mode": "target_commit_changed_tests_reference_probe",
         "pass_count": 0,
-        "results": [],
-        "sample_size": 0
+        "results": [
+          {
+            "command_shape": [
+              "uv",
+              "run",
+              "--no-project",
+              "--with",
+              "pytest>=8,<10",
+              "--",
+              "python",
+              "-m",
+              "pytest",
+              "<targeted_test_paths>",
+              "-q"
+            ],
+            "commit": "7f107e7efebd",
+            "duration_seconds": 0.08,
+            "label": "historical_reference_7f107e7efebd",
+            "returncode": 1,
+            "status": "failed",
+            "stderr_line_count": 95,
+            "stderr_tail_hash": "sha256:43fea7f9a77e0b9a1e30bb9c55386063c7cf87b56f5aa161fd410a0f7be52861",
+            "stdout_line_count": 0,
+            "stdout_tail_hash": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "test_path_count": 1,
+            "timed_out": false
+          }
+        ],
+        "sample_size": 1
       },
       "history_date_span": {
         "first_commit": "2011-03-06T14:46:50+01:00",
@@ -3457,14 +5213,39 @@
         "high": 136.8,
         "low": 60.8
       },
-      "setup_test_smoke": [],
+      "setup_test_smoke": [
+        {
+          "command_shape": [
+            "uv",
+            "run",
+            "--no-project",
+            "--with",
+            "pytest>=8,<10",
+            "--",
+            "python",
+            "-m",
+            "pytest",
+            "<targeted_test_paths>",
+            "-q"
+          ],
+          "duration_seconds": 0.084,
+          "label": "sklearn_validation",
+          "returncode": 4,
+          "status": "failed",
+          "stderr_line_count": 22,
+          "stderr_tail_hash": "sha256:a4f9020faa98530616e62c80a8ce17d42c1b125f2be6341964af8e36f46b3b62",
+          "stdout_line_count": 0,
+          "stdout_tail_hash": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "timed_out": false
+        }
+      ],
       "source_context_availability": "strong_pr_or_issue_title_context",
       "targeted_verifier_timing": {
-        "median_seconds": null,
-        "p95_seconds": null,
+        "median_seconds": 0.084,
+        "p95_seconds": 0.084,
         "pass_count": 0,
-        "sample_count": 0,
-        "speed_class": "not_measured"
+        "sample_count": 1,
+        "speed_class": "environment_failed_or_unusable"
       },
       "test_change_count": 1902,
       "time_bucket_distribution": {
@@ -3474,7 +5255,7 @@
       "total_commits": 33756,
       "total_commits_scanned": 5000,
       "track": "large_heavy",
-      "visible_setup_smoke_status": "not_run"
+      "visible_setup_smoke_status": "failed"
     },
     {
       "bounded_certification_sample": {
@@ -3491,21 +5272,53 @@
       "classification": "capacity_promising_but_speed_unproven",
       "clone_status": {
         "local_path": "experiments/phase0_headroom/external_repos/black",
-        "status": "already_present"
+        "status": "not_requested"
       },
       "count_feasible_rolling_origin_windows": 6,
       "deep_probe": true,
       "environment_risk": "low",
       "estimated_candidate_volume": 602,
       "estimated_release_eligible_volume": 73,
-      "expected_evaluation_speed_class": "ideal",
+      "expected_evaluation_speed_class": "partial_probe_failure",
       "expected_paid_baseline_discovery_cells": 292,
       "head_short": "6325332",
       "historical_reference_probe": {
-        "mode": "not_run",
+        "dominant_failure_labels": {
+          "failed": 1
+        },
+        "mode": "target_commit_changed_tests_reference_probe",
         "pass_count": 0,
-        "results": [],
-        "sample_size": 0
+        "results": [
+          {
+            "command_shape": [
+              "uv",
+              "run",
+              "--no-project",
+              "--with",
+              "pytest>=8,<10",
+              "--with",
+              ".",
+              "--",
+              "python",
+              "-m",
+              "pytest",
+              "<targeted_test_paths>",
+              "-q"
+            ],
+            "commit": "59acf8af38a7",
+            "duration_seconds": 5.345,
+            "label": "historical_reference_59acf8af38a7",
+            "returncode": 5,
+            "status": "failed",
+            "stderr_line_count": 3,
+            "stderr_tail_hash": "sha256:906fd618303e8b549838c760b7682aca24455af1463026b175debbe2e0c6aa94",
+            "stdout_line_count": 2,
+            "stdout_tail_hash": "sha256:fd637db4c244dc02ad65049d9f339eab9c30f1c02a401a04f6f729d811eaf002",
+            "test_path_count": 1,
+            "timed_out": false
+          }
+        ],
+        "sample_size": 1
       },
       "history_date_span": {
         "first_commit": "2018-03-14T12:55:32-07:00",
@@ -3604,14 +5417,67 @@
         "high": 131.4,
         "low": 58.4
       },
-      "setup_test_smoke": [],
+      "setup_test_smoke": [
+        {
+          "command_shape": [
+            "uv",
+            "run",
+            "--no-project",
+            "--with",
+            "pytest>=8,<10",
+            "--with",
+            ".",
+            "--",
+            "python",
+            "-m",
+            "pytest",
+            "<targeted_test_paths>",
+            "-q"
+          ],
+          "duration_seconds": 16.768,
+          "label": "black_format",
+          "returncode": 0,
+          "status": "passed",
+          "stderr_line_count": 0,
+          "stderr_tail_hash": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "stdout_line_count": 5,
+          "stdout_tail_hash": "sha256:32485b32bf5a135a73fe765e3b39204da3850fbfe417bdeb19c874413e51e964",
+          "timed_out": false
+        },
+        {
+          "command_shape": [
+            "uv",
+            "run",
+            "--no-project",
+            "--with",
+            "pytest>=8,<10",
+            "--with",
+            ".",
+            "--",
+            "python",
+            "-m",
+            "pytest",
+            "<targeted_test_paths>",
+            "-q"
+          ],
+          "duration_seconds": 2.676,
+          "label": "black_black",
+          "returncode": 1,
+          "status": "failed",
+          "stderr_line_count": 0,
+          "stderr_tail_hash": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "stdout_line_count": 53,
+          "stdout_tail_hash": "sha256:ab5ac758ce773f7df41501479d109d783153cfd32c7cc686f9ee82fbbd1742ca",
+          "timed_out": false
+        }
+      ],
       "source_context_availability": "strong_pr_or_issue_title_context",
       "targeted_verifier_timing": {
-        "median_seconds": null,
-        "p95_seconds": null,
-        "pass_count": 0,
-        "sample_count": 0,
-        "speed_class": "not_measured"
+        "median_seconds": 9.722,
+        "p95_seconds": 16.063,
+        "pass_count": 1,
+        "sample_count": 2,
+        "speed_class": "partial_probe_failure"
       },
       "test_change_count": 719,
       "time_bucket_distribution": {
@@ -3622,7 +5488,7 @@
       "total_commits": 2241,
       "total_commits_scanned": 2241,
       "track": "medium_large_fast",
-      "visible_setup_smoke_status": "not_run"
+      "visible_setup_smoke_status": "partial_failed"
     },
     {
       "bounded_certification_sample": {
@@ -3634,24 +5500,56 @@
       "changed_test_oracle_availability": "changed_tests_available",
       "changed_test_oracle_availability_count": 398,
       "checkout_status": "clean",
-      "classification": "capacity_promising_but_speed_unproven",
+      "classification": "screened_out",
       "clone_status": {
         "local_path": "experiments/phase0_headroom/external_repos/httpx",
-        "status": "already_present"
+        "status": "not_requested"
       },
       "count_feasible_rolling_origin_windows": 3,
       "deep_probe": true,
       "environment_risk": "low_to_medium_network_mocking",
       "estimated_candidate_volume": 474,
-      "estimated_release_eligible_volume": 60,
-      "expected_evaluation_speed_class": "ideal",
-      "expected_paid_baseline_discovery_cells": 240,
+      "estimated_release_eligible_volume": 20,
+      "expected_evaluation_speed_class": "environment_failed_or_unusable",
+      "expected_paid_baseline_discovery_cells": 0,
       "head_short": "b5addb6",
       "historical_reference_probe": {
-        "mode": "not_run",
+        "dominant_failure_labels": {
+          "pytest_usage_or_no_tests": 1
+        },
+        "mode": "target_commit_changed_tests_reference_probe",
         "pass_count": 0,
-        "results": [],
-        "sample_size": 0
+        "results": [
+          {
+            "command_shape": [
+              "uv",
+              "run",
+              "--no-project",
+              "--with",
+              "pytest>=8,<10",
+              "--with",
+              ".",
+              "--",
+              "python",
+              "-m",
+              "pytest",
+              "<targeted_test_paths>",
+              "-q"
+            ],
+            "commit": "926a55a84f0a",
+            "duration_seconds": 0.639,
+            "label": "historical_reference_926a55a84f0a",
+            "returncode": 4,
+            "status": "failed",
+            "stderr_line_count": 7,
+            "stderr_tail_hash": "sha256:097a8c0b6a0f35e82efbc5b47c9301cc2544314b6aaf9284ed82ddf5168d9caf",
+            "stdout_line_count": 0,
+            "stdout_tail_hash": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "test_path_count": 1,
+            "timed_out": false
+          }
+        ],
+        "sample_size": 1
       },
       "history_date_span": {
         "first_commit": "2019-04-04T13:27:55+01:00",
@@ -3665,9 +5563,9 @@
       "likely_verifier_command": "python -m pytest <httpx mocked client test> -q",
       "local_path": "experiments/phase0_headroom/external_repos/httpx",
       "prior_evidence": {},
-      "projected_certified_task_count_after_bounded_repair": 60,
-      "projected_evidence_backed_rolling_origin_windows": 2,
-      "reason_to_deep_probe_or_reject": "run targeted verifier smoke before any recommendation",
+      "projected_certified_task_count_after_bounded_repair": 20,
+      "projected_evidence_backed_rolling_origin_windows": 0,
+      "reason_to_deep_probe_or_reject": "screened out by capacity, checkout, or source/oracle availability",
       "repo_id": "httpx",
       "repo_url": "https://github.com/encode/httpx.git",
       "rolling_origin_windows_raw": [
@@ -3711,17 +5609,70 @@
         }
       ],
       "rough_paid_baseline_cost_usd_range": {
-        "high": 108.0,
-        "low": 48.0
+        "high": 0.0,
+        "low": 0.0
       },
-      "setup_test_smoke": [],
+      "setup_test_smoke": [
+        {
+          "command_shape": [
+            "uv",
+            "run",
+            "--no-project",
+            "--with",
+            "pytest>=8,<10",
+            "--with",
+            ".",
+            "--",
+            "python",
+            "-m",
+            "pytest",
+            "<targeted_test_paths>",
+            "-q"
+          ],
+          "duration_seconds": 4.197,
+          "label": "httpx_client",
+          "returncode": 1,
+          "status": "failed",
+          "stderr_line_count": 70,
+          "stderr_tail_hash": "sha256:d113c4942f6921c7b0530f223f48c771052cfb0f6145612241d7e606b959f3d0",
+          "stdout_line_count": 0,
+          "stdout_tail_hash": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "timed_out": false
+        },
+        {
+          "command_shape": [
+            "uv",
+            "run",
+            "--no-project",
+            "--with",
+            "pytest>=8,<10",
+            "--with",
+            ".",
+            "--",
+            "python",
+            "-m",
+            "pytest",
+            "<targeted_test_paths>",
+            "-q"
+          ],
+          "duration_seconds": 0.113,
+          "label": "httpx_models",
+          "returncode": 1,
+          "status": "failed",
+          "stderr_line_count": 70,
+          "stderr_tail_hash": "sha256:d113c4942f6921c7b0530f223f48c771052cfb0f6145612241d7e606b959f3d0",
+          "stdout_line_count": 0,
+          "stdout_tail_hash": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "timed_out": false
+        }
+      ],
       "source_context_availability": "strong_pr_or_issue_title_context",
       "targeted_verifier_timing": {
-        "median_seconds": null,
-        "p95_seconds": null,
+        "median_seconds": 2.155,
+        "p95_seconds": 3.993,
         "pass_count": 0,
-        "sample_count": 0,
-        "speed_class": "not_measured"
+        "sample_count": 2,
+        "speed_class": "environment_failed_or_unusable"
       },
       "test_change_count": 576,
       "time_bucket_distribution": {
@@ -3732,7 +5683,7 @@
       "total_commits": 1523,
       "total_commits_scanned": 1523,
       "track": "medium_large_fast",
-      "visible_setup_smoke_status": "not_run"
+      "visible_setup_smoke_status": "failed"
     },
     {
       "bounded_certification_sample": {
@@ -3747,21 +5698,55 @@
       "classification": "screened_out",
       "clone_status": {
         "local_path": "experiments/phase0_headroom/external_repos/starlette",
-        "status": "already_present"
+        "status": "not_requested"
       },
       "count_feasible_rolling_origin_windows": 6,
       "deep_probe": true,
       "environment_risk": "low_to_medium_async_http_stack",
       "estimated_candidate_volume": 435,
       "estimated_release_eligible_volume": 57,
-      "expected_evaluation_speed_class": "ideal",
+      "expected_evaluation_speed_class": "partial_probe_failure",
       "expected_paid_baseline_discovery_cells": 228,
       "head_short": "8ebffd0",
       "historical_reference_probe": {
-        "mode": "not_run",
+        "dominant_failure_labels": {
+          "pytest_usage_or_no_tests": 1
+        },
+        "mode": "target_commit_changed_tests_reference_probe",
         "pass_count": 0,
-        "results": [],
-        "sample_size": 0
+        "results": [
+          {
+            "command_shape": [
+              "uv",
+              "run",
+              "--no-project",
+              "--with",
+              "pytest>=8,<10",
+              "--with",
+              "httpx2",
+              "--with",
+              ".",
+              "--",
+              "python",
+              "-m",
+              "pytest",
+              "<targeted_test_paths>",
+              "-q"
+            ],
+            "commit": "79812bb22058",
+            "duration_seconds": 5.751,
+            "label": "historical_reference_79812bb22058",
+            "returncode": 4,
+            "status": "failed",
+            "stderr_line_count": 9,
+            "stderr_tail_hash": "sha256:4fc1dac0a6e6ef4214c5f2b825efab25bec7671bab5330aed5adaefbfade2703",
+            "stdout_line_count": 0,
+            "stdout_tail_hash": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "test_path_count": 2,
+            "timed_out": false
+          }
+        ],
+        "sample_size": 1
       },
       "history_date_span": {
         "first_commit": "2018-06-25T14:15:32+01:00",
@@ -3860,14 +5845,71 @@
         "high": 102.6,
         "low": 45.6
       },
-      "setup_test_smoke": [],
+      "setup_test_smoke": [
+        {
+          "command_shape": [
+            "uv",
+            "run",
+            "--no-project",
+            "--with",
+            "pytest>=8,<10",
+            "--with",
+            "httpx2",
+            "--with",
+            ".",
+            "--",
+            "python",
+            "-m",
+            "pytest",
+            "<targeted_test_paths>",
+            "-q"
+          ],
+          "duration_seconds": 1.769,
+          "label": "starlette_responses",
+          "returncode": 2,
+          "status": "failed",
+          "stderr_line_count": 1,
+          "stderr_tail_hash": "sha256:556d0398950a19292721dbdcb3dae60f3fd005f591c859ff80b0e6ccea18e469",
+          "stdout_line_count": 14,
+          "stdout_tail_hash": "sha256:f1fe5ea0b8d38565c6f9764804f0e5a05ab9a376b57e2f1a0d9356efbb8f36f6",
+          "timed_out": false
+        },
+        {
+          "command_shape": [
+            "uv",
+            "run",
+            "--no-project",
+            "--with",
+            "pytest>=8,<10",
+            "--with",
+            "httpx2",
+            "--with",
+            ".",
+            "--",
+            "python",
+            "-m",
+            "pytest",
+            "<targeted_test_paths>",
+            "-q"
+          ],
+          "duration_seconds": 0.256,
+          "label": "starlette_routing",
+          "returncode": 0,
+          "status": "passed",
+          "stderr_line_count": 0,
+          "stderr_tail_hash": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "stdout_line_count": 2,
+          "stdout_tail_hash": "sha256:da6b6af1ea78199e4ecec2b6e75675a2d8e9efb8d8cc9079b869d8118f645ca6",
+          "timed_out": false
+        }
+      ],
       "source_context_availability": "strong_pr_or_issue_title_context",
       "targeted_verifier_timing": {
-        "median_seconds": null,
-        "p95_seconds": null,
-        "pass_count": 0,
-        "sample_count": 0,
-        "speed_class": "not_measured"
+        "median_seconds": 1.012,
+        "p95_seconds": 1.693,
+        "pass_count": 1,
+        "sample_count": 2,
+        "speed_class": "partial_probe_failure"
       },
       "test_change_count": 531,
       "time_bucket_distribution": {
@@ -3878,83 +5920,475 @@
       "total_commits": 1653,
       "total_commits_scanned": 1653,
       "track": "medium_large_fast",
-      "visible_setup_smoke_status": "not_run"
+      "visible_setup_smoke_status": "partial_failed"
     },
     {
-      "changed_test_oracle_availability": "unknown",
-      "checkout_status": "history_read_failed",
+      "bounded_certification_sample": {
+        "dominant_failure_labels": {
+          "large_implementation_surface": 1
+        },
+        "mode": "bounded_task_shape_certification_not_paid_agent_replay",
+        "pass_count": 23,
+        "sample_size": 24
+      },
+      "changed_test_oracle_availability": "changed_tests_available",
+      "changed_test_oracle_availability_count": 220,
+      "checkout_status": "clean",
       "classification": "screened_out",
       "clone_status": {
         "local_path": "experiments/phase0_headroom/external_repos/anyio",
-        "status": "already_present"
+        "status": "not_requested"
       },
+      "count_feasible_rolling_origin_windows": 4,
       "deep_probe": true,
       "environment_risk": "low_to_medium_async_backend_matrix",
-      "history_error": "RuntimeError: fatal: unable to access 'https://github.com/agronholm/anyio.git/': LibreSSL SSL_connect: SSL_ERROR_SYSCALL in connection to github.com:443 \nfatal: could not fetch f5d45f048e1c078f0519a98eed593bdd6b48dfcd from promisor remote",
+      "estimated_candidate_volume": 394,
+      "estimated_release_eligible_volume": 11,
+      "expected_evaluation_speed_class": "environment_failed_or_unusable",
+      "expected_paid_baseline_discovery_cells": 0,
+      "head_short": "550b68e",
+      "historical_reference_probe": {
+        "dominant_failure_labels": {
+          "pytest_usage_or_no_tests": 1
+        },
+        "mode": "target_commit_changed_tests_reference_probe",
+        "pass_count": 0,
+        "results": [
+          {
+            "command_shape": [
+              "uv",
+              "run",
+              "--no-project",
+              "--with",
+              "pytest>=8,<10",
+              "--with",
+              ".",
+              "--",
+              "python",
+              "-m",
+              "pytest",
+              "<targeted_test_paths>",
+              "-q"
+            ],
+            "commit": "f1d077042e40",
+            "duration_seconds": 1.068,
+            "label": "historical_reference_f1d077042e40",
+            "returncode": 4,
+            "status": "failed",
+            "stderr_line_count": 7,
+            "stderr_tail_hash": "sha256:33c0e4f3f35724d117b32af042eddc689967c404de30ff5d193fa4392bab1ab3",
+            "stdout_line_count": 0,
+            "stdout_tail_hash": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "test_path_count": 1,
+            "timed_out": false
+          }
+        ],
+        "sample_size": 1
+      },
+      "history_date_span": {
+        "first_commit": "2018-09-08T16:52:44+03:00",
+        "latest_commit": "2026-06-15T09:14:08+03:00"
+      },
+      "history_scan_cap": 5000,
+      "history_scan_capped": false,
+      "history_scan_since": "2010-01-01",
+      "implementation_change_count": 680,
+      "implementation_plus_test_change_count": 394,
       "likely_verifier_command": "python -m pytest <anyio pytest shard> -q",
       "local_path": "experiments/phase0_headroom/external_repos/anyio",
       "prior_evidence": {},
-      "reason_to_deep_probe_or_reject": "history_read_failed",
+      "projected_certified_task_count_after_bounded_repair": 11,
+      "projected_evidence_backed_rolling_origin_windows": 0,
+      "reason_to_deep_probe_or_reject": "screened out by capacity, checkout, or source/oracle availability",
       "repo_id": "anyio",
       "repo_url": "https://github.com/agronholm/anyio.git",
-      "source_context_availability": "unknown",
-      "track": "medium_large_fast"
+      "rolling_origin_windows_raw": [
+        {
+          "dev_count": 95,
+          "future_count": 260,
+          "train_count": 39,
+          "window_id": "train_lt_2019_dev_2019_2020_future_gte_2021"
+        },
+        {
+          "dev_count": 138,
+          "future_count": 180,
+          "train_count": 76,
+          "window_id": "train_lt_2020_dev_2020_2021_future_gte_2022"
+        },
+        {
+          "dev_count": 110,
+          "future_count": 150,
+          "train_count": 134,
+          "window_id": "train_lt_2021_dev_2021_2022_future_gte_2023"
+        },
+        {
+          "dev_count": 65,
+          "future_count": 115,
+          "train_count": 214,
+          "window_id": "train_lt_2022_dev_2022_2023_future_gte_2024"
+        },
+        {
+          "dev_count": 76,
+          "future_count": 74,
+          "train_count": 244,
+          "window_id": "train_lt_2023_dev_2023_2024_future_gte_2025"
+        },
+        {
+          "dev_count": 86,
+          "future_count": 29,
+          "train_count": 279,
+          "window_id": "train_lt_2024_dev_2024_2025_future_gte_2026"
+        }
+      ],
+      "rolling_origin_windows_release_ready": [
+        {
+          "dev_count": 69,
+          "future_count": 133,
+          "train_count": 18,
+          "window_id": "train_lt_2021_dev_2021_2022_future_gte_2023"
+        },
+        {
+          "dev_count": 42,
+          "future_count": 105,
+          "train_count": 73,
+          "window_id": "train_lt_2022_dev_2022_2023_future_gte_2024"
+        },
+        {
+          "dev_count": 64,
+          "future_count": 69,
+          "train_count": 87,
+          "window_id": "train_lt_2023_dev_2023_2024_future_gte_2025"
+        },
+        {
+          "dev_count": 78,
+          "future_count": 27,
+          "train_count": 115,
+          "window_id": "train_lt_2024_dev_2024_2025_future_gte_2026"
+        }
+      ],
+      "rough_paid_baseline_cost_usd_range": {
+        "high": 0.0,
+        "low": 0.0
+      },
+      "setup_test_smoke": [
+        {
+          "command_shape": [
+            "uv",
+            "run",
+            "--no-project",
+            "--with",
+            "pytest>=8,<10",
+            "--with",
+            ".",
+            "--",
+            "python",
+            "-m",
+            "pytest",
+            "<targeted_test_paths>",
+            "-q"
+          ],
+          "duration_seconds": 0.137,
+          "label": "anyio_streams",
+          "returncode": 1,
+          "status": "failed",
+          "stderr_line_count": 51,
+          "stderr_tail_hash": "sha256:6195624a6785cdf0454746ed9774b15f034fefcde4dc529ca5b7fe846357b61e",
+          "stdout_line_count": 0,
+          "stdout_tail_hash": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "timed_out": false
+        },
+        {
+          "command_shape": [
+            "uv",
+            "run",
+            "--no-project",
+            "--with",
+            "pytest>=8,<10",
+            "--with",
+            ".",
+            "--",
+            "python",
+            "-m",
+            "pytest",
+            "<targeted_test_paths>",
+            "-q"
+          ],
+          "duration_seconds": 0.12,
+          "label": "anyio_tasks",
+          "returncode": 1,
+          "status": "failed",
+          "stderr_line_count": 51,
+          "stderr_tail_hash": "sha256:6195624a6785cdf0454746ed9774b15f034fefcde4dc529ca5b7fe846357b61e",
+          "stdout_line_count": 0,
+          "stdout_tail_hash": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "timed_out": false
+        }
+      ],
+      "source_context_availability": "strong_pr_or_issue_title_context",
+      "targeted_verifier_timing": {
+        "median_seconds": 0.129,
+        "p95_seconds": 0.136,
+        "pass_count": 0,
+        "sample_count": 2,
+        "speed_class": "environment_failed_or_unusable"
+      },
+      "test_change_count": 507,
+      "time_bucket_distribution": {
+        "2016_2019": 76,
+        "2020_2023": 203,
+        "2024_plus": 115
+      },
+      "total_commits": 1319,
+      "total_commits_scanned": 1319,
+      "track": "medium_large_fast",
+      "visible_setup_smoke_status": "failed"
+    },
+    {
+      "bounded_certification_sample": {
+        "dominant_failure_labels": {
+          "large_implementation_surface": 3
+        },
+        "mode": "bounded_task_shape_certification_not_paid_agent_replay",
+        "pass_count": 21,
+        "sample_size": 24
+      },
+      "changed_test_oracle_availability": "changed_tests_available",
+      "changed_test_oracle_availability_count": 514,
+      "checkout_status": "clean",
+      "classification": "balanced_target_prep_candidate",
+      "clone_status": {
+        "local_path": "experiments/phase0_headroom/external_repos/sphinx",
+        "status": "not_requested"
+      },
+      "count_feasible_rolling_origin_windows": 2,
+      "deep_probe": true,
+      "environment_risk": "medium_doc_build_fixture_matrix",
+      "estimated_candidate_volume": 804,
+      "estimated_release_eligible_volume": 157,
+      "expected_evaluation_speed_class": "ideal_under_60s",
+      "expected_paid_baseline_discovery_cells": 360,
+      "head_short": "581c0860d",
+      "historical_reference_probe": {
+        "dominant_failure_labels": {
+          "pytest_usage_or_no_tests": 1
+        },
+        "mode": "target_commit_changed_tests_reference_probe",
+        "pass_count": 0,
+        "results": [
+          {
+            "command_shape": [
+              "uv",
+              "run",
+              "--no-project",
+              "--with",
+              "pytest>=8,<10",
+              "--with",
+              ".",
+              "--",
+              "python",
+              "-m",
+              "pytest",
+              "<targeted_test_paths>",
+              "-q"
+            ],
+            "commit": "a66546895ed1",
+            "duration_seconds": 0.699,
+            "label": "historical_reference_a66546895ed1",
+            "returncode": 4,
+            "status": "failed",
+            "stderr_line_count": 9,
+            "stderr_tail_hash": "sha256:9e8399df7a4816c0f5335028e49ad3e7b06a775ddd9f23da3d046a72ca603f02",
+            "stdout_line_count": 0,
+            "stdout_tail_hash": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "test_path_count": 1,
+            "timed_out": false
+          }
+        ],
+        "sample_size": 1
+      },
+      "history_date_span": {
+        "first_commit": "2007-07-23T08:56:48Z",
+        "latest_commit": "2026-06-15T08:51:10+02:00"
+      },
+      "history_scan_cap": 5000,
+      "history_scan_capped": true,
+      "history_scan_since": "2010-01-01",
+      "implementation_change_count": 2217,
+      "implementation_plus_test_change_count": 804,
+      "likely_verifier_command": "python -m pytest <sphinx unit shard> -q",
+      "local_path": "experiments/phase0_headroom/external_repos/sphinx",
+      "prior_evidence": {},
+      "projected_certified_task_count_after_bounded_repair": 231,
+      "projected_evidence_backed_rolling_origin_windows": 2,
+      "reason_to_deep_probe_or_reject": "advance to no-paid target prep if stronger candidate does not beat it",
+      "repo_id": "sphinx",
+      "repo_url": "https://github.com/sphinx-doc/sphinx.git",
+      "rolling_origin_windows_raw": [
+        {
+          "dev_count": 266,
+          "future_count": 381,
+          "train_count": 157,
+          "window_id": "train_lt_2022_dev_2022_2023_future_gte_2024"
+        },
+        {
+          "dev_count": 323,
+          "future_count": 184,
+          "train_count": 297,
+          "window_id": "train_lt_2023_dev_2023_2024_future_gte_2025"
+        }
+      ],
+      "rolling_origin_windows_release_ready": [
+        {
+          "dev_count": 147,
+          "future_count": 302,
+          "train_count": 65,
+          "window_id": "train_lt_2022_dev_2022_2023_future_gte_2024"
+        },
+        {
+          "dev_count": 230,
+          "future_count": 154,
+          "train_count": 130,
+          "window_id": "train_lt_2023_dev_2023_2024_future_gte_2025"
+        }
+      ],
+      "rough_paid_baseline_cost_usd_range": {
+        "high": 162.0,
+        "low": 72.0
+      },
+      "setup_test_smoke": [
+        {
+          "command_shape": [
+            "uv",
+            "run",
+            "--no-project",
+            "--python",
+            "3.14",
+            "--with",
+            "pytest>=8,<10",
+            "--with",
+            ".",
+            "--",
+            "python",
+            "-m",
+            "pytest",
+            "<targeted_test_paths>",
+            "-q"
+          ],
+          "duration_seconds": 0.336,
+          "label": "sphinx_util",
+          "returncode": 0,
+          "status": "passed",
+          "stderr_line_count": 0,
+          "stderr_tail_hash": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "stdout_line_count": 2,
+          "stdout_tail_hash": "sha256:fcd476841e8af121ff907e81a92a59579b64c007b70cb79f9d096806f703fc7e",
+          "timed_out": false
+        },
+        {
+          "command_shape": [
+            "uv",
+            "run",
+            "--no-project",
+            "--python",
+            "3.14",
+            "--with",
+            "pytest>=8,<10",
+            "--with",
+            ".",
+            "--",
+            "python",
+            "-m",
+            "pytest",
+            "<targeted_test_paths>",
+            "-q"
+          ],
+          "duration_seconds": 0.68,
+          "label": "sphinx_config",
+          "returncode": 0,
+          "status": "passed",
+          "stderr_line_count": 0,
+          "stderr_tail_hash": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "stdout_line_count": 2,
+          "stdout_tail_hash": "sha256:2c14dcca9e5ab41e97c2b28168186084f5cb5e7ca1eb414ea42325ef7a0e07eb",
+          "timed_out": false
+        }
+      ],
+      "source_context_availability": "strong_pr_or_issue_title_context",
+      "targeted_verifier_timing": {
+        "median_seconds": 0.508,
+        "p95_seconds": 0.663,
+        "pass_count": 2,
+        "sample_count": 2,
+        "speed_class": "ideal_under_60s"
+      },
+      "test_change_count": 1213,
+      "time_bucket_distribution": {
+        "2016_2019": 1,
+        "2020_2023": 422,
+        "2024_plus": 381
+      },
+      "total_commits": 22409,
+      "total_commits_scanned": 5000,
+      "track": "medium_large_fast",
+      "visible_setup_smoke_status": "passed"
     }
   ],
   "deep_probe_track_counts": {
     "large_heavy": 5,
-    "medium_large_fast": 4
+    "medium_large_fast": 5
   },
-  "generated_at": "2026-06-15T07:31:17+00:00",
+  "generated_at": "2026-06-15T07:54:12+00:00",
   "history_scan_cap": 5000,
   "history_scan_since": "2010-01-01",
-  "new_repository_deep_probe_count": 9,
+  "new_repository_deep_probe_count": 10,
   "new_repository_screen_count": 15,
-  "next_action": "prepare black target profile, package map, verifier pinning, and a 20-30 task no-paid certification wave; do not start paid baseline discovery or tuning until that gate passes",
+  "next_action": "prepare sphinx target profile, package map, verifier pinning, and a 20-30 task no-paid certification wave; do not start paid baseline discovery or tuning until that gate passes",
   "paid_cells_run": 0,
   "paid_llm_calls_run": 0,
   "paid_tuner_calls_run": 0,
   "recommendation": {
-    "classification": "capacity_promising_but_speed_unproven",
-    "count_feasible_rolling_origin_windows": 6,
-    "environment_risk": "low",
-    "estimated_release_eligible_volume": 73,
-    "expected_evaluation_speed_class": "ideal",
-    "expected_paid_baseline_discovery_cells": 292,
+    "classification": "balanced_target_prep_candidate",
+    "count_feasible_rolling_origin_windows": 2,
+    "environment_risk": "medium_doc_build_fixture_matrix",
+    "estimated_release_eligible_volume": 157,
+    "expected_evaluation_speed_class": "ideal_under_60s",
+    "expected_paid_baseline_discovery_cells": 360,
     "historical_reference_probe": {
-      "dominant_failure_labels": {},
-      "mode": "not_run",
+      "dominant_failure_labels": {
+        "pytest_usage_or_no_tests": 1
+      },
+      "mode": "target_commit_changed_tests_reference_probe",
       "pass_count": 0,
-      "sample_size": 0
+      "sample_size": 1
     },
-    "likely_verifier_command": "python -m pytest <changed_tests> -q",
-    "projected_certified_task_count_after_bounded_repair": 73,
+    "likely_verifier_command": "python -m pytest <sphinx unit shard> -q",
+    "projected_certified_task_count_after_bounded_repair": 231,
     "projected_evidence_backed_rolling_origin_windows": 2,
-    "reason": "run targeted verifier smoke before any recommendation",
-    "repo_id": "black",
-    "repo_url": "https://github.com/psf/black.git",
+    "reason": "advance to no-paid target prep if stronger candidate does not beat it",
+    "repo_id": "sphinx",
+    "repo_url": "https://github.com/sphinx-doc/sphinx.git",
     "rough_paid_baseline_cost_usd_range": {
-      "high": 131.4,
-      "low": 58.4
+      "high": 162.0,
+      "low": 72.0
     },
     "targeted_verifier_timing": {
-      "median_seconds": null,
-      "p95_seconds": null,
-      "pass_count": 0,
-      "sample_count": 0,
-      "speed_class": "not_measured"
+      "median_seconds": 0.508,
+      "p95_seconds": 0.663,
+      "pass_count": 2,
+      "sample_count": 2,
+      "speed_class": "ideal_under_60s"
     },
     "track": "medium_large_fast"
   },
   "runbook": "docs/research/large-repo-target-selection-gate-runbook-2026-06-15.md",
   "schema_version": "barcarolle.large_repo_target_selection_gate.v1",
-  "terminal_state": "negative_no_balanced_large_fast_target_no_paid",
+  "terminal_state": "large_repo_target_selected_no_paid",
   "tuning_experiment_started": false,
   "unsupported_claims": [
     "No paid Agent cell, paid LLM call, or paid tuner call was run.",
     "No Agent tuning improvement is supported.",
     "No predictive-validity or cross-repo generalization claim is supported.",
-    "black is a no-paid target-prep recommendation, not an immediate paid-run authorization.",
+    "sphinx is a no-paid target-prep recommendation, not an immediate paid-run authorization.",
     "Projected certified counts are capacity estimates until a bounded release-certification wave proves conversion."
   ]
 }

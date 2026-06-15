@@ -73,3 +73,45 @@ def test_choose_recommendations_prefers_nonbaseline_balanced_target() -> None:
 
     assert primary["repo_id"] == "sympy"
     assert backup["repo_id"] == "attrs"
+
+
+def test_spread_sample_supports_single_sample() -> None:
+    rows = [{"task_time": f"2020-01-0{index}T00:00:00Z", "value": index} for index in range(1, 6)]
+
+    sampled = gate.spread_sample(rows, 1)
+
+    assert sampled == [{"task_time": "2020-01-03T00:00:00Z", "value": 3}]
+
+
+def test_projected_release_count_respects_prior_failed_probe() -> None:
+    metrics = {
+        "changed_test_oracle_availability_count": 100,
+        "bounded_certification_sample": {"sample_size": 24, "pass_count": 24},
+        "targeted_verifier_timing": {"pass_count": 1, "speed_class": "ideal_under_60s"},
+        "environment_risk": "low",
+    }
+
+    assert gate.projected_release_count(metrics, {"prior_probe_attempts": 12, "prior_probe_release_eligible": 0}) == 0
+
+
+def test_partial_probe_failure_is_not_fast_enough_for_balanced_classification() -> None:
+    probes = [
+        {"status": "passed", "duration_seconds": 1.0},
+        {"status": "failed", "duration_seconds": 2.0},
+    ]
+
+    timing = gate.summarize_probe_timings(probes)
+
+    assert timing["speed_class"] == "partial_probe_failure"
+    assert gate.smoke_status(probes) == "partial_failed"
+    assert (
+        gate.classify_candidate(
+            {
+                "estimated_release_eligible_volume": 120,
+                "count_feasible_rolling_origin_windows": 3,
+                "expected_evaluation_speed_class": timing["speed_class"],
+                "environment_risk": "low",
+            }
+        )
+        == "capacity_promising_but_speed_unproven"
+    )
