@@ -248,6 +248,22 @@ closeout:
 `experiments/agent_tuning_demo/reports/phase1_feasibility_closeout_zh.md` and
 `experiments/agent_tuning_demo/results/phase1_feasibility_closeout.json`.
 
+Agent Tuning Phase 2 completed on 2026-06-15 with terminal state
+`phase2_success_no_holdout_regression`. The hard action-level Kilo
+`AGENTS.md` preflight passed with no paid calls: Variant B executed the public
+pytest command and wrote the marker while Variant A did not. GEPA standalone
+`optimize_anything` was used with a custom local proposer and no reflection LM
+to produce one Kilo `AGENTS.md` appendix. Fresh Kilo GPT low-cost before/after
+validation was non-regressing but did not improve: Selection-dev baseline/tuned
+both `1/4`, Holdout baseline/tuned both `5/6`, paired net wins `0` on both
+splits, 20 paid cells total, estimated cost `$1.3267749`. This supports
+deployable-artifact injection, feedback export, hash freeze, and held-out
+before/after validation mechanics, not tuned improvement, statistical
+significance, predictive validity, cross-repo generalization, model
+fine-tuning, or full opaque-Agent tuning. Canonical closeout:
+`experiments/agent_tuning_demo/reports/phase2_closeout_zh.md` and
+`experiments/agent_tuning_demo/results/phase2_closeout.json`.
+
 Agent License remains a possible downstream product, but it is not the current
 research proof or active architecture. Historical license/admission material is
 archived under `archive/2026-05-agent-license-reset/`.
