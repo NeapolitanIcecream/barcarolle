@@ -3,7 +3,7 @@
 This file records repository-wide process decisions that future coding-agent
 sessions should know before planning or executing Barcarolle work.
 
-Last updated: 2026-06-15.
+Last updated: 2026-06-16.
 
 ## Maintenance Rules
 
@@ -138,6 +138,37 @@ Boltons small expansion demo update on 2026-06-15:
   `experiments/agent_selection_demo/results/boltons_small_expansion_summary.json`,
   `experiments/agent_selection_demo/results/boltons_strict_rolling_origin_summary.json`,
   `experiments/agent_selection_demo/results/boltons_small_expansion_task_manifest.json`.
+
+Selector-aware correction on 2026-06-16 supersedes the fixed-window chart as
+the live presentation evidence:
+
+- No new paid Agent cells were run. The analysis reuses the committed
+  `50 x 4` expanded boltons matrix and counts timeout, harness error,
+  invalid output, and no meaningful change as failed user-visible attempts.
+- At each origin, selectors choose only from historical task metadata before
+  outcomes are joined. The old fixed-window rolling-origin outputs remain
+  drift diagnostics only; do not present
+  `boltons_strict_rolling_origin_summary.json` or the old PPT timeline as
+  selector-selected benchmark evidence.
+- All implemented selectors were evaluated with no diagnostic-only exclusions.
+  The final presentation selector remains HRD v3 `70/30`, `k=10`, under the
+  selector-aware choice rule.
+- Latest-origin user story (`origin_40`): HRD chooses 10 tasks from the first
+  40 historical tasks. Selection recommends Kilo + Claude Sonnet at `9/10`;
+  later/future has Kilo + Claude Sonnet and Kilo + GPT mainline tied at `9/10`,
+  so recommendation regret is `0`.
+- Selector-aware primary rolling-origin metrics for HRD v3 `70/30`, `k=10`:
+  MAE mean `0.194444`, top-rank agreement `1.0`, top-tier agreement `1.0`,
+  mean/max regret `0.0` / `0.0`. Latest-origin MAE is `0.225`.
+- Latest-origin same-budget strongest random baseline is
+  `source_recency_stratified_random` with MAE mean `0.292125`; HRD improves
+  MAE by `0.067125` and regret by `0.0059`.
+- Canonical selector-aware outputs:
+  `experiments/agent_selection_demo/results/boltons_selector_aware_winner.json`,
+  `experiments/agent_selection_demo/reports/boltons_selector_aware_winner_zh.md`,
+  `experiments/agent_selection_demo/results/boltons_selector_aware_eval.json`,
+  `experiments/agent_selection_demo/results/boltons_selector_aware_random_baselines.json`,
+  `experiments/agent_selection_demo/reports/boltons_selector_aware_reanalysis_closeout_zh.md`.
 
 The predictive-validity completion pass froze the estimand as complete-Agent
 future target-repo verified pass-rate prediction accuracy and added no-paid
