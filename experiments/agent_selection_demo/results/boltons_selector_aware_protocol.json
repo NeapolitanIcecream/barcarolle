@@ -1,0 +1,214 @@
+{
+  "final_selector_choice_rule": [
+    "prefer latest-origin story where the selected benchmark yields a recommendation or useful top tier and the choice remains in the future top tier",
+    "then prefer better rolling-origin top-tier/top-pair agreement, lower regret, and lower MAE across primary origins",
+    "then compare against same-budget random baselines",
+    "if effectively tied, prefer the simpler selector"
+  ],
+  "generated_at": "2026-06-16T03:16:03+00:00",
+  "leakage_boundary": {
+    "diagnostic_only_rule": "Any selector that cannot satisfy the boundary is excluded from final-selector eligibility.",
+    "saes_lite_replay": "metadata seed batch first; observes outcomes only for seed-selected historical task IDs before choosing the second batch",
+    "selectors_do_not_receive": [
+      "future task IDs",
+      "future outcomes",
+      "outcomes for unselected candidate tasks"
+    ],
+    "selectors_receive": [
+      "historical task metadata",
+      "historical task_time/recency",
+      "historical quality/risk/flakiness metadata"
+    ]
+  },
+  "minimum_selector_ids": [
+    "rsq_v2",
+    "rsq_v2_no_recency",
+    "rsq_v2_no_caps",
+    "flc",
+    "representative_only",
+    "informativeness_only",
+    "hrd_v3_70_30",
+    "hrd_v3_60_40",
+    "hrd_v3_50_50",
+    "hrd_v3_70_30_no_recency",
+    "hrd_v3_70_30_no_caps",
+    "hrd_v3_70_30_flc_rep",
+    "cod_lite",
+    "ro_lsp",
+    "saes_lite"
+  ],
+  "origin_specs": [
+    {
+      "budgets": [
+        10
+      ],
+      "future_task_count": 30,
+      "history_task_count": 20,
+      "origin_id": "origin_20",
+      "origin_index": 20,
+      "primary": true
+    },
+    {
+      "budgets": [
+        10,
+        15
+      ],
+      "future_task_count": 20,
+      "history_task_count": 30,
+      "origin_id": "origin_30",
+      "origin_index": 30,
+      "primary": true
+    },
+    {
+      "budgets": [
+        10,
+        15,
+        20
+      ],
+      "future_task_count": 10,
+      "history_task_count": 40,
+      "origin_id": "origin_40",
+      "origin_index": 40,
+      "primary": true
+    }
+  ],
+  "output_artifacts": {
+    "closeout": "experiments/agent_selection_demo/results/boltons_selector_aware_reanalysis_closeout.json",
+    "eval": "experiments/agent_selection_demo/results/boltons_selector_aware_eval.json",
+    "eval_slices": "experiments/agent_selection_demo/results/boltons_selector_aware_eval_slices.csv",
+    "outcome_matrix": "experiments/agent_selection_demo/results/boltons_selector_aware_outcome_matrix.csv",
+    "random_baselines": "experiments/agent_selection_demo/results/boltons_selector_aware_random_baselines.json",
+    "selections": "experiments/agent_selection_demo/results/boltons_selector_aware_selections.json",
+    "task_features": "experiments/agent_selection_demo/results/boltons_selector_aware_task_features.csv",
+    "winner": "experiments/agent_selection_demo/results/boltons_selector_aware_winner.json"
+  },
+  "paid_agent_calls_made": false,
+  "previous_chart_audit": {
+    "old_artifacts_to_treat_as_diagnostic": [
+      "experiments/agent_selection_demo/results/boltons_strict_rolling_origin_summary.json",
+      "experiments/agent_selection_demo/reports/boltons_strict_rolling_origin_zh.md",
+      "/Users/chenmohan/playground/barcarolle_ppt_assets/boltons_strict_rolling_origin_timeline.png"
+    ],
+    "problem": "The previous rolling-origin/user-view charts compared the latest fixed historical window directly with future tasks. They did not first run a selector on the historical candidate pool and then evaluate only selector-chosen task IDs.",
+    "status": "fixed_window_not_selector_aware"
+  },
+  "primary_budget": 10,
+  "primary_origins": [
+    20,
+    30,
+    40
+  ],
+  "random_baselines": [
+    "uniform_random_same_budget",
+    "quality_filtered_random",
+    "source_recency_stratified_random",
+    "module_stratified_random"
+  ],
+  "random_seed_count": 1000,
+  "random_seeds": [
+    0,
+    999
+  ],
+  "schema_version": "barcarolle.agent_selection_demo.boltons_selector_aware_protocol.v1",
+  "scoring_policy": {
+    "count_as_failed_attempts": [
+      "acut_harness_error",
+      "harness_error",
+      "invalid_output",
+      "policy_violation",
+      "timeout",
+      "verified_fail"
+    ],
+    "main_path": "fail_inclusive",
+    "no_meaningful_change_rule": "failure_category == no meaningful change counts as a failed policy-valid attempt",
+    "pass_condition": "terminal_status == verified_pass",
+    "scoreable_only_is_sensitivity_not_main": true
+  },
+  "selector_configs": [
+    {
+      "algorithm_id": "rsq_v2",
+      "config_id": "rsq_v2",
+      "family": "rsq_v2"
+    },
+    {
+      "algorithm_id": "rsq_v2",
+      "config_id": "rsq_v2_no_recency",
+      "family": "rsq_v2",
+      "use_recency": false
+    },
+    {
+      "algorithm_id": "rsq_v2",
+      "config_id": "rsq_v2_no_caps",
+      "family": "rsq_v2",
+      "use_caps": false
+    },
+    {
+      "algorithm_id": "flc",
+      "config_id": "flc",
+      "family": "flc"
+    },
+    {
+      "algorithm_id": "representative_only",
+      "config_id": "representative_only",
+      "family": "ablation"
+    },
+    {
+      "algorithm_id": "informativeness_only",
+      "config_id": "informativeness_only",
+      "family": "ablation"
+    },
+    {
+      "algorithm_id": "hrd_v3_70_30",
+      "config_id": "hrd_v3_70_30",
+      "family": "hrd_v3"
+    },
+    {
+      "algorithm_id": "hrd_v3_60_40",
+      "config_id": "hrd_v3_60_40",
+      "family": "hrd_v3"
+    },
+    {
+      "algorithm_id": "hrd_v3_50_50",
+      "config_id": "hrd_v3_50_50",
+      "family": "hrd_v3"
+    },
+    {
+      "algorithm_id": "hrd_v3_70_30",
+      "config_id": "hrd_v3_70_30_no_recency",
+      "family": "hrd_v3",
+      "use_recency": false
+    },
+    {
+      "algorithm_id": "hrd_v3_70_30",
+      "config_id": "hrd_v3_70_30_no_caps",
+      "family": "hrd_v3",
+      "use_caps": false
+    },
+    {
+      "algorithm_id": "hrd_v3_70_30",
+      "config_id": "hrd_v3_70_30_flc_rep",
+      "family": "hrd_v3",
+      "representative_selector": "flc"
+    },
+    {
+      "algorithm_id": "cod_lite",
+      "config_id": "cod_lite",
+      "family": "cod_lite"
+    },
+    {
+      "algorithm_id": "ro_lsp",
+      "config_id": "ro_lsp",
+      "family": "ro_lsp"
+    },
+    {
+      "algorithm_id": "saes_lite",
+      "config_id": "saes_lite",
+      "family": "saes_lite"
+    }
+  ],
+  "sensitivity_budget_rule": "k=15 for origins with at least 30 historical tasks; k=20 for origin_40",
+  "source_manifest": "experiments/agent_selection_demo/results/boltons_small_expansion_task_manifest.json",
+  "source_matrix": "experiments/agent_selection_demo/results/boltons_small_expansion_final_matrix.csv",
+  "task_order_rule": "sort displayed boltons tasks by real task_time/task_order; history is strictly before origin, future is at or after origin",
+  "unavailable_selectors": []
+}

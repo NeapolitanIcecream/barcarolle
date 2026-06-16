@@ -499,6 +499,149 @@ def test_hrd_metadata_scores_ignore_outcome_like_future_fields() -> None:
     assert demo.select_hrd_disagreement_only(rows, k=1)["selected_task_ids"] == demo.select_hrd_disagreement_only(changed_future, k=1)["selected_task_ids"]
 
 
+def selector_aware_test_feature(index: int) -> dict[str, object]:
+    return {
+        "row_id": f"row_{index}",
+        "task_id": f"task_{index}",
+        "target_repo": "mahmoud/boltons",
+        "repo": "boltons",
+        "task_order": index,
+        "task_time": f"2020-01-{index + 1:02d}T00:00:00Z",
+        "final_split": "displayed",
+        "stage_role": "displayed",
+        "source": "history" if index < 4 else "future",
+        "source_cluster": f"cluster_{index % 2}",
+        "module_bucket": f"module_{index % 3}",
+        "path_bucket": "boltons",
+        "test_bucket": "pytest_unit",
+        "task_type": "target_repo_repair",
+        "change_size_proxy": "small",
+        "difficulty_bucket": "small",
+        "recency_bucket": "middle_2019_2022",
+        "quality_score": 1.0,
+        "risk_flag": False,
+        "flaky_flag": False,
+        "oracle_status": "usable",
+        "historical_difficulty": 0.25,
+        "metadata_informativeness": 0.0,
+        "feature_leakage_status": "metadata_only",
+        "allowed_for_final_scoring": True,
+    }
+
+
+def selector_aware_test_outcomes(task_count: int = 6) -> list[dict[str, object]]:
+    rows: list[dict[str, object]] = []
+    for index in range(task_count):
+        for agent_id in ["agent_a", "agent_b"]:
+            passed = agent_id == "agent_a" and index % 2 == 0
+            rows.append(
+                {
+                    "task_id": f"task_{index}",
+                    "agent_id": agent_id,
+                    "reviewer_name": agent_id,
+                    "policy_valid_cell": True,
+                    "policy_outcome_value": 1 if passed else 0,
+                    "terminal_status": "verified_pass" if passed else "verified_fail",
+                }
+            )
+    return rows
+
+
+def test_selector_aware_origin_slices_use_history_before_origin_and_future_at_origin() -> None:
+    rows = [selector_aware_test_feature(index) for index in range(6)]
+
+    history_ids, future_ids = boltons_expansion.selector_aware_origin_task_ids(rows, origin_index=4)
+
+    assert history_ids == ["task_0", "task_1", "task_2", "task_3"]
+    assert future_ids == ["task_4", "task_5"]
+
+
+def test_selector_aware_outcome_policy_counts_non_scoreable_as_failures() -> None:
+    rows = boltons_expansion.selector_aware_outcome_rows(
+        [
+            {
+                "task_id": "task_1",
+                "agent_id": "agent_a",
+                "reviewer_name": "Agent A",
+                "task_order": 1,
+                "task_time": "2020-01-01T00:00:00Z",
+                "final_split": "selection",
+                "terminal_status": "invalid_output",
+                "scoreable_cell": "False",
+                "verified_pass": "False",
+                "failure_category": "no meaningful change",
+                "source_artifact_path": "matrix.csv",
+                "score_source_kind": "test",
+                "cost_observation_kind": "test",
+            },
+            {
+                "task_id": "task_2",
+                "agent_id": "agent_a",
+                "reviewer_name": "Agent A",
+                "task_order": 2,
+                "task_time": "2020-01-02T00:00:00Z",
+                "final_split": "selection",
+                "terminal_status": "acut_harness_error",
+                "scoreable_cell": "False",
+                "verified_pass": "False",
+                "failure_category": "exceeded budget or timeout",
+                "source_artifact_path": "matrix.csv",
+                "score_source_kind": "test",
+                "cost_observation_kind": "test",
+            },
+        ]
+    )
+
+    assert [row["policy_valid_cell"] for row in rows] == [True, True]
+    assert [row["policy_pass"] for row in rows] == [False, False]
+    assert [row["policy_outcome_value"] for row in rows] == [0, 0]
+
+
+def test_selector_aware_selector_selection_is_subset_of_history() -> None:
+    rows = [selector_aware_test_feature(index) for index in range(6)]
+    origin = {"origin_id": "origin_4", "origin_index": 4, "origin_time": "2020-01-05T00:00:00Z"}
+    history_rows = boltons_expansion.selector_aware_history_rows(rows, origin)
+    spec = {"config_id": "rsq_v2", "family": "rsq_v2", "algorithm_id": "rsq_v2"}
+
+    selection = boltons_expansion.selector_aware_select_config(
+        history_rows,
+        spec,
+        budget=2,
+        outcome_rows=selector_aware_test_outcomes(),
+        agent_ids=["agent_a", "agent_b"],
+    )
+
+    assert len(selection["selected_task_ids"]) == 2
+    assert set(selection["selected_task_ids"]).issubset({"task_0", "task_1", "task_2", "task_3"})
+    assert set(selection["selected_task_ids"]).isdisjoint({"task_4", "task_5"})
+
+
+def test_selector_aware_random_baseline_uses_history_pool_and_budget() -> None:
+    rows = [selector_aware_test_feature(index) for index in range(6)]
+    origin = {"origin_id": "origin_4", "origin_index": 4, "origin_time": "2020-01-05T00:00:00Z"}
+    history_rows = boltons_expansion.selector_aware_history_rows(rows, origin)
+
+    selection = demo.select_bakeoff_strong_random(history_rows, 3, 17, baseline_id="uniform_random_same_budget")
+
+    assert len(selection["selected_task_ids"]) == 3
+    assert set(selection["selected_task_ids"]).issubset({"task_0", "task_1", "task_2", "task_3"})
+
+
+def test_selector_aware_eval_uses_selected_task_ids_not_all_history() -> None:
+    outcomes = selector_aware_test_outcomes(task_count=6)
+
+    selected_metrics = boltons_expansion.selector_aware_evaluate_task_ids(
+        selected_task_ids=["task_0", "task_2"],
+        future_task_ids=["task_4", "task_5"],
+        agent_ids=["agent_a", "agent_b"],
+        outcome_rows=outcomes,
+    )
+
+    assert selected_metrics["selection_rates"]["agent_a"]["valid_count"] == 2
+    assert selected_metrics["selection_rates"]["agent_a"]["pass_count"] == 2
+    assert selected_metrics["selection_rates"]["agent_b"]["valid_count"] == 2
+
+
 def test_boltons_small_expansion_pool_dedupes_current_and_v2_by_target_commit() -> None:
     config = demo.load_config(demo.ROOT / demo.DEFAULT_CONFIG)
 
