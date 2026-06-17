@@ -1,0 +1,33 @@
+{
+  "command_shape": [
+    "uv",
+    "run",
+    "--no-project",
+    "--with",
+    "pytest>=8,<10",
+    "--with",
+    "pytest-xdist",
+    "--with",
+    ".",
+    "--",
+    "python",
+    "-m",
+    "pytest",
+    "<targeted_test_paths>",
+    "-q"
+  ],
+  "duration_seconds": 0.714,
+  "generated_at": "2026-06-17T12:58:27+00:00",
+  "paid_agent_cells_run": 0,
+  "paid_llm_calls_run": 0,
+  "paid_tuner_calls_run": 0,
+  "repo_id": "mypy",
+  "returncode": 0,
+  "schema_version": "barcarolle.agent_tuning_demo.target_repair_selection_loop.v1.mypy_current_smoke.v1",
+  "status": "passed",
+  "stderr_line_count": 0,
+  "stderr_tail_hash": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "stdout_line_count": 5,
+  "stdout_tail_hash": "sha256:20f14fbd1698330d27a6775c91ba9b17fcddb7b25ee49815a9b49875a7cc9a47",
+  "timed_out": false
+}
