@@ -1,0 +1,35 @@
+{
+  "artifact_id": "agent-tuning-demo-mypy-data-driven-loop",
+  "artifact_type": "agents_md_appendix",
+  "changed_files": [
+    "AGENTS.md"
+  ],
+  "evidence_task_ids": [
+    "mypy__taskgen__2305",
+    "mypy__taskgen__2315",
+    "mypy__taskgen__2308",
+    "mypy__taskgen__2320",
+    "mypy__taskgen__2340",
+    "mypy__taskgen__2311",
+    "mypy__taskgen__2336"
+  ],
+  "files": [
+    {
+      "content": "## Barcarolle Agent Tuning Demo Appendix\n\nWhen solving mypy tasks for this benchmark, treat the task as a narrow data-driven regression repair.\nStart from the listed editable implementation paths and inspect adjacent implementation code before editing.\nIf the statement names TypeCheckSuite or `test-data` entry points, infer the expected behavior from nearby existing cases,\nbut do not edit tests or test-data files. Prefer a minimal semantic fix over broad rewrites, and run the targeted verifier\ncommand shape from the task statement before finishing when feasible.\n",
+      "workspace_relative_path": "AGENTS.md",
+      "write_mode": "append"
+    }
+  ],
+  "generated_at": "2026-06-17T15:45:02+00:00",
+  "hash": "sha256:c30535876817746c7e25b1a351c87f480c4f1bb68f8213e82e8632df680d2660",
+  "holdout_derived": false,
+  "intended_effect": "Improve Kilo's behavior on mypy data-driven regression tasks by making it inspect nearby implementation and targeted TypeCheckSuite context before editing.",
+  "optimizer_source": "local train-only rule proposer from selected benchmark baseline feedback",
+  "rollback_plan": "Remove the appended Barcarolle Agent Tuning Demo section from AGENTS.md.",
+  "schema_version": "barcarolle.agent_tuning_demo.tuning_artifact.v1",
+  "target_agent": "kilo_workspace",
+  "targeted_failure_labels": [
+    "hidden verifier failure"
+  ],
+  "visible_to_optimizer": true
+}
