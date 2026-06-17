@@ -887,6 +887,114 @@ Terminal state: `{payload['terminal_state']}`。
 """
 
 
+def run_closeout(
+    *,
+    agent_tests_status: str,
+    agent_tests_summary: str,
+    git_diff_check_status: str,
+    hygiene_scan_status: str,
+    hygiene_scan_hits: list[str],
+) -> dict[str, Any]:
+    decisions = read_json(RESULTS / "target_repair_selection_candidate_decisions.json", {})
+    search = read_json(RESULTS / "target_repair_selection_repository_search_expansion.json", {})
+    method = read_json(RESULTS / "target_repair_selection_method_limitation_diagnosis.json", {})
+    sphinx_manifest = read_json(RESULTS / "sphinx_certification_expanded_manifest.json", {})
+    sphinx_windows = read_json(RESULTS / "sphinx_rolling_origin_window_manifest.json", {})
+    mypy_sample = read_json(RESULTS / "mypy_certification_sample.json", {})
+    decision_rows = decisions.get("decisions", [])
+    payload = {
+        "schema_version": f"{SCHEMA_VERSION}.closeout.v1",
+        "generated_at": iso_now(),
+        "terminal_state": method.get("terminal_state", "task_generation_method_needs_revision"),
+        "selected_target_repository": None,
+        "max_exact_certified_task_count": max([int(row.get("exact_certified_task_count") or 0) for row in decision_rows] or [0]),
+        "corrected_rolling_origin_window_count": max([int(row.get("corrected_window_count") or 0) for row in decision_rows] or [0]),
+        "paid_agent_cells_run": 0,
+        "paid_llm_calls_run": 0,
+        "paid_tuner_calls_run": 0,
+        "expected_baseline_cells_per_supported_window": (SELECTED_BENCHMARK_SIZE + FUTURE_HOLDOUT_SIZE) * AGENT_COUNT,
+        "total_baseline_cells_for_prepared_windows": 0,
+        "verifier_speed_summary": {
+            "sphinx_exact_certified": sphinx_manifest.get("verifier_duration_summary", {}),
+            "sphinx_corrected_windows": sphinx_windows.get("window_count", 0),
+            "mypy_exact_sample": mypy_sample.get("verifier_duration_summary", {}),
+        },
+        "repositories_tried": decision_rows,
+        "repository_search_expansion": {
+            "screened_repository_count": search.get("screened_repository_count"),
+            "decision": search.get("decision"),
+        },
+        "next_step": "Task Generator repair before another target-repository retry or paid preregistration.",
+        "canonical_outputs": {
+            "sphinx_failure_diagnosis": "experiments/agent_tuning_demo/results/sphinx_failure_diagnosis.json",
+            "mypy_certification_sample": "experiments/agent_tuning_demo/results/mypy_certification_sample.json",
+            "candidate_decisions": "experiments/agent_tuning_demo/results/target_repair_selection_candidate_decisions.json",
+            "repository_search_expansion": "experiments/agent_tuning_demo/results/target_repair_selection_repository_search_expansion.json",
+            "method_limitation_diagnosis": "experiments/agent_tuning_demo/results/target_repair_selection_method_limitation_diagnosis.json",
+            "closeout": "experiments/agent_tuning_demo/results/target_repair_selection_loop_closeout.json",
+        },
+        "verification": {
+            "agent_tuning_tests": {
+                "command": "uv run --project experiments/phase1_compiler pytest experiments/agent_tuning_demo/tests -q",
+                "status": agent_tests_status,
+                "summary": agent_tests_summary,
+            },
+            "git_diff_check": {
+                "command": "git diff --check",
+                "status": git_diff_check_status,
+            },
+            "hygiene_scan": {
+                "command": "git ls-files | rg '(\\.venv|\\.pytest_cache|\\.DS_Store|transcript|completion|prompt|workspace|raw|external|clone|outputs/)'",
+                "status": hygiene_scan_status,
+                "hits": hygiene_scan_hits,
+            },
+        },
+    }
+    write_json(RESULTS / "target_repair_selection_loop_closeout.json", payload)
+    write_text(REPORTS / "target_repair_selection_loop_closeout_zh.md", closeout_report(payload))
+    return payload
+
+
+def closeout_report(payload: dict[str, Any]) -> str:
+    return f"""# Target repair selection loop closeout
+
+生成时间：`{payload['generated_at']}`。付费 Agent cells：`0`。付费 LLM calls：`0`。付费 tuner calls：`0`。
+
+## 结论
+
+Terminal state: `{payload['terminal_state']}`。Selected target repository: `{payload['selected_target_repository']}`。
+
+- max exact certified task count: `{payload['max_exact_certified_task_count']}`
+- corrected rolling-origin window count: `{payload['corrected_rolling_origin_window_count']}`
+- expected baseline cells per supported window: `{payload['expected_baseline_cells_per_supported_window']}`
+- total baseline cells for prepared windows: `{payload['total_baseline_cells_for_prepared_windows']}`
+- next step: `{payload['next_step']}`
+
+## Verifier speed summary
+
+- Sphinx exact certified: `{payload['verifier_speed_summary']['sphinx_exact_certified']}`
+- Mypy exact sample: `{payload['verifier_speed_summary']['mypy_exact_sample']}`
+
+## Repositories tried
+
+{markdown_table(payload['repositories_tried'], [('Repo', 'repo_id'), ('Exact certified', 'exact_certified_task_count'), ('Windows', 'corrected_window_count'), ('Smoke', 'setup_smoke'), ('Decision', 'decision_label'), ('Reason', 'primary_reason')])}
+
+## Repository search expansion
+
+Screened repositories: `{payload['repository_search_expansion']['screened_repository_count']}`。Decision: `{payload['repository_search_expansion']['decision']}`。
+
+## Canonical outputs
+
+{chr(10).join(f'- `{path}`' for path in payload['canonical_outputs'].values())}
+
+## Verification
+
+- tests: `{payload['verification']['agent_tuning_tests']['status']}` / `{payload['verification']['agent_tuning_tests']['summary']}`
+- git diff check: `{payload['verification']['git_diff_check']['status']}`
+- hygiene scan: `{payload['verification']['hygiene_scan']['status']}` / hits: `{payload['verification']['hygiene_scan']['hits']}`
+"""
+
+
 def main() -> int:
     parser = argparse.ArgumentParser()
     sub = parser.add_subparsers(dest="command", required=True)
@@ -896,6 +1004,12 @@ def main() -> int:
     sub.add_parser("candidate-decisions")
     sub.add_parser("repository-search-expansion")
     sub.add_parser("method-limitation-diagnosis")
+    closeout = sub.add_parser("closeout")
+    closeout.add_argument("--agent-tests-status", default="not_run")
+    closeout.add_argument("--agent-tests-summary", default="")
+    closeout.add_argument("--git-diff-check-status", default="not_run")
+    closeout.add_argument("--hygiene-scan-status", default="not_run")
+    closeout.add_argument("--hygiene-scan-hit", action="append", default=[])
     args = parser.parse_args()
     if args.command == "mypy-current-smoke":
         payload = run_mypy_current_smoke()
@@ -911,6 +1025,15 @@ def main() -> int:
         print(json.dumps({"decision": payload["decision"], "screened_repository_count": payload["screened_repository_count"]}, sort_keys=True))
     elif args.command == "method-limitation-diagnosis":
         payload = run_method_limitation_diagnosis()
+        print(json.dumps({"terminal_state": payload["terminal_state"]}, sort_keys=True))
+    elif args.command == "closeout":
+        payload = run_closeout(
+            agent_tests_status=args.agent_tests_status,
+            agent_tests_summary=args.agent_tests_summary,
+            git_diff_check_status=args.git_diff_check_status,
+            hygiene_scan_status=args.hygiene_scan_status,
+            hygiene_scan_hits=args.hygiene_scan_hit,
+        )
         print(json.dumps({"terminal_state": payload["terminal_state"]}, sort_keys=True))
     return 0
 

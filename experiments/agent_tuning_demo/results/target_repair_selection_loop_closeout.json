@@ -1,0 +1,205 @@
+{
+  "canonical_outputs": {
+    "candidate_decisions": "experiments/agent_tuning_demo/results/target_repair_selection_candidate_decisions.json",
+    "closeout": "experiments/agent_tuning_demo/results/target_repair_selection_loop_closeout.json",
+    "method_limitation_diagnosis": "experiments/agent_tuning_demo/results/target_repair_selection_method_limitation_diagnosis.json",
+    "mypy_certification_sample": "experiments/agent_tuning_demo/results/mypy_certification_sample.json",
+    "repository_search_expansion": "experiments/agent_tuning_demo/results/target_repair_selection_repository_search_expansion.json",
+    "sphinx_failure_diagnosis": "experiments/agent_tuning_demo/results/sphinx_failure_diagnosis.json"
+  },
+  "corrected_rolling_origin_window_count": 0,
+  "expected_baseline_cells_per_supported_window": 160,
+  "generated_at": "2026-06-17T13:16:23+00:00",
+  "max_exact_certified_task_count": 16,
+  "next_step": "Task Generator repair before another target-repository retry or paid preregistration.",
+  "paid_agent_cells_run": 0,
+  "paid_llm_calls_run": 0,
+  "paid_tuner_calls_run": 0,
+  "repositories_tried": [
+    {
+      "bounded_repair_attempted": false,
+      "corrected_window_count": 0,
+      "decision_label": "rejected",
+      "exact_certified_task_count": 16,
+      "paid_cells_used": 0,
+      "primary_reason": "reject_sphinx_move_to_candidate_loop",
+      "repo_id": "sphinx",
+      "setup_smoke": "passed_prior",
+      "verifier_speed_summary": "median 9.502s, p95 20.469s on certified rows"
+    },
+    {
+      "bounded_repair_attempted": false,
+      "corrected_window_count": 0,
+      "decision_label": "rejected",
+      "exact_certified_task_count": 7,
+      "paid_cells_used": 0,
+      "primary_reason": "exact certification sample conversion 0.2917; corrected threshold requires 80 exact tasks",
+      "repo_id": "mypy",
+      "setup_smoke": "passed",
+      "verifier_speed_summary": "current smoke 0.714s; cert sample {'count': 7, 'max_seconds': 14.153, 'median_seconds': 5.835, 'p95_seconds': 14.153}"
+    },
+    {
+      "bounded_repair_attempted": false,
+      "corrected_window_count": 0,
+      "decision_label": "rejected",
+      "exact_certified_task_count": 0,
+      "paid_cells_used": 0,
+      "primary_reason": "projected/existing supply 73 below corrected exact minimum 80",
+      "repo_id": "black",
+      "setup_smoke": "partial_probe_failure",
+      "verifier_speed_summary": "{\"median_seconds\": 9.722, \"p95_seconds\": 16.063, \"pass_count\": 1, \"sample_count\": 2, \"speed_class\": \"partial_probe_failure\"}"
+    },
+    {
+      "bounded_repair_attempted": false,
+      "corrected_window_count": 0,
+      "decision_label": "rejected",
+      "exact_certified_task_count": 0,
+      "paid_cells_used": 0,
+      "primary_reason": "projected/existing supply 57 below corrected exact minimum 80",
+      "repo_id": "starlette",
+      "setup_smoke": "partial_probe_failure",
+      "verifier_speed_summary": "{\"median_seconds\": 1.012, \"p95_seconds\": 1.693, \"pass_count\": 1, \"sample_count\": 2, \"speed_class\": \"partial_probe_failure\"}"
+    },
+    {
+      "bounded_repair_attempted": false,
+      "corrected_window_count": 0,
+      "decision_label": "rejected",
+      "exact_certified_task_count": 0,
+      "paid_cells_used": 0,
+      "primary_reason": "projected/existing supply 31 below corrected exact minimum 80; blockers: projected_release_eligible_count_below_60; evidence_backed_multi_window_not_proven",
+      "repo_id": "attrs",
+      "setup_smoke": "passed",
+      "verifier_speed_summary": "{\"command_shape\": [\"uv\", \"run\", \"--with\", \"pytest>=8,<10\", \"--with\", \".\", \"--\", \"python\", \"-m\", \"pytest\", \"<smoke_paths>\", \"-q\"], \"duration_seconds\": 1.858, \"returncode\": 0, \"status\": \"passed\", \"stderr_line_count\": 1, \"stderr_tail_hash\": \"sha256:887d991bfccc1c33bb0e58c338543f3678b004ed907f112d721fc8b0c6a02ec5\", \"stdout_line_count\": 4, \"stdout_tail_hash\": \"sha256:3971ac58d905515ffa60d4b2beb4256962a39428215d0609514c9595ca358925\", \"timed_out\": false}"
+    },
+    {
+      "bounded_repair_attempted": false,
+      "corrected_window_count": 0,
+      "decision_label": "rejected",
+      "exact_certified_task_count": 0,
+      "paid_cells_used": 0,
+      "primary_reason": "projected/existing supply 30 below corrected exact minimum 80; blockers: projected_release_eligible_count_below_60; evidence_backed_multi_window_not_proven",
+      "repo_id": "click",
+      "setup_smoke": "passed",
+      "verifier_speed_summary": "{\"command_shape\": [\"uv\", \"run\", \"--with\", \"pytest>=8,<10\", \"--with\", \".\", \"--\", \"python\", \"-m\", \"pytest\", \"<smoke_paths>\", \"-q\"], \"duration_seconds\": 0.445, \"returncode\": 0, \"status\": \"passed\", \"stderr_line_count\": 1, \"stderr_tail_hash\": \"sha256:887d991bfccc1c33bb0e58c338543f3678b004ed907f112d721fc8b0c6a02ec5\", \"stdout_line_count\": 12, \"stdout_tail_hash\": \"sha256:22dc3254520eb2e65995e519e2fe1b5de772187847226af4fe8ce35fcd7276de\", \"timed_out\": false}"
+    },
+    {
+      "bounded_repair_attempted": false,
+      "corrected_window_count": 0,
+      "decision_label": "rejected",
+      "exact_certified_task_count": 0,
+      "paid_cells_used": 0,
+      "primary_reason": "classified large_but_heavy; setup/replay blocker not bounded enough for this loop",
+      "repo_id": "django",
+      "setup_smoke": "environment_failed_or_unusable",
+      "verifier_speed_summary": "{\"median_seconds\": 0.014, \"p95_seconds\": 0.015, \"pass_count\": 0, \"sample_count\": 2, \"speed_class\": \"environment_failed_or_unusable\"}"
+    },
+    {
+      "bounded_repair_attempted": false,
+      "corrected_window_count": 0,
+      "decision_label": "rejected",
+      "exact_certified_task_count": 0,
+      "paid_cells_used": 0,
+      "primary_reason": "classified large_but_heavy; setup/replay blocker not bounded enough for this loop",
+      "repo_id": "pandas",
+      "setup_smoke": "environment_failed_or_unusable",
+      "verifier_speed_summary": "{\"median_seconds\": 0.085, \"p95_seconds\": 0.092, \"pass_count\": 0, \"sample_count\": 2, \"speed_class\": \"environment_failed_or_unusable\"}"
+    },
+    {
+      "bounded_repair_attempted": false,
+      "corrected_window_count": 0,
+      "decision_label": "rejected",
+      "exact_certified_task_count": 0,
+      "paid_cells_used": 0,
+      "primary_reason": "classified large_but_heavy; setup/replay blocker not bounded enough for this loop",
+      "repo_id": "scikit-learn",
+      "setup_smoke": "environment_failed_or_unusable",
+      "verifier_speed_summary": "{\"median_seconds\": 0.084, \"p95_seconds\": 0.084, \"pass_count\": 0, \"sample_count\": 1, \"speed_class\": \"environment_failed_or_unusable\"}"
+    },
+    {
+      "bounded_repair_attempted": false,
+      "corrected_window_count": 0,
+      "decision_label": "rejected",
+      "exact_certified_task_count": 0,
+      "paid_cells_used": 0,
+      "primary_reason": "projected/existing supply 0 below corrected exact minimum 80; blockers: projected_release_eligible_count_below_60; evidence_backed_multi_window_not_proven; high_prior_replay_probe_failed; bounded_no_paid_certification_needed",
+      "repo_id": "packaging",
+      "setup_smoke": "passed",
+      "verifier_speed_summary": "{\"command_shape\": [\"uv\", \"run\", \"--with\", \"pytest>=8,<10\", \"--with\", \".\", \"--\", \"python\", \"-m\", \"pytest\", \"<smoke_paths>\", \"-q\"], \"duration_seconds\": 16.083, \"returncode\": 0, \"status\": \"passed\", \"stderr_line_count\": 1, \"stderr_tail_hash\": \"sha256:887d991bfccc1c33bb0e58c338543f3678b004ed907f112d721fc8b0c6a02ec5\", \"stdout_line_count\": 749, \"stdout_tail_hash\": \"sha256:550727ac57986cdbb62868817af0fe3748d83d2944a94a2618237e2c4d43a8ce\", \"timed_out\": false}"
+    },
+    {
+      "bounded_repair_attempted": false,
+      "corrected_window_count": 0,
+      "decision_label": "rejected",
+      "exact_certified_task_count": 0,
+      "paid_cells_used": 0,
+      "primary_reason": "projected/existing supply 0 below corrected exact minimum 80; blockers: projected_release_eligible_count_below_60; evidence_backed_multi_window_not_proven; high_prior_replay_probe_failed; bounded_no_paid_certification_needed",
+      "repo_id": "marshmallow",
+      "setup_smoke": "passed",
+      "verifier_speed_summary": "{\"command_shape\": [\"uv\", \"run\", \"--with\", \"pytest>=8,<10\", \"--with\", \".\", \"--\", \"python\", \"-m\", \"pytest\", \"<smoke_paths>\", \"-q\"], \"duration_seconds\": 0.327, \"returncode\": 0, \"status\": \"passed\", \"stderr_line_count\": 1, \"stderr_tail_hash\": \"sha256:887d991bfccc1c33bb0e58c338543f3678b004ed907f112d721fc8b0c6a02ec5\", \"stdout_line_count\": 6, \"stdout_tail_hash\": \"sha256:2df21845d6e4dabfa6ce8194df3c15fc08c1d95755e639673987052b3e8f2d83\", \"timed_out\": false}"
+    },
+    {
+      "bounded_repair_attempted": false,
+      "corrected_window_count": 0,
+      "decision_label": "rejected",
+      "exact_certified_task_count": 0,
+      "paid_cells_used": 0,
+      "primary_reason": "projected/existing supply 0 below corrected exact minimum 80; blockers: projected_release_eligible_count_below_60; evidence_backed_multi_window_not_proven; high_visible_smoke_failed; bounded_no_paid_certification_needed",
+      "repo_id": "urllib3",
+      "setup_smoke": "failed",
+      "verifier_speed_summary": "{\"command_shape\": [\"uv\", \"run\", \"--with\", \"pytest>=8,<10\", \"--with\", \".\", \"--\", \"python\", \"-m\", \"pytest\", \"<smoke_paths>\", \"-q\"], \"duration_seconds\": 0.692, \"returncode\": 1, \"status\": \"failed\", \"stderr_line_count\": 1, \"stderr_tail_hash\": \"sha256:887d991bfccc1c33bb0e58c338543f3678b004ed907f112d721fc8b0c6a02ec5\", \"stdout_line_count\": 115, \"stdout_tail_hash\": \"sha256:a3c747836438599ad49feaf0f16e71917fb4e6f100616b47012400eb4c3e06b2\", \"timed_out\": false}"
+    },
+    {
+      "bounded_repair_attempted": false,
+      "corrected_window_count": 0,
+      "decision_label": "rejected",
+      "exact_certified_task_count": 0,
+      "paid_cells_used": 0,
+      "primary_reason": "classified small_pilot_or_backup; exact certification not available from current method; blockers: evidence_backed_multi_window_not_proven; high_complex_or_infrastructure_heavy_tests; bounded_no_paid_certification_needed",
+      "repo_id": "pytest",
+      "setup_smoke": "not_run",
+      "verifier_speed_summary": "{\"status\": \"not_run\"}"
+    }
+  ],
+  "repository_search_expansion": {
+    "decision": "no_additional_ready_repository_found",
+    "screened_repository_count": 33
+  },
+  "schema_version": "barcarolle.agent_tuning_demo.target_repair_selection_loop.v1.closeout.v1",
+  "selected_target_repository": null,
+  "terminal_state": "task_generation_method_needs_revision",
+  "total_baseline_cells_for_prepared_windows": 0,
+  "verification": {
+    "agent_tuning_tests": {
+      "command": "uv run --project experiments/phase1_compiler pytest experiments/agent_tuning_demo/tests -q",
+      "status": "passed",
+      "summary": "54 passed"
+    },
+    "git_diff_check": {
+      "command": "git diff --check",
+      "status": "passed"
+    },
+    "hygiene_scan": {
+      "command": "git ls-files | rg '(\\.venv|\\.pytest_cache|\\.DS_Store|transcript|completion|prompt|workspace|raw|external|clone|outputs/)'",
+      "hits": [
+        "157 historical tracked path-name hits from archive/docs/phase0/phase1 files containing prompt/workspace/raw/external/etc.; no new raw workspaces, clones, prompts, completions, transcripts, caches, or secrets were added",
+        "Scoped current-hit check under experiments/agent_tuning_demo experiments/demo_common PROCESS.md only returns experiments/demo_common/workspace_inputs.py, a source helper file, not a raw workspace artifact"
+      ],
+      "status": "explained_historical_tracked_hits"
+    }
+  },
+  "verifier_speed_summary": {
+    "mypy_exact_sample": {
+      "count": 7,
+      "max_seconds": 14.153,
+      "median_seconds": 5.835,
+      "p95_seconds": 14.153
+    },
+    "sphinx_corrected_windows": 0,
+    "sphinx_exact_certified": {
+      "count": 16,
+      "max_seconds": 24.333,
+      "median_seconds": 9.502,
+      "p95_seconds": 20.469
+    }
+  }
+}

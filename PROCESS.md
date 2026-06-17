@@ -454,6 +454,20 @@ manifest. Canonical freeze outputs:
 `experiments/agent_tuning_demo/reports/sphinx_paid_cell_accounting_zh.md`, and
 `experiments/agent_tuning_demo/results/sphinx_paid_cell_accounting.json`.
 
+The target repair/selection loop completed on 2026-06-17 with terminal state
+`task_generation_method_needs_revision`. No paid Agent cells, paid LLM calls,
+tuner calls, baseline discovery, or before/after tuning were run. Sphinx was
+rejected after a bounded diagnosis reproduced `0/30` repair expansion
+conversion dominated by target changed-test failures. Mypy current smoke passed,
+but exact certification after bounded worktree cleanup repair converted only
+`7/24` (`0.2917`), below the stop threshold. The priority list and reused broad
+repository search expansion found no target ready for corrected rolling-origin
+paid preregistration; the next step is Task Generator repair, not another paid
+runbook. Canonical closeout:
+`experiments/agent_tuning_demo/reports/target_repair_selection_loop_closeout_zh.md`
+and
+`experiments/agent_tuning_demo/results/target_repair_selection_loop_closeout.json`.
+
 Agent License remains a possible downstream product, but it is not the current
 research proof or active architecture. Historical license/admission material is
 archived under `archive/2026-05-agent-license-reset/`.
