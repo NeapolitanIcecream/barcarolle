@@ -1,0 +1,57 @@
+{
+  "generated_at": "2026-06-17T14:19:35+00:00",
+  "hypotheses": [
+    {
+      "decision": "kept",
+      "family": "Selection-Demo compatibility",
+      "hypothesis": "Use the boltons pattern: exact certified task rows first, then corrected windows from a task-time ordered manifest.",
+      "hypothesis_id": "H1_selection_demo_pipeline_shape",
+      "keep_reject_threshold": "Keep if manifest reaches >=80 tasks and >=2 windows per repo.",
+      "local_experiment": "Build final Sphinx/mypy manifests and windows from exact certified rows only."
+    },
+    {
+      "decision": "kept",
+      "family": "Support-root oracle extraction",
+      "hypothesis": "Changed support files must be injected with verifier entry files so hidden oracles are self-contained.",
+      "hypothesis_id": "H2_support_root_oracles",
+      "keep_reject_threshold": "Keep if exact certification conversion improves or manifest rows need support files.",
+      "local_experiment": "Mypy injects changed test-data files; Sphinx records and preserves support-root oracle metadata."
+    },
+    {
+      "decision": "kept",
+      "family": "Repo-specific oracle adapters",
+      "hypothesis": "Mypy data-driven tests and Sphinx roots need adapters instead of a generic Python-test-only miner.",
+      "hypothesis_id": "H3_repo_specific_adapters",
+      "keep_reject_threshold": "Keep if either repo reaches corrected minimum.",
+      "local_experiment": "Add mypy TypeCheckSuite nodeid adapter and Sphinx support-root manifest conversion."
+    },
+    {
+      "decision": "kept",
+      "family": "Version-aware verifier profiles",
+      "hypothesis": "Historical task time should choose bounded Python/dependency profiles.",
+      "hypothesis_id": "H4_version_aware_profiles",
+      "keep_reject_threshold": "Keep if winning profiles are observed across certified rows.",
+      "local_experiment": "Try date-compatible uv profiles and stop on first reference pass."
+    },
+    {
+      "decision": "kept",
+      "family": "Fail-to-pass/pass-to-pass guards",
+      "hypothesis": "Exact certification must require target-pass/base-fail replay and record pass-to-pass guard feasibility.",
+      "hypothesis_id": "H5_fail_to_pass_guards",
+      "keep_reject_threshold": "Keep if exact rows are auditable and no base-pass rows enter manifests.",
+      "local_experiment": "Reference target and base-with-injected-tests subgates are mandatory; pass-to-pass guard recorded as not run when no stable adjacent guard exists."
+    },
+    {
+      "decision": "kept",
+      "family": "Public context statement provenance",
+      "hypothesis": "Issue/PR refs are preferred, but low-confidence commit-message-only rows can be labeled when no paid LLM review is used.",
+      "hypothesis_id": "H6_public_statement_provenance",
+      "keep_reject_threshold": "Keep if no hidden oracle data is used in solver-visible fields.",
+      "local_experiment": "Manifest exposes solver_visible_statement_provenance and source_confidence_label."
+    }
+  ],
+  "paid_agent_cells_run": 0,
+  "paid_llm_calls_run": 0,
+  "paid_tuner_calls_run": 0,
+  "schema_version": "barcarolle.agent_tuning_demo.task_generator_evolution.v1.hypothesis_registry.v1"
+}
