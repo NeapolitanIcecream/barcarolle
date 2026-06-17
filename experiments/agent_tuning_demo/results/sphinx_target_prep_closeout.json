@@ -1,0 +1,104 @@
+{
+  "schema_version": "barcarolle.agent_tuning_demo.sphinx_target_prep_closeout.v1",
+  "generated_at": "2026-06-17T10:51:22+00:00",
+  "terminal_state": "sphinx_ready_for_paid_baseline_preregistration",
+  "repo_id": "sphinx",
+  "repo_url": "https://github.com/sphinx-doc/sphinx.git",
+  "paid_agent_cells_run": 0,
+  "paid_llm_calls_run": 0,
+  "paid_tuner_calls_run": 0,
+  "recommendation": "Advance sphinx-doc/sphinx to a paid-baseline-preregistration runbook, but do not run paid cells until that runbook is explicitly approved.",
+  "canonical_outputs": {
+    "target_profile": "experiments/agent_tuning_demo/config/sphinx_target_profile.json",
+    "setup_smoke": "experiments/agent_tuning_demo/results/sphinx_setup_smoke.json",
+    "replay_preflight": "experiments/agent_tuning_demo/results/sphinx_replay_preflight.json",
+    "candidate_inventory": "experiments/agent_tuning_demo/results/sphinx_candidate_inventory.json",
+    "certification_wave": "experiments/agent_tuning_demo/results/sphinx_certification_wave.json",
+    "rolling_origin_policy": "experiments/agent_tuning_demo/results/sphinx_rolling_origin_policy.json"
+  },
+  "target_profile_summary": {
+    "current_smoke_pass_count": 2,
+    "current_smoke_count": 2,
+    "targeted_verifier_time_class": "ideal_under_60s",
+    "head_commit": "581c0860dfedf9628e1b4c0c019e3c36e5e4a74e"
+  },
+  "version_aware_preflight": {
+    "sample_size": 5,
+    "pass_count": 4,
+    "dominant_failure_labels": {
+      "reference_target_test_failure": 1
+    },
+    "bounded_repair_done": "Added date-compatible historical verifier profiles, separated pytest entry files from tests/roots support files, and added html5lib to Sphinx test profiles."
+  },
+  "candidate_inventory": {
+    "candidate_count": 180,
+    "time_bucket_distribution": {
+      "pre_2022": 60,
+      "2022_2023": 60,
+      "2024_plus": 60
+    }
+  },
+  "certification_wave": {
+    "sample_size": 24,
+    "pass_count": 16,
+    "conversion_rate": 0.6667,
+    "dominant_failure_labels": {
+      "reference_target_test_failure": 5,
+      "base_passed_changed_tests_not_meaningful": 2,
+      "reference_dependency_mismatch_or_install_failed": 1
+    },
+    "verifier_duration_summary": {
+      "count": 24,
+      "median_seconds": 7.78,
+      "p95_seconds": 24.333,
+      "max_seconds": 42.758
+    }
+  },
+  "rolling_origin_feasibility": {
+    "policy_id": "fixed_task_count_40_20_20_stride20",
+    "projected_certified_count_from_wave": 120,
+    "projected_window_count": 3,
+    "minimum_tasks_per_segment": {
+      "historical_train": 40,
+      "selected_benchmark": 20,
+      "future_validation": 20
+    }
+  },
+  "paid_cell_estimates": {
+    "baseline_discovery_cells_per_window": 80,
+    "baseline_discovery_cells_total_for_projected_policy": 240,
+    "tuning_before_after_cells_per_window": 40,
+    "tuning_before_after_cells_total_for_projected_policy": 120,
+    "authorization": "not_authorized_by_this_no_paid_gate"
+  },
+  "comparison_to_prior_targets": {
+    "better_than_attrs_click_boltons_for_this_demo": true,
+    "reason": "Sphinx has materially larger no-paid inventory, credible replay conversion, three projected rolling-origin windows, and practical targeted verifier speed; attrs/click remain around 30-31 release-eligible tasks, while boltons remains capacity-limited for stronger multi-window tuning."
+  },
+  "unsupported": [
+    "No paid Agent cells, paid LLM calls, paid tuner/proposer calls, paid baseline discovery, or before/after tuning experiments were run.",
+    "The rolling-origin windows are projected from a 24-row wave and 180-row inventory; a future paid runbook must freeze an exact certified manifest before execution.",
+    "This does not prove tuning improvement, predictive validity, or cross-repository generalization.",
+    "The Sphinx profile is not a general Python historical environment solver."
+  ],
+  "next_runbook_recommendation": "Write a Sphinx paid-baseline-preregistration runbook that freezes a certification-expanded task manifest, preregisters Agents, baseline-discovery cells, seeds, endpoint proof via LLM_BASE_URL/LLM_API_KEY, cost/timeout stops, score-join rules, and success criteria; stop for explicit approval before any paid execution.",
+  "verification": {
+    "agent_tuning_tests": {
+      "command": "uv run --project experiments/phase1_compiler pytest experiments/agent_tuning_demo/tests -q",
+      "status": "passed",
+      "summary": "44 passed"
+    },
+    "git_diff_check": {
+      "command": "git diff --check",
+      "status": "passed"
+    },
+    "hygiene_scan": {
+      "command": "git ls-files experiments/agent_tuning_demo experiments/demo_common experiments/phase0_headroom/target_profiles PROCESS.md | rg '(\\.venv|\\.pytest_cache|\\.DS_Store|__pycache__|\\.pyc$|raw|transcript|workspace|secret|prompt|completion)' || true",
+      "status": "explained_non_artifact_hit",
+      "hits": [
+        "experiments/demo_common/workspace_inputs.py"
+      ],
+      "explanation": "This is a tracked source helper filename containing workspace, not a solver/verifier workspace, raw artifact, prompt, completion, transcript, cache, or secret."
+    }
+  }
+}

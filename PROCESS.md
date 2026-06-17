@@ -391,6 +391,24 @@ gate:
 and
 `experiments/agent_tuning_demo/results/large_repo_target_selection_gate.json`.
 
+The Sphinx target-prep gate completed on 2026-06-17 with terminal state
+`sphinx_ready_for_paid_baseline_preregistration`. No paid Agent cells, paid LLM
+calls, paid tuner/proposer calls, baseline discovery, or before/after tuning
+experiments were run. The gate added a Sphinx target profile, repaired narrow
+version-aware verifier pinning, built a 180-row bounded inventory, and ran a
+24-row no-paid certification wave: `16/24` replay/certification passes,
+conversion `0.6667`, verifier median `7.78s`, p95 `24.333s`, max `42.758s`.
+The simple rolling-origin policy projects 3 windows with 40 historical train,
+20 selected benchmark, and 20 future tasks per window; baseline discovery is
+estimated at 80 cells/window and future before/after tuning at 40 cells/window,
+but neither is authorized by this gate. Next work is a Sphinx
+paid-baseline-preregistration runbook that freezes a certification-expanded
+task manifest, Agents, seeds, endpoint proof, cost/timeout stops, score joins,
+and success criteria, then stops for explicit approval before any paid
+execution. Canonical closeout:
+`experiments/agent_tuning_demo/reports/sphinx_target_prep_closeout_zh.md` and
+`experiments/agent_tuning_demo/results/sphinx_target_prep_closeout.json`.
+
 Agent License remains a possible downstream product, but it is not the current
 research proof or active architecture. Historical license/admission material is
 archived under `archive/2026-05-agent-license-reset/`.
