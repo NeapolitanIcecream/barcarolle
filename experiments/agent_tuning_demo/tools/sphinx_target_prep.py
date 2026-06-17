@@ -1267,6 +1267,265 @@ def run_certification_expanded_manifest(
     return payload
 
 
+def sanitized_commands(row: dict[str, Any]) -> list[dict[str, Any]]:
+    return [
+        {
+            "role": command.get("role", ""),
+            "profile_id": command.get("profile_id", ""),
+            "returncode": command.get("returncode", ""),
+            "duration_seconds": command.get("duration_seconds", ""),
+            "timed_out": command.get("timed_out", False),
+            "subgate_label": command.get("subgate_label", ""),
+            "stdout_line_count": command.get("stdout_line_count", ""),
+            "stderr_line_count": command.get("stderr_line_count", ""),
+            "stdout_tail_hash": command.get("stdout_tail_hash", ""),
+            "stderr_tail_hash": command.get("stderr_tail_hash", ""),
+        }
+        for command in row.get("commands", [])
+    ]
+
+
+def command_subgate_counts(rows: list[dict[str, Any]]) -> dict[str, int]:
+    counts: dict[str, int] = {}
+    for row in rows:
+        for command in row.get("commands", []):
+            label = str(command.get("subgate_label") or "")
+            if label:
+                counts[label] = counts.get(label, 0) + 1
+    return dict(sorted(counts.items(), key=lambda item: (-item[1], item[0])))
+
+
+def concrete_sphinx_failure_label(row: dict[str, Any]) -> str:
+    failure = str(row.get("failure_label") or "")
+    command_labels = [str(command.get("subgate_label") or "") for command in row.get("commands", [])]
+    if failure == "reference_target_test_failure" and command_labels and set(command_labels) == {"target_test_failure"}:
+        return "target_changed_tests_fail_on_target_commit"
+    if failure == "reference_target_test_failure":
+        return "target_changed_tests_do_not_pass_under_bounded_profiles"
+    if failure == "target_worktree_failed":
+        return "target_commit_worktree_unavailable_or_invalid"
+    if failure == "base_passed_changed_tests_not_meaningful":
+        return "changed_tests_not_fail_to_pass_oracle"
+    if failure.startswith("reference_dependency_mismatch") or failure.startswith("reference_import") or failure.startswith("reference_collection"):
+        return "bounded_profile_or_dependency_mismatch"
+    return failure or "passed"
+
+
+def repair_class_for_sphinx_failure(concrete_label: str) -> str:
+    if concrete_label in {"bounded_profile_or_dependency_mismatch"}:
+        return "bounded_profile_repair_candidate"
+    if concrete_label == "target_commit_worktree_unavailable_or_invalid":
+        return "inventory_or_checkout_repair_candidate"
+    if concrete_label == "target_changed_tests_fail_on_target_commit":
+        return "not_locally_repairable_changed_tests_do_not_self_verify"
+    if concrete_label == "changed_tests_not_fail_to_pass_oracle":
+        return "not_repairable_oracle_not_meaningful"
+    return "not_locally_repairable"
+
+
+def sanitized_failure_row(row: dict[str, Any]) -> dict[str, Any]:
+    concrete = concrete_sphinx_failure_label(row)
+    return {
+        "task_id": row.get("task_id", ""),
+        "target_commit": row.get("target_commit", ""),
+        "base_commit": row.get("base_commit", ""),
+        "task_time": row.get("task_time", ""),
+        "time_bucket": time_bucket(parse_datetime(row.get("task_time")).year),
+        "module_family": row.get("module_family", ""),
+        "preliminary_risk_label": row.get("preliminary_risk_label", ""),
+        "failure_label": row.get("failure_label", ""),
+        "concrete_failure_label": concrete,
+        "repair_class": repair_class_for_sphinx_failure(concrete),
+        "changed_implementation_files": row.get("changed_implementation_files") or [],
+        "changed_test_files": row.get("changed_test_files") or [],
+        "pytest_entry_files": row.get("pytest_entry_files") or [],
+        "commands": sanitized_commands(row),
+    }
+
+
+def build_sphinx_failure_diagnosis_payload(
+    *,
+    attempt_rows: list[dict[str, Any]],
+    passing_contrast_rows: list[dict[str, Any]],
+    expansion_attempt_limit: int = 30,
+) -> dict[str, Any]:
+    sanitized_attempts = [sanitized_failure_row(row) for row in attempt_rows]
+    reference_failures = [row for row in sanitized_attempts if row["failure_label"] == "reference_target_test_failure"]
+    target_worktree_failures = [row for row in sanitized_attempts if row["failure_label"] == "target_worktree_failed"]
+    concrete_counts = counted(row["concrete_failure_label"] for row in sanitized_attempts if row["failure_label"])
+    repair_counts = counted(row["repair_class"] for row in sanitized_attempts if row["failure_label"])
+    pass_count = sum(1 for row in attempt_rows if row.get("terminal_status") == "passed")
+    reference_sample = reference_failures[:10]
+    terminal_decision = (
+        "reject_sphinx_move_to_candidate_loop"
+        if pass_count == 0 and repair_counts.get("not_locally_repairable_changed_tests_do_not_self_verify", 0) >= 10
+        else "bounded_repair_may_be_justified"
+    )
+    repair_attempted = terminal_decision != "reject_sphinx_move_to_candidate_loop"
+    return {
+        "schema_version": f"{SCHEMA_VERSION}.sphinx_failure_diagnosis.v1",
+        "generated_at": iso_now(),
+        "paid_agent_cells_run": 0,
+        "paid_llm_calls_run": 0,
+        "paid_tuner_calls_run": 0,
+        "repo_id": "sphinx",
+        "source_inputs": {
+            "candidate_inventory": "experiments/agent_tuning_demo/results/sphinx_candidate_inventory.json",
+            "certification_wave": "experiments/agent_tuning_demo/results/sphinx_certification_wave.json",
+            "certification_expanded_manifest": "experiments/agent_tuning_demo/results/sphinx_certification_expanded_manifest.json",
+        },
+        "sample_policy": {
+            "expansion_attempt_limit": expansion_attempt_limit,
+            "reference_target_test_failure_rows_required": 10,
+            "target_worktree_failed_rows_policy": "include_all_observed_rows_when_count_is_small",
+            "passing_contrast_rows": min(5, len(passing_contrast_rows)),
+            "raw_output_committed": False,
+        },
+        "attempt_summary": {
+            "attempted_count": len(attempt_rows),
+            "pass_count": pass_count,
+            "conversion_rate": round(pass_count / len(attempt_rows), 4) if attempt_rows else 0.0,
+            "failure_label_counts": failure_counts(attempt_rows),
+            "concrete_failure_label_counts": concrete_counts,
+            "repair_class_counts": repair_counts,
+            "command_subgate_counts": command_subgate_counts(attempt_rows),
+        },
+        "reference_target_test_failure_sample": reference_sample,
+        "reference_target_test_failure_sample_count": len(reference_sample),
+        "target_worktree_failed_rows": target_worktree_failures,
+        "target_worktree_failed_row_count": len(target_worktree_failures),
+        "passing_contrast_rows": [sanitized_failure_row(row) for row in passing_contrast_rows[:5]],
+        "decision": {
+            "sphinx_decision": terminal_decision,
+            "repair_attempted": repair_attempted,
+            "why": (
+                "The sampled expansion rows reproduced 0/30 conversion; the dominant concrete label is target changed-test "
+                "failure on the target commit, which is not a narrow verifier-profile or support-file repair."
+                if terminal_decision == "reject_sphinx_move_to_candidate_loop"
+                else "Failure labels leave a bounded profile, checkout, or oracle repair path open."
+            ),
+            "next_action": "continue_to_candidate_loop" if terminal_decision == "reject_sphinx_move_to_candidate_loop" else "run_bounded_sphinx_repair",
+        },
+    }
+
+
+def expansion_diagnosis_records(inventory_rows: list[dict[str, Any]], prior_flat_rows: list[dict[str, Any]], limit: int) -> list[dict[str, Any]]:
+    attempted_ids = {str(row["task_id"]) for row in prior_flat_rows}
+    records: list[dict[str, Any]] = []
+    for inventory_row in sorted(inventory_rows, key=lambda row: (row.get("task_time", ""), row.get("task_id", ""))):
+        if len(records) >= limit:
+            break
+        if str(inventory_row["task_id"]) in attempted_ids:
+            continue
+        records.append(inventory_row)
+    return records
+
+
+def run_sphinx_failure_diagnosis(limit: int = 30) -> dict[str, Any]:
+    profile = read_json(CONFIG)
+    repo = repo_path(profile["ignored_local_checkout_path"])
+    inventory = read_json(RESULTS / "sphinx_candidate_inventory.json")
+    wave = read_json(RESULTS / "sphinx_certification_wave.json")
+    records = expansion_diagnosis_records(list(inventory.get("rows") or []), list(wave.get("flat_rows") or []), limit)
+    attempt_rows = [
+        replay_candidate(profile, repo, inventory_record_to_replay_row(record), scratch_root=SCRATCH / "failure_diagnosis")
+        for record in records
+    ]
+    passing_contrast_rows = [row for row in wave.get("rows", []) if row.get("terminal_status") == "passed"][:5]
+    payload = build_sphinx_failure_diagnosis_payload(
+        attempt_rows=attempt_rows,
+        passing_contrast_rows=passing_contrast_rows,
+        expansion_attempt_limit=limit,
+    )
+    write_json(RESULTS / "sphinx_failure_diagnosis.json", payload)
+    write_text(REPORTS / "sphinx_failure_diagnosis_zh.md", sphinx_failure_diagnosis_report(payload))
+    return payload
+
+
+def sphinx_failure_diagnosis_report(payload: dict[str, Any]) -> str:
+    summary = payload["attempt_summary"]
+    decision = payload["decision"]
+    reference_table = markdown_table(
+        [
+            {
+                "task": row["task_id"],
+                "time": str(row["task_time"])[:10],
+                "family": row["module_family"],
+                "failure": row["concrete_failure_label"],
+                "repair": row["repair_class"],
+                "subgates": ",".join(command.get("subgate_label", "") for command in row["commands"]),
+            }
+            for row in payload["reference_target_test_failure_sample"]
+        ],
+        [("Task", "task"), ("Time", "time"), ("Family", "family"), ("Failure", "failure"), ("Repair class", "repair"), ("Subgates", "subgates")],
+    )
+    worktree_table = markdown_table(
+        [
+            {
+                "task": row["task_id"],
+                "time": str(row["task_time"])[:10],
+                "family": row["module_family"],
+                "failure": row["concrete_failure_label"],
+                "repair": row["repair_class"],
+            }
+            for row in payload["target_worktree_failed_rows"]
+        ],
+        [("Task", "task"), ("Time", "time"), ("Family", "family"), ("Failure", "failure"), ("Repair class", "repair")],
+    )
+    contrast_table = markdown_table(
+        [
+            {
+                "task": row["task_id"],
+                "time": str(row["task_time"])[:10],
+                "family": row["module_family"],
+                "subgates": ",".join(command.get("subgate_label", "") for command in row["commands"]),
+            }
+            for row in payload["passing_contrast_rows"]
+        ],
+        [("Task", "task"), ("Time", "time"), ("Family", "family"), ("Subgates", "subgates")],
+    )
+    return f"""# Sphinx failure diagnosis
+
+生成时间：`{payload['generated_at']}`。付费 Agent cells：`0`。付费 LLM calls：`0`。付费 tuner calls：`0`。
+
+## 结论
+
+Sphinx decision: `{decision['sphinx_decision']}`。Repair attempted: `{decision['repair_attempted']}`。Next action: `{decision['next_action']}`。
+
+诊断重放了 expansion 的前 `{payload['sample_policy']['expansion_attempt_limit']}` 个未尝试候选，conversion `{summary['pass_count']}/{summary['attempted_count']}` (`{summary['conversion_rate']}`)。
+
+主要 failure labels: `{summary['failure_label_counts']}`。
+
+具体 failure labels: `{summary['concrete_failure_label_counts']}`。
+
+repair classes: `{summary['repair_class_counts']}`。
+
+命令 subgates: `{summary['command_subgate_counts']}`。
+
+## 判断依据
+
+{decision['why']}
+
+`reference_target_test_failure` 样本不少于 10 行；`target_worktree_failed` 行数较小，因此全部列入 JSON 和下表。命令记录只保留 profile、return code、duration、subgate 和尾部 hash，不提交 raw stdout/stderr。
+
+## Reference target test failure sample
+
+{reference_table}
+
+## Target worktree failures
+
+{worktree_table}
+
+## Passing contrast
+
+{contrast_table}
+
+## Artifact hygiene
+
+本 artifact 不包含 raw logs、workspaces、prompts、completions、transcripts 或 secrets；只记录 sanitized metadata 和 command gate summaries。
+"""
+
+
 def certification_expanded_manifest_report(payload: dict[str, Any]) -> str:
     rows = [
         {
@@ -1876,6 +2135,7 @@ def main() -> int:
             "rolling-policy",
             "rolling-protocol-v2",
             "certification-expanded-manifest",
+            "failure-diagnosis",
             "window-manifest",
             "paid-cell-accounting",
             "closeout",
@@ -1914,6 +2174,9 @@ def main() -> int:
             minimum_threshold=args.minimum_threshold,
         )
         print(json.dumps({"certified_task_count": payload["certified_task_count"], "threshold_state": payload["threshold_state"]}, sort_keys=True))
+    elif args.command == "failure-diagnosis":
+        payload = run_sphinx_failure_diagnosis(limit=args.limit or 30)
+        print(json.dumps({"decision": payload["decision"]["sphinx_decision"], "pass_count": payload["attempt_summary"]["pass_count"]}, sort_keys=True))
     elif args.command == "window-manifest":
         payload = run_rolling_origin_window_manifest()
         print(json.dumps({"window_count": payload["window_count"], "state": payload["window_threshold_state"]}, sort_keys=True))

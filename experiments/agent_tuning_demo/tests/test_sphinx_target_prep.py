@@ -251,3 +251,58 @@ def test_paid_cell_accounting_uses_selected_plus_future_for_baseline() -> None:
     assert payload["total_naive_baseline_discovery_cells"] == 480
     assert payload["deduplicated_unique_task_agent_cells"]["known_future_holdout_unique_task_count"] == 60
     assert payload["deduplicated_unique_task_agent_cells"]["selected_plus_future_unique_cells_range_depends_on_next_selector"] == [320, 400]
+
+
+def test_sphinx_failure_diagnosis_rejects_nonrepairable_target_failures() -> None:
+    attempt_rows = [
+        {
+            "task_id": f"sphinx__hist__{index + 1:04d}",
+            "target_commit": "b" * 40,
+            "base_commit": "a" * 40,
+            "task_time": "2021-01-01T00:00:00+00:00",
+            "module_family": "extensions",
+            "preliminary_risk_label": "normal",
+            "terminal_status": "failed",
+            "failure_label": "reference_target_test_failure",
+            "changed_implementation_files": ["sphinx/ext/autodoc/__init__.py"],
+            "changed_test_files": ["tests/test_ext_autodoc_configs.py"],
+            "pytest_entry_files": ["tests/test_ext_autodoc_configs.py"],
+            "commands": [
+                {
+                    "role": "reference_target",
+                    "profile_id": "py39_2018_2021_editable",
+                    "returncode": 1,
+                    "duration_seconds": 0.5,
+                    "timed_out": False,
+                    "subgate_label": "target_test_failure",
+                }
+            ],
+        }
+        for index in range(10)
+    ]
+
+    payload = prep.build_sphinx_failure_diagnosis_payload(
+        attempt_rows=attempt_rows,
+        passing_contrast_rows=[],
+        expansion_attempt_limit=10,
+    )
+
+    assert payload["decision"]["sphinx_decision"] == "reject_sphinx_move_to_candidate_loop"
+    assert payload["decision"]["repair_attempted"] is False
+    assert payload["reference_target_test_failure_sample_count"] == 10
+    assert payload["attempt_summary"]["repair_class_counts"] == {
+        "not_locally_repairable_changed_tests_do_not_self_verify": 10
+    }
+
+
+def test_expansion_diagnosis_records_skip_prior_attempts() -> None:
+    inventory = [
+        {"task_id": "sphinx__hist__0001", "task_time": "2021-01-01T00:00:00+00:00"},
+        {"task_id": "sphinx__hist__0002", "task_time": "2021-01-02T00:00:00+00:00"},
+        {"task_id": "sphinx__hist__0003", "task_time": "2021-01-03T00:00:00+00:00"},
+    ]
+    prior = [{"task_id": "sphinx__hist__0001"}]
+
+    selected = prep.expansion_diagnosis_records(inventory, prior, 2)
+
+    assert [row["task_id"] for row in selected] == ["sphinx__hist__0002", "sphinx__hist__0003"]
