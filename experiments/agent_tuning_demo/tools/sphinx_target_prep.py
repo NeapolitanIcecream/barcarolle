@@ -11,6 +11,7 @@ import time
 from dataclasses import dataclass
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
+from statistics import median
 from typing import Any
 
 
@@ -255,6 +256,14 @@ def module_family(paths: list[str]) -> str:
     return "core_or_other"
 
 
+def time_bucket(year: int) -> str:
+    if year < 2022:
+        return "pre_2022"
+    if year < 2024:
+        return "2022_2023"
+    return "2024_plus"
+
+
 def risk_label(row: dict[str, Any]) -> str:
     tests = list(row.get("test_files") or [])
     impl = list(row.get("implementation_files") or [])
@@ -311,9 +320,10 @@ def parse_git_history(repo: Path) -> tuple[list[dict[str, Any]], bool]:
             "test_files": test_files,
             "pytest_files": [path for path in test_files if is_pytest_entry_path(path)],
             "module_family": module_family([*implementation_files, *test_files]),
-            "expected_targeted_verifier_command": "python -m pytest <changed_tests> -q",
+                "expected_targeted_verifier_command": "python -m pytest <changed_tests> -q",
         }
         row["preliminary_risk_label"] = risk_label(row)
+        row["time_bucket"] = time_bucket(int(row["task_year"]))
         rows.append(row)
     return rows, len(rows) >= HISTORY_SCAN_CAP
 
@@ -380,6 +390,37 @@ def preflight_sample(rows: list[dict[str, Any]], limit: int = 5) -> list[dict[st
         used = {row["task_id"] for row in selected}
         selected.extend(row for row in spread_sample(eligible, limit * 2) if row["task_id"] not in used)
     return selected[:limit]
+
+
+def inventory_sample(rows: list[dict[str, Any]], limit: int) -> list[dict[str, Any]]:
+    if len(rows) <= limit:
+        return rows
+    out: list[dict[str, Any]] = []
+    for bucket in ("pre_2022", "2022_2023", "2024_plus"):
+        bucket_rows = [row for row in rows if row["time_bucket"] == bucket]
+        out.extend(spread_sample(bucket_rows, max(1, limit // 3)))
+    if len(out) < limit:
+        used = {row["task_id"] for row in out}
+        out.extend(row for row in spread_sample(rows, limit * 2) if row["task_id"] not in used)
+    return sorted(out[:limit], key=lambda row: row["task_time"])
+
+
+def certification_sample(rows: list[dict[str, Any]], limit: int) -> list[dict[str, Any]]:
+    eligible = [
+        row
+        for row in rows
+        if row["preliminary_risk_label"] in {"normal", "wide_changed_test_oracle", "large_implementation_surface"}
+    ]
+    selected: list[dict[str, Any]] = []
+    per_bucket = max(1, limit // 3)
+    for bucket in ("pre_2022", "2022_2023", "2024_plus"):
+        bucket_rows = [row for row in eligible if row["time_bucket"] == bucket and row["preliminary_risk_label"] == "normal"]
+        selected.extend(spread_sample(bucket_rows, per_bucket))
+    if len(selected) < limit:
+        used = {row["task_id"] for row in selected}
+        fill = [row for row in eligible if row["task_id"] not in used]
+        selected.extend(spread_sample(fill, limit - len(selected)))
+    return sorted(selected[:limit], key=lambda row: row["task_time"])
 
 
 def command_record(role: str, profile: dict[str, Any], command: list[str], result: CommandResult) -> dict[str, Any]:
@@ -552,6 +593,243 @@ def run_replay_preflight(limit: int = 5) -> dict[str, Any]:
     return payload
 
 
+def inventory_record(row: dict[str, Any]) -> dict[str, Any]:
+    return {
+        "task_id": row["task_id"],
+        "commit": row["target_commit"],
+        "parent_base_commit": row["base_commit"],
+        "task_time": row["task_time"],
+        "time_bucket": row["time_bucket"],
+        "changed_implementation_files": row["implementation_files"],
+        "changed_test_files": row["test_files"],
+        "pytest_entry_files": row["pytest_files"],
+        "module_family": row["module_family"],
+        "public_source_context_reference": row["public_source_context_reference"],
+        "preliminary_risk_label": row["preliminary_risk_label"],
+        "expected_targeted_verifier_command": row["expected_targeted_verifier_command"],
+    }
+
+
+def run_candidate_inventory(limit: int = 180) -> dict[str, Any]:
+    profile = read_json(CONFIG)
+    repo = repo_path(profile["ignored_local_checkout_path"])
+    rows = inventory_sample(candidate_rows(repo), limit)
+    records = [inventory_record(row) for row in rows]
+    payload = {
+        "schema_version": f"{SCHEMA_VERSION}.candidate_inventory.v1",
+        "generated_at": iso_now(),
+        "paid_agent_cells_run": 0,
+        "paid_llm_calls_run": 0,
+        "paid_tuner_calls_run": 0,
+        "repo_id": profile["repo_id"],
+        "inventory_limit": limit,
+        "candidate_count": len(records),
+        "time_bucket_distribution": counted(row["time_bucket"] for row in records),
+        "module_family_distribution": counted(row["module_family"] for row in records),
+        "risk_distribution": counted(row["preliminary_risk_label"] for row in records),
+        "rows": records,
+    }
+    write_json(RESULTS / "sphinx_candidate_inventory.json", payload)
+    write_csv(
+        RESULTS / "sphinx_candidate_inventory.csv",
+        [csv_inventory_row(row) for row in records],
+        [
+            "task_id",
+            "commit",
+            "parent_base_commit",
+            "task_time",
+            "time_bucket",
+            "module_family",
+            "preliminary_risk_label",
+            "changed_implementation_files",
+            "changed_test_files",
+            "pytest_entry_files",
+            "public_source_context_reference",
+            "expected_targeted_verifier_command",
+        ],
+    )
+    write_text(REPORTS / "sphinx_candidate_inventory_zh.md", inventory_report(payload))
+    return payload
+
+
+def csv_inventory_row(row: dict[str, Any]) -> dict[str, Any]:
+    return {
+        **row,
+        "changed_implementation_files": ";".join(row["changed_implementation_files"]),
+        "changed_test_files": ";".join(row["changed_test_files"]),
+        "pytest_entry_files": ";".join(row["pytest_entry_files"]),
+    }
+
+
+def run_certification_wave(limit: int = 24) -> dict[str, Any]:
+    profile = read_json(CONFIG)
+    repo = repo_path(profile["ignored_local_checkout_path"])
+    inventory = inventory_sample(candidate_rows(repo), 180)
+    sampled = certification_sample(inventory, limit)
+    results = [replay_candidate(profile, repo, row, scratch_root=SCRATCH / "certification_wave") for row in sampled]
+    flat_rows = [certification_csv_row(row) for row in results]
+    durations = [float(row["verifier_duration_seconds"]) for row in flat_rows if row.get("verifier_duration_seconds") not in {"", None}]
+    payload = {
+        "schema_version": f"{SCHEMA_VERSION}.certification_wave.v1",
+        "generated_at": iso_now(),
+        "paid_agent_cells_run": 0,
+        "paid_llm_calls_run": 0,
+        "paid_tuner_calls_run": 0,
+        "repo_id": profile["repo_id"],
+        "sample_size": len(results),
+        "pass_count": sum(1 for row in results if row.get("terminal_status") == "passed"),
+        "conversion_rate": round(sum(1 for row in results if row.get("terminal_status") == "passed") / len(results), 4) if results else 0.0,
+        "dominant_failure_labels": failure_counts(results),
+        "time_bucket_distribution": counted(row["time_bucket"] for row in flat_rows),
+        "module_family_distribution": counted(row["module_family"] for row in flat_rows),
+        "verifier_duration_summary": duration_summary(durations),
+        "raw_output_committed": False,
+        "sample_policy": "24 deterministic spread-sample candidates across pre_2022, 2022_2023, and 2024_plus where available; normal-risk rows preferred before wider risk labels.",
+        "rows": results,
+        "flat_rows": flat_rows,
+    }
+    write_json(RESULTS / "sphinx_certification_wave.json", payload)
+    write_csv(
+        RESULTS / "sphinx_certification_wave.csv",
+        flat_rows,
+        [
+            "task_id",
+            "target_commit",
+            "base_commit",
+            "task_time",
+            "time_bucket",
+            "module_family",
+            "terminal_status",
+            "failure_label",
+            "winning_profile_id",
+            "base_workspace_prepared",
+            "changed_tests_reconstructed",
+            "hidden_verifier_injection_works",
+            "base_reference_behavior_meaningful",
+            "verifier_duration_seconds",
+            "changed_implementation_files",
+            "changed_test_files",
+            "pytest_entry_files",
+        ],
+    )
+    write_text(REPORTS / "sphinx_certification_wave_zh.md", certification_report(payload))
+    return payload
+
+
+def certification_csv_row(row: dict[str, Any]) -> dict[str, Any]:
+    failure = str(row.get("failure_label") or "")
+    return {
+        "task_id": row["task_id"],
+        "target_commit": row["target_commit"],
+        "base_commit": row["base_commit"],
+        "task_time": row["task_time"],
+        "time_bucket": time_bucket(parse_datetime(row["task_time"]).year),
+        "module_family": row["module_family"],
+        "terminal_status": row["terminal_status"],
+        "failure_label": failure,
+        "winning_profile_id": row.get("winning_profile_id", ""),
+        "base_workspace_prepared": failure not in {"base_worktree_failed", "target_worktree_failed"},
+        "changed_tests_reconstructed": failure != "changed_test_oracle_missing",
+        "hidden_verifier_injection_works": failure not in {
+            "base_worktree_failed",
+            "target_worktree_failed",
+            "changed_test_oracle_missing",
+            "hidden_verifier_injection_failed",
+        },
+        "base_reference_behavior_meaningful": row.get("terminal_status") == "passed",
+        "verifier_duration_seconds": round(float(row.get("verifier_duration_seconds") or row.get("duration_seconds") or 0.0), 3),
+        "changed_implementation_files": ";".join(row.get("changed_implementation_files") or []),
+        "changed_test_files": ";".join(row.get("changed_test_files") or []),
+        "pytest_entry_files": ";".join(row.get("pytest_entry_files") or []),
+    }
+
+
+def counted(values: Any) -> dict[str, int]:
+    counts: dict[str, int] = {}
+    for value in values:
+        key = str(value)
+        counts[key] = counts.get(key, 0) + 1
+    return dict(sorted(counts.items()))
+
+
+def duration_summary(values: list[float]) -> dict[str, Any]:
+    if not values:
+        return {"count": 0, "median_seconds": None, "p95_seconds": None, "max_seconds": None}
+    ordered = sorted(values)
+    p95_index = min(len(ordered) - 1, round((len(ordered) - 1) * 0.95))
+    return {
+        "count": len(values),
+        "median_seconds": round(median(values), 3),
+        "p95_seconds": round(ordered[p95_index], 3),
+        "max_seconds": round(max(values), 3),
+    }
+
+
+def inventory_report(payload: dict[str, Any]) -> str:
+    return f"""# Sphinx candidate inventory
+
+生成时间：`{payload['generated_at']}`。付费 Agent cells：`0`。付费 LLM calls：`0`。付费 tuner calls：`0`。
+
+## 结果
+
+本轮写出 bounded inventory `{payload['candidate_count']}` 条；上限 `{payload['inventory_limit']}`。这些条目均有实现文件、changed-test oracle、pytest entry 文件、base commit、target commit 和公开 issue/PR 引用。
+
+- time buckets: `{payload['time_bucket_distribution']}`
+- module families: `{payload['module_family_distribution']}`
+- preliminary risks: `{payload['risk_distribution']}`
+
+该 inventory 是 certification wave 和 rolling-origin feasibility 的 no-paid 输入，不是完整 Sphinx 历史挖掘。
+"""
+
+
+def certification_report(payload: dict[str, Any]) -> str:
+    table = markdown_table(
+        [
+            {
+                "task": row["task_id"],
+                "bucket": row["time_bucket"],
+                "family": row["module_family"],
+                "status": row["terminal_status"],
+                "label": row["failure_label"],
+                "profile": row["winning_profile_id"],
+                "seconds": row["verifier_duration_seconds"],
+            }
+            for row in payload["flat_rows"]
+        ],
+        [("Task", "task"), ("Bucket", "bucket"), ("Family", "family"), ("Status", "status"), ("Label", "label"), ("Profile", "profile"), ("Seconds", "seconds")],
+    )
+    return f"""# Sphinx certification wave
+
+生成时间：`{payload['generated_at']}`。付费 Agent cells：`0`。付费 LLM calls：`0`。付费 tuner calls：`0`。
+
+## 结论
+
+bounded no-paid certification/replay wave 为 `{payload['pass_count']}/{payload['sample_size']}` 通过，conversion rate `{payload['conversion_rate']}`。
+
+## 覆盖
+
+- time buckets: `{payload['time_bucket_distribution']}`
+- module families: `{payload['module_family_distribution']}`
+- sample policy: {payload['sample_policy']}
+
+## Verifier speed
+
+`{payload['verifier_duration_summary']}`
+
+## Failure labels
+
+`{payload['dominant_failure_labels']}`
+
+## Rows
+
+{table}
+
+## Artifact hygiene
+
+只提交 sanitized CSV/JSON/report。未提交 raw stdout/stderr、solver workspace、verifier workspace、prompt、completion 或 transcript。
+"""
+
+
 def failure_counts(rows: list[dict[str, Any]]) -> dict[str, int]:
     counts: dict[str, int] = {}
     for row in rows:
@@ -715,14 +993,20 @@ def markdown_table(rows: list[dict[str, Any]], columns: list[tuple[str, str]]) -
 
 def main() -> int:
     parser = argparse.ArgumentParser()
-    parser.add_argument("command", choices=["setup-smoke", "replay-preflight"])
-    parser.add_argument("--limit", type=int, default=5)
+    parser.add_argument("command", choices=["setup-smoke", "replay-preflight", "candidate-inventory", "certification-wave"])
+    parser.add_argument("--limit", type=int, default=None)
     args = parser.parse_args()
     if args.command == "setup-smoke":
         payload = run_setup_smoke()
         print(json.dumps({"status": payload["targeted_verifier_time_class"], "pass_count": payload["smoke_pass_count"]}, sort_keys=True))
     elif args.command == "replay-preflight":
-        payload = run_replay_preflight(limit=args.limit)
+        payload = run_replay_preflight(limit=args.limit or 5)
+        print(json.dumps({"pass_count": payload["pass_count"], "sample_size": payload["sample_size"]}, sort_keys=True))
+    elif args.command == "candidate-inventory":
+        payload = run_candidate_inventory(limit=args.limit or 180)
+        print(json.dumps({"candidate_count": payload["candidate_count"]}, sort_keys=True))
+    elif args.command == "certification-wave":
+        payload = run_certification_wave(limit=args.limit or 24)
         print(json.dumps({"pass_count": payload["pass_count"], "sample_size": payload["sample_size"]}, sort_keys=True))
     return 0
 

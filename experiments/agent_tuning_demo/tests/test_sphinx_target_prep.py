@@ -138,3 +138,35 @@ def test_replay_base_row_keeps_required_inventory_fields() -> None:
     assert base["changed_implementation_files"] == ["sphinx/config.py"]
     assert base["changed_test_files"] == ["tests/test_config/test_config.py"]
     assert base["pytest_entry_files"] == ["tests/test_config/test_config.py"]
+
+
+def test_time_bucket_policy_matches_runbook_ranges() -> None:
+    assert prep.time_bucket(2021) == "pre_2022"
+    assert prep.time_bucket(2022) == "2022_2023"
+    assert prep.time_bucket(2023) == "2022_2023"
+    assert prep.time_bucket(2024) == "2024_plus"
+
+
+def test_certification_csv_row_exposes_gate_booleans() -> None:
+    row = {
+        "task_id": "sphinx__hist__0001",
+        "target_commit": "b" * 40,
+        "base_commit": "a" * 40,
+        "task_time": "2024-01-01T00:00:00+00:00",
+        "module_family": "config",
+        "terminal_status": "passed",
+        "failure_label": "",
+        "winning_profile_id": "py312_2024_editable",
+        "verifier_duration_seconds": 1.2345,
+        "changed_implementation_files": ["sphinx/config.py"],
+        "changed_test_files": ["tests/test_config.py"],
+        "pytest_entry_files": ["tests/test_config.py"],
+    }
+
+    flat = prep.certification_csv_row(row)
+
+    assert flat["base_workspace_prepared"] is True
+    assert flat["changed_tests_reconstructed"] is True
+    assert flat["hidden_verifier_injection_works"] is True
+    assert flat["base_reference_behavior_meaningful"] is True
+    assert flat["verifier_duration_seconds"] == 1.234
