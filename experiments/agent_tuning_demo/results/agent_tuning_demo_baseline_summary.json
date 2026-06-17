@@ -1,14 +1,17 @@
 {
   "future_baseline": {
-    "cells": 0,
-    "estimated_cost_usd": 0,
-    "failure_categories": {},
+    "cells": 20,
+    "estimated_cost_usd": 7.2240855,
+    "failure_categories": {
+      "hidden verifier failure": 8,
+      "verified pass": 12
+    },
     "invalid_or_unscoreable_cells": 0,
-    "pass_rate": null,
-    "scoreable_cells": 0,
-    "verified_pass_count": 0
+    "pass_rate": 0.6,
+    "scoreable_cells": 20,
+    "verified_pass_count": 12
   },
-  "generated_at": "2026-06-17T15:44:52+00:00",
+  "generated_at": "2026-06-17T16:42:12+00:00",
   "matrix": "experiments/agent_tuning_demo/results/agent_tuning_demo_baseline_matrix.csv",
   "schema_version": "barcarolle.agent_tuning_demo.autonomous_completion.v1.baseline_summary.v1",
   "selected_baseline": {
@@ -23,5 +26,5 @@
     "scoreable_cells": 20,
     "verified_pass_count": 7
   },
-  "total_paid_baseline_cells": 20
+  "total_paid_baseline_cells": 40
 }
