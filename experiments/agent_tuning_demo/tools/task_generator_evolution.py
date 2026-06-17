@@ -734,6 +734,11 @@ def build_windows(repo_id: str, manifest: dict[str, Any]) -> dict[str, Any]:
         "selector_status": "not_chosen_in_this_runbook",
         "selector_leakage_rule": "Future holdout IDs/outcomes are withheld from selector/compiler until after selected_benchmark_from_history is frozen.",
     }
+    return payload
+
+
+def write_windows(repo_id: str, manifest: dict[str, Any]) -> dict[str, Any]:
+    payload = build_windows(repo_id, manifest)
     write_json(RESULTS / f"{repo_id}_task_generator_rolling_origin_windows.json", payload)
     write_text(REPORTS / f"{repo_id}_task_generator_rolling_origin_windows_zh.md", rolling_windows_report(payload))
     return payload
@@ -797,6 +802,11 @@ def build_paid_cell_accounting(window_payloads: list[dict[str, Any]]) -> dict[st
         "per_repo": per_repo,
         "authorization": "not_authorized_by_this_no_paid_run",
     }
+    return payload
+
+
+def write_paid_cell_accounting(window_payloads: list[dict[str, Any]]) -> dict[str, Any]:
+    payload = build_paid_cell_accounting(window_payloads)
     write_json(RESULTS / "task_generator_paid_cell_accounting.json", payload)
     write_text(REPORTS / "task_generator_paid_cell_accounting_zh.md", paid_cell_accounting_report(payload))
     return payload
@@ -1340,9 +1350,9 @@ def main() -> int:
     elif args.command == "windows-and-accounting":
         sphinx_manifest = load_manifest("sphinx")
         mypy_manifest = load_manifest("mypy")
-        sphinx_windows = build_windows("sphinx", sphinx_manifest)
-        mypy_windows = build_windows("mypy", mypy_manifest)
-        accounting = build_paid_cell_accounting([sphinx_windows, mypy_windows])
+        sphinx_windows = write_windows("sphinx", sphinx_manifest)
+        mypy_windows = write_windows("mypy", mypy_manifest)
+        accounting = write_paid_cell_accounting([sphinx_windows, mypy_windows])
         write_iteration_log(sphinx_manifest, mypy_manifest)
         print(json.dumps({"sphinx_windows": sphinx_windows["window_count"], "mypy_windows": mypy_windows["window_count"], "repos": sorted(accounting["per_repo"])}, sort_keys=True))
     elif args.command == "closeout":
