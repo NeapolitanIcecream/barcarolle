@@ -76,3 +76,60 @@ def test_ledger_row_records_required_cost_fields() -> None:
     assert ledger["repository"] == "mypy"
     assert ledger["observed_or_estimated_usd_cost"] == 0.01
     assert ledger["agent_model_harness_surface"]["surface"] == "baseline_no_artifact"
+
+
+def test_reused_dev_baseline_rows_are_not_paid_solver_cells(tmp_path, monkeypatch) -> None:
+    selected = tmp_path / "selected.csv"
+    dev = tmp_path / "dev.csv"
+    future = tmp_path / "future.csv"
+    ledger = tmp_path / "ledger.jsonl"
+    summary = tmp_path / "summary.json"
+    report = tmp_path / "summary.md"
+    row = {
+        "stage": "selected_baseline",
+        "condition": "baseline",
+        "candidate_id": "",
+        "repository": "mypy",
+        "origin_id": "origin_40",
+        "agent_id": demo.TARGET_AGENT_ID,
+        "reviewer_name": demo.TARGET_AGENT_NAME,
+        "harness": demo.TARGET_HARNESS,
+        "model": demo.TARGET_MODEL,
+        "surface": "baseline_no_artifact",
+        "task_id": "task",
+        "terminal_status": "verified_fail",
+        "scoreable_cell": True,
+        "verified_pass": False,
+        "failure_category": "hidden verifier failure",
+        "latency_seconds": 1,
+        "estimated_cost_usd": 0.25,
+        "usage_observed": True,
+        "cost_observation_kind": "observed_tokens_estimated_cost",
+        "usage_source": "adapter_output_usage_json",
+        "input_tokens": 1,
+        "cached_input_tokens": 0,
+        "output_tokens": 1,
+        "endpoint_proof_status": "llm_endpoint_proxy_secret_isolated",
+        "artifact_hash": "",
+        "patch_sha256": "abc",
+        "run_id": "run",
+        "result_artifact_path": "raw/submission.patch",
+    }
+    demo.write_csv(selected, [row], demo.SCORE_FIELDS)
+    demo.write_csv(dev, [{**row, "stage": "dev_eval"}], demo.SCORE_FIELDS)
+    demo.write_csv(future, [], demo.SCORE_FIELDS)
+    monkeypatch.setattr(demo, "SELECTED_BASELINE_CSV", selected)
+    monkeypatch.setattr(demo, "DEV_EVAL_CSV", dev)
+    monkeypatch.setattr(demo, "FUTURE_CSV", future)
+    monkeypatch.setattr(demo, "COST_LEDGER", ledger)
+    monkeypatch.setattr(demo, "COST_SUMMARY_JSON", summary)
+    monkeypatch.setattr(demo, "COST_SUMMARY_REPORT", report)
+    monkeypatch.setattr(demo, "CANDIDATES_JSON", tmp_path / "missing.json")
+
+    demo.rebuild_cost_ledger()
+
+    rows = demo.read_jsonl(ledger)
+    payload = demo.read_json(summary)
+    assert len(rows) == 1
+    assert payload["paid_solver_agent_cells"] == 1
+    assert payload["total_estimated_or_observed_cost_usd"] == 0.25

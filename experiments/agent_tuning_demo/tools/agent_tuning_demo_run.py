@@ -764,6 +764,8 @@ def rebuild_cost_ledger() -> None:
     for path in [SELECTED_BASELINE_CSV, DEV_EVAL_CSV, FUTURE_CSV]:
         for row in read_csv_rows(path):
             if row.get("run_id"):
+                if path == DEV_EVAL_CSV and row.get("condition") == "baseline":
+                    continue
                 rows.append(ledger_row_from_score(row))
     if CANDIDATES_JSON.exists():
         payload = read_json(CANDIDATES_JSON)
