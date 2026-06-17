@@ -3,7 +3,7 @@
     "agent_count_for_baseline_discovery": 4,
     "authorization": "not_authorized_by_this_no_paid_run",
     "formula": "(20 selected + 20 future) * 4 agents = 160 baseline cells/window",
-    "generated_at": "2026-06-17T14:49:46+00:00",
+    "generated_at": "2026-06-17T14:51:59+00:00",
     "paid_agent_cells_run": 0,
     "paid_llm_calls_run": 0,
     "paid_tuner_calls_run": 0,
@@ -22,10 +22,41 @@
             "naive_baseline_discovery_cells": 160,
             "origin_id": "origin_60",
             "selected_benchmark_cells": 80
+          },
+          {
+            "future_holdout_cells": 80,
+            "naive_baseline_discovery_cells": 160,
+            "origin_id": "origin_80",
+            "selected_benchmark_cells": 80
           }
         ],
-        "total_naive_baseline_discovery_cells": 320,
-        "window_count": 2
+        "total_naive_baseline_discovery_cells": 480,
+        "window_count": 3
+      },
+      "sphinx": {
+        "baseline_cells_per_window": 160,
+        "per_window": [
+          {
+            "future_holdout_cells": 80,
+            "naive_baseline_discovery_cells": 160,
+            "origin_id": "origin_40",
+            "selected_benchmark_cells": 80
+          },
+          {
+            "future_holdout_cells": 80,
+            "naive_baseline_discovery_cells": 160,
+            "origin_id": "origin_60",
+            "selected_benchmark_cells": 80
+          },
+          {
+            "future_holdout_cells": 80,
+            "naive_baseline_discovery_cells": 160,
+            "origin_id": "origin_80",
+            "selected_benchmark_cells": 80
+          }
+        ],
+        "total_naive_baseline_discovery_cells": 480,
+        "window_count": 3
       }
     },
     "schema_version": "barcarolle.agent_tuning_demo.task_generator_evolution.v1.paid_cell_accounting.v1"
@@ -48,7 +79,7 @@
     "SWE-bench Live/SWE-Bench++ environment and oracle QA framing",
     "SWE-Bench Pro held-out/future leakage boundary"
   ],
-  "generated_at": "2026-06-17T14:50:03+00:00",
+  "generated_at": "2026-06-17T14:51:59+00:00",
   "kept_mechanisms": [
     "exact-certified manifest before windows",
     "continue past bad chronological blocks instead of early stopping on one failed hypothesis",
@@ -62,7 +93,7 @@
   "paid_agent_cells_run": 0,
   "paid_llm_calls_run": 0,
   "paid_tuner_calls_run": 0,
-  "preferred_acceptance_met": false,
+  "preferred_acceptance_met": true,
   "rejected_or_deferred_mechanisms": [
     "generic Python-test-only mypy miner rejected because it undercounted data-driven oracles",
     "chronological bad-block early stop rejected because it discarded later Sphinx capacity",
@@ -76,10 +107,10 @@
   ],
   "repo_results": {
     "mypy": {
-      "corrected_rolling_origin_window_count": 2,
+      "corrected_rolling_origin_window_count": 3,
       "exact_certified_task_count": 100,
       "threshold_state": "preferred_met",
-      "window_threshold_state": "minimum_policy_supported"
+      "window_threshold_state": "preferred_policy_supported"
     },
     "sphinx": {
       "corrected_rolling_origin_window_count": 3,
