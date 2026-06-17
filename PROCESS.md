@@ -225,6 +225,27 @@ assumptions from demo packaging, materialize or reference the 31-task attrs
 manifest, and pin the attrs verifier environment. Do not start a second-repo
 paid matrix until that no-paid gate passes.
 
+Task Generator evolution update on 2026-06-17 supersedes the target-repair
+loop's `task_generation_method_needs_revision` state for the current Sphinx and
+mypy Agent Tuning candidate repositories:
+
+- Terminal state: `task_generator_evolved_two_repo_ready`.
+- No paid Agent cells, paid tuner/proposer calls, paid baseline discovery, or
+  paid LLM calls were run.
+- `sphinx` and `mypy` each have `100` exact certified tasks and `3` corrected
+  rolling-origin windows with `20` selected-from-history slots and `20` future
+  holdout tasks per window.
+- Final generator path:
+  `experiments/agent_tuning_demo/tools/task_generator_evolution.py`.
+- Canonical closeout:
+  `experiments/agent_tuning_demo/results/task_generator_evolution_closeout.json`
+  and
+  `experiments/agent_tuning_demo/reports/task_generator_evolution_closeout_zh.md`.
+- Next paid work, if pursued, must be a separate preregistered baseline or
+  tuning run that freezes selectors, Agents, score-join rules, invalid-cell
+  policy, seeds, cost caps, and the no-future-leakage window protocol before
+  any paid cells are run.
+
 The strict completion runbook has been executed. Do not rerun it as the default
 next step; use the completed reports above as the handoff state.
 

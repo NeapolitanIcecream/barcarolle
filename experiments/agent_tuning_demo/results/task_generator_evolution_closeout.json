@@ -1,0 +1,111 @@
+{
+  "accounting": {
+    "agent_count_for_baseline_discovery": 4,
+    "authorization": "not_authorized_by_this_no_paid_run",
+    "formula": "(20 selected + 20 future) * 4 agents = 160 baseline cells/window",
+    "generated_at": "2026-06-17T14:49:46+00:00",
+    "paid_agent_cells_run": 0,
+    "paid_llm_calls_run": 0,
+    "paid_tuner_calls_run": 0,
+    "per_repo": {
+      "mypy": {
+        "baseline_cells_per_window": 160,
+        "per_window": [
+          {
+            "future_holdout_cells": 80,
+            "naive_baseline_discovery_cells": 160,
+            "origin_id": "origin_40",
+            "selected_benchmark_cells": 80
+          },
+          {
+            "future_holdout_cells": 80,
+            "naive_baseline_discovery_cells": 160,
+            "origin_id": "origin_60",
+            "selected_benchmark_cells": 80
+          }
+        ],
+        "total_naive_baseline_discovery_cells": 320,
+        "window_count": 2
+      }
+    },
+    "schema_version": "barcarolle.agent_tuning_demo.task_generator_evolution.v1.paid_cell_accounting.v1"
+  },
+  "canonical_outputs": {
+    "baseline_failure_reproduction": "experiments/agent_tuning_demo/results/task_generator_baseline_failure_reproduction.json",
+    "closeout": "experiments/agent_tuning_demo/results/task_generator_evolution_closeout.json",
+    "hypothesis_registry": "experiments/agent_tuning_demo/results/task_generator_hypothesis_registry.json",
+    "iteration_log": "experiments/agent_tuning_demo/results/task_generator_iteration_log.jsonl",
+    "mypy_manifest": "experiments/agent_tuning_demo/results/mypy_task_generator_certified_manifest.json",
+    "mypy_windows": "experiments/agent_tuning_demo/results/mypy_task_generator_rolling_origin_windows.json",
+    "paid_cell_accounting": "experiments/agent_tuning_demo/results/task_generator_paid_cell_accounting.json",
+    "related_work_transfer_matrix": "experiments/agent_tuning_demo/results/task_generator_related_work_transfer_matrix.json",
+    "sphinx_manifest": "experiments/agent_tuning_demo/results/sphinx_task_generator_certified_manifest.json",
+    "sphinx_windows": "experiments/agent_tuning_demo/results/sphinx_task_generator_rolling_origin_windows.json"
+  },
+  "external_related_work_ideas_used": [
+    "SWE-bench fail-to-pass target/base replay",
+    "SWE-bench Verified-style clarity/leakage labels",
+    "SWE-bench Live/SWE-Bench++ environment and oracle QA framing",
+    "SWE-Bench Pro held-out/future leakage boundary"
+  ],
+  "generated_at": "2026-06-17T14:50:03+00:00",
+  "kept_mechanisms": [
+    "exact-certified manifest before windows",
+    "continue past bad chronological blocks instead of early stopping on one failed hypothesis",
+    "repo-specific oracle adapters",
+    "mypy TypeCheckSuite test-data nodeids",
+    "target-commit support/test-data oracle injection",
+    "version-aware uv verifier profiles",
+    "corrected rolling-origin future-holdout leakage boundary"
+  ],
+  "next_paid_preregistration_step": "Freeze selectors, agents, score-join rules, invalid-cell policy, seeds, and cost caps before any paid baseline discovery or before/after tuning run.",
+  "paid_agent_cells_run": 0,
+  "paid_llm_calls_run": 0,
+  "paid_tuner_calls_run": 0,
+  "preferred_acceptance_met": false,
+  "rejected_or_deferred_mechanisms": [
+    "generic Python-test-only mypy miner rejected because it undercounted data-driven oracles",
+    "chronological bad-block early stop rejected because it discarded later Sphinx capacity",
+    "synthetic SWE-smith-style reservoirs deferred because real-history certification reached target",
+    "paid LLM statement generation deferred; source-confidence labels are used instead"
+  ],
+  "remaining_risks": [
+    "Solver-visible statements are provenance-labeled but not human or paid-LLM reviewed.",
+    "Pass-to-pass guards are recorded as not run where no stable adjacent shard was bounded.",
+    "Sphinx final rows reuse the Sphinx replay primitive and sanitized expansion manifest rather than storing raw per-row stdout/stderr."
+  ],
+  "repo_results": {
+    "mypy": {
+      "corrected_rolling_origin_window_count": 2,
+      "exact_certified_task_count": 100,
+      "threshold_state": "preferred_met",
+      "window_threshold_state": "minimum_policy_supported"
+    },
+    "sphinx": {
+      "corrected_rolling_origin_window_count": 3,
+      "exact_certified_task_count": 100,
+      "threshold_state": "preferred_met",
+      "window_threshold_state": "preferred_policy_supported"
+    }
+  },
+  "schema_version": "barcarolle.agent_tuning_demo.task_generator_evolution.v1.closeout.v1",
+  "terminal_state": "task_generator_evolved_two_repo_ready",
+  "verification": {
+    "git_diff_check": {
+      "command": "git diff --check",
+      "status": "passed"
+    },
+    "hygiene_scan": {
+      "command": "git ls-files | rg '(\\.venv|\\.pytest_cache|\\.DS_Store|transcript|completion|prompt|workspace|raw|external|clone|outputs/)'",
+      "hits": [
+        "Historical tracked path-name hits from archive/docs/phase0/phase1 files containing prompt/workspace/raw/external/etc.; no new raw workspaces, clones, prompts, completions, transcripts, caches, or secrets were added."
+      ],
+      "status": "explained_historical_tracked_hits"
+    },
+    "tests": {
+      "command": "uv run --project experiments/phase1_compiler pytest experiments/agent_tuning_demo/tests -q",
+      "status": "passed",
+      "summary": "59 passed"
+    }
+  }
+}
