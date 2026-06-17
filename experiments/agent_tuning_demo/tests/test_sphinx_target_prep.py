@@ -170,3 +170,21 @@ def test_certification_csv_row_exposes_gate_booleans() -> None:
     assert flat["hidden_verifier_injection_works"] is True
     assert flat["base_reference_behavior_meaningful"] is True
     assert flat["verifier_duration_seconds"] == 1.234
+
+
+def test_build_rolling_origin_policy_uses_projected_certified_count() -> None:
+    inventory = {"candidate_count": 180}
+    wave = {
+        "sample_size": 24,
+        "pass_count": 16,
+        "conversion_rate": 0.6667,
+        "verifier_duration_summary": {"median_seconds": 8.0},
+        "dominant_failure_labels": {},
+    }
+
+    payload = prep.build_rolling_origin_policy(inventory, wave)
+
+    assert payload["evidence_inputs"]["projected_certified_count_from_wave"] == 120
+    assert payload["primary_policy"]["window_count"] == 3
+    assert payload["paid_cell_estimates"]["baseline_discovery_cells_per_window"] == 80
+    assert payload["paid_cell_estimates"]["tuning_before_after_cells_per_window"] == 40

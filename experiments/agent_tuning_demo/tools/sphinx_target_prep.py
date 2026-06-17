@@ -830,6 +830,143 @@ bounded no-paid certification/replay wave 为 `{payload['pass_count']}/{payload[
 """
 
 
+def run_rolling_origin_policy() -> dict[str, Any]:
+    inventory = read_json(RESULTS / "sphinx_candidate_inventory.json")
+    wave = read_json(RESULTS / "sphinx_certification_wave.json")
+    payload = build_rolling_origin_policy(inventory, wave)
+    write_json(RESULTS / "sphinx_rolling_origin_policy.json", payload)
+    write_text(REPORTS / "sphinx_rolling_origin_policy_zh.md", rolling_origin_report(payload))
+    return payload
+
+
+def build_rolling_origin_policy(inventory: dict[str, Any], wave: dict[str, Any]) -> dict[str, Any]:
+    conversion = float(wave.get("conversion_rate") or 0.0)
+    projected_certified = round(int(inventory.get("candidate_count") or 0) * conversion)
+    min_train = 40
+    selection_count = 20
+    future_count = 20
+    stride = 20
+    windows = []
+    origin = min_train
+    while origin + selection_count + future_count <= projected_certified:
+        windows.append(
+            {
+                "origin_id": f"origin_{origin}",
+                "origin_task_index": origin,
+                "historical_train_count": origin,
+                "selected_benchmark_count": selection_count,
+                "future_validation_count": future_count,
+                "overlap_with_previous_selected_tasks": 0,
+                "prediction_target": "selected benchmark pass rate",
+                "actual_target": "later/future task pass rate",
+                "mae_formula": "abs(predicted_selected_pass_rate - actual_future_pass_rate)",
+                "tuning_uplift_error_formula": "abs(predicted_after_minus_before_uplift - actual_future_after_minus_before_uplift)",
+                "expected_paid_baseline_discovery_cells": selection_count * 4,
+                "expected_paid_tuning_before_after_cells": future_count * 2,
+            }
+        )
+        origin += stride
+    return {
+        "schema_version": f"{SCHEMA_VERSION}.rolling_origin_policy.v1",
+        "generated_at": iso_now(),
+        "paid_agent_cells_run": 0,
+        "paid_llm_calls_run": 0,
+        "paid_tuner_calls_run": 0,
+        "repo_id": "sphinx",
+        "evidence_inputs": {
+            "candidate_inventory": "experiments/agent_tuning_demo/results/sphinx_candidate_inventory.json",
+            "certification_wave": "experiments/agent_tuning_demo/results/sphinx_certification_wave.json",
+            "certification_sample_size": wave.get("sample_size"),
+            "certification_pass_count": wave.get("pass_count"),
+            "certification_conversion_rate": wave.get("conversion_rate"),
+            "inventory_candidate_count": inventory.get("candidate_count"),
+            "projected_certified_count_from_wave": projected_certified,
+        },
+        "primary_policy": {
+            "policy_id": "fixed_task_count_40_20_20_stride20",
+            "ordering": "task_time ascending over certification-expanded Sphinx task manifest",
+            "minimum_tasks_per_segment": {
+                "historical_train": min_train,
+                "selected_benchmark": selection_count,
+                "future_validation": future_count,
+            },
+            "stride": stride,
+            "overlap_policy": "no overlap between selected benchmark and future validation within a window; historical train is cumulative",
+            "windows": windows,
+            "window_count": len(windows),
+        },
+        "paid_cell_estimates": {
+            "agent_count_for_baseline_discovery": 4,
+            "baseline_discovery_cells_per_window": selection_count * 4,
+            "baseline_discovery_cells_total_for_policy": sum(window["expected_paid_baseline_discovery_cells"] for window in windows),
+            "tuning_before_after_cells_per_window": future_count * 2,
+            "tuning_before_after_cells_total_for_policy": sum(window["expected_paid_tuning_before_after_cells"] for window in windows),
+            "authorization": "not_authorized_by_this_no_paid_gate",
+        },
+        "feasibility": {
+            "at_least_two_windows_projected": len(windows) >= 2,
+            "verifier_speed_summary": wave.get("verifier_duration_summary", {}),
+            "dominant_failure_labels": wave.get("dominant_failure_labels", {}),
+            "unsupported_until_followup": [
+                "Windows are projected from a 24-row certification wave, not frozen certified task manifests.",
+                "Paid baseline discovery and before/after tuning require a separate preregistered paid runbook.",
+            ],
+        },
+    }
+
+
+def rolling_origin_report(payload: dict[str, Any]) -> str:
+    policy = payload["primary_policy"]
+    cells = payload["paid_cell_estimates"]
+    table = markdown_table(
+        [
+            {
+                "origin": window["origin_id"],
+                "train": window["historical_train_count"],
+                "selected": window["selected_benchmark_count"],
+                "future": window["future_validation_count"],
+                "baseline_cells": window["expected_paid_baseline_discovery_cells"],
+                "tuning_cells": window["expected_paid_tuning_before_after_cells"],
+            }
+            for window in policy["windows"]
+        ],
+        [("Origin", "origin"), ("Train", "train"), ("Selected", "selected"), ("Future", "future"), ("Baseline cells", "baseline_cells"), ("Tuning cells", "tuning_cells")],
+    )
+    return f"""# Sphinx rolling-origin policy
+
+生成时间：`{payload['generated_at']}`。付费 Agent cells：`0`。付费 LLM calls：`0`。付费 tuner calls：`0`。
+
+## 结论
+
+主策略：`{policy['policy_id']}`。基于 certification wave 的 projected certified count 为 `{payload['evidence_inputs']['projected_certified_count_from_wave']}`，可支持 `{policy['window_count']}` 个 projected rolling-origin windows。
+
+## Policy
+
+- ordering: {policy['ordering']}
+- minimum segments: `{policy['minimum_tasks_per_segment']}`
+- stride: `{policy['stride']}`
+- overlap: {policy['overlap_policy']}
+
+{table}
+
+## Metrics
+
+每个 window 计算 selected benchmark predicted pass rate 与 later/future actual pass rate 的 MAE：`abs(predicted_selected_pass_rate - actual_future_pass_rate)`。
+
+若未来执行 paid tuning，再用 future segment 计算 before/after uplift error：`abs(predicted_after_minus_before_uplift - actual_future_after_minus_before_uplift)`。
+
+## Paid Cell Estimate
+
+- baseline discovery: `{cells['baseline_discovery_cells_per_window']}` cells/window, `{cells['baseline_discovery_cells_total_for_policy']}` cells for the projected policy.
+- before/after tuning: `{cells['tuning_before_after_cells_per_window']}` cells/window, `{cells['tuning_before_after_cells_total_for_policy']}` cells for the projected policy.
+- authorization: `{cells['authorization']}`.
+
+## Unsupported
+
+{chr(10).join(f"- {item}" for item in payload['feasibility']['unsupported_until_followup'])}
+"""
+
+
 def failure_counts(rows: list[dict[str, Any]]) -> dict[str, int]:
     counts: dict[str, int] = {}
     for row in rows:
@@ -993,7 +1130,10 @@ def markdown_table(rows: list[dict[str, Any]], columns: list[tuple[str, str]]) -
 
 def main() -> int:
     parser = argparse.ArgumentParser()
-    parser.add_argument("command", choices=["setup-smoke", "replay-preflight", "candidate-inventory", "certification-wave"])
+    parser.add_argument(
+        "command",
+        choices=["setup-smoke", "replay-preflight", "candidate-inventory", "certification-wave", "rolling-policy"],
+    )
     parser.add_argument("--limit", type=int, default=None)
     args = parser.parse_args()
     if args.command == "setup-smoke":
@@ -1008,6 +1148,9 @@ def main() -> int:
     elif args.command == "certification-wave":
         payload = run_certification_wave(limit=args.limit or 24)
         print(json.dumps({"pass_count": payload["pass_count"], "sample_size": payload["sample_size"]}, sort_keys=True))
+    elif args.command == "rolling-policy":
+        payload = run_rolling_origin_policy()
+        print(json.dumps({"window_count": payload["primary_policy"]["window_count"]}, sort_keys=True))
     return 0
 
 
