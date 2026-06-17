@@ -1,0 +1,49 @@
+{
+  "canonical_outputs": {
+    "certification_expanded_manifest": "experiments/agent_tuning_demo/results/sphinx_certification_expanded_manifest.json",
+    "closeout": "experiments/agent_tuning_demo/results/sphinx_protocol_manifest_freeze_closeout.json",
+    "paid_cell_accounting": "experiments/agent_tuning_demo/results/sphinx_paid_cell_accounting.json",
+    "rolling_origin_protocol_v2": "experiments/agent_tuning_demo/results/sphinx_rolling_origin_protocol_v2.json",
+    "rolling_origin_window_manifest": "experiments/agent_tuning_demo/results/sphinx_rolling_origin_window_manifest.json"
+  },
+  "generated_at": "2026-06-17T11:38:27+00:00",
+  "paid_agent_cells_run": 0,
+  "paid_llm_calls_run": 0,
+  "paid_tuner_calls_run": 0,
+  "remaining_boundary": [
+    "No paid Agent cells, paid LLM calls, tuner/proposer calls, baseline discovery, or before/after tuning experiments were run.",
+    "The next preregistration runbook still needs to freeze the selector, Agents, endpoint proof, budget/timeouts, score-join details, and success criteria before any paid execution.",
+    "This run did not write the paid-baseline-preregistration runbook."
+  ],
+  "repo_id": "sphinx",
+  "schema_version": "barcarolle.agent_tuning_demo.sphinx_target_prep.v1.protocol_manifest_freeze_closeout.v1",
+  "summary": {
+    "baseline_discovery_cells_per_default_window": 160,
+    "certified_task_count": 16,
+    "corrected_protocol_written": true,
+    "manifest_threshold_state": "below_minimum",
+    "total_naive_baseline_discovery_cells": 0,
+    "window_count": 0,
+    "window_threshold_state": "below_minimum_policy"
+  },
+  "terminal_state": "sphinx_manifest_needs_bounded_repair",
+  "verification": {
+    "agent_tuning_tests": {
+      "command": "uv run --project experiments/phase1_compiler pytest experiments/agent_tuning_demo/tests -q",
+      "status": "passed",
+      "summary": "48 passed"
+    },
+    "git_diff_check": {
+      "command": "git diff --check",
+      "status": "passed"
+    },
+    "hygiene_scan": {
+      "command": "git ls-files experiments/agent_tuning_demo experiments/demo_common experiments/phase0_headroom/target_profiles PROCESS.md | rg '(\\.venv|\\.pytest_cache|\\.DS_Store|__pycache__|\\.pyc$|raw|transcript|workspace|secret|prompt|completion)' || true",
+      "explanation": "Any listed tracked hit was reviewed and is not a committed raw prompt/completion/transcript, secret, solver/verifier workspace, cache, or large raw artifact.",
+      "hits": [
+        "experiments/demo_common/workspace_inputs.py"
+      ],
+      "status": "explained_non_artifact_hit"
+    }
+  }
+}

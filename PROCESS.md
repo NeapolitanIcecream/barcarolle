@@ -3,7 +3,7 @@
 This file records repository-wide process decisions that future coding-agent
 sessions should know before planning or executing Barcarolle work.
 
-Last updated: 2026-06-16.
+Last updated: 2026-06-17.
 
 ## Maintenance Rules
 
@@ -58,6 +58,22 @@ Frozen proposal and evidence:
 
 The V5 proposal report is a frozen proposal-stage artifact. Use it for audit
 and evidence context, not as the live source of the current project story.
+
+## Experiment Scope Discipline
+
+Keep experiments on the main demo story. Prefer the simplest protocol that can
+answer the current decision question. Exploring new algorithms, mechanisms, or
+diagnostics is allowed when the opportunity is concrete and the result can
+change the next decision.
+
+The thing to avoid is predesigning an elaborate scenario, overbuilding
+infrastructure around it, and then letting that path become the project by
+inertia. Do not add window policies, plots, selector/tuner variants, repository
+probes, or verifier machinery only because they are technically interesting or
+make a figure prettier.
+
+Label exploratory figures and diagnostics as such. Do not let exploratory
+details become new claim requirements without a separate decision.
 
 ## Algorithm Mainline
 
@@ -391,23 +407,52 @@ gate:
 and
 `experiments/agent_tuning_demo/results/large_repo_target_selection_gate.json`.
 
-The Sphinx target-prep gate completed on 2026-06-17 with terminal state
-`sphinx_ready_for_paid_baseline_preregistration`. No paid Agent cells, paid LLM
-calls, paid tuner/proposer calls, baseline discovery, or before/after tuning
-experiments were run. The gate added a Sphinx target profile, repaired narrow
+The Sphinx target-prep gate completed on 2026-06-17 with historical terminal
+state `sphinx_ready_for_paid_baseline_preregistration`, but its projected
+rolling-origin policy and old cell accounting are superseded by the
+protocol/manifest freeze below. No paid Agent cells, paid LLM calls, paid
+tuner/proposer calls, baseline discovery, or before/after tuning experiments
+were run. The gate added a Sphinx target profile, repaired narrow
 version-aware verifier pinning, built a 180-row bounded inventory, and ran a
 24-row no-paid certification wave: `16/24` replay/certification passes,
 conversion `0.6667`, verifier median `7.78s`, p95 `24.333s`, max `42.758s`.
-The simple rolling-origin policy projects 3 windows with 40 historical train,
-20 selected benchmark, and 20 future tasks per window; baseline discovery is
-estimated at 80 cells/window and future before/after tuning at 40 cells/window,
-but neither is authorized by this gate. Next work is a Sphinx
-paid-baseline-preregistration runbook that freezes a certification-expanded
-task manifest, Agents, seeds, endpoint proof, cost/timeout stops, score joins,
-and success criteria, then stops for explicit approval before any paid
-execution. Canonical closeout:
+Canonical target-prep closeout:
 `experiments/agent_tuning_demo/reports/sphinx_target_prep_closeout_zh.md` and
 `experiments/agent_tuning_demo/results/sphinx_target_prep_closeout.json`.
+
+The next Sphinx rolling-origin protocol must use the benchmark-compiler story
+directly: for each origin, all eligible tasks before the origin are the
+history pool, the selected benchmark is chosen from that history pool, and the
+future holdout is the next time/task window after the origin. Do not use a
+three-disjoint-segment interpretation where `selected` is simply the slice
+between `train` and `future`; that is a coarse feasibility shorthand, not the
+main claim protocol. Future preregistration should name fields like
+`history_pool_before_origin`, `selected_benchmark_from_history`,
+`future_holdout_after_origin`, and `origin_stride`.
+
+The Sphinx protocol/manifest freeze completed on 2026-06-17 with terminal
+state `sphinx_manifest_needs_bounded_repair`. It corrected the protocol in
+`sphinx_rolling_origin_protocol_v2`: selected benchmark tasks must be chosen
+from the pre-origin history pool, and future holdout IDs/outcomes are not
+selector inputs. Focused no-paid certification expansion reused the 24-row
+wave and attempted 30 additional candidates; conversion was `0/30`, dominated
+by `reference_target_test_failure`, so the stop condition fired. The exact
+certified manifest remains `16` tasks, below the minimum `80` tasks needed for
+two corrected origins, and the corrected window manifest therefore has `0`
+windows. Paid-cell accounting is now unambiguous: a default supported window
+would require `(20 selected + 20 future) * 4 = 160` baseline-discovery cells,
+but the current repaired-ready count is `0` cells because no window is
+supported. Do not write or execute a paid-baseline-preregistration runbook for
+Sphinx until a bounded repair plan can produce a minimum exact certified
+manifest. Canonical freeze outputs:
+`experiments/agent_tuning_demo/reports/sphinx_protocol_manifest_freeze_closeout_zh.md`,
+`experiments/agent_tuning_demo/results/sphinx_protocol_manifest_freeze_closeout.json`,
+`experiments/agent_tuning_demo/reports/sphinx_certification_expanded_manifest_zh.md`,
+`experiments/agent_tuning_demo/results/sphinx_certification_expanded_manifest.json`,
+`experiments/agent_tuning_demo/reports/sphinx_rolling_origin_window_manifest_zh.md`,
+`experiments/agent_tuning_demo/results/sphinx_rolling_origin_window_manifest.json`,
+`experiments/agent_tuning_demo/reports/sphinx_paid_cell_accounting_zh.md`, and
+`experiments/agent_tuning_demo/results/sphinx_paid_cell_accounting.json`.
 
 Agent License remains a possible downstream product, but it is not the current
 research proof or active architecture. Historical license/admission material is
