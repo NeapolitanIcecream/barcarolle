@@ -75,3 +75,66 @@ def test_setup_report_escapes_backticks_in_subject() -> None:
     report = prep.setup_smoke_report(payload)
 
     assert "Document 'graphviz' requirement" in report
+
+
+def test_historical_profiles_use_date_bucket_and_exclude_newer() -> None:
+    profile = {
+        "dependency_setup_policy": {
+            "current_smoke_profile": {
+                "profile_id": "current",
+                "python_version": "3.14",
+                "exclude_newer_date": "2026-06-17",
+                "dependency_constraints": ["."],
+            },
+            "historical_verifier_profiles": [
+                {
+                    "profile_id": "old",
+                    "active_from": "2018-01-01",
+                    "python_version": "3.9",
+                    "dependency_constraints": ["."],
+                },
+                {
+                    "profile_id": "new",
+                    "active_from": "2024-01-01",
+                    "python_version": "3.12",
+                    "dependency_constraints": ["."],
+                },
+            ],
+        }
+    }
+
+    selected = prep.historical_profiles(profile, "2022-06-01T00:00:00+00:00")
+
+    assert [row["profile_id"] for row in selected] == ["old"]
+    assert all(row["exclude_newer_date"] == "2022-11-28" for row in selected)
+
+
+def test_sphinx_candidate_path_classification_stays_inside_package_root() -> None:
+    assert prep.is_impl_path("sphinx/config.py") is True
+    assert prep.is_impl_path("tests/test_config/test_config.py") is False
+    assert prep.is_test_path("tests/test_config/test_config.py") is True
+    assert prep.is_pytest_entry_path("tests/test_config/test_config.py") is True
+    assert prep.is_test_path("tests/roots/test-basic/conf.py") is True
+    assert prep.is_pytest_entry_path("tests/roots/test-basic/conf.py") is False
+    assert prep.is_impl_path("doc/conf.py") is False
+
+
+def test_replay_base_row_keeps_required_inventory_fields() -> None:
+    row = {
+        "task_id": "sphinx__hist__0001",
+        "target_commit": "b" * 40,
+        "base_commit": "a" * 40,
+        "task_time": "2024-01-01T00:00:00+00:00",
+        "module_family": "config",
+        "implementation_files": ["sphinx/config.py"],
+        "test_files": ["tests/test_config/test_config.py"],
+        "pytest_files": ["tests/test_config/test_config.py"],
+        "public_source_context_reference": "pr_or_issue:1",
+        "preliminary_risk_label": "normal",
+    }
+
+    base = prep.replay_base_row(row)
+
+    assert base["changed_implementation_files"] == ["sphinx/config.py"]
+    assert base["changed_test_files"] == ["tests/test_config/test_config.py"]
+    assert base["pytest_entry_files"] == ["tests/test_config/test_config.py"]
