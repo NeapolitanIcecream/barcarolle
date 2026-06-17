@@ -1,0 +1,89 @@
+{
+  "candidate_hidden_verifier_command_template": "uv run --no-project --isolated --managed-python --python {python_version} --exclude-newer {exclude_newer_date} {dependency_flags} -- python -m pytest {test_files} -q",
+  "dependency_setup_policy": {
+    "current_smoke_profile": {
+      "dependency_constraints": [
+        ".",
+        "pytest>=9,<10",
+        "pytest-xdist[psutil]>=3.4",
+        "cython>=3.0",
+        "defusedxml>=0.7.1",
+        "setuptools>=70.0",
+        "typing_extensions>=4.9"
+      ],
+      "exclude_newer_date": "2026-06-17",
+      "install_mode": "editable",
+      "profile_id": "py314_current_editable",
+      "python_version": "3.14"
+    },
+    "historical_policy": "Choose a small date-bucket profile from task_time. Prefer editable installs for 2024+ and 2022-2023 tasks; use older Python and capped pytest/docutils/setuptools constraints for pre-2022 tasks. Try at most three profiles per task, stop on first reference pass, and label dependency mismatch rather than solving arbitrary environments.",
+    "raw_artifact_policy": "Do not commit raw stdout, stderr, workspaces, prompts, completions, or transcripts; record only command shapes, counters, durations, labels, and tail hashes."
+  },
+  "ignored_local_checkout_path": "experiments/phase0_headroom/external_repos/sphinx",
+  "known_environment_risks": [
+    "Modern Sphinx requires Python >=3.12; historical tasks may require older Python profiles.",
+    "Some tests use doc build fixtures and optional parser/builder dependencies; changed-test certification must stay on narrow pytest shards.",
+    "Docutils, pytest, setuptools, and importlib metadata compatibility changes are likely historical replay failure sources.",
+    "Graphviz, image, linkcheck, JavaScript, or external-network tests are not supported in this no-paid prep gate."
+  ],
+  "package_import_roots": [
+    "sphinx"
+  ],
+  "package_map": {
+    "builder": [
+      "sphinx/builders/**",
+      "tests/test_builders/**"
+    ],
+    "config": [
+      "sphinx/config.py",
+      "sphinx/config/**",
+      "tests/test_config/**"
+    ],
+    "directives": [
+      "sphinx/directives/**",
+      "tests/test_directives/**"
+    ],
+    "domains": [
+      "sphinx/domains/**",
+      "tests/test_domains/**"
+    ],
+    "environment": [
+      "sphinx/environment/**",
+      "tests/test_environment/**"
+    ],
+    "extensions": [
+      "sphinx/ext/**",
+      "tests/test_ext_*/**",
+      "tests/test_extensions/**"
+    ],
+    "util": [
+      "sphinx/util/**",
+      "tests/test_util/**"
+    ]
+  },
+  "repo_id": "sphinx",
+  "repo_url": "https://github.com/sphinx-doc/sphinx.git",
+  "schema_version": "barcarolle.agent_tuning_demo.sphinx_target_profile.v1",
+  "unsupported_assumptions": [
+    "This profile does not make full-suite Sphinx verification a requirement.",
+    "This profile does not certify tasks whose only oracle is documentation output without narrow changed tests.",
+    "This profile does not authorize paid Agent cells, paid LLM calls, tuner calls, baseline discovery, or before/after tuning experiments.",
+    "This profile is not a general historical Python environment solver."
+  ],
+  "visible_smoke_commands": [
+    {
+      "label": "sphinx_util",
+      "paths": [
+        "tests/test_util/test_util.py"
+      ],
+      "profile_id": "py314_current_editable"
+    },
+    {
+      "label": "sphinx_config",
+      "paths": [
+        "tests/test_config/test_config.py"
+      ],
+      "profile_id": "py314_current_editable"
+    }
+  ]
+}
