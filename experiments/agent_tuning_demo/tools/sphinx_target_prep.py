@@ -1356,6 +1356,8 @@ def build_window_manifest_from_tasks(tasks: list[dict[str, Any]]) -> dict[str, A
         "source_manifest": "experiments/agent_tuning_demo/results/sphinx_certification_expanded_manifest.json",
         "certified_task_count": len(ordered),
         "window_threshold_state": threshold_state,
+        "preferred_policy_minimum_certified_tasks": 100,
+        "minimum_policy_minimum_certified_tasks": 80,
         "task_ordering": "certified tasks by task_time ascending, stable tie-break by task_id",
         "origin_stride": DEFAULT_ORIGIN_STRIDE,
         "selected_benchmark_size": DEFAULT_SELECTED_BENCHMARK_SIZE,
@@ -1397,6 +1399,8 @@ def rolling_origin_window_manifest_report(payload: dict[str, Any]) -> str:
 ## 结论
 
 certified task count `{payload['certified_task_count']}` supports `{payload['window_count']}` corrected windows；state: `{payload['window_threshold_state']}`。
+
+Preferred policy requires `{payload['preferred_policy_minimum_certified_tasks']}` certified tasks for origins `40/60/80`; minimum acceptable policy requires `{payload['minimum_policy_minimum_certified_tasks']}` certified tasks for origins `40/60`。当前 manifest 只有 `{payload['certified_task_count']}` tasks，因此不伪造 smaller windows。
 
 ## 规则
 
