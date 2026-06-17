@@ -50,3 +50,21 @@ def test_candidate_decision_rejects_mypy_below_conversion_stop() -> None:
     assert row["decision_label"] == "rejected"
     assert row["exact_certified_task_count"] == 0
     assert "corrected threshold requires 80 exact tasks" in row["primary_reason"]
+
+
+def test_repository_search_row_rejects_projected_supply_below_threshold() -> None:
+    row = loop.repository_search_row(
+        {
+            "repo_id": "starlette",
+            "projected_certified_task_count_after_bounded_repair": 57,
+            "implementation_plus_test_change_count": 435,
+            "implementation_plus_test_public_ref_count": 381,
+            "targeted_verifier_timing": {"speed_class": "partial_probe_failure"},
+            "historical_reference_probe": {"sample_size": 1, "pass_count": 0},
+        },
+        source="unit",
+    )
+
+    assert row["decision_label"] == "rejected_supply_below_corrected_threshold"
+    assert row["projected_certified_task_count"] == 57
+    assert row["certification_sample_result"] == "0/1"

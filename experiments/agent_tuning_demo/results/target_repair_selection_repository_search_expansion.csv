@@ -1,0 +1,34 @@
+repo_id,source_screen,rough_scale,implementation_plus_test_anchor_count,public_context_count,setup_smoke_result,targeted_verifier_speed,projected_certified_task_count,certification_sample_result,decision_label,decision_reason
+anyio,large_repo_target_selection_gate,1319,394,220,failed,environment_failed_or_unusable,11,0/1,rejected_supply_below_corrected_threshold,projected 11 below 80
+boltons,target_repo_selection_gate,1611,202,42,passed,,57,not_run,rejected_supply_below_corrected_threshold,projected 57 below 80
+cachetools,target_repo_selection_gate,472,89,53,passed,,22,5/12,rejected_supply_below_corrected_threshold,projected 22 below 80
+dateutil,target_repo_selection_gate,1622,161,6,not_run,,1,not_run,rejected_supply_below_corrected_threshold,projected 1 below 80
+django,large_repo_target_selection_gate,34691,1888,1717,failed,environment_failed_or_unusable,258,0/1,rejected_setup_or_replay_risk,classified large_but_heavy
+httpx,large_repo_target_selection_gate,1523,474,398,failed,environment_failed_or_unusable,20,0/1,rejected_supply_below_corrected_threshold,projected 20 below 80
+humanize,target_repo_selection_gate,1054,90,10,not_run,,12,not_run,rejected_supply_below_corrected_threshold,projected 12 below 80
+jinja2,target_repo_selection_gate,2949,251,32,passed,,5,not_run,rejected_supply_below_corrected_threshold,projected 5 below 80
+jsonschema,target_repo_selection_gate,3044,254,10,not_run,,2,not_run,rejected_supply_below_corrected_threshold,projected 2 below 80
+marshmallow,target_repo_selection_gate,3721,463,106,passed,,0,0/3,rejected_supply_below_corrected_threshold,projected 0 below 80
+matplotlib,large_repo_target_selection_gate,54824,552,218,not_measured,not_measured,11,not_run,rejected_supply_below_corrected_threshold,projected 11 below 80
+packaging,target_repo_selection_gate,1032,248,179,passed,,0,0/12,rejected_supply_below_corrected_threshold,projected 0 below 80
+pandas,large_repo_target_selection_gate,38107,1672,1671,failed,environment_failed_or_unusable,251,0/1,rejected_setup_or_replay_risk,classified large_but_heavy
+pluggy,target_repo_selection_gate,992,103,11,not_run,,2,not_run,rejected_supply_below_corrected_threshold,projected 2 below 80
+pydantic,large_repo_target_selection_gate,,0,0,not_run,,0,not_run,rejected_supply_below_corrected_threshold,projected 0 below 80
+pytest,target_repo_selection_gate,17441,520,234,not_run,,82,not_run,deep_probe_or_profile_needed,"projected 82 could clear count, but exact certification/window manifest is not available"
+requests,target_repo_selection_gate,6476,176,48,not_run,,12,not_run,rejected_supply_below_corrected_threshold,projected 12 below 80
+rich,target_repo_selection_gate,,0,0,not_run,,0,not_run,rejected_supply_below_corrected_threshold,projected 0 below 80
+scikit-learn,large_repo_target_selection_gate,33756,1520,1520,failed,environment_failed_or_unusable,228,0/1,rejected_setup_or_replay_risk,classified large_but_heavy
+sortedcontainers,target_repo_selection_gate,656,69,6,not_run,,1,not_run,rejected_supply_below_corrected_threshold,projected 1 below 80
+sqlalchemy,large_repo_target_selection_gate,18107,1604,25,passed,ideal_under_60s,7,0/1,rejected_supply_below_corrected_threshold,projected 7 below 80
+sympy,large_repo_target_selection_gate,62216,911,37,failed,environment_failed_or_unusable,2,0/1,rejected_supply_below_corrected_threshold,projected 2 below 80
+toolz,target_repo_selection_gate,1230,196,12,not_run,,5,not_run,rejected_supply_below_corrected_threshold,projected 5 below 80
+tornado,large_repo_target_selection_gate,5040,1022,36,not_measured,not_measured,5,not_run,rejected_supply_below_corrected_threshold,projected 5 below 80
+trio,large_repo_target_selection_gate,6604,457,121,not_measured,not_measured,18,not_run,rejected_supply_below_corrected_threshold,projected 18 below 80
+urllib3,target_repo_selection_gate,4386,537,177,failed,,0,0/2,rejected_supply_below_corrected_threshold,projected 0 below 80
+werkzeug,target_repo_selection_gate,5926,454,42,passed,,6,not_run,rejected_supply_below_corrected_threshold,projected 6 below 80
+attrs,target_repo_selection_gate,1786,361,249,passed,,31,not_run,rejected_supply_below_corrected_threshold,projected 31 below 80
+black,large_repo_target_selection_gate,2241,602,488,partial_failed,partial_probe_failure,73,0/1,rejected_supply_below_corrected_threshold,projected 73 below 80
+click,target_repo_selection_gate,3242,392,59,passed,,30,30/102,rejected_supply_below_corrected_threshold,projected 30 below 80
+mypy,large_repo_target_selection_gate,13665,571,570,not_measured,not_measured,7,7/24 exact sample,rejected_after_exact_certification_sample,conversion 0.2917 below 0.30 stop threshold
+sphinx,large_repo_target_selection_gate,22409,804,514,passed,ideal_under_60s,16,16 exact certified; 0/30 repair expansion,rejected_after_exact_repair_loop,reject_sphinx_move_to_candidate_loop
+starlette,large_repo_target_selection_gate,1653,435,381,partial_failed,partial_probe_failure,57,0/1,rejected_supply_below_corrected_threshold,projected 57 below 80

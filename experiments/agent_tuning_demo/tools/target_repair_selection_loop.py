@@ -683,6 +683,210 @@ Candidate-loop terminal state: `{payload['terminal_state']}`。Selected target: 
 """
 
 
+def run_repository_search_expansion() -> dict[str, Any]:
+    large_gate = read_json(RESULTS / "large_repo_target_selection_gate.json", {})
+    target_gate = read_json(RESULTS / "target_repo_selection_gate.json", {})
+    sphinx = read_json(RESULTS / "sphinx_failure_diagnosis.json", {})
+    mypy = read_json(RESULTS / "mypy_certification_sample.json", {})
+    rows_by_id: dict[str, dict[str, Any]] = {}
+    for row in large_gate.get("candidate_metrics", []):
+        rows_by_id[str(row.get("repo_id"))] = repository_search_row(row, source="large_repo_target_selection_gate")
+    for row in target_gate.get("candidates", []):
+        rows_by_id[str(row.get("repo_id"))] = repository_search_row(row, source="target_repo_selection_gate")
+    if "sphinx" in rows_by_id:
+        rows_by_id["sphinx"].update(
+            {
+                "projected_certified_task_count": 16,
+                "certification_sample_result": "16 exact certified; 0/30 repair expansion",
+                "decision_label": "rejected_after_exact_repair_loop",
+                "decision_reason": sphinx.get("decision", {}).get("sphinx_decision", "exact manifest below corrected threshold"),
+            }
+        )
+    if "mypy" in rows_by_id:
+        rows_by_id["mypy"].update(
+            {
+                "projected_certified_task_count": int(mypy.get("pass_count") or 0),
+                "certification_sample_result": f"{mypy.get('pass_count', 0)}/{mypy.get('sample_size', 0)} exact sample",
+                "decision_label": "rejected_after_exact_certification_sample",
+                "decision_reason": f"conversion {mypy.get('conversion_rate')} below 0.30 stop threshold",
+            }
+        )
+    priority = {"sphinx", "mypy", "black", "starlette", "attrs", "click"}
+    rows = sorted(rows_by_id.values(), key=lambda row: (row["repo_id"] in priority, row["repo_id"]))
+    payload = {
+        "schema_version": f"{SCHEMA_VERSION}.repository_search_expansion.v1",
+        "generated_at": iso_now(),
+        "paid_agent_cells_run": 0,
+        "paid_llm_calls_run": 0,
+        "paid_tuner_calls_run": 0,
+        "source_screens": {
+            "target_repo_selection_gate": "experiments/agent_tuning_demo/results/target_repo_selection_gate.json",
+            "large_repo_target_selection_gate": "experiments/agent_tuning_demo/results/large_repo_target_selection_gate.json",
+        },
+        "search_policy": "Reuse the existing no-paid broad screens rather than adding a new ad hoc GitHub search after the priority loop failed.",
+        "screened_repository_count": len(rows),
+        "deep_probe_repository_count": sum(1 for row in rows if row["setup_smoke_result"] not in {"not_run", "not_measured", ""}),
+        "rows": rows,
+        "decision": "no_additional_ready_repository_found",
+    }
+    write_json(RESULTS / "target_repair_selection_repository_search_expansion.json", payload)
+    write_csv(
+        RESULTS / "target_repair_selection_repository_search_expansion.csv",
+        rows,
+        [
+            "repo_id",
+            "source_screen",
+            "rough_scale",
+            "implementation_plus_test_anchor_count",
+            "public_context_count",
+            "setup_smoke_result",
+            "targeted_verifier_speed",
+            "projected_certified_task_count",
+            "certification_sample_result",
+            "decision_label",
+            "decision_reason",
+        ],
+    )
+    write_text(REPORTS / "target_repair_selection_repository_search_expansion_zh.md", repository_search_expansion_report(payload))
+    return payload
+
+
+def repository_search_row(row: dict[str, Any], *, source: str) -> dict[str, Any]:
+    projected = int(row.get("projected_certified_task_count_after_bounded_repair") or row.get("current_or_projected_release_eligible_count") or 0)
+    timing = row.get("targeted_verifier_timing") or {}
+    smoke = row.get("visible_test_setup_smoke") or row.get("setup_test_smoke") or {}
+    if isinstance(smoke, list):
+        smoke_result = row.get("visible_setup_smoke_status", "")
+    else:
+        smoke_result = smoke.get("status") or timing.get("speed_class") or row.get("visible_setup_smoke_status") or "not_run"
+    historical = row.get("historical_reference_probe") or {}
+    prior = row.get("prior_evidence") or {}
+    sample_size = historical.get("sample_size") or prior.get("prior_probe_attempts") or 0
+    pass_count = historical.get("pass_count") or prior.get("prior_probe_release_eligible") or 0
+    classification = row.get("classification") or row.get("screen_label") or "screened_out"
+    if projected >= MINIMUM_CERTIFIED_TASKS and classification not in {"large_but_heavy", "screened_out"}:
+        decision = "deep_probe_or_profile_needed"
+        reason = f"projected {projected} could clear count, but exact certification/window manifest is not available"
+    elif projected < MINIMUM_CERTIFIED_TASKS:
+        decision = "rejected_supply_below_corrected_threshold"
+        reason = f"projected {projected} below {MINIMUM_CERTIFIED_TASKS}"
+    else:
+        decision = "rejected_setup_or_replay_risk"
+        reason = f"classified {classification}"
+    return {
+        "repo_id": row.get("repo_id", ""),
+        "source_screen": source,
+        "rough_scale": row.get("total_commits") or row.get("history_commit_count") or "",
+        "implementation_plus_test_anchor_count": row.get("implementation_plus_test_change_count") or row.get("estimated_candidate_volume") or 0,
+        "public_context_count": row.get("implementation_plus_test_public_ref_count") or row.get("changed_test_oracle_availability_count") or 0,
+        "setup_smoke_result": smoke_result,
+        "targeted_verifier_speed": timing.get("speed_class") or row.get("expected_evaluation_speed_class") or "",
+        "projected_certified_task_count": projected,
+        "certification_sample_result": f"{pass_count}/{sample_size}" if sample_size else "not_run",
+        "decision_label": decision,
+        "decision_reason": reason,
+    }
+
+
+def repository_search_expansion_report(payload: dict[str, Any]) -> str:
+    return f"""# Target repair selection repository search expansion
+
+生成时间：`{payload['generated_at']}`。付费 Agent cells：`0`。付费 LLM calls：`0`。付费 tuner calls：`0`。
+
+## 结论
+
+Decision: `{payload['decision']}`。本轮没有发现可直接进入 corrected rolling-origin paid preregistration 的新增仓库。
+
+本 artifact 复用已提交的 broad no-paid screens：`target_repo_selection_gate` 和 `large_repo_target_selection_gate`。这些 screens 已覆盖 baseline/prior near-miss、medium-large fast-evaluation、large/heavy、以及额外 Python repositories；本轮不再新增一次 ad hoc GitHub 搜索。
+
+- screened repositories: `{payload['screened_repository_count']}`
+- deep-probed or smoke-measured repositories: `{payload['deep_probe_repository_count']}`
+
+## Screen Table
+
+{markdown_table(payload['rows'], [('Repo', 'repo_id'), ('Source', 'source_screen'), ('Scale', 'rough_scale'), ('Impl+Test', 'implementation_plus_test_anchor_count'), ('Context', 'public_context_count'), ('Smoke', 'setup_smoke_result'), ('Speed', 'targeted_verifier_speed'), ('Projected', 'projected_certified_task_count'), ('Sample', 'certification_sample_result'), ('Decision', 'decision_label'), ('Reason', 'decision_reason')])}
+"""
+
+
+def run_method_limitation_diagnosis() -> dict[str, Any]:
+    decisions = read_json(RESULTS / "target_repair_selection_candidate_decisions.json", {})
+    search = read_json(RESULTS / "target_repair_selection_repository_search_expansion.json", {})
+    sphinx = read_json(RESULTS / "sphinx_failure_diagnosis.json", {})
+    mypy = read_json(RESULTS / "mypy_certification_sample.json", {})
+    payload = {
+        "schema_version": f"{SCHEMA_VERSION}.method_limitation_diagnosis.v1",
+        "generated_at": iso_now(),
+        "paid_agent_cells_run": 0,
+        "paid_llm_calls_run": 0,
+        "paid_tuner_calls_run": 0,
+        "terminal_state": "task_generation_method_needs_revision",
+        "source_artifacts": {
+            "candidate_decisions": "experiments/agent_tuning_demo/results/target_repair_selection_candidate_decisions.json",
+            "repository_search_expansion": "experiments/agent_tuning_demo/results/target_repair_selection_repository_search_expansion.json",
+            "sphinx_failure_diagnosis": "experiments/agent_tuning_demo/results/sphinx_failure_diagnosis.json",
+            "mypy_certification_sample": "experiments/agent_tuning_demo/results/mypy_certification_sample.json",
+        },
+        "diagnosis": {
+            "repositories_too_small": [
+                "attrs, click, starlette, black, boltons-style backups, and many additional screen rows fall below the corrected 80 exact-task minimum or below preferred 100 exact tasks after projected conversion.",
+                "Small fast repositories remain useful pilots, but they cannot support the corrected selected-from-history plus future-holdout protocol without stronger mining/certification yield.",
+            ],
+            "historical_environment_reproducibility": [
+                f"mypy exact sample converted {mypy.get('pass_count')}/{mypy.get('sample_size')} with dependency, collection, target-test, and non-meaningful-oracle failures.",
+                "django, pandas, and scikit-learn have raw capacity but existing bounded probes classify them as environment-heavy or compiled-extension-heavy.",
+            ],
+            "changed_tests_not_self_contained": [
+                f"Sphinx repair diagnosis classified {sphinx.get('attempt_summary', {}).get('concrete_failure_label_counts', {})} after a 0/30 expansion replay.",
+                "Several mypy rows either passed on base after target-test injection or failed on target, so changed Python test files alone are not a reliable hidden oracle.",
+            ],
+            "miner_source_pattern_limit": [
+                "The current miner is mostly implementation-plus-Python-test anchored and underuses repository-specific oracle shapes such as mypy test-data files, Sphinx fixture roots, generated fixtures, and support files.",
+                "It also did not preserve enough per-row failure detail in the first Sphinx expansion until this run added a diagnosis artifact.",
+            ],
+            "would_richer_method_help": [
+                "SWE-bench-style PR/issue mining could expose issue-specific or PR-specific oracle context instead of relying only on changed test files.",
+                "Version-aware environment synthesis and repository-specific oracle extraction would likely improve mypy/Sphinx conversion more than retrying another repository with the same generic miner.",
+            ],
+            "smallest_next_improvement": "Add a repository-specific Task Generator repair pass that mines changed test-data/support-file roots, captures target/base replay subgate details for every attempted row, and creates version-aware verifier profiles before expanding to another target.",
+        },
+        "candidate_loop_terminal_state": decisions.get("terminal_state"),
+        "repository_search_decision": search.get("decision"),
+    }
+    write_json(RESULTS / "target_repair_selection_method_limitation_diagnosis.json", payload)
+    write_text(REPORTS / "target_repair_selection_method_limitation_diagnosis_zh.md", method_limitation_diagnosis_report(payload))
+    return payload
+
+
+def method_limitation_diagnosis_report(payload: dict[str, Any]) -> str:
+    diagnosis = payload["diagnosis"]
+    sections = []
+    labels = [
+        ("Did repositories fail because they are too small?", "repositories_too_small"),
+        ("Did historical environments fail?", "historical_environment_reproducibility"),
+        ("Are changed tests self-contained hidden oracles?", "changed_tests_not_self_contained"),
+        ("Did the miner undercount or use the wrong source pattern?", "miner_source_pattern_limit"),
+        ("Would richer mining/environment synthesis likely change this?", "would_richer_method_help"),
+    ]
+    for title, key in labels:
+        sections.append(f"## {title}\n\n" + "\n".join(f"- {item}" for item in diagnosis[key]))
+    return f"""# Target repair selection method-limitation diagnosis
+
+生成时间：`{payload['generated_at']}`。付费 Agent cells：`0`。付费 LLM calls：`0`。付费 tuner calls：`0`。
+
+## 结论
+
+Terminal state: `{payload['terminal_state']}`。
+
+没有仓库达到 corrected rolling-origin paid preregistration 的 exact manifest 门槛。当前证据指向 Task Generator / certification method 修订，而不是继续用同一方法重试另一个仓库。
+
+{chr(10).join(sections)}
+
+## Smallest next improvement
+
+{diagnosis['smallest_next_improvement']}
+"""
+
+
 def main() -> int:
     parser = argparse.ArgumentParser()
     sub = parser.add_subparsers(dest="command", required=True)
@@ -690,6 +894,8 @@ def main() -> int:
     sample = sub.add_parser("mypy-certification-sample")
     sample.add_argument("--limit", type=int, default=24)
     sub.add_parser("candidate-decisions")
+    sub.add_parser("repository-search-expansion")
+    sub.add_parser("method-limitation-diagnosis")
     args = parser.parse_args()
     if args.command == "mypy-current-smoke":
         payload = run_mypy_current_smoke()
@@ -700,6 +906,12 @@ def main() -> int:
     elif args.command == "candidate-decisions":
         payload = run_candidate_decisions()
         print(json.dumps({"terminal_state": payload["terminal_state"], "selected": payload["selected_target_repository"]}, sort_keys=True))
+    elif args.command == "repository-search-expansion":
+        payload = run_repository_search_expansion()
+        print(json.dumps({"decision": payload["decision"], "screened_repository_count": payload["screened_repository_count"]}, sort_keys=True))
+    elif args.command == "method-limitation-diagnosis":
+        payload = run_method_limitation_diagnosis()
+        print(json.dumps({"terminal_state": payload["terminal_state"]}, sort_keys=True))
     return 0
 
 
