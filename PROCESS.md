@@ -489,6 +489,28 @@ runbook. Canonical closeout:
 and
 `experiments/agent_tuning_demo/results/target_repair_selection_loop_closeout.json`.
 
+The Agent Tuning Demo autonomous completion run completed on 2026-06-18 with
+terminal state `agent_tuning_demo_complete` and result label
+`agent_tuning_demo_complete_regressed`. Barcarolle used certified `mypy` tasks
+at `origin_40`, froze the corrected rolling-origin shape
+`history_pool_before_origin -> selected_benchmark_from_history ->
+future_holdout_after_origin`, exported train-only feedback, froze a deployable
+repo-local Kilo `AGENTS.md` appendix artifact before revealing future holdout
+IDs, and completed before/after future holdout validation. The chosen artifact
+was `agent-tuning-demo-mypy-family-triage-loop`
+(`sha256:4cc09bb467d9cf638a619017caa59fe01b84c26c1a12f5b4a9a9be08f1149621`).
+Future holdout result: baseline `12/20` scoreable pass, tuned `11/19`
+scoreable pass with one invalid output, paired net wins `-1`; this does not
+support a positive tuning-improvement claim. Total estimated/observed cost was
+`$29.39064915` across `76` paid solver Agent cells; no paid tuner/proposer
+calls were used, and actual billed provider cost was unavailable from endpoint
+export. Canonical outputs:
+`experiments/agent_tuning_demo/reports/agent_tuning_demo_final_report_zh.md`,
+`experiments/agent_tuning_demo/reports/agent_tuning_demo_final_closeout_zh.md`,
+`experiments/agent_tuning_demo/results/agent_tuning_demo_final_closeout.json`,
+`experiments/agent_tuning_demo/results/agent_tuning_demo_future_holdout_summary.json`,
+and `experiments/agent_tuning_demo/results/agent_tuning_demo_cost_summary.json`.
+
 Agent License remains a possible downstream product, but it is not the current
 research proof or active architecture. Historical license/admission material is
 archived under `archive/2026-05-agent-license-reset/`.

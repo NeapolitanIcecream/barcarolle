@@ -201,7 +201,7 @@
   "chosen_artifact_hash": "sha256:4cc09bb467d9cf638a619017caa59fe01b84c26c1a12f5b4a9a9be08f1149621",
   "chosen_artifact_id": "agent-tuning-demo-mypy-family-triage-loop",
   "future_gate_decision": "choose_least_bad_candidate_for_required_holdout_story",
-  "generated_at": "2026-06-17T16:15:59+00:00",
+  "generated_at": "2026-06-18T01:28:00+00:00",
   "origin_id": "origin_40",
   "paid_cells": 16,
   "repository": "mypy",

@@ -1,6 +1,6 @@
 # Agent Tuning Demo future holdout
 
-生成时间：`2026-06-17T17:16:24+00:00`。
+生成时间：`2026-06-18T01:28:00+00:00`。
 
 - Paired future tasks: `20`。
 - Baseline pass: `12/20`。

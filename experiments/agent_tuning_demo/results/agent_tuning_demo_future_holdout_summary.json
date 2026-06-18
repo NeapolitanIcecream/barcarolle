@@ -32,7 +32,7 @@
     "selection_basis": "choose_least_bad_candidate_for_required_holdout_story"
   },
   "future_holdout_task_ids_were_tuner_inputs": false,
-  "generated_at": "2026-06-17T17:16:24+00:00",
+  "generated_at": "2026-06-18T01:28:00+00:00",
   "origin_id": "origin_40",
   "paid_cells": 40,
   "paired_summary": {

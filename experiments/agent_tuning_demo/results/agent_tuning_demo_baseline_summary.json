@@ -11,7 +11,7 @@
     "scoreable_cells": 20,
     "verified_pass_count": 12
   },
-  "generated_at": "2026-06-17T17:16:24+00:00",
+  "generated_at": "2026-06-18T01:28:00+00:00",
   "matrix": "experiments/agent_tuning_demo/results/agent_tuning_demo_baseline_matrix.csv",
   "schema_version": "barcarolle.agent_tuning_demo.autonomous_completion.v1.baseline_summary.v1",
   "selected_baseline": {

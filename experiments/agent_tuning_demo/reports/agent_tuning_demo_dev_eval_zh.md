@@ -1,6 +1,6 @@
 # Agent Tuning Demo dev eval
 
-生成时间：`2026-06-17T16:15:59+00:00`。
+生成时间：`2026-06-18T01:28:00+00:00`。
 
 - Future gate decision: `choose_least_bad_candidate_for_required_holdout_story`。
 - Chosen artifact: `agent-tuning-demo-mypy-family-triage-loop`。
