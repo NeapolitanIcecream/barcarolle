@@ -2,17 +2,17 @@
   "actual_billed_cost_status": "not_available_from_endpoint_or_provider_export",
   "actual_billed_cost_usd": null,
   "call_counts_by_category": {
-    "solver Agent": 56,
+    "solver Agent": 76,
     "tuner/proposer": 2
   },
   "cost_by_observation_kind_usd": {
     "no-cost local": 0.0,
-    "observed_tokens_estimated_cost": 22.0998762
+    "observed_tokens_estimated_cost": 29.39064915
   },
-  "generated_at": "2026-06-17T16:42:12+00:00",
+  "generated_at": "2026-06-17T17:16:23+00:00",
   "ledger": "experiments/agent_tuning_demo/results/agent_tuning_demo_cost_ledger.jsonl",
-  "paid_solver_agent_cells": 56,
+  "paid_solver_agent_cells": 76,
   "paid_tuner_or_proposer_calls": 0,
   "schema_version": "barcarolle.agent_tuning_demo.autonomous_completion.v1.cost_summary.v1",
-  "total_estimated_or_observed_cost_usd": 22.0998762
+  "total_estimated_or_observed_cost_usd": 29.39064915
 }
