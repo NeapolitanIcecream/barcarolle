@@ -511,6 +511,21 @@ export. Canonical outputs:
 `experiments/agent_tuning_demo/results/agent_tuning_demo_future_holdout_summary.json`,
 and `experiments/agent_tuning_demo/results/agent_tuning_demo_cost_summary.json`.
 
+The paid Agent Tuning Demo is paused as of 2026-06-18. Follow-up analysis found
+no evidence that the run used a non-mini model: preregistration, runner config,
+ledger rows, and raw Kilo event metadata point to `gpt-5.4-mini`. The high cost
+is explained by Coding Agent token volume (`76` solver cells, about `95.66M`
+input tokens, `69.53M` cached input tokens, and `1.02M` output tokens), not by a
+known model mismatch. The current practical blocker is economic: new tuning
+artifacts require new paid solver cells and cannot be broadly reused like fixed
+Agent-selection cells. Do not continue paid tuning-result search without a
+dedicated budget. Before resuming, add or use outcome caching, a cost smoke
+gate, a funnel protocol, neutral `AGENTS.md` controls, flipped-task repeats, and
+a parent-`AGENTS.md` leakage preflight. Canonical checkpoint:
+`experiments/agent_tuning_demo/reports/agent_tuning_demo_paid_pause_checkpoint_zh.md`
+and
+`experiments/agent_tuning_demo/results/agent_tuning_demo_paid_pause_checkpoint.json`.
+
 Agent License remains a possible downstream product, but it is not the current
 research proof or active architecture. Historical license/admission material is
 archived under `archive/2026-05-agent-license-reset/`.
