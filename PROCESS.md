@@ -526,6 +526,15 @@ a parent-`AGENTS.md` leakage preflight. Canonical checkpoint:
 and
 `experiments/agent_tuning_demo/results/agent_tuning_demo_paid_pause_checkpoint.json`.
 
+Goodhart's Law is now an explicit validity risk for Barcarolle. Keep benchmark
+predictive validity separate from tuning utility: a benchmark generated at time
+`t` should primarily be judged by how well it predicts the future performance of
+Agents available at time `t`, not by how well Agents perform after being tuned
+with that benchmark. Tuning experiments measure the combined effect of the
+benchmark, tuner, and tuned artifact, and need later holdouts after each
+feedback-informed change. Canonical note:
+`docs/research/goodhart-law-note-2026-06-23.md`.
+
 Agent License remains a possible downstream product, but it is not the current
 research proof or active architecture. Historical license/admission material is
 archived under `archive/2026-05-agent-license-reset/`.
