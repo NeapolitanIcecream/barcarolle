@@ -3,137 +3,106 @@
 Barcarolle is a target-repository benchmark compiler for coding-agent
 evaluation and tuning.
 
-Given a repository, a cutoff, candidate task sources, an evaluation budget, and
-an Agent family, Barcarolle compiles auditable benchmark releases and evidence
-packages. An Agent means the complete tested configuration: model, harness,
-prompt or skills, tools, retrieval, runtime policy, and budget.
+The project is in proposal review and v2 design. The current priority is to
+turn the existing evidence and prototype code into a clean, low-abstraction
+system for:
 
-The north-star research question is predictive validity: whether a
-repo-specific benchmark can predict how Agents will perform on later real work
-in the same repository. Barcarolle has not established that claim yet. The
-current repository state preserves the proposal-stage evidence, the compiler
-prototype, and the next validation path needed to keep working toward it.
+- generating or importing repository-specific tasks;
+- certifying each task with an auditable check;
+- running complete coding Agents in isolated workspaces;
+- caching reusable `Agent x Task` results;
+- selecting benchmark tasks under rolling-origin evaluation;
+- measuring whether selected tasks predict later repository work.
 
-## Current Source Of Truth
+Predictive validity is the north star. It is not an established result yet.
 
-Start here:
+## Start Here
 
-- [Project state after proposal](docs/research/project-state-after-proposal.md)
-- [Current project story](docs/research/current-project-story.md)
-- [System design](docs/architecture/system-design.md)
-- [Evidence manifest](experiments/phase1_compiler/reports/proposal_report_v5_evidence_manifest.md)
-- [Research inputs and related work reference](docs/research/research-inputs-and-related-work-reference.md)
-- [Proposal report v5](docs/research/barcarolle-proposal-report-v5.md)
+- [AGENTS.md](AGENTS.md): operational rules for coding-agent sessions.
+- [PROCESS.md](PROCESS.md): current process decisions and claim boundaries.
+- [V2 system architecture](docs/architecture/v2-system-architecture-2026-06-25.md):
+  draft architecture for the rewrite.
+- [Learned selector roadmap prompt](docs/research/learned-selector-roadmap-gpt-5-5-pro-prompt-2026-06-25.md):
+  prompt for external algorithm-roadmap review.
+- [Goodhart note](docs/research/goodhart-law-note-2026-06-23.md):
+  validity boundary between benchmark prediction and tuning utility.
 
-`project-state-after-proposal.md` is the canonical state snapshot.
-`current-project-story.md` is the current reader-facing narrative.
-`barcarolle-proposal-report-v5.md` is a frozen proposal-stage report, not the
-live source of truth. Historical Agent License and core-narrative materials are
-archived and are not active semantics.
+## Current Design Shape
 
-## Active Work Areas
+The v2 system should keep a small vocabulary:
 
-- `experiments/phase1_compiler/`: compiler prototype, schemas, tests, selected
-  reports, and small evidence tables for task selection and validation.
-- `experiments/phase0_headroom/`: historical task-supply, workspace-adapter, and
-  score-table evidence used by the compiler prototype.
-- `docs/research/`: canonical state, current narrative, related-work
-  references, and the frozen proposal-stage report.
-- `archive/2026-05-agent-license-reset/`: historical Agent License and
-  core-narrative design notes retained for audit only.
+- `Task`: solver-visible problem and repository metadata.
+- `Check`: task acceptance method or oracle.
+- `Workspace`: isolated solver and verifier execution.
+- `Result`: one Agent on one task, including status, cost, latency, and failure
+  labels.
+- `Selector`: chooses benchmark tasks from historical supply under a budget.
+- `RollingOrigin`: evaluates whether selected tasks predict later work.
 
-## Research Asset Map
+Three assets should stay decoupled:
 
-The experiment code assets are retained in the repository, but they are still
-prototype assets rather than a packaged product library.
+- `Task Pool`: generated or imported tasks, checks, metadata, and certification
+  records.
+- `Benchmark Selection`: selector version, origin, history pool, selected task
+  IDs, weights, and budget.
+- `Agent Results`: cached outcomes for `Agent x Task x environment`, with cost
+  and verifier status.
 
-- Task supply and generation:
-  `experiments/phase1_compiler/tools/phase1_task_supply_v2_generator_bakeoff.py`,
-  `phase1_two_repo_certified_supply_expansion.py`,
-  `phase1_third_repo_release_supply_screen.py`,
-  `phase1_clean_outcome_unseen_supply_mining.py`.
-- Task certification, statements, and oracle checks:
-  `phase1_task_supply_v2_fresh_certification.py`,
-  `phase1_source_certification_hardening.py`,
-  `phase1_source_context_statement_hardening.py`,
-  `phase1_reference_pass_failure_audit.py`.
-- Task selection and predictive-signal analysis:
-  `phase1_local_algorithm_bakeoff.py`,
-  `phase1_future_holdout.py`,
-  `phase1_retrospective_predictive_signal.py`,
-  `phase1_three_repo_paid_validation.py`,
-  `phase1_three_repo_paid_result_diagnostics.py`.
-- Workspace and Agent execution support:
-  `experiments/phase0_headroom/tools/workspace_acut_run.py`,
-  `codex_workspace_adapter.py`,
-  `kilo_workspace_adapter.py`,
-  `measured_endpoint_run.py`,
-  `workspace_usage_import.py`.
-- Statement generation references:
-  `experiments/phase1_compiler/results/phase1_diff_assisted_regenerated_statements.jsonl`,
-  `phase1_diff_assisted_codex_loop_generated_statements.jsonl`,
-  and `phase1_canonical_regenerated_statements.jsonl`.
-- Contracts and regression coverage:
-  `experiments/phase1_compiler/schemas/`,
-  `experiments/phase1_compiler/tests/`,
-  `experiments/phase0_headroom/tools/test_*.py`.
+This decoupling matters because paid Agent results are durable assets. Selector
+research should be able to iterate over cached result tables without rerunning
+identical paid cells.
 
-## Evidence Data Map
+## Repository Layout
 
-Proposal-supporting experiment data is retained as sanitized score tables,
-matrices, metrics, manifests, cost summaries, and candidate inventories. Raw
-Agent transcripts, raw prompts/completions, solver workspaces, verifier
-workspaces, cloned target repositories, standalone process logs, and
-proposal/deck preflight traces are intentionally not committed. A small number
-of compact gate and package-inspection metadata files remain where retained
-tools or reports use them for reproducibility.
+- `docs/architecture/`: system design notes, including the v2 architecture
+  draft.
+- `docs/research/`: research notes, prompts, claim-boundary notes, and
+  reader-facing context.
+- `experiments/`: prototype code, tests, result schemas, and sanitized evidence
+  from completed experiments. Treat this as evidence and source material, not
+  as the v2 architecture.
+- `archive/`: historical material kept for audit only.
 
-- Primary three-repo paid validation:
-  `experiments/phase1_compiler/results/phase1_three_repo_paid_validation_score_tables_manifest.json`
-  indexes `120` completed and scoreable cells across `10` retained score
-  tables under `experiments/phase0_headroom/results/phase1_three_repo_paid_validation_*_score_table.csv`.
-- Three-repo summary and diagnostics:
-  `experiments/phase1_compiler/results/phase1_three_repo_paid_validation_metrics.json`,
-  `phase1_three_repo_paid_validation_cost_reconciliation.json`,
-  `phase1_three_repo_paid_result_diagnostics_result_cube.{json,csv}`,
-  and related diagnostics in `experiments/phase1_compiler/results/`.
-- Supplementary fairness/missing-cell paid run:
-  `experiments/phase1_compiler/results/phase1_blocked_split_missing_cell_supplement_paid_execution_combined_score_tables_manifest.json`
-  plus the retained `phase1_blocked_split_missing_cell_supplement_paid_execution_*`
-  score tables and metrics.
-- Weighted-design paid pilot:
-  `experiments/phase0_headroom/results/phase1_weighted_design_paid_pilot_score_table.csv`,
-  `phase1_weighted_design_paid_pilot_matrix.json`,
-  `phase1_weighted_design_paid_pilot_metrics.json`,
-  and `phase1_weighted_design_paid_pilot_cost_summary.json`.
-- Baseline and selection evidence:
-  `experiments/phase1_compiler/results/phase1_proposal_evidence_package_random_baseline_distribution.json`,
-  `phase1_proposal_evidence_package_baseline_envelope.json`,
-  and `phase1_local_algorithm_bakeoff_*`.
-- Usage/cost accounting support:
-  `experiments/phase0_headroom/results/workspace_usage_ledger.jsonl` is a
-  sanitized usage ledger used by later analyses, not a raw transcript.
+## Related-Work Direction
 
-## Historical References
+Built-in task generation should reuse and adapt established coding-agent
+benchmark methods instead of inventing similar ideas under new names. Initial
+families to study include:
 
-- `docs/research/research-inputs-and-related-work-reference.md`: condensed
-  synthesis of the May research inputs and external review constraints,
-  especially related-work positioning and task-source adapter policy.
-- `archive/2026-05-external-review-inputs/`: selected external-review prompts
-  and problem briefs for future review-packet design and algorithm/source
-  adapter context.
-- `archive/2026-05-agent-license-reset/`: old Agent License and core-narrative
-  design material retained for audit only.
+- SWE-bench-style issue/PR tasks with fail-to-pass and pass-to-pass tests;
+- SWE-bench Verified-style quality filtering;
+- SWE-bench Live-style refresh and origin-aware freezing;
+- SWE-Bench Pro-style harder long-horizon tasks;
+- SWE-Bench++ / SWE-Bench Atlas-style large-scale generation;
+- SWE-smith-style task and environment generation;
+- SWE-Future-style future-oriented task synthesis;
+- user-provided task pools and custom checks.
+
+## Paid Calls
+
+Paid LLM or Agent calls must use:
+
+```text
+LLM_BASE_URL
+LLM_API_KEY
+```
+
+Do not use subscription auth, `OPENAI_API_KEY`, OpenRouter variables, or
+provider-specific variables unless the user explicitly changes the rule.
+
+Raw prompts, completions, Agent transcripts, solver workspaces, verifier
+workspaces, cloned external repositories, caches, and secrets must not be
+committed.
 
 ## Useful Commands
 
-Run the current compiler tests:
+Run the main retained experiment tests:
 
 ```bash
 uv run --project experiments/phase1_compiler pytest -q
 ```
 
-Run the retained headroom/workspace-adapter tests:
+Run workspace-adapter tests:
 
 ```bash
 uv run --project experiments/phase0_headroom pytest experiments/phase0_headroom/tools -q
@@ -144,6 +113,3 @@ Check patch hygiene before committing:
 ```bash
 git diff --check
 ```
-
-Paid LLM or Agent calls must use `LLM_BASE_URL` plus `LLM_API_KEY`; see
-`AGENTS.md` for the full rule.
