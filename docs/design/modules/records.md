@@ -325,9 +325,14 @@ is frozen.
 - `exposed_at`
 - `exposure_scope_digest`
 - `created_at`
+- `selection_digest`
 
 This record is the frozen benchmark selection. It must be written before future
 holdout outcomes are opened for scoring.
+
+Selection records are append-only evidence. Corrections, rescoring-policy
+changes, or selector-input changes create a new `selection_id` and
+`selection_digest`; existing frozen selection records are not mutated.
 
 `selected_weights` is a keyed mapping from `TaskCheckRef` to numeric weight.
 Validators must reject weights for unselected refs and missing weights for
@@ -381,6 +386,11 @@ selected refs.
 - `completeness_state`
 - `abstention_reason`
 - `computed_at`
+- `metric_digest`
+
+Metric records are append-only evidence. Corrections, metric-config changes, or
+matrix/cell-set changes create a new `metric_id` and `metric_digest`; existing
+metric records are not mutated.
 
 Metric dimension rules:
 
@@ -578,7 +588,7 @@ Effect:
 - Validates frozen origin linkage, selected `Task + Check` refs, keyed weight
   coverage, selector ID, selector input digest, eligible refs, task-pool
   binding, origin, budget digest, feature snapshot linkage, and exposure
-  metadata.
+  metadata, and `selection_digest`.
 
 ### validate_metric
 
@@ -593,7 +603,7 @@ Output:
 Effect:
 
 - Validates metric provenance digests, metric config digest, denominator
-  policy, completeness state, and metric dimension rules.
+  policy, completeness state, metric dimension rules, and `metric_digest`.
 
 ### make_task_id
 

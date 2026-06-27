@@ -69,8 +69,8 @@ Metrics must reference the evaluation cell set plus selected-benchmark and
 future-holdout matrix digests plus the metric config digest, and must keep
 metric scope, Agent dimension, aggregation level, budget, and stratum as
 queryable fields.
-Frozen selector inputs, cell sets, and matrices reference Result records by ID
-and digest; Result Store is append-only for evidence-bearing results.
+Frozen selector inputs, selections, cell sets, matrices, and metrics reference
+Result records by ID and digest; evidence-bearing records are append-only.
 Rolling-origin evaluation freezes `Task + Check` refs before future outcomes
 are opened, and records source, task material, check material, certification,
 and result availability timestamps separately.

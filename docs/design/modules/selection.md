@@ -61,9 +61,9 @@ output, and effect only; it does not prescribe implementation.
 - whether future holdout `Task + Check` refs may be known before scoring.
 
 `BenchmarkSelectionRecord` is the frozen benchmark selection. Selection must
-write it before future holdout outcomes are opened. Selection functions must not
-accept future-result paths, verifier workspaces, raw hidden-check material, or
-raw Agent transcripts.
+write it append-only before future holdout outcomes are opened. Selection
+functions must not accept future-result paths, verifier workspaces, raw
+hidden-check material, or raw Agent transcripts.
 
 ## Selection Entry Points
 
@@ -383,11 +383,11 @@ Effect:
 - Computes future pass-rate MAE, pairwise gap error, rank agreement,
   recommendation regret, invalid rate, cost, latency, and coverage by comparing
   selected-benchmark estimates against future-holdout outcomes. It emits metric
-  records with selected/future matrix, cell-set, and metric-config digests, not
-  a human-facing report. Before computing MAE, it verifies matrix roles,
-  origin, selection, Agent set, join policy, and denominator policy alignment.
-  If these checks fail, it emits abstention or invalid metric records instead
-  of scoring the comparison.
+  records with selected/future matrix, cell-set, metric-config, and metric
+  digests, not a human-facing report. Before computing MAE, it verifies matrix
+  roles, origin, selection, Agent set, join policy, and denominator policy
+  alignment. If these checks fail, it emits abstention or invalid metric
+  records instead of scoring the comparison.
 
 ### choose_selector_for_origin
 
