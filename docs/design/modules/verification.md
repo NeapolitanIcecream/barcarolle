@@ -1,20 +1,20 @@
-# Module Design: Checks
+# Module Design: Verification
 
 Status: draft, 2026-06-27.
 
 ## Responsibility
 
-Define how a `Check` runs in a verifier `Workspace` and how its outcome is
-normalized.
+Verify a candidate diff in a verifier `Workspace` by executing a `Check` and
+normalizing the outcome.
 
-Checks do not select tasks, run Agents, or store Results.
+Verification does not select tasks, run Agents, or store Results.
 
 ## Inputs
 
 - `CheckRecord`;
 - verifier `WorkspaceRef`;
 - applied candidate diff;
-- check runtime config.
+- verification runtime config.
 
 ## Outputs
 
@@ -42,7 +42,7 @@ output, and effect only; it does not prescribe implementation.
 
 ## Functions
 
-### prepare_check_material
+### prepare_verifier
 
 Input:
 
@@ -58,7 +58,7 @@ Effect:
 - Injects hidden check material only into the verifier workspace and returns
   that workspace reference.
 
-### run_check
+### verify_diff
 
 Input:
 
@@ -72,9 +72,10 @@ Output:
 
 Effect:
 
-- Executes the check under bounded time and resource limits.
+- Executes the check against the applied candidate diff under bounded time and
+  resource limits.
 
-### normalize_check_outcome
+### normalize_outcome
 
 Input:
 
@@ -90,7 +91,7 @@ Effect:
 - Converts framework-specific outputs into pass, fail, or invalid with a
   failure label.
 
-### repeat_check
+### repeat_verification
 
 Input:
 
@@ -108,7 +109,7 @@ Effect:
 - Runs the check multiple times when certification or flakiness analysis needs
   stability evidence.
 
-### summarize_check_evidence
+### summarize_evidence
 
 Input:
 

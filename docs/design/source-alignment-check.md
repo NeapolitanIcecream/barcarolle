@@ -7,7 +7,7 @@ Status: draft, 2026-06-27.
 - `docs/architecture/v2-system-architecture-2026-06-25.md`
 - `docs/design-inputs/learned-selector-roadmap-gpt-5-5-pro-2026-06-25.md`
 
-## Checks
+## Alignment Review
 
 ### Vocabulary
 

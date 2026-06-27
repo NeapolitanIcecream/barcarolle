@@ -28,7 +28,8 @@ This module should not perform I/O beyond optional serialization helpers.
 Input sources:
 
 - Design docs;
-- records produced by Task Pool, Checks, Workspace, Results, and Selection.
+- records produced by Task Pool, Verification, Workspace, Results, and
+  Selection.
 
 Output consumers:
 
@@ -53,7 +54,7 @@ Output:
 
 Effect:
 
-- Checks required task fields, timestamp order, solver-visible material, and
+- Validates required task fields, timestamp order, solver-visible material, and
   absence of hidden check material.
 
 ### validate_check
@@ -68,7 +69,7 @@ Output:
 
 Effect:
 
-- Checks that the check has an execution type, bounded resource limits, and no
+- Validates that the check has an execution type, bounded resource limits, and no
   solver-visible hidden material.
 
 ### validate_result
@@ -83,7 +84,7 @@ Output:
 
 Effect:
 
-- Checks cache identity fields, status fields, cost/latency fields, and failure
+- Validates cache identity fields, status fields, cost/latency fields, and failure
   labels.
 
 ### validate_selector
@@ -98,7 +99,7 @@ Output:
 
 Effect:
 
-- Checks selector identity, version, training source digests, allowed feature
+- Validates selector identity, version, training source digests, allowed feature
   fields, and leakage boundary metadata.
 
 ### make_task_id

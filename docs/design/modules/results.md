@@ -30,7 +30,7 @@ Input sources:
 
 - Task Pool;
 - Workspace;
-- Checks;
+- Verification;
 - Records.
 
 Output consumers:

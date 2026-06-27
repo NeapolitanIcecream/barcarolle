@@ -33,7 +33,7 @@ Input sources:
 - built-in generators;
 - user imports;
 - Workspace for checkout and replay validation during certification;
-- Checks for executable-check validation during certification.
+- Verification for executable-check validation during certification.
 
 Output consumers:
 
@@ -130,7 +130,7 @@ Effect:
 
 - Validates checkout, dependency restoration, check execution, solver-visible
   boundary, hidden material separation, stability, and statement clarity. It may
-  call Workspace and Checks for certification, but it does not run Agents.
+  call Workspace and Verification for certification, but it does not run Agents.
 
 ### freeze_task_pool
 

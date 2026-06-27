@@ -50,7 +50,7 @@ Runner entrypoint:
 
 Downstream:
 
-- Workspace receives Tasks and Checks to run Agents.
+- Workspace receives Task and Check records to run Agents.
 - Selection receives Task metadata and certification metadata.
 - Reporting receives accepted and rejected counts.
 
@@ -72,7 +72,7 @@ Steps:
 4. Workspace captures the final diff.
 5. Workspace creates verifier workspace.
 6. Workspace applies the diff.
-7. Checks inject hidden material and execute the Check.
+7. Verification injects hidden material and executes the Check.
 8. Results computes cache identity and writes a normalized `Result`.
 
 Output:

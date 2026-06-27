@@ -5,7 +5,7 @@ Status: draft, 2026-06-27.
 ## Responsibility
 
 Create isolated solver and verifier workspaces, invoke the configured Agent,
-capture the diff, replay it, and run the Check through the Checks module.
+capture the diff, replay it, and run the Check through the Verification module.
 
 Workspace does not implement the Agent edit loop.
 
@@ -30,7 +30,7 @@ Input sources:
 
 - Task Pool provides `TaskRecord` and `CheckRecord`;
 - user or run config provides Agent and configs;
-- Checks provides check execution.
+- Verification provides check execution.
 
 Output consumers:
 
@@ -56,7 +56,7 @@ Output:
 
 Effect:
 
-- Checks out the target repository at the task base commit and writes only
+- Creates a checkout of the target repository at the task base commit and writes only
   solver-visible task material.
 
 ### invoke_agent
@@ -136,7 +136,8 @@ Output:
 
 Effect:
 
-- Delegates check preparation and execution to the Checks module.
+- Delegates verification preparation and check execution to the Verification
+  module.
 
 ### run_agent_on_task
 

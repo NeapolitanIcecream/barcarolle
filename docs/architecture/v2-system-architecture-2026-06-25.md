@@ -301,7 +301,7 @@ task pool + checks + metadata
 
 without forcing the user through Barcarolle's built-in generators.
 
-### Custom Checks
+### Custom Verification Methods
 
 Users may need checks beyond normal tests. For example, a GUI framework task may
 need to run a demo app, capture screenshots, and judge visual output.

@@ -23,7 +23,7 @@ Module-level design:
 
 - [Records](modules/records.md)
 - [Task Pool](modules/task-pool.md)
-- [Checks](modules/checks.md)
+- [Verification](modules/verification.md)
 - [Workspace](modules/workspace.md)
 - [Results](modules/results.md)
 - [Selection](modules/selection.md)
