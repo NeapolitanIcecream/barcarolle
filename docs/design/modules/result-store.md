@@ -13,6 +13,7 @@ Result Store does not execute Agents and does not choose benchmark tasks.
 - `TaskRecord`;
 - `CheckRecord`;
 - `AgentRecord`;
+- `ResultCacheIdentity`;
 - `WorkspaceRunRecord`;
 - cache and scoring config.
 
@@ -22,6 +23,7 @@ Result Store does not execute Agents and does not choose benchmark tasks.
 - result cache state;
 - cached result queries;
 - `ResultMatrix`;
+- result completeness and exclusion metadata;
 - missing Agent-task runs.
 
 ## System Boundary
@@ -54,6 +56,7 @@ Input:
 - `check: CheckRecord`
 - `agent: AgentRecord`
 - `workspace_run: WorkspaceRunRecord`
+- `cache_identity: ResultCacheIdentity`
 - `scoring_config: ScoringConfig`
 
 Output:
@@ -63,9 +66,9 @@ Output:
 Effect:
 
 - Normalizes pass/fail/invalid, cost, latency, failure label, diff digest, and
-  verifier metadata.
+  verifier metadata, and stores the exact cache identity used for reuse.
 
-### compute_result_cache_key
+### compute_result_cache_identity
 
 Input:
 
@@ -78,11 +81,27 @@ Input:
 
 Output:
 
+- `identity: ResultCacheIdentity`
+
+Effect:
+
+- Produces the structured identity used to decide whether a cached result is
+  reusable.
+
+### compute_result_cache_key
+
+Input:
+
+- `identity: ResultCacheIdentity`
+
+Output:
+
 - `cache_key: str`
 
 Effect:
 
-- Produces the identity used to decide whether a cached result is reusable.
+- Produces the digest key for a complete `ResultCacheIdentity`. Results with
+  missing identity fields are not reusable cache hits.
 
 ### store_result
 
@@ -118,8 +137,10 @@ Effect:
 
 Input:
 
-- `task_ids: Sequence[str]`
+- `tasks: Sequence[TaskRecord]`
+- `checks: Mapping[str, CheckRecord]`
 - `agents: Sequence[AgentRecord]`
+- `identity_config: ResultIdentityConfig`
 - `store: ResultStore`
 - `cache_config: ResultCacheConfig`
 
@@ -129,7 +150,9 @@ Output:
 
 Effect:
 
-- Identifies selected Agent-task runs that need execution by Workspace.
+- Builds the required `ResultCacheIdentity` for each requested Agent-task cell,
+  isolates incomplete or stale cached results, and identifies runs that need
+  execution by Workspace.
 
 ### build_result_matrix
 
@@ -146,13 +169,26 @@ Output:
 
 Effect:
 
-- Joins results into a table for Selection and Reporting.
+- Joins results into a table for Selection and Reporting. The matrix includes
+  completeness, excluded task IDs, missing cells, and abstention metadata.
 
-## Invalid Outcomes
+## Join And Denominator Policy
+
+`ResultJoinConfig` must explicitly define:
+
+- required result cache identity;
+- missing-cell policy;
+- Agent-attributable invalid outcome policy;
+- benchmark infrastructure failure policy;
+- denominator policy;
+- abstention policy.
 
 Agent-attributable invalid outcomes such as timeout, no meaningful patch, or
 budget exhaustion are failures. Benchmark infrastructure failures are not Agent
-failures and should be handled consistently across Agents.
+failures. Persistent task-level infrastructure failures should be removed from
+all Agents' denominators for that matrix. If required Agent-task cells are
+missing and cannot be filled under the configured policy, the matrix must carry
+an abstention reason instead of silently scoring a partial comparison.
 
 ## Source Alignment Check
 

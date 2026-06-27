@@ -77,7 +77,7 @@ Steps:
 
 Output:
 
-- reusable `Result`.
+- reusable `Result` with complete `ResultCacheIdentity`.
 
 Runner entrypoint:
 
@@ -101,8 +101,10 @@ Input:
 Steps:
 
 1. Runner loads historical results from Result Store.
-2. Selection builds the origins required by the training config.
-3. Selection trains or chooses a persistent `Selector`.
+2. Selection builds the origins required by the training config and
+   rolling-origin policy.
+3. Selection builds leakage-safe feature snapshots.
+4. Selection trains or chooses a persistent `Selector`.
 
 Output:
 
@@ -131,9 +133,11 @@ Input:
 Steps:
 
 1. Runner loads historical results from Result Store.
-2. Selection builds the origins required by the evaluation config.
-3. Selection applies the specified Selector at each origin.
-4. Selection returns metrics for those origins.
+2. Selection builds the origins required by the evaluation config and
+   rolling-origin policy.
+3. Selection builds leakage-safe feature snapshots.
+4. Selection applies the specified Selector at each origin.
+5. Selection returns metrics for those origins.
 
 Output:
 
@@ -163,10 +167,11 @@ Input:
 Steps:
 
 1. Runner loads pre-origin results from Result Store.
-2. Selection builds the history pool.
-3. Selection builds leakage-safe Selector input.
-4. Selector chooses common task IDs and optional weights.
-5. Selection records a `Benchmark Selection`.
+2. Selection builds the history pool from a `RollingOriginPolicy`.
+3. Selection builds and lints a feature snapshot.
+4. Selection builds leakage-safe Selector input.
+5. Selector chooses common task IDs and optional weights.
+6. Selection records a frozen `Benchmark Selection`.
 
 Output:
 
@@ -181,6 +186,8 @@ Downstream:
 - Runner can ask Result Store which selected Agent-task runs are missing.
 - Reporting shows why tasks were selected.
 - RollingOrigin evaluation joins selected results with future results.
+- Future outcomes must remain unopened until the `Benchmark Selection` has been
+  frozen.
 
 ## Flow 6: Score A Selection
 
@@ -193,11 +200,16 @@ Input:
 
 Steps:
 
-1. Compute selected-benchmark pass-rate estimates per Agent.
-2. Compute future holdout pass rates per Agent.
-3. Compute prediction error, rank agreement, regret, invalid rate, cost, and
+1. Runner prepares selected-benchmark Agent-task cells and future-holdout
+   Agent-task cells under the same result identity and denominator policy.
+2. Result Store fills cache hits, reports missing cells, and marks abstention
+   if required cells cannot be completed.
+3. Compute selected-benchmark pass-rate estimates per Agent.
+4. Compute future holdout pass rates per Agent.
+5. Compute prediction error, rank agreement, regret, invalid rate, cost, and
    coverage.
-4. Store metrics keyed by origin, selector version, and result cache state.
+6. Store metrics keyed by origin, selector version, result matrix digest, and
+   denominator policy.
 
 Output:
 

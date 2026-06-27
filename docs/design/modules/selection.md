@@ -18,12 +18,14 @@ Selection is the core research module.
 - candidate Agents;
 - budget;
 - selector config or specified Selector;
-- leakage rules.
+- rolling-origin policy;
+- feature config and leakage policy.
 
 ## Outputs
 
 - `BenchmarkSelectionRecord`;
 - `SelectorRecord`;
+- `FeatureSnapshotRecord`;
 - prediction metrics;
 - selector notes.
 
@@ -46,6 +48,23 @@ Output consumers:
 Functions below define module interfaces. Each function specifies input,
 output, and effect only; it does not prescribe implementation.
 
+## Policy Records
+
+`RollingOriginPolicy` must define:
+
+- `known_at` cutoff rule;
+- embargo interval;
+- task cluster constraints;
+- eligibility mode, such as strict historical evaluation or explicit
+  counterfactual replay;
+- holdout overlap rule;
+- whether future holdout task IDs may be known before scoring.
+
+`BenchmarkSelectionRecord` is the frozen benchmark selection. Selection must
+write it before future holdout outcomes are opened. Selection functions must not
+accept future-result paths, verifier workspaces, raw hidden-check material, or
+raw Agent transcripts.
+
 ## Selection Entry Points
 
 These are module-level entry points. Runner calls them as needed.
@@ -60,6 +79,8 @@ Input:
 - `history_window: TimeRange`
 - `candidate_selectors: Sequence[SelectorRecord]`
 - `training_config: SelectorTrainingConfig`
+- `rolling_policy: RollingOriginPolicy`
+- `feature_config: FeatureConfig`
 
 Output:
 
@@ -68,7 +89,8 @@ Output:
 Effect:
 
 - Trains or chooses a persistent Selector using only historical data allowed by
-  the training config. Rolling-origin splitting is internal to this function.
+  the training config and rolling-origin policy. Rolling-origin splitting is
+  internal to this function.
 
 ### evaluate_selector
 
@@ -80,6 +102,8 @@ Input:
 - `agents: Sequence[AgentRecord]`
 - `history_window: TimeRange`
 - `evaluation_config: SelectorEvaluationConfig`
+- `rolling_policy: RollingOriginPolicy`
+- `feature_config: FeatureConfig`
 
 Output:
 
@@ -88,7 +112,7 @@ Output:
 Effect:
 
 - Tests the specified Selector on historical data and returns metrics across
-  the origins defined by the evaluation config.
+  the origins defined by the evaluation config and rolling-origin policy.
 
 ### select_benchmark
 
@@ -101,6 +125,8 @@ Input:
 - `origin_time: datetime`
 - `budget: SelectionBudget`
 - `selection_config: SelectionConfig`
+- `rolling_policy: RollingOriginPolicy`
+- `feature_config: FeatureConfig`
 
 Output:
 
@@ -108,8 +134,9 @@ Output:
 
 Effect:
 
-- Uses the specified Selector at the origin to choose a production benchmark.
-  It does not run missing Agent-task results; Runner handles lazy Agent
+- Uses the specified Selector at the origin to choose a production benchmark
+  and write a frozen `BenchmarkSelectionRecord` before future outcomes are
+  opened. It does not run missing Agent-task results; Runner handles lazy Agent
   execution after this record is produced.
 
 ### update_selector
@@ -139,6 +166,7 @@ Input:
 - `task_pool: TaskPoolRecord`
 - `origin_time: datetime`
 - `future_window: TimeRange`
+- `policy: RollingOriginPolicy`
 
 Output:
 
@@ -147,7 +175,43 @@ Output:
 Effect:
 
 - Defines history pool and future holdout without exposing future outcomes to
-  selectors.
+  selectors. The policy defines `known_at` cutoff, embargo, cluster
+  constraints, eligibility mode, and holdout overlap rules.
+
+### build_feature_snapshot
+
+Input:
+
+- `origin: RollingOriginRecord`
+- `task_pool: TaskPoolRecord`
+- `results: Sequence[ResultRecord]`
+- `feature_config: FeatureConfig`
+
+Output:
+
+- `FeatureSnapshotRecord`
+
+Effect:
+
+- Builds pre-origin feature records with `observed_at`,
+  `source_artifact_digest`, `origin_snapshot_digest`, and `leakage_class`.
+  The function does not read future result paths.
+
+### lint_feature_snapshot
+
+Input:
+
+- `snapshot: FeatureSnapshotRecord`
+- `policy: LeakagePolicy`
+
+Output:
+
+- `ValidationResult`
+
+Effect:
+
+- Rejects features whose `observed_at`, source, or leakage class is not allowed
+  for the origin and eligibility mode.
 
 ### build_selector_input
 
@@ -155,10 +219,11 @@ Input:
 
 - `origin: RollingOriginRecord`
 - `task_pool: TaskPoolRecord`
+- `feature_snapshot: FeatureSnapshotRecord`
 - `results: Sequence[ResultRecord]`
 - `agents: Sequence[AgentRecord]`
 - `budget: SelectionBudget`
-- `leakage_rules: LeakageRules`
+- `leakage_policy: LeakagePolicy`
 
 Output:
 
@@ -166,7 +231,7 @@ Output:
 
 Effect:
 
-- Builds the pre-origin data visible to a selector.
+- Runs leakage linting and builds the pre-origin data visible to a selector.
 
 ### select_random
 
@@ -282,7 +347,8 @@ Output:
 Effect:
 
 - Selects one common task set and weight vector for all Agents in the
-  comparison.
+  comparison, then returns a frozen `BenchmarkSelectionRecord` with selected
+  task IDs, weights, selector input digest, and feature snapshot ID.
 
 ### evaluate_selection
 
@@ -340,6 +406,9 @@ Aligned with the architecture and roadmap:
 
 - Selectors use common task sets for Agent comparisons.
 - Future outcomes are not visible at selection time.
+- Rolling-origin leakage controls are represented in function inputs, not only
+  prose.
+- Feature provenance is recorded before selector input is built.
 - Primary metric is future pass-rate MAE.
 - Learned selectors start with data-efficient methods.
 - Adaptive behavior is based on prior-origin metrics and later feedback

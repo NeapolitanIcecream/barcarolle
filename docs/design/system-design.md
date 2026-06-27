@@ -28,12 +28,12 @@ and who consumes the outputs.
 
 | Module | Owns | Inputs | Input Source | Outputs | Output Consumers |
 | --- | --- | --- | --- | --- | --- |
-| Records | Shared record schemas, identity rules, validation errors, and JSON/JSONL serialization contracts. | Record definitions; record payloads produced by other modules. | Design docs; Task Pool; Verification; Workspace; Result Store; Selection; Reporting; Runner. | Validated `Task`, `Check`, `Result`, `Selector`, `Benchmark Selection`, metric, and report records; validation errors; stable IDs. | All modules. |
+| Records | Shared record schemas, identity rules, validation errors, and JSON/JSONL serialization contracts. | Record definitions; record payloads produced by other modules. | Design docs; Task Pool; Verification; Workspace; Result Store; Selection; Reporting; Runner. | Validated `Task`, `Check`, `Feature`, `Result`, `ResultCacheIdentity`, `Selector`, `Benchmark Selection`, metric, and report records; validation errors; stable IDs. | All modules. |
 | Task Pool | Task generation, task import, task certification, rejected-task summaries, and frozen task-pool files. | Target repository reference; task-source config; user-provided tasks; check construction config; certification config. | User config; built-in generators; user imports; Verification for executable-check validation; Workspace for checkout/replay validation. | Frozen `Task Pool`; accepted `Task + Check` records; rejected candidates; certification evidence. | Workspace; Result Store; Selection; Reporting. |
 | Verification | Check execution interface and normalized check outcomes. | `Check`; verifier workspace path; candidate diff already applied; verification runtime config. | Task Pool provides `Check`; Workspace provides verifier workspace and applied diff. | Normalized check outcome: pass, fail, invalid, failure label, sanitized evidence summary. | Workspace; Result Store; Reporting. |
 | Workspace | Solver workspace creation, Agent invocation, diff capture, verifier workspace creation, diff replay, and verification orchestration. | `Task`; `Check`; Agent config; workspace config; runtime config. | Task Pool provides `Task + Check`; user or run config provides Agent and configs; Verification provides verification runner. | Captured diff digest; execution metadata; check outcome; workspace-level failure classification. | Result Store. |
-| Result Store | Result cache identity, result storage, missing-run queries, and result matrices. | `Task`; `Check`; Agent config; workspace output; check outcome. | Task Pool; Workspace; Verification; Records. | Reusable `Result` records; result cache state; result matrix; missing Agent-task runs. | Selection; Reporting; Runner. |
-| Selection | Selector training, Selector evaluation, production benchmark selection, rolling-origin construction, and feedback-based Selector updates. | Frozen `Task Pool`; `Agent Results`; historical window or origin; budget; candidate Agents; selector config or specified Selector. | Task Pool; Result Store; user or experiment config; selector roadmap. | `Selector`; `Benchmark Selection`; selected task IDs and weights; rolling-origin metrics; selector notes. | Reporting; Runner. |
+| Result Store | Result cache identity, result storage, missing-run queries, and result matrices. | `Task`; `Check`; Agent config; exact result identity; workspace output; check outcome. | Task Pool; Workspace; Verification; Records. | Reusable `Result` records; result cache state; result matrix; completeness, exclusion, and abstention metadata; missing Agent-task runs. | Selection; Reporting; Runner. |
+| Selection | Selector training, Selector evaluation, production benchmark selection, rolling-origin construction, feature snapshotting, and feedback-based Selector updates. | Frozen `Task Pool`; `Agent Results`; historical window or origin; budget; candidate Agents; selector config or specified Selector; rolling-origin policy; feature config. | Task Pool; Result Store; user or experiment config; selector roadmap. | `Selector`; `Benchmark Selection`; selected task IDs and weights; rolling-origin metrics; feature snapshots; selector notes. | Reporting; Runner. |
 | Reporting | Claim-safe summaries, audit reports, and machine-readable summaries. | `Task Pool`; `Benchmark Selection`; `Agent Results`; rolling-origin metrics; artifact digests. | Task Pool; Result Store; Selection; Records. | Human-readable report; machine-readable summary; claim-boundary statement. | Users. |
 | Runner | Command-level orchestration across modules, including cache reuse and lazy Agent execution. | Run config; target repository; task-source config; Agent set; historical window or origin; budget; selector config or specified Selector; result store; workspace config; runtime config; report config. | Users; Task Pool; Result Store; Selection; Workspace; Reporting. | Run summary; references to records produced by owner modules; report paths. | Users. |
 
@@ -57,8 +57,9 @@ Runner + Task Pool + Agent config + workspace config
   -> Agent Results
 
 Task Pool + Agent Results + origin + budget + selector config
+  -> RollingOrigin + Feature Snapshot
   -> Selection
-  -> Benchmark Selection + rolling-origin metrics
+  -> frozen Benchmark Selection + rolling-origin metrics
 
 Task Pool + Agent Results + Benchmark Selection + metrics
   -> Reporting
@@ -95,6 +96,11 @@ One Agent on one Task under one environment and runtime config. A `Result`
 contains status, pass/fail/invalid, cost, latency, failure label, captured diff
 digest, and verifier metadata.
 
+A reusable `Result` is matched by `ResultCacheIdentity`, which stores the
+structured task, check, Agent, workspace, runtime, scoring, adapter, and
+optional hardware identity plus a digest. Results with incomplete identity are
+not cache hits.
+
 ### Selector
 
 A function that chooses benchmark tasks from a pre-origin history pool under a
@@ -107,7 +113,8 @@ metadata.
 
 Evaluation protocol that freezes an origin time, selects from pre-origin
 history, and compares selected-benchmark performance with later holdout
-performance.
+performance. The policy records known-at cutoffs, embargo, cluster constraints,
+eligibility mode, and holdout overlap rules.
 
 ## Result Reuse And Lazy Execution
 
@@ -119,7 +126,8 @@ keep this affordable.
 
 When `Agent Results` already exist for some Agent-task runs, selectors reuse
 those results instead of re-running paid Agent runs. This is what makes repeated
-selector research possible.
+selector research possible. Reuse requires an exact `ResultCacheIdentity`
+match; incomplete or stale identities are isolated from scoring.
 
 ### Lazy Agent Execution
 
@@ -127,7 +135,8 @@ When Agent execution is expensive and results are sparse, Selection can choose
 a benchmark first. Workspace then runs only selected Agent-task runs whose
 results are missing from the cache. Runner is the module that calls Result Store to
 find missing results, Workspace to execute them, and Result Store again to store
-them.
+them. The same completeness and denominator policy is applied when scoring the
+selected benchmark against the future holdout.
 
 ## Module Boundary Rules
 

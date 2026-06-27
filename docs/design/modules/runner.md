@@ -21,6 +21,7 @@ reporting logic.
 - result store;
 - workspace config;
 - runtime config;
+- result identity config;
 - report config.
 
 ## Outputs
@@ -75,6 +76,8 @@ Input:
 - `history_window: TimeRange`
 - `candidate_selectors: Sequence[SelectorRecord]`
 - `training_config: SelectorTrainingConfig`
+- `rolling_policy: RollingOriginPolicy`
+- `feature_config: FeatureConfig`
 - `result_store: ResultStore`
 
 Output:
@@ -84,7 +87,7 @@ Output:
 Effect:
 
 - Loads historical results and calls Selection to train or choose a persistent
-  Selector.
+  Selector under the requested rolling-origin and feature policies.
 
 ### select_benchmark
 
@@ -96,6 +99,8 @@ Input:
 - `budget: SelectionBudget`
 - `selector: SelectorRecord`
 - `selection_config: SelectionConfig`
+- `rolling_policy: RollingOriginPolicy`
+- `feature_config: FeatureConfig`
 - `result_store: ResultStore`
 
 Output:
@@ -105,7 +110,7 @@ Output:
 Effect:
 
 - Loads allowed pre-origin results and calls Selection to produce a benchmark
-  selection.
+  selection frozen before future outcomes are opened.
 
 ### update_selector
 
@@ -136,6 +141,8 @@ Input:
 - `agents: Sequence[AgentRecord]`
 - `history_window: TimeRange`
 - `evaluation_config: SelectorEvaluationConfig`
+- `rolling_policy: RollingOriginPolicy`
+- `feature_config: FeatureConfig`
 - `result_store: ResultStore`
 
 Output:
@@ -145,7 +152,8 @@ Output:
 Effect:
 
 - Loads historical results and calls Selection to test the specified Selector
-  across the origins defined by the evaluation config.
+  across the origins defined by the evaluation config and rolling-origin
+  policy.
 
 ## Internal Steps
 
@@ -158,6 +166,7 @@ Input:
 - `agents: Sequence[AgentRecord]`
 - `workspace_config: WorkspaceConfig`
 - `runtime_config: RuntimeConfig`
+- `identity_config: ResultIdentityConfig`
 - `result_store: ResultStore`
 
 Output:
@@ -178,6 +187,7 @@ Input:
 - `agents: Sequence[AgentRecord]`
 - `workspace_config: WorkspaceConfig`
 - `runtime_config: RuntimeConfig`
+- `identity_config: ResultIdentityConfig`
 - `result_store: ResultStore`
 
 Output:
@@ -189,6 +199,31 @@ Effect:
 - Calls Result Store to find selected Agent-task runs that are not reusable from the
   cache, then calls Workspace and Result Store to execute and store only those runs.
 
+### prepare_evaluation_cells
+
+Input:
+
+- `selection: BenchmarkSelectionRecord`
+- `origin: RollingOriginRecord`
+- `task_pool: TaskPoolRecord`
+- `agents: Sequence[AgentRecord]`
+- `workspace_config: WorkspaceConfig`
+- `runtime_config: RuntimeConfig`
+- `identity_config: ResultIdentityConfig`
+- `result_store: ResultStore`
+- `join_config: ResultJoinConfig`
+
+Output:
+
+- `EvaluationCellSet`
+
+Effect:
+
+- Applies the same cache identity and denominator policy to selected benchmark
+  tasks and future holdout tasks. It asks Result Store for missing cells, runs
+  allowed missing cells through Workspace, stores new results, and returns
+  completeness, exclusion, and abstention metadata for scoring.
+
 ### score_selection
 
 Input:
@@ -197,6 +232,7 @@ Input:
 - `origin: RollingOriginRecord`
 - `task_pool: TaskPoolRecord`
 - `agents: Sequence[AgentRecord]`
+- `evaluation_cells: EvaluationCellSet`
 - `result_store: ResultStore`
 - `join_config: ResultJoinConfig`
 - `metric_config: MetricConfig`
@@ -207,8 +243,10 @@ Output:
 
 Effect:
 
-- Calls Result Store to build the result matrix and calls Selection to evaluate
-  prediction metrics.
+- Calls Result Store to build selected-benchmark and future-holdout result
+  matrices from `evaluation_cells`, then calls Selection to evaluate prediction
+  metrics. If the required cells are incomplete under `join_config`, it records
+  abstention metadata instead of scoring a partial comparison.
 
 ### write_report
 
@@ -239,4 +277,5 @@ Aligned with the architecture:
   separate command flows.
 - Implements cache reuse and lazy Agent execution by calling Result Store and
   Workspace, not by creating another execution mode.
+- Keeps selected-benchmark and future-holdout result preparation symmetric.
 - Leaves module-specific logic in the owner modules.
