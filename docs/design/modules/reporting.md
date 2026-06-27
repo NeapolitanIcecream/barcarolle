@@ -70,7 +70,7 @@ Output:
 Effect:
 
 - Summarizes pass/fail/invalid, cost, latency, scoreable rate, and cache
-  coverage.
+  coverage, including pricing version and usage coverage.
 
 ### build_selector_report
 
@@ -85,7 +85,8 @@ Output:
 
 Effect:
 
-- Summarizes selector performance by origin, Agent set, budget, and metric.
+- Summarizes selector performance by origin, Agent set, budget, metric, and
+  benchmark exposure state.
 
 ### build_claim_boundary
 

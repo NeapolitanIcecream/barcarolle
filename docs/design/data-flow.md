@@ -136,11 +136,15 @@ Steps:
 2. Selection builds the origins required by the evaluation config and
    rolling-origin policy.
 3. Selection builds leakage-safe feature snapshots.
-4. Selection applies the specified Selector at each origin.
-5. Selection returns metrics for those origins.
+4. Selection applies the specified Selector at each origin and freezes a
+   `Benchmark Selection` before future outcomes for that origin are opened.
+5. Runner prepares evaluation cells for the selected benchmark and future
+   holdout under the same identity and denominator policy.
+6. Runner returns metrics for those frozen selections.
 
 Output:
 
+- frozen `Benchmark Selection` records;
 - rolling-origin metrics.
 
 Runner entrypoint:
@@ -170,7 +174,7 @@ Steps:
 2. Selection builds the history pool from a `RollingOriginPolicy`.
 3. Selection builds and lints a feature snapshot.
 4. Selection builds leakage-safe Selector input.
-5. Selector chooses common task IDs and optional weights.
+5. Selector chooses common `Task + Check` refs and optional weights.
 6. Selection records a frozen `Benchmark Selection`.
 
 Output:
@@ -183,7 +187,7 @@ Runner entrypoint:
 
 Downstream:
 
-- Runner can ask Result Store which selected Agent-task runs are missing.
+- Runner can ask Result Store which selected Agent-task-check cells are missing.
 - Reporting shows why tasks were selected.
 - RollingOrigin evaluation joins selected results with future results.
 - Future outcomes must remain unopened until the `Benchmark Selection` has been
@@ -200,8 +204,9 @@ Input:
 
 Steps:
 
-1. Runner prepares selected-benchmark Agent-task cells and future-holdout
-   Agent-task cells under the same result identity and denominator policy.
+1. Runner prepares selected-benchmark Agent-task-check cells and
+   future-holdout Agent-task-check cells under the same result identity and
+   denominator policy.
 2. Result Store fills cache hits, reports missing cells, and marks abstention
    if required cells cannot be completed.
 3. Compute selected-benchmark pass-rate estimates per Agent.

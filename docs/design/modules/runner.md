@@ -147,13 +147,15 @@ Input:
 
 Output:
 
-- `Sequence[MetricRecord]`
+- `selections: Sequence[BenchmarkSelectionRecord]`
+- `metrics: Sequence[MetricRecord]`
 
 Effect:
 
-- Loads historical results and calls Selection to test the specified Selector
-  across the origins defined by the evaluation config and rolling-origin
-  policy.
+- For each origin defined by the evaluation config and rolling-origin policy,
+  calls Selection to freeze a `BenchmarkSelectionRecord`, then calls
+  `prepare_evaluation_cells` and `score_selection`. It returns both frozen
+  selections and metrics.
 
 ## Internal Steps
 
@@ -162,7 +164,9 @@ Effect:
 Input:
 
 - `task_pool: TaskPoolRecord`
+- `task_check_refs: Sequence[TaskCheckRef]`
 - `tasks: Sequence[TaskRecord]`
+- `checks: Mapping[str, CheckRecord]`
 - `agents: Sequence[AgentRecord]`
 - `workspace_config: WorkspaceConfig`
 - `runtime_config: RuntimeConfig`
@@ -175,8 +179,8 @@ Output:
 
 Effect:
 
-- Calls Workspace for requested Agent-task runs and calls Result Store to store the
-  produced records.
+- Calls Workspace for requested Agent-task-check cells and calls Result Store to
+  store the produced records.
 
 ### fill_results
 
@@ -184,6 +188,8 @@ Input:
 
 - `selection: BenchmarkSelectionRecord`
 - `task_pool: TaskPoolRecord`
+- `tasks: Sequence[TaskRecord]`
+- `checks: Mapping[str, CheckRecord]`
 - `agents: Sequence[AgentRecord]`
 - `workspace_config: WorkspaceConfig`
 - `runtime_config: RuntimeConfig`
@@ -196,8 +202,9 @@ Output:
 
 Effect:
 
-- Calls Result Store to find selected Agent-task runs that are not reusable from the
-  cache, then calls Workspace and Result Store to execute and store only those runs.
+- Calls Result Store to find selected Agent-task-check cells that are not
+  reusable from the cache, then calls Workspace and Result Store to execute and
+  store only those cells.
 
 ### prepare_evaluation_cells
 
@@ -206,6 +213,8 @@ Input:
 - `selection: BenchmarkSelectionRecord`
 - `origin: RollingOriginRecord`
 - `task_pool: TaskPoolRecord`
+- `tasks: Sequence[TaskRecord]`
+- `checks: Mapping[str, CheckRecord]`
 - `agents: Sequence[AgentRecord]`
 - `workspace_config: WorkspaceConfig`
 - `runtime_config: RuntimeConfig`
@@ -220,9 +229,10 @@ Output:
 Effect:
 
 - Applies the same cache identity and denominator policy to selected benchmark
-  tasks and future holdout tasks. It asks Result Store for missing cells, runs
-  allowed missing cells through Workspace, stores new results, and returns
-  completeness, exclusion, and abstention metadata for scoring.
+  `Task + Check` refs and future holdout `Task + Check` refs. It asks Result
+  Store for missing cells, runs allowed missing cells through Workspace, stores
+  new results, and returns completeness, exclusion, and abstention metadata for
+  scoring.
 
 ### score_selection
 

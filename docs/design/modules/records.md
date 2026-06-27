@@ -17,11 +17,14 @@ This module should not perform I/O beyond optional serialization helpers.
 - `AgentRecord`
 - `WorkspaceConfig`
 - `RuntimeConfig`
+- `WorkspaceRunRecord`
 - `ResultCacheIdentity`
 - `SelectorRecord`
 - `FeatureRecord`
 - `FeatureSnapshotRecord`
 - `ResultRecord`
+- `ResultMatrix`
+- `EvaluationCellSet`
 - `TaskPoolRecord`
 - `BenchmarkSelectionRecord`
 - `RollingOriginRecord`
@@ -32,6 +35,14 @@ This module should not perform I/O beyond optional serialization helpers.
 These are minimum boundary fields. Implementations may add derived fields, but
 modules should not depend on fields that are not recorded here.
 
+### TaskCheckRef
+
+- `task_id`
+- `check_id`
+
+`TaskCheckRef` is a compact reference to an existing `TaskRecord` and
+`CheckRecord`, not a separate stored record.
+
 ### TaskRecord
 
 - `task_id`
@@ -39,24 +50,30 @@ modules should not depend on fields that are not recorded here.
 - `base_commit`
 - `source_family`
 - `source_ref`
-- `available_at`
-- `known_at`
+- `source_resolved_at`
+- `task_material_available_at`
+- `certified_at`
 - `solver_material_digest`
 - `solver_material_refs`
 - `check_ids`
 - `cluster_id`
+
+`known_at` is a derived value computed from source, material, check, and
+certification timestamps. It should not replace those source timestamps.
 
 ### CheckRecord
 
 - `check_id`
 - `task_id`
 - `check_type`
+- `check_manifest_digest`
 - `hidden_check_bundle_digest`
 - `verifier_image_digest`
 - `verifier_deps_digest`
 - `resource_limits`
 - `oracle_source`
-- `available_at`
+- `check_material_available_at`
+- `certified_at`
 
 ### AgentRecord
 
@@ -64,6 +81,7 @@ modules should not depend on fields that are not recorded here.
 - `agent_manifest_digest`
 - `model_snapshot_id`
 - `harness_digest`
+- `repository_instruction_digest`
 - `prompt_digest`
 - `tools_digest`
 - `retrieval_digest`
@@ -99,12 +117,14 @@ run. If hardware can change scoreability or latency claims, it must be present.
 - `base_commit`
 - `submodule_state_digest`
 - `solver_material_digest`
+- `check_manifest_digest`
 - `hidden_check_bundle_digest`
 - `verifier_image_digest`
 - `verifier_deps_digest`
 - `agent_manifest_digest`
 - `model_snapshot_id`
 - `harness_digest`
+- `repository_instruction_digest`
 - `prompt_digest`
 - `tools_digest`
 - `retrieval_digest`
@@ -124,6 +144,27 @@ The structured fields and `identity_digest` are both stored. Cached results
 missing any required identity field are isolated from reuse and may only appear
 in audit reports.
 
+### WorkspaceRunRecord
+
+- `workspace_run_id`
+- `cache_identity_digest`
+- `task_id`
+- `check_id`
+- `agent_id`
+- `solver_workspace_digest`
+- `verifier_workspace_digest`
+- `terminal_status`
+- `diff_digest`
+- `replay_status`
+- `check_outcome`
+- `invalid_owner`
+- `failure_label`
+- `usage`
+- `started_at`
+- `finished_at`
+
+Raw workspaces and transcripts are not stored in this record.
+
 ### ResultRecord
 
 - `result_id`
@@ -137,11 +178,15 @@ in audit reports.
 - `invalid_owner`
 - `failure_label`
 - `cost`
+- `pricing_version`
+- `usage`
+- `usage_coverage`
 - `latency`
 - `diff_digest`
 - `verifier_metadata_digest`
 - `started_at`
 - `finished_at`
+- `result_available_at`
 
 `invalid_owner` distinguishes Agent-attributable invalid outcomes from
 benchmark infrastructure failures.
@@ -149,9 +194,16 @@ benchmark infrastructure failures.
 ### FeatureRecord
 
 - `feature_id`
+- `feature_scope`
 - `task_id`
+- `check_id`
+- `agent_id`
+- `result_id`
+- `result_cache_identity_digest`
 - `feature_name`
 - `value`
+- `aggregation_window`
+- `aggregation_method`
 - `observed_at`
 - `source_artifact_digest`
 - `origin_snapshot_digest`
@@ -194,33 +246,65 @@ linting.
 - `origin_id`
 - `origin_time`
 - `policy_digest`
-- `history_task_ids`
-- `future_holdout_task_ids`
-- `known_at_cutoff`
+- `history_task_check_refs`
+- `future_holdout_task_check_refs`
+- `as_of_cutoff`
 - `embargo`
 - `cluster_constraints_digest`
 - `eligibility_mode`
 - `holdout_overlap_policy`
 
-Future holdout task IDs may be recorded before scoring, but future outcomes
-must not be available to Selection before a `BenchmarkSelectionRecord` is
-frozen.
+Future holdout `Task + Check` refs may be recorded before scoring, but future
+outcomes must not be available to Selection before a `BenchmarkSelectionRecord`
+is frozen.
 
 ### BenchmarkSelectionRecord
 
 - `selection_id`
 - `origin_id`
 - `selector_id`
-- `selected_task_ids`
+- `selected_task_check_refs`
 - `selected_weights`
 - `budget_digest`
 - `selection_input_digest`
 - `feature_snapshot_id`
 - `eligibility_mode`
+- `exposure_state`
+- `exposed_at`
+- `exposure_scope_digest`
 - `created_at`
 
 This record is the frozen benchmark selection. It must be written before future
 holdout outcomes are opened for scoring.
+
+### ResultMatrix
+
+- `matrix_id`
+- `origin_id`
+- `selection_id`
+- `agent_ids`
+- `task_check_refs`
+- `result_ids`
+- `missing_cells`
+- `excluded_task_check_refs`
+- `denominator_policy_digest`
+- `abstention_reason`
+- `scoreable_state`
+- `matrix_digest`
+
+### EvaluationCellSet
+
+- `cell_set_id`
+- `origin_id`
+- `selection_id`
+- `selected_task_check_refs`
+- `future_task_check_refs`
+- `required_cache_identity_digests`
+- `result_ids`
+- `missing_cells`
+- `excluded_task_check_refs`
+- `abstention_reason`
+- `cell_set_digest`
 
 ### MetricRecord
 
@@ -282,6 +366,21 @@ Effect:
 - Validates that the check has an execution type, bounded resource limits, and no
   solver-visible hidden material.
 
+### validate_workspace_run
+
+Input:
+
+- `run: WorkspaceRunRecord`
+
+Output:
+
+- `ValidationResult`
+
+Effect:
+
+- Validates run identity linkage, diff digest, replay status, usage fields, and
+  failure attribution without reading raw workspaces.
+
 ### validate_result
 
 Input:
@@ -294,8 +393,8 @@ Output:
 
 Effect:
 
-- Validates cache identity fields, status fields, cost/latency fields, and failure
-  labels.
+- Validates cache identity fields, status fields, cost/latency fields, usage
+  coverage, pricing version, result availability timestamp, and failure labels.
 
 ### validate_result_cache_identity
 
@@ -325,6 +424,36 @@ Output:
 Effect:
 
 - Validates feature provenance fields, leakage lint status, and origin linkage.
+
+### validate_result_matrix
+
+Input:
+
+- `matrix: ResultMatrix`
+
+Output:
+
+- `ValidationResult`
+
+Effect:
+
+- Validates completeness, exclusions, denominator policy, abstention metadata,
+  and matrix digest.
+
+### validate_evaluation_cell_set
+
+Input:
+
+- `cells: EvaluationCellSet`
+
+Output:
+
+- `ValidationResult`
+
+Effect:
+
+- Validates selected and future `Task + Check` refs, required cache identities,
+  missing cells, exclusions, and abstention metadata.
 
 ### validate_selector
 

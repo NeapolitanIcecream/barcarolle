@@ -52,13 +52,13 @@ output, and effect only; it does not prescribe implementation.
 
 `RollingOriginPolicy` must define:
 
-- `known_at` cutoff rule;
+- as-of cutoff rule;
 - embargo interval;
 - task cluster constraints;
 - eligibility mode, such as strict historical evaluation or explicit
   counterfactual replay;
 - holdout overlap rule;
-- whether future holdout task IDs may be known before scoring.
+- whether future holdout `Task + Check` refs may be known before scoring.
 
 `BenchmarkSelectionRecord` is the frozen benchmark selection. Selection must
 write it before future holdout outcomes are opened. Selection functions must not
@@ -107,12 +107,14 @@ Input:
 
 Output:
 
-- `Sequence[MetricRecord]`
+- `selections: Sequence[BenchmarkSelectionRecord]`
+- `metrics: Sequence[MetricRecord]`
 
 Effect:
 
-- Tests the specified Selector on historical data and returns metrics across
-  the origins defined by the evaluation config and rolling-origin policy.
+- Tests the specified Selector by freezing one `BenchmarkSelectionRecord` per
+  origin before scoring that origin. Metrics are returned only for origins whose
+  selections have been frozen.
 
 ### select_benchmark
 
@@ -175,7 +177,7 @@ Output:
 Effect:
 
 - Defines history pool and future holdout without exposing future outcomes to
-  selectors. The policy defines `known_at` cutoff, embargo, cluster
+  selectors. The policy defines as-of cutoff, embargo, cluster
   constraints, eligibility mode, and holdout overlap rules.
 
 ### build_feature_snapshot
@@ -193,9 +195,10 @@ Output:
 
 Effect:
 
-- Builds pre-origin feature records with `observed_at`,
-  `source_artifact_digest`, `origin_snapshot_digest`, and `leakage_class`.
-  The function does not read future result paths.
+- Builds pre-origin feature records with scope, optional Agent/result linkage,
+  aggregation method, `observed_at`, `source_artifact_digest`,
+  `origin_snapshot_digest`, and `leakage_class`. The function does not read
+  future result paths.
 
 ### lint_feature_snapshot
 
@@ -293,7 +296,7 @@ Output:
 Effect:
 
 - Combines rule-based selector scores and solves for one common selected task
-  set.
+  and check set.
 
 ### fit_learned_mixture
 
@@ -348,7 +351,7 @@ Effect:
 
 - Selects one common task set and weight vector for all Agents in the
   comparison, then returns a frozen `BenchmarkSelectionRecord` with selected
-  task IDs, weights, selector input digest, and feature snapshot ID.
+  `Task + Check` refs, weights, selector input digest, and feature snapshot ID.
 
 ### evaluate_selection
 

@@ -4,7 +4,7 @@ Status: draft, 2026-06-27.
 
 ## Responsibility
 
-Store, query, and join reusable `Result` records for Agent-task runs.
+Store, query, and join reusable `Result` records for Agent-task-check cells.
 
 Result Store does not execute Agents and does not choose benchmark tasks.
 
@@ -24,7 +24,7 @@ Result Store does not execute Agents and does not choose benchmark tasks.
 - cached result queries;
 - `ResultMatrix`;
 - result completeness and exclusion metadata;
-- missing Agent-task runs.
+- missing Agent-task-check cells.
 
 ## System Boundary
 
@@ -137,6 +137,7 @@ Effect:
 
 Input:
 
+- `task_check_refs: Sequence[TaskCheckRef]`
 - `tasks: Sequence[TaskRecord]`
 - `checks: Mapping[str, CheckRecord]`
 - `agents: Sequence[AgentRecord]`
@@ -150,15 +151,17 @@ Output:
 
 Effect:
 
-- Builds the required `ResultCacheIdentity` for each requested Agent-task cell,
-  isolates incomplete or stale cached results, and identifies runs that need
-  execution by Workspace.
+- Builds the required `ResultCacheIdentity` for each requested
+  Agent-task-check cell, isolates incomplete or stale cached results, and
+  identifies runs that need execution by Workspace.
 
 ### build_result_matrix
 
 Input:
 
+- `task_check_refs: Sequence[TaskCheckRef]`
 - `tasks: Sequence[TaskRecord]`
+- `checks: Mapping[str, CheckRecord]`
 - `agents: Sequence[AgentRecord]`
 - `results: Sequence[ResultRecord]`
 - `join_config: ResultJoinConfig`
@@ -170,7 +173,8 @@ Output:
 Effect:
 
 - Joins results into a table for Selection and Reporting. The matrix includes
-  completeness, excluded task IDs, missing cells, and abstention metadata.
+  completeness, excluded `Task + Check` refs, missing cells, and abstention
+  metadata.
 
 ## Join And Denominator Policy
 
@@ -186,9 +190,9 @@ Effect:
 Agent-attributable invalid outcomes such as timeout, no meaningful patch, or
 budget exhaustion are failures. Benchmark infrastructure failures are not Agent
 failures. Persistent task-level infrastructure failures should be removed from
-all Agents' denominators for that matrix. If required Agent-task cells are
-missing and cannot be filled under the configured policy, the matrix must carry
-an abstention reason instead of silently scoring a partial comparison.
+all Agents' denominators for that matrix. If required Agent-task-check cells
+are missing and cannot be filled under the configured policy, the matrix must
+carry an abstention reason instead of silently scoring a partial comparison.
 
 ## Source Alignment Check
 

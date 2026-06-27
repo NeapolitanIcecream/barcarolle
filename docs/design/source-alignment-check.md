@@ -40,7 +40,8 @@ The design keeps these assets independent:
 - `Agent Results`
 
 This matches the architecture requirement that cached paid results can be
-reused for selector research without rerunning identical Agent-task runs.
+reused for selector research without rerunning identical Agent-task-check
+cells.
 
 ### Selector Boundary
 
@@ -61,6 +62,9 @@ The Selector module follows the roadmap:
 Result reuse depends on exact `ResultCacheIdentity`, not broad runtime names.
 Result matrices must carry completeness, exclusion, abstention, and denominator
 metadata so Agent comparisons cannot silently reuse stale or partial cells.
+Rolling-origin evaluation freezes `Task + Check` refs before future outcomes
+are opened, and records source, task material, check material, certification,
+and result availability timestamps separately.
 
 ### Goodhart Boundary
 
