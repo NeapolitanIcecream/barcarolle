@@ -223,6 +223,8 @@ Steps:
 
 Output:
 
+- evaluation cell set;
+- selected-benchmark and future-holdout result matrices;
 - rolling-origin metrics.
 
 Runner entrypoint:

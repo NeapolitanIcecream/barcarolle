@@ -116,7 +116,8 @@ Output:
 
 Effect:
 
-- Writes or updates a result record according to the store config.
+- Writes a result record append-only. Corrections or rescoring create a new
+  `result_id` and `result_digest`; existing frozen records are not mutated.
 
 ### load_results
 

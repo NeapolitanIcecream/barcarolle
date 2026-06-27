@@ -52,12 +52,13 @@ modules should not depend on fields that are not recorded here.
 - `check_id`
 - `required_identity_digest`
 - `result_id`
+- `result_digest`
 - `cell_state`
 - `exclusion_reason`
 
 `ResultCellRef` is a compact cell-level reference used by result matrices and
-evaluation cell sets. `result_id` and `exclusion_reason` may be null depending
-on `cell_state`.
+evaluation cell sets. `result_id`, `result_digest`, and `exclusion_reason` may
+be null depending on `cell_state`.
 
 ### TaskRecord
 
@@ -183,6 +184,7 @@ Raw workspaces and transcripts are not stored in this record.
 ### ResultRecord
 
 - `result_id`
+- `result_digest`
 - `cache_identity: ResultCacheIdentity`
 - `agent_id`
 - `task_id`
@@ -255,6 +257,7 @@ linting.
 - `agent_ids`
 - `eligible_task_check_refs`
 - `pre_origin_result_ids`
+- `pre_origin_result_digests`
 - `budget_digest`
 - `leakage_policy_digest`
 - `selector_input_digest`
@@ -265,6 +268,7 @@ origin. Its digest covers the listed fields and the referenced feature snapshot.
 ### TaskPoolRecord
 
 - `task_pool_id`
+- `task_pool_digest`
 - `repository_id`
 - `task_ids`
 - `check_ids`
@@ -279,6 +283,11 @@ origin. Its digest covers the listed fields and the referenced feature snapshot.
 - `generator_config_digest`
 - `certification_config_digest`
 - `created_at`
+
+`task_pool_digest` is computed from the canonical serialization of the frozen
+task pool, including accepted Task/Check refs and digests, rejected candidate
+IDs, rejection summary digest, certification evidence digest, source event
+inventory digest, and generator/certification config digests.
 
 ### RollingOriginRecord
 
@@ -502,8 +511,8 @@ Output:
 Effect:
 
 - Validates origin linkage, task-pool binding, feature snapshot digest,
-  eligible `Task + Check` refs, pre-origin result membership, budget digest,
-  leakage policy digest, and selector input digest.
+  eligible `Task + Check` refs, pre-origin result IDs and digests, budget
+  digest, leakage policy digest, and selector input digest.
 
 ### validate_result_matrix
 
@@ -518,8 +527,8 @@ Output:
 Effect:
 
 - Validates cell-level Agent/Task/Check mapping, completeness, exclusions,
-  matrix role, join policy, denominator policy, abstention metadata, and matrix
-  digest.
+  result IDs and digests, matrix role, join policy, denominator policy,
+  abstention metadata, and matrix digest.
 
 ### validate_evaluation_cell_set
 

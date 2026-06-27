@@ -150,6 +150,8 @@ Input:
 Output:
 
 - `selections: Sequence[BenchmarkSelectionRecord]`
+- `cell_sets: Sequence[EvaluationCellSet]`
+- `result_matrices: Sequence[ResultMatrix]`
 - `metrics: Sequence[MetricRecord]`
 
 Effect:
@@ -157,8 +159,8 @@ Effect:
 - For each origin defined by the evaluation config and rolling-origin policy,
   resolves Task/Check records, builds pre-origin selector input, calls Selection
   `freeze_evaluation_selections` to freeze `BenchmarkSelectionRecord`s, then
-  calls `prepare_evaluation_cells` and `score_selection`. It returns both
-  frozen selections and metrics.
+  calls `prepare_evaluation_cells` and `score_selection`. It returns frozen
+  selections, cell sets, result matrices, and metrics.
 
 ## Internal Steps
 
@@ -254,7 +256,10 @@ Input:
 
 Output:
 
-- `Sequence[MetricRecord]`
+- `cell_set: EvaluationCellSet`
+- `selected_matrix: ResultMatrix`
+- `future_matrix: ResultMatrix`
+- `metrics: Sequence[MetricRecord]`
 
 Effect:
 
