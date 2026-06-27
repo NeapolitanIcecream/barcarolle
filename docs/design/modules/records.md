@@ -308,6 +308,7 @@ holdout outcomes are opened for scoring.
 - `agent_ids`
 - `task_check_refs`
 - `cells: Sequence[ResultCellRef]`
+- `join_policy_digest`
 - `denominator_policy_digest`
 - `abstention_reason`
 - `scoreable_state`
@@ -461,7 +462,8 @@ Output:
 Effect:
 
 - Validates cell-level Agent/Task/Check mapping, completeness, exclusions,
-  matrix role, denominator policy, abstention metadata, and matrix digest.
+  matrix role, join policy, denominator policy, abstention metadata, and matrix
+  digest.
 
 ### validate_evaluation_cell_set
 

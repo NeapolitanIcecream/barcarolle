@@ -244,6 +244,8 @@ Input:
 - `selection: BenchmarkSelectionRecord`
 - `origin: RollingOriginRecord`
 - `task_pool: TaskPoolRecord`
+- `tasks: Sequence[TaskRecord]`
+- `checks: Mapping[str, CheckRecord]`
 - `agents: Sequence[AgentRecord]`
 - `evaluation_cells: EvaluationCellSet`
 - `result_store: ResultStore`

@@ -149,13 +149,14 @@ Input:
 
 Output:
 
-- `Sequence[MissingResultCell]`
+- `Sequence[ResultCellRef]`
 
 Effect:
 
 - Builds the required `ResultCacheIdentity` for each requested
   Agent-task-check cell, isolates incomplete or stale cached results, and
-  identifies runs that need execution by Workspace.
+  returns missing cells as `ResultCellRef` records with `cell_state=missing`
+  for Runner to execute through Workspace.
 
 ### build_result_matrix
 
@@ -177,8 +178,8 @@ Effect:
 
 - Joins results into a table for Selection and Reporting. The matrix includes
   one `ResultCellRef` per Agent-task-check cell, plus completeness,
-  exclusions, missing cells, abstention metadata, and whether the matrix is for
-  the selected benchmark or future holdout.
+  exclusions, missing cells, join policy, abstention metadata, and whether the
+  matrix is for the selected benchmark or future holdout.
 
 ## Join And Denominator Policy
 
