@@ -33,6 +33,24 @@ current design without a specific review.
 - Later module documents may refine earlier system documents. Update the
   affected documents instead of leaving contradictions.
 
+## Design Review Stop Line
+
+Future design review should only request document changes for gaps that can
+break the trustworthy evidence chain. Continue fixing design docs when a gap
+could cause:
+
+- stale paid results to be reused;
+- Selectors to see future results or future-derived features;
+- Task, Check, or oracle mismatches;
+- selected or future denominators to become unauditable;
+- frozen selections, results, or metrics to be changed after the fact;
+- reports to lose traceability to cell, matrix, or result evidence.
+
+Do not continue expanding design docs only to make fields more complete, feature
+provenance more detailed, reports more expressive, validators more exhaustive,
+or schemas more strongly typed. Defer those refinements to implementation paths
+that actually need them.
+
 ## Paid Calls
 
 Current design documents do not require paid LLM or Agent calls. When a task

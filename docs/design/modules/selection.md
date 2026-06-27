@@ -383,11 +383,11 @@ Effect:
 - Computes future pass-rate MAE, pairwise gap error, rank agreement,
   recommendation regret, invalid rate, cost, latency, and coverage by comparing
   selected-benchmark estimates against future-holdout outcomes. It emits metric
-  records with selected/future matrix and cell-set digests, not a human-facing
-  report. Before computing MAE, it verifies matrix roles, origin, selection,
-  Agent set, join policy, and denominator policy alignment. If these checks
-  fail, it emits abstention or invalid metric records instead of scoring the
-  comparison.
+  records with selected/future matrix, cell-set, and metric-config digests, not
+  a human-facing report. Before computing MAE, it verifies matrix roles,
+  origin, selection, Agent set, join policy, and denominator policy alignment.
+  If these checks fail, it emits abstention or invalid metric records instead
+  of scoring the comparison.
 
 ### choose_selector_for_origin
 

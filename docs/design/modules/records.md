@@ -368,6 +368,7 @@ selected refs.
 - `selected_matrix_digest`
 - `future_matrix_digest`
 - `join_policy_digest`
+- `metric_config_digest`
 - `metric_scope`
 - `agent_id`
 - `agent_pair`
@@ -544,7 +545,8 @@ Output:
 Effect:
 
 - Validates selected and future `Task + Check` refs, cell-level required cache
-  identities, missing cells, exclusions, and abstention metadata.
+  identities, non-missing result ID and digest bindings, missing cells,
+  exclusions, abstention metadata, and `cell_set_digest`.
 
 ### validate_selector
 
@@ -590,8 +592,8 @@ Output:
 
 Effect:
 
-- Validates metric provenance digests, denominator policy, completeness state,
-  and metric dimension rules.
+- Validates metric provenance digests, metric config digest, denominator
+  policy, completeness state, and metric dimension rules.
 
 ### make_task_id
 
