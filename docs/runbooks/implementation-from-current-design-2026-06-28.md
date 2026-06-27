@@ -4,9 +4,11 @@ Status: ready for execution, 2026-06-28.
 
 ## Purpose
 
-Implement Barcarolle module by module from the current design documents, with a
-per-module worker/reviewer loop. The goal is to reach a small, auditable
-implementation that preserves the benchmark evidence chain.
+Implement Barcarolle module by module from the current design documents. The
+Agent executing this runbook is the worker for each module; an independent
+Reviewer Codex CLI session audits the worker's delivered changes after each
+module. The goal is to reach a small, auditable implementation that preserves
+the benchmark evidence chain.
 
 ## Authority
 
@@ -24,12 +26,16 @@ The design documents are the only source of truth for intended behavior:
 - `docs/design/modules/selection.md`
 - `docs/design/modules/reporting.md`
 - `docs/design/modules/runner.md`
-- `PROCESS.md`
 
-If this runbook, existing code, archived material, or an agent's assumptions
-conflict with the design documents, the design documents win. Do not import
-archived abstractions, old module names, or alternate vocabulary as active API
-concepts.
+`PROCESS.md` is not a source of truth for this implementation run. It may be
+stale and must not override or complete the design documents. Use it only as
+historical/process context when it is consistent with the design documents and
+this runbook.
+
+If this runbook, `PROCESS.md`, existing code, archived material, or an agent's
+assumptions conflict with the design documents, the design documents win. Do not
+import archived abstractions, old module names, or alternate vocabulary as
+active API concepts.
 
 ## Archive-First Reset
 
@@ -37,6 +43,13 @@ Before implementing modules, verify that legacy implementation code and old
 design documents are under `archive/`. If active, non-archived legacy code or
 old design material remains outside the current design set, archive it first in
 a focused step with a short manifest.
+
+Make this check from the Git-tracked/source perspective. Old source files,
+tracked docs, or active configuration that still define the previous system
+belong in `archive/`. Ignored local residue such as `__pycache__`, `.cache`,
+`.hypothesis`, `outputs/`, raw CLI logs, raw prompts, transcripts, and other
+large or generated artifacts must not be archived or committed; delete them or
+leave them ignored.
 
 New production code should be written from a clean starting point against the
 current design documents. Do not copy old implementation modules forward as the
@@ -46,9 +59,8 @@ satisfy.
 
 ## Review Stop Line
 
-Use the `PROCESS.md` design review stop line for all implementation reviews.
-Review findings must focus on gaps that can break the trustworthy evidence
-chain:
+Use this review stop line for all implementation reviews. Review findings must
+focus on gaps that can break the trustworthy evidence chain:
 
 - stale paid results can be reused;
 - Selectors can see future results or future-derived features;
@@ -81,32 +93,38 @@ frameworks or new abstractions.
 
 ## Per-Module Loop
 
-For each module, run a worker/reviewer loop based on the
-`codex-design-review-loop` pattern:
+For each module, run a worker/reviewer loop inspired by the
+`codex-design-review-loop` review discipline, but do not delegate worker duties
+to a separate Codex session. The Agent executing this runbook is the worker.
 
 1. Create a workflow under `.codex-workflows/<module-slug>/`.
-2. Start a worker Codex CLI session to implement only that module and the tests
-   needed for its design boundary.
-3. The worker must update `worker/process.md` before and after meaningful phases.
-4. When the worker reports `status: delivered`, start an independent reviewer
+2. As the worker, implement only that module and the tests needed for its design
+   boundary.
+3. As the worker, update `worker/process.md` before and after meaningful phases.
+4. When the worker writes `status: delivered`, start an independent reviewer
    Codex CLI session.
 5. The reviewer must inspect the implementation against the design documents and
    this runbook, then write `reviewer/review-to-worker.md`.
-6. If the reviewer reports `issues_found`, hand the review back to the worker and
-   repeat the revision/recheck loop.
+6. If the reviewer reports `issues_found`, the runbook Agent resumes worker
+   duties, fixes the issues, updates `worker/process.md`, and repeats the
+   reviewer check.
 7. Move to the next module only after the reviewer reports `no_issues`.
 
-Do not read worker or reviewer CLI logs for coordination. Use `process.md` and
-review handoff files. Logs are for debugging only.
+Do not start an independent Worker Codex CLI session. Do not read reviewer CLI
+logs for coordination. Use `process.md` and review handoff files. Logs are for
+debugging only. `.codex-workflows/` is coordination state and must not be
+committed.
 
 ## Worker Prompt Requirements
 
-Each worker prompt must state:
+The runbook Agent's worker notes for each module must state:
 
 - the repository path;
 - the module being implemented;
 - the exact design files to read before editing;
 - that design documents are the only source of truth;
+- that `PROCESS.md` is not a source of truth and must not override the design
+  documents;
 - that new production code must start from the current design, not from archived
   or legacy implementation structure;
 - that implementation must preserve current module vocabulary;
@@ -117,9 +135,9 @@ Each worker prompt must state:
 - that `git diff --check` and relevant tests must be run before delivery when
   feasible.
 
-Workers must not run paid benchmark Agent-solving calls. If a step appears to
+The worker must not run paid benchmark Agent-solving calls. If a step appears to
 require paid benchmark execution, stop and write a blocker report. Any explicit
-paid LLM or Agent call must obey `PROCESS.md` and use only `LLM_BASE_URL` and
+paid LLM or Agent call must obey `AGENTS.md` and use only `LLM_BASE_URL` and
 `LLM_API_KEY`.
 
 ## Reviewer Prompt Requirements
@@ -141,7 +159,7 @@ must check:
   verification is clearly justified.
 
 Reviewer findings should be concise and actionable. Do not reopen design choices
-that are already accepted in `docs/design/` and `PROCESS.md`.
+that are already accepted in `docs/design/`.
 
 ## Module Completion Criteria
 

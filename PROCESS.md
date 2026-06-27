@@ -1,6 +1,11 @@
 # Barcarolle Process Notes
 
-Last updated: 2026-06-27.
+Last updated: 2026-06-28.
+
+These are operational notes, not a source of truth for intended system
+behavior. For implementation, use the current design documents under
+`docs/design/` as the design authority. If this file conflicts with those
+documents, the design documents win.
 
 ## Current Mode
 
