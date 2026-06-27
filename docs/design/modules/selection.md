@@ -381,9 +381,10 @@ Effect:
   recommendation regret, invalid rate, cost, latency, and coverage by comparing
   selected-benchmark estimates against future-holdout outcomes. It emits metric
   records with selected/future matrix and cell-set digests, not a human-facing
-  report. Before computing MAE, it verifies matrix roles, Agent sets,
-  denominator policy, origin, and selection alignment. If these checks fail, it
-  emits abstention or invalid metric records instead of scoring the comparison.
+  report. Before computing MAE, it verifies matrix roles, origin, selection,
+  Agent set, join policy, and denominator policy alignment. If these checks
+  fail, it emits abstention or invalid metric records instead of scoring the
+  comparison.
 
 ### choose_selector_for_origin
 

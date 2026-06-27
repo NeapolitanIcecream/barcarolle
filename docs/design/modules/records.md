@@ -299,6 +299,10 @@ is frozen.
 This record is the frozen benchmark selection. It must be written before future
 holdout outcomes are opened for scoring.
 
+`selected_weights` is a keyed mapping from `TaskCheckRef` to numeric weight.
+Validators must reject weights for unselected refs and missing weights for
+selected refs.
+
 ### ResultMatrix
 
 - `matrix_id`
@@ -334,6 +338,12 @@ holdout outcomes are opened for scoring.
 - `selected_matrix_digest`
 - `future_matrix_digest`
 - `join_policy_digest`
+- `metric_scope`
+- `agent_id`
+- `agent_pair`
+- `aggregation_level`
+- `budget_digest`
+- `stratum_ref`
 - `metric_name`
 - `metric_value`
 - `denominator_policy_digest`
@@ -494,6 +504,21 @@ Effect:
 
 - Validates selector identity, version, training source digests, allowed feature
   fields, and leakage boundary metadata.
+
+### validate_benchmark_selection
+
+Input:
+
+- `selection: BenchmarkSelectionRecord`
+
+Output:
+
+- `ValidationResult`
+
+Effect:
+
+- Validates frozen origin linkage, selected `Task + Check` refs, keyed weight
+  coverage, budget digest, feature snapshot linkage, and exposure metadata.
 
 ### make_task_id
 

@@ -64,7 +64,8 @@ Result matrices must carry cell-level Agent/Task/Check mappings,
 completeness, exclusion, abstention, join policy, and denominator metadata so
 Agent comparisons cannot silently reuse stale or partial cells.
 Metrics must reference the evaluation cell set plus selected-benchmark and
-future-holdout matrix digests.
+future-holdout matrix digests, and must keep metric scope, Agent dimension,
+aggregation level, budget, and stratum as queryable fields.
 Rolling-origin evaluation freezes `Task + Check` refs before future outcomes
 are opened, and records source, task material, check material, certification,
 and result availability timestamps separately.
