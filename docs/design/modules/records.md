@@ -467,7 +467,8 @@ Output:
 Effect:
 
 - Validates cache identity fields, status fields, cost/latency fields, usage
-  coverage, pricing version, result availability timestamp, and failure labels.
+  coverage, pricing version, result availability timestamp, failure labels, and
+  `result_digest` against the canonical result record.
 
 ### validate_result_cache_identity
 
@@ -573,8 +574,9 @@ Output:
 Effect:
 
 - Validates frozen origin linkage, selected `Task + Check` refs, keyed weight
-  coverage, task-pool binding, budget digest, feature snapshot linkage, and
-  exposure metadata.
+  coverage, selector ID, selector input digest, eligible refs, task-pool
+  binding, origin, budget digest, feature snapshot linkage, and exposure
+  metadata.
 
 ### validate_metric
 

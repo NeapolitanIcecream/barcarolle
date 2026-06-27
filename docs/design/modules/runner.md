@@ -146,6 +146,12 @@ Input:
 - `rolling_policy: RollingOriginPolicy`
 - `feature_config: FeatureConfig`
 - `result_store: ResultStore`
+- `workspace_config: WorkspaceConfig`
+- `runtime_config: RuntimeConfig`
+- `scoring_config: ScoringConfig`
+- `cache_config: ResultCacheConfig`
+- `join_config: ResultJoinConfig`
+- `metric_config: MetricConfig`
 
 Output:
 
@@ -199,6 +205,7 @@ Input:
 - `workspace_config: WorkspaceConfig`
 - `runtime_config: RuntimeConfig`
 - `scoring_config: ScoringConfig`
+- `cache_config: ResultCacheConfig`
 - `result_store: ResultStore`
 
 Output:
@@ -224,6 +231,7 @@ Input:
 - `workspace_config: WorkspaceConfig`
 - `runtime_config: RuntimeConfig`
 - `scoring_config: ScoringConfig`
+- `cache_config: ResultCacheConfig`
 - `result_store: ResultStore`
 - `join_config: ResultJoinConfig`
 
@@ -235,9 +243,9 @@ Effect:
 
 - Applies the same cache identity and denominator policy to selected benchmark
   `Task + Check` refs and future holdout `Task + Check` refs. It asks Result
-  Store for missing cells, runs allowed missing cells through Workspace, stores
-  new results, and returns completeness, exclusion, and abstention metadata for
-  scoring.
+  Store for missing cells using `cache_config`, runs allowed missing cells
+  through Workspace, stores new results, and returns completeness, exclusion,
+  and abstention metadata for scoring.
 
 ### score_selection
 
@@ -276,7 +284,7 @@ Effect:
 Input:
 
 - `task_pool: TaskPoolRecord`
-- `selection: BenchmarkSelectionRecord`
+- `selections: Sequence[BenchmarkSelectionRecord]`
 - `results: Sequence[ResultRecord]`
 - `cell_sets: Sequence[EvaluationCellSet]`
 - `result_matrices: Sequence[ResultMatrix]`
