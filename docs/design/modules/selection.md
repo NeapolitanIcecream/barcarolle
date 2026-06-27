@@ -23,7 +23,22 @@ Selection is the core research module.
 
 - `BenchmarkSelectionRecord`;
 - prediction metrics;
-- selector comparison reports.
+- selector diagnostics;
+- missing selected Agent-task cells.
+
+## System Boundary
+
+Input sources:
+
+- Task Pool;
+- Results;
+- user or experiment config;
+- selector roadmap.
+
+Output consumers:
+
+- Results;
+- Reporting.
 
 ## Function Boundary
 
@@ -200,7 +215,8 @@ Output:
 Effect:
 
 - Computes future pass-rate MAE, pairwise gap error, rank agreement,
-  recommendation regret, invalid rate, cost, latency, and coverage.
+  recommendation regret, invalid rate, cost, latency, and coverage. It emits
+  metric records and diagnostics, not a human-facing report.
 
 ### choose_selector_for_origin
 
@@ -242,3 +258,4 @@ Aligned with the architecture and roadmap:
 - Primary metric is future pass-rate MAE.
 - Learned selectors start with data-efficient methods.
 - Adaptive behavior is conservative and based on prior origins.
+- Reporting, not Selection, owns human-readable reports.

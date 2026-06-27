@@ -22,6 +22,17 @@ This module should not perform I/O beyond optional serialization helpers.
 - `RollingOriginRecord`
 - `MetricRecord`
 
+## System Boundary
+
+Input sources:
+
+- Design docs;
+- records produced by Task Pool, Checks, Workspace, Results, and Selection.
+
+Output consumers:
+
+- all modules.
+
 ## Function Boundary
 
 Functions below define module interfaces. Each function specifies input,

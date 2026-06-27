@@ -25,6 +25,18 @@ Workspace does not implement the Agent edit loop.
 - verifier replay metadata;
 - check outcome.
 
+## System Boundary
+
+Input sources:
+
+- Task Pool provides `TaskRecord` and `CheckRecord`;
+- user or run config provides Agent and policies;
+- Checks provides check execution.
+
+Output consumers:
+
+- Results.
+
 ## Function Boundary
 
 Functions below define module interfaces. Each function specifies input,

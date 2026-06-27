@@ -19,8 +19,21 @@ Checks do not select tasks, run Agents, or store Results.
 ## Outputs
 
 - `CheckOutcome` with pass, fail, or invalid;
-- evidence summary safe to store;
-- hidden-evidence digests.
+- failure label;
+- evidence summary safe to store.
+
+## System Boundary
+
+Input sources:
+
+- Task Pool provides `CheckRecord`;
+- Workspace provides verifier workspace and applied diff.
+
+Output consumers:
+
+- Workspace;
+- Results;
+- Reporting.
 
 ## Function Boundary
 
@@ -114,4 +127,5 @@ Aligned with the architecture:
 
 - Keeps hidden oracle material out of solver workspaces.
 - Allows checks beyond unit tests.
-- Returns normalized outcomes that Results can store and Selection can consume.
+- Returns normalized outcomes that Workspace passes to Results. Selection reads
+  those outcomes only through Result records.

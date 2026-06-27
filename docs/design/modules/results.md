@@ -19,8 +19,25 @@ Results does not execute Agents and does not choose benchmark tasks.
 ## Outputs
 
 - `ResultRecord`;
+- result-cache snapshot;
 - cached result queries;
-- result completeness reports.
+- `ResultMatrix`;
+- missing Agent-task cells.
+
+## System Boundary
+
+Input sources:
+
+- Task Pool;
+- Workspace;
+- Checks;
+- Records.
+
+Output consumers:
+
+- Selection;
+- Reporting;
+- Workspace, for missing-cell execution.
 
 ## Function Boundary
 
@@ -112,7 +129,7 @@ Output:
 
 Effect:
 
-- Identifies selected `Agent x Task` cells that need execution.
+- Identifies selected `Agent x Task` cells that need execution by Workspace.
 
 ### build_result_matrix
 
@@ -143,5 +160,5 @@ Aligned with the architecture:
 
 - Makes paid Agent results durable and reusable.
 - Enforces exact cache identity.
-- Gives Selection tables instead of raw workspaces or transcripts.
+- Gives Selection result matrices instead of raw workspaces or transcripts.
 - Matches the roadmap's invalid-cell and cache-identity requirements.

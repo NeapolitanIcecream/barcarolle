@@ -21,6 +21,19 @@ evidence and does not run experiments.
 - machine-readable summaries;
 - claim-boundary sections.
 
+## System Boundary
+
+Input sources:
+
+- Task Pool;
+- Results;
+- Selection;
+- Records.
+
+Output consumers:
+
+- users.
+
 ## Function Boundary
 
 Functions below define module interfaces. Each function specifies input,

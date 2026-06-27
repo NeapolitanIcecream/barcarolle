@@ -15,14 +15,34 @@ Task Pool does not run Agents and does not select benchmarks.
 - generator config or user import path;
 - origin or time range;
 - certification policy;
-- check construction config.
+- check construction config;
+- workspace policy for certification;
+- check runtime policy for certification.
 
 ## Outputs
 
 - `TaskPoolRecord`;
 - accepted `TaskRecord` rows;
 - accepted `CheckRecord` rows;
-- rejection summaries.
+- rejected candidates;
+- certification evidence.
+
+## System Boundary
+
+Input sources:
+
+- user config;
+- built-in generators;
+- user imports;
+- Workspace for checkout and replay validation during certification;
+- Checks for executable-check validation during certification.
+
+Output consumers:
+
+- Workspace;
+- Results;
+- Selection;
+- Reporting.
 
 ## Function Boundary
 
@@ -103,6 +123,8 @@ Input:
 
 - `candidate: TaskCandidate`
 - `certification_policy: CertificationPolicy`
+- `workspace_policy: WorkspacePolicy`
+- `check_runtime_policy: CheckRuntimePolicy`
 
 Output:
 
@@ -111,7 +133,8 @@ Output:
 Effect:
 
 - Validates checkout, dependency restoration, check execution, solver-visible
-  boundary, hidden material separation, stability, and statement clarity.
+  boundary, hidden material separation, stability, and statement clarity. It may
+  call Workspace and Checks for certification, but it does not run Agents.
 
 ### freeze_task_pool
 
