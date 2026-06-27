@@ -230,7 +230,7 @@ Initial order:
 
 ## Source Alignment Check
 
-Aligned with the V2 architecture and roadmap:
+Aligned with the architecture and roadmap:
 
 - Selectors use common task sets for Agent comparisons.
 - Future outcomes are not visible at selection time.

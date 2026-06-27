@@ -1,4 +1,4 @@
-# Barcarolle V2 Data Flow
+# Barcarolle Data Flow
 
 Status: draft, 2026-06-27.
 
@@ -133,7 +133,7 @@ Downstream:
 
 ## Source Alignment Check
 
-Aligned with the V2 architecture:
+Aligned with the architecture:
 
 - Supports cached pool, select-then-run, and incremental cache fill modes.
 - Treats paid Agent results as reusable assets.

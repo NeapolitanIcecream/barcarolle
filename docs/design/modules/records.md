@@ -153,7 +153,7 @@ Effect:
 
 ## Source Alignment Check
 
-Aligned with the V2 architecture:
+Aligned with the architecture:
 
 - Provides direct data contracts.
 - Keeps the core vocabulary small.

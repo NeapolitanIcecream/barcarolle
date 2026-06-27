@@ -4,7 +4,7 @@ Last updated: 2026-06-27.
 
 ## Current Mode
 
-The repository is in a clean v2 design reset.
+The repository is in a clean design reset.
 
 Active design work must use only:
 
@@ -12,8 +12,8 @@ Active design work must use only:
 - `docs/design-inputs/learned-selector-roadmap-gpt-5-5-pro-2026-06-25.md`
 
 Archived code, reports, runbooks, and experiments are historical reference
-material. They are not active design inputs and should not be imported into v2
-without a specific review.
+material. They are not active design inputs and should not be imported into the
+current design without a specific review.
 
 ## Design Rules
 
@@ -23,7 +23,7 @@ without a specific review.
   `Selector`, `RollingOrigin`, `Task Pool`, `Benchmark Selection`, and
   `Agent Results`.
 - Do not introduce a new first-class concept when one of those terms is enough.
-- Every design document must include a source-alignment check against the V2
+- Every design document must include a source-alignment check against the
   architecture document.
 - Module-level design should define function names, inputs, outputs, and
   effects, but not implementation bodies.

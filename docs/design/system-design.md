@@ -1,10 +1,10 @@
-# Barcarolle V2 System Design
+# Barcarolle System Design
 
 Status: draft, 2026-06-27.
 
 ## Scope
 
-Barcarolle v2 compiles target-repository benchmarks for coding Agents. It
+Barcarolle compiles target-repository benchmarks for coding Agents. It
 generates or imports `Task + Check`, stores them in a `Task Pool`, runs Agents
 in isolated `Workspace`s, stores reusable `Result`s, and evaluates `Selector`s
 with `RollingOrigin`.
@@ -99,7 +99,7 @@ cells for later reuse.
 
 ## Source Alignment Check
 
-Aligned with the V2 architecture:
+Aligned with the architecture:
 
 - Keeps `Task`, `Check`, `Workspace`, `Result`, `Selector`, and
   `RollingOrigin` as first-class objects.

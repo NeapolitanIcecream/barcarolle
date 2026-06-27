@@ -1,15 +1,15 @@
-# Barcarolle V2 System Architecture
+# Barcarolle System Architecture
 
 Status: draft architecture for the post-proposal rewrite, 2026-06-25.
 
 This document describes the intended clean rewrite of Barcarolle. It is not a
 migration plan for the current experiment code. The old codebase remains useful
-as evidence, examples, and data provenance, but v2 should be designed from the
-current understanding of the project.
+as evidence, examples, and data provenance, but the current system should be
+designed from the current understanding of the project.
 
 ## Goal
 
-Barcarolle v2 is a target-repository benchmark compiler for coding Agents.
+Barcarolle is a target-repository benchmark compiler for coding Agents.
 
 Given a target repository, task supply, Agent candidates, and a time cutoff, it
 should compile and evaluate a benchmark that estimates how those Agents will
@@ -44,7 +44,7 @@ be confused with benchmark predictive validity.
 
 ## Core Objects
 
-V2 should have only a small number of first-class objects.
+The system should have only a small number of first-class objects.
 
 ### Task
 
@@ -112,7 +112,7 @@ The same protocol is used to train, validate, and compare selectors.
 
 ## Decoupled Assets And Execution Modes
 
-V2 must not assume a single linear flow where Barcarolle first selects a
+The system must not assume a single linear flow where Barcarolle first selects a
 benchmark and only then pays to run Agents on that benchmark.
 
 Three assets must be independent and joinable:
@@ -185,7 +185,7 @@ The system should treat paid cells as durable assets.
 
 ## Minimal System Flow
 
-The minimal v2 flow is therefore not one fixed pipeline. It is a set of
+The minimal flow is therefore not one fixed pipeline. It is a set of
 composable steps over the three assets above:
 
 ```text
@@ -199,7 +199,7 @@ generate or import Task + Check
   -> report prediction error, ranking, regret, uncertainty, cost, and coverage
 ```
 
-The first v2 vertical slice should implement this with one repository, one
+The first vertical slice should implement this with one repository, one
 certified task source, one result-cache schema, and a few simple selectors
 before adding more generator families or learned selectors.
 
@@ -209,10 +209,10 @@ Task supply is not the central claim, but it sets the ceiling for predictive
 validity. If the task pool misses important future work types, even a strong
 selector will have systematic prediction bias.
 
-V2 should support several task-source families. Built-in generators should be
-treated as replications or adaptations of related-work methods, not as
-free-form inventions. Before implementing a generator family, a worker should
-read the relevant paper or repository, identify the method's data inputs,
+The system should support several task-source families. Built-in generators
+should be treated as replications or adaptations of related-work methods, not
+as free-form inventions. Before implementing a generator family, a worker
+should read the relevant paper or repository, identify the method's data inputs,
 oracle construction, filtering gates, and failure modes, then document what is
 being reproduced and what is deliberately changed.
 
@@ -275,8 +275,8 @@ LLM-assisted review when useful.
 
 ### Live Or Future-Oriented Generators
 
-SWE-bench Live motivates continual refresh. V2 should support task pools that
-are updated over time and frozen at explicit origins.
+SWE-bench Live motivates continual refresh. The system should support task
+pools that are updated over time and frozen at explicit origins.
 
 The key requirement is not just freshness. The system must preserve what was
 known at each origin so that rolling-origin validation remains honest.
@@ -289,9 +289,9 @@ available history pool is too small or too backward-looking.
 ### Large-Supply Synthetic Or Semi-Synthetic Generators
 
 SWE-Bench++, SWE-smith-like, and future related methods are relevant because
-they may increase task supply and coverage. V2 should investigate these methods
-as generator adapters, especially when repository history does not provide
-enough certified tasks.
+they may increase task supply and coverage. The system should investigate these
+methods as generator adapters, especially when repository history does not
+provide enough certified tasks.
 
 Synthetic tasks must still pass certification. More tasks are useful only when
 they improve future prediction or coverage without introducing misleading
@@ -304,8 +304,8 @@ commit raw prompts or completions.
 
 ### User-Provided Task Pools
 
-Some users will already have task pools or custom regressions. V2 should allow
-direct import:
+Some users will already have task pools or custom regressions. The system
+should allow direct import:
 
 ```text
 task pool + checks + metadata
@@ -489,7 +489,7 @@ acceptable bounds.
 
 ## Goodhart Safeguards
 
-V2 must keep these claims separate:
+The system must keep these claims separate:
 
 - benchmark predictive validity: whether a benchmark predicts future performance
   of Agents available at the origin;
@@ -506,7 +506,7 @@ Practical safeguards:
 - compare to random, temporal, and simple stratified baselines;
 - report negative or regressed tuning results honestly.
 
-## Proposed V2 Repository Layout
+## Proposed Repository Layout
 
 This is a starting point, not a mandate:
 
@@ -561,16 +561,16 @@ The current codebase should be treated as:
 - provenance for already-paid results;
 - a source of tests and fixtures after review.
 
-It should not dictate v2 abstractions.
+It should not dictate current abstractions.
 
 Specific guidance:
 
 - keep historical reports and committed result summaries for audit;
-- port only code that has a clear v2 owner and contract;
+- port only code that has a clear owner module and contract;
 - do not port experiment-specific names into core APIs;
 - prefer new minimal tests over adapting broad experiment tests;
 - preserve paid-result schemas or write one-time converters rather than making
-  v2 depend on old experiment modules.
+  the current system depend on old experiment modules.
 
 ## First Vertical Slice
 

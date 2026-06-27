@@ -1,9 +1,9 @@
-# Pre-V2 Design Reset Archive
+# Pre-Reset Design Archive
 
 Date: 2026-06-27.
 
 This archive contains the documents, experiment artifacts, prototype code, and
-test files that existed before the clean v2 design reset.
+test files that existed before the clean design reset.
 
 The active design no longer treats these files as source material. They remain
 available for historical audit and for future one-time port reviews.

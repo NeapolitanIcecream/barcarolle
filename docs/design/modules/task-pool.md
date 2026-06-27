@@ -148,7 +148,7 @@ user-provided pools are represented as generator or importer functions.
 
 ## Source Alignment Check
 
-Aligned with the V2 architecture:
+Aligned with the architecture:
 
 - Treats generator output as `Task + Check`.
 - Reuses related-work task-generator methods instead of renaming them.

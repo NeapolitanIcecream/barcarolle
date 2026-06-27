@@ -101,7 +101,7 @@ Effect:
 
 ## Source Alignment Check
 
-Aligned with the V2 architecture:
+Aligned with the architecture:
 
 - Separates evidence from claims.
 - Reports negative or weak evidence honestly.

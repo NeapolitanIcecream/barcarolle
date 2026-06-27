@@ -1,6 +1,6 @@
 # Barcarolle
 
-Barcarolle is being reset for a clean v2 design.
+Barcarolle is being reset for a clean current design.
 
 The active project is a target-repository benchmark compiler for coding Agents.
 Its north star is predictive validity: whether a benchmark selected from
@@ -10,10 +10,10 @@ repository history predicts later Agent performance on that same repository.
 
 The active design uses only two source materials:
 
-- [V2 system architecture](docs/architecture/v2-system-architecture-2026-06-25.md)
+- [System architecture](docs/architecture/v2-system-architecture-2026-06-25.md)
 - [Learned selector roadmap](docs/design-inputs/learned-selector-roadmap-gpt-5-5-pro-2026-06-25.md)
 
-Everything else from the pre-v2 codebase and prior experiments has been moved
+Everything else from the previous codebase and prior experiments has been moved
 to archive for reference only.
 
 ## Active Design
@@ -27,9 +27,9 @@ Module-level designs live under [docs/design/modules](docs/design/modules).
 
 ## Current Boundary
 
-This repository is in design mode. Do not implement v2 code from archived
-modules. Use archived material only as historical evidence after an explicit
-review decides what to port.
+This repository is in design mode. Do not build the current system by copying
+archived modules. Use archived material only as historical evidence after an
+explicit review decides what to port.
 
 Core vocabulary stays small:
 

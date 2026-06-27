@@ -144,7 +144,7 @@ Effect:
 
 ## Source Alignment Check
 
-Aligned with the V2 architecture:
+Aligned with the architecture:
 
 - Keeps Agent execution outside Barcarolle.
 - Separates solving from verification.

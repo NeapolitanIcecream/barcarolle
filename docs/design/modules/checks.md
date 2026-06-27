@@ -105,7 +105,7 @@ Effect:
 
 ## Source Alignment Check
 
-Aligned with the V2 architecture:
+Aligned with the architecture:
 
 - Keeps hidden oracle material out of solver workspaces.
 - Allows checks beyond unit tests.

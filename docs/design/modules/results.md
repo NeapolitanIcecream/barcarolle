@@ -134,7 +134,7 @@ failures and should be handled consistently across Agents.
 
 ## Source Alignment Check
 
-Aligned with the V2 architecture:
+Aligned with the architecture:
 
 - Makes paid Agent results durable and reusable.
 - Enforces exact cache identity.

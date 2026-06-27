@@ -62,5 +62,5 @@ evidence.
 ### Archived Material
 
 Archived files may be inspected for examples or provenance, but they do not
-define active v2 APIs. Porting any old code requires a separate review that
+define active APIs. Porting any old code requires a separate review that
 identifies the owner module and contract.
