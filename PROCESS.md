@@ -19,9 +19,12 @@ current design without a specific review.
 
 - Design before implementation.
 - Keep module boundaries direct and small.
-- Keep the core vocabulary to `Task`, `Check`, `Workspace`, `Result`,
+- Keep the core data vocabulary to `Task`, `Check`, `Workspace`, `Result`,
   `Selector`, `RollingOrigin`, `Task Pool`, `Benchmark Selection`, and
   `Agent Results`.
+- Use the current module vocabulary: `Records`, `Task Pool`, `Verification`,
+  `Workspace`, `Result Store`, `Selection`, `Reporting`, and `Runner`.
+- Prefer the current module vocabulary; avoid alternate module names.
 - Do not introduce a new first-class concept when one of those terms is enough.
 - Every design document must include a source-alignment check against the
   architecture document.
@@ -32,13 +35,13 @@ current design without a specific review.
 
 ## Paid Calls
 
-No paid LLM or Agent calls are part of current design work.
-
-If future work requires paid calls, use only:
+Current design documents do not require paid LLM or Agent calls. When a task
+explicitly requires paid calls, use only:
 
 ```text
 LLM_BASE_URL
 LLM_API_KEY
 ```
 
-and record a frozen protocol before running them.
+Record a protocol before running paid calls that affect evidence, benchmark
+results, selector training, or research claims.

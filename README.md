@@ -29,7 +29,7 @@ This repository is in design mode. Do not build the current system by copying
 archived modules. Use archived material only as historical evidence after an
 explicit review decides what to port.
 
-Core vocabulary stays small:
+Core data vocabulary stays small:
 
 - `Task`
 - `Check`
@@ -40,3 +40,14 @@ Core vocabulary stays small:
 - `Task Pool`
 - `Benchmark Selection`
 - `Agent Results`
+
+Current modules are:
+
+- `Records`
+- `Task Pool`
+- `Verification`
+- `Workspace`
+- `Result Store`
+- `Selection`
+- `Reporting`
+- `Runner`

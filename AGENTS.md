@@ -23,7 +23,7 @@ Barcarolle owns the benchmark boundary:
 - provide only solver-visible task material;
 - invoke the configured Agent harness;
 - capture the final workspace diff;
-- enforce benchmark-side policy checks;
+- enforce benchmark-side rules;
 - replay the diff in a fresh verifier workspace;
 - inject private oracle material only in the verifier workspace;
 - run the hidden check;
@@ -40,8 +40,22 @@ bespoke frameworks or broad abstractions. Custom code is appropriate for
 benchmark boundaries, reproducibility, artifact hygiene, Agent isolation,
 hidden-oracle protection, and auditability.
 
-Keep core concepts simple. Current architectural vocabulary should converge on
-`Task`, `Check`, `Workspace`, `Result`, `Selector`, and `RollingOrigin`.
+Keep core concepts simple. Current data vocabulary is `Task`, `Check`,
+`Workspace`, `Result`, `Selector`, `RollingOrigin`, `Task Pool`,
+`Benchmark Selection`, and `Agent Results`.
+
+Use current module names consistently:
+
+- `Records`
+- `Task Pool`
+- `Verification`
+- `Workspace`
+- `Result Store`
+- `Selection`
+- `Reporting`
+- `Runner`
+
+Prefer the module vocabulary above; avoid alternate module names.
 
 Use `uv` for repo-local Python tooling.
 
@@ -67,7 +81,7 @@ Do not commit secrets, full raw prompts, raw completions, raw Agent transcripts,
 solver workspaces, verifier workspaces, cloned external repositories, `.venv`,
 caches, or large raw outputs.
 
-Store raw artifacts only under ignored paths. Commit small sanitized manifests,
+Store raw artifacts only under ignored paths. Commit small sanitized indexes,
 summaries, reports, schemas, and digests.
 
 Before committing experiment or infrastructure changes, run the scoped tests
@@ -87,7 +101,7 @@ changes.
 
 When executing a runbook, keep advancing until a real stop condition is reached.
 Record completed work, blockers, decisions, and recommended next actions in the
-closeout report.
+final report.
 
 Do not create the next runbook unless the user explicitly asks for it.
 
