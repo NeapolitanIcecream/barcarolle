@@ -158,6 +158,7 @@ Input:
 - candidate Agent set;
 - budget and constraints;
 - selector version.
+- selection config.
 
 Steps:
 

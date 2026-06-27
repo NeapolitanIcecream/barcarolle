@@ -95,6 +95,7 @@ Input:
 - `origin_time: datetime`
 - `budget: SelectionBudget`
 - `selector: SelectorRecord`
+- `selection_config: SelectionConfig`
 - `result_store: ResultStore`
 
 Output:
@@ -195,7 +196,9 @@ Input:
 - `selection: BenchmarkSelectionRecord`
 - `origin: RollingOriginRecord`
 - `task_pool: TaskPoolRecord`
+- `agents: Sequence[AgentRecord]`
 - `result_store: ResultStore`
+- `join_config: ResultJoinConfig`
 - `metric_config: MetricConfig`
 
 Output:

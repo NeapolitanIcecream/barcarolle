@@ -267,7 +267,7 @@ Effect:
 - Fits a low-dimensional weighting layer for calibrated, constrained coreset
   selection.
 
-### select_with_learned_model
+### select_with_selector
 
 Input:
 
