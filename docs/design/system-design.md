@@ -102,24 +102,23 @@ Evaluation protocol that freezes an origin time, selects from pre-origin
 history, and compares selected-benchmark performance with later holdout
 performance.
 
-## Execution Modes
+## Result Reuse And Lazy Execution
 
-### Cached Pool Mode
+The normal flow is: build a `Task Pool`, obtain `Agent Results`, then let
+Selection choose a `Benchmark Selection` for a frozen origin. Two optimizations
+keep this affordable.
 
-Use when `Agent Results` already exist for many Agent-task runs.
-Selectors choose virtual benchmarks and compute prediction error from cached
-results without re-running paid Agent runs.
+### Cache Reuse
 
-### Select-Then-Run Mode
+When `Agent Results` already exist for some Agent-task runs, selectors reuse
+those results instead of re-running paid Agent runs. This is what makes repeated
+selector research possible.
 
-Use when Agent execution is expensive and results are sparse. The selector
-chooses a benchmark first, then the system runs only missing Agent-task runs.
+### Lazy Agent Execution
 
-### Incremental Cache Fill Mode
-
-Use when selector uncertainty is dominated by missing results. Selection
-identifies which Agent-task runs would reduce uncertainty, and Results records
-newly run results for later reuse.
+When Agent execution is expensive and results are sparse, Selection can choose
+a benchmark first. Workspace then runs only selected Agent-task runs whose
+results are missing from the cache.
 
 ## Module Boundary Rules
 

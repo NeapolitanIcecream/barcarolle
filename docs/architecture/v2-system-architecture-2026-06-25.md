@@ -32,7 +32,7 @@ be confused with benchmark predictive validity.
 - Treat related work task generators as input methods to reuse, not ideas to
   rename.
 - Keep Agent execution outside Barcarolle. The Agent owns model, harness,
-  prompt, tools, retrieval, runtime policy, and retry behavior.
+  prompt, tools, retrieval, runtime config, and retry behavior.
 - Keep verification separate from solving. Hidden oracle material appears only
   in verifier workspaces.
 - Make every selector decision replayable from frozen task metadata and past
@@ -110,7 +110,7 @@ compare selected benchmark performance with future holdout performance
 
 The same protocol is used to train, validate, and compare selectors.
 
-## Decoupled Assets And Execution Modes
+## Decoupled Assets And Execution Optimizations
 
 The system must not assume a single linear flow where Barcarolle first selects a
 benchmark and only then pays to run Agents on that benchmark.
@@ -125,63 +125,47 @@ Benchmark Selection
   selector version, origin, history pool, selected task IDs, weights, budget
 
 Agent Results
-  cached outcomes for Agent x Task x environment, with cost and verifier status
+  cached Agent-task outcomes under a specific environment, with cost and verifier status
 ```
 
 This separation is required for selector research. If a task pool has already
 been fully or partially paid for across a set of Agents, the selector should be
 able to choose virtual benchmarks from the cached result table and compute
-prediction error without paying for those same Agent-task cells again.
+prediction error without paying for those same Agent-task runs again.
 
-It also supports the normal cost-saving mode: select a benchmark first, then run
-only the missing Agent-task cells. In both cases, the result cache should prevent
-duplicate paid execution for an identical `(task, Agent, environment, policy)`
-combination.
+This is not a set of separate workflows. It is one flow with two cost-saving
+optimizations:
 
-### Mode A: Prepaid Or Cached Pool
+- cache reuse: do not rerun an Agent-task pair when an identical reusable result
+  already exists;
+- lazy Agent execution: when results are sparse, select a benchmark first and
+  then run only selected Agent-task pairs whose results are missing.
 
-Use this mode for offline selector development and rolling-origin research.
+In both cases, the result cache should prevent duplicate paid execution for an
+identical `(task, Agent, environment, config)` combination.
 
-```text
-certified task pool
-  + cached Agent x Task results
-  -> many selector candidates
-  -> many virtual benchmark selections
-  -> prediction-error comparison against future windows
-```
+### Cache Reuse
 
-This is the main mode for learned selector iteration. It allows repeated
-selector training, ablation, and error analysis without repeatedly paying for
-the same task outcomes.
+Use this optimization for offline selector development and rolling-origin
+research. It allows repeated selector training, ablation, and error analysis
+without repeatedly paying for the same task outcomes.
 
-### Mode B: Select-Then-Run
+### Lazy Agent Execution
 
-Use this mode when the task pool is large and Agent outcomes are expensive.
+Use this optimization when the task pool is large and Agent outcomes are
+expensive.
 
 ```text
 certified task pool
   -> selector chooses benchmark under budget
-  -> run only missing Agent x selected-task cells
+  -> run only selected Agent-task runs whose results are missing
   -> verify, cache, and report
 ```
 
-This is the expected operational mode when a user wants a budgeted benchmark
+This is the expected operational path when a user wants a budgeted benchmark
 release.
 
-### Mode C: Incremental Cache Fill
-
-Use this mode when rolling-origin evaluation reveals that the result table is
-too sparse.
-
-```text
-existing task pool + partial result cache
-  -> identify cells that most reduce uncertainty
-  -> run bounded new paid cells
-  -> update result cache
-  -> rerun selector evaluation from cached tables
-```
-
-The system should treat paid cells as durable assets.
+The system should treat paid Agent results as durable assets.
 
 ## Minimal System Flow
 
@@ -393,8 +377,8 @@ workspaces or reading raw Agent traces.
 
 The result store should enforce cache identity. A cached result is reusable only
 when the task, check version, base commit, Agent identity, environment, runtime
-policy, and scoring policy match. If any of these change, the old result remains
-provenance but is not the same scoreable cell.
+config, and scoring config match. If any of these change, the old result remains
+provenance but is not the same reusable `Result`.
 
 ## Selector System
 

@@ -135,7 +135,7 @@ Downstream:
 
 Aligned with the architecture:
 
-- Supports cached pool, select-then-run, and incremental cache fill modes.
+- Supports result cache reuse and lazy Agent execution.
 - Treats paid Agent results as reusable assets.
 - Ensures selectors consume tables, not raw workspaces or transcripts.
 - Preserves separation between solving and verification.
