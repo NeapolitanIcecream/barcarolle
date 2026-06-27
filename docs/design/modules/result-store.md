@@ -181,7 +181,9 @@ Effect:
   one `ResultCellRef` per Agent-task-check cell from `evaluation_cells`,
   filtered by matrix role, plus completeness, exclusions, missing cells, join
   policy, abstention metadata, and whether the matrix is for the selected
-  benchmark or future holdout.
+  benchmark or future holdout. The relevant `Task + Check` refs are derived
+  from `evaluation_cells`; the `task_check_refs` input is a caller assertion
+  that must exactly match the selected or future subset for `matrix_role`.
 
 ## Join And Denominator Policy
 

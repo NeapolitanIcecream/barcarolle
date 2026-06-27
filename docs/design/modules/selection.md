@@ -312,8 +312,7 @@ Effect:
 Input:
 
 - `training_origins: Sequence[RollingOriginRecord]`
-- `task_pool: TaskPoolRecord`
-- `pre_origin_results_by_origin: Mapping[str, Sequence[ResultRecord]]`
+- `training_selector_inputs: Mapping[str, SelectorInput]`
 - `baseline_selectors: Sequence[SelectorRecord]`
 - `fit_config: FitConfig`
 
@@ -323,16 +322,15 @@ Output:
 
 Effect:
 
-- Learns mixture weights over rule-based selectors using only out-of-origin
-  training data.
+- Learns mixture weights over rule-based selectors using only leakage-checked,
+  out-of-origin selector inputs.
 
 ### fit_calibrated_weighting
 
 Input:
 
 - `training_origins: Sequence[RollingOriginRecord]`
-- `task_pool: TaskPoolRecord`
-- `pre_origin_results_by_origin: Mapping[str, Sequence[ResultRecord]]`
+- `training_selector_inputs: Mapping[str, SelectorInput]`
 - `selection_config: SelectionConfig`
 
 Output:
@@ -342,7 +340,7 @@ Output:
 Effect:
 
 - Fits a low-dimensional weighting layer for calibrated, constrained coreset
-  selection.
+  selection using leakage-checked selector inputs.
 
 ### select_with_selector
 
