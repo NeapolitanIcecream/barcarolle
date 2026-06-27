@@ -73,7 +73,7 @@ Steps:
 5. Workspace creates verifier workspace.
 6. Workspace applies the diff.
 7. Verification injects hidden material and executes the Check.
-8. Results computes cache identity and writes a normalized `Result`.
+8. Result Store computes cache identity and writes a normalized `Result`.
 
 Output:
 
@@ -85,7 +85,7 @@ Runner entrypoint:
 
 Downstream:
 
-- Selection joins Results with Task Pool records.
+- Selection joins results with Task Pool records.
 - Reporting summarizes outcome, cost, latency, and failure labels.
 
 ## Flow 3: Train A Selector
@@ -100,7 +100,7 @@ Input:
 
 Steps:
 
-1. Runner loads historical results from Results.
+1. Runner loads historical results from Result Store.
 2. Selection builds the origins required by the training config.
 3. Selection trains or chooses a persistent `Selector`.
 
@@ -130,7 +130,7 @@ Input:
 
 Steps:
 
-1. Runner loads historical results from Results.
+1. Runner loads historical results from Result Store.
 2. Selection builds the origins required by the evaluation config.
 3. Selection applies the specified Selector at each origin.
 4. Selection returns metrics for those origins.
@@ -161,7 +161,7 @@ Input:
 
 Steps:
 
-1. Runner loads pre-origin results from Results.
+1. Runner loads pre-origin results from Result Store.
 2. Selection builds the history pool.
 3. Selection builds leakage-safe Selector input.
 4. Selector chooses common task IDs and optional weights.
@@ -177,7 +177,7 @@ Runner entrypoint:
 
 Downstream:
 
-- Runner can ask Results which selected Agent-task runs are missing.
+- Runner can ask Result Store which selected Agent-task runs are missing.
 - Reporting shows why tasks were selected.
 - RollingOrigin evaluation joins selected results with future results.
 

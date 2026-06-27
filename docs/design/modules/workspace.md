@@ -34,7 +34,7 @@ Input sources:
 
 Output consumers:
 
-- Results.
+- Result Store.
 
 ## Function Boundary
 

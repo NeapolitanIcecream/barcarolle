@@ -26,7 +26,7 @@ evidence and does not run experiments.
 Input sources:
 
 - Task Pool;
-- Results;
+- Result Store;
 - Selection;
 - Records.
 

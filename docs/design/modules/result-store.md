@@ -1,4 +1,4 @@
-# Module Design: Results
+# Module Design: Result Store
 
 Status: draft, 2026-06-27.
 
@@ -6,7 +6,7 @@ Status: draft, 2026-06-27.
 
 Store, query, and join reusable `Result` records for Agent-task runs.
 
-Results does not execute Agents and does not choose benchmark tasks.
+Result Store does not execute Agents and does not choose benchmark tasks.
 
 ## Inputs
 

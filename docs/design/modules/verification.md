@@ -7,7 +7,7 @@ Status: draft, 2026-06-27.
 Verify a candidate diff in a verifier `Workspace` by executing a `Check` and
 normalizing the outcome.
 
-Verification does not select tasks, run Agents, or store Results.
+Verification does not select tasks, run Agents, or store Result records.
 
 ## Inputs
 
@@ -32,7 +32,7 @@ Input sources:
 Output consumers:
 
 - Workspace;
-- Results;
+- Result Store;
 - Reporting.
 
 ## Function Boundary
@@ -131,5 +131,5 @@ Aligned with the architecture:
 
 - Keeps hidden oracle material out of solver workspaces.
 - Allows checks beyond unit tests.
-- Returns normalized outcomes that Workspace passes to Results. Selection reads
-  those outcomes only through Result records.
+- Returns normalized outcomes that Workspace passes to Result Store. Selection
+  reads those outcomes only through Result records.

@@ -28,7 +28,7 @@ This module should not perform I/O beyond optional serialization helpers.
 Input sources:
 
 - Design docs;
-- records produced by Task Pool, Verification, Workspace, Results, and
+- records produced by Task Pool, Verification, Workspace, Result Store, and
   Selection.
 
 Output consumers:

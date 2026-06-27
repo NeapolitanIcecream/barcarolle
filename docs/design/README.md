@@ -25,7 +25,7 @@ Module-level design:
 - [Task Pool](modules/task-pool.md)
 - [Verification](modules/verification.md)
 - [Workspace](modules/workspace.md)
-- [Results](modules/results.md)
+- [Result Store](modules/result-store.md)
 - [Selection](modules/selection.md)
 - [Reporting](modules/reporting.md)
 - [Runner](modules/runner.md)

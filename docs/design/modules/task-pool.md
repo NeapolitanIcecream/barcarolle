@@ -38,7 +38,7 @@ Input sources:
 Output consumers:
 
 - Workspace;
-- Results;
+- Result Store;
 - Selection;
 - Reporting.
 

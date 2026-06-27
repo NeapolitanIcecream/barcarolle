@@ -32,7 +32,7 @@ Selection is the core research module.
 Input sources:
 
 - Task Pool;
-- Results;
+- Result Store;
 - user or experiment config;
 - selector roadmap.
 

@@ -35,7 +35,7 @@ Input sources:
 
 - users;
 - Task Pool;
-- Results;
+- Result Store;
 - Selection;
 - Workspace;
 - Reporting.
@@ -165,7 +165,7 @@ Output:
 
 Effect:
 
-- Calls Workspace for requested Agent-task runs and calls Results to store the
+- Calls Workspace for requested Agent-task runs and calls Result Store to store the
   produced records.
 
 ### fill_results
@@ -185,8 +185,8 @@ Output:
 
 Effect:
 
-- Calls Results to find selected Agent-task runs that are not reusable from the
-  cache, then calls Workspace and Results to execute and store only those runs.
+- Calls Result Store to find selected Agent-task runs that are not reusable from the
+  cache, then calls Workspace and Result Store to execute and store only those runs.
 
 ### score_selection
 
@@ -204,7 +204,7 @@ Output:
 
 Effect:
 
-- Calls Results to build the result matrix and calls Selection to evaluate
+- Calls Result Store to build the result matrix and calls Selection to evaluate
   prediction metrics.
 
 ### write_report
@@ -234,6 +234,6 @@ Aligned with the architecture:
 - Keeps `Task Pool`, `Benchmark Selection`, and `Agent Results` independent.
 - Exposes Selection training, evaluation, and production benchmark selection as
   separate command flows.
-- Implements cache reuse and lazy Agent execution by calling Results and
+- Implements cache reuse and lazy Agent execution by calling Result Store and
   Workspace, not by creating another execution mode.
 - Leaves module-specific logic in the owner modules.

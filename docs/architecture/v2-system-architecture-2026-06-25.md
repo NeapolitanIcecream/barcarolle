@@ -146,7 +146,8 @@ identical `(task, Agent, environment, config)` combination.
 
 A thin Runner module should own this cross-module orchestration. Runner is a
 code owner for command flow, not a new research object: it calls Task Pool,
-Results, Selection, Workspace, and Reporting without taking over their logic.
+Result Store, Selection, Workspace, and Reporting without taking over their
+logic.
 
 ### Cache Reuse
 
@@ -466,7 +467,7 @@ The adaptive layer should not become a vague new subsystem. Its job is:
 In the simplest version, this can be model selection over a small set of
 selectors using recent rolling-origin error and uncertainty.
 
-When lazy Agent execution produces new Results for a selected benchmark, Runner
+When lazy Agent execution produces new Result records for a selected benchmark, Runner
 should pass the resulting metrics back to Selection. Selection may then update
 the persistent Selector or its trust metadata using only recorded metrics and
 allowed historical outcomes.
@@ -526,17 +527,17 @@ barcarolle/
       synthetic.py
       import_pool.py
     certification.py
-  checks/
+  verification/
     base.py
-    pytest_check.py
-    script_check.py
-    visual_check.py
+    pytest.py
+    script.py
+    visual.py
   workspace/
     checkout.py
     solver.py
     verifier.py
     diff.py
-  results/
+  result_store/
     schema.py
     store.py
   selection/
@@ -556,7 +557,8 @@ barcarolle/
 ```
 
 The exact package name can change. The important point is that task supply,
-checks, workspace execution, results, and selection remain separate.
+verification, workspace execution, result storage, and selection remain
+separate.
 
 ## Relationship To Existing Code
 
