@@ -22,6 +22,11 @@ Checks do not select tasks, run Agents, or store Results.
 - evidence summary safe to store;
 - hidden-evidence digests.
 
+## Function Boundary
+
+Functions below define module interfaces. Each function specifies input,
+output, and effect only; it does not prescribe implementation.
+
 ## Functions
 
 ### prepare_check_material

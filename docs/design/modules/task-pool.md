@@ -24,6 +24,11 @@ Task Pool does not run Agents and does not select benchmarks.
 - accepted `CheckRecord` rows;
 - rejection summaries.
 
+## Function Boundary
+
+Functions below define module interfaces. Each function specifies input,
+output, and effect only; it does not prescribe implementation.
+
 ## Functions
 
 ### generate_history_candidates

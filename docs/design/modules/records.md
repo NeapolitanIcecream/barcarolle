@@ -22,6 +22,11 @@ This module should not perform I/O beyond optional serialization helpers.
 - `RollingOriginRecord`
 - `MetricRecord`
 
+## Function Boundary
+
+Functions below define module interfaces. Each function specifies input,
+output, and effect only; it does not prescribe implementation.
+
 ## Functions
 
 ### validate_task

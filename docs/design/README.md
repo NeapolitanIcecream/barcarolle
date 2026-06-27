@@ -29,6 +29,9 @@ Module-level design:
 - [Selection](modules/selection.md)
 - [Reporting](modules/reporting.md)
 
+Each module-level document defines function boundaries. Functions specify
+inputs, outputs, and effects only; they do not include implementation bodies.
+
 ## Update Rule
 
 These documents are not append-only. When a module-level design clarifies a

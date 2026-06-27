@@ -25,6 +25,11 @@ Workspace does not implement the Agent edit loop.
 - verifier replay metadata;
 - check outcome.
 
+## Function Boundary
+
+Functions below define module interfaces. Each function specifies input,
+output, and effect only; it does not prescribe implementation.
+
 ## Functions
 
 ### create_solver_workspace

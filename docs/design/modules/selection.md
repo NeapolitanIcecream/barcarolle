@@ -25,6 +25,11 @@ Selection is the core research module.
 - prediction metrics;
 - selector comparison reports.
 
+## Function Boundary
+
+Functions below define module interfaces. Each function specifies input,
+output, and effect only; it does not prescribe implementation.
+
 ## Functions
 
 ### build_rolling_origin

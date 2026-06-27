@@ -22,6 +22,11 @@ Results does not execute Agents and does not choose benchmark tasks.
 - cached result queries;
 - result completeness reports.
 
+## Function Boundary
+
+Functions below define module interfaces. Each function specifies input,
+output, and effect only; it does not prescribe implementation.
+
 ## Functions
 
 ### build_result_record
