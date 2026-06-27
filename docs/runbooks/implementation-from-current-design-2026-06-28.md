@@ -31,6 +31,19 @@ conflict with the design documents, the design documents win. Do not import
 archived abstractions, old module names, or alternate vocabulary as active API
 concepts.
 
+## Archive-First Reset
+
+Before implementing modules, verify that legacy implementation code and old
+design documents are under `archive/`. If active, non-archived legacy code or
+old design material remains outside the current design set, archive it first in
+a focused step with a short manifest.
+
+New production code should be written from a clean starting point against the
+current design documents. Do not copy old implementation modules forward as the
+starting structure. Archived code may be inspected only as historical reference
+after identifying the current owner module and design contract it would need to
+satisfy.
+
 ## Review Stop Line
 
 Use the `PROCESS.md` design review stop line for all implementation reviews.
@@ -53,14 +66,15 @@ validator could cover more future field combinations.
 Implement in this order unless the design documents require a narrower
 dependency step:
 
-1. Records
-2. Task Pool
-3. Verification
-4. Workspace
-5. Result Store
-6. Selection
-7. Reporting
-8. Runner
+1. Archive-first reset
+2. Records
+3. Task Pool
+4. Verification
+5. Workspace
+6. Result Store
+7. Selection
+8. Reporting
+9. Runner
 
 Keep each module small. Prefer direct functions and plain record contracts over
 frameworks or new abstractions.
@@ -93,6 +107,8 @@ Each worker prompt must state:
 - the module being implemented;
 - the exact design files to read before editing;
 - that design documents are the only source of truth;
+- that new production code must start from the current design, not from archived
+  or legacy implementation structure;
 - that implementation must preserve current module vocabulary;
 - that new concepts, module names, or broad frameworks are not allowed unless a
   design document requires them;
@@ -117,6 +133,8 @@ must check:
 - whether append-only evidence records cannot be mutated in place;
 - whether cache identity, leakage prevention, Task/Check linkage, denominator
   policy, and report traceability remain intact;
+- whether the implementation was built from the current design rather than
+  copy-forward legacy code;
 - whether the implementation introduced unnecessary vocabulary, concepts,
   storage layers, framework abstractions, or behavior not present in the design;
 - whether relevant tests or verification were run, or whether skipped
@@ -135,6 +153,8 @@ A module is complete when:
 - `git diff --check` passes;
 - changed files are limited to the module, its tests, and necessary integration
   points;
+- active legacy implementation or old design material has been archived before
+  new module code is introduced;
 - no new first-class concepts or module names were introduced outside the design.
 
 ## Runbook Completion Criteria
