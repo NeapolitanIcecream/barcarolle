@@ -14,9 +14,8 @@ Workspace does not implement the Agent edit loop.
 - `TaskRecord`;
 - `CheckRecord`;
 - `AgentRecord`;
-- `WorkspacePolicy`;
-- `RuntimePolicy`;
-- `CheckRuntimePolicy`.
+- `WorkspaceConfig`;
+- `RuntimeConfig`.
 
 ## Outputs
 
@@ -30,7 +29,7 @@ Workspace does not implement the Agent edit loop.
 Input sources:
 
 - Task Pool provides `TaskRecord` and `CheckRecord`;
-- user or run config provides Agent and policies;
+- user or run config provides Agent and configs;
 - Checks provides check execution.
 
 Output consumers:
@@ -49,7 +48,7 @@ output, and effect only; it does not prescribe implementation.
 Input:
 
 - `task: TaskRecord`
-- `workspace_policy: WorkspacePolicy`
+- `workspace_config: WorkspaceConfig`
 
 Output:
 
@@ -67,7 +66,7 @@ Input:
 - `solver_workspace: WorkspaceRef`
 - `task: TaskRecord`
 - `agent: AgentRecord`
-- `runtime_policy: RuntimePolicy`
+- `runtime_config: RuntimeConfig`
 
 Output:
 
@@ -97,7 +96,7 @@ Effect:
 Input:
 
 - `task: TaskRecord`
-- `workspace_policy: WorkspacePolicy`
+- `workspace_config: WorkspaceConfig`
 
 Output:
 
@@ -129,7 +128,7 @@ Input:
 
 - `verifier_workspace: WorkspaceRef`
 - `check: CheckRecord`
-- `check_runtime_policy: CheckRuntimePolicy`
+- `runtime_config: RuntimeConfig`
 
 Output:
 
@@ -146,9 +145,8 @@ Input:
 - `task: TaskRecord`
 - `check: CheckRecord`
 - `agent: AgentRecord`
-- `workspace_policy: WorkspacePolicy`
-- `runtime_policy: RuntimePolicy`
-- `check_runtime_policy: CheckRuntimePolicy`
+- `workspace_config: WorkspaceConfig`
+- `runtime_config: RuntimeConfig`
 
 Output:
 

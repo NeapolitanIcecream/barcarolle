@@ -29,11 +29,11 @@ and who consumes the outputs.
 | Module | Owns | Inputs | Input Source | Outputs | Output Consumers |
 | --- | --- | --- | --- | --- | --- |
 | Records | Shared record schemas, identity rules, validation errors, and JSON/JSONL serialization contracts. | Record definitions; record payloads produced by other modules. | Design docs; Task Pool; Checks; Workspace; Results; Selection. | Validated `Task`, `Check`, `Result`, `Benchmark Selection`, metric, and report records; validation errors; stable IDs. | All modules. |
-| Task Pool | Task generation, task import, task certification, rejected-task summaries, and frozen task-pool manifests. | Target repository reference; task-source config; user-provided tasks; check construction policy; certification policy; workspace policy for certification; check runtime policy for certification. | User config; built-in generators; user imports; Checks for executable-check validation; Workspace for checkout/replay validation. | Frozen `Task Pool`; accepted `Task + Check` records; rejected candidates; certification evidence. | Workspace; Results; Selection; Reporting. |
-| Checks | Check execution interface and normalized check outcomes. | `Check`; verifier workspace path; candidate diff already applied; check runtime policy. | Task Pool provides `Check`; Workspace provides verifier workspace and applied diff. | Normalized check outcome: pass, fail, invalid, failure label, sanitized evidence summary. | Workspace; Results; Reporting. |
-| Workspace | Solver workspace creation, Agent invocation, diff capture, verifier workspace creation, diff replay, and check orchestration. | `Task`; `Check`; Agent config; workspace policy; runtime policy. | Task Pool provides `Task + Check`; user or run config provides Agent and policies; Checks provides check runner. | Captured diff digest; execution metadata; check outcome; workspace-level failure classification. | Results. |
-| Results | Result cache identity, result storage, missing-cell queries, and result matrices. | `Task`; `Check`; Agent config; workspace output; check outcome. | Task Pool; Workspace; Checks; Records. | Reusable `Result` records; result-cache snapshot; result matrix; missing Agent-task cells. | Selection; Reporting; Workspace for missing-cell execution. |
-| Selection | Rolling-origin construction, selector execution, selector training/evaluation, and benchmark-selection manifests. | Frozen `Task Pool`; `Agent Results`; origin; budget; candidate Agents; selector config. | Task Pool; Results; user or experiment config; selector roadmap. | `Benchmark Selection`; selected task IDs and weights; rolling-origin metrics; selector diagnostics; missing selected cells. | Results; Reporting. |
+| Task Pool | Task generation, task import, task certification, rejected-task summaries, and frozen task-pool files. | Target repository reference; task-source config; user-provided tasks; check construction config; certification config. | User config; built-in generators; user imports; Checks for executable-check validation; Workspace for checkout/replay validation. | Frozen `Task Pool`; accepted `Task + Check` records; rejected candidates; certification evidence. | Workspace; Results; Selection; Reporting. |
+| Checks | Check execution interface and normalized check outcomes. | `Check`; verifier workspace path; candidate diff already applied; check runtime config. | Task Pool provides `Check`; Workspace provides verifier workspace and applied diff. | Normalized check outcome: pass, fail, invalid, failure label, sanitized evidence summary. | Workspace; Results; Reporting. |
+| Workspace | Solver workspace creation, Agent invocation, diff capture, verifier workspace creation, diff replay, and check orchestration. | `Task`; `Check`; Agent config; workspace config; runtime config. | Task Pool provides `Task + Check`; user or run config provides Agent and configs; Checks provides check runner. | Captured diff digest; execution metadata; check outcome; workspace-level failure classification. | Results. |
+| Results | Result cache identity, result storage, missing-run queries, and result matrices. | `Task`; `Check`; Agent config; workspace output; check outcome. | Task Pool; Workspace; Checks; Records. | Reusable `Result` records; result cache state; result matrix; missing Agent-task runs. | Selection; Reporting; Workspace for missing-run execution. |
+| Selection | Rolling-origin construction, selector execution, selector training/evaluation, and `Benchmark Selection` records. | Frozen `Task Pool`; `Agent Results`; origin; budget; candidate Agents; selector config. | Task Pool; Results; user or experiment config; selector roadmap. | `Benchmark Selection`; selected task IDs and weights; rolling-origin metrics; selector notes; missing selected Agent-task runs. | Results; Reporting. |
 | Reporting | Claim-safe summaries, audit reports, and machine-readable closeouts. | `Task Pool`; `Benchmark Selection`; `Agent Results`; rolling-origin metrics; artifact digests. | Task Pool; Results; Selection; Records. | Human-readable report; machine-readable summary; claim-boundary statement. | Users. |
 
 ## Canonical Data Flow
@@ -47,7 +47,7 @@ User config or task source
   -> Task Pool
   -> frozen Task + Check records
 
-Task Pool + Agent config + workspace policy
+Task Pool + Agent config + workspace config
   -> Workspace
   -> Checks
   -> Results
@@ -86,7 +86,7 @@ after the Agent diff is captured.
 
 ### Result
 
-One Agent on one Task under one environment and runtime policy. A `Result`
+One Agent on one Task under one environment and runtime config. A `Result`
 contains status, pass/fail/invalid, cost, latency, failure label, captured diff
 digest, and verifier metadata.
 
@@ -106,20 +106,20 @@ performance.
 
 ### Cached Pool Mode
 
-Use when `Agent Results` already exist for many `Agent x Task` cells.
+Use when `Agent Results` already exist for many Agent-task runs.
 Selectors choose virtual benchmarks and compute prediction error from cached
-rows without re-running paid Agent cells.
+results without re-running paid Agent runs.
 
 ### Select-Then-Run Mode
 
 Use when Agent execution is expensive and results are sparse. The selector
-chooses a benchmark first, then the system runs only missing Agent-task cells.
+chooses a benchmark first, then the system runs only missing Agent-task runs.
 
 ### Incremental Cache Fill Mode
 
-Use when selector uncertainty is dominated by missing result cells. Selection
-identifies which cells would reduce uncertainty, and Results records newly run
-cells for later reuse.
+Use when selector uncertainty is dominated by missing results. Selection
+identifies which Agent-task runs would reduce uncertainty, and Results records
+newly run results for later reuse.
 
 ## Module Boundary Rules
 

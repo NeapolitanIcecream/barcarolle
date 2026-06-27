@@ -14,7 +14,7 @@ Checks do not select tasks, run Agents, or store Results.
 - `CheckRecord`;
 - verifier `WorkspaceRef`;
 - applied candidate diff;
-- check runtime policy.
+- check runtime config.
 
 ## Outputs
 
@@ -51,18 +51,20 @@ Input:
 
 Output:
 
-- `PreparedCheck`
+- `WorkspaceRef`
 
 Effect:
 
-- Injects hidden check material only into the verifier workspace.
+- Injects hidden check material only into the verifier workspace and returns
+  that workspace reference.
 
 ### run_check
 
 Input:
 
-- `prepared_check: PreparedCheck`
-- `runtime_policy: CheckRuntimePolicy`
+- `check: CheckRecord`
+- `verifier_workspace: WorkspaceRef`
+- `runtime_config: RuntimeConfig`
 
 Output:
 
@@ -76,8 +78,8 @@ Effect:
 
 Input:
 
-- `raw_outcome: RawCheckOutcome`
-- `normalization_policy: CheckNormalizationPolicy`
+- `raw_output: object`
+- `normalization_config: CheckNormalizationConfig`
 
 Output:
 
@@ -95,10 +97,11 @@ Input:
 - `check: CheckRecord`
 - `verifier_workspace_factory: Callable`
 - `repeat_count: int`
+- `runtime_config: RuntimeConfig`
 
 Output:
 
-- `CheckStabilityReport`
+- `Sequence[CheckOutcome]`
 
 Effect:
 
@@ -113,13 +116,13 @@ Input:
 
 Output:
 
-- `CheckEvidenceSummary`
+- `EvidenceSummary`
 
 Effect:
 
 - Produces sanitized evidence for Result and Reporting. It must not include
   hidden test text, expected outputs, or raw verifier logs unless explicitly
-  allowed by a safe policy.
+  allowed by a safe rule.
 
 ## Source Alignment Check
 

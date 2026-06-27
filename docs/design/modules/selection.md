@@ -17,14 +17,14 @@ Selection is the core research module.
 - candidate Agents;
 - budget;
 - selector version;
-- leakage policy.
+- leakage rules.
 
 ## Outputs
 
 - `BenchmarkSelectionRecord`;
 - prediction metrics;
-- selector diagnostics;
-- missing selected Agent-task cells.
+- selector notes;
+- missing selected Agent-task runs.
 
 ## System Boundary
 
@@ -53,7 +53,7 @@ Input:
 
 - `task_pool: TaskPoolRecord`
 - `origin_time: datetime`
-- `future_window_policy: FutureWindowPolicy`
+- `future_window: TimeRange`
 
 Output:
 
@@ -64,7 +64,7 @@ Effect:
 - Defines history pool and future holdout without exposing future outcomes to
   selectors.
 
-### build_selector_context
+### build_selector_input
 
 Input:
 
@@ -73,11 +73,11 @@ Input:
 - `results: Sequence[ResultRecord]`
 - `agents: Sequence[AgentRecord]`
 - `budget: SelectionBudget`
-- `leakage_policy: LeakagePolicy`
+- `leakage_rules: LeakageRules`
 
 Output:
 
-- `SelectionContext`
+- `SelectorInput`
 
 Effect:
 
@@ -87,7 +87,7 @@ Effect:
 
 Input:
 
-- `context: SelectionContext`
+- `selector_input: SelectorInput`
 - `seed: int`
 
 Output:
@@ -102,7 +102,7 @@ Effect:
 
 Input:
 
-- `context: SelectionContext`
+- `selector_input: SelectorInput`
 
 Output:
 
@@ -116,8 +116,8 @@ Effect:
 
 Input:
 
-- `context: SelectionContext`
-- `coverage_policy: CoveragePolicy`
+- `selector_input: SelectorInput`
+- `coverage_config: CoverageConfig`
 
 Output:
 
@@ -132,9 +132,9 @@ Effect:
 
 Input:
 
-- `context: SelectionContext`
+- `selector_input: SelectorInput`
 - `expert_weights: Mapping[str, float]`
-- `constraint_policy: SelectionConstraintPolicy`
+- `selection_config: SelectionConfig`
 
 Output:
 
@@ -152,12 +152,12 @@ Input:
 - `training_origins: Sequence[RollingOriginRecord]`
 - `task_pool: TaskPoolRecord`
 - `results: Sequence[ResultRecord]`
-- `baseline_selectors: Sequence[SelectorSpec]`
-- `fit_policy: LearnedFitPolicy`
+- `baseline_selectors: Sequence[Selector]`
+- `fit_config: FitConfig`
 
 Output:
 
-- `LearnedSelectorModel`
+- `Selector`
 
 Effect:
 
@@ -169,13 +169,13 @@ Effect:
 Input:
 
 - `training_origins: Sequence[RollingOriginRecord]`
-- `feature_table: FeatureTable`
+- `task_pool: TaskPoolRecord`
 - `results: Sequence[ResultRecord]`
-- `constraint_policy: SelectionConstraintPolicy`
+- `selection_config: SelectionConfig`
 
 Output:
 
-- `LearnedSelectorModel`
+- `Selector`
 
 Effect:
 
@@ -186,9 +186,9 @@ Effect:
 
 Input:
 
-- `context: SelectionContext`
-- `model: LearnedSelectorModel`
-- `constraint_policy: SelectionConstraintPolicy`
+- `selector_input: SelectorInput`
+- `selector: Selector`
+- `selection_config: SelectionConfig`
 
 Output:
 
@@ -206,7 +206,7 @@ Input:
 - `selection: BenchmarkSelectionRecord`
 - `origin: RollingOriginRecord`
 - `result_matrix: ResultMatrix`
-- `metric_policy: MetricPolicy`
+- `metric_config: MetricConfig`
 
 Output:
 
@@ -216,20 +216,20 @@ Effect:
 
 - Computes future pass-rate MAE, pairwise gap error, rank agreement,
   recommendation regret, invalid rate, cost, latency, and coverage. It emits
-  metric records and diagnostics, not a human-facing report.
+  metric records and selector notes, not a human-facing report.
 
 ### choose_selector_for_origin
 
 Input:
 
-- `registered_selectors: Sequence[SelectorSpec]`
+- `registered_selectors: Sequence[Selector]`
 - `prior_metrics: Sequence[MetricRecord]`
 - `origin: RollingOriginRecord`
-- `controller_policy: ControllerPolicy`
+- `controller_config: ControllerConfig`
 
 Output:
 
-- `SelectorSpec`
+- `Selector`
 
 Effect:
 

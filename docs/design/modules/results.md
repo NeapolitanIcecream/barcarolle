@@ -4,7 +4,7 @@ Status: draft, 2026-06-27.
 
 ## Responsibility
 
-Store, query, and join reusable `Result` rows for `Agent x Task` cells.
+Store, query, and join reusable `Result` records for Agent-task runs.
 
 Results does not execute Agents and does not choose benchmark tasks.
 
@@ -14,15 +14,15 @@ Results does not execute Agents and does not choose benchmark tasks.
 - `CheckRecord`;
 - `AgentRecord`;
 - `WorkspaceRunRecord`;
-- cache and scoring policy.
+- cache and scoring config.
 
 ## Outputs
 
 - `ResultRecord`;
-- result-cache snapshot;
+- result cache state;
 - cached result queries;
 - `ResultMatrix`;
-- missing Agent-task cells.
+- missing Agent-task runs.
 
 ## System Boundary
 
@@ -37,7 +37,7 @@ Output consumers:
 
 - Selection;
 - Reporting;
-- Workspace, for missing-cell execution.
+- Workspace, for missing-run execution.
 
 ## Function Boundary
 
@@ -54,7 +54,7 @@ Input:
 - `check: CheckRecord`
 - `agent: AgentRecord`
 - `workspace_run: WorkspaceRunRecord`
-- `scoring_policy: ScoringPolicy`
+- `scoring_config: ScoringConfig`
 
 Output:
 
@@ -72,9 +72,9 @@ Input:
 - `task: TaskRecord`
 - `check: CheckRecord`
 - `agent: AgentRecord`
-- `workspace_policy: WorkspacePolicy`
-- `runtime_policy: RuntimePolicy`
-- `scoring_policy: ScoringPolicy`
+- `workspace_config: WorkspaceConfig`
+- `runtime_config: RuntimeConfig`
+- `scoring_config: ScoringConfig`
 
 Output:
 
@@ -93,11 +93,11 @@ Input:
 
 Output:
 
-- `StoredResultRef`
+- `ResultRecord`
 
 Effect:
 
-- Writes or updates a result row according to the store policy.
+- Writes or updates a result record according to the store config.
 
 ### load_results
 
@@ -112,7 +112,7 @@ Output:
 
 Effect:
 
-- Reads result rows matching task, Agent, origin, cache, and policy filters.
+- Reads result records matching task, Agent, origin, cache, and config filters.
 
 ### find_missing_results
 
@@ -121,15 +121,15 @@ Input:
 - `task_ids: Sequence[str]`
 - `agents: Sequence[AgentRecord]`
 - `store: ResultStore`
-- `identity_policy: ResultIdentityPolicy`
+- `cache_config: ResultCacheConfig`
 
 Output:
 
-- `Sequence[MissingResultCell]`
+- `Sequence[MissingAgentTaskRun]`
 
 Effect:
 
-- Identifies selected `Agent x Task` cells that need execution by Workspace.
+- Identifies selected Agent-task runs that need execution by Workspace.
 
 ### build_result_matrix
 
@@ -138,7 +138,7 @@ Input:
 - `tasks: Sequence[TaskRecord]`
 - `agents: Sequence[AgentRecord]`
 - `results: Sequence[ResultRecord]`
-- `join_policy: ResultJoinPolicy`
+- `join_config: ResultJoinConfig`
 
 Output:
 
@@ -148,7 +148,7 @@ Effect:
 
 - Joins results into a table for Selection and Reporting.
 
-## Invalid Policy
+## Invalid Outcomes
 
 Agent-attributable invalid outcomes such as timeout, no meaningful patch, or
 budget exhaustion are failures. Benchmark infrastructure failures are not Agent
@@ -161,4 +161,4 @@ Aligned with the architecture:
 - Makes paid Agent results durable and reusable.
 - Enforces exact cache identity.
 - Gives Selection result matrices instead of raw workspaces or transcripts.
-- Matches the roadmap's invalid-cell and cache-identity requirements.
+- Matches the roadmap's invalid-outcome and cache-identity requirements.

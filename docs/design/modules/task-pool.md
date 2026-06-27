@@ -14,16 +14,14 @@ Task Pool does not run Agents and does not select benchmarks.
 - target repository reference;
 - generator config or user import path;
 - origin or time range;
-- certification policy;
 - check construction config;
-- workspace policy for certification;
-- check runtime policy for certification.
+- certification config.
 
 ## Outputs
 
 - `TaskPoolRecord`;
-- accepted `TaskRecord` rows;
-- accepted `CheckRecord` rows;
+- accepted `TaskRecord` records;
+- accepted `CheckRecord` records;
 - rejected candidates;
 - certification evidence.
 
@@ -55,9 +53,9 @@ output, and effect only; it does not prescribe implementation.
 
 Input:
 
-- `repository: RepositoryRef`
+- `repository_url_or_path: str`
 - `time_range: TimeRange`
-- `generator_config: GeneratorConfig`
+- `task_source_config: TaskSourceConfig`
 
 Output:
 
@@ -73,7 +71,7 @@ Effect:
 Input:
 
 - `source_path: Path`
-- `import_policy: ImportPolicy`
+- `import_config: ImportConfig`
 
 Output:
 
@@ -87,12 +85,12 @@ Effect:
 
 Input:
 
-- `candidate_source: CandidateSource`
-- `statement_policy: StatementPolicy`
+- `candidate: TaskCandidate`
+- `statement_config: StatementConfig`
 
 Output:
 
-- `TaskStatement`
+- `task_text: str`
 
 Effect:
 
@@ -104,12 +102,12 @@ Effect:
 
 Input:
 
-- `candidate_source: CandidateSource`
-- `check_policy: CheckPolicy`
+- `candidate: TaskCandidate`
+- `check_config: CheckConfig`
 
 Output:
 
-- `CheckCandidate`
+- `CheckRecord`
 
 Effect:
 
@@ -122,9 +120,7 @@ Effect:
 Input:
 
 - `candidate: TaskCandidate`
-- `certification_policy: CertificationPolicy`
-- `workspace_policy: WorkspacePolicy`
-- `check_runtime_policy: CheckRuntimePolicy`
+- `certification_config: CertificationConfig`
 
 Output:
 
@@ -140,9 +136,10 @@ Effect:
 
 Input:
 
-- `accepted: Sequence[CertifiedTask]`
+- `accepted_tasks: Sequence[TaskRecord]`
+- `accepted_checks: Sequence[CheckRecord]`
 - `rejected: Sequence[CertificationResult]`
-- `pool_metadata: TaskPoolMetadata`
+- `metadata: Mapping[str, object]`
 
 Output:
 
@@ -160,7 +157,7 @@ Input:
 
 Output:
 
-- `TaskPoolSummary`
+- `Mapping[str, object]`
 
 Effect:
 
@@ -180,5 +177,5 @@ Aligned with the architecture:
 
 - Treats generator output as `Task + Check`.
 - Reuses related-work task-generator methods instead of renaming them.
-- Preserves rejected source events for supply diagnostics.
+- Preserves rejected source events for supply notes.
 - Leaves Agent execution to Workspace and benchmark choice to Selection.

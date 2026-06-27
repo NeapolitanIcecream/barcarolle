@@ -33,6 +33,8 @@ Each module-level document defines function boundaries. Functions specify
 inputs, outputs, and effects only; they do not include implementation bodies.
 The `System Boundary` section in each module document must stay consistent with
 the module boundary table in [System design](system-design.md).
+Names ending in `Config` are ordinary parameter groups, not first-class system
+concepts or modules.
 
 ## Update Rule
 

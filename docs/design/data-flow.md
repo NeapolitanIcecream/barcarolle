@@ -27,7 +27,7 @@ Input:
 - target repository reference;
 - task generator or user import;
 - check construction method;
-- certification policy.
+- certification config.
 
 Steps:
 
@@ -54,8 +54,8 @@ Input:
 - `Task`;
 - `Check`;
 - Agent config;
-- workspace policy;
-- runtime policy.
+- workspace config;
+- runtime config.
 
 Steps:
 
@@ -93,7 +93,7 @@ Steps:
 1. Selection builds the history pool.
 2. Selection builds leakage-safe feature tables.
 3. Selector chooses common task IDs and optional weights.
-4. Selection records a `Benchmark Selection` manifest.
+4. Selection records a `Benchmark Selection`.
 
 Output:
 
@@ -101,7 +101,7 @@ Output:
 
 Downstream:
 
-- Results identifies missing selected Agent-task cells.
+- Results identifies missing selected Agent-task runs.
 - Reporting shows why tasks were selected.
 - RollingOrigin evaluation joins selected results with future results.
 
@@ -120,7 +120,7 @@ Steps:
 2. Compute future holdout pass rates per Agent.
 3. Compute prediction error, rank agreement, regret, invalid rate, cost, and
    coverage.
-4. Store metrics keyed by origin, selector version, and result-cache snapshot.
+4. Store metrics keyed by origin, selector version, and result cache state.
 
 Output:
 

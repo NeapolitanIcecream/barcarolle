@@ -11,8 +11,8 @@ evidence and does not run experiments.
 
 - `TaskPoolRecord`;
 - `BenchmarkSelectionRecord`;
-- `ResultRecord` rows;
-- `MetricRecord` rows;
+- `ResultRecord` records;
+- `MetricRecord` records;
 - source and cache digests.
 
 ## Outputs
@@ -92,7 +92,7 @@ Effect:
 Input:
 
 - `metrics: Sequence[MetricRecord]`
-- `claim_policy: ClaimPolicy`
+- `claim_config: ClaimConfig`
 
 Output:
 

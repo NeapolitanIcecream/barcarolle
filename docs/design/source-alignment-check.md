@@ -40,7 +40,7 @@ The design keeps these assets independent:
 - `Agent Results`
 
 This matches the architecture requirement that cached paid results can be
-reused for selector research without rerunning identical cells.
+reused for selector research without rerunning identical Agent-task runs.
 
 ### Selector Boundary
 

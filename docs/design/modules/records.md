@@ -14,8 +14,8 @@ This module should not perform I/O beyond optional serialization helpers.
 - `TaskRecord`
 - `CheckRecord`
 - `AgentRecord`
-- `WorkspacePolicy`
-- `RuntimePolicy`
+- `WorkspaceConfig`
+- `RuntimeConfig`
 - `ResultRecord`
 - `TaskPoolRecord`
 - `BenchmarkSelectionRecord`
@@ -67,7 +67,7 @@ Output:
 
 Effect:
 
-- Checks that the check has an execution type, bounded resource policy, and no
+- Checks that the check has an execution type, bounded resource limits, and no
   solver-visible hidden material.
 
 ### validate_result
@@ -124,9 +124,9 @@ Input:
 - `task: TaskRecord`
 - `check: CheckRecord`
 - `agent: AgentRecord`
-- `workspace_policy: WorkspacePolicy`
-- `runtime_policy: RuntimePolicy`
-- `scoring_policy_digest: str`
+- `workspace_config: WorkspaceConfig`
+- `runtime_config: RuntimeConfig`
+- `scoring_config_digest: str`
 
 Output:
 
@@ -134,7 +134,7 @@ Output:
 
 Effect:
 
-- Returns the exact identity for a reusable `Agent x Task` result.
+- Returns the exact identity for a reusable Agent-task result.
 
 ### load_jsonl_records
 
