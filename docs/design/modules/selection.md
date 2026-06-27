@@ -244,6 +244,9 @@ Output:
 Effect:
 
 - Runs leakage linting and builds the pre-origin data visible to a selector.
+  The output digest binds origin, task pool, feature snapshot, Agent set,
+  eligible `Task + Check` refs, pre-origin result view, budget, and leakage
+  policy.
 
 ### select_random
 

@@ -23,6 +23,7 @@ This module should not perform I/O beyond optional serialization helpers.
 - `SelectorRecord`
 - `FeatureRecord`
 - `FeatureSnapshotRecord`
+- `SelectorInput`
 - `ResultRecord`
 - `ResultMatrix`
 - `EvaluationCellSet`
@@ -245,6 +246,22 @@ linting.
 - `config_digest`
 - `created_at`
 
+### SelectorInput
+
+- `selector_input_id`
+- `origin_id`
+- `task_pool_id`
+- `feature_snapshot_id`
+- `agent_ids`
+- `eligible_task_check_refs`
+- `pre_origin_result_ids`
+- `budget_digest`
+- `leakage_policy_digest`
+- `selector_input_digest`
+
+`SelectorInput` is the leakage-checked data visible to a Selector for one
+origin. Its digest covers the listed fields and the referenced feature snapshot.
+
 ### TaskPoolRecord
 
 - `task_pool_id`
@@ -266,6 +283,8 @@ linting.
 ### RollingOriginRecord
 
 - `origin_id`
+- `task_pool_id`
+- `task_pool_digest`
 - `origin_time`
 - `policy_digest`
 - `history_task_check_refs`
@@ -283,6 +302,8 @@ is frozen.
 ### BenchmarkSelectionRecord
 
 - `selection_id`
+- `task_pool_id`
+- `task_pool_digest`
 - `origin_id`
 - `selector_id`
 - `selected_task_check_refs`
@@ -468,6 +489,22 @@ Effect:
 
 - Validates feature provenance fields, leakage lint status, and origin linkage.
 
+### validate_selector_input
+
+Input:
+
+- `selector_input: SelectorInput`
+
+Output:
+
+- `ValidationResult`
+
+Effect:
+
+- Validates origin linkage, task-pool binding, feature snapshot digest,
+  eligible `Task + Check` refs, pre-origin result membership, budget digest,
+  leakage policy digest, and selector input digest.
+
 ### validate_result_matrix
 
 Input:
@@ -527,7 +564,8 @@ Output:
 Effect:
 
 - Validates frozen origin linkage, selected `Task + Check` refs, keyed weight
-  coverage, budget digest, feature snapshot linkage, and exposure metadata.
+  coverage, task-pool binding, budget digest, feature snapshot linkage, and
+  exposure metadata.
 
 ### validate_metric
 

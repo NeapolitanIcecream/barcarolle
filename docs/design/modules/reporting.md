@@ -79,6 +79,8 @@ Effect:
 Input:
 
 - `selections: Sequence[BenchmarkSelectionRecord]`
+- `cell_sets: Sequence[EvaluationCellSet]`
+- `result_matrices: Sequence[ResultMatrix]`
 - `metrics: Sequence[MetricRecord]`
 
 Output:
@@ -88,7 +90,7 @@ Output:
 Effect:
 
 - Summarizes selector performance by origin, Agent set, budget, metric, and
-  benchmark exposure state.
+  benchmark exposure state using selections, cell sets, matrices, and metrics.
 
 ### build_claim_boundary
 

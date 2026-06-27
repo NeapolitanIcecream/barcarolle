@@ -51,6 +51,8 @@ The Selector module follows the roadmap:
 - metadata-only track first;
 - outcome-aware track only when outcomes are available before origin;
 - feature provenance with observed-at timestamps and leakage classes;
+- selector inputs bind origin, task pool, feature snapshot, Agent set, budget,
+  and pre-origin result view;
 - rolling-origin policy with as-of cutoff, embargo, cluster constraints, and
   holdout overlap rules;
 - MAE as primary metric;
