@@ -141,13 +141,15 @@ Input:
 - `tasks: Sequence[TaskRecord]`
 - `checks: Mapping[str, CheckRecord]`
 - `agents: Sequence[AgentRecord]`
-- `identity_config: ResultIdentityConfig`
+- `workspace_config: WorkspaceConfig`
+- `runtime_config: RuntimeConfig`
+- `scoring_config: ScoringConfig`
 - `store: ResultStore`
 - `cache_config: ResultCacheConfig`
 
 Output:
 
-- `Sequence[MissingAgentTaskRun]`
+- `Sequence[MissingResultCell]`
 
 Effect:
 
@@ -164,6 +166,7 @@ Input:
 - `checks: Mapping[str, CheckRecord]`
 - `agents: Sequence[AgentRecord]`
 - `results: Sequence[ResultRecord]`
+- `matrix_role: ResultMatrixRole`
 - `join_config: ResultJoinConfig`
 
 Output:
@@ -174,7 +177,8 @@ Effect:
 
 - Joins results into a table for Selection and Reporting. The matrix includes
   one `ResultCellRef` per Agent-task-check cell, plus completeness,
-  exclusions, missing cells, and abstention metadata.
+  exclusions, missing cells, abstention metadata, and whether the matrix is for
+  the selected benchmark or future holdout.
 
 ## Join And Denominator Policy
 

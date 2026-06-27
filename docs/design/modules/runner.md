@@ -21,7 +21,7 @@ reporting logic.
 - result store;
 - workspace config;
 - runtime config;
-- result identity config;
+- scoring config;
 - report config.
 
 ## Outputs
@@ -173,7 +173,7 @@ Input:
 - `agents: Sequence[AgentRecord]`
 - `workspace_config: WorkspaceConfig`
 - `runtime_config: RuntimeConfig`
-- `identity_config: ResultIdentityConfig`
+- `scoring_config: ScoringConfig`
 - `result_store: ResultStore`
 
 Output:
@@ -196,7 +196,7 @@ Input:
 - `agents: Sequence[AgentRecord]`
 - `workspace_config: WorkspaceConfig`
 - `runtime_config: RuntimeConfig`
-- `identity_config: ResultIdentityConfig`
+- `scoring_config: ScoringConfig`
 - `result_store: ResultStore`
 
 Output:
@@ -221,7 +221,7 @@ Input:
 - `agents: Sequence[AgentRecord]`
 - `workspace_config: WorkspaceConfig`
 - `runtime_config: RuntimeConfig`
-- `identity_config: ResultIdentityConfig`
+- `scoring_config: ScoringConfig`
 - `result_store: ResultStore`
 - `join_config: ResultJoinConfig`
 
@@ -257,9 +257,10 @@ Output:
 Effect:
 
 - Calls Result Store to build selected-benchmark and future-holdout result
-  matrices from `evaluation_cells`, then calls Selection to evaluate prediction
-  metrics. If the required cells are incomplete under `join_config`, it records
-  abstention metadata instead of scoring a partial comparison.
+  matrices from `evaluation_cells` with explicit matrix roles, then calls
+  Selection with both matrices to evaluate prediction metrics. If the required
+  cells are incomplete under `join_config`, it records abstention metadata
+  instead of scoring a partial comparison.
 
 ### write_report
 
@@ -268,6 +269,8 @@ Input:
 - `task_pool: TaskPoolRecord`
 - `selection: BenchmarkSelectionRecord`
 - `results: Sequence[ResultRecord]`
+- `cell_sets: Sequence[EvaluationCellSet]`
+- `result_matrices: Sequence[ResultMatrix]`
 - `metrics: Sequence[MetricRecord]`
 - `report_config: ReportConfig`
 

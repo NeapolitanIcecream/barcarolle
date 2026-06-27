@@ -63,6 +63,8 @@ Result reuse depends on exact `ResultCacheIdentity`, not broad runtime names.
 Result matrices must carry cell-level Agent/Task/Check mappings,
 completeness, exclusion, abstention, and denominator metadata so Agent
 comparisons cannot silently reuse stale or partial cells.
+Metrics must reference the evaluation cell set plus selected-benchmark and
+future-holdout matrix digests.
 Rolling-origin evaluation freezes `Task + Check` refs before future outcomes
 are opened, and records source, task material, check material, certification,
 and result availability timestamps separately.

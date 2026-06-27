@@ -11,6 +11,8 @@ evidence and does not run experiments.
 
 - `TaskPoolRecord`;
 - `BenchmarkSelectionRecord`;
+- `EvaluationCellSet` records;
+- `ResultMatrix` records;
 - `ResultRecord` records;
 - `MetricRecord` records;
 - source and cache digests.
@@ -92,6 +94,10 @@ Effect:
 
 Input:
 
+- `task_pool: TaskPoolRecord`
+- `selections: Sequence[BenchmarkSelectionRecord]`
+- `cell_sets: Sequence[EvaluationCellSet]`
+- `result_matrices: Sequence[ResultMatrix]`
 - `metrics: Sequence[MetricRecord]`
 - `claim_config: ClaimConfig`
 
@@ -101,7 +107,9 @@ Output:
 
 Effect:
 
-- Separates supported claims from unsupported claims.
+- Separates supported claims from unsupported claims using task-pool coverage,
+  rejection and certification evidence, cache completeness, abstentions,
+  benchmark exposure state, and Agent/result identity drift.
 
 ### write_report
 

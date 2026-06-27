@@ -302,6 +302,7 @@ holdout outcomes are opened for scoring.
 ### ResultMatrix
 
 - `matrix_id`
+- `matrix_role`
 - `origin_id`
 - `selection_id`
 - `agent_ids`
@@ -328,10 +329,15 @@ holdout outcomes are opened for scoring.
 - `metric_id`
 - `origin_id`
 - `selection_id`
-- `result_matrix_digest`
+- `evaluation_cell_set_digest`
+- `selected_matrix_digest`
+- `future_matrix_digest`
+- `join_policy_digest`
 - `metric_name`
 - `metric_value`
 - `denominator_policy_digest`
+- `completeness_state`
+- `abstention_reason`
 - `computed_at`
 
 ## System Boundary
@@ -455,7 +461,7 @@ Output:
 Effect:
 
 - Validates cell-level Agent/Task/Check mapping, completeness, exclusions,
-  denominator policy, abstention metadata, and matrix digest.
+  matrix role, denominator policy, abstention metadata, and matrix digest.
 
 ### validate_evaluation_cell_set
 

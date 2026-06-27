@@ -366,7 +366,9 @@ Input:
 
 - `selection: BenchmarkSelectionRecord`
 - `origin: RollingOriginRecord`
-- `result_matrix: ResultMatrix`
+- `evaluation_cells: EvaluationCellSet`
+- `selected_matrix: ResultMatrix`
+- `future_matrix: ResultMatrix`
 - `metric_config: MetricConfig`
 
 Output:
@@ -376,8 +378,10 @@ Output:
 Effect:
 
 - Computes future pass-rate MAE, pairwise gap error, rank agreement,
-  recommendation regret, invalid rate, cost, latency, and coverage. It emits
-  metric records and selector notes, not a human-facing report.
+  recommendation regret, invalid rate, cost, latency, and coverage by comparing
+  selected-benchmark estimates against future-holdout outcomes. It emits metric
+  records with selected/future matrix and cell-set digests, not a human-facing
+  report.
 
 ### choose_selector_for_origin
 

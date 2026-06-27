@@ -212,12 +212,14 @@ Steps:
    denominator policy.
 2. Result Store builds cell-level mappings from Agent-task-check cells to
    required identities, results, exclusions, or missing states.
-3. Compute selected-benchmark pass-rate estimates per Agent.
-4. Compute future holdout pass rates per Agent.
-5. Compute prediction error, rank agreement, regret, invalid rate, cost, and
+3. Result Store builds one selected-benchmark matrix and one future-holdout
+   matrix with explicit matrix roles.
+4. Compute selected-benchmark pass-rate estimates per Agent.
+5. Compute future holdout pass rates per Agent.
+6. Compute prediction error, rank agreement, regret, invalid rate, cost, and
    coverage.
-6. Store metrics keyed by origin, selector version, result matrix digest, and
-   denominator policy.
+7. Store metrics keyed by origin, selector version, cell-set digest,
+   selected/future matrix digests, join policy, and denominator policy.
 
 Output:
 
