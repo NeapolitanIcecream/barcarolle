@@ -506,8 +506,6 @@ Practical safeguards:
 - compare to random, temporal, and simple stratified baselines;
 - report negative or regressed tuning results honestly.
 
-See `docs/research/goodhart-law-note-2026-06-23.md`.
-
 ## Proposed V2 Repository Layout
 
 This is a starting point, not a mandate:
