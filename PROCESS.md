@@ -4,7 +4,7 @@ Last updated: 2026-06-27.
 
 ## Current Mode
 
-The repository is in a clean design reset.
+The repository is in current-design mode.
 
 Active design work must use only:
 
@@ -32,7 +32,7 @@ current design without a specific review.
 
 ## Paid Calls
 
-No paid LLM or Agent calls are part of the design reset.
+No paid LLM or Agent calls are part of current design work.
 
 If future work requires paid calls, use only:
 

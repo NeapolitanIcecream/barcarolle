@@ -20,17 +20,50 @@ validity.
 
 No archived code or experiment document is an active source for this design.
 
-## Modules
+## Module Boundary Overview
 
-| Module | Owns | Inputs | Outputs | Sends Output To |
-| --- | --- | --- | --- | --- |
-| Records | Shared data shapes and validation contracts. | Design-level field definitions. | Typed records and validation errors. | All modules. |
-| Task Pool | Generation, import, certification, and frozen task pools. | Target repository, generator config, user imports, Check definitions. | `Task Pool` containing `Task`, `Check`, metadata, and certification records. | Workspace, Results, Selection, Reporting. |
-| Checks | Check execution contract and check outcome normalization. | `Check`, verifier `Workspace`, candidate diff. | Check outcome: pass, fail, invalid, evidence summary. | Workspace, Results. |
-| Workspace | Solver/verifier workspace lifecycle and Agent execution boundary. | `Task`, `Check`, Agent config, workspace policy. | Captured diff, check outcome, execution metadata. | Results. |
-| Results | Cache identity, result storage, and result joins. | `Task`, `Check`, Agent config, workspace output, check outcome. | Reusable `Result` rows and query results. | Selection, Reporting. |
-| Selection | Rolling-origin windows, selectors, metrics, and selector comparison. | `Task Pool`, `Agent Results`, origin, budget, candidate Agents. | `Benchmark Selection`, prediction metrics, selector diagnostics. | Results, Reporting. |
-| Reporting | Claim-safe reports and audit summaries. | `Task Pool`, `Benchmark Selection`, `Agent Results`, metrics. | Human-readable reports and machine-readable summaries. | Users. |
+The system has seven modules. The table below is the module boundary contract:
+for each module, it states what crosses the boundary, where inputs come from,
+and who consumes the outputs.
+
+| Module | Owns | Inputs | Input Source | Outputs | Output Consumers |
+| --- | --- | --- | --- | --- | --- |
+| Records | Shared record schemas, identity rules, validation errors, and JSON/JSONL serialization contracts. | Record definitions; record payloads produced by other modules. | Design docs; Task Pool; Checks; Workspace; Results; Selection. | Validated `Task`, `Check`, `Result`, `Benchmark Selection`, metric, and report records; validation errors; stable IDs. | All modules. |
+| Task Pool | Task generation, task import, task certification, rejected-task summaries, and frozen task-pool manifests. | Target repository reference; task-source config; user-provided tasks; check construction policy; certification policy. | User config; built-in generators; user imports; Checks for executable-check validation; Workspace for checkout/replay validation. | Frozen `Task Pool`; accepted `Task + Check` records; rejected candidates; certification evidence. | Workspace; Results; Selection; Reporting. |
+| Checks | Check execution interface and normalized check outcomes. | `Check`; verifier workspace path; candidate diff already applied; check runtime policy. | Task Pool provides `Check`; Workspace provides verifier workspace and applied diff. | Normalized check outcome: pass, fail, invalid, failure label, sanitized evidence summary. | Workspace; Results; Reporting. |
+| Workspace | Solver workspace creation, Agent invocation, diff capture, verifier workspace creation, diff replay, and check orchestration. | `Task`; `Check`; Agent config; workspace policy; runtime policy. | Task Pool provides `Task + Check`; user or run config provides Agent and policies; Checks provides check runner. | Captured diff digest; execution metadata; check outcome; workspace-level failure classification. | Results. |
+| Results | Result cache identity, result storage, missing-cell queries, and result matrices. | `Task`; `Check`; Agent config; workspace output; check outcome. | Task Pool; Workspace; Checks; Records. | Reusable `Result` records; result-cache snapshot; result matrix; missing Agent-task cells. | Selection; Reporting; Workspace for missing-cell execution. |
+| Selection | Rolling-origin construction, selector execution, selector training/evaluation, and benchmark-selection manifests. | Frozen `Task Pool`; `Agent Results`; origin; budget; candidate Agents; selector config. | Task Pool; Results; user or experiment config; selector roadmap. | `Benchmark Selection`; selected task IDs and weights; rolling-origin metrics; selector diagnostics; missing selected cells. | Results; Reporting. |
+| Reporting | Claim-safe summaries, audit reports, and machine-readable closeouts. | `Task Pool`; `Benchmark Selection`; `Agent Results`; rolling-origin metrics; artifact digests. | Task Pool; Results; Selection; Records. | Human-readable report; machine-readable summary; claim-boundary statement. | Users. |
+
+## Canonical Data Flow
+
+The module graph has two durable stores: `Task Pool` and `Agent Results`.
+`Benchmark Selection` is a durable output of Selection that joins them under a
+frozen origin and budget.
+
+```text
+User config or task source
+  -> Task Pool
+  -> frozen Task + Check records
+
+Task Pool + Agent config + workspace policy
+  -> Workspace
+  -> Checks
+  -> Results
+  -> Agent Results
+
+Task Pool + Agent Results + origin + budget + selector config
+  -> Selection
+  -> Benchmark Selection + rolling-origin metrics
+
+Task Pool + Agent Results + Benchmark Selection + metrics
+  -> Reporting
+  -> report + machine-readable summary
+```
+
+Records is used by every arrow in the graph. It validates data at module
+boundaries and assigns stable identities; it does not own system behavior.
 
 ## Core Data Objects
 

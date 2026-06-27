@@ -1,11 +1,11 @@
 # Barcarolle System Architecture
 
-Status: draft architecture for the post-proposal rewrite, 2026-06-25.
+Status: draft architecture for the current system, 2026-06-25.
 
-This document describes the intended clean rewrite of Barcarolle. It is not a
-migration plan for the current experiment code. The old codebase remains useful
-as evidence, examples, and data provenance, but the current system should be
-designed from the current understanding of the project.
+This document describes the intended architecture of Barcarolle. It is not a
+migration plan for the previous experiment code. The old codebase remains
+useful as evidence, examples, and data provenance, but the current system should
+be designed from the current understanding of the project.
 
 ## Goal
 

@@ -1,8 +1,6 @@
 # Barcarolle
 
-Barcarolle is being reset for a clean current design.
-
-The active project is a target-repository benchmark compiler for coding Agents.
+Barcarolle is a target-repository benchmark compiler for coding Agents.
 Its north star is predictive validity: whether a benchmark selected from
 repository history predicts later Agent performance on that same repository.
 

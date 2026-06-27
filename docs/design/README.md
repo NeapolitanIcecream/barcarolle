@@ -1,6 +1,6 @@
 # Barcarolle Design Index
 
-Status: draft design set for the clean rewrite, 2026-06-27.
+Status: draft design set for the current system, 2026-06-27.
 
 ## Source Materials
 

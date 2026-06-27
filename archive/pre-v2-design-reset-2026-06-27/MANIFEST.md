@@ -2,13 +2,13 @@
 
 Date: 2026-06-27.
 
-This archive contains the documents, experiment artifacts, prototype code, and
-test files that existed before the clean design reset.
+This archive contains earlier documents, experiment artifacts, prototype code,
+and test files.
 
 The active design no longer treats these files as source material. They remain
 available for historical audit and for future one-time port reviews.
 
-Active source materials after the reset are:
+Active source materials after archival are:
 
 - `docs/architecture/v2-system-architecture-2026-06-25.md`
 - `docs/design-inputs/learned-selector-roadmap-gpt-5-5-pro-2026-06-25.md`
