@@ -4,8 +4,9 @@ Status: draft, 2026-06-27.
 
 ## Responsibility
 
-Define rolling-origin windows, run Selectors, compare selected benchmarks with
-future holdouts, and record prediction metrics.
+Train Selectors from historical data, evaluate a specified Selector on
+historical data, select production benchmarks for a frozen origin, and update
+Selector choice from new evaluation feedback.
 
 Selection is the core research module.
 
@@ -13,15 +14,16 @@ Selection is the core research module.
 
 - frozen `Task Pool`;
 - cached `Agent Results`;
-- origin definition;
+- origin or historical window definition;
 - candidate Agents;
 - budget;
-- selector version;
+- selector config or specified Selector;
 - leakage rules.
 
 ## Outputs
 
 - `BenchmarkSelectionRecord`;
+- `SelectorRecord`;
 - prediction metrics;
 - selector notes.
 
@@ -43,6 +45,90 @@ Output consumers:
 
 Functions below define module interfaces. Each function specifies input,
 output, and effect only; it does not prescribe implementation.
+
+## Selection Entry Points
+
+These are module-level entry points. Runner calls them as needed.
+
+### train_selector
+
+Input:
+
+- `task_pool: TaskPoolRecord`
+- `results: Sequence[ResultRecord]`
+- `agents: Sequence[AgentRecord]`
+- `history_window: TimeRange`
+- `candidate_selectors: Sequence[SelectorRecord]`
+- `training_config: SelectorTrainingConfig`
+
+Output:
+
+- `SelectorRecord`
+
+Effect:
+
+- Trains or chooses a persistent Selector using only historical data allowed by
+  the training config. Rolling-origin splitting is internal to this function.
+
+### evaluate_selector
+
+Input:
+
+- `selector: SelectorRecord`
+- `task_pool: TaskPoolRecord`
+- `results: Sequence[ResultRecord]`
+- `agents: Sequence[AgentRecord]`
+- `history_window: TimeRange`
+- `evaluation_config: SelectorEvaluationConfig`
+
+Output:
+
+- `Sequence[MetricRecord]`
+
+Effect:
+
+- Tests the specified Selector on historical data and returns metrics across
+  the origins defined by the evaluation config.
+
+### select_benchmark
+
+Input:
+
+- `selector: SelectorRecord`
+- `task_pool: TaskPoolRecord`
+- `results: Sequence[ResultRecord]`
+- `agents: Sequence[AgentRecord]`
+- `origin_time: datetime`
+- `budget: SelectionBudget`
+- `selection_config: SelectionConfig`
+
+Output:
+
+- `BenchmarkSelectionRecord`
+
+Effect:
+
+- Uses the specified Selector at the origin to choose a production benchmark.
+  It does not run missing Agent-task results; Runner handles lazy Agent
+  execution after this record is produced.
+
+### update_selector_from_feedback
+
+Input:
+
+- `selector: SelectorRecord`
+- `selection: BenchmarkSelectionRecord`
+- `metrics: Sequence[MetricRecord]`
+- `feedback_config: SelectorFeedbackConfig`
+
+Output:
+
+- `SelectorRecord`
+
+Effect:
+
+- Updates the persistent Selector or its trust metadata after new evaluation
+  metrics are available. It does not inspect raw workspaces or hidden checks.
 
 ## Functions
 
@@ -151,12 +237,12 @@ Input:
 - `training_origins: Sequence[RollingOriginRecord]`
 - `task_pool: TaskPoolRecord`
 - `results: Sequence[ResultRecord]`
-- `baseline_selectors: Sequence[Selector]`
+- `baseline_selectors: Sequence[SelectorRecord]`
 - `fit_config: FitConfig`
 
 Output:
 
-- `Selector`
+- `SelectorRecord`
 
 Effect:
 
@@ -174,7 +260,7 @@ Input:
 
 Output:
 
-- `Selector`
+- `SelectorRecord`
 
 Effect:
 
@@ -186,7 +272,7 @@ Effect:
 Input:
 
 - `selector_input: SelectorInput`
-- `selector: Selector`
+- `selector: SelectorRecord`
 - `selection_config: SelectionConfig`
 
 Output:
@@ -221,14 +307,14 @@ Effect:
 
 Input:
 
-- `registered_selectors: Sequence[Selector]`
+- `registered_selectors: Sequence[SelectorRecord]`
 - `prior_metrics: Sequence[MetricRecord]`
 - `origin: RollingOriginRecord`
 - `controller_config: ControllerConfig`
 
 Output:
 
-- `Selector`
+- `SelectorRecord`
 
 Effect:
 
@@ -256,5 +342,6 @@ Aligned with the architecture and roadmap:
 - Future outcomes are not visible at selection time.
 - Primary metric is future pass-rate MAE.
 - Learned selectors start with data-efficient methods.
-- Adaptive behavior is conservative and based on prior origins.
+- Adaptive behavior is based on prior-origin metrics and later feedback
+  supplied through Metric records.
 - Reporting, not Selection, owns human-readable reports.

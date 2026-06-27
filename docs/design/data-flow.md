@@ -89,7 +89,33 @@ Downstream:
 - Selection joins Results with Task Pool records.
 - Reporting summarizes outcome, cost, latency, and failure labels.
 
-## Flow 3: Select A Benchmark
+## Flow 3: Train Or Test A Selector
+
+Input:
+
+- historical window;
+- pre-window or in-window `Task Pool` subset allowed by the protocol;
+- historical `Agent Results` allowed by the protocol;
+- candidate Agent set;
+- selector config or specified Selector.
+
+Steps:
+
+1. Runner loads historical results from Results.
+2. Selection builds the origins required by the training or evaluation config.
+3. For training, Selection returns a persistent `Selector`.
+4. For testing, Selection returns metrics for the specified Selector.
+
+Output:
+
+- `Selector` or rolling-origin metrics.
+
+Downstream:
+
+- Runner can use the Selector for production benchmark selection.
+- Reporting can summarize Selector performance.
+
+## Flow 4: Select A Benchmark
 
 Input:
 
@@ -102,10 +128,11 @@ Input:
 
 Steps:
 
-1. Selection builds the history pool.
-2. Selection builds leakage-safe feature tables.
-3. Selector chooses common task IDs and optional weights.
-4. Selection records a `Benchmark Selection`.
+1. Runner loads pre-origin results from Results.
+2. Selection builds the history pool.
+3. Selection builds leakage-safe Selector input.
+4. Selector chooses common task IDs and optional weights.
+5. Selection records a `Benchmark Selection`.
 
 Output:
 
@@ -121,7 +148,7 @@ Downstream:
 - Reporting shows why tasks were selected.
 - RollingOrigin evaluation joins selected results with future results.
 
-## Flow 4: Evaluate With Rolling Origin
+## Flow 5: Evaluate With Rolling Origin
 
 Input:
 
@@ -149,7 +176,7 @@ Runner entrypoint:
 
 Downstream:
 
-- Selection uses prior-origin metrics to compare selectors.
+- Selection uses metrics to evaluate or update Selectors.
 - Reporting distinguishes evidence from claim.
 
 ## Source Alignment Check

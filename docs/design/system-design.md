@@ -28,14 +28,14 @@ and who consumes the outputs.
 
 | Module | Owns | Inputs | Input Source | Outputs | Output Consumers |
 | --- | --- | --- | --- | --- | --- |
-| Records | Shared record schemas, identity rules, validation errors, and JSON/JSONL serialization contracts. | Record definitions; record payloads produced by other modules. | Design docs; Task Pool; Checks; Workspace; Results; Selection; Reporting; Runner. | Validated `Task`, `Check`, `Result`, `Benchmark Selection`, metric, and report records; validation errors; stable IDs. | All modules. |
+| Records | Shared record schemas, identity rules, validation errors, and JSON/JSONL serialization contracts. | Record definitions; record payloads produced by other modules. | Design docs; Task Pool; Checks; Workspace; Results; Selection; Reporting; Runner. | Validated `Task`, `Check`, `Result`, `Selector`, `Benchmark Selection`, metric, and report records; validation errors; stable IDs. | All modules. |
 | Task Pool | Task generation, task import, task certification, rejected-task summaries, and frozen task-pool files. | Target repository reference; task-source config; user-provided tasks; check construction config; certification config. | User config; built-in generators; user imports; Checks for executable-check validation; Workspace for checkout/replay validation. | Frozen `Task Pool`; accepted `Task + Check` records; rejected candidates; certification evidence. | Workspace; Results; Selection; Reporting. |
 | Checks | Check execution interface and normalized check outcomes. | `Check`; verifier workspace path; candidate diff already applied; check runtime config. | Task Pool provides `Check`; Workspace provides verifier workspace and applied diff. | Normalized check outcome: pass, fail, invalid, failure label, sanitized evidence summary. | Workspace; Results; Reporting. |
 | Workspace | Solver workspace creation, Agent invocation, diff capture, verifier workspace creation, diff replay, and check orchestration. | `Task`; `Check`; Agent config; workspace config; runtime config. | Task Pool provides `Task + Check`; user or run config provides Agent and configs; Checks provides check runner. | Captured diff digest; execution metadata; check outcome; workspace-level failure classification. | Results. |
 | Results | Result cache identity, result storage, missing-run queries, and result matrices. | `Task`; `Check`; Agent config; workspace output; check outcome. | Task Pool; Workspace; Checks; Records. | Reusable `Result` records; result cache state; result matrix; missing Agent-task runs. | Selection; Reporting; Runner. |
-| Selection | Rolling-origin construction, selector execution, selector training/evaluation, and `Benchmark Selection` records. | Frozen `Task Pool`; `Agent Results`; origin; budget; candidate Agents; selector config. | Task Pool; Results; user or experiment config; selector roadmap. | `Benchmark Selection`; selected task IDs and weights; rolling-origin metrics; selector notes. | Reporting; Runner. |
+| Selection | Selector training, Selector evaluation, production benchmark selection, rolling-origin construction, and feedback-based Selector updates. | Frozen `Task Pool`; `Agent Results`; historical window or origin; budget; candidate Agents; selector config or specified Selector. | Task Pool; Results; user or experiment config; selector roadmap. | `Selector`; `Benchmark Selection`; selected task IDs and weights; rolling-origin metrics; selector notes. | Reporting; Runner. |
 | Reporting | Claim-safe summaries, audit reports, and machine-readable closeouts. | `Task Pool`; `Benchmark Selection`; `Agent Results`; rolling-origin metrics; artifact digests. | Task Pool; Results; Selection; Records. | Human-readable report; machine-readable summary; claim-boundary statement. | Users. |
-| Runner | Command-level orchestration across modules, including cache reuse and lazy Agent execution. | Run config; target repository; task-source config; Agent set; origin; budget; selector config; result store; workspace config; runtime config; report config. | Users; Task Pool; Results; Selection; Workspace; Reporting. | Run summary; references to records produced by owner modules; report paths. | Users. |
+| Runner | Command-level orchestration across modules, including cache reuse and lazy Agent execution. | Run config; target repository; task-source config; Agent set; historical window or origin; budget; selector config or specified Selector; result store; workspace config; runtime config; report config. | Users; Task Pool; Results; Selection; Workspace; Reporting. | Run summary; references to records produced by owner modules; report paths. | Users. |
 
 ## Canonical Data Flow
 
@@ -99,7 +99,9 @@ digest, and verifier metadata.
 
 A function that chooses benchmark tasks from a pre-origin history pool under a
 budget. A selector may use task metadata and past outcomes available at the
-origin, but never future holdout outcomes.
+origin, but never future holdout outcomes. A persistent Selector is stored as a
+`SelectorRecord` with version, training source digests, and allowed feature
+metadata.
 
 ### RollingOrigin
 

@@ -16,6 +16,7 @@ This module should not perform I/O beyond optional serialization helpers.
 - `AgentRecord`
 - `WorkspaceConfig`
 - `RuntimeConfig`
+- `SelectorRecord`
 - `ResultRecord`
 - `TaskPoolRecord`
 - `BenchmarkSelectionRecord`
@@ -85,6 +86,21 @@ Effect:
 - Checks cache identity fields, status fields, cost/latency fields, and failure
   labels.
 
+### validate_selector
+
+Input:
+
+- `selector: SelectorRecord`
+
+Output:
+
+- `ValidationResult`
+
+Effect:
+
+- Checks selector identity, version, training source digests, allowed feature
+  fields, and leakage boundary metadata.
+
 ### make_task_id
 
 Input:
@@ -135,6 +151,20 @@ Output:
 Effect:
 
 - Returns the exact identity for a reusable Agent-task result.
+
+### make_selector_id
+
+Input:
+
+- `selector_digest: str`
+
+Output:
+
+- `selector_id: str`
+
+Effect:
+
+- Builds a stable identifier for a persistent Selector.
 
 ### load_jsonl_records
 

@@ -388,6 +388,18 @@ provenance but is not the same reusable `Result`.
 
 The selector is the core research claim.
 
+Selection should expose three module-level entry points:
+
+1. train a persistent Selector from historical data;
+2. evaluate a specified Selector on historical data;
+3. use a specified or adaptively chosen Selector to produce a benchmark for a
+   frozen origin.
+
+Rolling-origin splitting is internal to training and evaluation. External
+callers provide historical windows, Agents, budgets, configs, and optionally a
+specified Selector; Selection returns either a persistent Selector, metrics, or
+a Benchmark Selection.
+
 It receives:
 
 - history pool before an origin;
@@ -399,6 +411,7 @@ It receives:
 
 It outputs:
 
+- persistent selector records;
 - selected benchmark task IDs;
 - optional weights;
 - reason summary;
@@ -452,6 +465,11 @@ The adaptive layer should not become a vague new subsystem. Its job is:
 
 In the simplest version, this can be model selection over a small set of
 selectors using recent rolling-origin error and uncertainty.
+
+When lazy Agent execution produces new Results for a selected benchmark, Runner
+should pass the resulting metrics back to Selection. Selection may then update
+the persistent Selector or its trust metadata using only recorded metrics and
+allowed historical outcomes.
 
 ## Metrics
 

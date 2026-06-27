@@ -15,9 +15,9 @@ reporting logic.
 - target repository reference;
 - task-source config or existing `Task Pool`;
 - Agent set;
-- origin and future window;
+- historical window, origin, and future window;
 - budget;
-- selector config;
+- selector config or specified Selector;
 - result store;
 - workspace config;
 - runtime config;
@@ -95,7 +95,7 @@ Input:
 - `origin_time: datetime`
 - `future_window: TimeRange`
 - `budget: SelectionBudget`
-- `selector: Selector`
+- `selector: SelectorRecord`
 - `result_store: ResultStore`
 
 Output:
@@ -106,6 +106,46 @@ Effect:
 
 - Loads allowed pre-origin results, builds the rolling origin, and calls
   Selection to produce a benchmark selection.
+
+### train_selector_run
+
+Input:
+
+- `task_pool: TaskPoolRecord`
+- `agents: Sequence[AgentRecord]`
+- `history_window: TimeRange`
+- `candidate_selectors: Sequence[SelectorRecord]`
+- `training_config: SelectorTrainingConfig`
+- `result_store: ResultStore`
+
+Output:
+
+- `SelectorRecord`
+
+Effect:
+
+- Loads historical results and calls Selection to train or choose a persistent
+  Selector.
+
+### evaluate_selector_run
+
+Input:
+
+- `selector: SelectorRecord`
+- `task_pool: TaskPoolRecord`
+- `agents: Sequence[AgentRecord]`
+- `history_window: TimeRange`
+- `evaluation_config: SelectorEvaluationConfig`
+- `result_store: ResultStore`
+
+Output:
+
+- `Sequence[MetricRecord]`
+
+Effect:
+
+- Loads historical results and calls Selection to test the specified Selector
+  across the origins defined by the evaluation config.
 
 ### run_missing_selected_results
 
@@ -146,6 +186,24 @@ Effect:
 - Calls Results to build the result matrix and calls Selection to evaluate
   prediction metrics.
 
+### update_selector_feedback_run
+
+Input:
+
+- `selector: SelectorRecord`
+- `selection: BenchmarkSelectionRecord`
+- `metrics: Sequence[MetricRecord]`
+- `feedback_config: SelectorFeedbackConfig`
+
+Output:
+
+- `SelectorRecord`
+
+Effect:
+
+- Calls Selection to update the persistent Selector or its trust metadata after
+  new metrics are available.
+
 ### write_report_run
 
 Input:
@@ -171,6 +229,8 @@ Aligned with the architecture:
 
 - Makes cross-module data flow explicit without adding a new research object.
 - Keeps `Task Pool`, `Benchmark Selection`, and `Agent Results` independent.
+- Exposes Selection training, evaluation, and production benchmark selection as
+  separate command flows.
 - Implements cache reuse and lazy Agent execution by calling Results and
   Workspace, not by creating another execution mode.
 - Leaves module-specific logic in the owner modules.
