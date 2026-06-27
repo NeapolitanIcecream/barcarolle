@@ -46,7 +46,7 @@ Output:
 
 Runner entrypoint:
 
-- call Task Pool to build or import and certify the pool.
+- `build_task_pool`
 
 Downstream:
 
@@ -81,41 +81,74 @@ Output:
 
 Runner entrypoint:
 
-- call Workspace for requested Agent-task runs, then call Results to store the
-  normalized records.
+- `run_agents`
 
 Downstream:
 
 - Selection joins Results with Task Pool records.
 - Reporting summarizes outcome, cost, latency, and failure labels.
 
-## Flow 3: Train Or Test A Selector
+## Flow 3: Train A Selector
 
 Input:
 
 - historical window;
-- pre-window or in-window `Task Pool` subset allowed by the protocol;
+- historical `Task Pool` subset allowed by the protocol;
 - historical `Agent Results` allowed by the protocol;
 - candidate Agent set;
-- selector config or specified Selector.
+- selector config.
 
 Steps:
 
 1. Runner loads historical results from Results.
-2. Selection builds the origins required by the training or evaluation config.
-3. For training, Selection returns a persistent `Selector`.
-4. For testing, Selection returns metrics for the specified Selector.
+2. Selection builds the origins required by the training config.
+3. Selection trains or chooses a persistent `Selector`.
 
 Output:
 
-- `Selector` or rolling-origin metrics.
+- `Selector`.
+
+Runner entrypoint:
+
+- `train_selector`
 
 Downstream:
 
 - Runner can use the Selector for production benchmark selection.
+- Reporting can summarize training sources and selector version.
+
+## Flow 4: Evaluate A Selector
+
+Input:
+
+- specified `Selector`;
+- historical window;
+- historical `Task Pool` subset allowed by the protocol;
+- historical `Agent Results` allowed by the protocol;
+- candidate Agent set;
+- evaluation config.
+
+Steps:
+
+1. Runner loads historical results from Results.
+2. Selection builds the origins required by the evaluation config.
+3. Selection applies the specified Selector at each origin.
+4. Selection returns metrics for those origins.
+
+Output:
+
+- rolling-origin metrics.
+
+Runner entrypoint:
+
+- `evaluate_selector`
+
+Downstream:
+
+- Maintainers use metrics to compare selector versions.
 - Reporting can summarize Selector performance.
 
-## Flow 4: Select A Benchmark
+## Flow 5: Select A Benchmark
 
 Input:
 
@@ -140,7 +173,7 @@ Output:
 
 Runner entrypoint:
 
-- call Selection after loading the allowed pre-origin results from Results.
+- `select_benchmark`
 
 Downstream:
 
@@ -148,7 +181,7 @@ Downstream:
 - Reporting shows why tasks were selected.
 - RollingOrigin evaluation joins selected results with future results.
 
-## Flow 5: Evaluate With Rolling Origin
+## Flow 6: Score A Selection
 
 Input:
 
@@ -171,13 +204,38 @@ Output:
 
 Runner entrypoint:
 
-- call Results to build result matrices, call Selection to evaluate metrics,
-  and call Reporting to write summaries.
+- `score_selection`
 
 Downstream:
 
 - Selection uses metrics to evaluate or update Selectors.
 - Reporting distinguishes evidence from claim.
+
+## Flow 7: Update A Selector
+
+Input:
+
+- `Selector`;
+- `Benchmark Selection`;
+- metrics;
+- feedback config.
+
+Steps:
+
+1. Runner passes recorded metrics to Selection.
+2. Selection updates the persistent Selector or its trust metadata.
+
+Output:
+
+- updated `Selector`.
+
+Runner entrypoint:
+
+- `update_selector`
+
+Downstream:
+
+- Runner can use the updated Selector for later benchmark selection.
 
 ## Source Alignment Check
 

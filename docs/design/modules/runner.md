@@ -49,13 +49,13 @@ Output consumers:
 Functions below define module interfaces. Each function specifies input,
 output, and effect only; it does not prescribe implementation.
 
-## Functions
+## Public Entry Points
 
-### build_task_pool_run
+### build_task_pool
 
 Input:
 
-- `config: TaskPoolRunConfig`
+- `config: TaskPoolConfig`
 
 Output:
 
@@ -66,48 +66,7 @@ Effect:
 - Calls Task Pool to generate or import candidates, certify accepted tasks, and
   freeze a task pool.
 
-### run_agent_results
-
-Input:
-
-- `task_pool: TaskPoolRecord`
-- `tasks: Sequence[TaskRecord]`
-- `agents: Sequence[AgentRecord]`
-- `workspace_config: WorkspaceConfig`
-- `runtime_config: RuntimeConfig`
-- `result_store: ResultStore`
-
-Output:
-
-- `Sequence[ResultRecord]`
-
-Effect:
-
-- Calls Workspace for requested Agent-task runs and calls Results to store the
-  produced records.
-
-### select_benchmark_run
-
-Input:
-
-- `task_pool: TaskPoolRecord`
-- `agents: Sequence[AgentRecord]`
-- `origin_time: datetime`
-- `future_window: TimeRange`
-- `budget: SelectionBudget`
-- `selector: SelectorRecord`
-- `result_store: ResultStore`
-
-Output:
-
-- `BenchmarkSelectionRecord`
-
-Effect:
-
-- Loads allowed pre-origin results, builds the rolling origin, and calls
-  Selection to produce a benchmark selection.
-
-### train_selector_run
+### train_selector
 
 Input:
 
@@ -127,7 +86,47 @@ Effect:
 - Loads historical results and calls Selection to train or choose a persistent
   Selector.
 
-### evaluate_selector_run
+### select_benchmark
+
+Input:
+
+- `task_pool: TaskPoolRecord`
+- `agents: Sequence[AgentRecord]`
+- `origin_time: datetime`
+- `budget: SelectionBudget`
+- `selector: SelectorRecord`
+- `result_store: ResultStore`
+
+Output:
+
+- `BenchmarkSelectionRecord`
+
+Effect:
+
+- Loads allowed pre-origin results and calls Selection to produce a benchmark
+  selection.
+
+### update_selector
+
+Input:
+
+- `selector: SelectorRecord`
+- `selection: BenchmarkSelectionRecord`
+- `metrics: Sequence[MetricRecord]`
+- `feedback_config: SelectorFeedbackConfig`
+
+Output:
+
+- `SelectorRecord`
+
+Effect:
+
+- Calls Selection to update the persistent Selector or its trust metadata after
+  new metrics are available.
+
+## Maintainer Entry Points
+
+### evaluate_selector
 
 Input:
 
@@ -147,7 +146,29 @@ Effect:
 - Loads historical results and calls Selection to test the specified Selector
   across the origins defined by the evaluation config.
 
-### run_missing_selected_results
+## Internal Steps
+
+### run_agents
+
+Input:
+
+- `task_pool: TaskPoolRecord`
+- `tasks: Sequence[TaskRecord]`
+- `agents: Sequence[AgentRecord]`
+- `workspace_config: WorkspaceConfig`
+- `runtime_config: RuntimeConfig`
+- `result_store: ResultStore`
+
+Output:
+
+- `Sequence[ResultRecord]`
+
+Effect:
+
+- Calls Workspace for requested Agent-task runs and calls Results to store the
+  produced records.
+
+### fill_results
 
 Input:
 
@@ -167,7 +188,7 @@ Effect:
 - Calls Results to find selected Agent-task runs that are not reusable from the
   cache, then calls Workspace and Results to execute and store only those runs.
 
-### evaluate_rolling_origin_run
+### score_selection
 
 Input:
 
@@ -186,25 +207,7 @@ Effect:
 - Calls Results to build the result matrix and calls Selection to evaluate
   prediction metrics.
 
-### update_selector_feedback_run
-
-Input:
-
-- `selector: SelectorRecord`
-- `selection: BenchmarkSelectionRecord`
-- `metrics: Sequence[MetricRecord]`
-- `feedback_config: SelectorFeedbackConfig`
-
-Output:
-
-- `SelectorRecord`
-
-Effect:
-
-- Calls Selection to update the persistent Selector or its trust metadata after
-  new metrics are available.
-
-### write_report_run
+### write_report
 
 Input:
 

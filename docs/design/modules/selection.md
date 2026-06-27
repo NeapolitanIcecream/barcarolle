@@ -112,7 +112,7 @@ Effect:
   It does not run missing Agent-task results; Runner handles lazy Agent
   execution after this record is produced.
 
-### update_selector_from_feedback
+### update_selector
 
 Input:
 
