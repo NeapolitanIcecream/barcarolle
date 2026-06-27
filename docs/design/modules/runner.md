@@ -260,9 +260,11 @@ Effect:
 
 - Calls Result Store to build selected-benchmark and future-holdout result
   matrices from `evaluation_cells` with explicit matrix roles, then calls
-  Selection with both matrices to evaluate prediction metrics. If the required
-  cells are incomplete under `join_config`, it records abstention metadata
-  instead of scoring a partial comparison.
+  Selection with both matrices to evaluate prediction metrics. Result Store
+  receives the same `EvaluationCellSet` used for scoring so missing, excluded,
+  and required-identity cells cannot be reinterpreted. If the required cells are
+  incomplete under `join_config`, it records abstention metadata instead of
+  scoring a partial comparison.
 
 ### write_report
 

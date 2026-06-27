@@ -74,6 +74,8 @@ These are module-level entry points. Runner calls them as needed.
 Input:
 
 - `task_pool: TaskPoolRecord`
+- `tasks: Sequence[TaskRecord]`
+- `checks: Mapping[str, CheckRecord]`
 - `results: Sequence[ResultRecord]`
 - `agents: Sequence[AgentRecord]`
 - `history_window: TimeRange`

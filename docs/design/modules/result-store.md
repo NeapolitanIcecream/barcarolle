@@ -162,6 +162,7 @@ Effect:
 
 Input:
 
+- `evaluation_cells: EvaluationCellSet`
 - `task_check_refs: Sequence[TaskCheckRef]`
 - `tasks: Sequence[TaskRecord]`
 - `checks: Mapping[str, CheckRecord]`
@@ -177,9 +178,10 @@ Output:
 Effect:
 
 - Joins results into a table for Selection and Reporting. The matrix includes
-  one `ResultCellRef` per Agent-task-check cell, plus completeness,
-  exclusions, missing cells, join policy, abstention metadata, and whether the
-  matrix is for the selected benchmark or future holdout.
+  one `ResultCellRef` per Agent-task-check cell from `evaluation_cells`,
+  filtered by matrix role, plus completeness, exclusions, missing cells, join
+  policy, abstention metadata, and whether the matrix is for the selected
+  benchmark or future holdout.
 
 ## Join And Denominator Policy
 

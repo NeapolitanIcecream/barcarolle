@@ -351,6 +351,15 @@ selected refs.
 - `abstention_reason`
 - `computed_at`
 
+Metric dimension rules:
+
+- per-Agent metrics must set `metric_scope=agent` and `agent_id`;
+- pairwise metrics must set `metric_scope=pair` and `agent_pair`;
+- aggregate metrics must set `metric_scope=aggregate` and
+  `aggregation_level`, and must not set `agent_id` or `agent_pair`;
+- budget-sensitivity metrics must set `budget_digest`;
+- stratum metrics must set `stratum_ref`.
+
 ## System Boundary
 
 Input sources:
@@ -519,6 +528,21 @@ Effect:
 
 - Validates frozen origin linkage, selected `Task + Check` refs, keyed weight
   coverage, budget digest, feature snapshot linkage, and exposure metadata.
+
+### validate_metric
+
+Input:
+
+- `metric: MetricRecord`
+
+Output:
+
+- `ValidationResult`
+
+Effect:
+
+- Validates metric provenance digests, denominator policy, completeness state,
+  and metric dimension rules.
 
 ### make_task_id
 
