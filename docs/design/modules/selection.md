@@ -23,8 +23,7 @@ Selection is the core research module.
 
 - `BenchmarkSelectionRecord`;
 - prediction metrics;
-- selector notes;
-- missing selected Agent-task runs.
+- selector notes.
 
 ## System Boundary
 
@@ -37,8 +36,8 @@ Input sources:
 
 Output consumers:
 
-- Results;
-- Reporting.
+- Reporting;
+- Runner.
 
 ## Function Boundary
 

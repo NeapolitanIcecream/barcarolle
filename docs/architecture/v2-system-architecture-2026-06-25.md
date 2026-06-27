@@ -144,6 +144,10 @@ optimizations:
 In both cases, the result cache should prevent duplicate paid execution for an
 identical `(task, Agent, environment, config)` combination.
 
+A thin Runner module should own this cross-module orchestration. Runner is a
+code owner for command flow, not a new research object: it calls Task Pool,
+Results, Selection, Workspace, and Reporting without taking over their logic.
+
 ### Cache Reuse
 
 Use this optimization for offline selector development and rolling-origin

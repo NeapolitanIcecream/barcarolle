@@ -8,6 +8,9 @@ The system is organized around durable records. `Task Pool`, `Benchmark
 Selection`, and `Agent Results` are independent assets that can be joined by
 stable identifiers.
 
+Runner owns the cross-module command flow. The other modules own the records
+and computations named below.
+
 ```text
 target repository + task source
   -> Task Pool
@@ -41,6 +44,10 @@ Output:
 
 - frozen `Task Pool`.
 
+Runner entrypoint:
+
+- call Task Pool to build or import and certify the pool.
+
 Downstream:
 
 - Workspace receives Tasks and Checks to run Agents.
@@ -72,6 +79,11 @@ Output:
 
 - reusable `Result`.
 
+Runner entrypoint:
+
+- call Workspace for requested Agent-task runs, then call Results to store the
+  normalized records.
+
 Downstream:
 
 - Selection joins Results with Task Pool records.
@@ -99,9 +111,13 @@ Output:
 
 - `Benchmark Selection`.
 
+Runner entrypoint:
+
+- call Selection after loading the allowed pre-origin results from Results.
+
 Downstream:
 
-- Results identifies missing selected Agent-task runs.
+- Runner can ask Results which selected Agent-task runs are missing.
 - Reporting shows why tasks were selected.
 - RollingOrigin evaluation joins selected results with future results.
 
@@ -125,6 +141,11 @@ Steps:
 Output:
 
 - rolling-origin metrics.
+
+Runner entrypoint:
+
+- call Results to build result matrices, call Selection to evaluate metrics,
+  and call Reporting to write summaries.
 
 Downstream:
 

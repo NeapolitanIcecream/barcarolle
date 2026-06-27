@@ -37,7 +37,7 @@ Output consumers:
 
 - Selection;
 - Reporting;
-- Workspace, for missing-run execution.
+- Runner.
 
 ## Function Boundary
 
