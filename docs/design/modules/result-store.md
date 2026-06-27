@@ -173,8 +173,8 @@ Output:
 Effect:
 
 - Joins results into a table for Selection and Reporting. The matrix includes
-  completeness, excluded `Task + Check` refs, missing cells, and abstention
-  metadata.
+  one `ResultCellRef` per Agent-task-check cell, plus completeness,
+  exclusions, missing cells, and abstention metadata.
 
 ## Join And Denominator Policy
 

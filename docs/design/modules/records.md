@@ -14,6 +14,7 @@ This module should not perform I/O beyond optional serialization helpers.
 
 - `TaskRecord`
 - `CheckRecord`
+- `ResultCellRef`
 - `AgentRecord`
 - `WorkspaceConfig`
 - `RuntimeConfig`
@@ -42,6 +43,20 @@ modules should not depend on fields that are not recorded here.
 
 `TaskCheckRef` is a compact reference to an existing `TaskRecord` and
 `CheckRecord`, not a separate stored record.
+
+### ResultCellRef
+
+- `agent_id`
+- `task_id`
+- `check_id`
+- `required_identity_digest`
+- `result_id`
+- `cell_state`
+- `exclusion_reason`
+
+`ResultCellRef` is a compact cell-level reference used by result matrices and
+evaluation cell sets. `result_id` and `exclusion_reason` may be null depending
+on `cell_state`.
 
 ### TaskRecord
 
@@ -147,7 +162,6 @@ in audit reports.
 ### WorkspaceRunRecord
 
 - `workspace_run_id`
-- `cache_identity_digest`
 - `task_id`
 - `check_id`
 - `agent_id`
@@ -237,6 +251,14 @@ linting.
 - `repository_id`
 - `task_ids`
 - `check_ids`
+- `task_records_ref`
+- `task_records_digest`
+- `check_records_ref`
+- `check_records_digest`
+- `rejected_candidate_ids`
+- `rejection_summary_digest`
+- `certification_evidence_digest`
+- `source_event_inventory_digest`
 - `generator_config_digest`
 - `certification_config_digest`
 - `created_at`
@@ -284,9 +306,7 @@ holdout outcomes are opened for scoring.
 - `selection_id`
 - `agent_ids`
 - `task_check_refs`
-- `result_ids`
-- `missing_cells`
-- `excluded_task_check_refs`
+- `cells: Sequence[ResultCellRef]`
 - `denominator_policy_digest`
 - `abstention_reason`
 - `scoreable_state`
@@ -299,10 +319,7 @@ holdout outcomes are opened for scoring.
 - `selection_id`
 - `selected_task_check_refs`
 - `future_task_check_refs`
-- `required_cache_identity_digests`
-- `result_ids`
-- `missing_cells`
-- `excluded_task_check_refs`
+- `cells: Sequence[ResultCellRef]`
 - `abstention_reason`
 - `cell_set_digest`
 
@@ -378,8 +395,8 @@ Output:
 
 Effect:
 
-- Validates run identity linkage, diff digest, replay status, usage fields, and
-  failure attribution without reading raw workspaces.
+- Validates task, check, and Agent linkage, diff digest, replay status, usage
+  fields, and failure attribution without reading raw workspaces.
 
 ### validate_result
 
@@ -437,8 +454,8 @@ Output:
 
 Effect:
 
-- Validates completeness, exclusions, denominator policy, abstention metadata,
-  and matrix digest.
+- Validates cell-level Agent/Task/Check mapping, completeness, exclusions,
+  denominator policy, abstention metadata, and matrix digest.
 
 ### validate_evaluation_cell_set
 
@@ -452,8 +469,8 @@ Output:
 
 Effect:
 
-- Validates selected and future `Task + Check` refs, required cache identities,
-  missing cells, exclusions, and abstention metadata.
+- Validates selected and future `Task + Check` refs, cell-level required cache
+  identities, missing cells, exclusions, and abstention metadata.
 
 ### validate_selector
 

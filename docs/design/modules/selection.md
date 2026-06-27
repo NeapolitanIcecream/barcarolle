@@ -4,16 +4,16 @@ Status: draft, 2026-06-27.
 
 ## Responsibility
 
-Train Selectors from historical data, evaluate a specified Selector on
-historical data, select production benchmarks for a frozen origin, and update
-Selector choice from new evaluation feedback.
+Train Selectors from historical data, freeze benchmark selections for a
+specified Selector, score already-frozen selections, and update Selector choice
+from new evaluation feedback.
 
 Selection is the core research module.
 
 ## Inputs
 
 - frozen `Task Pool`;
-- cached `Agent Results`;
+- pre-origin `Agent Results`;
 - origin or historical window definition;
 - candidate Agents;
 - budget;
@@ -92,29 +92,29 @@ Effect:
   the training config and rolling-origin policy. Rolling-origin splitting is
   internal to this function.
 
-### evaluate_selector
+### freeze_evaluation_selections
 
 Input:
 
 - `selector: SelectorRecord`
 - `task_pool: TaskPoolRecord`
-- `results: Sequence[ResultRecord]`
+- `tasks: Sequence[TaskRecord]`
+- `checks: Mapping[str, CheckRecord]`
+- `selector_inputs: Mapping[str, SelectorInput]`
 - `agents: Sequence[AgentRecord]`
 - `history_window: TimeRange`
 - `evaluation_config: SelectorEvaluationConfig`
 - `rolling_policy: RollingOriginPolicy`
-- `feature_config: FeatureConfig`
 
 Output:
 
 - `selections: Sequence[BenchmarkSelectionRecord]`
-- `metrics: Sequence[MetricRecord]`
 
 Effect:
 
-- Tests the specified Selector by freezing one `BenchmarkSelectionRecord` per
-  origin before scoring that origin. Metrics are returned only for origins whose
-  selections have been frozen.
+- Freezes one `BenchmarkSelectionRecord` per origin for a specified Selector.
+  It does not score selections, does not accept raw result sets, and does not
+  open future outcomes.
 
 ### select_benchmark
 
@@ -122,7 +122,9 @@ Input:
 
 - `selector: SelectorRecord`
 - `task_pool: TaskPoolRecord`
-- `results: Sequence[ResultRecord]`
+- `tasks: Sequence[TaskRecord]`
+- `checks: Mapping[str, CheckRecord]`
+- `pre_origin_results: Sequence[ResultRecord]`
 - `agents: Sequence[AgentRecord]`
 - `origin_time: datetime`
 - `budget: SelectionBudget`
@@ -138,8 +140,8 @@ Effect:
 
 - Uses the specified Selector at the origin to choose a production benchmark
   and write a frozen `BenchmarkSelectionRecord` before future outcomes are
-  opened. It does not run missing Agent-task results; Runner handles lazy Agent
-  execution after this record is produced.
+  opened. It does not run missing Agent-task-check cells; Runner handles lazy
+  Agent execution after this record is produced.
 
 ### update_selector
 
@@ -166,6 +168,8 @@ Effect:
 Input:
 
 - `task_pool: TaskPoolRecord`
+- `tasks: Sequence[TaskRecord]`
+- `checks: Mapping[str, CheckRecord]`
 - `origin_time: datetime`
 - `future_window: TimeRange`
 - `policy: RollingOriginPolicy`
@@ -177,8 +181,9 @@ Output:
 Effect:
 
 - Defines history pool and future holdout without exposing future outcomes to
-  selectors. The policy defines as-of cutoff, embargo, cluster
-  constraints, eligibility mode, and holdout overlap rules.
+  selectors. It uses Task and Check timestamps to build eligible `Task + Check`
+  refs. The policy defines as-of cutoff, embargo, cluster constraints,
+  eligibility mode, and holdout overlap rules.
 
 ### build_feature_snapshot
 
@@ -186,7 +191,9 @@ Input:
 
 - `origin: RollingOriginRecord`
 - `task_pool: TaskPoolRecord`
-- `results: Sequence[ResultRecord]`
+- `tasks: Sequence[TaskRecord]`
+- `checks: Mapping[str, CheckRecord]`
+- `pre_origin_results: Sequence[ResultRecord]`
 - `feature_config: FeatureConfig`
 
 Output:
@@ -223,7 +230,7 @@ Input:
 - `origin: RollingOriginRecord`
 - `task_pool: TaskPoolRecord`
 - `feature_snapshot: FeatureSnapshotRecord`
-- `results: Sequence[ResultRecord]`
+- `pre_origin_results: Sequence[ResultRecord]`
 - `agents: Sequence[AgentRecord]`
 - `budget: SelectionBudget`
 - `leakage_policy: LeakagePolicy`
@@ -304,7 +311,7 @@ Input:
 
 - `training_origins: Sequence[RollingOriginRecord]`
 - `task_pool: TaskPoolRecord`
-- `results: Sequence[ResultRecord]`
+- `pre_origin_results_by_origin: Mapping[str, Sequence[ResultRecord]]`
 - `baseline_selectors: Sequence[SelectorRecord]`
 - `fit_config: FitConfig`
 
@@ -323,7 +330,7 @@ Input:
 
 - `training_origins: Sequence[RollingOriginRecord]`
 - `task_pool: TaskPoolRecord`
-- `results: Sequence[ResultRecord]`
+- `pre_origin_results_by_origin: Mapping[str, Sequence[ResultRecord]]`
 - `selection_config: SelectionConfig`
 
 Output:
@@ -409,6 +416,7 @@ Aligned with the architecture and roadmap:
 
 - Selectors use common task sets for Agent comparisons.
 - Future outcomes are not visible at selection time.
+- Historical evaluation freezes benchmark selections before any scoring step.
 - Rolling-origin leakage controls are represented in function inputs, not only
   prose.
 - Feature provenance is recorded before selector input is built.

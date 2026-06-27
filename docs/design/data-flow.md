@@ -43,6 +43,8 @@ Steps:
 Output:
 
 - frozen `Task Pool`.
+- accepted Task/Check record references, rejection summaries, certification
+  evidence, and source-event inventory digests.
 
 Runner entrypoint:
 
@@ -136,11 +138,12 @@ Steps:
 2. Selection builds the origins required by the evaluation config and
    rolling-origin policy.
 3. Selection builds leakage-safe feature snapshots.
-4. Selection applies the specified Selector at each origin and freezes a
-   `Benchmark Selection` before future outcomes for that origin are opened.
-5. Runner prepares evaluation cells for the selected benchmark and future
+4. Selection freezes `Benchmark Selection` records for those origins and does
+   not score them.
+5. Runner opens the needed result sets only after selections are frozen.
+6. Runner prepares evaluation cells for the selected benchmark and future
    holdout under the same identity and denominator policy.
-6. Runner returns metrics for those frozen selections.
+7. Runner returns metrics for those frozen selections.
 
 Output:
 
@@ -207,8 +210,8 @@ Steps:
 1. Runner prepares selected-benchmark Agent-task-check cells and
    future-holdout Agent-task-check cells under the same result identity and
    denominator policy.
-2. Result Store fills cache hits, reports missing cells, and marks abstention
-   if required cells cannot be completed.
+2. Result Store builds cell-level mappings from Agent-task-check cells to
+   required identities, results, exclusions, or missing states.
 3. Compute selected-benchmark pass-rate estimates per Agent.
 4. Compute future holdout pass rates per Agent.
 5. Compute prediction error, rank agreement, regret, invalid rate, cost, and

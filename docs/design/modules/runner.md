@@ -86,8 +86,9 @@ Output:
 
 Effect:
 
-- Loads historical results and calls Selection to train or choose a persistent
-  Selector under the requested rolling-origin and feature policies.
+- Resolves Task/Check records from the task pool, loads historical results, and
+  calls Selection to train or choose a persistent Selector under the requested
+  rolling-origin and feature policies.
 
 ### select_benchmark
 
@@ -109,8 +110,9 @@ Output:
 
 Effect:
 
-- Loads allowed pre-origin results and calls Selection to produce a benchmark
-  selection frozen before future outcomes are opened.
+- Resolves Task/Check records from the task pool, loads allowed pre-origin
+  results, and calls Selection to produce a benchmark selection frozen before
+  future outcomes are opened.
 
 ### update_selector
 
@@ -153,9 +155,10 @@ Output:
 Effect:
 
 - For each origin defined by the evaluation config and rolling-origin policy,
-  calls Selection to freeze a `BenchmarkSelectionRecord`, then calls
-  `prepare_evaluation_cells` and `score_selection`. It returns both frozen
-  selections and metrics.
+  resolves Task/Check records, builds pre-origin selector input, calls Selection
+  `freeze_evaluation_selections` to freeze `BenchmarkSelectionRecord`s, then
+  calls `prepare_evaluation_cells` and `score_selection`. It returns both
+  frozen selections and metrics.
 
 ## Internal Steps
 

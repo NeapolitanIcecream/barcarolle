@@ -147,7 +147,9 @@ Output:
 
 Effect:
 
-- Writes a frozen task pool with accepted records and rejection summaries.
+- Writes a frozen task pool with accepted Task/Check record references,
+  rejection summaries, certification evidence, and source-event inventory
+  digests.
 
 ### summarize_task_pool
 

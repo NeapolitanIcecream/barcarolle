@@ -51,7 +51,7 @@ The Selector module follows the roadmap:
 - metadata-only track first;
 - outcome-aware track only when outcomes are available before origin;
 - feature provenance with observed-at timestamps and leakage classes;
-- rolling-origin policy with known-at cutoff, embargo, cluster constraints, and
+- rolling-origin policy with as-of cutoff, embargo, cluster constraints, and
   holdout overlap rules;
 - MAE as primary metric;
 - pairwise gap and regret as auxiliary metrics;
@@ -60,8 +60,9 @@ The Selector module follows the roadmap:
 ### Cache And Scoring Boundary
 
 Result reuse depends on exact `ResultCacheIdentity`, not broad runtime names.
-Result matrices must carry completeness, exclusion, abstention, and denominator
-metadata so Agent comparisons cannot silently reuse stale or partial cells.
+Result matrices must carry cell-level Agent/Task/Check mappings,
+completeness, exclusion, abstention, and denominator metadata so Agent
+comparisons cannot silently reuse stale or partial cells.
 Rolling-origin evaluation freezes `Task + Check` refs before future outcomes
 are opened, and records source, task material, check material, certification,
 and result availability timestamps separately.
