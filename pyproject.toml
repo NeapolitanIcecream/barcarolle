@@ -1,0 +1,16 @@
+[project]
+name = "barcarolle"
+version = "0.1.0"
+description = "Target-repository benchmark compiler for coding-agent evaluation."
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = []
+
+[dependency-groups]
+dev = [
+    "pytest>=8.0",
+]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["."]
