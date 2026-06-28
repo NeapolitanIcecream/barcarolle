@@ -1,2 +1,1 @@
 """Barcarolle benchmark compiler package."""
-
