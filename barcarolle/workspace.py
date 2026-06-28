@@ -84,6 +84,8 @@ def bind_agent_harness(agent: AgentRecord, command: Sequence[str]) -> None:
     normalized = tuple(command)
     if not normalized:
         raise ValueError("agent harness command is required")
+    if _agent_command_digest(normalized) != agent.harness_digest:
+        raise ValueError("agent harness command digest does not match Agent harness")
     _AGENT_HARNESSES[_agent_key(agent)] = normalized
 
 
@@ -564,6 +566,10 @@ def _safe_output_digest(stdout: str | bytes | None, stderr: str | bytes | None) 
 
 def _check_command_digest(check_command: Sequence[str]) -> str:
     return canonical_digest({"check_command": tuple(check_command)})
+
+
+def _agent_command_digest(agent_command: Sequence[str]) -> str:
+    return canonical_digest({"agent_command": tuple(agent_command)})
 
 
 def _path_digest(path: Path) -> str:

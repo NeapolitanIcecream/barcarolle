@@ -11,6 +11,7 @@ from barcarolle.records import (
     AgentRecord,
     BenchmarkSelectionRecord,
     CheckRecord,
+    MetricRecord,
     RollingOriginRecord,
     RuntimeConfig,
     SelectorRecord,
@@ -44,9 +45,19 @@ from barcarolle.runner import (
     fill_results,
     prepare_evaluation_cells,
     score_selection,
+    select_benchmark,
+    train_selector,
     write_report,
 )
-from barcarolle.selection import FeatureConfig, MetricConfig, RollingOriginPolicy, SelectionConfig, SelectorEvaluationConfig
+from barcarolle.selection import (
+    FeatureConfig,
+    MetricConfig,
+    RollingOriginPolicy,
+    SelectionBudget,
+    SelectionConfig,
+    SelectorEvaluationConfig,
+    SelectorTrainingConfig,
+)
 from barcarolle.task_pool import TaskSourceConfig, TimeRange
 
 
@@ -113,6 +124,108 @@ def test_fill_results_runs_only_missing_agent_task_check_cells(tmp_path: Path, m
     assert {result.agent_id for result in load_results(store, ResultQuery())} == {"agent", "other-agent"}
 
 
+def test_train_selector_loads_only_allowed_history_results(tmp_path: Path, monkeypatch) -> None:
+    task = _task()
+    check = _check()
+    task_pool = _task_pool_with_refs(tmp_path, (task,), (check,))
+    agent = _agent()
+    queries = []
+
+    def fake_load_results(store, query):
+        queries.append(query)
+        return ()
+
+    monkeypatch.setattr(runner_module.result_store_module, "load_results", fake_load_results)
+
+    selector = train_selector(
+        task_pool,
+        (agent,),
+        TimeRange("2026-01-01T00:00:00Z", "2026-01-05T00:00:00Z"),
+        (),
+        SelectorTrainingConfig("training"),
+        RollingOriginPolicy("policy", "origin_time", "P0D", "clusters", "recency", "disjoint", False),
+        FeatureConfig("features", "leakage", ("task_count",), ("task_metadata",)),
+        ResultStore(tmp_path / "results.jsonl"),
+    )
+
+    assert selector.selector_family == "recency"
+    assert queries[0].task_ids == ("task",)
+    assert queries[0].check_ids == ("check",)
+    assert queries[0].agent_ids == ("agent",)
+    assert queries[0].result_available_before.startswith("2026-01-05T00:00:00")
+
+
+@pytest.mark.parametrize("embargo", ("", "PT0S"))
+def test_train_selector_treats_zero_embargo_strings_consistently(tmp_path: Path, monkeypatch, embargo: str) -> None:
+    task = _task()
+    check = _check()
+    task_pool = _task_pool_with_refs(tmp_path, (task,), (check,))
+    agent = _agent()
+    queries = []
+
+    def fake_load_results(store, query):
+        queries.append(query)
+        return ()
+
+    monkeypatch.setattr(runner_module.result_store_module, "load_results", fake_load_results)
+
+    selector = train_selector(
+        task_pool,
+        (agent,),
+        TimeRange("2026-01-01T00:00:00Z", "2026-01-05T00:00:00Z"),
+        (),
+        SelectorTrainingConfig("training"),
+        RollingOriginPolicy("policy", "origin_time", embargo, "clusters", "recency", "disjoint", False),
+        FeatureConfig("features", "leakage", ("task_count",), ("task_metadata",)),
+        ResultStore(tmp_path / "results.jsonl"),
+    )
+
+    assert selector.selector_family == "recency"
+    assert queries[0].result_available_before.startswith("2026-01-05T00:00:00")
+
+
+def test_select_benchmark_loads_only_allowed_pre_origin_results_and_appends_selection(tmp_path: Path, monkeypatch) -> None:
+    task = _task()
+    check = _check()
+    task_pool = _task_pool_with_refs(tmp_path, (task,), (check,))
+    agent = _agent()
+    pre_origin_result = record_with_digest(
+        replace(
+            _result(task, check, agent, _workspace_config(), _runtime_config(), _scoring_config()),
+            started_at="2026-01-03T00:00:00Z",
+            finished_at="2026-01-03T00:00:05Z",
+            result_available_at="2026-01-04T00:00:00Z",
+            result_digest="",
+        )
+    )
+    queries = []
+
+    def fake_load_results(store, query):
+        queries.append(query)
+        return (pre_origin_result,)
+
+    monkeypatch.setattr(runner_module.result_store_module, "load_results", fake_load_results)
+
+    selection = select_benchmark(
+        task_pool,
+        (agent,),
+        datetime(2026, 1, 5, tzinfo=UTC),
+        SelectionBudget("budget", 1),
+        _selector(),
+        SelectionConfig("selection", "selector", "placeholder", "recency"),
+        RollingOriginPolicy("policy", "origin_time", "P0D", "clusters", "recency", "disjoint", False),
+        FeatureConfig("features", "leakage", ("task_count",), ("task_metadata",)),
+        ResultStore(tmp_path / "results.jsonl"),
+    )
+
+    logged = load_jsonl_records(tmp_path / "selections.jsonl", BenchmarkSelectionRecord)
+    assert queries[0].task_ids == ("task",)
+    assert queries[0].check_ids == ("check",)
+    assert queries[0].agent_ids == ("agent",)
+    assert queries[0].result_available_before.startswith("2026-01-05T00:00:00")
+    assert logged == [selection]
+
+
 def test_prepare_evaluation_cells_and_score_selection_keep_selected_future_linkage(tmp_path: Path, monkeypatch) -> None:
     selected_task = _task("selected-task", "selected-check", certified_at="2026-01-02T00:00:00Z")
     future_task = _task("future-task", "future-check", certified_at="2026-01-07T00:00:00Z")
@@ -170,6 +283,8 @@ def test_prepare_evaluation_cells_and_score_selection_keep_selected_future_linka
     assert future_matrix.task_check_refs == (future_ref,)
     assert {metric.selected_matrix_digest for metric in metrics} == {selected_matrix.matrix_digest}
     assert {metric.future_matrix_digest for metric in metrics} == {future_matrix.matrix_digest}
+    logged_metrics = load_jsonl_records(store.path.with_name("metrics.jsonl"), MetricRecord)
+    assert tuple(metric.metric_id for metric in logged_metrics) == tuple(metric.metric_id for metric in metrics)
 
 
 def test_score_selection_uses_result_ids_frozen_in_evaluation_cells(tmp_path: Path) -> None:
@@ -266,18 +381,19 @@ def test_evaluate_selector_does_not_open_post_origin_results_before_freeze(tmp_p
     )
     agent = _agent()
     pre_origin_result = record_with_digest(
-            replace(
-                _result(selected_task, selected_check, agent, _workspace_config(), _runtime_config(), _scoring_config()),
-                started_at="2026-01-03T00:00:00Z",
-                finished_at="2026-01-03T00:00:05Z",
-                result_available_at="2026-01-04T00:00:00Z",
-                result_digest="",
-            )
+        replace(
+            _result(selected_task, selected_check, agent, _workspace_config(), _runtime_config(), _scoring_config()),
+            started_at="2026-01-03T00:00:00Z",
+            finished_at="2026-01-03T00:00:05Z",
+            result_available_at="2026-01-04T00:00:00Z",
+            result_digest="",
+        )
     )
     freeze_called = False
     pre_freeze_queries = []
+    captured_selector_inputs = []
 
-    class StopAfterFreeze(Exception):
+    class StopAfterSelectionAppend(Exception):
         pass
 
     def fake_load_results(store, query):
@@ -286,15 +402,31 @@ def test_evaluate_selector_does_not_open_post_origin_results_before_freeze(tmp_p
             return (pre_origin_result,)
         return ()
 
-    def fake_freeze(*args, **kwargs):
+    def fake_freeze(selector, task_pool_arg, tasks, checks, selector_inputs, agents, history_window, evaluation_config, rolling_policy):
         nonlocal freeze_called
         freeze_called = True
-        raise StopAfterFreeze
+        selector_input = next(iter(selector_inputs.values()))
+        captured_selector_inputs.append(selector_input)
+        return (
+            _selection_for_origin(
+                task_pool_arg,
+                selector_input.eligible_task_check_refs[0],
+                selector_input.origin_id,
+                selector_input.budget_digest,
+                selector_input.feature_snapshot_id,
+            ),
+        )
+
+    def fake_prepare(selection, *args, **kwargs):
+        logged = load_jsonl_records(tmp_path / "selections.jsonl", BenchmarkSelectionRecord)
+        assert logged == [selection]
+        raise StopAfterSelectionAppend
 
     monkeypatch.setattr(runner_module.result_store_module, "load_results", fake_load_results)
     monkeypatch.setattr(runner_module.selection_module, "freeze_evaluation_selections", fake_freeze)
+    monkeypatch.setattr(runner_module, "prepare_evaluation_cells", fake_prepare)
 
-    with pytest.raises(StopAfterFreeze):
+    with pytest.raises(StopAfterSelectionAppend):
         evaluate_selector(
             _selector(),
             task_pool,
@@ -304,6 +436,7 @@ def test_evaluate_selector_does_not_open_post_origin_results_before_freeze(tmp_p
                 "evaluation",
                 ("2026-01-05T00:00:00Z",),
                 SelectionConfig("selection", "selector", "placeholder", "recency"),
+                SelectionBudget("eval-budget", 7),
             ),
             RollingOriginPolicy("policy", "origin_time", "P0D", "clusters", "recency", "disjoint", True),
             FeatureConfig("features", "leakage", ("task_count",), ("task_metadata",)),
@@ -321,6 +454,8 @@ def test_evaluate_selector_does_not_open_post_origin_results_before_freeze(tmp_p
     assert all(query.result_available_before <= "2026-01-05T00:00:00Z" for query in pre_freeze_queries)
     assert pre_freeze_queries[0].task_ids == ("selected-task",)
     assert pre_freeze_queries[0].check_ids == ("selected-check",)
+    assert captured_selector_inputs[0].budget_digest == "eval-budget"
+    assert captured_selector_inputs[0].selection_budget_limit == 7
 
 
 def test_write_report_writes_human_and_machine_summaries(tmp_path: Path) -> None:
@@ -509,6 +644,21 @@ def _task_pool(tasks: tuple[TaskRecord, ...], checks: tuple[CheckRecord, ...]) -
     return record_with_digest(record)
 
 
+def _task_pool_with_refs(tmp_path: Path, tasks: tuple[TaskRecord, ...], checks: tuple[CheckRecord, ...]) -> TaskPoolRecord:
+    task_ref = tmp_path / "tasks.jsonl"
+    check_ref = tmp_path / "checks.jsonl"
+    write_jsonl_records(task_ref, tasks)
+    write_jsonl_records(check_ref, checks)
+    return record_with_digest(
+        replace(
+            _task_pool(tasks, checks),
+            task_records_ref=str(task_ref),
+            check_records_ref=str(check_ref),
+            task_pool_digest="",
+        )
+    )
+
+
 def _selection(task_pool: TaskPoolRecord, ref: TaskCheckRef) -> BenchmarkSelectionRecord:
     selection = BenchmarkSelectionRecord(
         selection_id="selection",
@@ -529,6 +679,24 @@ def _selection(task_pool: TaskPoolRecord, ref: TaskCheckRef) -> BenchmarkSelecti
         selection_digest="",
     )
     return record_with_digest(selection)
+
+
+def _selection_for_origin(
+    task_pool: TaskPoolRecord,
+    ref: TaskCheckRef,
+    origin_id: str,
+    budget_digest: str,
+    feature_snapshot_id: str,
+) -> BenchmarkSelectionRecord:
+    return record_with_digest(
+        replace(
+            _selection(task_pool, ref),
+            origin_id=origin_id,
+            budget_digest=budget_digest,
+            feature_snapshot_id=feature_snapshot_id,
+            selection_digest="",
+        )
+    )
 
 
 def _origin(task_pool: TaskPoolRecord, selected_ref: TaskCheckRef, future_ref: TaskCheckRef) -> RollingOriginRecord:

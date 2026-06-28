@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass, field, replace
-from datetime import UTC, datetime
+from datetime import UTC, datetime, timedelta
 from pathlib import Path
 from typing import Any, Mapping, Sequence
 
@@ -29,9 +29,12 @@ from barcarolle.records import (
     TaskRecord,
     WorkspaceConfig,
     canonical_digest,
+    canonical_json,
     load_jsonl_records,
     record_with_digest,
+    validate_benchmark_selection,
     validate_evaluation_cell_set,
+    validate_metric,
     validate_result,
     write_jsonl_records,
 )
@@ -84,13 +87,7 @@ def train_selector(
     result_store: result_store_module.ResultStore,
 ) -> SelectorRecord:
     tasks, checks = _load_task_pool_records(task_pool)
-    results = result_store_module.load_results(
-        result_store,
-        result_store_module.ResultQuery(
-            result_available_after=history_window.start,
-            result_available_before=history_window.end,
-        ),
-    )
+    results = _load_training_results(result_store, task_pool, tasks, checks, agents, history_window, rolling_policy)
     return selection_module.train_selector(
         task_pool,
         tasks,
@@ -117,12 +114,16 @@ def select_benchmark(
     result_store: result_store_module.ResultStore,
 ) -> BenchmarkSelectionRecord:
     tasks, checks = _load_task_pool_records(task_pool)
-    origin_cutoff = _datetime_to_iso(origin_time)
-    pre_origin_results = result_store_module.load_results(
-        result_store,
-        result_store_module.ResultQuery(result_available_before=origin_cutoff),
+    origin = selection_module.build_rolling_origin(
+        task_pool,
+        tasks,
+        checks,
+        origin_time,
+        TimeRange(start=_datetime_to_iso(origin_time), end=_datetime_to_iso(origin_time)),
+        rolling_policy,
     )
-    return selection_module.select_benchmark(
+    pre_origin_results = _load_pre_origin_results(result_store, origin, agents, TimeRange("", origin.as_of_cutoff))
+    selection = selection_module.select_benchmark(
         selector,
         task_pool,
         tasks,
@@ -135,6 +136,8 @@ def select_benchmark(
         rolling_policy,
         feature_config,
     )
+    _append_selection_record(selection, result_store)
+    return selection
 
 
 def update_selector(
@@ -183,17 +186,13 @@ def evaluate_selector(
     for origin in origins:
         pre_origin_results = _load_pre_origin_results(result_store, origin, agents, history_window)
         snapshot = selection_module.build_feature_snapshot(origin, task_pool, tasks, checks, pre_origin_results, feature_config)
-        budget = selection_module.SelectionBudget(
-            budget_digest=evaluation_config.evaluation_config_digest,
-            max_task_checks=max(1, len(origin.history_task_check_refs)),
-        )
         selector_input = selection_module.build_selector_input(
             origin,
             task_pool,
             snapshot,
             pre_origin_results,
             agents,
-            budget,
+            evaluation_config.budget,
             selection_module.LeakagePolicy(
                 feature_config.leakage_policy_digest,
                 feature_config.allowed_leakage_classes,
@@ -206,7 +205,7 @@ def evaluate_selector(
             feature_snapshot_id=selector_input.feature_snapshot_id,
         )
         effective_config = replace(evaluation_config, origin_ids=(origin.origin_id,), selection_config=selection_config)
-        selections.extend(
+        frozen = tuple(
             selection_module.freeze_evaluation_selections(
                 selector,
                 task_pool,
@@ -219,6 +218,9 @@ def evaluate_selector(
                 rolling_policy,
             )
         )
+        for selection in frozen:
+            _append_selection_record(selection, result_store)
+        selections.extend(frozen)
     cell_sets: list[EvaluationCellSet] = []
     matrices: list[ResultMatrix] = []
     metrics: list[MetricRecord] = []
@@ -436,6 +438,7 @@ def score_selection(
             metric_config,
         )
     )
+    _append_metric_records(metrics, result_store)
     return evaluation_cells, selected_matrix, future_matrix, metrics
 
 
@@ -576,24 +579,119 @@ def _run_agent_cells(
     return tuple(results)
 
 
+def _load_training_results(
+    result_store: result_store_module.ResultStore,
+    task_pool: TaskPoolRecord,
+    tasks: Sequence[TaskRecord],
+    checks: Mapping[str, CheckRecord],
+    agents: Sequence[AgentRecord],
+    history_window: TimeRange,
+    rolling_policy: selection_module.RollingOriginPolicy,
+) -> tuple[ResultRecord, ...]:
+    origin = selection_module.build_rolling_origin(
+        task_pool,
+        tasks,
+        checks,
+        _parse_datetime(history_window.end),
+        history_window,
+        rolling_policy,
+    )
+    task_ids, check_ids = _refs_query_parts(origin.history_task_check_refs)
+    if not task_ids or not agents:
+        return ()
+    return _load_results_for_refs(
+        result_store,
+        origin.history_task_check_refs,
+        agents,
+        result_available_after=history_window.start,
+        result_available_before=_apply_embargo(history_window.end, rolling_policy.embargo),
+    )
+
+
+def _load_results_for_refs(
+    result_store: result_store_module.ResultStore,
+    refs: Sequence[TaskCheckRef],
+    agents: Sequence[AgentRecord],
+    *,
+    result_available_after: str,
+    result_available_before: str,
+) -> tuple[ResultRecord, ...]:
+    task_ids, check_ids = _refs_query_parts(refs)
+    if not task_ids or not agents:
+        return ()
+    allowed_refs = {_ref_key(ref) for ref in refs}
+    loaded = result_store_module.load_results(
+        result_store,
+        result_store_module.ResultQuery(
+            task_ids=task_ids,
+            check_ids=check_ids,
+            agent_ids=tuple(agent.agent_id for agent in agents),
+            result_available_after=result_available_after,
+            result_available_before=result_available_before,
+        )
+    )
+    return tuple(result for result in loaded if (result.task_id, result.check_id) in allowed_refs)
+
+
 def _load_pre_origin_results(
     result_store: result_store_module.ResultStore,
     origin: RollingOriginRecord,
     agents: Sequence[AgentRecord],
     history_window: TimeRange,
 ) -> tuple[ResultRecord, ...]:
-    return tuple(
-        result_store_module.load_results(
-            result_store,
-            result_store_module.ResultQuery(
-                task_ids=tuple(ref.task_id for ref in origin.history_task_check_refs),
-                check_ids=tuple(ref.check_id for ref in origin.history_task_check_refs),
-                agent_ids=tuple(agent.agent_id for agent in agents),
-                result_available_after=history_window.start,
-                result_available_before=origin.as_of_cutoff,
-            ),
-        )
+    return _load_results_for_refs(
+        result_store,
+        origin.history_task_check_refs,
+        agents,
+        result_available_after=history_window.start,
+        result_available_before=origin.as_of_cutoff,
     )
+
+
+def _refs_query_parts(refs: Sequence[TaskCheckRef]) -> tuple[tuple[str, ...], tuple[str, ...]]:
+    return (
+        tuple(dict.fromkeys(ref.task_id for ref in refs)),
+        tuple(dict.fromkeys(ref.check_id for ref in refs)),
+    )
+
+
+def _append_selection_record(selection: BenchmarkSelectionRecord, result_store: result_store_module.ResultStore) -> None:
+    validation = validate_benchmark_selection(selection)
+    if not validation.ok:
+        raise ValueError(f"selection record is invalid: {', '.join(validation.errors)}")
+    _append_record_once(_selection_log_path(result_store), selection, BenchmarkSelectionRecord, "selection_id", "selection_digest")
+
+
+def _append_metric_records(metrics: Sequence[MetricRecord], result_store: result_store_module.ResultStore) -> None:
+    for metric in metrics:
+        validation = validate_metric(metric)
+        if not validation.ok:
+            raise ValueError(f"metric record is invalid: {', '.join(validation.errors)}")
+        _append_record_once(_metric_log_path(result_store), metric, MetricRecord, "metric_id", "metric_digest")
+
+
+def _append_record_once(path: Path, record: object, record_type: type, id_attr: str, digest_attr: str) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    record_id = getattr(record, id_attr)
+    record_digest = getattr(record, digest_attr)
+    if path.exists():
+        for existing in load_jsonl_records(path, record_type):
+            if getattr(existing, id_attr) != record_id:
+                continue
+            if getattr(existing, digest_attr) != record_digest:
+                raise ValueError(f"{id_attr} already exists with a different digest")
+            return
+    with path.open("a", encoding="utf-8") as handle:
+        handle.write(canonical_json(record))
+        handle.write("\n")
+
+
+def _selection_log_path(result_store: result_store_module.ResultStore) -> Path:
+    return result_store.path.with_name("selections.jsonl")
+
+
+def _metric_log_path(result_store: result_store_module.ResultStore) -> Path:
+    return result_store.path.with_name("metrics.jsonl")
 
 
 def _find_reusable_result(
@@ -725,12 +823,26 @@ def _ref_key(ref: TaskCheckRef) -> tuple[str, str]:
 
 def _origin_time(origin_id: str) -> datetime:
     try:
-        value = datetime.fromisoformat(origin_id.replace("Z", "+00:00"))
+        value = _parse_datetime(origin_id)
     except ValueError as exc:
         raise ValueError("Runner evaluate_selector origin_ids must be ISO datetime strings") from exc
-    if value.tzinfo is None:
-        return value.replace(tzinfo=UTC)
-    return value.astimezone(UTC)
+    return value
+
+
+def _parse_datetime(value: str) -> datetime:
+    parsed = datetime.fromisoformat(value.replace("Z", "+00:00"))
+    if parsed.tzinfo is None:
+        return parsed.replace(tzinfo=UTC)
+    return parsed.astimezone(UTC)
+
+
+def _apply_embargo(value: str, embargo: str) -> str:
+    parsed = _parse_datetime(value)
+    if embargo in {"", "P0D", "PT0S"}:
+        return _datetime_to_iso(parsed)
+    if embargo.startswith("P") and embargo.endswith("D"):
+        return _datetime_to_iso(parsed - timedelta(days=int(embargo[1:-1])))
+    raise ValueError("Runner supports day-based embargo strings such as P0D or P1D")
 
 
 def _datetime_to_iso(value: datetime) -> str:

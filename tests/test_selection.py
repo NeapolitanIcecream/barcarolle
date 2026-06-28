@@ -542,7 +542,10 @@ def test_freeze_evaluation_selections_does_not_accept_future_results() -> None:
         (_agent(),),
         TimeRange("2026-01-01T00:00:00Z", "2026-01-05T00:00:00Z"),
         __import__("barcarolle.selection", fromlist=["SelectorEvaluationConfig"]).SelectorEvaluationConfig(
-            "evaluation", (origin.origin_id,), SelectionConfig("selection-config", selector.selector_id, snapshot.feature_snapshot_id, "strict_history")
+            "evaluation",
+            (origin.origin_id,),
+            SelectionConfig("selection-config", selector.selector_id, snapshot.feature_snapshot_id, "strict_history"),
+            SelectionBudget("budget", 1),
         ),
         _rolling_policy(),
     )
@@ -591,7 +594,10 @@ def test_freeze_evaluation_selections_rejects_valid_input_with_future_ref() -> N
             (_agent(),),
             TimeRange("2026-01-01T00:00:00Z", "2026-01-05T00:00:00Z"),
             __import__("barcarolle.selection", fromlist=["SelectorEvaluationConfig"]).SelectorEvaluationConfig(
-                "evaluation", (origin.origin_id,), SelectionConfig("selection-config", "selector-recency", snapshot.feature_snapshot_id, "strict_history")
+                "evaluation",
+                (origin.origin_id,),
+                SelectionConfig("selection-config", "selector-recency", snapshot.feature_snapshot_id, "strict_history"),
+                SelectionBudget("budget", 1),
             ),
             _rolling_policy(),
         )
@@ -629,7 +635,10 @@ def test_freeze_evaluation_selections_rejects_selector_input_origin_key_mismatch
             (_agent(),),
             TimeRange("2026-01-01T00:00:00Z", "2026-01-05T00:00:00Z"),
             __import__("barcarolle.selection", fromlist=["SelectorEvaluationConfig"]).SelectorEvaluationConfig(
-                "evaluation", (origin.origin_id,), SelectionConfig("selection-config", "selector-recency", snapshot.feature_snapshot_id, "strict_history")
+                "evaluation",
+                (origin.origin_id,),
+                SelectionConfig("selection-config", "selector-recency", snapshot.feature_snapshot_id, "strict_history"),
+                SelectionBudget("budget", 1),
             ),
             _rolling_policy(),
         )

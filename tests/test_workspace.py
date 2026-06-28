@@ -3,6 +3,8 @@ import hashlib
 import subprocess
 import sys
 
+import pytest
+
 from barcarolle.records import (
     AgentRecord,
     CheckRecord,
@@ -46,11 +48,9 @@ def test_create_solver_workspace_clones_base_commit_and_writes_only_solver_visib
 
 
 def test_invoke_agent_runs_bound_harness_command_and_digest_safe_output(tmp_path: Path) -> None:
-    agent = _agent()
-    bind_agent_harness(
-        agent,
-        (sys.executable, "-c", "from pathlib import Path; Path('done.txt').write_text('ok'); print('done')"),
-    )
+    agent_command = (sys.executable, "-c", "from pathlib import Path; Path('done.txt').write_text('ok'); print('done')")
+    agent = _agent(agent_command)
+    bind_agent_harness(agent, agent_command)
     workspace = WorkspaceRef(path=tmp_path, role="solver", task_id="task", base_commit="commit", workspace_digest="workspace")
 
     outcome = invoke_agent(workspace, _task(), agent, _runtime())
@@ -58,6 +58,11 @@ def test_invoke_agent_runs_bound_harness_command_and_digest_safe_output(tmp_path
     assert outcome.terminal_status == "completed"
     assert outcome.safe_output_digest
     assert (tmp_path / "done.txt").read_text(encoding="utf-8") == "ok"
+
+
+def test_bind_agent_harness_rejects_command_digest_mismatch() -> None:
+    with pytest.raises(ValueError, match="harness command digest"):
+        bind_agent_harness(_agent(), (sys.executable, "-c", "print('different harness')"))
 
 
 def test_capture_diff_reads_git_worktree_and_includes_untracked_files(tmp_path: Path) -> None:
@@ -111,7 +116,6 @@ def test_run_agent_on_task_executes_scoreable_workspace_path_and_returns_valid_r
     repo, base_commit = _make_repo(tmp_path)
     task = _task(base_commit=base_commit)
     workspace_config = _workspace_config(repo)
-    agent = _agent()
     hidden = tmp_path / "hidden.txt"
     hidden.write_text("private oracle", encoding="utf-8")
     agent_command = (
@@ -121,6 +125,7 @@ def test_run_agent_on_task_executes_scoreable_workspace_path_and_returns_valid_r
         "Path('new.txt').write_text('agent edit\\n', encoding='utf-8'); "
         "assert 'hidden' not in Path('.barcarolle/solver-visible-task.json').read_text().lower()",
     )
+    agent = _agent(agent_command)
     check_command = (
         sys.executable,
         "-c",
@@ -148,7 +153,6 @@ def test_run_agent_on_task_replays_and_verifies_diff_after_nonzero_agent_exit(tm
     repo, base_commit = _make_repo(tmp_path)
     task = _task(base_commit=base_commit)
     workspace_config = _workspace_config(repo)
-    agent = _agent()
     hidden = tmp_path / "hidden.txt"
     hidden.write_text("private oracle", encoding="utf-8")
     agent_command = (
@@ -156,6 +160,7 @@ def test_run_agent_on_task_replays_and_verifies_diff_after_nonzero_agent_exit(tm
         "-c",
         "from pathlib import Path; Path('new.txt').write_text('agent edit\\n', encoding='utf-8'); raise SystemExit(1)",
     )
+    agent = _agent(agent_command)
     check_command = (
         sys.executable,
         "-c",
@@ -179,16 +184,14 @@ def test_run_agent_on_task_normalizes_diff_capture_failure(tmp_path: Path) -> No
     repo, base_commit = _make_repo(tmp_path)
     task = _task(base_commit=base_commit)
     workspace_config = _workspace_config(repo)
-    agent = _agent()
-    bind_repository_source(workspace_config, repo)
-    bind_agent_harness(
-        agent,
-        (
-            sys.executable,
-            "-c",
-            "from pathlib import Path; import shutil; shutil.rmtree('.git'); Path('new.txt').write_text('agent edit\\n')",
-        ),
+    agent_command = (
+        sys.executable,
+        "-c",
+        "from pathlib import Path; import shutil; shutil.rmtree('.git'); Path('new.txt').write_text('agent edit\\n')",
     )
+    agent = _agent(agent_command)
+    bind_repository_source(workspace_config, repo)
+    bind_agent_harness(agent, agent_command)
 
     record = run_agent_on_task(task, _check(), agent, workspace_config, _runtime())
 
@@ -201,8 +204,9 @@ def test_run_agent_on_task_normalizes_diff_capture_failure(tmp_path: Path) -> No
 
 def test_run_agent_on_task_rejects_task_check_mismatch_before_agent_runs(tmp_path: Path) -> None:
     marker = tmp_path / "agent-ran.txt"
-    agent = _agent()
-    bind_agent_harness(agent, (sys.executable, "-c", f"from pathlib import Path; Path({str(marker)!r}).write_text('ran')"))
+    agent_command = (sys.executable, "-c", f"from pathlib import Path; Path({str(marker)!r}).write_text('ran')")
+    agent = _agent(agent_command)
+    bind_agent_harness(agent, agent_command)
     check = _check(task_id="other-task")
 
     record = run_agent_on_task(_task(), check, agent, _workspace_config(tmp_path), _runtime())
@@ -296,12 +300,12 @@ def _check(
     )
 
 
-def _agent() -> AgentRecord:
+def _agent(command: tuple[str, ...] | None = None) -> AgentRecord:
     return AgentRecord(
         agent_id="agent",
         agent_manifest_digest="agent-manifest",
         model_snapshot_id="model",
-        harness_digest="harness",
+        harness_digest=canonical_digest({"agent_command": command}) if command is not None else "harness",
         repository_instruction_digest="instructions",
         prompt_digest="prompt",
         tools_digest="tools",

@@ -119,6 +119,7 @@ class SelectorEvaluationConfig:
     evaluation_config_digest: str
     origin_ids: tuple[str, ...]
     selection_config: SelectionConfig
+    budget: SelectionBudget
 
 
 @dataclass(frozen=True)
