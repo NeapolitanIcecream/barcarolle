@@ -199,6 +199,7 @@ def find_missing_results(
                         result_digest=None,
                         cell_state="missing",
                         exclusion_reason=None,
+                        outcome=None,
                     )
                 )
     return tuple(missing)
@@ -483,6 +484,7 @@ def _matrix_cell(
             result_digest=result.result_digest if result is not None else None,
             cell_state="excluded",
             exclusion_reason=task_exclusion_reason,
+            outcome=result.outcome if result is not None else None,
         )
     if result is None:
         if join_config.missing_cell_policy == "error":
@@ -496,6 +498,7 @@ def _matrix_cell(
             result_digest=None,
             cell_state="missing",
             exclusion_reason=None,
+            outcome=None,
         )
     if result.invalid_owner == "agent" and join_config.agent_invalid_policy == "exclude":
         return ResultCellRef(
@@ -507,6 +510,7 @@ def _matrix_cell(
             result_digest=result.result_digest,
             cell_state="excluded",
             exclusion_reason=result.failure_label or "agent_invalid",
+            outcome=result.outcome,
         )
     return ResultCellRef(
         agent_id=required.agent_id,
@@ -517,6 +521,7 @@ def _matrix_cell(
         result_digest=result.result_digest,
         cell_state="result",
         exclusion_reason=None,
+        outcome=result.outcome,
     )
 
 

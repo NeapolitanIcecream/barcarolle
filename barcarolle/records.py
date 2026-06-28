@@ -4,6 +4,7 @@ from __future__ import annotations
 
 from collections.abc import Mapping as MappingABC
 from dataclasses import dataclass, fields, is_dataclass, replace
+from datetime import UTC, datetime
 from pathlib import Path
 from tempfile import NamedTemporaryFile
 from types import UnionType
@@ -46,6 +47,7 @@ class ResultCellRef:
     result_digest: str | None
     cell_state: str
     exclusion_reason: str | None
+    outcome: str | None = None
 
 
 @dataclass(frozen=True)
@@ -216,6 +218,8 @@ class FeatureSnapshotRecord:
     feature_records_digest: str
     leakage_policy_digest: str
     leakage_lint_status: str
+    feature_records: tuple[FeatureRecord, ...] = ()
+    result_view_digest: str | None = None
 
 
 @dataclass(frozen=True)
@@ -242,6 +246,12 @@ class SelectorInput:
     budget_digest: str
     leakage_policy_digest: str
     selector_input_digest: str
+    task_pool_digest: str | None = None
+    selection_budget_limit: int | None = None
+    feature_records_digest: str | None = None
+    feature_snapshot_lint_status: str | None = None
+    origin_as_of_cutoff: str | None = None
+    origin_history_refs_digest: str | None = None
 
 
 @dataclass(frozen=True)
@@ -465,11 +475,16 @@ def validate_result(result: ResultRecord) -> ValidationResult:
 
 
 def validate_feature_snapshot(snapshot: FeatureSnapshotRecord) -> ValidationResult:
-    errors = _required_errors(snapshot)
+    errors = _required_errors(snapshot, nullable={"feature_records", "result_view_digest"})
     if not snapshot.feature_record_ids:
         errors.append("feature_record_ids must not be empty")
     if snapshot.leakage_lint_status not in {"passed", "failed", "not_run"}:
         errors.append("leakage_lint_status is not normalized")
+    if snapshot.feature_records:
+        if snapshot.feature_record_ids != tuple(record.feature_id for record in snapshot.feature_records):
+            errors.append("feature_record_ids must align with feature_records")
+        if snapshot.feature_records_digest != canonical_digest(snapshot.feature_records):
+            errors.append("feature_records_digest does not match feature_records")
     return _validation(errors)
 
 
@@ -479,9 +494,44 @@ def validate_selector_input(selector_input: SelectorInput) -> ValidationResult:
         errors.append("eligible_task_check_refs must not be empty")
     if len(selector_input.pre_origin_result_ids) != len(selector_input.pre_origin_result_digests):
         errors.append("pre_origin_result_ids and pre_origin_result_digests must align")
+    if selector_input.selection_budget_limit is None or selector_input.selection_budget_limit < 1:
+        errors.append("selection_budget_limit must be positive")
+    if not selector_input.feature_records_digest:
+        errors.append("feature_records_digest is required")
+    if selector_input.feature_snapshot_lint_status != "passed":
+        errors.append("feature_snapshot_lint_status must be passed")
+    if not selector_input.origin_as_of_cutoff:
+        errors.append("origin_as_of_cutoff is required")
+    if not selector_input.origin_history_refs_digest:
+        errors.append("origin_history_refs_digest is required")
+    if selector_input.origin_history_refs_digest and selector_input.origin_history_refs_digest != canonical_digest(selector_input.eligible_task_check_refs):
+        errors.append("origin_history_refs_digest does not match eligible refs")
+    if selector_input.selector_input_id != make_selector_input_id(selector_input):
+        errors.append("selector_input_id does not match selector input identity")
     if selector_input.selector_input_digest != canonical_digest(selector_input, exclude_self_digest=True):
         errors.append("selector_input_digest does not match canonical selector input")
     return _validation(errors)
+
+
+def make_selector_input_id(selector_input: SelectorInput) -> str:
+    identity = {
+        "origin_id": selector_input.origin_id,
+        "task_pool_id": selector_input.task_pool_id,
+        "task_pool_digest": selector_input.task_pool_digest,
+        "feature_snapshot_id": selector_input.feature_snapshot_id,
+        "agent_ids": selector_input.agent_ids,
+        "eligible_task_check_refs": selector_input.eligible_task_check_refs,
+        "pre_origin_result_ids": selector_input.pre_origin_result_ids,
+        "pre_origin_result_digests": selector_input.pre_origin_result_digests,
+        "budget_digest": selector_input.budget_digest,
+        "selection_budget_limit": selector_input.selection_budget_limit,
+        "leakage_policy_digest": selector_input.leakage_policy_digest,
+        "feature_records_digest": selector_input.feature_records_digest,
+        "feature_snapshot_lint_status": selector_input.feature_snapshot_lint_status,
+        "origin_as_of_cutoff": selector_input.origin_as_of_cutoff,
+        "origin_history_refs_digest": selector_input.origin_history_refs_digest,
+    }
+    return f"selector_input_{canonical_digest(identity)}"
 
 
 def validate_result_matrix(matrix: ResultMatrix) -> ValidationResult:
@@ -671,9 +721,20 @@ def _ordered_timestamps(record: Any, names: Sequence[str]) -> list[str]:
     values = [getattr(record, name) for name in names]
     if any(not isinstance(value, str) or not value for value in values):
         return []
-    if values != sorted(values):
+    try:
+        instants = [_parse_timestamp_utc(value) for value in values]
+    except ValueError:
+        return [f"timestamps must be valid ISO datetimes: {', '.join(names)}"]
+    if any(left > right for left, right in zip(instants, instants[1:])):
         return [f"timestamps must be ordered: {', '.join(names)}"]
     return []
+
+
+def _parse_timestamp_utc(value: str) -> datetime:
+    parsed = datetime.fromisoformat(value.replace("Z", "+00:00"))
+    if parsed.tzinfo is None:
+        parsed = parsed.replace(tzinfo=UTC)
+    return parsed.astimezone(UTC)
 
 
 def _validation(errors: Sequence[str]) -> ValidationResult:
