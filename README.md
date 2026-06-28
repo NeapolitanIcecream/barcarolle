@@ -4,17 +4,36 @@ Barcarolle is a target-repository benchmark compiler for coding Agents.
 Its north star is predictive validity: whether a benchmark selected from
 repository history predicts later Agent performance on that same repository.
 
-## Active Sources
+## Quickstart
 
-The active design uses only two source materials:
+```bash
+uv run pytest
+```
 
-- [System architecture](docs/architecture/v2-system-architecture-2026-06-25.md)
-- [Learned selector roadmap](docs/design-inputs/learned-selector-roadmap-gpt-5-5-pro-2026-06-25.md)
+## Active Code
 
-Everything else from the previous codebase and prior experiments has been moved
-to archive for reference only.
+The implementation lives in `barcarolle/`:
 
-## Active Design
+- `records.py`: shared record contracts, validation, canonical JSON, and
+  digests.
+- `task_pool.py`: Task + Check generation, import, certification, and frozen
+  task-pool summaries.
+- `verification.py`: hidden-oracle preparation, check execution, and normalized
+  outcomes.
+- `workspace.py`: solver/verifier workspaces, Agent harness invocation, diff
+  capture, replay, and verification orchestration.
+- `result_store.py`: append-only Result records, exact cache identity reuse,
+  missing-cell queries, and result matrices.
+- `selection.py`: rolling-origin construction, leakage-checked selector inputs,
+  benchmark selection, and metrics.
+- `reporting.py`: claim-safe reports from existing records.
+- `runner.py`: command-level orchestration across the owner modules.
+
+Tests live in `tests/` and mirror the module boundaries.
+
+## Design
+
+Design documents are under `docs/design/`:
 
 - [Design index](docs/design/README.md)
 - [System design](docs/design/system-design.md)
@@ -23,13 +42,14 @@ to archive for reference only.
 
 Module-level designs live under [docs/design/modules](docs/design/modules).
 
-## Current Boundary
+The design source materials are:
 
-This repository is in design mode. Do not build the current system by copying
-archived modules. Use archived material only as historical evidence after an
-explicit review decides what to port.
+- [System architecture](docs/architecture/v2-system-architecture-2026-06-25.md)
+- [Learned selector roadmap](docs/design-inputs/learned-selector-roadmap-gpt-5-5-pro-2026-06-25.md)
 
-Core data vocabulary stays small:
+## Vocabulary
+
+Core data vocabulary:
 
 - `Task`
 - `Check`
@@ -41,7 +61,7 @@ Core data vocabulary stays small:
 - `Benchmark Selection`
 - `Agent Results`
 
-Current modules are:
+Current modules:
 
 - `Records`
 - `Task Pool`
@@ -51,3 +71,8 @@ Current modules are:
 - `Selection`
 - `Reporting`
 - `Runner`
+
+## Archive
+
+`archive/` contains historical reference material. It is not needed for normal
+use of the current package, tests, or design documents.

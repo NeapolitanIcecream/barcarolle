@@ -9,16 +9,17 @@ documents, the design documents win.
 
 ## Current Mode
 
-The repository is in current-design mode.
+The repository has an initial implementation aligned to the current design
+documents.
 
-Active design work must use only:
+Active implementation and design work should use:
 
 - `docs/architecture/v2-system-architecture-2026-06-25.md`
 - `docs/design-inputs/learned-selector-roadmap-gpt-5-5-pro-2026-06-25.md`
 
 Archived code, reports, runbooks, and experiments are historical reference
-material. They are not active design inputs and should not be imported into the
-current design without a specific review.
+material. They are not active implementation inputs and should not be imported
+without a specific review.
 
 ## Design Rules
 

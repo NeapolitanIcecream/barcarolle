@@ -1,6 +1,6 @@
 # Barcarolle Design Index
 
-Status: draft design set for the current system, 2026-06-27.
+Status: current design set for the implemented system, 2026-06-28.
 
 ## Source Materials
 

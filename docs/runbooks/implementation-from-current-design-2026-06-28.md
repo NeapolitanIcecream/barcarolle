@@ -1,6 +1,6 @@
 # Runbook: Implement From Current Design
 
-Status: ready for execution, 2026-06-28.
+Status: completed, 2026-06-28.
 
 ## Purpose
 
