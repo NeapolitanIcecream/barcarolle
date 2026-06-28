@@ -1,0 +1,581 @@
+"""Workspace orchestration for solver and verifier runs."""
+
+from __future__ import annotations
+
+from dataclasses import dataclass
+from datetime import UTC, datetime
+from pathlib import Path
+from tempfile import mkdtemp
+from time import monotonic
+from typing import Any, Mapping, Sequence
+import hashlib
+import json
+import subprocess
+
+from barcarolle.records import (
+    AgentRecord,
+    CheckRecord,
+    RuntimeConfig,
+    TaskRecord,
+    WorkspaceConfig,
+    WorkspaceRunRecord,
+    canonical_digest,
+)
+from barcarolle.verification import CheckOutcome, WorkspaceRef as VerifierWorkspaceRef
+from barcarolle.verification import prepare_verifier, verify_diff
+
+
+@dataclass(frozen=True)
+class WorkspaceRef:
+    path: Path
+    role: str
+    task_id: str
+    base_commit: str
+    workspace_digest: str
+    agent_command: tuple[str, ...] = ()
+    check_command: tuple[str, ...] = ()
+    hidden_material_source: Path | None = None
+    hidden_material_destination: Path | None = None
+
+
+@dataclass(frozen=True)
+class AgentRunOutcome:
+    terminal_status: str
+    duration_seconds: float
+    usage: Mapping[str, Any]
+    safe_output_digest: str
+    failure_label: str | None
+
+
+@dataclass(frozen=True)
+class CapturedDiff:
+    diff_text: str
+    diff_digest: str
+
+
+@dataclass(frozen=True)
+class DiffReplayOutcome:
+    replay_status: str
+    failure_label: str | None
+    safe_output_digest: str
+
+
+@dataclass(frozen=True)
+class _CheckMaterialBinding:
+    check_command: tuple[str, ...]
+    hidden_material_source: Path
+    hidden_material_destination: Path
+
+
+_REPOSITORY_SOURCES: dict[str, Path] = {}
+_AGENT_HARNESSES: dict[tuple[str, str, str], tuple[str, ...]] = {}
+_CHECK_MATERIALS: dict[tuple[str, str, str], _CheckMaterialBinding] = {}
+_EMPTY_DIFF_DIGEST = hashlib.sha256(b"").hexdigest()
+
+
+def bind_repository_source(workspace_config: WorkspaceConfig, repository_path: Path) -> None:
+    source = repository_path.resolve()
+    if not (source / ".git").exists():
+        raise ValueError("repository_path must be a git repository checkout")
+    _REPOSITORY_SOURCES[workspace_config.repository_checkout_config_digest] = source
+
+
+def bind_agent_harness(agent: AgentRecord, command: Sequence[str]) -> None:
+    normalized = tuple(command)
+    if not normalized:
+        raise ValueError("agent harness command is required")
+    _AGENT_HARNESSES[_agent_key(agent)] = normalized
+
+
+def bind_check_material(
+    check: CheckRecord,
+    check_command: Sequence[str],
+    hidden_material_source: Path,
+    hidden_material_destination: Path = Path(".barcarolle/check_bundle"),
+) -> None:
+    normalized_command = tuple(check_command)
+    if _check_command_digest(normalized_command) != check.check_manifest_digest:
+        raise ValueError("check command digest does not match check manifest")
+    source = hidden_material_source.resolve()
+    if not source.exists():
+        raise ValueError("hidden_material_source must exist")
+    if _path_digest(source) != check.hidden_check_bundle_digest:
+        raise ValueError("hidden material digest does not match check")
+    _CHECK_MATERIALS[_check_key(check)] = _CheckMaterialBinding(
+        check_command=normalized_command,
+        hidden_material_source=source,
+        hidden_material_destination=hidden_material_destination,
+    )
+
+
+def create_solver_workspace(task: TaskRecord, workspace_config: WorkspaceConfig) -> WorkspaceRef:
+    path = _checkout_repository(task, workspace_config, prefix="barcarolle-solver-")
+    _exclude_benchmark_material(path)
+    _write_solver_visible_task_material(path, task)
+    return WorkspaceRef(
+        path=path,
+        role="solver",
+        task_id=task.task_id,
+        base_commit=task.base_commit,
+        workspace_digest=_workspace_digest(path, task, workspace_config, "solver"),
+    )
+
+
+def invoke_agent(
+    solver_workspace: WorkspaceRef,
+    task: TaskRecord,
+    agent: AgentRecord,
+    runtime_config: RuntimeConfig,
+) -> AgentRunOutcome:
+    if solver_workspace.role != "solver" or solver_workspace.task_id != task.task_id:
+        return AgentRunOutcome("invalid", 0.0, {}, "", "solver_workspace_task_mismatch")
+    command = solver_workspace.agent_command or _AGENT_HARNESSES.get(_agent_key(agent), ())
+    if not command:
+        return AgentRunOutcome("invalid", 0.0, {}, "", "missing_agent_command")
+    start = monotonic()
+    try:
+        completed = subprocess.run(
+            command,
+            cwd=solver_workspace.path,
+            text=True,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+            timeout=runtime_config.timeout_seconds,
+            check=False,
+        )
+    except subprocess.TimeoutExpired as exc:
+        return AgentRunOutcome(
+            terminal_status="timeout",
+            duration_seconds=monotonic() - start,
+            usage={},
+            safe_output_digest=_safe_output_digest(exc.stdout or "", exc.stderr or ""),
+            failure_label="agent_timeout",
+        )
+    except OSError:
+        return AgentRunOutcome("invalid", monotonic() - start, {}, "", "agent_launch_error")
+    terminal_status = "completed" if completed.returncode == 0 else "error"
+    return AgentRunOutcome(
+        terminal_status=terminal_status,
+        duration_seconds=monotonic() - start,
+        usage={},
+        safe_output_digest=_safe_output_digest(completed.stdout, completed.stderr),
+        failure_label=None if completed.returncode == 0 else "agent_failed",
+    )
+
+
+def capture_diff(solver_workspace: WorkspaceRef) -> CapturedDiff:
+    if solver_workspace.role != "solver":
+        raise ValueError("diff capture requires a solver workspace")
+    if not _is_git_checkout(solver_workspace.path):
+        raise ValueError("solver workspace must be a git checkout")
+    _run_git(solver_workspace.path, ("add", "--intent-to-add", "--", "."))
+    diff_text = _run_git(solver_workspace.path, ("diff", "--binary", "--no-ext-diff", "HEAD", "--")).stdout
+    return CapturedDiff(diff_text=diff_text, diff_digest=hashlib.sha256(diff_text.encode("utf-8")).hexdigest())
+
+
+def create_verifier_workspace(task: TaskRecord, workspace_config: WorkspaceConfig) -> WorkspaceRef:
+    path = _checkout_repository(task, workspace_config, prefix="barcarolle-verifier-")
+    _exclude_benchmark_material(path)
+    return WorkspaceRef(
+        path=path,
+        role="verifier",
+        task_id=task.task_id,
+        base_commit=task.base_commit,
+        workspace_digest=_workspace_digest(path, task, workspace_config, "verifier"),
+    )
+
+
+def apply_diff(verifier_workspace: WorkspaceRef, diff: CapturedDiff) -> DiffReplayOutcome:
+    if verifier_workspace.role != "verifier":
+        return DiffReplayOutcome("invalid", "not_verifier_workspace", "")
+    if not _is_git_checkout(verifier_workspace.path):
+        return DiffReplayOutcome("invalid", "missing_git_checkout", "")
+    if not diff.diff_text:
+        return DiffReplayOutcome("applied", None, "")
+    completed = subprocess.run(
+        ("git", "apply", "--whitespace=nowarn", "-"),
+        cwd=verifier_workspace.path,
+        input=diff.diff_text,
+        text=True,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+        check=False,
+    )
+    return DiffReplayOutcome(
+        replay_status="applied" if completed.returncode == 0 else "failed",
+        failure_label=None if completed.returncode == 0 else "diff_replay_failed",
+        safe_output_digest=_safe_output_digest(completed.stdout, completed.stderr),
+    )
+
+
+def verify_agent_diff(
+    verifier_workspace: WorkspaceRef,
+    check: CheckRecord,
+    runtime_config: RuntimeConfig,
+) -> CheckOutcome:
+    if verifier_workspace.role != "verifier":
+        return CheckOutcome("invalid", "not_verifier_workspace", None, False, 0.0, "")
+    if verifier_workspace.task_id != check.task_id:
+        return CheckOutcome("invalid", "check_workspace_mismatch", None, False, 0.0, "")
+    binding = _material_binding(check, verifier_workspace)
+    if binding is None:
+        return CheckOutcome("invalid", "missing_verification_material", None, False, 0.0, "")
+    verifier_ref = VerifierWorkspaceRef(
+        path=verifier_workspace.path,
+        check_command=binding.check_command,
+        check_id=check.check_id,
+        check_manifest_digest=check.check_manifest_digest,
+        hidden_check_bundle_digest=check.hidden_check_bundle_digest,
+        hidden_material_source=binding.hidden_material_source,
+        hidden_material_destination=binding.hidden_material_destination,
+    )
+    try:
+        prepared = prepare_verifier(check, verifier_ref)
+    except ValueError as exc:
+        return CheckOutcome("invalid", _preparation_failure_label(str(exc)), None, False, 0.0, "")
+    return verify_diff(check, prepared, runtime_config)
+
+
+def run_agent_on_task(
+    task: TaskRecord,
+    check: CheckRecord,
+    agent: AgentRecord,
+    workspace_config: WorkspaceConfig,
+    runtime_config: RuntimeConfig,
+) -> WorkspaceRunRecord:
+    started_at = _now()
+    if check.task_id != task.task_id or check.check_id not in task.check_ids:
+        return _invalid_run_record(
+            task=task,
+            check=check,
+            agent=agent,
+            started_at=started_at,
+            failure_label="task_check_mismatch",
+            invalid_owner="benchmark",
+        )
+    try:
+        solver_workspace = create_solver_workspace(task, workspace_config)
+    except (OSError, RuntimeError, ValueError) as exc:
+        return _invalid_run_record(
+            task=task,
+            check=check,
+            agent=agent,
+            started_at=started_at,
+            failure_label=_workspace_failure_label(str(exc)),
+            invalid_owner="benchmark",
+        )
+    agent_outcome = invoke_agent(solver_workspace, task, agent, runtime_config)
+    try:
+        diff = capture_diff(solver_workspace)
+    except (OSError, RuntimeError, ValueError):
+        return _invalid_run_record(
+            task=task,
+            check=check,
+            agent=agent,
+            started_at=started_at,
+            failure_label="diff_capture_failed",
+            invalid_owner="benchmark",
+            solver_workspace_digest=solver_workspace.workspace_digest,
+            usage=agent_outcome.usage,
+        )
+    try:
+        verifier_workspace = create_verifier_workspace(task, workspace_config)
+    except (OSError, RuntimeError, ValueError) as exc:
+        replay = DiffReplayOutcome("invalid", _workspace_failure_label(str(exc)), "")
+        check_outcome = CheckOutcome("invalid", replay.failure_label, None, False, 0.0, "")
+        return _workspace_run_record(
+            task=task,
+            check=check,
+            agent=agent,
+            solver_workspace_digest=solver_workspace.workspace_digest,
+            verifier_workspace_digest=_synthetic_workspace_digest(task, "verifier", replay.failure_label or "verifier_workspace_error"),
+            agent_outcome=agent_outcome,
+            diff=diff,
+            replay=replay,
+            check_outcome=check_outcome,
+            started_at=started_at,
+            finished_at=_now(),
+        )
+    replay = apply_diff(verifier_workspace, diff)
+    if replay.replay_status == "applied":
+        check_outcome = verify_agent_diff(verifier_workspace, check, runtime_config)
+    else:
+        check_outcome = CheckOutcome("invalid", replay.failure_label, None, False, 0.0, "")
+    return _workspace_run_record(
+        task=task,
+        check=check,
+        agent=agent,
+        solver_workspace_digest=solver_workspace.workspace_digest,
+        verifier_workspace_digest=verifier_workspace.workspace_digest,
+        agent_outcome=agent_outcome,
+        diff=diff,
+        replay=replay,
+        check_outcome=check_outcome,
+        started_at=started_at,
+        finished_at=_now(),
+    )
+
+
+def _checkout_repository(task: TaskRecord, workspace_config: WorkspaceConfig, *, prefix: str) -> Path:
+    source = _REPOSITORY_SOURCES.get(workspace_config.repository_checkout_config_digest)
+    if source is None:
+        raise ValueError("repository source is not bound for workspace config")
+    path = Path(mkdtemp(prefix=prefix))
+    _run(("git", "clone", "--quiet", str(source), str(path)))
+    _run_git(path, ("checkout", "--quiet", task.base_commit))
+    return path
+
+
+def _write_solver_visible_task_material(path: Path, task: TaskRecord) -> None:
+    material_dir = path / ".barcarolle"
+    material_dir.mkdir(parents=True, exist_ok=True)
+    payload = {
+        "task_id": task.task_id,
+        "repository_id": task.repository_id,
+        "base_commit": task.base_commit,
+        "source_family": task.source_family,
+        "source_ref": task.source_ref,
+        "solver_material_digest": task.solver_material_digest,
+        "solver_material_refs": task.solver_material_refs,
+        "check_ids": task.check_ids,
+    }
+    (material_dir / "solver-visible-task.json").write_text(json.dumps(payload, sort_keys=True), encoding="utf-8")
+
+
+def _workspace_digest(path: Path, task: TaskRecord, workspace_config: WorkspaceConfig, role: str) -> str:
+    return canonical_digest(
+        {
+            "role": role,
+            "path": str(path),
+            "task_id": task.task_id,
+            "base_commit": task.base_commit,
+            "workspace_config_id": workspace_config.workspace_config_id,
+            "repository_checkout_config_digest": workspace_config.repository_checkout_config_digest,
+            "submodule_state_digest": workspace_config.submodule_state_digest,
+            "base_image_digest": workspace_config.base_image_digest,
+            "dependency_lock_digest": workspace_config.dependency_lock_digest,
+            "head_commit": _head_commit(path),
+        }
+    )
+
+
+def _workspace_run_record(
+    *,
+    task: TaskRecord,
+    check: CheckRecord,
+    agent: AgentRecord,
+    solver_workspace_digest: str,
+    verifier_workspace_digest: str,
+    agent_outcome: AgentRunOutcome,
+    diff: CapturedDiff,
+    replay: DiffReplayOutcome,
+    check_outcome: CheckOutcome,
+    started_at: str,
+    finished_at: str,
+) -> WorkspaceRunRecord:
+    terminal_status = _terminal_status(agent_outcome, replay, check_outcome)
+    return WorkspaceRunRecord(
+        workspace_run_id=f"workspace_run_{canonical_digest((task.task_id, check.check_id, agent.agent_id, diff.diff_digest, started_at))}",
+        task_id=task.task_id,
+        check_id=check.check_id,
+        agent_id=agent.agent_id,
+        solver_workspace_digest=solver_workspace_digest,
+        verifier_workspace_digest=verifier_workspace_digest,
+        terminal_status=terminal_status,
+        diff_digest=diff.diff_digest,
+        replay_status=replay.replay_status,
+        check_outcome=check_outcome.outcome,
+        invalid_owner=_invalid_owner(terminal_status, agent_outcome, replay, check_outcome),
+        failure_label=_failure_label(agent_outcome, replay, check_outcome),
+        usage=agent_outcome.usage,
+        started_at=started_at,
+        finished_at=finished_at,
+    )
+
+
+def _invalid_run_record(
+    *,
+    task: TaskRecord,
+    check: CheckRecord,
+    agent: AgentRecord,
+    started_at: str,
+    failure_label: str,
+    invalid_owner: str,
+    solver_workspace_digest: str | None = None,
+    usage: Mapping[str, Any] | None = None,
+) -> WorkspaceRunRecord:
+    finished_at = _now()
+    return WorkspaceRunRecord(
+        workspace_run_id=f"workspace_run_{canonical_digest((task.task_id, check.check_id, agent.agent_id, failure_label, started_at))}",
+        task_id=task.task_id,
+        check_id=check.check_id,
+        agent_id=agent.agent_id,
+        solver_workspace_digest=solver_workspace_digest or _synthetic_workspace_digest(task, "solver", failure_label),
+        verifier_workspace_digest=_synthetic_workspace_digest(task, "verifier", failure_label),
+        terminal_status="invalid",
+        diff_digest=_EMPTY_DIFF_DIGEST,
+        replay_status="skipped",
+        check_outcome="invalid",
+        invalid_owner=invalid_owner,
+        failure_label=failure_label,
+        usage=usage or {},
+        started_at=started_at,
+        finished_at=finished_at,
+    )
+
+
+def _material_binding(check: CheckRecord, verifier_workspace: WorkspaceRef) -> _CheckMaterialBinding | None:
+    if verifier_workspace.check_command and verifier_workspace.hidden_material_source is not None:
+        return _CheckMaterialBinding(
+            check_command=verifier_workspace.check_command,
+            hidden_material_source=verifier_workspace.hidden_material_source,
+            hidden_material_destination=verifier_workspace.hidden_material_destination or Path(".barcarolle/check_bundle"),
+        )
+    return _CHECK_MATERIALS.get(_check_key(check))
+
+
+def _agent_key(agent: AgentRecord) -> tuple[str, str, str]:
+    return (agent.agent_id, agent.agent_manifest_digest, agent.harness_digest)
+
+
+def _check_key(check: CheckRecord) -> tuple[str, str, str]:
+    return (check.check_id, check.check_manifest_digest, check.hidden_check_bundle_digest)
+
+
+def _terminal_status(
+    agent_outcome: AgentRunOutcome,
+    replay: DiffReplayOutcome,
+    check_outcome: CheckOutcome,
+) -> str:
+    if agent_outcome.terminal_status != "completed":
+        return agent_outcome.terminal_status
+    if replay.replay_status != "applied":
+        return "invalid"
+    if check_outcome.outcome == "pass":
+        return "passed"
+    if check_outcome.outcome == "fail":
+        return "failed"
+    return "invalid"
+
+
+def _invalid_owner(
+    terminal_status: str,
+    agent_outcome: AgentRunOutcome,
+    replay: DiffReplayOutcome,
+    check_outcome: CheckOutcome,
+) -> str | None:
+    if terminal_status != "invalid":
+        return None
+    if agent_outcome.terminal_status == "invalid":
+        return "agent"
+    if replay.replay_status != "applied":
+        return "benchmark"
+    if check_outcome.outcome == "invalid":
+        return "benchmark"
+    return "benchmark"
+
+
+def _failure_label(
+    agent_outcome: AgentRunOutcome,
+    replay: DiffReplayOutcome,
+    check_outcome: CheckOutcome,
+) -> str | None:
+    if agent_outcome.terminal_status != "completed":
+        return agent_outcome.failure_label
+    if replay.replay_status != "applied":
+        return replay.failure_label
+    return check_outcome.failure_label
+
+
+def _workspace_failure_label(message: str) -> str:
+    lowered = message.lower()
+    if "repository source is not bound" in lowered:
+        return "missing_repository_source"
+    if "checkout" in lowered:
+        return "repository_checkout_failed"
+    return "workspace_preparation_failed"
+
+
+def _preparation_failure_label(message: str) -> str:
+    lowered = message.lower()
+    if "identity does not match" in lowered:
+        return "check_workspace_mismatch"
+    if "hidden_material_source" in lowered:
+        return "missing_verification_material"
+    if "hidden material digest" in lowered:
+        return "hidden_material_mismatch"
+    if "check command digest" in lowered:
+        return "check_command_mismatch"
+    if "inside verifier workspace" in lowered:
+        return "invalid_hidden_material_destination"
+    return "verifier_preparation_failed"
+
+
+def _synthetic_workspace_digest(task: TaskRecord, role: str, reason: str) -> str:
+    return canonical_digest({"role": role, "task_id": task.task_id, "base_commit": task.base_commit, "not_created": reason})
+
+
+def _exclude_benchmark_material(path: Path) -> None:
+    exclude_path = Path(_run_git(path, ("rev-parse", "--git-path", "info/exclude")).stdout.strip())
+    if not exclude_path.is_absolute():
+        exclude_path = path / exclude_path
+    exclude_path.parent.mkdir(parents=True, exist_ok=True)
+    existing = exclude_path.read_text(encoding="utf-8") if exclude_path.exists() else ""
+    if ".barcarolle/" not in existing:
+        exclude_path.write_text(f"{existing.rstrip()}\n.barcarolle/\n", encoding="utf-8")
+
+
+def _head_commit(path: Path) -> str:
+    return _run_git(path, ("rev-parse", "HEAD")).stdout.strip()
+
+
+def _is_git_checkout(path: Path) -> bool:
+    return (path / ".git").exists()
+
+
+def _run_git(path: Path, args: Sequence[str]) -> subprocess.CompletedProcess[str]:
+    return _run(("git", *args), cwd=path)
+
+
+def _run(command: Sequence[str], *, cwd: Path | None = None) -> subprocess.CompletedProcess[str]:
+    completed = subprocess.run(
+        tuple(command),
+        cwd=cwd,
+        text=True,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+        check=False,
+    )
+    if completed.returncode != 0:
+        raise RuntimeError((completed.stderr or completed.stdout or "command failed").strip())
+    return completed
+
+
+def _safe_output_digest(stdout: str | bytes | None, stderr: str | bytes | None) -> str:
+    def normalize(value: str | bytes | None) -> str:
+        if value is None:
+            return ""
+        if isinstance(value, bytes):
+            return value.decode("utf-8", errors="replace")
+        return value
+
+    return hashlib.sha256((normalize(stdout) + "\n" + normalize(stderr)).encode("utf-8")).hexdigest()
+
+
+def _check_command_digest(check_command: Sequence[str]) -> str:
+    return canonical_digest({"check_command": tuple(check_command)})
+
+
+def _path_digest(path: Path) -> str:
+    if path.is_file():
+        return hashlib.sha256(path.read_bytes()).hexdigest()
+    if path.is_dir():
+        entries = []
+        for child in sorted(item for item in path.rglob("*") if item.is_file()):
+            entries.append((str(child.relative_to(path)), hashlib.sha256(child.read_bytes()).hexdigest()))
+        return canonical_digest(tuple(entries))
+    raise ValueError("hidden_material_source must be an existing file or directory")
+
+
+def _now() -> str:
+    return datetime.now(UTC).isoformat(timespec="microseconds").replace("+00:00", "Z")
