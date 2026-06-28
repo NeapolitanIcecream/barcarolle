@@ -1,18 +1,19 @@
-# Barcarolle Process Notes
+# Barcarolle Internal Process Notes
 
 Last updated: 2026-06-28.
 
-These are operational notes, not a source of truth for intended system
-behavior. For implementation, use the current design documents under
-`docs/design/` as the design authority. If this file conflicts with those
-documents, the design documents win.
+These notes are for repository-maintenance agents. They are not user
+documentation and they are not a source of truth for intended system behavior.
+For implementation, use the current design documents under `docs/design/` as
+the design authority. If this file conflicts with those documents, the design
+documents win.
 
 ## Current Mode
 
-The repository has an initial implementation aligned to the current design
-documents.
+The active implementation is aligned to the current design documents under
+`docs/design/`.
 
-Active implementation and design work should use:
+Background design inputs are:
 
 - `docs/architecture/v2-system-architecture-2026-06-25.md`
 - `docs/design-inputs/learned-selector-roadmap-gpt-5-5-pro-2026-06-25.md`
