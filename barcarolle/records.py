@@ -486,7 +486,7 @@ def validate_selector_input(selector_input: SelectorInput) -> ValidationResult:
 
 def validate_result_matrix(matrix: ResultMatrix) -> ValidationResult:
     errors = _required_errors(matrix, nullable={"abstention_reason"})
-    if matrix.matrix_role not in {"selected", "future_holdout", "historical"}:
+    if matrix.matrix_role not in {"selected", "future_holdout"}:
         errors.append("matrix_role is not normalized")
     _validate_cells(
         errors,
