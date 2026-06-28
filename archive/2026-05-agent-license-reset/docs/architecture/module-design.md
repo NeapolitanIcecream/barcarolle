@@ -2,23 +2,23 @@
 
 ## 1. Design Goal
 
-This document refines the system in [docs/architecture/system-design.md](/Users/chenmohan/gits/barcarolle/docs/architecture/system-design.md) into module boundaries that are concrete enough for implementation planning, but still stay at the module level rather than interface-field level.
+This document refines the system in [docs/architecture/system-design.md](<repo>/docs/architecture/system-design.md) into module boundaries that are concrete enough for implementation planning, but still stay at the module level rather than interface-field level.
 
 The design is grounded in:
-- [docs/analysis/requirements.md](/Users/chenmohan/gits/barcarolle/docs/analysis/requirements.md)
-- [docs/architecture/system-design.md](/Users/chenmohan/gits/barcarolle/docs/architecture/system-design.md)
-- [docs/architecture/benchmark-admission-rubric.md](/Users/chenmohan/gits/barcarolle/docs/architecture/benchmark-admission-rubric.md)
-- [docs/architecture/scoring-semantics.md](/Users/chenmohan/gits/barcarolle/docs/architecture/scoring-semantics.md)
-- [docs/architecture/policy-calibration.md](/Users/chenmohan/gits/barcarolle/docs/architecture/policy-calibration.md)
-- [docs/decisions/dependency-selection.md](/Users/chenmohan/gits/barcarolle/docs/decisions/dependency-selection.md)
-- [docs/draft/abstract.md](/Users/chenmohan/gits/barcarolle/docs/draft/abstract.md)
-- [docs/research/replayable-repository-task-construction.md](/Users/chenmohan/gits/barcarolle/docs/research/replayable-repository-task-construction.md)
-- [docs/research/repository-context-selection-and-cross-file-editing.md](/Users/chenmohan/gits/barcarolle/docs/research/repository-context-selection-and-cross-file-editing.md)
-- [docs/research/repository-evaluation-infrastructure-landscape.md](/Users/chenmohan/gits/barcarolle/docs/research/repository-evaluation-infrastructure-landscape.md)
-- [docs/research/agent-configuration-evaluation.md](/Users/chenmohan/gits/barcarolle/docs/research/agent-configuration-evaluation.md)
-- [docs/research/benchmark-trustworthiness-risks.md](/Users/chenmohan/gits/barcarolle/docs/research/benchmark-trustworthiness-risks.md)
-- [docs/research/environment-replay-and-reproducible-execution.md](/Users/chenmohan/gits/barcarolle/docs/research/environment-replay-and-reproducible-execution.md)
-- [docs/research/repository-specific-benchmark-generation-related-work.md](/Users/chenmohan/gits/barcarolle/docs/research/repository-specific-benchmark-generation-related-work.md)
+- [docs/analysis/requirements.md](<repo>/docs/analysis/requirements.md)
+- [docs/architecture/system-design.md](<repo>/docs/architecture/system-design.md)
+- [docs/architecture/benchmark-admission-rubric.md](<repo>/docs/architecture/benchmark-admission-rubric.md)
+- [docs/architecture/scoring-semantics.md](<repo>/docs/architecture/scoring-semantics.md)
+- [docs/architecture/policy-calibration.md](<repo>/docs/architecture/policy-calibration.md)
+- [docs/decisions/dependency-selection.md](<repo>/docs/decisions/dependency-selection.md)
+- [docs/draft/abstract.md](<repo>/docs/draft/abstract.md)
+- [docs/research/replayable-repository-task-construction.md](<repo>/docs/research/replayable-repository-task-construction.md)
+- [docs/research/repository-context-selection-and-cross-file-editing.md](<repo>/docs/research/repository-context-selection-and-cross-file-editing.md)
+- [docs/research/repository-evaluation-infrastructure-landscape.md](<repo>/docs/research/repository-evaluation-infrastructure-landscape.md)
+- [docs/research/agent-configuration-evaluation.md](<repo>/docs/research/agent-configuration-evaluation.md)
+- [docs/research/benchmark-trustworthiness-risks.md](<repo>/docs/research/benchmark-trustworthiness-risks.md)
+- [docs/research/environment-replay-and-reproducible-execution.md](<repo>/docs/research/environment-replay-and-reproducible-execution.md)
+- [docs/research/repository-specific-benchmark-generation-related-work.md](<repo>/docs/research/repository-specific-benchmark-generation-related-work.md)
 
 ## 2. Design Stance
 
@@ -717,12 +717,12 @@ This separation is important because the trustworthiness research shows that sha
 
 ## 8. Traceability Notes
 
-- The need for replayable task construction comes from [docs/research/replayable-repository-task-construction.md](/Users/chenmohan/gits/barcarolle/docs/research/replayable-repository-task-construction.md).
-- The separation between context selection, localization, and executable modification comes from [docs/research/repository-context-selection-and-cross-file-editing.md](/Users/chenmohan/gits/barcarolle/docs/research/repository-context-selection-and-cross-file-editing.md).
-- The emphasis on traces, runner integration, canonical verification, and isolation comes from [docs/research/repository-evaluation-infrastructure-landscape.md](/Users/chenmohan/gits/barcarolle/docs/research/repository-evaluation-infrastructure-landscape.md) and [docs/research/environment-replay-and-reproducible-execution.md](/Users/chenmohan/gits/barcarolle/docs/research/environment-replay-and-reproducible-execution.md).
-- The need to evaluate the whole agent configuration comes from [docs/research/agent-configuration-evaluation.md](/Users/chenmohan/gits/barcarolle/docs/research/agent-configuration-evaluation.md).
-- The security and benchmark-gaming risks come from [docs/research/benchmark-trustworthiness-risks.md](/Users/chenmohan/gits/barcarolle/docs/research/benchmark-trustworthiness-risks.md).
-- The stack choices in [docs/decisions/dependency-selection.md](/Users/chenmohan/gits/barcarolle/docs/decisions/dependency-selection.md) justify the Docker/OCI baseline and a Python backend path.
+- The need for replayable task construction comes from [docs/research/replayable-repository-task-construction.md](<repo>/docs/research/replayable-repository-task-construction.md).
+- The separation between context selection, localization, and executable modification comes from [docs/research/repository-context-selection-and-cross-file-editing.md](<repo>/docs/research/repository-context-selection-and-cross-file-editing.md).
+- The emphasis on traces, runner integration, canonical verification, and isolation comes from [docs/research/repository-evaluation-infrastructure-landscape.md](<repo>/docs/research/repository-evaluation-infrastructure-landscape.md) and [docs/research/environment-replay-and-reproducible-execution.md](<repo>/docs/research/environment-replay-and-reproducible-execution.md).
+- The need to evaluate the whole agent configuration comes from [docs/research/agent-configuration-evaluation.md](<repo>/docs/research/agent-configuration-evaluation.md).
+- The security and benchmark-gaming risks come from [docs/research/benchmark-trustworthiness-risks.md](<repo>/docs/research/benchmark-trustworthiness-risks.md).
+- The stack choices in [docs/decisions/dependency-selection.md](<repo>/docs/decisions/dependency-selection.md) justify the Docker/OCI baseline and a Python backend path.
 
 ## 9. Inference Summary
 

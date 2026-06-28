@@ -2,7 +2,7 @@
   "candidate_count": 6,
   "history_scan_limit": 500,
   "layout": "src",
-  "local_repo": "/Users/chenmohan/gits/barcarolle/experiments/phase0_headroom/external_repos/itsdangerous",
+  "local_repo": "<repo>/experiments/phase0_headroom/external_repos/itsdangerous",
   "missing_data": [],
   "missing_data_policy": "empty missing_data means no known target-profile fields were silently omitted",
   "repo_id": "itsdangerous",

@@ -78,10 +78,10 @@
     "seed_count": 1000
   },
   "regenerated_chart_files": [
-    "/Users/chenmohan/playground/barcarolle_ppt_assets/agent_selection_selection_vs_holdout.png",
-    "/Users/chenmohan/playground/barcarolle_ppt_assets/boltons_selector_aware_rolling_origin_timeline.png",
-    "/Users/chenmohan/playground/barcarolle_ppt_assets/rolling_origin_mae_comparison.png",
-    "/Users/chenmohan/playground/barcarolle_ppt_assets/agent_selection_demo_image_prompts.md"
+    "<local-playground>/barcarolle_ppt_assets/agent_selection_selection_vs_holdout.png",
+    "<local-playground>/barcarolle_ppt_assets/boltons_selector_aware_rolling_origin_timeline.png",
+    "<local-playground>/barcarolle_ppt_assets/rolling_origin_mae_comparison.png",
+    "<local-playground>/barcarolle_ppt_assets/agent_selection_demo_image_prompts.md"
   ],
   "rolling_origin_selector_aware_metrics": {
     "MAE_max": 0.233333,

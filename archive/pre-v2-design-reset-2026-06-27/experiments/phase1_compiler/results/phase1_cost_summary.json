@@ -401,7 +401,7 @@
     }
   ],
   "predictive_validity_established": false,
-  "pricing_config": "/Users/chenmohan/gits/barcarolle/experiments/phase0_headroom/configs/model_pricing.yaml",
+  "pricing_config": "<repo>/experiments/phase0_headroom/configs/model_pricing.yaml",
   "pricing_source": "user_estimate_required_conservative_default",
   "provider_billed_cost_status": "unavailable",
   "schema_version": "barcarolle.phase1.cost_summary.v1",

@@ -17,7 +17,7 @@ audited_tasks:
   - attrs__hist__027
 
 source_artifacts:
-  proposal: /Users/chenmohan/Downloads/barcarolle-research-0519.md
+  proposal: <local-downloads>/barcarolle-research-0519.md
   certified_tasks: experiments/phase0_headroom/certified_tasks/attrs_clean_outcome_unseen_supply_certified_tasks.jsonl
   source_context: experiments/phase0_headroom/candidate_sources/attrs_clean_outcome_unseen_supply_source_context.jsonl
   task_outcome_matrix: experiments/phase1_compiler/results/phase1_two_repo_task_outcome_matrix.json

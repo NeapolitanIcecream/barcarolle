@@ -11,21 +11,21 @@ This document refines the repository-specific benchmark system into runtime-faci
 
 It stays aligned with:
 
-- [docs/analysis/requirements.md](/Users/chenmohan/gits/barcarolle/docs/analysis/requirements.md)
-- [docs/architecture/system-design.md](/Users/chenmohan/gits/barcarolle/docs/architecture/system-design.md)
-- [docs/architecture/module-design.md](/Users/chenmohan/gits/barcarolle/docs/architecture/module-design.md)
-- [docs/architecture/benchmark-admission-rubric.md](/Users/chenmohan/gits/barcarolle/docs/architecture/benchmark-admission-rubric.md)
-- [docs/architecture/scoring-semantics.md](/Users/chenmohan/gits/barcarolle/docs/architecture/scoring-semantics.md)
-- [docs/architecture/policy-calibration.md](/Users/chenmohan/gits/barcarolle/docs/architecture/policy-calibration.md)
-- [docs/architecture/interface-contracts.md](/Users/chenmohan/gits/barcarolle/docs/architecture/interface-contracts.md)
-- [docs/decisions/dependency-selection.md](/Users/chenmohan/gits/barcarolle/docs/decisions/dependency-selection.md)
-- [docs/decisions/module-dependencies.md](/Users/chenmohan/gits/barcarolle/docs/decisions/module-dependencies.md)
+- [docs/analysis/requirements.md](<repo>/docs/analysis/requirements.md)
+- [docs/architecture/system-design.md](<repo>/docs/architecture/system-design.md)
+- [docs/architecture/module-design.md](<repo>/docs/architecture/module-design.md)
+- [docs/architecture/benchmark-admission-rubric.md](<repo>/docs/architecture/benchmark-admission-rubric.md)
+- [docs/architecture/scoring-semantics.md](<repo>/docs/architecture/scoring-semantics.md)
+- [docs/architecture/policy-calibration.md](<repo>/docs/architecture/policy-calibration.md)
+- [docs/architecture/interface-contracts.md](<repo>/docs/architecture/interface-contracts.md)
+- [docs/decisions/dependency-selection.md](<repo>/docs/decisions/dependency-selection.md)
+- [docs/decisions/module-dependencies.md](<repo>/docs/decisions/module-dependencies.md)
 
 ## 2. Runtime stance
 
 ### 2.1 Workflow engine
 
-Temporal remains the baseline orchestration layer. This document intentionally inherits the time-sensitive Temporal version and activity facts from the already-audited dependency memo in [docs/decisions/module-dependencies.md](/Users/chenmohan/gits/barcarolle/docs/decisions/module-dependencies.md), rather than restating a separate version snapshot here. For runtime planning in this document, treat that memo as the repository's audit anchor for current Temporal release/activity status, including the recorded server and Python SDK release points and the note that Python SDK `1.25.0` introduced external-storage support relevant to large evidence payloads.
+Temporal remains the baseline orchestration layer. This document intentionally inherits the time-sensitive Temporal version and activity facts from the already-audited dependency memo in [docs/decisions/module-dependencies.md](<repo>/docs/decisions/module-dependencies.md), rather than restating a separate version snapshot here. For runtime planning in this document, treat that memo as the repository's audit anchor for current Temporal release/activity status, including the recorded server and Python SDK release points and the note that Python SDK `1.25.0` introduced external-storage support relevant to large evidence payloads.
 
 ### 2.2 Execution substrate
 
@@ -945,17 +945,17 @@ Backfill must be append-only:
 
 ### Internal sources
 
-- [docs/analysis/requirements.md](/Users/chenmohan/gits/barcarolle/docs/analysis/requirements.md)
-- [docs/architecture/system-design.md](/Users/chenmohan/gits/barcarolle/docs/architecture/system-design.md)
-- [docs/architecture/module-design.md](/Users/chenmohan/gits/barcarolle/docs/architecture/module-design.md)
-- [docs/architecture/interface-contracts.md](/Users/chenmohan/gits/barcarolle/docs/architecture/interface-contracts.md)
-- [docs/architecture/scoring-semantics.md](/Users/chenmohan/gits/barcarolle/docs/architecture/scoring-semantics.md)
-- [docs/decisions/dependency-selection.md](/Users/chenmohan/gits/barcarolle/docs/decisions/dependency-selection.md)
-- [docs/decisions/module-dependencies.md](/Users/chenmohan/gits/barcarolle/docs/decisions/module-dependencies.md) as the audited in-repo anchor for time-sensitive dependency/runtime facts, including Temporal release/activity status
-- [docs/research/environment-replay-and-reproducible-execution.md](/Users/chenmohan/gits/barcarolle/docs/research/environment-replay-and-reproducible-execution.md)
-- [docs/research/benchmark-trustworthiness-risks.md](/Users/chenmohan/gits/barcarolle/docs/research/benchmark-trustworthiness-risks.md)
-- [docs/research/replayable-repository-task-construction.md](/Users/chenmohan/gits/barcarolle/docs/research/replayable-repository-task-construction.md)
-- [docs/research/repository-evaluation-infrastructure-landscape.md](/Users/chenmohan/gits/barcarolle/docs/research/repository-evaluation-infrastructure-landscape.md)
+- [docs/analysis/requirements.md](<repo>/docs/analysis/requirements.md)
+- [docs/architecture/system-design.md](<repo>/docs/architecture/system-design.md)
+- [docs/architecture/module-design.md](<repo>/docs/architecture/module-design.md)
+- [docs/architecture/interface-contracts.md](<repo>/docs/architecture/interface-contracts.md)
+- [docs/architecture/scoring-semantics.md](<repo>/docs/architecture/scoring-semantics.md)
+- [docs/decisions/dependency-selection.md](<repo>/docs/decisions/dependency-selection.md)
+- [docs/decisions/module-dependencies.md](<repo>/docs/decisions/module-dependencies.md) as the audited in-repo anchor for time-sensitive dependency/runtime facts, including Temporal release/activity status
+- [docs/research/environment-replay-and-reproducible-execution.md](<repo>/docs/research/environment-replay-and-reproducible-execution.md)
+- [docs/research/benchmark-trustworthiness-risks.md](<repo>/docs/research/benchmark-trustworthiness-risks.md)
+- [docs/research/replayable-repository-task-construction.md](<repo>/docs/research/replayable-repository-task-construction.md)
+- [docs/research/repository-evaluation-infrastructure-landscape.md](<repo>/docs/research/repository-evaluation-infrastructure-landscape.md)
 
 ### External primary sources verified on 2026-04-20
 

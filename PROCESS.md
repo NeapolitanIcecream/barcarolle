@@ -18,9 +18,8 @@ Background design inputs are:
 - `docs/architecture/v2-system-architecture-2026-06-25.md`
 - `docs/design-inputs/learned-selector-roadmap-gpt-5-5-pro-2026-06-25.md`
 
-Archived code, reports, runbooks, and experiments are historical reference
-material. They are not active implementation inputs and should not be imported
-without a specific review.
+Archived material is historical reference. It is not an active implementation
+input and should not be imported without a specific review.
 
 ## Design Rules
 

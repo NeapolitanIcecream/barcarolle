@@ -2,13 +2,13 @@
 
 ## 1. Project Intent
 
-**Fact.** The abstract states that this project is about an “Agent 驾照” mechanism for software repositories. It aims to evaluate a code agent or LLM workflow on repository understanding, rule adherence, and regression-risk control, then support graded authorization based on the evaluation result. The research notes consistently frame the problem as repository-specific, history-grounded, replayable, and trust-oriented. Sources: [docs/draft/abstract.md](/Users/chenmohan/gits/barcarolle/docs/draft/abstract.md), [docs/research/repository-specific-benchmark-generation-related-work.md](/Users/chenmohan/gits/barcarolle/docs/research/repository-specific-benchmark-generation-related-work.md), [docs/research/benchmark-trustworthiness-risks.md](/Users/chenmohan/gits/barcarolle/docs/research/benchmark-trustworthiness-risks.md)
+**Fact.** The abstract states that this project is about an “Agent 驾照” mechanism for software repositories. It aims to evaluate a code agent or LLM workflow on repository understanding, rule adherence, and regression-risk control, then support graded authorization based on the evaluation result. The research notes consistently frame the problem as repository-specific, history-grounded, replayable, and trust-oriented. Sources: [docs/draft/abstract.md](<repo>/docs/draft/abstract.md), [docs/research/repository-specific-benchmark-generation-related-work.md](<repo>/docs/research/repository-specific-benchmark-generation-related-work.md), [docs/research/benchmark-trustworthiness-risks.md](<repo>/docs/research/benchmark-trustworthiness-risks.md)
 
 **Inference.** The project is not just a benchmark builder. It is a repository-scoped evaluation and governance layer that records benchmark evidence and derives repository-specific trust or admission decisions for a complete agent configuration.
 
 ## 2. Target Users
 
-**Fact.** The source materials point to evaluation of repository-level code agents and workflows, not a single model in isolation. That implies users who need to compare, certify, or govern complete agent setups. Sources: [docs/research/agent-configuration-evaluation.md](/Users/chenmohan/gits/barcarolle/docs/research/agent-configuration-evaluation.md), [docs/research/repository-evaluation-infrastructure-landscape.md](/Users/chenmohan/gits/barcarolle/docs/research/repository-evaluation-infrastructure-landscape.md)
+**Fact.** The source materials point to evaluation of repository-level code agents and workflows, not a single model in isolation. That implies users who need to compare, certify, or govern complete agent setups. Sources: [docs/research/agent-configuration-evaluation.md](<repo>/docs/research/agent-configuration-evaluation.md), [docs/research/repository-evaluation-infrastructure-landscape.md](<repo>/docs/research/repository-evaluation-infrastructure-landscape.md)
 
 **Inference.** The primary use cases are:
 
@@ -19,9 +19,9 @@
 
 ## 3. Problem Definition
 
-**Fact.** Existing public benchmarks are strong on issue-to-patch, PR mining, repository understanding, or execution harnesses, but they do not fully solve the problem of generating a replayable, graded benchmark for one arbitrary repository and one chosen agent workflow. Sources: [docs/research/repository-specific-benchmark-generation-related-work.md](/Users/chenmohan/gits/barcarolle/docs/research/repository-specific-benchmark-generation-related-work.md), [docs/research/repository-evaluation-infrastructure-landscape.md](/Users/chenmohan/gits/barcarolle/docs/research/repository-evaluation-infrastructure-landscape.md)
+**Fact.** Existing public benchmarks are strong on issue-to-patch, PR mining, repository understanding, or execution harnesses, but they do not fully solve the problem of generating a replayable, graded benchmark for one arbitrary repository and one chosen agent workflow. Sources: [docs/research/repository-specific-benchmark-generation-related-work.md](<repo>/docs/research/repository-specific-benchmark-generation-related-work.md), [docs/research/repository-evaluation-infrastructure-landscape.md](<repo>/docs/research/repository-evaluation-infrastructure-landscape.md)
 
-**Fact.** The literature also shows that the evaluated object is usually the whole agent configuration, including model, prompt, tools, memory, runtime budget, and permissions. Source: [docs/research/agent-configuration-evaluation.md](/Users/chenmohan/gits/barcarolle/docs/research/agent-configuration-evaluation.md)
+**Fact.** The literature also shows that the evaluated object is usually the whole agent configuration, including model, prompt, tools, memory, runtime budget, and permissions. Source: [docs/research/agent-configuration-evaluation.md](<repo>/docs/research/agent-configuration-evaluation.md)
 
 **Inference.** The core problem is to convert repository history and workflow artifacts into a trustworthy decision input: “How well does this specific agent configuration work in this repository-specific environment, and what evidence-backed admission or comparison result follows from that?”
 
@@ -50,13 +50,13 @@
 
 ### 4.2 Regression-risk check after repository drift
 
-**Fact.** The research emphasizes freshness, historical replay, and environment drift as recurring problems. Sources: [docs/research/environment-replay-and-reproducible-execution.md](/Users/chenmohan/gits/barcarolle/docs/research/environment-replay-and-reproducible-execution.md), [docs/research/benchmark-trustworthiness-risks.md](/Users/chenmohan/gits/barcarolle/docs/research/benchmark-trustworthiness-risks.md)
+**Fact.** The research emphasizes freshness, historical replay, and environment drift as recurring problems. Sources: [docs/research/environment-replay-and-reproducible-execution.md](<repo>/docs/research/environment-replay-and-reproducible-execution.md), [docs/research/benchmark-trustworthiness-risks.md](<repo>/docs/research/benchmark-trustworthiness-risks.md)
 
 **Inference.** The system should be re-runnable when dependencies, CI, or repository structure change, so the trust signal stays current.
 
 ### 4.3 Compare agent configurations
 
-**Fact.** The literature says prompt format, tool routing, retrieval quality, memory quality, and runtime budget can materially change results. Source: [docs/research/agent-configuration-evaluation.md](/Users/chenmohan/gits/barcarolle/docs/research/agent-configuration-evaluation.md)
+**Fact.** The literature says prompt format, tool routing, retrieval quality, memory quality, and runtime budget can materially change results. Source: [docs/research/agent-configuration-evaluation.md](<repo>/docs/research/agent-configuration-evaluation.md)
 
 **Inference.** The same repository benchmark should support side-by-side comparison of multiple configurations, not just a single score.
 
@@ -64,13 +64,13 @@
 
 ### 4.4 Repository/module-specific access control
 
-**Fact.** No reviewed source claims that repo-specific certification is already solved. Sources: [docs/research/repository-specific-benchmark-generation-related-work.md](/Users/chenmohan/gits/barcarolle/docs/research/repository-specific-benchmark-generation-related-work.md), [docs/research/agent-configuration-evaluation.md](/Users/chenmohan/gits/barcarolle/docs/research/agent-configuration-evaluation.md)
+**Fact.** No reviewed source claims that repo-specific certification is already solved. Sources: [docs/research/repository-specific-benchmark-generation-related-work.md](<repo>/docs/research/repository-specific-benchmark-generation-related-work.md), [docs/research/agent-configuration-evaluation.md](<repo>/docs/research/agent-configuration-evaluation.md)
 
 **Inference.** A likely downstream use is scoped permissions, such as allowing one configuration to work only in a subset of modules or task classes.
 
 ### 4.5 Post-evaluation agent evolution review
 
-**Fact.** The literature says the evaluated object is the whole agent configuration, and those configurations change materially when prompt, tools, memory, routing, or runtime budget changes. Source: [docs/research/agent-configuration-evaluation.md](/Users/chenmohan/gits/barcarolle/docs/research/agent-configuration-evaluation.md)
+**Fact.** The literature says the evaluated object is the whole agent configuration, and those configurations change materially when prompt, tools, memory, routing, or runtime budget changes. Source: [docs/research/agent-configuration-evaluation.md](<repo>/docs/research/agent-configuration-evaluation.md)
 
 **Inference.** A repository owner needs a governed path for changes made after the original benchmark run. Re-running the full benchmark for every edit will often be too expensive, but silently treating every descendant configuration as equivalent would overstate what was actually tested.
 
@@ -80,19 +80,19 @@
 
 ### 5.1 Source ingestion
 
-**Fact.** The research repeatedly uses commit history, issues, PRs, tests, CI, docs, and reviews as the raw material for benchmark construction. Sources: [docs/draft/abstract.md](/Users/chenmohan/gits/barcarolle/docs/draft/abstract.md), [docs/research/repository-specific-benchmark-generation-related-work.md](/Users/chenmohan/gits/barcarolle/docs/research/repository-specific-benchmark-generation-related-work.md), [docs/research/environment-replay-and-reproducible-execution.md](/Users/chenmohan/gits/barcarolle/docs/research/environment-replay-and-reproducible-execution.md)
+**Fact.** The research repeatedly uses commit history, issues, PRs, tests, CI, docs, and reviews as the raw material for benchmark construction. Sources: [docs/draft/abstract.md](<repo>/docs/draft/abstract.md), [docs/research/repository-specific-benchmark-generation-related-work.md](<repo>/docs/research/repository-specific-benchmark-generation-related-work.md), [docs/research/environment-replay-and-reproducible-execution.md](<repo>/docs/research/environment-replay-and-reproducible-execution.md)
 
 **Inference.** The system should ingest repository history and metadata sufficient to reconstruct candidate tasks, including at least commits, issues, PRs, tests, and environment files.
 
 ### 5.2 Replayable environment reconstruction
 
-**Fact.** Environment replay is a core bottleneck in the literature, and historical fidelity depends on dependency/version reconstruction. Sources: [docs/research/environment-replay-and-reproducible-execution.md](/Users/chenmohan/gits/barcarolle/docs/research/environment-replay-and-reproducible-execution.md), [docs/research/benchmark-trustworthiness-risks.md](/Users/chenmohan/gits/barcarolle/docs/research/benchmark-trustworthiness-risks.md)
+**Fact.** Environment replay is a core bottleneck in the literature, and historical fidelity depends on dependency/version reconstruction. Sources: [docs/research/environment-replay-and-reproducible-execution.md](<repo>/docs/research/environment-replay-and-reproducible-execution.md), [docs/research/benchmark-trustworthiness-risks.md](<repo>/docs/research/benchmark-trustworthiness-risks.md)
 
 **Inference.** The system should reconstruct runnable historical environments or clearly record when it cannot, instead of silently accepting an approximate environment.
 
 ### 5.3 Task synthesis
 
-**Fact.** Prior work derives tasks from issue/PR replay, feature tasks, CI failures, dependency breaks, and repository context selection. Sources: [docs/research/repository-specific-benchmark-generation-related-work.md](/Users/chenmohan/gits/barcarolle/docs/research/repository-specific-benchmark-generation-related-work.md), [docs/research/replayable-repository-task-construction.md](/Users/chenmohan/gits/barcarolle/docs/research/repository-context-selection-and-cross-file-editing.md)
+**Fact.** Prior work derives tasks from issue/PR replay, feature tasks, CI failures, dependency breaks, and repository context selection. Sources: [docs/research/repository-specific-benchmark-generation-related-work.md](<repo>/docs/research/repository-specific-benchmark-generation-related-work.md), [docs/research/replayable-repository-task-construction.md](<repo>/docs/research/repository-context-selection-and-cross-file-editing.md)
 
 **Inference.** The system should synthesize repository-specific tasks that are executable, graded, and tied to the repository’s own engineering history rather than generic prompts.
 
@@ -170,19 +170,19 @@
 
 ### 5.9 Execution and verification
 
-**Fact.** The reviewed systems rely on repository-native tests, builds, CI replay, or custom verifiers, and they treat execution outcomes as primary truth sources. Sources: [docs/research/environment-replay-and-reproducible-execution.md](/Users/chenmohan/gits/barcarolle/docs/research/environment-replay-and-reproducible-execution.md), [docs/research/repository-evaluation-infrastructure-landscape.md](/Users/chenmohan/gits/barcarolle/docs/research/repository-evaluation-infrastructure-landscape.md)
+**Fact.** The reviewed systems rely on repository-native tests, builds, CI replay, or custom verifiers, and they treat execution outcomes as primary truth sources. Sources: [docs/research/environment-replay-and-reproducible-execution.md](<repo>/docs/research/environment-replay-and-reproducible-execution.md), [docs/research/repository-evaluation-infrastructure-landscape.md](<repo>/docs/research/repository-evaluation-infrastructure-landscape.md)
 
 **Inference.** Each synthesized task should be runnable under a verifier with explicit pass/fail semantics, plus enough trace data to replay the run.
 
 ### 5.10 Trace capture and auditability
 
-**Fact.** The research repeatedly highlights trajectories, command logs, event streams, and evaluation logs as necessary artifacts. Sources: [docs/research/repository-evaluation-infrastructure-landscape.md](/Users/chenmohan/gits/barcarolle/docs/research/repository-evaluation-infrastructure-landscape.md), [docs/research/environment-replay-and-reproducible-execution.md](/Users/chenmohan/gits/barcarolle/docs/research/environment-replay-and-reproducible-execution.md)
+**Fact.** The research repeatedly highlights trajectories, command logs, event streams, and evaluation logs as necessary artifacts. Sources: [docs/research/repository-evaluation-infrastructure-landscape.md](<repo>/docs/research/repository-evaluation-infrastructure-landscape.md), [docs/research/environment-replay-and-reproducible-execution.md](<repo>/docs/research/environment-replay-and-reproducible-execution.md)
 
 **Inference.** The system should keep per-task traces that let a maintainer inspect what the agent did, what it saw, and why the verifier passed or failed it.
 
 ### 5.11 Benchmark-level evaluation and graded output
 
-**Fact.** The project abstract explicitly calls for graded authorization; the research suggests performance can vary by workflow, repository, and task family. Sources: [docs/draft/abstract.md](/Users/chenmohan/gits/barcarolle/docs/draft/abstract.md), [docs/research/agent-configuration-evaluation.md](/Users/chenmohan/gits/barcarolle/docs/research/agent-configuration-evaluation.md)
+**Fact.** The project abstract explicitly calls for graded authorization; the research suggests performance can vary by workflow, repository, and task family. Sources: [docs/draft/abstract.md](<repo>/docs/draft/abstract.md), [docs/research/agent-configuration-evaluation.md](<repo>/docs/research/agent-configuration-evaluation.md)
 
 **Inference.** The output should be more than pass/fail. It should produce a benchmark-level evaluation of one agent configuration on one benchmark release, plus a benchmark scorecard or equivalent aggregate that can drive trust grades and authorization recommendations.
 
@@ -220,13 +220,13 @@
 
 ### 6.1 Reproducibility
 
-**Fact.** Reproducibility and run-to-run stability are recurring concerns in the research. Sources: [docs/research/benchmark-trustworthiness-risks.md](/Users/chenmohan/gits/barcarolle/docs/research/benchmark-trustworthiness-risks.md), [docs/research/environment-replay-and-reproducible-execution.md](/Users/chenmohan/gits/barcarolle/docs/research/environment-replay-and-reproducible-execution.md)
+**Fact.** Reproducibility and run-to-run stability are recurring concerns in the research. Sources: [docs/research/benchmark-trustworthiness-risks.md](<repo>/docs/research/benchmark-trustworthiness-risks.md), [docs/research/environment-replay-and-reproducible-execution.md](<repo>/docs/research/environment-replay-and-reproducible-execution.md)
 
 **Requirement.** Results should be replayable from stored artifacts, with clear versioning for repository state, environment state, task definition, benchmark release membership, and evaluation policy.
 
 ### 6.2 Trustworthiness
 
-**Fact.** Benchmark leakage, weak oracles, and harness exploits are established risks. Source: [docs/research/benchmark-trustworthiness-risks.md](/Users/chenmohan/gits/barcarolle/docs/research/benchmark-trustworthiness-risks.md)
+**Fact.** Benchmark leakage, weak oracles, and harness exploits are established risks. Source: [docs/research/benchmark-trustworthiness-risks.md](<repo>/docs/research/benchmark-trustworthiness-risks.md)
 
 **Requirement.** The system should separate the agent workspace from the verifier trust boundary and avoid relying on any artifact that the agent can directly tamper with.
 
@@ -234,13 +234,13 @@
 
 ### 6.3 Freshness
 
-**Fact.** Several reviewed systems move toward live updates and rolling evaluation because static suites age quickly. Sources: [docs/research/benchmark-trustworthiness-risks.md](/Users/chenmohan/gits/barcarolle/docs/research/agent-configuration-evaluation.md)
+**Fact.** Several reviewed systems move toward live updates and rolling evaluation because static suites age quickly. Sources: [docs/research/benchmark-trustworthiness-risks.md](<repo>/docs/research/agent-configuration-evaluation.md)
 
 **Requirement.** The evaluation set should be refreshable or regeneratable so it can reflect repository drift and new history.
 
 ### 6.4 Auditability
 
-**Fact.** Process-level metrics and trajectory capture are a major theme in the literature. Sources: [docs/research/repository-evaluation-infrastructure-landscape.md](/Users/chenmohan/gits/barcarolle/docs/research/agent-configuration-evaluation.md)
+**Fact.** Process-level metrics and trajectory capture are a major theme in the literature. Sources: [docs/research/repository-evaluation-infrastructure-landscape.md](<repo>/docs/research/agent-configuration-evaluation.md)
 
 **Requirement.** A human reviewer should be able to explain both a per-task score and a benchmark-level scorecard from stored traces, release membership, and benchmark-evaluation lineage, not just from a final aggregate number.
 
@@ -252,31 +252,31 @@
 
 ### 7.1 Historical leakage
 
-**Fact.** Repo history can leak answers through future commits, PR text, linked issues, or searchable web artifacts. Source: [docs/research/benchmark-trustworthiness-risks.md](/Users/chenmohan/gits/barcarolle/docs/research/benchmark-trustworthiness-risks.md)
+**Fact.** Repo history can leak answers through future commits, PR text, linked issues, or searchable web artifacts. Source: [docs/research/benchmark-trustworthiness-risks.md](<repo>/docs/research/benchmark-trustworthiness-risks.md)
 
 **Risk.** If task generation reuses too much directly observable history, the benchmark may measure memorization or lookup rather than repository understanding.
 
 ### 7.2 Weak or misaligned oracles
 
-**Fact.** Tests can be too narrow, too broad, or otherwise misaligned with intent. Source: [docs/research/benchmark-trustworthiness-risks.md](/Users/chenmohan/gits/barcarolle/docs/research/benchmark-trustworthiness-risks.md)
+**Fact.** Tests can be too narrow, too broad, or otherwise misaligned with intent. Source: [docs/research/benchmark-trustworthiness-risks.md](<repo>/docs/research/benchmark-trustworthiness-risks.md)
 
 **Risk.** A passing agent may still be behaviorally wrong, while a correct alternate implementation may be rejected.
 
 ### 7.3 Environment drift and replay failure
 
-**Fact.** Dependency resolution, package availability, and CI state change over time. Source: [docs/research/environment-replay-and-reproducible-execution.md](/Users/chenmohan/gits/barcarolle/docs/research/environment-replay-and-reproducible-execution.md)
+**Fact.** Dependency resolution, package availability, and CI state change over time. Source: [docs/research/environment-replay-and-reproducible-execution.md](<repo>/docs/research/environment-replay-and-reproducible-execution.md)
 
 **Risk.** A task that was valid at extraction time may later become unreplayable or flaky.
 
 ### 7.4 Benchmark gaming
 
-**Fact.** The research documents concrete exploit paths against shared-state evaluators and test runners. Source: [docs/research/benchmark-trustworthiness-risks.md](/Users/chenmohan/gits/barcarolle/docs/research/benchmark-trustworthiness-risks.md)
+**Fact.** The research documents concrete exploit paths against shared-state evaluators and test runners. Source: [docs/research/benchmark-trustworthiness-risks.md](<repo>/docs/research/benchmark-trustworthiness-risks.md)
 
 **Risk.** If the verifier or logs sit inside the agent’s control boundary, the agent may optimize the score instead of solving the task.
 
 ### 7.5 Overgeneralization
 
-**Fact.** The literature warns that benchmark results differ by repository, task family, and workflow scaffold. Source: [docs/research/agent-configuration-evaluation.md](/Users/chenmohan/gits/barcarolle/docs/research/agent-configuration-evaluation.md)
+**Fact.** The literature warns that benchmark results differ by repository, task family, and workflow scaffold. Source: [docs/research/agent-configuration-evaluation.md](<repo>/docs/research/agent-configuration-evaluation.md)
 
 **Risk.** A score on one repository or task family should not be over-read as a global agent capability claim.
 
@@ -294,13 +294,13 @@ These are implementation assumptions, not facts from the sources. That uncertain
 
 ## 9. Source Traceability Summary
 
-- [docs/draft/abstract.md](/Users/chenmohan/gits/barcarolle/docs/draft/abstract.md): project intent, agent-license framing, repository-level trust and authorization goal.
-- [docs/research/replayable-repository-task-construction.md](/Users/chenmohan/gits/barcarolle/docs/research/replayable-repository-task-construction.md): executable task construction, replayability, validation, and suitable historical-change criteria.
-- [docs/research/repository-context-selection-and-cross-file-editing.md](/Users/chenmohan/gits/barcarolle/docs/research/repository-context-selection-and-cross-file-editing.md): repository understanding, context selection, dependency-aware editing, and process metrics.
-- [docs/research/repository-evaluation-infrastructure-landscape.md](/Users/chenmohan/gits/barcarolle/docs/research/repository-evaluation-infrastructure-landscape.md): evaluation stack, harnesses, traces, and infrastructure concerns.
-- [docs/research/agent-configuration-evaluation.md](/Users/chenmohan/gits/barcarolle/docs/research/agent-configuration-evaluation.md): whole-agent evaluation object, workflow sensitivity, and process-level metrics.
-- [docs/research/benchmark-trustworthiness-risks.md](/Users/chenmohan/gits/barcarolle/docs/research/benchmark-trustworthiness-risks.md): contamination, leakage, weak oracles, harness exploits, and stability risks.
-- [docs/research/environment-replay-and-reproducible-execution.md](/Users/chenmohan/gits/barcarolle/docs/research/environment-replay-and-reproducible-execution.md): historical environment reconstruction, replay fidelity, trace capture, and continuous maintenance.
+- [docs/draft/abstract.md](<repo>/docs/draft/abstract.md): project intent, agent-license framing, repository-level trust and authorization goal.
+- [docs/research/replayable-repository-task-construction.md](<repo>/docs/research/replayable-repository-task-construction.md): executable task construction, replayability, validation, and suitable historical-change criteria.
+- [docs/research/repository-context-selection-and-cross-file-editing.md](<repo>/docs/research/repository-context-selection-and-cross-file-editing.md): repository understanding, context selection, dependency-aware editing, and process metrics.
+- [docs/research/repository-evaluation-infrastructure-landscape.md](<repo>/docs/research/repository-evaluation-infrastructure-landscape.md): evaluation stack, harnesses, traces, and infrastructure concerns.
+- [docs/research/agent-configuration-evaluation.md](<repo>/docs/research/agent-configuration-evaluation.md): whole-agent evaluation object, workflow sensitivity, and process-level metrics.
+- [docs/research/benchmark-trustworthiness-risks.md](<repo>/docs/research/benchmark-trustworthiness-risks.md): contamination, leakage, weak oracles, harness exploits, and stability risks.
+- [docs/research/environment-replay-and-reproducible-execution.md](<repo>/docs/research/environment-replay-and-reproducible-execution.md): historical environment reconstruction, replay fidelity, trace capture, and continuous maintenance.
 
 ## 10. Conclusion
 

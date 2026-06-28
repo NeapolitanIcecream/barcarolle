@@ -6,15 +6,15 @@ This document defines the platform-operations view for the repository-specific a
 
 It stays aligned with:
 
-- [docs/analysis/requirements.md](/Users/chenmohan/gits/barcarolle/docs/analysis/requirements.md)
-- [docs/architecture/system-design.md](/Users/chenmohan/gits/barcarolle/docs/architecture/system-design.md)
-- [docs/architecture/module-design.md](/Users/chenmohan/gits/barcarolle/docs/architecture/module-design.md)
-- [docs/architecture/interface-contracts.md](/Users/chenmohan/gits/barcarolle/docs/architecture/interface-contracts.md)
-- [docs/architecture/data-model.md](/Users/chenmohan/gits/barcarolle/docs/architecture/data-model.md)
-- [docs/architecture/api-schema.md](/Users/chenmohan/gits/barcarolle/docs/architecture/api-schema.md)
-- [docs/architecture/workflow-runtime.md](/Users/chenmohan/gits/barcarolle/docs/architecture/workflow-runtime.md)
-- [docs/decisions/dependency-selection.md](/Users/chenmohan/gits/barcarolle/docs/decisions/dependency-selection.md)
-- [docs/decisions/module-dependencies.md](/Users/chenmohan/gits/barcarolle/docs/decisions/module-dependencies.md)
+- [docs/analysis/requirements.md](<repo>/docs/analysis/requirements.md)
+- [docs/architecture/system-design.md](<repo>/docs/architecture/system-design.md)
+- [docs/architecture/module-design.md](<repo>/docs/architecture/module-design.md)
+- [docs/architecture/interface-contracts.md](<repo>/docs/architecture/interface-contracts.md)
+- [docs/architecture/data-model.md](<repo>/docs/architecture/data-model.md)
+- [docs/architecture/api-schema.md](<repo>/docs/architecture/api-schema.md)
+- [docs/architecture/workflow-runtime.md](<repo>/docs/architecture/workflow-runtime.md)
+- [docs/decisions/dependency-selection.md](<repo>/docs/decisions/dependency-selection.md)
+- [docs/decisions/module-dependencies.md](<repo>/docs/decisions/module-dependencies.md)
 
 This page intentionally inherits time-sensitive dependency and release facts from the dependency and workflow documents above. It does not restate version snapshots here.
 

@@ -10,5 +10,5 @@ default_timeout_seconds: 120
 certification_timeout_seconds: 60
 allow_paid_model_calls_by_default: false
 require_budget_projection_before_paid_batch: true
-primary_python: /Users/chenmohan/gits/barcarolle/experiments/phase0_headroom/.venv/bin/python3
+primary_python: <repo>/experiments/phase0_headroom/.venv/bin/python3
 primary_shell: /bin/zsh

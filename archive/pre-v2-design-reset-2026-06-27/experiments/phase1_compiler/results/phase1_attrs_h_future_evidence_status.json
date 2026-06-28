@@ -19,7 +19,7 @@
     "hidden_oracle_informed_statement_rewrite",
     "task_generator_yield_as_main_contribution"
   ],
-  "config": "/Users/chenmohan/gits/barcarolle/experiments/phase1_compiler/configs/phase1_attrs_h_future_statement_quality_audit.yaml",
+  "config": "<repo>/experiments/phase1_compiler/configs/phase1_attrs_h_future_statement_quality_audit.yaml",
   "current_paid_result_preserved_as_original_observation": true,
   "decision_rationale": [
     "The original paid attrs H_future result remains 1/7 scoreable pass with one non-scoreable policy violation.",

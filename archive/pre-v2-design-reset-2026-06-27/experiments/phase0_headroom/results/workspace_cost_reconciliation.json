@@ -2,7 +2,7 @@
   "actual_provider_billed_cost_usd": null,
   "endpoint_host_hash": "9952174049b2",
   "generated_at": "2026-05-29T05:19:41+00:00",
-  "pricing_config": "/Users/chenmohan/gits/barcarolle/experiments/phase0_headroom/configs/model_pricing.yaml",
+  "pricing_config": "<repo>/experiments/phase0_headroom/configs/model_pricing.yaml",
   "result_prefixes": [
     "codex_kilo_workspace",
     "codex_kilo_workspace_followup_smoke",

@@ -668,7 +668,7 @@ def generator_prompt_text(config: dict[str, Any]) -> str:
 
 You are the real external Codex CLI generator session for the Phase 1 canonical split repair.
 
-Work in `/Users/chenmohan/gits/barcarolle`. Do not commit. Do not push. Do not run solver ACUT cells.
+Work in `<repo>`. Do not commit. Do not push. Do not run solver ACUT cells.
 
 Read only this sanitized candidate packet file:
 
@@ -722,7 +722,7 @@ def reviewer_prompt_text(config: dict[str, Any]) -> str:
 
 You are the real external Codex CLI reviewer session for the Phase 1 canonical split repair.
 
-Work in `/Users/chenmohan/gits/barcarolle`. Do not commit. Do not push. Do not edit generated statements.
+Work in `<repo>`. Do not commit. Do not push. Do not edit generated statements.
 
 Read:
 
@@ -778,7 +778,7 @@ def run_script_text(role: str, config: dict[str, Any]) -> str:
     reasoning = str(config["policy"]["required_reasoning_effort"])
     return f"""#!/usr/bin/env bash
 set -euo pipefail
-cd /Users/chenmohan/gits/barcarolle
+cd <repo>
 
 WORKFLOW="{wf_rel}"
 PROCESS="{process}"
@@ -800,7 +800,7 @@ EOF
 set +e
 env {env_unsets} \\
 codex exec \\
-  -C /Users/chenmohan/gits/barcarolle \\
+  -C <repo> \\
   -m {model} \\
   -c 'model_reasoning_effort="{reasoning}"' \\
   --dangerously-bypass-approvals-and-sandbox \\

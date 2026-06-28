@@ -37,7 +37,7 @@ generation_review:
   hard_incremental_cost_cap_usd: 20
 
 source_artifacts:
-  proposal: /Users/chenmohan/Downloads/barcarolle-research-0519.md
+  proposal: <local-downloads>/barcarolle-research-0519.md
   prior_deterministic_process: experiments/phase1_compiler/reports/phase1_diff_assisted_statement_regeneration_process.md
   prior_deterministic_reviews: experiments/phase1_compiler/reports/phase1_diff_assisted_statement_reviews.md
   prior_deterministic_screen: experiments/phase1_compiler/reports/phase1_diff_assisted_statement_screen.md

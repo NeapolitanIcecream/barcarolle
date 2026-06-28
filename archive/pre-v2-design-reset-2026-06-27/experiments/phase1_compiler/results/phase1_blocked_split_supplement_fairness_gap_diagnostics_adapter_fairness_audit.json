@@ -114,8 +114,8 @@
       "classification": "documented_acut_difference",
       "evidence": {
         "command_templates": {
-          "codex_workspace": "uv run --project /Users/chenmohan/gits/barcarolle/experiments/phase0_headroom python /Users/chenmohan/gits/barcarolle/experiments/phase0_headroom/tools/codex_workspace_adapter.py --workspace {workspace} --statement-file {statement_file} --raw-dir {raw_dir} --timeout {timeout_seconds}",
-          "kilo_workspace": "uv run --project /Users/chenmohan/gits/barcarolle/experiments/phase0_headroom python /Users/chenmohan/gits/barcarolle/experiments/phase0_headroom/tools/kilo_workspace_adapter.py --workspace {workspace} --statement-file {statement_file} --raw-dir {raw_dir} --timeout {timeout_seconds} --completion-mode strict-final"
+          "codex_workspace": "uv run --project <repo>/experiments/phase0_headroom python <repo>/experiments/phase0_headroom/tools/codex_workspace_adapter.py --workspace {workspace} --statement-file {statement_file} --raw-dir {raw_dir} --timeout {timeout_seconds}",
+          "kilo_workspace": "uv run --project <repo>/experiments/phase0_headroom python <repo>/experiments/phase0_headroom/tools/kilo_workspace_adapter.py --workspace {workspace} --statement-file {statement_file} --raw-dir {raw_dir} --timeout {timeout_seconds} --completion-mode strict-final"
         },
         "paid_acut_concurrency": 1,
         "timeouts": {

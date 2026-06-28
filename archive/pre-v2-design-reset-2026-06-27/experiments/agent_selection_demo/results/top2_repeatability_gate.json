@@ -17,7 +17,7 @@
   },
   "adapter_unit_tests": {
     "returncode": 0,
-    "stderr_tail": "warning: `VIRTUAL_ENV=/Users/chenmohan/.cache/uv/builds-v0/.tmpHOZsr3` does not match the project environment path `experiments/phase0_headroom/.venv` and will be ignored; use `--active` to target the active environment instead\n",
+    "stderr_tail": "warning: `VIRTUAL_ENV=<local-user-home>/.cache/uv/builds-v0/.tmpHOZsr3` does not match the project environment path `experiments/phase0_headroom/.venv` and will be ignored; use `--active` to target the active environment instead\n",
     "stdout_tail": "...............                                                          [100%]\n15 passed in 0.02s\n"
   },
   "agent_ids": [

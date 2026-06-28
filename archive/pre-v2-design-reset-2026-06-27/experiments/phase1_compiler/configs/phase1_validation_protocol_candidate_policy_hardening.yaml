@@ -48,10 +48,10 @@ inputs:
   selection_manifest: experiments/phase1_compiler/results/phase1_candidate_policy_validation_protocol_selection_manifest.json
   outcome_blindness_audit: experiments/phase1_compiler/results/phase1_candidate_policy_validation_protocol_outcome_blindness_audit.json
 optional_inputs:
-  local_plan_0519: /Users/chenmohan/Downloads/barcarolle-research-0519.md
-  local_plan_0526: /Users/chenmohan/Downloads/barcarolle-research-0526.md
-  local_plan_0526_1: /Users/chenmohan/Downloads/barcarolle-research-0526-1.md
-  local_plan_0530: /Users/chenmohan/Downloads/barcarolle-research-0530.md
+  local_plan_0519: <local-downloads>/barcarolle-research-0519.md
+  local_plan_0526: <local-downloads>/barcarolle-research-0526.md
+  local_plan_0526_1: <local-downloads>/barcarolle-research-0526-1.md
+  local_plan_0530: <local-downloads>/barcarolle-research-0530.md
 outputs:
   preflight: experiments/phase1_compiler/results/phase1_validation_protocol_candidate_policy_hardening_preflight.json
   claim_modes: experiments/phase1_compiler/results/phase1_validation_protocol_candidate_policy_hardening_claim_modes.json

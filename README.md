@@ -61,4 +61,3 @@ points.
 - `barcarolle/`: Python package.
 - `tests/`: executable examples and regression tests.
 - `docs/design/`: detailed behavior and data contracts.
-- `archive/`: historical material; skip it for normal use.

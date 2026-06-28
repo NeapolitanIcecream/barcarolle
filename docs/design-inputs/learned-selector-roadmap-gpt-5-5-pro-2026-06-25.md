@@ -801,7 +801,7 @@ I found an accessible SWE-bench Atlas evaluation package, but its README is an e
 
 ---
 
-# 8. Implementation roadmap for Codex
+# 8. Implementation Notes
 
 Keep the implementation small, use direct schemas and `uv`, and treat old experiment code as evidence or one-time import material rather than v2 architecture. That is consistent with the repository’s current engineering rules.
 

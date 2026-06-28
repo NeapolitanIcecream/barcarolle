@@ -2,7 +2,7 @@
 
 This run used the following planning and research inputs:
 
-- `/Users/chenmohan/Downloads/barcarolle-research-0519.md`
+- `<local-downloads>/barcarolle-research-0519.md`
 - `docs/experiments/phase-0-runbook.md`
 - `docs/experiments/phase-0-headroom-plan.md`
 - `docs/architecture/system-design.md`

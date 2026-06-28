@@ -305,8 +305,8 @@ git worktree add ../barcarolle-wt-analysis \
 
 Each worker prompt and `run.sh` should record both:
 
-- `COORDINATOR_REPO=/Users/chenmohan/gits/barcarolle`
-- `WORKER_REPO=/Users/chenmohan/gits/barcarolle-wt-<worker>` when a worktree is used
+- `COORDINATOR_REPO=<repo>`
+- `WORKER_REPO=<repo>-wt-<worker>` when a worktree is used
 
 The Codex CLI `-C` argument must point at `WORKER_REPO`, not the coordinator worktree, for worktree-backed workers.
 
@@ -390,7 +390,7 @@ Each ACUT task attempt should produce a normalized JSON result:
 
 Every worker prompt must include:
 
-- The coordinator repo path: `/Users/chenmohan/gits/barcarolle`.
+- The coordinator repo path: `<repo>`.
 - The worker repo path. This may be the coordinator worktree for lightweight workers, or a dedicated Git worktree for code, task, verifier, execution, and analysis workers.
 - The worker branch name when a dedicated worktree is used.
 - The workflow path: `.codex-workflows/core-narrative-experiment/`.
@@ -776,7 +776,7 @@ Threats to validity to report:
 ```text
 You are the coordinator for the Barcarolle core narrative experiment.
 
-Repo: /Users/chenmohan/gits/barcarolle
+Repo: <repo>
 Plan: docs/experiments/core-narrative-experiment-plan.md
 Workflow root: .codex-workflows/core-narrative-experiment
 
@@ -796,7 +796,7 @@ First action:
 ```text
 You are a Codex CLI worker in the Barcarolle core narrative experiment.
 
-Coordinator repo: /Users/chenmohan/gits/barcarolle
+Coordinator repo: <repo>
 Worker repo: WORKER_REPO
 Worker branch: WORKER_BRANCH
 Plan: docs/experiments/core-narrative-experiment-plan.md

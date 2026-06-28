@@ -1,5 +1,5 @@
 {
-  "config": "/Users/chenmohan/gits/barcarolle/experiments/phase1_compiler/configs/phase1_attrs_h_future_statement_quality_audit.yaml",
+  "config": "<repo>/experiments/phase1_compiler/configs/phase1_attrs_h_future_statement_quality_audit.yaml",
   "diagnostic_only": true,
   "does_not_change_paid_outcomes": true,
   "future_paid_validation_requires_new_preregistration": true,

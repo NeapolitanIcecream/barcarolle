@@ -11,7 +11,7 @@ policy:
   endpoint_api_key_env: LLM_API_KEY
 
 source_artifacts:
-  proposal: /Users/chenmohan/Downloads/barcarolle-research-0519.md
+  proposal: <local-downloads>/barcarolle-research-0519.md
   attrs_h_future_evidence_status: experiments/phase1_compiler/results/phase1_attrs_h_future_evidence_status.json
   attrs_h_future_task_design_audit: experiments/phase1_compiler/results/phase1_attrs_h_future_task_design_audit.json
   attrs_h_future_statement_sensitivity: experiments/phase1_compiler/results/phase1_attrs_h_future_statement_sensitivity.json

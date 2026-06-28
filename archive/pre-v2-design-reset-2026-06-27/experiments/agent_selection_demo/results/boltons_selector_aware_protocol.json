@@ -87,7 +87,7 @@
     "old_artifacts_to_treat_as_diagnostic": [
       "experiments/agent_selection_demo/results/boltons_strict_rolling_origin_summary.json",
       "experiments/agent_selection_demo/reports/boltons_strict_rolling_origin_zh.md",
-      "/Users/chenmohan/playground/barcarolle_ppt_assets/boltons_strict_rolling_origin_timeline.png"
+      "<local-playground>/barcarolle_ppt_assets/boltons_strict_rolling_origin_timeline.png"
     ],
     "problem": "The previous rolling-origin/user-view charts compared the latest fixed historical window directly with future tasks. They did not first run a selector on the historical candidate pool and then evaluate only selector-chosen task IDs.",
     "status": "fixed_window_not_selector_aware"

@@ -11,7 +11,7 @@
     "attrs__hist__023",
     "attrs__hist__027"
   ],
-  "config": "/Users/chenmohan/gits/barcarolle/experiments/phase1_compiler/configs/phase1_attrs_h_future_statement_quality_audit.yaml",
+  "config": "<repo>/experiments/phase1_compiler/configs/phase1_attrs_h_future_statement_quality_audit.yaml",
   "generated_at": "2026-05-25T01:34:18Z",
   "original_paid_result_preserved": true,
   "paid_acut_calls_made": false,

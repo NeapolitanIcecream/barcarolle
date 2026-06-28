@@ -1535,7 +1535,7 @@ def selector_aware_protocol_payload(manifest: dict[str, Any], matrix_rows: list[
             "old_artifacts_to_treat_as_diagnostic": [
                 "experiments/agent_selection_demo/results/boltons_strict_rolling_origin_summary.json",
                 "experiments/agent_selection_demo/reports/boltons_strict_rolling_origin_zh.md",
-                "/Users/chenmohan/playground/barcarolle_ppt_assets/boltons_strict_rolling_origin_timeline.png",
+                "<local-playground>/barcarolle_ppt_assets/boltons_strict_rolling_origin_timeline.png",
             ],
         },
         "task_order_rule": "sort displayed boltons tasks by real task_time/task_order; history is strictly before origin, future is at or after origin",
@@ -2636,10 +2636,10 @@ def selector_aware_closeout_payload(
             "seed_count": random_payload["random_seed_count"],
         },
         "regenerated_chart_files": [
-            "/Users/chenmohan/playground/barcarolle_ppt_assets/agent_selection_selection_vs_holdout.png",
-            "/Users/chenmohan/playground/barcarolle_ppt_assets/boltons_selector_aware_rolling_origin_timeline.png",
-            "/Users/chenmohan/playground/barcarolle_ppt_assets/rolling_origin_mae_comparison.png",
-            "/Users/chenmohan/playground/barcarolle_ppt_assets/agent_selection_demo_image_prompts.md",
+            "<local-playground>/barcarolle_ppt_assets/agent_selection_selection_vs_holdout.png",
+            "<local-playground>/barcarolle_ppt_assets/boltons_selector_aware_rolling_origin_timeline.png",
+            "<local-playground>/barcarolle_ppt_assets/rolling_origin_mae_comparison.png",
+            "<local-playground>/barcarolle_ppt_assets/agent_selection_demo_image_prompts.md",
         ],
         "supported_claims": [
             "The expanded boltons matrix can be reanalyzed without new paid cells under a selector-aware protocol.",

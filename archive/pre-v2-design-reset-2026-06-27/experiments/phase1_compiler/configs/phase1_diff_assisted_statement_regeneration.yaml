@@ -26,7 +26,7 @@ generation_review:
   hard_incremental_cost_cap_usd: 20
 
 source_artifacts:
-  proposal: /Users/chenmohan/Downloads/barcarolle-research-0519.md
+  proposal: <local-downloads>/barcarolle-research-0519.md
   statement_hardened_inventory: experiments/phase1_compiler/results/phase1_statement_hardened_candidate_inventory.json
   statement_hardened_screen: experiments/phase1_compiler/results/phase1_statement_hardened_candidate_screen.json
   statement_hardened_validation_decision: experiments/phase1_compiler/results/phase1_statement_hardened_validation_decision.json
