@@ -58,8 +58,9 @@ that actually need them.
 
 ## Paid Calls
 
-Current design documents do not require paid LLM or Agent calls. When a task
-explicitly requires paid calls, use only:
+Current design documents do not require paid benchmark or evidence-producing
+LLM or Agent calls. When a task explicitly requires benchmark/evidence-producing
+paid calls, use only:
 
 ```text
 LLM_BASE_URL
@@ -68,3 +69,8 @@ LLM_API_KEY
 
 Record a protocol before running paid calls that affect evidence, benchmark
 results, selector training, or research claims.
+
+Repository-maintenance Codex sessions used to implement, review, or coordinate
+work are outside this paid-call boundary. Reviewer Codex CLI sessions should use
+the user's local Codex CLI authentication/subscription unless the user
+explicitly requests a different reviewer execution mode.

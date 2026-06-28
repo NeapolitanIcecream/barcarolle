@@ -115,6 +115,11 @@ logs for coordination. Use `process.md` and review handoff files. Logs are for
 debugging only. `.codex-workflows/` is coordination state and must not be
 committed.
 
+Reviewer Codex CLI sessions are repository-maintenance review sessions. They
+should use the user's local Codex CLI authentication/subscription. Do not route
+Reviewer sessions through `LLM_BASE_URL` or `LLM_API_KEY` unless the user
+explicitly asks for that execution mode.
+
 ## Worker Prompt Requirements
 
 The runbook Agent's worker notes for each module must state:
@@ -137,8 +142,10 @@ The runbook Agent's worker notes for each module must state:
 
 The worker must not run paid benchmark Agent-solving calls. If a step appears to
 require paid benchmark execution, stop and write a blocker report. Any explicit
-paid LLM or Agent call must obey `AGENTS.md` and use only `LLM_BASE_URL` and
-`LLM_API_KEY`.
+benchmark/evidence-producing paid LLM or Agent call must obey `AGENTS.md` and
+use only `LLM_BASE_URL` and `LLM_API_KEY`. This restriction does not apply to
+Reviewer Codex CLI sessions, which are repository-maintenance review sessions
+and should use the user's local Codex CLI authentication/subscription.
 
 ## Reviewer Prompt Requirements
 

@@ -59,9 +59,14 @@ Prefer the module vocabulary above; avoid alternate module names.
 
 Use `uv` for repo-local Python tooling.
 
-## LLM Endpoint Rule
+## Benchmark LLM Endpoint Rule
 
-All paid LLM or Agent calls must use:
+This rule applies to Barcarolle benchmark or evidence-producing paid calls:
+target Agent-solving runs, paid validation runs, selector experiments,
+benchmark harness calls, and any other paid call whose output may become
+benchmark evidence or research evidence.
+
+Those calls must use:
 
 ```text
 LLM_BASE_URL
@@ -69,11 +74,18 @@ LLM_API_KEY
 ```
 
 If either variable is missing, source `~/.zshrc` and check again before making
-the call. Do not use subscription auth, `OPENAI_API_KEY`, OpenRouter variables,
-or provider-specific variables unless the user explicitly changes this rule.
+the benchmark/evidence-producing call. Do not use subscription auth,
+`OPENAI_API_KEY`, OpenRouter variables, or provider-specific variables for those
+benchmark/evidence-producing calls unless the user explicitly changes this rule.
 
 If a harness cannot be proven to use the required endpoint, stop before paid
 task-solving calls and write a blocker report.
+
+This rule does not apply to repository-maintenance Codex sessions used to
+implement, review, or coordinate work in this repository. Runbook Reviewer Codex
+CLI sessions should use the user's local Codex CLI authentication/subscription,
+not `LLM_BASE_URL` or `LLM_API_KEY`, unless the user explicitly requests a
+different reviewer execution mode.
 
 ## Artifact Hygiene
 
