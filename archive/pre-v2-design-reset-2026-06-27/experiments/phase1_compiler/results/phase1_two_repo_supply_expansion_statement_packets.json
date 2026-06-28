@@ -1463,7 +1463,7 @@
         "strutils"
       ],
       "linked_public_context_summaries": {
-        "body_summary": "I'm using Arch linux (typical starting statement of an arch user lol), and one of the packages I use depend on boltons (https://aur.archlinux.org/packages/python-boltons). I faced an issue with tests failing causing me to do some manual intervention. On my machine, I have ```python BOLTONS_PATH = \"/home/theartful/.cache/yay/python-boltons/src/boltons/boltons\" ``` The test checks that \"fileutils.py\" can be found using `iter_find_files`, and indeed it is part of `iter_find_files(BOLTONS_PATH, patterns=['*.py'])` as: ```python p = \"/home/theartful/.cache/yay/python-boltons/src/boltons/boltons/fileutils.",
+        "body_summary": "I'm using Arch linux (typical starting statement of an arch user lol), and one of the packages I use depend on boltons (https://aur.archlinux.org/packages/python-boltons). I faced an issue with tests failing causing me to do some manual intervention. On my machine, I have ```python BOLTONS_PATH = \"<external-user-home>/.cache/yay/python-boltons/src/boltons/boltons\" ``` The test checks that \"fileutils.py\" can be found using `iter_find_files`, and indeed it is part of `iter_find_files(BOLTONS_PATH, patterns=['*.py'])` as: ```python p = \"<external-user-home>/.cache/yay/python-boltons/src/boltons/boltons/fileutils.",
         "source_kind": "pull_request",
         "source_ref": "pr:377"
       },

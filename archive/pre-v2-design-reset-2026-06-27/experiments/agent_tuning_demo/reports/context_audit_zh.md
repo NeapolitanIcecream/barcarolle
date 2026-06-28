@@ -15,7 +15,7 @@
 | `experiments/phase0_headroom/tools/workspace_acut_run.py` | clean solver workspace、statement file、adapter invocation、diff capture、fresh verifier replay、hidden oracle injection、policy checks | Phase 2 主执行边界可沿用；需要注入 hook 或外层 wrapper |
 | `experiments/agent_selection_demo/tools/agent_selection_demo.py` | task pool、candidate adapter config、stage result persistence、usage/cost parsing、score rows | 可沿用 agent config 和 score/report 口径 |
 | `experiments/phase0_headroom/tools/codex_workspace_adapter.py` | `codex exec`、isolated `CODEX_HOME`、LLM endpoint provider、workspace `--cd` | Codex repo-local `AGENTS.md` / skills 是可测 surface |
-| `experiments/phase0_headroom/tools/kilo_workspace_adapter.py` | `kilo run`、isolated config/home/cache、workspace `--dir`、generated provider config | Kilo repo-local `AGENTS.md` / `.kilo/rules` / `.kilo/skills` 是可测 surface |
+| `experiments/phase0_headroom/tools/kilo_workspace_adapter.py` | `kilo run`、isolated config<external-user-home>、workspace `--dir`、generated provider config | Kilo repo-local `AGENTS.md` / `.kilo/rules` / `.kilo/skills` 是可测 surface |
 | `experiments/phase0_headroom/tools/llm_endpoint_proxy.py` | child env secret isolation、`LLM_BASE_URL`/`LLM_API_KEY` forwarding | paid boundary 和 no-secret child process 逻辑可沿用 |
 
 ## Agent 表示方式

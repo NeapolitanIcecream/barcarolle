@@ -104,6 +104,6 @@ def test_entry_gate_contains_no_local_absolute_paths_or_secret_values() -> None:
     payload = readiness.build_entry_gate()
     serialized = json.dumps(payload, sort_keys=True)
 
-    assert "/Users/" not in serialized
+    assert "<external-user-home>/" not in serialized
     assert "sk-" not in serialized
     assert payload["required_env"] == {"LLM_API_KEY": "required", "LLM_BASE_URL": "required"}

@@ -3273,7 +3273,7 @@
       "title_or_summary": "filtering.include/exclude throw a TypeError when any class attribute uses a Factory default"
     },
     {
-      "body_summary": "Currently the warning emitted looks something like this: ``` /home/mithrandi/deployment/virtualenvs/txaws/site-packages/attr/_funcs.py:173: DeprecationWarning: assoc is deprecated and will be removed after 2018/01. ``` I think this should pass an appropriate stacklevel so you can see where the calling code actually is.",
+      "body_summary": "Currently the warning emitted looks something like this: ``` <external-user-home>/deployment/virtualenvs/txaws/site-packages/attr/_funcs.py:173: DeprecationWarning: assoc is deprecated and will be removed after 2018/01. ``` I think this should pass an appropriate stacklevel so you can see where the calling code actually is.",
       "classification": "problem_context",
       "linked_issue_refs": [],
       "linked_pr_refs": [],
@@ -4382,7 +4382,7 @@
       "title_or_summary": "Exception when using auto_attribs and a attribute named property"
     },
     {
-      "body_summary": "Consider the following: ```python import attr class Base: x = 0 @attr.s(auto_attribs=True) class C(Base): x: int ``` This raises an: ``` Traceback (most recent call last): File \"t.py\", line 9, in <module> class C(Base): File \"/Users/hynek/Projects/attrs/src/attr/_make.py\", line 858, in wrap return builder.build_class() File \"/Users/hynek/Projects/attrs/src/attr/_make.py\", line 496, in build_class return self._patch_original_class() File \"/Users/hynek/Projects/attrs/src/attr/_make.",
+      "body_summary": "Consider the following: ```python import attr class Base: x = 0 @attr.s(auto_attribs=True) class C(Base): x: int ``` This raises an: ``` Traceback (most recent call last): File \"t.py\", line 9, in <module> class C(Base): File \"<external-user-home>/Projects/attrs/src/attr/_make.py\", line 858, in wrap return builder.build_class() File \"<external-user-home>/Projects/attrs/src/attr/_make.py\", line 496, in build_class return self._patch_original_class() File \"<external-user-home>/Projects/attrs/src/attr/_make.",
       "classification": "problem_context",
       "linked_issue_refs": [],
       "linked_pr_refs": [],
@@ -10890,7 +10890,7 @@
       "title_or_summary": "handle non-unique one-to-one inputs"
     },
     {
-      "body_summary": "I'm using Arch linux (typical starting statement of an arch user lol), and one of the packages I use depend on boltons (https://aur.archlinux.org/packages/python-boltons). I faced an issue with tests failing causing me to do some manual intervention. On my machine, I have ```python BOLTONS_PATH = \"/home/theartful/.cache/yay/python-boltons/src/boltons/boltons\" ``` The test checks that \"fileutils.py\" can be found using `iter_find_files`, and indeed it is part of `iter_find_files(BOLTONS_PATH, patterns=['*.py'])` as: ```python p = \"/home/theartful/.cache/yay/python-boltons/src/boltons/boltons/fileutils.",
+      "body_summary": "I'm using Arch linux (typical starting statement of an arch user lol), and one of the packages I use depend on boltons (https://aur.archlinux.org/packages/python-boltons). I faced an issue with tests failing causing me to do some manual intervention. On my machine, I have ```python BOLTONS_PATH = \"<external-user-home>/.cache/yay/python-boltons/src/boltons/boltons\" ``` The test checks that \"fileutils.py\" can be found using `iter_find_files`, and indeed it is part of `iter_find_files(BOLTONS_PATH, patterns=['*.py'])` as: ```python p = \"<external-user-home>/.cache/yay/python-boltons/src/boltons/boltons/fileutils.",
       "classification": "problem_context",
       "linked_issue_refs": [],
       "linked_pr_refs": [
