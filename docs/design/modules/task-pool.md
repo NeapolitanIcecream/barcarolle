@@ -173,9 +173,7 @@ filters, Live-style origin freezing, large-supply generation, SWE-smith-style
 environment generation, SWE-Future-style forecast-conditioned synthesis, and
 user-provided pools are represented as generator or importer functions.
 
-## Source Alignment Check
-
-Aligned with the architecture:
+## Design Consistency Check
 
 - Treats generator output as `Task + Check`.
 - Reuses related-work task-generator methods instead of renaming them.

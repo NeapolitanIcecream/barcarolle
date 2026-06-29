@@ -300,9 +300,7 @@ Effect:
 - Calls Reporting to write human-readable and machine-readable summaries, then
   returns paths and record references.
 
-## Source Alignment Check
-
-Aligned with the architecture:
+## Design Consistency Check
 
 - Makes cross-module data flow explicit without adding a new research object.
 - Keeps `Task Pool`, `Benchmark Selection`, and `Agent Results` independent.

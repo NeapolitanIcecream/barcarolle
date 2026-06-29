@@ -128,9 +128,7 @@ Effect:
 
 - Writes a report with source digests and artifact paths.
 
-## Source Alignment Check
-
-Aligned with the architecture:
+## Design Consistency Check
 
 - Separates evidence from claims.
 - Reports negative or weak evidence honestly.

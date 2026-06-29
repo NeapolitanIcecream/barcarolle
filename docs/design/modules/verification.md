@@ -125,9 +125,7 @@ Effect:
   hidden test text, expected outputs, or raw verifier logs unless explicitly
   allowed by a safe rule.
 
-## Source Alignment Check
-
-Aligned with the architecture:
+## Design Consistency Check
 
 - Keeps hidden oracle material out of solver workspaces.
 - Allows checks beyond unit tests.

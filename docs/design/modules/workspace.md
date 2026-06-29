@@ -158,11 +158,9 @@ Effect:
 - Orchestrates solver workspace, Agent invocation, diff capture, verifier
   workspace, diff replay, and Check execution.
 
-## Source Alignment Check
-
-Aligned with the architecture:
+## Design Consistency Check
 
 - Keeps Agent execution outside Barcarolle.
 - Separates solving from verification.
 - Provides only solver-visible material before diff capture.
-- Produces data for Result storage without exposing raw transcripts.
+- Produces data for Result storage without exposing unsanitized Agent logs.

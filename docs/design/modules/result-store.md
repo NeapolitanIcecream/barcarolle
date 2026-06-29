@@ -204,11 +204,10 @@ all Agents' denominators for that matrix. If required Agent-task-check cells
 are missing and cannot be filled under the configured policy, the matrix must
 carry an abstention reason instead of silently scoring a partial comparison.
 
-## Source Alignment Check
-
-Aligned with the architecture:
+## Design Consistency Check
 
 - Makes paid Agent results durable and reusable.
 - Enforces exact cache identity.
 - Gives Selection result matrices instead of raw workspaces or transcripts.
-- Matches the roadmap's invalid-outcome and cache-identity requirements.
+- Applies the invalid-outcome and cache-identity rules used by selection and
+  reporting.

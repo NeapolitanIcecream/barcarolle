@@ -13,13 +13,6 @@ Agent tuning is outside this system design. A predictive benchmark may later be
 used by a tuner, but tuning utility is not the same claim as predictive
 validity.
 
-## Source Materials
-
-- `docs/architecture/v2-system-architecture-2026-06-25.md`
-- `docs/design-inputs/learned-selector-roadmap-gpt-5-5-pro-2026-06-25.md`
-
-No archived code or experiment document is an active source for this design.
-
 ## Module Boundary Overview
 
 The system has eight modules. The table below is the module boundary contract:
@@ -33,7 +26,7 @@ and who consumes the outputs.
 | Verification | Check execution interface and normalized check outcomes. | `Check`; verifier workspace path; candidate diff already applied; verification runtime config. | Task Pool provides `Check`; Workspace provides verifier workspace and applied diff. | Normalized check outcome: pass, fail, invalid, failure label, sanitized evidence summary. | Workspace; Result Store; Reporting. |
 | Workspace | Solver workspace creation, Agent invocation, diff capture, verifier workspace creation, diff replay, and verification orchestration. | `Task`; `Check`; Agent config; workspace config; runtime config. | Task Pool provides `Task + Check`; user or run config provides Agent and configs; Verification provides verification runner. | Captured diff digest; execution metadata; check outcome; workspace-level failure classification. | Result Store. |
 | Result Store | Result cache identity, result storage, missing-cell queries, and result matrices. | `Task`; `Check`; Agent config; exact result identity; workspace output; check outcome. | Task Pool; Workspace; Verification; Records. | Reusable `Result` records; result cache state; cell-level result matrix; completeness, exclusion, and abstention metadata; missing Agent-task-check cells. | Selection; Reporting; Runner. |
-| Selection | Selector training, Selector evaluation, production benchmark selection, rolling-origin construction, feature snapshotting, and feedback-based Selector updates. | Frozen `Task Pool`; `Agent Results`; historical window or origin; budget; candidate Agents; selector config or specified Selector; rolling-origin policy; feature config. | Task Pool; Result Store; user or experiment config; selector roadmap. | `Selector`; `Benchmark Selection`; selected `Task + Check` refs and weights; rolling-origin metrics; feature snapshots; selector notes. | Reporting; Runner. |
+| Selection | Selector training, Selector evaluation, production benchmark selection, rolling-origin construction, feature snapshotting, and feedback-based Selector updates. | Frozen `Task Pool`; `Agent Results`; historical window or origin; budget; candidate Agents; selector config or specified Selector; rolling-origin policy; feature config. | Task Pool; Result Store; user config; selector config; feature config. | `Selector`; `Benchmark Selection`; selected `Task + Check` refs and weights; rolling-origin metrics; feature snapshots; selector notes. | Reporting; Runner. |
 | Reporting | Claim-safe summaries, audit reports, and machine-readable summaries. | `Task Pool`; `Benchmark Selection`; `EvaluationCellSet`; result matrices; `Agent Results`; rolling-origin metrics; artifact digests. | Task Pool; Result Store; Selection; Records. | Human-readable report; machine-readable summary; claim-boundary statement. | Users. |
 | Runner | Command-level orchestration across modules, including cache reuse and lazy Agent execution. | Run config; target repository; task-source config; Agent set; historical window or origin; budget; selector config or specified Selector; result store; workspace config; runtime config; scoring config; report config. | Users; Task Pool; Result Store; Selection; Workspace; Reporting. | Run summary; references to records produced by owner modules; report paths. | Users. |
 
@@ -144,7 +137,8 @@ applied when scoring the selected benchmark against the future holdout.
 
 - Task Pool does not run Agents.
 - Workspace does not select benchmark tasks.
-- Result Store does not inspect raw Agent transcripts for selector features.
+- Result Store does not inspect unsanitized Agent run logs for selector
+  features.
 - Selection does not read solver workspaces, verifier logs, hidden check text,
   raw reference patches, or future outcomes.
 - Reporting does not create new evidence; it only summarizes existing records.
@@ -152,13 +146,12 @@ applied when scoring the selected benchmark against the future holdout.
   verification, result scoring, or reporting logic. It only calls the owner
   modules in a defined order.
 
-## Source Alignment Check
-
-Aligned with the architecture:
+## Design Consistency Check
 
 - Keeps `Task`, `Check`, `Workspace`, `Result`, `Selector`, and
   `RollingOrigin` as first-class objects.
 - Keeps `Task Pool`, `Benchmark Selection`, and `Agent Results` decoupled.
 - Treats Selector as the core research claim.
 - Keeps Agent tuning outside the predictive-validity claim.
-- Does not import archived experiment abstractions.
+- Keeps selectors isolated from future outcomes, hidden checks, solver
+  workspaces, and verifier logs.

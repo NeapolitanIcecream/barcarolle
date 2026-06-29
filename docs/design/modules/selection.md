@@ -35,8 +35,9 @@ Input sources:
 
 - Task Pool;
 - Result Store;
-- user or experiment config;
-- selector roadmap.
+- user config;
+- selector config;
+- feature config.
 
 Output consumers:
 
@@ -342,7 +343,7 @@ Output:
 
 Effect:
 
-- Fits a low-dimensional weighting layer for calibrated, constrained coreset
+- Fits a low-dimensional weighting layer for calibrated, constrained task
   selection using leakage-checked selector inputs.
 
 ### select_with_selector
@@ -407,7 +408,7 @@ Effect:
 - Chooses a selector using only prior-origin evidence, with fallback to
   rule-based selectors under uncertainty or drift.
 
-## Algorithm Roadmap
+## Selector Development Order
 
 Initial order:
 
@@ -420,9 +421,7 @@ Initial order:
 7. pairwise and hierarchical models only when data volume supports them;
 8. adaptive controller after selectors have enough prior-origin evidence.
 
-## Source Alignment Check
-
-Aligned with the architecture and roadmap:
+## Design Consistency Check
 
 - Selectors use common task sets for Agent comparisons.
 - Future outcomes are not visible at selection time.

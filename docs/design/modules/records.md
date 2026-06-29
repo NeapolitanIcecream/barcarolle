@@ -700,8 +700,8 @@ Output:
 
 Effect:
 
-- Reads normalized records. It should not interpret archived experiment
-  formats.
+- Reads normalized records. It should not infer module-specific behavior from
+  unrelated file formats.
 
 ### write_jsonl_records
 
@@ -718,9 +718,7 @@ Effect:
 
 - Writes normalized records atomically.
 
-## Source Alignment Check
-
-Aligned with the architecture:
+## Design Consistency Check
 
 - Provides direct data contracts.
 - Keeps the core vocabulary small.

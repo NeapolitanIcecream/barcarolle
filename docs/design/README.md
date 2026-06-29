@@ -1,23 +1,17 @@
-# Barcarolle Design Index
+# Barcarolle Design Reference
 
-Status: current design set for the implemented system, 2026-06-28.
+Status: current behavior and data-contract reference, 2026-06-28.
 
-## Source Materials
-
-This design set uses only:
-
-- `docs/architecture/v2-system-architecture-2026-06-25.md`
-- `docs/design-inputs/learned-selector-roadmap-gpt-5-5-pro-2026-06-25.md`
-
-The architecture document is authoritative for system boundary and vocabulary.
-The roadmap is authoritative only for Selector algorithm design.
+These documents describe the current Barcarolle module boundaries, data
+contracts, and cross-module behavior. Use them when implementation details need
+the intended benchmark boundary rather than an incidental code path.
 
 ## Documents
 
 - [System design](system-design.md): module boundaries and responsibilities.
 - [Data flow](data-flow.md): how data moves between modules.
-- [Source alignment check](source-alignment-check.md): drift check against the
-  architecture document.
+- [Design consistency check](source-alignment-check.md): consistency checks for
+  vocabulary, module boundaries, and evidence flow.
 
 Module-level design:
 

@@ -262,11 +262,10 @@ Downstream:
 
 - Runner can use the updated Selector for later benchmark selection.
 
-## Source Alignment Check
-
-Aligned with the architecture:
+## Design Consistency Check
 
 - Supports result cache reuse and lazy Agent execution.
 - Treats paid Agent results as reusable assets.
-- Ensures selectors consume tables, not raw workspaces or transcripts.
+- Ensures selectors consume result tables, not workspaces or unsanitized Agent
+  logs.
 - Preserves separation between solving and verification.
