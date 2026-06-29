@@ -1,31 +1,44 @@
 # Barcarolle
 
-Barcarolle helps you build target-repository benchmarks for coding-agent
-evaluation. It keeps the benchmark boundary auditable: the Agent works in a
-solver workspace, hidden checks run in a separate verifier workspace, results
-are stored with exact cache identity, and reports are built from frozen
-evidence.
+Barcarolle is a repo-specific benchmark compiler for predictive coding-agent evaluation.
 
-Use it when you need to ask whether a benchmark selection predicts later Agent
-performance on the same repository.
+It helps you build auditable, time-split benchmarks around a target repository
+so you can evaluate coding agents on repository-specific work.
 
-## What Barcarolle Does
+## What It Does
 
-1. Builds or imports a `Task + Check` pool for a target repository.
-2. Runs configured Agents in clean solver workspaces and captures their final
-   diffs.
-3. Replays each diff in a verifier workspace with private oracle material.
-4. Stores normalized `Result` records and reuses cached results only when the
-   task, check, Agent, workspace, runtime, and scoring identity all match.
-5. Selects and evaluates benchmarks under rolling-origin splits so selectors
-   cannot use future results or future-derived features.
-6. Writes reports from frozen selections, result matrices, metrics, and result
-   records.
+Barcarolle keeps the benchmark boundary outside the tested Agent:
 
-Barcarolle does not choose the Agent model, prompts, tools, edit loop, retry
-policy, or runtime budget. Those stay inside the Agent harness you configure.
+- builds or imports a certified `Task + Check` pool;
+- runs Agents in isolated solver workspaces;
+- replays captured diffs in verifier workspaces with private check material;
+- stores normalized `Result` records with exact cache identity;
+- selects benchmark tasks under rolling-origin splits;
+- writes reports from frozen records and result matrices.
 
-## Install and Test
+The tested Agent owns its model, harness, prompts, tools, retrieval, edit loop,
+retry policy, public-test policy, and runtime budget. Barcarolle owns the task
+pool, workspace boundary, verification boundary, result storage, selection, and
+reporting contracts.
+
+## Run The Minimal Demo
+
+The demo runs offline with deterministic fixture Agents. It does not call an
+LLM API and does not require credentials.
+
+```bash
+uv run python examples/minimal/run_demo.py
+```
+
+It writes:
+
+- `examples/minimal/out/report.md`
+- `examples/minimal/out/report.json`
+
+The output directory is ignored by Git, so you can rerun the demo without
+creating tracked generated files.
+
+## Install And Test
 
 Barcarolle uses Python 3.11+ and `uv`.
 
@@ -34,30 +47,31 @@ uv sync
 uv run pytest
 ```
 
-Run a focused test file while reading an area:
+Run a focused test file while working in one area:
 
 ```bash
 uv run pytest tests/test_runner.py
 uv run pytest tests/test_result_store.py
 ```
 
-## Current Interface
+## Python Interface
 
-Barcarolle is currently a Python library. It does not expose a CLI yet.
+Barcarolle is currently a Python library. Start with these modules:
 
-Start from `barcarolle.runner` for end-to-end orchestration:
+- `barcarolle.task_pool` builds and freezes `Task + Check` pools.
+- `barcarolle.workspace` creates solver and verifier workspaces.
+- `barcarolle.result_store` stores reusable `Result` records and builds
+  result matrices.
+- `barcarolle.selection` builds rolling origins, selector inputs, benchmark
+  selections, and metrics.
+- `barcarolle.reporting` writes human-readable and machine-readable reports.
+- `barcarolle.runner` coordinates the modules for end-to-end workflows.
 
-- `build_task_pool(...)` creates a frozen task pool.
-- `fill_results(...)` runs missing Agent/task/check cells and stores results.
-- `select_benchmark(...)` freezes a benchmark selection for an origin time.
-- `evaluate_selector(...)` evaluates selections across rolling-origin splits.
-- `write_report(...)` writes report artifacts from existing records.
-
-The tests in `tests/test_runner.py` provide executable examples of these entry
-points.
+The tests in `tests/` are executable examples of the current contracts.
 
 ## Project Layout
 
 - `barcarolle/`: Python package.
 - `tests/`: executable examples and regression tests.
-- `docs/design/`: detailed behavior and data contracts.
+- `examples/minimal/`: offline demo with deterministic fixture Agents.
+- `docs/design/`: detailed behavior and data-contract reference.

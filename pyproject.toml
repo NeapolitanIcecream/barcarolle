@@ -1,7 +1,7 @@
 [project]
 name = "barcarolle"
 version = "0.1.0"
-description = "Target-repository benchmark compiler for coding-agent evaluation."
+description = "Repo-specific benchmark compiler for predictive coding-agent evaluation."
 readme = "README.md"
 requires-python = ">=3.11"
 dependencies = []

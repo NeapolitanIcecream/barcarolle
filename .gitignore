@@ -194,6 +194,7 @@ cython_debug/
 # Local OS/editor artifacts
 .DS_Store
 outputs/
+examples/minimal/out/
 
 # Local packaged review bundles
 experiments/phase1_compiler/external_review/*.zip
