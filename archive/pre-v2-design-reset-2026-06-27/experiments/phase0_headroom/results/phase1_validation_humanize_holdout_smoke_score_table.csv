@@ -1,5 +1,0 @@
-adapter_id,acut_id,harness_name,model_or_agent_name,task_id,split,attempt,submission_status,terminal_status,verifier_exit_code,scoreable_cell,agent_failure,harness_error
-codex_workspace,codex_workspace_gpt_5_4_mini,codex,gpt-5.4-mini,humanize__hist__002,B_real,1,submitted,verified_fail,1,True,True,False
-codex_workspace,codex_workspace_gpt_5_4_mini,codex,gpt-5.4-mini,humanize__hist__010,W_real,1,submitted,verified_fail,1,True,True,False
-kilo_workspace,kilo_workspace_gpt_5_4_mini,kilo,gpt-5.4-mini,humanize__hist__002,B_real,1,submitted,verified_fail,1,True,True,False
-kilo_workspace,kilo_workspace_gpt_5_4_mini,kilo,gpt-5.4-mini,humanize__hist__010,W_real,1,submitted,verified_fail,1,True,True,False

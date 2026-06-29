@@ -1,2 +1,0 @@
-{"extension_action": "reject_for_extension_overlay", "promotion_blockers": ["solution_exposure_risk"], "promotion_decision": "reject_for_clean_holdout", "schema_version": "barcarolle.phase1.clean_supply_breal_extension_review.v1", "split": "B_real", "task_id": "boltons__hist__006"}
-{"extension_action": "reject_for_extension_overlay", "promotion_blockers": ["solution_exposure_risk"], "promotion_decision": "reject_for_clean_holdout", "schema_version": "barcarolle.phase1.clean_supply_breal_extension_review.v1", "split": "B_real", "task_id": "boltons__hist__013"}

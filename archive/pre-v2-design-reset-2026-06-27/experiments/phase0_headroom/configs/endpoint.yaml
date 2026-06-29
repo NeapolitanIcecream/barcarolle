@@ -1,8 +1,0 @@
-schema_version: barcarolle.endpoint_config.v1
-base_url_present: true
-endpoint_host_hash: 9952174049b2
-api_key_present: true
-api_key_fingerprint: 1169c0fcf053
-local_codex_subscription_fallback: disabled
-openai_api_key_fallback: disabled
-raw_endpoint_url_committed: false

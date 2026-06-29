@@ -1,9 +1,0 @@
-{
-  "generated_at": "2026-05-26T07:26:23Z",
-  "local_bakeoff_rerun_completed": false,
-  "paid_replication_not_run": true,
-  "reason": "expanded supply does not add paid local outcomes, so B_eval/H_future gap metrics remain limited to the previous 10 attrs and 12 boltons outcome-seen tasks",
-  "run_id": "phase1_two_repo_supply_expansion_20260526",
-  "schema_version": "barcarolle.phase1_two_repo_certified_supply_expansion.v1",
-  "status": "local_bakeoff_rerun_skipped"
-}

@@ -1,8 +1,0 @@
-adapter_id,acut_id,harness_name,model_or_agent_name,task_id,split,attempt,submission_status,terminal_status,verifier_exit_code,scoreable_cell,agent_failure,harness_error
-codex_workspace,codex_workspace_gpt_5_4_mini,codex,gpt-5.4-mini,click__third__109,H_future,1,submitted,verified_fail,1,True,True,False
-codex_workspace,codex_workspace_gpt_5_4_mini,codex,gpt-5.4-mini,click__third__198,H_future,1,submitted,verified_fail,1,True,True,False
-codex_workspace,codex_workspace_gpt_5_4_mini,codex,gpt-5.4-mini,click__third__202,B_eval,1,submitted,verified_pass,0,True,False,False
-codex_workspace,codex_workspace_gpt_5_4_mini,codex,gpt-5.4-mini,click__third__214,H_future,1,submitted,verified_fail,1,True,True,False
-codex_workspace,codex_workspace_gpt_5_4_mini,codex,gpt-5.4-mini,click__third__220,B_eval,1,submitted,verified_fail,1,True,True,False
-codex_workspace,codex_workspace_gpt_5_4_mini,codex,gpt-5.4-mini,click__third__234,H_future,1,submitted,verified_fail,1,True,True,False
-codex_workspace,codex_workspace_gpt_5_4_mini,codex,gpt-5.4-mini,click__third__288,H_future,1,submitted,verified_pass,0,True,False,False

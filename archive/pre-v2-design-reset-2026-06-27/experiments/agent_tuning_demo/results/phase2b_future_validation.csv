@@ -1,1 +1,0 @@
-window_id,stage,condition,candidate_id,agent_id,reviewer_name,harness,model,task_id,terminal_status,scoreable_cell,verified_pass,failure_category,latency_seconds,estimated_cost_usd,usage_observed,cost_observation_kind,usage_source,artifact_hash,patch_sha256
