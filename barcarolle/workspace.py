@@ -555,7 +555,7 @@ def _solver_visible_task_markdown(path: Path, task: TaskRecord) -> str:
 
 
 def _solver_material_ref_section(path: Path, ref: str) -> list[str]:
-    ref_path = Path(ref)
+    ref_path = Path(_solver_material_path_ref(ref))
     if ref_path.is_absolute() or ".." in ref_path.parts:
         return [f"### `{ref}`", "", "Reference is outside the solver workspace and was not copied.", ""]
     workspace_root = path.resolve()
@@ -575,6 +575,13 @@ def _solver_material_ref_section(path: Path, ref: str) -> list[str]:
     except UnicodeDecodeError:
         return [f"### `{ref}`", "", "Referenced solver material is not UTF-8 text.", ""]
     return [f"### `{ref}`", "", "```text", content.rstrip(), "```", ""]
+
+
+def _solver_material_path_ref(ref: str) -> str:
+    for prefix in ("path:", "file:"):
+        if ref.startswith(prefix):
+            return ref.removeprefix(prefix)
+    return ref
 
 
 def _path_contains_symlink(path: Path, root: Path) -> bool:

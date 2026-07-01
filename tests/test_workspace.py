@@ -78,6 +78,23 @@ def test_create_solver_workspace_does_not_dereference_solver_material_symlink(tm
     assert "private check content" not in task_markdown
 
 
+def test_create_solver_workspace_reads_path_prefixed_solver_material_ref(tmp_path: Path) -> None:
+    repo, _ = _make_repo(tmp_path)
+    (repo / "statement.md").write_text("Implement the parser fix.\n", encoding="utf-8")
+    _git(repo, "add", "statement.md")
+    _git(repo, "commit", "-m", "add solver statement")
+    base_commit = _git(repo, "rev-parse", "HEAD").stdout.strip()
+    task = replace(_task(base_commit=base_commit), solver_material_refs=("path:statement.md",))
+    workspace_config = _workspace_config(repo)
+    bind_repository_source(workspace_config, repo)
+
+    workspace = create_solver_workspace(task, workspace_config)
+    task_markdown = (workspace.path / ".barcarolle" / "TASK.md").read_text(encoding="utf-8")
+
+    assert "path:statement.md" in task_markdown
+    assert "Implement the parser fix." in task_markdown
+
+
 def test_invoke_agent_runs_bound_harness_command_and_digest_safe_output(tmp_path: Path) -> None:
     agent_command = (sys.executable, "-c", "from pathlib import Path; Path('done.txt').write_text('ok'); print('done')")
     agent = _agent(agent_command)
