@@ -11,6 +11,7 @@ from barcarolle.records import (
     ResultCellRef,
     ResultMatrix,
     RuntimeConfig,
+    SelectorInput,
     TaskCheckRef,
     TaskRecord,
     WorkspaceConfig,
@@ -26,6 +27,7 @@ from barcarolle.records import (
     validate_metric,
     validate_result_cache_identity,
     validate_result_matrix,
+    validate_selector_input,
     validate_task,
     write_jsonl_records,
 )
@@ -181,6 +183,35 @@ def test_benchmark_selection_weights_must_match_selected_refs() -> None:
 
     assert not result.ok
     assert "selected_weights must exactly cover selected_task_check_refs" in result.errors
+
+
+def test_selector_input_validation_rejects_null_pre_origin_fields_without_throwing() -> None:
+    ref = TaskCheckRef("task", "check")
+    selector_input = SelectorInput(
+        selector_input_id="selector-input",
+        origin_id="origin",
+        task_pool_id="pool",
+        feature_snapshot_id="features",
+        agent_ids=("agent",),
+        eligible_task_check_refs=(ref,),
+        pre_origin_result_ids=None,
+        pre_origin_result_digests=None,
+        budget_digest="budget",
+        leakage_policy_digest="leakage",
+        selector_input_digest="digest",
+        task_pool_digest="pool-digest",
+        selection_budget_limit=1,
+        feature_records_digest="feature-records",
+        feature_snapshot_lint_status="passed",
+        origin_as_of_cutoff="2026-01-01T00:00:00Z",
+        origin_history_refs_digest=canonical_digest((ref,)),
+    )
+
+    result = validate_selector_input(selector_input)
+
+    assert not result.ok
+    assert "pre_origin_result_ids is required" in result.errors
+    assert "pre_origin_result_digests is required" in result.errors
 
 
 def test_result_matrix_validates_cell_bindings_and_digest() -> None:

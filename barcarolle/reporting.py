@@ -446,8 +446,21 @@ def write_report(sections: Sequence[ReportSection], output_path: Path, artifact_
 def _sanitize_report_section(section: ReportSection, artifact_root: Path) -> ReportSection:
     return replace(
         section,
+        summary=_sanitize_artifact_refs(section.summary, artifact_root),
         artifact_paths=tuple(_sanitize_artifact_path(artifact_path, artifact_root) for artifact_path in section.artifact_paths),
     )
+
+
+def _sanitize_artifact_refs(value: Any, artifact_root: Path) -> Any:
+    if isinstance(value, str):
+        return _sanitize_artifact_path(value, artifact_root)
+    if isinstance(value, Mapping):
+        return {key: _sanitize_artifact_refs(item, artifact_root) for key, item in value.items()}
+    if isinstance(value, tuple):
+        return tuple(_sanitize_artifact_refs(item, artifact_root) for item in value)
+    if isinstance(value, list):
+        return [_sanitize_artifact_refs(item, artifact_root) for item in value]
+    return value
 
 
 def _sanitize_artifact_path(artifact_path: str, artifact_root: Path) -> str:

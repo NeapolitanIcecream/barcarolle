@@ -624,7 +624,7 @@ def test_write_report_sanitizes_local_absolute_artifact_paths(tmp_path) -> None:
     section = ReportSection(
         section_id="artifacts",
         heading="Artifacts",
-        summary={},
+        summary={"task_records_ref": str(artifact), "nested": {"refs": (str(artifact),)}},
         source_digests={"artifact_digest": "digest"},
         artifact_paths=(str(artifact),),
     )
@@ -640,6 +640,8 @@ def test_write_report_sanitizes_local_absolute_artifact_paths(tmp_path) -> None:
     assert "/Users/" not in markdown
     assert "/home/" not in markdown
     assert "runs/workspace-run/stdout.txt" in markdown
+    assert payload[0]["summary"]["task_records_ref"] == "runs/workspace-run/stdout.txt"
+    assert payload[0]["summary"]["nested"]["refs"] == ["runs/workspace-run/stdout.txt"]
     assert payload[0]["artifact_paths"] == ["runs/workspace-run/stdout.txt"]
 
 
