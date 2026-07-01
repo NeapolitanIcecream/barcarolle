@@ -47,6 +47,10 @@ from barcarolle.workspace import bind_agent_harness
 bind_agent_harness(agent, ("./run-agent.sh",))
 ```
 
+For a concrete Codex CLI shell example, see
+`examples/harnesses/codex-cli/`. It is one harness option; Barcarolle does not
+require Codex CLI.
+
 For scoreable runs, the command should edit files in the provided solver
 worktree. Barcarolle captures the final `git diff`, replays it in a fresh
 verifier worktree, and runs the hidden check there.

@@ -40,6 +40,8 @@ creating tracked generated files.
 
 For a target repository run with a real Agent harness, see
 [`docs/real-target-walkthrough.md`](docs/real-target-walkthrough.md).
+For a concrete shell harness example, see
+[`examples/harnesses/codex-cli/`](examples/harnesses/codex-cli/).
 
 ## Install And Test
 
@@ -77,4 +79,5 @@ The tests in `tests/` are executable examples of the current contracts.
 - `src/barcarolle/`: Python package.
 - `tests/`: executable examples and regression tests.
 - `examples/minimal/`: offline demo with deterministic fixture Agents.
+- `examples/harnesses/codex-cli/`: optional Codex CLI harness example.
 - `docs/design/`: detailed behavior and data-contract reference.
