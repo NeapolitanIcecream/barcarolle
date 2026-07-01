@@ -57,7 +57,8 @@ Output:
 Effect:
 
 - Creates a checkout of the target repository at the task base commit and writes only
-  solver-visible task material.
+  solver-visible task material, including a machine-readable task reference and
+  a human-readable task file.
 
 ### invoke_agent
 
@@ -75,7 +76,9 @@ Output:
 Effect:
 
 - Calls the Agent harness and captures terminal status, duration, usage, and
-  safe output digests.
+  safe output digests. Stdout and stderr may be retained in the in-memory
+  outcome for artifact preservation, but normalized records store only digests
+  and usage.
 
 ### capture_diff
 
@@ -158,9 +161,33 @@ Effect:
 - Orchestrates solver workspace, Agent invocation, diff capture, verifier
   workspace, diff replay, and Check execution.
 
+### run_agent_on_task_with_artifacts
+
+Input:
+
+- `task: TaskRecord`
+- `check: CheckRecord`
+- `agent: AgentRecord`
+- `workspace_config: WorkspaceConfig`
+- `runtime_config: RuntimeConfig`
+- `artifact_config: WorkspaceArtifactConfig | None`
+
+Output:
+
+- `WorkspaceRunResult`
+
+Effect:
+
+- Runs the same benchmark boundary as `run_agent_on_task`.
+- When configured, preserves final diff, Agent stdout/stderr, and optional
+  workspace summaries under an output root.
+- Returns artifact refs relative to the output root.
+- Marks verifier workspace summaries as private artifacts.
+
 ## Design Consistency Check
 
 - Keeps Agent execution outside Barcarolle.
 - Separates solving from verification.
 - Provides only solver-visible material before diff capture.
-- Produces data for Result storage without exposing unsanitized Agent logs.
+- Produces data for Result storage without storing full Agent logs in normalized
+  records.

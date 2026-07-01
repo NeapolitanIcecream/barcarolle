@@ -20,6 +20,7 @@ from barcarolle.records import (
     WorkspaceConfig,
     WorkspaceRunRecord,
     canonical_digest,
+    validate_task,
 )
 from barcarolle.verification import CheckOutcome, WorkspaceRef as VerifierWorkspaceRef
 from barcarolle.verification import prepare_verifier, verify_diff
@@ -39,12 +40,44 @@ class WorkspaceRef:
 
 
 @dataclass(frozen=True)
+class WorkspaceArtifactConfig:
+    output_root: Path
+    preserve_stdout_stderr: bool = True
+    preserve_final_diff: bool = True
+    preserve_solver_workspace_summary: str = "never"
+    preserve_verifier_workspace_summary: str = "never"
+    path_mode: str = "relative"
+
+
+@dataclass(frozen=True)
+class WorkspaceArtifactRef:
+    kind: str
+    ref: str
+    digest: str
+    private: bool = False
+
+
+@dataclass(frozen=True)
+class WorkspaceArtifactManifest:
+    manifest_ref: str
+    artifact_refs: tuple[WorkspaceArtifactRef, ...]
+
+
+@dataclass(frozen=True)
+class WorkspaceRunResult:
+    run: WorkspaceRunRecord
+    artifacts: WorkspaceArtifactManifest | None = None
+
+
+@dataclass(frozen=True)
 class AgentRunOutcome:
     terminal_status: str
     duration_seconds: float
     usage: Mapping[str, Any]
     safe_output_digest: str
     failure_label: str | None
+    stdout: str = ""
+    stderr: str = ""
 
 
 @dataclass(frozen=True)
@@ -111,6 +144,9 @@ def bind_check_material(
 
 
 def create_solver_workspace(task: TaskRecord, workspace_config: WorkspaceConfig) -> WorkspaceRef:
+    validation = validate_task(task)
+    if not validation.ok:
+        raise ValueError(f"task is invalid: {', '.join(validation.errors)}")
     path = _checkout_repository(task, workspace_config, prefix="barcarolle-solver-")
     _exclude_benchmark_material(path)
     _write_solver_visible_task_material(path, task)
@@ -146,12 +182,16 @@ def invoke_agent(
             check=False,
         )
     except subprocess.TimeoutExpired as exc:
+        stdout = _normalize_output(exc.stdout)
+        stderr = _normalize_output(exc.stderr)
         return AgentRunOutcome(
             terminal_status="timeout",
             duration_seconds=monotonic() - start,
             usage={},
-            safe_output_digest=_safe_output_digest(exc.stdout or "", exc.stderr or ""),
+            safe_output_digest=_safe_output_digest(stdout, stderr),
             failure_label="agent_timeout",
+            stdout=stdout,
+            stderr=stderr,
         )
     except OSError:
         return AgentRunOutcome("invalid", monotonic() - start, {}, "", "agent_launch_error")
@@ -162,6 +202,8 @@ def invoke_agent(
         usage={},
         safe_output_digest=_safe_output_digest(completed.stdout, completed.stderr),
         failure_label=None if completed.returncode == 0 else "agent_failed",
+        stdout=completed.stdout,
+        stderr=completed.stderr,
     )
 
 
@@ -245,9 +287,20 @@ def run_agent_on_task(
     workspace_config: WorkspaceConfig,
     runtime_config: RuntimeConfig,
 ) -> WorkspaceRunRecord:
+    return run_agent_on_task_with_artifacts(task, check, agent, workspace_config, runtime_config).run
+
+
+def run_agent_on_task_with_artifacts(
+    task: TaskRecord,
+    check: CheckRecord,
+    agent: AgentRecord,
+    workspace_config: WorkspaceConfig,
+    runtime_config: RuntimeConfig,
+    artifact_config: WorkspaceArtifactConfig | None = None,
+) -> WorkspaceRunResult:
     started_at = _now()
     if check.task_id != task.task_id or check.check_id not in task.check_ids:
-        return _invalid_run_record(
+        run = _invalid_run_record(
             task=task,
             check=check,
             agent=agent,
@@ -255,10 +308,11 @@ def run_agent_on_task(
             failure_label="task_check_mismatch",
             invalid_owner="benchmark",
         )
+        return _workspace_run_result(run, artifact_config, None, None, None, None)
     try:
         solver_workspace = create_solver_workspace(task, workspace_config)
     except (OSError, RuntimeError, ValueError) as exc:
-        return _invalid_run_record(
+        run = _invalid_run_record(
             task=task,
             check=check,
             agent=agent,
@@ -266,11 +320,12 @@ def run_agent_on_task(
             failure_label=_workspace_failure_label(str(exc)),
             invalid_owner="benchmark",
         )
+        return _workspace_run_result(run, artifact_config, None, None, None, None)
     agent_outcome = invoke_agent(solver_workspace, task, agent, runtime_config)
     try:
         diff = capture_diff(solver_workspace)
     except (OSError, RuntimeError, ValueError):
-        return _invalid_run_record(
+        run = _invalid_run_record(
             task=task,
             check=check,
             agent=agent,
@@ -280,12 +335,13 @@ def run_agent_on_task(
             solver_workspace_digest=solver_workspace.workspace_digest,
             usage=agent_outcome.usage,
         )
+        return _workspace_run_result(run, artifact_config, None, agent_outcome, solver_workspace, None)
     try:
         verifier_workspace = create_verifier_workspace(task, workspace_config)
     except (OSError, RuntimeError, ValueError) as exc:
         replay = DiffReplayOutcome("invalid", _workspace_failure_label(str(exc)), "")
         check_outcome = CheckOutcome("invalid", replay.failure_label, None, False, 0.0, "")
-        return _workspace_run_record(
+        run = _workspace_run_record(
             task=task,
             check=check,
             agent=agent,
@@ -298,12 +354,13 @@ def run_agent_on_task(
             started_at=started_at,
             finished_at=_now(),
         )
+        return _workspace_run_result(run, artifact_config, diff, agent_outcome, solver_workspace, None)
     replay = apply_diff(verifier_workspace, diff)
     if replay.replay_status == "applied":
         check_outcome = verify_agent_diff(verifier_workspace, check, runtime_config)
     else:
         check_outcome = CheckOutcome("invalid", replay.failure_label, None, False, 0.0, "")
-    return _workspace_run_record(
+    run = _workspace_run_record(
         task=task,
         check=check,
         agent=agent,
@@ -316,6 +373,136 @@ def run_agent_on_task(
         started_at=started_at,
         finished_at=_now(),
     )
+    return _workspace_run_result(run, artifact_config, diff, agent_outcome, solver_workspace, verifier_workspace)
+
+
+def _workspace_run_result(
+    run: WorkspaceRunRecord,
+    artifact_config: WorkspaceArtifactConfig | None,
+    diff: CapturedDiff | None,
+    agent_outcome: AgentRunOutcome | None,
+    solver_workspace: WorkspaceRef | None,
+    verifier_workspace: WorkspaceRef | None,
+) -> WorkspaceRunResult:
+    if artifact_config is None:
+        return WorkspaceRunResult(run=run)
+    return WorkspaceRunResult(
+        run=run,
+        artifacts=_preserve_run_artifacts(
+            artifact_config,
+            run,
+            diff,
+            agent_outcome,
+            solver_workspace,
+            verifier_workspace,
+        ),
+    )
+
+
+def _preserve_run_artifacts(
+    config: WorkspaceArtifactConfig,
+    run: WorkspaceRunRecord,
+    diff: CapturedDiff | None,
+    agent_outcome: AgentRunOutcome | None,
+    solver_workspace: WorkspaceRef | None,
+    verifier_workspace: WorkspaceRef | None,
+) -> WorkspaceArtifactManifest:
+    _validate_artifact_config(config)
+    artifact_refs: list[WorkspaceArtifactRef] = []
+    run_ref = run.workspace_run_id
+    if config.preserve_final_diff and diff is not None:
+        artifact_refs.append(_write_text_artifact(config.output_root, run_ref, "final.diff", "final_diff", diff.diff_text))
+    if config.preserve_stdout_stderr and agent_outcome is not None:
+        artifact_refs.append(_write_text_artifact(config.output_root, run_ref, "stdout.txt", "agent_stdout", agent_outcome.stdout))
+        artifact_refs.append(_write_text_artifact(config.output_root, run_ref, "stderr.txt", "agent_stderr", agent_outcome.stderr))
+    if solver_workspace is not None and _should_preserve_workspace_summary(config.preserve_solver_workspace_summary, run):
+        artifact_refs.append(
+            _write_text_artifact(
+                config.output_root,
+                run_ref,
+                "solver-workspace-summary.json",
+                "solver_workspace_summary",
+                _workspace_summary_json(solver_workspace, private=False),
+            )
+        )
+    if verifier_workspace is not None and _should_preserve_workspace_summary(config.preserve_verifier_workspace_summary, run):
+        artifact_refs.append(
+            _write_text_artifact(
+                config.output_root,
+                run_ref,
+                "verifier-workspace-summary.json",
+                "verifier_workspace_summary",
+                _workspace_summary_json(verifier_workspace, private=True),
+                private=True,
+            )
+        )
+    manifest_ref = f"{run_ref}/manifest.json"
+    manifest_payload = {
+        "workspace_run_id": run.workspace_run_id,
+        "artifact_refs": tuple(_artifact_ref_data(ref) for ref in artifact_refs),
+    }
+    manifest_path = config.output_root / manifest_ref
+    manifest_path.parent.mkdir(parents=True, exist_ok=True)
+    manifest_path.write_text(json.dumps(manifest_payload, sort_keys=True, indent=2) + "\n", encoding="utf-8")
+    return WorkspaceArtifactManifest(manifest_ref=manifest_ref, artifact_refs=tuple(artifact_refs))
+
+
+def _validate_artifact_config(config: WorkspaceArtifactConfig) -> None:
+    if config.path_mode != "relative":
+        raise ValueError("Workspace artifact path_mode must be relative")
+    for mode in (config.preserve_solver_workspace_summary, config.preserve_verifier_workspace_summary):
+        if mode not in {"never", "on_failure", "always"}:
+            raise ValueError("workspace summary preservation must be never, on_failure, or always")
+
+
+def _should_preserve_workspace_summary(mode: str, run: WorkspaceRunRecord) -> bool:
+    if mode == "always":
+        return True
+    if mode == "on_failure":
+        return run.terminal_status != "passed"
+    return False
+
+
+def _write_text_artifact(
+    output_root: Path,
+    run_ref: str,
+    filename: str,
+    kind: str,
+    content: str,
+    *,
+    private: bool = False,
+) -> WorkspaceArtifactRef:
+    ref = f"{run_ref}/{filename}"
+    path = output_root / ref
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(content, encoding="utf-8")
+    return WorkspaceArtifactRef(
+        kind=kind,
+        ref=ref,
+        digest=hashlib.sha256(content.encode("utf-8")).hexdigest(),
+        private=private,
+    )
+
+
+def _workspace_summary_json(workspace: WorkspaceRef, *, private: bool) -> str:
+    payload = {
+        "artifact_class": "verifier_private" if private else "solver",
+        "base_commit": workspace.base_commit,
+        "private": private,
+        "task_id": workspace.task_id,
+        "workspace_digest": workspace.workspace_digest,
+        "workspace_role": workspace.role,
+    }
+    return json.dumps(payload, sort_keys=True, indent=2) + "\n"
+
+
+def _artifact_ref_data(ref: WorkspaceArtifactRef) -> Mapping[str, Any]:
+    return {
+        "kind": ref.kind,
+        "ref": ref.ref,
+        "digest": ref.digest,
+        "private": ref.private,
+    }
 
 
 def _checkout_repository(task: TaskRecord, workspace_config: WorkspaceConfig, *, prefix: str) -> Path:
@@ -339,9 +526,46 @@ def _write_solver_visible_task_material(path: Path, task: TaskRecord) -> None:
         "source_ref": task.source_ref,
         "solver_material_digest": task.solver_material_digest,
         "solver_material_refs": task.solver_material_refs,
+        "task_material_file": ".barcarolle/TASK.md",
         "check_ids": task.check_ids,
     }
     (material_dir / "solver-visible-task.json").write_text(json.dumps(payload, sort_keys=True), encoding="utf-8")
+    (material_dir / "TASK.md").write_text(_solver_visible_task_markdown(path, task), encoding="utf-8")
+
+
+def _solver_visible_task_markdown(path: Path, task: TaskRecord) -> str:
+    lines = [
+        "# Task",
+        "",
+        f"- Task ID: `{task.task_id}`",
+        f"- Repository: `{task.repository_id}`",
+        f"- Base commit: `{task.base_commit}`",
+        f"- Source: `{task.source_family}:{task.source_ref}`",
+        f"- Solver material digest: `{task.solver_material_digest}`",
+        "",
+        "## Solver Material Refs",
+        "",
+    ]
+    for ref in task.solver_material_refs:
+        lines.append(f"- `{ref}`")
+    lines.extend(["", "## Solver Material", ""])
+    for ref in task.solver_material_refs:
+        lines.extend(_solver_material_ref_section(path, ref))
+    return "\n".join(lines).rstrip() + "\n"
+
+
+def _solver_material_ref_section(path: Path, ref: str) -> list[str]:
+    ref_path = Path(ref)
+    if ref_path.is_absolute() or ".." in ref_path.parts:
+        return [f"### `{ref}`", "", "Reference is outside the solver workspace and was not copied.", ""]
+    material_path = path / ref_path
+    if not material_path.is_file():
+        return [f"### `{ref}`", "", "Referenced solver material was not found in this checkout.", ""]
+    try:
+        content = material_path.read_text(encoding="utf-8")
+    except UnicodeDecodeError:
+        return [f"### `{ref}`", "", "Referenced solver material is not UTF-8 text.", ""]
+    return [f"### `{ref}`", "", "```text", content.rstrip(), "```", ""]
 
 
 def _workspace_digest(path: Path, task: TaskRecord, workspace_config: WorkspaceConfig, role: str) -> str:
@@ -554,14 +778,15 @@ def _run(command: Sequence[str], *, cwd: Path | None = None) -> subprocess.Compl
 
 
 def _safe_output_digest(stdout: str | bytes | None, stderr: str | bytes | None) -> str:
-    def normalize(value: str | bytes | None) -> str:
-        if value is None:
-            return ""
-        if isinstance(value, bytes):
-            return value.decode("utf-8", errors="replace")
-        return value
+    return hashlib.sha256((_normalize_output(stdout) + "\n" + _normalize_output(stderr)).encode("utf-8")).hexdigest()
 
-    return hashlib.sha256((normalize(stdout) + "\n" + normalize(stderr)).encode("utf-8")).hexdigest()
+
+def _normalize_output(value: str | bytes | None) -> str:
+    if value is None:
+        return ""
+    if isinstance(value, bytes):
+        return value.decode("utf-8", errors="replace")
+    return value
 
 
 def _check_command_digest(check_command: Sequence[str]) -> str:

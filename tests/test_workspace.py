@@ -1,5 +1,6 @@
 from pathlib import Path
 import hashlib
+import json
 import subprocess
 import sys
 
@@ -16,6 +17,7 @@ from barcarolle.records import (
 )
 from barcarolle.workspace import (
     CapturedDiff,
+    WorkspaceArtifactConfig,
     WorkspaceRef,
     apply_diff,
     bind_agent_harness,
@@ -26,6 +28,7 @@ from barcarolle.workspace import (
     create_verifier_workspace,
     invoke_agent,
     run_agent_on_task,
+    run_agent_on_task_with_artifacts,
     verify_agent_diff,
 )
 
@@ -37,14 +40,21 @@ def test_create_solver_workspace_clones_base_commit_and_writes_only_solver_visib
     bind_repository_source(workspace_config, repo)
 
     workspace = create_solver_workspace(task, workspace_config)
-    material = (workspace.path / ".barcarolle/solver-visible-task.json").read_text(encoding="utf-8")
+    material_dir = workspace.path / ".barcarolle"
+    material = (material_dir / "solver-visible-task.json").read_text(encoding="utf-8")
+    task_markdown = (material_dir / "TASK.md").read_text(encoding="utf-8")
 
     assert workspace.role == "solver"
     assert _git(workspace.path, "rev-parse", "HEAD").stdout.strip() == base_commit
     assert (workspace.path / "README.md").read_text(encoding="utf-8") == "base\n"
     assert "solver_material_refs" in material
+    assert "TASK.md" in material
+    assert "README.md" in task_markdown
+    assert "base" in task_markdown
     assert "hidden" not in material.lower()
     assert "oracle" not in material.lower()
+    assert "hidden" not in task_markdown.lower()
+    assert "oracle" not in task_markdown.lower()
 
 
 def test_invoke_agent_runs_bound_harness_command_and_digest_safe_output(tmp_path: Path) -> None:
@@ -147,6 +157,65 @@ def test_run_agent_on_task_executes_scoreable_workspace_path_and_returns_valid_r
     assert record.invalid_owner is None
     assert record.failure_label is None
     assert record.diff_digest != hashlib.sha256(b"").hexdigest()
+
+
+def test_run_agent_on_task_with_artifacts_preserves_relative_run_outputs(tmp_path: Path) -> None:
+    repo, base_commit = _make_repo(tmp_path)
+    task = _task(base_commit=base_commit)
+    workspace_config = _workspace_config(repo)
+    hidden = tmp_path / "hidden.txt"
+    hidden.write_text("private oracle", encoding="utf-8")
+    agent_command = (
+        sys.executable,
+        "-c",
+        "from pathlib import Path; import sys; "
+        "Path('new.txt').write_text('agent edit\\n', encoding='utf-8'); "
+        "print('hello stdout'); print('hello stderr', file=sys.stderr)",
+    )
+    agent = _agent(agent_command)
+    check_command = (
+        sys.executable,
+        "-c",
+        "from pathlib import Path; assert Path('new.txt').read_text(encoding='utf-8') == 'agent edit\\n'",
+    )
+    check = _check(command=check_command, hidden=hidden)
+    bind_repository_source(workspace_config, repo)
+    bind_agent_harness(agent, agent_command)
+    bind_check_material(check, check_command, hidden)
+    artifact_config = WorkspaceArtifactConfig(
+        output_root=tmp_path / "artifacts",
+        preserve_solver_workspace_summary="always",
+        preserve_verifier_workspace_summary="always",
+    )
+
+    result = run_agent_on_task_with_artifacts(task, check, agent, workspace_config, _runtime(), artifact_config)
+
+    assert result.run.terminal_status == "passed"
+    assert result.artifacts is not None
+    assert Path(result.artifacts.manifest_ref).is_absolute() is False
+    refs = {artifact.kind: artifact for artifact in result.artifacts.artifact_refs}
+    assert set(refs) == {
+        "agent_stderr",
+        "agent_stdout",
+        "final_diff",
+        "solver_workspace_summary",
+        "verifier_workspace_summary",
+    }
+    for artifact in result.artifacts.artifact_refs:
+        assert Path(artifact.ref).is_absolute() is False
+        assert str(tmp_path) not in artifact.ref
+        assert (artifact_config.output_root / artifact.ref).exists()
+        assert artifact.digest
+    assert "hello stdout" in (artifact_config.output_root / refs["agent_stdout"].ref).read_text(encoding="utf-8")
+    assert "hello stderr" in (artifact_config.output_root / refs["agent_stderr"].ref).read_text(encoding="utf-8")
+    assert "new.txt" in (artifact_config.output_root / refs["final_diff"].ref).read_text(encoding="utf-8")
+    assert refs["verifier_workspace_summary"].private is True
+    solver_summary = json.loads((artifact_config.output_root / refs["solver_workspace_summary"].ref).read_text(encoding="utf-8"))
+    assert solver_summary["artifact_class"] == "solver"
+    assert "private oracle" not in json.dumps(solver_summary)
+    manifest = json.loads((artifact_config.output_root / result.artifacts.manifest_ref).read_text(encoding="utf-8"))
+    assert manifest["workspace_run_id"] == result.run.workspace_run_id
+    assert str(tmp_path) not in json.dumps(manifest)
 
 
 def test_run_agent_on_task_replays_and_verifies_diff_after_nonzero_agent_exit(tmp_path: Path) -> None:
