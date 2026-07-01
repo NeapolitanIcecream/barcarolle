@@ -489,7 +489,7 @@ def validate_feature_snapshot(snapshot: FeatureSnapshotRecord) -> ValidationResu
 
 
 def validate_selector_input(selector_input: SelectorInput) -> ValidationResult:
-    errors = _required_errors(selector_input)
+    errors = _required_errors(selector_input, nullable={"pre_origin_result_ids", "pre_origin_result_digests"})
     if not selector_input.eligible_task_check_refs:
         errors.append("eligible_task_check_refs must not be empty")
     if len(selector_input.pre_origin_result_ids) != len(selector_input.pre_origin_result_digests):
