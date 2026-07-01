@@ -17,6 +17,7 @@ from barcarolle.records import (
 )
 from barcarolle.reporting import (
     ClaimConfig,
+    ReportSection,
     build_claim_boundary,
     build_result_report,
     build_selector_report,
@@ -78,6 +79,28 @@ def test_result_report_rejects_non_numeric_cost_and_latency() -> None:
     assert section.supported_claims == ()
     assert "result result cost.total_cost is non-numeric" in section.unsupported_claims
     assert "result result latency.workspace_seconds is non-numeric" in section.unsupported_claims
+
+
+def test_result_report_distinguishes_unknown_cost_from_measured_zero() -> None:
+    measured_zero = _result(result_id="result-zero", total_cost=0.0)
+    unknown = record_with_digest(
+        replace(
+            _result(result_id="result-unknown", total_cost=0.0),
+            usage={},
+            usage_coverage="unknown",
+            result_digest="",
+        )
+    )
+
+    section = build_result_report((measured_zero, unknown), (_agent(),))
+
+    assert section.summary["total_cost"] == 0.0
+    assert section.summary["cost_coverage"] == {
+        "measured_result_count": 1,
+        "measured_zero_cost_count": 1,
+        "unknown_result_count": 1,
+    }
+    assert section.summary["usage_coverage"] == {"reported": 1, "unknown": 1}
 
 
 def test_selector_report_preserves_matrix_cell_set_and_metric_traceability() -> None:
@@ -594,6 +617,30 @@ def test_write_report_writes_markdown_and_json_summaries(tmp_path) -> None:
     assert "tasks.jsonl" in markdown
     assert payload[0]["section_id"] == "task_pool"
     assert payload[0]["artifact_paths"] == ["tasks.jsonl", "checks.jsonl"]
+
+
+def test_write_report_sanitizes_local_absolute_artifact_paths(tmp_path) -> None:
+    artifact = tmp_path / "runs" / "workspace-run" / "stdout.txt"
+    section = ReportSection(
+        section_id="artifacts",
+        heading="Artifacts",
+        summary={},
+        source_digests={"artifact_digest": "digest"},
+        artifact_paths=(str(artifact),),
+    )
+    markdown_path = tmp_path / "report.md"
+    json_path = tmp_path / "report.json"
+
+    write_report((section,), markdown_path)
+    write_report((section,), json_path)
+
+    markdown = markdown_path.read_text(encoding="utf-8")
+    payload = json.loads(json_path.read_text(encoding="utf-8"))
+    assert str(tmp_path) not in markdown
+    assert "/Users/" not in markdown
+    assert "/home/" not in markdown
+    assert "runs/workspace-run/stdout.txt" in markdown
+    assert payload[0]["artifact_paths"] == ["runs/workspace-run/stdout.txt"]
 
 
 def _task_pool() -> TaskPoolRecord:

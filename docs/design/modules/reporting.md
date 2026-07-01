@@ -119,6 +119,7 @@ Input:
 
 - `sections: Sequence[ReportSection]`
 - `output_path: Path`
+- `artifact_root: Path | None`
 
 Output:
 
@@ -127,6 +128,9 @@ Output:
 Effect:
 
 - Writes a report with source digests and artifact paths.
+- Emits artifact paths under the report root or configured artifact root as
+  relative refs.
+- Reports unknown or unreported usage/cost separately from measured zero cost.
 
 ## Design Consistency Check
 

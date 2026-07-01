@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 from collections import Counter
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
 from pathlib import Path
 from typing import Any, Mapping, Sequence
 
@@ -96,7 +96,8 @@ def build_result_report(results: Sequence[ResultRecord], agents: Sequence[AgentR
     invalid_owner_counts = Counter(result.invalid_owner or "none" for result in results)
     scoreable_state_counts = Counter(result.scoreable_state for result in results)
     scoreable_count = sum(1 for result in results if result.scoreable_state == "scoreable")
-    total_cost = sum(_number(result.cost.get("total_cost")) for result in results)
+    measured_cost_results = tuple(result for result in results if not _has_unknown_usage_or_cost(result))
+    total_cost = sum(_number(result.cost.get("total_cost")) for result in measured_cost_results)
     latency_seconds = [_number(result.latency.get("workspace_seconds")) for result in results if result.latency.get("workspace_seconds") is not None]
     cache_identity_digests = tuple(sorted(result.cache_identity.identity_digest for result in results))
     result_agent_ids = {result.agent_id for result in results}
@@ -117,6 +118,11 @@ def build_result_report(results: Sequence[ResultRecord], agents: Sequence[AgentR
         "scoreable_state_counts": dict(sorted(scoreable_state_counts.items())),
         "scoreable_rate": scoreable_count / len(results) if results else 0.0,
         "total_cost": total_cost,
+        "cost_coverage": {
+            "measured_result_count": len(measured_cost_results),
+            "measured_zero_cost_count": sum(1 for result in measured_cost_results if _number(result.cost.get("total_cost")) == 0.0),
+            "unknown_result_count": len(results) - len(measured_cost_results),
+        },
         "latency": {
             "count": len(latency_seconds),
             "total_workspace_seconds": sum(latency_seconds),
@@ -399,13 +405,15 @@ def build_claim_boundary(
     )
 
 
-def write_report(sections: Sequence[ReportSection], output_path: Path) -> None:
+def write_report(sections: Sequence[ReportSection], output_path: Path, artifact_root: Path | None = None) -> None:
     output_path.parent.mkdir(parents=True, exist_ok=True)
+    root = artifact_root or output_path.parent
+    sanitized_sections = tuple(_sanitize_report_section(section, root) for section in sections)
     if output_path.suffix == ".json":
-        output_path.write_text(canonical_json(tuple(_section_data(section) for section in sections)) + "\n", encoding="utf-8")
+        output_path.write_text(canonical_json(tuple(_section_data(section) for section in sanitized_sections)) + "\n", encoding="utf-8")
         return
     lines = ["# Barcarolle Report", ""]
-    for section in sections:
+    for section in sanitized_sections:
         lines.extend(
             [
                 f"## {section.heading}",
@@ -433,6 +441,31 @@ def write_report(sections: Sequence[ReportSection], output_path: Path) -> None:
         if section.limitations:
             lines.extend(["### Limitations", "", *[f"- {limitation}" for limitation in section.limitations], ""])
     output_path.write_text("\n".join(lines).rstrip() + "\n", encoding="utf-8")
+
+
+def _sanitize_report_section(section: ReportSection, artifact_root: Path) -> ReportSection:
+    return replace(
+        section,
+        artifact_paths=tuple(_sanitize_artifact_path(artifact_path, artifact_root) for artifact_path in section.artifact_paths),
+    )
+
+
+def _sanitize_artifact_path(artifact_path: str, artifact_root: Path) -> str:
+    path = Path(artifact_path)
+    if not path.is_absolute():
+        return artifact_path
+    try:
+        return path.resolve().relative_to(artifact_root.resolve()).as_posix()
+    except (OSError, ValueError):
+        pass
+    if _is_local_absolute_path(path):
+        return path.name
+    return artifact_path
+
+
+def _is_local_absolute_path(path: Path) -> bool:
+    parts = path.parts
+    return len(parts) > 1 and parts[0] == "/" and parts[1] in {"Users", "home"}
 
 
 def _section_data(section: ReportSection) -> Mapping[str, Any]:
@@ -679,6 +712,10 @@ def _result_measurement_errors(results: Sequence[ResultRecord]) -> tuple[str, ..
         elif not _is_number(result.latency["workspace_seconds"]):
             errors.append(f"result {result.result_id} latency.workspace_seconds is non-numeric")
     return tuple(errors)
+
+
+def _has_unknown_usage_or_cost(result: ResultRecord) -> bool:
+    return result.usage_coverage in {"unknown", "unreported"}
 
 
 def _selection_claim_errors(selection_validations: Sequence[Any], selections_match_task_pool: bool) -> tuple[str, ...]:
