@@ -38,6 +38,9 @@ It writes:
 The output directory is ignored by Git, so you can rerun the demo without
 creating tracked generated files.
 
+For a target repository run with a real Agent harness, see
+[`docs/real-target-walkthrough.md`](docs/real-target-walkthrough.md).
+
 ## Install And Test
 
 Barcarolle uses Python 3.11+ and `uv`.
