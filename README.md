@@ -74,7 +74,7 @@ The tests in `tests/` are executable examples of the current contracts.
 
 ## Project Layout
 
-- `barcarolle/`: Python package.
+- `src/barcarolle/`: Python package.
 - `tests/`: executable examples and regression tests.
 - `examples/minimal/`: offline demo with deterministic fixture Agents.
 - `docs/design/`: detailed behavior and data-contract reference.

@@ -1,3 +1,7 @@
+[build-system]
+requires = ["hatchling>=1.25"]
+build-backend = "hatchling.build"
+
 [project]
 name = "barcarolle"
 version = "0.1.0"
@@ -13,4 +17,7 @@ dev = [
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
-pythonpath = ["."]
+pythonpath = ["src"]
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/barcarolle"]
