@@ -1,3 +1,4 @@
+from dataclasses import replace
 from pathlib import Path
 import hashlib
 import json
@@ -55,6 +56,26 @@ def test_create_solver_workspace_clones_base_commit_and_writes_only_solver_visib
     assert "oracle" not in material.lower()
     assert "hidden" not in task_markdown.lower()
     assert "oracle" not in task_markdown.lower()
+
+
+def test_create_solver_workspace_does_not_dereference_solver_material_symlink(tmp_path: Path) -> None:
+    repo, _ = _make_repo(tmp_path)
+    outside_material = tmp_path / "outside-private.txt"
+    outside_material.write_text("private check content\n", encoding="utf-8")
+    symlink_ref = repo / "statement.md"
+    symlink_ref.symlink_to(outside_material)
+    _git(repo, "add", "statement.md")
+    _git(repo, "commit", "-m", "add symlink solver material")
+    base_commit = _git(repo, "rev-parse", "HEAD").stdout.strip()
+    task = replace(_task(base_commit=base_commit), solver_material_refs=("statement.md",))
+    workspace_config = _workspace_config(repo)
+    bind_repository_source(workspace_config, repo)
+
+    workspace = create_solver_workspace(task, workspace_config)
+    task_markdown = (workspace.path / ".barcarolle" / "TASK.md").read_text(encoding="utf-8")
+
+    assert "Reference uses a symlink and was not copied." in task_markdown
+    assert "private check content" not in task_markdown
 
 
 def test_invoke_agent_runs_bound_harness_command_and_digest_safe_output(tmp_path: Path) -> None:

@@ -558,7 +558,16 @@ def _solver_material_ref_section(path: Path, ref: str) -> list[str]:
     ref_path = Path(ref)
     if ref_path.is_absolute() or ".." in ref_path.parts:
         return [f"### `{ref}`", "", "Reference is outside the solver workspace and was not copied.", ""]
-    material_path = path / ref_path
+    workspace_root = path.resolve()
+    material_path = workspace_root / ref_path
+    if _path_contains_symlink(material_path, workspace_root):
+        return [f"### `{ref}`", "", "Reference uses a symlink and was not copied.", ""]
+    try:
+        material_resolved = material_path.resolve(strict=False)
+    except OSError:
+        return [f"### `{ref}`", "", "Referenced solver material could not be resolved.", ""]
+    if not _is_within(material_resolved, workspace_root):
+        return [f"### `{ref}`", "", "Reference resolves outside the solver workspace and was not copied.", ""]
     if not material_path.is_file():
         return [f"### `{ref}`", "", "Referenced solver material was not found in this checkout.", ""]
     try:
@@ -566,6 +575,27 @@ def _solver_material_ref_section(path: Path, ref: str) -> list[str]:
     except UnicodeDecodeError:
         return [f"### `{ref}`", "", "Referenced solver material is not UTF-8 text.", ""]
     return [f"### `{ref}`", "", "```text", content.rstrip(), "```", ""]
+
+
+def _path_contains_symlink(path: Path, root: Path) -> bool:
+    try:
+        relative = path.relative_to(root)
+    except ValueError:
+        return True
+    current = root
+    for part in relative.parts:
+        current = current / part
+        if current.is_symlink():
+            return True
+    return False
+
+
+def _is_within(path: Path, root: Path) -> bool:
+    try:
+        path.relative_to(root)
+    except ValueError:
+        return False
+    return True
 
 
 def _workspace_digest(path: Path, task: TaskRecord, workspace_config: WorkspaceConfig, role: str) -> str:
