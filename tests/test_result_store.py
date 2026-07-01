@@ -42,7 +42,7 @@ def test_build_result_record_stores_complete_identity_status_cost_and_latency() 
     runtime_config = _runtime_config()
     scoring_config = _scoring_config()
     identity = compute_result_cache_identity(task, check, agent, workspace_config, runtime_config, scoring_config)
-    workspace_run = _workspace_run(usage={"input_tokens": 100, "output_tokens": 20})
+    workspace_run = _workspace_run(usage={"input_tokens": 100, "output_tokens": 20, "harness_requests": 1, "note": "reported by harness"})
 
     result = build_result_record(task, check, agent, workspace_run, identity, scoring_config)
 
@@ -54,6 +54,7 @@ def test_build_result_record_stores_complete_identity_status_cost_and_latency() 
     assert result.cost["input_tokens_cost"] == 0.1
     assert result.cost["output_tokens_cost"] == 0.1
     assert result.cost["total_cost"] == 0.2
+    assert result.usage == workspace_run.usage
     assert result.latency["workspace_seconds"] == 5.0
     assert result.verifier_metadata_digest
 

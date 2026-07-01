@@ -490,9 +490,18 @@ def validate_feature_snapshot(snapshot: FeatureSnapshotRecord) -> ValidationResu
 
 def validate_selector_input(selector_input: SelectorInput) -> ValidationResult:
     errors = _required_errors(selector_input)
+    for field_name in ("pre_origin_result_ids", "pre_origin_result_digests"):
+        if getattr(selector_input, field_name) == ():
+            required_error = f"{field_name} is required"
+            if required_error in errors:
+                errors.remove(required_error)
     if not selector_input.eligible_task_check_refs:
         errors.append("eligible_task_check_refs must not be empty")
-    if len(selector_input.pre_origin_result_ids) != len(selector_input.pre_origin_result_digests):
+    if (
+        selector_input.pre_origin_result_ids is not None
+        and selector_input.pre_origin_result_digests is not None
+        and len(selector_input.pre_origin_result_ids) != len(selector_input.pre_origin_result_digests)
+    ):
         errors.append("pre_origin_result_ids and pre_origin_result_digests must align")
     if selector_input.selection_budget_limit is None or selector_input.selection_budget_limit < 1:
         errors.append("selection_budget_limit must be positive")

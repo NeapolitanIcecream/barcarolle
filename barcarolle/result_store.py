@@ -329,7 +329,7 @@ def _cost_from_usage(usage: Mapping[str, Any], scoring_config: ScoringConfig) ->
     total = 0.0
     for key, rate in scoring_config.cost_rates.items():
         value = usage.get(key)
-        if isinstance(value, int | float):
+        if isinstance(value, int | float) and not isinstance(value, bool):
             amount = float(value) * float(rate)
             costs[f"{key}_cost"] = amount
             total += amount

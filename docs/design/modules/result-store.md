@@ -67,6 +67,8 @@ Effect:
 
 - Normalizes pass/fail/invalid, cost, latency, failure label, diff digest, and
   verifier metadata, and stores the exact cache identity used for reuse.
+- Carries harness-provided usage mappings into the `ResultRecord` and computes
+  cost from matching numeric usage keys in `ScoringConfig.cost_rates`.
 
 ### compute_result_cache_identity
 

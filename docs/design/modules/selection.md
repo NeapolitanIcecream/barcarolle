@@ -248,6 +248,8 @@ Effect:
   The output digest binds origin, task pool, feature snapshot, Agent set,
   eligible `Task + Check` refs, pre-origin result view, budget, and leakage
   policy.
+- Allows an explicit empty pre-origin result view for metadata-only cold-start
+  selector inputs.
 
 ### select_random
 

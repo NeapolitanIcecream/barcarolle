@@ -142,6 +142,34 @@ def test_build_selector_input_lints_features_and_rejects_future_results() -> Non
         )
 
 
+def test_build_selector_input_allows_metadata_only_cold_start() -> None:
+    task_pool = _task_pool(("task-old",), ("check-old",))
+    origin = _origin(task_pool)
+    snapshot = build_feature_snapshot(
+        origin,
+        task_pool,
+        (_task("task-old", "check-old"),),
+        {"check-old": _check("check-old", "task-old")},
+        (),
+        FeatureConfig("features", "leakage", ("task_count",), ("task_metadata",)),
+    )
+
+    selector_input = build_selector_input(
+        origin,
+        task_pool,
+        snapshot,
+        (),
+        (_agent(),),
+        SelectionBudget("budget", 1),
+        LeakagePolicy("leakage", ("task_metadata",), origin.as_of_cutoff),
+    )
+
+    assert validate_selector_input(selector_input).ok
+    assert selector_input.pre_origin_result_ids == ()
+    assert selector_input.pre_origin_result_digests == ()
+    assert selector_input.feature_records_digest == snapshot.feature_records_digest
+
+
 def test_build_selector_input_rejects_timezone_offset_post_origin_result() -> None:
     task_pool = _task_pool(("task-old",), ("check-old",))
     origin = _origin(task_pool)
