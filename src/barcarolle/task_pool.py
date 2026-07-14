@@ -7,18 +7,29 @@ from dataclasses import dataclass
 from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any, Mapping, Sequence
+import hashlib
 import json
 
 from barcarolle.records import (
     CheckRecord,
+    RuntimeConfig,
     TaskPoolRecord,
     TaskRecord,
+    WorkspaceConfig,
     canonical_digest,
     make_check_id,
     make_task_id,
     record_with_digest,
     validate_check,
     validate_task,
+)
+from barcarolle.verification import CheckOutcome, summarize_evidence
+from barcarolle.workspace import (
+    CapturedDiff,
+    apply_diff,
+    cleanup_workspace,
+    create_verifier_workspace,
+    verify_agent_diff,
 )
 
 
@@ -63,15 +74,7 @@ class CheckConfig:
 class CertificationConfig:
     hidden_ref_markers: tuple[str, ...] = ("hidden", "oracle")
     require_statement: bool = True
-    required_evidence_keys: tuple[str, ...] = (
-        "checkout_valid",
-        "dependencies_restored",
-        "check_executable",
-        "oracle_stable",
-        "solver_visible_boundary",
-        "hidden_material_separated",
-        "statement_clear",
-    )
+    repeat_count: int = 1
 
 
 @dataclass(frozen=True)
@@ -95,7 +98,6 @@ class TaskCandidate:
     resource_limits: Mapping[str, Any]
     oracle_source: str
     check_type: str
-    certification_evidence: Mapping[str, Any]
 
 
 @dataclass(frozen=True)
@@ -170,7 +172,12 @@ def build_check_candidate(candidate: TaskCandidate, check_config: CheckConfig) -
 def certify_task_candidate(
     candidate: TaskCandidate,
     certification_config: CertificationConfig,
+    workspace_config: WorkspaceConfig,
+    runtime_config: RuntimeConfig,
+    reference_patch: CapturedDiff,
 ) -> CertificationResult:
+    if certification_config.repeat_count < 1:
+        raise ValueError("repeat_count must be at least 1")
     rejection_reasons: list[str] = []
     check = build_check_candidate(
         candidate,
@@ -199,22 +206,44 @@ def certify_task_candidate(
         if marker.lower() in lowered_refs:
             rejection_reasons.append("solver-visible material references hidden check material")
             break
-    for evidence_key in certification_config.required_evidence_keys:
-        if candidate.certification_evidence.get(evidence_key) is not True:
-            rejection_reasons.append(f"certification evidence failed: {evidence_key}")
 
     task_validation = validate_task(task)
     check_validation = validate_check(check)
     rejection_reasons.extend(task_validation.errors)
     rejection_reasons.extend(check_validation.errors)
 
+    reference_patch_digest = hashlib.sha256(reference_patch.diff_text.encode("utf-8")).hexdigest()
+    if reference_patch.diff_digest != reference_patch_digest:
+        rejection_reasons.append("reference patch digest does not match its content")
+
+    base_outcomes: tuple[CheckOutcome, ...] = ()
+    reference_outcomes: tuple[CheckOutcome, ...] = ()
+    if not rejection_reasons:
+        base_outcomes = (_run_task_check(task, check, workspace_config, runtime_config, None),)
+        base_outcome = base_outcomes[0]
+        if base_outcome.outcome != "fail":
+            rejection_reasons.append(f"base check attempt 1 must fail; observed {base_outcome.outcome}")
+        else:
+            patched: list[CheckOutcome] = []
+            for attempt in range(1, certification_config.repeat_count + 1):
+                outcome = _run_task_check(task, check, workspace_config, runtime_config, reference_patch)
+                patched.append(outcome)
+                if outcome.outcome != "pass":
+                    rejection_reasons.append(
+                        f"reference patch check attempt {attempt} must pass; observed {outcome.outcome}"
+                    )
+                    break
+            reference_outcomes = tuple(patched)
+
     accepted = not rejection_reasons
     evidence = {
         "candidate_id": candidate.candidate_id,
         "accepted": accepted,
         "rejection_reasons": tuple(rejection_reasons),
-        "certification_evidence": dict(candidate.certification_evidence),
-        "required_evidence_keys": certification_config.required_evidence_keys,
+        "repeat_count": certification_config.repeat_count,
+        "base_check": tuple(summarize_evidence(outcome).__dict__ for outcome in base_outcomes),
+        "reference_patch_check": tuple(summarize_evidence(outcome).__dict__ for outcome in reference_outcomes),
+        "reference_patch_digest": reference_patch_digest,
         "task_digest": canonical_digest(task),
         "check_digest": canonical_digest(check),
     }
@@ -363,8 +392,45 @@ def _candidate_from_mapping(data: Mapping[str, Any]) -> TaskCandidate:
         resource_limits=dict(data.get("resource_limits", {})),
         oracle_source=str(data["oracle_source"]),
         check_type=str(data["check_type"]),
-        certification_evidence=dict(data.get("certification_evidence", {})),
     )
+
+
+def _run_task_check(
+    task: TaskRecord,
+    check: CheckRecord,
+    workspace_config: WorkspaceConfig,
+    runtime_config: RuntimeConfig,
+    reference_patch: CapturedDiff | None,
+) -> CheckOutcome:
+    try:
+        workspace = create_verifier_workspace(task, workspace_config)
+    except (OSError, RuntimeError, ValueError):
+        return CheckOutcome("invalid", "verifier_workspace_error", None, False, 0.0, "")
+
+    try:
+        if reference_patch is not None:
+            replay = apply_diff(workspace, reference_patch)
+            if replay.replay_status != "applied":
+                outcome = CheckOutcome(
+                    "invalid",
+                    replay.failure_label or "diff_replay_failed",
+                    None,
+                    False,
+                    0.0,
+                    "",
+                )
+            else:
+                outcome = verify_agent_diff(workspace, check, runtime_config)
+        else:
+            outcome = verify_agent_diff(workspace, check, runtime_config)
+    except (OSError, RuntimeError, ValueError):
+        outcome = CheckOutcome("invalid", "verification_error", None, False, 0.0, "")
+
+    try:
+        cleanup_workspace(workspace)
+    except RuntimeError:
+        return CheckOutcome("invalid", "workspace_cleanup_failed", None, False, 0.0, "")
+    return outcome
 
 
 def _source_identity(candidate: TaskCandidate) -> Mapping[str, str]:

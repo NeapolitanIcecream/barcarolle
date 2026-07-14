@@ -94,27 +94,6 @@ Effect:
 - Converts framework-specific outputs into pass, fail, or invalid with a
   failure label.
 
-### repeat_verification
-
-Input:
-
-- `check: CheckRecord`
-- `verifier_workspace_factory: Callable`
-- `repeat_count: int`
-- `runtime_config: RuntimeConfig`
-- `workspace_cleanup: Callable[[WorkspaceRef], None]`
-
-Output:
-
-- `Sequence[CheckOutcome]`
-
-Effect:
-
-- Runs the check multiple times when task validation or flakiness analysis
-  needs repeatability evidence.
-- Calls the required cleanup function after every attempt, including verifier
-  preparation or execution failure, so copied private material is not retained.
-
 ### summarize_evidence
 
 Input:

@@ -1,15 +1,20 @@
+from dataclasses import replace
 import json
 from pathlib import Path
+import hashlib
+import subprocess
+import sys
 
 import pytest
 
-from barcarolle.records import canonical_digest
+from barcarolle.records import RuntimeConfig, WorkspaceConfig, canonical_digest
 from barcarolle.task_pool import (
     CertificationConfig,
     CertificationResult,
     CheckConfig,
     ImportConfig,
     StatementConfig,
+    TaskCandidate,
     TaskSourceConfig,
     TimeRange,
     build_check_candidate,
@@ -20,6 +25,23 @@ from barcarolle.task_pool import (
     import_task_pool,
     summarize_task_pool,
 )
+from barcarolle.workspace import CapturedDiff, bind_check_material, bind_repository_source
+
+
+@pytest.fixture(scope="module")
+def accepted_result(tmp_path_factory: pytest.TempPathFactory) -> CertificationResult:
+    candidate, workspace_config, runtime_config, reference_patch = _executable_candidate(
+        tmp_path_factory.mktemp("accepted-task")
+    )
+    result = certify_task_candidate(
+        candidate,
+        CertificationConfig(),
+        workspace_config,
+        runtime_config,
+        reference_patch,
+    )
+    assert result.accepted
+    return result
 
 
 def test_generate_history_candidates_filters_by_time_range_and_defaults_repository() -> None:
@@ -85,77 +107,112 @@ def test_build_check_candidate_binds_check_to_stable_task_id() -> None:
     assert check.hidden_check_bundle_digest == candidate.hidden_check_bundle_digest
 
 
-def test_certify_task_candidate_accepts_clean_candidate_and_rejects_hidden_solver_refs() -> None:
-    clean = generate_history_candidates(
-        "repo",
-        TimeRange("2026-01-01T00:00:00Z", "2026-01-31T23:59:59Z"),
-        TaskSourceConfig(source_family="issue", source_events=(_candidate_payload(),)),
-    )[0]
-    dirty = generate_history_candidates(
-        "repo",
-        TimeRange("2026-01-01T00:00:00Z", "2026-01-31T23:59:59Z"),
-        TaskSourceConfig(
-            source_family="issue",
-            source_events=(_candidate_payload(solver_material_refs=("README.md", "hidden/oracle.txt")),),
-        ),
-    )[0]
+def test_certify_task_candidate_requires_base_fail_and_reference_patch_pass(tmp_path: Path) -> None:
+    workspace_log = tmp_path / "workspaces.txt"
+    clean, workspace_config, runtime_config, reference_patch = _executable_candidate(
+        tmp_path,
+        workspace_log=workspace_log,
+    )
+    dirty = replace(clean, solver_material_refs=("README.md", "hidden/oracle.txt"))
 
-    accepted = certify_task_candidate(clean, CertificationConfig())
-    rejected = certify_task_candidate(dirty, CertificationConfig())
+    accepted = certify_task_candidate(
+        clean,
+        CertificationConfig(repeat_count=2),
+        workspace_config,
+        runtime_config,
+        reference_patch,
+    )
+    rejected = certify_task_candidate(
+        dirty,
+        CertificationConfig(),
+        workspace_config,
+        runtime_config,
+        reference_patch,
+    )
 
     assert accepted.accepted
     assert accepted.task is not None
     assert accepted.check is not None
+    assert [item["outcome"] for item in accepted.evidence["base_check"]] == ["fail"]
+    assert [item["outcome"] for item in accepted.evidence["reference_patch_check"]] == ["pass", "pass"]
+    checked_workspaces = tuple(Path(value) for value in workspace_log.read_text(encoding="utf-8").splitlines())
+    assert len(checked_workspaces) == 3
+    assert len(set(checked_workspaces)) == 3
+    assert not any(path.exists() for path in checked_workspaces)
     assert not rejected.accepted
     assert any("hidden check" in reason for reason in rejected.rejection_reasons)
 
 
-def test_certify_task_candidate_rejects_missing_required_certification_evidence() -> None:
-    candidate = generate_history_candidates(
-        "repo",
-        TimeRange("2026-01-01T00:00:00Z", "2026-01-31T23:59:59Z"),
-        TaskSourceConfig(
-            source_family="issue",
-            source_events=(_candidate_payload(certification_evidence={"checkout_valid": True}),),
-        ),
-    )[0]
+def test_certify_task_candidate_rejects_check_that_passes_at_base(tmp_path: Path) -> None:
+    candidate, workspace_config, runtime_config, reference_patch = _executable_candidate(
+        tmp_path,
+        expected_content="broken\n",
+    )
 
-    result = certify_task_candidate(candidate, CertificationConfig())
+    result = certify_task_candidate(
+        candidate,
+        CertificationConfig(),
+        workspace_config,
+        runtime_config,
+        reference_patch,
+    )
 
     assert not result.accepted
-    assert "certification evidence failed: check_executable" in result.rejection_reasons
+    assert "base check attempt 1 must fail; observed pass" in result.rejection_reasons
     assert result.task is None
     assert result.check is None
 
 
-def test_solver_visible_statement_rejects_hidden_or_oracle_text() -> None:
-    candidate = generate_history_candidates(
-        "repo",
-        TimeRange("2026-01-01T00:00:00Z", "2026-01-31T23:59:59Z"),
-        TaskSourceConfig(
-            source_family="issue",
-            source_events=(
-                _candidate_payload(statement_material={"title": "Use the hidden oracle answer", "body": "Fix it"}),
-            ),
-        ),
-    )[0]
+def test_certify_task_candidate_rejects_reference_patch_that_does_not_pass(tmp_path: Path) -> None:
+    candidate, workspace_config, runtime_config, _ = _executable_candidate(tmp_path)
+    patch_text = (
+        "diff --git a/value.txt b/value.txt\n"
+        "--- a/value.txt\n"
+        "+++ b/value.txt\n"
+        "@@ -1 +1 @@\n"
+        "-broken\n"
+        "+still-broken\n"
+    )
+    reference_patch = CapturedDiff(patch_text, hashlib.sha256(patch_text.encode("utf-8")).hexdigest())
+
+    result = certify_task_candidate(
+        candidate,
+        CertificationConfig(),
+        workspace_config,
+        runtime_config,
+        reference_patch,
+    )
+
+    assert not result.accepted
+    assert "reference patch check attempt 1 must pass; observed fail" in result.rejection_reasons
+    assert result.evidence["base_check"][0]["outcome"] == "fail"
+    assert result.evidence["reference_patch_check"][0]["outcome"] == "fail"
+
+
+def test_solver_visible_statement_rejects_hidden_or_oracle_text(tmp_path: Path) -> None:
+    executable, workspace_config, runtime_config, reference_patch = _executable_candidate(tmp_path)
+    candidate = replace(
+        executable,
+        statement_material={"title": "Use the hidden oracle answer", "body": "Fix it"},
+    )
 
     with pytest.raises(ValueError, match="hidden or oracle material"):
         build_task_statement(candidate, StatementConfig())
 
-    result = certify_task_candidate(candidate, CertificationConfig())
+    result = certify_task_candidate(
+        candidate,
+        CertificationConfig(),
+        workspace_config,
+        runtime_config,
+        reference_patch,
+    )
 
     assert not result.accepted
     assert "solver-visible task statement contains hidden or oracle material" in result.rejection_reasons
 
 
-def test_freeze_task_pool_records_digests_rejections_and_summary() -> None:
-    candidate = generate_history_candidates(
-        "repo",
-        TimeRange("2026-01-01T00:00:00Z", "2026-01-31T23:59:59Z"),
-        TaskSourceConfig(source_family="issue", source_events=(_candidate_payload(),)),
-    )[0]
-    accepted = certify_task_candidate(candidate, CertificationConfig())
+def test_freeze_task_pool_records_digests_rejections_and_summary(accepted_result: CertificationResult) -> None:
+    accepted = accepted_result
     assert accepted.task is not None
     assert accepted.check is not None
 
@@ -183,13 +240,8 @@ def test_freeze_task_pool_records_digests_rejections_and_summary() -> None:
     assert summary["rejected_count"] == 0
 
 
-def test_freeze_task_pool_rejects_broken_task_check_linkage() -> None:
-    candidate = generate_history_candidates(
-        "repo",
-        TimeRange("2026-01-01T00:00:00Z", "2026-01-31T23:59:59Z"),
-        TaskSourceConfig(source_family="issue", source_events=(_candidate_payload(),)),
-    )[0]
-    accepted = certify_task_candidate(candidate, CertificationConfig())
+def test_freeze_task_pool_rejects_broken_task_check_linkage(accepted_result: CertificationResult) -> None:
+    accepted = accepted_result
     assert accepted.task is not None
     assert accepted.check is not None
 
@@ -211,13 +263,8 @@ def test_freeze_task_pool_rejects_broken_task_check_linkage() -> None:
         )
 
 
-def test_freeze_task_pool_rejects_missing_required_metadata() -> None:
-    candidate = generate_history_candidates(
-        "repo",
-        TimeRange("2026-01-01T00:00:00Z", "2026-01-31T23:59:59Z"),
-        TaskSourceConfig(source_family="issue", source_events=(_candidate_payload(),)),
-    )[0]
-    accepted = certify_task_candidate(candidate, CertificationConfig())
+def test_freeze_task_pool_rejects_missing_required_metadata(accepted_result: CertificationResult) -> None:
+    accepted = accepted_result
     assert accepted.task is not None
     assert accepted.check is not None
 
@@ -235,13 +282,10 @@ def test_freeze_task_pool_rejects_missing_required_metadata() -> None:
         )
 
 
-def test_freeze_task_pool_rejects_missing_accepted_certification_result() -> None:
-    candidate = generate_history_candidates(
-        "repo",
-        TimeRange("2026-01-01T00:00:00Z", "2026-01-31T23:59:59Z"),
-        TaskSourceConfig(source_family="issue", source_events=(_candidate_payload(),)),
-    )[0]
-    accepted = certify_task_candidate(candidate, CertificationConfig())
+def test_freeze_task_pool_rejects_missing_accepted_certification_result(
+    accepted_result: CertificationResult,
+) -> None:
+    accepted = accepted_result
     assert accepted.task is not None
     assert accepted.check is not None
 
@@ -263,13 +307,10 @@ def test_freeze_task_pool_rejects_missing_accepted_certification_result() -> Non
         )
 
 
-def test_freeze_task_pool_rejects_unbound_accepted_certification_result() -> None:
-    candidate = generate_history_candidates(
-        "repo",
-        TimeRange("2026-01-01T00:00:00Z", "2026-01-31T23:59:59Z"),
-        TaskSourceConfig(source_family="issue", source_events=(_candidate_payload(),)),
-    )[0]
-    accepted = certify_task_candidate(candidate, CertificationConfig())
+def test_freeze_task_pool_rejects_unbound_accepted_certification_result(
+    accepted_result: CertificationResult,
+) -> None:
+    accepted = accepted_result
     assert accepted.task is not None
     assert accepted.check is not None
     bad_result = CertificationResult(
@@ -300,13 +341,8 @@ def test_freeze_task_pool_rejects_unbound_accepted_certification_result() -> Non
         )
 
 
-def test_freeze_task_pool_revalidates_hidden_solver_material() -> None:
-    candidate = generate_history_candidates(
-        "repo",
-        TimeRange("2026-01-01T00:00:00Z", "2026-01-31T23:59:59Z"),
-        TaskSourceConfig(source_family="issue", source_events=(_candidate_payload(),)),
-    )[0]
-    accepted = certify_task_candidate(candidate, CertificationConfig())
+def test_freeze_task_pool_revalidates_hidden_solver_material(accepted_result: CertificationResult) -> None:
+    accepted = accepted_result
     assert accepted.task is not None
     assert accepted.check is not None
     bad_task = type(accepted.task)(
@@ -334,13 +370,8 @@ def test_freeze_task_pool_revalidates_hidden_solver_material() -> None:
         )
 
 
-def test_freeze_task_pool_rejects_repository_mismatch() -> None:
-    candidate = generate_history_candidates(
-        "repo",
-        TimeRange("2026-01-01T00:00:00Z", "2026-01-31T23:59:59Z"),
-        TaskSourceConfig(source_family="issue", source_events=(_candidate_payload(),)),
-    )[0]
-    accepted = certify_task_candidate(candidate, CertificationConfig())
+def test_freeze_task_pool_rejects_repository_mismatch(accepted_result: CertificationResult) -> None:
+    accepted = accepted_result
     assert accepted.task is not None
     assert accepted.check is not None
 
@@ -372,6 +403,89 @@ def _check_config() -> CheckConfig:
     )
 
 
+def _executable_candidate(
+    tmp_path: Path,
+    *,
+    expected_content: str = "fixed\n",
+    workspace_log: Path | None = None,
+) -> tuple[TaskCandidate, WorkspaceConfig, RuntimeConfig, CapturedDiff]:
+    repo = tmp_path / "repo"
+    repo.mkdir()
+    _git(repo, "init", "--quiet")
+    _git(repo, "config", "user.email", "tests@example.invalid")
+    _git(repo, "config", "user.name", "Tests")
+    (repo / "value.txt").write_text("broken\n", encoding="utf-8")
+    _git(repo, "add", "value.txt")
+    _git(repo, "commit", "--quiet", "-m", "base")
+    base_commit = _git(repo, "rev-parse", "HEAD").stdout.strip()
+
+    hidden = tmp_path / "private-check.txt"
+    hidden.write_text("private check material\n", encoding="utf-8")
+    log_statement = ""
+    if workspace_log is not None:
+        log_statement = (
+            f"log_path = Path({str(workspace_log)!r}); "
+            "log_path.write_text((log_path.read_text(encoding='utf-8') if log_path.exists() else '') + "
+            "str(Path.cwd()) + '\\n', encoding='utf-8'); "
+        )
+    check_command = (
+        sys.executable,
+        "-c",
+        "from pathlib import Path; "
+        f"{log_statement}"
+        f"content_ok = Path('value.txt').read_text(encoding='utf-8') == {expected_content!r}; "
+        "private_ok = Path('.barcarolle/check_bundle').read_text(encoding='utf-8') == "
+        "'private check material\\n'; "
+        "raise SystemExit(0 if content_ok and private_ok else 1)",
+    )
+    payload = _candidate_payload(
+        base_commit=base_commit,
+        check_manifest_digest=canonical_digest({"check_command": check_command}),
+        hidden_check_bundle_digest=hashlib.sha256(hidden.read_bytes()).hexdigest(),
+    )
+    candidate = generate_history_candidates(
+        "repo",
+        TimeRange("2026-01-01T00:00:00Z", "2026-01-31T23:59:59Z"),
+        TaskSourceConfig(source_family="issue", source_events=(payload,)),
+    )[0]
+    workspace_config = WorkspaceConfig(
+        workspace_config_id="workspace",
+        repository_checkout_config_digest=canonical_digest({"repository_path": str(repo)}),
+        submodule_state_digest="submodules",
+        base_image_digest="image",
+        dependency_lock_digest="deps",
+    )
+    runtime_config = RuntimeConfig("runtime", "budget", "retry", "deterministic", 5, None)
+    check = build_check_candidate(candidate, _check_config())
+    bind_repository_source(workspace_config, repo)
+    bind_check_material(check, check_command, hidden)
+
+    patch_text = (
+        "diff --git a/value.txt b/value.txt\n"
+        "--- a/value.txt\n"
+        "+++ b/value.txt\n"
+        "@@ -1 +1 @@\n"
+        "-broken\n"
+        "+fixed\n"
+    )
+    reference_patch = CapturedDiff(
+        diff_text=patch_text,
+        diff_digest=hashlib.sha256(patch_text.encode("utf-8")).hexdigest(),
+    )
+    return candidate, workspace_config, runtime_config, reference_patch
+
+
+def _git(repo: Path, *args: str) -> subprocess.CompletedProcess[str]:
+    return subprocess.run(
+        ("git", *args),
+        cwd=repo,
+        text=True,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+        check=True,
+    )
+
+
 def _candidate_payload(**overrides: object) -> dict[str, object]:
     payload: dict[str, object] = {
         "repository_id": "repo",
@@ -396,15 +510,6 @@ def _candidate_payload(**overrides: object) -> dict[str, object]:
         "resource_limits": {"timeout_seconds": 30},
         "oracle_source": "private_tests",
         "check_type": "pytest",
-        "certification_evidence": {
-            "checkout_valid": True,
-            "dependencies_restored": True,
-            "check_executable": True,
-            "oracle_stable": True,
-            "solver_visible_boundary": True,
-            "hidden_material_separated": True,
-            "statement_clear": True,
-        },
     }
     payload.update(overrides)
     return payload

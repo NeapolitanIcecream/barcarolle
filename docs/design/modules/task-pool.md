@@ -134,6 +134,9 @@ Input:
 
 - `candidate: TaskCandidate`
 - `certification_config: CertificationConfig`
+- `workspace_config: WorkspaceConfig`
+- `runtime_config: RuntimeConfig`
+- `reference_patch: CapturedDiff`
 
 Output:
 
@@ -141,10 +144,14 @@ Output:
 
 Effect:
 
-- Validates checkout, dependency restoration, the base-fail and optional
-  reference-patch-pass transitions, solver-visible material, hidden material
-  separation, requested repeatability, and statement clarity. It may call
-  Workspace and Verification, but it does not run Agents.
+- Runs the Check once at the base commit and requires it to fail.
+- Applies the reference patch in a fresh verifier Workspace and requires the
+  same Check to pass. `repeat_count` repeats this patched check in a new
+  verifier Workspace each time.
+- Validates solver-visible material and statement clarity. It uses Workspace
+  and Verification but does not run Agents.
+- Stores normalized outcomes and the reference-patch digest, not the patch,
+  workspace contents, or raw Check output.
 
 ### freeze_task_pool
 

@@ -2,7 +2,6 @@
 
 from __future__ import annotations
 
-from collections.abc import Callable
 from dataclasses import dataclass
 from pathlib import Path
 from shutil import copy2, copytree
@@ -177,26 +176,6 @@ def normalize_outcome(raw_output: object, normalization_config: CheckNormalizati
     if exit_code in normalization_config.invalid_exit_codes:
         return CheckOutcome("invalid", normalization_config.invalid_failure_label, exit_code, False, duration, evidence_excerpt)
     return CheckOutcome("fail", normalization_config.fail_failure_label, exit_code, False, duration, evidence_excerpt)
-
-
-def repeat_verification(
-    check: CheckRecord,
-    verifier_workspace_factory: Callable[[], WorkspaceRef],
-    repeat_count: int,
-    runtime_config: RuntimeConfig,
-    workspace_cleanup: Callable[[WorkspaceRef], None],
-) -> Sequence[CheckOutcome]:
-    if repeat_count < 1:
-        raise ValueError("repeat_count must be at least 1")
-    outcomes: list[CheckOutcome] = []
-    for _ in range(repeat_count):
-        workspace = verifier_workspace_factory()
-        try:
-            prepared_workspace = prepare_verifier(check, workspace)
-            outcomes.append(verify_diff(check, prepared_workspace, runtime_config))
-        finally:
-            workspace_cleanup(workspace)
-    return tuple(outcomes)
 
 
 def summarize_evidence(outcome: CheckOutcome) -> EvidenceSummary:
