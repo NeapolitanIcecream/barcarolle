@@ -30,6 +30,12 @@ def test_minimal_demo_writes_reports_with_selected_and_future_evidence(tmp_path:
     assert str(report_md) in completed.stdout
     assert str(report_json) in completed.stdout
 
+    evidence_lines = (
+        output_dir / "records" / "certification-evidence.jsonl"
+    ).read_text(encoding="utf-8").splitlines()
+    assert len(evidence_lines) == 4
+    assert all(json.loads(line)["accepted"] for line in evidence_lines)
+
     report_text = report_md.read_text(encoding="utf-8")
     assert "Claim Boundary" not in report_text
     assert str(tmp_path) not in report_text

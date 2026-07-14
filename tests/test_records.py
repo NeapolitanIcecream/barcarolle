@@ -28,6 +28,7 @@ from barcarolle.records import (
     make_check_id,
     make_result_cache_identity,
     make_result_cache_key,
+    make_solver_material_digest,
     make_task_id,
     record_with_digest,
     task_check_ref_key,
@@ -65,7 +66,12 @@ def test_make_result_cache_identity_binds_task_check_agent_workspace_and_runtime
     assert identity.check_id == check.check_id
     assert identity.check_digest == make_check_digest(check)
     assert identity.agent_manifest_digest == agent.agent_manifest_digest
-    assert identity.workspace_config_digest == canonical_digest(workspace_config)
+    assert identity.workspace_config_digest == canonical_digest(
+        {
+            "checkout_mode": "base_commit_history_v1",
+            "workspace_config": workspace_config,
+        }
+    )
     assert identity.runtime_config_digest == canonical_digest(runtime_config)
     assert identity.identity_digest == canonical_digest(identity, exclude_self_digest=True)
     assert validate_result_cache_identity(identity).ok
@@ -170,7 +176,7 @@ def test_selector_config_digest_binds_family_and_parameters() -> None:
     assert not validate_selector(replace(selector, parameters={"seed": 8})).ok
 
 
-def test_task_validation_rejects_hidden_solver_material_and_unordered_timestamps() -> None:
+def test_task_validation_rejects_stale_solver_material_digest_and_unordered_timestamps() -> None:
     task = TaskRecord(
         task_id="task",
         repository_id="repo",
@@ -179,9 +185,9 @@ def test_task_validation_rejects_hidden_solver_material_and_unordered_timestamps
         source_ref="source",
         source_resolved_at="2026-06-02T00:00:00Z",
         task_material_available_at="2026-06-01T00:00:00Z",
-        certified_at="2026-06-03T00:00:00Z",
+        task_text="Fix the issue.",
         solver_material_digest="solver",
-        solver_material_refs=("hidden/oracle.txt",),
+        solver_material_refs=("README.md",),
         check_ids=("check",),
         cluster_id="cluster",
     )
@@ -190,7 +196,15 @@ def test_task_validation_rejects_hidden_solver_material_and_unordered_timestamps
 
     assert not result.ok
     assert any("timestamps" in error for error in result.errors)
-    assert any("hidden check" in error for error in result.errors)
+    assert any("solver_material_digest" in error for error in result.errors)
+
+
+def test_task_and_check_validation_allow_optional_cluster_and_resource_overrides() -> None:
+    task = replace(_task(), cluster_id="")
+    check = replace(_check(task), resource_limits={})
+
+    assert validate_task(task).ok
+    assert validate_check(check).ok
 
 
 def test_benchmark_selection_weights_must_match_selected_refs() -> None:
@@ -920,6 +934,8 @@ def _result() -> ResultRecord:
 def _task() -> TaskRecord:
     task_id = make_task_id("repo", "commit", "source")
     check_id = make_check_id(task_id, "check")
+    task_text = "Fix the issue."
+    solver_material_refs = ("README.md",)
     return TaskRecord(
         task_id=task_id,
         repository_id="repo",
@@ -928,9 +944,9 @@ def _task() -> TaskRecord:
         source_ref="source",
         source_resolved_at="2026-06-01T00:00:00Z",
         task_material_available_at="2026-06-02T00:00:00Z",
-        certified_at="2026-06-03T00:00:00Z",
-        solver_material_digest="solver",
-        solver_material_refs=("README.md",),
+        task_text=task_text,
+        solver_material_digest=make_solver_material_digest(task_text, solver_material_refs),
+        solver_material_refs=solver_material_refs,
         check_ids=(check_id,),
         cluster_id="cluster",
     )
@@ -943,12 +959,9 @@ def _check(task: TaskRecord) -> CheckRecord:
         check_type="pytest",
         check_manifest_digest="manifest",
         hidden_check_bundle_digest="hidden-bundle-digest",
-        verifier_image_digest="image",
-        verifier_deps_digest="deps",
         resource_limits={"timeout_seconds": 30},
         oracle_source="private_tests",
         check_material_available_at="2026-06-02T00:00:00Z",
-        certified_at="2026-06-03T00:00:00Z",
     )
 
 

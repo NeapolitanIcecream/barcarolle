@@ -43,7 +43,6 @@ class SelectorTrainingConfig:
 
 @dataclass(frozen=True)
 class SelectorEvaluationConfig:
-    evaluation_config_digest: str
     origin_times: tuple[str, ...]
     selection_config: SelectionConfig
     budget: SelectionBudget

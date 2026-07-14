@@ -6,6 +6,9 @@ import argparse
 from dataclasses import replace
 from datetime import UTC, datetime
 from pathlib import Path
+from tempfile import TemporaryDirectory
+import hashlib
+import subprocess
 import sys
 
 
@@ -56,9 +59,12 @@ from barcarolle.task_pool import (
     CertificationConfig,
     TaskCandidate,
     TimeRange,
+    build_check_candidate,
+    certification_evidence_records,
     certify_task_candidate,
     freeze_task_pool,
 )
+from barcarolle.workspace import CapturedDiff, bind_check_material, bind_repository_source
 
 
 DEFAULT_OUTPUT_DIR = Path(__file__).resolve().parent / "out"
@@ -78,7 +84,7 @@ def main(output_dir: Path = DEFAULT_OUTPUT_DIR) -> dict[str, object]:
     agents = _agents()
     workspace_config = WorkspaceConfig("workspace-fixture", "checkout-fixture", "submodules-none", "python-fixture", "deps-fixture")
     runtime_config = RuntimeConfig("runtime-fixture", "budget-fixture", "retry-none", "deterministic", 30, None)
-    scoring_config = ScoringConfig("scoring-fixture", "fixture-v1", "complete", {"input_tokens": 0.0})
+    scoring_config = ScoringConfig("fixture-v1", {"input_tokens": 0.0})
     result_store = ResultStore(records_dir / "results.jsonl")
     _store_fixture_results(tasks, checks_by_id, agents, workspace_config, runtime_config, scoring_config, result_store)
 
@@ -187,7 +193,23 @@ def main(output_dir: Path = DEFAULT_OUTPUT_DIR) -> dict[str, object]:
 
 def _build_task_pool(records_dir: Path) -> tuple[tuple[TaskRecord, ...], tuple[CheckRecord, ...], TaskPoolRecord]:
     certification_config = CertificationConfig()
-    certified = tuple(certify_task_candidate(candidate, certification_config) for candidate in _task_candidates())
+    with TemporaryDirectory(prefix="barcarolle-demo-task-") as temp_dir:
+        (
+            candidates,
+            workspace_config,
+            runtime_config,
+            reference_patch,
+        ) = _executable_task_candidates(Path(temp_dir))
+        certified = tuple(
+            certify_task_candidate(
+                candidate,
+                certification_config,
+                workspace_config,
+                runtime_config,
+                reference_patch,
+            )
+            for candidate in candidates
+        )
     accepted_tasks = tuple(result.task for result in certified if result.accepted and result.task is not None)
     accepted_checks = tuple(result.check for result in certified if result.accepted and result.check is not None)
     rejected = tuple(result for result in certified if not result.accepted)
@@ -200,7 +222,8 @@ def _build_task_pool(records_dir: Path) -> tuple[tuple[TaskRecord, ...], tuple[C
             "accepted_certification_results": tuple(result for result in certified if result.accepted),
             "task_records_ref": "records/tasks.jsonl",
             "check_records_ref": "records/checks.jsonl",
-            "source_event_inventory_digest": canonical_digest(tuple(candidate.source_ref for candidate in _task_candidates())),
+            "certification_evidence_ref": "records/certification-evidence.jsonl",
+            "source_event_inventory_digest": canonical_digest(tuple(candidate.source_ref for candidate in candidates)),
             "generator_config_digest": "generator-fixture",
             "certification_config_digest": canonical_digest(certification_config),
             "created_at": "2026-01-01T00:00:00Z",
@@ -208,10 +231,18 @@ def _build_task_pool(records_dir: Path) -> tuple[tuple[TaskRecord, ...], tuple[C
     )
     write_jsonl_records(records_dir / "tasks.jsonl", accepted_tasks)
     write_jsonl_records(records_dir / "checks.jsonl", accepted_checks)
+    write_jsonl_records(
+        records_dir / "certification-evidence.jsonl",
+        certification_evidence_records(certified),
+    )
     return accepted_tasks, accepted_checks, task_pool
 
 
-def _task_candidates() -> tuple[TaskCandidate, ...]:
+def _task_candidates(
+    base_commit: str,
+    check_manifest_digest: str,
+    hidden_check_bundle_digest: str,
+) -> tuple[TaskCandidate, ...]:
     return (
         _candidate(
             "candidate-config-parse",
@@ -220,6 +251,9 @@ def _task_candidates() -> tuple[TaskCandidate, ...]:
             "configuration",
             "Parse optional timeout values",
             "Accept missing timeout values while preserving existing defaults.",
+            base_commit,
+            check_manifest_digest,
+            hidden_check_bundle_digest,
         ),
         _candidate(
             "candidate-cache-key",
@@ -228,6 +262,9 @@ def _task_candidates() -> tuple[TaskCandidate, ...]:
             "result-store",
             "Include scoring identity in cache keys",
             "Keep cached results separate when scoring settings differ.",
+            base_commit,
+            check_manifest_digest,
+            hidden_check_bundle_digest,
         ),
         _candidate(
             "candidate-selection-summary",
@@ -236,6 +273,9 @@ def _task_candidates() -> tuple[TaskCandidate, ...]:
             "reporting",
             "Summarize selected and future matrix evidence",
             "Report selected benchmark cells separately from future holdout cells.",
+            base_commit,
+            check_manifest_digest,
+            hidden_check_bundle_digest,
         ),
         _candidate(
             "candidate-denominator-policy",
@@ -244,6 +284,9 @@ def _task_candidates() -> tuple[TaskCandidate, ...]:
             "selection",
             "Track denominator policy in metrics",
             "Bind rolling-origin metrics to the denominator policy used for scoring.",
+            base_commit,
+            check_manifest_digest,
+            hidden_check_bundle_digest,
         ),
     )
 
@@ -255,29 +298,100 @@ def _candidate(
     cluster_id: str,
     title: str,
     body: str,
+    base_commit: str,
+    check_manifest_digest: str,
+    hidden_check_bundle_digest: str,
 ) -> TaskCandidate:
-    evidence_keys = CertificationConfig.required_evidence_keys
     return TaskCandidate(
         candidate_id=candidate_id,
         repository_id="demo-repo",
-        base_commit=f"base-{source_ref}",
+        base_commit=base_commit,
         source_family="fixture",
         source_ref=source_ref,
         source_resolved_at=available_at,
         task_material_available_at=available_at,
         check_material_available_at=available_at,
-        solver_material_refs=(f"tasks/{source_ref}.md",),
-        solver_material_digest=f"solver-material-{source_ref}",
+        task_text=f"{title}\n\n{body}",
+        solver_material_refs=(),
         cluster_id=cluster_id,
-        statement_material={"title": title, "body": body},
-        check_manifest_digest=f"check-manifest-{source_ref}",
-        hidden_check_bundle_digest=f"check-bundle-{source_ref}",
-        verifier_image_digest="verifier-image-fixture",
-        verifier_deps_digest="verifier-deps-fixture",
+        check_manifest_digest=check_manifest_digest,
+        hidden_check_bundle_digest=hidden_check_bundle_digest,
         resource_limits={"timeout_seconds": 30},
         oracle_source="fixture",
         check_type="tests",
-        certification_evidence={key: True for key in evidence_keys},
+    )
+
+
+def _executable_task_candidates(
+    root: Path,
+) -> tuple[tuple[TaskCandidate, ...], WorkspaceConfig, RuntimeConfig, CapturedDiff]:
+    repository = root / "repository"
+    repository.mkdir()
+    _git(repository, "init", "--quiet")
+    _git(repository, "config", "user.email", "demo@example.invalid")
+    _git(repository, "config", "user.name", "Barcarolle Demo")
+    (repository / "value.txt").write_text("broken\n", encoding="utf-8")
+    _git(repository, "add", "value.txt")
+    _git(repository, "commit", "--quiet", "-m", "base")
+    base_commit = _git(repository, "rev-parse", "HEAD").stdout.strip()
+
+    hidden_material = root / "private-check.txt"
+    hidden_material.write_text("demo private check\n", encoding="utf-8")
+    check_command = (
+        sys.executable,
+        "-c",
+        "from pathlib import Path; "
+        "fixed = Path('value.txt').read_text(encoding='utf-8') == 'fixed\\n'; "
+        "private = Path('.barcarolle/check_bundle').read_text(encoding='utf-8') == "
+        "'demo private check\\n'; "
+        "raise SystemExit(0 if fixed and private else 1)",
+    )
+    check_manifest_digest = canonical_digest({"check_command": check_command})
+    hidden_check_bundle_digest = hashlib.sha256(hidden_material.read_bytes()).hexdigest()
+    candidates = _task_candidates(base_commit, check_manifest_digest, hidden_check_bundle_digest)
+    workspace_config = WorkspaceConfig(
+        "workspace-task-validation-fixture",
+        canonical_digest({"repository_path": str(repository)}),
+        "submodules-none",
+        "python-fixture",
+        "deps-fixture",
+    )
+    runtime_config = RuntimeConfig(
+        "runtime-task-validation-fixture",
+        "budget-fixture",
+        "retry-none",
+        "deterministic",
+        30,
+        None,
+    )
+    bind_repository_source(workspace_config, repository)
+    for candidate in candidates:
+        check = build_check_candidate(candidate)
+        bind_check_material(check, check_command, hidden_material)
+
+    patch_text = (
+        "diff --git a/value.txt b/value.txt\n"
+        "--- a/value.txt\n"
+        "+++ b/value.txt\n"
+        "@@ -1 +1 @@\n"
+        "-broken\n"
+        "+fixed\n"
+    )
+    reference_patch = CapturedDiff(
+        patch_text,
+        hashlib.sha256(patch_text.encode("utf-8")).hexdigest(),
+    )
+    return candidates, workspace_config, runtime_config, reference_patch
+
+
+def _git(repository: Path, *args: str) -> subprocess.CompletedProcess[str]:
+    return subprocess.run(
+        ("git", *args),
+        cwd=repository,
+        text=True,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+        check=True,
     )
 
 

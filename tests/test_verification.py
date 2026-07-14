@@ -291,12 +291,9 @@ def _check(command: tuple[str, ...] = ("python", "-c", "print('ok')")) -> CheckR
         check_type="pytest",
         check_manifest_digest=_command_digest(command),
         hidden_check_bundle_digest=_hidden_digest(),
-        verifier_image_digest="image",
-        verifier_deps_digest="deps",
         resource_limits={"timeout_seconds": 5},
         oracle_source="private_tests",
         check_material_available_at="2026-01-01T00:00:00Z",
-        certified_at="2026-01-02T00:00:00Z",
     )
 
 

@@ -16,6 +16,7 @@ from barcarolle.records import (
     TaskRecord,
     WorkspaceConfig,
     canonical_digest,
+    make_solver_material_digest,
     validate_workspace_run,
 )
 from barcarolle.workspace import (
@@ -49,6 +50,9 @@ def test_create_solver_workspace_clones_base_commit_and_writes_only_solver_visib
     tmp_path: Path, managed_workspaces
 ) -> None:
     repo, base_commit = _make_repo(tmp_path)
+    past_commit = _git(repo, "rev-parse", f"{base_commit}^").stdout.strip()
+    future_commit = _git(repo, "rev-parse", "HEAD").stdout.strip()
+    assert future_commit != base_commit
     task = _task(base_commit=base_commit)
     workspace_config = _workspace_config(repo)
     bind_repository_source(workspace_config, repo)
@@ -57,15 +61,30 @@ def test_create_solver_workspace_clones_base_commit_and_writes_only_solver_visib
     managed_workspaces.append(workspace)
     material_dir = workspace.path / ".barcarolle"
     material = (material_dir / "solver-visible-task.json").read_text(encoding="utf-8")
+    material_payload = json.loads(material)
     task_markdown = (material_dir / "TASK.md").read_text(encoding="utf-8")
 
     assert workspace.role == "solver"
     assert _git(workspace.path, "rev-parse", "HEAD").stdout.strip() == base_commit
+    assert _git(workspace.path, "remote").stdout.strip() == ""
+    assert not (workspace.path / ".git" / "FETCH_HEAD").exists()
+    assert _git(workspace.path, "rev-list", "--all").stdout.splitlines() == [base_commit, past_commit]
+    assert subprocess.run(
+        ("git", "cat-file", "-e", f"{future_commit}^{{commit}}"),
+        cwd=workspace.path,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+        check=False,
+    ).returncode != 0
     assert (workspace.path / "README.md").read_text(encoding="utf-8") == "base\n"
     assert "solver_material_refs" in material
     assert "TASK.md" in material
+    assert set(material_payload) == {"solver_material_refs", "task_material_file"}
     assert "README.md" in task_markdown
-    assert "base" in task_markdown
+    assert "Fix the issue." in task_markdown
+    assert task.task_id not in task_markdown
+    assert task.base_commit not in task_markdown
+    assert "base\n" not in task_markdown
     assert "hidden" not in material.lower()
     assert "oracle" not in material.lower()
     assert "hidden" not in task_markdown.lower()
@@ -106,7 +125,9 @@ def test_cleanup_workspace_rejects_replaced_owned_path(tmp_path: Path) -> None:
         cleanup_workspace(workspace)
 
 
-def test_create_solver_workspace_does_not_dereference_solver_material_symlink(tmp_path: Path, managed_workspaces) -> None:
+def test_create_solver_workspace_rejects_solver_material_resolving_outside_checkout(
+    tmp_path: Path, managed_workspaces
+) -> None:
     repo, _ = _make_repo(tmp_path)
     outside_material = tmp_path / "outside-private.txt"
     outside_material.write_text("private check content\n", encoding="utf-8")
@@ -115,16 +136,12 @@ def test_create_solver_workspace_does_not_dereference_solver_material_symlink(tm
     _git(repo, "add", "statement.md")
     _git(repo, "commit", "-m", "add symlink solver material")
     base_commit = _git(repo, "rev-parse", "HEAD").stdout.strip()
-    task = replace(_task(base_commit=base_commit), solver_material_refs=("statement.md",))
+    task = _with_solver_refs(_task(base_commit=base_commit), ("statement.md",))
     workspace_config = _workspace_config(repo)
     bind_repository_source(workspace_config, repo)
 
-    workspace = create_solver_workspace(task, workspace_config)
-    managed_workspaces.append(workspace)
-    task_markdown = (workspace.path / ".barcarolle" / "TASK.md").read_text(encoding="utf-8")
-
-    assert "Reference uses a symlink and was not copied." in task_markdown
-    assert "private check content" not in task_markdown
+    with pytest.raises(ValueError, match="solver material reference resolves outside the workspace"):
+        create_solver_workspace(task, workspace_config)
 
 
 def test_create_solver_workspace_reads_path_prefixed_solver_material_ref(tmp_path: Path, managed_workspaces) -> None:
@@ -133,7 +150,7 @@ def test_create_solver_workspace_reads_path_prefixed_solver_material_ref(tmp_pat
     _git(repo, "add", "statement.md")
     _git(repo, "commit", "-m", "add solver statement")
     base_commit = _git(repo, "rev-parse", "HEAD").stdout.strip()
-    task = replace(_task(base_commit=base_commit), solver_material_refs=("path:statement.md",))
+    task = _with_solver_refs(_task(base_commit=base_commit), ("path:statement.md",))
     workspace_config = _workspace_config(repo)
     bind_repository_source(workspace_config, repo)
 
@@ -142,7 +159,22 @@ def test_create_solver_workspace_reads_path_prefixed_solver_material_ref(tmp_pat
     task_markdown = (workspace.path / ".barcarolle" / "TASK.md").read_text(encoding="utf-8")
 
     assert "path:statement.md" in task_markdown
-    assert "Implement the parser fix." in task_markdown
+    assert "Implement the parser fix." not in task_markdown
+
+
+def test_create_solver_workspace_allows_task_text_without_attachment_refs(
+    tmp_path: Path, managed_workspaces
+) -> None:
+    repo, base_commit = _make_repo(tmp_path)
+    task = _with_solver_refs(_task(base_commit=base_commit), ())
+    workspace_config = _workspace_config(repo)
+    bind_repository_source(workspace_config, repo)
+
+    workspace = create_solver_workspace(task, workspace_config)
+    managed_workspaces.append(workspace)
+
+    task_markdown = (workspace.path / ".barcarolle" / "TASK.md").read_text(encoding="utf-8")
+    assert "Fix the issue." in task_markdown
 
 
 def test_invoke_agent_runs_bound_harness_command_and_digest_safe_output(tmp_path: Path) -> None:
@@ -191,7 +223,7 @@ def test_invoke_agent_reads_harness_usage_file(tmp_path: Path) -> None:
         '{"input_tokens": true}',
     ),
 )
-def test_invoke_agent_rejects_invalid_harness_usage_file(tmp_path: Path, usage_json: str) -> None:
+def test_invoke_agent_ignores_invalid_harness_usage_file(tmp_path: Path, usage_json: str) -> None:
     agent_command = (
         sys.executable,
         "-c",
@@ -217,8 +249,8 @@ def test_invoke_agent_rejects_invalid_harness_usage_file(tmp_path: Path, usage_j
         else:
             os.environ["TEST_USAGE_JSON"] = previous
 
-    assert outcome.terminal_status == "invalid"
-    assert outcome.failure_label == "invalid_agent_usage"
+    assert outcome.terminal_status == "completed"
+    assert outcome.failure_label is None
     assert outcome.usage == {}
 
 
@@ -921,9 +953,11 @@ def _make_repo(tmp_path: Path) -> tuple[Path, str]:
     _git(repo, "init")
     _git(repo, "config", "user.email", "barcarolle@example.invalid")
     _git(repo, "config", "user.name", "Barcarolle Tests")
-    (repo / "README.md").write_text("base\n", encoding="utf-8")
+    (repo / "README.md").write_text("past\n", encoding="utf-8")
     _git(repo, "add", "README.md")
-    _git(repo, "commit", "-m", "base")
+    _git(repo, "commit", "-m", "past")
+    (repo / "README.md").write_text("base\n", encoding="utf-8")
+    _git(repo, "commit", "-am", "base")
     base_commit = _git(repo, "rev-parse", "HEAD").stdout.strip()
     (repo / "README.md").write_text("future\n", encoding="utf-8")
     _git(repo, "commit", "-am", "future")
@@ -942,6 +976,8 @@ def _git(path: Path, *args: str) -> subprocess.CompletedProcess[str]:
 
 
 def _task(base_commit: str = "commit") -> TaskRecord:
+    task_text = "Fix the issue."
+    solver_material_refs = ("README.md",)
     return TaskRecord(
         task_id="task",
         repository_id="repo",
@@ -950,11 +986,19 @@ def _task(base_commit: str = "commit") -> TaskRecord:
         source_ref="issue-1",
         source_resolved_at="2026-01-01T00:00:00Z",
         task_material_available_at="2026-01-02T00:00:00Z",
-        certified_at="2026-01-03T00:00:00Z",
-        solver_material_digest="solver-material",
-        solver_material_refs=("README.md",),
+        task_text=task_text,
+        solver_material_digest=make_solver_material_digest(task_text, solver_material_refs),
+        solver_material_refs=solver_material_refs,
         check_ids=("check",),
         cluster_id="cluster",
+    )
+
+
+def _with_solver_refs(task: TaskRecord, refs: tuple[str, ...]) -> TaskRecord:
+    return replace(
+        task,
+        solver_material_refs=refs,
+        solver_material_digest=make_solver_material_digest(task.task_text, refs),
     )
 
 
@@ -970,12 +1014,9 @@ def _check(
         check_type="pytest",
         check_manifest_digest=canonical_digest({"check_command": command}),
         hidden_check_bundle_digest=hidden_digest,
-        verifier_image_digest="image",
-        verifier_deps_digest="deps",
         resource_limits={"timeout_seconds": 5},
         oracle_source="private_tests",
         check_material_available_at="2026-01-02T00:00:00Z",
-        certified_at="2026-01-03T00:00:00Z",
     )
 
 

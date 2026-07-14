@@ -26,7 +26,6 @@ from .origin import _now
 
 
 EXECUTABLE_SELECTOR_FAMILIES = frozenset({"coverage", "random", "recency", "rule_mixture"})
-PLANNED_SELECTOR_FAMILIES = frozenset({"calibrated_weighting", "learned_mixture"})
 
 
 @dataclass(frozen=True)
@@ -46,8 +45,7 @@ class CoverageConfig:
 
 def select_random(selector_input: SelectorInput, seed: int) -> BenchmarkSelectionRecord:
     _ensure_selector_input_valid(selector_input)
-    refs = list(selector_input.eligible_task_check_refs)
-    Random(seed).shuffle(refs)
+    refs = _random_order(selector_input.eligible_task_check_refs, seed)
     return _selection_from_refs(
         selector_input,
         refs[: _selection_count(selector_input)],
@@ -102,12 +100,16 @@ def select_rule_mixture(
         ref: (len(coverage_order) - rank) / max(1, len(coverage_order))
         for rank, ref in enumerate(coverage_order)
     }
+    random_order = _random_order(refs, random_seed)
+    random_scores = {
+        ref: (len(random_order) - rank) / max(1, len(random_order))
+        for rank, ref in enumerate(random_order)
+    }
     for index, ref in enumerate(refs):
         recency = (index + 1) / max(1, len(refs))
-        randomish = int(canonical_digest((random_seed, task_check_ref_key(ref)))[:8], 16) / 0xFFFFFFFF
         score = (
             expert_weights.get("recency", 0.0) * recency
-            + expert_weights.get("random", 0.0) * randomish
+            + expert_weights.get("random", 0.0) * random_scores[ref]
             + expert_weights.get("coverage", 0.0) * coverage_scores[ref]
         ) / total_weight
         scored.append((score, ref))
@@ -138,8 +140,7 @@ def select_with_selector(
     ensure_selector_executable(selector)
     if selector.selector_family == "random":
         seed = _random_parameters(selector.parameters)
-        refs = list(selector_input.eligible_task_check_refs)
-        Random(seed).shuffle(refs)
+        refs = _random_order(selector_input.eligible_task_check_refs, seed)
         return _selection_from_refs(
             selector_input,
             refs[: _selection_count(selector_input)],
@@ -177,8 +178,6 @@ def select_with_selector(
 
 
 def ensure_selector_family_executable(selector_family: str) -> None:
-    if selector_family in PLANNED_SELECTOR_FAMILIES:
-        raise NotImplementedError(f"{selector_family} selector is planned and not executable")
     if selector_family not in EXECUTABLE_SELECTOR_FAMILIES:
         raise ValueError(f"unsupported selector family: {selector_family}")
 
@@ -281,6 +280,12 @@ def _coverage_order(refs: Sequence[TaskCheckRef], coverage_config: CoverageConfi
         ordered.append(grouped[group].popleft())
         if grouped[group]:
             active_groups.append(group)
+    return tuple(ordered)
+
+
+def _random_order(refs: Sequence[TaskCheckRef], seed: int) -> tuple[TaskCheckRef, ...]:
+    ordered = list(refs)
+    Random(seed).shuffle(ordered)
     return tuple(ordered)
 
 

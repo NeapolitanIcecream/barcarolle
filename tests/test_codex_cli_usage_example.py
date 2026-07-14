@@ -11,26 +11,45 @@ SCRIPT = Path("examples/harnesses/codex-cli/extract-usage.py")
 HARNESS = Path("examples/harnesses/codex-cli/run-agent.zsh").resolve()
 
 
-def test_codex_usage_helper_normalizes_nested_usage_event() -> None:
+def test_codex_usage_helper_reads_codex_turn_completed_usage() -> None:
     payload = "\n".join(
         [
             json.dumps({"type": "message", "text": "done"}),
-            json.dumps({"type": "response", "response": {"usage": {"input_tokens": 12, "output_tokens": 3}}}),
+            json.dumps(
+                {
+                    "type": "turn.completed",
+                    "usage": {
+                        "input_tokens": 12,
+                        "cached_input_tokens": 7,
+                        "output_tokens": 3,
+                    },
+                }
+            ),
         ]
     )
 
     completed = _run_helper(payload)
 
-    assert json.loads(completed.stdout) == {"input_tokens": 12, "output_tokens": 3, "total_tokens": 15}
+    assert json.loads(completed.stdout) == {
+        "cached_input_tokens": 7,
+        "input_tokens": 12,
+        "output_tokens": 3,
+        "uncached_input_tokens": 5,
+    }
     assert completed.stderr == ""
 
 
-def test_codex_usage_helper_accepts_prompt_and_completion_token_names() -> None:
-    payload = json.dumps({"usage": {"prompt_tokens": 5, "completion_tokens": 7, "total_tokens": 12}})
+def test_codex_usage_helper_ignores_usage_aliases_and_unrelated_nested_objects() -> None:
+    payload = "\n".join(
+        [
+            json.dumps({"usage": {"prompt_tokens": 5, "completion_tokens": 7}}),
+            json.dumps({"type": "response", "response": {"usage": {"input_tokens": 12}}}),
+        ]
+    )
 
     completed = _run_helper(payload)
 
-    assert json.loads(completed.stdout) == {"input_tokens": 5, "output_tokens": 7, "total_tokens": 12}
+    assert json.loads(completed.stdout) == {}
 
 
 def test_codex_usage_helper_returns_empty_mapping_when_usage_is_absent() -> None:
@@ -50,7 +69,7 @@ def test_codex_harness_writes_usage_for_workspace_runner(tmp_path: Path) -> None
     fake_codex.write_text(
         "#!/bin/sh\n"
         "cat >/dev/null\n"
-        "printf '%s\\n' '{\"type\":\"response\",\"usage\":{\"input_tokens\":12,\"output_tokens\":3}}'\n",
+        "printf '%s\\n' '{\"type\":\"turn.completed\",\"usage\":{\"input_tokens\":12,\"cached_input_tokens\":7,\"output_tokens\":3}}'\n",
         encoding="utf-8",
     )
     fake_codex.chmod(0o755)
@@ -73,13 +92,14 @@ def test_codex_harness_writes_usage_for_workspace_runner(tmp_path: Path) -> None
     )
 
     assert json.loads(completed.stdout) == {
-        "type": "response",
-        "usage": {"input_tokens": 12, "output_tokens": 3},
+        "type": "turn.completed",
+        "usage": {"cached_input_tokens": 7, "input_tokens": 12, "output_tokens": 3},
     }
     assert json.loads((reserved / "usage.json").read_text(encoding="utf-8")) == {
+        "cached_input_tokens": 7,
         "input_tokens": 12,
         "output_tokens": 3,
-        "total_tokens": 15,
+        "uncached_input_tokens": 5,
     }
     assert not (reserved / "codex-events.jsonl").exists()
 

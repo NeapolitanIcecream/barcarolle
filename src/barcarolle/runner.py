@@ -42,10 +42,13 @@ from barcarolle.task_pool import TimeRange
 
 @dataclass(frozen=True)
 class TaskPoolConfig:
-    repository_url_or_path: str
+    repository_id: str
+    repository_path: Path
     workspace_config: WorkspaceConfig
     runtime_config: RuntimeConfig
     reference_patches: Mapping[str, workspace_module.CapturedDiff]
+    check_commands: Mapping[str, tuple[str, ...]]
+    hidden_material_paths: Mapping[str, Path]
     time_range: TimeRange | None = None
     task_source_config: task_pool_module.TaskSourceConfig | None = None
     import_path: Path | None = None
@@ -66,12 +69,40 @@ class ReportConfig:
 
 
 def build_task_pool(config: TaskPoolConfig) -> TaskPoolRecord:
+    if not config.repository_id:
+        raise ValueError("repository_id must not be empty")
     candidates = _task_candidates(config)
+    mismatched_repositories = tuple(
+        candidate.candidate_id for candidate in candidates if candidate.repository_id != config.repository_id
+    )
+    if mismatched_repositories:
+        raise ValueError(
+            "candidate repository_id does not match TaskPoolConfig for: "
+            + ", ".join(mismatched_repositories)
+        )
     missing_patches = tuple(
         candidate.candidate_id for candidate in candidates if candidate.candidate_id not in config.reference_patches
     )
     if missing_patches:
         raise ValueError("reference patch is missing for candidates: " + ", ".join(missing_patches))
+    missing_check_commands = tuple(
+        candidate.candidate_id for candidate in candidates if candidate.candidate_id not in config.check_commands
+    )
+    if missing_check_commands:
+        raise ValueError("check command is missing for candidates: " + ", ".join(missing_check_commands))
+    missing_hidden_material = tuple(
+        candidate.candidate_id for candidate in candidates if candidate.candidate_id not in config.hidden_material_paths
+    )
+    if missing_hidden_material:
+        raise ValueError("hidden check material is missing for candidates: " + ", ".join(missing_hidden_material))
+
+    workspace_module.bind_repository_source(config.workspace_config, config.repository_path)
+    for candidate in candidates:
+        workspace_module.bind_check_material(
+            task_pool_module.build_check_candidate(candidate),
+            config.check_commands[candidate.candidate_id],
+            config.hidden_material_paths[candidate.candidate_id],
+        )
     certified = tuple(
         task_pool_module.certify_task_candidate(
             candidate,
@@ -89,6 +120,10 @@ def build_task_pool(config: TaskPoolConfig) -> TaskPoolRecord:
     task_pool = task_pool_module.freeze_task_pool(accepted_tasks, accepted_checks, rejected, metadata)
     write_jsonl_records(_ref_path(task_pool.task_records_ref), accepted_tasks)
     write_jsonl_records(_ref_path(task_pool.check_records_ref), accepted_checks)
+    write_jsonl_records(
+        _ref_path(task_pool.certification_evidence_ref),
+        task_pool_module.certification_evidence_records(certified),
+    )
     return task_pool
 
 
@@ -177,11 +212,15 @@ def evaluate_selector(
     tuple[ResultMatrix, ...],
     tuple[MetricRecord, ...],
 ]:
-    tasks, checks = _load_task_pool_records(task_pool)
     try:
         origin_times = tuple(_parse_datetime(value) for value in evaluation_config.origin_times)
     except ValueError as exc:
         raise ValueError("evaluation origin_times entries must be ISO datetime strings") from exc
+    if not origin_times:
+        raise ValueError("evaluation origin_times must not be empty")
+    if len(set(origin_times)) != len(origin_times):
+        raise ValueError("evaluation origin_times must be unique UTC instants")
+    tasks, checks = _load_task_pool_records(task_pool)
     origins = tuple(
         selection_module.build_rolling_origin(
             task_pool,
@@ -320,7 +359,28 @@ def fill_results(
         result_store,
         cache_config,
     )
-    return _run_agent_cells(missing, tasks, checks, agents, workspace_config, runtime_config, scoring_config, result_store)
+    executed = _run_agent_cells(
+        missing,
+        tasks,
+        checks,
+        agents,
+        workspace_config,
+        runtime_config,
+        scoring_config,
+        result_store,
+    )
+    repriced = result_store_module.reprice_cached_results(
+        selection.selected_task_check_refs,
+        tasks,
+        checks,
+        agents,
+        workspace_config,
+        runtime_config,
+        result_store,
+        cache_config,
+        scoring_config,
+    )
+    return (*executed, *repriced)
 
 
 def prepare_evaluation_cells(
@@ -350,6 +410,17 @@ def prepare_evaluation_cells(
         cache_config,
     )
     _run_agent_cells(missing, tasks, checks, agents, workspace_config, runtime_config, scoring_config, result_store)
+    result_store_module.reprice_cached_results(
+        requested_refs,
+        tasks,
+        checks,
+        agents,
+        workspace_config,
+        runtime_config,
+        result_store,
+        cache_config,
+        scoring_config,
+    )
     cells = list(
         result_store_module.resolve_result_cells(
             requested_refs,
@@ -360,6 +431,7 @@ def prepare_evaluation_cells(
             runtime_config,
             result_store,
             cache_config,
+            scoring_config,
         )
     )
     cell_set = EvaluationCellSet(
@@ -462,13 +534,15 @@ def write_report(
 
 
 def _task_candidates(config: TaskPoolConfig) -> tuple[task_pool_module.TaskCandidate, ...]:
+    if config.import_path is not None and (config.time_range is not None or config.task_source_config is not None):
+        raise ValueError("TaskPoolConfig import_path and history generation inputs are mutually exclusive")
     if config.import_path is not None:
         return tuple(task_pool_module.import_task_pool(config.import_path, config.import_config))
     if config.time_range is None or config.task_source_config is None:
         raise ValueError("TaskPoolConfig requires either import_path or time_range with task_source_config")
     return tuple(
         task_pool_module.generate_history_candidates(
-            config.repository_url_or_path,
+            config.repository_id,
             config.time_range,
             config.task_source_config,
         )
@@ -481,21 +555,16 @@ def _task_pool_metadata(
     certified: Sequence[task_pool_module.CertificationResult],
 ) -> Mapping[str, object]:
     metadata = dict(config.metadata)
-    metadata.setdefault("repository_id", _repository_id(config, candidates))
-    metadata.setdefault("accepted_certification_results", tuple(result for result in certified if result.accepted))
+    metadata["repository_id"] = config.repository_id
+    metadata["accepted_certification_results"] = tuple(result for result in certified if result.accepted)
     metadata.setdefault("task_records_ref", "records/tasks.jsonl")
     metadata.setdefault("check_records_ref", "records/checks.jsonl")
-    metadata.setdefault("source_event_inventory_digest", canonical_digest(tuple(candidate.source_ref for candidate in candidates)))
-    metadata.setdefault("generator_config_digest", _generator_config_digest(config))
-    metadata.setdefault("certification_config_digest", canonical_digest(config.certification_config))
+    metadata.setdefault("certification_evidence_ref", "records/certification-evidence.jsonl")
+    metadata["source_event_inventory_digest"] = canonical_digest(tuple(candidate.source_ref for candidate in candidates))
+    metadata["generator_config_digest"] = _generator_config_digest(config)
+    metadata["certification_config_digest"] = canonical_digest(config.certification_config)
     metadata.setdefault("created_at", _now())
     return metadata
-
-
-def _repository_id(config: TaskPoolConfig, candidates: Sequence[task_pool_module.TaskCandidate]) -> str:
-    if candidates:
-        return candidates[0].repository_id
-    return config.repository_url_or_path
 
 
 def _generator_config_digest(config: TaskPoolConfig) -> str:
@@ -614,7 +683,17 @@ def _load_results_for_refs(
             result_available_before=result_available_before,
         )
     )
-    return tuple(result for result in loaded if (result.task_id, result.check_id) in allowed_refs)
+    distinct_executions: list[ResultRecord] = []
+    seen_execution_digests: set[str] = set()
+    for result in loaded:
+        if (result.task_id, result.check_id) not in allowed_refs:
+            continue
+        execution_digest = result_store_module.result_execution_digest(result)
+        if execution_digest in seen_execution_digests:
+            continue
+        seen_execution_digests.add(execution_digest)
+        distinct_executions.append(result)
+    return tuple(distinct_executions)
 
 
 def _load_pre_origin_results(

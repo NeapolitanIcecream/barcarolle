@@ -39,7 +39,11 @@ def test_task_pool_and_result_reports_summarize_existing_records() -> None:
     assert task_section.summary["task_count"] == 1
     assert task_section.summary["check_count"] == 1
     assert task_section.source_digests["task_pool_digest"] == task_pool.task_pool_digest
-    assert task_section.artifact_paths == ("tasks.jsonl", "checks.jsonl")
+    assert task_section.artifact_paths == (
+        "tasks.jsonl",
+        "checks.jsonl",
+        "certification-evidence.jsonl",
+    )
     assert task_section.unsupported_claims == ()
     assert result_section.summary["outcome_counts"] == {"fail": 1, "pass": 1}
     assert result_section.summary["scoreable_state_counts"] == {"scoreable": 2}
@@ -660,7 +664,11 @@ def test_write_report_writes_markdown_and_json_summaries(tmp_path) -> None:
     assert "task_pool_digest" in markdown
     assert "tasks.jsonl" in markdown
     assert payload[0]["section_id"] == "task_pool"
-    assert payload[0]["artifact_paths"] == ["tasks.jsonl", "checks.jsonl"]
+    assert payload[0]["artifact_paths"] == [
+        "tasks.jsonl",
+        "checks.jsonl",
+        "certification-evidence.jsonl",
+    ]
 
 
 def test_write_report_sanitizes_local_absolute_artifact_paths(tmp_path) -> None:
@@ -732,6 +740,7 @@ def _task_pool() -> TaskPoolRecord:
         task_records_digest="task-records",
         check_records_ref="checks.jsonl",
         check_records_digest="check-records",
+        certification_evidence_ref="certification-evidence.jsonl",
         rejected_candidate_ids=("rejected",),
         rejection_summary_digest="rejection-summary",
         certification_evidence_digest="certification-evidence",

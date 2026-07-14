@@ -1,5 +1,6 @@
 from dataclasses import replace
 from pathlib import Path
+from typing import Any
 
 import pytest
 
@@ -17,6 +18,7 @@ from barcarolle.records import (
     WorkspaceConfig,
     WorkspaceRunRecord,
     canonical_digest,
+    make_solver_material_digest,
     record_with_digest,
     validate_result,
     validate_result_matrix,
@@ -68,14 +70,12 @@ def test_pricing_change_reuses_paid_execution_and_can_recompute_cost(tmp_path: P
     store = ResultStore(tmp_path / "results.jsonl")
     result = _result()
     store_result(result, store)
-    changed_pricing = replace(
-        _scoring_config(),
-        scoring_config_digest="scoring:v2",
+    changed_pricing = ScoringConfig(
         pricing_version="test-pricing-v2",
         cost_rates={"input_tokens": 0.01, "output_tokens": 0.02},
     )
 
-    cells = resolve_result_cells(
+    execution_cells = resolve_result_cells(
         task_check_refs=(TaskCheckRef("task", "check"),),
         tasks=(_task(),),
         checks={"check": _check()},
@@ -85,10 +85,42 @@ def test_pricing_change_reuses_paid_execution_and_can_recompute_cost(tmp_path: P
         store=store,
         cache_config=ResultCacheConfig(),
     )
+    current_pricing_cells = resolve_result_cells(
+        task_check_refs=(TaskCheckRef("task", "check"),),
+        tasks=(_task(),),
+        checks={"check": _check()},
+        agents=(_agent(),),
+        workspace_config=_workspace_config(),
+        runtime_config=_runtime_config(),
+        store=store,
+        cache_config=ResultCacheConfig(),
+        scoring_config=changed_pricing,
+    )
 
-    assert cells[0].cell_state == "result"
-    assert cells[0].result_id == result.result_id
+    assert execution_cells[0].result_id == result.result_id
+    assert current_pricing_cells[0].cell_state == "missing"
+    assert current_pricing_cells[0].result_id is None
     assert compute_cost(result.usage, changed_pricing)["total_cost"] == 0.01
+
+
+def test_scoring_config_digest_is_derived_and_cannot_be_supplied() -> None:
+    config = ScoringConfig("pricing-v1", {"output_tokens": 0.02, "input_tokens": 0.01})
+    same_config = ScoringConfig("pricing-v1", {"input_tokens": 0.01, "output_tokens": 0.02})
+
+    assert config.scoring_config_digest == same_config.scoring_config_digest
+    assert config.scoring_config_digest == canonical_digest(
+        {
+            "pricing_version": "pricing-v1",
+            "cost_rates": {"input_tokens": 0.01, "output_tokens": 0.02},
+        }
+    )
+    constructor: Any = ScoringConfig
+    with pytest.raises(TypeError, match="scoring_config_digest"):
+        constructor(
+            pricing_version="pricing-v1",
+            cost_rates={"input_tokens": 0.01},
+            scoring_config_digest="caller-chosen",
+        )
 
 
 def test_unknown_usage_cost_is_null_not_zero() -> None:
@@ -110,6 +142,22 @@ def test_unknown_usage_cost_is_null_not_zero() -> None:
     assert result.usage == {}
     assert result.cost["total_cost"] is None
     assert validate_result(result).ok
+
+
+def test_nonempty_usage_without_cost_rates_has_unknown_total_cost() -> None:
+    scoring_config = replace(_scoring_config(), cost_rates={})
+
+    cost = compute_cost({"input_tokens": 100}, scoring_config)
+
+    assert cost == {"total_cost": None}
+
+
+def test_explicit_zero_cost_rate_produces_measured_zero_cost() -> None:
+    scoring_config = replace(_scoring_config(), cost_rates={"input_tokens": 0.0})
+
+    cost = compute_cost({"input_tokens": 100}, scoring_config)
+
+    assert cost == {"input_tokens_cost": 0.0, "total_cost": 0.0}
 
 
 def test_build_result_record_uses_utc_instants_for_result_availability(monkeypatch: pytest.MonkeyPatch) -> None:
@@ -506,7 +554,9 @@ def test_build_result_matrix_excludes_benchmark_invalid_result_with_traceability
     assert excluded["other-agent"].result_id == invalid_result.result_id
     assert excluded["other-agent"].result_digest == invalid_result.result_digest
     assert excluded["agent"].exclusion_reason == excluded["other-agent"].exclusion_reason
-    assert excluded["agent"].exclusion_reason.startswith("task_check_infrastructure_failure:check_launch_error:")
+    exclusion_reason = excluded["agent"].exclusion_reason
+    assert exclusion_reason is not None
+    assert exclusion_reason.startswith("task_check_infrastructure_failure:check_launch_error:")
 
 
 def test_build_result_matrix_uses_result_frozen_in_evaluation_cell_set() -> None:
@@ -627,6 +677,8 @@ def _evaluation_cell_set(
 
 
 def _task() -> TaskRecord:
+    task_text = "Fix the issue."
+    solver_material_refs = ("README.md",)
     return TaskRecord(
         task_id="task",
         repository_id="repo",
@@ -635,9 +687,9 @@ def _task() -> TaskRecord:
         source_ref="issue-1",
         source_resolved_at="2026-01-01T00:00:00Z",
         task_material_available_at="2026-01-02T00:00:00Z",
-        certified_at="2026-01-03T00:00:00Z",
-        solver_material_digest="solver-material",
-        solver_material_refs=("README.md",),
+        task_text=task_text,
+        solver_material_digest=make_solver_material_digest(task_text, solver_material_refs),
+        solver_material_refs=solver_material_refs,
         check_ids=("check",),
         cluster_id="cluster",
     )
@@ -650,12 +702,9 @@ def _check(check_id: str = "check", task_id: str = "task") -> CheckRecord:
         check_type="pytest",
         check_manifest_digest="check-manifest",
         hidden_check_bundle_digest="hidden-bundle",
-        verifier_image_digest="image",
-        verifier_deps_digest="deps",
         resource_limits={"timeout_seconds": 5},
         oracle_source="private_tests",
         check_material_available_at="2026-01-02T00:00:00Z",
-        certified_at="2026-01-03T00:00:00Z",
     )
 
 
@@ -725,7 +774,6 @@ def _workspace_run(
 
 def _scoring_config() -> ScoringConfig:
     return ScoringConfig(
-        scoring_config_digest="scoring",
         pricing_version="test-pricing",
         cost_rates={"input_tokens": 0.001, "output_tokens": 0.005},
     )

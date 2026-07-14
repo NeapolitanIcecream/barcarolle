@@ -189,6 +189,12 @@ def create_solver_workspace(task: TaskRecord, workspace_config: WorkspaceConfig)
         raise
 
 
+def validate_solver_material_refs(workspace: WorkspaceRef, task: TaskRecord) -> None:
+    if workspace.task_id != task.task_id or workspace.role not in {"solver", "verifier"}:
+        raise ValueError("workspace does not match Task")
+    _validate_solver_material_refs(workspace.path, task)
+
+
 def invoke_agent(
     solver_workspace: WorkspaceRef,
     task: TaskRecord,
@@ -230,15 +236,7 @@ def invoke_agent(
     try:
         usage = _load_agent_usage(usage_path)
     except (OSError, ValueError):
-        return AgentRunOutcome(
-            terminal_status="invalid",
-            duration_seconds=monotonic() - start,
-            usage={},
-            safe_output_digest=_safe_output_digest(completed.stdout, completed.stderr),
-            failure_label="invalid_agent_usage",
-            stdout=completed.stdout,
-            stderr=completed.stderr,
-        )
+        usage = {}
     terminal_status = "completed" if completed.returncode == 0 else "error"
     return AgentRunOutcome(
         terminal_status=terminal_status,
@@ -618,8 +616,13 @@ def _checkout_repository(task: TaskRecord, workspace_config: WorkspaceConfig, *,
     path = Path(mkdtemp(prefix=prefix))
     _register_owned_workspace_path(path)
     try:
-        _run(("git", "clone", "--quiet", str(source), str(path)))
-        _run_git(path, ("checkout", "--quiet", task.base_commit))
+        _run_git(path, ("init", "--quiet"))
+        _run_git(
+            path,
+            ("fetch", "--quiet", "--no-tags", str(source), task.base_commit),
+        )
+        _run_git(path, ("checkout", "--quiet", "--detach", "FETCH_HEAD"))
+        (path / ".git" / "FETCH_HEAD").unlink(missing_ok=True)
         return path
     except BaseException:
         _discard_owned_workspace_path(path)
@@ -683,65 +686,49 @@ def _discard_owned_workspace_path(path: Path) -> None:
 
 
 def _write_solver_visible_task_material(path: Path, task: TaskRecord) -> None:
+    _validate_solver_material_refs(path, task)
     material_dir = path / ".barcarolle"
     material_dir.mkdir(parents=True, exist_ok=True)
     payload = {
-        "task_id": task.task_id,
-        "repository_id": task.repository_id,
-        "base_commit": task.base_commit,
-        "source_family": task.source_family,
-        "source_ref": task.source_ref,
-        "solver_material_digest": task.solver_material_digest,
         "solver_material_refs": task.solver_material_refs,
         "task_material_file": ".barcarolle/TASK.md",
-        "check_ids": task.check_ids,
     }
     (material_dir / "solver-visible-task.json").write_text(json.dumps(payload, sort_keys=True), encoding="utf-8")
-    (material_dir / "TASK.md").write_text(_solver_visible_task_markdown(path, task), encoding="utf-8")
+    (material_dir / "TASK.md").write_text(_solver_visible_task_markdown(task), encoding="utf-8")
 
 
-def _solver_visible_task_markdown(path: Path, task: TaskRecord) -> str:
+def _solver_visible_task_markdown(task: TaskRecord) -> str:
     lines = [
         "# Task",
         "",
-        f"- Task ID: `{task.task_id}`",
-        f"- Repository: `{task.repository_id}`",
-        f"- Base commit: `{task.base_commit}`",
-        f"- Source: `{task.source_family}:{task.source_ref}`",
-        f"- Solver material digest: `{task.solver_material_digest}`",
-        "",
-        "## Solver Material Refs",
-        "",
+        task.task_text.rstrip(),
     ]
-    for ref in task.solver_material_refs:
-        lines.append(f"- `{ref}`")
-    lines.extend(["", "## Solver Material", ""])
-    for ref in task.solver_material_refs:
-        lines.extend(_solver_material_ref_section(path, ref))
+    if task.solver_material_refs:
+        lines.extend(["", "## Files", ""])
+        for ref in task.solver_material_refs:
+            lines.append(f"- `{ref}`")
     return "\n".join(lines).rstrip() + "\n"
 
 
-def _solver_material_ref_section(path: Path, ref: str) -> list[str]:
+def _validate_solver_material_ref(path: Path, ref: str) -> None:
     ref_path = Path(_solver_material_path_ref(ref))
     if ref_path.is_absolute() or ".." in ref_path.parts:
-        return [f"### `{ref}`", "", "Reference is outside the solver workspace and was not copied.", ""]
+        raise ValueError(f"solver material reference is outside the workspace: {ref}")
     workspace_root = path.resolve()
     material_path = workspace_root / ref_path
-    if _path_contains_symlink(material_path, workspace_root):
-        return [f"### `{ref}`", "", "Reference uses a symlink and was not copied.", ""]
     try:
         material_resolved = material_path.resolve(strict=False)
-    except OSError:
-        return [f"### `{ref}`", "", "Referenced solver material could not be resolved.", ""]
+    except OSError as exc:
+        raise ValueError(f"solver material reference could not be resolved: {ref}") from exc
     if not _is_within(material_resolved, workspace_root):
-        return [f"### `{ref}`", "", "Reference resolves outside the solver workspace and was not copied.", ""]
+        raise ValueError(f"solver material reference resolves outside the workspace: {ref}")
     if not material_path.is_file():
-        return [f"### `{ref}`", "", "Referenced solver material was not found in this checkout.", ""]
-    try:
-        content = material_path.read_text(encoding="utf-8")
-    except UnicodeDecodeError:
-        return [f"### `{ref}`", "", "Referenced solver material is not UTF-8 text.", ""]
-    return [f"### `{ref}`", "", "```text", content.rstrip(), "```", ""]
+        raise ValueError(f"solver material reference was not found: {ref}")
+
+
+def _validate_solver_material_refs(path: Path, task: TaskRecord) -> None:
+    for ref in task.solver_material_refs:
+        _validate_solver_material_ref(path, ref)
 
 
 def _solver_material_path_ref(ref: str) -> str:
@@ -749,19 +736,6 @@ def _solver_material_path_ref(ref: str) -> str:
         if ref.startswith(prefix):
             return ref.removeprefix(prefix)
     return ref
-
-
-def _path_contains_symlink(path: Path, root: Path) -> bool:
-    try:
-        relative = path.relative_to(root)
-    except ValueError:
-        return True
-    current = root
-    for part in relative.parts:
-        current = current / part
-        if current.is_symlink():
-            return True
-    return False
 
 
 def _is_within(path: Path, root: Path) -> bool:

@@ -16,6 +16,8 @@ import os
 
 
 JSONValue = Any
+_SOLVER_MATERIAL_FORMAT = "task_text_and_file_refs_v1"
+_WORKSPACE_CHECKOUT_MODE = "base_commit_history_v1"
 
 
 @dataclass(frozen=True)
@@ -60,7 +62,7 @@ class TaskRecord:
     source_ref: str
     source_resolved_at: str
     task_material_available_at: str
-    certified_at: str
+    task_text: str
     solver_material_digest: str
     solver_material_refs: tuple[str, ...]
     check_ids: tuple[str, ...]
@@ -74,12 +76,9 @@ class CheckRecord:
     check_type: str
     check_manifest_digest: str
     hidden_check_bundle_digest: str
-    verifier_image_digest: str
-    verifier_deps_digest: str
     resource_limits: Mapping[str, JSONValue]
     oracle_source: str
     check_material_available_at: str
-    certified_at: str
 
 
 @dataclass(frozen=True)
@@ -263,6 +262,7 @@ class TaskPoolRecord:
     task_records_digest: str
     check_records_ref: str
     check_records_digest: str
+    certification_evidence_ref: str
     rejected_candidate_ids: tuple[str, ...]
     rejection_summary_digest: str
     certification_evidence_digest: str
@@ -480,27 +480,32 @@ def task_check_ref_key(ref: TaskCheckRef) -> str:
 
 
 def validate_task(task: TaskRecord) -> ValidationResult:
-    errors, invalid_mapping = _initial_validation_errors(task)
+    errors, invalid_mapping = _initial_validation_errors(task, nullable={"cluster_id", "solver_material_refs"})
     if invalid_mapping:
         return _validation(errors)
-    errors.extend(_ordered_timestamps(task, ["source_resolved_at", "task_material_available_at", "certified_at"]))
-    hidden_refs = [ref for ref in task.solver_material_refs if _looks_hidden(ref)]
-    if hidden_refs:
-        errors.append("solver_material_refs must not include hidden check or oracle material")
+    errors.extend(_ordered_timestamps(task, ["source_resolved_at", "task_material_available_at"]))
+    if not task.task_text.strip():
+        errors.append("task_text must not be empty")
+    else:
+        if task.task_text != task.task_text.rstrip():
+            errors.append("task_text must not have trailing whitespace")
+        expected_solver_material_digest = make_solver_material_digest(task.task_text, task.solver_material_refs)
+        if task.solver_material_digest != expected_solver_material_digest:
+            errors.append("solver_material_digest does not match task_text and solver_material_refs")
     if not task.check_ids:
         errors.append("check_ids must not be empty")
     return _validation(errors)
 
 
 def validate_check(check: CheckRecord) -> ValidationResult:
-    errors, invalid_mapping = _initial_validation_errors(check)
+    errors, invalid_mapping = _initial_validation_errors(check, nullable={"resource_limits"})
     if invalid_mapping:
         return _validation(errors)
-    errors.extend(_ordered_timestamps(check, ["check_material_available_at", "certified_at"]))
+    errors.extend(_ordered_timestamps(check, ["check_material_available_at"]))
     if not check.check_type:
         errors.append("check_type is required")
-    if not isinstance(check.resource_limits, Mapping) or not check.resource_limits:
-        errors.append("resource_limits must be a non-empty mapping")
+    if not isinstance(check.resource_limits, Mapping):
+        errors.append("resource_limits must be a mapping")
     elif any(value is None for value in check.resource_limits.values()):
         errors.append("resource_limits values must be bounded")
     if _looks_solver_visible(check.hidden_check_bundle_digest):
@@ -818,6 +823,16 @@ def make_task_id(repository_id: str, base_commit: str, source_digest: str) -> st
     return f"task_{canonical_digest({'repository_id': repository_id, 'base_commit': base_commit, 'source_digest': source_digest})}"
 
 
+def make_solver_material_digest(task_text: str, solver_material_refs: Sequence[str]) -> str:
+    return canonical_digest(
+        {
+            "format": _SOLVER_MATERIAL_FORMAT,
+            "task_text": task_text,
+            "solver_material_refs": tuple(solver_material_refs),
+        }
+    )
+
+
 def make_check_id(task_id: str, check_digest: str) -> str:
     return f"check_{canonical_digest({'task_id': task_id, 'check_digest': check_digest})}"
 
@@ -826,13 +841,9 @@ def make_check_digest(check: CheckRecord) -> str:
     """Digest every Check field that can change execution or verification."""
     return canonical_digest(
         {
-            "check_type": check.check_type,
             "check_manifest_digest": check.check_manifest_digest,
             "hidden_check_bundle_digest": check.hidden_check_bundle_digest,
-            "verifier_image_digest": check.verifier_image_digest,
-            "verifier_deps_digest": check.verifier_deps_digest,
             "resource_limits": check.resource_limits,
-            "oracle_source": check.oracle_source,
         }
     )
 
@@ -869,7 +880,12 @@ def make_result_cache_identity(
         retry_policy_digest=runtime_config.retry_policy_digest,
         stochastic_settings_digest=runtime_config.stochastic_settings_digest,
         adapter_digest=agent.adapter_digest,
-        workspace_config_digest=canonical_digest(workspace_config),
+        workspace_config_digest=canonical_digest(
+            {
+                "checkout_mode": _WORKSPACE_CHECKOUT_MODE,
+                "workspace_config": workspace_config,
+            }
+        ),
         runtime_config_digest=canonical_digest(runtime_config),
         hardware_profile_digest=runtime_config.hardware_profile_digest,
         identity_digest="",
@@ -1022,11 +1038,6 @@ def _validation(errors: Sequence[str]) -> ValidationResult:
     if errors:
         return ValidationResult.fail(errors)
     return ValidationResult.pass_()
-
-
-def _looks_hidden(value: str) -> bool:
-    lowered = value.lower()
-    return "hidden" in lowered or "oracle" in lowered
 
 
 def _looks_solver_visible(value: str) -> bool:

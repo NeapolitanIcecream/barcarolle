@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
 from datetime import UTC, datetime
 from math import isfinite
 from pathlib import Path
@@ -38,9 +38,17 @@ from barcarolle.records import (
 
 @dataclass(frozen=True)
 class ScoringConfig:
-    scoring_config_digest: str
     pricing_version: str
     cost_rates: Mapping[str, float]
+
+    @property
+    def scoring_config_digest(self) -> str:
+        return canonical_digest(
+            {
+                "pricing_version": self.pricing_version,
+                "cost_rates": self.cost_rates,
+            }
+        )
 
 
 @dataclass(frozen=True)
@@ -91,7 +99,7 @@ def build_result_record(
     _validate_cache_identity_inputs(task, check, agent, cache_identity)
     scoreable_state, outcome, invalid_owner = _normalize_result_state(workspace_run)
     result = ResultRecord(
-        result_id=f"result_{canonical_digest((cache_identity.identity_digest, workspace_run.workspace_run_id, scoring_config.scoring_config_digest))}",
+        result_id="",
         result_digest="",
         cache_identity=cache_identity,
         agent_id=agent.agent_id,
@@ -113,6 +121,7 @@ def build_result_record(
         finished_at=workspace_run.finished_at,
         result_available_at=_latest_timestamp_utc(_now(), workspace_run.finished_at),
     )
+    result = replace(result, result_id=_result_id(result))
     result = record_with_digest(result)
     result_validation = validate_result(result)
     if not result_validation.ok:
@@ -209,6 +218,7 @@ def resolve_result_cells(
     runtime_config: RuntimeConfig,
     store: ResultStore,
     cache_config: ResultCacheConfig,
+    scoring_config: ScoringConfig | None = None,
 ) -> Sequence[ResultCellRef]:
     """Resolve each requested Agent/Task/Check cell against exact cached identity.
 
@@ -220,7 +230,11 @@ def resolve_result_cells(
         raise ValueError("Result Store only supports exact_identity cache reuse")
     task_by_id = {task.task_id: task for task in tasks}
     stored_results = load_results(store, ResultQuery())
-    reusable_results = _index_reusable_results(stored_results, cache_config)
+    reusable_results = _index_reusable_results(
+        stored_results,
+        cache_config,
+        scoring_config.scoring_config_digest if scoring_config is not None else None,
+    )
     cells: list[ResultCellRef] = []
     for ref in task_check_refs:
         task = _task_for_ref(ref, task_by_id)
@@ -232,6 +246,78 @@ def resolve_result_cells(
                 reusable = reusable_results.get((agent.agent_id, task.task_id, check.check_id, identity))
             cells.append(_resolved_result_cell(agent, task, check, identity, reusable))
     return tuple(cells)
+
+
+def reprice_cached_results(
+    task_check_refs: Sequence[TaskCheckRef],
+    tasks: Sequence[TaskRecord],
+    checks: Mapping[str, CheckRecord],
+    agents: Sequence[AgentRecord],
+    workspace_config: WorkspaceConfig,
+    runtime_config: RuntimeConfig,
+    store: ResultStore,
+    cache_config: ResultCacheConfig,
+    scoring_config: ScoringConfig,
+) -> Sequence[ResultRecord]:
+    """Append the current pricing view for reusable paid executions.
+
+    Execution reuse is still decided solely by exact ``ResultCacheIdentity``.
+    If that execution has no Result under the requested pricing, retained usage
+    and outcome evidence are repriced without invoking an Agent or Check.
+    """
+    current_cells = resolve_result_cells(
+        task_check_refs,
+        tasks,
+        checks,
+        agents,
+        workspace_config,
+        runtime_config,
+        store,
+        cache_config,
+        scoring_config,
+    )
+    current_keys = {
+        (cell.agent_id, cell.task_id, cell.check_id)
+        for cell in current_cells
+        if cell.cell_state == "result"
+    }
+    if all(cell.cell_state == "result" for cell in current_cells):
+        return ()
+
+    execution_cells = resolve_result_cells(
+        task_check_refs,
+        tasks,
+        checks,
+        agents,
+        workspace_config,
+        runtime_config,
+        store,
+        cache_config,
+    )
+    source_bindings = {
+        (cell.result_id, cell.result_digest)
+        for cell in execution_cells
+        if cell.result_id is not None and cell.result_digest is not None
+    }
+    if not source_bindings:
+        return ()
+    source_results = {
+        (result.result_id, result.result_digest): result
+        for result in load_results(
+            store,
+            ResultQuery(result_ids=tuple(result_id for result_id, _ in source_bindings)),
+        )
+    }
+    repriced: list[ResultRecord] = []
+    for cell in execution_cells:
+        cell_key = (cell.agent_id, cell.task_id, cell.check_id)
+        if cell_key in current_keys or cell.result_id is None or cell.result_digest is None:
+            continue
+        source = source_results.get((cell.result_id, cell.result_digest))
+        if source is None:
+            raise ValueError(f"cached result binding is missing for result_id {cell.result_id}")
+        repriced.append(store_result(_reprice_result(source, scoring_config), store))
+    return tuple(repriced)
 
 
 def build_result_matrix(
@@ -385,7 +471,7 @@ def compute_cost(usage: Mapping[str, Any], scoring_config: ScoringConfig) -> Map
             raise ValueError(f"usage and cost rate for {key} must be finite and nonnegative numbers")
         costs[f"{key}_cost"] = amount
         total += amount
-    costs["total_cost"] = total if usage and not missing_keys else None
+    costs["total_cost"] = total if usage and scoring_config.cost_rates and not missing_keys else None
     return costs
 
 
@@ -423,6 +509,50 @@ def _verifier_metadata_digest(workspace_run: WorkspaceRunRecord) -> str:
     )
 
 
+def result_execution_digest(result: ResultRecord) -> str:
+    """Digest one paid execution independently of its pricing views."""
+    return canonical_digest(
+        {
+            "cache_identity": result.cache_identity,
+            "agent_id": result.agent_id,
+            "task_id": result.task_id,
+            "check_id": result.check_id,
+            "terminal_status": result.terminal_status,
+            "scoreable_state": result.scoreable_state,
+            "outcome": result.outcome,
+            "invalid_owner": result.invalid_owner,
+            "failure_label": result.failure_label,
+            "usage": result.usage,
+            "latency": result.latency,
+            "diff_digest": result.diff_digest,
+            "verifier_metadata_digest": result.verifier_metadata_digest,
+            "started_at": result.started_at,
+            "finished_at": result.finished_at,
+        }
+    )
+
+
+def _result_id(result: ResultRecord) -> str:
+    return f"result_{canonical_digest((result_execution_digest(result), result.scoring_config_digest))}"
+
+
+def _reprice_result(result: ResultRecord, scoring_config: ScoringConfig) -> ResultRecord:
+    repriced = replace(
+        result,
+        result_id="",
+        result_digest="",
+        cost=compute_cost(result.usage, scoring_config),
+        scoring_config_digest=scoring_config.scoring_config_digest,
+        pricing_version=scoring_config.pricing_version,
+    )
+    repriced = replace(repriced, result_id=_result_id(repriced))
+    repriced = record_with_digest(repriced)
+    validation = validate_result(repriced)
+    if not validation.ok:
+        raise ValueError(f"repriced result record is invalid: {', '.join(validation.errors)}")
+    return repriced
+
+
 def _matches_query(
     result: ResultRecord,
     query: ResultQuery,
@@ -454,9 +584,12 @@ def _matches_query(
 def _index_reusable_results(
     results: Sequence[ResultRecord],
     cache_config: ResultCacheConfig,
+    scoring_config_digest: str | None = None,
 ) -> Mapping[tuple[str, str, str, ResultCacheIdentity], ResultRecord]:
     reusable: dict[tuple[str, str, str, ResultCacheIdentity], ResultRecord] = {}
     for result in results:
+        if scoring_config_digest is not None and result.scoring_config_digest != scoring_config_digest:
+            continue
         if cache_config.require_valid_result:
             if not validate_result(result).ok or result.scoreable_state == "benchmark_invalid":
                 continue

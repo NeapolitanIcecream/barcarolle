@@ -56,8 +56,22 @@ def build_rolling_origin(
                 future_refs.append((_parse_timestamp_utc(known_at), ref))
     ordered_history_refs = _chronological_refs(history_refs)
     ordered_future_refs = _chronological_refs(future_refs)
+    origin_identity = {
+        "task_pool_id": task_pool.task_pool_id,
+        "task_pool_digest": task_pool.task_pool_digest,
+        "origin_time": origin_time_iso,
+        "as_of_cutoff": as_of_cutoff,
+        "future_window": {
+            "start": _datetime_to_iso(_parse_timestamp_utc(future_window.start)),
+            "end": _datetime_to_iso(_parse_timestamp_utc(future_window.end)),
+        },
+        "policy": policy,
+        "history_task_check_refs": ordered_history_refs,
+        "future_holdout_task_check_refs": ordered_future_refs,
+    }
+    origin_id = f"origin_{canonical_digest(origin_identity)}"
     return RollingOriginRecord(
-        origin_id=f"origin_{canonical_digest((task_pool.task_pool_id, origin_time_iso, policy.policy_digest))}",
+        origin_id=origin_id,
         task_pool_id=task_pool.task_pool_id,
         task_pool_digest=task_pool.task_pool_digest,
         origin_time=origin_time_iso,
@@ -72,11 +86,11 @@ def build_rolling_origin(
 
 
 def _task_known_at(task: TaskRecord) -> str:
-    return _max_timestamp(task.source_resolved_at, task.task_material_available_at, task.certified_at)
+    return _max_timestamp(task.source_resolved_at, task.task_material_available_at)
 
 
 def _task_check_known_at(task: TaskRecord, check: CheckRecord) -> str:
-    return _max_timestamp(_task_known_at(task), check.check_material_available_at, check.certified_at)
+    return _max_timestamp(_task_known_at(task), check.check_material_available_at)
 
 
 def _training_history_refs(
@@ -123,7 +137,7 @@ def _ensure_time_range_order(time_range: TimeRange) -> None:
 def _datetime_to_iso(value: datetime) -> str:
     if value.tzinfo is None:
         value = value.replace(tzinfo=UTC)
-    return value.astimezone(UTC).isoformat(timespec="seconds").replace("+00:00", "Z")
+    return value.astimezone(UTC).isoformat(timespec="microseconds").replace("+00:00", "Z")
 
 
 def _parse_timestamp_utc(value: str) -> datetime:

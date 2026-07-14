@@ -1,8 +1,9 @@
 """Migrate the pre-2026-07 Result JSONL cache to the current schema.
 
 This is deliberately a one-off, non-destructive migration. It preserves paid
-execution records for cache reuse; it does not migrate selections, matrices, or
-metrics that reference the old result and identity digests.
+execution records in the current Result schema; exact cache reuse still
+requires every current execution-identity field to match. It does not migrate
+selections, matrices, or metrics that reference old result and identity digests.
 """
 
 from __future__ import annotations
@@ -17,12 +18,28 @@ from barcarolle.records import (
     ResultCacheIdentity,
     ResultRecord,
     canonical_digest,
-    load_jsonl_records,
     make_check_digest,
     record_with_digest,
     validate_check,
     validate_result,
     write_jsonl_records,
+)
+
+
+_OLD_CHECK_FIELDS = frozenset(
+    {
+        "check_id",
+        "task_id",
+        "check_type",
+        "check_manifest_digest",
+        "hidden_check_bundle_digest",
+        "verifier_image_digest",
+        "verifier_deps_digest",
+        "resource_limits",
+        "oracle_source",
+        "check_material_available_at",
+        "certified_at",
+    }
 )
 
 
@@ -99,15 +116,14 @@ def migrate_result_cache(
     if output_path.exists():
         raise FileExistsError(f"refusing to overwrite existing output: {output_path}")
 
-    checks = tuple(load_jsonl_records(checks_path, CheckRecord))
-    checks_by_id: dict[str, CheckRecord] = {}
-    for check in checks:
+    checks_by_id: dict[str, tuple[CheckRecord, Mapping[str, str]]] = {}
+    for check, old_environment in _read_old_checks(checks_path):
         validation = validate_check(check)
         if not validation.ok:
             raise ValueError(f"invalid CheckRecord {check.check_id}: {', '.join(validation.errors)}")
         if check.check_id in checks_by_id:
             raise ValueError(f"duplicate CheckRecord: {check.check_id}")
-        checks_by_id[check.check_id] = check
+        checks_by_id[check.check_id] = (check, old_environment)
 
     old_rows = _read_old_rows(results_path)
     migrated = tuple(_migrate_result(row, checks_by_id) for row in old_rows)
@@ -128,9 +144,52 @@ def _read_old_rows(path: Path) -> tuple[Mapping[str, Any], ...]:
     return tuple(rows)
 
 
+def _read_old_checks(path: Path) -> tuple[tuple[CheckRecord, Mapping[str, str]], ...]:
+    checks: list[tuple[CheckRecord, Mapping[str, str]]] = []
+    with path.open(encoding="utf-8") as handle:
+        for line_number, line in enumerate(handle, start=1):
+            if not line.strip():
+                continue
+            row = json.loads(line)
+            if not isinstance(row, Mapping) or set(row) != _OLD_CHECK_FIELDS:
+                raise ValueError(f"line {line_number} is not the supported pre-2026-07 Check schema")
+            check = CheckRecord(
+                check_id=_string(row["check_id"], "check_id"),
+                task_id=_string(row["task_id"], "task_id"),
+                check_type=_string(row["check_type"], "check_type"),
+                check_manifest_digest=_string(row["check_manifest_digest"], "check_manifest_digest"),
+                hidden_check_bundle_digest=_string(
+                    row["hidden_check_bundle_digest"],
+                    "hidden_check_bundle_digest",
+                ),
+                resource_limits=dict(_mapping(row["resource_limits"], "resource_limits")),
+                oracle_source=_string(row["oracle_source"], "oracle_source"),
+                check_material_available_at=_string(
+                    row["check_material_available_at"],
+                    "check_material_available_at",
+                ),
+            )
+            checks.append(
+                (
+                    check,
+                    {
+                        "verifier_image_digest": _string(
+                            row["verifier_image_digest"],
+                            "verifier_image_digest",
+                        ),
+                        "verifier_deps_digest": _string(
+                            row["verifier_deps_digest"],
+                            "verifier_deps_digest",
+                        ),
+                    },
+                )
+            )
+    return tuple(checks)
+
+
 def _migrate_result(
     old_result: Mapping[str, Any],
-    checks_by_id: Mapping[str, CheckRecord],
+    checks_by_id: Mapping[str, tuple[CheckRecord, Mapping[str, str]]],
 ) -> ResultRecord:
     _require_digest(old_result, "result_digest", "old result")
     old_identity = _mapping(old_result["cache_identity"], "cache_identity")
@@ -143,12 +202,13 @@ def _migrate_result(
     agent_id = _string(old_result["agent_id"], "agent_id")
     if old_identity["task_id"] != task_id or old_identity["check_id"] != check_id:
         raise ValueError("old cache identity does not match Result task/check")
-    check = checks_by_id.get(check_id)
-    if check is None:
+    check_binding = checks_by_id.get(check_id)
+    if check_binding is None:
         raise ValueError(f"missing CheckRecord for {check_id}")
+    check, old_environment = check_binding
     if check.task_id != task_id:
         raise ValueError(f"CheckRecord {check_id} does not match Result task")
-    _require_old_check_binding(old_identity, check)
+    _require_old_check_binding(old_identity, check, old_environment)
 
     identity = ResultCacheIdentity(
         task_id=task_id,
@@ -265,12 +325,15 @@ def _require_digest(value: Mapping[str, Any], digest_field: str, label: str) -> 
         raise ValueError(f"{label} digest does not match its payload")
 
 
-def _require_old_check_binding(identity: Mapping[str, Any], check: CheckRecord) -> None:
+def _require_old_check_binding(
+    identity: Mapping[str, Any],
+    check: CheckRecord,
+    old_environment: Mapping[str, str],
+) -> None:
     expected = {
         "check_manifest_digest": check.check_manifest_digest,
         "hidden_check_bundle_digest": check.hidden_check_bundle_digest,
-        "verifier_image_digest": check.verifier_image_digest,
-        "verifier_deps_digest": check.verifier_deps_digest,
+        **old_environment,
     }
     mismatched = [field for field, value in expected.items() if identity[field] != value]
     if mismatched:

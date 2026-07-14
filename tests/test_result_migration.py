@@ -12,7 +12,6 @@ from barcarolle.records import (
     load_jsonl_records,
     make_check_digest,
     validate_result,
-    write_jsonl_records,
 )
 
 
@@ -23,7 +22,7 @@ def test_migrate_result_cache_preserves_execution_and_moves_pricing(tmp_path: Pa
     checks_path = tmp_path / "checks.jsonl"
     output_path = tmp_path / "results.latest.jsonl"
     results_path.write_text(json.dumps(old_result, sort_keys=True) + "\n", encoding="utf-8")
-    write_jsonl_records(checks_path, (check,))
+    _write_old_check(checks_path, check)
 
     completed = _run_migration(results_path, checks_path, output_path)
     loaded = load_jsonl_records(output_path, ResultRecord)
@@ -46,7 +45,7 @@ def test_migrate_result_cache_refuses_overwrite_and_corrupt_input(tmp_path: Path
     results_path = tmp_path / "results.v1.jsonl"
     checks_path = tmp_path / "checks.jsonl"
     output_path = tmp_path / "results.latest.jsonl"
-    write_jsonl_records(checks_path, (check,))
+    _write_old_check(checks_path, check)
     old_result = _old_result(check)
     old_result["result_digest"] = "corrupt"
     results_path.write_text(json.dumps(old_result) + "\n", encoding="utf-8")
@@ -79,7 +78,7 @@ def test_migrate_result_cache_normalizes_legacy_error_and_empty_complete_usage(t
     checks_path = tmp_path / "checks.jsonl"
     output_path = tmp_path / "results.latest.jsonl"
     results_path.write_text(json.dumps(old_result) + "\n", encoding="utf-8")
-    write_jsonl_records(checks_path, (check,))
+    _write_old_check(checks_path, check)
 
     completed = _run_migration(results_path, checks_path, output_path)
     result = load_jsonl_records(output_path, ResultRecord)[0]
@@ -112,7 +111,7 @@ def test_migrate_result_cache_rejects_benchmark_owned_error(tmp_path: Path) -> N
     checks_path = tmp_path / "checks.jsonl"
     output_path = tmp_path / "results.latest.jsonl"
     results_path.write_text(json.dumps(old_result) + "\n", encoding="utf-8")
-    write_jsonl_records(checks_path, (check,))
+    _write_old_check(checks_path, check)
 
     completed = _run_migration(results_path, checks_path, output_path)
 
@@ -152,13 +151,20 @@ def _check() -> CheckRecord:
         check_type="tests",
         check_manifest_digest="check-manifest",
         hidden_check_bundle_digest="hidden-bundle",
-        verifier_image_digest="verifier-image",
-        verifier_deps_digest="verifier-deps",
         resource_limits={"timeout_seconds": 30},
         oracle_source="private",
         check_material_available_at="2026-01-01T00:00:00Z",
-        certified_at="2026-01-01T00:00:00Z",
     )
+
+
+def _write_old_check(path: Path, check: CheckRecord) -> None:
+    payload = {
+        **check.__dict__,
+        "certified_at": check.check_material_available_at,
+        "verifier_image_digest": "verifier-image",
+        "verifier_deps_digest": "verifier-deps",
+    }
+    path.write_text(json.dumps(payload, sort_keys=True) + "\n", encoding="utf-8")
 
 
 def _old_result(check: CheckRecord) -> dict[str, object]:
@@ -171,8 +177,8 @@ def _old_result(check: CheckRecord) -> dict[str, object]:
         "solver_material_digest": "solver-material",
         "check_manifest_digest": check.check_manifest_digest,
         "hidden_check_bundle_digest": check.hidden_check_bundle_digest,
-        "verifier_image_digest": check.verifier_image_digest,
-        "verifier_deps_digest": check.verifier_deps_digest,
+        "verifier_image_digest": "verifier-image",
+        "verifier_deps_digest": "verifier-deps",
         "agent_manifest_digest": "agent-manifest",
         "model_snapshot_id": "model",
         "harness_digest": "harness",

@@ -18,6 +18,7 @@ from barcarolle.records import (
     WorkspaceConfig,
     canonical_digest,
     make_check_id,
+    make_solver_material_digest,
     make_task_id,
     record_with_digest,
     validate_check,
@@ -29,7 +30,24 @@ from barcarolle.workspace import (
     apply_diff,
     cleanup_workspace,
     create_verifier_workspace,
+    validate_solver_material_refs,
     verify_agent_diff,
+)
+
+
+_VALIDATION_SETUP_FAILURES = frozenset(
+    {
+        "check_command_mismatch",
+        "check_workspace_mismatch",
+        "hidden_material_mismatch",
+        "invalid_hidden_material_destination",
+        "missing_check_command",
+        "missing_repository_source",
+        "missing_verification_material",
+        "not_verifier_workspace",
+        "verifier_preparation_failed",
+        "workspace_cleanup_failed",
+    }
 )
 
 
@@ -55,25 +73,7 @@ class ImportConfig:
 
 
 @dataclass(frozen=True)
-class StatementConfig:
-    material_keys: tuple[str, ...] = ("title", "body")
-    separator: str = "\n\n"
-    forbidden_markers: tuple[str, ...] = ("hidden", "oracle")
-
-
-@dataclass(frozen=True)
-class CheckConfig:
-    check_type: str
-    verifier_image_digest: str
-    verifier_deps_digest: str
-    resource_limits: Mapping[str, Any]
-    oracle_source: str
-
-
-@dataclass(frozen=True)
 class CertificationConfig:
-    hidden_ref_markers: tuple[str, ...] = ("hidden", "oracle")
-    require_statement: bool = True
     repeat_count: int = 1
 
 
@@ -87,14 +87,11 @@ class TaskCandidate:
     source_resolved_at: str
     task_material_available_at: str
     check_material_available_at: str
+    task_text: str
     solver_material_refs: tuple[str, ...]
-    solver_material_digest: str
     cluster_id: str
-    statement_material: Mapping[str, Any]
     check_manifest_digest: str
     hidden_check_bundle_digest: str
-    verifier_image_digest: str
-    verifier_deps_digest: str
     resource_limits: Mapping[str, Any]
     oracle_source: str
     check_type: str
@@ -112,7 +109,7 @@ class CertificationResult:
 
 
 def generate_history_candidates(
-    repository_url_or_path: str,
+    repository_id: str,
     time_range: TimeRange,
     task_source_config: TaskSourceConfig,
 ) -> Sequence[TaskCandidate]:
@@ -123,7 +120,7 @@ def generate_history_candidates(
             continue
         event_with_defaults = {
             **event,
-            "repository_id": event.get("repository_id", repository_url_or_path),
+            "repository_id": event.get("repository_id", repository_id),
             "source_family": event.get("source_family", task_source_config.source_family),
         }
         candidates.append(_candidate_from_mapping(event_with_defaults))
@@ -138,34 +135,17 @@ def import_task_pool(source_path: Path, import_config: ImportConfig) -> Sequence
     return tuple(candidates)
 
 
-def build_task_statement(candidate: TaskCandidate, statement_config: StatementConfig) -> str:
-    parts = []
-    for key in statement_config.material_keys:
-        value = candidate.statement_material.get(key)
-        if value is not None and str(value).strip():
-            parts.append(str(value).strip())
-    task_text = statement_config.separator.join(parts)
-    lowered = task_text.lower()
-    if any(marker.lower() in lowered for marker in statement_config.forbidden_markers):
-        raise ValueError("solver-visible task statement contains hidden or oracle material")
-    return task_text
-
-
-def build_check_candidate(candidate: TaskCandidate, check_config: CheckConfig) -> CheckRecord:
+def build_check_candidate(candidate: TaskCandidate) -> CheckRecord:
     task_id = make_task_id(candidate.repository_id, candidate.base_commit, canonical_digest(_source_identity(candidate)))
-    check_id = make_check_id(task_id, candidate.check_manifest_digest)
     return CheckRecord(
-        check_id=check_id,
+        check_id=make_check_id(task_id, candidate.check_manifest_digest),
         task_id=task_id,
-        check_type=check_config.check_type,
+        check_type=candidate.check_type,
         check_manifest_digest=candidate.check_manifest_digest,
         hidden_check_bundle_digest=candidate.hidden_check_bundle_digest,
-        verifier_image_digest=check_config.verifier_image_digest,
-        verifier_deps_digest=check_config.verifier_deps_digest,
-        resource_limits=check_config.resource_limits,
-        oracle_source=check_config.oracle_source,
+        resource_limits=candidate.resource_limits,
+        oracle_source=candidate.oracle_source,
         check_material_available_at=candidate.check_material_available_at,
-        certified_at=candidate.check_material_available_at,
     )
 
 
@@ -179,33 +159,11 @@ def certify_task_candidate(
     if certification_config.repeat_count < 1:
         raise ValueError("repeat_count must be at least 1")
     rejection_reasons: list[str] = []
-    check = build_check_candidate(
-        candidate,
-        CheckConfig(
-            check_type=candidate.check_type,
-            verifier_image_digest=candidate.verifier_image_digest,
-            verifier_deps_digest=candidate.verifier_deps_digest,
-            resource_limits=candidate.resource_limits,
-            oracle_source=candidate.oracle_source,
-        ),
-    )
+    check = build_check_candidate(candidate)
     task = _task_from_candidate(candidate, check)
 
-    try:
-        statement = build_task_statement(
-            candidate,
-            StatementConfig(forbidden_markers=certification_config.hidden_ref_markers),
-        )
-    except ValueError as exc:
-        statement = ""
-        rejection_reasons.append(str(exc))
-    if certification_config.require_statement and not statement:
-        rejection_reasons.append("task statement is empty")
-    lowered_refs = " ".join(candidate.solver_material_refs).lower()
-    for marker in certification_config.hidden_ref_markers:
-        if marker.lower() in lowered_refs:
-            rejection_reasons.append("solver-visible material references hidden check material")
-            break
+    if not candidate.task_text.strip():
+        rejection_reasons.append("task_text must not be empty")
 
     task_validation = validate_task(task)
     check_validation = validate_check(check)
@@ -219,19 +177,36 @@ def certify_task_candidate(
     base_outcomes: tuple[CheckOutcome, ...] = ()
     reference_outcomes: tuple[CheckOutcome, ...] = ()
     if not rejection_reasons:
-        base_outcomes = (_run_task_check(task, check, workspace_config, runtime_config, None),)
+        base_outcomes = (
+            _run_task_check(
+                task,
+                check,
+                workspace_config,
+                runtime_config,
+                None,
+                validate_material_refs=True,
+            ),
+        )
         base_outcome = base_outcomes[0]
+        if base_outcome.outcome == "invalid" and base_outcome.failure_label in _VALIDATION_SETUP_FAILURES:
+            raise RuntimeError(
+                "task validation could not execute the base check: "
+                + (base_outcome.failure_label or "unknown failure")
+            )
         if base_outcome.outcome != "fail":
-            rejection_reasons.append(f"base check attempt 1 must fail; observed {base_outcome.outcome}")
+            rejection_reasons.append(_unexpected_check_outcome("base check attempt 1", "fail", base_outcome))
         else:
             patched: list[CheckOutcome] = []
             for attempt in range(1, certification_config.repeat_count + 1):
                 outcome = _run_task_check(task, check, workspace_config, runtime_config, reference_patch)
                 patched.append(outcome)
-                if outcome.outcome != "pass":
-                    rejection_reasons.append(
-                        f"reference patch check attempt {attempt} must pass; observed {outcome.outcome}"
+                if outcome.outcome == "invalid" and outcome.failure_label in _VALIDATION_SETUP_FAILURES:
+                    raise RuntimeError(
+                        "task validation could not execute the reference patch check: "
+                        + (outcome.failure_label or "unknown failure")
                     )
+                if outcome.outcome != "pass":
+                    rejection_reasons.append(_unexpected_check_outcome(f"reference patch check attempt {attempt}", "pass", outcome))
                     break
             reference_outcomes = tuple(patched)
 
@@ -272,6 +247,7 @@ def freeze_task_pool(
             "accepted_certification_results",
             "task_records_ref",
             "check_records_ref",
+            "certification_evidence_ref",
             "source_event_inventory_digest",
             "generator_config_digest",
             "certification_config_digest",
@@ -283,17 +259,12 @@ def freeze_task_pool(
     task_records_digest = canonical_digest(tuple(accepted_tasks))
     check_records_digest = canonical_digest(tuple(accepted_checks))
     rejection_summary = _rejection_summary(rejected)
-    accepted_evidence_digests = _accepted_certification_evidence_digests(
+    accepted_results = _accepted_certification_results(
         accepted_tasks,
         accepted_checks,
         metadata["accepted_certification_results"],
     )
-    certification_evidence = {
-        "accepted_task_digests": tuple(canonical_digest(task) for task in accepted_tasks),
-        "accepted_check_digests": tuple(canonical_digest(check) for check in accepted_checks),
-        "accepted_certification_evidence_digests": accepted_evidence_digests,
-        "rejected_evidence_digests": tuple(result.evidence_digest for result in rejected),
-    }
+    certification_evidence = certification_evidence_records((*accepted_results, *rejected))
 
     record = TaskPoolRecord(
         task_pool_id=str(metadata.get("task_pool_id", "")),
@@ -305,6 +276,7 @@ def freeze_task_pool(
         task_records_digest=task_records_digest,
         check_records_ref=str(metadata["check_records_ref"]),
         check_records_digest=check_records_digest,
+        certification_evidence_ref=str(metadata["certification_evidence_ref"]),
         rejected_candidate_ids=tuple(result.candidate_id for result in rejected if not result.accepted),
         rejection_summary_digest=canonical_digest(rejection_summary),
         certification_evidence_digest=canonical_digest(certification_evidence),
@@ -318,6 +290,19 @@ def freeze_task_pool(
     return record_with_digest(record)
 
 
+def certification_evidence_records(
+    results: Sequence[CertificationResult],
+) -> tuple[Mapping[str, Any], ...]:
+    ordered = tuple(sorted(results, key=lambda result: result.candidate_id))
+    candidate_ids = tuple(result.candidate_id for result in ordered)
+    if len(set(candidate_ids)) != len(candidate_ids):
+        raise ValueError("certification results contain duplicate candidate_id values")
+    for result in ordered:
+        if result.evidence_digest != canonical_digest(result.evidence):
+            raise ValueError("certification evidence digest does not match structured evidence")
+    return tuple(result.evidence for result in ordered)
+
+
 def summarize_task_pool(task_pool: TaskPoolRecord) -> Mapping[str, object]:
     return {
         "task_pool_id": task_pool.task_pool_id,
@@ -327,6 +312,7 @@ def summarize_task_pool(task_pool: TaskPoolRecord) -> Mapping[str, object]:
         "rejected_count": len(task_pool.rejected_candidate_ids),
         "task_records_digest": task_pool.task_records_digest,
         "check_records_digest": task_pool.check_records_digest,
+        "certification_evidence_ref": task_pool.certification_evidence_ref,
         "certification_evidence_digest": task_pool.certification_evidence_digest,
         "source_event_inventory_digest": task_pool.source_event_inventory_digest,
         "created_at": task_pool.created_at,
@@ -354,11 +340,9 @@ def _candidate_from_mapping(data: Mapping[str, Any]) -> TaskCandidate:
         "source_resolved_at",
         "task_material_available_at",
         "check_material_available_at",
-        "solver_material_digest",
+        "task_text",
         "check_manifest_digest",
         "hidden_check_bundle_digest",
-        "verifier_image_digest",
-        "verifier_deps_digest",
         "oracle_source",
         "check_type",
     ]
@@ -381,14 +365,11 @@ def _candidate_from_mapping(data: Mapping[str, Any]) -> TaskCandidate:
         source_resolved_at=str(data["source_resolved_at"]),
         task_material_available_at=str(data["task_material_available_at"]),
         check_material_available_at=str(data["check_material_available_at"]),
+        task_text=str(data["task_text"]),
         solver_material_refs=tuple(str(ref) for ref in data.get("solver_material_refs", ())),
-        solver_material_digest=str(data["solver_material_digest"]),
         cluster_id=str(data.get("cluster_id", "")),
-        statement_material=dict(data.get("statement_material", {})),
         check_manifest_digest=str(data["check_manifest_digest"]),
         hidden_check_bundle_digest=str(data["hidden_check_bundle_digest"]),
-        verifier_image_digest=str(data["verifier_image_digest"]),
-        verifier_deps_digest=str(data["verifier_deps_digest"]),
         resource_limits=dict(data.get("resource_limits", {})),
         oracle_source=str(data["oracle_source"]),
         check_type=str(data["check_type"]),
@@ -401,14 +382,28 @@ def _run_task_check(
     workspace_config: WorkspaceConfig,
     runtime_config: RuntimeConfig,
     reference_patch: CapturedDiff | None,
+    *,
+    validate_material_refs: bool = False,
 ) -> CheckOutcome:
     try:
         workspace = create_verifier_workspace(task, workspace_config)
-    except (OSError, RuntimeError, ValueError):
-        return CheckOutcome("invalid", "verifier_workspace_error", None, False, 0.0, "")
+    except (OSError, RuntimeError, ValueError) as exc:
+        failure_label = (
+            "missing_repository_source"
+            if "repository source is not bound" in str(exc).lower()
+            else "verifier_workspace_error"
+        )
+        return CheckOutcome("invalid", failure_label, None, False, 0.0, "")
 
     try:
-        if reference_patch is not None:
+        if validate_material_refs:
+            try:
+                validate_solver_material_refs(workspace, task)
+            except ValueError:
+                outcome = CheckOutcome("invalid", "invalid_solver_material", None, False, 0.0, "")
+            else:
+                outcome = verify_agent_diff(workspace, check, runtime_config)
+        elif reference_patch is not None:
             replay = apply_diff(workspace, reference_patch)
             if replay.replay_status != "applied":
                 outcome = CheckOutcome(
@@ -433,6 +428,11 @@ def _run_task_check(
     return outcome
 
 
+def _unexpected_check_outcome(label: str, expected: str, outcome: CheckOutcome) -> str:
+    detail = f" ({outcome.failure_label})" if outcome.failure_label else ""
+    return f"{label} must {expected}; observed {outcome.outcome}{detail}"
+
+
 def _source_identity(candidate: TaskCandidate) -> Mapping[str, str]:
     return {
         "source_family": candidate.source_family,
@@ -442,6 +442,7 @@ def _source_identity(candidate: TaskCandidate) -> Mapping[str, str]:
 
 
 def _task_from_candidate(candidate: TaskCandidate, check: CheckRecord) -> TaskRecord:
+    task_text = candidate.task_text.rstrip()
     return TaskRecord(
         task_id=check.task_id,
         repository_id=candidate.repository_id,
@@ -450,8 +451,8 @@ def _task_from_candidate(candidate: TaskCandidate, check: CheckRecord) -> TaskRe
         source_ref=candidate.source_ref,
         source_resolved_at=candidate.source_resolved_at,
         task_material_available_at=candidate.task_material_available_at,
-        certified_at=max(candidate.task_material_available_at, candidate.check_material_available_at),
-        solver_material_digest=candidate.solver_material_digest,
+        task_text=task_text,
+        solver_material_digest=make_solver_material_digest(task_text, candidate.solver_material_refs),
         solver_material_refs=candidate.solver_material_refs,
         check_ids=(check.check_id,),
         cluster_id=candidate.cluster_id,
@@ -462,6 +463,10 @@ def _validate_accepted_task_check_linkage(
     accepted_tasks: Sequence[TaskRecord],
     accepted_checks: Sequence[CheckRecord],
 ) -> None:
+    if len({task.task_id for task in accepted_tasks}) != len(accepted_tasks):
+        raise ValueError("accepted tasks contain duplicate task_id values")
+    if len({check.check_id for check in accepted_checks}) != len(accepted_checks):
+        raise ValueError("accepted checks contain duplicate check_id values")
     tasks_by_id = {task.task_id: task for task in accepted_tasks}
     check_ids = {check.check_id for check in accepted_checks}
     for task in accepted_tasks:
@@ -493,11 +498,11 @@ def _validate_accepted_records(
             raise ValueError(f"check {check.check_id} failed validation: {'; '.join(validation.errors)}")
 
 
-def _accepted_certification_evidence_digests(
+def _accepted_certification_results(
     accepted_tasks: Sequence[TaskRecord],
     accepted_checks: Sequence[CheckRecord],
     accepted_results: object,
-) -> tuple[str, ...]:
+) -> tuple[CertificationResult, ...]:
     if not isinstance(accepted_results, SequenceABC) or isinstance(accepted_results, str):
         raise ValueError("accepted_certification_results must be a sequence of CertificationResult")
     results = tuple(accepted_results)
@@ -517,7 +522,7 @@ def _accepted_certification_evidence_digests(
         if pair in results_by_pair:
             raise ValueError("accepted_certification_results contains duplicate Task/Check evidence")
         results_by_pair[pair] = result
-    evidence_digests: list[str] = []
+    ordered_results: list[CertificationResult] = []
     for task_id, check_id in expected_pairs:
         result = results_by_pair.get((task_id, check_id))
         task = tasks_by_id.get(task_id)
@@ -532,8 +537,8 @@ def _accepted_certification_evidence_digests(
             raise ValueError("accepted certification evidence payload task digest does not match frozen task")
         if result.evidence.get("check_digest") != canonical_digest(check):
             raise ValueError("accepted certification evidence payload check digest does not match frozen check")
-        evidence_digests.append(result.evidence_digest)
-    return tuple(evidence_digests)
+        ordered_results.append(result)
+    return tuple(ordered_results)
 
 
 def _rejection_summary(results: Sequence[CertificationResult]) -> Mapping[str, Any]:
