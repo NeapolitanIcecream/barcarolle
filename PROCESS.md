@@ -10,10 +10,17 @@ documents win.
 
 ## Current Mode
 
-The current maintenance direction is to close evidence-chain gaps found by the
-2026-07-14 implementation audit. `docs/design/` remains the intended boundary;
+The current development direction is predictive validity. The active work makes
+task certification executable, binds replayable Task/Check/certification
+evidence, keeps rolling-origin inputs time-correct, captures real usage and
+unknown cost accurately, and evaluates Adaptive methods by paired MAE.
 `docs/implementation-status.md` records which effects the alpha implementation
-actually enforces.
+enforces.
+
+Complexity is justified when it can improve prediction, prevent invalid
+evidence, or preserve reusable paid results. Do not add aliases for existing
+concepts, uncommon names for standard methods, unused identity fields, or
+frameworks without a current caller.
 
 The default runtime target is a cooperative Agent. Fresh workspaces, diff
 replay, and verifier-only hidden material are required benchmark behavior.
@@ -40,11 +47,23 @@ input and should not be imported without a specific review.
   effects, but not implementation bodies.
 - Later module documents may refine earlier system documents. Update the
   affected documents instead of leaving contradictions.
-- Core code serves only the latest schema. When a schema change affects
-  valuable paid results, prefer a small one-off migration tool; do not maintain
-  compatibility branches or grow a migration framework.
 - Design learned data and parameter contracts with a concrete algorithm. MAE is
   the current primary prediction objective.
+
+## Schema And Result Preservation
+
+Core code reads and writes only the latest schema. Do not keep runtime
+compatibility branches for old records.
+
+When a schema change affects valuable paid results, preserve them with a small
+one-off migration that validates the new records and leaves the source
+untouched. Drop an old result only when it cannot be migrated without guessing
+evidence. Stop extending the migration when it starts becoming a compatibility
+framework.
+
+Preserved does not mean exact-cache reusable. When Agent-visible task material
+or repository-history boundaries change, keep the old paid record for analysis
+instead of rewriting its execution identity without proof of equivalence.
 
 ## Design Review Stop Line
 
@@ -66,9 +85,12 @@ that actually need them.
 
 ## Paid Calls
 
-Current design documents do not require paid benchmark or evidence-producing
-LLM or Agent calls. When a task explicitly requires benchmark/evidence-producing
-paid calls, use only:
+No paid benchmark or evidence-producing LLM or Agent call was made during the
+current implementation and documentation work. The branch therefore supports
+mechanism claims from tests, not an empirical MAE-improvement claim.
+
+When a task explicitly requires benchmark/evidence-producing paid calls, use
+only:
 
 ```text
 LLM_BASE_URL

@@ -58,11 +58,14 @@ output, and effect only; it does not prescribe implementation.
 - Implemented evaluation metrics: future pass-rate MAE, future coverage, future
   invalid rate, pairwise gap MAE, pairwise rank agreement, and recommendation
   regret.
-- Implemented meta-controller baseline: mean-MAE comparison over complete,
-  paired rows prepared by the rolling-origin pipeline. It uses a rule-based
-  fallback only when no historical rows exist.
-- Planned: learned-mixture fitting and calibrated weighting. No training API or
-  data contract is reserved before a concrete algorithm is designed.
+- Implemented mean-MAE selector choice: `choose_selector_from_metrics` validates
+  complete, paired rolling-origin metrics and chooses the rule Selector with the
+  lowest mean MAE. It uses a rule Selector fallback only when no prior metrics
+  exist.
+- Implemented weight fitting for the existing executable `rule_mixture`:
+  `fit_rule_mixture_from_metrics` uses paired rolling-origin MAE from the
+  coverage, random, and recency Selectors. It does not introduce another
+  Selector family.
 
 ## Policy Records
 
@@ -138,10 +141,10 @@ Input:
 - `task_pool: TaskPoolRecord`
 - `tasks: Sequence[TaskRecord]`
 - `checks: Mapping[str, CheckRecord]`
-- `selector_inputs: Mapping[str, SelectorInput]`
+- `selector_inputs: Sequence[SelectorInput]`
 - `agents: Sequence[AgentRecord]`
 - `history_window: TimeRange`
-- `evaluation_config: SelectorEvaluationConfig`
+- `selection_config: SelectionConfig`
 - `rolling_policy: RollingOriginPolicy`
 
 Output:
@@ -150,7 +153,8 @@ Output:
 
 Effect:
 
-- Freezes one `BenchmarkSelectionRecord` per origin for a specified Selector.
+- Freezes one `BenchmarkSelectionRecord` per already-built `SelectorInput`, in
+  input order, for a specified Selector.
   It does not score selections, does not accept raw result sets, and does not
   open future outcomes.
 
@@ -391,6 +395,8 @@ Effect:
 - Every emitted metric binds `budget_digest` to the frozen selection budget. A
   non-null, conflicting `MetricConfig.budget_digest` produces an invalid metric
   instead of a cross-budget comparison.
+- Metric completeness is `complete_with_exclusions` when either the selected or
+  future matrix has exclusions; it is `complete` only when both are complete.
 
 ### choose_selector_by_mean_mae
 
@@ -406,29 +412,82 @@ Output:
 
 Effect:
 
-- Each row contains one already-validated, comparable MAE value for every
-  registered Selector at one prior origin. The rolling-origin pipeline owns
-  origin splitting, Metric validation, availability, deduplication, and
-  comparability checks before calling this function.
+- Each row contains one comparable MAE value for every registered Selector at
+  one prior origin.
 - Averages each Selector's rows and returns the lowest mean MAE, breaking ties by
   Selector ID.
 - Uses the registered fallback only when `mae_by_origin` is empty. Incomplete
   rows and non-finite or out-of-range MAE values are input errors.
 
+### choose_selector_from_metrics
+
+Input:
+
+- `registered_selectors: Sequence[SelectorRecord]`
+- `selections: Sequence[BenchmarkSelectionRecord]`
+- `mae_metrics: Sequence[MetricRecord]`
+- `future_matrices: Sequence[ResultMatrix]`
+- `fallback_selector_id: str`
+
+Output:
+
+- `SelectorRecord`
+
+Effect:
+
+- Validates frozen Selections and `future_pass_rate_mae` Metric records, then
+  pairs one metric with every registered Selector at every supplied origin.
+- Requires one Task Pool and budget across the comparison and one frozen
+  selection input per origin. Metric configuration, join policy, and
+  denominator policy must match globally; completeness state must match within
+  an origin but may differ across origins. Each Metric must bind its supplied
+  future matrix, and every Selector at one origin must use the same future
+  Result cells. Missing Selectors, metrics, matrices, duplicate records, and
+  mismatched fields are input errors.
+- Calls `choose_selector_by_mean_mae` with the paired rows. When Selection,
+  Metric, and future-matrix inputs are all empty, it returns the registered
+  fallback.
+
+### fit_rule_mixture_from_metrics
+
+Input:
+
+- `expert_selectors: Sequence[SelectorRecord]`
+- `selections: Sequence[BenchmarkSelectionRecord]`
+- `mae_metrics: Sequence[MetricRecord]`
+- `future_matrices: Sequence[ResultMatrix]`
+
+Output:
+
+- executable `SelectorRecord` with `selector_family="rule_mixture"`
+
+Effect:
+
+- Requires exactly one executable coverage, random, and recency Selector and
+  reuses the same complete paired-MAE checks as
+  `choose_selector_from_metrics`. Missing paired evidence is an input error;
+  there is no fallback.
+- Sets each expert's weight to one minus its mean `future_pass_rate_mae` across
+  origins. If all three values are zero, it uses equal positive weights.
+- Inherits the random seed and coverage grouping directly from their expert
+  Selectors. The mixture's random component uses the same seeded ordering as
+  the standalone random Selector. The fitted record binds the expert Selector
+  records, Selections, and Metric records through `training_source_digests`;
+  each Metric already binds its future matrix digest.
+
 ## Selector Development Order
 
-Planned development order after the implemented rule baselines:
+Development order, with the first three steps implemented:
 
 1. random, recency, and coverage baselines;
 2. strong baseline envelope;
-3. learned mixture over rule selectors;
+3. fit the existing rule-mixture weights from paired MAE;
 4. calibrated constrained weighting;
 5. future-stratum matching;
 6. outcome-aware selectors only under explicit available-before-origin rules;
 7. pairwise and hierarchical models only when data volume supports them;
 8. stronger learned or drift-aware adaptive control after selectors have enough
-   prior-origin evidence; the prepared-table mean-MAE comparator remains the
-   baseline.
+   prior-origin evidence; mean-MAE Selector choice remains the baseline.
 
 ## Design Consistency Check
 
@@ -440,6 +499,6 @@ Planned development order after the implemented rule baselines:
 - Feature provenance is recorded before selector input is built.
 - Primary metric is future pass-rate MAE.
 - Learned selectors start with data-efficient methods.
-- The rolling-origin pipeline prepares paired historical MAE rows before the
-  meta-controller compares Selectors.
+- `choose_selector_from_metrics` rejects incomplete or incomparable
+  rolling-origin MAE rows before comparing Selectors.
 - Reporting, not Selection, owns human-readable reports.

@@ -12,7 +12,7 @@ reporting logic.
 
 ## Inputs
 
-- target repository reference;
+- stable target `repository_id` and local `repository_path`;
 - task-source config or existing `Task Pool`;
 - Agent set;
 - historical window, origin, and future window;
@@ -57,9 +57,15 @@ output, and effect only; it does not prescribe implementation.
 Input:
 
 - `config: TaskPoolConfig`
-  - the existing `WorkspaceConfig` and `RuntimeConfig` used to execute checks;
+  - stable `repository_id` stored in records;
+  - local Git `repository_path` used to create workspaces;
+  - the `WorkspaceConfig` and `RuntimeConfig` used to execute checks;
   - a direct `candidate_id -> CapturedDiff` mapping of trusted reference
-    patches.
+    patches;
+  - direct `candidate_id -> check command` and `candidate_id -> hidden material
+    path` mappings;
+  - either an import path or a time range with task-source config;
+  - certification config and output refs in metadata.
 
 Output:
 
@@ -67,8 +73,19 @@ Output:
 
 Effect:
 
-- Calls Task Pool to generate or import candidates, run execution-based task
-  validation, and freeze accepted tasks.
+- Generates or imports candidates and rejects repository IDs that differ from
+  `config.repository_id`; the local path is never used as record identity.
+- Binds `repository_path` to the Workspace config, builds each Check directly
+  from its candidate, then binds the matching check command and hidden
+  material before certification.
+- Requires one reference patch, check command, and hidden-material path for
+  every candidate. It runs executable base-fail/reference-patch-pass
+  certification and passes the accepted records and complete certification
+  results to `freeze_task_pool`.
+- After the frozen record is constructed, writes the exact accepted Task
+  sequence, accepted Check sequence, and ordered sanitized certification
+  evidence to their refs. Their canonical digests must match the digests stored
+  on `TaskPoolRecord`.
 
 ### train_selector
 
@@ -92,6 +109,8 @@ Effect:
 - Resolves Task/Check records from the task pool, loads historical results, and
   calls Selection to train or choose a persistent Selector under the requested
   rolling-origin and feature policies.
+- Treats append-only pricing views with the same `result_execution_digest` as
+  one pre-origin execution, preserving the first record in append order.
 
 ### select_benchmark
 
@@ -117,6 +136,8 @@ Effect:
   results, and calls Selection to produce a benchmark selection frozen before
   future outcomes are opened. A configured as-of cutoff later than the origin
   is rejected before any Result query.
+- Does not count repriced views as additional Agent executions; executions with
+  genuinely different verifier evidence remain distinct.
 
 ## Maintainer Entry Points
 
@@ -225,7 +246,9 @@ Effect:
 
 - Calls Result Store to find selected Agent-task-check cells that are not
   reusable from the cache, then calls Workspace and Result Store to execute and
-  store only those cells.
+  store only those cells. If an exact execution exists only under older
+  pricing, appends and returns the current pricing view without running the
+  Agent. An already-present current pricing view is not duplicated.
 
 ### prepare_evaluation_cells
 
@@ -253,10 +276,10 @@ Effect:
 - Applies the same cache identity and denominator policy to selected benchmark
   `Task + Check` refs and future holdout `Task + Check` refs. It asks Result
   Store for missing cells using `cache_config`, runs allowed missing cells
-  through Workspace, stores new results, then asks Result Store to resolve the
-  complete result-or-missing cell set. Runner does not implement a separate
-  cache lookup policy. It returns completeness, exclusion, and abstention
-  metadata for scoring.
+  through Workspace, stores new results, reprices reusable old-price
+  executions, then resolves cells against the exact current derived scoring
+  digest. Runner does not implement a separate cache lookup policy. It returns
+  completeness, exclusion, and abstention metadata for scoring.
 
 ### score_selection
 

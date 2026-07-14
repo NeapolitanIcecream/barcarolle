@@ -69,14 +69,26 @@ be null depending on `cell_state`.
 - `source_ref`
 - `source_resolved_at`
 - `task_material_available_at`
-- `certified_at`
+- `task_text`
 - `solver_material_digest`
 - `solver_material_refs`
 - `check_ids`
 - `cluster_id`
 
-`known_at` is a derived value computed from source, material, check, and
-certification timestamps. It should not replace those source timestamps.
+`task_text` is the directly replayable solver instruction.
+`solver_material_refs` optionally names supporting files already present in the
+repository checkout; it does not replace or contain `task_text`.
+`solver_material_digest` binds the solver-material format version, exact task
+text, and ordered refs. Agent-visible rendering changes must change that
+format version so old Results are not exact cache hits.
+
+`cluster_id` may be empty. Records do not replace an absent cluster with a
+default or `unclustered` label.
+
+Task `known_at` is derived only from `source_resolved_at` and
+`task_material_available_at`. Task/Check `known_at` also includes
+`check_material_available_at`. Certification time is not part of historical
+availability and is not stored on Task or Check.
 
 ### CheckRecord
 
@@ -85,12 +97,14 @@ certification timestamps. It should not replace those source timestamps.
 - `check_type`
 - `check_manifest_digest`
 - `hidden_check_bundle_digest`
-- `verifier_image_digest`
-- `verifier_deps_digest`
 - `resource_limits`
 - `oracle_source`
 - `check_material_available_at`
-- `certified_at`
+
+`resource_limits` may be empty. `RuntimeConfig.timeout_seconds` is the default
+Check timeout; a positive per-Check `resource_limits["timeout_seconds"]` only
+narrows that default. Other entries have effect only when the active execution
+adapter implements them.
 
 ### AgentRecord
 
@@ -165,8 +179,9 @@ in audit reports.
 
 `check_digest` is derived from the behavior-changing Check fields:
 `check_type`, `check_manifest_digest`, `hidden_check_bundle_digest`,
-`verifier_image_digest`, `verifier_deps_digest`, `resource_limits`, and
-`oracle_source`. Availability and certification timestamps are excluded.
+`resource_limits`, and `oracle_source`. Check-material availability is
+excluded. Verifier environment identity comes from `WorkspaceConfig` rather
+than duplicate Check fields.
 
 Pricing and scoring do not belong to paid execution identity. Changing prices
 must not cause an Agent or Check to run again.
@@ -290,6 +305,7 @@ origin. Its digest covers the listed fields and the referenced feature snapshot.
 - `task_records_digest`
 - `check_records_ref`
 - `check_records_digest`
+- `certification_evidence_ref`
 - `rejected_candidate_ids`
 - `rejection_summary_digest`
 - `certification_evidence_digest`
@@ -300,8 +316,12 @@ origin. Its digest covers the listed fields and the referenced feature snapshot.
 
 `task_pool_digest` is computed from the canonical serialization of the frozen
 task pool, including accepted Task/Check refs and digests, rejected candidate
-IDs, rejection summary digest, certification evidence digest, source event
-inventory digest, and generator/certification config digests.
+IDs, rejection summary digest, certification evidence ref and digest, source
+event inventory digest, and generator/certification config digests.
+
+`certification_evidence_ref` points to the exact ordered sanitized evidence
+sequence whose canonical digest is `certification_evidence_digest`. The ref and
+digest are one binding: a different sequence must produce a different digest.
 
 ### RollingOriginRecord
 
@@ -453,8 +473,9 @@ Output:
 
 Effect:
 
-- Validates required task fields, timestamp order, solver-visible material, and
-  absence of hidden check material.
+- Validates required task fields, source/material timestamp order, nonempty
+  normalized task text, solver-material digest, and repository-relative solver
+  material refs.
 
 ### validate_check
 
@@ -468,8 +489,8 @@ Output:
 
 Effect:
 
-- Validates that the check has an execution type, bounded resource limits, and no
-  solver-visible hidden material.
+- Validates that the Check has an execution type, a mapping for optional
+  per-Check resource overrides, and no solver-visible hidden material.
 
 ### validate_workspace_run
 
@@ -666,6 +687,24 @@ Effect:
 - Builds a stable task identifier. The function must not include future
   outcome data.
 
+### make_solver_material_digest
+
+Input:
+
+- `task_text: str`
+- `solver_material_refs: Sequence[str]`
+
+Output:
+
+- `solver_material_digest: str`
+
+Effect:
+
+- Digests the exact solver-visible task text and ordered supporting-file refs.
+  The referenced files remain part of the repository checkout at
+  `base_commit`; Workspace validates that each resolved path stays inside that
+  checkout.
+
 ### make_check_id
 
 Input:
@@ -694,7 +733,8 @@ Output:
 Effect:
 
 - Digests every Check field that can change execution or verification while
-  excluding material-availability and certification timestamps.
+  excluding check-material availability. Workspace environment identity is
+  already carried by `WorkspaceConfig`.
 
 ### make_result_cache_identity
 

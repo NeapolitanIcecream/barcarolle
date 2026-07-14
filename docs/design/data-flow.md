@@ -27,25 +27,31 @@ Task Pool + Agent Results + origin + budget
 
 Input:
 
-- target repository reference;
+- stable target `repository_id` and local `repository_path`;
 - task generator or user import;
-- check construction method;
-- task-validation config.
+- per-candidate check command, hidden material path, and reference patch;
+- Workspace, Runtime, and certification config.
 
 Steps:
 
 1. Task Pool calls a generator or importer.
-2. Generator emits candidate `Task + Check`.
-3. Execution-based task validation confirms that the task check fails at the
-   base commit and, when a reference patch exists, passes after that patch. It
-   repeats checks when repeatability needs to be measured.
-4. Task Pool freezes accepted `Task + Check` records and rejection summaries.
+2. Generator emits `TaskCandidate` records with direct task text and Check
+   fields.
+3. Runner binds the local repository and each candidate's check command and
+   hidden material.
+4. Execution-based task validation confirms that one aggregate Check fails at
+   the base commit and passes after its reference patch. It may repeat the
+   patched Check in fresh verifier Workspaces.
+5. Task Pool constructs the frozen pool record without writing files.
+6. Runner writes the exact accepted Task records, accepted Check records, and
+   ordered sanitized certification evidence referenced and digested by that
+   pool record.
 
 Output:
 
 - frozen `Task Pool`.
-- accepted Task/Check record references, rejection summaries, task-validation
-  evidence, and source-event inventory digests.
+- accepted Task/Check record references and digests, rejection summaries,
+  certification evidence ref and digest, and source-event inventory digest.
 
 Runner entrypoint:
 
@@ -54,7 +60,8 @@ Runner entrypoint:
 Downstream:
 
 - Workspace receives Task and Check records to run Agents.
-- Selection receives Task metadata and task-validation metadata.
+- Selection receives Task and Check metadata, not certification outcomes or
+  raw validation artifacts.
 - Reporting receives accepted and rejected counts.
 
 ## Flow 2: Run Agents And Store Results
@@ -133,13 +140,14 @@ Input:
 - historical `Task Pool` subset allowed by the protocol;
 - historical `Agent Results` allowed by the protocol;
 - candidate Agent set;
-- evaluation config.
+- evaluation config containing ISO `origin_times`, selection config, and
+  budget.
 
 Steps:
 
 1. Runner loads historical results from Result Store.
-2. Selection builds the origins required by the evaluation config and
-   rolling-origin policy.
+2. Runner parses `evaluation_config.origin_times` and asks Selection to build a
+   `RollingOriginRecord` for each timestamp under the rolling-origin policy.
 3. Selection builds leakage-safe feature snapshots.
 4. Selection freezes `Benchmark Selection` records for those origins and does
    not score them.

@@ -75,8 +75,12 @@ Output:
 Effect:
 
 - Executes the check against the applied candidate diff within the configured
-  timeout. An execution adapter may add stronger process, network, filesystem,
-  or resource limits.
+  timeout. `RuntimeConfig.timeout_seconds` is the default. A positive
+  `CheckRecord.resource_limits["timeout_seconds"]` narrows it; an empty mapping
+  uses the runtime default.
+- Other resource-limit entries have effect only when the active execution
+  adapter implements them. The built-in subprocess path does not claim
+  filesystem, network, process, CPU, or memory isolation.
 
 ### normalize_outcome
 

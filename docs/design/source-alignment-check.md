@@ -28,6 +28,8 @@ The tested Agent owns its model, harness, prompts, tools, retrieval, edit loop,
 retry policy, public-test policy, and runtime budget. Barcarolle owns task
 validation, fresh solver/verifier workspace separation, hidden-oracle verification,
 normalized result storage, rolling-origin selection, and report traceability.
+The built-in Workspace path assumes a cooperative Agent and does not claim
+host-level resource isolation.
 
 ## Asset Decoupling
 
@@ -55,9 +57,9 @@ The Selection module keeps these constraints:
 - rolling-origin policy with as-of cutoff, cluster constraints,
   eligibility mode, and holdout overlap rules;
 - benchmark selections frozen before future outcomes are opened;
-- a mean-MAE meta-controller over complete, comparable rows from earlier
-  rolling origins; result availability is enforced when those rows are built,
-  not reconsidered by the controller.
+- mean-MAE Selector choice over complete, comparable metrics from earlier
+  rolling origins; the choice does not reinterpret whether a recorded MAE is
+  available.
 
 ## Cache And Scoring Boundary
 
@@ -74,8 +76,9 @@ Frozen selector inputs, selections, cell sets, matrices, and metrics reference
 Result records by ID and digest. Evidence-bearing records are append-only.
 
 Rolling-origin evaluation freezes `Task + Check` refs before future outcomes
-are opened, and records source, task material, check material, certification,
-and result availability timestamps separately.
+are opened. Historical `known_at` uses only source, task-material, and
+check-material availability. Certification evidence is stored separately and
+does not move that historical availability time.
 
 ## Reporting Boundary
 

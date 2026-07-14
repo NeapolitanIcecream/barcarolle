@@ -57,6 +57,8 @@ Effect:
 
 - Summarizes task count, check count, generator families, execution-based task
   validation coverage, and rejection reasons.
+- Carries the Task, Check, and certification-evidence refs with their stored
+  digests. It does not claim to have re-certified tasks from the digest alone.
 
 ### build_result_report
 

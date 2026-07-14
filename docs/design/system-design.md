@@ -22,7 +22,7 @@ and who consumes the outputs.
 | Module | Owns | Inputs | Input Source | Outputs | Output Consumers |
 | --- | --- | --- | --- | --- | --- |
 | Records | Shared record schemas, identity rules, validation errors, and JSON/JSONL serialization contracts. | Record definitions; record payloads produced by other modules. | Design docs; Task Pool; Verification; Workspace; Result Store; Selection; Reporting; Runner. | Validated `Task`, `Check`, `Feature`, `Result`, `ResultCacheIdentity`, `Selector`, `Benchmark Selection`, metric, and report records; validation errors; stable IDs. | All modules. |
-| Task Pool | Task generation, task import, execution-based task validation, rejected-task summaries, and frozen task-pool files. | Target repository reference; task-source config; user-provided tasks; check construction config; validation config. | User config; built-in generators; user imports; Verification for check execution; Workspace for checkout/replay. | Frozen `Task Pool`; accepted `Task + Check` records; rejected candidates; validation evidence; source-event inventory. | Workspace; Result Store; Selection; Reporting. |
+| Task Pool | Task generation, task import, execution-based task validation, rejected-task summaries, and frozen task-pool records. | Stable repository ID; direct task text; Check fields; certification config; bound Workspace and Verification inputs. | User config; built-in generators; user imports; Verification for check execution; Workspace for checkout/replay. | Frozen `Task Pool`; accepted `Task + Check` records; rejected candidates; sanitized certification evidence; source-event inventory. | Workspace; Result Store; Selection; Reporting. |
 | Verification | Check execution interface and normalized check outcomes. | `Check`; verifier workspace path; candidate diff already applied; verification runtime config. | Task Pool provides `Check`; Workspace provides verifier workspace and applied diff. | Normalized check outcome: pass, fail, invalid, failure label, sanitized evidence summary. | Workspace; Result Store; Reporting. |
 | Workspace | Solver workspace creation, Agent invocation, diff capture, verifier workspace creation, diff replay, and verification orchestration. | `Task`; `Check`; Agent config; workspace config; runtime config. | Task Pool provides `Task + Check`; user or run config provides Agent and configs; Verification provides verification runner. | Captured diff digest; execution metadata; check outcome; workspace-level failure classification. | Result Store. |
 | Result Store | Result cache identity, result storage, missing-cell queries, and result matrices. | `Task`; `Check`; Agent config; exact result identity; workspace output; check outcome. | Task Pool; Workspace; Verification; Records. | Reusable `Result` records; result cache state; cell-level result matrix; completeness, exclusion, and abstention metadata; missing Agent-task-check cells. | Selection; Reporting; Runner. |
@@ -68,14 +68,19 @@ those modules.
 
 ### Task
 
-Solver-visible problem material plus repository metadata. A `Task` never
-contains hidden check material or future outcome data.
+Direct solver-visible task text, optional refs to supporting files in the
+repository checkout, and repository metadata. A `Task` never contains hidden
+check material or future outcome data. An empty cluster ID means that no
+cluster is recorded; the system does not invent a default cluster.
 
 ### Check
 
 Acceptance method for a `Task`. A `Check` may be a test command, script,
 visual check, user-supplied check, human-reviewed result, or LLM-judged check
-when the judgment process is explicitly represented.
+when the judgment process is explicitly represented. Its optional resource
+mapping overrides only limits implemented by the active execution path;
+Workspace and Runtime records own environment identity and the default
+timeout.
 
 ### Workspace
 
