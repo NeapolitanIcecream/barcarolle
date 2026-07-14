@@ -2,6 +2,7 @@ from dataclasses import replace
 from pathlib import Path
 import hashlib
 import json
+import os
 import subprocess
 import sys
 
@@ -153,8 +154,72 @@ def test_invoke_agent_runs_bound_harness_command_and_digest_safe_output(tmp_path
     outcome = invoke_agent(workspace, _task(), agent, _runtime())
 
     assert outcome.terminal_status == "completed"
+    assert outcome.usage == {}
     assert outcome.safe_output_digest
     assert (tmp_path / "done.txt").read_text(encoding="utf-8") == "ok"
+
+
+def test_invoke_agent_reads_harness_usage_file(tmp_path: Path) -> None:
+    agent_command = (
+        sys.executable,
+        "-c",
+        "from pathlib import Path; Path('.barcarolle').mkdir(); "
+        "Path('.barcarolle/usage.json').write_text('{\"input_tokens\": 12, \"output_tokens\": 3}')",
+    )
+    agent = _agent(agent_command)
+    bind_agent_harness(agent, agent_command)
+    workspace = WorkspaceRef(
+        path=tmp_path,
+        role="solver",
+        task_id="task",
+        base_commit="commit",
+        workspace_digest="workspace",
+    )
+
+    outcome = invoke_agent(workspace, _task(), agent, _runtime())
+
+    assert outcome.terminal_status == "completed"
+    assert outcome.usage == {"input_tokens": 12, "output_tokens": 3}
+
+
+@pytest.mark.parametrize(
+    "usage_json",
+    (
+        "[]",
+        '{"input_tokens": -1}',
+        '{"input_tokens": "unknown"}',
+        '{"input_tokens": true}',
+    ),
+)
+def test_invoke_agent_rejects_invalid_harness_usage_file(tmp_path: Path, usage_json: str) -> None:
+    agent_command = (
+        sys.executable,
+        "-c",
+        "import os; from pathlib import Path; Path('.barcarolle').mkdir(); "
+        "Path('.barcarolle/usage.json').write_text(os.environ['TEST_USAGE_JSON'])",
+    )
+    agent = _agent(agent_command)
+    bind_agent_harness(agent, agent_command)
+    workspace = WorkspaceRef(
+        path=tmp_path,
+        role="solver",
+        task_id="task",
+        base_commit="commit",
+        workspace_digest="workspace",
+    )
+    previous = os.environ.get("TEST_USAGE_JSON")
+    os.environ["TEST_USAGE_JSON"] = usage_json
+    try:
+        outcome = invoke_agent(workspace, _task(), agent, _runtime())
+    finally:
+        if previous is None:
+            os.environ.pop("TEST_USAGE_JSON", None)
+        else:
+            os.environ["TEST_USAGE_JSON"] = previous
+
+    assert outcome.terminal_status == "invalid"
+    assert outcome.failure_label == "invalid_agent_usage"
+    assert outcome.usage == {}
 
 
 def test_bind_agent_harness_rejects_command_digest_mismatch() -> None:

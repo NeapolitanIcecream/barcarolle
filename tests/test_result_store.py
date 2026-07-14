@@ -95,7 +95,7 @@ def test_unknown_usage_cost_is_null_not_zero() -> None:
     task = _task()
     check = _check()
     agent = _agent()
-    scoring_config = replace(_scoring_config(), usage_coverage="unknown")
+    scoring_config = _scoring_config()
     identity = compute_result_cache_identity(task, check, agent, _workspace_config(), _runtime_config())
 
     result = build_result_record(
@@ -176,23 +176,23 @@ def test_build_result_record_rejects_non_numeric_priced_usage() -> None:
         )
 
 
-@pytest.mark.parametrize("usage_coverage", ("reported", "complete"))
-def test_build_result_record_requires_every_priced_key_for_measured_usage(usage_coverage: str) -> None:
+def test_build_result_record_marks_cost_unknown_when_priced_usage_is_missing() -> None:
     task = _task()
     check = _check()
     agent = _agent()
-    scoring_config = replace(_scoring_config(), usage_coverage=usage_coverage)
+    scoring_config = _scoring_config()
     identity = compute_result_cache_identity(task, check, agent, _workspace_config(), _runtime_config())
 
-    with pytest.raises(ValueError, match=rf"{usage_coverage} usage is missing priced keys: output_tokens"):
-        build_result_record(
-            task,
-            check,
-            agent,
-            _workspace_run(usage={"input_tokens": 1}),
-            identity,
-            scoring_config,
-        )
+    result = build_result_record(
+        task,
+        check,
+        agent,
+        _workspace_run(usage={"input_tokens": 1}),
+        identity,
+        scoring_config,
+    )
+
+    assert result.cost == {"input_tokens_cost": 0.001, "total_cost": None}
 
 
 def test_build_result_record_rejects_unrepresentable_usage_cost_without_overflow() -> None:
@@ -727,6 +727,5 @@ def _scoring_config() -> ScoringConfig:
     return ScoringConfig(
         scoring_config_digest="scoring",
         pricing_version="test-pricing",
-        usage_coverage="reported",
         cost_rates={"input_tokens": 0.001, "output_tokens": 0.005},
     )

@@ -130,7 +130,6 @@ def build_result_report(results: Sequence[ResultRecord], agents: Sequence[AgentR
             "mean_workspace_seconds": sum(latency_seconds) / len(latency_seconds) if latency_seconds else 0.0,
         },
         "pricing_versions": tuple(sorted({result.pricing_version for result in results})),
-        "usage_coverage": dict(sorted(Counter(result.usage_coverage for result in results).items())),
         "cache_coverage": {
             "result_count": len(results),
             "unique_cache_identity_count": len(set(cache_identity_digests)),
@@ -711,7 +710,7 @@ def _result_measurement_errors(results: Sequence[ResultRecord]) -> tuple[str, ..
     for result in results:
         if "total_cost" not in result.cost:
             errors.append(f"result {result.result_id} cost.total_cost is missing")
-        elif result.cost["total_cost"] is None and result.usage_coverage in {"unknown", "unreported"}:
+        elif result.cost["total_cost"] is None:
             pass
         elif not _is_number(result.cost["total_cost"]):
             errors.append(f"result {result.result_id} cost.total_cost is non-numeric")
@@ -723,7 +722,7 @@ def _result_measurement_errors(results: Sequence[ResultRecord]) -> tuple[str, ..
 
 
 def _has_unknown_usage_or_cost(result: ResultRecord) -> bool:
-    return result.usage_coverage in {"unknown", "unreported"} or result.cost.get("total_cost") is None
+    return result.cost.get("total_cost") is None
 
 
 def _selection_claim_errors(selection_validations: Sequence[Any], selections_match_task_pool: bool) -> tuple[str, ...]:

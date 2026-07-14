@@ -71,11 +71,10 @@ Output:
 
 Effect:
 
-- Summarizes pass/fail/invalid, cost, latency, scoreable rate, and cache
-  coverage, including pricing version and usage coverage.
-- Counts `reported` or `complete` total cost as measured only because Result
-  Store requires every configured priced usage key; unknown and unreported
-  cost remain separate from measured zero cost.
+- Summarizes pass/fail/invalid, cost, latency, scoreable rate, cache coverage,
+  and pricing version.
+- Counts a numeric total cost as measured. A `null` total remains separate from
+  measured zero cost.
 
 ### build_selector_report
 
@@ -138,7 +137,7 @@ Effect:
 - Replaces every absolute artifact path outside that root with a basename-only
   reference, so reports do not expose host directory layouts.
 - Preserves caller-supplied relative artifact refs.
-- Reports unknown or unreported usage/cost separately from measured zero cost.
+- Reports unknown cost separately from measured zero cost.
 
 ## Design Consistency Check
 

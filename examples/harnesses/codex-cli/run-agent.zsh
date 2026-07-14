@@ -2,6 +2,9 @@
 set -euo pipefail
 
 task_file="${BARCAROLLE_TASK_FILE:-.barcarolle/TASK.md}"
+script_dir="${0:A:h}"
+events_file=".barcarolle/codex-events.jsonl"
+usage_file=".barcarolle/usage.json"
 
 fail() {
   print -u2 -- "codex-cli harness: $1"
@@ -73,6 +76,9 @@ provider_config=(
   -c 'model_providers.barcarolle_llm.wire_api="responses"'
 )
 
+rm -f "$events_file" "$usage_file"
+
+set +e
 {
   print -- "You are running inside a Barcarolle solver workspace."
   print -- "The complete solver-visible task from .barcarolle/TASK.md is included below; do not reread that file."
@@ -94,4 +100,11 @@ provider_config=(
   --sandbox workspace-write \
   --model "$BARCAROLLE_CODEX_MODEL" \
   "${provider_config[@]}" \
-  -
+  - > "$events_file"
+codex_status=$?
+set -e
+
+cat "$events_file"
+"$script_dir/extract-usage.py" < "$events_file" > "$usage_file"
+rm -f "$events_file"
+exit "$codex_status"

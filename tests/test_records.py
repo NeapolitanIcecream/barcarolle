@@ -773,12 +773,6 @@ def test_workspace_run_validation_accepts_produced_state_combinations(changes: d
         ({"scoreable_state": "complete"}, "scoreable_state is not normalized"),
         ({"outcome": "unknown"}, "outcome is not normalized"),
         ({"invalid_owner": "infrastructure"}, "invalid_owner is not normalized"),
-        ({"usage_coverage": "complete-ish"}, "usage_coverage is not normalized"),
-        ({"usage": {}}, "reported or complete usage must include a numeric measurement"),
-        (
-            {"usage": {}, "usage_coverage": "complete"},
-            "reported or complete usage must include a numeric measurement",
-        ),
         ({"cost": {}}, "cost must include total_cost"),
         ({"latency": {}}, "latency must include workspace_seconds"),
         ({"usage": {"input_tokens": -1}}, "usage values must be finite and nonnegative"),
@@ -813,14 +807,13 @@ def test_result_validation_enforces_normalized_measurements_and_state(
     assert any(expected_error in error for error in validation.errors)
 
 
-@pytest.mark.parametrize("usage_coverage", ["unknown", "unreported"])
-def test_result_validation_allows_empty_usage_when_coverage_is_not_reported(usage_coverage: str) -> None:
+def test_result_validation_allows_empty_usage_with_unknown_cost() -> None:
     result = record_with_digest(
         replace(
             _result(),
             result_digest="",
             usage={},
-            usage_coverage=usage_coverage,
+            cost={"total_cost": None},
         )
     )
 
@@ -850,7 +843,6 @@ def test_result_validation_allows_empty_usage_when_coverage_is_not_reported(usag
             "outcome": "invalid",
             "invalid_owner": "benchmark",
         },
-        {"usage_coverage": "complete"},
     ],
 )
 def test_result_validation_accepts_normalized_state_combinations(changes: dict[str, object]) -> None:
@@ -915,7 +907,6 @@ def _result() -> ResultRecord:
             scoring_config_digest="scoring:v1",
             pricing_version="test",
             usage={"input_tokens": 1},
-            usage_coverage="reported",
             latency={"workspace_seconds": 1.0},
             diff_digest="diff",
             verifier_metadata_digest="verifier",

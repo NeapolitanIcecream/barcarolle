@@ -208,7 +208,6 @@ Raw workspaces and transcripts are not stored in this record.
 - `scoring_config_digest`
 - `pricing_version`
 - `usage`
-- `usage_coverage`
 - `latency`
 - `diff_digest`
 - `verifier_metadata_digest`
@@ -503,19 +502,16 @@ Output:
 
 Effect:
 
-- Validates cache identity fields, status fields, cost/latency fields, usage
-  coverage, pricing version, result availability timestamp, failure labels, and
+- Validates cache identity fields, status fields, cost/latency/usage fields,
+  pricing version, result availability timestamp, failure labels, and
   `result_digest` against the canonical result record.
-- Accepts only normalized terminal states, scoreability states, outcomes, and
-  usage coverage values. Scoreable pass/fail results and Agent- or
-  benchmark-invalid results must have consistent terminal status, outcome, and
-  `invalid_owner` attribution.
+- Accepts only normalized terminal states, scoreability states, and outcomes.
+  Scoreable pass/fail results and Agent- or benchmark-invalid results must have
+  consistent terminal status, outcome, and `invalid_owner` attribution.
 - Requires `latency.workspace_seconds` and every known cost/latency/usage value
   to be numeric, finite, and nonnegative. `cost.total_cost` may be `null` only
-  to represent an unknown total.
-  `usage_coverage=reported` or `complete` requires at least one finite
-  nonnegative numeric usage measurement; empty usage remains valid only for
-  `unknown` or `unreported`.
+  to represent an unknown total. An empty usage mapping is valid and leaves
+  total cost unknown.
 
 ### validate_result_cache_identity
 

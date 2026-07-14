@@ -180,7 +180,6 @@ class ResultRecord:
     scoring_config_digest: str
     pricing_version: str
     usage: Mapping[str, JSONValue]
-    usage_coverage: str
     latency: Mapping[str, JSONValue]
     diff_digest: str
     verifier_metadata_digest: str
@@ -406,7 +405,6 @@ _WORKSPACE_RUN_STATES = frozenset(
 _RESULT_TERMINAL_STATUSES = _WORKSPACE_TERMINAL_STATUSES
 _RESULT_SCOREABLE_STATES = frozenset({"scoreable", "agent_invalid", "benchmark_invalid"})
 _RESULT_OUTCOMES = _WORKSPACE_CHECK_OUTCOMES
-_RESULT_USAGE_COVERAGES = frozenset({"reported", "complete", "unknown", "unreported"})
 _RESULT_STATES = frozenset(
     {
         ("passed", "scoreable", "pass", None),
@@ -567,8 +565,6 @@ def validate_result(result: ResultRecord) -> ValidationResult:
         errors.append("outcome is not normalized")
     if result.invalid_owner is not None and result.invalid_owner not in _INVALID_OWNERS:
         errors.append("invalid_owner is not normalized")
-    if result.usage_coverage not in _RESULT_USAGE_COVERAGES:
-        errors.append("usage_coverage is not normalized")
     errors.extend(_result_state_errors(result))
     if not isinstance(result.cost, Mapping):
         errors.append("cost must be a mapping")
@@ -588,10 +584,8 @@ def validate_result(result: ResultRecord) -> ValidationResult:
     if not isinstance(result.usage, Mapping):
         errors.append("usage must be a mapping")
     else:
-        usage_errors, numeric_usage_count = _usage_measurement_errors(result.usage)
+        usage_errors, _ = _usage_measurement_errors(result.usage)
         errors.extend(usage_errors)
-        if result.usage_coverage in {"reported", "complete"} and numeric_usage_count == 0:
-            errors.append("reported or complete usage must include a numeric measurement")
     return _validation(errors)
 
 

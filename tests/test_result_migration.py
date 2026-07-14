@@ -91,7 +91,7 @@ def test_migrate_result_cache_normalizes_legacy_error_and_empty_complete_usage(t
         "invalid",
         "agent",
     )
-    assert result.usage_coverage == "unreported"
+    assert result.usage == {}
     assert result.cost["total_cost"] is None
     assert validate_result(result).ok
 

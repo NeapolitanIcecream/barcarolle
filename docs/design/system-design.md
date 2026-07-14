@@ -88,8 +88,8 @@ execution adapter when their threat model requires it.
 ### Result
 
 One Agent on one Task under one environment and runtime config. A `Result`
-contains status, pass/fail/invalid, cost, pricing version, usage coverage,
-latency, failure label, captured diff digest, verifier metadata, and the time
+contains status, pass/fail/invalid, usage, cost, pricing version, latency,
+failure label, captured diff digest, verifier metadata, and the time
 the result became available for selector use.
 
 A reusable `Result` is matched by `ResultCacheIdentity`, which stores the

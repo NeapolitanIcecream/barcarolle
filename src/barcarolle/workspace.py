@@ -11,6 +11,7 @@ from time import monotonic
 from typing import Any, Mapping, Sequence
 import hashlib
 import json
+import math
 import shutil
 import subprocess
 
@@ -113,6 +114,7 @@ _CAPTURE_PATHSPEC = (
     ":(top,exclude).barcarolle",
     ":(top,exclude).barcarolle/**",
 )
+_USAGE_FILE = Path(".barcarolle/usage.json")
 _BENCHMARK_CHECK_FAILURE_LABELS = frozenset(
     {
         "baseline_check_passed_without_diff",
@@ -198,6 +200,8 @@ def invoke_agent(
     command = solver_workspace.agent_command or _AGENT_HARNESSES.get(_agent_key(agent), ())
     if not command:
         return AgentRunOutcome("invalid", 0.0, {}, "", "missing_agent_command")
+    usage_path = solver_workspace.path / _USAGE_FILE
+    usage_path.unlink(missing_ok=True)
     start = monotonic()
     try:
         completed = subprocess.run(
@@ -223,16 +227,46 @@ def invoke_agent(
         )
     except OSError:
         return AgentRunOutcome("invalid", monotonic() - start, {}, "", "agent_launch_error")
+    try:
+        usage = _load_agent_usage(usage_path)
+    except (OSError, ValueError):
+        return AgentRunOutcome(
+            terminal_status="invalid",
+            duration_seconds=monotonic() - start,
+            usage={},
+            safe_output_digest=_safe_output_digest(completed.stdout, completed.stderr),
+            failure_label="invalid_agent_usage",
+            stdout=completed.stdout,
+            stderr=completed.stderr,
+        )
     terminal_status = "completed" if completed.returncode == 0 else "error"
     return AgentRunOutcome(
         terminal_status=terminal_status,
         duration_seconds=monotonic() - start,
-        usage={},
+        usage=usage,
         safe_output_digest=_safe_output_digest(completed.stdout, completed.stderr),
         failure_label=None if completed.returncode == 0 else "agent_failed",
         stdout=completed.stdout,
         stderr=completed.stderr,
     )
+
+
+def _load_agent_usage(path: Path) -> Mapping[str, int | float]:
+    if not path.exists():
+        return {}
+    value = json.loads(path.read_text(encoding="utf-8"))
+    if not isinstance(value, dict) or any(not isinstance(key, str) for key in value):
+        raise ValueError("Agent usage must be a string-keyed JSON object")
+    for key, item in value.items():
+        if isinstance(item, bool) or not isinstance(item, int | float):
+            raise ValueError(f"Agent usage value for {key} must be numeric")
+        try:
+            numeric_item = float(item)
+        except (OverflowError, TypeError, ValueError) as exc:
+            raise ValueError(f"Agent usage value for {key} must be finite and nonnegative") from exc
+        if not math.isfinite(numeric_item) or numeric_item < 0.0:
+            raise ValueError(f"Agent usage value for {key} must be finite and nonnegative")
+    return value
 
 
 def capture_diff(solver_workspace: WorkspaceRef) -> CapturedDiff:

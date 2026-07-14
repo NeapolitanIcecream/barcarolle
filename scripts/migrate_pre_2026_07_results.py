@@ -222,7 +222,6 @@ def _migrate_result(
         scoring_config_digest=_string(old_identity["scoring_config_digest"], "scoring_config_digest"),
         pricing_version=_string(old_result["pricing_version"], "pricing_version"),
         usage=usage,
-        usage_coverage=usage_coverage,
         latency=dict(_mapping(old_result["latency"], "latency")),
         diff_digest=_string(old_result["diff_digest"], "diff_digest"),
         verifier_metadata_digest=_string(

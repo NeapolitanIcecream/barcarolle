@@ -89,7 +89,6 @@ def test_result_report_distinguishes_unknown_cost_from_measured_zero() -> None:
         replace(
             _result(result_id="result-unknown", total_cost=None),
             usage={},
-            usage_coverage="unknown",
             result_digest="",
         )
     )
@@ -102,7 +101,7 @@ def test_result_report_distinguishes_unknown_cost_from_measured_zero() -> None:
         "measured_zero_cost_count": 1,
         "unknown_result_count": 1,
     }
-    assert section.summary["usage_coverage"] == {"reported": 1, "unknown": 1}
+    assert "usage_coverage" not in section.summary
     assert section.unsupported_claims == ()
 
 
@@ -813,7 +812,6 @@ def _result(
         scoring_config_digest="scoring",
         pricing_version="test",
         usage={"total_tokens": 10},
-        usage_coverage="reported",
         latency={"workspace_seconds": workspace_seconds},
         diff_digest="diff",
         verifier_metadata_digest="verifier",

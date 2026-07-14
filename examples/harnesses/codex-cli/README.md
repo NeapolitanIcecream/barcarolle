@@ -63,8 +63,9 @@ there, and records the normalized result.
 
 ## Usage Extraction
 
-Usage extraction belongs to the harness or caller. Barcarolle core does not
-parse Codex output.
+Usage extraction belongs to the harness. Barcarolle core does not parse Codex
+output; it reads a normalized `.barcarolle/usage.json` object after the harness
+exits.
 
 The optional `extract-usage.py` helper parses line-delimited JSON from
 `codex exec --json` on a best-effort basis and emits a normalized mapping such
@@ -74,8 +75,9 @@ as:
 {"input_tokens": 123, "output_tokens": 45, "total_tokens": 168}
 ```
 
-A custom harness adapter can pass that mapping to `WorkspaceRunRecord.usage`.
-The current shell workspace runner does not wire the helper into its result, so
-its usage coverage must remain `unknown` or `unreported`. Barcarolle computes
-cost from user-provided `ScoringConfig.cost_rates`; this example does not define
-provider pricing.
+`run-agent.zsh` preserves the Codex JSON stream on stdout, feeds the same stream
+to this helper, and writes the mapping to `.barcarolle/usage.json`. The Workspace
+runner then stores it in `WorkspaceRunRecord.usage`. Barcarolle computes cost
+from user-provided `ScoringConfig.cost_rates`; this example does not define
+provider pricing. If usage is absent or any priced key is missing, total cost
+remains unknown (`null`).

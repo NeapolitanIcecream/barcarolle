@@ -71,10 +71,9 @@ Effect:
   results even if a Check also reported `fail`; only terminal `failed` is a
   scoreable failure.
 - Carries harness-provided usage mappings into the `ResultRecord` and computes
-  cost from numeric usage keys in `ScoringConfig.cost_rates`. `reported` and
-  `complete` coverage must include every priced key; `unknown` and
-  `unreported` may omit them. Present priced values must be finite and
-  nonnegative. An unknown total is stored as `null`, never zero.
+  cost from numeric usage keys in `ScoringConfig.cost_rates`. Present priced
+  values must be finite and nonnegative. If usage is absent or any configured
+  priced key is missing, total cost is stored as `null`, never zero.
 - Stores pricing provenance on the Result, outside `ResultCacheIdentity`, so a
   new price table can reprice retained usage without rerunning paid work.
 
@@ -112,8 +111,8 @@ Output:
 Effect:
 
 - Computes a pricing view from retained usage without executing an Agent or a
-  Check. Returns `total_cost=null` when usage coverage is unknown or
-  unreported.
+  Check. Returns `total_cost=null` when usage is absent or a configured priced
+  key is missing.
 
 ### compute_result_cache_key
 

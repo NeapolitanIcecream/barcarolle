@@ -40,7 +40,6 @@ from barcarolle.records import (
 class ScoringConfig:
     scoring_config_digest: str
     pricing_version: str
-    usage_coverage: str
     cost_rates: Mapping[str, float]
 
 
@@ -107,7 +106,6 @@ def build_result_record(
         scoring_config_digest=scoring_config.scoring_config_digest,
         pricing_version=scoring_config.pricing_version,
         usage=workspace_run.usage,
-        usage_coverage=scoring_config.usage_coverage,
         latency=_latency_from_workspace_run(workspace_run),
         diff_digest=workspace_run.diff_digest,
         verifier_metadata_digest=_verifier_metadata_digest(workspace_run),
@@ -357,8 +355,6 @@ def _normalize_result_state(workspace_run: WorkspaceRunRecord) -> tuple[str, str
 
 def compute_cost(usage: Mapping[str, Any], scoring_config: ScoringConfig) -> Mapping[str, Any]:
     """Price recorded usage without affecting the paid execution identity."""
-    if scoring_config.usage_coverage not in {"reported", "complete", "unknown", "unreported"}:
-        raise ValueError("usage_coverage is not normalized")
     for key, rate in scoring_config.cost_rates.items():
         if not isinstance(key, str):
             raise ValueError("cost rate keys must be strings")
@@ -370,12 +366,7 @@ def compute_cost(usage: Mapping[str, Any], scoring_config: ScoringConfig) -> Map
             raise ValueError(f"cost rate for {key} must be a finite and nonnegative number") from exc
         if not isfinite(numeric_rate) or numeric_rate < 0.0:
             raise ValueError(f"cost rate for {key} must be a finite and nonnegative number")
-    if scoring_config.usage_coverage in {"reported", "complete"}:
-        missing_keys = [key for key in scoring_config.cost_rates if key not in usage]
-        if missing_keys:
-            raise ValueError(
-                f"{scoring_config.usage_coverage} usage is missing priced keys: {', '.join(missing_keys)}"
-            )
+    missing_keys = [key for key in scoring_config.cost_rates if key not in usage]
     costs: dict[str, Any] = {}
     total = 0.0
     for key, rate in scoring_config.cost_rates.items():
@@ -394,7 +385,7 @@ def compute_cost(usage: Mapping[str, Any], scoring_config: ScoringConfig) -> Map
             raise ValueError(f"usage and cost rate for {key} must be finite and nonnegative numbers")
         costs[f"{key}_cost"] = amount
         total += amount
-    costs["total_cost"] = total if scoring_config.usage_coverage in {"reported", "complete"} else None
+    costs["total_cost"] = total if usage and not missing_keys else None
     return costs
 
 

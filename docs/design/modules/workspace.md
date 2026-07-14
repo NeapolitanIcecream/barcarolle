@@ -84,6 +84,9 @@ Effect:
   safe output digests. Stdout and stderr may be retained in the in-memory
   outcome for artifact preservation, but normalized records store only digests
   and usage.
+- Reads optional harness-reported usage from `.barcarolle/usage.json`. The file
+  must be a JSON object with finite, nonnegative numeric values. Missing usage
+  remains an empty mapping; malformed usage makes the Agent run invalid.
 
 ### capture_diff
 
